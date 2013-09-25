@@ -1,0 +1,174 @@
+========
+OBJECTS
+========
+
+Background
+White
+
+Grille
+gray
+0...0
+.0.0.
+..0..
+.0.0.
+0...0
+
+EndPoint
+Green
+
+Player 
+Black     
+00000
+00000
+0.0.0
+00000
+00000
+
+Wall
+Gray
+
+BlueBlock
+Blue
+00000
+00.00
+0.0.0
+00.00
+00000
+
+GreenBlock
+LightGreen
+00000
+00000
+00.00
+00000
+00000
+
+PinkBlock
+Red
+00000
+00.00
+0...0
+00.00
+00000
+
+PurpleBlock
+Purple
+00000
+0...0
+0.0.0
+0...0
+00000
+
+OrangeBlock
+Orange
+00000
+0.0.0
+00000
+0.0.0
+00000
+
+
+=======
+LEGEND
+=======
+
+Block = PinkBlock or BlueBlock or PurpleBlock or OrangeBlock or GreenBlock
+Moveable = Player or Block
+PlayerObstacle = Block or Wall
+BlockObstacle = Player or Wall or Grille or Block or EndPoint
+. = Background
+# = Wall
+P = Player
+B = BlueBlock
+G = GreenBLock
+K = PinkBlock
+R = PurpleBlock
+O = OrangeBlock
+E = EndPoint
+x = Grille
+H = Grille and Player
+
+
+=========
+SOUNDS
+=========
+
+================
+COLLISIONLAYERS
+================
+
+Background
+EndPoint
+Grille
+Player, Wall, PinkBlock, BlueBlock, PurpleBlock, OrangeBlock, GreenBlock
+
+======
+RULES     
+======     
+
+[ >  Moveable | Moveable ] -> [ > Moveable | > Moveable ]
+
+late [ PinkBlock | PinkBlock | PinkBlock ] -> [ | | ]
+late [ BlueBlock | BlueBlock | BlueBlock ] -> [ | | ]
+late [ PurpleBlock | PurpleBlock | PurpleBlock ] -> [ | | ]
+late [ OrangeBlock | OrangeBlock | OrangeBlock ] -> [ | | ]
+late [ GreenBlock | GreenBlock | GreenBlock ] -> [ | | ]
+
+==============
+WINCONDITION
+==============
+
+=======     
+LEVELS
+=======
+
+##########
+####...###
+#x....#x##
+#xO#O.OxE#
+#Hx##.#xx#
+#####.####
+#####.####
+O#########
+
+......#######...
+.....##P.#####..
+....###....####.
+..#####O...#B..#
+..#####.#.##BB.#
+##EBB..O.O.....#
+..#####.#.#....#
+..######..#..###
+....####..#.OOx.
+.....###GGG.#x..
+......#######...
+
+######xx######
+######GG######
+##xx#...#xEx##
+##..O...#x..##
+##..#...##O###
+#..##.......##
+xG....##....Gx
+xG....##....Gx
+##.......GG###
+###G##...#xx##
+##x..#...O.x##
+##.P.#...#xx##
+######GG######
+######xx######
+
+......##......
+....######....
+..##########..
+..#.OG..kk.#..
+.##OPO..Gkk##.
+.##GOG..GGk##.
+###...##...###
+###...##...###
+.##kkG##ROR##.
+.##Gkk..OEO##.
+..#.Gk..RO.#..
+..##########..
+....######....
+......##......

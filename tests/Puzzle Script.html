@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<!-- saved from url=(0057)file:///Users/increpare/Documents/PuzzleEngine/index.html -->
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    
+    <title>Puzzle Script</title>
+<link rel="stylesheet" href="file:///Users/increpare/Documents/PuzzleEngine/css/docs.css">
+<link rel="stylesheet" href="file:///Users/increpare/Documents/PuzzleEngine/css/codemirror.css">
+<link rel="stylesheet" href="file:///Users/increpare/Documents/PuzzleEngine/css/midnight.css">
+<link rel="stylesheet" href="file:///Users/increpare/Documents/PuzzleEngine/css/console.css">
+<link rel="stylesheet" href="file:///Users/increpare/Documents/PuzzleEngine/css/gamecanvas.css">
+<link rel="stylesheet" href="file:///Users/increpare/Documents/PuzzleEngine/css/soundbar.css">
+<link rel="stylesheet" href="file:///Users/increpare/Documents/PuzzleEngine/css/layout.css">
+<link rel="stylesheet" href="file:///Users/increpare/Documents/PuzzleEngine/css/toolbar.css">
+
+</head>
+<body>
+<div class="leftpanel">
+<form id="form1" name="form1" action="javascript:void(0);"><textarea id="code" name="code" rows="20" cols="20" style="display: none;">(
+Simple block pushing example, simplified
+)
+
+========
+OBJECTS
+========
+
+Background
+gray
+
+Target 
+YELLOW
+
+Player 
+PINK     
+
+Crate
+RED
+
+Wall     
+BROWN DARKBROWN     
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Player
+* = Crate
+@ = Crate and Target
+O = Target
+
+=========
+SOUNDS
+=========
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Target
+Player, Wall, Crate
+
+======
+RULES     
+======     
+
+[ &gt;  Player | Crate ] -&gt; [  &gt;  Player | &gt; Crate  ] 
++ rigid [ moving Crate | Crate ] -&gt; [ moving Crate | moving Crate ]
+
+==============
+WINCONDITION
+==============
+
+=======     
+LEVELS
+=======
+
+...............
+....*..........
+....*..........
+...............
+.....***.......
+.....*.........
+..P..**#.......
+.....*.........
+...............
+...............
+...............
+...............
+...............
+
+</textarea><div class="CodeMirror CodeMirror-wrap cm-s-midnight CodeMirror-focused"><div style="overflow: hidden; position: relative; width: 3px; height: 0px; top: 641px; left: 57px;"><textarea autocorrect="off" autocapitalize="off" spellcheck="false" tabindex="0" style="position: absolute; padding: 0px; width: 1000px; height: 1em; outline: none; font-size: 4px;"></textarea></div><div class="CodeMirror-hscrollbar" style="left: 29px; min-height: 18px;"><div style="height: 1px; width: 0px;"></div></div><div class="CodeMirror-vscrollbar" style="display: block; bottom: 0px; min-width: 18px;"><div style="width: 1px; height: 814px;"></div></div><div class="CodeMirror-scrollbar-filler"></div><div class="CodeMirror-gutter-filler"></div><div class="CodeMirror-scroll" tabindex="-1"><div class="CodeMirror-sizer" style="margin-left: 29px; min-height: 814px;"><div style="position: relative; top: 0px;"><div class="CodeMirror-lines"><div style="position: relative; outline: none;"><div class="CodeMirror-measure"></div><div style="position: relative; z-index: 1;"><div class="CodeMirror-selected" style="position: absolute; left: 4px; top: 0px; width: 607px; height: 13px;"></div><div class="CodeMirror-selected" style="position: absolute; left: 4px; top: 793px; width: 24px; height: 13px;"></div><div class="CodeMirror-selected" style="position: absolute; left: 4px; top: 13px; width: 607px; height: 780px;"></div></div><div class="CodeMirror-code" style=""><div style="position: relative;"><div style="position: absolute; left: -29px;"><div class="CodeMirror-linenumber CodeMirror-gutter-elt" style="left: 0px; width: 20px;">1</div></div><pre><span class="cm-comment">( rigidtest )</span></pre></div><div style="position: relative;"><div style="position: absolute; left: -29px;"><div class="CodeMirror-linenumber CodeMirror-gutter-elt" style="left: 0px; width: 20px;">2</div></div><pre>&nbsp;</pre></div><div style="position: relative;"><div style="position: absolute; left: -29px;"><div class="CodeMirror-linenumber CodeMirror-gutter-elt" style="left: 0px; width: 20px;">3</div></div><pre><span class="cm-EQUALSBIT">========</span></pre></div><div style="position: relative;"><div style="position: absolute; left: -29px;"><div class="CodeMirror-linenumber CodeMirror-gutter-elt" style="left: 0px; width: 20px;">4</div></div><pre><span class="cm-HEADER">OBJECTS</span></pre></div><div style="position: relative;"><div style="position: absolute; left: -29px;"><div class="CodeMirror-linenumber CodeMirror-gutter-elt" style="left: 0px; width: 20px;">5</div></div><pre><span class="cm-EQUALSBIT">========</span></pre></div><div style="position: relative;"><div style="position: absolute; left: -29px;"><div class="CodeMirror-linenumber CodeMirror-gutter-elt" style="left: 0px; width: 20px;">6</div></div><pre>&nbsp;</pre></div><div style="position: relative;"><div style="position: absolute; left: -29px;"><div class="CodeMirror-linenumber CodeMirror-gutter-elt" style="left: 0px; width: 20px;">7</div></div><pre><span class="cm-NAME">Background</span></pre></div><div style="position: relative;"><div style="position: absolute; left: -29px;"><div class="CodeMirror-linenumber CodeMirror-gutter-elt" style="left: 0px; width: 20px;">8</div></div><pre><span class="cm-GRAY">gray</span></pre></div><div style="position: relative;"><div style="position: absolute; left: -29px;"><div class="CodeMirror-linenumber CodeMirror-gutter-elt" style="left: 0px; width: 20px;">9</div></div><pre>&nbsp;</pre></div><div style="position: relative;"><div style="position: absolute; left: -29px;"><div class="CodeMirror-linenumber CodeMirror-gutter-elt" style="left: 0px; width: 20px;">10</div></div><pre><span class="cm-NAME">Target </span></pre></div><div style="position: relative;"><div style="position: absolute; left: -29px;"><div class="CodeMirror-linenumber CodeMirror-gutter-elt" style="left: 0px; width: 20px;">11</div></div><pre><span class="cm-YELLOW">YELLOW</span></pre></div><div style="position: relative;"><div style="position: absolute; left: -29px;"><div class="CodeMirror-linenumber CodeMirror-gutter-elt" style="left: 0px; width: 20px;">12</div></div><pre>&nbsp;</pre></div><div style="position: relative;"><div style="position: absolute; left: -29px;"><div class="CodeMirror-linenumber CodeMirror-gutter-elt" style="left: 0px; width: 20px;">13</div></div><pre><span class="cm-NAME">Player </span></pre></div><div style="position: relative;"><div style="position: absolute; left: -29px;"><div class="CodeMirror-linenumber CodeMirror-gutter-elt" style="left: 0px; width: 20px;">14</div></div><pre><span class="cm-PINK">PINK &nbsp; &nbsp; </span></pre></div><div style="position: relative;"><div style="position: absolute; left: -29px;"><div class="CodeMirror-linenumber CodeMirror-gutter-elt" style="left: 0px; width: 20px;">15</div></div><pre>&nbsp;</pre></div><div style="position: relative;"><div style="position: absolute; left: -29px;"><div class="CodeMirror-linenumber CodeMirror-gutter-elt" style="left: 0px; width: 20px;">16</div></div><pre><span class="cm-NAME">Crate</span></pre></div><div style="position: relative;"><div style="position: absolute; left: -29px;"><div class="CodeMirror-linenumber CodeMirror-gutter-elt" style="left: 0px; width: 20px;">17</div></div><pre><span class="cm-RED">RED</span></pre></div><div style="position: relative;"><div style="position: absolute; left: -29px;"><div class="CodeMirror-linenumber CodeMirror-gutter-elt" style="left: 0px; width: 20px;">18</div></div><pre>&nbsp;</pre></div><div style="position: relative;"><div style="position: absolute; left: -29px;"><div class="CodeMirror-linenumber CodeMirror-gutter-elt" style="left: 0px; width: 20px;">19</div></div><pre><span class="cm-NAME">Wall &nbsp; &nbsp; </span></pre></div><div style="position: relative;"><div style="position: absolute; left: -29px;"><div class="CodeMirror-linenumber CodeMirror-gutter-elt" style="left: 0px; width: 20px;">20</div></div><pre><span class="cm-BROWN">BROWN </span><span class="cm-DARKBROWN">DARKBROWN &nbsp; &nbsp; </span></pre></div><div style="position: relative;"><div style="position: absolute; left: -29px;"><div class="CodeMirror-linenumber CodeMirror-gutter-elt" style="left: 0px; width: 20px;">21</div></div><pre>&nbsp;</pre></div><div style="position: relative;"><div style="position: absolute; left: -29px;"><div class="CodeMirror-linenumber CodeMirror-gutter-elt" style="left: 0px; width: 20px;">22</div></div><pre><span class="cm-EQUALSBIT">=======</span></pre></div><div style="position: relative;"><div style="position: absolute; left: -29px;"><div class="CodeMirror-linenumber CodeMirror-gutter-elt" style="left: 0px; width: 20px;">23</div></div><pre><span class="cm-HEADER">LEGEND</span></pre></div><div style="position: relative;"><div style="position: absolute; left: -29px;"><div class="CodeMirror-linenumber CodeMirror-gutter-elt" style="left: 0px; width: 20px;">24</div></div><pre><span class="cm-EQUALSBIT">=======</span></pre></div><div style="position: relative;"><div style="position: absolute; left: -29px;"><div class="CodeMirror-linenumber CodeMirror-gutter-elt" style="left: 0px; width: 20px;">25</div></div><pre>&nbsp;</pre></div><div style="position: relative;"><div style="position: absolute; left: -29px;"><div class="CodeMirror-linenumber CodeMirror-gutter-elt" style="left: 0px; width: 20px;">26</div></div><pre><span class="cm-NAME">. </span><span class="cm-ASSSIGNMENT">= </span><span class="cm-NAME">Background</span></pre></div><div style="position: relative;"><div style="position: absolute; left: -29px;"><div class="CodeMirror-linenumber CodeMirror-gutter-elt" style="left: 0px; width: 20px;">27</div></div><pre><span class="cm-NAME"># </span><span class="cm-ASSSIGNMENT">= </span><span class="cm-NAME">Wall</span></pre></div><div style="position: relative;"><div style="position: absolute; left: -29px;"><div class="CodeMirror-linenumber CodeMirror-gutter-elt" style="left: 0px; width: 20px;">28</div></div><pre><span class="cm-NAME">P </span><span class="cm-ASSSIGNMENT">= </span><span class="cm-NAME">Player</span></pre></div><div style="position: relative;"><div style="position: absolute; left: -29px;"><div class="CodeMirror-linenumber CodeMirror-gutter-elt" style="left: 0px; width: 20px;">29</div></div><pre><span class="cm-NAME">* </span><span class="cm-ASSSIGNMENT">= </span><span class="cm-NAME">Crate</span></pre></div><div style="position: relative;"><div style="position: absolute; left: -29px;"><div class="CodeMirror-linenumber CodeMirror-gutter-elt" style="left: 0px; width: 20px;">30</div></div><pre><span class="cm-NAME">@ </span><span class="cm-ASSSIGNMENT">= </span><span class="cm-NAME">Crate </span><span class="cm-LOGICWORD">and </span><span class="cm-NAME">Target</span></pre></div><div style="position: relative;"><div style="position: absolute; left: -29px;"><div class="CodeMirror-linenumber CodeMirror-gutter-elt" style="left: 0px; width: 20px;">31</div></div><pre><span class="cm-NAME">O </span><span class="cm-ASSSIGNMENT">= </span><span class="cm-NAME">Target</span></pre></div><div style="position: relative;"><div style="position: absolute; left: -29px;"><div class="CodeMirror-linenumber CodeMirror-gutter-elt" style="left: 0px; width: 20px;">32</div></div><pre>&nbsp;</pre></div><div style="position: relative;"><div style="position: absolute; left: -29px;"><div class="CodeMirror-linenumber CodeMirror-gutter-elt" style="left: 0px; width: 20px;">33</div></div><pre><span class="cm-EQUALSBIT">=========</span></pre></div><div style="position: relative;"><div style="position: absolute; left: -29px;"><div class="CodeMirror-linenumber CodeMirror-gutter-elt" style="left: 0px; width: 20px;">34</div></div><pre><span class="cm-HEADER">SOUNDS</span></pre></div><div style="position: relative;"><div style="position: absolute; left: -29px;"><div class="CodeMirror-linenumber CodeMirror-gutter-elt" style="left: 0px; width: 20px;">35</div></div><pre><span class="cm-EQUALSBIT">=========</span></pre></div><div style="position: relative;"><div style="position: absolute; left: -29px;"><div class="CodeMirror-linenumber CodeMirror-gutter-elt" style="left: 0px; width: 20px;">36</div></div><pre>&nbsp;</pre></div><div style="position: relative;"><div style="position: absolute; left: -29px;"><div class="CodeMirror-linenumber CodeMirror-gutter-elt" style="left: 0px; width: 20px;">37</div></div><pre><span class="cm-EQUALSBIT">================</span></pre></div><div style="position: relative;"><div style="position: absolute; left: -29px;"><div class="CodeMirror-linenumber CodeMirror-gutter-elt" style="left: 0px; width: 20px;">38</div></div><pre><span class="cm-HEADER">COLLISIONLAYERS</span></pre></div><div style="position: relative;"><div style="position: absolute; left: -29px;"><div class="CodeMirror-linenumber CodeMirror-gutter-elt" style="left: 0px; width: 20px;">39</div></div><pre><span class="cm-EQUALSBIT">================</span></pre></div><div style="position: relative;"><div style="position: absolute; left: -29px;"><div class="CodeMirror-linenumber CodeMirror-gutter-elt" style="left: 0px; width: 20px;">40</div></div><pre>&nbsp;</pre></div><div style="position: relative;"><div style="position: absolute; left: -29px;"><div class="CodeMirror-linenumber CodeMirror-gutter-elt" style="left: 0px; width: 20px;">41</div></div><pre><span class="cm-NAME">Background</span></pre></div><div style="position: relative;"><div style="position: absolute; left: -29px;"><div class="CodeMirror-linenumber CodeMirror-gutter-elt" style="left: 0px; width: 20px;">42</div></div><pre><span class="cm-NAME">Target</span></pre></div><div style="position: relative;"><div style="position: absolute; left: -29px;"><div class="CodeMirror-linenumber CodeMirror-gutter-elt" style="left: 0px; width: 20px;">43</div></div><pre><span class="cm-NAME">Player</span>, <span class="cm-NAME">Wall</span>, <span class="cm-NAME">Crate</span></pre></div><div style="position: relative;"><div style="position: absolute; left: -29px;"><div class="CodeMirror-linenumber CodeMirror-gutter-elt" style="left: 0px; width: 20px;">44</div></div><pre>&nbsp;</pre></div><div style="position: relative;"><div style="position: absolute; left: -29px;"><div class="CodeMirror-linenumber CodeMirror-gutter-elt" style="left: 0px; width: 20px;">45</div></div><pre><span class="cm-EQUALSBIT">======</span></pre></div><div style="position: relative;"><div style="position: absolute; left: -29px;"><div class="CodeMirror-linenumber CodeMirror-gutter-elt" style="left: 0px; width: 20px;">46</div></div><pre><span class="cm-HEADER">RULES &nbsp; &nbsp; </span></pre></div><div style="position: relative;"><div style="position: absolute; left: -29px;"><div class="CodeMirror-linenumber CodeMirror-gutter-elt" style="left: 0px; width: 20px;">47</div></div><pre><span class="cm-EQUALSBIT">======</span> &nbsp; &nbsp; </pre></div><div style="position: relative;"><div style="position: absolute; left: -29px;"><div class="CodeMirror-linenumber CodeMirror-gutter-elt" style="left: 0px; width: 20px;">48</div></div><pre>&nbsp;</pre></div><div style="position: relative;"><div style="position: absolute; left: -29px;"><div class="CodeMirror-linenumber CodeMirror-gutter-elt" style="left: 0px; width: 20px;">49</div></div><pre><span class="cm-DIRECTION">rigid right </span><span class="cm-BRACKET">[ </span><span class="cm-DIRECTION">&gt;  </span><span class="cm-NAME">Player </span><span class="cm-BRACKET">| </span><span class="cm-DIRECTION">stationary </span><span class="cm-NAME">Crate </span><span class="cm-BRACKET">] </span><span class="cm-ARROW">-&gt; </span><span class="cm-BRACKET">[  </span><span class="cm-DIRECTION">&gt;  </span><span class="cm-NAME">Player </span><span class="cm-BRACKET">| </span><span class="cm-DIRECTION">&gt; </span><span class="cm-NAME">Crate  </span><span class="cm-BRACKET">] </span></pre></div><div style="position: relative;"><div style="position: absolute; left: -29px;"><div class="CodeMirror-linenumber CodeMirror-gutter-elt" style="left: 0px; width: 20px;">50</div></div><pre><span class="cm-BRACKET">+ </span><span class="cm-DIRECTION">rigid vertical </span><span class="cm-BRACKET">[ </span><span class="cm-DIRECTION">right </span><span class="cm-NAME">Crate </span><span class="cm-BRACKET">| </span><span class="cm-DIRECTION">stationary </span><span class="cm-NAME">Crate </span><span class="cm-BRACKET">] </span><span class="cm-ARROW">-&gt; </span><span class="cm-BRACKET">[ </span><span class="cm-DIRECTION">right </span><span class="cm-NAME">Crate </span><span class="cm-BRACKET">| </span><span class="cm-DIRECTION">right </span><span class="cm-NAME">Crate </span><span class="cm-BRACKET">]</span></pre></div><div style="position: relative;"><div style="position: absolute; left: -29px;"><div class="CodeMirror-linenumber CodeMirror-gutter-elt" style="left: 0px; width: 20px;">51</div></div><pre>&nbsp;</pre></div><div style="position: relative;"><div style="position: absolute; left: -29px;"><div class="CodeMirror-linenumber CodeMirror-gutter-elt" style="left: 0px; width: 20px;">52</div></div><pre><span class="cm-EQUALSBIT">==============</span></pre></div><div style="position: relative;"><div style="position: absolute; left: -29px;"><div class="CodeMirror-linenumber CodeMirror-gutter-elt" style="left: 0px; width: 20px;">53</div></div><pre><span class="cm-HEADER">WINCONDITION</span></pre></div><div style="position: relative;"><div style="position: absolute; left: -29px;"><div class="CodeMirror-linenumber CodeMirror-gutter-elt" style="left: 0px; width: 20px;">54</div></div><pre><span class="cm-EQUALSBIT">==============</span></pre></div><div style="position: relative;"><div style="position: absolute; left: -29px;"><div class="CodeMirror-linenumber CodeMirror-gutter-elt" style="left: 0px; width: 20px;">55</div></div><pre>&nbsp;</pre></div><div style="position: relative;"><div style="position: absolute; left: -29px;"><div class="CodeMirror-linenumber CodeMirror-gutter-elt" style="left: 0px; width: 20px;">56</div></div><pre><span class="cm-EQUALSBIT">=======</span> &nbsp; &nbsp; </pre></div><div style="position: relative;"><div style="position: absolute; left: -29px;"><div class="CodeMirror-linenumber CodeMirror-gutter-elt" style="left: 0px; width: 20px;">57</div></div><pre><span class="cm-HEADER">LEVELS</span></pre></div><div style="position: relative;"><div style="position: absolute; left: -29px;"><div class="CodeMirror-linenumber CodeMirror-gutter-elt" style="left: 0px; width: 20px;">58</div></div><pre><span class="cm-EQUALSBIT">=======</span></pre></div><div style="position: relative;"><div style="position: absolute; left: -29px;"><div class="CodeMirror-linenumber CodeMirror-gutter-elt" style="left: 0px; width: 20px;">59</div></div><pre>&nbsp;</pre></div><div style="position: relative;"><div style="position: absolute; left: -29px;"><div class="CodeMirror-linenumber CodeMirror-gutter-elt" style="left: 0px; width: 20px;">60</div></div><pre><span class="cm-LEVEL">.*.</span></pre></div><div class="CodeMirror-activeline" style="position: relative;"><div style="position: absolute; left: -29px;"><div class="CodeMirror-linenumber CodeMirror-gutter-elt" style="left: 0px; width: 20px;">61</div></div><div class="CodeMirror-activeline-background CodeMirror-linebackground"></div><pre><span class="cm-LEVEL">P*#</span></pre></div></div><div class="CodeMirror-cursor" style="left: 124px; top: 481px; height: 13px; display: none;">&nbsp;</div><div class="CodeMirror-cursor CodeMirror-secondarycursor" style="display: none;">&nbsp;</div></div></div></div></div><div style="position: absolute; height: 30px; width: 1px; top: 814px;"></div><div class="CodeMirror-gutters" style="height: 814px; left: 0px;"><div class="CodeMirror-gutter CodeMirror-linenumbers" style="width: 28px;"></div></div></div></div></form>
+</div>
+<div class="righttophalf">
+	<div class="uppertoolbar">
+	&nbsp;&nbsp;&nbsp;<h2>PuzzleScript Editor</h2> - <a id="runClickLink" href="javascript:void(0);">RUN</a> - <a id="rebuildClickLink" href="javascript:void(0);">REBUILD</a> - <a href="javascript:void(0);">EXPORT</a> - <a href="javascript:void(0)">LINK</a> &nbsp;&nbsp;
+	</div>
+	<div class="upperarea">
+	
+<canvas id="gameCanvas" width="638" height="299"></canvas>
+
+	</div>
+</div>
+<div class="rightbottomhalf">
+	<div class="lowertoolbar">
+<div id="soundbar">
+	&nbsp;<span class="soundbutton"><a id="clearConsoleClick" title="clears the console" href="javascript:void(0);"><img src="./Puzzle Script_files/clearConsole.gif" alt="clear console contents"></a></span>
+	&nbsp;&nbsp;&nbsp;
+	<span class="soundbutton"><a id="newsound0" title="collect item sound" href="javascript:void(0);"><img src="./Puzzle Script_files/audio1.gif" alt="collect item sound"></a></span>
+	<span class="soundbutton"><a id="newsound7" title="push sounds" href="javascript:void(0);"><img src="./Puzzle Script_files/audio2.gif" alt="push sounds"></a></span>
+	<span class="soundbutton"><a id="newsound2" title="explosion sound" href="javascript:void(0);"><img src="./Puzzle Script_files/audio3.gif" alt="explosion sound"></a></span>
+	<span class="soundbutton"><a id="newsound3" title="powerup sound" href="javascript:void(0);"><img src="./Puzzle Script_files/audio4.gif" alt="powerup sound"></a></span>
+	<span class="soundbutton"><a id="newsound9" title="bird tweet sound" href="javascript:void(0);"><img src="./Puzzle Script_files/audio5.gif" alt="bird tweet sound"></a></span>
+	<span class="soundbutton"><a id="newsound4" title="hurt sound" href="javascript:void(0);"><img src="./Puzzle Script_files/audio6.gif" alt="hurt sound"></a></span>
+	<span class="soundbutton"><a id="newsound5" title="jump sound" href="javascript:void(0);"><img src="./Puzzle Script_files/audio7.gif" alt="jump sound"></a></span>
+	<span class="soundbutton"><a id="newsound1" title="pew pew sound" href="javascript:void(0);"><img src="./Puzzle Script_files/audio8.gif" alt="pew pew pew"></a></span>
+	<span class="soundbutton"><a id="newsound6" title="selection sound" href="javascript:void(0);"><img src="./Puzzle Script_files/audio9.gif" alt="selection sound"></a></span>
+	<span class="soundbutton"><a id="newsound8" title="random sound" href="javascript:void(0);"><img src="./Puzzle Script_files/audio10.gif" alt="random sound"></a></span>
+	<form>
+	<input type="text" name="sounddat" id="sounddat">
+	<input id="soundButtonPress" name="clickMe" type="button" value="Play seed">
+	</form>
+</div>	</div>
+	<div class="lowerarea" id="lowerarea">
+<div id="consoletextarea">
+=================================<br>
+&nbsp;&nbsp;&nbsp;Puzzle Script Log V0.1<br>
+=================================<br>
+<br>=================================<br><span class="systemMessage">Successful Compilation, generated 20 instructions.</span><br>=================================<br><span class="systemMessage">Successful Compilation, generated 3 instructions.</span><br>=================================<br><span class="systemMessage">Successful live recompilation, generated 3 instructions.</span></div>
+	</div>
+</div>
+
+
+<script src="./Puzzle Script_files/debug.js"></script>
+<script src="./Puzzle Script_files/globalVariables.js"></script>
+<script src="./Puzzle Script_files/font.js"></script>
+<script src="./Puzzle Script_files/rng.js"></script>
+<script src="./Puzzle Script_files/riffwave.js"></script>
+<script src="./Puzzle Script_files/sfxr.js"></script>
+<script src="./Puzzle Script_files/codemirror.js"></script>
+<script src="./Puzzle Script_files/active-line.js"></script>
+<script src="./Puzzle Script_files/colors.js"></script>
+<script src="./Puzzle Script_files/graphics.js"></script>
+<script src="./Puzzle Script_files/inputoutput.js"></script>
+<script src="./Puzzle Script_files/engine.js"></script>
+<script src="./Puzzle Script_files/parser.js"></script>
+<script src="./Puzzle Script_files/editor.js"></script>
+<script src="./Puzzle Script_files/compiler.js"></script>
+<script src="./Puzzle Script_files/console.js"></script>
+<script src="./Puzzle Script_files/soundbar.js"></script>
+<script src="./Puzzle Script_files/toolbar.js"></script>
+<script src="./Puzzle Script_files/addlisteners.js"></script>
+<script src="./Puzzle Script_files/addlisteners_editor.js"></script>
+
+
+
+</body></html>

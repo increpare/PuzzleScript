@@ -1,0 +1,86 @@
+(
+Simple block pushing example, simplified
+)
+
+========
+OBJECTS
+========
+
+Background
+gray
+
+Target 
+YELLOW
+
+Player 
+PINK     
+
+BigCrate
+RED
+
+Wall     
+BROWN DARKBROWN     
+
+SmallCrate
+Pink
+.....
+.000.
+.000.
+.000.
+.....
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Player
+* = BigCrate
+s = SmallCrate
+crate = smallcrate or bigcrate
+O = Target
+
+=========
+SOUNDS
+=========
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Target
+Player, Wall, Crate
+
+======
+RULES     
+======     
+
+[ >  Player | Crate ] -> [  >  Player | > Crate  ] 
++ [ > smallcrate | Crate ] -> [ > smallcrate | > Crate ]
++ [ > bigcrate | smallcrate ] -> [> bigcrate | > smallcrate ]
++ rigid [ moving BigCrate | BigCrate ] -> [ moving BigCrate | moving BigCrate ]
+
+==============
+WINCONDITION
+==============
+
+=======     
+LEVELS
+=======
+
+...............
+....*..........
+....*..........
+..s............
+..s..***.......
+.....*.........
+..P..**#.......
+.....*.........
+...s...........
+...s...........
+...............
+...............
+...............
+

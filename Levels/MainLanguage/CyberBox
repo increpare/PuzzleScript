@@ -1,0 +1,235 @@
+========
+OBJECTS
+========
+
+Background
+Black
+
+Target 
+black
+
+Player 
+PINK     
+.000.
+0.0.0
+00000
+00000
+.0.0.
+
+Crate
+lightGreen
+00000
+00.00
+0...0
+00.00
+00000
+
+HCrate
+blue
+00000
+00000
+0...0
+00000
+00000
+
+VCrate
+yellow
+00000
+00.00
+00.00
+00.00
+00000
+
+Sticky
+Orange
+.0.0.
+00000
+.000.
+00000
+.0.0.
+
+Wall     
+maroon
+000.0
+.....
+0.000
+.....
+000.0
+.....
+
+UDiode
+pink
+..0..
+.0.0.
+0.0.0
+.000.
+00000
+
+DDiode
+pink
+00000
+.000.
+0.0.0
+.0.0.
+..0..
+
+
+LDiode
+pink
+..0.0
+.0.00
+0.000
+.0.00
+..0.0
+
+RDiode
+pink
+0.0..
+00.0.
+000.0
+00.0.
+0.0..
+
+upusher
+green
+..0..
+..0..
+.000.
+.000.
+00000
+
+dpusher
+green
+00000
+.000.
+.000.
+..0..
+..0..
+
+rpusher
+green
+0....
+000..
+00000
+000..
+0....
+
+lpusher 
+green
+....0
+..000
+00000
+..000
+....0
+
+indirectCrate
+yellow
+0...0
+.0.0.
+..0..
+.0.0.
+0...0
+
+=========
+SOUNDS
+=========
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Target
+Player, Wall, Crate, HCrate, VCrate, sticky, udiode, ddiode, ldiode, rdiode,upusher,dpusher,lpusher,rpusher,indirectCrate
+
+=======
+LEGEND
+=======
+
+Mover = player or crate or hcrate or vcrate or sticky or indirectcrate or upusher or dpusher or lpusher or rpusher
+obstacle = player or crate or hcrate or vcrate or sticky or udiode or ddiode or ldiode or rdiode or upusher or dpusher or lpusher or rpusher or indirectcrate
+hpushable = HCrate or Crate or indirectcrate
+vpushable = VCrate or Crate or indirectcrate
+. = Background
+# = Wall
+P = Player
+c = Crate
+x = hcrate
+y = vcrate
+e = Target
+o = indirectcrate
+
+i = udiode
+j = ldiode
+k = ddiode
+l = rdiode
+
+t = upusher
+g = dpusher
+f = lpusher
+h = rpusher
+
+======
+RULES     
+======     
+
+[ > player  | indirectCrate ] -> [ player | indirectCrate ]
+Horizontal [ >  Mover | HPushable ] -> [  >  Mover | > HPushable  ]     
+Vertical [ >  Mover | VPushable ] -> [  >  Mover | > VPushable  ]     
+[ <  Mover | Sticky ] -> [  <  Mover | < Sticky  ]     
+
+up [ > player |  udiode | no obstacle ] -> [ | udiode | player ]
+down [ > player |  ddiode | no obstacle ] -> [ | ddiode | player ]
+left [ > player |  ldiode | no obstacle ] -> [ | ldiode | player ]
+right [ > player |  rdiode | no obstacle ] -> [ | rdiode | player ] 
+
+
+late [ lpusher ] -> [ left lpusher ]
+late [ rpusher ] -> [ right rpusher ]
+late [ upusher ] -> [ up upusher ]
+late [ dpusher ] -> [ down dpusher ]
+
+==============
+WINCONDITIONS
+==============
+
+=======     
+LEVELS
+=======
+
+.#######t#######.
+#....#.....#....#
+#.....xyxyx.....#
+#y.....c.c.....y#
+#y.#..#.y.#..#.y#
+#....k.....j....#
+#.#.#.x.c.x.#.#.#
+#....i.....l....#
+#y.#..#.y.#..#.y#
+#y.............y#
+#....xx.p.xx....#
+.###############.
+
+##################
+#................#
+#................#
+#................#
+#...........yf...#
+#...p............#
+#................#
+#...........yf...#
+#................#
+##################
+
+.#######e#######.
+#......ooo......#
+#........####...#
+#.....###...j...#
+######.....##...#
+#......####..#.##
+#..#....x....j..#
+##.######.#.#...#
+#.....c.j.#.#...#
+#......##.....x.#
+#.......p#..##t##
+.###############.

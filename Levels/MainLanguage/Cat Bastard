@@ -1,0 +1,100 @@
+(
+Simple block pushing example, elaborate
+)
+
+========
+OBJECTS
+========
+
+background 
+gray
+
+wall 
+black
+
+
+Player 
+white     
+.0.0.
+00000
+00000
+.000.
+.0.0.
+
+Crate
+white black
+.....
+.000.
+.000.
+.000.
+.....
+
+
+CrateSpoken
+white black
+00000
+0.0.0
+00000
+0...0
+00000
+
+=======
+LEGEND
+=======
+
+pushable = crate or cratespoken or player
+. = Background
+# = Wall
+P = Player
+C = Crate
+
+=======
+SOUNDS
+=======
+
+Crate MOVE 3018293 
+START 3124523     
+FINISH 4123141
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Player, Wall, Crate, cratespoken
+
+======
+RULES     
+======     
+
+[ >  pushable | pushable ] -> [  >  pushable | > CrateSpoken  ]     
+
+==============
+WINCONDITION
+==============
+
+No Crate    
+
+=======     
+LEVELS
+=======
+
+#########
+#.......#
+#.......#
+#.P..C..#
+#.......#
+#.......#
+#########
+
+############
+#C.........#
+###C##.....#
+###..##....#
+#..#.#.....#
+#.C.P.C....#
+#..#.#.....#
+###..##....#
+###C##.....#
+#C.........#
+############

@@ -1,0 +1,137 @@
+require_player_movement
+
+
+(need to use the method of shadows -
+	if an uncharged block ends up not over a shadow, cancel the turn)
+    
+(
+Simple block pushing example, elaborate
+)
+
+========
+OBJECTS
+========
+
+Background 
+DarkBlue
+
+
+Target 
+purple
+
+Wall     
+Gray
+
+Player 
+LightGray  orange black blue
+.222.
+.111.
+00000
+10001
+.3.3.
+
+Crate
+green
+..0..
+.000.
+00000
+.000.
+..0..
+
+ChargedCrate
+yellow green
+..0..
+.010.
+01110
+.010.
+..0..
+
+
+playershadow
+black
+
+crateshadow
+black
+
+=======
+LEGEND
+=======
+
+Pushable = Crate or Player 
+AnyCrate = Crate or ChargedCrate
+. = Background
+# = Wall
+P = Player
+* = Crate
+@ = Crate and Target
+C = Crate
+O = Target
+
+
+=======
+SOUNDS
+=======
+
+Crate MOVE 3018293 
+START 3124523     
+FINISH 4123141
+
+================
+COLLISIONLAYERS
+================
+
+playershadow, crateshadow
+Background
+Target
+Player, Wall, Crate, ChargedCrate
+
+======
+RULES     
+======     
+
+[ ChargedCrate ] -> [ Crate ]
+
+[ Player ] -> [ Player PlayerShadow ]
+[ Crate ] -> [ Crate CrateShadow ]
+
+[ UP Pushable | Pushable ] -> [ UP Pushable | UP Pushable  ]     
+[ DOWN Pushable | Pushable ] -> [ DOWN Pushable | DOWN Pushable ]
+[ LEFT Pushable | Pushable ] -> [ LEFT Pushable | LEFT Pushable ]
+[ RIGHT Pushable | Pushable ] -> [ RIGHT Pushable | RIGHT Pushable ]
+
+late [ Player PlayerShadow ] [ Crate ] -> [ Player PlayerShadow ] []
+late [ Player PlayerShadow ] [ CrateShadow ] -> [ Player PlayerShadow ] [ Crate ]
+late [ CrateShadow ] -> []
+late [ PlayerShadow ] -> []
+
+late [ Crate | Player ] -> [ ChargedCrate | Player ]
+late [ ChargedCrate | Crate ] -> [ChargedCrate | ChargedCrate ]
+
+
+==============
+WINCONDITION
+==============
+
+All AnyCrate on target
+
+=======     
+LEVELS
+=======
+
+##########
+####P#####
+#..OOO...#
+#..#.#...#
+#..*.*...#
+#..#.#...#
+#...*....#
+#........#
+##########
+
+########
+#*..P.*#
+#..O...#
+##O.O.##
+#..O...#
+#*.#..*#
+########

@@ -1,0 +1,61 @@
+
+    	html, body {
+    		height: 100%;
+    		width:100%;
+    		margin: 0;
+    	}
+
+.leftpanel {
+	position:absolute;
+	left:0px;
+	top:0px;
+	bottom:0px;
+	height:100%;
+	width:50%;
+}
+.righttophalf {
+    	position:absolute;
+    	left:50%;
+	right:0px;
+	top:0px;
+	height:50%;
+	width:50%;
+}
+.rightbottomhalf {
+    	position:absolute;
+	right:0px;
+	top:50%;
+	height:50%;
+	width:50%;
+}
+
+.uppertoolbar {
+	display:block;
+	left:2px;
+	right:0;
+	height:30px;
+}
+.upperarea{
+	position:absolute;
+	top:30px;
+	bottom:0px;
+	left:2px;
+	right:0;
+}
+
+.lowertoolbar {
+	display:block;
+	left:2px;
+	right:0px;
+	height:20px;
+}
+.lowerarea{
+	color:gray;
+	background-color:#0F192A;
+	position:absolute;
+	top:20px;
+	bottom:0px;
+	left:2px;
+	right:0;
+	overflow:auto;	
+}

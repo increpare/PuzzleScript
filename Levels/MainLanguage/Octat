@@ -1,0 +1,146 @@
+(
+Simple block pushing example, simplified
+)
+
+========
+OBJECTS
+========
+
+Background
+maroon
+.....
+.000.
+.000.
+.000.
+.....
+
+activetile
+pink red
+00000
+0...0
+0...0
+0...0
+00000
+
+Target 
+RED
+0...0
+.0.0.
+..0..
+.0.0.
+0...0
+
+Player 
+white
+.....
+.000.
+.000.
+.000.
+.....
+
+tplayer
+black
+
+oldplayer
+black
+
+Crate
+RED
+
+Wall     
+black
+
+=========
+SOUNDS
+=========
+
+================
+COLLISIONLAYERS
+================
+
+Background
+activetile
+player
+tplayer,wall
+oldplayer
+Target
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Player and activetile
+a = activetile
+x = Target
+y = target and activetile
+
+======
+RULES     
+======     
+
+[> player ] -> [ > player oldplayer ]
+[> player | no activetile ] -> [player|]
+
+late [player wall] -> [wall]
+late [ player] -> [ tplayer ]
+late up [ tplayer  no oldplayer| activetile ] -> [player|]
+late up [ tplayer  no oldplayer| no activetile ] -> [player|activetile]
+late [ tplayer ] -> [player]
+
+late [ player ] -> [ tplayer ]
+late down [ tplayer  no oldplayer| activetile ] -> [player|]
+late down [ tplayer  no oldplayer| no activetile ] -> [player|activetile]
+late [ tplayer ] -> [player]
+
+late [ player ] -> [ tplayer ]
+late left [ tplayer  no oldplayer| activetile ] -> [player|]
+late left [ tplayer  no oldplayer| no activetile ] -> [player|activetile]
+late [ tplayer ] -> [player]
+
+late [ player ] -> [ tplayer ]
+late right [ tplayer  no oldplayer| activetile ] -> [player|]
+late right [ tplayer  no oldplayer| no activetile ] -> [player|activetile]
+late [ tplayer ] -> [player]
+
+[oldplayer ] ->[]
+
+==============
+WINCONDITIONS
+==============
+
+=======     
+LEVELS
+=======
+
+############
+#..........#
+#..........#
+#..........#
+#..........#
+#..........#
+#.x...ap...#
+#..........#
+#..........#
+#..........#
+#..........#
+############
+
+
+
+
+#############
+#...........#
+#...........#
+#...a.......#
+#..a.a......#
+#.a.a.a.....#
+#a.aya.a.ap.#
+#.a.a.a.....#
+#..a.a......#
+#...a.......#
+#...........#
+#############
+
+

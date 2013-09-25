@@ -1,0 +1,124 @@
+(
+Simple block pushing example, simplified
+)
+
+========
+OBJECTS
+========
+
+
+Background
+Black
+
+ScreenBorder
+Black
+
+MoveGuide1
+magenta
+MoveGuide2
+magenta
+
+Player1
+Green     
+
+Player2
+Green
+
+PlayerTemp
+Green
+
+Worm
+RED
+
+Wall     
+BROWN DARKBROWN     
+
+=======
+LEGEND
+=======
+MoveGuide = MoveGuide1 or MoveGuide2
+Obs = MoveGuide or ScreenBorder
+
+Player = Player1 or Player2 or PlayerTemp
+. = Background
+# = Wall
+P = Player1
+W = Worm
+1 = ScreenBorder
+
+=========
+SOUNDS
+=========
+
+================
+COLLISIONLAYERS
+================
+
+Background
+MoveGuide
+Player, Wall, Worm, ScreenBorder
+
+======
+RULES     
+======     
+
+
+UP [ Player1 |  No Obs] -> [ Player1 |  DOWN MoveGuide1 ]
+RIGHT [ Player1 |  No Obs] -> [ Player1 | LEFT MoveGuide1 ]
+DOWN [ Player1 |  No Obs] -> [ Player1 | UP MoveGuide1 ]
+LEFT [ Player1 |  No Obs] -> [ Player1 | RIGHT MoveGuide1 ]
+
+UP [ Player2 |  No Obs] -> [ Player2 |  DOWN MoveGuide2 ]
+RIGHT [ Player2 |  No Obs] -> [ Player2 | LEFT MoveGuide2 ]
+DOWN [ Player2 |  No Obs] -> [ Player2 | UP MoveGuide2 ]
+LEFT [ Player2 |  No Obs] -> [ Player2 | RIGHT MoveGuide2 ]
+
+(propagate moveguides in four directions)
+[ < MoveGuide | No Obs ] -> [ < MoveGuide | < MoveGuide ]
+
+VERTICAL [ LEFT MoveGuide1 |  No Obs ] -> [ LEFT MoveGuide1 | LEFT MoveGuide1 ]
+VERTICAL [ RIGHT MoveGuide1 |  No Obs ] -> [ RIGHT MoveGuide1 | RIGHT MoveGuide1 ]
+
+HORIZONTAL [ UP MoveGuide2 |  No Obs ] -> [ UP MoveGuide2 | UP MoveGuide2 ]
+HORIZONTAL [ DOWN MoveGuide2 |  No Obs ] -> [ DOWN MoveGuide2 | DOWN MoveGuide2 ]
+
+
+( INSERT ENEMY MOVEMENT LOGIC HERE )
+[ > MoveGuide Worm  ] -> [ > MoveGuide > Worm ]
+ 
+ 
+[ > MoveGuide ] -> [ ]
+Late [ Player1 ] -> [ PlayerTemp ]
+Late [ Player2 ] -> [ Player1 ]
+Late [ PlayerTemp] -> [ Player2 ]
+
+==============
+WINCONDITION
+==============
+
+=======     
+LEVELS
+=======
+
+1111111111111111111111111111111111
+1################################1
+1#...........#..................#1
+1#...........#..................#1
+1#...........#..................#1
+1#...........#..................#1
+1#...........#.........W........#1
+1#...........#..................#1
+1#...........#....#.............#1
+1#...........#....#.............#1
+1#...........#....#.............#1
+1#................######........#1
+1#..............................#1
+1#....P...............###########1
+1#..............................#1
+1#..............................#1
+1#..............................#1
+1#..............................#1
+1#..............................#1
+1#..............................#1
+1################################1
+1111111111111111111111111111111111

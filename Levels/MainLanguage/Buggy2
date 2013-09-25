@@ -1,0 +1,71 @@
+(
+Simple block pushing example, simplified
+)
+
+========
+OBJECTS
+========
+
+(temporary objects, for programming)
+
+MoveGuide
+pink
+
+Background
+darkgray
+
+
+Player P
+RED BLACK white
+.2.2.
+.000.
+01110
+00100
+00100
+
+
+=======
+LEGEND
+=======
+. = Background
+
+=========
+SOUNDS
+=========
+
+================
+COLLISIONLAYERS
+================
+
+Background
+MoveGuide
+Player
+
+======
+RULES     
+======     
+
+(movement manager code begin)
+
+(seed move guides)
+UP  [Player | ... |] ->  [ Player | ... | DOWN MoveGuide ]
+LEFT  [Player | ... |] ->  [ Player | ... |RIGHT MoveGuide ]
+
+
+VERTICAL [ Horizontal MoveGuide |  ] -> [ Horizontal MoveGuide | Horizontal MoveGuide ]
+
+
+
+==============
+WINCONDITION
+==============
+
+
+=======     
+LEVELS
+=======
+
+....
+....
+....
+...p

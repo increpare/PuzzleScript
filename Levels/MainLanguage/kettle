@@ -1,0 +1,163 @@
+(
+Simple block pushing example, simplified
+)
+
+========
+OBJECTS
+========
+
+Background
+gray
+
+Target 
+yellow 
+00000
+0...0
+0...0
+0...0
+00000
+
+
+UPolice
+black 
+.000.  
+.000.
+00000
+.000.
+.0.0.
+
+DPolice
+black 
+.000.  
+.000.
+00000
+.000.
+.0.0.
+
+LPolice
+black 
+.000.  
+.000.
+00000
+.000.
+.0.0.
+
+RPolice
+black 
+.000.  
+.000.
+00000
+.000.
+.0.0.
+
+Crate
+pink
+..0..
+00000
+..0..
+.000.
+.0.0.
+
+wall 
+black
+
+=========
+SOUNDS
+=========
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Target
+upolice, dpolice, lpolice, rpolice, Crate, wall
+
+=======
+LEGEND
+=======
+
+. = Background
+player = upolice or dpolice or lpolice or rpolice
+i = upolice
+k = dpolice
+j = lpolice
+l = rpolice
+c = Crate
+@ = Crate and Target
+t = Target
+# = wall
+
+======
+RULES     
+======     
+
+[ up rpolice] -> [rpolice]
+[ down rpolice] -> [rpolice]
+[ left rpolice] -> [rpolice]
+
+[ down upolice] -> [upolice]
+[ left upolice] -> [upolice]
+[ right upolice] -> [upolice]
+
+[ up lpolice] -> [lpolice]
+[ down lpolice] -> [lpolice]
+[ right lpolice] -> [lpolice]
+
+[ up dpolice] -> [dpolice]
+[ left dpolice] -> [dpolice]
+[ right dpolice] -> [dpolice]
+
+[ >  Player | Crate ] -> [  >  Player | > Crate  ]     
+[ >  crate | Crate ] -> [  >  crate | > Crate  ]     
+
+==============
+WINCONDITIONS
+==============
+
+=======     
+LEVELS
+=======
+
+###############
+#.............#
+#.............#
+#.....kkkk....#
+#....l..ccj...#
+#....l.tt.j...#
+#....l.tt.j...#
+#....lc..cj...#
+#.....iiii....#
+#.............#
+#.............#
+#.............#
+###############
+
+###############
+#.............#
+#.............#
+#.....kkkk....#
+#....lt@tcj...#
+#....l@t@.j...#
+#....l@ttcj...#
+#....lcc.cj...#
+#.....iiii....#
+#.............#
+#.............#
+#.............#
+###############
+
+###############
+#.............#
+#.............#
+#...kkkkkk....#
+#..lcc.c.cj...#
+#..lctt@t.j...#
+#..lctt@@cj...#
+#..l.tttt.j...#
+#..l.@@tt.j...#
+#..lccc..cj...#
+#...iiiiii....#
+#.............#
+#.............#
+###############

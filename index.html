@@ -1,0 +1,161 @@
+<!doctype html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html;charset=utf-8" >
+    <title>Puzzle Script</title>
+<link rel="stylesheet" href="css/docs.css">
+<link rel="stylesheet" href="css/codemirror.css">
+<link rel="stylesheet" href="css/midnight.css">
+<link rel="stylesheet" href="css/console.css">
+<link rel="stylesheet" href="css/gamecanvas.css">
+<link rel="stylesheet" href="css/soundbar.css">
+<link rel="stylesheet" href="css/layout.css">
+<link rel="stylesheet" href="css/toolbar.css">
+
+</head>
+<body>
+<div class="leftpanel">
+<form id="form1" name="form1"  action="javascript:void(0);"><textarea id="code" name="code" rows="20" cols="20">
+(
+Simple block pushing example, simplified
+)
+
+========
+OBJECTS
+========
+
+Background
+gray
+
+Target 
+YELLOW
+
+Player 
+PINK     
+
+Crate
+RED
+
+Wall     
+BROWN DARKBROWN     
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Player
+* = Crate
+@ = Crate and Target
+O = Target
+
+=========
+SOUNDS
+=========
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Target
+Player, Wall, Crate
+
+======
+RULES     
+======     
+
+[ >  Player | Crate ] -> [  >  Player | > Crate  ] 
++ rigid [ moving Crate | Crate ] -> [ moving Crate | moving Crate ]
+
+==============
+WINCONDITION
+==============
+
+=======     
+LEVELS
+=======
+
+...............
+....*..........
+....*..........
+...............
+.....***.......
+.....*.........
+..P..**#.......
+.....*.........
+...............
+...............
+...............
+...............
+...............
+
+</textarea></form>
+</div>
+<div class="righttophalf">
+	<div class="uppertoolbar">
+	&nbsp;&nbsp;&nbsp;<h2>PuzzleScript Editor</h2> - <a id="runClickLink" href="javascript:void(0);">RUN</a> - <a id="rebuildClickLink" href="javascript:void(0);">REBUILD</a> - <a href="javascript:void(0);">EXPORT</a> - <a href="javascript:void(0)">LINK</a> &nbsp;&nbsp;
+	</div>
+	<div class="upperarea">
+	
+<canvas 
+    id="gameCanvas" 
+></canvas>
+
+	</div>
+</div>
+<div class="rightbottomhalf">
+	<div class="lowertoolbar">
+<div id="soundbar">
+	&nbsp;<span class="soundbutton"><a id="clearConsoleClick" title="clears the console" href="javascript:void(0);"><img src="icons/clearConsole.gif" alt="clear console contents"></a></span>
+	&nbsp;&nbsp;&nbsp;
+	<span class="soundbutton"><a id="newsound0" title="collect item sound" href="javascript:void(0);"><img src="icons/audio1.gif"  alt="collect item sound"></a></span>
+	<span class="soundbutton"><a  id="newsound7" title="push sounds" href="javascript:void(0);" ><img src="icons/audio2.gif" alt="push sounds"></a></span>
+	<span class="soundbutton"><a id="newsound2" title="explosion sound" href="javascript:void(0);" ><img src="icons/audio3.gif" alt="explosion sound"></a></span>
+	<span class="soundbutton"><a id="newsound3" title="powerup sound" href="javascript:void(0);" ><img src="icons/audio4.gif" alt="powerup sound"></a></span>
+	<span class="soundbutton"><a id="newsound9" title="bird tweet sound" href="javascript:void(0);"><img src="icons/audio5.gif"  alt="bird tweet sound"></a></span>
+	<span class="soundbutton"><a id="newsound4" title="hurt sound" href="javascript:void(0);" ><img src="icons/audio6.gif" alt="hurt sound"></a></span>
+	<span class="soundbutton"><a id="newsound5" title="jump sound" href="javascript:void(0);"><img src="icons/audio7.gif"  alt="jump sound"></a></span>
+	<span class="soundbutton"><a id="newsound1" title="pew pew sound" href="javascript:void(0);"><img src="icons/audio8.gif"  alt="pew pew pew"></a></span>
+	<span class="soundbutton"><a id="newsound6" title="selection sound" href="javascript:void(0);"><img src="icons/audio9.gif"  alt="selection sound"></a></span>
+	<span class="soundbutton"><a id="newsound8" title="random sound" href="javascript:void(0);"><img src="icons/audio10.gif"  alt="random sound"></a></span>
+	<form>
+	<input type="text" name="sounddat" id="sounddat">
+	<input id="soundButtonPress" name="clickMe" type="button" value="Play seed"  />
+	</form>
+</div>	</div>
+	<div class="lowerarea" id="lowerarea">
+<div id = "consoletextarea" >
+=================================<br>
+&nbsp;&nbsp;&nbsp;Puzzle Script Log V0.1<br>
+=================================<br>
+</div>
+	</div>
+</div>
+
+
+<script src="js/debug.js"></script>
+<script src="js/globalVariables.js"></script>
+<script src="js/font.js"></script>
+<script src="js/rng.js"></script>
+<script src="js/riffwave.js"></script>
+<script src="js/sfxr.js"></script>
+<script src="js/codemirror.js"></script>
+<script src="js/active-line.js"></script>
+<script src="js/colors.js"></script>
+<script src="js/graphics.js"></script>
+<script src="js/inputoutput.js"></script>
+<script src="js/engine.js"></script>
+<script src="js/parser.js"></script>
+<script src="js/editor.js"></script>
+<script src="js/compiler.js"></script>
+<script src="js/console.js"></script>
+<script src="js/soundbar.js"></script>
+<script src="js/toolbar.js"></script>
+<script src="js/addlisteners.js"></script>
+<script src="js/addlisteners_editor.js"></script>
+
+
+</body>
+</html>

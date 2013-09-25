@@ -1,0 +1,84 @@
+(
+Simple block pushing example, simplified
+)
+color_palette famicom
+========
+OBJECTS
+========
+
+Background
+gray
+
+Target 
+YELLOW
+
+Player 
+PINK     
+
+CrateSpawn
+Purple
+
+CrateSpawn2
+Green
+
+BlueCrate
+BLUE
+
+RedCrate
+RED
+
+Wall     
+BROWN DARKBROWN     
+
+=======
+LEGEND
+=======
+
+. = Background
+P = Player
+Crate = RedCrate or BlueCrate
+O = Target
+* = CrateSpawn
+# = CrateSpawn2
+
+=========
+SOUNDS
+=========
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Target, CrateSpawn, CrateSpawn2
+Player, Wall, Crate
+
+======
+RULES     
+======     
+
+[ CrateSpawn ] -> [ Random RedCrate ]
+[ CrateSpawn2 ] -> [ RedCrate ]
+
+==============
+WINCONDITION
+==============
+
+=======     
+LEVELS
+=======
+
+...............
+...............
+...............
+...............
+......#........
+...............
+..P...*........
+...............
+...............
+...............
+...............
+...............
+...............
+

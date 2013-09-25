@@ -1,0 +1,65 @@
+title neko puzzle
+author lexaloffle
+homepage www.lexaloffle.com
+debug
+========
+OBJECTS
+========
+
+Background
+Black
+
+Fruit 
+YELLOW
+
+Player 
+Gray White
+.1.1.
+10101
+11111
+.111.
+00.00
+
+=======
+LEGEND
+=======
+
+. = Background
+P = Player
+# = Fruit
+
+=========
+SOUNDS
+=========
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Player, Fruit
+
+======
+RULES     
+======     
+
+[ > Player | ... | Fruit ] -> [ | ... | Player ]
+[ > Player ] -> [ Player]
+
+==============
+WINCONDITION
+==============
+No fruit
+
+=======     
+LEVELS
+=======
+......#...
+..........
+....#.....
+..#...#...
+..........
+....#....#
+..........
+#.P...#..#
+

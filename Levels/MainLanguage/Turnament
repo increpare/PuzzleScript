@@ -1,0 +1,165 @@
+(
+Simple block pushing example, simplified
+)
+
+========
+OBJECTS
+========
+
+(temporary objects, for programming)
+
+Temp
+black
+
+MoveState1
+pink
+MoveState2
+pink
+
+MoveGuide1
+pink
+
+MoveGuide2
+pink
+
+(game objects)
+
+Background
+darkgray
+
+Target 
+lightblue
+00000
+0...0
+0...0
+0...0
+00000
+
+Player P
+RED BLACK white
+.2.2.
+.000.
+01110
+00100
+00100
+
+Wall     
+BLUE PURPLE
+00010
+11111
+01000
+11111
+00010
+
+Vase V
+Pink White
+00000
+.000.
+00000
+11111
+00000
+
+Slime_Primed S
+green lightgreen
+..1..
+.101.
+10001
+10001
+.111.
+
+Slime_Tired
+green lightgreen
+.....
+..1..
+11011
+.111.
+.....
+
+
+=======
+LEGEND
+=======
+MoveState = MoveState1 or MoveState2
+U = MoveState1
+MoveGuide = MoveGuide1 or MoveGuide2
+Slime = Slime_Primed or Slime_Tired
+Entity = Vase or Player or Slime or Temp
+. = Background
+# = Wall
+T = Target
+
+=========
+SOUNDS
+=========
+
+================
+COLLISIONLAYERS
+================
+
+MoveState
+MoveGuide
+Background
+Target
+Wall, Entity
+
+======
+RULES     
+======     
+
+(movement manager code begin)
+
+(seed move guides)
+UP [MoveState1] [Player | ... |] -> [MoveState1] [ Player | ... | DOWN MoveGuide1 ]
+RIGHT [MoveState1] [Player | ... | ] -> [MoveState1] [ Player | ... |LEFT MoveGuide1 ]
+DOWN [MoveState1] [Player | ... |] -> [MoveState1] [ Player | ... |UP MoveGuide1 ]
+LEFT [MoveState1] [Player | ... |] -> [MoveState1] [ Player | ... |RIGHT MoveGuide1 ]
+
+UP [MoveState2] [Player | ... |] -> [MoveState1] [ Player | ... |DOWN MoveGuide2 ]
+RIGHT [MoveState2] [Player | ... |] -> [MoveState1] [ Player | ... |LEFT MoveGuide2 ]
+DOWN [MoveState2] [Player | ... |] -> [MoveState1] [ Player | ... |UP MoveGuide2 ]
+LEFT [MoveState2] [Player | ... |] -> [MoveState1] [ Player | ... |RIGHT MoveGuide2 ]
+
+VERTICAL [ Horizontal MoveGuide1 |  ] -> [ Horizontal MoveGuide1 | Horizontal MoveGuide1 ]
+Horizontal [ Vertical MoveGuide2 |  ] -> [ Vertical MoveGuide2 | Vertical MoveGuide2 ]
+
+late [MoveState1] -> [Temp]
+late [MoveState2] -> [MoveGuide1]
+late [Temp]->[MoveState1]
+late [MoveGuide] -> []
+(movement manager code end)
+
+[ > Player | Vase ] -> [ Player | ]
+
+[ > MoveGuide Slime_Primed  ] -> [ > MoveGuide > Slime_Primed ]
+
+
+late [ Slime_Tired ] -> [ Temp ]
+late [ Slime_Primed ] -> [ Slime_Tired ]
+late [ Temp ] -> [ Slime_Primed ]
+
+
+
+==============
+WINCONDITION
+==============
+
+Some Player on Target
+
+=======     
+LEVELS
+=======
+
+U.........................
+..#####....#######........
+..#...######V...V#........
+..#.P.V..........#........
+..#...######V...V#........
+..#####....###.###........
+.............#.#..........
+.............#.#...#######
+............##.###.#..V..#
+............#..VV###..V..#
+............#..VV.....#S..
+............#..VV###..V..#
+............######.#..V..#
+...................#######

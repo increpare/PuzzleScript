@@ -1,0 +1,100 @@
+(
+Simple block pushing example, elaborate
+)
+
+========
+OBJECTS
+========
+
+Background 
+LIGHTGREEN GREEN
+.....
+0....
+...0.
+.....     
+.0...   
+
+
+Target 
+YELLOW
+..... 
+..0..
+.000.
+..0..
+.....     
+
+Wall     
+BROWN DARKBROWN     
+000.0
+.....
+0.000
+.....
+000.0
+
+Player 
+PINK     
+..0..
+00000
+..0..
+.000.
+.0.0.
+
+Crate
+RED
+00000
+0...0
+0...0
+0...0
+00000
+
+
+=======
+SOUNDS
+=======
+
+Crate MOVE 3018293 
+START 3124523     
+FINISH 4123141
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Target
+Player, Wall, Crate
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Player
+* = Crate
+@ = Crate and Target
+O = Target
+
+======
+RULES     
+======     
+
+[ >  Player | Crate ] -> [  >  Player | > Crate  ]     
+
+==============
+WINCONDITIONS
+==============
+
+All Target on Crate     
+
+=======     
+LEVELS
+=======
+
+#########
+#.......#
+#.....@.#
+#.P.*.O.#
+#.......#
+#.......#
+#########
