@@ -401,6 +401,21 @@ function processRuleString(line, state, lineNumber,curRules)
 	var rigid = false;
 	var groupNumber=lineNumber;
 
+
+	if (tokens.length===2) {
+		if (tokens[0]==="["&&tokens[1]==="[" ) {
+			rule_line = {
+				bracket: 1
+			}
+			return rule_line;
+		} else if (tokens[0]==="]"&&tokens[1]==="]" ) {
+			rule_line = {
+				bracket: -1
+			}
+			return rule_line;
+		}
+	}
+
 	if (tokens.indexOf('->') == -1) {
 		logError("A rule has to have an arrow in it.  There's no arrow here! Consider reading up about rules - you're clearly doing something weird", lineNumber);
 	}
@@ -559,10 +574,17 @@ function rulesToArray(state) {
 
 	var oldrules = state.rules;
 	var rules = [];
+	var loops=[];
 	for (var i = 0; i < oldrules.length; i++) {
-		var newrule = processRuleString(oldrules[i][0], state, oldrules[i][1],rules);
+		var lineNumber = oldrules[i][1];
+		var newrule = processRuleString(oldrules[i][0], state, lineNumber,rules);
+		if (newrule.bracket!==undefined) {
+			loops.push([lineNumber,newrule.bracket]);
+			continue;
+		}
 		rules.push(newrule);
 	}
+	state.loops=loops;
 
 	//now expand out rules with multiple directions
 	var rules2 = [];
@@ -1330,6 +1352,7 @@ function arrangeRulesByGroupNumber(state) {
 function generateRigidGroupList(state) {
 	var rigidGroupIndex_to_GroupIndex=[];
 	var groupIndex_to_RigidGroupIndex=[];
+	var groupNumber_to_GroupIndex=[];
 	var groupNumber_to_RigidGroupIndex=[];
 	var rigidGroups=[];
 	for (var i=0;i<state.rules.length;i++) {
@@ -1343,8 +1366,11 @@ function generateRigidGroupList(state) {
 		}
 		rigidGroups[i]=rigidFound;
 		if (rigidFound) {
-			groupNumber_to_RigidGroupIndex[ruleset[0][6]]=i;
-			groupIndex_to_RigidGroupIndex[i]=rigidGroupIndex_to_GroupIndex.length;
+			var groupNumber=ruleset[0][6];
+			groupNumber_to_GroupIndex[groupNumber]=i;
+			var rigid_group_index = rigidGroupIndex_to_GroupIndex.length;
+			groupIndex_to_RigidGroupIndex[i]=rigid_group_index;
+			groupNumber_to_RigidGroupIndex[groupNumber]=rigid_group_index;
 			rigidGroupIndex_to_GroupIndex.push(i);
 		}
 	}
@@ -1576,6 +1602,58 @@ function printRules(state) {
 	output+="===========";
 	consolePrint(output);
 }
+
+function generateLoopPoints(state) {
+	var loopPoint={};
+	var loopPointIndex=0;
+	var outside=true;
+	var source=0;
+	var target=0;
+	if (state.loops.length%2===1) {
+		logErrorNoLine("have to have matching number of  '[[' and ']]' loop points.");
+	}
+
+	for (var j=0;j<state.loops.length;j++) {
+		var loop = state.loops[j];
+		for (var i=0;i<state.rules.length-1;i++) {
+			var ruleGroup = state.rules[i];
+
+			var firstRule = ruleGroup[0];			
+			var lastRule = ruleGroup[ruleGroup.length-1];
+
+			var firstRuleLine = firstRule[3];
+			var lastRuleLine = lastRule[3];
+
+			var nextRuleGroup =state.rules[i+1];
+
+			if (outside) {
+				if (firstRuleLine>=loop[0]) {
+					target=i;
+					outside=false;
+					if (loop[1]===-1) {
+						logErrorNoLine("have to have matching number of  '[[' and ']]' loop points.");						
+					}
+					break;
+				}
+			} else {
+				if (firstRuleLine>=loop[0]) {
+					source = i-1;		
+					loopPoint[source]=target;
+					outside=true;
+					if (loop[1]===-1) {
+						logErrorNoLine("have to have matching number of  '[[' and ']]' loop points.");						
+					}
+					break;
+				}
+			}
+		}
+	}
+	if (outside===false) {
+		var source = state.rules.length;
+		loopPoint[source]=target;
+	}
+	state.loopPoint=loopPoint;
+}
 var MAX_ERRORS=5;
 function loadFile(str) {
 	window.console.log('loadFile');
@@ -1620,6 +1698,8 @@ function loadFile(str) {
 
 	twiddleMetaData(state);
 
+	generateLoopPoints(state);
+
 	delete state.commentLevel;
 	delete state.names;
 	delete state.abbrevNames;
@@ -1630,6 +1710,7 @@ function loadFile(str) {
 	delete state.subsection;
 	delete state.tokenIndex;
 	delete state.visitedSections;
+	delete state.loops;
 	/*
 	var lines = stripComments(str);
 	window.console.log(lines);

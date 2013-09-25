@@ -921,8 +921,8 @@ propagationState = {
 	levelMovementMask:[],
 	rigidGroupIndexMask:[],//[indexgroupNumber, masked by layer arrays]
     rigidMovementAppliedMask:[],
-	rigidBackups:[],
-	bannedGroup:[]
+//	rigidBackups:[],
+//	bannedGroup:[]
 }
 
 var rigidBackups = [];//doesn't need to be backed up
@@ -936,20 +936,20 @@ function commitPreservationState(ruleGroupIndex) {
 		levelMovementMask:level.movementMask.concat([]),
 		rigidGroupIndexMask:level.rigidGroupIndexMask.concat([]),//[[mask,groupNumber]
         rigidMovementAppliedMask:level.rigidMovementAppliedMask.concat([]),
-		rigidBackups:rigidBackups.concat([]),
+//		rigidBackups:rigidBackups.concat([]),
 		bannedGroup:bannedGroup.concat([])
 	};
 	rigidBackups[ruleGroupIndex]=propagationState;
+	return propagationState;
 }
 
 function restorePreservationState(preservationState) {
-	//don't need to concat or anythign here, once something is restored it won't be used again.
-	level.dat = preservationState.dat;
-	level.movementMask = preservationState.levelMovementMask;
-	level.rigidGroupIndexMask = preservationState.rigidGroupIndexMask;
-    level.rigidMovementAppliedMask = preservationState.rigidMovementAppliedMask;
-	rigidBackups = preservationState.rigidBackups;
-	bannedGroup = preservationState.bannedGroup;
+//don't need to concat or anythign here, once something is restored it won't be used again.
+	level.dat = preservationState.dat.concat([]);
+	level.movementMask = preservationState.levelMovementMask.concat([]);
+	level.rigidGroupIndexMask = preservationState.rigidGroupIndexMask.concat([]);
+    level.rigidMovementAppliedMask = preservationState.rigidMovementAppliedMask.concat([]);
+//	rigidBackups = preservationState.rigidBackups;
 }
 
 function tryApplyRule(rule,ruleGroupIndex,ruleIndex){
@@ -1110,34 +1110,44 @@ function tryApplyRule(rule,ruleGroupIndex,ruleIndex){
 function propagateMovements(startRuleGroupindex){
         //for each rule
             //try to match it
-    for (var ruleGroupIndex=startRuleGroupindex;ruleGroupIndex<state.rules.length;ruleGroupIndex++) {
+
+    //when we're going back in, let's loop, to be sure to be sure
+    var loopPropagated = startRuleGroupindex>0;
+    for (var ruleGroupIndex=startRuleGroupindex;ruleGroupIndex<state.rules.length;) {
     	if (bannedGroup[ruleGroupIndex]) {
-    		continue;
-    	}
-    	if (state.rigidGroups[ruleGroupIndex]) {
-    		var rigid_Group_Index = state.groupNumber_to_RigidGroupIndex;
-    		if (rigidBackups[rigid_Group_Index]===undefined) {
-    			rigidBackups[rigid_Group_Index]=commitPreservationState(ruleGroupIndex);
-    		}
-    	}
+    		//do nothing
+    	} else {
+/*	    	if (state.rigidGroups[ruleGroupIndex]) {
+	    		var rigid_Group_Index = state.groupNumber_to_RigidGroupIndex;
+	    		if (rigidBackups[rigid_Group_Index]===undefined) {
+	    			rigidBackups[rigid_Group_Index]=commitPreservationState(ruleGroupIndex);
+	    		}
+	    	}
+*/
+	        var ruleGroup=state.rules[ruleGroupIndex];
 
-        var ruleGroup=state.rules[ruleGroupIndex];
-
-        var propagated=true;
-        var loopcount=0;
-        while(propagated) {
-        	loopcount++;
-        	if (loopcount>50) 
-        	{
-        		window.console.log("got caught looping in a rule group :O");
-        		break;
-        	}
-            propagated=false
-            for (var ruleIndex=0;ruleIndex<ruleGroup.length;ruleIndex++) {
-                var rule = ruleGroup[ruleIndex];            
-                propagated = tryApplyRule(rule) || propagated;
-            }
-        }       
+	        var propagated=true;
+	        var loopcount=0;
+	        while(propagated) {
+	        	loopcount++;
+	        	if (loopcount>50) 
+	        	{
+	        		window.console.log("got caught looping in a rule group :O");
+	        		break;
+	        	}
+	            propagated=false
+	            for (var ruleIndex=0;ruleIndex<ruleGroup.length;ruleIndex++) {
+	                var rule = ruleGroup[ruleIndex];            
+	                propagated = tryApplyRule(rule) || propagated;
+	            }
+	            loopPropagated = propagated || loopPropagated;
+	        }
+	    }
+        ruleGroupIndex++;
+        if (loopPropagated && state.loopPoint[ruleGroupIndex]!==undefined) {
+        	ruleGroupIndex = state.loopPoint[ruleGroupIndex];
+        	loopPropagated=false;
+        }
     }
 }
 
@@ -1171,7 +1181,7 @@ function resolveMovements(dir){
             }
         }
     }
-    var backtrackTarget=null;
+    var doUndo=false;
 
     for (var i=0;i<level.movementMask.length;i++) {
 
@@ -1190,7 +1200,8 @@ function resolveMovements(dir){
     					rigidGroupIndex--;//group indices start at zero, but are incremented for storing in the bitfield
     					var groupIndex = state.rigidGroupIndex_to_GroupIndex[rigidGroupIndex];
     					bannedGroup[groupIndex]=true;
-    					backtrackTarget = rigidBackups[rigidGroupIndex];
+    					//backtrackTarget = rigidBackups[rigidGroupIndex];
+    					doUndo=true;
     					break;
     				}
     			}
@@ -1200,7 +1211,7 @@ function resolveMovements(dir){
         level.rigidGroupIndexMask[i]=0;
         level.rigidMovementAppliedMask[i]=0;
     }
-    return backtrackTarget;
+    return doUndo;
 }
 
 /*
@@ -1252,6 +1263,8 @@ function processInput(dir) {
         rigidBackups = [];
         var startRuleGroupIndex=0;
         var rigidloop=false;
+        var startState = commitPreservationState();
+
         while (first || rigidloop||(anyMovements()&& (i<50))) {
         //not particularly elegant, but it'll do for now - should copy the world state and check
         //after each iteration
@@ -1259,12 +1272,12 @@ function processInput(dir) {
         	rigidloop=false;
         	i++;
         	propagateMovements(startRuleGroupIndex);	
-        	var rigidGroupUndoDat = resolveMovements();
+        	var shouldUndo = resolveMovements();
 
-        	if (rigidGroupUndoDat!=null) {
+        	if (shouldUndo) {
         		rigidloop=true;
-        		restorePreservationState(rigidGroupUndoDat);
-        		startRuleGroupIndex=rigidGroupUndoDat.ruleGroupIndex+1;
+        		restorePreservationState(startState);
+        		startRuleGroupIndex=0;//rigidGroupUndoDat.ruleGroupIndex+1;
         	} else {
         		propagateLateMovements();
         		startRuleGroupIndex=0;
