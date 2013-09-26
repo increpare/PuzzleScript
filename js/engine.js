@@ -688,7 +688,7 @@ function cellRowMatchesWildCard(direction,cellRow,i,maxk) {
                 var ruleStationaryMask = cellRow[j+4];
                 if (ruleMovementMask === ellipsisDirection) {
                 	//BAM inner loop time
-                	for (var k=0;k<=maxk;k++) {
+                	for (var k=0;k<maxk;k++) {
                 		var targetIndex2=targetIndex;
                 		targetIndex2 = (targetIndex2+delta[1]*(k)+delta[0]*(k)*level.height+level.dat.length)%level.dat.length;
                 		for (var j2=j+5;j2<cellRow.length;j2+=5) {
@@ -783,26 +783,26 @@ function matchCellRow(direction, cellRow) {
 	var ymin=0;
 	var ymax=level.height;
 
-    var len=((cellRow.length/5)|0)-1;
+    var len=((cellRow.length/5)|0);
     switch(direction) {
     	case 1://up
     	{
-    		ymin+=len;
+    		ymin+=(len-1);
     		break;
     	}
     	case 2: //down 
     	{
-			ymax-=len;
+			ymax-=(len-1);
 			break;
     	}
     	case 4: //left
     	{
-    		xmin+=len;
+    		xmin+=(len-1);
     		break;
     	}
     	case 8: //right
 		{
-			xmax-=len;	
+			xmax-=(len-1);	
 			break;
 		}
     	default:
@@ -830,26 +830,26 @@ function matchCellRowWildCard(direction, cellRow) {
 	var ymin=0;
 	var ymax=level.height;
 
-	var len=((cellRow.length/5)|0)-2;//remove one to deal with wildcard
+	var len=((cellRow.length/5)|0)-1;//remove one to deal with wildcard
     switch(direction) {
     	case 1://up
     	{
-    		ymin+=len;
+    		ymin+=(len-1);
     		break;
     	}
     	case 2: //down 
     	{
-			ymax-=len;
+			ymax-=(len-1);
 			break;
     	}
     	case 4: //left
     	{
-    		xmin+=len;
+    		xmin+=(len-1);
     		break;
     	}
     	case 8: //right
 		{
-			xmax-=len;	
+			xmax-=(len-1);	
 			break;
 		}
     	default:
@@ -865,7 +865,7 @@ function matchCellRowWildCard(direction, cellRow) {
 			switch(direction) {
 		    	case 1://up
 		    	{
-		    		kmax=y-1;
+		    		kmax=y;
 		    		break;
 		    	}
 		    	case 2: //down 
@@ -875,7 +875,7 @@ function matchCellRowWildCard(direction, cellRow) {
 		    	}
 		    	case 4: //left
 		    	{
-		    		kmax=x-1;
+		    		kmax=x;
 		    		break;
 		    	}
 		    	case 8: //right
@@ -1051,7 +1051,12 @@ function tryApplyRule(rule,ruleGroupIndex,ruleIndex){
                 curCellMask = curCellMask&(~postCell_NonExistence);
                 curMovementMask = curMovementMask&(~preCell_MoveNonExistence);
 
-                //3 add new
+                //3 mask out old movements before adding new
+                if (postCell_Movements!==0) {
+                	curMovementMask = curMovementMask&(~postCell_MovementsLayerMask);
+                }
+
+                //4 add new
                 curCellMask = curCellMask | postCell_Objects;
                 curMovementMask = curMovementMask | postCell_Movements;
                 curMovementMask = curMovementMask & (~postCell_StationaryMask);
