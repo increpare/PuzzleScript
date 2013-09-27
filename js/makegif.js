@@ -1,14 +1,35 @@
-function makeGIF(dataarray) {
+function makeGIF() {
+	var gifcanvas = document.createElement('canvas');
+	gifcanvas.width=screenwidth*cellwidth;
+	gifcanvas.height=screenheight*cellheight;
+	gifcanvas.style.width=screenwidth*cellwidth;
+	gifcanvas.style.height=screenheight*cellheight;
+
+	var gifctx = gifcanvas.getContext('2d');
+
+	var inputDat = inputHistory.concat([]);
+	
+
 	unitTesting=true;
-	levelString=dataarray[0];
+	levelString=compiledText;
 
 	for (var i=0;i<errorStrings.length;i++) {
 		var s = errorStrings[i];
 		throw s;
 	}
 
-	var inputDat = dataarray[1];
+
+	var encoder = new GIFEncoder();
+	encoder.setRepeat(0); //auto-loop
+	encoder.setDelay(250);
+	encoder.start();
+
 	compile(["loadLevel",0],levelString);
+	canvasResize();
+	redraw();
+	gifctx.drawImage(canvas,-xoffset,-yoffset);
+  	encoder.addFrame(gifctx);
+
 	for(var i=0;i<inputDat.length;i++) {
 		var val=inputDat[i];
 		if (val==="undo") {
@@ -18,12 +39,12 @@ function makeGIF(dataarray) {
 		} else {
 			processInput(val);
 		}
+		redraw();
+		gifctx.drawImage(canvas,-xoffset,-yoffset);
+  		encoder.addFrame(gifctx);
 	}
-	var calculatedOutput = JSON.stringify(level.dat);
-	var preparedOutput = dataarray[2];
-	var preparedLevel;
-	eval("preparedLevel = " + preparedOutput);
-	preparedOutput = JSON.stringify(preparedLevel.dat);
-	unitTesting=false;
-	return calculatedOutput === preparedOutput;
+
+  	encoder.finish();
+  	var dat = 'data:image/gif;base64,'+encode64(encoder.stream().getData());
+  	window.open(dat);
 }
