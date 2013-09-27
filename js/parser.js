@@ -84,18 +84,20 @@ var codeMirrorFn = function() {
     var relativedirs = ['^', 'v', '<', '>', 'moving','stationary','parallel','perpendicular', 'no'];
     var logicWords = ['all', 'no', 'on', 'some'];
     var sectionNames = ['objects', 'legend', 'sounds', 'collisionlayers', 'rules', 'wincondition', 'levels'];
-
+	var commandwords = ["sfx0","sfx1","sfx2","sfx3","sfx4","sfx5","sfx6","sfx7","sfx8","sfx9","sfx10","cancel","checkpoint","restart","win","message"];
+    var reg_commands = /\s*(sfx0|sfx1|sfx2|sfx3|Sfx4|sfx5|sfx6|sfx7|sfx8|sfx9|sfx10|cancel|checkpoint|restart|won|message)\s*/;
     var reg_name = /[\w]+\s*/;///\w*[a-uw-zA-UW-Z0-9_]/;
     var reg_number = /[\d]+/;
-    var reg_soundseed = /\d+\b/;
+    var reg_soundseed = /\s*\d+\b\s*/;
     var reg_spriterow = /[\.0-9]{5}\s*/;
     var reg_sectionNames = /(objects|collisionlayers|legend|sounds|rules|wincondition|levels)\s*/;
     var reg_equalsrow = /[\=]+/;
     var reg_notcommentstart = /[^\(]+/;
     var reg_csv_separators = /[ \,]*/;
-    var reg_soundwords = /(move|action|create|destroy|start|finish|message|beginning|ending)\s+/;
+    var reg_soundverbs = /(move|action|create|destroy|cantmove|undo|restart|titlescreen|startgame|endgame|startlevel|endlevel|showmessage|closemessage|sfx0|sfx1|sfx2|sfx3|sfx4|sfx5|sfx6|sfx7|sfx8|sfx9|sfx10)\s+/;
     var reg_directions = /^(up|down|left|right|\^|v|\<|\>|forward|moving|stationary|parallel|perpendicular|horizontal|vertical|no|randomdir|random)$/;
     var reg_ruledirectionindicators = /^(up|down|left|right|horizontal|vertical|orthogonal|late|rigid)$/;
+    var reg_sounddirectionindicators = /\s*(up|down|left|right|horizontal|vertical|orthogonal)\s*/;
     var reg_winconditionquantifiers = /^(all|any|no|some)$/;
     var reg_keywords = /(objects|collisionlayers|legend|sounds|rules|wincondition|\.\.\.|levels|up|down|left|right|^|v|\>|\<|no|horizontal|orthogonal|vertical|any|all|no|some|moving|stationary|parallel|perpendicular)/;
     var keyword_array = ['objects', 'collisionlayers', 'legend', 'sounds', 'rules', '...','wincondition', 'levels', 'up', 'down', 'left', 'right', 'late','rigid', '^','v','\>','\<','no','randomdir','random', 'horizontal', 'vertical','any', 'all', 'no', 'some', 'moving','stationary','parallel','perpendicular'];
@@ -208,7 +210,7 @@ var codeMirrorFn = function() {
                         logError('section "' + state.section.toUpperCase() + '" is out of order, must follow  "' + sectionNames[sectionIndex - 1].toUpperCase() + '".', state.lineNumber);
                     }
 
-                    if (state.section === 'rules') {
+                    if (state.section === 'sounds') {
                         //populate names from rules
                         for (var n in state.objects) {
                             if (state.objects.hasOwnProperty(n)) {
@@ -426,80 +428,36 @@ var codeMirrorFn = function() {
                     {
                         if (sol) {
                             var ok = true;
-                            var splits = reg_notcommentstart.exec(stream.string)[0].split(/\s/).filter(function(v) {return v !== ''});
-                            if (splits.length === 2) {
-                                if (splits[0] === 'start'|| splits[0] === 'finish'|| splits[0] === 'message') {
-                                    if (isNaN(splits[1])) {
-                                        ok = false;
-                                    }
-                                } else {
-                                    ok = false;
-                                }
-                                state.sounds.push([splits[0], splits[1]]);
-                                state.tokenIndex = 0;
-                            }
-                            else if (splits.length === 3) {
-                                if (splits[1] === 'move'|| splits[1] === 'action'|| splits[1] === 'create'|| splits[1] === 'destroy') {
-                                    if (isNaN(splits[2])) {
-                                        ok = false;
-                                    }
-                                } else {
-                                    ok = false;
-                                }
-                                state.tokenIndex = -1;//offset so i can try colour
-                            }
-                            else {
-                                ok = false;
-                            }
-
-                            state.sounds.push([splits[0], splits[1], splits[2]]);
-                            if (ok === false)
-                            {
-                                logError('Incorrect sound format', state.lineNumber);
-                                stream.match(reg_notcommentstart, true);
-                                return 'ERROR';
-                            }
+                            var splits = reg_notcommentstart.exec(stream.string)[0].split(/\s/).filter(function(v) {return v !== ''});                          
+                            splits.push(state.lineNumber);
+                            state.sounds.push(splits);
                         }
-                        if (state.tokenIndex === -1) {
-                            candname = stream.match(reg_name, true)[0].trim();
-                            if (candname === null) {
-                                state.tokenIndex++;
-                                stream.match(reg_notcommentstart, true);
-                                return 'ERROR';
-                            } else {
-                                if (state.objects[candname.toLowerCase()] == undefined) {
-                                        logError('Cannot add a sound to "' + candname.toUpperCase() + '";it has yet to be defined.', state.lineNumber);
-                                        state.tokenIndex++;
-                                        return 'ERROR';
-                                } else {
-                                        state.tokenIndex++;
-                                        return 'NAME';
-                                }
-                            }
-                        } else if (state.tokenIndex === 0) {
-                            candname = stream.match(reg_soundwords, true);
+                        candname = stream.match(reg_soundverbs, true);
+                        if (candname!==null) {
+                        	return 'SOUNDVERB';
+                        }
+                        candname = stream.match(reg_sounddirectionindicators,true);
+                        if (candname!==null) {
+                        	return 'DIRECTION';
+                        }
+                        candname = stream.match(reg_soundseed, true);
+                        if (candname !== null)
+                        {
                             state.tokenIndex++;
-                            return 'SOUNDVERB';
-                        } else {
-                            candname = stream.match(reg_soundseed, true);
-                            if (candname !== null)
-                            {
-                                state.tokenIndex++;
-                                return 'SOUND';
-                            } else {
-                                candname = stream.match(/\s+/, true);
-                                if (stream.eol() || candname !== null) {
-                                    return null;
-                                } else {
-                                    candname = stream.match(reg_notcommentstart, true);
-                                    logError('Was expecting a number (a sound seed), but found something else.', state.lineNumber);
-                                    stream.match(reg_notcommentstart, true);
-                                    return 'ERROR';
-                                }
+                            return 'SOUND';
+                        } 
+                       	candname = stream.match(/[^\[\|\]\s]*/, true);
+                       	if (candname!== null ) {
+                       		var m = candname[0].trim();
+                       		if (state.names.indexOf(m)>=0) {
+                       			return 'NAME';
+                       		}
+                       	}
 
-                            }
-                        }
-
+                        candname = stream.match(reg_notcommentstart, true);
+                        logError('unexpected sound token "'+candname+'".' , state.lineNumber);
+                        stream.match(reg_notcommentstart, true);
+                        return 'ERROR';
                         break;
                     }
                 case 'collisionlayers':
@@ -738,13 +696,17 @@ var codeMirrorFn = function() {
                         break;
                     }
                 case 'rules':
-                    {
+                    {                    	
                         if (sol) {
                             var rule = reg_notcommentstart.exec(stream.string)[0];
                             state.rules.push([rule, state.lineNumber]);
                             state.tokenIndex = 0;//in rules, records whether bracket has been found or not
                         }
 
+                        if (state.tokenIndex===-4) {
+                        	stream.skipToEnd();
+                        	return 'MESSAGE';
+                        }
                         if (stream.match(/\s*\-\>\s*/, true)) {
                             return 'ARROW';
                         }
@@ -775,6 +737,11 @@ var codeMirrorFn = function() {
                                     return 'DIRECTION';
                                 } else if (m==='rigid') {
                                     return 'DIRECTION';
+                                } else if (commandwords.indexOf(m)>=0) {
+									if (m==='message') {
+										state.tokenIndex=-4;
+									}                                	
+                                	return 'COMMAND';
                                 } else {
                                     logError('Name "' + m + '", referred to in a rule, does not exist.', state.lineNumber);
                                     return 'ERROR';
@@ -845,7 +812,7 @@ var codeMirrorFn = function() {
                                 } else {
                                     state.levels.push(newdat);
                                 }
-                                return 'MESSAGETEXT';
+                                return 'MESSAGE_VERB';
                             } else {
                                 var line = stream.match(reg_notcommentstart, false)[0].trim();
                                 state.tokenIndex = 2;
@@ -876,8 +843,8 @@ var codeMirrorFn = function() {
                             }
                         } else {
                             if (state.tokenIndex == 1) {
-                                stream.match(reg_notcommentstart, true);
-                                return 'MESSAGE';
+                                stream.skipToEnd();
+                               	return 'MESSAGE';
                             }
                         }
 

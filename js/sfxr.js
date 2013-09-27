@@ -859,3 +859,41 @@ if (typeof exports != 'undefined') {
   exports.Params = Params;
   exports.generate = generate;
 }
+
+var sfxCache = {};
+
+var cachedSeeds=[];
+var CACHE_MAX=50;
+
+function cacheSeed(seed){
+	if (seed in sfxCache) {
+		return;
+	}
+
+	var params = generateFromSeed(seed);
+	params.sound_vol = SOUND_VOL;
+	params.sample_rate = SAMPLE_RATE;
+	params.sample_size = SAMPLE_SIZE;
+	var sound = generate(params);
+	var audio = new Audio();
+	audio.src = sound.dataURI;
+	
+	sfxCache[seed]=audio;
+	cachedSeeds.push(seed);
+
+	while (cachedSeeds.length>CACHE_MAX) {
+		var toRemove=cachedSeeds[0];
+		cachedSeeds = cachedSeeds.slice(1);
+		delete sfxCache[toRemove];
+	}
+}
+
+function playSeed(seed) {
+	if (unitTesting) return;
+
+	cacheSeed(seed);
+	var sound = sfxCache[seed];
+//    sound.pause();
+//    sound.currentTime = 0;
+	sound.play();
+}

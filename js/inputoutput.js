@@ -121,7 +121,9 @@ function checkKey(e) {
         case 27://escape
         {
         	if (titleScreen==false) {
-				goToTitleScreen();
+				goToTitleScreen();	
+		    	tryPlayTitleSound();
+				canvasResize();			
 				return prevent(e)
         	}
         	break;
@@ -135,20 +137,26 @@ function checkKey(e) {
     	} else if (titleScreen) {
     		if (titleInputMode==0) {
     			if (inputdir==4) {
-    				if (titleSelected==false) {
+    				if (titleSelected==false) {    				
+						tryPlayStartGameSound();
 	    				titleSelected=true;
 	    				timer=0;
 	    				quittingTitleScreen=true;
 	    				generateTitleScreen();
+	    				canvasResize();
 	    			}
     			}
     		}
     	} else {
-    		if (inputdir==4) {
-    			if (messageselected==false) {
+    		if (inputdir==4) {    				
+				if (unitTesting) {
+					nextLevel();
+					return;
+				} else if (messageselected==false) {
     				messageselected=true;
     				timer=0;
     				quittingMessageScreen=true;
+    				tryPlayCloseMessageSound();
     				titleScreen=false;
     				drawMessageScreen();
     			}
@@ -176,7 +184,17 @@ function update() {
     if (quittingMessageScreen) {
         if (timer/1000>0.15) {
             quittingMessageScreen=false;
-            nextLevel();
+            if (messagetext==="") {
+            	nextLevel();
+            } else {
+            	messagetext="";
+            	textMode=false;
+				titleScreen=false;
+				titleMode=curlevel>0?1:0;
+				titleSelected=false;
+				titleSelection=0;
+    			canvasResize();            	
+            }
         }
     }
     if (winning) {

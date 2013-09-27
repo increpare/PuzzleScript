@@ -1,5 +1,6 @@
 'use strict';
 
+
 function isColor(str) {
 	str = str.trim();
 	if (str in colorPalettes.arnecolors)
@@ -353,6 +354,8 @@ var directionaggregates = {
 var simpleAbsoluteDirections = ['up', 'down', 'left', 'right'];
 var simpleRelativeDirections = ['^', 'v', '<', '>'];
 var reg_directions_only = /^(\>|\<|\^|v|up|down|left|right|moving|stationary|no|randomdir|random|horizontal|vertical|perpendicular|parallel)$/;
+//redclareing here, i don't know why
+var commandwords = ["sfx0","sfx1","sfx2","sfx3","sfx4","sfx5","sfx6","sfx7","sfx8","sfx9","sfx10","cancel","checkpoint","restart","win","message"];
 
 function processRuleString(line, state, lineNumber,curRules) 
 {
@@ -400,7 +403,7 @@ function processRuleString(line, state, lineNumber,curRules)
 	var late = false;
 	var rigid = false;
 	var groupNumber=lineNumber;
-
+	var commands=[];
 
 	if (tokens.length===2) {
 		if (tokens[0]==="["&&tokens[1]==="[" ) {
@@ -511,6 +514,18 @@ function processRuleString(line, state, lineNumber,curRules)
 				} else if (token==='...') {
 					curcell.push(token);
 					curcell.push(token);
+				} else if (commandwords.indexOf(token)>=0) {
+					if (rhs===false) {
+						logError("Commands cannot appear on the left-hand side of the arrow.",lineNumber);
+					}
+					if (token==='message') {
+						var messagetokens = tokens.slice(i+1);
+						var messagestring = messagetokens.join(' ');
+						commands.push([token,messagestring]);
+						i=tokens.length;
+					} else {
+						commands.push([token]);
+					}
 				} else {
 					logError('Error, malformed cell rule - was looking for cell contents, but found "' + token + '".  What am I supposed to do with this, eh, please tell me that.', lineNumber);
 				}
@@ -520,7 +535,11 @@ function processRuleString(line, state, lineNumber,curRules)
 	}
 
 	if (lhs_cells.length != rhs_cells.length) {
-		logError('Error, when specifying a rule, the number of matches (square bracketed bits) on the left hand side of the arrow must equal the number on the right', lineNumber);
+		if (commands.length>0&&rhs_cells.length==0) {
+			//ok
+		} else {
+			logError('Error, when specifying a rule, the number of matches (square bracketed bits) on the left hand side of the arrow must equal the number on the right', lineNumber);
+		}
 	} else {
 		for (var i = 0; i < lhs_cells.length; i++) {
 			if (lhs_cells[i].length != rhs_cells[i].length) {
@@ -543,7 +562,8 @@ function processRuleString(line, state, lineNumber,curRules)
 		lineNumber: lineNumber,
 		late: late,
 		rigid: rigid,
-		groupNumber: groupNumber
+		groupNumber: groupNumber,
+		commands:commands
 	};
 
 	//next up - replace relative directions with absolute direction
@@ -564,7 +584,8 @@ function deepCloneRule(rule) {
 		lineNumber: rule.lineNumber,
 		late: rule.late,
 		rigid: rule.rigid,
-		groupNumber: rule.groupNumber
+		groupNumber: rule.groupNumber,
+		commands:rule.commands
 	};
 	return clonedRule;
 }
@@ -603,7 +624,8 @@ function rulesToArray(state) {
 						lineNumber: rule.lineNumber,
 						late: rule.late,
 						rigid: rule.rigid,
-						groupNumber: rule.groupNumber
+						groupNumber: rule.groupNumber,
+						commands:rule.commands
 					};
 					rules2.push(modifiedrule);
 				}
@@ -615,7 +637,8 @@ function rulesToArray(state) {
 					lineNumber: rule.lineNumber,
 					late: rule.late,
 					rigid: rule.rigid,
-					groupNumber: rule.groupNumber
+					groupNumber: rule.groupNumber,
+					commands:rule.commands
 				};
 				rules2.push(modifiedrule);
 			}
@@ -1022,11 +1045,13 @@ function rephraseSynonyms(state,rule) {
 					cell_l[k] = state.synonymsDict[cell_l[k]];
 				}
 			}
-			var cell_r = cellrow_r[j];
-			for (var k = 1; k < cell_r.length; k += 2) {
-				var name = cell_r[k];
-				if (name in state.synonymsDict) {
-					cell_r[k] = state.synonymsDict[cell_r[k]];
+			if (rule.rhs.length>0) {
+				var cell_r = cellrow_r[j];
+				for (var k = 1; k < cell_r.length; k += 2) {
+					var name = cell_r[k];
+					if (name in state.synonymsDict) {
+						cell_r[k] = state.synonymsDict[cell_r[k]];
+					}
 				}
 			}
 		}
@@ -1199,6 +1224,9 @@ function rulesToMask(state) {
 				cellrow_l[k] = [forcemask_l, cellmask_l,nonExistenceMask_l,moveNonExistenceMask_l,stationaryMask_l];
 				//cellrow_l[k]=mask_l;
 
+				if (rule.rhs.length===0) {
+					continue;
+				}
 				var cell_r = cellrow_r[k];
 				var mask_r = maskTemplate.concat([]);
 				var forcemask_r = 0;				
@@ -1268,7 +1296,7 @@ function collapseRules(state) {
 	for (var i = 0; i < state.rules.length; i++)
 	{
 		var oldrule = state.rules[i];
-		var newrule = [0,[],[],oldrule.lineNumber,oldrule.late/*ellipses,group number,rigid*/];
+		var newrule = [0,[],[],oldrule.lineNumber,oldrule.late/*ellipses,group number,rigid,commands,commandsonly*/];
 		var ellipses = [];
 		for (var j=0;j<oldrule.lhs.length;j++) {
 			ellipses.push(false);
@@ -1280,7 +1308,7 @@ function collapseRules(state) {
 			var cellrow_r = oldrule.rhs[j];
 			var newcellrow_l = [];
 			var newcellrow_r = [];
-			for (var k = 0; k < cellrow_r.length; k++) {
+			for (var k = 0; k < cellrow_l.length; k++) {
 				var oldcellmask_l = cellrow_l[k];
 				if (oldcellmask_l[0]===ellipsisDirection) {
 					if (ellipses[j]) {
@@ -1294,20 +1322,25 @@ function collapseRules(state) {
 				newcellrow_l[k * 5 + 3] = oldcellmask_l[3];//movenonexistence
 				newcellrow_l[k * 5 + 4] = oldcellmask_l[4];//stationarymask
 
-				var oldcellmask_r = cellrow_r[k];
-				newcellrow_r[k * 5] = oldcellmask_r[0];
-				newcellrow_r[k * 5 + 1] = oldcellmask_r[1];
-				newcellrow_r[k * 5 + 2] = oldcellmask_r[2];//nonexistence
-				newcellrow_r[k * 5 + 3] = oldcellmask_r[3];//postCell_MovementsLayerMask
-				newcellrow_r[k * 5 + 4] = oldcellmask_r[4];//stationarymask
+				if (oldrule.rhs.length>0) {
+					var oldcellmask_r = cellrow_r[k];
+					newcellrow_r[k * 5] = oldcellmask_r[0];
+					newcellrow_r[k * 5 + 1] = oldcellmask_r[1];
+					newcellrow_r[k * 5 + 2] = oldcellmask_r[2];//nonexistence
+					newcellrow_r[k * 5 + 3] = oldcellmask_r[3];//postCell_MovementsLayerMask
+					newcellrow_r[k * 5 + 4] = oldcellmask_r[4];//stationarymask
+				}
 			}
 			newrule[1][j] = newcellrow_l;
 			newrule[2][j] = newcellrow_r;
 		}
 		newrule.push(ellipses);
 		newrule.push(oldrule.groupNumber);
-		newrule.push(oldrule.rigid)
-        state.rules[i] = newrule;
+		newrule.push(oldrule.rigid);
+		newrule.push(oldrule.commands);
+		newrule.push(oldrule.rhs.length===0);
+		
+		state.rules[i] = newrule;
 
 	}
 }
@@ -1654,6 +1687,145 @@ function generateLoopPoints(state) {
 	}
 	state.loopPoint=loopPoint;
 }
+
+var soundEvents = ["titlescreen", "startgame", "endgame", "startlevel","undo","restart","endlevel","showmessage","closemessage","sfx0","sfx1","sfx2","sfx3","sfx4","sfx5","sfx6","sfx7","sfx8","sfx9","sfx10"];
+var soundMaskedEvents =["create","destroy","move","cantmove","action"];
+var soundVerbs = soundEvents.concat(soundMaskedEvents);
+
+
+function validSeed (seed ) {
+	return /^\s*\d+\s*$/.exec(seed)!==null;
+}
+
+
+var soundDirectionIndicatorMasks = {
+	'up'			: parseInt('00001', 2),
+	'down'			: parseInt('00010', 2),
+	'left'			: parseInt('00100', 2),
+	'right'			: parseInt('01000', 2),
+	'horizontal'	: parseInt('01100', 2),
+	'vertical'		: parseInt('00011', 2),
+	'orthogonal'	: parseInt('01111', 2),
+	'___action____'		: parseInt('10000', 2)
+};
+
+var soundDirectionIndicators = ["up","down","left","right","horizontal","vertical","orthogonal","___action____"];
+
+
+function generateSoundData(state) {
+	var sfx_Events={};
+	var sfx_CreationMasks=[];
+	var sfx_DestructionMasks=[];
+	var sfx_MovementMasks=[];
+	var sfx_MovementFailureMasks=[];
+
+	for (var i=0;i<state.sounds.length;i++) {
+		var sound=state.sounds[i];
+		if (sound.length<=1) {
+			continue;
+		}
+		var lineNumber=sound[sound.length-1];
+
+		if (soundEvents.indexOf(sound[0])>=0) {
+			if (sound.length>4) {
+				logError("too much stuff to define a sound event",lineNumber);
+			}
+			var seed = sound[1];
+			if (validSeed(seed)) {
+				sfx_Events[sound[0]]=sound[1];
+			} else {
+				logError("Expecting sfx data, instead found \""+sound[1]+"\".",lineNumber);				
+			}
+		} else {
+			var target = sound[0].trim();
+			var verb = sound[1].trim();
+			var directions = sound.slice(2,sound.length-2);
+			if (directions.length>0&&verb!=='move') {
+				logError('incorrect sound declaration.',lineNumber);
+			}
+
+			if (verb==='action') {
+				verb='move';
+				directions=['___action____'];
+			}
+
+			if (directions.length==0) {
+				directions=["orthogonal"];
+			}
+			var seed = sound[sound.length-1];
+
+			if (target in state.aggregatesDict) {
+				logError('cannot assign sound events to aggregate objects (declared with "and"), only to regular objects, or properties, things defined in terms of "or" ("'+target+'").',lineNumber);
+			}
+			else if (target in state.objectMasks) {
+
+			} else {
+				logError('Object "'+ target+'" not found.');
+			}
+
+			var objectMask = state.objectMasks[target];
+
+			var directionMask=0;
+
+			for (var j=0;j<directions.length;j++) {
+				directions[j]=directions[j].trim();
+				var direction=directions[j];
+				if (soundDirectionIndicators.indexOf(direction)===-1) {
+					logError('Was expecting a direction, instead found "'+direction+'".',lineNumber);
+				} else {
+					directionMask = directionMask | soundDirectionIndicatorMasks[direction];
+				}
+			}
+			if (!validSeed(seed)) {
+				logError("Expecting sfx data, instead found \""+seed+"\".",lineNumber);	
+			}
+
+			var targetArray;
+			switch(verb) {
+				case "create": {
+					var o = {
+						objectMask: objectMask,
+						seed: seed
+					}
+					sfx_CreationMasks.push(o);
+					break;
+				}
+				case "destroy": {
+					var o = {
+						objectMask: objectMask,
+						seed: seed
+					}
+					sfx_DestructionMasks.push(o);
+					break;
+				}
+				case "move": {
+					var o = {
+						objectMask: objectMask,
+						directionMask: directionMask,
+						seed: seed
+					}
+					sfx_MovementMasks.push(o);
+					break;
+				}
+				case "cantmove": {
+					var o = {
+						objectMask: objectMask,
+						seed: seed
+					}
+					sfx_MovementFailureMasks.push(o);
+					break;
+				}
+			}
+		}
+	}
+
+	state.sfx_Events = sfx_Events;
+	state.sfx_CreationMasks = sfx_CreationMasks;
+	state.sfx_DestructionMasks = sfx_DestructionMasks;
+	state.sfx_MovementMasks = sfx_MovementMasks;
+	state.sfx_MovementFailureMasks = sfx_MovementFailureMasks;
+}
+
 var MAX_ERRORS=5;
 function loadFile(str) {
 	window.console.log('loadFile');
@@ -1699,6 +1871,8 @@ function loadFile(str) {
 	twiddleMetaData(state);
 
 	generateLoopPoints(state);
+
+	generateSoundData(state);
 
 	delete state.commentLevel;
 	delete state.names;

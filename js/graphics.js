@@ -236,6 +236,9 @@ function redraw() {
 
 var lastDownTarget;
 
+var oldcellwidth=0;
+var oldcellheight=0;
+var oldtextmode=-1;
 function canvasResize() {
 //  window.console.log("canvasresize");
     canvas.style.width = canvas.parentNode.clientWidth;
@@ -246,16 +249,18 @@ function canvasResize() {
 
     screenwidth=level.width;
     screenheight=level.height;
-    flickscreen=state.metadata.flickscreen!==undefined;
-    if (flickscreen) {
-        screenwidth=state.metadata.flickscreen[0];
-        screenheight=state.metadata.flickscreen[1];
-    }
-    zoomscreen=state.metadata.zoomscreen!==undefined;
-    if (zoomscreen) {
-        screenwidth=state.metadata.zoomscreen[0];
-        screenheight=state.metadata.zoomscreen[1];
-    }
+    if (state!==undefined){
+	     flickscreen=state.metadata.flickscreen!==undefined;
+	    if (flickscreen) {
+	        screenwidth=state.metadata.flickscreen[0];
+	        screenheight=state.metadata.flickscreen[1];
+	    }
+	    zoomscreen=state.metadata.zoomscreen!==undefined;
+	    if (zoomscreen) {
+	        screenwidth=state.metadata.zoomscreen[0];
+	        screenheight=state.metadata.zoomscreen[1];
+	    }
+	}
 
     if (textMode) {
         screenwidth=titleWidth;
@@ -292,7 +297,12 @@ function canvasResize() {
     xoffset = ~~xoffset;
     yoffset = ~~yoffset;
 
-    regenSpriteImages();
-
+    if (oldcellwidth!=cellwidth||oldcellheight!=cellheight||oldtextmode!=textMode) {
+    	regenSpriteImages();
+    }
+    oldcellheight=cellheight;
+    oldcellwidth=cellwidth;
+    oldtextmode=textMode;
+    
     redraw();
 }

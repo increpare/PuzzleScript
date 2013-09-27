@@ -1,0 +1,100 @@
+(
+Simple block pushing example, simplified
+)
+
+========
+OBJECTS
+========
+
+Background
+gray
+
+Target 
+YELLOW
+
+Player 
+PINK     
+
+Crate
+RED
+
+Wall     
+BROWN DARKBROWN     
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Player
+* = Crate
+@ = Crate and Target
+O = Target
+
+=========
+SOUNDS
+=========
+
+crate move  up right 142314
+crate cantmove 41234
+crate create 41234123
+crate destroy 512341
+crate action 4123424
+titlescreen 14241
+startgame 412341234
+endgame 1241234
+startlevel 1421341
+undo 14234
+restart 1241234
+endlevel 12341234
+showmessage 142134234
+closemessage 1241234
+sfx0 213424
+sfx1 213424
+sfx2 213424
+sfx3 213424
+sfx4 213424
+sfx5 213424
+sfx6 213424
+sfx7 213424
+sfx8 213424
+sfx9 213424
+sfx10 213424
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Target
+Player, Wall, Crate
+
+======
+RULES     
+======     
+
+[ >  Player | Crate ] -> [ > Player | ]
+
+==============
+WINCONDITION
+==============
+
+=======     
+LEVELS
+=======
+
+...............
+....*..........
+....*..........
+...............
+.....***.......
+.....*.........
+..P..**#.......
+.....*.........
+...............
+...............
+...............
+...............
+...............
+
