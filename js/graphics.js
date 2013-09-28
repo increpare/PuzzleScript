@@ -51,7 +51,6 @@ function regenText(spritecanvas,spritectx) {
 	}
 }
 var spriteimages;
-
 function regenSpriteImages() {
 
     var spritecanvas = document.createElement('canvas');
@@ -239,6 +238,7 @@ var lastDownTarget;
 var oldcellwidth=0;
 var oldcellheight=0;
 var oldtextmode=-1;
+var forceRegenImages=false;
 function canvasResize() {
 //  window.console.log("canvasresize");
     canvas.style.width = canvas.parentNode.clientWidth;
@@ -297,12 +297,13 @@ function canvasResize() {
     xoffset = ~~xoffset;
     yoffset = ~~yoffset;
 
-    if (oldcellwidth!=cellwidth||oldcellheight!=cellheight||oldtextmode!=textMode) {
+    if (oldcellwidth!=cellwidth||oldcellheight!=cellheight||oldtextmode!=textMode||forceRegenImages) {
+    	forceRegenImages=false;
     	regenSpriteImages();
     }
     oldcellheight=cellheight;
     oldcellwidth=cellwidth;
     oldtextmode=textMode;
-    
+
     redraw();
 }

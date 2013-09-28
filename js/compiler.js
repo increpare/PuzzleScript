@@ -1608,7 +1608,7 @@ function printCellRow(cellRow) {
 }
 
 function printRule(rule) {
-	var result="("+rule.groupNumber+")"+ rule.direction.toString().toUpperCase()+" ";
+	var result="("+rule.groupNumber+") "+ rule.direction.toString().toUpperCase()+" ";
 	if (rule.rigid) {
 		result = "RIGID "+result+" ";
 	}
@@ -1740,7 +1740,7 @@ function generateSoundData(state) {
 			var target = sound[0].trim();
 			var verb = sound[1].trim();
 			var directions = sound.slice(2,sound.length-2);
-			if (directions.length>0&&verb!=='move') {
+			if (directions.length>0&&(verb!=='move'&&verb!=='cantmove')) {
 				logError('incorrect sound declaration.',lineNumber);
 			}
 
@@ -1755,7 +1755,7 @@ function generateSoundData(state) {
 			var seed = sound[sound.length-1];
 
 			if (target in state.aggregatesDict) {
-				logError('cannot assign sound events to aggregate objects (declared with "and"), only to regular objects, or properties, things defined in terms of "or" ("'+target+'").',lineNumber);
+				logError('cannot assign sound fevents to aggregate objects (declared with "and"), only to regular objects, or properties, things defined in terms of "or" ("'+target+'").',lineNumber);
 			}
 			else if (target in state.objectMasks) {
 
@@ -1766,16 +1766,43 @@ function generateSoundData(state) {
 			var objectMask = state.objectMasks[target];
 
 			var directionMask=0;
-
 			for (var j=0;j<directions.length;j++) {
 				directions[j]=directions[j].trim();
 				var direction=directions[j];
 				if (soundDirectionIndicators.indexOf(direction)===-1) {
 					logError('Was expecting a direction, instead found "'+direction+'".',lineNumber);
 				} else {
-					directionMask = directionMask | soundDirectionIndicatorMasks[direction];
+					var soundDirectionMask = soundDirectionIndicatorMasks[direction];
+					directionMask = directionMask | soundDirectionMask;
 				}
 			}
+			var targets=[target];
+			if (target in state.propertiesDict) {
+				targets = state.propertiesDict[target];
+			}
+
+			if (verb==='move' || verb==='cantmove') {
+				for (var j=0;j<targets.length;j++) {
+					var targetName = targets[j];
+					var targetDat = state.objects[targetName];
+					var targetLayer = targetDat.layer;
+					var shiftedDirectionMask = directionMask<<(5*targetLayer);
+
+					var o = {
+						objectMask: objectMask,
+						directionMask: shiftedDirectionMask,
+						seed: seed
+					};
+
+					if (verb==='move') {
+						sfx_MovementMasks.push(o);						
+					} else {
+						sfx_MovementFailureMasks.push(o);
+					}
+				}
+			}
+
+
 			if (!validSeed(seed)) {
 				logError("Expecting sfx data, instead found \""+seed+"\".",lineNumber);	
 			}
@@ -1796,23 +1823,6 @@ function generateSoundData(state) {
 						seed: seed
 					}
 					sfx_DestructionMasks.push(o);
-					break;
-				}
-				case "move": {
-					var o = {
-						objectMask: objectMask,
-						directionMask: directionMask,
-						seed: seed
-					}
-					sfx_MovementMasks.push(o);
-					break;
-				}
-				case "cantmove": {
-					var o = {
-						objectMask: objectMask,
-						seed: seed
-					}
-					sfx_MovementFailureMasks.push(o);
 					break;
 				}
 			}

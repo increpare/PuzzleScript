@@ -1,0 +1,6 @@
+FILES=*.gif
+
+for f in $FILES
+do
+	gifsicle -O2 $f -o $f 
+done

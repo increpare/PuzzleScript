@@ -298,6 +298,7 @@ function drawMessageScreen() {
 }
 
 function loadLevelFromState(state,levelindex) {	
+	forceRegenImages=true;
 	titleScreen=false;
 	titleMode=curlevel>0?1:0;
 	titleSelected=false;
@@ -658,6 +659,8 @@ var dirMasksDelta = {
      3:[0,0]//'no'
 };
 
+var seedsToPlay=[];
+
 function repositionEntitiesOnLayer(positionIndex,layer,dirMask) 
 {
     var delta = dirMasksDelta[dirMask];
@@ -679,12 +682,37 @@ function repositionEntitiesOnLayer(positionIndex,layer,dirMask)
     var targetMask = level.dat[targetIndex];
     var collision = targetMask&layerMask;
     if (collision!=0) {
+
+		for (var i=0;i<state.sfx_MovementFailureMasks.length;i++) {
+			var o = state.sfx_MovementFailureMasks[i];
+			var objectMask = o.objectMask;
+			if (objectMask&sourceMask!==0) {
+				var movementMask = level.movementMask[positionIndex];
+				var directionMask = o.directionMask;
+				if ((movementMask&directionMask)!==0 && seedsToPlay.indexOf(o.seed)===-1) {
+					seedsToPlay.push(o.seed);
+				}
+			}
+		}
         return false;
     }
     var sourceMask = level.dat[positionIndex];
     var movingEntities = sourceMask&layerMask;
     level.dat[positionIndex] = sourceMask&(~layerMask);
     level.dat[targetIndex] = targetMask | movingEntities;
+
+
+	for (var i=0;i<state.sfx_MovementMasks.length;i++) {
+		var o = state.sfx_MovementMasks[i];
+		var objectMask = o.objectMask;
+		if ((objectMask&sourceMask)!==0) {
+			var movementMask = level.movementMask[positionIndex];
+			var directionMask = o.directionMask;
+			if ((movementMask&directionMask)!==0) {
+				seedsToPlay.push(o.seed);
+			}
+		}
+	}
     return true;
 }
 
@@ -725,6 +753,73 @@ function ruleMovementMaskAgrees(ruleMovementMask,cellMovementMask){
 
 var ellipsisDirection = 1<<31;
 var randomEntityMask = parseInt('00101', 2);
+
+
+function cellRowMatchesWildCard_ParticularK(direction,cellRow,i,k) {
+    var initMovementMask= cellRow[0];
+    var initCellMask = cellRow[1];
+    var initNonExistenceMask = cellRow[2];
+    var initStationaryMask = cellRow[4];
+    var delta = dirMasksDelta[direction];
+    var movementMask = level.movementMask[i];
+    var cellMask = level.dat[i];
+
+    var allowed;
+    var result=[];
+
+    if (checkThing(initCellMask,initMovementMask,initNonExistenceMask,initStationaryMask,movementMask,cellMask)) {
+            var targetIndex = i;
+            for (var j=5;j<cellRow.length;j+=5) {
+                targetIndex = (targetIndex+delta[1]+delta[0]*level.height)%level.dat.length;
+                var movementMask = level.movementMask[targetIndex];
+                var ruleMovementMask= cellRow[j+0];
+
+                var cellMask = level.dat[targetIndex];
+                var ruleCellMask = cellRow[j+1];
+                var ruleNonExistenceMask = cellRow[j+2];
+                var ruleStationaryMask = cellRow[j+4];
+                if (ruleMovementMask === ellipsisDirection) {
+                	//BAM inner loop time
+                	//for (var k=0;k<maxk;k++) 
+                	{//k defined 
+                		var targetIndex2=targetIndex;
+                		targetIndex2 = (targetIndex2+delta[1]*(k)+delta[0]*(k)*level.height+level.dat.length)%level.dat.length;
+                		for (var j2=j+5;j2<cellRow.length;j2+=5) {
+                			movementMask = level.movementMask[targetIndex2];
+			                cellMask = level.dat[targetIndex2];
+
+			                ruleMovementMask= cellRow[j2+0];
+			                ruleCellMask = cellRow[j2+1];
+			                ruleNonExistenceMask = cellRow[j2+2];
+			                ruleStationaryMask = cellRow[j2+4];
+
+						    if (checkThing(ruleCellMask,ruleMovementMask,ruleNonExistenceMask,ruleStationaryMask,movementMask,cellMask)) {
+						    	//good
+						    } else {
+						    	break;
+						    }
+                			targetIndex2 = (targetIndex2+delta[1]+delta[0]*level.height)%level.dat.length;
+                		}
+
+			            if (j2>=cellRow.length) {
+			                result.push([i,k]);
+			            }
+                	}
+                	break;
+                }
+
+
+			    if (checkThing(ruleCellMask,ruleMovementMask,ruleNonExistenceMask,ruleStationaryMask,movementMask,cellMask)) {
+                    //GOOD
+                } else {
+                    break;
+                }
+            }   
+            
+
+    }  
+    return result.length>0;
+}
 
 function cellRowMatchesWildCard(direction,cellRow,i,maxk) {
     var initMovementMask= cellRow[0];
@@ -1045,7 +1140,7 @@ function tryApplyRule(rule,ruleGroupIndex,ruleIndex){
 	            var matches=true;                
 	            for (var cellRowIndex=0;cellRowIndex<rule[1].length;cellRowIndex++) {
 	            	if (rule[5][cellRowIndex]) {//if ellipsis
-		            	if (cellRowMatchesWildCard(rule[0],rule[1][cellRowIndex],tuple[cellRowIndex][0],tuple[cellRowIndex][1])==false) {
+		            	if (cellRowMatchesWildCard_ParticularK(rule[0],rule[1][cellRowIndex],tuple[cellRowIndex][0],tuple[cellRowIndex][1])==false) {
 		                    matches=false;
 		                    break;
 		                }
@@ -1379,6 +1474,8 @@ function processInput(dir) {
 	    sfxCreateMask=0;
 	    sfxDestroyMask=0;
 
+		seedsToPlay=[];
+
         while (first || rigidloop||(anyMovements()&& (i<50))) {
         //not particularly elegant, but it'll do for now - should copy the world state and check
         //after each iteration
@@ -1400,6 +1497,10 @@ function processInput(dir) {
 
         if (i>=50) {
         	window.console.log("looped through 50 times, gave up.  too many loops!");
+        }
+
+        for (var i=0;i<seedsToPlay.length;i++) {
+	        	playSeed(seedsToPlay[i]);
         }
 
         for (var i=0;i<state.sfx_CreationMasks.length;i++) {

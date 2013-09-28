@@ -768,7 +768,7 @@ var codeMirrorFn = function() {
                         state.tokenIndex++;
                         var match = stream.match(/\s*\w+\s*/);
                         if (match === null) {
-                                logError('incorrect format of legend - should be one of A = B, A = B or C ( or D ...), A = B and C (and D ...)', state.lineNumber);
+                                logError('incorrect format of win condition.', state.lineNumber);
                                 stream.match(reg_notcommentstart, true);
                                 return 'ERROR';
 

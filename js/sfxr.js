@@ -895,5 +895,5 @@ function playSeed(seed) {
 	var sound = sfxCache[seed];
 //    sound.pause();
 //    sound.currentTime = 0;
-	sound.play();
+    sound.cloneNode().play();
 }

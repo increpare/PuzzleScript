@@ -8,6 +8,7 @@ function rebuildClick() {
 
 
 function compile(command,text) {
+	forceRegenImages=true;
 	if (command===undefined) {
 		command = ["restart"];
 	}
