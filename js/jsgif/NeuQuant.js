@@ -19,7 +19,7 @@
 * that this copyright notice remain intact.
 */
  
-/*
+/**
 * This class handles Neural-Net quantization algorithm
 * @author Kevin Weiner (original Java version - kweiner@fmsware.com)
 * @author Thibault Imbert (AS3 version - bytearray.org)

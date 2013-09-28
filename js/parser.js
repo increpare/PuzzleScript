@@ -88,7 +88,7 @@ var codeMirrorFn = function() {
     var reg_commands = /\s*(sfx0|sfx1|sfx2|sfx3|Sfx4|sfx5|sfx6|sfx7|sfx8|sfx9|sfx10|cancel|checkpoint|restart|won|message)\s*/;
     var reg_name = /[\w]+\s*/;///\w*[a-uw-zA-UW-Z0-9_]/;
     var reg_number = /[\d]+/;
-    var reg_soundseed = /\s*\d+\b\s*/;
+    var reg_soundseed = /\d+\b/;
     var reg_spriterow = /[\.0-9]{5}\s*/;
     var reg_sectionNames = /(objects|collisionlayers|legend|sounds|rules|wincondition|levels)\s*/;
     var reg_equalsrow = /[\=]+/;

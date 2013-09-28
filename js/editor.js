@@ -38,3 +38,25 @@ editor.on("beforeChange", function(instance, change) {
 
 code.editorreference = editor;
 editor.setOption('theme', 'midnight');
+
+function getParameterByName(name) {
+    name = name.replace(/[\[]/, "\\\[").replace(/[\]]/, "\\\]");
+    var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
+        results = regex.exec(location.search);
+    return results == null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
+}
+
+var fileToOpen=getParameterByName("demo");
+if (fileToOpen!==null&&fileToOpen.length>0) {
+	var client = new XMLHttpRequest();
+	client.open('GET', 'demo/'+fileToOpen+".txt");
+	client.onreadystatechange = function() {
+		
+  		if(client.readyState!=4) {
+  			return;
+  		}
+  		
+		editor.setValue(client.responseText);
+	}
+	client.send();
+}

@@ -141,7 +141,7 @@
 			if ((im == null) || !started || out == null) 
 			{
 				throw new Error ("Please call start method before calling addFrame");
-				return false;
+//				return false;
 			}
 			
 		    var ok/*Boolean*/ = true;

@@ -1,0 +1,92 @@
+<!doctype html>
+<html>
+<head>
+<style>
+
+body {
+	background-color:#333333;
+}
+#gameCanvas {
+  position:absolute;
+  top: 0px;
+  left: 0px;
+  width: 100%;
+  height: 100%;
+  bottom: 0px;
+  right:0px;
+  border: 0px;
+  background-color: black;
+} 
+
+a {
+	color:red;
+}
+.title {	
+	background-color:none;
+	text-align:center;
+	font-size:100%;
+	float:center;
+	color:gray;
+	position:absolute;
+	left:10%;
+	right:10%;
+	top:0%;
+	height:10%;
+}
+
+.footer {	
+	background-color:none;
+	text-align:center;
+	float:center;
+	color:white;
+	position:absolute;
+	margin-top:10px;
+	left:10%;
+	right:10%;
+	top:90%;
+	bottom:10%;
+}
+.gameContainer {
+	background-color:none;
+	position:absolute;
+	left:10%;
+	right:10%;
+	top:70px;
+	bottom:10%;
+}
+
+</style>
+</head>
+<body>
+<div class="title"><h1>"__GAMETITLE__"</h1></div>
+<div class="gameContainer">
+<canvas 
+    id="gameCanvas" 
+    onmousemove="mouseMove(event)" 
+    onmouseout="mouseOut()"
+    onkeydown="keyDown()"
+></canvas>
+</div> 
+<div class="footer">
+<a href="http://"+'"__HOMEPAGE__"'>"__HOMEPAGE__"</a>
+</div>
+
+<script src="js/globalVariables.js"></script>
+<script src="js/debug_off.js"></script>
+<script src="js/font.js"></script>
+<script src="js/rng.js"></script>
+<script src="js/riffwave.js"></script>
+<script src="js/sfxr.js"></script>
+
+<script src="js/colors.js"></script>
+<script src="js/graphics.js"></script>
+<script src="js/inputoutput.js"></script>
+
+<script src="js/engine.js"></script>
+
+<script src="js/addlisteners.js"></script>
+<script src="js/makegif.js"></script>
+
+<script src="js/gamedat.js"></script>
+</body>
+</html>

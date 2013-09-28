@@ -1,0 +1,54 @@
+
+<!-- saved from url=(0042)http://ded.increpare.com/~locus/audiotest/ -->
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<title>twit twit</title>
+<style>
+
+body {
+	background-color: lightyellow;
+
+}
+img {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  margin-top: -45px;
+  margin-left: -45px;
+   box-shadow: 5px 5px 2px #888888;
+}
+
+img:active {
+	padding-top : 2px;
+   box-shadow: 3px 3px 2px #888888;
+}
+
+</style>
+<script src="./buildGame_files/rng.js"></script>
+<script src="./buildGame_files/riffwave.js"></script>
+<script src="./buildGame_files/sfxr.js"></script>
+<script>
+
+var SOUND;
+var SOUND_VOL = 0.25;
+var SAMPLE_RATE = 5512;//44100;
+var SAMPLE_SIZE = 8;
+
+function newSound(instrument) {
+	var seed = ((Math.random()*999999)|0)+(instrument+1)*1000000;
+	var params = new Params();  
+	params.sound_vol = SOUND_VOL;
+	params.sample_rate = SAMPLE_RATE;
+	params.sample_size = SAMPLE_SIZE;
+	params.generateFromSeed(seed);
+	var sound = generate(params);
+	var audio = new Audio();
+	audio.src=sound.dataURI;			  
+	audio.play();
+}
+
+</script>
+</head>
+<body>
+<a class="centered" id="centered" onclick="newSound(9);" href="javascript:void(4);"><img src="./buildGame_files/birdy.gif"></a>
+
+</body></html>

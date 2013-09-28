@@ -1,0 +1,26 @@
+java -jar ~/progs/closure.jar --js_output_file js/scripts.js  \
+--js js/jsgif/b64.js \
+--js js/jsgif/LZWEncoder.js \
+--js js/jsgif/NeuQuant.js \
+--js js/jsgif/GIFEncoder.js \
+--js js/debug.js \
+--js js/globalVariables.js \
+--js js/font.js \
+--js js/rng.js \
+--js js/riffwave.js \
+--js js/sfxr.js \
+--js js/codemirror.js \
+--js js/active-line.js \
+--js js/colors.js \
+--js js/graphics.js \
+--js js/inputoutput.js \
+--js js/engine.js \
+--js js/parser.js \
+--js js/editor.js \
+--js js/compiler.js \
+--js js/console.js \
+--js js/soundbar.js \
+--js js/toolbar.js \
+--js js/addlisteners.js \
+--js js/addlisteners_editor.js \
+--js js/makegif.js

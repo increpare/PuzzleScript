@@ -1754,7 +1754,7 @@ function generateSoundData(state) {
 			if (directions.length==0) {
 				directions=["orthogonal"];
 			}
-			var seed = sound[sound.length-1];
+			var seed = sound[sound.length-2];
 
 			if (target in state.aggregatesDict) {
 				logError('cannot assign sound fevents to aggregate objects (declared with "and"), only to regular objects, or properties, things defined in terms of "or" ("'+target+'").',lineNumber);

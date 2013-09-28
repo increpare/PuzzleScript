@@ -5,9 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="">
     <meta name="author" content="">
-    <link rel="shortcut icon" href="ico/favicon.png">
+    <link rel="shortcut icon" type="image/x-icon" href="ico/favicon.ico" />
 
-    <title>Puzzle Script Documentation</title>
+    <title>Directions - Puzzle Script Documentation</title>
 
     <!-- Bootstrap core CSS -->
     <link href="css/bootstrap.css" rel="stylesheet">
@@ -32,12 +32,12 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <a class="navbar-brand" href="#">PuzzleScript</a>
+          <a class="navbar-brand" href="../index.html">PuzzleScript</a>
         </div>
         <div class="collapse navbar-collapse">
           <ul class="nav navbar-nav">
-              <li><a href="#Make Games">Make A Game</a></li>
-              <li><a href="#Tutorials">Play A Game</a></li>
+              <li><a href="../index.html">Make A Game</a></li>
+              
               <li class="active"><a href="documentation.html">Documentation</a></li>
           </ul>          
           <ul class="nav navbar-nav navbar-right">
@@ -61,10 +61,10 @@ Relaive directions rotate along with their pattern
 <p>
 gets compiled to the following set of rules:
 <p>
-<pre><code>UP [ up player | crate ] -> [ up player | up crate ] 
-DOWN [ down player | crate ] -> [ down player | down crate ] 
-LEFT [ left player | crate ] -> [ left player | left crate ] 
-RIGHT [ right player | crate ] -> [ right player | right crate ]</code></pre>
+<pre><code>UP [ UP player | crate ] -> [ UP player | UP crate ] 
+DOWN [ DOWN player | crate ] -> [ DOWN player | DOWN crate ] 
+LEFT [ LEFT player | crate ] -> [ LEFT player | LEFT crate ] 
+RIGHT [ RIGHT player | crate ] -> [ RIGHT player | RIGHT crate ]</code></pre>
 <p>
 You can restrict patterns so that they're only matched in a particular direction.  To implement gravity, we could do 
 <p>

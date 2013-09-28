@@ -194,11 +194,11 @@ function generateTitleScreen()
 	if (noUndo && noRestart) {
 		titleImage[11]="..................................";
 	} else if (noUndo) {
-		titleImage[11]=".R to restart.....................",
+		titleImage[11]=".R to restart.....................";
 	} else if (noRestart) {
-		titleImage[11]=".Z to undo.....................",
+		titleImage[11]=".Z to undo.....................";
 	}
-	
+
 	for (var i=0;i<titleImage.length;i++)
 	{
 		titleImage[i]=titleImage[i].replace(/\./g, ' ');
@@ -1094,7 +1094,7 @@ propagationState = {
 	levelDat:[],
 	levelMovementMask:[],
 	rigidGroupIndexMask:[],//[indexgroupNumber, masked by layer arrays]
-    rigidMovementAppliedMask:[],
+    rigidMovementAppliedMask:[]
 //	rigidBackups:[],
 //	bannedGroup:[]
 }

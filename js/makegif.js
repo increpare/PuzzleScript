@@ -13,9 +13,8 @@ function makeGIF() {
 	unitTesting=true;
 	levelString=compiledText;
 
-	for (var i=0;i<errorStrings.length;i++) {
-		var s = errorStrings[i];
-		throw s;
+	if (errorStrings.length>0) {
+		throw(errorStrings[0]);
 	}
 
 

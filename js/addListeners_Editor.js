@@ -13,3 +13,6 @@ var runClickLink = document.getElementById("runClickLink");
 runClickLink.addEventListener("click", runClick, false);
 var rebuildClickLink = document.getElementById("rebuildClickLink");
 rebuildClickLink.addEventListener("click", rebuildClick, false);
+
+var exportClickLink = document.getElementById("exportClickLink");
+exportClickLink.addEventListener("click", exportClick, false);

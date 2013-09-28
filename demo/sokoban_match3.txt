@@ -1,0 +1,110 @@
+title Match 3 Block Push
+author Stephen Lavelle
+homepage www.puzzlescript.net
+
+========
+OBJECTS
+========
+
+Background 
+LIGHTGREEN GREEN
+11111
+01111
+11101
+11111     
+10111   
+
+
+Target 
+DarkBlue 
+..... 
+.000.
+.0.0.
+.000.
+.....     
+
+Wall     
+BROWN DARKBROWN     
+00010
+11111
+01000
+11111
+00010
+
+Player 
+Black Orange White Blue     
+.000.
+.111.
+22222
+.333.
+.3.3.
+
+Crate
+Orange Yellow
+00000
+0...0
+0...0
+0...0
+00000
+
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Player
+* = Crate
+@ = Crate and Target
+O = Target
+
+
+=======
+SOUNDS
+=======
+
+Crate MOVE 36772507
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Target
+Player, Wall, Crate
+
+======
+RULES     
+======     
+
+[ >  Player | Crate ] -> [  >  Player | > Crate  ]     
+
+late [ Crate | Crate | Crate ] -> []
+
+==============
+WINCONDITION
+==============
+
+All Crate on Target     
+
+=======     
+LEVELS
+=======
+
+#########
+#.......#
+#.*.*.@.#
+#.P...O.#
+#...*.*.#
+#.......#
+#########
+
+.#######.
+.#.....#.
+.#O##..##
+##.##.*.#
+#.*..**.#
+#.OOO.#.#
+#.P.....#
+#########

@@ -8,61 +8,45 @@ OBJECTS
 
 Background 
 LIGHTGREEN GREEN
-.....
-0....
-...0.
-.....     
-.0...   
+11111
+01111
+11101
+11111     
+10111   
 
 
 Target 
-YELLOW
+DarkBlue 
 ..... 
-..0..
 .000.
-..0..
+.0.0.
+.000.
 .....     
 
 Wall     
 BROWN DARKBROWN     
-000.0
-.....
-0.000
-.....
-000.0
+00010
+11111
+01000
+11111
+00010
 
 Player 
-PINK     
-..0..
-00000
-..0..
+Black Orange White Blue     
 .000.
-.0.0.
+.111.
+22222
+.333.
+.3.3.
 
 Crate
-RED
+Orange Yellow
 00000
 0...0
 0...0
 0...0
 00000
 
-
-=======
-SOUNDS
-=======
-
-Crate MOVE 3018293 
-START 3124523     
-FINISH 4123141
-
-================
-COLLISIONLAYERS
-================
-
-Background
-Target
-Player, Wall, Crate
 
 =======
 LEGEND
@@ -75,6 +59,21 @@ P = Player
 @ = Crate and Target
 O = Target
 
+
+=======
+SOUNDS
+=======
+
+Crate MOVE 36772507
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Target
+Player, Wall, Crate
+
 ======
 RULES     
 ======     
@@ -82,7 +81,7 @@ RULES
 [ >  Player | Crate ] -> [  >  Player | > Crate  ]     
 
 ==============
-WINCONDITIONS
+WINCONDITION
 ==============
 
 All Target on Crate     
@@ -97,4 +96,13 @@ LEVELS
 #.P.*.O.#
 #.......#
 #.......#
+#########
+
+.#######.
+.#.....#.
+.#O##..##
+##.##.*.#
+#.*..**.#
+#.OOO.#.#
+#.P.....#
 #########
