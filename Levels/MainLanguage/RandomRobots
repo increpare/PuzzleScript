@@ -1,0 +1,96 @@
+(
+Simple block pushing example, simplified
+)
+
+========
+OBJECTS
+========
+
+
+Background  (special, automatically placed in its own layer)
+GREEN darkgreen 
+11111
+01111
+11101
+11111
+10111
+
+Target  (Name)     
+YELLOW (Color)
+..... (Sprite)
+..0..
+.000.
+..0..
+.....     
+
+Player    (Required by game)
+PINK     
+..0..
+00000
+..0..
+.000.
+.0.0.
+
+Wall     
+BROWN DARKBROWN     
+000.0
+.....
+0.000
+.....
+000.0
+
+Crate
+gray black red
+.000.
+.200.
+...0.
+00000
+01010
+
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Player
+* = Crate
+@ = Crate and Target
+O = Target
+
+=========
+SOUNDS
+=========
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Target
+Player, Wall, Crate
+
+======
+RULES     
+======     
+
+[crate ] -> [randomDir crate]
+
+==============
+WINCONDITION
+==============
+
+=======     
+LEVELS
+=======
+
+...........
+.....*.....
+...........
+.....*.....
+...........
+.....*.....
+..P........
+.....*.....
+...........

@@ -1231,6 +1231,7 @@ function rulesToMask(state) {
 				var mask_r = maskTemplate.concat([]);
 				var forcemask_r = 0;				
 				var cellmask_r = 0;
+				var randomMask_r = 0;
 				var nonExistenceMask_r = 0;
 				var postMovementsLayerMask_r = 0;
 				var stationaryMask_r = 0;
@@ -1246,10 +1247,9 @@ function rulesToMask(state) {
 						var object_name = cell_r[l+1];
 						if (object_name in state.objectMasks) {
 							var mask = state.objectMasks[object_name];                            
-                            cellmask_r = mask;
-                            forcemask_r = randomEntityMask;
-                            nonExistenceMask_r = 0;
-                            
+                            randomMask_r = randomMask_r | mask;
+                            //forcemask_r = randomEntityMask;
+//                            nonExistenceMask_r = 0; //don't know why i had this                           
 						} else {
 							logError('You want to spawn a random "'+object_name.toUpperCase()+'", but I don\'t know how to do that',rule.lineNumber);
 						}
@@ -1286,7 +1286,7 @@ function rulesToMask(state) {
 						nonExistenceMask_r = nonExistenceMask_r | layerMask;
 					}
 				}
-				cellrow_r[k] = [forcemask_r, cellmask_r, nonExistenceMask_r,postMovementsLayerMask_r,stationaryMask_r];
+				cellrow_r[k] = [forcemask_r, cellmask_r, nonExistenceMask_r,postMovementsLayerMask_r,stationaryMask_r,randomMask_r];
 			}
 		}
 	}
@@ -1316,19 +1316,21 @@ function collapseRules(state) {
 					} 
 					ellipses[j]=true;
 				}
-				newcellrow_l[k * 5] = oldcellmask_l[0];
-				newcellrow_l[k * 5 + 1] = oldcellmask_l[1];
-				newcellrow_l[k * 5 + 2] = oldcellmask_l[2];//nonexistence
-				newcellrow_l[k * 5 + 3] = oldcellmask_l[3];//movenonexistence
-				newcellrow_l[k * 5 + 4] = oldcellmask_l[4];//stationarymask
+				newcellrow_l[k * 6] = oldcellmask_l[0];
+				newcellrow_l[k * 6 + 1] = oldcellmask_l[1];
+				newcellrow_l[k * 6 + 2] = oldcellmask_l[2];//nonexistence
+				newcellrow_l[k * 6 + 3] = oldcellmask_l[3];//movenonexistence
+				newcellrow_l[k * 6 + 4] = oldcellmask_l[4];//stationarymask
+				newcellrow_l[k * 6 + 5]  = 0;//unassigned
 
 				if (oldrule.rhs.length>0) {
 					var oldcellmask_r = cellrow_r[k];
-					newcellrow_r[k * 5] = oldcellmask_r[0];
-					newcellrow_r[k * 5 + 1] = oldcellmask_r[1];
-					newcellrow_r[k * 5 + 2] = oldcellmask_r[2];//nonexistence
-					newcellrow_r[k * 5 + 3] = oldcellmask_r[3];//postCell_MovementsLayerMask
-					newcellrow_r[k * 5 + 4] = oldcellmask_r[4];//stationarymask
+					newcellrow_r[k * 6] = oldcellmask_r[0];
+					newcellrow_r[k * 6 + 1] = oldcellmask_r[1];
+					newcellrow_r[k * 6 + 2] = oldcellmask_r[2];//nonexistence
+					newcellrow_r[k * 6 + 3] = oldcellmask_r[3];//postCell_MovementsLayerMask
+					newcellrow_r[k * 6 + 4] = oldcellmask_r[4];//stationarymask
+					newcellrow_r[k * 6 + 5] = oldcellmask_r[5];//randomentitymask
 				}
 			}
 			newrule[1][j] = newcellrow_l;
@@ -1760,7 +1762,7 @@ function generateSoundData(state) {
 			else if (target in state.objectMasks) {
 
 			} else {
-				logError('Object "'+ target+'" not found.');
+				logError('Object "'+ target+'" not found.',lineNumber);
 			}
 
 			var objectMask = state.objectMasks[target];

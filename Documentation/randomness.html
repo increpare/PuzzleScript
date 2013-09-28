@@ -53,51 +53,24 @@
 
 
 
-<h1>Bird's-eye view of a PuzzleScript file</h1>
+<h1>Randomness</h1>
 <p>
-A puzzlescript file is divided into 8 sections:
+If you want a robot to move in a random direction each turn, do this:
 <p>
-
-  <ul class="nav nav-pills">
-    <li><a href="prelude.html">Prelude</a></li>
-    <li><a href="objects.html">Objects</a></li>
-    <li><a href="legend.html">Legend</a></li>
-    <li><a href="sounds.html">Sounds</a></li>
-    <li><a href="collisionlayers.html">CollisionLayers</a></li>
-    <li><a href="rules.html">Rules</a></li>
-    <li class="active"><a href="wincondition.html">WinCondition</a></li>
-    <li><a href="levels.html">Levels</a></li>
-  </ul>
-
-
-
-
-    <p>
-    <h2>WinCondition</h2>
-    <p>
-    Here are the possible formats of win conditions:
-    <p>
-    <pre><code> (neko puzzle - you win if there's no fruit left)
-No Fruit
-
-(sokoban - you win if every target point has a crate on it)
-All Target On Crate 
-
-(you win if Love exists somewhere)
-Some Love 
-
-(you win if there's some gold in the chest)
-Some gold on chest 
-
-(you win if all gold has been taken from the chest)
-No gold on chest</code></pre>
+<pre><code>[ Robot ] -> [randomDir Robot]</code></pre>
 <p>
-	These should do for most games, but if you want more advanced control over winning and losing, then you can specify your own win rules using <a href="rules.html#commands">commands</a>.
-
-
-
-
-
+<img src="images/randomrobots.gif">
+<p>
+If you want a robot spawnpoint that generates randomly coloured robots, have this in your legend
+<p>
+<pre><code>Robot = RedRobot or GreenRobot or BlueRobot</code></pre>
+<p>
+and then use this in your script
+<p>
+<pre><code>[ RobotSpawn no robot ] -> [ RobotSpawn random Robot]</code></pre>
+<p>
+<img src="images/robotspawner.gif">
+<p>
     </div><!-- /.container -->
 
 

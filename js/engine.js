@@ -189,6 +189,16 @@ function generateTitleScreen()
 		}
 	}
 
+	var noUndo = 'noundo' in state.metadata;
+	var noRestart = 'norestart' in state.metadata;
+	if (noUndo && noRestart) {
+		titleImage[11]="..................................";
+	} else if (noUndo) {
+		titleImage[11]=".R to restart.....................",
+	} else if (noRestart) {
+		titleImage[11]=".Z to undo.....................",
+	}
+	
 	for (var i=0;i<titleImage.length;i++)
 	{
 		titleImage[i]=titleImage[i].replace(/\./g, ' ');
@@ -576,12 +586,18 @@ var screenheight=0;
 
 
 function DoRestart() {
+	if ('norestart' in state.metadata) {
+		return;
+	}
 	backups.push(backupLevel());
 	restoreLevel(restartTarget);
 	tryPlayRestartSound();
 }
 
 function DoUndo() {
+	if ('noundo' in state.metadata) {
+		return;
+	}
 	if (backups.length>0) {
 		var tobackup = backups[backups.length-1];
 		restoreLevel(tobackup);
@@ -769,7 +785,7 @@ function cellRowMatchesWildCard_ParticularK(direction,cellRow,i,k) {
 
     if (checkThing(initCellMask,initMovementMask,initNonExistenceMask,initStationaryMask,movementMask,cellMask)) {
             var targetIndex = i;
-            for (var j=5;j<cellRow.length;j+=5) {
+            for (var j=6;j<cellRow.length;j+=6) {
                 targetIndex = (targetIndex+delta[1]+delta[0]*level.height)%level.dat.length;
                 var movementMask = level.movementMask[targetIndex];
                 var ruleMovementMask= cellRow[j+0];
@@ -784,7 +800,7 @@ function cellRowMatchesWildCard_ParticularK(direction,cellRow,i,k) {
                 	{//k defined 
                 		var targetIndex2=targetIndex;
                 		targetIndex2 = (targetIndex2+delta[1]*(k)+delta[0]*(k)*level.height+level.dat.length)%level.dat.length;
-                		for (var j2=j+5;j2<cellRow.length;j2+=5) {
+                		for (var j2=j+6;j2<cellRow.length;j2+=6) {
                 			movementMask = level.movementMask[targetIndex2];
 			                cellMask = level.dat[targetIndex2];
 
@@ -835,7 +851,7 @@ function cellRowMatchesWildCard(direction,cellRow,i,maxk) {
 
     if (checkThing(initCellMask,initMovementMask,initNonExistenceMask,initStationaryMask,movementMask,cellMask)) {
             var targetIndex = i;
-            for (var j=5;j<cellRow.length;j+=5) {
+            for (var j=6;j<cellRow.length;j+=6) {
                 targetIndex = (targetIndex+delta[1]+delta[0]*level.height)%level.dat.length;
                 var movementMask = level.movementMask[targetIndex];
                 var ruleMovementMask= cellRow[j+0];
@@ -849,7 +865,7 @@ function cellRowMatchesWildCard(direction,cellRow,i,maxk) {
                 	for (var k=0;k<maxk;k++) {
                 		var targetIndex2=targetIndex;
                 		targetIndex2 = (targetIndex2+delta[1]*(k)+delta[0]*(k)*level.height+level.dat.length)%level.dat.length;
-                		for (var j2=j+5;j2<cellRow.length;j2+=5) {
+                		for (var j2=j+6;j2<cellRow.length;j2+=6) {
                 			movementMask = level.movementMask[targetIndex2];
 			                cellMask = level.dat[targetIndex2];
 
@@ -906,7 +922,7 @@ function cellRowMatches(direction,cellRow,i,k) {
 
     if (checkThing(initCellMask,initMovementMask,initNonExistenceMask,initStationaryMask,movementMask,cellMask)) {
             var targetIndex = i;
-            for (var j=5;j<cellRow.length;j+=5) {
+            for (var j=6;j<cellRow.length;j+=6) {
                 targetIndex = (targetIndex+delta[1]+delta[0]*level.height)%level.dat.length;
                 var movementMask = level.movementMask[targetIndex];
                 var ruleMovementMask= cellRow[j+0];
@@ -941,7 +957,7 @@ function matchCellRow(direction, cellRow) {
 	var ymin=0;
 	var ymax=level.height;
 
-    var len=((cellRow.length/5)|0);
+    var len=((cellRow.length/6)|0);
     switch(direction) {
     	case 1://up
     	{
@@ -988,7 +1004,7 @@ function matchCellRowWildCard(direction, cellRow) {
 	var ymin=0;
 	var ymax=level.height;
 
-	var len=((cellRow.length/5)|0)-1;//remove one to deal with wildcard
+	var len=((cellRow.length/6)|0)-1;//remove one to deal with wildcard
     switch(direction) {
     	case 1://up
     	{
@@ -1162,7 +1178,7 @@ function tryApplyRule(rule,ruleGroupIndex,ruleIndex){
 	            var postRow = rule[2][cellRowIndex];
 	            
 	            var currentIndex = rule[5][cellRowIndex] ? tuple[cellRowIndex][0] : tuple[cellRowIndex];
-	            for (var cellIndex=0;cellIndex<preRow.length;cellIndex+=5) {
+	            for (var cellIndex=0;cellIndex<preRow.length;cellIndex+=6) {
 	                var preCell_Movement = preRow[cellIndex+0];
 	                if (preCell_Movement === ellipsisDirection) {
 	                	var k = tuple[cellRowIndex][1];
@@ -1180,21 +1196,23 @@ function tryApplyRule(rule,ruleGroupIndex,ruleIndex){
 	                var postCell_NonExistence = postRow[cellIndex+2];
 	                var postCell_MovementsLayerMask = postRow[cellIndex+3];
 	                var postCell_StationaryMask = postRow[cellIndex+4];
+	                var postCell_RandomEntityMask = postRow[cellIndex+5];
 
-	                if (postCell_Movements === randomEntityMask) {
+	                if (postCell_RandomEntityMask !== 0) {
 	                	var choices=[];
 	                	for (var i=0;i<32;i++) {
-	                		if  ((postCell_Objects&(1<<i))!==0) {
+	                		if  ((postCell_RandomEntityMask&(1<<i))!==0) {
 	                			choices.push(i);
 	                		}
 	                	}
 	                	var rand = choices[Math.floor(Math.random() * choices.length)];
 	                	var n = state.idDict[rand];
 	                	var o = state.objects[n];
-	                	var layerMask = state.layerMasks[o.layer];
-	                	postCell_Movements = 0;
-	                	postCell_Objects = (1<<rand);
-	                	postCell_NonExistence = layerMask;
+	                	var objectMask = state.layerMasks[o.layer];
+	                	var movementLayerMask = (1+2+4+8+16)<<(5*o.layer);
+	                	postCell_Objects = postCell_Objects | (1<<rand);
+	                	postCell_NonExistence = postCell_NonExistence | state.layerMasks[o.layer];
+	                	postCell_StationaryMask = postCell_StationaryMask | movementLayerMask;
 	                }
 	                
 	                
@@ -1219,8 +1237,8 @@ function tryApplyRule(rule,ruleGroupIndex,ruleIndex){
 
 	                //4 add new
 	                curCellMask = curCellMask | postCell_Objects;
-	                curMovementMask = curMovementMask | postCell_Movements;
 	                curMovementMask = curMovementMask & (~postCell_StationaryMask);
+	                curMovementMask = curMovementMask | postCell_Movements;
 
 	                var rigidchange=false;
 	                var curRigidGroupIndexMask =0;

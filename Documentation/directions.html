@@ -53,48 +53,32 @@
 
 
 
-<h1>Bird's-eye view of a PuzzleScript file</h1>
+<h1>Intermediate Directions and Movement</h1>
 <p>
-A puzzlescript file is divided into 8 sections:
+Relaive directions rotate along with their pattern
 <p>
-
-  <ul class="nav nav-pills">
-    <li><a href="prelude.html">Prelude</a></li>
-    <li><a href="objects.html">Objects</a></li>
-    <li><a href="legend.html">Legend</a></li>
-    <li><a href="sounds.html">Sounds</a></li>
-    <li><a href="collisionlayers.html">CollisionLayers</a></li>
-    <li><a href="rules.html">Rules</a></li>
-    <li class="active"><a href="wincondition.html">WinCondition</a></li>
-    <li><a href="levels.html">Levels</a></li>
-  </ul>
-
-
-
-
-    <p>
-    <h2>WinCondition</h2>
-    <p>
-    Here are the possible formats of win conditions:
-    <p>
-    <pre><code> (neko puzzle - you win if there's no fruit left)
-No Fruit
-
-(sokoban - you win if every target point has a crate on it)
-All Target On Crate 
-
-(you win if Love exists somewhere)
-Some Love 
-
-(you win if there's some gold in the chest)
-Some gold on chest 
-
-(you win if all gold has been taken from the chest)
-No gold on chest</code></pre>
+<pre><code>[ > Player | Crate ] -> [ > Player | > Crate]</code></pre>
 <p>
-	These should do for most games, but if you want more advanced control over winning and losing, then you can specify your own win rules using <a href="rules.html#commands">commands</a>.
-
-
+gets compiled to the following set of rules:
+<p>
+<pre><code>UP [ up player | crate ] -> [ up player | up crate ] 
+DOWN [ down player | crate ] -> [ down player | down crate ] 
+LEFT [ left player | crate ] -> [ left player | left crate ] 
+RIGHT [ right player | crate ] -> [ right player | right crate ]</code></pre>
+<p>
+You can restrict patterns so that they're only matched in a particular direction.  To implement gravity, we could do 
+<p>
+<pre><code>DOWN [ stationary Crate ] -> [ > Object ]</code></pre>
+<p>
+compiles to
+<p>
+<pre><code>DOWN [ stationary Crate ] -> [ DOWN Object ]</code></pre>
+<p>
+it would probably have been simpler to write the rule as 
+<p>
+<pre><code>[ stationary Crate ] -> [ DOWN Object ]</code></pre>
+<p>
+which is the same thing.
 
 
 
