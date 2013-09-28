@@ -287,10 +287,12 @@ function canvasResize() {
     if (cellwidth > cellheight) {
         cellwidth = cellheight;
         xoffset = (canvas.width - cellwidth * screenwidth) / 2;
+        yoffset = (canvas.height - cellheight * screenheight) / 2;
     }
     else if (cellheight > cellwidth) {
         cellheight = cellwidth;
         yoffset = (canvas.height - cellheight * screenheight) / 2;
+        xoffset = (canvas.width - cellwidth * screenwidth) / 2;
     }
     cellwidth = ~~cellwidth;
     cellheight = ~~cellheight;
