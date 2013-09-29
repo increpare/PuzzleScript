@@ -1,5 +1,10 @@
 var unitTesting=false;
 var curlevel=0;
+/*
+if (localStorage.curlevel!==undefined) {
+	curlevel = localStorage["curlevel"];
+}*/
+
 var quittingTitleScreen=false;
 var quittingMessageScreen=false;
 var deltatime=17;

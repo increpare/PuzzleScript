@@ -1,14 +1,4 @@
 /*
-credits: 
-codemirror for being an awesome web text editor
-arne for the main colour palette
-dock for help making others
-terry for poking me to add some silly features
-sound engine is based on jfxr, by such and such, which is based on sfxr
-lots of other people
-*/
-
-/*
 ..................................
 .............SOKOBAN..............
 ..................................
@@ -149,12 +139,13 @@ var titleWidth=titletemplate_select1[0].length;
 var titleHeight=titletemplate_select1.length;
 var textMode=true;
 var titleScreen=true;
-var titleInputMode=0;//1 means there are options
+var titleMode=0;//1 means there are options
 var titleSelection=0;
 var titleSelected=false;
 function generateTitleScreen()
 {
-
+	titleMode=curlevel>0?1:0;
+	
 	if (state.levels.length==0) {
 		titleImage=intro_template;
 		return;
@@ -167,7 +158,7 @@ function generateTitleScreen()
 
 	continueText = "continue";
 	leftnote1 = "arrow keys to move";
-	if (titleInputMode==0) {
+	if (titleMode==0) {
 		if (titleSelected) {
 			titleImage = deepClone(titletemplate_firstgo_selected);		
 		} else {
@@ -176,15 +167,15 @@ function generateTitleScreen()
 	} else {
 		if (titleSelection==0) {
 			if (titleSelected) {
-				titleImage = deepClone(titletemplate_select0);		
+				titleImage = deepClone(titletemplate_select0_selected);		
 			} else {
-				titleImage = deepClone(titletemplate_select0_selected);					
+				titleImage = deepClone(titletemplate_select0);					
 			}			
 		} else {
 			if (titleSelected) {
-				titleImage = deepClone(titletemplate_select0);		
+				titleImage = deepClone(titletemplate_select1_selected);		
 			} else {
-				titleImage = deepClone(titletemplate_select0_selected);					
+				titleImage = deepClone(titletemplate_select1);					
 			}						
 		}
 	}
@@ -278,7 +269,7 @@ function deepClone(item) {
 }
 
 function drawMessageScreen() {
-	titleMode=false;
+	titleMode=0;
 	textMode=true;
 	titleImage = deepClone(messagecontainer_template);
 
@@ -315,8 +306,12 @@ function loadLevelFromState(state,levelindex) {
 	titleSelection=0;
 	curlevel=levelindex;
     var leveldat = state.levels[levelindex];
+    if (leveldat===null) {
+    	consolePrint("Trying to access a level that doesn't exist.");
+    	return;
+    }
     if (leveldat.message===undefined) {
-    	titleMode=false;
+    	titleMode=0;
     	textMode=false;
 	    level = {
 	        width: leveldat.w,
@@ -675,7 +670,8 @@ var dirMasksDelta = {
      3:[0,0]//'no'
 };
 
-var seedsToPlay=[];
+var seedsToPlay_CanMove=[];
+var seedsToPlay_CantMove=[];
 
 function repositionEntitiesOnLayer(positionIndex,layer,dirMask) 
 {
@@ -697,22 +693,23 @@ function repositionEntitiesOnLayer(positionIndex,layer,dirMask)
     var layerMask = state.layerMasks[layer];
     var targetMask = level.dat[targetIndex];
     var collision = targetMask&layerMask;
+    var sourceMask = level.dat[positionIndex];
+
     if (collision!=0) {
 
 		for (var i=0;i<state.sfx_MovementFailureMasks.length;i++) {
 			var o = state.sfx_MovementFailureMasks[i];
 			var objectMask = o.objectMask;
-			if (objectMask&sourceMask!==0) {
+			if ((objectMask&sourceMask)!==0) {
 				var movementMask = level.movementMask[positionIndex];
 				var directionMask = o.directionMask;
-				if ((movementMask&directionMask)!==0 && seedsToPlay.indexOf(o.seed)===-1) {
-					seedsToPlay.push(o.seed);
+				if ((movementMask&directionMask)!==0 && seedsToPlay_CantMove.indexOf(o.seed)===-1) {
+					seedsToPlay_CantMove.push(o.seed);
 				}
 			}
 		}
         return false;
     }
-    var sourceMask = level.dat[positionIndex];
     var movingEntities = sourceMask&layerMask;
     level.dat[positionIndex] = sourceMask&(~layerMask);
     level.dat[targetIndex] = targetMask | movingEntities;
@@ -724,8 +721,8 @@ function repositionEntitiesOnLayer(positionIndex,layer,dirMask)
 		if ((objectMask&sourceMask)!==0) {
 			var movementMask = level.movementMask[positionIndex];
 			var directionMask = o.directionMask;
-			if ((movementMask&directionMask)!==0) {
-				seedsToPlay.push(o.seed);
+			if ((movementMask&directionMask)!==0 && seedsToPlay_CanMove.indexOf(o.seed)===-1) {
+				seedsToPlay_CanMove.push(o.seed);
 			}
 		}
 	}
@@ -1147,7 +1144,7 @@ function tryApplyRule(rule,ruleGroupIndex,ruleIndex){
         }
     }
 
-    if (rule[9]==false) {//if the rule has a rhs
+    if (rule[9]===false) {//if the rule has a rhs
 	    var tuples  = generateTuples(matches);
 	    for (var tupleIndex=0;tupleIndex<tuples.length;tupleIndex++) {
 	        var tuple = tuples[tupleIndex];
@@ -1156,18 +1153,18 @@ function tryApplyRule(rule,ruleGroupIndex,ruleIndex){
 	            var matches=true;                
 	            for (var cellRowIndex=0;cellRowIndex<rule[1].length;cellRowIndex++) {
 	            	if (rule[5][cellRowIndex]) {//if ellipsis
-		            	if (cellRowMatchesWildCard_ParticularK(rule[0],rule[1][cellRowIndex],tuple[cellRowIndex][0],tuple[cellRowIndex][1])==false) {
+		            	if (cellRowMatchesWildCard_ParticularK(rule[0],rule[1][cellRowIndex],tuple[cellRowIndex][0],tuple[cellRowIndex][1])===false) {
 		                    matches=false;
 		                    break;
 		                }
 	            	} else {
-		            	if (cellRowMatches(rule[0],rule[1][cellRowIndex],tuple[cellRowIndex])==false) {
+		            	if (cellRowMatches(rule[0],rule[1][cellRowIndex],tuple[cellRowIndex])===false) {
 		                    matches=false;
 		                    break;
 		                }
 	            	}
 	            }
-	            if (matches ==false ) {
+	            if (matches === false ) {
 	                continue;
 	            }
 	        }
@@ -1492,7 +1489,8 @@ function processInput(dir) {
 	    sfxCreateMask=0;
 	    sfxDestroyMask=0;
 
-		seedsToPlay=[];
+		seedsToPlay_CanMove=[];
+		seedsToPlay_CantMove=[];
 
         while (first || rigidloop||(anyMovements()&& (i<50))) {
         //not particularly elegant, but it'll do for now - should copy the world state and check
@@ -1517,8 +1515,41 @@ function processInput(dir) {
         	window.console.log("looped through 50 times, gave up.  too many loops!");
         }
 
-        for (var i=0;i<seedsToPlay.length;i++) {
-	        	playSeed(seedsToPlay[i]);
+        for (var i=0;i<seedsToPlay_CantMove.length;i++) {
+	        	playSeed(seedsToPlay_CantMove[i]);
+        }
+
+
+        if (playerPositions.length>0 && state.metadata.require_player_movement!==undefined) {
+        	var somemoved=false;
+        	for (var i=0;i<playerPositions.length;i++) {
+        		var pos = playerPositions[i];
+        		var val = level.dat[pos];
+        		if ((val&state.playerMask)===0) {
+        			somemoved=true;
+        			break;
+        		}
+        	}
+        	if (somemoved===false) {
+        		backups.push(bak);
+        		DoUndo();
+        		seedsToPlay_CanMove=[];
+        		seedsToPlay_CantMove=[];
+        		return;
+        	}
+        	//play player cantmove sounds here
+        }
+
+	    if (level.commandQueue.indexOf('cancel')>=0) {	
+    		backups.push(bak);
+    		DoUndo();
+    		seedsToPlay_CanMove=[];
+    		seedsToPlay_CantMove=[];
+    		return;
+	    } 
+
+        for (var i=0;i<seedsToPlay_CanMove.length;i++) {
+	        	playSeed(seedsToPlay_CanMove[i]);
         }
 
         for (var i=0;i<state.sfx_CreationMasks.length;i++) {
@@ -1541,29 +1572,6 @@ function processInput(dir) {
         	level.rigidMovementAppliedMask[i]=0;
         }
 
-	    if (level.commandQueue.indexOf('cancel')>=0) {	    	
-        	restorePreservationState(startState);
-        	redraw();
-        	return;
-	    } 
-
-        if (playerPositions.length>0 && state.metadata.require_player_movement!==undefined) {
-        	var somemoved=false;
-        	for (var i=0;i<playerPositions.length;i++) {
-        		var pos = playerPositions[i];
-        		var val = level.dat[pos];
-        		if ((val&state.playerMask)===0) {
-        			somemoved=true;
-        			break;
-        		}
-        	}
-        	if (somemoved===false) {
-        		backups.push(bak);
-        		DoUndo();
-        		return;
-        	}
-        	//play player cantmove sounds here
-        }
 
 	    for (var i=0;i<level.dat.length;i++) {
 	    	if (level.dat[i]!=bak.dat[i]) {
@@ -1577,7 +1585,7 @@ function processInput(dir) {
 	 		if (command.charAt(1)==='f')  {//identifies sfxN
 	 			tryPlaySimpleSound(command);
 	 		}  	
-			if (unitTesting==false) {
+			if (unitTesting===false) {
 				if (command==='message') {
 					showTempMessage();
 				}
@@ -1599,6 +1607,12 @@ function processInput(dir) {
 }
 
 function checkWin() {
+
+	if (level.commandQueue.indexOf('win')>=0) {
+		DoWin();
+		return;
+	}
+
 	var wincondition = state.wincondition;
 	if (wincondition.length==0) {
 		return;
@@ -1647,9 +1661,6 @@ function checkWin() {
 		}
 	}
 
-	if (level.commandQueue.indexOf('win')>=0) {
-		won=true;
-	}
 	if (won) {
 		DoWin();
 	}
@@ -1697,7 +1708,7 @@ function nextLevel() {
 		loadLevelFromState(state,curlevel);
 	} else {
 		if (curlevel<(state.levels.length-1))
-		{
+		{			
 			curlevel++;
 			textMode=false;
 			titleScreen=false;
@@ -1710,9 +1721,10 @@ function nextLevel() {
 			saveProgress();
 			goToTitleScreen();
 			tryPlayEndGameSound();
-		}
+		}		
 		//continue existing game
 	}
+	localStorage.curlevel=curlevel;
 	canvasResize();
 }
 
@@ -1723,3 +1735,5 @@ function goToTitleScreen(){
 	titleSelection=0;
 	generateTitleScreen();
 }
+
+

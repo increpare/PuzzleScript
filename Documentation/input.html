@@ -7,7 +7,7 @@
     <meta name="author" content="">
     <link rel="shortcut icon" type="image/x-icon" href="ico/favicon.ico" />
 
-    <title>Randomness - Puzzle Script Documentation</title>
+    <title>Input - Puzzle Script Documentation</title>
 
     <!-- Bootstrap core CSS -->
     <link href="css/bootstrap.css" rel="stylesheet">
@@ -49,32 +49,17 @@
     </div>
 
     <div class="container">
-
-
-
-
-<h1>Randomness</h1>
+    <p>
+    <h1>Input</h1>
 <p>
-If you want a robot to move in a random direction each turn, do this:
+When you press the arrow keys or action, this input is sent to the main player.  
 <p>
-<pre><code>[ Robot ] -> [randomDir Robot]</code></pre>
+Sometimes you will want to have several player entities on screen at once.  Don't worry, input gets sent to all of them :)
 <p>
-<img src="images/randomrobots.gif">
+Sometimes you will want several different types of objects to be able to receive input.  Let's call them Player1,Player3, Player3.  You can define player as follows in the legend section
 <p>
-If you want a robot spawnpoint that generates randomly coloured robots, have this in your legend
-<p>
-<pre><code>Robot = RedRobot or GreenRobot or BlueRobot</code></pre>
-<p>
-and then use this in your script
-<p>
-<pre><code>[ RobotSpawn no robot ] -> [ RobotSpawn random Robot]</code></pre>
-<p>
-<img src="images/robotspawner.gif">
-<p>
-You can only really use randomness once per cell - if you have several random statements they're all munged together.  For instance, the above rule is identical to writing
-<p>
-<pre><code>[ RobotSpawn no robot ] -> [ RobotSpawn random RedRobot random GreenRobot random BlueRobot]</code></pre>
-<p>
+<pre><code>Player = Player1 or Player2 or Player3</code></pre>
+and then three of those entitiy types will receive input from the player.
     </div><!-- /.container -->
 
 

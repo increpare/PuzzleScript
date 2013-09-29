@@ -36,8 +36,6 @@ function exportClick() {
 	compile("restart");
 
 	var stateString = JSON.stringify(state);
-
-	consolePrint(stateString);
 	
 	buildStandalone(stateString);
 }
@@ -76,7 +74,7 @@ function compile(command,text) {
 	}
 	/*catch(err)
 	{
-		if (anyErrors==false) {
+		if (anyErrors===false) {
 			logErrorNoLine(err.toString());
 		}
 	}*/

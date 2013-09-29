@@ -100,9 +100,9 @@ colorPalettes = {
 	green			: "#44891a",
 	darkgreen		: "#2f484e",
 	lightgreen		: "#a3ce27",
-	blue			: "#245aef",
-	lightblue		: "#31a2f2",
-	darkblue		: "#1b2632",
+	blue			: "#31A2F2",
+	lightblue		: "#B2DCEF",
+	darkblue		: "#005784",
 	purple			: "#342a97",
 	pink			: "#de65e2"
 	},

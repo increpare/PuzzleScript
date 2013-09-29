@@ -48,15 +48,15 @@ function getParameterByName(name) {
 
 var fileToOpen=getParameterByName("demo");
 if (fileToOpen!==null&&fileToOpen.length>0) {
-	var client = new XMLHttpRequest();
-	client.open('GET', 'demo/'+fileToOpen+".txt");
-	client.onreadystatechange = function() {
+	var fileOpenClient = new XMLHttpRequest();
+	fileOpenClient.open('GET', 'demo/'+fileToOpen+".txt");
+	fileOpenClient.onreadystatechange = function() {
 		
-  		if(client.readyState!=4) {
+  		if(fileOpenClient.readyState!=4) {
   			return;
   		}
   		
-		editor.setValue(client.responseText);
+		editor.setValue(fileOpenClient.responseText);
 	}
-	client.send();
+	fileOpenClient.send();
 }

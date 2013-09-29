@@ -4,20 +4,20 @@ var get_blob = function() {
 
 var standalone_HTML_String="";
 
-var client = new XMLHttpRequest();
+var clientStandaloneRequest = new XMLHttpRequest();
 
-client.open('GET', 'standalone_inlined.txt');
-client.onreadystatechange = function() {
+clientStandaloneRequest.open('GET', 'standalone_inlined.txt');
+clientStandaloneRequest.onreadystatechange = function() {
 
-		if(client.readyState!=4) {
+		if(clientStandaloneRequest.readyState!=4) {
 			return;
 		}
-		standalone_HTML_String=client.responseText;
+		standalone_HTML_String=clientStandaloneRequest.responseText;
 }
-client.send();
+clientStandaloneRequest.send();
 
 function buildStandalone(stateString) {
-	if (standalone_HTML_String.length==0) {
+	if (standalone_HTML_String.length===0) {
 		consolePrint("Can't export yet - still downloading html template.");
 		return;
 	}
@@ -29,7 +29,7 @@ function buildStandalone(stateString) {
 	}
 	var homepage = "www.puzzlescript.net";
 	if (state.metadata.homepage!==undefined) {
-		homepage=state.homepage.title.toUpperCase();
+		homepage=state.metadata.homepage.toLowerCase();
 	}
 
 	htmlString = htmlString.replace(/\"__GAMETITLE__\"/g,title);

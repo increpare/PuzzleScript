@@ -91,7 +91,7 @@ function rnd(max) {
 pickupCoin = function() {
   var result=Params();
   result.wave_type = Math.floor(frnd(SHAPES.length));
-  if (result.wave_type == 3) {
+  if (result.wave_type === 3) {
     result.wave_type = 0;
   }
   result.p_base_freq = 0.4 + frnd(0.5);
@@ -112,11 +112,11 @@ pickupCoin = function() {
 laserShoot = function() {
   var result=Params();
   result.wave_type = rnd(2);
-  if (result.wave_type == SINE && rnd(1))
+  if (result.wave_type === SINE && rnd(1))
     result.wave_type = rnd(1);
   result.wave_type = Math.floor(frnd(SHAPES.length));
 
-  if (result.wave_type == 3) {
+  if (result.wave_type === 3) {
     result.wave_type = SQUARE;
   }
 
@@ -124,7 +124,7 @@ laserShoot = function() {
   result.p_freq_limit = result.p_base_freq - 0.2 - frnd(0.6);
   if (result.p_freq_limit < 0.2) result.p_freq_limit = 0.2;
   result.p_freq_ramp = -0.15 - frnd(0.2);
-  if (rnd(2) == 0)
+  if (rnd(2) === 0)
   {
     result.p_base_freq = 0.3 + frnd(0.6);
     result.p_freq_limit = frnd(0.1);
@@ -145,7 +145,7 @@ laserShoot = function() {
   result.p_env_decay = frnd(0.4);
   if (rnd(1))
     result.p_env_punch = frnd(0.3);
-  if (rnd(2) == 0)
+  if (rnd(2) === 0)
   {
     result.p_pha_offset = frnd(0.2);
     result.p_pha_ramp = -frnd(0.2);
@@ -167,14 +167,14 @@ explosion = function() {
     result.p_freq_ramp = -0.2 - frnd(0.2);
   }
   result.p_base_freq *= result.p_base_freq;
-  if (rnd(4) == 0)
+  if (rnd(4) === 0)
     result.p_freq_ramp = 0.0;
-  if (rnd(2) == 0)
+  if (rnd(2) === 0)
     result.p_repeat_speed = 0.3 + frnd(0.5);
   result.p_env_attack = 0.0;
   result.p_env_sustain = 0.1 + frnd(0.3);
   result.p_env_decay = frnd(0.5);
-  if (rnd(1) == 0) {
+  if (rnd(1) === 0) {
     result.p_pha_offset = -0.3 + frnd(0.9);
     result.p_pha_ramp = -frnd(0.3);
   }
@@ -183,7 +183,7 @@ explosion = function() {
     result.p_vib_strength = frnd(0.7);
     result.p_vib_speed = frnd(0.6);
   }
-  if (rnd(2) == 0) {
+  if (rnd(2) === 0) {
     result.p_arp_speed = 0.6 + frnd(0.3);
     result.p_arp_mod = 0.8 - frnd(1.6);
   }
@@ -196,7 +196,7 @@ birdSound = function() {
 
 if (frnd(10) < 1) {
     result.wave_type = Math.floor(frnd(SHAPES.length));
-    if (result.wave_type == 3) {
+    if (result.wave_type === 3) {
       result.wave_type = SQUARE;
     }
 result.p_env_attack = 0.4304400932967592 + frnd(0.2) - 0.1;
@@ -229,7 +229,7 @@ return result;
 
 if (frnd(10) < 1) {
     result.wave_type = Math.floor(frnd(SHAPES.length));
-    if (result.wave_type == 3) {
+    if (result.wave_type === 3) {
       result.wave_type = SQUARE;
     }
 result.p_env_attack = 0.5277795946672003 + frnd(0.2) - 0.1;
@@ -261,7 +261,7 @@ return result;
 //result.wave_type = 4;
     result.wave_type = Math.floor(frnd(SHAPES.length));
 
-    if (result.wave_type == 3) {
+    if (result.wave_type === 3) {
       result.wave_type = SQUARE;
     }
 result.p_env_attack = 0.4304400932967592 + frnd(0.2) - 0.1;
@@ -291,7 +291,7 @@ return result;
   if (frnd(5) > 1) {
     result.wave_type = Math.floor(frnd(SHAPES.length));
 
-    if (result.wave_type == 3) {
+    if (result.wave_type === 3) {
       result.wave_type = SQUARE;
     }
     if (rnd(1)) {
@@ -346,7 +346,7 @@ return result;
   }
 
   result.wave_type = Math.floor(frnd(SHAPES.length));//TRIANGLE;
-  if (result.wave_type == 1 || result.wave_type == 3) {
+  if (result.wave_type === 1 || result.wave_type === 3) {
     result.wave_type = 2;
   }
   //new
@@ -386,10 +386,10 @@ return result;
 pushSound = function() {
   var result=Params();
   result.wave_type = Math.floor(frnd(SHAPES.length));//TRIANGLE;
-  if (result.wave_type == 2) {
+  if (result.wave_type === 2) {
     result.wave_type++;
   }
-  if (result.wave_type == 0) {
+  if (result.wave_type === 0) {
     result.wave_type = NOISE;
   }
   //new
@@ -418,7 +418,7 @@ powerUp = function() {
   else
     result.p_duty = frnd(0.6);
   result.wave_type = Math.floor(frnd(SHAPES.length));
-  if (result.wave_type == 3) {
+  if (result.wave_type === 3) {
     result.wave_type = SQUARE;
   }
   if (rnd(1))
@@ -447,9 +447,9 @@ powerUp = function() {
 hitHurt = function() {
   result = Params();
   result.wave_type = rnd(2);
-  if (result.wave_type == SINE)
+  if (result.wave_type === SINE)
     result.wave_type = NOISE;
-  if (result.wave_type == SQUARE)
+  if (result.wave_type === SQUARE)
     result.p_duty = frnd(0.6);
   result.wave_type = Math.floor(frnd(SHAPES.length));
   result.p_base_freq = 0.2 + frnd(0.6);
@@ -467,7 +467,7 @@ jump = function() {
   result = Params();
   result.wave_type = SQUARE;
   result.wave_type = Math.floor(frnd(SHAPES.length));
-  if (result.wave_type == 3) {
+  if (result.wave_type === 3) {
     result.wave_type = SQUARE;
   }
   result.p_duty = frnd(0.6);
@@ -487,10 +487,10 @@ blipSelect = function() {
   result = Params();
   result.wave_type = rnd(1);
   result.wave_type = Math.floor(frnd(SHAPES.length));
-  if (result.wave_type == 3) {
+  if (result.wave_type === 3) {
     result.wave_type = rnd(1);
   }
-  if (result.wave_type == SQUARE)
+  if (result.wave_type === SQUARE)
     result.p_duty = frnd(0.6);
   result.p_base_freq = 0.2 + frnd(0.4);
   result.p_env_attack = 0.0;
@@ -724,12 +724,12 @@ window.console.log(psstring);*/
     if (env_time > env_length[env_stage]) {
       env_time = 0;
       env_stage++;
-      if (env_stage == 3)
+      if (env_stage === 3)
         break;
     }
-    if (env_stage == 0)
+    if (env_stage === 0)
       env_vol = env_time / env_length[0];
-    else if (env_stage == 1)
+    else if (env_stage === 1)
       env_vol = 1.0 + Math.pow(1.0 - env_time / env_length[1],
                                1.0) * 2.0 * ps.p_env_punch;
     else  // env_stage == 2
@@ -755,27 +755,27 @@ window.console.log(psstring);*/
       phase++;
       if (phase >= period) {
         phase %= period;
-        if (ps.wave_type == NOISE)
+        if (ps.wave_type === NOISE)
           for (var i = 0; i < 32; ++i)
             noise_buffer[i] = Math.random() * 2.0 - 1.0;
       }
 
       // Base waveform
       var fp = phase / period;
-      if (ps.wave_type == SQUARE) {
+      if (ps.wave_type === SQUARE) {
         if (fp < square_duty)
           sub_sample = 0.5;
         else
           sub_sample = -0.5;
-      } else if (ps.wave_type == SAWTOOTH) {
+      } else if (ps.wave_type === SAWTOOTH) {
         sub_sample = 1.0 - fp * 2;
-      } else if (ps.wave_type == SINE) {
+      } else if (ps.wave_type === SINE) {
         sub_sample = Math.sin(fp * 2 * Math.PI);
-      } else if (ps.wave_type == NOISE) {
+      } else if (ps.wave_type === NOISE) {
         sub_sample = noise_buffer[Math.floor(phase * 32 / period)];
-      } else if (ps.wave_type == TRIANGLE) {
+      } else if (ps.wave_type === TRIANGLE) {
         sub_sample = Math.abs(1 - fp * 2) - 1;
-      } else if (ps.wave_type == BREAKER) {
+      } else if (ps.wave_type === BREAKER) {
         sub_sample = Math.abs(1 - fp * fp * 2) - 1;
       } else {
         throw new Exception('bad wave type! ' + ps.wave_type);
@@ -822,7 +822,7 @@ window.console.log(psstring);*/
     sample = sample / 8 * masterVolume;
     sample *= gain;
 
-    if (ps.sample_size == 8) {
+    if (ps.sample_size === 8) {
       // Rescale [-1.0, 1.0) to [0, 256)
       sample = Math.floor((sample + 1) * 128);
       if (sample > 255) {

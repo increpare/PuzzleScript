@@ -99,7 +99,7 @@ function checkKey(e) {
         case 90://z
         {
             //undo
-            if (textMode==false) {
+            if (textMode===false) {
 
                 if (canDump===true) {
                     inputHistory.push("undo");
@@ -110,7 +110,7 @@ function checkKey(e) {
         }
         case 82://r
         {
-        	if (textMode==false) {
+        	if (textMode===false) {
 
                 if (canDump===true) {
                     inputHistory.push("restart");
@@ -122,7 +122,7 @@ function checkKey(e) {
         }
         case 27://escape
         {
-        	if (titleScreen==false) {
+        	if (titleScreen===false) {
 				goToTitleScreen();	
 		    	tryPlayTitleSound();
 				canvasResize();			
@@ -137,9 +137,9 @@ function checkKey(e) {
     	if (state.levels.length===0) {
     		//do nothing
     	} else if (titleScreen) {
-    		if (titleInputMode==0) {
-    			if (inputdir==4) {
-    				if (titleSelected==false) {    				
+    		if (titleMode===0) {
+    			if (inputdir===4) {
+    				if (titleSelected===false) {    				
 						tryPlayStartGameSound();
 	    				titleSelected=true;
 	    				timer=0;
@@ -148,13 +148,29 @@ function checkKey(e) {
 	    				canvasResize();
 	    			}
     			}
+    		} else {
+    			if (inputdir==4) {
+    				if (titleSelected===false) {    				
+						tryPlayStartGameSound();
+	    				titleSelected=true;
+	    				timer=0;
+	    				quittingTitleScreen=true;
+	    				generateTitleScreen();
+	    				redraw();
+	    			}
+    			}
+    			else if (inputdir===0||inputdir===2) {
+    				titleSelection=1-titleSelection;
+    				generateTitleScreen();
+    				redraw();
+    			}
     		}
     	} else {
     		if (inputdir==4) {    				
 				if (unitTesting) {
 					nextLevel();
 					return;
-				} else if (messageselected==false) {
+				} else if (messageselected===false) {
     				messageselected=true;
     				timer=0;
     				quittingMessageScreen=true;

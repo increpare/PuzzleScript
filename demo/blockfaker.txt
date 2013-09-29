@@ -43,6 +43,14 @@ Black
 Wall
 Gray
 
+WallBlock
+Black Grey
+01111
+01111
+01111
+01111
+00001
+
 BlueBlock
 Blue
 00000
@@ -90,10 +98,11 @@ LEGEND
 
 Block = PinkBlock or BlueBlock or PurpleBlock or OrangeBlock or GreenBlock
 Moveable = Player or Block
-PlayerObstacle = Block or Wall
-BlockObstacle = Player or Wall or Grille or Block or EndPoint
+PlayerObstacle = Block or Wall or WallBlock
+BlockObstacle = Player or Wall or WallBlock or Grille or Block or EndPoint
 . = Background
 # = Wall
+@ = WallBlock
 P = Player
 B = BlueBlock
 G = GreenBLock
@@ -116,7 +125,7 @@ COLLISIONLAYERS
 Background
 EndPoint
 Grille
-Player, Wall, PinkBlock, BlueBlock, PurpleBlock, OrangeBlock, GreenBlock
+Player, Wall, WallBlock, PinkBlock, BlueBlock, PurpleBlock, OrangeBlock, GreenBlock
 
 ======
 RULES     
@@ -133,19 +142,36 @@ late [ GreenBlock | GreenBlock | GreenBlock ] -> [ | | ]
 ==============
 WINCONDITION
 ==============
-
+some player on endpoint
 =======     
 LEVELS
 =======
 
+........########
+################
+########@@@@@###
+####@@@@@...@###
+###@..OO....@@##
+##@..@@@@@....@#
+##@.@..@@@..E@@#
+#@..@.O...@@@@##
+##@...@.P.######
+####@.@@@@######
+####@@##########
+########........
+
+message congrats: level 2!
+
 ##########
-####...###
+####R.R###
 #x....#x##
 #xO#O.OxE#
-#Hx##.#xx#
-#####.####
-#####.####
+#xx##.#xx#
+#####R####
+#####P####
 O#########
+
+message congrats: level 3!
 
 ......#######...
 .....##P.#####..
@@ -158,6 +184,8 @@ O#########
 ....####..#.OOx.
 .....###GGG.#x..
 ......#######...
+
+message congrats: level 4!
 
 ######xx######
 ######GG######
@@ -174,6 +202,8 @@ xG....##....Gx
 ######GG######
 ######xx######
 
+message congrats: level 5!
+
 ......##......
 ....######....
 ..##########..
@@ -188,3 +218,5 @@ xG....##....Gx
 ..##########..
 ....######....
 ......##......
+
+message now go play the real game

@@ -36,12 +36,12 @@
         </div>
         <div class="collapse navbar-collapse">
           <ul class="nav navbar-nav">
-              <li><a href="../index.html">Make A Game</a></li>
+              <li><a href="../editor.html">Make A Game</a></li>
               
               <li class="active"><a href="documentation.html">Documentation</a></li>
           </ul>          
           <ul class="nav navbar-nav navbar-right">
-            <li><a href="donate.html">Donate</a></li>
+            <li><a href="https://www.paypal.com/cgi-bin/webscr?cmd=_donations&amp;business=RF7ZTG7FEU7YN&amp;lc=GB&amp;item_name=PuzzleScript%2enet&amp;item_number=puzzlescript%20donation&amp;currency_code=EUR&amp;bn=PP%2dDonationsBF%3abtn_donate_LG%2egif%3aNonHosted">Donate</a></li>
             <li><a href="about.html">About</a></li>
           </ul>
         </div><!--/.nav-collapse -->
@@ -79,9 +79,36 @@ it would probably have been simpler to write the rule as
 <pre><code>[ stationary Crate ] -> [ DOWN Object ]</code></pre>
 <p>
 which is the same thing.
-
-
-
+<p>
+<hr>
+<p>
+There are horizontal directons as well - if you want something that moves horizontally when you move horizontally, but ignores you otherwise, you do this
+<p>
+<pre><code>[ Horizontal  Player ] [ Crate ] -> [  Horizontal  Player ] [  Horizontal Crate  ]</code></pre>
+and get this:
+<p>
+<img src="images/horizontal_follow.gif">
+<p>
+(Vertical is also a keyword that you can use).
+<p>
+Vertical and horizontal are both keywords, but is there a way of reducing the following to a single instruction?
+<p>
+<pre><code>[ ^ Player | Crate ] -> [ ^ Player | ^ Crate ]
+[ v Player | Crate ] -> [ v Player | v Crate ]</code></pre>
+<p>
+There is, and it's this:
+<p>
+<pre><code>[ perpendicular Player | Crate ] -> [ perpendicular Player | perpendicular Crate ]</code></pre>
+<p>
+Parallel is also a keyword, and means what you think it might :)
+<p>
+Rule of thumb: if you don't know what something does in the examples, add the debug statement to the <a href="prelude.html">prelude</a> and see what it produces.  Can you use it to tell what the + in the following code does?
+<p>
+<pre><code>[ RIGHT Player | crate ] -> [RIGHT player | RIGHT crate] 
++ [ LEFT Player | LEFT Crate ] -> [ LEFT player | LEFT Crate ]</code></pre>
+<p>
+(that's a pretty advanced feature - it's crazy unlikely you'll need to use it)
+<p>
     </div><!-- /.container -->
 
 

@@ -80,7 +80,7 @@ RULES
 
 [ >  Player | Crate ] -> [  >  Player | > Crate  ]     
 
-late [ Crate | Crate | Crate ] -> []
+late [ Crate | Crate | Crate ] -> [ | |]
 
 ==============
 WINCONDITION

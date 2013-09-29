@@ -103,7 +103,7 @@ function generateExtraMembers(state) {
 	      		var c = o.colors[i];
 	      		c = colorToHex(colorPalette,c);
 				o.colors[i] = c;
-				if (isColor(c) == false) {
+				if (isColor(c) === false) {
 					logError('Invalid color specified for object "' + n + '", namely "' + o.colors[i] + '".', o.lineNumber + 1);
 				}
 			}
@@ -824,7 +824,9 @@ function concretizePropertyRule(state, rule,lineNumber) {
 							}
 
 							concretizePropertyInCell(newrule.lhs[j][k], property, concreteType);
-							concretizePropertyInCell(newrule.rhs[j][k], property, concreteType);//do for the corresponding rhs cell as well
+							if (newrule.rhs.length>0) {
+								concretizePropertyInCell(newrule.rhs[j][k], property, concreteType);//do for the corresponding rhs cell as well
+							}
                             
                             if (newrule.propertyReplacement[property]===undefined) {
     							newrule.propertyReplacement[property]=[concreteType,1];
@@ -1858,7 +1860,7 @@ function loadFile(str) {
 				return;
 			}
 		}		
-		while (ss.eol() == false);
+		while (ss.eol() === false);
 	}
 
 	delete state.lineNumber;
