@@ -287,7 +287,7 @@ var codeMirrorFn = function() {
                                     	logError('Name "' + candname.toUpperCase() + '" already in use.', state.lineNumber);                                		
                                 	}
                                 }
-                                if (candname in keyword_array) {
+                                if (keyword_array.indexOf(candname)>=0) {
                                     logError('You named an object "' + candname.toUpperCase() + '", but this is a keyword. Don\'t do that!', state.lineNumber);
                                 }
 

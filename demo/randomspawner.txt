@@ -1,3 +1,8 @@
+(
+Simple block pushing example, simplified
+)
+
+debug
 
 ========
 OBJECTS
@@ -12,6 +17,13 @@ GREEN darkgreen
 11111
 10111
 
+Spawner  (Name)     
+YELLOW (Color)
+..... (Sprite)
+..0..
+.000.
+..0..
+.....     
 
 Player    (Required by game)
 PINK     
@@ -21,8 +33,7 @@ PINK
 .000.
 .0.0.
 
-
-Robot
+RedRobot
 gray black red
 .000.
 .200.
@@ -30,14 +41,32 @@ gray black red
 00000
 01010
 
+GreenRobot
+gray black lightgreen
+.000.
+.200.
+...0.
+00000
+01010
+
+BlueRobot
+gray black lightblue
+.000.
+.200.
+...0.
+00000
+01010
 
 =======
 LEGEND
 =======
 
+Robot = redRobot or greenRobot or blueRobot
+Obstacle = Player or Robot
 . = Background
 P = Player
 * = Robot
+O = Spawner
 
 =========
 SOUNDS
@@ -48,14 +77,15 @@ COLLISIONLAYERS
 ================
 
 Background
+Spawner
 Player, Robot
 
 ======
 RULES     
 ======     
 
-[Robot ] -> [randomDir Robot]
-
+up [ Robot ] -> [randomDir Robot]
+up [ Spawner no Obstacle ] -> [ Spawner random Robot ]
 ==============
 WINCONDITION
 ==============
@@ -64,12 +94,10 @@ WINCONDITION
 LEVELS
 =======
 
-...........
-.....*.....
-...........
-.....*.....
-...........
-.....*.....
-..P........
-.....*.....
-...........
+.......
+.......
+.......
+...O...
+.......
+.P.....
+.......

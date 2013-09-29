@@ -46,10 +46,9 @@ function getParameterByName(name) {
     return results == null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
 }
 
-var fileToOpen=getParameterByName("demo");
-if (fileToOpen!==null&&fileToOpen.length>0) {
+function tryLoadFile(fileName) {
 	var fileOpenClient = new XMLHttpRequest();
-	fileOpenClient.open('GET', 'demo/'+fileToOpen+".txt");
+	fileOpenClient.open('GET', 'demo/'+fileName+".txt");
 	fileOpenClient.onreadystatechange = function() {
 		
   		if(fileOpenClient.readyState!=4) {
@@ -60,3 +59,13 @@ if (fileToOpen!==null&&fileToOpen.length>0) {
 	}
 	fileOpenClient.send();
 }
+
+var fileToOpen=getParameterByName("demo");
+if (fileToOpen!==null&&fileToOpen.length>0) {
+	tryLoadFile(fileToOpen);
+}
+
+function dropdownChange() {
+	tryLoadFile(this.value);
+}
+

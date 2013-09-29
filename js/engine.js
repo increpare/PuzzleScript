@@ -589,8 +589,8 @@ function DoRestart() {
 	tryPlayRestartSound();
 }
 
-function DoUndo() {
-	if ('noundo' in state.metadata) {
+function DoUndo(force) {
+	if ('noundo' in state.metadata && force!==true) {
 		return;
 	}
 	if (backups.length>0) {
@@ -1532,7 +1532,7 @@ function processInput(dir) {
         	}
         	if (somemoved===false) {
         		backups.push(bak);
-        		DoUndo();
+        		DoUndo(true);
         		seedsToPlay_CanMove=[];
         		seedsToPlay_CantMove=[];
         		return;
@@ -1542,9 +1542,10 @@ function processInput(dir) {
 
 	    if (level.commandQueue.indexOf('cancel')>=0) {	
     		backups.push(bak);
-    		DoUndo();
+    		DoUndo(true);
     		seedsToPlay_CanMove=[];
     		seedsToPlay_CantMove=[];
+    		redraw();
     		return;
 	    } 
 

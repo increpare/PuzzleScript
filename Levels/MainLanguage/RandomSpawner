@@ -17,7 +17,7 @@ GREEN darkgreen
 11111
 10111
 
-Target  (Name)     
+Spawner  (Name)     
 YELLOW (Color)
 ..... (Sprite)
 ..0..
@@ -41,7 +41,7 @@ BROWN DARKBROWN
 .....
 000.0
 
-RedCrate
+RedRobot
 gray black red
 .000.
 .200.
@@ -49,7 +49,7 @@ gray black red
 00000
 01010
 
-GreenCrate
+GreenRobot
 gray black lightgreen
 .000.
 .200.
@@ -57,7 +57,7 @@ gray black lightgreen
 00000
 01010
 
-BlueCrate
+BlueRobot
 gray black lightblue
 .000.
 .200.
@@ -72,9 +72,9 @@ LEGEND
 . = Background
 # = Wall
 P = Player
-Crate = redcrate or greencrate or bluecrate
-* = Crate
-O = Target
+Robot = redRobot or greenRobot or blueRobot
+* = Robot
+O = Spawner
 
 =========
 SOUNDS
@@ -85,15 +85,15 @@ COLLISIONLAYERS
 ================
 
 Background
-Target
-Player, Wall, Crate
+Spawner
+Player, Wall, Robot
 
 ======
 RULES     
 ======     
 
-up [ crate ] -> [randomDir crate]
-up [ target no crate ] -> [ target random crate ]
+up [ Robot ] -> [randomDir Robot]
+up [ Spawner no Robot ] -> [ Spawner random Robot ]
 ==============
 WINCONDITION
 ==============
@@ -107,5 +107,5 @@ LEVELS
 .......
 ...O...
 .......
-.......
+.P.....
 .......

@@ -16,3 +16,6 @@ rebuildClickLink.addEventListener("click", rebuildClick, false);
 
 var exportClickLink = document.getElementById("exportClickLink");
 exportClickLink.addEventListener("click", exportClick, false);
+
+var exampleDropdown = document.getElementById("exampleDropdown");
+exampleDropdown.addEventListener("change", dropdownChange, false);
