@@ -1,1 +1,2 @@
 var canDump=false;
+var canOpenEditor=false;

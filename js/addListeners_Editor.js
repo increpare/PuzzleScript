@@ -11,8 +11,12 @@ soundButtonPress.addEventListener("click", buttonPress, false);
 
 var runClickLink = document.getElementById("runClickLink");
 runClickLink.addEventListener("click", runClick, false);
+
 var rebuildClickLink = document.getElementById("rebuildClickLink");
 rebuildClickLink.addEventListener("click", rebuildClick, false);
+
+var levelEditorClickLink = document.getElementById("levelEditorClickLink");
+levelEditorClickLink.addEventListener("click", levelEditorClick_Fn, false);
 
 var exportClickLink = document.getElementById("exportClickLink");
 exportClickLink.addEventListener("click", exportClick, false);

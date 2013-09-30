@@ -109,6 +109,113 @@ function regenSpriteImages() {
 
         spriteimages[i] = img;
     }
+
+    if (canOpenEditor) {
+    	generateGlyphImages(spritecanvas,spritectx);
+    }
+}
+
+var glyphImagesCorrespondance;
+var glyphImages;
+var glyphHighlight;
+var glyphHighlightResize;
+var glyphPrintButton;
+var glyphMouseOver;
+var glyphSelectedIndex=0;
+function generateGlyphImages(spritecanvas,spritectx) {
+	glyphImagesCorrespondance=[];
+	glyphImages=[];
+	
+	for (var n in state.glyphDict) {
+		if (n.length==1 && state.glyphDict.hasOwnProperty(n)) {
+			var g=state.glyphDict[n];
+			glyphImagesCorrespondance.push(n);
+
+			spritectx.clearRect(0, 0, cellwidth, cellheight);
+
+			for (var i=0;i<g.length;i++){
+				var id = g[i];
+				if (id===-1) {
+					continue;
+				}
+				var s = spriteimages[id];
+				spritectx.drawImage(s,0,0);
+			}
+
+
+	        var new_image_url = spritecanvas.toDataURL();
+	        var img = document.createElement('img');
+	        img.onload = redraw;
+	        img.src = new_image_url;
+
+			glyphImages.push(img);
+		}
+	}
+
+	{
+		//make highlight thingy
+    	spritectx.fillStyle = '#FFFFFF';	
+		spritectx.clearRect(0, 0, cellwidth, cellheight);
+		
+		spritectx.fillRect(0,0,cellwidth,1);
+		spritectx.fillRect(0,0,1,cellheight);
+		
+		spritectx.fillRect(0,cellheight-1,cellwidth,1);
+		spritectx.fillRect(cellwidth-1,0,1,cellheight);
+
+
+	    var new_image_url = spritecanvas.toDataURL();
+	    var img = document.createElement('img');
+	    img.onload = redraw;
+	    img.src = new_image_url;
+
+		glyphHighlight=img;
+	}
+
+	{
+		glyphPrintButton=createSprite(spritecanvas,spritectx,'s');
+	}
+	{
+		//make highlight thingy
+    	spritectx.fillStyle = '#FFFFFF';	
+		spritectx.clearRect(0, 0, cellwidth, cellheight);
+		
+		var minx=((cellwidth/2)-1)|0;
+		var xsize=cellwidth-minx-1-minx;
+		var miny=((cellheight/2)-1)|0;
+		var ysize=cellheight-miny-1-minx;
+
+		spritectx.fillRect(minx,0,xsize,cellheight);
+		spritectx.fillRect(0,miny,cellwidth,ysize);
+
+
+	    var new_image_url = spritecanvas.toDataURL();
+	    var img = document.createElement('img');
+	    img.onload = redraw;
+	    img.src = new_image_url;
+
+		glyphHighlightResize=img;
+	}
+
+	{
+		//make highlight thingy
+    	spritectx.fillStyle = 'yellow';
+		spritectx.clearRect(0, 0, cellwidth, cellheight);
+		
+		spritectx.fillRect(0,0,cellwidth,2);
+		spritectx.fillRect(0,0,2,cellheight);
+		
+		spritectx.fillRect(0,cellheight-2,cellwidth,2);
+		spritectx.fillRect(cellwidth-2,0,2,cellheight);
+
+
+	    var new_image_url = spritecanvas.toDataURL();
+	    var img = document.createElement('img');
+	    img.onload = redraw;
+	    img.src = new_image_url;
+
+		glyphMouseOver=img;
+	}
 }
 
 var canvas;
@@ -201,6 +308,11 @@ function redraw() {
                 maxj=Math.min(minj+screenheight,level.height);
             }           
         }
+	    if (levelEditorOpened) {
+	    	maxi-=2;
+	    	maxj-=3;
+	    }
+
         for (var i = mini; i < maxi; i++) {
             for (var j = minj; j < maxj; j++) {
     /*          if (grid[i][j]==0){
@@ -224,6 +336,10 @@ function redraw() {
                 }
             }
         }
+
+	    if (levelEditorOpened) {
+	    	drawEditorIcons();
+	    }
         /*
     //  ctx.drawImage(spriteimages[0],0,0);
         ctx.fillStyle="#000000";
@@ -232,6 +348,47 @@ function redraw() {
     }
 }
 
+function drawEditorIcons() {
+	var glyphCount = glyphImages.length;
+	var glyphStartIndex=0;
+	var glyphEndIndex = glyphImages.length;/*Math.min(
+							glyphStartIndex+10,
+							screenwidth-2,
+							glyphStartIndex+Math.max(glyphCount-glyphStartIndex,0)
+							);*/
+	var glyphsToDisplay = glyphEndIndex-glyphStartIndex;
+
+	ctx.drawImage(glyphPrintButton,xoffset-cellwidth,yoffset-cellheight*2);
+	if (mouseCoordY===-2&&mouseCoordX===-1) {
+			ctx.drawImage(glyphMouseOver,xoffset-cellwidth,yoffset-cellheight*2);								
+	}
+
+	for (var i=0;i<glyphsToDisplay;i++) {
+		var glyphIndex = glyphStartIndex+i;
+		var sprite = glyphImages[glyphIndex];
+		ctx.drawImage(sprite,xoffset+(i)*cellwidth,yoffset-cellheight*2);
+		if (mouseCoordY===-2&&mouseCoordX===i) {
+			ctx.drawImage(glyphMouseOver,xoffset+i*cellwidth,yoffset-cellheight*2);						
+		}
+		if (i===glyphSelectedIndex) {
+			ctx.drawImage(glyphHighlight,xoffset+i*cellwidth,yoffset-cellheight*2);
+		} 		
+	}
+	if (mouseCoordX>=-1&&mouseCoordY>=-1&&mouseCoordX<screenwidth-1&&mouseCoordY<screenheight-2) {
+		if (mouseCoordX==-1||mouseCoordY==-1||mouseCoordX==screenwidth-2||mouseCoordY===screenheight-3) {
+			ctx.drawImage(glyphHighlightResize,
+				xoffset+mouseCoordX*cellwidth,
+				yoffset+mouseCoordY*cellheight
+				);								
+		} else {
+			ctx.drawImage(glyphHighlight,
+				xoffset+mouseCoordX*cellwidth,
+				yoffset+mouseCoordY*cellheight
+				);				
+		}
+	}
+
+}
 
 var lastDownTarget;
 
@@ -263,8 +420,13 @@ function canvasResize() {
 	}
 
     if (textMode) {
+    	levelEditorOpened=false;
         screenwidth=titleWidth;
         screenheight=titleHeight;
+    }
+    if (levelEditorOpened) {
+    	screenwidth+=2;
+    	screenheight+=3;
     }
     cellwidth = canvas.width / screenwidth;
     cellheight = canvas.height / screenheight;
@@ -294,15 +456,22 @@ function canvasResize() {
         yoffset = (canvas.height - cellheight * screenheight) / 2;
         xoffset = (canvas.width - cellwidth * screenwidth) / 2;
     }
-    cellwidth = ~~cellwidth;
-    cellheight = ~~cellheight;
-    xoffset = ~~xoffset;
-    yoffset = ~~yoffset;
+
+    if (levelEditorOpened) {
+    	xoffset+=cellwidth;
+    	yoffset+=cellheight*2;
+    }
+
+    cellwidth = cellwidth|0;
+    cellheight = cellheight|0;
+    xoffset = xoffset|0;
+    yoffset = yoffset|0;
 
     if (oldcellwidth!=cellwidth||oldcellheight!=cellheight||oldtextmode!=textMode||forceRegenImages) {
     	forceRegenImages=false;
     	regenSpriteImages();
     }
+
     oldcellheight=cellheight;
     oldcellwidth=cellwidth;
     oldtextmode=textMode;

@@ -68,4 +68,3 @@ if (fileToOpen!==null&&fileToOpen.length>0) {
 function dropdownChange() {
 	tryLoadFile(this.value);
 }
-

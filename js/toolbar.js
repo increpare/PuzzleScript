@@ -1,8 +1,19 @@
 function runClick() {
+	clearConsole();
 	compile(["restart"]);
 }
 
+function levelEditorClick_Fn() {
+	if (textMode || state.levels.length===0) {
+		consolePrint("You can only open the editor when a level is open.");
+	} else {
+		levelEditorOpened=!levelEditorOpened;
+    	canvasResize();
+    }
+}
+
 function rebuildClick() {
+	clearConsole();
 	compile(["rebuild"]);
 }
 

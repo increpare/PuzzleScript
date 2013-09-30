@@ -1,6 +1,6 @@
 var unitTesting=false;
 var curlevel=0;
-var levelEditor=false;
+var levelEditorOpened=false;
 
 /*
 if (localStorage.curlevel!==undefined) {

@@ -1,6 +1,7 @@
 var canDump=true;
 inputHistory=[];
 var compiledText;
+var canOpenEditor=true;
 
 function convertLevelToString() {
 	return  JSON.stringify(level);

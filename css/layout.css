@@ -8,21 +8,20 @@
 .leftpanel {
 	position:absolute;
 	left:0px;
-	top:0px;
+	top:30px;
 	bottom:0px;
-	height:100%;
 	width:50%;
 }
 .righttophalf {
-    	position:absolute;
-    	left:50%;
+    position:absolute;
+    left:50%;
 	right:0px;
-	top:0px;
-	height:50%;
+	top:30px;
+	bottom:50%;
 	width:50%;
 }
 .rightbottomhalf {
-    	position:absolute;
+    position:absolute;
 	right:0px;
 	top:50%;
 	height:50%;
@@ -37,7 +36,7 @@
 }
 .upperarea{
 	position:absolute;
-	top:30px;
+	top:0px;
 	bottom:0px;
 	left:2px;
 	right:0;

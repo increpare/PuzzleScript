@@ -298,6 +298,7 @@ function drawMessageScreen() {
 	}
 }
 
+
 function loadLevelFromState(state,levelindex) {	
 	forceRegenImages=true;
 	titleScreen=false;
@@ -390,18 +391,6 @@ function tick() {
 redraw();
 }
 
-/** @expose */
-function mouseMove(e) {
-    x = e.clientX;
-    y = e.clientY;
-    //window.console.log("showcoord ("+ canvas.width+","+canvas.height+") ("+x+","+y+")");
-    redraw();
-}
-
-/** @expose */
-function mouseOut() {
-//  window.console.log("clear");
-}
 
 function tryPlaySimpleSound(soundname) {
 	if (state.sfx_Events[soundname]!==undefined) {
@@ -1608,6 +1597,10 @@ function processInput(dir) {
 }
 
 function checkWin() {
+
+	if (levelEditorOpened) {
+		return;
+	}
 
 	if (level.commandQueue.indexOf('win')>=0) {
 		DoWin();
