@@ -1,5 +1,7 @@
 var unitTesting=false;
 var curlevel=0;
+var levelEditor=false;
+
 /*
 if (localStorage.curlevel!==undefined) {
 	curlevel = localStorage["curlevel"];

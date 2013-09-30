@@ -6,11 +6,7 @@ rm -rf ../bin
 mkdir ../bin
 echo inlining standalone template
 ./inline
-echo optimizing gifs 
-cd documentation/images
-./minimize
-cd ../../
-echo coping files
+echo copying files
 cp -r * ../bin/
 cp .htaccess ../bin/
 echo optimizing pngs
@@ -18,6 +14,10 @@ rm ../bin/images/*.png
 cd images
 ./minimize 
 cd ../
+echo optimizing gifs
+cd ../bin/documentation/images
+./minimize
+cd ../../../src
 echo removing files
 rm -rf ../bin/js/*
 rm -rf ../bin/css/*

@@ -17,56 +17,25 @@
 </head>
 <body>
 <div class="leftpanel">
-<form id="form1" name="form1"  action="javascript:void(0);"><textarea id="code" name="code" rows="20" cols="20">
-title Simple Block Pushing Game
-author Stephen Lavelle
-homepage www.puzzlescript.net
-
+<form id="form1" name="form1"  action="javascript:void(0);"><textarea id="code" class="codeform" name="code" rows="20" cols="20" style="display:none;">
 ========
 OBJECTS
 ========
 
 Background 
-LIGHTGREEN GREEN
-11111
-01111
-11101
-11111     
-10111   
-
+GREEN  
 
 Target 
-DarkBlue 
-..... 
-.000.
-.0.0.
-.000.
-.....     
+DarkBlue    
 
-Wall     
-BROWN DARKBROWN     
-00010
-11111
-01000
-11111
-00010
+Wall 
+BROWN
 
 Player 
-Black Orange White Blue     
-.000.
-.111.
-22222
-.333.
-.3.3.
+Blue   
 
-Crate
-Orange Yellow
-00000
-0...0
-0...0
-0...0
-00000
-
+Crate 
+Orange 
 
 =======
 LEGEND
@@ -79,12 +48,9 @@ P = Player
 @ = Crate and Target
 O = Target
 
-
 =======
 SOUNDS
 =======
-
-Crate MOVE 36772507
 
 ================
 COLLISIONLAYERS
@@ -110,8 +76,6 @@ All Target on Crate
 LEVELS
 =======
 
-message welcome to puzzlescript
-
 #########
 #.......#
 #.....@.#
@@ -123,15 +87,14 @@ message welcome to puzzlescript
 </div>
 <div class="righttophalf">
 	<div class="uppertoolbar">
-	&nbsp;&nbsp;&nbsp;<a href="index.html"><h2>PuzzleScript</h2></a> - <a id="runClickLink" href="javascript:void(0);">RUN</a> - <a id="rebuildClickLink" href="javascript:void(0);">REBUILD</a> - <a id="exportClickLink" href="javascript:void(0);">EXPORT</a> - <a href="documentation/documentation.html">DOCS</a> - <form action="" style="display:inline;">
+	&nbsp;&nbsp;&nbsp;<a href="index.html"><h2>PuzzleScript</h2></a> - <a id="runClickLink" href="javascript:void(0);">RUN</a> - <a id="rebuildClickLink" href="javascript:void(0);">REBUILD</a> - <a id="exportClickLink" href="javascript:void(0);">EXPORT</a> - <a href="documentation/documentation.html"  target="Puzzle_Script_Documentation">DOCS</a> - <form action="" style="display:inline;">
 <select  id="exampleDropdown"  name="default" style="display:inline; width:100px">
 <optgroup label="Tutorial">
 <option value="sokoban_basic">Basic</option>
 <option value="sokoban_eyeball">Eyeball</option>
 <option value="sokoban_match3">Match 3</option>
 <option value="randomrobots">Random Robots</option>
-<option value="robotspawner">Random Robot Spawner</option>
-<option value=""></option>
+<option value="randomspawner">Random Robot Spawner</option>
 </optgroup>
 <optgroup label="Elementary">
 <option value="blockfaker">Block Faker (Droqen)</option>
