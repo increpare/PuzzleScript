@@ -211,6 +211,93 @@ colorPalettes = {
 	purple			: "#aa00aa",
 	pink			: "#ff55ff"
 	},
+
+
+	proteus_mellow : {
+	black   		: "#3d2d2e",
+	white			: "#ddf1fc",
+	grey			: "#9fb2d4",
+	darkgrey		: "#7b8272",
+	lightgrey		: "#a4bfda",
+	gray			: "#9fb2d4",
+	darkgray		: "#7b8272",
+	lightgray		: "#a4bfda",
+	red				: "#9d5443",
+	darkred			: "#8c5b4a",
+	lightred		: "#94614c",
+	brown			: "#89a78d",
+	darkbrown		: "#829e88",
+	lightbrown		: "#aaae97",
+	orange			: "#d1ba86",
+	yellow 			: "#d6cda2",
+	green			: "#75ac8d",
+	darkgreen		: "#8fa67f",
+	lightgreen		: "#8eb682",
+	blue			: "#88a3ce",
+	lightblue		: "#a5adb0",
+	darkblue		: "#5c6b8c",
+	purple			: "#d39fac",
+	pink			: "#c8ac9e"
+	},
+	
+
+	proteus_night : {
+	black   		: "#010912",
+	white			: "#fdeeec",
+	grey			: "#051d40",
+	darkgrey		: "#091842",
+	lightgrey		: "#062151",
+	gray			: "#051d40",
+	darkgray		: "#091842",
+	lightgray		: "#062151",
+	red				: "#ad4576",
+	darkred			: "#934765",
+	lightred		: "#ab6290",
+	brown			: "#61646b",
+	darkbrown		: "#3d2d2d",
+	lightbrown		: "#8393a0",
+	orange			: "#0a2227",
+	yellow 			: "#0a2541",
+	green			: "#75ac8d",
+	darkgreen		: "#0a2434",
+	lightgreen		: "#061f2e",
+	blue			: "#0b2c79",
+	lightblue		: "#809ccb",
+	darkblue		: "#08153b",
+	purple			: "#666a87",
+	pink			: "#754b4d"
+	},
+	
+
+
+	proteus_rich: {
+	black   		: "#6f686f",
+	white			: "#d1b1e2",
+	grey			: "#b9aac1",
+	darkgrey		: "#8e8b84",
+	lightgrey		: "#c7b5cd",
+	gray			: "#b9aac1",
+	darkgray		: "#8e8b84",
+	lightgray		: "#c7b5cd",
+	red				: "#a11f4f",
+	darkred			: "#934765",
+	lightred		: "#c998ad",
+	brown			: "#89867d",
+	darkbrown		: "#797f75",
+	lightbrown		: "#ab9997",
+	orange			: "#ce8c5c",
+	yellow 			: "#f0d959",
+	green			: "#75bc54",
+	darkgreen		: "#599d79",
+	lightgreen		: "#90cf5c",
+	blue			: "#8fd0ec",
+	lightblue		: "#bcdce7",
+	darkblue		: "#0b2c70",
+	purple			: "#9b377f",
+	pink			: "#cd88e5"
+	},
+	
+
 	
 	amstrad : {
 	black   		: "#000000",
