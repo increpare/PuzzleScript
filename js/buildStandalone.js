@@ -12,6 +12,9 @@ clientStandaloneRequest.onreadystatechange = function() {
 		if(clientStandaloneRequest.readyState!=4) {
 			return;
 		}
+		if (clientStandaloneRequest.responseText==="") {
+			consolePrint("Couldn't find standalone template. Is there a connection problem to the internet?");
+		}
 		standalone_HTML_String=clientStandaloneRequest.responseText;
 }
 clientStandaloneRequest.send();

@@ -107,6 +107,7 @@ function levelEditorClick_Fn() {
 		levelEditorOpened=!levelEditorOpened;
     	canvasResize();
     }
+    lastDownTarget=canvas;	
 }
 
 function shareClick() {
@@ -149,7 +150,7 @@ function shareClick() {
 	githubHTTPClient.setRequestHeader("Content-type","application/x-www-form-urlencoded");
 	var stringifiedGist = JSON.stringify(gistToCreate);
 	githubHTTPClient.send(stringifiedGist);
-
+    lastDownTarget=canvas;	
 }
 
 function rebuildClick() {

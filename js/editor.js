@@ -57,6 +57,11 @@ function tryLoadGist(id) {
 		if(githubHTTPClient.readyState!=4) {
 			return;
 		}
+
+		if (clientStandaloneRequest.responseText==="") {
+			consolePrint("GitHub request returned nothing.  A connection fault, maybe?");
+		}
+
 		var result = JSON.parse(githubHTTPClient.responseText);
 		var code=result["files"]["script.txt"]["content"];
 		editor.setValue(code);
