@@ -3,6 +3,103 @@ function runClick() {
 	compile(["restart"]);
 }
 
+function dateToReadable(title,time) {
+	var year = time.getFullYear();
+	var month = time.getMonth()+1;
+	var date1 = time.getDate();
+	var hour = time.getHours();
+	var minutes = time.getMinutes();
+	var seconds = time.getSeconds();
+	var result = hour+":"+minutes+" "+year + "-" + month+"-"+date1+" "+title;
+	return result;
+}
+
+function saveClick() {
+	var title = "Untitled";
+	if (state.metadata.title!==undefined) {
+		title=state.metadata.title;
+	}
+	var text=editor.getValue();
+	var saveDat = {
+		title:title,
+		text:text,
+		date: new Date()
+	}
+
+	var curSaveArray = [];
+	if (localStorage['saves']===undefined) {
+
+	} else {
+		var curSaveArray = JSON.parse(localStorage.saves);
+	}
+
+	if (curSaveArray.length>19) {
+		curSaveArray.splice(0,1);
+	}
+	curSaveArray.push(saveDat);
+	var savesDatStr = JSON.stringify(curSaveArray);
+	localStorage['saves']=savesDatStr;
+
+	repopulateSaveDropdown(curSaveArray);
+	consolePrint("saved file to local storage");
+}
+
+
+
+function loadDropDownChange() {
+	var saveString = localStorage['saves'];
+	if (saveString===undefined) {
+			consolePrint("Eek, trying to load a file, but there's no local storage found. Eek!");
+	} 
+
+	saves = JSON.parse(saveString);
+	
+	for (var i=0;i<saves.length;i++) {
+		var sd = saves[i];
+	    var key = dateToReadable(sd.title,new Date(sd.date));
+	    if (key==this.value) {
+	    	var saveText = sd.text;
+			editor.setValue(saveText);
+			return;
+	    }
+	}
+	
+	consolePrint("Eek, trying to load a save, but couldn't find it. :(");
+}
+
+
+function repopulateSaveDropdown(saves) {
+	var loadDropdown = document.getElementById('loadDropDown');
+	loadDropdown.options.length = 0;
+
+	if (saves===undefined) {
+		if (localStorage['saves']===undefined) {
+			return;
+		} else {
+			saves = JSON.parse(localStorage["saves"]);
+		}
+	}
+
+    var optn = document.createElement("OPTION");
+    optn.text = "";
+    optn.value = "";
+    loadDropdown.options.add(optn);  
+
+	for (var i=saves.length-1;i>=0;i--) {			
+		var sd = saves[i];
+	    var optn = document.createElement("OPTION");
+	    var key = dateToReadable(sd.title,new Date(sd.date));
+	    optn.text = key;
+	    optn.value = key;
+	    loadDropdown.options.add(optn);  
+	}
+	loadDropdown.selectedIndex=1;
+}
+
+repopulateSaveDropdown();
+var loadDropdown = document.getElementById('loadDropDown');
+loadDropdown.selectedIndex=-1;
+
 function levelEditorClick_Fn() {
 	if (textMode || state.levels.length===0) {
 		consolePrint("You can only open the editor when a level is open.");
@@ -10,6 +107,49 @@ function levelEditorClick_Fn() {
 		levelEditorOpened=!levelEditorOpened;
     	canvasResize();
     }
+}
+
+function shareClick() {
+	consolePrint("Sending code to github...")
+	var title = "Untitled PuzzleScript Script";
+	if (state.metadata.title!==undefined) {
+		title=state.metadata.title + " PuzzleScript Script";
+	}
+	compile();
+
+	if (errorCount>0) {
+		consolePrint("Cannot share code that doesn't compile");
+		return;
+	}
+
+	var source=editor.getValue();
+
+	var gistToCreate = {
+		"description" : "title",
+		"public" : true,
+		"files": {
+			"script.txt" : {
+				"content": source
+			}
+		}
+	};
+
+	var githubURL = 'https://api.github.com/gists';
+	var githubHTTPClient = new XMLHttpRequest();
+	githubHTTPClient.open('POST', githubURL);
+	githubHTTPClient.onreadystatechange = function() {		
+		if(githubHTTPClient.readyState!=4) {
+			return;
+		}		
+		var result = JSON.parse(githubHTTPClient.responseText);
+		var id = result.id;
+		var url = "http://www.puzzlescript.net/play/?p="+id;
+		consolePrint("GitHub submission successful - the game can now be played at this url:<br><a href=\""+url+"\">"+url+"</a>");
+	}
+	githubHTTPClient.setRequestHeader("Content-type","application/x-www-form-urlencoded");
+	var stringifiedGist = JSON.stringify(gistToCreate);
+	githubHTTPClient.send(stringifiedGist);
+
 }
 
 function rebuildClick() {
@@ -51,68 +191,5 @@ function exportClick() {
 	buildStandalone(stateString);
 }
 
-function compile(command,text) {
-	forceRegenImages=true;
-	if (command===undefined) {
-		command = ["restart"];
-	}
-	lastDownTarget=canvas;	
-
-	if (text===undefined){
-		var code = window.form1.code;
-
-		var editor = code.editorreference;
-
-		text = editor.getValue();
-	}
-	if (canDump===true) {
-		compiledText=text;
-	}
-
-	errorCount = 0;
-	compiling = true;
-	errorStrings = [];
-	consolePrint('=================================');
-	try
-	{
-		var state = loadFile(text);
-//		consolePrint(JSON.stringify(state));
-	} finally {
-		compiling = false;
-	}
-	if (errorCount>MAX_ERRORS) {
-		return;
-	}
-	/*catch(err)
-	{
-		if (anyErrors===false) {
-			logErrorNoLine(err.toString());
-		}
-	}*/
-
-	if (errorCount>0) {
-		consolePrint('<span class="systemMessage">Errors detected during compilation, the game will not work correctly.</span>');
-	}
-	else {
-		var ruleCount=0;
-		for (var i=0;i<state.rules.length;i++) {
-			ruleCount+=state.rules[i].length;
-		}
-		for (var i=0;i<state.lateRules.length;i++) {
-			ruleCount+=state.lateRules[i].length;
-		}
-		if (command[0]=="restart") {
-			consolePrint('<span class="systemMessage">Successful Compilation, generated ' + ruleCount + ' instructions.</span>');
-		} else {
-			consolePrint('<span class="systemMessage">Successful live recompilation, generated ' + ruleCount + ' instructions.</span>');
-
-		}
-	}
-	setGameState(state,command);
-
-	if (canDump===true) {
-		inputHistory=[];
-	}
-}
 
 

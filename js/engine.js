@@ -1683,13 +1683,6 @@ function anyMovements() {
     return false;
 }
 
-function saveProgress() {
-
-}
-
-function restoreProgress() {
-
-}
 
 function nextLevel() {
 	messagetext="";
@@ -1697,7 +1690,6 @@ function nextLevel() {
 		if (titleSelection==0) {
 			//new game
 			curlevel=0;
-			saveProgress();
 		} 			
 		loadLevelFromState(state,curlevel);
 	} else {
@@ -1708,11 +1700,9 @@ function nextLevel() {
 			titleScreen=false;
 			quittingMessageScreen=false;
 			messageselected=false;
-			saveProgress();
 			loadLevelFromState(state,curlevel);
 		} else {
 			curlevel=0;
-			saveProgress();
 			goToTitleScreen();
 			tryPlayEndGameSound();
 		}		

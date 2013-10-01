@@ -46,6 +46,26 @@ function getParameterByName(name) {
     return results == null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
 }
 
+function tryLoadGist(id) {
+	var githubURL = 'https://api.github.com/gists/'+id;
+
+	consolePrint("Contacting GitHub")
+	var githubHTTPClient = new XMLHttpRequest();
+	githubHTTPClient.open('GET', githubURL);
+	githubHTTPClient.onreadystatechange = function() {
+	
+		if(githubHTTPClient.readyState!=4) {
+			return;
+		}
+		var result = JSON.parse(githubHTTPClient.responseText);
+		var code=result["files"]["script.txt"]["content"];
+		editor.setValue(code);
+		compile(["restart"],code);
+	}
+	githubHTTPClient.setRequestHeader("Content-type","application/x-www-form-urlencoded");
+	githubHTTPClient.send();
+}
+
 function tryLoadFile(fileName) {
 	var fileOpenClient = new XMLHttpRequest();
 	fileOpenClient.open('GET', 'demo/'+fileName+".txt");
@@ -65,6 +85,11 @@ if (fileToOpen!==null&&fileToOpen.length>0) {
 	tryLoadFile(fileToOpen);
 }
 
+var gistToLoad=getParameterByName("hack");
+if (gistToLoad!==null&&gistToLoad.length>0) {
+	var id = gistToLoad.replace(/[\\\/]/,"");
+	tryLoadGist(id);
+}
 function dropdownChange() {
 	tryLoadFile(this.value);
 }

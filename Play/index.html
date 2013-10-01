@@ -1,0 +1,147 @@
+<!doctype html>
+<html>
+<head>
+<style>
+
+body {
+	background-color:black;
+	font-family:"Courier New", Courier, monospace
+}
+#gameCanvas {
+  position:absolute;
+  top: 0px;
+  left: 0px;
+  width: 100%;
+  height: 100%;
+  bottom: 0px;
+  right:0px;
+  border: 0px;
+  background-color: black;
+} 
+
+h1 {
+	color:lightblue;
+	font-weight:normal;
+}
+a {
+	color:lightblue;
+}
+.title {	
+	background-color:none;
+	text-align:center;
+	font-size:100%;
+	float:center;
+	color:gray;
+	position:absolute;
+	left:10%;
+	right:10%;
+	top:0%;
+	height:10%;
+}
+
+.footer {	
+	background-color:none;
+	text-align:center;
+	float:center;
+	color:white;
+	position:absolute;
+	margin-top:10px;
+	left:10%;
+	right:10%;
+	top:90%;
+	bottom:10%;
+}
+.gameContainer {
+	background-color:none;
+	position:absolute;
+	left:10%;
+	right:10%;
+	top:70px;
+	bottom:70px;
+}
+
+</style>
+</head>
+<body>
+<div class="title"><h1 id="gametitle">PuzzleScript Game</h1></div>
+<div class="gameContainer">
+<canvas 
+    id="gameCanvas" 
+    onmousemove="mouseMove(event)" 
+    onmouseout="mouseOut()"
+    onkeydown="keyDown()"
+></canvas>
+</div> 
+<div class="footer">
+<a id="homepagelink" href="http://www.puzzlescript.net">www.puzzlescript.net</a> | <a id="hacklink" href="http://www.puzzlescript.net/editor.html?hack=412341234">hack</a>
+</div>
+
+
+<script src="../js/globalVariables.js"></script>
+<script src="../js/debug_off.js"></script>
+<script src="../js/font.js"></script>
+<script src="../js/rng.js"></script>
+<script src="../js/riffwave.js"></script>
+<script src="../js/sfxr.js"></script>
+<script src="../js/codemirror.js"></script>
+<script src="../js/colors.js"></script>
+<script src="../js/graphics.js"></script>
+<script src="../js/engine.js"></script>
+<script src="../js/parser.js"></script>
+<script src="../js/compiler.js"></script>
+<script src="../js/inputoutput.js"></script>
+
+<script>
+
+function getParameterByName(name) {
+    name = name.replace(/[\[]/, "\\\[").replace(/[\]]/, "\\\]");
+    var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
+        results = regex.exec(location.search);
+    return results == null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
+}
+
+function getData(){ 
+	var id = getParameterByName("p").replace(/[\\\/]/,"");
+	if (id===null) {
+		return;
+	}
+
+	var githubURL = 'https://api.github.com/gists/'+id;
+
+	var githubHTTPClient = new XMLHttpRequest();
+	githubHTTPClient.open('GET', githubURL);
+	githubHTTPClient.onreadystatechange = function() {
+	
+		if(githubHTTPClient.readyState!=4) {
+			return;
+		}
+		var result = JSON.parse(githubHTTPClient.responseText);
+		var code=result["files"]["script.txt"]["content"];
+		compile(["restart"],code);
+
+		if (state.metadata.homepage!==undefined) {
+			var homepage=state.metadata.homepage;
+			var homepageLink = document.getElementById("homepagelink");
+			homepageLink.innerHTML=homepage;
+			homepageLink.href="http://"+homepage;
+		}
+		if (state.metadata.title!==undefined) {
+			var title=state.metadata.title;
+			var gametitle = document.getElementById("gametitle");
+			gametitle.innerHTML=title;
+		}
+		var hacklink = document.getElementById("hacklink");
+		hacklink.href="http://www.puzzlescript.net/editor.html?hack="+id;
+	}
+	githubHTTPClient.setRequestHeader("Content-type","application/x-www-form-urlencoded");
+	githubHTTPClient.send();
+}
+
+getData();
+
+</script>
+</head>
+<body>
+	
+</body>
+</html>

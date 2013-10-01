@@ -322,7 +322,7 @@ function onKeyDown(event) {
     if(lastDownTarget === canvas) {
 	    if (keybuffer[event.keyCode]===undefined) {
 	    	keybuffer[event.keyCode]=0;
-	    	checkKey(event);
+	    	checkKey(event,true);
 	    }
     }
 
@@ -407,7 +407,7 @@ function prevent(e) {
 
 var messageselected=false;
 
-function checkKey(e) {
+function checkKey(e,justPressed) {
 
     if (winning) {
     	return;
@@ -490,13 +490,39 @@ function checkKey(e) {
         	if (canOpenEditor) {
         		levelEditorOpened=!levelEditorOpened;
         		canvasResize();
+        		return prevent(e);
         	}
-        	return prevent(e);
 		}
+		case 48://0
+		case 49://1
+		case 50://2
+		case 51://3
+		case 52://4
+		case 53://5
+		case 54://6
+		case 55://7
+		case 56://8
+		case 57://9
+		{
+        	if (levelEditorOpened&&justPressed) {
+        		var num=9;
+        		if (e.keyCode>=49)  {
+        			num = e.keyCode-49;
+        		}
+
+				if (num<glyphImages.length) {
+					glyphSelectedIndex=num;
+				} else {
+					consolePrint("Trying to select tile outside of range in level editor.")
+				}
+
+        		canvasResize();
+        		return prevent(e);
+        	}		
+        }
     }
 
     if (textMode) {
-
     	if (state.levels.length===0) {
     		//do nothing
     	} else if (titleScreen) {
@@ -512,7 +538,7 @@ function checkKey(e) {
 	    			}
     			}
     		} else {
-    			if (inputdir==4) {
+    			if (inputdir==4&&justPressed) {
     				if (titleSelected===false) {    				
 						tryPlayStartGameSound();
 	    				titleSelected=true;
@@ -529,7 +555,7 @@ function checkKey(e) {
     			}
     		}
     	} else {
-    		if (inputdir==4) {    				
+    		if (inputdir==4&&justPressed) {    				
 				if (unitTesting) {
 					nextLevel();
 					return;
@@ -588,7 +614,7 @@ function update() {
         keybuffer[n]+=deltatime;
         if (keybuffer[n]>repeatinterval) {
             keybuffer[n]=0;
-            checkKey({keyCode:parseInt(n)});
+            checkKey({keyCode:parseInt(n)},false);
         }
     }
     if (autotickinterval>0) {
