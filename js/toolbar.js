@@ -43,7 +43,7 @@ function saveClick() {
 	repopulateSaveDropdown(curSaveArray);
 
 	var loadDropdown = document.getElementById('loadDropDown');
-	loadDropdown.selectedIndex=1;
+	loadDropdown.selectedIndex=0;
 
 	consolePrint("saved file to local storage");
 }
@@ -64,6 +64,8 @@ function loadDropDownChange() {
 	    if (key==this.value) {
 	    	var saveText = sd.text;
 			editor.setValue(saveText);
+			var loadDropdown = document.getElementById('loadDropDown');
+			loadDropdown.selectedIndex=0;
 			return;
 	    }
 	}		
@@ -85,8 +87,8 @@ function repopulateSaveDropdown(saves) {
 	}
 
     var optn = document.createElement("OPTION");
-    optn.text = "";
-    optn.value = "";
+    optn.text = "Load";
+    optn.value = "Load";
     loadDropdown.options.add(optn);  
 
 	for (var i=saves.length-1;i>=0;i--) {			
@@ -102,7 +104,7 @@ function repopulateSaveDropdown(saves) {
 
 repopulateSaveDropdown();
 var loadDropdown = document.getElementById('loadDropDown');
-loadDropdown.selectedIndex=-1;
+loadDropdown.selectedIndex=0;
 
 function levelEditorClick_Fn() {
 	if (textMode || state.levels.length===0) {
@@ -158,7 +160,12 @@ function shareClick() {
 			var url = "play.html?p="+id;
 			url=qualifyURL(url);
 
-			consolePrint("GitHub submission successful - ");
+			var editurl = "editor.html?p="+id;
+			editurl=qualifyURL(editurl);
+			var sourceCodeLink = "link to source code:<br><a href=\""+editurl+"\">"+editurl+"</a>";
+
+
+			consolePrint("GitHub submission successful - " + sourceCodeLink);
 
 
 			if (errorCount>0) {
@@ -168,9 +175,6 @@ function shareClick() {
 			} 
 
 
-			var editurl = "editor.html?p="+id;
-			editurl=qualifyURL(url);
-			consolePrint("The link to open the code directly in editor is:<br><a href=\""+url+"\">"+url+"</a>")
 		}
 	}
 	githubHTTPClient.setRequestHeader("Content-type","application/x-www-form-urlencoded");

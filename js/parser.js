@@ -96,6 +96,7 @@ var codeMirrorFn = function() {
     var reg_csv_separators = /[ \,]*/;
     var reg_soundverbs = /(move|action|create|destroy|cantmove|undo|restart|titlescreen|startgame|endgame|startlevel|endlevel|showmessage|closemessage|sfx0|sfx1|sfx2|sfx3|sfx4|sfx5|sfx6|sfx7|sfx8|sfx9|sfx10)\s+/;
     var reg_directions = /^(up|down|left|right|\^|v|\<|\>|forward|moving|stationary|parallel|perpendicular|horizontal|vertical|no|randomdir|random)$/;
+    var reg_loopmarker = /^(startloop|endloop)$/;
     var reg_ruledirectionindicators = /^(up|down|left|right|horizontal|vertical|orthogonal|late|rigid)$/;
     var reg_sounddirectionindicators = /\s*(up|down|left|right|horizontal|vertical|orthogonal)\s*/;
     var reg_winconditionquantifiers = /^(all|any|no|some)$/;
@@ -675,6 +676,12 @@ var codeMirrorFn = function() {
 	                                			return true;
 	                                		}
 	                                	}
+	                                	for (var i=0;i<state.legend_synonyms.length;i++) {
+	                                		var a = state.legend_synonyms[i];
+	                                		if (a[0]===n) {  
+	                                			return true;
+	                                		}
+	                                	}
 	                                	return false;
 	                                };
 
@@ -720,7 +727,9 @@ var codeMirrorFn = function() {
                         } else {
                             var m = stream.match(/[^\[\|\]\s]*/, true)[0].trim();
 
-                            if (state.tokenIndex === 0 && reg_ruledirectionindicators.exec(m)) {
+                            if (state.tokenIndex===0&&reg_loopmarker.exec(m)) {
+                            	return 'BRACKET';
+                            } else if (state.tokenIndex === 0 && reg_ruledirectionindicators.exec(m)) {
                                 stream.match(/\s*/, true);
                                 return 'DIRECTION';
                             } else if (state.tokenIndex === 1 && reg_directions.exec(m)) {

@@ -8,7 +8,11 @@ function runTest(dataarray) {
 	}
 
 	var inputDat = dataarray[1];
-	compile(["loadLevel",0],levelString);
+	var targetlevel = dataarray[3];
+	if (targetlevel===undefined) {
+		targetlevel=0;
+	}
+	compile(["loadLevel",targetlevel],levelString);
 	for(var i=0;i<inputDat.length;i++) {
 		var val=inputDat[i];
 		if (val==="undo") {

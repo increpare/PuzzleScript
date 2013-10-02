@@ -1,4 +1,5 @@
 function makeGIF() {
+	var targetlevel=curlevel;
 	var gifcanvas = document.createElement('canvas');
 	gifcanvas.width=screenwidth*cellwidth;
 	gifcanvas.height=screenheight*cellheight;
@@ -23,7 +24,7 @@ function makeGIF() {
 	encoder.setDelay(250);
 	encoder.start();
 
-	compile(["loadLevel",0],levelString);
+	compile(["loadLevel",curlevel],levelString);
 	canvasResize();
 	redraw();
 	gifctx.drawImage(canvas,-xoffset,-yoffset);

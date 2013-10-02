@@ -330,7 +330,7 @@ function onKeyDown(event) {
     if (canDump===true) {
         if (event.keyCode===74 && (event.ctrlKey||event.metaKey)) {//ctrl+j
             dumpTestCase();
-        } else if (event.keyCode===75 && (event.ctrlKey||event.metaKey)) {//ctrl+j
+        } else if (event.keyCode===75 && (event.ctrlKey||event.metaKey)) {//ctrl+k
             makeGIF();
         } 
     }

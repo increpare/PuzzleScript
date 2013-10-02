@@ -16,7 +16,7 @@ if (fileToOpen!==null&&fileToOpen.length>0) {
 			var sd = curSaveArray[curSaveArray.length-1];
 			code.value = sd.text;
 			var loadDropdown = document.getElementById('loadDropDown');
-			loadDropdown.selectedIndex=1;
+			loadDropdown.selectedIndex=0;
 	    }
 	}
 }
@@ -114,4 +114,5 @@ function tryLoadFile(fileName) {
 
 function dropdownChange() {
 	tryLoadFile(this.value);
+	this.selectedIndex=0;
 }

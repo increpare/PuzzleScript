@@ -137,7 +137,7 @@ function generateExtraMembers(state) {
 			glyphDict[n] = mask;
 		}
 	}
- var added=true;
+ 	var added=true;
     while (added) {
         added=false;
         
@@ -222,6 +222,78 @@ function generateExtraMembers(state) {
 	}
 	state.synonymsDict = synonymsDict;
 
+	var modified=true;
+	while(modified){
+		modified=false;
+		for (var n in synonymsDict) {
+			if (synonymsDict.hasOwnProperty(n)) {
+				var value = synonymsDict[n];
+				if (value in propertiesDict) {
+					delete synonymsDict[n];
+					propertiesDict[n]=propertiesDict[value];
+					modified=true;
+				}
+				else if (value in aggregatesDict) {
+					delete aggregatesDict[n];
+					aggregatesDict[n]=aggregatesDict[value];
+					modified=true;
+				} else if (value in synonymsDict) {
+					synonymsDict[n]=synonymsDict[value];
+				}
+			}
+		}
+
+		for (var n in propertiesDict) {
+			if (propertiesDict.hasOwnProperty(n)) {
+				var values = propertiesDict[n];
+				for (var i=0;i<values.length;i++) {
+					var value = values[i];
+					if (value in synonymsDict) {
+						values[i]=synonymsDict[value];
+						modified=true;
+					} else if (value in propertiesDict) {
+						values.splice(i,1);
+						var newvalues=propertiesDict[value];
+						for (var j=0;j<newvalues.length;j++) {
+							var newvalue=newvalues[j];
+							if (values.indexOf(newvalue)===-1) {
+								values.push(newvalue);
+							}
+						}
+						modified=true;
+					} if (value in aggregatesDict) {
+						logError('Trying to define property "' + n.toUpperCase() +'" in terms of aggregate "'+value.toUpperCase()+'".');
+					}
+				}
+			}
+		}
+
+
+		for (var n in aggregatesDict) {
+			if (aggregatesDict.hasOwnProperty(n)) {
+				var values = aggregatesDict[n];
+				for (var i=0;i<values.length;i++) {
+					var value = values[i];
+					if (value in synonymsDict) {
+						values[i]=synonymsDict[value];
+						modified=true;
+					} else if (value in aggregatesDict) {
+						values.splice(i,1);
+						var newvalues=aggregatesDict[value];
+						for (var j=0;j<newvalues.length;j++) {
+							var newvalue=newvalues[j];
+							if (values.indexOf(newvalue)===-1) {
+								values.push(newvalue);
+							}
+						}
+						modified=true;
+					} if (value in propertiesDict) {
+						logError('Trying to define aggregate "' + n.toUpperCase() +'" in terms of property "'+value.toUpperCase()+'".');
+					}
+				}
+			}
+		}
+	}
 
 	//set default background object
 	var backgroundid;
@@ -405,13 +477,13 @@ function processRuleString(line, state, lineNumber,curRules)
 	var groupNumber=lineNumber;
 	var commands=[];
 
-	if (tokens.length===2) {
-		if (tokens[0]==="["&&tokens[1]==="[" ) {
+	if (tokens.length===1) {
+		if (tokens[0]==="startloop" ) {
 			rule_line = {
 				bracket: 1
 			}
 			return rule_line;
-		} else if (tokens[0]==="]"&&tokens[1]==="]" ) {
+		} else if (tokens[0]==="endloop" ) {
 			rule_line = {
 				bracket: -1
 			}
@@ -1411,7 +1483,7 @@ function checkNoLateRulesHaveMoves(state){
 						return;
 					}
 
-					if (cellRow_r!==undefined) {
+					if (cellRow_r!==undefined && cellRow_r.length>0) {
 						var movementMask_r = cellRow_r[cellIndex];
 						var moveStationaryMask_r = cellRow_r[cellIndex+4];
 
@@ -1994,7 +2066,7 @@ function compile(command,text) {
 	}*/
 
 	if (errorCount>0) {
-		consolePrint('<span class="systemMessage">Errors detected during compilation, the game will not work correctly.</span>');
+		consoleError('<span class="systemMessage">Errors detected during compilation, the game will not work correctly.</span>');
 	}
 	else {
 		var ruleCount=0;

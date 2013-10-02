@@ -349,6 +349,9 @@ function loadLevelFromState(state,levelindex) {
     	canvasResize();
 	}
 
+	if (canDump===true) {
+		inputHistory=[];
+	}
 
 }
 
@@ -545,6 +548,9 @@ function setGameState(_state, command) {
 		}
 	}
 	
+	if (canDump===true) {
+		inputHistory=[];
+	}
     canvasResize();
 }
 
@@ -1481,7 +1487,7 @@ function processInput(dir) {
 		seedsToPlay_CanMove=[];
 		seedsToPlay_CantMove=[];
 
-        while (first || rigidloop||(anyMovements()&& (i<50))) {
+        while (first || rigidloop/*||(anyMovements()&& (i<50))*/) {
         //not particularly elegant, but it'll do for now - should copy the world state and check
         //after each iteration
         	first=false;
@@ -1709,7 +1715,10 @@ function nextLevel() {
 		//continue existing game
 	}
 	localStorage.curlevel=curlevel;
-	canvasResize();
+	canvasResize();	
+	if (canDump===true) {
+		inputHistory=[];
+	}
 }
 
 function goToTitleScreen(){
