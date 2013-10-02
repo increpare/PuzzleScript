@@ -728,7 +728,7 @@ function repositionEntiteisAtCell(positionIndex) {
     //assumes not zero
     //for each layer
     var moved=false;
-    for (var layer=0;layer<5;layer++) {
+    for (var layer=0;layer<6;layer++) {
         var layerMovement = parseInt('11111', 2) & (movementMask>>(5*layer));
         if (layerMovement!=0) {
         	var randomMask = parseInt('00101', 2);
@@ -1139,21 +1139,21 @@ function tryApplyRule(rule,ruleGroupIndex,ruleIndex){
 	        var tuple = tuples[tupleIndex];
 	        //have to double check they apply
 	        if (tupleIndex>0) {
-	            var matches=true;                
+	            var ruleMatches=true;                
 	            for (var cellRowIndex=0;cellRowIndex<rule[1].length;cellRowIndex++) {
 	            	if (rule[5][cellRowIndex]) {//if ellipsis
 		            	if (cellRowMatchesWildCard_ParticularK(rule[0],rule[1][cellRowIndex],tuple[cellRowIndex][0],tuple[cellRowIndex][1])===false) {
-		                    matches=false;
+		                    ruleMatches=false;
 		                    break;
 		                }
 	            	} else {
 		            	if (cellRowMatches(rule[0],rule[1][cellRowIndex],tuple[cellRowIndex])===false) {
-		                    matches=false;
+		                    ruleMatches=false;
 		                    break;
 		                }
 	            	}
 	            }
-	            if (matches === false ) {
+	            if (ruleMatches === false ) {
 	                continue;
 	            }
 	        }

@@ -64,7 +64,7 @@ function generateExtraMembers(state) {
 	state.objectCount = idcount;
 	if (state.objectCount > 32)
 	{
-		logError('Cannot have more than 31 objects defined, you have '+ state.objects.length, state.objects[0].lineNumber);
+		logError('Cannot have more than 31 objects defined, you have '+ state.objectCount, state.objects[n].lineNumber);
 	}
 
 	//calculate blank mask template
@@ -429,11 +429,14 @@ function processRuleString(line, state, lineNumber,curRules)
 		switch (parsestate) {
 			case 0: {
 				//read initial directions
-				if (token==='+') {
+				if (token==='+') {					
 					if (groupNumber===lineNumber) {
+						if (curRules.length==0) {
+							logError('The "+" symbol, for joining a rule with the group of the previous rule, needs a previous rule to be applied to.');							
+						}
 						if (i!==0) {
 							logError('The "+" symbol, for joining a rule with the group of the previous rule, must be the first symbol on the line ');
-						}
+						}						
 						groupNumber = curRules[curRules.length-1].groupNumber;
 					} else {
 						logError('Two "+"s ("append to previous rule group" symbol)applied to the same rule.',lineNumber);
@@ -1255,7 +1258,7 @@ function rulesToMask(state) {
 						} else {
 							logError('You want to spawn a random "'+object_name.toUpperCase()+'", but I don\'t know how to do that',rule.lineNumber);
 						}
-						break;
+						continue;
 					}
 
 					var object_name = cell_r[l + 1];
@@ -1384,6 +1387,43 @@ function arrangeRulesByGroupNumber(state) {
 
 	//check that there're no late movements with direction requirements on the lhs
 	state.lateRules=result_late;
+}
+
+
+function checkNoLateRulesHaveMoves(state){
+	for (var ruleGroupIndex=0;ruleGroupIndex<state.lateRules.length;ruleGroupIndex++) {
+		var lateGroup = state.lateRules[ruleGroupIndex];
+		for (var ruleIndex=0;ruleIndex<lateGroup.length;ruleIndex++) {
+			var rule = lateGroup[ruleIndex];
+			var lineNumber = rule[3];				
+			for (var cellRowIndex=0;cellRowIndex<rule[1].length;cellRowIndex++) {
+				var cellRow_l = rule[1][cellRowIndex];
+				var cellRow_r = rule[2][cellRowIndex];
+				for (var cellIndex=0;cellIndex<cellRow_l.length;cellIndex+=6) {
+					var movementMask = cellRow_l[cellIndex];
+					if (movementMask===ellipsisDirection) {
+						continue;
+					}
+					var moveNonExistenceMask = cellRow_l[cellIndex+3];
+					var moveStationaryMask = cellRow_l[cellIndex+4];
+					if (movementMask!==0 || moveNonExistenceMask!==0 || moveStationaryMask!==0) {
+						logError("Movements cannot appear in late rules.",lineNumber);
+						return;
+					}
+
+					if (cellRow_r!==undefined) {
+						var movementMask_r = cellRow_r[cellIndex];
+						var moveStationaryMask_r = cellRow_r[cellIndex+4];
+
+						if (movementMask_r!==0 || moveStationaryMask_r!==0) {
+							logError("Movements cannot appear in late rules.",lineNumber);
+							return;
+						}
+					}				
+				}
+			}
+		}
+	}
 }
 
 function generateRigidGroupList(state) {
@@ -1840,6 +1880,7 @@ function generateSoundData(state) {
 	state.sfx_MovementFailureMasks = sfx_MovementFailureMasks;
 }
 
+
 var MAX_ERRORS=5;
 function loadFile(str) {
 	window.console.log('loadFile');
@@ -1874,9 +1915,13 @@ function loadFile(str) {
 		printRules(state);
 	}
 
+
 	rulesToMask(state);
 	collapseRules(state);
 	arrangeRulesByGroupNumber(state);
+
+	checkNoLateRulesHaveMoves(state);
+
 	generateRigidGroupList(state);
 
 	processWinCondition(state);
@@ -1971,4 +2016,12 @@ function compile(command,text) {
 	if (canDump===true) {
 		inputHistory=[];
 	}
+}
+
+
+
+function qualifyURL(url) {
+	var a = document.createElement('a');
+	a.href = url;
+	return a.href;
 }

@@ -324,7 +324,53 @@ colorPalettes = {
 	darkblue		: "#00007f",
 	purple			: "#7f007f",
 	pink			: "#ff7fff"
-	}
+	},
+c64 : {
+	black   		: "#000000",
+	white			: "#ffffff",
+	grey			: "#6C6C6C",
+	darkgrey		: "#444444",
+	lightgrey		: "#959595",
+	red				: "#68372B",
+	darkred			: "#3f1e17",
+	lightred		: "#9A6759",
+	brown			: "#433900",
+	darkbrown		: "#221c02",
+	lightbrown		: "#6d5c0d",
+	orange			: "#6F4F25",
+	yellow 			: "#B8C76F",
+	green			: "#588D43",
+	darkgreen		: "#345129",
+	lightgreen		: "#9AD284",
+	blue			: "#6C5EB5",
+	lightblue		: "#70A4B2",
+	darkblue		: "#352879",
+	purple			: "#6F3D86",
+	pink			: "#b044ac"
+},
+whitingjp : {
+  black       : "#202527",
+  white       : "#eff8fd",
+  grey        : "#7b7680",
+  darkgrey    : "#3c3b44",
+  lightgrey   : "#bed0d7",
+  red         : "#bd194b",
+  darkred     : "#6b1334",
+  lightred    : "#ef2358",
+  brown       : "#b52e1c",
+  darkbrown   : "#681c12",
+  lightbrown  : "#e87b45",
+  orange      : "#ff8c10",
+  yellow      : "#fbd524",
+  green       : "#36bc3c",
+  darkgreen   : "#317610",
+  lightgreen  : "#8ce062",
+  blue        : "#3f62c6",
+  lightblue   : "#57bbe0",
+  darkblue    : "#2c2fa0",
+  purple      : "#7037d9",
+  pink        : "#ec2b8f"
+}
 };
 
 var reg_color_names = /(black|white|darkgray|lightgray|gray|grey|darkgrey|lightgrey|red|darkred|lightred|brown|darkbrown|lightbrown|orange|yellow|green|darkgreen|lightgreen|blue|lightblue|darkblue|purple|pink)\s*/;

@@ -73,26 +73,43 @@ a {
 ></canvas>
 </div> 
 <div class="footer">
+<span id="errormessage" style="color:red;"></span>
 <a id="homepagelink" href="http://www.puzzlescript.net">www.puzzlescript.net</a> | <a id="hacklink" href="http://www.puzzlescript.net/editor.html?hack=412341234">hack</a>
 </div>
 
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
 
-<script src="../js/globalVariables.js"></script>
-<script src="../js/debug_off.js"></script>
-<script src="../js/font.js"></script>
-<script src="../js/rng.js"></script>
-<script src="../js/riffwave.js"></script>
-<script src="../js/sfxr.js"></script>
-<script src="../js/codemirror.js"></script>
-<script src="../js/colors.js"></script>
-<script src="../js/graphics.js"></script>
-<script src="../js/engine.js"></script>
-<script src="../js/parser.js"></script>
-<script src="../js/compiler.js"></script>
-<script src="../js/inputoutput.js"></script>
+  ga('create', 'UA-42606016-2', 'puzzlescript.net');
+  ga('send', 'pageview');
+</script>
+
+<!--TOREPLACE-->
+<script src="js/globalVariables.js"></script>
+<script src="js/debug_off.js"></script>
+<script src="js/font.js"></script>
+<script src="js/rng.js"></script>
+<script src="js/riffwave.js"></script>
+<script src="js/sfxr.js"></script>
+<script src="js/codemirror.js"></script>
+<script src="js/colors.js"></script>
+<script src="js/graphics.js"></script>
+<script src="js/engine.js"></script>
+<script src="js/parser.js"></script>
+<script src="js/compiler.js"></script>
+<script src="js/inputoutput.js"></script>
+<!--ENDREPLACE-->
 
 <script>
 
+function displayError(message) {
+	var homepageLink = document.getElementById("errormessage");
+	homepageLink.innerHTML="ERROR "+message+"<br>";
+
+}
 function getParameterByName(name) {
     name = name.replace(/[\[]/, "\\\[").replace(/[\]]/, "\\\]");
     var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
@@ -102,7 +119,8 @@ function getParameterByName(name) {
 
 function getData(){ 
 	var id = getParameterByName("p").replace(/[\\\/]/,"");
-	if (id===null) {
+	if (id===null||id.length===0) {
+		displayError("No ID specified in URL.")
 		return;
 	}
 
@@ -111,9 +129,14 @@ function getData(){
 	var githubHTTPClient = new XMLHttpRequest();
 	githubHTTPClient.open('GET', githubURL);
 	githubHTTPClient.onreadystatechange = function() {
-	
 		if(githubHTTPClient.readyState!=4) {
 			return;
+		}		
+		var result = JSON.parse(githubHTTPClient.responseText);
+		if (githubHTTPClient.status===403) {
+			displayError(result.message);
+		} else if (githubHTTPClient.status!==200&&githubHTTPClient.status!==201) {
+			displayError("HTTP Error "+ githubHTTPClient.status + ' - ' + githubHTTPClient.statusText);
 		}
 		var result = JSON.parse(githubHTTPClient.responseText);
 		var code=result["files"]["script.txt"]["content"];
@@ -131,7 +154,11 @@ function getData(){
 			gametitle.innerHTML=title;
 		}
 		var hacklink = document.getElementById("hacklink");
-		hacklink.href="http://www.puzzlescript.net/editor.html?hack="+id;
+
+		var url = "editor.html?hack="+id;
+		url=qualifyURL(url);
+
+		hacklink.href=url;
 	}
 	githubHTTPClient.setRequestHeader("Content-type","application/x-www-form-urlencoded");
 	githubHTTPClient.send();
@@ -140,8 +167,6 @@ function getData(){
 getData();
 
 </script>
-</head>
-<body>
-	
+
 </body>
 </html>

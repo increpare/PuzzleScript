@@ -41,6 +41,10 @@ function saveClick() {
 	localStorage['saves']=savesDatStr;
 
 	repopulateSaveDropdown(curSaveArray);
+
+	var loadDropdown = document.getElementById('loadDropDown');
+	loadDropdown.selectedIndex=1;
+
 	consolePrint("saved file to local storage");
 }
 
@@ -62,8 +66,8 @@ function loadDropDownChange() {
 			editor.setValue(saveText);
 			return;
 	    }
-	}
-	
+	}		
+
 	consolePrint("Eek, trying to load a save, but couldn't find it. :(");
 }
 
@@ -93,7 +97,7 @@ function repopulateSaveDropdown(saves) {
 	    optn.value = key;
 	    loadDropdown.options.add(optn);  
 	}
-	loadDropdown.selectedIndex=1;
+	loadDropdown.selectedIndex=0;
 }
 
 repopulateSaveDropdown();
@@ -102,7 +106,10 @@ loadDropdown.selectedIndex=-1;
 
 function levelEditorClick_Fn() {
 	if (textMode || state.levels.length===0) {
-		consolePrint("You can only open the editor when a level is open.");
+		compile(["loadLevel",0]);
+		if (textMode || state.levels.length===0) {			
+			consolePrint("You can only open the editor when a level is open.");
+		}
 	} else {
 		levelEditorOpened=!levelEditorOpened;
     	canvasResize();
@@ -118,10 +125,6 @@ function shareClick() {
 	}
 	compile();
 
-	if (errorCount>0) {
-		consolePrint("Cannot share code that doesn't compile");
-		return;
-	}
 
 	var source=editor.getValue();
 
@@ -129,6 +132,9 @@ function shareClick() {
 		"description" : "title",
 		"public" : true,
 		"files": {
+			"readme.txt" : {
+				"content": "Play this game by pasting the script in http://www.puzzlescript.net/editor.html"
+			},
 			"script.txt" : {
 				"content": source
 			}
@@ -143,9 +149,29 @@ function shareClick() {
 			return;
 		}		
 		var result = JSON.parse(githubHTTPClient.responseText);
-		var id = result.id;
-		var url = "http://www.puzzlescript.net/play/?p="+id;
-		consolePrint("GitHub submission successful - the game can now be played at this url:<br><a href=\""+url+"\">"+url+"</a>");
+		if (githubHTTPClient.status===403) {
+			consoleError(result.message);
+		} else if (githubHTTPClient.status!==200&&githubHTTPClient.status!==201) {
+			consoleError("HTTP Error "+ githubHTTPClient.status + ' - ' + githubHTTPClient.statusText);
+		} else {
+			var id = result.id;
+			var url = "play.html?p="+id;
+			url=qualifyURL(url);
+
+			consolePrint("GitHub submission successful - ");
+
+
+			if (errorCount>0) {
+				consolePrint("Cannot link directly to playable game, because there are compiler errors.");
+			} else {
+				consolePrint("The game can now be played at this url:<br><a href=\""+url+"\">"+url+"</a>");
+			} 
+
+
+			var editurl = "editor.html?p="+id;
+			editurl=qualifyURL(url);
+			consolePrint("The link to open the code directly in editor is:<br><a href=\""+url+"\">"+url+"</a>")
+		}
 	}
 	githubHTTPClient.setRequestHeader("Content-type","application/x-www-form-urlencoded");
 	var stringifiedGist = JSON.stringify(gistToCreate);

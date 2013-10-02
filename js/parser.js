@@ -711,7 +711,9 @@ var codeMirrorFn = function() {
                             return 'ARROW';
                         }
                         if (ch === '[' || ch === '|' || ch === ']' || ch==='+') {
-                            state.tokenIndex = 1;
+                        	if (ch!=='+') {
+                            	state.tokenIndex = 1;
+                            }
                             stream.next();
                             stream.match(/\s*/, true);
                             return 'BRACKET';

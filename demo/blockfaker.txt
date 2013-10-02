@@ -5,6 +5,7 @@ homepage www.droken.org
 require_player_movement
 key_repeat_interval 0.12
 
+color_palette c64
 (
 A port of first several levels of Droqen's beautiful game:
 
@@ -132,6 +133,8 @@ RULES
 ======     
 
 [ >  Moveable | Moveable ] -> [ > Moveable | > Moveable ]
+
+[ > Block | Grille ] -> [ Block | Grille ]
 
 late [ PinkBlock | PinkBlock | PinkBlock ] -> [ | | ]
 late [ BlueBlock | BlueBlock | BlueBlock ] -> [ | | ]

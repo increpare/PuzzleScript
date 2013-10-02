@@ -67,17 +67,37 @@ java -jar ~/progs/closure.jar --js_output_file ../bin/js/scripts_compiled.js  \
 --js js/addlisteners.js \
 --js js/addlisteners_editor.js \
 --js js/makegif.js
+java -jar ~/progs/closure.jar --js_output_file ../bin/js/scripts_play_compiled.js  \
+--js js/globalVariables.js \
+--js js/debug_off.js \
+--js js/font.js \
+--js js/rng.js \
+--js js/riffwave.js \
+--js js/sfxr.js \
+--js js/codemirror.js \
+--js js/colors.js \
+--js js/graphics.js \
+--js js/engine.js \
+--js js/parser.js \
+--js js/compiler.js \
+--js js/inputoutput.js
 echo running sed
 sed -e 's/<script src="js\/[A-Za-z0-9_\/-]*\.js"><\/script>//g' < editor.html > editor_temp1.html
 sed -e 's/<!--TOREPLACE-->/<script src="js\/scripts_compiled.js"><\/script>/g' < editor_temp1.html > editor_temp2.html
 sed -e 's/<link rel="stylesheet" href="[A-Za-z0-9_\/-]*\.css">//g' < editor_temp2.html > editor_temp3.html
 sed -e 's/<!--CSSREPLACE-->/<link rel="stylesheet" href="css\/combined.css">/' < editor_temp3.html > editor_temp4.html
+
+sed -e 's/<script src="js\/[A-Za-z0-9_\/-]*\.js"><\/script>//g' < play.html > play_temp1.html
+sed -e 's/<!--TOREPLACE-->/<script src="js\/scripts_play_compiled.js"><\/script>/g' < play_temp1.html > play_temp2.html
+
 echo copying editor.html over
 mv editor_temp4.html ../bin/editor.html
+mv play_temp2.html ../bin/play.html
 echo compressing html
 java -jar ~/progs/htmlcompressor-1.5.3.jar  -r ../bin/ -o ../bin/
 echo tidying up
 rm editor_temp*.html
+rm play_temp*.html
 echo gzipping site
 cd ../bin
 ./gzipper

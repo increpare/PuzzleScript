@@ -29,6 +29,10 @@ function consolePrint(text) {
 	objDiv.scrollTop = objDiv.scrollHeight;
 }
 
+function consoleError(text) {	
+        var errorString = '<span class="errorText">' + text + '</span>';
+        consolePrint(errorString);
+}
 function clearConsole() {
 	var code = document.getElementById('consoletextarea');
 	code.innerHTML = '';
