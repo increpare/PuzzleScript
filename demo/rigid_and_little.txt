@@ -1,0 +1,113 @@
+========
+OBJECTS
+========
+
+Background 
+LIGHTGREEN GREEN
+11111
+01111
+11101
+11111     
+10111   
+
+
+Target 
+DarkBlue 
+..... 
+.000.
+.0.0.
+.000.
+.....     
+
+Wall     
+BROWN DARKBROWN     
+00010
+11111
+01000
+11111
+00010
+
+Player 
+Black Orange White Blue     
+.000.
+.111.
+22222
+.333.
+.3.3.
+
+BigBlock
+Orange
+00000
+0...0
+0...0
+0...0
+00000
+
+LittleBlock
+Orange 
+.....
+.000.
+.0.0.
+.000.
+.....
+
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Player
+* = BigBlock
+@ = BigBlock and Target
+b = LittleBlock
+O = Target
+
+=========
+SOUNDS
+=========
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Target
+Player, Wall, BigBlock, LittleBlock
+
+======
+RULES     
+======     
+
+[ > Player | LittleBlock ] -> [ > Player | > LittleBlock ]
+
+[ > LittleBlock | LittleBlock ] -> [ > LittleBlock | > LittleBlock ]
+
+rigid [ > LittleBlock | BigBlock ] -> [ > LittleBlock | > BigBlock ]
++ rigid [ >  Player | BigBlock ] -> [  >  Player | > BigBlock  ] 
++ rigid [ moving BigBlock | BigBlock ] -> [ moving BigBlock | moving BigBlock ]
++ [ > BigBlock | LittleBlock ] -> [ > BigBlock | > LittleBlock ]
+
+==============
+WINCONDITION
+==============
+
+=======     
+LEVELS
+=======
+
+...............
+..........#....
+......b........
+..#............
+.....***.......
+.....*..b..#...
+..P..**#.......
+.....*.........
+...b...........
+..#......b.....
+.........#.....
+...............
+...............
+
