@@ -100,9 +100,9 @@ colorPalettes = {
 	green			: "#44891a",
 	darkgreen		: "#2f484e",
 	lightgreen		: "#a3ce27",
-	blue			: "#31A2F2",
+	blue			: "#1d57f7",
 	lightblue		: "#B2DCEF",
-	darkblue		: "#005784",
+	darkblue		: "#1B2632",
 	purple			: "#342a97",
 	pink			: "#de65e2"
 	},
@@ -299,7 +299,7 @@ colorPalettes = {
 	
 
 	
-	amstrad : {
+amstrad : {
 	black   		: "#000000",
 	white			: "#ffffff",
 	grey			: "#7f7f7f",
@@ -331,6 +331,9 @@ c64 : {
 	grey			: "#6C6C6C",
 	darkgrey		: "#444444",
 	lightgrey		: "#959595",
+	gray			: "#6C6C6C",
+	darkgray		: "#444444",
+	lightgray		: "#959595",
 	red				: "#68372B",
 	darkred			: "#3f1e17",
 	lightred		: "#9A6759",
@@ -354,6 +357,9 @@ whitingjp : {
   grey        : "#7b7680",
   darkgrey    : "#3c3b44",
   lightgrey   : "#bed0d7",
+  gray        : "#7b7680",
+  darkgray    : "#3c3b44",
+  lightgray   : "#bed0d7",
   red         : "#bd194b",
   darkred     : "#6b1334",
   lightred    : "#ef2358",

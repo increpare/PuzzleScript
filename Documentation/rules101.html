@@ -110,13 +110,13 @@ Let's have spooky eyeballs that follow you around.
 <p>
 <img src="images/eyefollow.gif">
 <p>
-Here's a naughty teleport sprite - whenever she sees you she swaps places with you.
+Here's a naughty teleport sprite - whenever she sees you she swaps places with you:
 <p>
 <pre><code>late [ Sprite | ... | Player ] -> [ Player | ... | Sprite ]</code></pre>
 <p>
 <em>No wait!  Don't type that in!</em> It causes an infinite loop, it keeps swapping them back and forth forever.  This fixes it:
 <p>
-<pre><code>late [ Sprite | ... | Player ] -> [ Temp | ... | Sprite ]
+<pre><code><a href="../editor.html?demo=naughtysprite" target="puzzleScript_EditorWindow" class="btn btn-default pull-right" ><span class="glyphicon glyphicon-cog"> Edit</span></a>late [ Sprite | ... | Player ] -> [ Temp | ... | Sprite ]
 late [ Temp ] -> [ Player ]</code></pre>
 <p>
 <img src="images/sokoban_fairy.gif">
@@ -132,7 +132,7 @@ The second line is because we are moving the kitty ourselves, and don't want the
 <p>
 What if you want crates that can only be pushed horizontally? 
 <p>
-<pre><code>Horizontal [ > Player | Block ] -> [ > Player | > Block ]</code></pre>
+<pre><code><a href="../editor.html?demo=sokoban_horizontal" target="puzzleScript_EditorWindow" class="btn btn-default pull-right" ><span class="glyphicon glyphicon-cog"> Edit</span></a>Horizontal [ > Player | Block ] -> [ > Player | > Block ]</code></pre>
 <p>
 This only looks for occurrences of the pattern that are horizontal. You could also say vertical instead.
 <p>

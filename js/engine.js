@@ -180,6 +180,7 @@ function generateTitleScreen()
 		}
 	}
 
+	var noAction = 'noaction' in state.metadata;	
 	var noUndo = 'noundo' in state.metadata;
 	var noRestart = 'norestart' in state.metadata;
 	if (noUndo && noRestart) {
@@ -189,7 +190,9 @@ function generateTitleScreen()
 	} else if (noRestart) {
 		titleImage[11]=".Z to undo.....................";
 	}
-
+	if (noAction) {
+		titleImage[10]="..................................";
+	}
 	for (var i=0;i<titleImage.length;i++)
 	{
 		titleImage[i]=titleImage[i].replace(/\./g, ' ');

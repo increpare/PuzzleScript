@@ -425,7 +425,7 @@ var directionaggregates = {
 
 var simpleAbsoluteDirections = ['up', 'down', 'left', 'right'];
 var simpleRelativeDirections = ['^', 'v', '<', '>'];
-var reg_directions_only = /^(\>|\<|\^|v|up|down|left|right|moving|stationary|no|randomdir|random|horizontal|vertical|perpendicular|parallel)$/;
+var reg_directions_only = /^(\>|\<|\^|v|up|down|left|right|moving|stationary|no|randomdir|random|horizontal|vertical|orthogonal|perpendicular|parallel|action)$/;
 //redclareing here, i don't know why
 var commandwords = ["sfx0","sfx1","sfx2","sfx3","sfx4","sfx5","sfx6","sfx7","sfx8","sfx9","sfx10","cancel","checkpoint","restart","win","message"];
 
@@ -640,6 +640,21 @@ function processRuleString(line, state, lineNumber,curRules)
 		groupNumber: groupNumber,
 		commands:commands
 	};
+
+	/* reset must appear by itself */
+
+	for (var i=0;i<commands.length;i++) {
+		var cmd = commands[i][0];
+		if (cmd==='restart') {
+			if (commands.length>1 || rhs_cells.length>0) {
+				logError('The RESET command can only appear by itself on the right hand side of the arrow.', lineNumber);
+			}
+		} else if (cmd==='cancel') {
+			if (commands.length>1 || rhs_cells.length>0) {
+				logError('The CANCEL command can only appear by itself on the right hand side of the arrow.', lineNumber);
+			}
+		}
+	}
 
 	//next up - replace relative directions with absolute direction
 

@@ -7,12 +7,51 @@
     <meta name="author" content="">
     <link rel="shortcut icon" type="image/x-icon" href="documentation/ico/favicon.ico" />
 
-    <title>Puzzle Script</title>
+    <title>Puzzle Script - an open-source HTML5 puzzle game engine</title>
 
     <!-- Bootstrap core CSS -->
     <link href="documentation/css/bootstrap.css" rel="stylesheet">
-    <!-- Custom styles for this template -->
 
+    <!-- Custom styles for this template -->
+<style> 
+
+/* Large screens ----------- */
+@media only screen and (max-width : 900px) {
+    /* Styles */
+    .jumbotron {
+      background-image: url('images/mascot_64.png');
+      background-position:right top;
+      background-repeat:no-repeat;
+    }
+}
+/* Large screens ----------- */
+@media only screen and (min-width : 900px) {
+    /* Styles */
+    .jumbotron {
+      background-image: url('images/mascot_256.png');
+      background-position:right center;
+      background-repeat:no-repeat;
+    }
+}
+
+/* custom button :D */
+/*
+.btn-custom {
+  background-color: white;
+  border-color: black;
+  color: black;
+  border-radius: 500px;
+}
+.btn-custom:hover,
+.btn-custom:focus,
+.btn-custom:active,
+.btn-custom.active {
+  background-color: yellow;
+  border-color: black;
+  border-radius: 500px;
+}*/
+
+</style>
     <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!--[if lt IE 9]>
       <script src="../../assets/js/html5shiv.js"></script>
@@ -24,7 +63,7 @@
 
 <p>
 <p>
-<div class="jumbotron" style="background-image: url('images/mascot_256.png');background-position:right center;background-repeat:no-repeat;">
+<div class="jumbotron" >
   <div class="container">
 
     <h1>PuzzleScript!</h1>
@@ -48,19 +87,19 @@ PuzzleScript is an open-source HTML5 puzzle game engine.
     <div class="container">
       <!-- Example row of columns -->
       <div class="row">
-        <div class="col-lg-4">
+        <div class="col-xs-4">
         <p>
-          <a href="editor.html?demo=sokoban_basic"><img src="documentation/images/sokoban.gif" class="img-rounded"></a>
+          <a href="editor.html?demo=sokoban_basic"><img src="documentation/images/sokoban.gif" class="img-rounded" width="100%"></a>
           <p>
         </div>
-        <div class="col-lg-4 ">
+        <div class="col-xs-4 ">
         <p>
-          <a href="editor.html?demo=whaleworld"><img src="documentation/images/puzz_whale.gif" class="img-rounded"></a>
+          <a href="editor.html?demo=whaleworld"><img src="documentation/images/puzz_whale.gif" class="img-rounded" width="100%"></a>
           <p>
         </div>
-        <div class="col-lg-4">
+        <div class="col-xs-4">
         <p>
-           <a href="editor.html?demo=randomrobots"><img src="documentation/images/randomrobots.gif" class="img-rounded"></a>
+           <a href="editor.html?demo=randomrobots"><img src="documentation/images/randomrobots.gif" class="img-rounded" width="100%"></a>
           <p>
         </div>
       </div>

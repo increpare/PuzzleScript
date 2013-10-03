@@ -109,9 +109,8 @@ loadDropdown.selectedIndex=0;
 function levelEditorClick_Fn() {
 	if (textMode || state.levels.length===0) {
 		compile(["loadLevel",0]);
-		if (textMode || state.levels.length===0) {			
-			consolePrint("You can only open the editor when a level is open.");
-		}
+		levelEditorOpened=true;
+    	canvasResize();
 	} else {
 		levelEditorOpened=!levelEditorOpened;
     	canvasResize();

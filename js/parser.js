@@ -95,13 +95,13 @@ var codeMirrorFn = function() {
     var reg_notcommentstart = /[^\(]+/;
     var reg_csv_separators = /[ \,]*/;
     var reg_soundverbs = /(move|action|create|destroy|cantmove|undo|restart|titlescreen|startgame|endgame|startlevel|endlevel|showmessage|closemessage|sfx0|sfx1|sfx2|sfx3|sfx4|sfx5|sfx6|sfx7|sfx8|sfx9|sfx10)\s+/;
-    var reg_directions = /^(up|down|left|right|\^|v|\<|\>|forward|moving|stationary|parallel|perpendicular|horizontal|vertical|no|randomdir|random)$/;
+    var reg_directions = /^(action|up|down|left|right|\^|v|\<|\>|forward|moving|stationary|parallel|perpendicular|horizontal|orthogonal|vertical|no|randomdir|random)$/;
     var reg_loopmarker = /^(startloop|endloop)$/;
     var reg_ruledirectionindicators = /^(up|down|left|right|horizontal|vertical|orthogonal|late|rigid)$/;
     var reg_sounddirectionindicators = /\s*(up|down|left|right|horizontal|vertical|orthogonal)\s*/;
     var reg_winconditionquantifiers = /^(all|any|no|some)$/;
-    var reg_keywords = /(objects|collisionlayers|legend|sounds|rules|wincondition|\.\.\.|levels|up|down|left|right|^|v|\>|\<|no|horizontal|orthogonal|vertical|any|all|no|some|moving|stationary|parallel|perpendicular)/;
-    var keyword_array = ['objects', 'collisionlayers', 'legend', 'sounds', 'rules', '...','wincondition', 'levels', 'up', 'down', 'left', 'right', 'late','rigid', '^','v','\>','\<','no','randomdir','random', 'horizontal', 'vertical','any', 'all', 'no', 'some', 'moving','stationary','parallel','perpendicular'];
+    var reg_keywords = /(objects|collisionlayers|legend|sounds|rules|wincondition|\.\.\.|levels|up|down|left|right|^|v|\>|\<|no|horizontal|orthogonal|vertical|any|all|no|some|moving|stationary|parallel|perpendicular|action)/;
+    var keyword_array = ['objects', 'collisionlayers', 'legend', 'sounds', 'rules', '...','wincondition', 'levels', 'up', 'down', 'left', 'right', 'late','rigid', '^','v','\>','\<','no','randomdir','random', 'horizontal', 'vertical','any', 'all', 'no', 'some', 'moving','stationary','parallel','perpendicular','action'];
 
     //  var keywordRegex = new RegExp("\\b(("+cons.join(")|(")+"))$", 'i');
 
@@ -892,7 +892,7 @@ var codeMirrorFn = function() {
 		                    			}
 		                    			state.tokenIndex=1;
 		                    			return 'METADATA';
-		                    		} else if ( ['run_rules_on_level_start','require_player_movement','debug','noundo','norestart'].indexOf(token)>=0) {
+		                    		} else if ( ['run_rules_on_level_start','require_player_movement','debug','noundo','noaction','norestart'].indexOf(token)>=0) {
 		                    			state.metadata.push(token);
 		                    			state.metadata.push("true");
 		                    			state.tokenIndex=-1;

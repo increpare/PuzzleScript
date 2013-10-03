@@ -41,7 +41,7 @@
               <li class="active"><a href="documentation.html">Documentation</a></li>
           </ul>          
           <ul class="nav navbar-nav navbar-right">
-            <li><a href="https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=RF7ZTG7FEU7YN&lc=GB&item_name=PuzzleScript%2enet&item_number=puzzlescript%20donation&currency_code=EUR&bn=PP%2dDonationsBF%3abtn_donate_LG%2egif%3aNonHosted">Donate</a></li>
+            <li><a href="https://www.paypal.com/cgi-bin/webscr?cmd=_donations&amp;business=RF7ZTG7FEU7YN&amp;lc=GB&amp;item_name=PuzzleScript%2enet&amp;item_number=puzzlescript%20donation&amp;currency_code=EUR&amp;bn=PP%2dDonationsBF%3abtn_donate_LG%2egif%3aNonHosted">Donate</a></li>
             <li><a href="about.html">About</a></li>
           </ul>
         </div><!--/.nav-collapse -->
@@ -56,14 +56,17 @@
 <dl>
 	<dt>I have an idea for feature X!</dt>
 	<dd>Not a question.  Let me know about your ideas, for sure!  For making an engine like this, while I have a lot of discretion for random crap, my main philosophy is to not add anything unless:
+  <p>
 	<ul>
-	<li>It would be useful in 2 or more possible games</li>
-	<li>Someone wants to use it in a game they're actually making</li></ul>
-	Of course, the project is open source + <a href="https://github.com/increpare/PuzzleScript">on GitHub</a>, so you are <em>warmly</em> welcome to fork it and add your own features.  I'd love to see how other people could snazz it up, and am more likely to consider pulling other people's changes than implementing new features myself.
+	<li>It would be useful in 2 or more possible games.</li>
+	<li>Someone wants to use it in a game they're actually making.</li></ul>
+	Of course, the project is open source + <a href="https://github.com/increpare/PuzzleScript">on GitHub</a>, so you are <em>warmly</em> welcome to fork it and add your own features.  I'd love to see how other people could snazz it up : )
 	</dd>
 	<dt>I have an idea for a puzzle game, but it's not suited to PuzzleScript</dt>
-	<dd>You're right, PuzzleScript isn't a universal puzzle game-making tool. It's best for <em>turn-based</em>, <em>keyboard-controlled</em> games where you're moving a thing, or several things around.  It would be neat to mod it to allow for mouse-controlled games - I'm a giant fan of <a href="http://qrostar.skr.jp/index.cgi?page=jelly&lang=en">qrostar</a>'s games.
-	<p>I'm basically a bit burned out on this right now.  I've been working on the engine for a couple of weeks, energy levels, and in order to reenergize I need to see people make good use of what's in there.  Adding mouse-controller support wouldn't be that hard, actually, but I'll need some encouragement.
+	<dd>
+  <p>You're right, PuzzleScript isn't a universal puzzle game-making tool. It's best for <em>turn-based</em>, <em>keyboard-controlled</em> games where you're moving a thing, or several things around.  It would be neat to mod it to allow for mouse-controlled games - I'm a giant fan of <a href="http://qrostar.skr.jp/index.cgi?page=jelly&lang=en">qrostar</a>'s games.
+	<p>
+  I'm a bit burned out on this right now.  I've been working on the engine for a couple of weeks, energy levels, and in order to reenergize I need to see people make good use of what's in there.  Adding mouse-controller support wouldn't be that hard, actually, but I'll need some encouragement.
 	<p>
 	Ditto the above to realtime stuff, animations/smooth movement between frames, what have you.  All very reasonable possibilities.  I just have to see where things go.</dd>
 	<dt>Is there a community site where I can go hang out, talk to people about PuzzleScript?</dt>
@@ -73,7 +76,7 @@
 	<dt>Can I turn my games into standalone executables></dt>
 	<dd>I had originally intended to make a very simple cross-platform standalone client for PuzzleScript.  However, the core engine is still in flux, and it wouldn't be a good idea to write a totally separate interpreter for PuzzleScript machine code in a different language, it'd be too much fuss to keep a separate C implemention of PuzzleScript synchronised with the main one.  But if <em>you</em> want to try to do so, knock yourself out : )</dd>
 	<dt>Can I run the editor offline?</dt>
-	<dd>You can save the editor page to disk, and that should work okay offline, except for exporting standalone versions of the games (it has some optimizations that stop it from working when the webpage is run from your hard-disk). </dd>
+	<dd>You can download an uncompressed version of the site from <a href="https://github.com/increpare/PuzzleScript">GitHub</a>, and that should work okay offline, except for exporting standalone versions of the games (it has some optimizations that stop it from working when the webpage is run from your hard-disk), and sharing.  It also won't share saves with the online version.</dd>
 	<dt>Why no music?</dt>
 	<dd>Ideally I'd like the music to be synthesized the way the sounds are.  However, with javascript as it is right now, that's not possible.  You can embed music into the standalone html files yourself if you want to, though.</dd>
 </dl>

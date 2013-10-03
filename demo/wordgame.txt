@@ -1,0 +1,102 @@
+title Multi-word Dictionary Game
+author Sarah Northway
+homepage www.sarahnorthway.com
+
+(included with permission of Sarah Northway)
+
+========
+OBJECTS
+========
+
+Background 
+pink  
+
+Wall 
+grey
+
+Player 
+Blue   
+
+Win
+yellow
+
+LetterC
+white black
+.111.
+1....
+1....
+1....
+.111.
+
+LetterA 
+white black
+.111.
+1...1
+11111
+1...1
+1...1
+
+LetterT
+white black
+11111
+..1..
+..1..
+..1..
+..1..
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Player
+W = Win
+C = LetterC
+A = LetterA
+T = LetterT
+
+=======
+SOUNDS
+=======
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Win
+Player, Wall, LetterC, LetterA, LetterT
+
+======
+RULES     
+======     
+
+[ >  Player | LetterC ] -> [  >  Player | > LetterC  ]
+[ >  Player | LetterA ] -> [  >  Player | > LetterA  ]
+[ >  Player | LetterT ] -> [  >  Player | > LetterT  ]
+
+[ <  Player | LetterC ] -> [  <  Player | < LetterC  ]
+[ <  Player | LetterA ] -> [  <  Player | < LetterA  ]
+[ <  Player | LetterT ] -> [  <  Player | < LetterT  ]
+
+late right [LetterC | LetterA | LetterT] -> [ | Win | ] message You spelled CAT!
+late right [LetterA | LetterC | LetterT] -> [ | Win | ] message You spelled ACT!
+
+==============
+WINCONDITION
+==============
+
+Some Win 
+
+=======     
+LEVELS
+=======
+
+#########
+#.......#
+#.A..C..#
+#.......#
+#...P...#
+#.T.....#
+#########

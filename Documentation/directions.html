@@ -72,21 +72,33 @@ DOWN [ DOWN player | crate ] -> [ DOWN player | DOWN crate ]
 LEFT [ LEFT player | crate ] -> [ LEFT player | LEFT crate ] 
 RIGHT [ RIGHT player | crate ] -> [ RIGHT player | RIGHT crate ]</code></pre>
 <p>
-You can restrict patterns so that they're only matched in a particular direction.  To implement gravity, we could do 
+You can restrict patterns so that they're only matched in a particular direction (by default, when the interpreter tries to find places to apply to rule, it tries all four rotations of it).  To implement gravity, we could do 
 <p>
-<pre><code>DOWN [ stationary Crate ] -> [ > Object ]</code></pre>
+<pre><code>DOWN [ stationary Object ] -> [ > Object ]</code></pre>
 <p>
-compiles to
+Which compiles to
 <p>
-<pre><code>DOWN [ stationary Crate ] -> [ DOWN Object ]</code></pre>
+<pre><code>DOWN [ stationary Object ] -> [ DOWN Object ]</code></pre>
 <p>
-it would probably have been simpler to write the rule as 
+It would probably have been simpler to write the rule as 
 <p>
-<pre><code>[ stationary Crate ] -> [ DOWN Object ]</code></pre>
+<pre><code>[ stationary Object ] -> [ DOWN Object ]</code></pre>
 <p>
 which is the same thing.
 <p>
+Another good illustration of why rule direction might be important would be if you're making a word game.
+<p>
+<pre><code>[ C | A | T ] -> WIN</code></pre>
+<p>
+would look for words in all four directions, so TAC would also match this rule. To fix it, you would restrict the rule to read left-to-right as follows:
+<p>
+<pre><code><a href="../editor.html?demo=wordgame" target="puzzleScript_EditorWindow" class="btn btn-default pull-right" ><span class="glyphicon glyphicon-cog"> Edit</span></a>right [ C | A | T ] -> WIN</code></pre>
+<p>
+<img src="images/wordgame.gif">
+<p>
+Huzzah!
 <hr>
+
 <p>
 There are horizontal directons as well - if you want something that moves horizontally when you move horizontally, but ignores you otherwise, you do this
 <p>
@@ -104,16 +116,11 @@ Vertical and horizontal are both keywords, but is there a way of reducing the fo
 <p>
 There is, and it's this:
 <p>
-<pre><code>[ perpendicular Player | Crate ] -> [ perpendicular Player | perpendicular Crate ]</code></pre>
+<pre><code>[ Perpendicular Player | Crate ] -> [ Perpendicular Player | Perpendicular Crate ]</code></pre>
 <p>
 Parallel is also a keyword, and means what you think it might :)
 <p>
-Rule of thumb: if you don't know what something does in the examples, add the debug statement to the <a href="prelude.html">prelude</a> and see what it produces.  Can you use it to tell what the + in the following code does?
-<p>
-<pre><code>[ RIGHT Player | crate ] -> [RIGHT player | RIGHT crate] 
-+ [ LEFT Player | LEFT Crate ] -> [ LEFT player | LEFT Crate ]</code></pre>
-<p>
-(that's a pretty advanced feature - it's crazy unlikely you'll need to use it)
+Tip: if you don't know what something does in the examples (or in your own code :S ), add the debug statement to the <a href="prelude.html">prelude</a> and see what it produces.
 <p>
     </div><!-- /.container -->
 

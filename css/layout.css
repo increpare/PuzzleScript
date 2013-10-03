@@ -1,62 +1,71 @@
+HTML, BODY
+{
+	height: 100%;
+	width: 100%;
+	margin: 0;
+}
+.leftpanel
+{
+	position: absolute;
+	left: 0px;
+	top: 30px;
+	bottom: 0px;
+	width: 50%;
+}
+.righttophalf
+{
+	position: absolute;
+	left: 50%;
+	right: 0px;
+	top: 30px;
+	bottom: 50%;
+	width: 50%;
+}
+.rightbottomhalf
+{
+	position: absolute;
+	right: 0px;
+	top: 50%;
+	height: 50%;
+	width: 50%;
+}
+.uppertoolbar
+{
+	position: absolute;
+	display: block;
+	left: 2px;
+	right: 0;
+	height: 30px;
 
-    	html, body {
-    		height: 100%;
-    		width:100%;
-    		margin: 0;
-    	}
+	background-color:#444444;
+}
+.upperarea
+{
+	position: absolute;
+	top: 0px;
+	bottom: 0px;
+	left: 2px;
+	right: 0;
+}
+.lowertoolbar
+{
+	display: block;
+	left: 2px;
+	right: 0px;
+	height: 20px;
 
-.leftpanel {
-	position:absolute;
-	left:0px;
-	top:30px;
-	bottom:0px;
-	width:50%;
+	padding-top:1px;
+	background-color:#444444;
 }
-.righttophalf {
-    position:absolute;
-    left:50%;
-	right:0px;
-	top:30px;
-	bottom:50%;
-	width:50%;
-}
-.rightbottomhalf {
-    position:absolute;
-	right:0px;
-	top:50%;
-	height:50%;
-	width:50%;
-}
-
-.uppertoolbar {
-	position:absolute;
-	display:block;
-	left:2px;
-	right:0;
-	height:30px;
-}
-.upperarea{
-	position:absolute;
-	top:0px;
-	bottom:0px;
-	left:2px;
-	right:0;
-}
-
-.lowertoolbar {
-	display:block;
-	left:2px;
-	right:0px;
-	height:20px;
-}
-.lowerarea{
-	color:gray;
-	background-color:#0F192A;
-	position:absolute;
-	top:20px;
-	bottom:0px;
-	left:2px;
-	right:0;
-	overflow:auto;	
+.lowerarea
+{
+	color: #808080;
+	background-color: #0F192A;
+	position: absolute;
+	top: 21px;
+	bottom: 0px;
+	left: 0px;
+	right: 0;
+	overflow: auto;
 	word-wrap: normal;
 }
