@@ -15,7 +15,8 @@ var repeatinterval=150;
 var autotick=0;
 var autotickinterval=0;
 var winning=false;
-
+var againing=false;
+var againinterval=150;
 
 var textImages={};
 var level = {

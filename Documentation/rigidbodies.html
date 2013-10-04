@@ -136,8 +136,7 @@ which works splendidly.  But what if we weren't allowed to refer to crate or com
 [ > OrangeCrate | OrangeCrate ] -> [ > OrangeCrate | > OrangeCrate ]
 [ > OrangeCrate | BlueCrate ] -> [ > OrangeCrate | > BlueCrate ]
 [ > BlueCrate | OrangeCrate ] -> [ > BlueCrate | > OrangeCrate ]
-[ > BlueCrate | BlueCrate ] -> [ > BlueCrate | > BlueCrate ]
-</code></pre>
+[ > BlueCrate | BlueCrate ] -> [ > BlueCrate | > BlueCrate ]</code></pre>
 
 you can push around pairs of blocks, but a big alternating sequence of blocks you can't deal with 
 <p>
@@ -156,8 +155,7 @@ startLoop
 [ > BlueCrate | OrangeCrate ] -> [ > BlueCrate | > OrangeCrate ]
 [ > BlueCrate | BlueCrate ] -> [ > BlueCrate | > BlueCrate ]
 
-endLoop
-</code></pre>
+endLoop</code></pre>
 
 and voila! 
 <p>
@@ -170,9 +168,7 @@ For the above example, this is identical to saying
 [ > OrangeCrate | OrangeCrate ] -> [ > OrangeCrate | > OrangeCrate ]
 +[ > OrangeCrate | BlueCrate ] -> [ > OrangeCrate | > BlueCrate ]
 +[ > BlueCrate | OrangeCrate ] -> [ > BlueCrate | > OrangeCrate ]
-+[ > BlueCrate | BlueCrate ] -> [ > BlueCrate | > BlueCrate ]
-
-</code></pre>
++[ > BlueCrate | BlueCrate ] -> [ > BlueCrate | > BlueCrate ]</code></pre>
 <p>
 However, we don't have this luxury for rigidbodies.  So, with all that said, here's what code for a system with several rigid bodies and some small blocks looks like:
 <p>
@@ -195,9 +191,7 @@ However, we don't have this luxury for rigidbodies.  So, with all that said, her
 
 [ > Crate | SmallCrate ] -> [  > Crate | > SmallCrate ]
 
-endloop
-
-</code></pre>
+endloop</code></pre>
 <p>
 And this gives us the image at the beginning of this document:
 <p>

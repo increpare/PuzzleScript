@@ -17,7 +17,7 @@ grey
 Player 
 Blue   
 
-Win
+Won
 yellow
 
 LetterC
@@ -48,10 +48,11 @@ white black
 LEGEND
 =======
 
+Letter = LetterA or LetterC or LetterT
 . = Background
 # = Wall
 P = Player
-W = Win
+W = Won
 C = LetterC
 A = LetterA
 T = LetterT
@@ -65,29 +66,24 @@ COLLISIONLAYERS
 ================
 
 Background
-Win
-Player, Wall, LetterC, LetterA, LetterT
+Won
+Player, Wall, Letter
 
 ======
 RULES     
 ======     
 
-[ >  Player | LetterC ] -> [  >  Player | > LetterC  ]
-[ >  Player | LetterA ] -> [  >  Player | > LetterA  ]
-[ >  Player | LetterT ] -> [  >  Player | > LetterT  ]
+[ >  Player | Letter ] -> [  >  Player | > Letter  ]
+[ <  Player | Letter ] -> [  <  Player | < Letter  ]
 
-[ <  Player | LetterC ] -> [  <  Player | < LetterC  ]
-[ <  Player | LetterA ] -> [  <  Player | < LetterA  ]
-[ <  Player | LetterT ] -> [  <  Player | < LetterT  ]
-
-late right [LetterC | LetterA | LetterT] -> [ | Win | ] message You spelled CAT!
-late right [LetterA | LetterC | LetterT] -> [ | Win | ] message You spelled ACT!
+late right [LetterC | LetterA | LetterT ] -> [ Won LetterC | Won LetterA | Won LetterT ] message You spelled CAT!
+late right [LetterA | LetterC | LetterT] -> [ Won LetterA | Won LetterC | Won LetterT ] message You spelled ACT!
 
 ==============
 WINCONDITION
 ==============
 
-Some Win 
+Some Won
 
 =======     
 LEVELS

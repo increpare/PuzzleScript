@@ -84,8 +84,8 @@ var codeMirrorFn = function() {
     var relativedirs = ['^', 'v', '<', '>', 'moving','stationary','parallel','perpendicular', 'no'];
     var logicWords = ['all', 'no', 'on', 'some'];
     var sectionNames = ['objects', 'legend', 'sounds', 'collisionlayers', 'rules', 'wincondition', 'levels'];
-	var commandwords = ["sfx0","sfx1","sfx2","sfx3","sfx4","sfx5","sfx6","sfx7","sfx8","sfx9","sfx10","cancel","checkpoint","restart","win","message"];
-    var reg_commands = /\s*(sfx0|sfx1|sfx2|sfx3|Sfx4|sfx5|sfx6|sfx7|sfx8|sfx9|sfx10|cancel|checkpoint|restart|won|message)\s*/;
+	var commandwords = ["sfx0","sfx1","sfx2","sfx3","sfx4","sfx5","sfx6","sfx7","sfx8","sfx9","sfx10","cancel","checkpoint","restart","win","message","again"];
+    var reg_commands = /\s*(sfx0|sfx1|sfx2|sfx3|Sfx4|sfx5|sfx6|sfx7|sfx8|sfx9|sfx10|cancel|checkpoint|restart|win|message|again)\s*/;
     var reg_name = /[\w]+\s*/;///\w*[a-uw-zA-UW-Z0-9_]/;
     var reg_number = /[\d]+/;
     var reg_soundseed = /\d+\b/;
@@ -125,6 +125,7 @@ var codeMirrorFn = function() {
         token: function(stream, state) {
            	var mixedCase = stream.string;
             var sol = stream.sol();
+            var mixedCase = stream.string;
             if (sol) {
                 stream.string = stream.string.toLowerCase();
                 /*   if (state.lineNumber==undefined) {
@@ -748,6 +749,8 @@ var codeMirrorFn = function() {
                                     return 'DIRECTION';
                                 } else if (m==='rigid') {
                                     return 'DIRECTION';
+                                } else if (m==='random') {
+                                    return 'DIRECTION';
                                 } else if (commandwords.indexOf(m)>=0) {
 									if (m==='message') {
 										state.tokenIndex=-4;
@@ -882,11 +885,17 @@ var codeMirrorFn = function() {
 		                    if (match!==null) {
 		                    	var token = match[0].trim();
 		                    	if (sol) {
-		                    		if (['title','author','homepage','key_repeat_interval','realtime_interval','flickscreen','zoomscreen','color_palette'].indexOf(token)>=0) {
-		                    			var m2 = stream.match(reg_notcommentstart, false);
+		                    		if (['title','author','homepage','key_repeat_interval','realtime_interval','again_interval','flickscreen','zoomscreen','color_palette','youtube'].indexOf(token)>=0) {
+		                    			
+                                        if (token==='youtube') {
+                                            stream.string=mixedCase;
+                                        }
+                                        
+                                        var m2 = stream.match(reg_notcommentstart, false);
+                                        
 		                    			if(m2!=null) {
-		                    				state.metadata.push(token);
-		                    				state.metadata.push(m2[0].trim());
+                                            state.metadata.push(token);
+		                    				state.metadata.push(m2[0].trim());                                            
 		                    			} else {
 		                    				logError('MetaData "'+token+'" needs a value.',state.lineNumber);
 		                    			}

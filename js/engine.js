@@ -309,6 +309,7 @@ function loadLevelFromState(state,levelindex) {
 	titleSelected=false;
 	titleSelection=0;
 	curlevel=levelindex;
+    againing=false;
     var leveldat = state.levels[levelindex];
     if (leveldat===null) {
     	consolePrint("Trying to access a level that doesn't exist.");
@@ -484,6 +485,13 @@ function setGameState(_state, command) {
     	repeatinterval=150;
     }
 
+    if (state.metadata.again_interval!==undefined) {
+		againinterval=state.metadata.again_interval*1000;
+    } else {
+    	againinterval=150;
+    }
+
+
     switch(command[0]){
     	case "restart":
     	{
@@ -555,6 +563,21 @@ function setGameState(_state, command) {
 		inputHistory=[];
 	}
     canvasResize();
+
+
+
+	if (canYoutube) {
+		if ('youtube' in state.metadata) {
+			var youtubeid=state.metadata['youtube'];
+			var url = "http://www.youtube.com/embed/"+youtubeid+"?autoplay=1";
+			ifrm = document.createElement("IFRAME");
+			ifrm.setAttribute("src",url);
+			ifrm.style.visibility="hidden";
+			ifrm.style.display="none";
+			document.body.appendChild(ifrm);
+		}
+	}
+	
 }
 
 var messagetext="";
@@ -567,6 +590,7 @@ function restoreLevel(lev) {
         level.rigidGroupIndexMask[i]=0;
         level.rigidMovementAppliedMask[i]=0;
     }
+    againing=false;
     messagetext="";
     level.commandQueue=[];
 	redraw();
@@ -1124,11 +1148,8 @@ function restorePreservationState(preservationState) {
 //	rigidBackups = preservationState.rigidBackups;
 }
 
-function tryApplyRule(rule,ruleGroupIndex,ruleIndex){
-	var result=false;	
-	var delta = dirMasksDelta[rule[0]];
-    //get all cellrow matches
-    var matches=[];
+function findRuleMatches(rule) {
+	var matches=[];
     for (var cellRowIndex=0;cellRowIndex<rule[1].length;cellRowIndex++) {
         var cellRow = rule[1][cellRowIndex];
         if (rule[5][cellRowIndex]) {//if ellipsis     
@@ -1137,166 +1158,185 @@ function tryApplyRule(rule,ruleGroupIndex,ruleIndex){
         	var match = matchCellRow(rule[0],cellRow);               	
         }
         if (match.length==0) {
-            return false;
+            return [];
         } else {
             matches.push(match);
         }
     }
+    return matches;
+}
 
-    if (rule[9]===false) {//if the rule has a rhs
+function applyRuleAt(rule,delta,tuple,check) {
+	//have to double check they apply
+    if (check) {
+        var ruleMatches=true;                
+        for (var cellRowIndex=0;cellRowIndex<rule[1].length;cellRowIndex++) {
+        	if (rule[5][cellRowIndex]) {//if ellipsis
+            	if (cellRowMatchesWildCard_ParticularK(rule[0],rule[1][cellRowIndex],tuple[cellRowIndex][0],tuple[cellRowIndex][1])===false) {
+                    ruleMatches=false;
+                    break;
+                }
+        	} else {
+            	if (cellRowMatches(rule[0],rule[1][cellRowIndex],tuple[cellRowIndex])===false) {
+                    ruleMatches=false;
+                    break;
+                }
+        	}
+        }
+        if (ruleMatches === false ) {
+            return false;
+        }
+    }
+    var result=false;
+    
+    //APPLY THE RULE
+    var rigidCommitted=false;
+    for (var cellRowIndex=0;cellRowIndex<rule[1].length;cellRowIndex++) {
+        var preRow = rule[1][cellRowIndex];
+        var postRow = rule[2][cellRowIndex];
+        
+        var currentIndex = rule[5][cellRowIndex] ? tuple[cellRowIndex][0] : tuple[cellRowIndex];
+        for (var cellIndex=0;cellIndex<preRow.length;cellIndex+=6) {
+            var preCell_Movement = preRow[cellIndex+0];
+            if (preCell_Movement === ellipsisDirection) {
+            	var k = tuple[cellRowIndex][1];
+            	currentIndex = (currentIndex+delta[1]*k+delta[0]*k*level.height)%level.dat.length;
+            	continue;
+            }
+            var preCell_Objects = preRow[cellIndex+1];
+            var preCell_NonExistence = preRow[cellIndex+2];
+            var preCell_MoveNonExistence = preRow[cellIndex+3];
+            var preCell_StationaryMask = preRow[cellIndex+4];
+
+            
+            var postCell_Movements = postRow[cellIndex+0];
+			var postCell_Objects = postRow[cellIndex+1];
+            var postCell_NonExistence = postRow[cellIndex+2];
+            var postCell_MovementsLayerMask = postRow[cellIndex+3];
+            var postCell_StationaryMask = postRow[cellIndex+4];
+            var postCell_RandomEntityMask = postRow[cellIndex+5];
+            var postCell_RandomDirMask = preRow[cellIndex+5];
+
+            if (postCell_RandomEntityMask !== 0) {
+            	var choices=[];
+            	for (var i=0;i<32;i++) {
+            		if  ((postCell_RandomEntityMask&(1<<i))!==0) {
+            			choices.push(i);
+            		}
+            	}
+            	var rand = choices[Math.floor(Math.random() * choices.length)];
+            	var n = state.idDict[rand];
+            	var o = state.objects[n];
+            	var objectMask = state.layerMasks[o.layer];
+            	var movementLayerMask = (1+2+4+8+16)<<(5*o.layer);
+            	postCell_Objects = postCell_Objects | (1<<rand);
+            	postCell_NonExistence = postCell_NonExistence | state.layerMasks[o.layer];
+            	postCell_StationaryMask = postCell_StationaryMask | movementLayerMask;
+            }
+            if (postCell_RandomDirMask !== 0 ) {
+            	for (var layerIndex=0;layerIndex<6;layerIndex++){
+            		var layerSection = parseInt("11111",2)&(postCell_RandomDirMask>>(5*layerIndex));
+            		if (layerSection!==0) {
+            			var r = randomDir();
+            			postCell_Movements = postCell_Movements | (r<<(5*layerIndex));
+            		}    				
+            	}
+            }
+            
+            var curCellMask = level.dat[currentIndex];
+            var curMovementMask = level.movementMask[currentIndex];
+
+            var oldCellMask = curCellMask;
+            var oldMovementMask = curMovementMask;
+
+            //1 remove old
+            curCellMask = curCellMask&(~preCell_Objects);
+            curMovementMask = curMovementMask&(~preCell_Movement);
+            
+            //2 make way for new
+            curCellMask = curCellMask&(~postCell_NonExistence);
+            curMovementMask = curMovementMask&(~preCell_MoveNonExistence);
+
+            //3 mask out old movements before adding new
+            if (postCell_Movements!==0) {
+            	curMovementMask = curMovementMask&(~postCell_MovementsLayerMask);
+            }
+
+            //4 add new
+            curCellMask = curCellMask | postCell_Objects;
+            curMovementMask = curMovementMask & (~postCell_StationaryMask);
+            curMovementMask = curMovementMask | postCell_Movements;
+
+            var rigidchange=false;
+            var curRigidGroupIndexMask =0;
+            var curRigidMovementAppliedMask =0;
+			if (rule[7]) {
+        		rigidCommitted=true;
+        		var groupNumber = rule[6];
+        		var rigidGroupIndex = state.groupNumber_to_RigidGroupIndex[groupNumber];  
+        		rigidGroupIndex++;//don't forget to -- it when decoding :O              	
+        		var rigidMask = 
+        					(rigidGroupIndex) +
+        					((rigidGroupIndex<< ( 1 * 5 ))) +
+        					((rigidGroupIndex<< ( 2 * 5 ))) +
+        					((rigidGroupIndex<< ( 3 * 5 ))) +
+        					((rigidGroupIndex<< ( 4 * 5 ))) +
+        					((rigidGroupIndex<< ( 5 * 5 )));
+        		rigidMask = rigidMask & postCell_MovementsLayerMask;
+        		curRigidGroupIndexMask = level.rigidGroupIndexMask[currentIndex];
+        		curRigidMovementAppliedMask = level.rigidMovementAppliedMask[currentIndex];
+
+        		var oldrigidGroupIndexMask = curRigidGroupIndexMask;
+        		var oldRigidMovementAppliedMask = curRigidMovementAppliedMask;
+
+        		curRigidGroupIndexMask = curRigidGroupIndexMask | rigidMask;
+        		curRigidMovementAppliedMask = curRigidMovementAppliedMask | postCell_MovementsLayerMask;
+
+        		if (oldrigidGroupIndexMask!==curRigidGroupIndexMask ||
+        			oldRigidMovementAppliedMask !== curRigidMovementAppliedMask) {
+        			rigidchange=true;
+        		}
+
+        	}
+
+            //check if it's changed
+            if (oldCellMask!==curCellMask || oldMovementMask!=curMovementMask || rigidchange) {                	
+                result=true;
+                if (rigidchange) {
+        			level.rigidGroupIndexMask[currentIndex] = curRigidGroupIndexMask;
+        			level.rigidMovementAppliedMask[currentIndex] = curRigidMovementAppliedMask;
+        		}
+
+        		var thingsCreated = curCellMask & (~oldCellMask);
+        		var thingsDestroyed = oldCellMask & (~curCellMask);
+        		sfxCreateMask = sfxCreateMask | thingsCreated;
+        		sfxDestroyMask = sfxDestroyMask | thingsDestroyed;
+
+                level.dat[currentIndex]=curCellMask;
+                level.movementMask[currentIndex]=curMovementMask;
+            }
+
+            currentIndex = (currentIndex+delta[1]+delta[0]*level.height)%level.dat.length;
+        }
+    }
+    return result;
+}
+
+function tryApplyRule(rule,ruleGroupIndex,ruleIndex){
+	var delta = dirMasksDelta[rule[0]];
+    //get all cellrow matches
+    var matches=findRuleMatches(rule);
+    if (matches.length===0) {
+    	return false;
+    }
+
+    var result=false;	
+	if (rule[9]===false) {//if the rule has a rhs
 	    var tuples  = generateTuples(matches);
 	    for (var tupleIndex=0;tupleIndex<tuples.length;tupleIndex++) {
 	        var tuple = tuples[tupleIndex];
-	        //have to double check they apply
-	        if (tupleIndex>0) {
-	            var ruleMatches=true;                
-	            for (var cellRowIndex=0;cellRowIndex<rule[1].length;cellRowIndex++) {
-	            	if (rule[5][cellRowIndex]) {//if ellipsis
-		            	if (cellRowMatchesWildCard_ParticularK(rule[0],rule[1][cellRowIndex],tuple[cellRowIndex][0],tuple[cellRowIndex][1])===false) {
-		                    ruleMatches=false;
-		                    break;
-		                }
-	            	} else {
-		            	if (cellRowMatches(rule[0],rule[1][cellRowIndex],tuple[cellRowIndex])===false) {
-		                    ruleMatches=false;
-		                    break;
-		                }
-	            	}
-	            }
-	            if (ruleMatches === false ) {
-	                continue;
-	            }
-	        }
-	        //APPLY THE RULE
-	        var rigidCommitted=false;
-	        for (var cellRowIndex=0;cellRowIndex<rule[1].length;cellRowIndex++) {
-	            var preRow = rule[1][cellRowIndex];
-	            var postRow = rule[2][cellRowIndex];
-	            
-	            var currentIndex = rule[5][cellRowIndex] ? tuple[cellRowIndex][0] : tuple[cellRowIndex];
-	            for (var cellIndex=0;cellIndex<preRow.length;cellIndex+=6) {
-	                var preCell_Movement = preRow[cellIndex+0];
-	                if (preCell_Movement === ellipsisDirection) {
-	                	var k = tuple[cellRowIndex][1];
-	                	currentIndex = (currentIndex+delta[1]*k+delta[0]*k*level.height)%level.dat.length;
-	                	continue;
-	                }
-	                var preCell_Objects = preRow[cellIndex+1];
-	                var preCell_NonExistence = preRow[cellIndex+2];
-	                var preCell_MoveNonExistence = preRow[cellIndex+3];
-	                var preCell_StationaryMask = preRow[cellIndex+4];
-
-	                
-	                var postCell_Movements = postRow[cellIndex+0];
-					var postCell_Objects = postRow[cellIndex+1];
-	                var postCell_NonExistence = postRow[cellIndex+2];
-	                var postCell_MovementsLayerMask = postRow[cellIndex+3];
-	                var postCell_StationaryMask = postRow[cellIndex+4];
-	                var postCell_RandomEntityMask = postRow[cellIndex+5];
-	                var postCell_RandomDirMask = preRow[cellIndex+5];
-
-	                if (postCell_RandomEntityMask !== 0) {
-	                	var choices=[];
-	                	for (var i=0;i<32;i++) {
-	                		if  ((postCell_RandomEntityMask&(1<<i))!==0) {
-	                			choices.push(i);
-	                		}
-	                	}
-	                	var rand = choices[Math.floor(Math.random() * choices.length)];
-	                	var n = state.idDict[rand];
-	                	var o = state.objects[n];
-	                	var objectMask = state.layerMasks[o.layer];
-	                	var movementLayerMask = (1+2+4+8+16)<<(5*o.layer);
-	                	postCell_Objects = postCell_Objects | (1<<rand);
-	                	postCell_NonExistence = postCell_NonExistence | state.layerMasks[o.layer];
-	                	postCell_StationaryMask = postCell_StationaryMask | movementLayerMask;
-	                }
-	                if (postCell_RandomDirMask !== 0 ) {
-	                	for (var layerIndex=0;layerIndex<6;layerIndex++){
-	                		var layerSection = parseInt("11111",2)&(postCell_RandomDirMask>>(5*layerIndex));
-	                		if (layerSection!==0) {
-	                			var r = randomDir();
-	                			postCell_Movements = postCell_Movements | (r<<(5*layerIndex));
-	                		}    				
-	                	}
-	                }
-	                
-	                var curCellMask = level.dat[currentIndex];
-	                var curMovementMask = level.movementMask[currentIndex];
-
-	                var oldCellMask = curCellMask;
-	                var oldMovementMask = curMovementMask;
-
-	                //1 remove old
-	                curCellMask = curCellMask&(~preCell_Objects);
-	                curMovementMask = curMovementMask&(~preCell_Movement);
-	                
-	                //2 make way for new
-	                curCellMask = curCellMask&(~postCell_NonExistence);
-	                curMovementMask = curMovementMask&(~preCell_MoveNonExistence);
-
-	                //3 mask out old movements before adding new
-	                if (postCell_Movements!==0) {
-	                	curMovementMask = curMovementMask&(~postCell_MovementsLayerMask);
-	                }
-
-	                //4 add new
-	                curCellMask = curCellMask | postCell_Objects;
-	                curMovementMask = curMovementMask & (~postCell_StationaryMask);
-	                curMovementMask = curMovementMask | postCell_Movements;
-
-	                var rigidchange=false;
-	                var curRigidGroupIndexMask =0;
-	                var curRigidMovementAppliedMask =0;
-					if (rule[7]) {
-	            		rigidCommitted=true;
-	            		var groupNumber = rule[6];
-	            		var rigidGroupIndex = state.groupNumber_to_RigidGroupIndex[groupNumber];  
-	            		rigidGroupIndex++;//don't forget to -- it when decoding :O              	
-	            		var rigidMask = 
-	            					(rigidGroupIndex) +
-	            					((rigidGroupIndex<< ( 1 * 5 ))) +
-	            					((rigidGroupIndex<< ( 2 * 5 ))) +
-	            					((rigidGroupIndex<< ( 3 * 5 ))) +
-	            					((rigidGroupIndex<< ( 4 * 5 ))) +
-	            					((rigidGroupIndex<< ( 5 * 5 )));
-	            		rigidMask = rigidMask & postCell_MovementsLayerMask;
-	            		curRigidGroupIndexMask = level.rigidGroupIndexMask[currentIndex];
-	            		curRigidMovementAppliedMask = level.rigidMovementAppliedMask[currentIndex];
-
-	            		var oldrigidGroupIndexMask = curRigidGroupIndexMask;
-	            		var oldRigidMovementAppliedMask = curRigidMovementAppliedMask;
-
-	            		curRigidGroupIndexMask = curRigidGroupIndexMask | rigidMask;
-	            		curRigidMovementAppliedMask = curRigidMovementAppliedMask | postCell_MovementsLayerMask;
-
-	            		if (oldrigidGroupIndexMask!==curRigidGroupIndexMask ||
-	            			oldRigidMovementAppliedMask !== curRigidMovementAppliedMask) {
-	            			rigidchange=true;
-	            		}
-
-	            	}
-
-	                //check if it's changed
-	                if (oldCellMask!==curCellMask || oldMovementMask!=curMovementMask || rigidchange) {                	
-	                    result=true;
-	                    if (rigidchange) {
-	            			level.rigidGroupIndexMask[currentIndex] = curRigidGroupIndexMask;
-	            			level.rigidMovementAppliedMask[currentIndex] = curRigidMovementAppliedMask;
-	            		}
-
-	            		var thingsCreated = curCellMask & (~oldCellMask);
-	            		var thingsDestroyed = oldCellMask & (~curCellMask);
-	            		sfxCreateMask = sfxCreateMask | thingsCreated;
-	            		sfxDestroyMask = sfxDestroyMask | thingsDestroyed;
-
-	                    level.dat[currentIndex]=curCellMask;
-	                    level.movementMask[currentIndex]=curMovementMask;
-	                }
-
-	                currentIndex = (currentIndex+delta[1]+delta[0]*level.height)%level.dat.length;
-	            }
-	        }
+	        var shouldCheck=tupleIndex>0;
+	        result = applyRuleAt(rule,delta,tuple,shouldCheck) || result;
 	    }
 	}
 
@@ -1332,6 +1372,66 @@ function showTempMessage() {
 	canvasResize();
 }
 
+function applyRandomRuleGroup(ruleGroup) {
+	var propagated=false;
+
+	var matches=[];
+	for (var ruleIndex=0;ruleIndex<ruleGroup.length;ruleIndex++) {
+		var rule=ruleGroup[ruleIndex];
+		var ruleMatches = findRuleMatches(rule);
+		if (ruleMatches.length>0) {
+	    	var tuples  = generateTuples(ruleMatches);
+	    	for (var j=0;j<tuples.length;j++) {
+	    		var tuple=tuples[j];
+				matches.push([ruleIndex,tuple]);
+	    	}
+		}		
+	}
+
+	if (matches.length==0)
+	{
+		return false;
+	} 
+
+	var match = matches[Math.floor(Math.random()*matches.length)];
+	var ruleIndex=match[0];
+	var rule=ruleGroup[ruleIndex];
+	var delta = dirMasksDelta[rule[0]];
+	var tuple=match[1];
+	var check=false;
+	var modified = applyRuleAt(rule,delta,tuple,check);
+	return modified;
+}
+
+function applyRuleGroup(ruleGroup) {
+
+	var randomGroup=ruleGroup[0][10];
+	if (randomGroup) {
+		return applyRandomRuleGroup(ruleGroup);
+	}
+
+	var loopPropagated=false;
+    var propagated=true;
+    var loopcount=0;
+    while(propagated) {
+    	loopcount++;
+    	if (loopcount>50) 
+    	{
+    		logErrorNoLine("got caught looping lots in a rule group :O");
+    		break;
+    	}
+        propagated=false
+        for (var ruleIndex=0;ruleIndex<ruleGroup.length;ruleIndex++) {
+            var rule = ruleGroup[ruleIndex];            
+            propagated = tryApplyRule(rule) || propagated;
+        }
+        if (propagated) {
+        	loopPropagated=true;
+        }
+    }
+    return loopPropagated;
+}
+
 function propagateMovements(startRuleGroupindex){
         //for each rule
             //try to match it
@@ -1342,31 +1442,8 @@ function propagateMovements(startRuleGroupindex){
     	if (bannedGroup[ruleGroupIndex]) {
     		//do nothing
     	} else {
-/*	    	if (state.rigidGroups[ruleGroupIndex]) {
-	    		var rigid_Group_Index = state.groupNumber_to_RigidGroupIndex;
-	    		if (rigidBackups[rigid_Group_Index]===undefined) {
-	    			rigidBackups[rigid_Group_Index]=commitPreservationState(ruleGroupIndex);
-	    		}
-	    	}
-*/
-	        var ruleGroup=state.rules[ruleGroupIndex];
-
-	        var propagated=true;
-	        var loopcount=0;
-	        while(propagated) {
-	        	loopcount++;
-	        	if (loopcount>50) 
-	        	{
-	        		window.console.log("got caught looping in a rule group :O");
-	        		break;
-	        	}
-	            propagated=false
-	            for (var ruleIndex=0;ruleIndex<ruleGroup.length;ruleIndex++) {
-	                var rule = ruleGroup[ruleIndex];            
-	                propagated = tryApplyRule(rule) || propagated;
-	            }
-	            loopPropagated = propagated || loopPropagated;
-	        }
+    		var ruleGroup=state.rules[ruleGroupIndex];
+			loopPropagated = applyRuleGroup(ruleGroup) || loopPropagated;	        	        
 	    }
         ruleGroupIndex++;
         if (loopPropagated && state.loopPoint[ruleGroupIndex]!==undefined) {
@@ -1374,7 +1451,8 @@ function propagateMovements(startRuleGroupindex){
         	loopPropagated=false;
         }
     }
-}
+}   
+
 
 function propagateLateMovements(){
         //for each rule
@@ -1603,11 +1681,17 @@ function processInput(dir) {
 	    if (level.commandQueue.indexOf('restart')>=0) {
 	    	DoRestart();	    	
 	    } 
+	    if (level.commandQueue.indexOf('again')>=0) {
+	    	againing=true;
+	    	timer=0;
+	    }
 		if (level.commandQueue.indexOf('checkpoint')>=0) {
 			restartTarget=backupLevel();
 		}	    
 	    
-	    checkWin();
+	    if (textMode===false) {
+	    	checkWin();
+	    }
 
 	    level.commandQueue=[];
     }
@@ -1704,6 +1788,7 @@ function anyMovements() {
 
 
 function nextLevel() {
+    againing=false;
 	messagetext="";
 	if (titleScreen) {
 		if (titleSelection==0) {
@@ -1735,6 +1820,7 @@ function nextLevel() {
 }
 
 function goToTitleScreen(){
+    againing=false;
 	messagetext="";
 	titleScreen=true;
 	textMode=true;

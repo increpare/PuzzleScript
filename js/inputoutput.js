@@ -527,7 +527,7 @@ function checkKey(e,justPressed) {
     		//do nothing
     	} else if (titleScreen) {
     		if (titleMode===0) {
-    			if (inputdir===4) {
+    			if (inputdir===4&&justPressed) {
     				if (titleSelected===false) {    				
 						tryPlayStartGameSound();
 	    				titleSelected=true;
@@ -570,7 +570,7 @@ function checkKey(e,justPressed) {
     		}
     	}
     } else {
-	    if (inputdir>=0) {
+	    if (!againing && inputdir>=0) {
             if (canDump===true) {
                 inputHistory.push(inputdir);
             }
@@ -588,6 +588,12 @@ function update() {
             nextLevel();
         }
     }
+    if (againing) {
+    	if (timer>againinterval) {
+    		againing=false;
+    		processInput(-1);
+    	}
+    }
     if (quittingMessageScreen) {
         if (timer/1000>0.15) {
             quittingMessageScreen=false;
@@ -600,7 +606,8 @@ function update() {
 				titleMode=curlevel>0?1:0;
 				titleSelected=false;
 				titleSelection=0;
-    			canvasResize();            	
+    			canvasResize();  
+    			checkWin();          	
             }
         }
     }

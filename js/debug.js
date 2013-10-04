@@ -1,4 +1,5 @@
 var canDump=true;
+var canYoutube=false;
 inputHistory=[];
 var compiledText;
 var canOpenEditor=true;

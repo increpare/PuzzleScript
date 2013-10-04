@@ -164,7 +164,22 @@ late [Shadow] -> []</code></pre>
    	<p>   	   	
    	Here're all the available commands:
    	<p>
-<blockquote><ul class="list-inline"><li>cancel</li><li>checkpoint</li><li>restart</li><li>win</li><li>message</li></ul><li>sfx0 ... sfx10</li></blockquote>
+    <dl>
+      <dt>again</dt>
+      <dd>means that there'll be a small pause after this turn, after which another turn will be fired off, with no player input - a way of doing non-interactive animations and other fun things :) .  You can control the time between frames with the 'again_interval' prelude switch.</dd>
+      <dt>cancel</dt>
+      <dd>cancels the entire turn, and reverts back to how it was at the start of the turn. basically "forget everything and pretend nothing happened"</dd>
+      <dt>checkpoint</dt>
+      <dd>saves the game state.  Now, whenever the person presses <b>R</b> to restart, or your do the RESTART command, they'll spawn here instead.</dd>
+      <dt>restart</dt>
+      <dd>Same as pressing R</dd>
+      <dt>Win</dt>
+      <dd>Wins the level!</dd>
+      <dt>Message</dt>
+      <dd>Gives the player a message.  So you can say things like "Message Hello World".  Reads everything to its right, so it has to be the rightmost argument.</dd>
+      <dt>sfx0 ... sfx10</dt>
+      <dd>Sound effects banks - you associate these to sounds in the <a href="sounds.html">sounds</a>a> section, and then you can trigger them in rules by mentioning them.</dd>
+    </dl>
 <p>
    	<h3>What stuff is hard to do?</h3>
    	<p>

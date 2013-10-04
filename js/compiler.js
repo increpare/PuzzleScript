@@ -427,7 +427,7 @@ var simpleAbsoluteDirections = ['up', 'down', 'left', 'right'];
 var simpleRelativeDirections = ['^', 'v', '<', '>'];
 var reg_directions_only = /^(\>|\<|\^|v|up|down|left|right|moving|stationary|no|randomdir|random|horizontal|vertical|orthogonal|perpendicular|parallel|action)$/;
 //redclareing here, i don't know why
-var commandwords = ["sfx0","sfx1","sfx2","sfx3","sfx4","sfx5","sfx6","sfx7","sfx8","sfx9","sfx10","cancel","checkpoint","restart","win","message"];
+var commandwords = ["sfx0","sfx1","sfx2","sfx3","sfx4","sfx5","sfx6","sfx7","sfx8","sfx9","sfx10","cancel","checkpoint","restart","win","message","again"];
 
 function processRuleString(line, state, lineNumber,curRules) 
 {
@@ -476,6 +476,7 @@ function processRuleString(line, state, lineNumber,curRules)
 	var rigid = false;
 	var groupNumber=lineNumber;
 	var commands=[];
+	var randomRule=false;
 
 	if (tokens.length===1) {
 		if (tokens[0]==="startloop" ) {
@@ -519,6 +520,8 @@ function processRuleString(line, state, lineNumber,curRules)
 						late=true;
 				} else if (token==='rigid') {
 					rigid=true;
+				} else if (token==='random') {
+					randomRule=true;
 				} else if (simpleAbsoluteDirections.indexOf(token) >= 0) {
 					directions.push(token);
 				} else if (simpleRelativeDirections.indexOf(token) >= 0) {
@@ -638,7 +641,8 @@ function processRuleString(line, state, lineNumber,curRules)
 		late: late,
 		rigid: rigid,
 		groupNumber: groupNumber,
-		commands:commands
+		commands: commands,
+		randomRule: randomRule
 	};
 
 	/* reset must appear by itself */
@@ -675,7 +679,8 @@ function deepCloneRule(rule) {
 		late: rule.late,
 		rigid: rule.rigid,
 		groupNumber: rule.groupNumber,
-		commands:rule.commands
+		commands:rule.commands,
+		randomRule:rule.randomRule
 	};
 	return clonedRule;
 }
@@ -715,7 +720,8 @@ function rulesToArray(state) {
 						late: rule.late,
 						rigid: rule.rigid,
 						groupNumber: rule.groupNumber,
-						commands:rule.commands
+						commands:rule.commands,
+						randomRule: rule.randomRule
 					};
 					rules2.push(modifiedrule);
 				}
@@ -728,7 +734,8 @@ function rulesToArray(state) {
 					late: rule.late,
 					rigid: rule.rigid,
 					groupNumber: rule.groupNumber,
-					commands:rule.commands
+					commands:rule.commands,
+					randomRule: rule.randomRule
 				};
 				rules2.push(modifiedrule);
 			}
@@ -1391,7 +1398,7 @@ function collapseRules(state) {
 	for (var i = 0; i < state.rules.length; i++)
 	{
 		var oldrule = state.rules[i];
-		var newrule = [0,[],[],oldrule.lineNumber,oldrule.late/*ellipses,group number,rigid,commands,commandsonly*/];
+		var newrule = [0,[],[],oldrule.lineNumber,oldrule.late/*ellipses,group number,rigid,commands,commandsonly,randomrule*/];
 		var ellipses = [];
 		for (var j=0;j<oldrule.lhs.length;j++) {
 			ellipses.push(false);
@@ -1437,9 +1444,25 @@ function collapseRules(state) {
 		newrule.push(oldrule.rigid);
 		newrule.push(oldrule.commands);
 		newrule.push(oldrule.rhs.length===0);
+		newrule.push(oldrule.randomRule);
 		
 		state.rules[i] = newrule;
 
+	}
+}
+
+function ruleGroupRandomnessTest(ruleGroup) {
+	if (ruleGroup.length===0) {
+		return;
+	}
+
+	var randomGroup=ruleGroup[0][10];
+	for (var i=0;i<randomGroup.length;i++) {
+		var rule=ruleGroup[i];
+		var ruleRandom=rule[10];
+		if (randomGroup!==rule) {
+			logError("Cannot mix random and non-random rules in a single rule-group", rule[3]);
+		}
 	}
 }
 
@@ -1464,6 +1487,7 @@ function arrangeRulesByGroupNumber(state) {
 	for (var groupNumber in aggregates) {
 		if (aggregates.hasOwnProperty(groupNumber)) {
 			var ruleGroup = aggregates[groupNumber];
+			ruleGroupRandomnessTest(ruleGroup);
 			result.push(ruleGroup);
 		}
 	}
@@ -1471,6 +1495,7 @@ function arrangeRulesByGroupNumber(state) {
 	for (var groupNumber in aggregates_late) {
 		if (aggregates_late.hasOwnProperty(groupNumber)) {
 			var ruleGroup = aggregates_late[groupNumber];
+			ruleGroupRandomnessTest(ruleGroup);
 			result_late.push(ruleGroup);
 		}
 	}
@@ -1972,6 +1997,15 @@ function generateSoundData(state) {
 }
 
 
+function formatHomePage(state){
+	if ('homepage' in state.metadata) {
+		var url = state.metadata['homepage'];
+		url=url.replace("http://","");
+		url=url.replace("https://","");
+		state.metadata['homepage']=url;
+	}
+}
+
 var MAX_ERRORS=5;
 function loadFile(str) {
 	window.console.log('loadFile');
@@ -2024,6 +2058,8 @@ function loadFile(str) {
 
 	generateSoundData(state);
 
+	formatHomePage(state);
+
 	delete state.commentLevel;
 	delete state.names;
 	delete state.abbrevNames;
@@ -2044,7 +2080,7 @@ function loadFile(str) {
 	return state;
 }
 
-
+var ifrm;
 function compile(command,text) {
 	forceRegenImages=true;
 	if (command===undefined) {
