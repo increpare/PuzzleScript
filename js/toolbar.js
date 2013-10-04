@@ -159,7 +159,7 @@ function shareClick() {
 			var url = "play.html?p="+id;
 			url=qualifyURL(url);
 
-			var editurl = "editor.html?p="+id;
+			var editurl = "editor.html?hack="+id;
 			editurl=qualifyURL(editurl);
 			var sourceCodeLink = "link to source code:<br><a href=\""+editurl+"\">"+editurl+"</a>";
 

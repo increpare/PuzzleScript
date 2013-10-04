@@ -732,6 +732,8 @@ function randomDir() {
    return dirMask_random[Math.floor(Math.random() * dirMask_random.length)];
 }
 
+var randomDirMask = parseInt('00101', 2);
+
 function repositionEntiteisAtCell(positionIndex) {
     var movementMask = level.movementMask[positionIndex];
     //assumes not zero
@@ -740,10 +742,9 @@ function repositionEntiteisAtCell(positionIndex) {
     for (var layer=0;layer<6;layer++) {
         var layerMovement = parseInt('11111', 2) & (movementMask>>(5*layer));
         if (layerMovement!=0) {
-        	var randomMask = parseInt('00101', 2);
-        	if (randomMask==layerMovement) {
-        		layerMovement = randomDir();
-        	}
+//        	if (randomDirMask===layerMovement) {
+//        		layerMovement = randomDir();
+//        	}
             moved = repositionEntitiesOnLayer(positionIndex,layer,layerMovement) || moved;
         }
     }
@@ -1192,6 +1193,7 @@ function tryApplyRule(rule,ruleGroupIndex,ruleIndex){
 	                var postCell_MovementsLayerMask = postRow[cellIndex+3];
 	                var postCell_StationaryMask = postRow[cellIndex+4];
 	                var postCell_RandomEntityMask = postRow[cellIndex+5];
+	                var postCell_RandomDirMask = preRow[cellIndex+5];
 
 	                if (postCell_RandomEntityMask !== 0) {
 	                	var choices=[];
@@ -1209,7 +1211,15 @@ function tryApplyRule(rule,ruleGroupIndex,ruleIndex){
 	                	postCell_NonExistence = postCell_NonExistence | state.layerMasks[o.layer];
 	                	postCell_StationaryMask = postCell_StationaryMask | movementLayerMask;
 	                }
-	                
+	                if (postCell_RandomDirMask !== 0 ) {
+	                	for (var layerIndex=0;layerIndex<6;layerIndex++){
+	                		var layerSection = parseInt("11111",2)&(postCell_RandomDirMask>>(5*layerIndex));
+	                		if (layerSection!==0) {
+	                			var r = randomDir();
+	                			postCell_Movements = postCell_Movements | (r<<(5*layerIndex));
+	                		}    				
+	                	}
+	                }
 	                
 	                var curCellMask = level.dat[currentIndex];
 	                var curMovementMask = level.movementMask[currentIndex];

@@ -1327,6 +1327,7 @@ function rulesToMask(state) {
 				var nonExistenceMask_r = 0;
 				var postMovementsLayerMask_r = 0;
 				var stationaryMask_r = 0;
+				var randomDirMask_r = 0;
 				for (var l = 0; l < cell_r.length; l += 2) {
 					var object_dir = cell_r[l];
 					if (object_dir==='...') {
@@ -1335,7 +1336,7 @@ function rulesToMask(state) {
 						cellmask_r = ellipsisDirection;
 						forcemask_r = ellipsisDirection;
 						break;
-					}  else if (object_dir==='random') {
+					} else if (object_dir==='random') {
 						var object_name = cell_r[l+1];
 						if (object_name in state.objectMasks) {
 							var mask = state.objectMasks[object_name];                            
@@ -1372,13 +1373,15 @@ function rulesToMask(state) {
 						cellmask_r = cellmask_r | (1 << object_id);
 						if (object_dir==='stationary') {
 							stationaryMask_r = stationaryMask_r | ((1+2+4+8+16)<<(5*layerIndex));
+						} if (object_dir==='randomdir') {
+							randomDirMask_r = randomDirMask_r | (dirMasks[object_dir] << (5 * layerIndex));
 						} else {
 							forcemask_r = forcemask_r | (dirMasks[object_dir] << (5 * layerIndex));
 						}
 						nonExistenceMask_r = nonExistenceMask_r | layerMask;
 					}
 				}
-				cellrow_r[k] = [forcemask_r, cellmask_r, nonExistenceMask_r,postMovementsLayerMask_r,stationaryMask_r,randomMask_r];
+				cellrow_r[k] = [forcemask_r, cellmask_r, nonExistenceMask_r,postMovementsLayerMask_r,stationaryMask_r,randomMask_r,randomDirMask_r];
 			}
 		}
 	}
@@ -1413,7 +1416,7 @@ function collapseRules(state) {
 				newcellrow_l[k * 6 + 2] = oldcellmask_l[2];//nonexistence
 				newcellrow_l[k * 6 + 3] = oldcellmask_l[3];//movenonexistence
 				newcellrow_l[k * 6 + 4] = oldcellmask_l[4];//stationarymask
-				newcellrow_l[k * 6 + 5]  = 0;//unassigned
+				newcellrow_l[k * 6 + 5]  = 0;//unassigned  //stores randomdirmask_r O_O
 
 				if (oldrule.rhs.length>0) {
 					var oldcellmask_r = cellrow_r[k];
@@ -1423,6 +1426,7 @@ function collapseRules(state) {
 					newcellrow_r[k * 6 + 3] = oldcellmask_r[3];//postCell_MovementsLayerMask
 					newcellrow_r[k * 6 + 4] = oldcellmask_r[4];//stationarymask
 					newcellrow_r[k * 6 + 5] = oldcellmask_r[5];//randomentitymask
+					newcellrow_l[k * 6 + 5] = oldcellmask_r[6];//store randomdirmask_r in lhs
 				}
 			}
 			newrule[1][j] = newcellrow_l;
@@ -1774,7 +1778,7 @@ function generateLoopPoints(state) {
 	var source=0;
 	var target=0;
 	if (state.loops.length%2===1) {
-		logErrorNoLine("have to have matching number of  '[[' and ']]' loop points.");
+		logErrorNoLine("have to have matching number of  'startLoop' and 'endLoop' loop points.");
 	}
 
 	for (var j=0;j<state.loops.length;j++) {
@@ -1795,7 +1799,7 @@ function generateLoopPoints(state) {
 					target=i;
 					outside=false;
 					if (loop[1]===-1) {
-						logErrorNoLine("have to have matching number of  '[[' and ']]' loop points.");						
+						logErrorNoLine("have to have matching number of  'startLoop' and 'endLoop' loop points.");						
 					}
 					break;
 				}
@@ -1804,8 +1808,8 @@ function generateLoopPoints(state) {
 					source = i-1;		
 					loopPoint[source]=target;
 					outside=true;
-					if (loop[1]===-1) {
-						logErrorNoLine("have to have matching number of  '[[' and ']]' loop points.");						
+					if (loop[1]===1) {
+						logErrorNoLine("have to have matching number of  'startLoop' and 'endLoop' loop points.");						
 					}
 					break;
 				}
