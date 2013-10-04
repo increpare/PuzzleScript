@@ -1,4 +1,4 @@
-title Match 3 Block Push
+title Simple Action Example
 author Stephen Lavelle
 homepage www.puzzlescript.net
 
@@ -14,16 +14,7 @@ LIGHTGREEN GREEN
 11111     
 10111   
 
-
-Target 
-DarkBlue 
-..... 
-.000.
-.0.0.
-.000.
-.....     
-
-Wall     
+Wall   
 BROWN DARKBROWN     
 00010
 11111
@@ -39,13 +30,22 @@ Black Orange White Blue
 .333.
 .3.3.
 
-Crate
-Orange Yellow
-00000
-0...0
-0...0
-0...0
-00000
+
+Blood 
+DarkRed red white
+.01.0
+.1202
+2.0.1
+02.1.
+.1.0.
+
+Sheep O
+black white gray
+..11.
+01111
+01112
+.212.
+.0.0.
 
 
 =======
@@ -55,56 +55,46 @@ LEGEND
 . = Background
 # = Wall
 P = Player
-* = Crate
-@ = Crate and Target
-O = Target
 
 
 =======
 SOUNDS
 =======
 
-Crate MOVE 36772507
+
+Sheep Create 76935307
+SFx0 52519108
 
 ================
 COLLISIONLAYERS
 ================
 
 Background
-Target
-Player, Wall, Crate
+Blood
+Player, Wall, Sheep
 
 ======
 RULES     
 ======     
 
-[ >  Player | Crate ] -> [  >  Player | > Crate  ]     
-
-late [ Crate | Crate | Crate ] -> [ | |]
+random [ no Sheep ] -> [ Sheep ] again
 
 ==============
 WINCONDITIONS
 ==============
 
-All Crate on Target     
-
 =======     
 LEVELS
 =======
 
-#########
-#.......#
-#.*.*.@.#
-#.P...O.#
-#...*.*.#
-#.......#
-#########
+#################
+#...............#
+#...............#
+#...............#
+#...............#
+#.......P.......#
+#...............#
+#...............#
+#...............#
+#################
 
-.#######.
-.#.....#.
-.#O##..##
-##.##.*.#
-#.*..**.#
-#.OOO.#.#
-#.P.....#
-#########

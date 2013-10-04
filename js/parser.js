@@ -83,14 +83,14 @@ var codeMirrorFn = function() {
     var absolutedirs = ['up', 'down', 'right', 'left'];
     var relativedirs = ['^', 'v', '<', '>', 'moving','stationary','parallel','perpendicular', 'no'];
     var logicWords = ['all', 'no', 'on', 'some'];
-    var sectionNames = ['objects', 'legend', 'sounds', 'collisionlayers', 'rules', 'wincondition', 'levels'];
+    var sectionNames = ['objects', 'legend', 'sounds', 'collisionlayers', 'rules', 'winconditions', 'levels'];
 	var commandwords = ["sfx0","sfx1","sfx2","sfx3","sfx4","sfx5","sfx6","sfx7","sfx8","sfx9","sfx10","cancel","checkpoint","restart","win","message","again"];
     var reg_commands = /\s*(sfx0|sfx1|sfx2|sfx3|Sfx4|sfx5|sfx6|sfx7|sfx8|sfx9|sfx10|cancel|checkpoint|restart|win|message|again)\s*/;
     var reg_name = /[\w]+\s*/;///\w*[a-uw-zA-UW-Z0-9_]/;
     var reg_number = /[\d]+/;
     var reg_soundseed = /\d+\b/;
     var reg_spriterow = /[\.0-9]{5}\s*/;
-    var reg_sectionNames = /(objects|collisionlayers|legend|sounds|rules|wincondition|levels)\s*/;
+    var reg_sectionNames = /(objects|collisionlayers|legend|sounds|rules|winconditions|levels)\s*/;
     var reg_equalsrow = /[\=]+/;
     var reg_notcommentstart = /[^\(]+/;
     var reg_csv_separators = /[ \,]*/;
@@ -100,8 +100,8 @@ var codeMirrorFn = function() {
     var reg_ruledirectionindicators = /^(up|down|left|right|horizontal|vertical|orthogonal|late|rigid)$/;
     var reg_sounddirectionindicators = /\s*(up|down|left|right|horizontal|vertical|orthogonal)\s*/;
     var reg_winconditionquantifiers = /^(all|any|no|some)$/;
-    var reg_keywords = /(objects|collisionlayers|legend|sounds|rules|wincondition|\.\.\.|levels|up|down|left|right|^|v|\>|\<|no|horizontal|orthogonal|vertical|any|all|no|some|moving|stationary|parallel|perpendicular|action)/;
-    var keyword_array = ['objects', 'collisionlayers', 'legend', 'sounds', 'rules', '...','wincondition', 'levels', 'up', 'down', 'left', 'right', 'late','rigid', '^','v','\>','\<','no','randomdir','random', 'horizontal', 'vertical','any', 'all', 'no', 'some', 'moving','stationary','parallel','perpendicular','action'];
+    var reg_keywords = /(objects|collisionlayers|legend|sounds|rules|winconditions|\.\.\.|levels|up|down|left|right|^|v|\>|\<|no|horizontal|orthogonal|vertical|any|all|no|some|moving|stationary|parallel|perpendicular|action)/;
+    var keyword_array = ['objects', 'collisionlayers', 'legend', 'sounds', 'rules', '...','winconditions', 'levels', 'up', 'down', 'left', 'right', 'late','rigid', '^','v','\>','\<','no','randomdir','random', 'horizontal', 'vertical','any', 'all', 'no', 'some', 'moving','stationary','parallel','perpendicular','action'];
 
     //  var keywordRegex = new RegExp("\\b(("+cons.join(")|(")+"))$", 'i');
 
@@ -765,18 +765,15 @@ var codeMirrorFn = function() {
 
                         break;
                     }
-                case 'wincondition':
+                case 'winconditions':
                     {
                         if (sol) {
                         	var tokenized = reg_notcommentstart.exec(stream.string);
                         	var splitted = tokenized[0].split(/\s/);
                         	var filtered = splitted.filter(function(v) {return v !== ''});
                             filtered.push(state.lineNumber);
-                            if (state.wincondition.length>0)
-                            {
-                            	logError('There can only be one win condition',state.lineNumber);
-                            }
-                            state.wincondition=filtered;
+                            
+                            state.winconditions.push(filtered);
                             state.tokenIndex = -1;
                         }
                         state.tokenIndex++;
@@ -967,7 +964,7 @@ var codeMirrorFn = function() {
 
                 names: [],
 
-                wincondition: [],
+                winconditions: [],
                 metadata: [],
 
                 abbrevNames: [],

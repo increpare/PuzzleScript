@@ -91,6 +91,7 @@ function tryLoadGist(id) {
 		} else {
 			var code=result["files"]["script.txt"]["content"];
 			editor.setValue(code);
+			unloadGame();
 			compile(["restart"],code);
 		}
 	}

@@ -1707,43 +1707,46 @@ function twiddleMetaData(state) {
 	state.metadata=newmetadata;	
 }
 
-function processWinCondition(state) {
+function processWinConditions(state) {
 //	[-1/0/1 (no,some,all),ob1,ob2] (ob2 is background by default)
 	var newconditions=[]; 
-	var wincondition=state.wincondition;
-	if (wincondition.length==0) {
-		return;
-	}
-	var num=0;
-	switch(wincondition[0]) {
-		case 'no':{num=-1;break;}
-		case 'all':{num=1;break;}
-	}
+	for (var i=0;i<state.winconditions.length;i++)  {
+		var wincondition=state.winconditions[i];
+		if (wincondition.length==0) {
+			return;
+		}
+		var num=0;
+		switch(wincondition[0]) {
+			case 'no':{num=-1;break;}
+			case 'all':{num=1;break;}
+		}
 
-	var lineNumber=wincondition[wincondition.length-1];
+		var lineNumber=wincondition[wincondition.length-1];
 
-	var n1 = wincondition[1];
-	var n2;
-	if (wincondition.length==5) {
-		n2 = wincondition[3];
-	} else {
-		n2 = 'background';
-	}
+		var n1 = wincondition[1];
+		var n2;
+		if (wincondition.length==5) {
+			n2 = wincondition[3];
+		} else {
+			n2 = 'background';
+		}
 
-	var mask1=0;
-	var mask2=0;
-	if (n1 in state.objectMasks) {
-		mask1=state.objectMasks[n1];
-	} else {
-		logError('unwelcome term "' + n1 +'" found in win condition. Win conditions objects have to be objects or properties (defined using "or", in terms of other properties)', lineNumber);
+		var mask1=0;
+		var mask2=0;
+		if (n1 in state.objectMasks) {
+			mask1=state.objectMasks[n1];
+		} else {
+			logError('unwelcome term "' + n1 +'" found in win condition. Win conditions objects have to be objects or properties (defined using "or", in terms of other properties)', lineNumber);
+		}
+		if (n2 in state.objectMasks) {
+			mask2=state.objectMasks[n2];
+		} else {
+			logError('unwelcome term "' + n2+ '" found in win condition. Win conditions objects have to be objects or properties (defined using "or", in terms of other properties)', lineNumber);
+		}
+		var newcondition = [num,mask1,mask2,lineNumber];
+		newconditions.push(newcondition);
 	}
-	if (n2 in state.objectMasks) {
-		mask2=state.objectMasks[n2];
-	} else {
-		logError('unwelcome term "' + n2+ '" found in win condition. Win conditions objects have to be objects or properties (defined using "or", in terms of other properties)', lineNumber);
-	}
-	var newcondition = [num,mask1,mask2,lineNumber];
-	state.wincondition=newcondition;
+	state.winconditions=newconditions;
 }
 
 function printCellRow(cellRow) {
@@ -1771,6 +1774,9 @@ function printRule(rule) {
 	var result="("+rule.groupNumber+") "+ rule.direction.toString().toUpperCase()+" ";
 	if (rule.rigid) {
 		result = "RIGID "+result+" ";
+	}
+	if (rule.random) {
+		result = "RANDOM "+result+" ";
 	}
 	if (rule.late) {
 		result = "LATE "+result+" ";
@@ -2049,7 +2055,7 @@ function loadFile(str) {
 
 	generateRigidGroupList(state);
 
-	processWinCondition(state);
+	processWinConditions(state);
 	checkObjectsAreLayered(state);
 
 	twiddleMetaData(state);

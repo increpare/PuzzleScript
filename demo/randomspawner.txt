@@ -1,8 +1,6 @@
-(
-Simple block pushing example, simplified
-)
-
-debug
+title Robot Spawner
+author Stephen Lavelle
+homepage www.puzzlescript.net
 
 ========
 OBJECTS
@@ -87,7 +85,7 @@ RULES
 up [ Robot ] -> [randomDir Robot]
 up [ Spawner no Obstacle ] -> [ Spawner random Robot ]
 ==============
-WINCONDITION
+WINCONDITIONS
 ==============
 
 =======     

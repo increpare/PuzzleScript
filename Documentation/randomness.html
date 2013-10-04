@@ -81,6 +81,14 @@ You can only really use randomness once per cell - if you have several random st
 <p>
 <pre><code>[ RobotSpawn no robot ] -> [ RobotSpawn random RedRobot random GreenRobot random BlueRobot]</code></pre>
 <p>
+If you want to have a rule applied a single time, at random (if possible) do this:
+<p>
+<pre><code>random [ Wall ] -> [ ]</code></pre>
+<p>
+This is also a crafty way to request that a rule only be applied once. : )
+<p>
+In detail, what it does is - it works not on a single rule but on a rule group - it looks at all possible applications of all rules in that group, and picks one at random.
+<p>
     </div><!-- /.container -->
 
 

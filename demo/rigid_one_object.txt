@@ -1,6 +1,6 @@
-(
-Simple block pushing example, simplified
-)
+title A single rigid body
+author Stephen Lavelle
+homepage www.puzzlescript.net
 
 ========
 OBJECTS
@@ -52,7 +52,7 @@ rigid [ >  Player | BigBlock ] -> [  >  Player | > BigBlock  ]
 + rigid [ moving BigBlock | BigBlock ] -> [ moving BigBlock | moving BigBlock ]
 
 ==============
-WINCONDITION
+WINCONDITIONS
 ==============
 
 =======     

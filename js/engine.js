@@ -142,6 +142,14 @@ var titleScreen=true;
 var titleMode=0;//1 means there are options
 var titleSelection=0;
 var titleSelected=false;
+
+function unloadGame() {
+	state=introstate;
+	generateTitleScreen();
+	canvasResize();
+	redraw();
+}
+
 function generateTitleScreen()
 {
 	titleMode=curlevel>0?1:0;
@@ -212,13 +220,15 @@ function generateTitleScreen()
 
 }
 
-var state = {
+var introstate = {
 	title: "2D Whale World",
 	attribution: "increpare",
    	objectCount: 2,
    	metadata:[],
    	levels:[]
-}
+};
+
+var state = introstate;
 
 function deepClone(item) {
     if (!item) { return item; } // null, undefined values check
@@ -288,8 +298,7 @@ function drawMessageScreen() {
 		var leveldat = state.levels[curlevel];
 		message = leveldat.message.trim();
 	} else {
-		message = messagetext;		
-		canvasResize();
+		message = messagetext;
 	}
 	var messageLength=message.length;
 	var lmargin = ((width-messageLength)/2)|0;
@@ -298,7 +307,8 @@ function drawMessageScreen() {
 	titleImage[5]=row.slice(0,lmargin)+message+row.slice(lmargin+message.length);		
 	if (quittingMessageScreen) {
 		titleImage[10]=titleImage[9];
-	}
+	}		
+	canvasResize();
 }
 
 
@@ -1400,6 +1410,9 @@ function applyRandomRuleGroup(ruleGroup) {
 	var tuple=match[1];
 	var check=false;
 	var modified = applyRuleAt(rule,delta,tuple,check);
+
+   	queueCommands(rule);
+
 	return modified;
 }
 
@@ -1710,52 +1723,59 @@ function checkWin() {
 		return;
 	}
 
-	var wincondition = state.wincondition;
-	if (wincondition.length==0) {
-		return;
-	}
-	var filter1 = wincondition[1];
-	var filter2 = wincondition[2];
-
 	var won= false;
-	switch(wincondition[0]) {
-		case -1://NO
-		{
-			won=true;
-			for (var i=0;i<level.dat.length;i++) {
-				var val = level.dat[i];
-				if ( ((filter1&val)!==0) &&  ((filter2&val)!==0) ) {
-					won=false;
-					break;
-				}
-			}
+	if (state.winconditions.length>0)  {
+		var passed=true;
+		for (var wcIndex=0;wcIndex<state.winconditions.length;wcIndex++) {
+			var wincondition = state.winconditions[wcIndex];
+			var filter1 = wincondition[1];
+			var filter2 = wincondition[2];
+			var rulePassed=true;
+			switch(wincondition[0]) {
+				case -1://NO
+				{
+					for (var i=0;i<level.dat.length;i++) {
+						var val = level.dat[i];
+						if ( ((filter1&val)!==0) &&  ((filter2&val)!==0) ) {
+							rulePassed=false;
+							break;
+						}
+					}
 
-			break;
-		}
-		case 0://SOME
-		{
-			won=false;
-			for (var i=0;i<level.dat.length;i++) {
-				var val = level.dat[i];
-				if ( ((filter2&val)!==0) &&  ((filter1&val)!==0) ) {
-					won=true;
+					break;
+				}
+				case 0://SOME
+				{
+					var passedTest=false;
+					for (var i=0;i<level.dat.length;i++) {
+						var val = level.dat[i];
+						if ( ((filter2&val)!==0) &&  ((filter1&val)!==0) ) {
+							passedTest=true;
+							break;
+						}
+					}
+					if (passedTest===false) {
+						rulePassed=false;
+					}
+					break;
+				}
+				case 1://ALL
+				{
+					for (var i=0;i<level.dat.length;i++) {
+						var val = level.dat[i];
+						if ( ((filter1&val)!==0) &&  ((filter2&val)===0) ) {
+							rulePassed=false;
+							break;
+						}
+					}
 					break;
 				}
 			}
-			break;
-		}
-		case 1://ALL
-		{
-			won=true;
-			for (var i=0;i<level.dat.length;i++) {
-				var val = level.dat[i];
-				if ( ((filter1&val)!==0) &&  ((filter2&val)===0) ) {
-					won=false;
-					break;
-				}
+			if (rulePassed===false) {
+				passed=false;
 			}
-			break;
 		}
+		won=passed;
 	}
 
 	if (won) {

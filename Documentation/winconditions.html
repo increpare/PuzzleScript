@@ -7,7 +7,7 @@
     <meta name="author" content="">
     <link rel="shortcut icon" type="image/x-icon" href="ico/favicon.ico" />
 
-    <title>A detailed rebuttal to your carefully considered argument - Puzzle Script Documentation</title>
+    <title>Win Conditions - Puzzle Script Documentation</title>
 
     <!-- Bootstrap core CSS -->
     <link href="css/bootstrap.css" rel="stylesheet">
@@ -49,25 +49,62 @@
     </div>
 
     <div class="container">
+
+
+<p>
+<ol class="breadcrumb">
+  <li><a href="documentation.html">Documentation</a></li>
+  <li>Bird's-eye View</li>
+  <li class="active">WinConditions</li>
+</ol>
+<p>
+
+
+<h1>Bird's-eye view of a PuzzleScript file</h1>
+<p>
+A puzzlescript file is divided into 8 sections:
+<p>
+
+  <ul class="nav nav-pills">
+    <li><a href="prelude.html">Prelude</a></li>
+    <li><a href="objects.html">Objects</a></li>
+    <li><a href="legend.html">Legend</a></li>
+    <li><a href="sounds.html">Sounds</a></li>
+    <li><a href="collisionlayers.html">CollisionLayers</a></li>
+    <li><a href="rules.html">Rules</a></li>
+    <li class="active"><a href="winconditions.html">WinConditions</a></li>
+    <li><a href="levels.html">Levels</a></li>
+  </ul>
+
+
+
+
     <p>
-    The project is open source, if you want to add stuff knock yourself out.
+    <h2>WinConditions</h2>
     <p>
-    <h1>How long until I will re-entertain a recommendation to add</h1>
+    Here are the possible formats of win conditions:
     <p>
-    <dl>
-    <dt>
-    Macros
-    </dt>
-    <dd>
-    1 year
-    </dd>
-    <dt>
-    Qualified Ellipses
-    </dt>
-    <dd>
-    1 year
-    </dd>
-    </dl>
+    <pre><code> (neko puzzle - you win if there's no fruit left)
+No Fruit
+
+(sokoban - you win if every target point has a crate on it)
+All Target On Crate 
+
+(you win if Love exists somewhere)
+Some Love 
+
+(you win if there's some gold in the chest)
+Some gold on chest 
+
+(you win if all gold has been taken from the chest)
+No gold on chest</code></pre>
+<p>
+	These should do for most games, but if you want more advanced control over winning and losing, then you can specify your own win rules using <a href="rules.html#commands">commands</a>.
+
+
+
+
+
     </div><!-- /.container -->
 
 

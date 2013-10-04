@@ -19,6 +19,10 @@
 <body>
 <div class="leftpanel">
 <form id="form1" name="form1"  action="javascript:void(0);"><textarea id="code" class="codeform" name="code" rows="20" cols="20" style="display:none;">
+title My Game
+author Stephen Lavelle
+homepage www.puzzlescript.net
+
 ========
 OBJECTS
 ========
@@ -68,7 +72,7 @@ RULES
 [ >  Player | Crate ] -> [  >  Player | > Crate  ]     
 
 ==============
-WINCONDITION
+WINCONDITIONS
 ==============
 
 All Target on Crate     
@@ -105,6 +109,7 @@ LEVELS
 <option value="kettle">Kettle (increpare)</option>
 <option value="microban">Microban (D. Skinner)</option>
 <option value="nekopuzzle">Neko Puzzle (Lexaloffle)</option>
+<option value="notsnake">Notsnake (Terry Cavanaghr)</option>
 <option value="zenpuzzlegarden">Zen Puzzle Garden (Lexaloffle)</option>
 </optgroup>
 <optgroup label="Intermediate">
@@ -117,7 +122,7 @@ LEVELS
 <option value="whaleworld">2D Whale World (increpare)</option>
 </optgroup>
 </select>
-</form>- <a id="runClickLink" href="javascript:void(0);">RUN</a> - <a id="rebuildClickLink" href="javascript:void(0);">REBUILD</a> - <a id="levelEditorClickLink" href="javascript:void();">LEVEL EDITOR</a> - <a id="exportClickLink" href="javascript:void(0);">EXPORT</a> - <a id="shareClickLink" href="javascript:void(0);">SHARE</a> - <a href="documentation/documentation.html"  target="Puzzle_Script_Documentation">DOCS</a> 
+</form>- <a id="runClickLink" href="javascript:void(0);">RUN</a> - <a id="rebuildClickLink" href="javascript:void(0);">REBUILD</a> - <a id="levelEditorClickLink" href="javascript:void(\"\");">LEVEL EDITOR</a> - <a id="exportClickLink" href="javascript:void(0);">EXPORT</a> - <a id="shareClickLink" href="javascript:void(0);">SHARE</a> - <a href="documentation/documentation.html"  target="Puzzle_Script_Documentation">DOCS</a> 
 
 	</div>
 
@@ -133,18 +138,18 @@ LEVELS
 <div class="rightbottomhalf">
 	<div class="lowertoolbar">
 <div id="soundbar">
-	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="soundbutton"><a id="clearConsoleClick" title="clears the console" href="javascript:void(0);"><img src="icons/clearConsole.gif" alt="clear console contents"></a></span>
+	<!--&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="soundbutton"><a id="clearConsoleClick" title="clears the console" href="javascript:void('Clear Console');"><img src="icons/clearConsole.gif" alt="clear console contents"></a></span>-->
 	&nbsp;&nbsp;&nbsp;
-	<span class="soundbutton"><a id="newsound0" title="collect item sound" href="javascript:void(0);"><img src="icons/audio1.gif"  alt="collect item sound"></a></span>
-	<span class="soundbutton"><a  id="newsound7" title="push sounds" href="javascript:void(0);" ><img src="icons/audio2.gif" alt="push sounds"></a></span>
-	<span class="soundbutton"><a id="newsound2" title="explosion sound" href="javascript:void(0);" ><img src="icons/audio3.gif" alt="explosion sound"></a></span>
-	<span class="soundbutton"><a id="newsound3" title="powerup sound" href="javascript:void(0);" ><img src="icons/audio4.gif" alt="powerup sound"></a></span>
-	<span class="soundbutton"><a id="newsound9" title="bird tweet sound" href="javascript:void(0);"><img src="icons/audio5.gif"  alt="bird tweet sound"></a></span>
-	<span class="soundbutton"><a id="newsound4" title="hurt sound" href="javascript:void(0);" ><img src="icons/audio6.gif" alt="hurt sound"></a></span>
-	<span class="soundbutton"><a id="newsound5" title="jump sound" href="javascript:void(0);"><img src="icons/audio7.gif"  alt="jump sound"></a></span>
-	<span class="soundbutton"><a id="newsound1" title="pew pew sound" href="javascript:void(0);"><img src="icons/audio8.gif"  alt="pew pew pew"></a></span>
-	<span class="soundbutton"><a id="newsound6" title="selection sound" href="javascript:void(0);"><img src="icons/audio9.gif"  alt="selection sound"></a></span>
-	<span class="soundbutton"><a id="newsound8" title="random sound" href="javascript:void(0);"><img src="icons/audio10.gif"  alt="random sound"></a></span>
+	<span class="soundbutton"><a id="newsound0" title="collect item sound" href="javascript:void('Generate Collect Item Sound');"><img src="icons/audio1.gif"  alt="collect item sound"></a></span>
+	<span class="soundbutton"><a  id="newsound7" title="push sounds" href="javascript:void('Generate Push Sound');" ><img src="icons/audio2.gif" alt="push sounds"></a></span>
+	<span class="soundbutton"><a id="newsound2" title="explosion sound" href="javascript:void('Generate Explosion Sound');" ><img src="icons/audio3.gif" alt="explosion sound"></a></span>
+	<span class="soundbutton"><a id="newsound3" title="powerup sound" href="javascript:void(Generate Power-Up Sound);" ><img src="icons/audio4.gif" alt="powerup sound"></a></span>
+	<span class="soundbutton"><a id="newsound9" title="bird tweet sound" href="javascript:void('Generate Bird Tweet Sound');"><img src="icons/audio5.gif"  alt="bird tweet sound"></a></span>
+	<span class="soundbutton"><a id="newsound4" title="hurt sound" href="javascript:void('Generate Hurt Sound');" ><img src="icons/audio6.gif" alt="hurt sound"></a></span>
+	<span class="soundbutton"><a id="newsound5" title="jump sound" href="javascript:void('Generate Jump Sound');"><img src="icons/audio7.gif"  alt="jump sound"></a></span>
+	<span class="soundbutton"><a id="newsound1" title="pew pew sound" href="javascript:void('Generate Pew Pew Sound');"><img src="icons/audio8.gif"  alt="pew pew pew"></a></span>
+	<span class="soundbutton"><a id="newsound6" title="selection sound" href="javascript:void('Generate Selection Sound');"><img src="icons/audio9.gif"  alt="selection sound"></a></span>
+	<span class="soundbutton"><a id="newsound8" title="random sound" href="javascript:void('Generate Random Sound');"><img src="icons/audio10.gif"  alt="random sound"></a></span>
 	<form>
 	<input type="text" name="sounddat" id="sounddat">
 	<input id="soundButtonPress" name="clickMe" type="button" value="Play seed"  />

@@ -4,7 +4,7 @@ homepage http://www.kissmaj7.com/
 
 (
 
-NOTE - STEPHEN, YOU DON'T HAVE PERMISSIONS TO INCLUDE THIS GAME.  DO NOT INCLUDE THIS IN THE PUBLIC RELEASE UNLESS YOU'VE GOTTEN IT SECURED.
+Ported with the very gracious permission of Tommi Touvinen
 
 The First eleven levels of a neato game - you can play the full version here 
 
@@ -105,7 +105,7 @@ LEGEND
 =======
 
 Player = PlayerHead1 or PlayerHead2 or PlayerHead3 or PlayerHead4
-Obstacle = PlayerBodyH or PlayerBodyV or Wall or Crate
+Obstacle = PlayerBodyH or PlayerBodyV or Wall or Crate or Player
 PlayerBody = PlayerBodyH or PlayerBodyV
 . = Background
 P = PlayerHead1
@@ -157,7 +157,7 @@ DOWN [ Player | No Obstacle ] -> [ PlayerBodyV | PlayerHead1 ]
 DOWN [ Crate | No Obstacle ] -> [  | Crate ]
 
 ==============
-WINCONDITION
+WINCONDITIONS
 ==============
 some player on exit
 

@@ -66,6 +66,8 @@ function loadDropDownChange() {
 			editor.setValue(saveText);
 			var loadDropdown = document.getElementById('loadDropDown');
 			loadDropdown.selectedIndex=0;
+			unloadGame();
+			compile(["restart"]);
 			return;
 	    }
 	}		

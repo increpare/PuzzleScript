@@ -3395,6 +3395,7 @@ window.CodeMirror = (function() {
     var legend_propertiesCopy = [];
     var soundsCopy = [];
     var levelsCopy = [];
+    var winConditionsCopy = [];
 
     for (var i = 0; i < state.legend_synonyms.length; i++) {
       legend_synonymsCopy.push(state.legend_synonyms[i].concat([]));
@@ -3410,6 +3411,9 @@ window.CodeMirror = (function() {
     }
     for (var i = 0; i < state.levels.length; i++) {
       levelsCopy.push(state.levels[i].concat([]));
+    }
+    for (var i = 0; i < state.winconditions.length; i++) {
+      winConditionsCopy.push(state.winconditions[i].concat([]));
     }
 
     var nstate = {
@@ -3437,7 +3441,7 @@ window.CodeMirror = (function() {
 
       names: state.names.concat([]),
 
-      wincondition: state.wincondition.concat([]),
+      winconditions: winConditionsCopy,
 
       abbrevNames: state.abbrevNames.concat([]),
 

@@ -1,4 +1,7 @@
 var keybuffer = [];
+var keyRepeatTimer=0;
+var keyRepeatIndex=0;
+
 var dragging=false;
 var rightdragging=false;
 var columnAdded=false;
@@ -286,7 +289,7 @@ function levelEditorRightClick(event,click) {
 function onMouseDown(event) {
 	if (event.button===0 && !(event.ctrlKey||event.metaKey) ) {
         lastDownTarget = event.target;
-        keybuffer={};
+        keybuffer=[];
         if (event.target===canvas) {
         	setMouseCoord(event);
         	dragging=true;
@@ -319,12 +322,17 @@ function onMouseUp(event) {
 
 function onKeyDown(event) {
     event = event || window.event;
-    if(lastDownTarget === canvas) {
-	    if (keybuffer[event.keyCode]===undefined) {
-	    	keybuffer[event.keyCode]=0;
-	    	checkKey(event,true);
-	    }
+    if (keybuffer.indexOf(event.keyCode)>=0) {
+    	return;
     }
+
+    if(lastDownTarget === canvas) {
+    	if (keybuffer.indexOf(event.keyCode)===-1) {
+    		keybuffer.splice(keyRepeatIndex,0,event.keyCode);
+	    	keyRepeatTimer=0;
+	    	checkKey(event,true);
+		}
+	}
 
 
     if (canDump===true) {
@@ -358,9 +366,13 @@ HTMLCanvasElement.prototype.relMouseCoords = relMouseCoords;
 
 function onKeyUp(event) {
 	event = event || window.event;
-/*	if(lastDownTarget == canvas) {
-    }*/
-    delete keybuffer[event.keyCode];
+	var index=keybuffer.indexOf(event.keyCode);
+	if (index>=0){
+    	keybuffer.splice(index,1);
+    	if (keyRepeatIndex>=index){
+    		keyRepeatIndex--;
+    	}
+    }
 }
 
 var mouseCoordX=0;
@@ -617,13 +629,16 @@ function update() {
             nextLevel();
         }
     }
-    for(var n in keybuffer) {
-        keybuffer[n]+=deltatime;
-        if (keybuffer[n]>repeatinterval) {
-            keybuffer[n]=0;
-            checkKey({keyCode:parseInt(n)},false);
-        }
-    }
+    if (keybuffer.length>0) {
+	    keyRepeatTimer+=deltatime;
+	    if (keyRepeatTimer>repeatinterval/(Math.sqrt(keybuffer.length))) {
+	    	keyRepeatTimer=0;
+	    	keyRepeatIndex = (keyRepeatIndex+1)%keybuffer.length;
+	    	var key = keybuffer[keyRepeatIndex];
+	        checkKey({keyCode:key},false);
+	    }
+	}
+
     if (autotickinterval>0) {
         autotick+=deltatime;
         if (autotick>autotickinterval) {
