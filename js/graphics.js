@@ -18,16 +18,19 @@ function createSprite(spritecanvas,spritectx,n) {
 
 	var w=5;
 	var h=5;
-	var cw = ~~(cellwidth / w);
-    var ch = ~~(cellheight / h);
-
+	var cw = ~~(cellwidth / 6);
+    var ch = ~~(cellheight / 6);
+    var pixh=ch;
+    if ("scanline" in state.metadata) {
+        pixh=Math.ceil(ch/2);
+    }
     spritectx.fillStyle = "#ffffff";
     for (var j = 0; j < w; j++) {
         for (var k = 0; k < h; k++) {
             var cy = ~~(j * cw);
             var cx = ~~(k * ch);
             if (spritegrid[j][k] == 1) {
-                spritectx.fillRect(cx, cy, cw, ch);
+                spritectx.fillRect(cx, cy, cw, pixh);
             }
         }
     }
@@ -87,6 +90,10 @@ function regenSpriteImages() {
 
 
 //      window.console.log(w+","+h+","+cw+","+ch);
+        var pixh=ch;
+        if ("scanline" in state.metadata) {
+            pixh=Math.ceil(ch/2);
+        }
 
         var colors = sprites[i].colors;
         for (var j = 0; j < w; j++) {
@@ -96,7 +103,7 @@ function regenSpriteImages() {
 	                var cy = (j * cw)|0;
 	                var cx = (k * ch)|0;
                 	spritectx.fillStyle = colors[val];
-                    spritectx.fillRect(cx, cy, cw, ch);
+                    spritectx.fillRect(cx, cy, cw, pixh);
                 }
             }
         }
@@ -227,6 +234,7 @@ var x;
 var y;
 var cellwidth;
 var cellheight;
+var magnification;
 var xoffset;
 var yoffset;
 
@@ -456,6 +464,7 @@ function canvasResize() {
         yoffset = (canvas.height - cellheight * screenheight) / 2;
         xoffset = (canvas.width - cellwidth * screenwidth) / 2;
     }
+    magnification = ((cellwidth/w)*5)|0;
 
     if (levelEditorOpened) {
     	xoffset+=cellwidth;

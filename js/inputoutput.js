@@ -605,7 +605,7 @@ function update() {
         }
     }
     if (winning) {
-        if (timer/1000>0.3) {
+        if (timer/1000>0.5) {
             winning=false;
             nextLevel();
         }

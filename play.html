@@ -1,6 +1,7 @@
 <!doctype html>
 <html>
 <head>
+<title>PuzzleScript Game</title>
 <style>
 
 body {
@@ -152,6 +153,7 @@ function getData(){
 			var title=state.metadata.title;
 			var gametitle = document.getElementById("gametitle");
 			gametitle.innerHTML=title;
+			window.document.title=title+" - PuzzleScript Game";
 		}
 		var hacklink = document.getElementById("hacklink");
 
