@@ -1,0 +1,123 @@
+title Simple Block Pushing Game
+author Stephen Lavelle
+homepage www.puzzlescript.net
+
+========
+OBJECTS
+========
+
+Background 
+LIGHTGREEN GREEN
+11111
+01111
+11101
+11111     
+10111   
+
+
+Target 
+DarkBlue 
+..... 
+.000.
+.0.0.
+.000.
+.....     
+
+Wall     
+BROWN DARKBROWN     
+00010
+11111
+01000
+11111
+00010
+
+Player 
+Black Orange White Blue     
+.000.
+.111.
+22222
+.333.
+.3.3.
+
+RedCrate
+Red Yellow
+00000
+0...0
+0...0
+0...0
+00000
+
+BlueCrate
+BLue Yellow
+00000
+0...0
+0...0
+0...0
+00000
+
+
+=======
+LEGEND
+=======
+
+Crate = RedCrate or BlueCrate
+. = Background
+# = Wall
+P = Player
+R = RedCrate
+B = BlueCrate
+
+
+=======
+SOUNDS
+=======
+
+Crate MOVE 36772507
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Target
+Player, Wall, Crate
+
+======
+RULES     
+======     
+
+right [ >  Player | Crate ] -> [  >  Player | > Crate  ]  
+
+([ > Crate | Crate ] -> [ > Crate | > Crate ])
+
+STARTLOOP
+
+right [ > RedCrate | RedCrate ] -> [ > RedCrate | > RedCrate ]
+right [ > BlueCrate | BlueCrate ] -> [ > BlueCrate | > BlueCrate ]
+right [ > RedCrate | BlueCrate ] -> [ > RedCrate | > BlueCrate ]
+right [ > BlueCrate | RedCrate ] -> [ > BlueCrate | > RedCrate ]
+
+ENDLOOP
+
+Right [ Player | Crate ] -> [ Player | BlueCrate ]
+
+Up [ Player | Crate ] -> [ Player | RedCrate ]
+
+==============
+WINCONDITIONS
+==============
+
+=======     
+LEVELS
+=======
+
+.................
+.................
+.......RBRRBR....
+...P...RRBRRB....
+.......RBRRBR....
+.................
+.................
+
+
+.pbrr.

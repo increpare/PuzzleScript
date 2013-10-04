@@ -1458,10 +1458,17 @@ function propagateMovements(startRuleGroupindex){
     		var ruleGroup=state.rules[ruleGroupIndex];
 			loopPropagated = applyRuleGroup(ruleGroup) || loopPropagated;	        	        
 	    }
-        ruleGroupIndex++;
         if (loopPropagated && state.loopPoint[ruleGroupIndex]!==undefined) {
         	ruleGroupIndex = state.loopPoint[ruleGroupIndex];
         	loopPropagated=false;
+        } else {
+        	ruleGroupIndex++;
+        	if (ruleGroupIndex===state.rules.length) {
+        		if (loopPropagated && state.loopPoint[ruleGroupIndex]!==undefined) {
+		        	ruleGroupIndex = state.loopPoint[ruleGroupIndex];
+		        	loopPropagated=false;
+		        } 
+        	}
         }
     }
 }   
@@ -1673,12 +1680,14 @@ function processInput(dir) {
         }
 
 
-	    for (var i=0;i<level.dat.length;i++) {
-	    	if (level.dat[i]!=bak.dat[i]) {
-	    		backups.push(bak);
-	    		break;
-	    	}
-	    }
+        if (dir!==-1) {
+		    for (var i=0;i<level.dat.length;i++) {
+		    	if (level.dat[i]!=bak.dat[i]) {
+		    		backups.push(bak);
+		    		break;
+		    	}
+		    }
+		}
 
 	    for (var i=0;i<level.commandQueue.length;i++) {
 	 		var command = level.commandQueue[i];
