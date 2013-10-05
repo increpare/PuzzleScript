@@ -1,3 +1,4 @@
+var canSetHTMLColors=false;
 var canDump=true;
 var canYoutube=false;
 inputHistory=[];

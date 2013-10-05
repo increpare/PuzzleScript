@@ -39,6 +39,7 @@ function generateSpriteMatrix(dat) {
 }
 
 var debugMode;
+var colorPalette;
 
 function generateExtraMembers(state) {
 
@@ -76,7 +77,7 @@ function generateExtraMembers(state) {
 
 	//get colorpalette name
 	debugMode=false;
-	var colorPalette=colorPalettes.arnecolors;
+	colorPalette=colorPalettes.arnecolors;
 	for (var i=0;i<state.metadata.length;i+=2){
 		var key = state.metadata[i];
 		var val = state.metadata[i+1];
@@ -325,7 +326,7 @@ function generateExtraMembers(state) {
 		backgroundlayer = state.objects.background.layer;
 	}
 	state.backgroundid=backgroundid;
-	state.backgroundlayer=backgroundlayer;
+	state.backgroundlayer=backgroundlayer;	
 }
 
 
@@ -2004,6 +2005,42 @@ function generateSoundData(state) {
 
 
 function formatHomePage(state){
+	if ('background_color' in state.metadata) {
+		state.bgcolor=colorToHex(colorPalette,state.metadata.background_color);
+	} else {
+		state.bgcolor="#000000";
+	}
+	if ('text_color' in state.metadata) {
+		state.fgcolor=colorToHex(colorPalette,state.metadata.text_color);
+	} else {
+		state.fgcolor="#FFFFFF";
+	}
+	
+
+	if (canSetHTMLColors) {
+		
+		if ('background_color' in state.metadata)  {
+			document.body.style.backgroundColor=state.bgcolor;
+		}
+		
+		if ('text_color' in state.metadata) {
+			var separator = document.getElementById("separator");
+			if (separator!=null) {
+			   separator.style.color = state.fgcolor;
+			}
+			
+			var h1Elements = document.getElementsByTagName("a");
+			for(var i = 0; i < h1Elements.length; i++) {
+			   h1Elements[i].style.color = state.fgcolor;
+			}
+
+			var h1Elements = document.getElementsByTagName("h1");
+			for(var i = 0; i < h1Elements.length; i++) {
+			   h1Elements[i].style.color = state.fgcolor;
+			}
+		}
+	}
+
 	if ('homepage' in state.metadata) {
 		var url = state.metadata['homepage'];
 		url=url.replace("http://","");

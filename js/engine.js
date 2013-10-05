@@ -225,7 +225,9 @@ var introstate = {
 	attribution: "increpare",
    	objectCount: 2,
    	metadata:[],
-   	levels:[]
+   	levels:[],
+   	bgcolor:"#000000",
+   	fgcolor:"#FFFFFF"
 };
 
 var state = introstate;
@@ -346,7 +348,7 @@ function loadLevelFromState(state,levelindex) {
 	    }
 
 	    if ('run_rules_on_level_start' in state.metadata) {
-			processInput(-1);
+			processInput(-1,true);
 	    }
 
 	    backups=[]
@@ -1124,13 +1126,11 @@ propagationState = {
 	levelDat:[],
 	levelMovementMask:[],
 	rigidGroupIndexMask:[],//[indexgroupNumber, masked by layer arrays]
-    rigidMovementAppliedMask:[]
-//	rigidBackups:[],
-//	bannedGroup:[]
+    rigidMovementAppliedMask:[],
+	bannedGroup:[]
 }
 
-var rigidBackups = [];//doesn't need to be backed up
-var bannedGroup = [];
+var rigidBackups=[]
 
 function commitPreservationState(ruleGroupIndex) {
 	var propagationState = {
@@ -1141,7 +1141,7 @@ function commitPreservationState(ruleGroupIndex) {
 		rigidGroupIndexMask:level.rigidGroupIndexMask.concat([]),//[[mask,groupNumber]
         rigidMovementAppliedMask:level.rigidMovementAppliedMask.concat([]),
 //		rigidBackups:rigidBackups.concat([]),
-		bannedGroup:bannedGroup.concat([])
+		bannedGroup:level.bannedGroup.concat([])
 	};
 	rigidBackups[ruleGroupIndex]=propagationState;
 	return propagationState;
@@ -1452,7 +1452,7 @@ function propagateMovements(startRuleGroupindex){
     //when we're going back in, let's loop, to be sure to be sure
     var loopPropagated = startRuleGroupindex>0;
     for (var ruleGroupIndex=startRuleGroupindex;ruleGroupIndex<state.rules.length;) {
-    	if (bannedGroup[ruleGroupIndex]) {
+    	if (level.bannedGroup[ruleGroupIndex]) {
     		//do nothing
     	} else {
     		var ruleGroup=state.rules[ruleGroupIndex];
@@ -1522,7 +1522,7 @@ function resolveMovements(dir){
     					var rigidGroupIndex = parseInt("11111",2)&(rigidGroupIndexMask>>(5*j));
     					rigidGroupIndex--;//group indices start at zero, but are incremented for storing in the bitfield
     					var groupIndex = state.rigidGroupIndex_to_GroupIndex[rigidGroupIndex];
-    					bannedGroup[groupIndex]=true;
+    					level.bannedGroup[groupIndex]=true;
     					//backtrackTarget = rigidBackups[rigidGroupIndex];
     					doUndo=true;
     					break;
@@ -1547,8 +1547,8 @@ function resolveMovements(dir){
 var sfxCreateMask=0;
 var sfxDestroyMask=0;
 
-function processInput(dir) {
-	bak = backupLevel();
+function processInput(dir,dontCheckWin,dontModify) {
+	var bak = backupLevel();
 
 	var playerPositions=[];
     if (dir<=4) {
@@ -1585,7 +1585,7 @@ function processInput(dir) {
 
         var i=0;
         var first=true;
-        bannedGroup = [];
+        level.bannedGroup = [];
         rigidBackups = [];
         level.commandQueue=[];
         var startRuleGroupIndex=0;
@@ -1679,14 +1679,26 @@ function processInput(dir) {
         	level.rigidMovementAppliedMask[i]=0;
         }
 
+	    for (var i=0;i<level.dat.length;i++) {
+	    	if (level.dat[i]!==bak.dat[i]) {
 
-        if (dir!==-1) {
-		    for (var i=0;i<level.dat.length;i++) {
-		    	if (level.dat[i]!=bak.dat[i]) {
-		    		backups.push(bak);
-		    		break;
-		    	}
-		    }
+				if (dontModify) {
+	        		backups.push(bak);
+	        		DoUndo(true);
+					return true;
+				} else {
+					if (dir!==-1) {
+	    				backups.push(bak);
+	    			}
+	    			modified=true;
+	    		}
+	    		break;
+	    	}
+	    }
+	
+
+		if (dontModify) {
+			return false;
 		}
 
 	    for (var i=0;i<level.commandQueue.length;i++) {
@@ -1703,19 +1715,23 @@ function processInput(dir) {
 	    if (level.commandQueue.indexOf('restart')>=0) {
 	    	DoRestart();	    	
 	    } 
-	    if (level.commandQueue.indexOf('again')>=0) {
-	    	againing=true;
-	    	timer=0;
+	    if (level.commandQueue.indexOf('again')>=0 && modified) {
+	    	//first have to verify that something's changed
+	    	if (processInput(-1,true,true)) {
+		    	againing=true;
+		    	timer=0;
+		    }
 	    }
 		if (level.commandQueue.indexOf('checkpoint')>=0) {
 			restartTarget=backupLevel();
 		}	    
 	    
-	    if (textMode===false) {
+	    if (textMode===false && (dontCheckWin===undefined ||dontCheckWin===false)) {
 	    	checkWin();
 	    }
 
 	    level.commandQueue=[];
+
     }
 
     redraw();

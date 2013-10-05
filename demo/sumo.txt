@@ -1,4 +1,4 @@
-title Simple Block Pushing Game
+title Multiple Patterns
 author Stephen Lavelle
 homepage www.puzzlescript.net
 
@@ -14,14 +14,6 @@ LIGHTGREEN GREEN
 11111     
 10111   
 
-
-Target 
-DarkBlue 
-..... 
-.000.
-.0.0.
-.000.
-.....     
 
 Wall     
 BROWN DARKBROWN     
@@ -39,14 +31,13 @@ Black Orange White Blue
 .333.
 .3.3.
 
-Crate
-Orange Yellow
+Sumo
+Pink White
+..0..
 00000
-0...0
-0...0
-0...0
-00000
-
+.000.
+.111.
+.0.0.
 
 =======
 LEGEND
@@ -55,55 +46,39 @@ LEGEND
 . = Background
 # = Wall
 P = Player
-* = Crate
-@ = Crate and Target
-O = Target
-
+S = Sumo
 
 =======
 SOUNDS
 =======
 
-Crate MOVE 36772507
+Sumo MOVE 48878907
 
 ================
 COLLISIONLAYERS
 ================
 
 Background
-Target
-Player, Wall, Crate
+Player, Wall, Sumo
 
 ======
 RULES     
 ======     
 
-[ >  Player | Crate ] -> [  >  Player | > Crate  ]   
+[ > Player ] [ Sumo ] -> [ > Player ] [ > Sumo ]
 
 ==============
 WINCONDITIONS
 ==============
 
-All Target on Crate     
-
 =======     
 LEVELS
 =======
 
-
-####..
-#.O#..
-#..###
-#@P..#
-#..*.#
-#..###
-####..
-
-
-######
-#....#
-#.#P.#
-#.*@.#
-#.O@.#
-#....#
-######
+########
+#......#
+#......#
+#.P..S.#
+#......#
+#......#
+########

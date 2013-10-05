@@ -24,7 +24,7 @@ function createSprite(spritecanvas,spritectx,n) {
     if ("scanline" in state.metadata) {
         pixh=Math.ceil(ch/2);
     }
-    spritectx.fillStyle = "#ffffff";
+    spritectx.fillStyle = state.fgcolor;
     for (var j = 0; j < w; j++) {
         for (var k = 0; k < h; k++) {
             var cy = ~~(j * cw);
@@ -255,7 +255,7 @@ function redraw() {
             }
         }
 
-        ctx.fillStyle = '#000000';
+        ctx.fillStyle = state.bgcolor;
         ctx.fillRect(0, 0, canvas.width, canvas.height);
 
         for (var i = 0; i < titleWidth; i++) {
@@ -282,7 +282,7 @@ function redraw() {
                 return;
         }
 
-        ctx.fillStyle = '#000000';
+        ctx.fillStyle = state.bgcolor;
         ctx.fillRect(0, 0, canvas.width, canvas.height);
 
         var mini=0;

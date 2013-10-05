@@ -1,0 +1,112 @@
+title Simple Block Pushing Game
+author Stephen Lavelle
+homepage www.puzzlescript.net
+
+
+run_rules_on_level_start
+
+
+========
+OBJECTS
+========
+
+Background 
+Orange
+  
+
+Wall
+Blue
+
+
+Crate
+Red
+.....
+.000.
+.000.
+.000.
+.....
+
+Whale
+Red
+
+EndPoint
+DarkRed
+.....
+.000.
+.0.0.
+.000.
+.....
+StartPoint
+darkRed
+.....
+.000.
+.0.0.
+.000.
+.....
+
+Player
+yellow
+.....
+.000.
+.000.
+.000.
+.....
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+W = Whale
+C = Crate
+S = StartPoint and Player
+E = EndPoint
+
+=======
+SOUNDS
+=======
+
+================
+COLLISIONLAYERS
+================
+
+Background
+StartPoint, EndPoint
+Player, Wall, Crate, Whale
+
+======
+RULES     
+======     
+
+[ >  Player | Crate ] -> [  >  Player | > Crate  ]   
+[ > Crate | Crate ] -> [ > Crate | > Crate ]
+
+==============
+WINCONDITIONS
+==============
+
+All Player on EndPoint
+
+=======     
+LEVELS
+=======
+
+
+#########
+#......E#
+#..CC..##
+#.....##.
+#.....W#.
+##.#####.
+#......#.
+#..CC..#.
+#..CC..#.
+##.....#.
+#W.....#.
+######.#.
+#......#.
+#......#.
+##S#####.
+########.
+

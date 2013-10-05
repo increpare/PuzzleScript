@@ -79,7 +79,7 @@ function tryLoadGist(id) {
 			return;
 		}
 
-		if (clientStandaloneRequest.responseText==="") {
+		if (githubHTTPClient.responseText==="") {
 			consoleError("GitHub request returned nothing.  A connection fault, maybe?");
 		}
 

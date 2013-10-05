@@ -25,7 +25,7 @@ function buildStandalone(stateString) {
 		return;
 	}
 
-	var htmlString = standalone_HTML_String;
+	var htmlString = standalone_HTML_String.concat("");
 	var title = "PuzzleScript Game";
 	if (state.metadata.title!==undefined) {
 		title=state.metadata.title.toUpperCase();
@@ -33,6 +33,13 @@ function buildStandalone(stateString) {
 	var homepage = "www.puzzlescript.net";
 	if (state.metadata.homepage!==undefined) {
 		homepage=state.metadata.homepage.toLowerCase();
+	}
+
+	if ('background_color' in state.metadata) {
+		htmlString = htmlString.replace(/black/g,state.bgcolor);	
+	}
+	if ('text_color' in state.metadata) {
+		htmlString = htmlString.replace(/lightblue/g,state.fgcolor);	
 	}
 
 	htmlString = htmlString.replace(/\"__GAMETITLE__\"/g,title);

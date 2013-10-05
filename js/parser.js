@@ -467,6 +467,7 @@ var codeMirrorFn = function() {
                         if (sol) {
                             //create new collision layer
                             state.collisionLayers.push([]);
+                            state.tokenIndex=0;
                         }
 
                         var match_name = stream.match(reg_name, true);
@@ -499,6 +500,12 @@ var codeMirrorFn = function() {
                             	logError('Cannot add "' + candname.toUpperCase() + '" to a collision layer; it has not been declared.', state.lineNumber);                                
                             	return [];
                             };
+                            if (candname==='background' && state.collisionLayers[state.collisionLayers.length-1].length>0) {
+                                logError("Background must be in a layer by itself.",state.lineNumber);
+                                state.tokenIndex===1;
+                            } else if (state.tokenIndex!==0) {
+                                logError("Background must be in a layer by itself.",state.lineNumber);
+                            }
 
                             var ar = substitutor(candname);
 
@@ -882,7 +889,7 @@ var codeMirrorFn = function() {
 		                    if (match!==null) {
 		                    	var token = match[0].trim();
 		                    	if (sol) {
-		                    		if (['title','author','homepage','key_repeat_interval','realtime_interval','again_interval','flickscreen','zoomscreen','color_palette','youtube'].indexOf(token)>=0) {
+		                    		if (['title','author','homepage','background_color','text_color','key_repeat_interval','realtime_interval','again_interval','flickscreen','zoomscreen','color_palette','youtube'].indexOf(token)>=0) {
 		                    			
                                         if (token==='youtube') {
                                             stream.string=mixedCase;
