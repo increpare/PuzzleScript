@@ -606,7 +606,7 @@ function setGameState(_state, command) {
 	if (canYoutube) {
 		if ('youtube' in state.metadata) {
 			var youtubeid=state.metadata['youtube'];
-			var url = "http://www.youtube.com/embed/"+youtubeid+"?autoplay=1";
+			var url = "http://www.youtube.com/embed/"+youtubeid+"?autoplay=1&loop=1";
 			ifrm = document.createElement("IFRAME");
 			ifrm.setAttribute("src",url);
 			ifrm.style.visibility="hidden";
