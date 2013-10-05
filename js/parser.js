@@ -500,9 +500,11 @@ var codeMirrorFn = function() {
                             	logError('Cannot add "' + candname.toUpperCase() + '" to a collision layer; it has not been declared.', state.lineNumber);                                
                             	return [];
                             };
-                            if (candname==='background' && state.collisionLayers[state.collisionLayers.length-1].length>0) {
-                                logError("Background must be in a layer by itself.",state.lineNumber);
-                                state.tokenIndex===1;
+                            if (candname==='background' ) {
+                                if (state.collisionLayers[state.collisionLayers.length-1].length>0) {
+                                    logError("Background must be in a layer by itself.",state.lineNumber);
+                                }
+                                state.tokenIndex=1;
                             } else if (state.tokenIndex!==0) {
                                 logError("Background must be in a layer by itself.",state.lineNumber);
                             }

@@ -145,6 +145,25 @@ var titleSelected=false;
 
 function unloadGame() {
 	state=introstate;
+	level =  {
+	    width: 5,
+	    height: 5,
+	    layerCount: 2,
+	    dat: [
+	    1, 3, 3, 1, 1, 2, 2, 3, 3, 1,
+	    2, 1, 2, 2, 3, 3, 1, 1, 2, 2,
+	    3, 2, 1, 3, 2, 1, 3, 2, 1, 3,
+	    1, 3, 3, 1, 1, 2, 2, 3, 3, 1,
+	    2, 1, 2, 2, 3, 3, 1, 1, 2, 2
+	    ],
+	    movementMask:[
+	    1, 3, 3, 1, 1, 2, 2, 3, 3, 1,
+	    2, 1, 2, 2, 3, 3, 1, 1, 2, 2,
+	    3, 2, 1, 3, 2, 1, 3, 2, 1, 3,
+	    1, 3, 3, 1, 1, 2, 2, 3, 3, 1,
+	    2, 1, 2, 2, 3, 3, 1, 1, 2, 2
+	    ]
+	};
 	generateTitleScreen();
 	canvasResize();
 	redraw();
@@ -461,6 +480,12 @@ function backupLevel() {
 }
 
 function setGameState(_state, command) {
+	timer=0;
+	autotick=0;
+	winning=false;
+	againing=false;
+    messageselected=false;
+
 	if (command===undefined) {
 		command=["restart"];
 	}

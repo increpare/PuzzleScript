@@ -543,6 +543,7 @@ function checkKey(e,justPressed) {
     				if (titleSelected===false) {    				
 						tryPlayStartGameSound();
 	    				titleSelected=true;
+	    				messageselected=false;
 	    				timer=0;
 	    				quittingTitleScreen=true;
 	    				generateTitleScreen();
@@ -554,6 +555,7 @@ function checkKey(e,justPressed) {
     				if (titleSelected===false) {    				
 						tryPlayStartGameSound();
 	    				titleSelected=true;
+	    				messageselected=false;
 	    				timer=0;
 	    				quittingTitleScreen=true;
 	    				generateTitleScreen();

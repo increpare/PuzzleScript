@@ -19,7 +19,7 @@ var againing=false;
 var againinterval=150;
 
 var textImages={};
-var level = {
+var initLevel = {
     width: 5,
     height: 5,
     layerCount: 2,
@@ -38,3 +38,5 @@ var level = {
     2, 1, 2, 2, 3, 3, 1, 1, 2, 2
     ]
 };
+
+var level = initLevel;

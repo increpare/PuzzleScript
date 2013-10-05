@@ -109,6 +109,8 @@ function tryLoadFile(fileName) {
   		}
   		
 		editor.setValue(fileOpenClient.responseText);
+		unloadGame();
+		compile(["restart"]);
 	}
 	fileOpenClient.send();
 }
