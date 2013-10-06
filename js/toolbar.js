@@ -45,6 +45,12 @@ function saveClick() {
 	var loadDropdown = document.getElementById('loadDropDown');
 	loadDropdown.selectedIndex=0;
 
+	var saveLink = document.getElementById('saveClickLink');
+	if(saveLink) {
+		saveLink.innerHTML = 'SAVE';
+	}
+	_editorDirty = false;
+
 	consolePrint("saved file to local storage");
 }
 

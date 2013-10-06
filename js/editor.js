@@ -1,4 +1,5 @@
 var code = document.getElementById('code');
+var _editorDirty = false;
 
 var fileToOpen=getParameterByName("demo");
 if (fileToOpen!==null&&fileToOpen.length>0) {
@@ -38,6 +39,18 @@ editor.on('mousedown', function(cm, event) {
       compile(["levelline",cm.posFromMouse(event).line]);      
     }
   }
+});
+
+editor.on('change', function(cm, changeObj) {
+
+	// editor is dirty
+	_editorDirty = true;
+
+	var saveLink = document.getElementById('saveClickLink');
+	if(saveLink) {
+		saveLink.innerHTML = 'SAVE*';
+	}
+
 });
 
 var mapObj = {
@@ -119,3 +132,4 @@ function dropdownChange() {
 	tryLoadFile(this.value);
 	this.selectedIndex=0;
 }
+
