@@ -21,8 +21,8 @@ the editor is a slight modification of codemirro (codemirror.net), which is craz
 var compiling = false;
 var errorStrings = [];
 var errorCount=0;
-function logError(str, lineNumber) {
-    if (compiling) {
+function logError(str, lineNumber,urgent) {
+    if (compiling||urgent) {
         if (lineNumber === undefined) {
             return logErrorNoLine(str);
         }
@@ -37,8 +37,8 @@ function logError(str, lineNumber) {
     }
 }
 
-function logErrorNoLine(str) {
-    if (compiling) {
+function logErrorNoLine(str,urgent) {
+    if (compiling||urgent) {
         var errorString = '<span class="errorText">' + str + '</span>';
          if (errorStrings.indexOf(errorString) >= 0) {
             //do nothing, duplicate error

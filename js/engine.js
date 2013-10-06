@@ -16,7 +16,7 @@ intro_template = [
 	"..................................",
 	"..................................",
 	"......Puzzle Script Terminal......",
-	"..............v 0.1...............",
+	"..............v 1.0...............",
 	"..................................",
 	"..................................",
 	"..................................",
@@ -1455,7 +1455,7 @@ function applyRuleGroup(ruleGroup) {
     	loopcount++;
     	if (loopcount>50) 
     	{
-    		logErrorNoLine("got caught looping lots in a rule group :O");
+    		logErrorNoLine("got caught looping lots in a rule group :O",true);
     		break;
     	}
         propagated=false
@@ -1504,15 +1504,7 @@ function propagateLateMovements(){
             //try to match it
     for (var ruleGroupIndex=0;ruleGroupIndex<state.lateRules.length;ruleGroupIndex++) {
         var ruleGroup=state.lateRules[ruleGroupIndex];
-
-        var propagated=true;
-        while(propagated) {
-            propagated=false
-            for (var ruleIndex=0;ruleIndex<ruleGroup.length;ruleIndex++) {
-                var rule = ruleGroup[ruleIndex];            
-                propagated = tryApplyRule(rule) || propagated;
-            }
-        }       
+        applyRuleGroup(ruleGroup);
     }
 }
 

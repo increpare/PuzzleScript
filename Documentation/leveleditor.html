@@ -7,7 +7,7 @@
     <meta name="author" content="">
     <link rel="shortcut icon" type="image/x-icon" href="ico/favicon.ico" />
 
-    <title>Puzzle Script Documentation</title>
+    <title>Level Editor - Puzzle Script Documentation</title>
 
     <!-- Bootstrap core CSS -->
     <link href="css/bootstrap.css" rel="stylesheet">
@@ -49,35 +49,38 @@
     </div>
 
     <div class="container">
+
+
 <p>
 <ol class="breadcrumb">
-  <li class="active">Documentation</li>
+  <li><a href="documentation.html">Documentation</a></li>
+  <li class="active">Level Editor</li>
 </ol>
 <p>
-
-<h1>Documentation</h1>
+<h1>The Level Editor</h1>
 <p>
-<ul class="nav nav-pills nav-stacked" class="pull-left">
-  <li>Basic</li>
-  <li><a href="rules101.html">Rules 101</a></li>
-  <li><a href="prelude.html">Bird's-eye view of a PuzzleScript file</a></li>
-  <li>Intermediate</li>
-  <li><a href="leveleditor.html">Level Editor</a></li>
-  <li><a href="directions.html">Directions</a></li>
-  <li><a href="actionbutton.html">The Action Button</a></li>
-  <li><a href="input.html">Input</a></li>
-  <li><a href="randomness.html">Randomness</a></li>
-  <li>Advanced</li>
-  <li><a href="executionorder.html">Rule Execution Order</a></li>
-  <li><a href="rigidbodies.html">Extended Rigid Bodies</a></li>
-  <li>Miscellanea</li>
-  <li><a href="gifs.html">Making Gifs</a></li>
-  <li><a href="faq.html">Frequently Asked Questions</a></li>
-</ul>
-
-
-
-
+In addition to editing the levels as text files, which is good for small modifications, there's a level editor.  Just click the level editor button in the toolbar and you'll switch to editor mode in-game -
+<p>
+<img src="images/leveleditor.png">
+<p>
+You can left click to select tiles in the toolbar (the tiles are generated from the 1-letter object types defined in the legend and elsewhere - basically anything you can put on a map you is displayed on top in the level editor), and also to pain them in the main window. (Right click, or CTRL/CMD+click to delete).
+<p>
+You can also use the number keys <b>1</b> to <b>0</b> on your keyboard to select tiles.
+<p>
+If you hover to the borders, a + symbol appears
+<p>
+<img src="images/editorplus.png">
+<p>
+If you left click it'll add an extra row/column to that side.  If you right-click, it'll remove one.
+<p>
+<img src="images/editorsave.png">
+<p>
+Click the <b>S</b> button to save the output to your console, where you can paste it back in the level section if you want.  
+<p>
+<img src="images/editoroutput.png">
+<p>
+If you've messed with the map so that it's not in a state that can be converted faithfully into single-character glyphs, the editor will output the closest approximation it can find.
+<p>
     </div><!-- /.container -->
 
 
