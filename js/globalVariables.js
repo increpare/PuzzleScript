@@ -2,10 +2,9 @@ var unitTesting=false;
 var curlevel=0;
 var levelEditorOpened=false;
 
-/*
-if (localStorage.curlevel!==undefined) {
-	curlevel = localStorage["curlevel"];
-}*/
+if (localStorage[document.URL]!==undefined) {
+	curlevel = localStorage[document.URL];
+}
 
 var quittingTitleScreen=false;
 var quittingMessageScreen=false;

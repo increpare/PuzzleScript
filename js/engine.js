@@ -1875,7 +1875,7 @@ function nextLevel() {
 		}		
 		//continue existing game
 	}
-	localStorage.curlevel=curlevel;
+	localStorage[document.URL]=curlevel;
 	canvasResize();	
 	if (canDump===true) {
 		inputHistory=[];
