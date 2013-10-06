@@ -290,7 +290,10 @@ function redraw() {
         var minj=0;
         var maxj=screenheight;
 
-        if (flickscreen) {
+        if (levelEditorOpened) {
+            maxi-=2;
+            maxj-=3;
+        } else if (flickscreen) {
             var playerPositions = getPlayerPositions();
             if (playerPositions.length>0) {
                 var playerPosition=playerPositions[0];
@@ -316,10 +319,7 @@ function redraw() {
                 maxj=Math.min(minj+screenheight,level.height);
             }           
         }
-	    if (levelEditorOpened) {
-	    	maxi-=2;
-	    	maxj-=3;
-	    }
+	    
 
         for (var i = mini; i < maxi; i++) {
             for (var j = minj; j < maxj; j++) {
@@ -415,13 +415,15 @@ function canvasResize() {
     screenwidth=level.width;
     screenheight=level.height;
     if (state!==undefined){
-	     flickscreen=state.metadata.flickscreen!==undefined;
-	    if (flickscreen) {
+        flickscreen=state.metadata.flickscreen!==undefined;
+        zoomscreen=state.metadata.zoomscreen!==undefined;
+	    if (levelEditorOpened) {
+            screenwidth+=2;
+            screenheight+=3;
+        } else if (flickscreen) {
 	        screenwidth=state.metadata.flickscreen[0];
 	        screenheight=state.metadata.flickscreen[1];
-	    }
-	    zoomscreen=state.metadata.zoomscreen!==undefined;
-	    if (zoomscreen) {
+	    } else if (zoomscreen) {
 	        screenwidth=state.metadata.zoomscreen[0];
 	        screenheight=state.metadata.zoomscreen[1];
 	    }
@@ -432,10 +434,7 @@ function canvasResize() {
         screenwidth=titleWidth;
         screenheight=titleHeight;
     }
-    if (levelEditorOpened) {
-    	screenwidth+=2;
-    	screenheight+=3;
-    }
+    
     cellwidth = canvas.width / screenwidth;
     cellheight = canvas.height / screenheight;
 

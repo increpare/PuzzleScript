@@ -121,6 +121,16 @@ A puzzlescript file is divided into 8 sections:
 	<p>
 		<pre><code> late [ LavaGun | ... | Mortal ] -> [ LavaGun | ... | Corpse ]</code></pre>
 	<p>
+  If the compiler was dumb, it would decompile this into something like
+  <p>
+    <pre><code>(92) late [ LavaGun | Mortal ] -> [ LavaGun | Corpse ]
+(92) late [ LavaGun | | Mortal ] -> [ LavaGun | | Corpse ]
+(92) late [ LavaGun | | | Mortal ] -> [ LavaGun | | | Corpse ]
+(92) late [ LavaGun | | | | Mortal ] -> [ LavaGun | | | | Corpse ]
+(92) ... etc.</code></pre>
+  <p>
+  and never finish compiling.
+  <p>
 	A point that might occasionally be relevant : ellipsis-based rules search from smallest to biggest.
 	<h3>Right-hand Side</h3>
 	If we had the following rule

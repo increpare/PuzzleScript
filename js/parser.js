@@ -209,7 +209,11 @@ var codeMirrorFn = function() {
                             logError('section "' + state.section.toUpperCase() + '" must be the first section', state.lineNumber);
                         }
                     } else if (state.visitedSections.indexOf(sectionNames[sectionIndex - 1]) == -1) {
-                        logError('section "' + state.section.toUpperCase() + '" is out of order, must follow  "' + sectionNames[sectionIndex - 1].toUpperCase() + '".', state.lineNumber);
+                        if (sectionIndex===-1) {
+                            logError('no such section as "' + state.section.toUpperCase() + '".', state.lineNumber);
+                        } else {
+                            logError('section "' + state.section.toUpperCase() + '" is out of order, must follow  "' + sectionNames[sectionIndex - 1].toUpperCase() + '".', state.lineNumber);                            
+                        }
                     }
 
                     if (state.section === 'sounds') {
@@ -472,8 +476,13 @@ var codeMirrorFn = function() {
 
                         var match_name = stream.match(reg_name, true);
                         if (match_name === null) {
-                            //then strip spaces and commans
+                            //then strip spaces and commas
+                            var prepos=stream.pos;
                             stream.match(reg_csv_separators, true);
+                            if (stream.pos==prepos) {
+                                logError("error detected - unexpected character " + stream.peek(),state.lineNumber);
+                                stream.next();
+                            }
                             return null;
                         } else {
                             //have a name: let's see if it's valid
