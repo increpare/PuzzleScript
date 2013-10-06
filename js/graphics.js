@@ -129,6 +129,8 @@ var glyphHighlightResize;
 var glyphPrintButton;
 var glyphMouseOver;
 var glyphSelectedIndex=0;
+var editorRowCount=1;
+
 function generateGlyphImages(spritecanvas,spritectx) {
 	glyphImagesCorrespondance=[];
 	glyphImages=[];
@@ -245,6 +247,16 @@ ctx = canvas.getContext('2d');
 x = 0;
 y = 0;
 
+function glyphCount(){
+    var count=0;
+    for (var n in state.glyphDict) {
+        if (n.length==1 && state.glyphDict.hasOwnProperty(n)) {
+            count++;
+        }
+    }    
+    return count;
+}
+
 function redraw() {
     if (textMode) {
         for (var n in textImages) {
@@ -291,8 +303,10 @@ function redraw() {
         var maxj=screenheight;
 
         if (levelEditorOpened) {
+            var glyphcount = glyphCount();
+            editorRowCount = Math.ceil(glyphcount/screenwidth);
             maxi-=2;
-            maxj-=3;
+            maxj-=2+editorRowCount;
         } else if (flickscreen) {
             var playerPositions = getPlayerPositions();
             if (playerPositions.length>0) {
@@ -374,16 +388,18 @@ function drawEditorIcons() {
 	for (var i=0;i<glyphsToDisplay;i++) {
 		var glyphIndex = glyphStartIndex+i;
 		var sprite = glyphImages[glyphIndex];
-		ctx.drawImage(sprite,xoffset+(i)*cellwidth,yoffset-cellheight*2);
+        var xpos = i % screenwidth;
+        var ypos = (i / screenwidth)|0;
+		ctx.drawImage(sprite,xoffset+xpos*cellwidth,yoffset+cellheight*(-2+ypos));    
 		if (mouseCoordY===-2&&mouseCoordX===i) {
-			ctx.drawImage(glyphMouseOver,xoffset+i*cellwidth,yoffset-cellheight*2);						
+			ctx.drawImage(glyphMouseOver,xoffset+xpos*cellwidth,yoffset+cellheight*(-2+ypos));						
 		}
 		if (i===glyphSelectedIndex) {
-			ctx.drawImage(glyphHighlight,xoffset+i*cellwidth,yoffset-cellheight*2);
+			ctx.drawImage(glyphHighlight,xoffset+xpos*cellwidth,yoffset+cellheight*(-2+ypos));
 		} 		
 	}
-	if (mouseCoordX>=-1&&mouseCoordY>=-1&&mouseCoordX<screenwidth-1&&mouseCoordY<screenheight-2) {
-		if (mouseCoordX==-1||mouseCoordY==-1||mouseCoordX==screenwidth-2||mouseCoordY===screenheight-3) {
+	if (mouseCoordX>=-1&&mouseCoordY>=-1&&mouseCoordX<screenwidth-1&&mouseCoordY<screenheight-2-(editorRowCount-1)) {
+		if (mouseCoordX==-1||mouseCoordY==-1||mouseCoordX==screenwidth-2||mouseCoordY===screenheight-2-editorRowCount) {
 			ctx.drawImage(glyphHighlightResize,
 				xoffset+mouseCoordX*cellwidth,
 				yoffset+mouseCoordY*cellheight
@@ -419,7 +435,7 @@ function canvasResize() {
         zoomscreen=state.metadata.zoomscreen!==undefined;
 	    if (levelEditorOpened) {
             screenwidth+=2;
-            screenheight+=3;
+            screenheight+=2+editorRowCount;
         } else if (flickscreen) {
 	        screenwidth=state.metadata.flickscreen[0];
 	        screenheight=state.metadata.flickscreen[1];
@@ -467,7 +483,7 @@ function canvasResize() {
 
     if (levelEditorOpened) {
     	xoffset+=cellwidth;
-    	yoffset+=cellheight*2;
+    	yoffset+=cellheight*(1+editorRowCount);
     }
 
     cellwidth = cellwidth|0;

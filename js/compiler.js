@@ -178,11 +178,15 @@ function generateExtraMembers(state) {
                     if (mask[o.layer] == -1) {
                         mask[o.layer] = o.id;
                     } else {
-                        logError(
-                            'Trying to create an aggregate object (defined in the legend) with both) "'
-                            + n.toUpperCase() + '" and "' + state.idDict[mask[o.layer]].toUpperCase() + '", which are on the same layer and therefore can\'t coexist.',
-                            dat.lineNumber
-                            );
+                    	if (o.layer===undefined) {
+                    		logError('Object "' + n.toUpperCase() + '" has been defined, but not assigned to a layer.',dat.lineNumber);
+                    	} else {                    		
+	                        logError(
+	                            'Trying to create an aggregate object (defined in the legend) with both "'
+	                            + n.toUpperCase() + '" and "' + state.idDict[mask[o.layer]].toUpperCase() + '", which are on the same layer and therefore can\'t coexist.',
+	                            dat.lineNumber
+	                            );
+	                    }
                     }
                 }
                 added=true;
@@ -1678,7 +1682,7 @@ function checkObjectsAreLayered(state) {
 			}
 			if (found===false) {
 				var o = state.objects[n];
-				logError('Object "' + n + '" has been defined, but not assigned to a layer.',o.lineNumber);
+				logError('Object "' + n.toUpperCase() + '" has been defined, but not assigned to a layer.',o.lineNumber);
 			}
 		}
 	}
