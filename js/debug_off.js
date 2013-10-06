@@ -11,10 +11,10 @@ function stripTags(str) {
 }
 
 function consolePrint(str){
-	var errorText = document.getElementById("errormessage");
+/*	var errorText = document.getElementById("errormessage");
 	
 	str=stripTags(str);
-	errorText.innerHTML+=str+"<br>";
+	errorText.innerHTML+=str+"<br>";*/
 }
 
 function consoleError(str,lineNumber){
