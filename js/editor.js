@@ -1,7 +1,5 @@
 var code = document.getElementById('code');
 var _editorDirty = false;
-
-
 var fileToOpen=getParameterByName("demo");
 if (fileToOpen!==null&&fileToOpen.length>0) {
 	tryLoadFile(fileToOpen);
@@ -41,7 +39,6 @@ editor.on('mousedown', function(cm, event) {
     }
   }
 });
-
 
 function setEditorDirty() {
 	if (_editorDirty===false){
@@ -151,3 +148,4 @@ function dropdownChange() {
 	tryLoadFile(this.value);
 	this.selectedIndex=0;
 }
+
