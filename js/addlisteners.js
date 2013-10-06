@@ -13,3 +13,19 @@ if (el.addEventListener) {
     el.attachEvent('onmousemove', mouseMove);
     el.attachEvent('onmouseout', mouseOut);
 }  
+
+window.onbeforeunload = function (e) {
+	var e = e || window.event;
+	var msg = 'You have unsaved changes!';
+
+	if(_editorDirty) {			
+
+		// For IE and Firefox prior to version 4
+		if (e) {
+			e.returnValue = msg;
+		}
+
+		// For Safari
+		return msg;
+	}
+};
