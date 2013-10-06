@@ -45,6 +45,8 @@ function saveClick() {
 	var loadDropdown = document.getElementById('loadDropDown');
 	loadDropdown.selectedIndex=0;
 
+	setEditorClean();
+
 	consolePrint("saved file to local storage");
 }
 
@@ -62,8 +64,10 @@ function loadDropDownChange() {
 		var sd = saves[i];
 	    var key = dateToReadable(sd.title,new Date(sd.date));
 	    if (key==this.value) {
+
 	    	var saveText = sd.text;
 			editor.setValue(saveText);
+			setEditorClean();
 			var loadDropdown = document.getElementById('loadDropDown');
 			loadDropdown.selectedIndex=0;
 			unloadGame();

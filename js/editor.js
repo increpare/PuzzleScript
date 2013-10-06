@@ -1,4 +1,6 @@
 var code = document.getElementById('code');
+var _editorDirty = false;
+
 
 var fileToOpen=getParameterByName("demo");
 if (fileToOpen!==null&&fileToOpen.length>0) {
@@ -38,6 +40,34 @@ editor.on('mousedown', function(cm, event) {
       compile(["levelline",cm.posFromMouse(event).line]);      
     }
   }
+});
+
+
+function setEditorDirty() {
+	if (_editorDirty===false){
+	  _editorDirty = true;
+
+	  var saveLink = document.getElementById('saveClickLink');
+	  if(saveLink) {
+	    saveLink.innerHTML = 'SAVE*';
+	  }
+	}
+}
+
+function setEditorClean() {
+	if (_editorDirty===true) {
+		var saveLink = document.getElementById('saveClickLink');
+		if(saveLink) {
+			saveLink.innerHTML = 'SAVE';
+		}
+		_editorDirty = false;
+	}
+}
+
+/* https://github.com/ndrake/PuzzleScript/commit/de4ac2a38865b74e66c1d711a25f0691079a290d */
+editor.on('change', function(cm, changeObj) {
+  // editor is dirty
+  setEditorDirty();
 });
 
 var mapObj = {
@@ -91,6 +121,7 @@ function tryLoadGist(id) {
 		} else {
 			var code=result["files"]["script.txt"]["content"];
 			editor.setValue(code);
+			setEditorClean();
 			unloadGame();
 			compile(["restart"],code);
 		}
@@ -109,6 +140,7 @@ function tryLoadFile(fileName) {
   		}
   		
 		editor.setValue(fileOpenClient.responseText);
+		setEditorClean();
 		unloadGame();
 		compile(["restart"]);
 	}
