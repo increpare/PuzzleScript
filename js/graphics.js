@@ -304,7 +304,7 @@ function redraw() {
 
         if (levelEditorOpened) {
             var glyphcount = glyphCount();
-            editorRowCount = Math.ceil(glyphcount/screenwidth);
+            editorRowCount = Math.ceil(glyphcount/(screenwidth-1));
             maxi-=2;
             maxj-=2+editorRowCount;
         } else if (flickscreen) {
@@ -380,25 +380,28 @@ function drawEditorIcons() {
 							);*/
 	var glyphsToDisplay = glyphEndIndex-glyphStartIndex;
 
-	ctx.drawImage(glyphPrintButton,xoffset-cellwidth,yoffset-cellheight*2);
-	if (mouseCoordY===-2&&mouseCoordX===-1) {
-			ctx.drawImage(glyphMouseOver,xoffset-cellwidth,yoffset-cellheight*2);								
+	ctx.drawImage(glyphPrintButton,xoffset-cellwidth,yoffset-cellheight*(1+editorRowCount));
+	if (mouseCoordY===(-1-editorRowCount)&&mouseCoordX===-1) {
+			ctx.drawImage(glyphMouseOver,xoffset-cellwidth,yoffset-cellheight*(1+editorRowCount));								
 	}
+
+	var ypos = editorRowCount-(-mouseCoordY-2)-1;
+	var mouseIndex=mouseCoordX+(screenwidth-1)*ypos;
 
 	for (var i=0;i<glyphsToDisplay;i++) {
 		var glyphIndex = glyphStartIndex+i;
 		var sprite = glyphImages[glyphIndex];
-        var xpos = i % screenwidth;
-        var ypos = (i / screenwidth)|0;
-		ctx.drawImage(sprite,xoffset+xpos*cellwidth,yoffset+cellheight*(-2+ypos));    
-		if (mouseCoordY===-2&&mouseCoordX===i) {
-			ctx.drawImage(glyphMouseOver,xoffset+xpos*cellwidth,yoffset+cellheight*(-2+ypos));						
+        var xpos=i%(screenwidth-1);
+        var ypos=(i/(screenwidth-1))|0;
+		ctx.drawImage(sprite,xoffset+(xpos)*cellwidth,yoffset+ypos*cellheight-cellheight*(1+editorRowCount));
+		if (mouseCoordX>=0&&mouseCoordX<(screenwidth-1)&&mouseIndex===i) {
+			ctx.drawImage(glyphMouseOver,xoffset+xpos*cellwidth,yoffset+ypos*cellheight-cellheight*(1+editorRowCount));						
 		}
 		if (i===glyphSelectedIndex) {
-			ctx.drawImage(glyphHighlight,xoffset+xpos*cellwidth,yoffset+cellheight*(-2+ypos));
+			ctx.drawImage(glyphHighlight,xoffset+xpos*cellwidth,yoffset+ypos*cellheight-cellheight*(1+editorRowCount));
 		} 		
 	}
-	if (mouseCoordX>=-1&&mouseCoordY>=-1&&mouseCoordX<screenwidth-1&&mouseCoordY<screenheight-2-(editorRowCount-1)) {
+	if (mouseCoordX>=-1&&mouseCoordY>=-1&&mouseCoordX<screenwidth-1&&mouseCoordY<screenheight-1-editorRowCount) {
 		if (mouseCoordX==-1||mouseCoordY==-1||mouseCoordX==screenwidth-2||mouseCoordY===screenheight-2-editorRowCount) {
 			ctx.drawImage(glyphHighlightResize,
 				xoffset+mouseCoordX*cellwidth,
@@ -435,6 +438,8 @@ function canvasResize() {
         zoomscreen=state.metadata.zoomscreen!==undefined;
 	    if (levelEditorOpened) {
             screenwidth+=2;
+            var glyphcount = glyphCount();
+            editorRowCount = Math.ceil(glyphcount/(screenwidth-1));
             screenheight+=2+editorRowCount;
         } else if (flickscreen) {
 	        screenwidth=state.metadata.flickscreen[0];

@@ -211,15 +211,17 @@ function printLevel() {
 }
 
 function levelEditorClick(event,click) {
-	if (mouseCoordY===-2) {
+	if (mouseCoordY<=-2) {
+		var ypos = editorRowCount-(-mouseCoordY-2)-1;
+		var newindex=mouseCoordX+(screenwidth-1)*ypos;
 		if (mouseCoordX===-1) {
 			printLevel();
-		} else if (mouseCoordX>=0&&mouseCoordX<glyphImages.length) {
-			glyphSelectedIndex=mouseCoordX;
+		} else if (mouseCoordX>=0&&newindex<glyphImages.length) {
+			glyphSelectedIndex=newindex;
 			redraw();
 		}
 
-	} else if (mouseCoordX>-1&&mouseCoordY>-1&&mouseCoordX<screenwidth-2&&mouseCoordY<screenheight-3	) {
+	} else if (mouseCoordX>-1&&mouseCoordY>-1&&mouseCoordX<screenwidth-2&&mouseCoordY<screenheight-2-editorRowCount	) {
 		var glyphname = glyphImagesCorrespondance[glyphSelectedIndex];
 		var glyph = state.glyphDict[glyphname];
 		var glyphmask = 1<<state.backgroundid;
@@ -246,7 +248,7 @@ function levelEditorClick(event,click) {
 		if (mouseCoordY===-1) {
 			addTopRow();
 			canvasResize();
-		} else if (mouseCoordY===screenheight-3) {
+		} else if (mouseCoordY===screenheight-2-editorRowCount) {
 			addBottomRow();
 			canvasResize();
 		}
@@ -259,7 +261,7 @@ function levelEditorRightClick(event,click) {
 			glyphSelectedIndex=mouseCoordX;
 			redraw();
 		}
-	} else if (mouseCoordX>-1&&mouseCoordY>-1&&mouseCoordX<screenwidth-2&&mouseCoordY<screenheight-3	) {
+	} else if (mouseCoordX>-1&&mouseCoordY>-1&&mouseCoordX<screenwidth-2&&mouseCoordY<screenheight-2-editorRowCount	) {
 		var glyphname = glyphImagesCorrespondance[glyphSelectedIndex];
 		var glyph = state.glyphDict[glyphname];
 		var glyphmask = 1<<state.backgroundid;
@@ -279,7 +281,7 @@ function levelEditorRightClick(event,click) {
 		if (mouseCoordY===-1) {
 			removeTopRow();
 			canvasResize();
-		} else if (mouseCoordY===screenheight-3) {
+		} else if (mouseCoordY===screenheight-2-editorRowCount) {
 			removeBottomRow();
 			canvasResize();
 		}
