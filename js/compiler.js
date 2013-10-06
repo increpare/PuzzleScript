@@ -2136,7 +2136,7 @@ function compile(command,text) {
 
 		var editor = code.editorreference;
 
-		text = editor.getValue();
+		text = editor.getValue()+"\n";
 	}
 	if (canDump===true) {
 		compiledText=text;

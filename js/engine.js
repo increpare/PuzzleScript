@@ -755,18 +755,6 @@ function repositionEntitiesOnLayer(positionIndex,layer,dirMask)
     var sourceMask = level.dat[positionIndex];
 
     if (collision!=0) {
-
-		for (var i=0;i<state.sfx_MovementFailureMasks.length;i++) {
-			var o = state.sfx_MovementFailureMasks[i];
-			var objectMask = o.objectMask;
-			if ((objectMask&sourceMask)!==0) {
-				var movementMask = level.movementMask[positionIndex];
-				var directionMask = o.directionMask;
-				if ((movementMask&directionMask)!==0 && seedsToPlay_CantMove.indexOf(o.seed)===-1) {
-					seedsToPlay_CantMove.push(o.seed);
-				}
-			}
-		}
         return false;
     }
     var movingEntities = sourceMask&layerMask;
@@ -795,7 +783,7 @@ function randomDir() {
 
 var randomDirMask = parseInt('00101', 2);
 
-function repositionEntiteisAtCell(positionIndex) {
+function repositionEntitiesAtCell(positionIndex) {
     var movementMask = level.movementMask[positionIndex];
     //assumes not zero
     //for each layer
@@ -1517,7 +1505,7 @@ function resolveMovements(dir){
             var movementMask = level.movementMask[i];
              if (movementMask!=0)
              {
-                 moved = repositionEntiteisAtCell(i) || moved;
+                 moved = repositionEntitiesAtCell(i) || moved;
             }
         }
     }
@@ -1525,6 +1513,7 @@ function resolveMovements(dir){
 
     for (var i=0;i<level.movementMask.length;i++) {
 
+    	var cellMask = level.dat[i];
     	var movementMask = level.movementMask[i];
     	if (movementMask!==0) {
     		var rigidMovementAppliedMask = level.rigidMovementAppliedMask[i];
@@ -1546,7 +1535,19 @@ function resolveMovements(dir){
     				}
     			}
     		}
+
+			for (var j=0;j<state.sfx_MovementFailureMasks.length;j++) {
+				var o = state.sfx_MovementFailureMasks[j];
+				var objectMask = o.objectMask;
+				if ((objectMask&cellMask)!==0) {
+					var directionMask = o.directionMask;
+					if ((movementMask&directionMask)!==0 && seedsToPlay_CantMove.indexOf(o.seed)===-1) {
+						seedsToPlay_CantMove.push(o.seed);
+					}
+				}
+			}
     	}
+
         level.movementMask[i]=0;
         level.rigidGroupIndexMask[i]=0;
         level.rigidMovementAppliedMask[i]=0;
