@@ -7,7 +7,7 @@ key_repeat_interval 0.25
 OBJECTS
 ========
 
-Background 
+Background
 #AAAAAA #DDDDDD
 00000
 00100
@@ -15,7 +15,7 @@ Background
 00010
 00000
 
-Goal 
+Goal
 Brown Yellow
 .000.
 00000
@@ -31,7 +31,7 @@ Darkgrey #222222
 00010
 11111
 
-Fighter 
+Fighter
 #FF4444 Pink DarkBrown
 .000.
 .111.
@@ -55,7 +55,7 @@ Thief
 .0.0.
 .0.0.
 
-SFighter 
+SFighter
 #880000 Pink DarkBrown
 .000.
 .111.
@@ -80,7 +80,7 @@ SThief
 .0.0.
 
 
-Crate 
+Crate
 Orange #552200
 .111.
 10001
@@ -192,10 +192,10 @@ Goal, Switch, OpenDoor, ShadowDoor
 ClosedDoor, Hero, Crate, Wall
 
 ======
-RULES     
-======     
+RULES
+======
 
-[ >  Fighter | Moveable ] -> [  >  Fighter | > Moveable  ]     
+[ >  Fighter | Moveable ] -> [  >  Fighter | > Moveable  ]
 [ > Moveable | Moveable ] [ Fighter] -> [ > Moveable | > Moveable ] [ Fighter]
 
 [ < Thief | Moveable ] -> [ < Thief | < Moveable ]
@@ -228,10 +228,10 @@ late [ShadowDoor] -> [PurpleOpen sfx3]
 WINCONDITIONS
 ==============
 
-All Hero on Goal     
+All Hero on Goal
 All Goal on Hero
 
-=======     
+=======
 LEVELS
 =======
 
@@ -251,7 +251,7 @@ Message Red warrior pushes blocks.
 #...#.*.#.*.#
 #############
 
-Message Hold down switches to open doors. 
+Message Hold down switches to open doors.
 
 #############
 #...#...#...#
@@ -304,7 +304,7 @@ Message Blue wizard teleports to blocks.
 #############
 
 #########
-#.....#G# 
+#.....#G#
 #.#*..#[#
 #.**.W..#
 #.......#

@@ -6,7 +6,7 @@ homepage www.lexaloffle.com
 OBJECTS
 ========
 
-Background 
+Background
 White LightBlue
 00000
 01110
@@ -15,7 +15,7 @@ White LightBlue
 00000
 
 
-Wall     
+Wall
 DarkBlue Black DarkGray LightGray White
 23330
 22300
@@ -23,7 +23,7 @@ DarkBlue Black DarkGray LightGray White
 21110
 11111
 
-Player 
+Player
 Yellow Orange Red White LightBrown
 20002
 01130
@@ -72,11 +72,11 @@ Background
 Player, Wall, GrayBlock, LitBlock
 
 ======
-RULES     
-======     
+RULES
+======
 
 [ > Player | Wall ] -> cancel
-late [ Player | GrayBlock ] -> [ Player | Player ]   
+late [ Player | GrayBlock ] -> [ Player | Player ]
 
 ==============
 WINCONDITIONS
@@ -84,7 +84,7 @@ WINCONDITIONS
 
 No GrayBlock
 
-=======     
+=======
 LEVELS
 =======
 
@@ -185,7 +185,7 @@ LEVELS
 ###########o
 #....p....##
 #....p.....#
-#...ppp....# 
+#...ppp....#
 #ppppppppp.#
 #...ppp....#
 #..ppppp...#

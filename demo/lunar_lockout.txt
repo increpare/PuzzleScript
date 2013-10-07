@@ -8,40 +8,40 @@ OBJECTS
 Background
 Black
 
-Square 
+Square
 LightGray Gray
-11111 
+11111
 10001
 10001
 10001
-11111     
+11111
 
 Space
 Black
 
-Target 
+Target
 Red
-..... 
+.....
 .000.
 .0.0.
 .000.
-.....     
+.....
 
 Soldier
 DarkBlue LightGray Gray
-11111 
+11111
 10001
 10201
 10001
-11111     
+11111
 
 Captain
 Green LightGray Gray
-11111 
+11111
 10001
 10201
 10001
-11111     
+11111
 
 Player
 Orange
@@ -83,8 +83,8 @@ Pawn, Captain
 Player
 
 ======
-RULES     
-======     
+RULES
+======
 
 [ > Player | Space ] -> [ Player | Space ]
 [ > Player Pawn ] -> [ Player > Pawn ]
@@ -96,9 +96,9 @@ RULES
 WINCONDITIONS
 ==============
 
-some Captain on Target     
+some Captain on Target
 
-=======     
+=======
 LEVELS
 =======
 

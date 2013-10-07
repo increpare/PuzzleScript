@@ -5,7 +5,7 @@ homepage www.increpare.com
 background_color orange
 text_color darkblue
 
-color_palette mastersystem  
+color_palette mastersystem
 
 run_rules_on_level_start
 require_player_movement
@@ -19,11 +19,11 @@ OBJECTS
 Background
 blue
 
-Void 
+Void
 orange
 
-Player 
-lightblue     
+Player
+lightblue
 
 Whale
 brown
@@ -33,7 +33,7 @@ brown
 00000
 00000
 
-Wall     
+Wall
 black
 00000
 0...0
@@ -92,8 +92,8 @@ HBeam
 VBeam
 
 ======
-RULES     
-======     
+RULES
+======
 
 (while we allow whales to move onto the void, player's aren't)
 [ > player | void ] -> [ player | void ]
@@ -122,7 +122,7 @@ WINCONDITIONS
 
 No Whale
 
-=======     
+=======
 LEVELS
 =======
 

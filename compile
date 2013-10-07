@@ -1,6 +1,10 @@
 #!/bin/bash 
 echo ===========================
 start=`date +%s`
+echo clearing whitepsace from demos
+cd demo
+find . -type f \( -name "*.txt" \) -exec perl -p -i -e "s/[ \t]*$//g" {} \;
+cd ..
 echo removing bin
 rm -rf ../bin
 mkdir ../bin

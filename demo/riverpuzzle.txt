@@ -6,16 +6,16 @@ homepage www.puzzlescript.net
 OBJECTS
 ========
 
-Grass 
+Grass
 #559922 GREEN
 11111
 01111
 11101
-11111     
-10111   
+11111
+10111
 
 
-Player 
+Player
 Yellow
 00.00
 0...0
@@ -150,8 +150,8 @@ Carrot, Rabbit, Fox, Dude
 Player
 
 ======
-RULES     
-======     
+RULES
+======
 
 (Loading the boat)
 [ action Player Object Platform ] [ EmptyBoat no Object ] -> [ Player Platform ] [ EmptyBoat Object ] sfx2
@@ -184,7 +184,7 @@ late [ LeftB Dude ] [ RightB Carrot ] [ RightB Rabbit ] -> [ LeftB Dude ] [ Righ
 WINCONDITIONS
 ==============
 
-=======     
+=======
 LEVELS
 =======
 

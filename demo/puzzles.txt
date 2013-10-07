@@ -2,8 +2,8 @@ title Puzzles
 author Stephen Lavelle
 homepage www.puzzlescript.net
 
-( 
-Unfortunately, just the first level - trying to emulate the later ones proved too complex :[  
+(
+Unfortunately, just the first level - trying to emulate the later ones proved too complex :[
 
 You can play the original game here:
 http://www.increpare.com/2012/06/puzzles/
@@ -22,12 +22,12 @@ OBJECTS
 DyingPlayer
 Black
 
-Void 
+Void
 White
 
-OBackground 
+OBackground
 Orange
-  
+
 GBackground
 LightGrey
 
@@ -109,7 +109,7 @@ yellow
 .000.
 .....
 
-GreyPlayer 
+GreyPlayer
 DarkGrey
 .....
 .000.
@@ -192,8 +192,8 @@ UpBeam, DownBeam
 LeftBeam, RightBeam
 
 ======
-RULES     
-======     
+RULES
+======
 
 
 left [ LeftBeam | < Player ] -> [ LeftBeam | Player ]
@@ -201,10 +201,10 @@ right [ RightBeam | < Player ] -> [ RightBeam | Player ]
 up [ UpBeam | < Player ] -> [ UpBeam | Player ]
 down [ DownBeam | < Player ] -> [ DownBeam | Player ]
 
-right [ RightBeam | stationary Pushable ] -> [ RightBeam | > Pushable ] 
-left [ LeftBeam | stationary Pushable ] -> [ LeftBeam | > Pushable ] 
-up [ UpBeam | stationary Pushable ] -> [ UpBeam | > Pushable ] 
-down [ DownBeam | stationary Pushable ] -> [ DownBeam | > Pushable ] 
+right [ RightBeam | stationary Pushable ] -> [ RightBeam | > Pushable ]
+left [ LeftBeam | stationary Pushable ] -> [ LeftBeam | > Pushable ]
+up [ UpBeam | stationary Pushable ] -> [ UpBeam | > Pushable ]
+down [ DownBeam | stationary Pushable ] -> [ DownBeam | > Pushable ]
 
 [ Whale | stationary Pushable ] -> [ Whale | > Pushable ]
 
@@ -212,7 +212,7 @@ down [ DownBeam | stationary Pushable ] -> [ DownBeam | > Pushable ]
 [ Beam ] -> []
 
 
-[ >  Player | Crate ] -> [  >  Player | > Crate  ]   
+[ >  Player | Crate ] -> [  >  Player | > Crate  ]
 [ > Crate | stationary Crate ] -> [ > Crate | > Crate ]
 
 ( using red/greypushable is an optimization - cuts down on unecessary rules by quite a lot, beause red and grey things never coexist)
@@ -243,11 +243,11 @@ late [ DyingPlayer ] [ RedCrate ] -> [ DyingPlayer ] [ GreyCrate ]
 late [ DyingPlayer ] [ RedStartPoint ] -> [ DyingPlayer ] [ GreyStartPoint ]
 late [ DyingPlayer ] [ RedEndPoint ] -> [ DyingPlayer ] [ GreyEndPoint ]
 late [ DyingPlayer ] [ OBackground ] -> [ DyingPlayer ] [ GBackground ]
-late [ DyingPlayer ] -> [ GreyPlayer ] 
+late [ DyingPlayer ] -> [ GreyPlayer ]
 
 late [DyingPlayer] -> [GreyPlayer]
 
-(LIFE TRANSITION) 
+(LIFE TRANSITION)
 late [ GreyPlayer GreyStartPoint ] [ GreyWall ] -> [ GreyPlayer GreyStartPoint ] [ BlueWall ]
 late [ GreyPlayer GreyStartPoint ] [ GreyCrate ] -> [ GreyPlayer GreyStartPoint ] [ RedCrate ]
 late [ GreyPlayer GreyStartPoint ] [ GreyWhale ] -> [ GreyPlayer GreyStartPoint ] [ RedWhale ]
@@ -264,7 +264,7 @@ WINCONDITIONS
 
 All Player on RedEndPoint
 
-=======     
+=======
 LEVELS
 =======
 

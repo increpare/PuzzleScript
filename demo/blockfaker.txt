@@ -36,8 +36,8 @@ gray
 EndPoint
 Green
 
-Player 
-Black     
+Player
+Black
 00000
 00000
 0.0.0
@@ -132,8 +132,8 @@ Grille
 Player, Wall, WallBlock, PinkBlock, BlueBlock, PurpleBlock, OrangeBlock, GreenBlock
 
 ======
-RULES     
-======     
+RULES
+======
 
 [ >  Moveable | Moveable ] -> [ > Moveable | > Moveable ]
 
@@ -149,7 +149,7 @@ late [ GreenBlock | GreenBlock | GreenBlock ] -> [ | | ]
 WINCONDITIONS
 ==============
 some player on endpoint
-=======     
+=======
 LEVELS
 =======
 

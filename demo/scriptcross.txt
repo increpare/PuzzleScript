@@ -6,7 +6,7 @@ homepage www.puzzlescript.net
 OBJECTS
 ========
 
-Background 
+Background
 White
 
 Target
@@ -140,11 +140,11 @@ Player
 
 
 ======
-RULES     
+RULES
 ======
 
 [Action Player no NoEmpty] -> [Player Fill]
-[Action Player Fill] -> [Player Cross]  
+[Action Player Fill] -> [Player Cross]
 [Action Player Cross] -> [Player]
 
 
@@ -156,7 +156,7 @@ WINCONDITIONS
 All Target on Fill
 All Fill on Target
 
-=======     
+=======
 LEVELS
 =======
 

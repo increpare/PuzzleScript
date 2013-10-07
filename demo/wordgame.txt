@@ -8,14 +8,14 @@ homepage www.sarahnorthway.com
 OBJECTS
 ========
 
-Background 
-pink  
+Background
+pink
 
-Wall 
+Wall
 grey
 
-Player 
-Blue   
+Player
+Blue
 
 Won
 yellow
@@ -28,7 +28,7 @@ white black
 1....
 .111.
 
-LetterA 
+LetterA
 white black
 .111.
 1...1
@@ -70,8 +70,8 @@ Won
 Player, Wall, Letter
 
 ======
-RULES     
-======     
+RULES
+======
 
 [ >  Player | Letter ] -> [  >  Player | > Letter  ]
 [ <  Player | Letter ] -> [  <  Player | < Letter  ]
@@ -85,7 +85,7 @@ WINCONDITIONS
 
 Some Won
 
-=======     
+=======
 LEVELS
 =======
 

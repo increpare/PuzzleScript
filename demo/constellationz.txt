@@ -2,7 +2,7 @@ title constellation z
 author stephen lavelle
 homepage www.increpare.com
 
-(a port of the first few levels of my game, the full version of which is 
+(a port of the first few levels of my game, the full version of which is
 http://ded.increpare.com/~locus/constellationz/
 )
 
@@ -13,10 +13,10 @@ OBJECTS
 Background
 Black
 
-BorderTile 
+BorderTile
 Red
 
-Teleport 
+Teleport
 white
 
 target
@@ -27,8 +27,8 @@ blue
 .000.
 .....
 
-Player 
-PINK     
+Player
+PINK
 .....
 .000.
 .000.
@@ -66,8 +66,8 @@ Teleport,BorderTile, target
 Player, AltPlayer
 
 ======
-RULES     
-======     
+RULES
+======
 
 late [ player Teleport ] -> [ altplayer Teleport ] sfx1
 
@@ -84,7 +84,7 @@ some player
 all player on target
 all target on player
 
-=======     
+=======
 LEVELS
 =======
 

@@ -8,23 +8,23 @@ OBJECTS
 
 
 Background  (special, automatically placed in its own layer)
-GREEN darkgreen 
+GREEN darkgreen
 11111
 01111
 11101
 11111
 10111
 
-Spawner  (Name)     
+Spawner  (Name)
 YELLOW (Color)
 ..... (Sprite)
 ..0..
 .000.
 ..0..
-.....     
+.....
 
 Player    (Required by game)
-PINK     
+PINK
 ..0..
 00000
 ..0..
@@ -79,8 +79,8 @@ Spawner
 Player, Robot
 
 ======
-RULES     
-======     
+RULES
+======
 
 up [ Robot ] -> [randomDir Robot]
 up [ Spawner no Obstacle ] -> [ Spawner random Robot ]
@@ -88,7 +88,7 @@ up [ Spawner no Obstacle ] -> [ Spawner random Robot ]
 WINCONDITIONS
 ==============
 
-=======     
+=======
 LEVELS
 =======
 

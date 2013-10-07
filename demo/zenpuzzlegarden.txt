@@ -2,7 +2,7 @@ title Zen Puzzle Garden
 author lexaloffle
 homepage www.lexaloffle.com
 
-( 
+(
 
 A replication, with some really bad levels, of the rather superior Zen Puzzle Garden.  Made with permission of the unfailingly lovely Joseph White.
 
@@ -14,7 +14,7 @@ http://www.lexaloffle.com/zen.htm
 OBJECTS
 ========
 
-Background 
+Background
 orange brown
 00100
 00000
@@ -22,7 +22,7 @@ orange brown
 10000
 00000
 
-Player 
+Player
 white black
 .0.0.
 01010
@@ -30,7 +30,7 @@ white black
 .000.
 11.11
 
-Rock 
+Rock
 grey darkgrey yellow
 21002
 11000
@@ -39,7 +39,7 @@ grey darkgrey yellow
 11101
 
 
-UnbrushedSand 
+UnbrushedSand
 yellow orange
 00000
 01000
@@ -93,14 +93,14 @@ Sand
 Player, Rock
 
 ======
-RULES     
-======     
+RULES
+======
 
 
 (the h and v sand effects are cosmetic - how could this be done in a single line if there was only one type brushed sand? )
 
 Horizontal [ UnbrushedSand >  Player  ] -> [ HBrushedSand > Player ]
-Vertical [ UnbrushedSand > Player ] -> [ VBrushedSand > Player ] 
+Vertical [ UnbrushedSand > Player ] -> [ VBrushedSand > Player ]
 
 late [ Player BrushedSand ] -> cancel
 
@@ -109,7 +109,7 @@ WINCONDITIONS
 ==============
 no UnbrushedSand
 
-=======     
+=======
 LEVELS
 =======
 

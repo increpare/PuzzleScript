@@ -9,11 +9,11 @@ OBJECTS
 Background
 darkgreen
 
-Target 
+Target
 YELLOW
 
-Player 
-PINK     
+Player
+PINK
 
 RedCrate q
 RED
@@ -21,7 +21,7 @@ RED
 GreenCrate w
 Green
 
-BlueCrate e 
+BlueCrate e
 Blue
 
 SmallCrate r
@@ -32,8 +32,8 @@ Purple
 .000.
 .....
 
-Wall     
-DARKBROWN     
+Wall
+DARKBROWN
 
 =======
 LEGEND
@@ -59,25 +59,25 @@ Target
 Player, Wall, Crate
 
 ======
-RULES     
-======     
+RULES
+======
 
 startloop
 
 [ > Player | Smallcrate ] -> [ > Player | > SmallCrate ]
 
-[ >  Player | RedCrate ] -> [  >  Player | > RedCrate  ] 
+[ >  Player | RedCrate ] -> [  >  Player | > RedCrate  ]
 + rigid [ moving RedCrate | RedCrate ] -> [ moving RedCrate | moving RedCrate ]
-+ [ >  Crate | RedCrate ] -> [  >  Crate | > RedCrate  ] 
++ [ >  Crate | RedCrate ] -> [  >  Crate | > RedCrate  ]
 
-[ >  Player | GreenCrate ] -> [  >  Player | > GreenCrate  ] 
+[ >  Player | GreenCrate ] -> [  >  Player | > GreenCrate  ]
 + rigid [ moving GreenCrate | GreenCrate ] -> [ moving GreenCrate | moving GreenCrate ]
-+ [ >  Crate | GreenCrate ] -> [  >  Crate | > GreenCrate  ] 
++ [ >  Crate | GreenCrate ] -> [  >  Crate | > GreenCrate  ]
 
 
-[ >  Player | BlueCrate ] -> [  >  Player | > BlueCrate  ] 
+[ >  Player | BlueCrate ] -> [  >  Player | > BlueCrate  ]
 + rigid [ moving BlueCrate | BlueCrate ] -> [ moving BlueCrate | moving BlueCrate ]
-+ [ >  Crate | BlueCrate ] -> [  >  Crate | > BlueCrate  ] 
++ [ >  Crate | BlueCrate ] -> [  >  Crate | > BlueCrate  ]
 
 [ > Crate | SmallCrate ] -> [  > Crate | > SmallCrate ]
 
@@ -87,7 +87,7 @@ endloop
 WINCONDITIONS
 ==============
 
-=======     
+=======
 LEVELS
 =======
 

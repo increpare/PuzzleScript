@@ -6,33 +6,33 @@ homepage www.puzzlescript.net
 OBJECTS
 ========
 
-Background 
+Background
 LIGHTGREEN GREEN
 11111
 01111
 11101
-11111     
-10111   
+11111
+10111
 
 
-Target 
-DarkBlue 
-..... 
+Target
+DarkBlue
+.....
 .000.
 .0.0.
 .000.
-.....     
+.....
 
-Wall     
-BROWN DARKBROWN     
+Wall
+BROWN DARKBROWN
 00010
 11111
 01000
 11111
 00010
 
-Player 
-Black Orange White Blue     
+Player
+Black Orange White Blue
 .000.
 .111.
 22222
@@ -48,7 +48,7 @@ Orange
 00000
 
 LittleBlock
-Orange 
+Orange
 .....
 .000.
 .0.0.
@@ -81,15 +81,15 @@ Target
 Player, Wall, BigBlock, LittleBlock
 
 ======
-RULES     
-======     
+RULES
+======
 
 [ > Player | LittleBlock ] -> [ > Player | > LittleBlock ]
 
 [ > LittleBlock | LittleBlock ] -> [ > LittleBlock | > LittleBlock ]
 
 rigid [ > LittleBlock | BigBlock ] -> [ > LittleBlock | > BigBlock ]
-+ rigid [ >  Player | BigBlock ] -> [  >  Player | > BigBlock  ] 
++ rigid [ >  Player | BigBlock ] -> [  >  Player | > BigBlock  ]
 + rigid [ moving BigBlock | BigBlock ] -> [ moving BigBlock | moving BigBlock ]
 + [ > BigBlock | LittleBlock ] -> [ > BigBlock | > LittleBlock ]
 
@@ -97,7 +97,7 @@ rigid [ > LittleBlock | BigBlock ] -> [ > LittleBlock | > BigBlock ]
 WINCONDITIONS
 ==============
 
-=======     
+=======
 LEVELS
 =======
 
