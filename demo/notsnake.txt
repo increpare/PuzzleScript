@@ -9,10 +9,10 @@ require_player_movement
 OBJECTS
 ========
 
-Background 
+Background
 blue
 
-Player 
+Player
 lightblue
 
 Trail
@@ -24,7 +24,7 @@ LEGEND
 =======
 
 . = Background
-P = Player 
+P = Player
 O = Trail
 
 =======
@@ -45,8 +45,8 @@ Trail
 Player
 
 ======
-RULES     
-======     
+RULES
+======
 
 [ > Player | No Trail ] -> [ Trail | Player ] sfx0
 [ > Player | Trail ] -> [  | Player ] sfx1
@@ -57,7 +57,7 @@ WINCONDITIONS
 
 No Trail
 
-=======     
+=======
 LEVELS
 =======
 

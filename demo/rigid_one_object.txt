@@ -9,17 +9,17 @@ OBJECTS
 Background
 brown
 
-Target 
+Target
 YELLOW
 
-Player 
-PINK     
+Player
+PINK
 
 BigBlock
 darkblue
 
-Wall     
-darkbrown     
+Wall
+darkbrown
 
 =======
 LEGEND
@@ -45,17 +45,17 @@ Target
 Player, Wall, BigBlock
 
 ======
-RULES     
-======     
+RULES
+======
 
-rigid [ >  Player | BigBlock ] -> [  >  Player | > BigBlock  ] 
+rigid [ >  Player | BigBlock ] -> [  >  Player | > BigBlock  ]
 + rigid [ moving BigBlock | BigBlock ] -> [ moving BigBlock | moving BigBlock ]
 
 ==============
 WINCONDITIONS
 ==============
 
-=======     
+=======
 LEVELS
 =======
 

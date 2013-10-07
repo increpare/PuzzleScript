@@ -9,40 +9,40 @@ OBJECTS
 Temp
 black
 
-Background 
+Background
 LIGHTGREEN GREEN
 11111
 01111
 11101
-11111     
-10111   
+11111
+10111
 
 
-Target 
-DarkBlue 
-..... 
+Target
+DarkBlue
+.....
 .000.
 .0.0.
 .000.
-.....     
+.....
 
-Wall     
-BROWN DARKBROWN     
+Wall
+BROWN DARKBROWN
 00010
 11111
 01000
 11111
 00010
 
-Player 
-Black Orange White Blue     
+Player
+Black Orange White Blue
 .000.
 .111.
 22222
 .333.
 .3.3.
 
-Sprite 
+Sprite
 Pink Blue Red
 .....
 .000.
@@ -76,8 +76,8 @@ Target
 Player, Wall, Sprite
 
 ======
-RULES     
-======     
+RULES
+======
 
 late [ Sprite | ... | Player ] -> [ Temp | ... | Sprite ]
 late [ Temp ] -> [ Player ]
@@ -86,7 +86,7 @@ late [ Temp ] -> [ Player ]
 WINCONDITIONS
 ==============
 
-=======     
+=======
 LEVELS
 =======
 

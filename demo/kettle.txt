@@ -16,8 +16,8 @@ OBJECTS
 Background
 darkgray
 
-Target 
-yellow 
+Target
+yellow
 00000
 0...0
 0...0
@@ -27,31 +27,31 @@ yellow
 
 UPolice
 black
-.000.  
+.000.
 .000.
 00000
 .000.
 .0.0.
 
 DPolice
-black 
-.000.  
+black
+.000.
 .000.
 00000
 .000.
 .0.0.
 
 LPolice
-black 
-.000.  
+black
+.000.
 .000.
 0000.
 .000.
 .0.0.
 
 RPolice
-black 
-.000.  
+black
+.000.
 .000.
 .0000
 .000.
@@ -65,7 +65,7 @@ blue
 .000.
 .0.0.
 
-wall 
+wall
 black
 
 =======
@@ -105,8 +105,8 @@ Target
 player, Crate, wall
 
 ======
-RULES     
-======     
+RULES
+======
 
 (the idea is simple: lots of players, each of which only responds to a particular input direction)
 
@@ -126,15 +126,15 @@ RULES
 [ left dpolice] -> [dpolice]
 [ right dpolice] -> [dpolice]
 
-[ >  Player | Crate ] -> [  >  Player | > Crate  ]     
-[ >  crate | Crate ] -> [  >  crate | > Crate  ]     
+[ >  Player | Crate ] -> [  >  Player | > Crate  ]
+[ >  crate | Crate ] -> [  >  crate | > Crate  ]
 
 ==============
 WINCONDITIONS
 ==============
 all target on crate
 
-=======     
+=======
 LEVELS
 =======
 
