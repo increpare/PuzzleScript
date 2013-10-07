@@ -1,0 +1,221 @@
+title Puzz-Not
+author Stew Hogarth
+homepage http://SmilingBag.wordpress.com
+
+(It's a bit like Puzznic)
+
+noaction 
+
+========
+OBJECTS
+========
+
+Background
+Blue
+
+
+Player
+Black White
+11.11
+1...1
+.....
+1...1
+11.11
+
+Block1
+Black Blue White
+00000
+02110
+01110
+01110
+00000
+
+Block2
+Black Red White
+00000
+02110
+01110
+01110
+00000
+
+Block3
+Black Green White
+00000
+02110
+01110
+01110
+00000
+
+Block4
+Black Yellow White
+00000
+02110
+01110
+01110
+00000
+
+Block5
+Black Pink White
+00000
+02110
+01110
+01110
+00000
+
+
+
+Wall 
+Orange Red Brown
+00000
+02210
+02210
+01110
+00000
+
+=======
+LEGEND
+=======
+
+(Player = PlayerHead1 or PlayerHead2 or PlayerHead3 or PlayerHead4)
+Block = Block1 or Block2 or Block3 or Block4 or Block5
+Obstacle = Wall or Block
+
+. = Background
+P = Player
+# = Wall
+1 = Block1
+2 = Block2
+3 = Block3
+4 = Block4
+5 = Block5
+
+=========
+SOUNDS
+=========
+sfx0 3295707 (player jump)
+sfx1 52109504 (Push)
+sfx2 97794703 (Match)
+endlevel 42971703
+startgame 29088103
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Wall, Block
+Player
+
+======
+RULES     
+======     
+
+
+DOWN [ No Obstacle ] -> [ no obstacle ]
+
+
+
+==============
+WINCONDITIONS
+==============
+NO Block
+
+=======     
+LEVELS
+=======
+
+
+
+
+message Level 1
+
+#########
+###.P.###
+##.....##
+##.2.2.##
+#########
+#1.....1#
+#########
+
+message Level 2
+
+###############
+#..#..#.#######
+#.##.....2..###
+#P1....1##..###
+##########....#
+##########..2.#
+###############
+
+message Level 3
+
+##########
+#P..2...2#
+#.########
+#.....3..#
+#.##.#####
+#3.....1##
+##1#######
+##########
+
+
+message Level 4
+
+##############
+##############
+#2..2.1..P.###
+##..###.##.###
+#2.........###
+####..####.###
+####1...1..###
+##############
+
+
+message Level 5
+
+#########
+##.2##.5#
+##.##1.3#
+##p.#4.##
+##..##..#
+##51....#
+#423#####
+#########
+
+message Level 6
+
+#########
+#534....#
+##21..P.#
+####....#
+#.......#
+#..12...#
+#..5345.#
+#########
+
+message Level 7
+
+##########
+#........#
+#...P....#
+#...35...#
+#...235..#
+#...521..#
+#...313.5#
+##########
+
+message Level 8
+############
+############
+#..#####..##
+#........4##
+#...p....###
+#.........##
+##3...1..5##
+#####.#2.###
+###....#.###
+###.2.4..4##
+###1#3##5###
+############
+
+message Well done!

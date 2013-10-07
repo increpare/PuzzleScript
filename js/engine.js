@@ -610,7 +610,9 @@ function setGameState(_state, command) {
 			ifrm = document.createElement("IFRAME");
 			ifrm.setAttribute("src",url);
 			ifrm.style.visibility="hidden";
-			ifrm.style.display="none";
+			ifrm.style.width="1px";
+			ifrm.style.height="1px";
+//			ifrm.style.display="none";
 			document.body.appendChild(ifrm);
 		}
 	}
