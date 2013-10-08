@@ -21,7 +21,7 @@ function makeGIF() {
 
 	var encoder = new GIFEncoder();
 	encoder.setRepeat(0); //auto-loop
-	encoder.setDelay(250);
+	encoder.setDelay(200);
 	encoder.start();
 
 	compile(["loadLevel",curlevel],levelString);
@@ -39,9 +39,18 @@ function makeGIF() {
 		} else {
 			processInput(val);
 		}
+		while (againing) {
+			againing=false;
+			processInput(-1);		
+			redraw();
+			encoder.setDelay(againinterval);
+			gifctx.drawImage(canvas,-xoffset,-yoffset);
+	  		encoder.addFrame(gifctx);	
+		}
 		redraw();
 		gifctx.drawImage(canvas,-xoffset,-yoffset);
   		encoder.addFrame(gifctx);
+		encoder.setDelay(repeatinterval);
 	}
 
   	encoder.finish();
