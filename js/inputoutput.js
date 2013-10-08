@@ -224,13 +224,19 @@ function levelEditorClick(event,click) {
 	} else if (mouseCoordX>-1&&mouseCoordY>-1&&mouseCoordX<screenwidth-2&&mouseCoordY<screenheight-2-editorRowCount	) {
 		var glyphname = glyphImagesCorrespondance[glyphSelectedIndex];
 		var glyph = state.glyphDict[glyphname];
-		var glyphmask = 1<<state.backgroundid;
+		var glyphmask = 0;
 		for (var i=0;i<glyph.length;i++)
 		{
 			var id = glyph[i];
 			if (id>=0) {
 				glyphmask = (glyphmask|(1<<id));
 			}			
+		}
+		var backgroundMask = state.layerMasks[state.backgroundlayer];
+		if (glyphmask&backgroundMask===0) {
+			// If we don't already have a background layer, mix in
+			// the default one.
+			glyphmask = glyphmask|(1<<state.backgroundid);
 		}
 		var coordIndex = mouseCoordY + mouseCoordX*level.height;
 		level.dat[coordIndex]=glyphmask;
