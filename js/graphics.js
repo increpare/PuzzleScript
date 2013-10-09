@@ -257,7 +257,6 @@ function glyphCount(){
     return count;
 }
 
-var oldflickscreendat=[];//used for buffering old flickscreen/scrollscreen positions, in case player vanishes
 function redraw() {
     if (textMode) {
         for (var n in textImages) {

@@ -1,6 +1,8 @@
 function runTest(dataarray) {
 	unitTesting=true;
 	levelString=dataarray[0];
+	errorStrings = [];
+	errorCount=0;
 
 	for (var i=0;i<errorStrings.length;i++) {
 		var s = errorStrings[i];

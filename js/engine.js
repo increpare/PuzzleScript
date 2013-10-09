@@ -183,8 +183,6 @@ function generateTitleScreen()
 		title=state.metadata.title.toUpperCase();
 	}
 
-	continueText = "continue";
-	leftnote1 = "arrow keys to move";
 	if (titleMode==0) {
 		if (titleSelected) {
 			titleImage = deepClone(titletemplate_firstgo_selected);		
@@ -674,7 +672,7 @@ function DoRestart(force) {
 	}
 	restoreLevel(restartTarget);
 	tryPlayRestartSound();
-	commandQueue=[];
+	level.commandQueue=[];
 }
 
 function DoUndo(force) {
@@ -1123,22 +1121,22 @@ function matchCellRowWildCard(direction, cellRow) {
 			switch(direction) {
 		    	case 1://up
 		    	{
-		    		kmax=y;
+		    		kmax=y-len+2;
 		    		break;
 		    	}
 		    	case 2: //down 
 		    	{
-					kmax=ymax-y;
+					kmax=level.height-(y+len)+1;
 					break;
 		    	}
 		    	case 4: //left
 		    	{
-		    		kmax=x;
+		    		kmax=x-len+2;
 		    		break;
 		    	}
 		    	case 8: //right
 				{
-					kmax=xmax-x;	
+					kmax=level.width-(x+len)+1;	
 					break;
 				}
 		    	default:
@@ -1826,6 +1824,7 @@ function processInput(dir,dontCheckWin,dontModify) {
         	level.rigidMovementAppliedMask[i]=0;
         }
 
+        var modified=false;
 	    for (var i=0;i<level.dat.length;i++) {
 	    	if (level.dat[i]!==bak.dat[i]) {
 

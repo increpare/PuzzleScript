@@ -1,4 +1,3 @@
-var keybuffer = [];
 var keyRepeatTimer=0;
 var keyRepeatIndex=0;
 
@@ -426,8 +425,6 @@ function prevent(e) {
     e.returnValue=false;
     return false;
 }
-
-var messageselected=false;
 
 function checkKey(e,justPressed) {
 

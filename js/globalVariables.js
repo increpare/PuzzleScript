@@ -16,6 +16,11 @@ var autotickinterval=0;
 var winning=false;
 var againing=false;
 var againinterval=150;
+var oldflickscreendat=[];//used for buffering old flickscreen/scrollscreen positions, in case player vanishes
+var keybuffer = [];
+
+
+var messageselected=false;
 
 var textImages={};
 var initLevel = {
