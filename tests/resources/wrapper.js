@@ -19,6 +19,7 @@ var inputString;
 var outputString;
 
 function consolePrint(text) {}
+function consoleError(text) {}
 
 var editor = {
 	getValue : function () { return levelString }
