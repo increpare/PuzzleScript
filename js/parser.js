@@ -220,32 +220,38 @@ var codeMirrorFn = function() {
                         //populate names from rules
                         for (var n in state.objects) {
                             if (state.objects.hasOwnProperty(n)) {
-                                if (state.names.indexOf(n)!==-1) {
+/*                                if (state.names.indexOf(n)!==-1) {
                                     logError('Object "'+n+'" has been declared to be multiple different things',state.objects[n].lineNumber);
-                                }
+                                }*/
                                 state.names.push(n);
                             }
                         }
                         //populate names from legends
                         for (var i = 0; i < state.legend_synonyms.length; i++) {
                             var n = state.legend_synonyms[i][0];
+                            /*
                             if (state.names.indexOf(n)!==-1) {
                                 logError('Object "'+n+'" has been declared to be multiple different things',state.legend_synonyms[i].lineNumber);
                             }
+                            */
                             state.names.push(n);
                         }
                         for (var i = 0; i < state.legend_aggregates.length; i++) {
                             var n = state.legend_aggregates[i][0];
+                            /*
                             if (state.names.indexOf(n)!==-1) {
                                 logError('Object "'+n+'" has been declared to be multiple different things',state.legend_aggregates[i].lineNumber);
                             }
+                            */
                             state.names.push(n);
                         }
                         for (var i = 0; i < state.legend_properties.length; i++) {
                             var n = state.legend_properties[i][0];
+                            /*
                             if (state.names.indexOf(n)!==-1) {
                                 logError('Object "'+n+'" has been declared to be multiple different things',state.legend_properties[i].lineNumber);
-                            }                            
+                            }                           
+                            */ 
                             state.names.push(n);
                         }
                     }
