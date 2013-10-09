@@ -74,7 +74,29 @@ but upon closer inspection it will reveal itself to be rather a flimsy construct
 <p>
 <img src="images/rigidfail2.gif">
 <p>
-To my knowledge (please prove me wrong!) it's impossible to give rigidity in the rules system, because the movements are all carried out independently in the moving phase, and it's a pain to figure out what moved successfully, what didn't, and even if you could find out that part of a block couldn't successfully move, how would you stop everything else from moving?
+Here be a rabbit hole - there are many approaches of increasing complexity, depending on what you want to achieve - I'd advice to not read down any further into this document than you need to.
+<p>
+If you want rigidbodies that you can push, but without being able to push several objects in a row, you can use the following sort of code:
+<pre><code><a href="../editor.html?demo=rigid_scott1" target="puzzleScript_EditorWindow" class="btn btn-default pull-right" ><span class="glyphicon glyphicon-cog"> Edit</span></a>[ > Player | Box ] -> [ > Player | > Box ]
+
+startloop
+
+[ moving Box1 | Box1 ] -> [ moving Box1 | moving Box1 ]
+[ moving Box2 | Box2 ] -> [ moving Box2 | moving Box2 ]
+[ moving Box3 | Box3 ] -> [ moving Box3 | moving Box3 ]
+[ moving Box4 | Box4 ] -> [ moving Box4 | moving Box4 ]
+
+[ > Box | Box ] -> [ > Box | > Box ]
+
+endloop
+
+[ > Box | Wall ] -> cancel</code></pre><p>
+<p>
+<img src="images/rigid_scott1.gif">
+<p>
+This breaks if you have several characters that are trying to push blocks in a single turn - because if any single effort fails, the whole turn is canceled.
+<p>
+To my knowledge (please prove me wrong!) it's impossible to get full rigidity in the basic rules system already described, because the movements are all carried out independently in the moving phase, and it's a pain to figure out what moved successfully, what didn't, and even if you could find out that part of a block couldn't successfully move, how would you stop everything else from moving?
 <p>
 Anyway, it's a gigantic can of worms.  The solution initially I thought would be to add a keyword to objects, to mark them as <b>rigid</b>.  However, I later realized that it was far nicer, and cooler, and more in-keeping with the engine, to think of rigidity as something you could apply to rules.  
 <p>

@@ -27,7 +27,7 @@ function logError(str, lineNumber,urgent) {
             return logErrorNoLine(str);
         }
         var errorString = '<a onclick="jumpToLine(' + lineNumber.toString() + ');"  href="javascript:void(0);"><span class="errorTextLineNumber"> line ' + lineNumber.toString() + '</span></a> : ' + '<span class="errorText">' + str + '</span>';
-         if (errorStrings.indexOf(errorString) >= 0) {
+         if (errorStrings.indexOf(errorString) >= 0 && !urgent) {
             //do nothing, duplicate error
          } else {
             consolePrint(errorString);
@@ -40,7 +40,7 @@ function logError(str, lineNumber,urgent) {
 function logErrorNoLine(str,urgent) {
     if (compiling||urgent) {
         var errorString = '<span class="errorText">' + str + '</span>';
-         if (errorStrings.indexOf(errorString) >= 0) {
+         if (errorStrings.indexOf(errorString) >= 0 && !urgent) {
             //do nothing, duplicate error
          } else {
             consolePrint(errorString);
@@ -418,7 +418,7 @@ var codeMirrorFn = function() {
                                     if (state.objects_spritematrix.length === 5) {
                                         o.spritematrix = state.objects_spritematrix;
                                         state.objects_section = 0;
-                                    }
+                                    } 
                                     return 'SPRITEMATRIX';
                                 }
                                 break;
@@ -916,7 +916,7 @@ var codeMirrorFn = function() {
 		                    			}
 		                    			state.tokenIndex=1;
 		                    			return 'METADATA';
-		                    		} else if ( ['run_rules_on_level_start','require_player_movement','debug','noundo','noaction','norestart','scanline'].indexOf(token)>=0) {
+		                    		} else if ( ['run_rules_on_level_start','require_player_movement','debug','verbose_logging','noundo','noaction','norestart','scanline'].indexOf(token)>=0) {
 		                    			state.metadata.push(token);
 		                    			state.metadata.push("true");
 		                    			state.tokenIndex=-1;

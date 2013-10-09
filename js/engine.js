@@ -666,7 +666,7 @@ var screenheight=0;
 
 
 function DoRestart(force) {
-	if (force==false && ('norestart' in state.metadata)) {
+	if (force===false && ('norestart' in state.metadata)) {
 		return;
 	}
 	backups.push(backupLevel());
@@ -754,6 +754,16 @@ var dirMasksDelta = {
      15:[0,0],//'?' : 
      16:[0,0],//'action' : 
      3:[0,0]//'no'
+};
+
+var dirMaskName = {
+     1:'up',
+     2:'down'  ,
+     4:'left'  , 
+     8:'right',  
+     15:'?' ,
+     16:'action',
+     3:'no'
 };
 
 var seedsToPlay_CanMove=[];
@@ -1364,6 +1374,9 @@ function applyRuleAt(rule,delta,tuple,check) {
 
                 level.dat[currentIndex]=curCellMask;
                 level.movementMask[currentIndex]=curMovementMask;
+
+            } else {
+
             }
 
             currentIndex = (currentIndex+delta[1]+delta[0]*level.height)%level.dat.length;
@@ -1452,6 +1465,13 @@ function applyRandomRuleGroup(ruleGroup) {
 	var check=false;
 	var modified = applyRuleAt(rule,delta,tuple,check);
 
+	if (verbose_logging&&modified){
+		var lineNumber = rule[3];
+		var ruleDirection = dirMaskName[rule[0]];
+		var logString = '<font color="green">Random rule group <a onclick="jumpToLine(' + lineNumber.toString() + ');"  href="javascript:void(0);">' + lineNumber.toString() + '</a> applied.</font>';
+		consolePrint(logString);
+	}
+
    	queueCommands(rule);
 
 	return modified;
@@ -1483,6 +1503,14 @@ function applyRuleGroup(ruleGroup) {
         	loopPropagated=true;
         }
     }
+
+	if (verbose_logging&&loopPropagated){
+		var lineNumber = rule[3];
+		var ruleDirection = dirMaskName[rule[0]];
+		var logString = '<font color="green">Rule group <a onclick="jumpToLine(' + lineNumber.toString() + ');"  href="javascript:void(0);">' + lineNumber.toString() + '</a> applied.</font>';
+		consolePrint(logString);
+	}
+
     return loopPropagated;
 }
 
@@ -1492,6 +1520,7 @@ function propagateMovements(startRuleGroupindex){
 
     //when we're going back in, let's loop, to be sure to be sure
     var loopPropagated = startRuleGroupindex>0;
+    var loopCount = 0;
     for (var ruleGroupIndex=startRuleGroupindex;ruleGroupIndex<state.rules.length;) {
     	if (level.bannedGroup[ruleGroupIndex]) {
     		//do nothing
@@ -1502,12 +1531,24 @@ function propagateMovements(startRuleGroupindex){
         if (loopPropagated && state.loopPoint[ruleGroupIndex]!==undefined) {
         	ruleGroupIndex = state.loopPoint[ruleGroupIndex];
         	loopPropagated=false;
+        	loopCount++;
+			if (loopCount > 100) {
+    			var ruleGroup=state.rules[ruleGroupIndex];
+			   	logError("got caught in an endless startloop...endloop vortex, escaping!", ruleGroup[0][3],true);
+			   	break;
+			}
         } else {
         	ruleGroupIndex++;
         	if (ruleGroupIndex===state.rules.length) {
         		if (loopPropagated && state.loopPoint[ruleGroupIndex]!==undefined) {
 		        	ruleGroupIndex = state.loopPoint[ruleGroupIndex];
-		        	loopPropagated=false;
+		        	loopPropagated=false;		        
+		        	loopCount++;
+					if (loopCount > 100) {
+		    			var ruleGroup=state.rules[ruleGroupIndex];
+					   	logError("got caught in an endless startloop...endloop vortex, escaping!", ruleGroup[0][3],true);
+					   	break;
+					}
 		        } 
         	}
         }
@@ -1517,6 +1558,7 @@ function propagateMovements(startRuleGroupindex){
 
 function propagateLateMovements(){
     var loopPropagated = true;
+    var loopCount = 0;
     for (var ruleGroupIndex=0;ruleGroupIndex<state.lateRules.length;) {
     	if (level.bannedGroup[ruleGroupIndex]) {
     		//do nothing
@@ -1527,12 +1569,24 @@ function propagateLateMovements(){
         if (loopPropagated && state.lateLoopPoint[ruleGroupIndex]!==undefined) {
         	ruleGroupIndex = state.lateLoopPoint[ruleGroupIndex];
         	loopPropagated=false;
+        	loopCount++;
+			if (loopCount > 100) {
+    			var ruleGroup=state.lateRules[ruleGroupIndex];
+			   	logError("got caught in an endless startloop...endloop vortex, escaping!", ruleGroup[0][3],true);
+			   	break;
+			}
         } else {
         	ruleGroupIndex++;
         	if (ruleGroupIndex===state.lateRules.length) {
         		if (loopPropagated && state.lateLoopPoint[ruleGroupIndex]!==undefined) {
 		        	ruleGroupIndex = state.lateLoopPoint[ruleGroupIndex];
 		        	loopPropagated=false;
+		        	loopCount++;
+					if (loopCount > 100) {
+		    			var ruleGroup=state.lateRules[ruleGroupIndex];
+					   	logError("got caught in an endless startloop...endloop vortex, escaping!", ruleGroup[0][3],true);
+					   	break;
+					}
 		        } 
         	}
         }
@@ -1609,6 +1663,16 @@ var sfxCreateMask=0;
 var sfxDestroyMask=0;
 
 function processInput(dir,dontCheckWin,dontModify) {
+
+	if (verbose_logging) { 
+	 	if (dir===-1) {
+	 		consolePrint('Turn starts with no input.')
+	 	} else {
+	 		consolePrint('=======================');
+			consolePrint('Turn starts with input of ' + ['up','left','down','right','action'][dir]+'.');
+	 	}
+	}
+
 	var bak = backupLevel();
 
 	var playerPositions=[];
@@ -1665,6 +1729,9 @@ function processInput(dir,dontCheckWin,dontModify) {
         	first=false;
         	rigidloop=false;
         	i++;
+        	
+        	if (verbose_logging){consolePrint('applying rules');}
+
         	propagateMovements(startRuleGroupIndex);	
         	var shouldUndo = resolveMovements();
 
@@ -1673,6 +1740,7 @@ function processInput(dir,dontCheckWin,dontModify) {
         		restorePreservationState(startState);
         		startRuleGroupIndex=0;//rigidGroupUndoDat.ruleGroupIndex+1;
         	} else {
+        		if (verbose_logging){consolePrint('applying late rules');}
         		propagateLateMovements();
         		startRuleGroupIndex=0;
         	}
@@ -1698,6 +1766,7 @@ function processInput(dir,dontCheckWin,dontModify) {
         		}
         	}
         	if (somemoved===false) {
+	    		consolePrint('require_player_movement set, but no player movement detected, so cancelling turn.');
         		backups.push(bak);
         		DoUndo(true);
         		seedsToPlay_CanMove=[];
@@ -1708,6 +1777,9 @@ function processInput(dir,dontCheckWin,dontModify) {
         }
 
 	    if (level.commandQueue.indexOf('cancel')>=0) {	
+	    	if (verbose_logging) { 
+	    		consolePrint('CANCEL command executed, cancelling turn.');
+			}
     		backups.push(bak);
     		DoUndo(true);
     		seedsToPlay_CanMove=[];
@@ -1717,7 +1789,10 @@ function processInput(dir,dontCheckWin,dontModify) {
 	    } 
 
 	    if (level.commandQueue.indexOf('restart')>=0) {
-	    	DoRestart();	
+	    	if (verbose_logging) { 
+	    		consolePrint('RESTART command executed, reverting to restart state.');
+			}
+	    	DoRestart(true);	
     		seedsToPlay_CanMove=[];
     		seedsToPlay_CantMove=[];
     		redraw();    	
@@ -1782,17 +1857,29 @@ function processInput(dir,dontCheckWin,dontModify) {
 	    }
 
 	    if (level.commandQueue.indexOf('again')>=0 && modified) {
+
 	    	//first have to verify that something's changed
 	    	if (processInput(-1,true,true)) {
+
+		    	if (verbose_logging) { 
+		    		consolePrint('AGAIN command executed, with changes detected: will execute another turn.');
+				}
+
 		    	againing=true;
 		    	timer=0;
 		    }
 	    }
 		if (level.commandQueue.indexOf('checkpoint')>=0) {
+	    	if (verbose_logging) { 
+	    		consolePrint('CHECKPOINT command executed, saving current state to the restart state.');
+			}
 			restartTarget=backupLevel();
 		}	    
 	    
 	    if (textMode===false && (dontCheckWin===undefined ||dontCheckWin===false)) {
+	    	if (verbose_logging) { 
+	    		consolePrint('Checking win condition.');
+			}
 	    	checkWin();
 	    }
 
@@ -1810,6 +1897,7 @@ function checkWin() {
 	}
 
 	if (level.commandQueue.indexOf('win')>=0) {
+		consolePrint("Win Condition Satisfied");
 		DoWin();
 		return;
 	}
@@ -1870,6 +1958,7 @@ function checkWin() {
 	}
 
 	if (won) {
+		consolePrint("Win Condition Satisfied");
 		DoWin();
 	}
 }

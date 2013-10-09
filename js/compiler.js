@@ -39,6 +39,7 @@ function generateSpriteMatrix(dat) {
 }
 
 var debugMode;
+var verbose_logging;
 var colorPalette;
 
 function generateExtraMembers(state) {
@@ -77,6 +78,7 @@ function generateExtraMembers(state) {
 
 	//get colorpalette name
 	debugMode=false;
+	verbose_logging=false;
 	colorPalette=colorPalettes.arnecolors;
 	for (var i=0;i<state.metadata.length;i+=2){
 		var key = state.metadata[i];
@@ -89,6 +91,8 @@ function generateExtraMembers(state) {
 			}
 		} else if (key==='debug') {
 			debugMode=true;
+		} else if (key ==='verbose_logging') {
+			verbose_logging=true;
 		}
 	}
 
@@ -432,11 +436,29 @@ var directionaggregates = {
 	'parallel' : ['<','>']
 };
 
+var relativeDirections = ['^', 'v', '<', '>','horizontal','vertical'];
 var simpleAbsoluteDirections = ['up', 'down', 'left', 'right'];
 var simpleRelativeDirections = ['^', 'v', '<', '>'];
 var reg_directions_only = /^(\>|\<|\^|v|up|down|left|right|moving|stationary|no|randomdir|random|horizontal|vertical|orthogonal|perpendicular|parallel|action)$/;
-//redclareing here, i don't know why
+//redeclaring here, i don't know why
 var commandwords = ["sfx0","sfx1","sfx2","sfx3","sfx4","sfx5","sfx6","sfx7","sfx8","sfx9","sfx10","cancel","checkpoint","restart","win","message","again"];
+
+
+
+function directionalRule(rule) {
+	for (var i=0;i<rule.lhs.length;i++) {
+		var cellRow = rule.lhs[i];
+		if (cellRow.length>1) {
+			return true;
+		}
+		for (var j=0;j<cellRow.length;j++) {
+			if (cellRow[j][0] in relativeDirections) {
+				return true;
+			}
+		}
+	}
+	return false;
+}
 
 function processRuleString(line, state, lineNumber,curRules) 
 {
@@ -654,6 +676,11 @@ function processRuleString(line, state, lineNumber,curRules)
 		randomRule: randomRule
 	};
 
+	if (directionalRule(rule_line)===false) {
+		consolePrint("simplifying undirectional rule");
+		rule_line.directions=['up'];
+	}
+
 	/* reset must appear by itself */
 
 	for (var i=0;i<commands.length;i++) {
@@ -718,7 +745,7 @@ function rulesToArray(state) {
 		var ruledirs = rule.directions;
 		for (var j = 0; j < ruledirs.length; j++) {
 			var dir = ruledirs[j];
-			if (dir in directionaggregates) {
+			if (dir in directionaggregates  && directionalRule(rule)) {
 				var dirs = directionaggregates[dir];
 				for (var k = 0; k < dirs.length; k++) {
 					var modifiedrule = {
