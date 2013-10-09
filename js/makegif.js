@@ -1,4 +1,5 @@
 function makeGIF() {
+	levelEditorOpened=false;
 	var targetlevel=curlevel;
 	var gifcanvas = document.createElement('canvas');
 	gifcanvas.width=screenwidth*cellwidth;

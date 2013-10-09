@@ -452,7 +452,7 @@ function directionalRule(rule) {
 			return true;
 		}
 		for (var j=0;j<cellRow.length;j++) {
-			if (cellRow[j][0] in relativeDirections) {
+			if (relativeDirections.indexOf(cellRow[j][0])>=0) {
 				return true;
 			}
 		}
@@ -677,7 +677,6 @@ function processRuleString(line, state, lineNumber,curRules)
 	};
 
 	if (directionalRule(rule_line)===false) {
-		consolePrint("simplifying undirectional rule");
 		rule_line.directions=['up'];
 	}
 

@@ -669,7 +669,9 @@ function DoRestart(force) {
 	if (force===false && ('norestart' in state.metadata)) {
 		return;
 	}
-	backups.push(backupLevel());
+	if (force===false) {
+		backups.push(backupLevel());
+	}
 	restoreLevel(restartTarget);
 	tryPlayRestartSound();
 	commandQueue=[];
@@ -1792,10 +1794,12 @@ function processInput(dir,dontCheckWin,dontModify) {
 	    	if (verbose_logging) { 
 	    		consolePrint('RESTART command executed, reverting to restart state.');
 			}
+    		backups.push(bak);
 	    	DoRestart(true);	
     		seedsToPlay_CanMove=[];
     		seedsToPlay_CantMove=[];
-    		redraw();    	
+    		redraw();   
+    		return true; 	
 	    } 
 
         for (var i=0;i<seedsToPlay_CanMove.length;i++) {

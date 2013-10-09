@@ -176,7 +176,7 @@ function shareClick() {
 			if (errorCount>0) {
 				consolePrint("Cannot link directly to playable game, because there are compiler errors.");
 			} else {
-				consolePrint("The game can now be played at this url:<br><a href=\""+url+"\">"+url+"</a>");
+				consolePrint("The game can now be played at this url:<br><a target=\"_blank\" href=\""+url+"\">"+url+"</a>");
 			} 
 
 
