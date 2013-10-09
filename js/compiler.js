@@ -1835,7 +1835,7 @@ function generateLoopPoints(state) {
 					target=i;
 					outside=false;
 					if (loop[1]===-1) {
-						logErrorNoLine("have to have matching number of  'startLoop' and 'endLoop' loop points.");						
+						logErrorNoLine("Need have to have matching number of  'startLoop' and 'endLoop' loop points.");						
 					}
 					break;
 				}
@@ -1845,7 +1845,7 @@ function generateLoopPoints(state) {
 					loopPoint[source]=target;
 					outside=true;
 					if (loop[1]===1) {
-						logErrorNoLine("have to have matching number of  'startLoop' and 'endLoop' loop points.");						
+						logErrorNoLine("Need have to have matching number of  'startLoop' and 'endLoop' loop points.");						
 					}
 					break;
 				}
@@ -1855,8 +1855,53 @@ function generateLoopPoints(state) {
 	if (outside===false) {
 		var source = state.rules.length;
 		loopPoint[source]=target;
+	} else {
 	}
 	state.loopPoint=loopPoint;
+
+	loopPoint={};
+	outside=true;
+	for (var j=0;j<state.loops.length;j++) {
+		var loop = state.loops[j];
+		for (var i=0;i<state.lateRules.length-1;i++) {
+			var ruleGroup = state.lateRules[i];
+
+			var firstRule = ruleGroup[0];			
+			var lastRule = ruleGroup[ruleGroup.length-1];
+
+			var firstRuleLine = firstRule[3];
+			var lastRuleLine = lastRule[3];
+
+			var nextRuleGroup =state.lateRules[i+1];
+
+			if (outside) {
+				if (firstRuleLine>=loop[0]) {
+					target=i;
+					outside=false;
+					if (loop[1]===-1) {
+						logErrorNoLine("Need have to have matching number of  'startLoop' and 'endLoop' loop points.");						
+					}
+					break;
+				}
+			} else {
+				if (firstRuleLine>=loop[0]) {
+					source = i-1;		
+					loopPoint[source]=target;
+					outside=true;
+					if (loop[1]===1) {
+						logErrorNoLine("Need have to have matching number of  'startLoop' and 'endLoop' loop points.");						
+					}
+					break;
+				}
+			}
+		}
+	}
+	if (outside===false) {
+		var source = state.lateRules.length;
+		loopPoint[source]=target;
+	} else {
+	}
+	state.lateLoopPoint=loopPoint;
 }
 
 var soundEvents = ["titlescreen", "startgame", "endgame", "startlevel","undo","restart","endlevel","showmessage","closemessage","sfx0","sfx1","sfx2","sfx3","sfx4","sfx5","sfx6","sfx7","sfx8","sfx9","sfx10"];

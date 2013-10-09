@@ -1490,11 +1490,26 @@ function propagateMovements(startRuleGroupindex){
 
 
 function propagateLateMovements(){
-        //for each rule
-            //try to match it
-    for (var ruleGroupIndex=0;ruleGroupIndex<state.lateRules.length;ruleGroupIndex++) {
-        var ruleGroup=state.lateRules[ruleGroupIndex];
-        applyRuleGroup(ruleGroup);
+    var loopPropagated = true;
+    for (var ruleGroupIndex=0;ruleGroupIndex<state.lateRules.length;) {
+    	if (level.bannedGroup[ruleGroupIndex]) {
+    		//do nothing
+    	} else {
+    		var ruleGroup=state.lateRules[ruleGroupIndex];
+			loopPropagated = applyRuleGroup(ruleGroup) || loopPropagated;	        	        
+	    }
+        if (loopPropagated && state.lateLoopPoint[ruleGroupIndex]!==undefined) {
+        	ruleGroupIndex = state.lateLoopPoint[ruleGroupIndex];
+        	loopPropagated=false;
+        } else {
+        	ruleGroupIndex++;
+        	if (ruleGroupIndex===state.lateRules.length) {
+        		if (loopPropagated && state.lateLoopPoint[ruleGroupIndex]!==undefined) {
+		        	ruleGroupIndex = state.lateLoopPoint[ruleGroupIndex];
+		        	loopPropagated=false;
+		        } 
+        	}
+        }
     }
 }
 

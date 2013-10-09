@@ -164,7 +164,7 @@ var htmlEntityMap = {
 
 function printLevel() {
 	var maskToGlyph = {};
-	var glyphmask = 1<<state.backgroundid;
+	var glyphmask = 0;
 	for (var glyphName in state.glyphDict) {
 		if (state.glyphDict.hasOwnProperty(glyphName)&&glyphName.length===1) {
 			var glyph = state.glyphDict[glyphName];
@@ -232,6 +232,14 @@ function levelEditorClick(event,click) {
 				glyphmask = (glyphmask|(1<<id));
 			}			
 		}
+
+		var backgroundMask = state.layerMasks[state.backgroundlayer];
+		if ((glyphmask&backgroundMask)===0) {
+			// If we don't already have a background layer, mix in
+			// the default one.
+			glyphmask = glyphmask|(1<<state.backgroundid);
+		}
+
 		var coordIndex = mouseCoordY + mouseCoordX*level.height;
 		level.dat[coordIndex]=glyphmask;
 		redraw();
