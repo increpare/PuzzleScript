@@ -15,6 +15,8 @@ function runTest(dataarray) {
 		targetlevel=0;
 	}
 	compile(["loadLevel",targetlevel],levelString);
+
+
 	for(var i=0;i<inputDat.length;i++) {
 		var val=inputDat[i];
 		if (val==="undo") {
@@ -24,7 +26,12 @@ function runTest(dataarray) {
 		} else {
 			processInput(val);
 		}
+		while (againing) {
+			againing=false;
+			processInput(-1);			
+		}
 	}
+
 	var calculatedOutput = JSON.stringify(level.dat);
 	var preparedOutput = dataarray[2];
 	var preparedLevel;

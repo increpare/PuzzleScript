@@ -457,6 +457,17 @@ function directionalRule(rule) {
 			}
 		}
 	}
+	for (var i=0;i<rule.rhs.length;i++) {
+		var cellRow = rule.rhs[i];
+		if (cellRow.length>1) {
+			return true;
+		}
+		for (var j=0;j<cellRow.length;j++) {
+			if (relativeDirections.indexOf(cellRow[j][0])>=0) {
+				return true;
+			}
+		}
+	}
 	return false;
 }
 
@@ -2257,7 +2268,7 @@ function compile(command,text) {
 	}*/
 
 	if (errorCount>0) {
-		consoleError('<span class="systemMessage">Errors detected during compilation, the game will not work correctly.</span>');
+		consoleError('<span class="systemMessage">Errors detected during compilation, the game may not work correctly.</span>');
 	}
 	else {
 		var ruleCount=0;

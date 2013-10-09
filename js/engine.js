@@ -334,7 +334,7 @@ function drawMessageScreen() {
 	} else {
 		message = messagetext;
 	}
-	splitMessage = wordwrap(message,titleImage[0].length-2);
+	splitMessage = wordwrap(message,titleImage[0].length);
 
 	for (var i=0;i<splitMessage.length;i++) {
 		var m = splitMessage[i];
