@@ -257,6 +257,7 @@ function glyphCount(){
     return count;
 }
 
+var oldflickscreendat=[];//used for buffering old flickscreen/scrollscreen positions, in case player vanishes
 function redraw() {
     if (textMode) {
         for (var n in textImages) {
@@ -320,6 +321,13 @@ function redraw() {
                 minj=screeny*screenheight;
                 maxi=Math.min(mini+screenwidth,level.width);
                 maxj=Math.min(minj+screenheight,level.height);
+
+                oldflickscreendat=[mini,minj,maxi,maxj];
+            } else if (oldflickscreendat.length>0){
+                mini=oldflickscreendat[0];
+                minj=oldflickscreendat[1];
+                maxi=oldflickscreendat[2];
+                maxj=oldflickscreendat[3];
             }
         } else if (zoomscreen) {
             var playerPositions = getPlayerPositions();
@@ -331,7 +339,13 @@ function redraw() {
                 minj=Math.max(py-((screenheight/2)|0),0);
                 maxi=Math.min(mini+screenwidth,level.width);
                 maxj=Math.min(minj+screenheight,level.height);
-            }           
+                oldflickscreendat=[mini,minj,maxi,maxj];
+            }  else if (oldflickscreendat.length>0){
+                mini=oldflickscreendat[0];
+                minj=oldflickscreendat[1];
+                maxi=oldflickscreendat[2];
+                maxj=oldflickscreendat[3];
+            }         
         }
 	    
 

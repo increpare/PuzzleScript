@@ -7,7 +7,7 @@ function isColor(str) {
 		return true;
 	if (/(^#[0-9A-F]{6}$)|(^#[0-9A-F]{3}$)/i.test(str))
 		return true;
-
+	return false;
 }
 
 function colorToHex(palette,str) {
@@ -298,6 +298,10 @@ function generateExtraMembers(state) {
 				}
 			}
 		}
+	}
+
+	if (state.idDict[0]===undefined) {
+		logError('You need to have some objects defined');
 	}
 
 	//set default background object
@@ -1040,7 +1044,9 @@ function concretizeMovingRule(state, rule,lineNumber) {
 							}
 
 							concretizeMovingInCell(newrule.lhs[j][k], ambiguous_dir, cand_name, concreteDirection);
-							concretizeMovingInCell(newrule.rhs[j][k], ambiguous_dir, cand_name, concreteDirection);//do for the corresponding rhs cell as well
+							if (newrule.rhs.length>0) {
+								concretizeMovingInCell(newrule.rhs[j][k], ambiguous_dir, cand_name, concreteDirection);//do for the corresponding rhs cell as well
+							}
                             
                             if (newrule.movingReplacement[cand_name]===undefined) {
     							newrule.movingReplacement[cand_name]=[concreteDirection,1,ambiguous_dir];
@@ -2065,6 +2071,12 @@ function formatHomePage(state){
 		state.fgcolor="#FFFFFF";
 	}
 	
+	if (isColor(state.fgcolor)===false ){
+		logError("text_color in incorrect format - found "+state.fgcolor+", but I expect a color name (like 'pink') or hex-formatted color (like '#1412FA').")
+	}
+	if (isColor(state.bgcolor)===false ){
+		logError("background_color in incorrect format - found "+state.bgcolor+", but I expect a color name (like 'pink') or hex-formatted color (like '#1412FA').")
+	}
 
 	if (canSetHTMLColors) {
 		

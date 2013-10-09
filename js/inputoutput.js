@@ -485,6 +485,7 @@ function checkKey(e,justPressed) {
             	DoUndo();
             	return prevent(e);
             }
+            break;
         }
         case 82://r
         {
@@ -497,6 +498,7 @@ function checkKey(e,justPressed) {
             	//restart
             	return prevent(e);
             }
+            break;
         }
         case 27://escape
         {
@@ -514,6 +516,7 @@ function checkKey(e,justPressed) {
         		canvasResize();
         		return prevent(e);
         	}
+            break;
 		}
 		case 48://0
 		case 49://1
@@ -598,8 +601,12 @@ function checkKey(e,justPressed) {
             if (canDump===true) {
                 inputHistory.push(inputdir);
             }
-	        processInput(inputdir);
-	       return prevent(e);
+            if (inputdir===4 && ('noaction' in state.metadata)) {
+
+            } else {
+	        	processInput(inputdir);
+	        }
+	       	return prevent(e);
     	}
     }
 }

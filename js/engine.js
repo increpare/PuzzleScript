@@ -302,6 +302,21 @@ function deepClone(item) {
     return result;
 }
 
+function wordwrap( str, width ) {
+ 
+    width = width || 75;
+    var cut = true;
+ 
+    if (!str) { return str; }
+ 
+    var regex = '.{1,' +width+ '}(\\s|$)' + (cut ? '|.{' +width+ '}|.+$' : '|\\S+?(\\s|$)');
+ 
+    return str.match( RegExp(regex, 'g') );
+ 
+}
+
+var splitMessage=[];
+
 function drawMessageScreen() {
 	titleMode=0;
 	textMode=true;
@@ -321,11 +336,18 @@ function drawMessageScreen() {
 	} else {
 		message = messagetext;
 	}
-	var messageLength=message.length;
-	var lmargin = ((width-messageLength)/2)|0;
-	var rmargin = width-messageLength-lmargin;
-	var row = titleImage[5];
-	titleImage[5]=row.slice(0,lmargin)+message+row.slice(lmargin+message.length);		
+	splitMessage = wordwrap(message,titleImage[0].length-2);
+
+	for (var i=0;i<splitMessage.length;i++) {
+		var m = splitMessage[i];
+		var row = 5-((splitMessage.length/2)|0)+i;
+		var messageLength=m.length;
+		var lmargin = ((width-messageLength)/2)|0;
+		var rmargin = width-messageLength-lmargin;
+		var rowtext = titleImage[row];
+		titleImage[row]=rowtext.slice(0,lmargin)+m+rowtext.slice(lmargin+m.length);		
+	}
+
 	if (quittingMessageScreen) {
 		titleImage[10]=titleImage[9];
 	}		
@@ -480,6 +502,7 @@ function backupLevel() {
 }
 
 function setGameState(_state, command) {
+	oldflickscreendat=[];
 	timer=0;
 	autotick=0;
 	winning=false;
@@ -621,6 +644,7 @@ function setGameState(_state, command) {
 
 var messagetext="";
 function restoreLevel(lev) {
+	oldflickscreendat=[];
 	level = deepClone(lev);
 
     for (var i=0;i<level.movementMask.length;i++)
@@ -641,13 +665,14 @@ var screenwidth=0;
 var screenheight=0;
 
 
-function DoRestart() {
-	if ('norestart' in state.metadata) {
+function DoRestart(force) {
+	if (force==false && ('norestart' in state.metadata)) {
 		return;
 	}
 	backups.push(backupLevel());
 	restoreLevel(restartTarget);
 	tryPlayRestartSound();
+	commandQueue=[];
 }
 
 function DoUndo(force) {
@@ -1388,6 +1413,7 @@ function queueCommands(rule) {
 }
 
 function showTempMessage() {
+	keybuffer=[];
 	textMode=true;
 	titleScreen=false;
 	quittingMessageScreen=false;
@@ -1690,6 +1716,13 @@ function processInput(dir,dontCheckWin,dontModify) {
     		return;
 	    } 
 
+	    if (level.commandQueue.indexOf('restart')>=0) {
+	    	DoRestart();	
+    		seedsToPlay_CanMove=[];
+    		seedsToPlay_CantMove=[];
+    		redraw();    	
+	    } 
+
         for (var i=0;i<seedsToPlay_CanMove.length;i++) {
 	        	playSeed(seedsToPlay_CanMove[i]);
         }
@@ -1747,9 +1780,7 @@ function processInput(dir,dontCheckWin,dontModify) {
 				}
 			}
 	    }
-	    if (level.commandQueue.indexOf('restart')>=0) {
-	    	DoRestart();	    	
-	    } 
+
 	    if (level.commandQueue.indexOf('again')>=0 && modified) {
 	    	//first have to verify that something's changed
 	    	if (processInput(-1,true,true)) {
@@ -1868,6 +1899,7 @@ function anyMovements() {
 
 
 function nextLevel() {
+	keybuffer=[];
     againing=false;
 	messagetext="";
 	if (titleScreen) {
