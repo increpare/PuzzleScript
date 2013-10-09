@@ -1492,6 +1492,7 @@ function propagateMovements(startRuleGroupindex){
 
     //when we're going back in, let's loop, to be sure to be sure
     var loopPropagated = startRuleGroupindex>0;
+	var loopCount = 0;
     for (var ruleGroupIndex=startRuleGroupindex;ruleGroupIndex<state.rules.length;) {
     	if (level.bannedGroup[ruleGroupIndex]) {
     		//do nothing
@@ -1502,12 +1503,22 @@ function propagateMovements(startRuleGroupindex){
         if (loopPropagated && state.loopPoint[ruleGroupIndex]!==undefined) {
         	ruleGroupIndex = state.loopPoint[ruleGroupIndex];
         	loopPropagated=false;
+			loopCount++;
+			if (loopCount > 50) {
+				logErrorNoLine("got caught in an endless startloop...endloop zone :O", true);
+				break;
+			}
         } else {
         	ruleGroupIndex++;
         	if (ruleGroupIndex===state.rules.length) {
         		if (loopPropagated && state.loopPoint[ruleGroupIndex]!==undefined) {
 		        	ruleGroupIndex = state.loopPoint[ruleGroupIndex];
 		        	loopPropagated=false;
+					loopCount++;
+					if (loopCount > 50) {
+						logErrorNoLine("got caught in an endless startloop...endloop zone :O", true);
+						break;
+					}
 		        } 
         	}
         }
