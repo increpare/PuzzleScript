@@ -220,18 +220,33 @@ var codeMirrorFn = function() {
                         //populate names from rules
                         for (var n in state.objects) {
                             if (state.objects.hasOwnProperty(n)) {
-                                    state.names.push(n);
+                                if (state.names.indexOf(n)!==-1) {
+                                    logError('Object "'+n+'" has been declared to be multiple different things',state.objects[n].lineNumber);
+                                }
+                                state.names.push(n);
                             }
                         }
                         //populate names from legends
                         for (var i = 0; i < state.legend_synonyms.length; i++) {
-                            state.names.push(state.legend_synonyms[i][0]);
+                            var n = state.legend_synonyms[i][0];
+                            if (state.names.indexOf(n)!==-1) {
+                                logError('Object "'+n+'" has been declared to be multiple different things',state.legend_synonyms[i].lineNumber);
+                            }
+                            state.names.push(n);
                         }
                         for (var i = 0; i < state.legend_aggregates.length; i++) {
-                            state.names.push(state.legend_aggregates[i][0]);
+                            var n = state.legend_aggregates[i][0];
+                            if (state.names.indexOf(n)!==-1) {
+                                logError('Object "'+n+'" has been declared to be multiple different things',state.legend_aggregates[i].lineNumber);
+                            }
+                            state.names.push(n);
                         }
                         for (var i = 0; i < state.legend_properties.length; i++) {
-                            state.names.push(state.legend_properties[i][0]);
+                            var n = state.legend_properties[i][0];
+                            if (state.names.indexOf(n)!==-1) {
+                                logError('Object "'+n+'" has been declared to be multiple different things',state.legend_properties[i].lineNumber);
+                            }                            
+                            state.names.push(n);
                         }
                     }
                     else if (state.section === 'levels') {
@@ -306,7 +321,7 @@ var codeMirrorFn = function() {
 										                                };
 								} else {
 									//set up alias
-									state.legend_synonyms.push([candname,state.objects_candname]);
+									state.legend_synonyms.push([candname,state.objects_candname,state.lineNumber]);
 								}								
                                 state.objects_section = -1;
                                 return 'NAME';
@@ -552,7 +567,7 @@ var codeMirrorFn = function() {
                                 stream.match(reg_notcommentstart, true);
                                 return 'ERROR';
                             } else if (splits.length === 3) {
-                                state.legend_synonyms.push([splits[0], splits[2].toLowerCase()]);
+                                state.legend_synonyms.push([splits[0], splits[2].toLowerCase(),state.lineNumber]);
                             } else if (splits.length % 2 === 0) {
                                 ok = false;
                             } else {
