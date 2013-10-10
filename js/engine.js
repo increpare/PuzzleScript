@@ -635,12 +635,15 @@ function setGameState(_state, command) {
 	if (canYoutube) {
 		if ('youtube' in state.metadata) {
 			var youtubeid=state.metadata['youtube'];
-			var url = "http://www.youtube.com/embed/"+youtubeid+"?autoplay=1&loop=1&playlist="+youtubeid;
+			var url = "https://youtube.googleapis.com/v/"+youtubeid+"?autoplay=1&loop=1&playlist="+youtubeid;
 			ifrm = document.createElement("IFRAME");
 			ifrm.setAttribute("src",url);
 			ifrm.style.visibility="hidden";
-			ifrm.style.width="1px";
-			ifrm.style.height="1px";
+			ifrm.style.width="500px";
+			ifrm.style.height="500px";
+			ifrm.style.position="absolute";
+			ifrm.style.top="-1000px";
+			ifrm.style.left="-1000px";
 //			ifrm.style.display="none";
 			document.body.appendChild(ifrm);
 		}
