@@ -514,6 +514,15 @@ var codeMirrorFn = function() {
                             	if (n in state.objects) {
                             		return [n];
                             	} 
+
+
+                                for (var i=0;i<state.legend_synonyms.length;i++) {
+                                    var a = state.legend_synonyms[i];
+                                    if (a[0]===n) {           
+                                        return [a[1]];         
+                                    }
+                                }
+
                             	for (var i=0;i<state.legend_aggregates.length;i++) {
                             		var a = state.legend_aggregates[i];
                             		if (a[0]===n) {           
@@ -524,7 +533,8 @@ var codeMirrorFn = function() {
                             	for (var i=0;i<state.legend_properties.length;i++) {
                             		var a = state.legend_properties[i];
                             		if (a[0]===n) {  
-                            			return [].concat.apply([],a.slice(1).map(substitutor));
+                                        var result = [].concat.apply([],a.slice(1).map(substitutor));
+                            			return result;
                             		}
                             	}
                             	logError('Cannot add "' + candname.toUpperCase() + '" to a collision layer; it has not been declared.', state.lineNumber);                                
