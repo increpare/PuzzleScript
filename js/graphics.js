@@ -71,10 +71,15 @@ function regenSpriteImages() {
 
 
 
-	if (textMode) {
+//	if (textMode) {
+    //find some other way to be selective about this stuff :)
 		regenText(spritecanvas,spritectx);
-		return;
-	}
+//		return;
+//	}
+    
+    if (state.levels.length===0) {
+        return;
+    }
     spriteimages = [];
 
 

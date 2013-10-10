@@ -39,7 +39,6 @@ function generateSpriteMatrix(dat) {
 }
 
 var debugMode;
-var verbose_logging;
 var colorPalette;
 
 function generateExtraMembers(state) {

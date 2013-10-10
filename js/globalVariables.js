@@ -6,6 +6,7 @@ if (localStorage[document.URL]!==undefined) {
 	curlevel = localStorage[document.URL];
 }
 
+var verbose_logging=false;
 var quittingTitleScreen=false;
 var quittingMessageScreen=false;
 var deltatime=17;
