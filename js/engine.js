@@ -224,15 +224,23 @@ function generateTitleScreen()
 	}
 
 	var width = titleImage[0].length;
-	var titleLength=title.length;
-	var lmargin = ((width-titleLength)/2)|0;
-	var rmargin = width-titleLength-lmargin;
-	var row = titleImage[1];
-	titleImage[1]=row.slice(0,lmargin)+title+row.slice(lmargin+title.length);
-	var row = titleImage[3];
+	var titlelines=wordwrap(title,titleImage[0].length);
+	for (var i=0;i<titlelines.length;i++) {
+		var titleline=titlelines[i];
+		var titleLength=titleline.length;
+		var lmargin = ((width-titleLength)/2)|0;
+		var rmargin = width-titleLength-lmargin;
+		var row = titleImage[1+i];
+		titleImage[1+i]=row.slice(0,lmargin)+titleline+row.slice(lmargin+titleline.length);
+	}
 	if (state.metadata.author!==undefined) {
 		var attribution="by "+state.metadata.author;
-		titleImage[3]=row.slice(0,width-attribution.length-1)+attribution+row[row.length-1];			
+		attributionsplit = wordwrap(attribution,titleImage[0].length);
+		for (var i=0;i<attributionsplit.length;i++) {
+			var line = attributionsplit[i];
+			var row = titleImage[3+i];
+			titleImage[3+i]=row.slice(0,width-line.length-1)+line+row[row.length-1];			
+		}
 	}
 
 }
@@ -636,6 +644,36 @@ function setGameState(_state, command) {
 //			ifrm.style.display="none";
 			document.body.appendChild(ifrm);
 		}
+
+		/*
+		if ('youtube' in state.metadata) {
+			var div_container = document.createElement('DIV');
+			var div_front = document.createElement('DIV');
+			div_front.style.zIndex=-100;	
+			div_front.style.backgroundColor=state.bgcolor;
+			div_front.style.position= "absolute";
+			div_front.style.width="500px";
+			div_front.style.height="500px";
+			var div_back = document.createElement('DIV');
+			div_back.style.zIndex=-200;
+			div_back.style.position= "absolute";
+			
+			div_container.appendChild(div_back);
+			div_container.appendChild(div_front);
+			
+			var youtubeid=state.metadata['youtube'];
+			var url = "https://youtube.googleapis.com/v/"+youtubeid+"?autoplay=1&loop=1&playlist="+youtubeid;
+			ifrm = document.createElement("IFRAME");
+			ifrm.setAttribute("src",url);
+			ifrm.style.visibility="hidden";
+			ifrm.style.width="500px";
+			ifrm.style.height="500px";
+			ifrm.frameBorder="0";
+//			ifrm.style.display="none";
+
+			div_back.appendChild(ifrm);
+			document.body.appendChild(div_container);
+			*/
 	}
 	
 }
@@ -1360,7 +1398,15 @@ function applyRuleAt(rule,delta,tuple,check) {
         	}
 
             //check if it's changed
-            if (oldCellMask!==curCellMask || oldMovementMask!=curMovementMask || rigidchange) {                	
+            if (oldCellMask!==curCellMask || oldMovementMask!=curMovementMask || rigidchange) { 
+
+				if (verbose_logging){
+					var lineNumber = rule[3];
+					var ruleDirection = dirMaskName[rule[0]];
+					var logString = '<font color="green">Rule <a onclick="jumpToLine(' + lineNumber.toString() + ');"  href="javascript:void(0);">' + lineNumber.toString() + '</a> applied.</font>';
+					consolePrint(logString);
+				}
+
                 result=true;
                 if (rigidchange) {
         			level.rigidGroupIndexMask[currentIndex] = curRigidGroupIndexMask;
@@ -1564,7 +1610,16 @@ function propagateLateMovements(){
     		//do nothing
     	} else {
     		var ruleGroup=state.lateRules[ruleGroupIndex];
-			loopPropagated = applyRuleGroup(ruleGroup) || loopPropagated;	        	        
+    		var modified = applyRuleGroup(ruleGroup);
+
+			if (verbose_logging&&modified){
+				var rule=ruleGroup[0];
+				var lineNumber = rule[3];
+				var ruleDirection = dirMaskName[rule[0]];
+				var logString = '<font color="green">Rule group <a onclick="jumpToLine(' + lineNumber.toString() + ');"  href="javascript:void(0);">' + lineNumber.toString() + '</a> applied.</font>';
+				consolePrint(logString);
+			}
+			loopPropagated = modified || loopPropagated;	        	        
 	    }
         if (loopPropagated && state.lateLoopPoint[ruleGroupIndex]!==undefined) {
         	ruleGroupIndex = state.lateLoopPoint[ruleGroupIndex];

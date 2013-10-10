@@ -264,6 +264,8 @@ function redraw() {
                 var spriteimage = textImages[n];
                 if (!spriteimage.complete)
                     return;
+                if (spriteimage.width===0||spriteimage.height===0)
+                    return;
             }
         }
 
