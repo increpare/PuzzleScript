@@ -97,6 +97,10 @@ A puzzlescript file is divided into 8 sections:
    	<p>
    	   	<pre><code>[ > Player | STATIONARY Crate ] -> [ > Player | > Crate ]</code></pre>
 	<p>
+  If you want to search if two things overlap, just mention them side by side
+  <p>
+    <pre><code>[ Player Spikes ] -> [ DeadPlayer Spikes ]</code></pre>
+  <p>
 	If one wanted to match any player movements, not just movements towards the crate, one can replace the arrow with the <b>MOVING</b> keyword.
    	<p>
    	   	<pre><code>[ MOVING Player | STATIONARY Crate ] -> [ MOVING Player | MOVING Crate ]</code></pre>
