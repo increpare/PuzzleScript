@@ -551,6 +551,10 @@ var codeMirrorFn = function() {
 
                             var ar = substitutor(candname);
 
+                            if (state.collisionLayers.length===0) {
+                                logError("no layers found.",state.lineNumber);
+                                return 'ERROR';
+                            }
                             state.collisionLayers[state.collisionLayers.length - 1] = state.collisionLayers[state.collisionLayers.length - 1].concat(ar);
                             if (state.collisionLayers.length > 6) {
                                 logError("Cannot have more than 6 layers.  You probably don't need that many, you know...", state.lineNumber);

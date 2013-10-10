@@ -866,19 +866,22 @@ function repositionEntitiesAtCell(positionIndex) {
     //assumes not zero
     //for each layer
     var moved=false;
-    for (var layer=0;layer<6;layer++) {
+    for (var layer=0;layer<6;layer++) {    	
         var layerMovement = parseInt('11111', 2) & (movementMask>>(5*layer));
         if (layerMovement!=0) {
 //        	if (randomDirMask===layerMovement) {
 //        		layerMovement = randomDir();
 //        	}
-            moved = repositionEntitiesOnLayer(positionIndex,layer,layerMovement) || moved;
+            var thismoved = repositionEntitiesOnLayer(positionIndex,layer,layerMovement);
+            if (thismoved) {
+            	movementMask = movementMask & (~(layerMovement<<(5*layer)));
+            }
+            moved = thismoved || moved;
         }
     }
 
-    if (moved){
-        level.movementMask[positionIndex]=0;
-    } 
+   	level.movementMask[positionIndex] = movementMask;            
+
     return moved;
 }
 

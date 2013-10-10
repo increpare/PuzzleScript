@@ -1872,7 +1872,7 @@ function generateLoopPoints(state) {
 
 	for (var j=0;j<state.loops.length;j++) {
 		var loop = state.loops[j];
-		for (var i=0;i<state.rules.length-1;i++) {
+		for (var i=0;i<state.rules.length;i++) {
 			var ruleGroup = state.rules[i];
 
 			var firstRule = ruleGroup[0];			
@@ -1880,8 +1880,6 @@ function generateLoopPoints(state) {
 
 			var firstRuleLine = firstRule[3];
 			var lastRuleLine = lastRule[3];
-
-			var nextRuleGroup =state.rules[i+1];
 
 			if (outside) {
 				if (firstRuleLine>=loop[0]) {
@@ -1916,7 +1914,7 @@ function generateLoopPoints(state) {
 	outside=true;
 	for (var j=0;j<state.loops.length;j++) {
 		var loop = state.loops[j];
-		for (var i=0;i<state.lateRules.length-1;i++) {
+		for (var i=0;i<state.lateRules.length;i++) {
 			var ruleGroup = state.lateRules[i];
 
 			var firstRule = ruleGroup[0];			
@@ -1924,8 +1922,6 @@ function generateLoopPoints(state) {
 
 			var firstRuleLine = firstRule[3];
 			var lastRuleLine = lastRule[3];
-
-			var nextRuleGroup =state.lateRules[i+1];
 
 			if (outside) {
 				if (firstRuleLine>=loop[0]) {
