@@ -975,7 +975,14 @@ function cellRowMatchesWildCard(direction,cellRow,i,maxk) {
     var allowed;
     var result=[];
 
-    if (checkThing(initCellMask,initMovementMask,initNonExistenceMask,initStationaryMask,movementMask,cellMask)) {
+    if (
+
+			((initCellMask&cellMask) == initCellMask) &&
+			((initNonExistenceMask&cellMask)==0)&&
+			((initMovementMask===0?true:((initMovementMask&movementMask)!==0))) &&
+			((initStationaryMask&movementMask)==0)
+    	//checkThing(initCellMask,initMovementMask,initNonExistenceMask,initStationaryMask,movementMask,cellMask)
+    	) {
             var targetIndex = i;
             for (var j=6;j<cellRow.length;j+=6) {
                 targetIndex = (targetIndex+delta[1]+delta[0]*level.height)%level.dat.length;
@@ -1000,7 +1007,15 @@ function cellRowMatchesWildCard(direction,cellRow,i,maxk) {
 			                ruleNonExistenceMask = cellRow[j2+2];
 			                ruleStationaryMask = cellRow[j2+4];
 
-						    if (checkThing(ruleCellMask,ruleMovementMask,ruleNonExistenceMask,ruleStationaryMask,movementMask,cellMask)) {
+						    if (
+
+								((ruleCellMask&cellMask) == ruleCellMask) &&
+								((ruleNonExistenceMask&cellMask)==0)&&
+								((ruleMovementMask===0?true:((ruleMovementMask&movementMask)!==0))) &&
+								((ruleStationaryMask&movementMask)==0)
+						    	//checkThing(ruleCellMask,ruleMovementMask,ruleNonExistenceMask,ruleStationaryMask,movementMask,cellMask)
+
+						    	) {
 						    	//good
 						    } else {
 						    	break;
@@ -1046,7 +1061,15 @@ function cellRowMatches(direction,cellRow,i,k) {
 
     var allowed;
 
-    if (checkThing(initCellMask,initMovementMask,initNonExistenceMask,initStationaryMask,movementMask,cellMask)) {
+    if (
+			((initCellMask&cellMask) == initCellMask) &&
+			((initNonExistenceMask&cellMask)==0)&&
+			((initMovementMask===0?true:((initMovementMask&movementMask)!==0))) &&
+			((initStationaryMask&movementMask)==0)
+
+//    	checkThing(initCellMask,initMovementMask,initNonExistenceMask,initStationaryMask,movementMask,cellMask)
+
+    	) {
             var targetIndex = i;
             for (var j=6;j<cellRow.length;j+=6) {
                 targetIndex = (targetIndex+delta[1]+delta[0]*level.height)%level.dat.length;
@@ -1061,7 +1084,15 @@ function cellRowMatches(direction,cellRow,i,k) {
                 var ruleCellMask = cellRow[j+1];
                 var ruleNonExistenceMask = cellRow[j+2];
                 var ruleStationaryMask = cellRow[j+4];
-			    if (checkThing(ruleCellMask,ruleMovementMask,ruleNonExistenceMask,ruleStationaryMask,movementMask,cellMask)) {
+			    if (
+
+			((ruleCellMask&cellMask) == ruleCellMask) &&
+			((ruleNonExistenceMask&cellMask)==0)&&
+			((ruleMovementMask===0?true:((ruleMovementMask&movementMask)!==0))) &&
+			((ruleStationaryMask&movementMask)==0)
+
+			    	//checkThing(ruleCellMask,ruleMovementMask,ruleNonExistenceMask,ruleStationaryMask,movementMask,cellMask)
+			    	) {
                     //GOOD
                 } else {
                     break;
@@ -1405,14 +1436,6 @@ function applyRuleAt(rule,delta,tuple,check) {
 
             //check if it's changed
             if (oldCellMask!==curCellMask || oldMovementMask!=curMovementMask || rigidchange) { 
-
-				if (verbose_logging){
-					var lineNumber = rule[3];
-					var ruleDirection = dirMaskName[rule[0]];
-					var logString = '<font color="green">Rule <a onclick="jumpToLine(' + lineNumber.toString() + ');"  href="javascript:void(0);">' + lineNumber.toString() + '</a> applied.</font>';
-					consolePrint(logString);
-				}
-
                 result=true;
                 if (rigidchange) {
         			level.rigidGroupIndexMask[currentIndex] = curRigidGroupIndexMask;
@@ -1434,6 +1457,14 @@ function applyRuleAt(rule,delta,tuple,check) {
             currentIndex = (currentIndex+delta[1]+delta[0]*level.height)%level.dat.length;
         }
     }
+
+	if (verbose_logging && result){
+		var lineNumber = rule[3];
+		var ruleDirection = dirMaskName[rule[0]];
+		var logString = '<font color="green">Rule <a onclick="jumpToLine(' + lineNumber.toString() + ');"  href="javascript:void(0);">' + lineNumber.toString() + '</a> applied.</font>';
+		consolePrint(logString);
+	}
+
     return result;
 }
 
@@ -1517,13 +1548,6 @@ function applyRandomRuleGroup(ruleGroup) {
 	var check=false;
 	var modified = applyRuleAt(rule,delta,tuple,check);
 
-	if (verbose_logging&&modified){
-		var lineNumber = rule[3];
-		var ruleDirection = dirMaskName[rule[0]];
-		var logString = '<font color="green">Random rule group <a onclick="jumpToLine(' + lineNumber.toString() + ');"  href="javascript:void(0);">' + lineNumber.toString() + '</a> applied.</font>';
-		consolePrint(logString);
-	}
-
    	queueCommands(rule);
 
 	return modified;
@@ -1555,13 +1579,6 @@ function applyRuleGroup(ruleGroup) {
         	loopPropagated=true;
         }
     }
-
-	if (verbose_logging&&loopPropagated){
-		var lineNumber = rule[3];
-		var ruleDirection = dirMaskName[rule[0]];
-		var logString = '<font color="green">Rule group <a onclick="jumpToLine(' + lineNumber.toString() + ');"  href="javascript:void(0);">' + lineNumber.toString() + '</a> applied.</font>';
-		consolePrint(logString);
-	}
 
     return loopPropagated;
 }
@@ -1618,13 +1635,6 @@ function propagateLateMovements(){
     		var ruleGroup=state.lateRules[ruleGroupIndex];
     		var modified = applyRuleGroup(ruleGroup);
 
-			if (verbose_logging&&modified){
-				var rule=ruleGroup[0];
-				var lineNumber = rule[3];
-				var ruleDirection = dirMaskName[rule[0]];
-				var logString = '<font color="green">Rule group <a onclick="jumpToLine(' + lineNumber.toString() + ');"  href="javascript:void(0);">' + lineNumber.toString() + '</a> applied.</font>';
-				consolePrint(logString);
-			}
 			loopPropagated = modified || loopPropagated;	        	        
 	    }
         if (loopPropagated && state.lateLoopPoint[ruleGroupIndex]!==undefined) {
