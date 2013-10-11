@@ -1441,11 +1441,29 @@ function rulesToMask(state) {
 	}
 }
 
+function cellRowMasks(rule) {
+	var ruleMasks=[];
+	var lhs=rule[1];
+	for (var i=0;i<lhs.length;i++) {
+		var cellRow = lhs[i];
+		var rowMask=0;
+		for (var j=0;j<cellRow.length;j+=6) {
+			var cellMask=cellRow[j+1];
+			rowMask = rowMask | cellMask;
+		}
+		if (rowMask===0) {
+			rowMask=~0;
+		}
+		ruleMasks.push(rowMask);
+	}
+	return ruleMasks;
+}
+
 function collapseRules(state) {
 	for (var i = 0; i < state.rules.length; i++)
 	{
 		var oldrule = state.rules[i];
-		var newrule = [0,[],[],oldrule.lineNumber,oldrule.late/*ellipses,group number,rigid,commands,commandsonly,randomrule*/];
+		var newrule = [0,[],[],oldrule.lineNumber,oldrule.late/*ellipses,group number,rigid,commands,commandsonly,randomrule,[cellrowmasks]*/];
 		var ellipses = [];
 		for (var j=0;j<oldrule.lhs.length;j++) {
 			ellipses.push(false);
@@ -1493,6 +1511,7 @@ function collapseRules(state) {
 		newrule.push(oldrule.rhs.length===0);
 		newrule.push(oldrule.randomRule);
 		
+		newrule.push(cellRowMasks(newrule));
 		state.rules[i] = newrule;
 
 	}

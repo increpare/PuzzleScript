@@ -436,28 +436,28 @@ function checkKey(e,justPressed) {
         case 65://a
         case 37: //left
         {
-            window.console.log("LEFT");
+//            window.console.log("LEFT");
             inputdir=1;
         break;
         }
         case 38: //up
         case 87: //w
         {
-            window.console.log("UP");
+//            window.console.log("UP");
             inputdir=0;
         break;
         }
         case 68://d
         case 39: //right
         {
-            window.console.log("RIGHT");
+//            window.console.log("RIGHT");
             inputdir=3;
         break;
         }
         case 83://s
         case 40: //down
         {
-            window.console.log("DOWN");
+//            window.console.log("DOWN");
             inputdir=2;
         break;
         }
@@ -466,7 +466,7 @@ function checkKey(e,justPressed) {
         case 67://c
         case 88://x
         {
-            window.console.log("ACTION");
+//            window.console.log("ACTION");
             inputdir=4;
         break;
         }
@@ -540,7 +540,8 @@ function checkKey(e,justPressed) {
 
         		canvasResize();
         		return prevent(e);
-        	}		
+        	}	
+        	break;	
         }
     }
 

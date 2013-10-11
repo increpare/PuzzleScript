@@ -385,8 +385,18 @@ function loadLevelFromState(state,levelindex) {
 	        movementMask: leveldat.dat.concat([]),
             rigidMovementAppliedMask: leveldat.dat.concat([]),
 	        rigidGroupIndexMask: leveldat.dat.concat([]),//group index
-	        commandQueue:[]
+	        rowCellContents:[],
+	        colCellContents:[],
+	        mapCellContents:0
 	    };
+
+	    for (var i=0;i<level.height;i++) {
+	    	level.rowCellContents[i]=0;	    	
+	    }
+	    for (var i=0;i<level.width;i++) {
+	    	level.colCellContents[i]=0;	    	
+	    }
+
 	    for (var i=0;i<level.movementMask.length;i++)
 	    {
 	        level.movementMask[i]=0;
@@ -504,7 +514,7 @@ var backups=[];
 var restartTarget;
 
 function backupLevel() {
-	return deepClone(level);
+	return level.dat.concat([]);
 }
 
 function setGameState(_state, command) {
@@ -684,14 +694,25 @@ function setGameState(_state, command) {
 var messagetext="";
 function restoreLevel(lev) {
 	oldflickscreendat=[];
-	level = deepClone(lev);
+	level.dat=lev.concat([]);
 
-    for (var i=0;i<level.movementMask.length;i++)
-    {    	
-        level.movementMask[i]=0;
-        level.rigidGroupIndexMask[i]=0;
-        level.rigidMovementAppliedMask[i]=0;
+
+	level.dat=lev.concat([]);
+	//width/height don't change, neither does layercount
+	for (var i=0;i<level.dat.length;i++) {
+		level.movementMask[i]=0;
+		level.rigidMovementAppliedMask[i]=0;
+		level.rigidGroupIndexMask[i]=0;
+	}	
+
+    for (var i=0;i<level.height;i++) {
+    	level.rowCellContents[i]=0;	    	
     }
+    for (var i=0;i<level.width;i++) {
+    	level.colCellContents[i]=0;	    	
+    }
+
+
     againing=false;
     messagetext="";
     level.commandQueue=[];
@@ -840,6 +861,12 @@ function repositionEntitiesOnLayer(positionIndex,layer,dirMask)
     level.dat[targetIndex] = targetMask | movingEntities;
 
 
+    var colIndex=(targetIndex/level.height)|0;
+	var rowIndex=(targetIndex%level.height);
+    level.colCellContents[colIndex]=(level.colCellContents[colIndex]|movingEntities);
+    level.rowCellContents[rowIndex]=(level.rowCellContents[rowIndex]|movingEntities);
+    level.mapCellContents = (level.mapCellContents|movingEntities);
+
 	for (var i=0;i<state.sfx_MovementMasks.length;i++) {
 		var o = state.sfx_MovementMasks[i];
 		var objectMask = o.objectMask;
@@ -909,7 +936,17 @@ function cellRowMatchesWildCard_ParticularK(direction,cellRow,i,k) {
     var allowed;
     var result=[];
 
-    if (checkThing(initCellMask,initMovementMask,initNonExistenceMask,initStationaryMask,movementMask,cellMask)) {
+    if (
+
+
+
+			((initCellMask&cellMask) == initCellMask) &&
+			((initNonExistenceMask&cellMask)==0)&&
+			((initMovementMask===0?true:((initMovementMask&movementMask)!==0))) &&
+			((initStationaryMask&movementMask)==0)
+
+    	//checkThing(initCellMask,initMovementMask,initNonExistenceMask,initStationaryMask,movementMask,cellMask)
+    	) {
             var targetIndex = i;
             for (var j=6;j<cellRow.length;j+=6) {
                 targetIndex = (targetIndex+delta[1]+delta[0]*level.height)%level.dat.length;
@@ -935,7 +972,15 @@ function cellRowMatchesWildCard_ParticularK(direction,cellRow,i,k) {
 			                ruleNonExistenceMask = cellRow[j2+2];
 			                ruleStationaryMask = cellRow[j2+4];
 
-						    if (checkThing(ruleCellMask,ruleMovementMask,ruleNonExistenceMask,ruleStationaryMask,movementMask,cellMask)) {
+						    if (
+
+								((ruleCellMask&cellMask) == ruleCellMask) &&
+								((ruleNonExistenceMask&cellMask)==0)&&
+								((ruleMovementMask===0?true:((ruleMovementMask&movementMask)!==0))) &&
+								((ruleStationaryMask&movementMask)==0)
+
+						    	//checkThing(ruleCellMask,ruleMovementMask,ruleNonExistenceMask,ruleStationaryMask,movementMask,cellMask)
+						    	) {
 						    	//good
 						    } else {
 						    	break;
@@ -951,7 +996,14 @@ function cellRowMatchesWildCard_ParticularK(direction,cellRow,i,k) {
                 }
 
 
-			    if (checkThing(ruleCellMask,ruleMovementMask,ruleNonExistenceMask,ruleStationaryMask,movementMask,cellMask)) {
+			    if (
+
+								((ruleCellMask&cellMask) == ruleCellMask) &&
+								((ruleNonExistenceMask&cellMask)==0)&&
+								((ruleMovementMask===0?true:((ruleMovementMask&movementMask)!==0))) &&
+								((ruleStationaryMask&movementMask)==0)
+								//checkThing(ruleCellMask,ruleMovementMask,ruleNonExistenceMask,ruleStationaryMask,movementMask,cellMask)
+								) {
                     //GOOD
                 } else {
                     break;
@@ -1031,7 +1083,13 @@ function cellRowMatchesWildCard(direction,cellRow,i,maxk) {
                 }
 
 
-			    if (checkThing(ruleCellMask,ruleMovementMask,ruleNonExistenceMask,ruleStationaryMask,movementMask,cellMask)) {
+			    if (
+						((ruleCellMask&cellMask) == ruleCellMask) &&
+						((ruleNonExistenceMask&cellMask)==0)&&
+						((ruleMovementMask===0?true:((ruleMovementMask&movementMask)!==0))) &&
+						((ruleStationaryMask&movementMask)==0)
+			    	//checkThing(ruleCellMask,ruleMovementMask,ruleNonExistenceMask,ruleStationaryMask,movementMask,cellMask)
+			    	) {
                     //GOOD
                 } else {
                     break;
@@ -1107,14 +1165,19 @@ function cellRowMatches(direction,cellRow,i,k) {
         return false;
 }
 
-function matchCellRow(direction, cellRow) {
+function matchCellRow(direction, cellRow, cellRowMask) {	
 	var result=[];
+	if ((cellRowMask&level.mapCellContents)===0) {
+		return result;
+	}
+
 	var xmin=0;
 	var xmax=level.width;
 	var ymin=0;
 	var ymax=level.height;
 
     var len=((cellRow.length/6)|0);
+
     switch(direction) {
     	case 1://up
     	{
@@ -1141,21 +1204,47 @@ function matchCellRow(direction, cellRow) {
     		window.console.log("EEEP "+direction);
     	}
     }
-	for (var x=xmin;x<xmax;x++) {
+
+    var horizontal=direction<=2;
+    if (horizontal) {
 		for (var y=ymin;y<ymax;y++) {
-			var i = x*level.height+y;
-			if (cellRowMatches(direction,cellRow,i))
-			{
-				result.push(i);
+			if ((level.rowCellContents[y]&cellRowMask)===0) {
+				continue;
+			}
+
+			for (var x=xmin;x<xmax;x++) {
+				var i = x*level.height+y;
+				if (cellRowMatches(direction,cellRow,i))
+				{
+					result.push(i);
+				}
 			}
 		}
+	} else {
+		for (var x=xmin;x<xmax;x++) {
+			if ((level.colCellContents[x]&cellRowMask)===0) {
+				continue;
+			}
+
+			for (var y=ymin;y<ymax;y++) {
+				var i = x*level.height+y;
+				if (cellRowMatches(direction,cellRow,i))
+				{
+					result.push(i);
+				}
+			}
+		}		
 	}
+
 	return result;
 }
 
 
-function matchCellRowWildCard(direction, cellRow) {
+function matchCellRowWildCard(direction, cellRow,cellRowMask) {
 	var result=[];
+	if ((cellRowMask&level.mapCellContents)===0) {
+		return result;
+	}
 	var xmin=0;
 	var xmax=level.width;
 	var ymin=0;
@@ -1188,40 +1277,90 @@ function matchCellRowWildCard(direction, cellRow) {
     		window.console.log("EEEP2 "+direction);
     	}
     }
-	for (var x=xmin;x<xmax;x++) {
-		for (var y=ymin;y<ymax;y++) {
-			var i = x*level.height+y;
-			var kmax;
 
-			switch(direction) {
-		    	case 1://up
-		    	{
-		    		kmax=y-len+2;
-		    		break;
-		    	}
-		    	case 2: //down 
-		    	{
-					kmax=level.height-(y+len)+1;
-					break;
-		    	}
-		    	case 4: //left
-		    	{
-		    		kmax=x-len+2;
-		    		break;
-		    	}
-		    	case 8: //right
-				{
-					kmax=level.width-(x+len)+1;	
-					break;
-				}
-		    	default:
-		    	{
-		    		window.console.log("EEEP2 "+direction);
-		    	}
-		    }
-			result = result.concat(cellRowMatchesWildCard(direction,cellRow,i,kmax))
-		}	
+
+
+    var horizontal=direction<=2;
+    if (horizontal) {
+		for (var y=ymin;y<ymax;y++) {
+			if ((level.rowCellContents[y]&cellRowMask)===0) {
+				continue;
+			}
+
+			for (var x=xmin;x<xmax;x++) {
+				var i = x*level.height+y;
+				var kmax;
+
+				switch(direction) {
+			    	case 1://up
+			    	{
+			    		kmax=y-len+2;
+			    		break;
+			    	}
+			    	case 2: //down 
+			    	{
+						kmax=level.height-(y+len)+1;
+						break;
+			    	}
+			    	case 4: //left
+			    	{
+			    		kmax=x-len+2;
+			    		break;
+			    	}
+			    	case 8: //right
+					{
+						kmax=level.width-(x+len)+1;	
+						break;
+					}
+			    	default:
+			    	{
+			    		window.console.log("EEEP2 "+direction);
+			    	}
+			    }
+				result = result.concat(cellRowMatchesWildCard(direction,cellRow,i,kmax))
+			}
+		}
+	} else {
+		for (var x=xmin;x<xmax;x++) {
+			if ((level.colCellContents[x]&cellRowMask)===0) {
+				continue;
+			}
+
+			for (var y=ymin;y<ymax;y++) {
+				var i = x*level.height+y;
+				var kmax;
+
+				switch(direction) {
+			    	case 1://up
+			    	{
+			    		kmax=y-len+2;
+			    		break;
+			    	}
+			    	case 2: //down 
+			    	{
+						kmax=level.height-(y+len)+1;
+						break;
+			    	}
+			    	case 4: //left
+			    	{
+			    		kmax=x-len+2;
+			    		break;
+			    	}
+			    	case 8: //right
+					{
+						kmax=level.width-(x+len)+1;	
+						break;
+					}
+			    	default:
+			    	{
+			    		window.console.log("EEEP2 "+direction);
+			    	}
+			    }
+				result = result.concat(cellRowMatchesWildCard(direction,cellRow,i,kmax))
+			}
+		}		
 	}
+
 	return result;
 }
 
@@ -1285,12 +1424,13 @@ function restorePreservationState(preservationState) {
 
 function findRuleMatches(rule) {
 	var matches=[];
+	var cellRowMasks=rule[11];
     for (var cellRowIndex=0;cellRowIndex<rule[1].length;cellRowIndex++) {
         var cellRow = rule[1][cellRowIndex];
         if (rule[5][cellRowIndex]) {//if ellipsis     
-        	var match = matchCellRowWildCard(rule[0],cellRow);  
+        	var match = matchCellRowWildCard(rule[0],cellRow,cellRowMasks[cellRowIndex]);  
         } else {
-        	var match = matchCellRow(rule[0],cellRow);               	
+        	var match = matchCellRow(rule[0],cellRow,cellRowMasks[cellRowIndex]);               	
         }
         if (match.length==0) {
             return [];
@@ -1449,6 +1589,12 @@ function applyRuleAt(rule,delta,tuple,check) {
 
                 level.dat[currentIndex]=curCellMask;
                 level.movementMask[currentIndex]=curMovementMask;
+
+                var colIndex=(currentIndex/level.height)|0;
+				var rowIndex=(currentIndex%level.height);
+                level.colCellContents[colIndex]=(level.colCellContents[colIndex]|curCellMask);
+                level.rowCellContents[rowIndex]=(level.rowCellContents[rowIndex]|curCellMask);
+                level.mapCellContents = (level.mapCellContents|curCellMask);
 
             } else {
 
@@ -1733,6 +1879,27 @@ function resolveMovements(dir){
 var sfxCreateMask=0;
 var sfxDestroyMask=0;
 
+function calculateRowColMasks() {
+	level.mapCellContents=0;
+	for (var i=0;i<level.width;i++) {
+		level.colCellContents[i]=0;
+	}
+
+	for (var j=0;j<level.height;j++) {
+		level.rowCellContents[i]=0;
+	}
+
+	for (var i=0;i<level.width;i++) {
+		for (var j=0;j<level.height;j++) {
+			var index = j+i*level.height;
+			var cellContents=level.dat[index];
+			level.mapCellContents = level.mapCellContents|cellContents;
+			level.rowCellContents[j] = level.rowCellContents[j]|cellContents;
+			level.colCellContents[i] = level.colCellContents[i]|cellContents;
+		}
+	}
+}
+
 function processInput(dir,dontCheckWin,dontModify) {
 
 	if (verbose_logging) { 
@@ -1793,6 +1960,8 @@ function processInput(dir,dontCheckWin,dontModify) {
 
 		seedsToPlay_CanMove=[];
 		seedsToPlay_CantMove=[];
+
+		calculateRowColMasks();
 
         while (first || rigidloop/*||(anyMovements()&& (i<50))*/) {
         //not particularly elegant, but it'll do for now - should copy the world state and check
@@ -1897,7 +2066,7 @@ function processInput(dir,dontCheckWin,dontModify) {
 
         var modified=false;
 	    for (var i=0;i<level.dat.length;i++) {
-	    	if (level.dat[i]!==bak.dat[i]) {
+	    	if (level.dat[i]!==bak[i]) {
 
 				if (dontModify) {
 	        		backups.push(bak);
