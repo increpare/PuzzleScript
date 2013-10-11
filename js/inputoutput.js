@@ -331,6 +331,12 @@ function onMouseUp(event) {
 
 function onKeyDown(event) {
     event = event || window.event;
+
+    // Prevent arrows/space from scrolling page
+    if ([32, 37, 38, 39, 40].indexOf(event.keyCode) > -1) {
+      prevent(event);
+    }
+
     if (keybuffer.indexOf(event.keyCode)>=0) {
     	return;
     }
