@@ -1711,7 +1711,7 @@ function applyRuleGroup(ruleGroup) {
     var loopcount=0;
     while(propagated) {
     	loopcount++;
-    	if (loopcount>50) 
+    	if (loopcount>200) 
     	{
     		logErrorNoLine("got caught looping lots in a rule group :O",true);
     		break;
@@ -1747,7 +1747,7 @@ function propagateMovements(startRuleGroupindex){
         	ruleGroupIndex = state.loopPoint[ruleGroupIndex];
         	loopPropagated=false;
         	loopCount++;
-			if (loopCount > 100) {
+			if (loopCount > 200) {
     			var ruleGroup=state.rules[ruleGroupIndex];
 			   	logError("got caught in an endless startloop...endloop vortex, escaping!", ruleGroup[0][3],true);
 			   	break;
@@ -1759,7 +1759,7 @@ function propagateMovements(startRuleGroupindex){
 		        	ruleGroupIndex = state.loopPoint[ruleGroupIndex];
 		        	loopPropagated=false;		        
 		        	loopCount++;
-					if (loopCount > 100) {
+					if (loopCount > 200) {
 		    			var ruleGroup=state.rules[ruleGroupIndex];
 					   	logError("got caught in an endless startloop...endloop vortex, escaping!", ruleGroup[0][3],true);
 					   	break;
@@ -1787,7 +1787,7 @@ function propagateLateMovements(){
         	ruleGroupIndex = state.lateLoopPoint[ruleGroupIndex];
         	loopPropagated=false;
         	loopCount++;
-			if (loopCount > 100) {
+			if (loopCount > 200) {
     			var ruleGroup=state.lateRules[ruleGroupIndex];
 			   	logError("got caught in an endless startloop...endloop vortex, escaping!", ruleGroup[0][3],true);
 			   	break;
@@ -1799,7 +1799,7 @@ function propagateLateMovements(){
 		        	ruleGroupIndex = state.lateLoopPoint[ruleGroupIndex];
 		        	loopPropagated=false;
 		        	loopCount++;
-					if (loopCount > 100) {
+					if (loopCount > 200) {
 		    			var ruleGroup=state.lateRules[ruleGroupIndex];
 					   	logError("got caught in an endless startloop...endloop vortex, escaping!", ruleGroup[0][3],true);
 					   	break;
