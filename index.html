@@ -106,12 +106,11 @@ PuzzleScript is an open-source HTML5 puzzle game engine.
 
   <div class="span12" style="text-align:center">
   <p>
-    <button class="btn btn-default btn-lg">
-    <a href="http://puzzlescriptgallery.tumblr.com">Gallery</a>
-    </button>
+    <a href="http://puzzlescriptgallery.tumblr.com" class="btn btn-default btn-lg">Gallery</a>
     <p>
   </div>
     </div> <!-- /container -->
+
 
 <div id="elementId" style="display:none">
 <script type="text/javascript" src="http://puzzlescriptgallery.tumblr.com/js"></script>
@@ -163,7 +162,7 @@ function replaceContent() {
   for (var i=0;i<items.length;i++) {
     var item=items[i];
     imgurl = item.getElementsByTagName('img')[0].src;
-    captionurl = item.getElementsByTagName('div')[0].innerText;
+    captionurl = item.getElementsByTagName('div')[0].children[0].children[0].innerHTML;
     data.push([imgurl,captionurl]);
   }
   data = shuffle(data);

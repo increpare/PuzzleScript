@@ -430,7 +430,8 @@ function levelsToArray(state) {
 var directionaggregates = {
 	'horizontal' : ['left', 'right'],
 	'vertical' : ['up', 'down'],
-	'moving' : ['up', 'down', 'left', 'right'],
+	'moving' : ['up', 'down', 'left', 'right', 'action'],
+	'orthogonal' : ['up', 'down', 'left', 'right'],
 	'perpendicular' : ['^','v'],
 	'parallel' : ['<','>']
 };
@@ -569,7 +570,7 @@ function processRuleString(line, state, lineNumber,curRules)
 					logError('You cannot use relative directions (\"^v<>\") to indicate in which direction(s) a rule applies.  Use absolute directions indicators (Up, Down, Left, Right, Horizontal, or Vertical, for instance), or, if you want the rule to apply in all four directions, do not specify directions', lineNumber);
 				} else if (token == '[') {
 					if (directions.length == 0) {
-						directions = directions.concat(directionaggregates['moving']);
+						directions = directions.concat(directionaggregates['orthogonal']);
 					}
 					parsestate = 1;
 					i--;
@@ -1847,7 +1848,7 @@ function printCellRow(cellRow) {
 }
 
 function printRule(rule) {
-	var result="(<a onclick=\"jumpToLine(' + lineNumber.toString() + ');\"  href=\"javascript:void(0);\">"+rule.groupNumber+"</a>) "+ rule.direction.toString().toUpperCase()+" ";
+	var result="(<a onclick=\"jumpToLine('"+ rule.lineNumber.toString() + "');\"  href=\"javascript:void(0);\">"+rule.groupNumber+"</a>) "+ rule.direction.toString().toUpperCase()+" ";
 	if (rule.rigid) {
 		result = "RIGID "+result+" ";
 	}
