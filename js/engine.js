@@ -1205,7 +1205,7 @@ function matchCellRow(direction, cellRow, cellRowMask) {
     	}
     }
 
-    var horizontal=direction<=2;
+    var horizontal=direction>2;
     if (horizontal) {
 		for (var y=ymin;y<ymax;y++) {
 			if ((level.rowCellContents[y]&cellRowMask)===0) {
@@ -1280,7 +1280,7 @@ function matchCellRowWildCard(direction, cellRow,cellRowMask) {
 
 
 
-    var horizontal=direction<=2;
+    var horizontal=direction>2;
     if (horizontal) {
 		for (var y=ymin;y<ymax;y++) {
 			if ((level.rowCellContents[y]&cellRowMask)===0) {
@@ -1799,7 +1799,7 @@ function propagateLateMovements(){
 		        	ruleGroupIndex = state.lateLoopPoint[ruleGroupIndex];
 		        	loopPropagated=false;
 		        	loopCount++;
-					if (loopCount > 200) {
+					if (loopCount > 00) {
 		    			var ruleGroup=state.lateRules[ruleGroupIndex];
 					   	logError("got caught in an endless startloop...endloop vortex, escaping!", ruleGroup[0][3],true);
 					   	break;
@@ -2210,6 +2210,7 @@ function DoWin() {
 	if (winning) {
 		return;
 	}
+	againing=false;
 	tryPlayEndLevelSound();
 	if (unitTesting) {
 		nextLevel();

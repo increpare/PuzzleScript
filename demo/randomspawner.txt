@@ -82,8 +82,9 @@ Player, Robot
 RULES
 ======
 
-up [ Robot ] -> [randomDir Robot]
-up [ Spawner no Obstacle ] -> [ Spawner random Robot ]
+[ stationary Robot ] -> [randomDir Robot]
+[ Spawner no Obstacle ] -> [ Spawner random Robot ]
+
 ==============
 WINCONDITIONS
 ==============
