@@ -51,6 +51,19 @@ function logErrorNoLine(str,urgent) {
 }
 
 
+
+function logBetaMessage(str,urgent){
+    if (compiling||urgent) {
+        var errorString = '<span class="betaText">' + str + '</span>';
+         if (errorStrings.indexOf(errorString) >= 0 && !urgent) {
+            //do nothing, duplicate error
+         } else {
+            consoleError(errorString);
+            errorStrings.push(errorString);
+        }
+    }  
+}
+
 function blankLineHandle(state) {
     if (state.section === 'levels') {
             if (state.levels[state.levels.length - 1].length > 0)

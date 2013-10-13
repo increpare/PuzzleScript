@@ -162,7 +162,10 @@ function unloadGame() {
 	    3, 2, 1, 3, 2, 1, 3, 2, 1, 3,
 	    1, 3, 3, 1, 1, 2, 2, 3, 3, 1,
 	    2, 1, 2, 2, 3, 3, 1, 1, 2, 2
-	    ]
+	    ],
+	    rigidGroupIndexMask:[],//[indexgroupNumber, masked by layer arrays]
+	    rigidMovementAppliedMask:[],//[indexgroupNumber, masked by layer arrays]
+	    bannedGroup:[]
 	};
 	generateTitleScreen();
 	canvasResize();
@@ -550,6 +553,7 @@ function setGameState(_state, command) {
     if (state.metadata.realtime_interval!==undefined) {
     	autotick=0;
     	autotickinterval=state.metadata.realtime_interval*1000;
+    	logBetaMessage("realtime_interval is a beta feature, its behaviour may change before it ends up in launch.  I would advise against circulating this game for wider distribution before then.",true);
     } else {
     	autotick=0;
     	autotickinterval=0;
@@ -695,7 +699,6 @@ var messagetext="";
 function restoreLevel(lev) {
 	oldflickscreendat=[];
 	level.dat=lev.concat([]);
-
 
 	level.dat=lev.concat([]);
 	//width/height don't change, neither does layercount

@@ -656,7 +656,7 @@ function update() {
 	    }
 	}
 
-    if (autotickinterval>0) {
+    if (autotickinterval>0&&!textMode) {
         autotick+=deltatime;
         if (autotick>autotickinterval) {
             autotick=0;

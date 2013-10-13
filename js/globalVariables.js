@@ -41,7 +41,12 @@ var initLevel = {
     3, 2, 1, 3, 2, 1, 3, 2, 1, 3,
     1, 3, 3, 1, 1, 2, 2, 3, 3, 1,
     2, 1, 2, 2, 3, 3, 1, 1, 2, 2
-    ]
+    ],
+    rigidGroupIndexMask:[],//[indexgroupNumber, masked by layer arrays]
+    rigidMovementAppliedMask:[],//[indexgroupNumber, masked by layer arrays]
+    bannedGroup:[],
+    colCellContents:[],
+    rowCellContents:[]
 };
 
 var level = initLevel;

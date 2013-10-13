@@ -28,3 +28,9 @@ function logErrorNoLine(str){
 	str=stripTags(str);
 	errorText.innerHTML+=str+"<br>";
 }
+
+function logBetaMessage(str){
+	var errorText = document.getElementById("errormessage");
+	str=stripTags(str);
+	errorText.innerHTML+=str+"<br>";	
+}
