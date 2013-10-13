@@ -29,7 +29,7 @@ window.Mobile.GestureHandler = function () {
 (function (proto) {
     var SWIPE_DISTANCE = 50;
     var CODE = {
-        x: 88
+        action: 88 // x
     }
 
     proto.initialize = function () {
@@ -109,15 +109,13 @@ window.Mobile.GestureHandler = function () {
     };
 
     proto.handleTap = function () {
-        this.emitKeydown('x'); // action
+        this.emitKeydown('action');
     };
 
-    proto.emitKeydown = function (character) {
+    proto.emitKeydown = function (input) {
         var event;
 
-        event = {
-            keyCode: CODE[character]
-        };
+        event = { keyCode: CODE[input] };
 
         onKeyDown(event);
     };
