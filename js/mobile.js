@@ -1,5 +1,3 @@
-
-
 /*
  * Add gesture support for mobile devices.
  */
@@ -57,7 +55,10 @@ window.Mobile.GestureHandler = function () {
 
     proto.onTouchEnd = function (event) {
         if (!this.gestured) {
-            this.handleTap();
+            // Was this a single finger tap?
+            if (event.touches.length === 0) {
+                this.handleTap();
+            }
         }
     };
 
@@ -92,7 +93,6 @@ window.Mobile.GestureHandler = function () {
             x: event.touches[0].clientX,
             y: event.touches[0].clientY
         };
-
     };
 
     proto.cardinalDistance = function (origin, target) {
@@ -117,7 +117,9 @@ window.Mobile.GestureHandler = function () {
 
         event = { keyCode: CODE[input] };
 
+        // Press, then release key.
         onKeyDown(event);
+        onKeyUp(event);
     };
 }(window.Mobile.GestureHandler.prototype));
 
