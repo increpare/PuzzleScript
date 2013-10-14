@@ -24,9 +24,14 @@ window.Mobile.GestureHandler = function () {
 (function (proto) {
     'use strict';
 
+    // Minimum range to begin looking at the swipe direction, in pixels
     var SWIPE_THRESHOLD = 10;
+    // Distance in pixels required to complete a swipe gesture.
     var SWIPE_DISTANCE = 50;
+    // Time in milliseconds to complete the gesture.
     var SWIPE_TIMEOUT = 1000;
+
+    // Lookup table mapping action to keyCode.
     var CODE = {
         action: 88, // x
         left:   37, // left arrow
@@ -37,6 +42,8 @@ window.Mobile.GestureHandler = function () {
         reset:  82, // r
         quit:   27, // escape
     }
+
+    // Template for the menu.
     var MENU_STRING = [
         '<div class="mobile-menu">',
         '  <div class="close">X</div>',
@@ -47,6 +54,8 @@ window.Mobile.GestureHandler = function () {
         '</div>'
     ].join("\n");
 
+    /** Bootstrap Methods **/
+
     proto.initialize = function () {
         this.firstPos = { x: 0, y: 0 };
     };
@@ -56,6 +65,8 @@ window.Mobile.GestureHandler = function () {
         window.addEventListener('touchend', this.onTouchEnd.bind(this));
         window.addEventListener('touchmove', this.onTouchMove.bind(this));
     };
+
+    /** Event Handlers **/
 
     proto.onTouchStart = function (event) {
         if (this.isTouching) {
@@ -77,17 +88,18 @@ window.Mobile.GestureHandler = function () {
 
     proto.onTouchEnd = function (event) {
         if (!this.isTouching) {
-            // The touch start event was probably canceled.
+            // If we're here, the menu event handlers had probably
+            // canceled the touchstart event.
             return;
         }
         if (!this.gestured) {
-            // Was this a single finger tap?
             if (event.touches.length === 0) {
                 this.handleTap();
             }
         }
 
-        // Last finger to be removed from the screen.
+        // The last finger to be removed from the screen lets us know
+        // we aren't tracking anything.
         if (event.touches.length === 0) {
             this.isTouching = false;
         }
@@ -104,6 +116,8 @@ window.Mobile.GestureHandler = function () {
 
         event.preventDefault();
     };
+
+    /** Detection Helper Methods **/
 
     proto.isSuccessfulSwipe = function () {
         var isSuccessful;
@@ -136,8 +150,8 @@ window.Mobile.GestureHandler = function () {
 
         this.swipeDistance = this.cardinalDistance(this.firstPos, currentPos);
         if (!this.swipeDirection) {
-            // We've swiped far enough to decide what direction we're swiping in.
             if (this.swipeDistance > SWIPE_THRESHOLD) {
+                // We've swiped far enough to decide what direction we're swiping in.
                 this.swipeDirection = this.dominantDirection(this.firstPos, currentPos);
                 this.touchCount = touchCount;
             }
@@ -159,6 +173,7 @@ window.Mobile.GestureHandler = function () {
         }
     };
 
+    // Find the distance traveled by the swipe along compass directions.
     proto.cardinalDistance = function (firstPos, currentPos) {
         var xDist, yDist;
 
@@ -168,6 +183,7 @@ window.Mobile.GestureHandler = function () {
         return Math.max(xDist, yDist);
     };
 
+    // Decide which direction the touch has moved farthest.
     proto.dominantDirection = function (firstPos, currentPos) {
         var dx, dy;
         var dominantAxis, dominantDirection;
@@ -197,12 +213,15 @@ window.Mobile.GestureHandler = function () {
         return dominantDirection;
     };
 
+    /** Action Methods **/
+
+    // Method to be called when we've detected a swipe and some action
+    // is called for.
     proto.handleSwipe = function (direction, touchCount) {
-        console.log(touchCount);
         if (touchCount === 1) {
             this.emitKeydown(this.swipeDirection);
         } else if (touchCount > 1) {
-            // Multitouch gesture to open toggle the menu.
+            // Since this was a multitouch gesture, open the menu.
             this.toggleMenu();
         }
     };
@@ -211,6 +230,7 @@ window.Mobile.GestureHandler = function () {
         this.emitKeydown('action');
     };
 
+    // Fake out keypresses to acheive the desired effect.
     proto.emitKeydown = function (input) {
         var event;
 
@@ -273,7 +293,9 @@ window.Mobile.GestureHandler = function () {
     };
 
     proto.hideMenu = function () {
-        this.menuElem.setAttribute('style', 'display: none;');
+        if (this.menuElem) {
+            this.menuElem.setAttribute('style', 'display: none;');
+        }
         this.isMenuVisible = false;
     };
 
