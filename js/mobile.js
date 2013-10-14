@@ -21,6 +21,12 @@ window.Mobile.GestureHandler = function () {
     this.initialize.apply(this, arguments);
 };
 
+Mobile.log = function (message) {
+    var h1;
+    h1 = document.getElementsByTagName('h1')[0];
+    h1.innerHTML = "" + Math.random().toString().substring(4, 1) + "-" + message;
+};
+
 (function (proto) {
     'use strict';
 
@@ -236,6 +242,7 @@ window.Mobile.GestureHandler = function () {
 
         event = { keyCode: CODE[input] };
 
+        this.fakeCanvasFocus();
         // Press, then release key.
         onKeyDown(event);
         onKeyUp(event);
@@ -297,6 +304,16 @@ window.Mobile.GestureHandler = function () {
             this.menuElem.setAttribute('style', 'display: none;');
         }
         this.isMenuVisible = false;
+    };
+
+    proto.fakeCanvasFocus = function () {
+        var canvas;
+
+        canvas = document.getElementById('gameCanvas');
+        onMouseDown({
+            button: 0,
+            target: canvas
+        });
     };
 
 }(window.Mobile.GestureHandler.prototype));
