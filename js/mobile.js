@@ -10,13 +10,11 @@ Mobile.hasTouch = function() {
 };
 
 Mobile.enable = function () {
-    var handler;
-    if (Mobile.hasTouch() && !Mobile.gesturesEnabled) {
-        handler = new Mobile.GestureHandler();
-        handler.bindEvents();
-
-        Mobile.gesturesEnabled = true;
+    if (Mobile.hasTouch() && !Mobile._instance) {
+        Mobile._instance = new Mobile.GestureHandler();
+        Mobile._instance.bindEvents();
     }
+    return Mobile._instance;
 };
 
 window.Mobile.GestureHandler = function () {
@@ -34,8 +32,20 @@ window.Mobile.GestureHandler = function () {
         left:   37, // left arrow
         right:  39, // right arrow
         up:     38, // up arrow
-        down:   40  // down arrow
+        down:   40, // down arrow
+        undo:   85, // u
+        reset:  82, // r
+        quit:   27, // escape
     }
+    var MENU_STRING = [
+        '<div class="mobile-menu">',
+        '  <div class="close">X</div>',
+        '  <div class="undo button">Undo</div>',
+        '  <div class="reset button">Reset</div>',
+        '  <div class="quit button">Quit to Menu</div>',
+        '  <div class="clear"></div>',
+        '</div>'
+    ].join("\n");
 
     proto.initialize = function () {
         this.firstPos = { x: 0, y: 0 };
@@ -66,6 +76,10 @@ window.Mobile.GestureHandler = function () {
     };
 
     proto.onTouchEnd = function (event) {
+        if (!this.isTouching) {
+            // The touch start event was probably canceled.
+            return;
+        }
         if (!this.gestured) {
             // Was this a single finger tap?
             if (event.touches.length === 0) {
@@ -81,7 +95,7 @@ window.Mobile.GestureHandler = function () {
 
     proto.onTouchMove = function (event) {
         if (this.isSuccessfulSwipe()) {
-            this.handleSwipe(this.swipeDirection);
+            this.handleSwipe(this.swipeDirection, this.touchCount);
             this.gestured = true;
             this.mayBeSwiping = false;
         } else if (this.mayBeSwiping) {
@@ -107,6 +121,7 @@ window.Mobile.GestureHandler = function () {
     // if the gesture can still be considered a swipe.
     proto.swipeStep = function (event) {
         var currentPos, distance, currentTime;
+        var touchCount;
 
         if (!this.mayBeSwiping) {
             return;
@@ -117,17 +132,25 @@ window.Mobile.GestureHandler = function () {
             y: event.touches[0].clientY
         };
         currentTime = new Date().getTime();
+        touchCount = event.touches.length;
 
         this.swipeDistance = this.cardinalDistance(this.firstPos, currentPos);
         if (!this.swipeDirection) {
             // We've swiped far enough to decide what direction we're swiping in.
             if (this.swipeDistance > SWIPE_THRESHOLD) {
                 this.swipeDirection = this.dominantDirection(this.firstPos, currentPos);
+                this.touchCount = touchCount;
             }
         } else if (distance < SWIPE_DISTANCE) {
+            // Now that they've committed to the swipe, look for misfires...
+
             direction = this.dominantDirection(this.firstPos, currentPos);
             // Cancel the swipe if the direction changes.
             if (direction !== this.swipeDirection) {
+                this.mayBeSwiping = false;
+            }
+            // If they're changing touch count at this point, it's a misfire.
+            if (touchCount < this.touchCount) {
                 this.mayBeSwiping = false;
             }
         } else if (currentTime - this.startTime > SWIPE_TIMEOUT) {
@@ -174,8 +197,14 @@ window.Mobile.GestureHandler = function () {
         return dominantDirection;
     };
 
-    proto.handleSwipe = function (direction) {
-        this.emitKeydown(this.swipeDirection);
+    proto.handleSwipe = function (direction, touchCount) {
+        console.log(touchCount);
+        if (touchCount === 1) {
+            this.emitKeydown(this.swipeDirection);
+        } else if (touchCount > 1) {
+            // Multitouch gesture to open toggle the menu.
+            this.toggleMenu();
+        }
     };
 
     proto.handleTap = function () {
@@ -191,5 +220,62 @@ window.Mobile.GestureHandler = function () {
         onKeyDown(event);
         onKeyUp(event);
     };
+
+    proto.toggleMenu = function () {
+        if (this.isMenuVisible) {
+            this.hideMenu();
+        } else {
+            this.showMenu();
+        }
+    };
+
+    proto.showMenu = function () {
+        if (!this.menuElem) {
+            this.buildMenu();
+        }
+        this.menuElem.setAttribute('style', '');
+        this.isMenuVisible = true;
+    };
+
+    proto.buildMenu = function () {
+        var self = this;
+        var tempElem, body;
+        var close, undo, reset, quit;
+
+        tempElem = document.createElement('div');
+        tempElem.innerHTML = MENU_STRING;
+        this.menuElem = tempElem.children[0];
+
+        close = this.menuElem.getElementsByClassName('close')[0];
+        close.addEventListener('touchstart', function (event) {
+            event.stopPropagation();
+            self.hideMenu();
+        });
+        undo = this.menuElem.getElementsByClassName('undo')[0];
+        undo.addEventListener('touchstart', function (event) {
+            event.stopPropagation();
+            self.emitKeydown('undo');
+        });
+        reset = this.menuElem.getElementsByClassName('reset')[0];
+        reset.addEventListener('touchstart', function (event) {
+            event.stopPropagation();
+            self.emitKeydown('reset');
+        });
+
+        quit = this.menuElem.getElementsByClassName('quit')[0];
+        quit.addEventListener('touchstart', function (event) {
+            event.stopPropagation();
+            self.emitKeydown('quit');
+        });
+
+        body = document.getElementsByTagName('body')[0];
+        body.appendChild(this.menuElem);
+    };
+
+    proto.hideMenu = function () {
+        this.menuElem.setAttribute('style', 'display: none;');
+        this.isMenuVisible = false;
+    };
+
 }(window.Mobile.GestureHandler.prototype));
 
