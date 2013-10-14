@@ -793,13 +793,13 @@ function rulesToArray(state) {
 		convertRelativeDirsToAbsolute(rules2[i]);
 	}
 
-/*
+
 	//optional
 	//replace up/left rules with their down/right equivalents
 	for (var i = 0; i < rules2.length; i++) {
 		rewriteUpLeftRules(rules2[i]);
 	}
-*/
+
 	//replace aggregates with what they mean
 	for (var i = 0; i < rules2.length; i++) {
 		atomizeAggregates(state, rules2[i]);
@@ -827,7 +827,20 @@ function rulesToArray(state) {
 	state.rules = rules4;
 }
 
+function containsEllipsis(rule) {
+	for (var i=0;i<rule.lhs.length;i++) {
+		for (var j=0;j<rule.lhs[i].length;j++) {
+			if (rule.lhs[i][j][1]==='...')
+				return true;
+		}
+	}
+	return false;
+}
 function rewriteUpLeftRules(rule) {
+	if (containsEllipsis(rule)) {
+		return;
+	}
+
 	if (rule.direction == 'up') {
 		rule.direction = 'down';
 	} else if (rule.direction == 'left') {
@@ -838,7 +851,9 @@ function rewriteUpLeftRules(rule) {
 
 	for (var i = 0; i < rule.lhs.length; i++) {
 		var cellrow_l = rule.lhs[i].reverse();
-		var cellrow_r = rule.rhs[i].reverse();
+		if (rule.rhs.length>0) {
+			var cellrow_r = rule.rhs[i].reverse();
+		}
 	}
 }
 
@@ -1867,6 +1882,15 @@ function printRule(rule) {
 		var cellRow = rule.rhs[i];
 		result = result + printCellRow(cellRow);
 	}
+	for (var i=0;i<rule.commands.length;i++) {
+		var command = rule.commands[i];
+		if (command.length===1) {
+			result = result +command[0].toString();
+		} else {
+			result = result + '('+command[0].toString()+", "+command[1].toString()+') ';			
+		}
+	}
+	//print commands next
 	return result;
 }
 function printRules(state) {
@@ -1879,6 +1903,24 @@ function printRules(state) {
 	consolePrint(output);
 }
 
+function removeDuplicateRules(state) {
+	var record = [];
+	var newrules=[];
+	var lastgroupnumber=-1;
+	for (var i=0;i<state.rules.length;i++) {
+		var r = state.rules[i];
+		var groupnumber = r.groupNumber;
+		if (groupnumber!=lastgroupnumber) {
+			record=[];
+		}
+		var r_string=printRule(r);
+		if (record.indexOf(r_string)===-1) {
+			newrules.push(r);
+			record.push(r_string);
+		}
+	}
+	state.rules=newrules;
+}
 function generateLoopPoints(state) {
 	var loopPoint={};
 	var loopPointIndex=0;
@@ -2201,6 +2243,8 @@ function loadFile(str) {
 	generatePlayerMask(state);
 	levelsToArray(state);
 	rulesToArray(state);
+
+	removeDuplicateRules(state);
 
 	if (debugMode) {
 		printRules(state);
