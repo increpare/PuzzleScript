@@ -942,9 +942,9 @@ function concretizePropertyRule(state, rule,lineNumber) {
 			//only need to iterate through lhs
 			var cur_rule = result[i];
 			shouldremove = false;
-			for (var j = 0; j < cur_rule.lhs.length; j++) {
+			for (var j = 0; j < cur_rule.lhs.length&&!shouldremove; j++) {
 				var cur_rulerow = cur_rule.lhs[j];
-				for (var k = 0; k < cur_rulerow.length; k++) {
+				for (var k = 0; k < cur_rulerow.length&&!shouldremove; k++) {
 					var cur_cell = cur_rulerow[k];
 					var properties = getPropertiesFromCell(state, cur_cell);
 					if (properties.length > 0) {
