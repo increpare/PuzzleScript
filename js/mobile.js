@@ -9,8 +9,8 @@ Mobile.hasTouch = function() {
         document.documentElement.hasOwnProperty('ontouchstart');
 };
 
-Mobile.enable = function () {
-    if (Mobile.hasTouch() && !Mobile._instance) {
+Mobile.enable = function (force) {
+    if (force || Mobile.hasTouch() && !Mobile._instance) {
         Mobile._instance = new Mobile.GestureHandler();
         Mobile._instance.bindEvents();
     }
