@@ -119,7 +119,7 @@ function generateExtraMembers(state) {
 	      if (state.objects.hasOwnProperty(n)) {
 	      	var o = state.objects[n];
 	      	if (o.colors.length==0) {
-	      		debug.logError('color not specified for object "' + n +'".',o.lineNumber);
+	      		logError('color not specified for object "' + n +'".',o.lineNumber);
 	      		o.colors=["#ff00ff"];
 	      	}
 			if (o.spritematrix.length===0) {
@@ -1910,7 +1910,7 @@ function removeDuplicateRules(state) {
 	for (var i=0;i<state.rules.length;i++) {
 		var r = state.rules[i];
 		var groupnumber = r.groupNumber;
-		if (groupnumber!=lastgroupnumber) {
+		if (groupnumber!==lastgroupnumber) {
 			record=[];
 		}
 		var r_string=printRule(r);
@@ -1918,6 +1918,7 @@ function removeDuplicateRules(state) {
 			newrules.push(r);
 			record.push(r_string);
 		}
+		lastgroupnumber=groupnumber;
 	}
 	state.rules=newrules;
 }
