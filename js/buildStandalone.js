@@ -35,16 +35,20 @@ function buildStandalone(stateString) {
 		homepage=state.metadata.homepage.toLowerCase();
 	}
 
+	var bgcolor = "black";
 	if ('background_color' in state.metadata) {
-		htmlString = htmlString.replace(/black/g,state.bgcolor);	
+		bgcolor = state.bgcolor;
 	}
+	var fgcolor = "lightblue";
 	if ('text_color' in state.metadata) {
-		htmlString = htmlString.replace(/lightblue/g,state.fgcolor);	
+		fgcolor = state.fgcolor;
 	}
 
 	htmlString = htmlString.replace(/\"__GAMETITLE__\"/g,title);
 	htmlString = htmlString.replace(/\"__HOMEPAGE__\"/g,homepage);	
 	htmlString = htmlString.replace(/\"__GAMEDAT__\"/g,stateString);
+	htmlString = htmlString.replace(/\"__BGCOLOR__\"/g,bgcolor);
+	htmlString = htmlString.replace(/\"__FGCOLOR__\"/g,fgcolor);
 
 	var BB = get_blob();
 	var blob = new BB([htmlString], {type: "text/plain;charset=utf-8"});
