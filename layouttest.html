@@ -1,0 +1,289 @@
+<html>
+<head>
+<style>
+
+body {
+	border:0;
+	margin:0;
+}
+
+body, html { overflow-x: hidden; overflow-y: hidden; }
+
+
+
+@media screen and (min-aspect-ratio: 1/1) {
+	/*LANDSCAPE*/
+	#left  {
+		position:absolute;
+		width:20%;
+		height:100%;
+		left:0;
+		background-color: orange;
+	}
+
+	#right {
+		position:absolute;
+		float:right;
+		width:20%;
+		height:100%;
+		left:80%;
+		background-color: red;
+	}
+
+	#center {
+		position:absolute;
+		left: 20%;
+		right:20%;
+		height:100%;
+		background-color: aqua;
+	}
+}
+
+@media screen and (max-aspect-ratio: 1/1) {
+		/*portrait*/
+
+	#left  {
+		position:absolute;
+		width:50%;
+		top:70%;		
+		height:30%;
+		left:0;
+		background-color: orange;
+	}
+
+	#right {
+		position:absolute;
+		float:right;
+		top:70%;
+		width:50%;
+		height:30%;
+		left:50%;
+		background-color: red;
+	}
+
+	#center {
+		position:absolute;
+		left: 0%;
+		right:0%;
+		height:70%;
+		background-color: aqua;
+	}
+}
+
+#leftcanvas {
+	width:100%;
+	height:100%;
+
+	background-color:orange;
+}
+#rightcanvas {
+	width:100%;
+	height:100%;
+
+	background-color:red;
+}
+
+#gamecanvas {
+	background-color: purple;
+	top:0px;
+	height:60%;
+	width:100%;
+}
+
+</style>	
+</head>
+<body>
+<div id="left">
+<canvas id="leftcanvas" class="padcanvas"></canvas>
+</div>
+
+<div id="right">
+<canvas id="rightcanvas" class="padcanvas"></canvas>
+</div>
+
+<div id="center">
+<h1>game title</h1>
+<canvas id="gamecanvas"></canvas><br>
+<a href="a">link1</a> | <a href="b">link2</a><br>
+</div>
+
+<script>
+
+var glyphImages = {
+	"up": [
+"00100",
+"01110",
+"11111",
+"00100",
+"00100"
+	],
+	"down": [
+"00100",
+"00100",
+"11111",
+"01110",
+"00100",
+	],
+	"left": [
+"00100",
+"01100",
+"11111",
+"01100",
+"00100",
+	],
+	"right": [
+"00100",
+"00110",
+"11111",
+"00110",
+"00100",
+	],
+	"action": [
+"010011101110101110111",
+"101010000100101010101",
+"111010000100101010101",
+"101010000100101010101",
+"101011100100101110101"
+],
+	"undo": [
+"101011101100111",
+"101010101010101",
+"101010101010101",
+"101010101010101",
+"111010101100111"
+	],
+	"restart" : [
+"1100110110111001001100111",
+"1010100100010010101010010",
+"1100110110010011101100010",
+"1010100010010010101010010",
+"1010110110010010101010010"
+	]
+};
+
+var leftGlyphs = {};
+var rightGlyphs ={};
+
+function createLeftGlyphs() {
+	var canvas = document.getElementById('leftcanvas');
+    canvas.width = canvas.parentNode.clientWidth;
+    canvas.height = canvas.parentNode.clientHeight;
+
+	leftGlyphs={};	
+	for (var n in glyphImages) {
+		if (glyphImages.hasOwnProperty(n)) {
+			var matrix = glyphImages[n];
+			var width = matrix[0].length;
+			var height = matrix.length;
+			for (var i=0;i<width;i++) {
+				for (var j=0;j<height;j++) {
+
+				}
+			}			
+		}
+	}
+}
+
+function createGlyphs() {
+	createLeftGlyphs();
+	createRightGlyphs();
+}
+function drawCanvases() {
+	drawLeftCanvas();
+	drawRightCanvas();
+}
+
+function drawLeftCanvas() {
+	var canvas = document.getElementById('leftcanvas');
+    canvas.width = canvas.parentNode.clientWidth;
+    canvas.height = canvas.parentNode.clientHeight;
+
+	var context = canvas.getContext('2d');
+	var cw = canvas.width;
+	var ch = canvas.height;
+	var width=cw;
+	var canvaswidth=cw;
+	var canvasheight=ch;
+
+	var yoffset=0;
+	var xoffset=0;
+	if (cw<ch) {
+		yoffset=ch-cw;
+		canvasheight=canvaswidth;
+	} else {
+//		xoffset=cw-ch;
+		canvaswidth=canvasheight;
+	}
+
+
+	 // set line width for all lines
+	 var linewidth=canvaswidth/20;
+	      context.lineWidth = linewidth;
+	      
+	      // miter line join (left)
+	      context.beginPath();
+	      context.moveTo(xoffset,yoffset); 
+	      context.lineTo(xoffset+canvaswidth,yoffset);
+	      context.lineTo(xoffset+canvaswidth,yoffset+canvasheight);
+	      context.lineTo(xoffset,yoffset+canvasheight);
+	      context.lineTo(xoffset,yoffset); 
+	      context.moveTo(xoffset+canvaswidth/3,yoffset);
+	      context.lineTo(xoffset+canvaswidth/3,yoffset+canvasheight);
+	      context.moveTo(xoffset+2*canvaswidth/3,yoffset);
+	      context.lineTo(xoffset+2*canvaswidth/3,yoffset+canvasheight);
+
+	      context.moveTo(xoffset,yoffset+canvasheight/3);
+	      context.lineTo(xoffset+canvaswidth,yoffset+canvasheight/3);
+	      context.moveTo(xoffset,yoffset+2*canvasheight/3);
+	      context.lineTo(xoffset+canvaswidth,yoffset+2*canvasheight/3);
+	      context.stroke();
+}
+
+function drawRightCanvas() {
+	var canvas = document.getElementById('rightcanvas');
+    canvas.width = canvas.parentNode.clientWidth;
+    canvas.height = canvas.parentNode.clientHeight;
+
+	var context = canvas.getContext('2d');
+	var cw = canvas.width;
+	var ch = canvas.height;
+	var width=cw;
+	var canvaswidth=cw;
+	var canvasheight=ch;
+
+	var yoffset=0;
+	var xoffset=0;
+	if (cw<ch) {
+		yoffset=ch-cw;
+		canvasheight=canvaswidth;
+	} else {
+		xoffset=cw-ch;
+		canvaswidth=canvasheight;
+	}
+
+
+	 // set line width for all lines
+	 var linewidth=canvaswidth/20;
+	      context.lineWidth = linewidth;
+	      
+	      // miter line join (left)
+	      context.beginPath();
+	      context.moveTo(xoffset,yoffset); 
+	      context.lineTo(xoffset+canvaswidth,yoffset);
+	      context.lineTo(xoffset+canvaswidth,yoffset+canvasheight);
+	      context.lineTo(xoffset,yoffset+canvasheight);
+	      context.lineTo(xoffset,yoffset); 
+
+	      context.moveTo(xoffset,yoffset+canvasheight/3);
+	      context.lineTo(xoffset+canvaswidth,yoffset+canvasheight/3);
+	      context.moveTo(xoffset,yoffset+2*canvasheight/3);
+	      context.lineTo(xoffset+canvaswidth,yoffset+2*canvasheight/3);
+	      context.stroke();
+}
+
+window.onresize=drawCanvases;
+window.onload=drawCanvases;
+
+</script>
+</body>
+</html>
