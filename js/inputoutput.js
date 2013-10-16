@@ -179,7 +179,7 @@ function printLevel() {
 			}
 			maskToGlyph[glyphmask]=glyphName;
 			//register the same - backgroundmask with the same name
-			var  bgMask = state.layerMasks[state.backgroundid];
+			var  bgMask = state.layerMasks[state.backgroundlayer];
 			var glyphmaskMinusBackground = glyphmask & (~bgMask);
 			if (! (glyphmask in maskToGlyph)) {
 				maskToGlyph[glyphmask]=glyphName;
