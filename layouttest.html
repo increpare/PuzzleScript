@@ -12,6 +12,7 @@ body {
 html, body {
   height: 100%;
   overflow: hidden;
+  background-color: black;
 }
 
 
@@ -24,7 +25,7 @@ html, body {
 		width:20%;
 		height:100%;
 		left:0;
-		background-color: orange;
+		background-color: black;
 	}
 
 	#right {
@@ -33,7 +34,7 @@ html, body {
 		width:20%;
 		height:100%;
 		left:80%;
-		background-color: red;
+		background-color: black;
 	}
 
 	#center {
@@ -41,7 +42,7 @@ html, body {
 		left: 20%;
 		right:20%;
 		height:100%;
-		background-color: aqua;
+		background-color: black;
 	}
 }
 
@@ -54,7 +55,7 @@ html, body {
 		top:70%;		
 		height:30%;
 		left:0;
-		background-color: orange;
+		background-color: black;
 	}
 
 	#right {
@@ -64,7 +65,7 @@ html, body {
 		width:50%;
 		height:30%;
 		left:50%;
-		background-color: red;
+		background-color: black;
 	}
 
 	#center {
@@ -72,7 +73,7 @@ html, body {
 		left: 0%;
 		right:0%;
 		height:70%;
-		background-color: aqua;
+		background-color: black;
 	}
 }
 
@@ -80,22 +81,60 @@ html, body {
 	width:100%;
 	height:100%;
 
-	background-color:orange;
+	background-color:black;
 }
 #rightcanvas {
 	width:100%;
 	height:100%;
 
-	background-color:red;
+	background-color:black;
 }
 
 #gamecanvas {
-	background-color: purple;
+	background-color: black;
 	top:0px;
-	height:60%;
+	height:100%;
 	width:100%;
 }
 
+#centertop h1{
+	color:lightblue;
+	text-align: center;
+	padding:0px;
+	border:0px;
+	margin:0px;
+	position:absolute;
+	top:0px;
+	height:40px;
+	width:100%;
+	background-color: black;
+}
+
+#centermiddle {
+	position:absolute;
+	top:40px;
+	bottom:20px;
+	width:100%;
+	background-color: black;
+}
+
+a {
+	color: lightblue;
+}
+#centerbottom {
+
+	color:white;
+	text-align: center;
+	padding:0px;
+	border:0px;
+	margin:0px;
+
+	position:absolute;
+	bottom:0px;
+	height:20px;
+	width:100%;
+	background-color: black;
+}
 </style>	
 </head>
 <body>
@@ -108,9 +147,14 @@ html, body {
 </div>
 
 <div id="center">
-<h1>game title</h1>
+<div id="centertop">
+<h1>game title</h1></div>
+<div id="centermiddle">
 <canvas id="gamecanvas"></canvas><br>
+</div>
+<div id="centerbottom">
 <a href="a">link1</a> | <a href="b">link2</a><br>
+</div>
 </div>
 
 <script>
@@ -379,10 +423,10 @@ function drawLeftCanvas() {
 	var pixelcount_height = glyphImages_Left['up'].length;
 	var pixelmagnification=1;
 	for (pixelmagnification=0;true;pixelmagnification++) {
-		if (pixelmagnification*pixelcount_width>cw) {
+		if (pixelmagnification*pixelcount_width*3>cw) {
 			break;
 		}
-		if (pixelmagnification*pixelcount_height>ch) {
+		if (pixelmagnification*pixelcount_height*3>ch) {
 			break;
 		}
 	}
@@ -391,7 +435,7 @@ function drawLeftCanvas() {
 	cellwidth = pixelmagnification*pixelcount_width;
 	cellheight = pixelmagnification*pixelcount_height;
 
-	var yoffset=ch-3*pixelmagnification*pixelcount_height;
+	var yoffset=ch-3*cellheight;
 	var xoffset=0;//cw-3*pixelmagnification*pixelcount_width;
 
 
@@ -401,10 +445,10 @@ function drawLeftCanvas() {
 
 	var tilewidth = leftGlyphs['up'].width;
 	var tileheight = leftGlyphs['up'].height;
-	context.drawImage(leftGlyphs['up'], xoffset + 1 * tilewidth, yoffset + 0 * tileheight);   
-	context.drawImage(leftGlyphs['down'], xoffset + 1 * tilewidth, yoffset + 2 * tileheight);   
-	context.drawImage(leftGlyphs['left'], xoffset + 0 * tilewidth, yoffset + 1 * tileheight);   
-	context.drawImage(leftGlyphs['right'], xoffset + 2 * tilewidth, yoffset + 1 * tileheight);   
+	context.drawImage(leftGlyphs['up'], xoffset + 1 * cellwidth, yoffset + 0 * cellheight);   
+	context.drawImage(leftGlyphs['down'], xoffset + 1 * cellwidth, yoffset + 2 * cellheight);   
+	context.drawImage(leftGlyphs['left'], xoffset + 0 * cellwidth, yoffset + 1 * cellheight);   
+	context.drawImage(leftGlyphs['right'], xoffset + 2 * cellwidth, yoffset + 1 * cellheight);   
 }
 
 function drawRightCanvas() {
