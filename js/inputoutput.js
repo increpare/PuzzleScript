@@ -101,7 +101,7 @@ function removeBottomRow(){
 	}
 	var bgMask = 1<<state.backgroundid;
 	for (var i=level.width-1;i>=0;i--) {
-		level.dat.splice(level.height+i*level.height,1);
+		level.dat.splice(level.height-1+i*level.height,1);
 	}
 	level.height--;
 	recalcLevelBounds();
