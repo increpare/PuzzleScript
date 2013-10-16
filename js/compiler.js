@@ -1305,7 +1305,8 @@ var dirMasks = {
 	'no'	: parseInt('00011', 2),
 	'randomdir': parseInt('00101', 2),
 	'random' : parseInt('10010',2),
-	'action' : parseInt('10000', 2)
+	'action' : parseInt('10000', 2),
+	'' : parseInt('00000',2)
 };
 
 
@@ -1439,13 +1440,16 @@ function rulesToMask(state) {
 						mask_r[2 * layerIndex + 0] = object_dir;
 						mask_r[2 * layerIndex + 1] = object_id;
 
-						postMovementsLayerMask_r = postMovementsLayerMask_r | ((1+2+4+8+16)<<(5*layerIndex));
+						if (object_dir.length>0) {
+							postMovementsLayerMask_r = postMovementsLayerMask_r | ((1+2+4+8+16)<<(5*layerIndex));
+						}			
+
 						cellmask_r = cellmask_r | (1 << object_id);
 						if (object_dir==='stationary') {
 							stationaryMask_r = stationaryMask_r | ((1+2+4+8+16)<<(5*layerIndex));
 						} if (object_dir==='randomdir') {
 							randomDirMask_r = randomDirMask_r | (dirMasks[object_dir] << (5 * layerIndex));
-						} else {
+						} else {						
 							forcemask_r = forcemask_r | (dirMasks[object_dir] << (5 * layerIndex));
 						}
 						nonExistenceMask_r = nonExistenceMask_r | layerMask;

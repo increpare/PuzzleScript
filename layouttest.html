@@ -1,5 +1,6 @@
 <html>
 <head>
+<meta name="viewport" content="initial-scale=1, maximum-scale=1, width=device-width, user-scalable=no" />
 <style>
 
 body {
@@ -7,7 +8,12 @@ body {
 	margin:0;
 }
 
-body, html { overflow-x: hidden; overflow-y: hidden; }
+
+html, body {
+  height: 100%;
+  overflow: hidden;
+}
+
 
 
 
@@ -108,56 +114,88 @@ body, html { overflow-x: hidden; overflow-y: hidden; }
 </div>
 
 <script>
-
-var glyphImages = {
+document.ontouchmove = function(event){
+    event.preventDefault();
+}
+var glyphImages_Left = {
 	"up": [
-"00100",
-"01110",
-"11111",
-"00100",
-"00100"
+"111111111",
+"100000001",
+"100010001",
+"100111001",
+"101111101",
+"100010001",
+"100010001",
+"100000001",
+"111111111"
 	],
 	"down": [
-"00100",
-"00100",
-"11111",
-"01110",
-"00100",
+"111111111",
+"100000001",
+"100010001",
+"100010001",
+"101111101",
+"100111001",
+"100010001",
+"100000001",
+"111111111"
 	],
 	"left": [
-"00100",
-"01100",
-"11111",
-"01100",
-"00100",
+"111111111",
+"100000001",
+"100010001",
+"100110001",
+"101111101",
+"100110001",
+"100010001",
+"100000001",
+"111111111"
 	],
 	"right": [
-"00100",
-"00110",
-"11111",
-"00110",
-"00100",
-	],
+"111111111",
+"100000001",
+"100010001",
+"100011001",
+"101111101",
+"100011001",
+"100010001",
+"100000001",
+"111111111"
+	]
+};
+var glyphImages_Right = {
 	"action": [
-"010011101110101110111",
-"101010000100101010101",
-"111010000100101010101",
-"101010000100101010101",
-"101011100100101110101"
+"11111111111111111111111111111",
+"10000000000000000000000000001",
+"10010011101110101110111000001",
+"10101010000100101010101000001",
+"10111010000100101010101000001",
+"10101010000100101010101000001",
+"10101011100100101110101000001",
+"10000000000000000000000000001",
+"11111111111111111111111111111"
 ],
 	"undo": [
-"101011101100111",
-"101010101010101",
-"101010101010101",
-"101010101010101",
-"111010101100111"
+"11111111111111111111111111111",
+"10000000000000000000000000001",
+"10101011101100111000000000001",
+"10101010101010101000000000001",
+"10101010101010101000000000001",
+"10101010101010101000000000001",
+"10111010101100111000000000001",
+"10000000000000000000000000001",
+"11111111111111111111111111111"
 	],
 	"restart" : [
-"1100110110111001001100111",
-"1010100100010010101010010",
-"1100110110010011101100010",
-"1010100010010010101010010",
-"1010110110010010101010010"
+"11111111111111111111111111111",
+"10000000000000000000000000001",
+"10110011011011100100110011101",
+"10101010010001001010101001001",
+"10110011011001001110110001001",
+"10101010001001001010101001001",
+"10101011011001001010101001001",
+"10000000000000000000000000001",
+"11111111111111111111111111111"
 	]
 };
 
@@ -165,40 +203,12 @@ var leftGlyphs = {};
 var rightGlyphs ={};
 
 function createLeftGlyphs() {
+
+
 	var canvas = document.getElementById('leftcanvas');
     canvas.width = canvas.parentNode.clientWidth;
     canvas.height = canvas.parentNode.clientHeight;
 
-	leftGlyphs={};	
-	for (var n in glyphImages) {
-		if (glyphImages.hasOwnProperty(n)) {
-			var matrix = glyphImages[n];
-			var width = matrix[0].length;
-			var height = matrix.length;
-			for (var i=0;i<width;i++) {
-				for (var j=0;j<height;j++) {
-
-				}
-			}			
-		}
-	}
-}
-
-function createGlyphs() {
-	createLeftGlyphs();
-	createRightGlyphs();
-}
-function drawCanvases() {
-	drawLeftCanvas();
-	drawRightCanvas();
-}
-
-function drawLeftCanvas() {
-	var canvas = document.getElementById('leftcanvas');
-    canvas.width = canvas.parentNode.clientWidth;
-    canvas.height = canvas.parentNode.clientHeight;
-
-	var context = canvas.getContext('2d');
 	var cw = canvas.width;
 	var ch = canvas.height;
 	var width=cw;
@@ -215,74 +225,250 @@ function drawLeftCanvas() {
 		canvaswidth=canvasheight;
 	}
 
+	cellwidth = (canvaswidth/3)|0;
+	cellheight = (canvasheight/3)|0;
 
-	 // set line width for all lines
-	 var linewidth=canvaswidth/20;
-	      context.lineWidth = linewidth;
-	      
-	      // miter line join (left)
-	      context.beginPath();
-	      context.moveTo(xoffset,yoffset); 
-	      context.lineTo(xoffset+canvaswidth,yoffset);
-	      context.lineTo(xoffset+canvaswidth,yoffset+canvasheight);
-	      context.lineTo(xoffset,yoffset+canvasheight);
-	      context.lineTo(xoffset,yoffset); 
-	      context.moveTo(xoffset+canvaswidth/3,yoffset);
-	      context.lineTo(xoffset+canvaswidth/3,yoffset+canvasheight);
-	      context.moveTo(xoffset+2*canvaswidth/3,yoffset);
-	      context.lineTo(xoffset+2*canvaswidth/3,yoffset+canvasheight);
+	var tempcanvas = document.createElement('canvas');
+    tempcanvas.width = cellwidth;
+    tempcanvas.height = cellheight;
+    var tempctx = tempcanvas.getContext('2d');
 
-	      context.moveTo(xoffset,yoffset+canvasheight/3);
-	      context.lineTo(xoffset+canvaswidth,yoffset+canvasheight/3);
-	      context.moveTo(xoffset,yoffset+2*canvasheight/3);
-	      context.lineTo(xoffset+canvaswidth,yoffset+2*canvasheight/3);
-	      context.stroke();
+	leftGlyphs={};	
+	var pixwidth=(cellwidth/glyphImages_Left['up'].length)|0;
+	var pixheight=pixwidth;
+
+	for (var n in glyphImages_Left) {
+		if (glyphImages_Left.hasOwnProperty(n)) {
+
+			var matrix = glyphImages_Left[n];
+			var width = matrix[0].length;
+			var height = matrix.length;
+			tempctx.fillStyle = 'black';
+			tempctx.fillRect(0,0,pixwidth*width,pixheight*height)
+    		//tempctx.clearRect(0, 0, cellwidth, cellheight);
+    		tempctx.fillStyle = 'white';
+
+			for (var i=0;i<width;i++) {
+				for (var j=0;j<height;j++) {
+					if (matrix[j][i]==='1') {
+                		tempctx.fillRect(pixwidth*i, pixheight*j, pixwidth, pixheight);
+                	}
+				}
+			}			
+
+		    var new_image_url = tempcanvas.toDataURL();
+		    var img = document.createElement('img');
+		    img.onload = drawCanvases;
+		    img.src = new_image_url;
+		    leftGlyphs[n]=img;
+		}
+	}
+
 }
 
-function drawRightCanvas() {
+
+function createRightGlyphs() {
 	var canvas = document.getElementById('rightcanvas');
     canvas.width = canvas.parentNode.clientWidth;
     canvas.height = canvas.parentNode.clientHeight;
 
-	var context = canvas.getContext('2d');
 	var cw = canvas.width;
 	var ch = canvas.height;
 	var width=cw;
 	var canvaswidth=cw;
 	var canvasheight=ch;
 
-	var yoffset=0;
-	var xoffset=0;
-	if (cw<ch) {
-		yoffset=ch-cw;
-		canvasheight=canvaswidth;
-	} else {
-		xoffset=cw-ch;
-		canvaswidth=canvasheight;
+
+	var pixelcount_width = glyphImages_Right['action'][0].length;
+	var pixelcount_height = glyphImages_Right['action'].length;
+	var pixelmagnification=1;
+	for (pixelmagnification=0;true;pixelmagnification++) {
+		if (pixelmagnification*pixelcount_width>cw) {
+			break;
+		}
+		if (pixelmagnification*pixelcount_height*3>ch) {
+			break;
+		}
+	}
+	pixelmagnification--;
+
+	cellwidth =pixelmagnification*pixelcount_width;
+	cellheight = pixelmagnification*pixelcount_height;
+
+	var yoffset=ch-3*pixelmagnification*pixelcount_height;
+	var xoffset=cw-pixelmagnification*pixelcount_width;
+
+	var tempcanvas = document.createElement('canvas');
+    tempcanvas.width = cellwidth;
+    tempcanvas.height = cellheight;
+    var tempctx = tempcanvas.getContext('2d');
+
+	rightGlyphs={};	
+	var pixwidth=(cellwidth/glyphImages_Right['action'][0].length)|0;
+	var pixheight=(cellheight/glyphImages_Right['action'].length)|0;
+
+	for (var n in glyphImages_Right) {
+		if (glyphImages_Right.hasOwnProperty(n)) {
+
+			var matrix = glyphImages_Right[n];
+			var width = matrix[0].length;
+			var height = matrix.length;
+			tempctx.fillStyle = 'black';
+			tempctx.fillRect(0,0,pixwidth*width,pixheight*height)
+    		//tempctx.clearRect(0, 0, cellwidth, cellheight);
+    		tempctx.fillStyle = 'white';
+
+			for (var i=0;i<width;i++) {
+				for (var j=0;j<height;j++) {
+					if (matrix[j][i]==='1') {
+                		tempctx.fillRect(pixwidth*i, pixheight*j, pixwidth, pixheight);
+                	}
+				}
+			}			
+
+		    var new_image_url = tempcanvas.toDataURL();
+		    var img = document.createElement('img');
+		    img.onload = drawCanvases;
+		    img.src = new_image_url;
+		    rightGlyphs[n]=img;
+		}
 	}
 
-
-	 // set line width for all lines
-	 var linewidth=canvaswidth/20;
-	      context.lineWidth = linewidth;
-	      
-	      // miter line join (left)
-	      context.beginPath();
-	      context.moveTo(xoffset,yoffset); 
-	      context.lineTo(xoffset+canvaswidth,yoffset);
-	      context.lineTo(xoffset+canvaswidth,yoffset+canvasheight);
-	      context.lineTo(xoffset,yoffset+canvasheight);
-	      context.lineTo(xoffset,yoffset); 
-
-	      context.moveTo(xoffset,yoffset+canvasheight/3);
-	      context.lineTo(xoffset+canvaswidth,yoffset+canvasheight/3);
-	      context.moveTo(xoffset,yoffset+2*canvasheight/3);
-	      context.lineTo(xoffset+canvaswidth,yoffset+2*canvasheight/3);
-	      context.stroke();
 }
 
-window.onresize=drawCanvases;
-window.onload=drawCanvases;
+function createGlyphs() {
+	createLeftGlyphs();
+	createRightGlyphs();
+}
+function drawCanvases() {
+	drawLeftCanvas();
+	drawRightCanvas();
+}
+
+function drawLeftCanvas() {
+	for (var n in leftGlyphs) {
+		if (leftGlyphs.hasOwnProperty(n)){
+			var spriteimage = leftGlyphs[n];
+            if (!spriteimage.complete)
+                return;
+            if (spriteimage.width===0||spriteimage.height===0)
+                return;
+
+		}
+	}
+	if (leftGlyphs['up']===undefined) {
+		return;
+	}
+
+	var canvas = document.getElementById('leftcanvas');
+    canvas.width = canvas.parentNode.clientWidth;
+    canvas.height = canvas.parentNode.clientHeight;
+
+	var context = canvas.getContext('2d');
+
+
+
+	var cw = canvas.width;
+	var ch = canvas.height;
+	var width=cw;
+	var canvaswidth=cw;
+	var canvasheight=ch;
+
+
+	var pixelcount_width = glyphImages_Left['up'][0].length;
+	var pixelcount_height = glyphImages_Left['up'].length;
+	var pixelmagnification=1;
+	for (pixelmagnification=0;true;pixelmagnification++) {
+		if (pixelmagnification*pixelcount_width>cw) {
+			break;
+		}
+		if (pixelmagnification*pixelcount_height>ch) {
+			break;
+		}
+	}
+	pixelmagnification--;
+
+	cellwidth = pixelmagnification*pixelcount_width;
+	cellheight = pixelmagnification*pixelcount_height;
+
+	var yoffset=ch-3*pixelmagnification*pixelcount_height;
+	var xoffset=0;//cw-3*pixelmagnification*pixelcount_width;
+
+
+
+	context.clearRect(0, 0, canvas.width, canvas.height);
+
+
+	var tilewidth = leftGlyphs['up'].width;
+	var tileheight = leftGlyphs['up'].height;
+	context.drawImage(leftGlyphs['up'], xoffset + 1 * tilewidth, yoffset + 0 * tileheight);   
+	context.drawImage(leftGlyphs['down'], xoffset + 1 * tilewidth, yoffset + 2 * tileheight);   
+	context.drawImage(leftGlyphs['left'], xoffset + 0 * tilewidth, yoffset + 1 * tileheight);   
+	context.drawImage(leftGlyphs['right'], xoffset + 2 * tilewidth, yoffset + 1 * tileheight);   
+}
+
+function drawRightCanvas() {
+	for (var n in rightGlyphs) {
+		if (rightGlyphs.hasOwnProperty(n)){
+			var spriteimage = rightGlyphs[n];
+            if (!spriteimage.complete)
+                return;
+            if (spriteimage.width===0||spriteimage.height===0)
+                return;
+
+		}
+	}
+	if (rightGlyphs['action']===undefined) {
+		return;
+	}
+
+	var canvas = document.getElementById('rightcanvas');
+    canvas.width = canvas.parentNode.clientWidth;
+    canvas.height = canvas.parentNode.clientHeight;
+
+	var context = canvas.getContext('2d');
+
+
+
+	var cw = canvas.width;
+	var ch = canvas.height;
+	var width=cw;
+	var canvaswidth=cw;
+	var canvasheight=ch;
+
+
+	var pixelcount_width = glyphImages_Right['action'][0].length;
+	var pixelcount_height = glyphImages_Right['action'].length;
+	var pixelmagnification=1;
+	for (pixelmagnification=0;true;pixelmagnification++) {
+		if (pixelmagnification*pixelcount_width>cw) {
+			break;
+		}
+		if (pixelmagnification*pixelcount_height*3>ch) {
+			break;
+		}
+	}
+	pixelmagnification--;
+
+	cellwidth =pixelmagnification*pixelcount_width;
+	cellheight = pixelmagnification*pixelcount_height;
+
+	var yoffset=ch-3*pixelmagnification*pixelcount_height;
+	var xoffset=cw-pixelmagnification*pixelcount_width;
+
+
+	context.clearRect(0, 0, canvas.width, canvas.height);
+
+	var tilewidth = rightGlyphs['action'].width;
+	var tileheight = rightGlyphs['action'].height;
+	context.drawImage(rightGlyphs['action'], xoffset + 0 * tilewidth, yoffset + 0 * tileheight);   
+	context.drawImage(rightGlyphs['undo'], xoffset + 0 * tilewidth, yoffset + 1 * tileheight);   
+	context.drawImage(rightGlyphs['restart'], xoffset + 0 * tilewidth, yoffset + 2 * tileheight);   
+}
+
+window.addEventListener('resize',createGlyphs);
+window.addEventListener('orientationchange',createGlyphs);
+window.addEventListener('load',createGlyphs);
 
 </script>
 </body>

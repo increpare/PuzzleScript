@@ -149,7 +149,9 @@ function matchGlyph(inputmask,maskToGlyph) {
 	if (highestbitcount>0) {
 		return highestmask;
 	}
-	return maskToGlyph[0];
+	
+	logErrorNoLine("Wasn't able to approximate a glyph value for some tiles, using '.' as a placeholder.",true);
+	return '.';
 }
 
 var htmlEntityMap = {
