@@ -246,6 +246,12 @@ var glyphImages_Right = {
 var leftGlyphs = {};
 var rightGlyphs ={};
 
+var leftGlyphs_hover = {};
+var rightGlyphs_hover ={};
+
+var leftGlyphs_down = {};
+var rightGlyphs_down ={};
+
 function createLeftGlyphs() {
 
 
@@ -272,17 +278,21 @@ function createLeftGlyphs() {
 	cellwidth = (canvaswidth/3)|0;
 	cellheight = (canvasheight/3)|0;
 
-	var tempcanvas = document.createElement('canvas');
-    tempcanvas.width = cellwidth;
-    tempcanvas.height = cellheight;
-    var tempctx = tempcanvas.getContext('2d');
-
 	leftGlyphs={};	
+	leftGlyphs_down={};
+	leftGlyphs_hover={};
+
 	var pixwidth=(cellwidth/glyphImages_Left['up'].length)|0;
 	var pixheight=pixwidth;
 
 	for (var n in glyphImages_Left) {
 		if (glyphImages_Left.hasOwnProperty(n)) {
+
+
+			var tempcanvas = leftGlyphs[n]===undefined?document.createElement('canvas'):leftGlyphs[n];
+		    tempcanvas.width = cellwidth;
+		    tempcanvas.height = cellheight;
+		    var tempctx = tempcanvas.getContext('2d');
 
 			var matrix = glyphImages_Left[n];
 			var width = matrix[0].length;
@@ -300,16 +310,66 @@ function createLeftGlyphs() {
 				}
 			}			
 
-		    var new_image_url = tempcanvas.toDataURL();
-		    var img = document.createElement('img');
-		    img.onload = drawCanvases;
-		    img.src = new_image_url;
-		    leftGlyphs[n]=img;
+		    leftGlyphs[n]=tempcanvas;
+
+
+
+		    ///////
+
+
+			var tempcanvas = leftGlyphs_hover[n]===undefined?document.createElement('canvas'):leftGlyphs_hover[n];
+		    tempcanvas.width = cellwidth;
+		    tempcanvas.height = cellheight;
+		    var tempctx = tempcanvas.getContext('2d');
+
+			var matrix = glyphImages_Left[n];
+			var width = matrix[0].length;
+			var height = matrix.length;
+			tempctx.fillStyle = '#444444';
+			tempctx.fillRect(0,0,pixwidth*width,pixheight*height)
+    		//tempctx.clearRect(0, 0, cellwidth, cellheight);
+    		tempctx.fillStyle = 'white';
+
+			for (var i=0;i<width;i++) {
+				for (var j=0;j<height;j++) {
+					if (matrix[j][i]==='1') {
+                		tempctx.fillRect(pixwidth*i, pixheight*j, pixwidth, pixheight);
+                	}
+				}
+			}			
+
+		    leftGlyphs_hover[n]=tempcanvas;
+
+
+		    ///////
+
+
+			var tempcanvas = leftGlyphs_down[n]===undefined?document.createElement('canvas'):leftGlyphs_down[n];
+		    tempcanvas.width = cellwidth;
+		    tempcanvas.height = cellheight;
+		    var tempctx = tempcanvas.getContext('2d');
+
+			var matrix = glyphImages_Left[n];
+			var width = matrix[0].length;
+			var height = matrix.length;
+			tempctx.fillStyle = '#888888';
+			tempctx.fillRect(0,0,pixwidth*width,pixheight*height)
+    		//tempctx.clearRect(0, 0, cellwidth, cellheight);
+    		tempctx.fillStyle = 'white';
+
+			for (var i=0;i<width;i++) {
+				for (var j=0;j<height;j++) {
+					if (matrix[j][i]==='1') {
+                		tempctx.fillRect(pixwidth*i, pixheight*j, pixwidth, pixheight);
+                	}
+				}
+			}			
+
+		    leftGlyphs_down[n]=tempcanvas;
 		}
 	}
 
 }
-
 
 function createRightGlyphs() {
 	var canvas = document.getElementById('rightcanvas');
@@ -342,11 +402,6 @@ function createRightGlyphs() {
 	var yoffset=ch-3*pixelmagnification*pixelcount_height;
 	var xoffset=cw-pixelmagnification*pixelcount_width;
 
-	var tempcanvas = document.createElement('canvas');
-    tempcanvas.width = cellwidth;
-    tempcanvas.height = cellheight;
-    var tempctx = tempcanvas.getContext('2d');
-
 	rightGlyphs={};	
 	var pixwidth=(cellwidth/glyphImages_Right['action'][0].length)|0;
 	var pixheight=(cellheight/glyphImages_Right['action'].length)|0;
@@ -354,9 +409,16 @@ function createRightGlyphs() {
 	for (var n in glyphImages_Right) {
 		if (glyphImages_Right.hasOwnProperty(n)) {
 
+			var tempcanvas = rightGlyphs[n]===undefined?document.createElement('canvas'):rightGlyphs[n];
+		    tempcanvas.width = cellwidth;
+		    tempcanvas.height = cellheight;
+		    var tempctx = tempcanvas.getContext('2d');
+
 			var matrix = glyphImages_Right[n];
 			var width = matrix[0].length;
 			var height = matrix.length;
+
+
 			tempctx.fillStyle = 'black';
 			tempctx.fillRect(0,0,pixwidth*width,pixheight*height)
     		//tempctx.clearRect(0, 0, cellwidth, cellheight);
@@ -370,11 +432,51 @@ function createRightGlyphs() {
 				}
 			}			
 
-		    var new_image_url = tempcanvas.toDataURL();
-		    var img = document.createElement('img');
-		    img.onload = drawCanvases;
-		    img.src = new_image_url;
-		    rightGlyphs[n]=img;
+		    rightGlyphs[n]=tempcanvas;
+
+		    ////////
+
+			var tempcanvas = rightGlyphs_hover[n]===undefined?document.createElement('canvas'):rightGlyphs_hover[n];
+		    tempcanvas.width = cellwidth;
+		    tempcanvas.height = cellheight;
+		    var tempctx = tempcanvas.getContext('2d');
+
+			tempctx.fillStyle = '#444444';
+			tempctx.fillRect(0,0,pixwidth*width,pixheight*height)
+    		//tempctx.clearRect(0, 0, cellwidth, cellheight);
+    		tempctx.fillStyle = 'white';
+
+			for (var i=0;i<width;i++) {
+				for (var j=0;j<height;j++) {
+					if (matrix[j][i]==='1') {
+                		tempctx.fillRect(pixwidth*i, pixheight*j, pixwidth, pixheight);
+                	}
+				}
+			}			
+
+		    rightGlyphs_hover[n]=tempcanvas;
+
+		    //////
+
+			var tempcanvas = rightGlyphs_down[n]===undefined?document.createElement('canvas'):rightGlyphs_down[n];
+		    tempcanvas.width = cellwidth;
+		    tempcanvas.height = cellheight;
+		    var tempctx = tempcanvas.getContext('2d');
+
+			tempctx.fillStyle = '#888888';
+			tempctx.fillRect(0,0,pixwidth*width,pixheight*height)
+    		//tempctx.clearRect(0, 0, cellwidth, cellheight);
+    		tempctx.fillStyle = 'white';
+
+			for (var i=0;i<width;i++) {
+				for (var j=0;j<height;j++) {
+					if (matrix[j][i]==='1') {
+                		tempctx.fillRect(pixwidth*i, pixheight*j, pixwidth, pixheight);
+                	}
+				}
+			}			
+
+		    rightGlyphs_down[n]=tempcanvas;
 		}
 	}
 
@@ -383,6 +485,7 @@ function createRightGlyphs() {
 function createGlyphs() {
 	createLeftGlyphs();
 	createRightGlyphs();
+	drawCanvases();
 }
 function drawCanvases() {
 	drawLeftCanvas();
@@ -390,23 +493,11 @@ function drawCanvases() {
 }
 
 function drawLeftCanvas() {
-	for (var n in leftGlyphs) {
-		if (leftGlyphs.hasOwnProperty(n)){
-			var spriteimage = leftGlyphs[n];
-            if (!spriteimage.complete)
-                return;
-            if (spriteimage.width===0||spriteimage.height===0)
-                return;
-
-		}
-	}
 	if (leftGlyphs['up']===undefined) {
 		return;
 	}
 
 	var canvas = document.getElementById('leftcanvas');
-    canvas.width = canvas.parentNode.clientWidth;
-    canvas.height = canvas.parentNode.clientHeight;
 
 	var context = canvas.getContext('2d');
 
@@ -452,23 +543,12 @@ function drawLeftCanvas() {
 }
 
 function drawRightCanvas() {
-	for (var n in rightGlyphs) {
-		if (rightGlyphs.hasOwnProperty(n)){
-			var spriteimage = rightGlyphs[n];
-            if (!spriteimage.complete)
-                return;
-            if (spriteimage.width===0||spriteimage.height===0)
-                return;
 
-		}
-	}
 	if (rightGlyphs['action']===undefined) {
 		return;
 	}
 
 	var canvas = document.getElementById('rightcanvas');
-    canvas.width = canvas.parentNode.clientWidth;
-    canvas.height = canvas.parentNode.clientHeight;
 
 	var context = canvas.getContext('2d');
 

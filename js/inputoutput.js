@@ -225,7 +225,7 @@ function levelEditorClick(event,click) {
 	} else if (mouseCoordX>-1&&mouseCoordY>-1&&mouseCoordX<screenwidth-2&&mouseCoordY<screenheight-2-editorRowCount	) {
 		var glyphname = glyphImagesCorrespondance[glyphSelectedIndex];
 		var glyph = state.glyphDict[glyphname];
-		var glyphmask = 1<<state.backgroundid;
+		var glyphmask = 0;
 		for (var i=0;i<glyph.length;i++)
 		{
 			var id = glyph[i];
