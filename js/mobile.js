@@ -13,6 +13,7 @@ Mobile.enable = function (force) {
     if (force || Mobile.hasTouch() && !Mobile._instance) {
         Mobile._instance = new Mobile.GestureHandler();
         Mobile._instance.bindEvents();
+        Mobile._instance.bootstrap();
     }
     return Mobile._instance;
 };
@@ -49,6 +50,14 @@ Mobile.log = function (message) {
         quit:   27, // escape
     }
 
+    var BURGER_STRING = [
+        '<div class="burger-icon">',
+        '  <div class="slice"></div>',
+        '  <div class="slice"></div>',
+        '  <div class="slice"></div>',
+        '</div>',
+    ].join("\n");
+
     // Template for the menu.
     var MENU_STRING = [
         '<div class="mobile-menu">',
@@ -70,6 +79,10 @@ Mobile.log = function (message) {
         window.addEventListener('touchstart', this.onTouchStart.bind(this));
         window.addEventListener('touchend', this.onTouchEnd.bind(this));
         window.addEventListener('touchmove', this.onTouchMove.bind(this));
+    };
+
+    proto.bootstrap = function () {
+        this.showBurger();
     };
 
     /** Event Handlers **/
@@ -248,6 +261,16 @@ Mobile.log = function (message) {
         onKeyUp(event);
     };
 
+    proto.fakeCanvasFocus = function () {
+        var canvas;
+
+        canvas = document.getElementById('gameCanvas');
+        onMouseDown({
+            button: 0,
+            target: canvas
+        });
+    };
+
     proto.toggleMenu = function () {
         if (this.isMenuVisible) {
             this.hideMenu();
@@ -262,6 +285,46 @@ Mobile.log = function (message) {
         }
         this.menuElem.setAttribute('style', '');
         this.isMenuVisible = true;
+        this.hideBurger();
+    };
+
+    proto.hideMenu = function () {
+        if (this.menuElem) {
+            this.menuElem.setAttribute('style', 'display: none;');
+        }
+        this.isMenuVisible = false;
+        this.showBurger();
+    };
+
+    proto.showBurger = function () {
+        if (!this.burgerElem) {
+            this.buildBurger();
+        }
+        this.burgerElem.setAttribute('style', '');
+    };
+
+    proto.hideBurger = function () {
+        if (this.burgerElem) {
+            this.burgerElem.setAttribute('style', 'display: none;');
+        }
+        this.isBurgerVisible = false;
+    };
+
+    proto.buildBurger = function () {
+        var self = this;
+        var tempElem, body;
+
+        tempElem = document.createElement('div');
+        tempElem.innerHTML = BURGER_STRING;
+        this.burgerElem = tempElem.children[0];
+
+        this.burgerElem.addEventListener('touchstart', function (event) {
+            event.stopPropagation();
+            self.showMenu();
+        });
+
+        body = document.getElementsByTagName('body')[0];
+        body.appendChild(this.burgerElem);
     };
 
     proto.buildMenu = function () {
@@ -299,22 +362,6 @@ Mobile.log = function (message) {
         body.appendChild(this.menuElem);
     };
 
-    proto.hideMenu = function () {
-        if (this.menuElem) {
-            this.menuElem.setAttribute('style', 'display: none;');
-        }
-        this.isMenuVisible = false;
-    };
-
-    proto.fakeCanvasFocus = function () {
-        var canvas;
-
-        canvas = document.getElementById('gameCanvas');
-        onMouseDown({
-            button: 0,
-            target: canvas
-        });
-    };
 
 }(window.Mobile.GestureHandler.prototype));
 
