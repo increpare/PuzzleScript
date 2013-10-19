@@ -50,11 +50,12 @@ Mobile.log = function (message) {
         quit:   27, // escape
     }
 
-    var BURGER_STRING = [
-        '<div class="burger-icon">',
-        '  <div class="slice"></div>',
-        '  <div class="slice"></div>',
-        '  <div class="slice"></div>',
+    var TAB_STRING = [
+        '<div class="tab-affordance">',
+        '  <div class="tab-icon">',
+        '    <div class="slice"></div>',
+        '    <div class="slice"></div>',
+        '  </div>',
         '</div>',
     ].join("\n");
 
@@ -73,6 +74,7 @@ Mobile.log = function (message) {
 
     proto.initialize = function () {
         this.firstPos = { x: 0, y: 0 };
+        this.setTabAnimationRatio = this.setTabAnimationRatio.bind(this);
     };
 
     proto.bindEvents = function () {
@@ -82,7 +84,7 @@ Mobile.log = function (message) {
     };
 
     proto.bootstrap = function () {
-        this.showBurger();
+        this.showTab();
     };
 
     /** Event Handlers **/
@@ -285,7 +287,7 @@ Mobile.log = function (message) {
         }
         this.menuElem.setAttribute('style', '');
         this.isMenuVisible = true;
-        this.hideBurger();
+        this.hideTab();
     };
 
     proto.hideMenu = function () {
@@ -293,38 +295,46 @@ Mobile.log = function (message) {
             this.menuElem.setAttribute('style', 'display: none;');
         }
         this.isMenuVisible = false;
-        this.showBurger();
+        this.showTab();
     };
 
-    proto.showBurger = function () {
-        if (!this.burgerElem) {
-            this.buildBurger();
+    proto.getTabAnimatable = function () {
+        var self = this;
+        if (!this._tabAnimatable) {
+            this._tabAnimatable = Animatable('tab', 0.1, self.setTabAnimationRatio);
         }
-        this.burgerElem.setAttribute('style', '');
+        return this._tabAnimatable;
     };
 
-    proto.hideBurger = function () {
-        if (this.burgerElem) {
-            this.burgerElem.setAttribute('style', 'display: none;');
+    proto.showTab = function () {
+        if (!this.tabElem) {
+            this.buildTab();
         }
-        this.isBurgerVisible = false;
+        this.getTabAnimatable().animateDown();
     };
 
-    proto.buildBurger = function () {
+    proto.hideTab = function () {
+        if (this.tabElem) {
+            this.tabElem.setAttribute('style', 'display: none;');
+        }
+        this.getTabAnimatable().animateUp();
+    };
+
+    proto.buildTab = function () {
         var self = this;
         var tempElem, body;
 
         tempElem = document.createElement('div');
-        tempElem.innerHTML = BURGER_STRING;
-        this.burgerElem = tempElem.children[0];
+        tempElem.innerHTML = TAB_STRING;
+        this.tabElem = tempElem.children[0];
 
-        this.burgerElem.addEventListener('touchstart', function (event) {
+        this.tabElem.addEventListener('touchstart', function (event) {
             event.stopPropagation();
             self.showMenu();
         });
 
         body = document.getElementsByTagName('body')[0];
-        body.appendChild(this.burgerElem);
+        body.appendChild(this.tabElem);
     };
 
     proto.buildMenu = function () {
@@ -362,6 +372,161 @@ Mobile.log = function (message) {
         body.appendChild(this.menuElem);
     };
 
+    proto.setTabAnimationRatio = function (ratio) {
+        var LEFT = 0;
+        var RIGHT = 3;
+        var style;
 
+        // Round away any exponents that might appear.
+        ratio = Math.round((ratio) * 1000) / 1000;
+        style = "left: " + (RIGHT * ratio + LEFT * (1 - ratio)) + "em; " +
+            "opacity: " + (1 - ratio) + ";";
+        this.tabElem.setAttribute("style", style);
+    };
 }(window.Mobile.GestureHandler.prototype));
 
+window.Animator = function () {
+    this.initialize.apply(this, arguments);
+};
+
+(function (proto) {
+    proto.initialize = function () {
+        this._animations = {};
+        this.tick = this.tick.bind(this);
+    };
+
+    proto.animate = function (key, tick) {
+        this._animations[key] = tick;
+        this.wakeup();
+    };
+
+    proto.wakeup = function () {
+        if (this._isAnimating) {
+            return;
+        }
+        this._isAnimating = true;
+        this.tick();
+    };
+
+    proto.tick = function () {
+        var key;
+        var isFinished, allFinished;
+        var toRemove, index;
+
+        toRemove = [];
+        allFinished = true;
+        for (key in this._animations) {
+            if (!this._animations.hasOwnProperty(key)) {
+                return;
+            }
+            isFinished = this._animations[key]();
+            if (!isFinished) {
+                allFinished = false;
+            } else {
+                toRemove.push(key);
+            }
+        }
+
+        if (!allFinished) {
+            requestAnimationFrame(this.tick);
+        } else {
+            for (index = 0; index < toRemove.length; toRemove++) {
+                delete this._isAnimating[toRemove[index]];
+            }
+            this._isAnimating = false;
+        }
+    };
+
+}(window.Animator.prototype));
+
+window.Animator.getInstance = function () {
+    if (!window.Animator._instance) {
+        window.Animator._instance = new window.Animator();
+    }
+    return window.Animator._instance;
+};
+
+function Animatable(key, increment, update) {
+    var ratio;
+    var handles;
+
+    handles = {
+        animateUp: function () {
+            Animator.getInstance().animate(key, tickUp);
+        },
+        animateDown: function () {
+            Animator.getInstance().animate(key, tickDown);
+        }
+    };
+
+    ratio = 0;
+
+    function tickUp () {
+        var isFinished;
+        ratio += increment;
+        if (ratio >= 1.0) {
+            isFinished = true;
+            ratio = 1;
+        }
+        update(ratio);
+        return isFinished;
+    };
+
+    function tickDown () {
+        var isFinished;
+        ratio -= increment;
+        if (ratio <= 0.0) {
+            isFinished = true;
+            ratio = 0;
+        }
+        update(ratio);
+        return isFinished;
+    };
+
+    return handles;
+};
+
+
+// http://paulirish.com/2011/requestanimationframe-for-smart-animating/
+// http://my.opera.com/emoller/blog/2011/12/20/requestanimationframe-for-smart-er-animating
+
+// requestAnimationFrame polyfill by Erik Möller. fixes from Paul Irish and Tino Zijdel
+
+// MIT license
+
+(function() {
+    'use strict';
+
+    var VENDORS = ['ms', 'moz', 'webkit', 'o'];
+    var index, lastTime;
+
+    for (index = 0; index < VENDORS.length && !window.requestAnimationFrame; index++) {
+        window.requestAnimationFrame = window[VENDORS[index] + 'RequestAnimationFrame'];
+        window.cancelAnimationFrame = window[VENDORS[index] + 'CancelAnimationFrame'];
+        if (!window.cancelAnimationFrame) {
+            window.cancelAnimationFrame = window[VENDORS[index] + 'CancelRequestAnimationFrame'];
+        }
+    }
+
+    if (!window.requestAnimationFrame) {
+        lastTime = 0;
+        window.requestAnimationFrame = function(callback, element) {
+            var currTime, timeToCall, id;
+
+            currTime = new Date().getTime();
+            timeToCall = Math.max(0, 16 - (currTime - lastTime));
+            id = window.setTimeout(function() {
+                callback(currTime + timeToCall);
+            }, timeToCall);
+            lastTime = currTime + timeToCall;
+
+            return id;
+        };
+    }
+
+    if (!window.cancelAnimationFrame) {
+        window.cancelAnimationFrame = function(id) {
+            clearTimeout(id);
+        };
+    }
+}());
