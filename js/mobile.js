@@ -75,6 +75,7 @@ Mobile.log = function (message) {
     proto.initialize = function () {
         this.firstPos = { x: 0, y: 0 };
         this.setTabAnimationRatio = this.setTabAnimationRatio.bind(this);
+        this.setMenuAnimationRatio = this.setMenuAnimationRatio.bind(this);
     };
 
     proto.bindEvents = function () {
@@ -285,39 +286,42 @@ Mobile.log = function (message) {
         if (!this.menuElem) {
             this.buildMenu();
         }
-        this.menuElem.setAttribute('style', '');
+        this.getAnimatables().menu.animateUp();
         this.isMenuVisible = true;
         this.hideTab();
     };
 
     proto.hideMenu = function () {
         if (this.menuElem) {
-            this.menuElem.setAttribute('style', 'display: none;');
+            this.getAnimatables().menu.animateDown();
         }
         this.isMenuVisible = false;
         this.showTab();
     };
 
-    proto.getTabAnimatable = function () {
+    proto.getAnimatables = function () {
         var self = this;
-        if (!this._tabAnimatable) {
-            this._tabAnimatable = Animatable('tab', 0.1, self.setTabAnimationRatio);
+        if (!this._animatables) {
+            this._animatables = {
+                tab: Animatable('tab', 0.1, self.setTabAnimationRatio),
+                menu: Animatable('menu', 0.1, self.setMenuAnimationRatio)
+            }
         }
-        return this._tabAnimatable;
+        return this._animatables;
     };
 
     proto.showTab = function () {
         if (!this.tabElem) {
             this.buildTab();
         }
-        this.getTabAnimatable().animateDown();
+        this.getAnimatables().tab.animateDown();
     };
 
     proto.hideTab = function () {
         if (this.tabElem) {
             this.tabElem.setAttribute('style', 'display: none;');
         }
-        this.getTabAnimatable().animateUp();
+        this.getAnimatables().tab.animateUp();
     };
 
     proto.buildTab = function () {
@@ -382,6 +386,18 @@ Mobile.log = function (message) {
         style = "left: " + (RIGHT * ratio + LEFT * (1 - ratio)) + "em; " +
             "opacity: " + (1 - ratio) + ";";
         this.tabElem.setAttribute("style", style);
+    };
+
+    proto.setMenuAnimationRatio = function (ratio) {
+        var LEFT = -3;
+        var RIGHT = 0;
+        var style;
+
+        // Round away any exponents that might appear.
+        ratio = Math.round((ratio) * 1000) / 1000;
+        style = "left: " + (RIGHT * ratio + LEFT * (1 - ratio)) + "em; " +
+            "opacity: " + ratio + ";";
+        this.menuElem.setAttribute("style", style);
     };
 }(window.Mobile.GestureHandler.prototype));
 
