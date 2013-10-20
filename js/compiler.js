@@ -452,8 +452,11 @@ function directionalRule(rule) {
 			return true;
 		}
 		for (var j=0;j<cellRow.length;j++) {
-			if (relativeDirections.indexOf(cellRow[j][0])>=0) {
-				return true;
+			var cell = cellRow[j];
+			for (var k=0;k<cell.length;k+=2) {
+				if (relativeDirections.indexOf(cell[k])>=0) {
+					return true;
+				}
 			}
 		}
 	}
@@ -463,8 +466,11 @@ function directionalRule(rule) {
 			return true;
 		}
 		for (var j=0;j<cellRow.length;j++) {
-			if (relativeDirections.indexOf(cellRow[j][0])>=0) {
-				return true;
+			var cell = cellRow[j];
+			for (var k=0;k<cell.length;k+=2) {
+				if (relativeDirections.indexOf(cell[k])>=0) {
+					return true;
+				}
 			}
 		}
 	}
@@ -1440,7 +1446,7 @@ function rulesToMask(state) {
 						mask_r[2 * layerIndex + 0] = object_dir;
 						mask_r[2 * layerIndex + 1] = object_id;
 
-						if (object_dir.length>0) {
+				if (object_dir.length>0) {
 							postMovementsLayerMask_r = postMovementsLayerMask_r | ((1+2+4+8+16)<<(5*layerIndex));
 						}			
 
