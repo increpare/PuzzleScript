@@ -68,25 +68,21 @@ a {
           margin-left: auto;
           margin-right: auto;
           width: 30em;
-          border: 1px solid lightblue;
           font-weight: bold;
           border-radius: 0.25em;
-          color: lightblue;
       }
 
+      .mobile-menu,
+      .tab-icon,
       .mobile-menu .close {
-          position: absolute;
-          right: -0.5em;
-          top: -0.50em;
-          border: 1px solid lightblue;
-          border-radius: 5em;
-          padding: 0.75em 1em;
-          background: black;
+          background: rgba(0,0,0,0.4);
+          border: 2px solid rgba(255, 255, 255, 0.4);
+          color: rgba(255, 255, 255, 1);
       }
+
       .mobile-menu .button {
           width: 28.3333%;
           margin: 2%;
-          border: 0.5% solid lightblue;
           border-radius: 0.25em;
           padding: 7.5% 0%;
           text-align: center;
@@ -104,27 +100,48 @@ a {
           top: 0em;
       }
 
-      .tab-icon {
-          width: 3em;
-          height: 3em;
+      .tab-icon,
+      .mobile-menu .close {
+          height: 48px;
           position: absolute;
-          left: -2em;
-          top: 0.5em;
-          background: rgba(0,0,0,0.4);
-          border: 0.125em solid rgba(255, 255, 255, 0.4);
-          border-radius: 0.5em;
+          border-radius: 6px;
+      }
+
+      .tab-icon {
+          left: -24px;
+          top: 6px;
+          width: 36px;
+      }
+
+      .mobile-menu .close {
+          left: -18px;
+          width: 18px;
+          top: 0px;
+          border-radius: 6px 0 0 6px;
+          border-right: 0;
+      }
+
+      .tab-icon .slice,
+      .mobile-menu .close .slice {
+          margin: 4.5px 1px;
+          width: 2px;
+          height: 80%;
+          background: rgba(255, 255, 255, 0.4);
       }
 
       .tab-icon .slice {
-          margin: 12.5% 2.5%;
-          width: 5%;
-          height: 75%;
-          background: rgba(255, 255, 255, 0.4);
           float: right;
       }
 
       .tab-icon .slice:first-child {
-           margin-right: 12.5%;
+           margin-right: 4.5px;
+      }
+
+      .mobile-menu .close .slice {
+          float: left;
+      }
+      .mobile-menu .close .slice:first-child {
+           margin-left: 4.5px;
       }
 
       @media screen and (max-width: 32em) {
@@ -139,6 +156,7 @@ a {
               width: 90%;
           }
       }
+
 
 </style>
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">

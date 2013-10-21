@@ -62,7 +62,10 @@ Mobile.log = function (message) {
     // Template for the menu.
     var MENU_STRING = [
         '<div class="mobile-menu">',
-        '  <div class="close">X</div>',
+        '  <div class="close">',
+        '    <div class="slice"></div>',
+        '    <div class="slice"></div>',
+        '  </div>',
         '  <div class="undo button">Undo</div>',
         '  <div class="reset button">Reset</div>',
         '  <div class="quit button">Quit to Menu</div>',
@@ -349,6 +352,7 @@ Mobile.log = function (message) {
         tempElem = document.createElement('div');
         tempElem.innerHTML = MENU_STRING;
         this.menuElem = tempElem.children[0];
+        this.closeElem = this.menuElem.getElementsByClassName('close')[0];
 
         close = this.menuElem.getElementsByClassName('close')[0];
         close.addEventListener('touchstart', function (event) {
@@ -378,26 +382,32 @@ Mobile.log = function (message) {
 
     proto.setTabAnimationRatio = function (ratio) {
         var LEFT = 0;
-        var RIGHT = 3;
+        var RIGHT = 48;
         var style;
 
         // Round away any exponents that might appear.
         ratio = Math.round((ratio) * 1000) / 1000;
-        style = "left: " + (RIGHT * ratio + LEFT * (1 - ratio)) + "em; " +
-            "opacity: " + (1 - ratio) + ";";
-        this.tabElem.setAttribute("style", style);
+        style = 'left: ' + (RIGHT * ratio + LEFT * (1 - ratio)) + 'px; ' +
+            'opacity: ' + (1 - ratio) + ';';
+        this.tabElem.setAttribute('style', style);
     };
 
     proto.setMenuAnimationRatio = function (ratio) {
-        var LEFT = -3;
-        var RIGHT = 0;
+        var LEFT = -48 - 18;
+        var RIGHT = -18;
+        var size, opacityString;
         var style;
 
         // Round away any exponents that might appear.
         ratio = Math.round((ratio) * 1000) / 1000;
-        style = "left: " + (RIGHT * ratio + LEFT * (1 - ratio)) + "em; " +
-            "opacity: " + ratio + ";";
-        this.menuElem.setAttribute("style", style);
+        size = RIGHT * ratio + LEFT * (1 - ratio);
+        opacityString = 'opacity: ' + ratio + ';';
+        style = 'left: ' + (size - 4) + 'px; ' +
+            opacityString + ' ' +
+            'width: ' + (-size) + 'px;';
+        this.closeElem.setAttribute('style', style);
+
+        this.menuElem.setAttribute('style', opacityString);
     };
 }(window.Mobile.GestureHandler.prototype));
 
