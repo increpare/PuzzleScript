@@ -51,7 +51,8 @@ Mobile.log = function (message) {
     }
 
     var TAB_STRING = [
-        '<div class="tab-affordance">',
+        '<div class="tab">',
+        '  <div class="tab-affordance"></div>',
         '  <div class="tab-icon">',
         '    <div class="slice"></div>',
         '    <div class="slice"></div>',
@@ -62,6 +63,7 @@ Mobile.log = function (message) {
     // Template for the menu.
     var MENU_STRING = [
         '<div class="mobile-menu">',
+        '  <div class="close-affordance"></div>',
         '  <div class="close">',
         '    <div class="slice"></div>',
         '    <div class="slice"></div>',
@@ -330,32 +332,37 @@ Mobile.log = function (message) {
     proto.buildTab = function () {
         var self = this;
         var tempElem, body;
+        var assemblyElem;
+        var tabAffordance;
 
         tempElem = document.createElement('div');
         tempElem.innerHTML = TAB_STRING;
-        this.tabElem = tempElem.children[0];
+        assemblyElem = tempElem.children[0];
+        tabAffordance = assemblyElem.getElementsByClassName('tab-affordance')[0];
 
-        this.tabElem.addEventListener('touchstart', function (event) {
+        tabAffordance.addEventListener('touchstart', function (event) {
             event.stopPropagation();
             self.showMenu();
         });
 
+        this.tabElem = assemblyElem.getElementsByClassName('tab-icon')[0];
+
         body = document.getElementsByTagName('body')[0];
-        body.appendChild(this.tabElem);
+        body.appendChild(assemblyElem);
     };
 
     proto.buildMenu = function () {
         var self = this;
         var tempElem, body;
-        var close, undo, reset, quit;
+        var closeAffordance, undo, reset, quit;
 
         tempElem = document.createElement('div');
         tempElem.innerHTML = MENU_STRING;
         this.menuElem = tempElem.children[0];
         this.closeElem = this.menuElem.getElementsByClassName('close')[0];
 
-        close = this.menuElem.getElementsByClassName('close')[0];
-        close.addEventListener('touchstart', function (event) {
+        closeAffordance = this.menuElem.getElementsByClassName('close-affordance')[0];
+        closeAffordance.addEventListener('touchstart', function (event) {
             event.stopPropagation();
             self.hideMenu();
         });
@@ -381,14 +388,17 @@ Mobile.log = function (message) {
     };
 
     proto.setTabAnimationRatio = function (ratio) {
-        var LEFT = 0;
-        var RIGHT = 48;
+        var LEFT = 18;
+        var RIGHT = 48 + 18;
+        var size, opacityString;
         var style;
 
         // Round away any exponents that might appear.
         ratio = Math.round((ratio) * 1000) / 1000;
-        style = 'left: ' + (RIGHT * ratio + LEFT * (1 - ratio)) + 'px; ' +
-            'opacity: ' + (1 - ratio) + ';';
+        size = RIGHT * ratio + LEFT * (1 - ratio);
+        opacityString = 'opacity: ' + (1 - ratio) + ';';
+        style = opacityString + ' ' +
+            'width: ' + size + 'px;';
         this.tabElem.setAttribute('style', style);
     };
 

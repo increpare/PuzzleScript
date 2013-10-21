@@ -92,12 +92,21 @@ a {
           clear: both;
       }
 
-      .tab-affordance {
+      .tab-affordance,
+      .close-affordance {
           width: 4em;
           height: 4em;
           position: absolute;
+      }
+
+      .tab-affordance {
           left: 0em;
           top: 0em;
+      }
+
+      .close-affordance {
+          left: -4em;
+          top: -0.5em;
       }
 
       .tab-icon,
@@ -108,9 +117,11 @@ a {
       }
 
       .tab-icon {
-          left: -24px;
+          left: 0px;
           top: 6px;
-          width: 36px;
+          width: 18px;
+          border-radius: 0 6px 6px 0;
+          border-left: 0;
       }
 
       .mobile-menu .close {
