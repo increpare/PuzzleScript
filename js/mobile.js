@@ -28,6 +28,23 @@ Mobile.log = function (message) {
     h1.innerHTML = "" + Math.random().toString().substring(4, 1) + "-" + message;
 };
 
+Mobile.debugDot = function (event) {
+    var dot, body, style
+
+    style = 'border-radius: 50px;' +
+        'width: 5px;' +
+        'height: 5px;' +
+        'background: red;' +
+        'position: absolute;' +
+        'left: ' + event.touches[0].clientX + 'px;' +
+        'top: ' + event.touches[0].clientY + 'px;';
+    dot = document.createElement('div');
+    dot.setAttribute('style', style);
+    console.log(style);
+    body = document.getElementsByTagName('body')[0];
+    body.appendChild(dot);
+};
+
 (function (proto) {
     'use strict';
 
@@ -333,20 +350,23 @@ Mobile.log = function (message) {
     proto.buildTab = function () {
         var self = this;
         var tempElem, body;
+        var openCallback;
+        var tabElem;
         var assemblyElem;
-        var tabAffordance;
 
         tempElem = document.createElement('div');
         tempElem.innerHTML = TAB_STRING;
         assemblyElem = tempElem.children[0];
-        tabAffordance = assemblyElem.getElementsByClassName('tab-affordance')[0];
 
-        tabAffordance.addEventListener('touchstart', function (event) {
+        openCallback = function (event) {
             event.stopPropagation();
             self.showMenu();
-        });
-
+        };
+        this.tabAffordance = assemblyElem.getElementsByClassName('tab-affordance')[0];
         this.tabElem = assemblyElem.getElementsByClassName('tab-icon')[0];
+
+        this.tabAffordance.addEventListener('touchstart', openCallback);
+        this.tabElem.addEventListener('touchstart', openCallback);
 
         body = document.getElementsByTagName('body')[0];
         body.appendChild(assemblyElem);
@@ -355,18 +375,24 @@ Mobile.log = function (message) {
     proto.buildMenu = function () {
         var self = this;
         var tempElem, body;
-        var closeAffordance, undo, reset, quit;
+        var undo, reset, quit;
+        var closeTab;
+        var closeCallback;
 
         tempElem = document.createElement('div');
         tempElem.innerHTML = MENU_STRING;
         this.menuElem = tempElem.children[0];
         this.closeElem = this.menuElem.getElementsByClassName('close')[0];
 
-        closeAffordance = this.menuElem.getElementsByClassName('close-affordance')[0];
-        closeAffordance.addEventListener('touchstart', function (event) {
+        closeCallback = function (event) {
             event.stopPropagation();
             self.hideMenu();
-        });
+        };
+        this.closeAffordance = this.menuElem.getElementsByClassName('close-affordance')[0];
+        closeTab = this.menuElem.getElementsByClassName('close')[0];
+        this.closeAffordance.addEventListener('touchstart', closeCallback);
+        closeTab.addEventListener('touchstart', closeCallback);
+
         undo = this.menuElem.getElementsByClassName('undo')[0];
         undo.addEventListener('touchstart', function (event) {
             event.stopPropagation();
@@ -396,6 +422,11 @@ Mobile.log = function (message) {
 
         // Round away any exponents that might appear.
         ratio = Math.round((ratio) * 1000) / 1000;
+        if (ratio >= 0.999) {
+            this.tabAffordance.setAttribute('style', 'display: none;');
+        } else {
+            this.tabAffordance.setAttribute('style', 'display: block;');
+        }
         size = RIGHT * ratio + LEFT * (1 - ratio);
         opacityString = 'opacity: ' + (1 - ratio) + ';';
         style = opacityString + ' ' +
@@ -411,6 +442,11 @@ Mobile.log = function (message) {
 
         // Round away any exponents that might appear.
         ratio = Math.round((ratio) * 1000) / 1000;
+        if (ratio <= 0.001) {
+            this.closeAffordance.setAttribute('style', 'display: none;');
+        } else {
+            this.closeAffordance.setAttribute('style', 'display: block;');
+        }
         size = RIGHT * ratio + LEFT * (1 - ratio);
         opacityString = 'opacity: ' + ratio + ';';
         style = 'left: ' + (size - 4) + 'px; ' +
