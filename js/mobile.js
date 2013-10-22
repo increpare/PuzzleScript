@@ -91,6 +91,7 @@ Mobile.log = function (message) {
 
     proto.bootstrap = function () {
         this.showTab();
+        this.disableAudio();
     };
 
     /** Event Handlers **/
@@ -418,6 +419,13 @@ Mobile.log = function (message) {
         this.closeElem.setAttribute('style', style);
 
         this.menuElem.setAttribute('style', opacityString);
+    };
+
+    /** Audio Methods **/
+
+    proto.disableAudio = function () {
+        // Overwrite the playseed function to disable it.
+        window.playSeed = function () {};
     };
 }(window.Mobile.GestureHandler.prototype));
 
