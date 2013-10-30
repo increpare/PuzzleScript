@@ -407,12 +407,13 @@ function loadLevelFromState(state,levelindex) {
 	        level.rigidGroupIndexMask[i]=0;
 	    }
 
-	    if ('run_rules_on_level_start' in state.metadata) {
-			processInput(-1,true);
-	    }
-
 	    backups=[]
 	    restartTarget=backupLevel();
+		
+		if ('run_rules_on_level_start' in state.metadata) {
+			processInput(-1,true);
+	    }
+		
 	    if (levelindex=== 0){ 
 			tryPlayStartLevelSound();
 		} else {
@@ -700,7 +701,6 @@ function restoreLevel(lev) {
 	oldflickscreendat=[];
 	level.dat=lev.concat([]);
 
-	level.dat=lev.concat([]);
 	//width/height don't change, neither does layercount
 	for (var i=0;i<level.dat.length;i++) {
 		level.movementMask[i]=0;
@@ -714,7 +714,6 @@ function restoreLevel(lev) {
     for (var i=0;i<level.width;i++) {
     	level.colCellContents[i]=0;	    	
     }
-
 
     againing=false;
     messagetext="";
@@ -737,7 +736,13 @@ function DoRestart(force) {
 	}
 	restoreLevel(restartTarget);
 	tryPlayRestartSound();
+	
+	if ('run_rules_on_level_start' in state.metadata) {
+			processInput(-1,true);
+	}
+	
 	level.commandQueue=[];
+
 }
 
 function DoUndo(force) {
