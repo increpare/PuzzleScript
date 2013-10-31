@@ -861,7 +861,7 @@ function repositionEntitiesOnLayer(positionIndex,layer,dirMask)
     var collision = targetMask&layerMask;
     var sourceMask = level.dat[positionIndex];
 
-    if (collision!=0) {
+    if ((collision!=0) && (dirMask!=16)) {
         return false;
     }
     var movingEntities = sourceMask&layerMask;
