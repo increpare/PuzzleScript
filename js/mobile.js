@@ -108,7 +108,9 @@ Mobile.debugDot = function (event) {
 
     proto.bootstrap = function () {
         this.showTab();
-        this.disableAudio();
+        if (!this.isAudioSupported()) {
+            this.disableAudio();
+        }
     };
 
     /** Event Handlers **/
@@ -462,6 +464,25 @@ Mobile.debugDot = function (event) {
     proto.disableAudio = function () {
         // Overwrite the playseed function to disable it.
         window.playSeed = function () {};
+    };
+
+    proto.isAudioSupported = function () {
+        var isAudioSupported = true;
+
+        if (webkitAudioContext) {
+            // We may be on Mobile Safari, which throws up
+            // 'Operation not Supported' alerts when we attempt to
+            // play Audio elements with "data:audio/wav;base64"
+            // encoded HTML5 Audio elements.
+            //
+            // Switching to MP3 encoded audio may be the way we have
+            // to go to get Audio working on mobile devices.
+            //
+            // e.g. https://github.com/rioleo/webaudio-api-synthesizer
+            isAudioSupported = false;
+        }
+
+        return isAudioSupported;
     };
 }(window.Mobile.GestureHandler.prototype));
 
