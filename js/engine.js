@@ -1320,7 +1320,7 @@ function matchCellRowWildCard(direction, cellRow,cellRowMask) {
 			    		window.console.log("EEEP2 "+direction);
 			    	}
 			    }
-				result = result.concat(cellRowMatchesWildCard(direction,cellRow,i,kmax))
+				result.push.apply(result, cellRowMatchesWildCard(direction,cellRow,i,kmax));
 			}
 		}
 	} else {
@@ -1359,7 +1359,7 @@ function matchCellRowWildCard(direction, cellRow,cellRowMask) {
 			    		window.console.log("EEEP2 "+direction);
 			    	}
 			    }
-				result = result.concat(cellRowMatchesWildCard(direction,cellRow,i,kmax))
+				result.push.apply(result, cellRowMatchesWildCard(direction,cellRow,i,kmax));
 			}
 		}		
 	}

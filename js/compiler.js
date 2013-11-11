@@ -43,6 +43,10 @@ var colorPalette;
 
 function generateExtraMembers(state) {
 
+	if (state.collisionLayers.length===0) {
+		logError("No collision layers defined.  All objects need to be in collision layers.");
+	}
+
 	//annotate objects with layers
 	//assign ids at the same time
 	state.idDict = {};
@@ -303,7 +307,7 @@ function generateExtraMembers(state) {
 		}
 	}
 
-	if (state.idDict[0]===undefined) {
+	if (state.idDict[0]===undefined && state.collisionLayers.length>0) {
 		logError('You need to have some objects defined');
 	}
 
@@ -1349,7 +1353,7 @@ function rulesToMask(state) {
 						forcemask_l = ellipsisDirection;
 						if (cell_l.length!==2) {
 							logError("You can't have anything in with an ellipsis. Sorry.",rule.lineNumber);
-						} else {
+						} else if (rule.rhs.length>0) {
 							var rhscell=cellrow_r[k];
 							if (rhscell.length!==2 || rhscell[0]!=='...') {
 								logError("An ellipsis on the left must be matched by one in the corresponding place on the right.",rule.lineNumber);								
