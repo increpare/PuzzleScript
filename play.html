@@ -18,6 +18,7 @@ body {
   right:0px;
   border: 0px;
   background-color: black;
+  -webkit-tap-highlight-color: rgba(0,0,0,0);
 } 
 
 h1 {
@@ -61,7 +62,115 @@ a {
 	bottom:70px;
 }
 
+      .mobile-menu {
+          position: relative;
+          top: 4em;
+          margin-left: auto;
+          margin-right: auto;
+          width: 30em;
+          font-weight: bold;
+          border-radius: 0.25em;
+      }
+
+      .mobile-menu,
+      .tab-icon,
+      .mobile-menu .close {
+          background: rgba(0,0,0,0.4);
+          border: 2px solid rgba(255, 255, 255, 0.4);
+          color: rgba(255, 255, 255, 1);
+      }
+
+      .mobile-menu .button {
+          width: 28.3333%;
+          margin: 2%;
+          border-radius: 0.25em;
+          padding: 7.5% 0%;
+          text-align: center;
+          float: left;
+      }
+      .mobile-menu .clear {
+          clear: both;
+      }
+
+      .tab-affordance,
+      .close-affordance {
+          width: 6em;
+          height: 6em;
+          position: absolute;
+      }
+
+      .tab-affordance {
+          left: 0em;
+          top: 0em;
+      }
+
+      .close-affordance {
+          left: -4em;
+          top: -0.5em;
+      }
+
+      .tab-icon,
+      .mobile-menu .close {
+          height: 48px;
+          position: absolute;
+          border-radius: 6px;
+      }
+
+      .tab-icon {
+          left: 0px;
+          top: 6px;
+          width: 18px;
+          border-radius: 0 6px 6px 0;
+          border-left: 0;
+      }
+
+      .mobile-menu .close {
+          left: -18px;
+          width: 18px;
+          top: 0px;
+          border-radius: 6px 0 0 6px;
+          border-right: 0;
+      }
+
+      .tab-icon .slice,
+      .mobile-menu .close .slice {
+          margin: 4.5px 1px;
+          width: 2px;
+          height: 80%;
+          background: rgba(255, 255, 255, 0.4);
+      }
+
+      .tab-icon .slice {
+          float: right;
+      }
+
+      .tab-icon .slice:first-child {
+           margin-right: 4.5px;
+      }
+
+      .mobile-menu .close .slice {
+          float: left;
+      }
+      .mobile-menu .close .slice:first-child {
+           margin-left: 4.5px;
+      }
+
+      @media screen and (max-width: 32em) {
+          .mobile-menu {
+              font-size: 0.8em;
+              width: 90%;
+          }
+      }
+      @media screen and (max-width: 24em) {
+          .mobile-menu {
+              font-size: 0.65em;
+              width: 90%;
+          }
+      }
+
+
 </style>
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 </head>
 <body>
 <div class="title"><h1 id="gametitle">PuzzleScript Game</h1></div>
@@ -102,6 +211,7 @@ a {
 <script src="js/parser.js"></script>
 <script src="js/compiler.js"></script>
 <script src="js/inputoutput.js"></script>
+<script src="js/mobile.js"></script>
 <!--ENDREPLACE-->
 
 <script>
@@ -155,6 +265,7 @@ function getData(){
 			gametitle.innerHTML=title;
 			window.document.title=title+" - PuzzleScript Game";
 		}
+                Mobile.enable();
 		var hacklink = document.getElementById("hacklink");
 
 		var url = "editor.html?hack="+id;
