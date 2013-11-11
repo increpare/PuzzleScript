@@ -815,7 +815,7 @@ function rulesToArray(state) {
 		atomizeAggregates(state, rules2[i]);
 	}
 
-	//replace aggregates with what they mean
+	//replace synonyms with what they mean
 	for (var i = 0; i < rules2.length; i++) {
 		rephraseSynonyms(state, rules2[i]);
 	}
