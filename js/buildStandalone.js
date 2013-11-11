@@ -36,10 +36,10 @@ function buildStandalone(stateString) {
 	}
 
 	if ('background_color' in state.metadata) {
-		htmlString = htmlString.replace(/black/g,state.bgcolor);	
+		htmlString = htmlString.replace(/black;\/\*Don\'t/g,state.bgcolor+';\/\*Don\'t');	
 	}
 	if ('text_color' in state.metadata) {
-		htmlString = htmlString.replace(/lightblue/g,state.fgcolor);	
+		htmlString = htmlString.replace(/lightblue;\/\*Don\'t/g,state.fgcolor+';\/\*Don\'t');	
 	}
 
 	htmlString = htmlString.replace(/\"__GAMETITLE__\"/g,title);

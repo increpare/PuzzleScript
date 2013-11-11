@@ -442,6 +442,7 @@ var lastDownTarget;
 var oldcellwidth=0;
 var oldcellheight=0;
 var oldtextmode=-1;
+var oldfgcolor=-1;
 var forceRegenImages=false;
 function canvasResize() {
 //  window.console.log("canvasresize");
@@ -516,7 +517,7 @@ function canvasResize() {
     xoffset = xoffset|0;
     yoffset = yoffset|0;
 
-    if (oldcellwidth!=cellwidth||oldcellheight!=cellheight||oldtextmode!=textMode||forceRegenImages) {
+    if (oldcellwidth!=cellwidth||oldcellheight!=cellheight||oldtextmode!=textMode||oldfgcolor!=state.fgcolor||forceRegenImages){
     	forceRegenImages=false;
     	regenSpriteImages();
     }
@@ -524,6 +525,7 @@ function canvasResize() {
     oldcellheight=cellheight;
     oldcellwidth=cellwidth;
     oldtextmode=textMode;
+    oldfgcolor=state.fgcolor;
 
     redraw();
 }
