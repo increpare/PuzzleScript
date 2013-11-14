@@ -2109,6 +2109,8 @@ function processInput(dir,dontCheckWin,dontModify) {
 
 	    if (level.commandQueue.indexOf('again')>=0 && modified) {
 
+	    	var old_verbose_logging=verbose_logging;
+	    	//verbose_logging=false;
 	    	//first have to verify that something's changed
 	    	if (processInput(-1,true,true)) {
 
@@ -2119,6 +2121,7 @@ function processInput(dir,dontCheckWin,dontModify) {
 		    	againing=true;
 		    	timer=0;
 		    }
+		    verbose_logging=old_verbose_logging;
 	    }
 		if (level.commandQueue.indexOf('checkpoint')>=0) {
 	    	if (verbose_logging) { 
