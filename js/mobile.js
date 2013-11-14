@@ -54,6 +54,8 @@ Mobile.debugDot = function (event) {
     var SWIPE_DISTANCE = 50;
     // Time in milliseconds to complete the gesture.
     var SWIPE_TIMEOUT = 1000;
+    // Time in milliseconds to repeat a motion if still holding down.
+    var MOTION_REPEAT_INTERVAL = 333;
 
     // Lookup table mapping action to keyCode.
     var CODE = {
@@ -98,6 +100,7 @@ Mobile.debugDot = function (event) {
         this.firstPos = { x: 0, y: 0 };
         this.setTabAnimationRatio = this.setTabAnimationRatio.bind(this);
         this.setMenuAnimationRatio = this.setMenuAnimationRatio.bind(this);
+        this.repeatTick = this.repeatTick.bind(this);
     };
 
     proto.bindEvents = function () {
@@ -111,6 +114,7 @@ Mobile.debugDot = function (event) {
         if (!this.isAudioSupported()) {
             this.disableAudio();
         }
+        this.disableSelection();
     };
 
     /** Event Handlers **/
@@ -149,6 +153,7 @@ Mobile.debugDot = function (event) {
         // we aren't tracking anything.
         if (event.touches.length === 0) {
             this.isTouching = false;
+            this.endRepeatWatcher();
         }
     };
 
@@ -157,12 +162,44 @@ Mobile.debugDot = function (event) {
             this.handleSwipe(this.swipeDirection, this.touchCount);
             this.gestured = true;
             this.mayBeSwiping = false;
+            this.beginRepeatWatcher(event);
         } else if (this.mayBeSwiping) {
             this.swipeStep(event);
+        } else if (this.isRepeating) {
+            this.repeatStep(event);
         }
 
         event.preventDefault();
     };
+
+    proto.beginRepeatWatcher = function (event) {
+        if (this.repeatInterval) {
+            return;
+        }
+        this.isRepeating = true;
+        this.repeatInterval = setInterval(this.repeatTick, MOTION_REPEAT_INTERVAL);
+        this.recenter(event);
+    };
+
+    proto.endRepeatWatcher = function () {
+        if (this.repeatInterval) {
+            clearInterval(this.repeatInterval);
+            delete this.repeatInterval;
+            this.isRepeating = false;
+        }
+    };
+
+    proto.repeatTick = function () {
+        if (this.isTouching) {
+            this.handleSwipe(this.direction, this.touchCount);
+        }
+    };
+
+    // Capture the location to consider the gamepad center.
+    proto.recenter = function (event) {
+        this.firstPos.x = event.touches[0].clientX;
+        this.firstPos.y = event.touches[0].clientY;
+    }
 
     /** Detection Helper Methods **/
 
@@ -217,6 +254,23 @@ Mobile.debugDot = function (event) {
         } else if (currentTime - this.startTime > SWIPE_TIMEOUT) {
             // Cancel the swipe if they took too long to finish.
             this.mayBeSwiping = false;
+        }
+    };
+
+    proto.repeatStep = function (event) {
+        var currentPos, distance, currentTime;
+        var newDistance, direction;
+
+        currentPos = {
+            x: event.touches[0].clientX,
+            y: event.touches[0].clientY
+        };
+
+        newDistance = this.cardinalDistance(this.firstPos, currentPos);
+
+        if (newDistance >= SWIPE_DISTANCE) {
+            this.swipeDirection = this.dominantDirection(this.firstPos, currentPos);
+            this.recenter(event);
         }
     };
 
@@ -484,6 +538,14 @@ Mobile.debugDot = function (event) {
 
         return isAudioSupported;
     };
+
+    /** Other HTML5 Stuff **/
+    proto.disableSelection = function () {
+        var body;
+        body = document.getElementsByTagName('body')[0];
+        body.setAttribute('class', body.getAttribute('class') + ' disable-select');
+    };
+
 }(window.Mobile.GestureHandler.prototype));
 
 window.Animator = function () {
