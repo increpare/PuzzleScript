@@ -114,6 +114,7 @@ Mobile.debugDot = function (event) {
         if (!this.isAudioSupported()) {
             this.disableAudio();
         }
+        this.disableSelection();
     };
 
     /** Event Handlers **/
@@ -537,6 +538,14 @@ Mobile.debugDot = function (event) {
 
         return isAudioSupported;
     };
+
+    /** Other HTML5 Stuff **/
+    proto.disableSelection = function () {
+        var body;
+        body = document.getElementsByTagName('body')[0];
+        body.setAttribute('class', body.getAttribute('class') + ' disable-select');
+    };
+
 }(window.Mobile.GestureHandler.prototype));
 
 window.Animator = function () {
