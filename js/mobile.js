@@ -54,6 +54,8 @@ Mobile.debugDot = function (event) {
     var SWIPE_DISTANCE = 50;
     // Time in milliseconds to complete the gesture.
     var SWIPE_TIMEOUT = 1000;
+    // Time in milliseconds to repeat a motion if still holding down.
+    var MOTION_REPEAT_INTERVAL = 333;
 
     // Lookup table mapping action to keyCode.
     var CODE = {
@@ -98,6 +100,7 @@ Mobile.debugDot = function (event) {
         this.firstPos = { x: 0, y: 0 };
         this.setTabAnimationRatio = this.setTabAnimationRatio.bind(this);
         this.setMenuAnimationRatio = this.setMenuAnimationRatio.bind(this);
+        this.repeatTick = this.repeatTick.bind(this);
     };
 
     proto.bindEvents = function () {
@@ -149,6 +152,7 @@ Mobile.debugDot = function (event) {
         // we aren't tracking anything.
         if (event.touches.length === 0) {
             this.isTouching = false;
+            this.endRepeatWatcher();
         }
     };
 
@@ -157,11 +161,32 @@ Mobile.debugDot = function (event) {
             this.handleSwipe(this.swipeDirection, this.touchCount);
             this.gestured = true;
             this.mayBeSwiping = false;
+            this.beginRepeatWatcher();
         } else if (this.mayBeSwiping) {
             this.swipeStep(event);
         }
 
         event.preventDefault();
+    };
+
+    proto.beginRepeatWatcher = function () {
+        if (this.repeatInterval) {
+            return;
+        }
+        this.repeatInterval = setInterval(this.repeatTick, MOTION_REPEAT_INTERVAL);
+    };
+
+    proto.endRepeatWatcher = function () {
+        if (this.repeatInterval) {
+            clearInterval(this.repeatInterval);
+            delete this.repeatInterval;
+        }
+    };
+
+    proto.repeatTick = function () {
+        if (this.isTouching) {
+            this.handleSwipe(this.direction, this.touchCount);
+        }
     };
 
     /** Detection Helper Methods **/
