@@ -407,12 +407,13 @@ function loadLevelFromState(state,levelindex) {
 	        level.rigidGroupIndexMask[i]=0;
 	    }
 
+	    backups=[]
+	    restartTarget=backupLevel();
+
 	    if ('run_rules_on_level_start' in state.metadata) {
 			processInput(-1,true);
 	    }
 
-	    backups=[]
-	    restartTarget=backupLevel();
 	    if (levelindex=== 0){ 
 			tryPlayStartLevelSound();
 		} else {
@@ -700,7 +701,6 @@ function restoreLevel(lev) {
 	oldflickscreendat=[];
 	level.dat=lev.concat([]);
 
-	level.dat=lev.concat([]);
 	//width/height don't change, neither does layercount
 	for (var i=0;i<level.dat.length;i++) {
 		level.movementMask[i]=0;
@@ -737,6 +737,11 @@ function DoRestart(force) {
 	}
 	restoreLevel(restartTarget);
 	tryPlayRestartSound();
+
+	if ('run_rules_on_level_start' in state.metadata) {
+    	processInput(-1,true);
+	}
+	
 	level.commandQueue=[];
 }
 
@@ -856,7 +861,7 @@ function repositionEntitiesOnLayer(positionIndex,layer,dirMask)
     var collision = targetMask&layerMask;
     var sourceMask = level.dat[positionIndex];
 
-    if (collision!=0) {
+    if ((collision!=0) && (dirMask!=16)) {
         return false;
     }
     var movingEntities = sourceMask&layerMask;

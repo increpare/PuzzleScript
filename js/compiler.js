@@ -815,7 +815,7 @@ function rulesToArray(state) {
 		atomizeAggregates(state, rules2[i]);
 	}
 
-	//replace aggregates with what they mean
+	//replace synonyms with what they mean
 	for (var i = 0; i < rules2.length; i++) {
 		rephraseSynonyms(state, rules2[i]);
 	}
@@ -1353,17 +1353,20 @@ function rulesToMask(state) {
 						forcemask_l = ellipsisDirection;
 						if (cell_l.length!==2) {
 							logError("You can't have anything in with an ellipsis. Sorry.",rule.lineNumber);
+						} else if ((k===0)||(k===cellrow_l.length-1)) {
+							logError("There's no point in putting an ellipsis at the very start or the end of a rule",rule.lineNumber);
 						} else if (rule.rhs.length>0) {
 							var rhscell=cellrow_r[k];
 							if (rhscell.length!==2 || rhscell[0]!=='...') {
 								logError("An ellipsis on the left must be matched by one in the corresponding place on the right.",rule.lineNumber);								
 							}
-						}
+						} 
 						break;
 					}  else if (object_dir==='random') {
 						logError("'random' cannot be matched on the left-hand side, it can only appear on the right",rule.lineNumber);
 						continue;
-					}
+					} 
+
 					var object_name = cell_l[l + 1];
 					var object = state.objects[object_name];
 					var layerIndex = object.layer;
@@ -1394,6 +1397,24 @@ function rulesToMask(state) {
 						}
 					}
 				}
+
+				if (rule.rhs.length>0) {
+					var rhscell = cellrow_r[k];
+					var lhscell = cellrow_l[k];
+					if (rhscell[0]==='...' && lhscell[0]!=='...' ) {
+						logError("An ellipsis on the right must be matched by one in the corresponding place on the left.",rule.lineNumber);								
+					}
+					for (var l=0;l<rhscell.length;l+=2) {
+						var content=rhscell[l];
+						if (content==='...') {
+							if (rhscell.length!==2) {
+								logError("You can't have anything in with an ellipsis. Sorry.",rule.lineNumber);							
+							}
+						}
+					}
+				}
+
+
 				cellrow_l[k] = [forcemask_l, cellmask_l,nonExistenceMask_l,moveNonExistenceMask_l,stationaryMask_l];
 				//cellrow_l[k]=mask_l;
 
