@@ -161,25 +161,30 @@ Mobile.debugDot = function (event) {
             this.handleSwipe(this.swipeDirection, this.touchCount);
             this.gestured = true;
             this.mayBeSwiping = false;
-            this.beginRepeatWatcher();
+            this.beginRepeatWatcher(event);
         } else if (this.mayBeSwiping) {
             this.swipeStep(event);
+        } else if (this.isRepeating) {
+            this.repeatStep(event);
         }
 
         event.preventDefault();
     };
 
-    proto.beginRepeatWatcher = function () {
+    proto.beginRepeatWatcher = function (event) {
         if (this.repeatInterval) {
             return;
         }
+        this.isRepeating = true;
         this.repeatInterval = setInterval(this.repeatTick, MOTION_REPEAT_INTERVAL);
+        this.recenter(event);
     };
 
     proto.endRepeatWatcher = function () {
         if (this.repeatInterval) {
             clearInterval(this.repeatInterval);
             delete this.repeatInterval;
+            this.isRepeating = false;
         }
     };
 
@@ -188,6 +193,12 @@ Mobile.debugDot = function (event) {
             this.handleSwipe(this.direction, this.touchCount);
         }
     };
+
+    // Capture the location to consider the gamepad center.
+    proto.recenter = function (event) {
+        this.firstPos.x = event.touches[0].clientX;
+        this.firstPos.y = event.touches[0].clientY;
+    }
 
     /** Detection Helper Methods **/
 
@@ -242,6 +253,23 @@ Mobile.debugDot = function (event) {
         } else if (currentTime - this.startTime > SWIPE_TIMEOUT) {
             // Cancel the swipe if they took too long to finish.
             this.mayBeSwiping = false;
+        }
+    };
+
+    proto.repeatStep = function (event) {
+        var currentPos, distance, currentTime;
+        var newDistance, direction;
+
+        currentPos = {
+            x: event.touches[0].clientX,
+            y: event.touches[0].clientY
+        };
+
+        newDistance = this.cardinalDistance(this.firstPos, currentPos);
+
+        if (newDistance >= SWIPE_DISTANCE) {
+            this.swipeDirection = this.dominantDirection(this.firstPos, currentPos);
+            this.recenter(event);
         }
     };
 
