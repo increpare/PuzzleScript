@@ -54,19 +54,20 @@ Mobile.debugDot = function (event) {
     var SWIPE_DISTANCE = 50;
     // Time in milliseconds to complete the gesture.
     var SWIPE_TIMEOUT = 1000;
-    // Time in milliseconds to repeat a motion if still holding down.
-    var MOTION_REPEAT_INTERVAL = 333;
+    // Time in milliseconds to repeat a motion if still holding down,
+    // ... and not specified in state.metadata.key_repeat_interval.
+    var DEFAULT_REPEAT_INTERVAL = 150;
 
     // Lookup table mapping action to keyCode.
     var CODE = {
-        action: 88, // x
-        left:   37, // left arrow
-        right:  39, // right arrow
-        up:     38, // up arrow
-        down:   40, // down arrow
-        undo:   85, // u
-        restart:  82, // r
-        quit:   27, // escape
+        action:  88, // x
+        left:    37, // left arrow
+        right:   39, // right arrow
+        up:      38, // up arrow
+        down:    40, // down arrow
+        undo:    85, // u
+        restart: 82, // r
+        quit:    27, // escape
     }
 
     var TAB_STRING = [
@@ -158,11 +159,16 @@ Mobile.debugDot = function (event) {
     };
 
     proto.beginRepeatWatcher = function (event) {
+        var repeatIntervalMilliseconds;
         if (this.repeatInterval) {
             return;
         }
         this.isRepeating = true;
-        this.repeatInterval = setInterval(this.repeatTick, MOTION_REPEAT_INTERVAL);
+        repeatIntervalMilliseconds = state.metadata.key_repeat_interval * 1000;
+        if (isNaN(repeatIntervalMilliseconds) || !repeatIntervalMilliseconds) {
+            repeatIntervalMilliseconds = DEFAULT_REPEAT_INTERVAL;
+        }
+        this.repeatInterval = setInterval(this.repeatTick, repeatIntervalMilliseconds);
         this.recenter(event);
     };
 
