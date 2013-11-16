@@ -54,19 +54,20 @@ Mobile.debugDot = function (event) {
     var SWIPE_DISTANCE = 50;
     // Time in milliseconds to complete the gesture.
     var SWIPE_TIMEOUT = 1000;
-    // Time in milliseconds to repeat a motion if still holding down.
-    var MOTION_REPEAT_INTERVAL = 333;
+    // Time in milliseconds to repeat a motion if still holding down,
+    // ... and not specified in state.metadata.key_repeat_interval.
+    var DEFAULT_REPEAT_INTERVAL = 150;
 
     // Lookup table mapping action to keyCode.
     var CODE = {
-        action: 88, // x
-        left:   37, // left arrow
-        right:  39, // right arrow
-        up:     38, // up arrow
-        down:   40, // down arrow
-        undo:   85, // u
-        reset:  82, // r
-        quit:   27, // escape
+        action:  88, // x
+        left:    37, // left arrow
+        right:   39, // right arrow
+        up:      38, // up arrow
+        down:    40, // down arrow
+        undo:    85, // u
+        restart: 82, // r
+        quit:    27, // escape
     }
 
     var TAB_STRING = [
@@ -77,21 +78,6 @@ Mobile.debugDot = function (event) {
         '    <div class="slice"></div>',
         '  </div>',
         '</div>',
-    ].join("\n");
-
-    // Template for the menu.
-    var MENU_STRING = [
-        '<div class="mobile-menu">',
-        '  <div class="close-affordance"></div>',
-        '  <div class="close">',
-        '    <div class="slice"></div>',
-        '    <div class="slice"></div>',
-        '  </div>',
-        '  <div class="undo button">Undo</div>',
-        '  <div class="reset button">Reset</div>',
-        '  <div class="quit button">Quit to Menu</div>',
-        '  <div class="clear"></div>',
-        '</div>'
     ].join("\n");
 
     /** Bootstrap Methods **/
@@ -173,11 +159,16 @@ Mobile.debugDot = function (event) {
     };
 
     proto.beginRepeatWatcher = function (event) {
+        var repeatIntervalMilliseconds;
         if (this.repeatInterval) {
             return;
         }
         this.isRepeating = true;
-        this.repeatInterval = setInterval(this.repeatTick, MOTION_REPEAT_INTERVAL);
+        repeatIntervalMilliseconds = state.metadata.key_repeat_interval * 1000;
+        if (isNaN(repeatIntervalMilliseconds) || !repeatIntervalMilliseconds) {
+            repeatIntervalMilliseconds = DEFAULT_REPEAT_INTERVAL;
+        }
+        this.repeatInterval = setInterval(this.repeatTick, repeatIntervalMilliseconds);
         this.recenter(event);
     };
 
@@ -431,12 +422,12 @@ Mobile.debugDot = function (event) {
     proto.buildMenu = function () {
         var self = this;
         var tempElem, body;
-        var undo, reset, quit;
+        var undo, restart, quit;
         var closeTab;
         var closeCallback;
 
         tempElem = document.createElement('div');
-        tempElem.innerHTML = MENU_STRING;
+        tempElem.innerHTML = this.buildMenuString(state);
         this.menuElem = tempElem.children[0];
         this.closeElem = this.menuElem.getElementsByClassName('close')[0];
 
@@ -450,15 +441,19 @@ Mobile.debugDot = function (event) {
         closeTab.addEventListener('touchstart', closeCallback);
 
         undo = this.menuElem.getElementsByClassName('undo')[0];
-        undo.addEventListener('touchstart', function (event) {
-            event.stopPropagation();
-            self.emitKeydown('undo');
-        });
-        reset = this.menuElem.getElementsByClassName('reset')[0];
-        reset.addEventListener('touchstart', function (event) {
-            event.stopPropagation();
-            self.emitKeydown('reset');
-        });
+        if (undo) {
+            undo.addEventListener('touchstart', function (event) {
+                event.stopPropagation();
+                self.emitKeydown('undo');
+            });
+        }
+        restart = this.menuElem.getElementsByClassName('restart')[0];
+        if (restart) {
+            restart.addEventListener('touchstart', function (event) {
+                event.stopPropagation();
+                self.emitKeydown('restart');
+            });
+        }
 
         quit = this.menuElem.getElementsByClassName('quit')[0];
         quit.addEventListener('touchstart', function (event) {
@@ -468,6 +463,46 @@ Mobile.debugDot = function (event) {
 
         body = document.getElementsByTagName('body')[0];
         body.appendChild(this.menuElem);
+    };
+
+    proto.buildMenuString = function (state) {
+    // Template for the menu.
+        var itemCount, menuLines;
+        var noUndo, noRestart;
+
+        noUndo = state.metadata.noundo;
+        noRestart = state.metadata.norestart;
+
+        itemCount = 3;
+        if (noUndo) {
+            itemCount -= 1;
+        }
+        if (noRestart) {
+            itemCount -= 1;
+        }
+
+        menuLines = [
+            '<div class="mobile-menu item-count-' + itemCount + '">',
+            '  <div class="close-affordance"></div>',
+            '  <div class="close">',
+            '    <div class="slice"></div>',
+            '    <div class="slice"></div>',
+            '  </div>'
+        ];
+
+        if (!noUndo) {
+            menuLines.push('  <div class="undo button">Undo</div>');
+        }
+        if (!noRestart) {
+            menuLines.push('  <div class="restart button">Restart</div>');
+        }
+        menuLines = menuLines.concat([
+            '  <div class="quit button">Quit to Menu</div>',
+            '  <div class="clear"></div>',
+            '</div>'
+        ]);
+
+        return menuLines.join("\n");
     };
 
     proto.setTabAnimationRatio = function (ratio) {
@@ -540,6 +575,7 @@ Mobile.debugDot = function (event) {
     };
 
     /** Other HTML5 Stuff **/
+
     proto.disableSelection = function () {
         var body;
         body = document.getElementsByTagName('body')[0];
