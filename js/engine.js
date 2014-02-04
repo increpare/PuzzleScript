@@ -426,13 +426,11 @@ function loadLevelFromState(state,levelindex) {
     	canvasResize();
 	}
 
-	if (canDump===true) {
-		inputHistory=[];
-	}
-
+	clearInputs();
 }
 
 function autoTickGame() {
+  pushInput("wait");
 	processInput(-1);
 }
 
@@ -640,10 +638,8 @@ function setGameState(_state, command) {
 		}
 	}
 	
-	if (canDump===true) {
-		inputHistory=[];
-	}
-    canvasResize();
+	clearInputs();
+  canvasResize();
 
 
 
@@ -891,7 +887,7 @@ function repositionEntitiesOnLayer(positionIndex,layer,dirMask)
 
 var dirMask_random = [parseInt('00001', 2), parseInt('00010', 2), parseInt('00100', 2), parseInt('01000', 2)];
 function randomDir() {
-   return dirMask_random[Math.floor(Math.random() * dirMask_random.length)];
+  return dirMask_random[Math.floor(Math.random() * dirMask_random.length)];
 }
 
 var randomDirMask = parseInt('00101', 2);
@@ -1507,7 +1503,11 @@ function applyRuleAt(rule,delta,tuple,check) {
             			choices.push(i);
             		}
             	}
-            	var rand = choices[Math.floor(Math.random() * choices.length)];
+              var idx = (randomEntIdxAvailable() ? 
+                popRandomEntIdx() : 
+                Math.floor(Math.random() * choices.length));
+            	var rand = choices[idx];
+              pushInput("randomEntIdx:"+idx);
             	var n = state.idDict[rand];
             	var o = state.objects[n];
             	var objectMask = state.layerMasks[o.layer];
@@ -1520,9 +1520,10 @@ function applyRuleAt(rule,delta,tuple,check) {
             	for (var layerIndex=0;layerIndex<6;layerIndex++){
             		var layerSection = parseInt("11111",2)&(postCell_RandomDirMask>>(5*layerIndex));
             		if (layerSection!==0) {
-            			var r = randomDir();
+            			var r = randomDirAvailable() ? popRandomDir() : randomDir();
+                  pushInput("randomDir:"+r);
             			postCell_Movements = postCell_Movements | (r<<(5*layerIndex));
-            		}    				
+            		}
             	}
             }
             
@@ -1694,7 +1695,11 @@ function applyRandomRuleGroup(ruleGroup) {
 		return false;
 	} 
 
-	var match = matches[Math.floor(Math.random()*matches.length)];
+  var idx = randomRuleIdxAvailable() ? 
+    popRandomRuleIdx() : 
+    Math.floor(Math.random()*matches.length);
+	var match = matches[idx];
+  pushInput("randomRuleIdx:"+idx);
 	var ruleIndex=match[0];
 	var rule=ruleGroup[ruleIndex];
 	var delta = dirMasksDelta[rule[0]];
@@ -2113,7 +2118,6 @@ function processInput(dir,dontCheckWin,dontModify) {
 	    	//verbose_logging=false;
 	    	//first have to verify that something's changed
 	    	if (processInput(-1,true,true)) {
-
 		    	if (verbose_logging) { 
 		    		consolePrint('AGAIN command executed, with changes detected: will execute another turn.');
 				}
@@ -2270,9 +2274,7 @@ function nextLevel() {
 	}
 	localStorage[document.URL]=curlevel;
 	canvasResize();	
-	if (canDump===true) {
-		inputHistory=[];
-	}
+	clearInputs();
 }
 
 function goToTitleScreen(){

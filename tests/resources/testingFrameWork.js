@@ -15,22 +15,26 @@ function runTest(dataarray) {
 		targetlevel=0;
 	}
 	compile(["loadLevel",targetlevel],levelString);
-
-
-	for(var i=0;i<inputDat.length;i++) {
-		var val=inputDat[i];
+  replayQueue = inputDat.slice().reverse();
+  while(replayQueue.length) {
+    var val=replayQueue.pop();
+    if(isNaN(val) && val.substr(0,6) == "random") {
+      throw new Exception("Replay queue has unconsumed random "+val);
+    }
 		if (val==="undo") {
 			DoUndo();
 		} else if (val==="restart") {
 			DoRestart();
-		} else {
+		} else if (val==="wait") {
+      processInput(-1);
+    } else {
 			processInput(val);
 		}
 		while (againing) {
 			againing=false;
 			processInput(-1);			
 		}
-	}
+  }
 
 	var calculatedOutput = JSON.stringify(level.dat);
 	var preparedOutput = dataarray[2];

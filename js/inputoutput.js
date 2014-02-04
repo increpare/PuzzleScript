@@ -486,10 +486,7 @@ function checkKey(e,justPressed) {
         {
             //undo
             if (textMode===false) {
-
-                if (canDump===true) {
-                    inputHistory.push("undo");
-                }
+              pushInput("undo");
             	DoUndo();
             	return prevent(e);
             }
@@ -498,10 +495,7 @@ function checkKey(e,justPressed) {
         case 82://r
         {
         	if (textMode===false) {
-
-                if (canDump===true) {
-                    inputHistory.push("restart");
-                }
+            pushInput("restart");
         		DoRestart();
             	//restart
             	return prevent(e);
@@ -607,15 +601,13 @@ function checkKey(e,justPressed) {
     	}
     } else {
 	    if (!againing && inputdir>=0) {
-            if (canDump===true) {
-                inputHistory.push(inputdir);
-            }
-            if (inputdir===4 && ('noaction' in state.metadata)) {
+        pushInput(inputdir);
+        if (inputdir===4 && ('noaction' in state.metadata)) {
 
-            } else {
-	        	processInput(inputdir);
-	        }
-	       	return prevent(e);
+        } else {
+	       	processInput(inputdir);
+	      }
+	      return prevent(e);
     	}
     }
 }

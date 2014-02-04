@@ -2386,9 +2386,7 @@ function compile(command,text) {
 	}
 	setGameState(state,command);
 
-	if (canDump===true) {
-		inputHistory=[];
-	}
+  clearInputs();
 }
 
 
