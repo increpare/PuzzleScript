@@ -505,9 +505,10 @@ function checkKey(e,justPressed) {
         case 27://escape
         {
         	if (titleScreen===false) {
+                DoQuit();
 				goToTitleScreen();	
 		    	tryPlayTitleSound();
-				canvasResize();			
+				canvasResize();
 				return prevent(e)
         	}
         	break;

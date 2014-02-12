@@ -524,7 +524,8 @@ function setGameState(_state, command) {
 	timer=0;
 	autotick=0;
 	winning=false;
-	againing=false;
+    againing=false;
+    quitting=false;
     messageselected=false;
 
 	if (command===undefined) {
@@ -575,6 +576,7 @@ function setGameState(_state, command) {
     	case "restart":
     	{
 		    winning=false;
+            quitting=false;
 		    timer=0;
 		    titleScreen=true;
 		    tryPlayTitleSound();
@@ -601,6 +603,7 @@ function setGameState(_state, command) {
 			var targetLevel = command[1];
 			curlevel=i;
 		    winning=false;
+            quitting=false;
 		    timer=0;
 		    titleScreen=false;
 		    textMode=false;
@@ -621,6 +624,7 @@ function setGameState(_state, command) {
 				if(level.lineNumber<=targetLine+1) {
 					curlevel=i;
 				    winning=false;
+                    quitting=false;
 				    timer=0;
 				    titleScreen=false;
 				    textMode=false;
@@ -2225,6 +2229,8 @@ function DoWin() {
 	if (winning) {
 		return;
 	}
+    pushInput("win");
+    dumpTrace();
 	againing=false;
 	tryPlayEndLevelSound();
 	if (unitTesting) {
@@ -2234,6 +2240,14 @@ function DoWin() {
 
 	winning=true;
 	timer=0;
+}
+
+var quitting = false;
+function DoQuit() {
+    if(quitting || curlevel==0) { return; }
+    quitting = true;
+    pushInput("quit");
+    dumpTrace();
 }
 
 function anyMovements() {	

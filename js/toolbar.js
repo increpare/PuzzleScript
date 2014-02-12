@@ -242,6 +242,7 @@ function exportClick() {
 	var stateString = JSON.stringify(state);
 	
 	buildStandalone(stateString);
+    buildDebug(stateString);
 }
 
 

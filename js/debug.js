@@ -2,9 +2,9 @@ var canSetHTMLColors=false;
 var canDump=true;
 var canYoutube=false;
 inputHistory=[];
-replayQueue=null;
 var compiledText;
 var canOpenEditor=true;
+dumpTraceHooks=[];
 
 function pushInput(inp) {
 	if (canDump===true) {
@@ -19,37 +19,46 @@ function clearInputs() {
 }
 
 function randomDirAvailable() { 
-  //TODO
-  return false; 
+    return false; 
 }
 
 function popRandomDir() {
-  //TODO
-  throw new Exception("No choices available"); 
+    throw new Exception("No choices available"); 
 }
 
 function randomEntIdxAvailable() {
-  //TODO
-  return false; 
+    return false; 
 }
 
 function popRandomEntIdx() {
-  //TODO
-  throw new Exception("No choices available"); 
+    throw new Exception("No choices available"); 
 }
 
 function randomRuleIdxAvailable() {
-  //TODO
-  return false; 
+    return false; 
 }
 
 function popRandomRuleIdx() {
-  //TODO
-  throw new Exception("No choices available"); 
+    throw new Exception("No choices available"); 
+}
+
+function addDumpTraceHook(fn) {
+    dumpTraceHooks.push(fn);
+}
+
+function dumpTrace() {
+    var title = state.metadata.title || state.title;
+    for(var i=0; i < dumpTraceHooks.length; i++) {
+        dumpTraceHooks[i](
+            title, 
+            curlevel, 
+            inputHistory
+        );
+    }
 }
 
 function convertLevelToString() {
-	return  JSON.stringify(level);
+	return JSON.stringify(level);
 }
 
 function dumpTestCase() {

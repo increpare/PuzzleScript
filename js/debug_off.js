@@ -11,11 +11,11 @@ function stripTags(str) {
 }
 
 function pushInput(inp) {
-  //nop
+    //nop
 }
 
 function clearInputs() {
-  //nop
+    //nop
 }
 
 function randomDirAvailable() { return false; }
@@ -24,6 +24,10 @@ function randomEntIdxAvailable() { return false; }
 function popRandomEntIdx() { throw new Exception("No choices available"); }
 function randomRuleIdxAvailable() { return false; }
 function popRandomRuleIdx() { throw new Exception("No choices available"); }
+
+function dumpTrace() {
+    //nop
+}
 
 function consolePrint(str){
 /*	var errorText = document.getElementById("errormessage");

@@ -1,1 +1,2 @@
-inliner standalone.html > standalone_inlined.txt
+TMPL=${1:standalone}
+inliner ${TMPL}.html > ${TMPL}_inlined.txt

@@ -19,13 +19,30 @@ clientStandaloneRequest.onreadystatechange = function() {
 }
 clientStandaloneRequest.send();
 
-function buildStandalone(stateString) {
-	if (standalone_HTML_String.length===0) {
+var debug_HTML_String="";
+
+var clientDebugRequest = new XMLHttpRequest();
+
+clientDebugRequest.open('GET', 'debug_inlined.txt');
+clientDebugRequest.onreadystatechange = function() {
+
+		if(clientDebugRequest.readyState!=4) {
+			return;
+		}
+		if (clientDebugRequest.responseText==="") {
+			consolePrint("Couldn't find debug template. Is there a connection problem to the internet?");
+		}
+		debug_HTML_String=clientDebugRequest.responseText;
+}
+clientDebugRequest.send();
+
+function buildFromHTML(stateString, str) {
+	if (str.length===0) {
 		consolePrint("Can't export yet - still downloading html template.");
 		return;
 	}
 
-	var htmlString = standalone_HTML_String.concat("");
+	var htmlString = str.concat("");
 	var title = "PuzzleScript Game";
 	if (state.metadata.title!==undefined) {
 		title=state.metadata.title.toUpperCase();
@@ -49,4 +66,12 @@ function buildStandalone(stateString) {
 	var BB = get_blob();
 	var blob = new BB([htmlString], {type: "text/plain;charset=utf-8"});
 	saveAs(blob, title+".html");
+}
+
+function buildStandalone(stateString) {
+    buildFromHTML(stateString, standalone_HTML_String);
+}
+
+function buildDebug(stateString) {
+    buildFromHTML(stateString, debug_HTML_String);
 }

@@ -15,26 +15,28 @@ function runTest(dataarray) {
 		targetlevel=0;
 	}
 	compile(["loadLevel",targetlevel],levelString);
-  replayQueue = inputDat.slice().reverse();
-  while(replayQueue.length) {
-    var val=replayQueue.pop();
-    if(isNaN(val) && val.substr(0,6) == "random") {
-      throw new Exception("Replay queue has unconsumed random "+val);
+    replayQueue = inputDat.slice().reverse();
+    while(replayQueue.length) {
+        var val=replayQueue.pop();
+        if(isNaN(val) && val.substr(0,6) == "random") {
+            throw new Exception("Replay queue has unconsumed random "+val);
+        }
+        if (val==="undo") {
+	        DoUndo();
+        } else if (val==="restart") {
+	    	DoRestart();
+	    } else if (val==="wait") {
+            processInput(-1);
+        } else if (val==="quit" || val==="win") {
+            continue;
+        } else {
+	    	processInput(val);
+	    }
+	    while (againing) {
+	    	againing=false;
+	    	processInput(-1);			
+	    }
     }
-		if (val==="undo") {
-			DoUndo();
-		} else if (val==="restart") {
-			DoRestart();
-		} else if (val==="wait") {
-      processInput(-1);
-    } else {
-			processInput(val);
-		}
-		while (againing) {
-			againing=false;
-			processInput(-1);			
-		}
-  }
 
 	var calculatedOutput = JSON.stringify(level.dat);
 	var preparedOutput = dataarray[2];
