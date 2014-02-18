@@ -1807,7 +1807,7 @@ function propagateLateMovements(){
 		        	ruleGroupIndex = state.lateLoopPoint[ruleGroupIndex];
 		        	loopPropagated=false;
 		        	loopCount++;
-					if (loopCount > 00) {
+					if (loopCount > 200) {
 		    			var ruleGroup=state.lateRules[ruleGroupIndex];
 					   	logError("got caught in an endless startloop...endloop vortex, escaping!", ruleGroup[0][3],true);
 					   	break;
