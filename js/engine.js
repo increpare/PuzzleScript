@@ -1656,6 +1656,14 @@ function queueCommands(rule) {
 			continue;
 		}
 		level.commandQueue.push(command[0]);
+
+		if (verbose_logging && result){
+			var lineNumber = rule[3];
+			var ruleDirection = dirMaskName[rule[0]];
+			var logString = '<font color="green">Rule <a onclick="jumpToLine(' + lineNumber.toString() + ');"  href="javascript:void(0);">' + lineNumber.toString() + '</a> triggers command '+command[0]+'.</font>';
+			consolePrint(logString);
+		}
+		
 		if (command[0]==='message') {			
 			messagetext=command[1];
 		}		
