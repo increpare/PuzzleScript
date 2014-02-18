@@ -13,6 +13,7 @@ try {
 
 
 var verbose_logging=false;
+var cache_console_messages=false;
 var quittingTitleScreen=false;
 var quittingMessageScreen=false;
 var deltatime=17;

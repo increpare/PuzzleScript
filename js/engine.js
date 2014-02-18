@@ -735,6 +735,11 @@ function DoRestart(force) {
 	if (force===false) {
 		backups.push(backupLevel());
 	}
+
+	if (verbose_logging) {
+		consolePrint("--- restarting ---");
+	}
+
 	restoreLevel(restartTarget);
 	tryPlayRestartSound();
 
@@ -748,6 +753,9 @@ function DoRestart(force) {
 function DoUndo(force) {
 	if ('noundo' in state.metadata && force!==true) {
 		return;
+	}
+	if (verbose_logging) {
+		consolePrint("--- undoing ---");
 	}
 	if (backups.length>0) {
 		var tobackup = backups[backups.length-1];
@@ -1919,6 +1927,7 @@ function calculateRowColMasks() {
 function processInput(dir,dontCheckWin,dontModify) {
 
 	if (verbose_logging) { 
+		cache_log_messages=true;
 	 	if (dir===-1) {
 	 		consolePrint('Turn starts with no input.')
 	 	} else {
@@ -2027,6 +2036,9 @@ function processInput(dir,dontCheckWin,dontModify) {
         		DoUndo(true);
         		seedsToPlay_CanMove=[];
         		seedsToPlay_CantMove=[];
+        		if (verbose_logging) {
+        			consoleCacheDump();
+        		}
         		return;
         	}
         	//play player cantmove sounds here
@@ -2041,6 +2053,9 @@ function processInput(dir,dontCheckWin,dontModify) {
     		seedsToPlay_CanMove=[];
     		seedsToPlay_CantMove=[];
     		redraw();
+        		if (verbose_logging) {
+        			consoleCacheDump();
+        		}
     		return;
 	    } 
 
@@ -2052,7 +2067,10 @@ function processInput(dir,dontCheckWin,dontModify) {
 	    	DoRestart(true);	
     		seedsToPlay_CanMove=[];
     		seedsToPlay_CantMove=[];
-    		redraw();   
+    		redraw();  
+    		if (verbose_logging) {
+    			consoleCacheDump();
+    		} 
     		return true; 	
 	    } 
 
@@ -2087,6 +2105,10 @@ function processInput(dir,dontCheckWin,dontModify) {
 				if (dontModify) {
 	        		backups.push(bak);
 	        		DoUndo(true);
+
+	        		if (verbose_logging) {
+	        			consoleCacheDump();
+	        		}
 					return true;
 				} else {
 					if (dir!==-1) {
@@ -2099,7 +2121,10 @@ function processInput(dir,dontCheckWin,dontModify) {
 	    }
 	
 
-		if (dontModify) {
+		if (dontModify) {		
+    		if (verbose_logging) {
+    			consoleCacheDump();
+    		}
 			return false;
 		}
 
@@ -2150,6 +2175,10 @@ function processInput(dir,dontCheckWin,dontModify) {
     }
 
     redraw();
+
+	if (verbose_logging) {
+		consoleCacheDump();
+	}
 }
 
 function checkWin() {
