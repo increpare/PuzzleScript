@@ -707,7 +707,7 @@ function processRuleString(line, state, lineNumber,curRules)
 		var cmd = commands[i][0];
 		if (cmd==='restart') {
 			if (commands.length>1 || rhs_cells.length>0) {
-				logError('The RESET command can only appear by itself on the right hand side of the arrow.', lineNumber);
+				logError('The RESTART command can only appear by itself on the right hand side of the arrow.', lineNumber);
 			}
 		} else if (cmd==='cancel') {
 			if (commands.length>1 || rhs_cells.length>0) {

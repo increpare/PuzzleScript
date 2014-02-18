@@ -42,9 +42,9 @@ function buildStandalone(stateString) {
 		htmlString = htmlString.replace(/lightblue;\/\*Don\'t/g,state.fgcolor+';\/\*Don\'t');	
 	}
 
-	htmlString = htmlString.replace(/\"__GAMETITLE__\"/g,title);
-	htmlString = htmlString.replace(/\"__HOMEPAGE__\"/g,homepage);	
-	htmlString = htmlString.replace(/\"__GAMEDAT__\"/g,stateString);
+	htmlString = htmlString.replace(/__GAMETITLE__/g,title);
+	htmlString = htmlString.replace(/__HOMEPAGE__/g,homepage);	
+	htmlString = htmlString.replace(/__GAMEDAT__/g,stateString);
 
 	var BB = get_blob();
 	var blob = new BB([htmlString], {type: "text/plain;charset=utf-8"});
