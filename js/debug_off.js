@@ -18,6 +18,10 @@ function consolePrint(str){
 	errorText.innerHTML+=str+"<br>";*/
 }
 
+function consoleCacheDump(str){
+	
+}
+
 function consoleError(str,lineNumber){
 	var errorText = document.getElementById("errormessage");
 	str=stripTags(str);

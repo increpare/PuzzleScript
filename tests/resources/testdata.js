@@ -166,6 +166,10 @@ var testdata = [
 	[
 		"Remove movements from empty layers after rule application",
 		["title Object Replacement Test Case\nauthor Scott Hughes\n\n=======\nOBJECTS\n=======\n\nBackground\nwhite\n\nPlayer\nblue\n\nCrate\nred\n\nSpawn\ngreen\n\n======\nLEGEND\n======\n\n. = Background\nP = Player and Spawn\n\n======\nSOUNDS\n======\n\n===============\nCOLLISIONLAYERS\n===============\n\nBackground\nSpawn\nPlayer, Crate\n\n=====\nRULES\n=====\n\n[ Player ] -> [ ]\n\n[ Spawn ] -> [ Spawn Crate ]\n\n=============\nWINCONDITIONS\n=============\n\n======\nLEVELS\n======\n\n...\n.P.\n...\n",[3],"{\"width\":3,\"height\":3,\"layerCount\":3,\"dat\":[1,1,1,1,11,1,1,1,1],\"movementMask\":[0,0,0,0,0,0,0,0,0],\"rigidMovementAppliedMask\":[0,0,0,0,0,0,0,0,0],\"rigidGroupIndexMask\":[0,0,0,0,0,0,0,0,0],\"rowCellContents\":[1,15,1,0],\"colCellContents\":[1,15,1],\"mapCellContents\":15,\"bannedGroup\":[],\"commandQueue\":[]}",0]
+	],
+	[
+		"movement matching - correctly matching different objects same cell moving in different directions",
+		["verbose_logging\ndebug\n\n========\nOBJECTS\n========\n\nBackground\ndarkgreen\n\nPlayer\ngreen\n\nRed\nred\n\nBrown\nbrown\n\nBlue\nblue\n\nA\nwhite\n\nB\nyellow\n\n=======\nLEGEND\n=======\n\nr = Red\no = Brown\n. = Background\n\n=======\nSOUNDS\n=======\n\n================\nCOLLISIONLAYERS\n================\n\nBackground\nPlayer\nA\nB\nRed, Brown\nBlue\n\n======\nRULES\n======\n\n[ Red ] -> [ down A down B ]\n[ Brown ] -> [ down A up B ]\n[ down A up B ] -> [ ]\n\n==============\nWINCONDITIONS\n==============\n\n=======\nLEVELS\n=======\n\nro\n\n\n",[3],"{\"width\":2,\"height\":1,\"layerCount\":6,\"dat\":[13,1],\"movementMask\":[0,0],\"rigidMovementAppliedMask\":[0,0],\"rigidGroupIndexMask\":[0,0],\"rowCellContents\":[61,null,0],\"colCellContents\":[29,45],\"mapCellContents\":61,\"bannedGroup\":[],\"commandQueue\":[]}",0]
 	]
 ];
 

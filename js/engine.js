@@ -933,7 +933,7 @@ function ruleMovementMaskAgrees(ruleMovementMask,cellMovementMask){
     if (ruleMovementMask===0 ) {
         return true;
     } else {
-        return (ruleMovementMask&cellMovementMask)!==0;
+        return (ruleMovementMask&cellMovementMask)===ruleMovementMask;
     }
 }
 
@@ -958,9 +958,9 @@ function cellRowMatchesWildCard_ParticularK(direction,cellRow,i,k) {
 
 
 			((initCellMask&cellMask) == initCellMask) &&
-			((initNonExistenceMask&cellMask)==0)&&
-			((initMovementMask===0?true:((initMovementMask&movementMask)!==0))) &&
-			((initStationaryMask&movementMask)==0)
+			((initNonExistenceMask&cellMask)===0)&&
+			((initMovementMask===0?true:((initMovementMask&movementMask)===initMovementMask))) &&
+			((initStationaryMask&movementMask)===0)
 
     	//checkThing(initCellMask,initMovementMask,initNonExistenceMask,initStationaryMask,movementMask,cellMask)
     	) {
@@ -992,9 +992,9 @@ function cellRowMatchesWildCard_ParticularK(direction,cellRow,i,k) {
 						    if (
 
 								((ruleCellMask&cellMask) == ruleCellMask) &&
-								((ruleNonExistenceMask&cellMask)==0)&&
-								((ruleMovementMask===0?true:((ruleMovementMask&movementMask)!==0))) &&
-								((ruleStationaryMask&movementMask)==0)
+								((ruleNonExistenceMask&cellMask)===0)&&
+								((ruleMovementMask===0?true:((ruleMovementMask&movementMask)===ruleMovementMask))) &&
+								((ruleStationaryMask&movementMask)===0)
 
 						    	//checkThing(ruleCellMask,ruleMovementMask,ruleNonExistenceMask,ruleStationaryMask,movementMask,cellMask)
 						    	) {
@@ -1016,9 +1016,9 @@ function cellRowMatchesWildCard_ParticularK(direction,cellRow,i,k) {
 			    if (
 
 								((ruleCellMask&cellMask) == ruleCellMask) &&
-								((ruleNonExistenceMask&cellMask)==0)&&
-								((ruleMovementMask===0?true:((ruleMovementMask&movementMask)!==0))) &&
-								((ruleStationaryMask&movementMask)==0)
+								((ruleNonExistenceMask&cellMask)===0)&&
+								((ruleMovementMask===0?true:((ruleMovementMask&movementMask)===ruleMovementMask))) &&
+								((ruleStationaryMask&movementMask)===0)
 								//checkThing(ruleCellMask,ruleMovementMask,ruleNonExistenceMask,ruleStationaryMask,movementMask,cellMask)
 								) {
                     //GOOD
@@ -1047,9 +1047,9 @@ function cellRowMatchesWildCard(direction,cellRow,i,maxk) {
     if (
 
 			((initCellMask&cellMask) == initCellMask) &&
-			((initNonExistenceMask&cellMask)==0)&&
-			((initMovementMask===0?true:((initMovementMask&movementMask)!==0))) &&
-			((initStationaryMask&movementMask)==0)
+			((initNonExistenceMask&cellMask)===0)&&
+			((initMovementMask===0?true:((initMovementMask&movementMask)===initMovementMask))) &&
+			((initStationaryMask&movementMask)===0)
     	//checkThing(initCellMask,initMovementMask,initNonExistenceMask,initStationaryMask,movementMask,cellMask)
     	) {
             var targetIndex = i;
@@ -1079,9 +1079,9 @@ function cellRowMatchesWildCard(direction,cellRow,i,maxk) {
 						    if (
 
 								((ruleCellMask&cellMask) == ruleCellMask) &&
-								((ruleNonExistenceMask&cellMask)==0)&&
+								((ruleNonExistenceMask&cellMask)===0)&&
 								((ruleMovementMask===0?true:((ruleMovementMask&movementMask)!==0))) &&
-								((ruleStationaryMask&movementMask)==0)
+								((ruleStationaryMask&movementMask)===0)
 						    	//checkThing(ruleCellMask,ruleMovementMask,ruleNonExistenceMask,ruleStationaryMask,movementMask,cellMask)
 
 						    	) {
@@ -1102,9 +1102,9 @@ function cellRowMatchesWildCard(direction,cellRow,i,maxk) {
 
 			    if (
 						((ruleCellMask&cellMask) == ruleCellMask) &&
-						((ruleNonExistenceMask&cellMask)==0)&&
-						((ruleMovementMask===0?true:((ruleMovementMask&movementMask)!==0))) &&
-						((ruleStationaryMask&movementMask)==0)
+						((ruleNonExistenceMask&cellMask)===0)&&
+						((ruleMovementMask===0?true:((ruleMovementMask&movementMask)===ruleMovementMask))) &&
+						((ruleStationaryMask&movementMask)===0)
 			    	//checkThing(ruleCellMask,ruleMovementMask,ruleNonExistenceMask,ruleStationaryMask,movementMask,cellMask)
 			    	) {
                     //GOOD
@@ -1120,9 +1120,9 @@ function cellRowMatchesWildCard(direction,cellRow,i,maxk) {
 
 function checkThing(ruleCellMask,ruleMovementMask,ruleNonExistenceMask,ruleStationaryMask,movementMask,cellMask) {
 	return ((ruleCellMask&cellMask) == ruleCellMask) &&
-			((ruleNonExistenceMask&cellMask)==0)&&
+			((ruleNonExistenceMask&cellMask)===0)&&
 			(ruleMovementMaskAgrees(ruleMovementMask,movementMask)) &&
-			((ruleStationaryMask&movementMask)==0);
+			((ruleStationaryMask&movementMask)===0);
 }
 
 function cellRowMatches(direction,cellRow,i,k) {
@@ -1138,9 +1138,9 @@ function cellRowMatches(direction,cellRow,i,k) {
 
     if (
 			((initCellMask&cellMask) == initCellMask) &&
-			((initNonExistenceMask&cellMask)==0)&&
-			((initMovementMask===0?true:((initMovementMask&movementMask)!==0))) &&
-			((initStationaryMask&movementMask)==0)
+			((initNonExistenceMask&cellMask)===0)&&
+			((initMovementMask===0?true:((initMovementMask&movementMask)===initMovementMask))) &&
+			((initStationaryMask&movementMask)===0)
 
 //    	checkThing(initCellMask,initMovementMask,initNonExistenceMask,initStationaryMask,movementMask,cellMask)
 
@@ -1162,9 +1162,9 @@ function cellRowMatches(direction,cellRow,i,k) {
 			    if (
 
 			((ruleCellMask&cellMask) == ruleCellMask) &&
-			((ruleNonExistenceMask&cellMask)==0)&&
-			((ruleMovementMask===0?true:((ruleMovementMask&movementMask)!==0))) &&
-			((ruleStationaryMask&movementMask)==0)
+			((ruleNonExistenceMask&cellMask)===0)&&
+			((ruleMovementMask===0?true:((ruleMovementMask&movementMask)===ruleMovementMask))) &&
+			((ruleStationaryMask&movementMask)===0)
 
 			    	//checkThing(ruleCellMask,ruleMovementMask,ruleNonExistenceMask,ruleStationaryMask,movementMask,cellMask)
 			    	) {
