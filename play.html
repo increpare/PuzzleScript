@@ -289,7 +289,10 @@ function getData(){
 			var homepage=state.metadata.homepage;
 			var homepageLink = document.getElementById("homepagelink");
 			homepageLink.innerHTML=homepage;
-			homepageLink.href="http://"+homepage;
+ 			if (!homepage.match(/^https?:\/\//)) {
+ 				homepage = "http://" + homepage;
+ 			}
+ 			homepageLink.href = homepage;
 		}
 		if (state.metadata.title!==undefined) {
 			var title=state.metadata.title;
