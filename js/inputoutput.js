@@ -396,7 +396,7 @@ function onKeyUp(event) {
     }
 }
 
-function onMyFocus(event) {
+function onMyFocus(event) {	
 	keybuffer=[];
 	keyRepeatIndex = 0;
 	keyRepeatTimer = 0;
@@ -441,8 +441,9 @@ document.addEventListener('mousedown', onMouseDown, false);
 document.addEventListener('mouseup', onMouseUp, false);
 document.addEventListener('keydown', onKeyDown, false);
 document.addEventListener('keyup', onKeyUp, false);
-document.addEventListener('focus', onMyFocus, false);
-document.addEventListener('blur', onMyBlur, false);
+window.addEventListener('focus', onMyFocus, false);
+window.addEventListener('blur', onMyBlur, false);
+
 
 function prevent(e) {
     if (e.preventDefault) e.preventDefault();
