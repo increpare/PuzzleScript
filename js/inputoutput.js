@@ -396,14 +396,14 @@ function onKeyUp(event) {
     }
 }
 
-function onFocus(event) {
-	keybuffer.length = 0;
+function onMyFocus(event) {
+	keybuffer=[];
 	keyRepeatIndex = 0;
 	keyRepeatTimer = 0;
 }
 
-function onBlur(event) {
-	keybuffer.length = 0;
+function onMyBlur(event) {
+	keybuffer=[];
 	keyRepeatIndex = 0;
 	keyRepeatTimer = 0;
 }
@@ -441,8 +441,8 @@ document.addEventListener('mousedown', onMouseDown, false);
 document.addEventListener('mouseup', onMouseUp, false);
 document.addEventListener('keydown', onKeyDown, false);
 document.addEventListener('keyup', onKeyUp, false);
-document.addEventListener('focus', onFocus, false);
-document.addEventListener('blur', onBlur, false);
+document.addEventListener('focus', onMyFocus, false);
+document.addEventListener('blur', onMyBlur, false);
 
 function prevent(e) {
     if (e.preventDefault) e.preventDefault();
