@@ -596,11 +596,11 @@ var codeMirrorFn = function() {
                                 ok = false;
                             } else if (splits[1] !== '=') {
                                 ok = false;
-                            } else if (splits[0].charAt(splits[0].length - 1) == 'v') {
+                            } /*else if (splits[0].charAt(splits[0].length - 1) == 'v') {
                                 logError('names cannot end with the letter "v", because it\'s is used as a direction.', state.lineNumber);
                                 stream.match(reg_notcommentstart, true);
                                 return 'ERROR';
-                            } else if (splits.length === 3) {
+                            } */ else if (splits.length === 3) {
                                 state.legend_synonyms.push([splits[0], splits[2].toLowerCase(),state.lineNumber]);
                             } else if (splits.length % 2 === 0) {
                                 ok = false;
@@ -725,6 +725,7 @@ var codeMirrorFn = function() {
                                 return 'ERROR';
                             } else {
                                 var candname = match_name[0].trim();
+
                                 if (state.tokenIndex % 2 === 0) {
 
 	                                var wordExists = function(n) {

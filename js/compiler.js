@@ -1759,12 +1759,7 @@ function generatePlayerMask(state) {
 	}
 
 	for (var i=0;i<state.legend_synonyms.length;i++) {
-		var syn = state.legend_synonyms[i];
-		/*
-		if ((syn[0] in objectMask)) {
-			logError('Object name "'+syn[0] +'" declared to be two different things.',syn[2]);
-		}
-		*/
+		var syn = state.legend_synonyms[i];		
 		objectMask[syn[0]]=objectMask[syn[1]];
 	}
 
@@ -1775,11 +1770,6 @@ function generatePlayerMask(state) {
 			var n = prop[j];
 			val = val | objectMask[n];
 		}
-		/*
-		if ((prop[0] in objectMask)) {
-			logError('Object name "'+prop[0] +'" declared to be two different things.',syn[2]);
-		}
-		*/
 		objectMask[prop[0]]=val;
 	}
 
