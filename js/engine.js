@@ -965,7 +965,7 @@ function cellRowMatchesWildCard_ParticularK(direction,cellRow,i,k) {
     	//checkThing(initCellMask,initMovementMask,initNonExistenceMask,initStationaryMask,movementMask,cellMask)
     	) {
             var targetIndex = i;
-            for (var j=6;j<cellRow.length;j+=6) {
+            for (var j=7;j<cellRow.length;j+=7) {
                 targetIndex = (targetIndex+delta[1]+delta[0]*level.height)%level.dat.length;
                 var movementMask = level.movementMask[targetIndex];
                 var ruleMovementMask= cellRow[j+0];
@@ -980,7 +980,7 @@ function cellRowMatchesWildCard_ParticularK(direction,cellRow,i,k) {
                 	{//k defined 
                 		var targetIndex2=targetIndex;
                 		targetIndex2 = (targetIndex2+delta[1]*(k)+delta[0]*(k)*level.height+level.dat.length)%level.dat.length;
-                		for (var j2=j+6;j2<cellRow.length;j2+=6) {
+                		for (var j2=j+7;j2<cellRow.length;j2+=7) {
                 			movementMask = level.movementMask[targetIndex2];
 			                cellMask = level.dat[targetIndex2];
 
@@ -1053,7 +1053,7 @@ function cellRowMatchesWildCard(direction,cellRow,i,maxk) {
     	//checkThing(initCellMask,initMovementMask,initNonExistenceMask,initStationaryMask,movementMask,cellMask)
     	) {
             var targetIndex = i;
-            for (var j=6;j<cellRow.length;j+=6) {
+            for (var j=7;j<cellRow.length;j+=7) {
                 targetIndex = (targetIndex+delta[1]+delta[0]*level.height)%level.dat.length;
                 var movementMask = level.movementMask[targetIndex];
                 var ruleMovementMask= cellRow[j+0];
@@ -1067,7 +1067,7 @@ function cellRowMatchesWildCard(direction,cellRow,i,maxk) {
                 	for (var k=0;k<maxk;k++) {
                 		var targetIndex2=targetIndex;
                 		targetIndex2 = (targetIndex2+delta[1]*(k)+delta[0]*(k)*level.height+level.dat.length)%level.dat.length;
-                		for (var j2=j+6;j2<cellRow.length;j2+=6) {
+                		for (var j2=j+7;j2<cellRow.length;j2+=7) {
                 			movementMask = level.movementMask[targetIndex2];
 			                cellMask = level.dat[targetIndex2];
 
@@ -1146,7 +1146,7 @@ function cellRowMatches(direction,cellRow,i,k) {
 
     	) {
             var targetIndex = i;
-            for (var j=6;j<cellRow.length;j+=6) {
+            for (var j=7;j<cellRow.length;j+=7) {
                 targetIndex = (targetIndex+delta[1]+delta[0]*level.height)%level.dat.length;
                 var movementMask = level.movementMask[targetIndex];
                 var ruleMovementMask= cellRow[j+0];
@@ -1488,7 +1488,7 @@ function applyRuleAt(rule,delta,tuple,check) {
         var postRow = rule[2][cellRowIndex];
         
         var currentIndex = rule[5][cellRowIndex] ? tuple[cellRowIndex][0] : tuple[cellRowIndex];
-        for (var cellIndex=0;cellIndex<preRow.length;cellIndex+=6) {
+        for (var cellIndex=0;cellIndex<preRow.length;cellIndex+=7) {
             var preCell_Movement = preRow[cellIndex+0];
             if (preCell_Movement === ellipsisDirection) {
             	var k = tuple[cellRowIndex][1];
@@ -1508,6 +1508,7 @@ function applyRuleAt(rule,delta,tuple,check) {
             var postCell_StationaryMask = postRow[cellIndex+4];
             var postCell_RandomEntityMask = postRow[cellIndex+5];
             var postCell_RandomDirMask = preRow[cellIndex+5];
+            var postCell_movementsToRemove = postRow[cellIndex+6];
 
             if (postCell_RandomEntityMask !== 0) {
             	var choices=[];
@@ -1544,6 +1545,7 @@ function applyRuleAt(rule,delta,tuple,check) {
             //1 remove old
             curCellMask = curCellMask&(~preCell_Objects);
             curMovementMask = curMovementMask&(~preCell_Movement);
+            curMovementMask = curMovementMask&(~postCell_movementsToRemove);
             
             //2 make way for new
             curCellMask = curCellMask&(~postCell_NonExistence);
@@ -1666,7 +1668,7 @@ function queueCommands(rule) {
 		}
 		level.commandQueue.push(command[0]);
 
-		if (verbose_logging && result){
+		if (verbose_logging){
 			var lineNumber = rule[3];
 			var ruleDirection = dirMaskName[rule[0]];
 			var logString = '<font color="green">Rule <a onclick="jumpToLine(' + lineNumber.toString() + ');"  href="javascript:void(0);">' + lineNumber.toString() + '</a> triggers command '+command[0]+'.</font>';
