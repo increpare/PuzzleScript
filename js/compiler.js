@@ -1471,7 +1471,7 @@ function rulesToMask(state) {
 						mask_r[2 * layerIndex + 0] = object_dir;
 						mask_r[2 * layerIndex + 1] = object_id;
 
-				if (object_dir.length>0) {
+						if (object_dir.length>0) {
 							postMovementsLayerMask_r = postMovementsLayerMask_r | ((1+2+4+8+16)<<(5*layerIndex));
 						}			
 

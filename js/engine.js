@@ -368,8 +368,8 @@ function loadLevelFromState(state,levelindex) {
 	forceRegenImages=true;
 	titleScreen=false;
 	titleMode=curlevel>0?1:0;
+	titleSelection=curlevel>0?1:0;
 	titleSelected=false;
-	titleSelection=0;
 	curlevel=levelindex;
     againing=false;
     var leveldat = state.levels[levelindex];
@@ -581,7 +581,7 @@ function setGameState(_state, command) {
 		    titleScreen=true;
 		    tryPlayTitleSound();
 		    textMode=true;
-		    titleSelection=0;
+		    titleSelection=curlevel>0?1:0;
 		    titleSelected=false;
 		    quittingMessageScreen=false;
 		    quittingTitleScreen=false;
@@ -606,7 +606,7 @@ function setGameState(_state, command) {
 		    timer=0;
 		    titleScreen=false;
 		    textMode=false;
-		    titleSelection=0;
+		    titleSelection=curlevel>0?1:0;
 		    titleSelected=false;
 		    quittingMessageScreen=false;
 		    quittingTitleScreen=false;
@@ -626,7 +626,7 @@ function setGameState(_state, command) {
 				    timer=0;
 				    titleScreen=false;
 				    textMode=false;
-				    titleSelection=0;
+				    titleSelection=curlevel>0?1:0;
 				    titleSelected=false;
 				    quittingMessageScreen=false;
 				    quittingTitleScreen=false;
@@ -2325,7 +2325,7 @@ function goToTitleScreen(){
 	messagetext="";
 	titleScreen=true;
 	textMode=true;
-	titleSelection=0;
+	titleSelection=curlevel>0?1:0;
 	generateTitleScreen();
 }
 
