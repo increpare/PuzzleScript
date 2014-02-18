@@ -584,6 +584,8 @@ var codeMirrorFn = function() {
                 case 'legend':
                     {
                         if (sol) {
+
+
                             //step 1 : verify format
                             var longer = stream.string.replace('=', ' = ');
                             longer = reg_notcommentstart.exec(longer)[0];
@@ -592,6 +594,15 @@ var codeMirrorFn = function() {
                                 return v !== '';
                             });
                             var ok = true;
+
+                        	if (splits.length>0) {
+                        		var candname = splits[0].toLowerCase();
+	                            if (keyword_array.indexOf(candname)>=0) {
+	                                logError('You named an object "' + candname.toUpperCase() + '", but this is a keyword. Don\'t do that!', state.lineNumber);
+	                                return "ERROR";
+	                            }
+                        	}
+
                             if (splits.length < 3) {
                                 ok = false;
                             } else if (splits[1] !== '=') {
