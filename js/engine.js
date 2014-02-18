@@ -2268,7 +2268,14 @@ function nextLevel() {
 		}		
 		//continue existing game
 	}
-	localStorage[document.URL]=curlevel;
+	try {
+		if (!!window.localStorage) {
+			localStorage[document.URL]=curlevel;
+		}
+	} catch (ex) {
+
+	}
+
 	canvasResize();	
 	if (canDump===true) {
 		inputHistory=[];

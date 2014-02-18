@@ -2,9 +2,15 @@ var unitTesting=false;
 var curlevel=0;
 var levelEditorOpened=false;
 
-if (localStorage[document.URL]!==undefined) {
-	curlevel = localStorage[document.URL];
+try {
+ 	if (!!window.localStorage) { 
+		if (localStorage[document.URL]!==undefined) {
+			curlevel = localStorage[document.URL];
+		}
+	}		 
+} catch(ex) {
 }
+
 
 var verbose_logging=false;
 var quittingTitleScreen=false;

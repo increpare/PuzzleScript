@@ -12,14 +12,18 @@ if (fileToOpen!==null&&fileToOpen.length>0) {
 		var id = gistToLoad.replace(/[\\\/]/,"");
 		tryLoadGist(id);
 		code.value = "loading...";
-} else {
-	if (localStorage!==undefined && localStorage['saves']!==undefined) {
-			var curSaveArray = JSON.parse(localStorage['saves']);
-			var sd = curSaveArray[curSaveArray.length-1];
-			code.value = sd.text;
-			var loadDropdown = document.getElementById('loadDropDown');
-			loadDropdown.selectedIndex=0;
-	    }
+	} else {
+		try {
+			if (localStorage!==undefined && localStorage['saves']!==undefined) {
+					var curSaveArray = JSON.parse(localStorage['saves']);
+					var sd = curSaveArray[curSaveArray.length-1];
+					code.value = sd.text;
+					var loadDropdown = document.getElementById('loadDropDown');
+					loadDropdown.selectedIndex=0;
+			}
+		} catch(ex) {
+			
+		}
 	}
 }
 

@@ -260,14 +260,9 @@ function getParameterByName(name) {
     return results == null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
 }
 
-function strip_http($url) {
-   $disallowed = array('http://', 'https://');
-   foreach($disallowed as $d) {
-      if(strpos($url, $d) === 0) {
-         return str_replace($d, '', $url);
-      }
-   }
-   return $url;
+function strip_http(url) {
+   url = url.replace(/^https?:\/\//,'');
+   return url;
 }
 
 function getData(){ 

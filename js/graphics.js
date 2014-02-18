@@ -245,7 +245,6 @@ var magnification;
 var xoffset;
 var yoffset;
 
-window.console.log('init');
 window.addEventListener('resize', canvasResize, false);
 canvas = document.getElementById('gameCanvas');
 ctx = canvas.getContext('2d');
