@@ -67,7 +67,7 @@ Mobile.debugDot = function (event) {
         down:    40, // down arrow
         undo:    85, // u
         restart: 82, // r
-        quit:    27, // escape
+        quit:    27 // escape
     }
 
     var TAB_STRING = [
@@ -77,7 +77,7 @@ Mobile.debugDot = function (event) {
         '    <div class="slice"></div>',
         '    <div class="slice"></div>',
         '  </div>',
-        '</div>',
+        '</div>'
     ].join("\n");
 
     /** Bootstrap Methods **/

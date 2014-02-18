@@ -64,6 +64,7 @@ java -jar ~/progs/closure.jar --js_output_file ../bin/js/scripts_compiled.js  \
 --js js/colors.js \
 --js js/graphics.js \
 --js js/inputoutput.js \
+--js js/mobile.js \
 --js js/buildStandalone.js \
 --js js/engine.js \
 --js js/parser.js \
@@ -88,7 +89,8 @@ java -jar ~/progs/closure.jar --js_output_file ../bin/js/scripts_play_compiled.j
 --js js/engine.js \
 --js js/parser.js \
 --js js/compiler.js \
---js js/inputoutput.js
+--js js/inputoutput.js \
+--js js/mobile.js
 echo running sed
 sed -e 's/<script src="js\/[A-Za-z0-9_\/-]*\.js"><\/script>//g' < editor.html > editor_temp1.html
 sed -e 's/<!--TOREPLACE-->/<script src="js\/scripts_compiled.js"><\/script>/g' < editor_temp1.html > editor_temp2.html

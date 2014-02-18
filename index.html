@@ -162,7 +162,7 @@ function replaceContent() {
   for (var i=0;i<items.length;i++) {
     var item=items[i];
     imgurl = item.getElementsByTagName('img')[0].src;
-    captionurl = item.getElementsByTagName('div')[0].children[0].children[0].innerHTML;
+    captionurl = item.getElementsByTagName('div')[0].children[0].children[0].href;
     data.push([imgurl,captionurl]);
   }
   data = shuffle(data);
