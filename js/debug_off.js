@@ -2,6 +2,7 @@ var canSetHTMLColors=true;
 var canDump=false;
 var canOpenEditor=false;
 var canYoutube=true;
+var IDE=false;
 
 function stripTags(str) {
 	var div = document.createElement("div");

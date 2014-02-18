@@ -4,6 +4,7 @@ var canYoutube=false;
 inputHistory=[];
 var compiledText;
 var canOpenEditor=true;
+var IDE=true;
 
 function convertLevelToString() {
 	return  JSON.stringify(level);

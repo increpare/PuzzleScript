@@ -69,7 +69,7 @@ function generateExtraMembers(state) {
 	state.objectCount = idcount;
 	if (state.objectCount > 32)
 	{
-		logError('Cannot have more than 31 objects defined, you have '+ state.objectCount, state.objects[n].lineNumber);
+		logError('Cannot have more than 32 object types defined, you have '+ state.objectCount, state.objects[n].lineNumber);
 	}
 
 	//calculate blank mask template

@@ -333,11 +333,10 @@ function onMouseUp(event) {
 
 function onKeyDown(event) {
 
-
     event = event || window.event;
 
 	// Prevent arrows/space from scrolling page
-	if ([32, 37, 38, 39, 40].indexOf(event.keyCode) > -1) {
+	if ((!IDE) && ([32, 37, 38, 39, 40].indexOf(event.keyCode) > -1)) {
 		prevent(event);
 	}
 
@@ -358,8 +357,10 @@ function onKeyDown(event) {
     if (canDump===true) {
         if (event.keyCode===74 && (event.ctrlKey||event.metaKey)) {//ctrl+j
             dumpTestCase();
+            prevent(event);
         } else if (event.keyCode===75 && (event.ctrlKey||event.metaKey)) {//ctrl+k
             makeGIF();
+            prevent(event);
         } 
     }
 }
