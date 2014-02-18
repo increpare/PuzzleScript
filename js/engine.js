@@ -729,7 +729,8 @@ var screenheight=0;
 
 
 function DoRestart(force) {
-	if (force===false && ('norestart' in state.metadata)) {
+
+	if (force!==true && ('norestart' in state.metadata)) {
 		return;
 	}
 	if (force===false) {
