@@ -1663,7 +1663,7 @@ function queueCommands(rule) {
 			var logString = '<font color="green">Rule <a onclick="jumpToLine(' + lineNumber.toString() + ');"  href="javascript:void(0);">' + lineNumber.toString() + '</a> triggers command '+command[0]+'.</font>';
 			consolePrint(logString);
 		}
-		
+
 		if (command[0]==='message') {			
 			messagetext=command[1];
 		}		
@@ -1729,7 +1729,7 @@ function applyRuleGroup(ruleGroup) {
     	loopcount++;
     	if (loopcount>200) 
     	{
-    		logErrorNoLine("got caught looping lots in a rule group :O",true);
+    		logError("Got caught looping lots in a rule group :O",ruleGroup[0][3],true);
     		break;
     	}
         propagated=false
