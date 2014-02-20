@@ -1193,7 +1193,7 @@ function matchCellRow(direction, cellRow, cellRowMask) {
 	var ymin=0;
 	var ymax=level.height;
 
-    var len=((cellRow.length/6)|0);
+    var len=((cellRow.length/7)|0);
 
     switch(direction) {
     	case 1://up
@@ -1267,7 +1267,7 @@ function matchCellRowWildCard(direction, cellRow,cellRowMask) {
 	var ymin=0;
 	var ymax=level.height;
 
-	var len=((cellRow.length/6)|0)-1;//remove one to deal with wildcard
+	var len=((cellRow.length/7)|0)-1;//remove one to deal with wildcard
     switch(direction) {
     	case 1://up
     	{
