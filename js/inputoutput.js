@@ -333,11 +333,10 @@ function onMouseUp(event) {
 
 function onKeyDown(event) {
 
-
     event = event || window.event;
 
 	// Prevent arrows/space from scrolling page
-	if ([32, 37, 38, 39, 40].indexOf(event.keyCode) > -1) {
+	if ((!IDE) && ([32, 37, 38, 39, 40].indexOf(event.keyCode) > -1)) {
 		prevent(event);
 	}
 
@@ -358,8 +357,10 @@ function onKeyDown(event) {
     if (canDump===true) {
         if (event.keyCode===74 && (event.ctrlKey||event.metaKey)) {//ctrl+j
             dumpTestCase();
+            prevent(event);
         } else if (event.keyCode===75 && (event.ctrlKey||event.metaKey)) {//ctrl+k
             makeGIF();
+            prevent(event);
         } 
     }
 }
@@ -395,6 +396,18 @@ function onKeyUp(event) {
     }
 }
 
+function onMyFocus(event) {
+	keybuffer=[];
+	keyRepeatIndex = 0;
+	keyRepeatTimer = 0;
+}
+
+function onMyBlur(event) {
+	keybuffer=[];
+	keyRepeatIndex = 0;
+	keyRepeatTimer = 0;
+}
+
 var mouseCoordX=0;
 var mouseCoordY=0;
 
@@ -424,10 +437,12 @@ function mouseOut() {
 //  window.console.log("clear");
 }
 
-    document.addEventListener('mousedown', onMouseDown, false);
-    document.addEventListener('mouseup', onMouseUp, false);
-    document.addEventListener('keydown', onKeyDown, false);
-    document.addEventListener('keyup', onKeyUp, false);
+document.addEventListener('mousedown', onMouseDown, false);
+document.addEventListener('mouseup', onMouseUp, false);
+document.addEventListener('keydown', onKeyDown, false);
+document.addEventListener('keyup', onKeyUp, false);
+document.addEventListener('focus', onMyFocus, false);
+document.addEventListener('blur', onMyBlur, false);
 
 function prevent(e) {
     if (e.preventDefault) e.preventDefault();

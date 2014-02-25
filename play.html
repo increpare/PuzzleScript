@@ -260,6 +260,11 @@ function getParameterByName(name) {
     return results == null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
 }
 
+function strip_http(url) {
+   url = url.replace(/^https?:\/\//,'');
+   return url;
+}
+
 function getData(){ 
 	var id = getParameterByName("p").replace(/[\\\/]/,"");
 	if (id===null||id.length===0) {
@@ -288,8 +293,11 @@ function getData(){
 		if (state.metadata.homepage!==undefined) {
 			var homepage=state.metadata.homepage;
 			var homepageLink = document.getElementById("homepagelink");
-			homepageLink.innerHTML=homepage;
-			homepageLink.href="http://"+homepage;
+			homepageLink.innerHTML=strip_http(homepage);
+ 			if (!homepage.match(/^https?:\/\//)) {
+ 				homepage = "http://" + homepage;
+ 			}
+ 			homepageLink.href = homepage;
 		}
 		if (state.metadata.title!==undefined) {
 			var title=state.metadata.title;

@@ -1,2 +1,2 @@
-var loadableGameDat = "__GAMEDAT__";
+var loadableGameDat = __GAMEDAT__;
 setGameState(loadableGameDat);

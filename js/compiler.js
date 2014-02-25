@@ -69,7 +69,7 @@ function generateExtraMembers(state) {
 	state.objectCount = idcount;
 	if (state.objectCount > 32)
 	{
-		logError('Cannot have more than 31 objects defined, you have '+ state.objectCount, state.objects[n].lineNumber);
+		logError('Cannot have more than 32 object types defined, you have '+ state.objectCount, state.objects[n].lineNumber);
 	}
 
 	//calculate blank mask template
@@ -707,7 +707,7 @@ function processRuleString(line, state, lineNumber,curRules)
 		var cmd = commands[i][0];
 		if (cmd==='restart') {
 			if (commands.length>1 || rhs_cells.length>0) {
-				logError('The RESET command can only appear by itself on the right hand side of the arrow.', lineNumber);
+				logError('The RESTART command can only appear by itself on the right hand side of the arrow.', lineNumber);
 			}
 		} else if (cmd==='cancel') {
 			if (commands.length>1 || rhs_cells.length>0) {
@@ -1339,6 +1339,7 @@ function rulesToMask(state) {
 			for (var k = 0; k < cellrow_l.length; k++) {
 				var cell_l = cellrow_l[k];
 				var mask_l = maskTemplate.concat([]);
+				var objectlayers_l = 0;
 				var forcemask_l = 0;
 				var cellmask_l = 0;
 				var nonExistenceMask_l = 0;
@@ -1386,6 +1387,9 @@ function rulesToMask(state) {
 						mask_l[2 * layerIndex + 1] = object_id;
 
 						cellmask_l = cellmask_l | (1 << object_id);
+						
+						objectlayers_l = objectlayers_l | ((1+2+4+8+16)<<(5*layerIndex));
+
 						if (object_dir==='stationary') {
 							stationaryMask_l = stationaryMask_l | ((1+2+4+8+16)<<(5*layerIndex));
 						} else {
@@ -1423,6 +1427,7 @@ function rulesToMask(state) {
 				}
 				var cell_r = cellrow_r[k];
 				var mask_r = maskTemplate.concat([]);
+				var objectlayers_r = 0;
 				var forcemask_r = 0;				
 				var cellmask_r = 0;
 				var randomMask_r = 0;
@@ -1471,11 +1476,12 @@ function rulesToMask(state) {
 						mask_r[2 * layerIndex + 0] = object_dir;
 						mask_r[2 * layerIndex + 1] = object_id;
 
-				if (object_dir.length>0) {
+						if (object_dir.length>0) {
 							postMovementsLayerMask_r = postMovementsLayerMask_r | ((1+2+4+8+16)<<(5*layerIndex));
 						}			
 
 						cellmask_r = cellmask_r | (1 << object_id);
+						objectlayers_r = objectlayers_r | ((1+2+4+8+16)<<(5*layerIndex));
 						if (object_dir==='stationary') {
 							stationaryMask_r = stationaryMask_r | ((1+2+4+8+16)<<(5*layerIndex));
 						} if (object_dir==='randomdir') {
@@ -1486,7 +1492,9 @@ function rulesToMask(state) {
 						nonExistenceMask_r = nonExistenceMask_r | layerMask;
 					}
 				}
-				cellrow_r[k] = [forcemask_r, cellmask_r, nonExistenceMask_r,postMovementsLayerMask_r,stationaryMask_r,randomMask_r,randomDirMask_r];
+
+				var movementsToRemove_r = objectlayers_l & (~objectlayers_r);
+				cellrow_r[k] = [forcemask_r, cellmask_r, nonExistenceMask_r,postMovementsLayerMask_r,stationaryMask_r,randomMask_r,randomDirMask_r,movementsToRemove_r];
 			}
 		}
 	}
@@ -1498,7 +1506,7 @@ function cellRowMasks(rule) {
 	for (var i=0;i<lhs.length;i++) {
 		var cellRow = lhs[i];
 		var rowMask=0;
-		for (var j=0;j<cellRow.length;j+=6) {
+		for (var j=0;j<cellRow.length;j+=7) {
 			var cellMask=cellRow[j+1];
 			rowMask = rowMask | cellMask;
 		}
@@ -1534,22 +1542,24 @@ function collapseRules(state) {
 					} 
 					ellipses[j]=true;
 				}
-				newcellrow_l[k * 6] = oldcellmask_l[0];
-				newcellrow_l[k * 6 + 1] = oldcellmask_l[1];
-				newcellrow_l[k * 6 + 2] = oldcellmask_l[2];//nonexistence
-				newcellrow_l[k * 6 + 3] = oldcellmask_l[3];//movenonexistence
-				newcellrow_l[k * 6 + 4] = oldcellmask_l[4];//stationarymask
-				newcellrow_l[k * 6 + 5]  = 0;//unassigned  //stores randomdirmask_r O_O
+				newcellrow_l[k * 7] = oldcellmask_l[0];
+				newcellrow_l[k * 7 + 1] = oldcellmask_l[1];
+				newcellrow_l[k * 7 + 2] = oldcellmask_l[2];//nonexistence
+				newcellrow_l[k * 7 + 3] = oldcellmask_l[3];//movenonexistence
+				newcellrow_l[k * 7 + 4] = oldcellmask_l[4];//stationarymask
+				newcellrow_l[k * 7 + 5]  = 0;			  //stores randomdirmask_r O_O
+				newcellrow_l[k * 7 + 6]  = 0;//unassigned 
 
 				if (oldrule.rhs.length>0) {
 					var oldcellmask_r = cellrow_r[k];
-					newcellrow_r[k * 6] = oldcellmask_r[0];
-					newcellrow_r[k * 6 + 1] = oldcellmask_r[1];
-					newcellrow_r[k * 6 + 2] = oldcellmask_r[2];//nonexistence
-					newcellrow_r[k * 6 + 3] = oldcellmask_r[3];//postCell_MovementsLayerMask
-					newcellrow_r[k * 6 + 4] = oldcellmask_r[4];//stationarymask
-					newcellrow_r[k * 6 + 5] = oldcellmask_r[5];//randomentitymask
-					newcellrow_l[k * 6 + 5] = oldcellmask_r[6];//store randomdirmask_r in lhs
+					newcellrow_r[k * 7] = oldcellmask_r[0];
+					newcellrow_r[k * 7 + 1] = oldcellmask_r[1];
+					newcellrow_r[k * 7 + 2] = oldcellmask_r[2];//nonexistence
+					newcellrow_r[k * 7 + 3] = oldcellmask_r[3];//postCell_MovementsLayerMask
+					newcellrow_r[k * 7 + 4] = oldcellmask_r[4];//stationarymask
+					newcellrow_r[k * 7 + 5] = oldcellmask_r[5];//randomentitymask
+					newcellrow_l[k * 7 + 5] = oldcellmask_r[6];//store randomdirmask_r in lhs
+					newcellrow_r[k * 7 + 6] = oldcellmask_r[7];//stores movementsToRemove_r
 				}
 			}
 			newrule[1][j] = newcellrow_l;
@@ -1632,7 +1642,7 @@ function checkNoLateRulesHaveMoves(state){
 			for (var cellRowIndex=0;cellRowIndex<rule[1].length;cellRowIndex++) {
 				var cellRow_l = rule[1][cellRowIndex];
 				var cellRow_r = rule[2][cellRowIndex];
-				for (var cellIndex=0;cellIndex<cellRow_l.length;cellIndex+=6) {
+				for (var cellIndex=0;cellIndex<cellRow_l.length;cellIndex+=7) {
 					var movementMask = cellRow_l[cellIndex];
 					if (movementMask===ellipsisDirection) {
 						continue;
@@ -1759,12 +1769,7 @@ function generatePlayerMask(state) {
 	}
 
 	for (var i=0;i<state.legend_synonyms.length;i++) {
-		var syn = state.legend_synonyms[i];
-		/*
-		if ((syn[0] in objectMask)) {
-			logError('Object name "'+syn[0] +'" declared to be two different things.',syn[2]);
-		}
-		*/
+		var syn = state.legend_synonyms[i];		
 		objectMask[syn[0]]=objectMask[syn[1]];
 	}
 
@@ -1775,11 +1780,6 @@ function generatePlayerMask(state) {
 			var n = prop[j];
 			val = val | objectMask[n];
 		}
-		/*
-		if ((prop[0] in objectMask)) {
-			logError('Object name "'+prop[0] +'" declared to be two different things.',syn[2]);
-		}
-		*/
 		objectMask[prop[0]]=val;
 	}
 

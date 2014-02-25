@@ -102,10 +102,14 @@ function repopulateSaveDropdown(saves) {
 	loadDropdown.options.length = 0;
 
 	if (saves===undefined) {
-		if (localStorage['saves']===undefined) {
+		try {
+			if (localStorage['saves']===undefined) {
+				return;
+			} else {
+				saves = JSON.parse(localStorage["saves"]);
+			}
+		} catch (ex) {
 			return;
-		} else {
-			saves = JSON.parse(localStorage["saves"]);
 		}
 	}
 

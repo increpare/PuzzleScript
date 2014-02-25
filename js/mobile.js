@@ -155,7 +155,8 @@ Mobile.debugDot = function (event) {
             this.repeatStep(event);
         }
 
-        event.preventDefault();
+        prevent(event);
+        return false;
     };
 
     proto.beginRepeatWatcher = function (event) {

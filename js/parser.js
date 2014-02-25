@@ -584,6 +584,8 @@ var codeMirrorFn = function() {
                 case 'legend':
                     {
                         if (sol) {
+
+
                             //step 1 : verify format
                             var longer = stream.string.replace('=', ' = ');
                             longer = reg_notcommentstart.exec(longer)[0];
@@ -592,15 +594,25 @@ var codeMirrorFn = function() {
                                 return v !== '';
                             });
                             var ok = true;
+
+                        	if (splits.length>0) {
+                        		var candname = splits[0].toLowerCase();
+	                            if (keyword_array.indexOf(candname)>=0) {
+	                                logError('You named an object "' + candname.toUpperCase() + '", but this is a keyword. Don\'t do that!', state.lineNumber);
+	                                stream.match(reg_notcommentstart, true);
+	                                return "ERROR";
+	                            }
+                        	}
+
                             if (splits.length < 3) {
                                 ok = false;
                             } else if (splits[1] !== '=') {
                                 ok = false;
-                            } else if (splits[0].charAt(splits[0].length - 1) == 'v') {
+                            } /*else if (splits[0].charAt(splits[0].length - 1) == 'v') {
                                 logError('names cannot end with the letter "v", because it\'s is used as a direction.', state.lineNumber);
                                 stream.match(reg_notcommentstart, true);
                                 return 'ERROR';
-                            } else if (splits.length === 3) {
+                            } */ else if (splits.length === 3) {
                                 state.legend_synonyms.push([splits[0], splits[2].toLowerCase(),state.lineNumber]);
                             } else if (splits.length % 2 === 0) {
                                 ok = false;
@@ -725,6 +737,7 @@ var codeMirrorFn = function() {
                                 return 'ERROR';
                             } else {
                                 var candname = match_name[0].trim();
+
                                 if (state.tokenIndex % 2 === 0) {
 
 	                                var wordExists = function(n) {

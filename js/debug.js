@@ -4,6 +4,8 @@ var canYoutube=false;
 inputHistory=[];
 var compiledText;
 var canOpenEditor=true;
+var IDE=true;
+
 dumpTraceHooks=[];
 
 function pushInput(inp) {

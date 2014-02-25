@@ -2,6 +2,7 @@ var lastDownTarget = null;
 var canvas = null;
 var input = document.createElement('TEXTAREA');
 
+
 function canvasResize() {
 
 }
@@ -20,6 +21,7 @@ var outputString;
 
 function consolePrint(text) {}
 
+function consoleCacheDump() {}
 var editor = {
 	getValue : function () { return levelString }
 }

@@ -368,8 +368,8 @@ function loadLevelFromState(state,levelindex) {
 	forceRegenImages=true;
 	titleScreen=false;
 	titleMode=curlevel>0?1:0;
+	titleSelection=curlevel>0?1:0;
 	titleSelected=false;
-	titleSelection=0;
 	curlevel=levelindex;
     againing=false;
     var leveldat = state.levels[levelindex];
@@ -581,7 +581,7 @@ function setGameState(_state, command) {
 		    titleScreen=true;
 		    tryPlayTitleSound();
 		    textMode=true;
-		    titleSelection=0;
+		    titleSelection=curlevel>0?1:0;
 		    titleSelected=false;
 		    quittingMessageScreen=false;
 		    quittingTitleScreen=false;
@@ -607,7 +607,7 @@ function setGameState(_state, command) {
 		    timer=0;
 		    titleScreen=false;
 		    textMode=false;
-		    titleSelection=0;
+		    titleSelection=curlevel>0?1:0;
 		    titleSelected=false;
 		    quittingMessageScreen=false;
 		    quittingTitleScreen=false;
@@ -628,7 +628,7 @@ function setGameState(_state, command) {
 				    timer=0;
 				    titleScreen=false;
 				    textMode=false;
-				    titleSelection=0;
+				    titleSelection=curlevel>0?1:0;
 				    titleSelected=false;
 				    quittingMessageScreen=false;
 				    quittingTitleScreen=false;
@@ -729,12 +729,18 @@ var screenheight=0;
 
 
 function DoRestart(force) {
-	if (force===false && ('norestart' in state.metadata)) {
+
+	if (force!==true && ('norestart' in state.metadata)) {
 		return;
 	}
 	if (force===false) {
 		backups.push(backupLevel());
 	}
+
+	if (verbose_logging) {
+		consolePrint("--- restarting ---");
+	}
+
 	restoreLevel(restartTarget);
 	tryPlayRestartSound();
 
@@ -748,6 +754,9 @@ function DoRestart(force) {
 function DoUndo(force) {
 	if ('noundo' in state.metadata && force!==true) {
 		return;
+	}
+	if (verbose_logging) {
+		consolePrint("--- undoing ---");
 	}
 	if (backups.length>0) {
 		var tobackup = backups[backups.length-1];
@@ -924,7 +933,7 @@ function ruleMovementMaskAgrees(ruleMovementMask,cellMovementMask){
     if (ruleMovementMask===0 ) {
         return true;
     } else {
-        return (ruleMovementMask&cellMovementMask)!==0;
+        return (ruleMovementMask&cellMovementMask)===ruleMovementMask;
     }
 }
 
@@ -949,14 +958,14 @@ function cellRowMatchesWildCard_ParticularK(direction,cellRow,i,k) {
 
 
 			((initCellMask&cellMask) == initCellMask) &&
-			((initNonExistenceMask&cellMask)==0)&&
-			((initMovementMask===0?true:((initMovementMask&movementMask)!==0))) &&
-			((initStationaryMask&movementMask)==0)
+			((initNonExistenceMask&cellMask)===0)&&
+			((initMovementMask===0?true:((initMovementMask&movementMask)===initMovementMask))) &&
+			((initStationaryMask&movementMask)===0)
 
     	//checkThing(initCellMask,initMovementMask,initNonExistenceMask,initStationaryMask,movementMask,cellMask)
     	) {
             var targetIndex = i;
-            for (var j=6;j<cellRow.length;j+=6) {
+            for (var j=7;j<cellRow.length;j+=7) {
                 targetIndex = (targetIndex+delta[1]+delta[0]*level.height)%level.dat.length;
                 var movementMask = level.movementMask[targetIndex];
                 var ruleMovementMask= cellRow[j+0];
@@ -971,7 +980,7 @@ function cellRowMatchesWildCard_ParticularK(direction,cellRow,i,k) {
                 	{//k defined 
                 		var targetIndex2=targetIndex;
                 		targetIndex2 = (targetIndex2+delta[1]*(k)+delta[0]*(k)*level.height+level.dat.length)%level.dat.length;
-                		for (var j2=j+6;j2<cellRow.length;j2+=6) {
+                		for (var j2=j+7;j2<cellRow.length;j2+=7) {
                 			movementMask = level.movementMask[targetIndex2];
 			                cellMask = level.dat[targetIndex2];
 
@@ -983,9 +992,9 @@ function cellRowMatchesWildCard_ParticularK(direction,cellRow,i,k) {
 						    if (
 
 								((ruleCellMask&cellMask) == ruleCellMask) &&
-								((ruleNonExistenceMask&cellMask)==0)&&
-								((ruleMovementMask===0?true:((ruleMovementMask&movementMask)!==0))) &&
-								((ruleStationaryMask&movementMask)==0)
+								((ruleNonExistenceMask&cellMask)===0)&&
+								((ruleMovementMask===0?true:((ruleMovementMask&movementMask)===ruleMovementMask))) &&
+								((ruleStationaryMask&movementMask)===0)
 
 						    	//checkThing(ruleCellMask,ruleMovementMask,ruleNonExistenceMask,ruleStationaryMask,movementMask,cellMask)
 						    	) {
@@ -1007,9 +1016,9 @@ function cellRowMatchesWildCard_ParticularK(direction,cellRow,i,k) {
 			    if (
 
 								((ruleCellMask&cellMask) == ruleCellMask) &&
-								((ruleNonExistenceMask&cellMask)==0)&&
-								((ruleMovementMask===0?true:((ruleMovementMask&movementMask)!==0))) &&
-								((ruleStationaryMask&movementMask)==0)
+								((ruleNonExistenceMask&cellMask)===0)&&
+								((ruleMovementMask===0?true:((ruleMovementMask&movementMask)===ruleMovementMask))) &&
+								((ruleStationaryMask&movementMask)===0)
 								//checkThing(ruleCellMask,ruleMovementMask,ruleNonExistenceMask,ruleStationaryMask,movementMask,cellMask)
 								) {
                     //GOOD
@@ -1038,13 +1047,13 @@ function cellRowMatchesWildCard(direction,cellRow,i,maxk) {
     if (
 
 			((initCellMask&cellMask) == initCellMask) &&
-			((initNonExistenceMask&cellMask)==0)&&
-			((initMovementMask===0?true:((initMovementMask&movementMask)!==0))) &&
-			((initStationaryMask&movementMask)==0)
+			((initNonExistenceMask&cellMask)===0)&&
+			((initMovementMask===0?true:((initMovementMask&movementMask)===initMovementMask))) &&
+			((initStationaryMask&movementMask)===0)
     	//checkThing(initCellMask,initMovementMask,initNonExistenceMask,initStationaryMask,movementMask,cellMask)
     	) {
             var targetIndex = i;
-            for (var j=6;j<cellRow.length;j+=6) {
+            for (var j=7;j<cellRow.length;j+=7) {
                 targetIndex = (targetIndex+delta[1]+delta[0]*level.height)%level.dat.length;
                 var movementMask = level.movementMask[targetIndex];
                 var ruleMovementMask= cellRow[j+0];
@@ -1058,7 +1067,7 @@ function cellRowMatchesWildCard(direction,cellRow,i,maxk) {
                 	for (var k=0;k<maxk;k++) {
                 		var targetIndex2=targetIndex;
                 		targetIndex2 = (targetIndex2+delta[1]*(k)+delta[0]*(k)*level.height+level.dat.length)%level.dat.length;
-                		for (var j2=j+6;j2<cellRow.length;j2+=6) {
+                		for (var j2=j+7;j2<cellRow.length;j2+=7) {
                 			movementMask = level.movementMask[targetIndex2];
 			                cellMask = level.dat[targetIndex2];
 
@@ -1070,9 +1079,9 @@ function cellRowMatchesWildCard(direction,cellRow,i,maxk) {
 						    if (
 
 								((ruleCellMask&cellMask) == ruleCellMask) &&
-								((ruleNonExistenceMask&cellMask)==0)&&
+								((ruleNonExistenceMask&cellMask)===0)&&
 								((ruleMovementMask===0?true:((ruleMovementMask&movementMask)!==0))) &&
-								((ruleStationaryMask&movementMask)==0)
+								((ruleStationaryMask&movementMask)===0)
 						    	//checkThing(ruleCellMask,ruleMovementMask,ruleNonExistenceMask,ruleStationaryMask,movementMask,cellMask)
 
 						    	) {
@@ -1093,9 +1102,9 @@ function cellRowMatchesWildCard(direction,cellRow,i,maxk) {
 
 			    if (
 						((ruleCellMask&cellMask) == ruleCellMask) &&
-						((ruleNonExistenceMask&cellMask)==0)&&
-						((ruleMovementMask===0?true:((ruleMovementMask&movementMask)!==0))) &&
-						((ruleStationaryMask&movementMask)==0)
+						((ruleNonExistenceMask&cellMask)===0)&&
+						((ruleMovementMask===0?true:((ruleMovementMask&movementMask)===ruleMovementMask))) &&
+						((ruleStationaryMask&movementMask)===0)
 			    	//checkThing(ruleCellMask,ruleMovementMask,ruleNonExistenceMask,ruleStationaryMask,movementMask,cellMask)
 			    	) {
                     //GOOD
@@ -1111,9 +1120,9 @@ function cellRowMatchesWildCard(direction,cellRow,i,maxk) {
 
 function checkThing(ruleCellMask,ruleMovementMask,ruleNonExistenceMask,ruleStationaryMask,movementMask,cellMask) {
 	return ((ruleCellMask&cellMask) == ruleCellMask) &&
-			((ruleNonExistenceMask&cellMask)==0)&&
+			((ruleNonExistenceMask&cellMask)===0)&&
 			(ruleMovementMaskAgrees(ruleMovementMask,movementMask)) &&
-			((ruleStationaryMask&movementMask)==0);
+			((ruleStationaryMask&movementMask)===0);
 }
 
 function cellRowMatches(direction,cellRow,i,k) {
@@ -1129,15 +1138,15 @@ function cellRowMatches(direction,cellRow,i,k) {
 
     if (
 			((initCellMask&cellMask) == initCellMask) &&
-			((initNonExistenceMask&cellMask)==0)&&
-			((initMovementMask===0?true:((initMovementMask&movementMask)!==0))) &&
-			((initStationaryMask&movementMask)==0)
+			((initNonExistenceMask&cellMask)===0)&&
+			((initMovementMask===0?true:((initMovementMask&movementMask)===initMovementMask))) &&
+			((initStationaryMask&movementMask)===0)
 
 //    	checkThing(initCellMask,initMovementMask,initNonExistenceMask,initStationaryMask,movementMask,cellMask)
 
     	) {
             var targetIndex = i;
-            for (var j=6;j<cellRow.length;j+=6) {
+            for (var j=7;j<cellRow.length;j+=7) {
                 targetIndex = (targetIndex+delta[1]+delta[0]*level.height)%level.dat.length;
                 var movementMask = level.movementMask[targetIndex];
                 var ruleMovementMask= cellRow[j+0];
@@ -1153,9 +1162,9 @@ function cellRowMatches(direction,cellRow,i,k) {
 			    if (
 
 			((ruleCellMask&cellMask) == ruleCellMask) &&
-			((ruleNonExistenceMask&cellMask)==0)&&
-			((ruleMovementMask===0?true:((ruleMovementMask&movementMask)!==0))) &&
-			((ruleStationaryMask&movementMask)==0)
+			((ruleNonExistenceMask&cellMask)===0)&&
+			((ruleMovementMask===0?true:((ruleMovementMask&movementMask)===ruleMovementMask))) &&
+			((ruleStationaryMask&movementMask)===0)
 
 			    	//checkThing(ruleCellMask,ruleMovementMask,ruleNonExistenceMask,ruleStationaryMask,movementMask,cellMask)
 			    	) {
@@ -1479,7 +1488,7 @@ function applyRuleAt(rule,delta,tuple,check) {
         var postRow = rule[2][cellRowIndex];
         
         var currentIndex = rule[5][cellRowIndex] ? tuple[cellRowIndex][0] : tuple[cellRowIndex];
-        for (var cellIndex=0;cellIndex<preRow.length;cellIndex+=6) {
+        for (var cellIndex=0;cellIndex<preRow.length;cellIndex+=7) {
             var preCell_Movement = preRow[cellIndex+0];
             if (preCell_Movement === ellipsisDirection) {
             	var k = tuple[cellRowIndex][1];
@@ -1499,6 +1508,7 @@ function applyRuleAt(rule,delta,tuple,check) {
             var postCell_StationaryMask = postRow[cellIndex+4];
             var postCell_RandomEntityMask = postRow[cellIndex+5];
             var postCell_RandomDirMask = preRow[cellIndex+5];
+            var postCell_movementsToRemove = postRow[cellIndex+6];
 
             if (postCell_RandomEntityMask !== 0) {
             	var choices=[];
@@ -1540,6 +1550,7 @@ function applyRuleAt(rule,delta,tuple,check) {
             //1 remove old
             curCellMask = curCellMask&(~preCell_Objects);
             curMovementMask = curMovementMask&(~preCell_Movement);
+            curMovementMask = curMovementMask&(~postCell_movementsToRemove);
             
             //2 make way for new
             curCellMask = curCellMask&(~postCell_NonExistence);
@@ -1661,6 +1672,14 @@ function queueCommands(rule) {
 			continue;
 		}
 		level.commandQueue.push(command[0]);
+
+		if (verbose_logging){
+			var lineNumber = rule[3];
+			var ruleDirection = dirMaskName[rule[0]];
+			var logString = '<font color="green">Rule <a onclick="jumpToLine(' + lineNumber.toString() + ');"  href="javascript:void(0);">' + lineNumber.toString() + '</a> triggers command '+command[0]+'.</font>';
+			consolePrint(logString);
+		}
+
 		if (command[0]==='message') {			
 			messagetext=command[1];
 		}		
@@ -1730,7 +1749,7 @@ function applyRuleGroup(ruleGroup) {
     	loopcount++;
     	if (loopcount>200) 
     	{
-    		logErrorNoLine("got caught looping lots in a rule group :O",true);
+    		logError("Got caught looping lots in a rule group :O",ruleGroup[0][3],true);
     		break;
     	}
         propagated=false
@@ -1816,7 +1835,7 @@ function propagateLateMovements(){
 		        	ruleGroupIndex = state.lateLoopPoint[ruleGroupIndex];
 		        	loopPropagated=false;
 		        	loopCount++;
-					if (loopCount > 00) {
+					if (loopCount > 200) {
 		    			var ruleGroup=state.lateRules[ruleGroupIndex];
 					   	logError("got caught in an endless startloop...endloop vortex, escaping!", ruleGroup[0][3],true);
 					   	break;
@@ -1920,6 +1939,7 @@ function calculateRowColMasks() {
 function processInput(dir,dontCheckWin,dontModify) {
 
 	if (verbose_logging) { 
+		cache_log_messages=true;
 	 	if (dir===-1) {
 	 		consolePrint('Turn starts with no input.')
 	 	} else {
@@ -2028,6 +2048,9 @@ function processInput(dir,dontCheckWin,dontModify) {
         		DoUndo(true);
         		seedsToPlay_CanMove=[];
         		seedsToPlay_CantMove=[];
+        		if (verbose_logging) {
+        			consoleCacheDump();
+        		}
         		return;
         	}
         	//play player cantmove sounds here
@@ -2042,6 +2065,9 @@ function processInput(dir,dontCheckWin,dontModify) {
     		seedsToPlay_CanMove=[];
     		seedsToPlay_CantMove=[];
     		redraw();
+        		if (verbose_logging) {
+        			consoleCacheDump();
+        		}
     		return;
 	    } 
 
@@ -2053,7 +2079,10 @@ function processInput(dir,dontCheckWin,dontModify) {
 	    	DoRestart(true);	
     		seedsToPlay_CanMove=[];
     		seedsToPlay_CantMove=[];
-    		redraw();   
+    		redraw();  
+    		if (verbose_logging) {
+    			consoleCacheDump();
+    		} 
     		return true; 	
 	    } 
 
@@ -2088,6 +2117,10 @@ function processInput(dir,dontCheckWin,dontModify) {
 				if (dontModify) {
 	        		backups.push(bak);
 	        		DoUndo(true);
+
+	        		if (verbose_logging) {
+	        			consoleCacheDump();
+	        		}
 					return true;
 				} else {
 					if (dir!==-1) {
@@ -2100,7 +2133,10 @@ function processInput(dir,dontCheckWin,dontModify) {
 	    }
 	
 
-		if (dontModify) {
+		if (dontModify) {		
+    		if (verbose_logging) {
+    			consoleCacheDump();
+    		}
 			return false;
 		}
 
@@ -2150,6 +2186,10 @@ function processInput(dir,dontCheckWin,dontModify) {
     }
 
     redraw();
+
+	if (verbose_logging) {
+		consoleCacheDump();
+	}
 }
 
 function checkWin() {
@@ -2286,7 +2326,14 @@ function nextLevel() {
 		}		
 		//continue existing game
 	}
-	localStorage[document.URL]=curlevel;
+	try {
+		if (!!window.localStorage) {
+			localStorage[document.URL]=curlevel;
+		}
+	} catch (ex) {
+
+	}
+
 	canvasResize();	
 	clearInputs();
 }
@@ -2296,7 +2343,7 @@ function goToTitleScreen(){
 	messagetext="";
 	titleScreen=true;
 	textMode=true;
-	titleSelection=0;
+	titleSelection=curlevel>0?1:0;
 	generateTitleScreen();
 }
 
