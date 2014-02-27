@@ -2171,6 +2171,7 @@ function processInput(dir,dontCheckWin,dontModify) {
 	    	if (verbose_logging) { 
 	    		consolePrint('CHECKPOINT command executed, saving current state to the restart state.');
 			}
+            pushInput("checkpoint");
 			restartTarget=backupLevel();
 		}	    
 	    

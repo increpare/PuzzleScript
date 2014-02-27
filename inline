@@ -1,2 +1,1 @@
-TMPL=${1:standalone}
-inliner ${TMPL}.html > ${TMPL}_inlined.txt
+inliner debug.html > debug_inlined.txt && inliner standalone.html > standalone_inlined.txt

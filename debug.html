@@ -1,7 +1,7 @@
 <!doctype html>
 <html>
 <head>
-<title>"__GAMETITLE__"</title>
+<title>__GAMETITLE__ (Debug)</title>
 <style>
 
 body {
@@ -64,7 +64,7 @@ a {
 </style>
 </head>
 <body onunload="DoQuit()">
-<div class="title"><h1>"__GAMETITLE__"</h1></div>
+<div class="title"><h1>"__GAMETITLE__" (Debug)</h1></div>
 <div class="gameContainer">
 <canvas 
     id="gameCanvas" 
@@ -73,8 +73,9 @@ a {
     onkeydown="keyDown()"
 ></canvas>
 </div> 
+<span id="errormessage" style="color:red;"></span>
 <div class="footer">
-<a href="http://"+'"__HOMEPAGE__"'>"__HOMEPAGE__"</a>
+<a href="http://__HOMEPAGE__">__HOMEPAGE__</a>
 </div>
 
 <script src="js/globalVariables.js"></script>
@@ -83,6 +84,7 @@ a {
 <script src="js/rng.js"></script>
 <script src="js/riffwave.js"></script>
 <script src="js/sfxr.js"></script>
+<script src="js/jsedn.js"></script>
 
 <script src="js/colors.js"></script>
 <script src="js/graphics.js"></script>
@@ -92,6 +94,12 @@ a {
 
 <script src="js/addlisteners.js"></script>
 <script src="js/gamedat.js"></script>
+<script src="js/gamalyze.js"></script>
+<script type="text/javascript">
+    function consolePrint(text) {
+        console.log(text);
+    }
+</script>
 
 </body>
 </html>

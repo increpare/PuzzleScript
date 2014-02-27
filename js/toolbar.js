@@ -246,6 +246,15 @@ function exportClick() {
 	var stateString = JSON.stringify(state);
 	
 	buildStandalone(stateString);
+}
+
+function exportDebugClick() {
+	var sourceCode = editor.getValue();
+
+	compile("restart");
+
+	var stateString = JSON.stringify(state);
+	
     buildDebug(stateString);
 }
 
