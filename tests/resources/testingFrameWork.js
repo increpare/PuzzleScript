@@ -22,14 +22,17 @@ function runTest(dataarray) {
             throw new Exception("Replay queue has unconsumed random "+val);
         }
         if (val==="undo") {
+            pushInput("undo");
 	        DoUndo();
         } else if (val==="restart") {
+            pushInput("restart");
 	    	DoRestart();
 	    } else if (val==="wait") {
-            processInput(-1);
+            autoTickGame();
         } else if (val==="quit" || val==="win") {
             continue;
         } else {
+            pushInput(val);
 	    	processInput(val);
 	    }
 	    while (againing) {
