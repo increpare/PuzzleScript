@@ -23,6 +23,7 @@ function addLeftColumn() {
 	for (var i=0;i<level.height;i++) {
 		level.dat.splice(i,0,bgMask);
 	}
+	dirty.all = true;
 	level.width++;
 	recalcLevelBounds();
 	columnAdded=true;
@@ -33,6 +34,7 @@ function addRightColumn(){
 	for (var i=0;i<level.height;i++) {
 		level.dat.push(bgMask);
 	}
+	dirty.all = true;
 	level.width++;
 	recalcLevelBounds();
 	columnAdded=true;
@@ -43,6 +45,7 @@ function addTopRow(){
 	for (var i=level.width-1;i>=0;i--) {
 		level.dat.splice(i*level.height,0,bgMask);
 	}
+	dirty.all = true;
 	level.height++;
 	recalcLevelBounds();
 	columnAdded=true;
@@ -52,6 +55,7 @@ function addBottomRow(){
 	for (var i=level.width-1;i>=0;i--) {
 		level.dat.splice(level.height+i*level.height,0,bgMask);
 	}
+	dirty.all = true;
 	level.height++;
 	recalcLevelBounds();
 	columnAdded=true;
@@ -65,6 +69,7 @@ function removeLeftColumn() {
 	for (var i=0;i<level.height;i++) {
 		level.dat.splice(0,1);
 	}
+	dirty.all = true;
 	level.width--;
 	recalcLevelBounds();
 	columnAdded=true;
@@ -78,6 +83,7 @@ function removeRightColumn(){
 	for (var i=0;i<level.height;i++) {
 		level.dat.splice(level.dat.length-1,1);
 	}
+	dirty.all = true;
 	level.width--;
 	recalcLevelBounds();
 	columnAdded=true;
@@ -91,6 +97,7 @@ function removeTopRow(){
 	for (var i=level.width-1;i>=0;i--) {
 		level.dat.splice(i*level.height,1);
 	}
+	dirty.all = true;
 	level.height--;
 	recalcLevelBounds();
 	columnAdded=true;
@@ -103,6 +110,7 @@ function removeBottomRow(){
 	for (var i=level.width-1;i>=0;i--) {
 		level.dat.splice(level.height-1+i*level.height,1);
 	}
+	dirty.all = true;
 	level.height--;
 	recalcLevelBounds();
 	columnAdded=true;
@@ -118,11 +126,11 @@ var h01 = 0x01010101; //the sum of 256 to the power of 0,1,2,3...
 
 //from http://jsperf.com/hamming-weight/4
 function CountBits(x) {
-    x = (x & m1 ) + ((x >>  1) & m1 ); //put count of each  2 bits into those  2 bits 
-    x = (x & m2 ) + ((x >>  2) & m2 ); //put count of each  4 bits into those  4 bits 
-    x = (x & m4 ) + ((x >>  4) & m4 ); //put count of each  8 bits into those  8 bits 
-    x = (x & m8 ) + ((x >>  8) & m8 ); //put count of each 16 bits into those 16 bits 
-    x = (x & m16) + ((x >> 16) & m16); //put count of each 32 bits into those 32 bits 
+    x = (x & m1 ) + ((x >>  1) & m1 ); //put count of each  2 bits into those  2 bits
+    x = (x & m2 ) + ((x >>  2) & m2 ); //put count of each  4 bits into those  4 bits
+    x = (x & m4 ) + ((x >>  4) & m4 ); //put count of each  8 bits into those  8 bits
+    x = (x & m8 ) + ((x >>  8) & m8 ); //put count of each 16 bits into those 16 bits
+    x = (x & m16) + ((x >> 16) & m16); //put count of each 32 bits into those 32 bits
     return x;
 }
 
@@ -138,7 +146,7 @@ function matchGlyph(inputmask,maskToGlyph) {
 		if (maskToGlyph.hasOwnProperty(glyphmask)) {
 			//require all bits of glyph to be in input
 			if (glyphmask == (glyphmask&inputmask)) {
-				var bitcount = CountBits(glyphmask);			
+				var bitcount = CountBits(glyphmask);
 				if (bitcount>highestbitcount) {
 					highestbitcount=bitcount;
 					highestmask=maskToGlyph[glyphmask];
@@ -149,7 +157,7 @@ function matchGlyph(inputmask,maskToGlyph) {
 	if (highestbitcount>0) {
 		return highestmask;
 	}
-	
+
 	logErrorNoLine("Wasn't able to approximate a glyph value for some tiles, using '.' as a placeholder.",true);
 	return '.';
 }
@@ -175,7 +183,7 @@ function printLevel() {
 				var id = glyph[i];
 				if (id>=0) {
 					glyphmask = (glyphmask|(1<<id));
-				}			
+				}
 			}
 			maskToGlyph[glyphmask]=glyphName;
 			//register the same - backgroundmask with the same name
@@ -189,7 +197,7 @@ function printLevel() {
 				if ((bgid&bgMask)!==0) {
 					var glyphmasnewbg = glyphmaskMinusBackground|bgid;
 					if (! (glyphmasnewbg in maskToGlyph)) {
-						maskToGlyph[glyphmasnewbg]=glyphName;						
+						maskToGlyph[glyphmasnewbg]=glyphName;
 					}
 				}
 			}
@@ -202,7 +210,7 @@ function printLevel() {
 			var cellMask = level.dat[cellIndex];
 			var glyph = matchGlyph(cellMask,maskToGlyph);
 			if (glyph in htmlEntityMap) {
-				glyph = htmlEntityMap[glyph]; 
+				glyph = htmlEntityMap[glyph];
 			}
 			output = output+glyph;
 		}
@@ -231,7 +239,7 @@ function levelEditorClick(event,click) {
 			var id = glyph[i];
 			if (id>=0) {
 				glyphmask = (glyphmask|(1<<id));
-			}			
+			}
 		}
 
 		var backgroundMask = state.layerMasks[state.backgroundlayer];
@@ -243,17 +251,18 @@ function levelEditorClick(event,click) {
 
 		var coordIndex = mouseCoordY + mouseCoordX*level.height;
 		level.dat[coordIndex]=glyphmask;
+		dirty[coordIndex]=true;
 		redraw();
 	}
 	else if (click) {
 		if (mouseCoordX===-1) {
 			//add a left row to the map
-			addLeftColumn();			
+			addLeftColumn();
 			canvasResize();
 		} else if (mouseCoordX===screenwidth-2) {
 			addRightColumn();
 			canvasResize();
-		} 
+		}
 		if (mouseCoordY===-1) {
 			addTopRow();
 			canvasResize();
@@ -276,17 +285,18 @@ function levelEditorRightClick(event,click) {
 		var glyphmask = 1<<state.backgroundid;
 		var coordIndex = mouseCoordY + mouseCoordX*level.height;
 		level.dat[coordIndex]=glyphmask;
+		dirty[coordIndex]=true;
 		redraw();
 	}
 	else if (click) {
 		if (mouseCoordX===-1) {
 			//add a left row to the map
-			removeLeftColumn();			
+			removeLeftColumn();
 			canvasResize();
 		} else if (mouseCoordX===screenwidth-2) {
 			removeRightColumn();
 			canvasResize();
-		} 
+		}
 		if (mouseCoordY===-1) {
 			removeTopRow();
 			canvasResize();
@@ -310,7 +320,7 @@ function onMouseDown(event) {
         	}
         }
         dragging=false;
-        rightdragging=false; 
+        rightdragging=false;
     } else if (event.button===2 || (event.button===0 && (event.ctrlKey||event.metaKey)) ) {
 
 	    dragging=false;
@@ -361,7 +371,7 @@ function onKeyDown(event) {
         } else if (event.keyCode===75 && (event.ctrlKey||event.metaKey)) {//ctrl+k
             makeGIF();
             prevent(event);
-        } 
+        }
     }
 }
 
@@ -421,11 +431,11 @@ function setMouseCoord(e){
 
 function mouseMove(event) {
     if (levelEditorOpened) {
-    	setMouseCoord(event);  
-    	if (dragging) { 	
+		setMouseCoord(event);
+		if (dragging) {
     		levelEditorClick(event,false);
     	} else if (rightdragging){
-    		levelEditorRightClick(event,false);    		
+			levelEditorRightClick(event,false);
     	}
     }
 
@@ -437,12 +447,14 @@ function mouseOut() {
 //  window.console.log("clear");
 }
 
-document.addEventListener('mousedown', onMouseDown, false);
-document.addEventListener('mouseup', onMouseUp, false);
-document.addEventListener('keydown', onKeyDown, false);
-document.addEventListener('keyup', onKeyUp, false);
-document.addEventListener('focus', onMyFocus, false);
-document.addEventListener('blur', onMyBlur, false);
+if(!unitTesting) {
+    document.addEventListener('mousedown', onMouseDown, false);
+    document.addEventListener('mouseup', onMouseUp, false);
+    document.addEventListener('keydown', onKeyDown, false);
+    document.addEventListener('keyup', onKeyUp, false);
+    document.addEventListener('focus', onMyFocus, false);
+    document.addEventListener('blur', onMyBlur, false);
+}
 
 function prevent(e) {
     if (e.preventDefault) e.preventDefault();
@@ -521,7 +533,7 @@ function checkKey(e,justPressed) {
         {
         	if (titleScreen===false) {
                 DoQuit();
-				goToTitleScreen();	
+				goToTitleScreen();
 		    	tryPlayTitleSound();
 				canvasResize();
 				return prevent(e)
@@ -561,8 +573,8 @@ function checkKey(e,justPressed) {
 
         		canvasResize();
         		return prevent(e);
-        	}	
-        	break;	
+			}
+			break;
         }
     }
 
@@ -572,7 +584,7 @@ function checkKey(e,justPressed) {
     	} else if (titleScreen) {
     		if (titleMode===0) {
     			if (inputdir===4&&justPressed) {
-    				if (titleSelected===false) {    				
+					if (titleSelected===false) {
 						tryPlayStartGameSound();
 	    				titleSelected=true;
 	    				messageselected=false;
@@ -584,7 +596,7 @@ function checkKey(e,justPressed) {
     			}
     		} else {
     			if (inputdir==4&&justPressed) {
-    				if (titleSelected===false) {    				
+					if (titleSelected===false) {
 						tryPlayStartGameSound();
 	    				titleSelected=true;
 	    				messageselected=false;
@@ -601,8 +613,8 @@ function checkKey(e,justPressed) {
     			}
     		}
     	} else {
-    		if (inputdir==4&&justPressed) {    				
-				if (unitTesting) {
+			if (inputdir==4&&justPressed) {
+				if (unitTesting && testsAutoAdvanceLevel) {
 					nextLevel();
 					return;
 				} else if (messageselected===false) {
@@ -654,8 +666,8 @@ function update() {
 				titleMode=curlevel>0?1:0;
 				titleSelected=false;
 				titleSelection=0;
-    			canvasResize();  
-    			checkWin();          	
+				canvasResize();
+				checkWin();
             }
         }
     }
@@ -684,7 +696,9 @@ function update() {
     }
 }
 
-// Lights, camera…function!
-setInterval(function() {
-    update();
-}, deltatime);
+if(!unitTesting) {
+	// Lights, camera…function!
+	setInterval(function() {
+		update();
+	}, deltatime);
+}

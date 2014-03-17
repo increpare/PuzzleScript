@@ -168,14 +168,16 @@ function unloadGame() {
 	    bannedGroup:[]
 	};
 	generateTitleScreen();
-	canvasResize();
-	redraw();
+    if(!unitTesting) {
+        canvasResize();
+        redraw();
+    }
 }
 
 function generateTitleScreen()
 {
 	titleMode=curlevel>0?1:0;
-	
+
 	if (state.levels.length==0) {
 		titleImage=intro_template;
 		return;
@@ -188,27 +190,27 @@ function generateTitleScreen()
 
 	if (titleMode==0) {
 		if (titleSelected) {
-			titleImage = deepClone(titletemplate_firstgo_selected);		
+			titleImage = deepClone(titletemplate_firstgo_selected);
 		} else {
-			titleImage = deepClone(titletemplate_firstgo);					
+			titleImage = deepClone(titletemplate_firstgo);
 		}
 	} else {
 		if (titleSelection==0) {
 			if (titleSelected) {
-				titleImage = deepClone(titletemplate_select0_selected);		
+				titleImage = deepClone(titletemplate_select0_selected);
 			} else {
-				titleImage = deepClone(titletemplate_select0);					
-			}			
+				titleImage = deepClone(titletemplate_select0);
+			}
 		} else {
 			if (titleSelected) {
-				titleImage = deepClone(titletemplate_select1_selected);		
+				titleImage = deepClone(titletemplate_select1_selected);
 			} else {
-				titleImage = deepClone(titletemplate_select1);					
-			}						
+				titleImage = deepClone(titletemplate_select1);
+			}
 		}
 	}
 
-	var noAction = 'noaction' in state.metadata;	
+	var noAction = 'noaction' in state.metadata;
 	var noUndo = 'noundo' in state.metadata;
 	var noRestart = 'norestart' in state.metadata;
 	if (noUndo && noRestart) {
@@ -242,7 +244,7 @@ function generateTitleScreen()
 		for (var i=0;i<attributionsplit.length;i++) {
 			var line = attributionsplit[i];
 			var row = titleImage[3+i];
-			titleImage[3+i]=row.slice(0,width-line.length-1)+line+row[row.length-1];			
+			titleImage[3+i]=row.slice(0,width-line.length-1)+line+row[row.length-1];
 		}
 	}
 
@@ -263,7 +265,7 @@ var state = introstate;
 function deepClone(item) {
     if (!item) { return item; } // null, undefined values check
 
-    var types = [ Number, String, Boolean ], 
+    var types = [ Number, String, Boolean ],
         result;
 
     // normalizing primitives if someone did new String('aaa'), or new Number('444');
@@ -276,13 +278,13 @@ function deepClone(item) {
     if (typeof result == "undefined") {
         if (Object.prototype.toString.call( item ) === "[object Array]") {
             result = [];
-            item.forEach(function(child, index, array) { 
+            item.forEach(function(child, index, array) {
                 result[index] = deepClone( child );
             });
         } else if (typeof item == "object") {
             // testing that this is DOM
             if (item.nodeType && typeof item.cloneNode == "function") {
-                var result = item.cloneNode( true );    
+                var result = item.cloneNode( true );
             } else if (!item.prototype) { // check that this is a literal
                 if (item instanceof Date) {
                     result = new Date(item);
@@ -312,16 +314,16 @@ function deepClone(item) {
 }
 
 function wordwrap( str, width ) {
- 
+
     width = width || 75;
     var cut = true;
- 
+
     if (!str) { return str; }
- 
+
     var regex = '.{1,' +width+ '}(\\s|$)' + (cut ? '|.{' +width+ '}|.+$' : '|\\S+?(\\s|$)');
- 
+
     return str.match( RegExp(regex, 'g') );
- 
+
 }
 
 var splitMessage=[];
@@ -354,24 +356,27 @@ function drawMessageScreen() {
 		var lmargin = ((width-messageLength)/2)|0;
 		var rmargin = width-messageLength-lmargin;
 		var rowtext = titleImage[row];
-		titleImage[row]=rowtext.slice(0,lmargin)+m+rowtext.slice(lmargin+m.length);		
+		titleImage[row]=rowtext.slice(0,lmargin)+m+rowtext.slice(lmargin+m.length);
 	}
 
 	if (quittingMessageScreen) {
 		titleImage[10]=titleImage[9];
-	}		
+	}
 	canvasResize();
 }
 
 
-function loadLevelFromState(state,levelindex) {	
-	forceRegenImages=true;
+function loadLevelFromState(state,levelindex) {
+	if(levelindex != curlevel) {
+		forceRegenImages=true;
+	}
 	titleScreen=false;
 	titleMode=curlevel>0?1:0;
 	titleSelection=curlevel>0?1:0;
 	titleSelected=false;
 	curlevel=levelindex;
     againing=false;
+    dirty.all = true;
     var leveldat = state.levels[levelindex];
     if (leveldat===null) {
     	consolePrint("Trying to access a level that doesn't exist.");
@@ -394,10 +399,10 @@ function loadLevelFromState(state,levelindex) {
 	    };
 
 	    for (var i=0;i<level.height;i++) {
-	    	level.rowCellContents[i]=0;	    	
+			level.rowCellContents[i]=0;
 	    }
 	    for (var i=0;i<level.width;i++) {
-	    	level.colCellContents[i]=0;	    	
+			level.colCellContents[i]=0;
 	    }
 
 	    for (var i=0;i<level.movementMask.length;i++)
@@ -413,11 +418,18 @@ function loadLevelFromState(state,levelindex) {
 	    if ('run_rules_on_level_start' in state.metadata) {
 			processInput(-1,true);
 	    }
+		if(!unitTesting) {
+			canvasResize();
+		}
 
-	    if (levelindex=== 0){ 
+		if (levelindex=== 0){
 			tryPlayStartLevelSound();
 		} else {
-			tryPlayStartLevelSound();			
+			tryPlayStartLevelSound();
+		}
+
+		if(!unitTesting) {
+			canvasResize();
 		}
 
 	} else {
@@ -430,7 +442,7 @@ function loadLevelFromState(state,levelindex) {
 }
 
 function autoTickGame() {
-  pushInput("wait");
+	pushInput("wait");
 	processInput(-1);
 }
 
@@ -466,12 +478,14 @@ canvasResize();
 //setTimeout(redraw,100);
 
 function tick() {
-redraw();
+	if(!unitTesting) {
+		redraw();
+	}
 }
 
 
 function tryPlaySimpleSound(soundname) {
-	if (state.sfx_Events[soundname]!==undefined) {
+	if (!unitTesting && state.sfx_Events[soundname]!==undefined) {
 		var seed = state.sfx_Events[soundname];
 		playSeed(seed);
 	}
@@ -641,7 +655,7 @@ function setGameState(_state, command) {
 			break;
 		}
 	}
-	
+
 	clearInputs();
   canvasResize();
 
@@ -667,7 +681,7 @@ function setGameState(_state, command) {
 		if ('youtube' in state.metadata) {
 			var div_container = document.createElement('DIV');
 			var div_front = document.createElement('DIV');
-			div_front.style.zIndex=-100;	
+			div_front.style.zIndex=-100;
 			div_front.style.backgroundColor=state.bgcolor;
 			div_front.style.position= "absolute";
 			div_front.style.width="500px";
@@ -675,10 +689,10 @@ function setGameState(_state, command) {
 			var div_back = document.createElement('DIV');
 			div_back.style.zIndex=-200;
 			div_back.style.position= "absolute";
-			
+
 			div_container.appendChild(div_back);
 			div_container.appendChild(div_front);
-			
+
 			var youtubeid=state.metadata['youtube'];
 			var url = "https://youtube.googleapis.com/v/"+youtubeid+"?autoplay=1&loop=1&playlist="+youtubeid;
 			ifrm = document.createElement("IFRAME");
@@ -693,33 +707,36 @@ function setGameState(_state, command) {
 			document.body.appendChild(div_container);
 			*/
 	}
-	
+
 }
 
 var messagetext="";
 function restoreLevel(lev) {
 	oldflickscreendat=[];
 	level.dat=lev.concat([]);
+	dirty.all = true;
 
 	//width/height don't change, neither does layercount
 	for (var i=0;i<level.dat.length;i++) {
 		level.movementMask[i]=0;
 		level.rigidMovementAppliedMask[i]=0;
 		level.rigidGroupIndexMask[i]=0;
-	}	
+	}
 
-    for (var i=0;i<level.height;i++) {
-    	level.rowCellContents[i]=0;	    	
-    }
-    for (var i=0;i<level.width;i++) {
-    	level.colCellContents[i]=0;	    	
-    }
+	for (var i=0;i<level.height;i++) {
+		level.rowCellContents[i]=0;
+	}
+	for (var i=0;i<level.width;i++) {
+		level.colCellContents[i]=0;
+	}
 
 
-    againing=false;
-    messagetext="";
-    level.commandQueue=[];
-	redraw();
+	againing=false;
+	messagetext="";
+	level.commandQueue=[];
+	if(!unitTesting) {
+		redraw();
+	}
 }
 
 var zoomscreen=false;
@@ -747,7 +764,7 @@ function DoRestart(force) {
 	if ('run_rules_on_level_start' in state.metadata) {
     	processInput(-1,true);
 	}
-	
+
 	level.commandQueue=[];
 }
 
@@ -827,28 +844,38 @@ function startMovement(dir) {
 
 var dirMasksDelta = {
      1:[0,-1],//up
-     2:[0,1],//'down'  : 
-     4:[-1,0],//'left'  : 
-     8:[1,0],//'right' : 
-     15:[0,0],//'?' : 
-     16:[0,0],//'action' : 
+     2:[0,1],//'down'  :
+     4:[-1,0],//'left'  :
+     8:[1,0],//'right' :
+     15:[0,0],//'?' :
+     16:[0,0],//'action' :
      3:[0,0]//'no'
 };
 
 var dirMaskName = {
      1:'up',
      2:'down'  ,
-     4:'left'  , 
-     8:'right',  
+     4:'left'  ,
+     8:'right',
      15:'?' ,
      16:'action',
      3:'no'
 };
 
+var dirNameMask = {
+     'up':1,
+     'down':2,
+     'left':4,
+     'right':8,
+     '?':15,
+     'action':16,
+     'no':3
+};
+
 var seedsToPlay_CanMove=[];
 var seedsToPlay_CantMove=[];
 
-function repositionEntitiesOnLayer(positionIndex,layer,dirMask) 
+function repositionEntitiesOnLayer(positionIndex,layer,dirMask)
 {
     var delta = dirMasksDelta[dirMask];
 
@@ -876,9 +903,9 @@ function repositionEntitiesOnLayer(positionIndex,layer,dirMask)
     var movingEntities = sourceMask&layerMask;
     level.dat[positionIndex] = sourceMask&(~layerMask);
     level.dat[targetIndex] = targetMask | movingEntities;
-
-
-    var colIndex=(targetIndex/level.height)|0;
+    dirty[positionIndex] = true;
+    dirty[targetIndex] = true;
+	var colIndex=(targetIndex/level.height)|0;
 	var rowIndex=(targetIndex%level.height);
     level.colCellContents[colIndex]=(level.colCellContents[colIndex]|movingEntities);
     level.rowCellContents[rowIndex]=(level.rowCellContents[rowIndex]|movingEntities);
@@ -910,7 +937,7 @@ function repositionEntitiesAtCell(positionIndex) {
     //assumes not zero
     //for each layer
     var moved=false;
-    for (var layer=0;layer<6;layer++) {    	
+    for (var layer=0;layer<6;layer++) {
         var layerMovement = parseInt('11111', 2) & (movementMask>>(5*layer));
         if (layerMovement!=0) {
 //        	if (randomDirMask===layerMovement) {
@@ -924,7 +951,7 @@ function repositionEntitiesAtCell(positionIndex) {
         }
     }
 
-   	level.movementMask[positionIndex] = movementMask;            
+    level.movementMask[positionIndex] = movementMask;
 
     return moved;
 }
@@ -937,7 +964,7 @@ function ruleMovementMaskAgrees(ruleMovementMask,cellMovementMask){
     }
 }
 
-var ellipsisDirection = 1<<31;
+
 var randomEntityMask = parseInt('00101', 2);
 
 
@@ -975,9 +1002,9 @@ function cellRowMatchesWildCard_ParticularK(direction,cellRow,i,k) {
                 var ruleNonExistenceMask = cellRow[j+2];
                 var ruleStationaryMask = cellRow[j+4];
                 if (ruleMovementMask === ellipsisDirection) {
-                	//BAM inner loop time
-                	//for (var k=0;k<maxk;k++) 
-                	{//k defined 
+                    //BAM inner loop time
+                    //for (var k=0;k<maxk;k++)
+					{//k defined
                 		var targetIndex2=targetIndex;
                 		targetIndex2 = (targetIndex2+delta[1]*(k)+delta[0]*(k)*level.height+level.dat.length)%level.dat.length;
                 		for (var j2=j+7;j2<cellRow.length;j2+=7) {
@@ -1025,10 +1052,10 @@ function cellRowMatchesWildCard_ParticularK(direction,cellRow,i,k) {
                 } else {
                     break;
                 }
-            }   
-            
+            }
 
-    }  
+
+    }
     return result.length>0;
 }
 
@@ -1111,10 +1138,10 @@ function cellRowMatchesWildCard(direction,cellRow,i,maxk) {
                 } else {
                     break;
                 }
-            }   
-            
+            }
 
-    }  
+
+    }
     return result;
 }
 
@@ -1151,8 +1178,8 @@ function cellRowMatches(direction,cellRow,i,k) {
                 var movementMask = level.movementMask[targetIndex];
                 var ruleMovementMask= cellRow[j+0];
  				if (ruleMovementMask === ellipsisDirection) {
- 					//only for once off verifications
-                	targetIndex = (targetIndex+delta[1]*k+delta[0]*k*level.height)%level.dat.length; 					
+					//only for once off verifications
+					targetIndex = (targetIndex+delta[1]*k+delta[0]*k*level.height)%level.dat.length;
                 }
                 var cellMask = level.dat[targetIndex];
 
@@ -1172,17 +1199,17 @@ function cellRowMatches(direction,cellRow,i,k) {
                 } else {
                     break;
                 }
-            }   
-            
+            }
+
             if (j>=cellRow.length) {
                 return true;
             }
 
-    }  
+    }
         return false;
 }
 
-function matchCellRow(direction, cellRow, cellRowMask) {	
+function matchCellRow(direction, cellRow, cellRowMask) {
 	var result=[];
 	if ((cellRowMask&level.mapCellContents)===0) {
 		return result;
@@ -1201,7 +1228,7 @@ function matchCellRow(direction, cellRow, cellRowMask) {
     		ymin+=(len-1);
     		break;
     	}
-    	case 2: //down 
+        case 2: //down
     	{
 			ymax-=(len-1);
 			break;
@@ -1213,7 +1240,7 @@ function matchCellRow(direction, cellRow, cellRowMask) {
     	}
     	case 8: //right
 		{
-			xmax-=(len-1);	
+			xmax-=(len-1);
 			break;
 		}
     	default:
@@ -1250,7 +1277,7 @@ function matchCellRow(direction, cellRow, cellRowMask) {
 					result.push(i);
 				}
 			}
-		}		
+		}
 	}
 
 	return result;
@@ -1274,19 +1301,19 @@ function matchCellRowWildCard(direction, cellRow,cellRowMask) {
     		ymin+=(len-1);
     		break;
     	}
-    	case 2: //down 
+		case 2: //down
     	{
 			ymax-=(len-1);
 			break;
     	}
     	case 4: //left
     	{
-    		xmin+=(len-1);
+			xmin+=(len-1);
     		break;
     	}
     	case 8: //right
 		{
-			xmax-=(len-1);	
+			xmax-=(len-1);
 			break;
 		}
     	default:
@@ -1314,7 +1341,7 @@ function matchCellRowWildCard(direction, cellRow,cellRowMask) {
 			    		kmax=y-len+2;
 			    		break;
 			    	}
-			    	case 2: //down 
+					case 2: //down
 			    	{
 						kmax=level.height-(y+len)+1;
 						break;
@@ -1326,7 +1353,7 @@ function matchCellRowWildCard(direction, cellRow,cellRowMask) {
 			    	}
 			    	case 8: //right
 					{
-						kmax=level.width-(x+len)+1;	
+						kmax=level.width-(x+len)+1;
 						break;
 					}
 			    	default:
@@ -1353,7 +1380,7 @@ function matchCellRowWildCard(direction, cellRow,cellRowMask) {
 			    		kmax=y-len+2;
 			    		break;
 			    	}
-			    	case 2: //down 
+					case 2: //down
 			    	{
 						kmax=level.height-(y+len)+1;
 						break;
@@ -1365,7 +1392,7 @@ function matchCellRowWildCard(direction, cellRow,cellRowMask) {
 			    	}
 			    	case 8: //right
 					{
-						kmax=level.width-(x+len)+1;	
+						kmax=level.width-(x+len)+1;
 						break;
 					}
 			    	default:
@@ -1375,7 +1402,7 @@ function matchCellRowWildCard(direction, cellRow,cellRowMask) {
 			    }
 				result.push.apply(result, cellRowMatchesWildCard(direction,cellRow,i,kmax));
 			}
-		}		
+		}
 	}
 
 	return result;
@@ -1444,10 +1471,10 @@ function findRuleMatches(rule) {
 	var cellRowMasks=rule[11];
     for (var cellRowIndex=0;cellRowIndex<rule[1].length;cellRowIndex++) {
         var cellRow = rule[1][cellRowIndex];
-        if (rule[5][cellRowIndex]) {//if ellipsis     
-        	var match = matchCellRowWildCard(rule[0],cellRow,cellRowMasks[cellRowIndex]);  
+        if (rule[5][cellRowIndex]) {//if ellipsis
+			var match = matchCellRowWildCard(rule[0],cellRow,cellRowMasks[cellRowIndex]);
         } else {
-        	var match = matchCellRow(rule[0],cellRow,cellRowMasks[cellRowIndex]);               	
+			var match = matchCellRow(rule[0],cellRow,cellRowMasks[cellRowIndex]);
         }
         if (match.length==0) {
             return [];
@@ -1461,7 +1488,7 @@ function findRuleMatches(rule) {
 function applyRuleAt(rule,delta,tuple,check) {
 	//have to double check they apply
     if (check) {
-        var ruleMatches=true;                
+        var ruleMatches=true;
         for (var cellRowIndex=0;cellRowIndex<rule[1].length;cellRowIndex++) {
         	if (rule[5][cellRowIndex]) {//if ellipsis
             	if (cellRowMatchesWildCard_ParticularK(rule[0],rule[1][cellRowIndex],tuple[cellRowIndex][0],tuple[cellRowIndex][1])===false) {
@@ -1480,13 +1507,13 @@ function applyRuleAt(rule,delta,tuple,check) {
         }
     }
     var result=false;
-    
+
     //APPLY THE RULE
     var rigidCommitted=false;
     for (var cellRowIndex=0;cellRowIndex<rule[1].length;cellRowIndex++) {
         var preRow = rule[1][cellRowIndex];
         var postRow = rule[2][cellRowIndex];
-        
+
         var currentIndex = rule[5][cellRowIndex] ? tuple[cellRowIndex][0] : tuple[cellRowIndex];
         for (var cellIndex=0;cellIndex<preRow.length;cellIndex+=7) {
             var preCell_Movement = preRow[cellIndex+0];
@@ -1500,7 +1527,7 @@ function applyRuleAt(rule,delta,tuple,check) {
             var preCell_MoveNonExistence = preRow[cellIndex+3];
             var preCell_StationaryMask = preRow[cellIndex+4];
 
-            
+
             var postCell_Movements = postRow[cellIndex+0];
 			var postCell_Objects = postRow[cellIndex+1];
             var postCell_NonExistence = postRow[cellIndex+2];
@@ -1517,8 +1544,8 @@ function applyRuleAt(rule,delta,tuple,check) {
             			choices.push(i);
             		}
             	}
-              var idx = (randomEntIdxAvailable() ? 
-                popRandomEntIdx() : 
+              var idx = (randomEntIdxAvailable() ?
+                popRandomEntIdx() :
                 Math.floor(Math.random() * choices.length));
             	var rand = choices[idx];
               pushInput("randomEntIdx:"+idx);
@@ -1540,7 +1567,7 @@ function applyRuleAt(rule,delta,tuple,check) {
             		}
             	}
             }
-            
+
             var curCellMask = level.dat[currentIndex];
             var curMovementMask = level.movementMask[currentIndex];
 
@@ -1551,7 +1578,7 @@ function applyRuleAt(rule,delta,tuple,check) {
             curCellMask = curCellMask&(~preCell_Objects);
             curMovementMask = curMovementMask&(~preCell_Movement);
             curMovementMask = curMovementMask&(~postCell_movementsToRemove);
-            
+
             //2 make way for new
             curCellMask = curCellMask&(~postCell_NonExistence);
             curMovementMask = curMovementMask&(~preCell_MoveNonExistence);
@@ -1572,9 +1599,9 @@ function applyRuleAt(rule,delta,tuple,check) {
 			if (rule[7]) {
         		rigidCommitted=true;
         		var groupNumber = rule[6];
-        		var rigidGroupIndex = state.groupNumber_to_RigidGroupIndex[groupNumber];  
-        		rigidGroupIndex++;//don't forget to -- it when decoding :O              	
-        		var rigidMask = 
+				var rigidGroupIndex = state.groupNumber_to_RigidGroupIndex[groupNumber];
+				rigidGroupIndex++;//don't forget to -- it when decoding :O
+				var rigidMask =
         					(rigidGroupIndex) +
         					((rigidGroupIndex<< ( 1 * 5 ))) +
         					((rigidGroupIndex<< ( 2 * 5 ))) +
@@ -1599,7 +1626,7 @@ function applyRuleAt(rule,delta,tuple,check) {
         	}
 
             //check if it's changed
-            if (oldCellMask!==curCellMask || oldMovementMask!=curMovementMask || rigidchange) { 
+            if (oldCellMask!==curCellMask || oldMovementMask!=curMovementMask || rigidchange) {
                 result=true;
                 if (rigidchange) {
         			level.rigidGroupIndexMask[currentIndex] = curRigidGroupIndexMask;
@@ -1612,6 +1639,7 @@ function applyRuleAt(rule,delta,tuple,check) {
         		sfxDestroyMask = sfxDestroyMask | thingsDestroyed;
 
                 level.dat[currentIndex]=curCellMask;
+                dirty[currentIndex] = true;
                 level.movementMask[currentIndex]=curMovementMask;
 
                 var colIndex=(currentIndex/level.height)|0;
@@ -1646,7 +1674,7 @@ function tryApplyRule(rule,ruleGroupIndex,ruleIndex){
     	return false;
     }
 
-    var result=false;	
+    var result=false;
 	if (rule[9]===false) {//if the rule has a rhs
 	    var tuples  = generateTuples(matches);
 	    for (var tupleIndex=0;tupleIndex<tuples.length;tupleIndex++) {
@@ -1680,9 +1708,9 @@ function queueCommands(rule) {
 			consolePrint(logString);
 		}
 
-		if (command[0]==='message') {			
+		if (command[0]==='message') {
 			messagetext=command[1];
-		}		
+		}
 	}
 }
 
@@ -1710,16 +1738,16 @@ function applyRandomRuleGroup(ruleGroup) {
 	    		var tuple=tuples[j];
 				matches.push([ruleIndex,tuple]);
 	    	}
-		}		
+		}
 	}
 
 	if (matches.length==0)
 	{
 		return false;
-	} 
+	}
 
-  var idx = randomRuleIdxAvailable() ? 
-    popRandomRuleIdx() : 
+  var idx = randomRuleIdxAvailable() ?
+    popRandomRuleIdx() :
     Math.floor(Math.random()*matches.length);
 	var match = matches[idx];
   pushInput("randomRuleIdx:"+idx);
@@ -1747,14 +1775,14 @@ function applyRuleGroup(ruleGroup) {
     var loopcount=0;
     while(propagated) {
     	loopcount++;
-    	if (loopcount>200) 
+		if (loopcount>200)
     	{
     		logError("Got caught looping lots in a rule group :O",ruleGroup[0][3],true);
     		break;
     	}
         propagated=false
         for (var ruleIndex=0;ruleIndex<ruleGroup.length;ruleIndex++) {
-            var rule = ruleGroup[ruleIndex];            
+            var rule = ruleGroup[ruleIndex];
             propagated = tryApplyRule(rule) || propagated;
         }
         if (propagated) {
@@ -1777,11 +1805,11 @@ function propagateMovements(startRuleGroupindex){
     		//do nothing
     	} else {
     		var ruleGroup=state.rules[ruleGroupIndex];
-			loopPropagated = applyRuleGroup(ruleGroup) || loopPropagated;	        	        
+			loopPropagated = applyRuleGroup(ruleGroup) || loopPropagated;
 	    }
         if (loopPropagated && state.loopPoint[ruleGroupIndex]!==undefined) {
-        	ruleGroupIndex = state.loopPoint[ruleGroupIndex];
-        	loopPropagated=false;
+            ruleGroupIndex = state.loopPoint[ruleGroupIndex];
+            loopPropagated=false;
         	loopCount++;
 			if (loopCount > 200) {
     			var ruleGroup=state.rules[ruleGroupIndex];
@@ -1792,19 +1820,19 @@ function propagateMovements(startRuleGroupindex){
         	ruleGroupIndex++;
         	if (ruleGroupIndex===state.rules.length) {
         		if (loopPropagated && state.loopPoint[ruleGroupIndex]!==undefined) {
-		        	ruleGroupIndex = state.loopPoint[ruleGroupIndex];
-		        	loopPropagated=false;		        
-		        	loopCount++;
+					ruleGroupIndex = state.loopPoint[ruleGroupIndex];
+					loopPropagated=false;
+					loopCount++;
 					if (loopCount > 200) {
-		    			var ruleGroup=state.rules[ruleGroupIndex];
-					   	logError("got caught in an endless startloop...endloop vortex, escaping!", ruleGroup[0][3],true);
-					   	break;
+						var ruleGroup=state.rules[ruleGroupIndex];
+						logError("got caught in an endless startloop...endloop vortex, escaping!", ruleGroup[0][3],true);
+						break;
 					}
-		        } 
-        	}
+				}
+			}
         }
     }
-}   
+}
 
 
 function propagateLateMovements(){
@@ -1817,7 +1845,7 @@ function propagateLateMovements(){
     		var ruleGroup=state.lateRules[ruleGroupIndex];
     		var modified = applyRuleGroup(ruleGroup);
 
-			loopPropagated = modified || loopPropagated;	        	        
+			loopPropagated = modified || loopPropagated;
 	    }
         if (loopPropagated && state.lateLoopPoint[ruleGroupIndex]!==undefined) {
         	ruleGroupIndex = state.lateLoopPoint[ruleGroupIndex];
@@ -1840,7 +1868,7 @@ function propagateLateMovements(){
 					   	logError("got caught in an endless startloop...endloop vortex, escaping!", ruleGroup[0][3],true);
 					   	break;
 					}
-		        } 
+		        }
         	}
         }
     }
@@ -1867,7 +1895,7 @@ function resolveMovements(dir){
     	var movementMask = level.movementMask[i];
     	if (movementMask!==0) {
     		var rigidMovementAppliedMask = level.rigidMovementAppliedMask[i];
-    		var movementMask_restricted = rigidMovementAppliedMask&movementMask;    			
+			var movementMask_restricted = rigidMovementAppliedMask&movementMask;
     		if (movementMask_restricted!==0) {
     			//find what layer was restricted
     			for (var j=0;j<6;j++) {
@@ -1938,7 +1966,7 @@ function calculateRowColMasks() {
 
 function processInput(dir,dontCheckWin,dontModify) {
 
-	if (verbose_logging) { 
+	if (verbose_logging) {
 		cache_log_messages=true;
 	 	if (dir===-1) {
 	 		consolePrint('Turn starts with no input.')
@@ -2006,10 +2034,10 @@ function processInput(dir,dontCheckWin,dontModify) {
         	first=false;
         	rigidloop=false;
         	i++;
-        	
+
         	if (verbose_logging){consolePrint('applying rules');}
 
-        	propagateMovements(startRuleGroupIndex);	
+			propagateMovements(startRuleGroupIndex);
         	var shouldUndo = resolveMovements();
 
         	if (shouldUndo) {
@@ -2056,35 +2084,39 @@ function processInput(dir,dontCheckWin,dontModify) {
         	//play player cantmove sounds here
         }
 
-	    if (level.commandQueue.indexOf('cancel')>=0) {	
-	    	if (verbose_logging) { 
+	    if (level.commandQueue.indexOf('cancel')>=0) {
+			if (verbose_logging) {
 	    		consolePrint('CANCEL command executed, cancelling turn.');
 			}
     		backups.push(bak);
     		DoUndo(true);
     		seedsToPlay_CanMove=[];
     		seedsToPlay_CantMove=[];
-    		redraw();
-        		if (verbose_logging) {
-        			consoleCacheDump();
-        		}
+			if(!unitTesting) {
+				redraw();
+			}
+			if (verbose_logging) {
+				consoleCacheDump();
+			}
     		return;
-	    } 
+	    }
 
 	    if (level.commandQueue.indexOf('restart')>=0) {
-	    	if (verbose_logging) { 
-	    		consolePrint('RESTART command executed, reverting to restart state.');
+			if (verbose_logging) {
+				consolePrint('RESTART command executed, reverting to restart state.');
 			}
     		backups.push(bak);
-	    	DoRestart(true);	
+			DoRestart(true);
     		seedsToPlay_CanMove=[];
     		seedsToPlay_CantMove=[];
-    		redraw();  
+			if(!unitTesting) {
+				redraw();
+			}
     		if (verbose_logging) {
     			consoleCacheDump();
-    		} 
-    		return true; 	
-	    } 
+			}
+			return true;
+	    }
 
         for (var i=0;i<seedsToPlay_CanMove.length;i++) {
 	        	playSeed(seedsToPlay_CanMove[i]);
@@ -2131,9 +2163,9 @@ function processInput(dir,dontCheckWin,dontModify) {
 	    		break;
 	    	}
 	    }
-	
 
-		if (dontModify) {		
+
+		if (dontModify) {
     		if (verbose_logging) {
     			consoleCacheDump();
     		}
@@ -2144,7 +2176,7 @@ function processInput(dir,dontCheckWin,dontModify) {
 	 		var command = level.commandQueue[i];
 	 		if (command.charAt(1)==='f')  {//identifies sfxN
 	 			tryPlaySimpleSound(command);
-	 		}  	
+			}
 			if (unitTesting===false) {
 				if (command==='message') {
 					showTempMessage();
@@ -2158,7 +2190,7 @@ function processInput(dir,dontCheckWin,dontModify) {
 	    	//verbose_logging=false;
 	    	//first have to verify that something's changed
 	    	if (processInput(-1,true,true)) {
-		    	if (verbose_logging) { 
+				if (verbose_logging) {
 		    		consolePrint('AGAIN command executed, with changes detected: will execute another turn.');
 				}
 
@@ -2168,15 +2200,15 @@ function processInput(dir,dontCheckWin,dontModify) {
 		    verbose_logging=old_verbose_logging;
 	    }
 		if (level.commandQueue.indexOf('checkpoint')>=0) {
-	    	if (verbose_logging) { 
+			if (verbose_logging) {
 	    		consolePrint('CHECKPOINT command executed, saving current state to the restart state.');
 			}
             pushInput("checkpoint");
 			restartTarget=backupLevel();
-		}	    
-	    
+		}
+
 	    if (textMode===false && (dontCheckWin===undefined ||dontCheckWin===false)) {
-	    	if (verbose_logging) { 
+			if (verbose_logging) {
 	    		consolePrint('Checking win condition.');
 			}
 	    	checkWin();
@@ -2186,8 +2218,9 @@ function processInput(dir,dontCheckWin,dontModify) {
 
     }
 
-    redraw();
-
+	if(!unitTesting) {
+		redraw();
+	}
 	if (verbose_logging) {
 		consoleCacheDump();
 	}
@@ -2274,7 +2307,7 @@ function DoWin() {
     dumpTrace();
 	againing=false;
 	tryPlayEndLevelSound();
-	if (unitTesting) {
+	if (unitTesting && testsAutoAdvanceLevel) {
 		nextLevel();
 		return;
 	}
@@ -2291,7 +2324,7 @@ function DoQuit() {
     dumpTrace();
 }
 
-function anyMovements() {	
+function anyMovements() {
     for (var i=0;i<level.movementMask.length;i++) {
         if (level.movementMask[i]!=0) {
         	return true;
@@ -2309,11 +2342,11 @@ function nextLevel() {
 		if (titleSelection==0) {
 			//new game
 			curlevel=0;
-		} 			
+		}
 		loadLevelFromState(state,curlevel);
 	} else {
 		if (curlevel<(state.levels.length-1))
-		{			
+		{
 			curlevel++;
 			textMode=false;
 			titleScreen=false;
@@ -2324,7 +2357,7 @@ function nextLevel() {
 			curlevel=0;
 			goToTitleScreen();
 			tryPlayEndGameSound();
-		}		
+		}
 		//continue existing game
 	}
 	try {
@@ -2335,7 +2368,7 @@ function nextLevel() {
 
 	}
 
-	canvasResize();	
+	canvasResize();
 	clearInputs();
 }
 

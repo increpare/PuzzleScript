@@ -2,13 +2,36 @@ var edn = window.jsedn;
 
 addDumpTraceHook(function(title, curlevel, inputHistory) {
     consolePrint("Complete:");
-    consolePrint(edn.encode(ednize_sequence(inputHistory)));
+    var plainSequence = edn.encode(new edn.Vector([ednize_sequence(inputHistory)]));
+    consolePrint(plainSequence);
     consolePrint("Sliced:");
-    consolePrint(edn.encode(ednize_sequences(slice_inputs(inputHistory))));
+    var sequenceTrees = edn.encode(ednize_sequences(slice_inputs(inputHistory)));
+    consolePrint(sequenceTrees);
+    postTraces(plainSequence, "http://localhost:3000/"+title+"/"+curlevel+"/complete");
+    postTraces(sequenceTrees, "http://localhost:3000/"+title+"/"+curlevel+"/split");
     // post to localhost:8000/title/curlevel/{complete,sliced}
     //     with data { inputs=EDN-INPUT-SEQ }
     //     and headers including Content-Type: application/edn
 });
+
+function postTraces(traces, url) {
+	var HTTPClient = new XMLHttpRequest();
+	HTTPClient.open('POST', url);
+	HTTPClient.onreadystatechange = function() {
+		if(HTTPClient.readyState!=4) {
+			return;
+		}
+		if (HTTPClient.status===403) {
+			consoleError(HTTPClient.responseText);
+		} else if (HTTPClient.status!==200&&HTTPClient.status!==201) {
+			consoleError("HTTP Error "+ HTTPClient.status + ' - ' + HTTPClient.statusText);
+		} else {
+			consolePrint("Submitted traces to "+url);
+		}
+	};
+	HTTPClient.setRequestHeader("Content-type","application/edn");
+	HTTPClient.send(traces);
+}
 
 //SLICING:
 

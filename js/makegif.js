@@ -57,4 +57,5 @@ function makeGIF() {
   	encoder.finish();
   	var dat = 'data:image/gif;base64,'+encode64(encoder.stream().getData());
   	window.open(dat);
+		unitTesting = false;
 }

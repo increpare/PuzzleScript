@@ -2332,7 +2332,7 @@ function compile(command,text) {
 	if (command===undefined) {
 		command = ["restart"];
 	}
-	lastDownTarget=canvas;	
+	lastDownTarget=canvas;
 
 	if (text===undefined){
 		var code = window.form1.code;
@@ -2386,7 +2386,8 @@ function compile(command,text) {
 	}
 	setGameState(state,command);
 
-  clearInputs();
+    clearInputs();
+    return state;
 }
 
 
