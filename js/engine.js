@@ -183,7 +183,7 @@ function generateTitleScreen()
 
 	var title = "PuzzleScript Game";
 	if (state.metadata.title!==undefined) {
-		title=state.metadata.title.toUpperCase();
+		title=state.metadata.title;
 	}
 
 	if (titleMode==0) {

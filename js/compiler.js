@@ -481,7 +481,7 @@ function directionalRule(rule) {
 	return false;
 }
 
-function processRuleString(line, state, lineNumber,curRules) 
+function processRuleString(rule, state, curRules) 
 {
 /*
 
@@ -496,6 +496,9 @@ function processRuleString(line, state, lineNumber,curRules)
 		pre : CellMask[]
 		post : CellMask[]
 */
+	var line = rule[0];
+	var lineNumber = rule[1];
+	var origLine = rule[2];
 
 // STEP ONE, TOKENIZE
 	line = line.replace(/\[/g, ' [ ').replace(/\]/g, ' ] ').replace(/\|/g, ' | ').replace(/\-\>/g, ' -> ');
@@ -649,10 +652,13 @@ function processRuleString(line, state, lineNumber,curRules)
 						logError("Commands cannot appear on the left-hand side of the arrow.",lineNumber);
 					}
 					if (token==='message') {
-						var messagetokens = tokens.slice(i+1);
-						var messagestring = messagetokens.join(' ');
-						commands.push([token,messagestring]);
-						i=tokens.length;
+						var message_match = origLine.match(/message (.*)/i);
+						if (message_match === null) {
+							logError("invalid message string", lineNumber);
+						} else {
+							commands.push([token, message_match[1].trim()]);
+							i=tokens.length;
+						}
 					} else {
 						commands.push([token]);
 					}
@@ -749,7 +755,7 @@ function rulesToArray(state) {
 	var loops=[];
 	for (var i = 0; i < oldrules.length; i++) {
 		var lineNumber = oldrules[i][1];
-		var newrule = processRuleString(oldrules[i][0], state, lineNumber,rules);
+		var newrule = processRuleString(oldrules[i], state, rules);
 		if (newrule.bracket!==undefined) {
 			loops.push([lineNumber,newrule.bracket]);
 			continue;
