@@ -116,16 +116,6 @@ var codeMirrorFn = function() {
     var reg_keywords = /(objects|collisionlayers|legend|sounds|rules|winconditions|\.\.\.|levels|up|down|left|right|^|v|\>|\<|no|horizontal|orthogonal|vertical|any|all|no|some|moving|stationary|parallel|perpendicular|action)/;
     var keyword_array = ['objects', 'collisionlayers', 'legend', 'sounds', 'rules', '...','winconditions', 'levels', 'up', 'down', 'left', 'right', 'late','rigid', '^','v','\>','\<','no','randomdir','random', 'horizontal', 'vertical','any', 'all', 'no', 'some', 'moving','stationary','parallel','perpendicular','action'];
 
-    //  var keywordRegex = new RegExp("\\b(("+cons.join(")|(")+"))$", 'i');
-
-    var fullSpriteMatrix = [
-        '00000',
-        '00000',
-        '00000',
-        '00000',
-        '00000'
-    ];
-
     return {
         blankLine: function(state) {
             if (state.section === 'levels') {
@@ -397,6 +387,77 @@ var codeMirrorFn = function() {
                             }
                         case 1:
                             {
+                                //check for duplication directive
+                                var match_manip = stream.match(/(copy|rotate|flip) (\w+)(?: (\w+))?/, true);
+                                if (match_manip !== null) {
+                                    state.objects_section = 0;
+
+                                    var source_name = match_manip[2];
+
+
+                                    if (state.objects[source_name] === undefined) {
+                                        logError('Cannot reference "' + source_name.toUpperCase() + '" in the OBJECTS section; it has not been defined yet.', state.lineNumber);
+                                        stream.match(reg_notcommentstart, true);
+                                        return null;
+                                    }
+
+
+                                    var pos_mapping = null;
+                                    var modifier = match_manip[3];
+
+                                    switch (match_manip[1]) {
+                                        case 'copy':
+                                            if (modifier !== undefined) {
+                                                logError('Unknown modifier to copy directive: ' + modifier, state.lineNumber);
+                                                stream.match(reg_notcommentstart, true);
+                                                return null;
+                                            }
+
+                                            pos_mapping = function(x, y) { return [x, y]; }
+
+                                            break;
+                                        case 'rotate':
+                                            if (modifier === 'left')
+                                                pos_mapping = function (x, y) { return [4 - y, x]; };
+                                            else if (modifier === 'right')
+                                                pos_mapping = function (x, y) { return [y, 4 - x]; };
+                                            else if (modifier == 'half')
+                                                pos_mapping = function(x, y) { return [4 - x, 4 - y]; };
+                                            else {
+                                                logError('Invalid direction for rotate directive. Choose left, right, or half.', state.lineNumber);
+                                                stream.match(reg_notcommentstart, true);
+                                                return null;
+                                            }
+                                            break;
+                                        case 'flip':
+                                            if (modifier === 'vertical')
+                                                pos_mapping = function (x, y) { return [x, 4 - y]; };
+                                            else if (modifier === 'horizontal')
+                                                pos_mapping = function (x, y) { return [4 - x, y]; };
+                                            else {
+                                                logError('Invalid axis for flip directive. Choose horizontal or vertical.', state.lineNumber);
+                                                stream.match(reg_notcommentstart, true);
+                                                return null;
+                                            }
+                                            break;
+                                    }
+
+                                    var spritematrix = new Array(5);
+
+                                    for (var y = 0; y < 5; y++) {
+                                        spritematrix[y] = '';
+                                        for (var x = 0; x < 5; x++) {
+                                            var off = pos_mapping(x, y);
+                                            spritematrix[y] += state.objects[source_name].spritematrix[off[1]][off[0]];
+                                        }
+                                    }
+
+                                    state.objects[state.objects_candname].colors = state.objects[source_name].colors;
+                                    state.objects[state.objects_candname].spritematrix = spritematrix;
+
+                                    return 'DUPLICATE';
+                                }
+
                                 //LOOK FOR COLOR
                                 state.tokenIndex = 0;
                                 var match_color = stream.match(reg_color, true);
