@@ -2256,6 +2256,8 @@ function formatHomePage(state){
 	}
 }
 
+var state =  new codeMirrorFn().startState();
+
 var MAX_ERRORS=5;
 function loadFile(str) {
 	window.console.log('loadFile');

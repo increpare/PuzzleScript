@@ -1052,6 +1052,10 @@ var codeMirrorFn = function() {
 
                 subsection: ''
             };
+        },
+        
+        copyState: function(state) {
+            return JSON.parse(JSON.stringify(state));
         }
     };
 };
