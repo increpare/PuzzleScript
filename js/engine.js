@@ -2018,10 +2018,6 @@ function processInput(dir,dontCheckWin,dontModify) {
         	window.console.log("looped through 50 times, gave up.  too many loops!");
         }
 
-        for (var i=0;i<seedsToPlay_CantMove.length;i++) {
-	        	playSeed(seedsToPlay_CantMove[i]);
-        }
-
 
         if (playerPositions.length>0 && state.metadata.require_player_movement!==undefined) {
         	var somemoved=false;
@@ -2037,8 +2033,6 @@ function processInput(dir,dontCheckWin,dontModify) {
 	    		consolePrint('require_player_movement set, but no player movement detected, so cancelling turn.');
         		backups.push(bak);
         		DoUndo(true);
-        		seedsToPlay_CanMove=[];
-        		seedsToPlay_CantMove=[];
         		if (verbose_logging) {
         			consoleCacheDump();
         		}
@@ -2053,8 +2047,6 @@ function processInput(dir,dontCheckWin,dontModify) {
 			}
     		backups.push(bak);
     		DoUndo(true);
-    		seedsToPlay_CanMove=[];
-    		seedsToPlay_CantMove=[];
     		redraw();
         		if (verbose_logging) {
         			consoleCacheDump();
@@ -2068,14 +2060,45 @@ function processInput(dir,dontCheckWin,dontModify) {
 			}
     		backups.push(bak);
 	    	DoRestart(true);	
-    		seedsToPlay_CanMove=[];
-    		seedsToPlay_CantMove=[];
     		redraw();  
     		if (verbose_logging) {
     			consoleCacheDump();
     		} 
     		return true; 	
 	    } 
+
+        var modified=false;
+	    for (var i=0;i<level.dat.length;i++) {
+	    	if (level.dat[i]!==bak[i]) {
+
+				if (dontModify) {
+	        		backups.push(bak);
+	        		DoUndo(true);
+
+	        		if (verbose_logging) {
+	        			consoleCacheDump();
+	        		}
+					return true;
+				} else {
+					if (dir!==-1) {
+	    				backups.push(bak);
+	    			}
+	    			modified=true;
+	    		}
+	    		break;
+	    	}
+	    }
+
+		if (dontModify) {		
+    		if (verbose_logging) {
+    			consoleCacheDump();
+    		}
+			return false;
+		}
+
+        for (var i=0;i<seedsToPlay_CantMove.length;i++) {
+	        	playSeed(seedsToPlay_CantMove[i]);
+        }
 
         for (var i=0;i<seedsToPlay_CanMove.length;i++) {
 	        	playSeed(seedsToPlay_CanMove[i]);
@@ -2101,36 +2124,6 @@ function processInput(dir,dontCheckWin,dontModify) {
         	level.rigidMovementAppliedMask[i]=0;
         }
 
-        var modified=false;
-	    for (var i=0;i<level.dat.length;i++) {
-	    	if (level.dat[i]!==bak[i]) {
-
-				if (dontModify) {
-	        		backups.push(bak);
-	        		DoUndo(true);
-
-	        		if (verbose_logging) {
-	        			consoleCacheDump();
-	        		}
-					return true;
-				} else {
-					if (dir!==-1) {
-	    				backups.push(bak);
-	    			}
-	    			modified=true;
-	    		}
-	    		break;
-	    	}
-	    }
-	
-
-		if (dontModify) {		
-    		if (verbose_logging) {
-    			consoleCacheDump();
-    		}
-			return false;
-		}
-
 	    for (var i=0;i<level.commandQueue.length;i++) {
 	 		var command = level.commandQueue[i];
 	 		if (command.charAt(1)==='f')  {//identifies sfxN
@@ -2144,7 +2137,6 @@ function processInput(dir,dontCheckWin,dontModify) {
 	    }
 
 	    if (level.commandQueue.indexOf('again')>=0 && modified) {
-
 	    	var old_verbose_logging=verbose_logging;
 	    	//verbose_logging=false;
 	    	//first have to verify that something's changed
