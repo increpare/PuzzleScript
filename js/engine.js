@@ -432,10 +432,6 @@ function loadLevelFromState(state,levelindex) {
 
 }
 
-function autoTickGame() {
-	processInput(-1);
-}
-
 var sprites = [
 {
     color: '#423563',
@@ -462,15 +458,6 @@ var sprites = [
 
 generateTitleScreen();
 canvasResize();
-
-//setInterval(tick, 100);
-
-//setTimeout(redraw,100);
-
-function tick() {
-redraw();
-}
-
 
 function tryPlaySimpleSound(soundname) {
 	if (state.sfx_Events[soundname]!==undefined) {
@@ -1927,7 +1914,9 @@ function calculateRowColMasks() {
 	}
 }
 
+/* returns a bool indicating if anything changed */
 function processInput(dir,dontCheckWin,dontModify) {
+	againing = false;
 
 	if (verbose_logging) { 
 		cache_log_messages=true;
@@ -2036,7 +2025,7 @@ function processInput(dir,dontCheckWin,dontModify) {
         		if (verbose_logging) {
         			consoleCacheDump();
         		}
-        		return;
+        		return false;
         	}
         	//play player cantmove sounds here
         }
@@ -2051,7 +2040,7 @@ function processInput(dir,dontCheckWin,dontModify) {
         		if (verbose_logging) {
         			consoleCacheDump();
         		}
-    		return;
+    		return false;
 	    } 
 
 	    if (level.commandQueue.indexOf('restart')>=0) {
@@ -2060,11 +2049,10 @@ function processInput(dir,dontCheckWin,dontModify) {
 			}
     		backups.push(bak);
 	    	DoRestart(true);	
-    		redraw();  
     		if (verbose_logging) {
     			consoleCacheDump();
-    		} 
-    		return true; 	
+    		}
+    		return true;
 	    } 
 
         var modified=false;
@@ -2169,11 +2157,11 @@ function processInput(dir,dontCheckWin,dontModify) {
 
     }
 
-    redraw();
-
 	if (verbose_logging) {
 		consoleCacheDump();
 	}
+
+	return modified;
 }
 
 function checkWin() {

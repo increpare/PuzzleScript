@@ -506,6 +506,7 @@ function checkKey(e,justPressed) {
                     inputHistory.push("undo");
                 }
             	DoUndo();
+                redraw();
             	return prevent(e);
             }
             break;
@@ -518,7 +519,7 @@ function checkKey(e,justPressed) {
                     inputHistory.push("restart");
                 }
         		DoRestart();
-            	//restart
+                redraw();
             	return prevent(e);
             }
             break;
@@ -628,7 +629,9 @@ function checkKey(e,justPressed) {
             if (inputdir===4 && ('noaction' in state.metadata)) {
 
             } else {
-	        	processInput(inputdir);
+                if (processInput(inputdir)) {
+                    redraw();
+                }
 	        }
 	       	return prevent(e);
     	}
@@ -644,10 +647,11 @@ function update() {
         }
     }
     if (againing) {
-    	if (timer>againinterval) {
-    		againing=false;
-    		processInput(-1);
-    	}
+        if (timer>againinterval) {
+            if (processInput(-1)) {
+                redraw();
+            }
+        }
     }
     if (quittingMessageScreen) {
         if (timer/1000>0.15) {
@@ -686,7 +690,9 @@ function update() {
         autotick+=deltatime;
         if (autotick>autotickinterval) {
             autotick=0;
-            autoTickGame();
+            if (processInput(-1)) {
+                redraw();
+            }
         }
     }
 }
