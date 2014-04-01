@@ -40,18 +40,17 @@ function makeGIF() {
 		} else {
 			processInput(val);
 		}
+		redraw();
+		gifctx.drawImage(canvas,-xoffset,-yoffset);
+		encoder.addFrame(gifctx);
+		encoder.setDelay(repeatinterval);
 		while (againing) {
-			againing=false;
 			processInput(-1);		
 			redraw();
 			encoder.setDelay(againinterval);
 			gifctx.drawImage(canvas,-xoffset,-yoffset);
 	  		encoder.addFrame(gifctx);	
 		}
-		redraw();
-		gifctx.drawImage(canvas,-xoffset,-yoffset);
-  		encoder.addFrame(gifctx);
-		encoder.setDelay(repeatinterval);
 	}
 
   	encoder.finish();
