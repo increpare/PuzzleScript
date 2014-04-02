@@ -706,7 +706,6 @@ function restoreLevel(lev) {
     againing=false;
     messagetext="";
     level.commandQueue=[];
-	redraw();
 }
 
 var zoomscreen=false;
@@ -2036,7 +2035,6 @@ function processInput(dir,dontCheckWin,dontModify) {
 			}
     		backups.push(bak);
     		DoUndo(true);
-    		redraw();
         		if (verbose_logging) {
         			consoleCacheDump();
         		}
