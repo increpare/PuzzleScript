@@ -373,7 +373,7 @@ function loadLevelFromState(state,levelindex) {
 	curlevel=levelindex;
     againing=false;
     var leveldat = state.levels[levelindex];
-    if (leveldat===null) {
+    if (leveldat===undefined) {
     	consolePrint("Trying to access a level that doesn't exist.");
     	return;
     }
