@@ -170,6 +170,10 @@ var testdata = [
 	[
 		"movement matching - correctly matching different objects same cell moving in different directions",
 		["verbose_logging\ndebug\n\n========\nOBJECTS\n========\n\nBackground\ndarkgreen\n\nPlayer\ngreen\n\nRed\nred\n\nBrown\nbrown\n\nBlue\nblue\n\nA\nwhite\n\nB\nyellow\n\n=======\nLEGEND\n=======\n\nr = Red\no = Brown\n. = Background\n\n=======\nSOUNDS\n=======\n\n================\nCOLLISIONLAYERS\n================\n\nBackground\nPlayer\nA\nB\nRed, Brown\nBlue\n\n======\nRULES\n======\n\n[ Red ] -> [ down A down B ]\n[ Brown ] -> [ down A up B ]\n[ down A up B ] -> [ ]\n\n==============\nWINCONDITIONS\n==============\n\n=======\nLEVELS\n=======\n\nro\n\n\n",[3],"{\"width\":2,\"height\":1,\"layerCount\":6,\"dat\":[13,1],\"movementMask\":[0,0],\"rigidMovementAppliedMask\":[0,0],\"rigidGroupIndexMask\":[0,0],\"rowCellContents\":[61,null,0],\"colCellContents\":[29,45],\"mapCellContents\":61,\"bannedGroup\":[],\"commandQueue\":[]}",0]
+	],
+	[
+		"movement matching - ellipsis bug - forgot to include one case in above",
+		["verbose_logging\ndebug\n\n========\nOBJECTS\n========\n\nBackground\ndarkgreen\n\nPlayer\ngreen\n\nRed\nred\n\nBrown\nbrown\n\nBlue\nblue\n\nA\nwhite\n\nB\nyellow\n\n=======\nLEGEND\n=======\n\nr = Red\no = Brown\n. = Background\n\n=======\nSOUNDS\n=======\n\n================\nCOLLISIONLAYERS\n================\n\nBackground\nPlayer\nA\nB\nRed, Brown\nBlue\n\n======\nRULES\n======\n\n[ Red | ... | Brown ] -> [ down A down B | ... | down a up B]\n[ down A up B | ... | down A up b ] -> [ | ... | ]\n\n==============\nWINCONDITIONS\n==============\n\n=======\nLEVELS\n=======\n\nro\n\n",[2],"{\"width\":2,\"height\":1,\"layerCount\":6,\"dat\":[13,13],\"movementMask\":[0,0],\"rigidMovementAppliedMask\":[0,0],\"rigidGroupIndexMask\":[0,0],\"rowCellContents\":[61,null,0],\"colCellContents\":[29,45],\"mapCellContents\":61,\"bannedGroup\":[],\"commandQueue\":[]}",0]
 	]
 ];
 

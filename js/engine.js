@@ -1066,7 +1066,7 @@ function cellRowMatchesWildCard(direction,cellRow,i,maxk) {
 
 								((ruleCellMask&cellMask) == ruleCellMask) &&
 								((ruleNonExistenceMask&cellMask)===0)&&
-								((ruleMovementMask===0?true:((ruleMovementMask&movementMask)!==0))) &&
+								((ruleMovementMask===0?true:((ruleMovementMask&movementMask)===ruleMovementMask))) &&
 								((ruleStationaryMask&movementMask)===0)
 						    	//checkThing(ruleCellMask,ruleMovementMask,ruleNonExistenceMask,ruleStationaryMask,movementMask,cellMask)
 
