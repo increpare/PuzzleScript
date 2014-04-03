@@ -1523,56 +1523,57 @@ function cellRowMasks(rule) {
 	return ruleMasks;
 }
 
-function collapseRules(state) {
-	for (var i = 0; i < state.rules.length; i++)
-	{
-		var oldrule = state.rules[i];
-		var newrule = [0,[],[],oldrule.lineNumber,oldrule.late/*ellipses,group number,rigid,commands,commandsonly,randomrule,[cellrowmasks]*/];
-		var ellipses = [];
-		for (var j=0;j<oldrule.lhs.length;j++) {
-			ellipses.push(false);
-		}
+function collapseRules(groups) {
+	for (var gn = 0; gn < groups.length; gn++) {
+		var rules = groups[gn];
+		for (var i = 0; i < rules.length; i++) {
+			var oldrule = rules[i];
+			var newrule = [0,[],[],oldrule.lineNumber/*ellipses,group number,rigid,commands,randomrule,[cellrowmasks]*/];
+			var ellipses = [];
+			for (var j=0;j<oldrule.lhs.length;j++) {
+				ellipses.push(false);
+			}
 
-		newrule[0]=dirMasks[oldrule.direction];
-		for (var j = 0; j < oldrule.lhs.length; j++) {
-			var cellrow_l = oldrule.lhs[j];
-			var cellrow_r = oldrule.rhs[j];
-			var newcellrow_l = [];
-			var newcellrow_r = [];
-			for (var k = 0; k < cellrow_l.length; k++) {
-				var oldcellmask_l = cellrow_l[k];
-				if (oldcellmask_l[0]===ellipsisDirection) {
-					if (ellipses[j]) {
-						logError("You can't use two ellipses in a single cell match pattern.  If you really want to, please implement it yourself and send me a patch :) ", oldrule.lineNumber);
-					} 
-					ellipses[j]=true;
+			newrule[0]=dirMasks[oldrule.direction];
+			for (var j = 0; j < oldrule.lhs.length; j++) {
+				var cellrow_l = oldrule.lhs[j];
+				var cellrow_r = oldrule.rhs[j];
+				var newcellrow_l = [];
+				var newcellrow_r = [];
+				for (var k = 0; k < cellrow_l.length; k++) {
+					var oldcellmask_l = cellrow_l[k];
+					if (oldcellmask_l[0]===ellipsisDirection) {
+						if (ellipses[j]) {
+							logError("You can't use two ellipses in a single cell match pattern.  If you really want to, please implement it yourself and send me a patch :) ", oldrule.lineNumber);
+						} 
+						ellipses[j]=true;
+					}
+					oldcellmask_l[5] = 0; //stores randomdirmask_r O_O
+					oldcellmask_l[6] = 0;
+
+					newcellrow_l[k] = new CellPattern(oldcellmask_l);
+
+					if (oldrule.rhs.length>0) {
+						var oldcellmask_r = cellrow_r[k];
+
+						newcellrow_l[k].randomDirOrEntityMask = oldcellmask_r[6];
+						oldcellmask_r[6] = oldcellmask_r[7];
+						newcellrow_r[k] = new CellPattern(oldcellmask_r);
+					}
 				}
-				oldcellmask_l[5] = 0; //stores randomdirmask_r O_O
-				oldcellmask_l[6] = 0;
-
-				newcellrow_l[k] = new CellPattern(oldcellmask_l);
-
-				if (oldrule.rhs.length>0) {
-					var oldcellmask_r = cellrow_r[k];
-
-					newcellrow_l[k].randomDirOrEntityMask = oldcellmask_r[6];
-					oldcellmask_r[6] = oldcellmask_r[7];
-					newcellrow_r[k] = new CellPattern(oldcellmask_r);
+				newrule[1][j] = newcellrow_l;
+				if (newcellrow_r.length) {  // don't store empty rhs cells
+					newrule[2][j] = newcellrow_r;
 				}
 			}
-			newrule[1][j] = newcellrow_l;
-			newrule[2][j] = newcellrow_r;
+			newrule.push(ellipses);
+			newrule.push(oldrule.groupNumber);
+			newrule.push(oldrule.rigid);
+			newrule.push(oldrule.commands);
+			newrule.push(oldrule.randomRule);
+			newrule.push(cellRowMasks(newrule));
+			rules[i] = new Rule(newrule);
 		}
-		newrule.push(ellipses);
-		newrule.push(oldrule.groupNumber);
-		newrule.push(oldrule.rigid);
-		newrule.push(oldrule.commands);
-		newrule.push(oldrule.rhs.length===0);
-		newrule.push(oldrule.randomRule);
-		
-		newrule.push(cellRowMasks(newrule));
-		state.rules[i] = new Rule(newrule);
-
 	}
 }
 
@@ -1581,10 +1582,10 @@ function ruleGroupRandomnessTest(ruleGroup) {
 		return;
 	}
 
-	var randomGroup=ruleGroup[0].isRandom;
+	var randomGroup=ruleGroup[0].randomRule;
 	for (var i=0;i<randomGroup.length;i++) {
 		var rule=ruleGroup[i];
-		var ruleRandom=rule.isRandom;
+		var ruleRandom=rule.randomRule;
 		if (randomGroup!==ruleRandom) {
 			logError("Cannot mix random and non-random rules in a single rule-group", rule.lineNumber);
 		}
@@ -1597,7 +1598,7 @@ function arrangeRulesByGroupNumber(state) {
 	for (var i=0;i<state.rules.length;i++) {
 		var rule = state.rules[i];
 		var targetArray = aggregates;
-		if (rule.isLate) {
+		if (rule.late) {
 			targetArray=aggregates_late;
 		}
 
@@ -2285,8 +2286,9 @@ function loadFile(str) {
 
 
 	rulesToMask(state);
-	collapseRules(state);
 	arrangeRulesByGroupNumber(state);
+	collapseRules(state.rules);
+	collapseRules(state.lateRules);
 
 	checkNoLateRulesHaveMoves(state);
 

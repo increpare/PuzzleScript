@@ -931,15 +931,13 @@ function Rule(rule) {
 	this.lhs = rule[1];				/* CellPatterns to match before */
 	this.rhs = rule[2];				/* CellPatterns after */
 	this.lineNumber = rule[3];		/* rule source for debugging */
-	this.isLate = rule[4];			/* applied after movements */
-	this.isEllipsis = rule[5];		/* array of bools, true if cell is ellipsis */
-	this.groupNumber = rule[6];		/* execution group number of rule */
-	this.isRigid = rule[7];
-	this.commands = rule[8];		/* cancel, restart, sfx, etc */
-	this.emptyRhs = rule[9];		/* rhs is empty TODO: eliminate? */
-	this.isRandom = rule[10];
-	this.cellRowMasks = rule[11];
-	/* TODO: eliminate isLate, isRigid, groupNumber, isRandom
+	this.isEllipsis = rule[4];		/* array of bools, true if cell is ellipsis */
+	this.groupNumber = rule[5];		/* execution group number of rule */
+	this.isRigid = rule[6];
+	this.commands = rule[7];		/* cancel, restart, sfx, etc */
+	this.isRandom = rule[8];
+	this.cellRowMasks = rule[9];
+	/* TODO: eliminate isRigid, groupNumber, isRandom
 	from this class by moving them up into a RuleGroup class */
 }
 
@@ -1576,7 +1574,7 @@ function tryApplyRule(rule,ruleGroupIndex,ruleIndex){
     }
 
     var result=false;	
-	if (rule.emptyRhs===false) {//if the rule has a rhs
+	if (rule.rhs.length) {
 	    var tuples  = generateTuples(matches);
 	    for (var tupleIndex=0;tupleIndex<tuples.length;tupleIndex++) {
 	        var tuple = tuples[tupleIndex];
