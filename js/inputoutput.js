@@ -427,10 +427,10 @@ function mouseMove(event) {
     	} else if (rightdragging){
     		levelEditorRightClick(event,false);    		
     	}
+	    redraw();
     }
 
     //window.console.log("showcoord ("+ canvas.width+","+canvas.height+") ("+x+","+y+")");
-    redraw();
 }
 
 function mouseOut() {
