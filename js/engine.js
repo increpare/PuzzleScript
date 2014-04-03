@@ -941,6 +941,14 @@ function Rule(rule) {
 	from this class by moving them up into a RuleGroup class */
 }
 
+Rule.prototype.toJSON = function() {
+	/* match construction order for easy deserialization */
+	return [
+		this.direction, this.lhs, this.rhs, this.lineNumber, this.isEllipsis,
+		this.groupNumber, this.isRigid, this.commands, this.isRandom, this.cellRowMasks
+	];
+};
+
 function CellPattern(row) {
 	this.movementMask = row[0];
 	this.cellMask = row[1];
@@ -950,6 +958,14 @@ function CellPattern(row) {
 	this.randomDirOrEntityMask = row[5]; /* dir on lhs, entity rhs */
 	this.movementsToRemove = row[6]; /* only used for rhs */
 }
+
+CellPattern.prototype.toJSON = function() {
+	return [
+		this.movementMask, this.cellMask, this.nonExistenceMask,
+		this.moveNonExistenceMask, this.moveStationaryMask, this.randomDirOrEntityMask,
+		this.movementsToRemove
+	];
+};
 
 function cellRowMatchesWildCard(direction,cellRow,i,maxk,mink) {
 	if (mink === undefined) {
