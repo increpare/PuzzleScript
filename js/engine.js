@@ -1702,78 +1702,38 @@ function applyRuleGroup(ruleGroup) {
     return loopPropagated;
 }
 
-function propagateMovements(startRuleGroupindex){
-        //for each rule
-            //try to match it
+function propagateMovements(rules, loopPoint, startRuleGroupindex){
+    //for each rule
+    //try to match it
 
     //when we're going back in, let's loop, to be sure to be sure
     var loopPropagated = startRuleGroupindex>0;
     var loopCount = 0;
-    for (var ruleGroupIndex=startRuleGroupindex;ruleGroupIndex<state.rules.length;) {
+    for (var ruleGroupIndex=startRuleGroupindex;ruleGroupIndex<rules.length;) {
     	if (level.bannedGroup[ruleGroupIndex]) {
     		//do nothing
     	} else {
-    		var ruleGroup=state.rules[ruleGroupIndex];
-			loopPropagated = applyRuleGroup(ruleGroup) || loopPropagated;	        	        
+    		var ruleGroup=rules[ruleGroupIndex];
+			loopPropagated = applyRuleGroup(ruleGroup) || loopPropagated;
 	    }
-        if (loopPropagated && state.loopPoint[ruleGroupIndex]!==undefined) {
-        	ruleGroupIndex = state.loopPoint[ruleGroupIndex];
+        if (loopPropagated && loopPoint[ruleGroupIndex]!==undefined) {
+        	ruleGroupIndex = loopPoint[ruleGroupIndex];
         	loopPropagated=false;
         	loopCount++;
 			if (loopCount > 200) {
-    			var ruleGroup=state.rules[ruleGroupIndex];
+    			var ruleGroup=rules[ruleGroupIndex];
 			   	logError("got caught in an endless startloop...endloop vortex, escaping!", ruleGroup[0].lineNumber,true);
 			   	break;
 			}
         } else {
         	ruleGroupIndex++;
-        	if (ruleGroupIndex===state.rules.length) {
-        		if (loopPropagated && state.loopPoint[ruleGroupIndex]!==undefined) {
-		        	ruleGroupIndex = state.loopPoint[ruleGroupIndex];
-		        	loopPropagated=false;		        
-		        	loopCount++;
-					if (loopCount > 200) {
-		    			var ruleGroup=state.rules[ruleGroupIndex];
-					   	logError("got caught in an endless startloop...endloop vortex, escaping!", ruleGroup[0].lineNumber,true);
-					   	break;
-					}
-		        } 
-        	}
-        }
-    }
-}   
-
-
-function propagateLateMovements(){
-    var loopPropagated = true;
-    var loopCount = 0;
-    for (var ruleGroupIndex=0;ruleGroupIndex<state.lateRules.length;) {
-    	if (level.bannedGroup[ruleGroupIndex]) {
-    		//do nothing
-    	} else {
-    		var ruleGroup=state.lateRules[ruleGroupIndex];
-    		var modified = applyRuleGroup(ruleGroup);
-
-			loopPropagated = modified || loopPropagated;	        	        
-	    }
-        if (loopPropagated && state.lateLoopPoint[ruleGroupIndex]!==undefined) {
-        	ruleGroupIndex = state.lateLoopPoint[ruleGroupIndex];
-        	loopPropagated=false;
-        	loopCount++;
-			if (loopCount > 200) {
-    			var ruleGroup=state.lateRules[ruleGroupIndex];
-			   	logError("got caught in an endless startloop...endloop vortex, escaping!", ruleGroup[0].lineNumber,true);
-			   	break;
-			}
-        } else {
-        	ruleGroupIndex++;
-        	if (ruleGroupIndex===state.lateRules.length) {
-        		if (loopPropagated && state.lateLoopPoint[ruleGroupIndex]!==undefined) {
-		        	ruleGroupIndex = state.lateLoopPoint[ruleGroupIndex];
+        	if (ruleGroupIndex===rules.length) {
+        		if (loopPropagated && loopPoint[ruleGroupIndex]!==undefined) {
+		        	ruleGroupIndex = loopPoint[ruleGroupIndex];
 		        	loopPropagated=false;
 		        	loopCount++;
 					if (loopCount > 200) {
-		    			var ruleGroup=state.lateRules[ruleGroupIndex];
+		    			var ruleGroup=rules[ruleGroupIndex];
 					   	logError("got caught in an endless startloop...endloop vortex, escaping!", ruleGroup[0].lineNumber,true);
 					   	break;
 					}
@@ -1782,6 +1742,7 @@ function propagateLateMovements(){
         }
     }
 }
+
 
 //if this returns!=null, need to go back and reprocess
 function resolveMovements(dir){
@@ -1948,7 +1909,7 @@ function processInput(dir,dontCheckWin,dontModify) {
         	
         	if (verbose_logging){consolePrint('applying rules');}
 
-        	propagateMovements(startRuleGroupIndex);	
+        	propagateMovements(state.rules, state.loopPoint, startRuleGroupIndex);	
         	var shouldUndo = resolveMovements();
 
         	if (shouldUndo) {
@@ -1957,7 +1918,7 @@ function processInput(dir,dontCheckWin,dontModify) {
         		startRuleGroupIndex=0;//rigidGroupUndoDat.ruleGroupIndex+1;
         	} else {
         		if (verbose_logging){consolePrint('applying late rules');}
-        		propagateLateMovements();
+        		propagateMovements(state.lateRules, state.lateLoopPoint, 0);
         		startRuleGroupIndex=0;
         	}
         }
