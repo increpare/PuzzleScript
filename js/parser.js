@@ -16,6 +16,8 @@ http://androidarts.com/palette/16pal.htm
 
 the editor is a slight modification of codemirro (codemirror.net), which is crazy awesome.
 
+for post-launch credits, check out activty on github.com/increpare/PuzzleScript
+
 */
 
 var compiling = false;
