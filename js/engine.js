@@ -927,122 +927,46 @@ var ellipsisDirection = 1<<31;
 var randomEntityMask = parseInt('00101', 2);
 
 function Rule(rule) {
-	this.direction = rule[0];
-	this.lhs = rule[1];
-	this.rhs = rule[2];
-	this.lineNumber = rule[3];
-	this.isLate = rule[4];
-	this.isEllipsis = rule[5];
-	this.groupNumber = rule[6];
+	this.direction = rule[0]; 		/* direction rule scans in */
+	this.lhs = rule[1];				/* CellPatterns to match before */
+	this.rhs = rule[2];				/* CellPatterns after */
+	this.lineNumber = rule[3];		/* rule source for debugging */
+	this.isLate = rule[4];			/* applied after movements */
+	this.isEllipsis = rule[5];		/* array of bools, true if cell is ellipsis */
+	this.groupNumber = rule[6];		/* execution group number of rule */
 	this.isRigid = rule[7];
-	this.commands = rule[8];
-	this.emptyRhs = rule[9];
+	this.commands = rule[8];		/* cancel, restart, sfx, etc */
+	this.emptyRhs = rule[9];		/* rhs is empty TODO: eliminate? */
 	this.isRandom = rule[10];
 	this.cellRowMasks = rule[11];
+	/* TODO: eliminate isLate, isRigid, groupNumber, isRandom
+	from this class by moving them up into a RuleGroup class */
 }
 
+function CellPattern(row) {
+	this.movementMask = row[0];
+	this.cellMask = row[1];
+	this.nonExistenceMask = row[2];
+	this.moveNonExistenceMask = row[3]; /* on rhs, movementsLayerMask */
+	this.moveStationaryMask = row[4];
+	this.randomDirOrEntityMask = row[5]; /* dir on lhs, entity rhs */
+	this.movementsToRemove = row[6]; /* only used for rhs */
+}
 
-function cellRowMatchesWildCard_ParticularK(direction,cellRow,i,k) {
-    var initMovementMask= cellRow[0];
-    var initCellMask = cellRow[1];
-    var initNonExistenceMask = cellRow[2];
-    var initStationaryMask = cellRow[4];
+function cellRowMatchesWildCard(direction,cellRow,i,maxk,mink) {
+	if (mink === undefined) {
+		mink = 0;
+	}
+
+	var cellPattern = cellRow[0];
+    var initMovementMask= cellPattern.movementMask;
+    var initCellMask = cellPattern.cellMask;
+    var initNonExistenceMask = cellPattern.nonExistenceMask;
+    var initStationaryMask = cellPattern.moveStationaryMask;
     var delta = dirMasksDelta[direction];
     var movementMask = level.movementMask[i];
     var cellMask = level.dat[i];
 
-    var allowed;
-    var result=[];
-
-    if (
-
-
-
-			((initCellMask&cellMask) == initCellMask) &&
-			((initNonExistenceMask&cellMask)===0)&&
-			((initMovementMask===0?true:((initMovementMask&movementMask)===initMovementMask))) &&
-			((initStationaryMask&movementMask)===0)
-
-    	//checkThing(initCellMask,initMovementMask,initNonExistenceMask,initStationaryMask,movementMask,cellMask)
-    	) {
-            var targetIndex = i;
-            for (var j=7;j<cellRow.length;j+=7) {
-                targetIndex = (targetIndex+delta[1]+delta[0]*level.height)%level.dat.length;
-                var movementMask = level.movementMask[targetIndex];
-                var ruleMovementMask= cellRow[j+0];
-
-                var cellMask = level.dat[targetIndex];
-                var ruleCellMask = cellRow[j+1];
-                var ruleNonExistenceMask = cellRow[j+2];
-                var ruleStationaryMask = cellRow[j+4];
-                if (ruleMovementMask === ellipsisDirection) {
-                	//BAM inner loop time
-                	//for (var k=0;k<maxk;k++) 
-                	{//k defined 
-                		var targetIndex2=targetIndex;
-                		targetIndex2 = (targetIndex2+delta[1]*(k)+delta[0]*(k)*level.height+level.dat.length)%level.dat.length;
-                		for (var j2=j+7;j2<cellRow.length;j2+=7) {
-                			movementMask = level.movementMask[targetIndex2];
-			                cellMask = level.dat[targetIndex2];
-
-			                ruleMovementMask= cellRow[j2+0];
-			                ruleCellMask = cellRow[j2+1];
-			                ruleNonExistenceMask = cellRow[j2+2];
-			                ruleStationaryMask = cellRow[j2+4];
-
-						    if (
-
-								((ruleCellMask&cellMask) == ruleCellMask) &&
-								((ruleNonExistenceMask&cellMask)===0)&&
-								((ruleMovementMask===0?true:((ruleMovementMask&movementMask)===ruleMovementMask))) &&
-								((ruleStationaryMask&movementMask)===0)
-
-						    	//checkThing(ruleCellMask,ruleMovementMask,ruleNonExistenceMask,ruleStationaryMask,movementMask,cellMask)
-						    	) {
-						    	//good
-						    } else {
-						    	break;
-						    }
-                			targetIndex2 = (targetIndex2+delta[1]+delta[0]*level.height)%level.dat.length;
-                		}
-
-			            if (j2>=cellRow.length) {
-			                result.push([i,k]);
-			            }
-                	}
-                	break;
-                }
-
-
-			    if (
-
-								((ruleCellMask&cellMask) == ruleCellMask) &&
-								((ruleNonExistenceMask&cellMask)===0)&&
-								((ruleMovementMask===0?true:((ruleMovementMask&movementMask)===ruleMovementMask))) &&
-								((ruleStationaryMask&movementMask)===0)
-								//checkThing(ruleCellMask,ruleMovementMask,ruleNonExistenceMask,ruleStationaryMask,movementMask,cellMask)
-								) {
-                    //GOOD
-                } else {
-                    break;
-                }
-            }   
-            
-
-    }  
-    return result.length>0;
-}
-
-function cellRowMatchesWildCard(direction,cellRow,i,maxk) {
-    var initMovementMask= cellRow[0];
-    var initCellMask = cellRow[1];
-    var initNonExistenceMask = cellRow[2];
-    var initStationaryMask = cellRow[4];
-    var delta = dirMasksDelta[direction];
-    var movementMask = level.movementMask[i];
-    var cellMask = level.dat[i];
-
-    var allowed;
     var result=[];
 
     if (
@@ -1054,28 +978,33 @@ function cellRowMatchesWildCard(direction,cellRow,i,maxk) {
     	//checkThing(initCellMask,initMovementMask,initNonExistenceMask,initStationaryMask,movementMask,cellMask)
     	) {
             var targetIndex = i;
-            for (var j=7;j<cellRow.length;j+=7) {
+            for (var j=1;j<cellRow.length;j+=1) {
                 targetIndex = (targetIndex+delta[1]+delta[0]*level.height)%level.dat.length;
                 var movementMask = level.movementMask[targetIndex];
-                var ruleMovementMask= cellRow[j+0];
+
+                var cellPattern = cellRow[j]
+                var ruleMovementMask= cellPattern.movementMask;
 
                 var cellMask = level.dat[targetIndex];
-                var ruleCellMask = cellRow[j+1];
-                var ruleNonExistenceMask = cellRow[j+2];
-                var ruleStationaryMask = cellRow[j+4];
+                var ruleCellMask = cellPattern.cellMask;
+                var ruleNonExistenceMask = cellPattern.nonExistenceMask;
+                var ruleStationaryMask = cellPattern.moveStationaryMask;
                 if (ruleMovementMask === ellipsisDirection) {
                 	//BAM inner loop time
-                	for (var k=0;k<maxk;k++) {
+                	for (var k=mink;k<maxk;k++) {
                 		var targetIndex2=targetIndex;
                 		targetIndex2 = (targetIndex2+delta[1]*(k)+delta[0]*(k)*level.height+level.dat.length)%level.dat.length;
-                		for (var j2=j+7;j2<cellRow.length;j2+=7) {
+                		for (var j2=j+1;j2<cellRow.length;j2++) {
                 			movementMask = level.movementMask[targetIndex2];
 			                cellMask = level.dat[targetIndex2];
 
-			                ruleMovementMask= cellRow[j2+0];
-			                ruleCellMask = cellRow[j2+1];
-			                ruleNonExistenceMask = cellRow[j2+2];
-			                ruleStationaryMask = cellRow[j2+4];
+			                cellPattern = cellRow[j2];
+
+			                /* are these supposed to shadow?? */
+			                ruleMovementMask= cellPattern.movementMask;
+			                ruleCellMask = cellPattern.cellMask;
+			                ruleNonExistenceMask = cellPattern.nonExistenceMask;
+			                ruleStationaryMask = cellPattern.moveStationaryMask;
 
 						    if (
 
@@ -1127,15 +1056,14 @@ function checkThing(ruleCellMask,ruleMovementMask,ruleNonExistenceMask,ruleStati
 }
 
 function cellRowMatches(direction,cellRow,i,k) {
-    var initMovementMask= cellRow[0];
-    var initCellMask = cellRow[1];
-    var initNonExistenceMask = cellRow[2];
-    var initStationaryMask = cellRow[4];
+	var cellPattern = cellRow[0];
+    var initMovementMask= cellPattern.movementMask;
+    var initCellMask = cellPattern.cellMask;
+    var initNonExistenceMask = cellPattern.nonExistenceMask;
+    var initStationaryMask = cellPattern.moveStationaryMask;
     var delta = dirMasksDelta[direction];
     var movementMask = level.movementMask[i];
     var cellMask = level.dat[i];
-
-    var allowed;
 
     if (
 			((initCellMask&cellMask) == initCellMask) &&
@@ -1147,19 +1075,20 @@ function cellRowMatches(direction,cellRow,i,k) {
 
     	) {
             var targetIndex = i;
-            for (var j=7;j<cellRow.length;j+=7) {
+            for (var j=1;j<cellRow.length;j++) {
                 targetIndex = (targetIndex+delta[1]+delta[0]*level.height)%level.dat.length;
                 var movementMask = level.movementMask[targetIndex];
-                var ruleMovementMask= cellRow[j+0];
+                cellPattern = cellRow[j];
+                var ruleMovementMask= cellPattern.movementMask;
  				if (ruleMovementMask === ellipsisDirection) {
  					//only for once off verifications
                 	targetIndex = (targetIndex+delta[1]*k+delta[0]*k*level.height)%level.dat.length; 					
                 }
                 var cellMask = level.dat[targetIndex];
 
-                var ruleCellMask = cellRow[j+1];
-                var ruleNonExistenceMask = cellRow[j+2];
-                var ruleStationaryMask = cellRow[j+4];
+                var ruleCellMask = cellPattern.cellMask;
+                var ruleNonExistenceMask = cellPattern.nonExistenceMask;
+                var ruleStationaryMask = cellPattern.moveStationaryMask;
 			    if (
 
 			((ruleCellMask&cellMask) == ruleCellMask) &&
@@ -1194,7 +1123,7 @@ function matchCellRow(direction, cellRow, cellRowMask) {
 	var ymin=0;
 	var ymax=level.height;
 
-    var len=((cellRow.length/6)|0);
+    var len=(cellRow.length|0);
 
     switch(direction) {
     	case 1://up
@@ -1268,7 +1197,7 @@ function matchCellRowWildCard(direction, cellRow,cellRowMask) {
 	var ymin=0;
 	var ymax=level.height;
 
-	var len=((cellRow.length/6)|0)-1;//remove one to deal with wildcard
+	var len=(cellRow.length|0)-1;//remove one to deal with wildcard
     switch(direction) {
     	case 1://up
     	{
@@ -1465,7 +1394,8 @@ function applyRuleAt(rule,delta,tuple,check) {
         var ruleMatches=true;                
         for (var cellRowIndex=0;cellRowIndex<rule.lhs.length;cellRowIndex++) {
         	if (rule.isEllipsis[cellRowIndex]) {//if ellipsis
-            	if (cellRowMatchesWildCard_ParticularK(rule.direction,rule.lhs[cellRowIndex],tuple[cellRowIndex][0],tuple[cellRowIndex][1])===false) {
+            	if (cellRowMatchesWildCard(rule.direction,rule.lhs[cellRowIndex],tuple[cellRowIndex][0],
+            		tuple[cellRowIndex][1]+1, tuple[cellRowIndex][1])===false) { /* pass mink to specify */
                     ruleMatches=false;
                     break;
                 }
@@ -1489,27 +1419,31 @@ function applyRuleAt(rule,delta,tuple,check) {
         var postRow = rule.rhs[cellRowIndex];
         
         var currentIndex = rule.isEllipsis[cellRowIndex] ? tuple[cellRowIndex][0] : tuple[cellRowIndex];
-        for (var cellIndex=0;cellIndex<preRow.length;cellIndex+=7) {
-            var preCell_Movement = preRow[cellIndex+0];
+        for (var cellIndex=0;cellIndex<preRow.length;cellIndex++) {
+            var preCell = preRow[cellIndex];
+
+            var preCell_Movement = preCell.movementMask;
             if (preCell_Movement === ellipsisDirection) {
             	var k = tuple[cellRowIndex][1];
             	currentIndex = (currentIndex+delta[1]*k+delta[0]*k*level.height)%level.dat.length;
             	continue;
             }
-            var preCell_Objects = preRow[cellIndex+1];
-            var preCell_NonExistence = preRow[cellIndex+2];
-            var preCell_MoveNonExistence = preRow[cellIndex+3];
-            var preCell_StationaryMask = preRow[cellIndex+4];
 
+            var preCell_Objects = preCell.cellMask;
+            var preCell_NonExistence = preCell.nonExistenceMask;
+            var preCell_MoveNonExistence = preCell.moveNonExistenceMask;
+            var preCell_StationaryMask = preCell.moveStationaryMask;
             
-            var postCell_Movements = postRow[cellIndex+0];
-			var postCell_Objects = postRow[cellIndex+1];
-            var postCell_NonExistence = postRow[cellIndex+2];
-            var postCell_MovementsLayerMask = postRow[cellIndex+3];
-            var postCell_StationaryMask = postRow[cellIndex+4];
-            var postCell_RandomEntityMask = postRow[cellIndex+5];
-            var postCell_RandomDirMask = preRow[cellIndex+5];
-            var postCell_movementsToRemove = postRow[cellIndex+6];
+            var postCell = postRow[cellIndex];
+
+            var postCell_Movements = postCell.movementMask;
+			var postCell_Objects = postCell.cellMask;
+            var postCell_NonExistence = postCell.nonExistenceMask;
+            var postCell_MovementsLayerMask = postCell.moveNonExistenceMask;
+            var postCell_StationaryMask = postCell.moveStationaryMask;
+            var postCell_RandomEntityMask = postCell.randomDirOrEntityMask;
+            var postCell_RandomDirMask = preCell.randomDirOrEntityMask;
+            var postCell_movementsToRemove = postCell.movementsToRemove;
 
             if (postCell_RandomEntityMask !== 0) {
             	var choices=[];

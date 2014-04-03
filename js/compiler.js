@@ -1512,9 +1512,8 @@ function cellRowMasks(rule) {
 	for (var i=0;i<lhs.length;i++) {
 		var cellRow = lhs[i];
 		var rowMask=0;
-		for (var j=0;j<cellRow.length;j+=7) {
-			var cellMask=cellRow[j+1];
-			rowMask = rowMask | cellMask;
+		for (var j=0;j<cellRow.length;j++) {
+			rowMask |= cellRow[j].cellMask;
 		}
 		if (rowMask===0) {
 			rowMask=~0;
@@ -1548,24 +1547,17 @@ function collapseRules(state) {
 					} 
 					ellipses[j]=true;
 				}
-				newcellrow_l[k * 7] = oldcellmask_l[0];
-				newcellrow_l[k * 7 + 1] = oldcellmask_l[1];
-				newcellrow_l[k * 7 + 2] = oldcellmask_l[2];//nonexistence
-				newcellrow_l[k * 7 + 3] = oldcellmask_l[3];//movenonexistence
-				newcellrow_l[k * 7 + 4] = oldcellmask_l[4];//stationarymask
-				newcellrow_l[k * 7 + 5]  = 0;			  //stores randomdirmask_r O_O
-				newcellrow_l[k * 7 + 6]  = 0;//unassigned 
+				oldcellmask_l[5] = 0; //stores randomdirmask_r O_O
+				oldcellmask_l[6] = 0;
+
+				newcellrow_l[k] = new CellPattern(oldcellmask_l);
 
 				if (oldrule.rhs.length>0) {
 					var oldcellmask_r = cellrow_r[k];
-					newcellrow_r[k * 7] = oldcellmask_r[0];
-					newcellrow_r[k * 7 + 1] = oldcellmask_r[1];
-					newcellrow_r[k * 7 + 2] = oldcellmask_r[2];//nonexistence
-					newcellrow_r[k * 7 + 3] = oldcellmask_r[3];//postCell_MovementsLayerMask
-					newcellrow_r[k * 7 + 4] = oldcellmask_r[4];//stationarymask
-					newcellrow_r[k * 7 + 5] = oldcellmask_r[5];//randomentitymask
-					newcellrow_l[k * 7 + 5] = oldcellmask_r[6];//store randomdirmask_r in lhs
-					newcellrow_r[k * 7 + 6] = oldcellmask_r[7];//stores movementsToRemove_r
+
+					newcellrow_l[k].randomDirOrEntityMask = oldcellmask_r[6];
+					oldcellmask_r[6] = oldcellmask_r[7];
+					newcellrow_r[k] = new CellPattern(oldcellmask_r);
 				}
 			}
 			newrule[1][j] = newcellrow_l;
@@ -1646,21 +1638,22 @@ function checkNoLateRulesHaveMoves(state){
 			for (var cellRowIndex=0;cellRowIndex<rule.lhs.length;cellRowIndex++) {
 				var cellRow_l = rule.lhs[cellRowIndex];
 				var cellRow_r = rule.rhs[cellRowIndex];
-				for (var cellIndex=0;cellIndex<cellRow_l.length;cellIndex+=7) {
-					var movementMask = cellRow_l[cellIndex];
+				for (var cellIndex=0;cellIndex<cellRow_l.length;cellIndex++) {
+					var cellMask = cellRow_l[cellIndex];
+					var movementMask = cellMask.movementMask;
 					if (movementMask===ellipsisDirection) {
 						continue;
 					}
-					var moveNonExistenceMask = cellRow_l[cellIndex+3];
-					var moveStationaryMask = cellRow_l[cellIndex+4];
+					var moveNonExistenceMask = cellMask.moveNonExistenceMask;
+					var moveStationaryMask = cellMask.moveStationaryMask;
 					if (movementMask!==0 || moveNonExistenceMask!==0 || moveStationaryMask!==0) {
 						logError("Movements cannot appear in late rules.",rule.lineNumber);
 						return;
 					}
 
 					if (cellRow_r!==undefined && cellRow_r.length>0) {
-						var movementMask_r = cellRow_r[cellIndex];
-						var moveStationaryMask_r = cellRow_r[cellIndex+4];
+						var movementMask_r = cellRow_r[cellIndex].movementMask;
+						var moveStationaryMask_r = cellRow_r[cellIndex].moveStationaryMask;
 
 						if (movementMask_r!==0 || moveStationaryMask_r!==0) {
 							logError("Movements cannot appear in late rules.",rule.lineNumber);
