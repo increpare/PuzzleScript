@@ -1579,7 +1579,7 @@ function collapseRules(state) {
 		newrule.push(oldrule.randomRule);
 		
 		newrule.push(cellRowMasks(newrule));
-		state.rules[i] = newrule;
+		state.rules[i] = new Rule(newrule);
 
 	}
 }
@@ -1589,12 +1589,12 @@ function ruleGroupRandomnessTest(ruleGroup) {
 		return;
 	}
 
-	var randomGroup=ruleGroup[0][10];
+	var randomGroup=ruleGroup[0].isRandom;
 	for (var i=0;i<randomGroup.length;i++) {
 		var rule=ruleGroup[i];
-		var ruleRandom=rule[10];
-		if (randomGroup!==rule) {
-			logError("Cannot mix random and non-random rules in a single rule-group", rule[3]);
+		var ruleRandom=rule.isRandom;
+		if (randomGroup!==ruleRandom) {
+			logError("Cannot mix random and non-random rules in a single rule-group", rule.lineNumber);
 		}
 	}
 }
@@ -1604,16 +1604,15 @@ function arrangeRulesByGroupNumber(state) {
 	var aggregates_late = {};
 	for (var i=0;i<state.rules.length;i++) {
 		var rule = state.rules[i];
-		var groupNumber=rule[6];
 		var targetArray = aggregates;
-		if (rule[4]) { 
+		if (rule.isLate) {
 			targetArray=aggregates_late;
 		}
 
-		if (targetArray[groupNumber]==undefined) {
-			targetArray[groupNumber]=[];
+		if (targetArray[rule.groupNumber]==undefined) {
+			targetArray[rule.groupNumber]=[];
 		}
-		targetArray[groupNumber].push(rule);
+		targetArray[rule.groupNumber].push(rule);
 	}
 
 	var result=[];
@@ -1644,10 +1643,9 @@ function checkNoLateRulesHaveMoves(state){
 		var lateGroup = state.lateRules[ruleGroupIndex];
 		for (var ruleIndex=0;ruleIndex<lateGroup.length;ruleIndex++) {
 			var rule = lateGroup[ruleIndex];
-			var lineNumber = rule[3];				
-			for (var cellRowIndex=0;cellRowIndex<rule[1].length;cellRowIndex++) {
-				var cellRow_l = rule[1][cellRowIndex];
-				var cellRow_r = rule[2][cellRowIndex];
+			for (var cellRowIndex=0;cellRowIndex<rule.lhs.length;cellRowIndex++) {
+				var cellRow_l = rule.lhs[cellRowIndex];
+				var cellRow_r = rule.rhs[cellRowIndex];
 				for (var cellIndex=0;cellIndex<cellRow_l.length;cellIndex+=7) {
 					var movementMask = cellRow_l[cellIndex];
 					if (movementMask===ellipsisDirection) {
@@ -1656,7 +1654,7 @@ function checkNoLateRulesHaveMoves(state){
 					var moveNonExistenceMask = cellRow_l[cellIndex+3];
 					var moveStationaryMask = cellRow_l[cellIndex+4];
 					if (movementMask!==0 || moveNonExistenceMask!==0 || moveStationaryMask!==0) {
-						logError("Movements cannot appear in late rules.",lineNumber);
+						logError("Movements cannot appear in late rules.",rule.lineNumber);
 						return;
 					}
 
@@ -1665,7 +1663,7 @@ function checkNoLateRulesHaveMoves(state){
 						var moveStationaryMask_r = cellRow_r[cellIndex+4];
 
 						if (movementMask_r!==0 || moveStationaryMask_r!==0) {
-							logError("Movements cannot appear in late rules.",lineNumber);
+							logError("Movements cannot appear in late rules.",rule.lineNumber);
 							return;
 						}
 					}				
@@ -1686,13 +1684,13 @@ function generateRigidGroupList(state) {
 		var rigidFound=false;
 		for (var j=0;j<ruleset.length;j++) {
 			var rule=ruleset[j];
-			if (rule[7]) {
+			if (rule.isRigid) {
 				rigidFound=true;
 			}
 		}
 		rigidGroups[i]=rigidFound;
 		if (rigidFound) {
-			var groupNumber=ruleset[0][6];
+			var groupNumber=ruleset[0].groupNumber;
 			groupNumber_to_GroupIndex[groupNumber]=i;
 			var rigid_group_index = rigidGroupIndex_to_GroupIndex.length;
 			groupIndex_to_RigidGroupIndex[i]=rigid_group_index;
@@ -1981,8 +1979,8 @@ function generateLoopPoints(state) {
 			var firstRule = ruleGroup[0];			
 			var lastRule = ruleGroup[ruleGroup.length-1];
 
-			var firstRuleLine = firstRule[3];
-			var lastRuleLine = lastRule[3];
+			var firstRuleLine = firstRule.lineNumber;
+			var lastRuleLine = lastRule.lineNumber;
 
 			if (outside) {
 				if (firstRuleLine>=loop[0]) {
@@ -2023,8 +2021,8 @@ function generateLoopPoints(state) {
 			var firstRule = ruleGroup[0];			
 			var lastRule = ruleGroup[ruleGroup.length-1];
 
-			var firstRuleLine = firstRule[3];
-			var lastRuleLine = lastRule[3];
+			var firstRuleLine = firstRule.lineNumber;
+			var lastRuleLine = lastRule.lineNumber;
 
 			if (outside) {
 				if (firstRuleLine>=loop[0]) {

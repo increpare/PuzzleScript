@@ -926,6 +926,21 @@ function ruleMovementMaskAgrees(ruleMovementMask,cellMovementMask){
 var ellipsisDirection = 1<<31;
 var randomEntityMask = parseInt('00101', 2);
 
+function Rule(rule) {
+	this.direction = rule[0];
+	this.lhs = rule[1];
+	this.rhs = rule[2];
+	this.lineNumber = rule[3];
+	this.isLate = rule[4];
+	this.isEllipsis = rule[5];
+	this.groupNumber = rule[6];
+	this.isRigid = rule[7];
+	this.commands = rule[8];
+	this.emptyRhs = rule[9];
+	this.isRandom = rule[10];
+	this.cellRowMasks = rule[11];
+}
+
 
 function cellRowMatchesWildCard_ParticularK(direction,cellRow,i,k) {
     var initMovementMask= cellRow[0];
@@ -1427,13 +1442,13 @@ function restorePreservationState(preservationState) {
 
 function findRuleMatches(rule) {
 	var matches=[];
-	var cellRowMasks=rule[11];
-    for (var cellRowIndex=0;cellRowIndex<rule[1].length;cellRowIndex++) {
-        var cellRow = rule[1][cellRowIndex];
-        if (rule[5][cellRowIndex]) {//if ellipsis     
-        	var match = matchCellRowWildCard(rule[0],cellRow,cellRowMasks[cellRowIndex]);  
+	var cellRowMasks=rule.cellRowMasks;
+    for (var cellRowIndex=0;cellRowIndex<rule.lhs.length;cellRowIndex++) {
+        var cellRow = rule.lhs[cellRowIndex];
+        if (rule.isEllipsis[cellRowIndex]) {//if ellipsis     
+        	var match = matchCellRowWildCard(rule.direction,cellRow,cellRowMasks[cellRowIndex]);  
         } else {
-        	var match = matchCellRow(rule[0],cellRow,cellRowMasks[cellRowIndex]);               	
+        	var match = matchCellRow(rule.direction,cellRow,cellRowMasks[cellRowIndex]);               	
         }
         if (match.length==0) {
             return [];
@@ -1448,14 +1463,14 @@ function applyRuleAt(rule,delta,tuple,check) {
 	//have to double check they apply
     if (check) {
         var ruleMatches=true;                
-        for (var cellRowIndex=0;cellRowIndex<rule[1].length;cellRowIndex++) {
-        	if (rule[5][cellRowIndex]) {//if ellipsis
-            	if (cellRowMatchesWildCard_ParticularK(rule[0],rule[1][cellRowIndex],tuple[cellRowIndex][0],tuple[cellRowIndex][1])===false) {
+        for (var cellRowIndex=0;cellRowIndex<rule.lhs.length;cellRowIndex++) {
+        	if (rule.isEllipsis[cellRowIndex]) {//if ellipsis
+            	if (cellRowMatchesWildCard_ParticularK(rule.direction,rule.lhs[cellRowIndex],tuple[cellRowIndex][0],tuple[cellRowIndex][1])===false) {
                     ruleMatches=false;
                     break;
                 }
         	} else {
-            	if (cellRowMatches(rule[0],rule[1][cellRowIndex],tuple[cellRowIndex])===false) {
+            	if (cellRowMatches(rule.direction,rule.lhs[cellRowIndex],tuple[cellRowIndex])===false) {
                     ruleMatches=false;
                     break;
                 }
@@ -1469,11 +1484,11 @@ function applyRuleAt(rule,delta,tuple,check) {
     
     //APPLY THE RULE
     var rigidCommitted=false;
-    for (var cellRowIndex=0;cellRowIndex<rule[1].length;cellRowIndex++) {
-        var preRow = rule[1][cellRowIndex];
-        var postRow = rule[2][cellRowIndex];
+    for (var cellRowIndex=0;cellRowIndex<rule.lhs.length;cellRowIndex++) {
+        var preRow = rule.lhs[cellRowIndex];
+        var postRow = rule.rhs[cellRowIndex];
         
-        var currentIndex = rule[5][cellRowIndex] ? tuple[cellRowIndex][0] : tuple[cellRowIndex];
+        var currentIndex = rule.isEllipsis[cellRowIndex] ? tuple[cellRowIndex][0] : tuple[cellRowIndex];
         for (var cellIndex=0;cellIndex<preRow.length;cellIndex+=7) {
             var preCell_Movement = preRow[cellIndex+0];
             if (preCell_Movement === ellipsisDirection) {
@@ -1550,10 +1565,9 @@ function applyRuleAt(rule,delta,tuple,check) {
             var rigidchange=false;
             var curRigidGroupIndexMask =0;
             var curRigidMovementAppliedMask =0;
-			if (rule[7]) {
+			if (rule.isRigid) {
         		rigidCommitted=true;
-        		var groupNumber = rule[6];
-        		var rigidGroupIndex = state.groupNumber_to_RigidGroupIndex[groupNumber];  
+        		var rigidGroupIndex = state.groupNumber_to_RigidGroupIndex[rule.groupNumber];  
         		rigidGroupIndex++;//don't forget to -- it when decoding :O              	
         		var rigidMask = 
         					(rigidGroupIndex) +
@@ -1610,9 +1624,9 @@ function applyRuleAt(rule,delta,tuple,check) {
     }
 
 	if (verbose_logging && result){
-		var lineNumber = rule[3];
-		var ruleDirection = dirMaskName[rule[0]];
-		var logString = '<font color="green">Rule <a onclick="jumpToLine(' + lineNumber.toString() + ');"  href="javascript:void(0);">' + lineNumber.toString() + '</a> applied.</font>';
+		var ruleDirection = dirMaskName[rule.direction];
+		var logString = '<font color="green">Rule <a onclick="jumpToLine(' + rule.lineNumber + ');"  href="javascript:void(0);">' + rule.lineNumber + '</a>' + 
+			ruleDirection + ' applied.</font>';
 		consolePrint(logString);
 	}
 
@@ -1620,7 +1634,7 @@ function applyRuleAt(rule,delta,tuple,check) {
 }
 
 function tryApplyRule(rule,ruleGroupIndex,ruleIndex){
-	var delta = dirMasksDelta[rule[0]];
+	var delta = dirMasksDelta[rule.direction];
     //get all cellrow matches
     var matches=findRuleMatches(rule);
     if (matches.length===0) {
@@ -1628,7 +1642,7 @@ function tryApplyRule(rule,ruleGroupIndex,ruleIndex){
     }
 
     var result=false;	
-	if (rule[9]===false) {//if the rule has a rhs
+	if (rule.emptyRhs===false) {//if the rule has a rhs
 	    var tuples  = generateTuples(matches);
 	    for (var tupleIndex=0;tupleIndex<tuples.length;tupleIndex++) {
 	        var tuple = tuples[tupleIndex];
@@ -1645,7 +1659,7 @@ function tryApplyRule(rule,ruleGroupIndex,ruleIndex){
 
 
 function queueCommands(rule) {
-	var commands = rule[8];
+	var commands = rule.commands;
 	for(var i=0;i<commands.length;i++) {
 		var command=commands[i];
 		var already=false;
@@ -1655,8 +1669,8 @@ function queueCommands(rule) {
 		level.commandQueue.push(command[0]);
 
 		if (verbose_logging){
-			var lineNumber = rule[3];
-			var ruleDirection = dirMaskName[rule[0]];
+			var lineNumber = rule.lineNumber;
+			var ruleDirection = dirMaskName[rule.direction];
 			var logString = '<font color="green">Rule <a onclick="jumpToLine(' + lineNumber.toString() + ');"  href="javascript:void(0);">' + lineNumber.toString() + '</a> triggers command '+command[0]+'.</font>';
 			consolePrint(logString);
 		}
@@ -1702,7 +1716,7 @@ function applyRandomRuleGroup(ruleGroup) {
 	var match = matches[Math.floor(Math.random()*matches.length)];
 	var ruleIndex=match[0];
 	var rule=ruleGroup[ruleIndex];
-	var delta = dirMasksDelta[rule[0]];
+	var delta = dirMasksDelta[rule.direction];
 	var tuple=match[1];
 	var check=false;
 	var modified = applyRuleAt(rule,delta,tuple,check);
@@ -1713,9 +1727,7 @@ function applyRandomRuleGroup(ruleGroup) {
 }
 
 function applyRuleGroup(ruleGroup) {
-
-	var randomGroup=ruleGroup[0][10];
-	if (randomGroup) {
+	if (ruleGroup[0].isRandom) {
 		return applyRandomRuleGroup(ruleGroup);
 	}
 
@@ -1726,7 +1738,7 @@ function applyRuleGroup(ruleGroup) {
     	loopcount++;
     	if (loopcount>200) 
     	{
-    		logError("Got caught looping lots in a rule group :O",ruleGroup[0][3],true);
+    		logError("Got caught looping lots in a rule group :O",ruleGroup[0].lineNumber,true);
     		break;
     	}
         propagated=false
@@ -1762,7 +1774,7 @@ function propagateMovements(startRuleGroupindex){
         	loopCount++;
 			if (loopCount > 200) {
     			var ruleGroup=state.rules[ruleGroupIndex];
-			   	logError("got caught in an endless startloop...endloop vortex, escaping!", ruleGroup[0][3],true);
+			   	logError("got caught in an endless startloop...endloop vortex, escaping!", ruleGroup[0].lineNumber,true);
 			   	break;
 			}
         } else {
@@ -1774,7 +1786,7 @@ function propagateMovements(startRuleGroupindex){
 		        	loopCount++;
 					if (loopCount > 200) {
 		    			var ruleGroup=state.rules[ruleGroupIndex];
-					   	logError("got caught in an endless startloop...endloop vortex, escaping!", ruleGroup[0][3],true);
+					   	logError("got caught in an endless startloop...endloop vortex, escaping!", ruleGroup[0].lineNumber,true);
 					   	break;
 					}
 		        } 
@@ -1802,7 +1814,7 @@ function propagateLateMovements(){
         	loopCount++;
 			if (loopCount > 200) {
     			var ruleGroup=state.lateRules[ruleGroupIndex];
-			   	logError("got caught in an endless startloop...endloop vortex, escaping!", ruleGroup[0][3],true);
+			   	logError("got caught in an endless startloop...endloop vortex, escaping!", ruleGroup[0].lineNumber,true);
 			   	break;
 			}
         } else {
@@ -1814,7 +1826,7 @@ function propagateLateMovements(){
 		        	loopCount++;
 					if (loopCount > 200) {
 		    			var ruleGroup=state.lateRules[ruleGroupIndex];
-					   	logError("got caught in an endless startloop...endloop vortex, escaping!", ruleGroup[0][3],true);
+					   	logError("got caught in an endless startloop...endloop vortex, escaping!", ruleGroup[0].lineNumber,true);
 					   	break;
 					}
 		        } 
