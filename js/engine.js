@@ -959,6 +959,13 @@ function CellPattern(row) {
 	this.movementsToRemove = row[6]; /* only used for rhs */
 }
 
+CellPattern.prototype.matches = function(cellMask, movementMask) {
+	return	((this.cellMask&cellMask) == this.cellMask) &&
+			((this.nonExistenceMask&cellMask)===0)&&
+			((this.movementMask===0?true:((this.movementMask&movementMask)===this.movementMask))) &&
+			((this.moveStationaryMask&movementMask)===0);
+};
+
 CellPattern.prototype.toJSON = function() {
 	return [
 		this.movementMask, this.cellMask, this.nonExistenceMask,
@@ -973,37 +980,20 @@ function cellRowMatchesWildCard(direction,cellRow,i,maxk,mink) {
 	}
 
 	var cellPattern = cellRow[0];
-    var initMovementMask= cellPattern.movementMask;
-    var initCellMask = cellPattern.cellMask;
-    var initNonExistenceMask = cellPattern.nonExistenceMask;
-    var initStationaryMask = cellPattern.moveStationaryMask;
     var delta = dirMasksDelta[direction];
     var movementMask = level.movementMask[i];
     var cellMask = level.dat[i];
 
     var result=[];
 
-    if (
-
-			((initCellMask&cellMask) == initCellMask) &&
-			((initNonExistenceMask&cellMask)===0)&&
-			((initMovementMask===0?true:((initMovementMask&movementMask)===initMovementMask))) &&
-			((initStationaryMask&movementMask)===0)
-    	//checkThing(initCellMask,initMovementMask,initNonExistenceMask,initStationaryMask,movementMask,cellMask)
-    	) {
+    if (cellPattern.matches(cellMask, movementMask)){
             var targetIndex = i;
             for (var j=1;j<cellRow.length;j+=1) {
                 targetIndex = (targetIndex+delta[1]+delta[0]*level.height)%level.dat.length;
                 var movementMask = level.movementMask[targetIndex];
 
                 var cellPattern = cellRow[j]
-                var ruleMovementMask= cellPattern.movementMask;
-
-                var cellMask = level.dat[targetIndex];
-                var ruleCellMask = cellPattern.cellMask;
-                var ruleNonExistenceMask = cellPattern.nonExistenceMask;
-                var ruleStationaryMask = cellPattern.moveStationaryMask;
-                if (ruleMovementMask === ellipsisDirection) {
+                if (cellPattern.movementMask === ellipsisDirection) {
                 	//BAM inner loop time
                 	for (var k=mink;k<maxk;k++) {
                 		var targetIndex2=targetIndex;
@@ -1011,24 +1001,9 @@ function cellRowMatchesWildCard(direction,cellRow,i,maxk,mink) {
                 		for (var j2=j+1;j2<cellRow.length;j2++) {
                 			movementMask = level.movementMask[targetIndex2];
 			                cellMask = level.dat[targetIndex2];
-
 			                cellPattern = cellRow[j2];
 
-			                /* are these supposed to shadow?? */
-			                ruleMovementMask= cellPattern.movementMask;
-			                ruleCellMask = cellPattern.cellMask;
-			                ruleNonExistenceMask = cellPattern.nonExistenceMask;
-			                ruleStationaryMask = cellPattern.moveStationaryMask;
-
-						    if (
-
-								((ruleCellMask&cellMask) == ruleCellMask) &&
-								((ruleNonExistenceMask&cellMask)===0)&&
-								((ruleMovementMask===0?true:((ruleMovementMask&movementMask)===ruleMovementMask))) &&
-								((ruleStationaryMask&movementMask)===0)
-						    	//checkThing(ruleCellMask,ruleMovementMask,ruleNonExistenceMask,ruleStationaryMask,movementMask,cellMask)
-
-						    	) {
+						    if (cellPattern.matches(cellMask, movementMask)) {
 						    	//good
 						    } else {
 						    	break;
@@ -1044,13 +1019,7 @@ function cellRowMatchesWildCard(direction,cellRow,i,maxk,mink) {
                 }
 
 
-			    if (
-						((ruleCellMask&cellMask) == ruleCellMask) &&
-						((ruleNonExistenceMask&cellMask)===0)&&
-						((ruleMovementMask===0?true:((ruleMovementMask&movementMask)===ruleMovementMask))) &&
-						((ruleStationaryMask&movementMask)===0)
-			    	//checkThing(ruleCellMask,ruleMovementMask,ruleNonExistenceMask,ruleStationaryMask,movementMask,cellMask)
-			    	) {
+			    if (cellPattern.matches(cellMask, movementMask)) {
                     //GOOD
                 } else {
                     break;
@@ -1062,56 +1031,26 @@ function cellRowMatchesWildCard(direction,cellRow,i,maxk,mink) {
     return result;
 }
 
-function checkThing(ruleCellMask,ruleMovementMask,ruleNonExistenceMask,ruleStationaryMask,movementMask,cellMask) {
-	return ((ruleCellMask&cellMask) == ruleCellMask) &&
-			((ruleNonExistenceMask&cellMask)===0)&&
-			(ruleMovementMaskAgrees(ruleMovementMask,movementMask)) &&
-			((ruleStationaryMask&movementMask)===0);
-}
-
 function cellRowMatches(direction,cellRow,i,k) {
 	var cellPattern = cellRow[0];
-    var initMovementMask= cellPattern.movementMask;
-    var initCellMask = cellPattern.cellMask;
-    var initNonExistenceMask = cellPattern.nonExistenceMask;
-    var initStationaryMask = cellPattern.moveStationaryMask;
     var delta = dirMasksDelta[direction];
     var movementMask = level.movementMask[i];
     var cellMask = level.dat[i];
 
-    if (
-			((initCellMask&cellMask) == initCellMask) &&
-			((initNonExistenceMask&cellMask)===0)&&
-			((initMovementMask===0?true:((initMovementMask&movementMask)===initMovementMask))) &&
-			((initStationaryMask&movementMask)===0)
-
-//    	checkThing(initCellMask,initMovementMask,initNonExistenceMask,initStationaryMask,movementMask,cellMask)
-
-    	) {
+    if (cellPattern.matches(cellMask, movementMask)) {
             var targetIndex = i;
             for (var j=1;j<cellRow.length;j++) {
                 targetIndex = (targetIndex+delta[1]+delta[0]*level.height)%level.dat.length;
-                var movementMask = level.movementMask[targetIndex];
                 cellPattern = cellRow[j];
-                var ruleMovementMask= cellPattern.movementMask;
- 				if (ruleMovementMask === ellipsisDirection) {
+ 				if (cellPattern.movementMask === ellipsisDirection) {
  					//only for once off verifications
                 	targetIndex = (targetIndex+delta[1]*k+delta[0]*k*level.height)%level.dat.length; 					
                 }
+
                 var cellMask = level.dat[targetIndex];
+                var movementMask = level.movementMask[targetIndex];
 
-                var ruleCellMask = cellPattern.cellMask;
-                var ruleNonExistenceMask = cellPattern.nonExistenceMask;
-                var ruleStationaryMask = cellPattern.moveStationaryMask;
-			    if (
-
-			((ruleCellMask&cellMask) == ruleCellMask) &&
-			((ruleNonExistenceMask&cellMask)===0)&&
-			((ruleMovementMask===0?true:((ruleMovementMask&movementMask)===ruleMovementMask))) &&
-			((ruleStationaryMask&movementMask)===0)
-
-			    	//checkThing(ruleCellMask,ruleMovementMask,ruleNonExistenceMask,ruleStationaryMask,movementMask,cellMask)
-			    	) {
+			    if (cellPattern.matches(cellMask, movementMask)) {
                     //GOOD
                 } else {
                     break;
@@ -1383,15 +1322,15 @@ function restorePreservationState(preservationState) {
 //	rigidBackups = preservationState.rigidBackups;
 }
 
-function findRuleMatches(rule) {
+Rule.prototype.findMatches = function() {
 	var matches=[];
-	var cellRowMasks=rule.cellRowMasks;
-    for (var cellRowIndex=0;cellRowIndex<rule.lhs.length;cellRowIndex++) {
-        var cellRow = rule.lhs[cellRowIndex];
-        if (rule.isEllipsis[cellRowIndex]) {//if ellipsis     
-        	var match = matchCellRowWildCard(rule.direction,cellRow,cellRowMasks[cellRowIndex]);  
+	var cellRowMasks=this.cellRowMasks;
+    for (var cellRowIndex=0;cellRowIndex<this.lhs.length;cellRowIndex++) {
+        var cellRow = this.lhs[cellRowIndex];
+        if (this.isEllipsis[cellRowIndex]) {//if ellipsis     
+        	var match = matchCellRowWildCard(this.direction,cellRow,cellRowMasks[cellRowIndex]);  
         } else {
-        	var match = matchCellRow(rule.direction,cellRow,cellRowMasks[cellRowIndex]);               	
+        	var match = matchCellRow(this.direction,cellRow,cellRowMasks[cellRowIndex]);               	
         }
         if (match.length==0) {
             return [];
@@ -1400,9 +1339,10 @@ function findRuleMatches(rule) {
         }
     }
     return matches;
-}
+};
 
-function applyRuleAt(rule,delta,tuple,check) {
+Rule.prototype.applyAt = function(delta,tuple,check) {
+	var rule = this;
 	//have to double check they apply
     if (check) {
         var ruleMatches=true;                
@@ -1579,35 +1519,34 @@ function applyRuleAt(rule,delta,tuple,check) {
 	}
 
     return result;
-}
+};
 
-function tryApplyRule(rule,ruleGroupIndex,ruleIndex){
-	var delta = dirMasksDelta[rule.direction];
+Rule.prototype.tryApply = function() {
+	var delta = dirMasksDelta[this.direction];
     //get all cellrow matches
-    var matches=findRuleMatches(rule);
+    var matches = this.findMatches();
     if (matches.length===0) {
     	return false;
     }
 
     var result=false;	
-	if (rule.rhs.length) {
+	if (this.rhs.length) {
 	    var tuples  = generateTuples(matches);
 	    for (var tupleIndex=0;tupleIndex<tuples.length;tupleIndex++) {
 	        var tuple = tuples[tupleIndex];
 	        var shouldCheck=tupleIndex>0;
-	        result = applyRuleAt(rule,delta,tuple,shouldCheck) || result;
+	        result = this.applyAt(delta,tuple,shouldCheck) || result;
 	    }
 	}
 
     if (matches.length>0) {
-    	queueCommands(rule);
+    	this.queueCommands();
     }
     return result;
 }
 
-
-function queueCommands(rule) {
-	var commands = rule.commands;
+Rule.prototype.queueCommands = function() {
+	var commands = this.commands;
 	for(var i=0;i<commands.length;i++) {
 		var command=commands[i];
 		var already=false;
@@ -1617,8 +1556,8 @@ function queueCommands(rule) {
 		level.commandQueue.push(command[0]);
 
 		if (verbose_logging){
-			var lineNumber = rule.lineNumber;
-			var ruleDirection = dirMaskName[rule.direction];
+			var lineNumber = this.lineNumber;
+			var ruleDirection = dirMaskName[this.direction];
 			var logString = '<font color="green">Rule <a onclick="jumpToLine(' + lineNumber.toString() + ');"  href="javascript:void(0);">' + lineNumber.toString() + '</a> triggers command '+command[0]+'.</font>';
 			consolePrint(logString);
 		}
@@ -1627,7 +1566,7 @@ function queueCommands(rule) {
 			messagetext=command[1];
 		}		
 	}
-}
+};
 
 function showTempMessage() {
 	keybuffer=[];
@@ -1646,7 +1585,7 @@ function applyRandomRuleGroup(ruleGroup) {
 	var matches=[];
 	for (var ruleIndex=0;ruleIndex<ruleGroup.length;ruleIndex++) {
 		var rule=ruleGroup[ruleIndex];
-		var ruleMatches = findRuleMatches(rule);
+		var ruleMatches = rule.findMatches();
 		if (ruleMatches.length>0) {
 	    	var tuples  = generateTuples(ruleMatches);
 	    	for (var j=0;j<tuples.length;j++) {
@@ -1667,9 +1606,9 @@ function applyRandomRuleGroup(ruleGroup) {
 	var delta = dirMasksDelta[rule.direction];
 	var tuple=match[1];
 	var check=false;
-	var modified = applyRuleAt(rule,delta,tuple,check);
+	var modified = rule.applyAt(delta,tuple,check);
 
-   	queueCommands(rule);
+   	rule.queueCommands();
 
 	return modified;
 }
@@ -1692,7 +1631,7 @@ function applyRuleGroup(ruleGroup) {
         propagated=false
         for (var ruleIndex=0;ruleIndex<ruleGroup.length;ruleIndex++) {
             var rule = ruleGroup[ruleIndex];            
-            propagated = tryApplyRule(rule) || propagated;
+            propagated = rule.tryApply() || propagated;
         }
         if (propagated) {
         	loopPropagated=true;
