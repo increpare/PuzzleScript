@@ -4390,89 +4390,17 @@
   // Utility functions for working with state. Exported because nested
   // modes need to do this for their inner modes.
 
-  function copyState(mode, state) {
+  var copyState = CodeMirror.copyState = function(mode, state) {
     if (state === true) return state;
     if (mode.copyState) return mode.copyState(state);
-
-    var objectsCopy = {};
-    for (var i in state.objects) {
-      if (state.objects.hasOwnProperty(i)) {
-        var o = state.objects[i];
-        objectsCopy[i] = {
-          colors: o.colors.concat([]),
-          lineNumber : o.lineNumber,
-          spritematrix: o.spritematrix.concat([])
-        }
-      }
+    var nstate = {};
+    for (var n in state) {
+      var val = state[n];
+      if (val instanceof Array) val = val.concat([]);
+      nstate[n] = val;
     }
-
-    var collisionLayersCopy = [];
-    for (var i = 0; i < state.collisionLayers.length; i++) {
-      collisionLayersCopy.push(state.collisionLayers[i].concat([]));
-    }
-
-    var legend_synonymsCopy = [];
-    var legend_aggregatesCopy = [];
-    var legend_propertiesCopy = [];
-    var soundsCopy = [];
-    var levelsCopy = [];
-    var winConditionsCopy = [];
-
-    for (var i = 0; i < state.legend_synonyms.length; i++) {
-      legend_synonymsCopy.push(state.legend_synonyms[i].concat([]));
-    }
-    for (var i = 0; i < state.legend_aggregates.length; i++) {
-      legend_aggregatesCopy.push(state.legend_aggregates[i].concat([]));
-    }
-    for (var i = 0; i < state.legend_properties.length; i++) {
-      legend_propertiesCopy.push(state.legend_properties[i].concat([]));
-    }
-    for (var i = 0; i < state.sounds.length; i++) {
-      soundsCopy.push(state.sounds[i].concat([]));
-    }
-    for (var i = 0; i < state.levels.length; i++) {
-      levelsCopy.push(state.levels[i].concat([]));
-    }
-    for (var i = 0; i < state.winconditions.length; i++) {
-      winConditionsCopy.push(state.winconditions[i].concat([]));
-    }
-
-    var nstate = {
-      lineNumber: state.lineNumber,
-
-      objects: objectsCopy,
-      collisionLayers: collisionLayersCopy,
-
-      commentLevel: state.commentLevel,
-      section: state.section,
-      visitedSections: state.visitedSections.concat([]),
-
-      objects_candname: state.objects_candname,
-      objects_section: state.objects_section,
-      objects_spritematrix: state.objects_spritematrix.concat([]),
-
-      tokenIndex: state.tokenIndex,
-      legend_synonyms: legend_synonymsCopy,
-      legend_aggregates: legend_aggregatesCopy,
-      legend_properties: legend_propertiesCopy,
-
-      sounds: soundsCopy,
-
-      rules: state.rules.concat([]),
-
-      names: state.names.concat([]),
-
-      winconditions: winConditionsCopy,
-
-      abbrevNames: state.abbrevNames.concat([]),
-
-      metadata : state.metadata.concat([]),
-
-      levels: levelsCopy
-    };
-
     return nstate;
-  }
+  };
 
   var startState = CodeMirror.startState = function(mode, a1, a2) {
     return mode.startState ? mode.startState(a1, a2) : true;
