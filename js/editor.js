@@ -27,6 +27,7 @@ if (fileToOpen!==null&&fileToOpen.length>0) {
 	}
 }
 
+window.CodeMirror.defaults.keyMap = "sublime";
 
 var editor = window.CodeMirror.fromTextArea(code, {
 //	viewportMargin: Infinity,
