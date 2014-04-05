@@ -781,7 +781,7 @@ function getLayerMask(cellMask) {
         if ( (cellMask&(1<<i))!=0 ){
             var n = state.idDict[i];
             var o = state.objects[n];
-            layerMask = (layerMask | (parseInt("11111",2)<<(5*o.layer)));
+            layerMask |= 0x1f<<(5*o.layer);
         }
     }
     return layerMask;
@@ -794,8 +794,7 @@ function moveEntitiesAtIndex(positionIndex, entityMask, dirMask) {
 
     var movementMask = level.movementMask[positionIndex];
     for (var i=0;i<layers.length;i++) {
-        var layer = layers[i];
-        movementMask = (movementMask | (dirMask<< (layer*5)));
+        movementMask |= dirMask<<(5*layers[i]);
     }
     level.movementMask[positionIndex]=movementMask;
 }
@@ -884,27 +883,17 @@ function repositionEntitiesOnLayer(positionIndex,layer,dirMask)
     return true;
 }
 
-var dirMask_random = [parseInt('00001', 2), parseInt('00010', 2), parseInt('00100', 2), parseInt('01000', 2)];
-function randomDir() {
-   return dirMask_random[Math.floor(Math.random() * dirMask_random.length)];
-}
-
-var randomDirMask = parseInt('00101', 2);
-
 function repositionEntitiesAtCell(positionIndex) {
     var movementMask = level.movementMask[positionIndex];
     //assumes not zero
     //for each layer
     var moved=false;
     for (var layer=0;layer<6;layer++) {    	
-        var layerMovement = parseInt('11111', 2) & (movementMask>>(5*layer));
+        var layerMovement = 0x1f & (movementMask>>(5*layer));
         if (layerMovement!=0) {
-//        	if (randomDirMask===layerMovement) {
-//        		layerMovement = randomDir();
-//        	}
             var thismoved = repositionEntitiesOnLayer(positionIndex,layer,layerMovement);
             if (thismoved) {
-            	movementMask = movementMask & (~(layerMovement<<(5*layer)));
+            	movementMask &= ~(layerMovement<<(5*layer));
             }
             moved = thismoved || moved;
         }
@@ -924,7 +913,6 @@ function ruleMovementMaskAgrees(ruleMovementMask,cellMovementMask){
 }
 
 var ellipsisDirection = 1<<31;
-var randomEntityMask = parseInt('00101', 2);
 
 function Rule(rule) {
 	this.direction = rule[0]; 		/* direction rule scans in */
@@ -974,12 +962,14 @@ function CellReplacement(row) {
 	this.nonExistenceMask = row[2];
 	this.movementsLayerMask = row[3];
 	this.moveStationaryMask = row[4];
-	this.randomDirMask = row[5];
-	this.randomEntityMask = row[6];
+	this.randomEntityMask = row[5];
+	this.randomDirMask = row[6];
 	this.movementsToRemove = row[7];
 };
 
-CellPattern.prototype.matches = function(cellMask, movementMask) {
+CellPattern.prototype.matches = function(i) {
+    var movementMask = level.movementMask[i];
+    var cellMask = level.dat[i];
 	return	((this.cellMask&cellMask) == this.cellMask) &&
 			((this.nonExistenceMask&cellMask)===0)&&
 			((this.movementMask===0?true:((this.movementMask&movementMask)===this.movementMask))) &&
@@ -994,6 +984,124 @@ CellPattern.prototype.toJSON = function() {
 	];
 };
 
+CellPattern.prototype.replace = function(rule, currentIndex) {
+	var replace = this.replacement;
+	var replace_Movements = replace.movementMask;
+	var replace_Objects = replace.cellMask;
+	var replace_NonExistence = replace.nonExistenceMask;
+	var replace_MovementsLayerMask = replace.movementsLayerMask;
+	var replace_StationaryMask = replace.moveStationaryMask;
+	var replace_RandomEntityMask = replace.randomEntityMask;
+	var replace_RandomDirMask = replace.randomDirMask;
+	var replace_movementsToRemove = replace.movementsToRemove;
+
+	if (replace_RandomEntityMask !== 0) {
+		var choices=[];
+		for (var i=0;i<32;i++) {
+			if  ((replace_RandomEntityMask&(1<<i))!==0) {
+				choices.push(i);
+			}
+		}
+		var rand = choices[Math.floor(Math.random() * choices.length)];
+		var n = state.idDict[rand];
+		var o = state.objects[n];
+		var objectMask = state.layerMasks[o.layer];
+		var movementLayerMask = 0x1f<<(5*o.layer);
+		replace_Objects |= 1<<rand;
+		replace_NonExistence |= state.layerMasks[o.layer];
+		replace_StationaryMask |= movementLayerMask;
+	}
+	if (replace_RandomDirMask !== 0 ) {
+		for (var layerIndex=0;layerIndex<6;layerIndex++){
+			var layerSection = 0x1f&(replace_RandomDirMask>>(5*layerIndex));
+			if (layerSection!==0) {
+				var randomDir = Math.floor(Math.random()*4)
+				replace_Movements |= (1 << randomDir)<<(5*layerIndex);
+			}
+		}
+	}
+	
+	var curCellMask = level.dat[currentIndex];
+	var curMovementMask = level.movementMask[currentIndex];
+
+	var oldCellMask = curCellMask;
+	var oldMovementMask = curMovementMask;
+
+	//1 remove old
+	curCellMask &= ~this.cellMask;
+	curMovementMask &= ~this.movementMask;
+	curMovementMask &= ~replace_movementsToRemove;
+	
+	//2 make way for new
+	curCellMask &= ~replace_NonExistence;
+	curMovementMask &= ~this.moveNonExistenceMask;
+
+	//3 mask out old movements before adding new
+	if (replace_Movements!==0) {
+		curMovementMask &= ~replace_MovementsLayerMask;
+	}
+
+	//4 add new
+	curCellMask |= replace_Objects;
+	curMovementMask &= ~replace_StationaryMask;
+	curMovementMask |= replace_Movements;
+
+	var rigidchange=false;
+	var curRigidGroupIndexMask =0;
+	var curRigidMovementAppliedMask =0;
+	if (rule.isRigid) {
+		rigidCommitted=true;
+		var rigidGroupIndex = state.groupNumber_to_RigidGroupIndex[rule.groupNumber];
+		rigidGroupIndex++;//don't forget to -- it when decoding :O
+		var rigidMask = 
+					(rigidGroupIndex) +
+					((rigidGroupIndex<< ( 1 * 5 ))) +
+					((rigidGroupIndex<< ( 2 * 5 ))) +
+					((rigidGroupIndex<< ( 3 * 5 ))) +
+					((rigidGroupIndex<< ( 4 * 5 ))) +
+					((rigidGroupIndex<< ( 5 * 5 )));
+		rigidMask &= replace_MovementsLayerMask;
+		curRigidGroupIndexMask = level.rigidGroupIndexMask[currentIndex];
+		curRigidMovementAppliedMask = level.rigidMovementAppliedMask[currentIndex];
+
+		var oldrigidGroupIndexMask = curRigidGroupIndexMask;
+		var oldRigidMovementAppliedMask = curRigidMovementAppliedMask;
+
+		curRigidGroupIndexMask |= rigidMask;
+		curRigidMovementAppliedMask |= replace_MovementsLayerMask;
+
+		if (oldrigidGroupIndexMask!==curRigidGroupIndexMask ||
+			oldRigidMovementAppliedMask !== curRigidMovementAppliedMask) {
+			rigidchange=true;
+		}
+	}
+
+	var result = false;
+
+	//check if it's changed
+	if (oldCellMask!==curCellMask || oldMovementMask!=curMovementMask || rigidchange) { 
+		result=true;
+		if (rigidchange) {
+			level.rigidGroupIndexMask[currentIndex] = curRigidGroupIndexMask;
+			level.rigidMovementAppliedMask[currentIndex] = curRigidMovementAppliedMask;
+		}
+
+		sfxCreateMask |= curCellMask & ~oldCellMask;
+		sfxDestroyMask |= oldCellMask & ~curCellMask;
+
+		level.dat[currentIndex]=curCellMask;
+		level.movementMask[currentIndex]=curMovementMask;
+
+		var colIndex=(currentIndex/level.height)|0;
+		var rowIndex=(currentIndex%level.height);
+		level.colCellContents[colIndex]=(level.colCellContents[colIndex]|curCellMask);
+		level.rowCellContents[rowIndex]=(level.rowCellContents[rowIndex]|curCellMask);
+		level.mapCellContents = (level.mapCellContents|curCellMask);
+	}
+
+	return result;
+}
+
 function cellRowMatchesWildCard(direction,cellRow,i,maxk,mink) {
 	if (mink === undefined) {
 		mink = 0;
@@ -1001,12 +1109,10 @@ function cellRowMatchesWildCard(direction,cellRow,i,maxk,mink) {
 
 	var cellPattern = cellRow[0];
     var delta = dirMasksDelta[direction];
-    var movementMask = level.movementMask[i];
-    var cellMask = level.dat[i];
 
     var result=[];
 
-    if (cellPattern.matches(cellMask, movementMask)){
+    if (cellPattern.matches(i)){
             var targetIndex = i;
             for (var j=1;j<cellRow.length;j+=1) {
                 targetIndex = (targetIndex+delta[1]+delta[0]*level.height)%level.dat.length;
@@ -1019,13 +1125,9 @@ function cellRowMatchesWildCard(direction,cellRow,i,maxk,mink) {
                 		var targetIndex2=targetIndex;
                 		targetIndex2 = (targetIndex2+delta[1]*(k)+delta[0]*(k)*level.height+level.dat.length)%level.dat.length;
                 		for (var j2=j+1;j2<cellRow.length;j2++) {
-                			movementMask = level.movementMask[targetIndex2];
-			                cellMask = level.dat[targetIndex2];
 			                cellPattern = cellRow[j2];
 
-						    if (cellPattern.matches(cellMask, movementMask)) {
-						    	//good
-						    } else {
+						    if (!cellPattern.matches(targetIndex2)) {
 						    	break;
 						    }
                 			targetIndex2 = (targetIndex2+delta[1]+delta[0]*level.height)%level.dat.length;
@@ -1036,13 +1138,8 @@ function cellRowMatchesWildCard(direction,cellRow,i,maxk,mink) {
 			            }
                 	}
                 	break;
-                }
-
-
-			    if (cellPattern.matches(cellMask, movementMask)) {
-                    //GOOD
-                } else {
-                    break;
+                } else if (!cellPattern.matches(targetIndex)) {
+					break;
                 }
             }   
             
@@ -1054,10 +1151,7 @@ function cellRowMatchesWildCard(direction,cellRow,i,maxk,mink) {
 function cellRowMatches(direction,cellRow,i,k) {
 	var cellPattern = cellRow[0];
     var delta = dirMasksDelta[direction];
-    var movementMask = level.movementMask[i];
-    var cellMask = level.dat[i];
-
-    if (cellPattern.matches(cellMask, movementMask)) {
+    if (cellPattern.matches(i)) {
             var targetIndex = i;
             for (var j=1;j<cellRow.length;j++) {
                 targetIndex = (targetIndex+delta[1]+delta[0]*level.height)%level.dat.length;
@@ -1070,7 +1164,7 @@ function cellRowMatches(direction,cellRow,i,k) {
                 var cellMask = level.dat[targetIndex];
                 var movementMask = level.movementMask[targetIndex];
 
-			    if (cellPattern.matches(cellMask, movementMask)) {
+			    if (cellPattern.matches(targetIndex)) {
                     //GOOD
                 } else {
                     break;
@@ -1402,129 +1496,7 @@ Rule.prototype.applyAt = function(delta,tuple,check) {
             	continue;
             }
 
-            var preCell_Objects = preCell.cellMask;
-            var preCell_NonExistence = preCell.nonExistenceMask;
-            var preCell_MoveNonExistence = preCell.moveNonExistenceMask;
-            var preCell_StationaryMask = preCell.moveStationaryMask;
-            
-            var postCell = preCell.replacement;
-
-            var postCell_Movements = postCell.movementMask;
-			var postCell_Objects = postCell.cellMask;
-            var postCell_NonExistence = postCell.nonExistenceMask;
-            var postCell_MovementsLayerMask = postCell.movementsLayerMask;
-            var postCell_StationaryMask = postCell.moveStationaryMask;
-            var postCell_RandomEntityMask = postCell.randomDirMask;
-            var postCell_RandomDirMask = postCell.randomEntityMask;
-            var postCell_movementsToRemove = postCell.movementsToRemove;
-
-            if (postCell_RandomEntityMask !== 0) {
-            	var choices=[];
-            	for (var i=0;i<32;i++) {
-            		if  ((postCell_RandomEntityMask&(1<<i))!==0) {
-            			choices.push(i);
-            		}
-            	}
-            	var rand = choices[Math.floor(Math.random() * choices.length)];
-            	var n = state.idDict[rand];
-            	var o = state.objects[n];
-            	var objectMask = state.layerMasks[o.layer];
-            	var movementLayerMask = (1+2+4+8+16)<<(5*o.layer);
-            	postCell_Objects = postCell_Objects | (1<<rand);
-            	postCell_NonExistence = postCell_NonExistence | state.layerMasks[o.layer];
-            	postCell_StationaryMask = postCell_StationaryMask | movementLayerMask;
-            }
-            if (postCell_RandomDirMask !== 0 ) {
-            	for (var layerIndex=0;layerIndex<6;layerIndex++){
-            		var layerSection = parseInt("11111",2)&(postCell_RandomDirMask>>(5*layerIndex));
-            		if (layerSection!==0) {
-            			var r = randomDir();
-            			postCell_Movements = postCell_Movements | (r<<(5*layerIndex));
-            		}    				
-            	}
-            }
-            
-            var curCellMask = level.dat[currentIndex];
-            var curMovementMask = level.movementMask[currentIndex];
-
-            var oldCellMask = curCellMask;
-            var oldMovementMask = curMovementMask;
-
-            //1 remove old
-            curCellMask = curCellMask&(~preCell_Objects);
-            curMovementMask = curMovementMask&(~preCell_Movement);
-            curMovementMask = curMovementMask&(~postCell_movementsToRemove);
-            
-            //2 make way for new
-            curCellMask = curCellMask&(~postCell_NonExistence);
-            curMovementMask = curMovementMask&(~preCell_MoveNonExistence);
-
-            //3 mask out old movements before adding new
-            if (postCell_Movements!==0) {
-            	curMovementMask = curMovementMask&(~postCell_MovementsLayerMask);
-            }
-
-            //4 add new
-            curCellMask = curCellMask | postCell_Objects;
-            curMovementMask = curMovementMask & (~postCell_StationaryMask);
-            curMovementMask = curMovementMask | postCell_Movements;
-
-            var rigidchange=false;
-            var curRigidGroupIndexMask =0;
-            var curRigidMovementAppliedMask =0;
-			if (rule.isRigid) {
-        		rigidCommitted=true;
-        		var rigidGroupIndex = state.groupNumber_to_RigidGroupIndex[rule.groupNumber];  
-        		rigidGroupIndex++;//don't forget to -- it when decoding :O              	
-        		var rigidMask = 
-        					(rigidGroupIndex) +
-        					((rigidGroupIndex<< ( 1 * 5 ))) +
-        					((rigidGroupIndex<< ( 2 * 5 ))) +
-        					((rigidGroupIndex<< ( 3 * 5 ))) +
-        					((rigidGroupIndex<< ( 4 * 5 ))) +
-        					((rigidGroupIndex<< ( 5 * 5 )));
-        		rigidMask = rigidMask & postCell_MovementsLayerMask;
-        		curRigidGroupIndexMask = level.rigidGroupIndexMask[currentIndex];
-        		curRigidMovementAppliedMask = level.rigidMovementAppliedMask[currentIndex];
-
-        		var oldrigidGroupIndexMask = curRigidGroupIndexMask;
-        		var oldRigidMovementAppliedMask = curRigidMovementAppliedMask;
-
-        		curRigidGroupIndexMask = curRigidGroupIndexMask | rigidMask;
-        		curRigidMovementAppliedMask = curRigidMovementAppliedMask | postCell_MovementsLayerMask;
-
-        		if (oldrigidGroupIndexMask!==curRigidGroupIndexMask ||
-        			oldRigidMovementAppliedMask !== curRigidMovementAppliedMask) {
-        			rigidchange=true;
-        		}
-
-        	}
-
-            //check if it's changed
-            if (oldCellMask!==curCellMask || oldMovementMask!=curMovementMask || rigidchange) { 
-                result=true;
-                if (rigidchange) {
-        			level.rigidGroupIndexMask[currentIndex] = curRigidGroupIndexMask;
-        			level.rigidMovementAppliedMask[currentIndex] = curRigidMovementAppliedMask;
-        		}
-
-        		var thingsCreated = curCellMask & (~oldCellMask);
-        		var thingsDestroyed = oldCellMask & (~curCellMask);
-        		sfxCreateMask = sfxCreateMask | thingsCreated;
-        		sfxDestroyMask = sfxDestroyMask | thingsDestroyed;
-
-                level.dat[currentIndex]=curCellMask;
-                level.movementMask[currentIndex]=curMovementMask;
-
-                var colIndex=(currentIndex/level.height)|0;
-				var rowIndex=(currentIndex%level.height);
-                level.colCellContents[colIndex]=(level.colCellContents[colIndex]|curCellMask);
-                level.rowCellContents[rowIndex]=(level.rowCellContents[rowIndex]|curCellMask);
-                level.mapCellContents = (level.mapCellContents|curCellMask);
-
-            } else {
-
-            }
+            result = preCell.replace(rule, currentIndex) || result;
 
             currentIndex = (currentIndex+delta[1]+delta[0]*level.height)%level.dat.length;
         }
@@ -1728,11 +1700,11 @@ function resolveMovements(dir){
     		if (movementMask_restricted!==0) {
     			//find what layer was restricted
     			for (var j=0;j<6;j++) {
-    				var layerSection = parseInt("11111",2)&(movementMask_restricted>>(5*j));
+    				var layerSection = 0x1f&(movementMask_restricted>>(5*j));
     				if (layerSection!==0) {
     					//this is our layer!
     					var rigidGroupIndexMask = level.rigidGroupIndexMask[i];
-    					var rigidGroupIndex = parseInt("11111",2)&(rigidGroupIndexMask>>(5*j));
+    					var rigidGroupIndex = 0x1f&(rigidGroupIndexMask>>(5*j));
     					rigidGroupIndex--;//group indices start at zero, but are incremented for storing in the bitfield
     					var groupIndex = state.rigidGroupIndex_to_GroupIndex[rigidGroupIndex];
     					level.bannedGroup[groupIndex]=true;
