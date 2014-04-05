@@ -1528,7 +1528,7 @@ function collapseRules(groups) {
 		var rules = groups[gn];
 		for (var i = 0; i < rules.length; i++) {
 			var oldrule = rules[i];
-			var newrule = [0,[],[],oldrule.lineNumber/*ellipses,group number,rigid,commands,randomrule,[cellrowmasks]*/];
+			var newrule = [0,[],oldrule.rhs.length>0,oldrule.lineNumber/*ellipses,group number,rigid,commands,randomrule,[cellrowmasks]*/];
 			var ellipses = [];
 			for (var j=0;j<oldrule.lhs.length;j++) {
 				ellipses.push(false);
@@ -1548,23 +1548,17 @@ function collapseRules(groups) {
 						} 
 						ellipses[j]=true;
 					}
-					oldcellmask_l[5] = 0; //stores randomdirmask_r O_O
-					oldcellmask_l[6] = 0;
 
-					newcellrow_l[k] = new CellPattern(oldcellmask_l);
+					oldcellmask_l[5] = null;
 
 					if (oldrule.rhs.length>0) {
 						var oldcellmask_r = cellrow_r[k];
-
-						newcellrow_l[k].randomDirOrEntityMask = oldcellmask_r[6];
-						oldcellmask_r[6] = oldcellmask_r[7];
-						newcellrow_r[k] = new CellPattern(oldcellmask_r);
+						oldcellmask_l[5] = new CellReplacement(oldcellmask_r);
 					}
+
+					newcellrow_l[k] = new CellPattern(oldcellmask_l);
 				}
 				newrule[1][j] = newcellrow_l;
-				if (newcellrow_r.length) {  // don't store empty rhs cells
-					newrule[2][j] = newcellrow_r;
-				}
 			}
 			newrule.push(ellipses);
 			newrule.push(oldrule.groupNumber);
@@ -1636,25 +1630,24 @@ function checkNoLateRulesHaveMoves(state){
 		var lateGroup = state.lateRules[ruleGroupIndex];
 		for (var ruleIndex=0;ruleIndex<lateGroup.length;ruleIndex++) {
 			var rule = lateGroup[ruleIndex];
-			for (var cellRowIndex=0;cellRowIndex<rule.lhs.length;cellRowIndex++) {
-				var cellRow_l = rule.lhs[cellRowIndex];
-				var cellRow_r = rule.rhs[cellRowIndex];
+			for (var cellRowIndex=0;cellRowIndex<rule.patterns.length;cellRowIndex++) {
+				var cellRow_l = rule.patterns[cellRowIndex];
 				for (var cellIndex=0;cellIndex<cellRow_l.length;cellIndex++) {
-					var cellMask = cellRow_l[cellIndex];
-					var movementMask = cellMask.movementMask;
+					var cellPattern = cellRow_l[cellIndex];
+					var movementMask = cellPattern.movementMask;
 					if (movementMask===ellipsisDirection) {
 						continue;
 					}
-					var moveNonExistenceMask = cellMask.moveNonExistenceMask;
-					var moveStationaryMask = cellMask.moveStationaryMask;
+					var moveNonExistenceMask = cellPattern.moveNonExistenceMask;
+					var moveStationaryMask = cellPattern.moveStationaryMask;
 					if (movementMask!==0 || moveNonExistenceMask!==0 || moveStationaryMask!==0) {
 						logError("Movements cannot appear in late rules.",rule.lineNumber);
 						return;
 					}
 
-					if (cellRow_r!==undefined && cellRow_r.length>0) {
-						var movementMask_r = cellRow_r[cellIndex].movementMask;
-						var moveStationaryMask_r = cellRow_r[cellIndex].moveStationaryMask;
+					if (cellPattern.replacement!=null) {
+						var movementMask_r = cellPattern.replacement.movementMask;
+						var moveStationaryMask_r = cellPattern.replacement.moveStationaryMask;
 
 						if (movementMask_r!==0 || moveStationaryMask_r!==0) {
 							logError("Movements cannot appear in late rules.",rule.lineNumber);

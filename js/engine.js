@@ -238,7 +238,7 @@ function generateTitleScreen()
 	}
 	if (state.metadata.author!==undefined) {
 		var attribution="by "+state.metadata.author;
-		attributionsplit = wordwrap(attribution,titleImage[0].length);
+		var attributionsplit = wordwrap(attribution,titleImage[0].length);
 		for (var i=0;i<attributionsplit.length;i++) {
 			var line = attributionsplit[i];
 			var row = titleImage[3+i];
@@ -928,10 +928,10 @@ var randomEntityMask = parseInt('00101', 2);
 
 function Rule(rule) {
 	this.direction = rule[0]; 		/* direction rule scans in */
-	this.lhs = rule[1];				/* CellPatterns to match before */
-	this.rhs = rule[2];				/* CellPatterns after */
+	this.patterns = rule[1];		/* lists of CellPatterns to match */
+	this.hasReplacements = rule[2];
 	this.lineNumber = rule[3];		/* rule source for debugging */
-	this.isEllipsis = rule[4];		/* array of bools, true if cell is ellipsis */
+	this.isEllipsis = rule[4];		/* true if pattern has ellipsis */
 	this.groupNumber = rule[5];		/* execution group number of rule */
 	this.isRigid = rule[6];
 	this.commands = rule[7];		/* cancel, restart, sfx, etc */
@@ -944,7 +944,7 @@ function Rule(rule) {
 Rule.prototype.toJSON = function() {
 	/* match construction order for easy deserialization */
 	return [
-		this.direction, this.lhs, this.rhs, this.lineNumber, this.isEllipsis,
+		this.direction, this.patterns, this.hasReplacements, this.lineNumber, this.isEllipsis,
 		this.groupNumber, this.isRigid, this.commands, this.isRandom, this.cellRowMasks
 	];
 };
@@ -958,6 +958,26 @@ function CellPattern(row) {
 	this.randomDirOrEntityMask = row[5]; /* dir on lhs, entity rhs */
 	this.movementsToRemove = row[6]; /* only used for rhs */
 }
+
+function CellPattern(row) {
+	this.movementMask = row[0];
+	this.cellMask = row[1];
+	this.nonExistenceMask = row[2];
+	this.moveNonExistenceMask = row[3];
+	this.moveStationaryMask = row[4];
+	this.replacement = row[5];
+};
+
+function CellReplacement(row) {
+	this.movementMask = row[0];
+	this.cellMask = row[1];
+	this.nonExistenceMask = row[2];
+	this.movementsLayerMask = row[3];
+	this.moveStationaryMask = row[4];
+	this.randomDirMask = row[5];
+	this.randomEntityMask = row[6];
+	this.movementsToRemove = row[7];
+};
 
 CellPattern.prototype.matches = function(cellMask, movementMask) {
 	return	((this.cellMask&cellMask) == this.cellMask) &&
@@ -1325,8 +1345,8 @@ function restorePreservationState(preservationState) {
 Rule.prototype.findMatches = function() {
 	var matches=[];
 	var cellRowMasks=this.cellRowMasks;
-    for (var cellRowIndex=0;cellRowIndex<this.lhs.length;cellRowIndex++) {
-        var cellRow = this.lhs[cellRowIndex];
+    for (var cellRowIndex=0;cellRowIndex<this.patterns.length;cellRowIndex++) {
+        var cellRow = this.patterns[cellRowIndex];
         if (this.isEllipsis[cellRowIndex]) {//if ellipsis     
         	var match = matchCellRowWildCard(this.direction,cellRow,cellRowMasks[cellRowIndex]);  
         } else {
@@ -1346,15 +1366,15 @@ Rule.prototype.applyAt = function(delta,tuple,check) {
 	//have to double check they apply
     if (check) {
         var ruleMatches=true;                
-        for (var cellRowIndex=0;cellRowIndex<rule.lhs.length;cellRowIndex++) {
+        for (var cellRowIndex=0;cellRowIndex<rule.patterns.length;cellRowIndex++) {
         	if (rule.isEllipsis[cellRowIndex]) {//if ellipsis
-            	if (cellRowMatchesWildCard(rule.direction,rule.lhs[cellRowIndex],tuple[cellRowIndex][0],
+            	if (cellRowMatchesWildCard(rule.direction,rule.patterns[cellRowIndex],tuple[cellRowIndex][0],
             		tuple[cellRowIndex][1]+1, tuple[cellRowIndex][1])===false) { /* pass mink to specify */
                     ruleMatches=false;
                     break;
                 }
         	} else {
-            	if (cellRowMatches(rule.direction,rule.lhs[cellRowIndex],tuple[cellRowIndex])===false) {
+            	if (cellRowMatches(rule.direction,rule.patterns[cellRowIndex],tuple[cellRowIndex])===false) {
                     ruleMatches=false;
                     break;
                 }
@@ -1368,9 +1388,8 @@ Rule.prototype.applyAt = function(delta,tuple,check) {
     
     //APPLY THE RULE
     var rigidCommitted=false;
-    for (var cellRowIndex=0;cellRowIndex<rule.lhs.length;cellRowIndex++) {
-        var preRow = rule.lhs[cellRowIndex];
-        var postRow = rule.rhs[cellRowIndex];
+    for (var cellRowIndex=0;cellRowIndex<rule.patterns.length;cellRowIndex++) {
+        var preRow = rule.patterns[cellRowIndex];
         
         var currentIndex = rule.isEllipsis[cellRowIndex] ? tuple[cellRowIndex][0] : tuple[cellRowIndex];
         for (var cellIndex=0;cellIndex<preRow.length;cellIndex++) {
@@ -1388,15 +1407,15 @@ Rule.prototype.applyAt = function(delta,tuple,check) {
             var preCell_MoveNonExistence = preCell.moveNonExistenceMask;
             var preCell_StationaryMask = preCell.moveStationaryMask;
             
-            var postCell = postRow[cellIndex];
+            var postCell = preCell.replacement;
 
             var postCell_Movements = postCell.movementMask;
 			var postCell_Objects = postCell.cellMask;
             var postCell_NonExistence = postCell.nonExistenceMask;
-            var postCell_MovementsLayerMask = postCell.moveNonExistenceMask;
+            var postCell_MovementsLayerMask = postCell.movementsLayerMask;
             var postCell_StationaryMask = postCell.moveStationaryMask;
-            var postCell_RandomEntityMask = postCell.randomDirOrEntityMask;
-            var postCell_RandomDirMask = preCell.randomDirOrEntityMask;
+            var postCell_RandomEntityMask = postCell.randomDirMask;
+            var postCell_RandomDirMask = postCell.randomEntityMask;
             var postCell_movementsToRemove = postCell.movementsToRemove;
 
             if (postCell_RandomEntityMask !== 0) {
@@ -1523,6 +1542,7 @@ Rule.prototype.applyAt = function(delta,tuple,check) {
 
 Rule.prototype.tryApply = function() {
 	var delta = dirMasksDelta[this.direction];
+
     //get all cellrow matches
     var matches = this.findMatches();
     if (matches.length===0) {
@@ -1530,8 +1550,8 @@ Rule.prototype.tryApply = function() {
     }
 
     var result=false;	
-	if (this.rhs.length) {
-	    var tuples  = generateTuples(matches);
+	if (this.hasReplacements) {
+	    var tuples = generateTuples(matches);
 	    for (var tupleIndex=0;tupleIndex<tuples.length;tupleIndex++) {
 	        var tuple = tuples[tupleIndex];
 	        var shouldCheck=tupleIndex>0;
@@ -1543,7 +1563,7 @@ Rule.prototype.tryApply = function() {
     	this.queueCommands();
     }
     return result;
-}
+};
 
 Rule.prototype.queueCommands = function() {
 	var commands = this.commands;
