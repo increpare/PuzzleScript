@@ -941,30 +941,19 @@ function CellPattern(row) {
 	this.movementMask = row[0];
 	this.cellMask = row[1];
 	this.nonExistenceMask = row[2];
-	this.moveNonExistenceMask = row[3]; /* on rhs, movementsLayerMask */
-	this.moveStationaryMask = row[4];
-	this.randomDirOrEntityMask = row[5]; /* dir on lhs, entity rhs */
-	this.movementsToRemove = row[6]; /* only used for rhs */
-}
-
-function CellPattern(row) {
-	this.movementMask = row[0];
-	this.cellMask = row[1];
-	this.nonExistenceMask = row[2];
 	this.moveNonExistenceMask = row[3];
 	this.moveStationaryMask = row[4];
 	this.replacement = row[5];
 };
 
 function CellReplacement(row) {
-	this.movementMask = row[0];
-	this.cellMask = row[1];
-	this.nonExistenceMask = row[2];
-	this.movementsLayerMask = row[3];
-	this.moveStationaryMask = row[4];
+	this.objectsClear = row[0];
+	this.objectsSet = row[1];
+	this.movementsClear = row[2];
+	this.movementsSet = row[3];
+	this.movementsLayerMask = row[4];
 	this.randomEntityMask = row[5];
 	this.randomDirMask = row[6];
-	this.movementsToRemove = row[7];
 };
 
 CellPattern.prototype.matches = function(i) {
@@ -991,13 +980,11 @@ CellPattern.prototype.replace = function(rule, currentIndex) {
 	var replace_RandomEntityMask = replace.randomEntityMask;
 	var replace_RandomDirMask = replace.randomDirMask;
 
-	var objectsSet = replace.cellMask;
-	var objectsClear = (this.cellMask | replace.nonExistenceMask);
+	var objectsSet = replace.objectsSet;
+	var objectsClear = replace.objectsClear;
 
-	var movementsSet = replace.movementMask;
-	var movementsClear = (this.movementMask | replace.movementsToRemove |
-					   this.moveNonExistenceMask | replace_MovementsLayerMask
-					   | replace.moveStationaryMask );
+	var movementsSet = replace.movementsSet;
+	var movementsClear = replace.movementsClear | replace_MovementsLayerMask;
 
 	if (replace_RandomEntityMask !== 0) {
 		var choices=[];

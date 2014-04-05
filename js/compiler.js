@@ -1376,11 +1376,10 @@ function rulesToMask(state) {
 					var object_name = cell_l[l + 1];
 					var object = state.objects[object_name];
 					var layerIndex = object.layer;
-					var object_id = object.id;
 					var layerMask = state.layerMasks[layerIndex];
 
 					if (object_dir==='no') {
-						nonExistenceMask_l |= 1<<object_id;
+						nonExistenceMask_l |= 1<<object.id;
 					} else {
 						var targetobjectid = mask_l[2 * layerIndex + 1];
 						if (targetobjectid > -2) {
@@ -1389,9 +1388,9 @@ function rulesToMask(state) {
 						}
 
 						mask_l[2 * layerIndex + 0] = object_dir;
-						mask_l[2 * layerIndex + 1] = object_id;
+						mask_l[2 * layerIndex + 1] = object.id;
 
-						cellmask_l |= 1 << object_id;
+						cellmask_l |= 1 << object.id;
 						
 						objectlayers_l |= 0x1f<<(5*layerIndex);
 
@@ -1432,29 +1431,28 @@ function rulesToMask(state) {
 				}
 				var cell_r = cellrow_r[k];
 				var mask_r = maskTemplate.concat([]);
+
+				var objectsClear = 0;
+				var objectsSet = 0;
+				var movementsClear = 0;
+				var movementsSet = 0;
+
 				var objectlayers_r = 0;
-				var forcemask_r = 0;				
-				var cellmask_r = 0;
 				var randomMask_r = 0;
-				var nonExistenceMask_r = 0;
+				var objectsClear = 0;
 				var postMovementsLayerMask_r = 0;
-				var stationaryMask_r = 0;
 				var randomDirMask_r = 0;
 				for (var l = 0; l < cell_r.length; l += 2) {
 					var object_dir = cell_r[l];
 					if (object_dir==='...') {
-//						mask_r[ 2 * layerIndex + 0 ] = ellipsisDirection;
-//						mask_r[ 2 * layerIndex + 1 ] = 0;
-						cellmask_r = ellipsisDirection;
-						forcemask_r = ellipsisDirection;
+						objectsSet = ellipsisDirection;
+						movementsSet = ellipsisDirection;
 						break;
 					} else if (object_dir==='random') {
 						var object_name = cell_r[l+1];
 						if (object_name in state.objectMasks) {
 							var mask = state.objectMasks[object_name];                            
-                            randomMask_r |= mask;
-                            //forcemask_r = randomEntityMask;
-//                            nonExistenceMask_r = 0; //don't know why i had this                           
+                            randomMask_r |= mask;                        
 						} else {
 							logError('You want to spawn a random "'+object_name.toUpperCase()+'", but I don\'t know how to do that',rule.lineNumber);
 						}
@@ -1468,7 +1466,7 @@ function rulesToMask(state) {
 
 					
 					if (object_dir=='no') {
-						nonExistenceMask_r |= 1<<object_id;
+						objectsClear |= 1<<object_id;
 					} else {
 						var targetobjectid = mask_r[2 * layerIndex + 1];
 						if (targetobjectid > -2) {
@@ -1485,21 +1483,23 @@ function rulesToMask(state) {
 							postMovementsLayerMask_r |= 0x1f<<(5*layerIndex);
 						}			
 
-						cellmask_r |= 1 << object_id;
+						objectsSet |= 1 << object_id;
 						objectlayers_r |= 0x1f<<(5*layerIndex);
 						if (object_dir==='stationary') {
-							stationaryMask_r |= 0x1f<<(5*layerIndex);
+							movementsClear |= 0x1f<<(5*layerIndex);
 						} if (object_dir==='randomdir') {
 							randomDirMask_r |= dirMasks[object_dir] << (5 * layerIndex);
 						} else {						
-							forcemask_r |= dirMasks[object_dir] << (5 * layerIndex);
+							movementsSet |= dirMasks[object_dir] << (5 * layerIndex);
 						}
-						nonExistenceMask_r |= layerMask;
+						objectsClear |= layerMask;
 					}
 				}
 
-				var movementsToRemove_r = objectlayers_l & (~objectlayers_r);
-				cellrow_r[k] = [forcemask_r, cellmask_r, nonExistenceMask_r,postMovementsLayerMask_r,stationaryMask_r,randomMask_r,randomDirMask_r,movementsToRemove_r];
+				objectsClear |= cellmask_l; // clear out old objects
+				movementsClear |= forcemask_l; // ... and movements
+				postMovementsLayerMask_r |= objectlayers_l & (~objectlayers_r);
+				cellrow_r[k] = new CellReplacement([objectsClear, objectsSet, movementsClear, movementsSet, postMovementsLayerMask_r, randomMask_r, randomDirMask_r]);
 			}
 		}
 	}
@@ -1551,8 +1551,7 @@ function collapseRules(groups) {
 					oldcellmask_l[5] = null;
 
 					if (oldrule.rhs.length>0) {
-						var oldcellmask_r = cellrow_r[k];
-						oldcellmask_l[5] = new CellReplacement(oldcellmask_r);
+						oldcellmask_l[5] = cellrow_r[k];
 					}
 
 					newcellrow_l[k] = new CellPattern(oldcellmask_l);
@@ -1645,10 +1644,10 @@ function checkNoLateRulesHaveMoves(state){
 					}
 
 					if (cellPattern.replacement!=null) {
-						var movementMask_r = cellPattern.replacement.movementMask;
-						var moveStationaryMask_r = cellPattern.replacement.moveStationaryMask;
+						var movementsClear = cellPattern.replacement.movementsClear;
+						var movementsSet = cellPattern.replacement.movementsSet;
 
-						if (movementMask_r!==0 || moveStationaryMask_r!==0) {
+						if (movementsClear!==0 || movementsSet!==0) {
 							logError("Movements cannot appear in late rules.",rule.lineNumber);
 							return;
 						}
