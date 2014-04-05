@@ -1440,12 +1440,12 @@ Rule.prototype.applyAt = function(delta,tuple,check) {
         for (var cellRowIndex=0;cellRowIndex<rule.patterns.length;cellRowIndex++) {
         	if (rule.isEllipsis[cellRowIndex]) {//if ellipsis
             	if (cellRowMatchesWildCard(rule.direction,rule.patterns[cellRowIndex],tuple[cellRowIndex][0],
-            		tuple[cellRowIndex][1]+1, tuple[cellRowIndex][1])===false) { /* pass mink to specify */
+            		tuple[cellRowIndex][1]+1, tuple[cellRowIndex][1]).length === 0) { /* pass mink to specify */
                     ruleMatches=false;
                     break;
                 }
         	} else {
-            	if (cellRowMatches(rule.direction,rule.patterns[cellRowIndex],tuple[cellRowIndex])===false) {
+            	if (cellRowMatches(rule.direction,rule.patterns[cellRowIndex],tuple[cellRowIndex]).length === 0) {
                     ruleMatches=false;
                     break;
                 }

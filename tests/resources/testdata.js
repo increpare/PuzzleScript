@@ -174,6 +174,10 @@ var testdata = [
 	[
 		"movement matching - ellipsis bug - forgot to include one case in above",
 		["verbose_logging\ndebug\n\n========\nOBJECTS\n========\n\nBackground\ndarkgreen\n\nPlayer\ngreen\n\nRed\nred\n\nBrown\nbrown\n\nBlue\nblue\n\nA\nwhite\n\nB\nyellow\n\n=======\nLEGEND\n=======\n\nr = Red\no = Brown\n. = Background\n\n=======\nSOUNDS\n=======\n\n================\nCOLLISIONLAYERS\n================\n\nBackground\nPlayer\nA\nB\nRed, Brown\nBlue\n\n======\nRULES\n======\n\n[ Red | ... | Brown ] -> [ down A down B | ... | down a up B]\n[ down A up B | ... | down A up b ] -> [ | ... | ]\n\n==============\nWINCONDITIONS\n==============\n\n=======\nLEVELS\n=======\n\nro\n\n",[2],"a b background:0,0,\n",0]
+	],
+	[
+		"ellipsis bug: rule matches two candidates, first replacement invalidates second",
+		["title ellipsis cloning\n(ellipsis cloning bug -- reduction from neko puzzle)\n\n========\nOBJECTS\n========\n\nBackground .\nDarkBlue\n\nFruit F\nRed\n\nPlayer P\nWhite\n\n=======\nLEGEND\n=======\n\n=========\nSOUNDS\n=========\n\n================\nCOLLISIONLAYERS\n================\n\nBackground\nPlayer, Fruit\n\n======\nRULES\n======\n\nright [ > Player | ... | Fruit ] -> [ | ... | Player ]\n\n==============\nWINCONDITIONS\n==============\n\n=======\nLEVELS\n=======\nF.P.....FF\n",[3,1,1],"background fruit:0,background:1,1,1,1,1,background player:2,1,1,0,\n",0]
 	]
 ];
 
