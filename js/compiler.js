@@ -405,9 +405,8 @@ function levelsToArray(state) {
 					mask = mask.concat([]);					
 					for (var z = 0; z < o.layerCount; z++) {
 						if (mask[z]>=0) {
-							maskint = maskint | (1 << mask[z]);
+							maskint |= 1 << mask[z];
 						}
-//						dat.push(mask[z]);
 					}
 					dat.push(maskint);
 				}
@@ -1381,7 +1380,7 @@ function rulesToMask(state) {
 					var layerMask = state.layerMasks[layerIndex];
 
 					if (object_dir==='no') {
-						nonExistenceMask_l = nonExistenceMask_l | (1<<object_id );
+						nonExistenceMask_l |= 1<<object_id;
 					} else {
 						var targetobjectid = mask_l[2 * layerIndex + 1];
 						if (targetobjectid > -2) {
@@ -1392,17 +1391,17 @@ function rulesToMask(state) {
 						mask_l[2 * layerIndex + 0] = object_dir;
 						mask_l[2 * layerIndex + 1] = object_id;
 
-						cellmask_l = cellmask_l | (1 << object_id);
+						cellmask_l |= 1 << object_id;
 						
-						objectlayers_l = objectlayers_l | ((1+2+4+8+16)<<(5*layerIndex));
+						objectlayers_l |= 0x1f<<(5*layerIndex);
 
 						if (object_dir==='stationary') {
-							stationaryMask_l = stationaryMask_l | ((1+2+4+8+16)<<(5*layerIndex));
+							stationaryMask_l |= 0x1f<<(5*layerIndex);
 						} else {
-							var forcemask = (dirMasks[object_dir] << (5 * layerIndex));
-							forcemask_l = forcemask_l | forcemask;	
+							var forcemask = dirMasks[object_dir] << (5 * layerIndex);
+							forcemask_l |= forcemask;	
 							if (forcemask!==0) {	
-								moveNonExistenceMask_l = moveNonExistenceMask_l | ((1+2+4+8+16)<<(5*layerIndex));							
+								moveNonExistenceMask_l |= 0x1f<<(5*layerIndex);
 							}
 						}
 					}
@@ -1453,7 +1452,7 @@ function rulesToMask(state) {
 						var object_name = cell_r[l+1];
 						if (object_name in state.objectMasks) {
 							var mask = state.objectMasks[object_name];                            
-                            randomMask_r = randomMask_r | mask;
+                            randomMask_r |= mask;
                             //forcemask_r = randomEntityMask;
 //                            nonExistenceMask_r = 0; //don't know why i had this                           
 						} else {
@@ -1469,7 +1468,7 @@ function rulesToMask(state) {
 
 					
 					if (object_dir=='no') {
-						nonExistenceMask_r = nonExistenceMask_r | (1<<object_id );
+						nonExistenceMask_r |= 1<<object_id;
 					} else {
 						var targetobjectid = mask_r[2 * layerIndex + 1];
 						if (targetobjectid > -2) {
@@ -1483,19 +1482,19 @@ function rulesToMask(state) {
 						mask_r[2 * layerIndex + 1] = object_id;
 
 						if (object_dir.length>0) {
-							postMovementsLayerMask_r = postMovementsLayerMask_r | ((1+2+4+8+16)<<(5*layerIndex));
+							postMovementsLayerMask_r |= 0x1f<<(5*layerIndex);
 						}			
 
-						cellmask_r = cellmask_r | (1 << object_id);
-						objectlayers_r = objectlayers_r | ((1+2+4+8+16)<<(5*layerIndex));
+						cellmask_r |= 1 << object_id;
+						objectlayers_r |= 0x1f<<(5*layerIndex);
 						if (object_dir==='stationary') {
-							stationaryMask_r = stationaryMask_r | ((1+2+4+8+16)<<(5*layerIndex));
+							stationaryMask_r |= 0x1f<<(5*layerIndex);
 						} if (object_dir==='randomdir') {
-							randomDirMask_r = randomDirMask_r | (dirMasks[object_dir] << (5 * layerIndex));
+							randomDirMask_r |= dirMasks[object_dir] << (5 * layerIndex);
 						} else {						
-							forcemask_r = forcemask_r | (dirMasks[object_dir] << (5 * layerIndex));
+							forcemask_r |= dirMasks[object_dir] << (5 * layerIndex);
 						}
-						nonExistenceMask_r = nonExistenceMask_r | layerMask;
+						nonExistenceMask_r |= layerMask;
 					}
 				}
 
@@ -1699,7 +1698,7 @@ function getMaskFromName(state,name) {
 	var objectMask=0;
 	if (name in state.objects) {
 		var o=state.objects[name];
-		objectMask = objectMask | (1<<o.id);		
+		objectMask |= 1<<o.id;		
 	}
 
 	if (name in state.aggregatesDict) {
@@ -1707,7 +1706,7 @@ function getMaskFromName(state,name) {
 		for(var i=0;i<objectnames.length;i++) {
 			var n=objectnames[i];
 			var o = state.objects[n];
-			objectMask = objectMask | (1<<o.id);
+			objectMask |= 1<<o.id;
 		}
 	}
 
@@ -1716,14 +1715,14 @@ function getMaskFromName(state,name) {
 		for(var i=0;i<objectnames.length;i++) {
 			var n = objectnames[i];
 			var o = state.objects[n];
-			objectMask = objectMask | (1<<o.id);
+			objectMask |= 1<<o.id;
 		}
 	}
 
 	if (name in state.synonymsDict) {
 		var n = state.synonymsDict[name];
 		var o = state.objects[n];
-		objectMask = objectMask | (1<<o.id);
+		objectMask |= 1<<o.id;
 	}
 
 	if (objectMask==0) {
@@ -1744,7 +1743,7 @@ function generatePlayerMask(state) {
 			var n=state.idDict[j];
 			var o = state.objects[n];
 			if (o.layer==layer) {
-				layerMask = layerMask | (1<<o.id);
+				layerMask |= 1<<o.id;
 			}
 		}
 		layerMasks.push(layerMask);
@@ -1769,7 +1768,7 @@ function generatePlayerMask(state) {
 		var val = 0;
 		for (var j=1;j<prop.length;j++) {
 			var n = prop[j];
-			val = val | objectMask[n];
+			val |= objectMask[n];
 		}
 		objectMask[prop[0]]=val;
 	}
@@ -2126,7 +2125,7 @@ function generateSoundData(state) {
 					logError('Was expecting a direction, instead found "'+direction+'".',lineNumber);
 				} else {
 					var soundDirectionMask = soundDirectionIndicatorMasks[direction];
-					directionMask = directionMask | soundDirectionMask;
+					directionMask |= soundDirectionMask;
 				}
 			}
 			var targets=[target];
