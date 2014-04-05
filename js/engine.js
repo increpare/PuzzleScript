@@ -986,14 +986,18 @@ CellPattern.prototype.toJSON = function() {
 
 CellPattern.prototype.replace = function(rule, currentIndex) {
 	var replace = this.replacement;
-	var replace_Movements = replace.movementMask;
-	var replace_Objects = replace.cellMask;
-	var replace_NonExistence = replace.nonExistenceMask;
+
 	var replace_MovementsLayerMask = replace.movementsLayerMask;
-	var replace_StationaryMask = replace.moveStationaryMask;
 	var replace_RandomEntityMask = replace.randomEntityMask;
 	var replace_RandomDirMask = replace.randomDirMask;
-	var replace_movementsToRemove = replace.movementsToRemove;
+
+	var objectsSet = replace.cellMask;
+	var objectsClear = (this.cellMask | replace.nonExistenceMask);
+
+	var movementsSet = replace.movementMask;
+	var movementsClear = (this.movementMask | replace.movementsToRemove |
+					   this.moveNonExistenceMask | replace_MovementsLayerMask
+					   | replace.moveStationaryMask );
 
 	if (replace_RandomEntityMask !== 0) {
 		var choices=[];
@@ -1005,18 +1009,17 @@ CellPattern.prototype.replace = function(rule, currentIndex) {
 		var rand = choices[Math.floor(Math.random() * choices.length)];
 		var n = state.idDict[rand];
 		var o = state.objects[n];
-		var objectMask = state.layerMasks[o.layer];
 		var movementLayerMask = 0x1f<<(5*o.layer);
-		replace_Objects |= 1<<rand;
-		replace_NonExistence |= state.layerMasks[o.layer];
-		replace_StationaryMask |= movementLayerMask;
+		objectsSet |= 1<<rand;
+		objectsClear |= state.layerMasks[o.layer];
+		movementsClear |= movementLayerMask;
 	}
 	if (replace_RandomDirMask !== 0 ) {
 		for (var layerIndex=0;layerIndex<6;layerIndex++){
 			var layerSection = 0x1f&(replace_RandomDirMask>>(5*layerIndex));
 			if (layerSection!==0) {
 				var randomDir = Math.floor(Math.random()*4)
-				replace_Movements |= (1 << randomDir)<<(5*layerIndex);
+				movementsSet |= (1 << randomDir)<<(5*layerIndex);
 			}
 		}
 	}
@@ -1027,24 +1030,11 @@ CellPattern.prototype.replace = function(rule, currentIndex) {
 	var oldCellMask = curCellMask;
 	var oldMovementMask = curMovementMask;
 
-	//1 remove old
-	curCellMask &= ~this.cellMask;
-	curMovementMask &= ~this.movementMask;
-	curMovementMask &= ~replace_movementsToRemove;
-	
-	//2 make way for new
-	curCellMask &= ~replace_NonExistence;
-	curMovementMask &= ~this.moveNonExistenceMask;
+	curCellMask &= ~objectsClear;
+	curCellMask |= objectsSet;
 
-	//3 mask out old movements before adding new
-	if (replace_Movements!==0) {
-		curMovementMask &= ~replace_MovementsLayerMask;
-	}
-
-	//4 add new
-	curCellMask |= replace_Objects;
-	curMovementMask &= ~replace_StationaryMask;
-	curMovementMask |= replace_Movements;
+	curMovementMask &= ~movementsClear;
+	curMovementMask |= movementsSet;
 
 	var rigidchange=false;
 	var curRigidGroupIndexMask =0;
