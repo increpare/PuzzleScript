@@ -7,7 +7,30 @@ var canOpenEditor=true;
 var IDE=true;
 
 function convertLevelToString() {
-	return  JSON.stringify(level);
+	var out = '';
+	var seenCells = {};
+	var i = 0;
+	for (var y = 0; y < level.height; y++) {
+		for (var x = 0; x < level.width; x++) {
+			var bitmask = level.dat[x + y * level.width];
+			var objs = [];
+			for (var bit = 0; bit < 32; ++bit) {
+				if (bitmask & (1 << bit)) {
+					objs.push(state.idDict[bit])
+				}
+			}
+			objs.sort();
+			objs = objs.join(" ");
+			/* replace repeated object combinations with numbers */
+			if (!seenCells.hasOwnProperty(objs)) {
+				seenCells[objs] = i++;
+				out += objs + ":";
+			}
+			out += seenCells[objs] + ",";
+		}
+		out += '\n';
+	}
+	return out;
 }
 
 function dumpTestCase() {
