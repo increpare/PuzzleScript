@@ -1434,12 +1434,13 @@ function rulesToMask(state) {
 				var randomDirMask_r = 0;
 				for (var l = 0; l < cell_r.length; l += 2) {
 					var object_dir = cell_r[l];
+					var object_name = cell_r[l + 1];
+
 					if (object_dir==='...') {
 						objectsSet = ellipsisDirection;
 						movementsSet = ellipsisDirection;
 						break;
 					} else if (object_dir==='random') {
-						var object_name = cell_r[l+1];
 						if (object_name in state.objectMasks) {
 							var mask = state.objectMasks[object_name];                            
                             randomMask_r |= mask;                        
@@ -1449,7 +1450,6 @@ function rulesToMask(state) {
 						continue;
 					}
 
-					var object_name = cell_r[l + 1];
 					var object = state.objects[object_name];
 					var layerIndex = object.layer;
 					var object_id = object.id;
@@ -1471,9 +1471,10 @@ function rulesToMask(state) {
 
 						if (object_dir.length>0) {
 							postMovementsLayerMask_r |= 0x1f<<(5*layerIndex);
-						}			
+						}
 
 						objectsSet |= 1 << object_id;
+						objectsClear |= layerMask
 						objectlayers_r |= 0x1f<<(5*layerIndex);
 						if (object_dir==='stationary') {
 							movementsClear |= 0x1f<<(5*layerIndex);
@@ -1481,15 +1482,22 @@ function rulesToMask(state) {
 							randomDirMask_r |= dirMasks[object_dir] << (5 * layerIndex);
 						} else {						
 							movementsSet |= dirMasks[object_dir] << (5 * layerIndex);
-						}
-						objectsClear |= layerMask;
+						};
 					}
 				}
 
-				objectsClear |= objectsPresent; // clear out old objects
-				movementsClear |= movementsPresent; // ... and movements
+				if ((objectsPresent & objectsSet) !== objectsPresent) {
+					objectsClear |= objectsPresent; // clear out old objects
+				}
+				if ((movementsPresent & movementsSet) !== movementsPresent) {
+					movementsClear |= movementsPresent; // ... and movements
+				}
+
 				postMovementsLayerMask_r |= objectlayers_l & (~objectlayers_r);
-				cellrow_l[k].replacement = new CellReplacement([objectsClear, objectsSet, movementsClear, movementsSet, postMovementsLayerMask_r, randomMask_r, randomDirMask_r]);
+				if (objectsClear || objectsSet || movementsClear || movementsSet || postMovementsLayerMask_r) {
+					// only set a replacement if something would change
+					cellrow_l[k].replacement = new CellReplacement([objectsClear, objectsSet, movementsClear, movementsSet, postMovementsLayerMask_r, randomMask_r, randomDirMask_r]);
+				}
 			}
 		}
 	}

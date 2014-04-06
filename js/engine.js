@@ -976,6 +976,10 @@ CellPattern.prototype.toJSON = function() {
 CellPattern.prototype.replace = function(rule, currentIndex) {
 	var replace = this.replacement;
 
+	if (replace === undefined) {
+		return false;
+	}
+
 	var replace_MovementsLayerMask = replace.movementsLayerMask;
 	var replace_RandomEntityMask = replace.randomEntityMask;
 	var replace_RandomDirMask = replace.randomDirMask;
