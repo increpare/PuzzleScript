@@ -938,11 +938,11 @@ Rule.prototype.toJSON = function() {
 };
 
 function CellPattern(row) {
-	this.movementMask = row[0];
-	this.cellMask = row[1];
-	this.nonExistenceMask = row[2];
-	this.moveNonExistenceMask = row[3];
-	this.moveStationaryMask = row[4];
+	this.objectsPresent = row[0];
+	this.objectsMissing = row[1];
+	this.movementsPresent = row[2];
+	this.movementsMissing = row[3];
+
 	this.replacement = row[5];
 };
 
@@ -959,10 +959,10 @@ function CellReplacement(row) {
 CellPattern.prototype.matches = function(i) {
     var movementMask = level.movementMask[i];
     var cellMask = level.dat[i];
-	return	((this.cellMask&cellMask) == this.cellMask) &&
-			((this.nonExistenceMask&cellMask)===0)&&
-			((this.movementMask===0?true:((this.movementMask&movementMask)===this.movementMask))) &&
-			((this.moveStationaryMask&movementMask)===0);
+	return	((this.objectsPresent&cellMask) === this.objectsPresent) &&
+			((this.objectsMissing&cellMask)===0)&&
+			((this.movementsPresent&movementMask)===this.movementsPresent) &&
+			((this.movementsMissing&movementMask)===0);
 };
 
 CellPattern.prototype.toJSON = function() {
@@ -1096,14 +1096,13 @@ function cellRowMatchesWildCard(direction,cellRow,i,maxk,mink) {
                 var movementMask = level.movementMask[targetIndex];
 
                 var cellPattern = cellRow[j]
-                if (cellPattern.movementMask === ellipsisDirection) {
+                if (cellPattern.movementsPresent === ellipsisDirection) {
                 	//BAM inner loop time
                 	for (var k=mink;k<maxk;k++) {
                 		var targetIndex2=targetIndex;
                 		targetIndex2 = (targetIndex2+delta[1]*(k)+delta[0]*(k)*level.height+level.dat.length)%level.dat.length;
                 		for (var j2=j+1;j2<cellRow.length;j2++) {
 			                cellPattern = cellRow[j2];
-
 						    if (!cellPattern.matches(targetIndex2)) {
 						    	break;
 						    }
@@ -1133,17 +1132,11 @@ function cellRowMatches(direction,cellRow,i,k) {
             for (var j=1;j<cellRow.length;j++) {
                 targetIndex = (targetIndex+delta[1]+delta[0]*level.height)%level.dat.length;
                 cellPattern = cellRow[j];
- 				if (cellPattern.movementMask === ellipsisDirection) {
+ 				if (cellPattern.movementsPresent === ellipsisDirection) {
  					//only for once off verifications
                 	targetIndex = (targetIndex+delta[1]*k+delta[0]*k*level.height)%level.dat.length; 					
                 }
-
-                var cellMask = level.dat[targetIndex];
-                var movementMask = level.movementMask[targetIndex];
-
-			    if (cellPattern.matches(targetIndex)) {
-                    //GOOD
-                } else {
+			    if (!cellPattern.matches(targetIndex)) {
                     break;
                 }
             }   
@@ -1466,8 +1459,7 @@ Rule.prototype.applyAt = function(delta,tuple,check) {
         for (var cellIndex=0;cellIndex<preRow.length;cellIndex++) {
             var preCell = preRow[cellIndex];
 
-            var preCell_Movement = preCell.movementMask;
-            if (preCell_Movement === ellipsisDirection) {
+            if (preCell.movementsPresent === ellipsisDirection) {
             	var k = tuple[cellRowIndex][1];
             	currentIndex = (currentIndex+delta[1]*k+delta[0]*k*level.height)%level.dat.length;
             	continue;

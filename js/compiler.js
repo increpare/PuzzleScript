@@ -747,8 +747,6 @@ function deepCloneRule(rule) {
 }
 
 function rulesToArray(state) {
-
-
 	var oldrules = state.rules;
 	var rules = [];
 	var loops=[];
@@ -1324,7 +1322,6 @@ var dirMasks = {
 	'' : parseInt('00000',2)
 };
 
-
 function rulesToMask(state) {
 	/*
 
@@ -1344,19 +1341,17 @@ function rulesToMask(state) {
 			for (var k = 0; k < cellrow_l.length; k++) {
 				var cell_l = cellrow_l[k];
 				var mask_l = maskTemplate.concat([]);
+				var objectsPresent = 0;
+				var objectsMissing = 0;
+				var movementsPresent = 0;
+				var movementsMissing = 0;
+
 				var objectlayers_l = 0;
-				var forcemask_l = 0;
-				var cellmask_l = 0;
-				var nonExistenceMask_l = 0;
-				var moveNonExistenceMask_l = 0;
-				var stationaryMask_l = 0;
 				for (var l = 0; l < cell_l.length; l += 2) {
 					var object_dir = cell_l[l];
 					if (object_dir==='...') {
-//						mask_l[ 2 * layerIndex + 0 ] = ellipsisDirection;
-//						mask_l[ 2 * layerIndex + 1 ] = 0;
-						cellmask_l = ellipsisDirection;
-						forcemask_l = ellipsisDirection;
+						objectsPresent = ellipsisDirection;
+						movementsPresent = ellipsisDirection;
 						if (cell_l.length!==2) {
 							logError("You can't have anything in with an ellipsis. Sorry.",rule.lineNumber);
 						} else if ((k===0)||(k===cellrow_l.length-1)) {
@@ -1379,7 +1374,7 @@ function rulesToMask(state) {
 					var layerMask = state.layerMasks[layerIndex];
 
 					if (object_dir==='no') {
-						nonExistenceMask_l |= 1<<object.id;
+						objectsMissing |= 1<<object.id;
 					} else {
 						var targetobjectid = mask_l[2 * layerIndex + 1];
 						if (targetobjectid > -2) {
@@ -1390,18 +1385,14 @@ function rulesToMask(state) {
 						mask_l[2 * layerIndex + 0] = object_dir;
 						mask_l[2 * layerIndex + 1] = object.id;
 
-						cellmask_l |= 1 << object.id;
-						
+						objectsPresent |= 1 << object.id;
 						objectlayers_l |= 0x1f<<(5*layerIndex);
 
 						if (object_dir==='stationary') {
-							stationaryMask_l |= 0x1f<<(5*layerIndex);
+							movementsMissing |= 0x1f<<(5*layerIndex);
 						} else {
 							var forcemask = dirMasks[object_dir] << (5 * layerIndex);
-							forcemask_l |= forcemask;	
-							if (forcemask!==0) {	
-								moveNonExistenceMask_l |= 0x1f<<(5*layerIndex);
-							}
+							movementsPresent |= forcemask;
 						}
 					}
 				}
@@ -1422,13 +1413,12 @@ function rulesToMask(state) {
 					}
 				}
 
-
-				cellrow_l[k] = [forcemask_l, cellmask_l,nonExistenceMask_l,moveNonExistenceMask_l,stationaryMask_l];
-				//cellrow_l[k]=mask_l;
+				cellrow_l[k] = new CellPattern([objectsPresent, objectsMissing, movementsPresent, movementsMissing, null]);
 
 				if (rule.rhs.length===0) {
 					continue;
 				}
+
 				var cell_r = cellrow_r[k];
 				var mask_r = maskTemplate.concat([]);
 
@@ -1496,10 +1486,10 @@ function rulesToMask(state) {
 					}
 				}
 
-				objectsClear |= cellmask_l; // clear out old objects
-				movementsClear |= forcemask_l; // ... and movements
+				objectsClear |= objectsPresent; // clear out old objects
+				movementsClear |= movementsPresent; // ... and movements
 				postMovementsLayerMask_r |= objectlayers_l & (~objectlayers_r);
-				cellrow_r[k] = new CellReplacement([objectsClear, objectsSet, movementsClear, movementsSet, postMovementsLayerMask_r, randomMask_r, randomDirMask_r]);
+				cellrow_l[k].replacement = new CellReplacement([objectsClear, objectsSet, movementsClear, movementsSet, postMovementsLayerMask_r, randomMask_r, randomDirMask_r]);
 			}
 		}
 	}
@@ -1512,7 +1502,7 @@ function cellRowMasks(rule) {
 		var cellRow = lhs[i];
 		var rowMask=0;
 		for (var j=0;j<cellRow.length;j++) {
-			rowMask |= cellRow[j].cellMask;
+			rowMask |= cellRow[j].objectsPresent;
 		}
 		if (rowMask===0) {
 			rowMask=~0;
@@ -1536,27 +1526,15 @@ function collapseRules(groups) {
 			newrule[0]=dirMasks[oldrule.direction];
 			for (var j = 0; j < oldrule.lhs.length; j++) {
 				var cellrow_l = oldrule.lhs[j];
-				var cellrow_r = oldrule.rhs[j];
-				var newcellrow_l = [];
-				var newcellrow_r = [];
 				for (var k = 0; k < cellrow_l.length; k++) {
-					var oldcellmask_l = cellrow_l[k];
-					if (oldcellmask_l[0]===ellipsisDirection) {
+					if (cellrow_l[k].movementsPresent === ellipsisDirection) {
 						if (ellipses[j]) {
 							logError("You can't use two ellipses in a single cell match pattern.  If you really want to, please implement it yourself and send me a patch :) ", oldrule.lineNumber);
 						} 
 						ellipses[j]=true;
 					}
-
-					oldcellmask_l[5] = null;
-
-					if (oldrule.rhs.length>0) {
-						oldcellmask_l[5] = cellrow_r[k];
-					}
-
-					newcellrow_l[k] = new CellPattern(oldcellmask_l);
 				}
-				newrule[1][j] = newcellrow_l;
+				newrule[1][j] = cellrow_l;
 			}
 			newrule.push(ellipses);
 			newrule.push(oldrule.groupNumber);
@@ -1632,13 +1610,13 @@ function checkNoLateRulesHaveMoves(state){
 				var cellRow_l = rule.patterns[cellRowIndex];
 				for (var cellIndex=0;cellIndex<cellRow_l.length;cellIndex++) {
 					var cellPattern = cellRow_l[cellIndex];
-					var movementMask = cellPattern.movementMask;
+					var movementMask = cellPattern.movementsPresent;
 					if (movementMask===ellipsisDirection) {
 						continue;
 					}
-					var moveNonExistenceMask = cellPattern.moveNonExistenceMask;
-					var moveStationaryMask = cellPattern.moveStationaryMask;
-					if (movementMask!==0 || moveNonExistenceMask!==0 || moveStationaryMask!==0) {
+					var moveMissing = cellPattern.movementsMissing;
+					var movePresent = cellPattern.movementsPresent;
+					if (moveMissing!==0 || movePresent!==0) {
 						logError("Movements cannot appear in late rules.",rule.lineNumber);
 						return;
 					}
@@ -2274,7 +2252,6 @@ function loadFile(str) {
 	if (debugMode) {
 		printRules(state);
 	}
-
 
 	rulesToMask(state);
 	arrangeRulesByGroupNumber(state);
