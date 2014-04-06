@@ -1350,8 +1350,7 @@ function rulesToMask(state) {
 				for (var l = 0; l < cell_l.length; l += 2) {
 					var object_dir = cell_l[l];
 					if (object_dir==='...') {
-						objectsPresent = ellipsisDirection;
-						movementsPresent = ellipsisDirection;
+						objectsPresent = ellipsisPattern;
 						if (cell_l.length!==2) {
 							logError("You can't have anything in with an ellipsis. Sorry.",rule.lineNumber);
 						} else if ((k===0)||(k===cellrow_l.length-1)) {
@@ -1413,7 +1412,12 @@ function rulesToMask(state) {
 					}
 				}
 
-				cellrow_l[k] = new CellPattern([objectsPresent, objectsMissing, movementsPresent, movementsMissing, null]);
+				if (objectsPresent === ellipsisPattern) {
+					cellrow_l[k] = ellipsisPattern;
+					continue;
+				} else {
+					cellrow_l[k] = new CellPattern([objectsPresent, objectsMissing, movementsPresent, movementsMissing, null]);
+				}
 
 				if (rule.rhs.length===0) {
 					continue;
@@ -1437,8 +1441,7 @@ function rulesToMask(state) {
 					var object_name = cell_r[l + 1];
 
 					if (object_dir==='...') {
-						objectsSet = ellipsisDirection;
-						movementsSet = ellipsisDirection;
+						logError("spooky ellipsis found! (should never hit this)");
 						break;
 					} else if (object_dir==='random') {
 						if (object_name in state.objectMasks) {
@@ -1535,7 +1538,7 @@ function collapseRules(groups) {
 			for (var j = 0; j < oldrule.lhs.length; j++) {
 				var cellrow_l = oldrule.lhs[j];
 				for (var k = 0; k < cellrow_l.length; k++) {
-					if (cellrow_l[k].movementsPresent === ellipsisDirection) {
+					if (cellrow_l[k] === ellipsisPattern) {
 						if (ellipses[j]) {
 							logError("You can't use two ellipses in a single cell match pattern.  If you really want to, please implement it yourself and send me a patch :) ", oldrule.lineNumber);
 						} 
@@ -1618,13 +1621,12 @@ function checkNoLateRulesHaveMoves(state){
 				var cellRow_l = rule.patterns[cellRowIndex];
 				for (var cellIndex=0;cellIndex<cellRow_l.length;cellIndex++) {
 					var cellPattern = cellRow_l[cellIndex];
-					var movementMask = cellPattern.movementsPresent;
-					if (movementMask===ellipsisDirection) {
+					if (cellPattern === ellipsisPattern) {
 						continue;
 					}
 					var moveMissing = cellPattern.movementsMissing;
 					var movePresent = cellPattern.movementsPresent;
-					if (moveMissing!==0 || movePresent!==0) {
+					if (!moveMissing.iszero() || !movePresent.iszero()) {
 						logError("Movements cannot appear in late rules.",rule.lineNumber);
 						return;
 					}
@@ -1633,7 +1635,7 @@ function checkNoLateRulesHaveMoves(state){
 						var movementsClear = cellPattern.replacement.movementsClear;
 						var movementsSet = cellPattern.replacement.movementsSet;
 
-						if (movementsClear!==0 || movementsSet!==0) {
+						if (!movementsClear.iszero() || !movementsSet.iszero()) {
 							logError("Movements cannot appear in late rules.",rule.lineNumber);
 							return;
 						}
