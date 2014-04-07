@@ -1556,6 +1556,7 @@ function collapseRules(groups) {
 			rules[i] = new Rule(newrule);
 		}
 	}
+	matchCache = {}; // clear match cache so we don't slowly leak memory
 }
 
 function ruleGroupRandomnessTest(ruleGroup) {

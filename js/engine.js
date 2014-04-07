@@ -1013,6 +1013,7 @@ function CellPattern(row) {
 	this.objectsMissing = new BitVec([row[1]]);
 	this.movementsPresent = new BitVec([row[2]]);
 	this.movementsMissing = new BitVec([row[3]]);
+	this.matches = this.generateMatchFunction();
 	this.replacement = row[4];
 };
 
@@ -1035,6 +1036,48 @@ CellPattern.prototype.matches = function(i) {
 			this.movementsPresent.bitsSetInArray(cellMovements) &&
 			this.movementsMissing.bitsClearInArray(cellMovements);
 };
+
+var matchCache = {}
+
+CellPattern.prototype.generateMatchFunction = function() {
+	var i;
+	var fn = '(function(i) {\n\ti=i|0;\n';
+	for (var i = 0; i < STRIDE; ++i) {
+		fn += '\tvar cellObjects' + i + ' = level.dat[i' + (i ? '+'+i: '') + ']|0;\n';
+		fn += '\tvar cellMovements' + i + ' = level.movementMask[i' + (i ? '+'+i: '') + ']|0;\n';
+	}
+	fn += '\t return (true \n';
+	for (var i = 0; i < STRIDE; ++i) {
+		var co = 'cellObjects' + i;
+		var cm = 'cellMovements' + i;
+		var op = this.objectsPresent.data[i];
+		var om = this.objectsMissing.data[i];
+		var mp = this.movementsPresent.data[i];
+		var mm = this.movementsMissing.data[i];
+		if (op) {
+			if (op&(op-1))
+				fn += '\t\t&& ((' + co + '&' + op + ')===' + op + ')\n';
+			else
+				fn += '\t\t&& (' + co + '&' + op + ')\n';
+		}
+		if (om)
+			fn += '\t\t&& !(' + co + '&' + om + ')\n';
+		if (mp) {
+			if (mp&(mp-1))
+				fn += '\t\t&& ((' + cm + '&' + mp + ')===' + mp + ')\n';
+			else
+				fn += '\t\t&& (' + cm + '&' + mp + ')\n';
+		}
+		if (mm)
+			fn += '\t\t&& !(' + cm + '&' + mm + ')\n';
+	}
+	fn += '\t);\n})';
+	if (fn in matchCache) {
+		return matchCache[fn];
+	}
+	//console.log(fn.replace(/\s+/g, ' '));
+	return matchCache[fn] = eval(fn);
+}
 
 CellPattern.prototype.toJSON = function() {
 	return [
