@@ -756,8 +756,8 @@ function getPlayerPositions() {
     var result=[];
     var playerMask = state.playerMask;
     for (i=0;i<level.dat.length;i++) {
-        var cellMask = level.dat[i];
-        if ((playerMask&cellMask)!=0){
+        var cellMask = levelGetIndex(i);
+        if (playerMask.anyBitsInCommon(cellMask)) {
             result.push(i);
         }
     }
@@ -767,7 +767,7 @@ function getPlayerPositions() {
 function getLayersOfMask(cellMask) {
     var layers=[];
     for (var i=0;i<state.objectCount;i++) {
-        if ( (cellMask&(1<<i))!=0 ){
+        if (cellMask.get(i)) {
             var n = state.idDict[i];
             var o = state.objects[n];
             layers.push(o.layer)
@@ -777,15 +777,15 @@ function getLayersOfMask(cellMask) {
 }
 
 function moveEntitiesAtIndex(positionIndex, entityMask, dirMask) {
-    var cellMask = level.dat[positionIndex];
-    var overlap = entityMask&cellMask;
-    var layers = getLayersOfMask(overlap);
+    var cellMask = levelGetIndex(positionIndex);
+    cellMask.iand(entityMask);
+    var layers = getLayersOfMask(cellMask);
 
-    var movementMask = level.movementMask[positionIndex];
+    var movementMask = movementsGetIndex(positionIndex);
     for (var i=0;i<layers.length;i++) {
-        movementMask |= dirMask<<(5*layers[i]);
+    	movementMask.ishiftor(dirMask, 5 * layers[i]);
     }
-    level.movementMask[positionIndex]=movementMask;
+    movementsSetIndex(positionIndex, movementMask);
 }
 
 
@@ -840,31 +840,34 @@ function repositionEntitiesOnLayer(positionIndex,layer,dirMask)
     var targetIndex = (positionIndex+delta[1]+delta[0]*level.height)%level.dat.length;
 
     var layerMask = state.layerMasks[layer];
-    var targetMask = level.dat[targetIndex];
-    var collision = targetMask&layerMask;
-    var sourceMask = level.dat[positionIndex];
+    var targetMask = levelGetIndex(targetIndex);
+    var sourceMask = levelGetIndex(positionIndex);
 
-    if ((collision!=0) && (dirMask!=16)) {
+    if (layerMask.anyBitsInCommon(targetMask) && (dirMask!=16)) {
         return false;
     }
-    var movingEntities = sourceMask&layerMask;
-    level.dat[positionIndex] = sourceMask&(~layerMask);
-    level.dat[targetIndex] = targetMask | movingEntities;
 
+    var movingEntities = sourceMask.clone();
+    sourceMask.iclear(layerMask);
+    movingEntities.iand(layerMask);
+    targetMask.ior(movingEntities);
+
+    levelSetIndex(positionIndex, sourceMask);
+    levelSetIndex(targetIndex, targetMask);
 
     var colIndex=(targetIndex/level.height)|0;
 	var rowIndex=(targetIndex%level.height);
-    level.colCellContents[colIndex]=(level.colCellContents[colIndex]|movingEntities);
-    level.rowCellContents[rowIndex]=(level.rowCellContents[rowIndex]|movingEntities);
-    level.mapCellContents = (level.mapCellContents|movingEntities);
+    level.colCellContents[colIndex].ior(movingEntities);
+    level.rowCellContents[rowIndex].ior(movingEntities);
+    level.mapCellContents.ior(layerMask);
 
 	for (var i=0;i<state.sfx_MovementMasks.length;i++) {
 		var o = state.sfx_MovementMasks[i];
 		var objectMask = o.objectMask;
-		if ((objectMask&sourceMask)!==0) {
+		if (objectMask.anyBitsInCommon(sourceMask)) {
 			var movementMask = level.movementMask[positionIndex];
 			var directionMask = o.directionMask;
-			if ((movementMask&directionMask)!==0 && seedsToPlay_CanMove.indexOf(o.seed)===-1) {
+			if (movementMask.anyBitsInCommon(directionMask) && seedsToPlay_CanMove.indexOf(o.seed)===-1) {
 				seedsToPlay_CanMove.push(o.seed);
 			}
 		}
@@ -877,6 +880,7 @@ function repositionEntitiesAtCell(positionIndex) {
     //assumes not zero
     //for each layer
     var moved=false;
+    // TODO(UNLIMITED)
     for (var layer=0;layer<6;layer++) {    	
         var layerMovement = 0x1f & (movementMask>>(5*layer));
         if (layerMovement!=0) {
@@ -930,6 +934,15 @@ BitVec.prototype.get = function(ind) {
 	return (this.data[ind>>5] & 1 << (ind & 31)) !== 0;
 }
 
+BitVec.prototype.getshiftor = function(mask, shift) {
+	var lowmask = mask << (shift & 31);
+	var highmask = mask >> (32 - (shift & 31));
+	var ret = (this.data[shift>>5] & lowmask) >> (shift & 31)
+	if (highmask)
+		ret |= (this.data[(shift>>5)+1] & highmask) >> (32 - (shift & 31));
+	return ret;
+}
+
 BitVec.prototype.ishiftor = function(mask, shift) {
 	var low = mask << (shift & 31);
 	var high = mask >> (32 - (shift & 31));
@@ -956,12 +969,6 @@ BitVec.prototype.iszero = function() {
 	return true;
 }
 
-
-
-var x = new BitVec(3);
-x.ishiftor(0x1f, 60);
-console.log(x.data);
-
 BitVec.prototype.bitsSetInArray = function(arr) {
 	for (var i = 0; i < this.data.length; ++i) {
 		if ((this.data[i] & arr[i]) !== this.data[i]) {
@@ -971,9 +978,6 @@ BitVec.prototype.bitsSetInArray = function(arr) {
 	return true;
 }
 
-var x = new BitVec([2]);
-console.log('test', x.bitsSetInArray([0]));
-
 BitVec.prototype.bitsClearInArray = function(arr) {
 	for (var i = 0; i < this.data.length; ++i) {
 		if (this.data[i] & arr[i]) {
@@ -981,6 +985,10 @@ BitVec.prototype.bitsClearInArray = function(arr) {
 		}
 	}
 	return true;
+}
+
+BitVec.prototype.anyBitsInCommon = function(other) {
+	return !this.bitsClearInArray(other.data);
 }
 
 function Rule(rule) {
@@ -1009,22 +1017,22 @@ Rule.prototype.toJSON = function() {
 var STRIDE = 1;
 
 function CellPattern(row) {
-	this.objectsPresent = new BitVec([row[0]]);
-	this.objectsMissing = new BitVec([row[1]]);
-	this.movementsPresent = new BitVec([row[2]]);
-	this.movementsMissing = new BitVec([row[3]]);
+	this.objectsPresent = row[0];
+	this.objectsMissing = row[1];
+	this.movementsPresent = row[2];
+	this.movementsMissing = row[3];
 	this.matches = this.generateMatchFunction();
 	this.replacement = row[4];
 };
 
 function CellReplacement(row) {
-	this.objectsClear = new BitVec([row[0]]);
-	this.objectsSet = new BitVec([row[1]]);
-	this.movementsClear = new BitVec([row[2]]);
-	this.movementsSet = new BitVec([row[3]]);
-	this.movementsLayerMask = new BitVec([row[4]]);
-	this.randomEntityMask = new BitVec([row[5]]);
-	this.randomDirMask = new BitVec([row[6]]);
+	this.objectsClear = row[0];
+	this.objectsSet = row[1];
+	this.movementsClear = row[2];
+	this.movementsSet = row[3];
+	this.movementsLayerMask = row[4];
+	this.randomEntityMask = row[5];
+	this.randomDirMask = row[6];
 };
 
 CellPattern.prototype.matches = function(i) {
@@ -1173,18 +1181,15 @@ CellPattern.prototype.replace = function(rule, currentIndex) {
 			rigidMask.ishiftor(rigidGroupIndex, layer * 5);
 		}
 		rigidMask.iand(replace.movementsLayerMask);
-		curRigidGroupIndexMask = new BitVec([level.rigidGroupIndexMask[currentIndex]]);
-		curRigidMovementAppliedMask = new BitVec([level.rigidMovementAppliedMask[currentIndex]]);
+		curRigidGroupIndexMask = level.rigidGroupIndexMask[currentIndex] || new BitVec(STRIDE);
+		curRigidMovementAppliedMask = level.rigidMovementAppliedMask[currentIndex] || new BitVec(STRIDE);
 
-		var oldRigidGroupIndexMask = curRigidGroupIndexMask.clone();
-		var oldRigidMovementAppliedMask = curRigidMovementAppliedMask.clone();
-
-		curRigidGroupIndexMask.ior(rigidMask);
-		curRigidMovementAppliedMask.ior(replace.movementsLayerMask);
-
-		if (!oldRigidGroupIndexMask.equals(curRigidGroupIndexMask) ||
-			!oldRigidMovementAppliedMask.equals(curRigidMovementAppliedMask)) {
+		if (!rigidMask.bitsSetInArray(curRigidGroupIndexMask.data) || 
+			!replace.movementsLayerMask.bitsSetInArray(curRigidMovementAppliedMask.data) ) {
+			curRigidGroupIndexMask.ior(rigidMask);
+			curRigidMovementAppliedMask.ior(replace.movementsLayerMask);
 			rigidchange=true;
+
 		}
 	}
 
@@ -1194,22 +1199,27 @@ CellPattern.prototype.replace = function(rule, currentIndex) {
 	if (!oldCellMask.equals(curCellMask) || !oldMovementMask.equals(curMovementMask) || rigidchange) { 
 		result=true;
 		if (rigidchange) {
-			level.rigidGroupIndexMask[currentIndex] = curRigidGroupIndexMask.data[0];
-			level.rigidMovementAppliedMask[currentIndex] = curRigidMovementAppliedMask.data[0];
+			level.rigidGroupIndexMask[currentIndex] = curRigidGroupIndexMask;
+			level.rigidMovementAppliedMask[currentIndex] = curRigidMovementAppliedMask;
 		}
 
 		//TODO
-		sfxCreateMask |= curCellMask & ~oldCellMask;
-		sfxDestroyMask |= oldCellMask & ~curCellMask;
+
+		var created = curCellMask.clone();
+		created.iclear(oldCellMask);
+		sfxCreateMask.ior(created);
+		var destroyed = oldCellMask.clone();
+		destroyed.iclear(curCellMask);
+		sfxDestroyMask.ior(destroyed);
 
 		levelSetIndex(currentIndex, curCellMask);
 		movementsSetIndex(currentIndex, curMovementMask);
 
 		var colIndex=(currentIndex/level.height)|0;
 		var rowIndex=(currentIndex%level.height);
-		level.colCellContents[colIndex]=(level.colCellContents[colIndex]|curCellMask);
-		level.rowCellContents[rowIndex]=(level.rowCellContents[rowIndex]|curCellMask);
-		level.mapCellContents = (level.mapCellContents|curCellMask);
+		level.colCellContents[colIndex].ior(curCellMask);
+		level.rowCellContents[rowIndex].ior(curCellMask);
+		level.mapCellContents.ior(curCellMask);
 	}
 
 	return result;
@@ -1287,11 +1297,10 @@ function cellRowMatches(direction,cellRow,i,k) {
 
 function matchCellRow(direction, cellRow, cellRowMask) {	
 	var result=[];
-	/*
-	if ((cellRowMask&level.mapCellContents)===0) {
+	
+	if ((!cellRowMask.bitsSetInArray(level.mapCellContents.data))) {
 		return result;
 	}
-	*/
 
 	var xmin=0;
 	var xmax=level.width;
@@ -1330,7 +1339,7 @@ function matchCellRow(direction, cellRow, cellRowMask) {
     var horizontal=direction>2;
     if (horizontal) {
 		for (var y=ymin;y<ymax;y++) {
-			if ((level.rowCellContents[y]&cellRowMask)===0) {
+			if (!cellRowMask.bitsSetInArray(level.rowCellContents[y].data)) {
 				continue;
 			}
 
@@ -1344,7 +1353,7 @@ function matchCellRow(direction, cellRow, cellRowMask) {
 		}
 	} else {
 		for (var x=xmin;x<xmax;x++) {
-			if ((level.colCellContents[x]&cellRowMask)===0) {
+			if (!cellRowMask.bitsSetInArray(level.colCellContents[x].data)) {
 				continue;
 			}
 
@@ -1364,7 +1373,7 @@ function matchCellRow(direction, cellRow, cellRowMask) {
 
 function matchCellRowWildCard(direction, cellRow,cellRowMask) {
 	var result=[];
-	if ((cellRowMask&level.mapCellContents)===0) {
+	if ((!cellRowMask.bitsSetInArray(level.mapCellContents.data))) {
 		return result;
 	}
 	var xmin=0;
@@ -1405,7 +1414,7 @@ function matchCellRowWildCard(direction, cellRow,cellRowMask) {
     var horizontal=direction>2;
     if (horizontal) {
 		for (var y=ymin;y<ymax;y++) {
-			if ((level.rowCellContents[y]&cellRowMask)===0) {
+			if (!cellRowMask.bitsSetInArray(level.rowCellContents[y].data)) {
 				continue;
 			}
 
@@ -1413,38 +1422,20 @@ function matchCellRowWildCard(direction, cellRow,cellRowMask) {
 				var i = x*level.height+y;
 				var kmax;
 
-				switch(direction) {
-			    	case 1://up
-			    	{
-			    		kmax=y-len+2;
-			    		break;
-			    	}
-			    	case 2: //down 
-			    	{
-						kmax=level.height-(y+len)+1;
-						break;
-			    	}
-			    	case 4: //left
-			    	{
-			    		kmax=x-len+2;
-			    		break;
-			    	}
-			    	case 8: //right
-					{
-						kmax=level.width-(x+len)+1;	
-						break;
-					}
-			    	default:
-			    	{
-			    		window.console.log("EEEP2 "+direction);
-			    	}
-			    }
+				if (direction == 4) { //left
+					kmax=x-len+2;
+				} else if (direction == 8) { //right
+					kmax=level.width-(x+len)+1;	
+				} else {
+					window.console.log("EEEP2 "+direction);					
+				}
+
 				result.push.apply(result, cellRowMatchesWildCard(direction,cellRow,i,kmax));
 			}
 		}
 	} else {
 		for (var x=xmin;x<xmax;x++) {
-			if ((level.colCellContents[x]&cellRowMask)===0) {
+			if (!cellRowMask.bitsSetInArray(level.colCellContents[x].data)) {
 				continue;
 			}
 
@@ -1452,32 +1443,13 @@ function matchCellRowWildCard(direction, cellRow,cellRowMask) {
 				var i = x*level.height+y;
 				var kmax;
 
-				switch(direction) {
-			    	case 1://up
-			    	{
-			    		kmax=y-len+2;
-			    		break;
-			    	}
-			    	case 2: //down 
-			    	{
-						kmax=level.height-(y+len)+1;
-						break;
-			    	}
-			    	case 4: //left
-			    	{
-			    		kmax=x-len+2;
-			    		break;
-			    	}
-			    	case 8: //right
-					{
-						kmax=level.width-(x+len)+1;	
-						break;
-					}
-			    	default:
-			    	{
-			    		window.console.log("EEEP2 "+direction);
-			    	}
-			    }
+				if (direction == 2) { // down
+					kmax=level.height-(y+len)+1;
+				} else if (direction == 1) { // up
+					kmax=y-len+2;					
+				} else {
+					window.console.log("EEEP2 "+direction);
+				}
 				result.push.apply(result, cellRowMatchesWildCard(direction,cellRow,i,kmax));
 			}
 		}		
@@ -1539,8 +1511,8 @@ function restorePreservationState(preservationState) {
 	level.movementMask = preservationState.levelMovementMask.concat([]);
 	level.rigidGroupIndexMask = preservationState.rigidGroupIndexMask.concat([]);
     level.rigidMovementAppliedMask = preservationState.rigidMovementAppliedMask.concat([]);
-    sfxCreateMask=0;
-    sfxDestroyMask=0;
+    sfxCreateMask=new BitVec(STRIDE);
+    sfxDestroyMask=new BitVec(STRIDE);
 //	rigidBackups = preservationState.rigidBackups;
 }
 
@@ -1797,42 +1769,42 @@ function resolveMovements(dir){
     }
     var doUndo=false;
 
-    for (var i=0;i<level.movementMask.length;i++) {
-
-    	var cellMask = level.dat[i];
-    	var movementMask = level.movementMask[i];
-    	if (movementMask!==0) {
-    		var rigidMovementAppliedMask = level.rigidMovementAppliedMask[i];
-    		var movementMask_restricted = rigidMovementAppliedMask&movementMask;    			
-    		if (movementMask_restricted!==0) {
-    			//find what layer was restricted
-    			for (var j=0;j<6;j++) {
-    				var layerSection = 0x1f&(movementMask_restricted>>(5*j));
-    				if (layerSection!==0) {
-    					//this is our layer!
-    					var rigidGroupIndexMask = level.rigidGroupIndexMask[i];
-    					var rigidGroupIndex = 0x1f&(rigidGroupIndexMask>>(5*j));
-    					rigidGroupIndex--;//group indices start at zero, but are incremented for storing in the bitfield
-    					var groupIndex = state.rigidGroupIndex_to_GroupIndex[rigidGroupIndex];
-    					level.bannedGroup[groupIndex]=true;
-    					//backtrackTarget = rigidBackups[rigidGroupIndex];
-    					doUndo=true;
-    					break;
-    				}
-    			}
-    		}
-
+	for (var i=0;i<level.movementMask.length;i++) {
+		var cellMask = levelGetIndex(i);
+		var movementMask = movementsGetIndex(i);
+		if (!movementMask.iszero()) {
+			var rigidMovementAppliedMask = level.rigidMovementAppliedMask[i];
+			if (rigidMovementAppliedMask !== 0) {
+				movementMask.iand(rigidMovementAppliedMask);
+				if (!movementMask.iszero()) {
+					//find what layer was restricted
+					for (var j=0;j<6;j++) {
+						var layerSection = movementMask.getshiftor(0x1f, 5*j);
+						if (layerSection!==0) {
+							//this is our layer!
+							var rigidGroupIndexMask = level.rigidGroupIndexMask[i];
+							var rigidGroupIndex = rigidGroupIndexMask.getshiftor(0x1f, 5*j);
+							rigidGroupIndex--;//group indices start at zero, but are incremented for storing in the bitfield
+							var groupIndex = state.rigidGroupIndex_to_GroupIndex[rigidGroupIndex];
+							level.bannedGroup[groupIndex]=true;
+							//backtrackTarget = rigidBackups[rigidGroupIndex];
+							doUndo=true;
+							break;
+						}
+					}
+			}
 			for (var j=0;j<state.sfx_MovementFailureMasks.length;j++) {
 				var o = state.sfx_MovementFailureMasks[j];
 				var objectMask = o.objectMask;
-				if ((objectMask&cellMask)!==0) {
+				if (objectMask.anyBitsInCommon(cellMask)) {
 					var directionMask = o.directionMask;
-					if ((movementMask&directionMask)!==0 && seedsToPlay_CantMove.indexOf(o.seed)===-1) {
+					if (movementMask.anyBitsInCommon(directionMask) && seedsToPlay_CantMove.indexOf(o.seed)===-1) {
 						seedsToPlay_CantMove.push(o.seed);
 					}
 				}
 			}
     	}
+    }
 
         level.movementMask[i]=0;
         level.rigidGroupIndexMask[i]=0;
@@ -1841,33 +1813,26 @@ function resolveMovements(dir){
     return doUndo;
 }
 
-/*
-    		    			var rigidMovementAppliedMask = level.rigidMovementAppliedMask[i];
-	    		var overlap = rigidGroupIndexMask&movementMask;
-    			var rigidGroupIndexMask = level.rigidGroupIndexMask[i];
-    			//need to find out what the group number is;
-*/
-
 var sfxCreateMask=0;
 var sfxDestroyMask=0;
 
 function calculateRowColMasks() {
-	level.mapCellContents=0;
+	level.mapCellContents=new BitVec(STRIDE);
 	for (var i=0;i<level.width;i++) {
-		level.colCellContents[i]=0;
+		level.colCellContents[i]=new BitVec(STRIDE);
 	}
 
 	for (var j=0;j<level.height;j++) {
-		level.rowCellContents[i]=0;
+		level.rowCellContents[j]=new BitVec(STRIDE);
 	}
 
 	for (var i=0;i<level.width;i++) {
 		for (var j=0;j<level.height;j++) {
 			var index = j+i*level.height;
-			var cellContents=level.dat[index];
-			level.mapCellContents = level.mapCellContents|cellContents;
-			level.rowCellContents[j] = level.rowCellContents[j]|cellContents;
-			level.colCellContents[i] = level.colCellContents[i]|cellContents;
+			var cellContents=levelGetIndex(index);
+			level.mapCellContents.ior(cellContents);
+			level.rowCellContents[j].ior(cellContents);
+			level.colCellContents[i].ior(cellContents);
 		}
 	}
 }
@@ -1930,8 +1895,8 @@ function processInput(dir,dontCheckWin,dontModify) {
         var rigidloop=false;
         var startState = commitPreservationState();
 	    messagetext="";
-	    sfxCreateMask=0;
-	    sfxDestroyMask=0;
+	    sfxCreateMask=new BitVec(STRIDE);
+	    sfxDestroyMask=new BitVec(STRIDE);
 
 		seedsToPlay_CanMove=[];
 		seedsToPlay_CantMove=[];
@@ -1970,8 +1935,8 @@ function processInput(dir,dontCheckWin,dontModify) {
         	var somemoved=false;
         	for (var i=0;i<playerPositions.length;i++) {
         		var pos = playerPositions[i];
-        		var val = level.dat[pos];
-        		if ((val&state.playerMask)===0) {
+        		var val = levelGetIndex(pos);
+        		if (state.playerMask.bitsClearInArray(val.data)) {
         			somemoved=true;
         			break;
         		}
@@ -2051,14 +2016,14 @@ function processInput(dir,dontCheckWin,dontModify) {
 
         for (var i=0;i<state.sfx_CreationMasks.length;i++) {
         	var entry = state.sfx_CreationMasks[i];
-        	if ((sfxCreateMask&entry.objectMask)!==0) {
+        	if (sfxCreateMask.anyBitsInCommon(entry.objectMask)) {
 	        	playSeed(entry.seed);
         	}
         }
 
         for (var i=0;i<state.sfx_DestructionMasks.length;i++) {
         	var entry = state.sfx_DestructionMasks[i];
-        	if ((sfxDestroyMask&entry.objectMask)!==0) {
+        	if (sfxDestroyMask.anyBitsInCommon(entry.objectMask)) {
 	        	playSeed(entry.seed);
         	}
         }
@@ -2146,7 +2111,8 @@ function checkWin() {
 				{
 					for (var i=0;i<level.dat.length;i++) {
 						var val = level.dat[i];
-						if ( ((filter1&val)!==0) &&  ((filter2&val)!==0) ) {
+						if ( (!filter1.bitsClearInArray([val])) &&  
+							 (!filter2.bitsClearInArray([val])) ) {
 							rulePassed=false;
 							break;
 						}
@@ -2159,7 +2125,8 @@ function checkWin() {
 					var passedTest=false;
 					for (var i=0;i<level.dat.length;i++) {
 						var val = level.dat[i];
-						if ( ((filter2&val)!==0) &&  ((filter1&val)!==0) ) {
+						if ( (!filter1.bitsClearInArray([val])) &&  
+							 (!filter2.bitsClearInArray([val])) ) {
 							passedTest=true;
 							break;
 						}
@@ -2173,7 +2140,8 @@ function checkWin() {
 				{
 					for (var i=0;i<level.dat.length;i++) {
 						var val = level.dat[i];
-						if ( ((filter1&val)!==0) &&  ((filter2&val)===0) ) {
+						if ( (!filter1.bitsClearInArray([val])) &&  
+							 (filter2.bitsClearInArray([val])) ) {
 							rulePassed=false;
 							break;
 						}

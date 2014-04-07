@@ -349,7 +349,7 @@ function calcLevelBackgroundMask(state,dat) {
 	var backgroundMask = state.layerMasks[state.backgroundlayer];
 	for (var i=0;i<dat.length;i++) {
 		var val=dat[i];
-		var masked = val&backgroundMask;
+		var masked = val&backgroundMask.data[0];
 		if (masked!==0) {
 			return masked;
 		}
@@ -417,7 +417,7 @@ function levelsToArray(state) {
 			for (var i=0;i<o.dat.length;i++)
 			{
 				var val = o.dat[i];
-				if ((val&backgroundLayerMask)===0) {
+				if (backgroundLayerMask.bitsClearInArray([val])) {
 					o.dat[i]=val|levelBackgroundMask;
 				}
 				
@@ -1341,12 +1341,12 @@ function rulesToMask(state) {
 			for (var k = 0; k < cellrow_l.length; k++) {
 				var cell_l = cellrow_l[k];
 				var mask_l = maskTemplate.concat([]);
-				var objectsPresent = 0;
-				var objectsMissing = 0;
-				var movementsPresent = 0;
-				var movementsMissing = 0;
+				var objectsPresent = new BitVec(STRIDE);
+				var objectsMissing = new BitVec(STRIDE);
+				var movementsPresent = new BitVec(STRIDE);
+				var movementsMissing = new BitVec(STRIDE);
 
-				var objectlayers_l = 0;
+				var objectlayers_l = new BitVec(STRIDE);
 				for (var l = 0; l < cell_l.length; l += 2) {
 					var object_dir = cell_l[l];
 					if (object_dir==='...') {
@@ -1373,7 +1373,7 @@ function rulesToMask(state) {
 					var layerMask = state.layerMasks[layerIndex];
 
 					if (object_dir==='no') {
-						objectsMissing |= 1<<object.id;
+						objectsMissing.ibitset(object.id);
 					} else {
 						var targetobjectid = mask_l[2 * layerIndex + 1];
 						if (targetobjectid > -2) {
@@ -1384,14 +1384,13 @@ function rulesToMask(state) {
 						mask_l[2 * layerIndex + 0] = object_dir;
 						mask_l[2 * layerIndex + 1] = object.id;
 
-						objectsPresent |= 1 << object.id;
-						objectlayers_l |= 0x1f<<(5*layerIndex);
+						objectsPresent.ibitset(object.id);
+						objectlayers_l.ishiftor(0x1f, 5*layerIndex);
 
 						if (object_dir==='stationary') {
-							movementsMissing |= 0x1f<<(5*layerIndex);
+							movementsMissing.ishiftor(0x1f, 5*layerIndex);
 						} else {
-							var forcemask = dirMasks[object_dir] << (5 * layerIndex);
-							movementsPresent |= forcemask;
+							movementsPresent.ishiftor(dirMasks[object_dir], 5 * layerIndex);
 						}
 					}
 				}
@@ -1426,16 +1425,16 @@ function rulesToMask(state) {
 				var cell_r = cellrow_r[k];
 				var mask_r = maskTemplate.concat([]);
 
-				var objectsClear = 0;
-				var objectsSet = 0;
-				var movementsClear = 0;
-				var movementsSet = 0;
+				var objectsClear = new BitVec(STRIDE);
+				var objectsSet = new BitVec(STRIDE);
+				var movementsClear = new BitVec(STRIDE);
+				var movementsSet = new BitVec(STRIDE);
 
-				var objectlayers_r = 0;
-				var randomMask_r = 0;
-				var objectsClear = 0;
-				var postMovementsLayerMask_r = 0;
-				var randomDirMask_r = 0;
+				var objectlayers_r = new BitVec(STRIDE);
+				var randomMask_r = new BitVec(STRIDE);
+				var objectsClear = new BitVec(STRIDE);
+				var postMovementsLayerMask_r = new BitVec(STRIDE);
+				var randomDirMask_r = new BitVec(STRIDE);
 				for (var l = 0; l < cell_r.length; l += 2) {
 					var object_dir = cell_r[l];
 					var object_name = cell_r[l + 1];
@@ -1445,8 +1444,8 @@ function rulesToMask(state) {
 						break;
 					} else if (object_dir==='random') {
 						if (object_name in state.objectMasks) {
-							var mask = state.objectMasks[object_name];                            
-                            randomMask_r |= mask;                        
+							var mask = state.objectMasks[object_name];    
+							randomMask_r.ior(mask);                      
 						} else {
 							logError('You want to spawn a random "'+object_name.toUpperCase()+'", but I don\'t know how to do that',rule.lineNumber);
 						}
@@ -1459,7 +1458,7 @@ function rulesToMask(state) {
 
 					
 					if (object_dir=='no') {
-						objectsClear |= 1<<object_id;
+						objectsClear.ibitset(object_id);
 					} else {
 						var targetobjectid = mask_r[2 * layerIndex + 1];
 						if (targetobjectid > -2) {
@@ -1473,30 +1472,32 @@ function rulesToMask(state) {
 						mask_r[2 * layerIndex + 1] = object_id;
 
 						if (object_dir.length>0) {
-							postMovementsLayerMask_r |= 0x1f<<(5*layerIndex);
+							postMovementsLayerMask_r.ishiftor(0x1f, 5*layerIndex);
 						}
 
-						objectsSet |= 1 << object_id;
-						objectsClear |= layerMask
-						objectlayers_r |= 0x1f<<(5*layerIndex);
+						objectsSet.ibitset(object_id);
+						objectsClear.ior(layerMask);
+						objectlayers_r.ishiftor(0x1f, 5*layerIndex);
 						if (object_dir==='stationary') {
-							movementsClear |= 0x1f<<(5*layerIndex);
+							movementsClear.ishiftor(0x1f, 5*layerIndex);
 						} if (object_dir==='randomdir') {
-							randomDirMask_r |= dirMasks[object_dir] << (5 * layerIndex);
+							randomDirMask_r.ishiftor(dirMasks[object_dir], 5 * layerIndex);
 						} else {						
-							movementsSet |= dirMasks[object_dir] << (5 * layerIndex);
+							movementsSet.ishiftor(dirMasks[object_dir], 5 * layerIndex);
 						};
 					}
 				}
 
-				if ((objectsPresent & objectsSet) !== objectsPresent) {
-					objectsClear |= objectsPresent; // clear out old objects
+				if (!(objectsPresent.bitsSetInArray(objectsSet))) {
+					objectsClear.ior(objectsPresent); // clear out old objects
 				}
-				if ((movementsPresent & movementsSet) !== movementsPresent) {
-					movementsClear |= movementsPresent; // ... and movements
+				if (!(movementsPresent.bitsSetInArray(movementsSet))) {
+					movementsClear.ior(movementsPresent); // ... and movements
 				}
 
-				postMovementsLayerMask_r |= objectlayers_l & (~objectlayers_r);
+				objectlayers_l.iclear(objectlayers_r);
+
+				postMovementsLayerMask_r.ior(objectlayers_l);
 				if (objectsClear || objectsSet || movementsClear || movementsSet || postMovementsLayerMask_r) {
 					// only set a replacement if something would change
 					cellrow_l[k].replacement = new CellReplacement([objectsClear, objectsSet, movementsClear, movementsSet, postMovementsLayerMask_r, randomMask_r, randomDirMask_r]);
@@ -1511,12 +1512,15 @@ function cellRowMasks(rule) {
 	var lhs=rule[1];
 	for (var i=0;i<lhs.length;i++) {
 		var cellRow = lhs[i];
-		var rowMask=0;
+		var rowMask=new BitVec(STRIDE);
 		for (var j=0;j<cellRow.length;j++) {
-			rowMask |= cellRow[j].objectsPresent;
+			if (cellRow[j] === ellipsisPattern)
+				continue;
+			rowMask.ior(cellRow[j].objectsPresent);
 		}
-		if (rowMask===0) {
-			rowMask=~0;
+		if (rowMask.iszero()) {
+			console.log("huh");
+			rowMask;
 		}
 		ruleMasks.push(rowMask);
 	}
@@ -1683,10 +1687,10 @@ function generateRigidGroupList(state) {
 }
 
 function getMaskFromName(state,name) {
-	var objectMask=0;
+	var objectMask=new BitVec(STRIDE);
 	if (name in state.objects) {
 		var o=state.objects[name];
-		objectMask |= 1<<o.id;		
+		objectMask.ibitset(o.id);
 	}
 
 	if (name in state.aggregatesDict) {
@@ -1694,7 +1698,7 @@ function getMaskFromName(state,name) {
 		for(var i=0;i<objectnames.length;i++) {
 			var n=objectnames[i];
 			var o = state.objects[n];
-			objectMask |= 1<<o.id;
+			objectMask.ibitset(o.id);
 		}
 	}
 
@@ -1703,17 +1707,17 @@ function getMaskFromName(state,name) {
 		for(var i=0;i<objectnames.length;i++) {
 			var n = objectnames[i];
 			var o = state.objects[n];
-			objectMask |= 1<<o.id;
+			objectMask.ibitset(o.id);
 		}
 	}
 
 	if (name in state.synonymsDict) {
 		var n = state.synonymsDict[name];
 		var o = state.objects[n];
-		objectMask |= 1<<o.id;
+		objectMask.ibitset(o.id);
 	}
 
-	if (objectMask==0) {
+	if (objectMask.iszero()) {
 		logErrorNoLine("error, didn't find any object called player, either in the objects section, or the legends section. there must be a player!");
 	}
 	return objectMask;
@@ -1726,12 +1730,12 @@ function generatePlayerMask(state) {
 	var layerMasks=[];
 	var layerCount = state.collisionLayers.length;
 	for (var layer=0;layer<layerCount;layer++){
-		var layerMask=0;
+		var layerMask=new BitVec(STRIDE);
 		for (var j=0;j<state.objectCount;j++) {
 			var n=state.idDict[j];
 			var o = state.objects[n];
 			if (o.layer==layer) {
-				layerMask |= 1<<o.id;
+				layerMask.ibitset(o.id);
 			}
 		}
 		layerMasks.push(layerMask);
@@ -1742,7 +1746,8 @@ function generatePlayerMask(state) {
 	for(var n in state.objects) {
 		if (state.objects.hasOwnProperty(n)) {
 			var o = state.objects[n];
-			objectMask[n]=1<<o.id;
+			objectMask[n] = new BitVec(STRIDE);
+			objectMask[n].ibitset(o.id);
 		}
 	}
 
@@ -1753,10 +1758,10 @@ function generatePlayerMask(state) {
 
 	for (var i=0;i<state.legend_properties.length;i++) {
 		var prop = state.legend_properties[i];
-		var val = 0;
+		var val = new BitVec(STRIDE);
 		for (var j=1;j<prop.length;j++) {
 			var n = prop[j];
-			val |= objectMask[n];
+			val.ior(objectMask[n]);
 		}
 		objectMask[prop[0]]=val;
 	}
@@ -2126,7 +2131,8 @@ function generateSoundData(state) {
 					var targetName = targets[j];
 					var targetDat = state.objects[targetName];
 					var targetLayer = targetDat.layer;
-					var shiftedDirectionMask = directionMask<<(5*targetLayer);
+					var shiftedDirectionMask = new BitVec(STRIDE);
+					shiftedDirectionMask.ishiftor(directionMask, 5*targetLayer);
 
 					var o = {
 						objectMask: objectMask,
