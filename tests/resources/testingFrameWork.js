@@ -32,11 +32,6 @@ function runTest(dataarray) {
 		}
 	}
 
-	var calculatedOutput = JSON.stringify(level.dat);
-	var preparedOutput = dataarray[2];
-	var preparedLevel;
-	eval("preparedLevel = " + preparedOutput);
-	preparedOutput = JSON.stringify(preparedLevel.dat);
 	unitTesting=false;
-	return calculatedOutput === preparedOutput;
+	return convertLevelToString() === dataarray[2];
 }

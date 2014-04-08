@@ -178,7 +178,6 @@ function glyphCount(){
 }
 
 function redraw() {
-    console.log('redraw');
     if (spriteimages===undefined) {
         regenSpriteImages();
     }
@@ -254,21 +253,11 @@ function redraw() {
 
         for (var i = mini; i < maxi; i++) {
             for (var j = minj; j < maxj; j++) {
-    /*          if (grid[i][j]==0){
-                    ctx.fillStyle="#00FF00";
-                }
-                else {
-                    ctx.fillStyle="#0000FF";
-                }
-
-                ctx.fillRect(xoffset+i*cellwidth,yoffset+j*cellheight,i+1*cellwidth,j+1*cellheight);
-    */
                 var posIndex = j + i * level.height;
-                var posMask = level.dat[posIndex];
+                var posMask = level.getCell(posIndex);
 
                 for (var k = 0; k < state.objectCount; k++) {
-                    var spriteMask = 1 << k;
-                    if ((posMask & spriteMask) != 0) {                  
+                    if (posMask.get(k) != 0) {                  
                         var sprite = spriteimages[k];
                         ctx.drawImage(sprite, xoffset + (i-mini) * cellwidth, yoffset + (j-minj) * cellheight);
                     }
@@ -279,11 +268,6 @@ function redraw() {
 	    if (levelEditorOpened) {
 	    	drawEditorIcons();
 	    }
-        /*
-    //  ctx.drawImage(spriteimages[0],0,0);
-        ctx.fillStyle="#000000";
-        ctx.fillText("Coordinates: (" + x + "," + y + ")",x,y);
-        */
     }
 }
 
