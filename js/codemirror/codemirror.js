@@ -3746,6 +3746,9 @@
 
   CodeMirror.prototype = {
     constructor: CodeMirror,
+
+    posFromMouse: function(e)  { return posFromMouse(this,e,true);},
+    
     focus: function(){window.focus(); focusInput(this); fastPoll(this);},
 
     setOption: function(option, value) {
