@@ -152,7 +152,6 @@ var codeMirrorFn = function() {
         token: function(stream, state) {
            	var mixedCase = stream.string;
             var sol = stream.sol();
-            var mixedCase = stream.string;
             if (sol) {
                 stream.string = stream.string.toLowerCase();
                 /*   if (state.lineNumber==undefined) {
@@ -584,9 +583,6 @@ var codeMirrorFn = function() {
                             }
                             
                             state.collisionLayers[state.collisionLayers.length - 1] = state.collisionLayers[state.collisionLayers.length - 1].concat(ar);
-                            if (state.collisionLayers.length > 6) {
-                                logError("Cannot have more than 6 layers.  You probably don't need that many, you know...", state.lineNumber);
-                            }
                             if (ar.length>0) {
                             	return 'NAME';                            
                             } else {
@@ -799,7 +795,7 @@ var codeMirrorFn = function() {
                     {                    	
                         if (sol) {
                             var rule = reg_notcommentstart.exec(stream.string)[0];
-                            state.rules.push([rule, state.lineNumber]);
+                            state.rules.push([rule, state.lineNumber, mixedCase]);
                             state.tokenIndex = 0;//in rules, records whether bracket has been found or not
                         }
 
@@ -976,7 +972,7 @@ var codeMirrorFn = function() {
 		                    	if (sol) {
 		                    		if (['title','author','homepage','background_color','text_color','key_repeat_interval','realtime_interval','again_interval','flickscreen','zoomscreen','color_palette','youtube'].indexOf(token)>=0) {
 		                    			
-                                        if (token==='youtube') {
+                                        if (token==='youtube' || token==='author' || token==='title') {
                                             stream.string=mixedCase;
                                         }
                                         

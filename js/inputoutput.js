@@ -6,143 +6,136 @@ var rightdragging=false;
 var columnAdded=false;
 
 function recalcLevelBounds(){
-	level.movementMask = level.dat.concat([]);
-    level.rigidMovementAppliedMask = level.dat.concat([]);
-	level.rigidGroupIndexMask = level.dat.concat([]);
-    level.commandQueue=[];
-
-    for (var i=0;i<level.movementMask.length;i++)
-    {
-        level.movementMask[i]=0;
-        level.rigidMovementAppliedMask[i]=0;
-        level.rigidGroupIndexMask[i]=0;
-    }
 }
+
+function arrCopy(from, fromoffset, to, tooffset, len) {
+	while (len--)
+		to[tooffset++] = from[fromoffset]++;
+}
+
+function adjustLevel(level, widthdelta, heightdelta) {
+	var oldlevel = level.clone();
+	level.width += widthdelta;
+	level.height += heightdelta;
+	level.n_tiles = level.width * level.height;
+	level.objects = new Int32Array(level.n_tiles * STRIDE);
+	var bgMask = new BitVec(STRIDE);
+	bgMask.ibitset(state.backgroundid);
+	for (var i=0; i<level.n_tiles; ++i) 
+		level.setCell(i, bgMask);
+	level.movements = new Int32Array(level.objects.length);
+	columnAdded=true;
+	return oldlevel;
+}
+
 function addLeftColumn() {
-	var bgMask = 1<<state.backgroundid;
-	for (var i=0;i<level.height;i++) {
-		level.dat.splice(i,0,bgMask);
+	var oldlevel = adjustLevel(level, 1, 0);
+	for (var x=1; x<level.width; ++x) {
+		for (var y=0; y<level.height; ++y) {
+			var index = x*level.height + y;
+			level.setCell(index, oldlevel.getCell(index - level.height))
+		}
 	}
-	level.width++;
-	recalcLevelBounds();
-	columnAdded=true;
 }
 
-function addRightColumn(){
-	var bgMask = 1<<state.backgroundid;
-	for (var i=0;i<level.height;i++) {
-		level.dat.push(bgMask);
+function addRightColumn() {
+	var oldlevel = adjustLevel(level, 1, 0);
+	for (var x=0; x<level.width-1; ++x) {
+		for (var y=0; y<level.height; ++y) {
+			var index = x*level.height + y;
+			level.setCell(index, oldlevel.getCell(index))
+		}
 	}
-	level.width++;
-	recalcLevelBounds();
-	columnAdded=true;
 }
 
-function addTopRow(){
-	var bgMask = 1<<state.backgroundid;
-	for (var i=level.width-1;i>=0;i--) {
-		level.dat.splice(i*level.height,0,bgMask);
+function addTopRow() {
+	var oldlevel = adjustLevel(level, 0, 1);
+	for (var x=0; x<level.width; ++x) {
+		for (var y=1; y<level.height; ++y) {
+			var index = x*level.height + y;
+			level.setCell(index, oldlevel.getCell(index - x - 1))
+		}
 	}
-	level.height++;
-	recalcLevelBounds();
-	columnAdded=true;
 }
-function addBottomRow(){
-	var bgMask = 1<<state.backgroundid;
-	for (var i=level.width-1;i>=0;i--) {
-		level.dat.splice(level.height+i*level.height,0,bgMask);
+
+function addBottomRow() {
+	var oldlevel = adjustLevel(level, 0, 1);
+	for (var x=0; x<level.width; ++x) {
+		for (var y=0; y<level.height - 1; ++y) {
+			var index = x*level.height + y;
+			level.setCell(index, oldlevel.getCell(index - x));
+		}
 	}
-	level.height++;
-	recalcLevelBounds();
-	columnAdded=true;
 }
 
 function removeLeftColumn() {
 	if (level.width<=1) {
 		return;
 	}
-	var bgMask = 1<<state.backgroundid;
-	for (var i=0;i<level.height;i++) {
-		level.dat.splice(0,1);
+	var oldlevel = adjustLevel(level, -1, 0);
+	for (var x=0; x<level.width; ++x) {
+		for (var y=0; y<level.height; ++y) {
+			var index = x*level.height + y;
+			level.setCell(index, oldlevel.getCell(index + level.height))
+		}
 	}
-	level.width--;
-	recalcLevelBounds();
-	columnAdded=true;
 }
 
 function removeRightColumn(){
 	if (level.width<=1) {
 		return;
 	}
-	var bgMask = 1<<state.backgroundid;
-	for (var i=0;i<level.height;i++) {
-		level.dat.splice(level.dat.length-1,1);
+	var oldlevel = adjustLevel(level, -1, 0);
+	for (var x=0; x<level.width; ++x) {
+		for (var y=0; y<level.height; ++y) {
+			var index = x*level.height + y;
+			level.setCell(index, oldlevel.getCell(index))
+		}
 	}
-	level.width--;
-	recalcLevelBounds();
-	columnAdded=true;
 }
 
 function removeTopRow(){
 	if (level.height<=1) {
 		return;
 	}
-	var bgMask = 1<<state.backgroundid;
-	for (var i=level.width-1;i>=0;i--) {
-		level.dat.splice(i*level.height,1);
+	var oldlevel = adjustLevel(level, 0, -1);
+	for (var x=0; x<level.width; ++x) {
+		for (var y=0; y<level.height; ++y) {
+			var index = x*level.height + y;
+			level.setCell(index, oldlevel.getCell(index + x + 1))
+		}
 	}
-	level.height--;
-	recalcLevelBounds();
-	columnAdded=true;
 }
 function removeBottomRow(){
 	if (level.height<=1) {
 		return;
 	}
-	var bgMask = 1<<state.backgroundid;
-	for (var i=level.width-1;i>=0;i--) {
-		level.dat.splice(level.height-1+i*level.height,1);
+	var oldlevel = adjustLevel(level, 0, -1);
+	for (var x=0; x<level.width; ++x) {
+		for (var y=0; y<level.height; ++y) {
+			var index = x*level.height + y;
+			level.setCell(index, oldlevel.getCell(index + x))
+		}
 	}
-	level.height--;
-	recalcLevelBounds();
-	columnAdded=true;
 }
 
-var m1  = 0x55555555; //binary: 0101...
-var m2  = 0x33333333; //binary: 00110011..
-var m4  = 0x0f0f0f0f; //binary:  4 zeros,  4 ones ...
-var m8  = 0x00ff00ff; //binary:  8 zeros,  8 ones ...
-var m16 = 0x0000ffff; //binary: 16 zeros, 16 ones ...
-var hff = 0xffffffff; //binary: all ones
-var h01 = 0x01010101; //the sum of 256 to the power of 0,1,2,3...
-
-//from http://jsperf.com/hamming-weight/4
-function CountBits(x) {
-    x = (x & m1 ) + ((x >>  1) & m1 ); //put count of each  2 bits into those  2 bits 
-    x = (x & m2 ) + ((x >>  2) & m2 ); //put count of each  4 bits into those  4 bits 
-    x = (x & m4 ) + ((x >>  4) & m4 ); //put count of each  8 bits into those  8 bits 
-    x = (x & m8 ) + ((x >>  8) & m8 ); //put count of each 16 bits into those 16 bits 
-    x = (x & m16) + ((x >> 16) & m16); //put count of each 32 bits into those 32 bits 
-    return x;
-}
-
-function matchGlyph(inputmask,maskToGlyph) {
-	if (inputmask in maskToGlyph) {
-		return maskToGlyph[inputmask];
-	}
-
-	//if what you have doesn't fit, look for mask with the most bits that does
+function matchGlyph(inputmask,glyphAndMask) {
+	// find mask with closest match
 	var highestbitcount=-1;
 	var highestmask;
-	for (var glyphmask in maskToGlyph) {
-		if (maskToGlyph.hasOwnProperty(glyphmask)) {
-			//require all bits of glyph to be in input
-			if (glyphmask == (glyphmask&inputmask)) {
-				var bitcount = CountBits(glyphmask);			
-				if (bitcount>highestbitcount) {
-					highestbitcount=bitcount;
-					highestmask=maskToGlyph[glyphmask];
-				}
+	for (var i=0; i<glyphAndMask.length; ++i) {
+		var glyphname = glyphAndMask[i][0];
+		var glyphmask = glyphAndMask[i][1]
+		//require all bits of glyph to be in input
+		if (glyphmask.bitsSetInArray(inputmask.data)) {
+			var bitcount = 0;
+			for (var bit=0;bit<32*STRIDE;++bit) {
+				if (glyphmask.get(bit) && inputmask.get(bit))
+					bitcount++;
+			}
+			if (bitcount>highestbitcount) {
+				highestbitcount=bitcount;
+				highestmask=glyphname;
 			}
 		}
 	}
@@ -164,33 +157,29 @@ var htmlEntityMap = {
 };
 
 function printLevel() {
-	var maskToGlyph = {};
-	var glyphmask = 0;
+	var glyphAndMask = [];
 	for (var glyphName in state.glyphDict) {
 		if (state.glyphDict.hasOwnProperty(glyphName)&&glyphName.length===1) {
 			var glyph = state.glyphDict[glyphName];
-			var glyphmask=0;
+			var glyphmask=new BitVec(STRIDE);
 			for (var i=0;i<glyph.length;i++)
 			{
 				var id = glyph[i];
 				if (id>=0) {
-					glyphmask = (glyphmask|(1<<id));
-				}			
+					glyphmask.ibitset(id);
+				}
 			}
-			maskToGlyph[glyphmask]=glyphName;
+			glyphAndMask.push([glyphName, glyphmask.clone()])
 			//register the same - backgroundmask with the same name
-			var  bgMask = state.layerMasks[state.backgroundlayer];
-			var glyphmaskMinusBackground = glyphmask & (~bgMask);
-			if (! (glyphmask in maskToGlyph)) {
-				maskToGlyph[glyphmask]=glyphName;
-			}
+			var bgMask = state.layerMasks[state.backgroundlayer];
+			glyphmask.iclear(bgMask);
+			glyphAndMask.push([glyphName, glyphmask.clone()])
 			for (var i=0;i<32;i++) {
 				var bgid = 1<<i;
-				if ((bgid&bgMask)!==0) {
-					var glyphmasnewbg = glyphmaskMinusBackground|bgid;
-					if (! (glyphmasnewbg in maskToGlyph)) {
-						maskToGlyph[glyphmasnewbg]=glyphName;						
-					}
+				if (bgMask.get(i)) {
+					glyphmask.ibitset(i);
+					glyphAndMask.push([glyphName, glyphmask.clone()])
+					glyphmask.ibitclear(i);
 				}
 			}
 		}
@@ -199,8 +188,8 @@ function printLevel() {
 	for (var j=0;j<level.height;j++) {
 		for (var i=0;i<level.width;i++) {
 			var cellIndex = j+i*level.height;
-			var cellMask = level.dat[cellIndex];
-			var glyph = matchGlyph(cellMask,maskToGlyph);
+			var cellMask = level.getCell(cellIndex);
+			var glyph = matchGlyph(cellMask,glyphAndMask);
 			if (glyph in htmlEntityMap) {
 				glyph = htmlEntityMap[glyph]; 
 			}
@@ -225,24 +214,24 @@ function levelEditorClick(event,click) {
 	} else if (mouseCoordX>-1&&mouseCoordY>-1&&mouseCoordX<screenwidth-2&&mouseCoordY<screenheight-2-editorRowCount	) {
 		var glyphname = glyphImagesCorrespondance[glyphSelectedIndex];
 		var glyph = state.glyphDict[glyphname];
-		var glyphmask = 0;
+		var glyphmask = new BitVec(STRIDE);
 		for (var i=0;i<glyph.length;i++)
 		{
 			var id = glyph[i];
 			if (id>=0) {
-				glyphmask = (glyphmask|(1<<id));
+				glyphmask.ibitset(id);
 			}			
 		}
 
 		var backgroundMask = state.layerMasks[state.backgroundlayer];
-		if ((glyphmask&backgroundMask)===0) {
+		if (glyphmask.bitsClearInArray(backgroundMask)) {
 			// If we don't already have a background layer, mix in
 			// the default one.
-			glyphmask = glyphmask|(1<<state.backgroundid);
+			glyphmask.ibitset(state.backgroundid);
 		}
 
 		var coordIndex = mouseCoordY + mouseCoordX*level.height;
-		level.dat[coordIndex]=glyphmask;
+		level.setCell(coordIndex, glyphmask);
 		redraw();
 	}
 	else if (click) {
@@ -271,11 +260,10 @@ function levelEditorRightClick(event,click) {
 			redraw();
 		}
 	} else if (mouseCoordX>-1&&mouseCoordY>-1&&mouseCoordX<screenwidth-2&&mouseCoordY<screenheight-2-editorRowCount	) {
-		var glyphname = glyphImagesCorrespondance[glyphSelectedIndex];
-		var glyph = state.glyphDict[glyphname];
-		var glyphmask = 1<<state.backgroundid;
 		var coordIndex = mouseCoordY + mouseCoordX*level.height;
-		level.dat[coordIndex]=glyphmask;
+		var glyphmask = new BitVec(STRIDE);
+		glyphmask.ibitset(state.backgroundid);
+		level.setCell(coordIndex, glyphmask);
 		redraw();
 	}
 	else if (click) {
@@ -427,10 +415,10 @@ function mouseMove(event) {
     	} else if (rightdragging){
     		levelEditorRightClick(event,false);    		
     	}
+	    redraw();
     }
 
     //window.console.log("showcoord ("+ canvas.width+","+canvas.height+") ("+x+","+y+")");
-    redraw();
 }
 
 function mouseOut() {
@@ -507,6 +495,7 @@ function checkKey(e,justPressed) {
                     inputHistory.push("undo");
                 }
             	DoUndo();
+                canvasResize(); // calls redraw
             	return prevent(e);
             }
             break;
@@ -519,7 +508,7 @@ function checkKey(e,justPressed) {
                     inputHistory.push("restart");
                 }
         		DoRestart();
-            	//restart
+                canvasResize(); // calls redraw
             	return prevent(e);
             }
             break;
@@ -629,7 +618,9 @@ function checkKey(e,justPressed) {
             if (inputdir===4 && ('noaction' in state.metadata)) {
 
             } else {
-	        	processInput(inputdir);
+                if (processInput(inputdir)) {
+                    redraw();
+                }
 	        }
 	       	return prevent(e);
     	}
@@ -645,10 +636,11 @@ function update() {
         }
     }
     if (againing) {
-    	if (timer>againinterval) {
-    		againing=false;
-    		processInput(-1);
-    	}
+        if (timer>againinterval) {
+            if (processInput(-1)) {
+                redraw();
+            }
+        }
     }
     if (quittingMessageScreen) {
         if (timer/1000>0.15) {
@@ -687,7 +679,9 @@ function update() {
         autotick+=deltatime;
         if (autotick>autotickinterval) {
             autotick=0;
-            autoTickGame();
+            if (processInput(-1)) {
+                redraw();
+            }
         }
     }
 }

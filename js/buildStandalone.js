@@ -28,7 +28,7 @@ function buildStandalone(stateString) {
 	var htmlString = standalone_HTML_String.concat("");
 	var title = "PuzzleScript Game";
 	if (state.metadata.title!==undefined) {
-		title=state.metadata.title.toUpperCase();
+		title=state.metadata.title;
 	}
 	var homepage = "www.puzzlescript.net";
 	if (state.metadata.homepage!==undefined) {
