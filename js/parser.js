@@ -39,6 +39,20 @@ function logError(str, lineNumber,urgent) {
     }
 }
 
+function logWarning(str, lineNumber,urgent) {
+    if (compiling||urgent) {
+        if (lineNumber === undefined) {
+            return logErrorNoLine(str);
+        }
+        var errorString = '<a onclick="jumpToLine(' + lineNumber.toString() + ');"  href="javascript:void(0);"><span class="errorTextLineNumber"> line ' + lineNumber.toString() + '</span></a> : ' + '<span class="warningText">' + str + '</span>';
+         if (errorStrings.indexOf(errorString) >= 0 && !urgent) {
+            //do nothing, duplicate error
+         } else {
+            consolePrint(errorString);
+            errorStrings.push(errorString);
+        }
+    }
+}
 function logErrorNoLine(str,urgent) {
     if (compiling||urgent) {
         var errorString = '<span class="errorText">' + str + '</span>';
@@ -406,7 +420,7 @@ var codeMirrorFn = function() {
                                 	}
                                 }
                                 if (keyword_array.indexOf(candname)>=0) {
-                                    logError('You named an object "' + candname.toUpperCase() + '", but this is a keyword. Don\'t do that!', state.lineNumber);
+                                    logWarning('You named an object "' + candname.toUpperCase() + '", but this is a keyword. Don\'t do that!', state.lineNumber);
                                 }
 
                                 if (sol) {
@@ -619,9 +633,6 @@ var codeMirrorFn = function() {
                             }
                             
                             state.collisionLayers[state.collisionLayers.length - 1] = state.collisionLayers[state.collisionLayers.length - 1].concat(ar);
-                            if (state.collisionLayers.length > 6) {
-                                logError("Cannot have more than 6 layers.  You probably don't need that many, you know...", state.lineNumber);
-                            }
                             if (ar.length>0) {
                             	return 'NAME';                            
                             } else {
@@ -647,9 +658,7 @@ var codeMirrorFn = function() {
                         	if (splits.length>0) {
                         		var candname = splits[0].toLowerCase();
 	                            if (keyword_array.indexOf(candname)>=0) {
-	                                logError('You named an object "' + candname.toUpperCase() + '", but this is a keyword. Don\'t do that!', state.lineNumber);
-	                                stream.match(reg_notcommentstart, true);
-	                                return "ERROR";
+	                                logWarning('You named an object "' + candname.toUpperCase() + '", but this is a keyword. Don\'t do that!', state.lineNumber);
 	                            }
                         	}
 

@@ -119,8 +119,35 @@ function removeBottomRow(){
 	}
 }
 
+<<<<<<< HEAD
+//from http://jsperf.com/hamming-weight/4
+function CountBits(x) {
+    var m1  = 0x55555555; //binary: 0101...
+    var m2  = 0x33333333; //binary: 00110011..
+    var m4  = 0x0f0f0f0f; //binary:  4 zeros,  4 ones ...
+    var m8  = 0x00ff00ff; //binary:  8 zeros,  8 ones ...
+    var m16 = 0x0000ffff; //binary: 16 zeros, 16 ones ...
+    var hff = 0xffffffff; //binary: all ones
+    var h01 = 0x01010101; //the sum of 256 to the power of 0,1,2,3...
+
+    x = (x & m1 ) + ((x >>  1) & m1 ); //put count of each  2 bits into those  2 bits
+    x = (x & m2 ) + ((x >>  2) & m2 ); //put count of each  4 bits into those  4 bits
+    x = (x & m4 ) + ((x >>  4) & m4 ); //put count of each  8 bits into those  8 bits
+    x = (x & m8 ) + ((x >>  8) & m8 ); //put count of each 16 bits into those 16 bits
+    x = (x & m16) + ((x >> 16) & m16); //put count of each 32 bits into those 32 bits
+    return x;
+}
+
+function matchGlyph(inputmask,maskToGlyph) {
+	if (inputmask in maskToGlyph) {
+		return maskToGlyph[inputmask];
+	}
+
+	//if what you have doesn't fit, look for mask with the most bits that does
+=======
 function matchGlyph(inputmask,glyphAndMask) {
 	// find mask with closest match
+>>>>>>> master
 	var highestbitcount=-1;
 	var highestmask;
 	for (var i=0; i<glyphAndMask.length; ++i) {
