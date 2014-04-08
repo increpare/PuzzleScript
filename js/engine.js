@@ -11,7 +11,7 @@ x to action.......................
 z to undo, r to restart...........
 */
 
-intro_template = [
+var intro_template = [
 	"..................................",
 	"..................................",
 	"..................................",
@@ -27,7 +27,7 @@ intro_template = [
 	".................................."
 ];
 
-messagecontainer_template = [
+var messagecontainer_template = [
 	"..................................",
 	"..................................",
 	"..................................",
@@ -43,7 +43,7 @@ messagecontainer_template = [
 	".................................."
 ];
 
-titletemplate_firstgo = [
+var titletemplate_firstgo = [
 	"..................................",
 	"..................................",
 	"..................................",
@@ -58,7 +58,7 @@ titletemplate_firstgo = [
 	".Z to undo, R to restart..........",
 	".................................."];
 
-titletemplate_select0 = [
+var titletemplate_select0 = [
 	"..................................",
 	"..................................",
 	"..................................",
@@ -73,7 +73,7 @@ titletemplate_select0 = [
 	".Z to undo, R to restart..........",
 	".................................."];
 
-titletemplate_select1 = [
+var titletemplate_select1 = [
 	"..................................",
 	"..................................",
 	"..................................",
@@ -89,7 +89,7 @@ titletemplate_select1 = [
 	".................................."];
 
 
-titletemplate_firstgo_selected = [
+var titletemplate_firstgo_selected = [
 	"..................................",
 	"..................................",
 	"..................................",
@@ -104,7 +104,7 @@ titletemplate_firstgo_selected = [
 	".Z to undo, R to restart..........",
 	".................................."];
 
-titletemplate_select0_selected = [
+var titletemplate_select0_selected = [
 	"..................................",
 	"..................................",
 	"..................................",
@@ -119,7 +119,7 @@ titletemplate_select0_selected = [
 	".Z to undo, R to restart..........",
 	".................................."];
 
-titletemplate_select1_selected = [
+var titletemplate_select1_selected = [
 	"..................................",
 	"..................................",
 	"..................................",
@@ -156,7 +156,7 @@ function generateTitleScreen()
 {
 	titleMode=curlevel>0?1:0;
 	
-	if (state.levels.length==0) {
+	if (state.levels.length===0) {
 		titleImage=intro_template;
 		return;
 	}
@@ -166,14 +166,14 @@ function generateTitleScreen()
 		title=state.metadata.title;
 	}
 
-	if (titleMode==0) {
+	if (titleMode===0) {
 		if (titleSelected) {
 			titleImage = deepClone(titletemplate_firstgo_selected);		
 		} else {
 			titleImage = deepClone(titletemplate_firstgo);					
 		}
 	} else {
-		if (titleSelection==0) {
+		if (titleSelection===0) {
 			if (titleSelected) {
 				titleImage = deepClone(titletemplate_select0_selected);		
 			} else {
@@ -497,7 +497,7 @@ function setGameState(_state, command) {
 	if (command===undefined) {
 		command=["restart"];
 	}
-	if (state.levels.length==0 && command.length>0 && command[0]==="rebuild")  {
+	if (state.levels.length===0 && command.length>0 && command[0]==="rebuild")  {
 		command=["restart"];
 	}
 
@@ -1521,7 +1521,7 @@ Rule.prototype.findMatches = function() {
         } else {
         	var match = matchCellRow(this.direction,cellRow,cellRowMasks[cellRowIndex]);               	
         }
-        if (match.length==0) {
+        if (match.length===0) {
             return [];
         } else {
             matches.push(match);
@@ -1661,7 +1661,7 @@ function applyRandomRuleGroup(ruleGroup) {
 		}		
 	}
 
-	if (matches.length==0)
+	if (matches.length===0)
 	{
 		return false;
 	} 
@@ -2175,7 +2175,7 @@ function nextLevel() {
     againing=false;
 	messagetext="";
 	if (titleScreen) {
-		if (titleSelection==0) {
+		if (titleSelection===0) {
 			//new game
 			curlevel=0;
 		} 			
