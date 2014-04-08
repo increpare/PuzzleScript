@@ -178,7 +178,6 @@ function glyphCount(){
 }
 
 function redraw() {
-    console.log('redraw');
     if (spriteimages===undefined) {
         regenSpriteImages();
     }
@@ -254,15 +253,6 @@ function redraw() {
 
         for (var i = mini; i < maxi; i++) {
             for (var j = minj; j < maxj; j++) {
-    /*          if (grid[i][j]==0){
-                    ctx.fillStyle="#00FF00";
-                }
-                else {
-                    ctx.fillStyle="#0000FF";
-                }
-
-                ctx.fillRect(xoffset+i*cellwidth,yoffset+j*cellheight,i+1*cellwidth,j+1*cellheight);
-    */
                 var posIndex = j + i * level.height;
                 var posMask = level.getCell(posIndex);
 
@@ -278,11 +268,6 @@ function redraw() {
 	    if (levelEditorOpened) {
 	    	drawEditorIcons();
 	    }
-        /*
-    //  ctx.drawImage(spriteimages[0],0,0);
-        ctx.fillStyle="#000000";
-        ctx.fillText("Coordinates: (" + x + "," + y + ")",x,y);
-        */
     }
 }
 

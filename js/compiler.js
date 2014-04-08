@@ -341,7 +341,7 @@ function generateExtraMembers(state) {
 		backgroundlayer = state.objects.background.layer;
 	}
 	state.backgroundid=backgroundid;
-	state.backgroundlayer=backgroundlayer;	
+	state.backgroundlayer=backgroundlayer;
 }
 
 Level.prototype.calcBackgroundMask = function(state) {

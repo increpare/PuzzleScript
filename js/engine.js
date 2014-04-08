@@ -480,7 +480,10 @@ var backups=[];
 var restartTarget;
 
 function backupLevel() {
-	return new Int32Array(level.objects);
+	var ret = new Int32Array(level.objects);
+	ret.width = level.width;
+	ret.height = level.height;
+	return ret;
 }
 
 function setGameState(_state, command) {
@@ -663,11 +666,15 @@ function restoreLevel(lev) {
 	oldflickscreendat=[];
 
 	level.objects = new Int32Array(lev);
+	if (level.width !== lev.width || level.height !== lev.height) {
+		level.width = lev.width;
+		level.height = lev.height;
+		level.n_tiles = lev.width * lev.height;
+		level.movements = new Int32Array(level.objects.length);
+	}
 
-	//TODO: restore width/height to fix undo for changed sizes
-	//width/height don't change, neither does layercount
+	// layercount doesn't change
 
-	//width/height don't change, neither does layercount
 	for (var i=0;i<level.n_tiles;i++) {
 		level.movements[i]=0;
 		level.rigidMovementAppliedMask[i]=0;
@@ -942,6 +949,10 @@ BitVec.prototype.iclear = function(other) {
 
 BitVec.prototype.ibitset = function(ind) {
 	this.data[ind>>5] |= 1 << (ind & 31);
+}
+
+BitVec.prototype.ibitclear = function(ind) {
+	this.data[ind>>5] &= ~(1 << (ind & 31));
 }
 
 BitVec.prototype.get = function(ind) {
