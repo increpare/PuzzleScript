@@ -67,10 +67,6 @@ function generateExtraMembers(state) {
 
 	//set object count
 	state.objectCount = idcount;
-	if (state.objectCount > 32)
-	{
-		logError('Cannot have more than 32 object types defined, you have '+ state.objectCount, state.objects[n].lineNumber);
-	}
 
 	//calculate blank mask template
 	var layerCount = state.collisionLayers.length;
@@ -78,6 +74,10 @@ function generateExtraMembers(state) {
 	for (var i = 0; i < layerCount; i++) {
 		blankMask.push(-1);
 	}
+
+	// how many words do our bitvecs need to hold?
+	// TODO: separate numbers for objects / layers
+	STRIDE = Math.ceil(Math.max(state.objectCount/32, layerCount/5))|0;
 
 	//get colorpalette name
 	debugMode=false;
@@ -378,7 +378,7 @@ function levelsToArray(state) {
 			processedLevels.push(o);
 		} else {
 			var o = new Level(level[0], level[1].length, level.length-1, state.collisionLayers.length, null);
-			o.objects = new Uint32Array(o.width * o.height * STRIDE);
+			o.objects = new Int32Array(o.width * o.height * STRIDE);
 
 			for (var i = 0; i < o.width; i++) {
 				for (var j = 0; j < o.height; j++) {

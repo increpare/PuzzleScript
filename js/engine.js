@@ -146,7 +146,7 @@ var titleSelected=false;
 function unloadGame() {
 	state=introstate;
 	level = new Level(0, 5, 5, 2, null);
-	level.objects = new Uint32Array(0);
+	level.objects = new Int32Array(0);
 	generateTitleScreen();
 	canvasResize();
 	redraw();
@@ -361,7 +361,7 @@ function loadLevelFromState(state,levelindex) {
     	titleMode=0;
     	textMode=false;
 		level = leveldat.clone();
-		level.movements = new Uint32Array(level.objects.length);
+		level.movements = new Int32Array(level.objects.length);
         level.rigidMovementAppliedMask = [];
         level.rigidGroupIndexMask = [];
 		level.rowCellContents = [];
@@ -480,7 +480,7 @@ var backups=[];
 var restartTarget;
 
 function backupLevel() {
-	return new Uint32Array(level.objects);
+	return new Int32Array(level.objects);
 }
 
 function setGameState(_state, command) {
@@ -662,7 +662,7 @@ var messagetext="";
 function restoreLevel(lev) {
 	oldflickscreendat=[];
 
-	level.objects = new Uint32Array(lev);
+	level.objects = new Int32Array(lev);
 
 	//TODO: restore width/height to fix undo for changed sizes
 	//width/height don't change, neither does layercount
@@ -858,11 +858,8 @@ function repositionEntitiesAtCell(positionIndex) {
     if (movementMask.iszero())
         return false;
 
-    //assumes not zero
-    //for each layer
     var moved=false;
-    // TODO(UNLIMITED)
-    for (var layer=0;layer<6;layer++) {
+    for (var layer=0;layer<level.layerCount;layer++) {
         var layerMovement = movementMask.getshiftor(0x1f, 5*layer);
         if (layerMovement!=0) {
             var thismoved = repositionEntitiesOnLayer(positionIndex,layer,layerMovement);
@@ -890,7 +887,7 @@ function Level(lineNumber, width, height, layerCount, objects) {
 
 Level.prototype.clone = function() {
 	var clone = new Level(this.lineNumber, this.width, this.height, this.layerCount, null);
-	clone.objects = new Uint32Array(this.objects);
+	clone.objects = new Int32Array(this.objects);
 	return clone;
 }
 
@@ -917,7 +914,7 @@ Level.prototype.setMovements = function(index, vec) {
 var ellipsisPattern = ['ellipsis'];
 
 function BitVec(init) {
-	this.data = new Uint32Array(init);
+	this.data = new Int32Array(init);
 	return this;
 }
 
@@ -952,12 +949,10 @@ BitVec.prototype.get = function(ind) {
 }
 
 BitVec.prototype.getshiftor = function(mask, shift) {
-	var lowmask = mask << (shift & 31);
-	var highmask = mask >> (32 - (shift & 31));
-	var ret = (this.data[shift>>5] & lowmask) >> (shift & 31)
-	if (highmask)
-		ret |= (this.data[(shift>>5)+1] & highmask) >> (32 - (shift & 31));
-	return ret;
+	var ret = this.data[shift>>5] >>> (shift & 31);
+	if (shift&31)
+		ret |= this.data[(shift>>5)+1] << (32 - (shift & 31));
+	return ret & mask;
 }
 
 BitVec.prototype.ishiftor = function(mask, shift) {
@@ -1061,9 +1056,8 @@ function CellReplacement(row) {
 };
 
 CellPattern.prototype.matches = function(i) {
-	// TODO
-	var cellObjects = level.getCell(i);; //level.dat.subarray(i * STRIDE, i * STRIDE + STRIDE);
-	var cellMovements = level.getMovements(i); //level.movementMask.subarray(i * STRIDE, i * STRIDE + STRIDE);
+	var cellObjects = level.getCell(i);
+	var cellMovements = level.getMovements(i);
 	return this.objectsPresent.bitsSetInArray(cellObjects.data) &&
 			this.objectsMissing.bitsClearInArray(cellObjects.data) && 
 			this.movementsPresent.bitsSetInArray(cellMovements.data) &&
@@ -1149,11 +1143,11 @@ CellPattern.prototype.replace = function(rule, currentIndex) {
 		var n = state.idDict[rand];
 		var o = state.objects[n];
 		objectsSet.ibitset(rand);
-		objectsClear.ior(new BitVec([state.layerMasks[o.layer]])); // TODO
+		objectsClear.ior(state.layerMasks[o.layer]);
 		movementsClear.ishiftor(0x1f, 5 * o.layer);
 	}
 	if (!replace_RandomDirMask.iszero()) {
-		for (var layerIndex=0;layerIndex<6;layerIndex++){
+		for (var layerIndex=0;layerIndex<level.layerCount;layerIndex++){
 			if (replace_RandomDirMask.get(5*layerIndex)) {
 				var randomDir = Math.floor(Math.random()*4);
 				movementsSet.ibitset(randomDir + 5 * layerIndex);
@@ -1181,7 +1175,7 @@ CellPattern.prototype.replace = function(rule, currentIndex) {
 		var rigidGroupIndex = state.groupNumber_to_RigidGroupIndex[rule.groupNumber];
 		rigidGroupIndex++;//don't forget to -- it when decoding :O
 		var rigidMask = new BitVec(STRIDE);
-		for (var layer = 0; layer < 6; layer++) {
+		for (var layer = 0; layer < level.layerCount; layer++) {
 			rigidMask.ishiftor(rigidGroupIndex, layer * 5);
 		}
 		rigidMask.iand(replace.movementsLayerMask);
@@ -1206,8 +1200,6 @@ CellPattern.prototype.replace = function(rule, currentIndex) {
 			level.rigidGroupIndexMask[currentIndex] = curRigidGroupIndexMask;
 			level.rigidMovementAppliedMask[currentIndex] = curRigidMovementAppliedMask;
 		}
-
-		//TODO
 
 		var created = curCellMask.clone();
 		created.iclear(oldCellMask);
@@ -1487,8 +1479,8 @@ function commitPreservationState(ruleGroupIndex) {
 	var propagationState = {
 		ruleGroupIndex:ruleGroupIndex,
 		//don't need to know the tuple index
-		objects:new Uint32Array(level.objects),
-		movements:new Uint32Array(level.movements),
+		objects:new Int32Array(level.objects),
+		movements:new Int32Array(level.movements),
 		rigidGroupIndexMask:level.rigidGroupIndexMask.concat([]),
 		rigidMovementAppliedMask:level.rigidMovementAppliedMask.concat([]),
 		bannedGroup:level.bannedGroup.concat([])
@@ -1499,8 +1491,8 @@ function commitPreservationState(ruleGroupIndex) {
 
 function restorePreservationState(preservationState) {
 //don't need to concat or anythign here, once something is restored it won't be used again.
-	level.objects = new Uint32Array(preservationState.objects);
-	level.movements = new Uint32Array(preservationState.movements);
+	level.objects = new Int32Array(preservationState.objects);
+	level.movements = new Int32Array(preservationState.movements);
 	level.rigidGroupIndexMask = preservationState.rigidGroupIndexMask.concat([]);
     level.rigidMovementAppliedMask = preservationState.rigidMovementAppliedMask.concat([]);
     sfxCreateMask=new BitVec(STRIDE);
@@ -1766,7 +1758,7 @@ function resolveMovements(dir){
 				movementMask.iand(rigidMovementAppliedMask);
 				if (!movementMask.iszero()) {
 					//find what layer was restricted
-					for (var j=0;j<6;j++) {
+					for (var j=0;j<level.layerCount;j++) {
 						var layerSection = movementMask.getshiftor(0x1f, 5*j);
 						if (layerSection!==0) {
 							//this is our layer!

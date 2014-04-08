@@ -569,9 +569,6 @@ var codeMirrorFn = function() {
                             }
                             
                             state.collisionLayers[state.collisionLayers.length - 1] = state.collisionLayers[state.collisionLayers.length - 1].concat(ar);
-                            if (state.collisionLayers.length > 6) {
-                                logError("Cannot have more than 6 layers.  You probably don't need that many, you know...", state.lineNumber);
-                            }
                             if (ar.length>0) {
                             	return 'NAME';                            
                             } else {
