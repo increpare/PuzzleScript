@@ -264,11 +264,10 @@ function redraw() {
                 ctx.fillRect(xoffset+i*cellwidth,yoffset+j*cellheight,i+1*cellwidth,j+1*cellheight);
     */
                 var posIndex = j + i * level.height;
-                var posMask = level.dat[posIndex];
+                var posMask = level.getCell(posIndex);
 
                 for (var k = 0; k < state.objectCount; k++) {
-                    var spriteMask = 1 << k;
-                    if ((posMask & spriteMask) != 0) {                  
+                    if (posMask.get(k) != 0) {                  
                         var sprite = spriteimages[k];
                         ctx.drawImage(sprite, xoffset + (i-mini) * cellwidth, yoffset + (j-minj) * cellheight);
                     }

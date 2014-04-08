@@ -145,28 +145,8 @@ var titleSelected=false;
 
 function unloadGame() {
 	state=introstate;
-	level =  {
-	    width: 5,
-	    height: 5,
-	    layerCount: 2,
-	    dat: [
-	    1, 3, 3, 1, 1, 2, 2, 3, 3, 1,
-	    2, 1, 2, 2, 3, 3, 1, 1, 2, 2,
-	    3, 2, 1, 3, 2, 1, 3, 2, 1, 3,
-	    1, 3, 3, 1, 1, 2, 2, 3, 3, 1,
-	    2, 1, 2, 2, 3, 3, 1, 1, 2, 2
-	    ],
-	    movementMask:[
-	    1, 3, 3, 1, 1, 2, 2, 3, 3, 1,
-	    2, 1, 2, 2, 3, 3, 1, 1, 2, 2,
-	    3, 2, 1, 3, 2, 1, 3, 2, 1, 3,
-	    1, 3, 3, 1, 1, 2, 2, 3, 3, 1,
-	    2, 1, 2, 2, 3, 3, 1, 1, 2, 2
-	    ],
-	    rigidGroupIndexMask:[],//[indexgroupNumber, masked by layer arrays]
-	    rigidMovementAppliedMask:[],//[indexgroupNumber, masked by layer arrays]
-	    bannedGroup:[]
-	};
+	level = new Level(0, 5, 5, 2, null);
+	level.objects = new Uint32Array(0);
 	generateTitleScreen();
 	canvasResize();
 	redraw();
@@ -380,18 +360,13 @@ function loadLevelFromState(state,levelindex) {
     if (leveldat.message===undefined) {
     	titleMode=0;
     	textMode=false;
-	    level = {
-	        width: leveldat.w,
-	        height: leveldat.h,
-	        layerCount: leveldat.layerCount,
-	        dat: leveldat.dat.concat([]),
-	        movementMask: leveldat.dat.concat([]),
-            rigidMovementAppliedMask: leveldat.dat.concat([]),
-	        rigidGroupIndexMask: leveldat.dat.concat([]),//group index
-	        rowCellContents:[],
-	        colCellContents:[],
-	        mapCellContents:0
-	    };
+		level = leveldat.clone();
+		level.movements = new Uint32Array(level.objects.length);
+        level.rigidMovementAppliedMask = [];
+        level.rigidGroupIndexMask = [];
+		level.rowCellContents = [];
+		level.colCellContents = [];
+		level.mapCellContents = 0;
 
 	    for (var i=0;i<level.height;i++) {
 	    	level.rowCellContents[i]=0;	    	
@@ -400,9 +375,9 @@ function loadLevelFromState(state,levelindex) {
 	    	level.colCellContents[i]=0;	    	
 	    }
 
-	    for (var i=0;i<level.movementMask.length;i++)
+	    for (var i=0;i<level.n_tiles;i++)
 	    {
-	        level.movementMask[i]=0;
+	        level.movements[i]=0;
 	        level.rigidMovementAppliedMask[i]=0;
 	        level.rigidGroupIndexMask[i]=0;
 	    }
@@ -505,7 +480,7 @@ var backups=[];
 var restartTarget;
 
 function backupLevel() {
-	return level.dat.concat([]);
+	return new Uint32Array(level.objects);
 }
 
 function setGameState(_state, command) {
@@ -686,11 +661,15 @@ function setGameState(_state, command) {
 var messagetext="";
 function restoreLevel(lev) {
 	oldflickscreendat=[];
-	level.dat=lev.concat([]);
+
+	level.objects = new Uint32Array(lev);
+
+	//TODO: restore width/height to fix undo for changed sizes
+	//width/height don't change, neither does layercount
 
 	//width/height don't change, neither does layercount
-	for (var i=0;i<level.dat.length;i++) {
-		level.movementMask[i]=0;
+	for (var i=0;i<level.n_tiles;i++) {
+		level.movements[i]=0;
 		level.rigidMovementAppliedMask[i]=0;
 		level.rigidGroupIndexMask[i]=0;
 	}	
@@ -701,7 +680,6 @@ function restoreLevel(lev) {
     for (var i=0;i<level.width;i++) {
     	level.colCellContents[i]=0;	    	
     }
-
 
     againing=false;
     messagetext="";
@@ -755,8 +733,8 @@ function DoUndo(force) {
 function getPlayerPositions() {
     var result=[];
     var playerMask = state.playerMask;
-    for (i=0;i<level.dat.length;i++) {
-        var cellMask = levelGetIndex(i);
+    for (i=0;i<level.n_tiles;i++) {
+        var cellMask = level.getCell(i);
         if (playerMask.anyBitsInCommon(cellMask)) {
             result.push(i);
         }
@@ -777,15 +755,15 @@ function getLayersOfMask(cellMask) {
 }
 
 function moveEntitiesAtIndex(positionIndex, entityMask, dirMask) {
-    var cellMask = levelGetIndex(positionIndex);
+    var cellMask = level.getCell(positionIndex);
     cellMask.iand(entityMask);
     var layers = getLayersOfMask(cellMask);
 
-    var movementMask = movementsGetIndex(positionIndex);
+    var movementMask = level.getMovements(positionIndex);
     for (var i=0;i<layers.length;i++) {
     	movementMask.ishiftor(dirMask, 5 * layers[i]);
     }
-    movementsSetIndex(positionIndex, movementMask);
+    level.setMovements(positionIndex, movementMask);
 }
 
 
@@ -837,11 +815,11 @@ function repositionEntitiesOnLayer(positionIndex,layer,dirMask)
     	return false;
     }
 
-    var targetIndex = (positionIndex+delta[1]+delta[0]*level.height)%level.dat.length;
+    var targetIndex = (positionIndex+delta[1]+delta[0]*level.height)%level.n_tiles;
 
     var layerMask = state.layerMasks[layer];
-    var targetMask = levelGetIndex(targetIndex);
-    var sourceMask = levelGetIndex(positionIndex);
+    var targetMask = level.getCell(targetIndex);
+    var sourceMask = level.getCell(positionIndex);
 
     if (layerMask.anyBitsInCommon(targetMask) && (dirMask!=16)) {
         return false;
@@ -852,8 +830,8 @@ function repositionEntitiesOnLayer(positionIndex,layer,dirMask)
     movingEntities.iand(layerMask);
     targetMask.ior(movingEntities);
 
-    levelSetIndex(positionIndex, sourceMask);
-    levelSetIndex(targetIndex, targetMask);
+    level.setCell(positionIndex, sourceMask);
+    level.setCell(targetIndex, targetMask);
 
     var colIndex=(targetIndex/level.height)|0;
 	var rowIndex=(targetIndex%level.height);
@@ -876,25 +854,64 @@ function repositionEntitiesOnLayer(positionIndex,layer,dirMask)
 }
 
 function repositionEntitiesAtCell(positionIndex) {
-    var movementMask = level.movementMask[positionIndex];
+    var movementMask = level.getMovements(positionIndex);
+    if (movementMask.iszero())
+        return false;
+
     //assumes not zero
     //for each layer
     var moved=false;
     // TODO(UNLIMITED)
-    for (var layer=0;layer<6;layer++) {    	
-        var layerMovement = 0x1f & (movementMask>>(5*layer));
+    for (var layer=0;layer<6;layer++) {
+        var layerMovement = movementMask.getshiftor(0x1f, 5*layer);
         if (layerMovement!=0) {
             var thismoved = repositionEntitiesOnLayer(positionIndex,layer,layerMovement);
             if (thismoved) {
-            	movementMask &= ~(layerMovement<<(5*layer));
+                movementMask.ishiftclear(layerMovement, 5*layer);
+                moved = true;
             }
-            moved = thismoved || moved;
         }
     }
 
-   	level.movementMask[positionIndex] = movementMask;            
+   	level.setMovements(positionIndex, movementMask);
 
     return moved;
+}
+
+
+function Level(lineNumber, width, height, layerCount, objects) {
+	this.lineNumber = lineNumber;
+	this.width = width;
+	this.height = height;
+	this.n_tiles = width * height;
+	this.objects = objects;
+	this.layerCount = layerCount;
+}
+
+Level.prototype.clone = function() {
+	var clone = new Level(this.lineNumber, this.width, this.height, this.layerCount, null);
+	clone.objects = new Uint32Array(this.objects);
+	return clone;
+}
+
+Level.prototype.getCell = function(index) {
+	return new BitVec(this.objects.subarray(index * STRIDE, index * STRIDE + STRIDE))
+}
+
+Level.prototype.setCell = function(index, vec) {
+	for (var i = 0; i < vec.data.length; ++i) {
+		this.objects[index * STRIDE + i] = vec.data[i];
+	}
+}
+
+Level.prototype.getMovements = function(index) {
+	return new BitVec(this.movements.subarray(index * STRIDE, index * STRIDE + STRIDE))
+}
+
+Level.prototype.setMovements = function(index, vec) {
+	for (var i = 0; i < vec.data.length; ++i) {
+		this.movements[index * STRIDE + i] = vec.data[i];
+	}
 }
 
 var ellipsisPattern = ['ellipsis'];
@@ -949,6 +966,14 @@ BitVec.prototype.ishiftor = function(mask, shift) {
 	this.data[shift>>5] |= low;
 	if (high)
 		this.data[(shift>>5)+1] |= high;
+}
+
+BitVec.prototype.ishiftclear = function(mask, shift) {
+	var low = mask << (shift & 31);
+	var high = mask >> (32 - (shift & 31));
+	this.data[shift>>5] &= ~low;
+	if (high)
+		this.data[(shift>>5)+1] &= ~high;
 }
 
 BitVec.prototype.equals = function(other) {
@@ -1037,12 +1062,12 @@ function CellReplacement(row) {
 
 CellPattern.prototype.matches = function(i) {
 	// TODO
-	var cellObjects = [level.dat[i]]; //level.dat.subarray(i * STRIDE, i * STRIDE + STRIDE);
-	var cellMovements = [level.movementMask[i]]; //level.movementMask.subarray(i * STRIDE, i * STRIDE + STRIDE);
-	return this.objectsPresent.bitsSetInArray(cellObjects) &&
-			this.objectsMissing.bitsClearInArray(cellObjects) && 
-			this.movementsPresent.bitsSetInArray(cellMovements) &&
-			this.movementsMissing.bitsClearInArray(cellMovements);
+	var cellObjects = level.getCell(i);; //level.dat.subarray(i * STRIDE, i * STRIDE + STRIDE);
+	var cellMovements = level.getMovements(i); //level.movementMask.subarray(i * STRIDE, i * STRIDE + STRIDE);
+	return this.objectsPresent.bitsSetInArray(cellObjects.data) &&
+			this.objectsMissing.bitsClearInArray(cellObjects.data) && 
+			this.movementsPresent.bitsSetInArray(cellMovements.data) &&
+			this.movementsMissing.bitsClearInArray(cellMovements.data);
 };
 
 var matchCache = {}
@@ -1050,9 +1075,10 @@ var matchCache = {}
 CellPattern.prototype.generateMatchFunction = function() {
 	var i;
 	var fn = '(function(i) {\n\ti=i|0;\n';
+	var mul = STRIDE === 1 ? '' : '*'+STRIDE;
 	for (var i = 0; i < STRIDE; ++i) {
-		fn += '\tvar cellObjects' + i + ' = level.dat[i' + (i ? '+'+i: '') + ']|0;\n';
-		fn += '\tvar cellMovements' + i + ' = level.movementMask[i' + (i ? '+'+i: '') + ']|0;\n';
+		fn += '\tvar cellObjects' + i + ' = level.objects[i' + mul + (i ? '+'+i: '') + ']|0;\n';
+		fn += '\tvar cellMovements' + i + ' = level.movements[i' + mul + (i ? '+'+i: '') + ']|0;\n';
 	}
 	fn += '\t return (true \n';
 	for (var i = 0; i < STRIDE; ++i) {
@@ -1095,28 +1121,6 @@ CellPattern.prototype.toJSON = function() {
 	];
 };
 
-function levelGetIndex(index) {
-	return new BitVec([level.dat[index * STRIDE]]);
-	//return level.dat.subarray(index * STRIDE, index * STRIDE + STRIDE);
-}
-
-function levelSetIndex(index, vec) {
-	for (var i = 0; i < vec.data.length; ++i) {
-		level.dat[index * STRIDE + i] = vec.data[i];
-	}
-}
-
-function movementsGetIndex(index) {
-	return new BitVec([level.movementMask[index * STRIDE]]);
-	return level.movements.subarray(index * STRIDE, index * STRIDE + STRIDE);
-}
-
-function movementsSetIndex(index, vec) {
-	for (var i = 0; i < vec.data.length; ++i) {
-		level.movementMask[index * STRIDE + i] = vec.data[i];
-	}
-}
-
 CellPattern.prototype.replace = function(rule, currentIndex) {
 	var replace = this.replacement;
 
@@ -1157,8 +1161,8 @@ CellPattern.prototype.replace = function(rule, currentIndex) {
 		}
 	}
 	
-	var curCellMask = levelGetIndex(currentIndex);
-	var curMovementMask = movementsGetIndex(currentIndex);
+	var curCellMask = level.getCell(currentIndex);
+	var curMovementMask = level.getMovements(currentIndex);
 
 	var oldCellMask = curCellMask.clone();
 	var oldMovementMask = curMovementMask.clone();
@@ -1212,8 +1216,8 @@ CellPattern.prototype.replace = function(rule, currentIndex) {
 		destroyed.iclear(curCellMask);
 		sfxDestroyMask.ior(destroyed);
 
-		levelSetIndex(currentIndex, curCellMask);
-		movementsSetIndex(currentIndex, curMovementMask);
+		level.setCell(currentIndex, curCellMask);
+		level.setMovements(currentIndex, curMovementMask);
 
 		var colIndex=(currentIndex/level.height)|0;
 		var rowIndex=(currentIndex%level.height);
@@ -1238,21 +1242,20 @@ function cellRowMatchesWildCard(direction,cellRow,i,maxk,mink) {
     if (cellPattern.matches(i)){
             var targetIndex = i;
             for (var j=1;j<cellRow.length;j+=1) {
-                targetIndex = (targetIndex+delta[1]+delta[0]*level.height)%level.dat.length;
-                var movementMask = level.movementMask[targetIndex];
+                targetIndex = (targetIndex+delta[1]+delta[0]*level.height)%level.n_tiles;
 
                 var cellPattern = cellRow[j]
                 if (cellPattern === ellipsisPattern) {
                 	//BAM inner loop time
                 	for (var k=mink;k<maxk;k++) {
                 		var targetIndex2=targetIndex;
-                		targetIndex2 = (targetIndex2+delta[1]*(k)+delta[0]*(k)*level.height+level.dat.length)%level.dat.length;
+                        targetIndex2 = (targetIndex2+delta[1]*(k)+delta[0]*(k)*level.height+level.n_tiles)%level.n_tiles;
                 		for (var j2=j+1;j2<cellRow.length;j2++) {
 			                cellPattern = cellRow[j2];
 						    if (!cellPattern.matches(targetIndex2)) {
 						    	break;
 						    }
-                			targetIndex2 = (targetIndex2+delta[1]+delta[0]*level.height)%level.dat.length;
+                            targetIndex2 = (targetIndex2+delta[1]+delta[0]*level.height)%level.n_tiles;
                 		}
 
 			            if (j2>=cellRow.length) {
@@ -1276,11 +1279,11 @@ function cellRowMatches(direction,cellRow,i,k) {
     if (cellPattern.matches(i)) {
             var targetIndex = i;
             for (var j=1;j<cellRow.length;j++) {
-                targetIndex = (targetIndex+delta[1]+delta[0]*level.height)%level.dat.length;
+                targetIndex = (targetIndex+delta[1]+delta[0]*level.height)%level.n_tiles;
                 cellPattern = cellRow[j];
  				if (cellPattern === ellipsisPattern) {
  					//only for once off verifications
-                	targetIndex = (targetIndex+delta[1]*k+delta[0]*k*level.height)%level.dat.length; 					
+                	targetIndex = (targetIndex+delta[1]*k+delta[0]*k*level.height)%level.n_tiles; 					
                 }
 			    if (!cellPattern.matches(targetIndex)) {
                     break;
@@ -1478,27 +1481,16 @@ function generateTuples(lists) {
     return tuples;
 }
 
-
-propagationState = {
-	ruleGroupIndex:0,
-	levelDat:[],
-	levelMovementMask:[],
-	rigidGroupIndexMask:[],//[indexgroupNumber, masked by layer arrays]
-    rigidMovementAppliedMask:[],
-	bannedGroup:[]
-}
-
 var rigidBackups=[]
 
 function commitPreservationState(ruleGroupIndex) {
 	var propagationState = {
 		ruleGroupIndex:ruleGroupIndex,
 		//don't need to know the tuple index
-		dat:level.dat.concat([]),
-		levelMovementMask:level.movementMask.concat([]),
-		rigidGroupIndexMask:level.rigidGroupIndexMask.concat([]),//[[mask,groupNumber]
-        rigidMovementAppliedMask:level.rigidMovementAppliedMask.concat([]),
-//		rigidBackups:rigidBackups.concat([]),
+		objects:new Uint32Array(level.objects),
+		movements:new Uint32Array(level.movements),
+		rigidGroupIndexMask:level.rigidGroupIndexMask.concat([]),
+		rigidMovementAppliedMask:level.rigidMovementAppliedMask.concat([]),
 		bannedGroup:level.bannedGroup.concat([])
 	};
 	rigidBackups[ruleGroupIndex]=propagationState;
@@ -1507,8 +1499,8 @@ function commitPreservationState(ruleGroupIndex) {
 
 function restorePreservationState(preservationState) {
 //don't need to concat or anythign here, once something is restored it won't be used again.
-	level.dat = preservationState.dat.concat([]);
-	level.movementMask = preservationState.levelMovementMask.concat([]);
+	level.objects = new Uint32Array(preservationState.objects);
+	level.movements = new Uint32Array(preservationState.movements);
 	level.rigidGroupIndexMask = preservationState.rigidGroupIndexMask.concat([]);
     level.rigidMovementAppliedMask = preservationState.rigidMovementAppliedMask.concat([]);
     sfxCreateMask=new BitVec(STRIDE);
@@ -1571,13 +1563,13 @@ Rule.prototype.applyAt = function(delta,tuple,check) {
 
             if (preCell === ellipsisPattern) {
             	var k = tuple[cellRowIndex][1];
-            	currentIndex = (currentIndex+delta[1]*k+delta[0]*k*level.height)%level.dat.length;
+            	currentIndex = (currentIndex+delta[1]*k+delta[0]*k*level.height)%level.n_tiles;
             	continue;
             }
 
             result = preCell.replace(rule, currentIndex) || result;
 
-            currentIndex = (currentIndex+delta[1]+delta[0]*level.height)%level.dat.length;
+            currentIndex = (currentIndex+delta[1]+delta[0]*level.height)%level.n_tiles;
         }
     }
 
@@ -1759,19 +1751,15 @@ function resolveMovements(dir){
     var moved=true;
     while(moved){
         moved=false;
-        for (var i=0;i<level.dat.length;i++) {
-            var movementMask = level.movementMask[i];
-             if (movementMask!=0)
-             {
-                 moved = repositionEntitiesAtCell(i) || moved;
-            }
+        for (var i=0;i<level.n_tiles;i++) {
+        	moved = repositionEntitiesAtCell(i) || moved;
         }
     }
     var doUndo=false;
 
-	for (var i=0;i<level.movementMask.length;i++) {
-		var cellMask = levelGetIndex(i);
-		var movementMask = movementsGetIndex(i);
+	for (var i=0;i<level.n_tiles;i++) {
+		var cellMask = level.getCell(i);
+		var movementMask = level.getMovements(i);
 		if (!movementMask.iszero()) {
 			var rigidMovementAppliedMask = level.rigidMovementAppliedMask[i];
 			if (rigidMovementAppliedMask !== 0) {
@@ -1792,6 +1780,7 @@ function resolveMovements(dir){
 							break;
 						}
 					}
+				}
 			}
 			for (var j=0;j<state.sfx_MovementFailureMasks.length;j++) {
 				var o = state.sfx_MovementFailureMasks[j];
@@ -1804,11 +1793,9 @@ function resolveMovements(dir){
 				}
 			}
     	}
-    }
-
-        level.movementMask[i]=0;
-        level.rigidGroupIndexMask[i]=0;
-        level.rigidMovementAppliedMask[i]=0;
+	    level.setMovements(i, new BitVec(STRIDE));
+	    level.rigidGroupIndexMask[i]=0;
+	    level.rigidMovementAppliedMask[i]=0;
     }
     return doUndo;
 }
@@ -1829,7 +1816,7 @@ function calculateRowColMasks() {
 	for (var i=0;i<level.width;i++) {
 		for (var j=0;j<level.height;j++) {
 			var index = j+i*level.height;
-			var cellContents=levelGetIndex(index);
+			var cellContents=level.getCell(index);
 			level.mapCellContents.ior(cellContents);
 			level.rowCellContents[j].ior(cellContents);
 			level.colCellContents[i].ior(cellContents);
@@ -1935,7 +1922,7 @@ function processInput(dir,dontCheckWin,dontModify) {
         	var somemoved=false;
         	for (var i=0;i<playerPositions.length;i++) {
         		var pos = playerPositions[i];
-        		var val = levelGetIndex(pos);
+        		var val = level.getCell(pos);
         		if (state.playerMask.bitsClearInArray(val.data)) {
         			somemoved=true;
         			break;
@@ -1978,9 +1965,8 @@ function processInput(dir,dontCheckWin,dontModify) {
 	    } 
 
         var modified=false;
-	    for (var i=0;i<level.dat.length;i++) {
-	    	if (level.dat[i]!==bak[i]) {
-
+	    for (var i=0;i<level.objects.length;i++) {
+	    	if (level.objects[i]!==bak[i]) {
 				if (dontModify) {
 	        		backups.push(bak);
 	        		DoUndo(true);
@@ -2026,12 +2012,6 @@ function processInput(dir,dontCheckWin,dontModify) {
         	if (sfxDestroyMask.anyBitsInCommon(entry.objectMask)) {
 	        	playSeed(entry.seed);
         	}
-        }
-
-	    for (var i=0;i<level.movementMask.length;i++) {
-        	level.movementMask[i]=0;
-        	level.rigidGroupIndexMask[i]=0;
-        	level.rigidMovementAppliedMask[i]=0;
         }
 
 	    for (var i=0;i<level.commandQueue.length;i++) {
@@ -2109,10 +2089,10 @@ function checkWin() {
 			switch(wincondition[0]) {
 				case -1://NO
 				{
-					for (var i=0;i<level.dat.length;i++) {
-						var val = level.dat[i];
-						if ( (!filter1.bitsClearInArray([val])) &&  
-							 (!filter2.bitsClearInArray([val])) ) {
+					for (var i=0;i<level.n_tiles;i++) {
+						var cell = level.getCell(i);
+						if ( (!filter1.bitsClearInArray(cell.data)) &&  
+							 (!filter2.bitsClearInArray(cell.data)) ) {
 							rulePassed=false;
 							break;
 						}
@@ -2123,10 +2103,10 @@ function checkWin() {
 				case 0://SOME
 				{
 					var passedTest=false;
-					for (var i=0;i<level.dat.length;i++) {
-						var val = level.dat[i];
-						if ( (!filter1.bitsClearInArray([val])) &&  
-							 (!filter2.bitsClearInArray([val])) ) {
+					for (var i=0;i<level.n_tiles;i++) {
+						var cell = level.getCell(i);
+						if ( (!filter1.bitsClearInArray(cell.data)) &&  
+							 (!filter2.bitsClearInArray(cell.data)) ) {
 							passedTest=true;
 							break;
 						}
@@ -2138,10 +2118,10 @@ function checkWin() {
 				}
 				case 1://ALL
 				{
-					for (var i=0;i<level.dat.length;i++) {
-						var val = level.dat[i];
-						if ( (!filter1.bitsClearInArray([val])) &&  
-							 (filter2.bitsClearInArray([val])) ) {
+					for (var i=0;i<level.n_tiles;i++) {
+						var cell = level.getCell(i);
+						if ( (!filter1.bitsClearInArray(cell.data)) &&  
+							 (filter2.bitsClearInArray(cell.data)) ) {
 							rulePassed=false;
 							break;
 						}

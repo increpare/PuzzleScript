@@ -344,17 +344,18 @@ function generateExtraMembers(state) {
 	state.backgroundlayer=backgroundlayer;	
 }
 
-
-function calcLevelBackgroundMask(state,dat) {
+Level.prototype.calcBackgroundMask = function(state) {
 	var backgroundMask = state.layerMasks[state.backgroundlayer];
-	for (var i=0;i<dat.length;i++) {
-		var val=dat[i];
-		var masked = val&backgroundMask.data[0];
-		if (masked!==0) {
-			return masked;
+	for (var i=0;i<this.n_tiles;i++) {
+		var cell=this.getCell(i);
+		cell.iand(backgroundMask);
+		if (!cell.iszero()) {
+			return cell;
 		}
 	}
-	return 1<<state.backgroundid;
+	cell = new BitVec(STRIDE);
+	cell.ibitset(state.backgroundid);
+	return cell;
 }
 
 //also assigns glyphDict
@@ -376,21 +377,15 @@ function levelsToArray(state) {
 			};
 			processedLevels.push(o);
 		} else {
-			var dat = [];
-			var o = {
-				lineNumber:level[0],
-				w: level[1].length,
-				h: level.length-1,
-				layerCount: state.collisionLayers.length
-			};
+			var o = new Level(level[0], level[1].length, level.length-1, state.collisionLayers.length, null);
+			o.objects = new Uint32Array(o.width * o.height * STRIDE);
 
-			for (var i = 0; i < o.w; i++) {
-				for (var j = 0; j < o.h; j++) {
+			for (var i = 0; i < o.width; i++) {
+				for (var j = 0; j < o.height; j++) {
 					var ch = level[j+1].charAt(i);
 					if (ch.length==0) {
 						ch=level[j+1].charAt(level[j+1].length-1);
 					}
-					var maskint = 0;
 					var mask = state.glyphDict[ch];
 
 					if (mask == undefined) {
@@ -402,25 +397,27 @@ function levelsToArray(state) {
 
 					}
 
+					var maskint = new BitVec(STRIDE);
 					mask = mask.concat([]);					
 					for (var z = 0; z < o.layerCount; z++) {
 						if (mask[z]>=0) {
-							maskint |= 1 << mask[z];
+							maskint.ibitset(mask[z]);
 						}
 					}
-					dat.push(maskint);
+					for (var w = 0; w < STRIDE; ++w) {
+						o.objects[STRIDE * (i * o.height + j) + w] = maskint.data[w];
+					}
 				}
 			}
-			o.dat = dat;
 
-			var levelBackgroundMask = calcLevelBackgroundMask(state,o.dat);
-			for (var i=0;i<o.dat.length;i++)
+			var levelBackgroundMask = o.calcBackgroundMask(state);
+			for (var i=0;i<o.n_tiles;i++)
 			{
-				var val = o.dat[i];
-				if (backgroundLayerMask.bitsClearInArray([val])) {
-					o.dat[i]=val|levelBackgroundMask;
+				var cell = o.getCell(i);
+				if (!backgroundLayerMask.anyBitsInCommon(cell)) {
+					cell.ior(levelBackgroundMask);
 				}
-				
+				o.setCell(i, cell);
 			}
 			processedLevels.push(o);
 		}
