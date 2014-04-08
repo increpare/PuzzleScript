@@ -868,7 +868,7 @@ function repositionEntitiesAtCell(positionIndex) {
     var moved=false;
     for (var layer=0;layer<level.layerCount;layer++) {
         var layerMovement = movementMask.getshiftor(0x1f, 5*layer);
-        if (layerMovement!=0) {
+        if (layerMovement!==0) {
             var thismoved = repositionEntitiesOnLayer(positionIndex,layer,layerMovement);
             if (thismoved) {
                 movementMask.ishiftclear(layerMovement, 5*layer);
@@ -1428,9 +1428,9 @@ function matchCellRowWildCard(direction, cellRow,cellRowMask) {
 				var i = x*level.height+y;
 				var kmax;
 
-				if (direction == 4) { //left
+				if (direction === 4) { //left
 					kmax=x-len+2;
-				} else if (direction == 8) { //right
+				} else if (direction === 8) { //right
 					kmax=level.width-(x+len)+1;	
 				} else {
 					window.console.log("EEEP2 "+direction);					
@@ -1449,9 +1449,9 @@ function matchCellRowWildCard(direction, cellRow,cellRowMask) {
 				var i = x*level.height+y;
 				var kmax;
 
-				if (direction == 2) { // down
+				if (direction === 2) { // down
 					kmax=level.height-(y+len)+1;
-				} else if (direction == 1) { // up
+				} else if (direction === 1) { // up
 					kmax=y-len+2;					
 				} else {
 					window.console.log("EEEP2 "+direction);
@@ -2162,7 +2162,7 @@ function DoWin() {
 
 function anyMovements() {	
     for (var i=0;i<level.movementMask.length;i++) {
-        if (level.movementMask[i]!=0) {
+        if (level.movementMask[i]!==0) {
         	return true;
         }
     }
