@@ -243,9 +243,9 @@ function exportClick() {
 
 	compile("restart");
 
-	var stateString = JSON.stringify(state);
+	var sourceString = JSON.stringify(sourceCode);
 	
-	buildStandalone(stateString);
+	buildStandalone(sourceString);
 }
 
 
