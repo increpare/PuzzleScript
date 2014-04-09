@@ -78,7 +78,8 @@ function generateExtraMembers(state) {
 	// how many words do our bitvecs need to hold?
 	// TODO: separate numbers for objects / layers
 	STRIDE = Math.ceil(Math.max(state.objectCount/32, layerCount/5))|0;
-
+	state.STRIDE=STRIDE;
+	
 	//get colorpalette name
 	debugMode=false;
 	verbose_logging=false;

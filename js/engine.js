@@ -493,7 +493,8 @@ function setGameState(_state, command) {
 	winning=false;
 	againing=false;
     messageselected=false;
-
+    stride=_state.STRIDE;
+    
 	if (command===undefined) {
 		command=["restart"];
 	}
