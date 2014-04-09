@@ -1933,7 +1933,9 @@ function processInput(dir,dontCheckWin,dontModify) {
         		}
         	}
         	if (somemoved===false) {
-	    		consolePrint('require_player_movement set, but no player movement detected, so cancelling turn.');
+        		if (verbose_logging){
+	    			consolePrint('require_player_movement set, but no player movement detected, so cancelling turn.');
+	    		}
         		backups.push(bak);
         		DoUndo(true);
         		if (verbose_logging) {
