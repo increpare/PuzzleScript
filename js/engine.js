@@ -890,6 +890,7 @@ function Level(lineNumber, width, height, layerCount, objects) {
 	this.n_tiles = width * height;
 	this.objects = objects;
 	this.layerCount = layerCount;
+	this.commandQueue = [];
 }
 
 Level.prototype.clone = function() {
