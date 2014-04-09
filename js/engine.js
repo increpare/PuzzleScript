@@ -2035,28 +2035,6 @@ function processInput(dir,dontCheckWin,dontModify) {
 			}
 	    }
 
-	    if (level.commandQueue.indexOf('again')>=0 && modified) {
-	    	var old_verbose_logging=verbose_logging;
-	    	//verbose_logging=false;
-	    	//first have to verify that something's changed
-	    	if (processInput(-1,true,true)) {
-
-		    	if (verbose_logging) { 
-		    		consolePrint('AGAIN command executed, with changes detected: will execute another turn.');
-				}
-
-		    	againing=true;
-		    	timer=0;
-		    }
-		    verbose_logging=old_verbose_logging;
-	    }
-		if (level.commandQueue.indexOf('checkpoint')>=0) {
-	    	if (verbose_logging) { 
-	    		consolePrint('CHECKPOINT command executed, saving current state to the restart state.');
-			}
-			restartTarget=backupLevel();
-		}	    
-	    
 	    if (textMode===false && (dontCheckWin===undefined ||dontCheckWin===false)) {
 	    	if (verbose_logging) { 
 	    		consolePrint('Checking win condition.');
@@ -2064,12 +2042,41 @@ function processInput(dir,dontCheckWin,dontModify) {
 	    	checkWin();
 	    }
 
+	    if (!winning) {
+		    if (level.commandQueue.indexOf('again')>=0 && modified) {
+		    	var old_verbose_logging=verbose_logging;
+		    	//verbose_logging=false;
+		    	//first have to verify that something's changed
+		    	if (processInput(-1,true,true)) {
+
+			    	if (verbose_logging) { 
+			    		consolePrint('AGAIN command executed, with changes detected: will execute another turn.');
+					}
+
+			    	againing=true;
+			    	timer=0;
+			    }
+			    verbose_logging=old_verbose_logging;
+		    }
+			if (level.commandQueue.indexOf('checkpoint')>=0) {
+		    	if (verbose_logging) { 
+		    		consolePrint('CHECKPOINT command executed, saving current state to the restart state.');
+				}
+				restartTarget=backupLevel();
+			}	    
+		}
+		    
+
 	    level.commandQueue=[];
 
     }
 
 	if (verbose_logging) {
 		consoleCacheDump();
+	}
+
+	if (winning) {
+		againing=false;
 	}
 
 	return modified;
