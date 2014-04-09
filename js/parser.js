@@ -220,7 +220,9 @@ var codeMirrorFn = function() {
 
               metadata : state.metadata.concat([]),
 
-              levels: levelsCopy
+              levels: levelsCopy,
+
+              STRIDE : state.STRIDE
             };
 
             return nstate;        

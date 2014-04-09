@@ -493,7 +493,8 @@ function setGameState(_state, command) {
 	winning=false;
 	againing=false;
     messageselected=false;
-
+    stride=_state.STRIDE;
+    
 	if (command===undefined) {
 		command=["restart"];
 	}
@@ -890,6 +891,7 @@ function Level(lineNumber, width, height, layerCount, objects) {
 	this.n_tiles = width * height;
 	this.objects = objects;
 	this.layerCount = layerCount;
+	this.commandQueue = [];
 }
 
 Level.prototype.clone = function() {
@@ -1578,7 +1580,7 @@ Rule.prototype.applyAt = function(delta,tuple,check) {
 
 	if (verbose_logging && result){
 		var ruleDirection = dirMaskName[rule.direction];
-		var logString = '<font color="green">Rule <a onclick="jumpToLine(' + rule.lineNumber + ');"  href="javascript:void(0);">' + rule.lineNumber + '</a>' + 
+		var logString = '<font color="green">Rule <a onclick="jumpToLine(' + rule.lineNumber + ');"  href="javascript:void(0);">' + rule.lineNumber + '</a> ' + 
 			ruleDirection + ' applied.</font>';
 		consolePrint(logString);
 	}
@@ -1932,7 +1934,9 @@ function processInput(dir,dontCheckWin,dontModify) {
         		}
         	}
         	if (somemoved===false) {
-	    		consolePrint('require_player_movement set, but no player movement detected, so cancelling turn.');
+        		if (verbose_logging){
+	    			consolePrint('require_player_movement set, but no player movement detected, so cancelling turn.');
+	    		}
         		backups.push(bak);
         		DoUndo(true);
         		if (verbose_logging) {
@@ -2029,28 +2033,6 @@ function processInput(dir,dontCheckWin,dontModify) {
 			}
 	    }
 
-	    if (level.commandQueue.indexOf('again')>=0 && modified) {
-	    	var old_verbose_logging=verbose_logging;
-	    	//verbose_logging=false;
-	    	//first have to verify that something's changed
-	    	if (processInput(-1,true,true)) {
-
-		    	if (verbose_logging) { 
-		    		consolePrint('AGAIN command executed, with changes detected: will execute another turn.');
-				}
-
-		    	againing=true;
-		    	timer=0;
-		    }
-		    verbose_logging=old_verbose_logging;
-	    }
-		if (level.commandQueue.indexOf('checkpoint')>=0) {
-	    	if (verbose_logging) { 
-	    		consolePrint('CHECKPOINT command executed, saving current state to the restart state.');
-			}
-			restartTarget=backupLevel();
-		}	    
-	    
 	    if (textMode===false && (dontCheckWin===undefined ||dontCheckWin===false)) {
 	    	if (verbose_logging) { 
 	    		consolePrint('Checking win condition.');
@@ -2058,12 +2040,41 @@ function processInput(dir,dontCheckWin,dontModify) {
 	    	checkWin();
 	    }
 
+	    if (!winning) {
+		    if (level.commandQueue.indexOf('again')>=0 && modified) {
+		    	var old_verbose_logging=verbose_logging;
+		    	//verbose_logging=false;
+		    	//first have to verify that something's changed
+		    	if (processInput(-1,true,true)) {
+
+			    	if (verbose_logging) { 
+			    		consolePrint('AGAIN command executed, with changes detected: will execute another turn.');
+					}
+
+			    	againing=true;
+			    	timer=0;
+			    }
+			    verbose_logging=old_verbose_logging;
+		    }
+			if (level.commandQueue.indexOf('checkpoint')>=0) {
+		    	if (verbose_logging) { 
+		    		consolePrint('CHECKPOINT command executed, saving current state to the restart state.');
+				}
+				restartTarget=backupLevel();
+			}	    
+		}
+		    
+
 	    level.commandQueue=[];
 
     }
 
 	if (verbose_logging) {
 		consoleCacheDump();
+	}
+
+	if (winning) {
+		againing=false;
 	}
 
 	return modified;

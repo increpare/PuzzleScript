@@ -639,6 +639,7 @@ function update() {
         if (timer>againinterval) {
             if (processInput(-1)) {
                 redraw();
+                keyRepeatTimer=0;
             }
         }
     }
