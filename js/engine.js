@@ -1584,7 +1584,7 @@ Rule.prototype.applyAt = function(delta,tuple,check) {
 
 	if (verbose_logging && result){
 		var ruleDirection = dirMaskName[rule.direction];
-		var logString = '<font color="green">Rule <a onclick="jumpToLine(' + rule.lineNumber + ');"  href="javascript:void(0);">' + rule.lineNumber + '</a>' + 
+		var logString = '<font color="green">Rule <a onclick="jumpToLine(' + rule.lineNumber + ');"  href="javascript:void(0);">' + rule.lineNumber + '</a> ' + 
 			ruleDirection + ' applied.</font>';
 		consolePrint(logString);
 	}
