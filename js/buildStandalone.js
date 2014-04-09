@@ -19,7 +19,7 @@ clientStandaloneRequest.onreadystatechange = function() {
 }
 clientStandaloneRequest.send();
 
-function buildStandalone(stateString) {
+function buildStandalone(sourceCode) {
 	if (standalone_HTML_String.length===0) {
 		consolePrint("Can't export yet - still downloading html template.");
 		return;
@@ -44,7 +44,7 @@ function buildStandalone(stateString) {
 
 	htmlString = htmlString.replace(/__GAMETITLE__/g,title);
 	htmlString = htmlString.replace(/__HOMEPAGE__/g,homepage);	
-	htmlString = htmlString.replace(/__GAMEDAT__/g,stateString);
+	htmlString = htmlString.replace(/__GAMEDAT__/g,sourceCode);
 
 	var BB = get_blob();
 	var blob = new BB([htmlString], {type: "text/plain;charset=utf-8"});
