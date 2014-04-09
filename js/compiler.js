@@ -1515,10 +1515,6 @@ function cellRowMasks(rule) {
 				continue;
 			rowMask.ior(cellRow[j].objectsPresent);
 		}
-		if (rowMask.iszero()) {
-			//if a rule has no restrictions on contents, it should match anything			
-			rowMask.setAllOnes();
-		}
 		ruleMasks.push(rowMask);
 	}
 	return ruleMasks;

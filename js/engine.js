@@ -1001,12 +1001,6 @@ BitVec.prototype.iszero = function() {
 	return true;
 }
 
-BitVec.prototype.setAllOnes = function() {
-	for (var i = 0; i < this.data.length; ++i) {
-		this.data[i]=~0;
-	}
-}
-
 BitVec.prototype.bitsSetInArray = function(arr) {
 	for (var i = 0; i < this.data.length; ++i) {
 		if ((this.data[i] & arr[i]) !== this.data[i]) {
