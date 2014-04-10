@@ -480,9 +480,11 @@ var backups=[];
 var restartTarget;
 
 function backupLevel() {
-	var ret = new Int32Array(level.objects);
-	ret.width = level.width;
-	ret.height = level.height;
+	var ret = {
+		dat : new Int32Array(level.objects),
+		width : level.width,
+		height : level.height
+	};
 	return ret;
 }
 
@@ -666,7 +668,7 @@ var messagetext="";
 function restoreLevel(lev) {
 	oldflickscreendat=[];
 
-	level.objects = new Int32Array(lev);
+	level.objects = new Int32Array(lev.dat);
 	if (level.width !== lev.width || level.height !== lev.height) {
 		level.width = lev.width;
 		level.height = lev.height;
@@ -1184,7 +1186,6 @@ CellPattern.prototype.replace = function(rule, currentIndex) {
 	var curRigidGroupIndexMask =0;
 	var curRigidMovementAppliedMask =0;
 	if (rule.isRigid) {
-		rigidCommitted=true;
 		var rigidGroupIndex = state.groupNumber_to_RigidGroupIndex[rule.groupNumber];
 		rigidGroupIndex++;//don't forget to -- it when decoding :O
 		var rigidMask = new BitVec(STRIDE);
@@ -1558,7 +1559,6 @@ Rule.prototype.applyAt = function(delta,tuple,check) {
     var result=false;
     
     //APPLY THE RULE
-    var rigidCommitted=false;
     for (var cellRowIndex=0;cellRowIndex<rule.patterns.length;cellRowIndex++) {
         var preRow = rule.patterns[cellRowIndex];
         
