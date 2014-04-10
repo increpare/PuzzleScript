@@ -1081,11 +1081,11 @@ var matchCache = {}
 
 CellPattern.prototype.generateMatchFunction = function() {
 	var i;
-	var fn = '(function(i) {\n\ti=i|0;\n';
+	var fn = '(function(i) {\n\ti=i;\n';
 	var mul = STRIDE === 1 ? '' : '*'+STRIDE;
 	for (var i = 0; i < STRIDE; ++i) {
-		fn += '\tvar cellObjects' + i + ' = level.objects[i' + mul + (i ? '+'+i: '') + ']|0;\n';
-		fn += '\tvar cellMovements' + i + ' = level.movements[i' + mul + (i ? '+'+i: '') + ']|0;\n';
+		fn += '\tvar cellObjects' + i + ' = level.objects[i' + mul + (i ? '+'+i: '') + '];\n';
+		fn += '\tvar cellMovements' + i + ' = level.movements[i' + mul + (i ? '+'+i: '') + '];\n';
 	}
 	fn += '\t return (true \n';
 	for (var i = 0; i < STRIDE; ++i) {
