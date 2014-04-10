@@ -518,9 +518,9 @@ var codeMirrorFn = function() {
                                         logError('invalid character "' + ch + '" in sprite for ' + state.objects_candname.toUpperCase(), state.lineNumber);
                                         return 'ERROR';
                                     }
-                                    return 'COLOR COLOR-' + o.colors[n].toUpperCase();
+                                    return 'COLOR BOLDCOLOR COLOR-' + o.colors[n].toUpperCase();
                                 }
-                                return 'COLOR';
+                                return 'COLOR FADECOLOR';
                             }
                         default:
                         	{
