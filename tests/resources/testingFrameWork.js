@@ -33,5 +33,11 @@ function runTest(dataarray) {
 	}
 
 	unitTesting=false;
-	return convertLevelToString() === dataarray[2];
+	var levelString = convertLevelToString();
+	var success = levelString == dataarray[2];
+	if (success) {
+		return true;
+	} else {
+		return false;
+	}
 }
