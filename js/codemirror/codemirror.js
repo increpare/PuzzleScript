@@ -2511,7 +2511,8 @@
       lastClick = {time: now, pos: start};
     }
 
-    var sel = cm.doc.sel, addNew = mac ? e.metaKey : e.ctrlKey;
+//don't know any other way of disabling multi-select
+    var sel = cm.doc.sel, addNew = false;// mac ? e.metaKey : e.ctrlKey;
     if (cm.options.dragDrop && dragAndDrop && !addNew && !isReadOnly(cm) &&
         type == "single" && sel.contains(start) > -1 && sel.somethingSelected())
       leftButtonStartDrag(cm, e, start);

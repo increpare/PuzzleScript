@@ -22,7 +22,7 @@ for (var i=0;i<testdata.length;i++) {
 					}
 					input += inputVals[testinput[j]];
 				}
-				var errormessage = testcode+"\n\n\ninput : "+input;
+				var errormessage =  testcode+"\n\n\ninput : "+input;
 				ok(runTest(td[1]),errormessage);
 			};
 		}(i)
