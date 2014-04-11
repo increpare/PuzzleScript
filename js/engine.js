@@ -665,6 +665,8 @@ function RebuildLevelArrays() {
 	_o7 = new BitVec(STRIDE);
 	_o8 = new BitVec(STRIDE);
 	_o9 = new BitVec(STRIDE);
+	_o10 = new BitVec(STRIDE);
+	_o11 = new BitVec(STRIDE);
 	_m1 = new BitVec(STRIDE);
 	_m2 = new BitVec(STRIDE);
 	_m3 = new BitVec(STRIDE);
@@ -770,7 +772,7 @@ function getPlayerPositions() {
     var result=[];
     var playerMask = state.playerMask;
     for (i=0;i<level.n_tiles;i++) {
-        var cellMask = level.getCell(i);
+        var cellMask = level.getCellInto(i,_o11);
         if (playerMask.anyBitsInCommon(cellMask)) {
             result.push(i);
         }
@@ -1180,7 +1182,7 @@ CellPattern.prototype.toJSON = function() {
 	];
 };
 
-var _o1,_o2,_o2_5,_o3,_o4,_o5,_o6,_o7,_o8,_o9;
+var _o1,_o2,_o2_5,_o3,_o4,_o5,_o6,_o7,_o8,_o9,_o10,_o11;
 var _m1,_m2,_m3;
 
 CellPattern.prototype.replace = function(rule, currentIndex) {
@@ -2173,7 +2175,7 @@ function checkWin() {
 				case -1://NO
 				{
 					for (var i=0;i<level.n_tiles;i++) {
-						var cell = level.getCell(i);
+						var cell = level.getCellInto(i,_o10);
 						if ( (!filter1.bitsClearInArray(cell.data)) &&  
 							 (!filter2.bitsClearInArray(cell.data)) ) {
 							rulePassed=false;
@@ -2187,7 +2189,7 @@ function checkWin() {
 				{
 					var passedTest=false;
 					for (var i=0;i<level.n_tiles;i++) {
-						var cell = level.getCell(i);
+						var cell = level.getCellInto(i,_o10);
 						if ( (!filter1.bitsClearInArray(cell.data)) &&  
 							 (!filter2.bitsClearInArray(cell.data)) ) {
 							passedTest=true;
@@ -2202,7 +2204,7 @@ function checkWin() {
 				case 1://ALL
 				{
 					for (var i=0;i<level.n_tiles;i++) {
-						var cell = level.getCell(i);
+						var cell = level.getCellInto(i,_o10);
 						if ( (!filter1.bitsClearInArray(cell.data)) &&  
 							 (filter2.bitsClearInArray(cell.data)) ) {
 							rulePassed=false;
