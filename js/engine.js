@@ -1013,26 +1013,32 @@ BitVec.prototype.get = function(ind) {
 }
 
 BitVec.prototype.getshiftor = function(mask, shift) {
-	var ret = this.data[shift>>5] >>> (shift & 31);
-	if (shift&31)
-		ret |= this.data[(shift>>5)+1] << (32 - (shift & 31));
+	var toshift = shift & 31;
+	var ret = this.data[shift>>5] >>> (toshift);
+	if (toshift) {
+		ret |= this.data[(shift>>5)+1] << (32 - toshift);
+	}
 	return ret & mask;
 }
 
 BitVec.prototype.ishiftor = function(mask, shift) {
-	var low = mask << (shift & 31);
-	var high = mask >> (32 - (shift & 31));
+	var toshift = shift&31;
+	var low = mask << toshift;
 	this.data[shift>>5] |= low;
-	if (high)
+	if (toshift) {
+		high = mask >> (32 - toshift);
 		this.data[(shift>>5)+1] |= high;
+	}
 }
 
 BitVec.prototype.ishiftclear = function(mask, shift) {
-	var low = mask << (shift & 31);
-	var high = mask >> (32 - (shift & 31));
+	var toshift = shift & 31;
+	var low = mask << toshift;
 	this.data[shift>>5] &= ~low;
-	if (high)
+	if (toshift){
+		var high = mask >> (32 - (shift & 31));
 		this.data[(shift>>5)+1] &= ~high;
+	}
 }
 
 BitVec.prototype.equals = function(other) {
