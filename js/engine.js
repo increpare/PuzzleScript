@@ -1294,42 +1294,41 @@ function cellRowMatchesWildCard(direction,cellRow,i,maxk,mink) {
 	}
 
 	var cellPattern = cellRow[0];
-    var delta = dirMasksDelta[direction];
-    var d0 = delta[0];
-	var d1 = delta[1];
 
     var result=[];
 
     if (cellPattern.matches(i)){
-            var targetIndex = i;
-            for (var j=1;j<cellRow.length;j+=1) {
-                targetIndex = (targetIndex+d1+d0*level.height)%level.n_tiles;
+    	var delta = dirMasksDelta[direction];
+    	var d0 = delta[0]*level.height;
+		var d1 = delta[1];
+        var targetIndex = i;
 
-                var cellPattern = cellRow[j]
-                if (cellPattern === ellipsisPattern) {
-                	//BAM inner loop time
-                	for (var k=mink;k<maxk;k++) {
-                		var targetIndex2=targetIndex;
-                        targetIndex2 = (targetIndex2+d1*(k)+d0*(k)*level.height+level.n_tiles)%level.n_tiles;
-                		for (var j2=j+1;j2<cellRow.length;j2++) {
-			                cellPattern = cellRow[j2];
-						    if (!cellPattern.matches(targetIndex2)) {
-						    	break;
-						    }
-                            targetIndex2 = (targetIndex2+d1+d0*level.height)%level.n_tiles;
-                		}
+        for (var j=1;j<cellRow.length;j+=1) {
+            targetIndex = (targetIndex+d1+d0)%level.n_tiles;
 
-			            if (j2>=cellRow.length) {
-			                result.push([i,k]);
-			            }
-                	}
-                	break;
-                } else if (!cellPattern.matches(targetIndex)) {
-					break;
-                }
-            }   
-            
+            var cellPattern = cellRow[j]
+            if (cellPattern === ellipsisPattern) {
+            	//BAM inner loop time
+            	for (var k=mink;k<maxk;k++) {
+            		var targetIndex2=targetIndex;
+                    targetIndex2 = (targetIndex2+(d1+d0)*(k)+level.n_tiles)%level.n_tiles;
+            		for (var j2=j+1;j2<cellRow.length;j2++) {
+		                cellPattern = cellRow[j2];
+					    if (!cellPattern.matches(targetIndex2)) {
+					    	break;
+					    }
+                        targetIndex2 = (targetIndex2+d1+d0)%level.n_tiles;
+            		}
 
+		            if (j2>=cellRow.length) {
+		                result.push([i,k]);
+		            }
+            	}
+            	break;
+            } else if (!cellPattern.matches(targetIndex)) {
+				break;
+            }
+        }               
     }  
     return result;
 }
@@ -1619,6 +1618,8 @@ Rule.prototype.applyAt = function(delta,tuple,check) {
     var result=false;
     
     //APPLY THE RULE
+    var d0 = delta[0]*level.height;
+    var d1 = delta[1];
     for (var cellRowIndex=0;cellRowIndex<rule.patterns.length;cellRowIndex++) {
         var preRow = rule.patterns[cellRowIndex];
         
@@ -1628,13 +1629,13 @@ Rule.prototype.applyAt = function(delta,tuple,check) {
 
             if (preCell === ellipsisPattern) {
             	var k = tuple[cellRowIndex][1];
-            	currentIndex = (currentIndex+delta[1]*k+delta[0]*k*level.height)%level.n_tiles;
+            	currentIndex = (currentIndex+(d1+d0)*k)%level.n_tiles;
             	continue;
             }
 
             result = preCell.replace(rule, currentIndex) || result;
 
-            currentIndex = (currentIndex+delta[1]+delta[0]*level.height)%level.n_tiles;
+            currentIndex = (currentIndex+d1+d0)%level.n_tiles;
         }
     }
 
