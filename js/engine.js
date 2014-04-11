@@ -657,14 +657,17 @@ function RebuildLevelArrays() {
 
 	_o1 = new BitVec(STRIDE);
 	_o2 = new BitVec(STRIDE);
+	_o2_5 = new BitVec(STRIDE);
 	_o3 = new BitVec(STRIDE);
 	_o4 = new BitVec(STRIDE);
 	_o5 = new BitVec(STRIDE);
+	_o6 = new BitVec(STRIDE);
+	_o7 = new BitVec(STRIDE);
+	_o8 = new BitVec(STRIDE);
+	_o9 = new BitVec(STRIDE);
 	_m1 = new BitVec(STRIDE);
 	_m2 = new BitVec(STRIDE);
 	_m3 = new BitVec(STRIDE);
-	_m4 = new BitVec(STRIDE);
-	_m5 = new BitVec(STRIDE);
 	
 
     for (var i=0;i<level.height;i++) {
@@ -851,8 +854,8 @@ function repositionEntitiesOnLayer(positionIndex,layer,dirMask)
     var targetIndex = (positionIndex+delta[1]+delta[0]*level.height)%level.n_tiles;
 
     var layerMask = state.layerMasks[layer];
-    var targetMask = level.getCell(targetIndex);
-    var sourceMask = level.getCell(positionIndex);
+    var targetMask = level.getCellInto(targetIndex,_o7);
+    var sourceMask = level.getCellInto(positionIndex,_o8);
 
     if (layerMask.anyBitsInCommon(targetMask) && (dirMask!=16)) {
         return false;
@@ -933,6 +936,7 @@ Level.prototype.getCellInto = function(index,targetarray) {
 	for (var i=0;i<STRIDE;i++) {
 		targetarray.data[i]=this.objects[index*STRIDE+i];	
 	}
+	return targetarray;
 }
 
 Level.prototype.setCell = function(index, vec) {
@@ -1176,8 +1180,8 @@ CellPattern.prototype.toJSON = function() {
 	];
 };
 
-var _o1,_o2,_o3,_o4,_o5;
-var _m1,_m2,_m3,_m4,_m5;
+var _o1,_o2,_o2_5,_o3,_o4,_o5,_o6,_o7,_o8,_o9;
+var _m1,_m2,_m3;
 
 CellPattern.prototype.replace = function(rule, currentIndex) {
 	var replace = this.replacement;
@@ -1219,7 +1223,7 @@ CellPattern.prototype.replace = function(rule, currentIndex) {
 		}
 	}
 	
-	var curCellMask = level.getCell(currentIndex);
+	var curCellMask = level.getCellInto(currentIndex,_o2_5);
 	var curMovementMask = level.getMovements(currentIndex);
 
 	var oldCellMask = curCellMask.cloneInto(_o3);
@@ -1291,26 +1295,28 @@ function cellRowMatchesWildCard(direction,cellRow,i,maxk,mink) {
 
 	var cellPattern = cellRow[0];
     var delta = dirMasksDelta[direction];
+    var d0 = delta[0];
+	var d1 = delta[1];
 
     var result=[];
 
     if (cellPattern.matches(i)){
             var targetIndex = i;
             for (var j=1;j<cellRow.length;j+=1) {
-                targetIndex = (targetIndex+delta[1]+delta[0]*level.height)%level.n_tiles;
+                targetIndex = (targetIndex+d1+d0*level.height)%level.n_tiles;
 
                 var cellPattern = cellRow[j]
                 if (cellPattern === ellipsisPattern) {
                 	//BAM inner loop time
                 	for (var k=mink;k<maxk;k++) {
                 		var targetIndex2=targetIndex;
-                        targetIndex2 = (targetIndex2+delta[1]*(k)+delta[0]*(k)*level.height+level.n_tiles)%level.n_tiles;
+                        targetIndex2 = (targetIndex2+d1*(k)+d0*(k)*level.height+level.n_tiles)%level.n_tiles;
                 		for (var j2=j+1;j2<cellRow.length;j2++) {
 			                cellPattern = cellRow[j2];
 						    if (!cellPattern.matches(targetIndex2)) {
 						    	break;
 						    }
-                            targetIndex2 = (targetIndex2+delta[1]+delta[0]*level.height)%level.n_tiles;
+                            targetIndex2 = (targetIndex2+d1+d0*level.height)%level.n_tiles;
                 		}
 
 			            if (j2>=cellRow.length) {
@@ -1330,27 +1336,32 @@ function cellRowMatchesWildCard(direction,cellRow,i,maxk,mink) {
 
 function cellRowMatches(direction,cellRow,i,k) {
 	var cellPattern = cellRow[0];
-    var delta = dirMasksDelta[direction];
     if (cellPattern.matches(i)) {
-            var targetIndex = i;
-            for (var j=1;j<cellRow.length;j++) {
-                targetIndex = (targetIndex+delta[1]+delta[0]*level.height)%level.n_tiles;
-                cellPattern = cellRow[j];
- 				if (cellPattern === ellipsisPattern) {
- 					//only for once off verifications
-                	targetIndex = (targetIndex+delta[1]*k+delta[0]*k*level.height)%level.n_tiles; 					
-                }
-			    if (!cellPattern.matches(targetIndex)) {
-                    break;
-                }
-            }   
-            
-            if (j>=cellRow.length) {
-                return true;
+
+	    var delta = dirMasksDelta[direction];
+	    var d0 = delta[0]*level.height;
+		var d1 = delta[1];
+		var cr_l = cellRow.length;
+
+        var targetIndex = i;
+        for (var j=1;j<cr_l;j++) {
+            targetIndex = (targetIndex+d1+d0)%level.n_tiles;
+            cellPattern = cellRow[j];
+			if (cellPattern === ellipsisPattern) {
+					//only for once off verifications
+            	targetIndex = (targetIndex+(d1+d0)*k)%level.n_tiles; 					
             }
+		    if (!cellPattern.matches(targetIndex)) {
+                break;
+            }
+        }   
+        
+        if (j>=cellRow.length) {
+            return true;
+        }
 
     }  
-        return false;
+    return false;
 }
 
 function matchCellRow(direction, cellRow, cellRowMask) {	
@@ -1365,7 +1376,7 @@ function matchCellRow(direction, cellRow, cellRowMask) {
 	var ymin=0;
 	var ymax=level.height;
 
-    var len=(cellRow.length|0);
+    var len=cellRow.length;
 
     switch(direction) {
     	case 1://up
@@ -1812,7 +1823,7 @@ function resolveMovements(dir){
     var doUndo=false;
 
 	for (var i=0;i<level.n_tiles;i++) {
-		var cellMask = level.getCell(i);
+		var cellMask = level.getCellInto(i,_o6);
 		var movementMask = level.getMovements(i);
 		if (!movementMask.iszero()) {
 			var rigidMovementAppliedMask = level.rigidMovementAppliedMask[i];
@@ -1847,7 +1858,10 @@ function resolveMovements(dir){
 				}
 			}
     	}
-	    level.setMovements(i, new BitVec(STRIDE));
+
+    	for (var j=0;j<STRIDE;j++) {
+    		level.movements[j+i*STRIDE]=0;
+    	}
 	    level.rigidGroupIndexMask[i]=0;
 	    level.rigidMovementAppliedMask[i]=0;
     }
@@ -1875,7 +1889,7 @@ function calculateRowColMasks() {
 	for (var i=0;i<level.width;i++) {
 		for (var j=0;j<level.height;j++) {
 			var index = j+i*level.height;
-			var cellContents=level.getCell(index);
+			var cellContents=level.getCellInto(index,_o9);
 			level.mapCellContents.ior(cellContents);
 			level.rowCellContents[j].ior(cellContents);
 			level.colCellContents[i].ior(cellContents);
