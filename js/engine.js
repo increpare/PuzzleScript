@@ -211,7 +211,7 @@ function generateTitleScreen()
 	for (var i=0;i<titlelines.length;i++) {
 		var titleline=titlelines[i];
 		var titleLength=titleline.length;
-		var lmargin = ((width-titleLength)/2)|0;
+		var lmargin = ((width-titleLength)/2;
 		var rmargin = width-titleLength-lmargin;
 		var row = titleImage[1+i];
 		titleImage[1+i]=row.slice(0,lmargin)+titleline+row.slice(lmargin+titleline.length);
@@ -845,7 +845,7 @@ function repositionEntitiesOnLayer(positionIndex,layer,dirMask)
     var dx = delta[0];
     var dy = delta[1];
     var tx = ((positionIndex/level.height)|0);
-    var ty = ((positionIndex%level.height)|0);
+    var ty = ((positionIndex%level.height));
     var maxx = level.width-1;
     var maxy = level.height-1;
 
@@ -970,7 +970,7 @@ function BitVec(init) {
 }
 
 BitVec.prototype.cloneInto = function(target) {
-	for (var i=0;i<this.data.length;i++) {
+	for (var i=0;i<this.data.length;++i) {
 		target.data[i]=this.data[i];
 	}
 	return target;
@@ -1451,7 +1451,7 @@ function matchCellRowWildCard(direction, cellRow,cellRowMask) {
 	var ymin=0;
 	var ymax=level.height;
 
-	var len=(cellRow.length|0)-1;//remove one to deal with wildcard
+	var len=cellRow.length-1;//remove one to deal with wildcard
     switch(direction) {
     	case 1://up
     	{
