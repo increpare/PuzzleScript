@@ -1456,7 +1456,7 @@ function matchCellRow(direction, cellRowMatch, cellRow, cellRowMask) {
 
 			for (var x=xmin;x<xmax;x++) {
 				var i = x*level.height+y;
-				if (cellRowMatches(direction,cellRow,i))
+				if (cellRowMatch(cellRow,i))
 				{
 					result.push(i);
 				}
@@ -1470,7 +1470,7 @@ function matchCellRow(direction, cellRowMatch, cellRow, cellRowMask) {
 
 			for (var y=ymin;y<ymax;y++) {
 				var i = x*level.height+y;
-				if (cellRowMatches(direction,cellRow,i))
+				if (cellRowMatch(cellRow,i))
 				{
 					result.push(i);
 				}
