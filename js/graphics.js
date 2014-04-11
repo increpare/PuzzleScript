@@ -254,8 +254,7 @@ function redraw() {
         for (var i = mini; i < maxi; i++) {
             for (var j = minj; j < maxj; j++) {
                 var posIndex = j + i * level.height;
-                var posMask = level.getCell(posIndex);
-
+                var posMask = level.getCellInto(posIndex,_o12);                
                 for (var k = 0; k < state.objectCount; k++) {
                     if (posMask.get(k) != 0) {                  
                         var sprite = spriteimages[k];
