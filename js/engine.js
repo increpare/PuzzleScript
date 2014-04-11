@@ -11,7 +11,7 @@ x to action.......................
 z to undo, r to restart...........
 */
 
-var RandomGen = new RNG("1");
+var RandomGen = new RNG();
 
 var intro_template = [
 	"..................................",
@@ -345,8 +345,10 @@ function drawMessageScreen() {
 	canvasResize();
 }
 
-
+var loadedLevelSeed=0;
 function loadLevelFromState(state,levelindex) {	
+	loadedLevelSeed = (Math.random() + Date.now()).toString();
+	RandomGen = new RNG(loadedLevelSeed);
 	forceRegenImages=true;
 	titleScreen=false;
 	titleMode=curlevel>0?1:0;
@@ -1317,7 +1319,7 @@ CellPattern.prototype.replace = function(rule, currentIndex) {
 	if (!replace_RandomDirMask.iszero()) {
 		for (var layerIndex=0;layerIndex<level.layerCount;layerIndex++){
 			if (replace_RandomDirMask.get(5*layerIndex)) {
-				var randomDir = Math.floor(Math.random()*4);
+				var randomDir = Math.floor(RandomGen.uniform()*4);
 				movementsSet.ibitset(randomDir + 5 * layerIndex);
 			}
 		}
@@ -1859,7 +1861,7 @@ function applyRandomRuleGroup(ruleGroup) {
 		return false;
 	} 
 
-	var match = matches[Math.floor(Math.random()*matches.length)];
+	var match = matches[Math.floor(RandomGen.uniform()*matches.length)];
 	var ruleIndex=match[0];
 	var rule=ruleGroup[ruleIndex];
 	var delta = dirMasksDelta[rule.direction];

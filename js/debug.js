@@ -38,7 +38,7 @@ function dumpTestCase() {
 	var input = inputHistory.concat([]);
 	var outputDat = convertLevelToString();
 
-	var resultarray = [levelDat,input,outputDat,curlevel];
+	var resultarray = [levelDat,input,outputDat,curlevel,loadedLevelSeed];
 	var resultstring = JSON.stringify(resultarray);
 	consolePrint("<br><br><br>"+resultstring+"<br><br><br>");
 }

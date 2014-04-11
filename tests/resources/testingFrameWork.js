@@ -11,11 +11,15 @@ function runTest(dataarray) {
 
 	var inputDat = dataarray[1];
 	var targetlevel = dataarray[3];
+	
+	var randomseed = dataarray[4]!==undefined ? dataarray[4] : null;
+
 	if (targetlevel===undefined) {
 		targetlevel=0;
 	}
 	compile(["loadLevel",targetlevel],levelString);
 
+	RandomGen = new RNG(randomseed);
 
 	for(var i=0;i<inputDat.length;i++) {
 		var val=inputDat[i];
