@@ -1112,9 +1112,19 @@ Rule.prototype.generateCellRowMatchesFunction = function(cellRow,hasEllipsis)  {
 		var delta = dirMasksDelta[this.direction];
 		var d0 = delta[0];
 		var d1 = delta[1];
-		var fn = "var d = "+d1+"+"+d0+"*level.height;\n";
-		fn += "return cellRow[0].matches(i)";
 		var cr_l = cellRow.length;
+
+			/*
+			hard substitute in the first one - if I substitute in all of them, firefox chokes.
+			*/
+		var fn = "var d = "+d1+"+"+d0+"*level.height;\n";
+		var mul = STRIDE === 1 ? '' : '*'+STRIDE;
+		
+		for (var i = 0; i < STRIDE; ++i) {
+			fn += 'var cellObjects' + i + ' = level.objects[i' + mul + (i ? '+'+i: '') + '];\n';
+			fn += 'var cellMovements' + i + ' = level.movements[i' + mul + (i ? '+'+i: '') + '];\n';
+		}
+		fn += "return "+cellRow[0].generateMatchString('0_');// cellRow[0].matches(i)";
 		for (var cellIndex=1;cellIndex<cr_l;cellIndex++) {
 			fn+="&&cellRow["+cellIndex+"].matches((i+"+cellIndex+"*d)%level.n_tiles)";
 		}
@@ -1130,6 +1140,7 @@ Rule.prototype.generateCellRowMatchesFunction = function(cellRow,hasEllipsis)  {
 		var d0 = delta[0];
 		var d1 = delta[1];
 		var cr_l = cellRow.length;
+
 
 		var fn = "var d = "+d1+"+"+d0+"*level.height;\n";
 		fn += "var result = [];\n"
@@ -1215,16 +1226,8 @@ var matchCache = {};
 
 
 
-
-CellPattern.prototype.generateMatchFunction = function() {
-	var i;
-	var fn = '';
-	var mul = STRIDE === 1 ? '' : '*'+STRIDE;
-	for (var i = 0; i < STRIDE; ++i) {
-		fn += '\tvar cellObjects' + i + ' = level.objects[i' + mul + (i ? '+'+i: '') + '];\n';
-		fn += '\tvar cellMovements' + i + ' = level.movements[i' + mul + (i ? '+'+i: '') + '];\n';
-	}
-	fn += '\t return (true \n';
+CellPattern.prototype.generateMatchString = function() {
+	var fn = "(true";
 	for (var i = 0; i < STRIDE; ++i) {
 		var co = 'cellObjects' + i;
 		var cm = 'cellMovements' + i;
@@ -1249,7 +1252,19 @@ CellPattern.prototype.generateMatchFunction = function() {
 		if (mm)
 			fn += '\t\t&& !(' + cm + '&' + mm + ')\n';
 	}
-	fn += '\t);';
+	fn += '\t)';
+	return fn;
+}
+
+CellPattern.prototype.generateMatchFunction = function() {
+	var i;
+	var fn = '';
+	var mul = STRIDE === 1 ? '' : '*'+STRIDE;
+	for (var i = 0; i < STRIDE; ++i) {
+		fn += '\tvar cellObjects' + i + ' = level.objects[i' + mul + (i ? '+'+i: '') + '];\n';
+		fn += '\tvar cellMovements' + i + ' = level.movements[i' + mul + (i ? '+'+i: '') + '];\n';
+	}
+	fn += "return " + this.generateMatchString()+';';
 	if (fn in matchCache) {
 		return matchCache[fn];
 	}
@@ -1885,7 +1900,7 @@ function applyRuleGroup(ruleGroup) {
     return loopPropagated;
 }
 
-function propagateMovements(rules, loopPoint, startRuleGroupindex){
+function applyRules(rules, loopPoint, startRuleGroupindex){
     //for each rule
     //try to match it
 
@@ -2087,7 +2102,7 @@ function processInput(dir,dontCheckWin,dontModify) {
         	
         	if (verbose_logging){consolePrint('applying rules');}
 
-        	propagateMovements(state.rules, state.loopPoint, startRuleGroupIndex);	
+        	applyRules(state.rules, state.loopPoint, startRuleGroupIndex);	
         	var shouldUndo = resolveMovements();
 
         	if (shouldUndo) {
@@ -2096,7 +2111,7 @@ function processInput(dir,dontCheckWin,dontModify) {
         		startRuleGroupIndex=0;//rigidGroupUndoDat.ruleGroupIndex+1;
         	} else {
         		if (verbose_logging){consolePrint('applying late rules');}
-        		propagateMovements(state.lateRules, state.lateLoopPoint, 0);
+        		applyRules(state.lateRules, state.lateLoopPoint, 0);
         		startRuleGroupIndex=0;
         	}
         }
