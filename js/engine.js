@@ -211,7 +211,7 @@ function generateTitleScreen()
 	for (var i=0;i<titlelines.length;i++) {
 		var titleline=titlelines[i];
 		var titleLength=titleline.length;
-		var lmargin = ((width-titleLength)/2;
+		var lmargin = ((width-titleLength)/2)|0;
 		var rmargin = width-titleLength-lmargin;
 		var row = titleImage[1+i];
 		titleImage[1+i]=row.slice(0,lmargin)+titleline+row.slice(lmargin+titleline.length);
