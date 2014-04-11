@@ -655,6 +655,18 @@ function RebuildLevelArrays() {
 	level.mapCellContents = new BitVec(STRIDE);
 	_movementsVec = new BitVec(STRIDE);
 
+	_o1 = new BitVec(STRIDE);
+	_o2 = new BitVec(STRIDE);
+	_o3 = new BitVec(STRIDE);
+	_o4 = new BitVec(STRIDE);
+	_o5 = new BitVec(STRIDE);
+	_m1 = new BitVec(STRIDE);
+	_m2 = new BitVec(STRIDE);
+	_m3 = new BitVec(STRIDE);
+	_m4 = new BitVec(STRIDE);
+	_m5 = new BitVec(STRIDE);
+	
+
     for (var i=0;i<level.height;i++) {
     	level.rowCellContents[i]=new BitVec(STRIDE);	    	
     }
@@ -914,7 +926,13 @@ Level.prototype.clone = function() {
 }
 
 Level.prototype.getCell = function(index) {
-	return new BitVec(this.objects.subarray(index * STRIDE, index * STRIDE + STRIDE))
+	return new BitVec(this.objects.subarray(index * STRIDE, index * STRIDE + STRIDE));
+}
+
+Level.prototype.getCellInto = function(index,targetarray) {
+	for (var i=0;i<STRIDE;i++) {
+		targetarray.data[i]=this.objects[index*STRIDE+i];	
+	}
 }
 
 Level.prototype.setCell = function(index, vec) {
@@ -945,6 +963,12 @@ function BitVec(init) {
 	return this;
 }
 
+BitVec.prototype.cloneInto = function(target) {
+	for (var i=0;i<this.data.length;i++) {
+		target.data[i]=this.data[i];
+	}
+	return target;
+}
 BitVec.prototype.clone = function() {
 	return new BitVec(this.data);
 }
@@ -1152,6 +1176,9 @@ CellPattern.prototype.toJSON = function() {
 	];
 };
 
+var _o1,_o2,_o3,_o4,_o5;
+var _m1,_m2,_m3,_m4,_m5;
+
 CellPattern.prototype.replace = function(rule, currentIndex) {
 	var replace = this.replacement;
 
@@ -1162,11 +1189,11 @@ CellPattern.prototype.replace = function(rule, currentIndex) {
 	var replace_RandomEntityMask = replace.randomEntityMask;
 	var replace_RandomDirMask = replace.randomDirMask;
 
-	var objectsSet = replace.objectsSet.clone();
-	var objectsClear = replace.objectsClear.clone();
+	var objectsSet = replace.objectsSet.cloneInto(_o1);
+	var objectsClear = replace.objectsClear.cloneInto(_o2);
 
-	var movementsSet = replace.movementsSet.clone();
-	var movementsClear = replace.movementsClear.clone();
+	var movementsSet = replace.movementsSet.cloneInto(_m1);
+	var movementsClear = replace.movementsClear.cloneInto(_m2);
 	movementsClear.ior(replace.movementsLayerMask);
 
 	if (!replace_RandomEntityMask.iszero()) {
@@ -1195,8 +1222,8 @@ CellPattern.prototype.replace = function(rule, currentIndex) {
 	var curCellMask = level.getCell(currentIndex);
 	var curMovementMask = level.getMovements(currentIndex);
 
-	var oldCellMask = curCellMask.clone();
-	var oldMovementMask = curMovementMask.clone();
+	var oldCellMask = curCellMask.cloneInto(_o3);
+	var oldMovementMask = curMovementMask.cloneInto(_m3);
 
 	curCellMask.iclear(objectsClear);
 	curCellMask.ior(objectsSet);
@@ -1237,10 +1264,10 @@ CellPattern.prototype.replace = function(rule, currentIndex) {
 			level.rigidMovementAppliedMask[currentIndex] = curRigidMovementAppliedMask;
 		}
 
-		var created = curCellMask.clone();
+		var created = curCellMask.cloneInto(_o4);
 		created.iclear(oldCellMask);
 		sfxCreateMask.ior(created);
-		var destroyed = oldCellMask.clone();
+		var destroyed = oldCellMask.cloneInto(_o5);
 		destroyed.iclear(curCellMask);
 		sfxDestroyMask.ior(destroyed);
 
