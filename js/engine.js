@@ -964,11 +964,10 @@ function BitVec(init) {
 }
 
 BitVec.prototype.cloneInto = function(target) {
-	return new BitVec(this.data);
-	/*for (var i=0;i<this.data.length;i++) {
+	for (var i=0;i<this.data.length;i++) {
 		target.data[i]=this.data[i];
 	}
-	return target;*/
+	return target;
 }
 BitVec.prototype.clone = function() {
 	return new BitVec(this.data);
