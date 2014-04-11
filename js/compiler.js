@@ -346,6 +346,7 @@ function generateExtraMembers(state) {
 }
 
 Level.prototype.calcBackgroundMask = function(state) {
+	
 	var backgroundMask = state.layerMasks[state.backgroundlayer];
 	for (var i=0;i<this.n_tiles;i++) {
 		var cell=this.getCell(i);

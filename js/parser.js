@@ -619,7 +619,7 @@ var codeMirrorFn = function() {
                             	return [];
                             };
                             if (candname==='background' ) {
-                                if (state.collisionLayers[state.collisionLayers.length-1].length>0) {
+                                if (state.collisionLayers.length>0&&state.collisionLayers[state.collisionLayers.length-1].length>0) {
                                     logError("Background must be in a layer by itself.",state.lineNumber);
                                 }
                                 state.tokenIndex=1;
