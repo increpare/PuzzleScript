@@ -2307,6 +2307,7 @@ function loadFile(str) {
 
 var ifrm;
 function compile(command,text) {
+	matchCache={};
 	forceRegenImages=true;
 	if (command===undefined) {
 		command = ["restart"];

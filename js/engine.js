@@ -11,6 +11,8 @@ x to action.......................
 z to undo, r to restart...........
 */
 
+var RandomGen = new RNG("1");
+
 var intro_template = [
 	"..................................",
 	"..................................",
@@ -1090,9 +1092,35 @@ function Rule(rule) {
 	this.commands = rule[7];		/* cancel, restart, sfx, etc */
 	this.isRandom = rule[8];
 	this.cellRowMasks = rule[9];
+	this.cellRowMatches = [];
+	for (var i=0;i,i<this.patterns.length;i++) {
+		this.cellRowMatches.push(this.generateCellRowMatchesFunction(this.patterns[i]));
+	}
 	/* TODO: eliminate isRigid, groupNumber, isRandom
 	from this class by moving them up into a RuleGroup class */
 }
+
+
+Rule.prototype.generateCellRowMatchesFunction = function(cellRow)  {
+	var delta = dirMasksDelta[this.direction];
+	var d0 = delta[0];
+	var d1 = delta[1];
+	var fn = "var d = "+d1+"+"+d0+"*level.height;\n";
+	fn += "return cellRow[0].matches(i)";
+	var cr_l = cellRow.length;
+	for (var cellIndex=1;cellIndex<cr_l;cellIndex++) {
+		fn+="&&cellRow["+cellIndex+"].matches((i+"+cellIndex+"*d)%level.n_tiles)";
+	}
+	fn+=";";
+
+	if (fn in matchCache) {
+		return matchCache[fn];
+	}
+	//console.log(fn.replace(/\s+/g, ' '));
+	return matchCache[fn] = new Function("cellRow","i",fn);
+
+}
+
 
 Rule.prototype.toJSON = function() {
 	/* match construction order for easy deserialization */
@@ -1123,16 +1151,11 @@ function CellReplacement(row) {
 	this.randomDirMask = row[6];
 };
 
-CellPattern.prototype.matches = function(i) {
-	var cellObjects = level.getCell(i);
-	var cellMovements = level.getMovements(i);
-	return this.objectsPresent.bitsSetInArray(cellObjects.data) &&
-			this.objectsMissing.bitsClearInArray(cellObjects.data) && 
-			this.movementsPresent.bitsSetInArray(cellMovements.data) &&
-			this.movementsMissing.bitsClearInArray(cellMovements.data);
-};
 
-var matchCache = {}
+var matchCache = {};
+
+
+
 
 CellPattern.prototype.generateMatchFunction = function() {
 	var i;
@@ -1210,7 +1233,7 @@ CellPattern.prototype.replace = function(rule, currentIndex) {
 				choices.push(i);
 			}
 		}
-		var rand = choices[Math.floor(Math.random() * choices.length)];
+		var rand = choices[Math.floor(RandomGen.uniform() * choices.length)];
 		var n = state.idDict[rand];
 		var o = state.objects[n];
 		objectsSet.ibitset(rand);
@@ -1336,6 +1359,17 @@ function cellRowMatchesWildCard(direction,cellRow,i,maxk,mink) {
     return result;
 }
 
+//say cellRow has length 3
+/*
+CellRow Matches can be specialized to look something like:
+function cellRowMatchesFunctionGenerate(direction,cellRow,i) {
+	var delta = dirMasksDelta[direction];
+	var d = delta[1]+delta[0]*level.height;
+	var cr_l = cellRow.length;
+	return cellRow[0].matches(i)&&cellRow[1].matches((i+d)%level.n_tiles)&&cellRow[2].matches((i+2*d)%level.n_tiles);
+}
+*/
+
 function cellRowMatches(direction,cellRow,i,k) {
 	var cellPattern = cellRow[0];
     if (cellPattern.matches(i)) {
@@ -1366,7 +1400,7 @@ function cellRowMatches(direction,cellRow,i,k) {
     return false;
 }
 
-function matchCellRow(direction, cellRow, cellRowMask) {	
+function matchCellRow(direction, cellRowMatch, cellRow, cellRowMask) {	
 	var result=[];
 	
 	if ((!cellRowMask.bitsSetInArray(level.mapCellContents.data))) {
@@ -1581,10 +1615,11 @@ Rule.prototype.findMatches = function() {
 	var cellRowMasks=this.cellRowMasks;
     for (var cellRowIndex=0;cellRowIndex<this.patterns.length;cellRowIndex++) {
         var cellRow = this.patterns[cellRowIndex];
+        var matchFunction = this.cellRowMatches[cellRowIndex];
         if (this.isEllipsis[cellRowIndex]) {//if ellipsis     
         	var match = matchCellRowWildCard(this.direction,cellRow,cellRowMasks[cellRowIndex]);  
         } else {
-        	var match = matchCellRow(this.direction,cellRow,cellRowMasks[cellRowIndex]);               	
+        	var match = matchCellRow(this.direction,matchFunction,cellRow,cellRowMasks[cellRowIndex]);               	
         }
         if (match.length===0) {
             return [];
@@ -1598,6 +1633,7 @@ Rule.prototype.findMatches = function() {
 Rule.prototype.applyAt = function(delta,tuple,check) {
 	var rule = this;
 	//have to double check they apply
+	//Q: why?
     if (check) {
         var ruleMatches=true;                
         for (var cellRowIndex=0;cellRowIndex<rule.patterns.length;cellRowIndex++) {
@@ -1906,7 +1942,6 @@ function processInput(dir,dontCheckWin,dontModify) {
 	againing = false;
 
 	if (verbose_logging) { 
-		cache_log_messages=true;
 	 	if (dir===-1) {
 	 		consolePrint('Turn starts with no input.')
 	 	} else {
