@@ -680,6 +680,7 @@ function update() {
         autotick+=deltatime;
         if (autotick>autotickinterval) {
             autotick=0;
+            inputHistory.push("tick");            
             if (processInput(-1)) {
                 redraw();
             }

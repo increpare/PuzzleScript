@@ -26,6 +26,8 @@ function runTest(dataarray) {
 			DoUndo();
 		} else if (val==="restart") {
 			DoRestart();
+		} else if (val==="tick") {
+			processInput(-1);
 		} else {
 			processInput(val);
 		}

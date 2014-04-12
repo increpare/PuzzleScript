@@ -15,9 +15,6 @@ function makeGIF() {
 	unitTesting=true;
 	levelString=compiledText;
 
-	if (errorStrings.length>0) {
-		throw(errorStrings[0]);
-	}
 
 
 	var encoder = new GIFEncoder();
@@ -30,20 +27,27 @@ function makeGIF() {
 	redraw();
 	gifctx.drawImage(canvas,-xoffset,-yoffset);
   	encoder.addFrame(gifctx);
+	var autotimer=0;
 
-	for(var i=0;i<inputDat.length;i++) {
+  	for(var i=0;i<inputDat.length;i++) {
+  		var realtimeframe=false;
 		var val=inputDat[i];
 		if (val==="undo") {
 			DoUndo();
 		} else if (val==="restart") {
 			DoRestart();
+		} else if (val=="tick") {			
+			processInput(-1);
+			realtimeframe=true;
 		} else {
 			processInput(val);
 		}
 		redraw();
 		gifctx.drawImage(canvas,-xoffset,-yoffset);
 		encoder.addFrame(gifctx);
-		encoder.setDelay(repeatinterval);
+		encoder.setDelay(realtimeframe?autotickinterval:repeatinterval);
+		autotimer+=repeatinterval;
+
 		while (againing) {
 			processInput(-1);		
 			redraw();
