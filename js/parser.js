@@ -86,9 +86,9 @@ function blankLineHandle(state) {
             {
                 state.levels.push([]);
             }
-    } else if (state.section === 'objects') {
+    } /*else if (state.section === 'objects') {
         state.objects_section = 0;
-    }
+    }*/
 }
 
 var codeMirrorFn = function() {
