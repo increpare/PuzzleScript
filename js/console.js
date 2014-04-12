@@ -22,10 +22,10 @@ function playSound(seed) {
 	audio.play();
 }
 
-var consolecache = "";
+var consolecache = [];
 function consolePrint(text) {
 	if (cache_console_messages) {		
-		consolecache = consolecache + '<br>' + text;
+		consolecache.push(text);
 	} else {
 		var code = document.getElementById('consoletextarea');
 		code.innerHTML = code.innerHTML + '<br>'+ text;
@@ -38,9 +38,27 @@ function consoleCacheDump() {
 	if (cache_console_messages===false) {
 		return;
 	}
+	
+	var lastline = "";
+	var times_repeated = 0;
+	var summarised_message = "";
+	for (var i = 0; i < consolecache.length; i++) {
+		if (consolecache[i] == lastline) {
+			times_repeated++;
+		} else {
+			lastline = consolecache[i];
+			summarised_message += lastline;
+			if (times_repeated > 0) {
+				summarised_message = summarised_message + " (x" + (times_repeated + 1) + ")";
+			}
+			summarised_message += "<br>"
+			times_repeated = 0;
+		}
+	}
+	
 	var code = document.getElementById('consoletextarea');
-	code.innerHTML = code.innerHTML + consolecache;
-	consolecache="";
+	code.innerHTML = code.innerHTML + summarised_message;
+	consolecache=[];
 	var objDiv = document.getElementById('lowerarea');
 	objDiv.scrollTop = objDiv.scrollHeight;
 }
