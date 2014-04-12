@@ -886,7 +886,7 @@ function repositionEntitiesOnLayer(positionIndex,layer,dirMask)
 		var o = state.sfx_MovementMasks[i];
 		var objectMask = o.objectMask;
 		if (objectMask.anyBitsInCommon(sourceMask)) {
-			var movementMask = level.movementMask[positionIndex];
+			var movementMask = level.getMovements(positionIndex);
 			var directionMask = o.directionMask;
 			if (movementMask.anyBitsInCommon(directionMask) && seedsToPlay_CanMove.indexOf(o.seed)===-1) {
 				seedsToPlay_CanMove.push(o.seed);
