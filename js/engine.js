@@ -886,7 +886,7 @@ function repositionEntitiesOnLayer(positionIndex,layer,dirMask)
 		var o = state.sfx_MovementMasks[i];
 		var objectMask = o.objectMask;
 		if (objectMask.anyBitsInCommon(sourceMask)) {
-			var movementMask = level.movementMask[positionIndex];
+			var movementMask = level.getMovements(positionIndex);
 			var directionMask = o.directionMask;
 			if (movementMask.anyBitsInCommon(directionMask) && seedsToPlay_CanMove.indexOf(o.seed)===-1) {
 				seedsToPlay_CanMove.push(o.seed);
@@ -2371,6 +2371,8 @@ function DoWin() {
 	timer=0;
 }
 
+/*
+//this function isn't valid after refactoring, but also isn't used.
 function anyMovements() {	
     for (var i=0;i<level.movementMask.length;i++) {
         if (level.movementMask[i]!==0) {
@@ -2378,7 +2380,7 @@ function anyMovements() {
         }
     }
     return false;
-}
+}*/
 
 
 function nextLevel() {
