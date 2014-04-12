@@ -19,6 +19,11 @@ function runTest(dataarray) {
 	}
 	compile(["loadLevel",targetlevel],levelString,randomseed);
 
+	while (againing) {
+		againing=false;
+		processInput(-1);			
+	}
+	
 	for(var i=0;i<inputDat.length;i++) {
 		window.console.log("turn " + i);
 		var val=inputDat[i];
