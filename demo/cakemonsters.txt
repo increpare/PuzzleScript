@@ -1,0 +1,789 @@
+title Cake Monsters
+author Matt Rix
+homepage www.magicule.com
+color_palette whitingjp
+text_color #FF5588
+background_color #050A0A
+noaction
+youtube Z6ih1aKeETk (tycho!)
+
+========
+OBJECTS
+========
+
+(-----------------------)
+(----MONSTER COLOURS----)
+(-----------------------)
+
+RedMon
+#D8144D #B00F3F BLACK WHITE
+
+00000
+020.3
+000..
+00000
+1..1.
+
+YellowMon
+#F3F333 #C7C829 BLACK WHITE
+
+00000
+020.3
+000..
+00000
+1..1.
+
+BlueMon
+#0366E3 #0A52BB BLACK WHITE
+
+00000
+020.3
+000..
+00000
+1..1.
+
+PurpleMon
+#9E14E2 #800FBA BLACK WHITE
+
+00000
+020.3
+000..
+00000
+1..1.
+
+OrangeMon
+#E68A25 #BB711E BLACK WHITE
+
+00000
+020.3
+000..
+00000
+1..1.
+
+GreenMon
+#1CED55 #15C346 BLACK WHITE
+
+00000
+020.3
+000..
+00000
+1..1.
+
+TrashMon
+#7C6953 #6D5239 BLACK WHITE
+
+00000
+020.3
+000..
+00000
+1..1.
+
+
+(------------------------)
+(------CAKE COLOURS------)
+(------------------------)
+
+RedCake
+#D8144D #B00F3F
+.000.
+00000
+00000
+10001
+.111.
+
+YellowCake
+#F3F333 #C7C829
+.000.
+00000
+00000
+10001
+.111.
+
+BlueCake
+#0366E3 #0A52BB
+.000.
+00000
+00000
+10001
+.111.
+
+
+PurpleCake
+#9E14E2 #800FBA
+.000.
+00000
+00000
+10001
+.111.
+
+OrangeCake
+#E68A25 #BB711E
+.000.
+00000
+00000
+10001
+.111.
+
+GreenCake
+#1CED55 #15C346
+.000.
+00000
+00000
+10001
+.111.
+
+TrashCake
+#7C6953 #6D5239
+.000.
+00000
+00000
+10001
+.111.
+
+(-----------------------)
+(------OTHER STUFF------)
+(-----------------------)
+
+Destroyer
+#001111 #223333 #384949
+.222.
+20202
+12021
+10101
+.111.
+
+Background
+#152020 #192525
+01101
+10110
+01101
+11010
+01010
+
+
+Wall
+#334444 #384949 #445555 #475959 #4A6B6B
+34443
+23332
+12221
+01110
+00000
+
+Blackness
+#050A0A
+
+
+=======
+LEGEND
+=======
+
+
+. = Background
+_ = Blackness
+# = Wall
+X = Destroyer
+
+R = RedMon
+Y = YellowMon
+B = BlueMon
+P = PurpleMon
+O = OrangeMon
+G = GreenMon
+T = TrashMon
+
+Monster = RedMon or YellowMon or BlueMon or PurpleMon or OrangeMon or GreenMon or TrashMon
+Player = Monster
+
+PrimaryMon = RedMon or YellowMon or BlueMon
+SecondaryMon = PurpleMon or OrangeMon or GreenMon
+
+(each cake char is the next letter in the alphabet after the monster char)
+(except for orange, sadly)
+S = RedCake
+Z = YellowCake
+C = BlueCake
+Q = PurpleCake
+A = OrangeCake
+H = GreenCake
+U = TrashCake
+
+Cake = RedCake or YellowCake or BlueCake or PurpleCake or OrangeCake or GreenCake or TrashCake
+
+=======
+SOUNDS
+=======
+
+sfx0 8478107 (move)
+sfx1 18590508 (eat other monster)
+sfx2 61437309 (eat cake)
+sfx3 89161102 (monster destroyed)
+startlevel 563108
+endlevel 76028308
+undo 82948709
+restart 22851101
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Blackness, Wall, Destroyer
+Monster,Cake
+
+
+
+======
+RULES     
+======      
+
+(------------------------)
+(----MONSTER MOVEMENT----)
+(------------------------)
+
+(movement sound)
+[ > Monster ] -> [ > Monster ] sfx0
+
+(stop the monster if it hits a wall)
+[ > Monster | Wall ] -> [ Monster | Wall] 
+
+(if monster hits a destroyer, remove the monster)
+[ > Monster | Destroyer ] -> [ | Destroyer] sfx3
+
+(monster eats cakes of the same color)
+[ > RedMon | RedCake] -> [ | RedMon] sfx2 
+[ > BlueMon | BlueCake] -> [ | BlueMon] sfx2 
+[ > YellowMon | YellowCake] -> [ | YellowMon] sfx2 
+[ > PurpleMon | PurpleCake] -> [ | PurpleMon] sfx2 
+[ > OrangeMon | OrangeCake] -> [ | OrangeMon] sfx2 
+[ > GreenMon | GreenCake] -> [ | GreenMon] sfx2 
+[ > TrashMon | TrashCake] -> [ | TrashMon] sfx2 
+
+(stop the monster if it hits a cake of a different color)
+(note: this is necessary to make sure the monster is marked as stationary)
+[ > RedMon | Cake no RedCake] -> [ RedMon | Cake no RedCake]
+[ > BlueMon | Cake no BlueCake] -> [ BlueMon | Cake no BlueCake]
+[ > YellowMon | Cake no YellowCake] -> [ YellowMon | Cake no YellowCake]
+[ > PurpleMon | Cake no PurpleCake] -> [ PurpleMon | Cake no PurpleCake]
+[ > OrangeMon | Cake no OrangeCake] -> [ OrangeMon | Cake no OrangeCake]
+[ > GreenMon | Cake no GreenCake] -> [ GreenMon | Cake no GreenCake]
+[ > TrashMon | Cake no TrashCake] -> [ TrashMon | Cake no TrashCake]
+
+(--------------------------)
+(---MONSTER COLOR MIXING---)
+(--------------------------)
+
+(red+blue = purple)
+[ > BlueMon | stationary RedMon] -> [ | PurpleMon] sfx1
+[ > RedMon | stationary BlueMon] -> [ | PurpleMon] sfx1
+
+(red+yellow = orange)
+[ > RedMon | stationary YellowMon] -> [ | OrangeMon] sfx1
+[ > YellowMon | stationary RedMon] -> [ | OrangeMon] sfx1
+
+(blue+yellow = green)
+[ > BlueMon | stationary YellowMon] -> [ | GreenMon] sfx1
+[ > YellowMon | stationary BlueMon] -> [ | GreenMon] sfx1
+
+(primary color + secondary color = brown aka trash)
+[ > PrimaryMon | stationary SecondaryMon] -> [ | TrashMon] sfx1
+[ > SecondaryMon | stationary PrimaryMon] -> [ | TrashMon] sfx1
+
+(green+orange = trash)
+[ > GreenMon | stationary OrangeMon] -> [ | TrashMon] sfx1
+[ > OrangeMon | stationary GreenMon] -> [ | TrashMon] sfx1
+
+(purple+orange = trash)
+[ > PurpleMon | stationary OrangeMon] -> [ | TrashMon] sfx1
+[ > OrangeMon | stationary PurpleMon] -> [ | TrashMon] sfx1
+
+(green+purple = trash)
+[ > GreenMon | stationary PurpleMon] -> [ | TrashMon] sfx1
+[ > PurpleMon | stationary GreenMon] -> [ | TrashMon] sfx1
+
+(trash+anything = trash)
+[ > TrashMon | stationary Monster] -> [ | TrashMon] sfx1
+[ > Monster | stationary TrashMon] -> [ | TrashMon] sfx1
+
+(monster + monster of the same color = monster of the same color)
+[ > Monster | stationary Monster] -> [ | Monster] sfx1
+
+ 
+==============
+WINCONDITIONS
+==============
+   
+No Cake
+
+
+=======     
+LEVELS
+======= 
+
+
+message WELCOME TO CAKE MONSTERS!
+message MONSTERS LIKE EATING CAKE
+
+_______
+#######
+#.....#
+#.r...#
+#...s.#
+#.....#
+#######
+_______
+(diff 0)
+
+message YOU MOVE ALL OF THE MONSTERS
+
+######_######
+#....#_#z...#
+#.r..#_#....#
+#..s.#_#....#
+#....#_#...y#
+######_######
+_____________
+######_######
+#.c..#_#....#
+#....#_#...h#
+#..b.#_#g...#
+#....#_#....#
+######_######
+(diff 0)
+
+message MONSTERS ONLY LIKE THEIR OWN CAKE
+message REMEMBER: Z TO UNDO, R TO RESTART
+_________
+#########
+#r.z....#
+#######.#
+#.......#
+#.sy....#
+#########
+_________
+(diff 1)
+
+message MONSTERS MIX WHEN THEY GET EATEN
+_________
+#########
+#.......#
+#.#####.#
+#.r.q.b.#
+#.#####.#
+#.......#
+#########
+_________
+(diff 1)
+
+
+message BROWN + ANY COLOR = BROWN
+__________
+##########
+#........#
+#.rybpog.#
+#........#
+#........#
+#.szcqah.#
+#........#
+#........#
+#.uuuuuu.#
+#........#
+##########
+__________
+(diff 1)
+
+
+message HAVE FUN!
+############
+#y........c#
+#b........z#
+#####..#####
+____#..#____
+____#..#____
+____#hh#____
+____####____
+(diff 1)
+
+(----------------------------)
+
+
+_____
+#####
+#RCQ#
+#.CS#
+#Q.B#
+#####
+_____
+(diff 2)
+
+
+
+
+______
+######
+#R...#
+#B...#
+#Q.QQ#
+#CSCS#
+######
+______
+(diff 2)
+
+_______
+#######
+#R.H.B#
+#.....#
+#.....#
+#Y.Q.B#
+#######
+_______
+(diff 2)
+
+_______
+#######
+#CCHCB#
+#.....#
+#YZHZZ#
+#######
+_______
+(diff 2)
+
+
+______
+######
+#R..B#
+#S.C.#
+#.A.C#
+#Y.C.#
+######
+______
+(diff 2)
+
+
+message PIECE OF CAKE, RIGHT?
+
+
+#########
+#ccccccc#
+#bcccccc#
+######cc#
+_____#ch#
+######zz#
+#yzzzzzz#
+#yzzzzzz#
+######zz#
+_____#sa#
+######ss#
+#rssssss#
+#sssssss#
+#########
+(diff 3, fun)
+
+_______
+#######
+#R.B.Y#
+#Y.B.R#
+#R.B.Y#
+#Y.B.R#
+#AHQHA#
+#######
+_______
+(diff 3)
+
+
+_______
+#######
+#AR.BA#
+#.#.#.#
+#H...H#
+##.A.##
+#HY#YH#
+#######
+_______
+(diff 3)
+
+
+
+message X TILES DESTROY MONSTERS
+_________
+_###_###_
+#...#...#
+#.q.x.p.#
+#...x...#
+_#..x..#_
+__#...#__
+___#.#___
+____#____
+_________
+(diff 0, destroyerz)
+
+
+_____
+#####
+#RAR#
+#RXY#
+#YAY#
+#####
+_____
+(diff 1, destroyerz)
+
+______
+######
+#BHHB#
+#YXXY#
+#YXXY#
+#BHHB#
+######
+______
+(diff 1 destroyerz)
+
+_______
+#######
+#RQXQR#
+#SQXQS#
+#BQXQB#
+#######
+_______
+(diff 1 destroyerz)
+
+___________
+#####_#####
+#sss#_#qqq#
+#sss###qqq#
+#x.......x#
+##x.rxb.x##
+#x.......x#
+#qqq###ccc#
+#qqq#_#ccc#
+#####_#####
+___________
+(diff 2 destroyerz)
+
+___________
+###########
+#...#q#.b.#
+#sxr#.#xx.#
+#.x.....c.#
+###########
+___________
+(diff 3 destroyerz)
+
+
+
+message YOU'RE CAKING THIS LOOK EASY!
+
+______
+######
+#RZSZ#
+#YSZS#
+#..SZ#
+#..ZS#
+######
+______
+(diff 3)
+
+
+#######
+#Y#B#Y#
+#.#R#.#
+#.#.#.#
+#.....#
+#.###.#
+#HHAHH#
+#######
+(diff 3, fun!)
+
+
+
+####__####
+#qc####cb#
+#c......c#
+##.####.##
+_#.#xx#.#_
+_#.c.r#.#_
+##.####.##
+#c......c#
+#qc####cq#
+####__####
+(diff 3)
+
+
+
+
+_#########_
+_#rrr.sss#_
+_#.......#_
+_#yyy.zzz#_
+_#.......#_
+##bbb.ccc##
+#.........#
+#.q..a..h.#
+#.........#
+###########
+
+______
+######
+#RA.Y#
+#....#
+#HH..#
+#SBCY#
+######
+______
+(diff 4)
+
+message LET'S CAKE IT TO THE NEXT TIER!
+
+
+#############
+#...#.h.#...#
+#.r.#...#.y.#
+#...c#c#s...#
+###c.....s###
+#..#.#h#.#..#
+#z.h.z.c.s.c#
+#..#.#s#.#..#
+###......z###
+#....#z#z...#
+#.b.#...#.g.#
+#...#.s.#...#
+#############
+(diff 3, easy but fun)
+
+
+_____
+#####
+#B.B#
+#RRY#
+#.Q.#
+#S.S#
+#CHC#
+#####
+_____
+(diff 5 - fun!)
+
+
+______
+######
+#HYBH#
+#YBYB#
+#BBBB#
+#HHHH#
+######
+______
+(diff 4)
+
+
+
+
+______
+######
+#BR.Y#
+#..A.#
+#SCZA#
+#CSZA#
+######
+______
+(diff 4)
+
+
+
+
+______
+######
+#CZG.#
+#ZCR##
+###..#
+#SHY##
+#HSB.#
+######
+______
+(diff 5 - very fun!)
+
+
+message YOU'RE GETTING BATTER!
+
+______
+######
+#YYYY#
+#...R#
+#AAAA#
+#ZZZZ#
+######
+______
+(diff 5 - fun but surprisingly hard)
+
+
+_______
+#######
+#Y..YA#
+#.BB.H#
+#R..RQ#
+#Y..YH#
+#######
+_______
+(diff 4)
+
+
+message ICING ON THE CAKE!
+
+______
+######
+#ZBBZ#
+#YBYB#
+#....#
+#ZHCZ#
+######
+______
+(diff 5)
+
+
+
+
+_______
+#######
+#A.S.A#
+#.Z.Z.#
+#SYRYS#
+#.ZYZ.#
+#A.S.A#
+#######
+_______
+(diff 5 - not too hard)
+
+
+
+message WILL YOU CAKE IT OUT ALIVE?
+______
+######
+#ZZZZ#
+#SSSS#
+#CCCC#
+#YRB.#
+######
+______
+(diff 6 - fun but tricky)
+
+
+
+
+message THE FINAL CHALLENGE!
+message DOUGH YOU HAVE WHAT IT CAKES?
+_____
+#####
+#AYA#
+#...#
+#CBC#
+#SZY#
+#RZS#
+#CBC#
+#...#
+#HOH#
+#####
+_____
+(diff 8 - a pretty tough one)
+
+
+
+message WELL, YOU REALLY TOOK THE CAKE!
+message CONGRATS, YOU WIN! :)
+
+
