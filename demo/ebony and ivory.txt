@@ -1,0 +1,93 @@
+title Ebony & Ivory
+author Guilherme Töws
+homepage zarat.us
+ 
+========
+OBJECTS
+========
+ 
+Background
+Purple
+ 
+Gray
+GRAY
+ 
+White
+WHITE
+ 
+Black
+BLACK
+ 
+PlayerRed
+Red    
+.....
+.000.
+.000.
+.000.
+.....
+ 
+PlayerGold    
+Yellow    
+.....
+.000.
+.000.
+.000.
+.....
+ 
+ 
+=======
+LEGEND
+=======
+ 
+. = White
+, = Black
+# = Gray
+: = PlayerRed and White
+; = PlayerRed and Black
+Player = PlayerRed or PlayerGold
+ 
+=======
+SOUNDS
+=======
+ 
+SFX0 72488907
+ 
+================
+COLLISIONLAYERS
+================
+ 
+Background
+Black, White, Gray
+Player
+ 
+======
+RULES    
+======    
+ 
+[ PlayerGold ] -> [ PlayerRed ]
+[ >  Player White | Black ] -> [  > Player White | > Black ]    
+[ >  Player Black | White ] -> [  > Player Black | > White ]    
+[ > Black | White ] -> [ White | Black ] SFX0
+[ > White | Black ] -> [ Black | White ] SFX0
+[ >  Player White |  Black ] -> [  Player White |  Black ]    
+[ >  Player Black |  White ] -> [  Player Black |  White ]    
+[ >  Player |  Gray ] -> [  Player |  Gray ]    
+late [ Player | PlayerRed ] -> [ Player | PlayerGold ]
+ 
+==============
+WINCONDITIONs
+==============
+ 
+No PlayerRed  
+ 
+=======    
+LEVELS
+=======
+ 
+########
+#..,,,,#
+#.:.,.,#
+#...,,,#
+#.,.,;,#
+#....,,#
+########
