@@ -2252,6 +2252,7 @@ function processInput(dir,dontCheckWin,dontModify) {
 		    	var old_verbose_logging=verbose_logging;
 		    	//verbose_logging=false;
 		    	//first have to verify that something's changed
+		    	var oldmessagetext = messagetext;
 		    	if (processInput(-1,true,true)) {
 
 			    	if (verbose_logging) { 
@@ -2261,6 +2262,7 @@ function processInput(dir,dontCheckWin,dontModify) {
 			    	againing=true;
 			    	timer=0;
 			    }
+			    messagetext = oldmessagetext;
 			    verbose_logging=old_verbose_logging;
 		    }
 			if (level.commandQueue.indexOf('checkpoint')>=0) {
