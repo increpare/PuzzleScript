@@ -1909,12 +1909,12 @@ function printRule(rule) {
 	return result;
 }
 function printRules(state) {
-	var output = "Rule Assembly : ("+ state.rules.length +" rules )<br>===========<br>";
+	var output = "<br>Rule Assembly : ("+ state.rules.length +" rules )<br>===========<br>";
 	for (var i=0;i<state.rules.length;i++) {
 		var rule = state.rules[i];
 		output += printRule(rule) +"<br>";
 	}
-	output+="===========";
+	output+="===========<br>";
 	consolePrint(output);
 }
 
@@ -2374,6 +2374,8 @@ function compile(command,text,randomseed) {
 	if (canDump===true) {
 		inputHistory=[];
 	}
+
+	consoleCacheDump();
 }
 
 
