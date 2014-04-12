@@ -91,8 +91,6 @@ function print_call_stack() {
 function RNG(seed) {
     if (seed == null) {
         seed = (Math.random() + Date.now()).toString();
-        window.console.log("setting random seed "+seed); 
-        print_call_stack();  
 
     } else if (typeof seed === 'function') {
         // Use it as a uniform number generator
@@ -103,9 +101,6 @@ function RNG(seed) {
         seed = null;
     } else if (Object.prototype.toString.call(seed) !== '[object String]') {
         seed = JSON.stringify(seed);
-    } else {
-        window.console.log("setting seed "+seed);
-        print_call_stack();
     }
     this._normal = null;
     if (seed) {
