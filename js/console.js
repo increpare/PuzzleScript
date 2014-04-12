@@ -25,7 +25,7 @@ function playSound(seed) {
 var consolecache = "";
 function consolePrint(text) {
 	if (cache_console_messages) {		
-		consolecache = consolecache + '<br'> + text;
+		consolecache = consolecache + '<br>' + text;
 	} else {
 		var code = document.getElementById('consoletextarea');
 		code.innerHTML = code.innerHTML + '<br>'+ text;
@@ -43,7 +43,6 @@ function consoleCacheDump() {
 	consolecache="";
 	var objDiv = document.getElementById('lowerarea');
 	objDiv.scrollTop = objDiv.scrollHeight;
-	cache_console_messages=false;
 }
 
 function consoleError(text) {	

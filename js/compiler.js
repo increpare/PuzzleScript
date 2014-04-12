@@ -95,8 +95,10 @@ function generateExtraMembers(state) {
 			}
 		} else if (key==='debug') {
 			debugMode=true;
+			cache_console_messages=true;
 		} else if (key ==='verbose_logging') {
 			verbose_logging=true;
+			cache_console_messages=true;
 		}
 	}
 
