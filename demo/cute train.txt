@@ -37,9 +37,6 @@ blue white lightblue
 01022
 20200
 
-Temp
-blue
-
 Gerald
 blue black
 .000.
@@ -213,9 +210,6 @@ white
 ..0..
 .....
 
-Switching
-black
-
 Switch
 red black
 ...0.
@@ -268,9 +262,12 @@ _ = Beach and HTrack
 
 WaterR = Water or Water2
 
-Ghost = GhostHTrack or GhostVTrack or GhostULTrack or  GhostURTrack or GhostDLTrack or GhostDRTrack
+Ghost = GhostHTrack or GhostVTrack or GhostULTrack or GhostURTrack or GhostDLTrack or GhostDRTrack
+Track = HTrack or VTrack or ULTrack or URTrack or DLTrack or DRTrack
+
 Train = UTrain or DTrain or LTrain or RTrain
-Mover = Train or Player or Cart
+Vehicle = Train or Cart
+Mover = Vehicle or Player
 
 G = Gerald and Structs
 
@@ -278,7 +275,7 @@ G = Gerald and Structs
 SOUNDS
 =======
 
-SFX0 91301709
+Train move 91301709
 SFX1 53409305
 SFX2 38557307
 SFX3 99431502
@@ -289,46 +286,38 @@ COLLISIONLAYERS
 
 Background
 Beach GhostVTrack GhostHTrack GhostURTrack GhostULTrack GhostDLTrack GhostDRTrack
-Structs Temp
+Structs
 VTrack HTrack URTrack ULTrack DLTrack DRTrack Switch
 Water Water2 Mountain Forest Player UTrain RTrain LTrain DTrain Cart Gerald
-Switching Smoke1 Smoke2 Smoke3
+Smoke1 Smoke2 Smoke3
 
 ======
 RULES     
 ======
 
-[ Ghost no Background] -> [ Ghost Background ]
+(animate water)
+[        WaterR ] -> [ action WaterR ]
+[ action WaterR ] -> [ random WaterR ]
 
-[ WaterR no Temp ] -> [ random WaterR Temp ] (animate water)
-
-[ action Player no Structs | Cart ] [ Train ] -> [ Player Temp | Cart ] [ Train ] (pressing action adds momentum)
-
-(move the train if there's momentum left)
-random [ Mover Temp ] [ UTrain ] -> [ Mover ] [ up    UTrain ] SFX0
-random [ Mover Temp ] [ DTrain ] -> [ Mover ] [ down  DTrain ] SFX0
-random [ Mover Temp ] [ RTrain ] -> [ Mover ] [ right RTrain ] SFX0 
-random [ Mover Temp ] [ LTrain ] -> [ Mover ] [ left  LTrain ] SFX0
+[ action Player no Structs | Cart ] [ Train ] -> [ Player | Cart ] [ action Train ]
 
 (move the train if we're on the impassable structs)
-[ Structs Mover ] [ UTrain ] -> [ Structs Mover ] [ up    UTrain ] SFX0
-[ Structs Mover ] [ DTrain ] -> [ Structs Mover ] [ down  DTrain ] SFX0
-[ Structs Mover ] [ RTrain ] -> [ Structs Mover ] [ right RTrain ] SFX0
-[ Structs Mover ] [ LTrain ] -> [ Structs Mover ] [ left  LTrain ] SFX0
+[ Structs Mover ] [ Train ] -> [ Structs Mover ] [ action Train ]
 
-late [ Mover Temp ]    -> [ Mover Temp ]    again (repeat if there is momentum left)
+[ action Train ] -> [ action Train Smoke1 ]
+
+[ action UTrain ] -> [    up UTrain ]
+[ action DTrain ] -> [  down DTrain ]
+[ action RTrain ] -> [ right RTrain ]
+[ action LTrain ] -> [  left LTrain ]
+
 late [ Mover Structs ] -> [ Mover Structs ] again (repeat if the train is still on structs)
 
-(cart follows train)
-[ Cart | > Train ] -> [ > Cart | > Train ]
-[ Cart | perpendicular Train ] -> [ > Cart | perpendicular Train ]
-
-(player follows cart)
-[ Player | > Cart ] -> [ > Player | > Cart ]
-[ Player | perpendicular Cart ] -> [ > Player | perpendicular Cart ]
+(cart follows train, player follows cart)
+[ Cart   | moving Train ] -> [ > Cart   | moving Train ]
+[ Player | moving Cart  ] -> [ > Player | moving Cart  ]
 
 [ > Player | Structs no Gerald no Cart ] -> [ Player | Structs ] message It's dangerous to walk along railway bridges!
-[ > Mover Temp ] -> [ > Mover > Temp ]
 
 (endgame message)
 [ >      Player | Gerald ] -> [ Player | Gerald ] message you made it! thanks for playing.
@@ -352,38 +341,29 @@ left  [ > LTrain | DRTrack ] -> [ > UTrain | DRTrack ]
 [ Smoke2 ] -> [ Smoke3 ]
 [ Smoke1 ] -> [ Smoke2 ]
 
-[ action Player Switch ] -> [ Player Switch Switching ] 
+[ action Player Switch ] -> [ Player action Switch ] 
 
 (switch all uncovered tracks at once)
-[ Switching ] [ GhostHTrack URTrack no Temp no Train no Cart ] -> [ Switching ] [ HTrack GhostURTrack Temp ]
-[ Switching ] [ HTrack GhostURTrack no Temp no Train no Cart ] -> [ Switching ] [ GhostHTrack URTrack Temp ]
-[ Switching ] [ GhostHTrack DRTrack no Temp no Train no Cart ] -> [ Switching ] [ HTrack GhostDRTrack Temp ]
-[ Switching ] [ HTrack GhostDRTrack no Temp no Train no Cart ] -> [ Switching ] [ GhostHTrack DRTrack Temp ]
-[ Switching ] [ GhostHTrack ULTrack no Temp no Train no Cart ] -> [ Switching ] [ HTrack GhostULTrack Temp ]
-[ Switching ] [ HTrack GhostULTrack no Temp no Train no Cart ] -> [ Switching ] [ GhostHTrack ULTrack Temp ]
-[ Switching ] [ GhostHTrack DLTrack no Temp no Train no Cart ] -> [ Switching ] [ HTrack GhostDLTrack Temp ]
-[ Switching ] [ HTrack GhostDLTrack no Temp no Train no Cart ] -> [ Switching ] [ GhostHTrack DLTrack Temp ]
+[ action Switch ] [ Ghost Vehicle ] -> [ action Switch ] [ Ghost Vehicle ] SFX3 (play blocking sound if switch tracks are covered while switching)
+[ action Switch ] [ Ghost no Vehicle ] -> [ action Switch ] [ action Ghost ] SFX2
 
-[ Switching ] [ GhostVTrack URTrack no Temp no Train no Cart ] -> [ Switching ] [ VTrack GhostURTrack Temp ]
-[ Switching ] [ VTrack GhostURTrack no Temp no Train no Cart ] -> [ Switching ] [ GhostVTrack URTrack Temp ]
-[ Switching ] [ GhostVTrack DRTrack no Temp no Train no Cart ] -> [ Switching ] [ VTrack GhostDRTrack Temp ]
-[ Switching ] [ VTrack GhostDRTrack no Temp no Train no Cart ] -> [ Switching ] [ GhostVTrack DRTrack Temp ]
-[ Switching ] [ GhostVTrack ULTrack no Temp no Train no Cart ] -> [ Switching ] [ VTrack GhostULTrack Temp ]
-[ Switching ] [ VTrack GhostULTrack no Temp no Train no Cart ] -> [ Switching ] [ GhostVTrack ULTrack Temp ]
-[ Switching ] [ GhostVTrack DLTrack no Temp no Train no Cart ] -> [ Switching ] [ VTrack GhostDLTrack Temp ]
-[ Switching ] [ VTrack GhostDLTrack no Temp no Train no Cart ] -> [ Switching ] [ GhostVTrack DLTrack Temp ]
+[ action GhostHTrack URTrack no Vehicle ] -> [ HTrack GhostURTrack ]
+[ HTrack action GhostURTrack no Vehicle ] -> [ GhostHTrack URTrack ]
+[ action GhostHTrack DRTrack no Vehicle ] -> [ HTrack GhostDRTrack ]
+[ HTrack action GhostDRTrack no Vehicle ] -> [ GhostHTrack DRTrack ]
+[ action GhostHTrack ULTrack no Vehicle ] -> [ HTrack GhostULTrack ]
+[ HTrack action GhostULTrack no Vehicle ] -> [ GhostHTrack ULTrack ]
+[ action GhostHTrack DLTrack no Vehicle ] -> [ HTrack GhostDLTrack ]
+[ HTrack action GhostDLTrack no Vehicle ] -> [ GhostHTrack DLTrack ]
 
-late [ no Mover Temp ] -> [ ]
-
-[ Switching ] [ Ghost Mover ] -> [ Switching ] [ Ghost Mover ] SFX3 (play blocking sound if switch tracks are covered while switching)
-[ Switching ] -> [ ] SFX2 (play switching sound, end switching)
-
-[ > UTrain ] -> [ > UTrain Smoke1 ]
-[ > DTrain ] -> [ > DTrain Smoke1 ]
-[ > LTrain ] -> [ > LTrain Smoke1 ]
-[ > RTrain ] -> [ > RTrain Smoke1 ]
-
-
+[ action GhostVTrack URTrack no Vehicle ] -> [ VTrack GhostURTrack ]
+[ VTrack action GhostURTrack no Vehicle ] -> [ GhostVTrack URTrack ]
+[ action GhostVTrack DRTrack no Vehicle ] -> [ VTrack GhostDRTrack ]
+[ VTrack action GhostDRTrack no Vehicle ] -> [ GhostVTrack DRTrack ]
+[ action GhostVTrack ULTrack no Vehicle ] -> [ VTrack GhostULTrack ]
+[ VTrack action GhostULTrack no Vehicle ] -> [ GhostVTrack ULTrack ]
+[ action GhostVTrack DLTrack no Vehicle ] -> [ VTrack GhostDLTrack ]
+[ VTrack action GhostDLTrack no Vehicle ] -> [ GhostVTrack DLTrack ]
 
 ==============
 WINCONDITIONS
@@ -483,3 +463,4 @@ message welcome to the breezy isles!
 ^^^^^^^^^^^^^^^^^^^^^^^^lzzzzj^^^^^^^%%%%%.%%%%...%%%%^^^,,,~~~~
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^%%%%%^^^^^^^^^^^^^^^^^~~
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^~~
+
