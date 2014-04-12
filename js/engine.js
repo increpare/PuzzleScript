@@ -2371,6 +2371,8 @@ function DoWin() {
 	timer=0;
 }
 
+/*
+//this function isn't valid after refactoring, but also isn't used.
 function anyMovements() {	
     for (var i=0;i<level.movementMask.length;i++) {
         if (level.movementMask[i]!==0) {
@@ -2378,7 +2380,7 @@ function anyMovements() {
         }
     }
     return false;
-}
+}*/
 
 
 function nextLevel() {
