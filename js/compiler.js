@@ -2308,11 +2308,14 @@ function loadFile(str) {
 }
 
 var ifrm;
-function compile(command,text) {
+function compile(command,text,randomseed) {
 	matchCache={};
 	forceRegenImages=true;
 	if (command===undefined) {
 		command = ["restart"];
+	}
+	if (randomseed===undefined) {
+		randomseed = null;
 	}
 	lastDownTarget=canvas;	
 
@@ -2366,7 +2369,7 @@ function compile(command,text) {
 
 		}
 	}
-	setGameState(state,command);
+	setGameState(state,command,randomseed);
 
 	if (canDump===true) {
 		inputHistory=[];

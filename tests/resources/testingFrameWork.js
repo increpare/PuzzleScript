@@ -17,11 +17,10 @@ function runTest(dataarray) {
 	if (targetlevel===undefined) {
 		targetlevel=0;
 	}
-	compile(["loadLevel",targetlevel],levelString);
-
-	RandomGen = new RNG(randomseed);
+	compile(["loadLevel",targetlevel],levelString,randomseed);
 
 	for(var i=0;i<inputDat.length;i++) {
+		window.console.log("turn " + i);
 		var val=inputDat[i];
 		if (val==="undo") {
 			DoUndo();

@@ -1,598 +1,472 @@
-title Flying Kick
+title Drop Swap
 author Aaron Steed
 homepage www.robotacid.com
 
 key_repeat_interval 0.23
-again_interval 0.1
+again_interval 0.05
 noaction
+noundo
 background_color Black
-text_color Yellow
+text_color Grey
+run_rules_on_level_start
 
 ========
 OBJECTS
 ========
 
 Background
-#e5b679
+Black
 
-WallTop 
-#d32112 #820e00 #d34900 #9da3c7 
-22220
-21110
-01111
-11111
-11111
-
-WallBase
-#820e00
-
-BreakWall
-#ffd600 #ffa30d #b76800 #979594 
-10101
-00002
-10101
-00002
-12121
-
-BreakDebris1
-#ffd600 #ffa30d #b76800 #979594 
-10101
-0.0.2
-10.01
-0.0.2
-12121
-
-BreakDebris2
-#ffd600 #ffa30d #b76800 #979594 
-.0.0.
-0.0.2
-.0.0.
-0.0.2
-.2.2.
-
-BreakDebris3
-#ffd600 #ffa30d #b76800 #979594 
-.0.0.
-0...2
-.....
-0...2
-.2.2.
-
-SpikeUp
-#d32112 #820e00 #ffffff #9da3c7 
-..3..
-..2..
-.223.
-.223.
-10201
-
-Mine
-#d32112 #878787 #ffffff #9da3c7 
-..2..
-.223.
-22231
-.331.
-..1..
-
-Blood1
-#d21d00 #ffe02c #ffc700 #c87700 
-0.0.0
-.000.
-00000
-.000.
-0.0.0
-
-Blood2
-#d21d00 #ffe02c #ffc700 #c87700 
-.....
-.0.0.
-..0..
-.0.0.
-.....
-
-Blood3
-#d21d00 #ffe02c #ffc700 #c87700 
-.....
-.....
-..0..
-.....
-.....
-
-Blood4
-#d21d00 #ffe02c #ffc700 #c87700 
-.....
-.....
-.....
-.....
-.....
-
-PlayerGround
-#000000 #e72119 #ffffff #ff0000 
-.000.
-.202.
-.000.
-.111.
-.0.0.
-
-PlayerFall
-#000000 #e72119 #ffffff #ff0000 
-.000.
-.202.
-.000.
-01110
-.....
-
-PlayerJumpStart
-#000000 #e72119 #ffffff #ff0000 
-.000.
-.202.
-.111.
-.0.0.
-.....
-
-PlayerJump
-#000000 #e72119 #ffffff #ff0000 
-.000.
-.202.
-.111.
-.0.0.
-.....
-
-PlayerKickRight
-#000000 #e72119 #ffffff #ff0000 
-000..
-002..
-11100
-.00..
-.....
-
-PlayerKickRightBack
-#000000 #e72119 #ffffff #ff0000  
-.000.
-.200.
-0111.
-.0...
-.....
-
-PlayerKickRightBackWait
-#000000 #e72119 #ffffff #ff0000  
-.000.
-.200.
-0111.
-.0...
-.....
-
-PlayerKickLeft
- #000000 #e72119 #ffffff #ff0000 
-..000
-..200
-00111
-..00.
-.....
-
-PlayerKickLeftBack
-#000000 #e72119 #ffffff #ff0000 
-.000.
-.002.
-.1110
-...0.
-.....
-
-PlayerKickLeftBackWait
-#000000 #e72119 #ffffff #ff0000 
-.000.
-.002.
-.1110
-...0.
-.....
-
-CrateGround
-#d32112 #ffa30d #ff8126 #c93700 
-.223.
-21123
-21123
-32233
-.333.
-
-CrateFall
-#d32112 #ffa30d #ff8126 #c93700
-.223.
-21123
-21123
-32233
-.333.
-
-CrateLeft
-#d32112 #ffe02c #ffc700 #c87700 
-.223.
-21123
-21123
-32233
-.333.
-
-CrateRight
-#d32112 #ffe02c #ffc700 #c87700 
-.223.
-21123
-21123
-32233
-.333.
-
-Exit
-#000000 #ffe02c #ffc700 #c87700 
-.000.
-00000
-00010
-00000
-00000
-
-Switch
-#ffd600 #ffa30d #a62514 #c93700 
-.....
-.....
-.001.
-.001.
-20012
-
-GateClosed
-#ffd600 #ffa30d #a62514 #c93700 
-33333
-30012
-31.12
+Player
+#ffffff #000000 #626263 #3c3b3c 
+.222.
 21112
-22222
+23132
+20102
+.222.
 
-GateOpen
-#ffd600 #ffa30d #a62514 #c93700 
-3.3.3
+DeadPlayer
+#ffffff #000000 #626263 #3c3b3c 
+.222.
+21112
+21112
+23132
+.222.
+
+BaseWall
+#222222 #333333 #444444 #ffffff 
+11110
+12220
+12200
+12000
+00000
+
+APill
+#ff0000 #ff7374 #ff0000 #ff0000 
+.111.
+11110
+11010
+11100
+.000.
+
+BPill
+#00de00 #cffa92 #ff0000 #ff0000 
+.111.
+10010
+10110
+11100
+.000.
+
+CPill
+#7a35fc #b56bfd #ff0000 #ff0000 
+.111.
+10110
+11010
+11100
+.000.
+
+DPill
+#0094fc #79b5fd #ff0000 #ff0000 
+.111.
+10100
+11010
+10100
+.000.
+
+EPill
+#d1c200 #fff919 #ffffff #ff0000 
+.111.
+10010
+10010
+11110
+.000.
+
+FPill
+#ff33b1 #ff76d2 #ff0000 #ff0000 
+.111.
+10100
+11110
+10110
+.000.
+
+AllPill
+#eeee66 #ffffff #ffffcc #ffffff
+.112.
+11112
+11012
+21120
+.220.
+
+NoPill
+#ffffff #000000 #ffde85 #ff0000 
+.000.
+00000
+21012
+.000.
+..2..
+
+Bomb
+#6e6e6e #000000 #ff0000 #fcf26b 
+.020.
+02320
+01210
+01110
+.000.
+
+GemPill
+#ffffff #000000 #626263 #3c3b3c 
+..0..
+.002.
+00022
+.223.
+..2..
+
+Count
+#ffffff #000000 #5a595a #ff0000 
 .....
-3...2
+.000.
+.000.
+.000.
 .....
-2.2.2
 
-GateClosing
-Pink
+Marked
+#ffffff #000000
+.....
+..1..
+.101.
+..1..
+.....
 
+CountTray
+#333333
 
+GemTray
+#333333
+
+StartGem
+red
+
+Collect
+White
+
+Debris1
+#ffffff #0739f5 #1f0f42 #ffffff
+.0.0.
+00.00
+..0..
+00.00
+.0.0.
+
+Debris2
+#ffffff #0739f5 #1f0f42 #ffffff 
+.....
+.0.0.
+..0..
+.0.0.
+.....
+
+Empty
+Black
+
+OldPos
+Black
+
+StartCount
+Black
+
+DropWall1
+#222222 #333333 #444444 #ffffff
+11110
+12220
+12200
+12200
+12200
+
+DropWall2
+#222222 #333333 #444444 #ffffff 
+11110
+12220
+12200
+12200
+12200
+
+DropWall3
+#222222 #333333 #444444 #ffffff 
+11110
+12220
+12200
+12200
+12200
+
+DropWall4
+#222222 #333333 #444444 #ffffff 
+11110
+12220
+12200
+12200
+12200
+
+DropMarker
+Blue
+
+Init
+Purple
 
 =======
 LEGEND
 =======
 
 . = Background
-# = WallBase
-h = WallTop
-@ = PlayerGround
-o = CrateGround
-a = SpikeUp
-e = Exit
-f = Switch
-g = GateOpen
-j = Mine
-k = BreakWall
+@ = Player
+p = DeadPlayer
+# = BaseWall
+a = APill
+b = BPill
+c = CPill
+d = DPill
+e = EPill
+f = FPill
+n = NoPill
+x = AllPill
+u = Count and CountTray
+w = Count and CountTray and StartCount
+g = GemPill
+q = GemTray
+o = GemTray and StartGem
+p = Bomb
+i = Init
+j = DropWall1
+k = DropWall2
+l = DropWall3
+m = DropWall4
 
-Player = PlayerGround or PlayerJump or PlayerKickLeft or PlayerKickRight or PlayerKickLeftBack or PlayerKickRightBack or PlayerKickLeftBackWait or PlayerKickRightBackWait or PlayerFall or PlayerJumpStart
-Wall = WallTop or WallBase
-Gate = GateOpen or GateClosed
-Crate = CrateGround or CrateFall or CrateRight or CrateLeft
-Item = Player or Wall or Crate or GateClosed or BreakWall
-Spike = SpikeUp or Mine
-Blood = Blood1 or Blood2 or Blood3 or Blood4
-Debris = BreakDebris1 or BreakDebris2 or BreakDebris3
+
+MatchPill = APill or BPill or CPill or DPill or EPill or FPill or AllPill
+Pill = MatchPill or NoPill or GemPill or Bomb
+Debris = Debris1 or Debris2
+AMatch = APill or AllPill
+BMatch = BPill or AllPill
+CMatch = CPill or AllPill
+DMatch = DPill or AllPill
+EMatch = EPill or AllPill
+FMatch = FPill or AllPill
+Wall = BaseWall or DropWall1 or DropWall2 or DropWall3 or DropWall4
+Item = Pill or Debris or Wall or Player
+Heavy = Pill or Player
+Dropping = Marked or DropMarker
+DropMix1 = APill or BPill or CPill or DPill or EPill
+DropMix2 = APill or BPill or CPill or DPill or EPill or GemPill
+DropMix3 = APill or BPill or CPill or DPill or EPill or NoPill
+DropMix4 = APill or BPill or CPill or DPill or EPill or FPill or GemPill
+DropMix5 = APill or BPill or CPill or DPill or EPill or FPill
+DropWallMarked = DropWall1 or DropWall3
 
 =======
 SOUNDS
 =======
 
-sfx0 8545502 (kick crate)
-sfx1 25968909 (jump)
-sfx2 2437309 (kick)
-sfx3 31029704 (kick wall)
-sfx4 31651909 (death)
-sfx5 83279102 (gate)
-Crate MOVE 29447307
-sfx6 42954502 (break wall)
-
+sfx0 54236904 (illegal)
+sfx1 5160507 (swap)
+sfx2 19008103 (allpill)
+sfx3 50665503 (crush 3)
+sfx4 80820507 (land)
+sfx5 2030908 (blast)
+sfx6 3032303 (bomb)
+sfx7 83704102 (dead)
+sfx8 7194508 (gem collect)
+EndLevel 16709508 (win)
 
 ================
 COLLISIONLAYERS
 ================
 
-GateClosing
+
+Collect, StartCount, StartGem
 Background
-Spike, Exit, Switch, GateOpen
-Player, Wall, Crate, GateClosed, BreakWall
-Blood, Debris
+OldPos, CountTray, GemTray
+Player, Wall, Pill, Empty, Count, DeadPlayer, Bomb, Init
+Debris, Marked, DropMarker
 
 ======
 RULES
 ======
 
-(AGAIN AGAIN AGAIN!!!)
+(init)
+[ DropWall1 ] [ Init ] -> [ DropWall1 ] [ random DropMix1 Marked ]
+[ DropWall2 ] [ Init ] -> [ DropWall2 ] [ random DropMix1 ]
+[ DropWall3 ] [ Init ] -> [ DropWall3 ] [ random DropMix1 Marked ]
+[ DropWall4 ] [ Init ] -> [ DropWall4 ] [ random DropMix5 ]
 
-[Blood4] -> Restart
+(debris clean up)
+[ Debris2 ] -> [ Empty ] again
+[ Debris1 ] -> [ Debris2 ] again
 
-[BreakDebris3] -> []
-[BreakDebris2] -> [BreakDebris3] again
-[BreakDebris1] -> [BreakDebris2] again
+(player - pill swapping)
+[ > Player | Pill ] -> [ Pill OldPos | Player ] sfx1
+[ Player Marked | OldPos ] -> [ Player | OldPos Marked ]
 
-(PLAYER)
+(blocked move)
+[ > Player | No Pill ] -> [ Player | ] sfx0
 
-(input)
-right [right PlayerJump] -> [PlayerKickRightBackWait] sfx2
-left [left PlayerJump] -> [PlayerKickLeftBackWait] sfx2
-up [up PlayerJump] -> [PlayerJump]
-down [down PlayerJump] -> [PlayerFall] again
+(pill combos)
+[ AMatch | AMatch | AMatch ] -> [ AMatch Collect | AMatch Collect | AMatch Collect ]
+[ BMatch | BMatch | BMatch ] -> [ BMatch Collect | BMatch Collect | BMatch Collect ]
+[ CMatch | CMatch | CMatch ] -> [ CMatch Collect | CMatch Collect | CMatch Collect ]
+[ DMatch | DMatch | DMatch ] -> [ DMatch Collect | DMatch Collect | DMatch Collect ]
+[ EMatch | EMatch | EMatch ] -> [ EMatch Collect | EMatch Collect | EMatch Collect ]
+[ FMatch | FMatch | FMatch ] -> [ FMatch Collect | FMatch Collect | FMatch Collect ]
+[ NoPill | NoPill | NoPill ] -> [ NoPill Collect | NoPill Collect | NoPill Collect ]
 
-(jump)
-up [PlayerJumpStart | No Item] -> [ | PlayerJump]
-[PlayerJumpStart] -> [PlayerJump]
-random up [Up PlayerGround | No Item] -> [ | PlayerJumpStart] again sfx1
+(bomb activate)
+[ OldPos Bomb ] -> sfx5
+up [ OldPos Bomb | Pill ] -> [ OldPos Bomb | Pill > Collect ]
+right [ OldPos Bomb | Pill ] -> [ OldPos Bomb | Pill > Collect ]
+down [ OldPos Bomb | Pill ] -> [ OldPos Bomb | Pill > Collect ]
+left [ OldPos Bomb | Pill ] -> [ OldPos Bomb | Pill > Collect ]
+[ OldPos Bomb ] -> [ OldPos Empty ]
 
-(falling)
-random down [PlayerFall | No Item] -> [ | PlayerFall] again
-random down [PlayerFall | Item] -> [PlayerGround | Item]
-late down [PlayerGround | No Item] -> [PlayerFall | ] again
+(blast)
+up [ Pill > Collect | Pill ] -> [ Pill Collect | Pill > Collect ]
+right [ Pill > Collect | Pill ] -> [ Pill Collect | Pill > Collect ]
+down [ Pill > Collect | Pill ] -> [ Pill Collect | Pill > Collect ]
+left [ Pill > Collect | Pill ] -> [ Pill Collect | Pill > Collect ]
+[ > Collect ] -> [ Collect ]
+[ GemPill Collect ] -> [ GemPill ]
 
-(flying kick)
-right [PlayerKickRight | CrateGround] -> [PlayerKickRight | CrateRight] sfx0
-right [PlayerKickRight | BreakWall] -> [PlayerFall | BreakDebris1] again sfx6
-right [PlayerKickRight | Item] -> [PlayerFall | Item] again sfx3
-random right [PlayerKickRight | No Item] -> [ | PlayerKickRight] again
-[PlayerKickRightBack] -> [PlayerKickRight] again
-[PlayerKickRightBackWait] -> [PlayerKickRightBack] again
-left [PlayerKickLeft | CrateGround] -> [PlayerKickLeft | CrateLeft] sfx0
-left [PlayerKickLeft | BreakWall] -> [PlayerFall | BreakDebris1] again sfx6
-left [PlayerKickLeft | Item] -> [PlayerFall | Item] again sfx3
-random left [PlayerKickLeft | No Item] -> [ | PlayerKickLeft] again
-[PlayerKickLeftBack] -> [PlayerKickLeft] again
-[PlayerKickLeftBackWait] -> [PlayerKickLeftBack] again
+(reward matches)
+(junction)
+Right [ Collect | Collect ] -> [ > Collect | > Collect ]
+Down [ Collect | Collect ] -> [ > Collect | > Collect ]
+[ Down Collect | Right Collect ] [ Collect OldPos ] -> [ Collect | Collect ] [ Bomb OldPos ] sfx6
+(4: create AllPill)
+[ MatchPill Collect | MatchPill Collect | MatchPill Collect | MatchPill Collect ] [ Collect OldPos ] -> [ MatchPill Collect | MatchPill Collect | MatchPill Collect | MatchPill Collect ] [ AllPill OldPos ] sfx2
 
-(CRATES)
+(count moves)
+(subtract on move)
+random right [ OldPos ] [ Count | No Count ] -> [ OldPos ] [ | ]
+(fill on Debris)
+[ Collect ] [ CountTray ] -> [ Collect ] [ CountTray Count ]
 
-(push)
-horizontal [> Player | Crate] -> [> Player | > Crate]
+(dead?)
+[ DeadPlayer ] -> cancel
+[ No Count StartCount CountTray ] [ Player ] -> [ No Count StartCount CountTray ] [ DeadPlayer ] sfx7
+[ Player | NoPill Collect ] -> [ DeadPlayer | NoPill ]
+[ DeadPlayer ] [ CountTray Count ] -> [ DeadPlayer ] [ CountTray ] sfx7
 
-(falling)
-random down[CrateFall | No Item] -> [ | CrateFall] again
-random down [CrateFall | Item] -> [CrateGround | Item]
-late down [CrateGround | No Item] -> [CrateFall | ] again
+(destroy matched)
+[ APill Collect ] -> [ Debris1 ] sfx3 again
+[ BPill Collect ] -> [ Debris1 ] sfx3 again
+[ CPill Collect ] -> [ Debris1 ] sfx3 again
+[ DPill Collect ] -> [ Debris1 ] sfx3 again
+[ EPill Collect ] -> [ Debris1 ] sfx3 again
+[ FPill Collect ] -> [ Debris1 ] sfx3 again
+[ AllPill Collect ] -> [ Debris1 ] sfx3 again
+[ Player ] [ NoPill Collect ] -> [ Player ] [ Debris1 ] sfx3 again
 
-(flying)
-right [CrateRight | CrateGround] -> [CrateFall | CrateRight] again
-right [CrateRight | BreakWall] -> [CrateFall | BreakDebris1] again sfx6
-right [CrateRight | Item] -> [CrateFall | Item] again
-random right [CrateRight | No Item] -> [ | CrateRight] again
-left [CrateLeft | CrateGround] -> [CrateFall | CrateLeft] again
-left [CrateLeft | BreakWall] -> [CrateFall | BreakDebris1] again sfx6
-left [CrateLeft | Item] -> [CrateFall | Item] again
-random left [CrateLeft | No Item] -> [ | CrateLeft] again
+(destroy NoPills)
+down [ NoPill | Wall ] -> [ Debris1 | Wall ] again
 
-(SPIKES + DEATH)
-[Blood3|] -> [Blood3 | Blood4]
-[Blood2|] -> [Blood2 | Blood3] again
-[Blood1|] -> [Blood1 | Blood2] again
-late [Player Spike] -> [Blood1 Spike] again sfx4
+(collect gems)
+down [ GemPill | Wall ] -> [ GemPill Collect | Wall ]
+[ GemPill Collect ] [ StartGem No GemPill ] -> [ Debris1 ] [ StartGem GemPill ] again sfx8
+right [ GemPill Collect ] [ GemPill GemTray | No GemPill GemTray ] -> [ Debris1 ] [ GemPill GemTray | GemPill GemTray ] again sfx8
 
-(GATES)
-late [Item Switch] [GateOpen] -> [Item Switch] [GateOpen GateClosing]
-late [No Item Switch] [GateClosing] -> [Switch] []
-late [GateClosing GateOpen] -> [GateClosed] sfx5
-late [No Item Switch] [GateClosed] -> [Switch] [GateOpen] sfx5
+(drop)
+[ Heavy No Dropping ] -> [ Heavy DropMarker ]
+down [ Heavy Dropping | Empty ] -> [ Empty | Heavy Dropping ]
+[ DropMarker ] -> [ ]
+down [ DropWall1 | Empty ] -> [ DropWall1 | random DropMix1 ] again
+down [ DropWall2 | Empty ] -> [ DropWall2 | random DropMix2 ] again
+down [ DropWall3 | Empty ] -> [ DropWall3 | random DropMix3 ] again
+down [ DropWall4 | Empty ] -> [ DropWall4 | random DropMix4 ] again
+
+(gem drop win)
+right [ GemPill GemTray | Wall ] -> win
+
+[ OldPos ] -> [ ]
 
 ==============
 WINCONDITIONS
 ==============
 
-Some Player on Exit  
+No Marked
+Some DropWallMarked
 
 =======     
 LEVELS
 =======
 
-MESSAGE AIIIYYAAAARRGGHH!!
+message collect orbs by matching 3
+message match 3 to restore move-energy
+message level 1: collect all marked orbs
 
-#......#
-#.e....#
-#hhh...#
-#......#
-#....hh#
-#......#
-#hh....#
-#......#
-#....hh#
-#.@....#
-#hhhhhh#
+wuuuuu#
+#jjjjj#
+#iiiii#
+#iiiii#
+#iiiii#
+#iiiii#
+#ii@ii#
+#######
 
-#............#
-#............#
-#............#
-#..........e.#
-#.......o.hhh#
-#.......o.####
-#.......o.####
-#.......o.####
-#......hhh####
-#......#######
-#..o.@.#######
-#hhhhhh#######
+message level 2: collect all marked orbs
 
-#...........#
-#...........#
-#.........e.#
-#........hhh#
-#...........#
-#a.o........#
-#hhhh.......#
-#...........#
-#.......oaa.#
-#......hhhhh#
-#.@.aa.######
-#hhhhhh######
+wuuuuuu#
+#jjjjjj#
+#iiiiii#
+#iiiiii#
+#iiiiii#
+#iiiiii#
+#iiiiii#
+#iiiiii#
+#iii@ii#
+########
 
-#.......#
-#.......#
-#.e.....#
-#hhh....#
-#.......#
-#.....gg#
-#.......#
-#hh..o..#
-#....o..#
-#..hhhhh#
-#...f.@.#
-#hhhhhhh#
+message collect gray gems by getting them to the bottom
+message level 3: collect 8 gems
 
-#.......#
-#.......#
-#.e.....#
-#hhh....#
-#.......#
-#....kkk#
-#....kkk#
-#....kkk#
-#kkk....#
-#kkk....#
-#kkk..@.#
-#hhhhhhh#
+oqqqqqqq#
+wuuuuuuu#
+#kkkkkkk#
+#iiiiiii#
+#iiiiiii#
+#iiiiiii#
+#iiiiiii#
+#iiiiiii#
+#iiiiiii#
+#iiiiiii#
+#iii@iii#
+#########
 
-#............#
-#............#
-#.......e....#
-#.......h....#
-#....o.....o.#
-#....o.....o.#
-#....o.....o.#
-#...hhh...hhh#
-#aaa###.@.####
-#hhh###hhh####
+message if you are next to 3 matching skulls you die
+message skulls can be destroyed by getting them to the bottom
+message level 4: collect all marked orbs
 
-#.........#
-#.......e.#
-#......hhh#
-#.........#
-#hh.......#
-#.........#
-#h.ooo....#
-#..hhh..gg#
-#.......h.#
-#hhh.hhh#.#
-#.@.f.....#
-###########
+wuuuuuu#
+#llllll#
+#iiiiii#
+#iiiiii#
+#iiiiii#
+#iiiiii#
+#iiiiii#
+#iiiiii#
+#iii@ii#
+########
 
-#..................#
-#..................#
-#..................#
-#.e................#
-#hhh.......o...o...#
-####.......o...o...#
-####.......o...o...#
-####gg.....o...o...#
-####.......o...o...#
-####hhh....o...o...#
-####....f..o.@.o...#
-####hhhhhhhhhhhhhhh#
+message level 5: collect 7 gems
 
-#.......#
-#...e...#
-#...h...#
-#...o...#
-#..ooo..#
-#..ooo..#
-#..hhh..#
-#.......#
-#hh.@.hh#
-###hhh###
+oqqqqqqq#
+wuuuuuuu#
+#mmmmmmm#
+#iiiiiii#
+#iiiiiii#
+#iiiiiii#
+#iiiiiii#
+#iiiiiii#
+#iiiiiii#
+#iiiiiii#
+#iii@iii#
+#########
 
-#...........#
-#...........#
-#.e.........#
-#hhh........#
-##..........#
-##.ooo..ooo.#
-##.kkk..kkk.#
-##..........#
-##.....@....#
-##hhhhhhhhhh#
-
-#...........#
-#..o..e..o..#
-#..o..h..o..#
-#..o.....o..#
-#..o.....o..#
-#..o.....o..#
-#.hhhhhhhhh.#
-#...........#
-#hh..o......#
-##...o...o..#
-##...o...o..#
-##...o...h..#
-##.@.o..aaa.#
-##hhhhhhhhhh#
-
-h.............h
-h.............h
-h...........e.h
-h..........hhhh
-h......g......h
-h.....ggg.....h
-h..ooo...ooo..h
-h..kkk...kkk..h
-h.............h
-h...f..@..f...h
-hhhhhhhhhhhhhhh
-
-#...............#
-#.............e.#
-#.....o...o..hhh#
-#.....o...o.....#
-#.....o...o.....#
-#gg...o...o....h#
-#.....o...o.....#
-#..@..o...o....f#
-#hhhhhhhhhhh..hh#
-###########aaaa##
-#################
-
-#...............#
-#...............#
-#...............#
-#.............e.#
-#............hhh#
-#.......g.......#
-#......ggg......#
-#...............#
-#..ooo.....ooo..#
-#..hhh.....hhh..#
-#...f...@...f...#
-#hhhhhhhhhhhhhhh#
-
-#...............#
-#............e..#
-#...........hhh.#
-#...............#
-#....o.o.o.o....#
-#....h.h.h.h....#
-#....ooo.ooo....#
-#h...hhh.hhh....#
-##............@.#
-##hh...aaa...hhh#
-#################
-
-#..........#
-#..........#
-#..........#
-#...o....e.#
-#...o...hhh#
-#...o......#
-#...o......#
-#kkkk.kkkkk#
-#...k.k....#
-#.@.k.k....#
-#hhhhhhhhhh#
-
-MESSAGE Right, that's my training done for the day...
-
-MESSAGE ...off to the pub I go.
-
+message thanks for playing
 
