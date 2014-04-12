@@ -346,8 +346,11 @@ function drawMessageScreen() {
 }
 
 var loadedLevelSeed=0;
-function loadLevelFromState(state,levelindex) {	
-	loadedLevelSeed = (Math.random() + Date.now()).toString();
+function loadLevelFromState(state,levelindex,randomseed) {	
+	if (randomseed==null) {
+		randomseed = (Math.random() + Date.now()).toString();
+	}
+	loadedLevelSeed = randomseed;
 	RandomGen = new RNG(loadedLevelSeed);
 	forceRegenImages=true;
 	titleScreen=false;
@@ -473,7 +476,7 @@ function backupLevel() {
 	return ret;
 }
 
-function setGameState(_state, command) {
+function setGameState(_state, command, randomseed) {
 	oldflickscreendat=[];
 	timer=0;
 	autotick=0;
@@ -488,6 +491,10 @@ function setGameState(_state, command) {
 	if (state.levels.length===0 && command.length>0 && command[0]==="rebuild")  {
 		command=["restart"];
 	}
+	if (randomseed===undefined) {
+		randomseed=null;
+	}
+	RandomGen = new RNG(randomseed);
 
 	state = _state;
     window.console.log('setting game state :D ');
@@ -565,7 +572,7 @@ function setGameState(_state, command) {
 		    quittingTitleScreen=false;
 		    messageselected=false;
 		    titleMode = 0;
-			loadLevelFromState(state,targetLevel);
+			loadLevelFromState(state,targetLevel,randomseed);
 			break;
 		}
 		case "levelline":
