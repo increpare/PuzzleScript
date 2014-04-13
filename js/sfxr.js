@@ -1,5 +1,5 @@
 var SOUND_VOL = 0.25;
-var SAMPLE_RATE = 5512;//44100;
+var SAMPLE_RATE = 44100;
 var SAMPLE_SIZE = 8;
 
 
@@ -580,7 +580,60 @@ generateFromSeed = function(seed) {
   return result;
 };
 
-var generate = function(ps) {
+var AUDIO_CONTEXT;
+
+if (typeof AudioContext != 'undefined') {
+  AUDIO_CONTEXT = new AudioContext();
+} else if (typeof webkitAudioContext != 'undefined') {
+  AUDIO_CONTEXT = new webkitAudioContext();
+}
+
+function SoundEffect(length, sampleRate) {
+  this._buffer = AUDIO_CONTEXT.createBuffer(1, /*length*/ 1 * sampleRate, sampleRate);
+}
+
+SoundEffect.prototype.getBuffer = function() {
+  return this._buffer.getChannelData(0);
+};
+
+SoundEffect.prototype.play = function() {
+  var t = AUDIO_CONTEXT.currentTime;
+  var source = AUDIO_CONTEXT.createBufferSource();
+  source.buffer = this._buffer;
+  source.connect(AUDIO_CONTEXT.destination);
+  if (typeof source.start != 'undefined') {
+    source.start(t);
+  } else {
+    source.noteOn(t);
+  }
+};
+
+if (typeof AUDIO_CONTEXT == 'undefined') {
+  SoundEffect = function SoundEffect(length, sampleRate) {
+    this._buffer = new Array(length);
+    this._audioElement = null;
+    this.length = length;
+    this.sampleRate = sampleRate;
+  };
+
+  SoundEffect.prototype.getBuffer = function() {
+    this._audioElement = null;
+    return this._buffer;
+  };
+
+  SoundEffect.prototype.play = function() {
+    if (this._audioElement != null) {
+      this._audioElement.cloneNode(true).play();
+    } else {
+      var wav = MakeRiff(this.sampleRate, this.length, this._buffer);
+      this._audioElement = new Audio();
+      this._audioElement.src = wav.dataURI;
+      this._audioElement.play();
+    }
+  };
+}
+
+SoundEffect.generate = function(ps) {
 /*  window.console.log(ps.wave_type + "\t" + ps.seed);
 
   var psstring="";
@@ -679,7 +732,8 @@ window.console.log(psstring);*/
 
   // ...end of initialization. Generate samples.
 
-  var buffer = [];
+  var sound = new SoundEffect(ps.sample_size, ps.sample_rate);
+  var buffer = sound.getBuffer();
 
   var sample_sum = 0;
   var num_summed = 0;
@@ -822,36 +876,43 @@ window.console.log(psstring);*/
     sample = sample / 8 * masterVolume;
     sample *= gain;
 
-    if (ps.sample_size === 8) {
-      // Rescale [-1.0, 1.0) to [0, 256)
-      sample = Math.floor((sample + 1) * 128);
-      if (sample > 255) {
-        sample = 255;
-        ++num_clipped;
-      } else if (sample < 0) {
-        sample = 0;
-        ++num_clipped;
-      }
-      buffer.push(sample);
-    } else {
-      // Rescale [-1.0, 1.0) to [-32768, 32768)
-      sample = Math.floor(sample * (1 << 15));
-      if (sample >= (1 << 15)) {
-        sample = (1 << 15) - 1;
-        ++num_clipped;
-      } else if (sample < -(1 << 15)) {
-        sample = -(1 << 15);
-        ++num_clipped;
-      }
-      buffer.push(sample & 0xFF);
-      buffer.push((sample >> 8) & 0xFF);
-    }
+    buffer[t] = sample;
+
+    // if (ps.sample_size === 8) {
+    //   // Rescale [-1.0, 1.0) to [0, 256)
+    //   sample = Math.floor((sample + 1) * 128);
+    //   if (sample > 255) {
+    //     sample = 255;
+    //     ++num_clipped;
+    //   } else if (sample < 0) {
+    //     sample = 0;
+    //     ++num_clipped;
+    //   }
+    //   buffer[t] = sample;
+    // } else {
+    //   // Rescale [-1.0, 1.0) to [-32768, 32768)
+    //   sample = Math.floor(sample * (1 << 15));
+    //   if (sample >= (1 << 15)) {
+    //     sample = (1 << 15) - 1;
+    //     ++num_clipped;
+    //   } else if (sample < -(1 << 15)) {
+    //     sample = -(1 << 15);
+    //     ++num_clipped;
+    //   }
+    //   buffer[t] = sample & 0xFF;
+    //   buffer[t] = (sample >> 8) & 0xFF;
+    // }
   }
 
-  var wave = MakeRiff(ps.sample_rate,ps.sample_size,buffer);
-  wave.clipping = num_clipped;
-  return wave;
+  return sound;
+
+  // var wave = MakeRiff(ps.sample_rate,ps.sample_size,buffer);
+  // wave.clipping = num_clipped;
+  // return wave;
 };
+
+
+
 
 if (typeof exports != 'undefined') {
   // For node.js
@@ -866,34 +927,41 @@ var cachedSeeds=[];
 var CACHE_MAX=50;
 
 function cacheSeed(seed){
-	if (seed in sfxCache) {
-		return;
-	}
+  if (seed in sfxCache) {
+    return;
+  }
 
-	var params = generateFromSeed(seed);
-	params.sound_vol = SOUND_VOL;
-	params.sample_rate = SAMPLE_RATE;
-	params.sample_size = SAMPLE_SIZE;
-	var sound = generate(params);
-	var audio = new Audio();
-	audio.src = sound.dataURI;
-	
-	sfxCache[seed]=audio;
-	cachedSeeds.push(seed);
+  var params = generateFromSeed(seed);
+  params.sound_vol = SOUND_VOL;
+  params.sample_rate = SAMPLE_RATE;
+  params.sample_size = SAMPLE_SIZE;
 
-	while (cachedSeeds.length>CACHE_MAX) {
-		var toRemove=cachedSeeds[0];
-		cachedSeeds = cachedSeeds.slice(1);
-		delete sfxCache[toRemove];
-	}
+  var sound = generate(params);
+  sfxCache[seed] = sound;
+  cachedSeeds.push(seed);
+
+  while (cachedSeeds.length>CACHE_MAX) {
+    var toRemove=cachedSeeds[0];
+    cachedSeeds = cachedSeeds.slice(1);
+    delete sfxCache[toRemove];
+  }
 }
 
 function playSeed(seed) {
-	if (unitTesting) return;
+  if (unitTesting) return;
 
-	cacheSeed(seed);
-	var sound = sfxCache[seed];
-//    sound.pause();
-//    sound.currentTime = 0;
-    sound.cloneNode().play();
+  var sound = sfxCache[seed];
+
+  if (!sound) {
+    // Cache sfx object for seed:
+    var params = generateFromSeed(seed);
+    params.sound_vol = SOUND_VOL;
+    params.sample_rate = SAMPLE_RATE;
+    params.sample_size = SAMPLE_SIZE;
+
+    sound = SoundEffect.generate(params);
+    sfxCache[seed] = sound;
+  }
+
+  sound.play();
 }
