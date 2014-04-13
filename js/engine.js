@@ -875,6 +875,18 @@ function repositionEntitiesOnLayer(positionIndex,layer,dirMask)
         return false;
     }
 
+	for (var i=0;i<state.sfx_MovementMasks.length;i++) {
+		var o = state.sfx_MovementMasks[i];
+		var objectMask = o.objectMask;
+		if (objectMask.anyBitsInCommon(sourceMask)) {
+			var movementMask = level.getMovements(positionIndex);
+			var directionMask = o.directionMask;
+			if (movementMask.anyBitsInCommon(directionMask) && seedsToPlay_CanMove.indexOf(o.seed)===-1) {
+				seedsToPlay_CanMove.push(o.seed);
+			}
+		}
+	}
+
     var movingEntities = sourceMask.clone();
     sourceMask.iclear(layerMask);
     movingEntities.iand(layerMask);
@@ -888,18 +900,6 @@ function repositionEntitiesOnLayer(positionIndex,layer,dirMask)
     level.colCellContents[colIndex].ior(movingEntities);
     level.rowCellContents[rowIndex].ior(movingEntities);
     level.mapCellContents.ior(layerMask);
-
-	for (var i=0;i<state.sfx_MovementMasks.length;i++) {
-		var o = state.sfx_MovementMasks[i];
-		var objectMask = o.objectMask;
-		if (objectMask.anyBitsInCommon(sourceMask)) {
-			var movementMask = level.getMovements(positionIndex);
-			var directionMask = o.directionMask;
-			if (movementMask.anyBitsInCommon(directionMask) && seedsToPlay_CanMove.indexOf(o.seed)===-1) {
-				seedsToPlay_CanMove.push(o.seed);
-			}
-		}
-	}
     return true;
 }
 

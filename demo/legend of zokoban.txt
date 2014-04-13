@@ -7,7 +7,7 @@ flickscreen 9x7
 OBJECTS
 ========
 
-Background 
+Background
 yellow orange
 00000
 01000
@@ -15,7 +15,7 @@ yellow orange
 00100
 10000
 
-Water 
+Water
 blue lightblue
 00000
 01000
@@ -23,7 +23,7 @@ blue lightblue
 00100
 10000
 
-Cave 
+Cave
 DarkBlue
 00000
 00000
@@ -31,7 +31,7 @@ DarkBlue
 00000
 00000
 
-Goal 
+Goal
 DarkBlue Red
 00000
 00000
@@ -39,7 +39,7 @@ DarkBlue Red
 00000
 00000
 
-RockWall 
+RockWall
 BROWN Orange
 01110
 10000
@@ -47,7 +47,7 @@ BROWN Orange
 10000
 00100
 
-StoneWall 
+StoneWall
 darkgrey grey
 01110
 10000
@@ -56,7 +56,7 @@ darkgrey grey
 00100
 
 PlayerWithoutSword
-GREEN lightgreen 
+GREEN lightgreen
 .00..
 00000
 .000.
@@ -71,15 +71,15 @@ GREEN lightgreen white grey
 .110.
 00.00
 
-Sword 
-grey white 
+Sword
+grey white
 ..1..
 ..1..
 .111.
 ..0..
 .....
 
-Block  
+Block
 BROWN Orange darkgrey
 .111.
 10001
@@ -88,7 +88,7 @@ BROWN Orange darkgrey
 .222.
 
 EasyBaddie
-white red 
+white red
 .111.
 10101
 11111
@@ -148,8 +148,8 @@ Player, Wall, Block, Water, EasyBaddie
 Sword, Money
 
 ======
-RULES     
-======     
+RULES
+======
 
 (baddies move at random)
 [ Stationary Baddie ] -> [ RandomDir Baddie ]
@@ -191,9 +191,9 @@ late random [ Player Cave | ... | Cave ] -> [ Cave | ... | Player Cave ] SFX2
 WINCONDITIONS
 ==============
 
-All Player on Goal     
+All Player on Goal
 
-=======     
+=======
 LEVELS
 =======
 

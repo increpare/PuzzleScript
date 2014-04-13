@@ -83,10 +83,10 @@ Target
 Player, Crate
 
 ======
-RULES     
-======     
+RULES
+======
 
-[ >  Player Nonblack | Crate Nonblack ] -> [  > Player Nonblack | > Crate Nonblack ]     
+[ >  Player Nonblack | Crate Nonblack ] -> [  > Player Nonblack | > Crate Nonblack ]
 [ >  Player Black | Crate Black ] -> [  > Player Black | > Crate Black ]
 [ > Player White | Black ] -> CANCEL
 [ > Player Black | White ] -> CANCEL
@@ -97,7 +97,7 @@ WINCONDITIONS
 
 All Crate on Target
 
-=======     
+=======
 LEVELS
 =======
 

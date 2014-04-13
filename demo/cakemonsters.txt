@@ -233,8 +233,8 @@ Monster,Cake
 
 
 ======
-RULES     
-======      
+RULES
+======
 
 (------------------------)
 (----MONSTER MOVEMENT----)
@@ -244,19 +244,19 @@ RULES
 [ > Monster ] -> [ > Monster ] sfx0
 
 (stop the monster if it hits a wall)
-[ > Monster | Wall ] -> [ Monster | Wall] 
+[ > Monster | Wall ] -> [ Monster | Wall]
 
 (if monster hits a destroyer, remove the monster)
 [ > Monster | Destroyer ] -> [ | Destroyer] sfx3
 
 (monster eats cakes of the same color)
-[ > RedMon | RedCake] -> [ | RedMon] sfx2 
-[ > BlueMon | BlueCake] -> [ | BlueMon] sfx2 
-[ > YellowMon | YellowCake] -> [ | YellowMon] sfx2 
-[ > PurpleMon | PurpleCake] -> [ | PurpleMon] sfx2 
-[ > OrangeMon | OrangeCake] -> [ | OrangeMon] sfx2 
-[ > GreenMon | GreenCake] -> [ | GreenMon] sfx2 
-[ > TrashMon | TrashCake] -> [ | TrashMon] sfx2 
+[ > RedMon | RedCake] -> [ | RedMon] sfx2
+[ > BlueMon | BlueCake] -> [ | BlueMon] sfx2
+[ > YellowMon | YellowCake] -> [ | YellowMon] sfx2
+[ > PurpleMon | PurpleCake] -> [ | PurpleMon] sfx2
+[ > OrangeMon | OrangeCake] -> [ | OrangeMon] sfx2
+[ > GreenMon | GreenCake] -> [ | GreenMon] sfx2
+[ > TrashMon | TrashCake] -> [ | TrashMon] sfx2
 
 (stop the monster if it hits a cake of a different color)
 (note: this is necessary to make sure the monster is marked as stationary)
@@ -307,17 +307,17 @@ RULES
 (monster + monster of the same color = monster of the same color)
 [ > Monster | stationary Monster] -> [ | Monster] sfx1
 
- 
+
 ==============
 WINCONDITIONS
 ==============
-   
+
 No Cake
 
 
-=======     
+=======
 LEVELS
-======= 
+=======
 
 
 message WELCOME TO CAKE MONSTERS!

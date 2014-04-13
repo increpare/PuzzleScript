@@ -231,7 +231,7 @@ function generateExtraMembers(state) {
 		}
 		else if (value in propertiesDict) {
 			propertiesDict[key]=propertiesDict[value];
-		} else {
+		} else if (key!==value) {
 			synonymsDict[key] = value;		
 		}
 	}
@@ -2118,9 +2118,18 @@ function generateSoundData(state) {
 					directionMask |= soundDirectionMask;
 				}
 			}
+
 			var targets=[target];
-			if (target in state.propertiesDict) {
-				targets = state.propertiesDict[target];
+			var modified=true;
+			while(modified) {
+				modified=false;
+				for (var k=0;k<targets.length;k++) {
+					var t = targets[k];
+					if (t in state.synonymsDict) {
+						targets[k]=state.synonymsDict[t];
+						modified=true;
+					} 
+				}
 			}
 
 			if (verb==='move' || verb==='cantmove') {

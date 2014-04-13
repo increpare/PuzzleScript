@@ -8,7 +8,7 @@ run_rules_on_level_start
 OBJECTS
 ========
 
-Background 
+Background
 #989898 #C8C8C8
 00000
 00100
@@ -16,7 +16,7 @@ Background
 00010
 00000
 
-Goal 
+Goal
 Brown Yellow
 .000.
 00000
@@ -80,7 +80,7 @@ Druid
 .000.
 00000
 
-SFighter 
+SFighter
 #880000 Pink DarkBrown
 .000.
 .111.
@@ -128,7 +128,7 @@ SDruid
 .000.
 00000
 
-Crate 
+Crate
 Orange #552200
 .111.
 10001
@@ -310,13 +310,13 @@ Saved
 Note
 
 ======
-RULES     
+RULES
 ======
 [Saved] [Goal] -> [] [HasSavedDoor] (Remembering whether we saved someone last round by temporarily changing some door to a HasSavedDoor. This is purely for sound effects purposes.)
 
 [Corpse] -> Restart
 
-[ >  Fighter | Moveable ] -> [  >  Fighter | > Moveable  ]     
+[ >  Fighter | Moveable ] -> [  >  Fighter | > Moveable  ]
 [ > Moveable | Moveable ] [ Fighter] -> [ > Moveable | > Moveable ] [ Fighter] (Fighters push.)
 
 [ < Thief | Moveable ] -> [ < Thief | < Moveable ] (Thieves pull.)
@@ -434,10 +434,10 @@ late [Note no Moveable] -> []
 WINCONDITIONS
 ==============
 
-All Hero on Goal     
+All Hero on Goal
 All Goal on Hero
 
-=======     
+=======
 LEVELS
 =======
 
@@ -460,7 +460,7 @@ Message And new heroes have cropped up, as if there were only room for so many b
 #3.*#.........#4..#
 ###################
 
-Message Purple bard charms nearby crates. 
+Message Purple bard charms nearby crates.
 
 #############
 #{#....{#...#
@@ -511,7 +511,7 @@ Message No one can resist the bard's music.
 ########
 
 #########
-#....G#G# 
+#....G#G#
 #.#*..#[#
 #.**....#
 #.......#

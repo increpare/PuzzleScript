@@ -269,7 +269,7 @@ horizontal [ > PlayerU ] -> [ > PlayerS ]
 [ > Player | Dirt ] -> [ | Player ] SFX1
 
 
-(use pickup) 
+(use pickup)
 
 up [ action PlayerS shoesworn | Solid | no inflow no exit ] -> [ | Solid | PlayerS ] SFX4
 up [ action PlayerS shoesworn | | Solid | no inflow no exit ] -> [ | | Solid | PlayerS ] SFX4

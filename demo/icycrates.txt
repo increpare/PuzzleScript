@@ -8,8 +8,8 @@ noaction
 OBJECTS
 ========
 
-Background 
-DarkBlue White LightBlue  
+Background
+DarkBlue White LightBlue
 22112
 21122
 11222
@@ -190,7 +190,7 @@ Red Orange DarkGrey Gray Black
 .333.
 
 
-Crate 
+Crate
 Brown Yellow Orange
 11111
 10002
@@ -199,7 +199,7 @@ Brown Yellow Orange
 22222
 
 
-Water1 
+Water1
 Blue LightBlue
 00000
 01100
@@ -207,7 +207,7 @@ Blue LightBlue
 00000
 01100
 
-Water2 
+Water2
 Blue LightBlue
 00000
 00110
@@ -215,7 +215,7 @@ Blue LightBlue
 00000
 00110
 
-Water3 
+Water3
 Blue LightBlue
 00000
 00011
@@ -223,7 +223,7 @@ Blue LightBlue
 00000
 00011
 
-Water4 
+Water4
 Blue LightBlue
 00000
 10001
@@ -231,7 +231,7 @@ Blue LightBlue
 00000
 10001
 
-Water5 
+Water5
 Blue LightBlue
 00000
 11000
@@ -239,7 +239,7 @@ Blue LightBlue
 00000
 11000
 
-Water6 
+Water6
 Blue LightBlue
 00000
 01100
@@ -247,7 +247,7 @@ Blue LightBlue
 00000
 01100
 
-FilledWater 
+FilledWater
 LightBrown LightBlue White
 11111
 10002
@@ -255,7 +255,7 @@ LightBrown LightBlue White
 10002
 22222
 
-Goal 
+Goal
 Black Green DarkGreen
 ..12.
 .112.
@@ -265,7 +265,7 @@ Black Green DarkGreen
 
 
 
-StillCrate 
+StillCrate
 Orange
 
 
@@ -305,8 +305,8 @@ Goal
 Player, Wall, Crate, StillCrate, Water
 
 ======
-RULES     
-======  
+RULES
+======
 
 (     0001
 
@@ -342,13 +342,13 @@ Down [Wall | Wall_0111] -> [Wall | Wall_0110]
 
 
 (animate water)
-[Water5]->[Water6] 
-[Water4]->[Water5] 
-[Water3]->[Water4] 
-[Water2]->[Water3] 
-[Water1]->[Water2] 
+[Water5]->[Water6]
+[Water4]->[Water5]
+[Water3]->[Water4]
+[Water2]->[Water3]
+[Water1]->[Water2]
 
-[Water6]->[Water1] 
+[Water6]->[Water1]
 
 
 (game logic)
@@ -392,9 +392,9 @@ DOWN [ PlayerD | Obstacle ] -> [ PlayerStill | Obstacle ]
 WINCONDITIONS
 ==============
 
-Some PlayerStill on Goal  
+Some PlayerStill on Goal
 
-=======     
+=======
 LEVELS
 =======
 

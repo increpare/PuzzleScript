@@ -10,7 +10,7 @@ run_rules_on_level_start
 OBJECTS
 ========
 
-Background 
+Background
 #9CBD0F
 
 LaserGV
@@ -53,7 +53,7 @@ LaserB
 ..3..
 .....
 
-Exit 
+Exit
 #9CBD0F #8CAD0F #306230 #0F380F
 2...2
 2...2
@@ -61,7 +61,7 @@ Exit
 2...2
 2.2.2
 
-Wall 
+Wall
 #9CBD0F #8CAD0F #306230 #0F380F
 33333
 31223
@@ -79,7 +79,7 @@ Heart
 
 
 PlayerFull
-#9CBD0F #8CAD0F #306230 #0F380F 
+#9CBD0F #8CAD0F #306230 #0F380F
 
 .222.
 .323.
@@ -88,7 +88,7 @@ PlayerFull
 .2.2.
 
 Protector
-#9CBD0F #8CAD0F #306230 #0F380F 
+#9CBD0F #8CAD0F #306230 #0F380F
 
 .333.
 .232.
@@ -97,7 +97,7 @@ Protector
 .3.3.
 
 ProtectorSolo
-#9CBD0F #8CAD0F #306230 #0F380F 
+#9CBD0F #8CAD0F #306230 #0F380F
 
 .333.
 .232.
@@ -106,7 +106,7 @@ ProtectorSolo
 .3.3.
 
 victimSolo
-#9CBD0F #8CAD0F #306230 #0F380F 
+#9CBD0F #8CAD0F #306230 #0F380F
 
 .222.
 .323.
@@ -116,7 +116,7 @@ victimSolo
 
 
 PlayerDead
-#9CBD0F #8CAD0F #306230 #0F380F 
+#9CBD0F #8CAD0F #306230 #0F380F
 .222.
 22222
 2.2.2
@@ -138,7 +138,7 @@ LEGEND
 Player = PlayerFull or Protector or ProtectorSolo or victimSolo
 PlayerWin = PlayerFull or PlayerDead or Protector or victimSolo
 Laser = LaserV or LaserH or LaserB
-LaserBlock = Wall or Player or PlayerDead or Exit 
+LaserBlock = Wall or Player or PlayerDead or Exit
 . = Background
 # = Wall
 g = LaserGV
@@ -160,7 +160,7 @@ CloseMessage 123434 (close message noise)
 ShowMessage 123434 (show message noise)
 sfx0 8545502 (death)
 sfx1 26 (heart)
- 
+
 
 ================
 COLLISIONLAYERS
@@ -169,10 +169,10 @@ Background
 Laser
 Exit
 ProtectorSolo, Heart, Wall
-Player, Wall, PlayerDead, LaserGV, LaserGH, Protector, victimSolo, pushBlock 
+Player, Wall, PlayerDead, LaserGV, LaserGH, Protector, victimSolo, pushBlock
 
 ======
-RULES     
+RULES
 ======
 
 (clear lasers)
@@ -183,7 +183,7 @@ late down [LaserGV | no Laser] -> [LaserGV | LaserV]
 late right [LaserGH | no Laser] -> [LaserGH | LaserH]
 
 late down [LaserV no LaserBlock | ] -> [LaserV | LaserV]
-late right [LaserH no LaserBlock | ] -> [LaserH | LaserH] 
+late right [LaserH no LaserBlock | ] -> [LaserH | LaserH]
 
 (generate overlapping lasers)
 late down [LaserV no LaserBlock | LaserH] -> [LaserV | LaserB]
@@ -221,7 +221,7 @@ WINCONDITIONS
 All PlayerWin on Exit
 No Heart
 
-=======     
+=======
 LEVELS
 =======
 
@@ -238,7 +238,7 @@ message I PROTECT YOU
 ###########
 
 message YOU SMOTHER ME
-	
+
 ###########
 #n........#
 #......#..#
@@ -426,6 +426,6 @@ message Credits
 message Concept/Design/Programming/Graphics - Steven McStravog
 message Design/Programming/Graphics - Darragh McLernon
 message Porting/Design/Programming - Rachel Gawley
-message Artwork - Ricky Woodside 
+message Artwork - Ricky Woodside
 
 

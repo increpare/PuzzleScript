@@ -7,7 +7,7 @@ key_repeat_interval 0.25
 OBJECTS
 ========
 
-Background 
+Background
 #989898 #C8C8C8
 00000
 00100
@@ -15,7 +15,7 @@ Background
 00010
 00000
 
-Goal 
+Goal
 Brown Yellow
 .000.
 00000
@@ -63,7 +63,7 @@ Priest
 .000.
 00000
 
-SFighter 
+SFighter
 #880000 Pink DarkBrown
 .000.
 .111.
@@ -95,7 +95,7 @@ SPriest
 .000.
 00000
 
-Crate 
+Crate
 Orange #552200
 .111.
 10001
@@ -292,8 +292,8 @@ RFireball, Saved, DidNotMove
 LFireball, HasSaved
 
 ======
-RULES     
-======     
+RULES
+======
 [Saved] [Wall] -> [] [Wall HasSaved] (Remembering whether we saved someone last round by attaching a note to some wall.)
 
 [Corpse] -> Restart
@@ -302,7 +302,7 @@ RULES
 
 [Player] -> [Player DidNotMove]
 
-[ >  Fighter | Moveable ] -> [  >  Fighter | > Moveable  ]     
+[ >  Fighter | Moveable ] -> [  >  Fighter | > Moveable  ]
 [ > Moveable | Moveable ] [ Fighter] -> [ > Moveable | > Moveable ] [ Fighter] (Fighters push.)
 
 [ < Thief | Moveable ] -> [ < Thief | < Moveable ] (Thieves pull.)
@@ -341,7 +341,7 @@ Late [DragonRight] -> [RFireball DragonRight]
 Late RIGHT [RFireball | No Vulnerable no Invulnerable] -> [ | RFireball]
 Late LEFT [LFireball | No Vulnerable no Invulnerable] -> [ | LFireball]
 Late RIGHT [RFireball | Vulnerable] -> [ | Dying Vulnerable]
-Late Right [RFireball | Invulnerable] -> [ | Invulnerable] 
+Late Right [RFireball | Invulnerable] -> [ | Invulnerable]
 Late Left [LFireball | Vulnerable] -> [ | Dying Vulnerable]
 Late LEFT [LFireball | Invulnerable] -> [ | Invulnerable]
 
@@ -380,10 +380,10 @@ late [HasSaved] -> []
 WINCONDITIONS
 ==============
 
-All Hero on Goal     
+All Hero on Goal
 All Goal on Hero
 
-=======     
+=======
 LEVELS
 =======
 

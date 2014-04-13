@@ -6,10 +6,10 @@ homepage @eastmad
 OBJECTS
 ========
 
-Background 
-gray  
+Background
+gray
 
-Target 
+Target
 darkgray gray lightgray white
 33333
 31112
@@ -17,11 +17,11 @@ darkgray gray lightgray white
 31002
 32222
 
-Wall 
+Wall
 BROWN
 
 Boom
-Red YELLOW orange    
+Red YELLOW orange
 .101.
 10001
 00200
@@ -29,8 +29,8 @@ Red YELLOW orange
 .101.
 
 
-Player 
-PINK YELLOW BLACK    
+Player
+PINK YELLOW BLACK
 .222.
 .000.
 22122
@@ -38,7 +38,7 @@ PINK YELLOW BLACK
 .2.2.
 
 
-CrateW 
+CrateW
 Brown DarkBrown lightbrown
 11111
 12001
@@ -240,29 +240,29 @@ Target
 Player, Wall, CrateN, CrateE, CrateW, CrateS, Shell, GunN, GunW, GunE, GunS, Bang, InertMine, ActiveMine, Boom, CrateMineN, CrateGunN, CrateGunS, Squawk, Droid, SquawkBang
 
 ======
-RULES     
-======     
- 
- 
+RULES
+======
+
+
 [Bang] -> [background]
 [boom] -> restart
 [> player][Droid] -> [> player][> Droid]
-[ >  Player | Shell ] -> [  >  Player | > Shell  ] 
+[ >  Player | Shell ] -> [  >  Player | > Shell  ]
 [ >  Droid | Shell ] -> [  >  Droid | > Shell  ]
-[ >  Player | InertMine ] -> [  >  Player | > InertMine  ] 
+[ >  Player | InertMine ] -> [  >  Player | > InertMine  ]
 [Action Player|InertMine] -> [Action Player|ActiveMine]
 [> Droid|InertMine] -> [Droid|ActiveMine]
 [> Player | ActiveMine] -> [Player | boom ]
 [> Droid | ActiveMine] -> [Droid | boom ]
 [> shell | ActiveMine] -> [boom | boom ]
- 
+
 [Action Player|Squawk] -> [Action Player|SquawkBang]
 [> Droid|Squawk] -> [Droid |SquawkBang]
 
-[SquawkBang][CrateMineN] -> [SquawkBang][ActiveMine] 
+[SquawkBang][CrateMineN] -> [SquawkBang][ActiveMine]
 [SquawkBang][CrateGunN] -> [SquawkBang][GunN]
 [SquawkBang][CrateGunS] -> [SquawkBang][GunS]
-[SquawkBang][CrateN] -> [SquawkBang][Shell] 
+[SquawkBang][CrateN] -> [SquawkBang][Shell]
 [SquawkBang][CrateS] -> [SquawkBang][Shell]
 [SquawkBang][CrateE] -> [SquawkBang][Shell]
 [SquawkBang][CrateW] -> [SquawkBang][Shell]
@@ -271,7 +271,7 @@ RULES
 DOWN [ Action Player |CrateN] -> [Action Player | Shell]
 UP [Action Player | CrateS] -> [Action Player | Shell]
 LEFT [Action Player | CrateE] -> [Action Player | Shell]
-RIGHT [Action Player | CrateW] -> [Action Player | Shell] 
+RIGHT [Action Player | CrateW] -> [Action Player | Shell]
 DOWN [Action Player | CrateGunN] -> [Action Player | GunN]
 UP [Action Player | CrateGunS] -> [Action Player | GunS]
 DOWN [Action Player | CrateMineN] -> [Action Player | ActiveMine]
@@ -295,7 +295,7 @@ WINCONDITIONS
 
 All Player on Target
 
-=======     
+=======
 LEVELS
 =======
 
@@ -332,7 +332,7 @@ MESSAGE Crates open from one side
 ########
 
 MESSAGE But shells are volatile
-MESSAGE Try firing the gun 
+MESSAGE Try firing the gun
 
 #########
 #..+.+.O#

@@ -6,7 +6,7 @@ homepage www.kevinzuhn.com
 OBJECTS
 ========
 
-Background 
+Background
 LightGreen Green
 11111
 11011
@@ -22,15 +22,15 @@ Green Purple Yellow
 00100
 10001
 
-Target 
+Target
 RED LightRed
-.0.0. 
+.0.0.
 01010
 01110
 .010.
-..0..     
+..0..
 
-Wall     
+Wall
 Red DarkGreen
 00000
 00100
@@ -38,7 +38,7 @@ Red DarkGreen
 00100
 00000
 
-DespairWall     
+DespairWall
 DarkBrown DarkBlue
 00000
 00100
@@ -46,16 +46,16 @@ DarkBrown DarkBlue
 00100
 00000
 
-NewDespairWall     
-DarkRed DarkBlue    
+NewDespairWall
+DarkRed DarkBlue
 00000
 00100
 01010
 00100
 00000
 
-Player 
-Blue LightRed Yellow DarkBlue     
+Player
+Blue LightRed Yellow DarkBlue
 .333.
 .323.
 20002
@@ -80,11 +80,11 @@ White LightRed
 
 Crate
 Pink White
-.0.0. 
+.0.0.
 01010
 01110
 .010.
-..0..  
+..0..
 
 OldDespair
 Black DarkBlue
@@ -154,8 +154,8 @@ Target, BackFlowers, Hope
 Player, Wall, Crate, Despair, NewDespair, DespairWall, NewDespairWall
 
 ======
-RULES     
-======     
+RULES
+======
 
 [NewDespair] -> [OldDespair]
 [AltNewDespair] -> [AltOldDespair]
@@ -181,9 +181,9 @@ late [Hope | NewDespairWall] -> [Hope | Wall]
 WINCONDITIONS
 ==============
 
-Some Player on Target     
+Some Player on Target
 
-=======     
+=======
 LEVELS
 =======
 

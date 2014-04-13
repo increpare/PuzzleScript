@@ -19,7 +19,7 @@ cd images
 ./minimize 
 cd ../
 echo optimizing gifs
-cd ../bin/documentation/images
+cd ../bin/Documentation/images
 ./minimize
 cd ../../../src
 echo removing files
@@ -30,7 +30,7 @@ rm -rf ../bin/Levels
 rm ../bin/compile
 rm ../bin/inline
 rm ../bin/images/minimize
-rm ../bin/documentation/images/minimize
+rm ../bin/Documentation/images/minimize
 rm ../bin/standalone.html
 echo compressing css
 cd css
@@ -39,8 +39,8 @@ cd ../
 mv css/combined.css ../bin/css/combined.css
 java -jar ~/progs/yuicompressor-2.4.8.jar ../bin/css/combined.css > ../bin/css/combined2.css
 mv ../bin/css/combined2.css ../bin/css/combined.css
-java -jar ~/progs/yuicompressor-2.4.8.jar ../bin/documentation/css/bootstrap.css > ../bin/documentation/css/bootstrap_compressed.css
-mv ../bin/documentation/css/bootstrap_compressed.css ../bin/documentation/css/bootstrap.css
+java -jar ~/progs/yuicompressor-2.4.8.jar ../bin/Documentation/css/bootstrap.css > ../bin/Documentation/css/bootstrap_compressed.css
+mv ../bin/Documentation/css/bootstrap_compressed.css ../bin/Documentation/css/bootstrap.css
 echo running google closure compiler
 java -jar ~/progs/closure.jar --js_output_file ../bin/js/scripts_compiled.js  \
 --js js/Blob.js \

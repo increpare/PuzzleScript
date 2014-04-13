@@ -9,7 +9,7 @@ key_repeat_interval 0.1
 OBJECTS
 ========
 
-Background 
+Background
 DARKBLUE BLACK
 11111
 10000
@@ -169,8 +169,8 @@ LIGHTGREEN GREEN DARKGREEN
 21112
 .222.
 
-Wall     
-LIGHTGREY GREY     
+Wall
+LIGHTGREY GREY
 11111
 01000
 01000
@@ -178,7 +178,7 @@ LIGHTGREY GREY
 00010
 
 PlayerA
-Black Orange White Blue Brown   
+Black Orange White Blue Brown
 .....
 .11..
 2224.
@@ -186,7 +186,7 @@ Black Orange White Blue Brown
 3.322
 
 PlayerB
-Black Orange White Blue Brown   
+Black Orange White Blue Brown
 .....
 .11..
 .4222
@@ -230,8 +230,8 @@ Player, Wall, PlayerA, PlayerB, Temp
 Head, Entry, ExitClosed
 
 ======
-RULES     
-======     
+RULES
+======
 
 (Stomp Heads)
 [ > Player | Head ] -> [ > Player | NO Head ]
@@ -242,7 +242,7 @@ RULES
 RANDOM [ Slime NO Player ] -> [ Slime Head ]
 
 (Grow Slime)
-[ Head | NO Slime NO Wall NO Player ] -> [ Head | Slime ]   
+[ Head | NO Slime NO Wall NO Player ] -> [ Head | Slime ]
 
 (Clear Slime from under player)
 [ > Player | Slime ] -> [ > Player | NO Slime ]
@@ -281,7 +281,7 @@ WINCONDITIONS
 
 ALL Player ON ExitOpen
 
-=======     
+=======
 LEVELS
 =======
 

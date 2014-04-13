@@ -292,7 +292,7 @@ Water Water2 Mountain Forest Player UTrain RTrain LTrain DTrain Cart Gerald
 Smoke1 Smoke2 Smoke3
 
 ======
-RULES     
+RULES
 ======
 
 (animate water)
@@ -341,7 +341,7 @@ left  [ > LTrain | DRTrack ] -> [ > UTrain | DRTrack ]
 [ Smoke2 ] -> [ Smoke3 ]
 [ Smoke1 ] -> [ Smoke2 ]
 
-[ action Player Switch ] -> [ Player action Switch ] 
+[ action Player Switch ] -> [ Player action Switch ]
 
 (switch all uncovered tracks at once)
 [ action Switch ] [ Ghost Vehicle ] -> [ action Switch ] [ Ghost Vehicle ] SFX3 (play blocking sound if switch tracks are covered while switching)
@@ -369,7 +369,7 @@ left  [ > LTrain | DRTrack ] -> [ > UTrain | DRTrack ]
 WINCONDITIONS
 ==============
 
-=======     
+=======
 LEVELS
 =======
 
