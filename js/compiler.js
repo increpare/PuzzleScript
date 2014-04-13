@@ -2119,6 +2119,7 @@ function generateSoundData(state) {
 				}
 			}
 
+
 			var targets=[target];
 			var modified=true;
 			while(modified) {
