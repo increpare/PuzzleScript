@@ -13,10 +13,8 @@ function newSound(instrument) {
 	params.sound_vol = SOUND_VOL;
 	params.sample_rate = SAMPLE_RATE;
 	params.sample_size = SAMPLE_SIZE;
-	var sound = generate(params);
-	var audio = new Audio();
-	audio.src = sound.dataURI;
-	audio.play();
+	var sound = SoundEffect.generate(params);
+	sound.play();
 }
 
 function buttonPress() {
@@ -26,8 +24,6 @@ function buttonPress() {
 	params.sound_vol = SOUND_VOL;
 	params.sample_rate = SAMPLE_RATE;
 	params.sample_size = SAMPLE_SIZE;
-	var sound = generate(params);
-	var audio = new Audio();
-	audio.src = sound.dataURI;
-	audio.play();
+	var sound = SoundEffect.generate(params);
+	sound.play();
 }
