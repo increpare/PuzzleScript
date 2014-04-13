@@ -580,7 +580,41 @@ generateFromSeed = function(seed) {
   return result;
 };
 
-var generate = function(ps) {
+function SoundEffect(sourceURL) {
+  var audio = new Audio();
+  audio.src = sourceURL;
+  this.audioPool = [audio];
+  this.index = 0;
+}
+
+SoundEffect.prototype.play = function() {
+  var audio;
+  var startIndex = this.index;
+  while (true) {
+    // Find an <audio> element in the audioPool that isn't busy.
+    audio = this.audioPool[this.index];
+
+    if (0 < audio.currentTime && audio.currentTime < audio.duration) {
+      // This one is free.
+      break;
+    }
+
+    this.index += 1;
+    this.index %= this.audioPool.length;
+
+    if (this.index == startIndex) {
+      // All <audio> elements are busy playing, so create a new one
+      // and add it to the audioPool.
+      audio = audio.cloneNode(false);
+      this.audioPool.splice(this.index, 0, audio);
+      this.index += 1;
+      break;
+    }
+  }
+  audio.play();
+};
+
+SoundEffect.generate = function(ps) {
 /*  window.console.log(ps.wave_type + "\t" + ps.seed);
 
   var psstring="";
@@ -850,7 +884,7 @@ window.console.log(psstring);*/
 
   var wave = MakeRiff(ps.sample_rate,ps.sample_size,buffer);
   wave.clipping = num_clipped;
-  return wave;
+  return new SoundEffect(wave.dataURI);
 };
 
 if (typeof exports != 'undefined') {
@@ -866,34 +900,32 @@ var cachedSeeds=[];
 var CACHE_MAX=50;
 
 function cacheSeed(seed){
-	if (seed in sfxCache) {
-		return;
-	}
+  if (seed in sfxCache) {
+    return;
+  }
 
-	var params = generateFromSeed(seed);
-	params.sound_vol = SOUND_VOL;
-	params.sample_rate = SAMPLE_RATE;
-	params.sample_size = SAMPLE_SIZE;
-	var sound = generate(params);
-	var audio = new Audio();
-	audio.src = sound.dataURI;
-	
-	sfxCache[seed]=audio;
-	cachedSeeds.push(seed);
+  var params = generateFromSeed(seed);
+  params.sound_vol = SOUND_VOL;
+  params.sample_rate = SAMPLE_RATE;
+  params.sample_size = SAMPLE_SIZE;
 
-	while (cachedSeeds.length>CACHE_MAX) {
-		var toRemove=cachedSeeds[0];
-		cachedSeeds = cachedSeeds.slice(1);
-		delete sfxCache[toRemove];
-	}
+  var sound = SoundEffect.generate(params);
+  sfxCache[seed] = sound;
+  cachedSeeds.push(seed);
+
+  while (cachedSeeds.length>CACHE_MAX) {
+    var toRemove=cachedSeeds[0];
+    cachedSeeds = cachedSeeds.slice(1);
+    delete sfxCache[toRemove];
+  }
 }
 
 function playSeed(seed) {
-	if (unitTesting) return;
+  if (unitTesting) return;
 
-	cacheSeed(seed);
-	var sound = sfxCache[seed];
+  cacheSeed(seed);
+  var sound = sfxCache[seed];
 //    sound.pause();
 //    sound.currentTime = 0;
-    sound.cloneNode().play();
+    sound.play();
 }
