@@ -2128,7 +2128,15 @@ function generateSoundData(state) {
 					if (t in state.synonymsDict) {
 						targets[k]=state.synonymsDict[t];
 						modified=true;
-					} 
+					} else if (t in state.propertiesDict) {
+						modified=true;
+						var props = state.propertiesDict[t];
+						targets.splice(k,1);
+						k--;
+						for (var l=0;l<props.length;l++) {
+							targets.push(props[l]);
+						}
+					}
 				}
 			}
 
