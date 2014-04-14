@@ -599,9 +599,13 @@ SoundEffect.prototype.getBuffer = function() {
 
 SoundEffect.prototype.play = function() {
   var t = AUDIO_CONTEXT.currentTime;
+  var filter = AUDIO_CONTEXT.createBiquadFilter();
   var source = AUDIO_CONTEXT.createBufferSource();
+  filter.type = (typeof filter.type == 'string') ? 'lowpass' : 0;
+  filter.frequency.value = 1650;
+  filter.connect(AUDIO_CONTEXT.destination);
   source.buffer = this._buffer;
-  source.connect(AUDIO_CONTEXT.destination);
+  source.connect(filter);
   if (typeof source.start != 'undefined') {
     source.start(t);
   } else {
