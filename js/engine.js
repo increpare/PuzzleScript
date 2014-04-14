@@ -483,7 +483,8 @@ function setGameState(_state, command, randomseed) {
 	winning=false;
 	againing=false;
     messageselected=false;
-    STRIDE=_state.STRIDE;
+    STRIDE_MOV=_state.STRIDE_MOV;
+    STRIDE_OBJ=_state.STRIDE_OBJ;
     
 	if (command===undefined) {
 		command=["restart"];
@@ -657,45 +658,44 @@ function setGameState(_state, command, randomseed) {
 }
 
 function RebuildLevelArrays() {
-	level.movements = new Int32Array(level.objects.length);
+	level.movements = new Int32Array(level.n_tiles * STRIDE_MOV);
 
     level.rigidMovementAppliedMask = [];
     level.rigidGroupIndexMask = [];
 	level.rowCellContents = [];
 	level.colCellContents = [];
-	level.mapCellContents = new BitVec(STRIDE);
-	_movementsVec = new BitVec(STRIDE);
+	level.mapCellContents = new BitVec(STRIDE_OBJ);
+	_movementsVec = new BitVec(STRIDE_MOV);
 
-	_o1 = new BitVec(STRIDE);
-	_o2 = new BitVec(STRIDE);
-	_o2_5 = new BitVec(STRIDE);
-	_o3 = new BitVec(STRIDE);
-	_o4 = new BitVec(STRIDE);
-	_o5 = new BitVec(STRIDE);
-	_o6 = new BitVec(STRIDE);
-	_o7 = new BitVec(STRIDE);
-	_o8 = new BitVec(STRIDE);
-	_o9 = new BitVec(STRIDE);
-	_o10 = new BitVec(STRIDE);
-	_o11 = new BitVec(STRIDE);
-	_o12 = new BitVec(STRIDE);
-	_m1 = new BitVec(STRIDE);
-	_m2 = new BitVec(STRIDE);
-	_m3 = new BitVec(STRIDE);
+	_o1 = new BitVec(STRIDE_OBJ);
+	_o2 = new BitVec(STRIDE_OBJ);
+	_o2_5 = new BitVec(STRIDE_OBJ);
+	_o3 = new BitVec(STRIDE_OBJ);
+	_o4 = new BitVec(STRIDE_OBJ);
+	_o5 = new BitVec(STRIDE_OBJ);
+	_o6 = new BitVec(STRIDE_OBJ);
+	_o7 = new BitVec(STRIDE_OBJ);
+	_o8 = new BitVec(STRIDE_OBJ);
+	_o9 = new BitVec(STRIDE_OBJ);
+	_o10 = new BitVec(STRIDE_OBJ);
+	_o11 = new BitVec(STRIDE_OBJ);
+	_o12 = new BitVec(STRIDE_OBJ);
+	_m1 = new BitVec(STRIDE_MOV);
+	_m2 = new BitVec(STRIDE_MOV);
+	_m3 = new BitVec(STRIDE_MOV);
 	
 
     for (var i=0;i<level.height;i++) {
-    	level.rowCellContents[i]=new BitVec(STRIDE);	    	
+    	level.rowCellContents[i]=new BitVec(STRIDE_OBJ);	    	
     }
     for (var i=0;i<level.width;i++) {
-    	level.colCellContents[i]=new BitVec(STRIDE);	    	
+    	level.colCellContents[i]=new BitVec(STRIDE_OBJ);	    	
     }
 
     for (var i=0;i<level.n_tiles;i++)
     {
-        level.movements[i]=new BitVec(STRIDE);
-        level.rigidMovementAppliedMask[i]=new BitVec(STRIDE);
-        level.rigidGroupIndexMask[i]=new BitVec(STRIDE);
+        level.rigidMovementAppliedMask[i]=new BitVec(STRIDE_MOV);
+        level.rigidGroupIndexMask[i]=new BitVec(STRIDE_MOV);
     }
 }
 
@@ -784,8 +784,8 @@ function getPlayerPositions() {
     var result=[];
     var playerMask = state.playerMask;
     for (i=0;i<level.n_tiles;i++) {
-        var cellMask = level.getCellInto(i,_o11);
-        if (playerMask.anyBitsInCommon(cellMask)) {
+        level.getCellInto(i,_o11);
+        if (playerMask.anyBitsInCommon(_o11)) {
             result.push(i);
         }
     }
@@ -943,34 +943,34 @@ Level.prototype.clone = function() {
 }
 
 Level.prototype.getCell = function(index) {
-	return new BitVec(this.objects.subarray(index * STRIDE, index * STRIDE + STRIDE));
+	return new BitVec(this.objects.subarray(index * STRIDE_OBJ, index * STRIDE_OBJ + STRIDE_OBJ));
 }
 
 Level.prototype.getCellInto = function(index,targetarray) {
-	for (var i=0;i<STRIDE;i++) {
-		targetarray.data[i]=this.objects[index*STRIDE+i];	
+	for (var i=0;i<STRIDE_OBJ;i++) {
+		targetarray.data[i]=this.objects[index*STRIDE_OBJ+i];	
 	}
 	return targetarray;
 }
 
 Level.prototype.setCell = function(index, vec) {
 	for (var i = 0; i < vec.data.length; ++i) {
-		this.objects[index * STRIDE + i] = vec.data[i];
+		this.objects[index * STRIDE_OBJ + i] = vec.data[i];
 	}
 }
 
 var _movementsVec;
 
 Level.prototype.getMovements = function(index) {
-	for (var i=0;i<STRIDE;i++) {
-		_movementsVec.data[i]=this.movements[index*STRIDE+i];	
+	for (var i=0;i<STRIDE_MOV;i++) {
+		_movementsVec.data[i]=this.movements[index*STRIDE_MOV+i];	
 	}
 	return _movementsVec;
 }
 
 Level.prototype.setMovements = function(index, vec) {
 	for (var i = 0; i < vec.data.length; ++i) {
-		this.movements[index * STRIDE + i] = vec.data[i];
+		this.movements[index * STRIDE_MOV + i] = vec.data[i];
 	}
 }
 
@@ -1127,10 +1127,12 @@ Rule.prototype.generateCellRowMatchesFunction = function(cellRow,hasEllipsis)  {
 			hard substitute in the first one - if I substitute in all of them, firefox chokes.
 			*/
 		var fn = "var d = "+d1+"+"+d0+"*level.height;\n";
-		var mul = STRIDE === 1 ? '' : '*'+STRIDE;
-		
-		for (var i = 0; i < STRIDE; ++i) {
+		var mul = STRIDE_OBJ === 1 ? '' : '*'+STRIDE_OBJ;	
+		for (var i = 0; i < STRIDE_OBJ; ++i) {
 			fn += 'var cellObjects' + i + ' = level.objects[i' + mul + (i ? '+'+i: '') + '];\n';
+		}
+		mul = STRIDE_MOV === 1 ? '' : '*'+STRIDE_MOV;
+		for (var i = 0; i < STRIDE_MOV; ++i) {
 			fn += 'var cellMovements' + i + ' = level.movements[i' + mul + (i ? '+'+i: '') + '];\n';
 		}
 		fn += "return "+cellRow[0].generateMatchString('0_');// cellRow[0].matches(i)";
@@ -1209,7 +1211,8 @@ Rule.prototype.toJSON = function() {
 	];
 };
 
-var STRIDE = 1;
+var STRIDE_OBJ = 1;
+var STRIDE_MOV = 1;
 
 function CellPattern(row) {
 	this.objectsPresent = row[0];
@@ -1237,7 +1240,7 @@ var matchCache = {};
 
 CellPattern.prototype.generateMatchString = function() {
 	var fn = "(true";
-	for (var i = 0; i < STRIDE; ++i) {
+	for (var i = 0; i < Math.max(STRIDE_OBJ, STRIDE_MOV); ++i) {
 		var co = 'cellObjects' + i;
 		var cm = 'cellMovements' + i;
 		var op = this.objectsPresent.data[i];
@@ -1268,9 +1271,12 @@ CellPattern.prototype.generateMatchString = function() {
 CellPattern.prototype.generateMatchFunction = function() {
 	var i;
 	var fn = '';
-	var mul = STRIDE === 1 ? '' : '*'+STRIDE;
-	for (var i = 0; i < STRIDE; ++i) {
+	var mul = STRIDE_OBJ === 1 ? '' : '*'+STRIDE_OBJ;	
+	for (var i = 0; i < STRIDE_OBJ; ++i) {
 		fn += '\tvar cellObjects' + i + ' = level.objects[i' + mul + (i ? '+'+i: '') + '];\n';
+	}
+	mul = STRIDE_MOV === 1 ? '' : '*'+STRIDE_MOV;
+	for (var i = 0; i < STRIDE_MOV; ++i) {
 		fn += '\tvar cellMovements' + i + ' = level.movements[i' + mul + (i ? '+'+i: '') + '];\n';
 	}
 	fn += "return " + this.generateMatchString()+';';
@@ -1311,8 +1317,8 @@ CellPattern.prototype.replace = function(rule, currentIndex) {
 
 	if (!replace_RandomEntityMask.iszero()) {
 		var choices=[];
-		for (var i=0;i<32*STRIDE;i++) {
-			if  (replace_RandomEntityMask.get(i)) {
+		for (var i=0;i<32*STRIDE_OBJ;i++) {
+			if (replace_RandomEntityMask.get(i)) {
 				choices.push(i);
 			}
 		}
@@ -1350,13 +1356,13 @@ CellPattern.prototype.replace = function(rule, currentIndex) {
 	if (rule.isRigid) {
 		var rigidGroupIndex = state.groupNumber_to_RigidGroupIndex[rule.groupNumber];
 		rigidGroupIndex++;//don't forget to -- it when decoding :O
-		var rigidMask = new BitVec(STRIDE);
+		var rigidMask = new BitVec(STRIDE_MOV);
 		for (var layer = 0; layer < level.layerCount; layer++) {
 			rigidMask.ishiftor(rigidGroupIndex, layer * 5);
 		}
 		rigidMask.iand(replace.movementsLayerMask);
-		curRigidGroupIndexMask = level.rigidGroupIndexMask[currentIndex] || new BitVec(STRIDE);
-		curRigidMovementAppliedMask = level.rigidMovementAppliedMask[currentIndex] || new BitVec(STRIDE);
+		curRigidGroupIndexMask = level.rigidGroupIndexMask[currentIndex] || new BitVec(STRIDE_MOV);
+		curRigidMovementAppliedMask = level.rigidMovementAppliedMask[currentIndex] || new BitVec(STRIDE_MOV);
 
 		if (!rigidMask.bitsSetInArray(curRigidGroupIndexMask.data) || 
 			!replace.movementsLayerMask.bitsSetInArray(curRigidMovementAppliedMask.data) ) {
@@ -1705,8 +1711,8 @@ function restorePreservationState(preservationState) {
 	level.movements = new Int32Array(preservationState.movements);
 	level.rigidGroupIndexMask = preservationState.rigidGroupIndexMask.concat([]);
     level.rigidMovementAppliedMask = preservationState.rigidMovementAppliedMask.concat([]);
-    sfxCreateMask=new BitVec(STRIDE);
-    sfxDestroyMask=new BitVec(STRIDE);
+    sfxCreateMask=new BitVec(STRIDE_OBJ);
+    sfxDestroyMask=new BitVec(STRIDE_OBJ);
 //	rigidBackups = preservationState.rigidBackups;
 }
 
@@ -1999,8 +2005,8 @@ function resolveMovements(dir){
 			}
     	}
 
-    	for (var j=0;j<STRIDE;j++) {
-    		level.movements[j+i*STRIDE]=0;
+    	for (var j=0;j<STRIDE_MOV;j++) {
+    		level.movements[j+i*STRIDE_MOV]=0;
     	}
 	    level.rigidGroupIndexMask[i]=0;
 	    level.rigidMovementAppliedMask[i]=0;
@@ -2094,8 +2100,8 @@ function processInput(dir,dontCheckWin,dontModify) {
         var rigidloop=false;
         var startState = commitPreservationState();
 	    messagetext="";
-	    sfxCreateMask=new BitVec(STRIDE);
-	    sfxDestroyMask=new BitVec(STRIDE);
+	    sfxCreateMask=new BitVec(STRIDE_OBJ);
+	    sfxDestroyMask=new BitVec(STRIDE_OBJ);
 
 		seedsToPlay_CanMove=[];
 		seedsToPlay_CantMove=[];
