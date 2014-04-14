@@ -940,13 +940,12 @@ if (typeof exports != 'undefined') {
 }
 
 var sfxCache = {};
-
-var cachedSeeds=[];
-var CACHE_MAX=50;
+var cachedSeeds = [];
+var CACHE_MAX = 50;
 
 function cacheSeed(seed){
   if (seed in sfxCache) {
-    return;
+    return sfxCache[seed];
   }
 
   var params = generateFromSeed(seed);
@@ -954,7 +953,7 @@ function cacheSeed(seed){
   params.sample_rate = SAMPLE_RATE;
   params.bit_depth = BIT_DEPTH;
 
-  var sound = generate(params);
+  var sound = SoundEffect.generate(params);
   sfxCache[seed] = sound;
   cachedSeeds.push(seed);
 
@@ -963,23 +962,12 @@ function cacheSeed(seed){
     cachedSeeds = cachedSeeds.slice(1);
     delete sfxCache[toRemove];
   }
+
+  return sound;
 }
 
-function playSeed(seed) {
+function playSound(seed) {
   if (unitTesting) return;
-
-  var sound = sfxCache[seed];
-
-  if (!sound) {
-    // Cache sfx object for seed:
-    var params = generateFromSeed(seed);
-    params.sound_vol = SOUND_VOL;
-    params.sample_rate = SAMPLE_RATE;
-    params.bit_depth = BIT_DEPTH;
-
-    sound = SoundEffect.generate(params);
-    sfxCache[seed] = sound;
-  }
-
+  var sound = cacheSeed(seed);
   sound.play();
 }

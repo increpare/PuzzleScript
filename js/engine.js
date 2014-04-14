@@ -425,7 +425,7 @@ canvasResize();
 function tryPlaySimpleSound(soundname) {
 	if (state.sfx_Events[soundname]!==undefined) {
 		var seed = state.sfx_Events[soundname];
-		playSeed(seed);
+		playSound(seed);
 	}
 }
 function tryPlayTitleSound() {
@@ -2214,24 +2214,24 @@ function processInput(dir,dontCheckWin,dontModify) {
 		}
 
         for (var i=0;i<seedsToPlay_CantMove.length;i++) {
-	        	playSeed(seedsToPlay_CantMove[i]);
+	        	playSound(seedsToPlay_CantMove[i]);
         }
 
         for (var i=0;i<seedsToPlay_CanMove.length;i++) {
-	        	playSeed(seedsToPlay_CanMove[i]);
+	        	playSound(seedsToPlay_CanMove[i]);
         }
 
         for (var i=0;i<state.sfx_CreationMasks.length;i++) {
         	var entry = state.sfx_CreationMasks[i];
         	if (sfxCreateMask.anyBitsInCommon(entry.objectMask)) {
-	        	playSeed(entry.seed);
+	        	playSound(entry.seed);
         	}
         }
 
         for (var i=0;i<state.sfx_DestructionMasks.length;i++) {
         	var entry = state.sfx_DestructionMasks[i];
         	if (sfxDestroyMask.anyBitsInCommon(entry.objectMask)) {
-	        	playSeed(entry.seed);
+	        	playSound(entry.seed);
         	}
         }
 
