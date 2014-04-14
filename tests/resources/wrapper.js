@@ -20,7 +20,7 @@ var outputString;
 
 function consolePrint(text) {}
 function consoleError(text) {
-	window.console.log(text);
+//	window.console.log(text);
 }
 
 function consoleCacheDump() {}

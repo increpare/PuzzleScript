@@ -185,6 +185,8 @@ function printLevel() {
 		}
 	}
 	var output="Printing level contents:<br><br>";
+	var old_cache_console_messages = cache_console_messages;
+	cache_console_messages = false;
 	for (var j=0;j<level.height;j++) {
 		for (var i=0;i<level.width;i++) {
 			var cellIndex = j+i*level.height;
@@ -198,6 +200,7 @@ function printLevel() {
 		output=output+"<br>";
 	}
 	consolePrint(output);
+	cache_console_messages=old_cache_console_messages;
 }
 
 function levelEditorClick(event,click) {
