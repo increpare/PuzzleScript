@@ -76,9 +76,10 @@ function generateExtraMembers(state) {
 	}
 
 	// how many words do our bitvecs need to hold?
-	// TODO: separate numbers for objects / layers
-	STRIDE = Math.ceil(Math.max(state.objectCount/32, layerCount/5))|0;
-	state.STRIDE=STRIDE;
+	STRIDE_OBJ = Math.ceil(state.objectCount/32)|0;
+	STRIDE_MOV = Math.ceil(layerCount/5)|0;
+	state.STRIDE_OBJ=STRIDE_OBJ;
+	state.STRIDE_MOV=STRIDE_MOV;
 	
 	//get colorpalette name
 	debugMode=false;
@@ -357,7 +358,7 @@ Level.prototype.calcBackgroundMask = function(state) {
 			return cell;
 		}
 	}
-	cell = new BitVec(STRIDE);
+	cell = new BitVec(STRIDE_OBJ);
 	cell.ibitset(state.backgroundid);
 	return cell;
 }
@@ -382,7 +383,7 @@ function levelsToArray(state) {
 			processedLevels.push(o);
 		} else {
 			var o = new Level(level[0], level[1].length, level.length-1, state.collisionLayers.length, null);
-			o.objects = new Int32Array(o.width * o.height * STRIDE);
+			o.objects = new Int32Array(o.width * o.height * STRIDE_OBJ);
 
 			for (var i = 0; i < o.width; i++) {
 				for (var j = 0; j < o.height; j++) {
@@ -401,15 +402,15 @@ function levelsToArray(state) {
 
 					}
 
-					var maskint = new BitVec(STRIDE);
+					var maskint = new BitVec(STRIDE_OBJ);
 					mask = mask.concat([]);					
 					for (var z = 0; z < o.layerCount; z++) {
 						if (mask[z]>=0) {
 							maskint.ibitset(mask[z]);
 						}
 					}
-					for (var w = 0; w < STRIDE; ++w) {
-						o.objects[STRIDE * (i * o.height + j) + w] = maskint.data[w];
+					for (var w = 0; w < STRIDE_OBJ; ++w) {
+						o.objects[STRIDE_OBJ * (i * o.height + j) + w] = maskint.data[w];
 					}
 				}
 			}
@@ -1342,12 +1343,12 @@ function rulesToMask(state) {
 			for (var k = 0; k < cellrow_l.length; k++) {
 				var cell_l = cellrow_l[k];
 				var mask_l = maskTemplate.concat([]);
-				var objectsPresent = new BitVec(STRIDE);
-				var objectsMissing = new BitVec(STRIDE);
-				var movementsPresent = new BitVec(STRIDE);
-				var movementsMissing = new BitVec(STRIDE);
+				var objectsPresent = new BitVec(STRIDE_OBJ);
+				var objectsMissing = new BitVec(STRIDE_OBJ);
+				var movementsPresent = new BitVec(STRIDE_MOV);
+				var movementsMissing = new BitVec(STRIDE_MOV);
 
-				var objectlayers_l = new BitVec(STRIDE);
+				var objectlayers_l = new BitVec(STRIDE_MOV);
 				for (var l = 0; l < cell_l.length; l += 2) {
 					var object_dir = cell_l[l];
 					if (object_dir==='...') {
@@ -1426,16 +1427,15 @@ function rulesToMask(state) {
 				var cell_r = cellrow_r[k];
 				var mask_r = maskTemplate.concat([]);
 
-				var objectsClear = new BitVec(STRIDE);
-				var objectsSet = new BitVec(STRIDE);
-				var movementsClear = new BitVec(STRIDE);
-				var movementsSet = new BitVec(STRIDE);
+				var objectsClear = new BitVec(STRIDE_OBJ);
+				var objectsSet = new BitVec(STRIDE_OBJ);
+				var movementsClear = new BitVec(STRIDE_MOV);
+				var movementsSet = new BitVec(STRIDE_MOV);
 
-				var objectlayers_r = new BitVec(STRIDE);
-				var randomMask_r = new BitVec(STRIDE);
-				var objectsClear = new BitVec(STRIDE);
-				var postMovementsLayerMask_r = new BitVec(STRIDE);
-				var randomDirMask_r = new BitVec(STRIDE);
+				var objectlayers_r = new BitVec(STRIDE_MOV);
+				var randomMask_r = new BitVec(STRIDE_OBJ);
+				var postMovementsLayerMask_r = new BitVec(STRIDE_MOV);
+				var randomDirMask_r = new BitVec(STRIDE_MOV);
 				for (var l = 0; l < cell_r.length; l += 2) {
 					var object_dir = cell_r[l];
 					var object_name = cell_r[l + 1];
@@ -1489,10 +1489,10 @@ function rulesToMask(state) {
 					}
 				}
 
-				if (!(objectsPresent.bitsSetInArray(objectsSet))) {
+				if (!(objectsPresent.bitsSetInArray(objectsSet.data))) {
 					objectsClear.ior(objectsPresent); // clear out old objects
 				}
-				if (!(movementsPresent.bitsSetInArray(movementsSet))) {
+				if (!(movementsPresent.bitsSetInArray(movementsSet.data))) {
 					movementsClear.ior(movementsPresent); // ... and movements
 				}
 
@@ -1513,7 +1513,7 @@ function cellRowMasks(rule) {
 	var lhs=rule[1];
 	for (var i=0;i<lhs.length;i++) {
 		var cellRow = lhs[i];
-		var rowMask=new BitVec(STRIDE);
+		var rowMask=new BitVec(STRIDE_OBJ);
 		for (var j=0;j<cellRow.length;j++) {
 			if (cellRow[j] === ellipsisPattern)
 				continue;
@@ -1684,7 +1684,7 @@ function generateRigidGroupList(state) {
 }
 
 function getMaskFromName(state,name) {
-	var objectMask=new BitVec(STRIDE);
+	var objectMask=new BitVec(STRIDE_OBJ);
 	if (name in state.objects) {
 		var o=state.objects[name];
 		objectMask.ibitset(o.id);
@@ -1727,7 +1727,7 @@ function generatePlayerMask(state) {
 	var layerMasks=[];
 	var layerCount = state.collisionLayers.length;
 	for (var layer=0;layer<layerCount;layer++){
-		var layerMask=new BitVec(STRIDE);
+		var layerMask=new BitVec(STRIDE_OBJ);
 		for (var j=0;j<state.objectCount;j++) {
 			var n=state.idDict[j];
 			var o = state.objects[n];
@@ -1743,7 +1743,7 @@ function generatePlayerMask(state) {
 	for(var n in state.objects) {
 		if (state.objects.hasOwnProperty(n)) {
 			var o = state.objects[n];
-			objectMask[n] = new BitVec(STRIDE);
+			objectMask[n] = new BitVec(STRIDE_OBJ);
 			objectMask[n].ibitset(o.id);
 		}
 	}
@@ -1755,7 +1755,7 @@ function generatePlayerMask(state) {
 
 	for (var i=0;i<state.legend_properties.length;i++) {
 		var prop = state.legend_properties[i];
-		var val = new BitVec(STRIDE);
+		var val = new BitVec(STRIDE_OBJ);
 		for (var j=1;j<prop.length;j++) {
 			var n = prop[j];
 			val.ior(objectMask[n]);
@@ -2145,7 +2145,7 @@ function generateSoundData(state) {
 					var targetName = targets[j];
 					var targetDat = state.objects[targetName];
 					var targetLayer = targetDat.layer;
-					var shiftedDirectionMask = new BitVec(STRIDE);
+					var shiftedDirectionMask = new BitVec(STRIDE_MOV);
 					shiftedDirectionMask.ishiftor(directionMask, 5*targetLayer);
 
 					var o = {
