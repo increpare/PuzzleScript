@@ -222,7 +222,8 @@ var codeMirrorFn = function() {
 
               levels: levelsCopy,
 
-              STRIDE : state.STRIDE
+              STRIDE_OBJ : state.STRIDE_OBJ,
+              STRIDE_MOV : state.STRIDE_MOV
             };
 
             return nstate;        
