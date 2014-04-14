@@ -5,7 +5,9 @@ function isColor(str) {
 	str = str.trim();
 	if (str in colorPalettes.arnecolors)
 		return true;
-	if (/(^#[0-9A-F]{6}$)|(^#[0-9A-F]{3}$)/i.test(str))
+	if (/^#([0-9A-F]{3}){1,2}$/i.test(str))
+		return true;
+	if (str === "transparent")
 		return true;
 	return false;
 }
@@ -113,10 +115,12 @@ function generateExtraMembers(state) {
 	      	}
 	      	for (var i=0;i<o.colors.length;i++) {
 	      		var c = o.colors[i];
-	      		c = colorToHex(colorPalette,c);
-				o.colors[i] = c;
-				if (isColor(c) === false) {
+				if (isColor(c)) {
+					c = colorToHex(colorPalette,c);
+					o.colors[i] = c;
+				} else {
 					logError('Invalid color specified for object "' + n + '", namely "' + o.colors[i] + '".', o.lineNumber + 1);
+					o.colors[i] = '#ff00ff'; // magenta error color
 				}
 			}
 		}
