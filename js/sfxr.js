@@ -622,9 +622,19 @@ if (typeof AUDIO_CONTEXT == 'undefined') {
   };
 
   SoundEffect.prototype.play = function() {
-    if (this._audioElement != null) {
-      this._audioElement.cloneNode(true).play();
+    if (this._audioElement) {
+      var t = this._audioElement.currentTime;
+      if (0 < t && t < this._audioElement.duration) {
+        // _audioElement is busy playing, so clone it and play the clone:
+        this._audioElement.cloneNode(false).play();
+      } else {
+        this._audioElement.play();
+      }
     } else {
+      for (var i = 0; i < this._buffer.length; i++) {
+        // bit_depth is always 8, rescale [-1.0, 1.0) to [0, 256)
+        this._buffer[i] = 255 & Math.floor(128 * Math.max(0, Math.min(this._buffer[i] + 1, 2)));
+      }
       var wav = MakeRiff(this._sample_rate, BIT_DEPTH, this._buffer);
       this._audioElement = new Audio();
       this._audioElement.src = wav.dataURI;
@@ -700,6 +710,7 @@ window.console.log(psstring);*/
     Math.floor(ps.p_env_sustain * ps.p_env_sustain * 100000.0),
     Math.floor(ps.p_env_decay * ps.p_env_decay * 100000.0)
   ];
+  var env_total_length = env_length[0] + env_length[1] + env_length[2];
 
   // Phaser
   var phase = 0;
@@ -732,12 +743,16 @@ window.console.log(psstring);*/
 
   // ...end of initialization. Generate samples.
 
-  var sound = new SoundEffect(ps.sample_size, ps.sample_rate);
-  var buffer = sound.getBuffer();
-
   var sample_sum = 0;
   var num_summed = 0;
   var summands = Math.floor(44100 / ps.sample_rate);
+
+  var buffer_i = 0;
+  var buffer_length = Math.ceil(env_total_length / summands);
+  var buffer_complete = false;
+
+  var sound = new SoundEffect(buffer_length, ps.sample_rate);
+  var buffer = sound.getBuffer();
 
   for (var t = 0;; ++t) {
 
@@ -757,7 +772,7 @@ window.console.log(psstring);*/
     if (fperiod > fmaxperiod) {
       fperiod = fmaxperiod;
       if (ps.p_freq_limit > 0.0)
-        break;
+        buffer_complete = true;
     }
 
     // Vibrato
@@ -779,7 +794,7 @@ window.console.log(psstring);*/
       env_time = 0;
       env_stage++;
       if (env_stage === 3)
-        break;
+        buffer_complete = true;
     }
     if (env_stage === 0)
       env_vol = env_time / env_length[0];
@@ -876,8 +891,6 @@ window.console.log(psstring);*/
     sample = sample / 8 * masterVolume;
     sample *= gain;
 
-    buffer[t] = sample;
-
     // if (ps.bit_depth === 8) {
     //   // Rescale [-1.0, 1.0) to [0, 256)
     //   sample = Math.floor((sample + 1) * 128);
@@ -888,7 +901,7 @@ window.console.log(psstring);*/
     //     sample = 0;
     //     ++num_clipped;
     //   }
-    //   buffer[t] = sample;
+    //   buffer[buffer_i++] = sample;
     // } else {
     //   // Rescale [-1.0, 1.0) to [-32768, 32768)
     //   sample = Math.floor(sample * (1 << 15));
@@ -899,20 +912,21 @@ window.console.log(psstring);*/
     //     sample = -(1 << 15);
     //     ++num_clipped;
     //   }
-    //   buffer[t] = sample & 0xFF;
-    //   buffer[t] = (sample >> 8) & 0xFF;
+    //   buffer[buffer_i++] = sample & 0xFF;
+    //   buffer[buffer_i++] = (sample >> 8) & 0xFF;
     // }
+
+    buffer[buffer_i++] = sample;
+
+    if (buffer_complete) {
+      for (; buffer_i < buffer_length; buffer_i++) {
+        buffer[buffer_i] = 0;
+      }
+      break;
+    }
   }
-
   return sound;
-
-  // var wave = MakeRiff(ps.sample_rate,ps.sample_size,buffer);
-  // wave.clipping = num_clipped;
-  // return wave;
 };
-
-
-
 
 if (typeof exports != 'undefined') {
   // For node.js
