@@ -12,7 +12,7 @@ function newSound(instrument) {
 	var params = generateFromSeed(seed);
 	params.sound_vol = SOUND_VOL;
 	params.sample_rate = SAMPLE_RATE;
-	params.sample_size = SAMPLE_SIZE;
+	params.bit_depth = BIT_DEPTH;
 	var sound = SoundEffect.generate(params);
 	sound.play();
 }
@@ -23,7 +23,7 @@ function buttonPress() {
 	var params = generateFromSeed(seed);
 	params.sound_vol = SOUND_VOL;
 	params.sample_rate = SAMPLE_RATE;
-	params.sample_size = SAMPLE_SIZE;
+	params.bit_depth = BIT_DEPTH;
 	var sound = SoundEffect.generate(params);
 	sound.play();
 }
