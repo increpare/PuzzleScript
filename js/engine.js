@@ -533,7 +533,8 @@ function setGameState(_state, command, randomseed) {
     	againinterval=150;
     }
 
-
+    norepeat_action = state.metadata.norepeat_action!==undefined;
+    
     switch(command[0]){
     	case "restart":
     	{
