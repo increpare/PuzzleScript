@@ -482,7 +482,11 @@ function checkKey(e,justPressed) {
         case 88://x
         {
 //            window.console.log("ACTION");
-            inputdir=4;
+			if (norepeat_action===false || justPressed) {
+            	inputdir=4;
+            } else {
+            	return;
+            }
         break;
         }
         case 85://u

@@ -11,17 +11,6 @@ function jumpToLine(i) {
     editor.setCursor(i - 1, 0);
 }
 
-function playSound(seed) {
-	var params = generateFromSeed(seed);
-	params.sound_vol = SOUND_VOL;
-	params.sample_rate = SAMPLE_RATE;
-	params.sample_size = SAMPLE_SIZE;
-	var sound = generate(params);
-	var audio = new Audio();
-	audio.src = sound.dataURI;
-	audio.play();
-}
-
 var consolecache = [];
 function consolePrint(text) {
 	if (cache_console_messages) {		

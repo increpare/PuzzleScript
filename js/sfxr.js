@@ -1,7 +1,6 @@
 var SOUND_VOL = 0.25;
-var SAMPLE_RATE = 5512;//44100;
-var SAMPLE_SIZE = 8;
-
+var SAMPLE_RATE = 44100;
+var BIT_DEPTH = 8;
 
 var SQUARE = 0;
 var SAWTOOTH = 1;
@@ -13,6 +12,16 @@ var BREAKER = 5;
 var SHAPES = [
   'square', 'sawtooth', 'sine', 'noise', 'triangle', 'breaker'
 ];
+
+var AUDIO_CONTEXT;
+
+if (typeof AudioContext != 'undefined') {
+  AUDIO_CONTEXT = new AudioContext();
+} else if (typeof webkitAudioContext != 'undefined') {
+  AUDIO_CONTEXT = new webkitAudioContext();
+} else {
+  SAMPLE_RATE = 5512;
+}
 
 // Playback volume
 var masterVolume = 1.0;
@@ -64,7 +73,7 @@ function Params() {
   // Sample parameters
   result.sound_vol = 0.5;
   result.sample_rate = 44100;
-  result.sample_size = 8;
+  result.bit_depth = 8;
   return result;
 }
 
@@ -554,16 +563,16 @@ birdSound
 ];
 
 var generatorNames = [
-"pickupCoin",
-"laserShoot",
-"explosion",
-"powerUp",
-"hitHurt",
-"jump",
-"blipSelect",
-"pushSound",
-"random",
-"birdSound"
+'pickupCoin',
+'laserShoot',
+'explosion',
+'powerUp',
+'hitHurt',
+'jump',
+'blipSelect',
+'pushSound',
+'random',
+'birdSound'
 ];
 
 /*
@@ -580,7 +589,65 @@ generateFromSeed = function(seed) {
   return result;
 };
 
-var generate = function(ps) {
+function SoundEffect(length, sample_rate) {
+  this._buffer = AUDIO_CONTEXT.createBuffer(1, length, sample_rate);
+}
+
+SoundEffect.prototype.getBuffer = function() {
+  return this._buffer.getChannelData(0);
+};
+
+SoundEffect.prototype.play = function() {
+  var t = AUDIO_CONTEXT.currentTime;
+  var filter = AUDIO_CONTEXT.createBiquadFilter();
+  var source = AUDIO_CONTEXT.createBufferSource();
+  filter.type = (typeof filter.type == 'string') ? 'lowpass' : 0;
+  filter.frequency.value = 1650;
+  filter.connect(AUDIO_CONTEXT.destination);
+  source.buffer = this._buffer;
+  source.connect(filter);
+  if (typeof source.start != 'undefined') {
+    source.start(t);
+  } else {
+    source.noteOn(t);
+  }
+};
+
+if (typeof AUDIO_CONTEXT == 'undefined') {
+  SoundEffect = function SoundEffect(length, sample_rate) {
+    this._sample_rate = sample_rate;
+    this._buffer = new Array(length);
+    this._audioElement = null;
+  };
+
+  SoundEffect.prototype.getBuffer = function() {
+    this._audioElement = null;
+    return this._buffer;
+  };
+
+  SoundEffect.prototype.play = function() {
+    if (this._audioElement) {
+      var t = this._audioElement.currentTime;
+      if (0 < t && t < this._audioElement.duration) {
+        // _audioElement is busy playing, so clone it and play the clone:
+        this._audioElement.cloneNode(false).play();
+      } else {
+        this._audioElement.play();
+      }
+    } else {
+      for (var i = 0; i < this._buffer.length; i++) {
+        // bit_depth is always 8, rescale [-1.0, 1.0) to [0, 256)
+        this._buffer[i] = 255 & Math.floor(128 * Math.max(0, Math.min(this._buffer[i] + 1, 2)));
+      }
+      var wav = MakeRiff(this._sample_rate, BIT_DEPTH, this._buffer);
+      this._audioElement = new Audio();
+      this._audioElement.src = wav.dataURI;
+      this._audioElement.play();
+    }
+  };
+}
+
+SoundEffect.generate = function(ps) {
 /*  window.console.log(ps.wave_type + "\t" + ps.seed);
 
   var psstring="";
@@ -647,6 +714,7 @@ window.console.log(psstring);*/
     Math.floor(ps.p_env_sustain * ps.p_env_sustain * 100000.0),
     Math.floor(ps.p_env_decay * ps.p_env_decay * 100000.0)
   ];
+  var env_total_length = env_length[0] + env_length[1] + env_length[2];
 
   // Phaser
   var phase = 0;
@@ -679,11 +747,16 @@ window.console.log(psstring);*/
 
   // ...end of initialization. Generate samples.
 
-  var buffer = [];
-
   var sample_sum = 0;
   var num_summed = 0;
   var summands = Math.floor(44100 / ps.sample_rate);
+
+  var buffer_i = 0;
+  var buffer_length = Math.ceil(env_total_length / summands);
+  var buffer_complete = false;
+
+  var sound = new SoundEffect(buffer_length, ps.sample_rate);
+  var buffer = sound.getBuffer();
 
   for (var t = 0;; ++t) {
 
@@ -703,7 +776,7 @@ window.console.log(psstring);*/
     if (fperiod > fmaxperiod) {
       fperiod = fmaxperiod;
       if (ps.p_freq_limit > 0.0)
-        break;
+        buffer_complete = true;
     }
 
     // Vibrato
@@ -725,7 +798,7 @@ window.console.log(psstring);*/
       env_time = 0;
       env_stage++;
       if (env_stage === 3)
-        break;
+        buffer_complete = true;
     }
     if (env_stage === 0)
       env_vol = env_time / env_length[0];
@@ -822,35 +895,16 @@ window.console.log(psstring);*/
     sample = sample / 8 * masterVolume;
     sample *= gain;
 
-    if (ps.sample_size === 8) {
-      // Rescale [-1.0, 1.0) to [0, 256)
-      sample = Math.floor((sample + 1) * 128);
-      if (sample > 255) {
-        sample = 255;
-        ++num_clipped;
-      } else if (sample < 0) {
-        sample = 0;
-        ++num_clipped;
+    buffer[buffer_i++] = sample;
+
+    if (buffer_complete) {
+      for (; buffer_i < buffer_length; buffer_i++) {
+        buffer[buffer_i] = 0;
       }
-      buffer.push(sample);
-    } else {
-      // Rescale [-1.0, 1.0) to [-32768, 32768)
-      sample = Math.floor(sample * (1 << 15));
-      if (sample >= (1 << 15)) {
-        sample = (1 << 15) - 1;
-        ++num_clipped;
-      } else if (sample < -(1 << 15)) {
-        sample = -(1 << 15);
-        ++num_clipped;
-      }
-      buffer.push(sample & 0xFF);
-      buffer.push((sample >> 8) & 0xFF);
+      break;
     }
   }
-
-  var wave = MakeRiff(ps.sample_rate,ps.sample_size,buffer);
-  wave.clipping = num_clipped;
-  return wave;
+  return sound;
 };
 
 if (typeof exports != 'undefined') {
@@ -861,39 +915,34 @@ if (typeof exports != 'undefined') {
 }
 
 var sfxCache = {};
-
-var cachedSeeds=[];
-var CACHE_MAX=50;
+var cachedSeeds = [];
+var CACHE_MAX = 50;
 
 function cacheSeed(seed){
-	if (seed in sfxCache) {
-		return;
-	}
+  if (seed in sfxCache) {
+    return sfxCache[seed];
+  }
 
-	var params = generateFromSeed(seed);
-	params.sound_vol = SOUND_VOL;
-	params.sample_rate = SAMPLE_RATE;
-	params.sample_size = SAMPLE_SIZE;
-	var sound = generate(params);
-	var audio = new Audio();
-	audio.src = sound.dataURI;
-	
-	sfxCache[seed]=audio;
-	cachedSeeds.push(seed);
+  var params = generateFromSeed(seed);
+  params.sound_vol = SOUND_VOL;
+  params.sample_rate = SAMPLE_RATE;
+  params.bit_depth = BIT_DEPTH;
 
-	while (cachedSeeds.length>CACHE_MAX) {
-		var toRemove=cachedSeeds[0];
-		cachedSeeds = cachedSeeds.slice(1);
-		delete sfxCache[toRemove];
-	}
+  var sound = SoundEffect.generate(params);
+  sfxCache[seed] = sound;
+  cachedSeeds.push(seed);
+
+  while (cachedSeeds.length>CACHE_MAX) {
+    var toRemove=cachedSeeds[0];
+    cachedSeeds = cachedSeeds.slice(1);
+    delete sfxCache[toRemove];
+  }
+
+  return sound;
 }
 
-function playSeed(seed) {
-	if (unitTesting) return;
-
-	cacheSeed(seed);
-	var sound = sfxCache[seed];
-//    sound.pause();
-//    sound.currentTime = 0;
-    sound.cloneNode().play();
+function playSound(seed) {
+  if (unitTesting) return;
+  var sound = cacheSeed(seed);
+  sound.play();
 }
