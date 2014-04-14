@@ -25,6 +25,7 @@ function adjustLevel(level, widthdelta, heightdelta) {
 		level.setCell(i, bgMask);
 	level.movements = new Int32Array(level.objects.length);
 	columnAdded=true;
+	RebuildLevelArrays();
 	return oldlevel;
 }
 
