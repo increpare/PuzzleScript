@@ -1109,7 +1109,7 @@ function Rule(rule) {
 	this.isRandom = rule[8];
 	this.cellRowMasks = rule[9];
 	this.cellRowMatches = [];
-	for (var i=0;i,i<this.patterns.length;i++) {
+	for (var i=0;i<this.patterns.length;i++) {
 		this.cellRowMatches.push(this.generateCellRowMatchesFunction(this.patterns[i],this.isEllipsis[i]));
 	}
 	/* TODO: eliminate isRigid, groupNumber, isRandom

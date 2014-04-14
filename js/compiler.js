@@ -1455,6 +1455,9 @@ function rulesToMask(state) {
 
 					var object = state.objects[object_name];
 					var layerIndex = object.layer;
+					if (layerIndex === undefined) {
+						logError('Object "'+object_name.toUpperCase()+'" hasn\'t been assigned to a layer.',object.lineNumber);
+					}
 					var object_id = object.id;
 
 					
@@ -2118,6 +2121,7 @@ function generateSoundData(state) {
 					directionMask |= soundDirectionMask;
 				}
 			}
+
 
 			var targets=[target];
 			var modified=true;
