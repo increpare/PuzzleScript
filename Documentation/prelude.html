@@ -173,6 +173,8 @@ late [ Temp ] -> [ ]</code></pre>
       <dd>Can accept a color name or hex code (in the form #412bbc). Controls the font color of title/message screens, as well as the font color in the website. Background_color is it's sibling.</dd>
 			<dt>title My Amazing Puzzle Game</dt>
 			<dd>The name of your game.  Appears on the title screen.</dd>
+      <dt>throttle_movement</dt>
+      <dd>For use in conjunction with realtime_interval - this stops you from moving crazy fast - repeated keypresses of the same movement direction will not increase your speed. This doesn't apply to the action button.  If you can think of an example that requires action be throttled, just let me know and I'll try accommodate you.</dd>
       <dt>verbose_logging</dt>
       <dd>As you play the game, spits out information about all rules applied as you play:<p>
       <img src="images/verbose_logging.png"></dd>

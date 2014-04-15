@@ -86,6 +86,7 @@ function generateExtraMembers(state) {
 	//get colorpalette name
 	debugMode=false;
 	verbose_logging=false;
+	throttle_movement=false;
 	colorPalette=colorPalettes.arnecolors;
 	for (var i=0;i<state.metadata.length;i+=2){
 		var key = state.metadata[i];
@@ -102,6 +103,8 @@ function generateExtraMembers(state) {
 		} else if (key ==='verbose_logging') {
 			verbose_logging=true;
 			cache_console_messages=true;
+		} else if (key==='throttle_movement') {
+			throttle_movement=true;
 		}
 	}
 

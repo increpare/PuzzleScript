@@ -1,9 +1,12 @@
 var keyRepeatTimer=0;
 var keyRepeatIndex=0;
+var input_throttle_timer=0.0;
+var lastinput=-100;
 
 var dragging=false;
 var rightdragging=false;
 var columnAdded=false;
+
 
 function recalcLevelBounds(){
 }
@@ -568,7 +571,14 @@ function checkKey(e,justPressed) {
         	break;	
         }
     }
-
+    if (throttle_movement && inputdir>=0&&inputdir<=3) {
+    	if (lastinput==inputdir && input_throttle_timer<repeatinterval) {
+    		return;
+    	} else {
+    		lastinput=inputdir;
+    		input_throttle_timer=0;
+    	}
+    }
     if (textMode) {
     	if (state.levels.length===0) {
     		//do nothing
@@ -635,8 +645,10 @@ function checkKey(e,justPressed) {
     }
 }
 
+
 function update() {
     timer+=deltatime;
+    input_throttle_timer+=deltatime;
     if (quittingTitleScreen) {
         if (timer/1000>0.3) {
             quittingTitleScreen=false;
@@ -676,8 +688,9 @@ function update() {
     }
     if (keybuffer.length>0) {
 	    keyRepeatTimer+=deltatime;
-	    if (keyRepeatTimer>repeatinterval/(Math.sqrt(keybuffer.length))) {
-	    	keyRepeatTimer=0;
+	    var ticklength = throttle_movement ? repeatinterval : repeatinterval/(Math.sqrt(keybuffer.length));
+	    if (keyRepeatTimer>ticklength) {
+	    	keyRepeatTimer=0;	
 	    	keyRepeatIndex = (keyRepeatIndex+1)%keybuffer.length;
 	    	var key = keybuffer[keyRepeatIndex];
 	        checkKey({keyCode:key},false);

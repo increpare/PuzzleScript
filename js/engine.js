@@ -532,7 +532,9 @@ function setGameState(_state, command, randomseed) {
     } else {
     	againinterval=150;
     }
-
+    if (throttle_movement && autotickinterval===0) {
+    	logWarning("throttle_movement is designed for use in conjunction with realtime_interval. Using it in other situations makes games gross and unresponsive, broadly speaking.  Please don't.");
+    }
     norepeat_action = state.metadata.norepeat_action!==undefined;
     
     switch(command[0]){
