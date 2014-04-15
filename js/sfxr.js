@@ -598,19 +598,23 @@ SoundEffect.prototype.getBuffer = function() {
 };
 
 SoundEffect.prototype.play = function() {
-  var t = AUDIO_CONTEXT.currentTime;
-  var filter = AUDIO_CONTEXT.createBiquadFilter();
   var source = AUDIO_CONTEXT.createBufferSource();
-  filter.type = (typeof filter.type == 'string') ? 'lowpass' : 0;
-  filter.frequency.value = 1650;
-  filter.connect(AUDIO_CONTEXT.destination);
+  var filter1 = AUDIO_CONTEXT.createBiquadFilter();
+  var filter2 = AUDIO_CONTEXT.createBiquadFilter();
+  var filter3 = AUDIO_CONTEXT.createBiquadFilter();
+
   source.buffer = this._buffer;
-  source.connect(filter);
-  if (typeof source.start != 'undefined') {
-    source.start(t);
-  } else {
-    source.noteOn(t);
-  }
+  source.connect(filter1);
+
+  filter1.frequency.value = 2000;
+  filter2.frequency.value = 2000;
+  filter3.frequency.value = 2000;
+
+  filter1.connect(filter2);
+  filter2.connect(filter3);
+  filter3.connect(AUDIO_CONTEXT.destination);
+
+  source.start(AUDIO_CONTEXT.currentTime);
 };
 
 if (typeof AUDIO_CONTEXT == 'undefined') {
