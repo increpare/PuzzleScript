@@ -477,6 +477,8 @@ var codeMirrorFn = function() {
                                     var candcol = match_color[0].trim().toLowerCase();
                                     if (candcol in colorPalettes.arnecolors) {
                                         return 'COLOR COLOR-' + candcol.toUpperCase();
+                                    } else if (candcol==="transparent") {
+                                        return 'COLOR FADECOLOR';
                                     } else {
                                         return 'COLOR';
                                     }

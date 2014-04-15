@@ -72,7 +72,7 @@ function Params() {
 
   // Sample parameters
   result.sound_vol = 0.5;
-  result.sample_rate = 44100;
+  result.sample_rate = SAMPLE_RATE;
   result.bit_depth = 8;
   return result;
 }
