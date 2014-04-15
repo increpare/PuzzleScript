@@ -1,5 +1,5 @@
 var SOUND_VOL = 0.25;
-var SAMPLE_RATE = 44100;
+var SAMPLE_RATE = 5512;
 var BIT_DEPTH = 8;
 
 var SQUARE = 0;
@@ -19,8 +19,6 @@ if (typeof AudioContext != 'undefined') {
   AUDIO_CONTEXT = new AudioContext();
 } else if (typeof webkitAudioContext != 'undefined') {
   AUDIO_CONTEXT = new webkitAudioContext();
-} else {
-  SAMPLE_RATE = 5512;
 }
 
 // Playback volume
@@ -72,7 +70,7 @@ function Params() {
 
   // Sample parameters
   result.sound_vol = 0.5;
-  result.sample_rate = SAMPLE_RATE;
+  result.sample_rate = 44100;
   result.bit_depth = 8;
   return result;
 }
@@ -597,6 +595,7 @@ SoundEffect.prototype.getBuffer = function() {
   return this._buffer.getChannelData(0);
 };
 
+
 SoundEffect.prototype.play = function() {
   var source = AUDIO_CONTEXT.createBufferSource();
   var filter1 = AUDIO_CONTEXT.createBiquadFilter();
@@ -606,9 +605,9 @@ SoundEffect.prototype.play = function() {
   source.buffer = this._buffer;
   source.connect(filter1);
 
-  filter1.frequency.value = 2000;
-  filter2.frequency.value = 2000;
-  filter3.frequency.value = 2000;
+  filter1.frequency.value = 1600;
+  filter2.frequency.value = 1600;
+  filter3.frequency.value = 1600;
 
   filter1.connect(filter2);
   filter2.connect(filter3);
@@ -616,6 +615,8 @@ SoundEffect.prototype.play = function() {
 
   source.start(AUDIO_CONTEXT.currentTime);
 };
+
+SoundEffect.MIN_SAMPLE_RATE = 22050;
 
 if (typeof AUDIO_CONTEXT == 'undefined') {
   SoundEffect = function SoundEffect(length, sample_rate) {
@@ -649,6 +650,8 @@ if (typeof AUDIO_CONTEXT == 'undefined') {
       this._audioElement.play();
     }
   };
+
+  SoundEffect.MIN_SAMPLE_RATE = 1;
 }
 
 SoundEffect.generate = function(ps) {
@@ -759,7 +762,13 @@ window.console.log(psstring);*/
   var buffer_length = Math.ceil(env_total_length / summands);
   var buffer_complete = false;
 
-  var sound = new SoundEffect(buffer_length, ps.sample_rate);
+  var sound;
+  if (ps.sample_rate < SoundEffect.MIN_SAMPLE_RATE) {
+    // Assume 4x gets close enough to MIN_SAMPLE_RATE
+    sound = new SoundEffect(4 * buffer_length, SoundEffect.MIN_SAMPLE_RATE);
+  } else {
+    sound = new SoundEffect(buffer_length, ps.sample_rate)
+  }
   var buffer = sound.getBuffer();
 
   for (var t = 0;; ++t) {
@@ -901,8 +910,19 @@ window.console.log(psstring);*/
 
     buffer[buffer_i++] = sample;
 
+    if (ps.sample_rate < SoundEffect.MIN_SAMPLE_RATE) {
+      buffer[buffer_i++] = sample;
+      buffer[buffer_i++] = sample;
+      buffer[buffer_i++] = sample;
+    }
+
     if (buffer_complete) {
       for (; buffer_i < buffer_length; buffer_i++) {
+        if (ps.sample_rate < SoundEffect.MIN_SAMPLE_RATE) {
+          buffer[buffer_i++] = 0;
+          buffer[buffer_i++] = 0;
+          buffer[buffer_i++] = 0;
+        }
         buffer[buffer_i] = 0;
       }
       break;
