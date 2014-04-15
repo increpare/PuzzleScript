@@ -612,8 +612,12 @@ SoundEffect.prototype.play = function() {
   filter1.connect(filter2);
   filter2.connect(filter3);
   filter3.connect(AUDIO_CONTEXT.destination);
-
-  source.start(AUDIO_CONTEXT.currentTime);
+  var t = AUDIO_CONTEXT.currentTime;
+  if (typeof source.start != 'undefined') {
+    source.start(t);
+  } else {
+    source.noteOn(t);
+  }
 };
 
 SoundEffect.MIN_SAMPLE_RATE = 22050;
