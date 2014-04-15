@@ -7,7 +7,7 @@
     <meta name="author" content="">
     <link rel="shortcut icon" type="image/x-icon" href="ico/favicon.ico" />
 
-    <title>PuzzleScript Documentation</title>
+    <title>Real-time Games - PuzzleScript Documentation</title>
 
     <!-- Bootstrap core CSS -->
     <link href="css/bootstrap.css" rel="stylesheet">
@@ -49,37 +49,36 @@
     </div>
 
     <div class="container">
+
+
 <p>
 <ol class="breadcrumb">
-  <li class="active">Documentation</li>
+  <li><a href="documentation.html">Documentation</a></li>
+  <li class="active">Real-time Games</li>
 </ol>
 <p>
-
-<h1>Documentation</h1>
+<h1>Real-time Games</h1>
 <p>
-<ul class="nav nav-pills nav-stacked" class="pull-left">
-  <li>Basic</li>
-  <li><a href="rules101.html">Rules 101</a></li>
-  <li><a href="prelude.html">Bird's-eye view of a PuzzleScript file</a></li>
-  <li>Intermediate</li>
-  <li><a href="leveleditor.html">Level Editor</a></li>
-  <li><a href="directions.html">Directions</a></li>
-  <li><a href="actionbutton.html">The Action Button</a></li>
-  <li><a href="input.html">Input</a></li>
-  <li><a href="randomness.html">Randomness</a></li>
-  <li><a href="realtime.html">Real-Time Games</a></li>
-  <li>Advanced</li>
-  <li><a href="executionorder.html">Rule Execution Order</a></li>
-  <li><a href="rigidbodies.html">Extended Rigid Bodies</a></li>
-  <li>Miscellanea</li>
-  <li><a href="gifs.html">Making GIFs</a></li>
-  <li><a href="permanent_urls.html">Updateable PuzzleScript.net URLs</a></li>
-  <li><a href="faq.html">Frequently Asked Questions</a></li>
-</ul>
 
+If you want your game to work in real-time, set the realtime_interval tag in the <a href="prelude.html">prelude</a>.
+<p>
+<pre><code>realtime_interval 0.5</code></pre>
+<p>
+The number indicates how long each realtime frame should be.  In the above case, twice a second the game engine will tick, but with no input.  Player input is processed as regular.
+<p>
+So, there are two sorts of ticks - one where the player has input, and then realtime ones - to tell them apart, you can search for this pattern.
+<p>
+<pre><code>(only triggers on real-time ticks)
+[ stationary Player ] [ a ] -> [ stationary Player ] [ b ] 
 
-
-
+(only triggers in response to player input)
+[ moving Player ] [ c ] -> [ moving Player ] [ d ] 
+</code></pre>
+<p>
+Because you're working on a realtime game, you might want to limit the rate at which a player can move - you can do this with the throttle_input prelude switch.
+<p>
+<pre><code>throttle_movement</code></pre>
+<p>
     </div><!-- /.container -->
 
 
