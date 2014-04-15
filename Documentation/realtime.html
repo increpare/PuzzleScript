@@ -75,9 +75,15 @@ So, there are two sorts of ticks - one where the player has input, and then real
 [ moving Player ] [ c ] -> [ moving Player ] [ d ] 
 </code></pre>
 <p>
-Because you're working on a realtime game, you might want to limit the rate at which a player can move - you can do this with the throttle_input prelude switch.
+Because you're working on a realtime game, you might want to limit the speed at which a player can move - you can do this with the throttle_input prelude switch.
 <p>
 <pre><code>throttle_movement</code></pre>
+<p>
+With this switch, if you press the same direction multiple times in rapid succession, you'll still move no more quickly than key_repeat_interval.  You can still alternate directions quickly, and press action as quickly as you like.
+<p>
+<h3>A small note on the interaction of realtime and again:</h3>
+<p>
+If again is triggered, no realtime ticks will happen until the again stuff has played itself out.
 <p>
     </div><!-- /.container -->
 
