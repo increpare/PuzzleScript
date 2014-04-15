@@ -13,11 +13,14 @@
 <link rel="stylesheet" href="css/soundbar.css">
 <link rel="stylesheet" href="css/layout.css">
 <link rel="stylesheet" href="css/toolbar.css">
+<link rel="stylesheet" href="css/jquery-ui.css">
+
 <!--CSSREPLACE-->
 <link rel="shortcut icon" type="image/x-icon" href="Documentation/ico/favicon.ico" />
 
 </head>
 <body>
+
 <div class="leftpanel">
 <form id="form1" name="form1"  action="javascript:void(0);"><textarea id="code" class="codeform" name="code" rows="20" cols="20" style="display:none;">
 title My Game
@@ -91,6 +94,7 @@ LEVELS
 #########
 </textarea></form>
 </div>
+
 <div class="uppertoolbar">
 	&nbsp;&nbsp;&nbsp;<a href="index.html"><h2>PuzzleScript</h2></a> - <a id="saveClickLink" href="javascript:void(0);">SAVE</a> - 
 
@@ -125,16 +129,14 @@ LEVELS
 </optgroup>
 </select>
 </form>- <a id="runClickLink" href="javascript:void('Run the Game');">RUN</a> - <a id="rebuildClickLink" href="javascript:void('Rebuild without restarting');">REBUILD</a> - <a id="levelEditorClickLink" href="javascript:void('Open Level Editor');">LEVEL EDITOR</a> - <a id="exportClickLink" href="javascript:void('Export Standalone HTML Build');">EXPORT</a> - <a id="shareClickLink" href="javascript:void('Generate Link To Game');">SHARE</a> - <a href="Documentation/documentation.html"  target="Puzzle_Script_Documentation">DOCS</a>  - <a href="https://groups.google.com/forum/#!forum/puzzlescript">FORUM</a>
-
-	</div>
+</div>
 
 <div class="righttophalf">	
 	<div class="upperarea">
-	
-<canvas id="gameCanvas" ></canvas>
-
+		<canvas id="gameCanvas" ></canvas>
 	</div>
 </div>
+
 <div class="rightbottomhalf">
 	<div class="lowertoolbar">
 <div id="soundbar">
@@ -201,6 +203,10 @@ LEVELS
 <script src="js/addlisteners.js"></script>
 <script src="js/addlisteners_editor.js"></script>
 <script src="js/makegif.js"></script>
+
+<script src="js/jquery/jquery-1.10.2.js"></script>
+<script src="js/jquery/jquery-ui.js"></script>
+<script src="js/layout.js"></script>
 <!--ENDREPLACE-->
 
 <!--<script src="js/scripts.js"></script>-->

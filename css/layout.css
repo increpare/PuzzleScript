@@ -3,41 +3,44 @@ HTML, BODY
 	height: 100%;
 	width: 100%;
 	margin: 0;
+	top: 0px;
+	left: 0px;
 }
 .leftpanel
 {
-	position: absolute;
 	left: 0px;
 	top: 30px;
 	bottom: 0px;
 	width: 50%;
+	height: calc(100% - 30px);
+	float: left;
 }
 .righttophalf
 {
-	position: absolute;
-	left: 50%;
-	right: 0px;
 	top: 30px;
-	bottom: 50%;
+	right: 0px;
 	width: 50%;
+	height: calc(50% - 30px);
+	float: left;
 }
 .rightbottomhalf
 {
-	position: absolute;
+	position: relative;
 	right: 0px;
-	top: 50%;
 	height: 50%;
 	width: 50%;
+	float: left;
+	top: 30px;
 }
 .uppertoolbar
 {
 	position: absolute;
 	display: block;
 	left: 2px;
-	right: 0;
+	right: 0px;
 	height: 30px;
-
-	background-color:#444444;
+	top: 0px;
+	background-color: #444444;
 }
 .upperarea
 {
