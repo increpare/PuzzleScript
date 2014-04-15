@@ -37,3 +37,8 @@ $( ".righttophalf" ).resizable({
 } );
 
 window.onresize = resize_all;
+
+window.onload = function(event){
+	$(".leftpanel").height($("BODY").height() - $(".uppertoolbar").height());
+	$(".righttophalf").height($("BODY").height()/2 - $(".uppertoolbar").height());
+}
