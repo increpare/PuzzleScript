@@ -64,8 +64,9 @@ function resize_all(e){
 };
 
 function verticalDragbarMouseDown(e) {
-    e.preventDefault();
-    window.addEventListener("mousemove", verticalDragbarMouseMove, false);
+	e.preventDefault();
+	document.body.style.cursor = "col-resize";
+	window.addEventListener("mousemove", verticalDragbarMouseMove, false);
 	window.addEventListener("mouseup", verticalDragbarMouseUp, false);
 };
 
@@ -73,19 +74,21 @@ function verticalDragbarMouseMove(e) {
 	if (e.pageX <= 0){
 		resize_widths(0);
 	} else if ((window.innerWidth - e.pageX) > soundbarwidth){
-		resize_widths(e.pageX + 2);
+		resize_widths(e.pageX - 1);
 	} else {
 		resize_widths(window.innerWidth - soundbarwidth);
 	};
 };
 
 function verticalDragbarMouseUp(e) {
-    window.removeEventListener("mousemove", verticalDragbarMouseMove, false);
+	document.body.style.cursor = "";
+	window.removeEventListener("mousemove", verticalDragbarMouseMove, false);
 };
 
 function horizontalDragbarMouseDown(e) {
 	e.preventDefault();
-    window.addEventListener("mousemove", horizontalDragbarMouseMove, false);
+	document.body.style.cursor = "row-resize";
+	window.addEventListener("mousemove", horizontalDragbarMouseMove, false);
 	window.addEventListener("mouseup", horizontalDragbarMouseUp, false);
 };
 
@@ -93,14 +96,15 @@ function horizontalDragbarMouseMove(e) {
 	if (e.pageY <= upperbarheight) {
 		resize_heights(upperbarheight);
 	} else if ((window.innerHeight - e.pageY) > (lowerbarheight + 7)){
-		resize_heights(e.pageY + 2);
+		resize_heights(e.pageY - 1);
 	} else {
 		resize_heights(window.innerHeight - lowerbarheight - 7);
 	}
 };
 
 function horizontalDragbarMouseUp(e) {
-    window.removeEventListener("mousemove", horizontalDragbarMouseMove, false);
+	document.body.style.cursor = "";
+	window.removeEventListener("mousemove", horizontalDragbarMouseMove, false);
 };
 
 function reset_panels(){
