@@ -24,12 +24,16 @@ function resize_all(){
 	verticaldragbarX = parseInt(document.getElementById("verticaldragbar").style.left.replace("px",""));
 	if ((window.innerWidth - verticaldragbarX) < soundbarwidth){
 		verticaldragbarX = window.innerWidth - soundbarwidth - 30;
-	};
+	} else if ((verticaldragbarX < window.innerWidth/2)){
+		verticaldragbarX = window.innerWidth/2;
+	}
 	resize_widths(verticaldragbarX);
 	
 	horizontaldragbarY = parseInt(document.getElementById("horizontaldragbar").style.top.replace("px",""));
 	if ((window.innerHeight - horizontaldragbarY) < (lowerbarheight)){
 		horizontaldragbarY = window.innerHeight - lowerbarheight - 7;
+	} else if ((horizontaldragbarY < window.innerHeight/2)){
+		horizontaldragbarY = window.innerHeight/2;
 	};
 	resize_heights(horizontaldragbarY);
 };
@@ -70,7 +74,7 @@ function horizontalDragbarMouseUp(e) {
     window.removeEventListener("mousemove", horizontalDragbarMouseMove, false);
 };
 
-function adjust_panels(){
+function reset_panels(){
 	resize_widths(window.innerWidth/2);
 	resize_heights(window.innerHeight/2);
 };
