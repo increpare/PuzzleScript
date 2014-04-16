@@ -12,8 +12,11 @@ function jumpToLine(i) {
 }
 
 var consolecache = [];
-function consolePrint(text) {
-	if (cache_console_messages) {		
+function consolePrint(text,urgent) {
+	if (urgent===undefined) {
+		urgent=false;
+	}
+	if (cache_console_messages&&urgent==false) {		
 		consolecache.push(text);
 	} else {
 		var code = document.getElementById('consoletextarea');

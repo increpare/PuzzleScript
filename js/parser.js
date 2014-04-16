@@ -32,7 +32,7 @@ function logError(str, lineNumber,urgent) {
          if (errorStrings.indexOf(errorString) >= 0 && !urgent) {
             //do nothing, duplicate error
          } else {
-            consolePrint(errorString);
+            consolePrint(errorString,true);
             errorStrings.push(errorString);
             errorCount++;
         }
@@ -48,7 +48,7 @@ function logWarning(str, lineNumber,urgent) {
          if (errorStrings.indexOf(errorString) >= 0 && !urgent) {
             //do nothing, duplicate error
          } else {
-            consolePrint(errorString);
+            consolePrint(errorString,true);
             errorStrings.push(errorString);
         }
     }
