@@ -15,6 +15,7 @@ function resize_rightbottom(event, ui){
 }
 
 function resize_all(){
+	$(".leftpanel").height($("BODY").height() - $(".uppertoolbar").height());
 	newwidth = $("BODY").width() - $(".leftpanel").width();
 	$( ".righttophalf").width(newwidth);
 	$( ".rightbottomhalf" ).width(newwidth);
