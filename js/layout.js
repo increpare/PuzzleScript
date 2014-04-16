@@ -1,14 +1,22 @@
 var soundbarwidth = 440;
-var lowerbarheight = 18;
-var upperbarheight = 30;
-var winwidth = 0;
-var winheight = 0;
+var lowerbarheight = document.getElementById("soundbar").clientHeight;
+var upperbarheight = document.getElementById("uppertoolbar").clientHeight;
+var winwidth = window.innerWidth;
+var winheight = window.innerHeight;
+var verticaldragbarWidth = document.getElementById("verticaldragbar").clientWidth;
+var horizontaldragbarHeight = document.getElementById("horizontaldragbar").clientHeight;
+
+console.log(lowerbarheight);
+console.log(upperbarheight);
+
+console.log(verticaldragbarWidth);
+console.log(horizontaldragbarHeight);
 
 function resize_widths(verticaldragbarX){
 	document.getElementById("leftpanel").style.width = verticaldragbarX + "px";
-	document.getElementById("righttophalf").style.left = verticaldragbarX + 3 + "px";
-	document.getElementById("rightbottomhalf").style.left = verticaldragbarX + 3 + "px";
-	document.getElementById("horizontaldragbar").style.left = verticaldragbarX + 3 + "px";
+	document.getElementById("righttophalf").style.left = verticaldragbarX + verticaldragbarWidth + "px";
+	document.getElementById("rightbottomhalf").style.left = verticaldragbarX + verticaldragbarWidth + "px";
+	document.getElementById("horizontaldragbar").style.left = verticaldragbarX + verticaldragbarWidth + "px";
 	document.getElementById("verticaldragbar").style.left = verticaldragbarX + "px";
 	canvasResize();
 	vbarX = verticaldragbarX;
@@ -17,8 +25,9 @@ function resize_widths(verticaldragbarX){
 function resize_heights(horizontaldragbarY){
 	document.getElementById("leftpanel").style.height = (window.innerHeight - upperbarheight) + "px";
 	document.getElementById("verticaldragbar").style.height = (window.innerHeight - upperbarheight) + "px";
+	
 	document.getElementById("righttophalf").style.height = horizontaldragbarY - upperbarheight + "px";
-	document.getElementById("rightbottomhalf").style.top = horizontaldragbarY + 2 + "px";
+	document.getElementById("rightbottomhalf").style.top = horizontaldragbarY + horizontaldragbarHeight + "px";
 	document.getElementById("horizontaldragbar").style.top = horizontaldragbarY + "px";
 	canvasResize();
 	hbarY = horizontaldragbarY;
@@ -55,7 +64,7 @@ function resize_all(e){
 	if ((horizontaldragbarY <= upperbarheight)){
 		horizontaldragbarY = upperbarheight;
 	} else if ((window.innerHeight - horizontaldragbarY) < (lowerbarheight)){
-		horizontaldragbarY = window.innerHeight - lowerbarheight - 7;
+		horizontaldragbarY = window.innerHeight - lowerbarheight - 5;
 	};
 	resize_heights(horizontaldragbarY);
 	
@@ -95,10 +104,10 @@ function horizontalDragbarMouseDown(e) {
 function horizontalDragbarMouseMove(e) {
 	if (e.pageY <= upperbarheight) {
 		resize_heights(upperbarheight);
-	} else if ((window.innerHeight - e.pageY) > (lowerbarheight + 7)){
+	} else if ((window.innerHeight - e.pageY) > (lowerbarheight + 3)){
 		resize_heights(e.pageY - 1);
 	} else {
-		resize_heights(window.innerHeight - lowerbarheight - 7);
+		resize_heights(window.innerHeight - lowerbarheight - 3);
 	}
 };
 
@@ -108,8 +117,8 @@ function horizontalDragbarMouseUp(e) {
 };
 
 function reset_panels(){
-	resize_widths(window.innerWidth/2);
-	resize_heights(window.innerHeight/2);
+	resize_widths(Math.floor(window.innerWidth/2));
+	resize_heights(Math.floor(window.innerHeight/2));
 	winwidth = window.innerWidth;
 	winheight = window.innerHeight;
 };
