@@ -30,7 +30,7 @@ function consoleCacheDump() {
 	
 	var lastline = "";
 	var times_repeated = 0;
-	var summarised_message = "";
+	var summarised_message = "<br>";
 	for (var i = 0; i < consolecache.length; i++) {
 		if (consolecache[i] == lastline) {
 			times_repeated++;
