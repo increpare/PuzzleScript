@@ -7,6 +7,26 @@ var dragging=false;
 var rightdragging=false;
 var columnAdded=false;
 
+function selectText(containerid,e) {
+	e = e || window.event;
+	var myspan = document.getElementById(containerid);
+	if (e&&(e.ctrlKey || e.metaKey)) {
+		var levelarr = ["console"].concat(myspan.innerHTML.split("<br>"));
+		var leveldat = levelFromString(state,levelarr);
+		loadLevelFromLevelDat(state,leveldat,null);
+		canvasResize();
+	} else {
+	    if (document.selection) {
+	        var range = document.body.createTextRange();
+	        range.moveToElementText(myspan);
+	        range.select();
+	    } else if (window.getSelection) {
+	        var range = document.createRange();
+	        range.selectNode(myspan);
+	        window.getSelection().addRange(range);
+	    }
+	}
+}
 
 function recalcLevelBounds(){
 }
@@ -161,6 +181,7 @@ var htmlEntityMap = {
 	"/": '&#x2F;'
 };
 
+
 function printLevel() {
 	var glyphAndMask = [];
 	for (var glyphName in state.glyphDict) {
@@ -183,13 +204,13 @@ function printLevel() {
 				var bgid = 1<<i;
 				if (bgMask.get(i)) {
 					glyphmask.ibitset(i);
-					glyphAndMask.push([glyphName, glyphmask.clone()])
+					glyphAndMask.push([glyphName, glyphmask.clone()]);
 					glyphmask.ibitclear(i);
 				}
 			}
 		}
 	}
-	var output="Printing level contents:<br><br>";
+	var output="Printing level contents:<br><br><span id=\"selectable\" onclick=\"selectText('selectable',event)\">";
 	var old_cache_console_messages = cache_console_messages;
 	cache_console_messages = false;
 	for (var j=0;j<level.height;j++) {
@@ -202,8 +223,11 @@ function printLevel() {
 			}
 			output = output+glyph;
 		}
-		output=output+"<br>";
+		if (j<level.height-1){
+			output=output+"<br>";
+		}
 	}
+	output+="</span><br>"
 	consolePrint(output);
 	cache_console_messages=old_cache_console_messages;
 }
@@ -320,12 +344,13 @@ function onMouseDown(event) {
         dragging=false;
         rightdragging=false; 
     } else if (event.button===2 || (event.button===0 && (event.ctrlKey||event.metaKey)) ) {
-
-	    dragging=false;
-	    rightdragging=true;
+    	if (event.target.id==="gameCanvas") {
+		    dragging=false;
+		    rightdragging=true;
         	if (levelEditorOpened) {
         		return levelEditorRightClick(event,true);
         	}
+        }
     }
 
 }
