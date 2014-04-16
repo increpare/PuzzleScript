@@ -23,7 +23,7 @@ function resize_heights(horizontaldragbarY){
 function resize_all(){
 	verticaldragbarX = parseInt(document.getElementById("verticaldragbar").style.left.replace("px",""));
 	if ((window.innerWidth - verticaldragbarX) < soundbarwidth){
-		verticaldragbarX = window.innerWidth - soundbarwidth - 30;
+		verticaldragbarX = window.innerWidth - soundbarwidth;
 	} else if ((verticaldragbarX < window.innerWidth/2)){
 		verticaldragbarX = window.innerWidth/2;
 	}
@@ -48,7 +48,7 @@ function verticalDragbarMouseMove(e) {
 	if ((window.innerWidth - e.pageX) > soundbarwidth){
 		resize_widths(e.pageX + 2);
 	} else {
-		resize_widths(window.innerWidth - soundbarwidth - 30);
+		resize_widths(window.innerWidth - soundbarwidth);
 	};
 };
 
