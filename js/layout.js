@@ -12,28 +12,30 @@ function resize_widths(verticaldragbarX){
 }
 
 function resize_heights(horizontaldragbarY){
-	document.getElementById("leftpanel").style.height = (window.innerHeight - 30) + "px";
-	document.getElementById("verticaldragbar").style.height = (window.innerHeight - 30) + "px";
+	document.getElementById("leftpanel").style.height = (window.innerHeight - upperbarheight) + "px";
+	document.getElementById("verticaldragbar").style.height = (window.innerHeight - upperbarheight) + "px";
 	document.getElementById("righttophalf").style.height = horizontaldragbarY - upperbarheight + "px";
-	document.getElementById("rightbottomhalf").style.top = horizontaldragbarY + 3 + "px";
+	document.getElementById("rightbottomhalf").style.top = horizontaldragbarY + 2 + "px";
 	document.getElementById("horizontaldragbar").style.top = horizontaldragbarY + "px";
 	canvasResize();
 }
 
-function resize_all(){
+function resize_all(e){
+	e.preventDefault();
+	console.log(e);
 	verticaldragbarX = parseInt(document.getElementById("verticaldragbar").style.left.replace("px",""));
-	if ((window.innerWidth - verticaldragbarX) < soundbarwidth){
+	if ((verticaldragbarX <= 0)){
+		verticaldragbarX = 0;
+	} else if ((window.innerWidth - verticaldragbarX) < soundbarwidth){
 		verticaldragbarX = window.innerWidth - soundbarwidth;
-	} else if ((verticaldragbarX < window.innerWidth/2)){
-		verticaldragbarX = window.innerWidth/2;
-	}
+	};
 	resize_widths(verticaldragbarX);
 	
 	horizontaldragbarY = parseInt(document.getElementById("horizontaldragbar").style.top.replace("px",""));
-	if ((window.innerHeight - horizontaldragbarY) < (lowerbarheight)){
+	if ((horizontaldragbarY <= upperbarheight)){
+		horizontaldragbarY = upperbarheight;
+	} else if ((window.innerHeight - horizontaldragbarY) < (lowerbarheight)){
 		horizontaldragbarY = window.innerHeight - lowerbarheight - 7;
-	} else if ((horizontaldragbarY < window.innerHeight/2)){
-		horizontaldragbarY = window.innerHeight/2;
 	};
 	resize_heights(horizontaldragbarY);
 };
@@ -65,8 +67,8 @@ function horizontalDragbarMouseDown(e) {
 };
 
 function horizontalDragbarMouseMove(e) {
-	if (e.pageY <= 30) {
-		resize_heights(30);
+	if (e.pageY <= upperbarheight) {
+		resize_heights(upperbarheight);
 	} else if ((window.innerHeight - e.pageY) > (lowerbarheight + 7)){
 		resize_heights(e.pageY + 2);
 	} else {
