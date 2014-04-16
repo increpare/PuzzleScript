@@ -36,11 +36,11 @@ function consoleCacheDump() {
 			times_repeated++;
 		} else {
 			lastline = consolecache[i];
-			summarised_message += lastline;
 			if (times_repeated > 0) {
 				summarised_message = summarised_message + " (x" + (times_repeated + 1) + ")";
 			}
 			summarised_message += "<br>"
+			summarised_message += lastline;
 			times_repeated = 0;
 		}
 	}
