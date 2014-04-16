@@ -1,16 +1,11 @@
-var soundbarwidth = 440;
+var soundbarwidth = 270;
 var lowerbarheight = document.getElementById("soundbar").clientHeight;
 var upperbarheight = document.getElementById("uppertoolbar").clientHeight;
 var winwidth = window.innerWidth;
 var winheight = window.innerHeight;
 var verticaldragbarWidth = document.getElementById("verticaldragbar").clientWidth;
 var horizontaldragbarHeight = document.getElementById("horizontaldragbar").clientHeight;
-
-console.log(lowerbarheight);
-console.log(upperbarheight);
-
-console.log(verticaldragbarWidth);
-console.log(horizontaldragbarHeight);
+var minimumDimension = 100;
 
 function resize_widths(verticaldragbarX){
 	document.getElementById("leftpanel").style.width = verticaldragbarX + "px";
@@ -19,7 +14,6 @@ function resize_widths(verticaldragbarX){
 	document.getElementById("horizontaldragbar").style.left = verticaldragbarX + verticaldragbarWidth + "px";
 	document.getElementById("verticaldragbar").style.left = verticaldragbarX + "px";
 	canvasResize();
-	vbarX = verticaldragbarX;
 }
 
 function resize_heights(horizontaldragbarY){
@@ -30,7 +24,6 @@ function resize_heights(horizontaldragbarY){
 	document.getElementById("rightbottomhalf").style.top = horizontaldragbarY + horizontaldragbarHeight + "px";
 	document.getElementById("horizontaldragbar").style.top = horizontaldragbarY + "px";
 	canvasResize();
-	hbarY = horizontaldragbarY;
 }
 
 function resize_all(e){
@@ -45,15 +38,18 @@ function resize_all(e){
 		verticaldragbarX *= window.innerWidth/winwidth;
 	};
 	
-	if ((verticaldragbarX <= 0)){
-		verticaldragbarX = 0;
+	if ((verticaldragbarX <= minimumDimension)){
+		verticaldragbarX = minimumDimension;
 	} else if ((window.innerWidth - verticaldragbarX) < soundbarwidth){
 		verticaldragbarX = window.innerWidth - soundbarwidth;
 	};
 	resize_widths(verticaldragbarX);
 	
+	
+	
 	horizontaldragbarY = parseInt(document.getElementById("horizontaldragbar").style.top.replace("px",""));
 	vdiff = window.innerHeight - winheight;
+	console.log(horizontaldragbarY);
 	
 	if(vdiff > -smallmovelimit && vdiff < smallmovelimit){
 		horizontaldragbarY += vdiff;
@@ -61,10 +57,10 @@ function resize_all(e){
 		horizontaldragbarY *= window.innerHeight/winheight;
 	};
 	
-	if ((horizontaldragbarY <= upperbarheight)){
-		horizontaldragbarY = upperbarheight;
-	} else if ((window.innerHeight - horizontaldragbarY) < (lowerbarheight)){
-		horizontaldragbarY = window.innerHeight - lowerbarheight - 5;
+	if ((horizontaldragbarY <= upperbarheight + minimumDimension)){
+		horizontaldragbarY = upperbarheight + minimumDimension;
+	} else if ((window.innerHeight - horizontaldragbarY) < (lowerbarheight + minimumDimension)){
+		horizontaldragbarY = window.innerHeight - (lowerbarheight + minimumDimension + 5);
 	};
 	resize_heights(horizontaldragbarY);
 	
@@ -80,8 +76,8 @@ function verticalDragbarMouseDown(e) {
 };
 
 function verticalDragbarMouseMove(e) {
-	if (e.pageX <= 0){
-		resize_widths(0);
+	if (e.pageX <= minimumDimension){
+		resize_widths(minimumDimension);
 	} else if ((window.innerWidth - e.pageX) > soundbarwidth){
 		resize_widths(e.pageX - 1);
 	} else {
@@ -102,12 +98,12 @@ function horizontalDragbarMouseDown(e) {
 };
 
 function horizontalDragbarMouseMove(e) {
-	if (e.pageY <= upperbarheight) {
-		resize_heights(upperbarheight);
-	} else if ((window.innerHeight - e.pageY) > (lowerbarheight + 3)){
+	if (e.pageY <= (upperbarheight + minimumDimension)) {
+		resize_heights(upperbarheight + minimumDimension);
+	} else if ((window.innerHeight - e.pageY) > (lowerbarheight + minimumDimension)){
 		resize_heights(e.pageY - 1);
 	} else {
-		resize_heights(window.innerHeight - lowerbarheight - 3);
+		resize_heights(window.innerHeight - lowerbarheight - minimumDimension);
 	}
 };
 

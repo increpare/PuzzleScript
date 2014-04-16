@@ -325,9 +325,9 @@ var oldtextmode=-1;
 var oldfgcolor=-1;
 var forceRegenImages=false;
 function canvasResize() {
-    //window.console.log("canvasresize");
-    //canvas.style.width = canvas.parentNode.clientWidth;
-    //canvas.style.height = canvas.parentNode.clientHeight;
+    window.console.log("canvasresize");
+    canvas.style.width = canvas.parentNode.clientWidth + "px";
+    canvas.style.height = canvas.parentNode.clientHeight + "px";
 
     canvas.width = canvas.parentNode.clientWidth;
     canvas.height = canvas.parentNode.clientHeight;
