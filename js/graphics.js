@@ -43,11 +43,10 @@ function regenText(spritecanvas,spritectx) {
 }
 var spriteimages;
 function regenSpriteImages() {
-//	if (textMode) {
-    //find some other way to be selective about this stuff :)
+	if (textMode) {
 		regenText();
-//		return;
-//	}
+		return;
+	}
     
     if (state.levels.length===0) {
         return;
