@@ -1,68 +1,85 @@
 var soundbarwidth = 440;
+var lowerbarheight = 18;
+var upperbarheight = 30;
 
-function resize_righthalf(event, ui){
-	if ($("BODY").width() - ui.size["width"] <= soundbarwidth){
-		return;
-	};
-	
-	newwidth = $("BODY").width() - ui.size["width"];
-	$( ".righttophalf").width(newwidth);
-	$( ".rightbottomhalf" ).width(newwidth);
-	canvasResize();
+function verticalDragbarMouseDown(e) {
+    e.preventDefault();
+    window.addEventListener("mousemove", verticalDragbarMouseMove, false);
+	window.addEventListener("mouseup", verticalDragbarMouseUp, false);
 };
 
-function resize_rightbottom(event, ui){
-	bottomhalfheight = $("BODY").height() - (ui.position["top"] + ui.size["height"]);
-	$( ".rightbottomhalf" ).height(bottomhalfheight);
-	
-	canvasResize();
-}
+function verticalDragbarMouseMove(e) {
+	if ((window.innerWidth - e.pageX) > soundbarwidth){
+		document.getElementById("leftpanel").style.width = e.pageX + 2 + "px";
+		document.getElementById("righttophalf").style.left = e.pageX + 5 + "px";
+		document.getElementById("rightbottomhalf").style.left = e.pageX + 5 + "px";
+		document.getElementById("horizontaldragbar").style.left = e.pageX + 5 + "px";
+		document.getElementById("verticaldragbar").style.left = e.pageX + 2 + "px";
+		canvasResize();
+	};
+};
+
+function verticalDragbarMouseUp(e) {
+    //document.getElementById("clickevent").innerHTML = 'in another mouseUp event' + i++;
+    window.removeEventListener("mousemove", verticalDragbarMouseMove, false);
+};
+
+function horizontalDragbarMouseDown(e) {
+	e.preventDefault();
+    window.addEventListener("mousemove", horizontalDragbarMouseMove, false);
+	window.addEventListener("mouseup", horizontalDragbarMouseUp, false);
+};
+
+function horizontalDragbarMouseMove(e) {
+	if ((window.innerHeight - e.pageY) > (lowerbarheight + 8)){
+		document.getElementById("righttophalf").style.height = e.pageY + 2 - upperbarheight + "px";
+		document.getElementById("rightbottomhalf").style.top = e.pageY + 5 + "px";
+		document.getElementById("horizontaldragbar").style.top = e.pageY + 2 + "px";
+		canvasResize();
+	}
+};
+
+function horizontalDragbarMouseUp(e) {
+    //document.getElementById("clickevent").innerHTML = 'in another mouseUp event' + i++;
+    window.removeEventListener("mousemove", horizontalDragbarMouseMove, false);
+};
 
 function resize_all(){
-	maxtophalfheight = ($("BODY").height()-($(".uppertoolbar").height() + $(".lowertoolbar").height() + 2));
+	document.getElementById("leftpanel").style.height = (window.innerHeight - 30) + "px";
+	document.getElementById("verticaldragbar").style.height = (window.innerHeight - 30) + "px";
 
-	//reset maximums drag extents
-	$( ".righttophalf" ).resizable( "option", "maxHeight", maxtophalfheight);
-	$(".leftpanel").resizable( "option", "maxWidth", ($("BODY").width() - soundbarwidth));
+	verticaldragbarX = parseInt(document.getElementById("verticaldragbar").style.left.replace("px",""));
 	
-	//resize panel heights
-	if ($(".righttophalf").height() > maxtophalfheight){
-		$(".righttophalf").height(maxtophalfheight);
-		bottomhalfheight = $("BODY").height() - (maxtophalfheight);
-	} else {
-		bottomhalfheight = $("BODY").height() - ($(".uppertoolbar").height() + $(".righttophalf").height());
+	if ((window.innerWidth - verticaldragbarX) < soundbarwidth){
+		verticaldragbarX = window.innerWidth - soundbarwidth - 30;
 	};
-	$( ".rightbottomhalf" ).height(bottomhalfheight);
-	$(".leftpanel").height($("BODY").height() - $(".uppertoolbar").height());
 	
-	//resize panel widths
-	if ($("BODY").width() - $(".leftpanel").width() < soundbarwidth){
-		$(".leftpanel").width($("BODY").width() - soundbarwidth);
+	document.getElementById("leftpanel").style.width = verticaldragbarX + "px";
+	document.getElementById("righttophalf").style.left = verticaldragbarX + 3 + "px";
+	document.getElementById("rightbottomhalf").style.left = verticaldragbarX + 3 + "px";
+	document.getElementById("horizontaldragbar").style.left = verticaldragbarX + 3 + "px";
+	document.getElementById("verticaldragbar").style.left = verticaldragbarX + "px";
+	
+	horizontaldragbarY = parseInt(document.getElementById("horizontaldragbar").style.top.replace("px",""));
+	if ((window.innerHeight - horizontaldragbarY) < (lowerbarheight)){
+		horizontaldragbarY = window.innerHeight - lowerbarheight - 8;
 	};
-	RHSwidth = $("BODY").width() - $(".leftpanel").width();
-	$( ".righttophalf").width(RHSwidth);
-	$( ".rightbottomhalf" ).width(RHSwidth);
 	
+	document.getElementById("righttophalf").style.height = horizontaldragbarY - upperbarheight + "px";
+	document.getElementById("rightbottomhalf").style.top = horizontaldragbarY + 3 + "px";
+	document.getElementById("horizontaldragbar").style.top = horizontaldragbarY + "px";
 	canvasResize();
 };
 
-$( ".leftpanel" ).resizable({
-	handles: "e",
-	resize: resize_righthalf,
-	stop: resize_righthalf,
-	maxWidth: ($("BODY").width() - soundbarwidth)
-});
-
-$( ".righttophalf" ).resizable({
-	handles: "s",
-	resize: resize_rightbottom,
-	stop: resize_rightbottom,
-	maxHeight: ($("BODY").height()-($(".uppertoolbar").height() + $(".lowertoolbar").height() + 2))
-} );
-
-window.onresize = resize_all;
-
-window.onload = function(event){
-	$(".leftpanel").height($("BODY").height() - $(".uppertoolbar").height());
-	$(".righttophalf").height($("BODY").height()/2 - $(".uppertoolbar").height());
-}
+function adjust_panels(){
+	document.getElementById("leftpanel").style.height = (window.innerHeight - 30) + "px";
+	document.getElementById("verticaldragbar").style.height = (window.innerHeight - 30) + "px";
+	document.getElementById("righttophalf").style.left = (window.innerWidth/2 + 3) + "px";
+	document.getElementById("rightbottomhalf").style.left = (window.innerWidth/2 + 3) + "px";
+	document.getElementById("rightbottomhalf").style.top = (window.innerHeight/2 + 3) + "px";
+	document.getElementById("horizontaldragbar").style.left = (window.innerWidth/2 + 3) + "px";
+	
+	//need to have these in px in case resize_all is called
+	document.getElementById("verticaldragbar").style.left = (window.innerWidth/2) + "px";
+	document.getElementById("horizontaldragbar").style.top = (window.innerHeight/2) + "px";
+};

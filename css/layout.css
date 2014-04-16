@@ -6,31 +6,34 @@ HTML, BODY
 	top: 0px;
 	left: 0px;
 }
-.leftpanel
+#leftpanel
 {
-	left: 0px;
+	position:absolute;
+	left: 0;
 	top: 30px;
-	bottom: 0px;
+	bottom: 0;
 	width: 50%;
 	height: 100%;
 	float: left;
 }
-.righttophalf
+#righttophalf
 {
+	position: absolute;
 	top: 30px;
-	right: 0px;
-	width: 50%;
-	height: 50%;
-	float: left;
+	right: 0;
+	bottom: 50%;
+	left: 50%;
+	float: right;
 }
-.rightbottomhalf
+#rightbottomhalf
 {
-	position: relative;
-	right: 0px;
-	height: 50%;
-	width: 50%;
-	float: left;
-	top: 30px;
+	position: absolute;
+	top: 50% + 3px;
+	right: 0;
+	bottom: 0;
+	left: 50%;
+	float: right;
+	
 }
 .uppertoolbar
 {
@@ -45,11 +48,8 @@ HTML, BODY
 }
 .upperarea
 {
-	position: absolute;
-	top: 0px;
-	bottom: 0px;
-	left: 2px;
-	right: 0;
+	height: 100%;
+	width: 100%;
 }
 .lowertoolbar
 {
@@ -69,7 +69,27 @@ HTML, BODY
 	top: 21px;
 	bottom: 0px;
 	left: 0px;
-	right: 0;
+	right: 0px;
 	overflow: auto;
 	word-wrap: normal;
+}
+#verticaldragbar {
+	position: absolute;
+	top: 30px;
+	left: 50%;
+    background-color:green;
+    height: 100%;
+    float: left;
+    width: 3px;
+    cursor: col-resize;
+}
+#horizontaldragbar {
+	position: absolute;
+    background-color:green;
+	top: 50%;
+	left: 50%;
+	right: 0;
+    float: right;
+    height: 3px;
+    cursor: row-resize;
 }

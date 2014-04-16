@@ -8,7 +8,6 @@ for (var i=0;i<10;i++) {
 var soundButtonPress = document.getElementById("soundButtonPress");
 soundButtonPress.addEventListener("click", buttonPress, false);
 
-
 var runClickLink = document.getElementById("runClickLink");
 runClickLink.addEventListener("click", runClick, false);
 
@@ -32,6 +31,15 @@ exampleDropdown.addEventListener("change", dropdownChange, false);
 
 var loadDropDown = document.getElementById("loadDropDown");
 loadDropDown.addEventListener("change", loadDropDownChange, false);
+
+var horizontalDragbar = document.getElementById("horizontaldragbar");
+horizontalDragbar.addEventListener("mousedown", horizontalDragbarMouseDown, false);
+
+var verticalDragbar = document.getElementById("verticaldragbar");
+verticalDragbar.addEventListener("mousedown", verticalDragbarMouseDown, false);
+
+window.addEventListener("resize", resize_all, false);
+window.addEventListener("load", adjust_panels, false);
 
 /* https://github.com/ndrake/PuzzleScript/commit/de4ac2a38865b74e66c1d711a25f0691079a290d */
 window.onbeforeunload = function (e) {
