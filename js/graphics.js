@@ -325,12 +325,8 @@ var oldtextmode=-1;
 var oldfgcolor=-1;
 var forceRegenImages=false;
 function canvasResize() {
-//  window.console.log("canvasresize");
-    canvas.style.width = canvas.parentNode.clientWidth;
-        canvas.style.height = canvas.parentNode.clientHeight;
-
     canvas.width = canvas.parentNode.clientWidth;
-        canvas.height = canvas.parentNode.clientHeight;
+    canvas.height = canvas.parentNode.clientHeight;
 
     screenwidth=level.width;
     screenheight=level.height;
