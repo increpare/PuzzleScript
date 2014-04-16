@@ -13,12 +13,14 @@
 <link rel="stylesheet" href="css/soundbar.css">
 <link rel="stylesheet" href="css/layout.css">
 <link rel="stylesheet" href="css/toolbar.css">
+
 <!--CSSREPLACE-->
 <link rel="shortcut icon" type="image/x-icon" href="Documentation/ico/favicon.ico" />
 
 </head>
 <body>
-<div class="leftpanel">
+
+<div id="leftpanel">
 <form id="form1" name="form1"  action="javascript:void(0);"><textarea id="code" class="codeform" name="code" rows="20" cols="20" style="display:none;">
 title My Game
 author Stephen Lavelle
@@ -91,7 +93,9 @@ LEVELS
 #########
 </textarea></form>
 </div>
-<div class="uppertoolbar">
+<div id="verticaldragbar"></div>
+
+<div id="uppertoolbar">
 	&nbsp;&nbsp;&nbsp;<a href="index.html"><h2>PuzzleScript</h2></a> - <a id="saveClickLink" href="javascript:void(0);">SAVE</a> - 
 
 	<form action="" style="display:inline;"><select id="loadDropDown" name="default" style="display:inline; width:100px"> -
@@ -125,17 +129,15 @@ LEVELS
 </optgroup>
 </select>
 </form>- <a id="runClickLink" href="javascript:void('Run the Game');">RUN</a> - <a id="rebuildClickLink" href="javascript:void('Rebuild without restarting');">REBUILD</a> - <a id="levelEditorClickLink" href="javascript:void('Open Level Editor');">LEVEL EDITOR</a> - <a id="exportClickLink" href="javascript:void('Export Standalone HTML Build');">EXPORT</a> - <a id="shareClickLink" href="javascript:void('Generate Link To Game');">SHARE</a> - <a href="Documentation/documentation.html"  target="Puzzle_Script_Documentation">DOCS</a>  - <a href="https://groups.google.com/forum/#!forum/puzzlescript">FORUM</a>
+</div>
 
-	</div>
-
-<div class="righttophalf">	
+<div id="righttophalf">	
 	<div class="upperarea">
-	
-<canvas id="gameCanvas" ></canvas>
-
+		<canvas id="gameCanvas" ></canvas>
 	</div>
 </div>
-<div class="rightbottomhalf">
+<div id="horizontaldragbar"></div>
+<div id="rightbottomhalf">
 	<div class="lowertoolbar">
 <div id="soundbar">
 	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="soundbutton"><a id="clearConsoleClick" title="clears the console" href="javascript:void('Clear Console');"><img src="images/clearConsole.gif" alt="clear console contents"></a></span>
@@ -150,11 +152,7 @@ LEVELS
 	<span class="soundbutton"><a id="newsound1" title="pew pew sound" href="javascript:void('Generate Pew Pew Sound');"><img src="images/audio8.gif"  alt="pew pew pew"></a></span>
 	<span class="soundbutton"><a id="newsound6" title="selection sound" href="javascript:void('Generate Selection Sound');"><img src="images/audio9.gif"  alt="selection sound"></a></span>
 	<span class="soundbutton"><a id="newsound8" title="random sound" href="javascript:void('Generate Random Sound');"><img src="images/audio10.gif"  alt="random sound"></a></span>
-	<form>
-	<input type="text" name="sounddat" id="sounddat">
-	<input id="soundButtonPress" name="clickMe" type="button" value="Play seed"  />
-	</form>
-</div>	</div>
+	</div></div>
 	<div class="lowerarea" id="lowerarea">
 <div id = "consoletextarea" >
 =================================<br>
@@ -198,9 +196,11 @@ LEVELS
 <script src="js/compiler.js"></script>
 <script src="js/soundbar.js"></script>
 <script src="js/toolbar.js"></script>
+<script src="js/layout.js"></script>
 <script src="js/addlisteners.js"></script>
 <script src="js/addlisteners_editor.js"></script>
 <script src="js/makegif.js"></script>
+
 <!--ENDREPLACE-->
 
 <!--<script src="js/scripts.js"></script>-->
