@@ -111,7 +111,7 @@ function getParameterByName(name) {
 function tryLoadGist(id) {
 	var githubURL = 'https://api.github.com/gists/'+id;
 
-	consolePrint("Contacting GitHub");
+	consolePrint("Contacting GitHub",true);
 	var githubHTTPClient = new XMLHttpRequest();
 	githubHTTPClient.open('GET', githubURL);
 	githubHTTPClient.onreadystatechange = function() {

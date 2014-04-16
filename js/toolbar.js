@@ -64,7 +64,7 @@ function saveClick() {
 
 	setEditorClean();
 
-	consolePrint("saved file to local storage");
+	consolePrint("saved file to local storage",true);
 }
 
 
@@ -72,7 +72,7 @@ function saveClick() {
 function loadDropDownChange() {
 	var saveString = localStorage['saves'];
 	if (saveString===undefined) {
-			consolePrint("Eek, trying to load a file, but there's no local storage found. Eek!");
+			consolePrint("Eek, trying to load a file, but there's no local storage found. Eek!",true);
 	} 
 
 	saves = JSON.parse(saveString);
@@ -93,7 +93,7 @@ function loadDropDownChange() {
 	    }
 	}		
 
-	consolePrint("Eek, trying to load a save, but couldn't find it. :(");
+	consolePrint("Eek, trying to load a save, but couldn't find it. :(",true);
 }
 
 
@@ -146,7 +146,7 @@ function levelEditorClick_Fn() {
 }
 
 function shareClick() {
-	consolePrint("Sending code to github...")
+	consolePrint("Sending code to github...",true)
 	var title = "Untitled PuzzleScript Script";
 	if (state.metadata.title!==undefined) {
 		title=state.metadata.title + " PuzzleScript Script";
@@ -191,13 +191,13 @@ function shareClick() {
 			var sourceCodeLink = "link to source code:<br><a href=\""+editurl+"\">"+editurl+"</a>";
 
 
-			consolePrint("GitHub submission successful - " + sourceCodeLink);
+			consolePrint("GitHub submission successful - " + sourceCodeLink,true);
 
 
 			if (errorCount>0) {
-				consolePrint("Cannot link directly to playable game, because there are compiler errors.");
+				consolePrint("Cannot link directly to playable game, because there are compiler errors.",true);
 			} else {
-				consolePrint("The game can now be played at this url:<br><a target=\"_blank\" href=\""+url+"\">"+url+"</a>");
+				consolePrint("The game can now be played at this url:<br><a target=\"_blank\" href=\""+url+"\">"+url+"</a>",true);
 			} 
 
 

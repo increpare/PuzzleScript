@@ -360,7 +360,7 @@ function loadLevelFromLevelDat(state,leveldat,randomseed) {
 	titleSelected=false;
     againing=false;
     if (leveldat===undefined) {
-    	consolePrint("Trying to access a level that doesn't exist.");
+    	consolePrint("Trying to access a level that doesn't exist.",true);
     	return;
     }
     if (leveldat.message===undefined) {
@@ -758,7 +758,7 @@ function DoRestart(force) {
 	}
 
 	if (verbose_logging) {
-		consolePrint("--- restarting ---");
+		consolePrint("--- restarting ---",true);
 	}
 
 	restoreLevel(restartTarget);
@@ -776,7 +776,7 @@ function DoUndo(force) {
 		return;
 	}
 	if (verbose_logging) {
-		consolePrint("--- undoing ---");
+		consolePrint("--- undoing ---",true);
 	}
 	if (backups.length>0) {
 		var tobackup = backups[backups.length-1];
@@ -1905,7 +1905,7 @@ function applyRuleGroup(ruleGroup) {
     	loopcount++;
     	if (loopcount>200) 
     	{
-    		logError("Got caught looping lots in a rule group :O",ruleGroup[0].lineNumber,true);
+    		logErrorCacheable("Got caught looping lots in a rule group :O",ruleGroup[0].lineNumber,true);
     		break;
     	}
         propagated=false
@@ -1941,7 +1941,7 @@ function applyRules(rules, loopPoint, startRuleGroupindex){
         	loopCount++;
 			if (loopCount > 200) {
     			var ruleGroup=rules[ruleGroupIndex];
-			   	logError("got caught in an endless startloop...endloop vortex, escaping!", ruleGroup[0].lineNumber,true);
+			   	logErrorCacheable("got caught in an endless startloop...endloop vortex, escaping!", ruleGroup[0].lineNumber,true);
 			   	break;
 			}
         } else {
@@ -1953,7 +1953,7 @@ function applyRules(rules, loopPoint, startRuleGroupindex){
 		        	loopCount++;
 					if (loopCount > 200) {
 		    			var ruleGroup=rules[ruleGroupIndex];
-					   	logError("got caught in an endless startloop...endloop vortex, escaping!", ruleGroup[0].lineNumber,true);
+					   	logErrorCacheable("got caught in an endless startloop...endloop vortex, escaping!", ruleGroup[0].lineNumber,true);
 					   	break;
 					}
 		        } 
@@ -2268,11 +2268,15 @@ function processInput(dir,dontCheckWin,dontModify) {
 		    	if (processInput(-1,true,true)) {
 
 			    	if (verbose_logging) { 
-			    		consolePrint('AGAIN command executed, with changes detected: will execute another turn.');
+			    		consolePrint('AGAIN command executed, with changes detected - will execute another turn.');
 					}
 
 			    	againing=true;
 			    	timer=0;
+			    } else {		    	
+					if (verbose_logging) { 
+						consolePrint('AGAIN command not executed, it wouldn\'t make any changes.');
+					}
 			    }
 			    messagetext = oldmessagetext;
 			    verbose_logging=old_verbose_logging;
