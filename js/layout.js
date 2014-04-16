@@ -1,6 +1,8 @@
 var soundbarwidth = 440;
 var lowerbarheight = 18;
 var upperbarheight = 30;
+var winwidth = 0;
+var winheight = 0;
 
 function resize_widths(verticaldragbarX){
 	document.getElementById("leftpanel").style.width = verticaldragbarX + "px";
@@ -9,6 +11,7 @@ function resize_widths(verticaldragbarX){
 	document.getElementById("horizontaldragbar").style.left = verticaldragbarX + 3 + "px";
 	document.getElementById("verticaldragbar").style.left = verticaldragbarX + "px";
 	canvasResize();
+	vbarX = verticaldragbarX;
 }
 
 function resize_heights(horizontaldragbarY){
@@ -18,12 +21,12 @@ function resize_heights(horizontaldragbarY){
 	document.getElementById("rightbottomhalf").style.top = horizontaldragbarY + 2 + "px";
 	document.getElementById("horizontaldragbar").style.top = horizontaldragbarY + "px";
 	canvasResize();
+	hbarY = horizontaldragbarY;
 }
 
 function resize_all(e){
-	e.preventDefault();
-	console.log(e);
-	verticaldragbarX = parseInt(document.getElementById("verticaldragbar").style.left.replace("px",""));
+	hdiff = window.innerWidth - winwidth;
+	verticaldragbarX = hdiff + parseInt(document.getElementById("verticaldragbar").style.left.replace("px",""));
 	if ((verticaldragbarX <= 0)){
 		verticaldragbarX = 0;
 	} else if ((window.innerWidth - verticaldragbarX) < soundbarwidth){
@@ -31,13 +34,17 @@ function resize_all(e){
 	};
 	resize_widths(verticaldragbarX);
 	
-	horizontaldragbarY = parseInt(document.getElementById("horizontaldragbar").style.top.replace("px",""));
+	vdiff = window.innerHeight - winheight;
+	horizontaldragbarY = vdiff + parseInt(document.getElementById("horizontaldragbar").style.top.replace("px",""));
 	if ((horizontaldragbarY <= upperbarheight)){
 		horizontaldragbarY = upperbarheight;
 	} else if ((window.innerHeight - horizontaldragbarY) < (lowerbarheight)){
 		horizontaldragbarY = window.innerHeight - lowerbarheight - 7;
 	};
 	resize_heights(horizontaldragbarY);
+	
+	winwidth = window.innerWidth;
+	winheight = window.innerHeight;
 };
 
 function verticalDragbarMouseDown(e) {
@@ -83,4 +90,6 @@ function horizontalDragbarMouseUp(e) {
 function reset_panels(){
 	resize_widths(window.innerWidth/2);
 	resize_heights(window.innerHeight/2);
+	winwidth = window.innerWidth;
+	winheight = window.innerHeight;
 };
