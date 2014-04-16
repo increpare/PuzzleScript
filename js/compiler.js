@@ -370,13 +370,58 @@ Level.prototype.calcBackgroundMask = function(state) {
 	return cell;
 }
 
+function levelFromString(state,level) {
+	var backgroundlayer=state.backgroundlayer;
+	var backgroundid=state.backgroundid;
+	var backgroundLayerMask = state.layerMasks[backgroundlayer];
+	var o = new Level(level[0], level[1].length, level.length-1, state.collisionLayers.length, null);
+	o.objects = new Int32Array(o.width * o.height * STRIDE_OBJ);
+
+	for (var i = 0; i < o.width; i++) {
+		for (var j = 0; j < o.height; j++) {
+			var ch = level[j+1].charAt(i);
+			if (ch.length==0) {
+				ch=level[j+1].charAt(level[j+1].length-1);
+			}
+			var mask = state.glyphDict[ch];
+
+			if (mask == undefined) {
+				if (state.propertiesDict[ch]===undefined) {
+					logError('Error, symbol "' + ch + '", used in map, not found.', state.lineNumber);
+				} else {
+					logError('Error, symbol "' + ch + '" is defined using \'or\', and therefore ambiguous - it cannot be used in a map. Did you mean to define it in terms of \'and\'?', state.lineNumber);							
+				}
+
+			}
+
+			var maskint = new BitVec(STRIDE_OBJ);
+			mask = mask.concat([]);					
+			for (var z = 0; z < o.layerCount; z++) {
+				if (mask[z]>=0) {
+					maskint.ibitset(mask[z]);
+				}
+			}
+			for (var w = 0; w < STRIDE_OBJ; ++w) {
+				o.objects[STRIDE_OBJ * (i * o.height + j) + w] = maskint.data[w];
+			}
+		}
+	}
+
+	var levelBackgroundMask = o.calcBackgroundMask(state);
+	for (var i=0;i<o.n_tiles;i++)
+	{
+		var cell = o.getCell(i);
+		if (!backgroundLayerMask.anyBitsInCommon(cell)) {
+			cell.ior(levelBackgroundMask);
+		}
+		o.setCell(i, cell);
+	}
+	return o;
+}
 //also assigns glyphDict
 function levelsToArray(state) {
 	var levels = state.levels;
 	var processedLevels = [];
-	var backgroundlayer=state.backgroundlayer;
-	var backgroundid=state.backgroundid;
-	var backgroundLayerMask = state.layerMasks[backgroundlayer];
 
 	for (var levelIndex = 0; levelIndex < levels.length; levelIndex++) {
 		var level = levels[levelIndex];
@@ -389,48 +434,7 @@ function levelsToArray(state) {
 			};
 			processedLevels.push(o);
 		} else {
-			var o = new Level(level[0], level[1].length, level.length-1, state.collisionLayers.length, null);
-			o.objects = new Int32Array(o.width * o.height * STRIDE_OBJ);
-
-			for (var i = 0; i < o.width; i++) {
-				for (var j = 0; j < o.height; j++) {
-					var ch = level[j+1].charAt(i);
-					if (ch.length==0) {
-						ch=level[j+1].charAt(level[j+1].length-1);
-					}
-					var mask = state.glyphDict[ch];
-
-					if (mask == undefined) {
-						if (state.propertiesDict[ch]===undefined) {
-							logError('Error, symbol "' + ch + '", used in map, not found.', state.lineNumber);
-						} else {
-							logError('Error, symbol "' + ch + '" is defined using \'or\', and therefore ambiguous - it cannot be used in a map. Did you mean to define it in terms of \'and\'?', state.lineNumber);							
-						}
-
-					}
-
-					var maskint = new BitVec(STRIDE_OBJ);
-					mask = mask.concat([]);					
-					for (var z = 0; z < o.layerCount; z++) {
-						if (mask[z]>=0) {
-							maskint.ibitset(mask[z]);
-						}
-					}
-					for (var w = 0; w < STRIDE_OBJ; ++w) {
-						o.objects[STRIDE_OBJ * (i * o.height + j) + w] = maskint.data[w];
-					}
-				}
-			}
-
-			var levelBackgroundMask = o.calcBackgroundMask(state);
-			for (var i=0;i<o.n_tiles;i++)
-			{
-				var cell = o.getCell(i);
-				if (!backgroundLayerMask.anyBitsInCommon(cell)) {
-					cell.ior(levelBackgroundMask);
-				}
-				o.setCell(i, cell);
-			}
+			var o = levelFromString(state,level);
 			processedLevels.push(o);
 		}
 

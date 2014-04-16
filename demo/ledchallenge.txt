@@ -45,7 +45,7 @@ darkgrey darkgrey darkgrey darkgrey
 .3.3.
 
 Wall #
-black 
+black
 
 Red_Off R
 black DarkRed
@@ -248,7 +248,7 @@ Unlit = Blue_Off or Green_Off or Red_Off
 Lit = Blue_On or Green_On or Red_On
 Cable = Cable_h or Cable_v or Cable_dr or Cable_dl or Cable_ul or Cable_ur or Cable_UL or Cable_UR or Cable_UDR or Cable_ULR or Cable_UDL or Cable_DLR or Cable_Omni
 Battery = Battery_H or Battery_V
-Item = Unlit or Lit or Battery or Cable 
+Item = Unlit or Lit or Battery or Cable
 Cable_Up = Cable_V or Cable_UL or Cable_UR or Battery_V or Cable_UDR or Cable_ULR or Cable_UDL or Cable_Omni or  Player
 Cable_Down = Cable_V or Cable_DL or Cable_DR or Battery_V or Cable_UDR or Cable_UDL or Cable_DLR or Cable_Omni or Player
 Cable_Left = Cable_H or Cable_UL or Cable_DL or Battery_H  or Cable_ULR or Cable_UDL or Cable_DLR or Cable_Omni or Player
@@ -311,7 +311,7 @@ late down [ Cable_Down | Light_Up ] -> [ Light Cable_Down | Light_Up ]
 
 late down [ Red_Off | Light_Up ] -> [ Red_On | Light_Up ]
 late down [ Green_Off | Light_Up ] -> [ Green_On | Light_Up ]
-late down [ Blue_Off | Light_Up ] -> [ Blue_On | Light_Up ] 
+late down [ Blue_Off | Light_Up ] -> [ Blue_On | Light_Up ]
 
 late [ Light Cable_Up ] -> [ Light Light_Up Cable_Up ]
 late [ Light Cable_Down ] -> [ Light Light_Down Cable_Down ]

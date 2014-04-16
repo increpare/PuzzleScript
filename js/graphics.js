@@ -43,11 +43,12 @@ function regenText(spritecanvas,spritectx) {
 }
 var spriteimages;
 function regenSpriteImages() {
-//	if (textMode) {
-    //find some other way to be selective about this stuff :)
+	if (textMode) {
 		regenText();
-//		return;
-//	}
+		return;
+	} else if (levelEditorOpened) {
+        textImages['s'] = createSprite(font['s'],undefined);
+    }
     
     if (state.levels.length===0) {
         return;
@@ -325,13 +326,9 @@ var oldtextmode=-1;
 var oldfgcolor=-1;
 var forceRegenImages=false;
 function canvasResize() {
-    window.console.log("canvasresize");
-    canvas.style.width = canvas.parentNode.clientWidth + "px";
-    canvas.style.height = canvas.parentNode.clientHeight + "px";
-
     canvas.width = canvas.parentNode.clientWidth;
     canvas.height = canvas.parentNode.clientHeight;
-	
+
     screenwidth=level.width;
     screenheight=level.height;
     if (state!==undefined){

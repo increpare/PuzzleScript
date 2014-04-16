@@ -346,7 +346,8 @@ function drawMessageScreen() {
 }
 
 var loadedLevelSeed=0;
-function loadLevelFromState(state,levelindex,randomseed) {	
+
+function loadLevelFromLevelDat(state,leveldat,randomseed) {	
 	if (randomseed==null) {
 		randomseed = (Math.random() + Date.now()).toString();
 	}
@@ -357,9 +358,7 @@ function loadLevelFromState(state,levelindex,randomseed) {
 	titleMode=curlevel>0?1:0;
 	titleSelection=curlevel>0?1:0;
 	titleSelected=false;
-	curlevel=levelindex;
     againing=false;
-    var leveldat = state.levels[levelindex];
     if (leveldat===undefined) {
     	consolePrint("Trying to access a level that doesn't exist.");
     	return;
@@ -376,13 +375,6 @@ function loadLevelFromState(state,levelindex,randomseed) {
 	    if ('run_rules_on_level_start' in state.metadata) {
 			processInput(-1,true);
 	    }
-
-	    if (levelindex=== 0){ 
-			tryPlayStartLevelSound();
-		} else {
-			tryPlayStartLevelSound();			
-		}
-
 	} else {
 		tryPlayShowMessageSound();
 		drawMessageScreen();
@@ -392,7 +384,19 @@ function loadLevelFromState(state,levelindex,randomseed) {
 	if (canDump===true) {
 		inputHistory=[];
 	}
+}
 
+function loadLevelFromState(state,levelindex,randomseed) {	
+    var leveldat = state.levels[levelindex];    
+	curlevel=levelindex;
+    if (leveldat.message===undefined) {
+	    if (levelindex=== 0){ 
+			tryPlayStartLevelSound();
+		} else {
+			tryPlayStartLevelSound();			
+		}
+    }
+    loadLevelFromLevelDat(state,leveldat,randomseed);
 }
 
 var sprites = [
@@ -515,7 +519,6 @@ function setGameState(_state, command, randomseed) {
     if (state.metadata.realtime_interval!==undefined) {
     	autotick=0;
     	autotickinterval=state.metadata.realtime_interval*1000;
-    	logBetaMessage("realtime_interval is a beta feature, its behaviour may change before it ends up in launch.  I would advise against circulating this game for wider distribution before then.",true);
     } else {
     	autotick=0;
     	autotickinterval=0;
@@ -769,7 +772,7 @@ function DoRestart(force) {
 }
 
 function DoUndo(force) {
-	if ('noundo' in state.metadata && force!==true) {
+	if ((!levelEditorOpened)&&('noundo' in state.metadata && force!==true)) {
 		return;
 	}
 	if (verbose_logging) {

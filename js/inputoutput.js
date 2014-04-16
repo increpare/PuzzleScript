@@ -7,6 +7,26 @@ var dragging=false;
 var rightdragging=false;
 var columnAdded=false;
 
+function selectText(containerid,e) {
+	e = e || window.event;
+	var myspan = document.getElementById(containerid);
+	if (e&&(e.ctrlKey || e.metaKey)) {
+		var levelarr = ["console"].concat(myspan.innerHTML.split("<br>"));
+		var leveldat = levelFromString(state,levelarr);
+		loadLevelFromLevelDat(state,leveldat,null);
+		canvasResize();
+	} else {
+	    if (document.selection) {
+	        var range = document.body.createTextRange();
+	        range.moveToElementText(myspan);
+	        range.select();
+	    } else if (window.getSelection) {
+	        var range = document.createRange();
+	        range.selectNode(myspan);
+	        window.getSelection().addRange(range);
+	    }
+	}
+}
 
 function recalcLevelBounds(){
 }
@@ -17,6 +37,7 @@ function arrCopy(from, fromoffset, to, tooffset, len) {
 }
 
 function adjustLevel(level, widthdelta, heightdelta) {
+	backups.push(backupLevel());
 	var oldlevel = level.clone();
 	level.width += widthdelta;
 	level.height += heightdelta;
@@ -160,6 +181,7 @@ var htmlEntityMap = {
 	"/": '&#x2F;'
 };
 
+
 function printLevel() {
 	var glyphAndMask = [];
 	for (var glyphName in state.glyphDict) {
@@ -182,13 +204,13 @@ function printLevel() {
 				var bgid = 1<<i;
 				if (bgMask.get(i)) {
 					glyphmask.ibitset(i);
-					glyphAndMask.push([glyphName, glyphmask.clone()])
+					glyphAndMask.push([glyphName, glyphmask.clone()]);
 					glyphmask.ibitclear(i);
 				}
 			}
 		}
 	}
-	var output="Printing level contents:<br><br>";
+	var output="Printing level contents:<br><br><span id=\"selectable\" onclick=\"selectText('selectable',event)\">";
 	var old_cache_console_messages = cache_console_messages;
 	cache_console_messages = false;
 	for (var j=0;j<level.height;j++) {
@@ -201,8 +223,11 @@ function printLevel() {
 			}
 			output = output+glyph;
 		}
-		output=output+"<br>";
+		if (j<level.height-1){
+			output=output+"<br>";
+		}
 	}
+	output+="</span><br>"
 	consolePrint(output);
 	cache_console_messages=old_cache_console_messages;
 }
@@ -238,8 +263,17 @@ function levelEditorClick(event,click) {
 		}
 
 		var coordIndex = mouseCoordY + mouseCoordX*level.height;
-		level.setCell(coordIndex, glyphmask);
-		redraw();
+		var getcell = level.getCell(coordIndex);
+		if (getcell.equals(glyphmask)) {
+			return;
+		} else {
+			if (anyEditsSinceMouseDown===false) {
+				anyEditsSinceMouseDown=true;				
+        		backups.push(backupLevel());
+			}
+			level.setCell(coordIndex, glyphmask);
+			redraw();
+		}
 	}
 	else if (click) {
 		if (mouseCoordX===-1) {
@@ -292,6 +326,8 @@ function levelEditorRightClick(event,click) {
 	}
 }
 
+var anyEditsSinceMouseDown = false;
+
 function onMouseDown(event) {
 	if (event.button===0 && !(event.ctrlKey||event.metaKey) ) {
         lastDownTarget = event.target;
@@ -301,18 +337,20 @@ function onMouseDown(event) {
         	dragging=true;
         	rightdragging=false;
         	if (levelEditorOpened) {
+        		anyEditsSinceMouseDown=false;
         		return levelEditorClick(event,true);
         	}
         }
         dragging=false;
         rightdragging=false; 
     } else if (event.button===2 || (event.button===0 && (event.ctrlKey||event.metaKey)) ) {
-
-	    dragging=false;
-	    rightdragging=true;
+    	if (event.target.id==="gameCanvas") {
+		    dragging=false;
+		    rightdragging=true;
         	if (levelEditorOpened) {
         		return levelEditorRightClick(event,true);
         	}
+        }
     }
 
 }
@@ -514,13 +552,14 @@ function checkKey(e,justPressed) {
         case 82://r
         {
         	if (textMode===false) {
-
-                if (canDump===true) {
-                    inputHistory.push("restart");
-                }
-        		DoRestart();
-                canvasResize(); // calls redraw
-            	return prevent(e);
+        		if (justPressed) {
+	                if (canDump===true) {
+	                    inputHistory.push("restart");
+	                }
+	        		DoRestart();
+	                canvasResize(); // calls redraw
+            		return prevent(e);
+            	}
             }
             break;
         }
@@ -536,8 +575,11 @@ function checkKey(e,justPressed) {
         }
         case 69: {//e
         	if (canOpenEditor) {
-        		levelEditorOpened=!levelEditorOpened;
-        		canvasResize();
+        		if (justPressed) {
+        			levelEditorOpened=!levelEditorOpened;
+        			restartTarget=backupLevel();
+        			canvasResize();
+        		}
         		return prevent(e);
         	}
             break;
@@ -697,7 +739,7 @@ function update() {
 	    }
 	}
 
-    if (autotickinterval>0&&!textMode) {
+    if (autotickinterval>0&&!textMode&&!levelEditorOpened) {
         autotick+=deltatime;
         if (autotick>autotickinterval) {
             autotick=0;
