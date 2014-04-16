@@ -49,7 +49,6 @@ function resize_all(e){
 	
 	horizontaldragbarY = parseInt(document.getElementById("horizontaldragbar").style.top.replace("px",""));
 	vdiff = window.innerHeight - winheight;
-	console.log(horizontaldragbarY);
 	
 	if(vdiff > -smallmovelimit && vdiff < smallmovelimit){
 		horizontaldragbarY += vdiff;
