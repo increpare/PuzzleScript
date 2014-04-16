@@ -1,4 +1,4 @@
-var soundbarwidth = 270;
+var soundbarwidth = 100;
 var lowerbarheight = document.getElementById("soundbar").clientHeight;
 var upperbarheight = document.getElementById("uppertoolbar").clientHeight;
 var winwidth = window.innerWidth;

@@ -182,6 +182,9 @@ function glyphCount(){
 }
 
 function redraw() {
+    if (cellwidth===0||cellheight===0) {
+        return;
+    }
     if (spriteimages===undefined) {
         regenSpriteImages();
     }
