@@ -46,7 +46,9 @@ function regenSpriteImages() {
 	if (textMode) {
 		regenText();
 		return;
-	}
+	} else if (levelEditorOpened) {
+        textImages['s'] = createSprite(font['s'],undefined);
+    }
     
     if (state.levels.length===0) {
         return;

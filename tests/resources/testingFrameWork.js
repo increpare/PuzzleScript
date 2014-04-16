@@ -25,7 +25,6 @@ function runTest(dataarray) {
 	}
 	
 	for(var i=0;i<inputDat.length;i++) {
-		window.console.log("turn " + i);
 		var val=inputDat[i];
 		if (val==="undo") {
 			DoUndo();

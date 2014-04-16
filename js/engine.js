@@ -515,7 +515,6 @@ function setGameState(_state, command, randomseed) {
     if (state.metadata.realtime_interval!==undefined) {
     	autotick=0;
     	autotickinterval=state.metadata.realtime_interval*1000;
-    	logBetaMessage("realtime_interval is a beta feature, its behaviour may change before it ends up in launch.  I would advise against circulating this game for wider distribution before then.",true);
     } else {
     	autotick=0;
     	autotickinterval=0;
@@ -769,7 +768,7 @@ function DoRestart(force) {
 }
 
 function DoUndo(force) {
-	if ('noundo' in state.metadata && force!==true) {
+	if ((!levelEditorOpened)&&('noundo' in state.metadata && force!==true)) {
 		return;
 	}
 	if (verbose_logging) {
