@@ -45,7 +45,9 @@ function verticalDragbarMouseDown(e) {
 };
 
 function verticalDragbarMouseMove(e) {
-	if ((window.innerWidth - e.pageX) > soundbarwidth){
+	if (e.pageX <= 0){
+		resize_widths(0);
+	} else if ((window.innerWidth - e.pageX) > soundbarwidth){
 		resize_widths(e.pageX + 2);
 	} else {
 		resize_widths(window.innerWidth - soundbarwidth);
@@ -63,7 +65,9 @@ function horizontalDragbarMouseDown(e) {
 };
 
 function horizontalDragbarMouseMove(e) {
-	if ((window.innerHeight - e.pageY) > (lowerbarheight + 7)){
+	if (e.pageY <= 30) {
+		resize_heights(30);
+	} else if ((window.innerHeight - e.pageY) > (lowerbarheight + 7)){
 		resize_heights(e.pageY + 2);
 	} else {
 		resize_heights(window.innerHeight - lowerbarheight - 7);
