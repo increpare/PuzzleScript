@@ -11,7 +11,7 @@
 
   function SearchCursor(doc, query, pos, caseFold) {
     this.atOccurrence = false; this.doc = doc;
-    if (caseFold == null && typeof query == "string") caseFold = false;
+    if (caseFold == null && typeof query == "string") caseFold = true;
 
     pos = pos ? doc.clipPos(pos) : Pos(0, 0);
     this.pos = {from: pos, to: pos};
@@ -167,15 +167,15 @@
   }
 
   CodeMirror.defineExtension("getSearchCursor", function(query, pos, caseFold) {
-    return new SearchCursor(this.doc, query, pos, caseFold);
+    return new SearchCursor(this.doc, query, pos, true);
   });
   CodeMirror.defineDocExtension("getSearchCursor", function(query, pos, caseFold) {
-    return new SearchCursor(this, query, pos, caseFold);
+    return new SearchCursor(this, query, pos, true);
   });
 
   CodeMirror.defineExtension("selectMatches", function(query, caseFold) {
     var ranges = [], next;
-    var cur = this.getSearchCursor(query, this.getCursor("from"), caseFold);
+    var cur = this.getSearchCursor(query, this.getCursor("from"), true);
     while (next = cur.findNext()) {
       if (CodeMirror.cmpPos(cur.to(), this.getCursor("to")) > 0) break;
       ranges.push({anchor: cur.from(), head: cur.to()});
