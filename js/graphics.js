@@ -85,6 +85,9 @@ function makeSpriteCanvas() {
 
 
 function generateGlyphImages() {
+    if (cellwidth===0||cellheight===0) {
+        return;
+    }
 	glyphImagesCorrespondance=[];
 	glyphImages=[];
 	
