@@ -25,8 +25,17 @@ function resize_heights(horizontaldragbarY){
 }
 
 function resize_all(e){
+	smallmovelimit = 100;
+	
 	hdiff = window.innerWidth - winwidth;
-	verticaldragbarX = hdiff + parseInt(document.getElementById("verticaldragbar").style.left.replace("px",""));
+	verticaldragbarX = parseInt(document.getElementById("verticaldragbar").style.left.replace("px",""));
+	
+	if(hdiff > -smallmovelimit && hdiff < smallmovelimit){
+		verticaldragbarX += hdiff;
+	} else {
+		verticaldragbarX *= window.innerWidth/winwidth;
+	};
+	
 	if ((verticaldragbarX <= 0)){
 		verticaldragbarX = 0;
 	} else if ((window.innerWidth - verticaldragbarX) < soundbarwidth){
@@ -34,8 +43,15 @@ function resize_all(e){
 	};
 	resize_widths(verticaldragbarX);
 	
+	horizontaldragbarY = parseInt(document.getElementById("horizontaldragbar").style.top.replace("px",""));
 	vdiff = window.innerHeight - winheight;
-	horizontaldragbarY = vdiff + parseInt(document.getElementById("horizontaldragbar").style.top.replace("px",""));
+	
+	if(vdiff > -smallmovelimit && vdiff < smallmovelimit){
+		horizontaldragbarY += vdiff;
+	} else {
+		horizontaldragbarY *= window.innerHeight/winheight;
+	};
+	
 	if ((horizontaldragbarY <= upperbarheight)){
 		horizontaldragbarY = upperbarheight;
 	} else if ((window.innerHeight - horizontaldragbarY) < (lowerbarheight)){
