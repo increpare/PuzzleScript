@@ -57,7 +57,7 @@ function consoleCacheDump() {
 
 function consoleError(text) {	
         var errorString = '<span class="errorText">' + text + '</span>';
-        consolePrint(errorString);
+        consolePrint(errorString,true);
 }
 function clearConsole() {
 	var code = document.getElementById('consoletextarea');

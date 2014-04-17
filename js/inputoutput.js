@@ -211,7 +211,6 @@ function printLevel() {
 		}
 	}
 	var output="Printing level contents:<br><br><span id=\"selectable\" onclick=\"selectText('selectable',event)\">";
-	var old_cache_console_messages = cache_console_messages;
 	cache_console_messages = false;
 	for (var j=0;j<level.height;j++) {
 		for (var i=0;i<level.width;i++) {
@@ -228,8 +227,7 @@ function printLevel() {
 		}
 	}
 	output+="</span><br>"
-	consolePrint(output);
-	cache_console_messages=old_cache_console_messages;
+	consolePrint(output,true);
 }
 
 function levelEditorClick(event,click) {
@@ -604,7 +602,7 @@ function checkKey(e,justPressed) {
 				if (num<glyphImages.length) {
 					glyphSelectedIndex=num;
 				} else {
-					consolePrint("Trying to select tile outside of range in level editor.")
+					consolePrint("Trying to select tile outside of range in level editor.",true)
 				}
 
         		canvasResize();

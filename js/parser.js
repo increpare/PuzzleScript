@@ -23,6 +23,23 @@ for post-launch credits, check out activty on github.com/increpare/PuzzleScript
 var compiling = false;
 var errorStrings = [];
 var errorCount=0;
+
+function logErrorCacheable(str, lineNumber,urgent) {
+    if (compiling||urgent) {
+        if (lineNumber === undefined) {
+            return logErrorNoLine(str);
+        }
+        var errorString = '<a onclick="jumpToLine(' + lineNumber.toString() + ');"  href="javascript:void(0);"><span class="errorTextLineNumber"> line ' + lineNumber.toString() + '</span></a> : ' + '<span class="errorText">' + str + '</span>';
+         if (errorStrings.indexOf(errorString) >= 0 && !urgent) {
+            //do nothing, duplicate error
+         } else {
+            consolePrint(errorString);
+            errorStrings.push(errorString);
+            errorCount++;
+        }
+    }
+}
+
 function logError(str, lineNumber,urgent) {
     if (compiling||urgent) {
         if (lineNumber === undefined) {
