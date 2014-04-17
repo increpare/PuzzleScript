@@ -19,15 +19,25 @@ function consolePrint(text,urgent) {
 	if (cache_console_messages&&urgent==false) {		
 		consolecache.push(text);
 	} else {
-		var code = document.getElementById('consoletextarea');
-		code.innerHTML = code.innerHTML + '<br>'+ text;
-		var objDiv = document.getElementById('lowerarea');
-		objDiv.scrollTop = objDiv.scrollHeight;
+		addToConsole(text);
 	}
 }
 
 
 var cache_n = 0;
+
+function addToConsole(text) {
+	cache = document.createElement("div");
+	cache.id = "cache" + cache_n;
+	cache.innerHTML = text;
+	cache_n++;
+	
+	var code = document.getElementById('consoletextarea');
+	code.appendChild(cache);
+	consolecache=[];
+	var objDiv = document.getElementById('lowerarea');
+	objDiv.scrollTop = objDiv.scrollHeight;
+}
 
 function consoleCacheDump() {
 	if (cache_console_messages===false) {
@@ -52,17 +62,7 @@ function consoleCacheDump() {
 	}
 	
 
-	
-	cache = document.createElement("div");
-	cache.id = "cache" + cache_n;
-	cache.innerHTML = summarised_message;
-	cache_n++;
-	
-	var code = document.getElementById('consoletextarea');
-	code.appendChild(cache);
-	consolecache=[];
-	var objDiv = document.getElementById('lowerarea');
-	objDiv.scrollTop = objDiv.scrollHeight;
+	addToConsole(summarised_message);
 }
 
 function consoleError(text) {	
