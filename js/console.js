@@ -26,6 +26,9 @@ function consolePrint(text,urgent) {
 	}
 }
 
+
+var cache_n = 0;
+
 function consoleCacheDump() {
 	if (cache_console_messages===false) {
 		return;
@@ -48,8 +51,15 @@ function consoleCacheDump() {
 		}
 	}
 	
+
+	
+	cache = document.createElement("div");
+	cache.id = "cache" + cache_n;
+	cache.innerHTML = summarised_message;
+	cache_n++;
+	
 	var code = document.getElementById('consoletextarea');
-	code.innerHTML = code.innerHTML + summarised_message;
+	code.appendChild(cache);
 	consolecache=[];
 	var objDiv = document.getElementById('lowerarea');
 	objDiv.scrollTop = objDiv.scrollHeight;
