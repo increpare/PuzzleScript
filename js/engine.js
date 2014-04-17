@@ -2266,7 +2266,10 @@ function processInput(dir,dontCheckWin,dontModify) {
 		    	//verbose_logging=false;
 		    	//first have to verify that something's changed
 		    	var oldmessagetext = messagetext;
+		    	var old_verbose_logging=verbose_logging;
+		    	verbose_logging=false;
 		    	if (processInput(-1,true,true)) {
+			    	verbose_logging=old_verbose_logging;
 
 			    	if (verbose_logging) { 
 			    		consolePrint('AGAIN command executed, with changes detected - will execute another turn.');
@@ -2275,10 +2278,13 @@ function processInput(dir,dontCheckWin,dontModify) {
 			    	againing=true;
 			    	timer=0;
 			    } else {		    	
+			    	verbose_logging=old_verbose_logging;
 					if (verbose_logging) { 
 						consolePrint('AGAIN command not executed, it wouldn\'t make any changes.');
 					}
 			    }
+			    verbose_logging=old_verbose_logging;
+
 			    messagetext = oldmessagetext;
 			    verbose_logging=old_verbose_logging;
 		    }
