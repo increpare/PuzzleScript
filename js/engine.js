@@ -1427,7 +1427,7 @@ function cellRowMatchesWildcardFunctionGenerate(direction,cellRow,i, maxk, mink)
 }
 */
 
-function cellRowMatchesWildCard(direction,cellRow,i,maxk,mink) {
+function DoesCellRowMatchWildCard(direction,cellRow,i,maxk,mink) {
 	if (mink === undefined) {
 		mink = 0;
 	}
@@ -1469,7 +1469,7 @@ function cellRowMatchesWildCard(direction,cellRow,i,maxk,mink) {
             }
         }               
     }  
-    return result;
+    return result.length>0;
 }
 
 //say cellRow has length 3
@@ -1482,7 +1482,7 @@ function cellRowMatchesFunctionGenerate(direction,cellRow,i) {
 }
 */
 
-function cellRowMatches(direction,cellRow,i,k) {
+function DoesCellRowMatch(direction,cellRow,i,k) {
 	var cellPattern = cellRow[0];
     if (cellPattern.matches(i)) {
 
@@ -1750,13 +1750,13 @@ Rule.prototype.applyAt = function(delta,tuple,check) {
         var ruleMatches=true;                
         for (var cellRowIndex=0;cellRowIndex<rule.patterns.length;cellRowIndex++) {
         	if (rule.isEllipsis[cellRowIndex]) {//if ellipsis
-            	if (cellRowMatchesWildCard(rule.direction,rule.patterns[cellRowIndex],tuple[cellRowIndex][0],
-            		tuple[cellRowIndex][1]+1, tuple[cellRowIndex][1]).length === 0) { /* pass mink to specify */
+            	if (DoesCellRowMatchWildCard(rule.direction,rule.patterns[cellRowIndex],tuple[cellRowIndex][0],
+            		tuple[cellRowIndex][1]+1, tuple[cellRowIndex][1])===false) { /* pass mink to specify */
                     ruleMatches=false;
                     break;
                 }
         	} else {
-            	if (cellRowMatches(rule.direction,rule.patterns[cellRowIndex],tuple[cellRowIndex]).length === 0) {
+            	if (DoesCellRowMatch(rule.direction,rule.patterns[cellRowIndex],tuple[cellRowIndex])===false) {
                     ruleMatches=false;
                     break;
                 }
@@ -1815,7 +1815,8 @@ Rule.prototype.tryApply = function() {
 	    for (var tupleIndex=0;tupleIndex<tuples.length;tupleIndex++) {
 	        var tuple = tuples[tupleIndex];
 	        var shouldCheck=tupleIndex>0;
-	        result = this.applyAt(delta,tuple,shouldCheck) || result;
+	        var success = this.applyAt(delta,tuple,shouldCheck);
+	        result = success || result;
 	    }
 	}
 
@@ -1908,7 +1909,7 @@ function applyRuleGroup(ruleGroup) {
     		logErrorCacheable("Got caught looping lots in a rule group :O",ruleGroup[0].lineNumber,true);
     		break;
     	}
-        propagated=false
+        propagated=false;
         for (var ruleIndex=0;ruleIndex<ruleGroup.length;ruleIndex++) {
             var rule = ruleGroup[ruleIndex];            
             propagated = rule.tryApply() || propagated;
