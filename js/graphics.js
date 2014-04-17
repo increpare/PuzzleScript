@@ -1,9 +1,9 @@
-function createSprite(spritegrid, colors, padding) {
+function createSprite(name,spritegrid, colors, padding) {
 	if (colors === undefined) {
 		colors = [state.bgcolor, state.fgcolor];
 	}
 
-	var sprite = makeSpriteCanvas();
+	var sprite = makeSpriteCanvas(name);
 	var spritectx = sprite.getContext('2d');
 
     spritectx.clearRect(0, 0, cellwidth, cellheight);
@@ -37,7 +37,7 @@ function regenText(spritecanvas,spritectx) {
 
 	for (var n in font) {
 		if (font.hasOwnProperty(n)) {
-			textImages[n] = createSprite(font[n], undefined, 1);
+			textImages[n] = createSprite('char'+n,font[n], undefined, 1);
 		}
 	}
 }
@@ -47,7 +47,7 @@ function regenSpriteImages() {
 		regenText();
 		return;
 	} else if (levelEditorOpened) {
-        textImages['s'] = createSprite(font['s'],undefined);
+        textImages['s'] = createSprite('chars',font['s'],undefined);
     }
     
     if (state.levels.length===0) {
@@ -59,7 +59,7 @@ function regenSpriteImages() {
         if (sprites[i] == undefined) {
             continue;
         }
-        spriteimages[i] = createSprite(sprites[i].dat, sprites[i].colors);
+        spriteimages[i] = createSprite(i.toString(),sprites[i].dat, sprites[i].colors);
     }
 
     if (canOpenEditor) {
@@ -76,8 +76,15 @@ var glyphMouseOver;
 var glyphSelectedIndex=0;
 var editorRowCount=1;
 
-function makeSpriteCanvas() {
-	var canvas = document.createElement('canvas');
+var canvasdict={};
+function makeSpriteCanvas(name) {
+    var canvas;
+    if (name in canvasdict) {
+        canvas = canvasdict[name];
+    } else {
+        canvas = document.createElement('canvas');
+        canvasdict[name]=canvas;
+    }
 	canvas.width = cellwidth;
 	canvas.height = cellheight;
 	return canvas;

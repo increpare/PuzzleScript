@@ -1434,7 +1434,7 @@ function DoesCellRowMatchWildCard(direction,cellRow,i,maxk,mink) {
 
 	var cellPattern = cellRow[0];
 
-    var result=[];
+    //var result=[];
 
     if (cellPattern.matches(i)){
     	var delta = dirMasksDelta[direction];
@@ -1460,7 +1460,8 @@ function DoesCellRowMatchWildCard(direction,cellRow,i,maxk,mink) {
             		}
 
 		            if (j2>=cellRow.length) {
-		                result.push([i,k]);
+		            	return true;
+		                //result.push([i,k]);
 		            }
             	}
             	break;
@@ -1469,7 +1470,7 @@ function DoesCellRowMatchWildCard(direction,cellRow,i,maxk,mink) {
             }
         }               
     }  
-    return result.length>0;
+    return false;
 }
 
 //say cellRow has length 3
