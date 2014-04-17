@@ -1,3 +1,18 @@
+(
+level ideas
+push battery horizontally
+have to assemble and then disassemble a circuit, in order to complete it
+add a piece to a circut, then break the circuit from another point
+level that starts with a closed circuit
+level with very dangerous + block
+)
+title ARM Challenge
+author Stephen Lavelle
+homepage www.increpare.com
+
+run_rules_on_level_start
+color_palette c64
+
 run_rules_on_level_start
 
 norepeat_action
@@ -7,10 +22,15 @@ OBJECTS
 ========
 
 Background .
-Black
+darkblue
 
 Player P
-Green
+Black orange grey Blue
+.111.
+.111.
+22222
+13331
+.3.3.
 
 R0_Up 0
 grey lightgrey
@@ -114,7 +134,7 @@ R3 3
 grey lightgrey
 .....
 ..0..
-.0.0.
+.010.
 ..0..
 .....
 
@@ -193,15 +213,20 @@ yellow red
 .101.
 
 Wall #
-grey darkgrey
-11111
-10001
-10001
-10001
-11111
+darkgrey grey lightgrey
+00000
+01110
+01010
+01110
+00000
 
 water ,
-lightblue
+blue lightblue
+00000
+00010
+00000
+00000
+01000
 
 Fruit F
 Red Green LightRed
@@ -213,20 +238,29 @@ Red Green LightRed
 
 
 FruitPicked G
-Red Green LightRed Yellow
-.313.
-30003
-00020
-00000
-30003
+Red Green LightRed grey grey
+..4..
+.030.
+43334
+00300
+.040.
+
+DeadFruit 
+black black black black black
+..4..
+.030.
+43334
+00300
+.040.
 
 EndPoint E
-LightBlue
-0.0.0
-.0.0.
-0.0.0
-.0.0.
-0.0.0
+darkgreen Yellow black green
+30003
+02220
+02220
+02220
+30003
+
 
 =======
 LEGEND
@@ -242,6 +276,22 @@ connector = connector_up or connector_down or connector_left or connector_right
 SOUNDS
 =======
 
+sfx0 43004308 (explosion)
+sfx1 69392707
+sfx2 57370907 (push machine)
+sfx3 62083508 (rotate machine)
+sfx4 90419908 (grab)
+sfx5 50782902 (drop in hole)
+sfx6 76878101 (empty grab)
+sfx7 13941101 (dead fruit)
+sfx8 42541302 (release)
+Player move 88476108
+startgame 30513908
+endlevel 5524308
+endgame 5524308
+showmessage 41852908
+closemessage 41852908
+
 ================
 COLLISIONLAYERS
 ================
@@ -252,6 +302,7 @@ Player
 Moved
 Fruit
 FRUITPICKED
+deadfruit
 R0_up, R0_down, R0_left, R0_right
 R1_up, R1_down, R1_left, R1_right
 R2_up, R2_down, R2_left, R2_right
@@ -274,9 +325,13 @@ RULES
 
 [ connector ] -> [ ]
 
+[ > player | fruit ] -> cancel
+
 [ > player | water ] -> cancel
 
 [ > player | ] -> [ > player | > force ]
+
+[ > player | robotpiece | wall ] -> cancel
 
 (place movement arrows)
 up [ R0_Up | ] -> [ up R0_Up | up Parent ]
@@ -308,11 +363,11 @@ right [ R2_right | ] -> [ right R2_right | right Parent ]
 [ > force R2 perpendicular parent ] [ R1 < parent ] [ R0 ] -> [ R2 perpendicular parent ] [ R1 < parent ] [ > force R0 ]
 
 
-[ > force moving R0 | ] -> [ | moving R0]
+[ > force moving R0 | ] -> [ | moving R0] sfx2
 
-[ > force moving R1 perpendicular parent ] [ R0 ] -> [ moving R1 perpendicular parent ] [ > R0 ]
-[ > force moving R2 perpendicular parent ] [ R1 ] -> [ moving R2 perpendicular parent ] [ > R1 ]
-[ > force 		R3 perpendicular parent ] [ R2 ] -> [ R3 perpendicular parent ] [ > R2 ]
+[ > force moving R1 perpendicular parent ] [ R0 ] -> [ moving R1 perpendicular parent ] [ > R0 ] sfx3
+[ > force moving R2 perpendicular parent ] [ R1 ] -> [ moving R2 perpendicular parent ] [ > R1 ] sfx3
+[ > force 		R3 perpendicular parent ] [ R2 ] -> [ R3 perpendicular parent ] [ > R2 ] sfx3
 
 
 (rebuild arm)
@@ -413,11 +468,11 @@ right [ R0_right | ] -> [ R0_right connector_right | connector_left ]
 right [ R1_right | ] -> [ R1_right connector_right | connector_left ]
 right [ R2_right | ] -> [ R2_right connector_right | connector_left ]
 
-[RobotPiece Wall no explosion no explosion2 ] -> [ RobotPiece Wall explosion ]
+[RobotPiece Wall no explosion no explosion2 ] -> [ RobotPiece Wall explosion ] sfx0
 
-[ R0 R2 no explosion no explosion2] -> [ R0 R2 explosion ]
-[ R0 R3 no explosion no explosion2 ] -> [ R0 r3 explosion ]
-[ R1 R3 no explosion no explosion2 ] -> [ R1 R3 explosion ]
+[ R0 R2 no explosion no explosion2] -> [ R0 R2 explosion ] sfx0
+[ R0 R3 no explosion no explosion2 ] -> [ R0 r3 explosion ] sfx0 
+[ R1 R3 no explosion no explosion2 ] -> [ R1 R3 explosion ] sfx0
 
 [ explosion2 ] -> [ explosionb ] again
 [ explosion ] -> [ explosion2] again
@@ -427,11 +482,16 @@ right [ R2_right | ] -> [ R2_right connector_right | connector_left ]
 
 [FruitPicked ] [ R3 no FruitPicked ] -> [ ] [ R3 FruitPicked ]
 
-[ action player ] [ R3 Fruit no fruitpicked ] -> [ player ] [ R3 Fruitpicked]
-[ action player ] [ R3 fruitpicked no fruit ] -> [ player ] [ r3 fruit ]
+[ action player ] [ R3 Fruit no fruitpicked ] -> [ player ] [ R3 Fruitpicked] sfx4
+[ action player ] [ R3 fruitpicked no fruit ] -> [ player ] [ r3 fruit ] sfx8
 
-[ fruit endpoint ] -> [endpoint]
+[action player ] [ r3 no fruit no fruitpicked ] -> sfx6
+
+
+[ fruit endpoint ] -> [endpoint] sfx5
+[ fruit water ] -> [ deadfruit water ] sfx7
 late [R0 water ] -> cancel
+[R0 fruit ] -> cancel
 
 ==============
 WINCONDITIONS
@@ -439,34 +499,60 @@ WINCONDITIONS
 
 no fruit
 no fruitpicked
+no deadfruit
 
 =======
 LEVELS
 =======
 
+message press x to grip and ungrip the mechanical arm
+message put fruit in hole
+
+message Level 1 of 3
+
+###################
+###################
+###################
+###..,........,.###
+###..,...3....,.###
+###..,...2....,.###
+###.F,.E.1.,,,F,###
+###..,...0....,.###
+###..,..P.....,.###
+###..,........,.###
+###################
+###################
+###################
+
+message Level 2 of 3
+
 ##############
 ##############
 ##############
-###........###
 ###..3.....###
-###..2.,,,,###
-###.E1.,...###
-###..0.,FF.###
+###..2.....###
+###..1.,,,,###
+###.E0.,...###
+###....,FF.###
 ###.P..,...###
 ##############
 ##############
 ##############
 
+message Level 3 of 3 
 
-##############
-##############
-##############
-###........###
-###..3.....###
-###..2.,,,,###
-###.E1.,...###
-###..0.,FF.###
-###.P..,...###
-##############
-##############
-##############
+###################
+###################
+###################
+########........###
+###..3.#...##.f.###
+###..2..........###
+###..1...#....#.###
+###.e0..........###
+###..p..#...#.f.###
+#########.......###
+###################
+###################
+###################
+
+message congratulations
