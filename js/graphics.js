@@ -101,7 +101,7 @@ function generateGlyphImages() {
 	for (var n in state.glyphDict) {
 		if (n.length==1 && state.glyphDict.hasOwnProperty(n)) {
 			var g=state.glyphDict[n];
-			var sprite = makeSpriteCanvas()
+			var sprite = makeSpriteCanvas("C"+n)
 			var spritectx = sprite.getContext('2d');
 			glyphImagesCorrespondance.push(n);
 			for (var i=0;i<g.length;i++){
@@ -117,7 +117,7 @@ function generateGlyphImages() {
 
 	{
 		//make highlight thingy
-		glyphHighlight = makeSpriteCanvas();
+		glyphHighlight = makeSpriteCanvas("highlight");
 		var spritectx = glyphHighlight.getContext('2d');
 		spritectx.fillStyle = '#FFFFFF';
 
@@ -133,7 +133,7 @@ function generateGlyphImages() {
 	}
 	{
 		//make highlight thingy
-		glyphHighlightResize = makeSpriteCanvas();
+		glyphHighlightResize = makeSpriteCanvas("highlightresize");
 		var spritectx = glyphHighlightResize.getContext('2d');
 		spritectx.fillStyle = '#FFFFFF';
 		
