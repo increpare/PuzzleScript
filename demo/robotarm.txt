@@ -6,7 +6,7 @@ add a piece to a circut, then break the circuit from another point
 level that starts with a closed circuit
 level with very dangerous + block
 )
-title ARM Challenge
+title Robot Arm
 author Stephen Lavelle
 homepage www.increpare.com
 
@@ -170,7 +170,7 @@ grey lightgrey
 ...11
 .....
 
-Moved
+Moved 
 transparent
 
 Parent
@@ -185,7 +185,7 @@ transparent
 NewRot2
 transparent
 
-force
+force 
 transparent
 
 explosion
@@ -245,7 +245,7 @@ Red Green LightRed grey grey
 00300
 .040.
 
-DeadFruit
+DeadFruit 
 black black black black black
 ..4..
 .030.
@@ -374,7 +374,7 @@ right [ R2_right | ] -> [ right R2_right | right Parent ]
 
 (add new parents)
 
-[ > R1 ] [ R2 ] -> [ > R1 ] [ R2 > NewRot ]
+[ > R1 ] [ R2 ] -> [ > R1 ] [ R2 > NewRot ] 
 [ > R0 ] [ R1 ] [ R2 ] -> [ > R0 ] [ R1 > NewRot ] [ R2 > NewRot2 ]
 
 [ > Parent R1 ] [ R2 ] -> [ > Parent R1 ] [ > GrandParent R2 ]
@@ -471,7 +471,7 @@ right [ R2_right | ] -> [ R2_right connector_right | connector_left ]
 [RobotPiece Wall no explosion no explosion2 ] -> [ RobotPiece Wall explosion ] sfx0
 
 [ R0 R2 no explosion no explosion2] -> [ R0 R2 explosion ] sfx0
-[ R0 R3 no explosion no explosion2 ] -> [ R0 r3 explosion ] sfx0
+[ R0 R3 no explosion no explosion2 ] -> [ R0 r3 explosion ] sfx0 
 [ R1 R3 no explosion no explosion2 ] -> [ R1 R3 explosion ] sfx0
 
 [ explosion2 ] -> [ explosionb ] again
@@ -539,7 +539,7 @@ message Level 2 of 3
 ##############
 ##############
 
-message Level 3 of 3
+message Level 3 of 3 
 
 ###################
 ###################
