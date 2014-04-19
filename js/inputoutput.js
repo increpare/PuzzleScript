@@ -181,6 +181,7 @@ var htmlEntityMap = {
 	"/": '&#x2F;'
 };
 
+var selectableint  = 0;
 
 function printLevel() {
 	var glyphAndMask = [];
@@ -210,7 +211,9 @@ function printLevel() {
 			}
 		}
 	}
-	var output="Printing level contents:<br><br><span id=\"selectable\" onclick=\"selectText('selectable',event)\">";
+	selectableint++;
+	var tag = 'selectable'+selectableint;
+	var output="Printing level contents:<br><br><span id=\""+tag+"\" onclick=\"selectText('"+tag+"',event)\">";
 	cache_console_messages = false;
 	for (var j=0;j<level.height;j++) {
 		for (var i=0;i<level.width;i++) {
