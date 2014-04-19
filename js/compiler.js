@@ -92,8 +92,11 @@ function generateExtraMembers(state) {
 		var key = state.metadata[i];
 		var val = state.metadata[i+1];
 		if (key==='color_palette') {
+			if (val in colorPalettesAliases) {
+				val = colorPalettesAliases[val];
+			}
 			if (colorPalettes[val]===undefined) {
-				logError('palette "'+val+'" not found, defaulting to arnecolors.',0);
+				logError('Palette "'+val+'" not found, defaulting to arnecolors.',0);
 			}else {
 				colorPalette=colorPalettes[val];
 			}

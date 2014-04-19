@@ -2192,6 +2192,10 @@ function processInput(dir,dontCheckWin,dontModify) {
     		return true;
 	    } 
 
+	    if (dontModify && level.commandQueue.indexOf('win')>=0) {
+	    	return true;
+	    }
+	    
         var modified=false;
 	    for (var i=0;i<level.objects.length;i++) {
 	    	if (level.objects[i]!==bak.dat[i]) {

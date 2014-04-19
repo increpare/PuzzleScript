@@ -1,3 +1,20 @@
+colorPalettesAliases = {
+	1 : "mastersystem",
+	2 : "gameboycolour",
+	3 : "amiga",
+	4 : "arnecolors",
+	5 : "famicom",
+	6 : "atari",
+	7 : "pastel",
+	8 : "ega",
+	9 : "amstrad",
+	10 : "proteus_mellow",
+	11 : "proteus_rich",
+	12 : "proteus_night",
+	13 : "c64",
+	14 : "whitingjp"
+};
+
 colorPalettes = {
 	mastersystem : {
 	black   		: "#000000",
