@@ -636,13 +636,7 @@ if (typeof AUDIO_CONTEXT == 'undefined') {
 
   SoundEffect.prototype.play = function() {
     if (this._audioElement) {
-      var t = this._audioElement.currentTime;
-      if (0 < t && t < this._audioElement.duration) {
-        // _audioElement is busy playing, so clone it and play the clone:
-        this._audioElement.cloneNode(false).play();
-      } else {
-        this._audioElement.play();
-      }
+      this._audioElement.cloneNode(false).play();
     } else {
       for (var i = 0; i < this._buffer.length; i++) {
         // bit_depth is always 8, rescale [-1.0, 1.0) to [0, 256)
