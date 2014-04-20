@@ -1174,7 +1174,7 @@ Rule.prototype.generateCellRowMatchesFunction = function(cellRow,hasEllipsis)  {
 		for (;cellIndex<cr_l;cellIndex++) {
 			fn+="&&cellRow["+cellIndex+"].matches((i+d*(k+"+(cellIndex-1)+"))%level.n_tiles)";			
 		}
-		fn+="){\n"
+		fn+="){\n";
 		fn+="\t\t\tresult.push([i,k]);\n";
 		fn+="\t\t}\n"
 		fn+="\t}\n";				
