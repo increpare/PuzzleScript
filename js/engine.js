@@ -534,7 +534,6 @@ function backupLevel() {
 }
 
 function setGameState(_state, command) {
-	dirty.all = true;
 	oldflickscreendat=[];
 	timer=0;
 	autotick=0;
@@ -708,7 +707,7 @@ function setGameState(_state, command) {
 			document.body.appendChild(div_container);
 			*/
 	}
-
+	dirty.all = true;
 }
 
 var messagetext="";

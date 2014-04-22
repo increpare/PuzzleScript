@@ -6,6 +6,7 @@ replayQueue=null;
 var compiledText;
 var canOpenEditor=true;
 dumpTraceHooks=[];
+var IDE=true;
 
 function pushInput(inp) {
 	if (canDump===true) {
@@ -23,42 +24,42 @@ function randomDirAvailable() {
     if(!replayQueue || !replayQueue.length) { return false; }
     var last = replayQueue[replayQueue.length-1];
     if(!isNaN(last)) { return false; }
-    return replayQueue[replayQueue.length-1].substr(0,9) == "randomDir";
+    return last.substr(0,9) == "randomDir";
 }
 
 function popRandomDir() {
     if(!randomDirAvailable()) {
         throw new Exception("No direction choices available"); 
     }
-    return parseInt(replayQueue[0].substr(10));
+    return parseInt(replayQueue.pop().substr(10));
 }
 
 function randomEntIdxAvailable() {
     if(!replayQueue || !replayQueue.length) { return false; }
     var last = replayQueue[replayQueue.length-1];
     if(!isNaN(last)) { return false; }
-    return replayQueue[replayQueue.length-1].substr(0,12) == "randomEntIdx";
+    return last.substr(0,12) == "randomEntIdx";
 }
 
 function popRandomEntIdx() {
     if(!randomEntIdxAvailable()) {
         throw new Exception("No entity index choices available"); 
     }
-    return parseInt(replayQueue[0].substr(13));
+    return parseInt(replayQueue.pop().substr(13));
 }
 
 function randomRuleIdxAvailable() {
     if(!replayQueue || !replayQueue.length) { return false; }
     var last = replayQueue[replayQueue.length-1];
     if(!isNaN(last)) { return false; }
-    return replayQueue[replayQueue.length-1].substr(0,13) == "randomRuleIdx";
+    return last.substr(0,13) == "randomRuleIdx";
 }
 
 function popRandomRuleIdx() {
     if(!randomRuleIdxAvailable()) {
         throw new Exception("No rule index choices available"); 
     }
-    return parseInt(replayQueue[0].substr(14));
+    return parseInt(replayQueue.pop().substr(14));
 }
 
 function addDumpTraceHook(fn) {
