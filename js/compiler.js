@@ -1578,16 +1578,15 @@ function collapseRules(groups) {
 }
 
 function ruleGroupRandomnessTest(ruleGroup) {
-	if (ruleGroup.length===0) {
+	if (ruleGroup.length === 0)
 		return;
-	}
-
-	var randomGroup=ruleGroup[0].randomRule;
-	for (var i=0;i<randomGroup.length;i++) {
+	var firstLineNumber = ruleGroup[0].lineNumber;
+	for (var i=1;i<ruleGroup.length;i++) {
 		var rule=ruleGroup[i];
-		var ruleRandom=rule.randomRule;
-		if (randomGroup!==ruleRandom) {
-			logError("Cannot mix random and non-random rules in a single rule-group", rule.lineNumber);
+		if (rule.lineNumber === firstLineNumber) // random [A | B] gets turned into 4 rules, skip
+			continue;
+		if (rule.randomRule) {
+			logError("A rule-group can only be marked random by the first rule", rule.lineNumber);
 		}
 	}
 }
