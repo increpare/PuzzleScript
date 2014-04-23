@@ -52,8 +52,6 @@ java -jar /usr/local/Cellar/closure-compiler/20130823/libexec/build/compiler.jar
 --js js/jsgif/NeuQuant.js \
 --js js/jsgif/GIFEncoder.js \
 --js js/debug.js \
---js js/jsedn.js \
---js js/gamalyze.js \
 --js js/globalVariables.js \
 --js js/font.js \
 --js js/rng.js \
@@ -78,7 +76,7 @@ java -jar /usr/local/Cellar/closure-compiler/20130823/libexec/build/compiler.jar
 --js js/toolbar.js \
 --js js/addlisteners.js \
 --js js/addlisteners_editor.js \
---js js/makegif.js
+--js js/makegif.js # --js js/jsedn.js --js js/gamalyze.js
 java -jar /usr/local/Cellar/closure-compiler/20130823/libexec/build/compiler.jar --js_output_file ../bin/js/scripts_play_compiled.js  \
 --js js/globalVariables.js \
 --js js/debug_off.js \
