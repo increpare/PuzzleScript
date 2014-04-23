@@ -209,6 +209,14 @@ function redraw() {
         }
         return;
     } else {
+		//conservatively redraw everything if the
+		//screen might be scrolling. in the future,
+		//only set dirty.all = true when min/max i/j
+		//has changed since last draw.
+		if(flickScreen || zoomScreen) {
+			dirty.all = true;
+		}
+		
         if(dirty.all) {
             ctx.fillStyle = state.bgcolor;
             ctx.fillRect(0, 0, canvas.width, canvas.height);
