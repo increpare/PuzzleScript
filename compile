@@ -78,7 +78,7 @@ java -jar /usr/local/Cellar/closure-compiler/20130823/libexec/build/compiler.jar
 --js js/layout.js \
 --js js/addlisteners.js \
 --js js/addlisteners_editor.js \
---js js/makegif.js # --js js/jsedn.js --js js/gamalyze.js
+--js js/makegif.js
 java -jar /usr/local/Cellar/closure-compiler/20130823/libexec/build/compiler.jar --js_output_file ../bin/js/scripts_play_compiled.js  \
 --js js/globalVariables.js \
 --js js/debug_off.js \
