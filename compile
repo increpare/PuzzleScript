@@ -8,8 +8,9 @@ cd ..
 echo removing bin
 rm -rf ../bin
 mkdir ../bin
-echo inlining standalone template
-./inline
+echo inlining standalone and debug templates
+./inline standalone
+./inline debug
 echo copying files
 cp -r * ../bin/
 cp .htaccess ../bin/
@@ -32,6 +33,7 @@ rm ../bin/inline
 rm ../bin/images/minimize
 rm ../bin/Documentation/images/minimize
 rm ../bin/standalone.html
+rm ../bin/debug.html
 echo compressing css
 cd css
 ./concat
@@ -39,8 +41,8 @@ cd ../
 mv css/combined.css ../bin/css/combined.css
 java -jar ~/progs/yuicompressor-2.4.8.jar ../bin/css/combined.css > ../bin/css/combined2.css
 mv ../bin/css/combined2.css ../bin/css/combined.css
-java -jar ~/progs/yuicompressor-2.4.8.jar ../bin/Documentation/css/bootstrap.css > ../bin/Documentation/css/bootstrap_compressed.css
-mv ../bin/Documentation/css/bootstrap_compressed.css ../bin/Documentation/css/bootstrap.css
+java -jar ~/progs/yuicompressor-2.4.8.jar ../bin/documentation/css/bootstrap.css > ../bin/documentation/css/bootstrap_compressed.css
+mv ../bin/documentation/css/bootstrap_compressed.css ../bin/documentation/css/bootstrap.css
 echo running google closure compiler
 java -jar ~/progs/closure.jar --js_output_file ../bin/js/scripts_compiled.js  \
 --js js/Blob.js \

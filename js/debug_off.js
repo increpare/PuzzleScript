@@ -11,6 +11,18 @@ function stripTags(str) {
 	return result;
 }
 
+function pushInput(inp) {
+    //nop
+}
+
+function clearInputs() {
+    //nop
+}
+
+function dumpTrace() {
+    //nop
+}
+
 function consolePrint(str){
 /*	var errorText = document.getElementById("errormessage");
 	

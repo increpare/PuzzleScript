@@ -1,4 +1,5 @@
 function makeGIF() {
+	var randomseed = RandomGen.seed;
 	levelEditorOpened=false;
 	var targetlevel=curlevel;
 	var gifcanvas = document.createElement('canvas');
@@ -10,11 +11,10 @@ function makeGIF() {
 	var gifctx = gifcanvas.getContext('2d');
 
 	var inputDat = inputHistory.concat([]);
-	
+    replayQueue = inputDat.slice().reverse();
 
 	unitTesting=true;
 	levelString=compiledText;
-
 
 
 	var encoder = new GIFEncoder();
@@ -22,26 +22,31 @@ function makeGIF() {
 	encoder.setDelay(200);
 	encoder.start();
 
-	compile(["loadLevel",curlevel],levelString);
+	compile(["loadLevel",curlevel],levelString,randomseed);
 	canvasResize();
 	redraw();
 	gifctx.drawImage(canvas,-xoffset,-yoffset);
   	encoder.addFrame(gifctx);
 	var autotimer=0;
 
-  	for(var i=0;i<inputDat.length;i++) {
+    while(replayQueue.length) {
   		var realtimeframe=false;
-		var val=inputDat[i];
-		if (val==="undo") {
-			DoUndo();
-		} else if (val==="restart") {
-			DoRestart();
-		} else if (val=="tick") {			
-			processInput(-1);
+        var val=replayQueue.pop();
+        if (val==="undo") {
+            pushInput("undo");
+	        DoUndo();
+        } else if (val==="restart") {
+            pushInput("restart");
+	    	DoRestart();
+	    } else if (val==="tick") {
+            autoTickGame();
 			realtimeframe=true;
-		} else {
-			processInput(val);
-		}
+        } else if (val==="quit" || val==="win") {
+            continue;
+        } else {
+            pushInput(val);
+	    	processInput(val);
+	    }
 		redraw();
 		gifctx.drawImage(canvas,-xoffset,-yoffset);
 		encoder.addFrame(gifctx);
@@ -54,10 +59,15 @@ function makeGIF() {
 			encoder.setDelay(againinterval);
 			gifctx.drawImage(canvas,-xoffset,-yoffset);
 	  		encoder.addFrame(gifctx);	
-		}
-	}
+	    }
+		redraw();
+		gifctx.drawImage(canvas,-xoffset,-yoffset);
+  		encoder.addFrame(gifctx);
+		encoder.setDelay(repeatinterval);
+    }
 
   	encoder.finish();
   	var dat = 'data:image/gif;base64,'+encode64(encoder.stream().getData());
   	window.open(dat);
+	unitTesting = false;
 }

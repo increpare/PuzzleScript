@@ -150,14 +150,15 @@ function unloadGame() {
 	level = new Level(0, 5, 5, 2, null);
 	level.objects = new Int32Array(0);
 	generateTitleScreen();
-	canvasResize();
-	redraw();
+    if(!unitTesting) {
+        canvasResize();
+        redraw();
+    }
 }
 
 function generateTitleScreen()
 {
 	titleMode=curlevel>0?1:0;
-	
 	if (state.levels.length===0) {
 		titleImage=intro_template;
 		return;
@@ -170,27 +171,27 @@ function generateTitleScreen()
 
 	if (titleMode===0) {
 		if (titleSelected) {
-			titleImage = deepClone(titletemplate_firstgo_selected);		
+			titleImage = deepClone(titletemplate_firstgo_selected);
 		} else {
-			titleImage = deepClone(titletemplate_firstgo);					
+			titleImage = deepClone(titletemplate_firstgo);
 		}
 	} else {
 		if (titleSelection===0) {
 			if (titleSelected) {
-				titleImage = deepClone(titletemplate_select0_selected);		
+				titleImage = deepClone(titletemplate_select0_selected);
 			} else {
-				titleImage = deepClone(titletemplate_select0);					
-			}			
+				titleImage = deepClone(titletemplate_select0);
+			}
 		} else {
 			if (titleSelected) {
-				titleImage = deepClone(titletemplate_select1_selected);		
+				titleImage = deepClone(titletemplate_select1_selected);
 			} else {
-				titleImage = deepClone(titletemplate_select1);					
-			}						
+				titleImage = deepClone(titletemplate_select1);
+			}
 		}
 	}
 
-	var noAction = 'noaction' in state.metadata;	
+	var noAction = 'noaction' in state.metadata;
 	var noUndo = 'noundo' in state.metadata;
 	var noRestart = 'norestart' in state.metadata;
 	if (noUndo && noRestart) {
@@ -224,7 +225,7 @@ function generateTitleScreen()
 		for (var i=0;i<attributionsplit.length;i++) {
 			var line = attributionsplit[i];
 			var row = titleImage[3+i];
-			titleImage[3+i]=row.slice(0,width-line.length-1)+line+row[row.length-1];			
+			titleImage[3+i]=row.slice(0,width-line.length-1)+line+row[row.length-1];
 		}
 	}
 
@@ -245,7 +246,7 @@ var state = introstate;
 function deepClone(item) {
     if (!item) { return item; } // null, undefined values check
 
-    var types = [ Number, String, Boolean ], 
+    var types = [ Number, String, Boolean ],
         result;
 
     // normalizing primitives if someone did new String('aaa'), or new Number('444');
@@ -258,13 +259,13 @@ function deepClone(item) {
     if (typeof result == "undefined") {
         if (Object.prototype.toString.call( item ) === "[object Array]") {
             result = [];
-            item.forEach(function(child, index, array) { 
+            item.forEach(function(child, index, array) {
                 result[index] = deepClone( child );
             });
         } else if (typeof item == "object") {
             // testing that this is DOM
             if (item.nodeType && typeof item.cloneNode == "function") {
-                var result = item.cloneNode( true );    
+                var result = item.cloneNode( true );
             } else if (!item.prototype) { // check that this is a literal
                 if (item instanceof Date) {
                     result = new Date(item);
@@ -294,16 +295,16 @@ function deepClone(item) {
 }
 
 function wordwrap( str, width ) {
- 
+
     width = width || 75;
     var cut = true;
- 
+
     if (!str) { return str; }
- 
+
     var regex = '.{1,' +width+ '}(\\s|$)' + (cut ? '|.{' +width+ '}|.+$' : '|\\S+?(\\s|$)');
- 
+
     return str.match( RegExp(regex, 'g') );
- 
+
 }
 
 var splitMessage=[];
@@ -336,12 +337,12 @@ function drawMessageScreen() {
 		var lmargin = ((width-messageLength)/2)|0;
 		var rmargin = width-messageLength-lmargin;
 		var rowtext = titleImage[row];
-		titleImage[row]=rowtext.slice(0,lmargin)+m+rowtext.slice(lmargin+m.length);		
+		titleImage[row]=rowtext.slice(0,lmargin)+m+rowtext.slice(lmargin+m.length);
 	}
 
 	if (quittingMessageScreen) {
 		titleImage[10]=titleImage[9];
-	}		
+	}
 	canvasResize();
 }
 
@@ -375,14 +376,22 @@ function loadLevelFromLevelDat(state,leveldat,randomseed) {
 	    if ('run_rules_on_level_start' in state.metadata) {
 			processInput(-1,true);
 	    }
+		if(!unitTesting) {
+			canvasResize();
+		}
 	} else {
 		tryPlayShowMessageSound();
 		drawMessageScreen();
     	canvasResize();
 	}
+	clearInputs();
+	dirty.all = true;
+}
 
-	if (canDump===true) {
-		inputHistory=[];
+function autoTickGame() {
+	pushInput("tick");
+	if(processInput(-1)) {
+		redraw();
 	}
 }
 
@@ -427,7 +436,7 @@ generateTitleScreen();
 canvasResize();
 
 function tryPlaySimpleSound(soundname) {
-	if (state.sfx_Events[soundname]!==undefined) {
+	if (!unitTesting && state.sfx_Events[soundname]!==undefined) {
 		var seed = state.sfx_Events[soundname];
 		playSound(seed);
 	}
@@ -481,11 +490,13 @@ function backupLevel() {
 }
 
 function setGameState(_state, command, randomseed) {
+	dirty.all = true;
 	oldflickscreendat=[];
 	timer=0;
 	autotick=0;
 	winning=false;
-	againing=false;
+    againing=false;
+    quitting=false;
     messageselected=false;
     STRIDE_MOV=_state.STRIDE_MOV;
     STRIDE_OBJ=_state.STRIDE_OBJ;
@@ -544,6 +555,7 @@ function setGameState(_state, command, randomseed) {
     	case "restart":
     	{
 		    winning=false;
+            quitting=false;
 		    timer=0;
 		    titleScreen=true;
 		    tryPlayTitleSound();
@@ -570,6 +582,7 @@ function setGameState(_state, command, randomseed) {
 			var targetLevel = command[1];
 			curlevel=i;
 		    winning=false;
+            quitting=false;
 		    timer=0;
 		    titleScreen=false;
 		    textMode=false;
@@ -590,6 +603,7 @@ function setGameState(_state, command, randomseed) {
 				if(level.lineNumber<=targetLine+1) {
 					curlevel=i;
 				    winning=false;
+                    quitting=false;
 				    timer=0;
 				    titleScreen=false;
 				    textMode=false;
@@ -606,13 +620,11 @@ function setGameState(_state, command, randomseed) {
 			break;
 		}
 	}
-	
-	if (canDump===true) {
-		inputHistory=[];
-	}
-    canvasResize();
 
-
+	clearInputs();
+	dirty.all = true;
+	canvasResize();
+	dirty.all = true;
 
 	if (canYoutube) {
 		if ('youtube' in state.metadata) {
@@ -634,7 +646,7 @@ function setGameState(_state, command, randomseed) {
 		if ('youtube' in state.metadata) {
 			var div_container = document.createElement('DIV');
 			var div_front = document.createElement('DIV');
-			div_front.style.zIndex=-100;	
+			div_front.style.zIndex=-100;
 			div_front.style.backgroundColor=state.bgcolor;
 			div_front.style.position= "absolute";
 			div_front.style.width="500px";
@@ -642,10 +654,10 @@ function setGameState(_state, command, randomseed) {
 			var div_back = document.createElement('DIV');
 			div_back.style.zIndex=-200;
 			div_back.style.position= "absolute";
-			
+
 			div_container.appendChild(div_back);
 			div_container.appendChild(div_front);
-			
+
 			var youtubeid=state.metadata['youtube'];
 			var url = "https://youtube.googleapis.com/v/"+youtubeid+"?autoplay=1&loop=1&playlist="+youtubeid;
 			ifrm = document.createElement("IFRAME");
@@ -660,7 +672,6 @@ function setGameState(_state, command, randomseed) {
 			document.body.appendChild(div_container);
 			*/
 	}
-	
 }
 
 function RebuildLevelArrays() {
@@ -740,6 +751,7 @@ function restoreLevel(lev) {
     againing=false;
     messagetext="";
     level.commandQueue=[];
+	dirty.all = true;
 }
 
 var zoomscreen=false;
@@ -767,7 +779,7 @@ function DoRestart(force) {
 	if ('run_rules_on_level_start' in state.metadata) {
     	processInput(-1,true);
 	}
-	
+
 	level.commandQueue=[];
 }
 
@@ -835,28 +847,38 @@ function startMovement(dir) {
 
 var dirMasksDelta = {
      1:[0,-1],//up
-     2:[0,1],//'down'  : 
-     4:[-1,0],//'left'  : 
-     8:[1,0],//'right' : 
-     15:[0,0],//'?' : 
-     16:[0,0],//'action' : 
+     2:[0,1],//'down'  :
+     4:[-1,0],//'left'  :
+     8:[1,0],//'right' :
+     15:[0,0],//'?' :
+     16:[0,0],//'action' :
      3:[0,0]//'no'
 };
 
 var dirMaskName = {
      1:'up',
      2:'down'  ,
-     4:'left'  , 
-     8:'right',  
+     4:'left'  ,
+     8:'right',
      15:'?' ,
      16:'action',
      3:'no'
 };
 
+var dirNameMask = {
+     'up':1,
+     'down':2,
+     'left':4,
+     'right':8,
+     '?':15,
+     'action':16,
+     'no':3
+};
+
 var seedsToPlay_CanMove=[];
 var seedsToPlay_CantMove=[];
 
-function repositionEntitiesOnLayer(positionIndex,layer,dirMask) 
+function repositionEntitiesOnLayer(positionIndex,layer,dirMask)
 {
     var delta = dirMasksDelta[dirMask];
 
@@ -900,6 +922,8 @@ function repositionEntitiesOnLayer(positionIndex,layer,dirMask)
 
     level.setCell(positionIndex, sourceMask);
     level.setCell(targetIndex, targetMask);
+    dirty[positionIndex] = true;
+    dirty[targetIndex] = true;
 
     var colIndex=(targetIndex/level.height)|0;
 	var rowIndex=(targetIndex%level.height);
@@ -1533,7 +1557,7 @@ function matchCellRow(direction, cellRowMatch, cellRow, cellRowMask) {
     		ymin+=(len-1);
     		break;
     	}
-    	case 2: //down 
+        case 2: //down
     	{
 			ymax-=(len-1);
 			break;
@@ -1545,7 +1569,7 @@ function matchCellRow(direction, cellRowMatch, cellRow, cellRowMask) {
     	}
     	case 8: //right
 		{
-			xmax-=(len-1);	
+			xmax-=(len-1);
 			break;
 		}
     	default:
@@ -1582,7 +1606,7 @@ function matchCellRow(direction, cellRowMatch, cellRow, cellRowMask) {
 					result.push(i);
 				}
 			}
-		}		
+		}
 	}
 
 	return result;
@@ -1606,19 +1630,19 @@ function matchCellRowWildCard(direction, cellRowMatch, cellRow,cellRowMask) {
     		ymin+=(len-1);
     		break;
     	}
-    	case 2: //down 
+		case 2: //down
     	{
 			ymax-=(len-1);
 			break;
     	}
     	case 4: //left
     	{
-    		xmin+=(len-1);
+			xmin+=(len-1);
     		break;
     	}
     	case 8: //right
 		{
-			xmax-=(len-1);	
+			xmax-=(len-1);
 			break;
 		}
     	default:
@@ -1670,7 +1694,7 @@ function matchCellRowWildCard(direction, cellRowMatch, cellRow,cellRowMask) {
 				}
 				result.push.apply(result, cellRowMatch(cellRow,i,kmax,0));
 			}
-		}		
+		}
 	}
 
 	return result;
@@ -1768,7 +1792,7 @@ Rule.prototype.applyAt = function(delta,tuple,check) {
         }
     }
     var result=false;
-    
+
     //APPLY THE RULE
     var d0 = delta[0]*level.height;
     var d1 = delta[1];
@@ -1784,8 +1808,9 @@ Rule.prototype.applyAt = function(delta,tuple,check) {
             	currentIndex = (currentIndex+(d1+d0)*k)%level.n_tiles;
             	continue;
             }
-
-            result = preCell.replace(rule, currentIndex) || result;
+			var rep = preCell.replace(rule, currentIndex);
+			if(rep) { dirty[currentIndex] = true; }
+            result = rep || result;
 
             currentIndex = (currentIndex+d1+d0)%level.n_tiles;
         }
@@ -1844,9 +1869,9 @@ Rule.prototype.queueCommands = function() {
 			consolePrint(logString);
 		}
 
-		if (command[0]==='message') {			
+		if (command[0]==='message') {
 			messagetext=command[1];
-		}		
+		}
 	}
 };
 
@@ -1874,13 +1899,13 @@ function applyRandomRuleGroup(ruleGroup) {
 	    		var tuple=tuples[j];
 				matches.push([ruleIndex,tuple]);
 	    	}
-		}		
+		}
 	}
 
 	if (matches.length===0)
 	{
 		return false;
-	} 
+	}
 
 	var match = matches[Math.floor(RandomGen.uniform()*matches.length)];
 	var ruleIndex=match[0];
@@ -1905,7 +1930,7 @@ function applyRuleGroup(ruleGroup) {
     var loopcount=0;
     while(propagated) {
     	loopcount++;
-    	if (loopcount>200) 
+		if (loopcount>200)
     	{
     		logErrorCacheable("Got caught looping lots in a rule group :O",ruleGroup[0].lineNumber,true);
     		break;
@@ -1958,7 +1983,7 @@ function applyRules(rules, loopPoint, startRuleGroupindex){
 					   	logErrorCacheable("got caught in an endless startloop...endloop vortex, escaping!", ruleGroup[0].lineNumber,true);
 					   	break;
 					}
-		        } 
+		        }
         	}
         }
     }
@@ -2122,7 +2147,7 @@ function processInput(dir,dontCheckWin,dontModify) {
         	first=false;
         	rigidloop=false;
         	i++;
-        	
+
         	if (verbose_logging){consolePrint('applying rules');}
 
         	applyRules(state.rules, state.loopPoint, startRuleGroupIndex);	
@@ -2168,8 +2193,8 @@ function processInput(dir,dontCheckWin,dontModify) {
         	//play player cantmove sounds here
         }
 
-	    if (level.commandQueue.indexOf('cancel')>=0) {	
-	    	if (verbose_logging) { 
+	    if (level.commandQueue.indexOf('cancel')>=0) {
+			if (verbose_logging) {
 	    		consolePrint('CANCEL command executed, cancelling turn.');
 			}
     		backups.push(bak);
@@ -2181,8 +2206,8 @@ function processInput(dir,dontCheckWin,dontModify) {
 	    } 
 
 	    if (level.commandQueue.indexOf('restart')>=0) {
-	    	if (verbose_logging) { 
-	    		consolePrint('RESTART command executed, reverting to restart state.');
+			if (verbose_logging) {
+				consolePrint('RESTART command executed, reverting to restart state.');
 			}
     		backups.push(bak);
 	    	DoRestart(true);	
@@ -2217,7 +2242,8 @@ function processInput(dir,dontCheckWin,dontModify) {
 	    	}
 	    }
 
-		if (dontModify) {		
+
+		if (dontModify) {
     		if (verbose_logging) {
     			consoleCacheDump();
     		}
@@ -2250,7 +2276,7 @@ function processInput(dir,dontCheckWin,dontModify) {
 	 		var command = level.commandQueue[i];
 	 		if (command.charAt(1)==='f')  {//identifies sfxN
 	 			tryPlaySimpleSound(command);
-	 		}  	
+			}
 			if (unitTesting===false) {
 				if (command==='message') {
 					showTempMessage();
@@ -2259,7 +2285,7 @@ function processInput(dir,dontCheckWin,dontModify) {
 	    }
 
 	    if (textMode===false && (dontCheckWin===undefined ||dontCheckWin===false)) {
-	    	if (verbose_logging) { 
+			if (verbose_logging) {
 	    		consolePrint('Checking win condition.');
 			}
 	    	checkWin();
@@ -2397,15 +2423,24 @@ function DoWin() {
 	if (winning) {
 		return;
 	}
+    pushInput("win");
+    dumpTrace();
 	againing=false;
 	tryPlayEndLevelSound();
-	if (unitTesting) {
+	if (unitTesting && testsAutoAdvanceLevel) {
 		nextLevel();
 		return;
 	}
 
 	winning=true;
 	timer=0;
+}
+
+function DoQuit() {
+	if(quitting || curlevel==0) { return; }
+	quitting = true;
+	pushInput("quit");
+	dumpTrace();
 }
 
 /*
@@ -2421,6 +2456,7 @@ function anyMovements() {
 
 
 function nextLevel() {
+	dirty.all=true;
 	keybuffer=[];
     againing=false;
 	messagetext="";
@@ -2428,11 +2464,11 @@ function nextLevel() {
 		if (titleSelection===0) {
 			//new game
 			curlevel=0;
-		} 			
+		}
 		loadLevelFromState(state,curlevel);
 	} else {
 		if (curlevel<(state.levels.length-1))
-		{			
+		{
 			curlevel++;
 			textMode=false;
 			titleScreen=false;
@@ -2443,7 +2479,7 @@ function nextLevel() {
 			curlevel=0;
 			goToTitleScreen();
 			tryPlayEndGameSound();
-		}		
+		}
 		//continue existing game
 	}
 	try {
@@ -2454,10 +2490,8 @@ function nextLevel() {
 
 	}
 
-	canvasResize();	
-	if (canDump===true) {
-		inputHistory=[];
-	}
+	canvasResize();
+	clearInputs();
 }
 
 function goToTitleScreen(){

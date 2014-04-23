@@ -1,6 +1,10 @@
 var unitTesting=false;
+var testsAutoAdvanceLevel=true;
+
 var curlevel=0;
 var levelEditorOpened=false;
+
+var dirty = {};
 
 try {
  	if (!!window.localStorage) { 
@@ -29,6 +33,11 @@ var norepeat_action=false;
 var oldflickscreendat=[];//used for buffering old flickscreen/scrollscreen positions, in case player vanishes
 var keybuffer = [];
 
+var canvas;
+var lastDownTarget;
+var ellipsisDirection = 1<<31;
+
+var forceRegenImages=false;
 
 var messageselected=false;
 

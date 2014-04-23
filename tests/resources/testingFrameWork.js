@@ -17,29 +17,35 @@ function runTest(dataarray) {
 	if (targetlevel===undefined) {
 		targetlevel=0;
 	}
+	
 	compile(["loadLevel",targetlevel],levelString,randomseed);
 
 	while (againing) {
 		againing=false;
 		processInput(-1);			
 	}
-	
-	for(var i=0;i<inputDat.length;i++) {
-		var val=inputDat[i];
-		if (val==="undo") {
-			DoUndo();
-		} else if (val==="restart") {
-			DoRestart();
-		} else if (val==="tick") {
-			processInput(-1);
-		} else {
-			processInput(val);
-		}
-		while (againing) {
-			againing=false;
-			processInput(-1);			
-		}
-	}
+    replayQueue = inputDat.slice().reverse();
+    while(replayQueue.length) {
+        var val=replayQueue.pop();
+        if (val==="undo") {
+            pushInput("undo");
+	        DoUndo();
+        } else if (val==="restart") {
+            pushInput("restart");
+	    	DoRestart();
+	    } else if (val==="tick") {
+            autoTickGame();
+        } else if (val==="quit" || val==="win") {
+            continue;
+        } else {
+            pushInput(val);
+	    	processInput(val);
+	    }
+	    while (againing) {
+	    	againing=false;
+	    	processInput(-1);			
+	    }
+    }
 
 	unitTesting=false;
 	var levelString = convertLevelToString();
@@ -47,6 +53,10 @@ function runTest(dataarray) {
 	if (success) {
 		return true;
 	} else {
+		console.log("Got");
+		console.log(levelString);
+		console.log("Expected");
+		console.log(dataarray[2]);
 		return false;
 	}
 }

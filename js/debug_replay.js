@@ -2,11 +2,11 @@ var canSetHTMLColors=false;
 var canDump=true;
 var canYoutube=false;
 inputHistory=[];
+replayQueue=null;
 var compiledText;
 var canOpenEditor=true;
-var IDE=true;
-
 dumpTraceHooks=[];
+var IDE=true;
 
 function pushInput(inp) {
 	if (canDump===true) {
@@ -25,6 +25,7 @@ function addDumpTraceHook(fn) {
 }
 
 function dumpTrace() {
+    if(replayQueue) { return; }
     var title = state.metadata.title || state.title;
     for(var i=0; i < dumpTraceHooks.length; i++) {
         dumpTraceHooks[i](

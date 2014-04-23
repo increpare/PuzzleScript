@@ -2406,14 +2406,10 @@ function compile(command,text,randomseed) {
 	}
 	setGameState(state,command,randomseed);
 
-	if (canDump===true) {
-		inputHistory=[];
-	}
-
+    clearInputs();
 	consoleCacheDump();
+    return state;
 }
-
-
 
 function qualifyURL(url) {
 	var a = document.createElement('a');
