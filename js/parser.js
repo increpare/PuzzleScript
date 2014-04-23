@@ -682,6 +682,9 @@ var codeMirrorFn = function() {
 	                            if (keyword_array.indexOf(candname)>=0) {
 	                                logWarning('You named an object "' + candname.toUpperCase() + '", but this is a keyword. Don\'t do that!', state.lineNumber);
 	                            }
+                                if (splits.indexOf(candname, 2)>=2) {
+                                    logError("You can't define object " + candname.toUpperCase() + " in terms of itself!", state.lineNumber);
+                                }
                         	}
 
                             if (splits.length < 3) {
