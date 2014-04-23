@@ -881,9 +881,6 @@ var seedsToPlay_CantMove=[];
 function repositionEntitiesOnLayer(positionIndex,layer,dirMask)
 {
     var delta = dirMasksDelta[dirMask];
-	if(!delta) { 
-		console.log("no delta for dirmask "+dirMask+" from "+JSON.stringify(dirMasksDelta));
-	}
 
     var dx = delta[0];
     var dy = delta[1];
@@ -2439,10 +2436,16 @@ function DoWin() {
 	timer=0;
 }
 
+function DoQuit() {
+	if(quitting || curlevel==0) { return; }
+	quitting = true;
+	pushInput("quit");
+	dumpTrace();
+}
+
 /*
 //this function isn't valid after refactoring, but also isn't used.
 function anyMovements() {	
->>>>>>> 379c91184fa2d1d37f698c2f83207a5dfaa4d7c4
     for (var i=0;i<level.movementMask.length;i++) {
         if (level.movementMask[i]!==0) {
         	return true;
