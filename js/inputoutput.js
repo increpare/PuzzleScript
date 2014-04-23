@@ -765,12 +765,7 @@ function update() {
         autotick+=deltatime;
         if (autotick>autotickinterval) {
             autotick=0;
-            if (canDump===true) {
-            	inputHistory.push("tick");            
-            }
-            if (processInput(-1)) {
-                redraw();
-            }
+            autoTickGame();
         }
     }
 }

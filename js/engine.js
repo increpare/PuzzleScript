@@ -389,9 +389,10 @@ function loadLevelFromLevelDat(state,leveldat,randomseed) {
 }
 
 function autoTickGame() {
-	pushInput("wait");
-	processInput(-1);
-	clearInputs();
+	pushInput("tick");
+	if(processInput(-1)) {
+		redraw();
+	}
 }
 
 function loadLevelFromState(state,levelindex,randomseed) {	
