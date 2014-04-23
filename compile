@@ -39,12 +39,12 @@ cd css
 ./concat
 cd ../
 mv css/combined.css ../bin/css/combined.css
-java -jar /usr/local/Cellar/yuicompressor/2.4.8/libexec/yuicompressor-2.4.8.jar ../bin/css/combined.css > ../bin/css/combined2.css
+java -jar ~/progs/yuicompressor-2.4.8.jar ../bin/css/combined.css > ../bin/css/combined2.css
 mv ../bin/css/combined2.css ../bin/css/combined.css
-java -jar /usr/local/Cellar/yuicompressor/2.4.8/libexec/yuicompressor-2.4.8.jar ../bin/documentation/css/bootstrap.css > ../bin/documentation/css/bootstrap_compressed.css
+java -jar ~/progs/yuicompressor-2.4.8.jar ../bin/documentation/css/bootstrap.css > ../bin/documentation/css/bootstrap_compressed.css
 mv ../bin/documentation/css/bootstrap_compressed.css ../bin/documentation/css/bootstrap.css
 echo running google closure compiler
-java -jar /usr/local/Cellar/closure-compiler/20130823/libexec/build/compiler.jar --js_output_file ../bin/js/scripts_compiled.js  \
+java -jar ~/progs/closure.jar --js_output_file ../bin/js/scripts_compiled.js  \
 --js js/Blob.js \
 --js js/FileSaver.js \
 --js js/jsgif/b64.js \
@@ -79,7 +79,7 @@ java -jar /usr/local/Cellar/closure-compiler/20130823/libexec/build/compiler.jar
 --js js/addlisteners.js \
 --js js/addlisteners_editor.js \
 --js js/makegif.js
-java -jar /usr/local/Cellar/closure-compiler/20130823/libexec/build/compiler.jar --js_output_file ../bin/js/scripts_play_compiled.js  \
+java -jar ~/progs/closure.jar --js_output_file ../bin/js/scripts_play_compiled.js  \
 --js js/globalVariables.js \
 --js js/debug_off.js \
 --js js/font.js \
@@ -108,7 +108,7 @@ echo copying editor.html over
 mv editor_temp4.html ../bin/editor.html
 mv play_temp2.html ../bin/play.html
 echo compressing html
-java -jar /usr/local/Cellar/htmlcompressor/1.5.3/libexec/htmlcompressor-1.5.3.jar  -r ../bin/ -o ../bin/
+java -jar ~/progs/htmlcompressor-1.5.3.jar  -r ../bin/ -o ../bin/
 echo tidying up
 rm editor_temp*.html
 rm play_temp*.html
