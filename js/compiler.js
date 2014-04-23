@@ -390,9 +390,9 @@ function levelFromString(state,level) {
 
 			if (mask == undefined) {
 				if (state.propertiesDict[ch]===undefined) {
-					logError('Error, symbol "' + ch + '", used in map, not found.', state.lineNumber);
+					logError('Error, symbol "' + ch + '", used in map, not found.', level[0]+j);
 				} else {
-					logError('Error, symbol "' + ch + '" is defined using \'or\', and therefore ambiguous - it cannot be used in a map. Did you mean to define it in terms of \'and\'?', state.lineNumber);							
+					logError('Error, symbol "' + ch + '" is defined using \'or\', and therefore ambiguous - it cannot be used in a map. Did you mean to define it in terms of \'and\'?', level[0]+j);							
 				}
 
 			}
@@ -1936,23 +1936,25 @@ function printRules(state) {
 }
 
 function removeDuplicateRules(state) {
-	var record = [];
+	console.log("rule count before = " +state.rules.length);
+	var record = {};
 	var newrules=[];
 	var lastgroupnumber=-1;
-	for (var i=0;i<state.rules.length;i++) {
+	for (var i=state.rules.length-1;i>=0;i--) {
 		var r = state.rules[i];
 		var groupnumber = r.groupNumber;
 		if (groupnumber!==lastgroupnumber) {
-			record=[];
+			record={};
 		}
 		var r_string=printRule(r);
-		if (record.indexOf(r_string)===-1) {
-			newrules.push(r);
-			record.push(r_string);
+		if (record.hasOwnProperty(r_string)) {
+			state.rules.splice(i,1);
+		} else {
+			record[r_string]=true;
 		}
 		lastgroupnumber=groupnumber;
 	}
-	state.rules=newrules;
+	console.log("rule count after = " +state.rules.length);
 }
 function generateLoopPoints(state) {
 	var loopPoint={};
