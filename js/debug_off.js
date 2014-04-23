@@ -19,13 +19,6 @@ function clearInputs() {
     //nop
 }
 
-function randomDirAvailable() { return false; }
-function popRandomDir() { throw new Exception("No choices available"); }
-function randomEntIdxAvailable() { return false; }
-function popRandomEntIdx() { throw new Exception("No choices available"); }
-function randomRuleIdxAvailable() { return false; }
-function popRandomRuleIdx() { throw new Exception("No choices available"); }
-
 function dumpTrace() {
     //nop
 }

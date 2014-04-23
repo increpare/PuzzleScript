@@ -5,12 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="">
     <meta name="author" content="">
-    <link rel="shortcut icon" type="image/x-icon" href="documentation/ico/favicon.ico" />
+    <link rel="shortcut icon" type="image/x-icon" href="Documentation/ico/favicon.ico" />
 
     <title>PuzzleScript - an open-source HTML5 puzzle game engine</title>
 
     <!-- Bootstrap core CSS -->
-    <link href="documentation/css/bootstrap.css" rel="stylesheet">
+    <link href="Documentation/css/bootstrap.css" rel="stylesheet">
 
     <!-- Custom styles for this template -->
 <style> 
@@ -86,7 +86,7 @@ PuzzleScript is an open-source HTML5 puzzle game engine.
     </div>
     <div class="col-lg-6">    <p>
     <a href="editor.html" class="btn btn-default btn-lg">Make A Game</a>
-    <a href="documentation/rules101.html" class="btn btn-default btn-lg">First Steps</a>    
+    <a href="Documentation/rules101.html" class="btn btn-default btn-lg">First Steps</a>    
     <p>
     </div></div>
   </div>
@@ -162,7 +162,7 @@ function replaceContent() {
   for (var i=0;i<items.length;i++) {
     var item=items[i];
     imgurl = item.getElementsByTagName('img')[0].src;
-    captionurl = item.getElementsByTagName('div')[0].children[0].children[0].innerHTML;
+    captionurl = item.getElementsByTagName('div')[0].children[0].children[0].href;
     data.push([imgurl,captionurl]);
   }
   data = shuffle(data);
@@ -180,7 +180,7 @@ replaceContent();
     <!-- Bootstrap core JavaScript
     ================================================== -->
     <!-- Placed at the end of the document so the pages load faster -->
-    <script src="documentation/js/jquery.js"></script>
-    <script src="documentation/js/bootstrap.min.js"></script>
+    <script src="Documentation/js/jquery.js"></script>
+    <script src="Documentation/js/bootstrap.min.js"></script>
   </body>
 </html>

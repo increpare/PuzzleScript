@@ -11,23 +11,29 @@ function runTest(dataarray) {
 
 	var inputDat = dataarray[1];
 	var targetlevel = dataarray[3];
+	
+	var randomseed = dataarray[4]!==undefined ? dataarray[4] : null;
+
 	if (targetlevel===undefined) {
 		targetlevel=0;
 	}
-	compile(["loadLevel",targetlevel],levelString);
+	
+	compile(["loadLevel",targetlevel],levelString,randomseed);
+
+	while (againing) {
+		againing=false;
+		processInput(-1);			
+	}
     replayQueue = inputDat.slice().reverse();
     while(replayQueue.length) {
         var val=replayQueue.pop();
-        if(isNaN(val) && val.substr(0,6) == "random") {
-            throw new Exception("Replay queue has unconsumed random "+val);
-        }
         if (val==="undo") {
             pushInput("undo");
 	        DoUndo();
         } else if (val==="restart") {
             pushInput("restart");
 	    	DoRestart();
-	    } else if (val==="wait") {
+	    } else if (val==="tick") {
             autoTickGame();
         } else if (val==="quit" || val==="win") {
             continue;
@@ -41,11 +47,16 @@ function runTest(dataarray) {
 	    }
     }
 
-	var calculatedOutput = JSON.stringify(level.dat);
-	var preparedOutput = dataarray[2];
-	var preparedLevel;
-	eval("preparedLevel = " + preparedOutput);
-	preparedOutput = JSON.stringify(preparedLevel.dat);
 	unitTesting=false;
-	return calculatedOutput === preparedOutput;
+	var levelString = convertLevelToString();
+	var success = levelString == dataarray[2];
+	if (success) {
+		return true;
+	} else {
+		console.log("Got");
+		console.log(levelString);
+		console.log("Expected");
+		console.log(dataarray[2]);
+		return false;
+	}
 }

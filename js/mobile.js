@@ -40,7 +40,6 @@ Mobile.debugDot = function (event) {
         'top: ' + event.touches[0].clientY + 'px;';
     dot = document.createElement('div');
     dot.setAttribute('style', style);
-    console.log(style);
     body = document.getElementsByTagName('body')[0];
     body.appendChild(dot);
 };
@@ -67,7 +66,7 @@ Mobile.debugDot = function (event) {
         down:    40, // down arrow
         undo:    85, // u
         restart: 82, // r
-        quit:    27, // escape
+        quit:    27 // escape
     }
 
     var TAB_STRING = [
@@ -77,7 +76,7 @@ Mobile.debugDot = function (event) {
         '    <div class="slice"></div>',
         '    <div class="slice"></div>',
         '  </div>',
-        '</div>',
+        '</div>'
     ].join("\n");
 
     /** Bootstrap Methods **/
@@ -110,6 +109,9 @@ Mobile.debugDot = function (event) {
             return;
         }
 
+        if (event.target.tagName.toUpperCase() === 'A') {
+            return;
+        }
         this.isTouching = true;
 
         this.mayBeSwiping = true;

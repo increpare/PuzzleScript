@@ -12,60 +12,34 @@
     color: #D1EDFF;
 }
 
-
-.cm-s-midnight span.cm-BLACK {color: gray;}
-.cm-s-midnight span.cm-VOID {color: #9D9D9D;}
-.cm-s-midnight span.cm-GREY {color: #9D9D9D;}
-.cm-s-midnight span.cm-GRAY {color: #9D9D9D;}
-.cm-s-midnight span.cm-DARKGRAY {color: #6D6D6D;}
-.cm-s-midnight span.cm-DARKGREY {color: #6D6D6D;}
-.cm-s-midnight span.cm-LIGHTGRAY {color: #c1c1c1;}
-.cm-s-midnight span.cm-LIGHTGREY {color: #c1c1c1;}
-.cm-s-midnight span.cm-ASH {color: #9D9D9D;}
-.cm-s-midnight span.cm-WHITE {color: #FFFFFF;}
-.cm-s-midnight span.cm-BLIND {color: #FFFFFF;}
-.cm-s-midnight span.cm-LIGHTRED {color: #BE2633;}
-.cm-s-midnight span.cm-RED {color: #BE2633;}
-.cm-s-midnight span.cm-BLOODRED {color: #BE2633;}
-.cm-s-midnight span.cm-PINK {color: #E06F8B;}
-.cm-s-midnight span.cm-PIGMEAT {color: #E06F8B;}
-.cm-s-midnight span.cm-DBROWN {color: #493C2B;}
-.cm-s-midnight span.cm-DARKBROWN {color: #493C2B;}
-.cm-s-midnight span.cm-OLDPOOP {color: #493C2B;}
-.cm-s-midnight span.cm-BROWN {color: #A46422;}
-.cm-s-midnight span.cm-NEWPOOP {color: #A46422;}
-.cm-s-midnight span.cm-ORANGE {color: #EB8931;}
-.cm-s-midnight span.cm-BLAZE {color: #EB8931;}
-.cm-s-midnight span.cm-YELLOW {color: #F7E26B;}
-.cm-s-midnight span.cm-ZORNSKIN {color: #F7E26B;}
-.cm-s-midnight span.cm-DGREEN {color: #2F484E;}
-.cm-s-midnight span.cm-DARKGREEN {color: #2F484E;}
-.cm-s-midnight span.cm-SHADEGREEN {color: #2F484E;}
-.cm-s-midnight span.cm-GREEN {color: #44891A;}
-.cm-s-midnight span.cm-LEAFGREEN {color: #44891A;}
-.cm-s-midnight span.cm-LGREEN {color: #A3CE27;}
-.cm-s-midnight span.cm-LIGHTGREEN {color: #A3CE27;}
-.cm-s-midnight span.cm-SLIMEGREEN {color: #A3CE27;}
-.cm-s-midnight span.cm-LIME {color: #A3CE27;}
-.cm-s-midnight span.cm-NBLUE {color: #1B2632;}
-.cm-s-midnight span.cm-NIGHTBLUE {color: #1B2632;}
-.cm-s-midnight span.cm-TEAL {color: #1B2632;}
-.cm-s-midnight span.cm-DBLUE {color: #005784;}
-.cm-s-midnight span.cm-DARKBLUE {color: #005784;}
-.cm-s-midnight span.cm-NAVY {color: #005784;}
-.cm-s-midnight span.cm-SEABLUE {color: #005784;}
-.cm-s-midnight span.cm-OCEANBLUE {color: #005784;}
-.cm-s-midnight span.cm-BLUE {color: #31A2F2;}
-.cm-s-midnight span.cm-SKYBLUE {color: #31A2F2;}
-.cm-s-midnight span.cm-LBLUE {color: #B2DCEF;}
-.cm-s-midnight span.cm-LIGHTBLUE {color: #B2DCEF;}
-.cm-s-midnight span.cm-CLOUDBLUE {color: #B2DCEF;}
-.cm-s-midnight span.cm-MAGENTA {color: #FF00FF;}
-.cm-s-midnight span.cm-FUSHSIA {color: #FF00FF;}
-.cm-s-midnight span.cm-PURPLE {color: #580780;}
-.cm-s-midnight span.cm-MAROON {color: #a51a14;}
-.cm-s-midnight span.cm-DARKRED {color: #a51a14;}
-
+.cm-s-midnight span.cm-COLOR {}
+.cm-s-midnight span.cm-BOLDCOLOR {font-weight:bold;}
+.cm-s-midnight span.cm-FADECOLOR {color:#777777;  font-weight:normal;}
+.cm-s-midnight span.cm-COLOR-TRANSPARENT {color:#777777; font-weight:normal;}
+.cm-s-midnight span.cm-COLOR-BLACK {color:#555555;}
+.cm-s-midnight span.cm-COLOR-WHITE {color:#FFFFFF;}
+.cm-s-midnight span.cm-COLOR-GREY {color:#9D9D9D;}
+.cm-s-midnight span.cm-COLOR-DARKGREY {color:#6D6D6D;}
+.cm-s-midnight span.cm-COLOR-LIGHTGREY {color:#c1c1c1;}
+.cm-s-midnight span.cm-COLOR-GRAY {color:#9D9D9D;}
+.cm-s-midnight span.cm-COLOR-DARKGRAY {color:#6D6D6D;}
+.cm-s-midnight span.cm-COLOR-LIGHTGRAY {color:#c1c1c1;}
+.cm-s-midnight span.cm-COLOR-RED {color:#BE2633;}
+.cm-s-midnight span.cm-COLOR-DARKRED {color:#732930;}
+.cm-s-midnight span.cm-COLOR-LIGHTRED {color:#e06f8b;}
+.cm-s-midnight span.cm-COLOR-BROWN {color:#A46422;}
+.cm-s-midnight span.cm-COLOR-DARKBROWN {color:#493C2B;}
+.cm-s-midnight span.cm-COLOR-LIGHTBROWN {color:#EEB62F;}
+.cm-s-midnight span.cm-COLOR-ORANGE {color:#EB8931;}
+.cm-s-midnight span.cm-COLOR-YELLOW {color:#F7E26B;}
+.cm-s-midnight span.cm-COLOR-GREEN {color:#44891A;}
+.cm-s-midnight span.cm-COLOR-DARKGREEN {color:#2F484E;}
+.cm-s-midnight span.cm-COLOR-LIGHTGREEN {color:#A3CE27;}
+.cm-s-midnight span.cm-COLOR-BLUE {color:#31A2F2;}
+.cm-s-midnight span.cm-COLOR-DARKBLUE {color:#005784;}
+.cm-s-midnight span.cm-COLOR-LIGHTBLUE {color:#B2DCEF;}
+.cm-s-midnight span.cm-COLOR-PURPLE {color:#580780;}
+.cm-s-midnight span.cm-COLOR-PINK {color:#E06F8B;}
 
 .cm-s-midnight span.cm-NAME {color: #1DC116;}
 .cm-s-midnight span.cm-HEADER {color: #AE81FF; font-weight:bold;}
@@ -82,7 +56,8 @@
 .cm-s-midnight span.cm-MESSAGE {color: orange;font-style:italic;}
 .cm-s-midnight span.cm-METADATA {color: #AE81FF;font-weight:bold;}
 .cm-s-midnight span.cm-METADATATEXT {color: orange;font-style:italic;}
-span.cm-SOUND { 
+
+span.cm-SOUND {
 	color: orange;
 	cursor: pointer; 
 	cursor: hand; 

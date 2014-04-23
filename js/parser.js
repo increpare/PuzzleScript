@@ -16,12 +16,15 @@ http://androidarts.com/palette/16pal.htm
 
 the editor is a slight modification of codemirro (codemirror.net), which is crazy awesome.
 
+for post-launch credits, check out activty on github.com/increpare/PuzzleScript
+
 */
 
 var compiling = false;
 var errorStrings = [];
 var errorCount=0;
-function logError(str, lineNumber,urgent) {
+
+function logErrorCacheable(str, lineNumber,urgent) {
     if (compiling||urgent) {
         if (lineNumber === undefined) {
             return logErrorNoLine(str);
@@ -37,6 +40,36 @@ function logError(str, lineNumber,urgent) {
     }
 }
 
+function logError(str, lineNumber,urgent) {
+    if (compiling||urgent) {
+        if (lineNumber === undefined) {
+            return logErrorNoLine(str);
+        }
+        var errorString = '<a onclick="jumpToLine(' + lineNumber.toString() + ');"  href="javascript:void(0);"><span class="errorTextLineNumber"> line ' + lineNumber.toString() + '</span></a> : ' + '<span class="errorText">' + str + '</span>';
+         if (errorStrings.indexOf(errorString) >= 0 && !urgent) {
+            //do nothing, duplicate error
+         } else {
+            consolePrint(errorString,true);
+            errorStrings.push(errorString);
+            errorCount++;
+        }
+    }
+}
+
+function logWarning(str, lineNumber,urgent) {
+    if (compiling||urgent) {
+        if (lineNumber === undefined) {
+            return logErrorNoLine(str);
+        }
+        var errorString = '<a onclick="jumpToLine(' + lineNumber.toString() + ');"  href="javascript:void(0);"><span class="errorTextLineNumber"> line ' + lineNumber.toString() + '</span></a> : ' + '<span class="warningText">' + str + '</span>';
+         if (errorStrings.indexOf(errorString) >= 0 && !urgent) {
+            //do nothing, duplicate error
+         } else {
+            consolePrint(errorString,true);
+            errorStrings.push(errorString);
+        }
+    }
+}
 function logErrorNoLine(str,urgent) {
     if (compiling||urgent) {
         var errorString = '<span class="errorText">' + str + '</span>';
@@ -70,6 +103,8 @@ function blankLineHandle(state) {
             {
                 state.levels.push([]);
             }
+    } else if (state.section === 'objects') {
+        state.objects_section = 0;
     }
 }
 
@@ -127,6 +162,89 @@ var codeMirrorFn = function() {
     ];
 
     return {
+        copyState: function(state) {
+            var objectsCopy = {};
+            for (var i in state.objects) {
+              if (state.objects.hasOwnProperty(i)) {
+                var o = state.objects[i];
+                objectsCopy[i] = {
+                  colors: o.colors.concat([]),
+                  lineNumber : o.lineNumber,
+                  spritematrix: o.spritematrix.concat([])
+                }
+              }
+            }
+
+            var collisionLayersCopy = [];
+            for (var i = 0; i < state.collisionLayers.length; i++) {
+              collisionLayersCopy.push(state.collisionLayers[i].concat([]));
+            }
+
+            var legend_synonymsCopy = [];
+            var legend_aggregatesCopy = [];
+            var legend_propertiesCopy = [];
+            var soundsCopy = [];
+            var levelsCopy = [];
+            var winConditionsCopy = [];
+
+            for (var i = 0; i < state.legend_synonyms.length; i++) {
+              legend_synonymsCopy.push(state.legend_synonyms[i].concat([]));
+            }
+            for (var i = 0; i < state.legend_aggregates.length; i++) {
+              legend_aggregatesCopy.push(state.legend_aggregates[i].concat([]));
+            }
+            for (var i = 0; i < state.legend_properties.length; i++) {
+              legend_propertiesCopy.push(state.legend_properties[i].concat([]));
+            }
+            for (var i = 0; i < state.sounds.length; i++) {
+              soundsCopy.push(state.sounds[i].concat([]));
+            }
+            for (var i = 0; i < state.levels.length; i++) {
+              levelsCopy.push(state.levels[i].concat([]));
+            }
+            for (var i = 0; i < state.winconditions.length; i++) {
+              winConditionsCopy.push(state.winconditions[i].concat([]));
+            }
+
+            var nstate = {
+              lineNumber: state.lineNumber,
+
+              objects: objectsCopy,
+              collisionLayers: collisionLayersCopy,
+
+              commentLevel: state.commentLevel,
+              section: state.section,
+              visitedSections: state.visitedSections.concat([]),
+
+              objects_candname: state.objects_candname,
+              objects_section: state.objects_section,
+              objects_spritematrix: state.objects_spritematrix.concat([]),
+
+              tokenIndex: state.tokenIndex,
+              legend_synonyms: legend_synonymsCopy,
+              legend_aggregates: legend_aggregatesCopy,
+              legend_properties: legend_propertiesCopy,
+
+              sounds: soundsCopy,
+
+              rules: state.rules.concat([]),
+
+              names: state.names.concat([]),
+
+              winconditions: winConditionsCopy,
+
+              abbrevNames: state.abbrevNames.concat([]),
+
+              metadata : state.metadata.concat([]),
+
+              levels: levelsCopy,
+
+              STRIDE_OBJ : state.STRIDE_OBJ,
+              STRIDE_MOV : state.STRIDE_MOV
+            };
+
+            return nstate;        
+        },
         blankLine: function(state) {
             if (state.section === 'levels') {
                     if (state.levels[state.levels.length - 1].length > 0)
@@ -138,7 +256,6 @@ var codeMirrorFn = function() {
         token: function(stream, state) {
            	var mixedCase = stream.string;
             var sol = stream.sol();
-            var mixedCase = stream.string;
             if (sol) {
                 stream.string = stream.string.toLowerCase();
                 /*   if (state.lineNumber==undefined) {
@@ -304,11 +421,6 @@ var codeMirrorFn = function() {
                 switch (state.section) {
                 case 'objects':
                     {
-                    	if (sol&&state.objects_section==-1) {
-                    		state.objects_section=1;
-                    	}                    
-
-
 						var tryParseName = function() {
                             //LOOK FOR NAME
                             var match_name = sol ? stream.match(reg_name, true) : stream.match(/[^\s\()]+\s*/,true);
@@ -328,7 +440,7 @@ var codeMirrorFn = function() {
                                 	}
                                 }
                                 if (keyword_array.indexOf(candname)>=0) {
-                                    logError('You named an object "' + candname.toUpperCase() + '", but this is a keyword. Don\'t do that!', state.lineNumber);
+                                    logWarning('You named an object "' + candname.toUpperCase() + '", but this is a keyword. Don\'t do that!', state.lineNumber);
                                 }
 
                                 if (sol) {
@@ -341,68 +453,36 @@ var codeMirrorFn = function() {
 								} else {
 									//set up alias
 									state.legend_synonyms.push([candname,state.objects_candname,state.lineNumber]);
-								}								
-                                state.objects_section = -1;
+								}
+                                state.objects_section = 1;
                                 return 'NAME';
                             }
                         };
 
-                        if (!sol) {
-                            if (state.objects_section === 2) {
-                                state.tokenIndex++;
-                                //try read background color
+                        if (sol && state.objects_section == 2) {
+                            state.objects_section = 3;
+                        }
 
-                                var match_color = stream.match(reg_color, true);
-                                if (state.tokenIndex === 0 && match_color === null) {
-                                    if (state.tokenIndex === 0) {
-                                        logError('Was looking for secondary color for object ' + state.objects_candname.toUpperCase() + '.', state.lineNumber);
-                                    } else {
-                                        logError('Was looking for sprite pixels definition (5 characters side, each one either \".\" or \"0\" ) on this line, but finding other crap instead, namely ' + state.objects_candname.toUpperCase() + '.', state.lineNumber);
-                                    }
-                                    stream.match(reg_notcommentstart, true);
-                                    return null;
-                                } else if (match_color===null) {
-                                	logError('Was looking for color definition  on this line, but finding other crap instead, namely ' + state.objects_candname.toUpperCase() + '.', state.lineNumber);
-                                }else {
-                                	state.objects[state.objects_candname].colors.push(match_color[0].trim())
-
-                                    state.objects_section = 2;
-                                    state.objects_spritematrix = [];
-
-                                    var candcol = match_color[0].trim().toLowerCase();
-                                    if (candcol in colorPalettes.arnecolors) {
-                                        return candcol.toUpperCase();
-                                    } else {
-                                        return 'COLOR';
-                                    }
-                                }
-
-                            }else if (state.objects_section === 1) {
-                            	                           
-                            } else if (state.objects_section === -1 ) {
-                        		return tryParseName();
-                            } else {
-                                logError('Only expecting two things on this line, a foreground colour and a background colour (something like "Red Blue", though you can leave out the background colour if you like, in which case the sprite will be transparent), but found some other stuff :S', state.lineNumber);
-                                stream.match(reg_notcommentstart, true);
-                                return 'ERROR';
-                            }
-                        }     
-
+                        if (sol && state.objects_section == 1) {
+                            state.objects_section = 2;
+                        }
 
                         switch (state.objects_section) {
                         case 0:
+                        case 1:
                             {
+                                state.objects_spritematrix = [];
                                 return tryParseName();
                                 break;
                             }
-                        case 1:
+                        case 2:
                             {
                                 //LOOK FOR COLOR
                                 state.tokenIndex = 0;
                                 var match_color = stream.match(reg_color, true);
                                 if (match_color == null) {
-                                    logError('Was looking for color for object ' + state.objects_candname.toUpperCase() + '.', state.lineNumber);
-                                    stream.match(reg_notcommentstart, true);
+                                    var str = stream.match(reg_name, true) || stream.match(reg_notcommentstart, true);
+                                    logError('Was looking for color for object ' + state.objects_candname.toUpperCase() + ', got "' + str + '" instead.', state.lineNumber);
                                     return null;
                                 } else {
                                     if (state.objects[state.objects_candname].colors === undefined) {
@@ -411,53 +491,58 @@ var codeMirrorFn = function() {
                                         state.objects[state.objects_candname].colors.push(match_color[0].trim());
                                     }
 
-                                    state.objects_section = 2;
-                                    state.objects_spritematrix = [];
-
                                     var candcol = match_color[0].trim().toLowerCase();
                                     if (candcol in colorPalettes.arnecolors) {
-                                        return candcol.toUpperCase();
+                                        return 'COLOR COLOR-' + candcol.toUpperCase();
+                                    } else if (candcol==="transparent") {
+                                        return 'COLOR FADECOLOR';
                                     } else {
                                         return 'COLOR';
                                     }
                                 }
                                 break;
                             }
-                        case 2:
+                        case 3:
                             {
-                                var match_spriterow = stream.match(reg_spriterow);
-                                if (match_spriterow == null) {
-                                    if (state.objects_spritematrix.length === 0) {
+                                var ch = stream.eat(/[.\d]/);
+                                var spritematrix = state.objects_spritematrix;
+                                if (ch === undefined) {
+                                    if (spritematrix.length === 0) {
                                         return tryParseName();
-                                    } else {
-                                        logError('Incomplete sprite matrix for object ' + state.objects_candname.toUpperCase() + '.', state.lineNumber);
-                                        stream.match(reg_notcommentstart, true);
-                                        return null;
                                     }
-                                } else {
-                                	var row = match_spriterow[0];
-
-                                	var o = state.objects[state.objects_candname];
-                                	for (var i=0;i<row.length;i++) {
-                                		var ch =row.charAt(i);
-                                		if (ch!=='.') {
-                                			var n = parseInt(ch);
-                                			if (n>=o.colors.length) {
-                                				logError("trying to access color number "+n+" from the color palette of sprite " +state.objects_candname.toUpperCase()+", but there are only "+o.colors.length+" defined in it.",state.lineNumber);
-                                				return 'ERROR';
-                                			}
-                                		}
-                                	}
-                                    state.objects_spritematrix.push(row);
-                                    if (state.objects_spritematrix.length === 5) {
-                                        o.spritematrix = state.objects_spritematrix;
-                                        state.objects_section = 0;
-                                    } 
-                                    return 'SPRITEMATRIX';
+                                    logError('Unknown junk in spritematrix for object ' + state.objects_candname.toUpperCase() + '.', state.lineNumber);
+                                    stream.match(reg_notcommentstart, true);
+                                    return null;
                                 }
-                                break;
+
+                                if (sol) {
+                                    spritematrix.push('');
+                                }
+
+                                var o = state.objects[state.objects_candname];
+
+                                spritematrix[spritematrix.length - 1] += ch;
+
+                                if (spritematrix.length === 5 && spritematrix[spritematrix.length - 1].length == 5) {
+                                    o.spritematrix = state.objects_spritematrix;
+                                    state.objects_section = 0;
+                                }
+
+                                if (ch!=='.') {
+                                    var n = parseInt(ch);
+                                    if (n>=o.colors.length) {
+                                        logError("trying to access color number "+n+" from the color palette of sprite " +state.objects_candname.toUpperCase()+", but there are only "+o.colors.length+" defined in it.",state.lineNumber);
+                                        return 'ERROR';
+                                    }
+                                    if (isNaN(n)) {
+                                        logError('invalid character "' + ch + '" in sprite for ' + state.objects_candname.toUpperCase(), state.lineNumber);
+                                        return 'ERROR';
+                                    }
+                                    return 'COLOR BOLDCOLOR COLOR-' + o.colors[n].toUpperCase();
+                                }
+                                return 'COLOR FADECOLOR';
                             }
-                        default: 
+                        default:
                         	{
                         	window.console.logError("EEK shouldn't get here.");
                         	}
@@ -554,7 +639,7 @@ var codeMirrorFn = function() {
                             	return [];
                             };
                             if (candname==='background' ) {
-                                if (state.collisionLayers[state.collisionLayers.length-1].length>0) {
+                                if (state.collisionLayers.length>0&&state.collisionLayers[state.collisionLayers.length-1].length>0) {
                                     logError("Background must be in a layer by itself.",state.lineNumber);
                                 }
                                 state.tokenIndex=1;
@@ -570,9 +655,6 @@ var codeMirrorFn = function() {
                             }
                             
                             state.collisionLayers[state.collisionLayers.length - 1] = state.collisionLayers[state.collisionLayers.length - 1].concat(ar);
-                            if (state.collisionLayers.length > 6) {
-                                logError("Cannot have more than 6 layers.  You probably don't need that many, you know...", state.lineNumber);
-                            }
                             if (ar.length>0) {
                             	return 'NAME';                            
                             } else {
@@ -598,10 +680,11 @@ var codeMirrorFn = function() {
                         	if (splits.length>0) {
                         		var candname = splits[0].toLowerCase();
 	                            if (keyword_array.indexOf(candname)>=0) {
-	                                logError('You named an object "' + candname.toUpperCase() + '", but this is a keyword. Don\'t do that!', state.lineNumber);
-	                                stream.match(reg_notcommentstart, true);
-	                                return "ERROR";
+	                                logWarning('You named an object "' + candname.toUpperCase() + '", but this is a keyword. Don\'t do that!', state.lineNumber);
 	                            }
+                                if (splits.indexOf(candname, 2)>=2) {
+                                    logError("You can't define object " + candname.toUpperCase() + " in terms of itself!", state.lineNumber);
+                                }
                         	}
 
                             if (splits.length < 3) {
@@ -787,7 +870,7 @@ var codeMirrorFn = function() {
                     {                    	
                         if (sol) {
                             var rule = reg_notcommentstart.exec(stream.string)[0];
-                            state.rules.push([rule, state.lineNumber]);
+                            state.rules.push([rule, state.lineNumber, mixedCase]);
                             state.tokenIndex = 0;//in rules, records whether bracket has been found or not
                         }
 
@@ -964,7 +1047,7 @@ var codeMirrorFn = function() {
 		                    	if (sol) {
 		                    		if (['title','author','homepage','background_color','text_color','key_repeat_interval','realtime_interval','again_interval','flickscreen','zoomscreen','color_palette','youtube'].indexOf(token)>=0) {
 		                    			
-                                        if (token==='youtube') {
+                                        if (token==='youtube' || token==='author' || token==='title') {
                                             stream.string=mixedCase;
                                         }
                                         
@@ -978,7 +1061,7 @@ var codeMirrorFn = function() {
 		                    			}
 		                    			state.tokenIndex=1;
 		                    			return 'METADATA';
-		                    		} else if ( ['run_rules_on_level_start','require_player_movement','debug','verbose_logging','noundo','noaction','norestart','scanline'].indexOf(token)>=0) {
+		                    		} else if ( ['run_rules_on_level_start','norepeat_action','require_player_movement','debug','verbose_logging','throttle_movement','noundo','noaction','norestart','scanline'].indexOf(token)>=0) {
 		                    			state.metadata.push(token);
 		                    			state.metadata.push("true");
 		                    			state.tokenIndex=-1;

@@ -5,7 +5,9 @@ function isColor(str) {
 	str = str.trim();
 	if (str in colorPalettes.arnecolors)
 		return true;
-	if (/(^#[0-9A-F]{6}$)|(^#[0-9A-F]{3}$)/i.test(str))
+	if (/^#([0-9A-F]{3}){1,2}$/i.test(str))
+		return true;
+	if (str === "transparent")
 		return true;
 	return false;
 }
@@ -67,10 +69,6 @@ function generateExtraMembers(state) {
 
 	//set object count
 	state.objectCount = idcount;
-	if (state.objectCount > 32)
-	{
-		logError('Cannot have more than 32 object types defined, you have '+ state.objectCount, state.objects[n].lineNumber);
-	}
 
 	//calculate blank mask template
 	var layerCount = state.collisionLayers.length;
@@ -79,23 +77,37 @@ function generateExtraMembers(state) {
 		blankMask.push(-1);
 	}
 
+	// how many words do our bitvecs need to hold?
+	STRIDE_OBJ = Math.ceil(state.objectCount/32)|0;
+	STRIDE_MOV = Math.ceil(layerCount/5)|0;
+	state.STRIDE_OBJ=STRIDE_OBJ;
+	state.STRIDE_MOV=STRIDE_MOV;
+	
 	//get colorpalette name
 	debugMode=false;
 	verbose_logging=false;
+	throttle_movement=false;
 	colorPalette=colorPalettes.arnecolors;
 	for (var i=0;i<state.metadata.length;i+=2){
 		var key = state.metadata[i];
 		var val = state.metadata[i+1];
 		if (key==='color_palette') {
+			if (val in colorPalettesAliases) {
+				val = colorPalettesAliases[val];
+			}
 			if (colorPalettes[val]===undefined) {
-				logError('palette "'+val+'" not found, defaulting to arnecolors.',0);
+				logError('Palette "'+val+'" not found, defaulting to arnecolors.',0);
 			}else {
 				colorPalette=colorPalettes[val];
 			}
 		} else if (key==='debug') {
 			debugMode=true;
+			cache_console_messages=true;
 		} else if (key ==='verbose_logging') {
 			verbose_logging=true;
+			cache_console_messages=true;
+		} else if (key==='throttle_movement') {
+			throttle_movement=true;
 		}
 	}
 
@@ -109,10 +121,12 @@ function generateExtraMembers(state) {
 	      	}
 	      	for (var i=0;i<o.colors.length;i++) {
 	      		var c = o.colors[i];
-	      		c = colorToHex(colorPalette,c);
-				o.colors[i] = c;
-				if (isColor(c) === false) {
+				if (isColor(c)) {
+					c = colorToHex(colorPalette,c);
+					o.colors[i] = c;
+				} else {
 					logError('Invalid color specified for object "' + n + '", namely "' + o.colors[i] + '".', o.lineNumber + 1);
+					o.colors[i] = '#ff00ff'; // magenta error color
 				}
 			}
 		}
@@ -228,7 +242,7 @@ function generateExtraMembers(state) {
 		}
 		else if (value in propertiesDict) {
 			propertiesDict[key]=propertiesDict[value];
-		} else {
+		} else if (key!==value) {
 			synonymsDict[key] = value;		
 		}
 	}
@@ -341,29 +355,76 @@ function generateExtraMembers(state) {
 		backgroundlayer = state.objects.background.layer;
 	}
 	state.backgroundid=backgroundid;
-	state.backgroundlayer=backgroundlayer;	
+	state.backgroundlayer=backgroundlayer;
 }
 
-
-function calcLevelBackgroundMask(state,dat) {
+Level.prototype.calcBackgroundMask = function(state) {
+	
 	var backgroundMask = state.layerMasks[state.backgroundlayer];
-	for (var i=0;i<dat.length;i++) {
-		var val=dat[i];
-		var masked = val&backgroundMask;
-		if (masked!==0) {
-			return masked;
+	for (var i=0;i<this.n_tiles;i++) {
+		var cell=this.getCell(i);
+		cell.iand(backgroundMask);
+		if (!cell.iszero()) {
+			return cell;
 		}
 	}
-	return 1<<state.backgroundid;
+	cell = new BitVec(STRIDE_OBJ);
+	cell.ibitset(state.backgroundid);
+	return cell;
 }
 
+function levelFromString(state,level) {
+	var backgroundlayer=state.backgroundlayer;
+	var backgroundid=state.backgroundid;
+	var backgroundLayerMask = state.layerMasks[backgroundlayer];
+	var o = new Level(level[0], level[1].length, level.length-1, state.collisionLayers.length, null);
+	o.objects = new Int32Array(o.width * o.height * STRIDE_OBJ);
+
+	for (var i = 0; i < o.width; i++) {
+		for (var j = 0; j < o.height; j++) {
+			var ch = level[j+1].charAt(i);
+			if (ch.length==0) {
+				ch=level[j+1].charAt(level[j+1].length-1);
+			}
+			var mask = state.glyphDict[ch];
+
+			if (mask == undefined) {
+				if (state.propertiesDict[ch]===undefined) {
+					logError('Error, symbol "' + ch + '", used in map, not found.', state.lineNumber);
+				} else {
+					logError('Error, symbol "' + ch + '" is defined using \'or\', and therefore ambiguous - it cannot be used in a map. Did you mean to define it in terms of \'and\'?', state.lineNumber);							
+				}
+
+			}
+
+			var maskint = new BitVec(STRIDE_OBJ);
+			mask = mask.concat([]);					
+			for (var z = 0; z < o.layerCount; z++) {
+				if (mask[z]>=0) {
+					maskint.ibitset(mask[z]);
+				}
+			}
+			for (var w = 0; w < STRIDE_OBJ; ++w) {
+				o.objects[STRIDE_OBJ * (i * o.height + j) + w] = maskint.data[w];
+			}
+		}
+	}
+
+	var levelBackgroundMask = o.calcBackgroundMask(state);
+	for (var i=0;i<o.n_tiles;i++)
+	{
+		var cell = o.getCell(i);
+		if (!backgroundLayerMask.anyBitsInCommon(cell)) {
+			cell.ior(levelBackgroundMask);
+		}
+		o.setCell(i, cell);
+	}
+	return o;
+}
 //also assigns glyphDict
 function levelsToArray(state) {
 	var levels = state.levels;
 	var processedLevels = [];
-	var backgroundlayer=state.backgroundlayer;
-	var backgroundid=state.backgroundid;
-	var backgroundLayerMask = state.layerMasks[backgroundlayer];
 
 	for (var levelIndex = 0; levelIndex < levels.length; levelIndex++) {
 		var level = levels[levelIndex];
@@ -376,53 +437,7 @@ function levelsToArray(state) {
 			};
 			processedLevels.push(o);
 		} else {
-			var dat = [];
-			var o = {
-				lineNumber:level[0],
-				w: level[1].length,
-				h: level.length-1,
-				layerCount: state.collisionLayers.length
-			};
-
-			for (var i = 0; i < o.w; i++) {
-				for (var j = 0; j < o.h; j++) {
-					var ch = level[j+1].charAt(i);
-					if (ch.length==0) {
-						ch=level[j+1].charAt(level[j+1].length-1);
-					}
-					var maskint = 0;
-					var mask = state.glyphDict[ch];
-
-					if (mask == undefined) {
-						if (state.propertiesDict[ch]===undefined) {
-							logError('Error, symbol "' + ch + '", used in map, not found.', state.lineNumber);
-						} else {
-							logError('Error, symbol "' + ch + '" is defined using \'or\', and therefore ambiguous - it cannot be used in a map. Did you mean to define it in terms of \'and\'?', state.lineNumber);							
-						}
-
-					}
-
-					mask = mask.concat([]);					
-					for (var z = 0; z < o.layerCount; z++) {
-						if (mask[z]>=0) {
-							maskint = maskint | (1 << mask[z]);
-						}
-//						dat.push(mask[z]);
-					}
-					dat.push(maskint);
-				}
-			}
-			o.dat = dat;
-
-			var levelBackgroundMask = calcLevelBackgroundMask(state,o.dat);
-			for (var i=0;i<o.dat.length;i++)
-			{
-				var val = o.dat[i];
-				if ((val&backgroundLayerMask)===0) {
-					o.dat[i]=val|levelBackgroundMask;
-				}
-				
-			}
+			var o = levelFromString(state,level);
 			processedLevels.push(o);
 		}
 
@@ -481,7 +496,7 @@ function directionalRule(rule) {
 	return false;
 }
 
-function processRuleString(line, state, lineNumber,curRules) 
+function processRuleString(rule, state, curRules) 
 {
 /*
 
@@ -496,6 +511,9 @@ function processRuleString(line, state, lineNumber,curRules)
 		pre : CellMask[]
 		post : CellMask[]
 */
+	var line = rule[0];
+	var lineNumber = rule[1];
+	var origLine = rule[2];
 
 // STEP ONE, TOKENIZE
 	line = line.replace(/\[/g, ' [ ').replace(/\]/g, ' ] ').replace(/\|/g, ' | ').replace(/\-\>/g, ' -> ');
@@ -649,10 +667,13 @@ function processRuleString(line, state, lineNumber,curRules)
 						logError("Commands cannot appear on the left-hand side of the arrow.",lineNumber);
 					}
 					if (token==='message') {
-						var messagetokens = tokens.slice(i+1);
-						var messagestring = messagetokens.join(' ');
-						commands.push([token,messagestring]);
-						i=tokens.length;
+						var message_match = origLine.match(/message (.*)/i);
+						if (message_match === null) {
+							logError("invalid message string", lineNumber);
+						} else {
+							commands.push([token, message_match[1].trim()]);
+							i=tokens.length;
+						}
 					} else {
 						commands.push([token]);
 					}
@@ -742,14 +763,12 @@ function deepCloneRule(rule) {
 }
 
 function rulesToArray(state) {
-
-
 	var oldrules = state.rules;
 	var rules = [];
 	var loops=[];
 	for (var i = 0; i < oldrules.length; i++) {
 		var lineNumber = oldrules[i][1];
-		var newrule = processRuleString(oldrules[i][0], state, lineNumber,rules);
+		var newrule = processRuleString(oldrules[i], state, rules);
 		if (newrule.bracket!==undefined) {
 			loops.push([lineNumber,newrule.bracket]);
 			continue;
@@ -1319,7 +1338,6 @@ var dirMasks = {
 	'' : parseInt('00000',2)
 };
 
-
 function rulesToMask(state) {
 	/*
 
@@ -1339,19 +1357,16 @@ function rulesToMask(state) {
 			for (var k = 0; k < cellrow_l.length; k++) {
 				var cell_l = cellrow_l[k];
 				var mask_l = maskTemplate.concat([]);
-				var objectlayers_l = 0;
-				var forcemask_l = 0;
-				var cellmask_l = 0;
-				var nonExistenceMask_l = 0;
-				var moveNonExistenceMask_l = 0;
-				var stationaryMask_l = 0;
+				var objectsPresent = new BitVec(STRIDE_OBJ);
+				var objectsMissing = new BitVec(STRIDE_OBJ);
+				var movementsPresent = new BitVec(STRIDE_MOV);
+				var movementsMissing = new BitVec(STRIDE_MOV);
+
+				var objectlayers_l = new BitVec(STRIDE_MOV);
 				for (var l = 0; l < cell_l.length; l += 2) {
 					var object_dir = cell_l[l];
 					if (object_dir==='...') {
-//						mask_l[ 2 * layerIndex + 0 ] = ellipsisDirection;
-//						mask_l[ 2 * layerIndex + 1 ] = 0;
-						cellmask_l = ellipsisDirection;
-						forcemask_l = ellipsisDirection;
+						objectsPresent = ellipsisPattern;
 						if (cell_l.length!==2) {
 							logError("You can't have anything in with an ellipsis. Sorry.",rule.lineNumber);
 						} else if ((k===0)||(k===cellrow_l.length-1)) {
@@ -1371,11 +1386,10 @@ function rulesToMask(state) {
 					var object_name = cell_l[l + 1];
 					var object = state.objects[object_name];
 					var layerIndex = object.layer;
-					var object_id = object.id;
 					var layerMask = state.layerMasks[layerIndex];
 
 					if (object_dir==='no') {
-						nonExistenceMask_l = nonExistenceMask_l | (1<<object_id );
+						objectsMissing.ibitset(object.id);
 					} else {
 						var targetobjectid = mask_l[2 * layerIndex + 1];
 						if (targetobjectid > -2) {
@@ -1384,20 +1398,15 @@ function rulesToMask(state) {
 						}
 
 						mask_l[2 * layerIndex + 0] = object_dir;
-						mask_l[2 * layerIndex + 1] = object_id;
+						mask_l[2 * layerIndex + 1] = object.id;
 
-						cellmask_l = cellmask_l | (1 << object_id);
-						
-						objectlayers_l = objectlayers_l | ((1+2+4+8+16)<<(5*layerIndex));
+						objectsPresent.ibitset(object.id);
+						objectlayers_l.ishiftor(0x1f, 5*layerIndex);
 
 						if (object_dir==='stationary') {
-							stationaryMask_l = stationaryMask_l | ((1+2+4+8+16)<<(5*layerIndex));
+							movementsMissing.ishiftor(0x1f, 5*layerIndex);
 						} else {
-							var forcemask = (dirMasks[object_dir] << (5 * layerIndex));
-							forcemask_l = forcemask_l | forcemask;	
-							if (forcemask!==0) {	
-								moveNonExistenceMask_l = moveNonExistenceMask_l | ((1+2+4+8+16)<<(5*layerIndex));							
-							}
+							movementsPresent.ishiftor(dirMasks[object_dir], 5 * layerIndex);
 						}
 					}
 				}
@@ -1418,52 +1427,56 @@ function rulesToMask(state) {
 					}
 				}
 
-
-				cellrow_l[k] = [forcemask_l, cellmask_l,nonExistenceMask_l,moveNonExistenceMask_l,stationaryMask_l];
-				//cellrow_l[k]=mask_l;
+				if (objectsPresent === ellipsisPattern) {
+					cellrow_l[k] = ellipsisPattern;
+					continue;
+				} else {
+					cellrow_l[k] = new CellPattern([objectsPresent, objectsMissing, movementsPresent, movementsMissing, null]);
+				}
 
 				if (rule.rhs.length===0) {
 					continue;
 				}
+
 				var cell_r = cellrow_r[k];
 				var mask_r = maskTemplate.concat([]);
-				var objectlayers_r = 0;
-				var forcemask_r = 0;				
-				var cellmask_r = 0;
-				var randomMask_r = 0;
-				var nonExistenceMask_r = 0;
-				var postMovementsLayerMask_r = 0;
-				var stationaryMask_r = 0;
-				var randomDirMask_r = 0;
+
+				var objectsClear = new BitVec(STRIDE_OBJ);
+				var objectsSet = new BitVec(STRIDE_OBJ);
+				var movementsClear = new BitVec(STRIDE_MOV);
+				var movementsSet = new BitVec(STRIDE_MOV);
+
+				var objectlayers_r = new BitVec(STRIDE_MOV);
+				var randomMask_r = new BitVec(STRIDE_OBJ);
+				var postMovementsLayerMask_r = new BitVec(STRIDE_MOV);
+				var randomDirMask_r = new BitVec(STRIDE_MOV);
 				for (var l = 0; l < cell_r.length; l += 2) {
 					var object_dir = cell_r[l];
+					var object_name = cell_r[l + 1];
+
 					if (object_dir==='...') {
-//						mask_r[ 2 * layerIndex + 0 ] = ellipsisDirection;
-//						mask_r[ 2 * layerIndex + 1 ] = 0;
-						cellmask_r = ellipsisDirection;
-						forcemask_r = ellipsisDirection;
+						logError("spooky ellipsis found! (should never hit this)");
 						break;
 					} else if (object_dir==='random') {
-						var object_name = cell_r[l+1];
 						if (object_name in state.objectMasks) {
-							var mask = state.objectMasks[object_name];                            
-                            randomMask_r = randomMask_r | mask;
-                            //forcemask_r = randomEntityMask;
-//                            nonExistenceMask_r = 0; //don't know why i had this                           
+							var mask = state.objectMasks[object_name];    
+							randomMask_r.ior(mask);                      
 						} else {
 							logError('You want to spawn a random "'+object_name.toUpperCase()+'", but I don\'t know how to do that',rule.lineNumber);
 						}
 						continue;
 					}
 
-					var object_name = cell_r[l + 1];
 					var object = state.objects[object_name];
 					var layerIndex = object.layer;
+					if (layerIndex === undefined) {
+						logError('Object "'+object_name.toUpperCase()+'" hasn\'t been assigned to a layer.',object.lineNumber);
+					}
 					var object_id = object.id;
 
 					
 					if (object_dir=='no') {
-						nonExistenceMask_r = nonExistenceMask_r | (1<<object_id );
+						objectsClear.ibitset(object_id);
 					} else {
 						var targetobjectid = mask_r[2 * layerIndex + 1];
 						if (targetobjectid > -2) {
@@ -1477,24 +1490,36 @@ function rulesToMask(state) {
 						mask_r[2 * layerIndex + 1] = object_id;
 
 						if (object_dir.length>0) {
-							postMovementsLayerMask_r = postMovementsLayerMask_r | ((1+2+4+8+16)<<(5*layerIndex));
-						}			
-
-						cellmask_r = cellmask_r | (1 << object_id);
-						objectlayers_r = objectlayers_r | ((1+2+4+8+16)<<(5*layerIndex));
-						if (object_dir==='stationary') {
-							stationaryMask_r = stationaryMask_r | ((1+2+4+8+16)<<(5*layerIndex));
-						} if (object_dir==='randomdir') {
-							randomDirMask_r = randomDirMask_r | (dirMasks[object_dir] << (5 * layerIndex));
-						} else {						
-							forcemask_r = forcemask_r | (dirMasks[object_dir] << (5 * layerIndex));
+							postMovementsLayerMask_r.ishiftor(0x1f, 5*layerIndex);
 						}
-						nonExistenceMask_r = nonExistenceMask_r | layerMask;
+
+						objectsSet.ibitset(object_id);
+						objectsClear.ior(layerMask);
+						objectlayers_r.ishiftor(0x1f, 5*layerIndex);
+						if (object_dir==='stationary') {
+							movementsClear.ishiftor(0x1f, 5*layerIndex);
+						} if (object_dir==='randomdir') {
+							randomDirMask_r.ishiftor(dirMasks[object_dir], 5 * layerIndex);
+						} else {						
+							movementsSet.ishiftor(dirMasks[object_dir], 5 * layerIndex);
+						};
 					}
 				}
 
-				var movementsToRemove_r = objectlayers_l & (~objectlayers_r);
-				cellrow_r[k] = [forcemask_r, cellmask_r, nonExistenceMask_r,postMovementsLayerMask_r,stationaryMask_r,randomMask_r,randomDirMask_r,movementsToRemove_r];
+				if (!(objectsPresent.bitsSetInArray(objectsSet.data))) {
+					objectsClear.ior(objectsPresent); // clear out old objects
+				}
+				if (!(movementsPresent.bitsSetInArray(movementsSet.data))) {
+					movementsClear.ior(movementsPresent); // ... and movements
+				}
+
+				objectlayers_l.iclear(objectlayers_r);
+
+				postMovementsLayerMask_r.ior(objectlayers_l);
+				if (objectsClear || objectsSet || movementsClear || movementsSet || postMovementsLayerMask_r) {
+					// only set a replacement if something would change
+					cellrow_l[k].replacement = new CellReplacement([objectsClear, objectsSet, movementsClear, movementsSet, postMovementsLayerMask_r, randomMask_r, randomDirMask_r]);
+				}
 			}
 		}
 	}
@@ -1505,77 +1530,51 @@ function cellRowMasks(rule) {
 	var lhs=rule[1];
 	for (var i=0;i<lhs.length;i++) {
 		var cellRow = lhs[i];
-		var rowMask=0;
-		for (var j=0;j<cellRow.length;j+=7) {
-			var cellMask=cellRow[j+1];
-			rowMask = rowMask | cellMask;
-		}
-		if (rowMask===0) {
-			rowMask=~0;
+		var rowMask=new BitVec(STRIDE_OBJ);
+		for (var j=0;j<cellRow.length;j++) {
+			if (cellRow[j] === ellipsisPattern)
+				continue;
+			rowMask.ior(cellRow[j].objectsPresent);
 		}
 		ruleMasks.push(rowMask);
 	}
 	return ruleMasks;
 }
 
-function collapseRules(state) {
-	for (var i = 0; i < state.rules.length; i++)
-	{
-		var oldrule = state.rules[i];
-		var newrule = [0,[],[],oldrule.lineNumber,oldrule.late/*ellipses,group number,rigid,commands,commandsonly,randomrule,[cellrowmasks]*/];
-		var ellipses = [];
-		for (var j=0;j<oldrule.lhs.length;j++) {
-			ellipses.push(false);
-		}
-
-		newrule[0]=dirMasks[oldrule.direction];
-		for (var j = 0; j < oldrule.lhs.length; j++) {
-			var cellrow_l = oldrule.lhs[j];
-			var cellrow_r = oldrule.rhs[j];
-			var newcellrow_l = [];
-			var newcellrow_r = [];
-			for (var k = 0; k < cellrow_l.length; k++) {
-				var oldcellmask_l = cellrow_l[k];
-				if (oldcellmask_l[0]===ellipsisDirection) {
-					if (ellipses[j]) {
-						logError("You can't use two ellipses in a single cell match pattern.  If you really want to, please implement it yourself and send me a patch :) ", oldrule.lineNumber);
-					} 
-					ellipses[j]=true;
-				}
-				newcellrow_l[k * 7] = oldcellmask_l[0];
-				newcellrow_l[k * 7 + 1] = oldcellmask_l[1];
-				newcellrow_l[k * 7 + 2] = oldcellmask_l[2];//nonexistence
-				newcellrow_l[k * 7 + 3] = oldcellmask_l[3];//movenonexistence
-				newcellrow_l[k * 7 + 4] = oldcellmask_l[4];//stationarymask
-				newcellrow_l[k * 7 + 5]  = 0;			  //stores randomdirmask_r O_O
-				newcellrow_l[k * 7 + 6]  = 0;//unassigned 
-
-				if (oldrule.rhs.length>0) {
-					var oldcellmask_r = cellrow_r[k];
-					newcellrow_r[k * 7] = oldcellmask_r[0];
-					newcellrow_r[k * 7 + 1] = oldcellmask_r[1];
-					newcellrow_r[k * 7 + 2] = oldcellmask_r[2];//nonexistence
-					newcellrow_r[k * 7 + 3] = oldcellmask_r[3];//postCell_MovementsLayerMask
-					newcellrow_r[k * 7 + 4] = oldcellmask_r[4];//stationarymask
-					newcellrow_r[k * 7 + 5] = oldcellmask_r[5];//randomentitymask
-					newcellrow_l[k * 7 + 5] = oldcellmask_r[6];//store randomdirmask_r in lhs
-					newcellrow_r[k * 7 + 6] = oldcellmask_r[7];//stores movementsToRemove_r
-				}
+function collapseRules(groups) {
+	for (var gn = 0; gn < groups.length; gn++) {
+		var rules = groups[gn];
+		for (var i = 0; i < rules.length; i++) {
+			var oldrule = rules[i];
+			var newrule = [0,[],oldrule.rhs.length>0,oldrule.lineNumber/*ellipses,group number,rigid,commands,randomrule,[cellrowmasks]*/];
+			var ellipses = [];
+			for (var j=0;j<oldrule.lhs.length;j++) {
+				ellipses.push(false);
 			}
-			newrule[1][j] = newcellrow_l;
-			newrule[2][j] = newcellrow_r;
-		}
-		newrule.push(ellipses);
-		newrule.push(oldrule.groupNumber);
-		newrule.push(oldrule.rigid);
-		newrule.push(oldrule.commands);
-		newrule.push(oldrule.rhs.length===0);
-		newrule.push(oldrule.randomRule);
-		
-		newrule.push(cellRowMasks(newrule));
-		state.rules[i] = newrule;
 
+			newrule[0]=dirMasks[oldrule.direction];
+			for (var j = 0; j < oldrule.lhs.length; j++) {
+				var cellrow_l = oldrule.lhs[j];
+				for (var k = 0; k < cellrow_l.length; k++) {
+					if (cellrow_l[k] === ellipsisPattern) {
+						if (ellipses[j]) {
+							logError("You can't use two ellipses in a single cell match pattern.  If you really want to, please implement it yourself and send me a patch :) ", oldrule.lineNumber);
+						} 
+						ellipses[j]=true;
+					}
+				}
+				newrule[1][j] = cellrow_l;
+			}
+			newrule.push(ellipses);
+			newrule.push(oldrule.groupNumber);
+			newrule.push(oldrule.rigid);
+			newrule.push(oldrule.commands);
+			newrule.push(oldrule.randomRule);
+			newrule.push(cellRowMasks(newrule));
+			rules[i] = new Rule(newrule);
+		}
 	}
+	matchCache = {}; // clear match cache so we don't slowly leak memory
 }
 
 function ruleGroupRandomnessTest(ruleGroup) {
@@ -1583,12 +1582,12 @@ function ruleGroupRandomnessTest(ruleGroup) {
 		return;
 	}
 
-	var randomGroup=ruleGroup[0][10];
+	var randomGroup=ruleGroup[0].randomRule;
 	for (var i=0;i<randomGroup.length;i++) {
 		var rule=ruleGroup[i];
-		var ruleRandom=rule[10];
-		if (randomGroup!==rule) {
-			logError("Cannot mix random and non-random rules in a single rule-group", rule[3]);
+		var ruleRandom=rule.randomRule;
+		if (randomGroup!==ruleRandom) {
+			logError("Cannot mix random and non-random rules in a single rule-group", rule.lineNumber);
 		}
 	}
 }
@@ -1598,16 +1597,15 @@ function arrangeRulesByGroupNumber(state) {
 	var aggregates_late = {};
 	for (var i=0;i<state.rules.length;i++) {
 		var rule = state.rules[i];
-		var groupNumber=rule[6];
 		var targetArray = aggregates;
-		if (rule[4]) { 
+		if (rule.late) {
 			targetArray=aggregates_late;
 		}
 
-		if (targetArray[groupNumber]==undefined) {
-			targetArray[groupNumber]=[];
+		if (targetArray[rule.groupNumber]==undefined) {
+			targetArray[rule.groupNumber]=[];
 		}
-		targetArray[groupNumber].push(rule);
+		targetArray[rule.groupNumber].push(rule);
 	}
 
 	var result=[];
@@ -1638,28 +1636,26 @@ function checkNoLateRulesHaveMoves(state){
 		var lateGroup = state.lateRules[ruleGroupIndex];
 		for (var ruleIndex=0;ruleIndex<lateGroup.length;ruleIndex++) {
 			var rule = lateGroup[ruleIndex];
-			var lineNumber = rule[3];				
-			for (var cellRowIndex=0;cellRowIndex<rule[1].length;cellRowIndex++) {
-				var cellRow_l = rule[1][cellRowIndex];
-				var cellRow_r = rule[2][cellRowIndex];
-				for (var cellIndex=0;cellIndex<cellRow_l.length;cellIndex+=7) {
-					var movementMask = cellRow_l[cellIndex];
-					if (movementMask===ellipsisDirection) {
+			for (var cellRowIndex=0;cellRowIndex<rule.patterns.length;cellRowIndex++) {
+				var cellRow_l = rule.patterns[cellRowIndex];
+				for (var cellIndex=0;cellIndex<cellRow_l.length;cellIndex++) {
+					var cellPattern = cellRow_l[cellIndex];
+					if (cellPattern === ellipsisPattern) {
 						continue;
 					}
-					var moveNonExistenceMask = cellRow_l[cellIndex+3];
-					var moveStationaryMask = cellRow_l[cellIndex+4];
-					if (movementMask!==0 || moveNonExistenceMask!==0 || moveStationaryMask!==0) {
-						logError("Movements cannot appear in late rules.",lineNumber);
+					var moveMissing = cellPattern.movementsMissing;
+					var movePresent = cellPattern.movementsPresent;
+					if (!moveMissing.iszero() || !movePresent.iszero()) {
+						logError("Movements cannot appear in late rules.",rule.lineNumber);
 						return;
 					}
 
-					if (cellRow_r!==undefined && cellRow_r.length>0) {
-						var movementMask_r = cellRow_r[cellIndex];
-						var moveStationaryMask_r = cellRow_r[cellIndex+4];
+					if (cellPattern.replacement!=null) {
+						var movementsClear = cellPattern.replacement.movementsClear;
+						var movementsSet = cellPattern.replacement.movementsSet;
 
-						if (movementMask_r!==0 || moveStationaryMask_r!==0) {
-							logError("Movements cannot appear in late rules.",lineNumber);
+						if (!movementsClear.iszero() || !movementsSet.iszero()) {
+							logError("Movements cannot appear in late rules.",rule.lineNumber);
 							return;
 						}
 					}				
@@ -1680,13 +1676,13 @@ function generateRigidGroupList(state) {
 		var rigidFound=false;
 		for (var j=0;j<ruleset.length;j++) {
 			var rule=ruleset[j];
-			if (rule[7]) {
+			if (rule.isRigid) {
 				rigidFound=true;
 			}
 		}
 		rigidGroups[i]=rigidFound;
 		if (rigidFound) {
-			var groupNumber=ruleset[0][6];
+			var groupNumber=ruleset[0].groupNumber;
 			groupNumber_to_GroupIndex[groupNumber]=i;
 			var rigid_group_index = rigidGroupIndex_to_GroupIndex.length;
 			groupIndex_to_RigidGroupIndex[i]=rigid_group_index;
@@ -1705,10 +1701,10 @@ function generateRigidGroupList(state) {
 }
 
 function getMaskFromName(state,name) {
-	var objectMask=0;
+	var objectMask=new BitVec(STRIDE_OBJ);
 	if (name in state.objects) {
 		var o=state.objects[name];
-		objectMask = objectMask | (1<<o.id);		
+		objectMask.ibitset(o.id);
 	}
 
 	if (name in state.aggregatesDict) {
@@ -1716,7 +1712,7 @@ function getMaskFromName(state,name) {
 		for(var i=0;i<objectnames.length;i++) {
 			var n=objectnames[i];
 			var o = state.objects[n];
-			objectMask = objectMask | (1<<o.id);
+			objectMask.ibitset(o.id);
 		}
 	}
 
@@ -1725,17 +1721,17 @@ function getMaskFromName(state,name) {
 		for(var i=0;i<objectnames.length;i++) {
 			var n = objectnames[i];
 			var o = state.objects[n];
-			objectMask = objectMask | (1<<o.id);
+			objectMask.ibitset(o.id);
 		}
 	}
 
 	if (name in state.synonymsDict) {
 		var n = state.synonymsDict[name];
 		var o = state.objects[n];
-		objectMask = objectMask | (1<<o.id);
+		objectMask.ibitset(o.id);
 	}
 
-	if (objectMask==0) {
+	if (objectMask.iszero()) {
 		logErrorNoLine("error, didn't find any object called player, either in the objects section, or the legends section. there must be a player!");
 	}
 	return objectMask;
@@ -1748,12 +1744,12 @@ function generatePlayerMask(state) {
 	var layerMasks=[];
 	var layerCount = state.collisionLayers.length;
 	for (var layer=0;layer<layerCount;layer++){
-		var layerMask=0;
+		var layerMask=new BitVec(STRIDE_OBJ);
 		for (var j=0;j<state.objectCount;j++) {
 			var n=state.idDict[j];
 			var o = state.objects[n];
 			if (o.layer==layer) {
-				layerMask = layerMask | (1<<o.id);
+				layerMask.ibitset(o.id);
 			}
 		}
 		layerMasks.push(layerMask);
@@ -1764,7 +1760,8 @@ function generatePlayerMask(state) {
 	for(var n in state.objects) {
 		if (state.objects.hasOwnProperty(n)) {
 			var o = state.objects[n];
-			objectMask[n]=1<<o.id;
+			objectMask[n] = new BitVec(STRIDE_OBJ);
+			objectMask[n].ibitset(o.id);
 		}
 	}
 
@@ -1775,10 +1772,10 @@ function generatePlayerMask(state) {
 
 	for (var i=0;i<state.legend_properties.length;i++) {
 		var prop = state.legend_properties[i];
-		var val = 0;
+		var val = new BitVec(STRIDE_OBJ);
 		for (var j=1;j<prop.length;j++) {
 			var n = prop[j];
-			val = val | objectMask[n];
+			val.ior(objectMask[n]);
 		}
 		objectMask[prop[0]]=val;
 	}
@@ -1929,12 +1926,12 @@ function printRule(rule) {
 	return result;
 }
 function printRules(state) {
-	var output = "Rule Assembly : ("+ state.rules.length +" rules )<br>===========<br>";
+	var output = "<br>Rule Assembly : ("+ state.rules.length +" rules )<br>===========<br>";
 	for (var i=0;i<state.rules.length;i++) {
 		var rule = state.rules[i];
 		output += printRule(rule) +"<br>";
 	}
-	output+="===========";
+	output+="===========<br>";
 	consolePrint(output);
 }
 
@@ -1975,8 +1972,8 @@ function generateLoopPoints(state) {
 			var firstRule = ruleGroup[0];			
 			var lastRule = ruleGroup[ruleGroup.length-1];
 
-			var firstRuleLine = firstRule[3];
-			var lastRuleLine = lastRule[3];
+			var firstRuleLine = firstRule.lineNumber;
+			var lastRuleLine = lastRule.lineNumber;
 
 			if (outside) {
 				if (firstRuleLine>=loop[0]) {
@@ -2017,8 +2014,8 @@ function generateLoopPoints(state) {
 			var firstRule = ruleGroup[0];			
 			var lastRule = ruleGroup[ruleGroup.length-1];
 
-			var firstRuleLine = firstRule[3];
-			var lastRuleLine = lastRule[3];
+			var firstRuleLine = firstRule.lineNumber;
+			var lastRuleLine = lastRule.lineNumber;
 
 			if (outside) {
 				if (firstRuleLine>=loop[0]) {
@@ -2135,12 +2132,30 @@ function generateSoundData(state) {
 					logError('Was expecting a direction, instead found "'+direction+'".',lineNumber);
 				} else {
 					var soundDirectionMask = soundDirectionIndicatorMasks[direction];
-					directionMask = directionMask | soundDirectionMask;
+					directionMask |= soundDirectionMask;
 				}
 			}
+
+
 			var targets=[target];
-			if (target in state.propertiesDict) {
-				targets = state.propertiesDict[target];
+			var modified=true;
+			while(modified) {
+				modified=false;
+				for (var k=0;k<targets.length;k++) {
+					var t = targets[k];
+					if (t in state.synonymsDict) {
+						targets[k]=state.synonymsDict[t];
+						modified=true;
+					} else if (t in state.propertiesDict) {
+						modified=true;
+						var props = state.propertiesDict[t];
+						targets.splice(k,1);
+						k--;
+						for (var l=0;l<props.length;l++) {
+							targets.push(props[l]);
+						}
+					}
+				}
 			}
 
 			if (verb==='move' || verb==='cantmove') {
@@ -2148,7 +2163,8 @@ function generateSoundData(state) {
 					var targetName = targets[j];
 					var targetDat = state.objects[targetName];
 					var targetLayer = targetDat.layer;
-					var shiftedDirectionMask = directionMask<<(5*targetLayer);
+					var shiftedDirectionMask = new BitVec(STRIDE_MOV);
+					shiftedDirectionMask.ishiftor(directionMask, 5*targetLayer);
 
 					var o = {
 						objectMask: objectMask,
@@ -2286,10 +2302,10 @@ function loadFile(str) {
 		printRules(state);
 	}
 
-
 	rulesToMask(state);
-	collapseRules(state);
 	arrangeRulesByGroupNumber(state);
+	collapseRules(state.rules);
+	collapseRules(state.lateRules);
 
 	checkNoLateRulesHaveMoves(state);
 
@@ -2327,12 +2343,16 @@ function loadFile(str) {
 }
 
 var ifrm;
-function compile(command,text) {
+function compile(command,text,randomseed) {
+	matchCache={};
 	forceRegenImages=true;
 	if (command===undefined) {
 		command = ["restart"];
 	}
-	lastDownTarget=canvas;
+	if (randomseed===undefined) {
+		randomseed = null;
+	}
+	lastDownTarget=canvas;	
 
 	if (text===undefined){
 		var code = window.form1.code;
@@ -2384,13 +2404,12 @@ function compile(command,text) {
 
 		}
 	}
-	setGameState(state,command);
+	setGameState(state,command,randomseed);
 
     clearInputs();
+	consoleCacheDump();
     return state;
 }
-
-
 
 function qualifyURL(url) {
 	var a = document.createElement('a');

@@ -1,4 +1,5 @@
 function makeGIF() {
+	var randomseed = RandomGen.seed;
 	levelEditorOpened=false;
 	var targetlevel=curlevel;
 	var gifcanvas = document.createElement('canvas');
@@ -15,43 +16,45 @@ function makeGIF() {
 	unitTesting=true;
 	levelString=compiledText;
 
-	if (errorStrings.length>0) {
-		throw(errorStrings[0]);
-	}
 
 	var encoder = new GIFEncoder();
 	encoder.setRepeat(0); //auto-loop
 	encoder.setDelay(200);
 	encoder.start();
 
-	compile(["loadLevel",curlevel],levelString);
+	compile(["loadLevel",curlevel],levelString,randomseed);
 	canvasResize();
 	redraw();
 	gifctx.drawImage(canvas,-xoffset,-yoffset);
   	encoder.addFrame(gifctx);
+	var autotimer=0;
 
     while(replayQueue.length) {
+  		var realtimeframe=false;
         var val=replayQueue.pop();
-        if(isNaN(val) && val.substr(0,6) == "random") {
-            throw new Exception("Replay queue has unconsumed random "+val);
-        }
         if (val==="undo") {
             pushInput("undo");
 	        DoUndo();
         } else if (val==="restart") {
             pushInput("restart");
 	    	DoRestart();
-	    } else if (val==="wait") {
+	    } else if (val==="tick") {
             autoTickGame();
+			realtimeframe=true;
         } else if (val==="quit" || val==="win") {
             continue;
         } else {
             pushInput(val);
 	    	processInput(val);
 	    }
-	    while (againing) {
-	    	againing=false;
-	    	processInput(-1);
+		redraw();
+		gifctx.drawImage(canvas,-xoffset,-yoffset);
+		encoder.addFrame(gifctx);
+		encoder.setDelay(realtimeframe?autotickinterval:repeatinterval);
+		autotimer+=repeatinterval;
+
+		while (againing) {
+			processInput(-1);		
 			redraw();
 			encoder.setDelay(againinterval);
 			gifctx.drawImage(canvas,-xoffset,-yoffset);

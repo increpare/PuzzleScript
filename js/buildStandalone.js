@@ -13,7 +13,7 @@ clientStandaloneRequest.onreadystatechange = function() {
 			return;
 		}
 		if (clientStandaloneRequest.responseText==="") {
-			consolePrint("Couldn't find standalone template. Is there a connection problem to the internet?");
+			consolePrint("Couldn't find standalone template. Is there a connection problem to the internet?",true);
 		}
 		standalone_HTML_String=clientStandaloneRequest.responseText;
 }
@@ -45,7 +45,7 @@ function buildFromHTML(stateString, str) {
 	var htmlString = str.concat("");
 	var title = "PuzzleScript Game";
 	if (state.metadata.title!==undefined) {
-		title=state.metadata.title.toUpperCase();
+		title=state.metadata.title;
 	}
 	var homepage = "www.puzzlescript.net";
 	if (state.metadata.homepage!==undefined) {
@@ -61,7 +61,7 @@ function buildFromHTML(stateString, str) {
 
 	htmlString = htmlString.replace(/__GAMETITLE__/g,title);
 	htmlString = htmlString.replace(/__HOMEPAGE__/g,homepage);	
-	htmlString = htmlString.replace(/__GAMEDAT__/g,stateString);
+	htmlString = htmlString.replace(/__GAMEDAT__/g,sourceCode);
 
 	var BB = get_blob();
 	var blob = new BB([htmlString], {type: "text/plain;charset=utf-8"});

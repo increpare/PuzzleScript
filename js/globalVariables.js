@@ -17,6 +17,7 @@ try {
 
 
 var verbose_logging=false;
+var throttle_movement=false;
 var cache_console_messages=false;
 var quittingTitleScreen=false;
 var quittingMessageScreen=false;
@@ -28,6 +29,7 @@ var autotickinterval=0;
 var winning=false;
 var againing=false;
 var againinterval=150;
+var norepeat_action=false;
 var oldflickscreendat=[];//used for buffering old flickscreen/scrollscreen positions, in case player vanishes
 var keybuffer = [];
 

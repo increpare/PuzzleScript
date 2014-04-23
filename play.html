@@ -121,10 +121,11 @@ a {
           width: 6em;
           height: 6em;
           position: absolute;
+          z-index: 1000;
       }
 
       .tab-affordance {
-          left: 0em;
+          left: -2em;
           top: 55px;
       }
 
@@ -208,11 +209,7 @@ a {
 <div class="title"><h1 id="gametitle">PuzzleScript Game</h1></div>
 <div class="gameContainer">
 <canvas 
-    id="gameCanvas" 
-    onmousemove="mouseMove(event)" 
-    onmouseout="mouseOut()"
-    onkeydown="keyDown()"
-></canvas>
+    id="gameCanvas" ></canvas>
 </div> 
 <div class="footer">
 <span id="errormessage" style="color:red;"></span>
@@ -236,7 +233,7 @@ a {
 <script src="js/rng.js"></script>
 <script src="js/riffwave.js"></script>
 <script src="js/sfxr.js"></script>
-<script src="js/codemirror.js"></script>
+<script src="js/codemirror/codemirror.js"></script>
 <script src="js/colors.js"></script>
 <script src="js/graphics.js"></script>
 <script src="js/engine.js"></script>

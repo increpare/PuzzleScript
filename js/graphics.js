@@ -1,25 +1,17 @@
+function createSprite(name,spritegrid, colors, padding) {
+	if (colors === undefined) {
+		colors = [state.bgcolor, state.fgcolor];
+	}
 
+	var sprite = makeSpriteCanvas(name);
+	var spritectx = sprite.getContext('2d');
 
-function setPixel(imageData, x, y, r, g, b, a) {
-    index = (x + y * imageData.width) * 4;
-    imageData.data[index + 0] = r;
-    imageData.data[index + 1] = g;
-    imageData.data[index + 2] = b;
-    imageData.data[index + 3] = a;
-}
-
-
-function createSprite(spritecanvas,spritectx,n) {
     spritectx.clearRect(0, 0, cellwidth, cellheight);
 
-    var spritegrid = font[n];
-
-//      window.console.log(w+","+h+","+cw+","+ch);
-
-	var w=5;
-	var h=5;
-	var cw = ~~(cellwidth / 6);
-    var ch = ~~(cellheight / 6);
+	var w = spritegrid[0].length;
+	var h = spritegrid.length;
+	var cw = ~~(cellwidth / (w + (padding|0)));
+    var ch = ~~(cellheight / (h + (padding|0)));
     var pixh=ch;
     if ("scanline" in state.metadata) {
         pixh=Math.ceil(ch/2);
@@ -27,21 +19,17 @@ function createSprite(spritecanvas,spritectx,n) {
     spritectx.fillStyle = state.fgcolor;
     for (var j = 0; j < w; j++) {
         for (var k = 0; k < h; k++) {
-            var cy = ~~(j * cw);
-            var cx = ~~(k * ch);
-            if (spritegrid[j][k] == 1) {
+            var val = spritegrid[j][k];
+            if (val >= 0) {
+                var cy = (j * cw)|0;
+                var cx = (k * ch)|0;
+                spritectx.fillStyle = colors[val];
                 spritectx.fillRect(cx, cy, cw, pixh);
             }
         }
     }
 
-
-    var new_image_url = spritecanvas.toDataURL();
-    var img = document.createElement('img');
-    img.onload = redraw;
-    img.src = new_image_url;
-
-    return img;
+    return sprite;
 }
 
 function regenText(spritecanvas,spritectx) {
@@ -49,81 +37,32 @@ function regenText(spritecanvas,spritectx) {
 
 	for (var n in font) {
 		if (font.hasOwnProperty(n)) {
-			textImages[n]=createSprite(spritecanvas,spritectx,n);
+			textImages[n] = createSprite('char'+n,font[n], undefined, 1);
 		}
 	}
 }
 var spriteimages;
 function regenSpriteImages() {
-
-    var spritecanvas = document.createElement('canvas');
-    spritecanvas.width = cellwidth;
-    spritecanvas.height = cellheight;
-
-    var spritectx = spritecanvas.getContext('2d');
-
-
-
-    var w = 5;//sprites[0].dat.length;
-    var h = 5;//sprites[0].dat[0].length;
-    var cw = ~~(cellwidth / w);
-    var ch = ~~(cellheight / h);
-
-
-
-//	if (textMode) {
-    //find some other way to be selective about this stuff :)
-		regenText(spritecanvas,spritectx);
-//		return;
-//	}
-
+	if (textMode) {
+		regenText();
+		return;
+	} else if (levelEditorOpened) {
+        textImages['s'] = createSprite('chars',font['s'],undefined);
+    }
     if (state.levels.length===0) {
         return;
     }
     spriteimages = [];
 
-
-
     for (var i = 0; i < sprites.length; i++) {
         if (sprites[i] == undefined) {
             continue;
         }
-
-        spritectx.clearRect(0, 0, cellwidth, cellheight);
-
-        var spritegrid = sprites[i].dat;
-
-
-//      window.console.log(w+","+h+","+cw+","+ch);
-        var pixh=ch;
-        if ("scanline" in state.metadata) {
-            pixh=Math.ceil(ch/2);
-        }
-
-        var colors = sprites[i].colors;
-        for (var j = 0; j < w; j++) {
-            for (var k = 0; k < h; k++) {
-                var val = spritegrid[j][k];
-                if (val>=0) {
-	                var cy = (j * cw)|0;
-	                var cx = (k * ch)|0;
-                	spritectx.fillStyle = colors[val];
-                    spritectx.fillRect(cx, cy, cw, pixh);
-                }
-            }
-        }
-
-
-        var new_image_url = spritecanvas.toDataURL();
-        var img = document.createElement('img');
-        img.onload = redraw;
-        img.src = new_image_url;
-
-        spriteimages[i] = img;
+        spriteimages[i] = createSprite(i.toString(),sprites[i].dat, sprites[i].colors);
     }
 
     if (canOpenEditor) {
-    	generateGlyphImages(spritecanvas,spritectx);
+    	generateGlyphImages();
     }
 }
 
@@ -136,64 +75,67 @@ var glyphMouseOver;
 var glyphSelectedIndex=0;
 var editorRowCount=1;
 
-function generateGlyphImages(spritecanvas,spritectx) {
+var canvasdict={};
+function makeSpriteCanvas(name) {
+    var canvas;
+    if (name in canvasdict) {
+        canvas = canvasdict[name];
+    } else {
+        canvas = document.createElement('canvas');
+        canvasdict[name]=canvas;
+    }
+	canvas.width = cellwidth;
+	canvas.height = cellheight;
+	return canvas;
+}
+
+
+function generateGlyphImages() {
+    if (cellwidth===0||cellheight===0) {
+        return;
+    }
 	glyphImagesCorrespondance=[];
 	glyphImages=[];
 
 	for (var n in state.glyphDict) {
 		if (n.length==1 && state.glyphDict.hasOwnProperty(n)) {
 			var g=state.glyphDict[n];
+			var sprite = makeSpriteCanvas("C"+n)
+			var spritectx = sprite.getContext('2d');
 			glyphImagesCorrespondance.push(n);
-
-			spritectx.clearRect(0, 0, cellwidth, cellheight);
-
 			for (var i=0;i<g.length;i++){
 				var id = g[i];
 				if (id===-1) {
 					continue;
 				}
-				var s = spriteimages[id];
-				spritectx.drawImage(s,0,0);
+				spritectx.drawImage(spriteimages[id], 0, 0);
 			}
-
-
-	        var new_image_url = spritecanvas.toDataURL();
-	        var img = document.createElement('img');
-	        img.onload = redraw;
-	        img.src = new_image_url;
-
-			glyphImages.push(img);
+			glyphImages.push(sprite);
 		}
 	}
 
 	{
 		//make highlight thingy
+		glyphHighlight = makeSpriteCanvas("highlight");
+		var spritectx = glyphHighlight.getContext('2d');
 		spritectx.fillStyle = '#FFFFFF';
-		spritectx.clearRect(0, 0, cellwidth, cellheight);
 
 		spritectx.fillRect(0,0,cellwidth,1);
 		spritectx.fillRect(0,0,1,cellheight);
 
 		spritectx.fillRect(0,cellheight-1,cellwidth,1);
 		spritectx.fillRect(cellwidth-1,0,1,cellheight);
-
-
-	    var new_image_url = spritecanvas.toDataURL();
-	    var img = document.createElement('img');
-	    img.onload = redraw;
-	    img.src = new_image_url;
-
-		glyphHighlight=img;
 	}
 
 	{
-		glyphPrintButton=createSprite(spritecanvas,spritectx,'s');
+		glyphPrintButton = textImages['s'];
 	}
 	{
 		//make highlight thingy
+		glyphHighlightResize = makeSpriteCanvas("highlightresize");
+		var spritectx = glyphHighlightResize.getContext('2d');
 		spritectx.fillStyle = '#FFFFFF';
-		spritectx.clearRect(0, 0, cellwidth, cellheight);
-
+		
 		var minx=((cellwidth/2)-1)|0;
 		var xsize=cellwidth-minx-1-minx;
 		var miny=((cellheight/2)-1)|0;
@@ -201,39 +143,23 @@ function generateGlyphImages(spritecanvas,spritectx) {
 
 		spritectx.fillRect(minx,0,xsize,cellheight);
 		spritectx.fillRect(0,miny,cellwidth,ysize);
-
-
-	    var new_image_url = spritecanvas.toDataURL();
-	    var img = document.createElement('img');
-	    img.onload = redraw;
-	    img.src = new_image_url;
-
-		glyphHighlightResize=img;
 	}
 
 	{
 		//make highlight thingy
-    	spritectx.fillStyle = 'yellow';
-		spritectx.clearRect(0, 0, cellwidth, cellheight);
-
+		glyphMouseOver = makeSpriteCanvas();
+		var spritectx = glyphMouseOver.getContext('2d');
+		spritectx.fillStyle = 'yellow';
+		
 		spritectx.fillRect(0,0,cellwidth,2);
 		spritectx.fillRect(0,0,2,cellheight);
 
 		spritectx.fillRect(0,cellheight-2,cellwidth,2);
 		spritectx.fillRect(cellwidth-2,0,2,cellheight);
-
-
-	    var new_image_url = spritecanvas.toDataURL();
-	    var img = document.createElement('img');
-	    img.onload = redraw;
-	    img.src = new_image_url;
-
-		glyphMouseOver=img;
 	}
 }
 
 var ctx;
-
 
 
 var x;
@@ -261,17 +187,14 @@ function glyphCount(){
 }
 
 function redraw() {
-    if (textMode) {
-        for (var n in textImages) {
-            if (textImages.hasOwnProperty(n)) {
-                var spriteimage = textImages[n];
-                if (!spriteimage.complete)
-                    return;
-                if (spriteimage.width===0||spriteimage.height===0)
-                    return;
-            }
-        }
+    if (cellwidth===0||cellheight===0) {
+        return;
+    }
+    if (spriteimages===undefined) {
+        regenSpriteImages();
+    }
 
+    if (textMode) {
         ctx.fillStyle = state.bgcolor;
         ctx.fillRect(0, 0, canvas.width, canvas.height);
 
@@ -286,19 +209,6 @@ function redraw() {
         }
         return;
     } else {
-
-        if (spriteimages===undefined) {
-            regenSpriteImages();
-        }
-
-        for (var i = 0; i < spriteimages.length; i++) {
-            var spriteimage = spriteimages[i];
-            if (spriteimage == undefined)
-                continue;
-            if (!spriteimage.complete)
-                return;
-        }
-
         if(dirty.all) {
             ctx.fillStyle = state.bgcolor;
             ctx.fillRect(0, 0, canvas.width, canvas.height);
@@ -356,16 +266,15 @@ function redraw() {
 
         var i,j,posIndex;
         function drawTileAt(i,j,idx) {
-            var posMask = level.dat[posIndex];
+            var posMask = level.getCellInto(posIndex,_o12);
             for (var k = 0; k < state.objectCount; k++) {
-                var spriteMask = 1 << k;
-                if ((posMask & spriteMask) != 0) {
+                if (posMask.get(k) != 0) {
                     var sprite = spriteimages[k];
                     ctx.drawImage(sprite, Math.floor(xoffset + (i-mini) * cellwidth), Math.floor(yoffset + (j-minj) * cellheight));
                 }
             }
         }
-        //possible future optimization: instead of tracking dirty in several places, 
+        //possible future optimization/refactor: instead of tracking dirty in several places, 
 		//store the whole last-drawn level.dat and redraw only the specific
         //different tiles, or else redraw if the current level has changed.
         if(!dirty.all) {
@@ -388,11 +297,6 @@ function redraw() {
 	    if (levelEditorOpened) {
 	    	drawEditorIcons();
 	    }
-        /*
-    //  ctx.drawImage(spriteimages[0],0,0);
-        ctx.fillStyle="#000000";
-        ctx.fillText("Coordinates: (" + x + "," + y + ")",x,y);
-        */
     }
 }
 
@@ -450,12 +354,8 @@ var oldcellheight=0;
 var oldtextmode=-1;
 var oldfgcolor=-1;
 function canvasResize() {
-//  window.console.log("canvasresize");
-    canvas.style.width = canvas.parentNode.clientWidth;
-        canvas.style.height = canvas.parentNode.clientHeight;
-
     canvas.width = canvas.parentNode.clientWidth;
-        canvas.height = canvas.parentNode.clientHeight;
+    canvas.height = canvas.parentNode.clientHeight;
 
     screenwidth=level.width;
     screenheight=level.height;
@@ -532,7 +432,5 @@ function canvasResize() {
     oldtextmode=textMode;
     oldfgcolor=state.fgcolor;
 
-    if(!unitTesting) {
-        redraw();
-    }
+    redraw();
 }

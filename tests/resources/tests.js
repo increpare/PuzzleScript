@@ -1,6 +1,6 @@
 
 
-var inputVals = {0 : "UP",1: "LEFT",2:"DOWN",3:"RIGHT",undo:"UNDO",restart:"RESTART"};
+var inputVals = {0 : "UP",1: "LEFT",2:"DOWN",3:"RIGHT",4:"ACTION",tick:"TICK",undo:"UNDO",restart:"RESTART"};
 
 function testFunction(td) {
 
@@ -22,7 +22,7 @@ for (var i=0;i<testdata.length;i++) {
 					}
 					input += inputVals[testinput[j]];
 				}
-				var errormessage = testcode+"\n\n\ninput : "+input;
+				var errormessage =  testcode+"\n\n\ninput : "+input;
 				ok(runTest(td[1]),errormessage);
 			};
 		}(i)

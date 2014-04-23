@@ -77,6 +77,11 @@ RC4.prototype.next = function() {
     return this.s[(this.s[this.i] + this.s[this.j]) % 256];
 };
 
+function print_call_stack() {
+  var e = new Error();
+  var stack = e.stack;
+  console.log( stack );
+}
 /**
  * Create a new random number generator with optional seed. If the
  * provided seed is a function (i.e. Math.random) it will be used as
@@ -85,8 +90,12 @@ RC4.prototype.next = function() {
  * @constructor
  */
 function RNG(seed) {
+	this.seed = seed;
     if (seed == null) {
         seed = (Math.random() + Date.now()).toString();
+        //window.console.log("setting random seed "+seed); 
+        //print_call_stack();  
+
     } else if (typeof seed === 'function') {
         // Use it as a uniform number generator
         this.uniform = seed;
@@ -96,6 +105,9 @@ function RNG(seed) {
         seed = null;
     } else if (Object.prototype.toString.call(seed) !== '[object String]') {
         seed = JSON.stringify(seed);
+    } else {
+        //window.console.log("setting seed "+seed);
+        //print_call_stack();
     }
     this._normal = null;
     if (seed) {
@@ -227,6 +239,3 @@ RNG.roller = function(expr, rng) {
         return total;
     };
 };
-
-/* Provide a pre-made generator instance. */
-RNG.$ = new RNG();

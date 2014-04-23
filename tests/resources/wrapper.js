@@ -2,7 +2,6 @@ var lastDownTarget = null;
 var canvas = null;
 var input = document.createElement('TEXTAREA');
 
-
 function canvasResize() {
 
 }
@@ -20,6 +19,9 @@ var inputString;
 var outputString;
 
 function consolePrint(text) {}
+function consoleError(text) {
+//	window.console.log(text);
+}
 
 function consoleCacheDump() {}
 var editor = {

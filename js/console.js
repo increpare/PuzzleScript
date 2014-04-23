@@ -11,44 +11,63 @@ function jumpToLine(i) {
     editor.setCursor(i - 1, 0);
 }
 
-function playSound(seed) {
-	var params = generateFromSeed(seed);
-	params.sound_vol = SOUND_VOL;
-	params.sample_rate = SAMPLE_RATE;
-	params.sample_size = SAMPLE_SIZE;
-	var sound = generate(params);
-	var audio = new Audio();
-	audio.src = sound.dataURI;
-	audio.play();
+var consolecache = [];
+function consolePrint(text,urgent) {
+	if (urgent===undefined) {
+		urgent=false;
+	}
+	if (cache_console_messages&&urgent==false) {		
+		consolecache.push(text);
+	} else {
+		addToConsole(text);
+	}
 }
 
-var consolecache = "";
-function consolePrint(text) {
-	if (cache_console_messages) {		
-		consolecache = consolecache + '<br'> + text;
-	} else {
-		var code = document.getElementById('consoletextarea');
-		code.innerHTML = code.innerHTML + '<br>'+ text;
-		var objDiv = document.getElementById('lowerarea');
-		objDiv.scrollTop = objDiv.scrollHeight;
-	}
+
+var cache_n = 0;
+
+function addToConsole(text) {
+	cache = document.createElement("div");
+	cache.id = "cache" + cache_n;
+	cache.innerHTML = text;
+	cache_n++;
+	
+	var code = document.getElementById('consoletextarea');
+	code.appendChild(cache);
+	consolecache=[];
+	var objDiv = document.getElementById('lowerarea');
+	objDiv.scrollTop = objDiv.scrollHeight;
 }
 
 function consoleCacheDump() {
 	if (cache_console_messages===false) {
 		return;
 	}
-	var code = document.getElementById('consoletextarea');
-	code.innerHTML = code.innerHTML + consolecache;
-	consolecache="";
-	var objDiv = document.getElementById('lowerarea');
-	objDiv.scrollTop = objDiv.scrollHeight;
-	cache_console_messages=false;
+	
+	var lastline = "";
+	var times_repeated = 0;
+	var summarised_message = "<br>";
+	for (var i = 0; i < consolecache.length; i++) {
+		if (consolecache[i] == lastline) {
+			times_repeated++;
+		} else {
+			lastline = consolecache[i];
+			if (times_repeated > 0) {
+				summarised_message = summarised_message + " (x" + (times_repeated + 1) + ")";
+			}
+			summarised_message += "<br>"
+			summarised_message += lastline;
+			times_repeated = 0;
+		}
+	}
+	
+
+	addToConsole(summarised_message);
 }
 
 function consoleError(text) {	
         var errorString = '<span class="errorText">' + text + '</span>';
-        consolePrint(errorString);
+        consolePrint(errorString,true);
 }
 function clearConsole() {
 	var code = document.getElementById('consoletextarea');
