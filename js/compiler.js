@@ -359,7 +359,10 @@ function generateExtraMembers(state) {
 }
 
 Level.prototype.calcBackgroundMask = function(state) {
-	
+	if (state.backgroundlayer===undefined) {
+			logError("you have to have a background layer");
+	}
+
 	var backgroundMask = state.layerMasks[state.backgroundlayer];
 	for (var i=0;i<this.n_tiles;i++) {
 		var cell=this.getCell(i);
