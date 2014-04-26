@@ -251,8 +251,8 @@ function redraw() {
                 var playerPosition=playerPositions[0];
                 var px = (playerPosition/(level.height))|0;
                 var py = (playerPosition%level.height)|0;
-                mini=Math.max(px-((screenwidth/2)|0),0);
-                minj=Math.max(py-((screenheight/2)|0),0);
+                mini=Math.max(Math.min(px-((screenwidth/2)|0),level.width-screenwidth),0);
+                minj=Math.max(Math.min(py-((screenheight/2)|0),level.height-screenheight),0);
                 maxi=Math.min(mini+screenwidth,level.width);
                 maxj=Math.min(minj+screenheight,level.height);
                 oldflickscreendat=[mini,minj,maxi,maxj];
