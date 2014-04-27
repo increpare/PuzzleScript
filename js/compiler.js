@@ -1407,7 +1407,7 @@ function rulesToMask(state) {
 					var object = state.objects[object_name];
 					var objectMask = state.objectMasks[object_name];
 					if (object) {
-						var layerIndex = object.layer;
+						var layerIndex = object.layer|0;
 					} else {
 						var layerIndex = state.propertiesSingleLayer[object_name];
 					}
@@ -1496,7 +1496,7 @@ function rulesToMask(state) {
 					var object = state.objects[object_name];
 					var objectMask = state.objectMasks[object_name];
 					if (object) {
-						var layerIndex = object.layer;
+						var layerIndex = object.layer|0;
 					} else {
 						var layerIndex = state.propertiesSingleLayer[object_name];
 					}
