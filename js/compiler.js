@@ -1313,10 +1313,9 @@ function rulesToMask(state) {
 
 	*/
 	var layerCount = state.collisionLayers.length;
-	var maskTemplate = [];
+	var layerTemplate = [];
 	for (var i = 0; i < layerCount; i++) {
-		maskTemplate.push(-2);
-		maskTemplate.push(-2);
+		layerTemplate.push(null);
 	}
 
 	for (var i = 0; i < state.rules.length; i++) {
@@ -1326,7 +1325,7 @@ function rulesToMask(state) {
 			var cellrow_r = rule.rhs[j];
 			for (var k = 0; k < cellrow_l.length; k++) {
 				var cell_l = cellrow_l[k];
-				var mask_l = maskTemplate.concat([]);
+				var layersUsed = layerTemplate.concat([]);
 				var objectsPresent = new BitVec(STRIDE_OBJ);
 				var objectsMissing = new BitVec(STRIDE_OBJ);
 				var movementsPresent = new BitVec(STRIDE_MOV);
@@ -1361,14 +1360,12 @@ function rulesToMask(state) {
 					if (object_dir==='no') {
 						objectsMissing.ibitset(object.id);
 					} else {
-						var targetobjectid = mask_l[2 * layerIndex + 1];
-						if (targetobjectid > -2) {
-							var existingname = state.idDict[targetobjectid];
+						var existingname = layersUsed[layerIndex];
+						if (existingname !== null) {
 							logError('Rule matches object types that can\'t overlap: "' + object_name.toUpperCase() + '" and "' + existingname.toUpperCase() + '".', rule.lineNumber);
 						}
 
-						mask_l[2 * layerIndex + 0] = object_dir;
-						mask_l[2 * layerIndex + 1] = object.id;
+						layersUsed[layerIndex] = object_name;
 
 						objectsPresent.ibitset(object.id);
 						objectlayers_l.ishiftor(0x1f, 5*layerIndex);
@@ -1409,7 +1406,7 @@ function rulesToMask(state) {
 				}
 
 				var cell_r = cellrow_r[k];
-				var mask_r = maskTemplate.concat([]);
+				layersUsed = layerTemplate.concat([]);
 
 				var objectsClear = new BitVec(STRIDE_OBJ);
 				var objectsSet = new BitVec(STRIDE_OBJ);
@@ -1448,21 +1445,18 @@ function rulesToMask(state) {
 					if (object_dir=='no') {
 						objectsClear.ibitset(object_id);
 					} else {
-						var targetobjectid = mask_r[2 * layerIndex + 1];
-						if (targetobjectid > -2) {
-							var existingname = state.idDict[targetobjectid];
+						var existingname = layersUsed[layerIndex];
+						if (existingname !== null) {
 							logError('Rule matches object types that can\'t overlap: "' + object_name.toUpperCase() + '" and "' + existingname.toUpperCase() + '".', rule.lineNumber);
 						}
 
-						var layerMask = state.layerMasks[layerIndex];
-
-						mask_r[2 * layerIndex + 0] = object_dir;
-						mask_r[2 * layerIndex + 1] = object_id;
+						layersUsed[layerIndex] = object_name;
 
 						if (object_dir.length>0) {
 							postMovementsLayerMask_r.ishiftor(0x1f, 5*layerIndex);
 						}
 
+						var layerMask = state.layerMasks[layerIndex];
 						objectsSet.ibitset(object_id);
 						objectsClear.ior(layerMask);
 						objectlayers_r.ishiftor(0x1f, 5*layerIndex);
@@ -1706,7 +1700,7 @@ function getMaskFromName(state,name) {
 	return objectMask;
 }
 
-function generatePlayerMask(state) {
+function generateMasks(state) {
 
 	state.playerMask=getMaskFromName(state,'player');
 
@@ -1725,7 +1719,7 @@ function generatePlayerMask(state) {
 	}
 	state.layerMasks=layerMasks;
 
-	var objectMask=[];
+	var objectMask={};
 	for(var n in state.objects) {
 		if (state.objects.hasOwnProperty(n)) {
 			var o = state.objects[n];
@@ -2263,7 +2257,7 @@ function loadFile(str) {
 	delete state.lineNumber;
 
 	generateExtraMembers(state);
-	generatePlayerMask(state);
+	generateMasks(state);
 	levelsToArray(state);
 	rulesToArray(state);
 
