@@ -1276,27 +1276,31 @@ function atomizeAggregates(state, rule) {
 		var cellrow = rule.lhs[i];
 		for (var j = 0; j < cellrow.length; j++) {
 			var cell = cellrow[j];
-			atomizeCellAggregates(state, cell);
+			atomizeCellAggregates(state, cell,rule.lineNumber);
 		}
 	}
 	for (var i = 0; i < rule.rhs.length; i++) {
 		var cellrow = rule.rhs[i];
 		for (var j = 0; j < cellrow.length; j++) {
 			var cell = cellrow[j];
-			atomizeCellAggregates(state, cell);
+			atomizeCellAggregates(state, cell,rule.lineNumber);
 		}
 	}
 }
 
-function atomizeCellAggregates(state, cell) {
-	for (var i = 1; i < cell.length; i += 2) {
-		var c = cell[i];
+function atomizeCellAggregates(state, cell, lineNumber) {
+	for (var i = 0; i < cell.length; i += 2) {
+		var dir =cell[i];
+		var c = cell[i+1];
 		if (c in state.aggregatesDict) {
+			if (dir==='no') {
+				logError("You cannot use 'no' to exclude the aggregate object " +c.toUpperCase()+" (defined using 'AND'), only regular objects, or properties (objects defined using 'OR').  If you want to do this, you'll have to write it out yourself the long way.",lineNumber);
+			}
 			var equivs = state.aggregatesDict[c];
-			cell[i] = equivs[0];
-			for (var i = 1; i < equivs.length; i++) {
-				cell.push(cell[i - 1]);//push the direction
-				cell.push(equivs[i]);
+			cell[i+1] = equivs[0];
+			for (var j= 1; j < equivs.length; j++) {
+				cell.push(cell[i]);//push the direction
+				cell.push(equivs[j]);
 			}
 		}
 	}
