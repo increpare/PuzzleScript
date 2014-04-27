@@ -258,6 +258,7 @@ var codeMirrorFn = function() {
             var sol = stream.sol();
             if (sol) {
                 stream.string = stream.string.toLowerCase();
+                state.tokenIndex=0;
                 /*   if (state.lineNumber==undefined) {
                         state.lineNumber=1;
                 }
@@ -275,7 +276,7 @@ var codeMirrorFn = function() {
 
             //NESTED COMMENTS
             var ch = stream.peek();
-            if (ch === '(' && state.tokenIndex !== -4) { // tokenIndex -4 indicates message command
+             if (ch === '(' && state.tokenIndex !== -4) { // tokenIndex -4 indicates message command
                 stream.next();
                 state.commentLevel++;
             } else if (ch === ')') {
