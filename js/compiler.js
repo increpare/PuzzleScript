@@ -321,6 +321,24 @@ function generateExtraMembers(state) {
 		}
 	}
 
+	/* determine which properties specify objects all on one layer */
+	state.propertiesSingleLayer = {};
+	for (var key in propertiesDict) {
+		if (propertiesDict.hasOwnProperty(key)) {
+			var values = propertiesDict[key];
+			var sameLayer = true;
+			for (var i = 1; i < values.length; i++) {
+				if ((state.objects[values[i-1]].layer !== state.objects[values[i]].layer)) {
+					sameLayer = false;
+					break;
+				}
+			}
+			if (sameLayer) {
+				state.propertiesSingleLayer[key] = state.objects[values[0]].layer;
+			}
+		}
+	}
+
 	if (state.idDict[0]===undefined && state.collisionLayers.length>0) {
 		logError('You need to have some objects defined');
 	}
@@ -938,12 +956,32 @@ function expandNoPrefixedProperties(state, cell) {
 function concretizePropertyRule(state, rule,lineNumber) {	
 
 	//step 1, rephrase rule to change "no flying" to "no cat no bat"
-
-
 	for (var i = 0; i < rule.lhs.length; i++) {
 		var cur_cellrow_l = rule.lhs[i];
 		for (var j=0;j<cur_cellrow_l.length;j++) {
 			cur_cellrow_l[j] = expandNoPrefixedProperties(state,cur_cellrow_l[j]);
+		}
+	}
+
+	//are there any properties we could avoid processing?
+	// e.g. [> player | movable] -> [> player | > movable],
+	// 		doesn't need to be split up (assuming single-layer player/block aggregates)
+
+	// we can't manage this if they're being used to disambiguate
+	var ambiguousProperties = {};
+
+	for (var j = 0; j < rule.rhs.length; j++) {
+		var row_l = rule.lhs[j];
+		var row_r = rule.rhs[j];
+		for (var k = 0; k < row_r.length; k++) {
+			var properties_l = getPropertiesFromCell(state, row_l[k]);
+			var properties_r = getPropertiesFromCell(state, row_r[k]);
+			for (var prop_n = 0; prop_n < properties_r.length; prop_n++) {
+				var property = properties_r[prop_n];
+				if (properties_l.indexOf(property) == -1) {
+					ambiguousProperties[property] = true;
+				}
+			}
 		}
 	}
 
@@ -961,13 +999,21 @@ function concretizePropertyRule(state, rule,lineNumber) {
 				for (var k = 0; k < cur_rulerow.length&&!shouldremove; k++) {
 					var cur_cell = cur_rulerow[k];
 					var properties = getPropertiesFromCell(state, cur_cell);
-					if (properties.length > 0) {
+					for (var prop_n = 0; prop_n < properties.length; ++prop_n) {
+						var property = properties[prop_n];
+
+						if (state.propertiesSingleLayer.hasOwnProperty(property) &&
+							ambiguousProperties[property] !== true) {
+							// we don't need to explode this property
+							continue;
+						}
+
+						var aliases = state.propertiesDict[property];
+
 						shouldremove = true;
 						modified = true;
 
 						//just do the base property, let future iterations take care of the others
-						var property = properties[0];
-						var aliases = state.propertiesDict[property];
 
 						for (var l = 0; l < aliases.length; l++) {
 							var concreteType = aliases[l];
@@ -993,6 +1039,8 @@ function concretizePropertyRule(state, rule,lineNumber) {
 
 							result.push(newrule);
 						}
+
+						break;
 					}
 				}
 			}
@@ -1042,8 +1090,10 @@ function concretizePropertyRule(state, rule,lineNumber) {
 			for (var k = 0; k < cur_rulerow.length; k++) {
 				var cur_cell = cur_rulerow[k];
 				var properties = getPropertiesFromCell(state, cur_cell);
-				if (properties.length > 0) {
-					rhsPropertyRemains = properties[0];					
+				for (var prop_n = 0; prop_n < properties.length; prop_n++) {
+					if (ambiguousProperties.hasOwnProperty(properties[prop_n])) {
+						rhsPropertyRemains = properties[prop_n];
+					}
 				}
 			}
 		}
@@ -1325,9 +1375,10 @@ function rulesToMask(state) {
 			var cellrow_r = rule.rhs[j];
 			for (var k = 0; k < cellrow_l.length; k++) {
 				var cell_l = cellrow_l[k];
-				var layersUsed = layerTemplate.concat([]);
+				var layersUsed_l = layerTemplate.concat([]);
 				var objectsPresent = new BitVec(STRIDE_OBJ);
 				var objectsMissing = new BitVec(STRIDE_OBJ);
+				var anyObjectsPresent = [];
 				var movementsPresent = new BitVec(STRIDE_MOV);
 				var movementsMissing = new BitVec(STRIDE_MOV);
 
@@ -1350,25 +1401,33 @@ function rulesToMask(state) {
 					}  else if (object_dir==='random') {
 						logError("'random' cannot be matched on the left-hand side, it can only appear on the right",rule.lineNumber);
 						continue;
-					} 
+					}
 
 					var object_name = cell_l[l + 1];
 					var object = state.objects[object_name];
-					var layerIndex = object.layer;
-					var layerMask = state.layerMasks[layerIndex];
+					var objectMask = state.objectMasks[object_name];
+					if (object) {
+						var layerIndex = object.layer;
+					} else {
+						var layerIndex = state.propertiesSingleLayer[object_name];
+					}
 
 					if (object_dir==='no') {
-						objectsMissing.ibitset(object.id);
+						objectsMissing.ior(objectMask);
 					} else {
-						var existingname = layersUsed[layerIndex];
+						var existingname = layersUsed_l[layerIndex];
 						if (existingname !== null) {
 							logError('Rule matches object types that can\'t overlap: "' + object_name.toUpperCase() + '" and "' + existingname.toUpperCase() + '".', rule.lineNumber);
 						}
 
-						layersUsed[layerIndex] = object_name;
+						layersUsed_l[layerIndex] = object_name;
 
-						objectsPresent.ibitset(object.id);
-						objectlayers_l.ishiftor(0x1f, 5*layerIndex);
+						if (object) {
+							objectsPresent.ior(objectMask);
+							objectlayers_l.ishiftor(0x1f, 5*layerIndex);
+						} else {
+							anyObjectsPresent.push(objectMask);
+						}
 
 						if (object_dir==='stationary') {
 							movementsMissing.ishiftor(0x1f, 5*layerIndex);
@@ -1398,7 +1457,7 @@ function rulesToMask(state) {
 					cellrow_l[k] = ellipsisPattern;
 					continue;
 				} else {
-					cellrow_l[k] = new CellPattern([objectsPresent, objectsMissing, movementsPresent, movementsMissing, null]);
+					cellrow_l[k] = new CellPattern([objectsPresent, objectsMissing, anyObjectsPresent, movementsPresent, movementsMissing, null]);
 				}
 
 				if (rule.rhs.length===0) {
@@ -1406,7 +1465,7 @@ function rulesToMask(state) {
 				}
 
 				var cell_r = cellrow_r[k];
-				layersUsed = layerTemplate.concat([]);
+				var layersUsed_r = layerTemplate.concat([]);
 
 				var objectsClear = new BitVec(STRIDE_OBJ);
 				var objectsSet = new BitVec(STRIDE_OBJ);
@@ -1435,31 +1494,37 @@ function rulesToMask(state) {
 					}
 
 					var object = state.objects[object_name];
-					var layerIndex = object.layer;
-					if (layerIndex === undefined) {
-						logError('Object "'+object_name.toUpperCase()+'" hasn\'t been assigned to a layer.',object.lineNumber);
+					var objectMask = state.objectMasks[object_name];
+					if (object) {
+						var layerIndex = object.layer;
+					} else {
+						var layerIndex = state.propertiesSingleLayer[object_name];
 					}
-					var object_id = object.id;
 
 					
 					if (object_dir=='no') {
-						objectsClear.ibitset(object_id);
+						objectsClear.ior(objectMask);
 					} else {
-						var existingname = layersUsed[layerIndex];
+						var existingname = layersUsed_r[layerIndex];
 						if (existingname !== null) {
 							logError('Rule matches object types that can\'t overlap: "' + object_name.toUpperCase() + '" and "' + existingname.toUpperCase() + '".', rule.lineNumber);
 						}
 
-						layersUsed[layerIndex] = object_name;
+						layersUsed_r[layerIndex] = object_name;
 
 						if (object_dir.length>0) {
 							postMovementsLayerMask_r.ishiftor(0x1f, 5*layerIndex);
 						}
 
 						var layerMask = state.layerMasks[layerIndex];
-						objectsSet.ibitset(object_id);
-						objectsClear.ior(layerMask);
-						objectlayers_r.ishiftor(0x1f, 5*layerIndex);
+
+						if (object) {
+							objectsSet.ibitset(object.id);
+							objectsClear.ior(layerMask);
+							objectlayers_r.ishiftor(0x1f, 5*layerIndex);
+						} else {
+							// shouldn't need to do anything here...
+						}
 						if (object_dir==='stationary') {
 							movementsClear.ishiftor(0x1f, 5*layerIndex);
 						} if (object_dir==='randomdir') {
@@ -1475,6 +1540,14 @@ function rulesToMask(state) {
 				}
 				if (!(movementsPresent.bitsSetInArray(movementsSet.data))) {
 					movementsClear.ior(movementsPresent); // ... and movements
+				}
+
+				for (var l = 0; l < layerCount; l++) {
+					if (layersUsed_l[l] !== null && layersUsed_r[l] === null) {
+						// a layer matched on the lhs, but not on the rhs
+						objectsClear.ior(state.layerMasks[l]);
+						postMovementsLayerMask_r.ishiftor(0x1f, 5*layerIndex);
+					}
 				}
 
 				objectlayers_l.iclear(objectlayers_r);
