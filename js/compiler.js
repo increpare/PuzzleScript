@@ -787,59 +787,31 @@ function rulesToArray(state) {
 		var ruledirs = rule.directions;
 		for (var j = 0; j < ruledirs.length; j++) {
 			var dir = ruledirs[j];
-			if (dir in directionaggregates  && directionalRule(rule)) {
+			if (dir in directionaggregates && directionalRule(rule)) {
 				var dirs = directionaggregates[dir];
 				for (var k = 0; k < dirs.length; k++) {
-					var modifiedrule = {
-						direction: dirs[k],
-						lhs: deepCloneHS(rule.lhs),
-						rhs: deepCloneHS(rule.rhs),
-						lineNumber: rule.lineNumber,
-						late: rule.late,
-						rigid: rule.rigid,
-						groupNumber: rule.groupNumber,
-						commands:rule.commands,
-						randomRule: rule.randomRule
-					};
+					var modifiedrule = deepCloneRule(rule);
+					modifiedrule.direction = dirs[k];
 					rules2.push(modifiedrule);
 				}
 			} else {
-				var modifiedrule = {
-					direction: dir,
-					lhs: deepCloneHS(rule.lhs),
-					rhs: deepCloneHS(rule.rhs),
-					lineNumber: rule.lineNumber,
-					late: rule.late,
-					rigid: rule.rigid,
-					groupNumber: rule.groupNumber,
-					commands:rule.commands,
-					randomRule: rule.randomRule
-				};
+				var modifiedrule = deepCloneRule(rule);
+				modifiedrule.direction = dir;
 				rules2.push(modifiedrule);
 			}
 		}
 	}
 
-	//remove relative directions
 	for (var i = 0; i < rules2.length; i++) {
-		convertRelativeDirsToAbsolute(rules2[i]);
-	}
-
-
-	//optional
-	//replace up/left rules with their down/right equivalents
-	for (var i = 0; i < rules2.length; i++) {
-		rewriteUpLeftRules(rules2[i]);
-	}
-
-	//replace aggregates with what they mean
-	for (var i = 0; i < rules2.length; i++) {
-		atomizeAggregates(state, rules2[i]);
-	}
-
-	//replace synonyms with what they mean
-	for (var i = 0; i < rules2.length; i++) {
-		rephraseSynonyms(state, rules2[i]);
+		var rule = rules2[i];
+		//remove relative directions
+		convertRelativeDirsToAbsolute(rule);
+		//optional: replace up/left rules with their down/right equivalents
+		rewriteUpLeftRules(rule);
+		//replace aggregates with what they mean
+		atomizeAggregates(state, rule);
+		//replace synonyms with what they mean
+		rephraseSynonyms(state, rule);
 	}
 
 	var rules3 = [];
@@ -868,6 +840,7 @@ function containsEllipsis(rule) {
 	}
 	return false;
 }
+
 function rewriteUpLeftRules(rule) {
 	if (containsEllipsis(rule)) {
 		return;
@@ -882,9 +855,9 @@ function rewriteUpLeftRules(rule) {
 	}
 
 	for (var i = 0; i < rule.lhs.length; i++) {
-		var cellrow_l = rule.lhs[i].reverse();
+		rule.lhs[i].reverse();
 		if (rule.rhs.length>0) {
-			var cellrow_r = rule.rhs[i].reverse();
+			rule.rhs[i].reverse();
 		}
 	}
 }
@@ -967,22 +940,16 @@ function concretizePropertyRule(state, rule,lineNumber) {
 	//step 1, rephrase rule to change "no flying" to "no cat no bat"
 
 
-	var modified = true;
-	while(modified) {
-		modified=false;
-		for (var i = 0; i < rule.lhs.length; i++) { 
-			var cur_cellrow_l = rule.lhs[i];
-			var cur_cellrow_r = rule.lhs[i];
-			for (var j=0;j<cur_cellrow_l.length;j++) {
-				cur_cellrow_l[j] = expandNoPrefixedProperties(state,cur_cellrow_l[j]);
-				cur_cellrow_r[j] = expandNoPrefixedProperties(state,cur_cellrow_r[j]);
-			}
+	for (var i = 0; i < rule.lhs.length; i++) {
+		var cur_cellrow_l = rule.lhs[i];
+		for (var j=0;j<cur_cellrow_l.length;j++) {
+			cur_cellrow_l[j] = expandNoPrefixedProperties(state,cur_cellrow_l[j]);
 		}
 	}
 
 	var shouldremove;
 	var result = [rule];
-	modified=true;
+	var modified=true;
 	while (modified) {
 		modified = false;
 		for (var i = 0; i < result.length; i++) {
@@ -1252,7 +1219,7 @@ function rephraseSynonyms(state,rule) {
 	}
 }
 
-function atomizeAggregates(state,rule) {
+function atomizeAggregates(state, rule) {
 	for (var i = 0; i < rule.lhs.length; i++) {
 		var cellrow = rule.lhs[i];
 		for (var j = 0; j < cellrow.length; j++) {
