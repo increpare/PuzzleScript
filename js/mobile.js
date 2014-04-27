@@ -86,6 +86,14 @@ Mobile.debugDot = function (event) {
         this.setTabAnimationRatio = this.setTabAnimationRatio.bind(this);
         this.setMenuAnimationRatio = this.setMenuAnimationRatio.bind(this);
         this.repeatTick = this.repeatTick.bind(this);
+        this.isFocused = true;
+    };
+
+    // assign the element that will allow tapping to toggle focus.
+    proto.setFocusElement = function (focusElement) {
+        this.focusElement = focusElement;
+        this.isFocused = false;
+        this.buildFocusIndicator();
     };
 
     proto.bindEvents = function () {
@@ -109,6 +117,12 @@ Mobile.debugDot = function (event) {
             return;
         }
 
+        // Handle focus changes used in editor.
+        this.handleFocusChange(event);
+        if (!this.isFocused) {
+            return;
+        }
+
         if (event.target.tagName.toUpperCase() === 'A') {
             return;
         }
@@ -126,6 +140,9 @@ Mobile.debugDot = function (event) {
     };
 
     proto.onTouchEnd = function (event) {
+        if (!this.isFocused) {
+            return;
+        }
         if (!this.isTouching) {
             // If we're here, the menu event handlers had probably
             // canceled the touchstart event.
@@ -146,6 +163,9 @@ Mobile.debugDot = function (event) {
     };
 
     proto.onTouchMove = function (event) {
+        if (!this.isFocused) {
+            return;
+        }
         if (this.isSuccessfulSwipe()) {
             this.handleSwipe(this.swipeDirection, this.touchCount);
             this.gestured = true;
@@ -159,6 +179,68 @@ Mobile.debugDot = function (event) {
 
         prevent(event);
         return false;
+    };
+
+    proto.handleFocusChange = function (event) {
+        if (!this.focusElement) {
+            return;
+        }
+
+        this.isFocused = this.isTouchInsideFocusElement(event);
+        this.setFocusIndicatorVisibility(this.isFocused);
+    };
+
+    proto.isTouchInsideFocusElement = function (event) {
+        var canvasPosition;
+
+        if (!event.touches || !event.touches[0]) {
+            return false;
+        }
+        canvasPosition = this.absoluteElementPosition(this.focusElement);
+
+        if (event.touches[0].clientX < canvasPosition.left ||
+            event.touches[0].clientY < canvasPosition.top) {
+            return false;
+        }
+
+        if (event.touches[0].clientX > canvasPosition.left + this.focusElement.clientWidth ||
+            event.touches[0].clientY > canvasPosition.top + this.focusElement.clientHeight) {
+            return false;
+        }
+
+        return true;
+    };
+
+    proto.setFocusIndicatorVisibility = function (isVisible) {
+        var visibility;
+
+        visibility = 'visible';
+        if (!isVisible) {
+            visibility = 'hidden';
+        }
+        this.focusIndicator.setAttribute('style', 'visibility: ' + visibility + ';');
+    };
+
+    proto.absoluteElementPosition = function (element) {
+        var position, body;
+
+        position = {
+            top: element.offsetTop || 0,
+            left: element.offsetLeft || 0
+        };
+        body = document.getElementsByTagName('body')[0];
+        position.top -= body.scrollTop || 0;
+
+        while (true) {
+            element = element.offsetParent;
+            if (!element) {
+                break;
+            }
+            position.top += element.offsetTop || 0;
+            position.left += element.offsetLeft || 0;
+        }
+
+        return position;
     };
 
     proto.beginRepeatWatcher = function (event) {
@@ -506,6 +588,16 @@ Mobile.debugDot = function (event) {
         ]);
 
         return menuLines.join("\n");
+    };
+
+    proto.buildFocusIndicator = function () {
+        var focusElementParent;
+        this.focusIndicator = document.createElement('DIV');
+        this.focusIndicator.setAttribute('class', 'tapFocusIndicator');
+        this.focusIndicator.setAttribute('style', 'visibility: hidden;');
+
+        focusElementParent = this.focusElement.parentNode;
+        focusElementParent.appendChild(this.focusIndicator);
     };
 
     proto.setTabAnimationRatio = function (ratio) {

@@ -57,3 +57,8 @@ window.onbeforeunload = function (e) {
     return msg;
   }
 };
+
+var gestureHandler = Mobile.enable();
+if (gestureHandler) {
+    gestureHandler.setFocusElement(document.getElementById('gameCanvas'));
+}
