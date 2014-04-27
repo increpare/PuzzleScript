@@ -275,7 +275,7 @@ var codeMirrorFn = function() {
 
             //NESTED COMMENTS
             var ch = stream.peek();
-            if (ch === '(') {
+            if (ch === '(' && state.tokenIndex !== -4) { // tokenIndex -4 indicates message command
                 stream.next();
                 state.commentLevel++;
             } else if (ch === ')') {
