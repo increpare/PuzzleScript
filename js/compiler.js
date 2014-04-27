@@ -321,6 +321,24 @@ function generateExtraMembers(state) {
 		}
 	}
 
+	/* determine which properties specify objects all on one layer */
+	state.propertiesSingleLayer = {};
+	for (var key in propertiesDict) {
+		if (propertiesDict.hasOwnProperty(key)) {
+			var values = propertiesDict[key];
+			var sameLayer = true;
+			for (var i = 1; i < values.length; i++) {
+				if ((state.objects[values[i-1]].layer !== state.objects[values[i]].layer)) {
+					sameLayer = false;
+					break;
+				}
+			}
+			if (sameLayer) {
+				state.propertiesSingleLayer[key] = state.objects[values[0]].layer;
+			}
+		}
+	}
+
 	if (state.idDict[0]===undefined && state.collisionLayers.length>0) {
 		logError('You need to have some objects defined');
 	}
@@ -787,59 +805,31 @@ function rulesToArray(state) {
 		var ruledirs = rule.directions;
 		for (var j = 0; j < ruledirs.length; j++) {
 			var dir = ruledirs[j];
-			if (dir in directionaggregates  && directionalRule(rule)) {
+			if (dir in directionaggregates && directionalRule(rule)) {
 				var dirs = directionaggregates[dir];
 				for (var k = 0; k < dirs.length; k++) {
-					var modifiedrule = {
-						direction: dirs[k],
-						lhs: deepCloneHS(rule.lhs),
-						rhs: deepCloneHS(rule.rhs),
-						lineNumber: rule.lineNumber,
-						late: rule.late,
-						rigid: rule.rigid,
-						groupNumber: rule.groupNumber,
-						commands:rule.commands,
-						randomRule: rule.randomRule
-					};
+					var modifiedrule = deepCloneRule(rule);
+					modifiedrule.direction = dirs[k];
 					rules2.push(modifiedrule);
 				}
 			} else {
-				var modifiedrule = {
-					direction: dir,
-					lhs: deepCloneHS(rule.lhs),
-					rhs: deepCloneHS(rule.rhs),
-					lineNumber: rule.lineNumber,
-					late: rule.late,
-					rigid: rule.rigid,
-					groupNumber: rule.groupNumber,
-					commands:rule.commands,
-					randomRule: rule.randomRule
-				};
+				var modifiedrule = deepCloneRule(rule);
+				modifiedrule.direction = dir;
 				rules2.push(modifiedrule);
 			}
 		}
 	}
 
-	//remove relative directions
 	for (var i = 0; i < rules2.length; i++) {
-		convertRelativeDirsToAbsolute(rules2[i]);
-	}
-
-
-	//optional
-	//replace up/left rules with their down/right equivalents
-	for (var i = 0; i < rules2.length; i++) {
-		rewriteUpLeftRules(rules2[i]);
-	}
-
-	//replace aggregates with what they mean
-	for (var i = 0; i < rules2.length; i++) {
-		atomizeAggregates(state, rules2[i]);
-	}
-
-	//replace synonyms with what they mean
-	for (var i = 0; i < rules2.length; i++) {
-		rephraseSynonyms(state, rules2[i]);
+		var rule = rules2[i];
+		//remove relative directions
+		convertRelativeDirsToAbsolute(rule);
+		//optional: replace up/left rules with their down/right equivalents
+		rewriteUpLeftRules(rule);
+		//replace aggregates with what they mean
+		atomizeAggregates(state, rule);
+		//replace synonyms with what they mean
+		rephraseSynonyms(state, rule);
 	}
 
 	var rules3 = [];
@@ -868,6 +858,7 @@ function containsEllipsis(rule) {
 	}
 	return false;
 }
+
 function rewriteUpLeftRules(rule) {
 	if (containsEllipsis(rule)) {
 		return;
@@ -882,9 +873,9 @@ function rewriteUpLeftRules(rule) {
 	}
 
 	for (var i = 0; i < rule.lhs.length; i++) {
-		var cellrow_l = rule.lhs[i].reverse();
+		rule.lhs[i].reverse();
 		if (rule.rhs.length>0) {
-			var cellrow_r = rule.rhs[i].reverse();
+			rule.rhs[i].reverse();
 		}
 	}
 }
@@ -965,24 +956,40 @@ function expandNoPrefixedProperties(state, cell) {
 function concretizePropertyRule(state, rule,lineNumber) {	
 
 	//step 1, rephrase rule to change "no flying" to "no cat no bat"
+	for (var i = 0; i < rule.lhs.length; i++) {
+		var cur_cellrow_l = rule.lhs[i];
+		for (var j=0;j<cur_cellrow_l.length;j++) {
+			cur_cellrow_l[j] = expandNoPrefixedProperties(state,cur_cellrow_l[j]);
+			if (rule.rhs.length > 0)
+				rule.rhs[i][j] = expandNoPrefixedProperties(state,rule.rhs[i][j]);
+		}
+	}
 
+	//are there any properties we could avoid processing?
+	// e.g. [> player | movable] -> [> player | > movable],
+	// 		doesn't need to be split up (assuming single-layer player/block aggregates)
 
-	var modified = true;
-	while(modified) {
-		modified=false;
-		for (var i = 0; i < rule.lhs.length; i++) { 
-			var cur_cellrow_l = rule.lhs[i];
-			var cur_cellrow_r = rule.lhs[i];
-			for (var j=0;j<cur_cellrow_l.length;j++) {
-				cur_cellrow_l[j] = expandNoPrefixedProperties(state,cur_cellrow_l[j]);
-				cur_cellrow_r[j] = expandNoPrefixedProperties(state,cur_cellrow_r[j]);
+	// we can't manage this if they're being used to disambiguate
+	var ambiguousProperties = {};
+
+	for (var j = 0; j < rule.rhs.length; j++) {
+		var row_l = rule.lhs[j];
+		var row_r = rule.rhs[j];
+		for (var k = 0; k < row_r.length; k++) {
+			var properties_l = getPropertiesFromCell(state, row_l[k]);
+			var properties_r = getPropertiesFromCell(state, row_r[k]);
+			for (var prop_n = 0; prop_n < properties_r.length; prop_n++) {
+				var property = properties_r[prop_n];
+				if (properties_l.indexOf(property) == -1) {
+					ambiguousProperties[property] = true;
+				}
 			}
 		}
 	}
 
 	var shouldremove;
 	var result = [rule];
-	modified=true;
+	var modified=true;
 	while (modified) {
 		modified = false;
 		for (var i = 0; i < result.length; i++) {
@@ -994,13 +1001,21 @@ function concretizePropertyRule(state, rule,lineNumber) {
 				for (var k = 0; k < cur_rulerow.length&&!shouldremove; k++) {
 					var cur_cell = cur_rulerow[k];
 					var properties = getPropertiesFromCell(state, cur_cell);
-					if (properties.length > 0) {
+					for (var prop_n = 0; prop_n < properties.length; ++prop_n) {
+						var property = properties[prop_n];
+
+						if (state.propertiesSingleLayer.hasOwnProperty(property) &&
+							ambiguousProperties[property] !== true) {
+							// we don't need to explode this property
+							continue;
+						}
+
+						var aliases = state.propertiesDict[property];
+
 						shouldremove = true;
 						modified = true;
 
 						//just do the base property, let future iterations take care of the others
-						var property = properties[0];
-						var aliases = state.propertiesDict[property];
 
 						for (var l = 0; l < aliases.length; l++) {
 							var concreteType = aliases[l];
@@ -1026,6 +1041,8 @@ function concretizePropertyRule(state, rule,lineNumber) {
 
 							result.push(newrule);
 						}
+
+						break;
 					}
 				}
 			}
@@ -1075,8 +1092,10 @@ function concretizePropertyRule(state, rule,lineNumber) {
 			for (var k = 0; k < cur_rulerow.length; k++) {
 				var cur_cell = cur_rulerow[k];
 				var properties = getPropertiesFromCell(state, cur_cell);
-				if (properties.length > 0) {
-					rhsPropertyRemains = properties[0];					
+				for (var prop_n = 0; prop_n < properties.length; prop_n++) {
+					if (ambiguousProperties.hasOwnProperty(properties[prop_n])) {
+						rhsPropertyRemains = properties[prop_n];
+					}
 				}
 			}
 		}
@@ -1252,7 +1271,7 @@ function rephraseSynonyms(state,rule) {
 	}
 }
 
-function atomizeAggregates(state,rule) {
+function atomizeAggregates(state, rule) {
 	for (var i = 0; i < rule.lhs.length; i++) {
 		var cellrow = rule.lhs[i];
 		for (var j = 0; j < cellrow.length; j++) {
@@ -1346,10 +1365,9 @@ function rulesToMask(state) {
 
 	*/
 	var layerCount = state.collisionLayers.length;
-	var maskTemplate = [];
+	var layerTemplate = [];
 	for (var i = 0; i < layerCount; i++) {
-		maskTemplate.push(-2);
-		maskTemplate.push(-2);
+		layerTemplate.push(null);
 	}
 
 	for (var i = 0; i < state.rules.length; i++) {
@@ -1359,9 +1377,10 @@ function rulesToMask(state) {
 			var cellrow_r = rule.rhs[j];
 			for (var k = 0; k < cellrow_l.length; k++) {
 				var cell_l = cellrow_l[k];
-				var mask_l = maskTemplate.concat([]);
+				var layersUsed_l = layerTemplate.concat([]);
 				var objectsPresent = new BitVec(STRIDE_OBJ);
 				var objectsMissing = new BitVec(STRIDE_OBJ);
+				var anyObjectsPresent = [];
 				var movementsPresent = new BitVec(STRIDE_MOV);
 				var movementsMissing = new BitVec(STRIDE_MOV);
 
@@ -1384,27 +1403,33 @@ function rulesToMask(state) {
 					}  else if (object_dir==='random') {
 						logError("'random' cannot be matched on the left-hand side, it can only appear on the right",rule.lineNumber);
 						continue;
-					} 
+					}
 
 					var object_name = cell_l[l + 1];
 					var object = state.objects[object_name];
-					var layerIndex = object.layer;
-					var layerMask = state.layerMasks[layerIndex];
+					var objectMask = state.objectMasks[object_name];
+					if (object) {
+						var layerIndex = object.layer|0;
+					} else {
+						var layerIndex = state.propertiesSingleLayer[object_name];
+					}
 
 					if (object_dir==='no') {
-						objectsMissing.ibitset(object.id);
+						objectsMissing.ior(objectMask);
 					} else {
-						var targetobjectid = mask_l[2 * layerIndex + 1];
-						if (targetobjectid > -2) {
-							var existingname = state.idDict[targetobjectid];
+						var existingname = layersUsed_l[layerIndex];
+						if (existingname !== null) {
 							logError('Rule matches object types that can\'t overlap: "' + object_name.toUpperCase() + '" and "' + existingname.toUpperCase() + '".', rule.lineNumber);
 						}
 
-						mask_l[2 * layerIndex + 0] = object_dir;
-						mask_l[2 * layerIndex + 1] = object.id;
+						layersUsed_l[layerIndex] = object_name;
 
-						objectsPresent.ibitset(object.id);
-						objectlayers_l.ishiftor(0x1f, 5*layerIndex);
+						if (object) {
+							objectsPresent.ior(objectMask);
+							objectlayers_l.ishiftor(0x1f, 5*layerIndex);
+						} else {
+							anyObjectsPresent.push(objectMask);
+						}
 
 						if (object_dir==='stationary') {
 							movementsMissing.ishiftor(0x1f, 5*layerIndex);
@@ -1434,7 +1459,7 @@ function rulesToMask(state) {
 					cellrow_l[k] = ellipsisPattern;
 					continue;
 				} else {
-					cellrow_l[k] = new CellPattern([objectsPresent, objectsMissing, movementsPresent, movementsMissing, null]);
+					cellrow_l[k] = new CellPattern([objectsPresent, objectsMissing, anyObjectsPresent, movementsPresent, movementsMissing, null]);
 				}
 
 				if (rule.rhs.length===0) {
@@ -1442,7 +1467,7 @@ function rulesToMask(state) {
 				}
 
 				var cell_r = cellrow_r[k];
-				var mask_r = maskTemplate.concat([]);
+				var layersUsed_r = layerTemplate.concat([]);
 
 				var objectsClear = new BitVec(STRIDE_OBJ);
 				var objectsSet = new BitVec(STRIDE_OBJ);
@@ -1471,34 +1496,37 @@ function rulesToMask(state) {
 					}
 
 					var object = state.objects[object_name];
-					var layerIndex = object.layer;
-					if (layerIndex === undefined) {
-						logError('Object "'+object_name.toUpperCase()+'" hasn\'t been assigned to a layer.',object.lineNumber);
+					var objectMask = state.objectMasks[object_name];
+					if (object) {
+						var layerIndex = object.layer|0;
+					} else {
+						var layerIndex = state.propertiesSingleLayer[object_name];
 					}
-					var object_id = object.id;
 
 					
 					if (object_dir=='no') {
-						objectsClear.ibitset(object_id);
+						objectsClear.ior(objectMask);
 					} else {
-						var targetobjectid = mask_r[2 * layerIndex + 1];
-						if (targetobjectid > -2) {
-							var existingname = state.idDict[targetobjectid];
+						var existingname = layersUsed_r[layerIndex];
+						if (existingname !== null) {
 							logError('Rule matches object types that can\'t overlap: "' + object_name.toUpperCase() + '" and "' + existingname.toUpperCase() + '".', rule.lineNumber);
 						}
 
-						var layerMask = state.layerMasks[layerIndex];
-
-						mask_r[2 * layerIndex + 0] = object_dir;
-						mask_r[2 * layerIndex + 1] = object_id;
+						layersUsed_r[layerIndex] = object_name;
 
 						if (object_dir.length>0) {
 							postMovementsLayerMask_r.ishiftor(0x1f, 5*layerIndex);
 						}
 
-						objectsSet.ibitset(object_id);
-						objectsClear.ior(layerMask);
-						objectlayers_r.ishiftor(0x1f, 5*layerIndex);
+						var layerMask = state.layerMasks[layerIndex];
+
+						if (object) {
+							objectsSet.ibitset(object.id);
+							objectsClear.ior(layerMask);
+							objectlayers_r.ishiftor(0x1f, 5*layerIndex);
+						} else {
+							// shouldn't need to do anything here...
+						}
 						if (object_dir==='stationary') {
 							movementsClear.ishiftor(0x1f, 5*layerIndex);
 						} if (object_dir==='randomdir') {
@@ -1514,6 +1542,14 @@ function rulesToMask(state) {
 				}
 				if (!(movementsPresent.bitsSetInArray(movementsSet.data))) {
 					movementsClear.ior(movementsPresent); // ... and movements
+				}
+
+				for (var l = 0; l < layerCount; l++) {
+					if (layersUsed_l[l] !== null && layersUsed_r[l] === null) {
+						// a layer matched on the lhs, but not on the rhs
+						objectsClear.ior(state.layerMasks[l]);
+						postMovementsLayerMask_r.ishiftor(0x1f, 5*layerIndex);
+					}
 				}
 
 				objectlayers_l.iclear(objectlayers_r);
@@ -1739,7 +1775,7 @@ function getMaskFromName(state,name) {
 	return objectMask;
 }
 
-function generatePlayerMask(state) {
+function generateMasks(state) {
 
 	state.playerMask=getMaskFromName(state,'player');
 
@@ -1758,7 +1794,7 @@ function generatePlayerMask(state) {
 	}
 	state.layerMasks=layerMasks;
 
-	var objectMask=[];
+	var objectMask={};
 	for(var n in state.objects) {
 		if (state.objects.hasOwnProperty(n)) {
 			var o = state.objects[n];
@@ -2296,7 +2332,7 @@ function loadFile(str) {
 	delete state.lineNumber;
 
 	generateExtraMembers(state);
-	generatePlayerMask(state);
+	generateMasks(state);
 	levelsToArray(state);
 	rulesToArray(state);
 

@@ -1223,10 +1223,11 @@ var STRIDE_MOV = 1;
 function CellPattern(row) {
 	this.objectsPresent = row[0];
 	this.objectsMissing = row[1];
-	this.movementsPresent = row[2];
-	this.movementsMissing = row[3];
+	this.anyObjectsPresent = row[2];
+	this.movementsPresent = row[3];
+	this.movementsMissing = row[4];
 	this.matches = this.generateMatchFunction();
-	this.replacement = row[4];
+	this.replacement = row[5];
 };
 
 function CellReplacement(row) {
@@ -1269,6 +1270,15 @@ CellPattern.prototype.generateMatchString = function() {
 		}
 		if (mm)
 			fn += '\t\t&& !(' + cm + '&' + mm + ')\n';
+	}
+	for (var j = 0; j < this.anyObjectsPresent.length; j++) {
+		fn += "\t\t&& (0";
+		for (var i = 0; i < STRIDE_OBJ; ++i) {
+			var aop = this.anyObjectsPresent[j].data[i];
+			if (aop)
+				fn += "|(cellObjects" + i + "&" + aop + ")";
+		}
+		fn += ")";
 	}
 	fn += '\t)';
 	return fn;
