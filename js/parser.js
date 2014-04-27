@@ -128,6 +128,30 @@ var codeMirrorFn = function() {
         return true;
     }
 
+    function checkNameNew(state,candname) {
+        if (state.objects[candname] !== undefined) {
+            logError('Object "' + candname.toUpperCase() + '" defined multiple times.', state.lineNumber);
+            return 'ERROR';
+        }
+        for (var i=0;i<state.legend_synonyms.length;i++) {
+            var entry = state.legend_synonyms[i];
+            if (entry[0]==candname) {
+                logError('Name "' + candname.toUpperCase() + '" already in use.', state.lineNumber);                                        
+            }
+        }
+        for (var i=0;i<state.legend_aggregates.length;i++) {
+            var entry = state.legend_aggregates[i];
+            if (entry[0]==candname) {
+                logError('Name "' + candname.toUpperCase() + '" already in use.', state.lineNumber);                                        
+            }
+        }
+        for (var i=0;i<state.legend_properties.length;i++) {
+            var entry = state.legend_properties[i];
+            if (entry[0]==candname) {
+                logError('Name "' + candname.toUpperCase() + '" already in use.', state.lineNumber);                                        
+            }
+        }
+    }
     var absolutedirs = ['up', 'down', 'right', 'left'];
     var relativedirs = ['^', 'v', '<', '>', 'moving','stationary','parallel','perpendicular', 'no'];
     var logicWords = ['all', 'no', 'on', 'some'];
@@ -686,6 +710,7 @@ var codeMirrorFn = function() {
                                 if (splits.indexOf(candname, 2)>=2) {
                                     logError("You can't define object " + candname.toUpperCase() + " in terms of itself!", state.lineNumber);
                                 }
+                                checkNameNew(state,candname);
                         	}
 
                             if (splits.length < 3) {
