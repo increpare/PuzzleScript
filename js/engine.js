@@ -2276,6 +2276,13 @@ function processInput(dir,dontCheckWin,dontModify) {
 	    }
 
 	    if (!winning) {
+			if (level.commandQueue.indexOf('checkpoint')>=0) {
+		    	if (verbose_logging) { 
+		    		consolePrint('CHECKPOINT command executed, saving current state to the restart state.');
+				}
+				restartTarget=backupLevel();
+			}	 
+
 		    if (level.commandQueue.indexOf('again')>=0 && modified) {
 		    	var old_verbose_logging=verbose_logging;
 		    	//verbose_logging=false;
@@ -2302,13 +2309,7 @@ function processInput(dir,dontCheckWin,dontModify) {
 
 			    messagetext = oldmessagetext;
 			    verbose_logging=old_verbose_logging;
-		    }
-			if (level.commandQueue.indexOf('checkpoint')>=0) {
-		    	if (verbose_logging) { 
-		    		consolePrint('CHECKPOINT command executed, saving current state to the restart state.');
-				}
-				restartTarget=backupLevel();
-			}	    
+		    }   
 		}
 		    
 
