@@ -960,6 +960,8 @@ function concretizePropertyRule(state, rule,lineNumber) {
 		var cur_cellrow_l = rule.lhs[i];
 		for (var j=0;j<cur_cellrow_l.length;j++) {
 			cur_cellrow_l[j] = expandNoPrefixedProperties(state,cur_cellrow_l[j]);
+			if (rule.rhs.length > 0)
+				rule.rhs[i][j] = expandNoPrefixedProperties(state,rule.rhs[i][j]);
 		}
 	}
 
