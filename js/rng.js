@@ -90,6 +90,7 @@ function print_call_stack() {
  * @constructor
  */
 function RNG(seed) {
+    this.seed = seed;
     if (seed == null) {
         seed = (Math.random() + Date.now()).toString();
         //window.console.log("setting random seed "+seed); 

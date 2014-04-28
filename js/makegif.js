@@ -1,4 +1,5 @@
 function makeGIF() {
+	var randomseed = RandomGen.seed;
 	levelEditorOpened=false;
 	var targetlevel=curlevel;
 	var gifcanvas = document.createElement('canvas');
@@ -22,7 +23,7 @@ function makeGIF() {
 	encoder.setDelay(200);
 	encoder.start();
 
-	compile(["loadLevel",curlevel],levelString);
+	compile(["loadLevel",curlevel],levelString,randomseed);
 	canvasResize();
 	redraw();
 	gifctx.drawImage(canvas,-xoffset,-yoffset);
