@@ -1941,7 +1941,7 @@ function printRule(rule) {
 	if (rule.rigid) {
 		result = "RIGID "+result+" ";
 	}
-	if (rule.random) {
+	if (rule.randomRule) {
 		result = "RANDOM "+result+" ";
 	}
 	if (rule.late) {
