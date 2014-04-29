@@ -1969,9 +1969,28 @@ function printRule(rule) {
 }
 function printRules(state) {
 	var output = "<br>Rule Assembly : ("+ state.rules.length +" rules )<br>===========<br>";
+	var loopIndex = 0;
+	var loopEnd = -1;
 	for (var i=0;i<state.rules.length;i++) {
 		var rule = state.rules[i];
+		if (loopIndex < state.loops.length) {
+			if (state.loops[loopIndex][0] < rule.lineNumber) {
+				output += "STARTLOOP<br>";
+				loopIndex++;
+				if (loopIndex < state.loops.length) { // don't die with mismatched loops
+					loopEnd = state.loops[loopIndex][0];
+					loopIndex++;
+				}
+			}
+		}
+		if (loopEnd !== -1 && loopEnd < rule.lineNumber) {
+			output += "ENDLOOP<br>";
+			loopEnd = -1;
+		}
 		output += printRule(rule) +"<br>";
+	}
+	if (loopEnd !== -1) {	// no more rules after loop end
+		output += "ENDLOOP<br>";
 	}
 	output+="===========<br>";
 	consolePrint(output);
