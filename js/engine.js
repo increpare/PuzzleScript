@@ -1164,9 +1164,11 @@ Rule.prototype.generateCellRowMatchesFunction = function(cellRow,hasEllipsis)  {
 		for (;!cellRow[cellIndex].hasEllipsis;cellIndex++) {
 			fn+="&&cellRow["+cellIndex+"].matches((i+"+cellIndex+"*d)%level.n_tiles)";
 		}
-		cellIndex++;
 		fn+=") {\n";
 		fn+="\tfor (var k=kmin;k<kmax;k++) {\n"
+		fn+="\t\tif(k>kmin && !cellRow["+cellIndex+"].matches((i+d*(k+"+(cellIndex-1)+"))%level.n_tiles))";
+        fn+="\t\t\tbreak;";
+		cellIndex++;
 		fn+="\t\tif(cellRow["+cellIndex+"].matches((i+d*(k+"+(cellIndex-1)+"))%level.n_tiles)";
 		cellIndex++;
 		for (;cellIndex<cr_l;cellIndex++) {
