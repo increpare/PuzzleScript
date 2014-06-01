@@ -1387,12 +1387,13 @@ function rulesToMask(state) {
 				var anyObjectsPresent = [];
 				var movementsPresent = new BitVec(STRIDE_MOV);
 				var movementsMissing = new BitVec(STRIDE_MOV);
+                var hasEllipsis = false;
 
 				var objectlayers_l = new BitVec(STRIDE_MOV);
 				for (var l = 0; l < cell_l.length; l += 2) {
 					var object_dir = cell_l[l];
 					if (object_dir==='...') {
-						objectsPresent = ellipsisPattern;
+                        hasEllipsis = true;
 						if (cell_l.length!==2) {
 							logError("You can't have anything in with an ellipsis. Sorry.",rule.lineNumber);
 						} else if ((k===0)||(k===cellrow_l.length-1)) {
@@ -1459,12 +1460,7 @@ function rulesToMask(state) {
 					}
 				}
 
-				if (objectsPresent === ellipsisPattern) {
-					cellrow_l[k] = ellipsisPattern;
-					continue;
-				} else {
-					cellrow_l[k] = new CellPattern([objectsPresent, objectsMissing, anyObjectsPresent, movementsPresent, movementsMissing, null]);
-				}
+                cellrow_l[k] = new CellPattern([objectsPresent, objectsMissing, anyObjectsPresent, movementsPresent, movementsMissing, null, hasEllipsis]);
 
 				if (rule.rhs.length===0) {
 					continue;
@@ -1487,7 +1483,7 @@ function rulesToMask(state) {
 					var object_name = cell_r[l + 1];
 
 					if (object_dir==='...') {
-						logError("spooky ellipsis found! (should never hit this)");
+						//logError("spooky ellipsis found! (should never hit this)");
 						break;
 					} else if (object_dir==='random') {
 						if (object_name in state.objectMasks) {
@@ -1575,7 +1571,7 @@ function cellRowMasks(rule) {
 		var cellRow = lhs[i];
 		var rowMask=new BitVec(STRIDE_OBJ);
 		for (var j=0;j<cellRow.length;j++) {
-			if (cellRow[j] === ellipsisPattern)
+			if (cellRow[j].hasEllipsis)
 				continue;
 			rowMask.ior(cellRow[j].objectsPresent);
 		}
@@ -1599,7 +1595,7 @@ function collapseRules(groups) {
 			for (var j = 0; j < oldrule.lhs.length; j++) {
 				var cellrow_l = oldrule.lhs[j];
 				for (var k = 0; k < cellrow_l.length; k++) {
-					if (cellrow_l[k] === ellipsisPattern) {
+					if (cellrow_l[k].hasEllipsis) {
 						if (ellipses[j]) {
 							logError("You can't use two ellipses in a single cell match pattern.  If you really want to, please implement it yourself and send me a patch :) ", oldrule.lineNumber);
 						} 
@@ -1682,7 +1678,7 @@ function checkNoLateRulesHaveMoves(state){
 				var cellRow_l = rule.patterns[cellRowIndex];
 				for (var cellIndex=0;cellIndex<cellRow_l.length;cellIndex++) {
 					var cellPattern = cellRow_l[cellIndex];
-					if (cellPattern === ellipsisPattern) {
+					if (cellPattern.hasEllipsis) {
 						continue;
 					}
 					var moveMissing = cellPattern.movementsMissing;

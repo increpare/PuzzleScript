@@ -980,8 +980,6 @@ Level.prototype.setMovements = function(index, vec) {
 	}
 }
 
-var ellipsisPattern = ['ellipsis'];
-
 function BitVec(init) {
 	this.data = new Int32Array(init);
 	return this;
@@ -1107,7 +1105,7 @@ function Rule(rule) {
 	this.patterns = rule[1];		/* lists of CellPatterns to match */
 	this.hasReplacements = rule[2];
 	this.lineNumber = rule[3];		/* rule source for debugging */
-	this.isEllipsis = rule[4];		/* true if pattern has ellipsis */
+	this.hasEllipsis = rule[4];		/* true if pattern has ellipsis */
 	this.groupNumber = rule[5];		/* execution group number of rule */
 	this.isRigid = rule[6];
 	this.commands = rule[7];		/* cancel, restart, sfx, etc */
@@ -1115,7 +1113,7 @@ function Rule(rule) {
 	this.cellRowMasks = rule[9];
 	this.cellRowMatches = [];
 	for (var i=0;i<this.patterns.length;i++) {
-		this.cellRowMatches.push(this.generateCellRowMatchesFunction(this.patterns[i],this.isEllipsis[i]));
+		this.cellRowMatches.push(this.generateCellRowMatchesFunction(this.patterns[i],this.hasEllipsis[i]));
 	}
 	/* TODO: eliminate isRigid, groupNumber, isRandom
 	from this class by moving them up into a RuleGroup class */
@@ -1163,7 +1161,7 @@ Rule.prototype.generateCellRowMatchesFunction = function(cellRow,hasEllipsis)  {
 		fn += "var result = [];\n"
 		fn += "if(cellRow[0].matches(i)";
 		var cellIndex=1;
-		for (;cellRow[cellIndex]!==ellipsisPattern;cellIndex++) {
+		for (;!cellRow[cellIndex].hasEllipsis;cellIndex++) {
 			fn+="&&cellRow["+cellIndex+"].matches((i+"+cellIndex+"*d)%level.n_tiles)";
 		}
 		cellIndex++;
@@ -1212,7 +1210,7 @@ function cellRowMatchesWildcardFunctionGenerate(direction,cellRow,i, maxk, mink)
 Rule.prototype.toJSON = function() {
 	/* match construction order for easy deserialization */
 	return [
-		this.direction, this.patterns, this.hasReplacements, this.lineNumber, this.isEllipsis,
+		this.direction, this.patterns, this.hasReplacements, this.lineNumber, this.hasEllipsis,
 		this.groupNumber, this.isRigid, this.commands, this.isRandom, this.cellRowMasks
 	];
 };
@@ -1228,6 +1226,7 @@ function CellPattern(row) {
 	this.movementsMissing = row[4];
 	this.matches = this.generateMatchFunction();
 	this.replacement = row[5];
+    this.hasEllipsis = row[6];
 };
 
 function CellReplacement(row) {
@@ -1456,7 +1455,7 @@ function DoesCellRowMatchWildCard(direction,cellRow,i,maxk,mink) {
             targetIndex = (targetIndex+d1+d0)%level.n_tiles;
 
             var cellPattern = cellRow[j]
-            if (cellPattern === ellipsisPattern) {
+            if (cellPattern.hasEllipsis) {
             	//BAM inner loop time
             	for (var k=mink;k<maxk;k++) {
             		var targetIndex2=targetIndex;
@@ -1506,7 +1505,7 @@ function DoesCellRowMatch(direction,cellRow,i,k) {
         for (var j=1;j<cr_l;j++) {
             targetIndex = (targetIndex+d1+d0)%level.n_tiles;
             cellPattern = cellRow[j];
-			if (cellPattern === ellipsisPattern) {
+			if (cellPattern.hasEllipsis) {
 					//only for once off verifications
             	targetIndex = (targetIndex+(d1+d0)*k)%level.n_tiles; 					
             }
@@ -1739,7 +1738,7 @@ Rule.prototype.findMatches = function() {
     for (var cellRowIndex=0;cellRowIndex<this.patterns.length;cellRowIndex++) {
         var cellRow = this.patterns[cellRowIndex];
         var matchFunction = this.cellRowMatches[cellRowIndex];
-        if (this.isEllipsis[cellRowIndex]) {//if ellipsis     
+        if (this.hasEllipsis[cellRowIndex]) {//if ellipsis     
         	var match = matchCellRowWildCard(this.direction,matchFunction,cellRow,cellRowMasks[cellRowIndex]);  
         } else {
         	var match = matchCellRow(this.direction,matchFunction,cellRow,cellRowMasks[cellRowIndex]);               	
@@ -1760,7 +1759,7 @@ Rule.prototype.applyAt = function(delta,tuple,check) {
     if (check) {
         var ruleMatches=true;                
         for (var cellRowIndex=0;cellRowIndex<rule.patterns.length;cellRowIndex++) {
-        	if (rule.isEllipsis[cellRowIndex]) {//if ellipsis
+        	if (rule.hasEllipsis[cellRowIndex]) {//if ellipsis
             	if (DoesCellRowMatchWildCard(rule.direction,rule.patterns[cellRowIndex],tuple[cellRowIndex][0],
             		tuple[cellRowIndex][1]+1, tuple[cellRowIndex][1])===false) { /* pass mink to specify */
                     ruleMatches=false;
@@ -1785,11 +1784,11 @@ Rule.prototype.applyAt = function(delta,tuple,check) {
     for (var cellRowIndex=0;cellRowIndex<rule.patterns.length;cellRowIndex++) {
         var preRow = rule.patterns[cellRowIndex];
         
-        var currentIndex = rule.isEllipsis[cellRowIndex] ? tuple[cellRowIndex][0] : tuple[cellRowIndex];
+        var currentIndex = rule.hasEllipsis[cellRowIndex] ? tuple[cellRowIndex][0] : tuple[cellRowIndex];
         for (var cellIndex=0;cellIndex<preRow.length;cellIndex++) {
             var preCell = preRow[cellIndex];
 
-            if (preCell === ellipsisPattern) {
+            if (preCell.hasEllipsis) {
             	var k = tuple[cellRowIndex][1];
             	currentIndex = (currentIndex+(d1+d0)*k)%level.n_tiles;
             	continue;
