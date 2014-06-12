@@ -782,7 +782,9 @@ function DoUndo(force) {
 		var tobackup = backups[backups.length-1];
 		restoreLevel(tobackup);
 		backups = backups.splice(0,backups.length-1);
-		tryPlayUndoSound();
+		if (! force) {
+			tryPlayUndoSound();
+		}
 	}
 }
 
