@@ -2167,12 +2167,10 @@ function processInput(dir,dontCheckWin,dontModify) {
         	if (somemoved===false) {
         		if (verbose_logging){
 	    			consolePrint('require_player_movement set, but no player movement detected, so cancelling turn.');
-	    		}
+	    			consoleCacheDump();
+        		}
         		backups.push(bak);
         		DoUndo(true);
-        		if (verbose_logging) {
-        			consoleCacheDump();
-        		}
         		return false;
         	}
         	//play player cantmove sounds here
@@ -2181,24 +2179,20 @@ function processInput(dir,dontCheckWin,dontModify) {
 	    if (level.commandQueue.indexOf('cancel')>=0) {	
 	    	if (verbose_logging) { 
 	    		consolePrint('CANCEL command executed, cancelling turn.');
+	    		consoleCacheDump();
 			}
     		backups.push(bak);
     		DoUndo(true);
-        		if (verbose_logging) {
-        			consoleCacheDump();
-        		}
     		return false;
 	    } 
 
 	    if (level.commandQueue.indexOf('restart')>=0) {
 	    	if (verbose_logging) { 
 	    		consolePrint('RESTART command executed, reverting to restart state.');
+	    		consoleCacheDump();
 			}
     		backups.push(bak);
-	    	DoRestart(true);	
-    		if (verbose_logging) {
-    			consoleCacheDump();
-    		}
+	    	DoRestart(true);
     		return true;
 	    } 
 
@@ -2210,12 +2204,11 @@ function processInput(dir,dontCheckWin,dontModify) {
 	    for (var i=0;i<level.objects.length;i++) {
 	    	if (level.objects[i]!==bak.dat[i]) {
 				if (dontModify) {
-	        		backups.push(bak);
-	        		DoUndo(true);
-
 	        		if (verbose_logging) {
 	        			consoleCacheDump();
 	        		}
+	        		backups.push(bak);
+	        		DoUndo(true);
 					return true;
 				} else {
 					if (dir!==-1) {
