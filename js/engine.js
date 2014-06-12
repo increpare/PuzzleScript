@@ -2277,8 +2277,6 @@ function processInput(dir,dontCheckWin,dontModify) {
 			}	 
 
 		    if (level.commandQueue.indexOf('again')>=0 && modified) {
-		    	var old_verbose_logging=verbose_logging;
-		    	//verbose_logging=false;
 		    	//first have to verify that something's changed
 		    	var oldmessagetext = messagetext;
 		    	var old_verbose_logging=verbose_logging;
