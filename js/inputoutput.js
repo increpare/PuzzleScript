@@ -703,6 +703,7 @@ function update() {
             if (processInput(-1)) {
                 redraw();
                 keyRepeatTimer=0;
+                autotick=0;
             }
         }
     }
@@ -740,7 +741,7 @@ function update() {
 	    }
 	}
 
-    if (autotickinterval>0&&!textMode&&!levelEditorOpened) {
+    if (autotickinterval>0&&!textMode&&!levelEditorOpened&&!againing) {
         autotick+=deltatime;
         if (autotick>autotickinterval) {
             autotick=0;
