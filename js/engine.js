@@ -2403,7 +2403,7 @@ function DoWin() {
 	}
 	againing=false;
 	tryPlayEndLevelSound();
-	if (unitTesting) {
+	if (unitTesting && testsAutoAdvanceLevel) {
 		nextLevel();
 		return;
 	}
