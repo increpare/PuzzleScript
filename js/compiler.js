@@ -2469,9 +2469,7 @@ function compile(command,text,randomseed) {
 	}
 	setGameState(state,command,randomseed);
 
-	if (canDump===true) {
-		inputHistory=[];
-	}
+	clearInputHistory();
 
 	consoleCacheDump();
 }
