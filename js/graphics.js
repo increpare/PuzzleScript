@@ -43,7 +43,7 @@ function regenText(spritecanvas,spritectx) {
 }
 var spriteimages;
 function regenSpriteImages() {
-    _forceRegenImages = false;
+	_forceRegenImages = false;
 	if (textMode) {
 		regenText();
 		return;
