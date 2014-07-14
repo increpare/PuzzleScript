@@ -145,6 +145,31 @@ var titleMode=0;//1 means there are options
 var titleSelection=0;
 var titleSelected=false;
 
+// Fallbacks. We might be running in an environment without audio, graphics, or other good stuff.
+var playSound, canvasResize, redraw, forceRegenImages, consolePrint, consoleError, consoleCacheDump;
+if(!playSound) {
+	playSound = function(_) { };
+}
+if(!canvasResize) {
+	canvasResize = function() { };
+}
+if(!redraw) {
+	redraw = function() { };
+}
+if(!forceRegenImages) {
+	forceRegenImages = function() { };
+}
+if(!consolePrint) {
+	consolePrint = function(_) { }
+}
+if(!consoleError) {
+	consoleError = function(_) { }
+}
+if(!consoleCacheDump) {
+	consoleCacheDump = function() { }
+}
+// End fallbacks
+
 function unloadGame() {
 	state=introstate;
 	level = new Level(0, 5, 5, 2, null);
@@ -353,7 +378,7 @@ function loadLevelFromLevelDat(state,leveldat,randomseed) {
 	}
 	loadedLevelSeed = randomseed;
 	RandomGen = new RNG(loadedLevelSeed);
-	forceRegenImages=true;
+	forceRegenImages();
 	titleScreen=false;
 	titleMode=curlevel>0?1:0;
 	titleSelection=curlevel>0?1:0;
@@ -378,8 +403,8 @@ function loadLevelFromLevelDat(state,leveldat,randomseed) {
 	} else {
 		tryPlayShowMessageSound();
 		drawMessageScreen();
-    	canvasResize();
 	}
+   	canvasResize();
 
 	if (canDump===true) {
 		inputHistory=[];
