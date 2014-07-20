@@ -47,6 +47,14 @@ function RC4(seed) {
     }
 }
 
+RC4.prototype.copy = function() {
+    var c = new RC4(null);
+    c.s = this.s.slice();
+    c.i = this.i;
+    c.j = this.j;
+    return c;
+}
+
 RC4.prototype._swap = function(i, j) {
     var tmp = this.s[i];
     this.s[i] = this.s[j];
@@ -93,8 +101,8 @@ function RNG(seed) {
     this.seed = seed;
     if (seed == null) {
         seed = (Math.random() + Date.now()).toString();
-        //window.console.log("setting random seed "+seed); 
-        //print_call_stack();  
+        //window.console.log("setting random seed "+seed);
+        //print_call_stack();
 
     } else if (typeof seed === 'function') {
         // Use it as a uniform number generator
@@ -103,18 +111,22 @@ function RNG(seed) {
             return ~~(this.uniform() * 256);
         };
         seed = null;
-    } else if (Object.prototype.toString.call(seed) !== '[object String]') {
+    } else if (Object.prototype.toString.call(seed) !== '[object String]' && seed.constructor !== RNG) {
         seed = JSON.stringify(seed);
     } else {
         //window.console.log("setting seed "+seed);
         //print_call_stack();
     }
     this._normal = null;
-    if (seed) {
+    if (seed.constructor == RNG) {
+        this.seed = seed.seed;
+        this._state = seed._state.copy();
+        this._normal = seed._normal;
+    } else if (seed) {
         this._state = new RC4(seed);
     } else {
         this._state = null;
-    }
+		}
 }
 
 /**
