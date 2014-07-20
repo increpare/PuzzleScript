@@ -126,7 +126,7 @@ function RNG(seed) {
         this._state = new RC4(seed);
     } else {
         this._state = null;
-		}
+    }
 }
 
 /**
