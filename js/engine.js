@@ -605,8 +605,10 @@ function setGameState(_state, command, randomseed) {
 		}
 	}
 	
-	clearInputHistory();
-    canvasResize();
+	if(command[0] !== "rebuild") {
+		clearInputHistory();
+	}
+	canvasResize();
 
 
 
