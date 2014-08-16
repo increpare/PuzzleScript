@@ -471,14 +471,6 @@ function mouseOut() {
 //  window.console.log("clear");
 }
 
-document.addEventListener('mousedown', onMouseDown, false);
-document.addEventListener('mouseup', onMouseUp, false);
-document.addEventListener('keydown', onKeyDown, false);
-document.addEventListener('keyup', onKeyUp, false);
-window.addEventListener('focus', onMyFocus, false);
-window.addEventListener('blur', onMyBlur, false);
-
-
 function prevent(e) {
     if (e.preventDefault) e.preventDefault();
     if (e.stopImmediatePropagation) e.stopImmediatePropagation();
@@ -745,8 +737,3 @@ function update() {
         }
     }
 }
-
-// Lights, camera…function!
-setInterval(function() {
-    update();
-}, deltatime);

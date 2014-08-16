@@ -59,3 +59,7 @@ var initLevel = {
 };
 
 var level = initLevel;
+
+
+var lastDownTarget;
+var canvas;
