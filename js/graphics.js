@@ -219,6 +219,7 @@ function redraw() {
         var maxi=screenwidth;
         var minj=0;
         var maxj=screenheight;
+		var playerPositions = [];
 
         if (levelEditorOpened) {
             var glyphcount = glyphCount();
@@ -226,7 +227,7 @@ function redraw() {
             maxi-=2;
             maxj-=2+editorRowCount;
         } else if (flickscreen) {
-            var playerPositions = getPlayerPositions();
+            getPlayerPositions(playerPositions);
             if (playerPositions.length>0) {
                 var playerPosition=playerPositions[0];
                 var px = (playerPosition/(level.height))|0;
@@ -247,7 +248,7 @@ function redraw() {
                 maxj=oldflickscreendat[3];
             }
         } else if (zoomscreen) {
-            var playerPositions = getPlayerPositions();
+            getPlayerPositions(playerPositions);
             if (playerPositions.length>0) {
                 var playerPosition=playerPositions[0];
                 var px = (playerPosition/(level.height))|0;
