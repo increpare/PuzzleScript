@@ -43,6 +43,7 @@ function regenText(spritecanvas,spritectx) {
 }
 var spriteimages;
 function regenSpriteImages() {
+	_forceRegenImages = false;
 	if (textMode) {
 		regenText();
 		return;
@@ -218,6 +219,7 @@ function redraw() {
         var maxi=screenwidth;
         var minj=0;
         var maxj=screenheight;
+		var playerPositions = [];
 
         if (levelEditorOpened) {
             var glyphcount = glyphCount();
@@ -225,7 +227,7 @@ function redraw() {
             maxi-=2;
             maxj-=2+editorRowCount;
         } else if (flickscreen) {
-            var playerPositions = getPlayerPositions();
+            getPlayerPositions(playerPositions);
             if (playerPositions.length>0) {
                 var playerPosition=playerPositions[0];
                 var px = (playerPosition/(level.height))|0;
@@ -246,7 +248,7 @@ function redraw() {
                 maxj=oldflickscreendat[3];
             }
         } else if (zoomscreen) {
-            var playerPositions = getPlayerPositions();
+            getPlayerPositions(playerPositions);
             if (playerPositions.length>0) {
                 var playerPosition=playerPositions[0];
                 var px = (playerPosition/(level.height))|0;
@@ -331,13 +333,16 @@ function drawEditorIcons() {
 
 }
 
-var lastDownTarget;
 
 var oldcellwidth=0;
 var oldcellheight=0;
 var oldtextmode=-1;
 var oldfgcolor=-1;
-var forceRegenImages=false;
+
+var _forceRegenImages = false;
+function forceRegenImages() {
+	_forceRegenImages = true;
+}
 function canvasResize() {
     canvas.width = canvas.parentNode.clientWidth;
     canvas.height = canvas.parentNode.clientHeight;
@@ -407,8 +412,7 @@ function canvasResize() {
     xoffset = xoffset|0;
     yoffset = yoffset|0;
 
-    if (oldcellwidth!=cellwidth||oldcellheight!=cellheight||oldtextmode!=textMode||oldfgcolor!=state.fgcolor||forceRegenImages){
-    	forceRegenImages=false;
+    if (oldcellwidth!=cellwidth||oldcellheight!=cellheight||oldtextmode!=textMode||oldfgcolor!=state.fgcolor||_forceRegenImages){
     	regenSpriteImages();
     }
 

@@ -1,4 +1,5 @@
 var unitTesting=false;
+var testsAutoAdvanceLevel=true;
 var curlevel=0;
 var levelEditorOpened=false;
 
@@ -59,3 +60,7 @@ var initLevel = {
 };
 
 var level = initLevel;
+
+
+var lastDownTarget;
+var canvas;

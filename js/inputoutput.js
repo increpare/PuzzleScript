@@ -471,14 +471,6 @@ function mouseOut() {
 //  window.console.log("clear");
 }
 
-document.addEventListener('mousedown', onMouseDown, false);
-document.addEventListener('mouseup', onMouseUp, false);
-document.addEventListener('keydown', onKeyDown, false);
-document.addEventListener('keyup', onKeyUp, false);
-window.addEventListener('focus', onMyFocus, false);
-window.addEventListener('blur', onMyBlur, false);
-
-
 function prevent(e) {
     if (e.preventDefault) e.preventDefault();
     if (e.stopImmediatePropagation) e.stopImmediatePropagation();
@@ -540,11 +532,8 @@ function checkKey(e,justPressed) {
         {
             //undo
             if (textMode===false) {
-
-                if (canDump===true) {
-                    inputHistory.push("undo");
-                }
-            	DoUndo();
+                pushInput("undo");
+                DoUndo();
                 canvasResize(); // calls redraw
             	return prevent(e);
             }
@@ -554,9 +543,7 @@ function checkKey(e,justPressed) {
         {
         	if (textMode===false) {
         		if (justPressed) {
-	                if (canDump===true) {
-	                    inputHistory.push("restart");
-	                }
+	        		pushInput("restart");
 	        		DoRestart();
 	                canvasResize(); // calls redraw
             		return prevent(e);
@@ -673,12 +660,10 @@ function checkKey(e,justPressed) {
     	}
     } else {
 	    if (!againing && inputdir>=0) {
-            if (canDump===true) {
-                inputHistory.push(inputdir);
-            }
             if (inputdir===4 && ('noaction' in state.metadata)) {
 
             } else {
+                pushInput(inputdir);
                 if (processInput(inputdir)) {
                     redraw();
                 }
@@ -745,17 +730,10 @@ function update() {
         autotick+=deltatime;
         if (autotick>autotickinterval) {
             autotick=0;
-            if (canDump===true) {
-            	inputHistory.push("tick");            
-            }
+            pushInput("tick");
             if (processInput(-1)) {
                 redraw();
             }
         }
     }
 }
-
-// Lights, camera…function!
-setInterval(function() {
-    update();
-}, deltatime);

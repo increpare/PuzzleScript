@@ -145,6 +145,31 @@ var titleMode=0;//1 means there are options
 var titleSelection=0;
 var titleSelected=false;
 
+// Fallbacks. We might be running in an environment without audio, graphics, or other good stuff.
+var playSound, canvasResize, redraw, forceRegenImages, consolePrint, consoleError, consoleCacheDump;
+if(!playSound) {
+	playSound = function(_) { };
+}
+if(!canvasResize) {
+	canvasResize = function() { };
+}
+if(!redraw) {
+	redraw = function() { };
+}
+if(!forceRegenImages) {
+	forceRegenImages = function() { };
+}
+if(!consolePrint) {
+	consolePrint = function(_) { }
+}
+if(!consoleError) {
+	consoleError = function(_) { }
+}
+if(!consoleCacheDump) {
+	consoleCacheDump = function() { }
+}
+// End fallbacks
+
 function unloadGame() {
 	state=introstate;
 	level = new Level(0, 5, 5, 2, null);
@@ -353,7 +378,7 @@ function loadLevelFromLevelDat(state,leveldat,randomseed) {
 	}
 	loadedLevelSeed = randomseed;
 	RandomGen = new RNG(loadedLevelSeed);
-	forceRegenImages=true;
+	forceRegenImages();
 	titleScreen=false;
 	titleMode=curlevel>0?1:0;
 	titleSelection=curlevel>0?1:0;
@@ -378,12 +403,10 @@ function loadLevelFromLevelDat(state,leveldat,randomseed) {
 	} else {
 		tryPlayShowMessageSound();
 		drawMessageScreen();
-    	canvasResize();
 	}
+   	canvasResize();
 
-	if (canDump===true) {
-		inputHistory=[];
-	}
+	clearInputHistory();
 }
 
 function loadLevelFromState(state,levelindex,randomseed) {	
@@ -607,10 +630,10 @@ function setGameState(_state, command, randomseed) {
 		}
 	}
 	
-	if (canDump===true) {
-		inputHistory=[];
+	if(command[0] !== "rebuild") {
+		clearInputHistory();
 	}
-    canvasResize();
+	canvasResize();
 
 
 
@@ -686,6 +709,8 @@ function RebuildLevelArrays() {
 	_o10 = new BitVec(STRIDE_OBJ);
 	_o11 = new BitVec(STRIDE_OBJ);
 	_o12 = new BitVec(STRIDE_OBJ);
+	sfxCreateMask = new BitVec(STRIDE_OBJ);
+	sfxDestroyMask = new BitVec(STRIDE_OBJ);
 	_m1 = new BitVec(STRIDE_MOV);
 	_m2 = new BitVec(STRIDE_MOV);
 	_m3 = new BitVec(STRIDE_MOV);
@@ -707,7 +732,8 @@ function RebuildLevelArrays() {
 
 var messagetext="";
 function restoreLevel(lev) {
-	oldflickscreendat=[];
+	if(!oldflickscreendat) { oldflickscreendat=[]; }
+	else { oldflickscreendat.length = 0; }
 
 	level.objects = new Int32Array(lev.dat);
 	if (level.width !== lev.width || level.height !== lev.height) {
@@ -739,7 +765,8 @@ function restoreLevel(lev) {
 
     againing=false;
     messagetext="";
-    level.commandQueue=[];
+    if(!level.commandQueue) { level.commandQueue=[]; }
+    else { level.commandQueue.length = 0; }
 }
 
 var zoomscreen=false;
@@ -768,7 +795,7 @@ function DoRestart(force) {
     	processInput(-1,true);
 	}
 	
-	level.commandQueue=[];
+	level.commandQueue.length=0;
 }
 
 function DoUndo(force) {
@@ -779,29 +806,26 @@ function DoUndo(force) {
 		consolePrint("--- undoing ---",true);
 	}
 	if (backups.length>0) {
-		var tobackup = backups[backups.length-1];
+		var tobackup = backups.pop();
 		restoreLevel(tobackup);
-		backups = backups.splice(0,backups.length-1);
 		if (! force) {
 			tryPlayUndoSound();
 		}
 	}
 }
 
-function getPlayerPositions() {
-    var result=[];
+function getPlayerPositions(positions) {
     var playerMask = state.playerMask;
     for (i=0;i<level.n_tiles;i++) {
         level.getCellInto(i,_o11);
         if (playerMask.anyBitsInCommon(_o11)) {
-            result.push(i);
+            positions.push(i);
         }
     }
-    return result;
 }
 
-function getLayersOfMask(cellMask) {
-    var layers=[];
+function getLayersOfMask(cellMask,layers) {
+    layers=layers || [];
     for (var i=0;i<state.objectCount;i++) {
         if (cellMask.get(i)) {
             var n = state.idDict[i];
@@ -812,27 +836,29 @@ function getLayersOfMask(cellMask) {
     return layers;
 }
 
+var _tempMoveLayers = [];
 function moveEntitiesAtIndex(positionIndex, entityMask, dirMask) {
-    var cellMask = level.getCell(positionIndex);
+    var cellMask = level.getCellInto(positionIndex,_o12);
     cellMask.iand(entityMask);
-    var layers = getLayersOfMask(cellMask);
+    _tempMoveLayers.length = 0;
+    getLayersOfMask(cellMask,_tempMoveLayers);
 
     var movementMask = level.getMovements(positionIndex);
-    for (var i=0;i<layers.length;i++) {
-    	movementMask.ishiftor(dirMask, 5 * layers[i]);
+    for (var i=0;i<_tempMoveLayers.length;i++) {
+    	movementMask.ishiftor(dirMask, 5 * _tempMoveLayers[i]);
     }
     level.setMovements(positionIndex, movementMask);
 }
 
 
-function startMovement(dir) {
+function startMovement(dir,positions) {
 	var movedany=false;
-    var playerPositions = getPlayerPositions();
+    getPlayerPositions(positions);
     for (var i=0;i<playerPositions.length;i++) {
         var playerPosIndex = playerPositions[i];
         moveEntitiesAtIndex(playerPosIndex,state.playerMask,dir);
     }
-    return playerPositions;
+    return positions;
 }
 
 var dirMasksDelta = {
@@ -895,7 +921,7 @@ function repositionEntitiesOnLayer(positionIndex,layer,dirMask)
 		}
 	}
 
-    var movingEntities = sourceMask.clone();
+    var movingEntities = sourceMask.cloneInto(_o9);
     sourceMask.iclear(layerMask);
     movingEntities.iand(layerMask);
     targetMask.ior(movingEntities);
@@ -942,6 +968,7 @@ function Level(lineNumber, width, height, layerCount, objects) {
 	this.objects = objects;
 	this.layerCount = layerCount;
 	this.commandQueue = [];
+	this.bannedGroup = [];
 }
 
 Level.prototype.clone = function() {
@@ -1716,9 +1743,9 @@ function commitPreservationState(ruleGroupIndex) {
 		//don't need to know the tuple index
 		objects:new Int32Array(level.objects),
 		movements:new Int32Array(level.movements),
-		rigidGroupIndexMask:level.rigidGroupIndexMask.concat([]),
-		rigidMovementAppliedMask:level.rigidMovementAppliedMask.concat([]),
-		bannedGroup:level.bannedGroup.concat([])
+		rigidGroupIndexMask:level.rigidGroupIndexMask.slice(),
+		rigidMovementAppliedMask:level.rigidMovementAppliedMask.slice(),
+		bannedGroup:level.bannedGroup.slice()
 	};
 	rigidBackups[ruleGroupIndex]=propagationState;
 	return propagationState;
@@ -1728,8 +1755,8 @@ function restorePreservationState(preservationState) {
 //don't need to concat or anythign here, once something is restored it won't be used again.
 	level.objects = new Int32Array(preservationState.objects);
 	level.movements = new Int32Array(preservationState.movements);
-	level.rigidGroupIndexMask = preservationState.rigidGroupIndexMask.concat([]);
-    level.rigidMovementAppliedMask = preservationState.rigidMovementAppliedMask.concat([]);
+	level.rigidGroupIndexMask = preservationState.rigidGroupIndexMask.slice();
+    level.rigidMovementAppliedMask = preservationState.rigidMovementAppliedMask.slice();
     sfxCreateMask=new BitVec(STRIDE_OBJ);
     sfxDestroyMask=new BitVec(STRIDE_OBJ);
 //	rigidBackups = preservationState.rigidBackups;
@@ -2063,8 +2090,14 @@ function calculateRowColMasks() {
 	}
 }
 
+var playerPositions = [];
+
 /* returns a bool indicating if anything changed */
-function processInput(dir,dontCheckWin,dontModify) {
+function processInput(dir,dontCheckWin,dontModify,premadeBackup) {
+    //premadeBackup is a current backup of this level; this is handy if one is
+    //doing automated play of PuzzleScript games because it avoids a redundant
+    //backupLevel(). It could maybe also be used to make again or cancel more
+    //efficient?
 	againing = false;
 
 	if (verbose_logging) { 
@@ -2076,9 +2109,14 @@ function processInput(dir,dontCheckWin,dontModify) {
 	 	}
 	}
 
-	var bak = backupLevel();
+	var bak;
+	if(premadeBackup) { 
+		bak = premadeBackup; 
+	} else { 
+		bak = backupLevel(); 
+	}
 
-	var playerPositions=[];
+	playerPositions.length = 0;
     if (dir<=4) {
     	if (dir>=0) {
 	        switch(dir){
@@ -2108,23 +2146,26 @@ function processInput(dir,dontCheckWin,dontModify) {
 	                break;
 	            }
 	        }
-	        playerPositions = startMovement(dir);
+	        startMovement(dir,playerPositions);
 		}
 
         var i=0;
         var first=true;
-        level.bannedGroup = [];
-        rigidBackups = [];
-        level.commandQueue=[];
+        level.bannedGroup.length = 0;
+        rigidBackups.length = 0;
+        level.commandQueue.length = 0;
         var startRuleGroupIndex=0;
         var rigidloop=false;
-        var startState = commitPreservationState();
+        //We know that shouldUndo (down in the while(first || rigidloop) loop) will only ever
+        // be true if resolveMovements returns true, which will only return true in the presence
+        // of rigidbody rules. So, there's no point making a copy of the level that will never be used!
+        var startState = state.rigidGroups.length > 0 ? commitPreservationState() : null;
 	    messagetext="";
-	    sfxCreateMask=new BitVec(STRIDE_OBJ);
-	    sfxDestroyMask=new BitVec(STRIDE_OBJ);
+	    sfxCreateMask.setZero();
+	    sfxDestroyMask.setZero();
 
-		seedsToPlay_CanMove=[];
-		seedsToPlay_CantMove=[];
+		seedsToPlay_CanMove.length = 0;
+		seedsToPlay_CantMove.length = 0;
 
 		calculateRowColMasks();
 
@@ -2142,6 +2183,9 @@ function processInput(dir,dontCheckWin,dontModify) {
 
         	if (shouldUndo) {
         		rigidloop=true;
+        		if(!startState) {
+        		    throw new Error("Violated assumption about rigid bodies and preservation states!");
+        		}
         		restorePreservationState(startState);
         		startRuleGroupIndex=0;//rigidGroupUndoDat.ruleGroupIndex+1;
         	} else {
@@ -2152,7 +2196,7 @@ function processInput(dir,dontCheckWin,dontModify) {
         }
 
         if (i>=50) {
-        	window.console.log("looped through 50 times, gave up.  too many loops!");
+        	consolePrint("looped through 50 times, gave up.  too many loops!");
         }
 
 
@@ -2160,7 +2204,7 @@ function processInput(dir,dontCheckWin,dontModify) {
         	var somemoved=false;
         	for (var i=0;i<playerPositions.length;i++) {
         		var pos = playerPositions[i];
-        		var val = level.getCell(pos);
+        		var val = level.getCellInto(pos,_o12);
         		if (state.playerMask.bitsClearInArray(val.data)) {
         			somemoved=true;
         			break;
@@ -2203,26 +2247,22 @@ function processInput(dir,dontCheckWin,dontModify) {
 	    }
 	    
         var modified=false;
-	    for (var i=0;i<level.objects.length;i++) {
-	    	if (level.objects[i]!==bak.dat[i]) {
-				if (dontModify) {
-	        		if (verbose_logging) {
-	        			consoleCacheDump();
-	        		}
-	        		backups.push(bak);
-	        		DoUndo(true);
-					return true;
-				} else {
-					if (dir!==-1) {
-	    				backups.push(bak);
-	    			}
-	    			modified=true;
-	    		}
-	    		break;
-	    	}
-	    }
+        for (var i=0;i<level.objects.length;i++) {
+            if (level.objects[i]!==bak.dat[i]) {
+                modified = true;
+                break;
+            }
+        }
+        if(dontModify && modified) {
+            backups.push(bak);
+            DoUndo(true);
+            return true;
+        }
+        if(modified && dir !== -1) {
+            backups.push(bak);
+        }
 
-		if (dontModify) {		
+        if (dontModify) {		
     		if (verbose_logging) {
     			consoleCacheDump();
     		}
@@ -2306,7 +2346,7 @@ function processInput(dir,dontCheckWin,dontModify) {
 		}
 		    
 
-	    level.commandQueue=[];
+        level.commandQueue.length = 0;
 
     }
 
@@ -2403,7 +2443,7 @@ function DoWin() {
 	}
 	againing=false;
 	tryPlayEndLevelSound();
-	if (unitTesting) {
+	if (unitTesting && testsAutoAdvanceLevel) {
 		nextLevel();
 		return;
 	}
@@ -2459,9 +2499,7 @@ function nextLevel() {
 	}
 
 	canvasResize();	
-	if (canDump===true) {
-		inputHistory=[];
-	}
+	clearInputHistory();
 }
 
 function goToTitleScreen(){

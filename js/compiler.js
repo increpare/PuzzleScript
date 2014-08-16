@@ -2408,7 +2408,7 @@ function loadFile(str) {
 var ifrm;
 function compile(command,text,randomseed) {
 	matchCache={};
-	forceRegenImages=true;
+	forceRegenImages();
 	if (command===undefined) {
 		command = ["restart"];
 	}
@@ -2469,9 +2469,7 @@ function compile(command,text,randomseed) {
 	}
 	setGameState(state,command,randomseed);
 
-	if (canDump===true) {
-		inputHistory=[];
-	}
+	clearInputHistory();
 
 	consoleCacheDump();
 }

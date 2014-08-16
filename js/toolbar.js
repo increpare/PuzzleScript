@@ -211,7 +211,7 @@ function shareClick() {
 
 function rebuildClick() {
 	clearConsole();
-	compile(["rebuild"]);
+	compile(["rebuild"],undefined,RandomGen);
 }
 
 function post_to_url(path, params, method) {

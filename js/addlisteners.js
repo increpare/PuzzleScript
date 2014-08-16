@@ -1,15 +1,22 @@
+var canvas = document.getElementById("gameCanvas");
+var attach = function(elt, evt, hnd) {
+	if(elt.addEventListener) {
+		elt.addEventListener(evt,hnd,false);
+	} else if(elt.attachEvent) {
+		elt.attachEvent(evt,hnd);
+	}
+}
+attach(canvas, "contextmenu", rightClickCanvas);
+attach(canvas, "mousemove", mouseMove);
+attach(canvas, "mouseout", mouseOut);
+attach(document, "mousedown", onMouseDown);
+attach(document, "mouseup", onMouseUp);
+attach(document, "keydown", onKeyDown);
+attach(document, "keyup", onKeyUp);
+attach(window, 'focus', onMyFocus);
+attach(window, 'blur', onMyBlur);
 
-
-    onmousemove="mouseMove(event)" 
-    onmouseout="mouseOut()"
-
-var el = document.getElementById("gameCanvas");
-if (el.addEventListener) {
-    el.addEventListener("contextmenu", rightClickCanvas, false);
-    el.addEventListener("mousemove", mouseMove, false);
-    el.addEventListener("mouseout", mouseOut, false);
-} else {
-    el.attachEvent('oncontextmenu', rightClickCanvas);
-    el.attachEvent('onmousemove', mouseMove);
-    el.attachEvent('onmouseout', mouseOut);
-}  
+// Lights, camera…function!
+setInterval(function() {
+    update();
+}, deltatime);
