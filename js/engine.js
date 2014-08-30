@@ -2112,7 +2112,6 @@ function processInput(dir,dontCheckWin,dontModify) {
 		}
 
         var i=0;
-        var first=true;
         level.bannedGroup = [];
         rigidBackups = [];
         level.commandQueue=[];
@@ -2128,10 +2127,9 @@ function processInput(dir,dontCheckWin,dontModify) {
 
 		calculateRowColMasks();
 
-        while (first || rigidloop/*||(anyMovements()&& (i<50))*/) {
+        do {
         //not particularly elegant, but it'll do for now - should copy the world state and check
         //after each iteration
-        	first=false;
         	rigidloop=false;
         	i++;
         	
@@ -2149,10 +2147,10 @@ function processInput(dir,dontCheckWin,dontModify) {
         		applyRules(state.lateRules, state.lateLoopPoint, 0);
         		startRuleGroupIndex=0;
         	}
-        }
+        } while (i < 50 && rigidloop);
 
         if (i>=50) {
-        	window.console.log("looped through 50 times, gave up.  too many loops!");
+            consolePrint("looped through 50 times, gave up.  too many loops!");
         }
 
 
