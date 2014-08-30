@@ -1780,7 +1780,6 @@ function getMaskFromName(state,name) {
 }
 
 function generateMasks(state) {
-
 	state.playerMask=getMaskFromName(state,'player');
 
 	var layerMasks=[];
@@ -1807,19 +1806,28 @@ function generateMasks(state) {
 		}
 	}
 
-	for (var i=0;i<state.legend_synonyms.length;i++) {
-		var syn = state.legend_synonyms[i];		
-		objectMask[syn[0]]=objectMask[syn[1]];
-	}
+	// Synonyms can depend on properties, and properties can depend on synonyms.
+	// Process them in order by combining & sorting by linenumber.
 
-	for (var i=0;i<state.legend_properties.length;i++) {
-		var prop = state.legend_properties[i];
-		var val = new BitVec(STRIDE_OBJ);
-		for (var j=1;j<prop.length;j++) {
-			var n = prop[j];
-			val.ior(objectMask[n]);
+	var synonyms_and_properties = state.legend_synonyms.concat(state.legend_properties);
+	synonyms_and_properties.sort(function(a, b) {
+		return a.lineNumber - b.lineNumber;
+	});
+
+	for (var i=0;i<synonyms_and_properties.length;i++) {
+		var synprop = synonyms_and_properties[i];
+		if (synprop.length == 2) {
+			// synonym (a = b)
+			objectMask[synprop[0]]=objectMask[synprop[1]];
+		} else {
+			// property (a = b or c)
+			var val = new BitVec(STRIDE_OBJ);
+			for (var j=1;j<synprop.length;j++) {
+				var n = synprop[j];
+				val.ior(objectMask[n]);
+			}
+			objectMask[synprop[0]]=val;
 		}
-		objectMask[prop[0]]=val;
 	}
 
 	state.objectMasks = objectMask;
