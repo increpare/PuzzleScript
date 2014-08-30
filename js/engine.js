@@ -381,9 +381,7 @@ function loadLevelFromLevelDat(state,leveldat,randomseed) {
     	canvasResize();
 	}
 
-	if (canDump===true) {
-		inputHistory=[];
-	}
+	clearInputHistory();
 }
 
 function loadLevelFromState(state,levelindex,randomseed) {	
@@ -607,10 +605,10 @@ function setGameState(_state, command, randomseed) {
 		}
 	}
 	
-	if (canDump===true) {
-		inputHistory=[];
+	if(command[0] !== "rebuild") {
+		clearInputHistory();
 	}
-    canvasResize();
+	canvasResize();
 
 
 
@@ -2457,9 +2455,7 @@ function nextLevel() {
 	}
 
 	canvasResize();	
-	if (canDump===true) {
-		inputHistory=[];
-	}
+	clearInputHistory();
 }
 
 function goToTitleScreen(){

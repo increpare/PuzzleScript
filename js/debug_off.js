@@ -39,3 +39,6 @@ function logBetaMessage(str){
 	str=stripTags(str);
 	errorText.innerHTML+=str+"<br>";	
 }
+
+function clearInputHistory() {}
+function pushInput(inp) {}
