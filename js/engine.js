@@ -473,7 +473,8 @@ function backupLevel() {
 	var ret = {
 		dat : new Int32Array(level.objects),
 		width : level.width,
-		height : level.height
+		height : level.height,
+		oldflickscreendat: oldflickscreendat.concat([])
 	};
 	return ret;
 }
@@ -705,7 +706,7 @@ function RebuildLevelArrays() {
 
 var messagetext="";
 function restoreLevel(lev) {
-	oldflickscreendat=[];
+	oldflickscreendat=lev.oldflickscreendat.concat([]);
 
 	level.objects = new Int32Array(lev.dat);
 	if (level.width !== lev.width || level.height !== lev.height) {
@@ -736,7 +737,6 @@ function restoreLevel(lev) {
 	}
 
     againing=false;
-    messagetext="";
     level.commandQueue=[];
 }
 
@@ -1041,7 +1041,7 @@ BitVec.prototype.ishiftor = function(mask, shift) {
 	var low = mask << toshift;
 	this.data[shift>>5] |= low;
 	if (toshift) {
-		high = mask >> (32 - toshift);
+		var high = mask >> (32 - toshift);
 		this.data[(shift>>5)+1] |= high;
 	}
 }
@@ -2116,7 +2116,6 @@ function processInput(dir,dontCheckWin,dontModify) {
         var startRuleGroupIndex=0;
         var rigidloop=false;
         var startState = commitPreservationState();
-	    messagetext="";
 	    sfxCreateMask=new BitVec(STRIDE_OBJ);
 	    sfxDestroyMask=new BitVec(STRIDE_OBJ);
 
@@ -2276,7 +2275,6 @@ function processInput(dir,dontCheckWin,dontModify) {
 
 		    if (level.commandQueue.indexOf('again')>=0 && modified) {
 		    	//first have to verify that something's changed
-		    	var oldmessagetext = messagetext;
 		    	var old_verbose_logging=verbose_logging;
 		    	verbose_logging=false;
 		    	if (processInput(-1,true,true)) {
@@ -2294,9 +2292,6 @@ function processInput(dir,dontCheckWin,dontModify) {
 						consolePrint('AGAIN command not executed, it wouldn\'t make any changes.');
 					}
 			    }
-			    verbose_logging=old_verbose_logging;
-
-			    messagetext = oldmessagetext;
 			    verbose_logging=old_verbose_logging;
 		    }   
 		}
