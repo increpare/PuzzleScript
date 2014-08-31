@@ -734,7 +734,7 @@ function update() {
 	    }
 	}
 
-    if (autotickinterval>0&&!textMode&&!levelEditorOpened&&!againing) {
+    if (autotickinterval>0&&!textMode&&!levelEditorOpened&&!againing&&!winning) {
         autotick+=deltatime;
         if (autotick>autotickinterval) {
             autotick=0;
