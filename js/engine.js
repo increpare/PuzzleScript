@@ -473,7 +473,8 @@ function backupLevel() {
 	var ret = {
 		dat : new Int32Array(level.objects),
 		width : level.width,
-		height : level.height
+		height : level.height,
+		oldflickscreendat: oldflickscreendat.concat([])
 	};
 	return ret;
 }
@@ -705,7 +706,7 @@ function RebuildLevelArrays() {
 
 var messagetext="";
 function restoreLevel(lev) {
-	oldflickscreendat=[];
+	oldflickscreendat=lev.oldflickscreendat.concat([]);
 
 	level.objects = new Int32Array(lev.dat);
 	if (level.width !== lev.width || level.height !== lev.height) {
