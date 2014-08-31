@@ -2162,6 +2162,9 @@ function generateSoundData(state) {
 			}
 			var seed = sound[1];
 			if (validSeed(seed)) {
+				if (sfx_Events[sound[0]]!==undefined){
+					logError(sound[0].toUpperCase()+" already declared.",lineNumber);				
+				} 
 				sfx_Events[sound[0]]=sound[1];
 			} else {
 				logError("Expecting sfx data, instead found \""+sound[1]+"\".",lineNumber);				
