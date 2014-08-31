@@ -1041,7 +1041,7 @@ BitVec.prototype.ishiftor = function(mask, shift) {
 	var low = mask << toshift;
 	this.data[shift>>5] |= low;
 	if (toshift) {
-		high = mask >> (32 - toshift);
+		var high = mask >> (32 - toshift);
 		this.data[(shift>>5)+1] |= high;
 	}
 }
