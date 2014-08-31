@@ -737,7 +737,6 @@ function restoreLevel(lev) {
 	}
 
     againing=false;
-    messagetext="";
     level.commandQueue=[];
 }
 
@@ -2117,7 +2116,6 @@ function processInput(dir,dontCheckWin,dontModify) {
         var startRuleGroupIndex=0;
         var rigidloop=false;
         var startState = commitPreservationState();
-	    messagetext="";
 	    sfxCreateMask=new BitVec(STRIDE_OBJ);
 	    sfxDestroyMask=new BitVec(STRIDE_OBJ);
 
@@ -2277,7 +2275,6 @@ function processInput(dir,dontCheckWin,dontModify) {
 
 		    if (level.commandQueue.indexOf('again')>=0 && modified) {
 		    	//first have to verify that something's changed
-		    	var oldmessagetext = messagetext;
 		    	var old_verbose_logging=verbose_logging;
 		    	verbose_logging=false;
 		    	if (processInput(-1,true,true)) {
@@ -2295,9 +2292,6 @@ function processInput(dir,dontCheckWin,dontModify) {
 						consolePrint('AGAIN command not executed, it wouldn\'t make any changes.');
 					}
 			    }
-			    verbose_logging=old_verbose_logging;
-
-			    messagetext = oldmessagetext;
 			    verbose_logging=old_verbose_logging;
 		    }   
 		}
