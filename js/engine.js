@@ -2276,6 +2276,7 @@ function processInput(dir,dontCheckWin,dontModify) {
 		    if (level.commandQueue.indexOf('again')>=0 && modified) {
 		    	//first have to verify that something's changed
 		    	var old_verbose_logging=verbose_logging;
+		    	var oldmessagetext = messagetext;
 		    	verbose_logging=false;
 		    	if (processInput(-1,true,true)) {
 			    	verbose_logging=old_verbose_logging;
@@ -2293,6 +2294,7 @@ function processInput(dir,dontCheckWin,dontModify) {
 					}
 			    }
 			    verbose_logging=old_verbose_logging;
+			    messagetext = oldmessagetext;
 		    }   
 		}
 		    

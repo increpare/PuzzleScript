@@ -692,7 +692,7 @@ function update() {
         }
     }
     if (againing) {
-        if (timer>againinterval) {
+        if (timer>againinterval&&messagetext.length==0) {
             if (processInput(-1)) {
                 redraw();
                 keyRepeatTimer=0;
