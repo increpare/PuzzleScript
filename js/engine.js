@@ -1366,14 +1366,10 @@ CellPattern.prototype.replace = function(rule, currentIndex) {
 	curMovementMask.iclear(movementsClear);
 	curMovementMask.ior(movementsSet);
 
-	//check if it's changed
-	if (oldCellMask.equals(curCellMask) && oldMovementMask.equals(curMovementMask)) {
-		return false;
-	}
-
+	var rigidchange=false;
+	var curRigidGroupIndexMask =0;
+	var curRigidMovementAppliedMask =0;
 	if (rule.isRigid) {
-		var curRigidGroupIndexMask =0;
-		var curRigidMovementAppliedMask =0;
 		var rigidGroupIndex = state.groupNumber_to_RigidGroupIndex[rule.groupNumber];
 		rigidGroupIndex++;//don't forget to -- it when decoding :O
 		var rigidMask = new BitVec(STRIDE_MOV);
@@ -1388,28 +1384,39 @@ CellPattern.prototype.replace = function(rule, currentIndex) {
 			!replace.movementsLayerMask.bitsSetInArray(curRigidMovementAppliedMask.data) ) {
 			curRigidGroupIndexMask.ior(rigidMask);
 			curRigidMovementAppliedMask.ior(replace.movementsLayerMask);
-			level.rigidGroupIndexMask[currentIndex] = curRigidGroupIndexMask;
-			level.rigidMovementAppliedMask[currentIndex] = curRigidMovementAppliedMask;
+			rigidchange=true;
+
 		}
 	}
 
-	var created = curCellMask.cloneInto(_o4);
-	created.iclear(oldCellMask);
-	sfxCreateMask.ior(created);
-	var destroyed = oldCellMask.cloneInto(_o5);
-	destroyed.iclear(curCellMask);
-	sfxDestroyMask.ior(destroyed);
+	var result = false;
 
-	level.setCell(currentIndex, curCellMask);
-	level.setMovements(currentIndex, curMovementMask);
+	//check if it's changed
+	if (!oldCellMask.equals(curCellMask) || !oldMovementMask.equals(curMovementMask) || rigidchange) { 
+		result=true;
+		if (rigidchange) {
+			level.rigidGroupIndexMask[currentIndex] = curRigidGroupIndexMask;
+			level.rigidMovementAppliedMask[currentIndex] = curRigidMovementAppliedMask;
+		}
 
-	var colIndex=(currentIndex/level.height)|0;
-	var rowIndex=(currentIndex%level.height);
-	level.colCellContents[colIndex].ior(curCellMask);
-	level.rowCellContents[rowIndex].ior(curCellMask);
-	level.mapCellContents.ior(curCellMask);
+		var created = curCellMask.cloneInto(_o4);
+		created.iclear(oldCellMask);
+		sfxCreateMask.ior(created);
+		var destroyed = oldCellMask.cloneInto(_o5);
+		destroyed.iclear(curCellMask);
+		sfxDestroyMask.ior(destroyed);
 
-	return true;
+		level.setCell(currentIndex, curCellMask);
+		level.setMovements(currentIndex, curMovementMask);
+
+		var colIndex=(currentIndex/level.height)|0;
+		var rowIndex=(currentIndex%level.height);
+		level.colCellContents[colIndex].ior(curCellMask);
+		level.rowCellContents[rowIndex].ior(curCellMask);
+		level.mapCellContents.ior(curCellMask);
+	}
+
+	return result;
 }
 
 
