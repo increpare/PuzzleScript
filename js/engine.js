@@ -1366,10 +1366,14 @@ CellPattern.prototype.replace = function(rule, currentIndex) {
 	curMovementMask.iclear(movementsClear);
 	curMovementMask.ior(movementsSet);
 
-	var rigidchange=false;
-	var curRigidGroupIndexMask =0;
-	var curRigidMovementAppliedMask =0;
+	//check if it's changed
+	if (oldCellMask.equals(curCellMask) && oldMovementMask.equals(curMovementMask)) {
+		return false;
+	}
+
 	if (rule.isRigid) {
+		var curRigidGroupIndexMask =0;
+		var curRigidMovementAppliedMask =0;
 		var rigidGroupIndex = state.groupNumber_to_RigidGroupIndex[rule.groupNumber];
 		rigidGroupIndex++;//don't forget to -- it when decoding :O
 		var rigidMask = new BitVec(STRIDE_MOV);
@@ -1380,43 +1384,32 @@ CellPattern.prototype.replace = function(rule, currentIndex) {
 		curRigidGroupIndexMask = level.rigidGroupIndexMask[currentIndex] || new BitVec(STRIDE_MOV);
 		curRigidMovementAppliedMask = level.rigidMovementAppliedMask[currentIndex] || new BitVec(STRIDE_MOV);
 
-		if (!rigidMask.bitsSetInArray(curRigidGroupIndexMask.data) || 
+		if (!rigidMask.bitsSetInArray(curRigidGroupIndexMask.data) &&
 			!replace.movementsLayerMask.bitsSetInArray(curRigidMovementAppliedMask.data) ) {
 			curRigidGroupIndexMask.ior(rigidMask);
 			curRigidMovementAppliedMask.ior(replace.movementsLayerMask);
-			rigidchange=true;
-
-		}
-	}
-
-	var result = false;
-
-	//check if it's changed
-	if (!oldCellMask.equals(curCellMask) || !oldMovementMask.equals(curMovementMask) || rigidchange) { 
-		result=true;
-		if (rigidchange) {
 			level.rigidGroupIndexMask[currentIndex] = curRigidGroupIndexMask;
 			level.rigidMovementAppliedMask[currentIndex] = curRigidMovementAppliedMask;
 		}
-
-		var created = curCellMask.cloneInto(_o4);
-		created.iclear(oldCellMask);
-		sfxCreateMask.ior(created);
-		var destroyed = oldCellMask.cloneInto(_o5);
-		destroyed.iclear(curCellMask);
-		sfxDestroyMask.ior(destroyed);
-
-		level.setCell(currentIndex, curCellMask);
-		level.setMovements(currentIndex, curMovementMask);
-
-		var colIndex=(currentIndex/level.height)|0;
-		var rowIndex=(currentIndex%level.height);
-		level.colCellContents[colIndex].ior(curCellMask);
-		level.rowCellContents[rowIndex].ior(curCellMask);
-		level.mapCellContents.ior(curCellMask);
 	}
 
-	return result;
+	var created = curCellMask.cloneInto(_o4);
+	created.iclear(oldCellMask);
+	sfxCreateMask.ior(created);
+	var destroyed = oldCellMask.cloneInto(_o5);
+	destroyed.iclear(curCellMask);
+	sfxDestroyMask.ior(destroyed);
+
+	level.setCell(currentIndex, curCellMask);
+	level.setMovements(currentIndex, curMovementMask);
+
+	var colIndex=(currentIndex/level.height)|0;
+	var rowIndex=(currentIndex%level.height);
+	level.colCellContents[colIndex].ior(curCellMask);
+	level.rowCellContents[rowIndex].ior(curCellMask);
+	level.mapCellContents.ior(curCellMask);
+
+	return true;
 }
 
 
@@ -1933,7 +1926,7 @@ function applyRuleGroup(ruleGroup) {
     return loopPropagated;
 }
 
-function applyRules(rules, loopPoint, startRuleGroupindex){
+function applyRules(rules, loopPoint, startRuleGroupindex, bannedGroup){
     //for each rule
     //try to match it
 
@@ -1941,7 +1934,7 @@ function applyRules(rules, loopPoint, startRuleGroupindex){
     var loopPropagated = startRuleGroupindex>0;
     var loopCount = 0;
     for (var ruleGroupIndex=startRuleGroupindex;ruleGroupIndex<rules.length;) {
-    	if (level.bannedGroup[ruleGroupIndex]) {
+    	if (bannedGroup && bannedGroup[ruleGroupIndex]) {
     		//do nothing
     	} else {
     		var ruleGroup=rules[ruleGroupIndex];
@@ -2132,7 +2125,7 @@ function processInput(dir,dontCheckWin,dontModify) {
         	
         	if (verbose_logging){consolePrint('applying rules');}
 
-        	applyRules(state.rules, state.loopPoint, startRuleGroupIndex);	
+        	applyRules(state.rules, state.loopPoint, startRuleGroupIndex, level.bannedGroup);
         	var shouldUndo = resolveMovements();
 
         	if (shouldUndo) {
