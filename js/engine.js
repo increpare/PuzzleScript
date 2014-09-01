@@ -1933,7 +1933,7 @@ function applyRuleGroup(ruleGroup) {
     return loopPropagated;
 }
 
-function applyRules(rules, loopPoint, startRuleGroupindex){
+function applyRules(rules, loopPoint, startRuleGroupindex, bannedGroup){
     //for each rule
     //try to match it
 
@@ -1941,7 +1941,7 @@ function applyRules(rules, loopPoint, startRuleGroupindex){
     var loopPropagated = startRuleGroupindex>0;
     var loopCount = 0;
     for (var ruleGroupIndex=startRuleGroupindex;ruleGroupIndex<rules.length;) {
-    	if (level.bannedGroup[ruleGroupIndex]) {
+    	if (bannedGroup && bannedGroup[ruleGroupIndex]) {
     		//do nothing
     	} else {
     		var ruleGroup=rules[ruleGroupIndex];
@@ -2132,7 +2132,7 @@ function processInput(dir,dontCheckWin,dontModify) {
         	
         	if (verbose_logging){consolePrint('applying rules');}
 
-        	applyRules(state.rules, state.loopPoint, startRuleGroupIndex);	
+        	applyRules(state.rules, state.loopPoint, startRuleGroupIndex, level.bannedGroup);
         	var shouldUndo = resolveMovements();
 
         	if (shouldUndo) {
