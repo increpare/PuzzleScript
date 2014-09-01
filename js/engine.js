@@ -1380,7 +1380,7 @@ CellPattern.prototype.replace = function(rule, currentIndex) {
 		curRigidGroupIndexMask = level.rigidGroupIndexMask[currentIndex] || new BitVec(STRIDE_MOV);
 		curRigidMovementAppliedMask = level.rigidMovementAppliedMask[currentIndex] || new BitVec(STRIDE_MOV);
 
-		if (!rigidMask.bitsSetInArray(curRigidGroupIndexMask.data) || 
+		if (!rigidMask.bitsSetInArray(curRigidGroupIndexMask.data) &&
 			!replace.movementsLayerMask.bitsSetInArray(curRigidMovementAppliedMask.data) ) {
 			curRigidGroupIndexMask.ior(rigidMask);
 			curRigidMovementAppliedMask.ior(replace.movementsLayerMask);
