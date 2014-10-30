@@ -540,11 +540,8 @@ function checkKey(e,justPressed) {
         {
             //undo
             if (textMode===false) {
-
-                if (canDump===true) {
-                    inputHistory.push("undo");
-                }
-            	DoUndo();
+                pushInput("undo");
+                DoUndo();
                 canvasResize(); // calls redraw
             	return prevent(e);
             }
@@ -554,9 +551,7 @@ function checkKey(e,justPressed) {
         {
         	if (textMode===false) {
         		if (justPressed) {
-	                if (canDump===true) {
-	                    inputHistory.push("restart");
-	                }
+	        		pushInput("restart");
 	        		DoRestart();
 	                canvasResize(); // calls redraw
             		return prevent(e);
@@ -673,12 +668,10 @@ function checkKey(e,justPressed) {
     	}
     } else {
 	    if (!againing && inputdir>=0) {
-            if (canDump===true) {
-                inputHistory.push(inputdir);
-            }
             if (inputdir===4 && ('noaction' in state.metadata)) {
 
             } else {
+                pushInput(inputdir);
                 if (processInput(inputdir)) {
                     redraw();
                 }
@@ -699,10 +692,11 @@ function update() {
         }
     }
     if (againing) {
-        if (timer>againinterval) {
+        if (timer>againinterval&&messagetext.length==0) {
             if (processInput(-1)) {
                 redraw();
                 keyRepeatTimer=0;
+                autotick=0;
             }
         }
     }
@@ -740,13 +734,11 @@ function update() {
 	    }
 	}
 
-    if (autotickinterval>0&&!textMode&&!levelEditorOpened) {
+    if (autotickinterval>0&&!textMode&&!levelEditorOpened&&!againing&&!winning) {
         autotick+=deltatime;
         if (autotick>autotickinterval) {
             autotick=0;
-            if (canDump===true) {
-            	inputHistory.push("tick");            
-            }
+            pushInput("tick");
             if (processInput(-1)) {
                 redraw();
             }

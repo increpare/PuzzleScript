@@ -381,9 +381,7 @@ function loadLevelFromLevelDat(state,leveldat,randomseed) {
     	canvasResize();
 	}
 
-	if (canDump===true) {
-		inputHistory=[];
-	}
+	clearInputHistory();
 }
 
 function loadLevelFromState(state,levelindex,randomseed) {	
@@ -475,7 +473,8 @@ function backupLevel() {
 	var ret = {
 		dat : new Int32Array(level.objects),
 		width : level.width,
-		height : level.height
+		height : level.height,
+		oldflickscreendat: oldflickscreendat.concat([])
 	};
 	return ret;
 }
@@ -607,10 +606,10 @@ function setGameState(_state, command, randomseed) {
 		}
 	}
 	
-	if (canDump===true) {
-		inputHistory=[];
+	if(command[0] !== "rebuild") {
+		clearInputHistory();
 	}
-    canvasResize();
+	canvasResize();
 
 
 
@@ -707,7 +706,7 @@ function RebuildLevelArrays() {
 
 var messagetext="";
 function restoreLevel(lev) {
-	oldflickscreendat=[];
+	oldflickscreendat=lev.oldflickscreendat.concat([]);
 
 	level.objects = new Int32Array(lev.dat);
 	if (level.width !== lev.width || level.height !== lev.height) {
@@ -738,7 +737,6 @@ function restoreLevel(lev) {
 	}
 
     againing=false;
-    messagetext="";
     level.commandQueue=[];
 }
 
@@ -782,7 +780,9 @@ function DoUndo(force) {
 		var tobackup = backups[backups.length-1];
 		restoreLevel(tobackup);
 		backups = backups.splice(0,backups.length-1);
-		tryPlayUndoSound();
+		if (! force) {
+			tryPlayUndoSound();
+		}
 	}
 }
 
@@ -1041,7 +1041,7 @@ BitVec.prototype.ishiftor = function(mask, shift) {
 	var low = mask << toshift;
 	this.data[shift>>5] |= low;
 	if (toshift) {
-		high = mask >> (32 - toshift);
+		var high = mask >> (32 - toshift);
 		this.data[(shift>>5)+1] |= high;
 	}
 }
@@ -1380,7 +1380,7 @@ CellPattern.prototype.replace = function(rule, currentIndex) {
 		curRigidGroupIndexMask = level.rigidGroupIndexMask[currentIndex] || new BitVec(STRIDE_MOV);
 		curRigidMovementAppliedMask = level.rigidMovementAppliedMask[currentIndex] || new BitVec(STRIDE_MOV);
 
-		if (!rigidMask.bitsSetInArray(curRigidGroupIndexMask.data) || 
+		if (!rigidMask.bitsSetInArray(curRigidGroupIndexMask.data) &&
 			!replace.movementsLayerMask.bitsSetInArray(curRigidMovementAppliedMask.data) ) {
 			curRigidGroupIndexMask.ior(rigidMask);
 			curRigidMovementAppliedMask.ior(replace.movementsLayerMask);
@@ -1933,7 +1933,7 @@ function applyRuleGroup(ruleGroup) {
     return loopPropagated;
 }
 
-function applyRules(rules, loopPoint, startRuleGroupindex){
+function applyRules(rules, loopPoint, startRuleGroupindex, bannedGroup){
     //for each rule
     //try to match it
 
@@ -1941,7 +1941,7 @@ function applyRules(rules, loopPoint, startRuleGroupindex){
     var loopPropagated = startRuleGroupindex>0;
     var loopCount = 0;
     for (var ruleGroupIndex=startRuleGroupindex;ruleGroupIndex<rules.length;) {
-    	if (level.bannedGroup[ruleGroupIndex]) {
+    	if (bannedGroup && bannedGroup[ruleGroupIndex]) {
     		//do nothing
     	} else {
     		var ruleGroup=rules[ruleGroupIndex];
@@ -2110,14 +2110,12 @@ function processInput(dir,dontCheckWin,dontModify) {
 		}
 
         var i=0;
-        var first=true;
         level.bannedGroup = [];
         rigidBackups = [];
         level.commandQueue=[];
         var startRuleGroupIndex=0;
         var rigidloop=false;
         var startState = commitPreservationState();
-	    messagetext="";
 	    sfxCreateMask=new BitVec(STRIDE_OBJ);
 	    sfxDestroyMask=new BitVec(STRIDE_OBJ);
 
@@ -2126,16 +2124,15 @@ function processInput(dir,dontCheckWin,dontModify) {
 
 		calculateRowColMasks();
 
-        while (first || rigidloop/*||(anyMovements()&& (i<50))*/) {
+        do {
         //not particularly elegant, but it'll do for now - should copy the world state and check
         //after each iteration
-        	first=false;
         	rigidloop=false;
         	i++;
         	
         	if (verbose_logging){consolePrint('applying rules');}
 
-        	applyRules(state.rules, state.loopPoint, startRuleGroupIndex);	
+        	applyRules(state.rules, state.loopPoint, startRuleGroupIndex, level.bannedGroup);
         	var shouldUndo = resolveMovements();
 
         	if (shouldUndo) {
@@ -2147,10 +2144,10 @@ function processInput(dir,dontCheckWin,dontModify) {
         		applyRules(state.lateRules, state.lateLoopPoint, 0);
         		startRuleGroupIndex=0;
         	}
-        }
+        } while (i < 50 && rigidloop);
 
         if (i>=50) {
-        	window.console.log("looped through 50 times, gave up.  too many loops!");
+            consolePrint("looped through 50 times, gave up.  too many loops!");
         }
 
 
@@ -2167,12 +2164,10 @@ function processInput(dir,dontCheckWin,dontModify) {
         	if (somemoved===false) {
         		if (verbose_logging){
 	    			consolePrint('require_player_movement set, but no player movement detected, so cancelling turn.');
-	    		}
+	    			consoleCacheDump();
+        		}
         		backups.push(bak);
         		DoUndo(true);
-        		if (verbose_logging) {
-        			consoleCacheDump();
-        		}
         		return false;
         	}
         	//play player cantmove sounds here
@@ -2181,24 +2176,20 @@ function processInput(dir,dontCheckWin,dontModify) {
 	    if (level.commandQueue.indexOf('cancel')>=0) {	
 	    	if (verbose_logging) { 
 	    		consolePrint('CANCEL command executed, cancelling turn.');
+	    		consoleCacheDump();
 			}
     		backups.push(bak);
     		DoUndo(true);
-        		if (verbose_logging) {
-        			consoleCacheDump();
-        		}
     		return false;
 	    } 
 
 	    if (level.commandQueue.indexOf('restart')>=0) {
 	    	if (verbose_logging) { 
 	    		consolePrint('RESTART command executed, reverting to restart state.');
+	    		consoleCacheDump();
 			}
     		backups.push(bak);
-	    	DoRestart(true);	
-    		if (verbose_logging) {
-    			consoleCacheDump();
-    		}
+	    	DoRestart(true);
     		return true;
 	    } 
 
@@ -2210,12 +2201,11 @@ function processInput(dir,dontCheckWin,dontModify) {
 	    for (var i=0;i<level.objects.length;i++) {
 	    	if (level.objects[i]!==bak.dat[i]) {
 				if (dontModify) {
-	        		backups.push(bak);
-	        		DoUndo(true);
-
 	        		if (verbose_logging) {
 	        			consoleCacheDump();
 	        		}
+	        		backups.push(bak);
+	        		DoUndo(true);
 					return true;
 				} else {
 					if (dir!==-1) {
@@ -2284,11 +2274,9 @@ function processInput(dir,dontCheckWin,dontModify) {
 			}	 
 
 		    if (level.commandQueue.indexOf('again')>=0 && modified) {
-		    	var old_verbose_logging=verbose_logging;
-		    	//verbose_logging=false;
 		    	//first have to verify that something's changed
-		    	var oldmessagetext = messagetext;
 		    	var old_verbose_logging=verbose_logging;
+		    	var oldmessagetext = messagetext;
 		    	verbose_logging=false;
 		    	if (processInput(-1,true,true)) {
 			    	verbose_logging=old_verbose_logging;
@@ -2306,9 +2294,7 @@ function processInput(dir,dontCheckWin,dontModify) {
 					}
 			    }
 			    verbose_logging=old_verbose_logging;
-
 			    messagetext = oldmessagetext;
-			    verbose_logging=old_verbose_logging;
 		    }   
 		}
 		    
@@ -2466,9 +2452,7 @@ function nextLevel() {
 	}
 
 	canvasResize();	
-	if (canDump===true) {
-		inputHistory=[];
-	}
+	clearInputHistory();
 }
 
 function goToTitleScreen(){

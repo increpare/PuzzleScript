@@ -43,7 +43,11 @@ function buildStandalone(sourceCode) {
 	}
 
 	htmlString = htmlString.replace(/__GAMETITLE__/g,title);
-	htmlString = htmlString.replace(/__HOMEPAGE__/g,homepage);	
+	htmlString = htmlString.replace(/__HOMEPAGE__/g,homepage);
+
+	// $ has special meaning to JavaScript's String.replace ($0, $1, etc.) Escape $ as $$.
+	sourceCode = sourceCode.replace(/\$/g, '$$$$');
+
 	htmlString = htmlString.replace(/__GAMEDAT__/g,sourceCode);
 
 	var BB = get_blob();

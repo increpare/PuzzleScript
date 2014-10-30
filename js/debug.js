@@ -1,7 +1,7 @@
 var canSetHTMLColors=false;
 var canDump=true;
 var canYoutube=false;
-inputHistory=[];
+var inputHistory=[];
 var compiledText;
 var canOpenEditor=true;
 var IDE=true;
@@ -41,4 +41,16 @@ function dumpTestCase() {
 	var resultarray = [levelDat,input,outputDat,curlevel,loadedLevelSeed];
 	var resultstring = JSON.stringify(resultarray);
 	consolePrint("<br><br><br>"+resultstring+"<br><br><br>",true);
+}
+
+function clearInputHistory() {
+	if (canDump===true) {
+		inputHistory=[];
+	}
+}
+
+function pushInput(inp) {
+	if (canDump===true) {
+		inputHistory.push(inp);
+	}
 }

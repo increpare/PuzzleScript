@@ -173,7 +173,7 @@ var codeMirrorFn = function() {
     var reg_sounddirectionindicators = /\s*(up|down|left|right|horizontal|vertical|orthogonal)\s*/;
     var reg_winconditionquantifiers = /^(all|any|no|some)$/;
     var reg_keywords = /(objects|collisionlayers|legend|sounds|rules|winconditions|\.\.\.|levels|up|down|left|right|^|v|\>|\<|no|horizontal|orthogonal|vertical|any|all|no|some|moving|stationary|parallel|perpendicular|action)/;
-    var keyword_array = ['objects', 'collisionlayers', 'legend', 'sounds', 'rules', '...','winconditions', 'levels', 'up', 'down', 'left', 'right', 'late','rigid', '^','v','\>','\<','no','randomdir','random', 'horizontal', 'vertical','any', 'all', 'no', 'some', 'moving','stationary','parallel','perpendicular','action'];
+    var keyword_array = ['objects', 'collisionlayers', 'legend', 'sounds', 'rules', '...','winconditions', 'levels', 'up', 'down', 'left', 'right', 'late','rigid', '^','v','\>','\<','no','randomdir','random', 'horizontal', 'vertical','any', 'all', 'no', 'some', 'moving','stationary','parallel','perpendicular','action','message'];
 
     //  var keywordRegex = new RegExp("\\b(("+cons.join(")|(")+"))$", 'i');
 
@@ -477,7 +477,9 @@ var codeMirrorFn = function() {
 										                                };
 								} else {
 									//set up alias
-									state.legend_synonyms.push([candname,state.objects_candname,state.lineNumber]);
+									var synonym = [candname,state.objects_candname];
+									synonym.lineNumber = state.lineNumber;
+									state.legend_synonyms.push(synonym);
 								}
                                 state.objects_section = 1;
                                 return 'NAME';
@@ -722,7 +724,9 @@ var codeMirrorFn = function() {
                                 stream.match(reg_notcommentstart, true);
                                 return 'ERROR';
                             } */ else if (splits.length === 3) {
-                                state.legend_synonyms.push([splits[0], splits[2].toLowerCase(),state.lineNumber]);
+                                var synonym = [splits[0], splits[2].toLowerCase()];
+                                synonym.lineNumber = state.lineNumber;
+                                state.legend_synonyms.push(synonym);
                             } else if (splits.length % 2 === 0) {
                                 ok = false;
                             } else {
