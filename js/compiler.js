@@ -538,7 +538,7 @@ function processRuleString(rule, state, curRules)
 
 // STEP ONE, TOKENIZE
 	line = line.replace(/\[/g, ' [ ').replace(/\]/g, ' ] ').replace(/\|/g, ' | ').replace(/\-\>/g, ' -> ').replace(/\+/g, ' + ');
-	line = line.replace(/[^\-]>/g, ' > ').replace(/</g, ' < ').replace(/\^/g, ' ^ ');
+	line = line.replace(/\s>/g, ' > ').replace(/\s</g, ' < ').replace(/\s\^/g, ' ^ ');
 	var tokens = line.split(/\s/).filter(function(v) {return v !== ''});
 
 	if (tokens.length == 0) {
