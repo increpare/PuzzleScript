@@ -67,6 +67,8 @@ function runTest(assert, dataarray) {
 
 	unitTesting=false;
 
-	var levelString = convertLevelToString();
-	assert.deepEqual(levelString, testresult, errormessage);
+	var origLevelString = convertLevelToString();
+	var levelString = compressLevelString(origLevelString);
+	assert.equal(decompressLevelString(levelString), origLevelString);
+	assert.equal(origLevelString, decompressLevelString(testresult), errormessage);
 }
