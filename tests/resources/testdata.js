@@ -480,7 +480,10 @@ var testdata = [
 	[
 		"Rigidbody rules apply to group rather than individual rules.",
 		["title Several Rigid Bodies\nauthor Stephen Lavelle\nhomepage www.puzzlescript.net\n\n========\nOBJECTS\n========\n\nBackground\ndarkgreen\n\nTarget\nYELLOW\n\nPlayer\nPINK\n\nRedCrate q\nRED\n\nGreenCrate w\nGreen\n\nBlueCrate e\nBlue\n\nSmallCrate r\nPurple\n.....\n.000.\n.000.\n.000.\n.....\n\nWall\nDARKBROWN\n\n=======\nLEGEND\n=======\n\n. = Background\n# = Wall\nP = Player\nbigcrate = redcrate or greencrate or bluecrate\nCrate = smallcrate or bigcrate\nO = Target\n\n=========\nSOUNDS\n=========\n\n================\nCOLLISIONLAYERS\n================\n\nBackground\nTarget\nPlayer, Wall, Crate\n\n======\nRULES\n======\n\nstartloop\n\n\n[ > Player | GreenCrate ] -> [ > Player | > GreenCrate ]\n+ rigid [ moving GreenCrate | GreenCrate ] -> [ moving GreenCrate | moving GreenCrate ]\n+ [ > Crate | GreenCrate ] -> [ > Crate | > GreenCrate ]\n\n\nendloop\n\n==============\nWINCONDITIONS\n==============\n\n=======\nLEVELS\n=======\n\n...............\n.......#wp.....\n......www......\n...............\n\n",[1,0,1,3,2,2,2,1,0,2,2],"background:0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,\n0,0,0,0,0,0,0,0,0,0,0,background greencrate:1,0,0,background wall:2,\n1,0,0,1,1,background player:3,0,0,0,0,0,0,0,0,0,\n0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,\n",0,"1409615719060.894"]
+	],
+	[
+		"Clear movement masks use the correct layer. #264",
+		["title Bug\n\n========\nOBJECTS\n========\n\nBackground\nDarkGrey\n\nPlayer\nGrey White\n.....\n..0..\n.010.\n..0..\n.....\n\nGun\nGrey\n..000\n..000\n000.0\n..000\n..000\n\nLaser\nRed\n.....\n.....\n00000\n.....\n.....\n\n=======\nLEGEND\n=======\n\n. = Background\nP = Player\nG = Gun\n\n=======\nSOUNDS\n=======\n\n================\nCOLLISIONLAYERS\n================\n\nBackground\nLaser\nGun Player\n\n\n======\nRULES\n======\n\n[Laser no Gun] -> []\n[] -> [laser]\n\n==============\nWINCONDITIONS\n==============\n\n=======\nLEVELS\n=======\n\n.....\n..P..\n.....\n..G..\n.....\n",[1,1,2,2,3,3,3,0,0,3,3,2,2,2,2,"restart",2,2,2,2,1,2,3,3,2,3,3,3],"background laser:0,0,0,0,0,\n0,0,0,0,0,\n0,0,0,background gun laser:1,0,\n0,0,0,0,0,\n0,0,0,0,background laser player:2,\n",0,"1417317038438.0283"]
 	]
-
 ];
 
