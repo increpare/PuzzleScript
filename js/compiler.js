@@ -1552,7 +1552,7 @@ function rulesToMask(state) {
 					if (layersUsed_l[l] !== null && layersUsed_r[l] === null) {
 						// a layer matched on the lhs, but not on the rhs
 						objectsClear.ior(state.layerMasks[l]);
-						postMovementsLayerMask_r.ishiftor(0x1f, 5*layerIndex);
+						postMovementsLayerMask_r.ishiftor(0x1f, 5*l);
 					}
 				}
 
