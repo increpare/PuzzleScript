@@ -374,8 +374,8 @@ function canvasResize() {
 
 
     if (textMode) {
-        w=6;
-        h=6;
+        w=font['X'][0].length + 1;
+        h=font['X'].length + 1;
     }
 
     cellwidth = w * ~~(cellwidth / w);
