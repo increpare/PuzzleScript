@@ -384,13 +384,13 @@ function canvasResize() {
     xoffset = 0;
     yoffset = 0;
 
-    if (cellwidth > cellheight) {
-        cellwidth = cellheight;
+    if (cellwidth / w > cellheight / h) {
+        cellwidth = cellheight * w / h;
         xoffset = (canvas.width - cellwidth * screenwidth) / 2;
         yoffset = (canvas.height - cellheight * screenheight) / 2;
     }
     else { //if (cellheight > cellwidth) {
-        cellheight = cellwidth;
+        cellheight = cellwidth * h / w;
         yoffset = (canvas.height - cellheight * screenheight) / 2;
         xoffset = (canvas.width - cellwidth * screenwidth) / 2;
     }
