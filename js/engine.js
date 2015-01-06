@@ -372,6 +372,7 @@ function loadLevelFromLevelDat(state,leveldat,randomseed) {
 	    backups=[]
 	    restartTarget=backupLevel();
 
+	    keybuffer=[];
 	    if ('run_rules_on_level_start' in state.metadata) {
 			processInput(-1,true);
 	    }
@@ -2418,7 +2419,6 @@ function anyMovements() {
 
 
 function nextLevel() {
-	keybuffer=[];
     againing=false;
 	messagetext="";
 	if (titleScreen) {
