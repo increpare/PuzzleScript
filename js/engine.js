@@ -208,26 +208,26 @@ function generateTitleScreen()
 		titleImage[i]=titleImage[i].replace(/\./g, ' ');
 	}
 
-	var width = titleImage[0].length;
-	var titlelines=wordwrap(title,titleImage[0].length);
-	for (var i=0;i<titlelines.length;i++) {
-		var titleline=titlelines[i];
-		var titleLength=titleline.length;
-		var lmargin = ((width-titleLength)/2)|0;
-		var rmargin = width-titleLength-lmargin;
-		var row = titleImage[1+i];
-		titleImage[1+i]=row.slice(0,lmargin)+titleline+row.slice(lmargin+titleline.length);
-	}
-	if (state.metadata.author!==undefined) {
-		var attribution="by "+state.metadata.author;
-		var attributionsplit = wordwrap(attribution, width);
-		for (var i=0;i<attributionsplit.length;i++) {
-			var line = attributionsplit[i].replace(/ +$/, "");
-			var row = titleImage[3+i];
-			titleImage[3+i] = row.slice(0, width - line.length) + line;
-		}
+	var blank = titleImage[0];
+	var width = blank.length;
+	var outRow = 1;
+
+	var titlelines = wordwrap(title, width);
+	for (var i = 0; i < titlelines.length && outRow < 5; i++, outRow++) {
+		var line = titlelines[i];
+		var lmargin = ((width - line.length) / 2) | 0;
+		var rmargin = width - line.length - lmargin;
+		titleImage[outRow] = blank.slice(0, lmargin) + line + blank.slice(0, rmargin);
 	}
 
+	outRow = Math.max(outRow, 3);
+	if (state.metadata.author!==undefined) {
+		var attributionsplit = wordwrap("by " + state.metadata.author, width);
+		for (var i = 0; i < attributionsplit.length && outRow < 5; i++, outRow++) {
+			var line = attributionsplit[i].replace(/ +$/, "");
+			titleImage[outRow] = blank.slice(0, width - line.length) + line;
+		}
+	}
 }
 
 var introstate = {
