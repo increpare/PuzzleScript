@@ -220,11 +220,11 @@ function generateTitleScreen()
 	}
 	if (state.metadata.author!==undefined) {
 		var attribution="by "+state.metadata.author;
-		var attributionsplit = wordwrap(attribution,titleImage[0].length);
+		var attributionsplit = wordwrap(attribution, width);
 		for (var i=0;i<attributionsplit.length;i++) {
-			var line = attributionsplit[i];
+			var line = attributionsplit[i].replace(/ +$/, "");
 			var row = titleImage[3+i];
-			titleImage[3+i]=row.slice(0,width-line.length-1)+line+row[row.length-1];			
+			titleImage[3+i] = row.slice(0, width - line.length) + line;
 		}
 	}
 
