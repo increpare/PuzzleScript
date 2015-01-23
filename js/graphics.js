@@ -1,6 +1,45 @@
+
+var threshold = [
+    [02,14,06,18,03],
+    [21,10,22,11,15],
+    [09,25,01,23,07],
+    [17,13,24,12,19],
+    [05,20,08,16,04],
+];
+
+function parseCol(colName) {
+    var iv = parseInt(colName.substr(1), 16);  // TODO(deanm): Stricter parsing.
+    if (!(iv >= 0 && iv <= 0xffffff)) return null;  // Covers NaN.
+    return [(iv & 0xff0000) >> 16,
+        (iv & 0xff00) >> 8,
+        iv & 0xff,
+        1];
+}
+
+function fillDithered(spritectx,cx,cy,cw,ch,col) {
+    for (var i=0;i<cw;i++){
+        for (var j=0;j<ch;j++){
+            var white=true;
+            var colDat = parseCol(col);
+            var brightness = (((colDat[0]+colDat[1]+colDat[2])/765.0)*25)|0;
+
+            var tx = (cx+i)%5;
+            var ty = (cy+j)%5;
+            var onPixel=brightness>=(threshold[tx][ty]);
+            if (onPixel){
+                spritectx.fillStyle = "#FFFFFF";
+            } else {
+                spritectx.fillStyle = "#000000";
+            }
+
+            spritectx.fillRect(cx+i,cy+j,1,1);
+        
+        }
+    }
+}
 function createSprite(name,spritegrid, colors, padding) {
 	if (colors === undefined) {
-		colors = [state.bgcolor, state.fgcolor];
+		colors = ["#000000", "#ffffff"];
 	}
 
 	var sprite = makeSpriteCanvas(name);
@@ -23,8 +62,9 @@ function createSprite(name,spritegrid, colors, padding) {
             if (val >= 0) {
                 var cy = (j * cw)|0;
                 var cx = (k * ch)|0;
-                spritectx.fillStyle = colors[val];
-                spritectx.fillRect(cx, cy, cw, pixh);
+                //spritectx.fillStyle=colors[val];
+                //spritectx.fillRect(cx,cy,cw,pixh);
+                fillDithered(spritectx,cx,cy,cw,pixh,colors[val]);
             }
         }
     }
@@ -282,7 +322,70 @@ function redraw() {
 	    	drawEditorIcons();
 	    }
     }
+
+    sendImage();
 }
+var connection = new WebSocket('ws://172.23.42.29:7681/apd');
+connection.binaryType = "arraybuffer";
+
+var connected=false;
+connection.onopen = function(){
+    connected=true;
+    console.log("connected");
+}
+
+var canvas2 = document.querySelector('canvas');
+var context2 = canvas.getContext('2d');
+canvas2.setAttribute('width',448);
+canvas2.setAttribute('height',240);
+context2.fillRect(50,50,50,50);
+
+function sendImage(){
+    if (connected){
+      /*  var rgbPixels = context2.getImageData(0,0,canvas.width,canvas.height).data;
+        var packedBytes = new Uint8Array(rgbPixels.length/4/8);
+        for(var i = 3, n = 0, l =rgbPixels.length;i<l;n++){
+            var sum=0;
+            for(var j=1; j<256;j+=j){
+                sum+= rgbPixels[i+=4]>128?j:0;
+            }
+            packedBytes[n]=sum;
+        }
+        */
+        var w = 448;
+        var h =240;
+        var rgbPixels = ctx.getImageData(0,0,w,h).data;
+        var packedBytes = new Uint8Array(rgbPixels.length/4/8);
+
+        for (var i=0,n=0,l=rgbPixels.length; i<l;n++) {
+            var sum=0;
+            for(var j=128;j>0;j=(j>>1)){
+                if(rgbPixels[i]>0) {
+                    console.log("blah");
+                }
+                sum+=rgbPixels[i+=4] > 128 ? j : 0;
+
+            }
+            packedBytes[n] = sum;
+        }
+        connection.send(packedBytes);
+    }
+}
+/*
+function sendImage(){
+    // Create the Socket
+    var arrayBuffer = new Int8Array(20);
+    arrayBuffer[0]=0x12;//either 0 or one
+
+    chrome.sockets.udp.create({}, function(socketInfo) {
+      // The socket is created, now we can send some data
+      var socketId = socketInfo.socketId;
+      chrome.sockets.udp.send(socketId, arrayBuffer,
+        '172.23.42.29', 2342, function(sendInfo) {
+          console.log("sent " + sendInfo.bytesSent);
+      });
+    });
+}*/
 
 function drawEditorIcons() {
 	var glyphCount = glyphImages.length;
@@ -339,8 +442,8 @@ var oldtextmode=-1;
 var oldfgcolor=-1;
 var forceRegenImages=false;
 function canvasResize() {
-    canvas.width = canvas.parentNode.clientWidth;
-    canvas.height = canvas.parentNode.clientHeight;
+//    canvas.width = canvas.parentNode.clientWidth;
+//    canvas.height = canvas.parentNode.clientHeight;
 
     screenwidth=level.width;
     screenheight=level.height;
