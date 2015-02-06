@@ -1,11 +1,5 @@
 
-var threshold = [
-    [02,14,06,18,03],
-    [21,10,22,11,15],
-    [09,25,01,23,07],
-    [17,13,24,12,19],
-    [05,20,08,16,04],
-];
+var threshold = [[2,14,06,18,03],    [21,10,22,11,15],    [9,25,1,23,7],    [17,13,24,12,19],    [5,20,8,16,4]];
 
 function parseCol(colName) {
     var iv = parseInt(colName.substr(1), 16);  // TODO(deanm): Stricter parsing.
@@ -20,6 +14,9 @@ function fillDithered(spritectx,cx,cy,cw,ch,col) {
     for (var i=0;i<cw;i++){
         for (var j=0;j<ch;j++){
             var white=true;
+            if (col==="transparent"){
+                    continue;
+            }
             var colDat = parseCol(col);
             var brightness = (((colDat[0]+colDat[1]+colDat[2])/765.0)*25)|0;
 
@@ -339,6 +336,7 @@ var context2 = canvas.getContext('2d');
 canvas2.setAttribute('width',448);
 canvas2.setAttribute('height',240);
 context2.fillRect(50,50,50,50);
+        var packedBytes = new Uint8Array(448*240/8);
 
 function sendImage(){
     if (connected){
@@ -355,7 +353,6 @@ function sendImage(){
         var w = 448;
         var h =240;
         var rgbPixels = ctx.getImageData(0,0,w,h).data;
-        var packedBytes = new Uint8Array(rgbPixels.length/4/8);
 
         for (var i=0,n=0,l=rgbPixels.length; i<l;n++) {
             var sum=0;
