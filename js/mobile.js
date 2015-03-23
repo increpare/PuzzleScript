@@ -4,10 +4,22 @@
 
 window.Mobile = {};
 
+/* stolen from
+ *  https://github.com/Modernizr/Modernizr/blob/master/feature-detects/touchevents.js
+ */
+
 Mobile.hasTouch = function() {
-    return document.documentElement &&
-        document.documentElement.hasOwnProperty('ontouchstart');
-};
+    var bool;
+    if(('ontouchstart' in window) || window.DocumentTouch && document instanceof DocumentTouch)     {
+      bool = true;
+    } else {
+      var query = ['@media (',prefixes.join('touch-enabled),    ('),'heartz',')','{#modernizr{top:9px;position:absolute}}'].join('');
+      testStyles(query, function( node ) {
+        bool = node.offsetTop === 9;
+      });
+    }
+    return bool;
+}
 
 Mobile.enable = function (force) {
     if (force || Mobile.hasTouch() && !Mobile._instance) {
