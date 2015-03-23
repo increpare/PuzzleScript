@@ -7,7 +7,7 @@ try {
  	if (!!window.localStorage) { 
 		if (localStorage[document.URL]!==undefined) {
             if (localStorage[document.URL+'_checkpoint']!==undefined){
-                curlevelTarget = localStorage[document.URL+'_checkpoint'];
+                curlevelTarget = JSON.parse(localStorage[document.URL+'_checkpoint']);
             }
 	        curlevel = localStorage[document.URL];            
 		}

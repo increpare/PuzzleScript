@@ -384,10 +384,10 @@ function loadLevelFromLevelDat(state,leveldat,randomseed) {
 	clearInputHistory();
 }
 
-function loadLevelFromStateTarget(state,target,randomseed) {	
+function loadLevelFromStateTarget(state,levelindex,target,randomseed) {	
     var leveldat = target;    
 	curlevel=levelindex;
-	curlevelTarget=null;
+	curlevelTarget=target;
     if (leveldat.message===undefined) {
 	    if (levelindex=== 0){ 
 			tryPlayStartLevelSound();
@@ -395,7 +395,8 @@ function loadLevelFromStateTarget(state,target,randomseed) {
 			tryPlayStartLevelSound();			
 		}
     }
-    loadLevelFromLevelDat(state,leveldat,randomseed);
+    loadLevelFromLevelDat(state,state.levels[levelindex],randomseed);
+    restoreLevel(target);
 }
 
 function loadLevelFromState(state,levelindex,randomseed) {	
@@ -2286,7 +2287,8 @@ function processInput(dir,dontCheckWin,dontModify) {
 		    		consolePrint('CHECKPOINT command executed, saving current state to the restart state.');
 				}
 				restartTarget=backupLevel();
-				localStorage[document.URL+'_checkpoint']=restartTarget;
+				curlevelTarget=restartTarget;
+				localStorage[document.URL+'_checkpoint']=JSON.stringify(restartTarget);
 				localStorage[document.URL]=curlevel;
 			}	 
 
@@ -2442,8 +2444,13 @@ function nextLevel() {
 		if (titleSelection===0) {
 			//new game
 			curlevel=0;
+			curlevelTarget=null;
 		} 			
-		loadLevelFromState(state,curlevel);
+		if (curlevelTarget!==null){			
+			loadLevelFromStateTarget(state,curlevel,curlevelTarget);
+		} else {
+			loadLevelFromState(state,curlevel);
+		}
 	} else {
 		if (curlevel<(state.levels.length-1))
 		{			
@@ -2454,12 +2461,13 @@ function nextLevel() {
 			messageselected=false;
 
 			if (curlevelTarget!==null){			
-				loadLevelFromStateTarget(state,curleveltarget);
+				loadLevelFromStateTarget(state,curlevel,curlevelTarget);
 			} else {
 				loadLevelFromState(state,curlevel);
 			}
 		} else {
 			curlevel=0;
+			curlevelTarget=null;
 			goToTitleScreen();
 			tryPlayEndGameSound();
 		}		
@@ -2468,7 +2476,11 @@ function nextLevel() {
 	try {
 		if (!!window.localStorage) {
 			localStorage[document.URL]=curlevel;
-			localStorage.removeItem(document.URL+"_checkpoint");
+			if (curlevelTarget!==null){
+				localStorage[document.URL+"_checkpoint"]=JSON.stringify(curlevelTarget);
+			} else {
+				localStorage.removeItem(document.URL+"_checkpoint");
+			}		
 		}
 	} catch (ex) {
 
