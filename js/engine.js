@@ -156,7 +156,7 @@ function unloadGame() {
 
 function generateTitleScreen()
 {
-	titleMode=curlevel>0?1:0;
+	titleMode=(curlevel>0||curlevelTarget!==null)?1:0;
 	
 	if (state.levels.length===0) {
 		titleImage=intro_template;
@@ -355,8 +355,8 @@ function loadLevelFromLevelDat(state,leveldat,randomseed) {
 	RandomGen = new RNG(loadedLevelSeed);
 	forceRegenImages=true;
 	titleScreen=false;
-	titleMode=curlevel>0?1:0;
-	titleSelection=curlevel>0?1:0;
+	titleMode=(curlevel>0||curlevelTarget!==null)?1:0;
+	titleSelection=(curlevel>0||curlevelTarget!==null)?1:0;
 	titleSelected=false;
     againing=false;
     if (leveldat===undefined) {
@@ -384,9 +384,24 @@ function loadLevelFromLevelDat(state,leveldat,randomseed) {
 	clearInputHistory();
 }
 
+function loadLevelFromStateTarget(state,target,randomseed) {	
+    var leveldat = target;    
+	curlevel=levelindex;
+	curlevelTarget=null;
+    if (leveldat.message===undefined) {
+	    if (levelindex=== 0){ 
+			tryPlayStartLevelSound();
+		} else {
+			tryPlayStartLevelSound();			
+		}
+    }
+    loadLevelFromLevelDat(state,leveldat,randomseed);
+}
+
 function loadLevelFromState(state,levelindex,randomseed) {	
     var leveldat = state.levels[levelindex];    
 	curlevel=levelindex;
+	curlevelTarget=null;
     if (leveldat.message===undefined) {
 	    if (levelindex=== 0){ 
 			tryPlayStartLevelSound();
@@ -547,13 +562,13 @@ function setGameState(_state, command, randomseed) {
 		    titleScreen=true;
 		    tryPlayTitleSound();
 		    textMode=true;
-		    titleSelection=curlevel>0?1:0;
+		    titleSelection=(curlevel>0||curlevelTarget!==null)?1:0;
 		    titleSelected=false;
 		    quittingMessageScreen=false;
 		    quittingTitleScreen=false;
 		    messageselected=false;
 		    titleMode = 0;
-		    if (curlevel>0) {
+		    if ((curlevel>0||curlevelTarget!==null)) {
 		    	titleMode=1;
 		    }
 		    generateTitleScreen();
@@ -572,7 +587,7 @@ function setGameState(_state, command, randomseed) {
 		    timer=0;
 		    titleScreen=false;
 		    textMode=false;
-		    titleSelection=curlevel>0?1:0;
+		    titleSelection=(curlevel>0||curlevelTarget!==null)?1:0;
 		    titleSelected=false;
 		    quittingMessageScreen=false;
 		    quittingTitleScreen=false;
@@ -592,7 +607,7 @@ function setGameState(_state, command, randomseed) {
 				    timer=0;
 				    titleScreen=false;
 				    textMode=false;
-				    titleSelection=curlevel>0?1:0;
+				    titleSelection=(curlevel>0||curlevelTarget!==null)?1:0;
 				    titleSelected=false;
 				    quittingMessageScreen=false;
 				    quittingTitleScreen=false;
@@ -2271,6 +2286,8 @@ function processInput(dir,dontCheckWin,dontModify) {
 		    		consolePrint('CHECKPOINT command executed, saving current state to the restart state.');
 				}
 				restartTarget=backupLevel();
+				localStorage[document.URL+'_checkpoint']=restartTarget;
+				localStorage[document.URL]=curlevel;
 			}	 
 
 		    if (level.commandQueue.indexOf('again')>=0 && modified) {
@@ -2435,7 +2452,12 @@ function nextLevel() {
 			titleScreen=false;
 			quittingMessageScreen=false;
 			messageselected=false;
-			loadLevelFromState(state,curlevel);
+
+			if (curlevelTarget!==null){			
+				loadLevelFromStateTarget(state,curleveltarget);
+			} else {
+				loadLevelFromState(state,curlevel);
+			}
 		} else {
 			curlevel=0;
 			goToTitleScreen();
@@ -2446,6 +2468,7 @@ function nextLevel() {
 	try {
 		if (!!window.localStorage) {
 			localStorage[document.URL]=curlevel;
+			localStorage.removeItem(document.URL+"_checkpoint");
 		}
 	} catch (ex) {
 
@@ -2460,7 +2483,7 @@ function goToTitleScreen(){
 	messagetext="";
 	titleScreen=true;
 	textMode=true;
-	titleSelection=curlevel>0?1:0;
+	titleSelection=(curlevel>0||curlevelTarget!==null)?1:0;
 	generateTitleScreen();
 }
 

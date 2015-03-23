@@ -4,15 +4,18 @@
 
 window.Mobile = {};
 
+//stolen from https://github.com/Modernizr/Modernizr/blob/master/feature-detects/touchevents.js
 Mobile.hasTouch = function() {
     var bool;
     if(('ontouchstart' in window) || window.DocumentTouch && document instanceof DocumentTouch)     {
       bool = true;
     } else {
+      /*
+      //don't know what's happening with this, so commented it out
       var query = ['@media (',prefixes.join('touch-enabled),    ('),'heartz',')','{#modernizr{top:9px;position:absolute}}'].join('');
       testStyles(query, function( node ) {
         bool = node.offsetTop === 9;
-      });
+      });*/
     }
     return bool;
 }

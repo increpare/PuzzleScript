@@ -709,7 +709,7 @@ function update() {
             	messagetext="";
             	textMode=false;
 				titleScreen=false;
-				titleMode=curlevel>0?1:0;
+				titleMode=(curlevel>0||curlevelTarget!==null)?1:0;
 				titleSelected=false;
 				titleSelection=0;
     			canvasResize();  

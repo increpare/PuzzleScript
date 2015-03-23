@@ -1,11 +1,15 @@
 var unitTesting=false;
 var curlevel=0;
+var curlevelTarget=null;
 var levelEditorOpened=false;
 
 try {
  	if (!!window.localStorage) { 
 		if (localStorage[document.URL]!==undefined) {
-			curlevel = localStorage[document.URL];
+            if (localStorage[document.URL+'_checkpoint']!==undefined){
+                curlevelTarget = localStorage[document.URL+'_checkpoint'];
+            }
+	        curlevel = localStorage[document.URL];            
 		}
 	}		 
 } catch(ex) {
