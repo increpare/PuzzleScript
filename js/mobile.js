@@ -6,7 +6,7 @@ window.Mobile = {};
 
 Mobile.hasTouch = function() {
     return document.documentElement &&
-        document.documentElement.hasOwnProperty('ontouchstart');
+        document.documentElement.ontouchstart !== undefined;
 };
 
 Mobile.enable = function (force) {
