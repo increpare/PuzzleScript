@@ -8,6 +8,13 @@ try {
 		if (localStorage[document.URL]!==undefined) {
             if (localStorage[document.URL+'_checkpoint']!==undefined){
                 curlevelTarget = JSON.parse(localStorage[document.URL+'_checkpoint']);
+                
+                var arr = [];
+                for(var p in Object.getOwnPropertyNames(curlevelTarget.dat)) {
+                    arr[p] = curlevelTarget.dat[p];
+                }
+                curlevelTarget.dat = new Int32Array(arr);
+
             }
 	        curlevel = localStorage[document.URL];            
 		}

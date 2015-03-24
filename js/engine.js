@@ -397,6 +397,7 @@ function loadLevelFromStateTarget(state,levelindex,target,randomseed) {
     }
     loadLevelFromLevelDat(state,state.levels[levelindex],randomseed);
     restoreLevel(target);
+    restartTarget=target;
 }
 
 function loadLevelFromState(state,levelindex,randomseed) {	
@@ -2289,6 +2290,13 @@ function processInput(dir,dontCheckWin,dontModify) {
 				restartTarget=backupLevel();
 				curlevelTarget=restartTarget;
 				localStorage[document.URL+'_checkpoint']=JSON.stringify(restartTarget);
+				//test line, remove later!:
+				var restored = JSON.parse(localStorage[document.URL+'_checkpoint']);
+				var arr = [];
+				for(var p in Object.getOwnPropertyNames(restored.dat)) {
+				    arr[p] = restored.dat[p];
+				}
+				restored.dat = new Int32Array(arr);
 				localStorage[document.URL]=curlevel;
 			}	 
 
