@@ -7,6 +7,10 @@ Try it out at http://www.puzzlescript.net
 
 -----
 
+Dev instructions here - https://groups.google.com/forum/#!searchin/puzzlescript/development/puzzlescript/yptIpY9hlng/cjfrOPy_4jcJ
+
+-----
+
 The MIT License (MIT)
 
 Copyright (c) 2013 Stephen Lavelle
