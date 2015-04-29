@@ -374,21 +374,6 @@ function onKeyDown(event) {
 		prevent(event);
 	}
 
-	 if (event.keyCode===70) { //f
-	    var elem = document.getElementById("gameCanvas");
-	    if (elem){
-		    if (elem.requestFullscreen) {
-		      elem.requestFullscreen();
-		    } else if (elem.msRequestFullscreen) {
-		      elem.msRequestFullscreen();
-		    } else if (elem.mozRequestFullScreen) {
-		      elem.mozRequestFullScreen();
-		    } else if (elem.webkitRequestFullscreen) {
-		      elem.webkitRequestFullscreen();
-		    }
-		}
-	  }
-
 
     if (keybuffer.indexOf(event.keyCode)>=0) {
     	return;
