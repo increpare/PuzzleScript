@@ -835,3 +835,5 @@ function Animatable(key, increment, update) {
         };
     }
 }());
+
+Mobile.enable();
