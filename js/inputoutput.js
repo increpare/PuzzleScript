@@ -492,6 +492,10 @@ function checkKey(e,justPressed) {
     if (winning) {
     	return;
     }
+    if (e.ctrlKey || e.metaKey || e.altKey) {
+        // This may be a keyboard shortcut for the browser.
+        return;
+    }
     var inputdir=-1;
     switch(e.keyCode) {
         case 65://a
