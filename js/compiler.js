@@ -482,6 +482,7 @@ var simpleRelativeDirections = ['^', 'v', '<', '>'];
 var reg_directions_only = /^(\>|\<|\^|v|up|down|left|right|moving|stationary|no|randomdir|random|horizontal|vertical|orthogonal|perpendicular|parallel|action)$/;
 //redeclaring here, i don't know why
 var commandwords = ["sfx0","sfx1","sfx2","sfx3","sfx4","sfx5","sfx6","sfx7","sfx8","sfx9","sfx10","cancel","checkpoint","restart","win","message","again"];
+var resetExtraCommands = ["sfx0","sfx1","sfx2","sfx3","sfx4","sfx5","sfx6","sfx7","sfx8","sfx9","sfx10","message"];
 
 
 
@@ -743,17 +744,25 @@ function processRuleString(rule, state, curRules)
 		rule_line.directions=['up'];
 	}
 
-	/* reset must appear by itself */
+	/* reset must appear first, and can only be used with certain other rules */
 
-	for (var i=0;i<commands.length;i++) {
+	for (var i=1;i<commands.length;i++) {
 		var cmd = commands[i][0];
-		if (cmd==='restart') {
-			if (commands.length>1 || rhs_cells.length>0) {
-				logError('The RESTART command can only appear by itself on the right hand side of the arrow.', lineNumber);
-			}
-		} else if (cmd==='cancel') {
-			if (commands.length>1 || rhs_cells.length>0) {
-				logError('The CANCEL command can only appear by itself on the right hand side of the arrow.', lineNumber);
+		if (cmd==='restart' || cmd==='cancel') {
+			logError('The '+cmd+' command can only appear immediately to the right of the arrow.', lineNumber);
+		}
+	}
+
+	if (commands.length>0 && (commands[0][0]==='restart' || commands[0][0]==='cancel'))
+	{
+		var resetCmd = commands[0][0];
+		if (rhs_cells.length>0) {
+			logError('The '+resetCmd+' command can only appear immediately to the right of the arrow.', lineNumber);
+		}
+		for (var i=1;i<commands.length;i++) {
+			var cmd = commands[i][0];
+			if (resetExtraCommands.indexOf(cmd) === -1) {
+				logError('The '+resetCmd+' command can only appear by itself on the right hand side of the arrow, or with a message or sound effect.', lineNumber);
 			}
 		}
 	}

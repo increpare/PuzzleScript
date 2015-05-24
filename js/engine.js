@@ -1895,6 +1895,20 @@ function showTempMessage() {
 	canvasResize();
 }
 
+function processOutputCommands(commands) {
+	for (var i=0;i<commands.length;i++) {
+		var command = commands[i];
+		if (command.charAt(1)==='f')  {//identifies sfxN
+			tryPlaySimpleSound(command);
+		}
+		if (unitTesting===false) {
+			if (command==='message') {
+				showTempMessage();
+			}
+		}
+	}
+}
+
 function applyRandomRuleGroup(ruleGroup) {
 	var propagated=false;
 
@@ -2202,6 +2216,7 @@ function processInput(dir,dontCheckWin,dontModify) {
 	    		consolePrint('CANCEL command executed, cancelling turn.');
 	    		consoleCacheDump();
 			}
+			processOutputCommands(level.commandQueue);
     		backups.push(bak);
     		DoUndo(true);
     		tryPlayCancelSound();
@@ -2213,6 +2228,7 @@ function processInput(dir,dontCheckWin,dontModify) {
 	    		consolePrint('RESTART command executed, reverting to restart state.');
 	    		consoleCacheDump();
 			}
+			processOutputCommands(level.commandQueue);
     		backups.push(bak);
 	    	DoRestart(true);
     		return true;
@@ -2271,17 +2287,7 @@ function processInput(dir,dontCheckWin,dontModify) {
         	}
         }
 
-	    for (var i=0;i<level.commandQueue.length;i++) {
-	 		var command = level.commandQueue[i];
-	 		if (command.charAt(1)==='f')  {//identifies sfxN
-	 			tryPlaySimpleSound(command);
-	 		}  	
-			if (unitTesting===false) {
-				if (command==='message') {
-					showTempMessage();
-				}
-			}
-	    }
+		processOutputCommands(level.commandQueue);
 
 	    if (textMode===false && (dontCheckWin===undefined ||dontCheckWin===false)) {
 	    	if (verbose_logging) { 
