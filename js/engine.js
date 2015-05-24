@@ -474,6 +474,10 @@ function tryPlayUndoSound(){
 	tryPlaySimpleSound("undo");
 }
 
+function tryPlayCancelSound(){
+	tryPlaySimpleSound("cancel");
+}
+
 function tryPlayRestartSound(){
 	tryPlaySimpleSound("restart");
 }
@@ -2200,6 +2204,7 @@ function processInput(dir,dontCheckWin,dontModify) {
 			}
     		backups.push(bak);
     		DoUndo(true);
+    		tryPlayCancelSound();
     		return false;
 	    } 
 
