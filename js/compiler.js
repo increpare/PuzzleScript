@@ -1418,6 +1418,10 @@ function rulesToMask(state) {
 						var layerIndex = state.propertiesSingleLayer[object_name];
 					}
 
+					if (typeof(layerIndex)==="undefined"){
+						logError("Oops!  " +object_name.toUpperCase()+" not assigned to a layer.",rule.lineNumber);
+					}
+
 					if (object_dir==='no') {
 						objectsMissing.ior(objectMask);
 					} else {
