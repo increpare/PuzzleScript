@@ -257,7 +257,7 @@ function levelEditorClick(event,click) {
 		}
 
 		var backgroundMask = state.layerMasks[state.backgroundlayer];
-		if (glyphmask.bitsClearInArray(backgroundMask)) {
+		if (glyphmask.bitsClearInArray(backgroundMask.data)) {
 			// If we don't already have a background layer, mix in
 			// the default one.
 			glyphmask.ibitset(state.backgroundid);
