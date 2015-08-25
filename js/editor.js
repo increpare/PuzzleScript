@@ -32,7 +32,8 @@ var editor = window.CodeMirror.fromTextArea(code, {
 //	viewportMargin: Infinity,
 	lineWrapping: true,
 	lineNumbers: true,
-      styleActiveLine: true
+    styleActiveLine: true,
+    mode: "haxe"
 	});
 
 editor.on('mousedown', function(cm, event) {

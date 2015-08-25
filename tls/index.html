@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+	
+	<title>Webthing</title>
+	
+	<meta id="viewport" name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+	<meta name="apple-mobile-web-app-capable" content="yes">
+	
+	
+	<script type="text/javascript" src="./lib/soundjs.min.js"></script>
+	<script type="text/javascript" src="./webthing.js"></script>
+	
+	<script>
+		window.addEventListener ("touchmove", function (event) { event.preventDefault (); }, false);
+		if (typeof window.devicePixelRatio != 'undefined' && window.devicePixelRatio > 2) {
+			var meta = document.getElementById ("viewport");
+			meta.setAttribute ('content', 'width=device-width, initial-scale=' + (2 / window.devicePixelRatio) + ', user-scalable=no');
+		}
+	</script>
+	
+	<style>
+		html,body { margin: 0; padding: 0; height: 100%; overflow: hidden; }
+		#openfl-content { background: #000000; width: 100%; height: 100%; }
+		
+		@font-face {
+			font-family: 'Open Sans';
+			src: url('data//fonts/opensans.eot');
+			src: url('data//fonts/opensans.eot?#iefix') format('embedded-opentype'),
+			url('data//fonts/opensans.svg#my-font-family') format('svg'),
+			url('data//fonts/opensans.woff') format('woff'),
+			url('data//fonts/opensans.ttf') format('truetype');
+			font-weight: normal;
+			font-style: normal;
+		}
+		@font-face {
+			font-family: 'Open Sans';
+			src: url('data/fonts/opensans.eot');
+			src: url('data/fonts/opensans.eot?#iefix') format('embedded-opentype'),
+			url('data/fonts/opensans.svg#my-font-family') format('svg'),
+			url('data/fonts/opensans.woff') format('woff'),
+			url('data/fonts/opensans.ttf') format('truetype');
+			font-weight: normal;
+			font-style: normal;
+		}
+	</style>
+	
+</head>
+<body>
+	
+	<div id="openfl-content"></div>
+	
+	<script type="text/javascript">
+		lime.embed ("openfl-content", 768, 480, "000000");
+	</script>
+	
+</body>
+</html>

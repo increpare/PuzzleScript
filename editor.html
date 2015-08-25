@@ -22,75 +22,9 @@
 
 <div id="leftpanel">
 <form id="form1" name="form1"  action="javascript:void(0);"><textarea id="code" class="codeform" name="code" rows="20" cols="20" style="display:none;">
-title My Game
-author Stephen Lavelle
-homepage www.puzzlescript.net
-
-========
-OBJECTS
-========
-
-Background 
-GREEN  
-
-Target 
-DarkBlue    
-
-Wall 
-BROWN
-
-Player 
-Blue   
-
-Crate 
-Orange 
-
-=======
-LEGEND
-=======
-
-. = Background
-# = Wall
-P = Player
-* = Crate
-@ = Crate and Target
-O = Target
-
-=======
-SOUNDS
-=======
-
-================
-COLLISIONLAYERS
-================
-
-Background
-Target
-Player, Wall, Crate
-
-======
-RULES     
-======     
-
-[ >  Player | Crate ] -> [  >  Player | > Crate  ]     
-
-==============
-WINCONDITIONS
-==============
-
-All Target on Crate     
-
-=======     
-LEVELS
-=======
-
-#########
-#.......#
-#.....@.#
-#.P.*.O.#
-#.......#
-#.......#
-#########
+function update() {
+	Text.display(0, 0, "Hello World");
+}
 </textarea></form>
 </div>
 <div id="verticaldragbar"></div>
@@ -178,11 +112,13 @@ LEVELS
 <script src="js/riffwave.js"></script>
 <script src="js/sfxr.js"></script>
 <script src="js/codemirror/codemirror.js"></script>
+<script src="js/codemirror/haxe.js"></script>
 <script src="js/codemirror/active-line.js"></script>
 <script src="js/codemirror/dialog.js"></script>
 <script src="js/codemirror/search.js"></script>
 <script src="js/codemirror/searchcursor.js"></script>
 <script src="js/codemirror/match-highlighter.js"></script>
+<script src="js/codemirror/haxe.js"></script>
 <script src="js/colors.js"></script>
 <script src="js/graphics.js"></script>
 <script src="js/inputoutput.js"></script>
