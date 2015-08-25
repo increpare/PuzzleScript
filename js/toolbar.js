@@ -4,6 +4,10 @@ function runClick() {
 	terryRun();
 }
 
+function compile(args){
+	terryRun();
+}
+
 var interpreter;
 function terryRun(){
 	//playSound(1232);
@@ -47,10 +51,7 @@ function dateToReadable(title,time) {
 }
 
 function saveClick() {
-	var title = "Untitled";
-	if (state.metadata.title!==undefined) {
-		title=state.metadata.title;
-	}
+	var title = "terrylib game";
 	var text=editor.getValue();
 	var saveDat = {
 		title:title,
@@ -111,6 +112,9 @@ function loadDropDownChange() {
 	consolePrint("Eek, trying to load a save, but couldn't find it. :(",true);
 }
 
+function unloadGame(){
+
+}
 
 function repopulateSaveDropdown(saves) {
 	var loadDropdown = document.getElementById('loadDropDown');

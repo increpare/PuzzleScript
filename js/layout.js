@@ -13,7 +13,9 @@ function resize_widths(verticaldragbarX){
 	document.getElementById("rightbottomhalf").style.left = verticaldragbarX + verticaldragbarWidth + "px";
 	document.getElementById("horizontaldragbar").style.left = verticaldragbarX + verticaldragbarWidth + "px";
 	document.getElementById("verticaldragbar").style.left = verticaldragbarX + "px";
-	canvasResize();
+	if (window.onresize!=null){
+		window.onresize();
+	}
 }
 
 function resize_heights(horizontaldragbarY){
@@ -23,7 +25,9 @@ function resize_heights(horizontaldragbarY){
 	document.getElementById("righttophalf").style.height = horizontaldragbarY - upperbarheight + "px";
 	document.getElementById("rightbottomhalf").style.top = horizontaldragbarY + horizontaldragbarHeight + "px";
 	document.getElementById("horizontaldragbar").style.top = horizontaldragbarY + "px";
-	canvasResize();
+	if (window.onresize!=null){
+		window.onresize();
+	}
 }
 
 function resize_all(e){

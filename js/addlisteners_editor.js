@@ -14,14 +14,8 @@ runClickLink.addEventListener("click", runClick, false);
 var saveClickLink = document.getElementById("saveClickLink");
 saveClickLink.addEventListener("click", saveClick, false);
 
-var rebuildClickLink = document.getElementById("rebuildClickLink");
-rebuildClickLink.addEventListener("click", rebuildClick, false);
-
 var shareClickLink = document.getElementById("shareClickLink");
 shareClickLink.addEventListener("click", shareClick, false);
-
-var levelEditorClickLink = document.getElementById("levelEditorClickLink");
-levelEditorClickLink.addEventListener("click", levelEditorClick_Fn, false);
 
 var exportClickLink = document.getElementById("exportClickLink");
 exportClickLink.addEventListener("click", exportClick, false);
@@ -57,8 +51,3 @@ window.onbeforeunload = function (e) {
     return msg;
   }
 };
-
-var gestureHandler = Mobile.enable();
-if (gestureHandler) {
-    gestureHandler.setFocusElement(document.getElementById('gameCanvas'));
-}

@@ -329,75 +329,11 @@ function levelEditorRightClick(event,click) {
 
 var anyEditsSinceMouseDown = false;
 
-function onMouseDown(event) {
-	if (event.button===0 && !(event.ctrlKey||event.metaKey) ) {
-        lastDownTarget = event.target;
-        keybuffer=[];
-        if (event.target===canvas) {
-        	setMouseCoord(event);
-        	dragging=true;
-        	rightdragging=false;
-        	if (levelEditorOpened) {
-        		anyEditsSinceMouseDown=false;
-        		return levelEditorClick(event,true);
-        	}
-        }
-        dragging=false;
-        rightdragging=false; 
-    } else if (event.button===2 || (event.button===0 && (event.ctrlKey||event.metaKey)) ) {
-    	if (event.target.id==="gameCanvas") {
-		    dragging=false;
-		    rightdragging=true;
-        	if (levelEditorOpened) {
-        		return levelEditorRightClick(event,true);
-        	}
-        }
-    }
-
-}
-
 function rightClickCanvas(event) {
     return prevent(event);
 }
 
-function onMouseUp(event) {
-	dragging=false;
-    rightdragging=false;
-}
 
-function onKeyDown(event) {
-
-    event = event || window.event;
-
-	// Prevent arrows/space from scrolling page
-	if ((!IDE) && ([32, 37, 38, 39, 40].indexOf(event.keyCode) > -1)) {
-		prevent(event);
-	}
-
-
-    if (keybuffer.indexOf(event.keyCode)>=0) {
-    	return;
-    }
-
-    if(lastDownTarget === canvas) {
-    	if (keybuffer.indexOf(event.keyCode)===-1) {
-    		keybuffer.splice(keyRepeatIndex,0,event.keyCode);
-	    	keyRepeatTimer=0;
-	    	checkKey(event,true);
-		}
-	}
-
-
-    if (canDump===true) {
-        if (event.keyCode===74 && (event.ctrlKey||event.metaKey)) {//ctrl+j
-            dumpTestCase();
-            prevent(event);
-        } else if (event.keyCode===75 && (event.ctrlKey||event.metaKey)) {//ctrl+k
-            makeGIF();
-            prevent(event);
-        } 
-    }
-}
 
 function relMouseCoords(event){
     var totalOffsetX = 0;
@@ -418,17 +354,6 @@ function relMouseCoords(event){
     return {x:canvasX, y:canvasY}
 }
 HTMLCanvasElement.prototype.relMouseCoords = relMouseCoords;
-
-function onKeyUp(event) {
-	event = event || window.event;
-	var index=keybuffer.indexOf(event.keyCode);
-	if (index>=0){
-    	keybuffer.splice(index,1);
-    	if (keyRepeatIndex>=index){
-    		keyRepeatIndex--;
-    	}
-    }
-}
 
 function onMyFocus(event) {	
 	keybuffer=[];
@@ -471,10 +396,6 @@ function mouseOut() {
 //  window.console.log("clear");
 }
 
-document.addEventListener('mousedown', onMouseDown, false);
-document.addEventListener('mouseup', onMouseUp, false);
-document.addEventListener('keydown', onKeyDown, false);
-document.addEventListener('keyup', onKeyUp, false);
 window.addEventListener('focus', onMyFocus, false);
 window.addEventListener('blur', onMyBlur, false);
 
