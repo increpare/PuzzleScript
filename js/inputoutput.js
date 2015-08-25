@@ -7,6 +7,9 @@ var dragging=false;
 var rightdragging=false;
 var columnAdded=false;
 
+var gamepads=[];
+var gamepadAnimationFrameId=0;
+
 function selectText(containerid,e) {
 	e = e || window.event;
 	var myspan = document.getElementById(containerid);
@@ -471,12 +474,65 @@ function mouseOut() {
 //  window.console.log("clear");
 }
 
+function dispatchKeyboardEventForGamepadButton(button, buttonIndex) {
+	if (button.down) {
+		document.dispatchEvent(new KeyboardEvent("keydown", { keyCode: 0xFF + buttonIndex }));
+	}
+	else if (button.up) {
+		document.dispatchEvent(new KeyboardEvent("keyup", { keyCode: 0xFF + buttonIndex }));
+	}
+}
+
+function pollGamepads() {
+	for (gamepadIndex in gamepads) {
+		var gamepad = gamepads[gamepadIndex];
+		updateGamepadButtonStates(gamepad);
+	    for (var buttonIndex = 0; buttonIndex < gamepad.buttons.length; buttonIndex++) {
+			var button = gamepad.buttons[buttonIndex];
+			dispatchKeyboardEventForGamepadButton(button, buttonIndex);
+		}
+	}
+
+	gamepadAnimationFrameId = requestAnimationFrame(pollGamepads);
+}
+
+function updateGamepadButtonStates(gamepad) {
+    for (var buttonIndex = 0; buttonIndex < gamepad.buttons.length; buttonIndex++) {
+		var button = gamepad.buttons[buttonIndex];
+		button.down = button.pressed && !button.previous;
+		button.up = !button.pressed && button.previous;
+        button.previous = button.pressed;
+    }
+}
+
+function onGamepadConnected(event) {
+    gamepad = event.gamepad;
+    gamepads.push(gamepad);
+
+	if (gamepadAnimationFrameId == 0) {
+		gamepadAnimationFrameId = requestAnimationFrame(pollGamepads);
+	}
+}
+
+function onGamepadDisconnected(event) {
+    gamepad = event.gamepad;
+    gamepadIndex = gamepads.indexOf(gamepad);
+	gamepads.splice(gamepadIndex, 1);
+
+	if (gamepads.length == 0) {
+		cancelAnimationFrame(gamepadAnimationFrameId);
+		gamepadAnimationFrameId = 0;
+	}
+}
+
 document.addEventListener('mousedown', onMouseDown, false);
 document.addEventListener('mouseup', onMouseUp, false);
 document.addEventListener('keydown', onKeyDown, false);
 document.addEventListener('keyup', onKeyUp, false);
 window.addEventListener('focus', onMyFocus, false);
 window.addEventListener('blur', onMyBlur, false);
+window.addEventListener('gamepadconnected', onGamepadConnected, false)
+window.addEventListener('gamepaddisconnected', onGamepadDisconnected, false)
 
 
 function prevent(e) {
@@ -496,6 +552,7 @@ function checkKey(e,justPressed) {
     switch(e.keyCode) {
         case 65://a
         case 37: //left
+		case 0xFF + 14: // gamepad left
         {
 //            window.console.log("LEFT");
             inputdir=1;
@@ -503,6 +560,7 @@ function checkKey(e,justPressed) {
         }
         case 38: //up
         case 87: //w
+		case 0xFF + 12: // gamepad up
         {
 //            window.console.log("UP");
             inputdir=0;
@@ -510,6 +568,7 @@ function checkKey(e,justPressed) {
         }
         case 68://d
         case 39: //right
+		case 0xFF + 15: // gamepad right
         {
 //            window.console.log("RIGHT");
             inputdir=3;
@@ -517,6 +576,7 @@ function checkKey(e,justPressed) {
         }
         case 83://s
         case 40: //down
+		case 0xFF + 13: // gamepad down
         {
 //            window.console.log("DOWN");
             inputdir=2;
@@ -526,6 +586,7 @@ function checkKey(e,justPressed) {
         case 32://space
         case 67://c
         case 88://x
+		case 0xFF + 0: // gamepad 0
         {
 //            window.console.log("ACTION");
 			if (norepeat_action===false || justPressed) {
@@ -537,6 +598,7 @@ function checkKey(e,justPressed) {
         }
         case 85://u
         case 90://z
+		case 0xFF + 1: // gamepad 1
         {
             //undo
             if (textMode===false) {
@@ -548,6 +610,7 @@ function checkKey(e,justPressed) {
             break;
         }
         case 82://r
+		case 0xFF + 3: // gamepad 3
         {
         	if (textMode===false) {
         		if (justPressed) {
@@ -560,6 +623,7 @@ function checkKey(e,justPressed) {
             break;
         }
         case 27://escape
+		case 0xFF + 9: // gamepad 9
         {
         	if (titleScreen===false) {
 				goToTitleScreen();	
