@@ -28,13 +28,46 @@ if (fileToOpen!==null&&fileToOpen.length>0) {
 }
 
 
+
 var editor = window.CodeMirror.fromTextArea(code, {
 //	viewportMargin: Infinity,
 	lineWrapping: true,
 	lineNumbers: true,
     styleActiveLine: true,
-    mode: "haxe"
-	});
+    mode: "haxe",
+    extraKeys: {"Ctrl-Space": "autocomplete"}
+   	});
+/*
+CodeMirror.registerHelper("hintWords", "haxe",
+*/
+
+var haxeHintWords =  ["Gfx.resizescreen","Gfx.clearscreen","Gfx.drawbox","Gfx.fillbox","Gfx.drawtri","Gfx.filltri","Gfx.drawcircle","Gfx.fillcircle","Gfx.drawhexagon","Gfx.fillhexagon","Gfx.drawline","Gfx.setlinethickness","Gfx.getpixel","Gfx.RGB","Gfx.HSL","Gfx.getred","Gfx.getgreen","Gfx.getblue","Gfx.screenwidth","Gfx.screenheight","Gfx.drawimage","Gfx.changetileset","Gfx.drawtile","Gfx.imagewidth","Gfx.imageheight","Gfx.tilewidth","Gfx.tileheight","Gfx.createimage","Gfx.createtiles","Gfx.numberoftiles","Gfx.drawtoscreen","Gfx.drawtoimage","Gfx.drawtotile","Gfx.copytile","Gfx.grabtilefromscreen","Gfx.grabtilefromimage","Gfx.grabimagefromscreen","Gfx.grabimagefromimage","Gfx.defineanimation","Gfx.drawanimation","Gfx.stopanimation","Col","Col.BLACK","Col.GREY","Col.WHITE","Col.RED","Col.PINK","Col.DARKBROWN","Col.BROWN","Col.ORANGE","Col.YELLOW","Col.DARKGREEN","Col.GREEN","Col.LIGHTGREEN","Col.NIGHTBLUE","Col.DARKBLUE","Col.BLUE","Col.LIGHTBLUE","Col.MAGENTA","Col","Text","Text.changefont","Text.changesize","Text.display","Text.input","Text.getinput","Music","Music.playsound","Key.A ","Key.B ","Key.C ","Key.D ","Key.E ","Key.F ","Key.G ","Key.H ","Key.I ","Key.J ","Key.K ","Key.L ","Key.M ","Key.N ","Key.O ","Key.P ","Key.Q ","Key.R ","Key.S ","Key.T ","Key.U ","Key.V ","Key.W ","Key.X ","Key.Y","Key.Z","Key.ZERO ","Key.ONE ","Key.TWO ","Key.THREE ","Key.FOUR ","Key.FIVE ","Key.SIX ","Key.SEVEN ","Key.EIGHT","Key.NINE","Key.F1 ","Key.F2 ","Key.F3 ","Key.F4 ","Key.F5 ","Key.F6 ","Key.F7 ","Key.F8 ","Key.F9 ","Key.F10 ","Key.F11","Key.F12","Key.MINUS","Key.PLUS","Key.DELETE","Key.BACKSPACE","Key.LBRACKET","Key.RBRACKET","Key.BACKSLASH","Key.CAPSLOCK","Key.SEMICOLON","Key.QUOTE","Key.COMMA","Key.PERIOD","Key.SLASH","Key.ESCAPE","Key.ENTER","Key.SHIFT","Key.CONTROL","Key.ALT","Key.SPACE","Key.UP","Key.DOWN","Key.LEFT","Key.RIGHT","Input.justpressed","Input.pressed","Input.justreleased","Input.delaypressed","Mouse.x","Mouse.y","Mouse.leftclick","Mouse.leftheld","Mouse.leftreleased","Mouse.middleclick","Mouse.middleheld","Mouse.middlereleased","Mouse.rightclick","Mouse.rightheld","Mouse.rightreleased","Mouse.mousewheel","Convert.tostring","Convert.toint","Convert.tofloat","Random.int","Random.float","Random.string","Random.bool","Random.occasional","Random.rare","Random.pickstring","Random.pickint","Random.pickfloat","Debug.log"];
+CodeMirror.registerHelper("hint", "haxe", 
+	function(editor, options) {
+		var cur = editor.getCursor();
+		var token = editor.getTokenAt(cur), start, end, search;
+		if (token.end > cur.ch) {
+	      token.end = cur.ch;
+	      token.string = token.string.slice(0, cur.ch - token.start);
+	    }
+
+	    if (token.string.match(/^[\'\"\w@]*/)) {
+	      search = token.string;
+	      start = token.start;
+	      end = token.end;
+	    } else {
+	      start = end = cur.ch;
+	      search = "";
+	    }
+		return {list: ["cat","bat","coat","coats"], from: CodeMirror.Pos(cur.line, start), to: CodeMirror.Pos(cur.line, end)};
+	}
+);
+
+// When an @ is typed, activate completion
+editor.on("inputRead", function(editor, change) {
+ // if (change.text[0] == ".")
+   // editor.showHint();
+});
 
 editor.on('mousedown', function(cm, event) {
   if (event.target.className == 'cm-SOUND') {
@@ -102,7 +135,7 @@ editor.on("beforeChange", function(instance, change) {
 
 
 code.editorreference = editor;
-editor.setOption('theme', 'midnight');
+//editor.setOption('theme', 'midnight');
 
 function getParameterByName(name) {
     name = name.replace(/[\[]/, "\\\[").replace(/[\]]/, "\\\]");

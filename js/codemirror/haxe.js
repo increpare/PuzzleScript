@@ -395,7 +395,9 @@ CodeMirror.defineMode("haxe", function(config, parserConfig) {
 
   return {
     startState: function(basecolumn) {
-    var defaulttypes = ["Int", "Float", "String", "Void", "Std", "Bool", "Dynamic", "Array"];
+    var defaulttypes = ["Int", "Float", "String", "Void", "Std", "Bool", "Dynamic", "Array",
+    //terrylib types
+    "Gfx","Col","Text","Music","Input","Key","Mouse","Convert","Random","Debug"];
       return {
         tokenize: haxeTokenBase,
         reAllowed: true,

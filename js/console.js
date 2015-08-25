@@ -76,5 +76,63 @@ function clearConsole() {
 	objDiv.scrollTop = objDiv.scrollHeight;
 }
 
+function logError(str, lineNumber,urgent) {
+    if (compiling||urgent) {
+        if (lineNumber === undefined) {
+            return logErrorNoLine(str);
+        }
+        var errorString = '<a onclick="jumpToLine(' + lineNumber.toString() + ');"  href="javascript:void(0);"><span class="errorTextLineNumber"> line ' + lineNumber.toString() + '</span></a> : ' + '<span class="errorText">' + str + '</span>';
+         if (errorStrings.indexOf(errorString) >= 0 && !urgent) {
+            //do nothing, duplicate error
+         } else {
+            consolePrint(errorString,true);
+            errorStrings.push(errorString);
+            errorCount++;
+        }
+    }
+}
+
+function logWarning(str, lineNumber,urgent) {
+    if (compiling||urgent) {
+        if (lineNumber === undefined) {
+            return logErrorNoLine(str);
+        }
+        var errorString = '<a onclick="jumpToLine(' + lineNumber.toString() + ');"  href="javascript:void(0);"><span class="errorTextLineNumber"> line ' + lineNumber.toString() + '</span></a> : ' + '<span class="warningText">' + str + '</span>';
+         if (errorStrings.indexOf(errorString) >= 0 && !urgent) {
+            //do nothing, duplicate error
+         } else {
+            consolePrint(errorString,true);
+            errorStrings.push(errorString);
+        }
+    }
+}
+
+
+function logWarningNoLine(str,urgent) {
+    if (compiling||urgent) {
+        var errorString = '<a onclick="jumpToLine(' + lineNumber.toString() + ');"  href="javascript:void(0);"><span class="errorTextLineNumber"> line ' + lineNumber.toString() + '</span></a> : ' + '<span class="warningText">' + str + '</span>';
+         if (errorStrings.indexOf(errorString) >= 0 && !urgent) {
+            //do nothing, duplicate error
+         } else {
+            consolePrint(errorString,true);
+            errorStrings.push(errorString);
+        }
+    }
+}
+
+function logErrorNoLine(str,urgent) {
+    if (compiling||urgent) {
+        var errorString = '<span class="errorText">' + str + '</span>';
+         if (errorStrings.indexOf(errorString) >= 0 && !urgent) {
+            //do nothing, duplicate error
+         } else {
+            consolePrint(errorString,true);
+            errorStrings.push(errorString);
+        }
+        errorCount++;
+    }
+}
+
+
 var clearConsoleClick = document.getElementById("clearConsoleClick");
 clearConsoleClick.addEventListener("click", clearConsole, false);

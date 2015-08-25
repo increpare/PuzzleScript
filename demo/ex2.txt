@@ -1,0 +1,15 @@
+function new(){
+  Music.playsound(132);
+}
+
+var t:Int=0;
+
+function update() {
+  t++;
+  if (t%10==0){
+	  Music.playsound(Math.floor(t/30));
+  }
+  Gfx.fillbox(0,0,Gfx.screenwidth,Gfx.screenheight,0xff0000);
+  Gfx.fillbox(10,10,100,100,0xff0000);
+  Text.display(100, 100, "Hello World");
+}

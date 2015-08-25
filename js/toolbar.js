@@ -1,3 +1,4 @@
+
 function runClick() {
 	clearConsole();
 	//compile(["restart"]);
@@ -8,11 +9,20 @@ function compile(args){
 	terryRun();
 }
 
+function referenceClick(){
+	if (interpreter==null){
+		interpreter = new Webbridge();
+	}
+	var s = interpreter.get_functions();
+	s=s.replace(/\n/g, "<br>");
+	consolePrint(s,true);
+}
+
 var interpreter;
 function terryRun(){
 	//playSound(1232);
 	if (interpreter==null){
-		interpreter = new MyClass();
+		interpreter = new Webbridge();
 	}
 	var code = window.form1.code;
 
@@ -89,10 +99,10 @@ function loadDropDownChange() {
 	var saveString = localStorage['saves'];
 	if (saveString===undefined) {
 			consolePrint("Eek, trying to load a file, but there's no local storage found. Eek!",true);
-	} 
+	}
 
 	saves = JSON.parse(saveString);
-	
+
 	for (var i=0;i<saves.length;i++) {
 		var sd = saves[i];
 	    var key = dateToReadable(sd.title,new Date(sd.date));
@@ -107,7 +117,7 @@ function loadDropDownChange() {
 			compile(["restart"]);
 			return;
 	    }
-	}		
+	}
 
 	consolePrint("Eek, trying to load a save, but couldn't find it. :(",true);
 }
@@ -135,15 +145,15 @@ function repopulateSaveDropdown(saves) {
     var optn = document.createElement("OPTION");
     optn.text = "Load";
     optn.value = "Load";
-    loadDropdown.options.add(optn);  
+    loadDropdown.options.add(optn);
 
-	for (var i=saves.length-1;i>=0;i--) {			
+	for (var i=saves.length-1;i>=0;i--) {
 		var sd = saves[i];
 	    var optn = document.createElement("OPTION");
 	    var key = dateToReadable(sd.title,new Date(sd.date));
 	    optn.text = key;
 	    optn.value = key;
-	    loadDropdown.options.add(optn);  
+	    loadDropdown.options.add(optn);
 	}
 	loadDropdown.selectedIndex=0;
 }
@@ -193,10 +203,10 @@ function shareClick() {
 	var githubURL = 'https://api.github.com/gists';
 	var githubHTTPClient = new XMLHttpRequest();
 	githubHTTPClient.open('POST', githubURL);
-	githubHTTPClient.onreadystatechange = function() {		
+	githubHTTPClient.onreadystatechange = function() {
 		if(githubHTTPClient.readyState!=4) {
 			return;
-		}		
+		}
 		var result = JSON.parse(githubHTTPClient.responseText);
 		if (githubHTTPClient.status===403) {
 			consoleError(result.message);
@@ -257,9 +267,6 @@ function exportClick() {
 	compile("restart");
 
 	var sourceString = JSON.stringify(sourceCode);
-	
+
 	buildStandalone(sourceString);
 }
-
-
-

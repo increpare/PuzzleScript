@@ -1,8 +1,11 @@
-<!doctype html>
-<html>
+<!DOCTYPE html>
+<html lang="en">
 <head>
-<meta charset="UTF-8">
-<title>PuzzleScript Game</title>
+
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+
+	<title>terrylib game</title>
 <style>
 
 body {
@@ -20,7 +23,7 @@ body {
   border: 0px;
   background-color: black;
   -webkit-tap-highlight-color: rgba(0,0,0,0);
-} 
+}
 
 h1 {
 	color:lightblue;
@@ -29,7 +32,7 @@ h1 {
 a {
 	color:lightblue;
 }
-.title {	
+.title {
 	background-color:none;
 	text-align:center;
 	font-size:100%;
@@ -42,7 +45,7 @@ a {
 	height:10%;
 }
 
-.footer {	
+.footer {
 	background-color:none;
 	text-align:center;
 	float:center;
@@ -204,28 +207,54 @@ a {
      }
 
 </style>
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+	<meta id="viewport" name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+	<meta name="apple-mobile-web-app-capable" content="yes">
+
+
+	<script type="text/javascript" src="./lib/soundjs.min.js"></script>
+	<script type="text/javascript" src="./webthing.js"></script>
+
+	<script>
+		window.addEventListener ("touchmove", function (event) { event.preventDefault (); }, false);
+		if (typeof window.devicePixelRatio != 'undefined' && window.devicePixelRatio > 2) {
+			var meta = document.getElementById ("viewport");
+			meta.setAttribute ('content', 'width=device-width, initial-scale=' + (2 / window.devicePixelRatio) + ', user-scalable=no');
+		}
+	</script>
+
+	<style>
+		html,body { margin: 0; padding: 0; height: 100%; overflow: hidden; }
+		#openfl-content { background: #000000; width: 100%; height: 100%; }
+
+		@font-face {
+			font-family: 'Open Sans';
+			src: url('data/fonts/opensans.eot');
+			src: url('data/fonts/opensans.eot?#iefix') format('embedded-opentype'),
+			url('data/fonts/opensans.svg#my-font-family') format('svg'),
+			url('data/fonts/opensans.woff') format('woff'),
+			url('data/fonts/opensans.ttf') format('truetype');
+			font-weight: normal;
+			font-style: normal;
+		}
+	</style>
+
 </head>
 <body>
 <div class="title"><h1 id="gametitle">PuzzleScript Game</h1></div>
 <div class="gameContainer">
-<canvas 
-    id="gameCanvas" ></canvas>
-</div> 
+	<div id="openfl-content"></div>
+</div>
 <div class="footer">
 <span id="errormessage" style="color:red;"></span>
 <a id="homepagelink" href="http://www.puzzlescript.net">www.puzzlescript.net</a> <span id="separator">|</span> <a id="hacklink" href="#">hack</a>
 </div>
 
-<script>
-  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
 
-  ga('create', 'UA-42606016-2', 'puzzlescript.net');
-  ga('send', 'pageview');
-</script>
+	<script type="text/javascript">
+		lime.embed ("openfl-content", 192, 120, "000000");
+	</script>
+
 
 <!--TOREPLACE-->
 <script src="js/globalVariables.js"></script>
@@ -236,12 +265,8 @@ a {
 <script src="js/sfxr.js"></script>
 <script src="js/codemirror/codemirror.js"></script>
 <script src="js/colors.js"></script>
-<script src="js/graphics.js"></script>
-<script src="js/engine.js"></script>
 <script src="js/parser.js"></script>
-<script src="js/compiler.js"></script>
 <script src="js/inputoutput.js"></script>
-<script src="js/mobile.js"></script>
 <!--ENDREPLACE-->
 
 <script>
@@ -263,7 +288,23 @@ function strip_http(url) {
    return url;
 }
 
-function getData(){ 
+
+	function qualifyURL(url) {
+		var a = document.createElement('a');
+		a.href = url;
+		return a.href;
+	}
+
+var interpreter;
+function terryRun(text){
+	//playSound(1232);
+	if (interpreter==null){
+		interpreter = new Webbridge();
+	}
+	interpreter.runScript(text);
+}
+
+function getData(){
 	var id = getParameterByName("p").replace(/[\\\/]/,"");
 	if (id===null||id.length===0) {
 		displayError("No ID specified in URL.")
@@ -277,7 +318,7 @@ function getData(){
 	githubHTTPClient.onreadystatechange = function() {
 		if(githubHTTPClient.readyState!=4) {
 			return;
-		}		
+		}
 		var result = JSON.parse(githubHTTPClient.responseText);
 		if (githubHTTPClient.status===403) {
 			displayError(result.message);
@@ -286,8 +327,8 @@ function getData(){
 		}
 		var result = JSON.parse(githubHTTPClient.responseText);
 		var code=result["files"]["script.txt"]["content"];
-		compile(["restart"],code);
-
+		terryRun(code);
+/*
 		if (state.metadata.homepage!==undefined) {
 			var homepage=state.metadata.homepage;
 			var homepageLink = document.getElementById("homepagelink");
@@ -301,9 +342,9 @@ function getData(){
 			var title=state.metadata.title;
 			var gametitle = document.getElementById("gametitle");
 			gametitle.innerHTML=title;
-			window.document.title=title+" - PuzzleScript Game";
-		}
-                Mobile.enable();
+			window.document.title=title+" - terrylib Game";
+		}*/
+//                Mobile.enable();
 		var hacklink = document.getElementById("hacklink");
 
 		var url = "editor.html?hack="+id;
@@ -318,6 +359,7 @@ function getData(){
 getData();
 
 </script>
+
 
 </body>
 </html>

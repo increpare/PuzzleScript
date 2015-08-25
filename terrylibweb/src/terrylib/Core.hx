@@ -24,21 +24,32 @@ class Core extends Sprite {
 		Input.init(this.stage);
 		Mouse.init(this.stage);
 		Gfx.init(this.stage);
+		#if !terrylibweb
 		Music.init();
+		#end
 		
 		//Default setup
-		Gfx.resizescreen(768, 480);
-		Text.addfont("opensans", 24);
+		#if terrylibweb
+			Gfx.resizescreen(192, 120, 1);
+			Text.addfont("visitor", 13);
+			//snoot good at 14
+			//visitor best at 13
+		#else
+			Gfx.resizescreen(768, 480);
+			Text.addfont("opensans", 24);
+		#end
 		
+		#if terrylibweb
+		terrylibmain = new Main();
+		#else
 		Scene.init();
+		#end
 		
 		_rate = 1000 / TARGET_FPS;
 	  _skip = _rate * 10;
 		_timer.addEventListener(TimerEvent.TIMER, update);
 		_timer.start();
 	}
-	
-	
 	
 	public function update(e:TimerEvent) {
 		Gfx.skiprender = false;
@@ -69,13 +80,20 @@ class Core extends Sprite {
 		if(!Gfx.skiprender) Gfx.backbuffer.lock();
 		
 		Gfx.clearscreen();
+		#if terrylibweb
+		terrylibmain.update();
+		#else
 		Scene.update();
+		#end
 		Text.drawstringinput();
 		Debug.showlog();
 		
 		if(!Gfx.skiprender) Gfx.backbuffer.unlock();
 	}
 	
+	#if terrylibweb
+		public var terrylibmain:Main;
+	#end
 	private var TARGET_FPS:Int = 60;
 	private var _rate:Float;
 	private var _skip:Float;

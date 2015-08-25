@@ -1,4 +1,5 @@
 // Huge huge thanks to Ruari O'Sullivan (@randomnine) for figuring this stuff out for me!
+#if !terrylibweb
 package terrylib;
 
 import openfl.errors.ArgumentError;
@@ -82,3 +83,5 @@ class Scene {
 	private static var scenelist:Array<Dynamic>;
 	private static var currentscene:Int;
 }
+
+#end

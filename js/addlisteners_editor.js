@@ -11,6 +11,10 @@ for (var i=0;i<10;i++) {
 var runClickLink = document.getElementById("runClickLink");
 runClickLink.addEventListener("click", runClick, false);
 
+
+var referenceClickLink = document.getElementById("referenceClickLink");
+referenceClickLink.addEventListener("click", referenceClick, false);
+
 var saveClickLink = document.getElementById("saveClickLink");
 saveClickLink.addEventListener("click", saveClick, false);
 

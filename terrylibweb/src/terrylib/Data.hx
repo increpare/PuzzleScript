@@ -1,3 +1,16 @@
+#if terrylibweb
+package terrylib;
+
+import openfl.Assets;
+
+class Data {
+	@:generic
+	public static function blank2darray<T>(width:Int, height:Int):Array<Array<T>> {
+		var returnedarray2d:Array<Array<T>> = [for (x in 0 ... width) [for (y in 0 ... height) cast ""]];
+		return returnedarray2d;
+	}
+}
+#else
 package terrylib;
 
 import openfl.Assets;
@@ -98,3 +111,4 @@ class Data {
 	
 	private static var tempstring:String;
 }
+#end

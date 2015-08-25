@@ -6,7 +6,7 @@ import openfl.display.*;
 
 class Fontfile {
 	public function new(_file:String) {
-		filename = "data/fonts/" + _file + ".ttf";
+		filename = "data/fonts/" + _file + "/" + _file + ".ttf";
 		font = Assets.getFont(filename);
 		typename = font.fontName;
 	}

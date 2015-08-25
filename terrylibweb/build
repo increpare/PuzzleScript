@@ -1,0 +1,4 @@
+echo "compiling"
+openfl build html5
+rm -v bin/html5/bin/index.html
+cp -r -v bin/html5/bin/* ../

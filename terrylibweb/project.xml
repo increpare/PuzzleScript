@@ -14,7 +14,7 @@
    />
    
 	<window
-      width="768" height="480" unless="mobile" 
+      width="192" height="120" unless="mobile" 
    ></window>
    
 	<window
@@ -36,6 +36,7 @@
 	<haxeflag name="--macro keep('IntIterator')"/>
 	<haxelib name="openfl" />
 	<haxelib name="hscript" />
+	<haxedef name="terrylibweb" />
 	
 	<assets path="data" exclude="*.svg|*.mp3|*.ogg|*.wav"/>	
 </project>

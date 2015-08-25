@@ -72,6 +72,11 @@ class Gfx {
 	}
 		
 	/** Makes a tile array from a given image. */
+	#if terrylibweb
+	public static function loadtiles(imagename:String, width:Int, height:Int) {
+		Webdebug.log("Error: \"loadtiles\" function not available in webscript version.");
+	}
+	#else
 	public static function loadtiles(imagename:String, width:Int, height:Int) {
 		buffer = new Bitmap(Assets.getBitmapData("data/graphics/" + imagename + ".png")).bitmapData;
 		if (buffer == null) {
@@ -100,6 +105,7 @@ class Gfx {
 		
 		changetileset(imagename);
 	}
+	#end
 	
 	/** Creates a blank tileset, with the name "imagename", with each tile a given width and height, containing "amount" tiles. */
 	public static function createtiles(imagename:String, width:Float, height:Float, amount:Int) {
@@ -126,6 +132,11 @@ class Gfx {
 	}
 	
 	/** Loads an image into the game. */
+	#if terrylibweb
+	public static function loadimage(imagename:String) {
+		Webdebug.log("Error: \"loadtiles\" function not available in webscript version.");
+	}
+	#else
 	public static function loadimage(imagename:String) {
 		buffer = new Bitmap(Assets.getBitmapData("data/graphics/" + imagename + ".png")).bitmapData;
 		if (buffer == null) {
@@ -140,6 +151,7 @@ class Gfx {
 		t.copyPixels(buffer, trect, tl);
 		images.push(t);
 	}
+	#end
 	
 	/** Creates a blank image, with the name "imagename", with given width and height. */
 	public static function createimage(imagename:String, width:Float, height:Float) {
@@ -851,6 +863,7 @@ class Gfx {
 		drawingtoscreen = true;
 		
 		screen = new Bitmap(backbuffer);
+		screen.smoothing = false;
 		screen.width = screenwidth * scale;
 		screen.height = screenheight * scale;
 		
