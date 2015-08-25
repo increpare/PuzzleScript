@@ -30,13 +30,13 @@ class Core extends Sprite {
 		
 		//Default setup
 		#if terrylibweb
-			Gfx.resizescreen(192, 120, 1);
+			Gfx.resizescreen(192, 120);
 			Text.addfont("visitor", 13);
 			//snoot good at 14
 			//visitor best at 13
 		#else
-			Gfx.resizescreen(768, 480);
-			Text.addfont("opensans", 24);
+			//Gfx.resizescreen(768, 480);
+			//Text.addfont("opensans", 24);
 		#end
 		
 		#if terrylibweb
