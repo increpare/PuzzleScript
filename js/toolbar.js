@@ -1,6 +1,20 @@
 function runClick() {
 	clearConsole();
-	compile(["restart"]);
+	//compile(["restart"]);
+	terryRun();
+}
+
+var interpreter;
+function terryRun(){
+	if (interpreter==null){
+		interpreter = new MyClass();
+	}
+	var code = window.form1.code;
+
+	var editor = code.editorreference;
+
+	text = editor.getValue()+"\n";
+	interpreter.runScript(text);
 }
 
 function dateToReadable(title,time) {
