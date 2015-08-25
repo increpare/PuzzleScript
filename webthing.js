@@ -103,7 +103,7 @@ ApplicationMain.init = function() {
 	if(total == 0) ApplicationMain.start();
 };
 ApplicationMain.main = function() {
-	ApplicationMain.config = { build : "170", company : "Stephen and Terry", file : "webthing", fps : 60, name : "Webthing", orientation : "landscape", packageName : "com.stephenandterry.webthing", version : "1.0.0", windows : [{ antialiasing : 0, background : 0, borderless : false, depthBuffer : false, display : 0, fullscreen : false, hardware : true, height : 480, parameters : "{}", resizable : true, stencilBuffer : true, title : "Webthing", vsync : true, width : 768, x : null, y : null}]};
+	ApplicationMain.config = { build : "177", company : "Stephen and Terry", file : "webthing", fps : 60, name : "Webthing", orientation : "landscape", packageName : "com.stephenandterry.webthing", version : "1.0.0", windows : [{ antialiasing : 0, background : 0, borderless : false, depthBuffer : false, display : 0, fullscreen : false, hardware : true, height : 480, parameters : "{}", resizable : true, stencilBuffer : true, title : "Webthing", vsync : true, width : 768, x : null, y : null}]};
 };
 ApplicationMain.start = function() {
 	var hasMain = false;
@@ -1824,7 +1824,7 @@ Main.prototype = {
 		this.interpreter.variables.set("Input",terrylib_Input);
 		this.interpreter.variables.set("Key",terrylib_Key);
 		this.interpreter.variables.set("Mouse",terrylib_Mouse);
-		this.interpreter.variables.set("Music",terrylib_Music);
+		this.interpreter.variables.set("Music",Webmusic);
 		this.interpreter.variables.set("Random",terrylib_Random);
 		this.interpreter.variables.set("Text",terrylib_Text);
 		this.runscript = true;
@@ -2136,6 +2136,13 @@ _$UInt_UInt_$Impl_$.gt = function(a,b) {
 _$UInt_UInt_$Impl_$.toFloat = function(this1) {
 	var $int = this1;
 	if($int < 0) return 4294967296.0 + $int; else return $int + 0.0;
+};
+var Webmusic = function() { };
+$hxClasses["Webmusic"] = Webmusic;
+Webmusic.__name__ = ["Webmusic"];
+Webmusic.playsound = function(t) {
+	haxe_Log.trace("boop",{ fileName : "Webmusic.hx", lineNumber : 6, className : "Webmusic", methodName : "playsound"});
+	openfl_external_ExternalInterface.call("playSound",t);
 };
 var haxe_StackItem = $hxClasses["haxe.StackItem"] = { __ename__ : true, __constructs__ : ["CFunction","Module","FilePos","Method","LocalFunction"] };
 haxe_StackItem.CFunction = ["CFunction",0];

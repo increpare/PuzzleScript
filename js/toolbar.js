@@ -6,6 +6,7 @@ function runClick() {
 
 var interpreter;
 function terryRun(){
+	//playSound(1232);
 	if (interpreter==null){
 		interpreter = new MyClass();
 	}

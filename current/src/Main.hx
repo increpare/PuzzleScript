@@ -63,7 +63,7 @@ class Main {
 		interpreter.variables.set("Key", Key);
 		//interpreter.variables.set("Load", Load);
 		interpreter.variables.set("Mouse", Mouse);
-		interpreter.variables.set("Music", Music);
+		interpreter.variables.set("Music", Webmusic);
 		interpreter.variables.set("Random", Random);
 		//interpreter.variables.set("Scene", Scene);
 		interpreter.variables.set("Text", Text);
