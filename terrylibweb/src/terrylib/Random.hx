@@ -1,4 +1,4 @@
-package terrylibweb;
+package terrylib;
 
 class Random{
 	/** Return a random boolean value (true or false) */

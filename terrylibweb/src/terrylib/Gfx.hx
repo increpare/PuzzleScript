@@ -1,11 +1,12 @@
-package terrylibweb;
+package terrylib;
 	
-import terrylibweb.util.*;
+import terrylib.util.*;
 import openfl.display.*;
 import openfl.geom.*;
 import openfl.events.*;
 import openfl.net.*;
 import openfl.text.*;
+import openfl.Assets;
 import openfl.Lib;
 import openfl.system.Capabilities;
 
@@ -69,6 +70,36 @@ class Gfx {
 	public static function numberoftiles():Int {
 		return tiles[currenttileset].tiles.length;
 	}
+		
+	/** Makes a tile array from a given image. */
+	public static function loadtiles(imagename:String, width:Int, height:Int) {
+		buffer = new Bitmap(Assets.getBitmapData("data/graphics/" + imagename + ".png")).bitmapData;
+		if (buffer == null) {
+			throw("ERROR: In loadtiles, cannot find data/graphics/" + imagename + ".png.");
+			return;
+		}
+		
+		var tiles_rect:Rectangle = new Rectangle(0, 0, width, height);
+		tiles.push(new Tileset(imagename, width, height));
+		tilesetindex.set(imagename, tiles.length - 1);
+		currenttileset = tiles.length - 1;
+		
+		var tilerows:Int;
+		var tilecolumns:Int;
+		tilecolumns = Std.int((buffer.width - (buffer.width % width)) / width);
+		tilerows = Std.int((buffer.height - (buffer.height % height)) / height);
+		
+		for (j in 0 ... tilerows) {
+			for (i in 0 ... tilecolumns) {
+				var t:BitmapData = new BitmapData(width, height, true, 0x000000);
+				settrect(i * width, j * height, width, height);
+				t.copyPixels(buffer, trect, tl);
+				tiles[currenttileset].tiles.push(t);
+			}
+		}
+		
+		changetileset(imagename);
+	}
 	
 	/** Creates a blank tileset, with the name "imagename", with each tile a given width and height, containing "amount" tiles. */
 	public static function createtiles(imagename:String, width:Float, height:Float, amount:Int) {
@@ -92,6 +123,22 @@ class Gfx {
 	/** Returns the height of a tile in the current tileset. */
 	public static function tileheight():Int {
 		return tiles[currenttileset].height;
+	}
+	
+	/** Loads an image into the game. */
+	public static function loadimage(imagename:String) {
+		buffer = new Bitmap(Assets.getBitmapData("data/graphics/" + imagename + ".png")).bitmapData;
+		if (buffer == null) {
+			throw("ERROR: In loadimage, cannot find data/graphics/" + imagename + ".png.");
+			return;
+		}
+		
+		imageindex.set(imagename, images.length);
+		
+		var t:BitmapData = new BitmapData(buffer.width, buffer.height, true, 0x000000);
+		settrect(0, 0, buffer.width, buffer.height);			
+		t.copyPixels(buffer, trect, tl);
+		images.push(t);
 	}
 	
 	/** Creates a blank image, with the name "imagename", with given width and height. */
@@ -324,7 +371,7 @@ class Gfx {
 		
 		imagenum = imageindex.get(imagename);
 		if (!imageindex.exists(imagetocopyfrom)) {
-			Webdebug.log("ERROR: No image called \"" + imagetocopyfrom + "\" found.");
+			trace("ERROR: No image called \"" + imagetocopyfrom + "\" found.");
 		}
 		var imagenumfrom:Int = imageindex.get(imagetocopyfrom);
 		
@@ -337,11 +384,11 @@ class Gfx {
 			if (tiles[currenttileset].width == tiles[tilesetindex.get(fromtileset)].width && tiles[currenttileset].height == tiles[tilesetindex.get(fromtileset)].height) {
 				tiles[currenttileset].tiles[totilenumber].copyPixels(tiles[tilesetindex.get(fromtileset)].tiles[fromtilenumber], tiles[tilesetindex.get(fromtileset)].tiles[fromtilenumber].rect, tl);		
 			}else {
-				Webdebug.log("ERROR: Tilesets " + currenttilesetname + " (" + Std.string(tilewidth()) + "x" + Std.string(tileheight()) + ") and " + fromtileset + " (" + Std.string(tiles[tilesetindex.get(fromtileset)].width) + "x" + Std.string(tiles[tilesetindex.get(fromtileset)].height) + ") are different sizes. Maybe try just drawing to the tile you want instead with Gfx.drawtotile()?");
+				trace("ERROR: Tilesets " + currenttilesetname + " (" + Std.string(tilewidth()) + "x" + Std.string(tileheight()) + ") and " + fromtileset + " (" + Std.string(tiles[tilesetindex.get(fromtileset)].width) + "x" + Std.string(tiles[tilesetindex.get(fromtileset)].height) + ") are different sizes. Maybe try just drawing to the tile you want instead with Gfx.drawtotile()?");
 				return;
 			}
 		}else {
-			Webdebug.log("ERROR: Tileset " + fromtileset + " hasn't been loaded or created.");
+			trace("ERROR: Tileset " + fromtileset + " hasn't been loaded or created.");
 			return;
 		}
 	}
@@ -808,6 +855,8 @@ class Gfx {
 		screen.height = screenheight * scale;
 		
 		fullscreen = false;
+		
+		Debug.showtest = false;
 	}
 	
 	/** Sets the values for the temporary rect structure. Probably better than making a new one, idk */

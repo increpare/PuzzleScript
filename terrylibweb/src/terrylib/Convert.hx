@@ -1,4 +1,4 @@
-package terrylibweb;
+package terrylib;
 
 class Convert {
 	public static function tostring(?value:Dynamic):String {

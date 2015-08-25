@@ -1,4 +1,4 @@
-import terrylibweb.*;
+import terrylib.*;
 import openfl.external.ExternalInterface;
 
 class Webdebug{

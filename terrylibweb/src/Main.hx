@@ -1,4 +1,4 @@
-import terrylibweb.*;
+import terrylib.*;
 
 @:expose
 class MyClass {

@@ -1,7 +1,12 @@
-import terrylibweb.*;
+import terrylib.*;
 import hscript.*;
 import openfl.Assets;
 import openfl.external.ExternalInterface;
+
+#if flash
+	import openfl.events.*;
+	import openfl.net.*;
+#end
 
 class Webscript {
 	public static var myscript:String;
@@ -17,15 +22,51 @@ class Webscript {
 	public static var updatefunction:Dynamic;
 	
 	public static function init() {
-		ExternalInterface.addCallback("loadscript", loadscript);
-		
 		scriptloaded = false;
 		runscript = false;
 		errorinscript = false;
+		
+		try {
+			ExternalInterface.addCallback("loadscript", loadscript);
+		}catch (e:Dynamic) {
+			//Ok, try loading this locally for testing
+			loadfile();
+		}
 	}
 	
+	#if flash
+	
+	public static var myLoader:URLLoader;
+	public static function loadfile():Void {
+		//make a new loader
+    myLoader = new URLLoader();
+    //new request - for a file in the same folder called 'someTextFile.txt'
+    var myRequest:URLRequest = new URLRequest("script.txt");
+		
+		//wait for the load
+    myLoader.addEventListener(Event.COMPLETE, onLoadComplete);
+		myLoader.addEventListener(IOErrorEvent.IO_ERROR, onIOError);
+		
+    //load!
+    myLoader.load(myRequest);
+	}
+	
+	public static function onIOError(e:Event):Void {
+		trace("\"script.txt\" not found.");
+	}
+	
+	public static function onLoadComplete(e:Event):Void {
+		myscript = Convert.tostring(myLoader.data);
+		
+		scriptfound();
+	}
+	#end
+	
 	public static function update() {
-		if (scriptloaded) {
+		if (errorinscript) {
+			Gfx.clearscreen(Gfx.RGB(32, 0, 0));
+			Text.display(Text.CENTER, Text.CENTER, "ERROR! ERROR! ERROR!", Col.RED);
+		}else if (scriptloaded) {
 			if (runscript) {
 				try {
 					updatefunction();
@@ -36,9 +77,6 @@ class Webscript {
 					runscript = false;
 				}
 			}	
-		}else if (errorinscript) {
-			Gfx.clearscreen(Gfx.RGB(32, 0, 0));
-			Text.display(Text.CENTER, Text.CENTER, "ERROR! ERROR! ERROR!", Col.RED);
 		}else {
 			Gfx.clearscreen(Col.NIGHTBLUE);
 			Text.display(Text.CENTER, Text.CENTER, "WAITING FOR SCRIPTFILE...");

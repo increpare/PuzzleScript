@@ -1,4 +1,4 @@
-package terrylibweb;
+package terrylib;
 
 //From Arne's legendary 16 colour palette: http://androidarts.com/palette/16pal.htm
 

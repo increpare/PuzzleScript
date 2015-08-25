@@ -1,4 +1,4 @@
-package terrylibweb.util;
+package terrylib.util;
 
 import openfl.display.*;
 

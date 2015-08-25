@@ -26,14 +26,9 @@ function buildStandalone(sourceCode) {
 	}
 
 	var htmlString = standalone_HTML_String.concat("");
-	var title = "PuzzleScript Game";
-	if (state.metadata.title!==undefined) {
-		title=state.metadata.title;
-	}
+	var title = "terrylib Game";
+
 	var homepage = "www.puzzlescript.net";
-	if (state.metadata.homepage!==undefined) {
-		homepage=state.metadata.homepage.toLowerCase();
-	}
 
 	if ('background_color' in state.metadata) {
 		htmlString = htmlString.replace(/black;\/\*Don\'t/g,state.bgcolor+';\/\*Don\'t');	

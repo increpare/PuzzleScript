@@ -161,15 +161,11 @@ function levelEditorClick_Fn() {
 		levelEditorOpened=!levelEditorOpened;
     	canvasResize();
     }
-    lastDownTarget=canvas;	
 }
 
 function shareClick() {
 	consolePrint("Sending code to github...",true)
-	var title = "Untitled PuzzleScript Script";
-	if (state.metadata.title!==undefined) {
-		title=state.metadata.title + " PuzzleScript Script";
-	}
+	var title = "Untitled Terrylib Script";
 	compile();
 
 
@@ -187,6 +183,12 @@ function shareClick() {
 			}
 		}
 	};
+
+	function qualifyURL(url) {
+		var a = document.createElement('a');
+		a.href = url;
+		return a.href;
+	}
 
 	var githubURL = 'https://api.github.com/gists';
 	var githubHTTPClient = new XMLHttpRequest();
@@ -209,23 +211,15 @@ function shareClick() {
 			editurl=qualifyURL(editurl);
 			var sourceCodeLink = "link to source code:<br><a href=\""+editurl+"\">"+editurl+"</a>";
 
-
 			consolePrint("GitHub submission successful - " + sourceCodeLink,true);
 
-
-			if (errorCount>0) {
-				consolePrint("Cannot link directly to playable game, because there are compiler errors.",true);
-			} else {
-				consolePrint("The game can now be played at this url:<br><a target=\"_blank\" href=\""+url+"\">"+url+"</a>",true);
-			} 
-
+			consolePrint("The game can now be played at this url:<br><a target=\"_blank\" href=\""+url+"\">"+url+"</a>",true);
 
 		}
 	}
 	githubHTTPClient.setRequestHeader("Content-type","application/x-www-form-urlencoded");
 	var stringifiedGist = JSON.stringify(gistToCreate);
 	githubHTTPClient.send(stringifiedGist);
-    lastDownTarget=canvas;	
 }
 
 function rebuildClick() {

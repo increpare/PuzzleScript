@@ -17,9 +17,6 @@ saveClickLink.addEventListener("click", saveClick, false);
 var shareClickLink = document.getElementById("shareClickLink");
 shareClickLink.addEventListener("click", shareClick, false);
 
-var exportClickLink = document.getElementById("exportClickLink");
-exportClickLink.addEventListener("click", exportClick, false);
-
 var exampleDropdown = document.getElementById("exampleDropdown");
 exampleDropdown.addEventListener("change", dropdownChange, false);
 
@@ -51,3 +48,4 @@ window.onbeforeunload = function (e) {
     return msg;
   }
 };
+

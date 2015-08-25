@@ -19,16 +19,16 @@
     <class path="C:\coding\haxe\Haxe\lib\lime\2,5,3" />
     <class path="C:\coding\haxe\Haxe\lib\hscript\2,0,5" />
     <class path="src" />
-    <class path="bin\html5\haxe" />
+    <class path="bin\flash\haxe" />
   </classpaths>
   <!-- Build options -->
   <build>
-    <option directives="openfl=3.3.0&#xA;lime=2.5.3&#xA;hscript=2.0.5&#xA;openfl-next&#xA;tools=2.5.3&#xA;no-compilation&#xA;openfl-html5&#xA;canvas&#xA;lime-html5&#xA;html5&#xA;web&#xA;html5" />
+    <option directives="openfl=3.3.0&#xA;lime=2.5.3&#xA;hscript=2.0.5&#xA;openfl-next&#xA;tools=2.5.3&#xA;no-compilation&#xA;openfl-flash&#xA;web" />
     <option flashStrict="False" />
     <option noInlineOnDebug="False" />
     <option mainClass="ApplicationMain" />
     <option enabledebug="False" />
-    <option additional="#--macro keep('IntIterator')&#xA;--remap flash:openfl&#xA;--macro allowPackage(&quot;flash&quot;)" />
+    <option additional="#--macro keep('IntIterator')&#xA;-swf-version 11.2&#xA;-debug " />
   </build>
   <!-- haxelib libraries -->
   <haxelib>

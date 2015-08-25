@@ -1,6 +1,6 @@
-package terrylibweb.util;
+package terrylib.util;
 
-@:access(terrylibweb.Gfx)
+@:access(terrylib.Gfx)
 class AnimationContainer {
 	public function new(_animationname:String, _tileset:String, _startframe:Int, _endframe:Int, _delayperframe:Int) {
 		name = _animationname;

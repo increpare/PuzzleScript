@@ -1,4 +1,3 @@
-var lastDownTarget = null;
 var canvas = null;
 var input = document.createElement('TEXTAREA');
 

@@ -1,4 +1,4 @@
-package terrylibweb;
+package terrylib;
 
 import openfl.utils.Timer;
 import openfl.display.*;
@@ -6,10 +6,11 @@ import openfl.events.*;
 import openfl.Lib;
 
 @:access(Main)
-@:access(terrylibweb.Gfx)
-@:access(terrylibweb.Music)
-@:access(terrylibweb.Mouse)
-@:access(terrylibweb.Input)
+@:access(terrylib.Gfx)
+@:access(terrylib.Music)
+@:access(terrylib.Mouse)
+@:access(terrylib.Input)
+@:access(terrylib.Scene)
 class Core extends Sprite {
 	public function new() {
 		super();
@@ -23,12 +24,13 @@ class Core extends Sprite {
 		Input.init(this.stage);
 		Mouse.init(this.stage);
 		Gfx.init(this.stage);
+		Music.init();
 		
 		//Default setup
 		Gfx.resizescreen(768, 480);
 		Text.addfont("opensans", 24);
 		
-		terrylibmain = new Main();
+		Scene.init();
 		
 		_rate = 1000 / TARGET_FPS;
 	  _skip = _rate * 10;
@@ -67,13 +69,13 @@ class Core extends Sprite {
 		if(!Gfx.skiprender) Gfx.backbuffer.lock();
 		
 		Gfx.clearscreen();
-		terrylibmain.update();
+		Scene.update();
 		Text.drawstringinput();
+		Debug.showlog();
 		
 		if(!Gfx.skiprender) Gfx.backbuffer.unlock();
 	}
 	
-	public var terrylibmain:Main;
 	private var TARGET_FPS:Int = 60;
 	private var _rate:Float;
 	private var _skip:Float;

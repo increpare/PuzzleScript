@@ -1,6 +1,6 @@
-package terrylibweb;
+package terrylib;
 
-import terrylibweb.util.*;
+import terrylib.util.*;
 import openfl.Assets;
 import openfl.display.*;
 import openfl.geom.*;
@@ -22,7 +22,7 @@ typedef Drawparamstext = {
 	@:optional var align:Int;
 }
 
-@:access(terrylibweb.Gfx)
+@:access(terrylib.Gfx)
 class Text {
 	public static function init(stage:Stage) {
 		drawto = Gfx.backbuffer;

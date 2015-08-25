@@ -331,8 +331,6 @@ function drawEditorIcons() {
 
 }
 
-var lastDownTarget;
-
 var oldcellwidth=0;
 var oldcellheight=0;
 var oldtextmode=-1;
