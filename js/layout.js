@@ -13,9 +13,10 @@ function resize_widths(verticaldragbarX){
 	document.getElementById("rightbottomhalf").style.left = verticaldragbarX + verticaldragbarWidth + "px";
 	document.getElementById("horizontaldragbar").style.left = verticaldragbarX + verticaldragbarWidth + "px";
 	document.getElementById("verticaldragbar").style.left = verticaldragbarX + "px";
-	if (window.onresize!=null){
-		window.onresize();
-	}
+	//this will probably break eventually
+	var e = new Event("resize");
+	e.recurse=false;
+	window.dispatchEvent(e);
 }
 
 function resize_heights(horizontaldragbarY){
@@ -25,12 +26,14 @@ function resize_heights(horizontaldragbarY){
 	document.getElementById("righttophalf").style.height = horizontaldragbarY - upperbarheight + "px";
 	document.getElementById("rightbottomhalf").style.top = horizontaldragbarY + horizontaldragbarHeight + "px";
 	document.getElementById("horizontaldragbar").style.top = horizontaldragbarY + "px";
-	if (window.onresize!=null){
-		window.onresize();
-	}
+	//this will probably break eventually
+	var e = new Event("resize");
+	e.recurse=false;
+	window.dispatchEvent(e);
 }
 
 function resize_all(e){
+	if (e.recurse===false){return;}
 	smallmovelimit = 100;
 	
 	hdiff = window.innerWidth - winwidth;
