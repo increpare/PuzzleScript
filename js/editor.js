@@ -50,30 +50,109 @@ function isalnum (code){
   return true;
 }
 
+
+  var cls = "CodeMirror-Tern-";
+  
+  function makeTooltip(x, y, content) {
+    var node = elt("div", cls + "tooltip", content);
+    node.style.left = x + "px";
+    node.style.top = y + "px";
+    document.body.appendChild(node);
+    return node;
+  }
+
+
+  function tempTooltip(cm, content, ts) {
+    if (cm.state.ternTooltip) remove(cm.state.ternTooltip);
+    var where = cm.cursorCoords();
+    var tip = cm.state.ternTooltip = makeTooltip(where.right + 1, where.bottom, content);
+    function maybeClear() {
+      old = true;
+      if (!mouseOnTip) clear();
+    }
+    function clear() {
+      cm.state.ternTooltip = null;
+      if (!tip.parentNode) return;
+      cm.off("cursorActivity", clear);
+      cm.off('blur', clear);
+      cm.off('scroll', clear);
+      fadeOut(tip);
+    }
+    var mouseOnTip = false, old = false;
+    CodeMirror.on(tip, "mousemove", function() { mouseOnTip = true; });
+    CodeMirror.on(tip, "mouseout", function(e) {
+      if (!CodeMirror.contains(tip, e.relatedTarget || e.toElement)) {
+        if (old) clear();
+        else mouseOnTip = false;
+      }
+    });
+    setTimeout(maybeClear, ts.options.hintDelay ? ts.options.hintDelay : 1700);
+    cm.on("cursorActivity", clear);
+    cm.on('blur', clear);
+    cm.on('scroll', clear);
+  }
+
+function renderHint(elt,data,cur){
+	var h = document.createElement("span")                // Create a <h1> element
+	var t = document.createTextNode("Hello World");     // Create a text node
+	h.appendChild(t);   
+
+	elt.appendChild(h);//document.createTextNode(cur.displayText || getText(cur)));
+}
+
 var haxeHintWords =  ["Gfx.resizescreen","Gfx.clearscreen","Gfx.drawbox","Gfx.fillbox","Gfx.drawtri","Gfx.filltri","Gfx.drawcircle","Gfx.fillcircle","Gfx.drawhexagon","Gfx.fillhexagon","Gfx.drawline","Gfx.setlinethickness","Gfx.getpixel","Gfx.RGB","Gfx.HSL","Gfx.getred","Gfx.getgreen","Gfx.getblue","Gfx.screenwidth","Gfx.screenheight","Gfx.drawimage","Gfx.changetileset","Gfx.drawtile","Gfx.imagewidth","Gfx.imageheight","Gfx.tilewidth","Gfx.tileheight","Gfx.createimage","Gfx.createtiles","Gfx.numberoftiles","Gfx.drawtoscreen","Gfx.drawtoimage","Gfx.drawtotile","Gfx.copytile","Gfx.grabtilefromscreen","Gfx.grabtilefromimage","Gfx.grabimagefromscreen","Gfx.grabimagefromimage","Gfx.defineanimation","Gfx.drawanimation","Gfx.stopanimation","Col","Col.BLACK","Col.GREY","Col.WHITE","Col.RED","Col.PINK","Col.DARKBROWN","Col.BROWN","Col.ORANGE","Col.YELLOW","Col.DARKGREEN","Col.GREEN","Col.LIGHTGREEN","Col.NIGHTBLUE","Col.DARKBLUE","Col.BLUE","Col.LIGHTBLUE","Col.MAGENTA","Col","Text","Text.changefont","Text.changesize","Text.display","Text.input","Text.getinput","Music","Music.playsound","Key.A ","Key.B ","Key.C ","Key.D ","Key.E ","Key.F ","Key.G ","Key.H ","Key.I ","Key.J ","Key.K ","Key.L ","Key.M ","Key.N ","Key.O ","Key.P ","Key.Q ","Key.R ","Key.S ","Key.T ","Key.U ","Key.V ","Key.W ","Key.X ","Key.Y","Key.Z","Key.ZERO ","Key.ONE ","Key.TWO ","Key.THREE ","Key.FOUR ","Key.FIVE ","Key.SIX ","Key.SEVEN ","Key.EIGHT","Key.NINE","Key.F1 ","Key.F2 ","Key.F3 ","Key.F4 ","Key.F5 ","Key.F6 ","Key.F7 ","Key.F8 ","Key.F9 ","Key.F10 ","Key.F11","Key.F12","Key.MINUS","Key.PLUS","Key.DELETE","Key.BACKSPACE","Key.LBRACKET","Key.RBRACKET","Key.BACKSLASH","Key.CAPSLOCK","Key.SEMICOLON","Key.QUOTE","Key.COMMA","Key.PERIOD","Key.SLASH","Key.ESCAPE","Key.ENTER","Key.SHIFT","Key.CONTROL","Key.ALT","Key.SPACE","Key.UP","Key.DOWN","Key.LEFT","Key.RIGHT","Input.justpressed","Input.pressed","Input.justreleased","Input.delaypressed","Mouse.x","Mouse.y","Mouse.leftclick","Mouse.leftheld","Mouse.leftreleased","Mouse.middleclick","Mouse.middleheld","Mouse.middlereleased","Mouse.rightclick","Mouse.rightheld","Mouse.rightreleased","Mouse.mousewheel","Convert.tostring","Convert.toint","Convert.tofloat","Random.int","Random.float","Random.string","Random.bool","Random.occasional","Random.rare","Random.pickstring","Random.pickint","Random.pickfloat","Debug.log"];
+var haxeHintDescriptions =  ["Gfx.resizescreen<hr>(width, height, scale)</hr>","Gfx.clearscreen","Gfx.drawbox","Gfx.fillbox","Gfx.drawtri","Gfx.filltri","Gfx.drawcircle","Gfx.fillcircle","Gfx.drawhexagon","Gfx.fillhexagon","Gfx.drawline","Gfx.setlinethickness","Gfx.getpixel","Gfx.RGB","Gfx.HSL","Gfx.getred","Gfx.getgreen","Gfx.getblue","Gfx.screenwidth","Gfx.screenheight","Gfx.drawimage","Gfx.changetileset","Gfx.drawtile","Gfx.imagewidth","Gfx.imageheight","Gfx.tilewidth","Gfx.tileheight","Gfx.createimage","Gfx.createtiles","Gfx.numberoftiles","Gfx.drawtoscreen","Gfx.drawtoimage","Gfx.drawtotile","Gfx.copytile","Gfx.grabtilefromscreen","Gfx.grabtilefromimage","Gfx.grabimagefromscreen","Gfx.grabimagefromimage","Gfx.defineanimation","Gfx.drawanimation","Gfx.stopanimation","Col","Col.BLACK","Col.GREY","Col.WHITE","Col.RED","Col.PINK","Col.DARKBROWN","Col.BROWN","Col.ORANGE","Col.YELLOW","Col.DARKGREEN","Col.GREEN","Col.LIGHTGREEN","Col.NIGHTBLUE","Col.DARKBLUE","Col.BLUE","Col.LIGHTBLUE","Col.MAGENTA","Col","Text","Text.changefont","Text.changesize","Text.display","Text.input","Text.getinput","Music","Music.playsound","Key.A ","Key.B ","Key.C ","Key.D ","Key.E ","Key.F ","Key.G ","Key.H ","Key.I ","Key.J ","Key.K ","Key.L ","Key.M ","Key.N ","Key.O ","Key.P ","Key.Q ","Key.R ","Key.S ","Key.T ","Key.U ","Key.V ","Key.W ","Key.X ","Key.Y","Key.Z","Key.ZERO ","Key.ONE ","Key.TWO ","Key.THREE ","Key.FOUR ","Key.FIVE ","Key.SIX ","Key.SEVEN ","Key.EIGHT","Key.NINE","Key.F1 ","Key.F2 ","Key.F3 ","Key.F4 ","Key.F5 ","Key.F6 ","Key.F7 ","Key.F8 ","Key.F9 ","Key.F10 ","Key.F11","Key.F12","Key.MINUS","Key.PLUS","Key.DELETE","Key.BACKSPACE","Key.LBRACKET","Key.RBRACKET","Key.BACKSLASH","Key.CAPSLOCK","Key.SEMICOLON","Key.QUOTE","Key.COMMA","Key.PERIOD","Key.SLASH","Key.ESCAPE","Key.ENTER","Key.SHIFT","Key.CONTROL","Key.ALT","Key.SPACE","Key.UP","Key.DOWN","Key.LEFT","Key.RIGHT","Input.justpressed","Input.pressed","Input.justreleased","Input.delaypressed","Mouse.x","Mouse.y","Mouse.leftclick","Mouse.leftheld","Mouse.leftreleased","Mouse.middleclick","Mouse.middleheld","Mouse.middlereleased","Mouse.rightclick","Mouse.rightheld","Mouse.rightreleased","Mouse.mousewheel","Convert.tostring","Convert.toint","Convert.tofloat","Random.int","Random.float","Random.string","Random.bool","Random.occasional","Random.rare","Random.pickstring","Random.pickint","Random.pickfloat","Debug.log"];
 CodeMirror.registerHelper("hint", "haxe", 
 	function(editor, options) {
 		var cur = editor.getCursor();
 		var line = editor.getLine(cur.line);
 		var start = cur.ch;
-		while (start>=0 &&
-				(isalnum(line[start])||line[start]==='.') ) {
+		while (start>0){
 			start--;
+			if (isalnum(line.charCodeAt(start))||line[start]===".")  {
+			} else {
+				break;
+			}
 		}
-		var end=cur.ch;
-		while(end<line.length && (isalnum(line[end]) || line[end]==='.')){
+		if (isalnum(line.charCodeAt(start))||line[start]===".")  {
+		} else {
+			start++;
+		}
+			
+		var end=cur.ch-1;
+		while (end<line.length-1){
 			end++;
+			if (isalnum(line.charCodeAt(end))||line[end]===".")  {
+			} else {
+				break;
+			}
 		}
+
+		if (isalnum(line.charCodeAt(end))||line[end]===".")  {
+		} else {
+			end--;
+		}
+		end++;
 		var token = line.substring(start,end);
 
-		return {list: ["cat","bat","coat","coats"], from: CodeMirror.Pos(cur.line, start), to: CodeMirror.Pos(cur.line, end)};
+		var matches=[];
+		for (var i=0;i<haxeHintWords.length;i++){
+			var w = haxeHintWords[i];
+			if (w.length<token.length){
+				continue;
+			} 
+			if (w.substring(0,token.length)==token){
+				matches.push({text:w,displayText:haxeHintDescriptions[i],render:renderHint});
+			}
+		}
+		return {list: matches, from: CodeMirror.Pos(cur.line, start), to: CodeMirror.Pos(cur.line, end)};
 	}
 );
 
 // When an @ is typed, activate completion
 editor.on("inputRead", function(editor, change) {
- // if (change.text[0] == ".")
-   // editor.showHint();
+  if (change.text[0] == ".")
+    editor.showHint();
 });
 
 editor.on('mousedown', function(cm, event) {
@@ -142,7 +221,7 @@ editor.on("beforeChange", function(instance, change) {
 
 
 code.editorreference = editor;
-//editor.setOption('theme', 'midnight');
+editor.setOption('theme', 'ambiance');
 
 function getParameterByName(name) {
     name = name.replace(/[\[]/, "\\\[").replace(/[\]]/, "\\\]");

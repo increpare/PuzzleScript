@@ -75,7 +75,7 @@ ApplicationMain.init = function() {
 	if(total == 0) ApplicationMain.start();
 };
 ApplicationMain.main = function() {
-	ApplicationMain.config = { antialiasing : 0, background : 0, borderless : false, company : "Stephen and Terry", depthBuffer : false, file : "webthing", fps : 60, fullscreen : false, hardware : true, height : 120, orientation : "landscape", packageName : "com.stephenandterry.webthing", resizable : true, stencilBuffer : true, title : "Webthing", version : "1.0.0", vsync : true, width : 192};
+	ApplicationMain.config = { antialiasing : 0, background : 0, borderless : false, company : "Stephen and Terry", depthBuffer : false, file : "webthing", fps : 60, fullscreen : false, hardware : true, height : 480, orientation : "landscape", packageName : "com.stephenandterry.webthing", resizable : true, stencilBuffer : true, title : "Webthing", version : "1.0.0", vsync : true, width : 768};
 };
 ApplicationMain.start = function() {
 	var hasMain = false;
@@ -1137,7 +1137,7 @@ terrylib.Core.prototype = $extend(openfl.display.Sprite.prototype,{
 		terrylib.Input.init(this.stage);
 		terrylib.Mouse.init(this.stage);
 		terrylib.Gfx.init(this.stage);
-		terrylib.Gfx.resizescreen(192,120);
+		terrylib.Gfx.resizescreen(192,120,4);
 		terrylib.Text.addfont("visitor",13);
 		this.terrylibmain = new Main();
 		this._rate = 1000 / this.TARGET_FPS;
@@ -1915,11 +1915,11 @@ NMEPreloader.prototype = $extend(openfl.display.Sprite.prototype,{
 		return 0;
 	}
 	,getHeight: function() {
-		var height = 120;
+		var height = 480;
 		if(height > 0) return height; else return openfl.Lib.current.stage.stageHeight;
 	}
 	,getWidth: function() {
-		var width = 192;
+		var width = 768;
 		if(width > 0) return width; else return openfl.Lib.current.stage.stageWidth;
 	}
 	,onInit: function() {
