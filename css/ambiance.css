@@ -50,12 +50,18 @@
 .cm-s-ambiance .CodeMirror-gutters {
   background: #3D3D3D;
   border-right: 1px solid #4D4D4D;
-  box-shadow: 0 10px 20px black;
+  /*box-shadow: 0 10px 20px black;*/
 }
+
+div.CodeMirror span.CodeMirror-matchingbracket {
+  color: yellow;
+    font-weight: bold;
+}
+
 
 .cm-s-ambiance .CodeMirror-linenumber {
   text-shadow: 0px 1px 1px #4d4d4d;
-  color: #111;
+  color: gray;
   padding: 0 5px;
 }
 

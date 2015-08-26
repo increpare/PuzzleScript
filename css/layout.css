@@ -39,12 +39,16 @@ HTML, BODY
 {
 	position: absolute;
 	display: block;
-	left: 2px;
+	left: 0px;
 	right: 0px;
 	height: 30px;
 	top: 0px;
-	background-color: #444444;
+	color:gray;
+	background-color: #4d4d4d;
 	overflow: hidden;
+	-webkit-box-shadow: inset 0px 0 53px -21px rgba(0,0,0,0.75);
+-moz-box-shadow: inset 0px 0 53px -21px rgba(0,0,0,0.75);
+box-shadow: inset 0px 0px 53px -21px rgba(0,0,0,0.75);
 }
 .upperarea
 {
@@ -64,7 +68,7 @@ HTML, BODY
 .lowerarea
 {
 	color: #808080;
-	background-color: #0F192A;
+	background-color: #202020;
 	position: absolute;
 	top: 21px;
 	bottom: 0px;
@@ -72,6 +76,9 @@ HTML, BODY
 	right: 0px;
 	overflow: auto;
 	word-wrap: normal;
+	 -webkit-box-shadow: inset 0 20px 20px -20px rgba(0,0,0,0.8);
+    -moz-box-shadow: inset 0 20px 20px -20px rgba(0,0,0,0.8);
+    box-shadow: inset 0 20px 20px -20px rgba(0,0,0,0.8);
 }
 #verticaldragbar {
 	position: absolute;
@@ -80,8 +87,9 @@ HTML, BODY
 	background-color:#555555;
 	height: 100%;
 	float: left;
-	width: 3px;
+	width: 5px;
 	cursor: col-resize;
+
 }
 #horizontaldragbar {
 	position: absolute;
@@ -90,6 +98,7 @@ HTML, BODY
 	left: 50%;
 	right: 0;
 	float: right;
-	height: 3px;
+	height: 5px;
 	cursor: row-resize;
+
 }

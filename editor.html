@@ -5,6 +5,7 @@
     <meta http-equiv="Content-Type" content="text/html;charset=utf-8" >
     <title>TerryLib</title>
 
+
 <link rel="stylesheet" href="css/docs.css">
 <link rel="stylesheet" href="css/codemirror.css">
 <link rel="stylesheet" href="css/ambiance.css">
@@ -14,6 +15,7 @@
 <link rel="stylesheet" href="css/soundbar.css">
 <link rel="stylesheet" href="css/layout.css">
 <link rel="stylesheet" href="css/toolbar.css">
+<link rel="stylesheet" href="css/tern.css">
 <link rel="stylesheet" href="js/codemirror/hint/show-hint.css">
 
 <!--CSSREPLACE-->
@@ -35,7 +37,7 @@ function update() {
 <div id="verticaldragbar"></div>
 
 <div id="uppertoolbar">
-	&nbsp;&nbsp;&nbsp;<a href="index.html"><h2>????????????</h2></a> - <a id="saveClickLink" href="javascript:void(0);">SAVE</a> -
+	&nbsp;&nbsp;&nbsp;<a href="index.html"><h2>terrylib</h2></a> - <a id="saveClickLink" href="javascript:void(0);">SAVE</a> -
 
 	<form action="" style="display:inline;"><select id="loadDropDown" name="default" style="display:inline; width:100px"> -
 </select></form> - <form action="" style="display:inline;"> <select  id="exampleDropdown"  name="default" style="display:inline; width:150px">
@@ -57,7 +59,7 @@ function update() {
 <option value="ex10">Example 10</option>
 </optgroup>
 </select>
-</form>- <a id="runClickLink" href="javascript:void('Run the Game');">RUN</a> - <a id="shareClickLink" href="javascript:void('Generate Link To Game');">SHARE</a> - <a href="Documentation/documentation.html"  target="Puzzle_Script_Documentation">DOCS</a> - <a id="referenceClickLink"  href="javascript:void('Print Reference Sheet');" target="_blank">REFERENCE</a> - <a href="https://groups.google.com/forum/#!forum/puzzlescript">FORUM</a>
+</form>- <a id="runClickLink" href="javascript:void('Run the Game');">RUN</a> - <a id="stopClickLink" href="javascript:void('Stop the Game');">STOP</a> - <a id="shareClickLink" href="javascript:void('Generate Link To Game');">SHARE</a> - <a href="Documentation/documentation.html"  target="Puzzle_Script_Documentation">DOCS</a> - <a id="referenceClickLink"  href="javascript:void('Print Reference Sheet');" target="_blank">REFERENCE</a> - <a href="https://groups.google.com/forum/#!forum/puzzlescript">FORUM</a>
 </div>
 
 <div id="righttophalf">
@@ -110,6 +112,8 @@ function update() {
 <script src="js/riffwave.js"></script>
 <script src="js/sfxr.js"></script>
 <script src="js/codemirror/codemirror.js"></script>
+<script src="js/addon/edit/closebrackets.js"></script>
+<script src="js/addon/edit/matchbrackets.js"></script>
 <script src="js/codemirror/active-line.js"></script>
 <script src="js/codemirror/dialog.js"></script>
 <script src="js/codemirror/search.js"></script>
@@ -180,7 +184,7 @@ function update() {
 </style>
 
 	<script type="text/javascript">
-	//	lime.embed ("openfl-content", 768, 480, "000000");
+		lime.embed ("openfl-content", 768, 480, "000000");
 	</script>
 
 <!--ENDREPLACE-->

@@ -13,7 +13,7 @@
   border-radius: 3px;
   border: 1px solid silver;
 
-  background: white;
+  background: #3D3D3D;
   font-size: 90%;
   font-family: monospace;
 
@@ -25,14 +25,14 @@
   margin: 0;
   padding: 0 4px;
   border-radius: 2px;
-  max-width: 19em;
+  max-width: 50em;
   overflow: hidden;
   white-space: pre;
-  color: black;
+  color: grey;
   cursor: pointer;
 }
 
 li.CodeMirror-hint-active {
-  background: #08f;
-  color: white;
+  background: #4D4D4D;
+  color: grey;
 }

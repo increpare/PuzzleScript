@@ -1,10 +1,12 @@
 
 #consoletextarea {
 	  font-family: monospace;
-	  color: #428BDD;
+	  color: #dddddd;
 	  background-color:#0F192A;
 	  margin-left:10px;
+	  margin-top:5px;
 	  line-height:1.0;
+	  background-color: transparent;
 }
 
 .errorTextLineNumber {
@@ -19,4 +21,12 @@
 }
 .betaText {
 	color: orange;
+}
+
+
+span.cm-SOUND {
+	color: orange;
+	cursor: pointer; 
+	cursor: hand; 
+	text-decoration: underline;
 }

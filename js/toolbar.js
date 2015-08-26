@@ -1,4 +1,9 @@
-
+function stopClick(){
+	if (interpreter==null){
+		interpreter = new Webbridge();
+	}
+	 interpreter.runScript("function update(){}");
+}
 function runClick() {
 	clearConsole();
 	//compile(["restart"]);
