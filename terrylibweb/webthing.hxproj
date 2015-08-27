@@ -15,20 +15,21 @@
   </output>
   <!-- Other classes to be compiled into your SWF -->
   <classpaths>
-    <class path="C:\coding\haxe\Haxe\lib\openfl\3,3,0" />
-    <class path="C:\coding\haxe\Haxe\lib\lime\2,5,3" />
+    <class path="C:\coding\haxe\Haxe\lib\lime\2,6,1" />
+    <class path="C:\coding\haxe\Haxe\lib\sion\0,0,3-alpha" />
+    <class path="C:\coding\haxe\Haxe\lib\openfl\3,3,2" />
     <class path="C:\coding\haxe\Haxe\lib\hscript\2,0,5" />
     <class path="src" />
     <class path="bin\html5\haxe" />
   </classpaths>
   <!-- Build options -->
   <build>
-    <option directives="openfl=3.3.0&#xA;lime=2.5.3&#xA;hscript=2.0.5&#xA;openfl-next&#xA;terrylibweb&#xA;tools=2.5.3&#xA;no-compilation&#xA;openfl-html5&#xA;canvas&#xA;lime-html5&#xA;html5&#xA;web&#xA;html5" />
+    <option directives="lime=2.6.1&#xA;sion=0.0.3-alpha&#xA;openfl=3.3.2&#xA;hscript=2.0.5&#xA;openfl-next&#xA;terrylibweb&#xA;tools=2.6.1&#xA;no-compilation&#xA;openfl-html5&#xA;canvas&#xA;RENDER_BLIT&#xA;lime-html5&#xA;html5&#xA;web&#xA;html5" />
     <option flashStrict="False" />
     <option noInlineOnDebug="False" />
     <option mainClass="ApplicationMain" />
     <option enabledebug="False" />
-    <option additional="#--macro keep('IntIterator')&#xA;--remap flash:openfl&#xA;--macro allowPackage(&quot;flash&quot;)" />
+    <option additional="#--macro keep('IntIterator')&#xA;--remap flash:openfl&#xA;--macro allowPackage(&quot;flash&quot;)&#xA;-debug " />
   </build>
   <!-- haxelib libraries -->
   <haxelib>

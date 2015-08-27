@@ -25,7 +25,6 @@ class Webscript {
 	public static var homepage:String;
 	public static var background_color:Int;
 	
-	
 	public static function init() {
 		scriptloaded = false;
 		runscript = false;
@@ -48,7 +47,7 @@ class Webscript {
 		//make a new loader
     myLoader = new URLLoader();
     //new request - for a file in the same folder called 'someTextFile.txt'
-    var myRequest:URLRequest = new URLRequest("script.txt");
+    var myRequest:URLRequest = new URLRequest("schript.txt");
 		
 		//wait for the load
     myLoader.addEventListener(Event.COMPLETE, onLoadComplete);
@@ -88,47 +87,18 @@ class Webscript {
 			counter+=5;
 			Gfx.clearscreen(Col.BLUE);
 			Gfx.fillbox(4, 4, Gfx.screenwidth - 8, Gfx.screenheight - 8, Col.NIGHTBLUE);
-			Text.changesize(13);
-			Text.display(Gfx.screenwidth - 10, Gfx.screenheight - 20, "terrylib alpha v0.1", Col.WHITE, { align:Text.RIGHT } );
-			Text.changesize(13);
+			
+			Text.display(Gfx.screenwidth - 6, Gfx.screenheight - Text.height()-4, "terrylib alpha v0.1", Col.WHITE, { align:Text.RIGHT } );
 			
 			var msg:String = "WAITING_FOR_SCRIPTFILE...";
 			var startpos:Float = Gfx.screenwidthmid - Text.len(msg) / 2;
 			var currentpos:Float = 0;
 			for (i in 0 ... msg.length) {
 				if (S.mid(msg, i, 1) != "_") {
-					Text.display(startpos + currentpos, Gfx.screenheightmid - 10 + Math.sin((((i*5)+counter)%360) * Math.PI * 2 / 360)*10, S.mid(msg, i, 1), Col.WHITE);
+					Text.display(startpos + currentpos, Gfx.screenheightmid - 10 + Math.sin((((i*5)+counter)%360) * Math.PI * 2 / 360)*5, S.mid(msg, i, 1), Col.WHITE);
 				}
 				currentpos += Text.len(S.mid(msg, i, 1));
 			}
-			Text.changesize(13);
-			/*
-			Text.changesize(11);
-			Text.display(10, 15, "Size 11 testing");
-			Text.changesize(12);
-			Text.display(10, 30, "Size 12 testing");
-			Text.changesize(13);
-			Text.display(10, 45, "Size 13 testing");
-			Text.changesize(14);
-			Text.display(10, 60, "Size 14 testing");
-			Text.changesize(15);
-			Text.display(10, 75, "Size 15 testing");
-			Text.changesize(16);
-			Text.display(10, 90, "Size 16 testing");
-			
-			Text.changesize(5);
-			Text.display(120, 15, "Size 5 testing");
-			Text.changesize(6);
-			Text.display(120, 30, "Size 6 testing");
-			Text.changesize(7);
-			Text.display(120, 45, "Size 7 testing");
-			Text.changesize(8);
-			Text.display(120, 60, "Size 8 testing");
-			Text.changesize(9);
-			Text.display(120, 75, "Size 9 testing");
-			Text.changesize(10);
-			Text.display(120, 90, "Size 10 testing");
-			*/
 			
 		}
 	}

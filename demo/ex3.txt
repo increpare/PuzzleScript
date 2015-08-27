@@ -1,6 +1,23 @@
 function new(){
+  //Text.addfont("pixel");
+  //Text.addfont("apple");
+  //Text.addfont("04b11");
+  //Text.addfont("casual");
+  //Text.addfont("visitor");
+  //Text.addfont("c64");
+  Text.addfont("nokia");
+  //Text.addfont("retrofuture");
+  //Text.addfont("crypt");
+  //Text.addfont("hellovetica");
 }
 
-function update() {
-  Text.display(0, 0, "Hello World");
+function update(){
+  Text.changesize(1);
+  Text.display(10, 10, "ABCDEFGHIJKLMNOPQRSTUVWXYZ...");
+  Text.display(10, 30, "abcdefghiklmnopqrstuvwxyz...");
+  Text.display(10, 50, "The quick brown fox jumped etc");
+  Text.display(10, 70, "Score: 201238123 & ^£$%7 27");
+  
+  Text.changesize(2);
+  Text.display(Text.CENTER, Gfx.screenheight - 25, "Da quick brown fox");
 }

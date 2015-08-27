@@ -8,11 +8,11 @@ var horizontaldragbarHeight = document.getElementById("horizontaldragbar").clien
 var minimumDimension = 100;
 
 function resize_widths(verticaldragbarX){
-	document.getElementById("leftpanel").style.width = verticaldragbarX + "px";
-	document.getElementById("righttophalf").style.left = verticaldragbarX + verticaldragbarWidth + "px";
-	document.getElementById("rightbottomhalf").style.left = verticaldragbarX + verticaldragbarWidth + "px";
-	document.getElementById("horizontaldragbar").style.left = verticaldragbarX + verticaldragbarWidth + "px";
-	document.getElementById("verticaldragbar").style.left = verticaldragbarX + "px";
+	document.getElementById("leftpanel").style.width = (verticaldragbarX  -5)+ "px";
+	document.getElementById("righttophalf").style.left = (verticaldragbarX + verticaldragbarWidth) + "px";
+	document.getElementById("rightbottomhalf").style.left = (verticaldragbarX + verticaldragbarWidth ) + "px";
+	document.getElementById("horizontaldragbar").style.left = (verticaldragbarX + verticaldragbarWidth ) + "px";
+	document.getElementById("verticaldragbar").style.left = (verticaldragbarX ) + "px";
 	//this will probably break eventually
 	var e = new Event("resize");
 	e.recurse=false;
@@ -21,7 +21,7 @@ function resize_widths(verticaldragbarX){
 
 function resize_heights(horizontaldragbarY){
 	document.getElementById("leftpanel").style.height = (window.innerHeight - upperbarheight) + "px";
-	document.getElementById("verticaldragbar").style.height = (window.innerHeight - upperbarheight) + "px";
+	document.getElementById("verticaldragbar").style.height = "100%";
 	
 	document.getElementById("righttophalf").style.height = horizontaldragbarY - upperbarheight + "px";
 	document.getElementById("rightbottomhalf").style.top = horizontaldragbarY + horizontaldragbarHeight + "px";
@@ -119,8 +119,12 @@ function horizontalDragbarMouseUp(e) {
 };
 
 function reset_panels(){
-	resize_widths(Math.floor(window.innerWidth/2));
-	resize_heights(Math.floor(window.innerHeight/2));
+	var w = (window.innerWidth-10);
+	var h = (window.innerHeight-5-35);
+	resize_widths(Math.floor(w*0.666));
+	//want the height to be set such that the ratio of width:height is 1.6
+	var wh=w*0.333*0.625;
+	resize_heights(Math.floor(wh+40));
 	winwidth = window.innerWidth;
 	winheight = window.innerHeight;
 };

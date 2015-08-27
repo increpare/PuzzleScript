@@ -88,13 +88,23 @@ class Text {
 		
 		input_font = currentfont;
 		input_textsize = currentsize;
-		typeface[currentindex].tf.text = text + inputtext;
+		if (typeface[currentindex].type == "bitmap") {
+			typeface[currentindex].tf_bitmap.text = text + inputtext;
+		}else if (typeface[currentindex].type == "ttf") {
+			typeface[currentindex].tf_ttf.text = text + inputtext;
+		}
 		x = alignx(x); y = aligny(y);
 		input_textxp = x;
 		input_textyp = y;
 		
-		typeface[currentindex].tf.text = text;
-		input_responsexp = input_textxp + Math.floor(typeface[currentindex].tf.textWidth);
+		
+		if (typeface[currentindex].type == "bitmap") {			
+			typeface[currentindex].tf_bitmap.text = text;
+			input_responsexp = input_textxp + Math.floor(typeface[currentindex].tf_bitmap.textWidth);
+		}else if (typeface[currentindex].type == "ttf") {			
+			typeface[currentindex].tf_ttf.text = text;
+			input_responsexp = input_textxp + Math.floor(typeface[currentindex].tf_ttf.textWidth);
+		}
 		input_responseyp = y;
 		
 		input_text = text;
@@ -140,30 +150,59 @@ class Text {
 	}
 	
 	//Text display functions
+	private static function currentlen():Float {
+		if (typeface[currentindex].type == "ttf") {
+			return typeface[currentindex].tf_ttf.textWidth;
+		}else if (typeface[currentindex].type == "bitmap") {
+			return typeface[currentindex].tf_bitmap.getStringWidth(typeface[currentindex].tf_bitmap.text, false);
+		}
+		return 0;
+	}
+	
+	private static function currentheight():Float {
+		if (typeface[currentindex].type == "ttf") {
+			return typeface[currentindex].tf_ttf.textHeight;
+		}else if (typeface[currentindex].type == "bitmap") {
+			return typeface[currentindex].tf_bitmap.textHeight;
+		}
+		return 0;
+	}
+	
 	public static function len(t:String):Float {
-		typeface[currentindex].tf.text = t;
-		return typeface[currentindex].tf.textWidth;
+		if (typeface[currentindex].type == "ttf") {
+			typeface[currentindex].tf_ttf.text = t;
+			return typeface[currentindex].tf_ttf.textWidth;
+		}else if (typeface[currentindex].type == "bitmap") {
+			return typeface[currentindex].tf_bitmap.getStringWidth(t, false);
+		}
+		return 0;
 	}
 	
 	public static function height():Float {
-		typeface[currentindex].tf.text = "???";
-		return typeface[currentindex].tf.textHeight;
+		if (typeface[currentindex].type == "ttf") {
+			typeface[currentindex].tf_ttf.text = "???";
+			return typeface[currentindex].tf_ttf.textHeight;
+		}else if (typeface[currentindex].type == "bitmap") {
+			typeface[currentindex].tf_bitmap.text = "???";
+			return typeface[currentindex].tf_bitmap.textHeight;
+		}
+		return 0;
 	}
 	
 	private static function alignx(x:Float):Float {
-		if (x == CENTER) return Math.floor(Gfx.screenwidthmid - (typeface[currentindex].tf.textWidth / 2));
+		if (x == CENTER) return Math.floor(Gfx.screenwidthmid - (currentlen() / 2));
 		if (x == LEFT || x == TOP) return 0;
-		if (x == RIGHT || x == BOTTOM) return Math.floor(Gfx.screenwidth - (typeface[currentindex].tf.textWidth));
+		if (x == RIGHT || x == BOTTOM) return Math.floor(Gfx.screenwidth - currentlen());
 		
-		return x;
+		return Math.floor(x);
 	}
 	
 	private static function aligny(y:Float):Float {
-		if (y == CENTER) return Math.floor(Gfx.screenheightmid - (typeface[currentindex].tf.textHeight / 2));
+		if (y == CENTER) return Math.floor(Gfx.screenheightmid - currentheight() / 2);
 		if (y == LEFT || y == TOP) return 0;
-		if (y == RIGHT || y == BOTTOM) return Math.floor(Gfx.screenheight - (typeface[currentindex].tf.textHeight));
+		if (y == RIGHT || y == BOTTOM) return Math.floor(Gfx.screenheight - currentheight());
 		
-		return y;
+		return Math.floor(y);
 	}
 	
 	private static function aligntextx(t:String, x:Float):Float {
@@ -181,18 +220,109 @@ class Text {
 	}
 	
 	public static function display(x:Float, y:Float, text:String, col:Int = 0xFFFFFF, ?parameters:Drawparamstext) {
+		if (typeface[currentindex].type == "bitmap") {
+			display_bitmap(x, y, text, col, parameters);
+		}else if (typeface[currentindex].type == "tff") {
+			display_ttf(x, y, text, col, parameters);
+		}
+	}
+	
+	public static function display_bitmap(x:Float, y:Float, text:String, col:Int = 0xFFFFFF, ?parameters:Drawparamstext) {
 		// This was called "print" once. Maybe it was better that way? eh, stuck with display now
 		if (Gfx.skiprender && Gfx.drawingtoscreen) return;
 		if (parameters == null) {
-			typeface[currentindex].tf.textColor = col;
-			typeface[currentindex].tf.text = text;
+			typeface[currentindex].tf_bitmap.useTextColor = true;
+			typeface[currentindex].tf_bitmap.textColor = (0xFF << 24) + col;
+			typeface[currentindex].tf_bitmap.text = text;
 			
 			x = alignx(x); y = aligny(y);
 			
 			fontmatrix.identity();
 			fontmatrix.translate(x, y);
-			typeface[currentindex].tf.textColor = col;
-			drawto.draw(typeface[currentindex].tf, fontmatrix);
+			drawto.draw(typeface[currentindex].tf_bitmap, fontmatrix);
+		}else {
+			drawto = typeface[currentindex].tfbitmap;
+			typeface[currentindex].clearbitmap();
+			
+			tempxpivot = 0;
+			tempypivot = 0;
+			tempxscale = 1.0;
+			tempyscale = 1.0;
+			temprotate = 0;
+			tempalpha = 1.0;
+			tempred = 1.0; tempgreen = 1.0; tempblue = 1.0;
+			changecolours = false;
+			
+			display_bitmap(0, 0, text, col);
+			
+			x = alignx(x); y = aligny(y);
+			
+			if (parameters.align != null) {
+				if (parameters.align == CENTER) {
+					x = Math.floor(x - (len(text) / 2));
+				}else if (parameters.align == RIGHT || parameters.align == BOTTOM) {
+					x = Math.floor(x - len(text));
+				}
+			}
+			
+			if (parameters.xpivot != null) tempxpivot = aligntextx(text, parameters.xpivot);
+		  if (parameters.ypivot != null) tempypivot = aligntexty(parameters.ypivot);		
+			if (parameters.scale != null) {
+				tempxscale = parameters.scale;
+				tempyscale = parameters.scale;
+			}else{
+				if (parameters.xscale != null) tempxscale = parameters.xscale;
+				if (parameters.yscale != null) tempyscale = parameters.yscale;
+			}
+			if (parameters.rotation != null) temprotate = parameters.rotation;
+			if (parameters.alpha != null) {
+				tempalpha = parameters.alpha;
+				alphact.alphaMultiplier = tempalpha;
+				changecolours = true;
+			}
+			if (parameters.red != null) {
+				tempred = parameters.red;
+				alphact.redMultiplier = tempred;
+				changecolours = true;
+			}
+			if (parameters.green != null) {
+				tempgreen = parameters.green;
+				alphact.greenMultiplier = tempgreen;
+				changecolours = true;
+			}
+			if (parameters.blue != null) {
+				tempblue = parameters.blue;
+				alphact.blueMultiplier = tempblue;
+				changecolours = true;
+			}
+			
+			fontmatrix.identity();
+			fontmatrix.translate(-tempxpivot, -tempypivot);
+			fontmatrix.scale(tempxscale, tempyscale);
+			fontmatrix.rotate((temprotate * 3.1415) / 180);
+			fontmatrix.translate(x + tempxpivot, y + tempypivot);
+			drawto = Gfx.drawto;
+			if (changecolours) {
+				drawto.draw(typeface[currentindex].tfbitmap, fontmatrix, alphact);
+			}else {
+			  drawto.draw(typeface[currentindex].tfbitmap, fontmatrix);	
+			}
+		}
+	}
+	
+	public static function display_ttf(x:Float, y:Float, text:String, col:Int = 0xFFFFFF, ?parameters:Drawparamstext) {
+		// This was called "print" once. Maybe it was better that way? eh, stuck with display now
+		if (Gfx.skiprender && Gfx.drawingtoscreen) return;
+		if (parameters == null) {
+			typeface[currentindex].tf_ttf.textColor = col;
+			typeface[currentindex].tf_ttf.text = text;
+			
+			x = alignx(x); y = aligny(y);
+			
+			fontmatrix.identity();
+			fontmatrix.translate(x, y);
+			typeface[currentindex].tf_ttf.textColor = col;
+			drawto.draw(typeface[currentindex].tf_ttf, fontmatrix);
 		}else {
 			drawto = typeface[currentindex].tfbitmap;
 			typeface[currentindex].clearbitmap();
@@ -212,9 +342,9 @@ class Text {
 			
 			if (parameters.align != null) {
 				if (parameters.align == CENTER) {
-					x = x - (len(text) / 2);
+					x = Math.floor(x - (len(text) / 2));
 				}else if (parameters.align == RIGHT || parameters.align == BOTTOM) {
-					x = x - len(text);
+					x = Math.floor(x - len(text));
 				}
 			}
 			
@@ -291,7 +421,7 @@ class Text {
 		}
 	}
 	
-	public static function addfont(t:String, defaultsize:Int) {
+	public static function addfont(t:String, defaultsize:Int = 1) {
 		fontfile.push(new Fontfile(t));
 		fontfileindex.set(t, fontfile.length - 1);
 		currentfont = t;

@@ -14,45 +14,55 @@ ApplicationMain.__name__ = ["ApplicationMain"];
 ApplicationMain.config = null;
 ApplicationMain.preloader = null;
 ApplicationMain.create = function() {
-	var app = new lime.app.Application();
+	var app = new openfl.display.Application();
 	app.create(ApplicationMain.config);
-	openfl.Lib.application = app;
-	var stage = new openfl.display.Stage(app.window.__width,app.window.__height,ApplicationMain.config.background);
-	stage.window = app.window;
-	stage.addChild(openfl.Lib.current);
-	app.addModule(stage);
 	var display = new NMEPreloader();
 	ApplicationMain.preloader = new openfl.display.Preloader(display);
-	ApplicationMain.preloader.onComplete = ApplicationMain.init;
+	app.setPreloader(ApplicationMain.preloader);
+	ApplicationMain.preloader.onComplete.add(ApplicationMain.init);
 	ApplicationMain.preloader.create(ApplicationMain.config);
 	var urls = [];
 	var types = [];
-	urls.push("data/fonts/opensans/LICENSE.txt");
+	urls.push("data/fonts/04b11/04b11.fnt");
 	types.push("TEXT");
-	urls.push("data/fonts/opensans/opensans.eot");
-	types.push("BINARY");
-	urls.push("Open Sans");
-	types.push("FONT");
-	urls.push("data/fonts/opensans/opensans.woff");
-	types.push("BINARY");
-	urls.push("data/fonts/opensans/opensans.woff2");
-	types.push("BINARY");
-	urls.push("data/fonts/snoot/snoot.eot");
-	types.push("BINARY");
-	urls.push("snootorg pixel10 Regular");
-	types.push("FONT");
-	urls.push("data/fonts/snoot/snoot.woff");
-	types.push("BINARY");
-	urls.push("data/fonts/snoot/snoot.woff2");
-	types.push("BINARY");
-	urls.push("data/fonts/visitor/visitor.eot");
-	types.push("BINARY");
-	urls.push("Visitor TT2 BRK Regular");
-	types.push("FONT");
-	urls.push("data/fonts/visitor/visitor.woff");
-	types.push("BINARY");
-	urls.push("data/fonts/visitor/visitor.woff2");
-	types.push("BINARY");
+	urls.push("data/fonts/04b11/04b11_0.png");
+	types.push("IMAGE");
+	urls.push("data/fonts/apple/apple.fnt");
+	types.push("TEXT");
+	urls.push("data/fonts/apple/apple_0.png");
+	types.push("IMAGE");
+	urls.push("data/fonts/c64/c64.fnt");
+	types.push("TEXT");
+	urls.push("data/fonts/c64/c64_0.png");
+	types.push("IMAGE");
+	urls.push("data/fonts/casual/casual.fnt");
+	types.push("TEXT");
+	urls.push("data/fonts/casual/casual_0.png");
+	types.push("IMAGE");
+	urls.push("data/fonts/crypt/crypt.fnt");
+	types.push("TEXT");
+	urls.push("data/fonts/crypt/crypt_0.png");
+	types.push("IMAGE");
+	urls.push("data/fonts/hellovetica/hellovetica.fnt");
+	types.push("TEXT");
+	urls.push("data/fonts/hellovetica/hellovetica_0.png");
+	types.push("IMAGE");
+	urls.push("data/fonts/nokia/nokia.fnt");
+	types.push("TEXT");
+	urls.push("data/fonts/nokia/nokia_0.png");
+	types.push("IMAGE");
+	urls.push("data/fonts/pixel/pixel.fnt");
+	types.push("TEXT");
+	urls.push("data/fonts/pixel/pixel_0.png");
+	types.push("IMAGE");
+	urls.push("data/fonts/retrofuture/retrofuture.fnt");
+	types.push("TEXT");
+	urls.push("data/fonts/retrofuture/retrofuture_0.png");
+	types.push("IMAGE");
+	urls.push("data/fonts/visitor/visitor.fnt");
+	types.push("TEXT");
+	urls.push("data/fonts/visitor/visitor_0.png");
+	types.push("IMAGE");
 	if(ApplicationMain.config.assetsPrefix != null) {
 		var _g1 = 0;
 		var _g = urls.length;
@@ -75,7 +85,7 @@ ApplicationMain.init = function() {
 	if(total == 0) ApplicationMain.start();
 };
 ApplicationMain.main = function() {
-	ApplicationMain.config = { antialiasing : 0, background : 0, borderless : false, company : "Stephen and Terry", depthBuffer : false, file : "webthing", fps : 60, fullscreen : false, hardware : true, height : 480, orientation : "landscape", packageName : "com.stephenandterry.webthing", resizable : true, stencilBuffer : true, title : "Webthing", version : "1.0.0", vsync : true, width : 768};
+	ApplicationMain.config = { build : "84", company : "Stephen and Terry", file : "webthing", fps : 60, name : "Webthing", orientation : "landscape", packageName : "com.stephenandterry.webthing", version : "1.0.0", windows : [{ antialiasing : 0, background : 0, borderless : false, depthBuffer : false, display : 0, fullscreen : false, hardware : true, height : 480, parameters : "{}", resizable : true, stencilBuffer : true, title : "Webthing", vsync : true, width : 768, x : null, y : null}]};
 };
 ApplicationMain.start = function() {
 	var hasMain = false;
@@ -152,7 +162,7 @@ openfl.events.EventDispatcher.prototype = {
 	}
 	,hasEventListener: function(type) {
 		if(this.__eventMap == null) return false;
-		return this.__eventMap.exists(type);
+		if(this.__dispatching.get(type) == true && this.__newEventMap.exists(type)) return this.__newEventMap.get(type).length > 0; else return this.__eventMap.exists(type);
 	}
 	,removeEventListener: function(type,listener,capture) {
 		if(capture == null) capture = false;
@@ -278,7 +288,8 @@ openfl.display.DisplayObject.prototype = $extend(openfl.events.EventDispatcher.p
 		return this.getBounds(targetCoordinateSpace);
 	}
 	,globalToLocal: function(pos) {
-		this.__getTransform().__transformInversePoint(pos.clone());
+		pos = pos.clone();
+		this.__getTransform().__transformInversePoint(pos);
 		return pos;
 	}
 	,hitTestObject: function(obj) {
@@ -355,10 +366,18 @@ openfl.display.DisplayObject.prototype = $extend(openfl.events.EventDispatcher.p
 	}
 	,__hitTest: function(x,y,shapeFlag,stack,interactiveOnly) {
 		if(this.__graphics != null) {
-			if(this.get_visible() && !this.__isMask && this.__graphics.__hitTest(x,y,shapeFlag,this.__getTransform())) {
-				if(!interactiveOnly) stack.push(this);
+			if(!this.get_visible() || this.__isMask) return false;
+			if(this.get_mask() != null && !this.get_mask().__hitTestMask(x,y)) return false;
+			if(this.__graphics.__hitTest(x,y,shapeFlag,this.__getTransform())) {
+				if(stack != null && !interactiveOnly) stack.push(this);
 				return true;
 			}
+		}
+		return false;
+	}
+	,__hitTestMask: function(x,y) {
+		if(this.__graphics != null) {
+			if(this.__graphics.__hitTest(x,y,true,this.__getTransform())) return true;
 		}
 		return false;
 	}
@@ -432,9 +451,10 @@ openfl.display.DisplayObject.prototype = $extend(openfl.events.EventDispatcher.p
 			this.__worldTransform.tx = this.get_x() * b00 + this.get_y() * b10 + parentTransform.tx;
 			this.__worldTransform.ty = this.get_x() * b01 + this.get_y() * b11 + parentTransform.ty;
 			if(sr != null) {
-				if(this.__worldTransform.a != 1 || this.__worldTransform.b != 0 || this.__worldTransform.c != 0 || this.__worldTransform.d != 1) sr.__transform(sr,this.__worldTransform);
-				this.__worldTransform.tx = (this.get_x() - sr.x) * b00 + (this.get_y() - sr.y) * b10 + parentTransform.tx;
-				this.__worldTransform.ty = (this.get_x() - sr.x) * b01 + (this.get_y() - sr.y) * b11 + parentTransform.ty;
+				if(this.__worldTransform.a != 1 || this.__worldTransform.b != 0 || this.__worldTransform.c != 0 || this.__worldTransform.d != 1) sr.__transform(sr,this.__worldTransform); else {
+					this.__worldTransform.tx = (this.get_x() - sr.x) * b00 + (this.get_y() - sr.y) * b10 + parentTransform.tx;
+					this.__worldTransform.ty = (this.get_x() - sr.x) * b01 + (this.get_y() - sr.y) * b11 + parentTransform.ty;
+				}
 			}
 			if(this.__isMask) this.__maskCached = false;
 		} else {
@@ -445,9 +465,10 @@ openfl.display.DisplayObject.prototype = $extend(openfl.events.EventDispatcher.p
 			this.__worldTransform.tx = this.get_x();
 			this.__worldTransform.ty = this.get_y();
 			if(sr != null) {
-				if(this.__worldTransform.a != 1 || this.__worldTransform.b != 0 || this.__worldTransform.c != 0 || this.__worldTransform.d != 1) sr.__transform(sr,this.__worldTransform);
-				this.__worldTransform.tx = this.get_x() - this.get_scrollRect().x;
-				this.__worldTransform.ty = this.get_y() - this.get_scrollRect().y;
+				if(this.__worldTransform.a != 1 || this.__worldTransform.b != 0 || this.__worldTransform.c != 0 || this.__worldTransform.d != 1) sr.__transform(sr,this.__worldTransform); else {
+					this.__worldTransform.tx = this.get_x() - this.get_scrollRect().x;
+					this.__worldTransform.ty = this.get_y() - this.get_scrollRect().y;
+				}
 			}
 		}
 		if(updateChildren && this.__transformDirty) {
@@ -688,7 +709,7 @@ openfl.display.InteractiveObject = function() {
 	this.doubleClickEnabled = false;
 	this.mouseEnabled = true;
 	this.needsSoftKeyboard = false;
-	this.tabEnabled = true;
+	this.__tabEnabled = false;
 	this.tabIndex = -1;
 };
 $hxClasses["openfl.display.InteractiveObject"] = openfl.display.InteractiveObject;
@@ -709,6 +730,12 @@ openfl.display.InteractiveObject.prototype = $extend(openfl.display.DisplayObjec
 	,__hitTest: function(x,y,shapeFlag,stack,interactiveOnly) {
 		if(!this.get_visible() || this.__isMask || interactiveOnly && !this.mouseEnabled) return false;
 		return openfl.display.DisplayObject.prototype.__hitTest.call(this,x,y,shapeFlag,stack,interactiveOnly);
+	}
+	,get_tabEnabled: function() {
+		return this.__tabEnabled;
+	}
+	,set_tabEnabled: function(value) {
+		return this.__tabEnabled = value;
 	}
 	,__class__: openfl.display.InteractiveObject
 });
@@ -894,7 +921,7 @@ openfl.display.DisplayObjectContainer.prototype = $extend(openfl.display.Interac
 		while(_g < _g1.length) {
 			var child = _g1[_g];
 			++_g;
-			if(!child.__renderable) continue;
+			if(child.get_scaleX() == 0 || child.get_scaleY() == 0 || child.__isMask) continue;
 			child.__getBounds(rect,child.__worldTransform);
 		}
 		if(matrix != null) {
@@ -904,6 +931,7 @@ openfl.display.DisplayObjectContainer.prototype = $extend(openfl.display.Interac
 	}
 	,__hitTest: function(x,y,shapeFlag,stack,interactiveOnly) {
 		if(!this.get_visible() || this.__isMask || interactiveOnly && !this.mouseEnabled && !this.mouseChildren) return false;
+		if(this.get_mask() != null && !this.get_mask().__hitTestMask(x,y)) return false;
 		if(this.get_scrollRect() != null && !this.get_scrollRect().containsPoint(this.globalToLocal(new openfl.geom.Point(x,y)))) return false;
 		var i = this.__children.length;
 		if(interactiveOnly) {
@@ -931,6 +959,11 @@ openfl.display.DisplayObjectContainer.prototype = $extend(openfl.display.Interac
 				}
 			}
 		} else while(--i >= 0) this.__children[i].__hitTest(x,y,shapeFlag,stack,false);
+		return false;
+	}
+	,__hitTestMask: function(x,y) {
+		var i = this.__children.length;
+		while(--i >= 0) if(this.__children[i].__hitTestMask(x,y)) return true;
 		return false;
 	}
 	,__renderCairo: function(renderSession) {
@@ -1103,10 +1136,15 @@ openfl.display.Sprite.prototype = $extend(openfl.display.DisplayObjectContainer.
 	}
 	,__hitTest: function(x,y,shapeFlag,stack,interactiveOnly) {
 		if(!this.get_visible() || this.__isMask || interactiveOnly && !this.mouseEnabled && !this.mouseChildren) return false;
+		if(this.get_mask() != null && !this.get_mask().__hitTestMask(x,y)) return false;
 		if(openfl.display.DisplayObjectContainer.prototype.__hitTest.call(this,x,y,shapeFlag,stack,interactiveOnly)) return interactiveOnly; else if((!interactiveOnly || this.mouseEnabled) && this.__graphics != null && this.__graphics.__hitTest(x,y,shapeFlag,this.__getTransform())) {
 			if(stack != null) stack.push(this);
 			return true;
 		}
+		return false;
+	}
+	,__hitTestMask: function(x,y) {
+		if(openfl.display.DisplayObjectContainer.prototype.__hitTestMask.call(this,x,y)) return true; else if(this.__graphics != null && this.__graphics.__hitTest(x,y,true,this.__getTransform())) return true;
 		return false;
 	}
 	,get_graphics: function() {
@@ -1115,6 +1153,9 @@ openfl.display.Sprite.prototype = $extend(openfl.display.DisplayObjectContainer.
 			this.__graphics.__owner = this;
 		}
 		return this.__graphics;
+	}
+	,get_tabEnabled: function() {
+		return this.__tabEnabled || this.buttonMode;
 	}
 	,__class__: openfl.display.Sprite
 });
@@ -1138,7 +1179,7 @@ terrylib.Core.prototype = $extend(openfl.display.Sprite.prototype,{
 		terrylib.Mouse.init(this.stage);
 		terrylib.Gfx.init(this.stage);
 		terrylib.Gfx.resizescreen(192,120,4);
-		terrylib.Text.addfont("visitor",13);
+		terrylib.Text.addfont("retrofuture",1);
 		this.terrylibmain = new Main();
 		this._rate = 1000 / this.TARGET_FPS;
 		this._skip = this._rate * 10;
@@ -1262,49 +1303,67 @@ var DefaultAssetLibrary = function() {
 	this.path = new haxe.ds.StringMap();
 	this.className = new haxe.ds.StringMap();
 	lime.AssetLibrary.call(this);
-	openfl.text.Font.registerFont(__ASSET__OPENFL__data_fonts_opensans_opensans_ttf);
-	openfl.text.Font.registerFont(__ASSET__OPENFL__data_fonts_snoot_snoot_ttf);
-	openfl.text.Font.registerFont(__ASSET__OPENFL__data_fonts_visitor_visitor_ttf);
 	var id;
-	id = "data/fonts/opensans/LICENSE.txt";
+	id = "data/fonts/04b11/04b11.fnt";
 	this.path.set(id,id);
 	this.type.set(id,"TEXT");
-	id = "data/fonts/opensans/opensans.eot";
+	id = "data/fonts/04b11/04b11_0.png";
 	this.path.set(id,id);
-	this.type.set(id,"BINARY");
-	id = "data/fonts/opensans/opensans.ttf";
-	this.className.set(id,__ASSET__data_fonts_opensans_opensans_ttf);
-	this.type.set(id,"FONT");
-	id = "data/fonts/opensans/opensans.woff";
+	this.type.set(id,"IMAGE");
+	id = "data/fonts/apple/apple.fnt";
 	this.path.set(id,id);
-	this.type.set(id,"BINARY");
-	id = "data/fonts/opensans/opensans.woff2";
+	this.type.set(id,"TEXT");
+	id = "data/fonts/apple/apple_0.png";
 	this.path.set(id,id);
-	this.type.set(id,"BINARY");
-	id = "data/fonts/snoot/snoot.eot";
+	this.type.set(id,"IMAGE");
+	id = "data/fonts/c64/c64.fnt";
 	this.path.set(id,id);
-	this.type.set(id,"BINARY");
-	id = "data/fonts/snoot/snoot.ttf";
-	this.className.set(id,__ASSET__data_fonts_snoot_snoot_ttf);
-	this.type.set(id,"FONT");
-	id = "data/fonts/snoot/snoot.woff";
+	this.type.set(id,"TEXT");
+	id = "data/fonts/c64/c64_0.png";
 	this.path.set(id,id);
-	this.type.set(id,"BINARY");
-	id = "data/fonts/snoot/snoot.woff2";
+	this.type.set(id,"IMAGE");
+	id = "data/fonts/casual/casual.fnt";
 	this.path.set(id,id);
-	this.type.set(id,"BINARY");
-	id = "data/fonts/visitor/visitor.eot";
+	this.type.set(id,"TEXT");
+	id = "data/fonts/casual/casual_0.png";
 	this.path.set(id,id);
-	this.type.set(id,"BINARY");
-	id = "data/fonts/visitor/visitor.ttf";
-	this.className.set(id,__ASSET__data_fonts_visitor_visitor_ttf);
-	this.type.set(id,"FONT");
-	id = "data/fonts/visitor/visitor.woff";
+	this.type.set(id,"IMAGE");
+	id = "data/fonts/crypt/crypt.fnt";
 	this.path.set(id,id);
-	this.type.set(id,"BINARY");
-	id = "data/fonts/visitor/visitor.woff2";
+	this.type.set(id,"TEXT");
+	id = "data/fonts/crypt/crypt_0.png";
 	this.path.set(id,id);
-	this.type.set(id,"BINARY");
+	this.type.set(id,"IMAGE");
+	id = "data/fonts/hellovetica/hellovetica.fnt";
+	this.path.set(id,id);
+	this.type.set(id,"TEXT");
+	id = "data/fonts/hellovetica/hellovetica_0.png";
+	this.path.set(id,id);
+	this.type.set(id,"IMAGE");
+	id = "data/fonts/nokia/nokia.fnt";
+	this.path.set(id,id);
+	this.type.set(id,"TEXT");
+	id = "data/fonts/nokia/nokia_0.png";
+	this.path.set(id,id);
+	this.type.set(id,"IMAGE");
+	id = "data/fonts/pixel/pixel.fnt";
+	this.path.set(id,id);
+	this.type.set(id,"TEXT");
+	id = "data/fonts/pixel/pixel_0.png";
+	this.path.set(id,id);
+	this.type.set(id,"IMAGE");
+	id = "data/fonts/retrofuture/retrofuture.fnt";
+	this.path.set(id,id);
+	this.type.set(id,"TEXT");
+	id = "data/fonts/retrofuture/retrofuture_0.png";
+	this.path.set(id,id);
+	this.type.set(id,"IMAGE");
+	id = "data/fonts/visitor/visitor.fnt";
+	this.path.set(id,id);
+	this.type.set(id,"TEXT");
+	id = "data/fonts/visitor/visitor_0.png";
+	this.path.set(id,id);
+	this.type.set(id,"IMAGE");
 	var assetsPrefix = ApplicationMain.config.assetsPrefix;
 	if(assetsPrefix != null) {
 		var $it0 = this.path.keys();
@@ -1435,179 +1494,6 @@ DefaultAssetLibrary.prototype = $extend(lime.AssetLibrary.prototype,{
 	}
 	,__class__: DefaultAssetLibrary
 });
-lime.text = {};
-lime.text.Font = function(name) {
-	if(name != null) this.name = name;
-	if(this.__fontPath != null) this.__fromFile(this.__fontPath);
-};
-$hxClasses["lime.text.Font"] = lime.text.Font;
-lime.text.Font.__name__ = ["lime","text","Font"];
-lime.text.Font.fromBytes = function(bytes) {
-	var font = new lime.text.Font();
-	font.__fromBytes(bytes);
-	return font;
-};
-lime.text.Font.fromFile = function(path) {
-	var font = new lime.text.Font();
-	font.__fromFile(path);
-	return font;
-};
-lime.text.Font.prototype = {
-	decompose: function() {
-		return null;
-	}
-	,getGlyph: function(character) {
-		return -1;
-	}
-	,getGlyphs: function(characters) {
-		if(characters == null) characters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^`'\"/\\&*()[]{}<>|:;_-+=?,. ";
-		return null;
-	}
-	,getGlyphMetrics: function(glyph) {
-		return null;
-	}
-	,renderGlyph: function(glyph,fontSize) {
-		return null;
-	}
-	,renderGlyphs: function(glyphs,fontSize) {
-		return null;
-	}
-	,__fromBytes: function(bytes) {
-		this.__fontPath = null;
-	}
-	,__fromFile: function(path) {
-		this.__fontPath = path;
-	}
-	,get_ascender: function() {
-		return 0;
-	}
-	,get_descender: function() {
-		return 0;
-	}
-	,get_height: function() {
-		return 0;
-	}
-	,get_numGlyphs: function() {
-		return 0;
-	}
-	,get_underlinePosition: function() {
-		return 0;
-	}
-	,get_underlineThickness: function() {
-		return 0;
-	}
-	,get_unitsPerEM: function() {
-		return 0;
-	}
-	,__class__: lime.text.Font
-};
-var __ASSET__data_fonts_opensans_opensans_ttf = function() {
-	lime.text.Font.call(this);
-	this.name = "Open Sans";
-};
-$hxClasses["__ASSET__data_fonts_opensans_opensans_ttf"] = __ASSET__data_fonts_opensans_opensans_ttf;
-__ASSET__data_fonts_opensans_opensans_ttf.__name__ = ["__ASSET__data_fonts_opensans_opensans_ttf"];
-__ASSET__data_fonts_opensans_opensans_ttf.__super__ = lime.text.Font;
-__ASSET__data_fonts_opensans_opensans_ttf.prototype = $extend(lime.text.Font.prototype,{
-	__class__: __ASSET__data_fonts_opensans_opensans_ttf
-});
-var __ASSET__data_fonts_snoot_snoot_ttf = function() {
-	lime.text.Font.call(this);
-	this.name = "snootorg pixel10 Regular";
-};
-$hxClasses["__ASSET__data_fonts_snoot_snoot_ttf"] = __ASSET__data_fonts_snoot_snoot_ttf;
-__ASSET__data_fonts_snoot_snoot_ttf.__name__ = ["__ASSET__data_fonts_snoot_snoot_ttf"];
-__ASSET__data_fonts_snoot_snoot_ttf.__super__ = lime.text.Font;
-__ASSET__data_fonts_snoot_snoot_ttf.prototype = $extend(lime.text.Font.prototype,{
-	__class__: __ASSET__data_fonts_snoot_snoot_ttf
-});
-var __ASSET__data_fonts_visitor_visitor_ttf = function() {
-	lime.text.Font.call(this);
-	this.name = "Visitor TT2 BRK Regular";
-};
-$hxClasses["__ASSET__data_fonts_visitor_visitor_ttf"] = __ASSET__data_fonts_visitor_visitor_ttf;
-__ASSET__data_fonts_visitor_visitor_ttf.__name__ = ["__ASSET__data_fonts_visitor_visitor_ttf"];
-__ASSET__data_fonts_visitor_visitor_ttf.__super__ = lime.text.Font;
-__ASSET__data_fonts_visitor_visitor_ttf.prototype = $extend(lime.text.Font.prototype,{
-	__class__: __ASSET__data_fonts_visitor_visitor_ttf
-});
-openfl.text = {};
-openfl.text.Font = function(name) {
-	lime.text.Font.call(this,name);
-};
-$hxClasses["openfl.text.Font"] = openfl.text.Font;
-openfl.text.Font.__name__ = ["openfl","text","Font"];
-openfl.text.Font.enumerateFonts = function(enumerateDeviceFonts) {
-	if(enumerateDeviceFonts == null) enumerateDeviceFonts = false;
-	return openfl.text.Font.__registeredFonts;
-};
-openfl.text.Font.fromBytes = function(bytes) {
-	var font = new openfl.text.Font();
-	font.__fromBytes(bytes);
-	return font;
-};
-openfl.text.Font.fromFile = function(path) {
-	var font = new openfl.text.Font();
-	font.__fromFile(path);
-	return font;
-};
-openfl.text.Font.registerFont = function(font) {
-	var instance;
-	instance = js.Boot.__cast(Type.createInstance(font,[]) , openfl.text.Font);
-	if(instance != null) openfl.text.Font.__registeredFonts.push(instance);
-};
-openfl.text.Font.__fromLimeFont = function(value) {
-	var font = new openfl.text.Font();
-	font.name = value.name;
-	font.src = value.src;
-	return font;
-};
-openfl.text.Font.__super__ = lime.text.Font;
-openfl.text.Font.prototype = $extend(lime.text.Font.prototype,{
-	get_fontName: function() {
-		return this.name;
-	}
-	,set_fontName: function(value) {
-		return this.name = value;
-	}
-	,__class__: openfl.text.Font
-});
-var __ASSET__OPENFL__data_fonts_opensans_opensans_ttf = function() {
-	var font = new __ASSET__data_fonts_opensans_opensans_ttf();
-	this.src = font.src;
-	this.name = font.name;
-	openfl.text.Font.call(this);
-};
-$hxClasses["__ASSET__OPENFL__data_fonts_opensans_opensans_ttf"] = __ASSET__OPENFL__data_fonts_opensans_opensans_ttf;
-__ASSET__OPENFL__data_fonts_opensans_opensans_ttf.__name__ = ["__ASSET__OPENFL__data_fonts_opensans_opensans_ttf"];
-__ASSET__OPENFL__data_fonts_opensans_opensans_ttf.__super__ = openfl.text.Font;
-__ASSET__OPENFL__data_fonts_opensans_opensans_ttf.prototype = $extend(openfl.text.Font.prototype,{
-	__class__: __ASSET__OPENFL__data_fonts_opensans_opensans_ttf
-});
-var __ASSET__OPENFL__data_fonts_snoot_snoot_ttf = function() {
-	var font = new __ASSET__data_fonts_snoot_snoot_ttf();
-	this.src = font.src;
-	this.name = font.name;
-	openfl.text.Font.call(this);
-};
-$hxClasses["__ASSET__OPENFL__data_fonts_snoot_snoot_ttf"] = __ASSET__OPENFL__data_fonts_snoot_snoot_ttf;
-__ASSET__OPENFL__data_fonts_snoot_snoot_ttf.__name__ = ["__ASSET__OPENFL__data_fonts_snoot_snoot_ttf"];
-__ASSET__OPENFL__data_fonts_snoot_snoot_ttf.__super__ = openfl.text.Font;
-__ASSET__OPENFL__data_fonts_snoot_snoot_ttf.prototype = $extend(openfl.text.Font.prototype,{
-	__class__: __ASSET__OPENFL__data_fonts_snoot_snoot_ttf
-});
-var __ASSET__OPENFL__data_fonts_visitor_visitor_ttf = function() {
-	var font = new __ASSET__data_fonts_visitor_visitor_ttf();
-	this.src = font.src;
-	this.name = font.name;
-	openfl.text.Font.call(this);
-};
-$hxClasses["__ASSET__OPENFL__data_fonts_visitor_visitor_ttf"] = __ASSET__OPENFL__data_fonts_visitor_visitor_ttf;
-__ASSET__OPENFL__data_fonts_visitor_visitor_ttf.__name__ = ["__ASSET__OPENFL__data_fonts_visitor_visitor_ttf"];
-__ASSET__OPENFL__data_fonts_visitor_visitor_ttf.__super__ = openfl.text.Font;
-__ASSET__OPENFL__data_fonts_visitor_visitor_ttf.prototype = $extend(openfl.text.Font.prototype,{
-	__class__: __ASSET__OPENFL__data_fonts_visitor_visitor_ttf
-});
 var EReg = function(r,opt) {
 	opt = opt.split("u").join("");
 	this.r = new RegExp(r,opt);
@@ -1721,6 +1607,38 @@ Lambda.count = function(it,pred) {
 	}
 	return n;
 };
+var List = function() {
+	this.length = 0;
+};
+$hxClasses["List"] = List;
+List.__name__ = ["List"];
+List.prototype = {
+	add: function(item) {
+		var x = [item];
+		if(this.h == null) this.h = x; else this.q[1] = x;
+		this.q = x;
+		this.length++;
+	}
+	,pop: function() {
+		if(this.h == null) return null;
+		var x = this.h[0];
+		this.h = this.h[1];
+		if(this.h == null) this.q = null;
+		this.length--;
+		return x;
+	}
+	,iterator: function() {
+		return { h : this.h, hasNext : function() {
+			return this.h != null;
+		}, next : function() {
+			if(this.h == null) return null;
+			var x = this.h[0];
+			this.h = this.h[1];
+			return x;
+		}};
+	}
+	,__class__: List
+};
 var Webbridge = $hx_exports.Webbridge = function() { };
 $hxClasses["Webbridge"] = Webbridge;
 Webbridge.__name__ = ["Webbridge"];
@@ -1736,131 +1654,6 @@ Webbridge.prototype = {
 	}
 	,get_homepage: function() {
 		return Webscript.homepage;
-	}
-	,addf: function(f) {
-		this.functionlist += f + "\n";
-	}
-	,get_functions: function() {
-		this.functionlist = "";
-		this.addf("Gfx:");
-		this.addf("----------");
-		this.addf("Gfx.resizescreen(width, height, scale);");
-		this.addf("Gfx.clearscreen(color);");
-		this.addf("Gfx.drawbox(x, y, width, height, col);");
-		this.addf("Gfx.fillbox(x, y, width, height, col);");
-		this.addf("Gfx.drawtri(x1, y1, x2, y2, x3, y3, col);");
-		this.addf("Gfx.filltri(x1, y1, x2, y2, x3, y3, col);");
-		this.addf("Gfx.drawcircle(x, y, radius, col);");
-		this.addf("Gfx.fillcircle(x, y, radius, col);");
-		this.addf("Gfx.drawhexagon(x, y, radius, angle, col);");
-		this.addf("Gfx.fillhexagon(x, y, radius, angle, col);");
-		this.addf("Gfx.drawline(x1, y1, x2, y2, col);");
-		this.addf("Gfx.setlinethickness(linethickness);");
-		this.addf("var p:Int = Gfx.getpixel(x, y);");
-		this.addf("var col:Int = Gfx.RGB(red, green, blue);");
-		this.addf("var col:Int = Gfx.HSL(hue, saturation, lightness);");
-		this.addf("var redvalue:Int = Gfx.getred(col);");
-		this.addf("var greenvalue:Int = Gfx.getgreen(col);");
-		this.addf("var bluevalue:Int = Gfx.getblue(col);");
-		this.addf("t = Gfx.screenwidth;");
-		this.addf("t = Gfx.screenheight;");
-		this.addf("Gfx.drawimage(x, y, \"imagename\", optional parameters);");
-		this.addf("Gfx.changetileset(\"newtileset\");");
-		this.addf("Gfx.drawtile(x, y, tilenumber, optional parameters);");
-		this.addf("t = Gfx.imagewidth(\"imagename\");");
-		this.addf("t = Gfx.imageheight(\"imagename\");");
-		this.addf("t = Gfx.tilewidth();");
-		this.addf("t = Gfx.tileheight();");
-		this.addf("Gfx.createimage(\"imagename\", width, height); ");
-		this.addf("Gfx.createtiles(\"imagename\", width, height, amount);");
-		this.addf("t = Gfx.numberoftiles();");
-		this.addf("Gfx.drawtoscreen();");
-		this.addf("Gfx.drawtoimage(\"imagename\");");
-		this.addf("Gfx.drawtotile(tilenumber);");
-		this.addf("Gfx.copytile(tilenumber in current tileset, \"tileset to copy from\", tilenumber in other tileset);");
-		this.addf("Gfx.grabtilefromscreen(tilenumber, screen x pos, screen y pos);");
-		this.addf("Gfx.grabtilefromimage(tilenumber, \"imagename\", x position in image, y position in image);");
-		this.addf("Gfx.grabimagefromscreen(\"imagename\", x position in screen, y position in screen);");
-		this.addf("Gfx.grabimagefromimage(\"imagename\", \"imagetocopyfrom\", x position in image, y position in image);");
-		this.addf("Gfx.defineanimation(\"animationname\", \"tileset\", start frame, end frame, delay per frame);");
-		this.addf("Gfx.drawanimation(x, y, \"animation name\", optional parameters);");
-		this.addf("Gfx.stopanimation(\"animation name\");");
-		this.addf("");
-		this.addf("Col:");
-		this.addf("----------");
-		this.addf("Col.BLACK");
-		this.addf("Col.GREY");
-		this.addf("Col.WHITE");
-		this.addf("Col.RED");
-		this.addf("Col.PINK");
-		this.addf("Col.DARKBROWN");
-		this.addf("Col.BROWN");
-		this.addf("Col.ORANGE");
-		this.addf("Col.YELLOW");
-		this.addf("Col.DARKGREEN");
-		this.addf("Col.GREEN");
-		this.addf("Col.LIGHTGREEN");
-		this.addf("Col.NIGHTBLUE");
-		this.addf("Col.DARKBLUE");
-		this.addf("Col.BLUE");
-		this.addf("Col.LIGHTBLUE");
-		this.addf("Col.MAGENTA");
-		this.addf("");
-		this.addf("Col:");
-		this.addf("----------");
-		this.addf("Text:");
-		this.addf("----------");
-		this.addf("Text.changefont(\"fontname\");");
-		this.addf("Text.changesize(fontsize);");
-		this.addf("Text.display(x, y, \"thing to display\", col, optional parameters);");
-		this.addf("var waitforreply:Bool = Text.input(x, y, \"Question: \", question_colour, answer_colour)");
-		this.addf("var response:String = Text.getinput()");
-		this.addf("Music:");
-		this.addf("----------");
-		this.addf("Music.playsound(integer to generate from)");
-		this.addf("Input:");
-		this.addf("----------");
-		this.addf("Key.A ... Key.Z");
-		this.addf("Key.ZERO ... Key.NINE");
-		this.addf("Key.F1 ... Key.F12");
-		this.addf("Key.MINUS, Key.PLUS, Key.DELETE, Key.BACKSPACE, Key.LBRACKET");
-		this.addf("Key.RBRACKET, Key.BACKSLASH, Key.CAPSLOCK, Key.SEMICOLON");
-		this.addf("Key.QUOTE, Key.COMMA, Key.PERIOD, Key.SLASH");
-		this.addf("Key.ESCAPE, Key.ENTER, Key.SHIFT");
-		this.addf("Key.CONTROL, Key.ALT, Key.SPACE");
-		this.addf("Key.UP, Key.DOWN, Key.LEFT, Key.RIGHT");
-		this.addf("Input.justpressed(Key.ENTER);");
-		this.addf("Input.pressed(Key.LEFT);");
-		this.addf("Input.justreleased(Key.SPACE);");
-		this.addf("Input.delaypressed(Key.Z, 5);");
-		this.addf("Mouse.x");
-		this.addf("Mouse.y");
-		this.addf("Mouse.leftclick()");
-		this.addf("Mouse.leftheld()");
-		this.addf("Mouse.leftreleased()");
-		this.addf("Mouse.middleclick()");
-		this.addf("Mouse.middleheld()");
-		this.addf("Mouse.middlereleased()");
-		this.addf("Mouse.rightclick()");
-		this.addf("Mouse.rightheld()");
-		this.addf("Mouse.rightreleased()");
-		this.addf("var wheel:Int = Mouse.mousewheel");
-		this.addf("Other:");
-		this.addf("----------");
-		this.addf("Convert.tostring(1234);");
-		this.addf("Convert.toint(\"15\");");
-		this.addf("Convert.tofloat(\"3.1417826\");");
-		this.addf("Random.int(from, to);");
-		this.addf("Random.float(from, to);");
-		this.addf("Random.string(length);");
-		this.addf("Random.bool();");
-		this.addf("Random.occasional();");
-		this.addf("Random.rare();");
-		this.addf("Random.pickstring(\"this one\", \"or this one?\", \"maybe this one?\");");
-		this.addf("Random.pickint(5, 14, 72, 92, 1, -723, 8);");
-		this.addf("Random.pickfloat(5.1, 14.2, 72.3, 92.4, 1.5, -723.6, 8.7);");
-		this.addf("Debug.log(message)");
-		return this.functionlist;
 	}
 	,__class__: Webbridge
 };
@@ -2156,7 +1949,13 @@ var StringBuf = function() {
 $hxClasses["StringBuf"] = StringBuf;
 StringBuf.__name__ = ["StringBuf"];
 StringBuf.prototype = {
-	__class__: StringBuf
+	add: function(x) {
+		this.b += Std.string(x);
+	}
+	,addSub: function(s,pos,len) {
+		if(len == null) this.b += HxOverrides.substr(s,pos,null); else this.b += HxOverrides.substr(s,pos,len);
+	}
+	,__class__: StringBuf
 };
 var StringTools = function() { };
 $hxClasses["StringTools"] = StringTools;
@@ -2337,9 +2136,7 @@ Webscript.update = function() {
 		Webscript.counter += 5;
 		terrylib.Gfx.clearscreen(terrylib.Col.BLUE);
 		terrylib.Gfx.fillbox(4,4,terrylib.Gfx.screenwidth - 8,terrylib.Gfx.screenheight - 8,terrylib.Col.NIGHTBLUE);
-		terrylib.Text.changesize(13);
-		terrylib.Text.display(terrylib.Gfx.screenwidth - 10,terrylib.Gfx.screenheight - 20,"terrylib alpha v0.1",terrylib.Col.WHITE,{ align : terrylib.Text.RIGHT});
-		terrylib.Text.changesize(13);
+		terrylib.Text.display(terrylib.Gfx.screenwidth - 6,terrylib.Gfx.screenheight - terrylib.Text.height() - 4,"terrylib alpha v0.1",terrylib.Col.WHITE,{ align : terrylib.Text.RIGHT});
 		var msg = "WAITING_FOR_SCRIPTFILE...";
 		var startpos = terrylib.Gfx.screenwidthmid - terrylib.Text.len(msg) / 2;
 		var currentpos = 0;
@@ -2347,10 +2144,9 @@ Webscript.update = function() {
 		var _g = msg.length;
 		while(_g1 < _g) {
 			var i = _g1++;
-			if(S.mid(msg,i,1) != "_") terrylib.Text.display(startpos + currentpos,terrylib.Gfx.screenheightmid - 10 + Math.sin((i * 5 + Webscript.counter) % 360 * Math.PI * 2 / 360) * 10,S.mid(msg,i,1),terrylib.Col.WHITE);
+			if(S.mid(msg,i,1) != "_") terrylib.Text.display(startpos + currentpos,terrylib.Gfx.screenheightmid - 10 + Math.sin((i * 5 + Webscript.counter) % 360 * Math.PI * 2 / 360) * 5,S.mid(msg,i,1),terrylib.Col.WHITE);
 			currentpos += terrylib.Text.len(S.mid(msg,i,1));
 		}
-		terrylib.Text.changesize(13);
 	}
 };
 Webscript.loadscript = function(script) {
@@ -2404,6 +2200,135 @@ Webscript.scriptfound = function() {
 			Webscript.errorinscript = true;
 		}
 	}
+};
+var XmlType = $hxClasses["XmlType"] = { __ename__ : true, __constructs__ : [] };
+var Xml = function() {
+};
+$hxClasses["Xml"] = Xml;
+Xml.__name__ = ["Xml"];
+Xml.Element = null;
+Xml.PCData = null;
+Xml.CData = null;
+Xml.Comment = null;
+Xml.DocType = null;
+Xml.ProcessingInstruction = null;
+Xml.Document = null;
+Xml.parse = function(str) {
+	return haxe.xml.Parser.parse(str);
+};
+Xml.createElement = function(name) {
+	var r = new Xml();
+	r.nodeType = Xml.Element;
+	r._children = new Array();
+	r._attributes = new haxe.ds.StringMap();
+	r.set_nodeName(name);
+	return r;
+};
+Xml.createPCData = function(data) {
+	var r = new Xml();
+	r.nodeType = Xml.PCData;
+	r.set_nodeValue(data);
+	return r;
+};
+Xml.createCData = function(data) {
+	var r = new Xml();
+	r.nodeType = Xml.CData;
+	r.set_nodeValue(data);
+	return r;
+};
+Xml.createComment = function(data) {
+	var r = new Xml();
+	r.nodeType = Xml.Comment;
+	r.set_nodeValue(data);
+	return r;
+};
+Xml.createDocType = function(data) {
+	var r = new Xml();
+	r.nodeType = Xml.DocType;
+	r.set_nodeValue(data);
+	return r;
+};
+Xml.createProcessingInstruction = function(data) {
+	var r = new Xml();
+	r.nodeType = Xml.ProcessingInstruction;
+	r.set_nodeValue(data);
+	return r;
+};
+Xml.createDocument = function() {
+	var r = new Xml();
+	r.nodeType = Xml.Document;
+	r._children = new Array();
+	return r;
+};
+Xml.prototype = {
+	get_nodeName: function() {
+		if(this.nodeType != Xml.Element) throw "bad nodeType";
+		return this._nodeName;
+	}
+	,set_nodeName: function(n) {
+		if(this.nodeType != Xml.Element) throw "bad nodeType";
+		return this._nodeName = n;
+	}
+	,set_nodeValue: function(v) {
+		if(this.nodeType == Xml.Element || this.nodeType == Xml.Document) throw "bad nodeType";
+		return this._nodeValue = v;
+	}
+	,get: function(att) {
+		if(this.nodeType != Xml.Element) throw "bad nodeType";
+		return this._attributes.get(att);
+	}
+	,set: function(att,value) {
+		if(this.nodeType != Xml.Element) throw "bad nodeType";
+		this._attributes.set(att,value);
+	}
+	,exists: function(att) {
+		if(this.nodeType != Xml.Element) throw "bad nodeType";
+		return this._attributes.exists(att);
+	}
+	,elementsNamed: function(name) {
+		if(this._children == null) throw "bad nodetype";
+		return { cur : 0, x : this._children, hasNext : function() {
+			var k = this.cur;
+			var l = this.x.length;
+			while(k < l) {
+				var n = this.x[k];
+				if(n.nodeType == Xml.Element && n._nodeName == name) break;
+				k++;
+			}
+			this.cur = k;
+			return k < l;
+		}, next : function() {
+			var k1 = this.cur;
+			var l1 = this.x.length;
+			while(k1 < l1) {
+				var n1 = this.x[k1];
+				k1++;
+				if(n1.nodeType == Xml.Element && n1._nodeName == name) {
+					this.cur = k1;
+					return n1;
+				}
+			}
+			return null;
+		}};
+	}
+	,firstElement: function() {
+		if(this._children == null) throw "bad nodetype";
+		var cur = 0;
+		var l = this._children.length;
+		while(cur < l) {
+			var n = this._children[cur];
+			if(n.nodeType == Xml.Element) return n;
+			cur++;
+		}
+		return null;
+	}
+	,addChild: function(x) {
+		if(this._children == null) throw "bad nodetype";
+		if(x._parent != null) HxOverrides.remove(x._parent._children,x);
+		x._parent = this;
+		this._children.push(x);
+	}
+	,__class__: Xml
 };
 var haxe = {};
 haxe.StackItem = $hxClasses["haxe.StackItem"] = { __ename__ : true, __constructs__ : ["CFunction","Module","FilePos","Method","LocalFunction"] };
@@ -2568,6 +2493,14 @@ haxe.Timer.prototype = {
 	,run: function() {
 	}
 	,__class__: haxe.Timer
+};
+haxe.Utf8 = function(size) {
+	this.__b = "";
+};
+$hxClasses["haxe.Utf8"] = haxe.Utf8;
+haxe.Utf8.__name__ = ["haxe","Utf8"];
+haxe.Utf8.prototype = {
+	__class__: haxe.Utf8
 };
 haxe.crypto = {};
 haxe.crypto.BaseCode = function(base) {
@@ -2777,6 +2710,26 @@ haxe.ds.IntMap.prototype = {
 	}
 	,exists: function(key) {
 		return this.h.hasOwnProperty(key);
+	}
+	,remove: function(key) {
+		if(!this.h.hasOwnProperty(key)) return false;
+		delete(this.h[key]);
+		return true;
+	}
+	,keys: function() {
+		var a = [];
+		for( var key in this.h ) {
+		if(this.h.hasOwnProperty(key)) a.push(key | 0);
+		}
+		return HxOverrides.iter(a);
+	}
+	,iterator: function() {
+		return { ref : this.h, it : this.keys(), hasNext : function() {
+			return this.it.hasNext();
+		}, next : function() {
+			var i = this.it.next();
+			return this.ref[i];
+		}};
 	}
 	,__class__: haxe.ds.IntMap
 };
@@ -3116,6 +3069,337 @@ haxe.io.StringInput.__super__ = haxe.io.BytesInput;
 haxe.io.StringInput.prototype = $extend(haxe.io.BytesInput.prototype,{
 	__class__: haxe.io.StringInput
 });
+haxe.xml = {};
+haxe.xml._Fast = {};
+haxe.xml._Fast.NodeAccess = function(x) {
+	this.__x = x;
+};
+$hxClasses["haxe.xml._Fast.NodeAccess"] = haxe.xml._Fast.NodeAccess;
+haxe.xml._Fast.NodeAccess.__name__ = ["haxe","xml","_Fast","NodeAccess"];
+haxe.xml._Fast.NodeAccess.prototype = {
+	resolve: function(name) {
+		var x = this.__x.elementsNamed(name).next();
+		if(x == null) {
+			var xname;
+			if(this.__x.nodeType == Xml.Document) xname = "Document"; else xname = this.__x.get_nodeName();
+			throw xname + " is missing element " + name;
+		}
+		return new haxe.xml.Fast(x);
+	}
+	,__class__: haxe.xml._Fast.NodeAccess
+};
+haxe.xml._Fast.AttribAccess = function(x) {
+	this.__x = x;
+};
+$hxClasses["haxe.xml._Fast.AttribAccess"] = haxe.xml._Fast.AttribAccess;
+haxe.xml._Fast.AttribAccess.__name__ = ["haxe","xml","_Fast","AttribAccess"];
+haxe.xml._Fast.AttribAccess.prototype = {
+	resolve: function(name) {
+		if(this.__x.nodeType == Xml.Document) throw "Cannot access document attribute " + name;
+		var v = this.__x.get(name);
+		if(v == null) throw this.__x.get_nodeName() + " is missing attribute " + name;
+		return v;
+	}
+	,__class__: haxe.xml._Fast.AttribAccess
+};
+haxe.xml._Fast.HasAttribAccess = function(x) {
+	this.__x = x;
+};
+$hxClasses["haxe.xml._Fast.HasAttribAccess"] = haxe.xml._Fast.HasAttribAccess;
+haxe.xml._Fast.HasAttribAccess.__name__ = ["haxe","xml","_Fast","HasAttribAccess"];
+haxe.xml._Fast.HasAttribAccess.prototype = {
+	resolve: function(name) {
+		if(this.__x.nodeType == Xml.Document) throw "Cannot access document attribute " + name;
+		return this.__x.exists(name);
+	}
+	,__class__: haxe.xml._Fast.HasAttribAccess
+};
+haxe.xml._Fast.HasNodeAccess = function(x) {
+	this.__x = x;
+};
+$hxClasses["haxe.xml._Fast.HasNodeAccess"] = haxe.xml._Fast.HasNodeAccess;
+haxe.xml._Fast.HasNodeAccess.__name__ = ["haxe","xml","_Fast","HasNodeAccess"];
+haxe.xml._Fast.HasNodeAccess.prototype = {
+	__class__: haxe.xml._Fast.HasNodeAccess
+};
+haxe.xml._Fast.NodeListAccess = function(x) {
+	this.__x = x;
+};
+$hxClasses["haxe.xml._Fast.NodeListAccess"] = haxe.xml._Fast.NodeListAccess;
+haxe.xml._Fast.NodeListAccess.__name__ = ["haxe","xml","_Fast","NodeListAccess"];
+haxe.xml._Fast.NodeListAccess.prototype = {
+	resolve: function(name) {
+		var l = new List();
+		var $it0 = this.__x.elementsNamed(name);
+		while( $it0.hasNext() ) {
+			var x = $it0.next();
+			l.add(new haxe.xml.Fast(x));
+		}
+		return l;
+	}
+	,__class__: haxe.xml._Fast.NodeListAccess
+};
+haxe.xml.Fast = function(x) {
+	if(x.nodeType != Xml.Document && x.nodeType != Xml.Element) throw "Invalid nodeType " + Std.string(x.nodeType);
+	this.x = x;
+	this.node = new haxe.xml._Fast.NodeAccess(x);
+	this.nodes = new haxe.xml._Fast.NodeListAccess(x);
+	this.att = new haxe.xml._Fast.AttribAccess(x);
+	this.has = new haxe.xml._Fast.HasAttribAccess(x);
+	this.hasNode = new haxe.xml._Fast.HasNodeAccess(x);
+};
+$hxClasses["haxe.xml.Fast"] = haxe.xml.Fast;
+haxe.xml.Fast.__name__ = ["haxe","xml","Fast"];
+haxe.xml.Fast.prototype = {
+	__class__: haxe.xml.Fast
+};
+haxe.xml.Parser = function() { };
+$hxClasses["haxe.xml.Parser"] = haxe.xml.Parser;
+haxe.xml.Parser.__name__ = ["haxe","xml","Parser"];
+haxe.xml.Parser.parse = function(str) {
+	var doc = Xml.createDocument();
+	haxe.xml.Parser.doParse(str,0,doc);
+	return doc;
+};
+haxe.xml.Parser.doParse = function(str,p,parent) {
+	if(p == null) p = 0;
+	var xml = null;
+	var state = 1;
+	var next = 1;
+	var aname = null;
+	var start = 0;
+	var nsubs = 0;
+	var nbrackets = 0;
+	var c = str.charCodeAt(p);
+	var buf = new StringBuf();
+	while(!(c != c)) {
+		switch(state) {
+		case 0:
+			switch(c) {
+			case 10:case 13:case 9:case 32:
+				break;
+			default:
+				state = next;
+				continue;
+			}
+			break;
+		case 1:
+			switch(c) {
+			case 60:
+				state = 0;
+				next = 2;
+				break;
+			default:
+				start = p;
+				state = 13;
+				continue;
+			}
+			break;
+		case 13:
+			if(c == 60) {
+				var child = Xml.createPCData(buf.b + HxOverrides.substr(str,start,p - start));
+				buf = new StringBuf();
+				parent.addChild(child);
+				nsubs++;
+				state = 0;
+				next = 2;
+			} else if(c == 38) {
+				buf.addSub(str,start,p - start);
+				state = 18;
+				next = 13;
+				start = p + 1;
+			}
+			break;
+		case 17:
+			if(c == 93 && str.charCodeAt(p + 1) == 93 && str.charCodeAt(p + 2) == 62) {
+				var child1 = Xml.createCData(HxOverrides.substr(str,start,p - start));
+				parent.addChild(child1);
+				nsubs++;
+				p += 2;
+				state = 1;
+			}
+			break;
+		case 2:
+			switch(c) {
+			case 33:
+				if(str.charCodeAt(p + 1) == 91) {
+					p += 2;
+					if(HxOverrides.substr(str,p,6).toUpperCase() != "CDATA[") throw "Expected <![CDATA[";
+					p += 5;
+					state = 17;
+					start = p + 1;
+				} else if(str.charCodeAt(p + 1) == 68 || str.charCodeAt(p + 1) == 100) {
+					if(HxOverrides.substr(str,p + 2,6).toUpperCase() != "OCTYPE") throw "Expected <!DOCTYPE";
+					p += 8;
+					state = 16;
+					start = p + 1;
+				} else if(str.charCodeAt(p + 1) != 45 || str.charCodeAt(p + 2) != 45) throw "Expected <!--"; else {
+					p += 2;
+					state = 15;
+					start = p + 1;
+				}
+				break;
+			case 63:
+				state = 14;
+				start = p;
+				break;
+			case 47:
+				if(parent == null) throw "Expected node name";
+				start = p + 1;
+				state = 0;
+				next = 10;
+				break;
+			default:
+				state = 3;
+				start = p;
+				continue;
+			}
+			break;
+		case 3:
+			if(!(c >= 97 && c <= 122 || c >= 65 && c <= 90 || c >= 48 && c <= 57 || c == 58 || c == 46 || c == 95 || c == 45)) {
+				if(p == start) throw "Expected node name";
+				xml = Xml.createElement(HxOverrides.substr(str,start,p - start));
+				parent.addChild(xml);
+				state = 0;
+				next = 4;
+				continue;
+			}
+			break;
+		case 4:
+			switch(c) {
+			case 47:
+				state = 11;
+				nsubs++;
+				break;
+			case 62:
+				state = 9;
+				nsubs++;
+				break;
+			default:
+				state = 5;
+				start = p;
+				continue;
+			}
+			break;
+		case 5:
+			if(!(c >= 97 && c <= 122 || c >= 65 && c <= 90 || c >= 48 && c <= 57 || c == 58 || c == 46 || c == 95 || c == 45)) {
+				var tmp;
+				if(start == p) throw "Expected attribute name";
+				tmp = HxOverrides.substr(str,start,p - start);
+				aname = tmp;
+				if(xml.exists(aname)) throw "Duplicate attribute";
+				state = 0;
+				next = 6;
+				continue;
+			}
+			break;
+		case 6:
+			switch(c) {
+			case 61:
+				state = 0;
+				next = 7;
+				break;
+			default:
+				throw "Expected =";
+			}
+			break;
+		case 7:
+			switch(c) {
+			case 34:case 39:
+				state = 8;
+				start = p;
+				break;
+			default:
+				throw "Expected \"";
+			}
+			break;
+		case 8:
+			if(c == str.charCodeAt(start)) {
+				var val = HxOverrides.substr(str,start + 1,p - start - 1);
+				xml.set(aname,val);
+				state = 0;
+				next = 4;
+			}
+			break;
+		case 9:
+			p = haxe.xml.Parser.doParse(str,p,xml);
+			start = p;
+			state = 1;
+			break;
+		case 11:
+			switch(c) {
+			case 62:
+				state = 1;
+				break;
+			default:
+				throw "Expected >";
+			}
+			break;
+		case 12:
+			switch(c) {
+			case 62:
+				if(nsubs == 0) parent.addChild(Xml.createPCData(""));
+				return p;
+			default:
+				throw "Expected >";
+			}
+			break;
+		case 10:
+			if(!(c >= 97 && c <= 122 || c >= 65 && c <= 90 || c >= 48 && c <= 57 || c == 58 || c == 46 || c == 95 || c == 45)) {
+				if(start == p) throw "Expected node name";
+				var v = HxOverrides.substr(str,start,p - start);
+				if(v != parent.get_nodeName()) throw "Expected </" + parent.get_nodeName() + ">";
+				state = 0;
+				next = 12;
+				continue;
+			}
+			break;
+		case 15:
+			if(c == 45 && str.charCodeAt(p + 1) == 45 && str.charCodeAt(p + 2) == 62) {
+				parent.addChild(Xml.createComment(HxOverrides.substr(str,start,p - start)));
+				p += 2;
+				state = 1;
+			}
+			break;
+		case 16:
+			if(c == 91) nbrackets++; else if(c == 93) nbrackets--; else if(c == 62 && nbrackets == 0) {
+				parent.addChild(Xml.createDocType(HxOverrides.substr(str,start,p - start)));
+				state = 1;
+			}
+			break;
+		case 14:
+			if(c == 63 && str.charCodeAt(p + 1) == 62) {
+				p++;
+				var str1 = HxOverrides.substr(str,start + 1,p - start - 2);
+				parent.addChild(Xml.createProcessingInstruction(str1));
+				state = 1;
+			}
+			break;
+		case 18:
+			if(c == 59) {
+				var s = HxOverrides.substr(str,start,p - start);
+				if(s.charCodeAt(0) == 35) {
+					var i;
+					if(s.charCodeAt(1) == 120) i = Std.parseInt("0" + HxOverrides.substr(s,1,s.length - 1)); else i = Std.parseInt(HxOverrides.substr(s,1,s.length - 1));
+					buf.add(String.fromCharCode(i));
+				} else if(!haxe.xml.Parser.escapes.exists(s)) buf.b += Std.string("&" + s + ";"); else buf.add(haxe.xml.Parser.escapes.get(s));
+				start = p + 1;
+				state = next;
+			}
+			break;
+		}
+		c = StringTools.fastCodeAt(str,++p);
+	}
+	if(state == 1) {
+		start = p;
+		state = 13;
+	}
+	if(state == 13) {
+		if(p != start || nsubs == 0) parent.addChild(Xml.createPCData(buf.b + HxOverrides.substr(str,start,p - start)));
+		return p;
+	}
+	throw "Unexpected end";
+};
 var hscript = {};
 hscript.Const = $hxClasses["hscript.Const"] = { __ename__ : true, __constructs__ : ["CInt","CFloat","CString"] };
 hscript.Const.CInt = function(v) { var $x = ["CInt",0,v]; $x.__enum__ = hscript.Const; $x.toString = $estr; return $x; };
@@ -5462,7 +5746,9 @@ lime.Assets.loadLibrary = function(name,handler) {
 		lime.Assets.libraries.set(name,library);
 		library.eventCallback = lime.Assets.library_onEvent;
 		library.load(handler);
-	} else haxe.Log.trace("[Assets] There is no asset library named \"" + name + "\"",{ fileName : "Assets.hx", lineNumber : 800, className : "lime.Assets", methodName : "loadLibrary"});
+		return;
+	} else haxe.Log.trace("[Assets] There is no asset library named \"" + name + "\"",{ fileName : "Assets.hx", lineNumber : 801, className : "lime.Assets", methodName : "loadLibrary"});
+	handler(null);
 };
 lime.Assets.loadText = function(id,handler) {
 	lime.Assets.initialize();
@@ -5475,8 +5761,8 @@ lime.Assets.loadText = function(id,handler) {
 		if(library.exists(symbolName,"TEXT")) {
 			library.loadText(symbolName,handler);
 			return;
-		} else haxe.Log.trace("[Assets] There is no String asset with an ID of \"" + id + "\"",{ fileName : "Assets.hx", lineNumber : 891, className : "lime.Assets", methodName : "loadText"});
-	} else haxe.Log.trace("[Assets] There is no asset library named \"" + libraryName + "\"",{ fileName : "Assets.hx", lineNumber : 897, className : "lime.Assets", methodName : "loadText"});
+		} else haxe.Log.trace("[Assets] There is no String asset with an ID of \"" + id + "\"",{ fileName : "Assets.hx", lineNumber : 894, className : "lime.Assets", methodName : "loadText"});
+	} else haxe.Log.trace("[Assets] There is no asset library named \"" + libraryName + "\"",{ fileName : "Assets.hx", lineNumber : 900, className : "lime.Assets", methodName : "loadText"});
 	handler(null);
 };
 lime.Assets.registerLibrary = function(name,library) {
@@ -5571,19 +5857,38 @@ lime._backend.html5.HTML5Application.prototype = {
 			return 1073741892;
 		case 123:
 			return 1073741893;
+		case 124:
+			return 1073741928;
+		case 125:
+			return 1073741929;
+		case 126:
+			return 1073741930;
+		case 186:
+			return 59;
+		case 187:
+			return 61;
+		case 188:
+			return 44;
+		case 189:
+			return 45;
+		case 190:
+			return 46;
+		case 191:
+			return 47;
+		case 192:
+			return 96;
+		case 219:
+			return 91;
+		case 220:
+			return 92;
+		case 221:
+			return 93;
+		case 222:
+			return 39;
 		}
 		return keyCode;
 	}
 	,create: function(config) {
-		this.parent.config = config;
-		if(config != null) {
-			this.setFrameRate(config.fps);
-			var $window = new lime.ui.Window(config);
-			var renderer = new lime.graphics.Renderer($window);
-			this.parent.addWindow($window);
-			this.parent.addRenderer(renderer);
-			this.parent.init(renderer.context);
-		}
 	}
 	,exec: function() {
 		window.addEventListener("keydown",$bind(this,this.handleKeyEvent),false);
@@ -5595,10 +5900,9 @@ lime._backend.html5.HTML5Application.prototype = {
 		
 			var lastTime = 0;
 			var vendors = ['ms', 'moz', 'webkit', 'o'];
-			for(var x = 0; x < vendors.length && !window.requestAnimationFrame; ++x) {
+			for (var x = 0; x < vendors.length && !window.requestAnimationFrame; ++x) {
 				window.requestAnimationFrame = window[vendors[x]+'RequestAnimationFrame'];
-				window.cancelAnimationFrame = window[vendors[x]+'CancelAnimationFrame'] 
-										   || window[vendors[x]+'CancelRequestAnimationFrame'];
+				window.cancelAnimationFrame = window[vendors[x]+'CancelAnimationFrame'] || window[vendors[x]+'CancelRequestAnimationFrame'];
 			}
 			
 			if (!window.requestAnimationFrame)
@@ -5619,43 +5923,15 @@ lime._backend.html5.HTML5Application.prototype = {
 			window.requestAnimFrame = window.requestAnimationFrame;
 		;
 		this.lastUpdate = new Date().getTime();
-		this.handleUpdateEvent();
+		this.handleApplicationEvent();
 		return 0;
+	}
+	,exit: function() {
 	}
 	,getFrameRate: function() {
 		if(this.framePeriod < 0) return 60; else if(this.framePeriod == 1000) return 0; else return 1000 / this.framePeriod;
 	}
-	,handleKeyEvent: function(event) {
-		if(this.parent.window != null) {
-			var _g = event.keyCode;
-			switch(_g) {
-			case 32:case 37:case 38:case 39:case 40:
-				event.preventDefault();
-				break;
-			}
-			var keyCode = this.convertKeyCode(event.keyCode != null?event.keyCode:event.which);
-			var modifier;
-			modifier = (event.shiftKey?3:0) | (event.ctrlKey?192:0) | (event.altKey?768:0) | (event.metaKey?3072:0);
-			if(event.type == "keydown") {
-				var listeners = this.parent.window.onKeyDown.listeners;
-				var repeat = this.parent.window.onKeyDown.repeat;
-				var i = 0;
-				while(i < listeners.length) {
-					listeners[i](keyCode,modifier);
-					if(!repeat[i]) this.parent.window.onKeyDown.remove(listeners[i]); else i++;
-				}
-			} else {
-				var listeners1 = this.parent.window.onKeyUp.listeners;
-				var repeat1 = this.parent.window.onKeyUp.repeat;
-				var i1 = 0;
-				while(i1 < listeners1.length) {
-					listeners1[i1](keyCode,modifier);
-					if(!repeat1[i1]) this.parent.window.onKeyUp.remove(listeners1[i1]); else i1++;
-				}
-			}
-		}
-	}
-	,handleUpdateEvent: function(__) {
+	,handleApplicationEvent: function(__) {
 		this.currentUpdate = new Date().getTime();
 		if(this.currentUpdate >= this.nextUpdate) {
 			this.deltaTime = this.currentUpdate - this.lastUpdate;
@@ -5666,15 +5942,15 @@ lime._backend.html5.HTML5Application.prototype = {
 				listeners[i](this.deltaTime | 0);
 				if(!repeat[i]) this.parent.onUpdate.remove(listeners[i]); else i++;
 			}
-			if(this.parent.renderer != null) {
-				var listeners1 = this.parent.renderer.onRender.listeners;
-				var repeat1 = this.parent.renderer.onRender.repeat;
+			if(this.parent.renderers[0] != null) {
+				var listeners1 = this.parent.renderers[0].onRender.listeners;
+				var repeat1 = this.parent.renderers[0].onRender.repeat;
 				var i1 = 0;
 				while(i1 < listeners1.length) {
-					listeners1[i1](this.parent.renderer.context);
-					if(!repeat1[i1]) this.parent.renderer.onRender.remove(listeners1[i1]); else i1++;
+					listeners1[i1]();
+					if(!repeat1[i1]) this.parent.renderers[0].onRender.remove(listeners1[i1]); else i1++;
 				}
-				this.parent.renderer.flip();
+				this.parent.renderers[0].flip();
 			}
 			if(this.framePeriod < 0) {
 				this.nextUpdate = this.currentUpdate;
@@ -5682,65 +5958,89 @@ lime._backend.html5.HTML5Application.prototype = {
 			} else this.nextUpdate = this.currentUpdate + this.framePeriod;
 			this.lastUpdate = this.currentUpdate;
 		}
-		window.requestAnimationFrame($bind(this,this.handleUpdateEvent));
+		window.requestAnimationFrame($bind(this,this.handleApplicationEvent));
+	}
+	,handleKeyEvent: function(event) {
+		if(this.parent.windows[0] != null) {
+			var keyCode = this.convertKeyCode(event.keyCode != null?event.keyCode:event.which);
+			var modifier;
+			modifier = (event.shiftKey?3:0) | (event.ctrlKey?192:0) | (event.altKey?768:0) | (event.metaKey?3072:0);
+			if(event.type == "keydown") {
+				var listeners = this.parent.windows[0].onKeyDown.listeners;
+				var repeat = this.parent.windows[0].onKeyDown.repeat;
+				var i = 0;
+				while(i < listeners.length) {
+					listeners[i](keyCode,modifier);
+					if(!repeat[i]) this.parent.windows[0].onKeyDown.remove(listeners[i]); else i++;
+				}
+			} else {
+				var listeners1 = this.parent.windows[0].onKeyUp.listeners;
+				var repeat1 = this.parent.windows[0].onKeyUp.repeat;
+				var i1 = 0;
+				while(i1 < listeners1.length) {
+					listeners1[i1](keyCode,modifier);
+					if(!repeat1[i1]) this.parent.windows[0].onKeyUp.remove(listeners1[i1]); else i1++;
+				}
+			}
+		}
 	}
 	,handleWindowEvent: function(event) {
-		if(this.parent.window != null) {
+		if(this.parent.windows[0] != null) {
 			var _g = event.type;
 			switch(_g) {
 			case "focus":
-				var listeners = this.parent.window.onWindowFocusIn.listeners;
-				var repeat = this.parent.window.onWindowFocusIn.repeat;
+				var listeners = this.parent.windows[0].onFocusIn.listeners;
+				var repeat = this.parent.windows[0].onFocusIn.repeat;
 				var i = 0;
 				while(i < listeners.length) {
 					listeners[i]();
-					if(!repeat[i]) this.parent.window.onWindowFocusIn.remove(listeners[i]); else i++;
+					if(!repeat[i]) this.parent.windows[0].onFocusIn.remove(listeners[i]); else i++;
 				}
-				var listeners1 = this.parent.window.onWindowActivate.listeners;
-				var repeat1 = this.parent.window.onWindowActivate.repeat;
+				var listeners1 = this.parent.windows[0].onActivate.listeners;
+				var repeat1 = this.parent.windows[0].onActivate.repeat;
 				var i1 = 0;
 				while(i1 < listeners1.length) {
 					listeners1[i1]();
-					if(!repeat1[i1]) this.parent.window.onWindowActivate.remove(listeners1[i1]); else i1++;
+					if(!repeat1[i1]) this.parent.windows[0].onActivate.remove(listeners1[i1]); else i1++;
 				}
 				break;
 			case "blur":
-				var listeners2 = this.parent.window.onWindowFocusOut.listeners;
-				var repeat2 = this.parent.window.onWindowFocusOut.repeat;
+				var listeners2 = this.parent.windows[0].onFocusOut.listeners;
+				var repeat2 = this.parent.windows[0].onFocusOut.repeat;
 				var i2 = 0;
 				while(i2 < listeners2.length) {
 					listeners2[i2]();
-					if(!repeat2[i2]) this.parent.window.onWindowFocusOut.remove(listeners2[i2]); else i2++;
+					if(!repeat2[i2]) this.parent.windows[0].onFocusOut.remove(listeners2[i2]); else i2++;
 				}
-				var listeners3 = this.parent.window.onWindowDeactivate.listeners;
-				var repeat3 = this.parent.window.onWindowDeactivate.repeat;
+				var listeners3 = this.parent.windows[0].onDeactivate.listeners;
+				var repeat3 = this.parent.windows[0].onDeactivate.repeat;
 				var i3 = 0;
 				while(i3 < listeners3.length) {
 					listeners3[i3]();
-					if(!repeat3[i3]) this.parent.window.onWindowDeactivate.remove(listeners3[i3]); else i3++;
+					if(!repeat3[i3]) this.parent.windows[0].onDeactivate.remove(listeners3[i3]); else i3++;
 				}
 				break;
 			case "resize":
-				var cacheWidth = this.parent.window.__width;
-				var cacheHeight = this.parent.window.__height;
-				this.parent.window.backend.handleResize();
-				if(this.parent.window.__width != cacheWidth || this.parent.window.__height != cacheHeight) {
-					var listeners4 = this.parent.window.onWindowResize.listeners;
-					var repeat4 = this.parent.window.onWindowResize.repeat;
+				var cacheWidth = this.parent.windows[0].__width;
+				var cacheHeight = this.parent.windows[0].__height;
+				this.parent.windows[0].backend.handleResize();
+				if(this.parent.windows[0].__width != cacheWidth || this.parent.windows[0].__height != cacheHeight) {
+					var listeners4 = this.parent.windows[0].onResize.listeners;
+					var repeat4 = this.parent.windows[0].onResize.repeat;
 					var i4 = 0;
 					while(i4 < listeners4.length) {
-						listeners4[i4](this.parent.window.__width,this.parent.window.__height);
-						if(!repeat4[i4]) this.parent.window.onWindowResize.remove(listeners4[i4]); else i4++;
+						listeners4[i4](this.parent.windows[0].__width,this.parent.windows[0].__height);
+						if(!repeat4[i4]) this.parent.windows[0].onResize.remove(listeners4[i4]); else i4++;
 					}
 				}
 				break;
 			case "beforeunload":
-				var listeners5 = this.parent.window.onWindowClose.listeners;
-				var repeat5 = this.parent.window.onWindowClose.repeat;
+				var listeners5 = this.parent.windows[0].onClose.listeners;
+				var repeat5 = this.parent.windows[0].onClose.repeat;
 				var i5 = 0;
 				while(i5 < listeners5.length) {
 					listeners5[i5]();
-					if(!repeat5[i5]) this.parent.window.onWindowClose.remove(listeners5[i5]); else i5++;
+					if(!repeat5[i5]) this.parent.windows[0].onClose.remove(listeners5[i5]); else i5++;
 				}
 				break;
 			}
@@ -5860,11 +6160,19 @@ lime._backend.html5.HTML5Renderer.prototype = {
 		}
 	}
 	,createContext: function() {
-		if(this.parent.window.backend.div != null) this.parent.context = lime.graphics.RenderContext.DOM(this.parent.window.backend.div); else if(this.parent.window.backend.canvas != null) {
+		if(this.parent.window.backend.div != null) {
+			this.parent.context = lime.graphics.RenderContext.DOM(this.parent.window.backend.div);
+			this.parent.type = lime.graphics.RendererType.DOM;
+		} else if(this.parent.window.backend.canvas != null) {
 			var webgl = null;
-			if(webgl == null) this.parent.context = lime.graphics.RenderContext.CANVAS(this.parent.window.backend.canvas.getContext("2d")); else {
+			if(webgl == null) {
+				this.parent.context = lime.graphics.RenderContext.CANVAS(this.parent.window.backend.canvas.getContext("2d"));
+				this.parent.type = lime.graphics.RendererType.CANVAS;
+			} else {
+				webgl = WebGLDebugUtils.makeDebugContext(webgl);
 				lime.graphics.opengl.GL.context = webgl;
 				this.parent.context = lime.graphics.RenderContext.OPENGL(lime.graphics.opengl.GL.context);
+				this.parent.type = lime.graphics.RendererType.OPENGL;
 			}
 		}
 	}
@@ -5876,22 +6184,22 @@ lime._backend.html5.HTML5Renderer.prototype = {
 		case "webglcontextlost":
 			event.preventDefault();
 			this.parent.context = null;
-			var listeners = this.parent.onRenderContextLost.listeners;
-			var repeat = this.parent.onRenderContextLost.repeat;
+			var listeners = this.parent.onContextLost.listeners;
+			var repeat = this.parent.onContextLost.repeat;
 			var i = 0;
 			while(i < listeners.length) {
 				listeners[i]();
-				if(!repeat[i]) this.parent.onRenderContextLost.remove(listeners[i]); else i++;
+				if(!repeat[i]) this.parent.onContextLost.remove(listeners[i]); else i++;
 			}
 			break;
 		case "webglcontextrestored":
 			this.createContext();
-			var listeners1 = this.parent.onRenderContextRestored.listeners;
-			var repeat1 = this.parent.onRenderContextRestored.repeat;
+			var listeners1 = this.parent.onContextRestored.listeners;
+			var repeat1 = this.parent.onContextRestored.repeat;
 			var i1 = 0;
 			while(i1 < listeners1.length) {
 				listeners1[i1](this.parent.context);
-				if(!repeat1[i1]) this.parent.onRenderContextRestored.remove(listeners1[i1]); else i1++;
+				if(!repeat1[i1]) this.parent.onContextRestored.remove(listeners1[i1]); else i1++;
 			}
 			break;
 		default:
@@ -5902,6 +6210,8 @@ lime._backend.html5.HTML5Renderer.prototype = {
 	,__class__: lime._backend.html5.HTML5Renderer
 };
 lime._backend.html5.HTML5Window = function(parent) {
+	this.unusedTouchesPool = new List();
+	this.currentTouches = new haxe.ds.IntMap();
 	this.parent = parent;
 	if(parent.config != null && Object.prototype.hasOwnProperty.call(parent.config,"element")) this.element = parent.config.element;
 };
@@ -5910,10 +6220,12 @@ lime._backend.html5.HTML5Window.__name__ = ["lime","_backend","html5","HTML5Wind
 lime._backend.html5.HTML5Window.textInput = null;
 lime._backend.html5.HTML5Window.prototype = {
 	close: function() {
+		this.parent.application.removeWindow(this.parent);
 	}
 	,create: function(application) {
 		this.setWidth = this.parent.__width;
 		this.setHeight = this.parent.__height;
+		this.parent.id = lime._backend.html5.HTML5Window.windowID++;
 		if(js.Boot.__instanceof(this.element,HTMLCanvasElement)) this.canvas = this.element; else this.canvas = window.document.createElement("canvas");
 		if(this.canvas != null) {
 			var style = this.canvas.style;
@@ -5970,6 +6282,8 @@ lime._backend.html5.HTML5Window.prototype = {
 			this.element.addEventListener("touchmove",$bind(this,this.handleTouchEvent),true);
 			this.element.addEventListener("touchend",$bind(this,this.handleTouchEvent),true);
 		}
+	}
+	,focus: function() {
 	}
 	,getDisplay: function() {
 		return lime.system.System.getDisplay(0);
@@ -6028,21 +6342,21 @@ lime._backend.html5.HTML5Window.prototype = {
 				}
 				break;
 			case "mouseenter":
-				var listeners1 = this.parent.onWindowEnter.listeners;
-				var repeat1 = this.parent.onWindowEnter.repeat;
+				var listeners1 = this.parent.onEnter.listeners;
+				var repeat1 = this.parent.onEnter.repeat;
 				var i1 = 0;
 				while(i1 < listeners1.length) {
 					listeners1[i1]();
-					if(!repeat1[i1]) this.parent.onWindowEnter.remove(listeners1[i1]); else i1++;
+					if(!repeat1[i1]) this.parent.onEnter.remove(listeners1[i1]); else i1++;
 				}
 				break;
 			case "mouseleave":
-				var listeners2 = this.parent.onWindowLeave.listeners;
-				var repeat2 = this.parent.onWindowLeave.repeat;
+				var listeners2 = this.parent.onLeave.listeners;
+				var repeat2 = this.parent.onLeave.repeat;
 				var i2 = 0;
 				while(i2 < listeners2.length) {
 					listeners2[i2]();
-					if(!repeat2[i2]) this.parent.onWindowLeave.remove(listeners2[i2]); else i2++;
+					if(!repeat2[i2]) this.parent.onLeave.remove(listeners2[i2]); else i2++;
 				}
 				break;
 			case "mouseup":
@@ -6115,79 +6429,115 @@ lime._backend.html5.HTML5Window.prototype = {
 	}
 	,handleTouchEvent: function(event) {
 		event.preventDefault();
-		var touch = event.changedTouches[0];
-		var id = touch.identifier;
-		var x = 0.0;
-		var y = 0.0;
+		var rect = null;
 		if(this.element != null) {
-			if(this.canvas != null) {
-				var rect = this.canvas.getBoundingClientRect();
-				x = (touch.clientX - rect.left) * (this.parent.__width / rect.width);
-				y = (touch.clientY - rect.top) * (this.parent.__height / rect.height);
-			} else if(this.div != null) {
-				var rect1 = this.div.getBoundingClientRect();
-				x = touch.clientX - rect1.left;
-				y = touch.clientY - rect1.top;
-			} else {
-				var rect2 = this.element.getBoundingClientRect();
-				x = (touch.clientX - rect2.left) * (this.parent.__width / rect2.width);
-				y = (touch.clientY - rect2.top) * (this.parent.__height / rect2.height);
-			}
-		} else {
-			x = touch.clientX;
-			y = touch.clientY;
+			if(this.canvas != null) rect = this.canvas.getBoundingClientRect(); else if(this.div != null) rect = this.div.getBoundingClientRect(); else rect = this.element.getBoundingClientRect();
 		}
-		var _g = event.type;
-		switch(_g) {
-		case "touchstart":
-			var listeners = this.parent.onTouchStart.listeners;
-			var repeat = this.parent.onTouchStart.repeat;
-			var i = 0;
-			while(i < listeners.length) {
-				listeners[i](x / this.setWidth,y / this.setHeight,id);
-				if(!repeat[i]) this.parent.onTouchStart.remove(listeners[i]); else i++;
+		var _g = 0;
+		var _g1 = event.changedTouches;
+		while(_g < _g1.length) {
+			var data = _g1[_g];
+			++_g;
+			var x = 0.0;
+			var y = 0.0;
+			if(rect != null) {
+				x = (data.clientX - rect.left) * (this.parent.__width / rect.width);
+				y = (data.clientY - rect.top) * (this.parent.__height / rect.height);
+			} else {
+				x = data.clientX;
+				y = data.clientY;
 			}
-			var listeners1 = this.parent.onMouseDown.listeners;
-			var repeat1 = this.parent.onMouseDown.repeat;
-			var i1 = 0;
-			while(i1 < listeners1.length) {
-				listeners1[i1](x,y,0);
-				if(!repeat1[i1]) this.parent.onMouseDown.remove(listeners1[i1]); else i1++;
+			var _g2 = event.type;
+			switch(_g2) {
+			case "touchstart":
+				var touch = this.unusedTouchesPool.pop();
+				if(touch == null) touch = new lime.ui.Touch(x / this.setWidth,y / this.setHeight,data.identifier,0,0,data.force,this.parent.id); else {
+					touch.x = x / this.setWidth;
+					touch.y = y / this.setHeight;
+					touch.id = data.identifier;
+					touch.dx = 0;
+					touch.dy = 0;
+					touch.pressure = data.force;
+					touch.device = this.parent.id;
+				}
+				this.currentTouches.set(data.identifier,touch);
+				var listeners = lime.ui.Touch.onStart.listeners;
+				var repeat = lime.ui.Touch.onStart.repeat;
+				var i = 0;
+				while(i < listeners.length) {
+					listeners[i](touch);
+					if(!repeat[i]) lime.ui.Touch.onStart.remove(listeners[i]); else i++;
+				}
+				if(data == event.touches[0]) {
+					var listeners1 = this.parent.onMouseDown.listeners;
+					var repeat1 = this.parent.onMouseDown.repeat;
+					var i1 = 0;
+					while(i1 < listeners1.length) {
+						listeners1[i1](x,y,0);
+						if(!repeat1[i1]) this.parent.onMouseDown.remove(listeners1[i1]); else i1++;
+					}
+				}
+				break;
+			case "touchend":
+				var touch1 = this.currentTouches.get(data.identifier);
+				if(touch1 != null) {
+					var cacheX = touch1.x;
+					var cacheY = touch1.y;
+					touch1.x = x / this.setWidth;
+					touch1.y = y / this.setHeight;
+					touch1.dx = touch1.x - cacheX;
+					touch1.dy = touch1.y - cacheY;
+					touch1.pressure = data.force;
+					var listeners2 = lime.ui.Touch.onEnd.listeners;
+					var repeat2 = lime.ui.Touch.onEnd.repeat;
+					var i2 = 0;
+					while(i2 < listeners2.length) {
+						listeners2[i2](touch1);
+						if(!repeat2[i2]) lime.ui.Touch.onEnd.remove(listeners2[i2]); else i2++;
+					}
+					this.currentTouches.remove(data.identifier);
+					this.unusedTouchesPool.add(touch1);
+					if(data == event.touches[0]) {
+						var listeners3 = this.parent.onMouseUp.listeners;
+						var repeat3 = this.parent.onMouseUp.repeat;
+						var i3 = 0;
+						while(i3 < listeners3.length) {
+							listeners3[i3](x,y,0);
+							if(!repeat3[i3]) this.parent.onMouseUp.remove(listeners3[i3]); else i3++;
+						}
+					}
+				}
+				break;
+			case "touchmove":
+				var touch2 = this.currentTouches.get(data.identifier);
+				if(touch2 != null) {
+					var cacheX1 = touch2.x;
+					var cacheY1 = touch2.y;
+					touch2.x = x / this.setWidth;
+					touch2.y = y / this.setHeight;
+					touch2.dx = touch2.x - cacheX1;
+					touch2.dy = touch2.y - cacheY1;
+					touch2.pressure = data.force;
+					var listeners4 = lime.ui.Touch.onMove.listeners;
+					var repeat4 = lime.ui.Touch.onMove.repeat;
+					var i4 = 0;
+					while(i4 < listeners4.length) {
+						listeners4[i4](touch2);
+						if(!repeat4[i4]) lime.ui.Touch.onMove.remove(listeners4[i4]); else i4++;
+					}
+					if(data == event.touches[0]) {
+						var listeners5 = this.parent.onMouseMove.listeners;
+						var repeat5 = this.parent.onMouseMove.repeat;
+						var i5 = 0;
+						while(i5 < listeners5.length) {
+							listeners5[i5](x,y);
+							if(!repeat5[i5]) this.parent.onMouseMove.remove(listeners5[i5]); else i5++;
+						}
+					}
+				}
+				break;
+			default:
 			}
-			break;
-		case "touchmove":
-			var listeners2 = this.parent.onTouchMove.listeners;
-			var repeat2 = this.parent.onTouchMove.repeat;
-			var i2 = 0;
-			while(i2 < listeners2.length) {
-				listeners2[i2](x / this.setWidth,y / this.setHeight,id);
-				if(!repeat2[i2]) this.parent.onTouchMove.remove(listeners2[i2]); else i2++;
-			}
-			var listeners3 = this.parent.onMouseMove.listeners;
-			var repeat3 = this.parent.onMouseMove.repeat;
-			var i3 = 0;
-			while(i3 < listeners3.length) {
-				listeners3[i3](x,y);
-				if(!repeat3[i3]) this.parent.onMouseMove.remove(listeners3[i3]); else i3++;
-			}
-			break;
-		case "touchend":
-			var listeners4 = this.parent.onTouchEnd.listeners;
-			var repeat4 = this.parent.onTouchEnd.repeat;
-			var i4 = 0;
-			while(i4 < listeners4.length) {
-				listeners4[i4](x / this.setWidth,y / this.setHeight,id);
-				if(!repeat4[i4]) this.parent.onTouchEnd.remove(listeners4[i4]); else i4++;
-			}
-			var listeners5 = this.parent.onMouseUp.listeners;
-			var repeat5 = this.parent.onMouseUp.repeat;
-			var i5 = 0;
-			while(i5 < listeners5.length) {
-				listeners5[i5](x,y,0);
-				if(!repeat5[i5]) this.parent.onMouseUp.remove(listeners5[i5]); else i5++;
-			}
-			break;
-		default:
 		}
 	}
 	,move: function(x,y) {
@@ -6253,14 +6603,13 @@ lime.app.IModule.prototype = {
 	__class__: lime.app.IModule
 };
 lime.app.Module = function() {
+	this.onExit = new lime.app.Event();
 };
 $hxClasses["lime.app.Module"] = lime.app.Module;
 lime.app.Module.__name__ = ["lime","app","Module"];
 lime.app.Module.__interfaces__ = [lime.app.IModule];
 lime.app.Module.prototype = {
-	init: function(context) {
-	}
-	,onGamepadAxisMove: function(gamepad,axis,value) {
+	onGamepadAxisMove: function(gamepad,axis,value) {
 	}
 	,onGamepadButtonDown: function(gamepad,button) {
 	}
@@ -6270,59 +6619,67 @@ lime.app.Module.prototype = {
 	}
 	,onGamepadDisconnect: function(gamepad) {
 	}
-	,onKeyDown: function(keyCode,modifier) {
+	,onKeyDown: function(window,keyCode,modifier) {
 	}
-	,onKeyUp: function(keyCode,modifier) {
+	,onKeyUp: function(window,keyCode,modifier) {
 	}
-	,onMouseDown: function(x,y,button) {
+	,onModuleExit: function(code) {
 	}
-	,onMouseMove: function(x,y) {
+	,onMouseDown: function(window,x,y,button) {
 	}
-	,onMouseMoveRelative: function(x,y) {
+	,onMouseMove: function(window,x,y) {
 	}
-	,onMouseUp: function(x,y,button) {
+	,onMouseMoveRelative: function(window,x,y) {
 	}
-	,onMouseWheel: function(deltaX,deltaY) {
+	,onMouseUp: function(window,x,y,button) {
 	}
-	,onRenderContextLost: function() {
+	,onMouseWheel: function(window,deltaX,deltaY) {
 	}
-	,onRenderContextRestored: function(context) {
+	,onPreloadComplete: function() {
 	}
-	,onTextEdit: function(text,start,length) {
+	,onPreloadProgress: function(loaded,total) {
 	}
-	,onTextInput: function(text) {
+	,onRenderContextLost: function(renderer) {
 	}
-	,onTouchEnd: function(x,y,id) {
+	,onRenderContextRestored: function(renderer,context) {
 	}
-	,onTouchMove: function(x,y,id) {
+	,onTextEdit: function(window,text,start,length) {
 	}
-	,onTouchStart: function(x,y,id) {
+	,onTextInput: function(window,text) {
 	}
-	,onWindowActivate: function() {
+	,onTouchEnd: function(touch) {
 	}
-	,onWindowClose: function() {
+	,onTouchMove: function(touch) {
 	}
-	,onWindowDeactivate: function() {
+	,onTouchStart: function(touch) {
 	}
-	,onWindowEnter: function() {
+	,onWindowActivate: function(window) {
 	}
-	,onWindowFocusIn: function() {
+	,onWindowClose: function(window) {
 	}
-	,onWindowFocusOut: function() {
+	,onWindowCreate: function(window) {
 	}
-	,onWindowFullscreen: function() {
+	,onWindowDeactivate: function(window) {
 	}
-	,onWindowLeave: function() {
+	,onWindowEnter: function(window) {
 	}
-	,onWindowMinimize: function() {
+	,onWindowFocusIn: function(window) {
 	}
-	,onWindowMove: function(x,y) {
+	,onWindowFocusOut: function(window) {
 	}
-	,onWindowResize: function(width,height) {
+	,onWindowFullscreen: function(window) {
 	}
-	,onWindowRestore: function() {
+	,onWindowLeave: function(window) {
 	}
-	,render: function(context) {
+	,onWindowMove: function(window,x,y) {
+	}
+	,onWindowMinimize: function(window) {
+	}
+	,onWindowResize: function(window,width,height) {
+	}
+	,onWindowRestore: function(window) {
+	}
+	,render: function(renderer) {
 	}
 	,update: function(deltaTime) {
 	}
@@ -6335,8 +6692,14 @@ lime.app.Application = function() {
 	this.modules = new Array();
 	this.renderers = new Array();
 	this.windows = new Array();
+	this.windowByID = new haxe.ds.IntMap();
 	this.backend = new lime._backend.html5.HTML5Application(this);
+	this.onExit.add($bind(this,this.onModuleExit));
 	this.onUpdate.add($bind(this,this.update));
+	lime.ui.Gamepad.onConnect.add($bind(this,this.onGamepadConnect));
+	lime.ui.Touch.onStart.add($bind(this,this.onTouchStart));
+	lime.ui.Touch.onMove.add($bind(this,this.onTouchMove));
+	lime.ui.Touch.onEnd.add($bind(this,this.onTouchEnd));
 };
 $hxClasses["lime.app.Application"] = lime.app.Application;
 lime.app.Application.__name__ = ["lime","app","Application"];
@@ -6345,65 +6708,183 @@ lime.app.Application.__super__ = lime.app.Module;
 lime.app.Application.prototype = $extend(lime.app.Module.prototype,{
 	addModule: function(module) {
 		this.modules.push(module);
-		if(this.initialized && this.renderer != null) module.init(this.renderer.context);
+		if(this.windows.length > 0) {
+			var _g = 0;
+			var _g1 = this.windows;
+			while(_g < _g1.length) {
+				var $window = _g1[_g];
+				++_g;
+				module.onWindowCreate($window);
+			}
+			if(this.preloader == null || this.preloader.complete) module.onPreloadComplete();
+		}
 	}
 	,addRenderer: function(renderer) {
-		renderer.onRender.add($bind(this,this.render));
-		renderer.onRenderContextLost.add($bind(this,this.onRenderContextLost));
-		renderer.onRenderContextRestored.add($bind(this,this.onRenderContextRestored));
+		renderer.onRender.add((function(f,a1) {
+			return function() {
+				return f(a1);
+			};
+		})($bind(this,this.render),renderer));
+		renderer.onContextLost.add((function(f1,a11) {
+			return function() {
+				return f1(a11);
+			};
+		})($bind(this,this.onRenderContextLost),renderer));
+		renderer.onContextRestored.add((function(f2,a12) {
+			return function(a2) {
+				return f2(a12,a2);
+			};
+		})($bind(this,this.onRenderContextRestored),renderer));
 		this.renderers.push(renderer);
-		this.renderer = renderer;
-	}
-	,addWindow: function(window) {
-		this.windows.push(window);
-		this.window = window;
-		window.onGamepadAxisMove.add($bind(this,this.onGamepadAxisMove));
-		window.onGamepadButtonDown.add($bind(this,this.onGamepadButtonDown));
-		window.onGamepadButtonUp.add($bind(this,this.onGamepadButtonUp));
-		window.onGamepadConnect.add($bind(this,this.onGamepadConnect));
-		window.onGamepadDisconnect.add($bind(this,this.onGamepadDisconnect));
-		window.onKeyDown.add($bind(this,this.onKeyDown));
-		window.onKeyUp.add($bind(this,this.onKeyUp));
-		window.onMouseDown.add($bind(this,this.onMouseDown));
-		window.onMouseMove.add($bind(this,this.onMouseMove));
-		window.onMouseMoveRelative.add($bind(this,this.onMouseMoveRelative));
-		window.onMouseUp.add($bind(this,this.onMouseUp));
-		window.onMouseWheel.add($bind(this,this.onMouseWheel));
-		window.onTextEdit.add($bind(this,this.onTextEdit));
-		window.onTextInput.add($bind(this,this.onTextInput));
-		window.onTouchStart.add($bind(this,this.onTouchStart));
-		window.onTouchMove.add($bind(this,this.onTouchMove));
-		window.onTouchEnd.add($bind(this,this.onTouchEnd));
-		window.onWindowActivate.add($bind(this,this.onWindowActivate));
-		window.onWindowClose.add($bind(this,this.onWindowClose));
-		window.onWindowDeactivate.add($bind(this,this.onWindowDeactivate));
-		window.onWindowEnter.add($bind(this,this.onWindowEnter));
-		window.onWindowFocusIn.add($bind(this,this.onWindowFocusIn));
-		window.onWindowFocusOut.add($bind(this,this.onWindowFocusOut));
-		window.onWindowFullscreen.add($bind(this,this.onWindowFullscreen));
-		window.onWindowLeave.add($bind(this,this.onWindowLeave));
-		window.onWindowMinimize.add($bind(this,this.onWindowMinimize));
-		window.onWindowMove.add($bind(this,this.onWindowMove));
-		window.onWindowResize.add($bind(this,this.onWindowResize));
-		window.onWindowRestore.add($bind(this,this.onWindowRestore));
-		window.create(this);
 	}
 	,create: function(config) {
+		this.config = config;
 		this.backend.create(config);
+		if(config != null) {
+			if(Object.prototype.hasOwnProperty.call(config,"fps")) this.backend.setFrameRate(config.fps);
+			if(Object.prototype.hasOwnProperty.call(config,"windows")) {
+				var _g = 0;
+				var _g1 = config.windows;
+				while(_g < _g1.length) {
+					var windowConfig = _g1[_g];
+					++_g;
+					var $window = new lime.ui.Window(windowConfig);
+					this.createWindow($window);
+					break;
+				}
+			}
+			if(this.preloader == null || this.preloader.complete) this.onPreloadComplete();
+		}
+	}
+	,createWindow: function(window) {
+		window.onActivate.add((function(f,a1) {
+			return function() {
+				return f(a1);
+			};
+		})($bind(this,this.onWindowActivate),window));
+		window.onClose.add((function(f1,a11) {
+			return function() {
+				return f1(a11);
+			};
+		})($bind(this,this.onWindowClose),window));
+		window.onCreate.add((function(f2,a12) {
+			return function() {
+				return f2(a12);
+			};
+		})($bind(this,this.onWindowCreate),window));
+		window.onDeactivate.add((function(f3,a13) {
+			return function() {
+				return f3(a13);
+			};
+		})($bind(this,this.onWindowDeactivate),window));
+		window.onEnter.add((function(f4,a14) {
+			return function() {
+				return f4(a14);
+			};
+		})($bind(this,this.onWindowEnter),window));
+		window.onFocusIn.add((function(f5,a15) {
+			return function() {
+				return f5(a15);
+			};
+		})($bind(this,this.onWindowFocusIn),window));
+		window.onFocusOut.add((function(f6,a16) {
+			return function() {
+				return f6(a16);
+			};
+		})($bind(this,this.onWindowFocusOut),window));
+		window.onFullscreen.add((function(f7,a17) {
+			return function() {
+				return f7(a17);
+			};
+		})($bind(this,this.onWindowFullscreen),window));
+		window.onKeyDown.add((function(f8,a18) {
+			return function(a2,a3) {
+				return f8(a18,a2,a3);
+			};
+		})($bind(this,this.onKeyDown),window));
+		window.onKeyUp.add((function(f9,a19) {
+			return function(a21,a31) {
+				return f9(a19,a21,a31);
+			};
+		})($bind(this,this.onKeyUp),window));
+		window.onLeave.add((function(f10,a110) {
+			return function() {
+				return f10(a110);
+			};
+		})($bind(this,this.onWindowLeave),window));
+		window.onMinimize.add((function(f11,a111) {
+			return function() {
+				return f11(a111);
+			};
+		})($bind(this,this.onWindowMinimize),window));
+		window.onMouseDown.add((function(f12,a112) {
+			return function(x,y,a22) {
+				return f12(a112,x,y,a22);
+			};
+		})($bind(this,this.onMouseDown),window));
+		window.onMouseMove.add((function(f13,a113) {
+			return function(x1,y1) {
+				return f13(a113,x1,y1);
+			};
+		})($bind(this,this.onMouseMove),window));
+		window.onMouseMoveRelative.add((function(f14,a114) {
+			return function(x2,y2) {
+				return f14(a114,x2,y2);
+			};
+		})($bind(this,this.onMouseMoveRelative),window));
+		window.onMouseUp.add((function(f15,a115) {
+			return function(x3,y3,a23) {
+				return f15(a115,x3,y3,a23);
+			};
+		})($bind(this,this.onMouseUp),window));
+		window.onMouseWheel.add((function(f16,a116) {
+			return function(a24,a32) {
+				return f16(a116,a24,a32);
+			};
+		})($bind(this,this.onMouseWheel),window));
+		window.onMove.add((function(f17,a117) {
+			return function(x4,y4) {
+				return f17(a117,x4,y4);
+			};
+		})($bind(this,this.onWindowMove),window));
+		window.onResize.add((function(f18,a118) {
+			return function(a25,a33) {
+				return f18(a118,a25,a33);
+			};
+		})($bind(this,this.onWindowResize),window));
+		window.onRestore.add((function(f19,a119) {
+			return function() {
+				return f19(a119);
+			};
+		})($bind(this,this.onWindowRestore),window));
+		window.onTextEdit.add((function(f20,a120) {
+			return function(a26,a34,a4) {
+				return f20(a120,a26,a34,a4);
+			};
+		})($bind(this,this.onTextEdit),window));
+		window.onTextInput.add((function(f21,a121) {
+			return function(a27) {
+				return f21(a121,a27);
+			};
+		})($bind(this,this.onTextInput),window));
+		if(window.renderer == null) {
+			var renderer = new lime.graphics.Renderer(window);
+			this.addRenderer(renderer);
+		}
+		window.create(this);
+		this.windows.push(window);
+		this.windowByID.set(window.id,window);
+		var listeners = window.onCreate.listeners;
+		var repeat = window.onCreate.repeat;
+		var i = 0;
+		while(i < listeners.length) {
+			listeners[i]();
+			if(!repeat[i]) window.onCreate.remove(listeners[i]); else i++;
+		}
 	}
 	,exec: function() {
 		lime.app.Application.current = this;
 		return this.backend.exec();
-	}
-	,init: function(context) {
-		var _g = 0;
-		var _g1 = this.modules;
-		while(_g < _g1.length) {
-			var module = _g1[_g];
-			++_g;
-			module.init(context);
-		}
-		this.initialized = true;
 	}
 	,onGamepadAxisMove: function(gamepad,axis,value) {
 		var _g = 0;
@@ -6440,6 +6921,26 @@ lime.app.Application.prototype = $extend(lime.app.Module.prototype,{
 			++_g;
 			module.onGamepadConnect(gamepad);
 		}
+		gamepad.onAxisMove.add((function(f,a1) {
+			return function(a2,a3) {
+				return f(a1,a2,a3);
+			};
+		})($bind(this,this.onGamepadAxisMove),gamepad));
+		gamepad.onButtonDown.add((function(f1,a11) {
+			return function(a21) {
+				return f1(a11,a21);
+			};
+		})($bind(this,this.onGamepadButtonDown),gamepad));
+		gamepad.onButtonUp.add((function(f2,a12) {
+			return function(a22) {
+				return f2(a12,a22);
+			};
+		})($bind(this,this.onGamepadButtonUp),gamepad));
+		gamepad.onDisconnect.add((function(f3,a13) {
+			return function() {
+				return f3(a13);
+			};
+		})($bind(this,this.onGamepadDisconnect),gamepad));
 	}
 	,onGamepadDisconnect: function(gamepad) {
 		var _g = 0;
@@ -6450,259 +6951,313 @@ lime.app.Application.prototype = $extend(lime.app.Module.prototype,{
 			module.onGamepadDisconnect(gamepad);
 		}
 	}
-	,onKeyDown: function(keyCode,modifier) {
+	,onKeyDown: function(window,keyCode,modifier) {
 		var _g = 0;
 		var _g1 = this.modules;
 		while(_g < _g1.length) {
 			var module = _g1[_g];
 			++_g;
-			module.onKeyDown(keyCode,modifier);
+			module.onKeyDown(window,keyCode,modifier);
 		}
 	}
-	,onKeyUp: function(keyCode,modifier) {
+	,onKeyUp: function(window,keyCode,modifier) {
 		var _g = 0;
 		var _g1 = this.modules;
 		while(_g < _g1.length) {
 			var module = _g1[_g];
 			++_g;
-			module.onKeyUp(keyCode,modifier);
+			module.onKeyUp(window,keyCode,modifier);
 		}
 	}
-	,onMouseDown: function(x,y,button) {
+	,onModuleExit: function(code) {
 		var _g = 0;
 		var _g1 = this.modules;
 		while(_g < _g1.length) {
 			var module = _g1[_g];
 			++_g;
-			module.onMouseDown(x,y,button);
+			module.onModuleExit(code);
+		}
+		this.backend.exit();
+	}
+	,onMouseDown: function(window,x,y,button) {
+		var _g = 0;
+		var _g1 = this.modules;
+		while(_g < _g1.length) {
+			var module = _g1[_g];
+			++_g;
+			module.onMouseDown(window,x,y,button);
 		}
 	}
-	,onMouseMove: function(x,y) {
+	,onMouseMove: function(window,x,y) {
 		var _g = 0;
 		var _g1 = this.modules;
 		while(_g < _g1.length) {
 			var module = _g1[_g];
 			++_g;
-			module.onMouseMove(x,y);
+			module.onMouseMove(window,x,y);
 		}
 	}
-	,onMouseMoveRelative: function(x,y) {
+	,onMouseMoveRelative: function(window,x,y) {
 		var _g = 0;
 		var _g1 = this.modules;
 		while(_g < _g1.length) {
 			var module = _g1[_g];
 			++_g;
-			module.onMouseMoveRelative(x,y);
+			module.onMouseMoveRelative(window,x,y);
 		}
 	}
-	,onMouseUp: function(x,y,button) {
+	,onMouseUp: function(window,x,y,button) {
 		var _g = 0;
 		var _g1 = this.modules;
 		while(_g < _g1.length) {
 			var module = _g1[_g];
 			++_g;
-			module.onMouseUp(x,y,button);
+			module.onMouseUp(window,x,y,button);
 		}
 	}
-	,onMouseWheel: function(deltaX,deltaY) {
+	,onMouseWheel: function(window,deltaX,deltaY) {
 		var _g = 0;
 		var _g1 = this.modules;
 		while(_g < _g1.length) {
 			var module = _g1[_g];
 			++_g;
-			module.onMouseWheel(deltaX,deltaY);
+			module.onMouseWheel(window,deltaX,deltaY);
 		}
 	}
-	,onRenderContextLost: function() {
+	,onPreloadComplete: function() {
 		var _g = 0;
 		var _g1 = this.modules;
 		while(_g < _g1.length) {
 			var module = _g1[_g];
 			++_g;
-			module.onRenderContextLost();
+			module.onPreloadComplete();
 		}
 	}
-	,onRenderContextRestored: function(context) {
+	,onPreloadProgress: function(loaded,total) {
 		var _g = 0;
 		var _g1 = this.modules;
 		while(_g < _g1.length) {
 			var module = _g1[_g];
 			++_g;
-			module.onRenderContextRestored(context);
+			module.onPreloadProgress(loaded,total);
 		}
 	}
-	,onTextEdit: function(text,start,length) {
+	,onRenderContextLost: function(renderer) {
 		var _g = 0;
 		var _g1 = this.modules;
 		while(_g < _g1.length) {
 			var module = _g1[_g];
 			++_g;
-			module.onTextEdit(text,start,length);
+			module.onRenderContextLost(renderer);
 		}
 	}
-	,onTextInput: function(text) {
+	,onRenderContextRestored: function(renderer,context) {
 		var _g = 0;
 		var _g1 = this.modules;
 		while(_g < _g1.length) {
 			var module = _g1[_g];
 			++_g;
-			module.onTextInput(text);
+			module.onRenderContextRestored(renderer,context);
 		}
 	}
-	,onTouchEnd: function(x,y,id) {
+	,onTextEdit: function(window,text,start,length) {
 		var _g = 0;
 		var _g1 = this.modules;
 		while(_g < _g1.length) {
 			var module = _g1[_g];
 			++_g;
-			module.onTouchEnd(x,y,id);
+			module.onTextEdit(window,text,start,length);
 		}
 	}
-	,onTouchMove: function(x,y,id) {
+	,onTextInput: function(window,text) {
 		var _g = 0;
 		var _g1 = this.modules;
 		while(_g < _g1.length) {
 			var module = _g1[_g];
 			++_g;
-			module.onTouchMove(x,y,id);
+			module.onTextInput(window,text);
 		}
 	}
-	,onTouchStart: function(x,y,id) {
+	,onTouchEnd: function(touch) {
 		var _g = 0;
 		var _g1 = this.modules;
 		while(_g < _g1.length) {
 			var module = _g1[_g];
 			++_g;
-			module.onTouchStart(x,y,id);
+			module.onTouchEnd(touch);
 		}
 	}
-	,onWindowActivate: function() {
+	,onTouchMove: function(touch) {
 		var _g = 0;
 		var _g1 = this.modules;
 		while(_g < _g1.length) {
 			var module = _g1[_g];
 			++_g;
-			module.onWindowActivate();
+			module.onTouchMove(touch);
 		}
 	}
-	,onWindowClose: function() {
+	,onTouchStart: function(touch) {
 		var _g = 0;
 		var _g1 = this.modules;
 		while(_g < _g1.length) {
 			var module = _g1[_g];
 			++_g;
-			module.onWindowClose();
+			module.onTouchStart(touch);
 		}
 	}
-	,onWindowDeactivate: function() {
+	,onWindowActivate: function(window) {
 		var _g = 0;
 		var _g1 = this.modules;
 		while(_g < _g1.length) {
 			var module = _g1[_g];
 			++_g;
-			module.onWindowDeactivate();
+			module.onWindowActivate(window);
 		}
 	}
-	,onWindowEnter: function() {
+	,onWindowClose: function(window) {
 		var _g = 0;
 		var _g1 = this.modules;
 		while(_g < _g1.length) {
 			var module = _g1[_g];
 			++_g;
-			module.onWindowEnter();
+			module.onWindowClose(window);
+		}
+		this.removeWindow(window);
+	}
+	,onWindowCreate: function(window) {
+		var _g = 0;
+		var _g1 = this.modules;
+		while(_g < _g1.length) {
+			var module = _g1[_g];
+			++_g;
+			module.onWindowCreate(window);
 		}
 	}
-	,onWindowFocusIn: function() {
+	,onWindowDeactivate: function(window) {
 		var _g = 0;
 		var _g1 = this.modules;
 		while(_g < _g1.length) {
 			var module = _g1[_g];
 			++_g;
-			module.onWindowFocusIn();
+			module.onWindowDeactivate(window);
 		}
 	}
-	,onWindowFocusOut: function() {
+	,onWindowEnter: function(window) {
 		var _g = 0;
 		var _g1 = this.modules;
 		while(_g < _g1.length) {
 			var module = _g1[_g];
 			++_g;
-			module.onWindowFocusOut();
+			module.onWindowEnter(window);
 		}
 	}
-	,onWindowFullscreen: function() {
+	,onWindowFocusIn: function(window) {
 		var _g = 0;
 		var _g1 = this.modules;
 		while(_g < _g1.length) {
 			var module = _g1[_g];
 			++_g;
-			module.onWindowFullscreen();
+			module.onWindowFocusIn(window);
 		}
 	}
-	,onWindowLeave: function() {
+	,onWindowFocusOut: function(window) {
 		var _g = 0;
 		var _g1 = this.modules;
 		while(_g < _g1.length) {
 			var module = _g1[_g];
 			++_g;
-			module.onWindowLeave();
+			module.onWindowFocusOut(window);
 		}
 	}
-	,onWindowMinimize: function() {
+	,onWindowFullscreen: function(window) {
 		var _g = 0;
 		var _g1 = this.modules;
 		while(_g < _g1.length) {
 			var module = _g1[_g];
 			++_g;
-			module.onWindowMinimize();
+			module.onWindowFullscreen(window);
 		}
 	}
-	,onWindowMove: function(x,y) {
+	,onWindowLeave: function(window) {
 		var _g = 0;
 		var _g1 = this.modules;
 		while(_g < _g1.length) {
 			var module = _g1[_g];
 			++_g;
-			module.onWindowMove(x,y);
+			module.onWindowLeave(window);
 		}
 	}
-	,onWindowResize: function(width,height) {
+	,onWindowMinimize: function(window) {
 		var _g = 0;
 		var _g1 = this.modules;
 		while(_g < _g1.length) {
 			var module = _g1[_g];
 			++_g;
-			module.onWindowResize(width,height);
+			module.onWindowMinimize(window);
 		}
 	}
-	,onWindowRestore: function() {
+	,onWindowMove: function(window,x,y) {
 		var _g = 0;
 		var _g1 = this.modules;
 		while(_g < _g1.length) {
 			var module = _g1[_g];
 			++_g;
-			module.onWindowRestore();
+			module.onWindowMove(window,x,y);
+		}
+	}
+	,onWindowResize: function(window,width,height) {
+		var _g = 0;
+		var _g1 = this.modules;
+		while(_g < _g1.length) {
+			var module = _g1[_g];
+			++_g;
+			module.onWindowResize(window,width,height);
+		}
+	}
+	,onWindowRestore: function(window) {
+		var _g = 0;
+		var _g1 = this.modules;
+		while(_g < _g1.length) {
+			var module = _g1[_g];
+			++_g;
+			module.onWindowRestore(window);
 		}
 	}
 	,removeModule: function(module) {
-		HxOverrides.remove(this.modules,module);
+		if(module != null) {
+			module.onModuleExit(0);
+			HxOverrides.remove(this.modules,module);
+		}
 	}
 	,removeRenderer: function(renderer) {
 		if(renderer != null && HxOverrides.indexOf(this.renderers,renderer,0) > -1) HxOverrides.remove(this.renderers,renderer);
 	}
 	,removeWindow: function(window) {
-		if(window != null && HxOverrides.indexOf(this.windows,window,0) > -1) {
-			window.close();
+		if(window != null && this.windowByID.exists(window.id)) {
 			HxOverrides.remove(this.windows,window);
+			this.windowByID.remove(window.id);
+			window.close();
+			if(this.windows[0] == window) this.window = null;
 		}
 	}
-	,render: function(context) {
+	,render: function(renderer) {
 		var _g = 0;
 		var _g1 = this.modules;
 		while(_g < _g1.length) {
 			var module = _g1[_g];
 			++_g;
-			module.render(context);
+			module.render(renderer);
+		}
+	}
+	,setPreloader: function(preloader) {
+		if(this.preloader != null) {
+			this.preloader.onProgress.remove($bind(this,this.onPreloadProgress));
+			this.preloader.onComplete.remove($bind(this,this.onPreloadComplete));
+		}
+		this.preloader = preloader;
+		if(preloader.complete) this.onPreloadComplete(); else {
+			preloader.onProgress.add($bind(this,this.onPreloadProgress));
+			preloader.onComplete.add($bind(this,this.onPreloadComplete));
 		}
 	}
 	,update: function(deltaTime) {
@@ -6719,6 +7274,12 @@ lime.app.Application.prototype = $extend(lime.app.Module.prototype,{
 	}
 	,set_frameRate: function(value) {
 		return this.backend.setFrameRate(value);
+	}
+	,get_renderer: function() {
+		return this.renderers[0];
+	}
+	,get_window: function() {
+		return this.windows[0];
 	}
 	,__class__: lime.app.Application
 });
@@ -6759,11 +7320,11 @@ lime.app.Event.prototype = {
 		return false;
 	}
 	,remove: function(listener) {
-		var index = HxOverrides.indexOf(this.listeners,listener,0);
-		if(index > -1) {
-			this.listeners.splice(index,1);
-			this.priorities.splice(index,1);
-			this.repeat.splice(index,1);
+		var i = this.listeners.length;
+		while(--i >= 0) if(Reflect.compareMethods(this.listeners[i],listener)) {
+			this.listeners.splice(i,1);
+			this.priorities.splice(i,1);
+			this.repeat.splice(i,1);
 		}
 	}
 	,__class__: lime.app.Event
@@ -6771,6 +7332,9 @@ lime.app.Event.prototype = {
 lime.app.Preloader = function() {
 	this.total = 0;
 	this.loaded = 0;
+	this.onProgress = new lime.app.Event();
+	this.onComplete = new lime.app.Event();
+	this.onProgress.add($bind(this,this.update));
 };
 $hxClasses["lime.app.Preloader"] = lime.app.Preloader;
 lime.app.Preloader.__name__ = ["lime","app","Preloader"];
@@ -6824,7 +7388,13 @@ lime.app.Preloader.prototype = {
 		var _g = this;
 		if(window.document.fonts && window.document.fonts.load) window.document.fonts.load("1em '" + font + "'").then(function(_) {
 			_g.loaded++;
-			_g.update(_g.loaded,_g.total);
+			var listeners = _g.onProgress.listeners;
+			var repeat = _g.onProgress.repeat;
+			var i = 0;
+			while(i < listeners.length) {
+				listeners[i](_g.loaded,_g.total);
+				if(!repeat[i]) _g.onProgress.remove(listeners[i]); else i++;
+			}
 			if(_g.loaded == _g.total) _g.start();
 		}); else {
 			var node = window.document.createElement("span");
@@ -6854,7 +7424,13 @@ lime.app.Preloader.prototype = {
 					if(interval != null) window.clearInterval(interval);
 					node.parentNode.removeChild(node);
 					node = null;
-					_g.update(_g.loaded,_g.total);
+					var listeners1 = _g.onProgress.listeners;
+					var repeat1 = _g.onProgress.repeat;
+					var i1 = 0;
+					while(i1 < listeners1.length) {
+						listeners1[i1](_g.loaded,_g.total);
+						if(!repeat1[i1]) _g.onProgress.remove(listeners1[i1]); else i1++;
+					}
 					if(_g.loaded == _g.total) _g.start();
 					return true;
 				}
@@ -6864,18 +7440,37 @@ lime.app.Preloader.prototype = {
 		}
 	}
 	,start: function() {
-		if(this.onComplete != null) this.onComplete();
+		this.complete = true;
+		var listeners = this.onComplete.listeners;
+		var repeat = this.onComplete.repeat;
+		var i = 0;
+		while(i < listeners.length) {
+			listeners[i]();
+			if(!repeat[i]) this.onComplete.remove(listeners[i]); else i++;
+		}
 	}
 	,update: function(loaded,total) {
 	}
 	,image_onLoad: function(_) {
 		this.loaded++;
-		this.update(this.loaded,this.total);
+		var listeners = this.onProgress.listeners;
+		var repeat = this.onProgress.repeat;
+		var i = 0;
+		while(i < listeners.length) {
+			listeners[i](this.loaded,this.total);
+			if(!repeat[i]) this.onProgress.remove(listeners[i]); else i++;
+		}
 		if(this.loaded == this.total) this.start();
 	}
 	,loader_onComplete: function(loader) {
 		this.loaded++;
-		this.update(this.loaded,this.total);
+		var listeners = this.onProgress.listeners;
+		var repeat = this.onProgress.repeat;
+		var i = 0;
+		while(i < listeners.length) {
+			listeners[i](this.loaded,this.total);
+			if(!repeat[i]) this.onProgress.remove(listeners[i]); else i++;
+		}
 		if(this.loaded == this.total) this.start();
 	}
 	,__class__: lime.app.Preloader
@@ -7279,6 +7874,17 @@ lime.audio.AudioBuffer.fromFile = function(path) {
 	return null;
 };
 lime.audio.AudioBuffer.fromURL = function(url,handler) {
+	if(url != null && url.indexOf("http://") == -1 && url.indexOf("https://") == -1) handler(lime.audio.AudioBuffer.fromFile(url)); else {
+		var loader = new lime.net.URLLoader();
+		loader.onComplete.add(function(_) {
+			var bytes = haxe.io.Bytes.ofString(loader.data);
+			handler(lime.audio.AudioBuffer.fromBytes(lime.utils.ByteArray.fromBytes(bytes)));
+		});
+		loader.onIOError.add(function(_1,msg) {
+			handler(null);
+		});
+		loader.load(new lime.net.URLRequest(url));
+	}
 };
 lime.audio.AudioBuffer.prototype = {
 	dispose: function() {
@@ -8119,8 +8725,8 @@ lime.graphics.Image = function(buffer,offsetX,offsetY,width,height,color,type) {
 	this.width = width;
 	this.height = height;
 	if(type == null) {
-		if(lime.app.Application.current != null && lime.app.Application.current.renderer != null) {
-			var _g = lime.app.Application.current.renderer.context;
+		if(lime.app.Application.current != null && lime.app.Application.current.renderers[0] != null) {
+			var _g = lime.app.Application.current.renderers[0].context;
 			switch(_g[1]) {
 			case 2:case 1:
 				this.type = lime.graphics.ImageType.CANVAS;
@@ -9018,11 +9624,11 @@ lime.graphics.RenderContext.NONE.toString = $estr;
 lime.graphics.RenderContext.NONE.__enum__ = lime.graphics.RenderContext;
 lime.graphics.Renderer = function(window) {
 	this.onRender = new lime.app.Event();
-	this.onRenderContextRestored = new lime.app.Event();
-	this.onRenderContextLost = new lime.app.Event();
+	this.onContextRestored = new lime.app.Event();
+	this.onContextLost = new lime.app.Event();
 	this.window = window;
 	this.backend = new lime._backend.html5.HTML5Renderer(this);
-	this.window.currentRenderer = this;
+	this.window.renderer = this;
 };
 $hxClasses["lime.graphics.Renderer"] = lime.graphics.Renderer;
 lime.graphics.Renderer.__name__ = ["lime","graphics","Renderer"];
@@ -9038,6 +9644,28 @@ lime.graphics.Renderer.prototype = {
 	}
 	,__class__: lime.graphics.Renderer
 };
+lime.graphics.RendererType = $hxClasses["lime.graphics.RendererType"] = { __ename__ : true, __constructs__ : ["OPENGL","CANVAS","DOM","FLASH","CAIRO","CONSOLE","CUSTOM"] };
+lime.graphics.RendererType.OPENGL = ["OPENGL",0];
+lime.graphics.RendererType.OPENGL.toString = $estr;
+lime.graphics.RendererType.OPENGL.__enum__ = lime.graphics.RendererType;
+lime.graphics.RendererType.CANVAS = ["CANVAS",1];
+lime.graphics.RendererType.CANVAS.toString = $estr;
+lime.graphics.RendererType.CANVAS.__enum__ = lime.graphics.RendererType;
+lime.graphics.RendererType.DOM = ["DOM",2];
+lime.graphics.RendererType.DOM.toString = $estr;
+lime.graphics.RendererType.DOM.__enum__ = lime.graphics.RendererType;
+lime.graphics.RendererType.FLASH = ["FLASH",3];
+lime.graphics.RendererType.FLASH.toString = $estr;
+lime.graphics.RendererType.FLASH.__enum__ = lime.graphics.RendererType;
+lime.graphics.RendererType.CAIRO = ["CAIRO",4];
+lime.graphics.RendererType.CAIRO.toString = $estr;
+lime.graphics.RendererType.CAIRO.__enum__ = lime.graphics.RendererType;
+lime.graphics.RendererType.CONSOLE = ["CONSOLE",5];
+lime.graphics.RendererType.CONSOLE.toString = $estr;
+lime.graphics.RendererType.CONSOLE.__enum__ = lime.graphics.RendererType;
+lime.graphics.RendererType.CUSTOM = ["CUSTOM",6];
+lime.graphics.RendererType.CUSTOM.toString = $estr;
+lime.graphics.RendererType.CUSTOM.__enum__ = lime.graphics.RendererType;
 lime.graphics.cairo = {};
 lime.graphics.cairo.Cairo = function(surface) {
 	if(surface != null) {
@@ -9273,7 +9901,8 @@ lime.graphics.cairo._CairoFilter = {};
 lime.graphics.cairo._CairoFilter.CairoFilter_Impl_ = function() { };
 $hxClasses["lime.graphics.cairo._CairoFilter.CairoFilter_Impl_"] = lime.graphics.cairo._CairoFilter.CairoFilter_Impl_;
 lime.graphics.cairo._CairoFilter.CairoFilter_Impl_.__name__ = ["lime","graphics","cairo","_CairoFilter","CairoFilter_Impl_"];
-lime.graphics.cairo.CairoFont = function(font) {
+lime.graphics.cairo.CairoFont = function(font,flags) {
+	if(flags == null) flags = 0;
 };
 $hxClasses["lime.graphics.cairo.CairoFont"] = lime.graphics.cairo.CairoFont;
 lime.graphics.cairo.CairoFont.__name__ = ["lime","graphics","cairo","CairoFont"];
@@ -10133,7 +10762,7 @@ lime.graphics.utils.ImageCanvasUtil.copyChannel = function(image,sourceImage,sou
 };
 lime.graphics.utils.ImageCanvasUtil.copyPixels = function(image,sourceImage,sourceRect,destPoint,alphaImage,alphaPoint,mergeAlpha) {
 	if(mergeAlpha == null) mergeAlpha = false;
-	if(destPoint.x >= image.width || destPoint.y >= image.height) return;
+	if(destPoint == null || destPoint.x >= image.width || destPoint.y >= image.height || sourceRect == null || sourceRect.width <= 0 || sourceRect.height <= 0) return;
 	if(alphaImage != null && alphaImage.get_transparent()) {
 		if(alphaPoint == null) alphaPoint = new lime.math.Vector2();
 		var tempData = image.clone();
@@ -10740,6 +11369,7 @@ lime.graphics.utils.ImageDataUtil.copyPixels = function(image,sourceImage,source
 				}
 			}
 		} else {
+			if(alphaPoint == null) alphaPoint = new lime.math.Vector2();
 			var alphaData = alphaImage.buffer.data;
 			var alphaFormat = alphaImage.buffer.format;
 			var alphaPremultiplied = alphaImage.buffer.premultiplied;
@@ -11102,109 +11732,116 @@ lime.graphics.utils.ImageDataUtil.getColorBoundsRect = function(image,mask,color
 	var right = 0;
 	var top = image.height + 1;
 	var bottom = 0;
-	var r;
-	var g;
-	var b;
-	var a;
-	var mr;
-	var mg;
-	var mb;
-	var ma;
-	if(format == 1) {
-		if(image.get_transparent()) a = color >> 24 & 255; else a = 255;
-		r = color >> 16 & 255;
-		g = color >> 8 & 255;
-		b = color & 255;
-		if(image.get_transparent()) ma = mask >> 24 & 255; else ma = 255;
-		mr = mask >> 16 & 255;
-		mg = mask >> 8 & 255;
-		mb = mask & 255;
-	} else {
-		r = color >> 24 & 255;
-		g = color >> 16 & 255;
-		b = color >> 8 & 255;
-		if(image.get_transparent()) a = color & 255; else a = 255;
-		mr = mask >> 24 & 255;
-		mg = mask >> 16 & 255;
-		mb = mask >> 8 & 255;
-		if(image.get_transparent()) ma = mask & 255; else ma = 255;
+	var _color;
+	var _mask;
+	switch(format) {
+	case 1:
+		var argb = color;
+		var rgba = 0;
+		rgba = (argb >> 16 & 255 & 255) << 24 | (argb >> 8 & 255 & 255) << 16 | (argb & 255 & 255) << 8 | argb >> 24 & 255 & 255;
+		_color = rgba;
+		var argb1 = mask;
+		var rgba1 = 0;
+		rgba1 = (argb1 >> 16 & 255 & 255) << 24 | (argb1 >> 8 & 255 & 255) << 16 | (argb1 & 255 & 255) << 8 | argb1 >> 24 & 255 & 255;
+		_mask = rgba1;
+		break;
+	case 2:
+		var bgra = color;
+		var rgba2 = 0;
+		rgba2 = (bgra >> 8 & 255 & 255) << 24 | (bgra >> 16 & 255 & 255) << 16 | (bgra >> 24 & 255 & 255) << 8 | bgra & 255 & 255;
+		_color = rgba2;
+		var bgra1 = mask;
+		var rgba3 = 0;
+		rgba3 = (bgra1 >> 8 & 255 & 255) << 24 | (bgra1 >> 16 & 255 & 255) << 16 | (bgra1 >> 24 & 255 & 255) << 8 | bgra1 & 255 & 255;
+		_mask = rgba3;
+		break;
+	default:
+		_color = color;
+		_mask = mask;
 	}
-	color = r | g << 8 | b << 16 | a << 24;
-	mask = mr | mg << 8 | mb << 16 | mask << 24;
-	var pix;
+	if(!image.get_transparent()) {
+		_color = (_color >> 24 & 255 & 255) << 24 | (_color >> 16 & 255 & 255) << 16 | (_color >> 8 & 255 & 255) << 8 | 255;
+		255;
+		_mask = (_mask >> 24 & 255 & 255) << 24 | (_mask >> 16 & 255 & 255) << 16 | (_mask >> 8 & 255 & 255) << 8 | 255;
+		255;
+	}
+	var pixel;
+	var hit;
 	var _g1 = 0;
 	var _g = image.width;
 	while(_g1 < _g) {
-		var ix = _g1++;
-		var hit = false;
+		var x = _g1++;
+		hit = false;
 		var _g3 = 0;
 		var _g2 = image.height;
 		while(_g3 < _g2) {
-			var iy = _g3++;
-			pix = image.getPixel32(ix,iy);
-			if(findColor) hit = (pix & mask) == color; else hit = (pix & mask) != color;
+			var y = _g3++;
+			pixel = image.getPixel32(x,y,0);
+			if(findColor) hit = (pixel & _mask) == _color; else hit = (pixel & _mask) != _color;
 			if(hit) {
-				if(ix < left) left = ix;
+				if(x < left) left = x;
 				break;
 			}
 		}
 		if(hit) break;
 	}
+	var ix;
 	var _g11 = 0;
 	var _g4 = image.width;
 	while(_g11 < _g4) {
-		var _ix = _g11++;
-		var ix1 = image.width - 1 - _ix;
-		var hit1 = false;
+		var x1 = _g11++;
+		ix = image.width - 1 - x1;
+		hit = false;
 		var _g31 = 0;
 		var _g21 = image.height;
 		while(_g31 < _g21) {
-			var iy1 = _g31++;
-			pix = image.getPixel32(ix1,iy1);
-			if(findColor) hit1 = (pix & mask) == color; else hit1 = (pix & mask) != color;
-			if(hit1) {
-				if(ix1 > right) right = ix1;
+			var y1 = _g31++;
+			pixel = image.getPixel32(ix,y1,0);
+			if(findColor) hit = (pixel & _mask) == _color; else hit = (pixel & _mask) != _color;
+			if(hit) {
+				if(ix > right) right = ix;
 				break;
 			}
 		}
-		if(hit1) break;
+		if(hit) break;
 	}
 	var _g12 = 0;
 	var _g5 = image.height;
 	while(_g12 < _g5) {
-		var iy2 = _g12++;
-		var hit2 = false;
+		var y2 = _g12++;
+		hit = false;
 		var _g32 = 0;
 		var _g22 = image.width;
 		while(_g32 < _g22) {
-			var ix2 = _g32++;
-			pix = image.getPixel32(ix2,iy2);
-			if(findColor) hit2 = (pix & mask) == color; else hit2 = (pix & mask) != color;
-			if(hit2) {
-				if(iy2 < top) top = iy2;
+			var x2 = _g32++;
+			pixel = image.getPixel32(x2,y2,0);
+			if(findColor) hit = (pixel & _mask) == _color; else hit = (pixel & _mask) != _color;
+			if(hit) {
+				if(y2 < top) top = y2;
 				break;
 			}
 		}
-		if(hit2) break;
+		if(hit) break;
 	}
+	var iy;
 	var _g13 = 0;
 	var _g6 = image.height;
 	while(_g13 < _g6) {
-		var _iy = _g13++;
-		var iy3 = image.height - 1 - _iy;
-		var hit3 = false;
+		var y3 = _g13++;
+		iy = image.height - 1 - y3;
+		hit = false;
 		var _g33 = 0;
 		var _g23 = image.width;
 		while(_g33 < _g23) {
-			var ix3 = _g33++;
-			pix = image.getPixel32(ix3,iy3);
-			if(findColor) hit3 = (pix & mask) == color; else hit3 = (pix & mask) != color;
-			if(hit3) {
-				if(iy3 > bottom) bottom = iy3;
+			var x3 = _g33++;
+			pixel = image.getPixel32(x3,iy,0);
+			if(findColor) hit = (pixel & _mask) == _color; else hit = (pixel & _mask) != _color;
+			if(hit) {
+				if(iy > bottom) bottom = iy;
 				break;
 			}
 		}
-		if(hit3) break;
+		if(hit) break;
 	}
 	var w = right - left;
 	var h = bottom - top;
@@ -14247,10 +14884,10 @@ lime.system.System.embed = $hx_exports.lime.embed = function(element,width,heigh
 	}
 	if(width == null) width = 0;
 	if(height == null) height = 0;
-	ApplicationMain.config.background = color;
-	ApplicationMain.config.element = htmlElement;
-	ApplicationMain.config.width = width;
-	ApplicationMain.config.height = height;
+	ApplicationMain.config.windows[0].background = color;
+	ApplicationMain.config.windows[0].element = htmlElement;
+	ApplicationMain.config.windows[0].width = width;
+	ApplicationMain.config.windows[0].height = height;
 	ApplicationMain.config.assetsPrefix = assetsPrefix;
 	ApplicationMain.create();
 };
@@ -14403,6 +15040,72 @@ $hxClasses["lime.system._ThreadPool.ThreadPoolMessage"] = lime.system._ThreadPoo
 lime.system._ThreadPool.ThreadPoolMessage.__name__ = ["lime","system","_ThreadPool","ThreadPoolMessage"];
 lime.system._ThreadPool.ThreadPoolMessage.prototype = {
 	__class__: lime.system._ThreadPool.ThreadPoolMessage
+};
+lime.text = {};
+lime.text.Font = function(name) {
+	if(name != null) this.name = name;
+	if(this.__fontPath != null) this.__fromFile(this.__fontPath);
+};
+$hxClasses["lime.text.Font"] = lime.text.Font;
+lime.text.Font.__name__ = ["lime","text","Font"];
+lime.text.Font.fromBytes = function(bytes) {
+	var font = new lime.text.Font();
+	font.__fromBytes(bytes);
+	return font;
+};
+lime.text.Font.fromFile = function(path) {
+	var font = new lime.text.Font();
+	font.__fromFile(path);
+	return font;
+};
+lime.text.Font.prototype = {
+	decompose: function() {
+		return null;
+	}
+	,getGlyph: function(character) {
+		return -1;
+	}
+	,getGlyphs: function(characters) {
+		if(characters == null) characters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^`'\"/\\&*()[]{}<>|:;_-+=?,. ";
+		return null;
+	}
+	,getGlyphMetrics: function(glyph) {
+		return null;
+	}
+	,renderGlyph: function(glyph,fontSize) {
+		return null;
+	}
+	,renderGlyphs: function(glyphs,fontSize) {
+		return null;
+	}
+	,__fromBytes: function(bytes) {
+		this.__fontPath = null;
+	}
+	,__fromFile: function(path) {
+		this.__fontPath = path;
+	}
+	,get_ascender: function() {
+		return 0;
+	}
+	,get_descender: function() {
+		return 0;
+	}
+	,get_height: function() {
+		return 0;
+	}
+	,get_numGlyphs: function() {
+		return 0;
+	}
+	,get_underlinePosition: function() {
+		return 0;
+	}
+	,get_underlineThickness: function() {
+		return 0;
+	}
+	,get_unitsPerEM: function() {
+		return 0;
+	}
+	,__class__: lime.text.Font
 };
 lime.text._Glyph = {};
 lime.text._Glyph.Glyph_Impl_ = function() { };
@@ -14561,6 +15264,10 @@ lime.text._TextScript.TextScript_Impl_.get_rightToLeft = function(this1) {
 };
 lime.ui = {};
 lime.ui.Gamepad = function(id) {
+	this.onDisconnect = new lime.app.Event();
+	this.onButtonUp = new lime.app.Event();
+	this.onButtonDown = new lime.app.Event();
+	this.onAxisMove = new lime.app.Event();
 	this.id = id;
 	this.connected = true;
 };
@@ -14768,36 +15475,43 @@ lime.ui.MouseCursor.WAIT_ARROW.__enum__ = lime.ui.MouseCursor;
 lime.ui.MouseCursor.CUSTOM = ["CUSTOM",12];
 lime.ui.MouseCursor.CUSTOM.toString = $estr;
 lime.ui.MouseCursor.CUSTOM.__enum__ = lime.ui.MouseCursor;
+lime.ui.Touch = function(x,y,id,dx,dy,pressure,device) {
+	this.x = x;
+	this.y = y;
+	this.id = id;
+	this.dx = dx;
+	this.dy = dy;
+	this.pressure = pressure;
+	this.device = device;
+};
+$hxClasses["lime.ui.Touch"] = lime.ui.Touch;
+lime.ui.Touch.__name__ = ["lime","ui","Touch"];
+lime.ui.Touch.prototype = {
+	__class__: lime.ui.Touch
+};
 lime.ui.Window = function(config) {
-	this.onWindowRestore = new lime.app.Event();
-	this.onWindowResize = new lime.app.Event();
-	this.onWindowMove = new lime.app.Event();
-	this.onWindowMinimize = new lime.app.Event();
-	this.onWindowLeave = new lime.app.Event();
-	this.onWindowFullscreen = new lime.app.Event();
-	this.onWindowFocusOut = new lime.app.Event();
-	this.onWindowFocusIn = new lime.app.Event();
-	this.onWindowEnter = new lime.app.Event();
-	this.onWindowDeactivate = new lime.app.Event();
-	this.onWindowClose = new lime.app.Event();
-	this.onWindowActivate = new lime.app.Event();
-	this.onTouchStart = new lime.app.Event();
-	this.onTouchMove = new lime.app.Event();
-	this.onTouchEnd = new lime.app.Event();
 	this.onTextInput = new lime.app.Event();
 	this.onTextEdit = new lime.app.Event();
+	this.onRestore = new lime.app.Event();
+	this.onResize = new lime.app.Event();
+	this.onMove = new lime.app.Event();
 	this.onMouseWheel = new lime.app.Event();
 	this.onMouseUp = new lime.app.Event();
 	this.onMouseMoveRelative = new lime.app.Event();
 	this.onMouseMove = new lime.app.Event();
 	this.onMouseDown = new lime.app.Event();
+	this.onMinimize = new lime.app.Event();
+	this.onLeave = new lime.app.Event();
 	this.onKeyUp = new lime.app.Event();
 	this.onKeyDown = new lime.app.Event();
-	this.onGamepadDisconnect = new lime.app.Event();
-	this.onGamepadConnect = new lime.app.Event();
-	this.onGamepadButtonUp = new lime.app.Event();
-	this.onGamepadButtonDown = new lime.app.Event();
-	this.onGamepadAxisMove = new lime.app.Event();
+	this.onFullscreen = new lime.app.Event();
+	this.onFocusOut = new lime.app.Event();
+	this.onFocusIn = new lime.app.Event();
+	this.onEnter = new lime.app.Event();
+	this.onDeactivate = new lime.app.Event();
+	this.onCreate = new lime.app.Event();
+	this.onClose = new lime.app.Event();
+	this.onActivate = new lime.app.Event();
 	this.config = config;
 	this.__width = 0;
 	this.__height = 0;
@@ -14805,9 +15519,12 @@ lime.ui.Window = function(config) {
 	this.__x = 0;
 	this.__y = 0;
 	this.__title = "";
+	this.id = -1;
 	if(config != null) {
 		if(Object.prototype.hasOwnProperty.call(config,"width")) this.__width = config.width;
 		if(Object.prototype.hasOwnProperty.call(config,"height")) this.__height = config.height;
+		if(Object.prototype.hasOwnProperty.call(config,"x")) this.__x = config.x;
+		if(Object.prototype.hasOwnProperty.call(config,"y")) this.__y = config.y;
 		if(Object.prototype.hasOwnProperty.call(config,"fullscreen")) this.__fullscreen = config.fullscreen;
 		if(Object.prototype.hasOwnProperty.call(config,"title")) this.__title = config.title;
 	}
@@ -14822,7 +15539,10 @@ lime.ui.Window.prototype = {
 	,create: function(application) {
 		this.application = application;
 		this.backend.create(application);
-		if(this.currentRenderer != null) this.currentRenderer.create();
+		if(this.renderer != null) this.renderer.create();
+	}
+	,focus: function() {
+		this.backend.focus();
 	}
 	,move: function(x,y) {
 		this.backend.move(x,y);
@@ -14899,11 +15619,11 @@ lime.ui.Window.prototype = {
 	,__class__: lime.ui.Window
 };
 lime.utils = {};
+lime.utils.TAError = $hxClasses["lime.utils.TAError"] = { __ename__ : true, __constructs__ : ["RangeError"] };
+lime.utils.TAError.RangeError = ["RangeError",0];
+lime.utils.TAError.RangeError.toString = $estr;
+lime.utils.TAError.RangeError.__enum__ = lime.utils.TAError;
 lime.utils._ArrayBufferView = {};
-lime.utils._ArrayBufferView.TAError = $hxClasses["lime.utils._ArrayBufferView.TAError"] = { __ename__ : true, __constructs__ : ["RangeError"] };
-lime.utils._ArrayBufferView.TAError.RangeError = ["RangeError",0];
-lime.utils._ArrayBufferView.TAError.RangeError.toString = $estr;
-lime.utils._ArrayBufferView.TAError.RangeError.__enum__ = lime.utils._ArrayBufferView.TAError;
 lime.utils._ArrayBufferView.TypedArrayType_Impl_ = function() { };
 $hxClasses["lime.utils._ArrayBufferView.TypedArrayType_Impl_"] = lime.utils._ArrayBufferView.TypedArrayType_Impl_;
 lime.utils._ArrayBufferView.TypedArrayType_Impl_.__name__ = ["lime","utils","_ArrayBufferView","TypedArrayType_Impl_"];
@@ -15615,7 +16335,7 @@ openfl.Assets.isLocal = function(id,type,useCache) {
 	return false;
 };
 openfl.Assets.isValidBitmapData = function(bitmapData) {
-	return bitmapData != null && bitmapData.__image != null;
+	return bitmapData != null && bitmapData.image != null;
 	return true;
 };
 openfl.Assets.isValidSound = function(sound) {
@@ -16256,24 +16976,29 @@ openfl.Memory._setPositionTemporarily = function(position,action) {
 	return value;
 };
 openfl.Memory.getByte = function(addr) {
+	if(addr < 0 || addr + 1 > openfl.Memory.len) throw "Bad address";
 	return openfl.Memory.gcRef.data.getInt8(addr);
 };
 openfl.Memory.getDouble = function(addr) {
+	if(addr < 0 || addr + 8 > openfl.Memory.len) throw "Bad address";
 	return openfl.Memory._setPositionTemporarily(addr,function() {
 		return openfl.Memory.gcRef.readDouble();
 	});
 };
 openfl.Memory.getFloat = function(addr) {
+	if(addr < 0 || addr + 4 > openfl.Memory.len) throw "Bad address";
 	return openfl.Memory._setPositionTemporarily(addr,function() {
 		return openfl.Memory.gcRef.readFloat();
 	});
 };
 openfl.Memory.getI32 = function(addr) {
+	if(addr < 0 || addr + 4 > openfl.Memory.len) throw "Bad address";
 	return openfl.Memory._setPositionTemporarily(addr,function() {
 		return openfl.Memory.gcRef.readInt();
 	});
 };
 openfl.Memory.getUI16 = function(addr) {
+	if(addr < 0 || addr + 2 > openfl.Memory.len) throw "Bad address";
 	return openfl.Memory._setPositionTemporarily(addr,function() {
 		return openfl.Memory.gcRef.readUnsignedShort();
 	});
@@ -16283,24 +17008,29 @@ openfl.Memory.select = function(inBytes) {
 	if(inBytes != null) openfl.Memory.len = inBytes.length; else openfl.Memory.len = 0;
 };
 openfl.Memory.setByte = function(addr,v) {
+	if(addr < 0 || addr + 1 > openfl.Memory.len) throw "Bad address";
 	openfl.Memory.gcRef.data.setUint8(addr,v);
 };
 openfl.Memory.setDouble = function(addr,v) {
+	if(addr < 0 || addr + 8 > openfl.Memory.len) throw "Bad address";
 	openfl.Memory._setPositionTemporarily(addr,function() {
 		openfl.Memory.gcRef.writeDouble(v);
 	});
 };
 openfl.Memory.setFloat = function(addr,v) {
+	if(addr < 0 || addr + 4 > openfl.Memory.len) throw "Bad address";
 	openfl.Memory._setPositionTemporarily(addr,function() {
 		openfl.Memory.gcRef.writeFloat(v);
 	});
 };
 openfl.Memory.setI16 = function(addr,v) {
+	if(addr < 0 || addr + 2 > openfl.Memory.len) throw "Bad address";
 	openfl.Memory._setPositionTemporarily(addr,function() {
 		openfl.Memory.gcRef.writeUnsignedShort(v);
 	});
 };
 openfl.Memory.setI32 = function(addr,v) {
+	if(addr < 0 || addr + 4 > openfl.Memory.len) throw "Bad address";
 	openfl.Memory._setPositionTemporarily(addr,function() {
 		openfl.Memory.gcRef.writeInt(v);
 	});
@@ -16656,6 +17386,188 @@ openfl._internal.renderer.AbstractRenderer.prototype = {
 	}
 	,__class__: openfl._internal.renderer.AbstractRenderer
 };
+openfl._internal.renderer.GraphicsPaths = function() { };
+$hxClasses["openfl._internal.renderer.GraphicsPaths"] = openfl._internal.renderer.GraphicsPaths;
+openfl._internal.renderer.GraphicsPaths.__name__ = ["openfl","_internal","renderer","GraphicsPaths"];
+openfl._internal.renderer.GraphicsPaths.ellipse = function(points,x,y,rx,ry,segmentCount) {
+	var seg = Math.PI * 2 / segmentCount;
+	var _g1 = 0;
+	var _g = segmentCount + 1;
+	while(_g1 < _g) {
+		var i = _g1++;
+		points.push(x + Math.sin(seg * i) * rx);
+		points.push(y + Math.cos(seg * i) * ry);
+	}
+};
+openfl._internal.renderer.GraphicsPaths.cubicCurveTo = function(points,cx,cy,cx2,cy2,x,y) {
+	var n = 20;
+	var dt = 0;
+	var dt2 = 0;
+	var dt3 = 0;
+	var t2 = 0;
+	var t3 = 0;
+	var fromX = points[points.length - 2];
+	var fromY = points[points.length - 1];
+	var px = 0;
+	var py = 0;
+	var tmp = 0;
+	var _g1 = 1;
+	var _g = n + 1;
+	while(_g1 < _g) {
+		var i = _g1++;
+		tmp = i / n;
+		dt = 1 - tmp;
+		dt2 = dt * dt;
+		dt3 = dt2 * dt;
+		t2 = tmp * tmp;
+		t3 = t2 * tmp;
+		px = dt3 * fromX + 3 * dt2 * tmp * cx + 3 * dt * t2 * cx2 + t3 * x;
+		py = dt3 * fromY + 3 * dt2 * tmp * cy + 3 * dt * t2 * cy2 + t3 * y;
+		points.push(px);
+		points.push(py);
+	}
+};
+openfl._internal.renderer.GraphicsPaths.curveTo = function(points,cx,cy,x,y) {
+	var xa = 0;
+	var ya = 0;
+	var n = 20;
+	var fromX = points[points.length - 2];
+	var fromY = points[points.length - 1];
+	var px = 0;
+	var py = 0;
+	var tmp = 0;
+	var _g1 = 1;
+	var _g = n + 1;
+	while(_g1 < _g) {
+		var i = _g1++;
+		tmp = i / n;
+		xa = fromX + (cx - fromX) * tmp;
+		ya = fromY + (cy - fromY) * tmp;
+		px = xa + (cx + (x - cx) * tmp - xa) * tmp;
+		py = ya + (cy + (y - cy) * tmp - ya) * tmp;
+		points.push(px);
+		points.push(py);
+	}
+};
+openfl._internal.renderer.GraphicsPaths.roundRectangle = function(points,x,y,width,height,rx,ry) {
+	var xe = x + width;
+	var ye = y + height;
+	var cx1 = -rx + rx * openfl._internal.renderer.GraphicsPaths.SIN45;
+	var cx2 = -rx + rx * openfl._internal.renderer.GraphicsPaths.TAN22;
+	var cy1 = -ry + ry * openfl._internal.renderer.GraphicsPaths.SIN45;
+	var cy2 = -ry + ry * openfl._internal.renderer.GraphicsPaths.TAN22;
+	points.push(xe);
+	points.push(ye - ry);
+	openfl._internal.renderer.GraphicsPaths.curveTo(points,xe,ye + cy2,xe + cx1,ye + cy1);
+	openfl._internal.renderer.GraphicsPaths.curveTo(points,xe + cx2,ye,xe - rx,ye);
+	points.push(x + rx);
+	points.push(ye);
+	openfl._internal.renderer.GraphicsPaths.curveTo(points,x - cx2,ye,x - cx1,ye + cy1);
+	openfl._internal.renderer.GraphicsPaths.curveTo(points,x,ye + cy2,x,ye - ry);
+	points.push(x);
+	points.push(y + ry);
+	openfl._internal.renderer.GraphicsPaths.curveTo(points,x,y - cy2,x - cx1,y - cy1);
+	openfl._internal.renderer.GraphicsPaths.curveTo(points,x - cx2,y,x + rx,y);
+	points.push(xe - rx);
+	points.push(y);
+	openfl._internal.renderer.GraphicsPaths.curveTo(points,xe + cx2,y,xe + cx1,y - cy1);
+	openfl._internal.renderer.GraphicsPaths.curveTo(points,xe,y - cy2,xe,y + ry);
+	points.push(xe);
+	points.push(ye - ry);
+};
+openfl._internal.renderer.PolyK = function() { };
+$hxClasses["openfl._internal.renderer.PolyK"] = openfl._internal.renderer.PolyK;
+openfl._internal.renderer.PolyK.__name__ = ["openfl","_internal","renderer","PolyK"];
+openfl._internal.renderer.PolyK.triangulate = function(tgs,p) {
+	var sign = true;
+	var n = p.length >> 1;
+	if(n < 3) return [];
+	var avl;
+	var _g = [];
+	var _g1 = 0;
+	while(_g1 < n) {
+		var i = _g1++;
+		_g.push(i);
+	}
+	avl = _g;
+	var i1 = 0;
+	var al = n;
+	var earFound = false;
+	while(al > 3) {
+		var i0 = avl[i1 % al];
+		var i11 = avl[(i1 + 1) % al];
+		var i2 = avl[(i1 + 2) % al];
+		var ax = p[2 * i0];
+		var ay = p[2 * i0 + 1];
+		var bx = p[2 * i11];
+		var by = p[2 * i11 + 1];
+		var cx = p[2 * i2];
+		var cy = p[2 * i2 + 1];
+		earFound = false;
+		if(openfl._internal.renderer.PolyK._convex(ax,ay,bx,by,cx,cy,sign)) {
+			earFound = true;
+			var _g11 = 0;
+			while(_g11 < al) {
+				var j = _g11++;
+				var vi = avl[j];
+				if(vi == i0 || vi == i11 || vi == i2) continue;
+				if(openfl._internal.renderer.PolyK._PointInTriangle(p[2 * vi],p[2 * vi + 1],ax,ay,bx,by,cx,cy)) {
+					earFound = false;
+					break;
+				}
+			}
+		}
+		if(earFound) {
+			tgs.push(i0);
+			tgs.push(i11);
+			tgs.push(i2);
+			avl.splice((i1 + 1) % al,1);
+			al--;
+			i1 = 0;
+		} else if(i1++ > 3 * al) {
+			if(sign) {
+				tgs = [];
+				var _g12 = [];
+				var _g2 = 0;
+				while(_g2 < n) {
+					var k = _g2++;
+					_g12.push(k);
+				}
+				avl = _g12;
+				i1 = 0;
+				al = n;
+				sign = false;
+			} else {
+				haxe.Log.trace("Warning: shape too complex to fill",{ fileName : "PolyK.hx", lineNumber : 104, className : "openfl._internal.renderer.PolyK", methodName : "triangulate"});
+				return [];
+			}
+		}
+	}
+	tgs.push(avl[0]);
+	tgs.push(avl[1]);
+	tgs.push(avl[2]);
+	return tgs;
+};
+openfl._internal.renderer.PolyK._PointInTriangle = function(px,py,ax,ay,bx,by,cx,cy) {
+	var v0x = cx - ax | 0;
+	var v0y = cy - ay | 0;
+	var v1x = bx - ax | 0;
+	var v1y = by - ay | 0;
+	var v2x = px - ax | 0;
+	var v2y = py - ay | 0;
+	var dot00 = v0x * v0x + v0y * v0y;
+	var dot01 = v0x * v1x + v0y * v1y;
+	var dot02 = v0x * v2x + v0y * v2y;
+	var dot11 = v1x * v1x + v1y * v1y;
+	var dot12 = v1x * v2x + v1y * v2y;
+	var invDenom = 1 / (dot00 * dot11 - dot01 * dot01);
+	var u = (dot11 * dot02 - dot01 * dot12) * invDenom;
+	var v = (dot00 * dot12 - dot01 * dot02) * invDenom;
+	return u >= 0 && v >= 0 && u + v < 1;
+};
+openfl._internal.renderer.PolyK._convex = function(ax,ay,bx,by,cx,cy,sign) {
+	return (ay - by) * (cx - bx) + (bx - ax) * (cy - by) >= 0 == sign;
+};
 openfl._internal.renderer.RenderSession = function() {
 };
 $hxClasses["openfl._internal.renderer.RenderSession"] = openfl._internal.renderer.RenderSession;
@@ -16705,58 +17617,20 @@ openfl._internal.renderer.cairo.CairoGraphics.bitmapFill = null;
 openfl._internal.renderer.cairo.CairoGraphics.bitmapRepeat = null;
 openfl._internal.renderer.cairo.CairoGraphics.bounds = null;
 openfl._internal.renderer.cairo.CairoGraphics.cairo = null;
-openfl._internal.renderer.cairo.CairoGraphics.fillCommands = null;
 openfl._internal.renderer.cairo.CairoGraphics.fillPattern = null;
 openfl._internal.renderer.cairo.CairoGraphics.fillPatternMatrix = null;
 openfl._internal.renderer.cairo.CairoGraphics.graphics = null;
 openfl._internal.renderer.cairo.CairoGraphics.hasFill = null;
 openfl._internal.renderer.cairo.CairoGraphics.hasStroke = null;
+openfl._internal.renderer.cairo.CairoGraphics.hitTesting = null;
 openfl._internal.renderer.cairo.CairoGraphics.inversePendingMatrix = null;
 openfl._internal.renderer.cairo.CairoGraphics.pendingMatrix = null;
-openfl._internal.renderer.cairo.CairoGraphics.strokeCommands = null;
 openfl._internal.renderer.cairo.CairoGraphics.strokePattern = null;
-openfl._internal.renderer.cairo.CairoGraphics.drawRoundRect = function(x,y,width,height,rx,ry) {
-	if(ry == -1) ry = rx;
-	rx *= 0.5;
-	ry *= 0.5;
-	if(rx > width / 2) rx = width / 2;
-	if(ry > height / 2) ry = height / 2;
-	var xe = x + width;
-	var ye = y + height;
-	var cx1 = -rx + rx * openfl._internal.renderer.cairo.CairoGraphics.SIN45;
-	var cx2 = -rx + rx * openfl._internal.renderer.cairo.CairoGraphics.TAN22;
-	var cy1 = -ry + ry * openfl._internal.renderer.cairo.CairoGraphics.SIN45;
-	var cy2 = -ry + ry * openfl._internal.renderer.cairo.CairoGraphics.TAN22;
-	openfl._internal.renderer.cairo.CairoGraphics.cairo.moveTo(xe,ye - ry);
-	openfl._internal.renderer.cairo.CairoGraphics.quadraticCurveTo(xe,ye + cy2,xe + cx1,ye + cy1);
-	openfl._internal.renderer.cairo.CairoGraphics.quadraticCurveTo(xe + cx2,ye,xe - rx,ye);
-	openfl._internal.renderer.cairo.CairoGraphics.cairo.lineTo(x + rx,ye);
-	openfl._internal.renderer.cairo.CairoGraphics.quadraticCurveTo(x - cx2,ye,x - cx1,ye + cy1);
-	openfl._internal.renderer.cairo.CairoGraphics.quadraticCurveTo(x,ye + cy2,x,ye - ry);
-	openfl._internal.renderer.cairo.CairoGraphics.cairo.lineTo(x,y + ry);
-	openfl._internal.renderer.cairo.CairoGraphics.quadraticCurveTo(x,y - cy2,x - cx1,y - cy1);
-	openfl._internal.renderer.cairo.CairoGraphics.quadraticCurveTo(x - cx2,y,x + rx,y);
-	openfl._internal.renderer.cairo.CairoGraphics.cairo.lineTo(xe - rx,y);
-	openfl._internal.renderer.cairo.CairoGraphics.quadraticCurveTo(xe + cx2,y,xe + cx1,y - cy1);
-	openfl._internal.renderer.cairo.CairoGraphics.quadraticCurveTo(xe,y - cy2,xe,y + ry);
-	openfl._internal.renderer.cairo.CairoGraphics.cairo.lineTo(xe,ye - ry);
-};
-openfl._internal.renderer.cairo.CairoGraphics.endFill = function() {
-	openfl._internal.renderer.cairo.CairoGraphics.cairo.newPath();
-	openfl._internal.renderer.cairo.CairoGraphics.playCommands(openfl._internal.renderer.cairo.CairoGraphics.fillCommands,false);
-	openfl._internal.renderer.cairo.CairoGraphics.fillCommands = [];
-};
-openfl._internal.renderer.cairo.CairoGraphics.endStroke = function() {
-	openfl._internal.renderer.cairo.CairoGraphics.cairo.newPath();
-	openfl._internal.renderer.cairo.CairoGraphics.playCommands(openfl._internal.renderer.cairo.CairoGraphics.strokeCommands,true);
-	openfl._internal.renderer.cairo.CairoGraphics.cairo.closePath();
-	openfl._internal.renderer.cairo.CairoGraphics.strokeCommands = [];
-};
 openfl._internal.renderer.cairo.CairoGraphics.closePath = function() {
 	if(openfl._internal.renderer.cairo.CairoGraphics.strokePattern == null) return;
 	openfl._internal.renderer.cairo.CairoGraphics.cairo.closePath();
 	openfl._internal.renderer.cairo.CairoGraphics.cairo.set_source(openfl._internal.renderer.cairo.CairoGraphics.strokePattern);
-	openfl._internal.renderer.cairo.CairoGraphics.cairo.strokePreserve();
+	if(!openfl._internal.renderer.cairo.CairoGraphics.hitTesting) openfl._internal.renderer.cairo.CairoGraphics.cairo.strokePreserve();
 	openfl._internal.renderer.cairo.CairoGraphics.cairo.newPath();
 };
 openfl._internal.renderer.cairo.CairoGraphics.createGradientPattern = function(type,colors,alphas,ratios,matrix,spreadMethod,interpolationMethod,focalPointRatio) {
@@ -16806,6 +17680,46 @@ openfl._internal.renderer.cairo.CairoGraphics.createImagePattern = function(bitm
 	openfl._internal.renderer.cairo.CairoGraphics.fillPatternMatrix = matrix;
 	return pattern;
 };
+openfl._internal.renderer.cairo.CairoGraphics.drawRoundRect = function(x,y,width,height,rx,ry) {
+	if(ry == -1) ry = rx;
+	rx *= 0.5;
+	ry *= 0.5;
+	if(rx > width / 2) rx = width / 2;
+	if(ry > height / 2) ry = height / 2;
+	var xe = x + width;
+	var ye = y + height;
+	var cx1 = -rx + rx * openfl._internal.renderer.cairo.CairoGraphics.SIN45;
+	var cx2 = -rx + rx * openfl._internal.renderer.cairo.CairoGraphics.TAN22;
+	var cy1 = -ry + ry * openfl._internal.renderer.cairo.CairoGraphics.SIN45;
+	var cy2 = -ry + ry * openfl._internal.renderer.cairo.CairoGraphics.TAN22;
+	openfl._internal.renderer.cairo.CairoGraphics.cairo.moveTo(xe,ye - ry);
+	openfl._internal.renderer.cairo.CairoGraphics.quadraticCurveTo(xe,ye + cy2,xe + cx1,ye + cy1);
+	openfl._internal.renderer.cairo.CairoGraphics.quadraticCurveTo(xe + cx2,ye,xe - rx,ye);
+	openfl._internal.renderer.cairo.CairoGraphics.cairo.lineTo(x + rx,ye);
+	openfl._internal.renderer.cairo.CairoGraphics.quadraticCurveTo(x - cx2,ye,x - cx1,ye + cy1);
+	openfl._internal.renderer.cairo.CairoGraphics.quadraticCurveTo(x,ye + cy2,x,ye - ry);
+	openfl._internal.renderer.cairo.CairoGraphics.cairo.lineTo(x,y + ry);
+	openfl._internal.renderer.cairo.CairoGraphics.quadraticCurveTo(x,y - cy2,x - cx1,y - cy1);
+	openfl._internal.renderer.cairo.CairoGraphics.quadraticCurveTo(x - cx2,y,x + rx,y);
+	openfl._internal.renderer.cairo.CairoGraphics.cairo.lineTo(xe - rx,y);
+	openfl._internal.renderer.cairo.CairoGraphics.quadraticCurveTo(xe + cx2,y,xe + cx1,y - cy1);
+	openfl._internal.renderer.cairo.CairoGraphics.quadraticCurveTo(xe,y - cy2,xe,y + ry);
+	openfl._internal.renderer.cairo.CairoGraphics.cairo.lineTo(xe,ye - ry);
+};
+openfl._internal.renderer.cairo.CairoGraphics.endFill = function() {
+	openfl._internal.renderer.cairo.CairoGraphics.cairo.newPath();
+	openfl._internal.renderer.cairo.CairoGraphics.playCommands(openfl._internal.renderer.cairo.CairoGraphics.fillCommands,false);
+	openfl._internal.renderer.cairo.CairoGraphics.fillCommands.splice(0,openfl._internal.renderer.cairo.CairoGraphics.fillCommands.length);
+};
+openfl._internal.renderer.cairo.CairoGraphics.endStroke = function() {
+	openfl._internal.renderer.cairo.CairoGraphics.cairo.newPath();
+	openfl._internal.renderer.cairo.CairoGraphics.playCommands(openfl._internal.renderer.cairo.CairoGraphics.strokeCommands,true);
+	openfl._internal.renderer.cairo.CairoGraphics.cairo.closePath();
+	openfl._internal.renderer.cairo.CairoGraphics.strokeCommands.splice(0,openfl._internal.renderer.cairo.CairoGraphics.strokeCommands.length);
+};
+openfl._internal.renderer.cairo.CairoGraphics.hitTest = function(graphics,x,y) {
+	return false;
+};
 openfl._internal.renderer.cairo.CairoGraphics.isCCW = function(x1,y1,x2,y2,x3,y3) {
 	return (x2 - x1) * (y3 - y1) - (y2 - y1) * (x3 - x1) < 0;
 };
@@ -16854,6 +17768,7 @@ openfl._internal.renderer.cairo.CairoGraphics.normalizeUVT = function(uvt,skipT)
 };
 openfl._internal.renderer.cairo.CairoGraphics.playCommands = function(commands,stroke) {
 	if(stroke == null) stroke = false;
+	if(commands.length == 0) return;
 	openfl._internal.renderer.cairo.CairoGraphics.bounds = openfl._internal.renderer.cairo.CairoGraphics.graphics.__bounds;
 	var offsetX = openfl._internal.renderer.cairo.CairoGraphics.bounds.x;
 	var offsetY = openfl._internal.renderer.cairo.CairoGraphics.bounds.y;
@@ -17207,7 +18122,7 @@ openfl._internal.renderer.cairo.CairoGraphics.playCommands = function(commands,s
 						openfl._internal.renderer.cairo.CairoGraphics.cairo.lineTo(x21,y21);
 						openfl._internal.renderer.cairo.CairoGraphics.cairo.lineTo(x31,y31);
 						openfl._internal.renderer.cairo.CairoGraphics.cairo.closePath();
-						openfl._internal.renderer.cairo.CairoGraphics.cairo.fillPreserve();
+						if(!openfl._internal.renderer.cairo.CairoGraphics.hitTesting) openfl._internal.renderer.cairo.CairoGraphics.cairo.fillPreserve();
 						i1 += 3;
 						continue;
 					}
@@ -17237,7 +18152,7 @@ openfl._internal.renderer.cairo.CairoGraphics.playCommands = function(commands,s
 					var matrix4 = new lime.math.Matrix3(t1,t2,t3,t4,dx,dy);
 					openfl._internal.renderer.cairo.CairoGraphics.cairo.set_matrix(matrix4);
 					openfl._internal.renderer.cairo.CairoGraphics.cairo.set_source(openfl._internal.renderer.cairo.CairoGraphics.fillPattern);
-					openfl._internal.renderer.cairo.CairoGraphics.cairo.fill();
+					if(!openfl._internal.renderer.cairo.CairoGraphics.hitTesting) openfl._internal.renderer.cairo.CairoGraphics.cairo.fill();
 					i1 += 3;
 				}
 				break;
@@ -17255,6 +18170,7 @@ openfl._internal.renderer.cairo.CairoGraphics.playCommands = function(commands,s
 				var useRect = (flags & 32) > 0;
 				var useOrigin = (flags & 64) > 0;
 				var useBlendAdd = (flags & 65536) > 0;
+				var useBlendOverlay = (flags & 4194304) > 0;
 				if(useTransform) {
 					useScale = false;
 					useRotation = false;
@@ -17297,6 +18213,7 @@ openfl._internal.renderer.cairo.CairoGraphics.playCommands = function(commands,s
 				sheet.__bitmap.__sync();
 				surface = sheet.__bitmap.getSurface();
 				if(useBlendAdd) openfl._internal.renderer.cairo.CairoGraphics.cairo.set_operator(12);
+				if(useBlendOverlay) openfl._internal.renderer.cairo.CairoGraphics.cairo.set_operator(16);
 				while(index < totalCount) {
 					var i2 = tileData[index + 2] | 0;
 					var tileID;
@@ -17330,11 +18247,13 @@ openfl._internal.renderer.cairo.CairoGraphics.playCommands = function(commands,s
 							openfl._internal.renderer.cairo.CairoGraphics.cairo.scale(scale,scale);
 						}
 						openfl._internal.renderer.cairo.CairoGraphics.cairo.setSourceSurface(surface,0,0);
-						if(useAlpha) openfl._internal.renderer.cairo.CairoGraphics.cairo.paintWithAlpha(tileData[index + alphaIndex]); else openfl._internal.renderer.cairo.CairoGraphics.cairo.paint();
+						if(useAlpha) {
+							if(!openfl._internal.renderer.cairo.CairoGraphics.hitTesting) openfl._internal.renderer.cairo.CairoGraphics.cairo.paintWithAlpha(tileData[index + alphaIndex]);
+						} else if(!openfl._internal.renderer.cairo.CairoGraphics.hitTesting) openfl._internal.renderer.cairo.CairoGraphics.cairo.paint();
 					}
 					index += numValues;
 				}
-				if(useBlendAdd) openfl._internal.renderer.cairo.CairoGraphics.cairo.set_operator(2);
+				if(useBlendAdd || useBlendOverlay) openfl._internal.renderer.cairo.CairoGraphics.cairo.set_operator(2);
 				break;
 			default:
 			}
@@ -17344,7 +18263,7 @@ openfl._internal.renderer.cairo.CairoGraphics.playCommands = function(commands,s
 		if(stroke && openfl._internal.renderer.cairo.CairoGraphics.hasStroke) {
 			if(openfl._internal.renderer.cairo.CairoGraphics.hasFill && closeGap) openfl._internal.renderer.cairo.CairoGraphics.cairo.lineTo(startX - offsetX,startY - offsetY);
 			openfl._internal.renderer.cairo.CairoGraphics.cairo.set_source(openfl._internal.renderer.cairo.CairoGraphics.strokePattern);
-			openfl._internal.renderer.cairo.CairoGraphics.cairo.strokePreserve();
+			if(!openfl._internal.renderer.cairo.CairoGraphics.hitTesting) openfl._internal.renderer.cairo.CairoGraphics.cairo.strokePreserve();
 		}
 		if(!stroke && openfl._internal.renderer.cairo.CairoGraphics.hasFill) {
 			openfl._internal.renderer.cairo.CairoGraphics.cairo.translate(-openfl._internal.renderer.cairo.CairoGraphics.bounds.x,-openfl._internal.renderer.cairo.CairoGraphics.bounds.y);
@@ -17357,9 +18276,9 @@ openfl._internal.renderer.cairo.CairoGraphics.playCommands = function(commands,s
 			openfl._internal.renderer.cairo.CairoGraphics.cairo.set_source(openfl._internal.renderer.cairo.CairoGraphics.fillPattern);
 			if(openfl._internal.renderer.cairo.CairoGraphics.pendingMatrix != null) {
 				openfl._internal.renderer.cairo.CairoGraphics.cairo.transform(openfl._internal.renderer.cairo.CairoGraphics.pendingMatrix.__toMatrix3());
-				openfl._internal.renderer.cairo.CairoGraphics.cairo.fillPreserve();
+				if(!openfl._internal.renderer.cairo.CairoGraphics.hitTesting) openfl._internal.renderer.cairo.CairoGraphics.cairo.fillPreserve();
 				openfl._internal.renderer.cairo.CairoGraphics.cairo.transform(openfl._internal.renderer.cairo.CairoGraphics.inversePendingMatrix.__toMatrix3());
-			} else openfl._internal.renderer.cairo.CairoGraphics.cairo.fillPreserve();
+			} else if(!openfl._internal.renderer.cairo.CairoGraphics.hitTesting) openfl._internal.renderer.cairo.CairoGraphics.cairo.fillPreserve();
 			openfl._internal.renderer.cairo.CairoGraphics.cairo.translate(openfl._internal.renderer.cairo.CairoGraphics.bounds.x,openfl._internal.renderer.cairo.CairoGraphics.bounds.y);
 			openfl._internal.renderer.cairo.CairoGraphics.cairo.closePath();
 		}
@@ -17523,6 +18442,10 @@ openfl._internal.renderer.cairo.CairoRenderer.prototype = $extend(openfl._intern
 		}
 		stage.__renderCairo(this.renderSession);
 	}
+	,renderDisplayObject: function(object) {
+		this.cairo.identityMatrix();
+		object.__renderCairo(this.renderSession);
+	}
 	,__class__: openfl._internal.renderer.cairo.CairoRenderer
 });
 openfl._internal.renderer.cairo.CairoShape = function() { };
@@ -17551,13 +18474,13 @@ openfl._internal.renderer.canvas.CanvasBitmap.render = function(bitmap,renderSes
 		if(renderSession.roundPixels) context.setTransform(transform.a,transform.b,transform.c,transform.d,transform.tx | 0,transform.ty | 0); else context.setTransform(transform.a,transform.b,transform.c,transform.d,transform.tx,transform.ty);
 		if(!bitmap.smoothing) {
 			context.mozImageSmoothingEnabled = false;
-			context.webkitImageSmoothingEnabled = false;
+			context.msImageSmoothingEnabled = false;
 			context.imageSmoothingEnabled = false;
 		}
-		if(scrollRect == null) context.drawImage(bitmap.bitmapData.__image.get_src(),0,0); else context.drawImage(bitmap.bitmapData.__image.get_src(),scrollRect.x,scrollRect.y,scrollRect.width,scrollRect.height,scrollRect.x,scrollRect.y,scrollRect.width,scrollRect.height);
+		if(scrollRect == null) context.drawImage(bitmap.bitmapData.image.get_src(),0,0); else context.drawImage(bitmap.bitmapData.image.get_src(),scrollRect.x,scrollRect.y,scrollRect.width,scrollRect.height,scrollRect.x,scrollRect.y,scrollRect.width,scrollRect.height);
 		if(!bitmap.smoothing) {
 			context.mozImageSmoothingEnabled = true;
-			context.webkitImageSmoothingEnabled = true;
+			context.msImageSmoothingEnabled = true;
 			context.imageSmoothingEnabled = true;
 		}
 		if(bitmap.__mask != null) renderSession.maskManager.popMask();
@@ -17570,25 +18493,62 @@ openfl._internal.renderer.canvas.CanvasGraphics.bitmapFill = null;
 openfl._internal.renderer.canvas.CanvasGraphics.bitmapStroke = null;
 openfl._internal.renderer.canvas.CanvasGraphics.bitmapRepeat = null;
 openfl._internal.renderer.canvas.CanvasGraphics.bounds = null;
-openfl._internal.renderer.canvas.CanvasGraphics.fillCommands = null;
 openfl._internal.renderer.canvas.CanvasGraphics.graphics = null;
 openfl._internal.renderer.canvas.CanvasGraphics.hasFill = null;
 openfl._internal.renderer.canvas.CanvasGraphics.hasStroke = null;
+openfl._internal.renderer.canvas.CanvasGraphics.hitTesting = null;
 openfl._internal.renderer.canvas.CanvasGraphics.inversePendingMatrix = null;
 openfl._internal.renderer.canvas.CanvasGraphics.pendingMatrix = null;
-openfl._internal.renderer.canvas.CanvasGraphics.strokeCommands = null;
 openfl._internal.renderer.canvas.CanvasGraphics.context = null;
+openfl._internal.renderer.canvas.CanvasGraphics.closePath = function() {
+	if(openfl._internal.renderer.canvas.CanvasGraphics.context.strokeStyle == null) return;
+	openfl._internal.renderer.canvas.CanvasGraphics.context.closePath();
+	openfl._internal.renderer.canvas.CanvasGraphics.context.stroke();
+	openfl._internal.renderer.canvas.CanvasGraphics.context.beginPath();
+};
 openfl._internal.renderer.canvas.CanvasGraphics.createBitmapFill = function(bitmap,bitmapRepeat) {
 	bitmap.__sync();
-	return openfl._internal.renderer.canvas.CanvasGraphics.context.createPattern(bitmap.__image.get_src(),bitmapRepeat?"repeat":"no-repeat");
+	return openfl._internal.renderer.canvas.CanvasGraphics.context.createPattern(bitmap.image.get_src(),bitmapRepeat?"repeat":"no-repeat");
 	return null;
+};
+openfl._internal.renderer.canvas.CanvasGraphics.createGradientPattern = function(type,colors,alphas,ratios,matrix,spreadMethod,interpolationMethod,focalPointRatio) {
+	var gradientFill = null;
+	switch(type[1]) {
+	case 0:
+		if(matrix == null) matrix = new openfl.geom.Matrix();
+		var point = matrix.transformPoint(new openfl.geom.Point(1638.4,0));
+		gradientFill = openfl._internal.renderer.canvas.CanvasGraphics.context.createRadialGradient(matrix.tx,matrix.ty,0,matrix.tx,matrix.ty,(point.x - matrix.tx) / 2);
+		break;
+	case 1:
+		var matrix1;
+		if(matrix != null) matrix1 = matrix; else matrix1 = new openfl.geom.Matrix();
+		var point1 = matrix1.transformPoint(new openfl.geom.Point(-819.2,0));
+		var point2 = matrix1.transformPoint(new openfl.geom.Point(819.2,0));
+		gradientFill = openfl._internal.renderer.canvas.CanvasGraphics.context.createLinearGradient(point1.x,point1.y,point2.x,point2.y);
+		break;
+	}
+	var _g1 = 0;
+	var _g = colors.length;
+	while(_g1 < _g) {
+		var i = _g1++;
+		var rgb = colors[i];
+		var alpha = alphas[i];
+		var r = (rgb & 16711680) >>> 16;
+		var g = (rgb & 65280) >>> 8;
+		var b = rgb & 255;
+		var ratio = ratios[i] / 255;
+		if(ratio < 0) ratio = 0;
+		if(ratio > 1) ratio = 1;
+		gradientFill.addColorStop(ratio,"rgba(" + r + ", " + g + ", " + b + ", " + alpha + ")");
+	}
+	return gradientFill;
 };
 openfl._internal.renderer.canvas.CanvasGraphics.createTempPatternCanvas = function(bitmap,repeat,width,height) {
 	var canvas = window.document.createElement("canvas");
 	var context = canvas.getContext("2d");
 	canvas.width = width;
 	canvas.height = height;
-	context.fillStyle = context.createPattern(bitmap.__image.get_src(),repeat?"repeat":"no-repeat");
+	context.fillStyle = context.createPattern(bitmap.image.get_src(),repeat?"repeat":"no-repeat");
 	context.beginPath();
 	context.moveTo(0,0);
 	context.lineTo(0,height);
@@ -17596,25 +18556,8 @@ openfl._internal.renderer.canvas.CanvasGraphics.createTempPatternCanvas = functi
 	context.lineTo(width,0);
 	context.lineTo(0,0);
 	context.closePath();
-	context.fill();
+	if(!openfl._internal.renderer.canvas.CanvasGraphics.hitTesting) context.fill();
 	return canvas;
-};
-openfl._internal.renderer.canvas.CanvasGraphics.endFill = function() {
-	openfl._internal.renderer.canvas.CanvasGraphics.context.beginPath();
-	openfl._internal.renderer.canvas.CanvasGraphics.playCommands(openfl._internal.renderer.canvas.CanvasGraphics.fillCommands,false);
-	openfl._internal.renderer.canvas.CanvasGraphics.fillCommands = [];
-};
-openfl._internal.renderer.canvas.CanvasGraphics.endStroke = function() {
-	openfl._internal.renderer.canvas.CanvasGraphics.context.beginPath();
-	openfl._internal.renderer.canvas.CanvasGraphics.playCommands(openfl._internal.renderer.canvas.CanvasGraphics.strokeCommands,true);
-	openfl._internal.renderer.canvas.CanvasGraphics.context.closePath();
-	openfl._internal.renderer.canvas.CanvasGraphics.strokeCommands = [];
-};
-openfl._internal.renderer.canvas.CanvasGraphics.closePath = function() {
-	if(openfl._internal.renderer.canvas.CanvasGraphics.context.strokeStyle == null) return;
-	openfl._internal.renderer.canvas.CanvasGraphics.context.closePath();
-	openfl._internal.renderer.canvas.CanvasGraphics.context.stroke();
-	openfl._internal.renderer.canvas.CanvasGraphics.context.beginPath();
 };
 openfl._internal.renderer.canvas.CanvasGraphics.drawRoundRect = function(x,y,width,height,rx,ry) {
 	if(ry == -1) ry = rx;
@@ -17641,6 +18584,82 @@ openfl._internal.renderer.canvas.CanvasGraphics.drawRoundRect = function(x,y,wid
 	openfl._internal.renderer.canvas.CanvasGraphics.context.quadraticCurveTo(xe + cx2,y,xe + cx1,y - cy1);
 	openfl._internal.renderer.canvas.CanvasGraphics.context.quadraticCurveTo(xe,y - cy2,xe,y + ry);
 	openfl._internal.renderer.canvas.CanvasGraphics.context.lineTo(xe,ye - ry);
+};
+openfl._internal.renderer.canvas.CanvasGraphics.endFill = function() {
+	openfl._internal.renderer.canvas.CanvasGraphics.context.beginPath();
+	openfl._internal.renderer.canvas.CanvasGraphics.playCommands(openfl._internal.renderer.canvas.CanvasGraphics.fillCommands,false);
+	openfl._internal.renderer.canvas.CanvasGraphics.fillCommands.splice(0,openfl._internal.renderer.canvas.CanvasGraphics.fillCommands.length);
+};
+openfl._internal.renderer.canvas.CanvasGraphics.endStroke = function() {
+	openfl._internal.renderer.canvas.CanvasGraphics.context.beginPath();
+	openfl._internal.renderer.canvas.CanvasGraphics.playCommands(openfl._internal.renderer.canvas.CanvasGraphics.strokeCommands,true);
+	openfl._internal.renderer.canvas.CanvasGraphics.context.closePath();
+	openfl._internal.renderer.canvas.CanvasGraphics.strokeCommands.splice(0,openfl._internal.renderer.canvas.CanvasGraphics.strokeCommands.length);
+};
+openfl._internal.renderer.canvas.CanvasGraphics.hitTest = function(graphics,x,y) {
+	if(!graphics.__visible || graphics.__commands.length == 0 || openfl._internal.renderer.canvas.CanvasGraphics.bounds == null || openfl._internal.renderer.canvas.CanvasGraphics.bounds.width <= 0 || openfl._internal.renderer.canvas.CanvasGraphics.bounds.height <= 0) {
+		graphics.__canvas = null;
+		graphics.__context = null;
+		graphics.__bitmap = null;
+		return false;
+	} else {
+		openfl._internal.renderer.canvas.CanvasGraphics.hitTesting = true;
+		x -= openfl._internal.renderer.canvas.CanvasGraphics.bounds.x;
+		y -= openfl._internal.renderer.canvas.CanvasGraphics.bounds.y;
+		if(graphics.__canvas == null) {
+			graphics.__canvas = window.document.createElement("canvas");
+			graphics.__context = graphics.__canvas.getContext("2d");
+		}
+		openfl._internal.renderer.canvas.CanvasGraphics.context = graphics.__context;
+		openfl._internal.renderer.canvas.CanvasGraphics.fillCommands.splice(0,openfl._internal.renderer.canvas.CanvasGraphics.fillCommands.length);
+		openfl._internal.renderer.canvas.CanvasGraphics.strokeCommands.splice(0,openfl._internal.renderer.canvas.CanvasGraphics.strokeCommands.length);
+		openfl._internal.renderer.canvas.CanvasGraphics.hasFill = false;
+		openfl._internal.renderer.canvas.CanvasGraphics.hasStroke = false;
+		openfl._internal.renderer.canvas.CanvasGraphics.bitmapFill = null;
+		openfl._internal.renderer.canvas.CanvasGraphics.bitmapRepeat = false;
+		openfl._internal.renderer.canvas.CanvasGraphics.context.beginPath();
+		var _g = 0;
+		var _g1 = graphics.__commands;
+		while(_g < _g1.length) {
+			var command = _g1[_g];
+			++_g;
+			switch(command[1]) {
+			case 3:case 4:case 15:case 16:
+				openfl._internal.renderer.canvas.CanvasGraphics.fillCommands.push(command);
+				openfl._internal.renderer.canvas.CanvasGraphics.strokeCommands.push(command);
+				break;
+			case 12:case 14:case 13:
+				openfl._internal.renderer.canvas.CanvasGraphics.strokeCommands.push(command);
+				break;
+			case 11:
+				openfl._internal.renderer.canvas.CanvasGraphics.endFill();
+				openfl._internal.renderer.canvas.CanvasGraphics.endStroke();
+				if(openfl._internal.renderer.canvas.CanvasGraphics.hasFill && openfl._internal.renderer.canvas.CanvasGraphics.context.isPointInPath(x,y)) return true;
+				if(openfl._internal.renderer.canvas.CanvasGraphics.hasStroke && openfl._internal.renderer.canvas.CanvasGraphics.context.isPointInStroke(x,y)) return true;
+				openfl._internal.renderer.canvas.CanvasGraphics.hasFill = false;
+				openfl._internal.renderer.canvas.CanvasGraphics.bitmapFill = null;
+				break;
+			case 0:case 1:case 2:
+				openfl._internal.renderer.canvas.CanvasGraphics.endFill();
+				openfl._internal.renderer.canvas.CanvasGraphics.endStroke();
+				if(openfl._internal.renderer.canvas.CanvasGraphics.hasFill && openfl._internal.renderer.canvas.CanvasGraphics.context.isPointInPath(x,y)) return true;
+				if(openfl._internal.renderer.canvas.CanvasGraphics.hasStroke && openfl._internal.renderer.canvas.CanvasGraphics.context.isPointInStroke(x,y)) return true;
+				openfl._internal.renderer.canvas.CanvasGraphics.fillCommands.push(command);
+				openfl._internal.renderer.canvas.CanvasGraphics.strokeCommands.push(command);
+				break;
+			case 5:case 6:case 7:case 8:
+				openfl._internal.renderer.canvas.CanvasGraphics.fillCommands.push(command);
+				openfl._internal.renderer.canvas.CanvasGraphics.strokeCommands.push(command);
+				break;
+			default:
+			}
+		}
+		if(openfl._internal.renderer.canvas.CanvasGraphics.fillCommands.length > 0) openfl._internal.renderer.canvas.CanvasGraphics.endFill();
+		if(openfl._internal.renderer.canvas.CanvasGraphics.strokeCommands.length > 0) openfl._internal.renderer.canvas.CanvasGraphics.endStroke();
+		if(openfl._internal.renderer.canvas.CanvasGraphics.hasFill && openfl._internal.renderer.canvas.CanvasGraphics.context.isPointInPath(x,y)) return true;
+		if(openfl._internal.renderer.canvas.CanvasGraphics.hasStroke && openfl._internal.renderer.canvas.CanvasGraphics.context.isPointInStroke(x,y)) return true;
+	}
+	return false;
 };
 openfl._internal.renderer.canvas.CanvasGraphics.isCCW = function(x1,y1,x2,y2,x3,y3) {
 	return (x2 - x1) * (y3 - y1) - (y2 - y1) * (x3 - x1) < 0;
@@ -17783,7 +18802,7 @@ openfl._internal.renderer.canvas.CanvasGraphics.playCommands = function(commands
 			var thickness = command[2];
 			if(stroke && openfl._internal.renderer.canvas.CanvasGraphics.hasStroke) {
 				openfl._internal.renderer.canvas.CanvasGraphics.context.closePath();
-				openfl._internal.renderer.canvas.CanvasGraphics.context.stroke();
+				if(!openfl._internal.renderer.canvas.CanvasGraphics.hitTesting) openfl._internal.renderer.canvas.CanvasGraphics.context.stroke();
 				openfl._internal.renderer.canvas.CanvasGraphics.context.beginPath();
 			}
 			openfl._internal.renderer.canvas.CanvasGraphics.context.moveTo(positionX - offsetX,positionY - offsetY);
@@ -17903,7 +18922,7 @@ openfl._internal.renderer.canvas.CanvasGraphics.playCommands = function(commands
 				}
 				if(canOptimizeMatrix && st >= 0 && sl >= 0 && sr <= openfl._internal.renderer.canvas.CanvasGraphics.bitmapFill.width && sb <= openfl._internal.renderer.canvas.CanvasGraphics.bitmapFill.height) {
 					optimizationUsed = true;
-					openfl._internal.renderer.canvas.CanvasGraphics.context.drawImage(openfl._internal.renderer.canvas.CanvasGraphics.bitmapFill.__image.get_src(),sl,st,sr - sl,sb - st,x7 - offsetX,y7 - offsetY,width2,height2);
+					if(!openfl._internal.renderer.canvas.CanvasGraphics.hitTesting) openfl._internal.renderer.canvas.CanvasGraphics.context.drawImage(openfl._internal.renderer.canvas.CanvasGraphics.bitmapFill.image.get_src(),sl,st,sr - sl,sb - st,x7 - offsetX,y7 - offsetY,width2,height2);
 				}
 			}
 			if(!optimizationUsed) openfl._internal.renderer.canvas.CanvasGraphics.context.rect(x7 - offsetX,y7 - offsetY,width2,height2);
@@ -17913,58 +18932,27 @@ openfl._internal.renderer.canvas.CanvasGraphics.playCommands = function(commands
 	}
 	if(stroke && openfl._internal.renderer.canvas.CanvasGraphics.hasStroke) {
 		if(openfl._internal.renderer.canvas.CanvasGraphics.hasFill && closeGap) openfl._internal.renderer.canvas.CanvasGraphics.context.lineTo(startX - offsetX,startY - offsetY);
-		openfl._internal.renderer.canvas.CanvasGraphics.context.stroke();
+		if(!openfl._internal.renderer.canvas.CanvasGraphics.hitTesting) openfl._internal.renderer.canvas.CanvasGraphics.context.stroke();
 	}
 	if(!stroke) {
 		if(openfl._internal.renderer.canvas.CanvasGraphics.hasFill || openfl._internal.renderer.canvas.CanvasGraphics.bitmapFill != null) {
 			openfl._internal.renderer.canvas.CanvasGraphics.context.translate(-openfl._internal.renderer.canvas.CanvasGraphics.bounds.x,-openfl._internal.renderer.canvas.CanvasGraphics.bounds.y);
 			if(openfl._internal.renderer.canvas.CanvasGraphics.pendingMatrix != null) {
 				openfl._internal.renderer.canvas.CanvasGraphics.context.transform(openfl._internal.renderer.canvas.CanvasGraphics.pendingMatrix.a,openfl._internal.renderer.canvas.CanvasGraphics.pendingMatrix.b,openfl._internal.renderer.canvas.CanvasGraphics.pendingMatrix.c,openfl._internal.renderer.canvas.CanvasGraphics.pendingMatrix.d,openfl._internal.renderer.canvas.CanvasGraphics.pendingMatrix.tx,openfl._internal.renderer.canvas.CanvasGraphics.pendingMatrix.ty);
-				openfl._internal.renderer.canvas.CanvasGraphics.context.fill();
+				if(!openfl._internal.renderer.canvas.CanvasGraphics.hitTesting) openfl._internal.renderer.canvas.CanvasGraphics.context.fill();
 				openfl._internal.renderer.canvas.CanvasGraphics.context.transform(openfl._internal.renderer.canvas.CanvasGraphics.inversePendingMatrix.a,openfl._internal.renderer.canvas.CanvasGraphics.inversePendingMatrix.b,openfl._internal.renderer.canvas.CanvasGraphics.inversePendingMatrix.c,openfl._internal.renderer.canvas.CanvasGraphics.inversePendingMatrix.d,openfl._internal.renderer.canvas.CanvasGraphics.inversePendingMatrix.tx,openfl._internal.renderer.canvas.CanvasGraphics.inversePendingMatrix.ty);
-			} else openfl._internal.renderer.canvas.CanvasGraphics.context.fill();
+			} else if(!openfl._internal.renderer.canvas.CanvasGraphics.hitTesting) openfl._internal.renderer.canvas.CanvasGraphics.context.fill();
 			openfl._internal.renderer.canvas.CanvasGraphics.context.translate(openfl._internal.renderer.canvas.CanvasGraphics.bounds.x,openfl._internal.renderer.canvas.CanvasGraphics.bounds.y);
 			openfl._internal.renderer.canvas.CanvasGraphics.context.closePath();
 		}
 	}
 };
-openfl._internal.renderer.canvas.CanvasGraphics.createGradientPattern = function(type,colors,alphas,ratios,matrix,spreadMethod,interpolationMethod,focalPointRatio) {
-	var gradientFill = null;
-	switch(type[1]) {
-	case 0:
-		if(matrix == null) matrix = new openfl.geom.Matrix();
-		var point = matrix.transformPoint(new openfl.geom.Point(1638.4,0));
-		gradientFill = openfl._internal.renderer.canvas.CanvasGraphics.context.createRadialGradient(matrix.tx,matrix.ty,0,matrix.tx,matrix.ty,(point.x - matrix.tx) / 2);
-		break;
-	case 1:
-		var matrix1;
-		if(matrix != null) matrix1 = matrix; else matrix1 = new openfl.geom.Matrix();
-		var point1 = matrix1.transformPoint(new openfl.geom.Point(-819.2,0));
-		var point2 = matrix1.transformPoint(new openfl.geom.Point(819.2,0));
-		gradientFill = openfl._internal.renderer.canvas.CanvasGraphics.context.createLinearGradient(point1.x,point1.y,point2.x,point2.y);
-		break;
-	}
-	var _g1 = 0;
-	var _g = colors.length;
-	while(_g1 < _g) {
-		var i = _g1++;
-		var rgb = colors[i];
-		var alpha = alphas[i];
-		var r = (rgb & 16711680) >>> 16;
-		var g = (rgb & 65280) >>> 8;
-		var b = rgb & 255;
-		var ratio = ratios[i] / 255;
-		if(ratio < 0) ratio = 0;
-		if(ratio > 1) ratio = 1;
-		gradientFill.addColorStop(ratio,"rgba(" + r + ", " + g + ", " + b + ", " + alpha + ")");
-	}
-	return gradientFill;
-};
 openfl._internal.renderer.canvas.CanvasGraphics.render = function(graphics,renderSession) {
 	if(graphics.__dirty) {
+		openfl._internal.renderer.canvas.CanvasGraphics.hitTesting = false;
 		openfl._internal.renderer.canvas.CanvasGraphics.graphics = graphics;
 		openfl._internal.renderer.canvas.CanvasGraphics.bounds = graphics.__bounds;
-		if(!graphics.__visible || graphics.__commands.length == 0 || openfl._internal.renderer.canvas.CanvasGraphics.bounds == null || openfl._internal.renderer.canvas.CanvasGraphics.bounds.width == 0 || openfl._internal.renderer.canvas.CanvasGraphics.bounds.height == 0) {
+		if(!graphics.__visible || graphics.__commands.length == 0 || openfl._internal.renderer.canvas.CanvasGraphics.bounds == null || openfl._internal.renderer.canvas.CanvasGraphics.bounds.width <= 0 || openfl._internal.renderer.canvas.CanvasGraphics.bounds.height <= 0) {
 			graphics.__canvas = null;
 			graphics.__context = null;
 			graphics.__bitmap = null;
@@ -17976,10 +18964,8 @@ openfl._internal.renderer.canvas.CanvasGraphics.render = function(graphics,rende
 			openfl._internal.renderer.canvas.CanvasGraphics.context = graphics.__context;
 			graphics.__canvas.width = Math.ceil(openfl._internal.renderer.canvas.CanvasGraphics.bounds.width);
 			graphics.__canvas.height = Math.ceil(openfl._internal.renderer.canvas.CanvasGraphics.bounds.height);
-			var offsetX = openfl._internal.renderer.canvas.CanvasGraphics.bounds.x;
-			var offsetY = openfl._internal.renderer.canvas.CanvasGraphics.bounds.y;
-			openfl._internal.renderer.canvas.CanvasGraphics.fillCommands = new Array();
-			openfl._internal.renderer.canvas.CanvasGraphics.strokeCommands = new Array();
+			openfl._internal.renderer.canvas.CanvasGraphics.fillCommands.splice(0,openfl._internal.renderer.canvas.CanvasGraphics.fillCommands.length);
+			openfl._internal.renderer.canvas.CanvasGraphics.strokeCommands.splice(0,openfl._internal.renderer.canvas.CanvasGraphics.strokeCommands.length);
 			openfl._internal.renderer.canvas.CanvasGraphics.hasFill = false;
 			openfl._internal.renderer.canvas.CanvasGraphics.hasStroke = false;
 			openfl._internal.renderer.canvas.CanvasGraphics.bitmapFill = null;
@@ -18142,7 +19128,7 @@ openfl._internal.renderer.canvas.CanvasGraphics.render = function(graphics,rende
 								openfl._internal.renderer.canvas.CanvasGraphics.context.lineTo(x2,y2);
 								openfl._internal.renderer.canvas.CanvasGraphics.context.lineTo(x3,y3);
 								openfl._internal.renderer.canvas.CanvasGraphics.context.closePath();
-								openfl._internal.renderer.canvas.CanvasGraphics.context.fill();
+								if(!openfl._internal.renderer.canvas.CanvasGraphics.hitTesting) openfl._internal.renderer.canvas.CanvasGraphics.context.fill();
 								i1 += 3;
 								continue;
 							}
@@ -18230,7 +19216,7 @@ openfl._internal.renderer.canvas.CanvasGraphics.render = function(graphics,rende
 						var previousTileID = -1;
 						var surface;
 						sheet.__bitmap.__sync();
-						surface = sheet.__bitmap.__image.get_src();
+						surface = sheet.__bitmap.image.get_src();
 						if(useBlendAdd) openfl._internal.renderer.canvas.CanvasGraphics.context.globalCompositeOperation = "lighter";
 						while(index < totalCount) {
 							var tileID;
@@ -18280,7 +19266,7 @@ openfl._internal.renderer.canvas.CanvasGraphics.render = function(graphics,rende
 };
 openfl._internal.renderer.canvas.CanvasGraphics.renderMask = function(graphics,renderSession) {
 	if(graphics.__commands.length != 0) {
-		var context = renderSession.context;
+		openfl._internal.renderer.canvas.CanvasGraphics.context = renderSession.context;
 		var positionX = 0.0;
 		var positionY = 0.0;
 		var offsetX = 0;
@@ -18298,7 +19284,7 @@ openfl._internal.renderer.canvas.CanvasGraphics.renderMask = function(graphics,r
 				var cy1 = command[4];
 				var cx2 = command[3];
 				var cx1 = command[2];
-				context.bezierCurveTo(cx1 - offsetX,cy1 - offsetY,cx2 - offsetX,cy2 - offsetY,x - offsetX,y - offsetY);
+				openfl._internal.renderer.canvas.CanvasGraphics.context.bezierCurveTo(cx1 - offsetX,cy1 - offsetY,cx2 - offsetX,cy2 - offsetY,x - offsetX,y - offsetY);
 				positionX = x;
 				positionY = y;
 				break;
@@ -18307,7 +19293,7 @@ openfl._internal.renderer.canvas.CanvasGraphics.renderMask = function(graphics,r
 				var x1 = command[4];
 				var cy = command[3];
 				var cx = command[2];
-				context.quadraticCurveTo(cx - offsetX,cy - offsetY,x1 - offsetX,y1 - offsetY);
+				openfl._internal.renderer.canvas.CanvasGraphics.context.quadraticCurveTo(cx - offsetX,cy - offsetY,x1 - offsetX,y1 - offsetY);
 				positionX = x1;
 				positionY = y1;
 				break;
@@ -18315,7 +19301,7 @@ openfl._internal.renderer.canvas.CanvasGraphics.renderMask = function(graphics,r
 				var radius = command[4];
 				var y2 = command[3];
 				var x2 = command[2];
-				context.arc(x2 - offsetX,y2 - offsetY,radius,0,Math.PI * 2,true);
+				openfl._internal.renderer.canvas.CanvasGraphics.context.arc(x2 - offsetX,y2 - offsetY,radius,0,Math.PI * 2,true);
 				break;
 			case 6:
 				var height = command[5];
@@ -18331,18 +19317,18 @@ openfl._internal.renderer.canvas.CanvasGraphics.renderMask = function(graphics,r
 				var ye = y3 + height;
 				var xm = x3 + width / 2;
 				var ym = y3 + height / 2;
-				context.moveTo(x3,ym);
-				context.bezierCurveTo(x3,ym - oy,xm - ox,y3,xm,y3);
-				context.bezierCurveTo(xm + ox,y3,xe,ym - oy,xe,ym);
-				context.bezierCurveTo(xe,ym + oy,xm + ox,ye,xm,ye);
-				context.bezierCurveTo(xm - ox,ye,x3,ym + oy,x3,ym);
+				openfl._internal.renderer.canvas.CanvasGraphics.context.moveTo(x3,ym);
+				openfl._internal.renderer.canvas.CanvasGraphics.context.bezierCurveTo(x3,ym - oy,xm - ox,y3,xm,y3);
+				openfl._internal.renderer.canvas.CanvasGraphics.context.bezierCurveTo(xm + ox,y3,xe,ym - oy,xe,ym);
+				openfl._internal.renderer.canvas.CanvasGraphics.context.bezierCurveTo(xe,ym + oy,xm + ox,ye,xm,ye);
+				openfl._internal.renderer.canvas.CanvasGraphics.context.bezierCurveTo(xm - ox,ye,x3,ym + oy,x3,ym);
 				break;
 			case 7:
 				var height1 = command[5];
 				var width1 = command[4];
 				var y4 = command[3];
 				var x4 = command[2];
-				context.rect(x4 - offsetX,y4 - offsetY,width1,height1);
+				openfl._internal.renderer.canvas.CanvasGraphics.context.rect(x4 - offsetX,y4 - offsetY,width1,height1);
 				break;
 			case 8:
 				var ry = command[7];
@@ -18356,14 +19342,14 @@ openfl._internal.renderer.canvas.CanvasGraphics.renderMask = function(graphics,r
 			case 15:
 				var y6 = command[3];
 				var x6 = command[2];
-				context.lineTo(x6 - offsetX,y6 - offsetY);
+				openfl._internal.renderer.canvas.CanvasGraphics.context.lineTo(x6 - offsetX,y6 - offsetY);
 				positionX = x6;
 				positionY = y6;
 				break;
 			case 16:
 				var y7 = command[3];
 				var x7 = command[2];
-				context.moveTo(x7 - offsetX,y7 - offsetY);
+				openfl._internal.renderer.canvas.CanvasGraphics.context.moveTo(x7 - offsetX,y7 - offsetY);
 				positionX = x7;
 				positionY = y7;
 				break;
@@ -18510,6 +19496,15 @@ openfl._internal.renderer.canvas.CanvasTextField.render = function(textField,ren
 				}
 				graphics.__canvas.width = Math.ceil(bounds.width);
 				graphics.__canvas.height = Math.ceil(bounds.height);
+				if(textEngine.antiAliasType != openfl.text.AntiAliasType.ADVANCED || textEngine.gridFitType != openfl.text.GridFitType.PIXEL) {
+					graphics.__context.mozImageSmoothingEnabled = true;
+					graphics.__context.msImageSmoothingEnabled = true;
+					graphics.__context.imageSmoothingEnabled = true;
+				} else {
+					graphics.__context.mozImageSmoothingEnabled = false;
+					graphics.__context.msImageSmoothingEnabled = false;
+					graphics.__context.imageSmoothingEnabled = false;
+				}
 				if(textEngine.border || textEngine.background) {
 					openfl._internal.renderer.canvas.CanvasTextField.context.rect(0.5,0.5,bounds.width - 1,bounds.height - 1);
 					if(textEngine.background) {
@@ -18575,7 +19570,7 @@ openfl._internal.renderer.canvas.CanvasTextField.render = function(textField,ren
 								openfl._internal.renderer.canvas.CanvasTextField.context.fillStyle = "#000000";
 								openfl._internal.renderer.canvas.CanvasTextField.context.fillRect(start.x,start.y,end.x - start.x,group.height);
 								openfl._internal.renderer.canvas.CanvasTextField.context.fillStyle = "#FFFFFF";
-								openfl._internal.renderer.canvas.CanvasTextField.context.fillText(text.substring(selectionStart,selectionEnd),group.offsetX + scrollX + start.x - 2,group.offsetY + offsetY + scrollY);
+								openfl._internal.renderer.canvas.CanvasTextField.context.fillText(text.substring(selectionStart,selectionEnd),scrollX + start.x,group.offsetY + offsetY + scrollY);
 							}
 						}
 					}
@@ -18603,13 +19598,26 @@ openfl._internal.renderer.canvas.CanvasTextField.render = function(textField,ren
 		}
 	}
 };
+openfl._internal.renderer.console = {};
+openfl._internal.renderer.console.ConsoleRenderer = function(width,height,ctx) {
+	openfl._internal.renderer.AbstractRenderer.call(this,width,height);
+	throw "ConsoleRenderer not supported";
+};
+$hxClasses["openfl._internal.renderer.console.ConsoleRenderer"] = openfl._internal.renderer.console.ConsoleRenderer;
+openfl._internal.renderer.console.ConsoleRenderer.__name__ = ["openfl","_internal","renderer","console","ConsoleRenderer"];
+openfl._internal.renderer.console.ConsoleRenderer.__super__ = openfl._internal.renderer.AbstractRenderer;
+openfl._internal.renderer.console.ConsoleRenderer.prototype = $extend(openfl._internal.renderer.AbstractRenderer.prototype,{
+	render: function(stage) {
+	}
+	,__class__: openfl._internal.renderer.console.ConsoleRenderer
+});
 openfl._internal.renderer.dom = {};
 openfl._internal.renderer.dom.DOMBitmap = function() { };
 $hxClasses["openfl._internal.renderer.dom.DOMBitmap"] = openfl._internal.renderer.dom.DOMBitmap;
 openfl._internal.renderer.dom.DOMBitmap.__name__ = ["openfl","_internal","renderer","dom","DOMBitmap"];
 openfl._internal.renderer.dom.DOMBitmap.render = function(bitmap,renderSession) {
 	if(bitmap.stage != null && bitmap.__worldVisible && bitmap.__renderable && bitmap.bitmapData != null && bitmap.bitmapData.__isValid) {
-		if(bitmap.bitmapData.__image.buffer.__srcImage != null) openfl._internal.renderer.dom.DOMBitmap.renderImage(bitmap,renderSession); else openfl._internal.renderer.dom.DOMBitmap.renderCanvas(bitmap,renderSession);
+		if(bitmap.bitmapData.image.buffer.__srcImage != null) openfl._internal.renderer.dom.DOMBitmap.renderImage(bitmap,renderSession); else openfl._internal.renderer.dom.DOMBitmap.renderCanvas(bitmap,renderSession);
 	} else {
 		if(bitmap.__image != null) {
 			renderSession.element.removeChild(bitmap.__image);
@@ -18633,7 +19641,7 @@ openfl._internal.renderer.dom.DOMBitmap.renderCanvas = function(bitmap,renderSes
 		bitmap.__context = bitmap.__canvas.getContext("2d");
 		if(!bitmap.smoothing) {
 			bitmap.__context.mozImageSmoothingEnabled = false;
-			bitmap.__context.webkitImageSmoothingEnabled = false;
+			bitmap.__context.msImageSmoothingEnabled = false;
 			bitmap.__context.imageSmoothingEnabled = false;
 		}
 		openfl._internal.renderer.dom.DOMRenderer.initializeElement(bitmap,bitmap.__canvas,renderSession);
@@ -18642,7 +19650,7 @@ openfl._internal.renderer.dom.DOMBitmap.renderCanvas = function(bitmap,renderSes
 	bitmap.__canvas.width = bitmap.bitmapData.width;
 	bitmap.__canvas.height = bitmap.bitmapData.height;
 	bitmap.__context.globalAlpha = bitmap.__worldAlpha;
-	bitmap.__context.drawImage(bitmap.bitmapData.__image.buffer.__srcCanvas,0,0);
+	bitmap.__context.drawImage(bitmap.bitmapData.image.buffer.__srcCanvas,0,0);
 	openfl._internal.renderer.dom.DOMRenderer.applyStyle(bitmap,renderSession,true,false,true);
 };
 openfl._internal.renderer.dom.DOMBitmap.renderImage = function(bitmap,renderSession) {
@@ -18652,7 +19660,7 @@ openfl._internal.renderer.dom.DOMBitmap.renderImage = function(bitmap,renderSess
 	}
 	if(bitmap.__image == null) {
 		bitmap.__image = window.document.createElement("img");
-		bitmap.__image.src = bitmap.bitmapData.__image.buffer.__srcImage.src;
+		bitmap.__image.src = bitmap.bitmapData.image.buffer.__srcImage.src;
 		openfl._internal.renderer.dom.DOMRenderer.initializeElement(bitmap,bitmap.__image,renderSession);
 	}
 	openfl._internal.renderer.dom.DOMRenderer.applyStyle(bitmap,renderSession,true,true,true);
@@ -18809,12 +19817,21 @@ openfl._internal.renderer.dom.DOMTextField.render = function(textField,renderSes
 	var textEngine = textField.__textEngine;
 	if(textField.stage != null && textField.__worldVisible && textField.__renderable) {
 		if(textField.__dirty || textField.__div == null) {
-			if(textEngine.text != "" || textEngine.background || textEngine.border) {
+			if(textEngine.text != "" || textEngine.background || textEngine.border || textEngine.type == openfl.text.TextFieldType.INPUT) {
 				if(textField.__div == null) {
 					textField.__div = window.document.createElement("div");
 					openfl._internal.renderer.dom.DOMRenderer.initializeElement(textField,textField.__div,renderSession);
-					textField.__style.setProperty("cursor","inherit",null);
+					textField.__style.setProperty("outline","none",null);
+					textField.__div.addEventListener("input",function(event) {
+						event.preventDefault();
+						if(textField.get_htmlText() != textField.__div.innerHTML) {
+							textField.set_htmlText(textField.__div.innerHTML);
+							textField.__dirty = false;
+						}
+					},true);
 				}
+				if(textEngine.selectable) textField.__style.setProperty("cursor","text",null); else textField.__style.setProperty("cursor","inherit",null);
+				textField.__div.contentEditable = textEngine.type == openfl.text.TextFieldType.INPUT;
 				var style = textField.__style;
 				textField.__div.innerHTML = textEngine.text;
 				if(textEngine.background) style.setProperty("background-color","#" + StringTools.hex(textEngine.backgroundColor,6),null); else style.removeProperty("background-color");
@@ -18909,7 +19926,8 @@ openfl._internal.renderer.opengl.GLRenderer = function(width,height,gl,transpare
 };
 $hxClasses["openfl._internal.renderer.opengl.GLRenderer"] = openfl._internal.renderer.opengl.GLRenderer;
 openfl._internal.renderer.opengl.GLRenderer.__name__ = ["openfl","_internal","renderer","opengl","GLRenderer"];
-openfl._internal.renderer.opengl.GLRenderer.renderBitmap = function(shape,renderSession) {
+openfl._internal.renderer.opengl.GLRenderer.renderBitmap = function(shape,renderSession,smooth) {
+	if(smooth == null) smooth = true;
 	if(!shape.__renderable || shape.__worldAlpha <= 0) return;
 	if(shape.__graphics == null || shape.__graphics.__bitmap == null) return;
 	var rect = openfl.geom.Rectangle.__temp;
@@ -18920,7 +19938,7 @@ openfl._internal.renderer.opengl.GLRenderer.renderBitmap = function(shape,render
 	var bitmap = shape.__graphics.__bitmap;
 	matrix.translate(shape.__graphics.__bounds.x,shape.__graphics.__bounds.y);
 	matrix.concat(shape.__worldTransform);
-	renderSession.spriteBatch.renderBitmapData(bitmap,true,matrix,shape.__worldColorTransform,shape.__worldAlpha,shape.__blendMode,openfl.display.PixelSnapping.ALWAYS);
+	renderSession.spriteBatch.renderBitmapData(bitmap,smooth,matrix,shape.__worldColorTransform,shape.__worldAlpha,shape.__blendMode,openfl.display.PixelSnapping.ALWAYS);
 };
 openfl._internal.renderer.opengl.GLRenderer.__super__ = openfl._internal.renderer.AbstractRenderer;
 openfl._internal.renderer.opengl.GLRenderer.prototype = $extend(openfl._internal.renderer.AbstractRenderer.prototype,{
@@ -19401,27 +20419,7 @@ openfl._internal.renderer.opengl.utils.PathBuiler.curveTo = function(cx,cy,x,y) 
 		openfl._internal.renderer.opengl.utils.PathBuiler.__currentPath.points.push(0);
 		openfl._internal.renderer.opengl.utils.PathBuiler.__drawPaths.push(openfl._internal.renderer.opengl.utils.PathBuiler.__currentPath);
 	}
-	var xa = 0;
-	var ya = 0;
-	var n = 20;
-	var points = openfl._internal.renderer.opengl.utils.PathBuiler.__currentPath.points;
-	var fromX = points[points.length - 2];
-	var fromY = points[points.length - 1];
-	var px = 0;
-	var py = 0;
-	var tmp = 0;
-	var _g1 = 1;
-	var _g = n + 1;
-	while(_g1 < _g) {
-		var i = _g1++;
-		tmp = i / n;
-		xa = fromX + (cx - fromX) * tmp;
-		ya = fromY + (cy - fromY) * tmp;
-		px = xa + (cx + (x - cx) * tmp - xa) * tmp;
-		py = ya + (cy + (y - cy) * tmp - ya) * tmp;
-		points.push(px);
-		points.push(py);
-	}
+	openfl._internal.renderer.GraphicsPaths.curveTo(openfl._internal.renderer.opengl.utils.PathBuiler.__currentPath.points,cx,cy,x,y);
 };
 openfl._internal.renderer.opengl.utils.PathBuiler.cubicCurveTo = function(cx,cy,cx2,cy2,x,y) {
 	if(openfl._internal.renderer.opengl.utils.PathBuiler.__currentPath.points.length == 0) {
@@ -19433,33 +20431,7 @@ openfl._internal.renderer.opengl.utils.PathBuiler.cubicCurveTo = function(cx,cy,
 		openfl._internal.renderer.opengl.utils.PathBuiler.__currentPath.points.push(0);
 		openfl._internal.renderer.opengl.utils.PathBuiler.__drawPaths.push(openfl._internal.renderer.opengl.utils.PathBuiler.__currentPath);
 	}
-	var n = 20;
-	var dt = 0;
-	var dt2 = 0;
-	var dt3 = 0;
-	var t2 = 0;
-	var t3 = 0;
-	var points = openfl._internal.renderer.opengl.utils.PathBuiler.__currentPath.points;
-	var fromX = points[points.length - 2];
-	var fromY = points[points.length - 1];
-	var px = 0;
-	var py = 0;
-	var tmp = 0;
-	var _g1 = 1;
-	var _g = n + 1;
-	while(_g1 < _g) {
-		var i = _g1++;
-		tmp = i / n;
-		dt = 1 - tmp;
-		dt2 = dt * dt;
-		dt3 = dt2 * dt;
-		t2 = tmp * tmp;
-		t3 = t2 * tmp;
-		px = dt3 * fromX + 3 * dt2 * tmp * cx + 3 * dt * t2 * cx2 + t3 * x;
-		py = dt3 * fromY + 3 * dt2 * tmp * cy + 3 * dt * t2 * cy2 + t3 * y;
-		points.push(px);
-		points.push(py);
-	}
+	openfl._internal.renderer.GraphicsPaths.cubicCurveTo(openfl._internal.renderer.opengl.utils.PathBuiler.__currentPath.points,cx,cy,cx2,cy2,x,y);
 };
 openfl._internal.renderer.opengl.utils.PathBuiler.graphicDataPop = function() {
 	if(openfl._internal.renderer.opengl.utils.PathBuiler.__currentPath.isRemovable && openfl._internal.renderer.opengl.utils.PathBuiler.__currentPath.points.length == 0) openfl._internal.renderer.opengl.utils.PathBuiler.__drawPaths.pop(); else openfl._internal.renderer.opengl.utils.PathBuiler.closePath();
@@ -19519,14 +20491,32 @@ openfl._internal.renderer.opengl.utils.PathBuiler.build = function(graphics,gl) 
 				var cx2 = command[4];
 				var cy = command[3];
 				var cx = command[2];
-				openfl._internal.renderer.opengl.utils.PathBuiler.cubicCurveTo(cx,cy,cx2,cy2,x,y);
+				if(openfl._internal.renderer.opengl.utils.PathBuiler.__currentPath.points.length == 0) {
+					if(openfl._internal.renderer.opengl.utils.PathBuiler.__currentPath.isRemovable && openfl._internal.renderer.opengl.utils.PathBuiler.__currentPath.points.length == 0) openfl._internal.renderer.opengl.utils.PathBuiler.__drawPaths.pop(); else openfl._internal.renderer.opengl.utils.PathBuiler.closePath();
+					openfl._internal.renderer.opengl.utils.PathBuiler.__currentPath = new openfl._internal.renderer.opengl.utils.DrawPath();
+					openfl._internal.renderer.opengl.utils.PathBuiler.__currentPath.update(openfl._internal.renderer.opengl.utils.PathBuiler.__line,openfl._internal.renderer.opengl.utils.PathBuiler.__fill,openfl._internal.renderer.opengl.utils.PathBuiler.__fillIndex,openfl._internal.renderer.opengl.utils.PathBuiler.__currentWinding);
+					openfl._internal.renderer.opengl.utils.PathBuiler.__currentPath.type = openfl._internal.renderer.opengl.utils.GraphicType.Polygon;
+					openfl._internal.renderer.opengl.utils.PathBuiler.__currentPath.points.push(0);
+					openfl._internal.renderer.opengl.utils.PathBuiler.__currentPath.points.push(0);
+					openfl._internal.renderer.opengl.utils.PathBuiler.__drawPaths.push(openfl._internal.renderer.opengl.utils.PathBuiler.__currentPath);
+				}
+				openfl._internal.renderer.GraphicsPaths.cubicCurveTo(openfl._internal.renderer.opengl.utils.PathBuiler.__currentPath.points,cx,cy,cx2,cy2,x,y);
 				break;
 			case 4:
 				var y1 = command[5];
 				var x1 = command[4];
 				var cy1 = command[3];
 				var cx1 = command[2];
-				openfl._internal.renderer.opengl.utils.PathBuiler.curveTo(cx1,cy1,x1,y1);
+				if(openfl._internal.renderer.opengl.utils.PathBuiler.__currentPath.points.length == 0) {
+					if(openfl._internal.renderer.opengl.utils.PathBuiler.__currentPath.isRemovable && openfl._internal.renderer.opengl.utils.PathBuiler.__currentPath.points.length == 0) openfl._internal.renderer.opengl.utils.PathBuiler.__drawPaths.pop(); else openfl._internal.renderer.opengl.utils.PathBuiler.closePath();
+					openfl._internal.renderer.opengl.utils.PathBuiler.__currentPath = new openfl._internal.renderer.opengl.utils.DrawPath();
+					openfl._internal.renderer.opengl.utils.PathBuiler.__currentPath.update(openfl._internal.renderer.opengl.utils.PathBuiler.__line,openfl._internal.renderer.opengl.utils.PathBuiler.__fill,openfl._internal.renderer.opengl.utils.PathBuiler.__fillIndex,openfl._internal.renderer.opengl.utils.PathBuiler.__currentWinding);
+					openfl._internal.renderer.opengl.utils.PathBuiler.__currentPath.type = openfl._internal.renderer.opengl.utils.GraphicType.Polygon;
+					openfl._internal.renderer.opengl.utils.PathBuiler.__currentPath.points.push(0);
+					openfl._internal.renderer.opengl.utils.PathBuiler.__currentPath.points.push(0);
+					openfl._internal.renderer.opengl.utils.PathBuiler.__drawPaths.push(openfl._internal.renderer.opengl.utils.PathBuiler.__currentPath);
+				}
+				openfl._internal.renderer.GraphicsPaths.curveTo(openfl._internal.renderer.opengl.utils.PathBuiler.__currentPath.points,cx1,cy1,x1,y1);
 				break;
 			case 5:
 				var radius = command[4];
@@ -19786,7 +20776,16 @@ openfl._internal.renderer.opengl.utils.PathBuiler.build = function(graphics,gl) 
 						ax = data2.data[idx + 2];
 						ay = data2.data[idx + 3];
 						idx += 4;
-						openfl._internal.renderer.opengl.utils.PathBuiler.curveTo(cx3,cy3,ax,ay);
+						if(openfl._internal.renderer.opengl.utils.PathBuiler.__currentPath.points.length == 0) {
+							if(openfl._internal.renderer.opengl.utils.PathBuiler.__currentPath.isRemovable && openfl._internal.renderer.opengl.utils.PathBuiler.__currentPath.points.length == 0) openfl._internal.renderer.opengl.utils.PathBuiler.__drawPaths.pop(); else openfl._internal.renderer.opengl.utils.PathBuiler.closePath();
+							openfl._internal.renderer.opengl.utils.PathBuiler.__currentPath = new openfl._internal.renderer.opengl.utils.DrawPath();
+							openfl._internal.renderer.opengl.utils.PathBuiler.__currentPath.update(openfl._internal.renderer.opengl.utils.PathBuiler.__line,openfl._internal.renderer.opengl.utils.PathBuiler.__fill,openfl._internal.renderer.opengl.utils.PathBuiler.__fillIndex,openfl._internal.renderer.opengl.utils.PathBuiler.__currentWinding);
+							openfl._internal.renderer.opengl.utils.PathBuiler.__currentPath.type = openfl._internal.renderer.opengl.utils.GraphicType.Polygon;
+							openfl._internal.renderer.opengl.utils.PathBuiler.__currentPath.points.push(0);
+							openfl._internal.renderer.opengl.utils.PathBuiler.__currentPath.points.push(0);
+							openfl._internal.renderer.opengl.utils.PathBuiler.__drawPaths.push(openfl._internal.renderer.opengl.utils.PathBuiler.__currentPath);
+						}
+						openfl._internal.renderer.GraphicsPaths.curveTo(openfl._internal.renderer.opengl.utils.PathBuiler.__currentPath.points,cx3,cy3,ax,ay);
 						break;
 					case 6:
 						cx3 = data2.data[idx];
@@ -19796,7 +20795,16 @@ openfl._internal.renderer.opengl.utils.PathBuiler.build = function(graphics,gl) 
 						ax = data2.data[idx + 4];
 						ay = data2.data[idx + 5];
 						idx += 6;
-						openfl._internal.renderer.opengl.utils.PathBuiler.cubicCurveTo(cx3,cy3,cx21,cy21,ax,ay);
+						if(openfl._internal.renderer.opengl.utils.PathBuiler.__currentPath.points.length == 0) {
+							if(openfl._internal.renderer.opengl.utils.PathBuiler.__currentPath.isRemovable && openfl._internal.renderer.opengl.utils.PathBuiler.__currentPath.points.length == 0) openfl._internal.renderer.opengl.utils.PathBuiler.__drawPaths.pop(); else openfl._internal.renderer.opengl.utils.PathBuiler.closePath();
+							openfl._internal.renderer.opengl.utils.PathBuiler.__currentPath = new openfl._internal.renderer.opengl.utils.DrawPath();
+							openfl._internal.renderer.opengl.utils.PathBuiler.__currentPath.update(openfl._internal.renderer.opengl.utils.PathBuiler.__line,openfl._internal.renderer.opengl.utils.PathBuiler.__fill,openfl._internal.renderer.opengl.utils.PathBuiler.__fillIndex,openfl._internal.renderer.opengl.utils.PathBuiler.__currentWinding);
+							openfl._internal.renderer.opengl.utils.PathBuiler.__currentPath.type = openfl._internal.renderer.opengl.utils.GraphicType.Polygon;
+							openfl._internal.renderer.opengl.utils.PathBuiler.__currentPath.points.push(0);
+							openfl._internal.renderer.opengl.utils.PathBuiler.__currentPath.points.push(0);
+							openfl._internal.renderer.opengl.utils.PathBuiler.__drawPaths.push(openfl._internal.renderer.opengl.utils.PathBuiler.__currentPath);
+						}
+						openfl._internal.renderer.GraphicsPaths.cubicCurveTo(openfl._internal.renderer.opengl.utils.PathBuiler.__currentPath.points,cx3,cy3,cx21,cy21,ax,ay);
 						break;
 					default:
 					}
@@ -20117,6 +21125,9 @@ openfl.geom.Rectangle.prototype = {
 		this.width = widtha;
 		this.height = heighta;
 	}
+	,toString: function() {
+		return "(x=" + this.x + ", y=" + this.y + ", width=" + this.width + ", height=" + this.height + ")";
+	}
 	,union: function(toUnion) {
 		if(this.width == 0 || this.height == 0) return toUnion.clone(); else if(toUnion.width == 0 || toUnion.height == 0) return this.clone();
 		var x0;
@@ -20319,14 +21330,14 @@ openfl._internal.renderer.opengl.utils.GraphicsRenderer.buildCircle = function(p
 	var rectData = path.points;
 	var x = rectData[0];
 	var y = rectData[1];
-	var width = rectData[2];
-	var height;
-	if(rectData.length == 3) height = width; else height = rectData[3];
+	var rx = rectData[2];
+	var ry;
+	if(rectData.length == 3) ry = rx; else ry = rectData[3];
 	if(path.type == openfl._internal.renderer.opengl.utils.GraphicType.Ellipse) {
-		width /= 2;
-		height /= 2;
-		x += width;
-		y += height;
+		rx /= 2;
+		ry /= 2;
+		x += rx;
+		y += ry;
 	}
 	if(localCoords) {
 		x -= openfl._internal.renderer.opengl.utils.GraphicsRenderer.objectBounds.x;
@@ -20347,8 +21358,8 @@ openfl._internal.renderer.opengl.utils.GraphicsRenderer.buildCircle = function(p
 			var i = _g1++;
 			verts.push(x);
 			verts.push(y);
-			verts.push(x + Math.sin(seg * i) * width);
-			verts.push(y + Math.cos(seg * i) * height);
+			verts.push(x + Math.sin(seg * i) * rx);
+			verts.push(y + Math.cos(seg * i) * ry);
 			indices.push(vertPos++);
 			indices.push(vertPos++);
 		}
@@ -20357,13 +21368,7 @@ openfl._internal.renderer.opengl.utils.GraphicsRenderer.buildCircle = function(p
 	if(path.line.width > 0) {
 		var tempPoints = path.points;
 		path.points = [];
-		var _g11 = 0;
-		var _g2 = totalSegs + 1;
-		while(_g11 < _g2) {
-			var i1 = _g11++;
-			path.points.push(x + Math.sin(seg * i1) * width);
-			path.points.push(y + Math.cos(seg * i1) * height);
-		}
+		openfl._internal.renderer.GraphicsPaths.ellipse(path.points,x,y,rx,ry,totalSegs);
 		openfl._internal.renderer.opengl.utils.GraphicsRenderer.buildLine(path,bucket);
 		path.points = tempPoints;
 	}
@@ -20583,7 +21588,7 @@ openfl._internal.renderer.opengl.utils.GraphicsRenderer.buildLine = function(pat
 	perpx = -(p1y - p2y);
 	perpy = p1x - p2x;
 	dist = Math.sqrt(Math.abs(perpx * perpx + perpy * perpy));
-	if(!Math.isFinite(dist)) haxe.Log.trace(perpx * perpx + perpy * perpy,{ fileName : "GraphicsRenderer.hx", lineNumber : 411, className : "openfl._internal.renderer.opengl.utils.GraphicsRenderer", methodName : "buildLine"});
+	if(!Math.isFinite(dist)) haxe.Log.trace(perpx * perpx + perpy * perpy,{ fileName : "GraphicsRenderer.hx", lineNumber : 406, className : "openfl._internal.renderer.opengl.utils.GraphicsRenderer", methodName : "buildLine"});
 	perpx = perpx / dist;
 	perpy = perpy / dist;
 	perpx = perpx * width;
@@ -20626,7 +21631,8 @@ openfl._internal.renderer.opengl.utils.GraphicsRenderer.buildPoly = function(pat
 	var verts = fill.verts;
 	var indices = fill.indices;
 	if(fill != null) {
-		var triangles = openfl._internal.renderer.opengl.utils.PolyK.triangulate(points);
+		var triangles = new Array();
+		openfl._internal.renderer.PolyK.triangulate(triangles,points);
 		var vertPos = verts.length / 2;
 		var i = 0;
 		while(i < triangles.length) {
@@ -20698,38 +21704,16 @@ openfl._internal.renderer.opengl.utils.GraphicsRenderer.buildRoundedRectangle = 
 		x -= openfl._internal.renderer.opengl.utils.GraphicsRenderer.objectBounds.x;
 		y -= openfl._internal.renderer.opengl.utils.GraphicsRenderer.objectBounds.y;
 	}
-	var xe = x + width;
-	var ye = y + height;
-	var cx1 = -rx + rx * openfl._internal.renderer.opengl.utils.GraphicsRenderer.SIN45;
-	var cx2 = -rx + rx * openfl._internal.renderer.opengl.utils.GraphicsRenderer.TAN22;
-	var cy1 = -ry + ry * openfl._internal.renderer.opengl.utils.GraphicsRenderer.SIN45;
-	var cy2 = -ry + ry * openfl._internal.renderer.opengl.utils.GraphicsRenderer.TAN22;
 	var recPoints = [];
-	recPoints.push(xe);
-	recPoints.push(ye - ry);
-	openfl._internal.renderer.opengl.utils.GraphicsRenderer.curveTo(recPoints,xe,ye + cy2,xe + cx1,ye + cy1);
-	openfl._internal.renderer.opengl.utils.GraphicsRenderer.curveTo(recPoints,xe + cx2,ye,xe - rx,ye);
-	recPoints.push(x + rx);
-	recPoints.push(ye);
-	openfl._internal.renderer.opengl.utils.GraphicsRenderer.curveTo(recPoints,x - cx2,ye,x - cx1,ye + cy1);
-	openfl._internal.renderer.opengl.utils.GraphicsRenderer.curveTo(recPoints,x,ye + cy2,x,ye - ry);
-	recPoints.push(x);
-	recPoints.push(y + ry);
-	openfl._internal.renderer.opengl.utils.GraphicsRenderer.curveTo(recPoints,x,y - cy2,x - cx1,y - cy1);
-	openfl._internal.renderer.opengl.utils.GraphicsRenderer.curveTo(recPoints,x - cx2,y,x + rx,y);
-	recPoints.push(xe - rx);
-	recPoints.push(y);
-	openfl._internal.renderer.opengl.utils.GraphicsRenderer.curveTo(recPoints,xe + cx2,y,xe + cx1,y - cy1);
-	openfl._internal.renderer.opengl.utils.GraphicsRenderer.curveTo(recPoints,xe,y - cy2,xe,y + ry);
-	recPoints.push(xe);
-	recPoints.push(ye - ry);
+	openfl._internal.renderer.GraphicsPaths.roundRectangle(recPoints,x,y,width,height,rx,ry);
 	var bucket = openfl._internal.renderer.opengl.utils.GraphicsRenderer.prepareBucket(path,glStack);
 	var fill = bucket.getData(openfl._internal.renderer.opengl.utils.BucketDataType.Fill);
 	if(fill != null) {
 		var verts = fill.verts;
 		var indices = fill.indices;
 		var vecPos = verts.length / 2;
-		var triangles = openfl._internal.renderer.opengl.utils.PolyK.triangulate(recPoints);
+		var triangles = new Array();
+		openfl._internal.renderer.PolyK.triangulate(triangles,recPoints);
 		var i = 0;
 		while(i < triangles.length) {
 			indices.push(triangles[i] + vecPos | 0);
@@ -20894,28 +21878,6 @@ openfl._internal.renderer.opengl.utils.GraphicsRenderer.buildDrawTriangles = fun
 };
 openfl._internal.renderer.opengl.utils.GraphicsRenderer.buildDrawTiles = function(path,glStack) {
 	openfl._internal.renderer.opengl.utils.GraphicsRenderer.prepareBucket(path,glStack);
-};
-openfl._internal.renderer.opengl.utils.GraphicsRenderer.curveTo = function(points,cx,cy,x,y) {
-	var xa = 0;
-	var ya = 0;
-	var n = 20;
-	var fromX = points[points.length - 2];
-	var fromY = points[points.length - 1];
-	var px = 0;
-	var py = 0;
-	var tmp = 0;
-	var _g1 = 1;
-	var _g = n + 1;
-	while(_g1 < _g) {
-		var i = _g1++;
-		tmp = i / n;
-		xa = fromX + (cx - fromX) * tmp;
-		ya = fromY + (cy - fromY) * tmp;
-		px = xa + (cx + (x - cx) * tmp - xa) * tmp;
-		py = ya + (cy + (y - cy) * tmp - ya) * tmp;
-		points.push(px);
-		points.push(py);
-	}
 };
 openfl._internal.renderer.opengl.utils.GraphicsRenderer.quadraticBezierCurve = function(fromX,fromY,cpX,cpY,toX,toY) {
 	var xa;
@@ -21249,7 +22211,7 @@ openfl._internal.renderer.opengl.utils.GraphicsRenderer.renderDrawTriangles = fu
 };
 openfl._internal.renderer.opengl.utils.GraphicsRenderer.bindTexture = function(gl,bucket) {
 	gl.bindTexture(gl.TEXTURE_2D,bucket.texture);
-	if(bucket.textureRepeat && bucket.bitmap.__image.get_powerOfTwo()) {
+	if(bucket.textureRepeat && bucket.bitmap.image.get_powerOfTwo()) {
 		gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_WRAP_S,gl.REPEAT);
 		gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_WRAP_T,gl.REPEAT);
 	} else {
@@ -21606,100 +22568,6 @@ openfl._internal.renderer.opengl.utils.GLGraphicsData.prototype = {
 	}
 	,__class__: openfl._internal.renderer.opengl.utils.GLGraphicsData
 };
-openfl._internal.renderer.opengl.utils.PolyK = function() { };
-$hxClasses["openfl._internal.renderer.opengl.utils.PolyK"] = openfl._internal.renderer.opengl.utils.PolyK;
-openfl._internal.renderer.opengl.utils.PolyK.__name__ = ["openfl","_internal","renderer","opengl","utils","PolyK"];
-openfl._internal.renderer.opengl.utils.PolyK.triangulate = function(p) {
-	var sign = true;
-	var n = p.length >> 1;
-	if(n < 3) return [];
-	var tgs = [];
-	var avl;
-	var _g = [];
-	var _g1 = 0;
-	while(_g1 < n) {
-		var i = _g1++;
-		_g.push(i);
-	}
-	avl = _g;
-	var i1 = 0;
-	var al = n;
-	var earFound = false;
-	while(al > 3) {
-		var i0 = avl[i1 % al];
-		var i11 = avl[(i1 + 1) % al];
-		var i2 = avl[(i1 + 2) % al];
-		var ax = p[2 * i0];
-		var ay = p[2 * i0 + 1];
-		var bx = p[2 * i11];
-		var by = p[2 * i11 + 1];
-		var cx = p[2 * i2];
-		var cy = p[2 * i2 + 1];
-		earFound = false;
-		if(openfl._internal.renderer.opengl.utils.PolyK._convex(ax,ay,bx,by,cx,cy,sign)) {
-			earFound = true;
-			var _g11 = 0;
-			while(_g11 < al) {
-				var j = _g11++;
-				var vi = avl[j];
-				if(vi == i0 || vi == i11 || vi == i2) continue;
-				if(openfl._internal.renderer.opengl.utils.PolyK._PointInTriangle(p[2 * vi],p[2 * vi + 1],ax,ay,bx,by,cx,cy)) {
-					earFound = false;
-					break;
-				}
-			}
-		}
-		if(earFound) {
-			tgs.push(i0);
-			tgs.push(i11);
-			tgs.push(i2);
-			avl.splice((i1 + 1) % al,1);
-			al--;
-			i1 = 0;
-		} else if(i1++ > 3 * al) {
-			if(sign) {
-				tgs = [];
-				var _g12 = [];
-				var _g2 = 0;
-				while(_g2 < n) {
-					var k = _g2++;
-					_g12.push(k);
-				}
-				avl = _g12;
-				i1 = 0;
-				al = n;
-				sign = false;
-			} else {
-				haxe.Log.trace("Warning: shape too complex to fill",{ fileName : "GraphicsRenderer.hx", lineNumber : 1718, className : "openfl._internal.renderer.opengl.utils.PolyK", methodName : "triangulate"});
-				return [];
-			}
-		}
-	}
-	tgs.push(avl[0]);
-	tgs.push(avl[1]);
-	tgs.push(avl[2]);
-	return tgs;
-};
-openfl._internal.renderer.opengl.utils.PolyK._PointInTriangle = function(px,py,ax,ay,bx,by,cx,cy) {
-	var v0x = cx - ax | 0;
-	var v0y = cy - ay | 0;
-	var v1x = bx - ax | 0;
-	var v1y = by - ay | 0;
-	var v2x = px - ax | 0;
-	var v2y = py - ay | 0;
-	var dot00 = v0x * v0x + v0y * v0y;
-	var dot01 = v0x * v1x + v0y * v1y;
-	var dot02 = v0x * v2x + v0y * v2y;
-	var dot11 = v1x * v1x + v1y * v1y;
-	var dot12 = v1x * v2x + v1y * v2y;
-	var invDenom = 1 / (dot00 * dot11 - dot01 * dot01);
-	var u = (dot11 * dot02 - dot01 * dot12) * invDenom;
-	var v = (dot00 * dot12 - dot01 * dot02) * invDenom;
-	return u >= 0 && v >= 0 && u + v < 1;
-};
-openfl._internal.renderer.opengl.utils.PolyK._convex = function(ax,ay,bx,by,cx,cy,sign) {
-	return (ay - by) * (cx - bx) + (bx - ax) * (cy - by) >= 0 == sign;
-};
 openfl._internal.renderer.opengl.utils.GraphicType = $hxClasses["openfl._internal.renderer.opengl.utils.GraphicType"] = { __ename__ : true, __constructs__ : ["Polygon","Rectangle","Circle","Ellipse","DrawTriangles","DrawTiles","OverrideMatrix"] };
 openfl._internal.renderer.opengl.utils.GraphicType.Polygon = ["Polygon",0];
 openfl._internal.renderer.opengl.utils.GraphicType.Polygon.toString = $estr;
@@ -21900,7 +22768,33 @@ openfl._internal.renderer.opengl.utils.SpriteBatch.prototype = {
 			blendMode = openfl.display.BlendMode.SUBTRACT;
 			break;
 		default:
-			blendMode = openfl.display.BlendMode.NORMAL;
+			var _g1 = flags & 15728640;
+			switch(_g1) {
+			case 1048576:
+				blendMode = openfl.display.BlendMode.DARKEN;
+				break;
+			case 2097152:
+				blendMode = openfl.display.BlendMode.LIGHTEN;
+				break;
+			case 4194304:
+				blendMode = openfl.display.BlendMode.OVERLAY;
+				break;
+			case 8388608:
+				blendMode = openfl.display.BlendMode.HARDLIGHT;
+				break;
+			default:
+				var _g2 = flags & 251658240;
+				switch(_g2) {
+				case 16777216:
+					blendMode = openfl.display.BlendMode.DIFFERENCE;
+					break;
+				case 33554432:
+					blendMode = openfl.display.BlendMode.INVERT;
+					break;
+				default:
+					blendMode = openfl.display.BlendMode.NORMAL;
+				}
+			}
 		}
 		if(useTransform) {
 			useScale = false;
@@ -22686,18 +23580,17 @@ openfl._internal.text.TextEngine.prototype = {
 			if(currentLineWidth > this.textWidth) this.textWidth = currentLineWidth;
 			this.textHeight = group.offsetY - 2 + group.ascent + group.descent;
 		}
-		if(this.numLines == 1) {
-			if(this.textHeight <= this.height - 2) this.bottomScrollV = 1;
-			this.textHeight += currentLineLeading;
-		}
 		this.lineAscents.push(currentLineAscent);
 		this.lineDescents.push(currentLineDescent);
 		this.lineLeadings.push(currentLineLeading != null?currentLineLeading:0);
 		this.lineHeights.push(currentLineHeight);
 		this.lineWidths.push(currentLineWidth);
-		if(this.textHeight <= this.height - 2) this.bottomScrollV++;
+		if(this.numLines == 1) {
+			this.bottomScrollV = 1;
+			if(currentLineLeading > 0) this.textHeight += currentLineLeading;
+		} else if(this.textHeight <= this.height - 2) this.bottomScrollV++;
 		if(this.textWidth > this.width - 4) this.maxScrollH = this.textWidth - this.width + 4 | 0; else this.maxScrollH = 0;
-		this.maxScrollV = this.numLines;
+		this.maxScrollV = this.numLines - this.bottomScrollV + 1;
 	}
 	,getLayoutGroups: function() {
 		var _g = this;
@@ -22788,7 +23681,7 @@ openfl._internal.text.TextEngine.prototype = {
 				nextFormatRange();
 				lineFormat = formatRange.format;
 			}
-		} else if(formatRange.end >= spaceIndex) {
+		} else if(formatRange.end >= spaceIndex && spaceIndex > -1) {
 			layoutGroup = null;
 			wrap = false;
 			while(true) {
@@ -22867,10 +23760,14 @@ openfl._internal.text.TextEngine.prototype = {
 				textIndex = spaceIndex + 1;
 				previousSpaceIndex = spaceIndex;
 				spaceIndex = this.text.indexOf(" ",previousSpaceIndex + 1);
-				if(formatRange.end <= previousSpaceIndex) nextFormatRange();
+				if(formatRange.end <= previousSpaceIndex) {
+					layoutGroup = null;
+					nextFormatRange();
+				}
 				if(spaceIndex > breakIndex && breakIndex > -1 || textIndex > this.text.length || spaceIndex > formatRange.end || spaceIndex == -1 && breakIndex > -1) break;
 			}
 		} else {
+			if(textIndex >= formatRange.end) break;
 			layoutGroup = new openfl._internal.text.TextLayoutGroup(formatRange.format,textIndex,formatRange.end);
 			layoutGroup.advances = getAdvances(this.text,textIndex,formatRange.end);
 			layoutGroup.offsetX = offsetX;
@@ -22883,11 +23780,9 @@ openfl._internal.text.TextEngine.prototype = {
 			layoutGroup.height = heightValue;
 			this.layoutGroups.push(layoutGroup);
 			offsetX += layoutGroup.width;
-			textIndex = formatRange.end + 1;
+			textIndex = formatRange.end;
 			nextFormatRange();
 		}
-		lineIndex = 0;
-		offsetX = 0;
 	}
 	,setTextAlignment: function() {
 		var lineIndex = -1;
@@ -22953,6 +23848,7 @@ openfl._internal.text.TextEngine.prototype = {
 			this.numLines = 1;
 			this.maxScrollH = 0;
 			this.maxScrollV = 1;
+			this.bottomScrollV = 1;
 		} else {
 			this.getLayoutGroups();
 			this.getLineMeasurements();
@@ -22982,6 +23878,35 @@ openfl._internal.text.TextLayoutGroup.__name__ = ["openfl","_internal","text","T
 openfl._internal.text.TextLayoutGroup.prototype = {
 	__class__: openfl._internal.text.TextLayoutGroup
 };
+openfl.display.Application = function() {
+	lime.app.Application.call(this);
+	if(openfl.Lib.application == null) openfl.Lib.application = this;
+};
+$hxClasses["openfl.display.Application"] = openfl.display.Application;
+openfl.display.Application.__name__ = ["openfl","display","Application"];
+openfl.display.Application.__super__ = lime.app.Application;
+openfl.display.Application.prototype = $extend(lime.app.Application.prototype,{
+	create: function(config) {
+		this.config = config;
+		this.backend.create(config);
+		if(config != null) {
+			if(Object.prototype.hasOwnProperty.call(config,"fps")) this.backend.setFrameRate(config.fps);
+			if(Object.prototype.hasOwnProperty.call(config,"windows")) {
+				var _g = 0;
+				var _g1 = config.windows;
+				while(_g < _g1.length) {
+					var windowConfig = _g1[_g];
+					++_g;
+					var $window = new openfl.display.Window(windowConfig);
+					this.createWindow($window);
+					break;
+				}
+			}
+			if(this.preloader == null || this.preloader.complete) this.onPreloadComplete();
+		}
+	}
+	,__class__: openfl.display.Application
+});
 openfl.display.Bitmap = function(bitmapData,pixelSnapping,smoothing) {
 	if(smoothing == null) smoothing = false;
 	openfl.display.DisplayObject.call(this);
@@ -23004,6 +23929,7 @@ openfl.display.Bitmap.prototype = $extend(openfl.display.DisplayObject.prototype
 	}
 	,__hitTest: function(x,y,shapeFlag,stack,interactiveOnly) {
 		if(!this.get_visible() || this.__isMask || this.bitmapData == null) return false;
+		if(this.get_mask() != null && !this.get_mask().__hitTestMask(x,y)) return false;
 		this.__getTransform();
 		var px = this.__worldTransform.__transformInverseX(x,y);
 		var py = this.__worldTransform.__transformInverseY(x,y);
@@ -23011,6 +23937,14 @@ openfl.display.Bitmap.prototype = $extend(openfl.display.DisplayObject.prototype
 			if(stack != null && !interactiveOnly) stack.push(this);
 			return true;
 		}
+		return false;
+	}
+	,__hitTestMask: function(x,y) {
+		if(this.bitmapData == null) return false;
+		this.__getTransform();
+		var px = this.__worldTransform.__transformInverseX(x,y);
+		var py = this.__worldTransform.__transformInverseY(x,y);
+		if(px > 0 && py > 0 && px <= this.bitmapData.width && py <= this.bitmapData.height) return true;
 		return false;
 	}
 	,__renderCairo: function(renderSession) {
@@ -23027,7 +23961,7 @@ openfl.display.Bitmap.prototype = $extend(openfl.display.DisplayObject.prototype
 	}
 	,__renderDOM: function(renderSession) {
 		if(this.stage != null && this.__worldVisible && this.__renderable && this.bitmapData != null && this.bitmapData.__isValid) {
-			if(this.bitmapData.__image.buffer.__srcImage != null) openfl._internal.renderer.dom.DOMBitmap.renderImage(this,renderSession); else openfl._internal.renderer.dom.DOMBitmap.renderCanvas(this,renderSession);
+			if(this.bitmapData.image.buffer.__srcImage != null) openfl._internal.renderer.dom.DOMBitmap.renderImage(this,renderSession); else openfl._internal.renderer.dom.DOMBitmap.renderCanvas(this,renderSession);
 		} else {
 			if(this.__image != null) {
 				renderSession.element.removeChild(this.__image);
@@ -23042,7 +23976,19 @@ openfl.display.Bitmap.prototype = $extend(openfl.display.DisplayObject.prototype
 		}
 	}
 	,__renderGL: function(renderSession) {
+		if(this.get_scrollRect() != null) {
+			renderSession.spriteBatch.stop();
+			var m = this.__worldTransform.clone();
+			var clip = openfl.geom.Rectangle.__temp;
+			this.get_scrollRect().__transform(clip,m);
+			clip.y = renderSession.renderer.height - clip.y - clip.height;
+			renderSession.spriteBatch.start(clip);
+		}
 		if(!this.__renderable || this.__worldAlpha <= 0 || this.bitmapData == null || !this.bitmapData.__isValid) null; else renderSession.spriteBatch.renderBitmapData(this.bitmapData,this.smoothing,this.__worldTransform,this.__worldColorTransform,this.__worldAlpha,this.__blendMode,this.pixelSnapping);
+		if(this.get_scrollRect() != null) {
+			renderSession.spriteBatch.stop();
+			renderSession.spriteBatch.start();
+		}
 	}
 	,__updateMask: function(maskGraphics) {
 		maskGraphics.__commands.push(openfl.display.DrawCommand.OverrideMatrix(this.__worldTransform));
@@ -23098,8 +24044,8 @@ openfl.display.BitmapData = function(width,height,transparent,fillColor) {
 			}(this)) == 0) fillColor = 0;
 		} else fillColor = -16777216 | fillColor & 16777215;
 		fillColor = fillColor << 8 | fillColor >> 24 & 255;
-		this.__image = new lime.graphics.Image(null,0,0,width,height,fillColor);
-		this.__image.set_transparent(transparent);
+		this.image = new lime.graphics.Image(null,0,0,width,height,fillColor);
+		this.image.set_transparent(transparent);
 		this.__isValid = true;
 	}
 	this.__createUVs();
@@ -23124,7 +24070,7 @@ openfl.display.BitmapData.fromCanvas = function(canvas,transparent) {
 	if(canvas == null) return null;
 	var bitmapData = new openfl.display.BitmapData(0,0,transparent);
 	bitmapData.__fromImage(lime.graphics.Image.fromCanvas(canvas));
-	bitmapData.__image.set_transparent(transparent);
+	bitmapData.image.set_transparent(transparent);
 	return bitmapData;
 };
 openfl.display.BitmapData.fromFile = function(path,onload,onerror) {
@@ -23137,7 +24083,7 @@ openfl.display.BitmapData.fromImage = function(image,transparent) {
 	if(image == null || image.buffer == null) return null;
 	var bitmapData = new openfl.display.BitmapData(0,0,transparent);
 	bitmapData.__fromImage(image);
-	bitmapData.__image.set_transparent(transparent);
+	bitmapData.image.set_transparent(transparent);
 	return bitmapData;
 };
 openfl.display.BitmapData.__ucompare = function(n1,n2) {
@@ -23162,20 +24108,109 @@ openfl.display.BitmapData.__ucompare = function(n1,n2) {
 openfl.display.BitmapData.prototype = {
 	applyFilter: function(sourceBitmapData,sourceRect,destPoint,filter) {
 		if(!this.__isValid || sourceBitmapData == null || !sourceBitmapData.__isValid) return;
-		lime.graphics.utils.ImageCanvasUtil.convertToCanvas(this.__image);
-		lime.graphics.utils.ImageCanvasUtil.createImageData(this.__image);
-		lime.graphics.utils.ImageCanvasUtil.convertToCanvas(sourceBitmapData.__image);
-		lime.graphics.utils.ImageCanvasUtil.createImageData(sourceBitmapData.__image);
-		filter.__applyFilter(this.__image.buffer.__srcImageData,sourceBitmapData.__image.buffer.__srcImageData,sourceRect,destPoint);
-		this.__image.dirty = true;
+		lime.graphics.utils.ImageCanvasUtil.convertToCanvas(this.image);
+		lime.graphics.utils.ImageCanvasUtil.createImageData(this.image);
+		lime.graphics.utils.ImageCanvasUtil.convertToCanvas(sourceBitmapData.image);
+		lime.graphics.utils.ImageCanvasUtil.createImageData(sourceBitmapData.image);
+		filter.__applyFilter(this.image.buffer.__srcImageData,sourceBitmapData.image.buffer.__srcImageData,sourceRect,destPoint);
+		this.image.dirty = true;
 	}
 	,clone: function() {
-		if(!this.__isValid) return new openfl.display.BitmapData(this.width,this.height,this.transparent); else return openfl.display.BitmapData.fromImage(this.__image.clone(),this.transparent);
+		if(!this.__isValid) return new openfl.display.BitmapData(this.width,this.height,this.transparent); else return openfl.display.BitmapData.fromImage(this.image.clone(),this.transparent);
 	}
 	,colorTransform: function(rect,colorTransform) {
 		if(!this.__isValid) return;
-		this.__image.colorTransform(rect.__toLimeRectangle(),colorTransform.__toLimeColorMatrix());
+		this.image.colorTransform(rect.__toLimeRectangle(),colorTransform.__toLimeColorMatrix());
 		this.__usingFramebuffer = false;
+	}
+	,compare: function(otherBitmapData) {
+		if(otherBitmapData == this) return 0; else if(otherBitmapData == null) return -1; else if(this.__isValid == false || otherBitmapData.__isValid == false) return -2; else if(this.width != otherBitmapData.width) return -3; else if(this.height != otherBitmapData.height) return -4;
+		if(this.image != null && otherBitmapData.image != null && this.image.get_format() == otherBitmapData.image.get_format()) {
+			var bytes = this.image.get_data();
+			var otherBytes = otherBitmapData.image.get_data();
+			var equal = true;
+			var _g1 = 0;
+			var _g = bytes.length;
+			while(_g1 < _g) {
+				var i = _g1++;
+				if((function($this) {
+					var $r;
+					var $int = bytes[i];
+					$r = $int < 0?4294967296.0 + $int:$int + 0.0;
+					return $r;
+				}(this)) != (function($this) {
+					var $r;
+					var int1 = otherBytes[i];
+					$r = int1 < 0?4294967296.0 + int1:int1 + 0.0;
+					return $r;
+				}(this))) {
+					equal = false;
+					break;
+				}
+			}
+			if(equal) return 0;
+		}
+		var bitmapData = null;
+		var foundDifference;
+		var pixel;
+		var otherPixel;
+		var comparePixel;
+		var r;
+		var g;
+		var b;
+		var a;
+		var _g11 = 0;
+		var _g2 = this.height;
+		while(_g11 < _g2) {
+			var y = _g11++;
+			var _g3 = 0;
+			var _g21 = this.width;
+			while(_g3 < _g21) {
+				var x = _g3++;
+				foundDifference = false;
+				pixel = this.getPixel32(x,y);
+				otherPixel = otherBitmapData.getPixel32(x,y);
+				comparePixel = 0;
+				if(pixel != otherPixel) {
+					r = (pixel >> 16 & 255) - (otherPixel >> 16 & 255);
+					g = (pixel >> 8 & 255) - (otherPixel >> 8 & 255);
+					b = (pixel & 255) - (otherPixel & 255);
+					if(r < 0) r *= -1;
+					if(g < 0) g *= -1;
+					if(b < 0) b *= -1;
+					if(r == 0 && g == 0 && b == 0) {
+						a = (pixel >> 24 & 255) - (otherPixel >> 24 & 255);
+						if(a != 0) {
+							comparePixel = (comparePixel >> 24 & 255 & 255) << 24 | 16711680 | (comparePixel >> 8 & 255 & 255) << 8 | comparePixel & 255 & 255;
+							255;
+							comparePixel = (comparePixel >> 24 & 255 & 255) << 24 | (comparePixel >> 16 & 255 & 255) << 16 | 65280 | comparePixel & 255 & 255;
+							255;
+							comparePixel = (comparePixel >> 24 & 255 & 255) << 24 | (comparePixel >> 16 & 255 & 255) << 16 | (comparePixel >> 8 & 255 & 255) << 8 | 255;
+							255;
+							comparePixel = (a & 255) << 24 | (comparePixel >> 16 & 255 & 255) << 16 | (comparePixel >> 8 & 255 & 255) << 8 | comparePixel & 255 & 255;
+							a;
+							foundDifference = true;
+						}
+					} else {
+						comparePixel = (comparePixel >> 24 & 255 & 255) << 24 | (r & 255) << 16 | (comparePixel >> 8 & 255 & 255) << 8 | comparePixel & 255 & 255;
+						r;
+						comparePixel = (comparePixel >> 24 & 255 & 255) << 24 | (comparePixel >> 16 & 255 & 255) << 16 | (g & 255) << 8 | comparePixel & 255 & 255;
+						g;
+						comparePixel = (comparePixel >> 24 & 255 & 255) << 24 | (comparePixel >> 16 & 255 & 255) << 16 | (comparePixel >> 8 & 255 & 255) << 8 | b & 255;
+						b;
+						comparePixel = -16777216 | (comparePixel >> 16 & 255 & 255) << 16 | (comparePixel >> 8 & 255 & 255) << 8 | comparePixel & 255 & 255;
+						255;
+						foundDifference = true;
+					}
+				}
+				if(foundDifference) {
+					if(bitmapData == null) bitmapData = new openfl.display.BitmapData(this.width,this.height,this.transparent || otherBitmapData.transparent,0);
+					bitmapData.setPixel32(x,y,comparePixel);
+				}
+			}
+		}
+		if(bitmapData == null) return 0;
+		return bitmapData;
 	}
 	,copyChannel: function(sourceBitmapData,sourceRect,destPoint,sourceChannel,destChannel) {
 		if(!this.__isValid) return;
@@ -23213,17 +24248,17 @@ openfl.display.BitmapData.prototype = {
 		default:
 			return;
 		}
-		this.__image.copyChannel(sourceBitmapData.__image,sourceRect.__toLimeRectangle(),destPoint.__toLimeVector2(),sourceChannel1,destChannel1);
+		this.image.copyChannel(sourceBitmapData.image,sourceRect.__toLimeRectangle(),destPoint.__toLimeVector2(),sourceChannel1,destChannel1);
 		this.__usingFramebuffer = false;
 	}
 	,copyPixels: function(sourceBitmapData,sourceRect,destPoint,alphaBitmapData,alphaPoint,mergeAlpha) {
 		if(mergeAlpha == null) mergeAlpha = false;
 		if(!this.__isValid || sourceBitmapData == null) return;
-		this.__image.copyPixels(sourceBitmapData.__image,sourceRect.__toLimeRectangle(),destPoint.__toLimeVector2(),alphaBitmapData != null?alphaBitmapData.__image:null,alphaPoint != null?alphaPoint.__toLimeVector2():null,mergeAlpha);
+		this.image.copyPixels(sourceBitmapData.image,sourceRect.__toLimeRectangle(),destPoint.__toLimeVector2(),alphaBitmapData != null?alphaBitmapData.image:null,alphaPoint != null?alphaPoint.__toLimeVector2():null,mergeAlpha);
 		this.__usingFramebuffer = false;
 	}
 	,dispose: function() {
-		this.__image = null;
+		this.image = null;
 		this.width = 0;
 		this.height = 0;
 		this.rect = null;
@@ -23247,18 +24282,19 @@ openfl.display.BitmapData.prototype = {
 	,draw: function(source,matrix,colorTransform,blendMode,clipRect,smoothing) {
 		if(smoothing == null) smoothing = false;
 		if(!this.__isValid) return;
-		lime.graphics.utils.ImageCanvasUtil.convertToCanvas(this.__image);
-		lime.graphics.utils.ImageCanvasUtil.sync(this.__image);
-		var buffer = this.__image.buffer;
+		lime.graphics.utils.ImageCanvasUtil.convertToCanvas(this.image);
+		lime.graphics.utils.ImageCanvasUtil.sync(this.image);
+		var buffer = this.image.buffer;
 		var renderSession = new openfl._internal.renderer.RenderSession();
 		renderSession.context = buffer.__srcContext;
 		renderSession.roundPixels = true;
 		renderSession.maskManager = new openfl._internal.renderer.canvas.CanvasMaskManager(renderSession);
 		if(!smoothing) {
 			buffer.__srcContext.mozImageSmoothingEnabled = false;
-			buffer.__srcContext.webkitImageSmoothingEnabled = false;
+			buffer.__srcContext.msImageSmoothingEnabled = false;
 			buffer.__srcContext.imageSmoothingEnabled = false;
 		}
+		if(clipRect != null) renderSession.maskManager.pushRect(clipRect,new openfl.geom.Matrix());
 		var matrixCache = source.__worldTransform;
 		if(matrix != null) source.__worldTransform = matrix; else source.__worldTransform = new openfl.geom.Matrix();
 		source.__updateChildren(false);
@@ -23267,26 +24303,27 @@ openfl.display.BitmapData.prototype = {
 		source.__updateChildren(true);
 		if(!smoothing) {
 			buffer.__srcContext.mozImageSmoothingEnabled = true;
-			buffer.__srcContext.webkitImageSmoothingEnabled = true;
+			buffer.__srcContext.msImageSmoothingEnabled = true;
 			buffer.__srcContext.imageSmoothingEnabled = true;
 		}
+		if(clipRect != null) renderSession.maskManager.popMask();
 		buffer.__srcContext.setTransform(1,0,0,1,0,0);
 		buffer.__srcImageData = null;
 		buffer.data = null;
 	}
 	,encode: function(rect,compressor,byteArray) {
 		if(!this.__isValid || rect == null) return byteArray = null;
-		if(js.Boot.__instanceof(compressor,openfl.display.PNGEncoderOptions)) return byteArray = this.__image.encode("png"); else if(js.Boot.__instanceof(compressor,openfl.display.JPEGEncoderOptions)) return byteArray = this.__image.encode("jpg",(js.Boot.__cast(compressor , openfl.display.JPEGEncoderOptions)).quality);
+		if(js.Boot.__instanceof(compressor,openfl.display.PNGEncoderOptions)) return byteArray = this.image.encode("png"); else if(js.Boot.__instanceof(compressor,openfl.display.JPEGEncoderOptions)) return byteArray = this.image.encode("jpg",(js.Boot.__cast(compressor , openfl.display.JPEGEncoderOptions)).quality);
 		return byteArray = null;
 	}
 	,fillRect: function(rect,color) {
 		if(!this.__isValid || rect == null) return;
-		this.__image.fillRect(rect.__toLimeRectangle(),color,1);
+		this.image.fillRect(rect.__toLimeRectangle(),color,1);
 		this.__usingFramebuffer = false;
 	}
 	,floodFill: function(x,y,color) {
 		if(!this.__isValid) return;
-		this.__image.floodFill(x,y,color,1);
+		this.image.floodFill(x,y,color,1);
 		this.__usingFramebuffer = false;
 	}
 	,generateFilterRect: function(sourceRect,filter) {
@@ -23311,25 +24348,25 @@ openfl.display.BitmapData.prototype = {
 	,getColorBoundsRect: function(mask,color,findColor) {
 		if(findColor == null) findColor = true;
 		if(!this.__isValid) return new openfl.geom.Rectangle(0,0,this.width,this.height);
-		var rect = this.__image.getColorBoundsRect(mask,color,findColor);
+		var rect = this.image.getColorBoundsRect(mask,color,findColor,1);
 		return new openfl.geom.Rectangle(rect.x,rect.y,rect.width,rect.height);
 	}
 	,getPixel: function(x,y) {
 		if(!this.__isValid) return 0;
-		return this.__image.getPixel(x,y,1);
+		return this.image.getPixel(x,y,1);
 	}
 	,getPixel32: function(x,y) {
 		if(!this.__isValid) return 0;
-		return this.__image.getPixel32(x,y,1);
+		return this.image.getPixel32(x,y,1);
 	}
 	,getPixels: function(rect) {
 		if(!this.__isValid) return null;
 		if(rect == null) rect = this.rect;
-		return this.__image.getPixels(rect.__toLimeRectangle(),1);
+		return this.image.getPixels(rect.__toLimeRectangle(),1);
 	}
 	,getSurface: function() {
 		if(!this.__isValid) return null;
-		if(this.__surface == null) this.__surface = lime.graphics.cairo._CairoImageSurface.CairoImageSurface_Impl_.fromImage(this.__image);
+		if(this.__surface == null) this.__surface = lime.graphics.cairo._CairoImageSurface.CairoImageSurface_Impl_.fromImage(this.image);
 		return this.__surface;
 	}
 	,getTexture: function(gl) {
@@ -23342,13 +24379,13 @@ openfl.display.BitmapData.prototype = {
 			gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_WRAP_T,gl.CLAMP_TO_EDGE);
 			gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MAG_FILTER,gl.NEAREST);
 			gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MIN_FILTER,gl.NEAREST);
-			this.__image.dirty = true;
+			this.image.dirty = true;
 		}
-		if(this.__image != null && this.__image.dirty) {
+		if(this.image != null && this.image.dirty) {
 			var internalFormat;
 			var format;
 			if(this.__surface != null) lime.graphics.cairo._CairoSurface.CairoSurface_Impl_.flush(this.__surface);
-			if(this.__image.buffer.bitsPerPixel == 1) {
+			if(this.image.buffer.bitsPerPixel == 1) {
 				internalFormat = gl.ALPHA;
 				format = gl.ALPHA;
 			} else {
@@ -23356,7 +24393,7 @@ openfl.display.BitmapData.prototype = {
 				format = gl.RGBA;
 			}
 			gl.bindTexture(gl.TEXTURE_2D,this.__texture);
-			var textureImage = this.__image;
+			var textureImage = this.image;
 			if(!textureImage.get_premultiplied() && textureImage.get_transparent() || textureImage.get_format() != 0) {
 				textureImage = textureImage.clone();
 				textureImage.set_format(0);
@@ -23364,7 +24401,7 @@ openfl.display.BitmapData.prototype = {
 			}
 			gl.texImage2D(gl.TEXTURE_2D,0,internalFormat,this.width,this.height,0,format,gl.UNSIGNED_BYTE,textureImage.get_data());
 			gl.bindTexture(gl.TEXTURE_2D,null);
-			this.__image.dirty = false;
+			this.image.dirty = false;
 		}
 		return this.__texture;
 	}
@@ -23495,7 +24532,7 @@ openfl.display.BitmapData.prototype = {
 	}
 	,merge: function(sourceBitmapData,sourceRect,destPoint,redMultiplier,greenMultiplier,blueMultiplier,alphaMultiplier) {
 		if(!this.__isValid || sourceBitmapData == null || !sourceBitmapData.__isValid || sourceRect == null || destPoint == null) return;
-		this.__image.merge(sourceBitmapData.__image,sourceRect.__toLimeRectangle(),destPoint.__toLimeVector2(),redMultiplier,greenMultiplier,blueMultiplier,alphaMultiplier);
+		this.image.merge(sourceBitmapData.image,sourceRect.__toLimeRectangle(),destPoint.__toLimeVector2(),redMultiplier,greenMultiplier,blueMultiplier,alphaMultiplier);
 		this.__usingFramebuffer = false;
 	}
 	,noise: function(randomSeed,low,high,channelOptions,grayScale) {
@@ -23553,22 +24590,22 @@ openfl.display.BitmapData.prototype = {
 	}
 	,scroll: function(x,y) {
 		if(!this.__isValid) return;
-		this.__image.scroll(x,y);
+		this.image.scroll(x,y);
 		this.__usingFramebuffer = false;
 	}
 	,setPixel: function(x,y,color) {
 		if(!this.__isValid) return;
-		this.__image.setPixel(x,y,color,1);
+		this.image.setPixel(x,y,color,1);
 		this.__usingFramebuffer = false;
 	}
 	,setPixel32: function(x,y,color) {
 		if(!this.__isValid) return;
-		this.__image.setPixel32(x,y,color,1);
+		this.image.setPixel32(x,y,color,1);
 		this.__usingFramebuffer = false;
 	}
 	,setPixels: function(rect,byteArray) {
 		if(!this.__isValid || rect == null) return;
-		this.__image.setPixels(rect.__toLimeRectangle(),byteArray,1);
+		this.image.setPixels(rect.__toLimeRectangle(),byteArray,1);
 		this.__usingFramebuffer = false;
 	}
 	,setVector: function(rect,inputVector) {
@@ -23611,9 +24648,7 @@ openfl.display.BitmapData.prototype = {
 				while(_g3 < _g2) {
 					var xx = _g3++;
 					position = (width_yy + xx) * 4;
-					pixelValue = openfl.Memory._setPositionTemporarily(position,function() {
-						return openfl.Memory.gcRef.readInt();
-					});
+					pixelValue = openfl.Memory.getI32(position);
 					pixelMask = pixelValue & mask;
 					i = openfl.display.BitmapData.__ucompare(pixelMask,thresholdMask);
 					test = false;
@@ -23675,9 +24710,7 @@ openfl.display.BitmapData.prototype = {
 				while(_g11 < dw) {
 					var xx1 = _g11++;
 					position1 = (xx1 + sx + (yy1 + sy) * sw) * 4;
-					pixelValue1 = openfl.Memory._setPositionTemporarily(canvasMemory + position1,function() {
-						return openfl.Memory.gcRef.readInt();
-					});
+					pixelValue1 = openfl.Memory.getI32(canvasMemory + position1);
 					pixelMask1 = pixelValue1 & mask;
 					i1 = openfl.display.BitmapData.__ucompare(pixelMask1,thresholdMask1);
 					test1 = false;
@@ -23760,17 +24793,17 @@ openfl.display.BitmapData.prototype = {
 		source.__updateChildren(true);
 		spritebatch.finish();
 		if(readPixels) {
-			if(this.__image.width != width || this.__image.height != height) this.__image.resize(width,height);
-			gl.readPixels(0,0,width,height,gl.RGBA,gl.UNSIGNED_BYTE,this.__image.buffer.data);
+			if(this.image.width != width || this.image.height != height) this.image.resize(width,height);
+			gl.readPixels(0,0,width,height,gl.RGBA,gl.UNSIGNED_BYTE,this.image.buffer.data);
 		}
 		gl.bindFramebuffer(gl.FRAMEBUFFER,renderSession1.defaultFramebuffer);
 		renderer.setViewport(0,0,renderSession1.renderer.width,renderSession1.renderer.height);
 		renderSession1.renderer.transparent = renderTransparent;
 		gl.colorMask(true,true,true,renderSession1.renderer.transparent);
 		this.__usingFramebuffer = false;
-		if(this.__image != null) {
-			this.__image.dirty = false;
-			this.__image.set_premultiplied(true);
+		if(this.image != null) {
+			this.image.dirty = false;
+			this.image.set_premultiplied(true);
 		}
 		this.__createUVs();
 		this.__isValid = true;
@@ -23797,9 +24830,9 @@ openfl.display.BitmapData.prototype = {
 		lime.graphics.Image.fromBytes(bytes,function(image) {
 			_g.__fromImage(image);
 			if(rawAlpha != null) {
-				lime.graphics.utils.ImageCanvasUtil.convertToCanvas(_g.__image);
-				lime.graphics.utils.ImageCanvasUtil.createImageData(_g.__image);
-				var data = _g.__image.buffer.data;
+				lime.graphics.utils.ImageCanvasUtil.convertToCanvas(image);
+				lime.graphics.utils.ImageCanvasUtil.createImageData(image);
+				var data = image.buffer.data;
 				var _g2 = 0;
 				var _g1 = rawAlpha.length;
 				while(_g2 < _g1) {
@@ -23807,7 +24840,7 @@ openfl.display.BitmapData.prototype = {
 					var val = rawAlpha.readUnsignedByte();
 					data[i * 4 + 3] = val;
 				}
-				_g.__image.dirty = true;
+				image.dirty = true;
 			}
 			if(onload != null) onload(_g);
 		});
@@ -23821,7 +24854,7 @@ openfl.display.BitmapData.prototype = {
 	}
 	,__fromImage: function(image) {
 		if(image != null && image.buffer != null) {
-			this.__image = image;
+			this.image = image;
 			this.width = image.width;
 			this.height = image.height;
 			this.rect = new openfl.geom.Rectangle(0,0,image.width,image.height);
@@ -23852,13 +24885,13 @@ openfl.display.BitmapData.prototype = {
 	}
 	,__renderCanvas: function(renderSession) {
 		if(!this.__isValid) return;
-		lime.graphics.utils.ImageCanvasUtil.sync(this.__image);
+		lime.graphics.utils.ImageCanvasUtil.sync(this.image);
 		var context = renderSession.context;
 		if(this.__worldTransform == null) this.__worldTransform = new openfl.geom.Matrix();
 		context.globalAlpha = 1;
 		var transform = this.__worldTransform;
 		if(renderSession.roundPixels) context.setTransform(transform.a,transform.b,transform.c,transform.d,transform.tx | 0,transform.ty | 0); else context.setTransform(transform.a,transform.b,transform.c,transform.d,transform.tx,transform.ty);
-		context.drawImage(this.__image.get_src(),0,0);
+		context.drawImage(this.image.get_src(),0,0);
 	}
 	,__renderCanvasMask: function(renderSession) {
 	}
@@ -23866,7 +24899,7 @@ openfl.display.BitmapData.prototype = {
 		renderSession.spriteBatch.renderBitmapData(this,false,this.__worldTransform,this.__worldColorTransform,this.__worldColorTransform.alphaMultiplier,this.__blendMode);
 	}
 	,__sync: function() {
-		lime.graphics.utils.ImageCanvasUtil.sync(this.__image);
+		lime.graphics.utils.ImageCanvasUtil.sync(this.image);
 	}
 	,__updateChildren: function(transformOnly) {
 	}
@@ -24331,13 +25364,8 @@ openfl.display.Graphics.prototype = {
 		if(this.__bounds == null) return false;
 		var px = matrix.__transformInverseX(x,y);
 		var py = matrix.__transformInverseY(x,y);
-		if(this.__bounds.contains(px,py)) {
-			if(shapeFlag) {
-				if(this.__dirty) {
-				}
-				if(this.__context != null) {
-				}
-			}
+		if(px > this.__bounds.x && py > this.__bounds.y && this.__bounds.contains(px,py)) {
+			if(shapeFlag) return openfl._internal.renderer.canvas.CanvasGraphics.hitTest(this,px,py);
 			return true;
 		}
 		return false;
@@ -25062,12 +26090,24 @@ openfl.display.Preloader.prototype = $extend(lime.app.Preloader.prototype,{
 	}
 	,sound_onComplete: function(event) {
 		this.loaded++;
-		this.update(this.loaded,this.total);
+		var listeners = this.onProgress.listeners;
+		var repeat = this.onProgress.repeat;
+		var i = 0;
+		while(i < listeners.length) {
+			listeners[i](this.loaded,this.total);
+			if(!repeat[i]) this.onProgress.remove(listeners[i]); else i++;
+		}
 		if(this.loaded == this.total) this.start();
 	}
 	,sound_onIOError: function(event) {
 		this.loaded++;
-		this.update(this.loaded,this.total);
+		var listeners = this.onProgress.listeners;
+		var repeat = this.onProgress.repeat;
+		var i = 0;
+		while(i < listeners.length) {
+			listeners[i](this.loaded,this.total);
+			if(!repeat[i]) this.onProgress.remove(listeners[i]); else i++;
+		}
 		if(this.loaded == this.total) this.start();
 	}
 	,__class__: openfl.display.Preloader
@@ -25098,8 +26138,10 @@ openfl.display.SpreadMethod.REFLECT.__enum__ = openfl.display.SpreadMethod;
 openfl.display.SpreadMethod.PAD = ["PAD",2];
 openfl.display.SpreadMethod.PAD.toString = $estr;
 openfl.display.SpreadMethod.PAD.__enum__ = openfl.display.SpreadMethod;
-openfl.display.Stage = function(width,height,color) {
+openfl.display.Stage = function(window,color) {
 	openfl.display.DisplayObjectContainer.call(this);
+	this.application = window.application;
+	this.window = window;
 	if(color == null) {
 		this.__transparent = true;
 		this.set_color(0);
@@ -25109,8 +26151,8 @@ openfl.display.Stage = function(width,height,color) {
 	this.__mouseX = 0;
 	this.__mouseY = 0;
 	this.__lastClickTime = 0;
-	this.stageWidth = width;
-	this.stageHeight = height;
+	this.stageWidth = window.__width;
+	this.stageHeight = window.__height;
 	this.stage = this;
 	this.align = openfl.display.StageAlign.TOP_LEFT;
 	this.allowsFullScreen = false;
@@ -25143,6 +26185,7 @@ openfl.display.Stage = function(width,height,color) {
 		this3.data[this3.length - 1] = x;
 	}
 	this3.length;
+	if(openfl.Lib.current.stage == null) this.stage.addChild(openfl.Lib.current);
 };
 $hxClasses["openfl.display.Stage"] = openfl.display.Stage;
 openfl.display.Stage.__name__ = ["openfl","display","Stage"];
@@ -25151,27 +26194,6 @@ openfl.display.Stage.__super__ = openfl.display.DisplayObjectContainer;
 openfl.display.Stage.prototype = $extend(openfl.display.DisplayObjectContainer.prototype,{
 	globalToLocal: function(pos) {
 		return pos.clone();
-	}
-	,init: function(context) {
-		switch(context[1]) {
-		case 0:
-			var gl = context[2];
-			this.__renderer = new openfl._internal.renderer.opengl.GLRenderer(this.stageWidth,this.stageHeight,gl);
-			break;
-		case 1:
-			var context1 = context[2];
-			this.__renderer = new openfl._internal.renderer.canvas.CanvasRenderer(this.stageWidth,this.stageHeight,context1);
-			break;
-		case 2:
-			var element = context[2];
-			this.__renderer = new openfl._internal.renderer.dom.DOMRenderer(this.stageWidth,this.stageHeight,element);
-			break;
-		case 4:
-			var cairo = context[2];
-			this.__renderer = new openfl._internal.renderer.cairo.CairoRenderer(this.stageWidth,this.stageHeight,cairo);
-			break;
-		default:
-		}
 	}
 	,invalidate: function() {
 		this.__invalidated = true;
@@ -25194,13 +26216,22 @@ openfl.display.Stage.prototype = $extend(openfl.display.DisplayObjectContainer.p
 	,onGamepadDisconnect: function(gamepad) {
 		openfl.ui.GameInput.__onGamepadDisconnect(gamepad);
 	}
-	,onKeyDown: function(keyCode,modifier) {
+	,onKeyDown: function(window,keyCode,modifier) {
+		if(this.window == null || this.window != window) return;
 		this.__onKey(openfl.events.KeyboardEvent.KEY_DOWN,keyCode,modifier);
 	}
-	,onKeyUp: function(keyCode,modifier) {
+	,onKeyUp: function(window,keyCode,modifier) {
+		if(this.window == null || this.window != window) return;
 		this.__onKey(openfl.events.KeyboardEvent.KEY_UP,keyCode,modifier);
 	}
-	,onMouseDown: function(x,y,button) {
+	,onModuleExit: function(code) {
+		if(this.window != null) {
+			var event = new openfl.events.Event(openfl.events.Event.DEACTIVATE);
+			this.__broadcast(event,true);
+		}
+	}
+	,onMouseDown: function(window,x,y,button) {
+		if(this.window == null || this.window != window) return;
 		var type;
 		switch(button) {
 		case 1:
@@ -25214,12 +26245,14 @@ openfl.display.Stage.prototype = $extend(openfl.display.DisplayObjectContainer.p
 		}
 		this.__onMouse(type,x,y,button);
 	}
-	,onMouseMove: function(x,y) {
+	,onMouseMove: function(window,x,y) {
+		if(this.window == null || this.window != window) return;
 		this.__onMouse(openfl.events.MouseEvent.MOUSE_MOVE,x,y,0);
 	}
-	,onMouseMoveRelative: function(x,y) {
+	,onMouseMoveRelative: function(window,x,y) {
 	}
-	,onMouseUp: function(x,y,button) {
+	,onMouseUp: function(window,x,y,button) {
+		if(this.window == null || this.window != window) return;
 		var type;
 		switch(button) {
 		case 1:
@@ -25233,16 +26266,22 @@ openfl.display.Stage.prototype = $extend(openfl.display.DisplayObjectContainer.p
 		}
 		this.__onMouse(type,x,y,button);
 	}
-	,onMouseWheel: function(deltaX,deltaY) {
+	,onMouseWheel: function(window,deltaX,deltaY) {
+		if(this.window == null || this.window != window) return;
 		this.__onMouseWheel(deltaX,deltaY);
 	}
-	,onRenderContextLost: function() {
+	,onPreloadComplete: function() {
 	}
-	,onRenderContextRestored: function(context) {
+	,onPreloadProgress: function(loaded,total) {
 	}
-	,onTextEdit: function(text,start,length) {
+	,onRenderContextLost: function(renderer) {
 	}
-	,onTextInput: function(text) {
+	,onRenderContextRestored: function(renderer,context) {
+	}
+	,onTextEdit: function(window,text,start,length) {
+	}
+	,onTextInput: function(window,text) {
+		if(this.window == null || this.window != window) return;
 		var stack = new Array();
 		if(this.__focus == null) this.__getInteractive(stack); else this.__focus.__getInteractive(stack);
 		var event = new openfl.events.TextEvent(openfl.events.TextEvent.TEXT_INPUT,true,false,text);
@@ -25251,54 +26290,101 @@ openfl.display.Stage.prototype = $extend(openfl.display.DisplayObjectContainer.p
 			this.__fireEvent(event,stack);
 		} else this.__broadcast(event,true);
 	}
-	,onTouchMove: function(x,y,id) {
-		this.__onTouch("touchMove",x,y,id);
+	,onTouchMove: function(touch) {
+		this.__onTouch("touchMove",touch);
 	}
-	,onTouchEnd: function(x,y,id) {
-		this.__onTouch("touchEnd",x,y,id);
+	,onTouchEnd: function(touch) {
+		this.__onTouch("touchEnd",touch);
 	}
-	,onTouchStart: function(x,y,id) {
-		this.__onTouch("touchBegin",x,y,id);
+	,onTouchStart: function(touch) {
+		this.__onTouch("touchBegin",touch);
 	}
-	,onWindowActivate: function() {
+	,onWindowActivate: function(window) {
+		if(this.window == null || this.window != window) return;
 		var event = new openfl.events.Event(openfl.events.Event.ACTIVATE);
 		this.__broadcast(event,true);
 	}
-	,onWindowClose: function() {
+	,onWindowClose: function(window) {
+		if(this.window == window) this.window = null;
 	}
-	,onWindowDeactivate: function() {
+	,onWindowCreate: function(window) {
+		if(this.window == null || this.window != window) return;
+		if(window.renderer != null) {
+			var _g = window.renderer.context;
+			switch(_g[1]) {
+			case 0:
+				var gl = _g[2];
+				this.__renderer = new openfl._internal.renderer.opengl.GLRenderer(this.stageWidth,this.stageHeight,gl);
+				break;
+			case 1:
+				var context = _g[2];
+				this.__renderer = new openfl._internal.renderer.canvas.CanvasRenderer(this.stageWidth,this.stageHeight,context);
+				break;
+			case 2:
+				var element = _g[2];
+				this.__renderer = new openfl._internal.renderer.dom.DOMRenderer(this.stageWidth,this.stageHeight,element);
+				break;
+			case 4:
+				var cairo = _g[2];
+				this.__renderer = new openfl._internal.renderer.cairo.CairoRenderer(this.stageWidth,this.stageHeight,cairo);
+				break;
+			case 5:
+				var ctx = _g[2];
+				this.__renderer = new openfl._internal.renderer.console.ConsoleRenderer(this.stageWidth,this.stageHeight,ctx);
+				break;
+			default:
+			}
+		}
+	}
+	,onWindowDeactivate: function(window) {
+		if(this.window == null || this.window != window) return;
 		var event = new openfl.events.Event(openfl.events.Event.DEACTIVATE);
 		this.__broadcast(event,true);
 	}
-	,onWindowEnter: function() {
+	,onWindowEnter: function(window) {
 	}
-	,onWindowFocusIn: function() {
+	,onWindowFocusIn: function(window) {
+		if(this.window == null || this.window != window) return;
 		var event = new openfl.events.FocusEvent(openfl.events.FocusEvent.FOCUS_IN,true,false,null,false,0);
 		this.__broadcast(event,true);
 	}
-	,onWindowFocusOut: function() {
+	,onWindowFocusOut: function(window) {
+		if(this.window == null || this.window != window) return;
 		var event = new openfl.events.FocusEvent(openfl.events.FocusEvent.FOCUS_OUT,true,false,null,false,0);
 		this.__broadcast(event,true);
 	}
-	,onWindowFullscreen: function() {
+	,onWindowFullscreen: function(window) {
 	}
-	,onWindowLeave: function() {
+	,onWindowLeave: function(window) {
+		if(this.window == null || this.window != window) return;
 		this.__dispatchEvent(new openfl.events.Event(openfl.events.Event.MOUSE_LEAVE));
 	}
-	,onWindowMinimize: function() {
+	,onWindowMinimize: function(window) {
 	}
-	,onWindowMove: function(x,y) {
+	,onWindowMove: function(window,x,y) {
 	}
-	,onWindowResize: function(width,height) {
+	,onWindowResize: function(window,width,height) {
+		if(this.window == null || this.window != window) return;
 		this.stageWidth = width;
 		this.stageHeight = height;
 		if(this.__renderer != null) this.__renderer.resize(width,height);
 		var event = new openfl.events.Event(openfl.events.Event.RESIZE);
 		this.__broadcast(event,false);
 	}
-	,onWindowRestore: function() {
+	,onWindowRestore: function(window) {
 	}
-	,render: function(context) {
+	,render: function(renderer) {
+		if(renderer.window == null || renderer.window != this.window) return;
+		if(this.application != null && this.application.windows.length > 0) {
+			if(!this.__transformDirty) {
+				this.__transformDirty = true;
+				openfl.display.DisplayObject.__worldTransformDirty++;
+			}
+			if(!this.__renderDirty) {
+				this.__renderDirty = true;
+				openfl.display.DisplayObject.__worldRenderDirty++;
+			}
+		}
 		if(this.__rendering) return;
 		this.__rendering = true;
 		this.__broadcast(new openfl.events.Event(openfl.events.Event.ENTER_FRAME),true);
@@ -25310,13 +26396,16 @@ openfl.display.Stage.prototype = $extend(openfl.display.DisplayObjectContainer.p
 		this.__enterFrame();
 		this.__update(false,true);
 		if(this.__renderer != null) {
-			switch(context[1]) {
-			case 4:
-				var cairo = context[2];
-				(js.Boot.__cast(this.__renderer , openfl._internal.renderer.cairo.CairoRenderer)).cairo = cairo;
-				this.__renderer.renderSession.cairo = cairo;
-				break;
-			default:
+			{
+				var _g = renderer.context;
+				switch(_g[1]) {
+				case 4:
+					var cairo = _g[2];
+					(js.Boot.__cast(this.__renderer , openfl._internal.renderer.cairo.CairoRenderer)).cairo = cairo;
+					this.__renderer.renderSession.cairo = cairo;
+					break;
+				default:
+				}
 			}
 			this.__renderer.render(this);
 		}
@@ -25788,8 +26877,10 @@ openfl.display.Stage.prototype = $extend(openfl.display.DisplayObjectContainer.p
 			target = this;
 			stack = [this];
 		}
-		if(type == openfl.events.MouseEvent.MOUSE_DOWN) this.set_focus(target);
 		if(target == null) target = this;
+		if(type == openfl.events.MouseEvent.MOUSE_DOWN) {
+			if(target.get_tabEnabled()) this.set_focus(target); else this.set_focus(null);
+		}
 		this.__fireEvent(openfl.events.MouseEvent.__create(type,button,this.__mouseX,this.__mouseY,target == this?targetPoint:target.globalToLocal(targetPoint),target),stack);
 		var clickType;
 		switch(type) {
@@ -25862,22 +26953,22 @@ openfl.display.Stage.prototype = $extend(openfl.display.DisplayObjectContainer.p
 		var delta = deltaY | 0;
 		this.__fireEvent(openfl.events.MouseEvent.__create(openfl.events.MouseEvent.MOUSE_WHEEL,0,this.__mouseX,this.__mouseY,target == this?targetPoint:target.globalToLocal(targetPoint),target,delta),stack);
 	}
-	,__onTouch: function(type,x,y,id) {
-		var point = new openfl.geom.Point(x * this.stageWidth,y * this.stageHeight);
+	,__onTouch: function(type,touch) {
+		var point = new openfl.geom.Point(touch.x * this.stageWidth,touch.y * this.stageHeight);
 		this.__mouseX = point.x;
 		this.__mouseY = point.y;
 		var __stack = [];
-		if(this.__hitTest(x,y,false,__stack,true)) {
+		if(this.__hitTest(touch.x,touch.y,false,__stack,true)) {
 			var target = __stack[__stack.length - 1];
 			if(target == null) target = this;
 			var localPoint = target.globalToLocal(point);
 			var touchEvent = openfl.events.TouchEvent.__create(type,null,this.__mouseX,this.__mouseY,localPoint,target);
-			touchEvent.touchPointID = id;
+			touchEvent.touchPointID = touch.id;
 			touchEvent.isPrimaryTouchPoint = true;
 			this.__fireEvent(touchEvent,__stack);
 		} else {
 			var touchEvent1 = openfl.events.TouchEvent.__create(type,null,this.__mouseX,this.__mouseY,point,this);
-			touchEvent1.touchPointID = id;
+			touchEvent1.touchPointID = touch.id;
 			touchEvent1.isPrimaryTouchPoint = true;
 			this.__fireEvent(touchEvent1,[this.stage]);
 		}
@@ -25961,30 +27052,31 @@ openfl.display.Stage.prototype = $extend(openfl.display.DisplayObjectContainer.p
 	}
 	,set_focus: function(value) {
 		if(value != this.__focus) {
-			if(this.__focus != null) {
-				var event = new openfl.events.FocusEvent(openfl.events.FocusEvent.FOCUS_OUT,true,false,value,false,0);
+			var oldFocus = this.__focus;
+			this.__focus = value;
+			if(oldFocus != null) {
+				var event = new openfl.events.FocusEvent(openfl.events.FocusEvent.FOCUS_OUT,true,false,this.__focus,false,0);
 				this.__stack = [];
-				this.__focus.__getInteractive(this.__stack);
+				oldFocus.__getInteractive(this.__stack);
 				this.__stack.reverse();
 				this.__fireEvent(event,this.__stack);
 			}
-			if(value != null) {
-				var event1 = new openfl.events.FocusEvent(openfl.events.FocusEvent.FOCUS_IN,true,false,this.__focus,false,0);
+			if(this.__focus != null) {
+				var event1 = new openfl.events.FocusEvent(openfl.events.FocusEvent.FOCUS_IN,true,false,oldFocus,false,0);
 				this.__stack = [];
 				value.__getInteractive(this.__stack);
 				this.__stack.reverse();
 				this.__fireEvent(event1,this.__stack);
 			}
-			this.__focus = value;
 		}
 		return this.__focus;
 	}
 	,get_frameRate: function() {
-		if(this.window != null) return this.window.application.backend.getFrameRate();
+		if(this.application != null) return this.application.backend.getFrameRate();
 		return 0;
 	}
 	,set_frameRate: function(value) {
-		if(this.window != null) return this.window.application.backend.setFrameRate(value);
+		if(this.application != null) return this.application.backend.setFrameRate(value);
 		return value;
 	}
 	,__class__: openfl.display.Stage
@@ -26112,6 +27204,20 @@ openfl.display.TriangleCulling.NONE.__enum__ = openfl.display.TriangleCulling;
 openfl.display.TriangleCulling.POSITIVE = ["POSITIVE",2];
 openfl.display.TriangleCulling.POSITIVE.toString = $estr;
 openfl.display.TriangleCulling.POSITIVE.__enum__ = openfl.display.TriangleCulling;
+openfl.display.Window = function(config) {
+	lime.ui.Window.call(this,config);
+};
+$hxClasses["openfl.display.Window"] = openfl.display.Window;
+openfl.display.Window.__name__ = ["openfl","display","Window"];
+openfl.display.Window.__super__ = lime.ui.Window;
+openfl.display.Window.prototype = $extend(lime.ui.Window.prototype,{
+	create: function(application) {
+		lime.ui.Window.prototype.create.call(this,application);
+		this.stage = new openfl.display.Stage(this,Object.prototype.hasOwnProperty.call(this.config,"background")?this.config.background:16777215);
+		application.addModule(this.stage);
+	}
+	,__class__: openfl.display.Window
+});
 openfl.display3D = {};
 openfl.display3D.Context3D = function() {
 	this.disposed = false;
@@ -27136,7 +28242,7 @@ openfl.display3D.textures.CubeTexture.prototype = $extend(openfl.display3D.textu
 	}
 	,uploadFromBitmapData: function(bitmapData,side,miplevel) {
 		if(miplevel == null) miplevel = 0;
-		var source = bitmapData.__image.get_data();
+		var source = bitmapData.image.get_data();
 		lime.graphics.opengl.GL.context.bindTexture(34067,this.glTexture);
 		switch(side) {
 		case 0:
@@ -27178,7 +28284,7 @@ openfl.display3D.textures.RectangleTexture.__super__ = openfl.display3D.textures
 openfl.display3D.textures.RectangleTexture.prototype = $extend(openfl.display3D.textures.TextureBase.prototype,{
 	uploadFromBitmapData: function(bitmapData,miplevel) {
 		if(miplevel == null) miplevel = 0;
-		var p = lime.utils.ByteArray.__ofBuffer(bitmapData.__image.get_data().buffer);
+		var p = lime.utils.ByteArray.__ofBuffer(bitmapData.image.get_data().buffer);
 		this.width = bitmapData.width;
 		this.height = bitmapData.height;
 		this.uploadFromByteArray(p,0);
@@ -27221,7 +28327,7 @@ openfl.display3D.textures.Texture.prototype = $extend(openfl.display3D.textures.
 	}
 	,uploadFromBitmapData: function(bitmapData,miplevel) {
 		if(miplevel == null) miplevel = 0;
-		var image = bitmapData.__image;
+		var image = bitmapData.image;
 		if(!image.get_premultiplied() && image.get_transparent()) {
 			image = image.clone();
 			image.set_premultiplied(true);
@@ -27703,7 +28809,7 @@ $hxClasses["openfl.external.ExternalInterface"] = openfl.external.ExternalInterf
 openfl.external.ExternalInterface.__name__ = ["openfl","external","ExternalInterface"];
 openfl.external.ExternalInterface.objectID = null;
 openfl.external.ExternalInterface.addCallback = function(functionName,closure) {
-	if(openfl.Lib.application.window.backend.element != null) openfl.Lib.application.window.backend.element[functionName] = closure;
+	if(openfl.Lib.application.windows[0].backend.element != null) openfl.Lib.application.windows[0].backend.element[functionName] = closure;
 };
 openfl.external.ExternalInterface.call = function(functionName,p1,p2,p3,p4,p5) {
 	var callResponse = null;
@@ -30716,8 +31822,11 @@ openfl.geom.Transform.prototype = {
 		return this.__colorTransform;
 	}
 	,set_colorTransform: function(value) {
-		this.__colorTransform = value;
-		if(value != null) this.__displayObject.set_alpha(value.alphaMultiplier);
+		if(!this.__colorTransform.__equals(value)) {
+			this.__colorTransform = value;
+			if(value != null) this.__displayObject.set_alpha(value.alphaMultiplier);
+			this.__displayObject.__setRenderDirty();
+		}
 		return this.__colorTransform;
 	}
 	,get_matrix: function() {
@@ -30738,10 +31847,13 @@ openfl.geom.Transform.prototype = {
 		this.__hasMatrix = true;
 		this.__hasMatrix3D = false;
 		if(this.__displayObject != null) {
+			var determinant = value.a * value.d - value.b * value.c;
+			var signY;
+			if(determinant < 0 && (value.a < 0 || value.d < 0)) signY = -1; else signY = 1;
 			this.__displayObject.set_x(value.tx);
 			this.__displayObject.set_y(value.ty);
 			this.__displayObject.set_scaleX(Math.sqrt(value.a * value.a + value.b * value.b));
-			this.__displayObject.set_scaleY(Math.sqrt(value.c * value.c + value.d * value.d));
+			this.__displayObject.set_scaleY(Math.sqrt(value.c * value.c + value.d * value.d) * signY);
 			this.__displayObject.set_rotation(Math.atan2(value.b,value.a) * (180 / Math.PI));
 		}
 		return value;
@@ -30980,8 +32092,10 @@ openfl.media.Sound.prototype = $extend(openfl.events.EventDispatcher.prototype,{
 		return 0;
 	}
 	,AudioBuffer_onURLLoad: function(buffer) {
-		this.__buffer = buffer;
-		this.dispatchEvent(new openfl.events.Event(openfl.events.Event.COMPLETE));
+		if(buffer == null) this.dispatchEvent(new openfl.events.IOErrorEvent(openfl.events.IOErrorEvent.IO_ERROR)); else {
+			this.__buffer = buffer;
+			this.dispatchEvent(new openfl.events.Event(openfl.events.Event.COMPLETE));
+		}
 	}
 	,SoundJS_onFileLoad: function(event) {
 		if(event.id == this.__soundID) {
@@ -31347,7 +32461,7 @@ openfl.system.Capabilities.get_screenDPI = function() {
 	return openfl.system.Capabilities.screenDPI;
 };
 openfl.system.Capabilities.get_screenResolutionX = function() {
-	var $window = openfl.Lib.application.window;
+	var $window = openfl.Lib.application.windows[0];
 	if($window != null) {
 		var display = $window.get_display();
 		if(display != null) return display.currentMode.width;
@@ -31355,7 +32469,7 @@ openfl.system.Capabilities.get_screenResolutionX = function() {
 	return 0;
 };
 openfl.system.Capabilities.get_screenResolutionY = function() {
-	var $window = openfl.Lib.application.window;
+	var $window = openfl.Lib.application.windows[0];
 	if($window != null) {
 		var display = $window.get_display();
 		if(display != null) return display.currentMode.height;
@@ -31367,7 +32481,7 @@ openfl.system.Capabilities.get_language = function() {
 };
 openfl.system.Capabilities.get_version = function() {
 	var value = "WEB";
-	value += " " + StringTools.replace("3.3.0",".",",") + ",0";
+	value += " " + StringTools.replace("3.3.2",".",",") + ",0";
 	return value;
 };
 openfl.system.LoaderContext = function(checkPolicyFile,applicationDomain,securityDomain) {
@@ -31390,6 +32504,7 @@ openfl.system.SecurityDomain.__name__ = ["openfl","system","SecurityDomain"];
 openfl.system.SecurityDomain.prototype = {
 	__class__: openfl.system.SecurityDomain
 };
+openfl.text = {};
 openfl.text.AntiAliasType = $hxClasses["openfl.text.AntiAliasType"] = { __ename__ : true, __constructs__ : ["ADVANCED","NORMAL"] };
 openfl.text.AntiAliasType.ADVANCED = ["ADVANCED",0];
 openfl.text.AntiAliasType.ADVANCED.toString = $estr;
@@ -31397,6 +32512,46 @@ openfl.text.AntiAliasType.ADVANCED.__enum__ = openfl.text.AntiAliasType;
 openfl.text.AntiAliasType.NORMAL = ["NORMAL",1];
 openfl.text.AntiAliasType.NORMAL.toString = $estr;
 openfl.text.AntiAliasType.NORMAL.__enum__ = openfl.text.AntiAliasType;
+openfl.text.Font = function(name) {
+	lime.text.Font.call(this,name);
+};
+$hxClasses["openfl.text.Font"] = openfl.text.Font;
+openfl.text.Font.__name__ = ["openfl","text","Font"];
+openfl.text.Font.enumerateFonts = function(enumerateDeviceFonts) {
+	if(enumerateDeviceFonts == null) enumerateDeviceFonts = false;
+	return openfl.text.Font.__registeredFonts;
+};
+openfl.text.Font.fromBytes = function(bytes) {
+	var font = new openfl.text.Font();
+	font.__fromBytes(bytes);
+	return font;
+};
+openfl.text.Font.fromFile = function(path) {
+	var font = new openfl.text.Font();
+	font.__fromFile(path);
+	return font;
+};
+openfl.text.Font.registerFont = function(font) {
+	var instance;
+	instance = js.Boot.__cast(Type.createInstance(font,[]) , openfl.text.Font);
+	if(instance != null) openfl.text.Font.__registeredFonts.push(instance);
+};
+openfl.text.Font.__fromLimeFont = function(value) {
+	var font = new openfl.text.Font();
+	font.name = value.name;
+	font.src = value.src;
+	return font;
+};
+openfl.text.Font.__super__ = lime.text.Font;
+openfl.text.Font.prototype = $extend(lime.text.Font.prototype,{
+	get_fontName: function() {
+		return this.name;
+	}
+	,set_fontName: function(value) {
+		return this.name = value;
+	}
+	,__class__: openfl.text.Font
+});
 openfl.text.FontStyle = $hxClasses["openfl.text.FontStyle"] = { __ename__ : true, __constructs__ : ["REGULAR","ITALIC","BOLD_ITALIC","BOLD"] };
 openfl.text.FontStyle.REGULAR = ["REGULAR",0];
 openfl.text.FontStyle.REGULAR.toString = $estr;
@@ -31436,6 +32591,7 @@ openfl.text.TextField = function() {
 	this.__graphics = new openfl.display.Graphics();
 	this.__textEngine = new openfl._internal.text.TextEngine(this);
 	this.__layoutDirty = true;
+	this.__tabEnabled = true;
 	if(openfl.text.TextField.__defaultTextFormat == null) {
 		openfl.text.TextField.__defaultTextFormat = new openfl.text.TextFormat("Times New Roman",12,0,false,false,false,"","",openfl.text.TextFormatAlign.LEFT,0,0,0,0);
 		openfl.text.TextField.__defaultTextFormat.blockIndent = 0;
@@ -31454,7 +32610,7 @@ openfl.text.TextField.__super__ = openfl.display.InteractiveObject;
 openfl.text.TextField.prototype = $extend(openfl.display.InteractiveObject.prototype,{
 	appendText: function(text) {
 		this.__textEngine.text += text;
-		this.__textEngine.textFormatRanges[this.__textEngine.textFormatRanges.length - 1].end = text.length;
+		this.__textEngine.textFormatRanges[this.__textEngine.textFormatRanges.length - 1].end = this.__textEngine.text.length;
 		this.__dirty = true;
 		this.__layoutDirty = true;
 	}
@@ -31692,7 +32848,7 @@ openfl.text.TextField.prototype = $extend(openfl.display.InteractiveObject.proto
 			} else if(range.start > beginIndex && range.start <= endIndex) {
 				range.start += offset;
 				i++;
-			}
+			} else i++;
 		}
 		this.__dirty = true;
 		this.__layoutDirty = true;
@@ -31745,26 +32901,29 @@ openfl.text.TextField.prototype = $extend(openfl.display.InteractiveObject.proto
 		}
 		if(y > this.__textEngine.textHeight) y = this.__textEngine.textHeight;
 		var firstGroup = true;
-		var _g2 = 0;
-		var _g11 = this.__textEngine.layoutGroups;
-		while(_g2 < _g11.length) {
-			var group = _g11[_g2];
-			++_g2;
+		var group;
+		var nextGroup;
+		var _g11 = 0;
+		var _g2 = this.__textEngine.layoutGroups.length;
+		while(_g11 < _g2) {
+			var i1 = _g11++;
+			group = this.__textEngine.layoutGroups[i1];
+			if(i1 < this.__textEngine.layoutGroups.length - 1) nextGroup = this.__textEngine.layoutGroups[i1 + 1]; else nextGroup = null;
 			if(firstGroup) {
 				if(y < group.offsetY) y = group.offsetY;
 				if(x < group.offsetX) x = group.offsetX;
 				firstGroup = false;
 			}
-			if(y >= group.offsetY && y <= group.offsetY + group.height) {
-				if(x >= group.offsetX) {
+			if(y >= group.offsetY && y <= group.offsetY + group.height || nextGroup == null) {
+				if(x >= group.offsetX && x <= group.offsetX + group.width || (nextGroup == null || nextGroup.lineIndex != group.lineIndex)) {
 					var advance = 0.0;
 					var _g3 = 0;
 					var _g21 = group.advances.length;
 					while(_g3 < _g21) {
-						var i1 = _g3++;
-						advance += group.advances[i1];
+						var i2 = _g3++;
+						advance += group.advances[i2];
 						if(x <= group.offsetX + advance) {
-							if(x <= group.offsetX + (advance - group.advances[i1]) + group.advances[i1] / 2) return group.startIndex + i1; else if(group.startIndex + i1 < group.endIndex) return group.startIndex + i1 + 1; else return group.endIndex;
+							if(x <= group.offsetX + (advance - group.advances[i2]) + group.advances[i2] / 2) return group.startIndex + i2; else if(group.startIndex + i2 < group.endIndex) return group.startIndex + i2 + 1; else return group.endIndex;
 						}
 					}
 					return group.endIndex;
@@ -31775,6 +32934,7 @@ openfl.text.TextField.prototype = $extend(openfl.display.InteractiveObject.proto
 	}
 	,__hitTest: function(x,y,shapeFlag,stack,interactiveOnly) {
 		if(!this.get_visible() || this.__isMask || interactiveOnly && !this.mouseEnabled) return false;
+		if(this.get_mask() != null && !this.get_mask().__hitTestMask(x,y)) return false;
 		this.__getTransform();
 		this.__updateLayout();
 		var px = this.__worldTransform.__transformInverseX(x,y);
@@ -31785,20 +32945,41 @@ openfl.text.TextField.prototype = $extend(openfl.display.InteractiveObject.proto
 		}
 		return false;
 	}
+	,__hitTestMask: function(x,y) {
+		this.__getTransform();
+		this.__updateLayout();
+		var px = this.__worldTransform.__transformInverseX(x,y);
+		var py = this.__worldTransform.__transformInverseY(x,y);
+		if(this.__textEngine.bounds.contains(px,py)) return true;
+		return false;
+	}
 	,__renderCairo: function(renderSession) {
 		openfl._internal.renderer.cairo.CairoTextField.render(this,renderSession);
 		openfl.display.InteractiveObject.prototype.__renderCairo.call(this,renderSession);
 	}
 	,__renderCanvas: function(renderSession) {
 		openfl._internal.renderer.canvas.CanvasTextField.render(this,renderSession);
-		openfl.display.InteractiveObject.prototype.__renderCanvas.call(this,renderSession);
+		if(this.__textEngine.antiAliasType == openfl.text.AntiAliasType.ADVANCED && this.__textEngine.gridFitType == openfl.text.GridFitType.PIXEL) {
+			var smoothingEnabled = renderSession.context.imageSmoothingEnabled;
+			if(smoothingEnabled) {
+				renderSession.context.mozImageSmoothingEnabled = false;
+				renderSession.context.msImageSmoothingEnabled = false;
+				renderSession.context.imageSmoothingEnabled = false;
+			}
+			openfl.display.InteractiveObject.prototype.__renderCanvas.call(this,renderSession);
+			if(smoothingEnabled) {
+				renderSession.context.mozImageSmoothingEnabled = true;
+				renderSession.context.msImageSmoothingEnabled = true;
+				renderSession.context.imageSmoothingEnabled = true;
+			}
+		} else openfl.display.InteractiveObject.prototype.__renderCanvas.call(this,renderSession);
 	}
 	,__renderDOM: function(renderSession) {
 		openfl._internal.renderer.dom.DOMTextField.render(this,renderSession);
 	}
 	,__renderGL: function(renderSession) {
 		openfl._internal.renderer.canvas.CanvasTextField.render(this,renderSession);
-		openfl._internal.renderer.opengl.GLRenderer.renderBitmap(this,renderSession);
+		openfl._internal.renderer.opengl.GLRenderer.renderBitmap(this,renderSession,this.__textEngine.antiAliasType != openfl.text.AntiAliasType.ADVANCED || this.__textEngine.gridFitType != openfl.text.GridFitType.PIXEL);
 	}
 	,__startCursorTimer: function() {
 		this.__cursorTimer = haxe.Timer.delay($bind(this,this.__startCursorTimer),600);
@@ -32130,7 +33311,7 @@ openfl.text.TextField.prototype = $extend(openfl.display.InteractiveObject.proto
 		if(this.__isHTML || this.__textEngine.text != value) {
 			this.__dirty = true;
 			this.__layoutDirty = true;
-		}
+		} else return value;
 		if(this.__textEngine.textFormatRanges.length > 1) this.__textEngine.textFormatRanges.splice(1,this.__textEngine.textFormatRanges.length - 1);
 		var range = this.__textEngine.textFormatRanges[0];
 		range.format = this.__textFormat;
@@ -32170,7 +33351,7 @@ openfl.text.TextField.prototype = $extend(openfl.display.InteractiveObject.proto
 				this.addEventListener(openfl.events.FocusEvent.FOCUS_IN,$bind(this,this.this_onFocusIn));
 				this.addEventListener(openfl.events.FocusEvent.FOCUS_OUT,$bind(this,this.this_onFocusOut));
 				this.addEventListener(openfl.events.Event.ADDED_TO_STAGE,$bind(this,this.this_onAddedToStage));
-				if(this.stage != null && this.stage.get_focus() == this) this.this_onFocusIn(null);
+				this.this_onFocusIn(null);
 			} else {
 				this.removeEventListener(openfl.events.FocusEvent.FOCUS_IN,$bind(this,this.this_onFocusIn));
 				this.removeEventListener(openfl.events.FocusEvent.FOCUS_OUT,$bind(this,this.this_onFocusOut));
@@ -32242,10 +33423,10 @@ openfl.text.TextField.prototype = $extend(openfl.display.InteractiveObject.proto
 		}
 	}
 	,this_onAddedToStage: function(event) {
-		if(this.stage != null && this.stage.get_focus() == this) this.this_onFocusIn(null);
+		this.this_onFocusIn(null);
 	}
 	,this_onFocusIn: function(event) {
-		if(this.get_selectable() && this.get_type() == openfl.text.TextFieldType.INPUT) this.__startTextInput();
+		if(this.get_selectable() && this.get_type() == openfl.text.TextFieldType.INPUT && this.stage != null && this.stage.get_focus() == this) this.__startTextInput();
 	}
 	,this_onFocusOut: function(event) {
 		this.__stopTextInput();
@@ -34656,13 +35837,18 @@ terrylib.Text.input = function(x,y,text,col,responsecol) {
 	terrylib.Text.input_show = 2;
 	terrylib.Text.input_font = terrylib.Text.currentfont;
 	terrylib.Text.input_textsize = terrylib.Text.currentsize;
-	terrylib.Text.typeface[terrylib.Text.currentindex].tf.set_text(text + terrylib.Text.inputtext);
+	if(terrylib.Text.typeface[terrylib.Text.currentindex].type == "bitmap") terrylib.Text.typeface[terrylib.Text.currentindex].tf_bitmap.set_text(text + terrylib.Text.inputtext); else if(terrylib.Text.typeface[terrylib.Text.currentindex].type == "ttf") terrylib.Text.typeface[terrylib.Text.currentindex].tf_ttf.set_text(text + terrylib.Text.inputtext);
 	x = terrylib.Text.alignx(x);
 	y = terrylib.Text.aligny(y);
 	terrylib.Text.input_textxp = x;
 	terrylib.Text.input_textyp = y;
-	terrylib.Text.typeface[terrylib.Text.currentindex].tf.set_text(text);
-	terrylib.Text.input_responsexp = terrylib.Text.input_textxp + Math.floor(terrylib.Text.typeface[terrylib.Text.currentindex].tf.get_textWidth());
+	if(terrylib.Text.typeface[terrylib.Text.currentindex].type == "bitmap") {
+		terrylib.Text.typeface[terrylib.Text.currentindex].tf_bitmap.set_text(text);
+		terrylib.Text.input_responsexp = terrylib.Text.input_textxp + Math.floor(terrylib.Text.typeface[terrylib.Text.currentindex].tf_bitmap.get_textWidth());
+	} else if(terrylib.Text.typeface[terrylib.Text.currentindex].type == "ttf") {
+		terrylib.Text.typeface[terrylib.Text.currentindex].tf_ttf.set_text(text);
+		terrylib.Text.input_responsexp = terrylib.Text.input_textxp + Math.floor(terrylib.Text.typeface[terrylib.Text.currentindex].tf_ttf.get_textWidth());
+	}
 	terrylib.Text.input_responseyp = y;
 	terrylib.Text.input_text = text;
 	terrylib.Text.input_response = terrylib.Text.inputtext;
@@ -34692,25 +35878,42 @@ terrylib.Text.drawstringinput = function() {
 	terrylib.Text.input_show--;
 	if(terrylib.Text.input_show < 0) terrylib.Text.input_show = 0;
 };
+terrylib.Text.currentlen = function() {
+	if(terrylib.Text.typeface[terrylib.Text.currentindex].type == "ttf") return terrylib.Text.typeface[terrylib.Text.currentindex].tf_ttf.get_textWidth(); else if(terrylib.Text.typeface[terrylib.Text.currentindex].type == "bitmap") return terrylib.Text.typeface[terrylib.Text.currentindex].tf_bitmap.getStringWidth(terrylib.Text.typeface[terrylib.Text.currentindex].tf_bitmap.text,false);
+	return 0;
+};
+terrylib.Text.currentheight = function() {
+	if(terrylib.Text.typeface[terrylib.Text.currentindex].type == "ttf") return terrylib.Text.typeface[terrylib.Text.currentindex].tf_ttf.get_textHeight(); else if(terrylib.Text.typeface[terrylib.Text.currentindex].type == "bitmap") return terrylib.Text.typeface[terrylib.Text.currentindex].tf_bitmap.get_textHeight();
+	return 0;
+};
 terrylib.Text.len = function(t) {
-	terrylib.Text.typeface[terrylib.Text.currentindex].tf.set_text(t);
-	return terrylib.Text.typeface[terrylib.Text.currentindex].tf.get_textWidth();
+	if(terrylib.Text.typeface[terrylib.Text.currentindex].type == "ttf") {
+		terrylib.Text.typeface[terrylib.Text.currentindex].tf_ttf.set_text(t);
+		return terrylib.Text.typeface[terrylib.Text.currentindex].tf_ttf.get_textWidth();
+	} else if(terrylib.Text.typeface[terrylib.Text.currentindex].type == "bitmap") return terrylib.Text.typeface[terrylib.Text.currentindex].tf_bitmap.getStringWidth(t,false);
+	return 0;
 };
 terrylib.Text.height = function() {
-	terrylib.Text.typeface[terrylib.Text.currentindex].tf.set_text("???");
-	return terrylib.Text.typeface[terrylib.Text.currentindex].tf.get_textHeight();
+	if(terrylib.Text.typeface[terrylib.Text.currentindex].type == "ttf") {
+		terrylib.Text.typeface[terrylib.Text.currentindex].tf_ttf.set_text("???");
+		return terrylib.Text.typeface[terrylib.Text.currentindex].tf_ttf.get_textHeight();
+	} else if(terrylib.Text.typeface[terrylib.Text.currentindex].type == "bitmap") {
+		terrylib.Text.typeface[terrylib.Text.currentindex].tf_bitmap.set_text("???");
+		return terrylib.Text.typeface[terrylib.Text.currentindex].tf_bitmap.get_textHeight();
+	}
+	return 0;
 };
 terrylib.Text.alignx = function(x) {
-	if(x == terrylib.Text.CENTER) return Math.floor(terrylib.Gfx.screenwidthmid - terrylib.Text.typeface[terrylib.Text.currentindex].tf.get_textWidth() / 2);
+	if(x == terrylib.Text.CENTER) return Math.floor(terrylib.Gfx.screenwidthmid - terrylib.Text.currentlen() / 2);
 	if(x == terrylib.Text.LEFT || x == terrylib.Text.TOP) return 0;
-	if(x == terrylib.Text.RIGHT || x == terrylib.Text.BOTTOM) return Math.floor(terrylib.Gfx.screenwidth - terrylib.Text.typeface[terrylib.Text.currentindex].tf.get_textWidth());
-	return x;
+	if(x == terrylib.Text.RIGHT || x == terrylib.Text.BOTTOM) return Math.floor(terrylib.Gfx.screenwidth - terrylib.Text.currentlen());
+	return Math.floor(x);
 };
 terrylib.Text.aligny = function(y) {
-	if(y == terrylib.Text.CENTER) return Math.floor(terrylib.Gfx.screenheightmid - terrylib.Text.typeface[terrylib.Text.currentindex].tf.get_textHeight() / 2);
+	if(y == terrylib.Text.CENTER) return Math.floor(terrylib.Gfx.screenheightmid - terrylib.Text.currentheight() / 2);
 	if(y == terrylib.Text.LEFT || y == terrylib.Text.TOP) return 0;
-	if(y == terrylib.Text.RIGHT || y == terrylib.Text.BOTTOM) return Math.floor(terrylib.Gfx.screenheight - terrylib.Text.typeface[terrylib.Text.currentindex].tf.get_textHeight());
-	return y;
+	if(y == terrylib.Text.RIGHT || y == terrylib.Text.BOTTOM) return Math.floor(terrylib.Gfx.screenheight - terrylib.Text.currentheight());
+	return Math.floor(y);
 };
 terrylib.Text.aligntextx = function(t,x) {
 	if(x == terrylib.Text.CENTER) return Math.floor(terrylib.Text.len(t) / 2);
@@ -34726,16 +35929,90 @@ terrylib.Text.aligntexty = function(y) {
 };
 terrylib.Text.display = function(x,y,text,col,parameters) {
 	if(col == null) col = 16777215;
+	if(terrylib.Text.typeface[terrylib.Text.currentindex].type == "bitmap") terrylib.Text.display_bitmap(x,y,text,col,parameters); else if(terrylib.Text.typeface[terrylib.Text.currentindex].type == "tff") terrylib.Text.display_ttf(x,y,text,col,parameters);
+};
+terrylib.Text.display_bitmap = function(x,y,text,col,parameters) {
+	if(col == null) col = 16777215;
 	if(terrylib.Gfx.skiprender && terrylib.Gfx.drawingtoscreen) return;
 	if(parameters == null) {
-		terrylib.Text.typeface[terrylib.Text.currentindex].tf.set_textColor(col);
-		terrylib.Text.typeface[terrylib.Text.currentindex].tf.set_text(text);
+		terrylib.Text.typeface[terrylib.Text.currentindex].tf_bitmap.set_useTextColor(true);
+		terrylib.Text.typeface[terrylib.Text.currentindex].tf_bitmap.set_textColor(-16777216 + col);
+		terrylib.Text.typeface[terrylib.Text.currentindex].tf_bitmap.set_text(text);
 		x = terrylib.Text.alignx(x);
 		y = terrylib.Text.aligny(y);
 		terrylib.Text.fontmatrix.identity();
 		terrylib.Text.fontmatrix.translate(x,y);
-		terrylib.Text.typeface[terrylib.Text.currentindex].tf.set_textColor(col);
-		terrylib.Text.drawto.draw(terrylib.Text.typeface[terrylib.Text.currentindex].tf,terrylib.Text.fontmatrix);
+		terrylib.Text.drawto.draw(terrylib.Text.typeface[terrylib.Text.currentindex].tf_bitmap,terrylib.Text.fontmatrix);
+	} else {
+		terrylib.Text.drawto = terrylib.Text.typeface[terrylib.Text.currentindex].tfbitmap;
+		terrylib.Text.typeface[terrylib.Text.currentindex].clearbitmap();
+		terrylib.Text.tempxpivot = 0;
+		terrylib.Text.tempypivot = 0;
+		terrylib.Text.tempxscale = 1.0;
+		terrylib.Text.tempyscale = 1.0;
+		terrylib.Text.temprotate = 0;
+		terrylib.Text.tempalpha = 1.0;
+		terrylib.Text.tempred = 1.0;
+		terrylib.Text.tempgreen = 1.0;
+		terrylib.Text.tempblue = 1.0;
+		terrylib.Text.changecolours = false;
+		terrylib.Text.display_bitmap(0,0,text,col);
+		x = terrylib.Text.alignx(x);
+		y = terrylib.Text.aligny(y);
+		if(parameters.align != null) {
+			if(parameters.align == terrylib.Text.CENTER) x = Math.floor(x - terrylib.Text.len(text) / 2); else if(parameters.align == terrylib.Text.RIGHT || parameters.align == terrylib.Text.BOTTOM) x = Math.floor(x - terrylib.Text.len(text));
+		}
+		if(parameters.xpivot != null) terrylib.Text.tempxpivot = terrylib.Text.aligntextx(text,parameters.xpivot);
+		if(parameters.ypivot != null) terrylib.Text.tempypivot = terrylib.Text.aligntexty(parameters.ypivot);
+		if(parameters.scale != null) {
+			terrylib.Text.tempxscale = parameters.scale;
+			terrylib.Text.tempyscale = parameters.scale;
+		} else {
+			if(parameters.xscale != null) terrylib.Text.tempxscale = parameters.xscale;
+			if(parameters.yscale != null) terrylib.Text.tempyscale = parameters.yscale;
+		}
+		if(parameters.rotation != null) terrylib.Text.temprotate = parameters.rotation;
+		if(parameters.alpha != null) {
+			terrylib.Text.tempalpha = parameters.alpha;
+			terrylib.Text.alphact.alphaMultiplier = terrylib.Text.tempalpha;
+			terrylib.Text.changecolours = true;
+		}
+		if(parameters.red != null) {
+			terrylib.Text.tempred = parameters.red;
+			terrylib.Text.alphact.redMultiplier = terrylib.Text.tempred;
+			terrylib.Text.changecolours = true;
+		}
+		if(parameters.green != null) {
+			terrylib.Text.tempgreen = parameters.green;
+			terrylib.Text.alphact.greenMultiplier = terrylib.Text.tempgreen;
+			terrylib.Text.changecolours = true;
+		}
+		if(parameters.blue != null) {
+			terrylib.Text.tempblue = parameters.blue;
+			terrylib.Text.alphact.blueMultiplier = terrylib.Text.tempblue;
+			terrylib.Text.changecolours = true;
+		}
+		terrylib.Text.fontmatrix.identity();
+		terrylib.Text.fontmatrix.translate(-terrylib.Text.tempxpivot,-terrylib.Text.tempypivot);
+		terrylib.Text.fontmatrix.scale(terrylib.Text.tempxscale,terrylib.Text.tempyscale);
+		terrylib.Text.fontmatrix.rotate(terrylib.Text.temprotate * 3.1415 / 180);
+		terrylib.Text.fontmatrix.translate(x + terrylib.Text.tempxpivot,y + terrylib.Text.tempypivot);
+		terrylib.Text.drawto = terrylib.Gfx.drawto;
+		if(terrylib.Text.changecolours) terrylib.Text.drawto.draw(terrylib.Text.typeface[terrylib.Text.currentindex].tfbitmap,terrylib.Text.fontmatrix,terrylib.Text.alphact); else terrylib.Text.drawto.draw(terrylib.Text.typeface[terrylib.Text.currentindex].tfbitmap,terrylib.Text.fontmatrix);
+	}
+};
+terrylib.Text.display_ttf = function(x,y,text,col,parameters) {
+	if(col == null) col = 16777215;
+	if(terrylib.Gfx.skiprender && terrylib.Gfx.drawingtoscreen) return;
+	if(parameters == null) {
+		terrylib.Text.typeface[terrylib.Text.currentindex].tf_ttf.set_textColor(col);
+		terrylib.Text.typeface[terrylib.Text.currentindex].tf_ttf.set_text(text);
+		x = terrylib.Text.alignx(x);
+		y = terrylib.Text.aligny(y);
+		terrylib.Text.fontmatrix.identity();
+		terrylib.Text.fontmatrix.translate(x,y);
+		terrylib.Text.typeface[terrylib.Text.currentindex].tf_ttf.set_textColor(col);
+		terrylib.Text.drawto.draw(terrylib.Text.typeface[terrylib.Text.currentindex].tf_ttf,terrylib.Text.fontmatrix);
 	} else {
 		terrylib.Text.drawto = terrylib.Text.typeface[terrylib.Text.currentindex].tfbitmap;
 		terrylib.Text.typeface[terrylib.Text.currentindex].clearbitmap();
@@ -34753,7 +36030,7 @@ terrylib.Text.display = function(x,y,text,col,parameters) {
 		x = terrylib.Text.alignx(x);
 		y = terrylib.Text.aligny(y);
 		if(parameters.align != null) {
-			if(parameters.align == terrylib.Text.CENTER) x = x - terrylib.Text.len(text) / 2; else if(parameters.align == terrylib.Text.RIGHT || parameters.align == terrylib.Text.BOTTOM) x = x - terrylib.Text.len(text);
+			if(parameters.align == terrylib.Text.CENTER) x = Math.floor(x - terrylib.Text.len(text) / 2); else if(parameters.align == terrylib.Text.RIGHT || parameters.align == terrylib.Text.BOTTOM) x = Math.floor(x - terrylib.Text.len(text));
 		}
 		if(parameters.xpivot != null) terrylib.Text.tempxpivot = terrylib.Text.aligntextx(text,parameters.xpivot);
 		if(parameters.ypivot != null) terrylib.Text.tempypivot = terrylib.Text.aligntexty(parameters.ypivot);
@@ -34835,6 +36112,7 @@ terrylib.Text.changesize = function(t) {
 	}
 };
 terrylib.Text.addfont = function(t,defaultsize) {
+	if(defaultsize == null) defaultsize = 1;
 	terrylib.Text.fontfile.push(new terrylib.util.Fontfile(t));
 	terrylib.Text.fontfileindex.set(t,terrylib.Text.fontfile.length - 1);
 	terrylib.Text.currentfont = t;
@@ -34874,6 +36152,1436 @@ terrylib.Text.input_cursorglow = null;
 terrylib.Text.input_font = null;
 terrylib.Text.input_textsize = null;
 terrylib.Text.input_show = null;
+terrylib.bitmapFont = {};
+terrylib.bitmapFont.BitmapFont = function(name,bitmap) {
+	this.spaceWidth = 0;
+	this.minOffsetX = 0;
+	this.italic = false;
+	this.bold = false;
+	this.lineHeight = 0;
+	this.size = 0;
+	this.bitmap = bitmap;
+	this.fontName = name;
+	this.glyphs = new haxe.ds.IntMap();
+	terrylib.bitmapFont.BitmapFont.store(name,this);
+};
+$hxClasses["terrylib.bitmapFont.BitmapFont"] = terrylib.bitmapFont.BitmapFont;
+terrylib.bitmapFont.BitmapFont.__name__ = ["terrylib","bitmapFont","BitmapFont"];
+terrylib.bitmapFont.BitmapFont.store = function(fontKey,font) {
+	if(!terrylib.bitmapFont.BitmapFont.fonts.exists(fontKey)) terrylib.bitmapFont.BitmapFont.fonts.set(fontKey,font);
+};
+terrylib.bitmapFont.BitmapFont.get = function(fontKey) {
+	return terrylib.bitmapFont.BitmapFont.fonts.get(fontKey);
+};
+terrylib.bitmapFont.BitmapFont.remove = function(fontKey) {
+	var font = terrylib.bitmapFont.BitmapFont.fonts.get(fontKey);
+	terrylib.bitmapFont.BitmapFont.fonts.remove(fontKey);
+	if(font != null) font.dispose();
+};
+terrylib.bitmapFont.BitmapFont.clearFonts = function() {
+	var $it0 = terrylib.bitmapFont.BitmapFont.fonts.iterator();
+	while( $it0.hasNext() ) {
+		var font = $it0.next();
+		font.dispose();
+	}
+	terrylib.bitmapFont.BitmapFont.fonts = new haxe.ds.StringMap();
+};
+terrylib.bitmapFont.BitmapFont.getDefaultFont = function() {
+	var font = terrylib.bitmapFont.BitmapFont.get("defaultFontKey");
+	if(font != null) return font;
+	var letters = "";
+	var bd = new openfl.display.BitmapData(700,9,true,-7829368);
+	var letterPos = 0;
+	var i = 0;
+	while(i < " 36000000000000000000!26101010001000\"46101010100000000000000000#66010100111110010100111110010100000000$56001000111011000001101110000100%66100100000100001000010000010010000000&66011000100000011010100100011010000000'26101000000000(36010100100100010000)36100010010010100000*46000010100100101000000000+46000001001110010000000000,36000000000000010100-46000000001110000000000000.26000000001000/66000010000100001000010000100000000000056011001001010010100100110000000156011000010000100001000010000000256111000001001100100001111000000356111000001001100000101110000000456100101001010010011100001000000556111101000011100000101110000000656011001000011100100100110000000756111000001000010001100001000000856011001001001100100100110000000956011001001010010011100001000000:26001000100000;26001000101000<46001001001000010000100000=46000011100000111000000000>46100001000010010010000000?56111000001001100000000100000000@66011100100010101110101010011100000000A56011001001010010111101001000000B56111001001011100100101110000000C56011001001010000100100110000000D56111001001010010100101110000000E56111101000011000100001111000000F56111101000010000110001000000000G56011001000010110100100111000000H56100101001011110100101001000000I26101010101000J56000100001000010100100110000000K56100101001010010111001001000000L46100010001000100011100000M66100010100010110110101010100010000000N56100101001011010101101001000000O56011001001010010100100110000000P56111001001010010111001000000000Q56011001001010010100100110000010R56111001001010010111001001000000S56011101000001100000101110000000T46111001000100010001000000U56100101001010010100100110000000V56100101001010010101000100000000W66100010100010101010110110100010000000X56100101001001100100101001000000Y56100101001010010011100001001100Z56111100001001100100001111000000[36110100100100110000}46110001000010010011000000]36110010010010110000^46010010100000000000000000_46000000000000000011110000'26101000000000a56000000111010010100100111000000b56100001110010010100101110000000c46000001101000100001100000d56000100111010010100100111000000e56000000110010110110000110000000f46011010001000110010000000g5700000011001001010010011100001001100h56100001110010010100101001000000i26100010101000j37010000010010010010100k56100001001010010111001001000000l26101010101000m66000000111100101010101010101010000000n56000001110010010100101001000000o56000000110010010100100110000000p5700000111001001010010111001000010000q5700000011101001010010011100001000010r46000010101100100010000000s56000000111011000001101110000000t46100011001000100001100000u56000001001010010100100111000000v56000001001010010101000100000000w66000000101010101010101010011110000000x56000001001010010011001001000000y5700000100101001010010011100001001100z56000001111000100010001111000000{46011001001000010001100000|26101010101000}46110001000010010011000000~56010101010000000000000000000000\\46111010101010101011100000".length) {
+		letters += HxOverrides.substr(" 36000000000000000000!26101010001000\"46101010100000000000000000#66010100111110010100111110010100000000$56001000111011000001101110000100%66100100000100001000010000010010000000&66011000100000011010100100011010000000'26101000000000(36010100100100010000)36100010010010100000*46000010100100101000000000+46000001001110010000000000,36000000000000010100-46000000001110000000000000.26000000001000/66000010000100001000010000100000000000056011001001010010100100110000000156011000010000100001000010000000256111000001001100100001111000000356111000001001100000101110000000456100101001010010011100001000000556111101000011100000101110000000656011001000011100100100110000000756111000001000010001100001000000856011001001001100100100110000000956011001001010010011100001000000:26001000100000;26001000101000<46001001001000010000100000=46000011100000111000000000>46100001000010010010000000?56111000001001100000000100000000@66011100100010101110101010011100000000A56011001001010010111101001000000B56111001001011100100101110000000C56011001001010000100100110000000D56111001001010010100101110000000E56111101000011000100001111000000F56111101000010000110001000000000G56011001000010110100100111000000H56100101001011110100101001000000I26101010101000J56000100001000010100100110000000K56100101001010010111001001000000L46100010001000100011100000M66100010100010110110101010100010000000N56100101001011010101101001000000O56011001001010010100100110000000P56111001001010010111001000000000Q56011001001010010100100110000010R56111001001010010111001001000000S56011101000001100000101110000000T46111001000100010001000000U56100101001010010100100110000000V56100101001010010101000100000000W66100010100010101010110110100010000000X56100101001001100100101001000000Y56100101001010010011100001001100Z56111100001001100100001111000000[36110100100100110000}46110001000010010011000000]36110010010010110000^46010010100000000000000000_46000000000000000011110000'26101000000000a56000000111010010100100111000000b56100001110010010100101110000000c46000001101000100001100000d56000100111010010100100111000000e56000000110010110110000110000000f46011010001000110010000000g5700000011001001010010011100001001100h56100001110010010100101001000000i26100010101000j37010000010010010010100k56100001001010010111001001000000l26101010101000m66000000111100101010101010101010000000n56000001110010010100101001000000o56000000110010010100100110000000p5700000111001001010010111001000010000q5700000011101001010010011100001000010r46000010101100100010000000s56000000111011000001101110000000t46100011001000100001100000u56000001001010010100100111000000v56000001001010010101000100000000w66000000101010101010101010011110000000x56000001001010010011001001000000y5700000100101001010010011100001001100z56000001111000100010001111000000{46011001001000010001100000|26101010101000}46110001000010010011000000~56010101010000000000000000000000\\46111010101010101011100000",i,1);
+		var gw = Std.parseInt((function($this) {
+			var $r;
+			var pos = ++i;
+			$r = HxOverrides.substr(" 36000000000000000000!26101010001000\"46101010100000000000000000#66010100111110010100111110010100000000$56001000111011000001101110000100%66100100000100001000010000010010000000&66011000100000011010100100011010000000'26101000000000(36010100100100010000)36100010010010100000*46000010100100101000000000+46000001001110010000000000,36000000000000010100-46000000001110000000000000.26000000001000/66000010000100001000010000100000000000056011001001010010100100110000000156011000010000100001000010000000256111000001001100100001111000000356111000001001100000101110000000456100101001010010011100001000000556111101000011100000101110000000656011001000011100100100110000000756111000001000010001100001000000856011001001001100100100110000000956011001001010010011100001000000:26001000100000;26001000101000<46001001001000010000100000=46000011100000111000000000>46100001000010010010000000?56111000001001100000000100000000@66011100100010101110101010011100000000A56011001001010010111101001000000B56111001001011100100101110000000C56011001001010000100100110000000D56111001001010010100101110000000E56111101000011000100001111000000F56111101000010000110001000000000G56011001000010110100100111000000H56100101001011110100101001000000I26101010101000J56000100001000010100100110000000K56100101001010010111001001000000L46100010001000100011100000M66100010100010110110101010100010000000N56100101001011010101101001000000O56011001001010010100100110000000P56111001001010010111001000000000Q56011001001010010100100110000010R56111001001010010111001001000000S56011101000001100000101110000000T46111001000100010001000000U56100101001010010100100110000000V56100101001010010101000100000000W66100010100010101010110110100010000000X56100101001001100100101001000000Y56100101001010010011100001001100Z56111100001001100100001111000000[36110100100100110000}46110001000010010011000000]36110010010010110000^46010010100000000000000000_46000000000000000011110000'26101000000000a56000000111010010100100111000000b56100001110010010100101110000000c46000001101000100001100000d56000100111010010100100111000000e56000000110010110110000110000000f46011010001000110010000000g5700000011001001010010011100001001100h56100001110010010100101001000000i26100010101000j37010000010010010010100k56100001001010010111001001000000l26101010101000m66000000111100101010101010101010000000n56000001110010010100101001000000o56000000110010010100100110000000p5700000111001001010010111001000010000q5700000011101001010010011100001000010r46000010101100100010000000s56000000111011000001101110000000t46100011001000100001100000u56000001001010010100100111000000v56000001001010010101000100000000w66000000101010101010101010011110000000x56000001001010010011001001000000y5700000100101001010010011100001001100z56000001111000100010001111000000{46011001001000010001100000|26101010101000}46110001000010010011000000~56010101010000000000000000000000\\46111010101010101011100000",pos,1);
+			return $r;
+		}(this)));
+		var gh = Std.parseInt((function($this) {
+			var $r;
+			var pos1 = ++i;
+			$r = HxOverrides.substr(" 36000000000000000000!26101010001000\"46101010100000000000000000#66010100111110010100111110010100000000$56001000111011000001101110000100%66100100000100001000010000010010000000&66011000100000011010100100011010000000'26101000000000(36010100100100010000)36100010010010100000*46000010100100101000000000+46000001001110010000000000,36000000000000010100-46000000001110000000000000.26000000001000/66000010000100001000010000100000000000056011001001010010100100110000000156011000010000100001000010000000256111000001001100100001111000000356111000001001100000101110000000456100101001010010011100001000000556111101000011100000101110000000656011001000011100100100110000000756111000001000010001100001000000856011001001001100100100110000000956011001001010010011100001000000:26001000100000;26001000101000<46001001001000010000100000=46000011100000111000000000>46100001000010010010000000?56111000001001100000000100000000@66011100100010101110101010011100000000A56011001001010010111101001000000B56111001001011100100101110000000C56011001001010000100100110000000D56111001001010010100101110000000E56111101000011000100001111000000F56111101000010000110001000000000G56011001000010110100100111000000H56100101001011110100101001000000I26101010101000J56000100001000010100100110000000K56100101001010010111001001000000L46100010001000100011100000M66100010100010110110101010100010000000N56100101001011010101101001000000O56011001001010010100100110000000P56111001001010010111001000000000Q56011001001010010100100110000010R56111001001010010111001001000000S56011101000001100000101110000000T46111001000100010001000000U56100101001010010100100110000000V56100101001010010101000100000000W66100010100010101010110110100010000000X56100101001001100100101001000000Y56100101001010010011100001001100Z56111100001001100100001111000000[36110100100100110000}46110001000010010011000000]36110010010010110000^46010010100000000000000000_46000000000000000011110000'26101000000000a56000000111010010100100111000000b56100001110010010100101110000000c46000001101000100001100000d56000100111010010100100111000000e56000000110010110110000110000000f46011010001000110010000000g5700000011001001010010011100001001100h56100001110010010100101001000000i26100010101000j37010000010010010010100k56100001001010010111001001000000l26101010101000m66000000111100101010101010101010000000n56000001110010010100101001000000o56000000110010010100100110000000p5700000111001001010010111001000010000q5700000011101001010010011100001000010r46000010101100100010000000s56000000111011000001101110000000t46100011001000100001100000u56000001001010010100100111000000v56000001001010010101000100000000w66000000101010101010101010011110000000x56000001001010010011001001000000y5700000100101001010010011100001001100z56000001111000100010001111000000{46011001001000010001100000|26101010101000}46110001000010010011000000~56010101010000000000000000000000\\46111010101010101011100000",pos1,1);
+			return $r;
+		}(this)));
+		var _g = 0;
+		while(_g < gh) {
+			var py = _g++;
+			var _g1 = 0;
+			while(_g1 < gw) {
+				var px = _g1++;
+				i++;
+				if(HxOverrides.substr(" 36000000000000000000!26101010001000\"46101010100000000000000000#66010100111110010100111110010100000000$56001000111011000001101110000100%66100100000100001000010000010010000000&66011000100000011010100100011010000000'26101000000000(36010100100100010000)36100010010010100000*46000010100100101000000000+46000001001110010000000000,36000000000000010100-46000000001110000000000000.26000000001000/66000010000100001000010000100000000000056011001001010010100100110000000156011000010000100001000010000000256111000001001100100001111000000356111000001001100000101110000000456100101001010010011100001000000556111101000011100000101110000000656011001000011100100100110000000756111000001000010001100001000000856011001001001100100100110000000956011001001010010011100001000000:26001000100000;26001000101000<46001001001000010000100000=46000011100000111000000000>46100001000010010010000000?56111000001001100000000100000000@66011100100010101110101010011100000000A56011001001010010111101001000000B56111001001011100100101110000000C56011001001010000100100110000000D56111001001010010100101110000000E56111101000011000100001111000000F56111101000010000110001000000000G56011001000010110100100111000000H56100101001011110100101001000000I26101010101000J56000100001000010100100110000000K56100101001010010111001001000000L46100010001000100011100000M66100010100010110110101010100010000000N56100101001011010101101001000000O56011001001010010100100110000000P56111001001010010111001000000000Q56011001001010010100100110000010R56111001001010010111001001000000S56011101000001100000101110000000T46111001000100010001000000U56100101001010010100100110000000V56100101001010010101000100000000W66100010100010101010110110100010000000X56100101001001100100101001000000Y56100101001010010011100001001100Z56111100001001100100001111000000[36110100100100110000}46110001000010010011000000]36110010010010110000^46010010100000000000000000_46000000000000000011110000'26101000000000a56000000111010010100100111000000b56100001110010010100101110000000c46000001101000100001100000d56000100111010010100100111000000e56000000110010110110000110000000f46011010001000110010000000g5700000011001001010010011100001001100h56100001110010010100101001000000i26100010101000j37010000010010010010100k56100001001010010111001001000000l26101010101000m66000000111100101010101010101010000000n56000001110010010100101001000000o56000000110010010100100110000000p5700000111001001010010111001000010000q5700000011101001010010011100001000010r46000010101100100010000000s56000000111011000001101110000000t46100011001000100001100000u56000001001010010100100111000000v56000001001010010101000100000000w66000000101010101010101010011110000000x56000001001010010011001001000000y5700000100101001010010011100001001100z56000001111000100010001111000000{46011001001000010001100000|26101010101000}46110001000010010011000000~56010101010000000000000000000000\\46111010101010101011100000",i,1) == "1") bd.setPixel32(1 + letterPos * 7 + px,1 + py,-1); else bd.setPixel32(1 + letterPos * 7 + px,1 + py,0);
+			}
+		}
+		i++;
+		letterPos++;
+	}
+	return terrylib.bitmapFont.BitmapFont.fromXNA("defaultFontKey",bd,letters);
+};
+terrylib.bitmapFont.BitmapFont.fromAngelCode = function(Source,Data) {
+	var fast = new haxe.xml.Fast(Data.firstElement());
+	var fontName = Std.string(fast.node.resolve("info").att.resolve("face"));
+	var font = terrylib.bitmapFont.BitmapFont.get(fontName);
+	if(font != null) return font;
+	font = new terrylib.bitmapFont.BitmapFont(fontName,Source);
+	font.lineHeight = Std.parseInt(fast.node.resolve("common").att.resolve("lineHeight"));
+	font.size = Std.parseInt(fast.node.resolve("info").att.resolve("size"));
+	font.fontName = Std.string(fast.node.resolve("info").att.resolve("face"));
+	font.bold = Std.parseInt(fast.node.resolve("info").att.resolve("bold")) != 0;
+	font.italic = Std.parseInt(fast.node.resolve("info").att.resolve("italic")) != 0;
+	var frame;
+	var glyph;
+	var charCode;
+	var spaceCharCode = HxOverrides.cca(" ",0);
+	var xOffset;
+	var yOffset;
+	var xAdvance;
+	var frameHeight;
+	var chars = fast.node.resolve("chars");
+	var $it0 = chars.nodes.resolve("char").iterator();
+	while( $it0.hasNext() ) {
+		var $char = $it0.next();
+		frame = new openfl.geom.Rectangle();
+		frame.x = Std.parseInt($char.att.resolve("x"));
+		frame.y = Std.parseInt($char.att.resolve("y"));
+		frame.width = Std.parseInt($char.att.resolve("width"));
+		frameHeight = Std.parseInt($char.att.resolve("height"));
+		frame.height = frameHeight;
+		if($char.has.resolve("xoffset")) xOffset = Std.parseInt($char.att.resolve("xoffset")); else xOffset = 0;
+		if($char.has.resolve("yoffset")) yOffset = Std.parseInt($char.att.resolve("yoffset")); else yOffset = 0;
+		if($char.has.resolve("xadvance")) xAdvance = Std.parseInt($char.att.resolve("xadvance")); else xAdvance = 0;
+		if(font.minOffsetX > xOffset) font.minOffsetX = xOffset; else font.minOffsetX = font.minOffsetX;
+		glyph = null;
+		charCode = -1;
+		if($char.has.resolve("letter")) glyph = $char.att.resolve("letter"); else if($char.has.resolve("id")) charCode = Std.parseInt($char.att.resolve("id"));
+		if(charCode == -1 && glyph == null) throw "Invalid font xml data!";
+		if(glyph != null) {
+			switch(glyph) {
+			case "space":
+				glyph = " ";
+				break;
+			case "&quot;":
+				glyph = "\"";
+				break;
+			case "&amp;":
+				glyph = "&";
+				break;
+			case "&gt;":
+				glyph = ">";
+				break;
+			case "&lt;":
+				glyph = "<";
+				break;
+			default:
+				glyph = glyph;
+			}
+			charCode = HxOverrides.cca(glyph,0);
+		}
+		font.addGlyphFrame(charCode,frame,xOffset,yOffset,xAdvance);
+		if(charCode == spaceCharCode) font.spaceWidth = xAdvance; else if(font.lineHeight > frameHeight + yOffset) font.lineHeight = font.lineHeight; else font.lineHeight = frameHeight + yOffset;
+	}
+	return font;
+};
+terrylib.bitmapFont.BitmapFont.fromXNA = function(key,source,letters,glyphBGColor) {
+	if(glyphBGColor == null) glyphBGColor = 0;
+	var font = terrylib.bitmapFont.BitmapFont.get(key);
+	if(font != null) return font;
+	font = new terrylib.bitmapFont.BitmapFont(key,source);
+	font.fontName = key;
+	if(letters == null) letters = " !\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~"; else letters = letters;
+	var bmd = source;
+	var globalBGColor = bmd.getPixel(0,0);
+	var cy = 0;
+	var cx;
+	var letterIdx = 0;
+	var charCode;
+	var numLetters = letters.length;
+	var rect;
+	var xAdvance;
+	while(cy < bmd.height && letterIdx < numLetters) {
+		var rowHeight = 0;
+		cx = 0;
+		while(cx < bmd.width && letterIdx < numLetters) {
+			if(Std["int"](bmd.getPixel(cx,cy)) != globalBGColor) {
+				var gx = cx;
+				var gy = cy;
+				while(Std["int"](bmd.getPixel(gx,cy)) != globalBGColor) gx++;
+				while(Std["int"](bmd.getPixel(cx,gy)) != globalBGColor) gy++;
+				var gw = gx - cx;
+				var gh = gy - cy;
+				charCode = HxOverrides.cca(letters,letterIdx);
+				rect = new openfl.geom.Rectangle(cx,cy,gw,gh);
+				xAdvance = gw;
+				font.addGlyphFrame(charCode,rect,0,0,xAdvance);
+				if(charCode == 32) font.spaceWidth = xAdvance;
+				if(gh > rowHeight) rowHeight = gh;
+				if(gh > font.size) font.size = gh;
+				cx += gw;
+				letterIdx++;
+			}
+			cx++;
+		}
+		cy += rowHeight + 1;
+	}
+	font.lineHeight = font.size;
+	terrylib.bitmapFont.BitmapFont.POINT.x = terrylib.bitmapFont.BitmapFont.POINT.y = 0;
+	var bgColor32 = bmd.getPixel32(0,0);
+	terrylib.bitmapFont.BitmapFont.replaceColor(bmd,bgColor32,0);
+	if(glyphBGColor != 0) terrylib.bitmapFont.BitmapFont.replaceColor(bmd,glyphBGColor,0);
+	return font;
+};
+terrylib.bitmapFont.BitmapFont.replaceColor = function(bitmapData,color,newColor) {
+	var row = 0;
+	var column = 0;
+	var rows = bitmapData.height;
+	var columns = bitmapData.width;
+	bitmapData.lock();
+	while(row < rows) {
+		column = 0;
+		while(column < columns) {
+			if(bitmapData.getPixel32(column,row) == color) bitmapData.setPixel32(column,row,newColor);
+			column++;
+		}
+		row++;
+	}
+	bitmapData.unlock();
+	return bitmapData;
+};
+terrylib.bitmapFont.BitmapFont.fromMonospace = function(key,source,letters,charSize,region,spacing) {
+	var font = terrylib.bitmapFont.BitmapFont.get(key);
+	if(font != null) return font;
+	if(letters == null) letters = " !\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~"; else letters = letters;
+	if(region == null) region = source.rect; else region = region;
+	if(region.width == 0 || region.get_right() > source.width) region.width = source.width - region.x;
+	if(region.height == 0 || region.get_bottom() > source.height) region.height = source.height - region.y;
+	if(spacing == null) spacing = new openfl.geom.Point(0,0); else spacing = spacing;
+	var bitmapWidth = region.width | 0;
+	var bitmapHeight = region.height | 0;
+	var startX = region.x | 0;
+	var startY = region.y | 0;
+	var xSpacing = spacing.x | 0;
+	var ySpacing = spacing.y | 0;
+	var charWidth = charSize.x | 0;
+	var charHeight = charSize.y | 0;
+	var spacedWidth = charWidth + xSpacing;
+	var spacedHeight = charHeight + ySpacing;
+	var numRows;
+	if(charHeight == 0) numRows = 1; else numRows = (bitmapHeight + ySpacing) / spacedHeight | 0;
+	var numCols;
+	if(charWidth == 0) numCols = 1; else numCols = (bitmapWidth + xSpacing) / spacedWidth | 0;
+	font = new terrylib.bitmapFont.BitmapFont(key,source);
+	font.fontName = key;
+	font.lineHeight = font.size = charHeight;
+	var charRect;
+	var xAdvance = charWidth;
+	font.spaceWidth = xAdvance;
+	var letterIndex = 0;
+	var numLetters = letters.length;
+	var _g1 = 0;
+	var _g = numRows;
+	while(_g1 < _g) {
+		var j = _g1++;
+		var _g3 = 0;
+		var _g2 = numCols;
+		while(_g3 < _g2) {
+			var i = _g3++;
+			charRect = new openfl.geom.Rectangle(startX + i * spacedWidth,startY + j * spacedHeight,charWidth,charHeight);
+			font.addGlyphFrame(HxOverrides.cca(letters,letterIndex),charRect,0,0,xAdvance);
+			letterIndex++;
+			if(letterIndex >= numLetters) return font;
+		}
+	}
+	return font;
+};
+terrylib.bitmapFont.BitmapFont.prototype = {
+	dispose: function() {
+		if(this.bitmap != null) this.bitmap.dispose();
+		this.bitmap = null;
+		this.glyphs = null;
+		this.fontName = null;
+	}
+	,addGlyphFrame: function(charCode,frame,offsetX,offsetY,xAdvance) {
+		if(xAdvance == null) xAdvance = 0;
+		if(offsetY == null) offsetY = 0;
+		if(offsetX == null) offsetX = 0;
+		if(frame.width == 0 || frame.height == 0 || this.glyphs.get(charCode) != null) return;
+		var glyphFrame = new terrylib.bitmapFont.BitmapGlyphFrame(this);
+		glyphFrame.charCode = charCode;
+		glyphFrame.xoffset = offsetX;
+		glyphFrame.yoffset = offsetY;
+		glyphFrame.xadvance = xAdvance;
+		glyphFrame.rect = frame;
+		this.glyphs.set(charCode,glyphFrame);
+	}
+	,prepareGlyphs: function(scale,color,useColor,smoothing) {
+		if(smoothing == null) smoothing = false;
+		if(useColor == null) useColor = true;
+		return new terrylib.bitmapFont.BitmapGlyphCollection(this,scale,color,useColor,smoothing);
+	}
+	,__class__: terrylib.bitmapFont.BitmapFont
+};
+terrylib.bitmapFont.BitmapGlyphFrame = function(parent) {
+	this.parent = parent;
+};
+$hxClasses["terrylib.bitmapFont.BitmapGlyphFrame"] = terrylib.bitmapFont.BitmapGlyphFrame;
+terrylib.bitmapFont.BitmapGlyphFrame.__name__ = ["terrylib","bitmapFont","BitmapGlyphFrame"];
+terrylib.bitmapFont.BitmapGlyphFrame.prototype = {
+	dispose: function() {
+		this.rect = null;
+		if(this._bitmap != null) this._bitmap.dispose();
+		this._bitmap = null;
+	}
+	,get_bitmap: function() {
+		if(this._bitmap != null) return this._bitmap;
+		this._bitmap = new openfl.display.BitmapData(Math.ceil(this.rect.width),Math.ceil(this.rect.height),true,0);
+		this._bitmap.copyPixels(this.parent.bitmap,this.rect,new openfl.geom.Point());
+		return this._bitmap;
+	}
+	,__class__: terrylib.bitmapFont.BitmapGlyphFrame
+};
+terrylib.bitmapFont.BitmapGlyphCollection = function(font,scale,color,useColor,smoothing) {
+	if(smoothing == null) smoothing = false;
+	if(useColor == null) useColor = true;
+	this.spaceWidth = 0;
+	this.minOffsetX = 0;
+	this.glyphMap = new haxe.ds.IntMap();
+	this.glyphs = new Array();
+	this.font = font;
+	this.scale = scale;
+	if(useColor) this.color = color; else this.color = -1;
+	this.minOffsetX = font.minOffsetX * scale;
+	this.prepareGlyphs(smoothing);
+};
+$hxClasses["terrylib.bitmapFont.BitmapGlyphCollection"] = terrylib.bitmapFont.BitmapGlyphCollection;
+terrylib.bitmapFont.BitmapGlyphCollection.__name__ = ["terrylib","bitmapFont","BitmapGlyphCollection"];
+terrylib.bitmapFont.BitmapGlyphCollection.prototype = {
+	prepareGlyphs: function(smoothing) {
+		if(smoothing == null) smoothing = false;
+		var matrix = new openfl.geom.Matrix();
+		matrix.scale(this.scale,this.scale);
+		var colorTransform = new openfl.geom.ColorTransform();
+		colorTransform.redMultiplier = (function($this) {
+			var $r;
+			var $int = $this.color >> 16 & 255;
+			$r = $int < 0?4294967296.0 + $int:$int + 0.0;
+			return $r;
+		}(this)) / (function($this) {
+			var $r;
+			var int1 = 255;
+			$r = int1 < 0?4294967296.0 + int1:int1 + 0.0;
+			return $r;
+		}(this));
+		colorTransform.greenMultiplier = (function($this) {
+			var $r;
+			var int2 = $this.color >> 8 & 255;
+			$r = int2 < 0?4294967296.0 + int2:int2 + 0.0;
+			return $r;
+		}(this)) / (function($this) {
+			var $r;
+			var int3 = 255;
+			$r = int3 < 0?4294967296.0 + int3:int3 + 0.0;
+			return $r;
+		}(this));
+		colorTransform.blueMultiplier = (function($this) {
+			var $r;
+			var int4 = $this.color & 255;
+			$r = int4 < 0?4294967296.0 + int4:int4 + 0.0;
+			return $r;
+		}(this)) / (function($this) {
+			var $r;
+			var int5 = 255;
+			$r = int5 < 0?4294967296.0 + int5:int5 + 0.0;
+			return $r;
+		}(this));
+		colorTransform.alphaMultiplier = (function($this) {
+			var $r;
+			var int6 = $this.color >> 24 & 255;
+			$r = int6 < 0?4294967296.0 + int6:int6 + 0.0;
+			return $r;
+		}(this)) / (function($this) {
+			var $r;
+			var int7 = 255;
+			$r = int7 < 0?4294967296.0 + int7:int7 + 0.0;
+			return $r;
+		}(this));
+		var glyphBD;
+		var preparedBD;
+		var glyph;
+		var preparedGlyph;
+		var bdWidth;
+		var bdHeight;
+		var offsetX;
+		var offsetY;
+		var xAdvance;
+		this.spaceWidth = this.font.spaceWidth * this.scale;
+		var $it0 = this.font.glyphs.iterator();
+		while( $it0.hasNext() ) {
+			var glyph1 = $it0.next();
+			glyphBD = glyph1.get_bitmap();
+			bdWidth = Math.ceil(glyphBD.width * this.scale);
+			bdHeight = Math.ceil(glyphBD.height * this.scale);
+			if(bdWidth > 0) bdWidth = bdWidth; else bdWidth = 1;
+			if(bdHeight > 0) bdHeight = bdHeight; else bdHeight = 1;
+			preparedBD = new openfl.display.BitmapData(bdWidth,bdHeight,true,0);
+			preparedBD.draw(glyphBD,matrix,null,null,null,smoothing);
+			preparedBD.colorTransform(preparedBD.rect,colorTransform);
+			offsetX = Math.ceil(glyph1.xoffset * this.scale);
+			offsetY = Math.ceil(glyph1.yoffset * this.scale);
+			xAdvance = Math.ceil(glyph1.xadvance * this.scale);
+			preparedGlyph = new terrylib.bitmapFont.BitmapGlyph(glyph1.charCode,preparedBD,offsetX,offsetY,xAdvance);
+			this.glyphs.push(preparedGlyph);
+			this.glyphMap.set(preparedGlyph.charCode,preparedGlyph);
+		}
+	}
+	,dispose: function() {
+		if(this.glyphs != null) {
+			var _g = 0;
+			var _g1 = this.glyphs;
+			while(_g < _g1.length) {
+				var glyph = _g1[_g];
+				++_g;
+				glyph.dispose();
+			}
+		}
+		this.glyphs = null;
+		this.glyphMap = null;
+		this.font = null;
+	}
+	,__class__: terrylib.bitmapFont.BitmapGlyphCollection
+};
+terrylib.bitmapFont.BitmapGlyph = function(charCode,bmd,offsetX,offsetY,xAdvance) {
+	if(xAdvance == null) xAdvance = 0;
+	if(offsetY == null) offsetY = 0;
+	if(offsetX == null) offsetX = 0;
+	this.xAdvance = 0;
+	this.offsetY = 0;
+	this.offsetX = 0;
+	this.charCode = charCode;
+	this.bitmap = bmd;
+	this.offsetX = offsetX;
+	this.offsetY = offsetY;
+	this.xAdvance = xAdvance;
+	this.rect = bmd.rect;
+};
+$hxClasses["terrylib.bitmapFont.BitmapGlyph"] = terrylib.bitmapFont.BitmapGlyph;
+terrylib.bitmapFont.BitmapGlyph.__name__ = ["terrylib","bitmapFont","BitmapGlyph"];
+terrylib.bitmapFont.BitmapGlyph.prototype = {
+	dispose: function() {
+		if(this.bitmap != null) this.bitmap.dispose();
+		this.bitmap = null;
+	}
+	,__class__: terrylib.bitmapFont.BitmapGlyph
+};
+terrylib.bitmapFont._BitmapTextAlign = {};
+terrylib.bitmapFont._BitmapTextAlign.BitmapTextAlign_Impl_ = function() { };
+$hxClasses["terrylib.bitmapFont._BitmapTextAlign.BitmapTextAlign_Impl_"] = terrylib.bitmapFont._BitmapTextAlign.BitmapTextAlign_Impl_;
+terrylib.bitmapFont._BitmapTextAlign.BitmapTextAlign_Impl_.__name__ = ["terrylib","bitmapFont","_BitmapTextAlign","BitmapTextAlign_Impl_"];
+terrylib.bitmapFont.BitmapTextField = function(font,text,pixelSnapping,smoothing) {
+	if(smoothing == null) smoothing = false;
+	if(text == null) text = "";
+	this._fieldHeight = 1;
+	this._fieldWidth = 1;
+	this._pendingBorderGlyphsChange = false;
+	this._pendingTextGlyphsChange = true;
+	this._pendingGraphicChange = true;
+	this._pendingTextChange = true;
+	this.updateImmediately = true;
+	this.size = 1;
+	this.numLines = 0;
+	this.multiLine = true;
+	this.backgroundColor = 0;
+	this.background = false;
+	this.borderQuality = 0;
+	this.borderSize = 1;
+	this.borderColor = -16777216;
+	this.borderStyle = terrylib.bitmapFont.TextBorderStyle.NONE;
+	this.useTextColor = false;
+	this.textColor = -1;
+	this._tabSpaces = "    ";
+	this.numSpacesInTab = 4;
+	this.padding = 0;
+	this.autoSize = true;
+	this.wrapByWord = true;
+	this.wordWrap = true;
+	this.autoUpperCase = false;
+	this.letterSpacing = 0;
+	this.lineSpacing = 0;
+	this.alignment = "left";
+	this._linesWidth = [];
+	this._lines = [];
+	this.text = "";
+	openfl.display.Sprite.call(this);
+	this.shadowOffset = new openfl.geom.Point(1,1);
+	if(pixelSnapping == null) pixelSnapping = openfl.display.PixelSnapping.AUTO; else pixelSnapping = pixelSnapping;
+	this._bitmapData = new openfl.display.BitmapData(this._fieldWidth,this._fieldHeight,true,0);
+	this._bitmap = new openfl.display.Bitmap(this._bitmapData,pixelSnapping,smoothing);
+	this._bitmap.smoothing = false;
+	this.addChild(this._bitmap);
+	this._point = new openfl.geom.Point();
+	if(font == null) font = terrylib.bitmapFont.BitmapFont.getDefaultFont();
+	this.set_font(font);
+	this.set_text(text);
+	this.set_smoothing(smoothing);
+};
+$hxClasses["terrylib.bitmapFont.BitmapTextField"] = terrylib.bitmapFont.BitmapTextField;
+terrylib.bitmapFont.BitmapTextField.__name__ = ["terrylib","bitmapFont","BitmapTextField"];
+terrylib.bitmapFont.BitmapTextField.__super__ = openfl.display.Sprite;
+terrylib.bitmapFont.BitmapTextField.prototype = $extend(openfl.display.Sprite.prototype,{
+	dispose: function() {
+		this.set_updateImmediately(false);
+		this.set_font(null);
+		this.set_text(null);
+		this._lines = null;
+		this._linesWidth = null;
+		this.shadowOffset = null;
+		this._point = null;
+		if(this.textGlyphs != null) this.textGlyphs.dispose();
+		this.textGlyphs = null;
+		if(this.borderGlyphs != null) this.borderGlyphs.dispose();
+		this.borderGlyphs = null;
+		if(this._bitmap != null) this.removeChild(this._bitmap);
+		this._bitmap = null;
+		if(this._bitmapData != null) this._bitmapData.dispose();
+		this._bitmapData = null;
+	}
+	,forceGraphicUpdate: function() {
+		this._pendingGraphicChange = true;
+		if(this._pendingTextGlyphsChange) this.updateTextGlyphs();
+		if(this._pendingBorderGlyphsChange) this.updateBorderGlyphs();
+		if(this._pendingTextChange) {
+			this.updateText();
+			this._pendingGraphicChange = true;
+		}
+		if(this._pendingGraphicChange) this.updateGraphic();
+	}
+	,checkImmediateChanges: function() {
+		if(this.updateImmediately) {
+			if(this._pendingTextGlyphsChange) this.updateTextGlyphs();
+			if(this._pendingBorderGlyphsChange) this.updateBorderGlyphs();
+			if(this._pendingTextChange) {
+				this.updateText();
+				this._pendingGraphicChange = true;
+			}
+			if(this._pendingGraphicChange) this.updateGraphic();
+		}
+	}
+	,checkPendingChanges: function() {
+		if(this._pendingTextGlyphsChange) this.updateTextGlyphs();
+		if(this._pendingBorderGlyphsChange) this.updateBorderGlyphs();
+		if(this._pendingTextChange) {
+			this.updateText();
+			this._pendingGraphicChange = true;
+		}
+		if(this._pendingGraphicChange) this.updateGraphic();
+	}
+	,set_textColor: function(value) {
+		if((function($this) {
+			var $r;
+			var $int = $this.textColor;
+			$r = $int < 0?4294967296.0 + $int:$int + 0.0;
+			return $r;
+		}(this)) != (function($this) {
+			var $r;
+			var int1 = value;
+			$r = int1 < 0?4294967296.0 + int1:int1 + 0.0;
+			return $r;
+		}(this))) {
+			this.textColor = value;
+			this._pendingTextGlyphsChange = true;
+			if(this.updateImmediately) {
+				if(this._pendingTextGlyphsChange) this.updateTextGlyphs();
+				if(this._pendingBorderGlyphsChange) this.updateBorderGlyphs();
+				if(this._pendingTextChange) {
+					this.updateText();
+					this._pendingGraphicChange = true;
+				}
+				if(this._pendingGraphicChange) this.updateGraphic();
+			}
+		}
+		return value;
+	}
+	,set_useTextColor: function(value) {
+		if(this.useTextColor != value) {
+			this.useTextColor = value;
+			this._pendingTextGlyphsChange = true;
+			if(this.updateImmediately) {
+				if(this._pendingTextGlyphsChange) this.updateTextGlyphs();
+				if(this._pendingBorderGlyphsChange) this.updateBorderGlyphs();
+				if(this._pendingTextChange) {
+					this.updateText();
+					this._pendingGraphicChange = true;
+				}
+				if(this._pendingGraphicChange) this.updateGraphic();
+			}
+		}
+		return value;
+	}
+	,set_text: function(value) {
+		if(value != this.text && value != null) {
+			this.text = value;
+			this._pendingTextChange = true;
+			if(this.updateImmediately) {
+				if(this._pendingTextGlyphsChange) this.updateTextGlyphs();
+				if(this._pendingBorderGlyphsChange) this.updateBorderGlyphs();
+				if(this._pendingTextChange) {
+					this.updateText();
+					this._pendingGraphicChange = true;
+				}
+				if(this._pendingGraphicChange) this.updateGraphic();
+			}
+		}
+		return value;
+	}
+	,updateText: function() {
+		var tmp;
+		if(this.autoUpperCase) tmp = this.text.toUpperCase(); else tmp = this.text;
+		this._lines = tmp.split("\n");
+		if(!this.autoSize) {
+			if(this.wordWrap) this.wrap(); else this.cutLines();
+		}
+		if(!this.multiLine) this._lines = [this._lines[0]];
+		this._pendingTextChange = false;
+		this._pendingGraphicChange = true;
+	}
+	,computeTextSize: function() {
+		var txtWidth = Math.ceil(this._fieldWidth);
+		var txtHeight = Math.ceil(this.get_textHeight()) + 2 * this.padding;
+		var tw = Math.ceil(this.get_textWidth());
+		if(this.autoSize) txtWidth = tw + 2 * this.padding; else txtWidth = Math.ceil(this._fieldWidth);
+		if(txtWidth == 0) this._fieldWidth = 1; else this._fieldWidth = txtWidth;
+		if(txtHeight == 0) this._fieldHeight = 1; else this._fieldHeight = txtHeight;
+	}
+	,getLineWidth: function(lineIndex) {
+		if(lineIndex < 0 || lineIndex >= this._lines.length) return 0;
+		return this.getStringWidth(this._lines[lineIndex]);
+	}
+	,getStringWidth: function(str,fordrawing) {
+		if(fordrawing == null) fordrawing = true;
+		var spaceWidth = Math.ceil(this.font.spaceWidth * this.size);
+		var tabWidth = Math.ceil(spaceWidth * this.numSpacesInTab);
+		var lineLength = str.length;
+		var lineWidth = Math.ceil(Math.abs(this.font.minOffsetX) * this.size);
+		if(!fordrawing) lineWidth = 0;
+		var charCode;
+		var charWidth = 0;
+		var widthPlusOffset = 0;
+		var glyphFrame;
+		var _g = 0;
+		while(_g < lineLength) {
+			var c = _g++;
+			charCode = HxOverrides.cca(str,c);
+			if(charCode == 32) charWidth = spaceWidth; else if(charCode == 9) charWidth = tabWidth; else if(this.font.glyphs.exists(charCode)) {
+				glyphFrame = this.font.glyphs.get(charCode);
+				charWidth = Math.ceil(glyphFrame.xadvance * this.size);
+				if(c == lineLength - 1) {
+					widthPlusOffset = Math.ceil((glyphFrame.xoffset + glyphFrame.get_bitmap().width) * this.size);
+					if(widthPlusOffset > charWidth) charWidth = widthPlusOffset;
+				}
+			} else charWidth = 0;
+			lineWidth += charWidth + this.letterSpacing;
+		}
+		if(lineLength > 0) lineWidth -= this.letterSpacing;
+		return lineWidth;
+	}
+	,cutLines: function() {
+		var newLines = [];
+		var lineLength;
+		var c;
+		var $char;
+		var charCode;
+		var charWidth = 0;
+		var subLine;
+		var subLineWidth;
+		var spaceWidth = this.font.spaceWidth * this.size;
+		var tabWidth = spaceWidth * this.numSpacesInTab;
+		var startX = Math.abs(this.font.minOffsetX) * this.size;
+		var _g = 0;
+		var _g1 = this._lines;
+		while(_g < _g1.length) {
+			var line = _g1[_g];
+			++_g;
+			lineLength = line.length;
+			subLine = new haxe.Utf8();
+			subLineWidth = startX;
+			c = 0;
+			while(c < lineLength) {
+				charCode = HxOverrides.cca(line,c);
+				if(charCode == 32) charWidth = spaceWidth; else if(charCode == 9) charWidth = tabWidth; else if(this.font.glyphs.exists(charCode)) charWidth = this.font.glyphs.get(charCode).xadvance * this.size; else charWidth = 0;
+				charWidth += this.letterSpacing;
+				if(subLineWidth + charWidth > this._fieldWidth - 2 * this.padding) {
+					subLine.__b += String.fromCharCode(charCode);
+					newLines.push(subLine.__b);
+					subLine = new haxe.Utf8();
+					subLineWidth = startX;
+					c = lineLength;
+				} else {
+					subLine.__b += String.fromCharCode(charCode);
+					subLineWidth += charWidth;
+				}
+				c++;
+			}
+		}
+		this._lines = newLines;
+	}
+	,wrap: function() {
+		var newLines = [];
+		var words;
+		var _g = 0;
+		var _g1 = this._lines;
+		while(_g < _g1.length) {
+			var line = _g1[_g];
+			++_g;
+			words = [];
+			this.splitLineIntoWords(line,words);
+			if(this.wrapByWord) this.wrapLineByWord(words,newLines); else this.wrapLineByCharacter(words,newLines);
+		}
+		this._lines = newLines;
+	}
+	,splitLineIntoWords: function(line,words) {
+		var word = "";
+		var wordUtf8 = new haxe.Utf8();
+		var isSpaceWord = false;
+		var lineLength = line.length;
+		var hyphenCode = HxOverrides.cca("-",0);
+		var c = 0;
+		var charCode;
+		var charUtf8;
+		while(c < lineLength) {
+			charCode = HxOverrides.cca(line,c);
+			word = wordUtf8.__b;
+			if(charCode == 32 || charCode == 9) {
+				if(!isSpaceWord) {
+					isSpaceWord = true;
+					if(word != "") {
+						words.push(word);
+						wordUtf8 = new haxe.Utf8();
+					}
+				}
+				wordUtf8.__b += String.fromCharCode(charCode);
+			} else if(charCode == hyphenCode) {
+				if(isSpaceWord && word != "") {
+					isSpaceWord = false;
+					words.push(word);
+					words.push("-");
+				} else if(isSpaceWord == false) {
+					charUtf8 = new haxe.Utf8();
+					charUtf8.__b += String.fromCharCode(charCode);
+					words.push(word + charUtf8.__b);
+				}
+				wordUtf8 = new haxe.Utf8();
+			} else {
+				if(isSpaceWord && word != "") {
+					isSpaceWord = false;
+					words.push(word);
+					wordUtf8 = new haxe.Utf8();
+				}
+				wordUtf8.__b += String.fromCharCode(charCode);
+			}
+			c++;
+		}
+		word = wordUtf8.__b;
+		if(word != "") words.push(word);
+	}
+	,wrapLineByWord: function(words,newLines) {
+		var numWords = words.length;
+		var w;
+		var word;
+		var wordWidth;
+		var wordLength;
+		var isSpaceWord = false;
+		var charCode;
+		var charWidth = 0;
+		var subLines = [];
+		var subLine;
+		var subLineWidth;
+		var spaceWidth = this.font.spaceWidth * this.size;
+		var tabWidth = spaceWidth * this.numSpacesInTab;
+		var startX = Math.abs(this.font.minOffsetX) * this.size;
+		if(numWords > 0) {
+			w = 0;
+			subLineWidth = startX;
+			subLine = "";
+			while(w < numWords) {
+				wordWidth = 0;
+				word = words[w];
+				wordLength = word.length;
+				charCode = HxOverrides.cca(word,0);
+				isSpaceWord = charCode == 32 || charCode == 9;
+				var _g = 0;
+				while(_g < wordLength) {
+					var c = _g++;
+					charCode = HxOverrides.cca(word,c);
+					if(charCode == 32) charWidth = spaceWidth; else if(charCode == 9) charWidth = tabWidth; else if(this.font.glyphs.exists(charCode)) charWidth = this.font.glyphs.get(charCode).xadvance * this.size; else charWidth = 0;
+					wordWidth += charWidth;
+				}
+				wordWidth += (wordLength - 1) * this.letterSpacing;
+				if(subLineWidth + wordWidth > this._fieldWidth - 2 * this.padding) {
+					if(isSpaceWord) {
+						subLines.push(subLine);
+						subLine = "";
+						subLineWidth = startX;
+					} else if(subLine != "") {
+						subLines.push(subLine);
+						subLine = word;
+						subLineWidth = startX + wordWidth + this.letterSpacing;
+					} else {
+						subLine = word;
+						subLineWidth = startX + wordWidth + this.letterSpacing;
+					}
+				} else {
+					subLine += word;
+					subLineWidth += wordWidth + this.letterSpacing;
+				}
+				w++;
+			}
+			if(subLine != "") subLines.push(subLine);
+		}
+		var _g1 = 0;
+		while(_g1 < subLines.length) {
+			var subline = subLines[_g1];
+			++_g1;
+			newLines.push(subline);
+		}
+	}
+	,wrapLineByCharacter: function(words,newLines) {
+		var numWords = words.length;
+		var w;
+		var word;
+		var wordLength;
+		var isSpaceWord = false;
+		var $char;
+		var charCode;
+		var c;
+		var charWidth = 0;
+		var subLines = [];
+		var subLine;
+		var subLineUtf8;
+		var subLineWidth;
+		var spaceWidth = this.font.spaceWidth * this.size;
+		var tabWidth = spaceWidth * this.numSpacesInTab;
+		var startX = Math.abs(this.font.minOffsetX) * this.size;
+		if(numWords > 0) {
+			w = 0;
+			subLineWidth = startX;
+			subLineUtf8 = new haxe.Utf8();
+			while(w < numWords) {
+				word = words[w];
+				wordLength = word.length;
+				charCode = HxOverrides.cca(word,0);
+				isSpaceWord = charCode == 32 || charCode == 9;
+				c = 0;
+				while(c < wordLength) {
+					charCode = HxOverrides.cca(word,c);
+					if(charCode == 32) charWidth = spaceWidth; else if(charCode == 9) charWidth = tabWidth; else if(this.font.glyphs.exists(charCode)) charWidth = this.font.glyphs.get(charCode).xadvance * this.size; else charWidth = 0;
+					if(subLineWidth + charWidth > this._fieldWidth - 2 * this.padding) {
+						subLine = subLineUtf8.__b;
+						if(isSpaceWord) {
+							subLines.push(subLine);
+							c = wordLength;
+							subLineUtf8 = new haxe.Utf8();
+							subLineWidth = startX;
+						} else if(subLine != "") {
+							subLines.push(subLine);
+							subLineUtf8 = new haxe.Utf8();
+							subLineUtf8.__b += String.fromCharCode(charCode);
+							subLineWidth = startX + charWidth + this.letterSpacing;
+						} else {
+							subLineUtf8 = new haxe.Utf8();
+							subLineUtf8.__b += String.fromCharCode(charCode);
+							subLineWidth = startX + charWidth + this.letterSpacing;
+						}
+					} else {
+						subLineUtf8.__b += String.fromCharCode(charCode);
+						subLineWidth += charWidth + this.letterSpacing;
+					}
+					c++;
+				}
+				w++;
+			}
+			subLine = subLineUtf8.__b;
+			if(subLine != "") subLines.push(subLine);
+		}
+		var _g = 0;
+		while(_g < subLines.length) {
+			var subline = subLines[_g];
+			++_g;
+			newLines.push(subline);
+		}
+	}
+	,updateGraphic: function() {
+		this.computeTextSize();
+		var colorForFill;
+		if(this.background) colorForFill = this.backgroundColor; else colorForFill = 0;
+		if(this._bitmapData == null || (this._fieldWidth != this._bitmapData.width || this._fieldHeight != this._bitmapData.height)) {
+			if(this._bitmapData != null) this._bitmapData.dispose();
+			this._bitmapData = new openfl.display.BitmapData(this._fieldWidth,this._fieldHeight,true,colorForFill);
+			this._bitmap.bitmapData = this._bitmapData;
+			this._bitmap.smoothing = this.smoothing;
+		} else this._bitmapData.fillRect(this._bitmapData.rect,colorForFill);
+		if(this.size > 0) {
+			this._bitmapData.lock();
+			var numLines = this._lines.length;
+			var line;
+			var lineWidth;
+			var ox;
+			var oy;
+			var iterations = this.borderSize * this.borderQuality | 0;
+			if(iterations <= 0) iterations = 1; else iterations = iterations;
+			var delta = this.borderSize / iterations | 0;
+			var iterationsX = 1;
+			var iterationsY = 1;
+			var deltaX = 1;
+			var deltaY = 1;
+			if(this.borderStyle == terrylib.bitmapFont.TextBorderStyle.SHADOW) {
+				iterationsX = Math.round(Math.abs(this.shadowOffset.x) * this.borderQuality);
+				if(iterationsX <= 0) iterationsX = 1; else iterationsX = iterationsX;
+				iterationsY = Math.round(Math.abs(this.shadowOffset.y) * this.borderQuality);
+				if(iterationsY <= 0) iterationsY = 1; else iterationsY = iterationsY;
+				deltaX = Math.round(this.shadowOffset.x / iterationsX);
+				deltaY = Math.round(this.shadowOffset.y / iterationsY);
+			}
+			var _g = 0;
+			while(_g < numLines) {
+				var i = _g++;
+				line = this._lines[i];
+				lineWidth = this._linesWidth[i];
+				ox = Std["int"](Math.abs(this.font.minOffsetX) * this.size);
+				oy = (i * (this.font.lineHeight * this.size + this.lineSpacing) | 0) + this.padding;
+				if(this.alignment == "center") ox += ((this._fieldWidth - lineWidth) / 2 | 0) - this.padding;
+				if(this.alignment == "right") ox += this._fieldWidth - (lineWidth | 0) - this.padding; else ox += this.padding;
+				var _g1 = this.borderStyle;
+				switch(_g1[1]) {
+				case 1:
+					var _g2 = 0;
+					while(_g2 < iterationsY) {
+						var iterY = _g2++;
+						var _g3 = 0;
+						while(_g3 < iterationsX) {
+							var iterX = _g3++;
+							this.blitLine(line,this.borderGlyphs,ox + deltaX * (iterX + 1),oy + deltaY * (iterY + 1));
+						}
+					}
+					break;
+				case 2:
+					var itd = 0;
+					var _g21 = 0;
+					while(_g21 < iterations) {
+						var iter = _g21++;
+						itd = delta * (iter + 1);
+						this.blitLine(line,this.borderGlyphs,ox - itd,oy - itd);
+						this.blitLine(line,this.borderGlyphs,ox,oy - itd);
+						this.blitLine(line,this.borderGlyphs,ox + itd,oy - itd);
+						this.blitLine(line,this.borderGlyphs,ox - itd,oy);
+						this.blitLine(line,this.borderGlyphs,ox + itd,oy);
+						this.blitLine(line,this.borderGlyphs,ox - itd,oy + itd);
+						this.blitLine(line,this.borderGlyphs,ox,oy + itd);
+						this.blitLine(line,this.borderGlyphs,ox + itd,oy + itd);
+					}
+					break;
+				case 3:
+					var itd1 = 0;
+					var _g22 = 0;
+					while(_g22 < iterations) {
+						var iter1 = _g22++;
+						itd1 = delta * (iter1 + 1);
+						this.blitLine(line,this.borderGlyphs,ox - itd1,oy - itd1);
+						this.blitLine(line,this.borderGlyphs,ox + itd1,oy - itd1);
+						this.blitLine(line,this.borderGlyphs,ox - itd1,oy + itd1);
+						this.blitLine(line,this.borderGlyphs,ox + itd1,oy + itd1);
+					}
+					break;
+				case 0:
+					break;
+				}
+			}
+			var _g4 = 0;
+			while(_g4 < numLines) {
+				var i1 = _g4++;
+				line = this._lines[i1];
+				lineWidth = this._linesWidth[i1];
+				ox = Std["int"](Math.abs(this.font.minOffsetX) * this.size);
+				oy = (i1 * (this.font.lineHeight * this.size + this.lineSpacing) | 0) + this.padding;
+				if(this.alignment == "center") ox += ((this._fieldWidth - lineWidth) / 2 | 0) - this.padding;
+				if(this.alignment == "right") ox += this._fieldWidth - (lineWidth | 0) - this.padding; else ox += this.padding;
+				this.blitLine(line,this.textGlyphs,ox,oy);
+			}
+			this._bitmapData.unlock();
+		}
+		this._pendingGraphicChange = false;
+	}
+	,blitLine: function(line,glyphs,startX,startY) {
+		if(glyphs == null) return;
+		var glyph;
+		var charCode;
+		var curX = startX;
+		var curY = startY;
+		var spaceWidth = this.font.spaceWidth * this.size | 0;
+		var tabWidth = spaceWidth * this.numSpacesInTab | 0;
+		var lineLength = line.length;
+		var _g = 0;
+		while(_g < lineLength) {
+			var i = _g++;
+			charCode = HxOverrides.cca(line,i);
+			if(charCode == 32) curX += spaceWidth; else if(charCode == 9) curX += tabWidth; else {
+				glyph = glyphs.glyphMap.get(charCode);
+				if(glyph != null) {
+					this._point.x = curX + glyph.offsetX;
+					this._point.y = curY + glyph.offsetY;
+					this._bitmapData.copyPixels(glyph.bitmap,glyph.rect,this._point,null,null,true);
+					curX += glyph.xAdvance;
+				}
+			}
+			curX += this.letterSpacing;
+		}
+	}
+	,setBorderStyle: function(Style,Color,Size,Quality) {
+		if(Quality == null) Quality = 1;
+		if(Size == null) Size = 1;
+		if(Color == null) Color = -1;
+		this.set_borderStyle(Style);
+		this.set_borderColor(Color);
+		this.set_borderSize(Size);
+		this.set_borderQuality(Quality);
+		if(this.borderStyle == terrylib.bitmapFont.TextBorderStyle.SHADOW) this.shadowOffset.setTo(this.borderSize,this.borderSize);
+		this._pendingGraphicChange = true;
+		if(this.updateImmediately) {
+			if(this._pendingTextGlyphsChange) this.updateTextGlyphs();
+			if(this._pendingBorderGlyphsChange) this.updateBorderGlyphs();
+			if(this._pendingTextChange) {
+				this.updateText();
+				this._pendingGraphicChange = true;
+			}
+			if(this._pendingGraphicChange) this.updateGraphic();
+		}
+	}
+	,set_width: function(value) {
+		value = value | 0;
+		value = Math.max(1,value);
+		if(value != this.get_width()) {
+			if(value == 0) this._fieldWidth = 1; else this._fieldWidth = value | 0;
+			this._pendingTextChange = true;
+			if(this.updateImmediately) {
+				if(this._pendingTextGlyphsChange) this.updateTextGlyphs();
+				if(this._pendingBorderGlyphsChange) this.updateBorderGlyphs();
+				if(this._pendingTextChange) {
+					this.updateText();
+					this._pendingGraphicChange = true;
+				}
+				if(this._pendingGraphicChange) this.updateGraphic();
+			}
+		}
+		return value;
+	}
+	,set_alignment: function(value) {
+		if(this.alignment != value) {
+			this.alignment = value;
+			this._pendingGraphicChange = true;
+			if(this.updateImmediately) {
+				if(this._pendingTextGlyphsChange) this.updateTextGlyphs();
+				if(this._pendingBorderGlyphsChange) this.updateBorderGlyphs();
+				if(this._pendingTextChange) {
+					this.updateText();
+					this._pendingGraphicChange = true;
+				}
+				if(this._pendingGraphicChange) this.updateGraphic();
+			}
+		}
+		return value;
+	}
+	,set_multiLine: function(value) {
+		if(this.multiLine != value) {
+			this.multiLine = value;
+			this._pendingTextChange = true;
+			if(this.updateImmediately) {
+				if(this._pendingTextGlyphsChange) this.updateTextGlyphs();
+				if(this._pendingBorderGlyphsChange) this.updateBorderGlyphs();
+				if(this._pendingTextChange) {
+					this.updateText();
+					this._pendingGraphicChange = true;
+				}
+				if(this._pendingGraphicChange) this.updateGraphic();
+			}
+		}
+		return value;
+	}
+	,set_font: function(value) {
+		if(this.font != value && value != null) {
+			this.font = value;
+			this._pendingTextChange = true;
+			this._pendingBorderGlyphsChange = true;
+			if(this.updateImmediately) {
+				if(this._pendingTextGlyphsChange) this.updateTextGlyphs();
+				if(this._pendingBorderGlyphsChange) this.updateBorderGlyphs();
+				if(this._pendingTextChange) {
+					this.updateText();
+					this._pendingGraphicChange = true;
+				}
+				if(this._pendingGraphicChange) this.updateGraphic();
+			}
+		}
+		return value;
+	}
+	,set_lineSpacing: function(value) {
+		if(this.lineSpacing != value) {
+			this.lineSpacing = Std["int"](Math.abs(value));
+			this._pendingGraphicChange = true;
+			if(this.updateImmediately) {
+				if(this._pendingTextGlyphsChange) this.updateTextGlyphs();
+				if(this._pendingBorderGlyphsChange) this.updateBorderGlyphs();
+				if(this._pendingTextChange) {
+					this.updateText();
+					this._pendingGraphicChange = true;
+				}
+				if(this._pendingGraphicChange) this.updateGraphic();
+			}
+		}
+		return this.lineSpacing;
+	}
+	,set_letterSpacing: function(value) {
+		var tmp = Std["int"](Math.abs(value));
+		if(tmp != this.letterSpacing) {
+			this.letterSpacing = tmp;
+			this._pendingTextChange = true;
+			if(this.updateImmediately) {
+				if(this._pendingTextGlyphsChange) this.updateTextGlyphs();
+				if(this._pendingBorderGlyphsChange) this.updateBorderGlyphs();
+				if(this._pendingTextChange) {
+					this.updateText();
+					this._pendingGraphicChange = true;
+				}
+				if(this._pendingGraphicChange) this.updateGraphic();
+			}
+		}
+		return this.letterSpacing;
+	}
+	,set_autoUpperCase: function(value) {
+		if(this.autoUpperCase != value) {
+			this.autoUpperCase = value;
+			this._pendingTextChange = true;
+			if(this.updateImmediately) {
+				if(this._pendingTextGlyphsChange) this.updateTextGlyphs();
+				if(this._pendingBorderGlyphsChange) this.updateBorderGlyphs();
+				if(this._pendingTextChange) {
+					this.updateText();
+					this._pendingGraphicChange = true;
+				}
+				if(this._pendingGraphicChange) this.updateGraphic();
+			}
+		}
+		return this.autoUpperCase;
+	}
+	,set_wordWrap: function(value) {
+		if(this.wordWrap != value) {
+			this.wordWrap = value;
+			this._pendingTextChange = true;
+			if(this.updateImmediately) {
+				if(this._pendingTextGlyphsChange) this.updateTextGlyphs();
+				if(this._pendingBorderGlyphsChange) this.updateBorderGlyphs();
+				if(this._pendingTextChange) {
+					this.updateText();
+					this._pendingGraphicChange = true;
+				}
+				if(this._pendingGraphicChange) this.updateGraphic();
+			}
+		}
+		return this.wordWrap;
+	}
+	,set_wrapByWord: function(value) {
+		if(this.wrapByWord != value) {
+			this.wrapByWord = value;
+			this._pendingTextChange = true;
+			if(this.updateImmediately) {
+				if(this._pendingTextGlyphsChange) this.updateTextGlyphs();
+				if(this._pendingBorderGlyphsChange) this.updateBorderGlyphs();
+				if(this._pendingTextChange) {
+					this.updateText();
+					this._pendingGraphicChange = true;
+				}
+				if(this._pendingGraphicChange) this.updateGraphic();
+			}
+		}
+		return value;
+	}
+	,set_autoSize: function(value) {
+		if(this.autoSize != value) {
+			this.autoSize = value;
+			this._pendingTextChange = true;
+			if(this.updateImmediately) {
+				if(this._pendingTextGlyphsChange) this.updateTextGlyphs();
+				if(this._pendingBorderGlyphsChange) this.updateBorderGlyphs();
+				if(this._pendingTextChange) {
+					this.updateText();
+					this._pendingGraphicChange = true;
+				}
+				if(this._pendingGraphicChange) this.updateGraphic();
+			}
+		}
+		return this.autoSize;
+	}
+	,set_size: function(value) {
+		var tmp = Math.abs(value);
+		if(tmp != this.size) {
+			this.size = tmp;
+			this._pendingTextGlyphsChange = true;
+			this._pendingBorderGlyphsChange = true;
+			this._pendingTextChange = true;
+			if(this.updateImmediately) {
+				if(this._pendingTextGlyphsChange) this.updateTextGlyphs();
+				if(this._pendingBorderGlyphsChange) this.updateBorderGlyphs();
+				if(this._pendingTextChange) {
+					this.updateText();
+					this._pendingGraphicChange = true;
+				}
+				if(this._pendingGraphicChange) this.updateGraphic();
+			}
+		}
+		return value;
+	}
+	,set_padding: function(value) {
+		if(value != this.padding) {
+			this.padding = value;
+			this._pendingTextChange = true;
+			if(this.updateImmediately) {
+				if(this._pendingTextGlyphsChange) this.updateTextGlyphs();
+				if(this._pendingBorderGlyphsChange) this.updateBorderGlyphs();
+				if(this._pendingTextChange) {
+					this.updateText();
+					this._pendingGraphicChange = true;
+				}
+				if(this._pendingGraphicChange) this.updateGraphic();
+			}
+		}
+		return value;
+	}
+	,set_numSpacesInTab: function(value) {
+		if(this.numSpacesInTab != value && value > 0) {
+			this.numSpacesInTab = value;
+			this._tabSpaces = "";
+			var _g = 0;
+			while(_g < value) {
+				var i = _g++;
+				this._tabSpaces += " ";
+			}
+			this._pendingTextChange = true;
+			if(this.updateImmediately) {
+				if(this._pendingTextGlyphsChange) this.updateTextGlyphs();
+				if(this._pendingBorderGlyphsChange) this.updateBorderGlyphs();
+				if(this._pendingTextChange) {
+					this.updateText();
+					this._pendingGraphicChange = true;
+				}
+				if(this._pendingGraphicChange) this.updateGraphic();
+			}
+		}
+		return value;
+	}
+	,set_background: function(value) {
+		if(this.background != value) {
+			this.background = value;
+			this._pendingGraphicChange = true;
+			if(this.updateImmediately) {
+				if(this._pendingTextGlyphsChange) this.updateTextGlyphs();
+				if(this._pendingBorderGlyphsChange) this.updateBorderGlyphs();
+				if(this._pendingTextChange) {
+					this.updateText();
+					this._pendingGraphicChange = true;
+				}
+				if(this._pendingGraphicChange) this.updateGraphic();
+			}
+		}
+		return value;
+	}
+	,set_backgroundColor: function(value) {
+		if((function($this) {
+			var $r;
+			var $int = $this.backgroundColor;
+			$r = $int < 0?4294967296.0 + $int:$int + 0.0;
+			return $r;
+		}(this)) != (function($this) {
+			var $r;
+			var int1 = value;
+			$r = int1 < 0?4294967296.0 + int1:int1 + 0.0;
+			return $r;
+		}(this))) {
+			this.backgroundColor = value;
+			this._pendingGraphicChange = true;
+			if(this.updateImmediately) {
+				if(this._pendingTextGlyphsChange) this.updateTextGlyphs();
+				if(this._pendingBorderGlyphsChange) this.updateBorderGlyphs();
+				if(this._pendingTextChange) {
+					this.updateText();
+					this._pendingGraphicChange = true;
+				}
+				if(this._pendingGraphicChange) this.updateGraphic();
+			}
+		}
+		return value;
+	}
+	,set_borderStyle: function(style) {
+		if(style != this.borderStyle) {
+			this.borderStyle = style;
+			this._pendingBorderGlyphsChange = true;
+			if(this.updateImmediately) {
+				if(this._pendingTextGlyphsChange) this.updateTextGlyphs();
+				if(this._pendingBorderGlyphsChange) this.updateBorderGlyphs();
+				if(this._pendingTextChange) {
+					this.updateText();
+					this._pendingGraphicChange = true;
+				}
+				if(this._pendingGraphicChange) this.updateGraphic();
+			}
+		}
+		return this.borderStyle;
+	}
+	,set_borderColor: function(value) {
+		if((function($this) {
+			var $r;
+			var $int = $this.borderColor;
+			$r = $int < 0?4294967296.0 + $int:$int + 0.0;
+			return $r;
+		}(this)) != (function($this) {
+			var $r;
+			var int1 = value;
+			$r = int1 < 0?4294967296.0 + int1:int1 + 0.0;
+			return $r;
+		}(this))) {
+			this.borderColor = value;
+			this._pendingBorderGlyphsChange = true;
+			if(this.updateImmediately) {
+				if(this._pendingTextGlyphsChange) this.updateTextGlyphs();
+				if(this._pendingBorderGlyphsChange) this.updateBorderGlyphs();
+				if(this._pendingTextChange) {
+					this.updateText();
+					this._pendingGraphicChange = true;
+				}
+				if(this._pendingGraphicChange) this.updateGraphic();
+			}
+		}
+		return value;
+	}
+	,set_borderSize: function(value) {
+		if(value != this.borderSize) {
+			this.borderSize = value;
+			if(this.borderStyle != terrylib.bitmapFont.TextBorderStyle.NONE) {
+				this._pendingGraphicChange = true;
+				if(this.updateImmediately) {
+					if(this._pendingTextGlyphsChange) this.updateTextGlyphs();
+					if(this._pendingBorderGlyphsChange) this.updateBorderGlyphs();
+					if(this._pendingTextChange) {
+						this.updateText();
+						this._pendingGraphicChange = true;
+					}
+					if(this._pendingGraphicChange) this.updateGraphic();
+				}
+			}
+		}
+		return value;
+	}
+	,set_borderQuality: function(value) {
+		value = Math.min(1,Math.max(0,value));
+		if(value != this.borderQuality) {
+			this.borderQuality = value;
+			if(this.borderStyle != terrylib.bitmapFont.TextBorderStyle.NONE) {
+				this._pendingGraphicChange = true;
+				if(this.updateImmediately) {
+					if(this._pendingTextGlyphsChange) this.updateTextGlyphs();
+					if(this._pendingBorderGlyphsChange) this.updateBorderGlyphs();
+					if(this._pendingTextChange) {
+						this.updateText();
+						this._pendingGraphicChange = true;
+					}
+					if(this._pendingGraphicChange) this.updateGraphic();
+				}
+			}
+		}
+		return value;
+	}
+	,get_numLines: function() {
+		return this._lines.length;
+	}
+	,get_textWidth: function() {
+		var max = 0;
+		var numLines = this._lines.length;
+		var lineWidth;
+		this._linesWidth = [];
+		var _g = 0;
+		while(_g < numLines) {
+			var i = _g++;
+			lineWidth = this.getLineWidth(i);
+			this._linesWidth[i] = lineWidth;
+			max = Math.max(max,lineWidth);
+		}
+		return max;
+	}
+	,get_textHeight: function() {
+		return (this.get_lineHeight() + this.lineSpacing) * this._lines.length - this.lineSpacing;
+	}
+	,get_lineHeight: function() {
+		return this.font.lineHeight * this.size;
+	}
+	,set_updateImmediately: function(value) {
+		if(this.updateImmediately != value) {
+			this.updateImmediately = value;
+			if(value) {
+				if(this._pendingTextGlyphsChange) this.updateTextGlyphs();
+				if(this._pendingBorderGlyphsChange) this.updateBorderGlyphs();
+				if(this._pendingTextChange) {
+					this.updateText();
+					this._pendingGraphicChange = true;
+				}
+				if(this._pendingGraphicChange) this.updateGraphic();
+			}
+		}
+		return value;
+	}
+	,set_smoothing: function(value) {
+		this._bitmap.smoothing = value;
+		return this.smoothing = value;
+	}
+	,updateTextGlyphs: function() {
+		if(this.font == null) return;
+		if(this.textGlyphs != null) this.textGlyphs.dispose();
+		this.textGlyphs = this.font.prepareGlyphs(this.size,this.textColor,this.useTextColor,this.smoothing);
+		this._pendingTextGlyphsChange = false;
+		this._pendingGraphicChange = true;
+	}
+	,updateBorderGlyphs: function() {
+		if(this.font != null && (this.borderGlyphs == null || (function($this) {
+			var $r;
+			var $int = $this.borderColor;
+			$r = $int < 0?4294967296.0 + $int:$int + 0.0;
+			return $r;
+		}(this)) != (function($this) {
+			var $r;
+			var int1 = $this.borderGlyphs.color;
+			$r = int1 < 0?4294967296.0 + int1:int1 + 0.0;
+			return $r;
+		}(this)) || this.size != this.borderGlyphs.scale || this.font != this.borderGlyphs.font)) {
+			if(this.borderGlyphs != null) this.borderGlyphs.dispose();
+			this.borderGlyphs = this.font.prepareGlyphs(this.size,this.borderColor,true,this.smoothing);
+		}
+		this._pendingBorderGlyphsChange = false;
+		this._pendingGraphicChange = true;
+	}
+	,__class__: terrylib.bitmapFont.BitmapTextField
+});
+terrylib.bitmapFont.TextBorderStyle = $hxClasses["terrylib.bitmapFont.TextBorderStyle"] = { __ename__ : true, __constructs__ : ["NONE","SHADOW","OUTLINE","OUTLINE_FAST"] };
+terrylib.bitmapFont.TextBorderStyle.NONE = ["NONE",0];
+terrylib.bitmapFont.TextBorderStyle.NONE.toString = $estr;
+terrylib.bitmapFont.TextBorderStyle.NONE.__enum__ = terrylib.bitmapFont.TextBorderStyle;
+terrylib.bitmapFont.TextBorderStyle.SHADOW = ["SHADOW",1];
+terrylib.bitmapFont.TextBorderStyle.SHADOW.toString = $estr;
+terrylib.bitmapFont.TextBorderStyle.SHADOW.__enum__ = terrylib.bitmapFont.TextBorderStyle;
+terrylib.bitmapFont.TextBorderStyle.OUTLINE = ["OUTLINE",2];
+terrylib.bitmapFont.TextBorderStyle.OUTLINE.toString = $estr;
+terrylib.bitmapFont.TextBorderStyle.OUTLINE.__enum__ = terrylib.bitmapFont.TextBorderStyle;
+terrylib.bitmapFont.TextBorderStyle.OUTLINE_FAST = ["OUTLINE_FAST",3];
+terrylib.bitmapFont.TextBorderStyle.OUTLINE_FAST.toString = $estr;
+terrylib.bitmapFont.TextBorderStyle.OUTLINE_FAST.__enum__ = terrylib.bitmapFont.TextBorderStyle;
 terrylib.util = {};
 terrylib.util.AnimationContainer = function(_animationname,_tileset,_startframe,_endframe,_delayperframe) {
 	this.name = _animationname;
@@ -34902,31 +37610,66 @@ terrylib.util.AnimationContainer.prototype = {
 	,__class__: terrylib.util.AnimationContainer
 };
 terrylib.util.Fontclass = function(_name,_size) {
-	this.name = _name;
-	this.size = _size;
-	this.tf = new openfl.text.TextField();
-	this.tf.set_embedFonts(true);
-	this.tf.set_defaultTextFormat(new openfl.text.TextFormat(terrylib.Text.getfonttypename(_name),this.size,0,false));
-	this.tf.set_selectable(false);
-	this.tf.set_width(terrylib.Gfx.screenwidth);
-	this.tf.set_height(terrylib.Gfx.screenheight);
-	this.tf.set_antiAliasType(openfl.text.AntiAliasType.NORMAL);
-	this.tf.set_text("???");
-	this.tfbitmap = new openfl.display.BitmapData(terrylib.Gfx.screenwidth,terrylib.Gfx.screenheight,true,0);
-	this.tf.set_height(terrylib.Gfx.screenheight);
+	this.type = terrylib.Text.fontfile[terrylib.Text.fontfileindex.get(_name)].type;
+	if(this.type == "bitmap") this.loadbitmapfont(_name,_size); else if(this.type == "ttf") this.loadttffont(_name,_size);
 };
 $hxClasses["terrylib.util.Fontclass"] = terrylib.util.Fontclass;
 terrylib.util.Fontclass.__name__ = ["terrylib","util","Fontclass"];
 terrylib.util.Fontclass.prototype = {
-	clearbitmap: function() {
+	loadbitmapfont: function(_name,_size) {
+		this.name = _name;
+		this.size = _size;
+		this.tf_bitmap = new terrylib.bitmapFont.BitmapTextField(terrylib.Text.fontfile[terrylib.Text.fontfileindex.get(_name)].bitmapfont);
+		this.tf_bitmap.set_text("???");
+		this.tf_bitmap.set_background(false);
+		this.tf_bitmap.set_size(_size);
+		this.tfbitmap = new openfl.display.BitmapData(terrylib.Gfx.screenwidth,terrylib.Gfx.screenheight,true,0);
+	}
+	,loadttffont: function(_name,_size) {
+		this.name = _name;
+		this.size = _size;
+		this.tf_ttf = new openfl.text.TextField();
+		this.tf_ttf.set_embedFonts(true);
+		this.tf_ttf.set_defaultTextFormat(new openfl.text.TextFormat(terrylib.Text.getfonttypename(_name),this.size,0,false));
+		this.tf_ttf.set_selectable(false);
+		this.tf_ttf.set_width(terrylib.Gfx.screenwidth);
+		this.tf_ttf.set_height(terrylib.Gfx.screenheight);
+		this.tf_ttf.set_antiAliasType(openfl.text.AntiAliasType.NORMAL);
+		this.tf_ttf.set_text("???");
+		this.tfbitmap = new openfl.display.BitmapData(terrylib.Gfx.screenwidth,terrylib.Gfx.screenheight,true,0);
+		this.tf_ttf.set_height(terrylib.Gfx.screenheight);
+	}
+	,clearbitmap: function() {
 		this.tfbitmap.fillRect(this.tfbitmap.rect,0);
 	}
 	,__class__: terrylib.util.Fontclass
 };
 terrylib.util.Fontfile = function(_file) {
-	this.filename = "data/fonts/" + _file + "/" + _file + ".ttf";
-	this.font = openfl.Assets.getFont(this.filename);
-	this.typename = this.font.name;
+	if(openfl.Assets.exists("data/fonts/" + _file + "/" + _file + ".fnt")) {
+		this.type = "bitmap";
+		this.fontxml = Xml.parse(openfl.Assets.getText("data/fonts/" + _file + "/" + _file + ".fnt"));
+		var tempfontimage = openfl.Assets.getBitmapData("data/fonts/" + _file + "/" + _file + "_0.png");
+		this.fontimage = new openfl.display.BitmapData(tempfontimage.width,tempfontimage.height,true,0);
+		var _g1 = 0;
+		var _g = tempfontimage.height;
+		while(_g1 < _g) {
+			var j = _g1++;
+			var _g3 = 0;
+			var _g2 = tempfontimage.width;
+			while(_g3 < _g2) {
+				var i = _g3++;
+				var cpixel = tempfontimage.getPixel(i,j);
+				if(cpixel != 0 && cpixel != 0) this.fontimage.setPixel32(i,j,-1);
+			}
+		}
+		this.bitmapfont = terrylib.bitmapFont.BitmapFont.fromAngelCode(this.fontimage,this.fontxml);
+		this.typename = _file;
+	} else if(openfl.Assets.exists("data/fonts/" + _file + "/" + _file + ".ttf")) {
+		this.type = "ttf";
+		this.filename = "data/fonts/" + _file + "/" + _file + ".ttf";
+		this.font = openfl.Assets.getFont(this.filename);
+		this.typename = this.font.name;
+	} else throw "ERROR: Cannot set font to \"" + _file + "\", no TTF or Bitmap Font found.";
 };
 $hxClasses["terrylib.util.Fontfile"] = terrylib.util.Fontfile;
 terrylib.util.Fontfile.__name__ = ["terrylib","util","Fontfile"];
@@ -34979,6 +37722,13 @@ var Bool = $hxClasses.Bool = Boolean;
 Bool.__ename__ = ["Bool"];
 var Class = $hxClasses.Class = { __name__ : ["Class"]};
 var Enum = { };
+Xml.Element = "element";
+Xml.PCData = "pcdata";
+Xml.CData = "cdata";
+Xml.Comment = "comment";
+Xml.DocType = "doctype";
+Xml.ProcessingInstruction = "processingInstruction";
+Xml.Document = "document";
 var this1;
 this1 = new Uint32Array(256);
 lime.math.color._RGBA.RGBA_Impl_.__alpha16 = this1;
@@ -35006,9 +37756,20 @@ if(window.createjs != null) createjs.Sound.alternateExtensions = ["ogg","mp3","w
 openfl.display.DisplayObject.__instanceCount = 0;
 openfl.display.DisplayObject.__worldRenderDirty = 0;
 openfl.display.DisplayObject.__worldTransformDirty = 0;
-openfl.text.Font.__registeredFonts = new Array();
 Webscript.counter = 0;
 haxe.ds.ObjectMap.count = 0;
+haxe.xml.Parser.escapes = (function($this) {
+	var $r;
+	var h = new haxe.ds.StringMap();
+	h.set("lt","<");
+	h.set("gt",">");
+	h.set("amp","&");
+	h.set("quot","\"");
+	h.set("apos","'");
+	h.set("nbsp",String.fromCharCode(160));
+	$r = h;
+	return $r;
+}(this));
 hscript.Parser.p1 = 0;
 hscript.Parser.readPos = 0;
 hscript.Parser.tokenMin = 0;
@@ -35024,6 +37785,7 @@ lime._Assets.AssetType_Impl_.MUSIC = "MUSIC";
 lime._Assets.AssetType_Impl_.SOUND = "SOUND";
 lime._Assets.AssetType_Impl_.TEMPLATE = "TEMPLATE";
 lime._Assets.AssetType_Impl_.TEXT = "TEXT";
+lime._backend.html5.HTML5Window.windowID = 0;
 lime.app.Preloader.images = new haxe.ds.StringMap();
 lime.app.Preloader.loaders = new haxe.ds.StringMap();
 lime.audio.openal.AL.NONE = 0;
@@ -35252,6 +38014,8 @@ lime.graphics.opengl.GL.DST_COLOR = 774;
 lime.graphics.opengl.GL.ONE_MINUS_DST_COLOR = 775;
 lime.graphics.opengl.GL.SRC_ALPHA_SATURATE = 776;
 lime.graphics.opengl.GL.FUNC_ADD = 32774;
+lime.graphics.opengl.GL.MIN = 32775;
+lime.graphics.opengl.GL.MAX = 32776;
 lime.graphics.opengl.GL.BLEND_EQUATION = 32777;
 lime.graphics.opengl.GL.BLEND_EQUATION_RGB = 32777;
 lime.graphics.opengl.GL.BLEND_EQUATION_ALPHA = 34877;
@@ -35677,6 +38441,7 @@ lime.text._TextScript.TextScript_Impl_.SIDDHAM = "Sidd";
 lime.text._TextScript.TextScript_Impl_.TIRHUTA = "Tirh";
 lime.text._TextScript.TextScript_Impl_.WARANG_CITI = "Wara";
 lime.ui.Gamepad.devices = new haxe.ds.IntMap();
+lime.ui.Gamepad.onConnect = new lime.app.Event();
 lime.ui._GamepadAxis.GamepadAxis_Impl_.LEFT_X = 0;
 lime.ui._GamepadAxis.GamepadAxis_Impl_.LEFT_Y = 1;
 lime.ui._GamepadAxis.GamepadAxis_Impl_.RIGHT_X = 2;
@@ -35949,6 +38714,9 @@ lime.ui._KeyModifier.KeyModifier_Impl_.CTRL = 192;
 lime.ui._KeyModifier.KeyModifier_Impl_.SHIFT = 3;
 lime.ui._KeyModifier.KeyModifier_Impl_.ALT = 768;
 lime.ui._KeyModifier.KeyModifier_Impl_.META = 3072;
+lime.ui.Touch.onEnd = new lime.app.Event();
+lime.ui.Touch.onMove = new lime.app.Event();
+lime.ui.Touch.onStart = new lime.app.Event();
 lime.utils._ArrayBufferView.TypedArrayType_Impl_.None = 0;
 lime.utils._ArrayBufferView.TypedArrayType_Impl_.Int8 = 1;
 lime.utils._ArrayBufferView.TypedArrayType_Impl_.Int16 = 2;
@@ -35984,10 +38752,16 @@ openfl.geom.Matrix.__temp = new openfl.geom.Matrix();
 openfl.geom.Matrix.__identity = new openfl.geom.Matrix();
 openfl.Lib.current = new openfl.display.MovieClip();
 openfl.Lib.__sentWarnings = new haxe.ds.StringMap();
+openfl._internal.renderer.GraphicsPaths.SIN45 = 0.70710678118654752440084436210485;
+openfl._internal.renderer.GraphicsPaths.TAN22 = 0.4142135623730950488016887242097;
 openfl._internal.renderer.cairo.CairoGraphics.SIN45 = 0.70710678118654752440084436210485;
 openfl._internal.renderer.cairo.CairoGraphics.TAN22 = 0.4142135623730950488016887242097;
+openfl._internal.renderer.cairo.CairoGraphics.fillCommands = new Array();
+openfl._internal.renderer.cairo.CairoGraphics.strokeCommands = new Array();
 openfl._internal.renderer.canvas.CanvasGraphics.SIN45 = 0.70710678118654752440084436210485;
 openfl._internal.renderer.canvas.CanvasGraphics.TAN22 = 0.4142135623730950488016887242097;
+openfl._internal.renderer.canvas.CanvasGraphics.fillCommands = new Array();
+openfl._internal.renderer.canvas.CanvasGraphics.strokeCommands = new Array();
 openfl._internal.renderer.opengl.GLRenderer.glContextId = 0;
 openfl._internal.renderer.opengl.GLRenderer.glContexts = [];
 openfl._internal.renderer.opengl.shaders2.Shader.UID = 0;
@@ -36093,6 +38867,15 @@ openfl.display.Graphics.TILE_RECT = 32;
 openfl.display.Graphics.TILE_ORIGIN = 64;
 openfl.display.Graphics.TILE_BLEND_NORMAL = 0;
 openfl.display.Graphics.TILE_BLEND_ADD = 65536;
+openfl.display.Graphics.TILE_BLEND_MULTIPLY = 131072;
+openfl.display.Graphics.TILE_BLEND_SCREEN = 262144;
+openfl.display.Graphics.TILE_BLEND_SUBTRACT = 524288;
+openfl.display.Graphics.TILE_BLEND_DARKEN = 1048576;
+openfl.display.Graphics.TILE_BLEND_LIGHTEN = 2097152;
+openfl.display.Graphics.TILE_BLEND_OVERLAY = 4194304;
+openfl.display.Graphics.TILE_BLEND_HARDLIGHT = 8388608;
+openfl.display.Graphics.TILE_BLEND_DIFFERENCE = 16777216;
+openfl.display.Graphics.TILE_BLEND_INVERT = 33554432;
 openfl.display.GraphicsPathCommand.LINE_TO = 2;
 openfl.display.GraphicsPathCommand.MOVE_TO = 1;
 openfl.display.GraphicsPathCommand.CURVE_TO = 3;
@@ -36114,6 +38897,12 @@ openfl.display.Tilesheet.TILE_BLEND_ADD = 65536;
 openfl.display.Tilesheet.TILE_BLEND_MULTIPLY = 131072;
 openfl.display.Tilesheet.TILE_BLEND_SCREEN = 262144;
 openfl.display.Tilesheet.TILE_BLEND_SUBTRACT = 524288;
+openfl.display.Tilesheet.TILE_BLEND_DARKEN = 1048576;
+openfl.display.Tilesheet.TILE_BLEND_LIGHTEN = 2097152;
+openfl.display.Tilesheet.TILE_BLEND_OVERLAY = 4194304;
+openfl.display.Tilesheet.TILE_BLEND_HARDLIGHT = 8388608;
+openfl.display.Tilesheet.TILE_BLEND_DIFFERENCE = 16777216;
+openfl.display.Tilesheet.TILE_BLEND_INVERT = 33554432;
 openfl.display.Tilesheet.__defaultPoint = new openfl.geom.Point(0,0);
 openfl.display3D.Context3D.TEXTURE_MAX_ANISOTROPY_EXT = 34046;
 openfl.display3D.Context3D.MAX_SAMPLERS = 8;
@@ -36224,7 +39013,7 @@ openfl.system.Capabilities.hasStreamingAudio = false;
 openfl.system.Capabilities.hasStreamingVideo = false;
 openfl.system.Capabilities.hasTLS = true;
 openfl.system.Capabilities.hasVideoEncoder = false;
-openfl.system.Capabilities.isDebugger = false;
+openfl.system.Capabilities.isDebugger = true;
 openfl.system.Capabilities.isEmbeddedInAcrobat = false;
 openfl.system.Capabilities.localFileReadDisable = true;
 openfl.system.Capabilities.manufacturer = "OpenFL Contributors";
@@ -36236,6 +39025,7 @@ openfl.system.Capabilities.supports32BitProcesses = false;
 openfl.system.Capabilities.supports64BitProcesses = false;
 openfl.system.Capabilities.touchscreenType = openfl.system.TouchscreenType.FINGER;
 openfl.system.SecurityDomain.currentDomain = new openfl.system.SecurityDomain();
+openfl.text.Font.__registeredFonts = new Array();
 openfl.ui.GameInput.isSupported = true;
 openfl.ui.GameInput.numDevices = 0;
 openfl.ui.GameInput.__devices = new haxe.ds.ObjectMap();
@@ -36405,5 +39195,20 @@ terrylib.Text.TOP = -20002;
 terrylib.Text.BOTTOM = -20003;
 terrylib.Text.CENTER = -20004;
 terrylib.Text.inputField = new openfl.text.TextField();
+terrylib.bitmapFont.BitmapFont.spaceCode = 32;
+terrylib.bitmapFont.BitmapFont.tabCode = 9;
+terrylib.bitmapFont.BitmapFont.newLineCode = 10;
+terrylib.bitmapFont.BitmapFont.defaultFontKey = "defaultFontKey";
+terrylib.bitmapFont.BitmapFont.defaultFontData = " 36000000000000000000!26101010001000\"46101010100000000000000000#66010100111110010100111110010100000000$56001000111011000001101110000100%66100100000100001000010000010010000000&66011000100000011010100100011010000000'26101000000000(36010100100100010000)36100010010010100000*46000010100100101000000000+46000001001110010000000000,36000000000000010100-46000000001110000000000000.26000000001000/66000010000100001000010000100000000000056011001001010010100100110000000156011000010000100001000010000000256111000001001100100001111000000356111000001001100000101110000000456100101001010010011100001000000556111101000011100000101110000000656011001000011100100100110000000756111000001000010001100001000000856011001001001100100100110000000956011001001010010011100001000000:26001000100000;26001000101000<46001001001000010000100000=46000011100000111000000000>46100001000010010010000000?56111000001001100000000100000000@66011100100010101110101010011100000000A56011001001010010111101001000000B56111001001011100100101110000000C56011001001010000100100110000000D56111001001010010100101110000000E56111101000011000100001111000000F56111101000010000110001000000000G56011001000010110100100111000000H56100101001011110100101001000000I26101010101000J56000100001000010100100110000000K56100101001010010111001001000000L46100010001000100011100000M66100010100010110110101010100010000000N56100101001011010101101001000000O56011001001010010100100110000000P56111001001010010111001000000000Q56011001001010010100100110000010R56111001001010010111001001000000S56011101000001100000101110000000T46111001000100010001000000U56100101001010010100100110000000V56100101001010010101000100000000W66100010100010101010110110100010000000X56100101001001100100101001000000Y56100101001010010011100001001100Z56111100001001100100001111000000[36110100100100110000}46110001000010010011000000]36110010010010110000^46010010100000000000000000_46000000000000000011110000'26101000000000a56000000111010010100100111000000b56100001110010010100101110000000c46000001101000100001100000d56000100111010010100100111000000e56000000110010110110000110000000f46011010001000110010000000g5700000011001001010010011100001001100h56100001110010010100101001000000i26100010101000j37010000010010010010100k56100001001010010111001001000000l26101010101000m66000000111100101010101010101010000000n56000001110010010100101001000000o56000000110010010100100110000000p5700000111001001010010111001000010000q5700000011101001010010011100001000010r46000010101100100010000000s56000000111011000001101110000000t46100011001000100001100000u56000001001010010100100111000000v56000001001010010101000100000000w66000000101010101010101010011110000000x56000001001010010011001001000000y5700000100101001010010011100001001100z56000001111000100010001111000000{46011001001000010001100000|26101010101000}46110001000010010011000000~56010101010000000000000000000000\\46111010101010101011100000";
+terrylib.bitmapFont.BitmapFont.fonts = new haxe.ds.StringMap();
+terrylib.bitmapFont.BitmapFont.DEFAULT_GLYPHS = " !\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~";
+terrylib.bitmapFont.BitmapFont.POINT = new openfl.geom.Point();
+terrylib.bitmapFont.BitmapFont.MATRIX = new openfl.geom.Matrix();
+terrylib.bitmapFont.BitmapFont.COLOR_TRANSFORM = new openfl.geom.ColorTransform();
+terrylib.bitmapFont._BitmapTextAlign.BitmapTextAlign_Impl_.LEFT = "left";
+terrylib.bitmapFont._BitmapTextAlign.BitmapTextAlign_Impl_.CENTER = "center";
+terrylib.bitmapFont._BitmapTextAlign.BitmapTextAlign_Impl_.RIGHT = "right";
 ApplicationMain.main();
 })(typeof window != "undefined" ? window : exports);
+
+//# sourceMappingURL=webthing.js.map

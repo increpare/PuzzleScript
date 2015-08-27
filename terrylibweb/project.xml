@@ -13,6 +13,8 @@
       file="webthing" 
    />
    
+  <window width="0" height="0" if="html5" />
+  
 	<window
       width="768" height="480" unless="mobile" 
    ></window>
@@ -35,8 +37,17 @@
 	<set name="openfl-legacy" if="windows"/>
 	<haxeflag name="--macro keep('IntIterator')"/>
 	<haxelib name="openfl" />
+	<haxelib name="sion" />
 	<haxelib name="hscript" />
 	<haxedef name="terrylibweb" />
+	
+	<!-- Using Beeblerox's BitmapFont implemention -->
+	<!-- Allow this setting to be overridden on the command-line -->
+	<set name="RENDER_BLIT" if="flash || html5" unless="RENDER_TILE" />
+	<set name="RENDER_TILE" unless="RENDER_BLIT" />
+	
+	<haxedef name="RENDER_BLIT" if="RENDER_BLIT" />
+	<haxedef name="RENDER_TILE" if="RENDER_TILE" />
 	
 	<assets path="data" exclude="*.svg|*.mp3|*.ogg|*.wav"/>	
 </project>

@@ -24,19 +24,18 @@ class Core extends Sprite {
 		Input.init(this.stage);
 		Mouse.init(this.stage);
 		Gfx.init(this.stage);
-		#if !terrylibweb
+		#if terrylibweb
+		#else
 		Music.init();
 		#end
 		
 		//Default setup
 		#if terrylibweb
 			Gfx.resizescreen(192, 120, 4);
-			Text.addfont("visitor", 13);
-			//snoot good at 14
-			//visitor best at 13
+			Text.addfont("retrofuture", 1);
 		#else
-			//Gfx.resizescreen(768, 480);
-			//Text.addfont("opensans", 24);
+			Gfx.resizescreen(768, 480);
+			Text.addfont("opensans", 24);
 		#end
 		
 		#if terrylibweb

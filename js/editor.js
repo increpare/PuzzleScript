@@ -234,7 +234,11 @@ var haxeHintArray = [
 ["Random.pickstring",'("this one", "or this one?", "maybe this one?"):String'],
 ["Random.pickint","(5, 14, 72, 92, 1, -723, 8):Int"],
 ["Random.pickfloat","(5.1, 14.2, 72.3, 92.4, 1.5, -723.6, 8.7):Float"],
-["Debug.log","(message)"]
+["Debug.log","(message)"],
+["Game.title","(title)"],
+["Game.homepage","(url)"],
+["Game.background","(color)"],
+["Game.foreground","(color)"],
 /*,
 ["break"],
 ["case"],
@@ -289,6 +293,14 @@ var haxeHintArray = [
 ["Dynamic"] 
 ["Array"]*/
 ];
+
+/*
+if you want the hints to be sorted
+function compareFn(a,b){
+	return a[0].localeCompare(b[0]);
+}
+haxeHintArray.sort(compareFn);
+*/
 
 function CompletionsPick( p_oCompletion ) { 
  //  console.log( "==> Function entry: " + arguments.callee.name + "() <==" ) ; 

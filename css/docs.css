@@ -18,7 +18,13 @@ SECTION, ARTICLE
 }
 BODY
 {
-	background: black;
+	background: #6d6d6d;
+/* background: -webkit-linear-gradient( #6d6d6d, #202020);
+  background: -o-linear-gradient(#6d6d6d, #202020); 
+  background: -moz-linear-gradient(#6d6d6d, #202020); 
+  background: linear-gradient(#6d6d6d, #202020); 
+  */
+
 	font-family: "Source Sans Pro", Helvetica, Arial, sans-serif;
 	line-height: 1.5;
 }
@@ -40,7 +46,9 @@ FORM
 }
 H2
 {
-	font-size: 120%;
+	font-size: 140%;
+	font-weight: bold;
+	text-decoration: none;
 }
 H3
 {
@@ -123,3 +131,4 @@ STRONG
 {
 	border: 1px solid #E84A5F;
 }
+

@@ -23,6 +23,7 @@ try {
 }
 
 
+
 var verbose_logging=false;
 var throttle_movement=false;
 var cache_console_messages=false;
@@ -70,3 +71,69 @@ var initLevel = {
 };
 
 var level = initLevel;
+
+
+
+function getTitle(){
+    if (metaData.title==""){
+        metaData.title="terrylib game";
+    }   
+    return metaData.title;
+}
+
+var metaData = {
+    title:"terrylib game",
+    homepage:"",
+    bgCol:"#000000"
+}
+function settitle(t){
+    metaData.title=t;
+    window.console.log("st " +t);
+
+    if (canSetHTMLColors){        
+        var link = document.getElementById ("gametitle");
+        link.innerText=t;
+    }
+    document.title = t;
+}
+
+function strip_http(url) {
+   url = url.replace(/^https?:\/\//,'');
+   url = url.replace(/\/*$/,'');
+   return url;
+}
+
+function qualifyURL(url) {
+    var a = document.createElement('a');
+    a.href = url;
+    return a.href;
+}
+
+function sethomepage(t){
+    metaData.homepage=t;
+    window.console.log("sh " +t);
+    if (canSetHTMLColors){        
+        var link = document.getElementById ("homepagelink");
+        link.href=qualifyURL(metaData.homepage);
+        link.innerText=strip_http(link.href);
+    }
+}
+
+function decimalToHex(d) {
+  var hex = Number(d).toString(16);
+  hex = "000000".substr(0, 6 - hex.length) + hex; 
+  return hex;
+}
+
+
+function setbackgroundcolor(t){
+    metaData.bgCol="#"+decimalToHex(t);
+    if (canSetHTMLColors){
+        var meta = document.getElementById ("openfl-content");
+        meta.style.backgroundColor=metaData.bgCol;
+        document.body.style.backgroundColor=metaData.bgCol;
+    } else {
+        var meta = document.getElementById ("openfl-content");
+        meta.style.backgroundColor=metaData.bgCol;   
+    }
+}

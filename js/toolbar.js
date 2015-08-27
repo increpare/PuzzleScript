@@ -2,15 +2,19 @@ function stopClick(){
 	if (interpreter==null){
 		interpreter = new Webbridge();
 	}
-	 interpreter.runScript("function update(){}");
+	setbackgroundcolor(0);
+	interpreter.runScript("function update(){}");
 }
 function runClick() {
 	clearConsole();
+	setbackgroundcolor(0);
 	//compile(["restart"]);
 	terryRun();
+	consolePrint("Running Program",true)
 }
 
 function compile(args){
+	setbackgroundcolor(0);
 	terryRun();
 }
 
@@ -66,10 +70,14 @@ function dateToReadable(title,time) {
 }
 
 function saveClick() {
-	var title = "terrylib game";
+	terryRun();
+
 	var text=editor.getValue();
+
+	stopClick();
+
 	var saveDat = {
-		title:title,
+		title:getTitle(),
 		text:text,
 		date: new Date()
 	}
@@ -199,11 +207,6 @@ function shareClick() {
 		}
 	};
 
-	function qualifyURL(url) {
-		var a = document.createElement('a');
-		a.href = url;
-		return a.href;
-	}
 
 	var githubURL = 'https://api.github.com/gists';
 	var githubHTTPClient = new XMLHttpRequest();

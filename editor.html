@@ -17,6 +17,7 @@
 <link rel="stylesheet" href="css/toolbar.css">
 <link rel="stylesheet" href="css/tern.css">
 <link rel="stylesheet" href="js/codemirror/hint/show-hint.css">
+<link rel="stylesheet" href="css/buttons.css">
 
 <!--CSSREPLACE-->
 <link rel="shortcut icon" type="image/x-icon" href="Documentation/ico/favicon.ico" />
@@ -37,10 +38,13 @@ function update() {
 <div id="verticaldragbar"></div>
 
 <div id="uppertoolbar">
-	&nbsp;&nbsp;&nbsp;<a href="index.html"><h2>terrylib</h2></a> - <a id="saveClickLink" href="javascript:void(0);">SAVE</a> -
-
+	&nbsp;&nbsp;&nbsp;
+	<a href="index.html"><h2>terrylib</h2></a> &nbsp;&nbsp; 
+	<span id="titlespan">
+	<a id="saveClickLink" href="javascript:void(0);" class="button-link" >SAVE</a> &nbsp;&nbsp;
 	<form action="" style="display:inline;"><select id="loadDropDown" name="default" style="display:inline; width:100px"> -
-</select></form> - <form action="" style="display:inline;"> <select  id="exampleDropdown"  name="default" style="display:inline; width:150px">
+</select></form> &nbsp;&nbsp; 
+	<form action="" style="display:inline;"> <select  id="exampleDropdown"  name="default" style="display:inline; width:100px">
 <option value="sokoban_basic">Load Example</option>
 <optgroup label="Elementary">
 <option value="ex1">Example 1</option>
@@ -59,8 +63,16 @@ function update() {
 <option value="ex10">Example 10</option>
 </optgroup>
 </select>
-</form>- <a id="runClickLink" href="javascript:void('Run the Game');">RUN</a> - <a id="stopClickLink" href="javascript:void('Stop the Game');">STOP</a> - <a id="shareClickLink" href="javascript:void('Generate Link To Game');">SHARE</a> - <a href="Documentation/documentation.html"  target="Puzzle_Script_Documentation">DOCS</a> - <a id="referenceClickLink"  href="javascript:void('Print Reference Sheet');" target="_blank">REFERENCE</a> - <a href="https://groups.google.com/forum/#!forum/puzzlescript">FORUM</a>
+</form> &nbsp;&nbsp;
+	<a id="runClickLink" href="javascript:void('Run the Game');" class="button-link">► RUN</a> &nbsp;&nbsp; 
+	<a id="stopClickLink" href="javascript:void('Stop the Game');" class="button-link">◼ STOP</a> &nbsp;&nbsp;
+	<a id="shareClickLink" href="javascript:void('Generate Link To Game');" class="button-link">SHARE</a> &nbsp;&nbsp; 
+	<a href="Documentation/documentation.html"  target="Puzzle_Script_Documentation" class="button-link">DOCS</a> &nbsp;&nbsp; 
+	<!--<a id="referenceClickLink"  href="javascript:void('Print Reference Sheet');" target="_blank" class="button-link">REFERENCE</a> &nbsp;&nbsp; -->
+	<a href="https://groups.google.com/forum/#!forum/puzzlescript" class="button-link">FORUM</a>
+	</span>
 </div>
+
 
 <div id="righttophalf">
 	<div class="upperarea">
@@ -107,7 +119,6 @@ function update() {
 
 <script src="js/debug.js"></script>
 <script src="js/globalVariables.js"></script>
-<script src="js/font.js"></script>
 <script src="js/rng.js"></script>
 <script src="js/riffwave.js"></script>
 <script src="js/sfxr.js"></script>

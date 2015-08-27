@@ -14,8 +14,8 @@ runClickLink.addEventListener("click", runClick, false);
 var runClickLink = document.getElementById("stopClickLink");
 runClickLink.addEventListener("click", stopClick, false);
 
-var referenceClickLink = document.getElementById("referenceClickLink");
-referenceClickLink.addEventListener("click", referenceClick, false);
+//var referenceClickLink = document.getElementById("referenceClickLink");
+//referenceClickLink.addEventListener("click", referenceClick, false);
 
 var saveClickLink = document.getElementById("saveClickLink");
 saveClickLink.addEventListener("click", saveClick, false);
