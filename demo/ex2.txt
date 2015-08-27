@@ -11,5 +11,5 @@ function update() {
   }
   Gfx.fillbox(0,0,Gfx.screenwidth,Gfx.screenheight,0xff0000);
   Gfx.fillbox(10,10,100,100,0xff0000);
-  Text.display(100, 100, "Hello World");
+  Text.display(Text.CENTER, Text.CENTER, "Hello World");
 }

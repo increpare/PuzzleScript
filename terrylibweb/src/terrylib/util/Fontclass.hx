@@ -26,7 +26,6 @@ class Fontclass {
 		
 		tf_bitmap.background = false;
 		
-		tf_bitmap.size = _size;
 		tfbitmap = new BitmapData(Gfx.screenwidth, Gfx.screenheight, true, 0);
 	}
 	

@@ -47,7 +47,7 @@ class Webscript {
 		//make a new loader
     myLoader = new URLLoader();
     //new request - for a file in the same folder called 'someTextFile.txt'
-    var myRequest:URLRequest = new URLRequest("schript.txt");
+    var myRequest:URLRequest = new URLRequest("script.txt");
 		
 		//wait for the load
     myLoader.addEventListener(Event.COMPLETE, onLoadComplete);
@@ -70,6 +70,7 @@ class Webscript {
 	
 	public static function update() {
 		if (errorinscript) {
+			Text.setfont("default", 1);
 			Gfx.clearscreen(Gfx.RGB(32, 0, 0));
 			Text.display(Text.CENTER, Text.CENTER, "ERROR! ERROR! ERROR!", Col.RED);
 		}else if (scriptloaded) {
@@ -90,7 +91,7 @@ class Webscript {
 			
 			Text.display(Gfx.screenwidth - 6, Gfx.screenheight - Text.height()-4, "terrylib alpha v0.1", Col.WHITE, { align:Text.RIGHT } );
 			
-			var msg:String = "WAITING_FOR_SCRIPTFILE...";
+			var msg:String = "WAITING FOR SCRIPTFILE...";
 			var startpos:Float = Gfx.screenwidthmid - Text.len(msg) / 2;
 			var currentpos:Float = 0;
 			for (i in 0 ... msg.length) {
@@ -99,10 +100,18 @@ class Webscript {
 				}
 				currentpos += Text.len(S.mid(msg, i, 1));
 			}
-			
 		}
+		
+		
+		oldfont = Text.currentfont;
+		oldfontsize = Text.currentsize;
+		Text.setfont("pixel", 1);
+		Text.display(Gfx.screenwidth - 4, 1, "FPS: " + Gfx.fps(), Col.YELLOW, { align: Text.RIGHT});
+		Text.setfont(oldfont, oldfontsize);
 	}
 	private static var counter:Int = 0;
+	private static var oldfont:String = "";
+	private static var oldfontsize:Int = 0;
 	
 	public static function loadscript(script:String) {
 		myscript = script;
@@ -116,6 +125,7 @@ class Webscript {
 		parser.allowTypes = true;
     interpreter = new hscript.Interp();
 		
+		interpreter.variables.set("Random", Random);
 		interpreter.variables.set("Math", Math);
 		interpreter.variables.set("Col", Col);
 		interpreter.variables.set("Convert", Convert);
@@ -124,12 +134,10 @@ class Webscript {
 		interpreter.variables.set("Input", Input);
 		interpreter.variables.set("Key", Key);
 		interpreter.variables.set("Game", Game);
-		//interpreter.variables.set("Load", Load);
 		interpreter.variables.set("Mouse", Mouse);
 		interpreter.variables.set("Music", Webmusic);
-		interpreter.variables.set("Random", Random);
-		//interpreter.variables.set("Scene", Scene);
 		interpreter.variables.set("Text", Text);
+		interpreter.variables.set("Font", Webfont);
     
 		//myscript = loadscriptfile("test");
 		runscript = true;
@@ -158,6 +166,8 @@ class Webscript {
 			initfunction = interpreter.variables.get("new");
 			updatefunction = interpreter.variables.get("update");
 			
+			//Set default font
+			Text.setfont("default", 1);
 			if (initfunction != null) {
 				initfunction();	
 			}

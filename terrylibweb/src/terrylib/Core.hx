@@ -32,10 +32,10 @@ class Core extends Sprite {
 		//Default setup
 		#if terrylibweb
 			Gfx.resizescreen(192, 120, 4);
-			Text.addfont("retrofuture", 1);
+			Text.setfont("default", 1);
 		#else
 			Gfx.resizescreen(768, 480);
-			Text.addfont("opensans", 24);
+			Text.setfont("opensans", 24);
 		#end
 		
 		#if terrylibweb
@@ -78,7 +78,7 @@ class Core extends Sprite {
 		
 		if(!Gfx.skiprender) Gfx.backbuffer.lock();
 		
-		Gfx.clearscreen();
+		if(Gfx.doclearscreeneachframe) Gfx.clearscreen();
 		#if terrylibweb
 		terrylibmain.update();
 		#else

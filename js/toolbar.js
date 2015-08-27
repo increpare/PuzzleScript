@@ -70,7 +70,12 @@ function dateToReadable(title,time) {
 }
 
 function saveClick() {
-	terryRun();
+	try {
+		terryRun();
+	}
+	catch (e){
+		consoleError(e,true);
+	}
 
 	var text=editor.getValue();
 
@@ -118,21 +123,27 @@ function loadDropDownChange() {
 
 	for (var i=0;i<saves.length;i++) {
 		var sd = saves[i];
-	    var key = dateToReadable(sd.title,new Date(sd.date));
-	    if (key==this.value) {
-
+	    var val = sd.date;
+	    //dateToReadable
+	    if (val==this.value) {
 	    	var saveText = sd.text;
 			editor.setValue(saveText);
 			setEditorClean();
 			var loadDropdown = document.getElementById('loadDropDown');
 			loadDropdown.selectedIndex=0;
 			unloadGame();
-			compile(["restart"]);
+			try{
+				compile(["restart"]);
+			}
+			catch (e){
+				consoleError(e,true);
+			}
+			stopClick();
 			return;
 	    }
 	}
 
-	consolePrint("Eek, trying to load a save, but couldn't find it. :(",true);
+	consoleError("Eek, trying to load a save, but couldn't find it. :(",true);
 }
 
 function unloadGame(){
@@ -165,7 +176,7 @@ function repopulateSaveDropdown(saves) {
 	    var optn = document.createElement("OPTION");
 	    var key = dateToReadable(sd.title,new Date(sd.date));
 	    optn.text = key;
-	    optn.value = key;
+	    optn.value = sd.date.toString();
 	    loadDropdown.options.add(optn);
 	}
 	loadDropdown.selectedIndex=0;

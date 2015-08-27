@@ -49,7 +49,6 @@ function update() {
     drawstripes(currenteffect);
   }
   
-  Text.changesize(10);
   //Display the text twice, once black and slightly offset, once white to give a shadow effect under the string
 
   Text.display(Text.CENTER, Gfx.screenheight - Text.height() - 5, "LEFT CLICK MOUSE TO CYCLE EFFECTS", Col.WHITE);

@@ -34,12 +34,12 @@
    
 	<source path="src" />
 	
-	<set name="openfl-legacy" if="windows"/>
 	<haxeflag name="--macro keep('IntIterator')"/>
 	<haxelib name="openfl" />
 	<haxelib name="sion" />
 	<haxelib name="hscript" />
 	<haxedef name="terrylibweb" />
+	<haxedef name="webgl" />
 	
 	<!-- Using Beeblerox's BitmapFont implemention -->
 	<!-- Allow this setting to be overridden on the command-line -->

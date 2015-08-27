@@ -937,8 +937,50 @@ if (typeof exports != 'undefined') {
 }
 
 var sfxCache = {};
+var noteCache = {};
 var cachedSeeds = [];
+var cachedNotes = [];
 var CACHE_MAX = 50;
+var NOTE_CACHE_MAX = 200;
+
+function cacheNote(seed,frequency,length,volume){
+  var str = seed.toString()+frequency.toString()+length.toString()+volume.toString();
+
+  if (str in noteCache) {
+    return noteCache[str];
+  } 
+
+  var params = generateFromSeed(seed);
+
+  var totLen=params.p_env_attack+params.p_env_sustain+params.p_env_punch+params.p_env_decay;
+  var scaleFactor=length/totLen;
+  params.p_env_attack*=scaleFactor;
+  params.p_env_sustain*=scaleFactor;
+  params.p_env_punch*=scaleFactor;
+  params.p_env_decay*=scaleFactor;
+
+  params.p_base_freq=0.384*frequency;
+  if (volume>1){
+    volume=1;
+  }
+  if (volume<0){
+    volume=0;
+  }
+  params.sound_vol = SOUND_VOL*volume;
+  params.sample_rate = SAMPLE_RATE;
+  params.bit_depth = BIT_DEPTH;
+
+  var sound = SoundEffect.generate(params);
+  noteCache[str] = sound;
+  cachedNotes.push(str);
+
+  while (cachedNotes.length>NOTE_CACHE_MAX) {
+    var toRemove=cachedNotes[0];
+    cachedNotes = cachedNotes.slice(1);
+    delete noteCache[toRemove];
+  }
+  return sound;
+}
 
 function cacheSeed(seed){
   if (seed in sfxCache) {
@@ -961,6 +1003,12 @@ function cacheSeed(seed){
   }
 
   return sound;
+}
+
+function playNote(seed,frequency,length,volume){
+  if (unitTesting) return;
+  var sound = cacheNote(seed,frequency,length,volume);
+  sound.play();
 }
 
 function playSound(seed) {
