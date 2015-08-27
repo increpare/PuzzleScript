@@ -122,6 +122,9 @@ function reset_panels(){
 	var w = (window.innerWidth-10);
 	var h = (window.innerHeight-5-35);
 	var resize_w = Math.floor(w*0.666);
+	if (w-resize_w<300){
+		resize_w=w-300;
+	}
 	resize_widths(resize_w);
 	//want the height to be set such that the ratio of width:height is 1.6
 	var wh=(w-resize_w)*0.625;
