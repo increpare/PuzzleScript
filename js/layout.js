@@ -121,10 +121,15 @@ function horizontalDragbarMouseUp(e) {
 function reset_panels(){
 	var w = (window.innerWidth-10);
 	var h = (window.innerHeight-5-35);
-	resize_widths(Math.floor(w*0.666));
+	var resize_w = Math.floor(w*0.666);
+	resize_widths(resize_w);
 	//want the height to be set such that the ratio of width:height is 1.6
-	var wh=w*0.333*0.625;
-	resize_heights(Math.floor(wh+40));
+	var wh=(w-resize_w)*0.625;
+	var resize_h=Math.floor(wh+45);
+	if (h-resize_h<50){
+		resize_h=h-50;
+	}
+	resize_heights(resize_h);	
 	winwidth = window.innerWidth;
 	winheight = window.innerHeight;
 };
