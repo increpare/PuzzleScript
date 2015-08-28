@@ -30,6 +30,28 @@ class Webscript {
 		runscript = false;
 		errorinscript = false;
 		
+		Text.setfont(Webfont.ZERO4B11, 1);
+		Text.setfont(Webfont.APPLE, 1);
+		Text.setfont(Webfont.BOLD, 1);
+		Text.setfont(Webfont.C64, 1);
+		Text.setfont(Webfont.CASUAL, 1);
+		Text.setfont(Webfont.COMIC, 1);
+		Text.setfont(Webfont.CRYPT, 1);
+		Text.setfont(Webfont.DOS, 1);
+		Text.setfont(Webfont.GANON, 1);
+		Text.setfont(Webfont.HANDY, 1);
+		Text.setfont(Webfont.NOKIA, 1);
+		Text.setfont(Webfont.OLDENGLISH, 1);
+		Text.setfont(Webfont.PIXEL, 1);
+		Text.setfont(Webfont.PRESSSTART, 1);
+		Text.setfont(Webfont.RETROFUTURE, 1);
+		Text.setfont(Webfont.ROMAN, 1);
+		Text.setfont(Webfont.SPECIAL, 1);
+		Text.setfont(Webfont.VISITOR, 1);
+		Text.setfont(Webfont.YOSTER, 1);
+		
+		Text.setfont(Webfont.DEFAULT, 1);
+		
 		try {
 			ExternalInterface.addCallback("loadscript", loadscript);
 		}catch (e:Dynamic) {
@@ -78,15 +100,14 @@ class Webscript {
 				try {
 					updatefunction();
 				}catch (e:Dynamic) {
-					Webdebug.error("RUNTIME ERROR:");
-					Webdebug.error(Convert.tostring(e));
+					Webdebug.error("RUNTIME ERROR: " + Convert.tostring(e));
 					Gfx.resizescreen(192, 120, 4);
 					errorinscript = true;
 					runscript = false;
 				}
 			}	
 		}else {
-			counter+=5;
+			counter+=10;
 			Gfx.clearscreen(Col.BLUE);
 			Gfx.fillbox(4, 4, Gfx.screenwidth - 8, Gfx.screenheight - 8, Col.NIGHTBLUE);
 			
@@ -142,19 +163,25 @@ class Webscript {
 		interpreter.variables.set("Font", Webfont);
 		interpreter.variables.set("Std", Std);
 		
-		
 		runscript = true;
 		try{
 			parsedscript = parser.parseString(myscript);
 		}catch (e:hscript.Expr.Error) {
-			Webdebug.error("Error: " + parser.error, parser.line);
+			Webdebug.error("Error!", parser.line);
 			runscript = false;
 			errorinscript = true;
 			Gfx.resizescreen(192, 120, 4);
 		}
 		
 		if (runscript) {
-			interpreter.execute(parsedscript);
+			try{
+				interpreter.execute(parsedscript);
+			}catch (e:hscript.Expr.Error) {
+				Webdebug.error("Initilisation error:", parser.line);
+				runscript = false;
+				errorinscript = true;
+				Gfx.resizescreen(192, 120, 4);
+			}
 			
 			title = interpreter.variables.get("title");
 			if (title == null) title = "Untitled";
@@ -173,7 +200,14 @@ class Webscript {
 			//Set default font
 			Text.setfont("default", 1);
 			if (initfunction != null) {
-				initfunction();	
+				try{
+					initfunction();	
+				}catch (e:Dynamic) {
+					Webdebug.error("Error in new(): " + Convert.tostring(e), parser.line);
+					runscript = false;
+					errorinscript = true;
+					Gfx.resizescreen(192, 120, 4);
+				}
 			}
 			
 			if (updatefunction == null) {

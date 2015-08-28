@@ -26,7 +26,7 @@ function update(){
     Music.playsound(6142);
   }
   
-  if(counter % 4 == 0) updatestars();
+  if(counter % 2 == 0) updatestars();
   drawstars();
 
   Text.setfont("pixel", 1);
@@ -48,9 +48,9 @@ function update(){
     }
   }else{
     scrolldelay++;
-    if(scrolldelay >= 90){
-      scrolldelay = 90;
-      scrollposition++;
+    if(scrolldelay >= 45){
+      scrolldelay = 45;
+      scrollposition+=2;
     }
   }
 

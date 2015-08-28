@@ -93,7 +93,7 @@ class Core extends Sprite {
 	#if terrylibweb
 		public var terrylibmain:Main;
 	#end
-	private var TARGET_FPS:Int = 60;
+	private var TARGET_FPS:Int = 30;
 	private var _rate:Float;
 	private var _skip:Float;
 	private var _last:Float = -1;

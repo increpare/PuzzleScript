@@ -5,7 +5,7 @@ function new(){
 var t:Int=0;
 
 function update() {
-  t++;
+  t+=2;
   if (t%10==0){
 	  Music.playsound(Math.floor(t/30));
   }

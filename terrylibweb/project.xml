@@ -21,7 +21,7 @@
    ></window>
    
 	<window
-      fps="60"
+      fps="30"
       background="0x000000"
       orientation="landscape"
       hardware="true"
@@ -35,8 +35,10 @@
 	<haxelib name="openfl" />
 	<haxelib name="sion" />
 	<haxelib name="hscript" />
+	
 	<haxedef name="terrylibweb" />
 	<haxedef name="webgl" />
+	<haxedef name="hscriptPos" />
 	
 	<!-- Using Beeblerox's BitmapFont implemention -->
 	<!-- Allow this setting to be overridden on the command-line -->
