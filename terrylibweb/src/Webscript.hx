@@ -92,6 +92,21 @@ class Webscript {
 	public static var	reloaddelay:Int = 0;
 	#end
 	
+	public static function printError(e:Dynamic):String{
+		
+		if ( Std.is(e,hscript.Expr.Error) ) {	
+			var errstr : String = e.e[0];
+			for (i in 2 ... e.e.length){
+				errstr = errstr + " " + e.e[i];
+			}
+			return errstr;
+		}
+		if (e.name == "TypeError"){
+			return e.stack;
+		}
+		return e.toString();
+	}
+
 	public static function update() {
 		#if flash
 		  if (Input.justpressed(Key.R)) {
@@ -115,7 +130,8 @@ class Webscript {
 				try {
 					updatefunction();
 				}catch (e:Dynamic) {
-					Webdebug.error("RUNTIME ERROR: " + e.stack);
+					var errorMessage = printError(e);
+					Webdebug.error("RUNTIME ERROR: " + errorMessage);
 					Gfx.resizescreen(192, 120, 4);
 					errorinscript = true;
 					runscript = false;
@@ -188,11 +204,8 @@ class Webscript {
 					e { error name , error code id, ? possibly data associated with that error}
 				}
 			*/
-			var errstr : String = e.e[0];
-			for (i in 2 ... e.e.length){
-				errstr = errstr + " " + e.e[i];
-			}
-			Webdebug.error("Error:"+errstr, parser.line);
+			var errstr : String = printError(e);
+			Webdebug.error("Error:"+errstr);
 			runscript = false;
 			errorinscript = true;
 			Gfx.resizescreen(192, 120, 4);
@@ -202,7 +215,8 @@ class Webscript {
 			try{
 				interpreter.execute(parsedscript);
 			}catch (e:hscript.Expr.Error) {
-				Webdebug.error("Initilisation error:", parser.line);
+				var errstr : String = printError(e);
+				Webdebug.error("Initilisation error:"+errstr, parser.line);
 				runscript = false;
 				errorinscript = true;
 				Gfx.resizescreen(192, 120, 4);
@@ -228,7 +242,8 @@ class Webscript {
 				try{
 					initfunction();	
 				}catch (e:Dynamic) {
-					Webdebug.error("Error in new(): " + e, parser.line);
+					var errstr : String = printError(e);
+					Webdebug.error("Error in new(): " + errstr, parser.line);
 					runscript = false;
 					errorinscript = true;
 					Gfx.resizescreen(192, 120, 4);
