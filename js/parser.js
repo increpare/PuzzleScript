@@ -20,10 +20,6 @@ for post-launch credits, check out activty on github.com/increpare/PuzzleScript
 
 */
 
-var compiling = false;
-var errorStrings = [];
-var errorCount=0;
-
 function logErrorCacheable(str, lineNumber,urgent) {
     if (compiling||urgent) {
         if (lineNumber === undefined) {

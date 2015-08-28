@@ -78,8 +78,9 @@ class Webscript {
 				try {
 					updatefunction();
 				}catch (e:Dynamic) {
-					Webdebug.log("RUNTIME ERROR:");
-					Webdebug.log(Convert.tostring(e));
+					Webdebug.error("RUNTIME ERROR:");
+					Webdebug.error(Convert.tostring(e));
+					Gfx.resizescreen(192, 120, 4);
 					errorinscript = true;
 					runscript = false;
 				}
@@ -102,12 +103,13 @@ class Webscript {
 			}
 		}
 		
-		
-		oldfont = Text.currentfont;
-		oldfontsize = Text.currentsize;
-		Text.setfont("pixel", 1);
-		Text.display(Gfx.screenwidth - 4, 1, "FPS: " + Gfx.fps(), Col.YELLOW, { align: Text.RIGHT});
-		Text.setfont(oldfont, oldfontsize);
+		if (Gfx.showfps) {
+			oldfont = Text.currentfont;
+			oldfontsize = Text.currentsize;
+			Text.setfont("pixel", 1);
+			Text.display(Gfx.screenwidth - 4, 1, "FPS: " + Gfx.fps(), Col.YELLOW, { align: Text.RIGHT});
+			Text.setfont(oldfont, oldfontsize);
+		}
 	}
 	private static var counter:Int = 0;
 	private static var oldfont:String = "";
@@ -138,15 +140,17 @@ class Webscript {
 		interpreter.variables.set("Music", Webmusic);
 		interpreter.variables.set("Text", Text);
 		interpreter.variables.set("Font", Webfont);
-    
-		//myscript = loadscriptfile("test");
+		interpreter.variables.set("Std", Std);
+		
+		
 		runscript = true;
 		try{
 			parsedscript = parser.parseString(myscript);
 		}catch (e:hscript.Expr.Error) {
-			Webdebug.log("Error in line " + parser.line);
+			Webdebug.error("Error: " + parser.error, parser.line);
 			runscript = false;
 			errorinscript = true;
+			Gfx.resizescreen(192, 120, 4);
 		}
 		
 		if (runscript) {
@@ -173,11 +177,13 @@ class Webscript {
 			}
 			
 			if (updatefunction == null) {
-				Webdebug.log("Error: An \"update\" function is required. e.g.");
-				Webdebug.log("function update(){");
-				Webdebug.log("}");
+				Webdebug.error("Error: An \"update\" function is required. e.g.");
+				Webdebug.error("function update(){");
+				Webdebug.error("}");
 				runscript = false;
 				errorinscript = true;
+				
+				Gfx.resizescreen(192, 120, 4);
 			}
 		}
 	}	

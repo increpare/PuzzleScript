@@ -1,6 +1,194 @@
 function new(){
+// Music.playnote(4123,1,1,10);
+Text.setfont(Font.PIXEL,1);
+}
+
+var charWidth:Int=3;
+var charHeight:Int=5;
+var charOffset:Int = -4;
+
+var mainButton = 0x0000ff;
+var mainHighlight = 0x5555ff;
+var mainHighlightish = 0x8888ff;
+var mainHighlighter = 0xaaaaff;
+
+var panelCol = 0x000088;
+var panelColLight = 0x0000aa;
+var backgroundCol = Col.NIGHTBLUE;
+var textCol = 0xeeeeee;
+var darkText=0x888888;
+
+var maxBPM=240;
+
+var instCols = [
+  [0x880088,0xff55ff],
+  [0x888800,0xffff55],
+  [0x880000,0xff5555],
+  [0x008888,0x55ffff],
+  [0x008800,0x55ff55]
+];
+
+var selectedInst:Int=0;
+var noteLength:Int=3;
+function drawButton(text,x,y,textcolor,color,colorhover):Bool {
+  
+  var width=text.length*(charWidth+1)+1;
+  var height=charHeight+2;
+
+  var dx = Mouse.x-x;
+  var dy = Mouse.y-y;
+
+  var collide = !(dx<0||dx>=width||dy<0||dy>=height);
+
+
+	var click = collide && Mouse.leftclick();
+
+  if (collide&& !click){
+    color=colorhover;
+  }
+	Gfx.fillbox(x,y,width,height,color);
+	Text.display(x+1, y+1+charOffset, text, textcolor);
+	return click;
+}
+
+function drawNumberEntry(tex,x,y,digits){
+  
+}
+
+function printMouseCoord(){
+  Gfx.fillbox(Mouse.x-2,Mouse.y,5,1,0xffffff);
+  Gfx.fillbox(Mouse.x,Mouse.y-2,1,5,0xffffff);
+  var y =Mouse.y-7+charOffset;
+  if (y<0){
+    y=Mouse.y+4+charOffset;
+  }
+  Text.display(Mouse.x+3,y,Mouse.x+","+Mouse.y,textCol);
+}
+
+function collideBox(x,y,w,h) : Int {
+  var dx = Mouse.x-x;
+  var dy = Mouse.y-y;
+  
+
+  var collide = !(dx<0||dx>=w||dy<0||dy>=h);
+  
+  if (collide==false){    
+    return 0;    
+  }
+  if (Mouse.leftclick()){
+    return 2;
+  }
+  return 1;
 }
 
 function update() {
-  Text.display(0, 0, "Hello World");
+  Gfx.clearscreen(backgroundCol);
+
+  //draw sequence panel
+  var cellCount=12;
+  Gfx.fillbox(1,9,13,11+cellCount*8,panelCol);
+  Text.display(2,10+charOffset,"SEQ",darkText);
+  for (i in 0 ... cellCount) {
+    var col = i==2?mainHighlighter:mainHighlight;
+    Gfx.fillbox(2,20+i*8,11,7,col);
+  	var s = i>=10? Convert.tostring(i):("0"+Convert.tostring(i));
+    Text.display(4,20 + i * 8+charOffset+1,s ,darkText);
+  }
+
+  var xOffset=41;
+  
+	if (drawButton("save",xOffset+1,1,textCol,mainButton,mainHighlight)){
+		Debug.log("click");
+	}
+  
+  Text.display(1,2+charOffset,"~~BUSKER~~",Col.DARKBROWN);
+    
+  //bpm box
+	Gfx.fillbox(xOffset+19,1,13,7,panelCol);
+	Gfx.fillbox(xOffset+32,1,13,7,mainHighlight);
+	Text.display(xOffset+20,2+charOffset,"bpm",textCol);
+	Text.display(xOffset+33,2+charOffset,"120",textCol);
+
+  //swing box
+	Gfx.fillbox(xOffset+46,1,21,7,panelCol);
+	Gfx.fillbox(xOffset+67,1,5,7,mainHighlight);
+	Text.display(xOffset+47,2+charOffset,"swing",textCol);
+	Text.display(xOffset+68,2+charOffset,"9",textCol);
+
+  //notes box
+	Gfx.fillbox(xOffset+73,1,21,7,panelCol);
+	Gfx.fillbox(xOffset+94,1,9,7,mainHighlight);
+	Text.display(xOffset+74,2+charOffset,"notes",textCol);
+	Text.display(xOffset+95,2+charOffset,"16",textCol);
+	
+	//instruments box
+	Gfx.fillbox(145,2,45,7,panelCol);
+	Gfx.fillbox(15,9,175,9,panelCol);
+	Text.display(146,3+charOffset,"instruments",textCol);
+
+  //draw sequencer
+	Gfx.fillbox(16+selectedInst*35-1,9,35,9,0xffffff);
+
+var k=0;
+for (k in 0 ... 5){
+  var c = collideBox(16-1+k*35,10-1,33+2,7+2);
+  if (c>0&&k!=selectedInst){
+		Gfx.fillbox(16-1+k*35,10-1,33+2,7+2,Col.GREY);    
+    if (c==2){
+      selectedInst=k;
+    }
+  } 
+  {
+		Gfx.fillbox(16+k*35,10,33,7,instCols[k][0]);
+  }
+	Text.display(17+k*35,11+charOffset,"13142131",instCols[k][1]);
+}
+	
+  
+
+  //draw note
+
+	Gfx.fillbox(145,19,45,7,panelCol);
+	Text.display(146,20+charOffset,"Note Length",textCol);
+
+	Gfx.fillbox(145,27,45,7,mainHighlight);
+	Text.display(163,28+charOffset,"08",textCol);
+
+	Gfx.fillbox(145,19+20,45,7,panelCol);
+	Text.display(146,20+20+charOffset,"Loudness",textCol);
+
+	Gfx.fillbox(145,27+20,45,7,mainHighlight);
+	Text.display(160,28+20+charOffset,"100",textCol);
+
+
+	Gfx.fillbox(145,19+2*20,45,7,panelCol);
+	Text.display(146,20+2*20+charOffset,"Octave",textCol);
+
+	Gfx.fillbox(145,27+2*20,45,7,mainHighlight);
+	Text.display(166,28+2*20+charOffset,"4",textCol);
+
+	//draw grid
+	var gx=15;
+	var gy=19;
+	var cellWidth=8;
+	var cellHeight=8;
+	var xCells=16;
+	var yCells=12;
+	Gfx.fillbox(gx,gy,xCells*(cellWidth)+1,yCells*(cellHeight)+1,panelCol);
+  for (i in 0 ... xCells){
+    for (j in 0 ... yCells){
+      var col=mainHighlight;
+      if (i%4==0){
+        col=mainHighlighter;
+      } else if (j==1||j==3||j==5||j==8||j==10){
+        col=mainHighlightish;   
+      }
+      Gfx.fillbox(gx+1+cellWidth*i,gy+1+cellHeight*j,cellWidth-1,cellHeight-1,col); 
+
+    }
+  }
+  
+  
+
+  printMouseCoord();
 }

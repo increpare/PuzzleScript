@@ -3,6 +3,11 @@ var curlevel=0;
 var curlevelTarget=null;
 var levelEditorOpened=false;
 
+
+var compiling = false;
+var errorStrings = [];
+var errorCount=0;
+
 try {
  	if (!!window.localStorage) { 
 		if (localStorage[document.URL]!==undefined) {

@@ -53,12 +53,14 @@ class Gfx {
 	public static function resizescreen(width:Float, height:Float, scale:Int = 1) {
 		initgfx(Std.int(width), Std.int(height), scale);
 		Text.init(gfxstage);
+		showfps = false;
 		fps();
 		gfxstage.addChild(screen);
 		
 		updategraphicsmode();
 	}
 	
+	public static var showfps:Bool;
 	public static function fps():Int {
 		if (fpsobj == null) {
 			fpsobj = new FPS(0, 0, 0xffffff);	
@@ -965,6 +967,6 @@ class Gfx {
 	//HSL conversion variables 
 	private static var hslval:Array<Float> = new Array<Float>();
 	
-	private static var skiprender:Bool;
+	public static var skiprender:Bool;
 	private static var drawingtoscreen:Bool;
 }

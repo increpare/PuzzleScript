@@ -17,6 +17,13 @@ class Webbridge {
 	public function get_homepage():String {
 		return Webscript.homepage;
 	}
+	
+	public function stop() {
+		Gfx.resizescreen(192, 120, 4);
+		Webscript.scriptloaded = false;
+		Webscript.runscript = false;
+		Webscript.errorinscript = false;
+	}
 }
 
 class Main {

@@ -37,6 +37,7 @@ var editor = window.CodeMirror.fromTextArea(code, {
     mode: "haxe",
     autoCloseBrackets: true,
     matchBrackets:true,
+    tabSize:2,
     extraKeys: {"Ctrl-Space": "autocomplete"}
    	});
 /*

@@ -3,7 +3,7 @@ function stopClick(){
 		interpreter = new Webbridge();
 	}
 	setbackgroundcolor(0);
-	interpreter.runScript("function update(){}");
+	interpreter.stop();
 }
 function runClick() {
 	clearConsole();

@@ -11,6 +11,7 @@
       main="terrylib.Load"
       path="bin" 
       file="webthing" 
+      preloader="Preloader"
    />
    
   <window width="0" height="0" if="html5" />
@@ -25,11 +26,7 @@
       orientation="landscape"
       hardware="true"
       vsync="true"
-   ></window>
-   
-	<window
-      antialiasing="0" 
-      if="cpp"
+      antialiasing="0"
    ></window>
    
 	<source path="src" />

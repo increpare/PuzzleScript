@@ -16,7 +16,7 @@ ApplicationMain.preloader = null;
 ApplicationMain.create = function() {
 	var app = new openfl.display.Application();
 	app.create(ApplicationMain.config);
-	var display = new NMEPreloader();
+	var display = new Preloader();
 	ApplicationMain.preloader = new openfl.display.Preloader(display);
 	app.setPreloader(ApplicationMain.preloader);
 	ApplicationMain.preloader.onComplete.add(ApplicationMain.init);
@@ -125,7 +125,7 @@ ApplicationMain.init = function() {
 	if(total == 0) ApplicationMain.start();
 };
 ApplicationMain.main = function() {
-	ApplicationMain.config = { build : "270", company : "Stephen and Terry", file : "webthing", fps : 60, name : "Webthing", orientation : "landscape", packageName : "com.stephenandterry.webthing", version : "1.0.0", windows : [{ antialiasing : 0, background : 0, borderless : false, depthBuffer : false, display : 0, fullscreen : false, hardware : true, height : 480, parameters : "{}", resizable : true, stencilBuffer : true, title : "Webthing", vsync : true, width : 768, x : null, y : null}]};
+	ApplicationMain.config = { build : "348", company : "Stephen and Terry", file : "webthing", fps : 60, name : "Webthing", orientation : "landscape", packageName : "com.stephenandterry.webthing", version : "1.0.0", windows : [{ antialiasing : 0, background : 0, borderless : false, depthBuffer : false, display : 0, fullscreen : false, hardware : true, height : 480, parameters : "{}", resizable : true, stencilBuffer : true, title : "Webthing", vsync : true, width : 768, x : null, y : null}]};
 };
 ApplicationMain.start = function() {
 	var hasMain = false;
@@ -1755,6 +1755,11 @@ Webbridge.prototype = {
 	,get_homepage: function() {
 		return Webscript.homepage;
 	}
+	,stop: function() {
+		terrylib.Gfx.resizescreen(192,120,4);
+		Webscript.scriptloaded = false;
+		Webscript.runscript = false;
+	}
 	,__class__: Webbridge
 };
 var Main = function() {
@@ -1826,6 +1831,129 @@ NMEPreloader.prototype = $extend(openfl.display.Sprite.prototype,{
 		this.progress.set_scaleX(percentLoaded);
 	}
 	,__class__: NMEPreloader
+});
+var Preloader = function() {
+	NMEPreloader.call(this);
+	this.screenwidth = 192;
+	this.screenheight = 120;
+	this.stagewidth = 768;
+	this.stageheight = 480;
+	this.backcol = this.RGB(0,0,0);
+	this.frontcol = this.RGB(128,128,128);
+	this.loadercol = this.RGB(196,196,196);
+	this.loadingbarwidth = 125;
+	this.ct = new openfl.geom.ColorTransform(0,0,0,1,255,255,255,1);
+	this.temprect = new openfl.geom.Rectangle();
+	this.tl = new openfl.geom.Point(0,0);
+	this.tpoint = new openfl.geom.Point(0,0);
+	this.glyphletters = new haxe.ds.StringMap();
+	this.glyphletters.set("A",["4","111","101","111","101","101"]);
+	this.glyphletters.set("B",["4","111","101","110","101","111"]);
+	this.glyphletters.set("C",["4","111","100","100","100","111"]);
+	this.glyphletters.set("D",["4","110","101","101","101","110"]);
+	this.glyphletters.set("E",["4","111","100","110","100","111"]);
+	this.glyphletters.set("F",["4","111","100","110","100","100"]);
+	this.glyphletters.set("G",["4","111","100","101","101","111"]);
+	this.glyphletters.set("H",["4","101","101","111","101","101"]);
+	this.glyphletters.set("I",["2","1","1","1","1","1"]);
+	this.glyphletters.set("J",["3","01","01","01","01","11"]);
+	this.glyphletters.set("K",["4","101","101","110","101","101"]);
+	this.glyphletters.set("L",["4","100","100","100","100","111"]);
+	this.glyphletters.set("M",["6","10001","11011","10101","10001","10001"]);
+	this.glyphletters.set("N",["5","1001","1101","1111","1011","1001"]);
+	this.glyphletters.set("O",["4","111","101","101","101","111"]);
+	this.glyphletters.set("P",["4","111","101","111","100","100"]);
+	this.glyphletters.set("Q",["4","111","101","101","101","111","001"]);
+	this.glyphletters.set("R",["4","111","101","110","101","101"]);
+	this.glyphletters.set("S",["4","111","100","111","001","111"]);
+	this.glyphletters.set("T",["4","111","010","010","010","010"]);
+	this.glyphletters.set("U",["4","101","101","101","101","111"]);
+	this.glyphletters.set("V",["4","101","101","101","101","010"]);
+	this.glyphletters.set("W",["6","10001","10001","10101","11011","10001"]);
+	this.glyphletters.set("X",["4","101","101","010","101","101"]);
+	this.glyphletters.set("Y",["4","101","101","111","010","010"]);
+	this.glyphletters.set("Z",["4","111","001","010","100","111"]);
+	this.glyphletters.set(" ",["4"]);
+	this.backbuffer = new openfl.display.BitmapData(this.screenwidth,this.screenheight,false,0);
+	this.screenbuffer = new openfl.display.BitmapData(this.screenwidth,this.screenheight,false,0);
+	this.screen = new openfl.display.Bitmap(this.screenbuffer);
+	this.screen.set_width(this.stagewidth);
+	this.screen.set_height(this.stageheight);
+	this.addChild(this.screen);
+	this.startgame = false;
+};
+$hxClasses["Preloader"] = Preloader;
+Preloader.__name__ = ["Preloader"];
+Preloader.__super__ = NMEPreloader;
+Preloader.prototype = $extend(NMEPreloader.prototype,{
+	RGB: function(red,green,blue) {
+		return blue | green << 8 | red << 16;
+	}
+	,onLoaded: function() {
+		if(this.contains(this.screen)) this.removeChild(this.screen);
+		this.dispatchEvent(new openfl.events.Event(openfl.events.Event.COMPLETE));
+	}
+	,fillrect: function(x,y,w,h,col) {
+		this.temprect.x = x;
+		this.temprect.y = y;
+		this.temprect.width = w;
+		this.temprect.height = h;
+		this.backbuffer.fillRect(this.temprect,col);
+	}
+	,pset: function(x,y) {
+		this.temprect.x = this.psetx + x;
+		this.temprect.y = this.psety + y;
+		this.temprect.width = 1;
+		this.temprect.height = 1;
+		this.backbuffer.fillRect(this.temprect,16777215);
+	}
+	,glyphprint: function(_x,_y,s) {
+		this.psetx = _x;
+		this.psety = _y;
+		var _g1 = 0;
+		var _g = s.length;
+		while(_g1 < _g) {
+			var i = _g1++;
+			this.drawgylph(HxOverrides.substr(s,i,1).toUpperCase());
+		}
+	}
+	,drawgylph: function(letter) {
+		if(this.glyphletters.exists(letter)) {
+			var sarray = this.glyphletters.get(letter);
+			var _g1 = 1;
+			var _g = sarray.length;
+			while(_g1 < _g) {
+				var j = _g1++;
+				var _g3 = 0;
+				var _g2 = sarray[j].length;
+				while(_g3 < _g2) {
+					var i = _g3++;
+					if(HxOverrides.substr(sarray[j],i,1) == "1") {
+						this.pset(i,j * 2);
+						this.pset(i,j * 2 + 1);
+					}
+				}
+			}
+			this.psetx += Std.parseInt(sarray[0]);
+		}
+	}
+	,onUpdate: function(bytesLoaded,bytesTotal) {
+		var p = bytesLoaded / bytesTotal;
+		if(p >= 1) this.startgame = true;
+		this.backbuffer.fillRect(this.backbuffer.rect,this.backcol);
+		this.fillrect(this.screenwidth / 2 - this.loadingbarwidth / 2 - 2 | 0,(this.screenheight / 2 - 13 | 0) - 10,this.loadingbarwidth + 4,32,this.frontcol);
+		this.fillrect(this.screenwidth / 2 - this.loadingbarwidth / 2 | 0,(this.screenheight / 2 - 11 | 0) - 10,this.loadingbarwidth,28,this.backcol);
+		this.fillrect((this.screenwidth / 2 - this.loadingbarwidth / 2 | 0) + 1,(this.screenheight / 2 - 11 | 0) + 1 - 10,(p * this.loadingbarwidth | 0) - 2,26,this.loadercol);
+		this.glyphprint((this.screenwidth / 2 | 0) - 28,this.screenheight / 2 + 12 | 0,"LOADING TERRYLIB");
+		this.screenbuffer.lock();
+		this.screenbuffer.copyPixels(this.backbuffer,this.backbuffer.rect,this.tl,null,null,false);
+		this.screenbuffer.unlock();
+		this.backbuffer.lock();
+		this.backbuffer.fillRect(this.backbuffer.rect,0);
+		this.backbuffer.unlock();
+		if(this.startgame) this.onLoaded();
+	}
+	,__class__: Preloader
 });
 var Reflect = function() { };
 $hxClasses["Reflect"] = Reflect;
@@ -2181,7 +2309,10 @@ var Webdebug = function() { };
 $hxClasses["Webdebug"] = Webdebug;
 Webdebug.__name__ = ["Webdebug"];
 Webdebug.log = function(msg) {
-	openfl.external.ExternalInterface.call("consoleError",msg,true);
+	openfl.external.ExternalInterface.call("consolePrint",msg,true);
+};
+Webdebug.error = function(msg,linenum) {
+	openfl.external.ExternalInterface.call("logError",msg,linenum,true);
 };
 Webdebug.warn = function(msg,linenum) {
 	openfl.external.ExternalInterface.call("logWarning",msg,linenum,true);
@@ -2234,8 +2365,9 @@ Webscript.update = function() {
 		if(Webscript.runscript) try {
 			Webscript.updatefunction();
 		} catch( e ) {
-			Webdebug.log("RUNTIME ERROR:");
-			Webdebug.log(terrylib.Convert.tostring(e));
+			Webdebug.error("RUNTIME ERROR:");
+			Webdebug.error(terrylib.Convert.tostring(e));
+			terrylib.Gfx.resizescreen(192,120,4);
 			Webscript.errorinscript = true;
 			Webscript.runscript = false;
 		}
@@ -2255,11 +2387,13 @@ Webscript.update = function() {
 			currentpos += terrylib.Text.len(S.mid(msg,i,1));
 		}
 	}
-	Webscript.oldfont = terrylib.Text.currentfont;
-	Webscript.oldfontsize = terrylib.Text.currentsize;
-	terrylib.Text.setfont("pixel",1);
-	terrylib.Text.display(terrylib.Gfx.screenwidth - 4,1,"FPS: " + terrylib.Gfx.fps(),terrylib.Col.YELLOW,{ align : terrylib.Text.RIGHT});
-	terrylib.Text.setfont(Webscript.oldfont,Webscript.oldfontsize);
+	if(terrylib.Gfx.showfps) {
+		Webscript.oldfont = terrylib.Text.currentfont;
+		Webscript.oldfontsize = terrylib.Text.currentsize;
+		terrylib.Text.setfont("pixel",1);
+		terrylib.Text.display(terrylib.Gfx.screenwidth - 4,1,"FPS: " + terrylib.Gfx.fps(),terrylib.Col.YELLOW,{ align : terrylib.Text.RIGHT});
+		terrylib.Text.setfont(Webscript.oldfont,Webscript.oldfontsize);
+	}
 };
 Webscript.loadscript = function(script) {
 	Webscript.myscript = script;
@@ -2284,14 +2418,16 @@ Webscript.scriptfound = function() {
 	Webscript.interpreter.variables.set("Music",Webmusic);
 	Webscript.interpreter.variables.set("Text",terrylib.Text);
 	Webscript.interpreter.variables.set("Font",Webfont);
+	Webscript.interpreter.variables.set("Std",Std);
 	Webscript.runscript = true;
 	try {
 		Webscript.parsedscript = Webscript.parser.parseString(Webscript.myscript);
 	} catch( e ) {
 		if( js.Boot.__instanceof(e,hscript.Error) ) {
-			Webdebug.log("Error in line " + Webscript.parser.line);
+			Webdebug.error("Error: " + Std.string(($_=Webscript.parser,$bind($_,$_.error))),Webscript.parser.line);
 			Webscript.runscript = false;
 			Webscript.errorinscript = true;
+			terrylib.Gfx.resizescreen(192,120,4);
 		} else throw(e);
 	}
 	if(Webscript.runscript) {
@@ -2307,11 +2443,12 @@ Webscript.scriptfound = function() {
 		terrylib.Text.setfont("default",1);
 		if(Webscript.initfunction != null) Webscript.initfunction();
 		if(Webscript.updatefunction == null) {
-			Webdebug.log("Error: An \"update\" function is required. e.g.");
-			Webdebug.log("function update(){");
-			Webdebug.log("}");
+			Webdebug.error("Error: An \"update\" function is required. e.g.");
+			Webdebug.error("function update(){");
+			Webdebug.error("}");
 			Webscript.runscript = false;
 			Webscript.errorinscript = true;
+			terrylib.Gfx.resizescreen(192,120,4);
 		}
 	}
 };
@@ -34556,10 +34693,12 @@ terrylib.Gfx.resizescreen = function(width,height,scale) {
 	if(scale == null) scale = 1;
 	terrylib.Gfx.initgfx(width | 0,height | 0,scale);
 	terrylib.Text.init(terrylib.Gfx.gfxstage);
+	terrylib.Gfx.showfps = false;
 	terrylib.Gfx.fps();
 	terrylib.Gfx.gfxstage.addChild(terrylib.Gfx.screen);
 	terrylib.Gfx.updategraphicsmode();
 };
+terrylib.Gfx.showfps = null;
 terrylib.Gfx.fps = function() {
 	if(terrylib.Gfx.fpsobj == null) {
 		terrylib.Gfx.fpsobj = new openfl.display.FPS(0,0,16777215);
@@ -34779,7 +34918,7 @@ terrylib.Gfx.grabimagefromimage = function(imagename,imagetocopyfrom,x,y) {
 		return;
 	}
 	terrylib.Gfx.imagenum = terrylib.Gfx.imageindex.get(imagename);
-	if(!terrylib.Gfx.imageindex.exists(imagetocopyfrom)) haxe.Log.trace("ERROR: No image called \"" + imagetocopyfrom + "\" found.",{ fileName : "Gfx.hx", lineNumber : 398, className : "terrylib.Gfx", methodName : "grabimagefromimage"});
+	if(!terrylib.Gfx.imageindex.exists(imagetocopyfrom)) haxe.Log.trace("ERROR: No image called \"" + imagetocopyfrom + "\" found.",{ fileName : "Gfx.hx", lineNumber : 400, className : "terrylib.Gfx", methodName : "grabimagefromimage"});
 	var imagenumfrom = terrylib.Gfx.imageindex.get(imagetocopyfrom);
 	terrylib.Gfx.settrect(x,y,terrylib.Gfx.images[terrylib.Gfx.imagenum].width,terrylib.Gfx.images[terrylib.Gfx.imagenum].height);
 	terrylib.Gfx.images[terrylib.Gfx.imagenum].copyPixels(terrylib.Gfx.images[imagenumfrom],terrylib.Gfx.trect,terrylib.Gfx.tl);
@@ -34787,11 +34926,11 @@ terrylib.Gfx.grabimagefromimage = function(imagename,imagetocopyfrom,x,y) {
 terrylib.Gfx.copytile = function(totilenumber,fromtileset,fromtilenumber) {
 	if(terrylib.Gfx.tilesetindex.exists(fromtileset)) {
 		if(terrylib.Gfx.tiles[terrylib.Gfx.currenttileset].width == terrylib.Gfx.tiles[terrylib.Gfx.tilesetindex.get(fromtileset)].width && terrylib.Gfx.tiles[terrylib.Gfx.currenttileset].height == terrylib.Gfx.tiles[terrylib.Gfx.tilesetindex.get(fromtileset)].height) terrylib.Gfx.tiles[terrylib.Gfx.currenttileset].tiles[totilenumber].copyPixels(terrylib.Gfx.tiles[terrylib.Gfx.tilesetindex.get(fromtileset)].tiles[fromtilenumber],terrylib.Gfx.tiles[terrylib.Gfx.tilesetindex.get(fromtileset)].tiles[fromtilenumber].rect,terrylib.Gfx.tl); else {
-			haxe.Log.trace("ERROR: Tilesets " + terrylib.Gfx.currenttilesetname + " (" + Std.string(terrylib.Gfx.tilewidth()) + "x" + Std.string(terrylib.Gfx.tileheight()) + ") and " + fromtileset + " (" + Std.string(terrylib.Gfx.tiles[terrylib.Gfx.tilesetindex.get(fromtileset)].width) + "x" + Std.string(terrylib.Gfx.tiles[terrylib.Gfx.tilesetindex.get(fromtileset)].height) + ") are different sizes. Maybe try just drawing to the tile you want instead with Gfx.drawtotile()?",{ fileName : "Gfx.hx", lineNumber : 411, className : "terrylib.Gfx", methodName : "copytile"});
+			haxe.Log.trace("ERROR: Tilesets " + terrylib.Gfx.currenttilesetname + " (" + Std.string(terrylib.Gfx.tilewidth()) + "x" + Std.string(terrylib.Gfx.tileheight()) + ") and " + fromtileset + " (" + Std.string(terrylib.Gfx.tiles[terrylib.Gfx.tilesetindex.get(fromtileset)].width) + "x" + Std.string(terrylib.Gfx.tiles[terrylib.Gfx.tilesetindex.get(fromtileset)].height) + ") are different sizes. Maybe try just drawing to the tile you want instead with Gfx.drawtotile()?",{ fileName : "Gfx.hx", lineNumber : 413, className : "terrylib.Gfx", methodName : "copytile"});
 			return;
 		}
 	} else {
-		haxe.Log.trace("ERROR: Tileset " + fromtileset + " hasn't been loaded or created.",{ fileName : "Gfx.hx", lineNumber : 415, className : "terrylib.Gfx", methodName : "copytile"});
+		haxe.Log.trace("ERROR: Tileset " + fromtileset + " hasn't been loaded or created.",{ fileName : "Gfx.hx", lineNumber : 417, className : "terrylib.Gfx", methodName : "copytile"});
 		return;
 	}
 };
