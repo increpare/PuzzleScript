@@ -1,9 +1,12 @@
+/* Currently broken for interesting reasons. To do: Figure out why */
+
 Game.title("Shapes Demo");
 Game.homepage("http://www.distractionware.com");
 Game.background(Col.BLACK);
 
 var currenteffect:Int;    // Current effect we're drawing on the screen
 var totaleffects:Int;     // Total number of effects
+var currenteffectname:String;
 
 var counter:Int;          // Count up one every frame: using in this program for animation.
 
@@ -14,11 +17,13 @@ var pulsedir:String;      // Controls the direction of the pulse.
 function new() {
   currenteffect = 1;
   totaleffects = 4;
+  currenteffectname = "1: TRIANGLES";
   
   pulse = 0;
   counter = 0;
   pulsedir = "up";
   
+  Text.setfont(Font.PIXEL, 1);
   //Set up the triangle buffer
   Gfx.createimage("triangles", Gfx.screenwidth, Gfx.screenheight);
   drawtriangles(1);
@@ -48,14 +53,14 @@ function update() {
   }else if (currenteffect == 4) {
     drawstripes(currenteffect);
   }
-  
-  //Display the text twice, once black and slightly offset, once white to give a shadow effect under the string
-
-  Text.display(Text.CENTER, Gfx.screenheight - Text.height() - 5, "LEFT CLICK MOUSE TO CYCLE EFFECTS", Col.WHITE);
+    
+  Gfx.fillbox(0,Gfx.screenheight-10,Gfx.screenwidth,10,Col.BLACK);
+  Text.display(Gfx.screenwidth-2, Gfx.screenheight - Text.height(), "LEFT CLICK MOUSE TO CYCLE EFFECTS", Col.WHITE, {align: Text.RIGHT});
 }
 
 function drawtriangles(effectnum:Int) {
   //Draw to a specially made image buffer
+  currenteffectname = "1: TRIANGLES";
   Gfx.drawtoimage("triangles");
   
   if (counter % 60 == 0) {
@@ -72,6 +77,7 @@ function drawtriangles(effectnum:Int) {
 }
 
 function drawcircles(effectnum:Int) {
+  currenteffectname = "2: CIRCLES";
   Gfx.setlinethickness(3);
   var radius:Int = 0;
   
@@ -90,14 +96,18 @@ function drawcircles(effectnum:Int) {
 }
 
 function drawhexagon(effectnum:Int) {
-  Gfx.setlinethickness(2);
-    
-  for (i in 0 ... 30) {
-    Gfx.drawhexagon(Gfx.screenwidthmid, Gfx.screenheightmid, 10 + (i*10) + (pulse / 2), counter / 50, Gfx.RGB(255-(20*i), 255-(20*i), 255-(20*i)));
+  currenteffectname = "3: HEXAGON";
+  Gfx.setlinethickness(1);
+  
+  var shade:Int = 255-(27*i);
+  if(shade<0) shade=0;
+  for (i in 0 ... 13) {
+    Gfx.drawhexagon(Gfx.screenwidthmid, Gfx.screenheightmid, 10 + (i*10) + (pulse / 2), counter / 50, Gfx.RGB(shade, shade, shade));
   }
 }
 
 function drawstripes(effectnum:Int) {
+  currenteffectname = "4: STRIPES";
   var colour1:Int;
   var colour2:Int;
   

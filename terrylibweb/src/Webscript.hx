@@ -88,10 +88,25 @@ class Webscript {
 		
 		scriptfound();
 	}
+	
+	public static var	reloaddelay:Int = 0;
 	#end
 	
 	public static function update() {
+		#if flash
+		  if (Input.justpressed(Key.R)) {
+				reloaddelay = 5;
+			}
+		#end
+		#if flash
+		if (reloaddelay > 0) {
+			Gfx.clearscreen(Col.BLACK);
+			reloaddelay--;
+			if (reloaddelay <= 0) loadfile();
+		}else	if (errorinscript) {
+		#else
 		if (errorinscript) {
+		#end
 			Text.setfont("default", 1);
 			Gfx.clearscreen(Gfx.RGB(32, 0, 0));
 			Text.display(Text.CENTER, Text.CENTER, "ERROR! ERROR! ERROR!", Col.RED);
@@ -100,7 +115,7 @@ class Webscript {
 				try {
 					updatefunction();
 				}catch (e:Dynamic) {
-					Webdebug.error("RUNTIME ERROR: " + Convert.tostring(e));
+					Webdebug.error("RUNTIME ERROR: " + e.stack);
 					Gfx.resizescreen(192, 120, 4);
 					errorinscript = true;
 					runscript = false;
@@ -166,8 +181,18 @@ class Webscript {
 		runscript = true;
 		try{
 			parsedscript = parser.parseString(myscript);
-		}catch (e:hscript.Expr.Error) {
-			Webdebug.error("Error!", parser.line);
+		}catch (e:Dynamic) {
+			/*
+				e looks like
+				{
+					e { error name , error code id, ? possibly data associated with that error}
+				}
+			*/
+			var errstr : String = e.e[0];
+			for (i in 2 ... e.e.length){
+				errstr = errstr + " " + e.e[i];
+			}
+			Webdebug.error("Error:"+errstr, parser.line);
 			runscript = false;
 			errorinscript = true;
 			Gfx.resizescreen(192, 120, 4);
@@ -203,7 +228,7 @@ class Webscript {
 				try{
 					initfunction();	
 				}catch (e:Dynamic) {
-					Webdebug.error("Error in new(): " + Convert.tostring(e), parser.line);
+					Webdebug.error("Error in new(): " + e, parser.line);
 					runscript = false;
 					errorinscript = true;
 					Gfx.resizescreen(192, 120, 4);
