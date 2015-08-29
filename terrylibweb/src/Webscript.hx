@@ -175,9 +175,9 @@ class Webscript {
 	public static function scriptfound(){
 		scriptloaded = true;
 		errorinscript = false;
-    parser = new hscript.Parser();
+   	 	parser = new hscript.Parser();
 		parser.allowTypes = true;
-    interpreter = new hscript.Interp();
+    	interpreter = new hscript.Interp();
 		
 		interpreter.variables.set("Random", Random);
 		interpreter.variables.set("Math", Math);

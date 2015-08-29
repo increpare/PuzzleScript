@@ -18,8 +18,8 @@ var backgroundCol = Col.NIGHTBLUE;
 var textCol = 0xeeeeee;
 var darkText=0x888888;
 
-var maxBPM=240;
-
+var playing=false;
+var playTick=0;
 
 var instCols = [
   [0x880088,0xff55ff],
@@ -34,6 +34,8 @@ var blackNotes = [false,true,false,true,false,false,true,false,true,false,true,f
 
 // a note is [note, length, onset, amplitude]
 var dat = {
+  patternLength:16,
+  cellDuration:8,
   instruments:[1,2,3,4,5],
   sequences:[0,5,2,3,1,0,4,2,5,2],
   notes:[
@@ -50,10 +52,12 @@ var dat = {
   ],
 };
 
+
 var channelOrder:Array = [0,1,2,3,4];
 
 var selectedInst:Int=0;
 var noteLength:Int=3;
+var noteVol:Int=8;
 var selectedSequenceSlot:Int=0;
 var bottomNote=60;
 
@@ -105,6 +109,9 @@ function collideBox(x,y,w,h) : Int {
   if (Mouse.leftclick()){
     return 2;
   }
+  if (Mouse.rightclick()){
+    return 3;
+  }
   return 1;
 }
 
@@ -144,19 +151,47 @@ function getNum():Int{
   }
   return -1;
 }
+
+function startPlay() {
+  playing=true;
+  playTick= -1;
+  
+}
+
+function stopPlay(){
+  playing=false;
+}
+
 function update() {
-  if (Input.pressed(Key.DOWN)&&bottomNote>0){
+  if ((Input.pressed(Key.DOWN)||Input.pressed(Key.S))&&bottomNote>0){
     bottomNote--;
   }
-  if (Input.pressed(Key.UP)&&bottomNote<132-12){
+  if ((Input.pressed(Key.UP)||Input.pressed(Key.W))&&bottomNote<132-12){
     bottomNote++;
   }
-  if (Input.justpressed(Key.LEFT)&&noteLength>1){
-    noteLength--;
+  if (Input.pressed(Key.LEFT)||Input.pressed(Key.A)){
+    lCounter--;
+    if (lCounter<=0){
+      if (noteLength>1){
+        noteLength--;
+        lCounter=5;
+      } 
+    }
+  } else {
+  	lCounter=0;      
   }
-  if (Input.justpressed(Key.RIGHT)&&noteLength<16){
-    noteLength++;
+  if (Input.pressed(Key.RIGHT)||Input.pressed(Key.D)){
+    rCounter--;
+    if (rCounter<=0){
+      if (noteLength<16){
+        noteLength++;
+        rCounter=5;
+      } 
+    }
+  } else {
+  	rCounter=0;      
   }
+    
   scrollt--;
   Gfx.clearscreen(backgroundCol);
 
@@ -218,48 +253,47 @@ function update() {
 var k=0;
 for (k in 0 ... 5){
   var c = collideBox(16-1+k*35,10-1,33+2,7+2);
-  if (c>0&&k!=selectedInst){
-    Debug.log("paint");
-		Gfx.fillbox(16-1+k*35,10-1,33+2,7+2,Col.GREY);    
-    if (c==2){
-      Debug.log("yo");
-      selectedInst=k;
-      Debug.log("a"+k);
-      Debug.log(channelOrder);
-//      channelOrder.Remove(k);
-      Debug.log(channelOrder);
-//      channelOrder.Push(k);
-      Debug.log(channelOrder);
+  if (c>0){
+    if (k!=selectedInst){
+			Gfx.fillbox(16-1+k*35,10-1,33+2,7+2,Col.GREY);    
     }
-  } 
+    if (c==2){
+      setInstrument(k);
+    }
+  }
+    
+  if (c==3){
+    dat.instruments[k]=Random.int(0,99999999);
+  	Music.playnote(dat.instruments[k],1,1,1.0);
+  }
   {
 		Gfx.fillbox(16+k*35,10,33,7,instCols[k][0]);
   }
   var n=dat.instruments[k];
 //  Debug.log(k+","+s);
-//	Text.display(17+k*35,11+charOffset,Convert.tostring(n),instCols[k][1]);
+	Text.display(17+k*35,11+charOffset,Convert.tostring(n),instCols[k][1]);
   if (c>0){
     var n = getNum();
     if (n>=0){
-      dat.instruments[k]=((dat.instruments[k]*10) % 1000000000)+n;
+      dat.instruments[k]=((dat.instruments[k]*10) % 100000000)+n;
       Debug.log(dat.instruments[k]);
     }
+    if (Input.justpressed(Key.BACKSPACE)){
+			dat.instruments[k]=0;
+    }
   }
+    
 }
 
   //draw note
 
-	Gfx.fillbox(145,19,45,7,panelCol);
-	Text.display(146,20+charOffset,"Note Length",textCol);
-
-	Gfx.fillbox(145,27,45,7,mainHighlight);
-	Text.display(163,28+charOffset,noteLength.toString(),textCol);
-
-	Gfx.fillbox(145,19+20,45,7,panelCol);
-	Text.display(146,20+20+charOffset,"Loudness",textCol);
-
-	Gfx.fillbox(145,27+20,45,7,mainHighlight);
-	Text.display(160,28+20+charOffset,"100",textCol);
+	if (drawButton("  play   ",152,21,textCol,mainButton,mainHighlight)){
+		startPlay();
+	}
+	if (drawButton("  stop   ",152,31,textCol,mainButton,mainHighlight)){
+		playing=false;
+	}
+  
 
 
 	//draw grid
@@ -313,7 +347,7 @@ for (k in 0 ... 5){
          var dNote = notePos-bottomNote;   
          var x = gx+1+cellWidth*(n[2]);
     		 var l = n[1];
-         if (dNote<0){
+         if (dNote<=0){
 				 	//draw note on bottom
            var y = 118;
            Gfx.fillbox(x,y,cellWidth*l-1,1,col);
@@ -335,16 +369,32 @@ for (k in 0 ... 5){
 	var gridHeight = cellHeight*yCells;
 	var dx=Mouse.x-gx;
 	var dy=Mouse.y-gy;
+
   if (dx>=0 && dx<gridWidth && dy>=0 && dy<gridHeight){
-
-    if (noteLength>1 && Mouse.mousewheel< -1 && scrollt<=0){
-       noteLength--;
-	      scrollt=scrollInterval;
-    } else if (noteLength<16 && Mouse.mousewheel>1 && scrollt<=0){
-      noteLength++;
+		/*
+    if (bottomNote>0 && Mouse.mousewheel< -1 ){
+       bottomNote--;
+	     scrollt=scrollInterval;
+    } else if (bottomNote<132-12&& Mouse.mousewheel>1 ){
+      bottomNote++;
       scrollt=scrollInterval;
+    }*/
+    if (Input.justpressed(Key.ONE)){
+      setInstrument(0);
     }
-
+    if (Input.justpressed(Key.TWO)){
+      setInstrument(1);
+    }
+    if (Input.justpressed(Key.THREE)){
+      setInstrument(2);
+    }
+    if (Input.justpressed(Key.FOUR)){
+      setInstrument(3);
+    }
+    if (Input.justpressed(Key.FIVE)){
+      setInstrument(4);
+    }
+    
 		var sx = Math.floor(dx/cellWidth);
     var sy = Math.floor(dy/cellHeight);
     var l = noteLength;
@@ -353,15 +403,126 @@ for (k in 0 ... 5){
       l=xCells-sx;
     }
     Gfx.drawbox(gx+1+cellWidth*sx,gy+1+cellHeight*sy,cellWidth*l-1,cellHeight-1,0xffffff); 
-    if (Mouse.leftclick()){
-      var seqIndex=dat.sequences[selectedSequenceSlot];
-      Debug.log(selectedInst+" : " +dat.notes[seqIndex]+"("+selectedSequenceSlot+")");
-      // a note is [note, length, onset, amplitude]
-      Debug.log("index " +seqIndex+","+selectedInst);
-      dat.notes[seqIndex][selectedInst].push([bottomNote+12-sy,l,sx,100]);
-      Debug.log("post "+dat.notes[seqIndex][selectedInst]);
+    if (Mouse.leftheld()){
+      var clickX = sx;
+      var clickY = bottomNote+12-sy;
+      for (i in 0...l){
+        if (Mouse.leftclick()){
+		      blockNote(clickX+i,clickY);         
+        } else {
+		      deleteNote(clickX+i,clickY); 
+        }
+      }
+	    if (oldAddX>=0){
+  	  	blockNote(oldAddX,oldAddY);
+      }
+      dat.notes[selectedSequence][selectedInst].push([clickY,l,clickX,100]);
+			oldAddX=clickX;
+    	oldAddY=clickY;
+    } else {
+      oldAddX= -1;
+      oldAddY= -1;
+    }
+    
+    if (Mouse.rightheld()){
+      //note clicked on
+      var clickX = sx;
+      var clickY = bottomNote+12-sy;
+      deleteNote(clickX,clickY);
+    }
+  } else {
+    if (Mouse.leftheld()==false){
+      oldAddX= -1;
+      oldAddY= -1;
     }
   }
 
+    
+  if (playing){
+    playTick++;    
+    var globalCell = Std.int(playTick/dat.cellDuration);
+    var playPattern = Std.int(globalCell/dat.patternLength);
+    selectedSequenceSlot=playPattern;
+   	var patternProgress = globalCell-dat.patternLength*playPattern;
+    
+    if (playTick%dat.cellDuration==0){
+      TryPlayNote(patternProgress);
+    }
+      
+    Gfx.fillbox(gx+cellWidth*patternProgress,gy,1,gy*cellHeight,Col.WHITE);
+    
+  }
+    
   printMouseCoord();
+}
+
+function DoPlayNote(c,n){
+  var notePos = n[2];
+	var pitch = Math.pow(2,(n[0]-60)/12);
+  var noteLength = n[1]*dat.cellDuration/30;
+	Music.playnote(dat.instruments[c],pitch,noteLength,n[3]);
+}
+
+function TryPlayNote(x){
+  Debug.log("try play note at "+x);
+  var selectedSequence = dat.sequences[selectedSequenceSlot];
+  for (c2 in 0...5){
+    var c = channelOrder[c2];
+    var channel = dat.notes[selectedSequence][c];  
+    var colIndex = c==selectedInst?1:0;
+    var col = instCols[c][colIndex];
+    for (n in channel){
+        // var n = channel[nIndex];
+        // a note is [note, length, onset, amplitude]
+        var notePos = n[2];
+        if (notePos==x){  
+		      DoPlayNote(c,n);
+				}         
+    }    
+  }
+}  
+  
+function setInstrument(k){
+  	Music.playnote(dat.instruments[k],1,1,1.0);
+    selectedInst=k;
+    var kIndex=channelOrder.indexOf(k);
+    channelOrder.splice(kIndex,1);
+    channelOrder.push(k);
+}
+
+function deleteNote(clickX,clickY){
+  var selectedSequence = dat.sequences[selectedSequenceSlot];
+  for (n in dat.notes[selectedSequence][selectedInst]){
+       var noteX=n[2];
+       var noteL=n[1];
+       var noteY=n[0];
+       if (clickY==noteY && clickX>=noteX && clickX<(noteX+noteL)){    
+      var arr = dat.notes[selectedSequence][selectedInst];
+      var noteIndex = arr.indexOf(n);
+      arr.splice(noteIndex,1);
+      break;
+    }
+  }
+}
+  
+
+function blockNote(clickX,clickY){
+  var selectedSequence = dat.sequences[selectedSequenceSlot];
+  for (n in dat.notes[selectedSequence][selectedInst]){
+      var noteX=n[2];
+      var noteL=n[1];
+      var noteY=n[0];
+      if (clickY==noteY && clickX>=noteX && clickX<(noteX+noteL)){  
+		    if (clickX==noteX){
+          //delete it
+    	    var arr = dat.notes[selectedSequence][selectedInst];
+    	    var noteIndex = arr.indexOf(n);
+    	    arr.splice(noteIndex,1);
+      		break;
+        } else {
+          //resize it
+          n[1]=clickX-noteX;
+        }
+    }
+  }
 }

@@ -945,7 +945,7 @@ var NOTE_CACHE_MAX = 200;
 
 function cacheNote(seed,frequency,length,volume){
   var str = seed.toString()+frequency.toString()+length.toString()+volume.toString();
-
+  frequency=Math.sqrt(frequency);
   if (str in noteCache) {
     return noteCache[str];
   } 
@@ -959,7 +959,7 @@ function cacheNote(seed,frequency,length,volume){
   params.p_env_punch*=scaleFactor;
   params.p_env_decay*=scaleFactor;
 
-  params.p_base_freq=0.384*frequency;
+  params.p_base_freq=0.4*frequency;
   if (volume>1){
     volume=1;
   }
