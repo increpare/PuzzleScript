@@ -8,6 +8,13 @@ var compiling = false;
 var errorStrings = [];
 var errorCount=0;
 
+var canv = 
+document.oncontextmenu = function (e) {
+    if (e.target.tagName=="CANVAS"){
+        e.preventDefault();
+    }
+};
+
 try {
  	if (!!window.localStorage) { 
 		if (localStorage[document.URL]!==undefined) {
