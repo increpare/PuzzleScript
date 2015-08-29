@@ -15,6 +15,37 @@ document.oncontextmenu = function (e) {
     }
 };
 
+//on backspace down + optional callback
+function onBackspace(e, callback){
+    var key;
+    if(typeof e.keyIdentifier !== "undefined"){
+        key = e.keyIdentifier;
+
+    }else if(typeof e.keyCode !== "undefined"){
+        key = e.keyCode;
+    }
+    if (key === 'U+0008' || 
+        key === 'Backspace' || 
+        key === 8) {
+                    if(typeof callback === "function"){
+                callback();
+            }
+            return true;
+        }
+    return false;
+}
+
+document.onkeydown = function (e) {
+    switch (e.target.tagName.toLowerCase()){
+        case "canvas":
+            e.preventDefault();
+            break;
+    }        
+    onBackspace(e,function(){
+        e.preventDefault();
+    });
+};
+
 try {
  	if (!!window.localStorage) { 
 		if (localStorage[document.URL]!==undefined) {
