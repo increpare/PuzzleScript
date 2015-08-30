@@ -32,11 +32,13 @@
 	<source path="src" />
 	
 	<haxeflag name="--macro keep('IntIterator')"/>
+	<haxeflag name="-dce no"/>
 	<haxelib name="openfl" />
 	<haxelib name="sion" />
 	<haxelib name="hscript" />
 	
 	<haxedef name="terrylibweb" />
+	<haxedef name="terrylibwebhtml5debug" />
 	<haxedef name="webgl" />
 	<haxedef name="hscriptPos" />
 	

@@ -1,7 +1,6 @@
-function new(){
-// Music.playnote(4123,1,1,10);
-Text.setfont(Font.PIXEL,1);
-}
+
+
+var initDat:String ="qdb4ac4aé5ab3a2b3ababfibabcbéaeb2dfbeacg2k4a";
 
 var charWidth:Int=3;
 var charHeight:Int=5;
@@ -32,32 +31,199 @@ var instCols = [
 
 var blackNotes = [false,true,false,true,false,false,true,false,true,false,true,false];
 
+/*
+FILE
+	patternLength : [1-16]
+	cellDuration : [1..10]
+	instruments : 5*int8
+	sequences : seqSlotCount*[1..12]
+	notes : seqCount*
+							[ noteCount * ([1..128],[1..16],[1..16],[] )]
+*/
 // a note is [note, length, onset, amplitude]
 var dat = {
   patternLength:16,
-  cellDuration:8,
-  instruments:[1,2,3,4,5],
-  sequences:[0,5,2,3,1,0,4,2,5,2],
+  cellDuration:3,
+  instruments:[1,2,61,62,63],
+  sequences:[0],
   notes:[
-    [[[5,3,2,0.5],[64,5,6,0.5],[102,1,10,0.5]],[],[],[],[]],
-    [[],[],[],[],[]],
-    [[],[],[],[],[]],
-    [[],[],[],[],[]],
-    [[],[],[],[],[]],
-    [[],[],[],[],[]],
-    [[],[],[],[],[]],
+    [[[70,3,0,3],[62,3,2,3],[64,5,6,5],[61,1,10,4],[66,4,10,7]],[],[],[],[]],
     [[],[],[],[],[]],
     [[],[],[],[],[]],
     [[],[],[],[],[]]
   ],
 };
 
+function stripUnnecessaryNotes(){
+  
+}
 
+var B62 = [ "a","b","c","d","e","f","g","h","i","j","k","l","m","n","o","p","q","r","s","t","u","v","w","x","y","z", "A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z",
+"à","á","â","ä","æ","ã","å","ā","è","é"        
+];
+
+  /*
+ var dat = {
+  patternLength:16,
+  cellDuration:3,
+  instruments:[1,2,61,62,63],
+  sequences:[0],
+  notes:[]};*/
+  
+function loadDat(s){
+  Debug.log(s);
+  s = unmakeRLE(s);
+  var arr :Array = [];
+  for(ci in 0...s.length){
+  	var c = s[ci];
+  	arr.push(B62.indexOf(c));
+	}
+  Debug.log(arr);
+  dat = {};
+	
+	var i=0;
+	dat.patternLength=arr[i];
+
+	i++;
+	dat.cellDuration=arr[i];
+
+	dat.instruments=[];
+	for (j in 0...5){
+    var n=0;
+    for (k in 0...5){
+      i++;
+   		n = n + Math.pow(62,k)*arr[i];      
+    }
+    dat.instruments.push(n);
+  }
+    
+  i++;
+	var sequenceSlotCount = arr[i];
+
+	dat.sequences=[];
+	for (j in 0...sequenceSlotCount){
+  	i++;
+    dat.sequences.push(arr[i]);
+  }
+       
+  Debug.log(dat.sequences);
+	Debug.log("patternlength "+dat.patternLength);
+	Debug.log("cellDuration "+dat.cellDuration);
+	Debug.log("instruments "+dat.instruments);
+	Debug.log("sequences "+dat.sequences);
+}
+    
+function saveDat():String{
+  stripUnnecessaryNotes();
+  
+  var intArray=[];
+  intArray.push(dat.patternLength);
+  intArray.push(dat.cellDuration);
+  for ( i in 0...5){
+   	var n = dat.instruments[i];
+    for ( j in 0...5){
+      var p1 = Math.pow(62,j);
+      var v = Std.int(n/p1)%62;
+      intArray.push(v);
+    }
+  }
+  intArray.push(dat.sequences.length);
+  for(s in dat.sequences){
+      intArray.push(s);
+  }
+
+  intArray.push(dat.notes.length);
+  for(r in dat.notes){
+    for (i in 0...5){
+      var instNotes = r[i];
+      intArray.push(instNotes.length);
+      for (n in instNotes){
+      	intArray.push(n[0]%62);
+      	intArray.push(Std.int(n[0]/62)%62);    
+      }
+    for (j in 1...3){
+      for (n in instNotes){            
+      	intArray.push(n[j]);
+      }
+    }
+    }
+  }
+  Debug.log(intArray);
+
+  var result="";
+	for( n in intArray){
+		result = result+B62[n];    
+  }
+  Debug.log(result);
+  result = makeRLE(result);
+  Debug.log(result);
+	result = unmakeRLE(result);
+  Debug.log(result);
+  return result;
+}
+
+  function makeRLE(s):String{
+		var result ="";
+    var lastChar=s[0];
+    var lastCharCount=1;
+    for (i in 1...s.length){
+         var c = s[i];
+         if (c == lastChar){
+     		 	lastCharCount++; 
+    } else {
+      if (lastCharCount>1){
+        result = result+lastCharCount;
+      }
+      result = result + lastChar;
+			lastChar = c;
+      lastCharCount = 1;
+      
+    }
+    }
+      
+    if (lastCharCount>1){
+      result = result+lastCharCount;
+    }
+    result = result + lastChar;
+    
+    return result;
+  }
+
+  function unmakeRLE(s):String{
+		var result ="";
+    var lastInt=0;
+    var i = 0;
+    while(i<s.length){
+      var c = s[i];
+      while (c=="0"||c=="1"||c=="2"||c=="3"||c=="4"||c=="5"||c=="6"||c=="7"||c=="8"||c=="9"){
+				lastInt=lastInt*10+Std.int(c);
+        Debug.log(lastInt);
+        i++;
+        c=s[i];
+      }
+        if (lastInt==0){
+          lastInt=1;
+        }
+
+      for (i in 0...lastInt){
+          result = result +c;    
+      }
+      i++;
+      c=s[i];
+      lastInt=0;
+    }
+      
+    result = result;
+    
+    return result;
+  }
+    
 var channelOrder:Array = [0,1,2,3,4];
 
 var selectedInst:Int=0;
 var noteLength:Int=3;
-var noteVol:Int=8;
+var maxVol:Int=7;
+var noteVol:Int=maxVol;
 var selectedSequenceSlot:Int=0;
 var bottomNote=60;
 
@@ -162,10 +328,33 @@ function stopPlay(){
   playing=false;
 }
 
+function PushNewSequence(){
+	var minNotFound=0;
+  var changed=true;
+  while(changed){
+    changed=false;
+    for(i in dat.sequences){
+        if (i==minNotFound){
+	      changed=true;
+      	minNotFound++;
+	      break;
+	    }
+    }
+  }
+  if (dat.notes.length==minNotFound){
+    dat.notes.push([[],[],[],[],[]]);
+  }
+    dat.sequences.push(minNotFound);
+  }
+
+var plusCounter=0;
+var minusCounter=0;
+
 function update() {
   if ((Input.pressed(Key.DOWN)||Input.pressed(Key.S))&&bottomNote>0){
     bottomNote--;
   }
+  
   if ((Input.pressed(Key.UP)||Input.pressed(Key.W))&&bottomNote<132-12){
     bottomNote++;
   }
@@ -180,6 +369,7 @@ function update() {
   } else {
   	lCounter=0;      
   }
+    
   if (Input.pressed(Key.RIGHT)||Input.pressed(Key.D)){
     rCounter--;
     if (rCounter<=0){
@@ -192,27 +382,78 @@ function update() {
   	rCounter=0;      
   }
     
+    
+  if (Input.pressed(Key.PLUS)){
+    plusCounter--;
+    if (plusCounter<=0){
+      if (noteVol<7){
+        noteVol++;
+        plusCounter=5;
+      } 
+    }
+  } else {
+  	plusCounter=0;      
+  }
+    
+    
+  if (Input.pressed(Key.MINUS)){
+    minusCounter--;
+    if (minusCounter<=0){
+      if (noteVol>1){
+        noteVol--;
+        minusCounter=5;
+      } 
+    }
+  } else {
+  	minusCounter=0;      
+  }
+    
   scrollt--;
   Gfx.clearscreen(backgroundCol);
 
   //draw sequence panel
-  var cellCount=12;
-  Gfx.fillbox(1,9,13,11+cellCount*8,panelCol);
+  var cellCount=12;  
+  var colLength = Math.min(dat.sequences.length+1,12);
+  Gfx.fillbox(1,9,13,11+colLength*8,panelCol);
   Text.display(2,10+charOffset,"SEQ",darkText);
-  for (i in 0 ... cellCount) {
-  var tCol=darkText;
+
+  for (i in 0 ... dat.sequences.length) {
+  	var tCol=darkText;
     var collide=collideBox(2,20+i*8,11,7);
-  var col:Int=i==selectedSequenceSlot?mainHighlighter:mainHighlight;
-  if (collide==1&&i!=selectedSequenceSlot){
-    col=mainHighlightish;
-    tCol=Col.GREY;
-  } 
-  if (collide==2){
-    selectedSequenceSlot=i;
-  }
+ 	 	var col:Int=i==selectedSequenceSlot?mainHighlighter:mainHighlight;
+  	if (collide==1&&i!=selectedSequenceSlot){
+    	col=mainHighlightish;
+    	tCol=Col.GREY;
+	  } 
+  	if (collide==2){
+    	selectedSequenceSlot=i;
+  	}	
+    if (collide==3){
+      if (dat.sequences.length>1){
+				dat.sequences.splice(i,1);
+        if (selectedSequenceSlot==i){
+          selectedSequenceSlot--;
+        }
+        Debug.log("removed from sequence");
+	      break;
+      }
+    }
     Gfx.fillbox(2,20+i*8,11,7,col);  	
-  	var s = i>=10? Convert.tostring(i):("0"+Convert.tostring(i));
+	  var seqIndex=dat.sequences[i];
+  	var s = seqIndex>=10? Convert.tostring(seqIndex):("0"+Convert.tostring(seqIndex));
     Text.display(4,20 + i * 8+charOffset+1,s ,tCol);
+  }
+  if (dat.sequences.length<12){
+    var i =dat.sequences.length;
+    var collide=collideBox(2,20+i*8,11,7);
+    var col=Col.GREY;
+    if (collide==1){
+      col=Col.WHITE;
+    }
+    if (collide==2){
+			PushNewSequence();
+    }
+    Text.display(6,20 + i * 8+charOffset+1,"+" ,col);		
   }
 
   var xOffset=41;
@@ -258,7 +499,7 @@ for (k in 0 ... 5){
 			Gfx.fillbox(16-1+k*35,10-1,33+2,7+2,Col.GREY);    
     }
     if (c==2){
-      setInstrument(k);
+      setInstrument(k,true);
     }
   }
     
@@ -294,8 +535,28 @@ for (k in 0 ... 5){
 		playing=false;
 	}
   
+    
+	if (drawButton("clear pat",152,61,textCol,mainButton,mainHighlight)){
+		dat.notes[dat.sequences[selectedSequenceSlot]]=[[],[],[],[],[]];
+	}
+    
+	if (drawButton("   new   ",152,100,textCol,mainButton,mainHighlight)){
+		dat = {
+      patternLength:16,
+      cellDuration:3,
+      instruments:[1,2,61,62,63],
+      sequences:[0],
+      notes:[
+        [[],[],[],[],[]],
+      ],
+    };
+	}
 
 
+	if (drawButton("  save   ",152,110,textCol,mainButton,mainHighlight)){
+		saveDat();
+	}
+    
 	//draw grid
 	var gx=22;
 	var gy=21;
@@ -359,8 +620,8 @@ for (k in 0 ... 5){
            //draw note on grid
            var y = gy+1+cellHeight*(12-dNote);
            var l = n[1];
-
-           Gfx.fillbox(x,y,cellWidth*l-1,cellHeight-1,col);
+					 var v = n[3];
+           Gfx.fillbox(x,y+maxVol-v,cellWidth*l-1,v,col);
          }
     }
   }
@@ -369,8 +630,13 @@ for (k in 0 ... 5){
 	var gridHeight = cellHeight*yCells;
 	var dx=Mouse.x-gx;
 	var dy=Mouse.y-gy;
-
+	if (Mouse.leftclick()){	
+    pressedDownOnCanvas=false;
+  }
   if (dx>=0 && dx<gridWidth && dy>=0 && dy<gridHeight){
+    if (Mouse.leftclick()){
+	    pressedDownOnCanvas=true;      
+    }
 		/*
     if (bottomNote>0 && Mouse.mousewheel< -1 ){
        bottomNote--;
@@ -380,19 +646,19 @@ for (k in 0 ... 5){
       scrollt=scrollInterval;
     }*/
     if (Input.justpressed(Key.ONE)){
-      setInstrument(0);
+      setInstrument(0,false);
     }
     if (Input.justpressed(Key.TWO)){
-      setInstrument(1);
+      setInstrument(1,false);
     }
     if (Input.justpressed(Key.THREE)){
-      setInstrument(2);
+      setInstrument(2,false);
     }
     if (Input.justpressed(Key.FOUR)){
-      setInstrument(3);
+      setInstrument(3,false,false);
     }
     if (Input.justpressed(Key.FIVE)){
-      setInstrument(4);
+      setInstrument(4,false);
     }
     
 		var sx = Math.floor(dx/cellWidth);
@@ -402,8 +668,8 @@ for (k in 0 ... 5){
     if (sx+l>=xCells){
       l=xCells-sx;
     }
-    Gfx.drawbox(gx+1+cellWidth*sx,gy+1+cellHeight*sy,cellWidth*l-1,cellHeight-1,0xffffff); 
-    if (Mouse.leftheld()){
+    Gfx.drawbox(gx+1+cellWidth*sx,gy+1+cellHeight*sy+maxVol-noteVol-1,cellWidth*l-1,noteVol+1,0xffffff); 
+    if (Mouse.leftheld()&&pressedDownOnCanvas){
       var clickX = sx;
       var clickY = bottomNote+12-sy;
       for (i in 0...l){
@@ -416,7 +682,11 @@ for (k in 0 ... 5){
 	    if (oldAddX>=0){
   	  	blockNote(oldAddX,oldAddY);
       }
-      dat.notes[selectedSequence][selectedInst].push([clickY,l,clickX,100]);
+      var newNote=[clickY,l,clickX,noteVol];
+      dat.notes[selectedSequence][selectedInst].push(newNote);
+      if (Mouse.leftclick()){
+				DoPlayNote(selectedInst,newNote);
+      }
 			oldAddX=clickX;
     	oldAddY=clickY;
     } else {
@@ -440,6 +710,8 @@ for (k in 0 ... 5){
     
   if (playing){
     playTick++;    
+    var pieceLengthInTicks = dat.sequences.length*dat.patternLength*dat.cellDuration;
+    playTick = playTick%pieceLengthInTicks;
     var globalCell = Std.int(playTick/dat.cellDuration);
     var playPattern = Std.int(globalCell/dat.patternLength);
     selectedSequenceSlot=playPattern;
@@ -458,9 +730,10 @@ for (k in 0 ... 5){
 
 function DoPlayNote(c,n){
   var notePos = n[2];
-	var pitch = Math.pow(2,(n[0]-60)/12);
+	var pitch = Math.pow(2,(n[0]-61)/12);
+  Debug.log(n[0]+","+pitch);
   var noteLength = n[1]*dat.cellDuration/30;
-	Music.playnote(dat.instruments[c],pitch,noteLength,n[3]);
+	Music.playnote(dat.instruments[c],pitch,noteLength,n[3]/maxVol);
 }
 
 function TryPlayNote(x){
@@ -482,12 +755,14 @@ function TryPlayNote(x){
   }
 }  
   
-function setInstrument(k){
+function setInstrument(k,play){
+  if (play){
   	Music.playnote(dat.instruments[k],1,1,1.0);
-    selectedInst=k;
-    var kIndex=channelOrder.indexOf(k);
-    channelOrder.splice(kIndex,1);
-    channelOrder.push(k);
+  }
+  selectedInst=k;
+  var kIndex=channelOrder.indexOf(k);
+  channelOrder.splice(kIndex,1);
+  channelOrder.push(k);
 }
 
 function deleteNote(clickX,clickY){
@@ -525,4 +800,11 @@ function blockNote(clickX,clickY){
         }
     }
   }
+}
+  
+function new(){
+  // Music.playnote(4123,1,1,10);
+	Text.setfont(Font.PIXEL,1);
+//  var saved = saveDat();
+//  loadDat(saved);
 }

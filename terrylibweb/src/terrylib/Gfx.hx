@@ -764,6 +764,7 @@ class Gfx {
 		tempshape.graphics.lineTo(0, 0);
 		tempshape.graphics.endFill();
 		
+		shapematrix.identity();
 		shapematrix.translate(x, y);
 		drawto.draw(tempshape, shapematrix);
 		shapematrix.translate(-x, -y);

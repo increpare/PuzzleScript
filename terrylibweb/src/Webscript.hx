@@ -3,13 +3,12 @@ import hscript.*;
 import openfl.Assets;
 import openfl.external.ExternalInterface;
 
-#if flash
-	import openfl.events.*;
-	import openfl.net.*;
-#end
+import openfl.events.*;
+import openfl.net.*;
 
 class Webscript {
 	public static var myscript:String;
+	public static var loadedscript:Array<String>;
 	public static var parsedscript:Expr;
 	public static var parser:Parser;
 	public static var interpreter:Interp;
@@ -53,23 +52,24 @@ class Webscript {
 		Text.setfont(Webfont.DEFAULT, 1);
 		
 		try {
-			ExternalInterface.addCallback("loadscript", loadscript);
+			#if terrylibwebhtml5debug
+				loadfile("test.txt");
+			#else
+				ExternalInterface.addCallback("loadscript", loadscript);
+			#end
 		}catch (e:Dynamic) {
 			//Ok, try loading this locally for testing
 			#if flash
-			loadfile();
+			loadfile("script.txt");
 			#end
 		}
 	}
 	
-	#if flash
-	
 	public static var myLoader:URLLoader;
-	public static function loadfile():Void {
+	public static function loadfile(filename:String):Void {
 		//make a new loader
     myLoader = new URLLoader();
-    //new request - for a file in the same folder called 'someTextFile.txt'
-    var myRequest:URLRequest = new URLRequest("script.txt");
+    var myRequest:URLRequest = new URLRequest(filename);
 		
 		//wait for the load
     myLoader.addEventListener(Event.COMPLETE, onLoadComplete);
@@ -80,7 +80,7 @@ class Webscript {
 	}
 	
 	public static function onIOError(e:Event):Void {
-		trace("\"script.txt\" not found.");
+		trace("test script not found.");
 	}
 	
 	public static function onLoadComplete(e:Event):Void {
@@ -90,34 +90,18 @@ class Webscript {
 	}
 	
 	public static var	reloaddelay:Int = 0;
-	#end
 	
-	public static function printError(e:Dynamic):String{
-		
-		if ( Std.is(e,hscript.Expr.Error) ) {	
-			var errstr : String = e.e[0];
-			for (i in 2 ... e.e.length){
-				errstr = errstr + " " + e.e[i];
-			}
-			return errstr;
-		}
-		if (e.name == "TypeError"){
-			return e.stack;
-		}
-		return e.toString();
-	}
-
 	public static function update() {
 		#if flash
 		  if (Input.justpressed(Key.R)) {
-				reloaddelay = 5;
+				reloaddelay = 10;
 			}
 		#end
 		#if flash
 		if (reloaddelay > 0) {
 			Gfx.clearscreen(Col.BLACK);
 			reloaddelay--;
-			if (reloaddelay <= 0) loadfile();
+			if (reloaddelay <= 0) loadfile("script.txt");
 		}else	if (errorinscript) {
 		#else
 		if (errorinscript) {
@@ -130,11 +114,7 @@ class Webscript {
 				try {
 					updatefunction();
 				}catch (e:Dynamic) {
-					var errorMessage = printError(e);
-					Webdebug.error("RUNTIME ERROR: " + errorMessage);
-					Gfx.resizescreen(192, 120, 4);
-					errorinscript = true;
-					runscript = false;
+					Err.log(Err.RUNTIME_UPDATE, parser.line, Err.process(e));
 				}
 			}	
 		}else {
@@ -175,11 +155,18 @@ class Webscript {
 	public static function scriptfound(){
 		scriptloaded = true;
 		errorinscript = false;
-   	 	parser = new hscript.Parser();
+   	parser = new hscript.Parser();
 		parser.allowTypes = true;
-    	interpreter = new hscript.Interp();
+    interpreter = new hscript.Interp();
 		
-		interpreter.variables.set("Random", Random);
+		
+		loadedscript = myscript.split("\n");
+		//Preprocessor.loadscript(myscript);
+		//if (Preprocessor.sortbyscope()) {
+		//Preprocessor.checkforerrors();
+		//myscript = Preprocessor.getfinalscript();
+			
+		//Preprocessor.debug();
 		interpreter.variables.set("Math", Math);
 		interpreter.variables.set("Col", Col);
 		interpreter.variables.set("Convert", Convert);
@@ -193,33 +180,20 @@ class Webscript {
 		interpreter.variables.set("Text", Text);
 		interpreter.variables.set("Font", Webfont);
 		interpreter.variables.set("Std", Std);
+		interpreter.variables.set("Random", Random);
 		
 		runscript = true;
 		try{
 			parsedscript = parser.parseString(myscript);
 		}catch (e:Dynamic) {
-			/*
-				e looks like
-				{
-					e { error name , error code id, ? possibly data associated with that error}
-				}
-			*/
-			var errstr : String = printError(e);
-			Webdebug.error("Error:"+errstr);
-			runscript = false;
-			errorinscript = true;
-			Gfx.resizescreen(192, 120, 4);
+			Err.log(Err.PARSER_INIT, null, Err.process(e));
 		}
 		
 		if (runscript) {
 			try{
 				interpreter.execute(parsedscript);
-			}catch (e:hscript.Expr.Error) {
-				var errstr : String = printError(e);
-				Webdebug.error("Initilisation error:"+errstr, parser.line);
-				runscript = false;
-				errorinscript = true;
-				Gfx.resizescreen(192, 120, 4);
+			}catch (e:Dynamic) {
+				Err.log(Err.RUNTIME_INIT, parser.line, Err.process(e));
 			}
 			
 			title = interpreter.variables.get("title");
@@ -230,7 +204,7 @@ class Webscript {
 			if (bg_col == null) {
 				background_color = Col.BLACK;
 			}else{
-			  background_color = Convert.toint(bg_col);
+				background_color = Convert.toint(bg_col);
 			}
 			
 			initfunction = interpreter.variables.get("new");
@@ -239,25 +213,15 @@ class Webscript {
 			//Set default font
 			Text.setfont("default", 1);
 			if (initfunction != null) {
-				try{
+				try {
 					initfunction();	
 				}catch (e:Dynamic) {
-					var errstr : String = printError(e);
-					Webdebug.error("Error in new(): " + errstr, parser.line);
-					runscript = false;
-					errorinscript = true;
-					Gfx.resizescreen(192, 120, 4);
+					Err.log(Err.PARSER_NEW, parser.line, Err.process(e));
 				}
 			}
 			
 			if (updatefunction == null) {
-				Webdebug.error("Error: An \"update\" function is required. e.g.");
-				Webdebug.error("function update(){");
-				Webdebug.error("}");
-				runscript = false;
-				errorinscript = true;
-				
-				Gfx.resizescreen(192, 120, 4);
+				Err.log(Err.PRE_MISSINGUPDATE);
 			}
 		}
 	}	
