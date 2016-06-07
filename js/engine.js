@@ -789,16 +789,36 @@ function DoRestart(force) {
 	level.commandQueue=[];
 }
 
-function DoUndo(force) {
+function backupDiffers(){
+	if (backups.length==0){
+		return true;
+	}
+	var bak = backups[backups.length-1];
+	for (var i=0;i<level.objects.length;i++) {
+    	if (level.objects[i]!==bak.dat[i]) {
+    		return true;
+    	}
+    }
+    return false;
+}
+
+function DoUndo(force,ignoreDuplicates) {
 	if ((!levelEditorOpened)&&('noundo' in state.metadata && force!==true)) {
 		return;
 	}
 	if (verbose_logging) {
 		consolePrint("--- undoing ---",true);
 	}
+
+	if (ignoreDuplicates){
+		while (backupDiffers()==false){
+			backups.pop();
+		}
+	}
+
 	if (backups.length>0) {
-		var tobackup = backups[backups.length-1];
-		restoreLevel(tobackup);
+		var torestore = backups[backups.length-1];
+		restoreLevel(torestore);
 		backups = backups.splice(0,backups.length-1);
 		if (! force) {
 			tryPlayUndoSound();
@@ -2187,7 +2207,7 @@ function processInput(dir,dontCheckWin,dontModify) {
 	    			consoleCacheDump();
         		}
         		backups.push(bak);
-        		DoUndo(true);
+        		DoUndo(true,false);
         		return false;
         	}
         	//play player cantmove sounds here
@@ -2199,7 +2219,7 @@ function processInput(dir,dontCheckWin,dontModify) {
 	    		consoleCacheDump();
 			}
     		backups.push(bak);
-    		DoUndo(true);
+    		DoUndo(true,false);
     		return false;
 	    } 
 
@@ -2225,7 +2245,7 @@ function processInput(dir,dontCheckWin,dontModify) {
 	        			consoleCacheDump();
 	        		}
 	        		backups.push(bak);
-	        		DoUndo(true);
+	        		DoUndo(true,false);
 					return true;
 				} else {
 					if (dir!==-1) {
