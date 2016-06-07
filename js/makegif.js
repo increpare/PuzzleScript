@@ -34,7 +34,7 @@ function makeGIF() {
   		var realtimeframe=false;
 		var val=inputDat[i];
 		if (val==="undo") {
-			DoUndo();
+			DoUndo(false,true);
 		} else if (val==="restart") {
 			DoRestart();
 		} else if (val=="tick") {			

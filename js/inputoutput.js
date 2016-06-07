@@ -541,7 +541,7 @@ function checkKey(e,justPressed) {
             //undo
             if (textMode===false) {
                 pushInput("undo");
-                DoUndo();
+                DoUndo(false,true);
                 canvasResize(); // calls redraw
             	return prevent(e);
             }
