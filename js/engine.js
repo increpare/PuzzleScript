@@ -2239,8 +2239,8 @@ function processInput(dir,dontCheckWin,dontModify) {
 				consoleCacheDump();
 			}
 			backups.push(bak);
-			DoUndo(true);
-			DoUndo(true);
+			DoUndo(true,false);
+			DoUndo(true,false);
 			return true;
 		}
 
