@@ -2292,6 +2292,7 @@ function processInput(dir,dontCheckWin,dontModify) {
 				}
 				restartTarget=backupLevel();
 				curlevelTarget=restartTarget;
+				hasUsedCheckpoint=true;
 				localStorage[document.URL+'_checkpoint']=JSON.stringify(restartTarget);
 				//test line, remove later!:
 				var restored = JSON.parse(localStorage[document.URL+'_checkpoint']);
@@ -2448,6 +2449,10 @@ function anyMovements() {
 
 
 function nextLevel() {
+	if (hasUsedCheckpoint){
+		curlevelTarget=null;
+		hasUsedCheckpoint=false;
+	}
 	keybuffer=[];
     againing=false;
 	messagetext="";

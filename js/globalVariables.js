@@ -1,6 +1,7 @@
 var unitTesting=false;
 var curlevel=0;
 var curlevelTarget=null;
+var hasUsedCheckpoint=false;
 var levelEditorOpened=false;
 
 try {
