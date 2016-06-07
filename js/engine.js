@@ -2213,6 +2213,17 @@ function processInput(dir,dontCheckWin,dontModify) {
     		return true;
 	    } 
 
+		if (level.commandQueue.indexOf('undo')>=0) {
+			if (verbose_logging) {
+				consolePrint('UNDO command executed, undoing previous turn.');
+				consoleCacheDump();
+			}
+			backups.push(bak);
+			DoUndo(true);
+			DoUndo(true);
+			return true;
+		}
+
 	    if (dontModify && level.commandQueue.indexOf('win')>=0) {
 	    	return true;
 	    }
