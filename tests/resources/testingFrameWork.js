@@ -27,7 +27,7 @@ function runTest(dataarray) {
 	for(var i=0;i<inputDat.length;i++) {
 		var val=inputDat[i];
 		if (val==="undo") {
-			DoUndo();
+			DoUndo(false,true);
 		} else if (val==="restart") {
 			DoRestart();
 		} else if (val==="tick") {
