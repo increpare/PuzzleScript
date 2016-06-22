@@ -143,6 +143,9 @@ function generateExtraMembers(state) {
 			if (o.spritematrix.length===0) {
 				o.spritematrix = [[0, 0, 0, 0, 0], [0, 0, 0, 0, 0], [0, 0, 0, 0, 0], [0, 0, 0, 0, 0], [0, 0, 0, 0, 0]];
 			} else {
+				if ( o.spritematrix.length!==5 || o.spritematrix[0].length!==5 || o.spritematrix[1].length!==5 || o.spritematrix[2].length!==5 || o.spritematrix[3].length!==5 || o.spritematrix[4].length!==5 ){
+					logWarning("Sprite graphics must be 5 wide and 5 high exactly.",o.lineNumber);
+				}
 				o.spritematrix = generateSpriteMatrix(o.spritematrix);
 			}
 		}

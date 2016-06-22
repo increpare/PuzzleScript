@@ -451,6 +451,9 @@ var codeMirrorFn = function() {
                             var match_name = sol ? stream.match(reg_name, true) : stream.match(/[^\s\()]+\s*/,true);
                             if (match_name == null) {
                                 stream.match(reg_notcommentstart, true);
+                                if (stream.pos>0){                                
+                                    logWarning('Unknown junk in object section (possibly: sprites have to be 5 pixels wide and 5 pixels high exactly).',state.lineNumber);
+                                }
                                 return 'ERROR';
                             } else {
                             	var candname = match_name[0].trim();
@@ -549,20 +552,24 @@ var codeMirrorFn = function() {
                                 var o = state.objects[state.objects_candname];
 
                                 spritematrix[spritematrix.length - 1] += ch;
-
+                                if (spritematrix[spritematrix.length-1].length>5){
+                                    logError('Sprites must be 5 wide and 5 high.', state.lineNumber);
+                                    stream.match(reg_notcommentstart, true);
+                                    return null;
+                                }
+                                o.spritematrix = state.objects_spritematrix;
                                 if (spritematrix.length === 5 && spritematrix[spritematrix.length - 1].length == 5) {
-                                    o.spritematrix = state.objects_spritematrix;
                                     state.objects_section = 0;
                                 }
 
                                 if (ch!=='.') {
                                     var n = parseInt(ch);
                                     if (n>=o.colors.length) {
-                                        logError("trying to access color number "+n+" from the color palette of sprite " +state.objects_candname.toUpperCase()+", but there are only "+o.colors.length+" defined in it.",state.lineNumber);
+                                        logError("Trying to access color number "+n+" from the color palette of sprite " +state.objects_candname.toUpperCase()+", but there are only "+o.colors.length+" defined in it.",state.lineNumber);
                                         return 'ERROR';
                                     }
                                     if (isNaN(n)) {
-                                        logError('invalid character "' + ch + '" in sprite for ' + state.objects_candname.toUpperCase(), state.lineNumber);
+                                        logError('Invalid character "' + ch + '" in sprite for ' + state.objects_candname.toUpperCase(), state.lineNumber);
                                         return 'ERROR';
                                     }
                                     return 'COLOR BOLDCOLOR COLOR-' + o.colors[n].toUpperCase();
