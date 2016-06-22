@@ -369,11 +369,24 @@ function onKeyDown(event) {
 
     event = event || window.event;
 
+    window.console.log(event.keyCode);
 	// Prevent arrows/space from scrolling page
 	if ((!IDE) && ([32, 37, 38, 39, 40].indexOf(event.keyCode) > -1)) {
 		prevent(event);
 	}
 
+	if (IDE &&  (event.ctrlKey||event.metaKey) && event.keyCode==13 ) {		
+		clearConsole();
+		compile(["restart"]);
+		document.activeElement.blur();
+		var code = window.form1.code;
+		var editor = code.editorreference;
+		editor.getInputField().blur();
+		canvas.focus();
+		canvas.click();
+		prevent(event);
+		return;
+	}
 
     if (keybuffer.indexOf(event.keyCode)>=0) {
     	return;
