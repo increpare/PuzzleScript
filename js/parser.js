@@ -1024,26 +1024,20 @@ var codeMirrorFn = function() {
                                 if (lastlevel[0] == '\n') {
                                     state.levels.push([state.lineNumber,line]);
                                 } else {
-/*                                    if (lastlevel.length>0) 
-                                    {
-                                        if (line.length!=lastlevel[1].length) {
-//                                            logError("Within a single level, the width of each row must be the same.",state.lineNumber);
-                                        }
-                                    }*/
                                     if (lastlevel.length==0)
                                     {
                                         lastlevel.push(state.lineNumber);
                                     }
-                                    lastlevel.push(line);                                
-                                }
-                                /*
-                                if (lastlevel.length>1) {
-                                    if (lastlevel[lastlevel.length-2].length!=line.length) {
-                                        stream.match(reg_notcommentstart,true);
-                                        logError("All line lengths in a level have to be the same",state.lineNumber);
-                                        return "ERROR";
+                                    lastlevel.push(line);  
+
+                                    if (lastlevel.length>1) 
+                                    {
+                                        if (line.length!=lastlevel[1].length) {
+                                            logWarning("Maps must be rectangular, yo (In a level, the length of each row must be the same).",state.lineNumber);
+                                        }
                                     }
-                                }*/
+                                }
+                                
                             }
                         } else {
                             if (state.tokenIndex == 1) {
