@@ -201,7 +201,7 @@ function generateTitleScreen()
 		titleImage[11]=".Z to undo.....................";
 	}
 	if (noAction) {
-		titleImage[10]="..................................";
+		titleImage[10]=".X to select......................";
 	}
 	for (var i=0;i<titleImage.length;i++)
 	{
@@ -2473,6 +2473,7 @@ function nextLevel() {
 		curlevelTarget=null;
 		hasUsedCheckpoint=false;
 	}
+	oldflickscreendat=[0,0,screenwidth,screenheight];
 	keybuffer=[];
     againing=false;
 	messagetext="";
