@@ -2473,6 +2473,7 @@ function nextLevel() {
 		curlevelTarget=null;
 		hasUsedCheckpoint=false;
 	}
+	oldflickscreendat=[0,0,screenwidth,screenheight];
 	keybuffer=[];
     againing=false;
 	messagetext="";
