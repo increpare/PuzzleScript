@@ -372,6 +372,25 @@ function loadLevelFromLevelDat(state,leveldat,randomseed) {
 		level = leveldat.clone();
 		RebuildLevelArrays();
 
+
+        if (state!==undefined) {
+	        if (state.metadata.flickscreen!==undefined){
+	            oldflickscreendat=[
+	            	0,
+	            	0,
+	            	Math.min(state.metadata.flickscreen[0],level.width),
+	            	Math.min(state.metadata.flickscreen[1],level.height)
+	            ];
+	        } else if (state.metadata.zoomscreen!==undefined){
+	            oldflickscreendat=[
+	            	0,
+	            	0,
+	            	Math.min(state.metadata.zoomscreen[0],level.width),
+	            	Math.min(state.metadata.zoomscreen[1],level.height)
+	            ];
+	        }
+        }
+
 	    backups=[]
 	    restartTarget=backupLevel();
 
@@ -2473,7 +2492,6 @@ function nextLevel() {
 		curlevelTarget=null;
 		hasUsedCheckpoint=false;
 	}
-	oldflickscreendat=[0,0,screenwidth,screenheight];
 	keybuffer=[];
     againing=false;
 	messagetext="";

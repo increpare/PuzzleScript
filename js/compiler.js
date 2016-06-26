@@ -361,12 +361,12 @@ function generateExtraMembers(state) {
 			backgroundid = o.id;
 			backgroundlayer = o.layer;
 		}else if ('background' in state.aggregatesDict) {
-			var o=state.idDict[0];
+			var o=state.objects[state.idDict[0]];
 			backgroundid=o.id;
 			backgroundlayer=o.layer;
 			logError("background cannot be an aggregate (declared with 'and'), it has to be a simple type, or property (declared in terms of others using 'or').");
 		} else {
-			var o=state.idDict[0];
+			var o=state.objects[state.idDict[0]];
 			backgroundid=o.id;
 			backgroundlayer=o.layer;
 			logError("you have to define something to be the background");
