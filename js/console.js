@@ -13,6 +13,10 @@ function jumpToLine(i) {
 
 var consolecache = [];
 function consolePrint(text,urgent) {
+	if (level!=null && level.commandQueue!=null && level.commandQueue.indexOf('cancel')>=0 && text.indexOf('CANCEL')===-1) {	
+		return;
+	}
+
 	if (urgent===undefined) {
 		urgent=false;
 	}
