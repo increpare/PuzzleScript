@@ -395,7 +395,7 @@ function loadLevelFromLevelDat(state,leveldat,randomseed) {
 	    restartTarget=backupLevel();
 
 	    if ('run_rules_on_level_start' in state.metadata) {
-			processInput(-1,true);
+			processInput(-1,true,false);
 	    }
 	} else {
 		tryPlayShowMessageSound();
@@ -802,7 +802,7 @@ function DoRestart(force) {
 	tryPlayRestartSound();
 
 	if ('run_rules_on_level_start' in state.metadata) {
-    	processInput(-1,true);
+    	processInput(-1,true,false);
 	}
 	
 	level.commandQueue=[];

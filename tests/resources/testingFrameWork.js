@@ -21,23 +21,23 @@ function runTest(dataarray) {
 
 	while (againing) {
 		againing=false;
-		processInput(-1);			
+		processInput(-1,false,false);			
 	}
 	
 	for(var i=0;i<inputDat.length;i++) {
 		var val=inputDat[i];
-		if (val==="undo") {
+		if (val===6) {
 			DoUndo(false,true);
-		} else if (val==="restart") {
+		} else if (val===7) {
 			DoRestart();
-		} else if (val==="tick") {
-			processInput(-1);
+		} else if (val===5) {
+			processInput(-1,false,false);
 		} else {
-			processInput(val);
+			processInput(val|0,false,false);
 		}
 		while (againing) {
 			againing=false;
-			processInput(-1);			
+			processInput(-1,false,false);			
 		}
 	}
 

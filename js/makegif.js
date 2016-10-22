@@ -38,10 +38,10 @@ function makeGIF() {
 		} else if (val==="restart") {
 			DoRestart();
 		} else if (val=="tick") {			
-			processInput(-1);
+			processInput(-1,false,false);
 			realtimeframe=true;
 		} else {
-			processInput(val);
+			processInput(val|0,false,false);
 		}
 		redraw();
 		gifctx.drawImage(canvas,-xoffset,-yoffset);
@@ -50,7 +50,7 @@ function makeGIF() {
 		autotimer+=repeatinterval;
 
 		while (againing) {
-			processInput(-1);		
+			processInput(-1,false,false);		
 			redraw();
 			encoder.setDelay(againinterval);
 			gifctx.drawImage(canvas,-xoffset,-yoffset);

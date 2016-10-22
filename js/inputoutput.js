@@ -540,7 +540,7 @@ function checkKey(e,justPressed) {
         {
             //undo
             if (textMode===false) {
-                pushInput("undo");
+                pushInput(6);//"undo""
                 DoUndo(false,true);
                 canvasResize(); // calls redraw
             	return prevent(e);
@@ -551,7 +551,7 @@ function checkKey(e,justPressed) {
         {
         	if (textMode===false) {
         		if (justPressed) {
-	        		pushInput("restart");
+	        		pushInput(7);//"restart"
 	        		DoRestart();
 	                canvasResize(); // calls redraw
             		return prevent(e);
@@ -671,8 +671,8 @@ function checkKey(e,justPressed) {
             if (inputdir===4 && ('noaction' in state.metadata)) {
 
             } else {
-                pushInput(inputdir);
-                if (processInput(inputdir)) {
+                pushInput(inputdir|0,false,false);
+                if (processInput(inputdir|0,false,false)) {
                     redraw();
                 }
 	        }
@@ -693,7 +693,7 @@ function update() {
     }
     if (againing) {
         if (timer>againinterval&&messagetext.length==0) {
-            if (processInput(-1)) {
+            if (processInput(-1,false,false)) {
                 redraw();
                 keyRepeatTimer=0;
                 autotick=0;
@@ -738,8 +738,8 @@ function update() {
         autotick+=deltatime;
         if (autotick>autotickinterval) {
             autotick=0;
-            pushInput("tick");
-            if (processInput(-1)) {
+            pushInput(5);//"tick"
+            if (processInput(-1,false,false)) {
                 redraw();
             }
         }
