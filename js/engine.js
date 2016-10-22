@@ -1188,29 +1188,65 @@ Rule.prototype.generateCellRowMatchesFunction = function(cellRow,hasEllipsis)  {
 		var d1 = delta[1];
 		var cr_l = cellRow.length;
 
-			/*
+		/*
 			hard substitute in the first one - if I substitute in all of them, firefox chokes.
 			*/
 		var fn = "var d = "+d1+"+"+d0+"*level.height;\n";
 		var mul = STRIDE_OBJ === 1 ? '' : '*'+STRIDE_OBJ;	
 		for (var i = 0; i < STRIDE_OBJ; ++i) {
-			fn += 'var cellObjects' + i + ' = level.objects[i' + mul + (i ? '+'+i: '') + '];\n';
+			fn += 'var cellObjects0_' + i + ' = level.objects[i' + mul + (i ? '+'+i: '') + '];\n';
 		}
 		mul = STRIDE_MOV === 1 ? '' : '*'+STRIDE_MOV;
 		for (var i = 0; i < STRIDE_MOV; ++i) {
-			fn += 'var cellMovements' + i + ' = level.movements[i' + mul + (i ? '+'+i: '') + '];\n';
+			fn += 'var cellMovements0_' + i + ' = level.movements[i' + mul + (i ? '+'+i: '') + '];\n';
 		}
 		fn += "return "+cellRow[0].generateMatchString('0_');// cellRow[0].matches(i)";
 		for (var cellIndex=1;cellIndex<cr_l;cellIndex++) {
 			fn+="&&cellRow["+cellIndex+"].matches((i+"+cellIndex+"*d)%level.n_tiles)";
 		}
-		fn+=";";
+		fn+=";\n";
+		var oldfn=fn;
+		var debugtext="";
+		if (cr_l==2){
+			debugtext="OLD : \n"+fn+"\n";
+
+			newfn = "var d = "+d1+"+"+d0+"*level.height;\n";
+			var o_mul = STRIDE_OBJ === 1 ? '' : '*'+STRIDE_OBJ;
+			var m_mul = STRIDE_MOV === 1 ? '' : '*'+STRIDE_MOV;	
+
+			for (var i = 0; i < STRIDE_OBJ; ++i) {
+				newfn += 'var cellObjects0_' + i + ' = level.objects[i' + o_mul + (i ? '+'+i: '') + '];\n';
+			}
+			for (var i = 0; i < STRIDE_MOV; ++i) {
+				newfn += 'var cellMovements0_' + i + ' = level.movements[i' + m_mul + (i ? '+'+i: '') + '];\n';
+			}
+
+			for (var i = 0; i < STRIDE_OBJ; ++i) {
+				newfn += 'var cellObjects1_' + i + ' = level.objects[(i+d)' + o_mul + (i ? '+'+i: '') + '];\n';
+			}
+			for (var i = 0; i < STRIDE_MOV; ++i) {
+				newfn += 'var cellMovements1_' + i + ' = level.movements[(i+d)' + m_mul + (i ? '+'+i: '') + '];\n';
+			}
+
+			newfn += "return ("+cellRow[0].generateMatchString('0_')+"&&"+cellRow[1].generateMatchString('1_')+");\n";// cellRow[0].matches(i)";
+
+			debugtext+="NEW : \n"+newfn;		
+		} 
 
 		if (fn in matchCache) {
 			return matchCache[fn];
 		}
-		//console.log(fn.replace(/\s+/g, ' '));
-		return matchCache[fn] = new Function("cellRow","i",fn);
+
+		var generated_f = new Function("cellRow","i",fn);
+
+
+		if (debugtext!==""){
+			var generated_f_new = new Function("cellRow","i",newfn);
+			matchCacheNew[generated_f] = generated_f_new;
+			matchCacheDescription[generated_f]=debugtext;
+		}
+
+		return matchCache[fn] = generated_f;
 	} else {
 		var delta = dirMasksDelta[this.direction];
 		var d0 = delta[0];
@@ -1238,7 +1274,7 @@ Rule.prototype.generateCellRowMatchesFunction = function(cellRow,hasEllipsis)  {
 		fn+="\t\t}\n"
 		fn+="\t}\n";				
 		fn+="}\n";		
-		fn+="return result;"
+		fn+="return result;\n"
 
 
 		if (fn in matchCache) {
@@ -1301,14 +1337,15 @@ function CellReplacement(row) {
 
 
 var matchCache = {};
+var matchCacheNew = {};
+var matchCacheDescription = {};
 
 
-
-CellPattern.prototype.generateMatchString = function() {
+CellPattern.prototype.generateMatchString = function(suffix) {
 	var fn = "(true";
 	for (var i = 0; i < Math.max(STRIDE_OBJ, STRIDE_MOV); ++i) {
-		var co = 'cellObjects' + i;
-		var cm = 'cellMovements' + i;
+		var co = 'cellObjects'+suffix+ i;
+		var cm = 'cellMovements' +suffix+ i;
 		var op = this.objectsPresent.data[i];
 		var om = this.objectsMissing.data[i];
 		var mp = this.movementsPresent.data[i];
@@ -1335,7 +1372,7 @@ CellPattern.prototype.generateMatchString = function() {
 		for (var i = 0; i < STRIDE_OBJ; ++i) {
 			var aop = this.anyObjectsPresent[j].data[i];
 			if (aop)
-				fn += "|(cellObjects" + i + "&" + aop + ")";
+				fn += "|(cellObjects"+suffix + i + "&" + aop + ")";
 		}
 		fn += ")";
 	}
@@ -1354,7 +1391,7 @@ CellPattern.prototype.generateMatchFunction = function() {
 	for (var i = 0; i < STRIDE_MOV; ++i) {
 		fn += '\tvar cellMovements' + i + ' = level.movements[i' + mul + (i ? '+'+i: '') + '];\n';
 	}
-	fn += "return " + this.generateMatchString()+';';
+	fn += "return " + this.generateMatchString("")+';';
 	if (fn in matchCache) {
 		return matchCache[fn];
 	}
@@ -1590,31 +1627,32 @@ function matchCellRow(direction, cellRowMatch, cellRow, cellRowMask) {
 	}
 
 	var xmin=0;
-	var xmax=level.width;
-	var ymin=0;
-	var ymax=level.height;
+	var xmax=level.width|0;
+	var ymin=0;	
+	var ymax=level.height|0;
+	var height=ymax;
 
-    var len=cellRow.length;
+    var len=cellRow.length|0;
 
     switch(direction) {
     	case 1://up
     	{
-    		ymin+=(len-1);
+    		ymin+=(len-1)|0;
     		break;
     	}
     	case 2: //down 
     	{
-			ymax-=(len-1);
+			ymax-=(len-1)|0;
 			break;
     	}
     	case 4: //left
     	{
-    		xmin+=(len-1);
+    		xmin+=(len-1)|0;
     		break;
     	}
     	case 8: //right
 		{
-			xmax-=(len-1);	
+			xmax-=(len-1)|0;	
 			break;
 		}
     	default:
@@ -1631,8 +1669,18 @@ function matchCellRow(direction, cellRowMatch, cellRow, cellRowMask) {
 			}
 
 			for (var x=xmin;x<xmax;x++) {
-				var i = x*level.height+y;
-				if (cellRowMatch(cellRow,i))
+				var i = x*height+y;
+				var matches = cellRowMatch(cellRow,i);
+				if (cellRowMatch in matchCacheNew){
+					var cellRowNewMatch = matchCacheNew[cellRowMatch];
+					var newMatches = cellRowNewMatch(cellRow,i);
+					if (newMatches!==matches){
+						console.log(matchCacheDescription[cellRowMatch]);
+						var recalcMatches = cellRowMatch(cellRow,i);
+						var recalcNewMatches = cellRowNewMatch(cellRow,i);
+					}
+				}
+				if (matches)
 				{
 					result.push(i);
 				}
@@ -1664,30 +1712,32 @@ function matchCellRowWildCard(direction, cellRowMatch, cellRow,cellRowMask) {
 		return result;
 	}
 	var xmin=0;
-	var xmax=level.width;
+	var xmax=level.width|0;
 	var ymin=0;
-	var ymax=level.height;
+	var ymax=level.height|0;
+	var height=ymax;
 
-	var len=cellRow.length-1;//remove one to deal with wildcard
+
+	var len=(cellRow.length|0)-2;//remove one to deal with wildcard
     switch(direction) {
     	case 1://up
     	{
-    		ymin+=(len-1);
+    		ymin+=len;
     		break;
     	}
     	case 2: //down 
     	{
-			ymax-=(len-1);
+			ymax-=len;
 			break;
     	}
     	case 4: //left
     	{
-    		xmin+=(len-1);
+    		xmin+=len;
     		break;
     	}
     	case 8: //right
 		{
-			xmax-=(len-1);	
+			xmax-=len;	
 			break;
 		}
     	default:
@@ -1707,12 +1757,12 @@ function matchCellRowWildCard(direction, cellRowMatch, cellRow,cellRowMask) {
 
 			for (var x=xmin;x<xmax;x++) {
 				var i = x*level.height+y;
-				var kmax;
+				var kmax = 0;
 
 				if (direction === 4) { //left
-					kmax=x-len+2;
+					kmax=x-len+1;
 				} else if (direction === 8) { //right
-					kmax=level.width-(x+len)+1;	
+					kmax=level.width-(x+len);	
 				} else {
 					window.console.log("EEEP2 "+direction);					
 				}
@@ -1728,12 +1778,12 @@ function matchCellRowWildCard(direction, cellRowMatch, cellRow,cellRowMask) {
 
 			for (var y=ymin;y<ymax;y++) {
 				var i = x*level.height+y;
-				var kmax;
+				var kmax = 0;
 
 				if (direction === 2) { // down
-					kmax=level.height-(y+len)+1;
+					kmax=level.height-(y+len);
 				} else if (direction === 1) { // up
-					kmax=y-len+2;					
+					kmax=y-len+1;					
 				} else {
 					window.console.log("EEEP2 "+direction);
 				}
@@ -1862,7 +1912,7 @@ Rule.prototype.applyAt = function(delta,tuple,check) {
 
 	if (verbose_logging && result){
 		var ruleDirection = dirMaskName[rule.direction];
-		var logString = '<font color="green">Rule <a onclick="jumpToLine(' + rule.lineNumber + ');"  href="javascript:void(0);">' + rule.lineNumber + '</a> ' + 
+		var logString = '<font color="green">Rule <a onclick="jumpToLine(' + rule.lineNumber + ');\n"  href="javascript:void(0);">' + rule.lineNumber + '</a> ' + 
 			ruleDirection + ' applied.</font>';
 		consolePrint(logString);
 	}
