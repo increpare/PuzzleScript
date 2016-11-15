@@ -452,7 +452,7 @@ var codeMirrorFn = function() {
                             if (match_name == null) {
                                 stream.match(reg_notcommentstart, true);
                                 if (stream.pos>0){                                
-                                    logWarning('Unknown junk in object section (possibly: sprites have to be 5 pixels wide and 5 pixels high exactly).',state.lineNumber);
+                                    logWarning('Unknown junk in object section (possibly: sprites have to be 8 pixels wide and 8 pixels high exactly).',state.lineNumber);
                                 }
                                 return 'ERROR';
                             } else {
@@ -552,13 +552,13 @@ var codeMirrorFn = function() {
                                 var o = state.objects[state.objects_candname];
 
                                 spritematrix[spritematrix.length - 1] += ch;
-                                if (spritematrix[spritematrix.length-1].length>5){
-                                    logError('Sprites must be 5 wide and 5 high.', state.lineNumber);
+                                if (spritematrix[spritematrix.length-1].length>8){
+                                    logError('Sprites must be 8 wide and 8 high.', state.lineNumber);
                                     stream.match(reg_notcommentstart, true);
                                     return null;
                                 }
                                 o.spritematrix = state.objects_spritematrix;
-                                if (spritematrix.length === 5 && spritematrix[spritematrix.length - 1].length == 5) {
+                                if (spritematrix.length === 8 && spritematrix[spritematrix.length - 1].length === 8) {
                                     state.objects_section = 0;
                                 }
 

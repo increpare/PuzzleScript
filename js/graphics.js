@@ -369,8 +369,8 @@ function canvasResize() {
     cellwidth = canvas.width / screenwidth;
     cellheight = canvas.height / screenheight;
 
-    var w = 5;//sprites[1].dat.length;
-    var h = 5;//sprites[1].dat[0].length;
+    var w = 8;//sprites[1].dat.length;
+    var h = 8;//sprites[1].dat[0].length;
 
 
     if (textMode) {
@@ -394,7 +394,7 @@ function canvasResize() {
         yoffset = (canvas.height - cellheight * screenheight) / 2;
         xoffset = (canvas.width - cellwidth * screenwidth) / 2;
     }
-    magnification = ((cellwidth/w)*5)|0;
+    magnification = ((cellwidth/w)*8)|0;
 
     if (levelEditorOpened && !textMode) {
     	xoffset+=cellwidth;
