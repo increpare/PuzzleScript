@@ -245,7 +245,7 @@ function exportClick() {
 
 	var sourceString = JSON.stringify(sourceCode);
 	
-	buildStandalone(sourceString);
+	buildEmbedded();
 }
 
 
