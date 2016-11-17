@@ -1,11 +1,11 @@
 const byte PLAYER_MASK = 0b00000100;
-const word PLAYER_LAYERMASK = 0b0000001111100000;
+const word PLAYER_LAYERMASK = 0b0111110000000000;
 const int GLYPH_COUNT = 5;
 
 const byte LAYERMASK[] = {
 	0b00000000,
-	0b11111110,
 	0b00000000,
+	0b11111110,
 };
 
 PROGMEM const byte tiles_b[][8] = {

@@ -17,7 +17,7 @@ const word ALL_LEFT = DIR_LEFT+(DIR_LEFT<<5)+(DIR_LEFT<<10);
 const word ALL_RIGHT = DIR_RIGHT+(DIR_RIGHT<<5)+(DIR_RIGHT<<10);
 
 byte level[128];
-word movementArray[128];
+word movementMask[128];
 byte rowCellContents[8];
 byte colCellContents[16];
 byte mapCellContents=0;
@@ -30,6 +30,28 @@ void resetState(){
   mapCellContents=0;
 }
 
+
+
+void render(){
+  arduboy.clear();
+
+  for (byte j=0;j<8;j++){
+    for (byte i=0;i<16;i++){
+      byte idx = i+16*j;
+      byte dat = level[idx];
+      for (char g=0;g<GLYPH_COUNT;g++){
+        char m = 1<<g;
+        if (dat&m){
+            arduboy.drawBitmap(i*8,j*8, tiles_b[g], 8,8, 0);
+            arduboy.drawBitmap(i*8,j*8, tiles_w[g], 8,8, 1);
+        }
+      }
+    }
+  }
+
+  arduboy.display();
+}
+
 void setup() {
   Serial.begin(9600);
   arduboy.boot();
@@ -39,21 +61,133 @@ void setup() {
   render();
 }
 
+bool doesMatch1(byte i){
+  byte d = 1;
+  byte cellObjects0 = level[i];
+  word cellMovements0 = movementMask[i];
+  byte cellObjects1 = level[i+1*d];
+  word cellMovements1 = movementMask[i+1*d];
+  return (cellObjects0 & 16) && (cellObjects1&4) && (cellMovements1&4096);
+}
+bool doesMatch2(byte i){
+  byte d = 1;
+  byte cellObjects1 = level[i];
+  word cellMovements1 = movementMask[i];
+  byte cellObjects0 = level[i+1*d];
+  word cellMovements0 = movementMask[i+1*d];
+  return (cellObjects0 & 16) && (cellObjects1&4) && (cellMovements1&0b10000000000000);
+}
+bool doesMatch3(byte i){
+  byte d = 1;
+  byte cellObjects0 = level[i];
+  word cellMovements0 = movementMask[i];
+  byte cellObjects1 = level[i+16*d];
+  word cellMovements1 = movementMask[i+16*d];
+  return (cellObjects0 & 16) && (cellObjects1&4) && (cellMovements1&0b10000000000);
+}
+bool doesMatch4(byte i){
+  byte d = 1;
+  byte cellObjects1 = level[i];
+  word cellMovements1 = movementMask[i];
+  byte cellObjects0 = level[i+16*d];
+  word cellMovements0 = movementMask[i+16*d];
+  return (cellObjects0 & 16) && (cellObjects1&4) && (cellMovements1&0b100000000000);
+}
 
+//horizontal rule
+bool applyRule1(byte r){ 
+  //match code
+  for (byte j=0;j<8;j++){
+    //check if row has relevant parts
+    for (byte i=0;i<16-1;i++){  
+      byte idx = i+16*j;
+      if (doesMatch1(idx)){
+        movementMask[idx]|=DIR_LEFT<<(5*2);
+      }
+    }
+  }
+}
+
+bool applyRule2(byte r){ 
+  //match code
+  for (byte j=0;j<8;j++){
+    //check if row has relevant parts
+    for (byte i=0;i<16-1;i++){  
+      byte idx = i+16*j;
+      if (doesMatch2(idx)){
+        movementMask[idx+1]|=DIR_RIGHT<<(5*2);
+      }
+    }
+  }
+}
+
+
+bool applyRule3(byte r){ 
+  //match code
+  for (byte j=0;j<7;j++){
+    //check if row has relevant parts
+    for (byte i=0;i<16;i++){  
+      byte idx = i+16*j;
+      if (doesMatch3(idx)){
+        movementMask[idx]|=DIR_UP<<(5*2);
+      }
+    }
+  }
+}
+
+bool applyRule4(byte r){ 
+  //match code
+  for (byte j=0;j<7;j++){
+    //check if row has relevant parts
+    for (byte i=0;i<16;i++){  
+      byte idx = i+16*j;
+      if (doesMatch4(idx)){
+        movementMask[idx+16]|=DIR_DOWN<<(5*2);
+      }
+    }
+  }
+}
+
+void processRules(){
+  Serial.println(F("Applying rules"));
+  applyRule1(0);
+  applyRule2(0);
+  applyRule3(0);
+  applyRule4(0);
+
+  // for (byte i=0;i<RULE_GROUP_COUNT;i++){
+  //   int** rg = RULE_GROUP[i];
+  //   bool applied=true;
+  //   while (appleid){
+  //     applied=false;      
+  //     for (byte j=0;j<RULE_GROUP_LENGTH[i];j++){
+  //       //int* r = rg[j];
+  //       //applied |= applyRule(r)
+  //       applyRule(0)
+  //     }
+  //   }
+  // }
+}
+
+void processLateRules(){
+
+}
 
 void moveTick(word mvmt){
-  memset(movementArray,0, 128*sizeof(word));
+  memset(movementMask,0, 128*sizeof(word));
   for (byte j=0;j<8;j++){
     for (byte i=0;i<16;i++){
       byte idx = i+16*j;
       byte p = level[idx];
       if (p&PLAYER_MASK){
-        movementArray[idx]= PLAYER_LAYERMASK & mvmt;
+        movementMask[idx]= PLAYER_LAYERMASK & mvmt;
       }
     }
   }
 
+  processRules();
   processMovements();  
+  processLateRules();
 }
 
 bool repositionEntitiesOnLayer(byte positionIndex,byte layer,byte dirMask) 
@@ -104,18 +238,10 @@ bool repositionEntitiesOnLayer(byte positionIndex,byte layer,byte dirMask)
   word sourceMask = level[positionIndex];
 
   if (targetMask&layerMask){
-    Serial.println(F("collision"));
     return false;
   }
 
-  Serial.println(F("no collision"));
-  Serial.println(sourceMask,BIN);
-  Serial.println(targetMask,BIN);
-  Serial.println(layerMask,BIN);
-
   word movingEntities = sourceMask & layerMask;
-  Serial.print(F("moving entities = "));
-  Serial.println(movingEntities,BIN);
 
   byte targetbefore = level[targetIndex];
 
@@ -124,9 +250,6 @@ bool repositionEntitiesOnLayer(byte positionIndex,byte layer,byte dirMask)
   
   byte targetafter = level[targetIndex];
 
-  Serial.println(F("before vs after "));
-  Serial.println(targetbefore,BIN);
-  Serial.println(targetafter,BIN);
 
   byte colIndex = targetIndex%16;
   byte rowIndex = targetIndex/16;
@@ -134,44 +257,33 @@ bool repositionEntitiesOnLayer(byte positionIndex,byte layer,byte dirMask)
   colCellContents[colIndex] |= movingEntities;
   rowCellContents[rowIndex] |= movingEntities;
   mapCellContents |= layerMask;
-  Serial.println(F("all good"));
   return true;
 }
 
 byte LAYERCOUNT_MAX=3;
 byte repositionEntitiesAtCell(byte positionIndex) {
-    word movementMask = movementArray[positionIndex];
+    word movMask = movementMask[positionIndex];
 
 
-    if (movementMask==0){
+    if (movMask==0){
         return false;
     }
 
-    Serial.print(F("found movement at "));
-    Serial.println(positionIndex);
 
     bool moved=false;
     for (var layer=0;layer<LAYERCOUNT_MAX;layer++){
-      word layerMovement = (movementMask>>(5*layer))&0b11111;
-      Serial.print(movementMask,BIN);
-      Serial.print(F(" >> "));
-      Serial.print(layer);
-      Serial.print(F("& 0b11111 = "));
-      Serial.println(layerMovement,BIN);
+      word layerMovement = (movMask>>(5*layer))&0b11111;
       
       if (layerMovement!=0){
-        Serial.println(F("trying to reposition"));
         bool thismoved = repositionEntitiesOnLayer(positionIndex,layer,layerMovement);
         if(thismoved){
-          Serial.print(F("movement on "));
-          Serial.println(movementMask,BIN);
-          movementMask = movementMask & (~(layerMovement));
+          movMask = movMask & (~(layerMovement));
           moved=true;
         }
       }
     }
 
-    movementArray[positionIndex]=movementMask;    
+    movementMask[positionIndex]=movMask;    
     return moved;
 }
 
@@ -186,26 +298,6 @@ void processMovements(){
   } 
 }
 
-
-void render(){
-  arduboy.clear();
-
-  for (byte j=0;j<8;j++){
-    for (byte i=0;i<16;i++){
-      byte idx = i+16*j;
-      byte dat = level[idx];
-      for (char g=0;g<GLYPH_COUNT;g++){
-        char m = 1<<g;
-        if (dat&m){
-            arduboy.drawBitmap(i*8,j*8, tiles_b[g], 8,8, 0);
-            arduboy.drawBitmap(i*8,j*8, tiles_w[g], 8,8, 1);
-        }
-      }
-    }
-  }
-
-  arduboy.display();
-}
 
 bool nothingHappened(){
   return !(
