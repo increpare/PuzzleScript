@@ -14,7 +14,6 @@ word movementMask[128];
 byte rowCellContents[8];
 byte colCellContents[16];
 byte mapCellContents=0;
-
 const byte PLAYER_MASK = 0b00000100;
 const long PLAYER_LAYERMASK = 0b00000000000000000111110000000000;
 
@@ -154,103 +153,92 @@ const byte levels[][128] {
 	},
 };
 
-bool doesMatch1(byte i){
-  byte d = 1;
-  byte cellObjects0 = level[i];
-  word cellMovements0 = movementMask[i];
-  byte cellObjects1 = level[i+1*d];
-  word cellMovements1 = movementMask[i+1*d];
-  return (cellObjects0 & 16) && (cellObjects1&4) && (cellMovements1&4096);
-}
+bool applyRule0_0_0(){ 
+  for (byte y=0;y<7;y++){
+    for (byte x=0;x<16;x++){  
+      byte i = x+16*y;
+      if ((level[i] & 16) && (level[i+16] & 4) && (movementMask[i+16] & 1024)){
+		level[i] = (level[i]&4294967267)|16;
+		movementMask[i] = (movementMask[i]&4294967295)|1024;
+		level[i+16] = (level[i+16]&4294967267)|4;
+		movementMask[i+16] = (movementMask[i+16]&4294967295)|1024;
 
-bool doesMatch2(byte i){
-  byte d = 1;
-  byte cellObjects1 = level[i];
-  word cellMovements1 = movementMask[i];
-  byte cellObjects0 = level[i+1*d];
-  word cellMovements0 = movementMask[i+1*d];
-  return (cellObjects0 & 16) && (cellObjects1&4) && (cellMovements1&8192);
+      }
+    }
+  }
 }
+bool applyRule0_1_0(){ 
+  for (byte y=0;y<7;y++){
+    for (byte x=0;x<16;x++){  
+      byte i = x+16*y;
+      if ((level[i] & 4) && (movementMask[i] & 2048) && (level[i+16] & 16)){
+		level[i] = (level[i]&4294967267)|4;
+		movementMask[i] = (movementMask[i]&4294967295)|2048;
+		level[i+16] = (level[i+16]&4294967267)|16;
+		movementMask[i+16] = (movementMask[i+16]&4294967295)|2048;
 
-bool doesMatch3(byte i){
-  byte d = 1;
-  byte cellObjects0 = level[i];
-  word cellMovements0 = movementMask[i];
-  byte cellObjects1 = level[i+16*d];
-  word cellMovements1 = movementMask[i+16*d];
-  return (cellObjects0 & 16) && (cellObjects1&4) && (cellMovements1&1024);
+      }
+    }
+  }
 }
+bool applyRule0_2_0(){ 
+  for (byte y=0;y<8;y++){
+    for (byte x=0;x<15;x++){  
+      byte i = x+16*y;
+      if ((level[i] & 16) && (level[i+1] & 4) && (movementMask[i+1] & 4096)){
+		level[i] = (level[i]&4294967267)|16;
+		movementMask[i] = (movementMask[i]&4294967295)|4096;
+		level[i+1] = (level[i+1]&4294967267)|4;
+		movementMask[i+1] = (movementMask[i+1]&4294967295)|4096;
 
-bool doesMatch4(byte i){
-  byte d = 1;
-  byte cellObjects1 = level[i];
-  word cellMovements1 = movementMask[i];
-  byte cellObjects0 = level[i+16*d];
-  word cellMovements0 = movementMask[i+16*d];
-  return (cellObjects0 & 16) && (cellObjects1&4) && (cellMovements1&2048);
+      }
+    }
+  }
 }
+bool applyRule0_3_0(){ 
+  for (byte y=0;y<8;y++){
+    for (byte x=0;x<15;x++){  
+      byte i = x+16*y;
+      if ((level[i] & 4) && (movementMask[i] & 8192) && (level[i+1] & 16)){
+		level[i] = (level[i]&4294967267)|4;
+		movementMask[i] = (movementMask[i]&4294967295)|8192;
+		level[i+1] = (level[i+1]&4294967267)|16;
+		movementMask[i+1] = (movementMask[i+1]&4294967295)|8192;
 
-//horizontal rule
-bool applyRule1(byte r){ 
-  //match code
-  for (byte j=0;j<8;j++){
-    //check if row has relevant parts
-    for (byte i=0;i<16-1;i++){  
-      byte idx = i+16*j;
-      if (doesMatch1(idx)){
-        movementMask[idx]|=DIR_LEFT<<(5*2);
+      }
+    }
+  }
+}
+bool applyRule1_0_0(){ 
+  for (byte y=0;y<6;y++){
+    for (byte x=0;x<16;x++){  
+      byte i = x+16*y;
+      if ((level[i] & 16) && (level[i+16] & 16) && (level[i+32] & 16)){
+		level[i] = (level[i]&4294967267)|0;
+		movementMask[i] = (movementMask[i]&4294967295)|0;
+		level[i+16] = (level[i+16]&4294967267)|0;
+		movementMask[i+16] = (movementMask[i+16]&4294967295)|0;
+		level[i+32] = (level[i+32]&4294967267)|0;
+		movementMask[i+32] = (movementMask[i+32]&4294967295)|0;
+
+      }
+    }
+  }
+}
+bool applyRule1_1_0(){ 
+  for (byte y=0;y<8;y++){
+    for (byte x=0;x<14;x++){  
+      byte i = x+16*y;
+      if ((level[i] & 16) && (level[i+1] & 16) && (level[i+2] & 16)){
+		level[i] = (level[i]&4294967267)|0;
+		movementMask[i] = (movementMask[i]&4294967295)|0;
+		level[i+1] = (level[i+1]&4294967267)|0;
+		movementMask[i+1] = (movementMask[i+1]&4294967295)|0;
+		level[i+2] = (level[i+2]&4294967267)|0;
+		movementMask[i+2] = (movementMask[i+2]&4294967295)|0;
+
       }
     }
   }
 }
 
-bool applyRule2(byte r){ 
-  //match code
-  for (byte j=0;j<8;j++){
-    //check if row has relevant parts
-    for (byte i=0;i<16-1;i++){  
-      byte idx = i+16*j;
-      if (doesMatch2(idx)){
-        movementMask[idx+1]|=DIR_RIGHT<<(5*2);
-      }
-    }
-  }
-}
-
-
-bool applyRule3(byte r){ 
-  //match code
-  for (byte j=0;j<7;j++){
-    //check if row has relevant parts
-    for (byte i=0;i<16;i++){  
-      byte idx = i+16*j;
-      if (doesMatch3(idx)){
-        movementMask[idx]|=DIR_UP<<(5*2);
-      }
-    }
-  }
-}
-
-bool applyRule4(byte r){ 
-  //match code
-  for (byte j=0;j<7;j++){
-    //check if row has relevant parts
-    for (byte i=0;i<16;i++){  
-      byte idx = i+16*j;
-      if (doesMatch4(idx)){
-        movementMask[idx+16]|=DIR_DOWN<<(5*2);
-      }
-    }
-  }
-}
-
-void processRules(){
-  applyRule1(0);
-  applyRule2(0);
-  applyRule3(0);
-  applyRule4(0);
-}
-
-void processLateRules(){
-
-}

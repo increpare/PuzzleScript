@@ -45,6 +45,18 @@ void setup() {
   render();
 }
 
+void processRules(){
+  applyRule0_0_0();
+  applyRule0_1_0();
+  applyRule0_2_0();
+  applyRule0_3_0();
+  applyRule1_0_0();
+  applyRule1_1_0();
+}
+
+void processLateRules(){
+
+}
 
 void DoCompute(){
   processRules();
@@ -59,6 +71,8 @@ void moveTick(word mvmt){
       byte idx = i+16*j;
       byte p = level[idx];
       if (p&PLAYER_MASK){
+        Serial.print(F("adding mask to "));
+        Serial.println(idx);
         movementMask[idx]= PLAYER_LAYERMASK & mvmt;
       }
     }

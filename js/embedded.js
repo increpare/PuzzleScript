@@ -121,19 +121,55 @@ function GenerateMatchPattern(d,p){
         var objectMissing=c.objectsMissing.data[0];
         var objectPresent=c.objectsPresent.data[0];
 
-        var _cellObjects = (l*d===0)?"level[i]":"level[i+"+l*d+"]"
-        var _cellMovements = (l*d===0)?"movementMask[i]":"movementMask[i+"+l*d+"]"
+        var _cellObjects = (l===0)?"level[i]":"level[i+"+l*d+"]"
+        var _cellMovements = (l===0)?"movementMask[i]":"movementMask[i+"+l*d+"]"
         if (tests.length>0){
             tests+=" && ";
         }
         if (objectPresent!==0){
             tests+="("+_cellObjects+" & "+objectPresent+")";
             if (movementPresent!==0){
-                tests+="&& ("+_cellMovements+" & "+movementPresent+")";                            
+                tests+=" && ("+_cellMovements+" & "+movementPresent+")";                            
             }
         }
     }
     return tests;
+}
+
+function GeneratePatternReplacement(d,p){
+    var movementsMissing = [];
+    var movementsPresent = [];
+    var objectsMissing = [];
+    var objectsPresent = [];
+    var test="";
+    for (var l=0;l<p.length;l++){
+        var c = p[l]
+        var movementMissing=c.movementsMissing.data[0];
+        var movementPresent=c.movementsPresent.data[0];
+        var objectMissing=c.objectsMissing.data[0];
+        var objectPresent=c.objectsPresent.data[0];
+
+        var objectsClear=c.replacement.objectsClear.data[0];
+        var objectsSet=c.replacement.objectsSet.data[0];
+        var movementsClear=c.replacement.movementsClear.data[0];
+        var movementsLayerMask=c.replacement.movementsLayerMask.data[0];
+        var movementsSet=c.replacement.movementsSet.data[0];
+        var objectPrandomDirMaskresent=c.replacement.randomDirMask.data[0];
+        var randomEntityMask=c.replacement.randomEntityMask.data[0];
+
+
+        var objectsPreserve=(~objectsClear)>>> 0;
+        var movementsPresent=(~movementsClear)>>> 0;
+
+        var lvlName = (l===0) ? "level[i]" : "level[i+"+l*d+"]"
+        test += "\t\t"+lvlName + " = "
+        test += `(${lvlName}&${objectsPreserve})|${objectsSet};\n`
+        var mvmtName = (l===0) ? "movementMask[i]" : "movementMask[i+"+l*d+"]"
+        test += "\t\t"+mvmtName + " = "
+        test += `(${mvmtName}&${movementsPresent})|${movementsSet};\n`
+
+    }
+    return test;
 }
 
 
@@ -145,12 +181,33 @@ function ARDU_rulesDat(){
             var r = rg[j];
             var ruleDir = r.direction;
             var d = ruleDir===8?1:16;//right is 8, otherwise down
-            for (var k=0;k<r.patterns.length;k++){                                
-                var tests = GenerateMatchPattern(d,r.patterns[k])
-                console.log(tests);
+            for (var k=0;k<r.patterns.length;k++){   
+                var test = GenerateMatchPattern(d,r.patterns[k])
+                var replacement = GeneratePatternReplacement(d,r.patterns[k])
+                var l = r.patterns[k].length;
+                var maxY=8;
+                var maxX=16;
+                if (d===1){
+                    maxX-=l-1;
+                } else {
+                    maxY-=l-1;                    
+                }
+                                result+=
+`bool applyRule${i}_${j}_${k}(){ 
+  for (byte y=0;y<${maxY};y++){
+    for (byte x=0;x<${maxX};x++){  
+      byte i = x+16*y;
+      if (${test}){
+${replacement}
+      }
+    }
+  }
+}
+`
             }
         }
     }
+    console.log(result);
     return result;
 }
 
@@ -161,7 +218,24 @@ function exportEmbeddedClick(){
 
 	compile("restart");
     
-    var outputTxt="\n";
+    var outputTxt=`
+const byte DIR_UP     = 0b00001;
+const byte DIR_DOWN   = 0b00010;
+const byte DIR_LEFT   = 0b00100;
+const byte DIR_RIGHT  = 0b01000;
+const byte DIR_ACTION = 0b10000;
+
+const word ALL_UP = DIR_UP+(DIR_UP<<5)+(DIR_UP<<10);
+const word ALL_DOWN = DIR_DOWN+(DIR_DOWN<<5)+(DIR_DOWN<<10);
+const word ALL_LEFT = DIR_LEFT+(DIR_LEFT<<5)+(DIR_LEFT<<10);
+const word ALL_RIGHT = DIR_RIGHT+(DIR_RIGHT<<5)+(DIR_RIGHT<<10);
+
+byte level[128];
+word movementMask[128];
+byte rowCellContents[8];
+byte colCellContents[16];
+byte mapCellContents=0;
+`;
 
     var playerConsts = ARDU_playerConstants();
     outputTxt+=playerConsts;
