@@ -83,12 +83,77 @@ function ARDU_playerConstants(){
     var playerLayerMask = 0;
     for (var i=0;i<playerLayers.length;i++){
         var l = playerLayers.length;
-        playerLayerMask+=0b11111<<(5*l);
+        playerLayerMask+=0b11111<<(5*playerLayers[0]);
     }
-    result += "const word PLAYER_LAYERMASK = "+printInt(playerLayerMask,16)+";\n";
+    result += "const long PLAYER_LAYERMASK = "+printInt(playerLayerMask,32)+";\n";
+
+
+    result+="\n";
+    result += "const long LAYERMASK[] = {\n"
+    for (var i=0;i<state.collisionLayers.length;i++){
+        var clayer = state.collisionLayers[i];
+        var lMask = 0;
+
+        for (var n=0;n<state.objectCount;n++){
+            var obN=state.idDict[n];
+            if (clayer.indexOf(obN)>=0){
+                lMask |= (1<<n);
+            }
+        }
+        result+="\t"+printInt(lMask,32)+",\n";
+
+    }
+    result += "};\n";
 
     return result;
 }
+
+function GenerateMatchPattern(d,p){
+    var movementsMissing = [];
+    var movementsPresent = [];
+    var objectsMissing = [];
+    var objectsPresent = [];
+    var tests="";
+    for (var l=0;l<p.length;l++){
+        var c = p[l]
+        var movementMissing=c.movementsMissing.data[0];
+        var movementPresent=c.movementsPresent.data[0];
+        var objectMissing=c.objectsMissing.data[0];
+        var objectPresent=c.objectsPresent.data[0];
+
+        var _cellObjects = (l*d===0)?"level[i]":"level[i+"+l*d+"]"
+        var _cellMovements = (l*d===0)?"movementMask[i]":"movementMask[i+"+l*d+"]"
+        if (tests.length>0){
+            tests+=" && ";
+        }
+        if (objectPresent!==0){
+            tests+="("+_cellObjects+" & "+objectPresent+")";
+            if (movementPresent!==0){
+                tests+="&& ("+_cellMovements+" & "+movementPresent+")";                            
+            }
+        }
+    }
+    return tests;
+}
+
+
+function ARDU_rulesDat(){
+    var result="";
+    for (var i=0;i<state.rules.length;i++){
+        var rg = state.rules[i];
+        for (var j=0;j<rg.length;j++){
+            var r = rg[j];
+            var ruleDir = r.direction;
+            var d = ruleDir===8?1:16;//right is 8, otherwise down
+            for (var k=0;k<r.patterns.length;k++){                                
+                var tests = GenerateMatchPattern(d,r.patterns[k])
+                console.log(tests);
+            }
+        }
+    }
+    return result;
+}
+
 function exportEmbeddedClick(){
 
 
@@ -105,7 +170,10 @@ function exportEmbeddedClick(){
 	outputTxt+=glyphText+"\n";
     
     var levelText = ARDU_levelDat();
-	outputTxt+=levelText+"\n";
+    outputTxt+=levelText+"\n";
+    
+    var rulesText = ARDU_rulesDat();
+    outputTxt+=rulesText+"\n";
 
 	addToConsole(outputTxt)
 	console.log(outputTxt)
