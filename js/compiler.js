@@ -141,7 +141,16 @@ function generateExtraMembers(state) {
 	      		o.colors=["#ff00ff"];
 	      	}
 			if (o.spritematrix.length===0) {
-				o.spritematrix = [[0, 0, 0, 0, 0,0,0,0], [0, 0, 0, 0, 0,0,0,0], [0, 0, 0, 0, 0,0,0,0], [0, 0, 0, 0, 0,0,0,0], [0, 0, 0, 0, 0,0,0,0]];
+				o.spritematrix = [
+					[0,0,0,0,0,0,0,0], 
+					[0,0,0,0,0,0,0,0], 
+					[0,0,0,0,0,0,0,0], 
+					[0,0,0,0,0,0,0,0], 
+					[0,0,0,0,0,0,0,0], 
+					[0,0,0,0,0,0,0,0], 
+					[0,0,0,0,0,0,0,0], 
+					[0,0,0,0,0,0,0,0]
+				]
 			} else {
 				if ( o.spritematrix.length!==8 || o.spritematrix[0].length!==8 || o.spritematrix[1].length!==8 || o.spritematrix[2].length!==8 || o.spritematrix[3].length!==8 || o.spritematrix[4].length!==8 || o.spritematrix[5].length!==8 || o.spritematrix[6].length!==8 || o.spritematrix[7].length!==8 ){
 					logWarning("Sprite graphics must be 8 wide and 8 high exactly.",o.lineNumber);
@@ -153,7 +162,7 @@ function generateExtraMembers(state) {
 
 
 	//calculate glyph dictionary
-	var glyphDict = {};
+	var glyphDict = { };
 	for (var n in state.objects) {
 	      if (state.objects.hasOwnProperty(n)) {
 	      	var o = state.objects[n];
@@ -345,62 +354,9 @@ function generateExtraMembers(state) {
 	if (state.idDict[0]===undefined && state.collisionLayers.length>0) {
 		logError('You need to have some objects defined');
 	}
-
-	//set default background object
-	var backgroundid;
-	var backgroundlayer;
-	if (state.objects.background===undefined) {
-		if ('background' in state.synonymsDict) {
-			var n = state.synonymsDict['background'];
-			var o = state.objects[n];
-			backgroundid = o.id;
-			backgroundlayer = o.layer;
-		} else if ('background' in state.propertiesDict) {
-			var n = state.propertiesDict['background'][0];
-			var o = state.objects[n];
-			backgroundid = o.id;
-			backgroundlayer = o.layer;
-		}else if ('background' in state.aggregatesDict) {
-			var o=state.objects[state.idDict[0]];
-			backgroundid=o.id;
-			backgroundlayer=o.layer;
-			logError("background cannot be an aggregate (declared with 'and'), it has to be a simple type, or property (declared in terms of others using 'or').");
-		} else {
-			var o=state.objects[state.idDict[0]];
-			backgroundid=o.id;
-			backgroundlayer=o.layer;
-			logError("you have to define something to be the background");
-		}
-	} else {
-		backgroundid = state.objects.background.id;
-		backgroundlayer = state.objects.background.layer;
-	}
-	state.backgroundid=backgroundid;
-	state.backgroundlayer=backgroundlayer;
-}
-
-Level.prototype.calcBackgroundMask = function(state) {
-	if (state.backgroundlayer===undefined) {
-			logError("you have to have a background layer");
-	}
-
-	var backgroundMask = state.layerMasks[state.backgroundlayer];
-	for (var i=0;i<this.n_tiles;i++) {
-		var cell=this.getCell(i);
-		cell.iand(backgroundMask);
-		if (!cell.iszero()) {
-			return cell;
-		}
-	}
-	cell = new BitVec(STRIDE_OBJ);
-	cell.ibitset(state.backgroundid);
-	return cell;
 }
 
 function levelFromString(state,level) {
-	var backgroundlayer=state.backgroundlayer;
-	var backgroundid=state.backgroundid;
-	var backgroundLayerMask = state.layerMasks[backgroundlayer];
 	var o = new Level(level[0], level[1].length, level.length-1, state.collisionLayers.length, null);
 	o.objects = new Int32Array(o.width * o.height * STRIDE_OBJ);
 
@@ -412,6 +368,13 @@ function levelFromString(state,level) {
 			}
 			var mask = state.glyphDict[ch];
 
+			if (ch==="."){
+				var blankMask = [];
+				for (var i_ = 0; i_ < state.collisionLayers.length; i_++) {
+					blankMask.push(-1);
+				}
+				mask = blankMask;
+			}
 			if (mask == undefined) {
 				if (state.propertiesDict[ch]===undefined) {
 					logError('Error, symbol "' + ch + '", used in map, not found.', level[0]+j);
@@ -432,16 +395,6 @@ function levelFromString(state,level) {
 				o.objects[STRIDE_OBJ * (i * o.height + j) + w] = maskint.data[w];
 			}
 		}
-	}
-
-	var levelBackgroundMask = o.calcBackgroundMask(state);
-	for (var i=0;i<o.n_tiles;i++)
-	{
-		var cell = o.getCell(i);
-		if (!backgroundLayerMask.anyBitsInCommon(cell)) {
-			cell.ior(levelBackgroundMask);
-		}
-		o.setCell(i, cell);
 	}
 	return o;
 }

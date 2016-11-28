@@ -17,8 +17,8 @@ function createSprite(name,spritegrid, colors, padding) {
         pixh=Math.ceil(ch/2);
     }
     spritectx.fillStyle = state.fgcolor;
-    for (var j = 0; j < w; j++) {
-        for (var k = 0; k < h; k++) {
+    for (var j = 0; j < spritegrid.length; j++) {
+        for (var k = 0; k < spritegrid[0].length; k++) {
             var val = spritegrid[j][k];
             if (val >= 0) {
                 var cy = (j * cw)|0;

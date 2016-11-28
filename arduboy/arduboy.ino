@@ -1,24 +1,20 @@
 #include "Arduboy2.h"
-#include "generated.h"
-
 Arduboy2 arduboy;
+
+#include "generated.h"
 
 #define var byte
 
-
-
 void resetState(){
-  memcpy(level,levels[0],128*sizeof(byte));
+  for (byte i=0;i<128;i++){
+    level[i]=pgm_read_byte_near(levels[0]+i);
+  }
   memset(rowCellContents,0, 8*sizeof(byte));
   memset(colCellContents,0, 16*sizeof(byte));
   mapCellContents=0;
 }
 
-
-
-void render(){
-  arduboy.clear();
-
+void drawLevel(){
   for (byte j=0;j<8;j++){
     for (byte i=0;i<16;i++){
       byte idx = i+16*j;
@@ -33,16 +29,15 @@ void render(){
     }
   }
 
-  arduboy.display();
+  arduboy.display(true);
 }
 
 void setup() {
   Serial.begin(9600);
   arduboy.boot();
   arduboy.setFrameRate(15);
-
   resetState();
-  render();
+  drawTitle();
 }
 
 void processRules(){
@@ -50,8 +45,6 @@ void processRules(){
   applyRule0_1_0();
   applyRule0_2_0();
   applyRule0_3_0();
-  applyRule1_0_0();
-  applyRule1_1_0();
 }
 
 void processLateRules(){
@@ -59,9 +52,13 @@ void processLateRules(){
 }
 
 void DoCompute(){
+  Serial.println("rules");
   processRules();
+  Serial.println("movements");
   processMovements();  
+  Serial.println("laterules");
   processLateRules();
+  Serial.println("done");
 }
 
 void moveTick(word mvmt){
@@ -77,8 +74,7 @@ void moveTick(word mvmt){
       }
     }
   }
-
-  DoCompute();
+  DoCompute();  
 }
 
 bool repositionEntitiesOnLayer(byte positionIndex,byte layer,byte dirMask) 
@@ -170,6 +166,7 @@ byte repositionEntitiesAtCell(byte positionIndex) {
         if(thismoved){
           movMask = movMask & (~(layerMovement));
           moved=true;
+          Serial.println(movMask,BIN);
         }
       }
     }
@@ -207,16 +204,53 @@ bool nothingHappened(){
           );
 }
 
-// our main game loop, this runs once every cycle/frame.
-// this is where our game logic goes.
-void loop() {
-  // pause render until it's time for the next frame
-  if (!(arduboy.nextFrame()))
+
+
+
+
+
+void titleLoop(){
+  if (nothingHappened()){
     return;
+  }
 
+  if (titleSelection<2){
+    if (arduboy.justPressed(UP_BUTTON)){
+      titleSelection=0;
+    }
+    if (arduboy.justPressed(DOWN_BUTTON)){
+      titleSelection=1;
+    }
+  }
 
-  arduboy.pollButtons();
-  
+  //FOR TESTING PURPOSES
+  if (arduboy.justPressed(A_BUTTON)){
+    if (titleSelection<2){
+      titleSelection=2;
+    } else {
+      titleSelection=0;
+    }
+  }
+  if (arduboy.justPressed(B_BUTTON)){
+    state=LEVEL;
+    resetState();
+    drawLevel();
+    return;
+  }
+ 
+  drawTitle();
+
+}
+
+void messageLoop(){
+  if (nothingHappened()){
+    return;
+  }
+
+  arduboy.display(true);
+}
+
+void levelLoop(){
   if (nothingHappened()){
     return;
   }
@@ -235,5 +269,27 @@ void loop() {
   if (arduboy.justPressed(LEFT_BUTTON)){
       moveTick(ALL_LEFT);
   }
-  render();
+  drawLevel();
+}
+
+// our main game loop, this runs once every cycle/frame.
+// this is where our game logic goes.
+void loop() {
+  // pause render until it's time for the next frame
+  if (!(arduboy.nextFrame()))
+    return;
+  arduboy.pollButtons();
+
+  // pause render until it's time for the next frame
+  switch(state){
+    case LEVEL:
+      levelLoop();
+      break;
+    case TITLE:
+      titleLoop();
+      break;
+    case MESSAGE:
+      messageLoop();
+      break;
+  }
 }

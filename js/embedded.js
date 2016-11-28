@@ -46,14 +46,39 @@ function ARDU_spriteGlyphs(){
 }
 
 function ARDU_levelDat(){
-	var levelDat = `const byte levels[][128] {\n`
+	var levelDat = `PROGMEM const byte levels[][128] {\n`
 	for (var i=0;i<state.levels.length;i++){
 		var level=state.levels[i]
 		levelDat+="\t{\n\t\t"
-		for (var j=0;j<8;j++){
+        var levelw=level.width;
+        var levelh=level.height;
+        if (levelw>16){
+            consoleError(`ARDUBOY ERROR:\nOne of your levels has width ${levelw} (max on arduboy is 16).`)
+        }
+        if (levelh>8){
+            consoleError(`ARDUBOY ERROR:\nOne of your levels has height ${levelh} (max on arduboy is 8).`)
+        }
+
+        var centeredLevelGrid=[];
+        for (var j=0;j<8;j++){
+            for (var k=0;k<16;k++){
+                centeredLevelGrid.push(0);
+            }
+        }
+        var xpadding=Math.floor((16-levelw)/2);
+        var ypadding=Math.floor((8-levelh)/2);
+        for (var j=0;j<levelh;j++){            
+            for (var k=0;k<levelw;k++){
+                var fromidx = j+levelh*k;
+                var toidx = j+ypadding+8*(k+xpadding);
+                centeredLevelGrid[toidx]=level.objects[fromidx]
+            }
+        }
+
+		for (var j=0;j<8;j++){            
 			for (var k=0;k<16;k++){
 				var idx = j+8*k
-				levelDat+=level.objects[idx]+","
+				levelDat+=centeredLevelGrid[idx]+","
 			}
 			levelDat+="\n"
 			if (j<7){
@@ -85,11 +110,11 @@ function ARDU_playerConstants(){
         var l = playerLayers.length;
         playerLayerMask+=0b11111<<(5*playerLayers[0]);
     }
-    result += "const long PLAYER_LAYERMASK = "+printInt(playerLayerMask,32)+";\n";
+    result += "const word PLAYER_LAYERMASK = "+printInt(playerLayerMask,32)+";\n";
 
 
     result+="\n";
-    result += "const long LAYERMASK[] = {\n"
+    result += "const word LAYERMASK[] = {\n"
     for (var i=0;i<state.collisionLayers.length;i++){
         var clayer = state.collisionLayers[i];
         var lMask = 0;
@@ -127,9 +152,9 @@ function GenerateMatchPattern(d,p){
             tests+=" && ";
         }
         if (objectPresent!==0){
-            tests+="("+_cellObjects+" & "+objectPresent+")";
+            tests+=`( ${_cellObjects} & ${objectPresent} )`;
             if (movementPresent!==0){
-                tests+=" && ("+_cellMovements+" & "+movementPresent+")";                            
+                tests+=` && ( ${_cellMovements} & ${movementPresent})`;                            
             }
         }
     }
@@ -211,6 +236,89 @@ ${replacement}
     return result;
 }
 
+function ARDU_titleFunction(){
+    var CHAR_WIDTH=6;
+    var SCREEN_WIDTH=128;
+    var SCREEN_HEIGHT=64;
+    var LINEHEIGHT=10;
+
+    function strOffset(s){
+        if (s.length>21){
+            consoleError(`ARDUBOY ERROR:\nstring "${s}" is too long (${s.length} characters). Max string length for arduboy is 21.` )
+        }
+      return Math.floor(SCREEN_WIDTH/2-(CHAR_WIDTH*s.length/2));
+    }
+
+    if (state.metadata.title!==undefined) {
+        var s_title = state.metadata.title;
+        var x_title = strOffset(s_title);
+    }
+
+    if (state.metadata.author!==undefined) {
+        var s_by = `by ${state.metadata.author}`;
+        var x_by = strOffset(s_by);
+    }
+
+    var s_start = "start game";
+    var x_start = strOffset(s_start);
+
+    var s_startSelected = "> start game <"
+    var x_startSelected = strOffset(s_startSelected);
+
+    var s_new = "new game";
+    var x_new = strOffset(s_new);
+
+    var s_newSelected = "> new game <"
+    var x_newSelected = strOffset(s_newSelected);
+
+    var s_continue = "continue game"
+    var x_continue = strOffset(s_continue);
+
+    var s_continueSelected = "> continue game <"
+    var x_continueSelected = strOffset(s_continueSelected);
+
+    var outputTxt = `
+        byte titleSelection = 2;
+
+        void drawTitle(){
+
+          arduboy.setCursor(${x_title}, 0);
+          arduboy.print(F("${s_title}"));
+          
+
+          arduboy.setCursor(${x_by}, ${LINEHEIGHT});
+          arduboy.print(F("${s_by}"));
+
+          switch (titleSelection){
+            case 2:{
+              arduboy.setCursor(${x_startSelected}, ${LINEHEIGHT*3});
+              arduboy.print(F("${s_startSelected}"));
+              break;
+            }
+            case 0:{
+              arduboy.setCursor(${x_newSelected}, ${LINEHEIGHT*3-4});
+              arduboy.print(F("${s_newSelected}"));
+              arduboy.setCursor(${x_continue}, ${LINEHEIGHT*3-4+8});
+              arduboy.print(F("${s_continue}"));
+              break;
+            }
+            case 1:{
+              arduboy.setCursor(${x_new}, ${LINEHEIGHT*3-4});
+              arduboy.print(F("${s_new}"));
+              arduboy.setCursor(${x_continueSelected}, ${LINEHEIGHT*3-4+8});
+              arduboy.print(F("${s_continueSelected}"));
+              break;
+            }
+          }
+
+          arduboy.setCursor(0,64-15);
+          arduboy.print(F("A:action, B:undo\\nA+B:restart")); 
+          arduboy.display(true);
+        }
+        `;
+        return outputTxt;
+}
+
 function exportEmbeddedClick(){
 
 
@@ -219,6 +327,12 @@ function exportEmbeddedClick(){
 	compile("restart");
     
     var outputTxt=`
+enum State {
+  LEVEL,
+  TITLE,
+  MESSAGE
+};
+State state=TITLE;
 const byte DIR_UP     = 0b00001;
 const byte DIR_DOWN   = 0b00010;
 const byte DIR_LEFT   = 0b00100;
@@ -240,6 +354,9 @@ byte mapCellContents=0;
     var playerConsts = ARDU_playerConstants();
     outputTxt+=playerConsts;
     
+    var titleFunction = ARDU_titleFunction();
+    outputTxt+=titleFunction+"\n";
+
 	var glyphText = ARDU_spriteGlyphs();
 	outputTxt+=glyphText+"\n";
     

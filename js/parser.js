@@ -175,16 +175,6 @@ var codeMirrorFn = function() {
     var reg_keywords = /(objects|collisionlayers|legend|sounds|rules|winconditions|\.\.\.|levels|up|down|left|right|^|v|\>|\<|no|horizontal|orthogonal|vertical|any|all|no|some|moving|stationary|parallel|perpendicular|action)/;
     var keyword_array = ['objects', 'collisionlayers', 'legend', 'sounds', 'rules', '...','winconditions', 'levels', 'up', 'down', 'left', 'right', 'late','rigid', '^','v','\>','\<','no','randomdir','random', 'horizontal', 'vertical','any', 'all', 'no', 'some', 'moving','stationary','parallel','perpendicular','action','message'];
 
-    //  var keywordRegex = new RegExp("\\b(("+cons.join(")|(")+"))$", 'i');
-
-    var fullSpriteMatrix = [
-        '00000',
-        '00000',
-        '00000',
-        '00000',
-        '00000'
-    ];
-
     return {
         copyState: function(state) {
             var objectsCopy = {};
@@ -1056,7 +1046,7 @@ var codeMirrorFn = function() {
                         if (state.tokenIndex === 2 && !stream.eol()) {
                             var ch = stream.peek();
                             stream.next();
-                            if (state.abbrevNames.indexOf(ch) >= 0) {
+                            if (state.abbrevNames.indexOf(ch) >= 0 || ch==='.') {
                                 return 'LEVEL';
                             } else {
                                 logError('Key "' + ch.toUpperCase() + '" not found. Do you need to add it to the legend, or define a new object?', state.lineNumber);
