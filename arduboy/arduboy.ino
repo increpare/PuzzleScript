@@ -12,6 +12,7 @@ void resetState(){
   memset(rowCellContents,0, 8*sizeof(byte));
   memset(colCellContents,0, 16*sizeof(byte));
   mapCellContents=0;
+  //generate row/cell contents properly
 }
 
 void drawLevel(){
@@ -51,14 +52,27 @@ void processLateRules(){
 
 }
 
+
+void preserveUndoState(){
+  memcpy(undoState,level,128);
+}
+
+void doUndo(){
+  memcpy(level,undoState,128);
+}
+
+void doReset(){
+  resetState();
+}
+
 void DoCompute(){
-  Serial.println("rules");
-  processRules();
-  Serial.println("movements");
+  bool changed=true;
+  changed |= processRules();
   processMovements();  
-  Serial.println("laterules");
-  processLateRules();
-  Serial.println("done");
+  changed |= processLateRules();
+  if (changed){
+    preserveUndoState();
+  }
 }
 
 void moveTick(word mvmt){
@@ -239,6 +253,7 @@ void titleLoop(){
   }
  
   drawTitle();
+  undoState[0]=0;
 
 }
 
@@ -268,6 +283,20 @@ void levelLoop(){
   }
   if (arduboy.justPressed(LEFT_BUTTON)){
       moveTick(ALL_LEFT);
+  }
+  if (arduboy.justPressed(B_BUTTON)){
+    if (arduboy.pressed(A_BUTTON)){
+      doReset();
+    } else {
+      moveTick(ALL_ACTION);
+    }
+  }
+  if (arduboy.justPressed(A_BUTTON)){
+    if (arduboy.pressed(B_BUTTON)){
+      doReset();
+    } else {
+      doUndo();
+    }
   }
   drawLevel();
 }

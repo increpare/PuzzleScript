@@ -311,8 +311,8 @@ function ARDU_titleFunction(){
             }
           }
 
-          arduboy.setCursor(0,64-15);
-          arduboy.print(F("A:action, B:undo\\nA+B:restart")); 
+          arduboy.setCursor(0,64-7);
+          arduboy.print(F("A:reset, B:reset\\nA+B:restart")); 
           arduboy.display(true);
         }
         `;
@@ -343,6 +343,7 @@ const word ALL_UP = DIR_UP+(DIR_UP<<5)+(DIR_UP<<10);
 const word ALL_DOWN = DIR_DOWN+(DIR_DOWN<<5)+(DIR_DOWN<<10);
 const word ALL_LEFT = DIR_LEFT+(DIR_LEFT<<5)+(DIR_LEFT<<10);
 const word ALL_RIGHT = DIR_RIGHT+(DIR_RIGHT<<5)+(DIR_RIGHT<<10);
+const word ALL_LEFT = DIR_ACTION+(DIR_ACTION<<5)+(DIR_ACTION<<10);
 
 byte level[128];
 word movementMask[128];

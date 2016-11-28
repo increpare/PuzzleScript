@@ -44,7 +44,6 @@ function adjustLevel(level, widthdelta, heightdelta) {
 	level.n_tiles = level.width * level.height;
 	level.objects = new Int32Array(level.n_tiles * STRIDE_OBJ);
 	var bgMask = new BitVec(STRIDE_OBJ);
-	bgMask.ibitset(state.backgroundid);
 	for (var i=0; i<level.n_tiles; ++i) 
 		level.setCell(i, bgMask);
 	level.movements = new Int32Array(level.objects.length);
@@ -54,6 +53,9 @@ function adjustLevel(level, widthdelta, heightdelta) {
 }
 
 function addLeftColumn() {
+	if (level.width>16){
+		consoleError(`ARDUINO ERROR: Map can have at most width 16 (current width ${level.width})`);
+	}
 	var oldlevel = adjustLevel(level, 1, 0);
 	for (var x=1; x<level.width; ++x) {
 		for (var y=0; y<level.height; ++y) {
@@ -64,6 +66,9 @@ function addLeftColumn() {
 }
 
 function addRightColumn() {
+	if (level.width>16){
+		consoleError(`ARDUINO ERROR: Map can have at most width 16 tiles (current width ${level.width}).`);
+	}
 	var oldlevel = adjustLevel(level, 1, 0);
 	for (var x=0; x<level.width-1; ++x) {
 		for (var y=0; y<level.height; ++y) {
@@ -74,6 +79,9 @@ function addRightColumn() {
 }
 
 function addTopRow() {
+	if (level.height>8){
+		consoleError(`ARDUINO ERROR: Map can have at most height 8 tiles (current height ${level.height}).`);
+	}
 	var oldlevel = adjustLevel(level, 0, 1);
 	for (var x=0; x<level.width; ++x) {
 		for (var y=1; y<level.height; ++y) {
@@ -84,6 +92,9 @@ function addTopRow() {
 }
 
 function addBottomRow() {
+	if (level.height>8){
+		consoleError(`ARDUINO ERROR: Map can have at most height 8 tiles (current height ${level.height}).`);
+	}
 	var oldlevel = adjustLevel(level, 0, 1);
 	for (var x=0; x<level.width; ++x) {
 		for (var y=0; y<level.height - 1; ++y) {
@@ -245,22 +256,17 @@ function levelEditorClick(event,click) {
 		}
 
 	} else if (mouseCoordX>-1&&mouseCoordY>-1&&mouseCoordX<screenwidth-2&&mouseCoordY<screenheight-2-editorRowCount	) {
-		var glyphname = glyphImagesCorrespondance[glyphSelectedIndex];
-		var glyph = state.glyphDict[glyphname];
 		var glyphmask = new BitVec(STRIDE_OBJ);
-		for (var i=0;i<glyph.length;i++)
-		{
-			var id = glyph[i];
-			if (id>=0) {
-				glyphmask.ibitset(id);
-			}			
-		}
-
-		var backgroundMask = state.layerMasks[state.backgroundlayer];
-		if (glyphmask.bitsClearInArray(backgroundMask)) {
-			// If we don't already have a background layer, mix in
-			// the default one.
-			glyphmask.ibitset(state.backgroundid);
+		if (glyphSelectedIndex>0){
+			var glyphname = glyphImagesCorrespondance[glyphSelectedIndex-1];
+			var glyph = state.glyphDict[glyphname];
+			for (var i=0;i<glyph.length;i++)
+			{
+				var id = glyph[i];
+				if (id>=0) {
+					glyphmask.ibitset(id);
+				}			
+			}
 		}
 
 		var coordIndex = mouseCoordY + mouseCoordX*level.height;
@@ -304,7 +310,6 @@ function levelEditorRightClick(event,click) {
 	} else if (mouseCoordX>-1&&mouseCoordY>-1&&mouseCoordX<screenwidth-2&&mouseCoordY<screenheight-2-editorRowCount	) {
 		var coordIndex = mouseCoordY + mouseCoordX*level.height;
 		var glyphmask = new BitVec(STRIDE_OBJ);
-		glyphmask.ibitset(state.backgroundid);
 		level.setCell(coordIndex, glyphmask);
 		redraw();
 	}

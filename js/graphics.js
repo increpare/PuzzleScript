@@ -302,9 +302,21 @@ function drawEditorIcons() {
 	var ypos = editorRowCount-(-mouseCoordY-2)-1;
 	var mouseIndex=mouseCoordX+(screenwidth-1)*ypos;
 
-	for (var i=0;i<glyphsToDisplay;i++) {
+
+    {
+        var i=0;
+        if (mouseCoordX>=0&&mouseCoordX<(screenwidth-1)&&mouseIndex===0) {
+            ctx.drawImage(glyphMouseOver,xoffset+xpos*cellwidth,yoffset+ypos*cellheight-cellheight*(1+editorRowCount));                     
+        }
+        if (i===glyphSelectedIndex) {
+            var xpos=i%(screenwidth-1);
+            var ypos=(i/(screenwidth-1))|0;
+            ctx.drawImage(glyphHighlight,xoffset+xpos*cellwidth,yoffset+ypos*cellheight-cellheight*(1+editorRowCount));
+        }    
+    }   
+	for (var i=1;i<glyphsToDisplay+1;i++) {
 		var glyphIndex = glyphStartIndex+i;
-		var sprite = glyphImages[glyphIndex];
+		var sprite = glyphImages[glyphIndex-1];
         var xpos=i%(screenwidth-1);
         var ypos=(i/(screenwidth-1))|0;
 		ctx.drawImage(sprite,xoffset+(xpos)*cellwidth,yoffset+ypos*cellheight-cellheight*(1+editorRowCount));
