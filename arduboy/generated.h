@@ -1,3 +1,4 @@
+
 enum State {
   LEVEL,
   TITLE,
@@ -24,20 +25,19 @@ byte colCellContents[16];
 byte mapCellContents=0;
 unsigned long waitfrom;
 bool waiting=false;
-const byte PLAYER_MASK = 0b00000010;
-const word PLAYER_LAYERMASK = 0b00000000000000000000001111100000;
+const byte PLAYER_MASK = 0b00000001;
+const word PLAYER_LAYERMASK = 0b00000000000000000000000000011111;
 
 const word LAYERMASK[] = {
-	0b00000000000000000000000000000001,
-	0b00000000000000000000000000001110,
+	0b00000000000000000000000000000111,
 };
 
         byte titleSelection = 2;
 
         void drawTitle(){
 
-          arduboy.setCursor(10, 0);
-          arduboy.print(F("Block Pushing Game"));
+          arduboy.setCursor(31, 0);
+          arduboy.print(F("EYE EYE EYE"));
           
 
           arduboy.setCursor(10, 10);
@@ -70,7 +70,7 @@ const word LAYERMASK[] = {
           arduboy.display(true);
         }
         
-const int GLYPH_COUNT = 4;
+const int GLYPH_COUNT = 3;
 
 PROGMEM const byte tiles_b[][8] = {
 	{
@@ -95,22 +95,12 @@ PROGMEM const byte tiles_b[][8] = {
 	},
 	{
 		0b00000000,
-		0b00000000,
-		0b00000000,
-		0b00000000,
-		0b00000000,
-		0b00000000,
-		0b00000000,
-		0b00000000,
-	},
-	{
-		0b00000000,
-		0b00000000,
-		0b00000000,
-		0b00000000,
-		0b00000000,
-		0b00000000,
-		0b00000000,
+		0b00011100,
+		0b00100110,
+		0b01000010,
+		0b01000010,
+		0b00100110,
+		0b00011100,
 		0b00000000,
 	},
 };
@@ -118,22 +108,12 @@ PROGMEM const byte tiles_b[][8] = {
 PROGMEM const byte tiles_w[][8] = {
 	{
 		0b00000000,
-		0b00000000,
-		0b00000000,
 		0b00001000,
-		0b00010000,
-		0b00000000,
-		0b00000000,
-		0b00000000,
-	},
-	{
-		0b00000000,
-		0b01001000,
 		0b01111110,
 		0b00011110,
 		0b00011110,
 		0b01111110,
-		0b01001000,
+		0b00001000,
 		0b00000000,
 	},
 	{
@@ -148,106 +128,44 @@ PROGMEM const byte tiles_w[][8] = {
 	},
 	{
 		0b00000000,
-		0b01111110,
-		0b01000010,
-		0b01000010,
-		0b01000010,
-		0b01000010,
-		0b01111110,
+		0b00100000,
+		0b01011000,
+		0b00111100,
+		0b00111100,
+		0b01011000,
+		0b00100000,
 		0b00000000,
 	},
 };
 
 PROGMEM const byte levels[][128] {
 	{
-		0,0,0,0,0,4,4,4,4,0,0,0,0,0,0,0,
-		0,0,0,0,0,4,0,1,4,0,0,0,0,0,0,0,
-		0,0,0,0,0,4,0,0,4,4,4,0,0,0,0,0,
-		0,0,0,0,0,4,9,2,0,0,4,0,0,0,0,0,
-		0,0,0,0,0,4,0,0,8,0,4,0,0,0,0,0,
-		0,0,0,0,0,4,0,0,4,4,4,0,0,0,0,0,
-		0,0,0,0,0,4,4,4,4,0,0,0,0,0,0,0,
-		0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-	},
-	{
-		0,0,0,0,0,4,4,4,4,4,4,0,0,0,0,0,
-		0,0,0,0,0,4,0,0,0,0,4,0,0,0,0,0,
-		0,0,0,0,0,4,0,4,2,0,4,0,0,0,0,0,
-		0,0,0,0,0,4,0,8,9,0,4,0,0,0,0,0,
-		0,0,0,0,0,4,0,1,9,0,4,0,0,0,0,0,
-		0,0,0,0,0,4,0,0,0,0,4,0,0,0,0,0,
-		0,0,0,0,0,4,4,4,4,4,4,0,0,0,0,0,
-		0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+		0,0,2,2,2,2,2,2,2,2,2,2,2,2,0,0,
+		0,0,2,0,0,0,0,0,0,0,0,0,0,2,0,0,
+		0,0,2,0,0,0,0,0,0,0,0,0,0,2,0,0,
+		0,0,2,0,0,0,0,0,4,0,0,0,0,2,0,0,
+		0,0,2,0,1,0,0,0,0,0,0,0,0,2,0,0,
+		0,0,2,0,0,0,0,0,0,0,0,0,0,2,0,0,
+		0,0,2,0,0,0,0,0,0,0,0,0,0,2,0,0,
+		0,0,2,2,2,2,2,2,2,2,2,2,2,2,0,0,
 	},
 };
 
-bool applyRule0_0_0(){ 
-  for (byte y=0;y<7;y++){
-    for (byte x=0;x<16;x++){  
-      byte i = x+16*y;
-      if (( level[i] & 8 ) && ( level[i+16] & 2 ) && ( movementMask[i+16] & 32)){
-		level[i] = (level[i]&4294967281)|8;
-		movementMask[i] = (movementMask[i]&4294967295)|32;
-		level[i+16] = (level[i+16]&4294967281)|2;
-		movementMask[i+16] = (movementMask[i+16]&4294967295)|32;
-
-      }
-    }
-  }
-}
-bool applyRule0_1_0(){ 
-  for (byte y=0;y<7;y++){
-    for (byte x=0;x<16;x++){  
-      byte i = x+16*y;
-      if (( level[i] & 2 ) && ( movementMask[i] & 64) && ( level[i+16] & 8 )){
-		level[i] = (level[i]&4294967281)|2;
-		movementMask[i] = (movementMask[i]&4294967295)|64;
-		level[i+16] = (level[i+16]&4294967281)|8;
-		movementMask[i+16] = (movementMask[i+16]&4294967295)|64;
-
-      }
-    }
-  }
-}
-bool applyRule0_2_0(){ 
-  for (byte y=0;y<8;y++){
-    for (byte x=0;x<15;x++){  
-      byte i = x+16*y;
-      if (( level[i] & 8 ) && ( level[i+1] & 2 ) && ( movementMask[i+1] & 128)){
-		level[i] = (level[i]&4294967281)|8;
-		movementMask[i] = (movementMask[i]&4294967295)|128;
-		level[i+1] = (level[i+1]&4294967281)|2;
-		movementMask[i+1] = (movementMask[i+1]&4294967295)|128;
-
-      }
-    }
-  }
-}
-bool applyRule0_3_0(){ 
-  for (byte y=0;y<8;y++){
-    for (byte x=0;x<15;x++){  
-      byte i = x+16*y;
-      if (( level[i] & 2 ) && ( movementMask[i] & 256) && ( level[i+1] & 8 )){
-		level[i] = (level[i]&4294967281)|2;
-		movementMask[i] = (movementMask[i]&4294967295)|256;
-		level[i+1] = (level[i+1]&4294967281)|8;
-		movementMask[i+1] = (movementMask[i+1]&4294967295)|256;
-
-      }
-    }
-  }
-}
-
-void checkWin(){
-	{
-
-        for (byte i=0;i<128;i++){
-            if ( !(level[i]&1) && (level[i]&8) ){
-                return;
+bool applyRule0_0(){
+    for (byte y0=0;y0<7;y0++){
+        for (byte x0=0;x0<16;x0++){
+            for (byte k0=0;k0<(7-y0);k0++){
+                byte i_L_0 = x0+16*y0;
+                byte i_R_0 = x0+16*(y0+k0+1);
+                if (( level[i_L_0] & 4 ) && ( level[i_R_0] & 1 )){
+                    level[i_L_0] = (level[i_L_0]&4294967288)|4;
+                    movementMask[i_L_0] = (movementMask[i_L_0]&4294967295)|4;
+                    level[i_R_0] = (level[i_R_0]&4294967288)|1;
+                    movementMask[i_R_0] = (movementMask[i_R_0]&4294967295)|0;
+                }
             }
         }
-	}
-
-  waiting=true;
-  waitfrom=millis();
+    }
 }
+
+void checkWin(){}
