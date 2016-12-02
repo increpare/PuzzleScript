@@ -133,7 +133,7 @@ function ARDU_playerConstants(){
     return result;
 }
 
-function GenerateMatchPattern(d,p){
+function GenerateMatchPattern(d,p,depth){
     var movementsMissing = [];
     var movementsPresent = [];
     var objectsMissing = [];
@@ -146,8 +146,8 @@ function GenerateMatchPattern(d,p){
         var objectMissing=c.objectsMissing.data[0];
         var objectPresent=c.objectsPresent.data[0];
 
-        var _cellObjects = (l===0)?"level[i]":"level[i+"+l*d+"]"
-        var _cellMovements = (l===0)?"movementMask[i]":"movementMask[i+"+l*d+"]"
+        var _cellObjects = (l===0)?"level[i${depth}]":"level[i${depth}+"+l*d+"]"
+        var _cellMovements = (l===0)?"movementMask[i${depth}]":"movementMask[i${depth}+"+l*d+"]"
         if (tests.length>0){
             tests+=" && ";
         }
@@ -161,7 +161,7 @@ function GenerateMatchPattern(d,p){
     return tests;
 }
 
-function GeneratePatternReplacement(d,p){
+function GeneratePatternReplacement(d,p,depth){
     var movementsMissing = [];
     var movementsPresent = [];
     var objectsMissing = [];
@@ -197,6 +197,42 @@ function GeneratePatternReplacement(d,p){
     return test;
 }
 
+function generateMatchString(patern,ruleDir,depth){
+    var d = ruleDir===8?1:16;//right is 8, otherwise down
+
+    var test = GenerateMatchPattern(d,patern)
+    var replacement = GeneratePatternReplacement(d,patern)
+    var l = r.patterns[k].length;
+    var maxY=8;
+    var maxX=16;
+    if (d===1){
+        maxX-=l-1;
+    } else {
+        maxY-=l-1;                    
+    }
+
+    var patternTest = `
+for (byte y${depth}=0;y${depth}<${maxY};y${depth}++){
+    for (byte x${depth}=0;x${depth}<${maxX};x${depth}++){  
+      byte i${depth} = x${depth}+16*y${depth};
+      if (${test}){
+    `
+
+var patternEnd = `
+        }
+    }
+}
+`;
+    var patternReplace="";
+
+    for (var i=0;i<depth;i++){
+        patternTest=patternTest.replace(/^/gm, "\t");
+        patternReplace=patternReplace.replace(/^/gm, "\t");
+        patternEnd=patternEnd.replace(/^/gm, "\t");
+    }
+
+    return [patternTest,patternReplace,patternEnd];
+}
 
 function ARDU_rulesDat(){
     var result="";
@@ -311,12 +347,69 @@ function ARDU_titleFunction(){
             }
           }
 
-          arduboy.setCursor(0,64-7);
-          arduboy.print(F("A:reset, B:reset\\nA+B:restart")); 
+          arduboy.setCursor(0,64-15);
+          arduboy.print(F("A:reset, B:action\\nA+B:restart")); 
           arduboy.display(true);
         }
         `;
         return outputTxt;
+}
+
+function ARDU_winConditionsDat(){
+    if (state.winconditions.length===0){
+        return "void checkWin(){}"
+    }
+
+    var outputTxt=`void checkWin(){\n`;
+
+
+    for (var i=0;i<state.winconditions.length;i++){
+        outputTxt+="\t{\n"
+        var wc = state.winconditions[i];
+        switch (wc[0]){
+            case -1:{//NO
+                outputTxt+=`
+        for (byte i=0;i<128;i++){
+            if ( !(level[i]&${wc[1].data[0]}) && !(level[i]&${wc[2].data[0]}) ){
+                return;
+            }
+        }\n`;
+
+                break;
+            }
+            case 0:{//SOME
+                outputTxt+=`
+        bool passedTest=false;
+        for (byte i=0;i<128;i++){
+            if ( !(level[i]&${wc[1].data[0]}) && !(level[i]&${wc[2].data[0]}) ){
+                passedTest=true;
+                break;
+            }
+            if (!passedTest){
+                return;
+            }
+        }\n`;
+
+                break;
+            }
+            case 1:{//ALL
+                outputTxt+=`
+        for (byte i=0;i<128;i++){
+            if ( !(level[i]&${wc[1].data[0]}) && (level[i]&${wc[2].data[0]}) ){
+                return;
+            }
+        }\n`;
+                break;
+            }
+        }
+        outputTxt+="\t}\n"    
+    }
+
+    outputTxt+=`
+  waiting=true;
+  waitfrom=millis();
+}`;
+    return outputTxt;
 }
 
 function exportEmbeddedClick(){
@@ -343,13 +436,16 @@ const word ALL_UP = DIR_UP+(DIR_UP<<5)+(DIR_UP<<10);
 const word ALL_DOWN = DIR_DOWN+(DIR_DOWN<<5)+(DIR_DOWN<<10);
 const word ALL_LEFT = DIR_LEFT+(DIR_LEFT<<5)+(DIR_LEFT<<10);
 const word ALL_RIGHT = DIR_RIGHT+(DIR_RIGHT<<5)+(DIR_RIGHT<<10);
-const word ALL_LEFT = DIR_ACTION+(DIR_ACTION<<5)+(DIR_ACTION<<10);
+const word ALL_ACTION = DIR_ACTION+(DIR_ACTION<<5)+(DIR_ACTION<<10);
 
+byte undoState[128];
 byte level[128];
 word movementMask[128];
 byte rowCellContents[8];
 byte colCellContents[16];
 byte mapCellContents=0;
+unsigned long waitfrom;
+bool waiting=false;
 `;
 
     var playerConsts = ARDU_playerConstants();
@@ -366,6 +462,9 @@ byte mapCellContents=0;
     
     var rulesText = ARDU_rulesDat();
     outputTxt+=rulesText+"\n";
+    
+    var winConditionsText = ARDU_winConditionsDat();
+    outputTxt+=winConditionsText+"\n";
 
 	addToConsole(outputTxt)
 	console.log(outputTxt)

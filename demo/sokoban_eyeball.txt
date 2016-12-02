@@ -6,52 +6,35 @@ homepage www.puzzlescript.net
 OBJECTS
 ========
 
-Background
-LIGHTGREEN GREEN
-11111
-01111
-11101
-11111
-10111
-
-
-Target
-DarkBlue
-.....
-.000.
-.0.0.
-.000.
-.....
-
 Wall
-BROWN DARKBROWN
-00010
-11111
-01000
-11111
-00010
+white
 
 Player
-Black Orange White Blue
-.000.
-.111.
-22222
-.333.
-.3.3.
+white
+........
+..0000..
+..0000..
+.000000.
+..0000..
+..0..0..
+..0..0..
+........
 
 EyeBall
-White Blue Red
-.000.
-00100
-01110
-20102
-.202.
+black white
+........
+..0000..
+.001100.
+.011110.
+.011110.
+.101101.
+..1001..
+........
 
 =======
 LEGEND
 =======
 
-. = Background
 # = Wall
 P = Player
 O = EyeBall
@@ -67,15 +50,13 @@ SFX0 67117309
 COLLISIONLAYERS
 ================
 
-Background
-Target
 Player, Wall, EyeBall
 
 ======
 RULES
 ======
 
-[ Eyeball | ... | Player ] -> [ > Eyeball | ... | Player ] SFX0
+[ Eyeball | ... | Player ] -> [ > Eyeball | ... | Player ] 
 
 ==============
 WINCONDITIONS
@@ -94,3 +75,4 @@ LEVELS
 #.......#
 #.......#
 #########
+

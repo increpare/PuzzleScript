@@ -366,7 +366,7 @@ function loadLevelFromLevelDat(state,leveldat,randomseed) {
     	consolePrint("Trying to access a level that doesn't exist.",true);
     	return;
     }
-    if (leveldat.message===undefined) {
+    if (typeof(leveldat.message)=="undefined") {
     	titleMode=0;
     	textMode=false;
 		level = leveldat.clone();

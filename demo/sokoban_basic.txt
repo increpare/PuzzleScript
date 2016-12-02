@@ -6,19 +6,8 @@ homepage www.puzzlescript.net
 OBJECTS
 ========
 
-Background
-white
-00000000
-00000000
-00000000
-00000000
-00000000
-00000000
-00000000
-00000000
-
 Target
-black
+white
 ........
 ........
 ........
@@ -29,7 +18,7 @@ black
 ........
 
 Wall
-black
+white
 00000000
 00000000
 00000000
@@ -40,7 +29,7 @@ black
 00000000
 
 Player
-Black 
+white 
 ........
 ..0000..
 ..0000..
@@ -51,7 +40,7 @@ Black
 ........
 
 Crate
-black
+white
 ........
 .000000.
 .0....0.
@@ -66,7 +55,6 @@ black
 LEGEND
 =======
 
-. = Background
 # = Wall
 P = Player
 * = Crate
@@ -84,7 +72,6 @@ Crate MOVE 36772507
 COLLISIONLAYERS
 ================
 
-Background
 Target
 Player, Wall, Crate
 

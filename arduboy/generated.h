@@ -14,6 +14,7 @@ const word ALL_UP = DIR_UP+(DIR_UP<<5)+(DIR_UP<<10);
 const word ALL_DOWN = DIR_DOWN+(DIR_DOWN<<5)+(DIR_DOWN<<10);
 const word ALL_LEFT = DIR_LEFT+(DIR_LEFT<<5)+(DIR_LEFT<<10);
 const word ALL_RIGHT = DIR_RIGHT+(DIR_RIGHT<<5)+(DIR_RIGHT<<10);
+const word ALL_ACTION = DIR_ACTION+(DIR_ACTION<<5)+(DIR_ACTION<<10);
 
 byte undoState[128];
 byte level[128];
@@ -21,6 +22,8 @@ word movementMask[128];
 byte rowCellContents[8];
 byte colCellContents[16];
 byte mapCellContents=0;
+unsigned long waitfrom;
+bool waiting=false;
 const byte PLAYER_MASK = 0b00000010;
 const word PLAYER_LAYERMASK = 0b00000000000000000000001111100000;
 
@@ -62,8 +65,8 @@ const word LAYERMASK[] = {
             }
           }
 
-          arduboy.setCursor(0,64-7);
-          arduboy.print(F("A:reset, B:action")); 
+          arduboy.setCursor(0,64-15);
+          arduboy.print(F("A:reset, B:action\nA+B:restart")); 
           arduboy.display(true);
         }
         
@@ -235,3 +238,16 @@ bool applyRule0_3_0(){
   }
 }
 
+void checkWin(){
+	{
+
+        for (byte i=0;i<128;i++){
+            if ( !(level[i]&1) && (level[i]&8) ){
+                return;
+            }
+        }
+	}
+
+  waiting=true;
+  waitfrom=millis();
+}
