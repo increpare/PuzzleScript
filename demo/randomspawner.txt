@@ -6,62 +6,68 @@ homepage www.puzzlescript.net
 OBJECTS
 ========
 
+Player
+white 
+........
+..0000..
+..0000..
+.000000.
+..0000..
+..0..0..
+.00..00.
+........
 
-Background  (special, automatically placed in its own layer)
-GREEN darkgreen
-11111
-01111
-11101
-11111
-10111
+SPAWNER
+white
+........
+........
+........
+...0....
+....0...
+........
+........
+........
 
-Spawner  (Name)
-YELLOW (Color)
-..... (Sprite)
-..0..
-.000.
-..0..
-.....
+ROBOT1
+white
+........
+.000000.
+.0....0.
+.0....0.
+.0....0.
+.0....0.
+.000000.
+........
 
-Player    (Required by game)
-PINK
-..0..
-00000
-..0..
-.000.
-.0.0.
+ROBOT2
+white
+........
+..0.0.0.
+.0......
+......0.
+.0......
+......0.
+.0.0.0..
+........
 
-RedRobot
-gray black red
-.000.
-.200.
-...0.
-00000
-01010
+ROBOT3
+white
+........
+.000000.
+.00..00.
+.0....0.
+.0....0.
+.00..00.
+.000000.
+........
 
-GreenRobot
-gray black lightgreen
-.000.
-.200.
-...0.
-00000
-01010
-
-BlueRobot
-gray black lightblue
-.000.
-.200.
-...0.
-00000
-01010
 
 =======
 LEGEND
 =======
 
-Robot = redRobot or greenRobot or blueRobot
+Robot = robot1 or robot2 or robot3
 Obstacle = Player or Robot
-. = Background
 P = Player
 * = Robot
 O = Spawner
@@ -74,7 +80,6 @@ SOUNDS
 COLLISIONLAYERS
 ================
 
-Background
 Spawner
 Player, Robot
 
@@ -100,3 +105,4 @@ LEVELS
 .......
 .P.....
 .......
+

@@ -4,6 +4,9 @@ enum State {
   TITLE,
   MESSAGE
 };
+
+const byte LAYER_COUNT = 3;
+
 State state=TITLE;
 const byte DIR_UP     = 0b00001;
 const byte DIR_DOWN   = 0b00010;
@@ -25,19 +28,20 @@ byte colCellContents[16];
 byte mapCellContents=0;
 unsigned long waitfrom;
 bool waiting=false;
-const byte PLAYER_MASK = 0b00000001;
-const word PLAYER_LAYERMASK = 0b00000000000000000000000000011111;
+const byte PLAYER_MASK = 0b00000010;
+const word PLAYER_LAYERMASK = 0b0000001111100000;
 
 const word LAYERMASK[] = {
-	0b00000000000000000000000000000111,
+	0b0000000000000001,
+	0b0000000000011110,
 };
 
         byte titleSelection = 2;
 
         void drawTitle(){
 
-          arduboy.setCursor(31, 0);
-          arduboy.print(F("EYE EYE EYE"));
+          arduboy.setCursor(25, 0);
+          arduboy.print(F("Robot Spawner"));
           
 
           arduboy.setCursor(10, 10);
@@ -70,7 +74,7 @@ const word LAYERMASK[] = {
           arduboy.display(true);
         }
         
-const int GLYPH_COUNT = 3;
+const int GLYPH_COUNT = 5;
 
 PROGMEM const byte tiles_b[][8] = {
 	{
@@ -95,12 +99,32 @@ PROGMEM const byte tiles_b[][8] = {
 	},
 	{
 		0b00000000,
-		0b00011100,
-		0b00100110,
-		0b01000010,
-		0b01000010,
-		0b00100110,
-		0b00011100,
+		0b00000000,
+		0b00000000,
+		0b00000000,
+		0b00000000,
+		0b00000000,
+		0b00000000,
+		0b00000000,
+	},
+	{
+		0b00000000,
+		0b00000000,
+		0b00000000,
+		0b00000000,
+		0b00000000,
+		0b00000000,
+		0b00000000,
+		0b00000000,
+	},
+	{
+		0b00000000,
+		0b00000000,
+		0b00000000,
+		0b00000000,
+		0b00000000,
+		0b00000000,
+		0b00000000,
 		0b00000000,
 	},
 };
@@ -108,120 +132,115 @@ PROGMEM const byte tiles_b[][8] = {
 PROGMEM const byte tiles_w[][8] = {
 	{
 		0b00000000,
+		0b00000000,
+		0b00000000,
 		0b00001000,
+		0b00010000,
+		0b00000000,
+		0b00000000,
+		0b00000000,
+	},
+	{
+		0b00000000,
+		0b01001000,
 		0b01111110,
 		0b00011110,
 		0b00011110,
 		0b01111110,
-		0b00001000,
+		0b01001000,
 		0b00000000,
 	},
 	{
-		0b11111111,
-		0b11111111,
-		0b11111111,
-		0b11111111,
-		0b11111111,
-		0b11111111,
-		0b11111111,
-		0b11111111,
+		0b00000000,
+		0b01111110,
+		0b01000010,
+		0b01000010,
+		0b01000010,
+		0b01000010,
+		0b01111110,
+		0b00000000,
 	},
 	{
 		0b00000000,
-		0b00100000,
-		0b01011000,
-		0b00111100,
-		0b00111100,
-		0b01011000,
-		0b00100000,
+		0b01010100,
+		0b00000010,
+		0b01000000,
+		0b00000010,
+		0b01000000,
+		0b00101010,
+		0b00000000,
+	},
+	{
+		0b00000000,
+		0b01111110,
+		0b01100110,
+		0b01000010,
+		0b01000010,
+		0b01100110,
+		0b01111110,
 		0b00000000,
 	},
 };
 
 PROGMEM const byte levels[][128] {
 	{
-		0,0,2,2,2,2,2,2,2,2,2,2,2,2,0,0,
-		0,0,2,0,0,0,0,0,0,0,0,0,0,2,0,0,
-		0,0,2,0,0,0,0,0,0,0,0,0,0,2,0,0,
-		0,0,2,0,0,0,0,4,4,0,0,0,0,2,0,0,
-		0,0,2,0,1,0,0,0,4,0,0,0,0,2,0,0,
-		0,0,2,0,0,0,0,0,0,0,0,0,0,2,0,0,
-		0,0,2,0,0,0,0,0,0,0,0,0,0,2,0,0,
-		0,0,2,2,2,2,2,2,2,2,2,2,2,2,0,0,
+		0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+		0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+		0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+		0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,
+		0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+		0,0,0,0,0,2,0,0,0,0,0,0,0,0,0,0,
+		0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+		0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 	},
 };
 
 bool applyRule0_0(){
-    for (byte y0=0;y0<6;y0++){
-        for (byte x0=0;x0<16;x0++){
-            for (char k0=y0;k0>=0;k0--){
-                byte i_L_0 = x0+16*k0;
-                byte i_R_0 = x0+16*(y0+2);
-                if (( level[i_L_0+0] & 1 ) && ( level[i_R_0+0] & 4 ) && ( level[i_R_0+16] & 4 )){
-                    level[i_L_0] = (level[i_L_0]&4294967288)|1;
-                    movementMask[i_L_0] = (movementMask[i_L_0]&4294967295)|0;
-                    level[i_R_0] = (level[i_R_0]&4294967288)|4;
-                    movementMask[i_R_0] = (movementMask[i_R_0]&4294967295)|1;
-                    level[i_R_0+16] = (level[i_R_0+16]&4294967288)|4;
-                    movementMask[i_R_0+16] = (movementMask[i_R_0+16]&4294967295)|0;
-                }
-            }
-        }
-    }
-}
-bool applyRule0_1(){
-    for (byte y0=0;y0<6;y0++){
-        for (byte x0=0;x0<16;x0++){
-            for (byte k0=0;k0<(6-y0);k0++){
-                byte i_L_0 = x0+16*y0;
-                byte i_R_0 = x0+16*(y0+k0+2);
-                if (( level[i_L_0+0] & 4 ) && ( level[i_L_0+16] & 4 ) && ( level[i_R_0+0] & 1 )){
-                    level[i_L_0] = (level[i_L_0]&4294967288)|4;
-                    movementMask[i_L_0] = (movementMask[i_L_0]&4294967295)|0;
-                    level[i_L_0+16] = (level[i_L_0+16]&4294967288)|4;
-                    movementMask[i_L_0+16] = (movementMask[i_L_0+16]&4294967295)|2;
-                    level[i_R_0] = (level[i_R_0]&4294967288)|1;
-                    movementMask[i_R_0] = (movementMask[i_R_0]&4294967295)|0;
-                }
-            }
-        }
-    }
-}
-bool applyRule0_2(){
     for (byte y0=0;y0<8;y0++){
-        for (byte x0=0;x0<14;x0++){
-            for (char k0=x0;k0>=0;k0--){
-                byte i_L_0 = k0+16*y0;
-                byte i_R_0 = x0+2+16*y0;
-                if (( level[i_L_0+0] & 1 ) && ( level[i_R_0+0] & 4 ) && ( level[i_R_0+1] & 4 )){
-                    level[i_L_0] = (level[i_L_0]&4294967288)|1;
-                    movementMask[i_L_0] = (movementMask[i_L_0]&4294967295)|0;
-                    level[i_R_0] = (level[i_R_0]&4294967288)|4;
-                    movementMask[i_R_0] = (movementMask[i_R_0]&4294967295)|4;
-                    level[i_R_0+1] = (level[i_R_0+1]&4294967288)|4;
-                    movementMask[i_R_0+1] = (movementMask[i_R_0+1]&4294967295)|0;
+        for (byte x0=0;x0<16;x0++){
+            byte i0 = x0+16*y0;
+            if (( level[i0+0] & 0b11100 ) && ( !( movementMask[i0+0]&992 ) )){
+                level[i0+0] = (level[i0+0]&4294967295)|0;
+                movementMask[i0+0] = ( movementMask[i0+0]&4294967295 ) | 0;
+                movementMask[i0+0] |= (1<<random(0,4))<<5;
+            }
+        }
+    }
+}
+bool applyRule1_0(){
+    for (byte y0=0;y0<8;y0++){
+        for (byte x0=0;x0<16;x0++){
+            byte i0 = x0+16*y0;
+            if (( level[i0+0] & 1 ) && !( level[i0+0] & 30 )){
+                level[i0+0] = (level[i0+0]&4294967294)|1;
+                movementMask[i0+0] = ( movementMask[i0+0]&4294967295 ) | 0;
+                switch (random(0,3)){
+                    case 0:
+                    {
+                        level[i0+0] |= 0b100;
+                        break;
+                    }
+                    case 1:
+                    {
+                        level[i0+0] |= 0b1000;
+                        break;
+                    }
+                    case 2:
+                    {
+                        level[i0+0] |= 0b10000;
+                        break;
+                    }
                 }
             }
         }
     }
 }
-bool applyRule0_3(){
-    for (byte y0=0;y0<8;y0++){
-        for (byte x0=0;x0<14;x0++){
-            for (byte k0=0;k0<(14-x0);k0++){
-                byte i_L_0 = x0+16*y0;
-                byte i_R_0 = x0+k0+2+16*y0;
-                if (( level[i_L_0+0] & 4 ) && ( level[i_L_0+1] & 4 ) && ( level[i_R_0+0] & 1 )){
-                    level[i_L_0] = (level[i_L_0]&4294967288)|4;
-                    movementMask[i_L_0] = (movementMask[i_L_0]&4294967295)|0;
-                    level[i_L_0+1] = (level[i_L_0+1]&4294967288)|4;
-                    movementMask[i_L_0+1] = (movementMask[i_L_0+1]&4294967295)|8;
-                    level[i_R_0] = (level[i_R_0]&4294967288)|1;
-                    movementMask[i_R_0] = (movementMask[i_R_0]&4294967295)|0;
-                }
-            }
-        }
-    }
+
+void processRules(){
+	applyRule0_0();
+	applyRule1_0();
+}
+void processLateRules(){
 }
 
 void checkWin(){}

@@ -48,15 +48,6 @@ void setup() {
   drawTitle();
 }
 
-void processRules(){
-  applyRule0_0();
-  applyRule0_1();
-  applyRule0_2();
-  applyRule0_3();
-}
-
-void processLateRules(){
-}
 
 
 void preserveUndoState(){
@@ -184,6 +175,8 @@ byte repositionEntitiesAtCell(byte positionIndex) {
         bool thismoved = repositionEntitiesOnLayer(positionIndex,layer,layerMovement);
         if(thismoved){
           movMask = movMask & (~(layerMovement));
+          Serial.print("moved ");
+          Serial.println(positionIndex);
           moved=true;
         }
       }

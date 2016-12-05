@@ -6,53 +6,59 @@ homepage www.puzzlescript.net
 OBJECTS
 ========
 
-Background
-LIGHTGREEN GREEN
-11111
-01111
-11101
-11111
-10111
 
 
 Target
-DarkBlue
-.....
-.000.
-.0.0.
-.000.
-.....
+white
+........
+........
+........
+...0....
+....0...
+........
+........
+........
 
 Wall
-BROWN DARKBROWN
-00010
-11111
-01000
-11111
-00010
+white
+00000000
+00000000
+00000000
+00000000
+00000000
+00000000
+00000000
+00000000
 
 Player
-Black Orange White Blue
-.000.
-.111.
-22222
-.333.
-.3.3.
+white 
+........
+..0000..
+..0000..
+.000000.
+..0000..
+..0..0..
+.00..00.
+........
 
 Crate
-Orange Yellow
-00000
-0...0
-0...0
-0...0
-00000
+white
+........
+.000000.
+.0....0.
+.0....0.
+.0....0.
+.0....0.
+.000000.
+........
+
+
 
 
 =======
 LEGEND
 =======
 
-. = Background
 # = Wall
 P = Player
 * = Crate
@@ -70,7 +76,6 @@ Crate MOVE 36772507
 COLLISIONLAYERS
 ================
 
-Background
 Target
 Player, Wall, Crate
 
@@ -108,3 +113,4 @@ LEVELS
 #.OOO.#.#
 #.P.....#
 #########
+

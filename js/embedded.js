@@ -3,6 +3,7 @@ var DIR_DOWN   = 0b00010;
 var DIR_LEFT   = 0b00100;
 var DIR_RIGHT  = 0b01000;
 var DIR_ACTION = 0b10000;
+var LAYER_COUNT = 3;
 
 String.prototype.replaceAll = function(search, replacement) {
     var target = this;
@@ -115,7 +116,7 @@ function ARDU_playerConstants(){
         var l = playerLayers.length;
         playerLayerMask+=0b11111<<(5*playerLayers[0]);
     }
-    result += "const word PLAYER_LAYERMASK = "+printInt(playerLayerMask,32)+";\n";
+    result += "const word PLAYER_LAYERMASK = "+printInt(playerLayerMask,16)+";\n";
 
 
     result+="\n";
@@ -130,7 +131,7 @@ function ARDU_playerConstants(){
                 lMask |= (1<<n);
             }
         }
-        result+="\t"+printInt(lMask,32)+",\n";
+        result+="\t"+printInt(lMask,16)+",\n";
 
     }
     result += "};\n";
@@ -145,10 +146,6 @@ function GenerateEllipsisMatchPattern(d,p,depth,flip=false){
     }
     var ellipsisIndex = getEllipsisIndex(p);
 
-    var movementsMissing = [];
-    var movementsPresent = [];
-    var objectsMissing = [];
-    var objectsPresent = [];
     var tests="";
     for (var l=0;l<ellipsisIndex;l++){
         var c = p[l]
@@ -167,6 +164,21 @@ function GenerateEllipsisMatchPattern(d,p,depth,flip=false){
             if (movementPresent!==0){
                 tests+=` && ( ${_cellMovements} & ${movementPresent})`;                            
             }
+        }
+        for (var i=0;i<anyObjectsPresent.length;i++){
+            var op = anyObjectsPresent[i].data[0];
+            if (op!==0){
+                if (tests.length>0){
+                    tests+=" && ";
+                }
+                tests+=`( ${_cellObjects} & 0b${op.toString(2)} )`;
+            }
+        }
+        if (movementMissing!==0){
+            if (tests.length>0){
+                tests+=" && ";
+            }
+            tests += `( !( ${_cellMovements}&${movementMissing} ) )`;
         }
     }
 
@@ -189,15 +201,32 @@ function GenerateEllipsisMatchPattern(d,p,depth,flip=false){
                 tests+=` && ( ${_cellMovements} & ${movementPresent})`;                            
             }
         }
+        if (objectMissing!==0){
+            if (tests.length>0){
+                tests+=" && ";
+            }
+            tests+=`!( ${_cellObjects} & ${objectMissing} )`;
+        }
+        for (var i=0;i<anyObjectsPresent.length;i++){
+            var op = anyObjectsPresent[i].data[0];
+            if (op!==0){
+                if (tests.length>0){
+                    tests+=" && ";
+                }
+                tests+=`( ${_cellObjects} & 0b${op.toString(2)} )`;
+            }
+        }
+        if (movementMissing!==0){
+            if (tests.length>0){
+                tests+=" && ";
+            }
+            tests += `( !( ${_cellMovements}&${movementMissing} ) )`;
+        }
     }
     return tests;
 }
 
 function GenerateMatchPattern(d,p,depth){
-    var movementsMissing = [];
-    var movementsPresent = [];
-    var objectsMissing = [];
-    var objectsPresent = [];
     var tests="";
     for (var l=0;l<p.length;l++){
         var c = p[l]
@@ -205,17 +234,40 @@ function GenerateMatchPattern(d,p,depth){
         var movementPresent=c.movementsPresent.data[0];
         var objectMissing=c.objectsMissing.data[0];
         var objectPresent=c.objectsPresent.data[0];
+        var anyObjectsPresent=c.anyObjectsPresent;
+        var movementMissing=c.movementsMissing.data[0];
 
-        var _cellObjects = (l===0)?`level[i${depth}]`:`level[i${depth}+`+l*d+`]`
-        var _cellMovements = (l===0)?`movementMask[i${depth}]`:`movementMask[i${depth}+`+l*d+`]`
+        var _cellObjects = `level[i${depth}+`+l*d+`]`
+        var _cellMovements = `movementMask[i${depth}+`+l*d+`]`
         if (tests.length>0){
             tests+=" && ";
         }
         if (objectPresent!==0){
             tests+=`( ${_cellObjects} & ${objectPresent} )`;
             if (movementPresent!==0){
-                tests+=` && ( ${_cellMovements} & ${movementPresent})`;                            
+                tests+=` && ( ${_cellMovements} & ${movementPresent} )`;                            
             }
+        }
+        if (objectMissing!==0){
+            if (tests.length>0){
+                tests+=" && ";
+            }
+            tests+=`!( ${_cellObjects} & ${objectMissing} )`;
+        }
+        for (var i=0;i<anyObjectsPresent.length;i++){
+            var op = anyObjectsPresent[i].data[0];
+            if (op!==0){
+                if (tests.length>0){
+                    tests+=" && ";
+                }
+                tests+=`( ${_cellObjects} & 0b${op.toString(2)} )`;
+            }
+        }
+        if (movementMissing!==0){
+            if (tests.length>0){
+                tests+=" && ";
+            }
+            tests += `( !( ${_cellMovements}&${movementMissing} ) )`;
         }
     }
     return tests;
@@ -247,19 +299,47 @@ function GenerateEllipsisPatternReplacement(d,p,depth,flip){
         var movementsClear=c.replacement.movementsClear.data[0];
         var movementsLayerMask=c.replacement.movementsLayerMask.data[0];
         var movementsSet=c.replacement.movementsSet.data[0];
-        var objectPrandomDirMaskresent=c.replacement.randomDirMask.data[0];
+        var randomDirMask=c.replacement.randomDirMask.data[0];
         var randomEntityMask=c.replacement.randomEntityMask.data[0];
 
 
         var objectsPreserve=(~objectsClear)>>> 0;
         var movementsPresent=(~movementsClear)>>> 0;
 
-        var lvlName = (l===0) ? `level[i_L_${depth}]` : `level[i_L_${depth}+`+l*d+`]`
+        var lvlName = `level[i_L_${depth}+`+l*d+`]`
         test += lvlName + " = "
         test += `(${lvlName}&${objectsPreserve})|${objectsSet};\n`
-        var mvmtName = (l===0) ? `movementMask[i_L_${depth}]` : `movementMask[i_L_${depth}+`+l*d+`]`
+        var mvmtName = `movementMask[i_L_${depth}+`+l*d+`]`
         test += mvmtName + " = "
         test += `(${mvmtName}&${movementsPresent})|${movementsSet};`
+
+
+        if (randomEntityMask!==0){
+            test+=`\n`;
+
+            var entityCount=CountBits(randomEntityMask);
+            test+=`switch (random(0,${entityCount})){\n`
+            var ni=0;
+            for (var i=0;i<entityCount;i++){
+                var targetObjMask = 1<<GetPositionofKthOne(randomEntityMask,i);
+                test+=`    case ${i}:\n`
+                test+=`    {\n`
+                test+=`        level[i${depth}+`+l*d+`] |= 0b${targetObjMask.toString(2)};\n`
+                test+=`        break;\n`
+                test+=`    }\n`
+                ni++;
+            }
+            test+=`}`
+        }
+        if (randomDirMask!==0){
+            test+=`\n`;
+
+            for (var i=0;i<LAYER_COUNT;i++){
+                if ((randomDirMask&(1<<i)) !=0){
+                    test+=`movementMask[i_L_${depth}+`+l*d+`] |= (1<<random(0,4))<<${5*i};`;
+                }
+            }
+        }
     }
     var l0=ellipsisIndex+1;
     for (var l=l0;l<p.length;l++){
@@ -277,22 +357,73 @@ function GenerateEllipsisPatternReplacement(d,p,depth,flip){
         var movementsClear=c.replacement.movementsClear.data[0];
         var movementsLayerMask=c.replacement.movementsLayerMask.data[0];
         var movementsSet=c.replacement.movementsSet.data[0];
-        var objectPrandomDirMaskresent=c.replacement.randomDirMask.data[0];
+        var randomDirMask=c.replacement.randomDirMask.data[0];
         var randomEntityMask=c.replacement.randomEntityMask.data[0];
 
 
         var objectsPreserve=(~objectsClear)>>> 0;
         var movementsPresent=(~movementsClear)>>> 0;
 
-        var lvlName = ((l-l0)===0) ? `level[i_R_${depth}]` : `level[i_R_${depth}+`+(l-l0)*d+`]`
+        var lvlName = `level[i_R_${depth}+`+(l-l0)*d+`]`
         test += lvlName + " = "
         test += `(${lvlName}&${objectsPreserve})|${objectsSet};\n`
-        var mvmtName = ((l-l0)===0) ? `movementMask[i_R_${depth}]` : `movementMask[i_R_${depth}+`+(l-l0)*d+`]`
+        var mvmtName = `movementMask[i_R_${depth}+`+(l-l0)*d+`]`
         test += mvmtName + " = "
         test += `(${mvmtName}&${movementsPresent})|${movementsSet};`
+
+
+        if (randomEntityMask!==0){
+            test+=`\n`;
+
+            var entityCount=CountBits(randomEntityMask);
+            test+=`switch (random(0,${entityCount})){\n`
+            var ni=0;
+            for (var i=0;i<entityCount;i++){
+                var targetObjMask = 1<<GetPositionofKthOne(randomEntityMask,i);
+                test+=`    case ${i}:\n`
+                test+=`    {\n`
+                test+=`        level[i${depth}+`+l*d+`] |= 0b${targetObjMask.toString(2)};\n`
+                test+=`        break;\n`
+                test+=`    }\n`
+                ni++;
+            }
+            test+=`}`
+        }
+        if (randomDirMask!==0){
+            test+=`\n`;
+
+            for (var i=0;i<LAYER_COUNT;i++){
+                if ((randomDirMask&(1<<(5*i))) !=0){
+                    test+=`movementMask[i_R_${depth}+`+l*d+`] |= (1<<random(0,4))<<${5*i};`;
+                }
+            }
+        }
     }
 
     return test;
+}
+
+function CountBits(n){
+    var result=0;
+    for (var i=0;i<state.objectCount;i++){
+        if ((n&(1<<i))!==0){
+            result++;
+        }
+    }
+    return result;
+}
+
+function GetPositionofKthOne(n,k){
+    var count=0;
+    for (var i=0;i<state.objectCount;i++){        
+        if ((n&(1<<i))!==0){
+            if (k===count){
+                return i;
+            }
+            count++;
+        }
+    }
+    return -1;
 }
 
 function GeneratePatternReplacement(d,p,depth){
@@ -316,20 +447,50 @@ function GeneratePatternReplacement(d,p,depth){
         var movementsClear=c.replacement.movementsClear.data[0];
         var movementsLayerMask=c.replacement.movementsLayerMask.data[0];
         var movementsSet=c.replacement.movementsSet.data[0];
-        var objectPrandomDirMaskresent=c.replacement.randomDirMask.data[0];
         var randomEntityMask=c.replacement.randomEntityMask.data[0];
+        var randomDirMask=c.replacement.randomDirMask.data[0];
 
 
         var objectsPreserve=(~objectsClear)>>> 0;
         var movementsPresent=(~movementsClear)>>> 0;
 
-        var lvlName = (l===0) ? `level[i${depth}]` : `level[i${depth}+`+l*d+`]`
+        var lvlName = `level[i${depth}+`+l*d+`]`
         test += lvlName + " = "
         test += `(${lvlName}&${objectsPreserve})|${objectsSet};\n`
-        var mvmtName = (l===0) ? `movementMask[i${depth}]` : `movementMask[i${depth}+`+l*d+`]`
+        var mvmtName = `movementMask[i${depth}+`+l*d+`]`
         test += mvmtName + " = "
-        test += `(${mvmtName}&${movementsPresent})|${movementsSet};`
+        test += `( ${mvmtName}&${movementsPresent} ) | ${movementsSet};`
 
+
+        var randomEntityMask=c.replacement.randomEntityMask.data[0];
+        var randomDirMask=c.replacement.randomDirMask.data[0];
+
+        if (randomEntityMask!==0){
+            test+=`\n`;
+
+            var entityCount=CountBits(randomEntityMask);
+            test+=`switch (random(0,${entityCount})){\n`
+            var ni=0;
+            for (var i=0;i<entityCount;i++){
+                var targetObjMask = 1<<GetPositionofKthOne(randomEntityMask,i);
+                test+=`    case ${i}:\n`
+                test+=`    {\n`
+                test+=`        level[i${depth}+`+l*d+`] |= 0b${targetObjMask.toString(2)};\n`
+                test+=`        break;\n`
+                test+=`    }\n`
+                ni++;
+            }
+            test+=`}`
+        }
+        if (randomDirMask!==0){
+            test+=`\n`;
+
+            for (var i=0;i<LAYER_COUNT;i++){
+                if ((randomDirMask&(1<<(5*i))) !=0){
+                    test+=`movementMask[i${depth}+`+l*d+`] |= (1<<random(0,4))<<${5*i};`;
+                }
+            }
+        }
     }
     return test;
 }
@@ -492,8 +653,11 @@ var patternEnd =
 
 function ARDU_rulesDat(){
     var result="";
-    for (var i=0;i<state.rules.length;i++){
-        var rg = state.rules[i];
+    var rulesTogether=state.rules.concat(state.lateRules);
+
+    for (var i=0;i<rulesTogether.length;i++){
+        var rg = rulesTogether[i];
+        var late = i>=state.rules.length;
         for (var j=0;j<rg.length;j++){
             var r = rg[j];
             var ruleDir = r.direction;
@@ -504,8 +668,12 @@ function ARDU_rulesDat(){
                 matchStrings.push(generateMatchString(pattern,ruleDir,k));
             }
 
-            var depth=1;            
-            result+=`bool applyRule${i}_${j}(){\n`;
+            var depth=1;           
+            if (!late){ 
+                result+=`bool applyRule${i}_${j}(){\n`;
+            } else {
+                result+=`bool applyLateRule${i-state.rules.length}_${j}(){\n`;                
+            }
             for (var k=0;k<matchStrings.length;k++){
                 var [loop,test,replace,post]=matchStrings[k];
                 loop=indent(loop,depth);
@@ -533,6 +701,31 @@ function ARDU_rulesDat(){
         }
     }
     console.log(result);
+    return result;
+}
+
+function ARDU_applyRulesFns(){
+    var result=`void processRules(){\n`;
+
+    for (var i=0;i<state.rules.length;i++){
+        var rg = state.rules[i];
+        for (var j=0;j<rg.length;j++){
+            result +=`\tapplyRule${i}_${j}();\n`
+        }
+    }
+
+    result+="}\n"
+
+    result+=`void processLateRules(){\n`;
+
+    for (var i=0;i<state.lateRules.length;i++){
+        var rg = state.lateRules[i];
+        for (var j=0;j<rg.length;j++){
+            result +=`\tapplyLateRule${i}_${j}();\n`
+        }
+    }
+
+    result+="}\n"
     return result;
 }
 
@@ -689,6 +882,9 @@ enum State {
   TITLE,
   MESSAGE
 };
+
+const byte LAYER_COUNT = 3;
+
 State state=TITLE;
 const byte DIR_UP     = 0b00001;
 const byte DIR_DOWN   = 0b00010;
@@ -726,6 +922,9 @@ bool waiting=false;
     
     var rulesText = ARDU_rulesDat();
     outputTxt+=rulesText+"\n";
+    
+    var applyRulesFns = ARDU_applyRulesFns();
+    outputTxt+=applyRulesFns+"\n";
     
     var winConditionsText = ARDU_winConditionsDat();
     outputTxt+=winConditionsText+"\n";

@@ -1,41 +1,40 @@
+title Random Robots
+author Stephen Lavelle
+homepage www.puzzlescript.net
 
 ========
 OBJECTS
 ========
 
 
-Background  (special, automatically placed in its own layer)
-GREEN darkgreen 
-11111
-01111
-11101
-11111
-10111
+Player
+white 
+........
+..0000..
+..0000..
+.000000.
+..0000..
+..0..0..
+.00..00.
+........
 
+ROBOT
+white
+........
+..0000..
+.000000.
+...00...
+...00...
+..0000..
+.0....0.
+........
 
-Player    (Required by game)
-PINK     
-..0..
-00000
-..0..
-.000.
-.0.0.
-
-
-Robot
-gray black red
-.000.
-.200.
-...0.
-00000
-01010
 
 
 =======
 LEGEND
 =======
 
-. = Background
 P = Player
 * = Robot
 
@@ -47,24 +46,22 @@ SOUNDS
 COLLISIONLAYERS
 ================
 
-Background
 Player, Robot
 
 ======
-RULES     
-======     
+RULES
+======
 
-[Robot ] -> [randomDir Robot]
+[ stationary Robot ] -> [randomDir Robot]
 
 ==============
-WINCONDITION
+WINCONDITIONS
 ==============
 
-=======     
+=======
 LEVELS
 =======
 
-...........
 .....*.....
 ...........
 .....*.....
