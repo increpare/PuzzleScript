@@ -143,8 +143,8 @@ PROGMEM const byte levels[][128] {
 		0,0,2,2,2,2,2,2,2,2,2,2,2,2,0,0,
 		0,0,2,0,0,0,0,0,0,0,0,0,0,2,0,0,
 		0,0,2,0,0,0,0,0,0,0,0,0,0,2,0,0,
-		0,0,2,0,0,0,0,0,4,0,0,0,0,2,0,0,
-		0,0,2,0,1,0,0,0,0,0,0,0,0,2,0,0,
+		0,0,2,0,0,0,0,4,4,0,0,0,0,2,0,0,
+		0,0,2,0,1,0,0,0,4,0,0,0,0,2,0,0,
 		0,0,2,0,0,0,0,0,0,0,0,0,0,2,0,0,
 		0,0,2,0,0,0,0,0,0,0,0,0,0,2,0,0,
 		0,0,2,2,2,2,2,2,2,2,2,2,2,2,0,0,
@@ -152,14 +152,70 @@ PROGMEM const byte levels[][128] {
 };
 
 bool applyRule0_0(){
-    for (byte y0=0;y0<7;y0++){
+    for (byte y0=0;y0<6;y0++){
         for (byte x0=0;x0<16;x0++){
-            for (byte k0=0;k0<(7-y0);k0++){
+            for (char k0=y0;k0>=0;k0--){
+                byte i_L_0 = x0+16*k0;
+                byte i_R_0 = x0+16*(y0+2);
+                if (( level[i_L_0+0] & 1 ) && ( level[i_R_0+0] & 4 ) && ( level[i_R_0+16] & 4 )){
+                    level[i_L_0] = (level[i_L_0]&4294967288)|1;
+                    movementMask[i_L_0] = (movementMask[i_L_0]&4294967295)|0;
+                    level[i_R_0] = (level[i_R_0]&4294967288)|4;
+                    movementMask[i_R_0] = (movementMask[i_R_0]&4294967295)|1;
+                    level[i_R_0+16] = (level[i_R_0+16]&4294967288)|4;
+                    movementMask[i_R_0+16] = (movementMask[i_R_0+16]&4294967295)|0;
+                }
+            }
+        }
+    }
+}
+bool applyRule0_1(){
+    for (byte y0=0;y0<6;y0++){
+        for (byte x0=0;x0<16;x0++){
+            for (byte k0=0;k0<(6-y0);k0++){
                 byte i_L_0 = x0+16*y0;
-                byte i_R_0 = x0+16*(y0+k0+1);
-                if (( level[i_L_0] & 4 ) && ( level[i_R_0] & 1 )){
+                byte i_R_0 = x0+16*(y0+k0+2);
+                if (( level[i_L_0+0] & 4 ) && ( level[i_L_0+16] & 4 ) && ( level[i_R_0+0] & 1 )){
                     level[i_L_0] = (level[i_L_0]&4294967288)|4;
-                    movementMask[i_L_0] = (movementMask[i_L_0]&4294967295)|4;
+                    movementMask[i_L_0] = (movementMask[i_L_0]&4294967295)|0;
+                    level[i_L_0+16] = (level[i_L_0+16]&4294967288)|4;
+                    movementMask[i_L_0+16] = (movementMask[i_L_0+16]&4294967295)|2;
+                    level[i_R_0] = (level[i_R_0]&4294967288)|1;
+                    movementMask[i_R_0] = (movementMask[i_R_0]&4294967295)|0;
+                }
+            }
+        }
+    }
+}
+bool applyRule0_2(){
+    for (byte y0=0;y0<8;y0++){
+        for (byte x0=0;x0<14;x0++){
+            for (char k0=x0;k0>=0;k0--){
+                byte i_L_0 = k0+16*y0;
+                byte i_R_0 = x0+2+16*y0;
+                if (( level[i_L_0+0] & 1 ) && ( level[i_R_0+0] & 4 ) && ( level[i_R_0+1] & 4 )){
+                    level[i_L_0] = (level[i_L_0]&4294967288)|1;
+                    movementMask[i_L_0] = (movementMask[i_L_0]&4294967295)|0;
+                    level[i_R_0] = (level[i_R_0]&4294967288)|4;
+                    movementMask[i_R_0] = (movementMask[i_R_0]&4294967295)|4;
+                    level[i_R_0+1] = (level[i_R_0+1]&4294967288)|4;
+                    movementMask[i_R_0+1] = (movementMask[i_R_0+1]&4294967295)|0;
+                }
+            }
+        }
+    }
+}
+bool applyRule0_3(){
+    for (byte y0=0;y0<8;y0++){
+        for (byte x0=0;x0<14;x0++){
+            for (byte k0=0;k0<(14-x0);k0++){
+                byte i_L_0 = x0+16*y0;
+                byte i_R_0 = x0+k0+2+16*y0;
+                if (( level[i_L_0+0] & 4 ) && ( level[i_L_0+1] & 4 ) && ( level[i_R_0+0] & 1 )){
+                    level[i_L_0] = (level[i_L_0]&4294967288)|4;
+                    movementMask[i_L_0] = (movementMask[i_L_0]&4294967295)|0;
+                    level[i_L_0+1] = (level[i_L_0+1]&4294967288)|4;
+                    movementMask[i_L_0+1] = (movementMask[i_L_0+1]&4294967295)|8;
                     level[i_R_0] = (level[i_R_0]&4294967288)|1;
                     movementMask[i_R_0] = (movementMask[i_R_0]&4294967295)|0;
                 }

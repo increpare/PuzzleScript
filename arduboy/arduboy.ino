@@ -50,6 +50,9 @@ void setup() {
 
 void processRules(){
   applyRule0_0();
+  applyRule0_1();
+  applyRule0_2();
+  applyRule0_3();
 }
 
 void processLateRules(){

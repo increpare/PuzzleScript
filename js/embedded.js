@@ -1,3 +1,8 @@
+var DIR_UP     = 0b00001;
+var DIR_DOWN   = 0b00010;
+var DIR_LEFT   = 0b00100;
+var DIR_RIGHT  = 0b01000;
+var DIR_ACTION = 0b10000;
 
 String.prototype.replaceAll = function(search, replacement) {
     var target = this;
@@ -134,7 +139,10 @@ function ARDU_playerConstants(){
 }
 
 
-function GenerateEllipsisMatchPattern(d,p,depth){
+function GenerateEllipsisMatchPattern(d,p,depth,flip=false){
+    if (flip===true){
+        p = p.slice().reverse();
+    }
     var ellipsisIndex = getEllipsisIndex(p);
 
     var movementsMissing = [];
@@ -149,8 +157,8 @@ function GenerateEllipsisMatchPattern(d,p,depth){
         var objectMissing=c.objectsMissing.data[0];
         var objectPresent=c.objectsPresent.data[0];
 
-        var _cellObjects = (l===0)?`level[i_L_${depth}]`:`level[i_L_${depth}+`+l*d+`]`
-        var _cellMovements = (l===0)?`movementMask[i_L_${depth}]`:`movementMask[i_L_${depth}+`+l*d+`]`
+        var _cellObjects = `level[i_L_${depth}+${l*d}]`
+        var _cellMovements = `movementMask[i_L_${depth}+${l*d}]`
         if (tests.length>0){
             tests+=" && ";
         }
@@ -170,8 +178,8 @@ function GenerateEllipsisMatchPattern(d,p,depth){
         var objectMissing=c.objectsMissing.data[0];
         var objectPresent=c.objectsPresent.data[0];
 
-        var _cellObjects = ((l-l0)===0)?`level[i_R_${depth}]`:`level[i_R_${depth}+`+(l-l0)*d+`]`
-        var _cellMovements = ((l-l0)===0)?`movementMask[i_R_${depth}]`:`movementMask[i_R_${depth}+`+(l-l0)*d+`]`
+        var _cellObjects = `level[i_R_${depth}+${(l-l0)*d}]`
+        var _cellMovements = `movementMask[i_R_${depth}+${(l-l0)*d}]`
         if (tests.length>0){
             tests+=" && ";
         }
@@ -214,7 +222,10 @@ function GenerateMatchPattern(d,p,depth){
 }
 
 
-function GenerateEllipsisPatternReplacement(d,p,depth){
+function GenerateEllipsisPatternReplacement(d,p,depth,flip){
+    if (flip===true){
+        p = p.slice().reverse();
+    }
     var ellipsisIndex = getEllipsisIndex(p);
     var movementsMissing = [];
     var movementsPresent = [];
@@ -350,10 +361,35 @@ function generateEllipsisMatchString(pattern,ruleDir,depth){
     var pat2_startIndex = ellipsisIndex+1;
     var pat2_length = pattern.length-pat2_startIndex;
     
-    var d = ruleDir===8?1:16;//right is 8, otherwise down
+    var d=0;
+    var flip=false;
+    switch (ruleDir){
+        case DIR_UP:
+        {
+            d=16;
+            flip=true;
+            break;
+        }
+        case DIR_DOWN:
+        {
+            d=16;
+            break;
+        }
+        case DIR_LEFT:
+        {
+            d=1;
+            flip=true;
+            break;
+        }
+        case DIR_RIGHT:
+        {
+            d=1;
+            break;
+        }
+    }
 
-    var test = GenerateEllipsisMatchPattern(d,pattern,depth)
-    var replacement = GenerateEllipsisPatternReplacement(d,pattern,depth)
+    var test = GenerateEllipsisMatchPattern(d,pattern,depth,flip)
+    var replacement = GenerateEllipsisPatternReplacement(d,pattern,depth,flip)
     var l = pattern.length;
     var maxY=8;
     var maxX=16;
@@ -365,26 +401,49 @@ function generateEllipsisMatchString(pattern,ruleDir,depth){
 
     var patternTest="";
 
-    var patternLoop = 
-`for (byte y${depth}=0;y${depth}<${maxY};y${depth}++){
-    for (byte x${depth}=0;x${depth}<${maxX};x${depth}++){`
+    var patternLoop = ""
     
-    if (d==1){//horizontal
-        patternLoop+=`
-        for (byte k${depth}=0;k${depth}<(${maxX}-x${depth});k${depth}++){`
+    switch(ruleDir){        
+        case DIR_RIGHT: {
+            patternLoop+=`for (byte y${depth}=0;y${depth}<${maxY};y${depth}++){\n`
+            patternLoop+=`    for (byte x${depth}=0;x${depth}<${maxX};x${depth}++){\n`
+            patternLoop+=`        for (byte k${depth}=0;k${depth}<(${maxX}-x${depth});k${depth}++){`
 
-        patternTest = 
-`byte i_L_${depth} = x${depth}+16*y${depth};
-byte i_R_${depth} = x${depth}+k${depth}+${ellipsisIndex}+16*y${depth};
-if (${test}){`
-    } else {
-        patternLoop+=`
-        for (byte k${depth}=0;k${depth}<(${maxY}-y${depth});k${depth}++){`  
+            patternTest += `byte i_L_${depth} = x${depth}+16*y${depth};\n`
+            patternTest += `byte i_R_${depth} = x${depth}+k${depth}+${ellipsisIndex}+16*y${depth};\n`
+            patternTest += `if (${test}){`
+            break;
+        }
+        case DIR_LEFT: {
+            patternLoop+=`for (byte y${depth}=0;y${depth}<${maxY};y${depth}++){\n`
+            patternLoop+=`    for (byte x${depth}=0;x${depth}<${maxX};x${depth}++){\n`
+            patternLoop+=`        for (char k${depth}=x${depth};k${depth}>=0;k${depth}--){`
 
-        patternTest = 
-`byte i_L_${depth} = x${depth}+16*y${depth};
-byte i_R_${depth} = x${depth}+16*(y${depth}+k${depth}+${ellipsisIndex});
-if (${test}){`      
+            patternTest +=`byte i_L_${depth} = k${depth}+16*y${depth};\n`
+            patternTest +=`byte i_R_${depth} = x${depth}+${ellipsisIndex}+16*y${depth};\n`;
+            patternTest +=`if (${test}){`
+            break;
+        }
+        case DIR_DOWN:{
+            patternLoop+=`for (byte y${depth}=0;y${depth}<${maxY};y${depth}++){\n`
+            patternLoop+=`    for (byte x${depth}=0;x${depth}<${maxX};x${depth}++){\n`
+            patternLoop+=`        for (byte k${depth}=0;k${depth}<(${maxY}-y${depth});k${depth}++){`  
+
+            patternTest += `byte i_L_${depth} = x${depth}+16*y${depth};\n`
+            patternTest += `byte i_R_${depth} = x${depth}+16*(y${depth}+k${depth}+${ellipsisIndex});\n`
+            patternTest += `if (${test}){`     
+            break;
+        }
+        case DIR_UP:{
+            patternLoop+=`for (byte y${depth}=0;y${depth}<${maxY};y${depth}++){\n`
+            patternLoop+=`    for (byte x${depth}=0;x${depth}<${maxX};x${depth}++){\n`
+            patternLoop+=`        for (char k${depth}=y${depth};k${depth}>=0;k${depth}--){`
+
+            patternTest += `byte i_L_${depth} = x${depth}+16*k${depth};\n`
+            patternTest += `byte i_R_${depth} = x${depth}+16*(y${depth}+${ellipsisIndex});\n`
+            patternTest += `if (${test}){`     
+            break;
+        }
     }
 
 var patternEnd = 
