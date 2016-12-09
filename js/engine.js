@@ -2541,6 +2541,9 @@ function nextLevel() {
 
 	}
 
+	if (state!==undefined && state.metadata.flickscreen!==undefined){
+		oldflickscreendat=[0,0,Math.min(metadata.flickscreen[0],level.width),Math.min(metadata.flickscreen[1],level.height)];
+	}
 	canvasResize();	
 	clearInputHistory();
 }
