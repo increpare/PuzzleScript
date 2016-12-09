@@ -518,6 +518,16 @@ function backupLevel() {
 	return ret;
 }
 
+function level4Serialization() {
+	var ret = {
+		dat : Array.from(level.objects),
+		width : level.width,
+		height : level.height,
+		oldflickscreendat: oldflickscreendat.concat([])
+	};
+	return ret;
+}
+
 function setGameState(_state, command, randomseed) {
 	oldflickscreendat=[];
 	timer=0;
@@ -2329,17 +2339,10 @@ function processInput(dir,dontCheckWin,dontModify) {
 		    	if (verbose_logging) { 
 		    		consolePrint('CHECKPOINT command executed, saving current state to the restart state.');
 				}
-				restartTarget=backupLevel();
-				curlevelTarget=restartTarget;
+				restartTarget=level4Serialization();
 				hasUsedCheckpoint=true;
-				localStorage[document.URL+'_checkpoint']=JSON.stringify(restartTarget);
-				//test line, remove later!:
-				var restored = JSON.parse(localStorage[document.URL+'_checkpoint']);
-				var arr = [];
-				for(var p in Object.getOwnPropertyNames(restored.dat)) {
-				    arr[p] = restored.dat[p];
-				}
-				restored.dat = new Int32Array(arr);
+				var backupStr = JSON.stringify(restartTarget);
+				localStorage[document.URL+'_checkpoint']=backupStr;
 				localStorage[document.URL]=curlevel;
 			}	 
 
@@ -2488,10 +2491,6 @@ function anyMovements() {
 
 
 function nextLevel() {
-	if (hasUsedCheckpoint){
-		curlevelTarget=null;
-		hasUsedCheckpoint=false;
-	}
 	keybuffer=[];
     againing=false;
 	messagetext="";
@@ -2506,7 +2505,11 @@ function nextLevel() {
 		} else {
 			loadLevelFromState(state,curlevel);
 		}
-	} else {
+	} else {	
+		if (hasUsedCheckpoint){
+			curlevelTarget=null;
+			hasUsedCheckpoint=false;
+		}
 		if (curlevel<(state.levels.length-1))
 		{			
 			curlevel++;
@@ -2532,7 +2535,9 @@ function nextLevel() {
 		if (!!window.localStorage) {
 			localStorage[document.URL]=curlevel;
 			if (curlevelTarget!==null){
-				localStorage[document.URL+"_checkpoint"]=JSON.stringify(curlevelTarget);
+				restartTarget=level4Serialization();
+				var backupStr = JSON.stringify(restartTarget);
+				localStorage[document.URL+'_checkpoint']=backupStr;
 			} else {
 				localStorage.removeItem(document.URL+"_checkpoint");
 			}		
@@ -2542,7 +2547,7 @@ function nextLevel() {
 	}
 
 	if (state!==undefined && state.metadata.flickscreen!==undefined){
-		oldflickscreendat=[0,0,Math.min(metadata.flickscreen[0],level.width),Math.min(metadata.flickscreen[1],level.height)];
+		oldflickscreendat=[0,0,Math.min(state.metadata.flickscreen[0],level.width),Math.min(state.metadata.flickscreen[1],level.height)];
 	}
 	canvasResize();	
 	clearInputHistory();
@@ -2553,6 +2558,7 @@ function goToTitleScreen(){
 	messagetext="";
 	titleScreen=true;
 	textMode=true;
+	doSetupTitleScreenLevelContinue();
 	titleSelection=(curlevel>0||curlevelTarget!==null)?1:0;
 	generateTitleScreen();
 }
