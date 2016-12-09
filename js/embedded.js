@@ -159,7 +159,10 @@ function GenerateEllipsisMatchPattern(d,p,depth,flip=false){
         if (tests.length>0){
             tests+=" && ";
         }
-        if (objectPresent!==0){
+        if (objectPresent!==0){            
+            if (tests.length>0){
+                tests+=" && ";
+            }
             tests+=`( ${_cellObjects} & ${objectPresent} )`;
             if (movementPresent!==0){
                 tests+=` && ( ${_cellMovements} & ${movementPresent})`;                            
@@ -192,10 +195,10 @@ function GenerateEllipsisMatchPattern(d,p,depth,flip=false){
 
         var _cellObjects = `level[i_R_${depth}+${(l-l0)*d}]`
         var _cellMovements = `movementMask[i_R_${depth}+${(l-l0)*d}]`
-        if (tests.length>0){
-            tests+=" && ";
-        }
-        if (objectPresent!==0){
+        if (objectPresent!==0){            
+            if (tests.length>0){
+                tests+=" && ";
+            }
             tests+=`( ${_cellObjects} & ${objectPresent} )`;
             if (movementPresent!==0){
                 tests+=` && ( ${_cellMovements} & ${movementPresent})`;                            
@@ -239,13 +242,13 @@ function GenerateMatchPattern(d,p,depth){
 
         var _cellObjects = `level[i${depth}+`+l*d+`]`
         var _cellMovements = `movementMask[i${depth}+`+l*d+`]`
-        if (tests.length>0){
-            tests+=" && ";
-        }
-        if (objectPresent!==0){
+        if (objectPresent!==0){            
+            if (tests.length>0){
+                tests+=" && ";
+            }
             tests+=`( ${_cellObjects} & ${objectPresent} )`;
             if (movementPresent!==0){
-                tests+=` && ( ${_cellMovements} & ${movementPresent} )`;                            
+                tests+=` && ( ${_cellMovements} & ${movementPresent})`;                            
             }
         }
         if (objectMissing!==0){
