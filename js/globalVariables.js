@@ -4,24 +4,29 @@ var curlevelTarget=null;
 var hasUsedCheckpoint=false;
 var levelEditorOpened=false;
 
-try {
- 	if (!!window.localStorage) { 
-		if (localStorage[document.URL]!==undefined) {
-            if (localStorage[document.URL+'_checkpoint']!==undefined){
-                curlevelTarget = JSON.parse(localStorage[document.URL+'_checkpoint']);
-                
-                var arr = [];
-                for(var p in Object.getOwnPropertyNames(curlevelTarget.dat)) {
-                    arr[p] = curlevelTarget.dat[p];
-                }
-                curlevelTarget.dat = new Int32Array(arr);
+function doSetupTitleScreenLevelContinue(){
+    try {
+     	if (!!window.localStorage) { 
+    		if (localStorage[document.URL]!==undefined) {
+                if (localStorage[document.URL+'_checkpoint']!==undefined){
+                    var backupStr = localStorage[document.URL+'_checkpoint'];
+                    curlevelTarget = JSON.parse(backupStr);
+                    
+                    var arr = [];
+                    for(var p in Object.keys(curlevelTarget.dat)) {
+                        arr[p] = curlevelTarget.dat[p];
+                    }
+                    curlevelTarget.dat = new Int32Array(arr);
 
-            }
-	        curlevel = localStorage[document.URL];            
-		}
-	}		 
-} catch(ex) {
+                }
+    	        curlevel = localStorage[document.URL];            
+    		}
+    	}		 
+    } catch(ex) {
+    }
 }
+
+doSetupTitleScreenLevelContinue();
 
 
 var verbose_logging=false;

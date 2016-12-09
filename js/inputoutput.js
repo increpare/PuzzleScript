@@ -651,7 +651,11 @@ function checkKey(e,justPressed) {
 	    			}
     			}
     			else if (inputdir===0||inputdir===2) {
-    				titleSelection=1-titleSelection;
+    				if (inputdir===0){
+    					titleSelection=0;    					
+    				} else {
+    					titleSelection=1;    					    					
+    				}
     				generateTitleScreen();
     				redraw();
     			}
