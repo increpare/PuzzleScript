@@ -13,57 +13,72 @@ http://ded.increpare.com/~locus/kettle
 OBJECTS
 ========
 
-Background
-darkgray
-
 Target
-yellow
-00000
-0...0
-0...0
-0...0
-00000
+white
+........
+.000000.
+.0....0.
+.0....0.
+.0....0.
+.0....0.
+.000000.
+........
 
 
 UPolice
-black
-.000.
-.000.
-00000
-.000.
-.0.0.
+white
+........
+.000000.
+.000000.
+.000000.
+.000000.
+..0..0..
+.000000.
+........
 
 DPolice
-black
-.000.
-.000.
-00000
-.000.
-.0.0.
+white
+........
+.000000.
+..0..0..
+.000000.
+.000000.
+.000000.
+.000000.
+........
 
 LPolice
-black
-.000.
-.000.
-0000.
-.000.
-.0.0.
+white
+........
+.0000.0.
+.0000.0.
+.000000.
+.0000.0.
+.0000.0.
+.0000.0.
+........
 
 RPolice
-black
-.000.
-.000.
-.0000
-.000.
-.0.0.
+white
+........
+.0.0000.
+.0.0000.
+.000000.
+.0.0000.
+.0.0000.
+.0.0000.
+........
 
 Crate
-blue
-..0..
-00000
-..0..
-.000.
-.0.0.
+white
+........
+..0000..
+..0000..
+.000000.
+..0000..
+..0..0..
+..0..0..
+........
 
 wall
 black
@@ -72,7 +87,6 @@ black
 LEGEND
 =======
 
-. = Background
 player = upolice or dpolice or lpolice or rpolice
 i = upolice
 k = dpolice
@@ -100,7 +114,6 @@ startgame 94059902
 COLLISIONLAYERS
 ================
 
-Background
 Target
 player, Crate, wall
 
@@ -138,210 +151,23 @@ all target on crate
 LEVELS
 =======
 
-message Let's see your ID
-
-###############
-#.............#
-#.............#
-#.....kkkk....#
-#....l...cj...#
-#....l.tt.j...#
-#....lctt.j...#
-#....lc..cj...#
-#.....iiii....#
-#.............#
-#.............#
-#.............#
-###############
-
-message Area Secure
-message Gonna lock you up, sonny!
-
-###############
-#.............#
-#.............#
-#.....kkkk....#
-#....l@@t.j...#
-#....ltttcj...#
-#....l@t@cj...#
-#....lc.ccj...#
-#.....iiii....#
-#.............#
-#.............#
-#.............#
-###############
-
-message Area Secure
-message We didn't see nothing!
-
-###############
-#.............#
-#.............#
-#....kkkkk....#
-#...l@t@@cj...#
-#...l@@ttcj...#
-#...ltt@tcj...#
-#...lt@@@.j...#
-#...l.ccccj...#
-#....iiiii....#
-#.............#
-#.............#
-###############
+.............
+.....kkkk....
+....l...cj...
+....l.tt.j...
+....lctt.j...
+....lc..cj...
+.....iiii....
+.............
 
 
-message Area Secure
-message You'll be late for class, eh!
+.............
+.....kkkk....
+....l@@t.j...
+....ltttcj...
+....l@t@cj...
+....lc.ccj...
+.....iiii....
+.............
 
-###############
-#.............#
-#.............#
-#....kkkkk....#
-#...lc.c.cj...#
-#...lc@tt.j...#
-#...l.tt@cj...#
-#...l.ttt.j...#
-#...lc...cj...#
-#....iiiii....#
-#.............#
-#.............#
-###############
-
-message Area Secure
-message Ha! You shat yourself!
-
-
-###############
-#.............#
-#.............#
-#....kkkkkk...#
-#...lc.c..cj..#
-#...lcttt..j..#
-#...l.t@@..j..#
-#...l.ttt..j..#
-#...lc...ccj..#
-#....iiiiii...#
-#.............#
-#.............#
-###############
-
-message Area Secure
-message Have to confiscate your camera!
-
-
-###############
-#.............#
-#.............#
-#....kkkkkk...#
-#...lcc..ccj..#
-#...l.tttt.j..#
-#...l.t@@t.j..#
-#...lcttt@cj..#
-#...lct@ttcj..#
-#...lcc..ccj..#
-#....iiiiii...#
-#.............#
-###############
-
-
-message Area Secure
-message Keeping the peace is hard work
-
-
-###############
-#.............#
-#...kkkkkkk...#
-#..l..cc..cj..#
-#..l.tttt..j..#
-#..lc@t@t..j..#
-#..lctttt.cj..#
-#..l.@@tt..j..#
-#..lc.....cj..#
-#..lcc.c..cj..#
-#...iiiiiii...#
-#.............#
-###############
-
-
-message Area Secure
-message You should've packed lunch!
-
-
-
-###############
-#.............#
-#..kkkkkkkk...#
-#.lccccc...j..#
-#.lct@@tt.cj..#
-#.l.t@t@t.cj..#
-#.lc@@ttt.cj..#
-#.lct@tttccj..#
-#.l.tt@@t..j..#
-#.l........j..#
-#.lc..cc...j..#
-#..iiiiiiii...#
-###############
-
-
-message Area Secure
-message I want to hit you
-
-###############
-#.............#
-#..kkkkkkkkk..#
-#.lc.cccc...j.#
-#.l.........j.#
-#.lccttttt..j.#
-#.lc.tt@tt.cj.#
-#.lc.tt@@t.cj.#
-#.l..@@tt@.cj.#
-#.l..t@t@t..j.#
-#.l.........j.#
-#.lc.c.c.c.cj.#
-#..iiiiiiiii..#
-###############
-
-
-message Area Secure
-message Don't be naughty!
-
-
-###############
-#.kkkkkkkkkk..#
-#lccc..c...cj.#
-#lc.........j.#
-#lc.@t@tt...j.#
-#lc.t@@@t...j.#
-#l..@ttt@..cj.#
-#lc.tt@@t..cj.#
-#l..ttttt...j.#
-#l..........j.#
-#l.........cj.#
-#l....c.c.ccj.#
-#.iiiiiiiiii..#
-###############
-
-message Area Secure
-message I'm upholding human rights!
-
-
-
-###############
-#.kkkkkkkkkkk.#
-#lccc.c.c...cj#
-#l....c......j#
-#lc.@ttttt...j#
-#l..@ttt@t...j#
-#l..t@@ttt..cj#
-#lc.@tt@@t..cj#
-#l..@@t@@t...j#
-#l..t@t@tt..cj#
-#lc..c.......j#
-#lc....c.....j#
-#lcc.c.c.c..cj#
-#.iiiiiiiiiii.#
-###############
-
-message Area Secure
-message I'm all out of lines, matey:
-message It's game over for you
 

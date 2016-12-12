@@ -52,10 +52,10 @@ function ARDU_spriteGlyphs(){
 }
 
 function ARDU_levelDat(){
-	var levelDat = `PROGMEM const byte levels[][128] {\n`
-	for (var i=0;i<state.levels.length;i++){
-		var level=state.levels[i]
-		levelDat+="\t{\n\t\t"
+    var levelDat = `PROGMEM const byte levels[][128] {\n`
+    for (var i=0;i<state.levels.length;i++){
+        var level=state.levels[i]
+        levelDat+="\t{\n\t\t"
         var levelw=level.width;
         var levelh=level.height;
         if (levelw>16){
@@ -81,20 +81,20 @@ function ARDU_levelDat(){
             }
         }
 
-		for (var j=0;j<8;j++){            
-			for (var k=0;k<16;k++){
-				var idx = j+8*k
-				levelDat+=centeredLevelGrid[idx]+","
-			}
-			levelDat+="\n"
-			if (j<7){
-				levelDat+="\t\t"
-			}
-		}
-		levelDat+="\t},\n"
-	}
-	levelDat+="};\n"
-	return levelDat
+        for (var j=0;j<8;j++){            
+            for (var k=0;k<16;k++){
+                var idx = j+8*k
+                levelDat+=centeredLevelGrid[idx]+","
+            }
+            levelDat+="\n"
+            if (j<7){
+                levelDat+="\t\t"
+            }
+        }
+        levelDat+="\t},\n"
+    }
+    levelDat+="};\n"
+    return levelDat
 }
 
 function printInt(n,bits){
@@ -176,6 +176,9 @@ function GenerateEllipsisMatchPattern(d,p,depth,flip=false){
                 }
                 tests+=`( ${_cellObjects} & 0b${op.toString(2)} )`;
             }
+            if (movementPresent!==0){
+                tests+=` && ( ${_cellMovements} & ${movementPresent})`;                            
+            }
         }
         if (movementMissing!==0){
             if (tests.length>0){
@@ -217,6 +220,9 @@ function GenerateEllipsisMatchPattern(d,p,depth,flip=false){
                     tests+=" && ";
                 }
                 tests+=`( ${_cellObjects} & 0b${op.toString(2)} )`;
+            }
+            if (movementPresent!==0){
+                tests+=` && ( ${_cellMovements} & ${movementPresent})`;                            
             }
         }
         if (movementMissing!==0){
@@ -264,6 +270,9 @@ function GenerateMatchPattern(d,p,depth){
                     tests+=" && ";
                 }
                 tests+=`( ${_cellObjects} & 0b${op.toString(2)} )`;
+            }
+            if (movementPresent!==0){
+                tests+=` && ( ${_cellMovements} & ${movementPresent})`;                            
             }
         }
         if (movementMissing!==0){
@@ -692,6 +701,8 @@ function ARDU_rulesDat(){
                 result+=test+"\n";
                 depth++;
             }
+
+            result+=indent(`Serial.println(F("${i}_${j}"));`,depth)+"\n";
             for (var k=0;k<matchStrings.length;k++){
                 var [loop,test,replace,post]=matchStrings[k];
                 replace=indent(replace,depth)+"\n"
@@ -824,7 +835,7 @@ function ARDU_winConditionsDat(){
 
 
     for (var i=0;i<state.winconditions.length;i++){
-        outputTxt+="\t{\n"
+        outputTxt+="    {"
         var wc = state.winconditions[i];
         switch (wc[0]){
             case -1:{//NO
@@ -841,13 +852,13 @@ function ARDU_winConditionsDat(){
                 outputTxt+=`
         bool passedTest=false;
         for (byte i=0;i<128;i++){
-            if ( !(level[i]&${wc[1].data[0]}) && !(level[i]&${wc[2].data[0]}) ){
+            if ( (level[i]&${wc[1].data[0]}) && (level[i]&${wc[2].data[0]}) ){
                 passedTest=true;
                 break;
             }
-            if (!passedTest){
-                return;
-            }
+        }        
+        if (!passedTest){
+            return;
         }\n`;
 
                 break;
@@ -862,12 +873,12 @@ function ARDU_winConditionsDat(){
                 break;
             }
         }
-        outputTxt+="\t}\n"    
+        outputTxt+="    }\n"    
     }
 
     outputTxt+=`
-  waiting=true;
-  waitfrom=millis();
+    waiting=true;
+    waitfrom=millis();
 }`;
     return outputTxt;
 }
@@ -875,9 +886,9 @@ function ARDU_winConditionsDat(){
 function exportEmbeddedClick(){
 
 
-	var sourceCode = editor.getValue();
+    var sourceCode = editor.getValue();
 
-	compile("restart");
+    compile("restart");
     
     var outputTxt=`
 enum State {
@@ -917,8 +928,8 @@ bool waiting=false;
     var titleFunction = ARDU_titleFunction();
     outputTxt+=titleFunction+"\n";
 
-	var glyphText = ARDU_spriteGlyphs();
-	outputTxt+=glyphText+"\n";
+    var glyphText = ARDU_spriteGlyphs();
+    outputTxt+=glyphText+"\n";
     
     var levelText = ARDU_levelDat();
     outputTxt+=levelText+"\n";
