@@ -150,12 +150,16 @@ function matchGlyph(inputmask,glyphAndMask) {
 	var highestmask;
 	for (var i=0; i<glyphAndMask.length; ++i) {
 		var glyphname = glyphAndMask[i][0];
-		var glyphmask = glyphAndMask[i][1]
-		//require all bits of glyph to be in input
+		var glyphmask = glyphAndMask[i][1];
+		var glyphbits = glyphAndMask[i][2];
+		//require all bits of mask to be in input
 		if (glyphmask.bitsSetInArray(inputmask.data)) {
 			var bitcount = 0;
 			for (var bit=0;bit<32*STRIDE_OBJ;++bit) {
+				if (glyphbits.get(bit) && inputmask.get(bit))
+					bitcount++;
 				if (glyphmask.get(bit) && inputmask.get(bit))
+					// Assign heigher weight to matched bits not on background layer
 					bitcount++;
 			}
 			if (bitcount>highestbitcount) {
@@ -184,7 +188,7 @@ var htmlEntityMap = {
 var selectableint  = 0;
 
 function printLevel() {
-	var glyphAndMask = [];
+	var glyphMasks = [];
 	for (var glyphName in state.glyphDict) {
 		if (state.glyphDict.hasOwnProperty(glyphName)&&glyphName.length===1) {
 			var glyph = state.glyphDict[glyphName];
@@ -196,19 +200,11 @@ function printLevel() {
 					glyphmask.ibitset(id);
 				}
 			}
-			glyphAndMask.push([glyphName, glyphmask.clone()])
-			//register the same - backgroundmask with the same name
+			var glyphbits = glyphmask.clone();
+			// Do not require bg to match
 			var bgMask = state.layerMasks[state.backgroundlayer];
 			glyphmask.iclear(bgMask);
-			glyphAndMask.push([glyphName, glyphmask.clone()])
-			for (var i=0;i<32;i++) {
-				var bgid = 1<<i;
-				if (bgMask.get(i)) {
-					glyphmask.ibitset(i);
-					glyphAndMask.push([glyphName, glyphmask.clone()]);
-					glyphmask.ibitclear(i);
-				}
-			}
+			glyphMasks.push([glyphName, glyphmask, glyphbits]);
 		}
 	}
 	selectableint++;
@@ -219,7 +215,7 @@ function printLevel() {
 		for (var i=0;i<level.width;i++) {
 			var cellIndex = j+i*level.height;
 			var cellMask = level.getCell(cellIndex);
-			var glyph = matchGlyph(cellMask,glyphAndMask);
+			var glyph = matchGlyph(cellMask,glyphMasks);
 			if (glyph in htmlEntityMap) {
 				glyph = htmlEntityMap[glyph]; 
 			}
@@ -257,7 +253,7 @@ function levelEditorClick(event,click) {
 		}
 
 		var backgroundMask = state.layerMasks[state.backgroundlayer];
-		if (glyphmask.bitsClearInArray(backgroundMask)) {
+		if (glyphmask.bitsClearInArray(backgroundMask.data)) {
 			// If we don't already have a background layer, mix in
 			// the default one.
 			glyphmask.ibitset(state.backgroundid);
