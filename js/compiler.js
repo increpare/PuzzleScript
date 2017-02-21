@@ -650,7 +650,7 @@ function processRuleString(rule, state, curRules)
 					if (curcell.length % 2 == 1) {
 						logError("Error, an item can't move in multiple directions.", lineNumber);
 					} else if (!incellrow) {
-						logWarning("Error, directions should be placed at the start of a rule.", lineNumber);
+						logWarning("Invalid syntax. Directions should be placed at the start of a rule.", lineNumber);
   					} else {
 						curcell.push(token);
 					}
