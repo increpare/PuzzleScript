@@ -330,11 +330,18 @@ function drawMessageScreen() {
 	} else {
 		message = messagetext;
 	}
+	
 	splitMessage = wordwrap(message,titleImage[0].length);
 
-	for (var i=0;i<splitMessage.length;i++) {
+
+	var offset = 5-((splitMessage.length/2)|0);
+	if (offset<0){
+		offset=0;
+	}
+
+	for (var i=0;i<Math.min(splitMessage.length,9);i++) {
 		var m = splitMessage[i];
-		var row = 5-((splitMessage.length/2)|0)+i;
+		var row = offset+i;	
 		var messageLength=m.length;
 		var lmargin = ((width-messageLength)/2)|0;
 		var rmargin = width-messageLength-lmargin;

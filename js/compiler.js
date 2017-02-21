@@ -456,9 +456,15 @@ function levelsToArray(state) {
 			continue;
 		}
 		if (level[0] == '\n') {
+
 			var o = {
 				message: level[1]
 			};
+			splitMessage = wordwrap(o.message,intro_template[0].length);
+			if (splitMessage.length>9){
+				logWarning('Message too long to fit on screen.', level[2]);
+			}
+
 			processedLevels.push(o);
 		} else {
 			var o = levelFromString(state,level);

@@ -1036,7 +1036,7 @@ var codeMirrorFn = function() {
                         {
                             if (stream.match(/\s*message\s*/, true)) {
                                 state.tokenIndex = 1;//1/2 = message/level
-                                var newdat = ['\n', mixedCase.slice(stream.pos).trim()];
+                                var newdat = ['\n', mixedCase.slice(stream.pos).trim(),state.lineNumber];
                                 if (state.levels[state.levels.length - 1].length == 0) {
                                     state.levels.splice(state.levels.length - 1, 0, newdat);
                                 } else {
