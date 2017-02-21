@@ -591,6 +591,10 @@ function setGameState(_state, command, randomseed) {
     switch(command[0]){
     	case "restart":
     	{
+    		if (restarting==true){
+    			logWarning('A "restart" command is being triggered in the "run_rules_on_level_start" section of level creation, which would cause an infinite loop if it was actually triggered, but it's being ignored, so it's not.');
+    			break;
+    		}
 		    winning=false;
 		    timer=0;
 		    titleScreen=true;
@@ -794,9 +798,11 @@ var flickscreen=false;
 var screenwidth=0;
 var screenheight=0;
 
-
 function DoRestart(force) {
-
+	if (restarting===true){
+		return;
+	}
+	restarting=true;
 	if (force!==true && ('norestart' in state.metadata)) {
 		return;
 	}
@@ -816,6 +822,7 @@ function DoRestart(force) {
 	}
 	
 	level.commandQueue=[];
+	restarting=false;
 }
 
 function backupDiffers(){
