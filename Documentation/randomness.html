@@ -61,12 +61,6 @@
 
 <h1>Randomness</h1>
 <p>
-If you want a robot to move in a random direction each turn, do this:
-<p>
-<pre><code><a href="../editor.html?demo=randomrobots" target="puzzleScript_EditorWindow" class="btn btn-default pull-right" ><span class="glyphicon glyphicon-cog"> Edit</span></a>[ Stationary Robot ] -> [randomDir Robot]</code></pre>
-<p>
-<img src="images/randomrobots.gif">
-<p>
 If you want a robot spawnpoint that generates randomly coloured robots, have this in your legend
 <p>
 <pre><code>Robot = RedRobot or GreenRobot or BlueRobot</code></pre>
@@ -85,9 +79,15 @@ If you want to have a rule applied a single time, at random (if possible) do thi
 <p>
 <pre><code>random [ Wall ] -> [ ]</code></pre>
 <p>
-This is also a crafty way to request that a rule only be applied once. : )
+In detail: what it does is - it works not on a single rule but on a rule group - it looks at all possible applications of all rules in that group, and picks one at random.
 <p>
-In detail, what it does is - it works not on a single rule but on a rule group - it looks at all possible applications of all rules in that group, and picks one at random.
+If you want a robot to move in a random direction each turn*, do this:
+<p>
+<pre><code><a href="../editor.html?demo=randomrobots" target="puzzleScript_EditorWindow" class="btn btn-default pull-right" ><span class="glyphicon glyphicon-cog"> Edit</span></a>[ Stationary Robot ] -> [randomDir Robot]</code></pre>
+<p>
+<img src="images/randomrobots.gif">
+<p>
+* WARNING: random object movement is super unfun in most situations. Do not use this if you think it's going to be fun unless you're REALLY sure it's going to be fun. Predictable movement tends to work a lot better in puzzlescript games.  See <a href="../editor.html?demo=leftrightnpcs">this demo</a> for an example of deterministic entity movement.
 <p>
     </div><!-- /.container -->
 

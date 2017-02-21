@@ -158,6 +158,8 @@ Here are the possible options:
 			<dd>Disables the undo key (Z)</dd>
 			<dt>norestart</dt>
 			<dd>Disables the restart key (R)</dd>
+      <dt>realtime_interval</dt> 
+      <dd>The number indicates how long each realtime frame should be.  In the above case, twice a second the game engine will tick, but with no input.  Player input is processed as regular. See <a href="realtime.html">this documentation</a> for more info on making realtime games.</dd>     
 			<dt>require_player_movement</dt>
 			<dd>
 			This is a common requirement in games - if the player doesn't move, cancel the whole move.  This is equivalent, where there's only one player character, to the following:
