@@ -546,7 +546,8 @@ function processRuleString(rule, state, curRules)
 	var origLine = rule[2];
 
 // STEP ONE, TOKENIZE
-	line = line.replace(/\[/g, ' [ ').replace(/\]/g, ' ] ').replace(/\|/g, ' | ').replace(/\-\>/g, ' -> ');
+	line = line.replace(/\[/g, ' [ ').replace(/\]/g, ' ] ').replace(/\|/g, ' | ').replace(/\-\>/g, ' -> ').replace(/\+/g, ' + ');
+	line = line.replace(/\s>/g, ' > ').replace(/\s</g, ' < ').replace(/\s\^/g, ' ^ ');
 	var tokens = line.split(/\s/).filter(function(v) {return v !== ''});
 
 	if (tokens.length == 0) {
@@ -567,6 +568,8 @@ function processRuleString(rule, state, curRules)
 
 	var curcell = null; // [up, cat, down mouse]
 	var curcellrow = []; // [  [up, cat]  [ down, mouse ] ]
+
+	var incellrow = false;
 
 	var appendGroup=false;
 	var rhs = false;
@@ -642,10 +645,13 @@ function processRuleString(rule, state, curRules)
 					if (curcellrow.length > 0) {
 						logError('Error, malformed cell rule - encountered a "["" before previous bracket was closed', lineNumber);
 					}
+					incellrow = true;
 					curcell = [];
 				} else if (reg_directions_only.exec(token)) {
 					if (curcell.length % 2 == 1) {
 						logError("Error, an item can't move in multiple directions.", lineNumber);
+					} else if (!incellrow) {
+						logError("Error, directions should be placed at the start of a rule.", lineNumber);
 					} else {
 						curcell.push(token);
 					}
@@ -674,6 +680,7 @@ function processRuleString(rule, state, curRules)
 						lhs_cells.push(curcellrow);
 					}
 					curcellrow = [];
+					incellrow = false;
 				} else if (token === '->') {
 					if (rhs) {
 						logError('Error, you can only use "->" once in a rule; it\'s used to separate before and after states.', lineNumber);
@@ -683,15 +690,22 @@ function processRuleString(rule, state, curRules)
 						rhs = true;
 					}
 				} else if (state.names.indexOf(token) >= 0) {
-					if (curcell.length % 2 == 0) {
+					if (!incellrow) {
+						logError("Error, object names should only be used within cells (square brackets).", lineNumber);
+					}
+					else if (curcell.length % 2 == 0) {
 						curcell.push('');
 						curcell.push(token);
 					} else if (curcell.length % 2 == 1) {
 						curcell.push(token);
 					}
 				} else if (token==='...') {
-					curcell.push(token);
-					curcell.push(token);
+					if (!incellrow) {
+						logError("Error, ellipses should only be used within cells (square brackets).", lineNumber);
+					} else {
+						curcell.push(token);
+						curcell.push(token);
+					}
 				} else if (commandwords.indexOf(token)>=0) {
 					if (rhs===false) {
 						logError("Commands cannot appear on the left-hand side of the arrow.",lineNumber);

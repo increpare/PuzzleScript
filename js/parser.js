@@ -944,6 +944,16 @@ var codeMirrorFn = function() {
                             stream.next();
                             stream.match(/\s*/, true);
                             return 'BRACKET';
+                        } else if (state.tokenIndex === 1 && stream.match(/\s*[>\^<]\s*/,true)) {
+                            // EXCEPTION: Most directions have to be separated
+                            // from identifiers by whitespace, but not arrows
+                            // ('>', '<', and '^', but not 'v'). So we can
+                            // parse arrows separately if they appear at the
+                            // start of an identifier.
+                            // e.g.     '>cat <dog'
+                            //      NOT '>cat< dog' or '>cat<dog'
+                            stream.match(/\s*/, true);
+                            return 'DIRECTION';
                         } else {
                             var m = stream.match(/[^\[\|\]\s]*/, true)[0].trim();
 
