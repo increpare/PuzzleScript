@@ -160,7 +160,7 @@ function generateTitleScreen()
 	if (titleMode>0){
 		titleSelection=1;
 	}
-	
+
 	if (state.levels.length===0) {
 		titleImage=intro_template;
 		return;
@@ -950,7 +950,7 @@ function repositionEntitiesOnLayer(positionIndex,layer,dirMask)
     	return false;
     }
 
-    var targetIndex = (positionIndex+delta[1]+delta[0]*level.height)%level.n_tiles;
+    var targetIndex = (positionIndex+delta[1]+delta[0]*level.height);
 
     var layerMask = state.layerMasks[layer];
     var targetMask = level.getCellInto(targetIndex,_o7);
@@ -1222,7 +1222,7 @@ Rule.prototype.generateCellRowMatchesFunction = function(cellRow,hasEllipsis)  {
 		}
 		fn += "return "+cellRow[0].generateMatchString('0_');// cellRow[0].matches(i)";
 		for (var cellIndex=1;cellIndex<cr_l;cellIndex++) {
-			fn+="&&cellRow["+cellIndex+"].matches((i+"+cellIndex+"*d)%level.n_tiles)";
+			fn+="&&cellRow["+cellIndex+"].matches((i+"+cellIndex+"*d))";
 		}
 		fn+=";";
 
@@ -1243,15 +1243,15 @@ Rule.prototype.generateCellRowMatchesFunction = function(cellRow,hasEllipsis)  {
 		fn += "if(cellRow[0].matches(i)";
 		var cellIndex=1;
 		for (;cellRow[cellIndex]!==ellipsisPattern;cellIndex++) {
-			fn+="&&cellRow["+cellIndex+"].matches((i+"+cellIndex+"*d)%level.n_tiles)";
+			fn+="&&cellRow["+cellIndex+"].matches((i+"+cellIndex+"*d))";
 		}
 		cellIndex++;
 		fn+=") {\n";
 		fn+="\tfor (var k=kmin;k<kmax;k++) {\n"
-		fn+="\t\tif(cellRow["+cellIndex+"].matches((i+d*(k+"+(cellIndex-1)+"))%level.n_tiles)";
+		fn+="\t\tif(cellRow["+cellIndex+"].matches((i+d*(k+"+(cellIndex-1)+")))";
 		cellIndex++;
 		for (;cellIndex<cr_l;cellIndex++) {
-			fn+="&&cellRow["+cellIndex+"].matches((i+d*(k+"+(cellIndex-1)+"))%level.n_tiles)";			
+			fn+="&&cellRow["+cellIndex+"].matches((i+d*(k+"+(cellIndex-1)+")))";			
 		}
 		fn+="){\n";
 		fn+="\t\t\tresult.push([i,k]);\n";
@@ -1275,7 +1275,7 @@ function cellRowMatchesWildcardFunctionGenerate(direction,cellRow,i, maxk, mink)
 	var matchfirsthalf = cellRow[0].matches(i);
 	if (matchfirsthalf) {
 		for (var k=mink;k<maxk;k++) {
-			if (cellRow[2].matches((i+d*(k+0))%level.n_tiles)) {
+			if (cellRow[2].matches((i+d*(k+0)))) {
 				result.push([i,k]);
 			}
 		}
@@ -1532,7 +1532,7 @@ function DoesCellRowMatchWildCard(direction,cellRow,i,maxk,mink) {
         var targetIndex = i;
 
         for (var j=1;j<cellRow.length;j+=1) {
-            targetIndex = (targetIndex+d1+d0)%level.n_tiles;
+            targetIndex = (targetIndex+d1+d0);
 
             var cellPattern = cellRow[j]
             if (cellPattern === ellipsisPattern) {
@@ -1545,7 +1545,7 @@ function DoesCellRowMatchWildCard(direction,cellRow,i,maxk,mink) {
 					    if (!cellPattern.matches(targetIndex2)) {
 					    	break;
 					    }
-                        targetIndex2 = (targetIndex2+d1+d0)%level.n_tiles;
+                        targetIndex2 = (targetIndex2+d1+d0);
             		}
 
 		            if (j2>=cellRow.length) {
@@ -1583,11 +1583,11 @@ function DoesCellRowMatch(direction,cellRow,i,k) {
 
         var targetIndex = i;
         for (var j=1;j<cr_l;j++) {
-            targetIndex = (targetIndex+d1+d0)%level.n_tiles;
+            targetIndex = (targetIndex+d1+d0);
             cellPattern = cellRow[j];
 			if (cellPattern === ellipsisPattern) {
 					//only for once off verifications
-            	targetIndex = (targetIndex+(d1+d0)*k)%level.n_tiles; 					
+            	targetIndex = (targetIndex+(d1+d0)*k); 					
             }
 		    if (!cellPattern.matches(targetIndex)) {
                 break;
@@ -1870,13 +1870,13 @@ Rule.prototype.applyAt = function(delta,tuple,check) {
 
             if (preCell === ellipsisPattern) {
             	var k = tuple[cellRowIndex][1];
-            	currentIndex = (currentIndex+(d1+d0)*k)%level.n_tiles;
+            	currentIndex = (currentIndex+(d1+d0)*k);
             	continue;
             }
 
             result = preCell.replace(rule, currentIndex) || result;
 
-            currentIndex = (currentIndex+d1+d0)%level.n_tiles;
+            currentIndex = (currentIndex+d1+d0);
         }
     }
 
