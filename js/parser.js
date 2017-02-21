@@ -688,6 +688,25 @@ var codeMirrorFn = function() {
                                 return 'ERROR';
                             }
                             
+                            var foundOthers=[];
+                            for (var i=0;i<ar.length;i++){
+                                var candname = ar[i];
+                                for (var j=0;j<=state.collisionLayers.length-1;j++){
+                                    var clj = state.collisionLayers[j];
+                                    if (clj.indexOf(candname)>=0){
+                                        foundOthers.push(j);
+                                    }
+                                }
+                            }
+                            if (foundOthers.length>0){
+                                var warningStr = 'Object "'+candname.toUpperCase()+'" included in multiple collision layers ( layers ';
+                                for (var i=0;i<foundOthers.length;i++){
+                                    warningStr+=foundOthers[i]+", ";
+                                }
+                                warningStr+=state.collisionLayers.length-1;
+                                logWarning(warningStr +'). You should fix this!',state.lineNumber);                                        
+                            }
+
                             state.collisionLayers[state.collisionLayers.length - 1] = state.collisionLayers[state.collisionLayers.length - 1].concat(ar);
                             if (ar.length>0) {
                             	return 'NAME';                            
