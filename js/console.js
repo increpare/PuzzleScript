@@ -5,10 +5,24 @@ function jumpToLine(i) {
     var editor = code.editorreference;
 
     // editor.getLineHandle does not help as it does not return the reference of line.
-    editor.scrollIntoView(i - 1 - 10);
-    editor.scrollIntoView(i - 1 + 10);
-    editor.scrollIntoView(i - 1);
-    editor.setCursor(i - 1, 0);
+    var ll = editor.doc.lastLine();
+    var low=i-1-10;    
+    var high=i-1+10;    
+    var mid=i-1;
+    if (low<0){
+    	low=0;
+    }
+    if (high>ll){
+    	high=ll;
+    }
+    if (mid>ll){
+    	mid=ll;
+    }
+
+    editor.scrollIntoView(low);
+    editor.scrollIntoView(high);
+    editor.scrollIntoView(mid);
+    editor.setCursor(mid, 0);
 }
 
 var consolecache = [];
