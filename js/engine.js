@@ -562,7 +562,9 @@ function setGameState(_state, command, randomseed) {
 
 	state = _state;
     window.console.log('setting game state :D ');
-    backups=[];
+    if (command[0]!=="rebuild"){
+    	backups=[];
+    }
     //set sprites
     sprites = [];
     for (var n in state.objects) {
