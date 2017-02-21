@@ -1513,7 +1513,7 @@ function rulesToMask(state) {
 					var object_name = cell_r[l + 1];
 
 					if (object_dir==='...') {
-						logError("spooky ellipsis found! (should never hit this)");
+						//logError("spooky ellipsis found! (should never hit this)");
 						break;
 					} else if (object_dir==='random') {
 						if (object_name in state.objectMasks) {
