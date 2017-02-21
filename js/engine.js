@@ -1852,6 +1852,24 @@ Rule.prototype.findMatches = function() {
     return matches;
 };
 
+Rule.prototype.directional = function(){
+	//Check if other rules in its rulegroup with the same line number.
+	for (var i=0;i<state.rules.length;i++){
+		var rg = state.rules[i];
+		var copyCount=0;
+		for (var j=0;j<rg.length;j++){
+			if (this.lineNumber===rg[j].lineNumber){
+				copyCount++;
+			}
+			if (copyCount>1){
+				return true;
+			}
+		}
+	}
+
+    return false;
+}
+
 Rule.prototype.applyAt = function(delta,tuple,check) {
 	var rule = this;
 	//have to double check they apply
@@ -1902,6 +1920,10 @@ Rule.prototype.applyAt = function(delta,tuple,check) {
 
 	if (verbose_logging && result){
 		var ruleDirection = dirMaskName[rule.direction];
+		if (!rule.directional()){
+			ruleDirection="";
+		}
+
 		var logString = '<font color="green">Rule <a onclick="jumpToLine(' + rule.lineNumber + ');"  href="javascript:void(0);">' + rule.lineNumber + '</a> ' + 
 			ruleDirection + ' applied.</font>';
 		consolePrint(logString);
