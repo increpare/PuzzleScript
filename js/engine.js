@@ -485,6 +485,10 @@ function tryPlayEndGameSound() {
 	tryPlaySimpleSound("endgame");
 }
 
+function tryPlayCancelSound() {
+	tryPlaySimpleSound("cancel");
+}
+
 function tryPlayStartLevelSound() {
 	tryPlaySimpleSound("startlevel");
 }
@@ -2266,6 +2270,7 @@ function processInput(dir,dontCheckWin,dontModify) {
 			}
     		backups.push(bak);
     		DoUndo(true,false);
+    		tryPlayCancelSound();
     		return false;
 	    } 
 
