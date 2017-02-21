@@ -690,7 +690,7 @@ function processRuleString(rule, state, curRules)
 					}
 				} else if (state.names.indexOf(token) >= 0) {
 					if (!incellrow) {
- 						logWarning("Error, object names should only be used within cells (square brackets).", lineNumber);
+ 						logWarning("Invalid syntax. Object names should only be used within cells (square brackets).", lineNumber);
  					}
  					else if (curcell.length % 2 == 0) {
 						curcell.push('');
@@ -700,7 +700,7 @@ function processRuleString(rule, state, curRules)
 					}
 				} else if (token==='...') {
 					if (!incellrow) {
- 						logWarning("Error, ellipses should only be used within cells (square brackets).", lineNumber);
+ 						logWarning("Invalid syntax, ellipses should only be used within cells (square brackets).", lineNumber);
  					} else {
  						curcell.push(token);
  						curcell.push(token);
