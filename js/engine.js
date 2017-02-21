@@ -2526,8 +2526,8 @@ function nextLevel() {
 		} else {
 			if (!!window.localStorage) {
 				try{
-					delete localStorage.removeItem(document.URL);
-					delete localStorage.removeItem(document.URL+'_checkpoint');
+					localStorage.removeItem(document.URL);
+					localStorage.removeItem(document.URL+'_checkpoint');
 				} catch(ex){
 					
 				}
