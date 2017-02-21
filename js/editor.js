@@ -134,6 +134,7 @@ function tryLoadGist(id) {
 		} else {
 			var code=result["files"]["script.txt"]["content"];
 			editor.setValue(code);
+			editor.clearHistory();
 			setEditorClean();
 			unloadGame();
 			compile(["restart"],code);
