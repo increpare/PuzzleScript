@@ -648,7 +648,7 @@ function processRuleString(rule, state, curRules)
 					curcell = [];
 				} else if (reg_directions_only.exec(token)) {
 					if (curcell.length % 2 == 1) {
-						logError("Error, an item can't move in multiple directions.", lineNumber);
+						logError("Error, an item can only have one direction/action at a time, but you're looking for several at once!", lineNumber);
 					} else if (!incellrow) {
 						logWarning("Invalid syntax. Directions should be placed at the start of a rule.", lineNumber);
   					} else {
