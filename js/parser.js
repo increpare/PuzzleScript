@@ -906,7 +906,7 @@ var codeMirrorFn = function() {
                 case 'rules':
                     {                    	
                         if (sol) {
-                            var rule = stream.string.replace(/ *\([^)]*\) */g, "");
+                            var rule = reg_notcommentstart.exec(stream.string)[0];
                             state.rules.push([rule, state.lineNumber, mixedCase]);
                             state.tokenIndex = 0;//in rules, records whether bracket has been found or not
                         }
