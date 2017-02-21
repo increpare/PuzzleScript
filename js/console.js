@@ -78,7 +78,10 @@ function consoleCacheDump() {
 			times_repeated = 0;
 		}
 	}
-	
+
+	if (times_repeated > 0) {
+		summarised_message = summarised_message + " (x" + (times_repeated + 1) + ")";
+	}
 
 	addToConsole(summarised_message);
 }
