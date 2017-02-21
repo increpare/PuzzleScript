@@ -452,7 +452,7 @@ var codeMirrorFn = function() {
                             if (match_name == null) {
                                 stream.match(reg_notcommentstart, true);
                                 if (stream.pos>0){                                
-                                    logWarning('Unknown junk in object section (possibly: sprites have to be 5 pixels wide and 5 pixels high exactly).',state.lineNumber);
+                                    logWarning('Unknown junk in object section (possibly: sprites have to be 5 pixels wide and 5 pixels high exactly. Or maybe: the main names for objects have to be words containing only the letters a-z0.9 - if you want to call them something like ",", do it in the legend section).',state.lineNumber);
                                 }
                                 return 'ERROR';
                             } else {
