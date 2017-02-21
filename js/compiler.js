@@ -614,7 +614,7 @@ function processRuleString(rule, state, curRules)
 						}						
 						groupNumber = curRules[curRules.length-1].groupNumber;
 					} else {
-						logError('Two "+"s ("append to previous rule group" symbol)applied to the same rule.',lineNumber);
+						logError('Two "+"s ("append to previous rule group" symbol) applied to the same rule.',lineNumber);
 					}
 				} else if (token in directionaggregates) {
 					directions = directions.concat(directionaggregates[token]);						
@@ -650,7 +650,7 @@ function processRuleString(rule, state, curRules)
 					if (curcell.length % 2 == 1) {
 						logError("Error, an item can't move in multiple directions.", lineNumber);
 					} else if (!incellrow) {
-						logError("Error, directions should be placed at the start of a rule.", lineNumber);
+						logWarning("Error, directions should be placed at the start of a rule.", lineNumber);
   					} else {
 						curcell.push(token);
 					}
@@ -690,7 +690,7 @@ function processRuleString(rule, state, curRules)
 					}
 				} else if (state.names.indexOf(token) >= 0) {
 					if (!incellrow) {
- 						logError("Error, object names should only be used within cells (square brackets).", lineNumber);
+ 						logWarning("Error, object names should only be used within cells (square brackets).", lineNumber);
  					}
  					else if (curcell.length % 2 == 0) {
 						curcell.push('');
@@ -700,7 +700,7 @@ function processRuleString(rule, state, curRules)
 					}
 				} else if (token==='...') {
 					if (!incellrow) {
- 						logError("Error, ellipses should only be used within cells (square brackets).", lineNumber);
+ 						logWarning("Error, ellipses should only be used within cells (square brackets).", lineNumber);
  					} else {
  						curcell.push(token);
  						curcell.push(token);
