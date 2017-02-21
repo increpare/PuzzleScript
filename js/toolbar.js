@@ -188,7 +188,7 @@ function shareClick() {
 
 			var editurl = "editor.html?hack="+id;
 			editurl=qualifyURL(editurl);
-			var sourceCodeLink = "link to source code:<br><a href=\""+editurl+"\">"+editurl+"</a>";
+			var sourceCodeLink = "link to source code:<br><a target=\"_blank\" href=\""+editurl+"\">"+editurl+"</a>";
 
 
 			consolePrint("GitHub submission successful - " + sourceCodeLink,true);
