@@ -542,6 +542,9 @@ function setGameState(_state, command, randomseed) {
     STRIDE_MOV=_state.STRIDE_MOV;
     STRIDE_OBJ=_state.STRIDE_OBJ;
     
+    sfxCreateMask=new BitVec(STRIDE_OBJ);
+    sfxDestroyMask=new BitVec(STRIDE_OBJ);
+
 	if (command===undefined) {
 		command=["restart"];
 	}
@@ -766,6 +769,7 @@ function restoreLevel(lev) {
 	oldflickscreendat=lev.oldflickscreendat.concat([]);
 
 	level.objects = new Int32Array(lev.dat);
+
 	if (level.width !== lev.width || level.height !== lev.height) {
 		level.width = lev.width;
 		level.height = lev.height;
@@ -1808,8 +1812,10 @@ function restorePreservationState(preservationState) {
 	level.movements = new Int32Array(preservationState.movements);
 	level.rigidGroupIndexMask = preservationState.rigidGroupIndexMask.concat([]);
     level.rigidMovementAppliedMask = preservationState.rigidMovementAppliedMask.concat([]);
-    sfxCreateMask=new BitVec(STRIDE_OBJ);
-    sfxDestroyMask=new BitVec(STRIDE_OBJ);
+    
+    sfxCreateMask.setZero();
+    sfxDestroyMask.setZero();
+
 //	rigidBackups = preservationState.rigidBackups;
 }
 
@@ -2112,8 +2118,8 @@ function resolveMovements(dir){
     return doUndo;
 }
 
-var sfxCreateMask=0;
-var sfxDestroyMask=0;
+var sfxCreateMask=null;
+var sfxDestroyMask=null;
 
 function calculateRowColMasks() {
 	for(var i=0;i<level.mapCellContents.length;i++) {
@@ -2196,8 +2202,8 @@ function processInput(dir,dontCheckWin,dontModify) {
         var startRuleGroupIndex=0;
         var rigidloop=false;
         var startState = commitPreservationState();
-	    sfxCreateMask=new BitVec(STRIDE_OBJ);
-	    sfxDestroyMask=new BitVec(STRIDE_OBJ);
+	    sfxCreateMask.setZero();
+	    sfxDestroyMask.setZero();
 
 		seedsToPlay_CanMove=[];
 		seedsToPlay_CantMove=[];
