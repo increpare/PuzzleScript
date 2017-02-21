@@ -157,6 +157,9 @@ function unloadGame() {
 function generateTitleScreen()
 {
 	titleMode=(curlevel>0||curlevelTarget!==null)?1:0;
+	if (titleMode>0){
+		titleSelection=1;
+	}
 	
 	if (state.levels.length===0) {
 		titleImage=intro_template;
