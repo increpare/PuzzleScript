@@ -1813,21 +1813,23 @@ function commitPreservationState(ruleGroupIndex) {
 		movements:new Int32Array(level.movements),
 		rigidGroupIndexMask:level.rigidGroupIndexMask.concat([]),
 		rigidMovementAppliedMask:level.rigidMovementAppliedMask.concat([]),
-		bannedGroup:level.bannedGroup.concat([])
+		bannedGroup:level.bannedGroup.concat([]),
+		commandQueue:level.commandQueue.concat([])
 	};
 	rigidBackups[ruleGroupIndex]=propagationState;
 	return propagationState;
 }
 
-function restorePreservationState(preservationState) {
+function restorePreservationState(preservationState) {;
 //don't need to concat or anythign here, once something is restored it won't be used again.
 	level.objects = new Int32Array(preservationState.objects);
 	level.movements = new Int32Array(preservationState.movements);
 	level.rigidGroupIndexMask = preservationState.rigidGroupIndexMask.concat([]);
     level.rigidMovementAppliedMask = preservationState.rigidMovementAppliedMask.concat([]);
-    
+    level.commandQueue = preservationState.commandQueue.concat([]);
     sfxCreateMask.setZero();
     sfxDestroyMask.setZero();
+	consolePrint("Rigid movement application failed, rolling back");
 
 //	rigidBackups = preservationState.rigidBackups;
 }
