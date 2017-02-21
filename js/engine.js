@@ -2261,8 +2261,8 @@ function processInput(dir,dontCheckWin,dontModify) {
 
 	    if (level.commandQueue.indexOf('cancel')>=0) {	
 	    	if (verbose_logging) { 
-	    		consolePrint('CANCEL command executed, cancelling turn.');
 	    		consoleCacheDump();
+	    		consolePrint('CANCEL command executed, cancelling turn.',true);
 			}
     		backups.push(bak);
     		DoUndo(true,false);
