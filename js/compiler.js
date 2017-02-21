@@ -690,7 +690,7 @@ function processRuleString(rule, state, curRules)
 					}
 				} else if (state.names.indexOf(token) >= 0) {
 					if (!incellrow) {
- 						logWarning("Invalid syntax. Object names should only be used within cells (square brackets).", lineNumber);
+ 						logWarning("Invalid token "+token.toUpperCase() +". Object names should only be used within cells (square brackets).", lineNumber);
  					}
  					else if (curcell.length % 2 == 0) {
 						curcell.push('');
