@@ -526,6 +526,15 @@ function directionalRule(rule) {
 	return false;
 }
 
+function findIndexAfterToken(str,tokens,tokenIndex){
+	var curIndex=0;
+	for (var i=0;i<=tokenIndex;i++){
+		var token = tokens[i];
+		curIndex=str.indexOf(token,curIndex)+token.length;
+	}
+	return curIndex;
+}
+
 function processRuleString(rule, state, curRules) 
 {
 /*
@@ -714,13 +723,10 @@ function processRuleString(rule, state, curRules)
 						logError("Commands cannot appear on the left-hand side of the arrow.",lineNumber);
 					}
 					if (token==='message') {
-						var message_match = origLine.match(/message (.*)/i);
-						if (message_match === null) {
-							logError("invalid message string", lineNumber);
-						} else {
-							commands.push([token, message_match[1].trim()]);
-							i=tokens.length;
-						}
+						var messageIndex = findIndexAfterToken(line,tokens,i);
+						var messageStr = line.substring(messageIndex).trim();
+						commands.push([token, messageStr]);
+						i=tokens.length;
 					} else {
 						commands.push([token]);
 					}
