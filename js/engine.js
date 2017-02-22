@@ -1002,7 +1002,7 @@ function repositionEntitiesOnLayer(positionIndex,layer,dirMask)
 	var rowIndex=(targetIndex%level.height);
     level.colCellContents[colIndex].ior(movingEntities);
     level.rowCellContents[rowIndex].ior(movingEntities);
-    level.mapCellContents.ior(layerMask);
+    level.mapCellContents.ior(movingEntities);
     return true;
 }
 
