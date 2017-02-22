@@ -743,7 +743,7 @@ function RebuildLevelArrays() {
 	level.rowCellContents = [];
 	level.colCellContents = [];
 	level.mapCellContents = new BitVec(STRIDE_OBJ);
-	_movementsVec = new BitVec(STRIDE_MOV);
+	_movementVecs = [new BitVec(STRIDE_MOV),new BitVec(STRIDE_MOV),new BitVec(STRIDE_MOV)];
 
 	_o1 = new BitVec(STRIDE_OBJ);
 	_o2 = new BitVec(STRIDE_OBJ);
@@ -1062,9 +1062,12 @@ Level.prototype.setCell = function(index, vec) {
 	}
 }
 
-var _movementsVec;
-
+var _movementVecs;
+var _movementVecIndex=0;
 Level.prototype.getMovements = function(index) {
+	var _movementsVec=_movementVecs[_movementVecIndex];
+	_movementVecIndex=(_movementVecIndex+1)%_movementVecs.length;
+
 	for (var i=0;i<STRIDE_MOV;i++) {
 		_movementsVec.data[i]=this.movements[index*STRIDE_MOV+i];	
 	}
