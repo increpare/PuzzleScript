@@ -723,8 +723,8 @@ function processRuleString(rule, state, curRules)
 						logError("Commands cannot appear on the left-hand side of the arrow.",lineNumber);
 					}
 					if (token==='message') {
-						var messageIndex = findIndexAfterToken(line,tokens,i);
-						var messageStr = line.substring(messageIndex).trim();
+						var messageIndex = findIndexAfterToken(origLine,tokens,i);
+						var messageStr = origLine.substring(messageIndex).trim();
 						commands.push([token, messageStr]);
 						i=tokens.length;
 					} else {
