@@ -725,6 +725,10 @@ function processRuleString(rule, state, curRules)
 					if (token==='message') {
 						var messageIndex = findIndexAfterToken(origLine,tokens,i);
 						var messageStr = origLine.substring(messageIndex).trim();
+						if (messageStr===""){
+							messageStr=" ";
+							//needs to be nonempty or the system gets confused and thinks it's a whole level message rather than an interstitial.
+						}
 						commands.push([token, messageStr]);
 						i=tokens.length;
 					} else {
