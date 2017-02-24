@@ -224,7 +224,7 @@ function printLevel() {
 			output=output+"<br>";
 		}
 	}
-	output+="</span><br>"
+	output+="</span><br><br>"
 	consolePrint(output,true);
 }
 
@@ -568,6 +568,9 @@ function checkKey(e,justPressed) {
         	if (canOpenEditor) {
         		if (justPressed) {
         			levelEditorOpened=!levelEditorOpened;
+        			if (levelEditorOpened===false){
+        				printLevel();
+        			}
         			restartTarget=backupLevel();
         			canvasResize();
         		}
