@@ -2552,6 +2552,10 @@ function anyMovements() {
 function nextLevel() {
     againing=false;
 	messagetext="";
+	if (state && state.levels && (curlevel>state.levels.length) ){
+		curlevel=state.levels.length-1;
+	}
+	
 	if (titleScreen) {
 		if (titleSelection===0) {
 			//new game
