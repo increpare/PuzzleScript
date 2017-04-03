@@ -1,4 +1,5 @@
 var unitTesting=false;
+var testsAutoAdvanceLevel=true;
 var curlevel=0;
 var curlevelTarget=null;
 var hasUsedCheckpoint=false;
