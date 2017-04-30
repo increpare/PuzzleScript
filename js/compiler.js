@@ -2203,12 +2203,12 @@ function generateSoundData(state) {
 
 		if (soundEvents.indexOf(sound[0])>=0) {
 			if (sound.length>4) {
-				logError("too much stuff to define a sound event",lineNumber);
+				logError("too much stuff to define a sound event.",lineNumber);
 			}
 			var seed = sound[1];
 			if (validSeed(seed)) {
 				if (sfx_Events[sound[0]]!==undefined){
-					logError(sound[0].toUpperCase()+" already declared.",lineNumber);				
+					logWarning(sound[0].toUpperCase()+" already declared.",lineNumber);				
 				} 
 				sfx_Events[sound[0]]=sound[1];
 			} else {
