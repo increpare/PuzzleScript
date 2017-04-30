@@ -527,6 +527,7 @@ function directionalRule(rule) {
 }
 
 function findIndexAfterToken(str,tokens,tokenIndex){
+	str=str.toLowerCase();
 	var curIndex=0;
 	for (var i=0;i<=tokenIndex;i++){
 		var token = tokens[i];
