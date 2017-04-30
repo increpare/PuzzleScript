@@ -461,7 +461,7 @@ function levelsToArray(state) {
 				message: level[1]
 			};
 			splitMessage = wordwrap(o.message,intro_template[0].length);
-			if (splitMessage.length>9){
+			if (splitMessage.length>12){
 				logWarning('Message too long to fit on screen.', level[2]);
 			}
 

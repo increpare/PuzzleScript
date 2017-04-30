@@ -321,6 +321,11 @@ function drawMessageScreen() {
 		titleImage[i]=titleImage[i].replace(/\./g, ' ');
 	}
 
+	var emptyLineStr = titleImage[9];
+	var xToContinueStr = titleImage[10];
+
+	titleImage[10]=emptyLineStr;
+
 	var width = titleImage[0].length;
 
 	var message;
@@ -339,7 +344,8 @@ function drawMessageScreen() {
 		offset=0;
 	}
 
-	for (var i=0;i<Math.min(splitMessage.length,9);i++) {
+	var count = Math.min(splitMessage.length,12);
+	for (var i=0;i<count;i++) {
 		var m = splitMessage[i];
 		var row = offset+i;	
 		var messageLength=m.length;
@@ -350,8 +356,17 @@ function drawMessageScreen() {
 	}
 
 	if (quittingMessageScreen) {
-		titleImage[10]=titleImage[9];
-	}		
+		titleImage[10]=emptyLineStr;
+	} else {
+		if (count<10){
+			titleImage[10]=xToContinueStr;
+		} else if (count<12) {
+			titleImage[count+1]=xToContinueStr;
+		} else {
+			titleImage[count]=xToContinueStr;
+		}
+	}
+	
 	canvasResize();
 }
 
