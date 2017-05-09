@@ -958,7 +958,7 @@ var codeMirrorFn = function() {
                             } else {
                                 if (state.names.indexOf(m) >= 0) {
                                     if (sol) {
-                                        logError('Identifiers cannot appear outside of square brackes in rules, only directions can.', state.lineNumber);
+                                        logError('Identifiers cannot appear outside of square brackets in rules, only directions can.', state.lineNumber);
                                         return 'ERROR';
                                     } else {
                                         stream.match(/\s*/, true);
