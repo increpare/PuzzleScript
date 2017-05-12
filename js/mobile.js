@@ -664,7 +664,7 @@ Mobile.debugDot = function (event) {
     proto.isAudioSupported = function () {
         var isAudioSupported = true;
 
-        if (webkitAudioContext) {
+        if (typeof webkitAudioContext !== 'undefined') {
             // We may be on Mobile Safari, which throws up
             // 'Operation not Supported' alerts when we attempt to
             // play Audio elements with "data:audio/wav;base64"
