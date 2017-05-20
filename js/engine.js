@@ -417,6 +417,7 @@ function loadLevelFromLevelDat(state,leveldat,randomseed) {
 	    restartTarget=backupLevel();
 		keybuffer=[];
 
+	    keybuffer=[];
 	    if ('run_rules_on_level_start' in state.metadata) {
 			processInput(-1,true);
 	    }
