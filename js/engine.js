@@ -355,16 +355,18 @@ function drawMessageScreen() {
 		titleImage[row]=rowtext.slice(0,lmargin)+m+rowtext.slice(lmargin+m.length);		
 	}
 
+        var endPos = 10;
+        if (count>=10) {
+            if (count<12){
+                endPos = count + 1;
+            } else {
+                endPos = 12;
+            }
+        }
 	if (quittingMessageScreen) {
-		titleImage[10]=emptyLineStr;
+		titleImage[endPos]=emptyLineStr;
 	} else {
-		if (count<10){
-			titleImage[10]=xToContinueStr;
-		} else if (count<12) {
-			titleImage[count+1]=xToContinueStr;
-		} else {
-			titleImage[count]=xToContinueStr;
-		}
+                titleImage[endPos]=xToContinueStr;
 	}
 	
 	canvasResize();
