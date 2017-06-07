@@ -2400,7 +2400,9 @@ function processInput(dir,dontCheckWin,dontModify) {
 				if (command==='message') {
 					showTempMessage();
 				}
-			}
+			} else {
+                            messagetext = "";
+                        }
 	    }
 
 	    if (textMode===false && (dontCheckWin===undefined ||dontCheckWin===false)) {
