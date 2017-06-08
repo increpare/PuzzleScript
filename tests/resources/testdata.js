@@ -492,6 +492,10 @@ var testdata = [
 	[
 		"Rigid weirdness test (#369)",
 		["title Rigid Clothes\nauthor ThatScar\n\nverbose_logging\ndebug\n\n========\nOBJECTS\n========\n\nBackground .\nLightGreen Green\n11111\n01111\n11101\n11111\n10111\n\nPlayer \nBlack Orange\n.000.\n.111.\n11111\n.111.\n.1.1.\n\nSumo A\nPink White\n..0..\n00000\n.000.\n.111.\n.0.0.\n\nShirt T\nWhite\n.....\n.....\n00000\n.000.\n.....\n\nPants U\nBlue\n.....\n.....\n.....\n.000.\n.0.0.\n\n=======\nLEGEND\n=======\n\nClothes = Shirt or Pants\nP = Player and Shirt and Pants\n\n=======\nSOUNDS\n=======\n\nplayer action 1232\n\n================\nCOLLISIONLAYERS\n================\n\nBackground\nPlayer, Sumo\nShirt\nPants\n\n======\nRULES\n======\n\n[ Parallel Player | Sumo ] -> [ Parallel Player | Parallel Sumo ]\n\nRigid [ Moving Player Clothes ] -> [ Moving Player Moving Clothes ]\n\n==============\nWINCONDITIONS\n==============\n\n=======\nLEVELS\n=======\n\nPA.\n\n",[3],"background:0,background pants player shirt:1,background sumo:2,\n",0,"1487773403601.2908"]
-	]
+	],
+        [
+                "Synonym confusion",
+                ["title Simple Block Pushing Game\nauthor Stephen Lavelle\nhomepage www.puzzlescript.net\n\n========\nOBJECTS\n========\n\nBackground\nRed\n\nPlayer\nOrange\n\nFloorB2\nYellow\n\nFloorB1\nGreen\n\nFloorMain\nBlue\n\n=======\nLEGEND\n=======\n\nFloorB2AndDown = FloorB2\nFloorB1AndDown = FloorB1 and FloorB2AndDown\nFloorMainAndDown = FloorMain and FloorB1AndDown\n\n. = Background\nP = Player\n\n=======\nSOUNDS\n=======\n\n================\nCOLLISIONLAYERS\n================\n\nBackground\nFloorB2\nFloorB1\nFloorMain, Player\n\n======\nRULES\n======\n\n==============\nWINCONDITIONS\n==============\n\nno Player\n\n=======\nLEVELS\n=======\n\n...\n..P\n",[1],"background:0,0,0,\nbackground player:1,0,0,\n",0,"1496933845000"]
+        ]
 ];
 
