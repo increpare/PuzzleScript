@@ -737,11 +737,13 @@ var codeMirrorFn = function() {
 	                            }
                                 if (splits.indexOf(candname, 2)>=2) {
                                     logError("You can't define object " + candname.toUpperCase() + " in terms of itself!", state.lineNumber);
+                                    ok = false;
                                 }
                                 checkNameNew(state,candname);
                         	}
 
-                            if (splits.length < 3) {
+                            if (!ok) {
+                            } else if (splits.length < 3) {
                                 ok = false;
                             } else if (splits[1] !== '=') {
                                 ok = false;
