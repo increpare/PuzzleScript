@@ -1513,6 +1513,7 @@ function rulesToMask(state) {
 
 				var cell_r = cellrow_r[k];
 				var layersUsed_r = layerTemplate.concat([]);
+				var layersUsedRand_r = layerTemplate.concat([]);
 
 				var objectsClear = new BitVec(STRIDE_OBJ);
 				var objectsSet = new BitVec(STRIDE_OBJ);
@@ -1532,8 +1533,25 @@ function rulesToMask(state) {
 						break;
 					} else if (object_dir==='random') {
 						if (object_name in state.objectMasks) {
-							var mask = state.objectMasks[object_name];    
-							randomMask_r.ior(mask);                      
+							var mask = state.objectMasks[object_name];
+							randomMask_r.ior(mask);
+							var values;
+							if (state.propertiesDict.hasOwnProperty(object_name)) {
+								values = state.propertiesDict[object_name];
+							} else {
+								values = [object_name];
+							}
+							for (var m = 0; m < values.length; m++) {
+								var subobject = values[m];
+								var layerIndex = state.objects[subobject].layer|0;
+								var existingname = layersUsed_r[layerIndex];
+								if (existingname !== null) {
+									logError('Rule matches object types that can\'t overlap: "' + subobject.toUpperCase() + '" and "' + existingname.toUpperCase() + '".', rule.lineNumber);
+								}
+
+								layersUsedRand_r[layerIndex] = subobject;
+							}
+
 						} else {
 							logError('You want to spawn a random "'+object_name.toUpperCase()+'", but I don\'t know how to do that',rule.lineNumber);
 						}
@@ -1553,6 +1571,9 @@ function rulesToMask(state) {
 						objectsClear.ior(objectMask);
 					} else {
 						var existingname = layersUsed_r[layerIndex];
+						if (existingname === null) {
+							existingname = layersUsedRand_r[layerIndex];
+						}
 						if (existingname !== null) {
 							logError('Rule matches object types that can\'t overlap: "' + object_name.toUpperCase() + '" and "' + existingname.toUpperCase() + '".', rule.lineNumber);
 						}
