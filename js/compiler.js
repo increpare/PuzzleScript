@@ -1537,19 +1537,19 @@ function rulesToMask(state) {
 							randomMask_r.ior(mask);
 							var values;
 							if (state.propertiesDict.hasOwnProperty(object_name)) {
-							    values = state.propertiesDict[object_name];
+								values = state.propertiesDict[object_name];
 							} else {
-							    values = [object_name];
+								values = [object_name];
 							}
 							for (var m = 0; m < values.length; m++) {
-							    var subobject = values[m];
-							    var layerIndex = state.objects[subobject].layer|0;
-							    var existingname = layersUsed_r[layerIndex];
-							    if (existingname !== null) {
-								logError('Rule matches object types that can\'t overlap: "' + subobject.toUpperCase() + '" and "' + existingname.toUpperCase() + '".', rule.lineNumber);
-							    }
+								var subobject = values[m];
+								var layerIndex = state.objects[subobject].layer|0;
+								var existingname = layersUsed_r[layerIndex];
+								if (existingname !== null) {
+									logError('Rule matches object types that can\'t overlap: "' + subobject.toUpperCase() + '" and "' + existingname.toUpperCase() + '".', rule.lineNumber);
+								}
 
-							    layersUsedRand_r[layerIndex] = subobject;
+								layersUsedRand_r[layerIndex] = subobject;
 							}
 
 						} else {
@@ -1572,7 +1572,7 @@ function rulesToMask(state) {
 					} else {
 						var existingname = layersUsed_r[layerIndex];
 						if (existingname === null) {
-						    existingname = layersUsedRand_r[layerIndex];
+							existingname = layersUsedRand_r[layerIndex];
 						}
 						if (existingname !== null) {
 							logError('Rule matches object types that can\'t overlap: "' + object_name.toUpperCase() + '" and "' + existingname.toUpperCase() + '".', rule.lineNumber);

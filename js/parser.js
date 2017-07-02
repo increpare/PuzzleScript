@@ -651,7 +651,7 @@ var codeMirrorFn = function() {
                                 for (var i=0;i<state.legend_synonyms.length;i++) {
                                     var a = state.legend_synonyms[i];
                                     if (a[0]===n) {           
-                                        return substitutor(a[1]);         
+                                        return substitutor(a[1]);
                                     }
                                 }
 
@@ -769,7 +769,7 @@ var codeMirrorFn = function() {
 	                                	for (var i=0;i<state.legend_synonyms.length;i++) {
 	                                		var a = state.legend_synonyms[i];
 	                                		if (a[0]===n) {   
-	                                			return substitutor(a[1]);        
+	                                			return substitutor(a[1]);
 	                                		}
 	                                	}
 	                                	for (var i=0;i<state.legend_aggregates.length;i++) {
@@ -814,7 +814,7 @@ var codeMirrorFn = function() {
 	                                	for (var i=0;i<state.legend_synonyms.length;i++) {
 	                                		var a = state.legend_synonyms[i];
 	                                		if (a[0]===n) {   
-	                                			return substitutor(a[1]);        
+	                                			return substitutor(a[1]);
 	                                		}
 	                                	}
 	                                	for (var i=0;i<state.legend_aggregates.length;i++) {

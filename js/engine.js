@@ -355,18 +355,18 @@ function drawMessageScreen() {
 		titleImage[row]=rowtext.slice(0,lmargin)+m+rowtext.slice(lmargin+m.length);		
 	}
 
-        var endPos = 10;
-        if (count>=10) {
-            if (count<12){
-                endPos = count + 1;
-            } else {
-                endPos = 12;
-            }
+	var endPos = 10;
+	if (count>=10) {
+		if (count<12){
+			endPos = count + 1;
+		} else {
+			endPos = 12;
+		}
         }
 	if (quittingMessageScreen) {
 		titleImage[endPos]=emptyLineStr;
 	} else {
-                titleImage[endPos]=xToContinueStr;
+		titleImage[endPos]=xToContinueStr;
 	}
 	
 	canvasResize();
@@ -2401,8 +2401,8 @@ function processInput(dir,dontCheckWin,dontModify) {
 					showTempMessage();
 				}
 			} else {
-                            messagetext = "";
-                        }
+				messagetext = "";
+			}
 	    }
 
 	    if (textMode===false && (dontCheckWin===undefined ||dontCheckWin===false)) {
