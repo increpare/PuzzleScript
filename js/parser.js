@@ -838,7 +838,7 @@ var codeMirrorFn = function() {
                                         }
                                     }
                                     if (ok) {
-                                        var newlegend = [splits[0], splits[2].toLowerCase(), splits[4].toLowerCase()];
+                                        var newlegend = [splits[0]].concat(substitutor(splits[2])).concat(substitutor(splits[4]));
                                         for (var i = 6; i < splits.length; i += 2) {
                                             newlegend.push(splits[i].toLowerCase());
                                         }
