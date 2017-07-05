@@ -317,25 +317,45 @@
 		var analyzePixels = function analyzePixels()/*void*/
 		{
 		    
-			var len/*int*/ = pixels.length;
+		    var len/*int*/ = pixels.length;
 		    var nPix/*int*/ = len / 3;
 		    indexedPixels = [];
-		    var nq/*NeuQuant*/ = new NeuQuant(pixels, len, sample);
-		    // initialize quantizer
-		    colorTab = nq.process(); // create reduced palette
-		    // map image pixels to new palette
-		    var k/*int*/ = 0;
-		    for (var j/*int*/ = 0; j < nPix; j++) {
-		      var index/*int*/ = nq.map(pixels[k++] & 0xff, pixels[k++] & 0xff, pixels[k++] & 0xff);
-		      usedEntry[index] = true;
-		      indexedPixels[j] = index;
+		    var initColorTab = new Set();
+		    var k = 0;
+		    for (var j = 0; j < nPix; j++) {
+			initColorTab.add(((pixels[k++] & 0xff) << 16) + ((pixels[k++] & 0xff) << 8) + (pixels[k++] & 0xff));
+			if (initColorTab.length > 256)
+			    break;
+		    }
+		    if (initColorTab.length > 256) {
+			palSize = 7;
+			var nq/*NeuQuant*/ = new NeuQuant(pixels, len, sample);
+			// initialize quantizer
+			colorTab = nq.process(); // create reduced palette
+			// map image pixels to new palette
+			k/*int*/ = 0;
+			for (var j/*int*/ = 0; j < nPix; j++) {
+			    var index/*int*/ = nq.map(pixels[k++] & 0xff, pixels[k++] & 0xff, pixels[k++] & 0xff);
+			    usedEntry[index] = true;
+			    indexedPixels[j] = index;
+			}
+		    } else {
+			colorTab = Array.from(initColorTab);
+			k = 0;
+			for (var j/*int*/ = 0; j < nPix; j++) {
+			    var index/*int*/ = colorTab.indexOf(((pixels[k++] & 0xff) << 16) + ((pixels[k++] & 0xff) << 8) + (pixels[k++] & 0xff));
+			    usedEntry[index] = true;
+			    indexedPixels[j] = index;
+			}
+			var doConcat = function doConcat(prev, curr, cIndex, cArray) { return prev.concat((curr >>> 16),(curr >>> 8) & 0xff,curr & 0xff); }
+			colorTab = colorTab.reduce(doConcat, []);
+			palSize = Math.ceil(Math.log2(colorTab.length / 3)) - 1;
 		    }
 		    pixels = null;
 		    colorDepth = 8;
-		    palSize = 7;
 		    // get closest match to transparent color if specified
 		    if (transparent != null) {
-		      transIndex = findClosest(transparent);
+			transIndex = findClosest(transparent);
 		    }
 		}
 		
@@ -508,7 +528,7 @@
 		var writePalette = function writePalette()/*void*/
 		{
 		    out.writeBytes(colorTab);
-		    var n/*int*/ = (3 * 256) - colorTab.length;
+		    var n/*int*/ = (3 * Math.pow(2,palSize+1)) - colorTab.length;
 		    for (var i/*int*/ = 0; i < n; i++) out.writeByte(0);
 			
 		}

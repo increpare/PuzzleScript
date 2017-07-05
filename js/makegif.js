@@ -63,4 +63,6 @@ function makeGIF() {
   	window.open(dat);
   	
   	unitTesting = false;
+
+        inputHistory = inputDat;
 }

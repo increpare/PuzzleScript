@@ -759,7 +759,7 @@ function processRuleString(rule, state, curRules)
 				logError('In a rule, each pattern to match on the left must have a corresponding pattern on the right of equal length (number of cells).', lineNumber);
 			}
 			if (lhs_cells[i].length == 0) {
-				logError("You have an totally empty pattern on the left-hand side.  This will match *everything*.  You certianly don't want this.");
+				logError("You have an totally empty pattern on the left-hand side.  This will match *everything*.  You certainly don't want this.");
 			}
 		}
 	}
@@ -1559,6 +1559,7 @@ function rulesToMask(state) {
  
  								layersUsedRand_r[layerIndex] = subobject;
  							}                      
+
 						} else {
 							logError('You want to spawn a random "'+object_name.toUpperCase()+'", but I don\'t know how to do that',rule.lineNumber);
 						}
@@ -2263,7 +2264,7 @@ function generateSoundData(state) {
 			var seed = sound[sound.length-2];
 
 			if (target in state.aggregatesDict) {
-				logError('cannot assign sound fevents to aggregate objects (declared with "and"), only to regular objects, or properties, things defined in terms of "or" ("'+target+'").',lineNumber);
+				logError('cannot assign sound events to aggregate objects (declared with "and"), only to regular objects, or properties, things defined in terms of "or" ("'+target+'").',lineNumber);
 			}
 			else if (target in state.objectMasks) {
 
