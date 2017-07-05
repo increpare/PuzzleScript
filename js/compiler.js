@@ -204,12 +204,16 @@ function generateExtraMembers(state) {
                     } else {
                     	if (o.layer===undefined) {
                     		logError('Object "' + n.toUpperCase() + '" has been defined, but not assigned to a layer.',dat.lineNumber);
-                    	} else {                    		
-	                        logError(
-	                            'Trying to create an aggregate object (defined in the legend) with both "'
-	                            + n.toUpperCase() + '" and "' + state.idDict[mask[o.layer]].toUpperCase() + '", which are on the same layer and therefore can\'t coexist.',
-	                            dat.lineNumber
-	                            );
+                    	} else {
+                    		var n1 = n.toUpperCase();
+                    		var n2 = state.idDict[mask[o.layer]].toUpperCase();
+                    		if (n1!==n2){
+		                        logError(
+		                            'Trying to create an aggregate object (defined in the legend) with both "'
+		                            + n1 + '" and "' + n2 + '", which are on the same layer and therefore can\'t coexist.',
+		                            dat.lineNumber
+		                            );
+		                    }
 	                    }
                     }
                 }

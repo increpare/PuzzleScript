@@ -496,6 +496,10 @@ var testdata = [
 	[
 		"Synonym confusion",
 		["title Simple Block Pushing Game\nauthor Stephen Lavelle\nhomepage www.puzzlescript.net\n\n========\nOBJECTS\n========\n\nBackground\nRed\n\nPlayer\nOrange\n\nFloorB2\nYellow\n\nFloorB1\nGreen\n\nFloorMain\nBlue\n\n=======\nLEGEND\n=======\n\nFloorB2AndDown = FloorB2\nFloorB1AndDown = FloorB1 and FloorB2AndDown\nFloorMainAndDown = FloorMain and FloorB1AndDown\n\n. = Background\nP = Player\n\n=======\nSOUNDS\n=======\n\n================\nCOLLISIONLAYERS\n================\n\nBackground\nFloorB2\nFloorB1\nFloorMain, Player\n\n======\nRULES\n======\n\n==============\nWINCONDITIONS\n==============\n\nno Player\n\n=======\nLEVELS\n=======\n\n...\n..P\n",[1],"background:0,0,0,\nbackground player:1,0,0,\n",0,"1496933845000"]
+	],
+	[
+		"a = b and b #393",
+		["title Simple Block Pushing Game\nauthor Stephen Lavelle\nhomepage www.puzzlescript.net\n\n========\nOBJECTS\n========\n\nBackground\nLIGHTGREEN GREEN\n11111\n01111\n11101\n11111\n10111\n\n\nTarget\nDarkBlue\n.....\n.000.\n.0.0.\n.000.\n.....\n\nWall\nBROWN DARKBROWN\n00010\n11111\n01000\n11111\n00010\n\nPlayer\nBlack Orange White Blue\n.000.\n.111.\n22222\n.333.\n.3.3.\n\nCrate\nOrange Yellow\n00000\n0...0\n0...0\n0...0\n00000\n\n\n=======\nLEGEND\n=======\n\n. = Background\n# = Wall\nP = Player\n* = Crate\nO = Target\n\nab = crate\n@ = ab and crate\n\n=======\nSOUNDS\n=======\n\nCrate MOVE 36772507\n\n================\nCOLLISIONLAYERS\n================\n\nBackground\nTarget\nPlayer, Wall, Crate\n\n\n======\nRULES\n======\n\n[ > Player | Crate ] -> [ > Player | > Crate ]\n\n==============\nWINCONDITIONS\n==============\n\nAll Target on Crate\n\n=======\nLEVELS\n=======\n\n\n####..\n#.O#..\n#..###\n#@P..#\n#..*.#\n#..###\n####..\n\n\n######\n#....#\n#.#P.#\n#.*@.#\n#.O@.#\n#....#\n######\n\n",[0,2,2,1,0],"background wall:0,0,0,0,0,0,\n0,0,background:1,background crate:2,background player:3,1,\n1,0,0,background target:4,1,1,\n1,1,0,0,0,0,\n1,2,0,0,1,1,\n0,1,1,0,1,1,\n1,0,0,0,0,1,\n",0,"1499256887390.9216"]
 	]
 ];
 
