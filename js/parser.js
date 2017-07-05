@@ -651,7 +651,7 @@ var codeMirrorFn = function() {
                                 for (var i=0;i<state.legend_synonyms.length;i++) {
                                     var a = state.legend_synonyms[i];
                                     if (a[0]===n) {           
-                                        return [a[1]];         
+                                        return substitutor(a[1]);
                                     }
                                 }
 
@@ -767,7 +767,7 @@ var codeMirrorFn = function() {
 	                                	for (var i=0;i<state.legend_synonyms.length;i++) {
 	                                		var a = state.legend_synonyms[i];
 	                                		if (a[0]===n) {   
-	                                			return [1];        
+	                                			return substitutor(a[1]);
 	                                		}
 	                                	}
 	                                	for (var i=0;i<state.legend_aggregates.length;i++) {
@@ -812,7 +812,7 @@ var codeMirrorFn = function() {
 	                                	for (var i=0;i<state.legend_synonyms.length;i++) {
 	                                		var a = state.legend_synonyms[i];
 	                                		if (a[0]===n) {   
-	                                			return [1];        
+	                                			return substitutor(a[1]);
 	                                		}
 	                                	}
 	                                	for (var i=0;i<state.legend_aggregates.length;i++) {
@@ -838,7 +838,7 @@ var codeMirrorFn = function() {
                                         }
                                     }
                                     if (ok) {
-                                        var newlegend = [splits[0], splits[2].toLowerCase(), splits[4].toLowerCase()];
+                                        var newlegend = [splits[0]].concat(substitutor(splits[2])).concat(substitutor(splits[4]));
                                         for (var i = 6; i < splits.length; i += 2) {
                                             newlegend.push(splits[i].toLowerCase());
                                         }
