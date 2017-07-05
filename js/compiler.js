@@ -1552,8 +1552,8 @@ function rulesToMask(state) {
  								if (existingname !== null) {
  									var o1 = subobject.toUpperCase();
  									var o2 = existingname.toUpperCase();
- 									if (o1!==o2){
- 										logWarning(`This rule may try to spawn a ${o1} with random, but also requires a ${o2} be here, which is on the same layer - they shouldn't be able to coexist!`, rule.lineNumber); 									
+ 									if (o1!==o2) {
+ 										logWarning("This rule may try to spawn a "+o1+" with random, but also requires a "+o2+" be here, which is on the same layer - they shouldn't be able to coexist!", rule.lineNumber); 									
  									}
  								}
  
