@@ -355,16 +355,18 @@ function drawMessageScreen() {
 		titleImage[row]=rowtext.slice(0,lmargin)+m+rowtext.slice(lmargin+m.length);		
 	}
 
-	if (quittingMessageScreen) {
-		titleImage[10]=emptyLineStr;
-	} else {
-		if (count<10){
-			titleImage[10]=xToContinueStr;
-		} else if (count<12) {
-			titleImage[count+1]=xToContinueStr;
+	var endPos = 10;
+	if (count>=10) {
+		if (count<12){
+			endPos = count + 1;
 		} else {
-			titleImage[count]=xToContinueStr;
+			endPos = 12;
 		}
+        }
+	if (quittingMessageScreen) {
+		titleImage[endPos]=emptyLineStr;
+	} else {
+		titleImage[endPos]=xToContinueStr;
 	}
 	
 	canvasResize();
@@ -386,6 +388,7 @@ function loadLevelFromLevelDat(state,leveldat,randomseed) {
     againing=false;
     if (leveldat===undefined) {
     	consolePrint("Trying to access a level that doesn't exist.",true);
+	goToTitleScreen();
     	return;
     }
     if (leveldat.message===undefined) {
@@ -449,7 +452,7 @@ function loadLevelFromState(state,levelindex,randomseed) {
     var leveldat = state.levels[levelindex];    
 	curlevel=levelindex;
 	curlevelTarget=null;
-    if (leveldat.message===undefined) {
+    if (leveldat!==undefined && leveldat.message===undefined) {
 	    if (levelindex=== 0){ 
 			tryPlayStartLevelSound();
 		} else {
@@ -575,7 +578,7 @@ function setGameState(_state, command, randomseed) {
 	if (command===undefined) {
 		command=["restart"];
 	}
-	if (state.levels.length===0 && command.length>0 && command[0]==="rebuild")  {
+	if ((state.levels.length===0 || _state.levels.length===0) && command.length>0 && command[0]==="rebuild")  {
 		command=["restart"];
 	}
 	if (randomseed===undefined) {
@@ -584,6 +587,7 @@ function setGameState(_state, command, randomseed) {
 	RandomGen = new RNG(randomseed);
 
 	state = _state;
+
     window.console.log('setting game state :D ');
     if (command[0]!=="rebuild"){
     	backups=[];
@@ -2321,6 +2325,7 @@ function processInput(dir,dontCheckWin,dontModify) {
 	    		consolePrint('CANCEL command executed, cancelling turn.',true);
 			}
     		backups.push(bak);
+		messagetext = "";
     		DoUndo(true,false);
     		tryPlayCancelSound();
     		return false;
@@ -2332,6 +2337,7 @@ function processInput(dir,dontCheckWin,dontModify) {
 	    		consoleCacheDump();
 			}
     		backups.push(bak);
+		messagetext = "";
 	    	DoRestart(true);
     		return true;
 	    } 
@@ -2398,6 +2404,8 @@ function processInput(dir,dontCheckWin,dontModify) {
 				if (command==='message') {
 					showTempMessage();
 				}
+			} else {
+				messagetext = "";
 			}
 	    }
 
