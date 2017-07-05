@@ -694,7 +694,9 @@ var codeMirrorFn = function() {
                                 for (var j=0;j<=state.collisionLayers.length-1;j++){
                                     var clj = state.collisionLayers[j];
                                     if (clj.indexOf(candname)>=0){
-                                        foundOthers.push(j);
+                                        if (j!=state.collisionLayers.length-1){
+                                            foundOthers.push(j);
+                                        }
                                     }
                                 }
                             }
