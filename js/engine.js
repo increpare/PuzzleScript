@@ -2325,7 +2325,7 @@ function processInput(dir,dontCheckWin,dontModify) {
 	    		consolePrint('CANCEL command executed, cancelling turn.',true);
 			}
     		backups.push(bak);
-		messagetext = "";
+			messagetext = "";
     		DoUndo(true,false);
     		tryPlayCancelSound();
     		return false;
@@ -2337,7 +2337,7 @@ function processInput(dir,dontCheckWin,dontModify) {
 	    		consoleCacheDump();
 			}
     		backups.push(bak);
-		messagetext = "";
+			messagetext = "";
 	    	DoRestart(true);
     		return true;
 	    } 
