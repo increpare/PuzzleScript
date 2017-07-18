@@ -665,10 +665,10 @@ function processRuleString(rule, state, curRules)
 					incellrow = true;
 					curcell = [];
 				} else if (reg_directions_only.exec(token)) {
-					if (curcell.length % 2 == 1) {
-						logError("Error, an item can only have one direction/action at a time, but you're looking for several at once!", lineNumber);
-					} else if (!incellrow) {
+					if (!incellrow) {
 						logWarning("Invalid syntax. Directions should be placed at the start of a rule.", lineNumber);
+					} else if (curcell.length % 2 == 1) {
+						logError("Error, an item can only have one direction/action at a time, but you're looking for several at once!", lineNumber);
   					} else {
 						curcell.push(token);
 					}
@@ -705,10 +705,10 @@ function processRuleString(rule, state, curRules)
 						incellrow = false;
 					}
 				} else if (token === '->') {
-					if (rhs) {
-						logError('Error, you can only use "->" once in a rule; it\'s used to separate before and after states.', lineNumber);
-					} if (incellrow) {
+					if (incellrow) {
 						logError('Encountered an unexpected "->" inside square brackets.  It\'s used to separate states, it has no place inside them >:| .', lineNumber);
+					} else if (rhs) {
+						logError('Error, you can only use "->" once in a rule; it\'s used to separate before and after states.', lineNumber);
 					} else {
 						rhs = true;
 					}
