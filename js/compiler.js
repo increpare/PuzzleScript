@@ -659,8 +659,8 @@ function processRuleString(rule, state, curRules)
 			}
 			case 1: {
 				if (token == '[') {
-					if (curcellrow.length > 0) {
-						logError('Error, malformed cell rule - encountered a "["" before previous bracket was closed', lineNumber);
+					if (incellrow) {
+						logError('Error, malformed cell rule - encountered a "[" before previous bracket was closed', lineNumber);
 					}
 					incellrow = true;
 					curcell = [];
@@ -673,35 +673,41 @@ function processRuleString(rule, state, curRules)
 						curcell.push(token);
 					}
 				} else if (token == '|') {
-					if (curcell.length % 2 == 1) {
+					if (!incellrow) {
+						logWarning('Invalid syntax.  "|" should only be used in cell rows (square brackets).');
+					} else if (curcell.length % 2 == 1) {
 						logError('In a rule, if you specify a force, it has to act on an object.', lineNumber);
 					} else {
 						curcellrow.push(curcell);
 						curcell = [];
 					}
 				} else if (token === ']') {
-					if (curcell.length % 2 == 1) {
-						if (curcell[0]==='...') {
-							logError('Cannot end a rule with ellipses.', lineNumber);
+					if (!incellrow) {
+						logWarning('You have a "]" in a rule with no corresponding "[".  This does not make sense.', lineNumber);
+					} else {
+						if (curcell.length % 2 == 1) {
+							if (curcell[0]==='...') {
+								logError('Cannot end a rule with ellipses.', lineNumber);
+							} else {
+								logError('In a rule, if you specify a force, it has to act on an object.', lineNumber);
+							}
 						} else {
-							logError('In a rule, if you specify a force, it has to act on an object.', lineNumber);
+							curcellrow.push(curcell);
+							curcell = [];
 						}
-					} else {
-						curcellrow.push(curcell);
-						curcell = [];
-					}
 
-					if (rhs) {
-						rhs_cells.push(curcellrow);
-					} else {
-						lhs_cells.push(curcellrow);
+						if (rhs) {
+							rhs_cells.push(curcellrow);
+						} else {
+							lhs_cells.push(curcellrow);
+						}
+						curcellrow = [];
+						incellrow = false;
 					}
-					curcellrow = [];
-					incellrow = false;
 				} else if (token === '->') {
 					if (rhs) {
 						logError('Error, you can only use "->" once in a rule; it\'s used to separate before and after states.', lineNumber);
-					} if (curcellrow.length > 0) {
+					} if (incellrow) {
 						logError('Encountered an unexpected "->" inside square brackets.  It\'s used to separate states, it has no place inside them >:| .', lineNumber);
 					} else {
 						rhs = true;
@@ -745,6 +751,10 @@ function processRuleString(rule, state, curRules)
 			}
 
 		}
+	}
+
+	if (incellrow) {
+		logError('The line ended in the middle of a cell.  You probably forgot a "]".', lineNumber);
 	}
 
 	if (lhs_cells.length != rhs_cells.length) {
