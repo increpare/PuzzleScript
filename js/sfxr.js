@@ -806,10 +806,12 @@ window.console.log(psstring);*/
     // Volume envelope
     env_time++;
     if (env_time > env_length[env_stage]) {
-      env_time = 0;
+      env_time = 1;
       env_stage++;
+      while (env_stage < 3 && env_length[env_stage] === 0)
+	env_stage++;
       if (env_stage === 3)
-        buffer_complete = true;
+        break;
     }
     if (env_stage === 0)
       env_vol = env_time / env_length[0];
@@ -913,19 +915,23 @@ window.console.log(psstring);*/
       buffer[buffer_i++] = sample;
       buffer[buffer_i++] = sample;
     }
+  }
 
-    if (buffer_complete) {
-      for (; buffer_i < buffer_length; buffer_i++) {
-        if (ps.sample_rate < SoundEffect.MIN_SAMPLE_RATE) {
-          buffer[buffer_i++] = 0;
-          buffer[buffer_i++] = 0;
-          buffer[buffer_i++] = 0;
-        }
-        buffer[buffer_i] = 0;
-      }
-      break;
+  if (summands > 0) {
+    sample = sample_sum / summands;
+
+    sample = sample / 8 * masterVolume;
+    sample *= gain;
+
+    buffer[buffer_i++] = sample;
+
+    if (ps.sample_rate < SoundEffect.MIN_SAMPLE_RATE) {
+      buffer[buffer_i++] = sample;
+      buffer[buffer_i++] = sample;
+      buffer[buffer_i++] = sample;
     }
   }
+
   return sound;
 };
 
