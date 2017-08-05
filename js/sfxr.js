@@ -618,6 +618,9 @@ SoundEffect.prototype.play = function() {
   } else {
     source.noteOn(t);
   }
+  source.onended = function() {
+    filter3.disconnect()
+  }
 };
 
 SoundEffect.MIN_SAMPLE_RATE = 22050;
