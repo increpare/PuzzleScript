@@ -1183,7 +1183,7 @@ function concretizeMovingRule(state, rule,lineNumber) {
 							for(var moveTerm in cur_rule.movingReplacement) {
 								if (cur_rule.movingReplacement.hasOwnProperty(moveTerm)) {
 									var moveDat = cur_rule.movingReplacement[moveTerm];
-									newrule.movingReplacement[moveTerm] = [moveDat[0],moveDat[1],moveDat[3]];
+									newrule.movingReplacement[moveTerm] = [moveDat[0],moveDat[1],moveDat[2]];
 								}
 							}
 
