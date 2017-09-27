@@ -162,7 +162,7 @@ var codeMirrorFn = function() {
     var reg_number = /[\d]+/;
     var reg_soundseed = /\d+\b/;
     var reg_spriterow = /[\.0-9]{5}\s*/;
-    var reg_sectionNames = /(objects|collisionlayers|legend|sounds|rules|winconditions|levels)\s*/;
+    var reg_sectionNames = /^\s*(objects|collisionlayers|legend|sounds|rules|winconditions|levels)\s*$/;
     var reg_equalsrow = /[\=]+/;
     var reg_notcommentstart = /[^\(]+/;
     var reg_csv_separators = /[ \,]*/;
