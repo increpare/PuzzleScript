@@ -155,14 +155,14 @@ var codeMirrorFn = function() {
     var absolutedirs = ['up', 'down', 'right', 'left'];
     var relativedirs = ['^', 'v', '<', '>', 'moving','stationary','parallel','perpendicular', 'no'];
     var logicWords = ['all', 'no', 'on', 'some'];
-    var sectionNames = ['objects', 'legend', 'sounds', 'collisionlayers', 'rules', 'winconditions', 'levels'];
+    var sectionNames = ['objects', 'legend', 'sounds', 'collisionlayers', 'rules', 'winconditions', 'levels', 'tests'];
 	var commandwords = ["sfx0","sfx1","sfx2","sfx3","sfx4","sfx5","sfx6","sfx7","sfx8","sfx9","sfx10","cancel","checkpoint","restart","win","message","again"];
     var reg_commands = /\s*(sfx0|sfx1|sfx2|sfx3|Sfx4|sfx5|sfx6|sfx7|sfx8|sfx9|sfx10|cancel|checkpoint|restart|win|message|again)\s*/;
     var reg_name = /[\w]+\s*/;///\w*[a-uw-zA-UW-Z0-9_]/;
     var reg_number = /[\d]+/;
     var reg_soundseed = /\d+\b/;
     var reg_spriterow = /[\.0-9]{5}\s*/;
-    var reg_sectionNames = /(objects|collisionlayers|legend|sounds|rules|winconditions|levels)(?![\w])\s*/;
+    var reg_sectionNames = /(objects|collisionlayers|legend|sounds|rules|winconditions|levels|tests)(?![\w])\s*/;
     var reg_equalsrow = /[\=]+/;
     var reg_notcommentstart = /[^\(]+/;
     var reg_csv_separators = /[ \,]*/;
@@ -172,8 +172,8 @@ var codeMirrorFn = function() {
     var reg_ruledirectionindicators = /^(up|down|left|right|horizontal|vertical|orthogonal|late|rigid)$/;
     var reg_sounddirectionindicators = /\s*(up|down|left|right|horizontal|vertical|orthogonal)\s*/;
     var reg_winconditionquantifiers = /^(all|any|no|some)$/;
-    var reg_keywords = /(checkpoint|objects|collisionlayers|legend|sounds|rules|winconditions|\.\.\.|levels|up|down|left|right|^|\||\[|\]|v|\>|\<|no|horizontal|orthogonal|vertical|any|all|no|some|moving|stationary|parallel|perpendicular|action)/;
-    var keyword_array = ['checkpoint','objects', 'collisionlayers', 'legend', 'sounds', 'rules', '...','winconditions', 'levels','|','[',']','up', 'down', 'left', 'right', 'late','rigid', '^','v','\>','\<','no','randomdir','random', 'horizontal', 'vertical','any', 'all', 'no', 'some', 'moving','stationary','parallel','perpendicular','action','message'];
+    var reg_keywords = /(checkpoint|objects|collisionlayers|legend|sounds|rules|winconditions|\.\.\.|levels|tests|up|down|left|right|^|\||\[|\]|v|\>|\<|no|horizontal|orthogonal|vertical|any|all|no|some|moving|stationary|parallel|perpendicular|action|test|given|when|then)/;
+    var keyword_array = ['checkpoint','objects', 'collisionlayers', 'legend', 'sounds', 'rules', '...','winconditions', 'levels', 'tests','|','[',']','up', 'down', 'left', 'right', 'late','rigid', '^','v','\>','\<','no','randomdir','random', 'horizontal', 'vertical','any', 'all', 'no', 'some', 'moving','stationary','parallel','perpendicular','action','message','test','given','when','then'];
 
     //  var keywordRegex = new RegExp("\\b(("+cons.join(")|(")+"))$", 'i');
 
@@ -210,6 +210,7 @@ var codeMirrorFn = function() {
             var soundsCopy = [];
             var levelsCopy = [];
             var winConditionsCopy = [];
+            var testsCopy = [];
 
             for (var i = 0; i < state.legend_synonyms.length; i++) {
               legend_synonymsCopy.push(state.legend_synonyms[i].concat([]));
@@ -228,6 +229,9 @@ var codeMirrorFn = function() {
             }
             for (var i = 0; i < state.winconditions.length; i++) {
               winConditionsCopy.push(state.winconditions[i].concat([]));
+            }
+            for (var i = 0; i < state.tests.length; i++) {
+              testsCopy.push(_.cloneDeep(state.tests[i]));
             }
 
             var nstate = {
@@ -262,6 +266,8 @@ var codeMirrorFn = function() {
               metadata : state.metadata.concat([]),
 
               levels: levelsCopy,
+
+              tests: testsCopy,
 
               STRIDE_OBJ : state.STRIDE_OBJ,
               STRIDE_MOV : state.STRIDE_MOV
@@ -1088,6 +1094,86 @@ var codeMirrorFn = function() {
                         }
                         break;
                     }
+                case 'tests': {
+                    var firstChar = stream.peek();
+                    var test = state.tests[state.tests.length - 1]; // The test we're constructing
+
+                    if (sol) {
+                        if (stream.match(/\s*test\s*/, true)) {
+                            // We've found a new test
+                            test = {};
+                            test.name = mixedCase.slice(stream.pos).trim();
+                            state.tests.push(test);
+                            state.tokenName = 'TEST_VERB';
+                            return 'TEST_VERB';
+                        } else if (stream.match(/\s*given\s*/)) {
+                            // It's a test precondition
+                            return 'GIVEN_VERB';
+                        } else if (stream.match(/\s*when\s*/)) {
+                            // It's a test step
+                            state.tokenName = 'WHEN_VERB';
+                            test.when = {inputs: []};
+                            return 'WHEN_VERB';
+                        } else if (stream.match(/\s*then\s*/)) {
+                            // It's an expected outcome
+                            return 'THEN_VERB';
+                        } else if (state.abbrevNames.indexOf(firstChar) >= 0) {
+                            // It's a level fragment
+                            var line = stream.match(reg_notcommentstart, false)[0].trim();
+                            state.tokenName = 'LEVEL';
+
+                            var fragmentType = test.when ? 'THEN' : 'WHEN';
+                            var partialFragment = fragmentType === 'WHEN' ? test.when : test.then;
+                            var fragment = partialFragment ? partialFragment : [];
+
+                            if (!fragment.length) {
+                                fragment.push(state.lineNumber);
+                            }
+
+                            fragment.push(line);
+
+                            if (fragment.length > 1) {
+                                if (line.length !== fragment[1].length) {
+                                    logWarning("Level fragments must be rectangular, pal (just like normal levels).", state.lineNumber);
+                                }
+                            }
+
+                            if (fragmentType === 'WHEN') {
+                                test.given = fragment;
+                            } else {
+                                test.then = fragment;
+                            }
+                        }
+                    } else {
+                        if (state.tokenName === 'TEST_VERB' || state.tokenName === 'GIVEN_VERB') {
+                            // Won't include 'GIVEN_VERB' - just for now
+                            stream.skipToEnd();
+                            return 'TEST_NAME';
+                        } else if (state.tokenName === 'WHEN_VERB') {
+                            var m = stream.match(/[^\s]*/, true)[0].trim();
+
+                            if (reg_directions.exec(m)) {
+                                stream.match(/\s*/, true);
+                                test.when.inputs.push(m);
+                                return 'DIRECTION';
+                            } else {
+                                logError('Unrecognised stuff in the WHEN section of a test. Keyboard inputs only, please.');
+                                return 'ERROR';
+                            }
+                        }
+                    }
+
+                    if (state.tokenName === 'LEVEL' && !stream.eol()) {
+                        stream.next();
+
+                        if (state.abbrevNames.indexOf(ch) >= 0) {
+                            return 'LEVEL';
+                        } else {
+                            logError('Key "' + ch.toUpperCase() + '" not found. Do you need to add it to the legend, or define a new object?', state.lineNumber);
+                            return 'ERROR';
+                        }
+                    }
+                }
 	                
 	                default://if you're in the preamble
 	                {
@@ -1187,6 +1273,8 @@ var codeMirrorFn = function() {
                 abbrevNames: [],
 
                 levels: [[]],
+
+                tests: [],
 
                 subsection: ''
             };
