@@ -764,13 +764,43 @@ function runGameTests(state) {
     consolePrint('=================================');
     consolePrint('<br />');
 
+    var curlevelBackup = curlevel;
+
     for (var i = 0; i < state.tests.length; i++) {
         var test = state.tests[i];
         runGameTest(state, test);
     }
 
-    var numPassing = _.reduce(state.tests, function(total, test) { return test.pass ? total + 1 : total }, 0);
-    consolePrint('<br />' + numPassing + ' of ' + state.tests.length + ' passing');
+    printTestSuiteResult(state);
+
+    // Return to the level we were on before running tests
+    loadLevelFromState(state, curlevelBackup);
+}
+
+/**
+ * Prints the overall result of running the test suite
+ */
+function printTestSuiteResult(state) {
+    var failingTests = _.filter(state.tests, function(test) { return !test.pass });
+    var numFailing = failingTests.length;
+    var numPassing = state.tests.length - numFailing;
+
+    if (numPassing > 0) {
+        consolePrint('<br /><span class="successText">' + numPassing + ' passing</span>');
+    }
+
+    if (numFailing > 0) {
+        consolePrint('<span class="errorText">' + numFailing + ' failing</span>');
+    }
+
+    _.each(failingTests, function(test, i) {
+        consolePrint('<br />');
+        consolePrint((i + 1) + ') ' + test.name + ':');
+        consolePrint('<br /><span class="errorText indent">AssertionError: actual level fragment did not match expected</span>');
+        consolePrint('<span class="successText indent">+ expected</span><span class="errorText"> - actual</span>');
+        consolePrint('<br /><span class="errorText indent symbol">-</span><span class="errorText inline">' + test.actual.replace(/\n/g, '<br />') + '</span>');
+        consolePrint('<span class="successText indent symbol">+</span><span class="successText inline">' + test.expected.replace(/\n/g, '<br />') + '</span>');
+    });
 }
 
 /**
@@ -805,10 +835,10 @@ function runGameTest(state, test) {
         }
     }
 
-    var outcome = convertLevelFragmentToString();
-    var expected = convertLevelFragmentToString(test.thenLevel);
+    test.actual = convertLevelFragmentToString();
+    test.expected = convertLevelFragmentToString(test.thenLevel);
 
-    test.pass = outcome === expected;
+    test.pass = test.actual === test.expected;
     printTestResult(test);
 
     unitTesting = false;

@@ -174,7 +174,8 @@ var codeMirrorFn = function() {
     var reg_winconditionquantifiers = /^(all|any|no|some)$/;
     var reg_keywords = /(checkpoint|objects|collisionlayers|legend|sounds|rules|winconditions|\.\.\.|levels|tests|up|down|left|right|^|\||\[|\]|v|\>|\<|no|horizontal|orthogonal|vertical|any|all|no|some|moving|stationary|parallel|perpendicular|action|test|given|when|then)/;
     var keyword_array = ['checkpoint','objects', 'collisionlayers', 'legend', 'sounds', 'rules', '...','winconditions', 'levels', 'tests','|','[',']','up', 'down', 'left', 'right', 'late','rigid', '^','v','\>','\<','no','randomdir','random', 'horizontal', 'vertical','any', 'all', 'no', 'some', 'moving','stationary','parallel','perpendicular','action','message','test','given','when','then'];
-    var test_inputs = {up: 0, left: 1, down: 2, right: 3, action: 4, tick: 'tick'};
+    var reg_test_inputs = /^(action|up|down|left|right|\^|v|\<|\>|tick|\.)$/;
+    var test_inputs = {up: 0, left: 1, down: 2, right: 3, '^': 0, '<': 1, 'v': 2, '>': 3, action: 4, tick: 'tick', '.': 'tick'};
 
     //  var keywordRegex = new RegExp("\\b(("+cons.join(")|(")+"))$", 'i');
 
@@ -1152,7 +1153,7 @@ var codeMirrorFn = function() {
                         } else if (state.tokenName === 'WHEN_VERB') {
                             var m = stream.match(/[^\s]*/, true)[0].trim();
 
-                            if (reg_directions.exec(m)) {
+                            if (reg_test_inputs.exec(m)) {
                                 stream.match(/\s*/, true);
                                 test.when.inputs.push(test_inputs[m]);
                                 return 'DIRECTION';
