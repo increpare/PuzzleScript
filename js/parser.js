@@ -174,6 +174,7 @@ var codeMirrorFn = function() {
     var reg_winconditionquantifiers = /^(all|any|no|some)$/;
     var reg_keywords = /(checkpoint|objects|collisionlayers|legend|sounds|rules|winconditions|\.\.\.|levels|tests|up|down|left|right|^|\||\[|\]|v|\>|\<|no|horizontal|orthogonal|vertical|any|all|no|some|moving|stationary|parallel|perpendicular|action|test|given|when|then)/;
     var keyword_array = ['checkpoint','objects', 'collisionlayers', 'legend', 'sounds', 'rules', '...','winconditions', 'levels', 'tests','|','[',']','up', 'down', 'left', 'right', 'late','rigid', '^','v','\>','\<','no','randomdir','random', 'horizontal', 'vertical','any', 'all', 'no', 'some', 'moving','stationary','parallel','perpendicular','action','message','test','given','when','then'];
+    var test_inputs = {up: 0, left: 1, down: 2, right: 3, action: 4, tick: 'tick'};
 
     //  var keywordRegex = new RegExp("\\b(("+cons.join(")|(")+"))$", 'i');
 
@@ -1123,7 +1124,7 @@ var codeMirrorFn = function() {
                             state.tokenName = 'LEVEL';
 
                             var fragmentType = test.when ? 'THEN' : 'WHEN';
-                            var partialFragment = fragmentType === 'WHEN' ? test.when : test.then;
+                            var partialFragment = fragmentType === 'WHEN' ? test.given : test.then;
                             var fragment = partialFragment ? partialFragment : [];
 
                             if (!fragment.length) {
@@ -1145,8 +1146,7 @@ var codeMirrorFn = function() {
                             }
                         }
                     } else {
-                        if (state.tokenName === 'TEST_VERB' || state.tokenName === 'GIVEN_VERB') {
-                            // Won't include 'GIVEN_VERB' - just for now
+                        if (state.tokenName === 'TEST_VERB' || state.tokenName === 'GIVEN_VERB' || state.tokenName === 'THEN_VERB') {
                             stream.skipToEnd();
                             return 'TEST_NAME';
                         } else if (state.tokenName === 'WHEN_VERB') {
@@ -1154,7 +1154,7 @@ var codeMirrorFn = function() {
 
                             if (reg_directions.exec(m)) {
                                 stream.match(/\s*/, true);
-                                test.when.inputs.push(m);
+                                test.when.inputs.push(test_inputs[m]);
                                 return 'DIRECTION';
                             } else {
                                 logError('Unrecognised stuff in the WHEN section of a test. Keyboard inputs only, please.');

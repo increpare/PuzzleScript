@@ -755,6 +755,107 @@ function setGameState(_state, command, randomseed) {
 	
 }
 
+/**
+ * Runs the suite of tests found in the TESTS section of the PuzzleScript file.
+ */
+function runGameTests(state) {
+    consolePrint('<br />=================================');
+    consolePrint('<span class="systemMessage">Running Test Suite</span>');
+    consolePrint('=================================');
+    consolePrint('<br />');
+
+    for (var i = 0; i < state.tests.length; i++) {
+        var test = state.tests[i];
+        runGameTest(state, test);
+    }
+
+    var numPassing = _.reduce(state.tests, function(total, test) { return test.pass ? total + 1 : total }, 0);
+    consolePrint('<br />' + numPassing + ' of ' + state.tests.length + ' passing');
+}
+
+/**
+ * Runs a single test and prints the result to the console
+ */
+function runGameTest(state, test) {
+    unitTesting = true;
+
+    // Load the precondition level fragment as the current level
+    loadLevelFromLevelDat(state, test.givenLevel);
+
+    // If run_rules_on_start is set, an 'again' rule might be hit, so need to tick
+    while (againing) {
+        againing = false;
+        processInput(-1);
+    }
+
+    for (var i = 0; i < test.when.inputs.length; i++) {
+        var input = test.when.inputs[i];
+
+        // Send each input we wish to simulate to the engine
+        if (input === 'tick') {
+            processInput(-1);
+        } else {
+            processInput(input);
+        }
+
+        // Allow a tick if an 'again' rule has triggered
+        while (againing) {
+            againing = false;
+            processInput(-1);
+        }
+    }
+
+    var outcome = convertLevelFragmentToString();
+    var expected = convertLevelFragmentToString(test.thenLevel);
+
+    test.pass = outcome === expected;
+    printTestResult(test);
+
+    unitTesting = false;
+}
+
+/**
+ * Prints a single test result to the console
+ */
+function printTestResult(test) {
+    var symbolClass = test.pass ? 'successText' : 'errorText';
+    var symbol = test.pass ? '\u2713' : '\u2717';
+    var colouredSymbol = '<span class="symbol ' + symbolClass + '">' + symbol + '</span>';
+    consolePrint(colouredSymbol + test.name);
+}
+
+/**
+ * Converts a test level fragment to a String representation for the purposes of comparing actual
+ * outcomes with expected ones. The function is a modified verison of that in testingFrameWork.js.
+ */
+function convertLevelFragmentToString(obj) {
+    var lvl = obj ? obj : level;
+    var out = '';
+    var seenCells = {};
+    var i = 0;
+    for (var y = 0; y < lvl.height; y++) {
+        for (var x = 0; x < lvl.width; x++) {
+            var bitmask = lvl.getCell(y + (x * lvl.height));
+            var objs = [];
+            for (var bit = 0; bit < 32 * STRIDE_OBJ; ++bit) {
+                if (bitmask.get(bit)) {
+                    objs.push(state.idDict[bit])
+                }
+            }
+            objs.sort();
+            objs = objs.join(" ");
+            /* replace repeated object combinations with numbers */
+            if (!seenCells.hasOwnProperty(objs)) {
+                seenCells[objs] = i++;
+                out += objs + ":";
+            }
+            out += seenCells[objs] + ",";
+        }
+        out += '\n';
+    }
+    return out;
+}
+
 function RebuildLevelArrays() {
 	level.movements = new Int32Array(level.n_tiles * STRIDE_MOV);
 

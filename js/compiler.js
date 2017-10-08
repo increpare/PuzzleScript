@@ -459,25 +459,39 @@ function levelsToArray(state) {
 		if (level.length == 0) {
 			continue;
 		}
-		if (level[0] == '\n') {
-
-			var o = {
-				message: level[1]
-			};
-			splitMessage = wordwrap(o.message,intro_template[0].length);
-			if (splitMessage.length>12){
-				logWarning('Message too long to fit on screen.', level[2]);
-			}
-
-			processedLevels.push(o);
-		} else {
-			var o = levelFromString(state,level);
-			processedLevels.push(o);
-		}
-
+		processedLevels.push(processLevel(state, level));
 	}
 
 	state.levels = processedLevels;
+}
+
+function processLevel(state, level) {
+	if (level[0] == '\n') {
+
+		var o = {
+			message: level[1]
+		};
+		splitMessage = wordwrap(o.message,intro_template[0].length);
+		if (splitMessage.length>12){
+			logWarning('Message too long to fit on screen.', level[2]);
+		}
+
+		return o;
+	} else {
+		var o = levelFromString(state,level);
+		return o;
+	}
+}
+
+/**
+ * Converts raw level fragments from tests into proper Level objects
+ */
+function processLevelFragments(state) {
+	for (var i = 0; i < state.tests.length; i++) {
+		var test = state.tests[i];
+		test.givenLevel = processLevel(state, test.given);
+		test.thenLevel = processLevel(state, test.then);
+	}
 }
 
 var directionaggregates = {
@@ -2445,6 +2459,7 @@ function loadFile(str) {
 	generateMasks(state);
 	levelsToArray(state);
 	rulesToArray(state);
+	processLevelFragments(state);
 
 	removeDuplicateRules(state);
 
@@ -2547,7 +2562,7 @@ function compile(command,text,randomseed) {
 		for (var i=0;i<state.lateRules.length;i++) {
 			ruleCount+=state.lateRules[i].length;
 		}
-		if (command[0]=="restart") {
+		if (command[0] === "restart" || command[0] === "test") {
 			consolePrint('<span class="systemMessage">Successful Compilation, generated ' + ruleCount + ' instructions.</span>');
 		} else {
 			consolePrint('<span class="systemMessage">Successful live recompilation, generated ' + ruleCount + ' instructions.</span>');
@@ -2557,6 +2572,10 @@ function compile(command,text,randomseed) {
 	setGameState(state,command,randomseed);
 
 	clearInputHistory();
+
+	if (command[0] === 'test') {
+		runGameTests(state);
+	}
 
 	consoleCacheDump();
 }
