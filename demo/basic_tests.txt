@@ -1,0 +1,172 @@
+title Testing Tests
+author Rich Locke
+homepage www.richardlocke.co.uk
+
+========
+OBJECTS
+========
+
+Background
+LIGHTGREEN GREEN
+11111
+01111
+11101
+11111
+10111
+
+
+Target
+DarkBlue
+.....
+.000.
+.0.0.
+.000.
+.....
+
+Wall
+BROWN DARKBROWN
+00010
+11111
+01000
+11111
+00010
+
+Player
+Black Orange White Blue
+.000.
+.111.
+22222
+.333.
+.3.3.
+
+Crate
+Orange Yellow
+00000
+0...0
+0...0
+0...0
+00000
+
+Coin
+yellow
+.....
+.....
+000..
+000..
+000..
+
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Player
+* = Crate
+@ = Crate and Target
+O = Target
+c = coin
+
+
+=======
+SOUNDS
+=======
+
+Crate MOVE 36772507
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Target
+Coin
+Player, Wall, Crate
+
+======
+RULES
+======
+
+(Player pushes crate)
+[> Player|Crate] -> [> Player|> Crate]
+
+(Player drops coins)
+[ACTION Player] -> [Player Coin]
+
+==============
+WINCONDITIONS
+==============
+
+All Target on Crate
+
+=======
+LEVELS
+=======
+
+
+####..
+#.O#..
+#..###
+#@P..#
+#..*.#
+#..###
+####..
+
+
+######
+#....#
+#.#P.#
+#.*@.#
+#.O@.#
+#....#
+######
+
+=======
+TESTS
+=======
+
+test crates can be pushed right
+given
+o....
+.p*..
+.....
+when right right
+then
+o....
+...p*
+.....
+
+test crates can be pushed left
+given
+o....
+..*p.
+.....
+when left left
+then
+o....
+*p...
+.....
+
+(We expect this test to fail because crates can't be pulled!)
+test crates can be pulled left
+given
+o....
+..p*.
+.....
+when left left
+then
+o....
+p*...
+.....
+
+test player drops coins
+given
+o....
+..p..
+.....
+when action left action left
+then
+o....
+pcc..
+.....

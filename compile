@@ -6,43 +6,43 @@ cd demo
 find . -type f \( -name "*.txt" \) -exec perl -p -i -e "s/[ \t]*$//g" {} \;
 cd ..
 echo removing bin
-rm -rf ../bin
-mkdir ../bin
+rm -rf bin
+mkdir bin
 echo inlining standalone template
 ./inline
 echo copying files
-cp -r * ../bin/
-cp .htaccess ../bin/
+rsync -av --exclude=bin --exclude=node_modules --exclude='.*' ./ bin
+cp .htaccess bin/
 echo optimizing pngs
-rm ../bin/images/*.png
+rm bin/images/*.png
 cd images
 ./minimize 
 cd ../
 echo optimizing gifs
-cd ../bin/Documentation/images
+cd bin/Documentation/images
 ./minimize
-cd ../../../src
+cd -
 echo removing files
-rm -rf ../bin/js/*
-rm -rf ../bin/css/*
-rm -rf ../bin/tests
-rm -rf ../bin/Levels
-rm ../bin/compile
-rm ../bin/inline
-rm ../bin/images/minimize
-rm ../bin/Documentation/images/minimize
-rm ../bin/standalone.html
+rm -rf bin/js/*
+rm -rf bin/css/*
+rm -rf bin/tests
+rm -rf bin/Levels
+rm bin/compile
+rm bin/inline
+rm bin/images/minimize
+rm bin/Documentation/images/minimize
+rm bin/standalone.html
 echo compressing css
 cd css
 ./concat
 cd ../
-mv css/combined.css ../bin/css/combined.css
-java -jar ~/progs/yuicompressor-2.4.8.jar ../bin/css/combined.css > ../bin/css/combined2.css
-mv ../bin/css/combined2.css ../bin/css/combined.css
-java -jar ~/progs/yuicompressor-2.4.8.jar ../bin/Documentation/css/bootstrap.css > ../bin/Documentation/css/bootstrap_compressed.css
-mv ../bin/Documentation/css/bootstrap_compressed.css ../bin/Documentation/css/bootstrap.css
+mv css/combined.css bin/css/combined.css
+java -jar lib/yuicompressor-2.4.8.jar bin/css/combined.css > bin/css/combined2.css
+mv bin/css/combined2.css bin/css/combined.css
+java -jar lib/yuicompressor-2.4.8.jar bin/Documentation/css/bootstrap.css > bin/Documentation/css/bootstrap_compressed.css
+mv bin/Documentation/css/bootstrap_compressed.css bin/Documentation/css/bootstrap.css
 echo running google closure compiler
-java -jar ~/progs/closure.jar --js_output_file ../bin/js/scripts_compiled.js  \
+java -jar lib/closure.jar --js_output_file bin/js/scripts_compiled.js  \
 --js js/Blob.js \
 --js js/FileSaver.js \
 --js js/jsgif/b64.js \
@@ -77,7 +77,7 @@ java -jar ~/progs/closure.jar --js_output_file ../bin/js/scripts_compiled.js  \
 --js js/addlisteners.js \
 --js js/addlisteners_editor.js \
 --js js/makegif.js
-java -jar ~/progs/closure.jar --js_output_file ../bin/js/scripts_play_compiled.js  \
+java -jar lib/closure.jar --js_output_file bin/js/scripts_play_compiled.js  \
 --js js/globalVariables.js \
 --js js/debug_off.js \
 --js js/font.js \
@@ -103,20 +103,20 @@ sed -e 's/<script src="js\/[A-Za-z0-9_\/-]*\.js"><\/script>//g' < play.html > pl
 sed -e 's/<!--TOREPLACE-->/<script src="js\/scripts_play_compiled.js"><\/script>/g' < play_temp1.html > play_temp2.html
 
 echo copying editor.html over
-mv editor_temp4.html ../bin/editor.html
-mv play_temp2.html ../bin/play.html
+mv editor_temp4.html bin/editor.html
+mv play_temp2.html bin/play.html
 echo compressing html
-java -jar ~/progs/htmlcompressor-1.5.3.jar  -r ../bin/ -o ../bin/
+java -jar lib/htmlcompressor-1.5.3.jar  -r bin/ -o bin/
 echo tidying up
 rm editor_temp*.html
 rm play_temp*.html
 echo gzipping site
-cd ../bin
+cd bin
 ./gzipper
 rm README.md
 rm gzipper
 rm commit
-cd ../src
+cd -
 end=`date +%s`
 runtime=$((end-start))
 echo script took $runtime seconds

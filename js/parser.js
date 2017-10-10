@@ -1103,9 +1103,11 @@ var codeMirrorFn = function() {
                     if (sol) {
                         if (stream.match(/\s*test\s*/, true)) {
                             // We've found a new test
-                            test = {};
+                            if (!test) {
+                                test = {};
+                                state.tests.push(test);
+                            }
                             test.name = mixedCase.slice(stream.pos).trim();
-                            state.tests.push(test);
                             state.tokenName = 'TEST_VERB';
                             return 'TEST_VERB';
                         } else if (stream.match(/\s*given\s*/)) {
@@ -1123,6 +1125,11 @@ var codeMirrorFn = function() {
                             // It's a level fragment
                             var line = stream.match(reg_notcommentstart, false)[0].trim();
                             state.tokenName = 'LEVEL';
+
+                            if (!test) {
+                                test = {};
+                                state.tests.push(test);
+                            }
 
                             var fragmentType = test.when ? 'THEN' : 'WHEN';
                             var partialFragment = fragmentType === 'WHEN' ? test.given : test.then;

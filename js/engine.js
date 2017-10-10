@@ -785,6 +785,12 @@ function printTestSuiteResult(state) {
     var numFailing = failingTests.length;
     var numPassing = state.tests.length - numFailing;
 
+    if (numPassing > 0 || numFailing > 0) {
+        consolePrint('<br />');
+    } else {
+        consolePrint('No tests found');
+    }
+
     if (numPassing > 0) {
         consolePrint('<br /><span class="successText">' + numPassing + ' passing</span>');
     }
