@@ -172,8 +172,8 @@ var codeMirrorFn = function() {
     var reg_ruledirectionindicators = /^(up|down|left|right|horizontal|vertical|orthogonal|late|rigid)$/;
     var reg_sounddirectionindicators = /\s*(up|down|left|right|horizontal|vertical|orthogonal)\s*/;
     var reg_winconditionquantifiers = /^(all|any|no|some)$/;
-    var reg_keywords = /(checkpoint|objects|collisionlayers|legend|sounds|rules|winconditions|\.\.\.|levels|tests|up|down|left|right|^|\||\[|\]|v|\>|\<|no|horizontal|orthogonal|vertical|any|all|no|some|moving|stationary|parallel|perpendicular|action|test|given|when|then)/;
-    var keyword_array = ['checkpoint','objects', 'collisionlayers', 'legend', 'sounds', 'rules', '...','winconditions', 'levels', 'tests','|','[',']','up', 'down', 'left', 'right', 'late','rigid', '^','v','\>','\<','no','randomdir','random', 'horizontal', 'vertical','any', 'all', 'no', 'some', 'moving','stationary','parallel','perpendicular','action','message','test','given','when','then'];
+    var reg_keywords = /(checkpoint|objects|collisionlayers|legend|sounds|rules|winconditions|\.\.\.|levels|tests|up|down|left|right|^|\||\[|\]|v|\>|\<|no|horizontal|orthogonal|vertical|any|all|no|some|moving|stationary|parallel|perpendicular|action|test|given|when|then|expect)/;
+    var keyword_array = ['checkpoint','objects', 'collisionlayers', 'legend', 'sounds', 'rules', '...','winconditions', 'levels', 'tests','|','[',']','up', 'down', 'left', 'right', 'late','rigid', '^','v','\>','\<','no','randomdir','random', 'horizontal', 'vertical','any', 'all', 'no', 'some', 'moving','stationary','parallel','perpendicular','action','message','test','given','when','then','expect'];
     var reg_test_inputs = /^(action|up|down|left|right|\^|v|\<|\>|tick|\.)$/;
     var test_inputs = {up: 0, left: 1, down: 2, right: 3, '^': 0, '<': 1, 'v': 2, '>': 3, action: 4, tick: 'tick', '.': 'tick'};
 
@@ -186,6 +186,60 @@ var codeMirrorFn = function() {
         '00000',
         '00000'
     ];
+
+    function parseRuleContent(state, stream, ch, sol) {
+        if (state.tokenIndex===-4) {
+            stream.skipToEnd();
+            return 'MESSAGE';
+        }
+        if (stream.match(/\s*\-\>\s*/, true)) {
+            return 'ARROW';
+        }
+        if (ch === '[' || ch === '|' || ch === ']' || ch==='+') {
+            if (ch!=='+') {
+                state.tokenIndex = 1;
+            }
+            stream.next();
+            stream.match(/\s*/, true);
+            return 'BRACKET';
+        } else {
+            var m = stream.match(/[^\[\|\]\s]*/, true)[0].trim();
+
+            if (state.tokenIndex===0&&reg_loopmarker.exec(m)) {
+                return 'BRACKET';
+            } else if (state.tokenIndex === 0 && reg_ruledirectionindicators.exec(m)) {
+                stream.match(/\s*/, true);
+                return 'DIRECTION';
+            } else if (state.tokenIndex === 1 && reg_directions.exec(m)) {
+                stream.match(/\s*/, true);
+                return 'DIRECTION';
+            } else {
+                if (state.names.indexOf(m) >= 0) {
+                    if (sol) {
+                        logError('Identifiers cannot appear outside of square brackets in rules, only directions can.', state.lineNumber);
+                        return 'ERROR';
+                    } else {
+                        stream.match(/\s*/, true);
+                        return 'NAME';
+                    }
+                } else if (m==='...') {
+                    return 'DIRECTION';
+                } else if (m==='rigid') {
+                    return 'DIRECTION';
+                } else if (m==='random') {
+                    return 'DIRECTION';
+                } else if (commandwords.indexOf(m)>=0) {
+                    if (m==='message') {
+                        state.tokenIndex=-4;
+                    }
+                    return 'COMMAND';
+                } else {
+                    logError('Name "' + m + '", referred to in a rule, does not exist.', state.lineNumber);
+                    return 'ERROR';
+                }
+            }
+        }
+    }
 
     return {
         copyState: function(state) {
@@ -942,59 +996,7 @@ var codeMirrorFn = function() {
                             state.tokenIndex = 0;//in rules, records whether bracket has been found or not
                         }
 
-                        if (state.tokenIndex===-4) {
-                        	stream.skipToEnd();
-                        	return 'MESSAGE';
-                        }
-                        if (stream.match(/\s*\-\>\s*/, true)) {
-                            return 'ARROW';
-                        }
-                        if (ch === '[' || ch === '|' || ch === ']' || ch==='+') {
-                        	if (ch!=='+') {
-                            	state.tokenIndex = 1;
-                            }
-                            stream.next();
-                            stream.match(/\s*/, true);
-                            return 'BRACKET';
-                        } else {
-                            var m = stream.match(/[^\[\|\]\s]*/, true)[0].trim();
-
-                            if (state.tokenIndex===0&&reg_loopmarker.exec(m)) {
-                            	return 'BRACKET';
-                            } else if (state.tokenIndex === 0 && reg_ruledirectionindicators.exec(m)) {
-                                stream.match(/\s*/, true);
-                                return 'DIRECTION';
-                            } else if (state.tokenIndex === 1 && reg_directions.exec(m)) {
-                                stream.match(/\s*/, true);
-                                return 'DIRECTION';
-                            } else {
-                                if (state.names.indexOf(m) >= 0) {
-                                    if (sol) {
-                                        logError('Identifiers cannot appear outside of square brackets in rules, only directions can.', state.lineNumber);
-                                        return 'ERROR';
-                                    } else {
-                                        stream.match(/\s*/, true);
-                                        return 'NAME';
-                                    }
-                                } else if (m==='...') {
-                                    return 'DIRECTION';
-                                } else if (m==='rigid') {
-                                    return 'DIRECTION';
-                                } else if (m==='random') {
-                                    return 'DIRECTION';
-                                } else if (commandwords.indexOf(m)>=0) {
-									if (m==='message') {
-										state.tokenIndex=-4;
-									}                                	
-                                	return 'COMMAND';
-                                } else {
-                                    logError('Name "' + m + '", referred to in a rule, does not exist.', state.lineNumber);
-                                    return 'ERROR';
-                                }
-                            }
-                        }
-
-                        break;
+                        return parseRuleContent(state, stream, ch, sol);
                     }
                 case 'winconditions':
                     {
@@ -1098,15 +1100,16 @@ var codeMirrorFn = function() {
                     }
                 case 'tests': {
                     var firstChar = stream.peek();
-                    var test = state.tests[state.tests.length - 1]; // The test we're constructing
+                    // Get the last test (or a blank one)
+                    var test = state.tests.length ? state.tests[state.tests.length - 1] : {}
 
                     if (sol) {
                         if (stream.match(/\s*test\s*/, true)) {
                             // We've found a new test
-                            if (!test) {
+                            if (state.tests.length) {
                                 test = {};
-                                state.tests.push(test);
                             }
+                            state.tests.push(test);
                             test.name = mixedCase.slice(stream.pos).trim();
                             state.tokenName = 'TEST_VERB';
                             return 'TEST_VERB';
@@ -1120,16 +1123,20 @@ var codeMirrorFn = function() {
                             return 'WHEN_VERB';
                         } else if (stream.match(/\s*then\s*/)) {
                             // It's an expected outcome
+                            state.tokenName = 'THEN_VERB';
                             return 'THEN_VERB';
+                        } else if (stream.match(/\s*expect\s*/)) {
+                            // It's an expected condition
+                            if (!test.conditions) {
+                                test.conditions = [];
+                            }
+                            test.conditions.push({lineNumber: state.lineNumber});
+                            state.tokenName = 'EXPECT_VERB';
+                            return 'EXPECT_VERB';
                         } else if (state.abbrevNames.indexOf(firstChar) >= 0) {
                             // It's a level fragment
                             var line = stream.match(reg_notcommentstart, false)[0].trim();
                             state.tokenName = 'LEVEL';
-
-                            if (!test) {
-                                test = {};
-                                state.tests.push(test);
-                            }
 
                             var fragmentType = test.when ? 'THEN' : 'WHEN';
                             var partialFragment = fragmentType === 'WHEN' ? test.given : test.then;
@@ -1168,6 +1175,30 @@ var codeMirrorFn = function() {
                                 logError('Unrecognised stuff in the WHEN section of a test. Keyboard inputs only, please.');
                                 return 'ERROR';
                             }
+                        } else if (state.tokenName === 'EXPECT_VERB') {
+                            var condition = test.conditions[test.conditions.length - 1];
+                            var expectedCountMatch = stream.match(/\s*\d+\s*/);
+                            if (expectedCountMatch) {
+                                condition.expectedCount = Number(expectedCountMatch[0].trim());
+                                return 'EXPECT_COUNT';
+                            }
+
+                            if (!condition.rule) {
+                                // Grab the rule and add custom test RHS command
+                                var restOfLine = stream.string.substring(stream.pos);
+                                var rawRule = reg_notcommentstart.exec(restOfLine)[0];
+                                var rule = rawRule + ' -> count';
+                                condition.rawRule = rawRule;
+                                condition.rule = [rule, state.lineNumber, mixedCase + ' -> count'];
+                                state.tokenIndex = 0; // Indicates bracket hasn't been found yet
+
+                                if (!condition.expectedCount) {
+                                    // Default of 1 if no expected count is entered
+                                    condition.expectedCount = 1;
+                                }
+                            }
+
+                            return parseRuleContent(state, stream, ch, sol);
                         }
                     }
 

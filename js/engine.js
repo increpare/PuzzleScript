@@ -767,6 +767,7 @@ function runGameTests(state) {
     var curlevelBackup = curlevel;
 
     for (var i = 0; i < state.tests.length; i++) {
+        state.currentTest = i;
         var test = state.tests[i];
         runGameTest(state, test);
     }
@@ -802,10 +803,22 @@ function printTestSuiteResult(state) {
     _.each(failingTests, function(test, i) {
         consolePrint('<br />');
         consolePrint((i + 1) + ') ' + test.name + ':');
-        consolePrint('<br /><span class="errorText indent">AssertionError: actual level fragment did not match expected</span>');
-        consolePrint('<span class="successText indent">+ expected</span><span class="errorText"> - actual</span>');
-        consolePrint('<br /><span class="errorText indent symbol">-</span><span class="errorText inline">' + test.actual.replace(/\n/g, '<br />') + '</span>');
-        consolePrint('<span class="successText indent symbol">+</span><span class="successText inline">' + test.expected.replace(/\n/g, '<br />') + '</span>');
+
+        if (!test.fragmentsMatch) {
+            consolePrint('<br /><span class="errorText indent">AssertionError: actual level fragment did not match expected</span>');
+            consolePrint('<span class="successText indent">+ expected</span><span class="errorText"> - actual</span>');
+            consolePrint('<br /><span class="errorText indent symbol">-</span><span class="errorText inline">' + test.actualFragment.replace(/\n/g, '<br />') + '</span>');
+            consolePrint('<span class="successText indent symbol">+</span><span class="successText inline">' + test.expectedFragment.replace(/\n/g, '<br />') + '</span>');
+        }
+
+        _.each(test.conditions, function(condition) {
+            if (!condition.met) {
+                consolePrint('<br /><span class="errorText indent">AssertionError: unexpected occurrence count</span>');
+                consolePrint('<span class="errorText indent">Condition: ' + condition.rawRule + ' (expected: '
+                    + condition.expectedCount + ', actual: ' + condition.actualCount + ')</span>');
+                consolePrint('<span class="errorText indent">Final level fragment:<br /><br />' + test.actualFragment.replace(/\n/g, '<br />') + '</span>')
+            }
+        });
     });
 }
 
@@ -841,10 +854,28 @@ function runGameTest(state, test) {
         }
     }
 
-    test.actual = convertLevelFragmentToString();
-    test.expected = convertLevelFragmentToString(test.thenLevel);
+    test.actualFragment = convertLevelFragmentToString();
+    test.fragmentsMatch = true;
+    if (test.thenLevel) {
+        test.expectedFragment = convertLevelFragmentToString(test.thenLevel);
+        test.fragmentsMatch = test.actualFragment === test.expectedFragment;
+    }
 
-    test.pass = test.actual === test.expected;
+    test.conditionsMet = true;
+    if (test.compiledRules && test.compiledRules.length) {
+        applyRules(test.compiledRules, undefined, 0, []);
+
+        // Are the conditions met?
+        _.each(test.conditions, function(condition) {
+            condition.met = condition.actualCount === condition.expectedCount;
+        });
+
+        test.conditionsMet = _.every(test.conditions, function(condition) {
+            return condition.met;
+        });
+    }
+
+    test.pass = test.fragmentsMatch && test.conditionsMet;
     printTestResult(test);
 
     unitTesting = false;
@@ -2114,16 +2145,29 @@ Rule.prototype.tryApply = function() {
 	    }
 	}
 
-    if (matches.length>0) {
-    	this.queueCommands();
+    if (matches && matches[0].length) {
+        this.queueCommands(matches[0].length);
     }
     return result;
 };
 
-Rule.prototype.queueCommands = function() {
+Rule.prototype.queueCommands = function(numMatches) {
 	var commands = this.commands;
 	for(var i=0;i<commands.length;i++) {
 		var command=commands[i];
+
+        if (command[0] === 'count') {
+            // Only used in tests to compare expected occurrences to actual
+            // Can be executed by multiple test conditions so don't care if it's happened already
+            var test = state.tests[state.currentTest];
+            var rule = this;
+            var condition = _.find(test.conditions, function(condition) {
+                return condition.lineNumber === rule.lineNumber;
+            });
+
+            condition.actualCount = numMatches;
+        }
+
 		var already=false;
 		if (level.commandQueue.indexOf(command[0])>=0) {
 			continue;
@@ -2139,7 +2183,7 @@ Rule.prototype.queueCommands = function() {
 
 		if (command[0]==='message') {			
 			messagetext=command[1];
-		}		
+		}
 	}
 };
 

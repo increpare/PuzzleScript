@@ -489,8 +489,13 @@ function processLevel(state, level) {
 function processLevelFragments(state) {
 	for (var i = 0; i < state.tests.length; i++) {
 		var test = state.tests[i];
-		test.givenLevel = processLevel(state, test.given);
-		test.thenLevel = processLevel(state, test.then);
+		if (test.given) {
+			test.givenLevel = processLevel(state, test.given);
+		}
+
+		if (test.then) {
+			test.thenLevel = processLevel(state, test.then);
+		}
 	}
 }
 
@@ -508,7 +513,7 @@ var simpleAbsoluteDirections = ['up', 'down', 'left', 'right'];
 var simpleRelativeDirections = ['^', 'v', '<', '>'];
 var reg_directions_only = /^(\>|\<|\^|v|up|down|left|right|moving|stationary|no|randomdir|random|horizontal|vertical|orthogonal|perpendicular|parallel|action)$/;
 //redeclaring here, i don't know why
-var commandwords = ["sfx0","sfx1","sfx2","sfx3","sfx4","sfx5","sfx6","sfx7","sfx8","sfx9","sfx10","cancel","checkpoint","restart","win","message","again"];
+var commandwords = ["sfx0","sfx1","sfx2","sfx3","sfx4","sfx5","sfx6","sfx7","sfx8","sfx9","sfx10","cancel","checkpoint","restart","win","message","again","count"];
 
 
 
@@ -838,8 +843,7 @@ function deepCloneRule(rule) {
 	return clonedRule;
 }
 
-function rulesToArray(state) {
-	var oldrules = state.rules;
+function rulesToArray(state, oldrules) {
 	var rules = [];
 	var loops=[];
 	for (var i = 0; i < oldrules.length; i++) {
@@ -851,7 +855,6 @@ function rulesToArray(state) {
 		}
 		rules.push(newrule);
 	}
-	state.loops=loops;
 
 	//now expand out rules with multiple directions
 	var rules2 = [];
@@ -901,7 +904,7 @@ function rulesToArray(state) {
 
 	}
 
-	state.rules = rules4;
+	return [rules4, loops];
 }
 
 function containsEllipsis(rule) {
@@ -1419,7 +1422,7 @@ var dirMasks = {
 	'' : parseInt('00000',2)
 };
 
-function rulesToMask(state) {
+function rulesToMask(state, rules) {
 	/*
 
 	*/
@@ -1429,8 +1432,8 @@ function rulesToMask(state) {
 		layerTemplate.push(null);
 	}
 
-	for (var i = 0; i < state.rules.length; i++) {
-		var rule = state.rules[i];
+	for (var i = 0; i < rules.length; i++) {
+		var rule = rules[i];
 		for (var j = 0; j < rule.lhs.length; j++) {
 			var cellrow_l = rule.lhs[j];
 			var cellrow_r = rule.rhs[j];
@@ -1719,11 +1722,11 @@ function ruleGroupRandomnessTest(ruleGroup) {
 	}
 }
 
-function arrangeRulesByGroupNumber(state) {
+function arrangeRulesByGroupNumber(state, rules) {
 	var aggregates = {};
 	var aggregates_late = {};
-	for (var i=0;i<state.rules.length;i++) {
-		var rule = state.rules[i];
+	for (var i=0;i<rules.length;i++) {
+		var rule = rules[i];
 		var targetArray = aggregates;
 		if (rule.late) {
 			targetArray=aggregates_late;
@@ -1751,10 +1754,8 @@ function arrangeRulesByGroupNumber(state) {
 			result_late.push(ruleGroup);
 		}
 	}
-	state.rules=result;
 
-	//check that there're no late movements with direction requirements on the lhs
-	state.lateRules=result_late;
+	return {rules: result, lateRules: result_late};
 }
 
 
@@ -2089,20 +2090,20 @@ function printRules(state) {
 	consolePrint(output);
 }
 
-function removeDuplicateRules(state) {
+function removeDuplicateRules(state, rules) {
 	console.log("rule count before = " +state.rules.length);
 	var record = {};
 	var newrules=[];
 	var lastgroupnumber=-1;
-	for (var i=state.rules.length-1;i>=0;i--) {
-		var r = state.rules[i];
+	for (var i=rules.length-1;i>=0;i--) {
+		var r = rules[i];
 		var groupnumber = r.groupNumber;
 		if (groupnumber!==lastgroupnumber) {
 			record={};
 		}
 		var r_string=printRule(r);
 		if (record.hasOwnProperty(r_string)) {
-			state.rules.splice(i,1);
+			rules.splice(i,1);
 		} else {
 			record[r_string]=true;
 		}
@@ -2430,6 +2431,23 @@ function formatHomePage(state){
 	}
 }
 
+function processTestConditions(state) {
+	_.each(state.tests, function(test) {
+		var allRules = _.map(test.conditions, function(condition) {
+			return condition.rule
+		});
+
+		if (allRules.length) {
+			test.compiledRules = rulesToArray(state, allRules)[0];
+			// Ignore loops here
+			removeDuplicateRules(state, test.compiledRules);
+			rulesToMask(state, test.compiledRules);
+			test.compiledRules = arrangeRulesByGroupNumber(state, test.compiledRules).rules;
+			collapseRules(test.compiledRules);
+		}
+	});
+}
+
 var MAX_ERRORS=5;
 function loadFile(str) {
 	window.console.log('loadFile');
@@ -2458,17 +2476,22 @@ function loadFile(str) {
 	generateExtraMembers(state);
 	generateMasks(state);
 	levelsToArray(state);
-	rulesToArray(state);
-	processLevelFragments(state);
 
-	removeDuplicateRules(state);
+	var processedRules = rulesToArray(state, state.rules);
+	state.rules = processedRules[0];
+	state.loops = processedRules[1];
+
+	removeDuplicateRules(state, state.rules);
 
 	if (debugMode) {
 		printRules(state);
 	}
 
-	rulesToMask(state);
-	arrangeRulesByGroupNumber(state);
+	rulesToMask(state, state.rules);
+	var ruleGroups = arrangeRulesByGroupNumber(state, state.rules);
+	state.rules = ruleGroups.rules;
+	state.lateRules = ruleGroups.lateRules;
+
 	collapseRules(state.rules);
 	collapseRules(state.lateRules);
 
@@ -2486,6 +2509,9 @@ function loadFile(str) {
 	generateSoundData(state);
 
 	formatHomePage(state);
+
+	processLevelFragments(state);
+	processTestConditions(state);
 
 	delete state.commentLevel;
 	delete state.names;
