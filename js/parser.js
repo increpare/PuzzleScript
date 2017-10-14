@@ -1062,9 +1062,11 @@ var codeMirrorFn = function() {
                             } else if (stream.match(/\s*id\s*/, true)) {
                                 state.tokenName = 'LEVEL_ID';
                                 var rawId = stream.string.substring(stream.pos);
-                                if (rawId) {
+                                if (rawId && rawId.trim().length) {
                                     var id = rawId.trim();
                                     state.levelIds.push(id);
+                                } else {
+                                    logWarning('Expected to see a level ID. Did you mean to add one?', state.lineNumber);
                                 }
                                 return 'LEVEL_ID_VERB';
                             } else {
@@ -1087,6 +1089,10 @@ var codeMirrorFn = function() {
                                             logWarning("Maps must be rectangular, yo (In a level, the length of each row must be the same).",state.lineNumber);
                                         }
                                     }
+                                }
+                                if (state.levels.length > state.levelIds.length) {
+                                    // Ensure the number of IDs equals the number of levels, so the indices match even if we don't have all IDs
+                                    state.levelIds.push(null);
                                 }
                             }
                         } else {
@@ -1126,6 +1132,9 @@ var codeMirrorFn = function() {
                             }
                             state.tests.push(test);
                             test.name = mixedCase.slice(stream.pos).trim();
+                            if (!test.name || !test.name.length) {
+                                logWarning('Tests should be given names, bro. Be as descriptive as you like e.g. "test dogs chase cats but cats win in fights"', state.lineNumber);
+                            }
                             state.tokenName = 'TEST_VERB';
                             return 'TEST_VERB';
                         } else if (stream.match(/\s*given\s*/)) {
@@ -1190,7 +1199,7 @@ var codeMirrorFn = function() {
 
                             if (fragment.length > 1) {
                                 if (line.length !== fragment[1].length) {
-                                    logWarning("Level fragments must be rectangular, pal (just like normal levels).", state.lineNumber);
+                                    logWarning('Level fragments must be rectangular, pal (just like normal levels).', state.lineNumber);
                                 }
                             }
 
@@ -1206,6 +1215,9 @@ var codeMirrorFn = function() {
                             return 'TEST_NAME';
                         } else if (state.tokenName === 'GIVEN_VERB') {
                             test.levelId = stream.match(/[^\s]*/, true)[0].trim();
+                            if (state.levelIds.indexOf(test.levelId) === -1) {
+                                logError('No level with ID "' + test.levelId + '" could be found.', state.lineNumber);
+                            }
                             return 'LEVEL_ID';
                         } else if (state.tokenName === 'WHEN_VERB') {
                             var step = test.steps[test.steps.length - 1];
@@ -1216,7 +1228,7 @@ var codeMirrorFn = function() {
                                 step.when.inputs.push(test_inputs[m]);
                                 return 'DIRECTION';
                             } else {
-                                logError('Unrecognised stuff in the WHEN section of a test. Keyboard inputs only, please.');
+                                logError('Unrecognised stuff in the WHEN section of a test. Directions, "action" and "tick" only, please.');
                                 return 'ERROR';
                             }
                         } else if (state.tokenName === 'EXPECT_VERB') {
@@ -1232,6 +1244,12 @@ var codeMirrorFn = function() {
                                 // Grab the rule and add custom test RHS command
                                 var restOfLine = stream.string.substring(stream.pos);
                                 var rawRule = reg_notcommentstart.exec(restOfLine)[0];
+
+                                if (rawRule.indexOf('->') > -1) {
+                                    rawRule = rawRule.substring(0, rawRule.indexOf('->'));
+                                    logError('Test conditions aren\'t like normal rules. They can\'t include outcomes - that means no "->". Think of them as the left-hand side of rules only.', state.lineNumber);
+                                }
+
                                 var rule = rawRule + ' -> count';
                                 condition.rawRule = rawRule;
                                 condition.rule = [rule, state.lineNumber, mixedCase + ' -> count'];

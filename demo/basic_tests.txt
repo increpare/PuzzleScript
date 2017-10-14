@@ -1,5 +1,5 @@
-title Testing Tests
-author Rich Locke
+title Basic With Tests
+author Stephen Lavelle/Rich Locke
 homepage www.richardlocke.co.uk
 
 ========
@@ -104,7 +104,7 @@ All Target on Crate
 LEVELS
 =======
 
-
+id sahara
 ####..
 #.O#..
 #..###
@@ -113,7 +113,7 @@ LEVELS
 #..###
 ####..
 
-
+id mojave
 ######
 #....#
 #.#P.#
@@ -126,40 +126,6 @@ LEVELS
 TESTS
 =======
 
-test crates can be pushed right
-given
-o....
-.p*..
-.....
-when right right
-then
-o....
-...p*
-.....
-
-test crates can be pushed left
-given
-o....
-..*p.
-.....
-when left left
-then
-o....
-*p...
-.....
-
-(We expect this test to fail because crates can't be pulled!)
-test crates can be pulled left
-given
-o....
-..p*.
-.....
-when left left
-then
-o....
-p*...
-.....
-
 test player drops coins
 given
 o....
@@ -170,3 +136,62 @@ then
 o....
 pcc..
 .....
+
+test crates can be pushed
+......
+op*...
+......
+......
+when right right
+......
+o..p*.
+......
+......
+when up right down
+......
+o...p.
+....*.
+......
+when right down left
+......
+o.....
+...*p.
+......
+when down left up
+......
+o..*..
+...p..
+......
+
+(We expect this test to fail because crates can't be pulled!)
+test crates can be pulled
+given
+o....
+..p*.
+.....
+when left left
+then
+o....
+p*...
+.....
+
+test player can stand on coins
+given
+o...p
+.....
+when action left action down action right action up
+then
+expect 2 right[coin|coin]
+expect 2 down[coin|coin]
+expect 4 [coin]
+expect [player coin]
+
+test player can walk around sahara
+given sahara
+when right right right right down left left left left
+expect [wall|crate|player]
+expect 0 [player coin]
+when action right action
+expect [coin|coin player]
+when up left up
+expect 0 [player coin]
