@@ -804,21 +804,32 @@ function printTestSuiteResult(state) {
         consolePrint('<br />');
         consolePrint((i + 1) + ') ' + test.name + ':');
 
-        if (!test.fragmentsMatch) {
-            consolePrint('<br /><span class="errorText indent">AssertionError: actual level fragment did not match expected</span>');
-            consolePrint('<span class="successText indent">+ expected</span><span class="errorText"> - actual</span>');
-            consolePrint('<br /><span class="errorText indent symbol">-</span><span class="errorText inline">' + test.actualFragment.replace(/\n/g, '<br />') + '</span>');
-            consolePrint('<span class="successText indent symbol">+</span><span class="successText inline">' + test.expectedFragment.replace(/\n/g, '<br />') + '</span>');
-        }
+        for (var i = 0; i < test.steps.length; i++) {
+            var step = test.steps[i];
+            var errorFound = false;
 
-        _.each(test.conditions, function(condition) {
-            if (!condition.met) {
-                consolePrint('<br /><span class="errorText indent">AssertionError: unexpected occurrence count</span>');
-                consolePrint('<span class="errorText indent">Condition: ' + condition.rawRule + ' (expected: '
-                    + condition.expectedCount + ', actual: ' + condition.actualCount + ')</span>');
-                consolePrint('<span class="errorText indent">Final level fragment:<br /><br />' + test.actualFragment.replace(/\n/g, '<br />') + '</span>')
+            if (!step.fragmentsMatch) {
+                errorFound = true;
+                consolePrint('<br /><span class="errorText indent">Step ' + (i + 1) + ' error: actual level fragment did not match expected</span>');
+                consolePrint('<span class="successText indent">+ expected</span><span class="errorText"> - actual</span>');
+                consolePrint('<br /><span class="errorText indent symbol">-</span><span class="errorText inline">' + step.actualFragment.replace(/\n/g, '<br />') + '</span>');
+                consolePrint('<span class="successText indent symbol">+</span><span class="successText inline">' + step.expectedFragment.replace(/\n/g, '<br />') + '</span>');
             }
-        });
+
+            _.each(step.then.conditions, function(condition) {
+                if (!condition.met) {
+                    errorFound = true;
+                    consolePrint('<br /><span class="errorText indent">Step ' + (i + 1) + ' error: unexpected occurrence count</span>');
+                    consolePrint('<span class="errorText indent">Condition: ' + condition.rawRule + ' (expected: '
+                        + condition.expectedCount + ', actual: ' + condition.actualCount + ')</span>');
+                    consolePrint('<span class="errorText indent">Final level fragment:<br /><br />' + step.actualFragment.replace(/\n/g, '<br />') + '</span>')
+                }
+            });
+
+            if (errorFound) {
+                break; // Don't check the rest of the steps
+            }
+        }
     });
 }
 
@@ -842,8 +853,27 @@ function runGameTest(state, test) {
         processInput(-1);
     }
 
-    for (var i = 0; i < test.when.inputs.length; i++) {
-        var input = test.when.inputs[i];
+    for (var i = 0; i < test.steps.length; i++) {
+        var step = test.steps[i];
+        var pass = runTestStep(step);
+
+        if (!pass) {
+            break; // Don't bother trying remaining steps
+        }
+    }
+
+    test.pass = _.every(test.steps, function(step) {
+        return step.pass;
+    });
+
+    printTestResult(test);
+
+    unitTesting = false;
+}
+
+function runTestStep(step) {
+    for (var i = 0; i < step.when.inputs.length; i++) {
+        var input = step.when.inputs[i];
 
         // Send each input we wish to simulate to the engine
         if (input === 'tick') {
@@ -859,31 +889,29 @@ function runGameTest(state, test) {
         }
     }
 
-    test.actualFragment = convertLevelFragmentToString();
-    test.fragmentsMatch = true;
-    if (test.thenLevel) {
-        test.expectedFragment = convertLevelFragmentToString(test.thenLevel);
-        test.fragmentsMatch = test.actualFragment === test.expectedFragment;
+    step.actualFragment = convertLevelFragmentToString();
+    step.fragmentsMatch = true;
+    if (step.then.fragment) {
+        step.expectedFragment = convertLevelFragmentToString(step.then.level);
+        step.fragmentsMatch = step.actualFragment === step.expectedFragment;
     }
 
-    test.conditionsMet = true;
-    if (test.compiledRules && test.compiledRules.length) {
-        applyRules(test.compiledRules, undefined, 0, []);
+    step.conditionsMet = true;
+    if (step.then.compiledRules && step.then.compiledRules.length) {
+        applyRules(step.then.compiledRules, undefined, 0, []);
 
         // Are the conditions met?
-        _.each(test.conditions, function(condition) {
+        _.each(step.then.conditions, function(condition) {
             condition.met = condition.actualCount === condition.expectedCount;
         });
 
-        test.conditionsMet = _.every(test.conditions, function(condition) {
+        step.conditionsMet = _.every(step.then.conditions, function(condition) {
             return condition.met;
         });
     }
 
-    test.pass = test.fragmentsMatch && test.conditionsMet;
-    printTestResult(test);
-
-    unitTesting = false;
+    step.pass = step.fragmentsMatch && step.conditionsMet;
+    return step.pass;
 }
 
 /**
@@ -2166,8 +2194,18 @@ Rule.prototype.queueCommands = function(numMatches) {
             // Can be executed by multiple test conditions so don't care if it's happened already
             var test = state.tests[state.currentTest];
             var rule = this;
-            var condition = _.find(test.conditions, function(condition) {
-                return condition.lineNumber === rule.lineNumber;
+            var condition;
+            // Have to search through all steps and each step's conditions
+            _.find(test.steps, function(step) {
+                var candidate = _.find(step.then.conditions, function(condition) {
+                    return condition.lineNumber === rule.lineNumber;
+                });
+
+                if (candidate) {
+                    condition = candidate;
+                }
+
+                return !!candidate;
             });
 
             condition.actualCount = numMatches;

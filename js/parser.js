@@ -1135,7 +1135,12 @@ var codeMirrorFn = function() {
                         } else if (stream.match(/\s*when\s*/)) {
                             // It's a test step
                             state.tokenName = 'WHEN_VERB';
-                            test.when = {inputs: []};
+                            if (!test.steps) {
+                                test.steps = [];
+                            }
+                            test.steps.push({});
+                            var step = test.steps[test.steps.length - 1];
+                            step.when = {inputs: []};
                             return 'WHEN_VERB';
                         } else if (stream.match(/\s*then\s*/)) {
                             // It's an expected outcome
@@ -1143,10 +1148,18 @@ var codeMirrorFn = function() {
                             return 'THEN_VERB';
                         } else if (stream.match(/\s*expect\s*/)) {
                             // It's an expected condition
-                            if (!test.conditions) {
-                                test.conditions = [];
+                            if (!test.steps) {
+                                test.steps = [{}];
                             }
-                            test.conditions.push({lineNumber: state.lineNumber});
+
+                            var step = test.steps[test.steps.length - 1];
+                            if (!step.then) {
+                                step.then = {};
+                            }
+                            if (!step.then.conditions) {
+                                step.then.conditions = [];
+                            }
+                            step.then.conditions.push({lineNumber: state.lineNumber, actualCount: 0});
                             state.tokenName = 'EXPECT_VERB';
                             return 'EXPECT_VERB';
                         } else if (state.abbrevNames.indexOf(firstChar) >= 0) {
@@ -1154,8 +1167,19 @@ var codeMirrorFn = function() {
                             var line = stream.match(reg_notcommentstart, false)[0].trim();
                             state.tokenName = 'LEVEL';
 
-                            var fragmentType = test.when ? 'THEN' : 'WHEN';
-                            var partialFragment = fragmentType === 'WHEN' ? test.given : test.then;
+                            var step = test.steps && test.steps[test.steps.length - 1];
+                            var fragmentType = step && step.when ? 'THEN' : 'WHEN';
+
+                            var partialFragment;
+                            if (fragmentType === 'WHEN') {
+                                partialFragment = test.given;
+                            } else {
+                                if (!step.then) {
+                                    step.then = {};
+                                }
+                                partialFragment = step.then.fragment;
+                            }
+
                             var fragment = partialFragment ? partialFragment : [];
 
                             if (!fragment.length) {
@@ -1173,7 +1197,7 @@ var codeMirrorFn = function() {
                             if (fragmentType === 'WHEN') {
                                 test.given = fragment;
                             } else {
-                                test.then = fragment;
+                                step.then.fragment = fragment;
                             }
                         }
                     } else {
@@ -1184,18 +1208,20 @@ var codeMirrorFn = function() {
                             test.levelId = stream.match(/[^\s]*/, true)[0].trim();
                             return 'LEVEL_ID';
                         } else if (state.tokenName === 'WHEN_VERB') {
+                            var step = test.steps[test.steps.length - 1];
                             var m = stream.match(/[^\s]*/, true)[0].trim();
 
                             if (reg_test_inputs.exec(m)) {
                                 stream.match(/\s*/, true);
-                                test.when.inputs.push(test_inputs[m]);
+                                step.when.inputs.push(test_inputs[m]);
                                 return 'DIRECTION';
                             } else {
                                 logError('Unrecognised stuff in the WHEN section of a test. Keyboard inputs only, please.');
                                 return 'ERROR';
                             }
                         } else if (state.tokenName === 'EXPECT_VERB') {
-                            var condition = test.conditions[test.conditions.length - 1];
+                            var step = test.steps[test.steps.length - 1]
+                            var condition = step.then.conditions[step.then.conditions.length - 1];
                             var expectedCountMatch = stream.match(/\s*\d+\s*/);
                             if (expectedCountMatch) {
                                 condition.expectedCount = Number(expectedCountMatch[0].trim());
@@ -1211,7 +1237,7 @@ var codeMirrorFn = function() {
                                 condition.rule = [rule, state.lineNumber, mixedCase + ' -> count'];
                                 state.tokenIndex = 0; // Indicates bracket hasn't been found yet
 
-                                if (!condition.expectedCount) {
+                                if (!condition.expectedCount && condition.expectedCount !== 0) {
                                     // Default of 1 if no expected count is entered
                                     condition.expectedCount = 1;
                                 }

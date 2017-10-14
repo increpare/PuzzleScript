@@ -493,9 +493,11 @@ function processLevelFragments(state) {
 			test.givenLevel = processLevel(state, test.given);
 		}
 
-		if (test.then) {
-			test.thenLevel = processLevel(state, test.then);
-		}
+		_.each(test.steps, function(step) {
+			if (step.then && step.then.fragment) {
+				step.then.level = processLevel(state, step.then.fragment);
+			}
+		});
 	}
 }
 
@@ -2433,18 +2435,20 @@ function formatHomePage(state){
 
 function processTestConditions(state) {
 	_.each(state.tests, function(test) {
-		var allRules = _.map(test.conditions, function(condition) {
-			return condition.rule
-		});
+		_.each(test.steps, function(step) {
+			var allRules = _.map(step.then.conditions, function(condition) {
+				return condition.rule
+			});
 
-		if (allRules.length) {
-			test.compiledRules = rulesToArray(state, allRules)[0];
-			// Ignore loops here
-			removeDuplicateRules(state, test.compiledRules);
-			rulesToMask(state, test.compiledRules);
-			test.compiledRules = arrangeRulesByGroupNumber(state, test.compiledRules).rules;
-			collapseRules(test.compiledRules);
-		}
+			if (allRules.length) {
+				step.then.compiledRules = rulesToArray(state, allRules)[0];
+				// Ignore loops here
+				removeDuplicateRules(state, step.then.compiledRules);
+				rulesToMask(state, step.then.compiledRules);
+				step.then.compiledRules = arrangeRulesByGroupNumber(state, step.then.compiledRules).rules;
+				collapseRules(step.then.compiledRules);
+			}
+		});
 	});
 }
 
