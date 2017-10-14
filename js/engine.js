@@ -828,8 +828,13 @@ function printTestSuiteResult(state) {
 function runGameTest(state, test) {
     unitTesting = true;
 
-    // Load the precondition level fragment as the current level
-    loadLevelFromLevelDat(state, test.givenLevel);
+    if (test.levelId) {
+        // Load the level with the given ID
+        loadLevelFromState(state, state.levelIds.indexOf(test.levelId));
+    } else {
+        // Load the precondition level fragment as the current level
+        loadLevelFromLevelDat(state, test.givenLevel);
+    }
 
     // If run_rules_on_start is set, an 'again' rule might be hit, so need to tick
     while (againing) {
