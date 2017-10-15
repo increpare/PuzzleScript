@@ -2436,9 +2436,11 @@ function formatHomePage(state){
 function processTestConditions(state) {
 	_.each(state.tests, function(test) {
 		_.each(test.steps, function(step) {
-			var allRules = _.map(step.then.conditions, function(condition) {
+			var allRules = _.chain(step.then.conditions).filter(function(condition) {
+				return !!condition.rule;
+			}).map(function(condition) {
 				return condition.rule
-			});
+			}).value();
 
 			if (allRules.length) {
 				step.then.compiledRules = rulesToArray(state, allRules)[0];

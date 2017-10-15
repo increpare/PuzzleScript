@@ -188,7 +188,7 @@ o..*..
 ......
 
 (We expect this test to fail because crates can't be pulled!)
-test crates can be pulled
+test crates can be pulled (expect to fail)
 given
 o....
 ..p*.
@@ -219,6 +219,11 @@ when action right action
 expect [coin|coin player]
 when up left up
 expect 0 [player coin]
+
+test mojave can be completed
+given mojave
+when right down down left right up up left down up up left left down down right
+expect win
 </textarea></form>
 </div>
 <div id="verticaldragbar"></div>

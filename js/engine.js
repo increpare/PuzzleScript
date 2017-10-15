@@ -774,8 +774,9 @@ function runGameTests(state) {
 
     printTestSuiteResult(state);
 
-    // Return to the level we were on before running tests
+    // Restore previously-loaded level
     loadLevelFromState(state, curlevelBackup);
+    goToTitleScreen();
 }
 
 /**
@@ -793,7 +794,7 @@ function printTestSuiteResult(state) {
     }
 
     if (numPassing > 0) {
-        consolePrint('<br /><span class="successText">' + numPassing + ' passing</span>');
+        consolePrint('<span class="successText">' + numPassing + ' passing</span>');
     }
 
     if (numFailing > 0) {
@@ -812,17 +813,24 @@ function printTestSuiteResult(state) {
                 errorFound = true;
                 consolePrint('<br /><span class="errorText indent">Step ' + (i + 1) + ' error: actual level fragment did not match expected</span>');
                 consolePrint('<span class="successText indent">+ expected</span><span class="errorText"> - actual</span>');
-                consolePrint('<br /><span class="errorText indent symbol">-</span><span class="errorText inline">' + step.actualFragment.replace(/\n/g, '<br />') + '</span>');
-                consolePrint('<span class="successText indent symbol">+</span><span class="successText inline">' + step.expectedFragment.replace(/\n/g, '<br />') + '</span>');
+                consolePrint('<br /><span class="errorText indent symbol">-</span><span class="errorText inline noWrap">' + step.actualFragment.replace(/\n/g, '<br />') + '</span>');
+                consolePrint('<span class="successText indent symbol">+</span><span class="successText inline noWrap">' + step.expectedFragment.replace(/\n/g, '<br />') + '</span>');
             }
 
             _.each(step.then.conditions, function(condition) {
                 if (!condition.met) {
                     errorFound = true;
-                    consolePrint('<br /><span class="errorText indent">Step ' + (i + 1) + ' error: unexpected occurrence count</span>');
-                    consolePrint('<span class="errorText indent">Condition: ' + condition.rawRule + ' (expected: '
-                        + condition.expectedCount + ', actual: ' + condition.actualCount + ')</span>');
-                    consolePrint('<span class="errorText indent">Final level fragment:<br /><br />' + step.actualFragment.replace(/\n/g, '<br />') + '</span>')
+                    if (condition.expectedCount && condition.actualCount !== condition.expectedCount) {
+                        consolePrint('<br /><span class="errorText indent">Step ' + (i + 1) + ' error: unexpected occurrence count</span>');
+                        consolePrint('<span class="errorText indent">Condition: ' + condition.rawRule + ' (expected: '
+                            + condition.expectedCount + ', actual: ' + condition.actualCount + ')</span>');
+                    }
+
+                    if (condition.expectWin && !condition.actualWin) {
+                        consolePrint('<br /><span class="errorText indent">Step ' + (i + 1) + ' error: expected win conditions to be met (but they weren\'t)</span>');
+                    }
+
+                    consolePrint('<br /><span class="errorText indent noWrap">Final level fragment:<br /><br />' + step.actualFragment.replace(/\n/g, '<br />') + '</span>')
                 }
             });
 
@@ -838,6 +846,7 @@ function printTestSuiteResult(state) {
  */
 function runGameTest(state, test) {
     unitTesting = true;
+    state.runningTest = true;
 
     if (test.levelId) {
         // Load the level with the given ID
@@ -855,7 +864,7 @@ function runGameTest(state, test) {
 
     for (var i = 0; i < test.steps.length; i++) {
         var step = test.steps[i];
-        var pass = runTestStep(step);
+        var pass = runTestStep(state, step);
 
         if (!pass) {
             break; // Don't bother trying remaining steps
@@ -867,11 +876,13 @@ function runGameTest(state, test) {
     });
 
     printTestResult(test);
-
+    state.runningTest = false;
     unitTesting = false;
 }
 
-function runTestStep(step) {
+function runTestStep(state, step) {
+    state.winConditionsMet = false;
+
     for (var i = 0; i < step.when.inputs.length; i++) {
         var input = step.when.inputs[i];
 
@@ -897,12 +908,17 @@ function runTestStep(step) {
     }
 
     step.conditionsMet = true;
-    if (step.then.compiledRules && step.then.compiledRules.length) {
-        applyRules(step.then.compiledRules, undefined, 0, []);
+    if (step.then.conditions && step.then.conditions.length) {
+        if (step.then.compiledRules && step.then.compiledRules.length) {
+            applyRules(step.then.compiledRules, undefined, 0, []);
+        }
 
         // Are the conditions met?
         _.each(step.then.conditions, function(condition) {
-            condition.met = condition.actualCount === condition.expectedCount;
+            var winExpectationMet = condition.expectWin ? state.winConditionsMet : true;
+            var haveCountExpectation = !!condition.expectedCount || condition.expectedCount === 0;
+            var countExpectationMet = !haveCountExpectation || condition.actualCount === condition.expectedCount;
+            condition.met = countExpectationMet && winExpectationMet;
         });
 
         step.conditionsMet = _.every(step.then.conditions, function(condition) {
@@ -911,6 +927,7 @@ function runTestStep(step) {
     }
 
     step.pass = step.fragmentsMatch && step.conditionsMet;
+    state.winConditionsMet = false;
     return step.pass;
 }
 
@@ -2700,9 +2717,13 @@ function checkWin() {
 	}
 
 	if (level.commandQueue.indexOf('win')>=0) {
-		consolePrint("Win Condition Satisfied");
-		DoWin();
-		return;
+        if (state.runningTest) {
+            state.winConditionsMet = true;
+        } else {
+            consolePrint("Win Condition Satisfied");
+            DoWin();
+            return;
+        }
 	}
 
 	var won= false;
@@ -2764,8 +2785,12 @@ function checkWin() {
 	}
 
 	if (won) {
-		consolePrint("Win Condition Satisfied");
-		DoWin();
+        if (state.runningTest) {
+            state.winConditionsMet = true;
+        } else {
+            consolePrint("Win Condition Satisfied");
+            DoWin();
+        }
 	}
 }
 

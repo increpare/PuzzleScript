@@ -1058,6 +1058,10 @@ var codeMirrorFn = function() {
                                 } else {
                                     state.levels.push(newdat);
                                 }
+                                if (state.levels.length > state.levelIds.length) {
+                                    // Ensure the number of IDs equals the number of levels, so the indices match even if we don't have all IDs
+                                    state.levelIds.push(null);
+                                }
                                 return 'MESSAGE_VERB';
                             } else if (stream.match(/\s*id\s*/, true)) {
                                 state.tokenName = 'LEVEL_ID';
@@ -1081,7 +1085,7 @@ var codeMirrorFn = function() {
                                     {
                                         lastlevel.push(state.lineNumber);
                                     }
-                                    lastlevel.push(line);  
+                                    lastlevel.push(line);
 
                                     if (lastlevel.length>1) 
                                     {
@@ -1091,7 +1095,6 @@ var codeMirrorFn = function() {
                                     }
                                 }
                                 if (state.levels.length > state.levelIds.length) {
-                                    // Ensure the number of IDs equals the number of levels, so the indices match even if we don't have all IDs
                                     state.levelIds.push(null);
                                 }
                             }
@@ -1234,6 +1237,12 @@ var codeMirrorFn = function() {
                         } else if (state.tokenName === 'EXPECT_VERB') {
                             var step = test.steps[test.steps.length - 1]
                             var condition = step.then.conditions[step.then.conditions.length - 1];
+
+                            if (stream.match(/\s*win\s*/)) {
+                                condition.expectWin = true;
+                                return 'COMMAND';
+                            }
+
                             var expectedCountMatch = stream.match(/\s*\d+\s*/);
                             if (expectedCountMatch) {
                                 condition.expectedCount = Number(expectedCountMatch[0].trim());
