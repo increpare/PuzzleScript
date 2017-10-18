@@ -287,7 +287,7 @@ var codeMirrorFn = function() {
               winConditionsCopy.push(state.winconditions[i].concat([]));
             }
             for (var i = 0; i < state.tests.length; i++) {
-              testsCopy.push(_.cloneDeep(state.tests[i]));
+              testsCopy.push(deepClone(state.tests[i]));
             }
 
             var nstate = {
@@ -326,6 +326,8 @@ var codeMirrorFn = function() {
               tests: testsCopy,
 
               levelIds: state.levelIds.concat([]),
+
+              fragments: state.fragments.concat([]),
 
               STRIDE_OBJ : state.STRIDE_OBJ,
               STRIDE_MOV : state.STRIDE_MOV
@@ -1177,7 +1179,7 @@ var codeMirrorFn = function() {
                         } else if (state.abbrevNames.indexOf(firstChar) >= 0) {
                             // It's a level fragment
                             var line = stream.match(reg_notcommentstart, false)[0].trim();
-                            state.tokenName = 'LEVEL';
+                            state.tokenName = 'FRAGMENT';
 
                             var step = test.steps && test.steps[test.steps.length - 1];
                             var fragmentType = step && step.when ? 'THEN' : 'WHEN';
@@ -1274,11 +1276,11 @@ var codeMirrorFn = function() {
                         }
                     }
 
-                    if (state.tokenName === 'LEVEL' && !stream.eol()) {
+                    if ((state.tokenName === 'LEVEL' || state.tokenName === 'FRAGMENT') && !stream.eol()) {
                         stream.next();
 
                         if (state.abbrevNames.indexOf(ch) >= 0) {
-                            return 'LEVEL';
+                            return state.tokenName;
                         } else {
                             logError('Key "' + ch.toUpperCase() + '" not found. Do you need to add it to the legend, or define a new object?', state.lineNumber);
                             return 'ERROR';
@@ -1387,6 +1389,7 @@ var codeMirrorFn = function() {
 
                 tests: [],
                 levelIds: [],
+                fragments: [],
 
                 subsection: ''
             };

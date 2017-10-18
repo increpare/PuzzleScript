@@ -697,6 +697,24 @@ function setGameState(_state, command, randomseed) {
 			}
 			break;
 		}
+        case "fragline": {
+            var targetLine = command[1];
+            var fragment = _(state.fragments)
+                .orderBy('lineNumber', 'desc')
+                .find(function(f) { return f.lineNumber <= targetLine + 1 });
+
+            winning=false;
+            timer=0;
+            titleScreen=false;
+            textMode=false;
+            titleSelection=1;
+            titleSelected=false;
+            quittingMessageScreen=false;
+            quittingTitleScreen=false;
+            messageselected=false;
+            titleMode = 0;
+            loadLevelFromLevelDat(state, fragment);
+        }
 	}
 	
 	if(command[0] !== "rebuild") {
@@ -820,7 +838,7 @@ function printTestSuiteResult(state) {
             _.each(step.then.conditions, function(condition) {
                 if (!condition.met) {
                     errorFound = true;
-                    if (condition.expectedCount && condition.actualCount !== condition.expectedCount) {
+                    if ((condition.expectedCount || condition.expectedCount === 0) && condition.actualCount !== condition.expectedCount) {
                         consolePrint('<br /><span class="errorText indent">Step ' + (i + 1) + ' error: unexpected occurrence count</span>');
                         consolePrint('<span class="errorText indent">Condition: ' + condition.rawRule + ' (expected: '
                             + condition.expectedCount + ', actual: ' + condition.actualCount + ')</span>');

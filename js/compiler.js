@@ -487,18 +487,19 @@ function processLevel(state, level) {
  * Converts raw level fragments from tests into proper Level objects
  */
 function processLevelFragments(state) {
-	for (var i = 0; i < state.tests.length; i++) {
-		var test = state.tests[i];
+	_.each(state.tests, function(test) {
 		if (test.given) {
 			test.givenLevel = processLevel(state, test.given);
+			state.fragments.push(test.givenLevel);
 		}
 
 		_.each(test.steps, function(step) {
 			if (step.then && step.then.fragment) {
 				step.then.level = processLevel(state, step.then.fragment);
+				state.fragments.push(step.then.level);
 			}
 		});
-	}
+	});
 }
 
 var directionaggregates = {
@@ -2434,23 +2435,17 @@ function formatHomePage(state){
 }
 
 function processTestConditions(state) {
-	_.each(state.tests, function(test) {
-		_.each(test.steps, function(step) {
-			var allRules = _.chain(step.then.conditions).filter(function(condition) {
-				return !!condition.rule;
-			}).map(function(condition) {
-				return condition.rule
-			}).value();
+	_(state.tests).flatMap('steps').each(function(step) {
+		var allRules = _(step.then.conditions).filter('rule').map('rule').value();
 
-			if (allRules.length) {
-				step.then.compiledRules = rulesToArray(state, allRules)[0];
-				// Ignore loops here
-				removeDuplicateRules(state, step.then.compiledRules);
-				rulesToMask(state, step.then.compiledRules);
-				step.then.compiledRules = arrangeRulesByGroupNumber(state, step.then.compiledRules).rules;
-				collapseRules(step.then.compiledRules);
-			}
-		});
+		if (allRules.length) {
+			step.then.compiledRules = rulesToArray(state, allRules)[0];
+			// Ignore loops here
+			removeDuplicateRules(state, step.then.compiledRules);
+			rulesToMask(state, step.then.compiledRules);
+			step.then.compiledRules = arrangeRulesByGroupNumber(state, step.then.compiledRules).rules;
+			collapseRules(step.then.compiledRules);
+		}
 	});
 }
 
