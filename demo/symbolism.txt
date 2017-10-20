@@ -1,0 +1,1315 @@
+title Symbolism
+author Richard Locke
+homepage www.richardlocke.co.uk
+background_color #303030
+text_color #a0a0a0
+again_interval 0.5
+realtime_interval 1.0
+key_repeat_interval 0.2
+norepeat_action
+run_rules_on_level_start
+(verbose_logging)
+(debug)
+
+========
+OBJECTS
+========
+
+void
+Transparent
+
+rockInert
+#303040
+
+rockActive
+#303060
+
+boundary
+#808080 #303030
+00000
+00000
+00000
+11111
+11111
+
+buttonInert
+#808080 #8050f0 #303030
+00000
+11111
+00000
+22222
+22222
+
+buttonHover
+#808080 #c050f0 #303030
+00000
+11111
+00000
+22222
+22222
+
+buttonActive
+#808080 #f050f0 #303030
+00000
+11111
+00000
+22222
+22222
+
+playMode
+transparent
+
+playModeOff
+transparent
+
+timeRemaining
+transparent
+
+toolbox
+#304030
+
+borderTop
+#808080
+.....
+.....
+.....
+.....
+00000
+
+borderLeft
+#808080
+....0
+....0
+....0
+....0
+....0
+
+borderRight
+#808080
+0....
+0....
+0....
+0....
+0....
+
+borderBottom
+#808080
+00000
+.....
+.....
+.....
+.....
+
+borderTopLeft
+#808080
+.....
+.....
+.....
+.....
+....0
+
+borderTopRight
+#808080
+.....
+.....
+.....
+.....
+0....
+
+borderButtonBL
+#808080
+....0
+....0
+....0
+.....
+.....
+
+borderButtonBR
+#808080
+0....
+0....
+0....
+.....
+.....
+
+borderBL
+#808080
+....0
+.....
+.....
+.....
+.....
+
+borderBR
+#808080
+0....
+.....
+.....
+.....
+.....
+
+borderInsideTL
+#808080
+00000
+0....
+0....
+0....
+0....
+
+borderInsideTR
+#808080
+00000
+....0
+....0
+....0
+....0
+
+borderInsideBL
+#808080
+0....
+0....
+0....
+0....
+00000
+
+borderInsideBR
+#808080
+....0
+....0
+....0
+....0
+00000
+
+select
+#e0e0e0
+00.00
+0...0
+.....
+0...0
+00.00
+
+invisiplayer
+Transparent
+
+shield
+#505060
+
+shadow
+transparent
+
+removeShadow
+Transparent
+
+noWin
+transparent
+
+omega
+#ff9070
+...0.
+...0.
+0000.
+.0...
+.0...
+
+omegaShadow
+transparent
+
+omegaRevert
+transparent
+
+square
+#70d070
+..0..
+.000.
+.0.0.
+.000.
+.....
+
+squareShadow
+transparent
+
+squareRevert
+transparent
+
+violet
+#90c0f0
+.000.
+.0.0.
+00.00
+...0.
+...0.
+
+violetShadow
+transparent
+
+violetRevert
+transparent
+
+decayedViolet
+transparent
+
+decayedVioletShadow
+transparent
+
+decayedVioletRevert
+transparent
+
+chariot
+#d0d080
+....0
+000.0
+0.0.0
+0.000
+0....
+
+chariotShadow
+transparent
+
+chariotRevert
+transparent
+
+horse
+#f05050
+.....
+.0000
+00.0.
+..00.
+.00..
+
+horseShadow
+transparent
+
+horseRevert
+transparent
+
+slash
+#808080
+.....
+...0.
+..0..
+.0...
+0....
+
+tick
+#80a080
+.....
+.....
+...0.
+0.0..
+.0...
+
+cross
+#b08080
+.....
+.....
+0.0..
+.0...
+0.0..
+
+zero
+#808080
+0000.
+0..0.
+0..0.
+0..0.
+0000.
+
+one
+#808080
+000..
+..0..
+..0..
+..0..
+0000.
+
+two
+#808080
+0000.
+...0.
+0000.
+0....
+0000.
+
+three
+#808080
+000..
+...0.
+.00..
+...0.
+000..
+
+four
+#808080
+0....
+0....
+0.0..
+0000.
+..0..
+
+five
+#808080
+0000.
+0....
+000..
+...0.
+000..
+
+six
+#808080
+.000.
+0....
+000..
+0..0.
+.00..
+
+seven
+#808080
+0000.
+...0.
+..0..
+.0...
+0....
+
+eight
+#808080
+.00..
+0..0.
+.00..
+0..0.
+.00..
+
+nine
+#808080
+.00..
+0..0.
+.000.
+...0.
+000..
+
+oneRevert
+transparent
+
+twoRevert
+transparent
+
+threeRevert
+transparent
+
+fourRevert
+transparent
+
+fiveRevert
+transparent
+
+sixRevert
+transparent
+
+sevenRevert
+transparent
+
+eightRevert
+transparent
+
+nineRevert
+transparent
+
+numberCover
+#303030
+
+wall
+#b0b0b0
+00000
+00.00
+.0.0.
+00.00
+00000
+
+playIcon
+#60c0a9
+.0...
+.00..
+.000.
+.00..
+.0...
+
+pauseIcon
+#b08080
+00.00
+00.00
+00.00
+00.00
+00.00
+
+solved
+transparent
+
+time
+#60c0a9
+00000
+.000.
+..0..
+.000.
+00000
+
+timeShadow
+transparent
+
+timeRevert
+transparent
+
+applyRules
+transparent
+
+error
+#603030
+
+info1
+#5080e0 #50c0c0
+.....
+..01.
+.00..
+..00.
+.....
+
+info2
+#5080e0 #50c0c0
+.....
+..10.
+..00.
+.10..
+.....
+
+info3
+#5080e0 #50c0c0
+.....
+.10..
+..01.
+.01..
+.....
+
+info4
+#5080e0 #50c0c0
+.....
+.100.
+..1..
+.11..
+.....
+
+plus
+#808080
+.....
+..0..
+.000.
+..0..
+.....
+
+timebox
+transparent
+
+=======
+LEGEND
+=======
+
+' = void
+. = rockInert
+$ = shield
+# = boundary and rockInert
+P = select and rockInert
+π = select and shield
+S = square and void
+W = violet and void
+h = horse and void
+˙ = horse and shield
+O = omega and shield
+C = chariot and shield
+ç = chariot and void
+√ = decayedViolet and shield
+/ = slash
+÷ = plus
+0 = zero
+1 = one
+2 = two
+3 = three
+4 = four
+5 = five
+6 = six
+7 = seven
+8 = eight
+9 = nine
+- = borderTop and void
+_ = borderBottom and void
+: = borderLeft and void
+; = borderRight and void
+{ = borderTopLeft and void
+} = borderTopRight and void
+` = borderButtonBL and void
+~ = borderButtonBR and void
+œ = borderInsideTL and void
+∑ = borderInsideTR and void
+´ = borderInsideBL and void
+® = borderInsideBR and void
+† = borderBL and void
+¥ = borderBR and void
+x = buttonInert and rockInert
+q = square and toolbox
+u = square and shield
+i = violet and shield
+m = omega
+§ = zero and numberCover
+! = one and numberCover
+@ = two and numberCover
+£ = three and numberCover
+± = four and numberCover
+% = five and numberCover
+" = six and numberCover
+& = seven and numberCover
+* = eight and numberCover
+™ = nine and numberCover
+? = wall and shield
+t = time and shield
+e = time
+l = toolbox
+¬ = timebox
+¡ = info1 and shield
+¢ = info2 and shield
+∞ = info3 and shield
+¶ = info4 and shield
+
+
+
+rock = rockInert or rockActive
+background = rock or shield or void
+button = buttonInert or buttonHover or buttonActive
+border = boundary or borderLeft or borderRight or borderTop or borderBottom or borderTopLeft or borderTopRight or borderButtonBL or borderButtonBR or borderInsideTL or borderInsideTR or borderInsideBL or borderInsideBR or borderBL or borderBR or button
+revert = oneRevert or twoRevert or threeRevert or fourRevert or fiveRevert or sixRevert or sevenRevert or eightRevert or nineRevert or omegaRevert or squareRevert or violetRevert or chariotRevert or horseRevert or timeRevert or decayedVioletRevert
+noop = border or shield or wall
+player = select or invisiplayer
+playArea = rock or shield
+
+number = zero or one or two or three or four or five or six or seven or eight or nine
+
+(All symbols need to be added to this list)
+symbol = omega or square or violet or chariot or horse or time or info1 or info2 or info3 or info4
+
+(Occupied spaces are important for symbol rules)
+occupied = symbol or border or button or wall
+
+icon = tick or cross or playIcon or pauseIcon
+
+=======
+SOUNDS
+=======
+
+(Draw symbol)
+sfx0 94979106
+
+(Erase symbol)
+sfx1 65786906
+
+(Draw fail)
+sfx2 90767506
+
+(Change symbol)
+sfx3 64174703
+
+(Timer tick)
+sfx4 54851300
+
+(Timer tick 2)
+sfx5 44900907
+
+(Empty toolbox)
+sfx6 3749704
+
+sfx7 39598503
+
+(atmosphere)
+sfx8 38051508
+sfx9 81574108
+sfx10 4497708
+
+titleScreen 38051508
+startGame 81574108
+undo 74844306
+restart 4497708
+endGame 96315108
+
+================
+COLLISIONLAYERS
+================
+
+rock, shield, void, toolbox, timebox
+error
+border, symbol, wall
+decayedViolet
+slash, plus, icon, player
+number
+numberCover
+revert
+shadow, noWin, applyRules
+solved
+omegaShadow
+squareShadow
+violetShadow
+chariotShadow
+horseShadow
+timeShadow
+decayedVioletShadow
+removeShadow
+playMode, playModeOff
+timeRemaining
+
+
+
+======
+RULES
+======
+
+(Info messages)
+[ > player | info1 ][ nine  ] -> [ > player | info1 ][ nine  ] message Species' biggest challenge: Data processing
+[ > player | info2 ][ nine  ] -> [ > player | info2 ][ nine  ] message Species' biggest challenge: War
+[ > player | info3 ][ nine  ] -> [ > player | info3 ][ nine  ] message Species' biggest challenge: Food/energy production
+[ > player | info4 ][ nine  ] -> [ > player | info4 ][ nine  ] message Species' biggest challenge: Spacetime manipulation
+
+[ > player | info1 ][ eight ] -> [ > player | info1 ][ eight ] message Purpose: The acquisition of knowledge
+[ > player | info2 ][ eight ] -> [ > player | info2 ][ eight ] message Purpose: The acquisition of resources
+[ > player | info3 ][ eight ] -> [ > player | info3 ][ eight ] message Purpose: The hegemony of your race
+[ > player | info4 ][ eight ] -> [ > player | info4 ][ eight ] message Purpose: The survival of your race
+
+[ > player | info1 ][ seven ] -> [ > player | info1 ][ seven ] message Decision: Sacrifice freedoms and submit to our control
+[ > player | info2 ][ seven ] -> [ > player | info2 ][ seven ] message Decision: Face annihilation
+
+
+(If the level is solved, don't allow normal rules to execute)
+[ action player solved ] -> [ player solved ] win
+[ > player solved ] -> [ player solved ] win
+
+(Stop the player from leaving the level bounds)
+[ > player | void ] -> cancel
+
+(Draw or remove a square when the action key is pressed and there are some in the toolbox. Put a shadow where the last item was in the toolbox so we can refill it in the right order.)
+(Can't draw on noop)
+[ action player noop no button ] -> [ player noop ] sfx2
+
+(Drawing a square)
+[ action player no square no noop ] -> [ player squareShadow ]
+down [ squareShadow ][ square toolbox ] -> [ square ][ toolbox ] sfx0
+
+(Clean up error flags from last time)
+[ toolbox error ] -> [ toolbox ]
+
+(Nothing in the toolbox if the squareShadow is still present at this point)
+[ squareShadow ][ toolbox no error ] -> [ squareShadow ][ toolbox error ] sfx6
+[ squareShadow ] -> []
+
+(Erasing a square)
+down [ action player square no noop ][ toolbox no symbol | toolbox symbol ] -> [ action player ][ square toolbox | toolbox symbol ] sfx1
+[ action player square no noop ][ toolbox no symbol ] -> [ action player ][ square toolbox ] sfx1
+right down [ action player ][ square toolbox | toolbox no square ] -> [ action player ][ toolbox no square | square toolbox ] sfx1
+
+
+
+(Play Mode)
+
+(Deactivate play mode when the player moves or presses action again)
+[ > player ][ playMode ] -> [ > player ][ playModeOff no timeRemaining ]
+[ action player ][ playMode ] -> [ player ][ playModeOff no timeRemaining ] (consume action)
+
+(When deactivating play mode, revert to the initial state)
+[ playModeOff ][ symbol decayedVioletRevert ] -> [ playModeOff ][ decayedVioletRevert ]
+[ playModeOff ][ decayedViolet no decayedVioletRevert ] -> [ playModeOff ][]
+[ playModeOff ][ symbol no revert    ] -> [ playModeOff ][               ]
+[ playModeOff ][ nineRevert          ] -> [ playModeOff ][ nine          ]
+[ playModeOff ][ eightRevert         ] -> [ playModeOff ][ eight         ]
+[ playModeOff ][ sevenRevert         ] -> [ playModeOff ][ seven         ]
+[ playModeOff ][ sixRevert           ] -> [ playModeOff ][ six           ]
+[ playModeOff ][ fiveRevert          ] -> [ playModeOff ][ five          ]
+[ playModeOff ][ fourRevert          ] -> [ playModeOff ][ four          ]
+[ playModeOff ][ threeRevert         ] -> [ playModeOff ][ three         ]
+[ playModeOff ][ twoRevert           ] -> [ playModeOff ][ two           ]
+[ playModeOff ][ oneRevert           ] -> [ playModeOff ][ one           ]
+[ playModeOff ][ omegaRevert         ] -> [ playModeOff ][ omega         ]
+[ playModeOff ][ squareRevert        ] -> [ playModeOff ][ square        ]
+[ playModeOff ][ violetRevert        ] -> [ playModeOff ][ violet        ]
+[ playModeOff ][ chariotRevert       ] -> [ playModeOff ][ chariot       ]
+[ playModeOff ][ horseRevert         ] -> [ playModeOff ][ horse         ]
+[ playModeOff ][ timeRevert          ] -> [ playModeOff ][ time          ]
+[ playModeOff ][ decayedVioletRevert ] -> [ playModeOff ][ decayedViolet ]
+[ playModeOff ][ plus                ] -> [ playModeOff ][ void          ]
+
+(Remove the play or pause icon)
+[ playModeOff ][ | | number | time ] -> [ playModeOff ][ no icon | | number | time ]
+
+(Take the button out of active mode)
+[ playModeOff ][ player button ][ button ] -> [ playModeOff ][ player buttonHover ][ buttonHover ]
+[ playModeOff ][ player no button ][ button ] -> [ playModeOff ][ player ][ buttonInert ]
+
+(Reset the play area's appearance)
+[ playModeOff ][ rockActive ] -> [ playModeOff ][ rockInert ]
+
+[ playModeOff ] -> []
+
+(Activate play mode when the action key is pressed on the play button)
+(If the action is omitted from the RHS, it is consumed)
+[ action player button ][ button ][ | | number | time ] -> [ action player buttonActive playMode timeRemaining ][ buttonActive ][ playIcon | | number | time ]
+
+(Change the play area's appearance)
+[ action player button ][ rockInert ] -> [ action player button ][ rockActive ]
+
+(Save the state before play mode begins so we can revert to it afterwards)
+[ action player button ][ nine  | time ] -> [ action player button ][ nine  nineRevert  | time ]
+[ action player button ][ eight | time ] -> [ action player button ][ eight  eightRevert  | time ]
+[ action player button ][ seven | time ] -> [ action player button ][ seven  sevenRevert  | time ]
+[ action player button ][ six   | time ] -> [ action player button ][ six   sixRevert  | time ]
+[ action player button ][ five  | time ] -> [ action player button ][ five  fiveRevert  | time ]
+[ action player button ][ four  | time ] -> [ action player button ][ four  fourRevert  | time ]
+[ action player button ][ three | time ] -> [ action player button ][ three threeRevert | time ]
+[ action player button ][ two   | time ] -> [ action player button ][ two   twoRevert  | time ]
+[ action player button ][ one   | time ] -> [ action player button ][ one   oneRevert  | time ]
+[ action player button ][ omega   ] -> [ action player button ][ omega    omegaRevert ]
+[ action player button ][ square  ] -> [ action player button ][ square  squareRevert ]
+[ action player button ][ violet  ] -> [ action player button ][ violet  violetRevert ]
+[ action player button ][ chariot ] -> [ action player button ][ chariot chariotRevert ]
+[ action player button ][ horse   ] -> [ action player button ][ horse    horseRevert ]
+[ action player button ][ time ] -> [ action player button ][ time timeRevert ]
+[ action player button ][ decayedViolet ] -> [ action player button ][ decayedViolet decayedVioletRevert ]
+
+(Don't allow symbol interations once time gets to zero)
+[ timeRemaining ][ zero | time ] -> [][ zero | time ]
+
+(If there are hourglasses, however, we still have time remaining)
+[ playMode no timeRemaining ][ time playArea ] -> [ playMode timeRemaining ][ time playArea ]
+[ playMode no timeRemaining ][ time timebox ] -> [ playMode timeRemaining ][ time timebox ]
+
+
+(Change the button appearance when the player's on it)
+[ > player | button ][ buttonInert ] -> [ > invisiplayer | buttonHover ][ buttonHover ]
+[ no button | < player button ][ buttonHover ] -> [ | < select buttonInert ][ buttonInert ]
+
+
+(SYMBOL RULES)
+(These all apply to real-time moves only, and only when in play mode)
+(Set a marker to say we're okay to apply the symbol rules)
+[ stationary player ][ timeRemaining no solved ] -> [ stationary player ][ timeRemaining applyRules ]
+
+(Omega next to a square: remove square, replace omega with violet)
+[ applyRules ][ omega playArea | square playArea ] -> [ applyRules ][ omega violetShadow playArea | square removeShadow playArea ]
+
+(Chariot next to square: remove chariot, replace square with Omega)
+[ applyRules ][ chariot playArea | square playArea ] -> [ applyRules ][ chariot removeShadow playArea | square omegaShadow playArea ]
+
+(Three squares in a row produce a horse)
+[ applyRules ][ square playArea | square playArea | square playArea ] -> [ applyRules ][ square removeShadow playArea | square removeShadow horseShadow playArea | square removeShadow playArea ]
+
+(A square next to a horse will walk in the direction of the square)
+[ applyRules ][ square playArea | horse playArea | no occupied ] -> [ applyRules ][ square removeShadow playArea | horse removeShadow squareShadow playArea | horseShadow ]
+
+(A chariot next to a horse does the same thing)
+[ applyRules ][ chariot playArea | horse playArea | no occupied ] -> [ applyRules ][ chariot removeShadow playArea | horse removeShadow chariotShadow playArea | horseShadow ]
+
+(Two or more horses next to a violet become hourglasses)
+[ applyRules ] -> [ applyRules zero ]
++ [ applyRules zero ][ violet playArea no zero no shadow ] -> [ applyRules ][ violet playArea zero ]
++ [ applyRules ][ horse no shadow | violet zero no shadow ] -> [ applyRules ][ horse shadow | violet zero shadow ]
++ [ applyRules ][ horse no shadow | violet zero shadow ] -> [ applyRules ][ horse timeShadow | violet zero shadow decayedVioletShadow ]
++ [ applyRules ][ horse shadow | violet decayedVioletShadow ] -> [ applyRules ][ horse timeShadow no shadow | violet decayedVioletShadow ]
++ [ applyRules ][ violet zero ] -> [ applyRules ][ violet shadow no zero ]
++ [ applyRules ][ horse shadow ] -> [ applyRules ][ horse no shadow ]
+(Clean up - not part of rule group)
+[ applyRules ][ symbol shadow ] -> [ applyRules ][ symbol ]
+[ applyRules ][ violet zero ] -> [ applyRules ][ violet ]
+[ applyRules zero ] -> [ applyRules ]
+[ applyRules ][ violet decayedVioletShadow ] -> [ applyRules ][ decayedVioletShadow ]
+
+(An hourglass decays into a chariot, providing an extra second)
+(First, the indication that time needs to tick down)
+[ stationary player ][ playMode ] -> [ player ][ down playMode ]
+(Each separate group of hourglasses can tick independently. For each, the order is clockwise from 3 o' clock)
+left [ applyRules ][ time playArea | decayedViolet no shadow ] -> [ applyRules ][ time chariotShadow playArea | decayedViolet shadow ] sfx4
+up [ applyRules ][ time playArea | decayedViolet no shadow ] -> [ applyRules ][ time chariotShadow playArea | decayedViolet shadow ] sfx4
+right [ applyRules ][ time playArea | decayedViolet no shadow ] -> [ applyRules ][ time chariotShadow playArea | decayedViolet shadow ] sfx4
+down [ applyRules ][ time playArea | decayedViolet no shadow ] -> [ applyRules ][ time chariotShadow playArea | decayedViolet shadow ] sfx4
+(Put hourglasses in the timebox. Need a few rules to make sure they go in in the right order)
+right [ decayedViolet shadow ][ timebox time | timebox no time ] -> [ decayedViolet ][ timebox time | timebox time ]
+down [ decayedViolet shadow ][ no timebox | timebox no time ] -> [ decayedViolet ][ no timebox | timebox time ]
+down [ decayedViolet shadow ][ timebox time | timebox no time ] -> [ decayedViolet ][ timebox time | timebox time ]
+right [ decayedViolet shadow ][ timebox no time ] -> [ decayedViolet ][ timebox time]
+[ decayedViolet shadow ] -> [ decayedViolet ]
+
+(A decayed violet with no hourglasses next to it disappears)
+right [ applyRules ][ no time | decayedViolet | no time ] -> [ applyRules ][ no time | decayedViolet shadow | no time ]
+down [ applyRules ][ no time | decayedViolet shadow | no time ] -> [ applyRules ][ no time | no decayedViolet | no time ]
+[ decayedViolet shadow ] -> [ decayedViolet no shadow]
+
+(Remove applyRules)
+[ applyRules ] -> [ no applyRules ]
+
+
+
+(Remove an hourglass from the timebox if there is one, then shuffle them to the top-left)
+right [ down playMode ][ plus | timebox time | timebox no time ] -> [ stationary playMode ][ void | timebox | timebox ] sfx4
+[ down playMode ][ timebox time ] -> [ stationary playMode ][ timebox ] sfx4
+up [ timebox time | timebox no time ] -> [ timebox | timebox time ]
+left [ timebox time | timebox no time ] -> [ timebox | timebox time ]
+right [ void | timebox time ] -> [ plus | timebox time ]
+
+(Count the timer down)
+right [ down playMode ][ one   | time ] -> [ playMode ][ zero  | time] sfx4
+right [ down playMode ][ two   | time ] -> [ playMode ][ one   | time] sfx4
+right [ down playMode ][ three | time ] -> [ playMode ][ two   | time] sfx4
+right [ down playMode ][ four  | time ] -> [ playMode ][ three | time] sfx4
+right [ down playMode ][ five  | time ] -> [ playMode ][ four  | time] sfx4
+right [ down playMode ][ six   | time ] -> [ playMode ][ five  | time] sfx4
+right [ down playMode ][ seven | time ] -> [ playMode ][ six   | time] sfx4
+right [ down playMode ][ eight | time ] -> [ playMode ][ seven | time] sfx4
+right [ down playMode ][ nine  | time ] -> [ playMode ][ eight | time] sfx4
+
+[ down playMode ] -> [ playMode ]
+
+(Switch to a pause icon after the timer reaches zero)
+right [ playMode no timeRemaining][ playIcon | | zero ] -> [ playMode ][ pauseIcon | | zero ]
+
+
+(POST-SYMBOL RULES)
+(Remove any RemoveShadows and the symbol in that space)
+[ removeShadow symbol ] -> []
+
+(Replace symbol shadows with their real symbols)
+[ violetShadow  ] -> [ violet  ]
+[ omegaShadow   ] -> [ omega   ]
+[ squareShadow  ] -> [ square  ]
+[ chariotShadow ] -> [ chariot ]
+[ horseShadow   ] -> [ horse   ]
+[ timeShadow    ] -> [ time    ]
+[ decayedVioletShadow ] -> [ decayedViolet ]
+
+
+
+(Count up the number of target symbols by putting shadows on them then counting up as we remove them by shifting a shadow along the number line. Don't forget to set the count to zero first.)
+
+(violets)
+[ zero numberCover ] -> [ zero numberCover shadow ]
+right [ number | violet ][ violet No void ] -> [ number | violet ][ violet shadow ]
+right [ violet shadow ][ number shadow | number ] -> [ violet ][ number | number shadow ]
+right [ number shadow ][ | slash | | violet ] -> [ number ][ number | slash | | violet ]
+
+(omegas)
+[ zero numberCover ] -> [ zero numberCover shadow ]
+right [ number | omega ][ omega no void ] -> [ number | omega ][ omega shadow ]
+right [ omega shadow ][ number shadow | number ] -> [ omega ][ number | number shadow ]
+right [ number shadow ][ | slash | | omega ] -> [ number ][ number | slash | | omega ]
+
+(horses)
+[ zero numberCover ] -> [ zero numberCover shadow ]
+right [ number | horse ][ horse no void ] -> [ number | horse ][ horse shadow ]
+right [ horse shadow ][ number shadow | number ] -> [ horse ][ number | number shadow ]
+right [ number shadow ][ | slash | | horse ] -> [ number ][ number | slash | | horse ]
+
+(squares)
+[ zero numberCover ] -> [ zero numberCover shadow ]
+right [ number | square ][ square no void no toolbox ] -> [ number | square ][ square shadow ]
+right [ square shadow ][ number shadow | number ] -> [ square ][ number | number shadow ]
+right [ number shadow ][ | slash | | square ] -> [ number ][ number | slash | | square ]
+
+(chariots)
+[ zero numberCover ] -> [ zero numberCover shadow ]
+right [ number | chariot ][ chariot no void ] -> [ number | chariot ][ chariot shadow ]
+right [ chariot shadow ][ number shadow | number ] -> [ chariot ][ number | number shadow ]
+right [ number shadow ][ | slash | | chariot ] -> [ number ][ number | slash | | chariot ]
+
+(Clean up e.g. where there are more than 9 of a given symbol)
+[ symbol shadow ] -> [ symbol ]
+
+
+(Work out if the level is solved)
+(First, put crosses by all the counters)
+right [ | number | slash ] -> [ cross no tick | number | slash ]
+(Next, replace crosses with ticks where the targets are met)
+right [ cross | zero  | slash | zero  ] -> [ tick | zero  | slash | zero  ]
+right [ cross | one   | slash | one   ] -> [ tick | one   | slash | one   ]
+right [ cross | two   | slash | two   ] -> [ tick | two   | slash | two   ]
+right [ cross | three | slash | three ] -> [ tick | three | slash | three ]
+right [ cross | four  | slash | four  ] -> [ tick | four  | slash | four  ]
+right [ cross | five  | slash | five  ] -> [ tick | five  | slash | five  ]
+right [ cross | six   | slash | six   ] -> [ tick | six   | slash | six   ]
+right [ cross | seven | slash | seven ] -> [ tick | seven | slash | seven ]
+right [ cross | eight | slash | eight ] -> [ tick | eight | slash | eight ]
+right [ cross | nine  | slash | nine  ] -> [ tick | nine  | slash | nine  ]
+(Next, put a noWin on the player for any cross we find)
+[ cross ][ player ] -> [ cross ][ player noWin ]
+(If there's not a noWin on the player, the level is solved!)
+[ player no noWin no solved ] -> [ player solved no playMode ] sfx7
+down [ solved ][ button | ] -> [ solved ][ button | tick ]
+[ playIcon ][ solved ] -> [ tick ][ solved ]
+[ pauseIcon ][ solved ] -> [ tick ][ solved ]
+[ player noWin ] -> [ player ]
+
+
+
+==============
+WINCONDITIONS
+==============
+
+=======     
+LEVELS
+=======
+
+(There are a few features each level must have in order to work correctly:)
+(1. A row of hidden numbers 0-9 as this is used for counting)
+(2. At least one target symbol counter in the form 0/yZ where y is the required number and Z is the target symbol)
+(3. There must be a column to the left of the target counter so that ticks and crosses can be placed there by the rules)
+(4. An optional time limit in the form xe where x is the number of seconds allowed, up to a maximum of 9)
+(5. If a time limit is in place, it must have two columns to the left of it to allow the play and pause icons to be placed there by the rules)
+(6. At least one button sprite, x. By convention, these are put at the bottom of the play area.)
+(7. Levels with hourglasses need at least one timebox space)
+(7. Hourglasses tick down in groups around the violet they were produced by. If more than one of these groups may exist in the level, you'll need one timebox space per violet group to hold extra hourglasses)
+
+message Let it be known that proceeding may lead to the annihilation of your species.
+message X = draw/erase symbol, activate button
+
+id opener
+§!@£±%"&*™
+'''''{-}''
+'''4e:P;q'
+''''':O;''
+'0/1w:.;''
+'''''`x~''
+''''''''''
+
+message Acceptance confirmed. Analysis of species MW3022 commencing. Recognition of 'Hindu-Arabic' numerals likely.
+
+§!@£±%"&*™'
+'''''{---}'
+'''4e:P.o;q
+''''':...;'
+'0/1w:o..;'
+'''''`xxx~'
+'''''''''''
+
+message Normalised threat rating: **
+
+§!@£±%"&*™''''
+'''''{------}'
+'''4e:P.O$..;q
+''''':.$.$$O;q
+'0/4w:$O..$$;q
+''''':.$$..O;q
+'''''`xxxxxx~'
+''''''''''''''
+
+message Chance of accidental completion rated at 0.16% based on factorial analysis. Subject's comprehension is considered highly probable.
+
+§!@£±%"&*™''''''
+'''''{-------}''
+'''4e:p.o$..$;lq
+''''':..$.o..;qq
+''''':$o..o$.;qq
+'0/4w:.o.$..$;qq
+''''':.$$..o$;qq
+'0/9s:o..$$..;qq
+''''':..o..$.;qq
+'''''`xxxxxxx~''
+''''''''''''''''
+
+message Normalised threat rating: ****
+
+§!@£±%"&*™''''''
+'''''{--------}'
+'''4e:p.o$..o.;q
+''''':o..$.o.o;q
+'0/7w:.$..$..$;q
+''''':..o.o.o$;'
+''''':o..$.$..;'
+''''':.$o..$.o;'
+'''''`xxxxxxxx~'
+''''''''''''''''
+
+message Normalised threat rating: *****
+
+§!@£±%"&*™'''
+'''''{-----}'
+'''4e:P.$.O;q
+''''':$.$$.;q
+'0/4w:.$C..;q
+''''':$..$$;q
+''''':.C$..;q
+''''':.$.O$;q
+'''''`xxxxx~'
+'''''''''''''
+
+message Normalised threat rating: *******
+
+§!@£±%"&*™'''''
+'''''{-----}'''
+'''4e:P$..$;lqq
+''''':$..C.;lqq
+'0/8w:..$..;lqq
+''''':.C..$;qqq
+''''':$..$.;qqq
+'''''`xxxxx~'''
+'''''''''''''''
+
+message Normalised threat rating: *********
+
+§!@£±%"&*™''''''''
+'''''{---------}''
+'''4e:p.c.o$..c;lq
+''''':$o$..$.$.;lq
+'0/7w:$..o$c$.o;lq
+''''':.o$.$..c.;lq
+'0/3m:c.c.o.o$$;qq
+'''''`xxxxxxxxx~''
+''''''''''''''''''
+
+message Normalised threat rating: ************
+
+§!''''{-}''
+'''4e{®p´}q
+''''':...;q
+'0/1h†∑.œ¥q
+''''''`x~''
+
+message Normalised threat rating: **************
+
+§!@£±%"&*™'''''''''
+'''''{---------}'''
+'''4e:p$...$$$o;qqq
+''''':$$.$.o...;qqq
+'0/4h:$.o.$.$o$;qqq
+''''':o.$$.$.$.;qqq
+'0/6w:$.o..$$..;qqq
+''''':.$..$...$;'''
+'''''`xxxxxxxxx~'''
+'''''''''''''''''''
+
+message What is your species' biggest challenge? 1) Data processing, 2) War, 3) Food/energy production, 4) Spacetime manipulation
+
+§!''™{--}'
+'0/1s:¡p;q
+''''':¢.;'
+''''':∞.;'
+''''':¶.;'
+'''''†__¥'
+
+message Your response will be taken into consideration.
+
+§!@£±%"&*™'{----}'
+'''9e'''''':$$$$;q
+''''''''''':$o$$;q
+''''''''''':$$$$;q
+''''''''''':$$$$;q
+'''''{-----®.$$.;q
+'0/2h:π$$...$$.$;q
+''''':$$$$...$$.;q
+'0/2w:$o$$.$$...;q
+''''':$$$$$.$..$;q
+'''''`xxxxxxxxxx~'
+''''''''''''''''''
+
+message Normalised threat rating: ****************
+
+§!@£±%"&*™'''''''''
+'''''{----------}''
+'''9e:π...$..$..;''
+''''':$$..$$?.$.;lq
+'0/1w:$?$.$$...$;lq
+'''''†___∑.$$$$?;lq
+'''''{--}†∑?$o$.;lq
+''''':..´-®$$$$.;qq
+''''':...$$$$?$.;qq
+''''':?.$$$$.$.$;''
+'''''`xxxxxxxxxx~''
+'''''''''''''''''''
+
+message Normalised threat rating: *********************
+
+§!@£±%"&*™'''''''''
+'''''{---------}'''
+'''4e:p.$..$..$;qqq
+''''':$$$.$.$..;qqq
+'0/9h:$..$...$.;qqq
+''''':...$...$.;qqq
+''''':...$$$$..;qqq
+''''':$$$...$..;'''
+''''':....$..$.;'''
+''''':..$...$$$;'''
+''''':.$..$$...;'''
+''''':$.$$.$...;'''
+''''':.$...$$..;'''
+'''''`xxxxxxxxx~'''
+'''''''''''''''''''
+
+message Normalised threat rating: ************************
+
+§!@£±%"&*™'''''''
+'''''{---}'''''''
+'''1e:p..´}'''qqq
+''''':.$t$´}''qqq
+'¬¬¬¬:$t√.$´}'qqq
+'¬¬¬¬:..t...´}'''
+''''':$..$$..;'''
+''''':.t$.t√t;'''
+''''':t√t..tœ¥'''
+'0/9m:$..$.œ¥''''
+'''''`xxxxx~'''''
+'''''''''''''''''
+
+message Normalised threat rating: ***************************
+
+§!@£±%"&*™'''''''''
+'''''{----}''''''''
+'''9e:p..$;'qqqqq''
+''''':$...;'qqqqq''
+'0/8m:....;{-----}'
+'''{-®$$$$;:o....;'
+'¬¬:o.t$$?´®.....;'
+''':$t√t$$$$$$$$$;'
+''':o.t$?...œ____¥'
+'''`xxxxxxxx~''''''
+'''''''''''''''''''
+
+message Normalised threat rating: ******************************
+
+§!@£±%"&*™''''''
+'''''{----}'''''
+'''9e:p...;'''''
+''''':....;'''''
+'''¬¬:....;'qqq'
+'''¬¬:....;'qqq'
+'0/2m:$$$.;'qqq'
+{---}:.$$$;'''''
+:t√$´®$$$$´----}
+:$t$$$$$$$$$$$$;
+:$$$$$$$$$$$$t√;
+†____∑$$$$œ∑$$t;
+''{--®$...;†___¥
+'':$......´--}''
+'':$.......$$;''
+'':.$.......$;''
+''`xxxxxxxxxx~''
+''''''''''''''''
+
+message What is your purpose? 1) The acquisition of knowledge, 2) The acquisition of resources, 3) The hegemony of your race, 4) The survival of your race
+
+§!''*{--}'
+'0/1s:¡p;q
+''''':¢.;'
+''''':∞.;'
+''''':¶.;'
+'''''†__¥'
+
+message Your response will be taken into consideration.
+
+§!@£±%"&*™'''
+'''''{---}'''
+'''2e:p..;lqq
+'¬¬¬¬:.i.;qqq
+'0/2ç:...;qqq
+'''''`xxx~'''
+'''''''''''''
+
+message Normalised threat rating: *************************************
+
+§!@£±%"&*™''''''''
+'''''''{------}'''
+'''9e'':$$$$$c;lqq
+'''''''†∑uœ∑$œ¥qqq
+'¬¬¬¬'''†_¥:$;'qqq
+'''''{-----®$´}qqq
+''''':p......$;'''
+''''':.i......;'''
+'1/0s:........;'''
+'''''`xxxxxxxx~'''
+''''''''''''''''''
+
+message Normalised threat rating: *********************************************************
+
+§!@£±%"&*™''''''''''''
+'''''{-----}{-----}'''
+'''2e:p...$;:.$...;qqq
+''''':$i...´®..$i.;qqq
+'''¬¬:$.$$.$$.$.$.;qqq
+'''¬¬:....$..i.$$$;qqq
+'''¬¬:...i.$....i.;qqq
+'''¬¬:$.$$$$.$.$..;qqq
+''''':$$...$$$$...;qqq
+''''':$....$$$$$i$;qqq
+'0/4m:.....$$$$$$$;'''
+'''''`xxxxxxxxxxxx~'''
+''''''''''''''''''''''
+
+message We come now to the final test. Consider your actions carefully, sapient one.
+
+'''''''''''''''''''''''{--}''''
+''''''''''''''''''''''':u$;''''
+'§!@£±%"&*™'''''''''''':$$;qqq'
+'''''{------------}'''':$o;qqq'
+'''9e:p.....√.....´}''':u$;qqq'
+''''':˙.˙.˙.t.˙.˙.˙´--}:$$;qqq'
+'¬¬¬¬:.˙.˙.˙.˙.˙.˙....´®$o;qqq'
+'¬¬¬¬†__________∑........œ¥qqq'
+'¬¬¬¬{----------®........´}qqq'
+'¬¬¬¬:...˙...˙...˙....œ∑$o;qqq'
+''''':˙.˙.˙.t.˙.˙.˙œ__¥:$$;qqq'
+'4/0m:.˙...˙√..˙..œ¥''':u$;qqq'
+'''''`xxxxxxxxxxxx~'''':$o;qqq'
+''''''''''''''''''''''':$$;''''
+'''''''''''''''''''''''`xx~''''
+
+message Testing is now complete. Your risk rating has been calculated as...
+message CRITICAL
+message Dangerously intelligent life cannot be permitted to propagate unchecked within the galaxy. You must now decide on behalf of your civilisation whether to 1) Sacrifice your freedoms and submit to our direct control, or 2) Face annihilation.
+
+§!''&{--}'
+'0/1s:¡p;q
+''''':¢.;'
+'''''†__¥'
+
+message ERROR: Species designated 'homo sapiens' came under supervision 2500 years ago. Access to this system should not have been allowed. Our physical agents in the region may have been compromised.
+message Dispatching scout party to Orion Spur, Sol system.
+message ETA: 5 years
+message Shutting down...
+
+======
+TESTS
+======
+
+test timer counts down to zero
+given
+§!@£±%"&*™
+'''9e'p'''
+'0/1w'x'''
+when down action tick
+expect right[eight|time]
+when tick
+expect right[seven|time]
+when tick
+expect right[six|time]
+when tick
+expect right[five|time]
+when tick
+expect right[four|time]
+when tick
+expect right[three|time]
+when tick
+expect right[two|time]
+when tick
+expect right[one|time]
+when tick
+expect right[zero|time]
+when tick
+expect right[zero|time]
+
+test omegas become violets
+given
+§!@£±%"&*™
+'''1e'po'q
+'0/1w'x'''
+when action down action tick
+expect 0 [omega]
+expect 1 [squarerevert|violet]
+
+test level 1
+given opener
+when action down down down action tick down
+expect win
