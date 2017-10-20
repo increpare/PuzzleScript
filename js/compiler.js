@@ -459,25 +459,47 @@ function levelsToArray(state) {
 		if (level.length == 0) {
 			continue;
 		}
-		if (level[0] == '\n') {
-
-			var o = {
-				message: level[1]
-			};
-			splitMessage = wordwrap(o.message,intro_template[0].length);
-			if (splitMessage.length>12){
-				logWarning('Message too long to fit on screen.', level[2]);
-			}
-
-			processedLevels.push(o);
-		} else {
-			var o = levelFromString(state,level);
-			processedLevels.push(o);
-		}
-
+		processedLevels.push(processLevel(state, level));
 	}
 
 	state.levels = processedLevels;
+}
+
+function processLevel(state, level) {
+	if (level[0] == '\n') {
+
+		var o = {
+			message: level[1]
+		};
+		splitMessage = wordwrap(o.message,intro_template[0].length);
+		if (splitMessage.length>12){
+			logWarning('Message too long to fit on screen.', level[2]);
+		}
+
+		return o;
+	} else {
+		var o = levelFromString(state,level);
+		return o;
+	}
+}
+
+/**
+ * Converts raw level fragments from tests into proper Level objects
+ */
+function processLevelFragments(state) {
+	_.each(state.tests, function(test) {
+		if (test.given) {
+			test.givenLevel = processLevel(state, test.given);
+			state.fragments.push(test.givenLevel);
+		}
+
+		_.each(test.steps, function(step) {
+			if (step.then && step.then.fragment) {
+				step.then.level = processLevel(state, step.then.fragment);
+				state.fragments.push(step.then.level);
+			}
+		});
+	});
 }
 
 var directionaggregates = {
@@ -494,7 +516,7 @@ var simpleAbsoluteDirections = ['up', 'down', 'left', 'right'];
 var simpleRelativeDirections = ['^', 'v', '<', '>'];
 var reg_directions_only = /^(\>|\<|\^|v|up|down|left|right|moving|stationary|no|randomdir|random|horizontal|vertical|orthogonal|perpendicular|parallel|action)$/;
 //redeclaring here, i don't know why
-var commandwords = ["sfx0","sfx1","sfx2","sfx3","sfx4","sfx5","sfx6","sfx7","sfx8","sfx9","sfx10","cancel","checkpoint","restart","win","message","again"];
+var commandwords = ["sfx0","sfx1","sfx2","sfx3","sfx4","sfx5","sfx6","sfx7","sfx8","sfx9","sfx10","cancel","checkpoint","restart","win","message","again","count"];
 
 
 
@@ -824,8 +846,7 @@ function deepCloneRule(rule) {
 	return clonedRule;
 }
 
-function rulesToArray(state) {
-	var oldrules = state.rules;
+function rulesToArray(state, oldrules) {
 	var rules = [];
 	var loops=[];
 	for (var i = 0; i < oldrules.length; i++) {
@@ -837,7 +858,6 @@ function rulesToArray(state) {
 		}
 		rules.push(newrule);
 	}
-	state.loops=loops;
 
 	//now expand out rules with multiple directions
 	var rules2 = [];
@@ -887,7 +907,7 @@ function rulesToArray(state) {
 
 	}
 
-	state.rules = rules4;
+	return [rules4, loops];
 }
 
 function containsEllipsis(rule) {
@@ -1405,7 +1425,7 @@ var dirMasks = {
 	'' : parseInt('00000',2)
 };
 
-function rulesToMask(state) {
+function rulesToMask(state, rules) {
 	/*
 
 	*/
@@ -1415,8 +1435,8 @@ function rulesToMask(state) {
 		layerTemplate.push(null);
 	}
 
-	for (var i = 0; i < state.rules.length; i++) {
-		var rule = state.rules[i];
+	for (var i = 0; i < rules.length; i++) {
+		var rule = rules[i];
 		for (var j = 0; j < rule.lhs.length; j++) {
 			var cellrow_l = rule.lhs[j];
 			var cellrow_r = rule.rhs[j];
@@ -1705,11 +1725,11 @@ function ruleGroupRandomnessTest(ruleGroup) {
 	}
 }
 
-function arrangeRulesByGroupNumber(state) {
+function arrangeRulesByGroupNumber(state, rules) {
 	var aggregates = {};
 	var aggregates_late = {};
-	for (var i=0;i<state.rules.length;i++) {
-		var rule = state.rules[i];
+	for (var i=0;i<rules.length;i++) {
+		var rule = rules[i];
 		var targetArray = aggregates;
 		if (rule.late) {
 			targetArray=aggregates_late;
@@ -1737,10 +1757,8 @@ function arrangeRulesByGroupNumber(state) {
 			result_late.push(ruleGroup);
 		}
 	}
-	state.rules=result;
 
-	//check that there're no late movements with direction requirements on the lhs
-	state.lateRules=result_late;
+	return {rules: result, lateRules: result_late};
 }
 
 
@@ -2075,20 +2093,20 @@ function printRules(state) {
 	consolePrint(output);
 }
 
-function removeDuplicateRules(state) {
+function removeDuplicateRules(state, rules) {
 	console.log("rule count before = " +state.rules.length);
 	var record = {};
 	var newrules=[];
 	var lastgroupnumber=-1;
-	for (var i=state.rules.length-1;i>=0;i--) {
-		var r = state.rules[i];
+	for (var i=rules.length-1;i>=0;i--) {
+		var r = rules[i];
 		var groupnumber = r.groupNumber;
 		if (groupnumber!==lastgroupnumber) {
 			record={};
 		}
 		var r_string=printRule(r);
 		if (record.hasOwnProperty(r_string)) {
-			state.rules.splice(i,1);
+			rules.splice(i,1);
 		} else {
 			record[r_string]=true;
 		}
@@ -2416,6 +2434,21 @@ function formatHomePage(state){
 	}
 }
 
+function processTestConditions(state) {
+	_(state.tests).flatMap('steps').each(function(step) {
+		var allRules = _(step.then.conditions).filter('rule').map('rule').value();
+
+		if (allRules.length) {
+			step.then.compiledRules = rulesToArray(state, allRules)[0];
+			// Ignore loops here
+			removeDuplicateRules(state, step.then.compiledRules);
+			rulesToMask(state, step.then.compiledRules);
+			step.then.compiledRules = arrangeRulesByGroupNumber(state, step.then.compiledRules).rules;
+			collapseRules(step.then.compiledRules);
+		}
+	});
+}
+
 var MAX_ERRORS=5;
 function loadFile(str) {
 	window.console.log('loadFile');
@@ -2444,16 +2477,22 @@ function loadFile(str) {
 	generateExtraMembers(state);
 	generateMasks(state);
 	levelsToArray(state);
-	rulesToArray(state);
 
-	removeDuplicateRules(state);
+	var processedRules = rulesToArray(state, state.rules);
+	state.rules = processedRules[0];
+	state.loops = processedRules[1];
+
+	removeDuplicateRules(state, state.rules);
 
 	if (debugMode) {
 		printRules(state);
 	}
 
-	rulesToMask(state);
-	arrangeRulesByGroupNumber(state);
+	rulesToMask(state, state.rules);
+	var ruleGroups = arrangeRulesByGroupNumber(state, state.rules);
+	state.rules = ruleGroups.rules;
+	state.lateRules = ruleGroups.lateRules;
+
 	collapseRules(state.rules);
 	collapseRules(state.lateRules);
 
@@ -2471,6 +2510,9 @@ function loadFile(str) {
 	generateSoundData(state);
 
 	formatHomePage(state);
+
+	processLevelFragments(state);
+	processTestConditions(state);
 
 	delete state.commentLevel;
 	delete state.names;
@@ -2547,7 +2589,7 @@ function compile(command,text,randomseed) {
 		for (var i=0;i<state.lateRules.length;i++) {
 			ruleCount+=state.lateRules[i].length;
 		}
-		if (command[0]=="restart") {
+		if (command[0] === "restart" || command[0] === "test") {
 			consolePrint('<span class="systemMessage">Successful Compilation, generated ' + ruleCount + ' instructions.</span>');
 		} else {
 			consolePrint('<span class="systemMessage">Successful live recompilation, generated ' + ruleCount + ' instructions.</span>');
@@ -2557,6 +2599,10 @@ function compile(command,text,randomseed) {
 	setGameState(state,command,randomseed);
 
 	clearInputHistory();
+
+	if (command[0] === 'test') {
+		runGameTests(state);
+	}
 
 	consoleCacheDump();
 }

@@ -1,0 +1,202 @@
+title Basic With Tests
+author Stephen Lavelle/Rich Locke
+homepage www.richardlocke.co.uk
+
+========
+OBJECTS
+========
+
+Background
+LIGHTGREEN GREEN
+11111
+01111
+11101
+11111
+10111
+
+
+Target
+DarkBlue
+.....
+.000.
+.0.0.
+.000.
+.....
+
+Wall
+BROWN DARKBROWN
+00010
+11111
+01000
+11111
+00010
+
+Player
+Black Orange White Blue
+.000.
+.111.
+22222
+.333.
+.3.3.
+
+Crate
+Orange Yellow
+00000
+0...0
+0...0
+0...0
+00000
+
+Coin
+yellow
+.....
+.....
+000..
+000..
+000..
+
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Player
+* = Crate
+@ = Crate and Target
+O = Target
+c = coin
+
+
+=======
+SOUNDS
+=======
+
+Crate MOVE 36772507
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Target
+Coin
+Player, Wall, Crate
+
+======
+RULES
+======
+
+(Player pushes crate)
+[> Player|Crate] -> [> Player|> Crate]
+
+(Player drops coins)
+[ACTION Player] -> [Player Coin]
+
+==============
+WINCONDITIONS
+==============
+
+All Target on Crate
+
+=======
+LEVELS
+=======
+
+id sahara
+####..
+#.O#..
+#..###
+#@P..#
+#..*.#
+#..###
+####..
+
+id mojave
+######
+#....#
+#.#P.#
+#.*@.#
+#.O@.#
+#....#
+######
+
+=======
+TESTS
+=======
+
+test player drops coins
+given
+o....
+..p..
+.....
+when action left action left
+then
+o....
+pcc..
+.....
+
+test crates can be pushed
+......
+op*...
+......
+......
+when right right
+......
+o..p*.
+......
+......
+when up right down
+......
+o...p.
+....*.
+......
+when right down left
+......
+o.....
+...*p.
+......
+when down left up
+......
+o..*..
+...p..
+......
+
+(We expect this test to fail because crates can't be pulled!)
+test crates can be pulled (expect to fail)
+given
+o....
+..p*.
+.....
+when left left
+then
+o....
+p*...
+.....
+
+test player can stand on coins
+given
+o...p
+.....
+when action left action down action right action up
+then
+expect 2 right[coin|coin]
+expect 2 down[coin|coin]
+expect 4 [coin]
+expect [player coin]
+
+test player can walk around sahara
+given sahara
+when right right right right down left left left left
+expect [wall|crate|player]
+expect 0 [player coin]
+when action right action
+expect [coin|coin player]
+when up left up
+expect 0 [player coin]
+
+test mojave can be completed
+given mojave
+when right down down left right up up left down up up left left down down right
+expect win

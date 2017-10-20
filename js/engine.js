@@ -697,6 +697,24 @@ function setGameState(_state, command, randomseed) {
 			}
 			break;
 		}
+        case "fragline": {
+            var targetLine = command[1];
+            var fragment = _(state.fragments)
+                .orderBy('lineNumber', 'desc')
+                .find(function(f) { return f.lineNumber <= targetLine + 1 });
+
+            winning=false;
+            timer=0;
+            titleScreen=false;
+            textMode=false;
+            titleSelection=1;
+            titleSelected=false;
+            quittingMessageScreen=false;
+            quittingTitleScreen=false;
+            messageselected=false;
+            titleMode = 0;
+            loadLevelFromLevelDat(state, fragment);
+        }
 	}
 	
 	if(command[0] !== "rebuild") {
@@ -753,6 +771,219 @@ function setGameState(_state, command, randomseed) {
 			*/
 	}
 	
+}
+
+/**
+ * Runs the suite of tests found in the TESTS section of the PuzzleScript file.
+ */
+function runGameTests(state) {
+    consolePrint('<br />=================================');
+    consolePrint('<span class="systemMessage">Running Test Suite</span>');
+    consolePrint('=================================');
+    consolePrint('<br />');
+
+    for (var i = 0; i < state.tests.length; i++) {
+        state.currentTest = i;
+        var test = state.tests[i];
+        runGameTest(state, test);
+    }
+
+    printTestSuiteResult(state);
+    goToTitleScreen();
+}
+
+/**
+ * Prints the overall result of running the test suite
+ */
+function printTestSuiteResult(state) {
+    var failingTests = _.filter(state.tests, function(test) { return !test.pass });
+    var numFailing = failingTests.length;
+    var numPassing = state.tests.length - numFailing;
+
+    if (numPassing > 0 || numFailing > 0) {
+        consolePrint('<br />');
+    } else {
+        consolePrint('No tests found');
+    }
+
+    if (numPassing > 0) {
+        consolePrint('<span class="successText">' + numPassing + ' passing</span>');
+    }
+
+    if (numFailing > 0) {
+        consolePrint('<span class="errorText">' + numFailing + ' failing</span>');
+    }
+
+    _.each(failingTests, function(test, i) {
+        consolePrint('<br />');
+        consolePrint((i + 1) + ') ' + test.name + ':');
+
+        for (var i = 0; i < test.steps.length; i++) {
+            var step = test.steps[i];
+            var errorFound = false;
+
+            if (!step.fragmentsMatch) {
+                errorFound = true;
+                consolePrint('<br /><span class="errorText indent">Step ' + (i + 1) + ' error: actual level fragment did not match expected</span>');
+                consolePrint('<span class="successText indent">+ expected</span><span class="errorText"> - actual</span>');
+                consolePrint('<br /><span class="errorText indent symbol">-</span><span class="errorText inline noWrap">' + step.actualFragment.replace(/\n/g, '<br />') + '</span>');
+                consolePrint('<span class="successText indent symbol">+</span><span class="successText inline noWrap">' + step.expectedFragment.replace(/\n/g, '<br />') + '</span>');
+            }
+
+            _.each(step.then.conditions, function(condition) {
+                if (!condition.met) {
+                    errorFound = true;
+                    if ((condition.expectedCount || condition.expectedCount === 0) && condition.actualCount !== condition.expectedCount) {
+                        consolePrint('<br /><span class="errorText indent">Step ' + (i + 1) + ' error: unexpected occurrence count</span>');
+                        consolePrint('<span class="errorText indent">Condition: ' + condition.rawRule + ' (expected: '
+                            + condition.expectedCount + ', actual: ' + condition.actualCount + ')</span>');
+                    }
+
+                    if (condition.expectWin && !condition.actualWin) {
+                        consolePrint('<br /><span class="errorText indent">Step ' + (i + 1) + ' error: expected win conditions to be met (but they weren\'t)</span>');
+                    }
+
+                    consolePrint('<br /><span class="errorText indent noWrap">Final level fragment:<br /><br />' + step.actualFragment.replace(/\n/g, '<br />') + '</span>')
+                }
+            });
+
+            if (errorFound) {
+                break; // Don't check the rest of the steps
+            }
+        }
+    });
+}
+
+/**
+ * Runs a single test and prints the result to the console
+ */
+function runGameTest(state, test) {
+    unitTesting = true;
+    state.runningTest = true;
+
+    if (test.levelId) {
+        // Load the level with the given ID
+        loadLevelFromState(state, state.levelIds.indexOf(test.levelId));
+    } else {
+        // Load the precondition level fragment as the current level
+        loadLevelFromLevelDat(state, test.givenLevel);
+    }
+
+    // If run_rules_on_start is set, an 'again' rule might be hit, so need to tick
+    while (againing) {
+        againing = false;
+        processInput(-1);
+    }
+
+    for (var i = 0; i < test.steps.length; i++) {
+        var step = test.steps[i];
+        var pass = runTestStep(state, step);
+
+        if (!pass) {
+            break; // Don't bother trying remaining steps
+        }
+    }
+
+    test.pass = _.every(test.steps, function(step) {
+        return step.pass;
+    });
+
+    printTestResult(test);
+    state.runningTest = false;
+    unitTesting = false;
+}
+
+function runTestStep(state, step) {
+    state.winConditionsMet = false;
+
+    for (var i = 0; i < step.when.inputs.length; i++) {
+        var input = step.when.inputs[i];
+
+        // Send each input we wish to simulate to the engine
+        if (input === 'tick') {
+            processInput(-1);
+        } else {
+            processInput(input);
+        }
+
+        // Allow a tick if an 'again' rule has triggered
+        while (againing) {
+            againing = false;
+            processInput(-1);
+        }
+    }
+
+    step.actualFragment = convertLevelFragmentToString();
+    step.fragmentsMatch = true;
+    if (step.then.fragment) {
+        step.expectedFragment = convertLevelFragmentToString(step.then.level);
+        step.fragmentsMatch = step.actualFragment === step.expectedFragment;
+    }
+
+    step.conditionsMet = true;
+    if (step.then.conditions && step.then.conditions.length) {
+        if (step.then.compiledRules && step.then.compiledRules.length) {
+            applyRules(step.then.compiledRules, undefined, 0, []);
+        }
+
+        // Are the conditions met?
+        _.each(step.then.conditions, function(condition) {
+            var winExpectationMet = condition.expectWin ? state.winConditionsMet : true;
+            var haveCountExpectation = !!condition.expectedCount || condition.expectedCount === 0;
+            var countExpectationMet = !haveCountExpectation || condition.actualCount === condition.expectedCount;
+            condition.met = countExpectationMet && winExpectationMet;
+        });
+
+        step.conditionsMet = _.every(step.then.conditions, function(condition) {
+            return condition.met;
+        });
+    }
+
+    step.pass = step.fragmentsMatch && step.conditionsMet;
+    state.winConditionsMet = false;
+    return step.pass;
+}
+
+/**
+ * Prints a single test result to the console
+ */
+function printTestResult(test) {
+    var symbolClass = test.pass ? 'successText' : 'errorText';
+    var symbol = test.pass ? '\u2713' : '\u2717';
+    var colouredSymbol = '<span class="symbol ' + symbolClass + '">' + symbol + '</span>';
+    consolePrint(colouredSymbol + test.name);
+}
+
+/**
+ * Converts a test level fragment to a String representation for the purposes of comparing actual
+ * outcomes with expected ones. The function is a modified verison of that in testingFrameWork.js.
+ */
+function convertLevelFragmentToString(obj) {
+    var lvl = obj ? obj : level;
+    var out = '';
+    var seenCells = {};
+    var i = 0;
+    for (var y = 0; y < lvl.height; y++) {
+        for (var x = 0; x < lvl.width; x++) {
+            var bitmask = lvl.getCell(y + (x * lvl.height));
+            var objs = [];
+            for (var bit = 0; bit < 32 * STRIDE_OBJ; ++bit) {
+                if (bitmask.get(bit)) {
+                    objs.push(state.idDict[bit])
+                }
+            }
+            objs.sort();
+            objs = objs.join(" ");
+            /* replace repeated object combinations with numbers */
+            if (!seenCells.hasOwnProperty(objs)) {
+                seenCells[objs] = i++;
+                out += objs + ":";
+            }
+            out += seenCells[objs] + ",";
+        }
+        out += '\n';
+    }
+    return out;
 }
 
 function RebuildLevelArrays() {
@@ -1977,16 +2208,39 @@ Rule.prototype.tryApply = function() {
 	    }
 	}
 
-    if (matches.length>0) {
-    	this.queueCommands();
+    if (matches && matches[0].length) {
+        this.queueCommands(matches[0].length);
     }
     return result;
 };
 
-Rule.prototype.queueCommands = function() {
+Rule.prototype.queueCommands = function(numMatches) {
 	var commands = this.commands;
 	for(var i=0;i<commands.length;i++) {
 		var command=commands[i];
+
+        if (command[0] === 'count') {
+            // Only used in tests to compare expected occurrences to actual
+            // Can be executed by multiple test conditions so don't care if it's happened already
+            var test = state.tests[state.currentTest];
+            var rule = this;
+            var condition;
+            // Have to search through all steps and each step's conditions
+            _.find(test.steps, function(step) {
+                var candidate = _.find(step.then.conditions, function(condition) {
+                    return condition.lineNumber === rule.lineNumber;
+                });
+
+                if (candidate) {
+                    condition = candidate;
+                }
+
+                return !!candidate;
+            });
+
+            condition.actualCount = numMatches;
+        }
+
 		var already=false;
 		if (level.commandQueue.indexOf(command[0])>=0) {
 			continue;
@@ -2002,7 +2256,7 @@ Rule.prototype.queueCommands = function() {
 
 		if (command[0]==='message') {			
 			messagetext=command[1];
-		}		
+		}
 	}
 };
 
@@ -2476,9 +2730,13 @@ function checkWin() {
 	}
 
 	if (level.commandQueue.indexOf('win')>=0) {
-		consolePrint("Win Condition Satisfied");
-		DoWin();
-		return;
+        if (state.runningTest) {
+            state.winConditionsMet = true;
+        } else {
+            consolePrint("Win Condition Satisfied");
+            DoWin();
+            return;
+        }
 	}
 
 	var won= false;
@@ -2540,8 +2798,12 @@ function checkWin() {
 	}
 
 	if (won) {
-		consolePrint("Win Condition Satisfied");
-		DoWin();
+        if (state.runningTest) {
+            state.winConditionsMet = true;
+        } else {
+            consolePrint("Win Condition Satisfied");
+            DoWin();
+        }
 	}
 }
 

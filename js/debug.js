@@ -6,13 +6,14 @@ var compiledText;
 var canOpenEditor=true;
 var IDE=true;
 
-function convertLevelToString() {
+function convertLevelToString(obj) {
+	var lvl = obj ? obj : level;
 	var out = '';
 	var seenCells = {};
 	var i = 0;
-	for (var y = 0; y < level.height; y++) {
-		for (var x = 0; x < level.width; x++) {
-			var bitmask = level.getCell(x + y * level.width);
+	for (var y = 0; y < lvl.height; y++) {
+		for (var x = 0; x < lvl.width; x++) {
+			var bitmask = lvl.getCell(x + y * lvl.width);
 			var objs = [];
 			for (var bit = 0; bit < 32 * STRIDE_OBJ; ++bit) {
 				if (bitmask.get(bit)) {
