@@ -782,8 +782,6 @@ function runGameTests(state) {
     consolePrint('=================================');
     consolePrint('<br />');
 
-    var curlevelBackup = curlevel;
-
     for (var i = 0; i < state.tests.length; i++) {
         state.currentTest = i;
         var test = state.tests[i];
@@ -791,9 +789,6 @@ function runGameTests(state) {
     }
 
     printTestSuiteResult(state);
-
-    // Restore previously-loaded level
-    loadLevelFromState(state, curlevelBackup);
     goToTitleScreen();
 }
 
