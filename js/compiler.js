@@ -5,17 +5,39 @@ function isColor(str) {
 	str = str.trim();
 	if (str in colorPalettes.arnecolors)
 		return true;
-	if (/^#([0-9A-F]{3}){1,2}$/i.test(str))
+	if (/^#[0-9A-F]{3,8}$/i.test(str))
 		return true;
 	if (str === "transparent")
 		return true;
 	return false;
 }
 
-function colorToHex(palette,str) {
+function colorToCss(palette,str) {
 	str = str.trim();
 	if (str in palette) {
 		return palette[str];
+	}
+
+	if (/^#[0-9A-F]{8}$/i.test(str)) {
+		var r = parseInt(str.substring(1, 3), 16);
+		var g = parseInt(str.substring(3, 5), 16);
+		var b = parseInt(str.substring(5, 7), 16);
+		var a = parseInt(str.substring(7, 9), 16);
+		var css = 'rgba(' + r + ',' + g + ',' + b + ',' + (a / 255) + ')';
+		return css;
+	}
+
+	if (/^#[0-9A-F]{4}$/i.test(str)) {
+		var r = str.substring(1, 2);
+		var g = str.substring(2, 3);
+		var b = str.substring(3, 4);
+		var a = str.substring(4, 5);
+		r = parseInt(r + r, 16);
+		g = parseInt(g + g, 16);
+		b = parseInt(b + b, 16);
+		a = parseInt(a + a, 16);
+		var css = 'rgba(' + r + ',' + g + ',' + b + ',' + (a / 255) + ')';
+		return css;
 	}
 
 	return str;
@@ -122,7 +144,7 @@ function generateExtraMembers(state) {
 	      	for (var i=0;i<o.colors.length;i++) {
 	      		var c = o.colors[i];
 				if (isColor(c)) {
-					c = colorToHex(colorPalette,c);
+					c = colorToCss(colorPalette,c);
 					o.colors[i] = c;
 				} else {
 					logError('Invalid color specified for object "' + n + '", namely "' + o.colors[i] + '".', o.lineNumber + 1);
@@ -2385,12 +2407,12 @@ function generateSoundData(state) {
 
 function formatHomePage(state){
 	if ('background_color' in state.metadata) {
-		state.bgcolor=colorToHex(colorPalette,state.metadata.background_color);
+		state.bgcolor=colorToCss(colorPalette,state.metadata.background_color);
 	} else {
 		state.bgcolor="#000000";
 	}
 	if ('text_color' in state.metadata) {
-		state.fgcolor=colorToHex(colorPalette,state.metadata.text_color);
+		state.fgcolor=colorToCss(colorPalette,state.metadata.text_color);
 	} else {
 		state.fgcolor="#FFFFFF";
 	}
