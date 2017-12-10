@@ -15,35 +15,70 @@
 <link rel="stylesheet" href="css/toolbar.css">
 
 <!--CSSREPLACE-->
-<link rel="shortcut icon" type="image/x-icon" href="Documentation/ico/favicon.ico" />
+<link rel="shortcut icon" type="image/x-icon" href="favicon.ico" />
 
 </head>
 <body>
 
 <div id="leftpanel">
 <form id="form1" name="form1"  action="javascript:void(0);"><textarea id="code" class="codeform" name="code" rows="20" cols="20" style="display:none;">
-title My Game
-author Stephen Lavelle
-homepage www.puzzlescript.net
+title Basic With Tests
+author Stephen Lavelle/Rich Locke
+homepage www.richardlocke.co.uk
 
 ========
 OBJECTS
 ========
 
-Background 
-GREEN  
+Background
+LIGHTGREEN GREEN
+11111
+01111
+11101
+11111
+10111
 
-Target 
-DarkBlue    
 
-Wall 
-BROWN
+Target
+DarkBlue
+.....
+.000.
+.0.0.
+.000.
+.....
 
-Player 
-Blue   
+Wall
+BROWN DARKBROWN
+00010
+11111
+01000
+11111
+00010
 
-Crate 
-Orange 
+Player
+Black Orange White Blue
+.000.
+.111.
+22222
+.333.
+.3.3.
+
+Crate
+Orange Yellow
+00000
+0...0
+0...0
+0...0
+00000
+
+Coin
+yellow
+.....
+.....
+000..
+000..
+000..
+
 
 =======
 LEGEND
@@ -55,10 +90,14 @@ P = Player
 * = Crate
 @ = Crate and Target
 O = Target
+c = coin
+
 
 =======
 SOUNDS
 =======
+
+Crate MOVE 36772507
 
 ================
 COLLISIONLAYERS
@@ -66,41 +105,139 @@ COLLISIONLAYERS
 
 Background
 Target
+Coin
 Player, Wall, Crate
 
 ======
-RULES     
-======     
+RULES
+======
 
-[ >  Player | Crate ] -> [  >  Player | > Crate  ]     
+(Player pushes crate)
+[> Player|Crate] -> [> Player|> Crate]
+
+(Player drops coins)
+[ACTION Player] -> [Player Coin]
 
 ==============
 WINCONDITIONS
 ==============
 
-All Target on Crate     
+All Target on Crate
 
-=======     
+=======
 LEVELS
 =======
 
-#########
-#.......#
-#.....@.#
-#.P.*.O.#
-#.......#
-#.......#
-#########
+id sahara
+####..
+#.O#..
+#..###
+#@P..#
+#..*.#
+#..###
+####..
+
+id mojave
+######
+#....#
+#.#P.#
+#.*@.#
+#.O@.#
+#....#
+######
+
+=======
+TESTS
+=======
+
+test player drops coins
+given
+o....
+..p..
+.....
+when action left action left
+then
+o....
+pcc..
+.....
+
+test crates can be pushed
+......
+op*...
+......
+......
+when right right
+......
+o..p*.
+......
+......
+when up right down
+......
+o...p.
+....*.
+......
+when right down left
+......
+o.....
+...*p.
+......
+when down left up
+......
+o..*..
+...p..
+......
+
+(We expect this test to fail because crates can't be pulled!)
+test crates can be pulled (expect to fail)
+given
+o....
+..p*.
+.....
+when left left
+then
+o....
+p*...
+.....
+
+test player can stand on coins
+given
+o...p
+.....
+when action left action down action right action up
+then
+expect 2 right[coin|coin]
+expect 2 down[coin|coin]
+expect 4 [coin]
+expect [player coin]
+
+test player can walk around sahara
+given sahara
+when right right right right down left left left left
+expect [wall|crate|player]
+expect 0 [player coin]
+when action right action
+expect [coin|coin player]
+when up left up
+expect 0 [player coin]
+
+test mojave can be completed
+given mojave
+when right down down left right up up left down up up left left down down right
+expect win
 </textarea></form>
 </div>
 <div id="verticaldragbar"></div>
 
 <div id="uppertoolbar">
-	&nbsp;&nbsp;&nbsp;<a href="index.html"><h2>PuzzleScript</h2></a> - <a id="saveClickLink" href="javascript:void(0);">SAVE</a> - 
+	&nbsp;&nbsp;&nbsp;<a href="http://www.puzzlescript.net/"><h2>PuzzleScript</h2></a> - <a id="saveClickLink" href="javascript:void(0);">SAVE</a> - 
 
 	<form action="" style="display:inline;"><select id="loadDropDown" name="default" style="display:inline; width:100px"> -
 </select></form> - <form action="" style="display:inline;"> <select  id="exampleDropdown"  name="default" style="display:inline; width:150px">
 <option value="sokoban_basic">Load Example</option>
+<optgroup label="Tests">
+<option value="basic_tests">Basic With Tests</option>
+<option value="symbolism">Symbolism (Rich Locke)</option>
+</optgroup>
 <optgroup label="Tutorial">
 <option value="sokoban_basic">Basic</option>
 <option value="sokoban_eyeball">Eyeball</option>
@@ -128,7 +265,7 @@ LEVELS
 <option value="blank">Blank Project</option>
 </optgroup>
 </select>
-</form>- <a id="runClickLink" href="javascript:void('Run the Game');">RUN</a> - <a id="rebuildClickLink" href="javascript:void('Rebuild without restarting');">REBUILD</a> - <a id="levelEditorClickLink" href="javascript:void('Open Level Editor');">LEVEL EDITOR</a> - <a id="exportClickLink" href="javascript:void('Export Standalone HTML Build');">EXPORT</a> - <a id="shareClickLink" href="javascript:void('Generate Link To Game');">SHARE</a> - <a href="Documentation/documentation.html"  target="Puzzle_Script_Documentation">DOCS</a>  - <a href="https://groups.google.com/forum/#!forum/puzzlescript">FORUM</a>
+</form>- <a id="runClickLink" href="javascript:void('Run the Game');">RUN</a> - <a id="rebuildClickLink" href="javascript:void('Rebuild without restarting');">REBUILD</a> - <a id="levelEditorClickLink" href="javascript:void('Open Level Editor');">LEVEL EDITOR</a> - <a id="testClickLink" href="javascript:void('Run Tests');">TEST</a> - <a id="exportClickLink" href="javascript:void('Export Standalone HTML Build');">EXPORT</a> - <a id="shareClickLink" href="javascript:void('Generate Link To Game');">SHARE</a> - <a href="http://www.puzzlescript.net/Documentation/documentation.html"  target="Puzzle_Script_Documentation">DOCS</a>  - <a href="https://groups.google.com/forum/#!forum/puzzlescript">FORUM</a>
 </div>
 
 <div id="righttophalf">	
@@ -156,7 +293,7 @@ LEVELS
 	<div class="lowerarea" id="lowerarea">
 <div id = "consoletextarea" >
 =================================<br>
-&nbsp;&nbsp;&nbsp;PuzzleScript Log V1.4.6<br>
+&nbsp;&nbsp;&nbsp;PuzzleScriptRL Log V1.1.0<br>
 =================================<br>
 </div>
 	</div>
@@ -200,6 +337,7 @@ LEVELS
 <script src="js/addlisteners.js"></script>
 <script src="js/addlisteners_editor.js"></script>
 <script src="js/makegif.js"></script>
+<script src="js/lodash.min.js"></script>
 
 <!--ENDREPLACE-->
 

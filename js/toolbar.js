@@ -248,5 +248,7 @@ function exportClick() {
 	buildStandalone(sourceString);
 }
 
-
+function testClick() {
+	compile(["test"]);
+}
 

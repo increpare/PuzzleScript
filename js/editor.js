@@ -39,11 +39,12 @@ editor.on('mousedown', function(cm, event) {
   if (event.target.className == 'cm-SOUND') {
     var seed = parseInt(event.target.innerHTML);
     playSound(seed);
-  } else if (event.target.className == 'cm-LEVEL') {
+  } else if (event.target.className == 'cm-LEVEL' || event.target.className === 'cm-FRAGMENT') {
     if (event.ctrlKey||event.metaKey) {
       document.activeElement.blur();  // unfocus code panel
       event.preventDefault();         // prevent refocus
-      compile(["levelline",cm.posFromMouse(event).line]);
+      var command = event.target.className === 'cm-LEVEL' ? 'levelline' : 'fragline';
+      compile([command,cm.posFromMouse(event).line]);
     }
   }
 });

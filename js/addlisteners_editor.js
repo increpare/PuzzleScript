@@ -17,6 +17,9 @@ saveClickLink.addEventListener("click", saveClick, false);
 var rebuildClickLink = document.getElementById("rebuildClickLink");
 rebuildClickLink.addEventListener("click", rebuildClick, false);
 
+var testClickLink = document.getElementById("testClickLink");
+testClickLink.addEventListener("click", testClick, false);
+
 var shareClickLink = document.getElementById("shareClickLink");
 shareClickLink.addEventListener("click", shareClick, false);
 

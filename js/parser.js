@@ -155,14 +155,14 @@ var codeMirrorFn = function() {
     var absolutedirs = ['up', 'down', 'right', 'left'];
     var relativedirs = ['^', 'v', '<', '>', 'moving','stationary','parallel','perpendicular', 'no'];
     var logicWords = ['all', 'no', 'on', 'some'];
-    var sectionNames = ['objects', 'legend', 'sounds', 'collisionlayers', 'rules', 'winconditions', 'levels'];
+    var sectionNames = ['objects', 'legend', 'sounds', 'collisionlayers', 'rules', 'winconditions', 'levels', 'tests'];
 	var commandwords = ["sfx0","sfx1","sfx2","sfx3","sfx4","sfx5","sfx6","sfx7","sfx8","sfx9","sfx10","cancel","checkpoint","restart","win","message","again"];
     var reg_commands = /\s*(sfx0|sfx1|sfx2|sfx3|Sfx4|sfx5|sfx6|sfx7|sfx8|sfx9|sfx10|cancel|checkpoint|restart|win|message|again)\s*/;
     var reg_name = /[\w]+\s*/;///\w*[a-uw-zA-UW-Z0-9_]/;
     var reg_number = /[\d]+/;
     var reg_soundseed = /\d+\b/;
     var reg_spriterow = /[\.0-9]{5}\s*/;
-    var reg_sectionNames = /(objects|collisionlayers|legend|sounds|rules|winconditions|levels)(?![\w])\s*/;
+    var reg_sectionNames = /(objects|collisionlayers|legend|sounds|rules|winconditions|levels|tests)(?![\w])\s*/;
     var reg_equalsrow = /[\=]+/;
     var reg_notcommentstart = /[^\(]+/;
     var reg_csv_separators = /[ \,]*/;
@@ -172,8 +172,10 @@ var codeMirrorFn = function() {
     var reg_ruledirectionindicators = /^(up|down|left|right|horizontal|vertical|orthogonal|late|rigid)$/;
     var reg_sounddirectionindicators = /\s*(up|down|left|right|horizontal|vertical|orthogonal)\s*/;
     var reg_winconditionquantifiers = /^(all|any|no|some)$/;
-    var reg_keywords = /(checkpoint|objects|collisionlayers|legend|sounds|rules|winconditions|\.\.\.|levels|up|down|left|right|^|\||\[|\]|v|\>|\<|no|horizontal|orthogonal|vertical|any|all|no|some|moving|stationary|parallel|perpendicular|action)/;
-    var keyword_array = ['checkpoint','objects', 'collisionlayers', 'legend', 'sounds', 'rules', '...','winconditions', 'levels','|','[',']','up', 'down', 'left', 'right', 'late','rigid', '^','v','\>','\<','no','randomdir','random', 'horizontal', 'vertical','any', 'all', 'no', 'some', 'moving','stationary','parallel','perpendicular','action','message'];
+    var reg_keywords = /(checkpoint|objects|collisionlayers|legend|sounds|rules|winconditions|\.\.\.|levels|tests|up|down|left|right|^|\||\[|\]|v|\>|\<|no|horizontal|orthogonal|vertical|any|all|no|some|moving|stationary|parallel|perpendicular|action|test|given|when|then|expect|id)/;
+    var keyword_array = ['checkpoint','objects', 'collisionlayers', 'legend', 'sounds', 'rules', '...','winconditions', 'levels', 'tests','|','[',']','up', 'down', 'left', 'right', 'late','rigid', '^','v','\>','\<','no','randomdir','random', 'horizontal', 'vertical','any', 'all', 'no', 'some', 'moving','stationary','parallel','perpendicular','action','message','test','given','when','then','expect','id'];
+    var reg_test_inputs = /^(action|up|down|left|right|\^|v|\<|\>|tick|\.)$/;
+    var test_inputs = {up: 0, left: 1, down: 2, right: 3, '^': 0, '<': 1, 'v': 2, '>': 3, action: 4, tick: 'tick', '.': 'tick'};
 
     //  var keywordRegex = new RegExp("\\b(("+cons.join(")|(")+"))$", 'i');
 
@@ -184,6 +186,60 @@ var codeMirrorFn = function() {
         '00000',
         '00000'
     ];
+
+    function parseRuleContent(state, stream, ch, sol) {
+        if (state.tokenIndex===-4) {
+            stream.skipToEnd();
+            return 'MESSAGE';
+        }
+        if (stream.match(/\s*\-\>\s*/, true)) {
+            return 'ARROW';
+        }
+        if (ch === '[' || ch === '|' || ch === ']' || ch==='+') {
+            if (ch!=='+') {
+                state.tokenIndex = 1;
+            }
+            stream.next();
+            stream.match(/\s*/, true);
+            return 'BRACKET';
+        } else {
+            var m = stream.match(/[^\[\|\]\s]*/, true)[0].trim();
+
+            if (state.tokenIndex===0&&reg_loopmarker.exec(m)) {
+                return 'BRACKET';
+            } else if (state.tokenIndex === 0 && reg_ruledirectionindicators.exec(m)) {
+                stream.match(/\s*/, true);
+                return 'DIRECTION';
+            } else if (state.tokenIndex === 1 && reg_directions.exec(m)) {
+                stream.match(/\s*/, true);
+                return 'DIRECTION';
+            } else {
+                if (state.names.indexOf(m) >= 0) {
+                    if (sol) {
+                        logError('Identifiers cannot appear outside of square brackets in rules, only directions can.', state.lineNumber);
+                        return 'ERROR';
+                    } else {
+                        stream.match(/\s*/, true);
+                        return 'NAME';
+                    }
+                } else if (m==='...') {
+                    return 'DIRECTION';
+                } else if (m==='rigid') {
+                    return 'DIRECTION';
+                } else if (m==='random') {
+                    return 'DIRECTION';
+                } else if (commandwords.indexOf(m)>=0) {
+                    if (m==='message') {
+                        state.tokenIndex=-4;
+                    }
+                    return 'COMMAND';
+                } else {
+                    logError('Name "' + m + '", referred to in a rule, does not exist.', state.lineNumber);
+                    return 'ERROR';
+                }
+            }
+        }
+    }
 
     return {
         copyState: function(state) {
@@ -210,6 +266,7 @@ var codeMirrorFn = function() {
             var soundsCopy = [];
             var levelsCopy = [];
             var winConditionsCopy = [];
+            var testsCopy = [];
 
             for (var i = 0; i < state.legend_synonyms.length; i++) {
               legend_synonymsCopy.push(state.legend_synonyms[i].concat([]));
@@ -228,6 +285,9 @@ var codeMirrorFn = function() {
             }
             for (var i = 0; i < state.winconditions.length; i++) {
               winConditionsCopy.push(state.winconditions[i].concat([]));
+            }
+            for (var i = 0; i < state.tests.length; i++) {
+              testsCopy.push(deepClone(state.tests[i]));
             }
 
             var nstate = {
@@ -262,6 +322,12 @@ var codeMirrorFn = function() {
               metadata : state.metadata.concat([]),
 
               levels: levelsCopy,
+
+              tests: testsCopy,
+
+              levelIds: state.levelIds.concat([]),
+
+              fragments: state.fragments.concat([]),
 
               STRIDE_OBJ : state.STRIDE_OBJ,
               STRIDE_MOV : state.STRIDE_MOV
@@ -934,59 +1000,7 @@ var codeMirrorFn = function() {
                             state.tokenIndex = 0;//in rules, records whether bracket has been found or not
                         }
 
-                        if (state.tokenIndex===-4) {
-                        	stream.skipToEnd();
-                        	return 'MESSAGE';
-                        }
-                        if (stream.match(/\s*\-\>\s*/, true)) {
-                            return 'ARROW';
-                        }
-                        if (ch === '[' || ch === '|' || ch === ']' || ch==='+') {
-                        	if (ch!=='+') {
-                            	state.tokenIndex = 1;
-                            }
-                            stream.next();
-                            stream.match(/\s*/, true);
-                            return 'BRACKET';
-                        } else {
-                            var m = stream.match(/[^\[\|\]\s]*/, true)[0].trim();
-
-                            if (state.tokenIndex===0&&reg_loopmarker.exec(m)) {
-                            	return 'BRACKET';
-                            } else if (state.tokenIndex === 0 && reg_ruledirectionindicators.exec(m)) {
-                                stream.match(/\s*/, true);
-                                return 'DIRECTION';
-                            } else if (state.tokenIndex === 1 && reg_directions.exec(m)) {
-                                stream.match(/\s*/, true);
-                                return 'DIRECTION';
-                            } else {
-                                if (state.names.indexOf(m) >= 0) {
-                                    if (sol) {
-                                        logError('Identifiers cannot appear outside of square brackets in rules, only directions can.', state.lineNumber);
-                                        return 'ERROR';
-                                    } else {
-                                        stream.match(/\s*/, true);
-                                        return 'NAME';
-                                    }
-                                } else if (m==='...') {
-                                    return 'DIRECTION';
-                                } else if (m==='rigid') {
-                                    return 'DIRECTION';
-                                } else if (m==='random') {
-                                    return 'DIRECTION';
-                                } else if (commandwords.indexOf(m)>=0) {
-									if (m==='message') {
-										state.tokenIndex=-4;
-									}                                	
-                                	return 'COMMAND';
-                                } else {
-                                    logError('Name "' + m + '", referred to in a rule, does not exist.', state.lineNumber);
-                                    return 'ERROR';
-                                }
-                            }
-                        }
-
-                        break;
+                        return parseRuleContent(state, stream, ch, sol);
                     }
                 case 'winconditions':
                     {
@@ -1046,8 +1060,23 @@ var codeMirrorFn = function() {
                                 } else {
                                     state.levels.push(newdat);
                                 }
+                                if (state.levels.length > state.levelIds.length) {
+                                    // Ensure the number of IDs equals the number of levels, so the indices match even if we don't have all IDs
+                                    state.levelIds.push(null);
+                                }
                                 return 'MESSAGE_VERB';
+                            } else if (stream.match(/\s*id\s*/, true)) {
+                                state.tokenName = 'LEVEL_ID';
+                                var rawId = stream.string.substring(stream.pos);
+                                if (rawId && rawId.trim().length) {
+                                    var id = rawId.trim();
+                                    state.levelIds.push(id);
+                                } else {
+                                    logWarning('Expected to see a level ID. Did you mean to add one?', state.lineNumber);
+                                }
+                                return 'LEVEL_ID_VERB';
                             } else {
+                                state.tokenName = 'LEVEL';
                                 var line = stream.match(reg_notcommentstart, false)[0].trim();
                                 state.tokenIndex = 2;
                                 var lastlevel = state.levels[state.levels.length - 1];
@@ -1058,7 +1087,7 @@ var codeMirrorFn = function() {
                                     {
                                         lastlevel.push(state.lineNumber);
                                     }
-                                    lastlevel.push(line);  
+                                    lastlevel.push(line);
 
                                     if (lastlevel.length>1) 
                                     {
@@ -1067,12 +1096,19 @@ var codeMirrorFn = function() {
                                         }
                                     }
                                 }
-                                
+                                if (state.levels.length > state.levelIds.length) {
+                                    state.levelIds.push(null);
+                                }
                             }
                         } else {
                             if (state.tokenIndex == 1) {
                                 stream.skipToEnd();
                                	return 'MESSAGE';
+                            }
+
+                            if (state.tokenName == 'LEVEL_ID') {
+                                stream.skipToEnd();
+                                return 'LEVEL_ID'
                             }
                         }
 
@@ -1088,6 +1124,169 @@ var codeMirrorFn = function() {
                         }
                         break;
                     }
+                case 'tests': {
+                    var firstChar = stream.peek();
+                    // Get the last test (or a blank one)
+                    var test = state.tests.length ? state.tests[state.tests.length - 1] : {}
+
+                    if (sol) {
+                        if (stream.match(/\s*test\s*/, true)) {
+                            // We've found a new test
+                            if (state.tests.length) {
+                                test = {};
+                            }
+                            state.tests.push(test);
+                            test.name = mixedCase.slice(stream.pos).trim();
+                            if (!test.name || !test.name.length) {
+                                logWarning('Tests should be given names, bro. Be as descriptive as you like e.g. "test dogs chase cats but cats win in fights"', state.lineNumber);
+                            }
+                            state.tokenName = 'TEST_VERB';
+                            return 'TEST_VERB';
+                        } else if (stream.match(/\s*given\s*/)) {
+                            // It's a test precondition
+                            state.tokenName = 'GIVEN_VERB';
+                            return 'GIVEN_VERB';
+                        } else if (stream.match(/\s*when\s*/)) {
+                            // It's a test step
+                            state.tokenName = 'WHEN_VERB';
+                            if (!test.steps) {
+                                test.steps = [];
+                            }
+                            test.steps.push({});
+                            var step = test.steps[test.steps.length - 1];
+                            step.when = {inputs: []};
+                            return 'WHEN_VERB';
+                        } else if (stream.match(/\s*then\s*/)) {
+                            // It's an expected outcome
+                            state.tokenName = 'THEN_VERB';
+                            return 'THEN_VERB';
+                        } else if (stream.match(/\s*expect\s*/)) {
+                            // It's an expected condition
+                            if (!test.steps) {
+                                test.steps = [{}];
+                            }
+
+                            var step = test.steps[test.steps.length - 1];
+                            if (!step.then) {
+                                step.then = {};
+                            }
+                            if (!step.then.conditions) {
+                                step.then.conditions = [];
+                            }
+                            step.then.conditions.push({lineNumber: state.lineNumber, actualCount: 0});
+                            state.tokenName = 'EXPECT_VERB';
+                            return 'EXPECT_VERB';
+                        } else if (state.abbrevNames.indexOf(firstChar) >= 0) {
+                            // It's a level fragment
+                            var line = stream.match(reg_notcommentstart, false)[0].trim();
+                            state.tokenName = 'FRAGMENT';
+
+                            var step = test.steps && test.steps[test.steps.length - 1];
+                            var fragmentType = step && step.when ? 'THEN' : 'WHEN';
+
+                            var partialFragment;
+                            if (fragmentType === 'WHEN') {
+                                partialFragment = test.given;
+                            } else {
+                                if (!step.then) {
+                                    step.then = {};
+                                }
+                                partialFragment = step.then.fragment;
+                            }
+
+                            var fragment = partialFragment ? partialFragment : [];
+
+                            if (!fragment.length) {
+                                fragment.push(state.lineNumber);
+                            }
+
+                            fragment.push(line);
+
+                            if (fragment.length > 1) {
+                                if (line.length !== fragment[1].length) {
+                                    logWarning('Level fragments must be rectangular, pal (just like normal levels).', state.lineNumber);
+                                }
+                            }
+
+                            if (fragmentType === 'WHEN') {
+                                test.given = fragment;
+                            } else {
+                                step.then.fragment = fragment;
+                            }
+                        }
+                    } else {
+                        if (state.tokenName === 'TEST_VERB' || state.tokenName === 'THEN_VERB') {
+                            stream.skipToEnd();
+                            return 'TEST_NAME';
+                        } else if (state.tokenName === 'GIVEN_VERB') {
+                            test.levelId = stream.match(/[^\s]*/, true)[0].trim();
+                            if (state.levelIds.indexOf(test.levelId) === -1) {
+                                logError('No level with ID "' + test.levelId + '" could be found.', state.lineNumber);
+                            }
+                            return 'LEVEL_ID';
+                        } else if (state.tokenName === 'WHEN_VERB') {
+                            var step = test.steps[test.steps.length - 1];
+                            var m = stream.match(/[^\s]*/, true)[0].trim();
+
+                            if (reg_test_inputs.exec(m)) {
+                                stream.match(/\s*/, true);
+                                step.when.inputs.push(test_inputs[m]);
+                                return 'DIRECTION';
+                            } else {
+                                logError('Unrecognised stuff in the WHEN section of a test. Directions, "action" and "tick" only, please.');
+                                return 'ERROR';
+                            }
+                        } else if (state.tokenName === 'EXPECT_VERB') {
+                            var step = test.steps[test.steps.length - 1]
+                            var condition = step.then.conditions[step.then.conditions.length - 1];
+
+                            if (stream.match(/\s*win\s*/)) {
+                                condition.expectWin = true;
+                                return 'COMMAND';
+                            }
+
+                            var expectedCountMatch = stream.match(/\s*\d+\s*/);
+                            if (expectedCountMatch) {
+                                condition.expectedCount = Number(expectedCountMatch[0].trim());
+                                return 'EXPECT_COUNT';
+                            }
+
+                            if (!condition.rule) {
+                                // Grab the rule and add custom test RHS command
+                                var restOfLine = stream.string.substring(stream.pos);
+                                var rawRule = reg_notcommentstart.exec(restOfLine)[0];
+
+                                if (rawRule.indexOf('->') > -1) {
+                                    rawRule = rawRule.substring(0, rawRule.indexOf('->'));
+                                    logError('Test conditions aren\'t like normal rules. They can\'t include outcomes - that means no "->". Think of them as the left-hand side of rules only.', state.lineNumber);
+                                }
+
+                                var rule = rawRule + ' -> count';
+                                condition.rawRule = rawRule;
+                                condition.rule = [rule, state.lineNumber, mixedCase + ' -> count'];
+                                state.tokenIndex = 0; // Indicates bracket hasn't been found yet
+
+                                if (!condition.expectedCount && condition.expectedCount !== 0) {
+                                    // Default of 1 if no expected count is entered
+                                    condition.expectedCount = 1;
+                                }
+                            }
+
+                            return parseRuleContent(state, stream, ch, sol);
+                        }
+                    }
+
+                    if ((state.tokenName === 'LEVEL' || state.tokenName === 'FRAGMENT') && !stream.eol()) {
+                        stream.next();
+
+                        if (state.abbrevNames.indexOf(ch) >= 0) {
+                            return state.tokenName;
+                        } else {
+                            logError('Key "' + ch.toUpperCase() + '" not found. Do you need to add it to the legend, or define a new object?', state.lineNumber);
+                            return 'ERROR';
+                        }
+                    }
+                }
 	                
 	                default://if you're in the preamble
 	                {
@@ -1187,6 +1386,10 @@ var codeMirrorFn = function() {
                 abbrevNames: [],
 
                 levels: [[]],
+
+                tests: [],
+                levelIds: [],
+                fragments: [],
 
                 subsection: ''
             };
