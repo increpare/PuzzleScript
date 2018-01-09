@@ -15,11 +15,22 @@ var SHAPES = [
 
 var AUDIO_CONTEXT;
 
-if (typeof AudioContext != 'undefined') {
-  AUDIO_CONTEXT = new AudioContext();
-} else if (typeof webkitAudioContext != 'undefined') {
-  AUDIO_CONTEXT = new webkitAudioContext();
+function checkAudioContextExists(){
+  try{
+    if (AUDIO_CONTEXT==null){
+      if (typeof AudioContext != 'undefined') {
+        AUDIO_CONTEXT = new AudioContext();
+      } else if (typeof webkitAudioContext != 'undefined') {
+        AUDIO_CONTEXT = new webkitAudioContext();
+      }
+    }
+  }
+  catch (ex){
+    window.console.log(ex)
+  }
 }
+
+checkAudioContextExists();
 
 // Playback volume
 var masterVolume = 1.0;
@@ -973,6 +984,7 @@ function cacheSeed(seed){
 }
 
 function playSound(seed) {
+  checkAudioContextExists();
   if (unitTesting) return;
   var sound = cacheSeed(seed);
   sound.play();
