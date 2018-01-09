@@ -2609,14 +2609,16 @@ function nextLevel() {
 				loadLevelFromState(state,curlevel);
 			}
 		} else {
-			if (!!window.localStorage) {
-				try{
+			try{
+				if (!!window.localStorage) {
+	
 					localStorage.removeItem(document.URL);
 					localStorage.removeItem(document.URL+'_checkpoint');
-				} catch(ex){
-					
 				}
+			} catch(ex){
+					
 			}
+			
 			curlevel=0;
 			curlevelTarget=null;
 			goToTitleScreen();
