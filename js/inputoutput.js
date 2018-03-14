@@ -390,6 +390,9 @@ function onKeyDown(event) {
         } else if (event.keyCode===75 && (event.ctrlKey||event.metaKey)) {//ctrl+k
             makeGIF();
             prevent(event);
+        }  else if (event.keyCode===83 && (event.ctrlKey||event.metaKey)) {//ctrl+s
+            saveClick();
+            prevent(event);
         } 
     }
 }
