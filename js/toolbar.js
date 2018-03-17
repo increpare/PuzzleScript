@@ -169,7 +169,7 @@ function shareClick() {
 		}
 	};
 
-	var githubURL = 'https://api.github.com/gists';
+	var githubURL = '/save'; // 'https://api.github.com/gists';
 	var githubHTTPClient = new XMLHttpRequest();
 	githubHTTPClient.open('POST', githubURL);
 	githubHTTPClient.onreadystatechange = function() {		
@@ -203,7 +203,7 @@ function shareClick() {
 
 		}
 	}
-	githubHTTPClient.setRequestHeader("Content-type","application/x-www-form-urlencoded");
+	githubHTTPClient.setRequestHeader("Content-type","application/json");
 	var stringifiedGist = JSON.stringify(gistToCreate);
 	githubHTTPClient.send(stringifiedGist);
     lastDownTarget=canvas;	
