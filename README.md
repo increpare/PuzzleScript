@@ -9,6 +9,36 @@ Try it out at https://www.puzzlescript.net
 
 Dev instructions here - https://groups.google.com/forum/#!searchin/puzzlescript/development/puzzlescript/yptIpY9hlng/cjfrOPy_4jcJ
 
+
+Server Development
+==================
+
+1. Run `npm install` to install the [nodejs](https://nodejs.org) dependencies
+1. Run `npm start` to start the server
+1. Visit http://localhost:3000 to see the website
+
+To configure Gist uploading:
+
+1. copy `.env.example` to `.env`
+1. visit https://github.com/settings/tokens/new , select the `gist` checkbox, and click `[Generate token]`
+1. paste the token into `.env`
+1. run `npm start` to start the server
+
+
+Server Packages
+---------------
+
+These are the packages the server uses:
+
+- http://koajs.com/
+- https://github.com/koajs/koa
+- https://github.com/koajs/static
+- https://github.com/koajs/route
+- https://github.com/koajs/bodyparser
+- https://github.com/octokit/rest.js
+- https://www.npmjs.com/package/dotenv
+
+
 -----
 
 The MIT License (MIT)
