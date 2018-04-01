@@ -179,6 +179,8 @@ function shareClick() {
 		var result = JSON.parse(githubHTTPClient.responseText);
 		if (githubHTTPClient.status===403) {
 			consoleError(result.message);
+		} else if (githubHTTPClient.status===401) {
+			consoleError("Sharing is unavailable right now, please visit the forum and ask for instructions on how to share your game.");
 		} else if (githubHTTPClient.status!==200&&githubHTTPClient.status!==201) {
 			consoleError("HTTP Error "+ githubHTTPClient.status + ' - ' + githubHTTPClient.statusText);
 		} else {
