@@ -1,0 +1,73 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>PuzzleScript Login</title>
+
+</head>
+
+<body>
+	<pre id="pre"></pre>
+
+<script>
+
+(function() {
+
+// An external helper that can exchange a code for an access token.
+//
+// It fetches https://github.com/login/oauth/access_token, passing:
+//   * code and state, which the caller has to provide as query parameters.
+//   * client_id, same as OAUTH_CLIENT_ID above.
+//   * client_secret, which corresponds to client_id, but is secret on the server.
+//
+// It returns an access token as JSON, something like:
+//   {"access_token": "a440b61aa137bb25bb739b697ef5c96a76881107"}
+//
+// The server has CORS set up so that puzzlescript.net can access it.
+OAUTH_HELPER_URL = "https://twotaled.com/puzzleauth/access_token";
+
+var pre = document.getElementById("pre");
+
+var url = new URL(window.location);
+var code = url.searchParams.get("code");
+var state = url.searchParams.get("state");
+
+if (typeof code !== "string" || typeof state !== "string") {
+	pre.innerText = "Nothing to see here.";
+	return;
+}
+
+pre.innerText = "Just a moment…";
+
+var xhr = new XMLHttpRequest();
+xhr.open("GET", OAUTH_HELPER_URL + "?code=" + code + "&state=" + state);
+xhr.onreadystatechange = function() {
+	if (xhr.readyState !== 4) {
+		return;
+	}
+
+	if (xhr.status === 403) {
+		pre.innerText = result.message;
+		return;
+	} else if ((xhr.status !== 200) && (xhr.status !== 201)) {
+		pre.innerText = "HTTP Error " + xhr.status + " - " + xhr.statusText;
+		return;
+	}
+
+	var result = JSON.parse(xhr.responseText);
+	console.log(result);
+	if (typeof result.error === "string") {
+		pre.innerText = "Oops, got an error: " + JSON.stringify(result, null, 4);
+		return;
+	}
+
+	window.localStorage.setItem("oauth_access_token", result.access_token);
+	pre.innerText = "OK! You’re all set up. You can close this window and share your game :)";
+}
+xhr.send();
+
+})();
+
+</script>
+</body>
+</html>

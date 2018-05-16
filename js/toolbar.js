@@ -1,3 +1,9 @@
+// The client ID of a GitHub OAuth app registered at https://github.com/settings/developers.
+// The “callback URL” of that app points to https://www.puzzlescript.net/auth.html.
+// If you’re running from another host name, sharing might not work.
+OAUTH_CLIENT_ID = "52a4e0d89c82c5c29417";
+
+
 function runClick() {
 	clearConsole();
 	compile(["restart"]);
@@ -146,6 +152,27 @@ function levelEditorClick_Fn() {
 }
 
 function shareClick() {
+	var oauthAccessToken = window.localStorage.getItem("oauth_access_token");
+	if (typeof oauthAccessToken !== "string") {
+		// Generates 32 letters of random data, like "liVsr/e+luK9tC02fUob75zEKaL4VpQn".
+		var randomState = window.btoa(Array.prototype.map.call(
+				window.crypto.getRandomValues(new Uint8Array(24)),
+				function(x) { return String.fromCharCode(x); }).join(""));
+
+		var authUrl = "https://github.com/login/oauth/authorize"
+			+ "?client_id=" + OAUTH_CLIENT_ID
+			+ "&scope=gist"
+			+ "&state=" + randomState
+			+ "&allow_signup=true";
+		consolePrint(
+				"PuzzleScript needs permission to share games through GitHub:<br>" +
+				"<ul>" +
+				"<li><a target=\"_blank\" href=\"https://github.com/join\">Create a GitHub account</a></li>" +
+				"<li><a target=\"_blank\" href=\"" + authUrl + "\">Give PuzzleScript permission</a></li>" +
+				"</ul>");
+		return;
+	}
+
 	consolePrint("Sending code to github...",true)
 	var title = "Untitled PuzzleScript Script";
 	if (state.metadata.title!==undefined) {
@@ -169,7 +196,7 @@ function shareClick() {
 		}
 	};
 
-	var githubURL = 'https://api.github.com/gists';
+	var githubURL = 'https://api.github.com/gists?access_token=' + oauthAccessToken;
 	var githubHTTPClient = new XMLHttpRequest();
 	githubHTTPClient.open('POST', githubURL);
 	githubHTTPClient.onreadystatechange = function() {		
