@@ -210,6 +210,8 @@ function shareClick() {
 		var result = JSON.parse(githubHTTPClient.responseText);
 		if (githubHTTPClient.status===403) {
 			consoleError(result.message);
+		} else if (githubHTTPClient.status===401) {
+			consoleError("Automatic sharing is unavailable right now, please visit the forum and ask for instructions on how to share your game.");
 		} else if (githubHTTPClient.status!==200&&githubHTTPClient.status!==201) {
 			if (githubHTTPClient.statusText==="Unauthorized"){
 				consoleError("Authorization check failed.  You have to log back into GitHub (or give it permission again or something).");
