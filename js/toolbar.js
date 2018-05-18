@@ -151,7 +151,7 @@ function levelEditorClick_Fn() {
     lastDownTarget=canvas;	
 }
 
-function printUnauthorized(){
+function getAuthURL(){
 	var randomState = window.btoa(Array.prototype.map.call(
 		window.crypto.getRandomValues(new Uint8Array(24)),
 		function(x) { return String.fromCharCode(x); }).join(""));
@@ -161,6 +161,13 @@ function printUnauthorized(){
 		+ "&scope=gist"
 		+ "&state=" + randomState
 		+ "&allow_signup=true";
+
+	return authUrl;
+}
+
+function printUnauthorized(){
+
+	var authUrl = getAuthURL();
 	consolePrint(
 			"<br>" +
 			"PuzzleScript needs permission to share games through GitHub:<br>" +
@@ -251,6 +258,8 @@ function shareClick() {
 
 function githubLogOut(){
 	window.localStorage.removeItem("oauth_access_token");
+
+	var authUrl = getAuthURL();
 	consolePrint(
 		"<br>Logged out of Github.<br>" +
 		"<ul>" +
