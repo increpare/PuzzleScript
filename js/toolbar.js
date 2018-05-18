@@ -266,8 +266,6 @@ function githubLogOut(){
 		"<li><a target=\"_blank\" href=\"" + authUrl + "\">Give PuzzleScript permission</a></li>" +
 		"</ul>"
 				,true);
-	shareClick();
-
 }
 
 function rebuildClick() {
