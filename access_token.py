@@ -25,13 +25,18 @@ import os
 import requests
 import sys
 
-OAUTH_CLIENT = "xxxxxxxxxxxxxxxxxxxx"
+OAUTH_CLIENT = "211570277eb588cddf44"
 OAUTH_SECRET = "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
 ORIGIN_LIST = [
     "www.puzzlescript.net",
     "www.increpare.com",
+    "ded.increpare.com",
     "increpare.github.io",
     "sfiera.github.io",
+    "www.flickgame.org",
+    "www.tinychoice.net",
+    "www.plingpling.org",
+    "www.flickgame.org",
 ]
 
 LOGIN_URL = "https://github.com/login/oauth/access_token"

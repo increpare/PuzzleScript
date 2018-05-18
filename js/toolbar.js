@@ -1,7 +1,7 @@
 // The client ID of a GitHub OAuth app registered at https://github.com/settings/developers.
 // The “callback URL” of that app points to https://www.puzzlescript.net/auth.html.
 // If you’re running from another host name, sharing might not work.
-OAUTH_CLIENT_ID = "52a4e0d89c82c5c29417";
+OAUTH_CLIENT_ID = "211570277eb588cddf44";
 
 
 function runClick() {
@@ -151,29 +151,33 @@ function levelEditorClick_Fn() {
     lastDownTarget=canvas;	
 }
 
+function printUnauthorized(){
+	var randomState = window.btoa(Array.prototype.map.call(
+		window.crypto.getRandomValues(new Uint8Array(24)),
+		function(x) { return String.fromCharCode(x); }).join(""));
+
+	var authUrl = "https://github.com/login/oauth/authorize"
+		+ "?client_id=" + OAUTH_CLIENT_ID
+		+ "&scope=gist"
+		+ "&state=" + randomState
+		+ "&allow_signup=true";
+	consolePrint(
+			"<br>" +
+			"PuzzleScript needs permission to share games through GitHub:<br>" +
+			"<ul>" +
+			"<li><a target=\"_blank\" href=\"" + authUrl + "\">Give PuzzleScript permission</a></li>" +
+			"</ul>",true);
+}
+
 function shareClick() {
 	var oauthAccessToken = window.localStorage.getItem("oauth_access_token");
 	if (typeof oauthAccessToken !== "string") {
 		// Generates 32 letters of random data, like "liVsr/e+luK9tC02fUob75zEKaL4VpQn".
-		var randomState = window.btoa(Array.prototype.map.call(
-				window.crypto.getRandomValues(new Uint8Array(24)),
-				function(x) { return String.fromCharCode(x); }).join(""));
-
-		var authUrl = "https://github.com/login/oauth/authorize"
-			+ "?client_id=" + OAUTH_CLIENT_ID
-			+ "&scope=gist"
-			+ "&state=" + randomState
-			+ "&allow_signup=true";
-		consolePrint(
-				"PuzzleScript needs permission to share games through GitHub:<br>" +
-				"<ul>" +
-				"<li><a target=\"_blank\" href=\"https://github.com/join\">Create a GitHub account</a></li>" +
-				"<li><a target=\"_blank\" href=\"" + authUrl + "\">Give PuzzleScript permission</a></li>" +
-				"</ul>");
+		printUnauthorized();
 		return;
 	}
 
-	consolePrint("Sending code to github...",true)
+	consolePrint("<br>Sending code to github...",true)
 	var title = "Untitled PuzzleScript Script";
 	if (state.metadata.title!==undefined) {
 		title=state.metadata.title + " PuzzleScript Script";
@@ -207,7 +211,15 @@ function shareClick() {
 		if (githubHTTPClient.status===403) {
 			consoleError(result.message);
 		} else if (githubHTTPClient.status!==200&&githubHTTPClient.status!==201) {
-			consoleError("HTTP Error "+ githubHTTPClient.status + ' - ' + githubHTTPClient.statusText);
+			if (githubHTTPClient.statusText==="Unauthorized"){
+				consoleError("Authorization check failed.  You have to log back into GitHub (or give it permission again or something).");
+				window.localStorage.removeItem("oauth_access_token");
+			} else {
+				consoleError("HTTP Error "+ githubHTTPClient.status + ' - ' + githubHTTPClient.statusText);
+				consoleError("Try giving puzzlescript permission again, that might fix things...");
+			}
+
+			printUnauthorized();
 		} else {
 			var id = result.id;
 			var url = "play.html?p="+id;
@@ -215,18 +227,19 @@ function shareClick() {
 
 			var editurl = "editor.html?hack="+id;
 			editurl=qualifyURL(editurl);
-			var sourceCodeLink = "link to source code:<br><a target=\"_blank\"  href=\""+editurl+"\">"+editurl+"</a>";
+			var sourceCodeLink = "Link to source code:<br><a target=\"_blank\"  href=\""+editurl+"\">"+editurl+"</a>";
 
 
-			consolePrint("GitHub submission successful - " + sourceCodeLink,true);
+			consolePrint('GitHub (<a onclick="githubLogOut();"  href="javascript:void(0);">log out</a>) submission successful.<br>',true);
+
+			consolePrint('<br>'+sourceCodeLink,true);
 
 
 			if (errorCount>0) {
-				consolePrint("Cannot link directly to playable game, because there are compiler errors.",true);
+				consolePrint("<br>Cannot link directly to playable game, because there are compiler errors.",true);
 			} else {
-				consolePrint("The game can now be played at this url:<br><a target=\"_blank\" href=\""+url+"\">"+url+"</a>",true);
+				consolePrint("<br>The game can now be played at this url:<br><a target=\"_blank\" href=\""+url+"\">"+url+"</a>",true);
 			} 
-
 
 		}
 	}
@@ -234,6 +247,18 @@ function shareClick() {
 	var stringifiedGist = JSON.stringify(gistToCreate);
 	githubHTTPClient.send(stringifiedGist);
     lastDownTarget=canvas;	
+}
+
+function githubLogOut(){
+	window.localStorage.removeItem("oauth_access_token");
+	consolePrint(
+		"<br>Logged out of Github.<br>" +
+		"<ul>" +
+		"<li><a target=\"_blank\" href=\"" + authUrl + "\">Give PuzzleScript permission</a></li>" +
+		"</ul>"
+				,true);
+	shareClick();
+
 }
 
 function rebuildClick() {
