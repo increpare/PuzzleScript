@@ -1,7 +1,6 @@
 // The client ID of a GitHub OAuth app registered at https://github.com/settings/developers.
 // The “callback URL” of that app points to https://www.puzzlescript.net/auth.html.
 // If you’re running from another host name, sharing might not work.
-OAUTH_CLIENT_ID = "211570277eb588cddf44";
 
 
 function runClick() {
@@ -150,6 +149,8 @@ function levelEditorClick_Fn() {
     }
     lastDownTarget=canvas;	
 }
+
+OAUTH_CLIENT_ID = "211570277eb588cddf44";
 
 function getAuthURL(){
 	var randomState = window.btoa(Array.prototype.map.call(

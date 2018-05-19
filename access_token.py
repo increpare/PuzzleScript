@@ -35,8 +35,11 @@ ORIGIN_LIST = [
     "sfiera.github.io",
     "www.flickgame.org",
     "www.tinychoice.net",
+    "tinychoice.net",
     "www.plingpling.org",
+    "plingpling.org",
     "www.flickgame.org",
+    "flickgame.org",
 ]
 
 LOGIN_URL = "https://github.com/login/oauth/access_token"
