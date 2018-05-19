@@ -749,7 +749,7 @@ black transparent
 11101
 00010
 00100
- 
+
 vertica や
 black transparent
 00100
@@ -929,7 +929,7 @@ COLLISIONLAYERS
 ================
 
 Background
-fakeground, 
+fakeground,
 black
 Target
 sfa
@@ -951,7 +951,7 @@ timer
 mark
 mark2
 pressaction
-tmark, 
+tmark,
 cmark, pmark
 nott, nota,notr,notg,note
 text, textsecret
@@ -1045,7 +1045,7 @@ late [play3][text] -> [play3][]
 late [play3][crate] -> [play3][ textcrate crate]
 late [play3][player] -> [play3 ][textplayer player]
 [play3][> player | letter no c no g] -> [play3][stationary player | letter]
- 
+
 late [play3][target no crate no player] -> [play3][ texttarget target]
 late [play3][fakeground no crate no wall no player no target no textsecret] -> [play3 ][textgrass fakeground]
 late [play3][wall] -> [play3 ][textwall wall]
