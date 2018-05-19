@@ -562,6 +562,37 @@ function level4Serialization() {
 	return ret;
 }
 
+
+function tryDeactivateYoutube(){
+	var youtubeFrame = document.getElementById("youtubeFrame");
+	if (youtubeFrame){
+		document.body.removeChild(youtubeFrame);
+	}
+}
+
+function tryActivateYoutube(){
+	var youtubeFrame = document.getElementById("youtubeFrame");
+	if (youtubeFrame){
+		return;
+	}
+	if (canYoutube) {
+		if ('youtube' in state.metadata) {
+			var youtubeid=state.metadata['youtube'];
+			var url = "https://www.youtube.com/embed/"+youtubeid+"?autoplay=1&loop=1&playlist="+youtubeid;
+			ifrm = document.createElement("IFRAME");
+			ifrm.setAttribute("src",url);
+			ifrm.setAttribute("id","youtubeFrame");
+			ifrm.style.visibility="hidden";
+			ifrm.style.width="500px";
+			ifrm.style.height="500px";
+			ifrm.style.position="absolute";
+			ifrm.style.top="-1000px";
+			ifrm.style.left="-1000px";
+			document.body.appendChild(ifrm);
+		}
+	}
+}
+
 function setGameState(_state, command, randomseed) {
 	oldflickscreendat=[];
 	timer=0;
@@ -706,21 +737,7 @@ function setGameState(_state, command, randomseed) {
 
 
 
-	if (canYoutube) {
-		if ('youtube' in state.metadata) {
-			var youtubeid=state.metadata['youtube'];
-			var url = "https://www.youtube.com/embed/"+youtubeid+"?autoplay=1&loop=1&playlist="+youtubeid;
-			ifrm = document.createElement("IFRAME");
-			ifrm.setAttribute("src",url);
-			ifrm.style.visibility="hidden";
-			ifrm.style.width="500px";
-			ifrm.style.height="500px";
-			ifrm.style.position="absolute";
-			ifrm.style.top="-1000px";
-			ifrm.style.left="-1000px";
-			document.body.appendChild(ifrm);
-		}
-	}
+	tryActivateYoutube();
 	
 }
 
