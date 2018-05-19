@@ -718,39 +718,8 @@ function setGameState(_state, command, randomseed) {
 			ifrm.style.position="absolute";
 			ifrm.style.top="-1000px";
 			ifrm.style.left="-1000px";
-//			ifrm.style.display="none";
 			document.body.appendChild(ifrm);
 		}
-
-		/*
-		if ('youtube' in state.metadata) {
-			var div_container = document.createElement('DIV');
-			var div_front = document.createElement('DIV');
-			div_front.style.zIndex=-100;	
-			div_front.style.backgroundColor=state.bgcolor;
-			div_front.style.position= "absolute";
-			div_front.style.width="500px";
-			div_front.style.height="500px";
-			var div_back = document.createElement('DIV');
-			div_back.style.zIndex=-200;
-			div_back.style.position= "absolute";
-			
-			div_container.appendChild(div_back);
-			div_container.appendChild(div_front);
-			
-			var youtubeid=state.metadata['youtube'];
-			var url = "https://youtube.googleapis.com/v/"+youtubeid+"?autoplay=1&loop=1&playlist="+youtubeid;
-			ifrm = document.createElement("IFRAME");
-			ifrm.setAttribute("src",url);
-			ifrm.style.visibility="hidden";
-			ifrm.style.width="500px";
-			ifrm.style.height="500px";
-			ifrm.frameBorder="0";
-//			ifrm.style.display="none";
-
-			div_back.appendChild(ifrm);
-			document.body.appendChild(div_container);
-			*/
 	}
 	
 }
