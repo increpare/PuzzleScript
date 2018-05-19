@@ -992,3 +992,31 @@ function playSound(seed) {
   var sound = cacheSeed(seed);
   sound.play();
 }
+
+
+function toggleMute() {
+  if (muted===0){
+    muteAudio();
+  } else {
+    unMuteAudio();
+  }
+}
+
+function muteAudio() {
+  muted=1; 
+  var mb = document.getElementById("muteButton");
+  var umb = document.getElementById("unMuteButton");
+  if (mb){
+    mb.style.display="none"; 
+    umb.style.display="block";
+  }
+}
+function unMuteAudio() {
+  muted=0; 
+  var mb = document.getElementById("muteButton");
+  var umb = document.getElementById("unMuteButton");
+  if (mb){
+    mb.style.display="block"; 
+    umb.style.display="none";
+  }
+}
