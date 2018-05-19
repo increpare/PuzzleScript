@@ -984,6 +984,9 @@ function cacheSeed(seed){
 }
 
 function playSound(seed) {
+  if (muted){
+    return;
+  }
   checkAudioContextExists();
   if (unitTesting) return;
   var sound = cacheSeed(seed);

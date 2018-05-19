@@ -228,7 +228,7 @@ a {
   (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
   m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
   })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
-
+  ga('set', 'anonymizeIp', true);
   ga('create', 'UA-42606016-2', 'puzzlescript.net');
   ga('send', 'pageview');
 </script>
@@ -324,6 +324,16 @@ function getData(){
 getData();
 
 </script>
+<script>
+  // Puzzlescript Mute Button by NTurnerGames.com CC0
+  window.muteAudio = function(){muted=1; document.getElementById("muteButton").style.display="none"; document.getElementById("unMuteButton").style.display="block";}
+  window.unMuteAudio = function(){muted=0; document.getElementById("muteButton").style.display="block"; document.getElementById("unMuteButton").style.display="none";}
+</script>
+
+<div style = "z-index: 2; background: transparent; position: absolute; top: 0; right: 0;">
+  <img id="muteButton" width=32px height=32px onClick="window.muteAudio()" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAABGdBTUEAALGPC/xhBQAAAAlwSFlzAAAOwgAADsIBFShKgAAAABl0RVh0U29mdHdhcmUAcGFpbnQubmV0IDQuMC4xOdTWsmQAAAIGSURBVFhH3ZchcsJAGIURiApEBbIH6BEqOQASWYHoESoQFcwgOAaiEsEBKip6BERlBQJRwQEqtu/tvj+TLMnAJpntTL+ZP/De7p/9k102YUCcc0tEbpbx4MHIAMcKQ2LM4ktmOCYH9gXIawXzQasLYGKnAphryErC53VJLiPvhNgjtog54tZ3bgDt7QpgTkyD/42Y+aQa2CG5APYvMdGnFTBC3COeEG8IY4M4uxtsSCqAfQ1ZhSdZATangdNCvhCVImheVQC6FFdKZHtkeQ8fB8QOsUCM5N0hPhBkQ8+gEQ5BXLUb+swSsu0cZXjFE/kswu7ElB6hCAeJS/isCDXZOcaIKeKdHvhBPKiN00F4l+zu1BaQtKkop1Ic5BCx8g3OfSJu5Fthj9LnBfB7Ckqzc/Dq1oihtA34LP0SpHuV7r0AYyXN6SC7SO+ley9gFpQ7SHNNkFifpP9fAcZaOvsUNC3ChbQtwq30eQGg88+QwLKNjRuS/e6toLl0bQGNsF+MmuwcdRuR7Ya2EfEJ6Z8JFOEQRK6tuHg8U4TDBdClr4eRn3uDRjhcCfsasgpPsgLs8uP4iBiryUMzqQDC/iXiFxJbA1zttg4IX9EqgxM2JBdAmBPT4Pf/SmYwr4y8PC+lBnMNWUn4vLbJBvNBtz8m4E//mtkGlK0IjhWG1Jj8EnRWMPhg8AvjeqPLyfe3igAAAABJRU5ErkJggg==" />
+  <img id="unMuteButton" width=32px height=32px onClick="window.unMuteAudio()" style="display:none" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAAZdEVYdFNvZnR3YXJlAHBhaW50Lm5ldCA0LjAuMTnU1rJkAAABqElEQVRYR72XW3LDMAwDc7QerTdPRWjBoW1aedXZGUYUAIlqP9LpLbjf77+jvs3vfvgUvkDMmiPHzGxg9HTXEjNjsB6A0Nar+MxYg+UPFoH5ccLCauE+3Wmqvke+Pk5YWAl3sJuXGiSx3wfSOsMsrKRm4i6DJJAEktB+L1YW1oG4xyAJJIGUSOsMs7A2xB0GSSAJpA3Sz8xgYYnh/8R5g+ZKFG6Q9yAQ9dS3JEcEkkBqkb8K2X8EcYEkkE5RxkH6rkz7VT10uu3wwcbrcOipB+hEg62ZmlR9hbL1wEkJndgRMpVgif1+j3yH6LsSOtGALZAE0rUPwBJICfJ1D0A2ylamfDxXke8QfVfCGdak6pXpNkZBvkP0XeUl3hvkFiKfP8CwT5BPIfavD0iQBNJhEPJnDzCjr6Q31sMfI4P0/gPM6BP20ivTnSClxrZFvkP0WQ4YCQuImfzNYLfId4i+VqL0ExDfgNUi3yF6V6LkC3AsQW6R7xB9rZeHmzhrkFrkO0R/qHcZZ4Plv3sROARHv1mvImbG4GxixbucmDVHMjOauf8qY/jt9gdOODPsYZA1BAAAAABJRU5ErkJggg==" />
+</div>
 
 </body>
 </html>
