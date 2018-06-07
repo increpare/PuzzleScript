@@ -162,7 +162,19 @@ function tryLoadFile(fileName) {
 }
 
 function dropdownChange() {
+	if(!canExit()) {
+		this.selectedIndex = 0;
+		return;
+	}
+
 	tryLoadFile(this.value);
 	this.selectedIndex=0;
 }
 
+function canExit() {
+	if(!_editorDirty) {
+		return true;
+	}
+
+	return confirm("You have unsaved changes! Do you want to lose changes and proceed?")
+}

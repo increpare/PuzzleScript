@@ -75,6 +75,11 @@ function saveClick() {
 
 
 function loadDropDownChange() {
+	if(!canExit()) {
+		this.selectedIndex = 0;
+		return;
+	}
+
 	var saveString = localStorage['saves'];
 	if (saveString===undefined) {
 			consolePrint("Eek, trying to load a file, but there's no local storage found. Eek!",true);
