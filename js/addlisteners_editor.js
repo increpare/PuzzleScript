@@ -26,6 +26,9 @@ levelEditorClickLink.addEventListener("click", levelEditorClick_Fn, false);
 var exportClickLink = document.getElementById("exportClickLink");
 exportClickLink.addEventListener("click", exportClick, false);
 
+var autosaveCheckbox = document.getElementById("autosaveCheckbox");
+autosaveCheckbox.addEventListener("change", autosaveToggle, false);
+
 var exampleDropdown = document.getElementById("exampleDropdown");
 exampleDropdown.addEventListener("change", dropdownChange, false);
 
