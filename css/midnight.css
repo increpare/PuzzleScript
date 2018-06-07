@@ -75,6 +75,9 @@ span.cm-SOUND {
 .cm-s-midnight .CodeMirror-cursor {
     border-left: 1px solid #F8F8F0 !important;
 }
+.cm-s-midnight div.CodeMirror-overwrite .CodeMirror-cursor {
+    border-left: 7px solid #F8F8F0 !important;
+}
 .cm-s-midnight span.cm-MATRIX {color: yellow; font-style:italic;}
 .cm-s-midnight span.cm-IDENTIFIER {color: #1DC116;font-weight:bold;}
 
