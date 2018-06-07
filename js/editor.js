@@ -195,11 +195,11 @@ function autosaveCheck() {
 		}
 	}
 
-	if(index == -1) {
-		curSaveArray.push(saveDat);
-	} else {
-		curSaveArray[index] = saveDat;
+	if(index != -1) {
+		curSaveArray.splice(index, 1);
 	}
+	
+	curSaveArray.push(saveDat);
 
 	save(curSaveArray);
 }
@@ -238,5 +238,5 @@ function canExit() {
 		return true;
 	}
 
-	return confirm("You have unsaved changes! Do you want to lose changes and proceed?")
+	return confirm("You have unsaved changes! Do you want to proceed and lose changes?")
 }
