@@ -37,16 +37,7 @@ function dateToReadable(title,time) {
 }
 
 function saveClick() {
-	var title = "Untitled";
-	if (state.metadata.title!==undefined) {
-		title=state.metadata.title;
-	}
-	var text=editor.getValue();
-	var saveDat = {
-		title:title,
-		text:text,
-		date: new Date()
-	}
+	var saveDat = getSaveData();
 
 	var curSaveArray = [];
 	if (localStorage['saves']===undefined) {
@@ -59,22 +50,22 @@ function saveClick() {
 		curSaveArray.splice(0,1);
 	}
 	curSaveArray.push(saveDat);
-	var savesDatStr = JSON.stringify(curSaveArray);
-	localStorage['saves']=savesDatStr;
-
-	repopulateSaveDropdown(curSaveArray);
-
-	var loadDropdown = document.getElementById('loadDropDown');
-	loadDropdown.selectedIndex=0;
-
-	setEditorClean();
+	
+	save(curSaveArray);;
 
 	consolePrint("saved file to local storage",true);
 }
 
-
+function autosaveToggle() {
+	_autosaveMode = this.checked;
+}
 
 function loadDropDownChange() {
+	if(!canExit()) {
+		this.selectedIndex = 0;
+		return;
+	}
+
 	var saveString = localStorage['saves'];
 	if (saveString===undefined) {
 			consolePrint("Eek, trying to load a file, but there's no local storage found. Eek!",true);

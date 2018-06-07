@@ -1,6 +1,7 @@
 var code = document.getElementById('code');
 var _editorDirty = false;
 var _editorCleanState = "";
+var _autosaveMode = false;
 
 var fileToOpen=getParameterByName("demo");
 if (fileToOpen!==null&&fileToOpen.length>0) {
@@ -162,7 +163,80 @@ function tryLoadFile(fileName) {
 }
 
 function dropdownChange() {
+	if(!canExit()) {
+		this.selectedIndex = 0;
+		return;
+	}
+
 	tryLoadFile(this.value);
 	this.selectedIndex=0;
 }
 
+function autosaveCheck() {
+	if(!_autosaveMode || !_editorDirty) {
+		return;
+	}
+
+	// autosave replaces existing autosave slot for given game name or creates new
+
+	var saveDat = getSaveData();
+	saveDat.title += " (Autosave)"
+
+	var curSaveArray = [];
+	if (localStorage['saves'] !== undefined) {
+		curSaveArray = JSON.parse(localStorage.saves);
+	}
+
+	var index = -1;
+	for(var i = 0; i < curSaveArray.length; i++) {
+		if(curSaveArray[i].title === saveDat.title) {
+			index = i;
+			break;
+		}
+	}
+
+	if(index != -1) {
+		curSaveArray.splice(index, 1);
+	}
+	
+	curSaveArray.push(saveDat);
+
+	save(curSaveArray);
+}
+
+setInterval(autosaveCheck, 5000);
+
+function getSaveData() {
+	var title = "Untitled";
+	if (state.metadata.title !== undefined) {
+		title = state.metadata.title;
+	}
+
+	var text = editor.getValue();
+	
+	return {
+		title: title,
+		text: text,
+		date: new Date()
+	}
+}
+
+function save(saveArray) {
+	var savesDatStr = JSON.stringify(saveArray);
+	localStorage['saves'] = savesDatStr;
+
+	repopulateSaveDropdown(saveArray);
+
+	var loadDropdown = document.getElementById('loadDropDown');
+	loadDropdown.selectedIndex = 0;
+
+	setEditorClean();
+}
+
+function canExit() {
+	if(!_editorDirty) {
+		return true;
+	}
+
+	return confirm("You have unsaved changes! Do you want to proceed and lose changes?")
+}
