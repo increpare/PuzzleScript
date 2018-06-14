@@ -12,6 +12,30 @@
   "use strict";
 
   var WORD = /[\w$]+/, RANGE = 500;
+  var PRELUDES = [
+    'author',
+    'color_palette',
+    'again_interval',
+    'background_color',
+    'debug',
+    'flickscreen',
+    'homepage',
+    'key_repeat_interval',
+    'noaction',
+    'norepeat_action',
+    'noundo',
+    'norestart',
+    'realtime_interval',
+    'require_player_movement',
+    'run_rules_on_level_start',
+    'scanline',
+    'text_color',
+    'title',
+    'throttle_movement',
+    'verbose_logging',
+    'youtube',
+    'zoomscreen'
+  ];
 
   CodeMirror.registerHelper("hint", "anyword", function(editor, options) {
     var word = options && options.word || WORD;
@@ -45,6 +69,16 @@
         }
       }
     }
+
+    // check preludes
+    PRELUDES.forEach(function (matchWord) {
+      if (matchWord === curWord) return;
+      if ((!curWord || matchWord.lastIndexOf(curWord, 0) == 0) && !Object.prototype.hasOwnProperty.call(seen, matchWord)) {
+        seen[matchWord] = true;
+        list.push(matchWord);
+      }
+    });
+
     return {list: list, from: CodeMirror.Pos(cur.line, start), to: CodeMirror.Pos(cur.line, end)};
   });
   
