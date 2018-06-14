@@ -1147,7 +1147,7 @@ var codeMirrorFn = function() {
 		                    			state.tokenIndex=-1;
 		                    			return 'METADATA';
 		                    		} else  {
-		                    			logError('Unrecognised stuff in metadata section.', state.lineNumber);
+		                    			logError('Unrecognised stuff in the prelude.', state.lineNumber);
 		                    			return 'ERROR';
 		                    		}
 		                    	} else if (state.tokenIndex==-1) {
