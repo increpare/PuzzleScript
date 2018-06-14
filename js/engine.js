@@ -18,7 +18,7 @@ var intro_template = [
 	"..................................",
 	"..................................",
 	"......Puzzle Script Terminal......",
-	"..............v 1.0...............",
+	"..............v 1.6...............",
 	"..................................",
 	"..................................",
 	"..................................",
@@ -619,7 +619,6 @@ function setGameState(_state, command, randomseed) {
 
 	state = _state;
 
-    window.console.log('setting game state :D ');
     if (command[0]!=="rebuild"){
     	backups=[];
     }
