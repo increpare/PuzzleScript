@@ -1,4 +1,5 @@
 #!/bin/bash 
+node-qunit-phantomjs  tests/tests.html --timeout 40
 echo ===========================
 start=`date +%s`
 echo clearing whitepsace from demos
