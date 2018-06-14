@@ -52,7 +52,7 @@
 
         var RULE_DIRECTION_WORDS = [
             "DIRECTION",//tag
-            "up", "down", "left", "right", "random", "horizontal", "vertical"]
+            "up", "down", "left", "right", "random", "horizontal", "vertical","late","rigid"]
 
         var PATTERN_DIRECTION_WORDS = [
             "DIRECTION",
@@ -193,7 +193,9 @@
                     }
                 case 'levels':
                     {
-                        candlists.push(["message"]);
+                        if (lineToCursor.trim().split(/\s+/ ).length<2) {
+                            candlists.push(["MESSAGE_VERB","message"]);
+                        }
                         break;
                     }
                 default: //preamble
