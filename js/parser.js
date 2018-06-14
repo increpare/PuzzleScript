@@ -302,7 +302,6 @@ var codeMirrorFn = function() {
                   return str.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, "\\$&");
                 }
 
-                console.log(candname);
                 var nameFinder =  new RegExp("\\b"+escapeRegExp(candname)+"\\b","i")
                 var match = mixedCase.match(nameFinder);
                 if (match!=null){

@@ -10,12 +10,13 @@
 })(function(CodeMirror) {
         "use strict";
 
-        var WORD = /[\w$]+/,
+        var WORD = /[\w$#]+/,
             RANGE = 500;
 
         var PRELUDE_COMMAND_WORDS = [
-            ["author", "Gill Bloggs", `Your name goes here. This will appear in the title screen of the game.`],
-            ["color_palette", "arne", `By default, when you use colour names, they are pulled from a variation of <a href="http://androidarts.com/palette/16pal.htm">Arne</a>'s 16-Colour palette. However, there are other palettes to choose from: <p> <ul> <li>1 - mastersystem </li> <li>2 - gameboycolour </li> <li>3 - amiga </li> <li>4 - arnecolors </li> <li>5 - famicom </li> <li>6 - atari </li> <li>7 - pastel </li> <li>8 - ega </li> <li>9 - amstrad </li> <li>10 - proteus_mellow </li> <li>11 - proteus_rich </li> <li>12 - proteus_night </li> <li>13 - c64 </li> <li>14 - whitingjp </li> </ul> <p> (you can also refer to them by their numerical index)`],
+            "METADATA",//tag
+            ["author", "Gill Bloggs", "Your name goes here. This will appear in the title screen of the game."],
+            ["color_palette", "arne", "By default, when you use colour names, they are pulled from a variation of <a href='http://androidarts.com/palette/16pal.htm'>Arne</a>'s 16-Colour palette. However, there are other palettes to choose from: <p> <ul> <li>1 - mastersystem </li> <li>2 - gameboycolour </li> <li>3 - amiga </li> <li>4 - arnecolors </li> <li>5 - famicom </li> <li>6 - atari </li> <li>7 - pastel </li> <li>8 - ega </li> <li>9 - amstrad </li> <li>10 - proteus_mellow </li> <li>11 - proteus_rich </li> <li>12 - proteus_night </li> <li>13 - c64 </li> <li>14 - whitingjp </li> </ul> <p> (you can also refer to them by their numerical index)"],
             ["again_interval", "0.1", "The amount of time it takes an 'again' event to trigger."],
             ["background_color", "blue", "Can accept a color name or hex code (in the form #412bbc). Controls the background color of title/message screens, as well as the background color of the website. Text_color is its sibling."],
             ["debug", "", "This outputs the compiled instructions whenever you build your file."],
@@ -35,23 +36,75 @@
             ["throttle_movement", "", "For use in conjunction with realtime_interval - this stops you from moving crazy fast - repeated keypresses of the same movement direction will not increase your speed. This doesn't apply to the action button."],
             ["verbose_logging", "", "As you play the game, spits out information about all rules applied as you play"],
             ["youtube", "5MJLi5_dyn0", "If you write the youtube tag followed by the ID of a youtube video, it will play in the background."],
-            ["zoomscreen", "WxH", "Zooms the camera in to a WxH section of the map around the player, centered on the player."],
+            ["zoomscreen", "WxH", "Zooms the camera in to a WxH section of the map around the player, centered on the player."]
         ];
 
-        var COLOR_WORDS = ["black", "white", "darkgray", "lightgray", "gray", "grey", "darkgrey", "lightgrey", "red", "darkred", "lightred", "brown", "darkbrown", "lightbrown", "orange", "yellow", "green", "darkgreen", "lightgreen", "blue", "lightblue", "darkblue", "purple", "pink", "transparent"];
-        var RULE_COMMAND_WORDS = ["sfx0", "sfx1", "sfx2", "sfx3", "sfx4", "sfx5", "sfx6", "sfx7", "sfx8", "sfx9", "sfx10", "cancel", "checkpoint", "restart", "win", "message", "again"];
+        var COLOR_WORDS = [
+            "COLOR",//special tag
+            "BLACK", "WHITE", "DARKGRAY", "LIGHTGRAY", "GRAY", "RED", "DARKRED", "LIGHTRED", "BROWN", "DARKBROWN", "LIGHTBROWN", "ORANGE", "YELLOW", "GREEN", "DARKGREEN", "LIGHTGREEN", "BLUE", "LIGHTBLUE", "DARKBLUE", "PURPLE", "PINK", "TRANSPARENT"];
+        var RULE_COMMAND_WORDS = [
+            "COMMAND",
+            "sfx0", "sfx1", "sfx2", "sfx3", "sfx4", "sfx5", "sfx6", "sfx7", "sfx8", "sfx9", "sfx10", "cancel", "checkpoint", "restart", "win", "message", "again"];
 
-        var CARDINAL_DIRECTION_WORDS = ["up","down","left","right"]
+        var CARDINAL_DIRECTION_WORDS = [
+            "DIRECTION",
+            "up","down","left","right","horizontal","vertical"]
 
-        var RULE_DIRECTION_WORDS = ["up", "down", "left", "right", "random", "horizontal", "vertical"]
+        var RULE_DIRECTION_WORDS = [
+            "DIRECTION",//tag
+            "up", "down", "left", "right", "random", "horizontal", "vertical"]
 
-        var PATTERN_DIRECTION_WORDS = ["up", "down", "left", "right", "moving", "stationary", "no", "randomdir", "random", "horizontal", "vertical", "orthogonal", "perpendicular", "parallel", "action"]
+        var PATTERN_DIRECTION_WORDS = [
+            "DIRECTION",
+            "up", "down", "left", "right", "moving", "stationary", "no", "randomdir", "random", "horizontal", "vertical", "orthogonal", "perpendicular", "parallel", "action"]
 
-        var SOUND_WORDS = ["titlescreen", "startgame", "cancel", "endgame", "startlevel", "undo", "restart", "endlevel", "showmessage", "closemessage", "sfx0", "sfx1", "sfx2", "sfx3", "sfx4", "sfx5", "sfx6", "sfx7", "sfx8", "sfx9", "sfx10", "create", "destroy", "move", "cantmove", "action"];
+        var SOUND_WORDS = [
+            "SOUNDVERB",
+            "titlescreen", "startgame", "cancel", "endgame", "startlevel", "undo", "restart", "endlevel", "showmessage", "closemessage", "sfx0", "sfx1", "sfx2", "sfx3", "sfx4", "sfx5", "sfx6", "sfx7", "sfx8", "sfx9", "sfx10", "create", "destroy", "move", "cantmove", "action"];
 
-        var WINCONDITION_WORDS = ["some", "on", "no", "all"]
+        var WINCONDITION_WORDS = [
+            "LOGICWORD",
+            "some", "on", "no", "all"]
+
+        var LEGEND_LOGICWORDS = [
+                "LOGICWORD",
+                "and","or"
+            ]
 
 
+        function renderHint(elt,data,cur){
+            var t1=cur.text;
+            var t2=cur.extra;
+            var tag=cur.tag;
+            if (t1.length==0){
+                t1=cur.extra;
+                t2=cur.text;
+            }
+            var wrapper = document.createElement("span")
+            wrapper.className += " cm-s-midnight ";
+
+            var h = document.createElement("span")                // Create a <h1> element
+            // h.style.color="white";
+            var t = document.createTextNode(t1);     // Create a text node
+
+            h.appendChild(t);   
+            wrapper.appendChild(h); 
+
+            if (tag!=null){
+                h.className += "cm-" + tag;
+            }
+
+            elt.appendChild(wrapper);//document.createTextNode(cur.displayText || getText(cur)));
+
+            if (t2.length>0){
+                var h2 = document.createElement("span")                // Create a <h1> element
+                h2.style.color="orange";
+                var t2 = document.createTextNode(" "+t2);     // Create a text node
+                h2.appendChild(t2);  
+                h2.style.color="orange";
+                elt.appendChild(t2);
+            }
+        }
 
         CodeMirror.registerHelper("hint", "anyword", function(editor, options) {
 
@@ -73,9 +126,16 @@
 
             // ignore empty word
             if (!curWord || state.commentLevel>0) {
-                return {
-                    list: []
-                };
+                // if ( 
+                //         ( state.section=="" && curLine.trim()=="")  
+                //         // || ( state.section=="objects" && state.objects_section==2 ) 
+                //     ) {
+                //     curWord="";
+                // } else {
+                    return {
+                        list: []
+                    };
+                // }            
             }
 
             var addObjects = false;
@@ -85,13 +145,16 @@
             switch (state.section) {
                 case 'objects':
                     {
-                        candlists.push(COLOR_WORDS);
+                        if (state.objects_section==2){
+                            candlists.push(COLOR_WORDS);
+                        }
                         break;
                     }
                 case 'legend':
                     {
                         if (lineToCursor.indexOf('=')>=0){
-                            addObjects=true;                        
+                            addObjects=true;  
+                            candlists.push(LEGEND_LOGICWORDS);                      
                         } //no hins before equals
                         break;
                     }
@@ -113,6 +176,8 @@
                         //if inside of roles,can use some extra directions
                         if (lineToCursor.indexOf("[")==-1) {
                             candlists.push(RULE_DIRECTION_WORDS);
+                        } else {
+                            candlists.push(PATTERN_DIRECTION_WORDS);                            
                         }
                         if (lineToCursor.indexOf("->")>=0) {
                             candlists.push(RULE_COMMAND_WORDS);
@@ -133,8 +198,16 @@
                     }
                 default: //preamble
                     {
-                        candlists.push(PRELUDE_COMMAND_WORDS);
-                        candlists.push(COLOR_WORDS);
+                        var lc = lineToCursor.toLowerCase();
+                        if (lc.indexOf("background_color")>=0 ||
+                            lc.indexOf("text_color")>=0) {
+                            candlists.push(COLOR_WORDS);
+                        } else {
+                            if (lineToCursor.trim().split(/\s+/ ).length<2) {
+                                candlists.push(PRELUDE_COMMAND_WORDS);
+                            }
+                        }
+
                         break;
                     }
             }
@@ -154,7 +227,8 @@
                         if (matchWord === curWord) continue;
                         if ((!curWord || matchWord.lastIndexOf(curWord, 0) == 0) && !Object.prototype.hasOwnProperty.call(seen, matchWord)) {
                             seen[matchWord] = true;
-                            list.push(state.original_case_names[w]);
+                            var hint = state.original_case_names[w]; 
+                            list.push({text:hint,extra:"",tag:"NAME",render:renderHint});
                         }
                     }
                 }
@@ -164,6 +238,7 @@
                     legendbits.push(state.legend_properties);
                 }
 
+                //go throuhg all derived objects
                 for (var i=0;i<legendbits.length;i++){
                     var lr = legendbits[i];
                     for (var j=0;j<lr.length;j++){
@@ -172,20 +247,26 @@
                         if (matchWord === curWord) continue;
                         if ((!curWord || matchWord.lastIndexOf(curWord, 0) == 0) && !Object.prototype.hasOwnProperty.call(seen, matchWord)) {
                             seen[matchWord] = true;
-                            list.push(state.original_case_names[w]);
+                            var hint = state.original_case_names[w]; 
+                            list.push({text:hint,extra:"",tag:"NAME",render:renderHint});
                         }
                     }
                 }
 
             }
 
-            // second
+            // go through random names
             for (var i = 0; i < candlists.length; i++) {
                 var candlist = candlists[i]
-                for (var j = 0; j < candlist.length; j++) {
+                var tag = candlist[0];
+                for (var j = 1; j < candlist.length; j++) {
                     var m = candlist[j];
                     var orig = m;
+                    var extra=""
                     if (typeof m !== 'string'){
+                        if (m.length>1){
+                            extra=m[1]
+                        }
                         m=m[0];
                     }
                     var matchWord=m;
@@ -193,7 +274,13 @@
                     if (matchWord === curWord) continue;
                     if ((!curWord || matchWord.lastIndexOf(curWord, 0) == 0) && !Object.prototype.hasOwnProperty.call(seen, matchWord)) {
                         seen[matchWord] = true;
-                        list.push({text:m});
+
+                        var mytag = tag;
+                        if (mytag==="COLOR"){
+                            mytag = "COLOR-"+m.toUpperCase();
+                        }                    
+
+                        list.push({text:m,extra:extra,tag:mytag,render:renderHint});
                     }
                 }
             }
@@ -211,7 +298,7 @@
             };
         });
 
-    // https://stackoverflow.com/questions/13744176/codemirror-autocomplete-after-any-keyup
+    // https://statetackoverflow.com/questions/13744176/codemirror-autocomplete-after-any-keyup
     CodeMirror.ExcludedIntelliSenseTriggerKeys = {
         "9": "tab",
         "13": "enter",

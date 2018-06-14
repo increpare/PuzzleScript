@@ -26,11 +26,16 @@
   padding: 0 4px;
   border-radius: 2px;
   white-space: pre;
-  color: #D1EDFF;
+  color: #FFc540;
   cursor: pointer;
 }
 
 li.CodeMirror-hint-active {
   background: #3f5883;
-  color: #D1EDFF;
+  color: orange;
+}
+
+
+.CodeMirror-hint-active .cm-s-midnight span.cm-COLOR-BLACK {
+    color: black;
 }
