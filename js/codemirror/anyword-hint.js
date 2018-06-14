@@ -10,7 +10,7 @@
 })(function(CodeMirror) {
         "use strict";
 
-        var WORD = /[\w$#]+/,
+        var WORD = /[\[\-\>\w$#]+/,
             RANGE = 500;
 
         var PRELUDE_COMMAND_WORDS = [
@@ -52,7 +52,7 @@
 
         var RULE_DIRECTION_WORDS = [
             "DIRECTION",//tag
-            "up", "down", "left", "right", "random", "horizontal", "vertical","late","rigid"]
+            "up", "down", "left", "right", "random", "horizontal", "vertical", "late", "rigid"]
 
         var PATTERN_DIRECTION_WORDS = [
             "DIRECTION",
@@ -107,7 +107,7 @@
         }
 
         CodeMirror.registerHelper("hint", "anyword", function(editor, options) {
-
+            
             var word = options && options.word || WORD;
             var range = options && options.range || RANGE;
             var cur = editor.getCursor(),
@@ -177,12 +177,28 @@
                         if (lineToCursor.indexOf("[")==-1) {
                             candlists.push(RULE_DIRECTION_WORDS);
                         } else {
-                            candlists.push(PATTERN_DIRECTION_WORDS);                            
+                            candlists.push(PATTERN_DIRECTION_WORDS);
                         }
+                            
+                        var sqrBracket = lineToCursor.slice(-1) == "[";
+                        if( (lineToCursor.indexOf("->")>=0 && sqrBracket)
+                        || lineToCursor.slice(-2) == "->"
+                        || lineToCursor.slice(-1) == "-") {
+                           
+                            var count = lineToCursor.split("|").length - 1;
+                            candlists.push([
+                                "SPECIAL",
+                                (sqrBracket ? "" : "-> ") + "[ " + " | ".repeat(count) + " ]",
+                                (sqrBracket ? "" : "->") + "[ " + " | ".repeat(count) + " ]"
+                            ]);
+                        }
+
                         if (lineToCursor.indexOf("->")>=0) {
                             candlists.push(RULE_COMMAND_WORDS);
                         }
+
                         addObjects=true;
+                        
                         break;
                     }
                 case 'winconditions':
@@ -212,7 +228,8 @@
 
                         break;
                     }
-            }
+                }
+
             // case insensitive
             curWord = curWord.toLowerCase();
 
