@@ -523,6 +523,11 @@ function checkKey(e,justPressed) {
             inputdir=2;
         break;
         }
+        case 80://p
+        {
+			printLevel();
+        	break;
+        }
         case 13://enter
         case 32://space
         case 67://c
