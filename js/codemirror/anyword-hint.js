@@ -84,7 +84,6 @@
   
   // https://stackoverflow.com/questions/13744176/codemirror-autocomplete-after-any-keyup
   CodeMirror.ExcludedIntelliSenseTriggerKeys = {
-    "8": "backspace",
     "9": "tab",
     "13": "enter",
     "16": "shift",
@@ -102,7 +101,6 @@
     "39": "right",
     "40": "down",
     "45": "insert",
-    "46": "delete",
     "91": "left window key",
     "92": "right window key",
     "93": "select",
