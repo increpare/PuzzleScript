@@ -834,4 +834,6 @@ function Animatable(key, increment, update) {
             clearTimeout(id);
         };
     }
+
+    Mobile.enable();
 }());
