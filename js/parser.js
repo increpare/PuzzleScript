@@ -230,6 +230,8 @@ var codeMirrorFn = function() {
               winConditionsCopy.push(state.winconditions[i].concat([]));
             }
 
+            var original_case_namesCopy = Object.assign({},state.original_case_names);
+            
             var nstate = {
               lineNumber: state.lineNumber,
 
@@ -256,6 +258,8 @@ var codeMirrorFn = function() {
               names: state.names.concat([]),
 
               winconditions: winConditionsCopy,
+
+              original_case_names : original_case_namesCopy,
 
               abbrevNames: state.abbrevNames.concat([]),
 
@@ -290,6 +294,20 @@ var codeMirrorFn = function() {
                     state.lineNumber++;
                 }*/
 
+            }
+
+            function registerOriginalCaseName(candname){
+
+                function escapeRegExp(str) {
+                  return str.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, "\\$&");
+                }
+
+                console.log(candname);
+                var nameFinder =  new RegExp("\\b"+escapeRegExp(candname)+"\\b","i")
+                var match = mixedCase.match(nameFinder);
+                if (match!=null){
+                    state.original_case_names[candname] = match[0];
+                }
             }
 
             stream.eatWhile(/[ \t]/);
@@ -473,13 +491,16 @@ var codeMirrorFn = function() {
 
                                 if (sol) {
                                 	state.objects_candname = candname;
+                                    registerOriginalCaseName(candname);
                                 	state.objects[state.objects_candname] = {
 										                                	lineNumber: state.lineNumber,
 										                                	colors: [],
 										                                	spritematrix: []
 										                                };
+
 								} else {
 									//set up alias
+                                    registerOriginalCaseName(candname);
 									var synonym = [candname,state.objects_candname];
 									synonym.lineNumber = state.lineNumber;
 									state.legend_synonyms.push(synonym);
@@ -756,6 +777,8 @@ var codeMirrorFn = function() {
                             } */ else if (splits.length === 3) {
                                 var synonym = [splits[0], splits[2].toLowerCase()];
                                 synonym.lineNumber = state.lineNumber;
+
+                                registerOriginalCaseName(splits[0]);
                                 state.legend_synonyms.push(synonym);
                             } else if (splits.length % 2 === 0) {
                                 ok = false;
@@ -803,6 +826,8 @@ var codeMirrorFn = function() {
                                             newlegend = newlegend.concat(substitutor(splits[i]));
                                         }
                                         newlegend.lineNumber = state.lineNumber;
+
+                                        registerOriginalCaseName(newlegend[0]);
                                         state.legend_aggregates.push(newlegend);
                                     }
                                 } else if (lowertoken === 'or') {
@@ -847,6 +872,8 @@ var codeMirrorFn = function() {
                                             newlegend.push(splits[i].toLowerCase());
                                         }
                                         newlegend.lineNumber = state.lineNumber;
+
+                                        registerOriginalCaseName(newlegend[0]);
                                         state.legend_properties.push(newlegend);
                                     }
                                 } else {
@@ -1183,6 +1210,8 @@ var codeMirrorFn = function() {
 
                 winconditions: [],
                 metadata: [],
+
+                original_case_names: {},
 
                 abbrevNames: [],
 
