@@ -2076,7 +2076,6 @@ function printRules(state) {
 }
 
 function removeDuplicateRules(state) {
-	console.log("rule count before = " +state.rules.length);
 	var record = {};
 	var newrules=[];
 	var lastgroupnumber=-1;
@@ -2094,7 +2093,6 @@ function removeDuplicateRules(state) {
 		}
 		lastgroupnumber=groupnumber;
 	}
-	console.log("rule count after = " +state.rules.length);
 }
 function generateLoopPoints(state) {
 	var loopPoint={};
@@ -2418,8 +2416,6 @@ function formatHomePage(state){
 
 var MAX_ERRORS=5;
 function loadFile(str) {
-	window.console.log('loadFile');
-
 	var processor = new codeMirrorFn();
 	var state = processor.startState();
 
