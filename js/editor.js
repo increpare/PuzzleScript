@@ -179,3 +179,9 @@ function dropdownChange() {
 	this.selectedIndex=0;
 }
 
+editor.on('keyup', function (editor, event) {
+	if (!CodeMirror.ExcludedIntelliSenseTriggerKeys[(event.keyCode || event.which).toString()])
+	{
+			CodeMirror.commands.autocomplete(editor, null, { completeSingle: false });
+	}
+});
