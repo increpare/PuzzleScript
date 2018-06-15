@@ -581,9 +581,10 @@ function checkKey(e,justPressed) {
         		if (justPressed) {
         			if (titleScreen){
         				if (state.title==="EMPTY GAME"){
-        					compile(["restart"]);
+        					compile(["loadFirstNonMessageLevel"]);
+        				} else {
+        					nextLevel();
         				}
-        				nextLevel();
         			}
         			levelEditorOpened=!levelEditorOpened;
         			if (levelEditorOpened===false){

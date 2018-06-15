@@ -688,6 +688,28 @@ function setGameState(_state, command, randomseed) {
 			//do nothing
 			break;
 		}
+		case "loadFirstNonMessageLevel":{
+			for (var i=0;i<state.levels.length;i++){
+				if (state.levels[i].hasOwnProperty("message")){
+					continue;
+				}
+				var targetLevel = i;
+				curlevel=i;
+			    winning=false;
+			    timer=0;
+			    titleScreen=false;
+			    textMode=false;
+			    titleSelection=(curlevel>0||curlevelTarget!==null)?1:0;
+			    titleSelected=false;
+			    quittingMessageScreen=false;
+			    quittingTitleScreen=false;
+			    messageselected=false;
+			    titleMode = 0;
+				loadLevelFromState(state,targetLevel,randomseed);
+				break;
+			}
+			break;	
+		}
 		case "loadLevel":
 		{
 			var targetLevel = command[1];
