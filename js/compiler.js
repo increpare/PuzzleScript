@@ -616,6 +616,7 @@ function processRuleString(rule, state, curRules)
 		logError("A rule has to have an arrow in it.  There's no arrow here! Consider reading up about rules - you're clearly doing something weird", lineNumber);
 	}
 
+	var curcell=[];
 	for (var i = 0; i < tokens.length; i++)
 	{
 		var token = tokens[i];
@@ -659,7 +660,7 @@ function processRuleString(rule, state, curRules)
 			}
 			case 1: {
 				if (token == '[') {
-					if (curcellrow.length > 0) {
+					if (curcell.length > 0) {
 						logError('Error, malformed cell rule - encountered a "["" before previous bracket was closed', lineNumber);
 					}
 					incellrow = true;
