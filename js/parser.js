@@ -335,7 +335,10 @@ var codeMirrorFn = function() {
                 }
             }
 
-            stream.eatWhile(/[ \t]/);
+            // skip whitespaces (not belong to any tokens)
+            if (stream.eatWhile(/[ \t]/)) {
+                return;
+            }
 
             ////////////////////////////////
             // COMMENT PROCESSING BEGIN
@@ -555,12 +558,19 @@ var codeMirrorFn = function() {
                             {
                                 //LOOK FOR COLOR
                                 state.tokenIndex = 0;
+
                                 var match_color = stream.match(reg_color, true);
                                 if (match_color == null) {
                                     var str = stream.match(reg_name, true) || stream.match(reg_notcommentstart, true);
                                     logError('Was looking for color for object ' + state.objects_candname.toUpperCase() + ', got "' + str + '" instead.', state.lineNumber);
                                     return null;
                                 } else {
+                                    var ch = stream.peek();
+                                    if (ch !== null && ch !== undefined && !/\s/.test(ch)) {
+                                        // no EOL or spaces; skip all
+                                        stream.match(/[#\w]+\s*/, true);
+                                        return null;
+                                    }
                                     if (state.objects[state.objects_candname].colors === undefined) {
                                         state.objects[state.objects_candname].colors = [match_color[0].trim()];
                                     } else {
@@ -573,7 +583,7 @@ var codeMirrorFn = function() {
                                     } else if (candcol==="transparent") {
                                         return 'COLOR FADECOLOR';
                                     } else {
-                                        return 'COLOR';
+                                        return 'MULTICOLOR'+match_color[0];
                                     }
                                 }
                                 break;
