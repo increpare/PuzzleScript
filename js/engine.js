@@ -2193,7 +2193,7 @@ function calculateRowColMasks() {
 }
 
 /* returns a bool indicating if anything changed */
-function processInput(dir,dontCheckWin,dontModify) {
+function processInput(dir,dontDoWin,dontModify) {
 	againing = false;
 
 	if (verbose_logging) { 
@@ -2394,11 +2394,14 @@ function processInput(dir,dontCheckWin,dontModify) {
 			}
 	    }
 
-	    if (textMode===false && (dontCheckWin===undefined ||dontCheckWin===false)) {
+	    if (textMode===false) {
 	    	if (verbose_logging) { 
 	    		consolePrint('Checking win condition.');
 			}
-	    	checkWin();
+			if (dontDoWin===undefined){
+				dontDoWin = false;
+			}
+	    	checkWin( dontDoWin );
 	    }
 
 	    if (!winning) {
@@ -2454,15 +2457,17 @@ function processInput(dir,dontCheckWin,dontModify) {
 	return modified;
 }
 
-function checkWin() {
+function checkWin(dontDoWin) {
 
 	if (levelEditorOpened) {
-		return;
+		dontDoWin=true;
 	}
 
 	if (level.commandQueue.indexOf('win')>=0) {
 		consolePrint("Win Condition Satisfied");
-		DoWin();
+		if(!dontDoWin){
+			DoWin();
+		}
 		return;
 	}
 
@@ -2526,7 +2531,9 @@ function checkWin() {
 
 	if (won) {
 		consolePrint("Win Condition Satisfied");
-		DoWin();
+		if (!dontDoWin){
+			DoWin();
+		}
 	}
 }
 
