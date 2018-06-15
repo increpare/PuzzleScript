@@ -542,7 +542,7 @@ var codeMirrorFn = function() {
                                     var ch = stream.peek();
                                     if (ch !== null && ch !== undefined && !/\s/.test(ch)) {
                                         // no EOL or spaces; skip all
-                                        stream.match(reg_name, true);
+                                        stream.match(/[#\w]+\s*/, true);
                                         return null;
                                     }
                                     if (state.objects[state.objects_candname].colors === undefined) {
