@@ -579,6 +579,12 @@ function checkKey(e,justPressed) {
         case 69: {//e
         	if (canOpenEditor) {
         		if (justPressed) {
+        			if (titleScreen){
+        				if (state.title==="EMPTY GAME"){
+        					compile(["restart"]);
+        				}
+        				nextLevel();
+        			}
         			levelEditorOpened=!levelEditorOpened;
         			if (levelEditorOpened===false){
         				printLevel();

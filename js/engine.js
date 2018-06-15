@@ -235,7 +235,7 @@ function generateTitleScreen()
 }
 
 var introstate = {
-	title: "2D Whale World",
+	title: "EMPTY GAME",
 	attribution: "increpare",
    	objectCount: 2,
    	metadata:[],
