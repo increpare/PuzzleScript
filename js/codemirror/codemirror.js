@@ -6904,7 +6904,7 @@
   function isExtendingChar(ch) { return ch.charCodeAt(0) >= 768 && extendingChars.test(ch); }
 
   // DOM UTILITIES
-
+  var colorCache = {};
   function elt(tag, content, className, style) {
     var e = document.createElement(tag);
     if (className) {
@@ -6932,19 +6932,99 @@
           } 
         }
 
-        var colorString = content[0].textContent;
-        var col = parseColor(colorString)
-        var textCol="black"
-        if (col){
-          var brightness = (col[0] * 299 + col[1] * 587 + col[2] * 114) / (1000*255)
-          if (brightness<0.5){
-            textCol="white";
-          }        
+        // https://stackoverflow.com/questions/9733288/how-to-programmatically-calculate-the-contrast-ratio-between-two-colors
+        function luminanace(rgb) {
+          var r = rgb[0], g = rgb[1], b = rgb[2];
+          var a = [r, g, b].map(function (v) {
+            v /= 255;
+            return v <= 0.03928 ? v / 12.92 : Math.pow((v + 0.055) / 1.055, 2.4);
+          });
+          return a[0] * 0.2126 + a[1] * 0.7152 + a[2] * 0.0722;
+        }
+        var BG_LUMINANACE = luminanace(parseColor('#0F192A'));
+        function contrast(rgb) {
+          return (luminanace(rgb) + 0.05) / (BG_LUMINANACE + 0.05);
         }
 
-        style = `background-color:${colorString}; color:${textCol}`;
+        // https://gist.github.com/mjackson/5311256
+        function rgbToHsl(rgb) {
+          var r = rgb[0], g = rgb[1], b = rgb[2];
+          r /= 255, g /= 255, b /= 255;
+        
+          var max = Math.max(r, g, b), min = Math.min(r, g, b);
+          var h, s, l = (max + min) / 2;
+        
+          if (max == min) {
+            h = s = 0; // achromatic
+          } else {
+            var d = max - min;
+            s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
+        
+            switch (max) {
+              case r: h = (g - b) / d + (g < b ? 6 : 0); break;
+              case g: h = (b - r) / d + 2; break;
+              case b: h = (r - g) / d + 4; break;
+            }
+        
+            h /= 6;
+          }
+        
+          return [h, s, l];
+        }
+        function hslToRgb(hsl) {
+          var h = hsl[0], s = hsl[1], l = hsl[2];
+          var r, g, b;
+        
+          if (s == 0) {
+            r = g = b = l; // achromatic
+          } else {
+            function hue2rgb(p, q, t) {
+              if (t < 0) t += 1;
+              if (t > 1) t -= 1;
+              if (t < 1/6) return p + (q - p) * 6 * t;
+              if (t < 1/2) return q;
+              if (t < 2/3) return p + (q - p) * (2/3 - t) * 6;
+              return p;
+            }
+        
+            var q = l < 0.5 ? l * (1 + s) : l + s - l * s;
+            var p = 2 * l - q;
+        
+            r = hue2rgb(p, q, h + 1/3);
+            g = hue2rgb(p, q, h);
+            b = hue2rgb(p, q, h - 1/3);
+          }
+        
+          return [r * 255, g * 255, b * 255];
+        }
 
-        //color specially
+        var colorString = content[0].textContent;
+        if (colorCache[colorString]) {
+          // no need to parse it again, for performance
+          style = colorCache[colorString];
+        } else {
+          var col = parseColor(colorString)
+          if (col){
+            // use contrast ratio (to the background) instead of brightness only
+            var r = contrast(col);
+            if (r < 2.361) {
+              // worse than #555
+              var hsl = rgbToHsl(col);
+
+              do {
+                // increase lightness a little bit until reach the contrast required
+                hsl[2] += 0.01;
+                r = contrast(hslToRgb(hsl));
+              } while (r < 2.361);
+
+              // template strings don't work for IE
+              style = 'color: hsl(' + ~~(hsl[0] * 360) + ',' + ~~(hsl[1] * 100) + '%,' + ~~(hsl[2] * 100) + '%)';
+            } else {
+              style = 'color:' + colorString;
+            }
+          }
+          colorCache[colorString] = style;
+        }
       }
 
       e.className = className;
