@@ -2523,7 +2523,7 @@ function compile(command,text,randomseed) {
 		compiling = false;
 	}
 
-	if (state.levels.length===0){	
+	if (state && state.levels && state.levels.length===0){	
 		logError('No levels found.  Add some levels!',undefined,true);
 	}
 

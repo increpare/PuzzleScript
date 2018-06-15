@@ -335,10 +335,7 @@ var codeMirrorFn = function() {
                 }
             }
 
-            // skip whitespaces (not belong to any tokens)
-            if (stream.eatWhile(/[ \t]/)) {
-                return;
-            }
+            stream.eatWhile(/[ \t]/);
 
             ////////////////////////////////
             // COMMENT PROCESSING BEGIN
@@ -565,12 +562,6 @@ var codeMirrorFn = function() {
                                     logError('Was looking for color for object ' + state.objects_candname.toUpperCase() + ', got "' + str + '" instead.', state.lineNumber);
                                     return null;
                                 } else {
-                                    var ch = stream.peek();
-                                    if (ch !== null && ch !== undefined && !/\s/.test(ch)) {
-                                        // no EOL or spaces; skip all
-                                        stream.match(/[#\w]+\s*/, true);
-                                        return null;
-                                    }
                                     if (state.objects[state.objects_candname].colors === undefined) {
                                         state.objects[state.objects_candname].colors = [match_color[0].trim()];
                                     } else {

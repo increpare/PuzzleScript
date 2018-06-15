@@ -11,6 +11,7 @@ x to action.......................
 z to undo, r to restart...........
 */
 
+
 var RandomGen = new RNG();
 
 var intro_template = [
@@ -820,6 +821,7 @@ function restoreLevel(lev) {
 
     againing=false;
     level.commandQueue=[];
+    level.commandQueueSourceRules=[];
 }
 
 var zoomscreen=false;
@@ -851,6 +853,7 @@ function DoRestart(force) {
 	}
 	
 	level.commandQueue=[];
+	level.commandQueueSourceRules=[];
 	restarting=false;
 }
 
@@ -1045,6 +1048,7 @@ function Level(lineNumber, width, height, layerCount, objects) {
 	this.objects = objects;
 	this.layerCount = layerCount;
 	this.commandQueue = [];
+	this.commandQueueSourceRules = [];
 }
 
 Level.prototype.clone = function() {
@@ -1825,7 +1829,8 @@ function commitPreservationState(ruleGroupIndex) {
 		rigidGroupIndexMask:level.rigidGroupIndexMask.concat([]),
 		rigidMovementAppliedMask:level.rigidMovementAppliedMask.concat([]),
 		bannedGroup:level.bannedGroup.concat([]),
-		commandQueue:level.commandQueue.concat([])
+		commandQueue:level.commandQueue.concat([]),
+		commandQueueSourceRules:level.commandQueueSourceRules.concat([]),
 	};
 	rigidBackups[ruleGroupIndex]=propagationState;
 	return propagationState;
@@ -1838,6 +1843,7 @@ function restorePreservationState(preservationState) {;
 	level.rigidGroupIndexMask = preservationState.rigidGroupIndexMask.concat([]);
     level.rigidMovementAppliedMask = preservationState.rigidMovementAppliedMask.concat([]);
     level.commandQueue = preservationState.commandQueue.concat([]);
+    level.commandQueueSourceRules = preservationState.commandQueueSourceRules.concat([]);
     sfxCreateMask.setZero();
     sfxDestroyMask.setZero();
 	consolePrint("Rigid movement application failed, rolling back");
@@ -1980,12 +1986,13 @@ Rule.prototype.queueCommands = function() {
 			continue;
 		}
 		level.commandQueue.push(command[0]);
+		level.commandQueueSourceRules.push(this);
 
 		if (verbose_logging){
 			var lineNumber = this.lineNumber;
 			var ruleDirection = dirMaskName[this.direction];
 			var logString = '<font color="green">Rule <a onclick="jumpToLine(' + lineNumber.toString() + ');"  href="javascript:void(0);">' + lineNumber.toString() + '</a> triggers command '+command[0]+'.</font>';
-			consolePrint(logString);
+			consolePrint(logString,true);
 		}
 
 		if (command[0]==='message') {			
@@ -2247,6 +2254,7 @@ function processInput(dir,dontDoWin,dontModify) {
         level.bannedGroup = [];
         rigidBackups = [];
         level.commandQueue=[];
+        level.commandQueueSourceRules=[];
         var startRuleGroupIndex=0;
         var rigidloop=false;
         var startState = commitPreservationState();
@@ -2307,10 +2315,13 @@ function processInput(dir,dontDoWin,dontModify) {
         	//play player cantmove sounds here
         }
 
-	    if (level.commandQueue.indexOf('cancel')>=0) {	
+
+
+	    if (level.commandQueue.indexOf('cancel')>=0) {
 	    	if (verbose_logging) { 
 	    		consoleCacheDump();
-	    		consolePrint('CANCEL command executed, cancelling turn.',true);
+	    		var r = level.commandQueueSourceRules[level.commandQueue.indexOf('cancel')];
+	    		consolePrintFromRule('CANCEL command executed, cancelling turn.',r,true);
 			}
     		backups.push(bak);
 			messagetext = "";
@@ -2321,7 +2332,8 @@ function processInput(dir,dontDoWin,dontModify) {
 
 	    if (level.commandQueue.indexOf('restart')>=0) {
 	    	if (verbose_logging) { 
-	    		consolePrint('RESTART command executed, reverting to restart state.');
+	    		var r = level.commandQueueSourceRules[level.commandQueue.indexOf('restart')];
+	    		consolePrintFromRule('RESTART command executed, reverting to restart state.',r);
 	    		consoleCacheDump();
 			}
     		backups.push(bak);
@@ -2410,7 +2422,8 @@ function processInput(dir,dontDoWin,dontModify) {
 	    if (!winning) {
 			if (level.commandQueue.indexOf('checkpoint')>=0) {
 		    	if (verbose_logging) { 
-		    		consolePrint('CHECKPOINT command executed, saving current state to the restart state.');
+	    			var r = level.commandQueueSourceRules[level.commandQueue.indexOf('checkpoint')];
+		    		consolePrintFromRule('CHECKPOINT command executed, saving current state to the restart state.',r);
 				}
 				restartTarget=level4Serialization();
 				hasUsedCheckpoint=true;
@@ -2428,7 +2441,8 @@ function processInput(dir,dontDoWin,dontModify) {
 			    	verbose_logging=old_verbose_logging;
 
 			    	if (verbose_logging) { 
-			    		consolePrint('AGAIN command executed, with changes detected - will execute another turn.');
+	    				var r = level.commandQueueSourceRules[level.commandQueue.indexOf('again')];
+			    		consolePrintFromRule('AGAIN command executed, with changes detected - will execute another turn.',r);
 					}
 
 			    	againing=true;
@@ -2436,7 +2450,8 @@ function processInput(dir,dontDoWin,dontModify) {
 			    } else {		    	
 			    	verbose_logging=old_verbose_logging;
 					if (verbose_logging) { 
-						consolePrint('AGAIN command not executed, it wouldn\'t make any changes.');
+	    				var r = level.commandQueueSourceRules[level.commandQueue.indexOf('again')];
+						consolePrintFromRule('AGAIN command not executed, it wouldn\'t make any changes.',r);
 					}
 			    }
 			    verbose_logging=old_verbose_logging;
@@ -2446,6 +2461,7 @@ function processInput(dir,dontDoWin,dontModify) {
 		    
 
 	    level.commandQueue=[];
+	    level.commandQueueSourceRules=[];
 
     }
 
