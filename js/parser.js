@@ -309,7 +309,7 @@ var codeMirrorFn = function() {
                 }
             }
 
-            // skip whitespaces (not belong any tokens)
+            // skip whitespaces (not belong to any tokens)
             if (stream.eatWhile(/[ \t]/)) {
                 return;
             }
