@@ -309,7 +309,10 @@ var codeMirrorFn = function() {
                 }
             }
 
-            stream.eatWhile(/[ \t]/);
+            // skip whitespaces (not belong any tokens)
+            if (stream.eatWhile(/[ \t]/)) {
+                return;
+            }
 
             ////////////////////////////////
             // COMMENT PROCESSING BEGIN
@@ -529,15 +532,6 @@ var codeMirrorFn = function() {
                             {
                                 //LOOK FOR COLOR
                                 state.tokenIndex = 0;
-                                var ch = stream.peek();
-                                if (ch===" " || ch==="\t"){
-                                    stream.eat(/\s+/);
-                                    return "BASD";
-                                } 
-                                var eat_spaces = stream.match(/K+/, true);
-                                if (eat_spaces !== null){
-                                    return "BASD";
-                                }
 
                                 var match_color = stream.match(reg_color, true);
                                 if (match_color == null) {
