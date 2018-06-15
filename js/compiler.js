@@ -2522,6 +2522,11 @@ function compile(command,text,randomseed) {
 	} finally {
 		compiling = false;
 	}
+
+	if (state.levels.length===0){	
+		logError('No levels found.  Add some levels!',undefined,true);
+	}
+
 	if (errorCount>MAX_ERRORS) {
 		return;
 	}
