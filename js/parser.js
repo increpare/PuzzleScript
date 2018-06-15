@@ -529,15 +529,6 @@ var codeMirrorFn = function() {
                             {
                                 //LOOK FOR COLOR
                                 state.tokenIndex = 0;
-                                var ch = stream.peek();
-                                if (ch===" " || ch==="\t"){
-                                    stream.eat(/\s+/);
-                                    return "BASD";
-                                } 
-                                var eat_spaces = stream.match(/K+/, true);
-                                if (eat_spaces !== null){
-                                    return "BASD";
-                                }
 
                                 var match_color = stream.match(reg_color, true);
                                 if (match_color == null) {
@@ -545,6 +536,12 @@ var codeMirrorFn = function() {
                                     logError('Was looking for color for object ' + state.objects_candname.toUpperCase() + ', got "' + str + '" instead.', state.lineNumber);
                                     return null;
                                 } else {
+                                    var ch = stream.peek();
+                                    if (ch !== null && ch !== undefined && !/\s/.test(ch)) {
+                                        // no EOL or spaces; skip all
+                                        stream.match(/[#\w]+\s*/, true);
+                                        return null;
+                                    }
                                     if (state.objects[state.objects_candname].colors === undefined) {
                                         state.objects[state.objects_candname].colors = [match_color[0].trim()];
                                     } else {
