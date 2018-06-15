@@ -348,7 +348,7 @@ function onMouseDown(event) {
         	}
         }
     }
-
+	checkAudioContextExists();
 }
 
 function rightClickCanvas(event) {
@@ -362,6 +362,8 @@ function onMouseUp(event) {
 
 function onKeyDown(event) {
 
+	checkAudioContextExists();
+	
     event = event || window.event;
 
 	// Prevent arrows/space from scrolling page
