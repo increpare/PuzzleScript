@@ -1250,7 +1250,9 @@ function concretizeMovingRule(state, rule,lineNumber) {
         for(var ambiguousMovement in ambiguous_movement_dict) {
         	if (ambiguous_movement_dict.hasOwnProperty(ambiguousMovement) && ambiguousMovement!=="INVALID") {
         		concreteMovement = ambiguous_movement_dict[ambiguousMovement];
-
+        		if (concreteMovement==="INVALID"){
+   					continue;
+        		}
 				for (var j=0;j<cur_rule.rhs.length;j++) {
 					var cellRow_rhs = cur_rule.rhs[j];
 					for (var k=0;k<cellRow_rhs.length;k++) {
