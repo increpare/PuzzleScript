@@ -6907,7 +6907,48 @@
 
   function elt(tag, content, className, style) {
     var e = document.createElement(tag);
-    if (className) e.className = className;
+    if (className) {
+      if(className.indexOf("cm-MULTICOLOR")===0){
+        className="cm-COLOR"
+
+        function parseColor(input) {
+          input = input.trim();
+          if (input.length<4){
+            return null
+          } else if (input.length<7){
+              // in three-character format, each value is multiplied by 0x11 to give an
+              // even scale from 0x00 to 0xff
+              return [
+                  parseInt(input.charAt(1),16)*0x11,
+                  parseInt(input.charAt(2),16)*0x11,
+                  parseInt(input.charAt(3),16)*0x11
+              ];
+          } else {
+              return [
+                  parseInt(input.substr(1,2),16),
+                  parseInt(input.substr(3,2),16),
+                  parseInt(input.substr(5,2),16)
+              ];
+          } 
+        }
+
+        var colorString = content[0].textContent;
+        var col = parseColor(colorString)
+        var textCol="black"
+        if (col){
+          var brightness = (col[0] * 299 + col[1] * 587 + col[2] * 114) / (1000*255)
+          if (brightness<0.5){
+            textCol="white";
+          }        
+        }
+
+        style = `background-color:${colorString}; color:${textCol}`;
+
+        //color specially
+      }
+
+      e.className = className;
+    }
     if (style) e.style.cssText = style;
     if (typeof content == "string") e.appendChild(document.createTextNode(content));
     else if (content) for (var i = 0; i < content.length; ++i) e.appendChild(content[i]);

@@ -529,6 +529,16 @@ var codeMirrorFn = function() {
                             {
                                 //LOOK FOR COLOR
                                 state.tokenIndex = 0;
+                                var ch = stream.peek();
+                                if (ch===" " || ch==="\t"){
+                                    stream.eat(/\s+/);
+                                    return "BASD";
+                                } 
+                                var eat_spaces = stream.match(/K+/, true);
+                                if (eat_spaces !== null){
+                                    return "BASD";
+                                }
+
                                 var match_color = stream.match(reg_color, true);
                                 if (match_color == null) {
                                     var str = stream.match(reg_name, true) || stream.match(reg_notcommentstart, true);
@@ -547,7 +557,7 @@ var codeMirrorFn = function() {
                                     } else if (candcol==="transparent") {
                                         return 'COLOR FADECOLOR';
                                     } else {
-                                        return 'COLOR';
+                                        return 'MULTICOLOR'+match_color[0];
                                     }
                                 }
                                 break;
