@@ -1823,14 +1823,13 @@ var rigidBackups=[]
 function commitPreservationState(ruleGroupIndex) {
 	var propagationState = {
 		ruleGroupIndex:ruleGroupIndex,
-		//don't need to know the tuple index
 		objects:new Int32Array(level.objects),
 		movements:new Int32Array(level.movements),
 		rigidGroupIndexMask:level.rigidGroupIndexMask.concat([]),
 		rigidMovementAppliedMask:level.rigidMovementAppliedMask.concat([]),
 		bannedGroup:level.bannedGroup.concat([]),
 		commandQueue:level.commandQueue.concat([]),
-		commandQueueSourceRules:level.commandQueueSourceRules.concat([]),
+		commandQueueSourceRules:level.commandQueueSourceRules.concat([])
 	};
 	rigidBackups[ruleGroupIndex]=propagationState;
 	return propagationState;
