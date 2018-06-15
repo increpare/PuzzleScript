@@ -18,6 +18,7 @@ var levelString;
 var inputString;
 var outputString;
 
+function consolePrintFromRule(text){}
 function consolePrint(text) {}
 function consoleError(text) {
 //	window.console.log(text);

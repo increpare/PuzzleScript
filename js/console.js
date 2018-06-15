@@ -26,12 +26,28 @@ function jumpToLine(i) {
 }
 
 var consolecache = [];
-function consolePrint(text,urgent) {
-	if (level!=null && level.commandQueue!=null && level.commandQueue.indexOf('cancel')>=0) {	
-		if (!urgent){
-			return;
-		}
+
+
+function consolePrintFromRule(text,rule,urgent) {
+
+	if (urgent===undefined) {
+		urgent=false;
 	}
+
+
+	var ruleDirection = dirMaskName[rule.direction];
+
+	var logString = '<font color="green">Rule <a onclick="jumpToLine(' + rule.lineNumber + ');"  href="javascript:void(0);">' + 
+			rule.lineNumber + '</a> ' + ruleDirection + " : "  + text + '</font>';
+
+	if (cache_console_messages&&urgent==false) {		
+		consolecache.push(logString);
+	} else {
+		addToConsole(logString);
+	}
+}
+
+function consolePrint(text,urgent) {
 
 	if (urgent===undefined) {
 		urgent=false;
@@ -39,6 +55,7 @@ function consolePrint(text,urgent) {
 	if (cache_console_messages&&urgent==false) {		
 		consolecache.push(text);
 	} else {
+		consoleCacheDump();
 		addToConsole(text);
 	}
 }

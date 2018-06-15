@@ -194,7 +194,7 @@ function shareClick() {
 	consolePrint("<br>Sending code to github...",true)
 	var title = "Untitled PuzzleScript Script";
 	if (state.metadata.title!==undefined) {
-		title=state.metadata.title + " PuzzleScript Script";
+		title=state.metadata.title + " (PuzzleScript Script)";
 	}
 	compile();
 
@@ -202,7 +202,7 @@ function shareClick() {
 	var source=editor.getValue();
 
 	var gistToCreate = {
-		"description" : "title",
+		"description" : title,
 		"public" : true,
 		"files": {
 			"readme.txt" : {

@@ -43,7 +43,7 @@ function logErrorCacheable(str, lineNumber,urgent) {
 function logError(str, lineNumber,urgent) {
     if (compiling||urgent) {
         if (lineNumber === undefined) {
-            return logErrorNoLine(str);
+            return logErrorNoLine(str,urgent);
         }
         var errorString = '<a onclick="jumpToLine(' + lineNumber.toString() + ');"  href="javascript:void(0);"><span class="errorTextLineNumber"> line ' + lineNumber.toString() + '</span></a> : ' + '<span class="errorText">' + str + '</span>';
          if (errorStrings.indexOf(errorString) >= 0 && !urgent) {
@@ -106,6 +106,32 @@ function blankLineHandle(state) {
     } else if (state.section === 'objects') {
         state.objects_section = 0;
     }
+}
+
+//for IE support
+if (typeof Object.assign != 'function') {
+  (function () {
+    Object.assign = function (target) {
+      'use strict';
+      // We must check against these specific cases.
+      if (target === undefined || target === null) {
+        throw new TypeError('Cannot convert undefined or null to object');
+      }
+ 
+      var output = Object(target);
+      for (var index = 1; index < arguments.length; index++) {
+        var source = arguments[index];
+        if (source !== undefined && source !== null) {
+          for (var nextKey in source) {
+            if (source.hasOwnProperty(nextKey)) {
+              output[nextKey] = source[nextKey];
+            }
+          }
+        }
+      }
+      return output;
+    };
+  })();
 }
 
 var codeMirrorFn = function() {
@@ -536,12 +562,6 @@ var codeMirrorFn = function() {
                                     logError('Was looking for color for object ' + state.objects_candname.toUpperCase() + ', got "' + str + '" instead.', state.lineNumber);
                                     return null;
                                 } else {
-                                    var ch = stream.peek();
-                                    if (ch !== null && ch !== undefined && !/\s/.test(ch)) {
-                                        // no EOL or spaces; skip all
-                                        stream.match(/[#\w]+\s*/, true);
-                                        return null;
-                                    }
                                     if (state.objects[state.objects_candname].colors === undefined) {
                                         state.objects[state.objects_candname].colors = [match_color[0].trim()];
                                     } else {

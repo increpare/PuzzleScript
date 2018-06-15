@@ -994,6 +994,26 @@ function playSound(seed) {
 }
 
 
+
+function killAudioButton(){
+  var mb = document.getElementById("muteButton");
+  var umb = document.getElementById("unMuteButton");
+  if (mb){
+    mb.remove();
+    umb.remove();
+  }
+}
+
+function showAudioButton(){
+  var mb = document.getElementById("muteButton");
+  var umb = document.getElementById("unMuteButton");
+  if (mb){
+    mb.style.display="block"; 
+    umb.style.display="none";
+  }
+}
+
+
 function toggleMute() {
   if (muted===0){
     muteAudio();

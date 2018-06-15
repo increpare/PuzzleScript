@@ -3,7 +3,7 @@ var curlevel=0;
 var curlevelTarget=null;
 var hasUsedCheckpoint=false;
 var levelEditorOpened=false;
-var muted=false;
+var muted=0;
 
 function doSetupTitleScreenLevelContinue(){
     try {

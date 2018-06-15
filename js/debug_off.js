@@ -11,7 +11,14 @@ function stripTags(str) {
 	return result;
 }
 
-function consolePrint(str){
+function consolePrint(str,urgent){
+/*	var errorText = document.getElementById("errormessage");
+	
+	str=stripTags(str);
+	errorText.innerHTML+=str+"<br>";*/
+}
+
+function consolePrintFromRule(str,rule,urgent){
 /*	var errorText = document.getElementById("errormessage");
 	
 	str=stripTags(str);
