@@ -735,8 +735,11 @@ function setGameState(_state, command, randomseed) {
 	canvasResize();
 
 
-
-	tryActivateYoutube();
+	if (state.sounds.length==0&&state.metadata.youtube==null){
+		killAudioButton();
+	} else {
+		showAudioButton();
+	}
 	
 }
 

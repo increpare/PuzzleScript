@@ -369,9 +369,10 @@ function onKeyDown(event) {
 		prevent(event);
 	}
 
-	if ((!IDE) && event.keyCode===77){
+	if ((!IDE) && event.keyCode===77){//m
 		toggleMute();		
 	}
+
 	
     if (keybuffer.indexOf(event.keyCode)>=0) {
     	return;
