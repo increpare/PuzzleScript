@@ -115,6 +115,7 @@ Mobile.debugDot = function (event) {
 
     proto.bootstrap = function () {
         this.showTab();
+        this.disableScrolling();
         if (!this.isAudioSupported()) {
             this.disableAudio();
         }
@@ -653,6 +654,22 @@ Mobile.debugDot = function (event) {
 
         this.menuElem.setAttribute('style', opacityString);
     };
+
+    proto.disableScrolling = function() {
+        var style = {
+            height: "100%",
+            overflow: "hidden",
+            position: "fixed",
+            width: "100%"
+        }
+        
+        var styleString = "";
+        for (var key in style) {
+            styleString += key + ": " + style[key] + "; ";
+        }
+
+        document.body.setAttribute('style', styleString)
+    }
 
     /** Audio Methods **/
 
