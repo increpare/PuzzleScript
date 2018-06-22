@@ -140,7 +140,7 @@
 
             var addObjects = false;
             var excludeProperties = false;
-
+            var excludeAggregates = false;
             var candlists = [];
             switch (state.section) {
                 case 'objects':
@@ -163,12 +163,12 @@
                         candlists.push(CARDINAL_DIRECTION_WORDS);
                         candlists.push(SOUND_WORDS);
                         addObjects=true;
+                        excludeAggregates=true;
                         break;
                     }
                 case 'collisionlayers':
                     {
                         addObjects=true;
-                        excludeProperties=true;
                         break;
                     }
                 case 'rules':
@@ -235,9 +235,12 @@
                     }
                 }
 
-                var legendbits = [state.legend_aggregates,state.legend_synonyms];
+                var legendbits = [state.legend_synonyms];
                 if (!excludeProperties){
                     legendbits.push(state.legend_properties);
+                }
+                if (!excludeAggregates){
+                    legendbits.push(state.legend_aggregates);
                 }
 
                 //go throuhg all derived objects
