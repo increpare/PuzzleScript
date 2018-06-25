@@ -2454,6 +2454,9 @@ function processInput(dir,dontDoWin,dontModify) {
 			}	 
 
 		    if (level.commandQueue.indexOf('again')>=0 && modified) {
+
+	    		var r = level.commandQueueSourceRules[level.commandQueue.indexOf('again')];
+
 		    	//first have to verify that something's changed
 		    	var old_verbose_logging=verbose_logging;
 		    	var oldmessagetext = messagetext;
@@ -2462,7 +2465,6 @@ function processInput(dir,dontDoWin,dontModify) {
 			    	verbose_logging=old_verbose_logging;
 
 			    	if (verbose_logging) { 
-	    				var r = level.commandQueueSourceRules[level.commandQueue.indexOf('again')];
 			    		consolePrintFromRule('AGAIN command executed, with changes detected - will execute another turn.',r);
 					}
 
@@ -2471,7 +2473,6 @@ function processInput(dir,dontDoWin,dontModify) {
 			    } else {		    	
 			    	verbose_logging=old_verbose_logging;
 					if (verbose_logging) { 
-	    				var r = level.commandQueueSourceRules[level.commandQueue.indexOf('again')];
 						consolePrintFromRule('AGAIN command not executed, it wouldn\'t make any changes.',r);
 					}
 			    }
