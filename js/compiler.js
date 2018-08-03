@@ -494,7 +494,7 @@ var simpleAbsoluteDirections = ['up', 'down', 'left', 'right'];
 var simpleRelativeDirections = ['^', 'v', '<', '>'];
 var reg_directions_only = /^(\>|\<|\^|v|up|down|left|right|moving|stationary|no|randomdir|random|horizontal|vertical|orthogonal|perpendicular|parallel|action)$/;
 //redeclaring here, i don't know why
-var commandwords = ["sfx0","sfx1","sfx2","sfx3","sfx4","sfx5","sfx6","sfx7","sfx8","sfx9","sfx10","cancel","checkpoint","restart","win","message","again"];
+var commandwords = ["sfx0","sfx1","sfx2","sfx3","sfx4","sfx5","sfx6","sfx7","sfx8","sfx9","sfx10","cancel","checkpoint","restart","win","message","jump","again"];
 
 
 
@@ -737,6 +737,11 @@ function processRuleString(rule, state, curRules)
 						}
 						commands.push([token, messageStr]);
 						i=tokens.length;
+					} else if (token==='jump') {
+						var levelIndex = findIndexAfterToken(origLine,tokens,i);
+						var level = origLine.substring(levelIndex).trim();
+						commands.push([token, level]);
+						i=tokens.length;	
 					} else {
 						commands.push([token]);
 					}
@@ -796,6 +801,10 @@ function processRuleString(rule, state, curRules)
 		} else if (cmd==='cancel') {
 			if (commands.length>1 || rhs_cells.length>0) {
 				logError('The CANCEL command can only appear by itself on the right hand side of the arrow.', lineNumber);
+			}
+		} else if (cmd==='level') {
+			if (commands.length>1 || rhs_cells.length>0) {
+				logError('The LEVEL command can only appear by itself on the right hand side of the arrow.', lineNumber);
 			}
 		}
 	}
