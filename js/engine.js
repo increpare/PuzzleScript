@@ -809,6 +809,8 @@ function RebuildLevelArrays() {
 }
 
 var messagetext="";
+var gotolvl=-1;
+
 function restoreLevel(lev) {
 	oldflickscreendat=lev.oldflickscreendat.concat([]);
 
@@ -2018,7 +2020,11 @@ Rule.prototype.queueCommands = function() {
 
 		if (command[0]==='message') {			
 			messagetext=command[1];
-		}		
+		}
+
+		if (command[0]==='goto') {
+			gotolvl=command[1];
+		}
 	}
 };
 
@@ -2361,7 +2367,13 @@ function processInput(dir,dontDoWin,dontModify) {
 			messagetext = "";
 	    	DoRestart(true);
     		return true;
-	    } 
+		}
+		
+		if (level.commandQueue.indexOf('goto')>=0) {
+			gotoLevel(gotolvl);
+			gotolvl=-1;
+			return true;
+		}
 
 	    if (dontModify && level.commandQueue.indexOf('win')>=0) {
 	    	return true;
@@ -2604,6 +2616,24 @@ function anyMovements() {
     return false;
 }*/
 
+function gotoLevel(level) {
+	againing=false;
+	messagetext="";
+
+	curlevel=level;
+	textMode=false;
+	titleScreen=false;
+	quittingMessageScreen=false;
+	messageselected=false;
+
+	loadLevelFromState(state, curlevel);
+
+	if (state!==undefined && state.metadata.flickscreen!==undefined){
+		oldflickscreendat=[0,0,Math.min(state.metadata.flickscreen[0],level.width),Math.min(state.metadata.flickscreen[1],level.height)];
+	}
+	canvasResize();	
+	clearInputHistory();
+}
 
 function nextLevel() {
     againing=false;

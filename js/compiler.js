@@ -494,7 +494,7 @@ var simpleAbsoluteDirections = ['up', 'down', 'left', 'right'];
 var simpleRelativeDirections = ['^', 'v', '<', '>'];
 var reg_directions_only = /^(\>|\<|\^|v|up|down|left|right|moving|stationary|no|randomdir|random|horizontal|vertical|orthogonal|perpendicular|parallel|action)$/;
 //redeclaring here, i don't know why
-var commandwords = ["sfx0","sfx1","sfx2","sfx3","sfx4","sfx5","sfx6","sfx7","sfx8","sfx9","sfx10","cancel","checkpoint","restart","win","message","again"];
+var commandwords = ["sfx0","sfx1","sfx2","sfx3","sfx4","sfx5","sfx6","sfx7","sfx8","sfx9","sfx10","cancel","checkpoint","restart","win","message","goto","again"];
 
 
 
@@ -737,6 +737,9 @@ function processRuleString(rule, state, curRules)
 						}
 						commands.push([token, messageStr]);
 						i=tokens.length;
+					} else if (token==='goto') {
+						commands.push([token, tokens[i + 1]]);
+						i++;	
 					} else {
 						commands.push([token]);
 					}
