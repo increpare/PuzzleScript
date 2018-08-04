@@ -800,10 +800,6 @@ function processRuleString(rule, state, curRules)
 			if (commands.length>1 || rhs_cells.length>0) {
 				logError('The CANCEL command can only appear by itself on the right hand side of the arrow.', lineNumber);
 			}
-		} else if (cmd==='level') {
-			if (commands.length>1 || rhs_cells.length>0) {
-				logError('The LEVEL command can only appear by itself on the right hand side of the arrow.', lineNumber);
-			}
 		}
 	}
 
