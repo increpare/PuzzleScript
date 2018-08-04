@@ -809,7 +809,7 @@ function RebuildLevelArrays() {
 }
 
 var messagetext="";
-var jumplvl=-1;
+var gotolvl=-1;
 
 function restoreLevel(lev) {
 	oldflickscreendat=lev.oldflickscreendat.concat([]);
@@ -2022,8 +2022,8 @@ Rule.prototype.queueCommands = function() {
 			messagetext=command[1];
 		}
 
-		if (command[0]==='jump') {
-			jumplvl=command[1];
+		if (command[0]==='goto') {
+			gotolvl=command[1];
 		}
 	}
 };
@@ -2369,9 +2369,9 @@ function processInput(dir,dontDoWin,dontModify) {
     		return true;
 		}
 		
-		if (level.commandQueue.indexOf('jump')>=0) {
-			gotoLevel(jumplvl);
-			jumplvl=-1;
+		if (level.commandQueue.indexOf('goto')>=0) {
+			gotoLevel(gotolvl);
+			gotolvl=-1;
 			return true;
 		}
 
