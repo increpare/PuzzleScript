@@ -24,6 +24,10 @@ function checkAudioContextExists(){
         AUDIO_CONTEXT = new webkitAudioContext();
       }
     }
+	
+	if(AUDIO_CONTEXT != null && AUDIO_CONTEXT.state == "suspended") {
+		AUDIO_CONTEXT.resume().then(function() { window.console.log("Resumed AudioContext") });
+	}
   }
   catch (ex){
     window.console.log(ex)
