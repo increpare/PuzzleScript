@@ -444,8 +444,8 @@ function levelFromString(state,level) {
 		var cell = o.getCell(i);
 		if (!backgroundLayerMask.anyBitsInCommon(cell)) {
 			cell.ior(levelBackgroundMask);
+			o.setCell(i, cell);
 		}
-		o.setCell(i, cell);
 	}
 	return o;
 }
