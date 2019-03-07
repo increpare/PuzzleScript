@@ -3749,7 +3749,7 @@
     constructor: CodeMirror,
 
     posFromMouse: function(e)  { return posFromMouse(this,e,true);},
-    
+
     focus: function(){window.focus(); focusInput(this); fastPoll(this);},
 
     setOption: function(option, value) {
@@ -6925,7 +6925,7 @@
               parseInt(input.substr(3,2),16),
               parseInt(input.substr(5,2),16)
           ];
-      } 
+      }
     }
 
     // https://stackoverflow.com/questions/9733288/how-to-programmatically-calculate-the-contrast-ratio-between-two-colors
@@ -6946,31 +6946,31 @@
     function rgbToHsl(rgb) {
       var r = rgb[0], g = rgb[1], b = rgb[2];
       r /= 255, g /= 255, b /= 255;
-    
+
       var max = Math.max(r, g, b), min = Math.min(r, g, b);
       var h, s, l = (max + min) / 2;
-    
+
       if (max == min) {
         h = s = 0; // achromatic
       } else {
         var d = max - min;
         s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
-    
+
         switch (max) {
           case r: h = (g - b) / d + (g < b ? 6 : 0); break;
           case g: h = (b - r) / d + 2; break;
           case b: h = (r - g) / d + 4; break;
         }
-    
+
         h /= 6;
       }
-    
+
       return [h, s, l];
     }
     function hslToRgb(hsl) {
       var h = hsl[0], s = hsl[1], l = hsl[2];
       var r, g, b;
-    
+
       if (s == 0) {
         r = g = b = l; // achromatic
       } else {
@@ -6982,15 +6982,15 @@
           if (t < 2/3) return p + (q - p) * (2/3 - t) * 6;
           return p;
         }
-    
+
         var q = l < 0.5 ? l * (1 + s) : l + s - l * s;
         var p = 2 * l - q;
-    
+
         r = hue2rgb(p, q, h + 1/3);
         g = hue2rgb(p, q, h);
         b = hue2rgb(p, q, h - 1/3);
       }
-    
+
       return [r * 255, g * 255, b * 255];
     }
 
@@ -7017,6 +7017,9 @@
           // template strings don't work for IE
           style = 'color: hsl(' + ~~(hsl[0] * 360) + ',' + ~~(hsl[1] * 100) + '%,' + ~~(hsl[2] * 100) + '%)';
         } else {
+          if (colorString.length > 7) {  // don't use alpha in editor #rrggbbaa
+            colorString = colorString.substring(0, 7);
+          }
           style = 'color:' + colorString;
         }
       }

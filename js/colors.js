@@ -256,7 +256,7 @@ colorPalettes = {
 	purple			: "#d39fac",
 	pink			: "#c8ac9e"
 	},
-	
+
 
 	proteus_night : {
 	black   		: "#010912",
@@ -284,7 +284,7 @@ colorPalettes = {
 	purple			: "#666a87",
 	pink			: "#754b4d"
 	},
-	
+
 
 
 	proteus_rich: {
@@ -313,9 +313,9 @@ colorPalettes = {
 	purple			: "#9b377f",
 	pink			: "#cd88e5"
 	},
-	
 
-	
+
+
 amstrad : {
 	black   		: "#000000",
 	white			: "#ffffff",
@@ -398,7 +398,7 @@ whitingjp : {
 
 var reg_color_names = /(black|white|darkgray|lightgray|gray|grey|darkgrey|lightgrey|red|darkred|lightred|brown|darkbrown|lightbrown|orange|yellow|green|darkgreen|lightgreen|blue|lightblue|darkblue|purple|pink|transparent)\s*/;
 
-var reg_color = /(black|white|gray|darkgray|lightgray|grey|darkgrey|lightgrey|red|darkred|lightred|brown|darkbrown|lightbrown|orange|yellow|green|darkgreen|lightgreen|blue|lightblue|darkblue|purple|pink|transparent|#(?:[0-9a-f]{3}){1,2})\s*/;
+var reg_color = /(black|white|gray|darkgray|lightgray|grey|darkgrey|lightgrey|red|darkred|lightred|brown|darkbrown|lightbrown|orange|yellow|green|darkgreen|lightgreen|blue|lightblue|darkblue|purple|pink|transparent|#(?:[0-9a-f]{8}))|#(?:[0-9a-f]{3}){1,2}\s*/;
 
 
 
