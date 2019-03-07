@@ -24,8 +24,8 @@ body {
   image-rendering: -webkit-crisp-edges;
   image-rendering: pixelated;
   image-rendering: crisp-edges;
-  
-} 
+
+}
 
 h1 {
 	color:lightblue;
@@ -34,7 +34,7 @@ h1 {
 a {
 	color:lightblue;
 }
-.title {	
+.title {
 	background-color:none;
 	text-align:center;
 	font-size:100%;
@@ -47,7 +47,7 @@ a {
 	height:10%;
 }
 
-.footer {	
+.footer {
 	background-color:none;
 	text-align:center;
 	float:center;
@@ -215,9 +215,9 @@ a {
 <body>
 <div class="title"><h1 id="gametitle">PuzzleScript Game</h1></div>
 <div class="gameContainer">
-<canvas 
+<canvas
     id="gameCanvas" ></canvas>
-</div> 
+</div>
 <div class="footer">
 <span id="errormessage" style="color:red;"></span>
 <a id="homepagelink" href="https://www.puzzlescript.net">www.puzzlescript.net</a> <span id="separator">|</span> <a id="hacklink" href="#">hack</a>
@@ -245,6 +245,7 @@ a {
 <script src="js/graphics.js"></script>
 <script src="js/engine.js"></script>
 <script src="js/parser.js"></script>
+<script src="js/connectedTextures.js"></script>
 <script src="js/compiler.js"></script>
 <script src="js/inputoutput.js"></script>
 <script src="js/mobile.js"></script>
@@ -269,7 +270,7 @@ function strip_http(url) {
    return url;
 }
 
-function getData(){ 
+function getData(){
 	var id = getParameterByName("p").replace(/[\\\/]/,"");
 	if (id===null||id.length===0) {
 		displayError("No ID specified in URL.")
@@ -283,7 +284,7 @@ function getData(){
 	githubHTTPClient.onreadystatechange = function() {
 		if(githubHTTPClient.readyState!=4) {
 			return;
-		}		
+		}
 		var result = JSON.parse(githubHTTPClient.responseText);
 		if (githubHTTPClient.status===403) {
 			displayError(result.message);
@@ -309,7 +310,7 @@ function getData(){
 			gametitle.innerHTML=title;
 			window.document.title=title+" - PuzzleScript Game";
 		}
-                
+
 		var hacklink = document.getElementById("hacklink");
 
 		var url = "editor.html?hack="+id;

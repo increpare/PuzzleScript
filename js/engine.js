@@ -171,27 +171,27 @@ function generateTitleScreen()
 
 	if (titleMode===0) {
 		if (titleSelected) {
-			titleImage = deepClone(titletemplate_firstgo_selected);		
+			titleImage = deepClone(titletemplate_firstgo_selected);
 		} else {
-			titleImage = deepClone(titletemplate_firstgo);					
+			titleImage = deepClone(titletemplate_firstgo);
 		}
 	} else {
 		if (titleSelection===0) {
 			if (titleSelected) {
-				titleImage = deepClone(titletemplate_select0_selected);		
+				titleImage = deepClone(titletemplate_select0_selected);
 			} else {
-				titleImage = deepClone(titletemplate_select0);					
-			}			
+				titleImage = deepClone(titletemplate_select0);
+			}
 		} else {
 			if (titleSelected) {
-				titleImage = deepClone(titletemplate_select1_selected);		
+				titleImage = deepClone(titletemplate_select1_selected);
 			} else {
-				titleImage = deepClone(titletemplate_select1);					
-			}						
+				titleImage = deepClone(titletemplate_select1);
+			}
 		}
 	}
 
-	var noAction = 'noaction' in state.metadata;	
+	var noAction = 'noaction' in state.metadata;
 	var noUndo = 'noundo' in state.metadata;
 	var noRestart = 'norestart' in state.metadata;
 	if (noUndo && noRestart) {
@@ -249,7 +249,7 @@ var state = introstate;
 function deepClone(item) {
     if (!item) { return item; } // null, undefined values check
 
-    var types = [ Number, String, Boolean ], 
+    var types = [ Number, String, Boolean ],
         result;
 
     // normalizing primitives if someone did new String('aaa'), or new Number('444');
@@ -262,13 +262,13 @@ function deepClone(item) {
     if (typeof result == "undefined") {
         if (Object.prototype.toString.call( item ) === "[object Array]") {
             result = [];
-            item.forEach(function(child, index, array) { 
+            item.forEach(function(child, index, array) {
                 result[index] = deepClone( child );
             });
         } else if (typeof item == "object") {
             // testing that this is DOM
             if (item.nodeType && typeof item.cloneNode == "function") {
-                var result = item.cloneNode( true );    
+                var result = item.cloneNode( true );
             } else if (!item.prototype) { // check that this is a literal
                 if (item instanceof Date) {
                     result = new Date(item);
@@ -298,16 +298,16 @@ function deepClone(item) {
 }
 
 function wordwrap( str, width ) {
- 
+
     width = width || 75;
     var cut = true;
- 
+
     if (!str) { return str; }
- 
+
     var regex = '.{1,' +width+ '}(\\s|$)' + (cut ? '|.{' +width+ '}|.+$' : '|\\S+?(\\s|$)');
- 
+
     return str.match( RegExp(regex, 'g') );
- 
+
 }
 
 var splitMessage=[];
@@ -336,7 +336,7 @@ function drawMessageScreen() {
 	} else {
 		message = messagetext;
 	}
-	
+
 	splitMessage = wordwrap(message,titleImage[0].length);
 
 
@@ -348,12 +348,12 @@ function drawMessageScreen() {
 	var count = Math.min(splitMessage.length,12);
 	for (var i=0;i<count;i++) {
 		var m = splitMessage[i];
-		var row = offset+i;	
+		var row = offset+i;
 		var messageLength=m.length;
 		var lmargin = ((width-messageLength)/2)|0;
 		var rmargin = width-messageLength-lmargin;
 		var rowtext = titleImage[row];
-		titleImage[row]=rowtext.slice(0,lmargin)+m+rowtext.slice(lmargin+m.length);		
+		titleImage[row]=rowtext.slice(0,lmargin)+m+rowtext.slice(lmargin+m.length);
 	}
 
 	var endPos = 10;
@@ -369,13 +369,13 @@ function drawMessageScreen() {
 	} else {
 		titleImage[endPos]=xToContinueStr;
 	}
-	
+
 	canvasResize();
 }
 
 var loadedLevelSeed=0;
 
-function loadLevelFromLevelDat(state,leveldat,randomseed) {	
+function loadLevelFromLevelDat(state,leveldat,randomseed) {
 	if (randomseed==null) {
 		randomseed = (Math.random() + Date.now()).toString();
 	}
@@ -433,15 +433,15 @@ function loadLevelFromLevelDat(state,leveldat,randomseed) {
 	clearInputHistory();
 }
 
-function loadLevelFromStateTarget(state,levelindex,target,randomseed) {	
-    var leveldat = target;    
+function loadLevelFromStateTarget(state,levelindex,target,randomseed) {
+    var leveldat = target;
 	curlevel=levelindex;
 	curlevelTarget=target;
     if (leveldat.message===undefined) {
-	    if (levelindex=== 0){ 
+	    if (levelindex=== 0){
 			tryPlayStartLevelSound();
 		} else {
-			tryPlayStartLevelSound();			
+			tryPlayStartLevelSound();
 		}
     }
     loadLevelFromLevelDat(state,state.levels[levelindex],randomseed);
@@ -449,15 +449,15 @@ function loadLevelFromStateTarget(state,levelindex,target,randomseed) {
     restartTarget=target;
 }
 
-function loadLevelFromState(state,levelindex,randomseed) {	
-    var leveldat = state.levels[levelindex];    
+function loadLevelFromState(state,levelindex,randomseed) {
+    var leveldat = state.levels[levelindex];
 	curlevel=levelindex;
 	curlevelTarget=null;
     if (leveldat!==undefined && leveldat.message===undefined) {
-	    if (levelindex=== 0){ 
+	    if (levelindex=== 0){
 			tryPlayStartLevelSound();
 		} else {
-			tryPlayStartLevelSound();			
+			tryPlayStartLevelSound();
 		}
     }
     loadLevelFromLevelDat(state,leveldat,randomseed);
@@ -603,7 +603,7 @@ function setGameState(_state, command, randomseed) {
     messageselected=false;
     STRIDE_MOV=_state.STRIDE_MOV;
     STRIDE_OBJ=_state.STRIDE_OBJ;
-    
+
     sfxCreateMask=new BitVec(STRIDE_OBJ);
     sfxDestroyMask=new BitVec(STRIDE_OBJ);
 
@@ -630,7 +630,8 @@ function setGameState(_state, command, randomseed) {
             var object = state.objects[n];
             var sprite = {
                 colors: object.colors,
-                dat: object.spritematrix
+                dat: object.spritematrix,
+							  connected: object.connected,
             };
             sprites[object.id] = sprite;
         }
@@ -658,7 +659,7 @@ function setGameState(_state, command, randomseed) {
     	logWarning("throttle_movement is designed for use in conjunction with realtime_interval. Using it in other situations makes games gross and unresponsive, broadly speaking.  Please don't.");
     }
     norepeat_action = state.metadata.norepeat_action!==undefined;
-    
+
     switch(command[0]){
     	case "restart":
     	{
@@ -708,7 +709,7 @@ function setGameState(_state, command, randomseed) {
 				loadLevelFromState(state,targetLevel,randomseed);
 				break;
 			}
-			break;	
+			break;
 		}
 		case "loadLevel":
 		{
@@ -751,7 +752,7 @@ function setGameState(_state, command, randomseed) {
 			break;
 		}
 	}
-	
+
 	if(command[0] !== "rebuild") {
 		clearInputHistory();
 	}
@@ -763,7 +764,7 @@ function setGameState(_state, command, randomseed) {
 	} else {
 		showAudioButton();
 	}
-	
+
 }
 
 function RebuildLevelArrays() {
@@ -792,13 +793,13 @@ function RebuildLevelArrays() {
 	_m1 = new BitVec(STRIDE_MOV);
 	_m2 = new BitVec(STRIDE_MOV);
 	_m3 = new BitVec(STRIDE_MOV);
-	
+
 
     for (var i=0;i<level.height;i++) {
-    	level.rowCellContents[i]=new BitVec(STRIDE_OBJ);	    	
+    	level.rowCellContents[i]=new BitVec(STRIDE_OBJ);
     }
     for (var i=0;i<level.width;i++) {
-    	level.colCellContents[i]=new BitVec(STRIDE_OBJ);	    	
+    	level.colCellContents[i]=new BitVec(STRIDE_OBJ);
     }
 
     for (var i=0;i<level.n_tiles;i++)
@@ -821,7 +822,7 @@ function restoreLevel(lev) {
 		RebuildLevelArrays();
 		//regenerate all other stride-related stuff
 	}
-	else 
+	else
 	{
 	// layercount doesn't change
 
@@ -829,7 +830,7 @@ function restoreLevel(lev) {
 			level.movements[i]=0;
 			level.rigidMovementAppliedMask[i]=0;
 			level.rigidGroupIndexMask[i]=0;
-		}	
+		}
 
 	    for (var i=0;i<level.height;i++) {
 	    	var rcc = level.rowCellContents[i];
@@ -873,7 +874,7 @@ function DoRestart(force) {
 	if ('run_rules_on_level_start' in state.metadata) {
     	processInput(-1,true);
 	}
-	
+
 	level.commandQueue=[];
 	level.commandQueueSourceRules=[];
 	restarting=false;
@@ -965,19 +966,19 @@ function startMovement(dir) {
 
 var dirMasksDelta = {
      1:[0,-1],//up
-     2:[0,1],//'down'  : 
-     4:[-1,0],//'left'  : 
-     8:[1,0],//'right' : 
-     15:[0,0],//'?' : 
-     16:[0,0],//'action' : 
+     2:[0,1],//'down'  :
+     4:[-1,0],//'left'  :
+     8:[1,0],//'right' :
+     15:[0,0],//'?' :
+     16:[0,0],//'action' :
      3:[0,0]//'no'
 };
 
 var dirMaskName = {
      1:'up',
      2:'down'  ,
-     4:'left'  , 
-     8:'right',  
+     4:'left'  ,
+     8:'right',
      15:'?' ,
      16:'action',
      3:'no'
@@ -986,7 +987,7 @@ var dirMaskName = {
 var seedsToPlay_CanMove=[];
 var seedsToPlay_CantMove=[];
 
-function repositionEntitiesOnLayer(positionIndex,layer,dirMask) 
+function repositionEntitiesOnLayer(positionIndex,layer,dirMask)
 {
     var delta = dirMasksDelta[dirMask];
 
@@ -1085,7 +1086,7 @@ Level.prototype.getCell = function(index) {
 
 Level.prototype.getCellInto = function(index,targetarray) {
 	for (var i=0;i<STRIDE_OBJ;i++) {
-		targetarray.data[i]=this.objects[index*STRIDE_OBJ+i];	
+		targetarray.data[i]=this.objects[index*STRIDE_OBJ+i];
 	}
 	return targetarray;
 }
@@ -1103,7 +1104,7 @@ Level.prototype.getMovements = function(index) {
 	_movementVecIndex=(_movementVecIndex+1)%_movementVecs.length;
 
 	for (var i=0;i<STRIDE_MOV;i++) {
-		_movementsVec.data[i]=this.movements[index*STRIDE_MOV+i];	
+		_movementsVec.data[i]=this.movements[index*STRIDE_MOV+i];
 	}
 	return _movementsVec;
 }
@@ -1113,6 +1114,49 @@ Level.prototype.setMovements = function(index, vec) {
 		this.movements[index * STRIDE_MOV + i] = vec.data[i];
 	}
 }
+
+/**
+ * Gets the direct neighbour bit mask for connected textures support.
+ * N: 1, E: 2, S: 4, W: 8, NW: 16, NE: 32, SE: 64, SW: 128
+ * @param x {number} x position in the level
+ * @param y {number} y position in the level
+ * @param id  {number} object id / nr.
+ */
+Level.prototype.getNeighbourMask = function(x, y, id) {
+	var lvl = this;
+	function isSet(i, j) {
+		if (i < 0 || i >= lvl.width || j < 0 || j >= lvl.height) {
+			return false;
+		}
+		return lvl.getCell(i*lvl.height + j).get(id);
+	}
+	var code = 0;
+	if (isSet(x, y - 1)) {
+		code |= 1;
+	}
+	if (isSet(x + 1, y)) {
+		code |= 2;
+	}
+	if (isSet(x, y + 1)) {
+		code |= 4;
+	}
+	if (isSet(x - 1, y)) {
+		code |= 8;
+	}
+	if (isSet(x - 1, y - 1)) {
+		code |= 16;
+	}
+	if (isSet(x + 1, y - 1)) {
+		code |= 32;
+	}
+	if (isSet(x + 1, y + 1)) {
+		code |= 64;
+	}
+	if (isSet(x - 1, y + 1)) {
+		code |= 128;
+	}
+	return code;
+};
 
 var ellipsisPattern = ['ellipsis'];
 
@@ -1267,7 +1311,7 @@ Rule.prototype.generateCellRowMatchesFunction = function(cellRow,hasEllipsis)  {
 			hard substitute in the first one - if I substitute in all of them, firefox chokes.
 			*/
 		var fn = "var d = "+d1+"+"+d0+"*level.height;\n";
-		var mul = STRIDE_OBJ === 1 ? '' : '*'+STRIDE_OBJ;	
+		var mul = STRIDE_OBJ === 1 ? '' : '*'+STRIDE_OBJ;
 		for (var i = 0; i < STRIDE_OBJ; ++i) {
 			fn += 'var cellObjects' + i + ' = level.objects[i' + mul + (i ? '+'+i: '') + '];\n';
 		}
@@ -1306,13 +1350,13 @@ Rule.prototype.generateCellRowMatchesFunction = function(cellRow,hasEllipsis)  {
 		fn+="\t\tif(cellRow["+cellIndex+"].matches((i+d*(k+"+(cellIndex-1)+")))";
 		cellIndex++;
 		for (;cellIndex<cr_l;cellIndex++) {
-			fn+="&&cellRow["+cellIndex+"].matches((i+d*(k+"+(cellIndex-1)+")))";			
+			fn+="&&cellRow["+cellIndex+"].matches((i+d*(k+"+(cellIndex-1)+")))";
 		}
 		fn+="){\n";
 		fn+="\t\t\tresult.push([i,k]);\n";
 		fn+="\t\t}\n"
-		fn+="\t}\n";				
-		fn+="}\n";		
+		fn+="\t}\n";
+		fn+="}\n";
 		fn+="return result;"
 
 
@@ -1338,7 +1382,7 @@ function cellRowMatchesWildcardFunctionGenerate(direction,cellRow,i, maxk, mink)
 	return result;
 }
 */
-	
+
 
 }
 
@@ -1421,7 +1465,7 @@ CellPattern.prototype.generateMatchString = function() {
 CellPattern.prototype.generateMatchFunction = function() {
 	var i;
 	var fn = '';
-	var mul = STRIDE_OBJ === 1 ? '' : '*'+STRIDE_OBJ;	
+	var mul = STRIDE_OBJ === 1 ? '' : '*'+STRIDE_OBJ;
 	for (var i = 0; i < STRIDE_OBJ; ++i) {
 		fn += '\tvar cellObjects' + i + ' = level.objects[i' + mul + (i ? '+'+i: '') + '];\n';
 	}
@@ -1487,7 +1531,7 @@ CellPattern.prototype.replace = function(rule, currentIndex) {
 			}
 		}
 	}
-	
+
 	var curCellMask = level.getCellInto(currentIndex,_o2_5);
 	var curMovementMask = level.getMovements(currentIndex);
 
@@ -1526,7 +1570,7 @@ CellPattern.prototype.replace = function(rule, currentIndex) {
 	var result = false;
 
 	//check if it's changed
-	if (!oldCellMask.equals(curCellMask) || !oldMovementMask.equals(curMovementMask) || rigidchange) { 
+	if (!oldCellMask.equals(curCellMask) || !oldMovementMask.equals(curMovementMask) || rigidchange) {
 		result=true;
 		if (rigidchange) {
 			level.rigidGroupIndexMask[currentIndex] = curRigidGroupIndexMask;
@@ -1612,8 +1656,8 @@ function DoesCellRowMatchWildCard(direction,cellRow,i,maxk,mink) {
             } else if (!cellPattern.matches(targetIndex)) {
 				break;
             }
-        }               
-    }  
+        }
+    }
     return false;
 }
 
@@ -1642,24 +1686,24 @@ function DoesCellRowMatch(direction,cellRow,i,k) {
             cellPattern = cellRow[j];
 			if (cellPattern === ellipsisPattern) {
 					//only for once off verifications
-            	targetIndex = (targetIndex+(d1+d0)*k); 					
+            	targetIndex = (targetIndex+(d1+d0)*k);
             }
 		    if (!cellPattern.matches(targetIndex)) {
                 break;
             }
-        }   
-        
+        }
+
         if (j>=cellRow.length) {
             return true;
         }
 
-    }  
+    }
     return false;
 }
 
-function matchCellRow(direction, cellRowMatch, cellRow, cellRowMask) {	
+function matchCellRow(direction, cellRowMatch, cellRow, cellRowMask) {
 	var result=[];
-	
+
 	if ((!cellRowMask.bitsSetInArray(level.mapCellContents.data))) {
 		return result;
 	}
@@ -1677,7 +1721,7 @@ function matchCellRow(direction, cellRowMatch, cellRow, cellRowMask) {
     		ymin+=(len-1);
     		break;
     	}
-    	case 2: //down 
+    	case 2: //down
     	{
 			ymax-=(len-1);
 			break;
@@ -1689,7 +1733,7 @@ function matchCellRow(direction, cellRowMatch, cellRow, cellRowMask) {
     	}
     	case 8: //right
 		{
-			xmax-=(len-1);	
+			xmax-=(len-1);
 			break;
 		}
     	default:
@@ -1726,7 +1770,7 @@ function matchCellRow(direction, cellRowMatch, cellRow, cellRowMask) {
 					result.push(i);
 				}
 			}
-		}		
+		}
 	}
 
 	return result;
@@ -1750,7 +1794,7 @@ function matchCellRowWildCard(direction, cellRowMatch, cellRow,cellRowMask) {
     		ymin+=(len-1);
     		break;
     	}
-    	case 2: //down 
+    	case 2: //down
     	{
 			ymax-=(len-1);
 			break;
@@ -1762,7 +1806,7 @@ function matchCellRowWildCard(direction, cellRowMatch, cellRow,cellRowMask) {
     	}
     	case 8: //right
 		{
-			xmax-=(len-1);	
+			xmax-=(len-1);
 			break;
 		}
     	default:
@@ -1787,9 +1831,9 @@ function matchCellRowWildCard(direction, cellRowMatch, cellRow,cellRowMask) {
 				if (direction === 4) { //left
 					kmax=x-len+2;
 				} else if (direction === 8) { //right
-					kmax=level.width-(x+len)+1;	
+					kmax=level.width-(x+len)+1;
 				} else {
-					window.console.log("EEEP2 "+direction);					
+					window.console.log("EEEP2 "+direction);
 				}
 
 				result.push.apply(result, cellRowMatch(cellRow,i,kmax,0));
@@ -1808,13 +1852,13 @@ function matchCellRowWildCard(direction, cellRowMatch, cellRow,cellRowMask) {
 				if (direction === 2) { // down
 					kmax=level.height-(y+len)+1;
 				} else if (direction === 1) { // up
-					kmax=y-len+2;					
+					kmax=y-len+2;
 				} else {
 					window.console.log("EEEP2 "+direction);
 				}
 				result.push.apply(result, cellRowMatch(cellRow,i,kmax,0));
 			}
-		}		
+		}
 	}
 
 	return result;
@@ -1878,10 +1922,10 @@ Rule.prototype.findMatches = function() {
     for (var cellRowIndex=0;cellRowIndex<this.patterns.length;cellRowIndex++) {
         var cellRow = this.patterns[cellRowIndex];
         var matchFunction = this.cellRowMatches[cellRowIndex];
-        if (this.isEllipsis[cellRowIndex]) {//if ellipsis     
-        	var match = matchCellRowWildCard(this.direction,matchFunction,cellRow,cellRowMasks[cellRowIndex]);  
+        if (this.isEllipsis[cellRowIndex]) {//if ellipsis
+        	var match = matchCellRowWildCard(this.direction,matchFunction,cellRow,cellRowMasks[cellRowIndex]);
         } else {
-        	var match = matchCellRow(this.direction,matchFunction,cellRow,cellRowMasks[cellRowIndex]);               	
+        	var match = matchCellRow(this.direction,matchFunction,cellRow,cellRowMasks[cellRowIndex]);
         }
         if (match.length===0) {
             return [];
@@ -1915,7 +1959,7 @@ Rule.prototype.applyAt = function(delta,tuple,check) {
 	//have to double check they apply
 	//Q: why?
     if (check) {
-        var ruleMatches=true;                
+        var ruleMatches=true;
         for (var cellRowIndex=0;cellRowIndex<rule.patterns.length;cellRowIndex++) {
         	if (rule.isEllipsis[cellRowIndex]) {//if ellipsis
             	if (DoesCellRowMatchWildCard(rule.direction,rule.patterns[cellRowIndex],tuple[cellRowIndex][0],
@@ -1935,13 +1979,13 @@ Rule.prototype.applyAt = function(delta,tuple,check) {
         }
     }
     var result=false;
-    
+
     //APPLY THE RULE
     var d0 = delta[0]*level.height;
     var d1 = delta[1];
     for (var cellRowIndex=0;cellRowIndex<rule.patterns.length;cellRowIndex++) {
         var preRow = rule.patterns[cellRowIndex];
-        
+
         var currentIndex = rule.isEllipsis[cellRowIndex] ? tuple[cellRowIndex][0] : tuple[cellRowIndex];
         for (var cellIndex=0;cellIndex<preRow.length;cellIndex++) {
             var preCell = preRow[cellIndex];
@@ -1964,7 +2008,7 @@ Rule.prototype.applyAt = function(delta,tuple,check) {
 			ruleDirection="";
 		}
 
-		var logString = '<font color="green">Rule <a onclick="jumpToLine(' + rule.lineNumber + ');"  href="javascript:void(0);">' + rule.lineNumber + '</a> ' + 
+		var logString = '<font color="green">Rule <a onclick="jumpToLine(' + rule.lineNumber + ');"  href="javascript:void(0);">' + rule.lineNumber + '</a> ' +
 			ruleDirection + ' applied.</font>';
 		consolePrint(logString);
 	}
@@ -1981,7 +2025,7 @@ Rule.prototype.tryApply = function() {
     	return false;
     }
 
-    var result=false;	
+    var result=false;
 	if (this.hasReplacements) {
 	    var tuples = generateTuples(matches);
 	    for (var tupleIndex=0;tupleIndex<tuples.length;tupleIndex++) {
@@ -2016,9 +2060,9 @@ Rule.prototype.queueCommands = function() {
 			consolePrint(logString,true);
 		}
 
-		if (command[0]==='message') {			
+		if (command[0]==='message') {
 			messagetext=command[1];
-		}		
+		}
 	}
 };
 
@@ -2046,13 +2090,13 @@ function applyRandomRuleGroup(ruleGroup) {
 	    		var tuple=tuples[j];
 				matches.push([ruleIndex,tuple]);
 	    	}
-		}		
+		}
 	}
 
 	if (matches.length===0)
 	{
 		return false;
-	} 
+	}
 
 	var match = matches[Math.floor(RandomGen.uniform()*matches.length)];
 	var ruleIndex=match[0];
@@ -2077,14 +2121,14 @@ function applyRuleGroup(ruleGroup) {
     var loopcount=0;
     while(propagated) {
     	loopcount++;
-    	if (loopcount>200) 
+    	if (loopcount>200)
     	{
     		logErrorCacheable("Got caught looping lots in a rule group :O",ruleGroup[0].lineNumber,true);
     		break;
     	}
         propagated=false;
         for (var ruleIndex=0;ruleIndex<ruleGroup.length;ruleIndex++) {
-            var rule = ruleGroup[ruleIndex];            
+            var rule = ruleGroup[ruleIndex];
             propagated = rule.tryApply() || propagated;
         }
         if (propagated) {
@@ -2130,7 +2174,7 @@ function applyRules(rules, loopPoint, startRuleGroupindex, bannedGroup){
 					   	logErrorCacheable("got caught in an endless startloop...endloop vortex, escaping!", ruleGroup[0].lineNumber,true);
 					   	break;
 					}
-		        } 
+		        }
         	}
         }
     }
@@ -2227,7 +2271,7 @@ function calculateRowColMasks() {
 function processInput(dir,dontDoWin,dontModify) {
 	againing = false;
 
-	if (verbose_logging) { 
+	if (verbose_logging) {
 	 	if (dir===-1) {
 	 		consolePrint('Turn starts with no input.')
 	 	} else {
@@ -2292,7 +2336,7 @@ function processInput(dir,dontDoWin,dontModify) {
         //after each iteration
         	rigidloop=false;
         	i++;
-        	
+
         	if (verbose_logging){consolePrint('applying rules');}
 
         	applyRules(state.rules, state.loopPoint, startRuleGroupIndex, level.bannedGroup);
@@ -2339,7 +2383,7 @@ function processInput(dir,dontDoWin,dontModify) {
 
 
 	    if (level.commandQueue.indexOf('cancel')>=0) {
-	    	if (verbose_logging) { 
+	    	if (verbose_logging) {
 	    		consoleCacheDump();
 	    		var r = level.commandQueueSourceRules[level.commandQueue.indexOf('cancel')];
 	    		consolePrintFromRule('CANCEL command executed, cancelling turn.',r,true);
@@ -2349,10 +2393,10 @@ function processInput(dir,dontDoWin,dontModify) {
     		DoUndo(true,false);
     		tryPlayCancelSound();
     		return false;
-	    } 
+	    }
 
 	    if (level.commandQueue.indexOf('restart')>=0) {
-	    	if (verbose_logging) { 
+	    	if (verbose_logging) {
 	    		var r = level.commandQueueSourceRules[level.commandQueue.indexOf('restart')];
 	    		consolePrintFromRule('RESTART command executed, reverting to restart state.',r);
 	    		consoleCacheDump();
@@ -2361,12 +2405,12 @@ function processInput(dir,dontDoWin,dontModify) {
 			messagetext = "";
 	    	DoRestart(true);
     		return true;
-	    } 
+	    }
 
 	    if (dontModify && level.commandQueue.indexOf('win')>=0) {
 	    	return true;
 	    }
-	    
+
         var modified=false;
 	    for (var i=0;i<level.objects.length;i++) {
 	    	if (level.objects[i]!==bak.dat[i]) {
@@ -2387,7 +2431,7 @@ function processInput(dir,dontDoWin,dontModify) {
 	    	}
 	    }
 
-		if (dontModify) {		
+		if (dontModify) {
     		if (verbose_logging) {
     			consoleCacheDump();
     		}
@@ -2420,7 +2464,7 @@ function processInput(dir,dontDoWin,dontModify) {
 	 		var command = level.commandQueue[i];
 	 		if (command.charAt(1)==='f')  {//identifies sfxN
 	 			tryPlaySimpleSound(command);
-	 		}  	
+	 		}
 			if (unitTesting===false) {
 				if (command==='message') {
 					showTempMessage();
@@ -2431,7 +2475,7 @@ function processInput(dir,dontDoWin,dontModify) {
 	    }
 
 	    if (textMode===false) {
-	    	if (verbose_logging) { 
+	    	if (verbose_logging) {
 	    		consolePrint('Checking win condition.');
 			}
 			if (dontDoWin===undefined){
@@ -2442,7 +2486,7 @@ function processInput(dir,dontDoWin,dontModify) {
 
 	    if (!winning) {
 			if (level.commandQueue.indexOf('checkpoint')>=0) {
-		    	if (verbose_logging) { 
+		    	if (verbose_logging) {
 	    			var r = level.commandQueueSourceRules[level.commandQueue.indexOf('checkpoint')];
 		    		consolePrintFromRule('CHECKPOINT command executed, saving current state to the restart state.',r);
 				}
@@ -2451,7 +2495,7 @@ function processInput(dir,dontDoWin,dontModify) {
 				var backupStr = JSON.stringify(restartTarget);
 				localStorage[document.URL+'_checkpoint']=backupStr;
 				localStorage[document.URL]=curlevel;
-			}	 
+			}
 
 		    if (level.commandQueue.indexOf('again')>=0 && modified) {
 
@@ -2464,23 +2508,23 @@ function processInput(dir,dontDoWin,dontModify) {
 		    	if (processInput(-1,true,true)) {
 			    	verbose_logging=old_verbose_logging;
 
-			    	if (verbose_logging) { 
+			    	if (verbose_logging) {
 			    		consolePrintFromRule('AGAIN command executed, with changes detected - will execute another turn.',r);
 					}
 
 			    	againing=true;
 			    	timer=0;
-			    } else {		    	
+			    } else {
 			    	verbose_logging=old_verbose_logging;
-					if (verbose_logging) { 
+					if (verbose_logging) {
 						consolePrintFromRule('AGAIN command not executed, it wouldn\'t make any changes.',r);
 					}
 			    }
 			    verbose_logging=old_verbose_logging;
 			    messagetext = oldmessagetext;
-		    }   
+		    }
 		}
-		    
+
 
 	    level.commandQueue=[];
 	    level.commandQueueSourceRules=[];
@@ -2525,7 +2569,7 @@ function checkWin(dontDoWin) {
 				{
 					for (var i=0;i<level.n_tiles;i++) {
 						var cell = level.getCellInto(i,_o10);
-						if ( (!filter1.bitsClearInArray(cell.data)) &&  
+						if ( (!filter1.bitsClearInArray(cell.data)) &&
 							 (!filter2.bitsClearInArray(cell.data)) ) {
 							rulePassed=false;
 							break;
@@ -2539,7 +2583,7 @@ function checkWin(dontDoWin) {
 					var passedTest=false;
 					for (var i=0;i<level.n_tiles;i++) {
 						var cell = level.getCellInto(i,_o10);
-						if ( (!filter1.bitsClearInArray(cell.data)) &&  
+						if ( (!filter1.bitsClearInArray(cell.data)) &&
 							 (!filter2.bitsClearInArray(cell.data)) ) {
 							passedTest=true;
 							break;
@@ -2554,7 +2598,7 @@ function checkWin(dontDoWin) {
 				{
 					for (var i=0;i<level.n_tiles;i++) {
 						var cell = level.getCellInto(i,_o10);
-						if ( (!filter1.bitsClearInArray(cell.data)) &&  
+						if ( (!filter1.bitsClearInArray(cell.data)) &&
 							 (filter2.bitsClearInArray(cell.data)) ) {
 							rulePassed=false;
 							break;
@@ -2595,7 +2639,7 @@ function DoWin() {
 
 /*
 //this function isn't valid after refactoring, but also isn't used.
-function anyMovements() {	
+function anyMovements() {
     for (var i=0;i<level.movementMask.length;i++) {
         if (level.movementMask[i]!==0) {
         	return true;
@@ -2611,32 +2655,32 @@ function nextLevel() {
 	if (state && state.levels && (curlevel>state.levels.length) ){
 		curlevel=state.levels.length-1;
 	}
-	
+
 	if (titleScreen) {
 		if (titleSelection===0) {
 			//new game
 			curlevel=0;
 			curlevelTarget=null;
-		} 			
-		if (curlevelTarget!==null){			
+		}
+		if (curlevelTarget!==null){
 			loadLevelFromStateTarget(state,curlevel,curlevelTarget);
 		} else {
 			loadLevelFromState(state,curlevel);
 		}
-	} else {	
+	} else {
 		if (hasUsedCheckpoint){
 			curlevelTarget=null;
 			hasUsedCheckpoint=false;
 		}
 		if (curlevel<(state.levels.length-1))
-		{			
+		{
 			curlevel++;
 			textMode=false;
 			titleScreen=false;
 			quittingMessageScreen=false;
 			messageselected=false;
 
-			if (curlevelTarget!==null){			
+			if (curlevelTarget!==null){
 				loadLevelFromStateTarget(state,curlevel,curlevelTarget);
 			} else {
 				loadLevelFromState(state,curlevel);
@@ -2644,19 +2688,19 @@ function nextLevel() {
 		} else {
 			try{
 				if (!!window.localStorage) {
-	
+
 					localStorage.removeItem(document.URL);
 					localStorage.removeItem(document.URL+'_checkpoint');
 				}
 			} catch(ex){
-					
+
 			}
-			
+
 			curlevel=0;
 			curlevelTarget=null;
 			goToTitleScreen();
 			tryPlayEndGameSound();
-		}		
+		}
 		//continue existing game
 	}
 	try {
@@ -2668,7 +2712,7 @@ function nextLevel() {
 				localStorage[document.URL+'_checkpoint']=backupStr;
 			} else {
 				localStorage.removeItem(document.URL+"_checkpoint");
-			}		
+			}
 		}
 	} catch (ex) {
 
@@ -2677,7 +2721,7 @@ function nextLevel() {
 	if (state!==undefined && state.metadata.flickscreen!==undefined){
 		oldflickscreendat=[0,0,Math.min(state.metadata.flickscreen[0],level.width),Math.min(state.metadata.flickscreen[1],level.height)];
 	}
-	canvasResize();	
+	canvasResize();
 	clearInputHistory();
 }
 

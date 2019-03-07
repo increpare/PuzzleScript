@@ -24,7 +24,7 @@ body {
   image-rendering: -webkit-crisp-edges;
   image-rendering: pixelated;
   image-rendering: crisp-edges;
-} 
+}
 
 h1 {
 	color:lightblue;/*don't modify this line at all, needs text to be the same*/
@@ -33,7 +33,7 @@ h1 {
 a {
 	color:lightblue;/*don't modify this line at all, needs text to be the same*/
 }
-.title {	
+.title {
 	background-color:none;
 	text-align:center;
 	font-size:100%;
@@ -46,7 +46,7 @@ a {
 	height:10%;
 }
 
-.footer {	
+.footer {
 	background-color:none;
 	text-align:center;
 	float:center;
@@ -72,13 +72,13 @@ a {
 <body>
 <div class="title"><h1>__GAMETITLE__</h1></div>
 <div class="gameContainer">
-<canvas 
-    id="gameCanvas" 
-    onmousemove="mouseMove(event)" 
+<canvas
+    id="gameCanvas"
+    onmousemove="mouseMove(event)"
     onmouseout="mouseOut()"
     onkeydown="keyDown()"
 ></canvas>
-</div> 
+</div>
 <div class="footer">
 <span id="errormessage" style="color:red;"></span>
 <a href="http://__HOMEPAGE__">__HOMEPAGE__</a>
@@ -95,6 +95,7 @@ a {
 <script src="js/graphics.js"></script>
 <script src="js/engine.js"></script>
 <script src="js/parser.js"></script>
+<script src="js/connectedTextures.js"></script>
 <script src="js/compiler.js"></script>
 <script src="js/inputoutput.js"></script>
 <script src="js/mobile.js"></script>

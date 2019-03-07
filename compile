@@ -1,4 +1,4 @@
-#!/bin/bash 
+#!/bin/bash
 #node-qunit-phantomjs  tests/tests.html --timeout 40
 echo ===========================
 start=`date +%s`
@@ -17,7 +17,7 @@ cp .htaccess ../bin/
 echo optimizing pngs
 rm ../bin/images/*.png
 cd images
-./minimize 
+./minimize
 cd ../
 echo optimizing gifs
 cd ../bin/Documentation/images
@@ -72,6 +72,7 @@ java -jar ~/progs/closure.jar --js_output_file ../bin/js/scripts_compiled.js  \
 --js js/engine.js \
 --js js/parser.js \
 --js js/editor.js \
+--js js/connectedTextures.js \
 --js js/compiler.js \
 --js js/console.js \
 --js js/soundbar.js \
@@ -92,6 +93,7 @@ java -jar ~/progs/closure.jar --js_output_file ../bin/js/scripts_play_compiled.j
 --js js/graphics.js \
 --js js/engine.js \
 --js js/parser.js \
+--js js/connectedTextures.js \
 --js js/compiler.js \
 --js js/inputoutput.js \
 --js js/mobile.js
@@ -123,7 +125,7 @@ cd ../src
 end=`date +%s`
 runtime=$((end-start))
 time=`date "+%H:%M:%S"`
-echo script end time : $time 
+echo script end time : $time
 echo script took $runtime seconds
 echo ===========================
 
