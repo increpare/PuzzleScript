@@ -65,8 +65,147 @@ a {
 	right:10%;
 	top:70px;
 	bottom:70px;
+  touch-action: none;
+}
+.mobile-menu {
+		position: relative;
+		top: 4em;
+		margin-left: auto;
+		margin-right: auto;
+		font-weight: bold;
+		border-radius: 0.25em;
 }
 
+.mobile-menu.item-count-3 {
+		width: 30em;
+}
+.mobile-menu.item-count-3 .button {
+		width: 28.3333%;
+		/* scale the height of the button relative to the width of .mobile-menu */
+		padding: 7.5% 0%;
+}
+
+.mobile-menu.item-count-2 {
+		width: 20em;
+}
+.mobile-menu.item-count-2 .button {
+		width: 46%;
+		/* scale the height of the button relative to the width of .mobile-menu */
+		padding: 12.1765% 0%;
+}
+
+.mobile-menu.item-count-1 {
+		width: 10em;
+}
+.mobile-menu.item-count-1 .button {
+		width: 98%;
+		/* scale the height of the button relative to the width of .mobile-menu */
+		padding: 26.5% 0%;
+}
+
+.mobile-menu,
+.tab-icon,
+.mobile-menu .close {
+		background: rgba(0,0,0,0.4);
+		border: 2px solid rgba(255, 255, 255, 0.4);
+		color: rgba(255, 255, 255, 1);
+}
+
+.mobile-menu .button {
+		margin: 2%;
+		border-radius: 0.25em;
+		text-align: center;
+		float: left;
+}
+.mobile-menu .clear {
+		clear: both;
+}
+
+.tab-affordance,
+.close-affordance {
+		width: 6em;
+		height: 6em;
+		position: absolute;
+		z-index: 1000;
+}
+
+.tab-affordance {
+		left: -2em;
+		top: 55px;
+}
+
+.close-affordance {
+		left: -4em;
+		top: -1em;
+}
+
+.tab-icon,
+.mobile-menu .close {
+		height: 48px;
+		position: absolute;
+		border-radius: 6px;
+}
+
+.tab-icon {
+		left: -0.5em;
+		top: 70px;
+		width: 18px;
+		border-radius: 0 6px 6px 0;
+		border-left: 0;
+}
+
+.mobile-menu .close {
+		left: -18px;
+		width: 18px;
+		top: 0px;
+		border-radius: 6px 0 0 6px;
+		border-right: 0;
+}
+
+.tab-icon .slice,
+.mobile-menu .close .slice {
+		margin: 4.5px 1px;
+		width: 2px;
+		height: 80%;
+		background: rgba(255, 255, 255, 0.4);
+}
+
+.tab-icon .slice {
+		float: right;
+}
+
+.tab-icon .slice:first-child {
+			margin-right: 4.5px;
+}
+
+.mobile-menu .close .slice {
+		float: left;
+}
+.mobile-menu .close .slice:first-child {
+			margin-left: 4.5px;
+}
+
+@media screen and (max-width: 32em) {
+		.mobile-menu {
+				font-size: 0.8em;
+				width: 90%;
+		}
+}
+@media screen and (max-width: 24em) {
+		.mobile-menu {
+				font-size: 0.65em;
+				width: 90%;
+		}
+}
+
+.disable-select {
+		-webkit-touch-callout: none;
+		-webkit-user-select: none;
+		-khtml-user-select: none;
+		-moz-user-select: none;
+		-ms-user-select: none;
+		user-select: none;
+}
 </style>
 </head>
 <body>
