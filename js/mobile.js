@@ -640,16 +640,21 @@ Mobile.debugDot = function (event) {
 
         // Round away any exponents that might appear.
         ratio = Math.round((ratio) * 1000) / 1000;
-        if (ratio <= 0.001) {
-            this.closeAffordance.setAttribute('style', 'display: none;');
-        } else {
-            this.closeAffordance.setAttribute('style', 'display: block;');
-        }
+
         size = RIGHT * ratio + LEFT * (1 - ratio);
         opacityString = 'opacity: ' + ratio + ';';
         style = 'left: ' + (size - 4) + 'px; ' +
             opacityString + ' ' +
             'width: ' + (-size) + 'px;';
+        ratio = Math.round((ratio) * 1000) / 1000;
+
+        if (ratio <= 0.001) {
+            this.closeAffordance.setAttribute('style', 'display: none;');
+            opacityString="display:none;"
+        } else {
+            this.closeAffordance.setAttribute('style', 'display: block;');
+        }
+
         this.closeElem.setAttribute('style', style);
 
         this.menuElem.setAttribute('style', opacityString);
