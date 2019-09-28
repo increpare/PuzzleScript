@@ -1664,10 +1664,10 @@ function matchCellRow(direction, cellRowMatch, cellRow, cellRowMask) {
     return result;
   }
 
-  var xmin=max(0, playerPositions[0].x - 5);
-  var xmax=min(level.width, playerPositions[0].x + 5);
-  var ymin=max(0, playerPositions[0].y - 5);
-  var ymax=min(level.height, playerPositions[0].y + 5);
+  var xmin=Math.max(0, playerPositions[0]/level.height - 5);
+  var xmax=Math.min(level.width, playerPositions[0]/level.height + 5);
+  var ymin=Math.max(0, playerPositions[0]%level.height - 5);
+  var ymax=Math.min(level.height, playerPositions[0]%level.height + 5);
 
     var len=cellRow.length;
 
