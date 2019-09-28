@@ -2249,7 +2249,7 @@ function processInput(dir,dontDoWin,dontModify) {
 
   var bak = backupLevel();
 
-  playerPositions=[];
+  playerPositions=getPlayerPositions()
     if (dir<=4) {
       if (dir>=0) {
           switch(dir){
