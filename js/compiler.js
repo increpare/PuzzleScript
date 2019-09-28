@@ -643,7 +643,7 @@ function processRuleString(rule, state, curRules)
 					rigid=true;
 				} else if (token==='random') {
 					randomRule=true;
-				} else if (token==='random') {
+				} else if (token==='global') {
 					globalRule=true;
 				}else if (simpleAbsoluteDirections.indexOf(token) >= 0) {
 					directions.push(token);
