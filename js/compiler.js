@@ -1,3 +1,4 @@
+
 'use strict';
 
 
@@ -543,12 +544,10 @@ function findIndexAfterToken(str,tokens,tokenIndex){
 function processRuleString(rule, state, curRules) 
 {
 /*
-
 	intermediate structure
 		dirs: Directions[]
 		pre : CellMask[]
 		post : CellMask[]
-
 		//pre/post pairs must have same lengths
 	final rule structure
 		dir: Direction
@@ -597,6 +596,7 @@ function processRuleString(rule, state, curRules)
 	var groupNumber=lineNumber;
 	var commands=[];
 	var randomRule=false;
+	var globalRule=false;
 
 	if (tokens.length===1) {
 		if (tokens[0]==="startloop" ) {
@@ -643,7 +643,9 @@ function processRuleString(rule, state, curRules)
 					rigid=true;
 				} else if (token==='random') {
 					randomRule=true;
-				} else if (simpleAbsoluteDirections.indexOf(token) >= 0) {
+				} else if (token==='random') {
+					globalRule=true;
+				}else if (simpleAbsoluteDirections.indexOf(token) >= 0) {
 					directions.push(token);
 				} else if (simpleRelativeDirections.indexOf(token) >= 0) {
 					logError('You cannot use relative directions (\"^v<>\") to indicate in which direction(s) a rule applies.  Use absolute directions indicators (Up, Down, Left, Right, Horizontal, or Vertical, for instance), or, if you want the rule to apply in all four directions, do not specify directions', lineNumber);
@@ -778,7 +780,8 @@ function processRuleString(rule, state, curRules)
 		rigid: rigid,
 		groupNumber: groupNumber,
 		commands: commands,
-		randomRule: randomRule
+		randomRule: randomRule,
+		globalRule: globalRule
 	};
 
 	if (directionalRule(rule_line)===false) {
@@ -820,7 +823,8 @@ function deepCloneRule(rule) {
 		rigid: rule.rigid,
 		groupNumber: rule.groupNumber,
 		commands:rule.commands,
-		randomRule:rule.randomRule
+		randomRule:rule.randomRule,
+		globalRule:rule.globalRule
 	};
 	return clonedRule;
 }
@@ -1392,7 +1396,6 @@ function absolutifyRuleCell(forward, cell) {
 	LEFT parseInt('0', 2);
 	RIGHT parseInt('0', 2);
 	?  parseInt('', 2);
-
 */
 
 var dirMasks = {
@@ -1410,7 +1413,6 @@ var dirMasks = {
 
 function rulesToMask(state) {
 	/*
-
 	*/
 	var layerCount = state.collisionLayers.length;
 	var layerTemplate = [];
@@ -1686,8 +1688,9 @@ function collapseRules(groups) {
 			newrule.push(oldrule.groupNumber);
 			newrule.push(oldrule.rigid);
 			newrule.push(oldrule.commands);
-			newrule.push(oldrule.randomRule);
+			newrule.push(oldrule.randomRule);			
 			newrule.push(cellRowMasks(newrule));
+			newrule.push(oldrule.globalRule);
 			rules[i] = new Rule(newrule);
 		}
 	}
@@ -2025,6 +2028,9 @@ function printRule(rule) {
 	}
 	if (rule.randomRule) {
 		result = "RANDOM "+result+" ";
+	}
+	if (rule.globalRule) {
+		result = "GLOBAL "+result+" ";
 	}
 	if (rule.late) {
 		result = "LATE "+result+" ";
