@@ -1249,6 +1249,7 @@ function Rule(rule) {
   this.commands = rule[7];    /* cancel, restart, sfx, etc */
   this.isRandom = rule[8];
   this.cellRowMasks = rule[9];
+  this.isGlobal = rule[10]
   this.cellRowMatches = [];
   for (var i=0;i<this.patterns.length;i++) {
     this.cellRowMatches.push(this.generateCellRowMatchesFunction(this.patterns[i],this.isEllipsis[i]));
@@ -1348,7 +1349,7 @@ Rule.prototype.toJSON = function() {
   /* match construction order for easy deserialization */
   return [
     this.direction, this.patterns, this.hasReplacements, this.lineNumber, this.isEllipsis,
-    this.groupNumber, this.isRigid, this.commands, this.isRandom, this.cellRowMasks
+    this.groupNumber, this.isRigid, this.commands, this.isRandom, this.cellRowMasks, this.isGlobal
   ];
 };
 
@@ -1657,17 +1658,25 @@ function DoesCellRowMatch(direction,cellRow,i,k) {
     return false;
 }
 
-function matchCellRow(direction, cellRowMatch, cellRow, cellRowMask) {  
+function matchCellRow(direction, cellRowMatch, cellRow, cellRowMask, isGlobal) {  
   var result=[];
   
   if ((!cellRowMask.bitsSetInArray(level.mapCellContents.data))) {
     return result;
   }
-
-  var xmin=Math.max(0, (playerPositions[0]/level.height|0) - 5);
-  var xmax=Math.min(level.width, (playerPositions[0]/level.height|0) + 5);
-  var ymin=Math.max(0, playerPositions[0]%level.height - 5);
-  var ymax=Math.min(level.height, playerPositions[0]%level.height + 5);
+  var xmin, xmax, ymin, ymax;
+  if(isGlobal){
+    xmin=0;
+    xmax=level.width;
+    ymin=0;
+    ymax=level.height;
+  }
+  else{
+    xmin=max(0, playerPositions[0]/level.height - 20);
+    xmax=min(level.width, playerPositions[0]/level.height + 20);
+    ymin=max(0, playerPositions[0]% - 20);
+    ymax=min(level.height, playerPositions[0].y + 20);
+  }
 
     var len=cellRow.length;
 
@@ -1881,7 +1890,7 @@ Rule.prototype.findMatches = function() {
         if (this.isEllipsis[cellRowIndex]) {//if ellipsis     
           var match = matchCellRowWildCard(this.direction,matchFunction,cellRow,cellRowMasks[cellRowIndex]);  
         } else {
-          var match = matchCellRow(this.direction,matchFunction,cellRow,cellRowMasks[cellRowIndex]);                
+          var match = matchCellRow(this.direction,matchFunction,cellRow,cellRowMasks[cellRowIndex], this.isGlobal);                
         }
         if (match.length===0) {
             return [];
@@ -2240,7 +2249,7 @@ function processInput(dir,dontDoWin,dontModify) {
 
   var bak = backupLevel();
 
-  playerPositions= getPlayerPositions();
+  playerPositions=[];
     if (dir<=4) {
       if (dir>=0) {
           switch(dir){
