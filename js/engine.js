@@ -147,6 +147,7 @@ var titleScreen=true;
 var titleMode=0;//1 means there are options
 var titleSelection=0;
 var titleSelected=false;
+var localRadius=false;
 
 function unloadGame() {
   state=introstate;
@@ -400,7 +401,7 @@ function loadLevelFromLevelDat(state,leveldat,randomseed) {
     level = leveldat.clone();
     RebuildLevelArrays();
 
-
+        console.log(state);
         if (state!==undefined) {
           if (state.metadata.flickscreen!==undefined){
               oldflickscreendat=[
@@ -416,6 +417,11 @@ function loadLevelFromLevelDat(state,leveldat,randomseed) {
                 Math.min(state.metadata.zoomscreen[0],level.width),
                 Math.min(state.metadata.zoomscreen[1],level.height)
               ];
+          }
+          if(state.metadata.local_radius!==undefined){
+
+            localRadius = state.metadata.local_radius;
+            console.log(localRadius);
           }
         }
 
@@ -848,6 +854,7 @@ function restoreLevel(lev) {
     level.commandQueueSourceRules=[];
 }
 
+var localRadius=false;
 var zoomscreen=false;
 var flickscreen=false;
 var screenwidth=0;
@@ -1672,10 +1679,10 @@ function matchCellRow(direction, cellRowMatch, cellRow, cellRowMask, isGlobal) {
     ymax=level.height;
   }
   else{
-    xmin=Math.max(0, (playerPositions[0]/level.height|0) - 5);
-    xmax=Math.min(level.width, (playerPositions[0]/level.height|0) + 5);
-    ymin=Math.max(0, playerPositions[0]%level.height - 5);
-    ymax=Math.min(level.height, playerPositions[0]%level.height + 5);
+    xmin=Math.max(0, (playerPositions[0]/level.height|0) - localRadius);
+    xmax=Math.min(level.width, (playerPositions[0]/level.height|0) + localRadius);
+    ymin=Math.max(0, playerPositions[0]%level.height - localRadius);
+    ymax=Math.min(level.height, playerPositions[0]%level.height + localRadius);
   }
 
     var len=cellRow.length;
@@ -2249,7 +2256,7 @@ function processInput(dir,dontDoWin,dontModify) {
 
   var bak = backupLevel();
 
-  playerPositions=getPlayerPositions()
+  playerPositions= getPlayerPositions();
     if (dir<=4) {
       if (dir>=0) {
           switch(dir){
