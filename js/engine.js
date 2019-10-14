@@ -1683,6 +1683,9 @@ function matchCellRow(direction, cellRowMatch, cellRow, cellRowMask, isGlobal) {
     xmax=Math.min(level.width, (playerPositions[0]/level.height|0) + localRadius);
     ymin=Math.max(0, playerPositions[0]%level.height - localRadius);
     ymax=Math.min(level.height, playerPositions[0]%level.height + localRadius);
+    console.log(level);
+    console.log(xmin + " " + xmax + " " + ymin + " " + ymax);
+    console.log(localRadius);
   }
 
     var len=cellRow.length;
