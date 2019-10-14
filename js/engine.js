@@ -400,8 +400,6 @@ function loadLevelFromLevelDat(state,leveldat,randomseed) {
       textMode=false;
     level = leveldat.clone();
     RebuildLevelArrays();
-
-        console.log(state);
         if (state!==undefined) {
           if (state.metadata.flickscreen!==undefined){
               oldflickscreendat=[
@@ -420,8 +418,7 @@ function loadLevelFromLevelDat(state,leveldat,randomseed) {
           }
           if(state.metadata.local_radius!==undefined){
 
-            localRadius = state.metadata.local_radius;
-            console.log(localRadius);
+            localRadius = parseInt(state.metadata.local_radius, 10);
           }
         }
 
@@ -1683,13 +1680,7 @@ function matchCellRow(direction, cellRowMatch, cellRow, cellRowMask, isGlobal) {
     xmax=Math.min(level.width, (playerPositions[0]/level.height|0) + localRadius);
     ymin=Math.max(0, playerPositions[0]%level.height - localRadius);
     ymax=Math.min(level.height, playerPositions[0]%level.height + localRadius);
-    console.log(level);
-    console.log(xmin + " " + xmax + " " + ymin + " " + ymax);
-    console.log((playerPositions[0]/level.height|0));
-    console.log((playerPositions[0]/level.height|0) - localRadius);
-    console.log((playerPositions[0]/level.height|0) + localRadius);
-    console.log(level.width);
-    console.log(localRadius);
+
   }
 
     var len=cellRow.length;
