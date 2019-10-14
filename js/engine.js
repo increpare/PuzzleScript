@@ -1685,6 +1685,10 @@ function matchCellRow(direction, cellRowMatch, cellRow, cellRowMask, isGlobal) {
     ymax=Math.min(level.height, playerPositions[0]%level.height + localRadius);
     console.log(level);
     console.log(xmin + " " + xmax + " " + ymin + " " + ymax);
+    console.log((playerPositions[0]/level.height|0));
+    console.log((playerPositions[0]/level.height|0) - localRadius);
+    console.log((playerPositions[0]/level.height|0) + localRadius);
+    console.log(level.width);
     console.log(localRadius);
   }
 
