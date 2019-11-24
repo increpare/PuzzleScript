@@ -5,7 +5,7 @@ function isColor(str) {
 	str = str.trim();
 	if (str in colorPalettes.arnecolors)
 		return true;
-	if (/^#([0-9A-F]{3}){1,2}$/i.test(str))
+	if (/^#([0-9A-F]{8}|([0-9A-F]{3}){1,2})$/i.test(str))
 		return true;
 	if (str === "transparent")
 		return true;
