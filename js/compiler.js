@@ -116,8 +116,8 @@ function generateExtraMembers(state) {
 	      if (state.objects.hasOwnProperty(n)) {
 			//convert color to hex
 	      	var o = state.objects[n];
-	      	if (o.colors.length>10) {
-	      		logError("a sprite cannot have more than 10 colors.  Why you would want more than 10 is beyond me.",o.lineNumber+1);
+	      	if (o.colors.length> 10 + 26) {
+	      		logError("a sprite cannot have more than 36 colors.  Why you would want more than 36 and how could you use all of them is beyond me.",o.lineNumber+1);
 	      	}
 	      	for (var i=0;i<o.colors.length;i++) {
 	      		var c = o.colors[i];

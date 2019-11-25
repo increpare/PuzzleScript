@@ -560,7 +560,7 @@ var codeMirrorFn = function() {
                                 if (match_color == null) {
                                     var str = stream.match(reg_name, true) || stream.match(reg_notcommentstart, true);
                                     logError('Was looking for color for object ' + state.objects_candname.toUpperCase() + ', got "' + str + '" instead.', state.lineNumber);
-                                    return null;
+                                    return 'ERROR';
                                 } else {
                                     if (state.objects[state.objects_candname].colors === undefined) {
                                         state.objects[state.objects_candname].colors = [match_color[0].trim()];
@@ -581,28 +581,27 @@ var codeMirrorFn = function() {
                             }
                         case 3:
                             {
-                                var ch = stream.eat(/[.\d]/);
+                                var o = state.objects[state.objects_candname];
+                                var ch = stream.eat(o.colors.length > 10 ? /[.0-9a-z]/ : /[.0-9]/);
                                 var spritematrix = state.objects_spritematrix;
                                 if (ch === undefined) {
-                                    if (spritematrix.length === 0) {
+                                    if (spritematrix.length === 0 && o.colors.length === 1) {
                                         return tryParseName();
                                     }
                                     logError('Unknown junk in spritematrix for object ' + state.objects_candname.toUpperCase() + '.', state.lineNumber);
                                     stream.match(reg_notcommentstart, true);
-                                    return null;
+                                    return 'ERROR';
                                 }
 
                                 if (sol) {
                                     spritematrix.push('');
                                 }
 
-                                var o = state.objects[state.objects_candname];
-
                                 spritematrix[spritematrix.length - 1] += ch;
                                 if (spritematrix[spritematrix.length-1].length>5){
                                     logError('Sprites must be 5 wide and 5 high.', state.lineNumber);
                                     stream.match(reg_notcommentstart, true);
-                                    return null;
+                                    return 'ERROR';
                                 }
                                 o.spritematrix = state.objects_spritematrix;
                                 if (spritematrix.length === 5 && spritematrix[spritematrix.length - 1].length == 5) {
@@ -611,12 +610,11 @@ var codeMirrorFn = function() {
 
                                 if (ch!=='.') {
                                     var n = parseInt(ch);
+                                    if (isNaN(n)) {
+                                        n = 10 + (ch.charCodeAt(0) - 'a'.charCodeAt(0));
+                                    }
                                     if (n>=o.colors.length) {
                                         logError("Trying to access color number "+n+" from the color palette of sprite " +state.objects_candname.toUpperCase()+", but there are only "+o.colors.length+" defined in it.",state.lineNumber);
-                                        return 'ERROR';
-                                    }
-                                    if (isNaN(n)) {
-                                        logError('Invalid character "' + ch + '" in sprite for ' + state.objects_candname.toUpperCase(), state.lineNumber);
                                         return 'ERROR';
                                     }
                                     return 'COLOR BOLDCOLOR COLOR-' + o.colors[n].toUpperCase();

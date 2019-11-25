@@ -20,6 +20,9 @@ function createSprite(name,spritegrid, colors, padding) {
     for (var j = 0; j < w; j++) {
         for (var k = 0; k < h; k++) {
             var val = spritegrid[j][k];
+            if (/[a-z]/.test(val)) {
+                val = 10 + (val.charCodeAt(0) - 'a'.charCodeAt(0));
+            }
             if (val >= 0) {
                 var cy = (j * cw)|0;
                 var cx = (k * ch)|0;
