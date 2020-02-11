@@ -2075,11 +2075,15 @@ function applyRuleGroup(ruleGroup) {
 	var loopPropagated=false;
     var propagated=true;
     var loopcount=0;
+	var max_loopcount = 200;
+	if ('max_loop_length' in state.metadata) {
+		max_loopcount=parseInt(state.metadata['max_loop_length'],10);
+	}
     while(propagated) {
     	loopcount++;
-    	if (loopcount>200) 
+    	if (loopcount>max_loopcount) 
     	{
-    		logErrorCacheable("Got caught looping lots in a rule group :O",ruleGroup[0].lineNumber,true);
+    		logErrorCacheable("Got caught looping more than "+max_loopcount+" times in a rule group :O",ruleGroup[0].lineNumber,true);
     		break;
     	}
         propagated=false;
@@ -2101,7 +2105,11 @@ function applyRules(rules, loopPoint, startRuleGroupindex, bannedGroup){
 
     //when we're going back in, let's loop, to be sure to be sure
     var loopPropagated = startRuleGroupindex>0;
-    var loopCount = 0;
+	var loopCount = 0;
+	var max_loopcount = 200;
+	if ('max_loop_length' in state.metadata) {
+		max_loopcount=parseInt(state.metadata['max_loop_length'],10);
+	}
     for (var ruleGroupIndex=startRuleGroupindex;ruleGroupIndex<rules.length;) {
     	if (bannedGroup && bannedGroup[ruleGroupIndex]) {
     		//do nothing
@@ -2113,7 +2121,7 @@ function applyRules(rules, loopPoint, startRuleGroupindex, bannedGroup){
         	ruleGroupIndex = loopPoint[ruleGroupIndex];
         	loopPropagated=false;
         	loopCount++;
-			if (loopCount > 200) {
+			if (loopCount > max_loopcount) {
     			var ruleGroup=rules[ruleGroupIndex];
 			   	logErrorCacheable("got caught in an endless startloop...endloop vortex, escaping!", ruleGroup[0].lineNumber,true);
 			   	break;
@@ -2125,7 +2133,7 @@ function applyRules(rules, loopPoint, startRuleGroupindex, bannedGroup){
 		        	ruleGroupIndex = loopPoint[ruleGroupIndex];
 		        	loopPropagated=false;
 		        	loopCount++;
-					if (loopCount > 200) {
+					if (loopCount > max_loopcount) {
 		    			var ruleGroup=rules[ruleGroupIndex];
 					   	logErrorCacheable("got caught in an endless startloop...endloop vortex, escaping!", ruleGroup[0].lineNumber,true);
 					   	break;
