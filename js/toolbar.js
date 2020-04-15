@@ -214,7 +214,7 @@ function shareClick() {
 		}
 	};
 
-	var githubURL = 'https://api.github.com/gists?access_token=' + oauthAccessToken;
+	var githubURL = 'https://api.github.com/gists';
 	var githubHTTPClient = new XMLHttpRequest();
 	githubHTTPClient.open('POST', githubURL);
 	githubHTTPClient.onreadystatechange = function() {		
@@ -258,6 +258,7 @@ function shareClick() {
 		}
 	}
 	githubHTTPClient.setRequestHeader("Content-type","application/x-www-form-urlencoded");
+	githubHTTPClient.setRequestHeader("Authorization","token "+oauthAccessToken);
 	var stringifiedGist = JSON.stringify(gistToCreate);
 	githubHTTPClient.send(stringifiedGist);
     lastDownTarget=canvas;	
