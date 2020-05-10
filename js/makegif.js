@@ -58,9 +58,9 @@ function makeGIF() {
 		}
 	}
 
-  	encoder.finish();
-  	var dat = 'data:image/gif;base64,'+encode64(encoder.stream().getData());
-  	window.open(dat);
+	encoder.finish();
+	const data_url = 'data:image/gif;base64,'+btoa(encoder.stream().getData());
+	consolePrint(`<a href="${data_url}" download>Download GIF</a>`);
   	
   	unitTesting = false;
 
