@@ -661,16 +661,39 @@ function checkKey(e,justPressed) {
 	    				generateTitleScreen();
 	    				redraw();
 	    			}
+    			} else if (inputdir===0 || inputdir===2) {
+    				var maxTitleSelection = ('enable_level_select' in state.metadata) ? 2 : 1;
+    				if (inputdir===0 && titleSelection > 0) {
+	    				titleSelection--;
+	    				generateTitleScreen();
+	    				redraw();
+	    			} else if (inputdir===2 && titleSelection < maxTitleSelection) {
+	    				titleSelection++;
+
+	    				generateTitleScreen();
+	    				redraw();
+	    			}
     			}
-    			else if (inputdir===0||inputdir===2) {
-    				if (inputdir===0){
-    					titleSelection=0;    					
-    				} else {
-    					titleSelection=1;    					    					
-    				}
-    				generateTitleScreen();
+    		}
+    	} else if (levelSelectScreen) {
+    		if (inputdir==4&&justPressed) {
+    			if (levelSelectSelected===false) {
+    				levelSelectSelected=true;
+    				titleSelected=false;
+    				messageselected=false;
+    				timer=0;
+    				quittingLevelSelectScreen=true;
+    				generateLevelSelectScreen();
     				redraw();
     			}
+    		} else {
+    			if (inputdir===0) { levelSelectCursor-=5; }
+    			else if (inputdir===1) { levelSelectCursor-=1; }
+    			else if (inputdir===2) { levelSelectCursor+=5; }
+    			else if (inputdir===3) { levelSelectCursor+=1; }
+    			normalizeLevelSelectCursor();
+    			generateLevelSelectScreen();
+    			redraw();
     		}
     	} else {
     		if (inputdir==4&&justPressed) {    				
@@ -702,13 +725,22 @@ function checkKey(e,justPressed) {
     }
 }
 
-
 function update() {
     timer+=deltatime;
     input_throttle_timer+=deltatime;
     if (quittingTitleScreen) {
         if (timer/1000>0.3) {
             quittingTitleScreen=false;
+            if (titleSelection===2) {
+                goToLevelSelectScreen();
+            } else {
+                nextLevel();
+            }
+        }
+    }
+    if (quittingLevelSelectScreen) {
+        if (timer/1000>0.3) {
+            quittingLevelSelectScreen=false;
             nextLevel();
         }
     }

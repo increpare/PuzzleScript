@@ -34,6 +34,7 @@ var verbose_logging=false;
 var throttle_movement=false;
 var cache_console_messages=false;
 var quittingTitleScreen=false;
+var quittingLevelSelectScreen=false;
 var quittingMessageScreen=false;
 var deltatime=17;
 var timer=0;
