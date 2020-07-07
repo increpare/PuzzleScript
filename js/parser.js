@@ -292,6 +292,7 @@ var codeMirrorFn = function() {
               metadata : state.metadata.concat([]),
 
               levels: levelsCopy,
+              level_select_points: state.level_select_points.concat([]),
 
               STRIDE_OBJ : state.STRIDE_OBJ,
               STRIDE_MOV : state.STRIDE_MOV
@@ -1092,14 +1093,23 @@ var codeMirrorFn = function() {
                         if (sol)
                         {
                             if (stream.match(/\s*message\s*/, true)) {
-                                state.tokenIndex = 1;//1/2 = message/level
-                                var newdat = ['\n', mixedCase.slice(stream.pos).trim(),state.lineNumber];
+                                state.tokenIndex = 1;//1/2/3 = message/level/level_select_point
+                                var newdat = ['MESSAGE', mixedCase.slice(stream.pos).trim(),state.lineNumber];
                                 if (state.levels[state.levels.length - 1].length == 0) {
                                     state.levels.splice(state.levels.length - 1, 0, newdat);
                                 } else {
                                     state.levels.push(newdat);
                                 }
                                 return 'MESSAGE_VERB';
+                            } else if (stream.match(/\s*level_select_point\s*/, true)) {
+                                state.tokenIndex = 3;
+                                var newdat = ['LEVEL_SELECT_POINT', state.lineNumber];
+                                if (state.levels[state.levels.length - 1].length == 0) {
+                                    state.levels.splice(state.levels.length - 1, 0, newdat);
+                                } else {
+                                    state.levels.push(newdat);
+                                }
+                                return 'LEVEL_SELECT_VERB';
                             } else {
                                 var line = stream.match(reg_notcommentstart, false)[0].trim();
                                 state.tokenIndex = 2;
@@ -1129,6 +1139,11 @@ var codeMirrorFn = function() {
                             }
                         }
 
+                        if (state.tokenIndex === 3 && !stream.eol()) {
+                            logError('level_select_point must appear on a line by itself.', state.lineNumber);
+                            stream.match(reg_notcommentstart, true);
+                            return 'ERROR';
+                        }
                         if (state.tokenIndex === 2 && !stream.eol()) {
                             var ch = stream.peek();
                             stream.next();
@@ -1242,6 +1257,7 @@ var codeMirrorFn = function() {
                 abbrevNames: [],
 
                 levels: [[]],
+                level_select_points: [],
 
                 subsection: ''
             };

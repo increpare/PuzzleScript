@@ -196,6 +196,7 @@
                     {
                         if (lineToCursor.trim().split(/\s+/ ).length<2) {
                             candlists.push(["MESSAGE_VERB","message"]);
+                            candlists.push(["LEVEL_SELECT_VERB","level_select_point"]);
                         }
                         break;
                     }

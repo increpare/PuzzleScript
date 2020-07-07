@@ -294,79 +294,51 @@ var levelSelectScreen=false;
 var levelSelectCursor=0; // a real level id (i.e. no `message` level ids)
 var levelSelectSelected=false;
 
-function levelIdForNthRealLevel(n) {
-	// Returns the index of the nth "real" (non-message) level.
-	// * n=0 returns the first level
-	// * If the n is too high, will return the last level
-	// * If the nth level has `message`s before it, returns that level id
-	// of the first of these `message` levels
-	var levelId=0;
-	var realLevelsSeen=0;
-	for (var i=0;i<state.levels.length;i++){
-		if (state.levels[i].hasOwnProperty("message")){
-			continue;
-		}
-		levelId=i;
-		if (realLevelsSeen===n) {
-			break;
-		}
-		realLevelsSeen++;
+function getLevelSelectPointForLevelId(id) {
+	if (id==null||id>state.levels.length) {
+		id=state.levels.length;
 	}
 
-	var precursorId=levelId;
-	for (var i=levelId-1;i>=0;i--){
-		if (!state.levels[i].hasOwnProperty("message")){
+	var best=0;
+	for (var pointIndex=0;pointIndex<state.level_select_points.length;pointIndex++){
+		var levelId=state.level_select_points[pointIndex];
+		if (levelId > id) {
 			break;
 		}
-		precursorId=i;
+		best=pointIndex;
 	}
-	return precursorId;
-}
-
-function countNonMessageLevels(limit) {
-	if (limit==null||limit>state.levels.length) {
-		limit=state.levels.length;
-	}
-	var numRealLevels=0;
-	for (var i=0;i<limit;i++){
-		if (!state.levels[i].hasOwnProperty("message")){
-			numRealLevels++;
-		}
-	}
-	return numRealLevels;
+	return best;
 }
 
 function normalizeLevelSelectCursor() {
-	var numRealLevels=countNonMessageLevels();
 	if (levelSelectCursor<0){
 		levelSelectCursor=0;
 	}
-	if (levelSelectCursor>=numRealLevels){
-		levelSelectCursor=numRealLevels-1;
+	if (levelSelectCursor>=state.level_select_points.length){
+		levelSelectCursor=state.level_select_points.length-1;
 	}
 }
 
 function generateLevelSelectScreen() {
 	titleImage = deepClone(levelselect_template);
 
-	var numRealLevels=countNonMessageLevels();
-	var realCurlevel=countNonMessageLevels(parseInt(curlevel));
+	var curlevelPoint=getLevelSelectPointForLevelId(parseInt(curlevel));
 	var pageOffset=Math.floor(levelSelectCursor/20)*20;
 	for (var i=0;i<20;i++){
-		var realLevelIndex=pageOffset+i;
-		if (realLevelIndex>=numRealLevels){
+		var point=pageOffset+i;
+		if (point>=state.level_select_points.length){
 			break;
 		}
 		var colIndex=3+6*(i%5);
 		var rowIndex=3+2*Math.floor(i/5);
-		var label=""+(realLevelIndex+1);
+		var label=""+(point+1);
 		var offset=0;
-		if (realLevelIndex===realCurlevel){
+		if (point===curlevelPoint){
 			label="["+label+"]";
 			offset=-1;
 		}
 		titleImage[rowIndex]=titleImage[rowIndex].slice(0,colIndex+offset)+label+titleImage[rowIndex].slice(colIndex+offset+label.length);
-		if (levelSelectCursor===realLevelIndex){
+		if (levelSelectCursor===point){
 			label="#";
 			offset=-2;
 			titleImage[rowIndex]=titleImage[rowIndex].slice(0,colIndex+offset)+label+titleImage[rowIndex].slice(colIndex+offset+label.length);
@@ -384,7 +356,7 @@ function generateLevelSelectScreen() {
 	// if (pageOffset>0){
 	// 	titleImage[1]="...........level select...(more)..";
 	// }
-	if (pageOffset+20<numRealLevels){
+	if (pageOffset+20<state.level_select_points.length){
 		titleImage[11]="..........................(more)..";
 	}
 
@@ -2792,7 +2764,7 @@ function nextLevel() {
 			loadLevelFromState(state,curlevel);
 		}
 	} else if (levelSelectScreen) {	
-		curlevel=levelIdForNthRealLevel(levelSelectCursor);
+		curlevel=state.level_select_points[levelSelectCursor];
 		curlevelTarget=null;
 		loadLevelFromState(state,curlevel);
 	} else {	
@@ -2870,7 +2842,7 @@ function goToLevelSelectScreen() {
 	titleSelected=false;
 
 	levelSelectScreen=true;
-	levelSelectCursor=countNonMessageLevels(parseInt(curlevel));
+	levelSelectCursor=getLevelSelectPointForLevelId(parseInt(curlevel));
 	levelSelectSelected=false;
 
 	generateLevelSelectScreen();
