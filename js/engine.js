@@ -46,8 +46,7 @@ var messagecontainer_template = [
 	".................................."
 ];
 
-var titletemplate_firstgo = [
-	"..................................",
+var titletemplate_firstgo0 = [
 	"..................................",
 	"..................................",
 	"..................................",
@@ -55,6 +54,22 @@ var titletemplate_firstgo = [
 	"..................................",
 	"..........#.start game.#..........",
 	"..................................",
+	"...........level select...........",
+	"..................................",
+	".arrow keys to move...............",
+	".X to action......................",
+	".Z to undo, R to restart..........",
+	".................................."];
+
+var titletemplate_firstgo1 = [
+	"..................................",
+	"..................................",
+	"..................................",
+	"..................................",
+	"..................................",
+	"............start game............",
+	"..................................",
+	".........#.level select.#.........",
 	"..................................",
 	".arrow keys to move...............",
 	".X to action......................",
@@ -107,8 +122,7 @@ var titletemplate_select2 = [
 	".................................."];
 
 
-var titletemplate_firstgo_selected = [
-	"..................................",
+var titletemplate_firstgo0_selected = [
 	"..................................",
 	"..................................",
 	"..................................",
@@ -116,6 +130,22 @@ var titletemplate_firstgo_selected = [
 	"..................................",
 	"###########.start game.###########",
 	"..................................",
+	"...........level select...........",
+	"..................................",
+	".arrow keys to move...............",
+	".X to action......................",
+	".Z to undo, R to restart..........",
+	".................................."];
+
+var titletemplate_firstgo1_selected = [
+	"..................................",
+	"..................................",
+	"..................................",
+	"..................................",
+	"..................................",
+	"............start game............",
+	"..................................",
+	"##########.level select.##########",
 	"..................................",
 	".arrow keys to move...............",
 	".X to action......................",
@@ -200,11 +230,19 @@ function generateTitleScreen()
 	}
 
 	if (titleMode===0) {
-		if (titleSelected) {
-			titleImage = deepClone(titletemplate_firstgo_selected);		
-		} else {
-			titleImage = deepClone(titletemplate_firstgo);					
-		}
+		if (titleSelection===0) {
+            if (titleSelected) {
+                titleImage = deepClone(titletemplate_firstgo0_selected);		
+            } else {
+                titleImage = deepClone(titletemplate_firstgo0);					
+            }
+		} else if (titleSelection===1) {
+			if (titleSelected) {
+				titleImage = deepClone(titletemplate_firstgo1_selected);		
+			} else {
+				titleImage = deepClone(titletemplate_firstgo1);					
+			}						
+        }
 	} else {
 		if (titleSelection===0) {
 			if (titleSelected) {

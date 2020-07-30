@@ -638,43 +638,29 @@ function checkKey(e,justPressed) {
     	if (state.levels.length===0) {
     		//do nothing
     	} else if (titleScreen) {
-    		if (titleMode===0) {
-    			if (inputdir===4&&justPressed) {
-    				if (titleSelected===false) {    				
-						tryPlayStartGameSound();
-	    				titleSelected=true;
-	    				messageselected=false;
-	    				timer=0;
-	    				quittingTitleScreen=true;
-	    				generateTitleScreen();
-	    				canvasResize();
-	    			}
-    			}
-    		} else {
-    			if (inputdir==4&&justPressed) {
-    				if (titleSelected===false) {    				
-						tryPlayStartGameSound();
-	    				titleSelected=true;
-	    				messageselected=false;
-	    				timer=0;
-	    				quittingTitleScreen=true;
-	    				generateTitleScreen();
-	    				redraw();
-	    			}
-    			} else if (inputdir===0 || inputdir===2) {
-    				var maxTitleSelection = ('enable_level_select' in state.metadata) ? 2 : 1;
-    				if (inputdir===0 && titleSelection > 0) {
-	    				titleSelection--;
-	    				generateTitleScreen();
-	    				redraw();
-	    			} else if (inputdir===2 && titleSelection < maxTitleSelection) {
-	    				titleSelection++;
-
-	    				generateTitleScreen();
-	    				redraw();
-	    			}
-    			}
-    		}
+            if (inputdir==4&&justPressed) {
+                if (titleSelected===false) {    				
+                    tryPlayStartGameSound();
+                    titleSelected=true;
+                    messageselected=false;
+                    timer=0;
+                    quittingTitleScreen=true;
+                    generateTitleScreen();
+                    redraw();
+                }
+            } else if (inputdir===0 || inputdir===2) {
+                var maxTitleSelection = ('enable_level_select' in state.metadata) ? 2 : 1;
+                if (titleMode===0) maxTitleSelection--;
+                if (inputdir===0 && titleSelection > 0) {
+                    titleSelection--;
+                    generateTitleScreen();
+                    redraw();
+                } else if (inputdir===2 && titleSelection < maxTitleSelection) {
+                    titleSelection++;
+                    generateTitleScreen();
+                    redraw();
+                }
+            }
     	} else if (levelSelectScreen) {
     		if (inputdir==4&&justPressed) {
     			if (levelSelectSelected===false) {
@@ -691,6 +677,20 @@ function checkKey(e,justPressed) {
     			else if (inputdir===1) { levelSelectCursor-=1; }
     			else if (inputdir===2) { levelSelectCursor+=5; }
     			else if (inputdir===3) { levelSelectCursor+=1; }
+                /*
+    			if (inputdir===0 && levelSelectCursor>=5) {
+                    levelSelectCursor-=5;
+                }
+    			else if (inputdir===1) {
+                    levelSelectCursor-=1;
+                }
+    			else if (inputdir===2 && levelSelectCursor<state.level_select_points.length-5) {
+                    levelSelectCursor+=5;
+                }
+    			else if (inputdir===3) {
+                    levelSelectCursor+=1;
+                }
+                */
     			normalizeLevelSelectCursor();
     			generateLevelSelectScreen();
     			redraw();
@@ -731,7 +731,7 @@ function update() {
     if (quittingTitleScreen) {
         if (timer/1000>0.3) {
             quittingTitleScreen=false;
-            if (titleSelection===2) {
+            if (titleSelection===2 || (titleMode===0 && titleSelection===1)) {
                 goToLevelSelectScreen();
             } else {
                 nextLevel();
