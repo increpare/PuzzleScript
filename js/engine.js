@@ -386,9 +386,6 @@ function generateLevelSelectScreen() {
 				}
 			}
 		}
-		if (point===curlevelPoint){
-			label=label+"<";
-		}
 		titleImage[rowIndex]=titleImage[rowIndex].slice(0,colIndex+offset)+label+titleImage[rowIndex].slice(colIndex+offset+label.length);
 		if (levelSelectCursor===point){
 			label="#";
