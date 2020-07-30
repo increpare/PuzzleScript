@@ -677,20 +677,6 @@ function checkKey(e,justPressed) {
     			else if (inputdir===1) { levelSelectCursor-=1; }
     			else if (inputdir===2) { levelSelectCursor+=5; }
     			else if (inputdir===3) { levelSelectCursor+=1; }
-                /*
-    			if (inputdir===0 && levelSelectCursor>=5) {
-                    levelSelectCursor-=5;
-                }
-    			else if (inputdir===1) {
-                    levelSelectCursor-=1;
-                }
-    			else if (inputdir===2 && levelSelectCursor<state.level_select_points.length-5) {
-                    levelSelectCursor+=5;
-                }
-    			else if (inputdir===3) {
-                    levelSelectCursor+=1;
-                }
-                */
     			normalizeLevelSelectCursor();
     			generateLevelSelectScreen();
     			redraw();
