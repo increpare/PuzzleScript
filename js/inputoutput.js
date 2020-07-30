@@ -683,10 +683,10 @@ function checkKey(e,justPressed) {
     		}
     	} else {
     		if (inputdir==4&&justPressed) {    				
-				if (unitTesting) {
-					nextLevel();
-					return;
-				} else if (messageselected===false) {
+    				if (unitTesting) {
+    					nextLevel();
+    					return;
+    				} else if (messageselected===false) {
     				messageselected=true;
     				timer=0;
     				quittingMessageScreen=true;
