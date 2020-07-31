@@ -647,6 +647,14 @@ function checkKey(e,justPressed) {
                     quittingTitleScreen=true;
                     generateTitleScreen();
                     redraw();
+
+                    if (titleSelection == 0) {
+                        try {
+                            if (!!window.localStorage) {
+                                localStorage.removeItem(document.URL+'_levelswon');
+                            }
+                        } catch (ex) { }
+                    }
                 }
             } else if (inputdir===0 || inputdir===2) {
                 var maxTitleSelection = ('enable_level_select' in state.metadata) ? 2 : 1;
