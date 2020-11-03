@@ -1,13 +1,13 @@
-PuzzleScript
-============
+PuzzleScript With Level Select
+==============================
 
-Open Source HTML5 Puzzle Game Engine
+A fork of Stephen Lavelle's Open Source HTML5 Puzzle Game Engine.
 
-Try it out at https://www.puzzlescript.net
+If you add `enable_level_select` to your game's prelude, you will get
+a level select screen. Slighly more advanced options are available, see
+the [documentation](https://pancelor.github.io/PuzzleScript/Documentation/levels.html)
 
------
-
-Dev instructions here - https://groups.google.com/forum/#!searchin/puzzlescript/development/puzzlescript/yptIpY9hlng/cjfrOPy_4jcJ
+Try it out at https://pancelor.github.io/PuzzleScript/
 
 -----
 
