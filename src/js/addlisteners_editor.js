@@ -62,3 +62,4 @@ var gestureHandler = Mobile.enable();
 if (gestureHandler) {
     gestureHandler.setFocusElement(document.getElementById('gameCanvas'));
 }
+

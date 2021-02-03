@@ -325,10 +325,25 @@ function levelEditorRightClick(event,click) {
 var anyEditsSinceMouseDown = false;
 
 function onMouseDown(event) {
-	if (event.button===0 && !(event.ctrlKey||event.metaKey) ) {
+
+	if (event.handled){
+		return;
+	}
+
+	var lmb = event.button===0;
+	var rmb = event.button===2 ;
+	if (event.type=="touchstart"){
+		lmb=true;
+	}
+	if (lmb && (event.ctrlKey||event.metaKey)){
+		lmb=false;
+		rmb=true;
+	}
+	
+	if (lmb ) {
         lastDownTarget = event.target;
         keybuffer=[];
-        if (event.target===canvas) {
+        if (event.target===canvas || event.target.className==="tapFocusIndicator") {
         	setMouseCoord(event);
         	dragging=true;
         	rightdragging=false;
@@ -339,15 +354,18 @@ function onMouseDown(event) {
         }
         dragging=false;
         rightdragging=false; 
-    } else if (event.button===2 || (event.button===0 && (event.ctrlKey||event.metaKey)) ) {
-    	if (event.target.id==="gameCanvas") {
+    } else if (rmb) {
+    	if (event.target===canvas || event.target.className==="tapFocusIndicator") {
+			setMouseCoord(event);
 		    dragging=false;
 		    rightdragging=true;
         	if (levelEditorOpened) {
         		return levelEditorRightClick(event,true);
         	}
         }
-    }
+	}
+	
+	event.handled=true;
 
 }
 
@@ -356,8 +374,14 @@ function rightClickCanvas(event) {
 }
 
 function onMouseUp(event) {
+	if (event.handled){
+		return;
+	}
+
 	dragging=false;
-    rightdragging=false;
+	rightdragging=false;
+	
+	event.handled=true;
 }
 
 function onKeyDown(event) {
@@ -414,8 +438,14 @@ function relMouseCoords(event){
     }
     while(currentElement = currentElement.offsetParent)
 
-    canvasX = event.pageX - totalOffsetX;
-    canvasY = event.pageY - totalOffsetY;
+	if (event.touches==null){
+    	canvasX = event.pageX - totalOffsetX;
+		canvasY = event.pageY - totalOffsetY;
+	} else {
+    	canvasX = event.touches[0].pageX - totalOffsetX;
+		canvasY = event.touches[0].pageY - totalOffsetY;
+
+	}
 
     return {x:canvasX, y:canvasY}
 }
@@ -456,6 +486,11 @@ function setMouseCoord(e){
 }
 
 function mouseMove(event) {
+	
+	if (event.handled){
+		return;
+	}
+
     if (levelEditorOpened) {
     	setMouseCoord(event);  
     	if (dragging) { 	
@@ -466,6 +501,7 @@ function mouseMove(event) {
 	    redraw();
     }
 
+	event.handled=true;
     //window.console.log("showcoord ("+ canvas.width+","+canvas.height+") ("+x+","+y+")");
 }
 
@@ -473,10 +509,16 @@ function mouseOut() {
 //  window.console.log("clear");
 }
 
+document.addEventListener('touchstart', onMouseDown, false);
+document.addEventListener('touchmove', mouseMove, false);
+document.addEventListener('touchend', onMouseUp, false);
+
 document.addEventListener('mousedown', onMouseDown, false);
 document.addEventListener('mouseup', onMouseUp, false);
+
 document.addEventListener('keydown', onKeyDown, false);
 document.addEventListener('keyup', onKeyUp, false);
+
 window.addEventListener('focus', onMyFocus, false);
 window.addEventListener('blur', onMyBlur, false);
 

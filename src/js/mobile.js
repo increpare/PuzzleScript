@@ -178,6 +178,9 @@ Mobile.debugDot = function (event) {
         if (!this.isFocused) {
             return;
         }
+        if (levelEditorOpened){
+            return;
+        }
         if (this.isSuccessfulSwipe()) {
             this.handleSwipe(this.swipeDirection, this.touchCount);
             this.gestured = true;
