@@ -182,6 +182,13 @@ function dropdownChange() {
 editor.on('keyup', function (editor, event) {
 	if (!CodeMirror.ExcludedIntelliSenseTriggerKeys[(event.keyCode || event.which).toString()])
 	{
+		var dosuggest=true;
+		if (editor.doc.sel.ranges.length>0){
+			console.log(editor.getRange(editor.doc.sel.ranges[0].anchor, {line:53,ch:59}));
+		}
+
+		if (dosuggest){
 			CodeMirror.commands.autocomplete(editor, null, { completeSingle: false });
+		}
 	}
 });

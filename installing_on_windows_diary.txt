@@ -1,0 +1,41 @@
+Ok keeping track of what I do to get puzzlescript building on windows.
+
+1 - sync to github repo
+2 - try opening the folder in vs code
+3 - realize that the build scripts rely on the folder being called src and there being a parallel bin directory
+*4 - move everything to a src directory in the github structure (probably breaking things on mac)
+*5 - edited the ..gitignore file to take this into account
+6 - try to run the non-compiled version (src/editor.html). Oh I can just run it in edge. Also chrome. Also firefox. (Much easier than on mac, where you need a http server).
+
+
+what external tools does my bash script need?
+
+images/minimize needs pngcrush
+https://www.npmjs.com/package/pngcrush
+
+css/concat uses concat
+https://www.npmjs.com/package/concat
+
+closure.jar
+https://www.npmjs.com/package/google-closure-compiler
+
+yuicompressor-2.4.8.jar
+https://www.npmjs.com/package/ycssmin
+
+htmlcompressor-1.5.3.jar
+https://www.npmjs.com/package/html-minifier-terser
+
+gzipper needs perl, lol
+gzipper
+https://www.npmjs.com/package/tar
+
+inliner
+https://www.npmjs.com/package/inliner
+
+directory cp = ncp
+
+7 - install npm packages I'll probably need: 
+npm i tar  html-minifier-terser ycssmin  google-closure-compiler concat  imagemin imagemin-pngcrush inliner ncp
+
+
+
