@@ -35,7 +35,6 @@
             ["title", "My Amazing Puzzle Game", "The name of your game. Appears on the title screen."],
             ["throttle_movement", "", "For use in conjunction with realtime_interval - this stops you from moving crazy fast - repeated keypresses of the same movement direction will not increase your speed. This doesn't apply to the action button."],
             ["verbose_logging", "", "As you play the game, spits out information about all rules applied as you play"],
-            ["youtube", "5MJLi5_dyn0", "If you write the youtube tag followed by the ID of a youtube video, it will play in the background."],
             ["zoomscreen", "WxH", "Zooms the camera in to a WxH section of the map around the player, centered on the player."]
         ];
 
