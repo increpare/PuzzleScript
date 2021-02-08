@@ -60,7 +60,8 @@ function makeGIF() {
 
 	encoder.finish();
 	const data_url = 'data:image/gif;base64,'+btoa(encoder.stream().getData());
-	consolePrint(`<a href="${data_url}" download>Download GIF</a>`);
+	consolePrint('<img class="generatedgif" src="'+data_url+'">');
+	consolePrint('<a href="'+data_url+'" download>Download GIF</a>');
   	
   	unitTesting = false;
 
