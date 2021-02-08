@@ -393,7 +393,10 @@ function onKeyDown(event) {
 
 	// Prevent arrows/space from scrolling page
 	if ((!IDE) && ([32, 37, 38, 39, 40].indexOf(event.keyCode) > -1)) {
-		prevent(event);
+		if (e&&(e.ctrlKey || e.metaKey)){
+		} else {
+			prevent(event);
+		}
 	}
 
 	if ((!IDE) && event.keyCode===77){//m
