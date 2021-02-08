@@ -546,7 +546,8 @@ function prevent(e) {
 }
 
 function checkKey(e,justPressed) {
-
+	ULBS();
+	
     if (winning) {
     	return;
 	}
