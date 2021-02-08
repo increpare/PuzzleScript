@@ -536,7 +536,7 @@ function checkKey(e,justPressed) {
     if (winning) {
     	return;
 	}
-	if (e&&(e.ctrlKey || e.metaKey)){
+	if (e&&(e.ctrlKey || e.metaKey|| e.altKey)){
 		return;
 	}
 	
