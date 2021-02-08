@@ -420,8 +420,13 @@ function onKeyDown(event) {
         }  else if (event.keyCode===83 && (event.ctrlKey||event.metaKey)) {//ctrl+s
             saveClick();
             prevent(event);
-        } 
-    }
+        } else if (event.keyCode===13 && (event.ctrlKey||event.metaKey)){//ctrl+enter
+			canvas.focus();
+			editor.display.input.blur();
+            rebuildClick();
+            prevent(event);
+		}
+	}
 }
 
 function relMouseCoords(event){
