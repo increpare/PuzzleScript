@@ -671,6 +671,28 @@ function checkKey(e,justPressed) {
         	}	
         	break;	
         }
+		case 189://-
+		{
+        	if (levelEditorOpened&&justPressed) {
+				if (glyphSelectedIndex>0) {
+					glyphSelectedIndex--;
+					canvasResize();
+					return prevent(e);
+				} 
+        	}	
+        	break;	
+		}
+		case 187://+
+		{
+        	if (levelEditorOpened&&justPressed) {
+				if (glyphSelectedIndex+1<glyphImages.length) {
+					glyphSelectedIndex++;
+					canvasResize();
+					return prevent(e);
+				} 
+        	}	
+        	break;	
+		}
     }
     if (throttle_movement && inputdir>=0&&inputdir<=3) {
     	if (lastinput==inputdir && input_throttle_timer<repeatinterval) {
