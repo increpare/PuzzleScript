@@ -410,7 +410,7 @@ var codeMirrorFn = function() {
                         if (sectionIndex===-1) {
                             logError('no such section as "' + state.section.toUpperCase() + '".', state.lineNumber);
                         } else {
-                            logError('section "' + state.section.toUpperCase() + '" is out of order, must follow  "' + sectionNames[sectionIndex - 1].toUpperCase() + '".', state.lineNumber);                            
+                            logError('section "' + state.section.toUpperCase() + '" is out of order, must follow  "' + sectionNames[sectionIndex - 1].toUpperCase() + '" (or it could be that the section "'+sectionNames[sectionIndex - 1].toUpperCase()+`"is just missing totally.  You have to include all section headings, even if the section itself is empty).`, state.lineNumber);                            
                         }
                     }
 
