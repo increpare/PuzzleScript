@@ -329,6 +329,8 @@ function onMouseDown(event) {
 		return;
 	}
 
+	ULBS();
+	
 	var lmb = event.button===0;
 	var rmb = event.button===2 ;
 	if (event.type=="touchstart"){
@@ -385,6 +387,8 @@ function onMouseUp(event) {
 
 function onKeyDown(event) {
 
+	ULBS();
+	
     event = event || window.event;
 
 	// Prevent arrows/space from scrolling page
