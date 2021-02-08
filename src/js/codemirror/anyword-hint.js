@@ -71,6 +71,9 @@
                 "and","or"
             ]
 
+        var PRELUDE_COLOR_PALETTE_WORDS = [
+            "mastersystem", "gameboycolour", "amiga", "arnecolors", "famicom", "atari", "pastel", "ega", "amstrad", "proteus_mellow", "proteus_rich", "proteus_night", "c64", "whitingjp"
+        ]
 
         function renderHint(elt,data,cur){
             var t1=cur.text;
@@ -205,8 +208,12 @@
                             lc.indexOf("text_color")>=0) {
                             candlists.push(COLOR_WORDS);
                         } else {
-                            if (lineToCursor.trim().split(/\s+/ ).length<2) {
+                            var linewords =lineToCursor.trim().split(/\s+/ );
+
+                            if (linewords.length<2) {
                                 candlists.push(PRELUDE_COMMAND_WORDS);
+                            } else if (linewords.length==2 && linewords[0].toLowerCase()=='color_palette'){
+                                candlists.push(PRELUDE_COLOR_PALETTE_WORDS);
                             }
                         }
 
