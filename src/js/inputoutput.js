@@ -410,9 +410,12 @@ function onKeyDown(event) {
 
     if(lastDownTarget === canvas || (window.Mobile && (lastDownTarget === window.Mobile.focusIndicator) ) ){
     	if (keybuffer.indexOf(event.keyCode)===-1) {
-    		keybuffer.splice(keyRepeatIndex,0,event.keyCode);
-	    	keyRepeatTimer=0;
-	    	checkKey(event,true);
+    		if (event&&(event.ctrlKey || event.metaKey)){
+		    } else {
+    		    keybuffer.splice(keyRepeatIndex,0,event.keyCode);
+	    	    keyRepeatTimer=0;
+	    	    checkKey(event,true);
+		    }
 		}
 	}
 
