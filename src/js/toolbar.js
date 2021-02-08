@@ -196,7 +196,8 @@ function shareClick() {
 	if (state.metadata.title!==undefined) {
 		title=state.metadata.title + " (PuzzleScript Script)";
 	}
-	compile();
+	
+	compile(["rebuild"]);
 
 
 	var source=editor.getValue();
