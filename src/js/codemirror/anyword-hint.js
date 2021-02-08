@@ -194,7 +194,9 @@
                     }
                 case 'winconditions':
                     {
-                        addObjects=true;
+                        if ((lineToCursor.trim().split(/\s+/ ).length%2)===0){
+                            addObjects=true;
+                        }
                         candlists.push(WINCONDITION_WORDS);
                         break;
                     }
