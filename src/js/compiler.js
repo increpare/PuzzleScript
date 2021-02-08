@@ -2426,10 +2426,12 @@ function formatHomePage(state){
 	}
 	
 	if (isColor(state.fgcolor)===false ){
-		logError("text_color in incorrect format - found "+state.fgcolor+", but I expect a color name (like 'pink') or hex-formatted color (like '#1412FA').")
+		logError("text_color in incorrect format - found "+state.fgcolor+", but I expect a color name (like 'pink') or hex-formatted color (like '#1412FA').  Defaulting to white.")
+		state.fgcolor="#FFFFFF";
 	}
 	if (isColor(state.bgcolor)===false ){
-		logError("background_color in incorrect format - found "+state.bgcolor+", but I expect a color name (like 'pink') or hex-formatted color (like '#1412FA').")
+		logError("background_color in incorrect format - found "+state.bgcolor+", but I expect a color name (like 'pink') or hex-formatted color (like '#1412FA').  Defaulting to black.")
+		state.bgcolor="#000000";
 	}
 
 	if (canSetHTMLColors) {
