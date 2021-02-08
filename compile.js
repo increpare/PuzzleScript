@@ -6,8 +6,7 @@ creates a highly compressed release build in bin of the contents of src
 
 packages used:
 
-npm i tar  html-minifier-terser ycssmin  google-closure-compiler concat  pngcrush-bin inliner ncp rimraf gifsicle terser
-
+npm i tar  html-minifier-terser ycssmin  google-closure-compiler concat  pngcrush-bin inliner ncp rimraf gifsicle terser gzipper  
 */
 
 var fs = require("fs");
@@ -216,8 +215,26 @@ new Inliner('./src/standalone.html', function (error, html) {
                 }
             });
 
+            
+            (async function a() {
+                const { Compress } = require('gzipper');
+            
+                var glob = require("glob")
+            
+                files = glob.sync("./bin/**/*.js");
+                files = files.concat(glob.sync("./bin/**/*.html"));
+                files = files.concat(glob.sync("./bin/**/*.css"));
+                files = files.concat(glob.sync("./bin/**/*.txt"));
+            
+                var compressionTasks = files.map( fn=>new Compress(fn));
+                var compressed = await Promise.all(compressionTasks.map(gzip=>gzip.run()));
+            
+                console.log("Files compressed. All good!");
 
-          })
+            
+            })();
+
+          });
 
 
     })();
