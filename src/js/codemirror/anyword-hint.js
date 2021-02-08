@@ -237,7 +237,7 @@
                     if (obs.hasOwnProperty(key)) {
                         var w = key;
                         var matchWord = w.toLowerCase();
-                        if (matchWord === curWord) continue;
+                        // if (matchWord === curWord) continue;
                         if ((!curWord || matchWord.lastIndexOf(curWord, 0) == 0) && !Object.prototype.hasOwnProperty.call(seen, matchWord)) {
                             seen[matchWord] = true;
                             var hint = state.original_case_names[w]; 
@@ -260,7 +260,7 @@
                     for (var j=0;j<lr.length;j++){
                         var w = lr[j][0];
                         var matchWord = w.toLowerCase();
-                        if (matchWord === curWord) continue;
+                        // if (matchWord === curWord) continue;
                         if ((!curWord || matchWord.lastIndexOf(curWord, 0) == 0) && !Object.prototype.hasOwnProperty.call(seen, matchWord)) {
                             seen[matchWord] = true;
                             var hint = state.original_case_names[w]; 
@@ -287,7 +287,7 @@
                     }
                     var matchWord=m;
                     var matchWord = matchWord.toLowerCase();
-                    if (matchWord === curWord) continue;
+                    // if (matchWord === curWord) continue;
                     if ((!curWord || matchWord.lastIndexOf(curWord, 0) == 0) && !Object.prototype.hasOwnProperty.call(seen, matchWord)) {
                         seen[matchWord] = true;
 
