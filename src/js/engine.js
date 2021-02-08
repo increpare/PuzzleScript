@@ -1137,6 +1137,13 @@ BitVec.prototype.iand = function(other) {
 	}
 }
 
+
+BitVec.prototype.inot = function() {
+	for (var i = 0; i < this.data.length; ++i) {
+		this.data[i] = ~this.data[i];
+	}
+}
+
 BitVec.prototype.ior = function(other) {
 	for (var i = 0; i < this.data.length; ++i) {
 		this.data[i] |= other.data[i];

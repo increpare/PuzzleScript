@@ -1904,6 +1904,11 @@ function generateMasks(state) {
 		}
 	}
 
+	//use \n as a delimeter for internal-only objects
+	var all_obj = new BitVec(STRIDE_OBJ);
+	all_obj.inot();
+	objectMask["\nall\n"]=all_obj;
+
 	state.objectMasks = objectMask;
 }
 
@@ -1976,7 +1981,7 @@ function processWinConditions(state) {
 		if (wincondition.length==5) {
 			n2 = wincondition[3];
 		} else {
-			n2 = 'background';
+			n2 = '\nall\n';
 		}
 
 		var mask1=0;

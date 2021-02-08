@@ -508,6 +508,10 @@ var testdata = [
 	[
 		"Reserved keywords are too greedy (#419)",
 		["========\nOBJECTS(cat)\n========\n\nbackground \nwhite\n\nPlayer\nblue\n\nLevelscat\nblack\n\n=======\nLEGEND\n=======\n\nP = Player\n\n\n=======\nSOUNDS\n=======\n\n================\nCOLLISIONLAYERS \n================\n\nbackground\nplayer\nLevelscat\n\n======\nRULES\n======\n\n\n==============\nWINCONDITIONS\n==============\n\n(there's no way to win against a floating eyeball :S )\n\n=======\nLEVELS\n=======\n\np\n\n",[3,3,0],"background player:0,\n",0,"1506517029540.7014"]
+	],
+	[
+		`Removing background tiles breaks "no X" wincondition (#534)`,
+		["title no Coin, all Player on Target\nauthor Zachary Abel\nhomepage zacharyabel.com\n\nrun_rules_on_level_start\n\n=======\nOBJECTS\n=======\n\nBackground\ngreen\n\nPlayer\nRed\n.000.\n.0.0.\n.000.\n.0...\n.0...\n\n\n======\nLEGEND\n======\n\nP = Player\n. = Background\n\n======\nSOUNDS\n======\n\n===============\nCOLLISIONLAYERS\n===============\n\nBackground\nPlayer\n\n=====\nRULES\n=====\n\n[Background] -> []\n\n=============\nWINCONDITIONS\n=============\n\nno Player\n\n======\nLEVELS\n======\n\nP.\n\n",[3,3],":0,player:1,\n",0,"1612779741066.1199"]
 	]
 ];
 
