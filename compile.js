@@ -129,7 +129,6 @@ new Inliner('./src/standalone.html', function (error, html) {
                 js: [  
                     "./src/js/Blob.js",
                     "./src/js/FileSaver.js",
-                    "./src/js/jsgif/b64.js",
                     "./src/js/jsgif/LZWEncoder.js",
                     "./src/js/jsgif/NeuQuant.js",
                     "./src/js/jsgif/GIFEncoder.js",
