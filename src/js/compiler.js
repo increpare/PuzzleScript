@@ -1740,7 +1740,7 @@ function ruleGroupDiscardOverlappingTest(ruleGroup){
 		}
 	}
 	if (allbad){
-		logError(`${example[0]} and ${example[1]} can never overlap, but this rule requires that to happen.`, firstLineNumber);
+		logError(example[0] +' and '+example[1]+' can never overlap, but this rule requires that to happen.', firstLineNumber);
 	}
 }
 

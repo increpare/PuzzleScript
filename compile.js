@@ -20,7 +20,7 @@ fs.writeFileSync(".build/buildnumber.txt",buildnum.toString(),encoding='utf-8');
 
 //#node-qunit-phantomjs  tests/tests.html --timeout 40
 console.log("===========================");
-console.log(`build number ${buildnum}`)
+console.log('build number '+buildnum)
 
 var start = new Date()
 
@@ -197,7 +197,7 @@ new Inliner('./src/standalone.html', function (error, html) {
                     editor = editor.replace(/<!--TOREPLACE-->/g, '<script src="js\/scripts_compiled.js"><\/script>');
                     editor = editor.replace(/<link rel="stylesheet" href="[A-Za-z0-9_\/-]*\.css">/g, '');
                     editor = editor.replace(/<!--CSSREPLACE-->/g, '<link rel="stylesheet" href="css\/combined.css">');
-                    editor = editor.replace(/<!--BUILDNUMBER-->/g,`(build ${buildnum.toString()})`);
+                    editor = editor.replace(/<!--BUILDNUMBER-->/g,'(build '+buildnum.toString()+')');
                     fs.writeFileSync("./bin/editor.html",editor, encoding='utf8');
 
                     var player = fs.readFileSync("./bin/play.html", encoding='utf8');
