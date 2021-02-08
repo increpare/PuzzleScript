@@ -535,7 +535,11 @@ function checkKey(e,justPressed) {
 
     if (winning) {
     	return;
-    }
+	}
+	if (e&&(e.ctrlKey || e.metaKey)){
+		return;
+	}
+	
     var inputdir=-1;
     switch(e.keyCode) {
         case 65://a
