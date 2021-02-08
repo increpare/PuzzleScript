@@ -617,6 +617,7 @@ function processRuleString(rule, state, curRules)
 	}
 
 	var curcell=[];
+	var bracketbalance=0;
 	for (var i = 0; i < tokens.length; i++)
 	{
 		var token = tokens[i];
@@ -660,6 +661,10 @@ function processRuleString(rule, state, curRules)
 			}
 			case 1: {
 				if (token == '[') {
+					bracketbalance++;
+					if(bracketbalance>1){
+						logWarning("Multiple opening brackets without closing brackets.  Something fishy here.  Every '[' has to be closed by a ']', and you can't nest them.", lineNumber);
+					}
 					if (curcell.length > 0) {
 						logError('Error, malformed cell rule - encountered a "["" before previous bracket was closed', lineNumber);
 					}
@@ -681,6 +686,12 @@ function processRuleString(rule, state, curRules)
 						curcell = [];
 					}
 				} else if (token === ']') {
+					
+					bracketbalance--;
+					if(bracketbalance<0){
+						logWarning("Multiple closing brackets without corresponding opening brackets.  Something fishy here.  Every '[' has to be closed by a ']', and you can't nest them.", lineNumber);
+					}
+
 					if (curcell.length % 2 == 1) {
 						if (curcell[0]==='...') {
 							logError('Cannot end a rule with ellipses.', lineNumber);
