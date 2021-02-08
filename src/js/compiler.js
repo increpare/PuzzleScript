@@ -2592,7 +2592,7 @@ function compile(command,text,randomseed) {
 	}*/
 
 	if (errorCount>0) {
-		consoleError('<span class="systemMessage">Errors detected during compilation, the game may not work correctly.</span>');
+		consoleError('<span class="systemMessage">Errors detected during compilation; the game may not work correctly.</span>');
 	}
 	else {
 		var ruleCount=0;
