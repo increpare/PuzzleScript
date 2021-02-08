@@ -1482,7 +1482,7 @@ function rulesToMask(state) {
 					} else {
 						var existingname = layersUsed_l[layerIndex];
 						if (existingname !== null) {
-							logError('Rule matches object types that can\'t overlap: "' + object_name.toUpperCase() + '" and "' + existingname.toUpperCase() + '".', rule.lineNumber);
+							rule.discard=[object_name.toUpperCase(),existingname.toUpperCase()];
 						}
 
 						layersUsed_l[layerIndex] = object_name;
@@ -1598,7 +1598,11 @@ function rulesToMask(state) {
  						}
 
 						if (existingname !== null) {
-							logError('Rule matches object types that can\'t overlap: "' + object_name.toUpperCase() + '" and "' + existingname.toUpperCase() + '".', rule.lineNumber);
+							if (rule.hasOwnProperty('discard')){
+
+							} else {
+								logError('Rule matches object types that can\'t overlap: "' + object_name.toUpperCase() + '" and "' + existingname.toUpperCase() + '".',rule.lineNumber);
+							}
 						}
 
 						layersUsed_r[layerIndex] = object_name;
@@ -1719,6 +1723,27 @@ function ruleGroupRandomnessTest(ruleGroup) {
 	}
 }
 
+function ruleGroupDiscardOverlappingTest(ruleGroup){
+	if (ruleGroup.length === 0)
+		return;
+	var firstLineNumber = ruleGroup[0].lineNumber;
+	var allbad=true;
+	var example=null;
+	for (var i=0;i<ruleGroup.length;i++){
+		var rule=ruleGroup[i];
+		if (rule.hasOwnProperty('discard')){
+			example=rule['discard'];
+			ruleGroup.splice(i,1);
+			i--;
+		} else {
+			allbad=false;
+		}
+	}
+	if (allbad){
+		logError(`${example[0]} and ${example[1]} can never overlap, but this rule requires that to happen.`, firstLineNumber);
+	}
+}
+
 function arrangeRulesByGroupNumber(state) {
 	var aggregates = {};
 	var aggregates_late = {};
@@ -1740,6 +1765,7 @@ function arrangeRulesByGroupNumber(state) {
 		if (aggregates.hasOwnProperty(groupNumber)) {
 			var ruleGroup = aggregates[groupNumber];
 			ruleGroupRandomnessTest(ruleGroup);
+			ruleGroupDiscardOverlappingTest(ruleGroup);
 			result.push(ruleGroup);
 		}
 	}
@@ -1748,6 +1774,7 @@ function arrangeRulesByGroupNumber(state) {
 		if (aggregates_late.hasOwnProperty(groupNumber)) {
 			var ruleGroup = aggregates_late[groupNumber];
 			ruleGroupRandomnessTest(ruleGroup);
+			ruleGroupDiscardOverlappingTest(ruleGroup);
 			result_late.push(ruleGroup);
 		}
 	}
@@ -2085,7 +2112,11 @@ function printRules(state) {
 			output += "ENDLOOP<br>";
 			loopEnd = -1;
 		}
-		output += printRule(rule) +"<br>";
+		if (rule.hasOwnProperty('discard')){
+
+		} else {
+			output += printRule(rule) +"<br>";
+		}
 	}
 	if (loopEnd !== -1) {	// no more rules after loop end
 		output += "ENDLOOP<br>";
@@ -2463,11 +2494,13 @@ function loadFile(str) {
 
 	removeDuplicateRules(state);
 
+	rulesToMask(state);
+
+	
 	if (debugMode) {
 		printRules(state);
 	}
 
-	rulesToMask(state);
 	arrangeRulesByGroupNumber(state);
 	collapseRules(state.rules);
 	collapseRules(state.lateRules);
