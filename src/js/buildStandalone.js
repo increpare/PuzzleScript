@@ -32,7 +32,7 @@ function buildStandalone(sourceCode) {
 	}
 	var homepage = "www.puzzlescript.net";
 	if (state.metadata.homepage!==undefined) {
-		homepage=state.metadata.homepage.toLowerCase();
+		homepage=state.metadata.homepage;
 	}
 
 	if ('background_color' in state.metadata) {

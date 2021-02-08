@@ -1155,7 +1155,7 @@ var codeMirrorFn = function() {
 		                    	if (sol) {
 		                    		if (['title','author','homepage','background_color','text_color','key_repeat_interval','realtime_interval','again_interval','flickscreen','zoomscreen','color_palette','youtube'].indexOf(token)>=0) {
 		                    			
-                                        if (token==='youtube' || token==='author' || token==='title') {
+                                        if (token==='youtube' || token==='author' || token==='homepage' || token==='title') {
                                             stream.string=mixedCase;
                                         }
                                         
