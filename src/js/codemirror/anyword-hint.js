@@ -51,8 +51,12 @@
 
         var RULE_DIRECTION_WORDS = [
             "DIRECTION",//tag
-            "up", "down", "left", "right", "random", "horizontal", "vertical","late","rigid","startloop","endloop"]
+            "up", "down", "left", "right", "random", "horizontal", "vertical","late","rigid"]
 
+        var LOOP_WORDS = [
+            "BRACKET",//tag
+            "startloop","endloop"]
+            
         var PATTERN_DIRECTION_WORDS = [
             "DIRECTION",
             "up", "down", "left", "right", "moving", "stationary", "no", "randomdir", "random", "horizontal", "vertical", "orthogonal", "perpendicular", "parallel", "action"]
@@ -178,6 +182,7 @@
                         //if inside of roles,can use some extra directions
                         if (lineToCursor.indexOf("[")==-1) {
                             candlists.push(RULE_DIRECTION_WORDS);
+                            candlists.push(LOOP_WORDS);
                         } else {
                             candlists.push(PATTERN_DIRECTION_WORDS);                            
                         }
