@@ -41,13 +41,16 @@ function regenText(spritecanvas,spritectx) {
 		}
 	}
 }
+
+var editor_s_grille=[[0,1,1,1,0],[1,0,0,0,0],[0,1,1,1,0],[0,0,0,0,1],[0,1,1,1,0]];
+
 var spriteimages;
 function regenSpriteImages() {
 	if (textMode) {
 		regenText();
 		return;
 	} else if (levelEditorOpened) {
-        textImages['s'] = createSprite('chars',font['s'],undefined);
+        textImages['editor_s'] = createSprite('chars',editor_s_grille,undefined);
     }
     
     if (state.levels.length===0) {
@@ -129,7 +132,7 @@ function generateGlyphImages() {
 	}
 
 	{
-		glyphPrintButton = textImages['s'];
+		glyphPrintButton = textImages['editor_s'];
 	}
 	{
 		//make highlight thingy
