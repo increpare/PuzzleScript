@@ -141,12 +141,15 @@ function generateExtraMembers(state) {
 	      		o.colors=["#ff00ff"];
 	      	}
 			if (o.spritematrix.length===0) {
-				o.spritematrix = [[0, 0, 0, 0, 0], [0, 0, 0, 0, 0], [0, 0, 0, 0, 0], [0, 0, 0, 0, 0], [0, 0, 0, 0, 0]];
+                            var sprite_row = new Array(state.tile_width).fill(0);
+                            o.spritematrix = new Array(state.tile_height).fill(sprite_row);
 			} else {
-				if ( o.spritematrix.length!==5 || o.spritematrix[0].length!==5 || o.spritematrix[1].length!==5 || o.spritematrix[2].length!==5 || o.spritematrix[3].length!==5 || o.spritematrix[4].length!==5 ){
-					logWarning("Sprite graphics must be 5 wide and 5 high exactly.",o.lineNumber);
-				}
-				o.spritematrix = generateSpriteMatrix(o.spritematrix);
+                            if( o.spritematrix.length !== state.tile_height )
+                                logWarning("Sprite graphics must be "+state.tile_height+" high.",o.lineNumber);
+                            for(var i=0; i<o.spritematrix.length; i++)
+                                if( o.spritematrix[i].length != state.tile_width )
+                                    logWarning("Sprite graphics must be "+state.tile_width+" wide.",o.lineNumber);
+                            o.spritematrix = generateSpriteMatrix(o.spritematrix);
 			}
 		}
 	}

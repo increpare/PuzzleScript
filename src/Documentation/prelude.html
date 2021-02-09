@@ -179,6 +179,10 @@ late [ Temp ] -> [ ]</code></pre>
 			<dd>The name of your game.  Appears on the title screen.</dd>
       <dt>throttle_movement</dt>
       <dd>For use in conjunction with realtime_interval - this stops you from moving crazy fast - repeated keypresses of the same movement direction will not increase your speed. This doesn't apply to the action button.  If you can think of an example that requires action be throttled, just let me know and I'll try accommodate you.</dd>
+      <dt>tile_height</dt>
+      <dd>The height in pixels of each tile, if not specified tiles are of 5 pixels high.</dd>
+      <dt>tile_width</dt>
+      <dd>The width in pixels of each tile, if not specified the tiles are of 5 pixels wide. As the pixels are square, if tile_width and tile_height are not equal the tiles are rectangular.<dd>
       <dt>verbose_logging</dt>
       <dd>As you play the game, spits out information about all rules applied as you play:<p>
       <img src="images/verbose_logging.png"></dd>
