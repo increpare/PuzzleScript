@@ -2059,6 +2059,20 @@ function showTempMessage() {
 	canvasResize();
 }
 
+function processOutputCommands(commands) {
+	for (var i=0;i<commands.length;i++) {
+		var command = commands[i];
+		if (command.charAt(1)==='f')  {//identifies sfxN
+			tryPlaySimpleSound(command);
+		}
+		if (unitTesting===false) {
+			if (command==='message') {
+				showTempMessage();
+			}
+		}
+	}
+}
+
 function applyRandomRuleGroup(ruleGroup) {
 	var propagated=false;
 
@@ -2354,7 +2368,7 @@ function processInput(dir,dontDoWin,dontModify) {
         		if (verbose_logging){
 	    			consolePrint('require_player_movement set, but no player movement detected, so cancelling turn.');
 	    			consoleCacheDump();
-        		}
+				}
         		backups.push(bak);
         		DoUndo(true,false);
         		return false;
@@ -2370,6 +2384,7 @@ function processInput(dir,dontDoWin,dontModify) {
 	    		var r = level.commandQueueSourceRules[level.commandQueue.indexOf('cancel')];
 	    		consolePrintFromRule('CANCEL command executed, cancelling turn.',r,true);
 			}
+			processOutputCommands(level.commandQueue);
     		backups.push(bak);
 			messagetext = "";
     		DoUndo(true,false);
@@ -2383,6 +2398,7 @@ function processInput(dir,dontDoWin,dontModify) {
 	    		consolePrintFromRule('RESTART command executed, reverting to restart state.',r);
 	    		consoleCacheDump();
 			}
+			processOutputCommands(level.commandQueue);
     		backups.push(bak);
 			messagetext = "";
 	    	DoRestart(true);
@@ -2442,19 +2458,7 @@ function processInput(dir,dontDoWin,dontModify) {
         	}
         }
 
-	    for (var i=0;i<level.commandQueue.length;i++) {
-	 		var command = level.commandQueue[i];
-	 		if (command.charAt(1)==='f')  {//identifies sfxN
-	 			tryPlaySimpleSound(command);
-	 		}  	
-			if (unitTesting===false) {
-				if (command==='message') {
-					showTempMessage();
-				}
-			} else {
-				messagetext = "";
-			}
-	    }
+	    processOutputCommands(level.commandQueue);
 
 	    if (textMode===false) {
 	    	if (verbose_logging) { 

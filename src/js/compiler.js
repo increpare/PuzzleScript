@@ -497,7 +497,6 @@ var reg_directions_only = /^(\>|\<|\^|v|up|down|left|right|moving|stationary|no|
 var commandwords = ["sfx0","sfx1","sfx2","sfx3","sfx4","sfx5","sfx6","sfx7","sfx8","sfx9","sfx10","cancel","checkpoint","restart","win","message","again"];
 
 
-
 function directionalRule(rule) {
 	for (var i=0;i<rule.lhs.length;i++) {
 		var cellRow = rule.lhs[i];
@@ -794,21 +793,6 @@ function processRuleString(rule, state, curRules)
 
 	if (directionalRule(rule_line)===false) {
 		rule_line.directions=['up'];
-	}
-
-	/* reset must appear by itself */
-
-	for (var i=0;i<commands.length;i++) {
-		var cmd = commands[i][0];
-		if (cmd==='restart') {
-			if (commands.length>1 || rhs_cells.length>0) {
-				logError('The RESTART command can only appear by itself on the right hand side of the arrow.', lineNumber);
-			}
-		} else if (cmd==='cancel') {
-			if (commands.length>1 || rhs_cells.length>0) {
-				logError('The CANCEL command can only appear by itself on the right hand side of the arrow.', lineNumber);
-			}
-		}
 	}
 
 	//next up - replace relative directions with absolute direction
