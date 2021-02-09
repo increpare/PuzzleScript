@@ -205,7 +205,7 @@
                     }
                 case 'levels':
                     {
-                        if (lineToCursor.trim().split(/\s+/ ).length<2) {
+                        if ("message".indexOf(lineToCursor.trim())===0) {
                             candlists.push(["MESSAGE_VERB","message"]);
                         }
                         break;
