@@ -3,8 +3,20 @@
 	font-family: "Source Sans Pro";
 	font-style: normal;
 	font-weight: 400;
-	src: local('Source Sans Pro'), local('SourceSansPro-Regular'), url(https://themes.googleusercontent.com/static/fonts/sourcesanspro/v5/ODelI1aHBYDBqgeIAH2zlBM0YzuT7MdOe03otPbuUS0.woff) format('woff');
+	src: 
+	 local('Source Sans Pro'),
+	 local('SourceSansPro-Regular'), 
+	 url("../fonts/SourceSansPro-Regular.woff") format('woff'),
+	 url("../fonts/SourceSansPro-Regular.ttf") format('truetype');
 }
+
+
+@font-face {
+	font-family: 'Glyphicons Halflings';
+	src: url('../fonts/glyphicons-halflings-regular.eot');
+	src: url('../fonts/glyphicons-halflings-regular.eot?#iefix') format('embedded-opentype'), url('../fonts/glyphicons-halflings-regular.woff') format('woff'), url('../fonts/glyphicons-halflings-regular.ttf') format('truetype'), url('../fonts/glyphicons-halflings-regular.svg#glyphicons-halflingsregular') format('svg');
+  }
+
 BODY, HTML
 {
 	margin: 0;

@@ -162,6 +162,7 @@ new Inliner('./src/standalone.html', function (error, html) {
 
                 var concatenated = files.map(fn=>fs.readFileSync(fn,encoding='utf-8')).concat();
                 var result = await minify(concatenated, { sourceMap: true });
+                result.code += "\n//# sourceMappingURL=localhost:8000/bin/js/scripts_compiled.js.map"
                 fs.writeFileSync('./bin/js/scripts_compiled.js',result.code);
                 fs.writeFileSync('./bin/js/scripts_compiled.js.map',result.map);
 
@@ -185,6 +186,7 @@ new Inliner('./src/standalone.html', function (error, html) {
 
             concatenated = files.map(fn=>fs.readFileSync(fn,encoding='utf-8')).concat();
             var result = await minify(concatenated, { sourceMap: true });
+            result.code += "\n//# sourceMappingURL=scripts_play_compiled.js.map"
             fs.writeFileSync('./bin/js/scripts_play_compiled.js',result.code);
             fs.writeFileSync('./bin/js/scripts_play_compiled.js.map',result.map);
         
