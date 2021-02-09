@@ -712,11 +712,11 @@ function processRuleString(rule, state, curRules)
 					curcellrow = [];
 					incellrow = false;
 				} else if (token === '->') {
-					if (rhs) {
-						logError('Error, you can only use "->" once in a rule; it\'s used to separate before and after states.', lineNumber);
-					} if (curcellrow.length > 0) {
+					if (incellrow) {
 						logError('Encountered an unexpected "->" inside square brackets.  It\'s used to separate states, it has no place inside them >:| .', lineNumber);
-					} else {
+					} else if (rhs) {
+						logError('Error, you can only use "->" once in a rule; it\'s used to separate before and after states.', lineNumber);
+					}  else {
 						rhs = true;
 					}
 				} else if (state.names.indexOf(token) >= 0) {
