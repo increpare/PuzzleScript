@@ -374,8 +374,8 @@ function canvasResize() {
 
 
     if (textMode) {
-        w=6;
-        h=6;
+        w=font['X'][0].length + 1;
+        h=font['X'].length + 1;
     }
 
     cellwidth = w * ~~(cellwidth / w);
@@ -384,13 +384,13 @@ function canvasResize() {
     xoffset = 0;
     yoffset = 0;
 
-    if (cellwidth > cellheight) {
-        cellwidth = cellheight;
+    if (cellwidth / w > cellheight / h) {
+        cellwidth = cellheight * w / h;
         xoffset = (canvas.width - cellwidth * screenwidth) / 2;
         yoffset = (canvas.height - cellheight * screenheight) / 2;
     }
     else { //if (cellheight > cellwidth) {
-        cellheight = cellwidth;
+        cellheight = cellwidth * h / w;
         yoffset = (canvas.height - cellheight * screenheight) / 2;
         xoffset = (canvas.width - cellwidth * screenwidth) / 2;
     }
