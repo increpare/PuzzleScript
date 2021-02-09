@@ -678,7 +678,9 @@ function processRuleString(rule, state, curRules)
 						curcell.push(token);
 					}
 				} else if (token == '|') {
-					if (curcell.length % 2 == 1) {
+					if (!incellrow) {
+						logWarning('Janky syntax.  "|" should only be used inside cell rows (the square brackety bits).',lineNumber);
+					} else if (curcell.length % 2 == 1) {
 						logError('In a rule, if you specify a force, it has to act on an object.', lineNumber);
 					} else {
 						curcellrow.push(curcell);
