@@ -42,8 +42,9 @@ editor.on('mousedown', function(cm, event) {
     playSound(seed);
   } else if (event.target.className == 'cm-LEVEL') {
     if (event.ctrlKey||event.metaKey) {
-      document.activeElement.blur();  // unfocus code panel
-      event.preventDefault();         // prevent refocus
+	  document.activeElement.blur();  // unfocus code panel
+	  editor.display.input.blur();
+      prevent(event);         // prevent refocus
       compile(["levelline",cm.posFromMouse(event).line]);
     }
   }
