@@ -855,10 +855,10 @@ function DoRestart(force) {
 	if (restarting===true){
 		return;
 	}
-	restarting=true;
 	if (force!==true && ('norestart' in state.metadata)) {
 		return;
 	}
+	restarting=true;
 	if (force===false) {
 		backups.push(backupLevel());
 	}
