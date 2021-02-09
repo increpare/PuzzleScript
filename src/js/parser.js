@@ -27,7 +27,7 @@ var errorCount=0;
 function logErrorCacheable(str, lineNumber,urgent) {
     if (compiling||urgent) {
         if (lineNumber === undefined) {
-            return logErrorNoLine(str);
+            return logErrorNoLine(str,urgent);
         }
         var errorString = '<a onclick="jumpToLine(' + lineNumber.toString() + ');"  href="javascript:void(0);"><span class="errorTextLineNumber"> line ' + lineNumber.toString() + '</span></a> : ' + '<span class="errorText">' + str + '</span>';
          if (errorStrings.indexOf(errorString) >= 0 && !urgent) {
@@ -59,7 +59,7 @@ function logError(str, lineNumber,urgent) {
 function logWarning(str, lineNumber,urgent) {
     if (compiling||urgent) {
         if (lineNumber === undefined) {
-            return logErrorNoLine(str);
+            return logErrorNoLine(str,urgent);
         }
         var errorString = '<a onclick="jumpToLine(' + lineNumber.toString() + ');"  href="javascript:void(0);"><span class="errorTextLineNumber"> line ' + lineNumber.toString() + '</span></a> : ' + '<span class="warningText">' + str + '</span>';
          if (errorStrings.indexOf(errorString) >= 0 && !urgent) {
