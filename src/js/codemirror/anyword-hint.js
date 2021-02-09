@@ -159,9 +159,12 @@
                 case 'legend':
                     {
                         if (lineToCursor.indexOf('=')>=0){
-                            addObjects=true;  
-                            candlists.push(LEGEND_LOGICWORDS);                      
-                        } //no hins before equals
+                            if ((lineToCursor.trim().split(/\s+/ ).length%2)===1){
+                                addObjects=true;
+                            } else {
+                                candlists.push(LEGEND_LOGICWORDS);                      
+                            }
+                        } //no hints before equals
                         break;
                     }
                 case 'sounds':
