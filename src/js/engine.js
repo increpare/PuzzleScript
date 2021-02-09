@@ -211,6 +211,18 @@ function generateTitleScreen()
 
 	var width = titleImage[0].length;
 	var titlelines=wordwrap(title,titleImage[0].length);
+	if (state.metadata.author!==undefined){
+		if ( titlelines.length>3){
+			titlelines.splice(3);
+			logWarning("Game title is too long to fit on screen, truncating to three lines.",undefined,true);
+		}
+	} else {
+		if ( titlelines.length>5){
+			titlelines.splice(5);
+			logWarning("Game title is too long to fit on screen, truncating to five lines.",undefined,true);
+		}
+
+	}
 	for (var i=0;i<titlelines.length;i++) {
 		var titleline=titlelines[i];
 		var titleLength=titleline.length;
@@ -222,6 +234,13 @@ function generateTitleScreen()
 	if (state.metadata.author!==undefined) {
 		var attribution="by "+state.metadata.author;
 		var attributionsplit = wordwrap(attribution,titleImage[0].length);
+		if (attributionsplit[0].length<titleImage[0].length){
+			attributionsplit[0]=" "+attributionsplit[0];
+		}
+		if (attributionsplit.length>3){
+			attributionsplit.splice(3);
+			logWarning("Author list too long to fit on screen, truncating to three lines.",undefined,true);
+		}
 		for (var i=0;i<attributionsplit.length;i++) {
 			var line = attributionsplit[i]+" ";
 			if (line.length>width){
