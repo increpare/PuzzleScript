@@ -187,7 +187,7 @@ var codeMirrorFn = function() {
     var reg_name = /[\p{L}\p{N}_]+[\p{Z}]*/u;///\w*[a-uw-zA-UW-Z0-9_]/;
     var reg_number = /[\d]+/;
     var reg_soundseed = /\d+\b/;
-    var reg_spriterow = /[\.0-9]{5}\p{Z}*/u;
+    var reg_spriterow = /[\.0-9]{5,8}\p{Z}*/u;
     var reg_sectionNames = /(objects|collisionlayers|legend|sounds|rules|winconditions|levels)(?![\p{L}\p{N}_])[\p{Z}]*/u;
     var reg_equalsrow = /[\=]+/;
     var reg_notcommentstart = /[^\(]+/;
@@ -290,6 +290,9 @@ var codeMirrorFn = function() {
               abbrevNames: state.abbrevNames.concat([]),
 
               metadata : state.metadata.concat([]),
+
+              tile_width : state.tile_width,
+              tile_height : state.tile_height,
 
               levels: levelsCopy,
 
@@ -495,7 +498,7 @@ var codeMirrorFn = function() {
                             if (match_name == null) {
                                 stream.match(reg_notcommentstart, true);
                                 if (stream.pos>0){                                
-                                    logWarning('Unknown junk in object section (possibly: sprites have to be 5 pixels wide and 5 pixels high exactly. Or maybe: the main names for objects have to be words containing only the letters a-z0.9 - if you want to call them something like ",", do it in the legend section).',state.lineNumber);
+                                    logWarning('Unknown junk in object section (possibly: sprites have to be '+state.tile_width+' pixels wide and '+state.tile_height+' pixels high exactly. Or maybe: the main names for objects have to be words containing only the letters a-z0.9 - if you want to call them something like ",", do it in the legend section).',state.lineNumber);
                                 }
                                 return 'ERROR';
                             } else {
@@ -599,13 +602,13 @@ var codeMirrorFn = function() {
                                 var o = state.objects[state.objects_candname];
 
                                 spritematrix[spritematrix.length - 1] += ch;
-                                if (spritematrix[spritematrix.length-1].length>5){
-                                    logError('Sprites must be 5 wide and 5 high.', state.lineNumber);
+                                if (spritematrix[spritematrix.length-1].length > state.tile_width){
+                                    logError('Sprites must be '+state.tile_width+' wide.', state.lineNumber);
                                     stream.match(reg_notcommentstart, true);
                                     return null;
                                 }
                                 o.spritematrix = state.objects_spritematrix;
-                                if (spritematrix.length === 5 && spritematrix[spritematrix.length - 1].length == 5) {
+                                if (spritematrix.length === state.tile_height && spritematrix[spritematrix.length - 1].length == state.tile_width) {
                                     state.objects_section = 0;
                                 }
 
@@ -1153,7 +1156,7 @@ var codeMirrorFn = function() {
 		                    if (match!==null) {
 		                    	var token = match[0].trim();
 		                    	if (sol) {
-		                    		if (['title','author','homepage','background_color','text_color','key_repeat_interval','realtime_interval','again_interval','flickscreen','zoomscreen','color_palette','youtube'].indexOf(token)>=0) {
+		                    		if (['title','author','homepage','background_color','text_color','key_repeat_interval','realtime_interval','again_interval','flickscreen','zoomscreen','color_palette','youtube','tile_height','tile_width'].indexOf(token)>=0) {
 		                    			
                                         if (token==='youtube' || token==='author' || token==='homepage' || token==='title') {
                                             stream.string=mixedCase;
@@ -1164,6 +1167,10 @@ var codeMirrorFn = function() {
 		                    			if(m2!=null) {
                                             state.metadata.push(token);
 		                    				state.metadata.push(m2[0].trim());                                            
+                                            if(token==='tile_width')
+                                                state.tile_width = parseInt(m2[0].trim());
+                                            else if(token==='tile_height')
+                                                state.tile_height = parseInt(m2[0].trim());
 		                    			} else {
 		                    				logError('MetaData "'+token+'" needs a value.',state.lineNumber);
 		                    			}
@@ -1237,6 +1244,9 @@ var codeMirrorFn = function() {
 
                 winconditions: [],
                 metadata: [],
+
+                tile_width: 5,
+                tile_height: 5,
 
                 original_case_names: {},
 

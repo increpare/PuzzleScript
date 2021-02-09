@@ -369,8 +369,8 @@ function canvasResize() {
     cellwidth = canvas.width / screenwidth;
     cellheight = canvas.height / screenheight;
 
-    var w = 5;//sprites[1].dat.length;
-    var h = 5;//sprites[1].dat[0].length;
+    var w = state.tile_width;//sprites[1].dat.length;
+    var h = state.tile_height;//sprites[1].dat[0].length;
 
 
     if (textMode) {
@@ -378,23 +378,28 @@ function canvasResize() {
         h=6;
     }
 
-    cellwidth = w * ~~(cellwidth / w);
-    cellheight = h * ~~(cellheight / h);
+    cellwidth = ~~(cellwidth / w);
+    cellheight = ~~(cellheight / h);
 
     xoffset = 0;
     yoffset = 0;
 
     if (cellwidth > cellheight) {
         cellwidth = cellheight;
-        xoffset = (canvas.width - cellwidth * screenwidth) / 2;
-        yoffset = (canvas.height - cellheight * screenheight) / 2;
+        xoffset = (canvas.width - w * cellwidth * screenwidth) / 2;
+        yoffset = (canvas.height - h * cellheight * screenheight) / 2;
     }
     else { //if (cellheight > cellwidth) {
         cellheight = cellwidth;
-        yoffset = (canvas.height - cellheight * screenheight) / 2;
-        xoffset = (canvas.width - cellwidth * screenwidth) / 2;
+        yoffset = (canvas.height - h * cellheight * screenheight) / 2;
+        xoffset = (canvas.width - w * cellwidth * screenwidth) / 2;
     }
-    magnification = ((cellwidth/w)*5)|0;
+
+    magnification = (cellwidth*5)|0;
+
+    cellwidth = w * cellwidth;
+    cellheight = h * cellheight;
+
 
     if (levelEditorOpened && !textMode) {
     	xoffset+=cellwidth;
