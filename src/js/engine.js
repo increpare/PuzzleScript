@@ -2404,10 +2404,6 @@ function processInput(dir,dontDoWin,dontModify) {
 	    	DoRestart(true);
     		return true;
 	    } 
-
-	    if (dontModify && level.commandQueue.indexOf('win')>=0) {
-	    	return true;
-	    }
 	    
         var modified=false;
 	    for (var i=0;i<level.objects.length;i++) {
