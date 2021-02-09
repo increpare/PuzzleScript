@@ -32,6 +32,8 @@
             ["run_rules_on_level_start", "", "Applies the rules once on level-load, before the player has moved"],
             ["scanline", "", "Applies a scanline visual effect"],
             ["text_color", "orange", "Can accept a color name or hex code (in the form #412bbc). Controls the font color of title/message screens, as well as the font color in the website. Background_color is its sibling."],
+            ["tile_height", "5", "The height in pixels of each tile. All tiles are the same height."],
+            ["tile_width", "5", "The width in pixels of each tile. All tiles are the same width."],
             ["title", "My Amazing Puzzle Game", "The name of your game. Appears on the title screen."],
             ["throttle_movement", "", "For use in conjunction with realtime_interval - this stops you from moving crazy fast - repeated keypresses of the same movement direction will not increase your speed. This doesn't apply to the action button."],
             ["verbose_logging", "", "As you play the game, spits out information about all rules applied as you play"],
