@@ -32,9 +32,10 @@ var editor = window.CodeMirror.fromTextArea(code, {
 //	viewportMargin: Infinity,
 	lineWrapping: true,
 	lineNumbers: true,
-      styleActiveLine: true
+	styleActiveLine: true,
+	extraKeys: {"Ctrl-/": "toggleComment"},
 	});
-
+	
 editor.on('mousedown', function(cm, event) {
   if (event.target.className == 'cm-SOUND') {
     var seed = parseInt(event.target.innerHTML);
