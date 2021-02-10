@@ -441,7 +441,9 @@ function loadLevelFromLevelDat(state,leveldat,randomseed) {
 		keybuffer=[];
 
 	    if ('run_rules_on_level_start' in state.metadata) {
+			runrulesonlevelstart_phase=true;
 			processInput(-1,true);
+			runrulesonlevelstart_phase=false;
 	    }
 	} else {
 		tryPlayShowMessageSound();
@@ -2533,7 +2535,11 @@ function checkWin(dontDoWin) {
 	}
 
 	if (level.commandQueue.indexOf('win')>=0) {
-		consolePrint("Win Condition Satisfied");
+		if (runrulesonlevelstart_phase){
+			consolePrint("Win Condition Satisfied (However this is in the run_rules_on_level_start rule pass, so I'm going to ignore it for you.  Why would you want to complete a level before it's already started?!)");		
+		} else {
+			consolePrint("Win Condition Satisfied");
+		}
 		if(!dontDoWin){
 			DoWin();
 		}
@@ -2599,7 +2605,11 @@ function checkWin(dontDoWin) {
 	}
 
 	if (won) {
-		consolePrint("Win Condition Satisfied");
+		if (runrulesonlevelstart_phase){
+			consolePrint("Win Condition Satisfied (However this is in the run_rules_on_level_start rule pass, so I'm going to ignore it for you.  Why would you want to complete a level before it's already started?!)");		
+		} else {
+			consolePrint("Win Condition Satisfied");
+		}
 		if (!dontDoWin){
 			DoWin();
 		}
