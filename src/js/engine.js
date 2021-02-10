@@ -880,7 +880,7 @@ function DoRestart(force) {
 		return;
 	}
 	restarting=true;
-	if (force===false) {
+	if (force!==true) {
 		backups.push(backupLevel());
 	}
 
