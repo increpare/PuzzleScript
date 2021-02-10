@@ -2047,7 +2047,7 @@ function printCellRow(cellRow) {
 	return result;
 }
 
-function printRule(rule) {
+function cacheRuleStringRep(rule) {
 	var result="(<a onclick=\"jumpToLine('"+ rule.lineNumber.toString() + "');\"  href=\"javascript:void(0);\">"+rule.lineNumber+"</a>) "+ rule.direction.toString().toUpperCase()+" ";
 	if (rule.rigid) {
 		result = "RIGID "+result+" ";
@@ -2076,12 +2076,21 @@ function printRule(rule) {
 		}
 	}
 	//print commands next
-	return result;
+	rule.stringRep=result;
+}
+
+function cacheAllRuleNames(state){
+
+	for (var i=0;i<state.rules.length;i++) {
+		var rule = state.rules[i];
+		cacheRuleStringRep(rule);
+	}
 }
 function printRules(state) {
-	var output = "<br>Rule Assembly : ("+ state.rules.length +" rules )<br>===========<br>";
+	var output = "";
 	var loopIndex = 0;
 	var loopEnd = -1;
+	var discardcount=0;
 	for (var i=0;i<state.rules.length;i++) {
 		var rule = state.rules[i];
 		if (loopIndex < state.loops.length) {
@@ -2099,15 +2108,16 @@ function printRules(state) {
 			loopEnd = -1;
 		}
 		if (rule.hasOwnProperty('discard')){
-
+			discardcount++;
 		} else {
-			output += printRule(rule) +"<br>";
+			output += rule.stringRep +"<br>";
 		}
 	}
 	if (loopEnd !== -1) {	// no more rules after loop end
 		output += "ENDLOOP<br>";
 	}
 	output+="===========<br>";
+	output= "<br>Rule Assembly : ("+ (state.rules.length-discardcount) +" rules)<br>===========<br>"+output;
 	consolePrint(output);
 }
 
@@ -2121,7 +2131,7 @@ function removeDuplicateRules(state) {
 		if (groupnumber!==lastgroupnumber) {
 			record={};
 		}
-		var r_string=printRule(r);
+		var r_string=r.stringRep;
 		if (record.hasOwnProperty(r_string)) {
 			state.rules.splice(i,1);
 		} else {
@@ -2479,6 +2489,8 @@ function loadFile(str) {
 	generateMasks(state);
 	levelsToArray(state);
 	rulesToArray(state);
+
+	cacheAllRuleNames(state);
 
 	removeDuplicateRules(state);
 
