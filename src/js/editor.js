@@ -33,7 +33,10 @@ var editor = window.CodeMirror.fromTextArea(code, {
 	lineWrapping: true,
 	lineNumbers: true,
 	styleActiveLine: true,
-	extraKeys: {"Ctrl-/": "toggleComment"},
+	extraKeys: {
+		"Ctrl-/": "toggleComment",
+		"Esc":CodeMirror.commands.clearSearch
+		}
 	});
 	
 editor.on('mousedown', function(cm, event) {
