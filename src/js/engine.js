@@ -2405,8 +2405,9 @@ function processInput(dir,dontDoWin,dontModify) {
 			messagetext = "";
 	    	DoRestart(true);
     		return true;
-	    } 
-	    
+		} 
+		
+		
         var modified=false;
 	    for (var i=0;i<level.objects.length;i++) {
 	    	if (level.objects[i]!==bak.dat[i]) {
@@ -2427,6 +2428,10 @@ function processInput(dir,dontDoWin,dontModify) {
 	    	}
 	    }
 
+		if (dontModify && level.commandQueue.indexOf('win')>=0) {	
+	    	return true;	
+		}
+		
 		if (dontModify) {		
     		if (verbose_logging) {
     			consoleCacheDump();
