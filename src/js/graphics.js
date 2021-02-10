@@ -381,8 +381,9 @@ function canvasResize() {
         h=font['X'].length + 1;
     }
 
-    cellwidth = w * ~~(cellwidth / w);
-    cellheight = h * ~~(cellheight / h);
+
+    cellwidth =w * Math.max( ~~(cellwidth / w),1);
+    cellheight = h * Math.max(~~(cellheight / h),1);
 
     xoffset = 0;
     yoffset = 0;
