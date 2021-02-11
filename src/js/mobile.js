@@ -203,6 +203,9 @@ Mobile.debugDot = function (event) {
 
         this.isFocused = this.isTouchInsideFocusElement(event);
         this.setFocusIndicatorVisibility(this.isFocused);
+        
+        canvas.focus();
+        editor.display.input.blur();
     };
 
     proto.isTouchInsideFocusElement = function (event) {
@@ -233,7 +236,7 @@ Mobile.debugDot = function (event) {
         if (!isVisible) {
             visibility = 'hidden';
         }
-        this.focusIndicator.setAttribute('style', 'visibility: ' + visibility + ';');
+        // this.focusIndicator.setAttribute('style', 'visibility: ' + visibility + ';');
     };
 
     proto.absoluteElementPosition = function (element) {
