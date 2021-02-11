@@ -33,14 +33,33 @@ function convertLevelToString() {
 	return out;
 }
 
+function stripHTMLTags(html_str){
+	var div = document.createElement("div");
+	div.innerHTML = html_str;
+	var text = div.textContent || div.innerText || "";
+	return text.trim();
+}
+
 function dumpTestCase() {
+	if (errorStrings.length>0) {
+		//compiler error data
+		var levelDat = compiledText;
+		var errorStrings_stripped = errorStrings.map(stripHTMLTags);
+		var resultarray = [levelDat,errorStrings_stripped];
+		var resultstring = JSON.stringify(resultarray);
+		consolePrint("<br>Compilation error/warning data (for error message tests - errormessage_testdata.js):<br><br><br>"+resultstring+"<br><br><br>",true);
+	}
+
+	
+	//normal session recording data
 	var levelDat = compiledText;
 	var input = inputHistory.concat([]);
 	var outputDat = convertLevelToString();
 
 	var resultarray = [levelDat,input,outputDat,curlevel,loadedLevelSeed];
 	var resultstring = JSON.stringify(resultarray);
-	consolePrint("<br><br><br>"+resultstring+"<br><br><br>",true);
+	consolePrint("<br>Recorded play session data (for play session tests - testdata.js):<br><br><br>"+resultstring+"<br><br><br>",true);
+
 }
 
 function clearInputHistory() {

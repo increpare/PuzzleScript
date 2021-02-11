@@ -50,3 +50,36 @@ function runTest(dataarray) {
 		return false;
 	}
 }
+
+
+function runCompilationTest(dataarray) {
+	unitTesting=true;
+	levelString=dataarray[0];
+	recordedErrorStrings=dataarray[1];
+	
+	errorStrings = [];
+	errorCount=0;
+
+	try{
+		compile(["restart"],levelString);
+	} catch (error){
+		console.log(error);
+	}
+
+	var strippedErrorStrings = errorStrings.map(stripHTMLTags);
+
+	var i_recorded=0;
+	var i_simulated=0;
+	for (i_simulated=0;i_simulated<strippedErrorStrings.length && i_recorded<recordedErrorStrings.length;i_simulated++){
+		var simulated_error = strippedErrorStrings[i_simulated].replace(/\s/g, '');
+		var recorded_error = recordedErrorStrings[i_recorded].replace(/\s/g, '');//html replaces '  ' with ' ', so I'm just comparing stripping all spaces lol.
+		if (simulated_error===recorded_error){
+			i_recorded++;
+		}
+	}
+
+	if (i_recorded<recordedErrorStrings.length){
+		return false;
+	}
+	return true;
+}
