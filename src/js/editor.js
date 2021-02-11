@@ -35,6 +35,7 @@ var editor = window.CodeMirror.fromTextArea(code, {
 	styleActiveLine: true,
 	extraKeys: {
 		"Ctrl-/": "toggleComment",
+		"Cmd-/": "toggleComment",
 		"Esc":CodeMirror.commands.clearSearch
 		}
 	});
