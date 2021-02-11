@@ -45,7 +45,7 @@ function dumpTestCase() {
 		//compiler error data
 		var levelDat = compiledText;
 		var errorStrings_stripped = errorStrings.map(stripHTMLTags);
-		var resultarray = [levelDat,errorStrings_stripped];
+		var resultarray = [levelDat,errorStrings_stripped,errorCount];
 		var resultstring = JSON.stringify(resultarray);
 		consolePrint("<br>Compilation error/warning data (for error message tests - errormessage_testdata.js):<br><br><br>"+resultstring+"<br><br><br>",true);
 	}

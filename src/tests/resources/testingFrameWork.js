@@ -55,8 +55,8 @@ function runTest(dataarray) {
 function runCompilationTest(dataarray) {
 	unitTesting=true;
 	levelString=dataarray[0];
-	recordedErrorStrings=dataarray[1];
-	
+	var recordedErrorStrings=dataarray[1];
+	var recordedErrorCount=dataarray[2];
 	errorStrings = [];
 	errorCount=0;
 
@@ -67,6 +67,9 @@ function runCompilationTest(dataarray) {
 	}
 
 	var strippedErrorStrings = errorStrings.map(stripHTMLTags);
+	if (errorCount!==recordedErrorCount){
+		return false;
+	}
 
 	var i_recorded=0;
 	var i_simulated=0;
