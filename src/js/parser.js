@@ -1107,7 +1107,17 @@ var codeMirrorFn = function() {
                     {
                         if (sol)
                         {
-                            if (stream.match(/\p{Z}*message\p{Z}*/u, true)) {
+                            if (stream.match(/\p{Z}*message\b\p{Z}*/u, true)) {
+                                state.tokenIndex = 1;//1/2 = message/level
+                                var newdat = ['\n', mixedCase.slice(stream.pos).trim(),state.lineNumber];
+                                if (state.levels[state.levels.length - 1].length == 0) {
+                                    state.levels.splice(state.levels.length - 1, 0, newdat);
+                                } else {
+                                    state.levels.push(newdat);
+                                }
+                                return 'MESSAGE_VERB';//a duplicate of the previous section as a legacy thing for #589 
+                            } else if (stream.match(/\p{Z}*message\p{Z}*/u, true)) {//duplicating previous section because of #589
+                                logWarning("You probably meant to put a space after 'message' innit.  That's ok, I'll still interpret it as a message, but you probably want to put a space there.",state.lineNumber);
                                 state.tokenIndex = 1;//1/2 = message/level
                                 var newdat = ['\n', mixedCase.slice(stream.pos).trim(),state.lineNumber];
                                 if (state.levels[state.levels.length - 1].length == 0) {
