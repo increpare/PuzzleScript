@@ -41,14 +41,12 @@ function stripHTMLTags(html_str){
 }
 
 function dumpTestCase() {
-	if (errorStrings.length>0) {
-		//compiler error data
-		var levelDat = compiledText;
-		var errorStrings_stripped = errorStrings.map(stripHTMLTags);
-		var resultarray = [levelDat,errorStrings_stripped,errorCount];
-		var resultstring = JSON.stringify(resultarray);
-		consolePrint("<br>Compilation error/warning data (for error message tests - errormessage_testdata.js):<br><br><br>"+resultstring+"<br><br><br>",true);
-	}
+	//compiler error data
+	var levelDat = compiledText;
+	var errorStrings_stripped = errorStrings.map(stripHTMLTags);
+	var resultarray = [levelDat,errorStrings_stripped,errorCount];
+	var resultstring = JSON.stringify(resultarray);
+	consolePrint("<br>Compilation error/warning data (for error message tests - errormessage_testdata.js):<br><br><br>"+resultstring+"<br><br><br>",true);
 
 	
 	//normal session recording data
