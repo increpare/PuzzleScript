@@ -1,7 +1,7 @@
 /*
 credits
 
-brunt of the work by stephen lavelle (www.increpare.com)
+brunt of the work by increpare (www.increpare.com)
 
 all open source mit license blah blah
 
