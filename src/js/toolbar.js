@@ -70,9 +70,32 @@ function saveClick() {
 	setEditorClean();
 
 	consolePrint("saved file to local storage",true);
+
+	if (window.location.href.indexOf("?hack")>=0){
+		var currURL= window.location.href; 
+		var afterDomain= currURL.substring(currURL.lastIndexOf('/') + 1);
+		var beforeQueryString= afterDomain.split("?")[0];  
+ 
+		window.history.pushState({}, document.title, "./" +beforeQueryString);
+	}
+	//clear parameters from url bar if any present
+
 }
 
+window.addEventListener( "pageshow", function ( event ) {
+	var historyTraversal = event.persisted || 
+						   ( typeof window.performance != "undefined" && 
+								window.performance.navigation.type === 2 );
+	if ( historyTraversal ) {
+	  // Handle page restore.
+	  window.location.reload();
+	}
+  });
 
+window.addEventListener("popstate", function(event){
+	console.log("hey");
+	location.reload();
+});
 
 function loadDropDownChange() {
 
