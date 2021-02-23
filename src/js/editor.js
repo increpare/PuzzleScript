@@ -121,6 +121,10 @@ function tryLoadGist(id) {
 
 	consolePrint("Contacting GitHub",true);
 	var githubHTTPClient = new XMLHttpRequest();
+	var oauthAccessToken = window.localStorage.getItem("oauth_access_token");
+	if (typeof oauthAccessToken === "string") {
+		githubHTTPClient.setRequestHeader("Authorization","token "+oauthAccessToken);
+	}
 	githubHTTPClient.open('GET', githubURL);
 	githubHTTPClient.onreadystatechange = function() {
 	
