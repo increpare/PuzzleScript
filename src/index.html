@@ -106,29 +106,16 @@ PuzzleScript is an open-source HTML5 puzzle game engine.
 
   <div class="col-lg-12" style="text-align:center">
   <p>
-    <a href="https://puzzlescriptgallery.tumblr.com" class="btn btn-default btn-lg">Gallery</a>
+    <a href="./Gallery/index.html" class="btn btn-default btn-lg">Gallery</a>
     <p>
   </div>
     </div> <!-- /container -->
 
 
-<div id="elementId" style="display:none">
-<script type="text/javascript" src="https://puzzlescriptgallery.tumblr.com/js?num=50"></script>
-</div>
+<script type="text/javascript" src="games_dat.js"></script>
 
 
 <script>
-function getElementsWithClass(tagName,matchClass) {
-    var elems = document.getElementsByTagName(tagName), i;
-    var result=[];
-    for (i in elems) {
-        if((' ' + elems[i].className + ' ').indexOf(' ' + matchClass + ' ')
-                > -1) {
-            result.push(elems[i]);
-        }
-    }
-    return result;
-}
 
 function shuffle(array) {
   var currentIndex = array.length
@@ -155,15 +142,12 @@ function shuffle(array) {
 function replaceContent() {
   var columns = [document.getElementById('col_1'),document.getElementById('col_2'),document.getElementById('col_3')];
 
-  var items = getElementsWithClass('li','tumblr_photo_post');
-  var postbody = getElementsWithClass('ol','tumblr_posts')[0];
 
   var data = [];
-  for (var i=0;i<items.length;i++) {
-    var item=items[i];
-    imgurl = item.getElementsByTagName('img')[0].src;
-    captionurl = item.getElementsByTagName('div')[0].children[0].children[0].href;
-    data.push([imgurl,captionurl]);
+  for (var i=0;i<games_gallery.length;i++) {
+    item=games_gallery[i];
+    imgurl = "./Gallery/gifs/"+item.thumb;
+    data.push([imgurl,item.url]);
   }
   data = shuffle(data);
   for (var i=0;i<columns.length;i++)
@@ -171,7 +155,7 @@ function replaceContent() {
     var dat = data[i];
     columns[i].innerHTML='<div class="imgcontainer"><a href="'+dat[1]+'"><div class="center-cropped" style="background-image: url(\''+dat[0]+'\');"></div>​</a></class>';
   }
-  postbody.parentElement.removeChild(postbody);
+
 }
 
 replaceContent();
