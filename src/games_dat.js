@@ -450,5 +450,17 @@ var games_gallery = [
   {
     "url": "https://www.puzzlescript.net/play.html?p=8ba10d6a0a5a0edd640e0b9431858259",
     "thumb": "8ba10d6a0a5a0edd640e0b9431858259.gif"
-  }
+  },
+  { 
+    "url": "https://www.puzzlescript.net/play.html?p=35861399c74d3f57f39aaf64daadde65",
+    "thumb": "35861399c74d3f57f39aaf64daadde65.gif"
+  },
+  {
+    "url": "https://thinkycollective.itch.io/ahoist-cratey",
+    "thumb": "ahoist.gif"
+  },
+  {
+    "url": "https://www.puzzlescript.net/play.html?p=2fe3172d2b9fe684977d184f1b6226d5",
+    "thumb":"2fe3172d2b9fe684977d184f1b6226d5.gif"
+  },
 ]
