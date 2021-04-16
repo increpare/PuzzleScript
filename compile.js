@@ -10,6 +10,8 @@ npm i tar  html-minifier-terser ycssmin  google-closure-compiler concat  pngcrus
 */
 
 var fs = require("fs");
+var path = require('path');
+
 
 var lines = fs.readFileSync(".build/buildnumber.txt",encoding='utf-8');
 var buildnum = parseInt(lines);
@@ -71,6 +73,20 @@ new Inliner('./src/standalone.html', function (error, html) {
         const {execFileSync} = require('child_process');
         const gifsicle = require('gifsicle');
         
+        console.log('Optimizing gallery gifs');
+
+        const galGifDir = "./bin/Gallery/gifs";
+
+        fs.readdirSync(galGifDir).forEach(file => {
+          if (fs.lstatSync(path.resolve(galGifDir, file)).isDirectory()) {
+          } else {
+            if (path.extname(file).toLowerCase()=== ".gif"){
+                execFileSync(gifsicle, ['--batch','-O2',galGifDir+"/"+file])
+            }
+          }
+        });
+
+
         console.log('Optimizing documentation gifs');
         
         var glob = require("glob")
