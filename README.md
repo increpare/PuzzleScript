@@ -7,7 +7,7 @@ If you add `enable_level_select` to your game's prelude, you will get
 a level select screen. Slighly more advanced options are available, see
 the [documentation](https://pancelor.github.io/PuzzleScript/Documentation/levels.html)
 
-Try it out at https://pancelor.github.io/PuzzleScript/
+Try it out at https://pancelor.github.io/PuzzleScript/src/
 
 -----
 
