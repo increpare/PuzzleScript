@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="shortcut icon" type="image/x-icon" href="ico/favicon.ico" />
+
+    <title>Frequently Asked Questions - PuzzleScript Documentation</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="css/bootstrap.css" rel="stylesheet">
+
+    <!-- Custom styles for this template -->
+    <link href="css/bootstrap-theme.css" rel="stylesheet">
+
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+      <script src="../../assets/js/html5shiv.js"></script>
+      <script src="../../assets/js/respond.min.js"></script>
+    <![endif]-->
+  </head>
+
+  <body>
+
+    <div class="navbar navbar-inverse navbar-fixed-top">
+      <div class="container">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="../index.html"><img src="../images/mascot_colorful.png"> PuzzleScript</a>
+        </div>
+        <div class="collapse navbar-collapse">
+          <ul class="nav navbar-nav">
+              <li><a href="../editor.html">Make A Game</a></li>
+              
+              <li class="active"><a href="documentation.html">Documentation</a></li>
+          </ul>          
+          <ul class="nav navbar-nav navbar-right">
+            <li><a href="https://github.com/sponsors/increpare">Sponsor</a></li>
+            <li><a href="about.html">About</a></li>
+          </ul>
+        </div><!--/.nav-collapse -->
+      </div>
+    </div>
+
+    <div class="container">
+
+
+<h1>Frequently Asked Questions</h1>
+<p>
+<dl>
+	<dt>I have an idea for feature X!</dt>
+	<dd>Not a question.  Let me know about your ideas, for sure!  For making an engine like this, while I have a lot of discretion for random crap, my main philosophy is to not add anything unless:
+  <p>
+	<ul>
+	<li>It would be useful in 2 or more possible games.</li>
+	<li>Someone wants to use it in a game they're actually making.</li>
+  <li>It excites me.</li></ul>
+	Of course, the project is open source + <a href="https://github.com/increpare/PuzzleScript">on GitHub</a>, so you are <em>warmly</em> welcome to fork it and add your own features.  I'd love to see how other people could snazz it up : )
+	</dd>
+	<dt>I have an idea for a puzzle game, but it's not suited to PuzzleScript</dt>
+	<dd>
+  <p>You're right, PuzzleScript isn't a universal puzzle game-making tool. It's best for <em>turn-based</em>, <em>keyboard-controlled</em> games where you're moving a thing, or several things around.  It would be neat to mod it to allow for mouse-controlled games - I'm a giant fan of <a href="http://qrostar.skr.jp/index.cgi?page=jelly&lang=en">qrostar</a>'s games.
+	<p>
+  I'm a bit burned out on this right now.  I've been working on the engine for a couple of weeks, energy levels, and in order to reenergize I need to see people make good use of what's in there.  Adding mouse-controller support wouldn't be that hard, actually, but I'll need some encouragement.
+	<p>
+	Ditto the above to realtime stuff, animations/smooth movement between frames, what have you.  All very reasonable possibilities.  I just have to see where things go.</dd>
+	<dt>The editor is crazy ugly.</dt>
+	<dd>Not a question. If you want to try reskinning it, I'd love to see what you could do.  It's all controlled in css (in midnight.css), so knock yourself out.  You should work on the <a href="https://github.com/increpare/puzzlescript">source</a>, rather than the raw webpage on puzzlescript.net, which is heavily compiled, and won't make much sense.</dd>
+	<dt>Can I turn my games into standalone executables?</dt>
+	<dd>I had originally intended to make a very simple cross-platform standalone client for PuzzleScript.  However, the core engine is still in flux, and it wouldn't be a good idea to write a totally separate interpreter for PuzzleScript machine code in a different language, it'd be too much fuss to keep a separate C implemention of PuzzleScript synchronised with the main one.  But if <em>you</em> want to try to do so, knock yourself out : )</dd>
+	<dt>Can I run the editor offline?</dt>
+	<dd>You can download an uncompressed version of the site from <a href="https://github.com/increpare/PuzzleScript">GitHub</a>, and that should work okay offline, except for exporting standalone versions of the games (it has some optimizations that stop it from working when the webpage is run from your hard-disk), and sharing.  It also won't share saves with the online version.</dd>
+	<dt>Why no music?</dt>
+	<dd>There is music! Search for youtube in the <a href="prelude.html">prelude</a> page.</dd>
+</dl>
+
+    </div><!-- /.container -->
+
+
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="js/jquery.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+  </body>
+</html>

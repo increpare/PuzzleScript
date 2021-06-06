@@ -1,0 +1,137 @@
+@font-face
+{
+	font-family: "Source Sans Pro";
+	font-style: normal;
+	font-weight: 400;
+	src: 
+	 local('Source Sans Pro'),
+	 local('SourceSansPro-Regular'), 
+	 url("../fonts/SourceSansPro-Regular.woff") format('woff'),
+	 url("../fonts/SourceSansPro-Regular.ttf") format('truetype');
+}
+
+
+@font-face {
+	font-family: 'Glyphicons Halflings';
+	src: url('../fonts/glyphicons-halflings-regular.eot');
+	src: url('../fonts/glyphicons-halflings-regular.eot?#iefix') format('embedded-opentype'), url('../fonts/glyphicons-halflings-regular.woff') format('woff'), url('../fonts/glyphicons-halflings-regular.ttf') format('truetype'), url('../fonts/glyphicons-halflings-regular.svg#glyphicons-halflingsregular') format('svg');
+  }
+
+BODY, HTML
+{
+	margin: 0;
+	padding: 0;
+	height: 100%;
+}
+SECTION, ARTICLE
+{
+	display: block;
+	padding: 0;
+}
+BODY
+{
+	background: black;
+	font-family: "Source Sans Pro", Helvetica, Arial, sans-serif;
+	line-height: 1.5;
+}
+P
+{
+	margin-top: 0;
+}
+H2, H3
+{
+	color: #ffffff;
+	font-weight: normal;
+	text-decoration: underline;
+	margin-bottom: 0.7em;
+	display: inline;
+}
+FORM
+{
+	display: inline;
+}
+H2
+{
+	font-size: 120%;
+}
+H3
+{
+	font-size: 110%;
+}
+ARTICLE > H2:first-child, SECTION:first-child > H2
+{
+	margin-top: 0;
+}
+A, A:visited, A:link, .quasilink
+{
+	color: #e06f8b;
+}
+.quasilink
+{
+	cursor: pointer;
+}
+ARTICLE
+{
+	margin: 0 auto;
+	padding: 0px;
+	border: 0px;
+	background: #2A363B;
+	z-index: 2;
+	position: relative;
+	min-height: 100%;
+	box-sizing: border-box;
+	-moz-box-sizing: border-box;
+}
+SECTION
+{
+	border-top: 1px solid #E84A5F;
+	margin: 1.5em 0;
+}
+SECTION.first
+{
+	border: none;
+	margin-top: 0;
+}
+#demo
+{
+	position: relative;
+}
+#demolist
+{
+	position: absolute;
+	right: 5px;
+	top: 5px;
+	z-index: 25;
+}
+TH
+{
+	text-decoration: underline;
+	font-weight: normal;
+	text-align: left;
+}
+.rel
+{
+	margin-bottom: 0;
+}
+.rel-note
+{
+	margin-top: 0;
+	color: #2A363B;
+}
+PRE
+{
+	padding-left: 15px;
+}
+CODE
+{
+	padding: 0 2px;
+}
+STRONG
+{
+	text-decoration: underline;
+	font-weight: normal;
+}
+.field
+{
+	border: 1px solid #E84A5F;
+}

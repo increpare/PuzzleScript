@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="shortcut icon" type="image/x-icon" href="ico/favicon.ico" />
+
+    <title>Level Editor - PuzzleScript Documentation</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="css/bootstrap.css" rel="stylesheet">
+
+    <!-- Custom styles for this template -->
+    <link href="css/bootstrap-theme.css" rel="stylesheet">
+
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+      <script src="../../assets/js/html5shiv.js"></script>
+      <script src="../../assets/js/respond.min.js"></script>
+    <![endif]-->
+  </head>
+
+  <body>
+
+    <div class="navbar navbar-inverse navbar-fixed-top">
+      <div class="container">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="../index.html"><img src="../images/mascot_colorful.png"> PuzzleScript</a>
+        </div>
+        <div class="collapse navbar-collapse">
+          <ul class="nav navbar-nav">
+              <li><a href="../editor.html">Make A Game</a></li>
+              
+              <li class="active"><a href="documentation.html">Documentation</a></li>
+          </ul>          
+          <ul class="nav navbar-nav navbar-right">
+            <li><a href="https://github.com/sponsors/increpare">Sponsor</a></li>
+            <li><a href="about.html">About</a></li>
+          </ul>
+        </div><!--/.nav-collapse -->
+      </div>
+    </div>
+
+    <div class="container">
+
+
+<p>
+<ol class="breadcrumb">
+  <li><a href="documentation.html">Documentation</a></li>
+  <li class="active">Level Editor</li>
+</ol>
+<p>
+<h1>The Level Editor</h1>
+<p>
+In addition to editing the levels as text files, which is good for small modifications, there's a level editor.  Just click the level editor button in the toolbar and you'll switch to editor mode in-game -
+<p>
+<img src="images/leveleditor.png">
+<p>
+You can left click to select tiles in the toolbar (the tiles are generated from the 1-letter object types defined in the legend and elsewhere - basically anything you can put on a map is displayed on top in the level editor), and also to paint them in the main window. (Right click, or CTRL/CMD+click to delete).
+<p>
+You can also use the number keys <b>1</b> to <b>0</b> on your keyboard to select tiles.
+<p>
+If you hover to the borders, a + symbol appears
+<p>
+<img src="images/editorplus.png">
+<p>
+If you left click it'll add an extra row/column to that side.  If you right-click, it'll remove one.
+<p>
+<img src="images/editorsave.png">
+<p>
+Click the <b>S</b> button to save the output to your console, where you can paste it back in the level section if you want.  
+<p>
+<img src="images/editoroutput.png">
+<p>
+If you've messed with the map so that it's not in a state that can be converted faithfully into single-character glyphs, the editor will output the closest approximation it can find.
+<p>
+Tip: you can press the <b>E</b> key while playing the game in the editor to toggle the level editor.  If you press R, it resets to the last time the editor was toggled.
+<p>
+Also, if you hold CTRL (or, on a Mac, CMD) and left click on the text of a level in the script editor or the console, it will load it in game.
+<p>
+    </div><!-- /.container -->
+
+
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="js/jquery.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+  </body>
+</html>

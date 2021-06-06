@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="shortcut icon" type="image/x-icon" href="ico/favicon.ico" />
+
+    <title>Rules 101 - PuzzleScript Documentation</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="css/bootstrap.css" rel="stylesheet">
+
+    <!-- Custom styles for this template -->
+    <link href="css/bootstrap-theme.css" rel="stylesheet">
+
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+      <script src="../../assets/js/html5shiv.js"></script>
+      <script src="../../assets/js/respond.min.js"></script>
+    <![endif]-->
+  </head>
+
+  <body>
+
+    <div class="navbar navbar-inverse navbar-fixed-top">
+      <div class="container">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>         
+          <a class="navbar-brand" href="../index.html"><img src="../images/mascot_colorful.png"> PuzzleScript</a>
+        </div>
+        <div class="collapse navbar-collapse">
+          <ul class="nav navbar-nav">
+              <li><a href="../editor.html">Make A Game</a></li>
+              
+              <li class="active"><a href="documentation.html">Documentation</a></li>
+          </ul>          
+          <ul class="nav navbar-nav navbar-right">
+            <li><a href="https://github.com/sponsors/increpare">Sponsor</a></li>
+            <li><a href="about.html">About</a></li>
+          </ul>
+        </div><!--/.nav-collapse -->
+      </div>
+    </div>
+
+    <div class="container">
+
+
+<p>
+<ol class="breadcrumb">
+  <li><a href="documentation.html">Documentation</a></li>
+  <li class="active">Rules 101</li>
+</ol>
+<p>
+
+
+
+<h2>Rules 101</h2>
+<p>
+PuzzleScript is a game engine designed to help you make tile-based puzzle games.  The most famous tile-based puzzle game is sokoban:
+<p>
+<img src="images/sokoban.gif">
+<p>
+Sokoban has one rule:
+<ul>
+<li>If a player is trying to walk into a crate, try to push that crate.</li>
+</ul>
+<p>
+PuzzleScript allows you to express this succinctly:
+<p>
+<pre><code><a href="../editor.html?demo=sokoban_basic" target="puzzleScript_EditorWindow" class="btn btn-default pull-right" ><span class="glyphicon glyphicon-cog"> Edit</span></a>[ > Player | Crate ] -> [ > Player | > Crate ]</code></pre>
+<p>
+The engine looks for the pattern on the left, and replaces it with the one on the right.  
+<p>
+<b>></b> is a directional arrow.  The four arrows are <b>&lt;</b>, <b>></b>, <b>^</b>, and <b>v</b>.
+<p>
+Let's play with the above line of code - what would happen if we changed the direction of the arrows?
+<p>
+<pre><code><a href="../editor.html?demo=sokoban_sticky" target="puzzleScript_EditorWindow" class="btn btn-default pull-right" ><span class="glyphicon glyphicon-cog"> Edit</span></a>[ &lt; Player | Crate ] -> [ &lt; Player | &lt; Crate ]</code></pre>
+<p>
+Now, the crates stick to you you when you move away from them!
+<p>
+<img src="images/sokoban_reversed.gif">
+<p>
+The engine works like this:
+<p>
+<ol>
+<li>The player is marked as being someone who wants to move</li>
+<li>Each of your rules is applied as often as it can be.</li>
+<li>Movement happens.</li>
+<li>An optional extra stage for rules you want to apply at the very end.</li>
+</ol>
+<p>
+What might you want to do after movements have been applied?  Say you want three crates in a row to vanish (a la <a href="http://dl.dropboxusercontent.com/u/4452540/locklake/index.html">block faker</a>), you do this by adding the following rule:
+<p>
+<pre><code><a href="../editor.html?demo=sokoban_match3" target="puzzleScript_EditorWindow" class="btn btn-default pull-right" ><span class="glyphicon glyphicon-cog"> Edit</span></a>late [ Crate | Crate | Crate ] -> [ | | ]</code></pre>
+<p>
+<img src="images/sokoban_match3.gif">
+<p>
+If the late keyword wasn't there, the crates wouldn't disappear until the start of the next turn.
+<p>
+Let's have spooky eyeballs that follow you around.
+<p>
+<pre><code><a href="../editor.html?demo=sokoban_eyeball" target="puzzleScript_EditorWindow" class="btn btn-default pull-right" ><span class="glyphicon glyphicon-cog"> Edit</span></a>[ Eyeball | ... | Player ] -> [ > Eyeball | ... | Player ]</code></pre>
+<p>
+<img src="images/eyefollow.gif">
+<p>
+Here's a naughty teleport sprite - whenever she sees you she swaps places with you:
+<p>
+<pre><code>late [ Sprite | ... | Player ] -> [ Player | ... | Sprite ]</code></pre>
+<p>
+<em>No wait!  Don't type that in!</em> It causes an infinite loop, it keeps swapping them back and forth forever.  This fixes it:
+<p>
+<pre><code><a href="../editor.html?demo=naughtysprite" target="puzzleScript_EditorWindow" class="btn btn-default pull-right" ><span class="glyphicon glyphicon-cog"> Edit</span></a>late [ Sprite | ... | Player ] -> [ Temp | ... | Sprite ]
+late [ Temp ] -> [ Player ]</code></pre>
+<p>
+<img src="images/sokoban_fairy.gif">
+<p>
+What if you're <a href="http://www.lexaloffle.com/neko.htm">a kitty that likes fruit?</a>
+<p>
+<pre><code><a href="../editor.html?demo=nekopuzzle" target="puzzleScript_EditorWindow" class="btn btn-default pull-right" ><span class="glyphicon glyphicon-cog"> Edit</span></a>[ > Kitty | ... | Fruit ] -> [ | ... | Kitty ]
+[ > Kitty ] -> [ Kitty ]</code></pre>
+<p>
+The second line is because we are moving the kitty ourselves, and don't want the game engine letting kitty wander about.
+<p>
+<img src="images/nekopuzzle.gif">
+<p>
+What if you want crates that can only be pushed horizontally? 
+<p>
+<pre><code><a href="../editor.html?demo=sokoban_horizontal" target="puzzleScript_EditorWindow" class="btn btn-default pull-right" ><span class="glyphicon glyphicon-cog"> Edit</span></a>Horizontal [ > Player | Block ] -> [ > Player | > Block ]</code></pre>
+<p>
+This only looks for occurrences of the pattern that are horizontal. You could also say vertical instead.
+<p>
+<img src="images/horizontalblock.gif">
+<p>
+You can have several patterns rather than just a single row - here's a sumo wrestler that imitates whatever you do, whever you are:
+<p>
+<pre><code><a href="../editor.html?demo=sumo" target="puzzleScript_EditorWindow" class="btn btn-default pull-right" ><span class="glyphicon glyphicon-cog"> Edit</span></a>[ > Player ] [ Sumo ] -> [ > Player ] [ > Sumo ]</code></pre>
+<p>
+<img src="images/sumo.gif">
+<p>
+That about covers all the basics.  You should be able to tinker with the examples now.  There's <a href="documentation.html">plenty more</a> to read if you want to, but I would advise to learn the rest on a need-to-know basis.  There're no prizes for knowing all the nooks and crannies of PuzzleScript - it's a tool for making games, and if you're not doing that with it, then the engine has failed in its purpose.
+<p>
+<a href="../editor.html">Make some games!</a>
+<p>
+
+    </div><!-- /.container -->
+
+
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="js/jquery.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+  </body>
+</html>

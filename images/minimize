@@ -1,6 +1,0 @@
-FILES=*.png
-
-for f in $FILES
-do
-	pngcrush -rem allb -brute -reduce $f ../../bin/images/$f &> /dev/null
-done

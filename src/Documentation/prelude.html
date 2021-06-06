@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="shortcut icon" type="image/x-icon" href="ico/favicon.ico" />
+
+    <title>Prelude - PuzzleScript Documentation</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="css/bootstrap.css" rel="stylesheet">
+
+    <!-- Custom styles for this template -->
+    <link href="css/bootstrap-theme.css" rel="stylesheet">
+
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+      <script src="../../assets/js/html5shiv.js"></script>
+      <script src="../../assets/js/respond.min.js"></script>
+    <![endif]-->
+  </head>
+
+  <body>
+
+    <div class="navbar navbar-inverse navbar-fixed-top">
+      <div class="container">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="../index.html"><img src="../images/mascot_colorful.png"> PuzzleScript</a>
+        </div>
+        <div class="collapse navbar-collapse">
+          <ul class="nav navbar-nav">
+              <li><a href="../editor.html">Make A Game</a></li>
+              
+              <li class="active"><a href="documentation.html">Documentation</a></li>
+          </ul>          
+          <ul class="nav navbar-nav navbar-right">
+            <li><a href="https://github.com/sponsors/increpare">Sponsor</a></li>
+            <li><a href="about.html">About</a></li>
+          </ul>
+        </div><!--/.nav-collapse -->
+      </div>
+    </div>
+
+    <div class="container">
+
+
+
+<p>
+<ol class="breadcrumb">
+  <li><a href="documentation.html">Documentation</a></li>
+  <li>Bird's-eye View</li>
+  <li class="active">Prelude</li>
+</ol>
+<p>
+
+
+<h1>Bird's-eye view of a PuzzleScript file</h1>
+<p>
+A puzzlescript file is divided into 8 sections:
+<p>
+
+  <ul class="nav nav-pills">
+    <li class="active"><a href="prelude.html">Prelude</a></li>
+    <li><a href="objects.html">Objects</a></li>
+    <li><a href="legend.html">Legend</a></li>
+    <li><a href="sounds.html">Sounds</a></li>
+    <li><a href="collisionlayers.html">CollisionLayers</a></li>
+    <li><a href="rules.html">Rules</a></li>
+    <li><a href="winconditions.html">WinConditions</a></li>
+    <li><a href="levels.html">Levels</a></li>
+  </ul>
+
+
+
+    <h2>Prelude</h2>
+      <p>
+      Before any of the "official" sections are declared, you can give details about your project in this section, and also set some editor options.
+      <p>
+      <pre><code>title 2D Whale World
+author increpare
+homepage www.increpare.com
+
+require_player_movement
+key_repeat_interval 0.12
+</code></pre>
+
+Here are the possible options:
+		<p>
+		<dl>
+			<dt>author increpare</dt>
+			<dd>Your name goes here.  This will appear in the title screen of the game.</dd>
+			<dt>color_palette mastersystem</dt>
+			<dd>By default, when you use colour names, they are pulled from a variation of <a href="http://androidarts.com/palette/16pal.htm">Arne</a>'s 16-Colour palette.  However, there are other palettes to choose from:
+			<p>
+<ul>
+<li>1 - mastersystem </li>
+<li>2 - gameboycolour </li>
+<li>3 - amiga </li>
+<li>4 - arnecolors </li>
+<li>5 - famicom  </li>
+<li>6 - atari </li>
+<li>7 - pastel  </li>
+<li>8 - ega </li>
+<li>9 - amstrad </li>
+<li>10 - proteus_mellow </li>
+<li>11 - proteus_rich </li>
+<li>12 - proteus_night </li>
+<li>13 - c64 </li>
+<li>14 - whitingjp </li>
+</ul>
+<p>
+(you can also refer to them by their numerical index)
+			</dd>
+      <dt>again_interval 0.1</dt>      
+      <dd>The amount of time it takes an 'again' event to trigger.</dd>
+      <dt>background_color blue</dt>
+      <dd>Can accept a color name or hex code (in the form #412bbc). Controls the background color of title/message screens, as well as the background color of the website.  Text_color is its sibling.</dd>
+			<dt>debug</dt>
+			<dd>This outputs the compiled instructions whenever you build your file.  For instance, the line
+			<p>
+			<pre><code>[ > Player | Crate ] -> [ > Player | > Crate ]</code></pre>
+			<p>
+			is compiled into four instructions, as the output from debug shows:
+			<pre>Rule Assembly : (4 rules )
+===========
+(52) UP [ up player | crate ] -> [ up player | up crate ] 
+(52) DOWN [ down player | crate ] -> [ down player | down crate ] 
+(52) LEFT [ left player | crate ] -> [ left player | left crate ] 
+(52) RIGHT [ right player | crate ] -> [ right player | right crate ] 
+===========</pre>
+			the number on the far left is the group number of the disassembled - based on the line-number of the rules.  The compilation step removes all relative directions ( <b>^</b>, <b>v</b>, <b>&lt;</b>, and <b>></b>), and replaces them with <b>UP</b>, <b>DOWN</b>, <b>LEFT</b>, and <b>RIGHT</b>.
+			</dd>
+
+			<dt>flickscreen WxH</dt>
+			<dd>
+				Setting flickscreen divides each level into WxH grids, and zooms the camera in so that the player can only see one at a time - the camera does not follow the player around on a move-to-move basis, but if the player moves from one part of this grid to another, the camera <em>flicks</em> to the new position.
+			</dd>
+			<dt>homepage www.mypage.com</dt>
+			<dd>
+			The homepage of the author.  This doesn't appear directly in the game itself, but is included in the exported HTML build.
+			</dd>
+			<dt>key_repeat_interval 0.1</dt> 
+			<dd>
+			When you hold down a key, how long is the delay between repeated presses getting sent to the game (in seconds)?
+			</dd>
+      <dt>noaction</dt>
+      <dd>Hides the action key (X) instruction from the title screen, and does not respond when the player pressed it (outside of menus and cutscenes and the like).</dd>
+      <dt>norepeat_action</dt>
+      <dd>For many games, you don't want holding action down to retrigger it - games where you're toggling a switch, say.  For these games, set norepeat_action, and the action button will only respond to individual presses.</dd>
+			<dt>noundo</dt>
+			<dd>Disables the undo key (Z)</dd>
+			<dt>norestart</dt>
+			<dd>Disables the restart key (R)</dd>
+      <dt>realtime_interval</dt> 
+      <dd>The number indicates how long each realtime frame should be.  In the above case, twice a second the game engine will tick, but with no input.  Player input is processed as regular. See <a href="realtime.html">this documentation</a> for more info on making realtime games.</dd>     
+			<dt>require_player_movement</dt>
+			<dd>
+			This is a common requirement in games - if the player doesn't move, cancel the whole move.  This is equivalent, where there's only one player character, to the following:
+			<pre><code>[Player]->[Player Temp]
+late [ Player Temp ] -> CANCEL
+late [ Temp ] -> [ ]</code></pre>
+			</dd>
+			<dt>run_rules_on_level_start</dt>
+			<dd>
+			For some games, you will want, before the player sees the level, for the rules to be applied once.
+			</dd>
+      <dt>scanline</dt>
+      <dd>Applies a scanline visual effect - only draws every other line</dd>      
+      <dt>text_color blue</dt>
+      <dd>Can accept a color name or hex code (in the form #412bbc). Controls the font color of title/message screens, as well as the font color in the website. Background_color is its sibling.</dd>
+			<dt>title My Amazing Puzzle Game</dt>
+			<dd>The name of your game.  Appears on the title screen.</dd>
+      <dt>throttle_movement</dt>
+      <dd>For use in conjunction with realtime_interval - this stops you from moving crazy fast - repeated keypresses of the same movement direction will not increase your speed. This doesn't apply to the action button.  If you can think of an example that requires action be throttled, just let me know and I'll try accommodate you.</dd>
+      <dt>verbose_logging</dt>
+      <dd>As you play the game, spits out information about all rules applied as you play:<p>
+      <img src="images/verbose_logging.png"></dd>
+      <dt>youtube 5MJLi5_dyn0</dt>
+      <dd>If you write the youtube tag followed by the ID of a youtube video, it will play in the background.  Exported builds using this, obviously enough, will no longer be fully self-contained, but some might like it :)  You'll only hear the music in the exported or shared versions, not in the editor.</dd>
+			<dt>zoomscreen WxH</dt>
+			<dd>Zooms the camera in to a WxH section of the map around the player, centered on the player.</dd>
+		</dl>
+
+
+
+
+    </div><!-- /.container -->
+
+
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="js/jquery.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+  </body>
+</html>
