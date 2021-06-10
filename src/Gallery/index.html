@@ -79,10 +79,9 @@ function replaceContent() {
     item=games_gallery[i];
     imgurl = "./gifs/"+item.thumb;
     gameurl = item.url;
-    columns.innerHTML+='<div class="col-xs-4"><div class="imgcontainer"><a href="'+gameurl+'"><img class="thumbimg" src=\''+imgurl+'\';"></div>​</a></div></div>';
+    data.push('<div class="col-xs-4"><div class="imgcontainer"><a href="'+gameurl+'"><img class="thumbimg" src=\''+imgurl+'\';"></div>​</a></div></div>');
   }
-
-
+  columns.innerHTML = data.join('');
 }
 
 replaceContent();
