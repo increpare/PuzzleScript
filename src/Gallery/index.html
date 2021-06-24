@@ -16,12 +16,36 @@
     <link href="../Documentation/css/bootstrap-theme.css" rel="stylesheet">
 
     <style>
-      .thumbimg {
-        width:100%;
-        height:300px;
-        /*background-color: black;*/
-        object-fit:contain;
-      }
+  .panel {
+    border:0;
+    margin:0;
+    box-shadow:none;
+  }
+.panel-body {
+  border:0;
+  background-color: transparent;
+  padding:0;
+  text-align: center;
+}
+.panel-footer {
+  border:0;
+  background-color: transparent;
+  padding:0;
+  text-align: center;
+  margin-top: 5px;
+  margin-bottom: 20px;
+}
+.panel-body img {
+  width:100%;
+  max-height: 320px; 
+  object-fit: contain;
+  bottom:0px;
+  text-align: center;
+}
+.gamelinktitle{
+  font-weight: bold;
+}
+
       .caption{
         text-align: center;
       }
@@ -69,6 +93,16 @@
 
 <script>
 
+function escapeHtml(unsafe) {
+  console.log(unsafe);
+  return unsafe
+  .replace(/&/g, "&amp;")
+  .replace(/</g, "&lt;")
+  .replace(/>/g, "&gt;")
+  .replace(/"/g, "&quot;")
+  .replace(/'/g, "&#039;");
+}
+
 
 function replaceContent() {
   var columns = document.getElementById('gallerycontainer');
@@ -76,10 +110,16 @@ function replaceContent() {
   games_gallery.reverse();
   var data = [];
   for (var i=0;i<games_gallery.length;i++) {
-    item=games_gallery[i];
-    imgurl = "./gifs/"+item.thumb;
-    gameurl = item.url;
-    data.push('<div class="col-xs-4"><div class="imgcontainer"><a href="'+gameurl+'"><img class="thumbimg" src=\''+imgurl+'\';"></div>​</a></div></div>');
+    dat=games_gallery[i];
+    dat.imgurl = "./gifs/"+dat.thumb;
+    dat.gameurl = dat.url;
+    if (dat.hasOwnProperty("homepage")===false){
+      dat.homepage=dat.url;
+    }
+    var str ='<div class="panel panel-default"><div class="panel-body"><a href="'+dat.url+'"><img src="'+dat.imgurl+'">​</a></div><div class="panel-footer"><a class="gamelinktitle" href="'+dat.url+'">'+escapeHtml(dat.title)+'</a> by <a href="'+dat.homepage+'">'+escapeHtml(dat.author)+'</a></div></div>';
+
+
+    data.push('<div class="col-xs-4">'+str+'</div>');
   }
   columns.innerHTML = data.join('');
 }
