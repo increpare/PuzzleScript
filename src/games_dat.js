@@ -772,4 +772,11 @@ var games_gallery = [
     "title": "Pushing It",
     "author": "Jack Lance"
   },
+  {
+    "url": "https://nebu-soku.itch.io/golfshall-we-golf",
+    "thumb": "golfy.gif",
+    "title": "Shall We Golf?",
+    "author": " nebu soku",
+    "homepage": "https://nebu-soku.itch.io/"
+  },
 ]
