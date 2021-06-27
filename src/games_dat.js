@@ -776,7 +776,7 @@ var games_gallery = [
     "url": "https://nebu-soku.itch.io/golfshall-we-golf",
     "thumb": "golfy.gif",
     "title": "Shall We Golf?",
-    "author": " nebu soku",
+    "author": "nebu soku",
     "homepage": "https://nebu-soku.itch.io/"
   },
   {
