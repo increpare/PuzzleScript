@@ -270,7 +270,7 @@ var games_gallery = [
     "author": "Mark Richardson"
   },
   {
-    "url": "https://www.puzzlescript.net/play.html?p=8632255",
+    "url": "https://www.puzzlescript.net/play.html?p=6decdfe5107e7f2beee586e01680e850",
     "thumb": "8632255.gif",
     "title": "Smother",
     "author": "Team Borse"
