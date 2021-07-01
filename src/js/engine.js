@@ -2388,7 +2388,6 @@ function processInput(dir,dontDoWin,dontModify) {
 			}
 			processOutputCommands(level.commandQueue);
     		backups.push(bak);
-			messagetext = "";
     		DoUndo(true,false);
     		tryPlayCancelSound();
     		return false;
@@ -2402,7 +2401,6 @@ function processInput(dir,dontDoWin,dontModify) {
 			}
 			processOutputCommands(level.commandQueue);
     		backups.push(bak);
-			messagetext = "";
 	    	DoRestart(true);
     		return true;
 		} 
