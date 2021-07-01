@@ -780,6 +780,13 @@ var games_gallery = [
     "homepage": "https://nebu-soku.itch.io/"
   },
   {
+    "url": "https://vexorian.itch.io/boolean-bloom",
+    "thumb": "booleanbloom.gif",
+    "title": "Boolean Bloom 1.42",
+    "author": "vexorian",
+    "homepage": "https://vexorian.itch.io/"
+  },
+  {
     "url": "https://galactical.itch.io/at-the-hedges-of-time",
     "thumb": "hedges.gif",
     "title": "At the Hedges of Time",
