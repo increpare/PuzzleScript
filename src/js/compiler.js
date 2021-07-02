@@ -457,13 +457,14 @@ function levelFromString(state, level) {
 function levelsToArray(state) {
     var levels = state.levels;
     var processedLevels = [];
+    var levelSelectPoints = [];
 
     for (var levelIndex = 0; levelIndex < levels.length; levelIndex++) {
         var level = levels[levelIndex];
         if (level.length == 0) {
             continue;
         }
-        if (level[0] == '\n') {
+        if (level[0] == 'MESSAGE') {
 
             var o = {
                 message: level[1]
@@ -474,6 +475,11 @@ function levelsToArray(state) {
             }
 
             processedLevels.push(o);
+        } else if (level[0] == 'LEVEL_SELECT_POINT') {
+            var processedLevelsIndex = levelIndex - levelSelectPoints.length;
+            if (levelSelectPoints.length == 0 || levelSelectPoints[levelSelectPoints.length-1] != processedLevelsIndex) {
+                levelSelectPoints.push(processedLevelsIndex);
+            }
         } else {
             var o = levelFromString(state, level);
             processedLevels.push(o);
@@ -482,6 +488,25 @@ function levelsToArray(state) {
     }
 
     state.levels = processedLevels;
+    state.level_select_points = levelSelectPoints;
+}
+
+function generateLevelSelectPoints(state) {
+    if (state.level_select_points.length == 0 && 'enable_level_select' in state.metadata) {
+        // level select is enabled but no level_select_points have been set;
+        // generate a level_select_point at the start of each (message*, level) group of levels
+        var mark_next_level = true;
+        for (var levelIndex = 0; levelIndex < state.levels.length; levelIndex++) {
+            var level = state.levels[levelIndex];
+            if (mark_next_level) {
+                state.level_select_points.push(levelIndex);
+                mark_next_level = false;
+            }
+            if (!level.hasOwnProperty("message")){
+                   mark_next_level = true;
+            }
+        }
+    }
 }
 
 var directionaggregates = {
@@ -2523,7 +2548,8 @@ function loadFile(str) {
     checkObjectsAreLayered(state);
 
     twiddleMetaData(state);
-
+    generateLevelSelectPoints(state);
+    
     generateLoopPoints(state);
 
     generateSoundData(state);

@@ -3,8 +3,8 @@
 .............SOKOBAN..............
 ..................................
 ...........#.new game.#...........
-..................................
 .............continue.............
+...........level select...........
 ..................................
 arrow keys to move................
 x to action.......................
@@ -20,7 +20,7 @@ var intro_template = [
 	"..................................",
 	"......Puzzle Script Terminal......",
 	"..............v 1.7...............",
-	"..................................",
+	"........with level select.........",
 	"..................................",
 	"..................................",
 	".........insert cartridge.........",
@@ -46,8 +46,7 @@ var messagecontainer_template = [
 	".................................."
 ];
 
-var titletemplate_firstgo = [
-	"..................................",
+var titletemplate_firstgo0 = [
 	"..................................",
 	"..................................",
 	"..................................",
@@ -55,6 +54,22 @@ var titletemplate_firstgo = [
 	"..................................",
 	"..........#.start game.#..........",
 	"..................................",
+	"...........level select...........",
+	"..................................",
+	".arrow keys to move...............",
+	".X to action......................",
+	".Z to undo, R to restart..........",
+	".................................."];
+
+var titletemplate_firstgo1 = [
+	"..................................",
+	"..................................",
+	"..................................",
+	"..................................",
+	"..................................",
+	"............start game............",
+	"..................................",
+	".........#.level select.#.........",
 	"..................................",
 	".arrow keys to move...............",
 	".X to action......................",
@@ -68,8 +83,8 @@ var titletemplate_select0 = [
 	"..................................",
 	"..................................",
 	"...........#.new game.#...........",
-	"..................................",
 	".............continue.............",
+	"...........level select...........",
 	"..................................",
 	".arrow keys to move...............",
 	".X to action......................",
@@ -83,8 +98,23 @@ var titletemplate_select1 = [
 	"..................................",
 	"..................................",
 	".............new game.............",
-	"..................................",
 	"...........#.continue.#...........",
+	"...........level select...........",
+	"..................................",
+	".arrow keys to move...............",
+	".X to action......................",
+	".Z to undo, R to restart..........",
+	".................................."];
+
+var titletemplate_select2 = [
+	"..................................",
+	"..................................",
+	"..................................",
+	"..................................",
+	"..................................",
+	".............new game.............",
+	".............continue.............",
+	".........#.level select.#.........",
 	"..................................",
 	".arrow keys to move...............",
 	".X to action......................",
@@ -92,8 +122,7 @@ var titletemplate_select1 = [
 	".................................."];
 
 
-var titletemplate_firstgo_selected = [
-	"..................................",
+var titletemplate_firstgo0_selected = [
 	"..................................",
 	"..................................",
 	"..................................",
@@ -101,6 +130,22 @@ var titletemplate_firstgo_selected = [
 	"..................................",
 	"###########.start game.###########",
 	"..................................",
+	"...........level select...........",
+	"..................................",
+	".arrow keys to move...............",
+	".X to action......................",
+	".Z to undo, R to restart..........",
+	".................................."];
+
+var titletemplate_firstgo1_selected = [
+	"..................................",
+	"..................................",
+	"..................................",
+	"..................................",
+	"..................................",
+	"............start game............",
+	"..................................",
+	"##########.level select.##########",
 	"..................................",
 	".arrow keys to move...............",
 	".X to action......................",
@@ -114,8 +159,8 @@ var titletemplate_select0_selected = [
 	"..................................",
 	"..................................",
 	"############.new game.############",
-	"..................................",
 	".............continue.............",
+	"...........level select...........",
 	"..................................",
 	".arrow keys to move...............",
 	".X to action......................",
@@ -129,13 +174,28 @@ var titletemplate_select1_selected = [
 	"..................................",
 	"..................................",
 	".............new game.............",
-	"..................................",
 	"############.continue.############",
+	"...........level select...........",
 	"..................................",
 	".arrow keys to move...............",
 	".X to action......................",
 	".Z to undo, R to restart..........",
-	"................................."];
+	".................................."];
+
+var titletemplate_select2_selected = [
+	"..................................",
+	"..................................",
+	"..................................",
+	"..................................",
+	"..................................",
+	".............new game.............",
+	".............continue.............",
+	"##########.level select.##########",
+	"..................................",
+	".arrow keys to move...............",
+	".X to action......................",
+	".Z to undo, R to restart..........",
+	".................................."];
 
 var titleImage=[];
 var titleWidth=titletemplate_select1[0].length;
@@ -158,6 +218,13 @@ function unloadGame() {
 function generateTitleScreen()
 {
 	titleMode=(curlevel>0||curlevelTarget!==null)?1:0;
+    try {
+        if (!!window.localStorage) {
+            if (localStorage[document.URL+'_levelswon']!==undefined){
+                titleMode = 1;
+            }
+        }
+    } catch (ex) { }
 
 	if (state.levels.length===0) {
 		titleImage=intro_template;
@@ -170,10 +237,18 @@ function generateTitleScreen()
 	}
 
 	if (titleMode===0) {
-		if (titleSelected) {
-			titleImage = deepClone(titletemplate_firstgo_selected);		
-		} else {
-			titleImage = deepClone(titletemplate_firstgo);					
+		if (titleSelection===0) {
+			if (titleSelected) {
+				titleImage = deepClone(titletemplate_firstgo0_selected);		
+			} else {
+				titleImage = deepClone(titletemplate_firstgo0);					
+			}
+		} else if (titleSelection===1) {
+			if (titleSelected) {
+				titleImage = deepClone(titletemplate_firstgo1_selected);		
+			} else {
+				titleImage = deepClone(titletemplate_firstgo1);					
+			}						
 		}
 	} else {
 		if (titleSelection===0) {
@@ -182,18 +257,25 @@ function generateTitleScreen()
 			} else {
 				titleImage = deepClone(titletemplate_select0);					
 			}			
-		} else {
+		} else if (titleSelection===1) {
 			if (titleSelected) {
 				titleImage = deepClone(titletemplate_select1_selected);		
 			} else {
 				titleImage = deepClone(titletemplate_select1);					
 			}						
+		} else {
+			if (titleSelected) {
+				titleImage = deepClone(titletemplate_select2_selected);		
+			} else {
+				titleImage = deepClone(titletemplate_select2);					
+			}						
 		}
 	}
 
-	var noAction = 'noaction' in state.metadata;	
+	var noAction = 'noaction' in state.metadata;
 	var noUndo = 'noundo' in state.metadata;
 	var noRestart = 'norestart' in state.metadata;
+	var noLevelSelect = !('enable_level_select' in state.metadata);
 	if (noUndo && noRestart) {
 		titleImage[11]="..............................................";
 	} else if (noUndo) {
@@ -203,6 +285,10 @@ function generateTitleScreen()
 	}
 	if (noAction) {
 		titleImage[10]=".......X to select............................";
+	}
+	if (noLevelSelect) {
+		titleImage[7]="..................................";
+		titleImage[12]="..................................";
 	}
 	for (var i=0;i<titleImage.length;i++)
 	{
@@ -251,6 +337,108 @@ function generateTitleScreen()
 		}
 	}
 
+}
+
+
+var levelselect_template = [
+	"..................................",
+	"...........level select...........",
+	"..................................",
+	"..................................",
+	"..................................",
+	"..................................",
+	"..................................",
+	"..................................",
+	"..................................",
+	"..................................",
+	"..................................",
+	"..................................",
+	".................................."];
+
+var levelSelectScreen=false;
+var levelSelectCursor=0; // a real level id (i.e. no `message` level ids)
+var levelSelectSelected=false;
+
+function getLevelSelectPointForLevelId(id) {
+	if (id==null||id>state.levels.length) {
+		id=state.levels.length;
+	}
+
+	var best=0;
+	for (var pointIndex=0;pointIndex<state.level_select_points.length;pointIndex++){
+		var levelId=state.level_select_points[pointIndex];
+		if (levelId > id) {
+			break;
+		}
+		best=pointIndex;
+	}
+	return best;
+}
+
+function normalizeLevelSelectCursor() {
+	if (levelSelectCursor<0){
+		levelSelectCursor=0;
+	}
+	if (levelSelectCursor>=state.level_select_points.length){
+		levelSelectCursor=state.level_select_points.length-1;
+	}
+}
+
+function generateLevelSelectScreen() {
+	titleImage = deepClone(levelselect_template);
+
+    var levelsWon = {};
+    try {
+        if (!!window.localStorage) {
+            if (localStorage[document.URL+'_levelswon']!==undefined) {
+                var backupStr = localStorage[document.URL+'_levelswon'];
+                levelsWon = JSON.parse(backupStr);
+            }
+        }
+    } catch (ex) { }
+
+	var curlevelPoint=getLevelSelectPointForLevelId(parseInt(curlevel));
+	var pageOffset=Math.floor(levelSelectCursor/20)*20;
+	for (var i=0;i<20;i++){
+		var point=pageOffset+i;
+		if (point>=state.level_select_points.length){
+			break;
+		}
+		var colIndex=3+6*(i%5);
+		var rowIndex=3+2*Math.floor(i/5);
+		var label=""+(point+1);
+		var offset=0;
+        if (levelsWon[pageOffset+i]) {
+            label="*"+label;
+            offset=-1;
+        }
+		titleImage[rowIndex]=titleImage[rowIndex].slice(0,colIndex+offset)+label+titleImage[rowIndex].slice(colIndex+offset+label.length);
+		if (levelSelectCursor===point){
+			label="#";
+			offset=-2;
+			titleImage[rowIndex]=titleImage[rowIndex].slice(0,colIndex+offset)+label+titleImage[rowIndex].slice(colIndex+offset+label.length);
+		}
+	}
+	if (levelSelectSelected) {
+		var i=levelSelectCursor%20;
+		var colIndex=3+6*(i%5);
+		var rowIndex=3+2*Math.floor(i/5);
+		titleImage[rowIndex]="##################################";
+		var label=" "+(levelSelectCursor+1)+" ";
+		var offset=-1;
+		titleImage[rowIndex]=titleImage[rowIndex].slice(0,colIndex+offset)+label+titleImage[rowIndex].slice(colIndex+offset+label.length);
+	}
+	// if (pageOffset>0){
+	// 	titleImage[1]="...........level select...(more)..";
+	// }
+	if (pageOffset+20<state.level_select_points.length){
+		titleImage[11]="..........................(more)..";
+	}
+
+	for (var i=0;i<titleImage.length;i++)
+	{
+		titleImage[i]=titleImage[i].replace(/\./g, ' ');
+	}
 }
 
 var introstate = {
@@ -405,6 +593,9 @@ function loadLevelFromLevelDat(state,leveldat,randomseed) {
 	titleMode=(curlevel>0||curlevelTarget!==null)?1:0;
 	titleSelection=(curlevel>0||curlevelTarget!==null)?1:0;
 	titleSelected=false;
+	levelSelectScreen=false;
+	levelSelectCursor=0;
+	levelSelectSelected=false;
     againing=false;
     if (leveldat===undefined) {
     	consolePrint("Trying to access a level that doesn't exist.",true);
@@ -2482,11 +2673,13 @@ function processInput(dir,dontDoWin,dontModify) {
 				restartTarget=level4Serialization();
 				hasUsedCheckpoint=true;
 				var backupStr = JSON.stringify(restartTarget);
-				if (!!window.localStorage) {
-					localStorage[document.URL+'_checkpoint']=backupStr;
-					localStorage[document.URL]=curlevel;
-				}
-			}	 
+				try {
+					if (!!window.localStorage) {
+						localStorage[document.URL+'_checkpoint']=backupStr;
+						localStorage[document.URL]=curlevel;
+					}	 
+				} catch (ex) { }
+			}
 
 		    if (level.commandQueue.indexOf('again')>=0 && modified) {
 
@@ -2627,6 +2820,7 @@ function DoWin() {
 	}
 	againing=false;
 	tryPlayEndLevelSound();
+    markLevelWon();
 	if (unitTesting) {
 		nextLevel();
 		return;
@@ -2647,7 +2841,6 @@ function anyMovements() {
     return false;
 }*/
 
-
 function nextLevel() {
     againing=false;
 	messagetext="";
@@ -2666,6 +2859,10 @@ function nextLevel() {
 		} else {
 			loadLevelFromState(state,curlevel);
 		}
+	} else if (levelSelectScreen) {	
+		curlevel=state.level_select_points[levelSelectCursor];
+		curlevelTarget=null;
+		loadLevelFromState(state,curlevel);
 	} else {	
 		if (hasUsedCheckpoint){
 			curlevelTarget=null;
@@ -2687,13 +2884,10 @@ function nextLevel() {
 		} else {
 			try{
 				if (!!window.localStorage) {
-	
 					localStorage.removeItem(document.URL);
 					localStorage.removeItem(document.URL+'_checkpoint');
 				}
-			} catch(ex){
-					
-			}
+			} catch(ex) { }
 			
 			curlevel=0;
 			curlevelTarget=null;
@@ -2713,9 +2907,7 @@ function nextLevel() {
 				localStorage.removeItem(document.URL+"_checkpoint");
 			}		
 		}
-	} catch (ex) {
-
-	}
+	} catch (ex) { }
 
 	if (state!==undefined && state.metadata.flickscreen!==undefined){
 		oldflickscreendat=[0,0,Math.min(state.metadata.flickscreen[0],level.width),Math.min(state.metadata.flickscreen[1],level.height)];
@@ -2724,7 +2916,27 @@ function nextLevel() {
 	clearInputHistory();
 }
 
+function markLevelWon() {
+    if (!('enable_level_select' in state.metadata)) return;
+    try {
+        if (!window.localStorage) return;
+
+        var levelsWon = {};
+        if (localStorage[document.URL+'_levelswon']!==undefined){
+            var backupStr = localStorage[document.URL+'_levelswon'];
+            levelsWon = JSON.parse(backupStr);
+        }
+
+        var lsp = getLevelSelectPointForLevelId(parseInt(curlevel));
+        levelsWon[lsp] = true;
+
+        var backupStr = JSON.stringify(levelsWon);
+        localStorage[document.URL+'_levelswon']=backupStr;
+    } catch (ex) { }
+}
+
 function goToTitleScreen(){
+	levelSelectScreen=false;
     againing=false;
 	messagetext="";
 	titleScreen=true;
@@ -2734,4 +2946,15 @@ function goToTitleScreen(){
 	generateTitleScreen();
 }
 
+function goToLevelSelectScreen() {	
+	titleScreen=false;
+	titleSelection=(curlevel>0||curlevelTarget!==null)?1:0;
+	titleSelected=false;
 
+	levelSelectScreen=true;
+	levelSelectCursor=getLevelSelectPointForLevelId(parseInt(curlevel));
+	levelSelectSelected=false;
+
+	generateLevelSelectScreen();
+	redraw();
+}

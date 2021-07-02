@@ -307,6 +307,7 @@ var codeMirrorFn = function() {
               metadata : state.metadata.concat([]),
 
               levels: levelsCopy,
+              level_select_points: state.level_select_points.concat([]),
 
               STRIDE_OBJ : state.STRIDE_OBJ,
               STRIDE_MOV : state.STRIDE_MOV
@@ -1108,8 +1109,8 @@ var codeMirrorFn = function() {
                         if (sol)
                         {
                             if (stream.match(/[\p{Z}\s]*message\b[\p{Z}\s]*/u, true)) {
-                                state.tokenIndex = 1;//1/2 = message/level
-                                var newdat = ['\n', mixedCase.slice(stream.pos).trim(),state.lineNumber];
+                                state.tokenIndex = 1;//1/2/3 = message/level/level_select_point
+                                var newdat = ['MESSAGE', mixedCase.slice(stream.pos).trim(),state.lineNumber];
                                 if (state.levels[state.levels.length - 1].length == 0) {
                                     state.levels.splice(state.levels.length - 1, 0, newdat);
                                 } else {
@@ -1118,14 +1119,23 @@ var codeMirrorFn = function() {
                                 return 'MESSAGE_VERB';//a duplicate of the previous section as a legacy thing for #589 
                             } else if (stream.match(/[\p{Z}\s]*message[\p{Z}\s]*/u, true)) {//duplicating previous section because of #589
                                 logWarning("You probably meant to put a space after 'message' innit.  That's ok, I'll still interpret it as a message, but you probably want to put a space there.",state.lineNumber);
-                                state.tokenIndex = 1;//1/2 = message/level
-                                var newdat = ['\n', mixedCase.slice(stream.pos).trim(),state.lineNumber];
+                                state.tokenIndex = 1;//1/2/3 = message/level/level_select_point
+                                var newdat = ['MESSAGE', mixedCase.slice(stream.pos).trim(),state.lineNumber];
                                 if (state.levels[state.levels.length - 1].length == 0) {
                                     state.levels.splice(state.levels.length - 1, 0, newdat);
                                 } else {
                                     state.levels.push(newdat);
                                 }
                                 return 'MESSAGE_VERB';
+                            } else if (stream.match(/[\p{Z}\s]*level_select_point[\p{Z}\s]*/, true)) {
+                                state.tokenIndex = 3;//1/2/3 = message/level/level_select_point
+                                var newdat = ['LEVEL_SELECT_POINT', state.lineNumber];
+                                if (state.levels[state.levels.length - 1].length == 0) {
+                                    state.levels.splice(state.levels.length - 1, 0, newdat);
+                                } else {
+                                    state.levels.push(newdat);
+                                }
+                                return 'LEVEL_SELECT_VERB';
                             } else {
                                 var line = stream.match(reg_notcommentstart, false)[0].trim();
                                 state.tokenIndex = 2;
@@ -1155,6 +1165,11 @@ var codeMirrorFn = function() {
                             }
                         }
 
+                        if (state.tokenIndex === 3 && !stream.eol()) {
+                            logError('level_select_point must appear on a line by itself.', state.lineNumber);
+                            stream.match(reg_notcommentstart, true);
+                            return 'ERROR';
+                        }
                         if (state.tokenIndex === 2 && !stream.eol()) {
                             var ch = stream.peek();
                             stream.next();
@@ -1194,7 +1209,7 @@ var codeMirrorFn = function() {
 		                    			}
 		                    			state.tokenIndex=1;
 		                    			return 'METADATA';
-		                    		} else if ( ['run_rules_on_level_start','norepeat_action','require_player_movement','debug','verbose_logging','throttle_movement','noundo','noaction','norestart','scanline'].indexOf(token)>=0) {
+		                    		} else if ( ['run_rules_on_level_start','norepeat_action','require_player_movement','debug','verbose_logging','throttle_movement','noundo','noaction','norestart','scanline','enable_level_select'].indexOf(token)>=0) {
 		                    			state.metadata.push(token);
 		                    			state.metadata.push("true");
 		                    			state.tokenIndex=-1;
@@ -1268,6 +1283,7 @@ var codeMirrorFn = function() {
                 abbrevNames: [],
 
                 levels: [[]],
+                level_select_points: [],
 
                 subsection: ''
             };
