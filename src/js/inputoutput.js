@@ -629,12 +629,29 @@ function checkKey(e,justPressed) {
         }
         case 27://escape
         {
-        	if (titleScreen===false) {
-				goToTitleScreen();	
-		    	tryPlayTitleSound();
+        	var dest=0
+        	if (titleScreen===true) {
+        		// do nothing
+        	} else if (levelSelectScreen===true) {
+        		dest=1
+        	} else {
+        		if ('enable_level_select' in state.metadata) {
+        			dest=2
+        		} else {
+        			dest=1
+				}
+        	}
+
+			if (dest>0) {
+				if (dest===1) {
+					goToTitleScreen();
+					tryPlayTitleSound();
+				} else if (dest===2) {
+					goToLevelSelectScreen()
+				}
 				canvasResize();			
 				return prevent(e)
-        	}
+			}
         	break;
         }
         case 69: {//e
@@ -730,26 +747,6 @@ function checkKey(e,justPressed) {
                     quittingTitleScreen=true;
                     generateTitleScreen();
                     redraw();
-
-                    if (titleSelection == 0) {
-                        try {
-                            if (!!window.localStorage) {
-                                localStorage.removeItem(document.URL+'_levelswon');
-                            }
-                        } catch (ex) { }
-                    }
-                }
-            } else if (inputdir===0 || inputdir===2) {
-                var maxTitleSelection = ('enable_level_select' in state.metadata) ? 2 : 1;
-                if (titleMode===0) maxTitleSelection--;
-                if (inputdir===0 && titleSelection > 0) {
-                    titleSelection--;
-                    generateTitleScreen();
-                    redraw();
-                } else if (inputdir===2 && titleSelection < maxTitleSelection) {
-                    titleSelection++;
-                    generateTitleScreen();
-                    redraw();
                 }
             }
     	} else if (levelSelectScreen) {
@@ -808,7 +805,7 @@ function update() {
     if (quittingTitleScreen) {
         if (timer/1000>0.3) {
             quittingTitleScreen=false;
-            if (titleSelection===2 || (titleMode===0 && titleSelection===1)) {
+            if ('enable_level_select' in state.metadata) {
                 goToLevelSelectScreen();
             } else {
                 nextLevel();

@@ -46,7 +46,7 @@ var messagecontainer_template = [
 	".................................."
 ];
 
-var titletemplate_firstgo0 = [
+var titletemplate = [
 	"..................................",
 	"..................................",
 	"..................................",
@@ -54,75 +54,14 @@ var titletemplate_firstgo0 = [
 	"..................................",
 	"..........#.start game.#..........",
 	"..................................",
-	"...........level select...........",
+	"..................................",
 	"..................................",
 	".arrow keys to move...............",
 	".X to action......................",
 	".Z to undo, R to restart..........",
 	".................................."];
 
-var titletemplate_firstgo1 = [
-	"..................................",
-	"..................................",
-	"..................................",
-	"..................................",
-	"..................................",
-	"............start game............",
-	"..................................",
-	".........#.level select.#.........",
-	"..................................",
-	".arrow keys to move...............",
-	".X to action......................",
-	".Z to undo, R to restart..........",
-	".................................."];
-
-var titletemplate_select0 = [
-	"..................................",
-	"..................................",
-	"..................................",
-	"..................................",
-	"..................................",
-	"...........#.new game.#...........",
-	".............continue.............",
-	"...........level select...........",
-	"..................................",
-	".arrow keys to move...............",
-	".X to action......................",
-	".Z to undo, R to restart..........",
-	".................................."];
-
-var titletemplate_select1 = [
-	"..................................",
-	"..................................",
-	"..................................",
-	"..................................",
-	"..................................",
-	".............new game.............",
-	"...........#.continue.#...........",
-	"...........level select...........",
-	"..................................",
-	".arrow keys to move...............",
-	".X to action......................",
-	".Z to undo, R to restart..........",
-	".................................."];
-
-var titletemplate_select2 = [
-	"..................................",
-	"..................................",
-	"..................................",
-	"..................................",
-	"..................................",
-	".............new game.............",
-	".............continue.............",
-	".........#.level select.#.........",
-	"..................................",
-	".arrow keys to move...............",
-	".X to action......................",
-	".Z to undo, R to restart..........",
-	".................................."];
-
-
-var titletemplate_firstgo0_selected = [
+var titletemplate_selected = [
 	"..................................",
 	"..................................",
 	"..................................",
@@ -130,67 +69,7 @@ var titletemplate_firstgo0_selected = [
 	"..................................",
 	"###########.start game.###########",
 	"..................................",
-	"...........level select...........",
 	"..................................",
-	".arrow keys to move...............",
-	".X to action......................",
-	".Z to undo, R to restart..........",
-	".................................."];
-
-var titletemplate_firstgo1_selected = [
-	"..................................",
-	"..................................",
-	"..................................",
-	"..................................",
-	"..................................",
-	"............start game............",
-	"..................................",
-	"##########.level select.##########",
-	"..................................",
-	".arrow keys to move...............",
-	".X to action......................",
-	".Z to undo, R to restart..........",
-	".................................."];
-
-var titletemplate_select0_selected = [
-	"..................................",
-	"..................................",
-	"..................................",
-	"..................................",
-	"..................................",
-	"############.new game.############",
-	".............continue.............",
-	"...........level select...........",
-	"..................................",
-	".arrow keys to move...............",
-	".X to action......................",
-	".Z to undo, R to restart..........",
-	".................................."];
-
-var titletemplate_select1_selected = [
-	"..................................",
-	"..................................",
-	"..................................",
-	"..................................",
-	"..................................",
-	".............new game.............",
-	"############.continue.############",
-	"...........level select...........",
-	"..................................",
-	".arrow keys to move...............",
-	".X to action......................",
-	".Z to undo, R to restart..........",
-	".................................."];
-
-var titletemplate_select2_selected = [
-	"..................................",
-	"..................................",
-	"..................................",
-	"..................................",
-	"..................................",
-	".............new game.............",
-	".............continue.............",
-	"##########.level select.##########",
 	"..................................",
 	".arrow keys to move...............",
 	".X to action......................",
@@ -198,13 +77,16 @@ var titletemplate_select2_selected = [
 	".................................."];
 
 var titleImage=[];
-var titleWidth=titletemplate_select1[0].length;
-var titleHeight=titletemplate_select1.length;
+var titleWidth=titletemplate[0].length;
+var titleHeight=titletemplate.length;
 var textMode=true;
 var titleScreen=true;
+var titleSelected=false;
+
+// these are completely unused now, but I left in the code that sets them,
+// to avoid merge conflicts in the future
 var titleMode=0;//1 means there are options
 var titleSelection=0;
-var titleSelected=false;
 
 function unloadGame() {
 	state=introstate;
@@ -217,15 +99,6 @@ function unloadGame() {
 
 function generateTitleScreen()
 {
-	titleMode=(curlevel>0||curlevelTarget!==null)?1:0;
-    try {
-        if (!!window.localStorage) {
-            if (localStorage[document.URL+'_levelswon']!==undefined){
-                titleMode = 1;
-            }
-        }
-    } catch (ex) { }
-
 	if (state.levels.length===0) {
 		titleImage=intro_template;
 		return;
@@ -236,40 +109,10 @@ function generateTitleScreen()
 		title=state.metadata.title;
 	}
 
-	if (titleMode===0) {
-		if (titleSelection===0) {
-			if (titleSelected) {
-				titleImage = deepClone(titletemplate_firstgo0_selected);		
-			} else {
-				titleImage = deepClone(titletemplate_firstgo0);					
-			}
-		} else if (titleSelection===1) {
-			if (titleSelected) {
-				titleImage = deepClone(titletemplate_firstgo1_selected);		
-			} else {
-				titleImage = deepClone(titletemplate_firstgo1);					
-			}						
-		}
+	if (titleSelected) {
+		titleImage = deepClone(titletemplate_selected);		
 	} else {
-		if (titleSelection===0) {
-			if (titleSelected) {
-				titleImage = deepClone(titletemplate_select0_selected);		
-			} else {
-				titleImage = deepClone(titletemplate_select0);					
-			}			
-		} else if (titleSelection===1) {
-			if (titleSelected) {
-				titleImage = deepClone(titletemplate_select1_selected);		
-			} else {
-				titleImage = deepClone(titletemplate_select1);					
-			}						
-		} else {
-			if (titleSelected) {
-				titleImage = deepClone(titletemplate_select2_selected);		
-			} else {
-				titleImage = deepClone(titletemplate_select2);					
-			}						
-		}
+		titleImage = deepClone(titletemplate);					
 	}
 
 	var noAction = 'noaction' in state.metadata;
@@ -2950,6 +2793,7 @@ function goToLevelSelectScreen() {
 	titleScreen=false;
 	titleSelection=(curlevel>0||curlevelTarget!==null)?1:0;
 	titleSelected=false;
+	textMode=true;
 
 	levelSelectScreen=true;
 	levelSelectCursor=getLevelSelectPointForLevelId(parseInt(curlevel));
