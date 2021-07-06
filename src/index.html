@@ -14,7 +14,31 @@
 
     <!-- Custom styles for this template -->
 <style> 
-
+  .panel {
+    border:0;
+    margin:0;
+    box-shadow:none;
+  }
+.panel-body {
+  border:0;
+  background-color: transparent;
+  padding:0;
+}
+.panel-footer {
+  border:0;
+  background-color: transparent;
+  padding:0;
+  text-align: center;
+  margin-top: 5px;
+}
+.panel-body img {
+  width:100%;
+  max-height: 320px; 
+  object-fit: contain;
+}
+.gamelinktitle{
+  font-weight: bold;
+}
 /* Large screens ----------- */
 @media only screen and (max-width : 900px) {
     /* Styles */
@@ -41,6 +65,7 @@
     background-position: center center;
     background-repeat: no-repeat;
 }​
+
 
 /* custom button :D */
 /*
@@ -139,6 +164,15 @@ function shuffle(array) {
   return array;
 }
 
+function escapeHtml(unsafe) {
+      return unsafe
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;")
+      .replace(/'/g, "&#039;");
+    }
+
 function replaceContent() {
   var columns = [document.getElementById('col_1'),document.getElementById('col_2'),document.getElementById('col_3')];
 
@@ -146,14 +180,17 @@ function replaceContent() {
   var data = [];
   for (var i=0;i<games_gallery.length;i++) {
     item=games_gallery[i];
-    imgurl = "./Gallery/gifs/"+item.thumb;
-    data.push([imgurl,item.url]);
+    item.imgurl = "./Gallery/gifs/"+item.thumb;
+    if (item.hasOwnProperty("homepage")===false){
+      item.homepage=item.url;
+    }
+    data.push(item);
   }
   data = shuffle(data);
   for (var i=0;i<columns.length;i++)
   {
     var dat = data[i];
-    columns[i].innerHTML='<div class="imgcontainer"><a href="'+dat[1]+'"><div class="center-cropped" style="background-image: url(\''+dat[0]+'\');"></div>​</a></class>';
+    columns[i].innerHTML='<div class="panel panel-default"><div class="panel-body"><a href="'+dat.url+'"><img src="'+dat.imgurl+'">​</a></div><div class="panel-footer"><a class="gamelinktitle" href="'+dat.url+'">'+escapeHtml(dat.title)+'</a> by <a href="'+dat.homepage+'">'+escapeHtml(dat.author)+'</a></div></div>';
   }
 
 }
