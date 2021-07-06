@@ -184,6 +184,9 @@ function replaceContent() {
     if (item.hasOwnProperty("homepage")===false){
       item.homepage=item.url;
     }
+    if (item.homepage.startsWith("http")===false){
+      item.homepage="https://"+item.homepage
+    }
     data.push(item);
   }
   data = shuffle(data);
