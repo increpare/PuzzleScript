@@ -1129,7 +1129,7 @@ var codeMirrorFn = function() {
                                 return 'MESSAGE_VERB';
                             } else if (stream.match(/[\p{Z}\s]*level_select_point[\p{Z}\s]*/u, true)) {
                                 state.tokenIndex = 3;//1/2/3 = message/level/level_select_point
-                                var newdat = ['LEVEL_SELECT_POINT', state.lineNumber];
+                                var newdat = ['LEVEL_SELECT_POINT', mixedCase.slice(stream.pos).trim(), state.lineNumber];
                                 if (state.levels[state.levels.length - 1].length == 0) {
                                     state.levels.splice(state.levels.length - 1, 0, newdat);
                                 } else {
@@ -1162,14 +1162,12 @@ var codeMirrorFn = function() {
                             if (state.tokenIndex == 1) {
                                 stream.skipToEnd();
                                	return 'MESSAGE';
+                            } else if (state.tokenIndex == 3) {
+                                stream.skipToEnd();
+                                return 'LEVEL_SELECT_ID';
                             }
                         }
 
-                        if (state.tokenIndex === 3 && !stream.eol()) {
-                            logError('level_select_point must appear on a line by itself.', state.lineNumber);
-                            stream.match(reg_notcommentstart, true);
-                            return 'ERROR';
-                        }
                         if (state.tokenIndex === 2 && !stream.eol()) {
                             var ch = stream.peek();
                             stream.next();

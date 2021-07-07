@@ -457,7 +457,11 @@ function levelFromString(state, level) {
 function levelsToArray(state) {
     var levels = state.levels;
     var processedLevels = [];
-    var levelSelectPoints = [];
+    var levelSelectPoints = []; // ["my cool level","_auto_name_1"]
+    
+    var auto_name = 1;
+    var lspIndex = 0;
+    var seen_names = {};
 
     for (var levelIndex = 0; levelIndex < levels.length; levelIndex++) {
         var level = levels[levelIndex];
@@ -478,7 +482,16 @@ function levelsToArray(state) {
         } else if (level[0] == 'LEVEL_SELECT_POINT') {
             var processedLevelsIndex = levelIndex - levelSelectPoints.length;
             if (levelSelectPoints.length == 0 || levelSelectPoints[levelSelectPoints.length-1] != processedLevelsIndex) {
-                levelSelectPoints.push(processedLevelsIndex);
+                var dat={name: level[1], lspIndex: lspIndex++, levelIndex: processedLevelsIndex}
+                if (dat.name==="") {
+                    dat.name="_auto_name_"+(auto_name++);
+                }
+                if (seen_names[dat.name]) {
+                    logError("Duplicate level_select_point name \""+dat.name+"\"",level[2])
+                } else {
+                    seen_names[dat.name]=true
+                    levelSelectPoints.push(dat)
+                }
             }
         } else {
             var o = levelFromString(state, level);
@@ -487,6 +500,11 @@ function levelsToArray(state) {
 
     }
 
+    // for (var i = 0; i < levelSelectPoints.length; i++) {
+    //     if (levelSelectPoints[i].lspIndex!==i) {
+    //         throw new Error("assert error")
+    //     }
+    // }
     state.levels = processedLevels;
     state.level_select_points = levelSelectPoints;
 }
@@ -495,11 +513,14 @@ function generateLevelSelectPoints(state) {
     if (state.level_select_points.length == 0 && 'enable_level_select' in state.metadata) {
         // level select is enabled but no level_select_points have been set;
         // generate a level_select_point at the start of each (message*, level) group of levels
+        var auto_name = 1;
+        var lspIndex = 0;
         var mark_next_level = true;
         for (var levelIndex = 0; levelIndex < state.levels.length; levelIndex++) {
             var level = state.levels[levelIndex];
             if (mark_next_level) {
-                state.level_select_points.push(levelIndex);
+                var name="_auto_name_"+(auto_name++);
+                state.level_select_points.push({name: name, lspIndex: lspIndex++, levelIndex: levelIndex});
                 mark_next_level = false;
             }
             if (!level.hasOwnProperty("message")){

@@ -124,7 +124,7 @@ If you set <b>enable_level_select</b> in the <a href="prelude.html">prelude</a>,
 If you want to have more control over where exactly the level select screen takes the player, you can write <b>level_select_point</b> at every point that you want to be able to jump to from the level select screen. For example:
 <p>
 <pre><code>
-LEVEL_SELECT_POINT
+LEVEL_SELECT_POINT intro1
 
 MESSAGE Welcome to level 1
 
@@ -138,7 +138,7 @@ MESSAGE Welcome to level 1
 
 MESSAGE You beat level 1!
 
-LEVEL_SELECT_POINT
+LEVEL_SELECT_POINT tricky_variant_2
 
 MESSAGE Welcome to level 2
 
@@ -159,6 +159,8 @@ MESSAGE This level cannot be accessed from the level select screen.
 #########
 
 MESSAGE Thank you for playing the game.</code></pre>
+<p>
+The level names (in this case, "intro1" and "tricky_variant_2") are optional, but will help persist players' save data in the level select menu if you update your game and rearrange the levels. These level names are internal-only, and are never shown to the player.
 <p>
 <h3>What stuff is hard to do?</h3>
 <p>

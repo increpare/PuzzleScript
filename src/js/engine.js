@@ -202,18 +202,18 @@ var levelSelectScreen=false;
 var levelSelectCursor=0; // a real level id (i.e. no `message` level ids)
 var levelSelectSelected=false;
 
-function getLevelSelectPointForLevelId(id) {
-	if (id==null||id>state.levels.length) {
-		id=state.levels.length;
+function getLevelSelectPointForLevelIndex(levelIndex) {
+	if (levelIndex==null||levelIndex>=state.levels.length) {
+		return null;
 	}
 
 	var best=0;
-	for (var pointIndex=0;pointIndex<state.level_select_points.length;pointIndex++){
-		var levelId=state.level_select_points[pointIndex];
-		if (levelId > id) {
+	for (var i=0;i<state.level_select_points.length;i++){
+		var lsp=state.level_select_points[i];
+		if (lsp.levelIndex > levelIndex) {
 			break;
 		}
-		best=pointIndex;
+		best=lsp;
 	}
 	return best;
 }
@@ -240,18 +240,18 @@ function generateLevelSelectScreen() {
         }
     } catch (ex) { }
 
-	var curlevelPoint=getLevelSelectPointForLevelId(parseInt(curlevel));
 	var pageOffset=Math.floor(levelSelectCursor/20)*20;
 	for (var i=0;i<20;i++){
 		var point=pageOffset+i;
 		if (point>=state.level_select_points.length){
 			break;
 		}
+		var lsp=state.level_select_points[point]
 		var colIndex=3+6*(i%5);
 		var rowIndex=3+2*Math.floor(i/5);
 		var label=""+(point+1);
 		var offset=0;
-        if (levelsWon[pageOffset+i]) {
+        if (lsp && levelsWon[lsp.name]) {
             label="*"+label;
             offset=-1;
         }
@@ -2703,7 +2703,8 @@ function nextLevel() {
 			loadLevelFromState(state,curlevel);
 		}
 	} else if (levelSelectScreen) {	
-		curlevel=state.level_select_points[levelSelectCursor];
+		var lsp=state.level_select_points[levelSelectCursor];
+		curlevel=lsp.levelIndex;
 		curlevelTarget=null;
 		loadLevelFromState(state,curlevel);
 	} else {	
@@ -2761,6 +2762,24 @@ function nextLevel() {
 
 function markLevelWon() {
     if (!('enable_level_select' in state.metadata)) return;
+
+    var lsp_now = getLevelSelectPointForLevelIndex(parseInt(curlevel));
+    if (lsp_now==null) return;
+
+    { // only mark as solved if every real level in the LSP is solved
+	    var i=parseInt(curlevel)+1
+	    while (i<state.levels.length) {
+		    if (state.levels[i].message===undefined) {
+	    		// this is the next playable level
+	    		break
+	    	}
+	    	i++;
+	    }
+	    var lsp_next_real_level = getLevelSelectPointForLevelIndex(i);
+
+	    if (lsp_now===lsp_next_real_level) return;
+	}
+
     try {
         if (!window.localStorage) return;
 
@@ -2770,8 +2789,7 @@ function markLevelWon() {
             levelsWon = JSON.parse(backupStr);
         }
 
-        var lsp = getLevelSelectPointForLevelId(parseInt(curlevel));
-        levelsWon[lsp] = true;
+        levelsWon[lsp_now.name] = true;
 
         var backupStr = JSON.stringify(levelsWon);
         localStorage[document.URL+'_levelswon']=backupStr;
@@ -2796,7 +2814,8 @@ function goToLevelSelectScreen() {
 	textMode=true;
 
 	levelSelectScreen=true;
-	levelSelectCursor=getLevelSelectPointForLevelId(parseInt(curlevel));
+	var lsp=getLevelSelectPointForLevelIndex(parseInt(curlevel));
+	levelSelectCursor=lsp.lspIndex;
 	levelSelectSelected=false;
 
 	generateLevelSelectScreen();
