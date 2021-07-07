@@ -208,6 +208,8 @@
                     {
                         if ("message".indexOf(lineToCursor.trim())===0) {
                             candlists.push(["MESSAGE_VERB","message"]);
+                        }
+                        if ("level_select_point".indexOf(lineToCursor.trim())===0) {
                             candlists.push(["LEVEL_SELECT_VERB","level_select_point"]);
                         }
                         break;

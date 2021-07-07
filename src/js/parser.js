@@ -1127,7 +1127,7 @@ var codeMirrorFn = function() {
                                     state.levels.push(newdat);
                                 }
                                 return 'MESSAGE_VERB';
-                            } else if (stream.match(/[\p{Z}\s]*level_select_point[\p{Z}\s]*/, true)) {
+                            } else if (stream.match(/[\p{Z}\s]*level_select_point[\p{Z}\s]*/u, true)) {
                                 state.tokenIndex = 3;//1/2/3 = message/level/level_select_point
                                 var newdat = ['LEVEL_SELECT_POINT', state.lineNumber];
                                 if (state.levels[state.levels.length - 1].length == 0) {
