@@ -523,8 +523,18 @@ function generateLevelSelectPoints(state) {
                 state.level_select_points.push({name: name, lspIndex: lspIndex++, levelIndex: levelIndex});
                 mark_next_level = false;
             }
-            if (!level.hasOwnProperty("message")){
-                   mark_next_level = true;
+            if (level.message===undefined) {
+                mark_next_level = true;
+            }
+        }
+
+        { // remove last lsp if it's just a message
+            var lastlevel=state.levels[state.levels.length-1];
+            if (lastlevel.message===undefined) {
+                // do nothing
+            } else {
+                // message-only; rm
+                state.level_select_points.pop()
             }
         }
     }
