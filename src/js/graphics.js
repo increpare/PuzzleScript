@@ -37,7 +37,9 @@ function regenText(spritecanvas,spritectx) {
 
 	for (var n in font) {
 		if (font.hasOwnProperty(n)) {
-			textImages[n] = createSprite('char'+n,font[n], undefined, 1);
+            fontstr = font[n].split('\n').map(a=>a.trim().split('').map(t=>parseInt(t)));
+            fontstr.shift();
+			textImages[n] = createSprite('char'+n,fontstr, undefined, 1);
 		}
 	}
 }
@@ -377,8 +379,8 @@ function canvasResize() {
 
 
     if (textMode) {
-        w=font['X'][0].length + 1;
-        h=font['X'].length + 1;
+        w=5 + 1;
+        h=font['X'].length/(w) + 1;
     }
 
 
