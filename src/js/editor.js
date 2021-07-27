@@ -121,12 +121,7 @@ function tryLoadGist(id) {
 
 	consolePrint("Contacting GitHub",true);
 	var githubHTTPClient = new XMLHttpRequest();
-    if (window.localStorage!==undefined && localStorage['oauth_access_token']!==undefined) {
-        var oauthAccessToken = window.localStorage.getItem("oauth_access_token");
-        if (typeof oauthAccessToken === "string") {
-            githubHTTPClient.setRequestHeader("Authorization","token "+oauthAccessToken);
-        }
-    }
+
 	githubHTTPClient.open('GET', githubURL);
 	githubHTTPClient.onreadystatechange = function() {
 	
@@ -152,6 +147,12 @@ function tryLoadGist(id) {
 			compile(["restart"],code);
 		}
 	}
+	if (window.localStorage!==undefined && localStorage['oauth_access_token']!==undefined) {
+        var oauthAccessToken = window.localStorage.getItem("oauth_access_token");
+        if (typeof oauthAccessToken === "string") {
+            githubHTTPClient.setRequestHeader("Authorization","token "+oauthAccessToken);
+        }
+    }
 	githubHTTPClient.setRequestHeader("Content-type","application/x-www-form-urlencoded");
 	githubHTTPClient.send();
 }
