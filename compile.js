@@ -201,7 +201,7 @@ new Inliner('./src/standalone.html', function (error, html) {
                 "./src/js/rng.js",
                 "./src/js/riffwave.js",
                 "./src/js/sfxr.js",
-                "./src/js/codemirror/codemirror.js",
+                "./src/js/codemirror/stringstream.js",
                 "./src/js/colors.js",
                 "./src/js/graphics.js",
                 "./src/js/engine.js",
