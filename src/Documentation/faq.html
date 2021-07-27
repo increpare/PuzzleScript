@@ -61,23 +61,19 @@
 	<li>It would be useful in 2 or more possible games.</li>
 	<li>Someone wants to use it in a game they're actually making.</li>
   <li>It excites me.</li></ul>
-	Of course, the project is open source + <a href="https://github.com/increpare/PuzzleScript">on GitHub</a>, so you are <em>warmly</em> welcome to fork it and add your own features.  I'd love to see how other people could snazz it up : )
+	Of course, the project is open source and <a href="https://github.com/increpare/PuzzleScript">on GitHub</a>, so you are <em>warmly</em> welcome to fork it and add your own features.  I'd love to see how other people could snazz it up : )
 	</dd>
 	<dt>I have an idea for a puzzle game, but it's not suited to PuzzleScript</dt>
 	<dd>
-  <p>You're right, PuzzleScript isn't a universal puzzle game-making tool. It's best for <em>turn-based</em>, <em>keyboard-controlled</em> games where you're moving a thing, or several things around.  It would be neat to mod it to allow for mouse-controlled games - I'm a giant fan of <a href="http://qrostar.skr.jp/index.cgi?page=jelly&lang=en">qrostar</a>'s games.
-	<p>
-  I'm a bit burned out on this right now.  I've been working on the engine for a couple of weeks, energy levels, and in order to reenergize I need to see people make good use of what's in there.  Adding mouse-controller support wouldn't be that hard, actually, but I'll need some encouragement.
-	<p>
-	Ditto the above to realtime stuff, animations/smooth movement between frames, what have you.  All very reasonable possibilities.  I just have to see where things go.</dd>
+  <p>You're right, PuzzleScript isn't a universal puzzle-game-making tool. It's best for <em>turn-based</em>, <em>keyboard-controlled</em> games where you're moving a thing, or several things around.  
 	<dt>The editor is crazy ugly.</dt>
 	<dd>Not a question. If you want to try reskinning it, I'd love to see what you could do.  It's all controlled in css (in midnight.css), so knock yourself out.  You should work on the <a href="https://github.com/increpare/puzzlescript">source</a>, rather than the raw webpage on puzzlescript.net, which is heavily compiled, and won't make much sense.</dd>
 	<dt>Can I turn my games into standalone executables?</dt>
-	<dd>I had originally intended to make a very simple cross-platform standalone client for PuzzleScript.  However, the core engine is still in flux, and it wouldn't be a good idea to write a totally separate interpreter for PuzzleScript machine code in a different language, it'd be too much fuss to keep a separate C implemention of PuzzleScript synchronised with the main one.  But if <em>you</em> want to try to do so, knock yourself out : )</dd>
+	<dd>I had originally intended to make a very simple native (C or whatever) cross-platform standalone client for PuzzleScript.  However, it wouldn't be fun for me to maintain two separate versions of the engine.  But if <em>you</em> want to try to do so, knock yourself out : )</dd>
 	<dt>Can I run the editor offline?</dt>
-	<dd>You can download an uncompressed version of the site from <a href="https://github.com/increpare/PuzzleScript">GitHub</a>, and that should work okay offline, except for exporting standalone versions of the games (it has some optimizations that stop it from working when the webpage is run from your hard-disk), and sharing.  It also won't share saves with the online version.</dd>
+	<dd>You can download an uncompressed version of PuzzleScript from <a href="https://github.com/increpare/PuzzleScript">GitHub</a>, and that should work okay offline, except for exporting standalone versions of the games (it has some optimizations that stop it from working when the webpage is run from your hard-disk), and sharing.</dd>
 	<dt>Why no music?</dt>
-	<dd>There is music! Search for youtube in the <a href="prelude.html">prelude</a> page.</dd>
+	<dd>I want scripts to be standalone, and it's not so practical for people to write aesthetically tolerable music the same way they say edit sprites.  Sorry!  (Maybe a better approach would be to have a seeded random music generator like the random sound generator).</dd>
 </dl>
 
     </div><!-- /.container -->
