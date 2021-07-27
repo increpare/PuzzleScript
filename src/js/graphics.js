@@ -35,13 +35,17 @@ function createSprite(name,spritegrid, colors, padding) {
 function regenText(spritecanvas,spritectx) {
 	textImages={};
 
-	for (var n in font) {
-		if (font.hasOwnProperty(n)) {
-            fontstr = font[n].split('\n').map(a=>a.trim().split('').map(t=>parseInt(t)));
-            fontstr.shift();
-			textImages[n] = createSprite('char'+n,fontstr, undefined, 1);
-		}
-	}
+	for (var rowidx in titleImage) {
+        var row=titleImage[rowidx];
+        for (var nidx in row) {
+            var n = row[nidx];
+            if (font.hasOwnProperty(n) && !textImages.hasOwnProperty(n)) {
+                fontstr = font[n].split('\n').map(a=>a.trim().split('').map(t=>parseInt(t)));
+                fontstr.shift();
+                textImages[n] = createSprite('char'+n,fontstr, undefined, 1);
+            }
+        }
+    }
 }
 
 var editor_s_grille=[[0,1,1,1,0],[1,0,0,0,0],[0,1,1,1,0],[0,0,0,0,1],[0,1,1,1,0]];
@@ -49,6 +53,7 @@ var editor_s_grille=[[0,1,1,1,0],[1,0,0,0,0],[0,1,1,1,0],[0,0,0,0,1],[0,1,1,1,0]
 var spriteimages;
 function regenSpriteImages() {
 	if (textMode) {
+        spriteimages = [];
 		regenText();
 		return;
 	} else if (levelEditorOpened) {
