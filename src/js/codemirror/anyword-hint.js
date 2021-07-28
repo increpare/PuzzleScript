@@ -313,8 +313,16 @@
             //state.objects
 
             //if list is a single word and that matches what the current word is, don't show hint
-            if (list.length===1 && list[0].text.toLowerCase()===curWord.toLowerCase()){
+            if (list.length===1 && list[0].text.toLowerCase()===curWord){
                 list=[];
+            }
+            for (var i=1;i<list.length;i++){
+                if (list[i].text.toLowerCase()===curWord){
+                    var newhead=list[i];
+                    list.splice(i,1);
+                    list.unshift(newhead);
+                    break;
+                }
             }
             return {
                 list: list,
