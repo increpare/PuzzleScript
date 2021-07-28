@@ -1,6 +1,6 @@
 
 
-var inputVals = {0 : "UP",1: "LEFT",2:"DOWN",3:"RIGHT",4:"ACTION",tick:"TICK",undo:"UNDO",restart:"RESTART"};
+var inputVals = {0 : "U",1: "L",2:"D",3:"R",4:"A",tick:"T",undo:"U",restart:"R"};
 
 function testFunction(td) {
 
@@ -17,8 +17,8 @@ for (var i=0;i<testdata.length;i++) {
 				var testresult=td[1][2];
 				var input="";
 				for (var j=0;j<testinput.length;j++) {
-					if (j>0) {
-						input+=", ";
+					if (j%5==0 && j>0) {
+						input+=" ";
 					}
 					input += inputVals[testinput[j]];
 				}
