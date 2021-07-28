@@ -1,6 +1,6 @@
 
 
-var inputVals = {0 : "U",1: "L",2:"D",3:"R",4:"A",tick:"T",undo:"U",restart:"R"};
+var inputVals = {0 : "U",1: "L",2:"D",3:"R",4:"A",tick:"T",undo:" UNDO ",restart:" RESTART "};
 
 function testFunction(td) {
 
