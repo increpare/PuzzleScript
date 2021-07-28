@@ -1,6 +1,7 @@
 var canSetHTMLColors=false;
 var canDump=true;
 var canYoutube=false;
+var recordingStartsFromLevel=0;
 var inputHistory=[];
 var compiledText;
 var canOpenEditor=true;
@@ -54,7 +55,7 @@ function dumpTestCase() {
 	var input = inputHistory.concat([]);
 	var outputDat = convertLevelToString();
 
-	var resultarray = [levelDat,input,outputDat,curlevel,loadedLevelSeed];
+	var resultarray = [levelDat,input,outputDat,recordingStartsFromLevel,loadedLevelSeed];
 	var resultstring = JSON.stringify(resultarray);
 	consolePrint("<br>Recorded play session data (for play session tests - testdata.js):<br><br><br>"+resultstring+"<br><br><br>",true);
 
@@ -63,6 +64,7 @@ function dumpTestCase() {
 function clearInputHistory() {
 	if (canDump===true) {
 		inputHistory=[];
+		recordingStartsFromLevel = curlevel;
 	}
 }
 

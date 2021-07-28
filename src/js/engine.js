@@ -394,7 +394,7 @@ function drawMessageScreen() {
 
 var loadedLevelSeed=0;
 
-function loadLevelFromLevelDat(state,leveldat,randomseed) {	
+function loadLevelFromLevelDat(state,leveldat,randomseed,clearinputhistory) {	
 	if (randomseed==null) {
 		randomseed = (Math.random() + Date.now()).toString();
 	}
@@ -451,7 +451,9 @@ function loadLevelFromLevelDat(state,leveldat,randomseed) {
     	canvasResize();
 	}
 
-	clearInputHistory();
+	if (clearinputhistory===true){
+		clearInputHistory();
+	}
 }
 
 function loadLevelFromStateTarget(state,levelindex,target,randomseed) {	
@@ -2721,7 +2723,6 @@ function nextLevel() {
 		oldflickscreendat=[0,0,Math.min(state.metadata.flickscreen[0],level.width),Math.min(state.metadata.flickscreen[1],level.height)];
 	}
 	canvasResize();	
-	clearInputHistory();
 }
 
 function goToTitleScreen(){
