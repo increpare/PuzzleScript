@@ -312,6 +312,10 @@
             //state.legend_properties
             //state.objects
 
+            //if list is a single word and that matches what the current word is, don't show hint
+            if (list.length===1 && list[0].text.toLowerCase()===curWord.toLowerCase()){
+                list=[];
+            }
             return {
                 list: list,
                 from: CodeMirror.Pos(cur.line, start),
