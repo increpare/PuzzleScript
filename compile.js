@@ -240,7 +240,9 @@ new Inliner('./src/standalone.html', function (error, html) {
             editor = editor.replace(/<!--TOREPLACE-->/g, '<script src="js\/scripts_compiled.js"><\/script>');
             editor = editor.replace(/<link rel="stylesheet" href="[A-Za-z0-9_\/-]*\.css">/g, '');
             editor = editor.replace(/<!--CSSREPLACE-->/g, '<link rel="stylesheet" href="css\/combined.css">');
-            editor = editor.replace(/<!--BUILDNUMBER-->/g,'(build '+buildnum.toString()+')');
+            d = new Date();
+            const monthname = ["jan","feb","mar","apr","may","jun","jul","aug","sep","oct","nov","dec"];
+            editor = editor.replace(/<!--BUILDNUMBER-->/g,`build ${buildnum.toString()}, ${d.getDate()}-${monthname[d.getMonth()]}-${d.getFullYear()}`);
             fs.writeFileSync("./bin/editor.html",editor, encoding='utf8');
 
             var player = fs.readFileSync("./bin/play.html", encoding='utf8');
