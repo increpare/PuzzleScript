@@ -116,6 +116,9 @@ function replaceContent() {
     if (dat.hasOwnProperty("homepage")===false){
       dat.homepage=dat.url;
     }
+    if (dat.homepage.startsWith("http")===false){
+      dat.homepage="https://"+dat.homepage
+    }
     var str ='<div class="panel panel-default"><div class="panel-body"><a href="'+dat.url+'"><img src="'+dat.imgurl+'">​</a></div><div class="panel-footer"><a class="gamelinktitle" href="'+dat.url+'">'+escapeHtml(dat.title)+'</a> by <a href="'+dat.homepage+'">'+escapeHtml(dat.author)+'</a></div></div>';
 
 
