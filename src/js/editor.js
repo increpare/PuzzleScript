@@ -76,17 +76,6 @@ CodeMirror.commands.swapLineUp = function(cm) {
     });
   };
 
-  CodeMirror.commands.selectLine = function(cm) {
-    var ranges = cm.listSelections(), extended = [];
-    for (var i = 0; i < ranges.length; i++) {
-      var range = ranges[i];
-      extended.push({anchor: CodeMirror.Pos(range.from().line, 0),
-                     head: CodeMirror.Pos(range.to().line + 1, 0)});
-    }
-    cm.setSelections(extended);
-  };
-
-
 var editor = window.CodeMirror.fromTextArea(code, {
 //	viewportMargin: Infinity,
 	lineWrapping: true,
@@ -98,10 +87,6 @@ var editor = window.CodeMirror.fromTextArea(code, {
 		"Esc":CodeMirror.commands.clearSearch,
 		"Shift-Ctrl-Up": "swapLineUp",
 		"Shift-Ctrl-Down": "swapLineDown",
-		"Shift-Cmd-Up": "swapLineUp",
-		"Shift-Cmd-Down": "swapLineDown",
-		"Ctrl-L": "selectLine",
-		"Cmd-L": "selectLine",
 		}
 	});
 	
