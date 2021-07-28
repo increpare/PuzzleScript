@@ -1087,6 +1087,7 @@ var codeMirrorFn = function() {
                             }
                             else if (state.tokenIndex === 2) {
                                 if (candword != 'on') {
+                                    logError('Expecting the word "ON" but got "'+candword.toUpperCase()+"'.", state.lineNumber);
                                     return 'ERROR';
                                 } else {
                                     return 'LOGICWORD';
