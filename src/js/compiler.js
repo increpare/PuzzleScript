@@ -2615,12 +2615,21 @@ function compile(command, text, randomseed) {
             consolePrint('<span class="systemMessage">Successful live recompilation, generated ' + ruleCount + ' instructions.</span>');
 
         }
+
+
+        
+        if (IDE){
+            if (state.metadata.title!==undefined) {
+                document.title="PuzzleScript - " + state.metadata.title;
+            }
+        }
     }
     setGameState(state, command, randomseed);
 
     clearInputHistory();
 
     consoleCacheDump();
+
 }
 
 
