@@ -73,18 +73,8 @@
       </div>
     </div>
 
-    <div class="container">
-<p>
-
-<p>
-      <!-- Example row of columns -->
-      <div class="row" id="gallerycontainer">
-      <center><h1>Gallery</h1></center>
-      <hr>
-        
-      </div>
-
-
+    <center><h1>Gallery</h1></center>
+    <div class="container" id="gallerycontainer">
     </div><!-- /.container -->
 
 
@@ -107,9 +97,17 @@ function escapeHtml(unsafe) {
 function replaceContent() {
   var columns = document.getElementById('gallerycontainer');
 
+  var rowStart = '<div class="row">';
+  var rowEnd = '</div>'
+  var gamesPerRow = 3;
+
   games_gallery.reverse();
   var data = [];
+  data.push(rowStart);
   for (var i=0;i<games_gallery.length;i++) {
+    var startNewRow = i && !(i % gamesPerRow);
+    if(startNewRow) data.push(rowEnd, rowStart);
+    
     dat=games_gallery[i];
     dat.imgurl = "./gifs/"+dat.thumb;
     dat.gameurl = dat.url;
@@ -124,6 +122,7 @@ function replaceContent() {
 
     data.push('<div class="col-xs-4">'+str+'</div>');
   }
+  data.push(rowEnd);
   columns.innerHTML = data.join('');
 }
 
