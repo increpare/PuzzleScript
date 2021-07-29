@@ -417,7 +417,7 @@ function canvasResize() {
     xoffset = xoffset|0;
     yoffset = yoffset|0;
 
-    if (oldcellwidth!=cellwidth||oldcellheight!=cellheight||oldtextmode!=textMode||oldfgcolor!=state.fgcolor||forceRegenImages){
+    if (oldcellwidth!=cellwidth||oldcellheight!=cellheight||oldtextmode!=textMode||textMode||oldfgcolor!=state.fgcolor||forceRegenImages){
     	forceRegenImages=false;
     	regenSpriteImages();
     }
