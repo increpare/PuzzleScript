@@ -2030,6 +2030,42 @@ Rule.prototype.tryApply = function() {
 
 Rule.prototype.queueCommands = function() {
 	var commands = this.commands;
+	
+	if (commands.length==0){
+		return;
+	}
+
+	//commandQueue is an array of strings, message.commands is an array of array of strings (For messagetext parameter), so I search through them differently
+	var preexisting_cancel=level.commandQueue.indexOf("cancel")>=0;
+	var preexisting_restart=level.commandQueue.indexOf("restart")>=0;
+	
+	var currule_cancel = false;
+	var currule_restart = false;
+	for (var i=0;i<commands.length;i++){
+		var cmd = commands[i][0];
+		if (cmd==="cancel"){
+			currule_cancel=true;
+		} else if (cmd==="restart"){
+			currule_restart=true;
+		}
+	}
+
+	//priority cancel > restart > everything else
+	//if cancel is the queue from other rules, ignore everything
+	if (preexisting_cancel){
+		return;
+	}
+	//if restart is in the queue from other rules, only apply if there's a cancel present here
+	if (preexisting_restart && !currule_cancel){
+		return;
+	}
+
+	//if you are writing a cancel or restart, clear the current queue
+	if (currule_cancel || currule_restart){
+		level.commandQueue=[];
+		messagetext="";
+	}
+
 	for(var i=0;i<commands.length;i++) {
 		var command=commands[i];
 		var already=false;
@@ -2733,7 +2769,9 @@ function goToTitleScreen(){
 	doSetupTitleScreenLevelContinue();
 	titleSelection=(curlevel>0||curlevelTarget!==null)?1:0;
 	generateTitleScreen();
-	regenSpriteImages();
+	if (canvas!==null){//otherwise triggers error in cat bastard test
+		regenSpriteImages();
+	}
 }
 
 
