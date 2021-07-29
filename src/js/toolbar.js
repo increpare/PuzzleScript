@@ -53,10 +53,12 @@ function saveClick() {
 		var curSaveArray = JSON.parse(storage_get('saves'));
 	}
 
-	if (curSaveArray.length>19) {
+	if (curSaveArray.length>20) {
 		curSaveArray.splice(0,1);
 	}
 	curSaveArray.push(saveDat);
+
+
 	var savesDatStr = JSON.stringify(curSaveArray);
 	storage_set('saves',savesDatStr);
 
@@ -77,7 +79,9 @@ function saveClick() {
 		window.history.pushState({}, document.title, "./" +beforeQueryString);
 	}
 	//clear parameters from url bar if any present
-
+	if (curSaveArray.length===20){
+		consolePrint("WARNING: your <i>locally saved file list</i> has reached its maximum capacity of 20 files - older saved files will be deleted when you save in future.",true);
+	}
 }
 
 window.addEventListener( "pageshow", function ( event ) {
