@@ -401,6 +401,7 @@ function loadLevelFromLevelDat(state,leveldat,randomseed,clearinputhistory) {
 	loadedLevelSeed = randomseed;
 	RandomGen = new RNG(loadedLevelSeed);
 	forceRegenImages=true;
+	ignoreNotJustPressedAction=true;
 	titleScreen=false;
 	titleMode=(curlevel>0||curlevelTarget!==null)?1:0;
 	titleSelection=(curlevel>0||curlevelTarget!==null)?1:0;
@@ -446,6 +447,7 @@ function loadLevelFromLevelDat(state,leveldat,randomseed,clearinputhistory) {
 			runrulesonlevelstart_phase=false;
 	    }
 	} else {
+		ignoreNotJustPressedAction=true;
 		tryPlayShowMessageSound();
 		drawMessageScreen();
     	canvasResize();
@@ -2094,6 +2096,7 @@ function showTempMessage() {
 	titleScreen=false;
 	quittingMessageScreen=false;
 	messageselected=false;
+	ignoreNotJustPressedAction=true;
 	tryPlayShowMessageSound();
 	drawMessageScreen();
 	canvasResize();
@@ -2690,7 +2693,7 @@ function nextLevel() {
 	if (state && state.levels && (curlevel>state.levels.length) ){
 		curlevel=state.levels.length-1;
 	}
-	
+	ignoreNotJustPressedAction=true;
 	if (titleScreen) {
 		if (titleSelection===0) {
 			//new game

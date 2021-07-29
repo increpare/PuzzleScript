@@ -5,6 +5,7 @@ var hasUsedCheckpoint=false;
 var levelEditorOpened=false;
 var muted=0;
 var runrulesonlevelstart_phase=false;
+var ignoreNotJustPressedAction=true;
 
 function doSetupTitleScreenLevelContinue(){
     try {
