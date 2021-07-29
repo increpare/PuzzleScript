@@ -196,8 +196,8 @@ new Inliner('./src/standalone.html', function (error, html) {
 
 
             files = [  
-                "./src/js/globalVariables.js",
                 "./src/js/storagewrapper.js",
+                "./src/js/globalVariables.js",
                 "./src/js/debug_off.js",
                 "./src/js/font.js",
                 "./src/js/rng.js",
