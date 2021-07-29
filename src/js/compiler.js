@@ -2021,12 +2021,12 @@ function processWinConditions(state) {
         if (n1 in state.objectMasks) {
             mask1 = state.objectMasks[n1];
         } else {
-            logError('unwelcome term "' + n1 + '" found in win condition. Win conditions objects have to be objects or properties (defined using "or", in terms of other properties)', lineNumber);
+            logError('Unwelcome term "' + n1 + '" found in win condition. Win conditions objects have to be objects or properties (defined using "or", in terms of other properties)', lineNumber);
         }
         if (n2 in state.objectMasks) {
             mask2 = state.objectMasks[n2];
         } else {
-            logError('unwelcome term "' + n2 + '" found in win condition. Win conditions objects have to be objects or properties (defined using "or", in terms of other properties)', lineNumber);
+            logError('Unwelcome term "' + n2 + '" found in win condition. Win conditions objects have to be objects or properties (defined using "or", in terms of other properties)', lineNumber);
         }
         var newcondition = [num, mask1, mask2, lineNumber];
         newconditions.push(newcondition);
