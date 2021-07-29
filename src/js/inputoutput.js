@@ -854,7 +854,24 @@ function update() {
     }
 }
 
+var looping=false;
 // Lights, camera…function!
-setInterval(function() {
-    update();
-}, deltatime);
+var loop = function(){
+	looping=true;
+	update();
+	if (document.visibilityState==='hidden'){
+		looping=false;
+		return;
+	};
+	setTimeout(loop,deltatime);
+}
+
+document.addEventListener('visibilitychange', function logData() {
+	if (document.visibilityState === 'visible') {
+		if (looping===false){
+			loop();
+		}
+	}
+  });
+
+loop();
