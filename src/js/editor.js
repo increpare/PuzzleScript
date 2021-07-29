@@ -14,8 +14,8 @@ if (fileToOpen!==null&&fileToOpen.length>0) {
 		code.value = "loading...";
 	} else {
 		try {
-			if (localStorage!==undefined && localStorage['saves']!==undefined) {
-					var curSaveArray = JSON.parse(localStorage['saves']);
+			if (storage_has('saves')) {
+					var curSaveArray = JSON.parse(storage_get('saves'));
 					var sd = curSaveArray[curSaveArray.length-1];
 					code.value = sd.text;
 					var loadDropdown = document.getElementById('loadDropDown');
@@ -197,8 +197,8 @@ function tryLoadGist(id) {
 			compile(["restart"],code);
 		}
 	}
-	if (window.localStorage!==undefined && localStorage['oauth_access_token']!==undefined) {
-        var oauthAccessToken = window.localStorage.getItem("oauth_access_token");
+	if (storage_has('oauth_access_token')) {
+        var oauthAccessToken = storage_get("oauth_access_token");
         if (typeof oauthAccessToken === "string") {
             githubHTTPClient.setRequestHeader("Authorization","token "+oauthAccessToken);
         }

@@ -9,22 +9,20 @@ var ignoreNotJustPressedAction=true;
 
 function doSetupTitleScreenLevelContinue(){
     try {
-     	if (!!window.localStorage) { 
-    		if (localStorage[document.URL]!==undefined) {
-                if (localStorage[document.URL+'_checkpoint']!==undefined){
-                    var backupStr = localStorage[document.URL+'_checkpoint'];
-                    curlevelTarget = JSON.parse(backupStr);
-                    
-                    var arr = [];
-                    for(var p in Object.keys(curlevelTarget.dat)) {
-                        arr[p] = curlevelTarget.dat[p];
-                    }
-                    curlevelTarget.dat = new Int32Array(arr);
-
+        if (storage_has(document.URL)) {
+            if (storage_has(document.URL+'_checkpoint')){
+                var backupStr = storage_get(document.URL+'_checkpoint');
+                curlevelTarget = JSON.parse(backupStr);
+                
+                var arr = [];
+                for(var p in Object.keys(curlevelTarget.dat)) {
+                    arr[p] = curlevelTarget.dat[p];
                 }
-    	        curlevel = localStorage[document.URL];            
-    		}
-    	}		 
+                curlevelTarget.dat = new Int32Array(arr);
+
+            }
+            curlevel = storage_get(document.URL); 
+        }
     } catch(ex) {
     }
 }

@@ -246,6 +246,7 @@ a {
 
 <!--TOREPLACE-->
 <script src="js/globalVariables.js"></script>
+<script src="js/storagewrapper.js"></script>
 <script src="js/debug_off.js"></script>
 <script src="js/font.js"></script>
 <script src="js/rng.js"></script>
@@ -329,8 +330,8 @@ function getData(){
 		hacklink.href=url;
         
 	}
-    if (window.localStorage!==undefined && localStorage['oauth_access_token']!==undefined) {
-        var oauthAccessToken = window.localStorage.getItem("oauth_access_token");
+    if (storage_has('oauth_access_token')) {
+        var oauthAccessToken = storage_get("oauth_access_token");
         if (typeof oauthAccessToken === "string") {
             githubHTTPClient.setRequestHeader("Authorization","token "+oauthAccessToken);
         }

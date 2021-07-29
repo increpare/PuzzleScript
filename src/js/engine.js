@@ -2521,10 +2521,8 @@ function processInput(dir,dontDoWin,dontModify) {
 				restartTarget=level4Serialization();
 				hasUsedCheckpoint=true;
 				var backupStr = JSON.stringify(restartTarget);
-				if (!!window.localStorage) {
-					localStorage[document.URL+'_checkpoint']=backupStr;
-					localStorage[document.URL]=curlevel;
-				}
+				storage_set(document.URL+'_checkpoint',backupStr);
+				storage_set(document.URL,curlevel);				
 			}	 
 
 		    if (level.commandQueue.indexOf('again')>=0 && modified) {
@@ -2725,11 +2723,8 @@ function nextLevel() {
 			}
 		} else {
 			try{
-				if (!!window.localStorage) {
-	
-					localStorage.removeItem(document.URL);
-					localStorage.removeItem(document.URL+'_checkpoint');
-				}
+				storage_remove(document.URL);
+				storage_remove(document.URL+'_checkpoint');				
 			} catch(ex){
 					
 			}
@@ -2742,16 +2737,16 @@ function nextLevel() {
 		//continue existing game
 	}
 	try {
-		if (!!window.localStorage) {
-			localStorage[document.URL]=curlevel;
-			if (curlevelTarget!==null){
-				restartTarget=level4Serialization();
-				var backupStr = JSON.stringify(restartTarget);
-				localStorage[document.URL+'_checkpoint']=backupStr;
-			} else {
-				localStorage.removeItem(document.URL+"_checkpoint");
-			}		
-		}
+		
+		storage_set(document.URL,curlevel);
+		if (curlevelTarget!==null){
+			restartTarget=level4Serialization();
+			var backupStr = JSON.stringify(restartTarget);
+			storage_set(document.URL+'_checkpoint',backupStr);
+		} else {
+			storage_remove(document.URL+"_checkpoint");
+		}		
+		
 	} catch (ex) {
 
 	}

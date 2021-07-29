@@ -61,7 +61,7 @@ xhr.onreadystatechange = function() {
 		return;
 	}
 
-	window.localStorage.setItem("oauth_access_token", result.access_token);
+	storage_set("oauth_access_token", result.access_token);
 	pre.innerText = "OK! You’re all set up. You can close this window and share your game :)";
 }
 xhr.send();
