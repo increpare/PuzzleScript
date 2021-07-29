@@ -161,7 +161,7 @@ Mobile.debugDot = function (event) {
             return;
         }
         if (!this.gestured) {
-            if (event.touches.length === 0) {
+            if (event.touches.length === 0 && event.target.id!=="unMuteButton" && event.target.id!=="muteButton" ) {
                 this.handleTap();
             }
         }
