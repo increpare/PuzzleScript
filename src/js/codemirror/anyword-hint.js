@@ -326,7 +326,7 @@
                 }
             }
             //if you're editing mid-word rather than at the end, no hints.
-            if (tok.string.length>curWord.length){
+            if (tok.string.trim().length>curWord.length){
                 list=[];
             }
             return {
