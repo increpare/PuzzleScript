@@ -765,10 +765,10 @@ var codeMirrorFn = function() {
                             if (foundOthers.length>0){
                                 var warningStr = 'Object "'+candname.toUpperCase()+'" included in multiple collision layers ( layers ';
                                 for (var i=0;i<foundOthers.length;i++){
-                                    warningStr+=foundOthers[i]+", ";
+                                    warningStr+="#"+(foundOthers[i]+1)+", ";
                                 }
-                                warningStr+=state.collisionLayers.length-1;
-                                logWarning(warningStr +'). You should fix this!',state.lineNumber);                                        
+                                warningStr+="#"+state.collisionLayers.length;
+                                logWarning(warningStr +' ). You should fix this!',state.lineNumber);                                        
                             }
 
                             state.collisionLayers[state.collisionLayers.length - 1] = state.collisionLayers[state.collisionLayers.length - 1].concat(ar);
