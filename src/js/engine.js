@@ -2733,6 +2733,7 @@ function goToTitleScreen(){
 	doSetupTitleScreenLevelContinue();
 	titleSelection=(curlevel>0||curlevelTarget!==null)?1:0;
 	generateTitleScreen();
+	regenSpriteImages();
 }
 
 
