@@ -350,6 +350,16 @@
 			var doConcat = function doConcat(prev, curr, cIndex, cArray) { return prev.concat((curr >>> 16),(curr >>> 8) & 0xff,curr & 0xff); }
 			colorTab = colorTab.reduce(doConcat, []);
 			palSize = Math.ceil(Math.log2(colorTab.length / 3)) - 1;
+
+			/*
+			It seems that palSize has to be positive, 
+			so the minimum 18.c.4 in the spec 
+			(https://www.w3.org/Graphics/GIF/spec-gif89a.txt) 
+			value can be 0 (denoting a palette of size 2).
+			*/
+			if (palSize===-1){
+				palSize=0;
+			}
 		    }
 		    pixels = null;
 		    colorDepth = 8;
