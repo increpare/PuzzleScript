@@ -734,13 +734,6 @@ var games_gallery = [
     "homepage": "https://www.activeupgames.com/"
   },
   {
-    "url": "https://zacharybarbanell.itch.io/loop-deleter",
-    "thumb": "deleter.gif",
-    "title": "Loop Deleter",
-    "author": "Zachary Barbanell",
-    "homepage": "https://zacharybarbanell.itch.io/"
-  },
-  {
     "url": "https://www.puzzlescript.net/play.html?p=58325085befa37ab497168cd803c64cb",
     "thumb": "58325085befa37ab497168cd803c64cb.gif",
     "title": "Fall Leaves",
@@ -758,13 +751,6 @@ var games_gallery = [
     "thumb": "35861399c74d3f57f39aaf64daadde65.gif",
     "title": "Indigestion",
     "author": "Le Slo"
-  },
-  {
-    "url": "https://thinkycollective.itch.io/ahoist-cratey",
-    "thumb": "ahoist.gif",
-    "title": "Ahoist Cratey",
-    "author": "Thinky Collective",
-    "homepage": "https://thinkycollective.itch.io/"
   },
   {
     "url": "https://www.puzzlescript.net/play.html?p=2fe3172d2b9fe684977d184f1b6226d5",
