@@ -486,7 +486,11 @@ function levelsToArray(state) {
 
 var directionaggregates = {
     'horizontal': ['left', 'right'],
+    'horizontal_par': ['left', 'right'],
+    'horizontal_perp': ['left', 'right'],
     'vertical': ['up', 'down'],
+    'vertical_par': ['up', 'down'],
+    'vertical_perp': ['up', 'down'],
     'moving': ['up', 'down', 'left', 'right', 'action'],
     'orthogonal': ['up', 'down', 'left', 'right'],
     'perpendicular': ['^', 'v'],
@@ -1249,7 +1253,7 @@ function concretizeMovingRule(state, rule, lineNumber) {
                 var cur_rulerow = cur_rule.lhs[j];
                 for (var k = 0; k < cur_rulerow.length; k++) {
                     var cur_cell = cur_rulerow[k];
-                    var movings = getMovings(state, cur_cell);
+                    var movings = getMovings(state, cur_cell); //finds aggregate directions
                     if (movings.length > 0) {
                         shouldremove = true;
                         modified = true;
@@ -1262,12 +1266,20 @@ function concretizeMovingRule(state, rule, lineNumber) {
                             var concreteDirection = concreteDirs[l];
                             var newrule = deepCloneRule(cur_rule);
 
+                            //deep copy replacements
                             newrule.movingReplacement = {};
                             for (var moveTerm in cur_rule.movingReplacement) {
                                 if (cur_rule.movingReplacement.hasOwnProperty(moveTerm)) {
                                     var moveDat = cur_rule.movingReplacement[moveTerm];
-                                    newrule.movingReplacement[moveTerm] = [moveDat[0], moveDat[1], moveDat[2]];
+                                    newrule.movingReplacement[moveTerm] = [moveDat[0], moveDat[1], moveDat[2],moveDat[3],moveDat[4],moveDat[5]];
                                 }
+                            }
+                            newrule.aggregateDirReplacement = {};
+                            for (var moveTerm in cur_rule.aggregateDirReplacement) {
+                                if (cur_rule.aggregateDirReplacement.hasOwnProperty(moveTerm)) {
+                                    var moveDat = cur_rule.aggregateDirReplacement[moveTerm];
+                                    newrule.aggregateDirReplacement[moveTerm] = [moveDat[0], moveDat[1], moveDat[2]];
+                                }                                
                             }
 
                             concretizeMovingInCell(newrule.lhs[j][k], ambiguous_dir, cand_name, concreteDirection);
@@ -1275,10 +1287,18 @@ function concretizeMovingRule(state, rule, lineNumber) {
                                 concretizeMovingInCell(newrule.rhs[j][k], ambiguous_dir, cand_name, concreteDirection); //do for the corresponding rhs cell as well
                             }
 
-                            if (newrule.movingReplacement[cand_name] === undefined) {
-                                newrule.movingReplacement[cand_name] = [concreteDirection, 1, ambiguous_dir];
+                            if (newrule.movingReplacement[cand_name+ambiguous_dir] === undefined) {
+                                newrule.movingReplacement[cand_name+ambiguous_dir] = [concreteDirection, 1, ambiguous_dir,cand_name,j,k];
                             } else {
-                                newrule.movingReplacement[cand_name][1] = newrule.movingReplacement[cand_name][1] + 1;
+                                var mr = newrule.movingReplacement[cand_name+ambiguous_dir];
+                                if (j!==mr[4] || k!==mr[5]){
+                                    mr[1] = mr[1] + 1;
+                                }
+                            }
+                            if (newrule.aggregateDirReplacement[ambiguous_dir] === undefined) {
+                                newrule.aggregateDirReplacement[ambiguous_dir] = [concreteDirection, 1, ambiguous_dir];
+                            } else {
+                                newrule.aggregateDirReplacement[ambiguous_dir][1] = newrule.aggregateDirReplacement[ambiguous_dir][1] + 1;
                             }
 
                             result.push(newrule);
@@ -1309,11 +1329,7 @@ function concretizeMovingRule(state, rule, lineNumber) {
                 var concreteMovement = replacementInfo[0];
                 var occurrenceCount = replacementInfo[1];
                 var ambiguousMovement = replacementInfo[2];
-                if ((ambiguousMovement in ambiguous_movement_dict) || (occurrenceCount !== 1)) {
-                    ambiguous_movement_dict[ambiguousMovement] = "INVALID";
-                } else {
-                    ambiguous_movement_dict[ambiguousMovement] = concreteMovement
-                }
+                var ambiguousMovement_attachedObject = replacementInfo[3];
 
                 if (occurrenceCount === 1) {
                     //do the replacement
@@ -1321,17 +1337,52 @@ function concretizeMovingRule(state, rule, lineNumber) {
                         var cellRow_rhs = cur_rule.rhs[j];
                         for (var k = 0; k < cellRow_rhs.length; k++) {
                             var cell = cellRow_rhs[k];
-                            concretizeMovingInCell(cell, ambiguousMovement, cand_name, concreteMovement);
+                            concretizeMovingInCell(cell, ambiguousMovement, ambiguousMovement_attachedObject, concreteMovement);
                         }
                     }
                 }
+
             }
         }
+
+        
+        var ambiguous_movement_names_dict = {};
+        for (var cand_name in cur_rule.aggregateDirReplacement) {
+            if (cur_rule.aggregateDirReplacement.hasOwnProperty(cand_name)) {
+                var replacementInfo = cur_rule.aggregateDirReplacement[cand_name];
+                var concreteMovement = replacementInfo[0];
+                var occurrenceCount = replacementInfo[1];
+                var ambiguousMovement = replacementInfo[2];
+                if ((ambiguousMovement in ambiguous_movement_names_dict) || (occurrenceCount !== 1)) {
+                    ambiguous_movement_names_dict[ambiguousMovement] = "INVALID";
+                } else {
+                    ambiguous_movement_names_dict[ambiguousMovement] = concreteMovement
+                }
+            }
+        }        
 
         //for each ambiguous word, if there's a single ambiguous movement specified in the whole lhs, then replace that wholesale
         for (var ambiguousMovement in ambiguous_movement_dict) {
             if (ambiguous_movement_dict.hasOwnProperty(ambiguousMovement) && ambiguousMovement !== "INVALID") {
                 concreteMovement = ambiguous_movement_dict[ambiguousMovement];
+                if (concreteMovement === "INVALID") {
+                    continue;
+                }
+                for (var j = 0; j < cur_rule.rhs.length; j++) {
+                    var cellRow_rhs = cur_rule.rhs[j];
+                    for (var k = 0; k < cellRow_rhs.length; k++) {
+                        var cell = cellRow_rhs[k];
+                        concretizeMovingInCellByAmbiguousMovementName(cell, ambiguousMovement, concreteMovement);
+                    }
+                }
+            }
+        }
+
+        
+        //further replacements - if a movement word appears once on the left, can use to disambiguate remaining ones on the right
+        for (var ambiguousMovement in ambiguous_movement_names_dict) {
+            if (ambiguous_movement_names_dict.hasOwnProperty(ambiguousMovement) && ambiguousMovement !== "INVALID") {
+                concreteMovement = ambiguous_movement_names_dict[ambiguousMovement];
                 if (concreteMovement === "INVALID") {
                     continue;
                 }
@@ -1450,11 +1501,12 @@ function convertRelativeDirsToAbsolute(rule) {
 }
 
 var relativeDirs = ['^', 'v', '<', '>', 'parallel', 'perpendicular']; //used to index the following
+//I use _par/_perp just to keep track of providence for replacement purposes later.
 var relativeDict = {
-    'right': ['up', 'down', 'left', 'right', 'horizontal', 'vertical'],
-    'up': ['left', 'right', 'down', 'up', 'vertical', 'horizontal'],
-    'down': ['right', 'left', 'up', 'down', 'vertical', 'horizontal'],
-    'left': ['down', 'up', 'right', 'left', 'horizontal', 'vertical']
+    'right': ['up', 'down', 'left', 'right', 'horizontal_par', 'vertical_perp'],
+    'up': ['left', 'right', 'down', 'up', 'vertical_par', 'horizontal_perp'],
+    'down': ['right', 'left', 'up', 'down', 'vertical_par', 'horizontal_perp'],
+    'left': ['down', 'up', 'right', 'left', 'horizontal_par', 'vertical_perp']
 };
 
 function absolutifyRuleCell(forward, cell) {
