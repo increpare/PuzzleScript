@@ -888,6 +888,9 @@ function rulesToArray(state) {
 
     }
 
+    for (i=0;i<rules4.length;i++){
+        makeSpawnedObjectsStationary(state,rules4[i],rule.lineNumber);
+    }
     state.rules = rules4;
 }
 
@@ -920,6 +923,49 @@ function rewriteUpLeftRules(rule) {
             rule.rhs[i].reverse();
         }
     }
+}
+
+//expands all properties to list of all things it could be, filterio
+function getPossibleObjectsFromCell(state, cell) {
+    var result = [];
+    for (var j = 0; j < cell.length; j += 2) {
+        var dir = cell[j];
+        var name = cell[j + 1];
+        if (name in state.objects){
+            result.push(name);
+        }
+        else if (name in state.propertiesDict) {
+            var aliases = state.propertiesDict[name];
+            for (var k = 0; k < aliases.length; k++) {
+                var alias = aliases[k];
+                result.push(alias);
+            }        
+        }
+    }
+    return result;
+}
+
+//expands all properties to list of all things it could be, filterio
+function getPossibleMovementfullObjectsFromCell(state, cell) {
+    var result = [];
+    for (var j = 0; j < cell.length; j += 2) {
+        var dir = cell[j];
+        var name = cell[j + 1];
+        if (dir===''){
+            continue;
+        }
+        if (name in state.objects){
+            result.push(name);
+        }
+        if (name in state.propertiesDict) {
+            var aliases = state.propertiesDict[name];
+            for (var k = 0; k < aliases.length; k++) {
+                var alias = aliases[k];
+                result.push(alias);
+            }        
+        }
+    }
+    return result;
 }
 
 function getPropertiesFromCell(state, cell) {
@@ -1150,6 +1196,43 @@ function concretizePropertyRule(state, rule, lineNumber) {
     return result;
 }
 
+function makeSpawnedObjectsStationary(state,rule,lineNumber){
+    //movement not getting correctly cleared from tile #492
+    //[ > Player | ] -> [ Crate | Player ] if there was a player already in the second cell, it's not replaced with a stationary player.
+    //if there are properties remaining by this stage, just ignore them ( c.f. "[ >  Moveable | Moveable ] -> [ > Moveable | > Moveable ]" in block faker, what's left in this form) - this only happens IIRC when the properties span a single layer so it's)
+    //if am object without moving-annotations appears on the RHS, and that object is not present on the lhs (either explicitly as an object, or implicitly in a property), add a 'stationary'
+    if (rule.late){
+        return;
+    }
+
+    for (var j = 0; j < rule.rhs.length; j++) {
+        var row_l = rule.lhs[j];
+        var row_r = rule.rhs[j];
+        for (var k = 0; k < row_r.length; k++) {
+            var cell=row_r[k];
+
+            //this is super intricate. uff. 
+            var objects_l = getPossibleObjectsFromCell(state, row_l[k]);
+            var stuff_l = getPossibleMovementfullObjectsFromCell(state, row_l[k]);
+            var layers = objects_l.map(n=>state.objects[n].layer);
+            for (var l = 0; l < cell.length; l += 2) {
+                var dir = cell[l];
+                if (dir!==""){
+                    continue;
+                }
+                var name = cell[l + 1];
+                if (name in state.propertiesDict || objects_l.indexOf(name)>=0){
+                    continue;
+                }
+                var r_layer = state.objects[name].layer;
+                if (layers.indexOf(r_layer)===-1){
+                    cell[l]='stationary';
+                }
+            }
+        }
+    }
+
+}
 
 function concretizeMovingRule(state, rule, lineNumber) {
 
@@ -1607,9 +1690,10 @@ function rulesToMask(state) {
                         } else {
                             // shouldn't need to do anything here...
                         }
+                        //possibility - if object not present on lhs in same position, clear movement
                         if (object_dir === 'stationary') {
                             movementsClear.ishiftor(0x1f, 5 * layerIndex);
-                        }
+                        }                
                         if (object_dir === 'randomdir') {
                             randomDirMask_r.ishiftor(dirMasks[object_dir], 5 * layerIndex);
                         } else {
@@ -1618,6 +1702,7 @@ function rulesToMask(state) {
                     }
                 }
 
+                //I don't know why these two ifs here are needed.
                 if (!(objectsPresent.bitsSetInArray(objectsSet.data))) {
                     objectsClear.ior(objectsPresent); // clear out old objects
                 }
@@ -1625,6 +1710,16 @@ function rulesToMask(state) {
                     movementsClear.ior(movementsPresent); // ... and movements
                 }
 
+                /*
+                for rules like this I want to clear movements on newly-spawned entities
+                    [ >  Player | Crate ] -> [  >  Player | > Crate  ]
+                    [ > Player | ] -> [ Crate | Player ]
+
+                WITHOUT havin this rule remove movements
+                    [ > Player | ] -> [ Crate | Player ]
+                (bug #492)
+                */
+               
                 for (var l = 0; l < layerCount; l++) {
                     if (layersUsed_l[l] !== null && layersUsed_r[l] === null) {
                         // a layer matched on the lhs, but not on the rhs
