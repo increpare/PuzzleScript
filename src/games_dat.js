@@ -779,4 +779,11 @@ var games_gallery = [
     "author": "Ezra Szanton",
     "homepage": "https://www.ezras.work/"
   },
+  {
+    "url": "https://nebu-soku.itch.io/two-worlds",
+    "thumb": "twoworlds.gif",
+    "title": "Two Worlds",
+    "author": "nebu soku",
+    "homepage": "https://nebu-soku.itch.io"
+  },
 ]
