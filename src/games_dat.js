@@ -773,7 +773,7 @@ var games_gallery = [
     "homepage": "https://galactical.itch.io/"
   },
   {
-    "url": "https://www.puzzlescript.net/editor.html?hack=3754910c54ef200ac105b4152654bbea",
+    "url": "https://www.puzzlescript.net/play.html?p=3754910c54ef200ac105b4152654bbea",
     "thumb": "ezra.gif",
     "title": "Sokodig",
     "author": "Ezra Szanton",
