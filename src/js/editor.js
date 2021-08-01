@@ -197,12 +197,12 @@ function tryLoadGist(id) {
 			compile(["restart"],code);
 		}
 	}
-	if (storage_has('oauth_access_token')) {
-        var oauthAccessToken = storage_get("oauth_access_token");
-        if (typeof oauthAccessToken === "string") {
-            githubHTTPClient.setRequestHeader("Authorization","token "+oauthAccessToken);
-        }
-    }
+	// if (storage_has('oauth_access_token')) {
+    //     var oauthAccessToken = storage_get("oauth_access_token");
+    //     if (typeof oauthAccessToken === "string") {
+    //         githubHTTPClient.setRequestHeader("Authorization","token "+oauthAccessToken);
+    //     }
+    // }
 	githubHTTPClient.setRequestHeader("Content-type","application/x-www-form-urlencoded");
 	githubHTTPClient.send();
 }
