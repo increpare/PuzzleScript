@@ -289,12 +289,12 @@ function redraw() {
         }
 
 	    if (levelEditorOpened) {
-	    	drawEditorIcons();
+	    	drawEditorIcons(mini,minj);
 	    }
     }
 }
 
-function drawEditorIcons() {
+function drawEditorIcons(mini,minj) {
 	var glyphCount = glyphImages.length;
 	var glyphStartIndex=0;
 	var glyphEndIndex = glyphImages.length;/*Math.min(
@@ -325,6 +325,43 @@ function drawEditorIcons() {
 			ctx.drawImage(glyphHighlight,xoffset+xpos*cellwidth,yoffset+ypos*cellheight-cellheight*(1+editorRowCount));
 		} 		
 	}
+
+    //filched from https://raw.githubusercontent.com/ClementSparrow/Pattern-Script/master/src/js/graphics.js
+    var tooltip_string = ''
+    var tooltip_objects = null
+    // prepare tooltip: legend for highlighted editor icon
+    if ( (mouseCoordX >= 0) && (mouseCoordX < screenwidth) && (mouseIndex >= 0) && (mouseIndex < glyphsToDisplay) )
+    {
+        const glyphIndex = glyphStartIndex + mouseIndex
+        const identifier_index = glyphImagesCorrespondance[glyphIndex]
+        tooltip_string = identifier_index 
+        if (identifier_index in state.synonymsDict){
+            tooltip_string += " = " + state.synonymsDict[identifier_index];
+        } else if (identifier_index in state.aggregatesDict){
+            tooltip_string += " = " + state.aggregatesDict[identifier_index].join(" and ");
+            
+        }
+    }
+    // prepare tooltip: content of a level's cell
+    else if ( (mouseCoordX >= 0) && (mouseCoordY >= 0) && (mouseCoordX < screenwidth) && (mouseCoordY < screenheight-editorRowCount) )
+    {
+        const posMask = level.getCellInto((mouseCoordY+minj) + (mouseCoordX+mini)*level.height, _o12);
+        tooltip_objects = state.idDict.filter( (x,k) => (posMask.get(k) != 0) )
+            // prepare tooltip: object names
+        if (tooltip_objects !== null)
+        {
+            tooltip_string = tooltip_objects.join(', ')
+        }
+    }
+
+    // show tooltip
+    if (tooltip_string.length > 0)
+    {
+        ctx.fillStyle = state.fgcolor;
+        ctx.font = `16px "Source Sans Pro", Helvetica, Arial, sans-serif`;
+        ctx.fillText(tooltip_string, xoffset, yoffset-0.4*cellheight);
+    }
+
 	if (mouseCoordX>=-1&&mouseCoordY>=-1&&mouseCoordX<screenwidth-1&&mouseCoordY<screenheight-1-editorRowCount) {
 		if (mouseCoordX==-1||mouseCoordY==-1||mouseCoordX==screenwidth-2||mouseCoordY===screenheight-2-editorRowCount) {
 			ctx.drawImage(glyphHighlightResize,

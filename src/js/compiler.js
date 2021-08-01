@@ -51,7 +51,7 @@ function generateExtraMembers(state) {
 
     //annotate objects with layers
     //assign ids at the same time
-    state.idDict = {};
+    state.idDict = [];
     var idcount = 0;
     for (var layerIndex = 0; layerIndex < state.collisionLayers.length; layerIndex++) {
         for (var j = 0; j < state.collisionLayers[layerIndex].length; j++) {
