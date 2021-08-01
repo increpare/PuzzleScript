@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="shortcut icon" type="image/x-icon" href="ico/favicon.ico" />
+
+    <title>Tool for extracting source code from exported standalone games - PuzzleScript Documentation</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="css/bootstrap.css" rel="stylesheet">
+
+    <!-- Custom styles for this template -->
+    <link href="css/bootstrap-theme.css" rel="stylesheet">
+
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+      <script src="../../assets/js/html5shiv.js"></script>
+      <script src="../../assets/js/respond.min.js"></script>
+    <![endif]-->
+  </head>
+
+  <body>
+
+    <div class="navbar navbar-inverse navbar-fixed-top">
+      <div class="container">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="../index.html"><img src="../images/mascot_colorful.png"> PuzzleScript</a>
+        </div>
+        <div class="collapse navbar-collapse">
+          <ul class="nav navbar-nav">
+              <li><a href="../editor.html">Make A Game</a></li>
+              
+              <li class="active"><a href="documentation.html">Documentation</a></li>
+          </ul>          
+          <ul class="nav navbar-nav navbar-right">
+            <li><a href="https://github.com/sponsors/increpare">Sponsor</a></li>
+            <li><a href="about.html">About</a></li>
+          </ul>
+        </div><!--/.nav-collapse -->
+      </div>
+    </div>
+
+    <div class="container">
+
+      <p>
+        <ol class="breadcrumb">
+          <li><a href="documentation.html">Documentation</a></li>
+          <li class="active">Tool for extracting source code from exported standalone games</li>
+        </ol>
+        <p>
+<h1>Tool for extracting source code from exported standalone games</h1>
+<p>
+    Kept a copy of a playable copy of your puzzlescript game as a HTML file around, but lost the source code? Worry no more, just drop the HTML file here and it'll give you the original puzzlescript code :)
+<p>
+
+
+
+    <form id="myform">
+        <div class="form-group">
+          <input id="myfile" name="file" type="file" />
+          <p></p>
+          <textarea class="form-control"  id="text" rows="20" cols="40">nothing loaded</textarea>
+        </div>
+      </form>
+
+    <script>
+        /*
+
+
+        sourceCode="[ SCRIPT]";compile(["restart"]
+        */
+        function unescapeSlashes(str) {
+            // add another escaped slash if the string ends with an odd
+            // number of escaped slashes which will crash JSON.parse
+            let parsedStr = str.replace(/(^|[^\\])(\\\\)*\\$/, "$&\\");
+
+            // escape unescaped double quotes to prevent error with
+            // added double quotes in json string
+            parsedStr = parsedStr.replace(/(^|[^\\])((\\\\)*")/g, "$1\\$2");
+
+            try {
+                parsedStr = JSON.parse(`"${parsedStr}"`);
+            } catch(e) {
+                return str;
+            }
+            return parsedStr ;
+        }
+
+        function rip(s){
+            var prebit=`sourceCode="`;
+            var preindex = s.indexOf(prebit)+prebit.length;
+            s = s.substring(preindex);
+            var postbit=`";compile\(\["restart"\]`;
+            var postindex = s.indexOf(postbit);
+            s = s.substring(0,postindex);
+            return unescapeSlashes(s);
+        }
+
+        document.forms['myform'].elements['myfile'].onchange = function(evt) {
+        if(!window.FileReader) return; // Browser is not compatible
+
+        var reader = new FileReader();
+
+        reader.onload = function(evt) {
+            if(evt.target.readyState != 2) return;
+            if(evt.target.error) {
+                alert('Error while reading file');
+                return;
+            }
+
+            filecontent = evt.target.result;
+
+            document.forms['myform'].elements['text'].value = rip(evt.target.result);
+        };
+
+        reader.readAsText(evt.target.files[0]);
+    };
+    </script>
+    <!-- 
+
+
+    -->
+    </div><!-- /.container -->
+
+
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="js/jquery.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+  </body>
+</html>
