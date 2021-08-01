@@ -1351,7 +1351,7 @@ function concretizeMovingRule(state, rule, lineNumber) {
             }
         }
 
-        
+        //I don't fully understand why the following part is needed (and I wrote this yesterday), but it's not obviously malicious.
         var ambiguous_movement_names_dict = {};
         for (var cand_name in cur_rule.aggregateDirReplacement) {
             if (cur_rule.aggregateDirReplacement.hasOwnProperty(cand_name)) {
@@ -1359,6 +1359,7 @@ function concretizeMovingRule(state, rule, lineNumber) {
                 var concreteMovement = replacementInfo[0];
                 var occurrenceCount = replacementInfo[1];
                 var ambiguousMovement = replacementInfo[2];
+                //are both the following boolean bits necessary, or just the latter? ah well, no harm it seems.
                 if ((ambiguousMovement in ambiguous_movement_names_dict) || (occurrenceCount !== 1)) {
                     ambiguous_movement_names_dict[ambiguousMovement] = "INVALID";
                 } else {
