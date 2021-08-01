@@ -146,6 +146,10 @@ var titleMode=0;//1 means there are options
 var titleSelection=0;
 var titleSelected=false;
 
+function showContinueOptionOnTitleScreen(){
+	return (curlevel>0||curlevelTarget!==null)&&(curlevel in state.levels);
+}
+
 function unloadGame() {
 	state=introstate;
 	level = new Level(0, 5, 5, 2, null);
@@ -157,7 +161,7 @@ function unloadGame() {
 
 function generateTitleScreen()
 {
-	titleMode=(curlevel>0||curlevelTarget!==null)?1:0;
+	titleMode=showContinueOptionOnTitleScreen()?1:0;
 
 	if (state.levels.length===0) {
 		titleImage=intro_template;
@@ -403,8 +407,8 @@ function loadLevelFromLevelDat(state,leveldat,randomseed,clearinputhistory) {
 	forceRegenImages=true;
 	ignoreNotJustPressedAction=true;
 	titleScreen=false;
-	titleMode=(curlevel>0||curlevelTarget!==null)?1:0;
-	titleSelection=(curlevel>0||curlevelTarget!==null)?1:0;
+	titleMode=showContinueOptionOnTitleScreen()?1:0;
+	titleSelection=showContinueOptionOnTitleScreen()?1:0;
 	titleSelected=false;
     againing=false;
     if (leveldat===undefined) {
@@ -696,13 +700,13 @@ function setGameState(_state, command, randomseed) {
 		    titleScreen=true;
 		    tryPlayTitleSound();
 		    textMode=true;
-		    titleSelection=(curlevel>0||curlevelTarget!==null)?1:0;
+		    titleSelection=showContinueOptionOnTitleScreen()?1:0;
 		    titleSelected=false;
 		    quittingMessageScreen=false;
 		    quittingTitleScreen=false;
 		    messageselected=false;
 		    titleMode = 0;
-		    if ((curlevel>0||curlevelTarget!==null)) {
+		    if (showContinueOptionOnTitleScreen()) {
 		    	titleMode=1;
 		    }
 		    generateTitleScreen();
@@ -724,7 +728,7 @@ function setGameState(_state, command, randomseed) {
 			    timer=0;
 			    titleScreen=false;
 			    textMode=false;
-			    titleSelection=(curlevel>0||curlevelTarget!==null)?1:0;
+			    titleSelection=showContinueOptionOnTitleScreen()?1:0;
 			    titleSelected=false;
 			    quittingMessageScreen=false;
 			    quittingTitleScreen=false;
@@ -743,7 +747,7 @@ function setGameState(_state, command, randomseed) {
 		    timer=0;
 		    titleScreen=false;
 		    textMode=false;
-		    titleSelection=(curlevel>0||curlevelTarget!==null)?1:0;
+		    titleSelection=showContinueOptionOnTitleScreen()?1:0;
 		    titleSelected=false;
 		    quittingMessageScreen=false;
 		    quittingTitleScreen=false;
@@ -763,7 +767,7 @@ function setGameState(_state, command, randomseed) {
 				    timer=0;
 				    titleScreen=false;
 				    textMode=false;
-				    titleSelection=(curlevel>0||curlevelTarget!==null)?1:0;
+				    titleSelection=showContinueOptionOnTitleScreen()?1:0;
 				    titleSelected=false;
 				    quittingMessageScreen=false;
 				    quittingTitleScreen=false;
@@ -2763,7 +2767,7 @@ function goToTitleScreen(){
 	titleScreen=true;
 	textMode=true;
 	doSetupTitleScreenLevelContinue();
-	titleSelection=(curlevel>0||curlevelTarget!==null)?1:0;
+	titleSelection=showContinueOptionOnTitleScreen()?1:0;
 	generateTitleScreen();
 	if (canvas!==null){//otherwise triggers error in cat bastard test
 		regenSpriteImages();
