@@ -777,6 +777,7 @@ function processRuleString(rule, state, curRules) {
         for (var i = 0; i < lhs_cells.length; i++) {
             if (lhs_cells[i].length != rhs_cells[i].length) {
                 logError('In a rule, each pattern to match on the left must have a corresponding pattern on the right of equal length (number of cells).', lineNumber);
+                state.invalid=true;
             }
             if (lhs_cells[i].length == 0) {
                 logError("You have an totally empty pattern on the left-hand side.  This will match *everything*.  You certainly don't want this.");
@@ -874,6 +875,11 @@ function rulesToArray(state) {
         rewriteUpLeftRules(rule);
         //replace aggregates with what they mean
         atomizeAggregates(state, rule);
+
+        if (state.invalid){
+            return;
+        }
+        
         //replace synonyms with what they mean
         rephraseSynonyms(state, rule);
     }
@@ -1417,6 +1423,7 @@ function concretizeMovingRule(state, rule, lineNumber) {
 
     if (rhsAmbiguousMovementsRemain.length > 0) {
         logError('This rule has an ambiguous movement on the right-hand side, \"' + rhsAmbiguousMovementsRemain + "\", that can't be inferred from the left-hand side.  (either for every ambiguous movement associated to an entity on the right there has to be a corresponding one on the left attached to the same entity, OR, if there's a single occurrence of a particular ambiguous movement on the left, all properties of the same movement attached to the same object on the right are assumed to be the same (or something like that)).", lineNumber);
+        state.invalid=true;
     }
 
     return result;
@@ -1647,6 +1654,13 @@ function rulesToMask(state) {
                     cellrow_l[k] = new CellPattern([objectsPresent, objectsMissing, anyObjectsPresent, movementsPresent, movementsMissing, null]);
                 }
 
+                //if X no X, then cancel
+                if (objectsPresent.anyBitsInCommon(objectsMissing)){
+                    state.rules.splice(i,1);
+                    i--;
+                    continue;
+                }
+                
                 if (rule.rhs.length === 0) {
                     continue;
                 }
@@ -2646,10 +2660,17 @@ function loadFile(str) {
     generateMasks(state);
     levelsToArray(state);
     rulesToArray(state);
+    if (state.invalid>0){
+        return null;
+    }
 
     cacheAllRuleNames(state);
 
     removeDuplicateRules(state);
+
+    if (state.invalid>0){
+        return null;
+    }
 
     rulesToMask(state);
 
@@ -2771,7 +2792,10 @@ function compile(command, text, randomseed) {
             }
         }
     }
-    setGameState(state, command, randomseed);
+
+    if (state!==null){//otherwise error
+        setGameState(state, command, randomseed);
+    }
 
     clearInputHistory();
 
