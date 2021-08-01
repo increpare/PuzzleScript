@@ -364,13 +364,6 @@ var games_gallery = [
     "author": "Connorses [Loneship Games]"
   },
   {
-    "url": "https://www.ben-reilly.com/weakly-games/007-dinnertime/",
-    "thumb": "dinnertime.gif",
-    "title": "Dinnertime!",
-    "author": "Ben Reilly",
-    "homepage": "https://www.ben-reilly.com/"
-  },
-  {
     "url": "https://www.puzzlescript.net/play.html?p=09d9778d0e69116c5406",
     "thumb": "09d9778d0e69116c5406.gif",
     "title": "pretender to the crown",
