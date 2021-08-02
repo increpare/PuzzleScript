@@ -23,7 +23,10 @@ function selectText(containerid,e) {
 	    } else if (window.getSelection) {
 	        var range = document.createRange();
 	        range.selectNode(myspan);
-	        window.getSelection().addRange(range);
+			var selection = window.getSelection();
+			//why removeallranges? https://stackoverflow.com/a/43443101 whatever...
+			selection.removeAllRanges();
+	        selection.addRange(range);
 	    }
 	}
 }
