@@ -57,7 +57,16 @@ function dumpTestCase() {
 
 	var resultarray = [levelDat,input,outputDat,recordingStartsFromLevel,loadedLevelSeed];
 	var resultstring = JSON.stringify(resultarray);
-	consolePrint("<br>Recorded play session data (for play session tests - testdata.js):<br><br><br>"+resultstring+"<br><br><br>",true);
+	resultstring = `<br>
+	[<br>
+		"${state.metadata.title||"untitled test"}",<br>
+		${resultstring}<br>
+	],`;
+	
+	selectableint++;
+	var tag = 'selectable'+selectableint;
+	
+	consolePrint("<br>Recorded play session data (for play session tests - testdata.js):<br><br><br><span id=\""+tag+"\" onclick=\"selectText('"+tag+"',event)\">"+resultstring+"</span><br><br><br>",true);
 
 }
 
