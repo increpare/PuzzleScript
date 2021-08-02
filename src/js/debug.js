@@ -47,7 +47,14 @@ function dumpTestCase() {
 	var errorStrings_stripped = errorStrings.map(stripHTMLTags);
 	var resultarray = [levelDat,errorStrings_stripped,errorCount];
 	var resultstring = JSON.stringify(resultarray);
-	consolePrint("<br>Compilation error/warning data (for error message tests - errormessage_testdata.js):<br><br><br>"+resultstring+"<br><br><br>",true);
+	resultstring = `<br>
+	[<br>
+		"${state.metadata.title||"untitled test"}",<br>
+		${resultstring}<br>
+	],`;
+	selectableint++;
+	var tag = 'selectable'+selectableint;
+	consolePrint("<br>Compilation error/warning data (for error message tests - errormessage_testdata.js):<br><br><br><span id=\""+tag+"\" onclick=\"selectText('"+tag+"',event)\">"+resultstring+"</span><br><br><br>",true);
 
 	
 	//normal session recording data
