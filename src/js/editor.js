@@ -33,11 +33,14 @@ CodeMirror.commands.swapLineUp = function(cm) {
       var range = ranges[i], from = range.from().line - 1, to = range.to().line;
       newSels.push({anchor: CodeMirror.Pos(range.anchor.line - 1, range.anchor.ch),
                     head: CodeMirror.Pos(range.head.line - 1, range.head.ch)});
-      if (range.to().ch == 0 && !range.empty()) --to;
+    //   if (range.to().ch == 0 && !range.empty()) --to;
       if (from > at) linesToMove.push(from, to);
       else if (linesToMove.length) linesToMove[linesToMove.length - 1] = to;
       at = to;
     }
+	if (linesToMove.length===0){
+		return;
+	}
     cm.operation(function() {
       for (var i = 0; i < linesToMove.length; i += 2) {
         var from = linesToMove[i], to = linesToMove[i + 1];
@@ -57,7 +60,7 @@ CodeMirror.commands.swapLineUp = function(cm) {
     var ranges = cm.listSelections(), linesToMove = [], at = cm.lastLine() + 1;
     for (var i = ranges.length - 1; i >= 0; i--) {
       var range = ranges[i], from = range.to().line + 1, to = range.from().line;
-      if (range.to().ch == 0 && !range.empty()) from--;
+    //   if (range.to().ch == 0 && !range.empty()) from--;
       if (from < at) linesToMove.push(from, to);
       else if (linesToMove.length) linesToMove[linesToMove.length - 1] = to;
       at = to;
