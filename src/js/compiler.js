@@ -100,11 +100,15 @@ function generateExtraMembers(state) {
                 colorPalette = colorPalettes[val];
             }
         } else if (key === 'debug') {
-            debugMode = true;
-            cache_console_messages = true;
+            if (IDE && unitTesting===false){
+                debugMode = true;
+                cache_console_messages = true;
+            }
         } else if (key === 'verbose_logging') {
-            verbose_logging = true;
-            cache_console_messages = true;
+            if (IDE && unitTesting===false){
+                verbose_logging = true;
+                cache_console_messages = true;
+            }
         } else if (key === 'throttle_movement') {
             throttle_movement = true;
         }

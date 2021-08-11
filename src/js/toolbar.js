@@ -120,6 +120,7 @@ function loadDropDownChange() {
 
 	    	var saveText = sd.text;
 			editor.setValue(saveText);
+			clearConsole();
 			setEditorClean();
 			var loadDropdown = document.getElementById('loadDropDown');
 			loadDropdown.selectedIndex=0;

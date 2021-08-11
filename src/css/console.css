@@ -21,3 +21,14 @@
 .betaText {
 	color: orange;
 }
+
+.hoverpreview::before{
+	content: '👁 ';
+}
+.hoverpreview:hover {
+	background-color:#374b6c;
+}
+
+.invisible {
+	visibility:hidden;
+}

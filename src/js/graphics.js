@@ -80,11 +80,13 @@ function regenSpriteImages() {
 var glyphImagesCorrespondance;
 var glyphImages;
 var glyphHighlight;
+var glyphHighlightDiff;
 var glyphHighlightResize;
 var glyphPrintButton;
 var glyphMouseOver;
 var glyphSelectedIndex=0;
 var editorRowCount=1;
+var editorGlyphMovements=[];
 
 var canvasdict={};
 function makeSpriteCanvas(name) {
@@ -125,7 +127,7 @@ function generateGlyphImages() {
 		}
 	}
 
-	{
+	if (IDE) {
 		//make highlight thingy
 		glyphHighlight = makeSpriteCanvas("highlight");
 		var spritectx = glyphHighlight.getContext('2d');
@@ -136,12 +138,34 @@ function generateGlyphImages() {
 		
 		spritectx.fillRect(0,cellheight-1,cellwidth,1);
 		spritectx.fillRect(cellwidth-1,0,1,cellheight);
-	}
 
-	{
 		glyphPrintButton = textImages['editor_s'];
-	}
-	{
+
+		//make diff highlighter thingy
+		glyphHighlightDiff = makeSpriteCanvas("glyphHighlightDiff");
+		var spritectx = glyphHighlightDiff.getContext('2d');
+        
+		spritectx.fillStyle =  state.bgcolor;
+
+		spritectx.fillRect(0,0,cellwidth,2);
+		spritectx.fillRect(0,0,2,cellheight);
+		
+		spritectx.fillRect(0,cellheight-2,cellwidth,2);
+		spritectx.fillRect(cellwidth-2,0,2,cellheight);
+
+		spritectx.fillStyle = state.fgcolor;
+
+		spritectx.fillRect(0,0,cellwidth,1);
+		spritectx.fillRect(0,0,1,cellheight);
+		
+		spritectx.fillRect(0,cellheight-1,cellwidth,1);
+		spritectx.fillRect(cellwidth-1,0,1,cellheight);
+
+        
+
+		glyphPrintButton = textImages['editor_s'];
+
+
 		//make highlight thingy
 		glyphHighlightResize = makeSpriteCanvas("highlightresize");
 		var spritectx = glyphHighlightResize.getContext('2d');
@@ -154,11 +178,9 @@ function generateGlyphImages() {
 
 		spritectx.fillRect(minx,0,xsize,cellheight);
 		spritectx.fillRect(0,miny,cellwidth,ysize);
-	}
 
-	{
 		//make highlight thingy
-		glyphMouseOver = makeSpriteCanvas();
+		glyphMouseOver = makeSpriteCanvas("glyphMouseOver");
 		var spritectx = glyphMouseOver.getContext('2d');
 		spritectx.fillStyle = 'yellow';
 		
@@ -167,6 +189,54 @@ function generateGlyphImages() {
 		
 		spritectx.fillRect(0,cellheight-2,cellwidth,2);
 		spritectx.fillRect(cellwidth-2,0,2,cellheight);
+
+        //make movement glyphs
+
+        /* 
+        up:1
+        down:2
+        left:4
+        right:8
+        action:16
+
+        */
+        const coords = [
+            //up
+            [ [3,2],[5,0],[7,2]],
+            //down
+            [ [3,8],[5,9],[7,8]],
+            //left
+            [ [2,3],[0,5],[2,7]],
+            //right
+            [ [7,3],[9,5],[7,7]],
+            //action
+            [ [3,5],[5,7],[7,5],[5,3]],
+        ];
+
+        for (var i=0;i<coords.length;i++){
+            editorGlyphMovements[i]=makeSpriteCanvas("editorGlyphMovements"+i);
+            var path = coords[i];
+
+            var spritectx = editorGlyphMovements[i].getContext('2d');
+            spritectx.lineWidth=1;
+            
+            
+		    spritectx.fillStyle =  state.bgcolor;
+		    spritectx.strokeStyle = state.fgcolor;
+
+
+            spritectx.beginPath();       // Start a new path
+            spritectx.moveTo(path[0][0]*cellwidth/10.0, path[0][1]*cellheight/10.0);    
+            for (var j=1;j<path.length;j++){
+                spritectx.lineTo(path[j][0]*cellwidth/10.0, path[j][1]*cellheight/10.0);   
+            }
+            spritectx.closePath();
+            spritectx.fill();
+            spritectx.stroke();          // Render the path
+
+                
+
+        }
 	}
 }
 
@@ -221,6 +291,11 @@ function redraw() {
         }
         return;
     } else {
+        var curlevel = level;
+        if (diffToVisualize!==null){
+            curlevel = new Level(-1,diffToVisualize.width,diffToVisualize.height,diffToVisualize.layerCount,diffToVisualize.objects);
+            curlevel.movements = diffToVisualize.movements;
+        }
         ctx.fillStyle = state.bgcolor;
         ctx.fillRect(0, 0, canvas.width, canvas.height);
 
@@ -238,15 +313,15 @@ function redraw() {
             var playerPositions = getPlayerPositions();
             if (playerPositions.length>0) {
                 var playerPosition=playerPositions[0];
-                var px = (playerPosition/(level.height))|0;
-                var py = (playerPosition%level.height)|0;
+                var px = (playerPosition/(curlevel.height))|0;
+                var py = (playerPosition%curlevel.height)|0;
 
                 var screenx = (px/screenwidth)|0;
                 var screeny = (py/screenheight)|0;
                 mini=screenx*screenwidth;
                 minj=screeny*screenheight;
-                maxi=Math.min(mini+screenwidth,level.width);
-                maxj=Math.min(minj+screenheight,level.height);
+                maxi=Math.min(mini+screenwidth,curlevel.width);
+                maxj=Math.min(minj+screenheight,curlevel.height);
 
                 oldflickscreendat=[mini,minj,maxi,maxj];
             } else if (oldflickscreendat.length>0){
@@ -259,12 +334,12 @@ function redraw() {
             var playerPositions = getPlayerPositions();
             if (playerPositions.length>0) {
                 var playerPosition=playerPositions[0];
-                var px = (playerPosition/(level.height))|0;
-                var py = (playerPosition%level.height)|0;
-                mini=Math.max(Math.min(px-((screenwidth/2)|0),level.width-screenwidth),0);
-                minj=Math.max(Math.min(py-((screenheight/2)|0),level.height-screenheight),0);
-                maxi=Math.min(mini+screenwidth,level.width);
-                maxj=Math.min(minj+screenheight,level.height);
+                var px = (playerPosition/(curlevel.height))|0;
+                var py = (playerPosition%curlevel.height)|0;
+                mini=Math.max(Math.min(px-((screenwidth/2)|0),curlevel.width-screenwidth),0);
+                minj=Math.max(Math.min(py-((screenheight/2)|0),curlevel.height-screenheight),0);
+                maxi=Math.min(mini+screenwidth,curlevel.width);
+                maxj=Math.min(minj+screenheight,curlevel.height);
                 oldflickscreendat=[mini,minj,maxi,maxj];
             }  else if (oldflickscreendat.length>0){
                 mini=oldflickscreendat[0];
@@ -275,15 +350,62 @@ function redraw() {
         }
 	    
 
+
         for (var i = mini; i < maxi; i++) {
             for (var j = minj; j < maxj; j++) {
-                var posIndex = j + i * level.height;
-                var posMask = level.getCellInto(posIndex,_o12);                
+                var posIndex = j + i * curlevel.height;
+                var posMask = curlevel.getCellInto(posIndex,_o12);                
                 for (var k = 0; k < state.objectCount; k++) {
                     if (posMask.get(k) != 0) {                  
                         var sprite = spriteimages[k];
                         ctx.drawImage(sprite, xoffset + (i-mini) * cellwidth, yoffset + (j-minj) * cellheight);
                     }
+                }
+            }
+        }
+        
+        if (diffToVisualize!==null){
+            //find previous state (this is never called on the very first state, the one before player inputs are applied, so there is always a previous state)
+            var prevstate_lineNumberIndex=diffToVisualize.lineNumber-1;
+            for (;prevstate_lineNumberIndex>=-1;prevstate_lineNumberIndex--)
+            {
+                if (debug_visualisation_array[diffToVisualize.turnIndex].hasOwnProperty(prevstate_lineNumberIndex)){
+                    break;
+                }
+            }
+
+            var prev_state = debug_visualisation_array[diffToVisualize.turnIndex][prevstate_lineNumberIndex];
+            var prevlevel = new Level(-1,prev_state.width,prev_state.height,prev_state.layerCount,prev_state.objects);
+            prevlevel.movements = prev_state.movements;
+        
+            for (var i = mini; i < maxi; i++) {
+                for (var j = minj; j < maxj; j++) {
+                    var posIndex = j + i * curlevel.height;
+                    var movementbitvec_PREV = prevlevel.getMovements(posIndex);
+                    var movementbitvec = curlevel.getMovements(posIndex);
+                    
+                    var posMask_PREV = prevlevel.getCellInto(posIndex,_o11); 
+                    var posMask = curlevel.getCellInto(posIndex,_o12); 
+                    if (!movementbitvec.equals(movementbitvec_PREV) || !posMask.equals(posMask_PREV)){
+                        ctx.drawImage(glyphHighlightDiff, xoffset + (i-mini) * cellwidth, yoffset + (j-minj) * cellheight);
+
+                    }
+                }
+            }
+        
+            //draw movements!
+            for (var i = mini; i < maxi; i++) {
+                for (var j = minj; j < maxj; j++) {
+                    var posIndex = j + i * curlevel.height;
+                    var movementbitvec = curlevel.getMovements(posIndex);
+                    for (var layer=0;layer<curlevel.layerCount;layer++) {
+                        var layerMovement = movementbitvec.getshiftor(0x1f, 5*layer);
+                        for (var k = 0; k < 5; k++) {
+                            if ((layerMovement&Math.pow(2,k))!==0){
+                                ctx.drawImage(editorGlyphMovements[k], xoffset + (i-mini) * cellwidth, yoffset + (j-minj) * cellheight);
+                            }
+                        }
+                    }                             
                 }
             }
         }

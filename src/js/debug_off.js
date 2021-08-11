@@ -3,6 +3,7 @@ var canDump=false;
 var canOpenEditor=false;
 var canYoutube=true;
 var IDE=false;
+const diffToVisualize=null;
 
 function stripTags(str) {
 	var div = document.createElement("div");

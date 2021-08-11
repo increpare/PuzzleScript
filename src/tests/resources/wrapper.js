@@ -29,3 +29,4 @@ var editor = {
 	getValue : function () { return levelString }
 }
 
+function addToDebugTimeline(level, lineNumber){}

@@ -34,7 +34,7 @@
             ["text_color", "orange", "Can accept a color name or hex code (in the form #412bbc). Controls the font color of title/message screens, as well as the font color in the website. Background_color is its sibling."],
             ["title", "My Amazing Puzzle Game", "The name of your game. Appears on the title screen."],
             ["throttle_movement", "", "For use in conjunction with realtime_interval - this stops you from moving crazy fast - repeated keypresses of the same movement direction will not increase your speed. This doesn't apply to the action button."],
-            ["verbose_logging", "", "As you play the game, spits out information about all rules applied as you play"],
+            ["verbose_logging", "", "As you play the game, spits out information about all rules applied as you play, and also allows visual inspection of what exactly the rules do by hovering over them with your mouse (or tapping them on touchscreen)."],
             ["zoomscreen", "WxH", "Zooms the camera in to a WxH section of the map around the player, centered on the player."]
         ];
 

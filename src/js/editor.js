@@ -192,6 +192,7 @@ function tryLoadGist(id) {
 			var code=result["files"]["script.txt"]["content"];
 			editor.setValue(code);
 			editor.clearHistory();
+			clearConsole();
 			setEditorClean();
 			unloadGame();
 			compile(["restart"],code);
@@ -217,6 +218,7 @@ function tryLoadFile(fileName) {
   		}
   		
 		editor.setValue(fileOpenClient.responseText);
+		clearConsole();
 		setEditorClean();
 		unloadGame();
 		compile(["restart"]);
@@ -255,3 +257,37 @@ editor.on('keyup', function (editor, event) {
 		}
 	}
 });
+
+
+function debugPreview(turnIndex,lineNumber){
+	diffToVisualize=debug_visualisation_array[turnIndex][lineNumber];
+	redraw();
+}
+
+function debugUnpreview(){
+	diffToVisualize=null;
+	redraw();
+}
+
+function addToDebugTimeline(level,lineNumber){
+
+	if (!debug_visualisation_array.hasOwnProperty(debugger_turnIndex)){
+		debug_visualisation_array[debugger_turnIndex]=[];
+	}
+
+	var debugTimelineSnapshot = {
+		width:level.width,
+		height:level.height,
+		layerCount:level.layerCount,
+		turnIndex:debugger_turnIndex,
+		lineNumber:lineNumber,
+		objects:new Int32Array(level.objects),
+		movements:new Int32Array(level.movements),
+		commandQueue:level.commandQueue.concat([]),
+		commandQueueSourceRules:level.commandQueueSourceRules.concat([])
+	};
+	
+
+	debug_visualisation_array[debugger_turnIndex][lineNumber]=debugTimelineSnapshot;
+	return `</span><span class="hoverpreview" onmouseover="debugPreview(${debugger_turnIndex},${lineNumber})" onmouseleave="debugUnpreview()">`;
+}

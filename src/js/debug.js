@@ -7,6 +7,10 @@ var compiledText;
 var canOpenEditor=true;
 var IDE=true;
 
+var debugger_turnIndex=0;
+var debug_visualisation_array=[];
+var diffToVisualize=null;
+
 function convertLevelToString() {
 	var out = '';
 	var seenCells = {};
