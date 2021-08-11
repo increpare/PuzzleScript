@@ -2177,6 +2177,9 @@ function applyRuleGroup(ruleGroup) {
         }
         if (propagated) {
         	loopPropagated=true;
+			
+			debugger_turnIndex++;
+			addToDebugTimeline(level,-2);//pre-movement-applied debug state
         }
     }
 
@@ -2206,6 +2209,9 @@ function applyRules(rules, loopPoint, startRuleGroupindex, bannedGroup){
 			   	logErrorCacheable("got caught in an endless startloop...endloop vortex, escaping!", ruleGroup[0].lineNumber,true);
 			   	break;
 			}
+			
+			debugger_turnIndex++;
+			addToDebugTimeline(level,-2);//pre-movement-applied debug state
         } else {
         	ruleGroupIndex++;
         	if (ruleGroupIndex===rules.length) {
@@ -2220,6 +2226,9 @@ function applyRules(rules, loopPoint, startRuleGroupindex, bannedGroup){
 					}
 		        } 
         	}
+			
+			debugger_turnIndex++;
+			addToDebugTimeline(level,-2);//pre-movement-applied debug state
         }
     }
 }
