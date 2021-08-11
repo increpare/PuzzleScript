@@ -41,19 +41,21 @@ function consolePrintFromRule(text,rule,urgent) {
 			rule.lineNumber + '</a> ' + ruleDirection + " : "  + text + '</font>';
 
 	if (cache_console_messages&&urgent==false) {		
-		consolecache.push(logString);
+		consolecache.push([logString,null,null,1]);
 	} else {
 		addToConsole(logString);
 	}
 }
 
-function consolePrint(text,urgent) {
+function consolePrint(text,urgent,linenumber,inspect_ID) {
 
 	if (urgent===undefined) {
 		urgent=false;
 	}
-	if (cache_console_messages&&urgent==false) {		
-		consolecache.push(text);
+
+
+	if (cache_console_messages && urgent===false) {		
+		consolecache.push([text,linenumber,inspect_ID,1]);
 	} else {
 		consoleCacheDump();
 		addToConsole(text);
@@ -81,26 +83,81 @@ function consoleCacheDump() {
 		return;
 	}
 	
-	var lastline = "";
-	var times_repeated = 0;
-	var summarised_message = "<br>";
-	for (var i = 0; i < consolecache.length; i++) {
-		if (consolecache[i] == lastline) {
-			times_repeated++;
-		} else {
-			lastline = consolecache[i];
-			if (times_repeated > 0) {
-				summarised_message = summarised_message + " (x" + (times_repeated + 1) + ")";
-			}
-			summarised_message += "<br>"
-			summarised_message += lastline;
-			times_repeated = 0;
+	//pass 1 : aggregate identical messages
+	for (var i = 0; i < consolecache.length-1; i++) {
+		var this_row = consolecache[i];
+		var this_row_text=this_row[0];
+
+		var next_row = consolecache[i+1];
+		var next_row_text=next_row[0];
+
+		if (this_row_text===next_row_text){			
+			consolecache.splice(i,1);
+			i--;
+			//need to preserve visual_id from later one
+			next_row[3]=this_row[3]+1;
 		}
 	}
 
-	if (times_repeated > 0) {
-		summarised_message = summarised_message + " (x" + (times_repeated + 1) + ")";
+	var batched_messages=[];
+	var current_batch_row=[];
+	//pass 2 : group by debug visibility
+	for (var i=0;i<consolecache.length;i++){
+		var row = consolecache[i];
+
+		var message = row[0];
+		var lineNumber = row[1];
+		var inspector_ID = row[2];
+		var count = row[3];
+		
+		if (i===0||lineNumber==null){
+			current_batch_row=[lineNumber,inspector_ID,[row]]; 
+			batched_messages.push(current_batch_row);
+			continue;
+		} 
+
+		var batch_lineNumber = current_batch_row[0];
+		var batch_inspector_ID = current_batch_row[1];
+
+		if (inspector_ID===null && lineNumber==batch_lineNumber){
+			current_batch_row[2].push(row);
+		} else {
+			current_batch_row=[lineNumber,inspector_ID,[row]]; 
+			batched_messages.push(current_batch_row);
+		}
 	}
+
+	var summarised_message = "<br>";
+	for (var j=0;j<batched_messages.length;j++){
+		var batch_row = batched_messages[j];
+		var batch_lineNumber = batch_row[0];
+		var inspector_ID = batch_row[1];
+		var batch_messages = batch_row[2];
+		
+		summarised_message+="<br>"
+
+		if (inspector_ID!= null){
+			summarised_message+=`<span class="hoverpreview" onmouseover="debugPreview(${inspector_ID})" onmouseleave="debugUnpreview()">`;
+		}
+		for (var i = 0; i < batch_messages.length; i++) {
+
+			if(i>0){
+				summarised_message+=`<br><span class="noeye_indent"></span>`
+			}
+			var curdata = batch_messages[i];
+			var curline = curdata[0];
+			var times_repeated = curdata[3];
+			if (times_repeated>1){
+				curline += ` (x${times_repeated})`;
+			}
+			summarised_message += curline
+		}
+
+		if (inspector_ID!= null){
+			summarised_message+=`</span>`;
+		}
+	}
+
 
 	addToConsole(summarised_message);
 }

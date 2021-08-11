@@ -2000,9 +2000,9 @@ Rule.prototype.applyAt = function(delta,tuple,check) {
 			ruleDirection="";
 		}
 
-		var inspectString =  addToDebugTimeline(level,rule.lineNumber);
-		var logString = `${inspectString}<font color="green">Rule <a onclick="jumpToLine(${rule.lineNumber});"  href="javascript:void(0);">${rule.lineNumber}</a> ${ruleDirection} applied.</font></span>`;
-		consolePrint(logString);
+		var inspect_ID =  addToDebugTimeline(level,rule.lineNumber);
+		var logString = `<font color="green">Rule <a onclick="jumpToLine(${rule.lineNumber});"  href="javascript:void(0);">${rule.lineNumber}</a> ${ruleDirection} applied.</font>`;
+		consolePrint(logString,false,rule.lineNumber,inspect_ID);
 		
 	}
 
@@ -2070,6 +2070,7 @@ Rule.prototype.queueCommands = function() {
 	//if you are writing a cancel or restart, clear the current queue
 	if (currule_cancel || currule_restart){
 		level.commandQueue=[];
+        level.commandQueueSourceRules=[];
 		messagetext="";
 	}
 
@@ -2086,7 +2087,7 @@ Rule.prototype.queueCommands = function() {
 			var lineNumber = this.lineNumber;
 			var ruleDirection = dirMaskName[this.direction];
 			var logString = '<font color="green">Rule <a onclick="jumpToLine(' + lineNumber.toString() + ');"  href="javascript:void(0);">' + lineNumber.toString() + '</a> triggers command '+command[0]+'.</font>';
-			consolePrint(logString,false);
+			consolePrint(logString,false,lineNumber,null);
 		}
 
 		if (command[0]==='message') {			
@@ -2374,13 +2375,13 @@ function processInput(dir,dontDoWin,dontModify) {
 		if (verbose_logging) { 
 			consolePrint('Applying rules');
 
-			var inspectString = addToDebugTimeline(level,-1);
+			var inspect_ID = addToDebugTimeline(level,-1);
 				
 			 if (dir===-1) {
-				 consolePrint(`${inspectString}Turn starts with no input.</span>`)
+				 consolePrint(`Turn starts with no input.`,false,null,inspect_ID)
 			 } else {
 				//  consolePrint('=======================');
-				consolePrint(`${inspectString}Turn starts with input of ${['up','left','down','right','action'][inputindex]}.</span>`);
+				consolePrint(`Turn starts with input of ${['up','left','down','right','action'][inputindex]}.`,false,null,inspect_ID);
 			 }
 		}
 
@@ -2428,9 +2429,9 @@ function processInput(dir,dontDoWin,dontModify) {
         		if (verbose_logging){
 
 					var eof_idx = debug_visualisation_array[debugger_turnIndex].length+1;//just need some number greater than any rule group
-					var inspectString = addToDebugTimeline(level,eof_idx);
+					var inspect_ID = addToDebugTimeline(level,eof_idx);
 
-					consolePrint(`${inspectString}Processed movements.</span>`);
+					consolePrint(`Processed movements.`,false,null,inspect_ID);
 					
 					if (state.lateRules.length>0){
 											

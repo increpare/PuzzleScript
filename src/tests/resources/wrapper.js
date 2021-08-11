@@ -19,7 +19,7 @@ var inputString;
 var outputString;
 
 function consolePrintFromRule(text){}
-function consolePrint(text) {}
+function consolePrint(text,urgent,linenumber,turnIndex) {}
 function consoleError(text) {
 //	window.console.log(text);
 }

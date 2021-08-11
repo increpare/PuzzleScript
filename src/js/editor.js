@@ -289,5 +289,5 @@ function addToDebugTimeline(level,lineNumber){
 	
 
 	debug_visualisation_array[debugger_turnIndex][lineNumber]=debugTimelineSnapshot;
-	return `</span><span class="hoverpreview" onmouseover="debugPreview(${debugger_turnIndex},${lineNumber})" onmouseleave="debugUnpreview()">`;
+	return `${debugger_turnIndex},${lineNumber}`;
 }

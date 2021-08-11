@@ -13,7 +13,7 @@ clientStandaloneRequest.onreadystatechange = function() {
 			return;
 		}
 		if (clientStandaloneRequest.responseText==="") {
-			consolePrint("Couldn't find standalone template. Is there a connection problem to the internet?",true);
+			consolePrint("Couldn't find standalone template. Is there a connection problem to the internet?",true,null,null);
 		}
 		standalone_HTML_String=clientStandaloneRequest.responseText;
 }
@@ -21,7 +21,7 @@ clientStandaloneRequest.send();
 
 function buildStandalone(sourceCode) {
 	if (standalone_HTML_String.length===0) {
-		consolePrint("Can't export yet - still downloading html template.",true);
+		consolePrint("Can't export yet - still downloading html template.",true,null,null);
 		return;
 	}
 
