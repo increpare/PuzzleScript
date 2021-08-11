@@ -23,7 +23,7 @@
 }
 
 .hoverpreview::before{
-	content: '👁 ';
+	content: url(../images/eye.svg);
 }
 .hoverpreview:hover {
 	background-color:#374b6c;
@@ -31,4 +31,8 @@
 
 .invisible {
 	visibility:hidden;
+}
+
+svg{
+	overflow: visible;
 }

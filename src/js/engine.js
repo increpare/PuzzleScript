@@ -2001,7 +2001,7 @@ Rule.prototype.applyAt = function(delta,tuple,check) {
 		}
 
 		var inspectString =  addToDebugTimeline(level,rule.lineNumber);
-		var logString = `${inspectString} <font color="green">Rule <a onclick="jumpToLine(${rule.lineNumber});"  href="javascript:void(0);">${rule.lineNumber}</a> ${ruleDirection} applied.</font></span>`;
+		var logString = `${inspectString}<font color="green">Rule <a onclick="jumpToLine(${rule.lineNumber});"  href="javascript:void(0);">${rule.lineNumber}</a> ${ruleDirection} applied.</font></span>`;
 		consolePrint(logString);
 		
 	}
@@ -2368,10 +2368,10 @@ function processInput(dir,dontDoWin,dontModify) {
 			var inspectString = addToDebugTimeline(level,-1);
 				
 			 if (dir===-1) {
-				 consolePrint(`${inspectString} Turn starts with no input.</span>`)
+				 consolePrint(`${inspectString}Turn starts with no input.</span>`)
 			 } else {
 				//  consolePrint('=======================');
-				consolePrint(`${inspectString} Turn starts with input of ${['up','left','down','right','action'][inputindex]}.</span>`);
+				consolePrint(`${inspectString}Turn starts with input of ${['up','left','down','right','action'][inputindex]}.</span>`);
 			 }
 		}
 
@@ -2421,7 +2421,7 @@ function processInput(dir,dontDoWin,dontModify) {
 					var eof_idx = debug_visualisation_array[debugger_turnIndex].length+1;//just need some number greater than any rule group
 					var inspectString = addToDebugTimeline(level,eof_idx);
 
-					consolePrint(`${inspectString} Processed movements.</span>`);
+					consolePrint(`${inspectString}Processed movements.</span>`);
 					
 					if (state.lateRules.length>0){
 											
