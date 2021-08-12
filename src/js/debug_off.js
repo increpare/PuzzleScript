@@ -12,7 +12,7 @@ function stripTags(str) {
 	return result;
 }
 
-function consolePrint,linenumber,inspect_ID){
+function consolePrint(linenumber,inspect_ID){
 /*	var errorText = document.getElementById("errormessage");
 	
 	str=stripTags(str);
