@@ -379,7 +379,7 @@
         "186": "semicolon",
         "187": "equalsign",
         "188": "comma",
-        "189": "dash",
+        // "189": "dash",
         "190": "period",
         "191": "slash",
         "192": "graveaccent",
