@@ -7,7 +7,7 @@
     <meta name="author" content="">
     <link rel="shortcut icon" type="image/x-icon" href="ico/favicon.ico" />
 
-    <title>PuzzleScript Documentation</title>
+    <title>Visual Debugger - PuzzleScript Documentation</title>
 
     <!-- Bootstrap core CSS -->
     <link href="css/bootstrap.css" rel="stylesheet">
@@ -49,41 +49,26 @@
     </div>
 
     <div class="container">
+
 <p>
 <ol class="breadcrumb">
-  <li class="active">Documentation</li>
+  <li><a href="documentation.html">Documentation</a></li>
+  <li class="active">Visual Debugger</li>
 </ol>
 <p>
 
-<h1>Documentation</h1>
+<h1>Visual Debugger</h1>
+
+If you run a game with the <b>verbose_logging</b> <A href="prelude.html">prelude option</a> you can avail yourself of the visual debugger. 
 <p>
-<ul class="nav nav-pills nav-stacked" class="pull-left">
-  <li>Basic</li>
-  <li><a href="rules101.html">Rules 101</a></li>
-  <li><a href="prelude.html">Bird's-eye view of a PuzzleScript file</a></li>
-  <li>Intermediate</li>
-  <li><a href="leveleditor.html">Level Editor</a></li>
-  <li><a href="directions.html">Directions</a></li>
-  <li><a href="actionbutton.html">The Action Button</a></li>
-  <li><a href="input.html">Input</a></li>
-  <li><a href="randomness.html">Randomness</a></li>
-  <li><a href="realtime.html">Real-Time Games</a></li>
-  <li><a href="visual_debugger.html">Visual Debugger</a></li>
-  <li>Advanced</li>
-  <li><a href="executionorder.html">Rule Execution Order</a></li>
-  <li><a href="rigidbodies.html">Extended Rigid Bodies</a></li>
-  <li>Miscellanea</li>
-  <li><a href="gifs.html">Making GIFs</a></li>
-  <li><a href="permanent_urls.html">Updateable PuzzleScript.net URLs</a></li>
-  <li><a href="extract_from_standalone_html.html">Tool for extracting source code from exported standalone games</a></li>
-  <li><a href="keyboard_shortcuts.html">Keyboard Shortcuts</a></li>
-  <li><a href="faq.html">Frequently Asked Questions</a></li>
-  <li><a href="privacypolicy.html">PuzzleScript.net Privacy Policy</a></li>
-</ul>
-
-
-
-
+As you play a level with this option, you'll see information about what rules were applied.  By hovering over them (or tapping them on touchscreen), you can see the state of the level after the indicated rules were applied: 
+<p>
+                <img src="images/verbose_logging.png">
+<p>
+Changes are indicated with black+white (or your custom background/text colours) outlined boxes.  In the above example, a new movement has been added to the indicated tile by the rule on line 139.
+<p>
+Movements are indicated with arrows overlayed on top of the cell.  They don't tell you what object the movements are attached to in that cell, they just tell you that the movement exists somewhere in the cell (if you have several overlapping objects on several layers moving in multiple directions at once, you will see all its movement arrows overlaid).
+<p>
     </div><!-- /.container -->
 
 
