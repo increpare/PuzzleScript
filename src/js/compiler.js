@@ -1827,6 +1827,22 @@ function cellRowMasks(rule) {
     return ruleMasks;
 }
 
+function cellRowMasks_Movements(rule){
+    var ruleMasks_mov = [];
+    var lhs = rule[1];
+    for (var i = 0; i < lhs.length; i++) {
+        var cellRow = lhs[i];
+        var rowMask = new BitVec(STRIDE_MOV);
+        for (var j = 0; j < cellRow.length; j++) {
+            if (cellRow[j] === ellipsisPattern)
+                continue;
+            rowMask.ior(cellRow[j].movementsPresent);
+        }
+        ruleMasks_mov.push(rowMask);
+    }
+    return ruleMasks_mov;
+}
+
 function collapseRules(groups) {
     for (var gn = 0; gn < groups.length; gn++) {
         var rules = groups[gn];
@@ -1857,6 +1873,7 @@ function collapseRules(groups) {
             newrule.push(oldrule.commands);
             newrule.push(oldrule.randomRule);
             newrule.push(cellRowMasks(newrule));
+            newrule.push(cellRowMasks_Movements(newrule));
             rules[i] = new Rule(newrule);
         }
     }

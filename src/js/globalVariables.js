@@ -74,7 +74,9 @@ var initLevel = {
     rigidMovementAppliedMask:[],//[indexgroupNumber, masked by layer arrays]
     bannedGroup:[],
     colCellContents:[],
-    rowCellContents:[]
+    rowCellContents:[],
+    colCellContents_Movements:[],
+    rowCellContents_Movements:[],
 };
 
 var level = initLevel;
