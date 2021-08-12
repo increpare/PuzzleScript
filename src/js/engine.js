@@ -2228,8 +2228,10 @@ function applyRuleGroup(ruleGroup) {
         if (propagated) {
         	loopPropagated=true;
 			
-			debugger_turnIndex++;
-			addToDebugTimeline(level,-2);//pre-movement-applied debug state
+			if (verbose_logging){
+				debugger_turnIndex++;
+				addToDebugTimeline(level,-2);//pre-movement-applied debug state
+			}
         }
     }
 
@@ -2260,8 +2262,10 @@ function applyRules(rules, loopPoint, startRuleGroupindex, bannedGroup){
 			   	break;
 			}
 			
-			debugger_turnIndex++;
-			addToDebugTimeline(level,-2);//pre-movement-applied debug state
+			if (verbose_logging){
+				debugger_turnIndex++;
+				addToDebugTimeline(level,-2);//pre-movement-applied debug state
+			}
         } else {
         	ruleGroupIndex++;
         	if (ruleGroupIndex===rules.length) {
@@ -2277,8 +2281,10 @@ function applyRules(rules, loopPoint, startRuleGroupindex, bannedGroup){
 		        } 
         	}
 			
-			debugger_turnIndex++;
-			addToDebugTimeline(level,-2);//pre-movement-applied debug state
+			if (verbose_logging){
+				debugger_turnIndex++;
+				addToDebugTimeline(level,-2);//pre-movement-applied debug state
+			}
         }
     }
 }
