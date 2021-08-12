@@ -2789,8 +2789,12 @@ function compile(command, text, randomseed) {
     	}
     }*/
 
-    if (errorCount > 0 && IDE===false) {
-        consoleError('<span class="systemMessage">Errors detected during compilation; the game may not work correctly.  If this is an older game, and you think it just broke because of recent changes in the puzzlescript engine, please consider dropping an email to analytic@gmail.com with a link to the game and I\'ll try make sure it\'s back working ASAP.</span>');
+    if (errorCount > 0) {
+        if (IDE===false){
+            consoleError('<span class="systemMessage">Errors detected during compilation; the game may not work correctly.  If this is an older game, and you think it just broke because of recent changes in the puzzlescript engine, please consider dropping an email to analytic@gmail.com with a link to the game and I\'ll try make sure it\'s back working ASAP.</span>');
+        } else{
+            consoleError('<span class="systemMessage">Errors detected during compilation; the game may not work correctly.</span>');
+        }
     } else {
         var ruleCount = 0;
         for (var i = 0; i < state.rules.length; i++) {
