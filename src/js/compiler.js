@@ -2682,7 +2682,7 @@ function loadFile(str) {
         while (ss.eol() === false);
     }
 
-    delete state.lineNumber;
+    // delete state.lineNumber;
 
     generateExtraMembers(state);
     generateMasks(state);
