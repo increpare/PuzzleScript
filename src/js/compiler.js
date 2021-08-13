@@ -1821,10 +1821,10 @@ function rulesToMask(state) {
                 objectlayers_l.iclear(objectlayers_r);
 
                 postMovementsLayerMask_r.ior(objectlayers_l);
-                if (objectsClear || objectsSet || movementsClear || movementsSet || postMovementsLayerMask_r) {
+                if (!objectsClear.iszero() || !objectsSet.iszero() || !movementsClear.iszero() || !movementsSet.iszero() || !postMovementsLayerMask_r.iszero() || !randomMask_r.iszero() || !randomDirMask_r.iszero()) {
                     // only set a replacement if something would change
                     cellrow_l[k].replacement = new CellReplacement([objectsClear, objectsSet, movementsClear, movementsSet, postMovementsLayerMask_r, randomMask_r, randomDirMask_r]);
-                }
+                } 
             }
         }
     }
