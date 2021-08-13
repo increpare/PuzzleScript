@@ -609,6 +609,7 @@ function processRuleString(rule, state, curRules) {
     var groupNumber = lineNumber;
     var commands = [];
     var randomRule = false;
+	var has_plus = false;
 
     if (tokens.length === 1) {
         if (tokens[0] === "startloop") {
@@ -637,6 +638,7 @@ function processRuleString(rule, state, curRules) {
                 {
                     //read initial directions
                     if (token === '+') {
+                        has_plus=true;
                         if (groupNumber === lineNumber) {
                             if (curRules.length == 0) {
                                 logError('The "+" symbol, for joining a rule with the group of the previous rule, needs a previous rule to be applied to.');
@@ -656,6 +658,11 @@ function processRuleString(rule, state, curRules) {
                         rigid = true;
                     } else if (token === 'random') {
                         randomRule = true;
+                        if (has_plus)
+                        {
+                            logError(`A rule-group can only be marked random by the opening rule in the group (aka, a '+' and 'random' can't appear as rule modifiers on the same line).  Why? Well, you see "random" isn't a property of individual rules, but of whole rule groups.  It indicates that a single possible application of some rule from the whole group should be applied at random.`, lineNumber) 
+                        }
+
                     } else if (simpleAbsoluteDirections.indexOf(token) >= 0) {
                         directions.push(token);
                     } else if (simpleRelativeDirections.indexOf(token) >= 0) {
@@ -1882,19 +1889,7 @@ function collapseRules(groups) {
     matchCache = {}; // clear match cache so we don't slowly leak memory
 }
 
-function ruleGroupRandomnessTest(ruleGroup) {
-    if (ruleGroup.length === 0)
-        return;
-    var firstLineNumber = ruleGroup[0].lineNumber;
-    for (var i = 1; i < ruleGroup.length; i++) {
-        var rule = ruleGroup[i];
-        if (rule.lineNumber === firstLineNumber) // random [A | B] gets turned into 4 rules, skip
-            continue;
-        if (rule.randomRule) {
-            logError("A rule-group can only be marked random by the first rule", rule.lineNumber);
-        }
-    }
-}
+
 
 function ruleGroupDiscardOverlappingTest(ruleGroup) {
     if (ruleGroup.length === 0)
@@ -1938,7 +1933,6 @@ function arrangeRulesByGroupNumber(state) {
     for (var groupNumber in aggregates) {
         if (aggregates.hasOwnProperty(groupNumber)) {
             var ruleGroup = aggregates[groupNumber];
-            ruleGroupRandomnessTest(ruleGroup);
             ruleGroupDiscardOverlappingTest(ruleGroup);
             if (ruleGroup.length > 0) {
                 result.push(ruleGroup);
@@ -1949,7 +1943,6 @@ function arrangeRulesByGroupNumber(state) {
     for (var groupNumber in aggregates_late) {
         if (aggregates_late.hasOwnProperty(groupNumber)) {
             var ruleGroup = aggregates_late[groupNumber];
-            ruleGroupRandomnessTest(ruleGroup);
             ruleGroupDiscardOverlappingTest(ruleGroup);
             if (ruleGroup.length > 0) {
                 result_late.push(ruleGroup);
