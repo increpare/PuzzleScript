@@ -1897,21 +1897,22 @@ function ruleGroupRandomnessTest(ruleGroup) {
 function ruleGroupDiscardOverlappingTest(ruleGroup) {
     if (ruleGroup.length === 0)
         return;
-    var firstLineNumber = ruleGroup[0].lineNumber;
-    var allbad = true;
-    var example = null;
+
     for (var i = 0; i < ruleGroup.length; i++) {
         var rule = ruleGroup[i];
         if (rule.hasOwnProperty('discard')) {
-            example = rule['discard'];
             ruleGroup.splice(i, 1);
+
+            //if rule before isn't of same linenumber, and rule after isn't of same linenumber, 
+            //then a rule has been totally erased and you should throw an error!
+            if ( (i===0 || ruleGroup[i-1].lineNumber !==  rule.lineNumber ) 
+                && (i<ruleGroup.length-1 && ruleGroup[i+1].lineNumber !==  rule.lineNumber) || ruleGroup.length===0) {
+                var example = rule['discard'];
+                
+                logError(example[0] + ' and ' + example[1] + ' can never overlap, but this rule requires that to happen.', rule.lineNumber);
+            }
             i--;
-        } else {
-            allbad = false;
         }
-    }
-    if (allbad) {
-        logError(example[0] + ' and ' + example[1] + ' can never overlap, but this rule requires that to happen.', firstLineNumber);
     }
 }
 
