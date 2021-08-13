@@ -82,6 +82,9 @@ function runCompilationTest(dataarray) {
 	}
 
 	if (i_recorded<recordedErrorStrings.length){
+		var simualted_summary = strippedErrorStrings.join("\n");
+		var recorded_summary = recordedErrorStrings.join("\n");
+		QUnit.assert.equal(simualted_summary,recorded_summary)
 		return false;
 	}
 	return true;
