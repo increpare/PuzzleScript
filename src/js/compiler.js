@@ -552,6 +552,14 @@ function findIndexAfterToken(str, tokens, tokenIndex) {
     }
     return curIndex;
 }
+function rightBracketToRightOf(tokens,i){
+    for(;i<tokens.length;i++){
+        if (tokens[i]==="]"){
+            return true;
+        }
+    }
+    return false;
+}
 
 function processRuleString(rule, state, curRules) {
     /*
@@ -758,7 +766,9 @@ function processRuleString(rule, state, curRules) {
                         }
                     } else if (commandwords.indexOf(token) >= 0) {
                         if (rhs === false) {
-                            logError("Commands cannot appear on the left-hand side of the arrow.", lineNumber);
+                            logError("Commands should only appear at the end of rules, not in or before the pattern-detection/-replacement sections.", lineNumber);
+                        } else if (incellrow || rightBracketToRightOf(tokens,i)){//only a warning for legacy support reasons.
+                            logWarning("Commands should only appear at the end of rules, not in or before the pattern-detection/-replacement sections.", lineNumber);
                         }
                         if (token === 'message') {
                             var messageIndex = findIndexAfterToken(origLine, tokens, i);
