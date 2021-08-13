@@ -56,7 +56,9 @@ function regenSpriteImages() {
         spriteimages = [];
 		regenText();
 		return;
-	} else if (levelEditorOpened) {
+	} 
+    
+    if (IDE===true) {
         textImages['editor_s'] = createSprite('chars',editor_s_grille,undefined);
     }
     
