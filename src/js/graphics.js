@@ -259,7 +259,6 @@ var x;
 var y;
 var cellwidth;
 var cellheight;
-var magnification;
 var xoffset;
 var yoffset;
 
@@ -575,7 +574,6 @@ function canvasResize() {
         yoffset = (canvas.height - cellheight * screenheight) / 2;
         xoffset = (canvas.width - cellwidth * screenwidth) / 2;
     }
-    magnification = ((cellwidth/w)*5)|0;
 
     if (levelEditorOpened && !textMode) {
     	xoffset+=cellwidth;
