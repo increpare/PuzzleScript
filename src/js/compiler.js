@@ -703,6 +703,8 @@ function processRuleString(rule, state, curRules) {
                             logError("Error, an item can only have one direction/action at a time, but you're looking for several at once!", lineNumber);
                         } else if (!incellrow) {
                             logWarning("Invalid syntax. Directions should be placed at the start of a rule.", lineNumber);
+                        } else if (late && token!=='no' && token!=='random' && token!=='randomdir') {
+                            logError("Movements cannot appear in late rules.", lineNumber);
                         } else {
                             curcell.push(token);
                         }
@@ -1941,41 +1943,6 @@ function arrangeRulesByGroupNumber(state) {
     state.lateRules = result_late;
 }
 
-
-function checkNoLateRulesHaveMoves(state) {
-    for (var ruleGroupIndex = 0; ruleGroupIndex < state.lateRules.length; ruleGroupIndex++) {
-        var lateGroup = state.lateRules[ruleGroupIndex];
-        for (var ruleIndex = 0; ruleIndex < lateGroup.length; ruleIndex++) {
-            var rule = lateGroup[ruleIndex];
-            for (var cellRowIndex = 0; cellRowIndex < rule.patterns.length; cellRowIndex++) {
-                var cellRow_l = rule.patterns[cellRowIndex];
-                for (var cellIndex = 0; cellIndex < cellRow_l.length; cellIndex++) {
-                    var cellPattern = cellRow_l[cellIndex];
-                    if (cellPattern === ellipsisPattern) {
-                        continue;
-                    }
-                    var moveMissing = cellPattern.movementsMissing;
-                    var movePresent = cellPattern.movementsPresent;
-                    if (!moveMissing.iszero() || !movePresent.iszero()) {
-                        logError("Movements cannot appear in late rules.", rule.lineNumber);
-                        return;
-                    }
-
-                    if (cellPattern.replacement != null) {
-                        var movementsClear = cellPattern.replacement.movementsClear;
-                        var movementsSet = cellPattern.replacement.movementsSet;
-
-                        if (!movementsClear.iszero() || !movementsSet.iszero()) {
-                            logError("Movements cannot appear in late rules.", rule.lineNumber);
-                            return;
-                        }
-                    }
-                }
-            }
-        }
-    }
-}
-
 function generateRigidGroupList(state) {
     var rigidGroupIndex_to_GroupIndex = [];
     var groupIndex_to_RigidGroupIndex = [];
@@ -2686,8 +2653,6 @@ function loadFile(str) {
     arrangeRulesByGroupNumber(state);
     collapseRules(state.rules);
     collapseRules(state.lateRules);
-
-    checkNoLateRulesHaveMoves(state);
 
     generateRigidGroupList(state);
 
