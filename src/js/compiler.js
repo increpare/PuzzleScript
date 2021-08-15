@@ -978,29 +978,6 @@ function getPossibleObjectsFromCell(state, cell) {
     return result;
 }
 
-//expands all properties to list of all things it could be, filterio
-function getPossibleMovementfullObjectsFromCell(state, cell) {
-    var result = [];
-    for (var j = 0; j < cell.length; j += 2) {
-        var dir = cell[j];
-        var name = cell[j + 1];
-        if (dir===''){
-            continue;
-        }
-        if (name in state.objects){
-            result.push(name);
-        }
-        if (name in state.propertiesDict) {
-            var aliases = state.propertiesDict[name];
-            for (var k = 0; k < aliases.length; k++) {
-                var alias = aliases[k];
-                result.push(alias);
-            }        
-        }
-    }
-    return result;
-}
-
 function getPropertiesFromCell(state, cell) {
     var result = [];
     for (var j = 0; j < cell.length; j += 2) {
@@ -1246,7 +1223,6 @@ function makeSpawnedObjectsStationary(state,rule,lineNumber){
 
             //this is super intricate. uff. 
             var objects_l = getPossibleObjectsFromCell(state, row_l[k]);
-            var stuff_l = getPossibleMovementfullObjectsFromCell(state, row_l[k]);
             var layers = objects_l.map(n=>state.objects[n].layer);
             for (var l = 0; l < cell.length; l += 2) {
                 var dir = cell[l];
