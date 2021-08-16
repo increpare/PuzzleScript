@@ -826,8 +826,8 @@ function processRuleString(rule, state, curRules) {
         randomRule: randomRule
     };
 
-    if (directionalRule(rule_line) === false) {
-        rule_line.directions = ['up'];
+    if (directionalRule(rule_line) === false && rule_line.directions.length>1) {
+        rule_line.directions.splice(1);
     }
 
     //next up - replace relative directions with absolute direction
