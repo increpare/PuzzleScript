@@ -116,15 +116,16 @@ function generateGlyphImages() {
 	for (var n in state.glyphDict) {
 		if (n.length==1 && state.glyphDict.hasOwnProperty(n)) {            
 			var g=state.glyphDict[n];
-			var sprite = makeSpriteCanvas("C"+n)
-			var spritectx = sprite.getContext('2d');
-			glyphImagesCorrespondance.push(n);
 
             /* hide duplicate entries from editor palette*/
             var trace = g.join(",");
             if (seenobjects.hasOwnProperty(trace)){
                 continue;
             }
+            
+			var sprite = makeSpriteCanvas("C"+n)
+			var spritectx = sprite.getContext('2d');
+			glyphImagesCorrespondance.push(n);
             seenobjects[trace]=true;
 
 			for (var i=0;i<g.length;i++){
