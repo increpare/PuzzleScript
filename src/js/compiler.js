@@ -1658,6 +1658,13 @@ function rulesToMask(state) {
 
                 //if X no X, then cancel
                 if (objectsPresent.anyBitsInCommon(objectsMissing)){
+                    //if I'm about the remove the last representative of this line number, throw an error
+                    var ln = rule.lineNumber;
+                    if ( (i>0 && state.rules[i-1].lineNumber===ln) || ( (i+1<state.rules.length) && state.rules[i+1].lineNumber===ln)){
+                        //all good
+                    } else {
+                        logError('This rule has some content of the form "X no X" which can never match and so the rule is getting removed during compilation.', rule.lineNumber);
+                    }
                     state.rules.splice(i,1);
                     i--;
                     continue;
