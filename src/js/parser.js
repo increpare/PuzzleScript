@@ -673,9 +673,10 @@ var codeMirrorFn = function() {
                        		if (state.names.indexOf(m)>=0) {
                        			return 'NAME';
                        		}
-                       	}
-
-                        candname = stream.match(reg_notcommentstart, true);
+                       	} else {
+                            //can we ever get here?
+                            candname = stream.match(reg_notcommentstart, true);
+                        }
                         logError('unexpected sound token "'+candname+'".' , state.lineNumber);
                         stream.match(reg_notcommentstart, true);
                         return 'ERROR';
