@@ -1934,37 +1934,7 @@ function generateTuples(lists) {
     return tuples;
 }
 
-var rigidBackups=[]
 
-function commitPreservationState(ruleGroupIndex) {
-	var propagationState = {
-		ruleGroupIndex:ruleGroupIndex,
-		objects:new Int32Array(level.objects),
-		movements:new Int32Array(level.movements),
-		rigidGroupIndexMask:level.rigidGroupIndexMask.concat([]),
-		rigidMovementAppliedMask:level.rigidMovementAppliedMask.concat([]),
-		bannedGroup:level.bannedGroup.concat([]),
-		commandQueue:level.commandQueue.concat([]),
-		commandQueueSourceRules:level.commandQueueSourceRules.concat([])
-	};
-	rigidBackups[ruleGroupIndex]=propagationState;
-	return propagationState;
-}
-
-function restorePreservationState(preservationState) {;
-//don't need to concat or anythign here, once something is restored it won't be used again.
-	level.objects = new Int32Array(preservationState.objects);
-	level.movements = new Int32Array(preservationState.movements);
-	level.rigidGroupIndexMask = preservationState.rigidGroupIndexMask.concat([]);
-    level.rigidMovementAppliedMask = preservationState.rigidMovementAppliedMask.concat([]);
-    level.commandQueue = preservationState.commandQueue.concat([]);
-    level.commandQueueSourceRules = preservationState.commandQueueSourceRules.concat([]);
-    sfxCreateMask.setZero();
-    sfxDestroyMask.setZero();
-	consolePrint("Rigid movement application failed, rolling back");
-
-//	rigidBackups = preservationState.rigidBackups;
-}
 
 Rule.prototype.findMatches = function() {	
 	if ( ! this.ruleMask.bitsSetInArray(level.mapCellContents.data) )
@@ -2299,7 +2269,7 @@ function applyRules(rules, loopPoint, startRuleGroupindex, bannedGroup){
 
 
 //if this returns!=null, need to go back and reprocess
-function resolveMovements(dir){
+function resolveMovements(level, bannedGroup){
     var moved=true;
     while(moved){
         moved=false;
@@ -2326,7 +2296,7 @@ function resolveMovements(dir){
 							var rigidGroupIndex = rigidGroupIndexMask.getshiftor(0x1f, 5*j);
 							rigidGroupIndex--;//group indices start at zero, but are incremented for storing in the bitfield
 							var groupIndex = state.rigidGroupIndex_to_GroupIndex[rigidGroupIndex];
-							level.bannedGroup[groupIndex]=true;
+							bannedGroup[groupIndex]=true;
 							//backtrackTarget = rigidBackups[rigidGroupIndex];
 							doUndo=true;
 							break;
@@ -2460,13 +2430,19 @@ function processInput(dir,dontDoWin,dontModify) {
 		}
 
 		
-        level.bannedGroup = [];
-        rigidBackups = [];
+        bannedGroup = [];
         level.commandQueue=[];
         level.commandQueueSourceRules=[];
         var startRuleGroupIndex=0;
         var rigidloop=false;
-        var startState = commitPreservationState();
+		const startState = {
+			objects: new Int32Array(level.objects),
+			movements: new Int32Array(level.movements),
+			rigidGroupIndexMask: level.rigidGroupIndexMask.concat([]),
+			rigidMovementAppliedMask: level.rigidMovementAppliedMask.concat([]),
+			commandQueue: [],
+			commandQueueSourceRules: []
+		}
 	    sfxCreateMask.setZero();
 	    sfxDestroyMask.setZero();
 
@@ -2484,12 +2460,28 @@ function processInput(dir,dontDoWin,dontModify) {
         	
 
 
-        	applyRules(state.rules, state.loopPoint, startRuleGroupIndex, level.bannedGroup);
-        	var shouldUndo = resolveMovements();
+        	applyRules(state.rules, state.loopPoint, startRuleGroupIndex, bannedGroup);
+        	var shouldUndo = resolveMovements(level,bannedGroup);
 
         	if (shouldUndo) {
         		rigidloop=true;
-        		restorePreservationState(startState);
+
+				{
+					// trackback
+					consolePrint("Rigid movement application failed. Rolling back...")
+					//don't need to concat or anythign here, once something is restored it won't be used again.
+					level.objects = new Int32Array(startState.objects)
+					level.movements = new Int32Array(startState.movements)
+					level.rigidGroupIndexMask = startState.rigidGroupIndexMask.concat([])
+					level.rigidMovementAppliedMask = startState.rigidMovementAppliedMask.concat([])
+					// TODO: shouldn't we also save/restore the level data computed by level.calculateRowColMasks() ?
+					level.commandQueue = startState.commandQueue.concat([])
+					level.commandQueueSourceRules = startState.commandQueueSourceRules.concat([])
+					sfxCreateMask.setZero()
+					sfxDestroyMask.setZero()
+					// TODO: should
+
+				}
 
 				if (verbose_logging && rigidloop && i>0){				
 					consolePrint('Relooping through rules because of rigid.');
