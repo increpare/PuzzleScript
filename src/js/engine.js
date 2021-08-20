@@ -2202,7 +2202,6 @@ function applyRuleGroup(ruleGroup) {
     	}
         propagated=false;
 
-		var last_applied = null
         for (var ruleIndex=0;ruleIndex<ruleGroup.length;ruleIndex++) {
             var rule = ruleGroup[ruleIndex];     
 			if (rule.tryApply(level)){
@@ -2213,7 +2212,6 @@ function applyRuleGroup(ruleGroup) {
 			}
 			if ( nothing_happened_counter === ruleGroup.length)
 				break;
-			skip_from = last_applied;
         }
         if (propagated) {
         	loopPropagated=true;
