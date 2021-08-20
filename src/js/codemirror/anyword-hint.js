@@ -323,11 +323,18 @@
             //state.objects
 
             //remove words from the toexclude list
-            for (var i=0;i<list.length;i++){
-                var lc = list[i].text.toLowerCase();
-                if (toexclude.indexOf(lc)>=0){
-                    list.splice(i,1);
-                    i--;
+
+            
+            if (toexclude.length>0){
+                if (toexclude[toexclude.length-1]===curWord){
+                    splits.pop();
+                }
+                for (var i=0;i<list.length;i++){
+                    var lc = list[i].text.toLowerCase();
+                    if (toexclude.indexOf(lc)>=0){
+                        list.splice(i,1);
+                        i--;
+                    }
                 }
             }
                     //if list is a single word and that matches what the current word is, don't show hint
