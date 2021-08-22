@@ -723,7 +723,8 @@ function setGameState(_state, command, randomseed) {
 					continue;
 				}
 				var targetLevel = i;
-				curlevel=i;
+				curlevel=targetLevel;
+				curlevelTarget=null;
 			    winning=false;
 			    timer=0;
 			    titleScreen=false;
@@ -742,7 +743,8 @@ function setGameState(_state, command, randomseed) {
 		case "loadLevel":
 		{
 			var targetLevel = command[1];
-			curlevel=i;
+			curlevel=targetLevel;
+			curlevelTarget=null;
 		    winning=false;
 		    timer=0;
 		    titleScreen=false;
@@ -763,6 +765,7 @@ function setGameState(_state, command, randomseed) {
 				var level= state.levels[i];
 				if(level.lineNumber<=targetLine+1) {
 					curlevel=i;
+					curlevelTarget=null;
 				    winning=false;
 				    timer=0;
 				    titleScreen=false;
@@ -2844,6 +2847,7 @@ function nextLevel() {
 		if (curlevel<(state.levels.length-1))
 		{			
 			curlevel++;
+			curlevelTarget=null;
 			textMode=false;
 			titleScreen=false;
 			quittingMessageScreen=false;
