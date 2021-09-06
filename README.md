@@ -7,7 +7,7 @@ Try it out at https://www.puzzlescript.net
 
 -----
 
-[Development setup info here](DEV.md)
+[Development setup info here](DEVELOPMENT.md)
 
 -----
 
