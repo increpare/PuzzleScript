@@ -7,7 +7,7 @@ Try it out at https://www.puzzlescript.net
 
 -----
 
-Dev instructions here - https://groups.google.com/forum/#!searchin/puzzlescript/development/puzzlescript/yptIpY9hlng/cjfrOPy_4jcJ
+[Development setup info here](DEV.md)
 
 -----
 
