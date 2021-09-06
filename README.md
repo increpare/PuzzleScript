@@ -3,7 +3,7 @@ PuzzleScript
 
 Open Source HTML5 Puzzle Game Engine
 
-Try it out at https://www.puzzlescript.net
+Try it out at https://www.puzzlescript.net.
 
 -----
 
