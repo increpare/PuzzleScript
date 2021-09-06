@@ -1,4 +1,3 @@
-@@ -0,0 +1,48 @@
 # PuzzleScript Development Guide
 
 ## Structure
