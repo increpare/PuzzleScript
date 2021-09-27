@@ -1,5 +1,9 @@
 # PuzzleScript Development Guide
 
+## Hello
+
+This document is about recompiling puzzlescript from source.  If you're just interested in learning about using the engine, rather than developing it, the documentation is [the documentation is here](https://www.puzzlescript.net/Documentation/documentation.html).
+
 ## Structure
 The structure of PuzzleScript is the following:
 
