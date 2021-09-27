@@ -6,12 +6,23 @@ creates a highly compressed release build in bin of the contents of src
 
 packages used:
 
-npm i tar  html-minifier-terser ycssmin  google-closure-compiler concat  pngcrush-bin inliner ncp rimraf gifsicle terser gzipper  
+npm i inliner ncp rimraf compress-images gifsicle glob concat ycssmin terser html-minifier-terser gzipper
 */
 
-var fs = require("fs");
-var path = require('path');
-
+const fs = require("fs");
+const path = require('path');
+const rimraf = require('rimraf');
+const compress_images = require("compress-images");
+const Inliner = require('inliner');
+const ncp = require('ncp').ncp;
+const {execFileSync} = require('child_process');
+const gifsicle = require('gifsicle');
+const concat = require('concat');
+const cssmin = require('ycssmin').cssmin;
+const { minify } = require("terser");
+const { Compress } = require('gzipper');            
+const htmlminify = require('html-minifier-terser').minify;
+const glob = require("glob")
 
 var lines = fs.readFileSync(".build/buildnumber.txt",encoding='utf-8');
 var buildnum = parseInt(lines);
@@ -39,14 +50,12 @@ fs.mkdirSync('./bin');
 
 console.log("inlining standalone template")
 
-var Inliner = require('inliner');
 
 new Inliner('./src/standalone.html', function (error, html) {
   // compressed and inlined HTML page
   fs.writeFileSync("./src/standalone_inlined.txt",html,'utf8');
 
   console.log("Copying files")
-  var ncp = require('ncp').ncp;
   ncp.limit = 16;
   ncp("./src", "./bin/", function (err) {
     if (err) {
@@ -54,24 +63,31 @@ new Inliner('./src/standalone.html', function (error, html) {
     }
     console.log("echo optimizing pngs");
 
-    const rimraf = require('rimraf');
     rimraf.sync('./bin/images/*.png');
 
-    const imagemin = require('imagemin');
-    const imageminPngcrush = require('imagemin-pngcrush');
-
     (async () => {
-        await imagemin(['./src/images/*.png'], {
-            destination: './bin/images/',
-            plugins: [
-                imageminPngcrush(["-brute","-reduce","-rem allb"])
-            ]
-        });
+
+
+        compress_images(
+            "./src/images/*.png", 
+            "./bin/images/", 
+            { compress_force: false, statistic: false, autoupdate: true }, false,
+            { jpg: { engine: "mozjpeg", command: ["-quality", "60"] } },
+            { png: { engine: "pngcrush", command: ["-reduce", "-brute"] } },
+            { svg: { engine: "svgo", command: "--multipass" } },
+            { gif: { engine: "gifsicle", command: ["--colors", "64", "--use-col=web"] } },
+            
+            function (error, completed, statistic) {
+                // console.log("-------------");
+                // console.log(error);
+                // console.log(completed);
+                // console.log(statistic);
+                // console.log("-------------");
+            }
+        );
     
 
 
-        const {execFileSync} = require('child_process');
-        const gifsicle = require('gifsicle');
         
         console.log('Optimizing gallery gifs');
 
@@ -89,7 +105,6 @@ new Inliner('./src/standalone.html', function (error, html) {
 
         console.log('Optimizing documentation gifs');
         
-        var glob = require("glob")
         glob("./bin/Documentation/images/*.gif", {}, async function (er, files) {
             for (filename of files){
                 execFileSync(gifsicle, ['-O2','-o', filename, filename]);
@@ -109,7 +124,7 @@ new Inliner('./src/standalone.html', function (error, html) {
 
             console.log('compressing css');
 
-            const concat = require('concat');
+
             await concat(["./src/css/docs.css", 
                 "./src/css/codemirror.css", 
                 "./src/css/midnight.css", 
@@ -125,7 +140,6 @@ new Inliner('./src/standalone.html', function (error, html) {
             console.log('css files concatenated')
 
 
-            var cssmin = require('ycssmin').cssmin;
             var css = fs.readFileSync("./bin/css/combined.css", encoding='utf8');
             var min = cssmin(css);
             fs.writeFileSync("./bin/css/combined.css",min,encoding="utf8");
@@ -136,8 +150,6 @@ new Inliner('./src/standalone.html', function (error, html) {
             fs.writeFileSync("./bin/Documentation/css/bootstrap.css",min,encoding="utf8");
 
             console.log("running js minification");
-
-            const { minify } = require("terser");
 
             var files = [  
                     "./src/js/Blob.js",
@@ -254,21 +266,17 @@ new Inliner('./src/standalone.html', function (error, html) {
 
             console.log("compressing html");
             
-            var htmlminify = require('html-minifier-terser').minify;
             
             glob("./bin/*.html", {}, async function (er, files) {
                 for (filename of files){
                     var lines=fs.readFileSync(filename, encoding='utf8');
-                    var result = htmlminify(lines);
+                    var result = await htmlminify(lines);
                     fs.writeFileSync(filename,result);
                 }
             });
 
             
             (async function a() {
-                const { Compress } = require('gzipper');
-            
-                var glob = require("glob")
             
                 files = glob.sync("./bin/**/*.js");
                 files = files.concat(glob.sync("./bin/**/*.html"));
