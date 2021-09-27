@@ -3,11 +3,11 @@ PuzzleScript
 
 Open Source HTML5 Puzzle Game Engine
 
-Try it out at https://www.puzzlescript.net
+Try it out at https://www.puzzlescript.net.
 
 -----
 
-Dev instructions here - https://groups.google.com/forum/#!searchin/puzzlescript/development/puzzlescript/yptIpY9hlng/cjfrOPy_4jcJ
+[Development setup info here](DEVELOPMENT.md)
 
 -----
 
