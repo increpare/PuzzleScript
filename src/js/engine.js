@@ -920,11 +920,11 @@ function consolidateDiff(before,after){
 		return before;
 	}
 	//only generate diffs if level size is bigger than this
-	if (before.dat.length<512){
+	if (before.dat.length<1024){
 		return before;
 	}
 	//diff structure: repeating ( start,length, [ data ] )
-	var result = new Int32Array(512);
+	var result = new Int32Array(128);
 	var position=0;
 	var chain=false;
 	var chain_start_idx_in_diff=-1;
