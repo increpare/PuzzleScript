@@ -166,7 +166,7 @@ you can push around pairs of blocks, but a big alternating sequence of blocks yo
 <p>
 <img src="images/rigid_twolittlecrates2.gif">
 <p>
-If only there were some way of looping through these four rules.  Well, adding them all to the same rulegroup is one way, but in the case of rigid rules we don't want to cancel the movement of EVERYTHING just because one block can't move. In particular, motion could be added independently to two objects on opposite sides of the level on the same turn (maybe there's a second pusher that mirrors the player's movements). If only one is able to move, disabling the whole rule group because of rigid would incorrectly prevent both blocks from moving - so we need another layer of loopiness.  So, let's introduce startloop and endloop;
+If only there were some way of looping through these four rules.  Well, adding them all to the same rulegroup is one way, but in the case of rigid rules we don't want to cancel the movement of EVERYTHING just because one block can't move. In particular, motion could be added independently to two blocks on opposite sides of the level on the same turn (maybe there are gravity rules being applied). If only one is able to move, disabling the whole rule group because of rigid would incorrectly prevent both blocks from moving - so we need another layer of loopiness.  So, let's introduce startloop and endloop;
 <p>
 
 
