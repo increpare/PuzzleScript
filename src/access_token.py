@@ -2,6 +2,8 @@
 
 """Proxies a request for a GitHub access_token.
 
+note: LOCATED in /usr/lib/cgi-bin on server with private key substituted, public address https://ded.increpare.com/cgi-bin/access_token.py (see auth.html)
+
 This script handles the server-side part of Github authentication.
 PuzzleScript uses it to get an access token after a user gives
 PuzzleScript permission to write gists on their behalf.
