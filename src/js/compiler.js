@@ -1663,7 +1663,7 @@ function rulesToMask(state) {
                     if ( (i>0 && state.rules[i-1].lineNumber===ln) || ( (i+1<state.rules.length) && state.rules[i+1].lineNumber===ln)){
                         //all good
                     } else {
-                        logError('This rule has some content of the form "X no X" which can never match and so the rule is getting removed during compilation.', rule.lineNumber);
+                        logWarning('This rule has some content of the form "X no X" (either directly or maybe indirectly - check closely how the terms are defined if nothing stands out) which can never match and so the rule is getting removed during compilation.', rule.lineNumber);
                     }
                     state.rules.splice(i,1);
                     i--;
