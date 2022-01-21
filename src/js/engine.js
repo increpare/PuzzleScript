@@ -852,24 +852,29 @@ function RebuildLevelArrays() {
 }
 
 var messagetext="";
+
+function applyDiff(diff, level_objects) {
+    var index=0;
+    while (index<diff.dat.length){
+	var start_index = diff.dat[index];
+	var copy_length = diff.dat[index+1];
+	if (copy_length===0){
+	    break;//tail of buffer is all 0s
+	}
+	for (j=0;j<copy_length;j++){
+	    level_objects[start_index+j]=diff.dat[index+2+j];
+	}
+	index += 2 + copy_length;
+    }
+}
+
 function restoreLevel(lev) {
 	var diffing = lev.hasOwnProperty("diff");
 
 	oldflickscreendat=lev.oldflickscreendat.concat([]);
 
 	if (diffing){
-		var index=0;
-		while (index<lev.dat.length){
-			var start_index = lev.dat[index];
-			var copy_length = lev.dat[index+1];
-			if (copy_length===0){
-				break;//tail of buffer is all 0s
-			}
-			for (j=0;j<copy_length;j++){
-				level.objects[start_index+j]=lev.dat[index+2+j];
-			}
-			index += 2 + copy_length;
-		}
+	    applyDiff(lev, level.objects);
 	} else {	
 		level.objects = new Int32Array(lev.dat);
 	}
@@ -972,6 +977,20 @@ function consolidateDiff(before,after){
 		height : before.height,
 		oldflickscreendat: before.oldflickscreendat
 	}
+}
+
+function unconsolidateDiff(before,after) {
+    if (!before.hasOwnProperty("diff")) {
+	return before;
+    }
+    var result = new Int32Array(after.dat);
+    applyDiff(before, result);
+    return {
+	dat: result,
+	width: before.width,
+	height: before.height,
+	oldflickscreendat: before.oldflickscreendat
+    }
 }
 
 function addUndoState(state){
@@ -2684,8 +2703,10 @@ function processInput(dir,dontDoWin,dontModify) {
 					return true;
 				} else {
 					if (dir!==-1) {
-	    				addUndoState(bak);
-	    			}
+						addUndoState(bak);
+					} else if (backups.length > 0) {
+						backups[backups.length - 1] = unconsolidateDiff(backups[backups.length - 1], bak);
+					}
 	    			modified=true;
 	    		}
 	    		break;
