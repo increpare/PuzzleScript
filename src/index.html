@@ -193,7 +193,7 @@ function replaceContent() {
   for (var i=0;i<columns.length;i++)
   {
     var dat = data[i];
-    columns[i].innerHTML='<div class="panel panel-default"><div class="panel-body"><a href="'+dat.url+'"><img src="'+dat.imgurl+'">​</a></div><div class="panel-footer"><a class="gamelinktitle" href="'+dat.url+'">'+escapeHtml(dat.title)+'</a> by <a href="'+dat.homepage+'">'+escapeHtml(dat.author)+'</a></div></div>';
+    columns[i].innerHTML='<div class="panel panel-default"><div class="panel-body"><a href="'+dat.url+'"><img src="'+dat.imgurl+'">​</a></div><div class="panel-footer"><a class="gamelinktitle" href="'+dat.url+'">'+escapeHtml(dat.title)+'</a> by <a href="'+dat.homepage+'" target="_blank">'+escapeHtml(dat.author)+'</a></div></div>';
   }
 
 }
