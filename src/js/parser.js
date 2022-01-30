@@ -251,6 +251,7 @@ var codeMirrorFn = function() {
             var soundsCopy = [];
             var levelsCopy = [];
             var winConditionsCopy = [];
+            var rulesCopy = [];
 
             for (var i = 0; i < state.legend_synonyms.length; i++) {
               legend_synonymsCopy.push(state.legend_synonyms[i].concat([]));
@@ -269,6 +270,9 @@ var codeMirrorFn = function() {
             }
             for (var i = 0; i < state.winconditions.length; i++) {
               winConditionsCopy.push(state.winconditions[i].concat([]));
+            }
+            for (var i = 0; i < state.rules.length; i++) {
+              rulesCopy.push(state.rules[i].concat([]));
             }
 
             var original_case_namesCopy = Object.assign({},state.original_case_names);
@@ -294,7 +298,7 @@ var codeMirrorFn = function() {
 
               sounds: soundsCopy,
 
-              rules: state.rules.concat([]),
+              rules: rulesCopy,
 
               names: state.names.concat([]),
 
