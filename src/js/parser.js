@@ -283,6 +283,11 @@ var codeMirrorFn = function() {
               section: state.section,
               visitedSections: state.visitedSections.concat([]),
 
+              line_should_end: state.line_should_end,
+              line_should_end_because: state.line_should_end_because,
+
+              sol_after_comment: state.sol_after_comment,
+
               objects_candname: state.objects_candname,
               objects_section: state.objects_section,
               objects_spritematrix: state.objects_spritematrix.concat([]),
@@ -324,10 +329,11 @@ var codeMirrorFn = function() {
         },
         token: function(stream, state) {
            	var mixedCase = stream.string;
-            var sol = stream.sol();
-            if (sol) {
+            var normal_sol = stream.sol();
+            if (normal_sol) {
                 stream.string = stream.string.toLowerCase();
                 state.tokenIndex=0;
+                state.line_should_end = false;
                 /*   if (state.lineNumber==undefined) {
                         state.lineNumber=1;
                 }
@@ -336,6 +342,12 @@ var codeMirrorFn = function() {
                 }*/
 
             }
+            // White-out initial comments to reduce parser confusion (e.g., code that accesses and reparses stream.string)
+            if (state.sol_after_comment === true) {
+                stream.string = ' '.repeat(stream.pos) + stream.string.substr(stream.pos);
+            }
+            var sol = normal_sol || state.sol_after_comment;
+            state.sol_after_comment = false;
 
             function registerOriginalCaseName(candname){
 
@@ -361,16 +373,11 @@ var codeMirrorFn = function() {
             if (ch === '(' && state.tokenIndex !== -4) { // tokenIndex -4 indicates message command
                 stream.next();
                 state.commentLevel++;
-            } else if (ch === ')') {
-                stream.next();
-                if (state.commentLevel > 0) {
-                    state.commentLevel--;
-                    if (state.commentLevel === 0) {
-                        return 'comment';
-                    }
-                }
             }
             if (state.commentLevel > 0) {
+                if (sol) {
+                    state.sol_after_comment = true;
+                }
                 while (true) {
                     stream.eatWhile(/[^\(\)]+/);
 
@@ -400,17 +407,27 @@ var codeMirrorFn = function() {
                 return blankLineHandle(state);
             }
 
+	        if (state.line_should_end && !stream.eol()) {
+                logError('Only comments should go after ' + state.line_should_end_because + ' on a line.', state.lineNumber);
+                stream.skipToEnd();
+                return 'ERROR';
+            }
+
             //  if (sol)
             {
 
                 //MATCH '==="s AT START OF LINE
                 if (sol && stream.match(reg_equalsrow, true)) {
+                    state.line_should_end = true;
+                    state.line_should_end_because = 'an equals decorator (\'===\')';
                     return 'EQUALSBIT';
                 }
 
                 //MATCH SECTION NAME
                 if (sol && stream.match(reg_sectionNames, true)) {
                     state.section = stream.string.slice(0, stream.pos).trim();
+                    state.line_should_end = true;
+                    state.line_should_end_because = 'a section name';
                     if (state.visitedSections.indexOf(state.section) >= 0) {
                         logError('cannot duplicate sections (you tried to duplicate \"' + state.section.toUpperCase() + '").', state.lineNumber);
                     }
@@ -1251,6 +1268,12 @@ var codeMirrorFn = function() {
 
                 section: '',
                 visitedSections: [],
+
+                line_should_end: false,
+                line_should_end_because: '',
+
+                sol_after_comment: false,
+
 
                 objects_candname: '',
                 objects_section: 0, //whether reading name/color/spritematrix

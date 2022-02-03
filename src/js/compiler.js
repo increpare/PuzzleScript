@@ -2675,6 +2675,9 @@ function loadFile(str) {
     formatHomePage(state);
 
     delete state.commentLevel;
+    delete state.line_should_end;
+    delete state.line_should_end_because;
+    delete state.sol_after_comment;
     delete state.names;
     delete state.abbrevNames;
     delete state.objects_candname;
