@@ -455,4 +455,8 @@ var errormessage_testdata = [
         "Confused mid-line parsing test",
         ["OBJECTS Bad\n======= AlsoBad\n(!!!!!) Trouble\nRed\n\nBackground Player .\nBlack\n\nLEGEND\n\nZap = Bad or Player\nBang = AlsoBad or Player\nBoom = Trouble or Player\n\nSOUNDS\n\nCOLLISIONLAYERS\n\nBackground\nTrouble\n\nRULES\n\nWINCONDITIONS\n\nNo Trouble\n\nLEVELS\n\n.\n",["line 1 : Only comments should go after a section name on a line.","line 2 : Only comments should go after an equals decorator ('===') on a line.","line 11 : Cannot reference \"BAD\" in the LEGEND section; it has not been defined yet.","line 12 : Cannot reference \"ALSOBAD\" in the LEGEND section; it has not been defined yet."],4]
     ],
+    [
+        "Right parenthesis nonsense",
+        ["OBJECTS\n\nBackground Player .\nBlack\n\nLEGEND\n\nBad = )Player or Player\n\nSOUNDS\nCOLLISIONLAYERS\n\nBackground\n\nRULES\nWINCONDITIONS\nLEVELS\n\n.\n",["line 8 : Something bad's happening in the LEGEND"],1]
+    ],
 ];
