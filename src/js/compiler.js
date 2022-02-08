@@ -2426,6 +2426,11 @@ function generateSoundData(state) {
         if (soundEvents.indexOf(sound[0]) >= 0) {
             if (sound.length > 4) {
                 logError("too much stuff to define a sound event.", lineNumber);
+            } else {
+                //out of an abundance of caution, doing a fallback warning rather than expanding the scope of the error #779
+                if (sound.length > 3) {
+                    logWarning("too much stuff to define a sound event.", lineNumber);
+                }
             }
             var seed = sound[1];
             if (validSeed(seed)) {
