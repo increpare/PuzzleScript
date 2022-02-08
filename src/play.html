@@ -242,7 +242,7 @@ a {
 </div> 
 <div class="footer">
 <span id="errormessage" style="color:red;"></span>
-<a id="homepagelink" href="https://www.puzzlescript.net">www.puzzlescript.net</a> <span id="separator">|</span> <a id="hacklink" href="#">hack</a>
+<a id="homepagelink" href="https://www.puzzlescript.net" target="_blank">www.puzzlescript.net</a> <span id="separator">|</span> <a id="hacklink" href="#">hack</a>
 </div>
 
 <!--TOREPLACE-->
@@ -312,7 +312,7 @@ function getData(){
 			var homepageLink = document.getElementById("homepagelink");
 			homepageLink.innerHTML=strip_http(homepage);
  			if (!homepage.match(/^https?:\/\//)) {
- 				homepage = "http://" + homepage;
+ 				homepage = "https://" + homepage;
  			}
  			homepageLink.href = homepage;
 		}

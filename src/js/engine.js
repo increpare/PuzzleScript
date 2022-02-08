@@ -852,24 +852,51 @@ function RebuildLevelArrays() {
 }
 
 var messagetext="";
+
+function applyDiff(diff, level_objects) {
+
+	var index=0;
+	
+	while (index<diff.dat.length){
+		var start_index = diff.dat[index];
+		var copy_length = diff.dat[index+1];
+		if (copy_length===0){
+			break;//tail of buffer is all 0s
+		}
+		for (j=0;j<copy_length;j++){
+			level_objects[start_index+j]=diff.dat[index+2+j];
+		}
+		index += 2 + copy_length;
+	}
+}
+
+function unconsolidateDiff(before,after) {
+
+	// If before is not a diff, return it, otherwise generate a complete 'before' 
+	// state from the 'after' state and the 'diff' (remember, the diffs are all 
+	// backwards...).
+	if (!before.hasOwnProperty("diff")) {
+		return before;
+	}
+
+	var after_objects = new Int32Array(after.dat);
+	applyDiff(before, after_objects);
+
+	return {
+		dat: after_objects,
+		width: before.width,
+		height: before.height,
+		oldflickscreendat: before.oldflickscreendat
+	}
+}
+
 function restoreLevel(lev) {
 	var diffing = lev.hasOwnProperty("diff");
 
 	oldflickscreendat=lev.oldflickscreendat.concat([]);
 
 	if (diffing){
-		var index=0;
-		while (index<lev.dat.length){
-			var start_index = lev.dat[index];
-			var copy_length = lev.dat[index+1];
-			if (copy_length===0){
-				break;//tail of buffer is all 0s
-			}
-			for (j=0;j<copy_length;j++){
-				level.objects[start_index+j]=lev.dat[index+2+j];
-			}
-			index += 2 + copy_length;
-		}
+		applyDiff(lev, level.objects);
 	} else {	
 		level.objects = new Int32Array(lev.dat);
 	}
@@ -2684,7 +2711,13 @@ function processInput(dir,dontDoWin,dontModify) {
 					return true;
 				} else {
 					if (dir!==-1) {
-	    				addUndoState(bak);
+						addUndoState(bak);
+					} else if (backups.length > 0) {
+						// This is for the case that diffs break the undo buffer for real-time games 
+						// ( c f https://github.com/increpare/PuzzleScript/pull/796 ),
+						// because realtime ticks are ignored when the user presses undo and the backup
+						// array reflects this structure.  
+						backups[backups.length - 1] = unconsolidateDiff(backups[backups.length - 1], bak);					
 	    			}
 	    			modified=true;
 	    		}

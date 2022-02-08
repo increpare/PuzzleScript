@@ -30,10 +30,14 @@ function buildStandalone(sourceCode) {
 	if (state.metadata.title!==undefined) {
 		title=state.metadata.title;
 	}
-	var homepage = "www.puzzlescript.net";
+	var homepage = "https://www.puzzlescript.net";
 	if (state.metadata.homepage!==undefined) {
 		homepage=state.metadata.homepage;
+		if (!homepage.match(/^https?:\/\//)) {
+			homepage = "https://" + homepage;
+		}
 	}
+	var homepage_stripped = homepage.replace(/^https?:\/\//,'');
 
 	if ('background_color' in state.metadata) {
 		htmlString = htmlString.replace(/black;\/\*Don\'t/g,state.bgcolor+';\/\*Don\'t');	
@@ -43,7 +47,10 @@ function buildStandalone(sourceCode) {
 	}
 
 	htmlString = htmlString.replace(/__GAMETITLE__/g,title);
+
+
 	htmlString = htmlString.replace(/__HOMEPAGE__/g,homepage);
+	htmlString = htmlString.replace(/__HOMEPAGE_STRIPPED_PROTOCOL__/g,homepage_stripped);
 
 	// $ has special meaning to JavaScript's String.replace ($0, $1, etc.) Escape $ as $$.
 	sourceCode = sourceCode.replace(/\$/g, '$$$$');
