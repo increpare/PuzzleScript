@@ -728,7 +728,15 @@ var codeMirrorFn = function() {
                             	for (var i=0;i<state.legend_properties.length;i++) {
                             		var a = state.legend_properties[i];
                             		if (a[0]===n) {  
-                                        var result = [].concat.apply([],a.slice(1).map(substitutor));
+                                        var result = [];
+                                        for (var j=1;j<a.length;j++){
+                                            if (a[j]===n){
+                                                //error here superfluous, also detected elsewhere (cf 'You can't define object' / #789)
+                                                //logError('Error, recursive definition found for '+n+'.', state.lineNumber);                                
+                                            } else {
+                                                result = result.concat(substitutor(a[j]));
+                                            }
+                                        }
                             			return result;
                             		}
                             	}
@@ -802,6 +810,16 @@ var codeMirrorFn = function() {
 	                            }
                                 if (splits.indexOf(candname, 2)>=2) {
                                     logError("You can't define object " + candname.toUpperCase() + " in terms of itself!", state.lineNumber);
+                                    var idx = splits.indexOf(candname, 2);
+                                    while (idx >=2){
+                                        if (idx>=4){
+                                            splits.splice(idx-1, 2);
+                                        } else {
+                                            splits.splice(idx, 2);
+                                        }
+                                        idx = splits.indexOf(candname, 2);
+                                    }
+
                                     // ok = false;
                                 }
                                 checkNameNew(state,candname);
@@ -896,8 +914,17 @@ var codeMirrorFn = function() {
 	                                	for (var i=0;i<state.legend_properties.length;i++) {
 	                                		var a = state.legend_properties[i];
 	                                		if (a[0]===n) {  
-	                                			return [].concat.apply([],a.slice(1).map(substitutor));
-	                                		}
+                                                var result = [];
+                                                for (var j=1;j<a.length;j++){
+                                                    if (a[j]===n){
+                                                        //error here superfluous, also detected elsewhere (cf 'You can't define object' / #789)
+                                                        //logError('Error, recursive definition found for '+n+'.', state.lineNumber);                                
+                                                    } else {
+                                                        result = result.concat(substitutor(a[j]));
+                                                    }
+                                                }
+                                                return result;
+                                            }
 	                                	}
 	                                	return [n];
 	                                };
