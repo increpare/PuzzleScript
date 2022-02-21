@@ -2682,6 +2682,7 @@ function loadFile(str) {
 
     formatHomePage(state);
 
+    //delete intermediate representations
     delete state.commentLevel;
     delete state.line_should_end;
     delete state.line_should_end_because;
@@ -2694,6 +2695,7 @@ function loadFile(str) {
     delete state.section;
     delete state.subsection;
     delete state.tokenIndex;
+    delete state.legend_current_line_wip;
     delete state.visitedSections;
     delete state.loops;
     /*
