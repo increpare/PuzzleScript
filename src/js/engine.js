@@ -863,7 +863,7 @@ function applyDiff(diff, level_objects) {
 		if (copy_length===0){
 			break;//tail of buffer is all 0s
 		}
-		for (j=0;j<copy_length;j++){
+		for (var j=0;j<copy_length;j++){
 			level_objects[start_index+j]=diff.dat[index+2+j];
 		}
 		index += 2 + copy_length;
@@ -1081,7 +1081,7 @@ function DoUndo(force,ignoreDuplicates) {
 function getPlayerPositions() {
     var result=[];
     var playerMask = state.playerMask;
-    for (i=0;i<level.n_tiles;i++) {
+    for (var i=0;i<level.n_tiles;i++) {
         level.getCellInto(i,_o11);
         if (playerMask.anyBitsInCommon(_o11)) {
             result.push(i);
@@ -2562,7 +2562,7 @@ function processInput(dir,dontDoWin,dontModify) {
 		}
 
 		
-        bannedGroup = [];
+        level.bannedGroup = [];
         level.commandQueue=[];
         level.commandQueueSourceRules=[];
         var startRuleGroupIndex=0;
@@ -2592,8 +2592,8 @@ function processInput(dir,dontDoWin,dontModify) {
         	
 
 
-        	applyRules(state.rules, state.loopPoint, startRuleGroupIndex, bannedGroup);
-        	var shouldUndo = resolveMovements(level,bannedGroup);
+        	applyRules(state.rules, state.loopPoint, startRuleGroupIndex, level.bannedGroup);
+        	var shouldUndo = resolveMovements(level, level.bannedGroup);
 
         	if (shouldUndo) {
         		rigidloop=true;

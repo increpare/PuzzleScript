@@ -923,7 +923,7 @@ function rulesToArray(state) {
 
     }
 
-    for (i=0;i<rules4.length;i++){
+    for (var i=0;i<rules4.length;i++){
         makeSpawnedObjectsStationary(state,rules4[i],rule.lineNumber);
     }
     state.rules = rules4;
