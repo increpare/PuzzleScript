@@ -1546,15 +1546,6 @@ function cellRowMatchesWildcardFunctionGenerate(direction,cellRow,i, maxk, mink)
 }
 
 
-Rule.prototype.toJSON = function() {
-	/* match construction order for easy deserialization */
-	return [
-		this.direction, this.patterns, this.hasReplacements, this.lineNumber, this.isEllipsis,
-		this.groupNumber, this.isRigid, this.commands, this.isRandom, this.cellRowMasks,
-		this.cellRowMasks_Movements
-	];
-};
-
 var STRIDE_OBJ = 1;
 var STRIDE_MOV = 1;
 
@@ -1640,14 +1631,6 @@ CellPattern.prototype.generateMatchFunction = function() {
 	//console.log(fn.replace(/\s+/g, ' '));
 	return matchCache[fn] = new Function("i", "objects", "movements", fn);
 }
-
-CellPattern.prototype.toJSON = function() {
-	return [
-		this.movementMask, this.cellMask, this.nonExistenceMask,
-		this.moveNonExistenceMask, this.moveStationaryMask, this.randomDirOrEntityMask,
-		this.movementsToRemove
-	];
-};
 
 var _o1,_o2,_o2_5,_o3,_o4,_o5,_o6,_o7,_o8,_o9,_o10,_o11,_o12;
 var _m1,_m2,_m3;
