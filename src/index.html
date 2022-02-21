@@ -187,6 +187,10 @@ function replaceContent() {
     if (item.homepage.startsWith("http")===false){
       item.homepage="https://"+item.homepage
     }
+    if (item.NSFW==true)
+    { 
+      continue;
+    }
     data.push(item);
   }
   data = shuffle(data);

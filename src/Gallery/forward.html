@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="shortcut icon" type="image/x-icon" href="ico/favicon.ico" />
+
+    <title>Forward to external site - PuzzleScript Gallery</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="../Documentation/css/bootstrap.css" rel="stylesheet">
+
+    <!-- Custom styles for this template -->
+    <link href="../Documentation/css/bootstrap-theme.css" rel="stylesheet">
+
+    <style>
+  .panel {
+    border:0;
+    margin:0;
+    box-shadow:none;
+  }
+.panel-body {
+  border:0;
+  background-color: transparent;
+  padding:0;
+  text-align: center;
+}
+.panel-footer {
+  border:0;
+  background-color: transparent;
+  padding:0;
+  text-align: center;
+  margin-top: 5px;
+  margin-bottom: 20px;
+}
+.panel-body img {
+  width:100%;
+  max-height: 320px; 
+  object-fit: contain;
+  bottom:0px;
+  text-align: center;
+}
+.gamelinktitle{
+  font-weight: bold;
+}
+
+      .caption{
+        text-align: center;
+      }
+    </style>
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+      <script src="../../assets/js/html5shiv.js"></script>
+      <script src="../../assets/js/respond.min.js"></script>
+    <![endif]-->
+  </head>
+<script>
+
+    function checkdate(evt){
+        console.log("hi");
+
+    }
+</script>
+  <body>
+
+    <div class="navbar navbar-inverse navbar-fixed-top">
+      <div class="container">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="../index.html"><img src="../images/mascot_colorful.png"> PuzzleScript</a>
+        </div>
+
+      </div>
+    </div>
+
+    <center><h1>Warning</h1></center>
+    <div class="container" id="gallerycontainer">
+    </div><!-- /.container -->
+
+
+<script type="text/javascript" src="../games_dat.js"></script>
+
+
+
+    <div class="container">
+
+    <p>
+    This game has content that is not suitable for children.  
+    <p>
+    If you are a child, please <a href="index.html">go back</a> to the gallery and go play something else.
+    <p>
+        
+       
+    <ul>
+    <li><span id="unconfirmed">Please confirm your date of birth to confirm you are over 18: 
+        <input type="date" id="dob" name="dob" value="" min="1900-01-01">
+    </span>
+        <span id="confirmed" style="display:none;">
+            <a id="forwardlink"  href="">I am an adult and wish to play the game.</a><span id ="explanation"></span></span>
+        </span>
+    </li>
+    <li><a href="index.html">Go back to the Puzzlescript Gallery.</a></li>
+    </ul>
+</div>
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="../Documentation/js/jquery.js"></script>
+    <script src="../Documentation/js/bootstrap.min.js"></script>
+
+    <script>
+        const dobinput = document.getElementById('dob');
+        const unconfirmed = document.getElementById("unconfirmed");                
+        const confirmed = document.getElementById("confirmed");            
+
+        function isAdult(dateOfBirth) {
+            // find the date 18 years ago
+            const date18YrsAgo = new Date();
+            date18YrsAgo.setFullYear(date18YrsAgo.getFullYear() - 18);
+            const date200YrsAgo = new Date();
+            date200YrsAgo.setFullYear(date18YrsAgo.getFullYear() - 200);
+            // check if the date of birth is before that date
+            return (dateOfBirth <= date18YrsAgo) && (dateOfBirth >= date200YrsAgo);
+        }
+
+        function updateValue(e){
+            const dob_string = dobinput.value;
+            const dob = new Date(dob_string);
+            if(isAdult(dob)){
+                //hide unconfirmed
+                unconfirmed.style.display = "none";
+                //show confirmed
+                confirmed.style.display = "inline";
+                var params = new URLSearchParams(document.location.search);
+                var targeturl = params.get("url"); // is the string "Jonathan"
+                //set target url of forwardlink to targeturl
+                document.getElementById("forwardlink").href = atob(targeturl);
+            }
+        }
+
+        dobinput.addEventListener('input', updateValue);
+
+    </script>
+
+  </body>
+</html>

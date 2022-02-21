@@ -348,7 +348,8 @@ var games_gallery = [
     "thumb": "6ec59e0b3f1f306acdc1.gif",
     "title": "Pornography for Beginners",
     "author": "Holly",
-    "homepage": "https://hollygramazio.net"
+    "homepage": "https://hollygramazio.net",
+    "NSFW": true
   },
   {
     "url": "https://www.puzzlescript.net/play.html?p=0590a6662f9e8e6afe4a",
