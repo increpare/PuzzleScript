@@ -372,6 +372,8 @@ var codeMirrorFn = function() {
                     if (state.commentLevel === 0) {
                         return 'comment';
                     }
+                } else {
+                    logWarning("You're trying to close a comment here, but I can't find any opening bracket to match it? [This is highly suspicious, you probably want to fix it]",state.lineNumber);
                 }
             }
             if (state.commentLevel > 0) {
