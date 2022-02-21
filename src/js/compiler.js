@@ -171,8 +171,8 @@ function generateExtraMembers(state) {
             glyphDict[n] = mask;
         }
     }
+    
     var added = true;
-    var targetcount = state.legend_synonyms.length + state.legend_aggregates.length;
     while (added) 
     {
         added = false;
@@ -185,8 +185,7 @@ function generateExtraMembers(state) {
             if ((!(key in glyphDict) || (glyphDict[key] === undefined)) && (glyphDict[val] !== undefined)) {
                 added = true;
                 glyphDict[key] = glyphDict[val];
-                targetcount--;
-            }
+            } 
         }
 
         //then, aggregates
@@ -231,10 +230,10 @@ function generateExtraMembers(state) {
                 }
                 added = true;
                 glyphDict[dat[0]] = mask;
-                targetcount--;
             }
         }
     }
+    
     state.glyphDict = glyphDict;
 
     var aggregatesDict = {};
