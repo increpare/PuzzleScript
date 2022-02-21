@@ -172,7 +172,9 @@ function generateExtraMembers(state) {
         }
     }
     var added = true;
-    while (added) {
+    var targetcount = state.legend_synonyms.length + state.legend_aggregates.length;
+    while (added) 
+    {
         added = false;
 
         //then, synonyms
@@ -183,6 +185,7 @@ function generateExtraMembers(state) {
             if ((!(key in glyphDict) || (glyphDict[key] === undefined)) && (glyphDict[val] !== undefined)) {
                 added = true;
                 glyphDict[key] = glyphDict[val];
+                targetcount--;
             }
         }
 
@@ -228,6 +231,7 @@ function generateExtraMembers(state) {
                 }
                 added = true;
                 glyphDict[dat[0]] = mask;
+                targetcount--;
             }
         }
     }
@@ -433,7 +437,7 @@ function levelFromString(state, level) {
                 } else {
                     logError('Error, symbol "' + ch + '" is defined using \'or\', and therefore ambiguous - it cannot be used in a map. Did you mean to define it in terms of \'and\'?', level[0] + j);
                 }
-
+                return o;
             }
 
             var maskint = new BitVec(STRIDE_OBJ);
@@ -2680,6 +2684,9 @@ function loadFile(str) {
     formatHomePage(state);
 
     delete state.commentLevel;
+    delete state.line_should_end;
+    delete state.line_should_end_because;
+    delete state.sol_after_comment;
     delete state.names;
     delete state.abbrevNames;
     delete state.objects_candname;

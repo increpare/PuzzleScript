@@ -287,6 +287,10 @@ var codeMirrorFn = function() {
               section: state.section,
               visitedSections: state.visitedSections.concat([]),
 
+              line_should_end: state.line_should_end,
+              line_should_end_because: state.line_should_end_because,
+              sol_after_comment: state.sol_after_comment,
+
               objects_candname: state.objects_candname,
               objects_section: state.objects_section,
               objects_spritematrix: state.objects_spritematrix.concat([]),
@@ -332,6 +336,7 @@ var codeMirrorFn = function() {
             if (sol) {
                 stream.string = stream.string.toLowerCase();
                 state.tokenIndex=0;
+                state.line_should_end = false;
                 /*   if (state.lineNumber==undefined) {
                         state.lineNumber=1;
                 }
@@ -339,6 +344,10 @@ var codeMirrorFn = function() {
                     state.lineNumber++;
                 }*/
 
+            }
+            if (state.sol_after_comment){
+                sol = true;
+                state.sol_after_comment = false;
             }
 
             function registerOriginalCaseName(candname){
@@ -373,10 +382,14 @@ var codeMirrorFn = function() {
                         return 'comment';
                     }
                 } else {
-                    logWarning("You're trying to close a comment here, but I can't find any opening bracket to match it? [This is highly suspicious, you probably want to fix it]",state.lineNumber);
+                    logWarning("You're trying to close a comment here, but I can't find any opening bracket to match it? [This is highly suspicious; you probably want to fix it.]",state.lineNumber);
+                    return '';
                 }
             }
             if (state.commentLevel > 0) {
+                if (sol) {
+                    state.sol_after_comment = true;
+                }
                 while (true) {
                     stream.eatWhile(/[^\(\)]+/);
 
@@ -406,20 +419,31 @@ var codeMirrorFn = function() {
                 return blankLineHandle(state);
             }
 
+            if (state.line_should_end && !stream.eol()) {
+                logError('Only comments should go after ' + state.line_should_end_because + ' on a line.', state.lineNumber);
+                stream.skipToEnd();
+                return 'ERROR';
+            }
+
             //  if (sol)
             {
 
                 //MATCH '==="s AT START OF LINE
                 if (sol && stream.match(reg_equalsrow, true)) {
+                    state.line_should_end = true;
+                    state.line_should_end_because = 'a bunch of equals signs (\'===\')';
                     return 'EQUALSBIT';
                 }
 
                 //MATCH SECTION NAME
-                if (sol && stream.match(reg_sectionNames, true)) {
-                    state.section = stream.string.slice(0, stream.pos).trim();
+                var sectionNameMatches = stream.match(reg_sectionNames, true);
+                if (sol && sectionNameMatches ) {
+                    state.section = sectionNameMatches[0].trim();
                     if (state.visitedSections.indexOf(state.section) >= 0) {
                         logError('cannot duplicate sections (you tried to duplicate \"' + state.section.toUpperCase() + '").', state.lineNumber);
                     }
+                    state.line_should_end = true;
+                    state.line_should_end_because = `a section name ("${state.section.toUpperCase()}")`;
                     state.visitedSections.push(state.section);
                     var sectionIndex = sectionNames.indexOf(state.section);
                     if (sectionIndex == 0) {
@@ -800,15 +824,16 @@ var codeMirrorFn = function() {
                         if (sol) {
 
 
-                            //step 1 : verify format
                             var longer = stream.string.replace('=', ' = ');
                             longer = reg_notcommentstart.exec(longer)[0];
 
                             var splits = longer.split(/[\p{Z}\s]/u).filter(function(v) {
                                 return v !== '';
                             });
-                            var ok = true;
 
+                            
+                            //gotta verify the format
+                            var ok = true;
                         	if (splits.length>0) {
                         		var candname = splits[0].toLowerCase();
 	                            if (keyword_array.indexOf(candname)>=0) {
@@ -913,7 +938,7 @@ var codeMirrorFn = function() {
 	                                	for (var i=0;i<state.legend_aggregates.length;i++) {
 	                                		var a = state.legend_aggregates[i];
 	                                		if (a[0]===n) {           
-	                                			logError("Cannot define a property (using 'or') in terms of aggregates (something that uses 'and').", state.lineNumber);
+	                                			logError("Cannot define a property (something defined in terms of 'or') in terms of aggregates (something that uses 'and').", state.lineNumber);
 	                                			ok=false;          
 	                                		}
 	                                	}
@@ -1284,6 +1309,10 @@ var codeMirrorFn = function() {
 
                 section: '',
                 visitedSections: [],
+
+                line_should_end: false,
+                line_should_end_because: '',
+                sol_after_comment: false,
 
                 objects_candname: '',
                 objects_section: 0, //whether reading name/color/spritematrix
