@@ -218,13 +218,13 @@ function generateExtraMembers(state) {
                         } else {
                             var n1 = n.toUpperCase();
                             var n2 = state.idDict[mask[o.layer]].toUpperCase();
-                            if (n1 !== n2) {
+                            // if (n1 !== n2) {
                                 logError(
                                     'Trying to create an aggregate object (defined in the legend) with both "' +
                                     n1 + '" and "' + n2 + '", which are on the same layer and therefore can\'t coexist.',
                                     dat.lineNumber
                                 );
-                            }
+                            // }
                         }
                     }
                 }
@@ -1616,7 +1616,7 @@ function rulesToMask(state) {
                     } else {
                         var existingname = layersUsed_l[layerIndex];
                         if (existingname !== null) {
-                            rule.discard = [object_name.toUpperCase(), existingname.toUpperCase()];
+                            rule.discard=[object_name.toUpperCase(), existingname.toUpperCase()];
                         }
 
                         layersUsed_l[layerIndex] = object_name;
@@ -1892,19 +1892,51 @@ function collapseRules(groups) {
 function ruleGroupDiscardOverlappingTest(ruleGroup) {
     if (ruleGroup.length === 0)
         return;
+    
+    var discards=[];
 
     for (var i = 0; i < ruleGroup.length; i++) {
         var rule = ruleGroup[i];
         if (rule.hasOwnProperty('discard')) {
+            
+            var beforesame = i===0 ? false : ruleGroup[i-1].lineNumber === rule.lineNumber;
+            var aftersame = i===(ruleGroup.length-1) ? false : ruleGroup[i+1].lineNumber === rule.lineNumber;
+
             ruleGroup.splice(i, 1);
+            discards.push(rule.discard)
 
             //if rule before isn't of same linenumber, and rule after isn't of same linenumber, 
             //then a rule has been totally erased and you should throw an error!
-            if ( (i===0 || ruleGroup[i-1].lineNumber !==  rule.lineNumber ) 
-                && (i<ruleGroup.length-1 && ruleGroup[i+1].lineNumber !==  rule.lineNumber) || ruleGroup.length===0) {
-                var example = rule['discard'];
+            if ( !(beforesame||aftersame) || ruleGroup.length===0) {
                 
-                logError(example[0] + ' and ' + example[1] + ' can never overlap, but this rule requires that to happen.', rule.lineNumber);
+                const example = discards[0];
+                
+                var parenthetical = "";
+                if (discards.length>1){
+                    parenthetical = " (ditto for ";
+                    for (var j=1;j<discards.length;j++){
+                        if (j>1){
+                            parenthetical+=", "
+                            
+                            if (j===discards.length-1){
+                                parenthetical += "and ";
+                            }
+                        }
+
+                        const thisdiscard = discards[j];
+                        const p1 = thisdiscard[0];
+                        const p2 = thisdiscard[1];
+                        parenthetical += `${p1}/${p2}`;
+
+                        if (j===3 && discards.length>4){
+                            parenthetical+=" etc.";
+                            break;
+                        }
+                    }
+                    parenthetical += ")";
+                }
+
+                logError(`${example[0]} and ${example[1]} can never overlap${parenthetical}, but this rule requires that to happen, so it's being culled.`, rule.lineNumber);
             }
             i--;
         }
@@ -2261,6 +2293,12 @@ function printRules(state) {
         if (rule.hasOwnProperty('discard')) {
             discardcount++;
         } else {
+            var sameGroupAsPrevious = i>0 && state.rules[i-1].groupNumber === rule.groupNumber;
+            if (sameGroupAsPrevious){
+                output += '+ ';
+            } else {
+                output += '&nbsp;&nbsp;';
+            }
             output += rule.stringRep + "<br>";
         }
     }
