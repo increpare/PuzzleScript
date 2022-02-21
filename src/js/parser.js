@@ -251,6 +251,7 @@ var codeMirrorFn = function() {
             var soundsCopy = [];
             var levelsCopy = [];
             var winConditionsCopy = [];
+            var rulesCopy = [];
 
             for (var i = 0; i < state.legend_synonyms.length; i++) {
               legend_synonymsCopy.push(state.legend_synonyms[i].concat([]));
@@ -269,6 +270,9 @@ var codeMirrorFn = function() {
             }
             for (var i = 0; i < state.winconditions.length; i++) {
               winConditionsCopy.push(state.winconditions[i].concat([]));
+            }
+            for (var i = 0; i < state.rules.length; i++) {
+              rulesCopy.push(state.rules[i].concat([]));
             }
 
             var original_case_namesCopy = Object.assign({},state.original_case_names);
@@ -294,7 +298,7 @@ var codeMirrorFn = function() {
 
               sounds: soundsCopy,
 
-              rules: state.rules.concat([]),
+              rules: rulesCopy,
 
               names: state.names.concat([]),
 
@@ -1137,7 +1141,7 @@ var codeMirrorFn = function() {
                         if (sol)
                         {
                             if (stream.match(/[\p{Z}\s]*message\b[\p{Z}\s]*/u, true)) {
-                                state.tokenIndex = 1;//1/2 = message/level
+                                state.tokenIndex = -4;//-4/2 = message/level
                                 var newdat = ['\n', mixedCase.slice(stream.pos).trim(),state.lineNumber];
                                 if (state.levels[state.levels.length - 1].length == 0) {
                                     state.levels.splice(state.levels.length - 1, 0, newdat);
@@ -1147,7 +1151,7 @@ var codeMirrorFn = function() {
                                 return 'MESSAGE_VERB';//a duplicate of the previous section as a legacy thing for #589 
                             } else if (stream.match(/[\p{Z}\s]*message[\p{Z}\s]*/u, true)) {//duplicating previous section because of #589
                                 logWarning("You probably meant to put a space after 'message' innit.  That's ok, I'll still interpret it as a message, but you probably want to put a space there.",state.lineNumber);
-                                state.tokenIndex = 1;//1/2 = message/level
+                                state.tokenIndex = -4;//-4/2 = message/level
                                 var newdat = ['\n', mixedCase.slice(stream.pos).trim(),state.lineNumber];
                                 if (state.levels[state.levels.length - 1].length == 0) {
                                     state.levels.splice(state.levels.length - 1, 0, newdat);
@@ -1185,7 +1189,7 @@ var codeMirrorFn = function() {
                                 }
                             }
                         } else {
-                            if (state.tokenIndex == 1) {
+                            if (state.tokenIndex == -4) {
                                 stream.skipToEnd();
                                	return 'MESSAGE';
                             }
