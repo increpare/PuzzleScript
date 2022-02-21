@@ -1,6 +1,5 @@
 var canSetHTMLColors=false;
 var canDump=true;
-var canYoutube=false;
 var recordingStartsFromLevel=0;
 var inputHistory=[];
 var compiledText;

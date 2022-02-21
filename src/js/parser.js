@@ -167,23 +167,6 @@ if (typeof Object.assign != 'function') {
 var codeMirrorFn = function() {
     'use strict';
 
-
-    function searchStringInArray(str, strArray) {
-        for (var j = 0; j < strArray.length; j++) {
-            if (strArray[j] === str) { return j; }
-        }
-        return -1;
-    }
-
-    function isMatrixLine(str) {
-        for (var j = 0; j < str.length; j++) {
-            if (str.charAt(j) !== '.' && str.charAt(j) !== '0') {
-                return false;
-            }
-        }
-        return true;
-    }
-
     function checkNameDefined(state,candname) {
         if (state.objects[candname] !== undefined) {
             return;
@@ -1287,8 +1270,12 @@ var codeMirrorFn = function() {
                             if (sol) {
                                 if (['title','author','homepage','background_color','text_color','key_repeat_interval','realtime_interval','again_interval','flickscreen','zoomscreen','color_palette','youtube'].indexOf(token)>=0) {
                                     
-                                    if (token==='youtube' || token==='author' || token==='homepage' || token==='title') {
+                                    if (token==='author' || token==='homepage' || token==='title') {
                                         stream.string=mixedCase;
+                                    }
+
+                                    if (token==="youtube") {
+                                        logWarning("Unfortunately, YouTube support hasn't been working properly for a long time - it was always a hack and it hasn't gotten less hacky over time, so I can no longer pretend to support it.",state.lineNumber);
                                     }
                                     
                                     var m2 = stream.match(reg_notcommentstart, false);
