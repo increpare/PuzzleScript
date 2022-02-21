@@ -2562,7 +2562,8 @@ function processInput(dir,dontDoWin,dontModify) {
 		}
 
 		
-        level.bannedGroup = [];
+        var bannedGroup = [];
+
         level.commandQueue=[];
         level.commandQueueSourceRules=[];
         var startRuleGroupIndex=0;
@@ -2592,8 +2593,8 @@ function processInput(dir,dontDoWin,dontModify) {
         	
 
 
-        	applyRules(state.rules, state.loopPoint, startRuleGroupIndex, level.bannedGroup);
-        	var shouldUndo = resolveMovements(level, level.bannedGroup);
+        	applyRules(state.rules, state.loopPoint, startRuleGroupIndex, bannedGroup);
+        	var shouldUndo = resolveMovements(level, bannedGroup);
 
         	if (shouldUndo) {
         		rigidloop=true;
