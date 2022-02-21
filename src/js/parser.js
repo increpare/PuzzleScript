@@ -859,7 +859,7 @@ var codeMirrorFn = function() {
 
                             spritematrix[spritematrix.length - 1] += ch;
                             if (spritematrix[spritematrix.length-1].length>5){
-                                logError('Sprites must be 5 wide and 5 high.', state.lineNumber);
+                                logWarning('Sprites must be 5 wide and 5 high.', state.lineNumber);
                                 stream.match(reg_notcommentstart, true);
                                 return null;
                             }
