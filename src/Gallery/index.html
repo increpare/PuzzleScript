@@ -117,11 +117,13 @@ function replaceContent() {
     if (dat.homepage.startsWith("http")===false){
       dat.homepage="https://"+dat.homepage
     }
+    var suffix="";
     if (dat.NSFW===true){      
       //set dat.url to be a link to forward.html that has dat.url in it ars
       dat.url = "forward.html?url="+escapeHtml(btoa(dat.url));
+      suffix = " [Adults Only]"
     }
-    var str ='<div class="panel panel-default"><div class="panel-body"><a href="'+dat.url+'"><img src="'+dat.imgurl+'">​</a></div><div class="panel-footer"><a class="gamelinktitle" href="'+dat.url+'">'+escapeHtml(dat.title)+'</a> by <a href="'+dat.homepage+'">'+escapeHtml(dat.author)+'</a></div></div>';
+    var str ='<div class="panel panel-default"><div class="panel-body"><a href="'+dat.url+'"><img src="'+dat.imgurl+'">​</a></div><div class="panel-footer"><a class="gamelinktitle" href="'+dat.url+'">'+escapeHtml(dat.title)+'</a> by <a href="'+dat.homepage+'">'+escapeHtml(dat.author)+'</a>'+suffix+'</div></div>';
 
 
     data.push('<div class="col-xs-4">'+str+'</div>');

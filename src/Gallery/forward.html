@@ -79,74 +79,36 @@
       </div>
     </div>
 
-    <center><h1>Warning</h1></center>
-    <div class="container" id="gallerycontainer">
-    </div><!-- /.container -->
-
 
 <script type="text/javascript" src="../games_dat.js"></script>
 
 
 
     <div class="container">
+      <h1>Warning</h1>
+    <p>
+    This game has mature content that is not suitable for children.  
+    <p>
+    If you are a child, please <a href="index.html">go back to the gallery</a> and go play something else.
+    <p>              
+ 
+    <a class="btn  btn-danger" id="forwardlink"  href="">I confirm that I am an adult and wish to play the game.</a>
+    <p></p>
+    <a class="btn  btn-primary" href="index.html">Take me back to the Puzzlescript Gallery.</a></li>
 
-    <p>
-    This game has content that is not suitable for children.  
-    <p>
-    If you are a child, please <a href="index.html">go back</a> to the gallery and go play something else.
-    <p>
-        
-       
-    <ul>
-    <li><span id="unconfirmed">Please confirm your date of birth to confirm you are over 18: 
-        <input type="date" id="dob" name="dob" value="" min="1900-01-01">
-    </span>
-        <span id="confirmed" style="display:none;">
-            <a id="forwardlink"  href="">I am an adult and wish to play the game.</a><span id ="explanation"></span></span>
-        </span>
-    </li>
-    <li><a href="index.html">Go back to the Puzzlescript Gallery.</a></li>
-    </ul>
 </div>
+
     <!-- Bootstrap core JavaScript
     ================================================== -->
     <!-- Placed at the end of the document so the pages load faster -->
     <script src="../Documentation/js/jquery.js"></script>
     <script src="../Documentation/js/bootstrap.min.js"></script>
 
-    <script>
-        const dobinput = document.getElementById('dob');
-        const unconfirmed = document.getElementById("unconfirmed");                
-        const confirmed = document.getElementById("confirmed");            
-
-        function isAdult(dateOfBirth) {
-            // find the date 18 years ago
-            const date18YrsAgo = new Date();
-            date18YrsAgo.setFullYear(date18YrsAgo.getFullYear() - 18);
-            const date200YrsAgo = new Date();
-            date200YrsAgo.setFullYear(date18YrsAgo.getFullYear() - 200);
-            // check if the date of birth is before that date
-            return (dateOfBirth <= date18YrsAgo) && (dateOfBirth >= date200YrsAgo);
-        }
-
-        function updateValue(e){
-            const dob_string = dobinput.value;
-            const dob = new Date(dob_string);
-            if(isAdult(dob)){
-                //hide unconfirmed
-                unconfirmed.style.display = "none";
-                //show confirmed
-                confirmed.style.display = "inline";
-                var params = new URLSearchParams(document.location.search);
-                var targeturl = params.get("url"); // is the string "Jonathan"
-                //set target url of forwardlink to targeturl
-                document.getElementById("forwardlink").href = atob(targeturl);
-            }
-        }
-
-        dobinput.addEventListener('input', updateValue);
-
+    <script>      
+        var params = new URLSearchParams(document.location.search);
+        var targeturl = params.get("url"); // is the string "Jonathan"
+        //set target url of forwardlink to targeturl
+        document.getElementById("forwardlink").href = atob(targeturl);
     </script>
-
   </body>
 </html>
