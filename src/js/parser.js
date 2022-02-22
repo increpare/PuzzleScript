@@ -257,18 +257,21 @@ var codeMirrorFn = function() {
             }
         
         
-            if (splits.indexOf(candname, 2)>=2) {
-                logError("You can't define object " + candname.toUpperCase() + " in terms of itself!", state.lineNumber);
-                ok=false;
-                var idx = splits.indexOf(candname, 2);
-                while (idx >=2){
-                    if (idx>=4){
-                        splits.splice(idx-1, 2);
-                    } else {
-                        splits.splice(idx, 2);
-                    }
-                    idx = splits.indexOf(candname, 2);
-                }                                    
+            for (var i=2; i<splits.length; i+=2){
+                var nname = splits[i];
+                if (nname===candname){
+                    logError("You can't define object " + candname.toUpperCase() + " in terms of itself!", state.lineNumber);
+                    ok=false;
+                    var idx = splits.indexOf(candname, 2);
+                    while (idx >=2){
+                        if (idx>=4){
+                            splits.splice(idx-1, 2);
+                        } else {
+                            splits.splice(idx, 2);
+                        }
+                        idx = splits.indexOf(candname, 2);
+                    }          
+                }                          
             } 
 
             //for every other word, check if it's a valid name

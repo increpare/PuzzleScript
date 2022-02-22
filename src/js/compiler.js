@@ -220,7 +220,7 @@ function generateExtraMembers(state) {
                             var n2 = state.idDict[mask[o.layer]].toUpperCase();
                             // if (n1 !== n2) {
                                 logError(
-                                    'Trying to create an aggregate object (defined in the legend) with both "' +
+                                    'Trying to create an aggregate object (something defined in the LEGEND section using AND) with both "' +
                                     n1 + '" and "' + n2 + '", which are on the same layer and therefore can\'t coexist.',
                                     dat.lineNumber
                                 );
@@ -1903,7 +1903,18 @@ function ruleGroupDiscardOverlappingTest(ruleGroup) {
             var aftersame = i===(ruleGroup.length-1) ? false : ruleGroup[i+1].lineNumber === rule.lineNumber;
 
             ruleGroup.splice(i, 1);
-            discards.push(rule.discard)
+            
+            var found=false;
+            for(var j=0;j<discards.length;j++){
+                var discard=discards[j];
+                if (discard[0]===rule.discard[0] && discard[1]===rule.discard[1]){
+                    found=true;
+                    break;
+                }
+            }
+            if(!found){
+                discards.push(rule.discard)
+            }
 
             //if rule before isn't of same linenumber, and rule after isn't of same linenumber, 
             //then a rule has been totally erased and you should throw an error!
