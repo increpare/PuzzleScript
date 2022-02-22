@@ -15,3 +15,10 @@ dt {
 	margin-bottom:10px;
 /*	background-color:lightgray;*/
 }
+
+:target {
+  display: block;
+  position: relative;
+  top: -50px; 
+  visibility: hidden;
+}
