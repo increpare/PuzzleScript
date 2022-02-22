@@ -2432,15 +2432,9 @@ function generateLoopPoints(state) {
     state.lateLoopPoint = loopPoint;
 }
 
-var soundEvents = ["titlescreen", "startgame", "cancel", "endgame", "startlevel", "undo", "restart", "endlevel", "showmessage", "closemessage", "sfx0", "sfx1", "sfx2", "sfx3", "sfx4", "sfx5", "sfx6", "sfx7", "sfx8", "sfx9", "sfx10"];
-var soundMaskedEvents = ["create", "destroy", "move", "cantmove", "action"];
-var soundVerbs = soundEvents.concat(soundMaskedEvents);
-
-
 function validSeed(seed) {
     return /^\s*\d+\s*$/.exec(seed) !== null;
 }
-
 
 var soundDirectionIndicatorMasks = {
     'up': parseInt('00001', 2),
@@ -2475,7 +2469,19 @@ function generateSoundData(state) {
             continue;
         }
 
-        if (soundEvents.indexOf(sound[0]) >= 0) {
+        const v0=sound[0][0].trim();
+        const t0=sound[0][1].trim();
+        const v1=sound[1][0].trim();
+        const t1=sound[1][1].trim();
+        
+        var seed = sound[sound.length - 2][0];
+        var seed_t = sound[sound.length - 2][1];
+        if (seed_t !== 'SOUND') {
+            logError("Expecting sfx data, instead found \"" + seed + "\".", lineNumber);
+        }
+
+        if (t0 === "SOUNDEVENT") {
+
             if (sound.length > 4) {
                 logError("too much stuff to define a sound event.", lineNumber);
             } else {
@@ -2484,21 +2490,26 @@ function generateSoundData(state) {
                     logWarning("too much stuff to define a sound event.", lineNumber);
                 }
             }
-            var seed = sound[1];
-            if (validSeed(seed)) {
-                if (sfx_Events[sound[0]] !== undefined) {
-                    logWarning(sound[0].toUpperCase() + " already declared.", lineNumber);
-                }
-                sfx_Events[sound[0]] = sound[1];
-            } else {
-                logError("Expecting sfx data, instead found \"" + sound[1] + "\".", lineNumber);
+
+            if (sfx_Events[v0] !== undefined) {
+                logWarning(v0.toUpperCase() + " already declared.", lineNumber);
             }
+            sfx_Events[v0] = seed;
+
         } else {
-            var target = sound[0].trim();
-            var verb = sound[1].trim();
-            var directions = sound.slice(2, sound.length - 2);
+            var target = v0;
+            var verb = v1;
+            var directions = [];
+            for (var j=2;j<sound.length-2;j++){//avoid last sound declaration as well as the linenumber element at the end
+                if (sound[j][1] === 'DIRECTION') {
+                    directions.push(sound[j][0]);      
+                } else {
+                    //Don't know how if I can get here, but just in case
+                    logError(`Expected a direction here, but found instead "$(sound[j][0])".`, lineNumber);
+                }
+            }
             if (directions.length > 0 && (verb !== 'move' && verb !== 'cantmove')) {
-                logError('incorrect sound declaration.', lineNumber);
+                logError('Incorrect sound declaration - cannot have directions (UP/DOWN/etc.) attached to non-directional sound verbs (CREATE is not directional, but MOVE is directional).', lineNumber);
             }
 
             if (verb === 'action') {
@@ -2509,7 +2520,7 @@ function generateSoundData(state) {
             if (directions.length == 0) {
                 directions = ["orthogonal"];
             }
-            var seed = sound[sound.length - 2];
+            
 
             if (target in state.aggregatesDict) {
                 logError('cannot assign sound events to aggregate objects (declared with "and"), only to regular objects, or properties, things defined in terms of "or" ("' + target + '").', lineNumber);
@@ -2554,7 +2565,8 @@ function generateSoundData(state) {
                     }
                 }
             }
-
+            
+            //if verb in soundverbs_directional
             if (verb === 'move' || verb === 'cantmove') {
                 for (var j = 0; j < targets.length; j++) {
                     var targetName = targets[j];
@@ -2578,9 +2590,6 @@ function generateSoundData(state) {
             }
 
 
-            if (!validSeed(seed)) {
-                logError("Expecting sfx data, instead found \"" + seed + "\".", lineNumber);
-            }
 
             var targetArray;
             switch (verb) {
@@ -2744,7 +2753,7 @@ function loadFile(str) {
     delete state.section;
     delete state.subsection;
     delete state.tokenIndex;
-    delete state.legend_current_line_wip;
+    delete state.current_line_wip_array;
     delete state.visitedSections;
     delete state.loops;
     /*

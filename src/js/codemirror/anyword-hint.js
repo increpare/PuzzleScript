@@ -61,9 +61,20 @@
             "DIRECTION",
             "up", "down", "left", "right", "moving", "stationary", "no", "randomdir", "random", "horizontal", "vertical", "orthogonal", "perpendicular", "parallel", "action"]
 
-        var SOUND_WORDS = [
+
+        var SOUND_EVENTS = [
+            "SOUNDEVENT",
+            "undo", "restart", "titlescreen", "startgame", "cancel", "endgame", "startlevel", "endlevel", "showmessage", "closemessage", "sfx0", "sfx1", "sfx2", "sfx3", "sfx4", "sfx5", "sfx6", "sfx7", "sfx8", "sfx9", "sfx10"
+        ];
+
+        var SOUND_VERBS = [
             "SOUNDVERB",
-            "titlescreen", "startgame", "cancel", "endgame", "startlevel", "undo", "restart", "endlevel", "showmessage", "closemessage", "sfx0", "sfx1", "sfx2", "sfx3", "sfx4", "sfx5", "sfx6", "sfx7", "sfx8", "sfx9", "sfx10", "create", "destroy", "move", "cantmove", "action"];
+            "move", "action", "create", "destroy", "cantmove"
+        ];
+
+        var SOUND_DIRECTIONS = [
+            "DIRECTION",
+            "up","down","left","right","horizontal","vertical","orthogonal"]
 
         var WINCONDITION_WORDS = [
             "LOGICWORD",
@@ -162,7 +173,7 @@
                         var splits = lineToCursor.toLowerCase().split(/[\p{Z}\s]/u).filter(function(v) {
                             return v !== '';
                         });
-                        toexclude=splits;
+                        toexclude=splits.filter(a => LEGEND_LOGICWORDS.indexOf(a)===-1);//don't filter out and or or
                         if (lineToCursor.indexOf('=')>=0){
                             if ((lineToCursor.trim().split(/\s+/ ).length%2)===1){
                                 addObjects=true;
@@ -174,10 +185,49 @@
                     }
                 case 'sounds':
                     {
-                        candlists.push(CARDINAL_DIRECTION_WORDS);
-                        candlists.push(SOUND_WORDS);
-                        addObjects=true;
-                        excludeAggregates=true;
+                        /*
+                        SOUNDEVENT SOUND 
+                        NAME
+                            SOUNDVERB <SOUND>
+                            SOUNDVERB
+                                <SOUND>
+                                DIRECTION+ <SOUND>
+                                */
+                        var last_idx = state.current_line_wip_array.length-1;
+                        if (last_idx>=0 && state.current_line_wip_array[last_idx]==="ERROR"){
+                            //if there's an error, just try to match greedily
+                            candlists.push(SOUND_VERBS);
+                            candlists.push(SOUND_DIRECTIONS);
+                            candlists.push(SOUND_EVENTS);
+                            addObjects=true;
+                            excludeAggregates=true;       
+                        } else if (state.current_line_wip_array.length.length===0){
+                            candlists.push(SOUND_EVENTS);
+                            addObjects=true;
+                            excludeAggregates=true;                            
+                        } else  {
+                            var lastType =  state.current_line_wip_array[last_idx][1];
+                            switch (lastType){
+                                case "SOUNDEVENT":
+                                    {
+                                        break;
+                                    }
+                                case "NAME":
+                                    {
+                                        candlists.push(SOUND_VERBS);
+                                        break;
+                                    }
+                                case "SOUNDVERB":
+                                case "DIRECTION":
+                                    {
+                                        candlists.push(SOUND_DIRECTIONS);
+                                        break;
+                                    }
+                                case "SOUND":
+                                    {
+                                    }
+                            }                                                 
+                        }
                         break;
                     }
                 case 'collisionlayers':
