@@ -546,12 +546,11 @@ function canvasResize() {
     var w = 5;//sprites[1].dat.length;
     var h = 5;//sprites[1].dat[0].length;
 
-
     if (textMode) {
         w=5 + 1;
-        h=font['X'].length/(w) + 1;
+        var xchar = font['X'].split('\n').map(a=>a.trim());
+        h = xchar.length;        
     }
-
 
     cellwidth =w * Math.max( ~~(cellwidth / w),1);
     cellheight = h * Math.max(~~(cellheight / h),1);
