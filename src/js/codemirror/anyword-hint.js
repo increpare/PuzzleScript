@@ -194,14 +194,14 @@
                                 DIRECTION+ <SOUND>
                                 */
                         var last_idx = state.current_line_wip_array.length-1;
-                        if (last_idx>=0 && state.current_line_wip_array[last_idx]==="ERROR"){
+                        if (last_idx>0 && state.current_line_wip_array[last_idx]==="ERROR"){
                             //if there's an error, just try to match greedily
                             candlists.push(SOUND_VERBS);
                             candlists.push(SOUND_DIRECTIONS);
                             candlists.push(SOUND_EVENTS);
                             addObjects=true;
                             excludeAggregates=true;       
-                        } else if (state.current_line_wip_array.length.length===0){
+                        } else if (state.current_line_wip_array.length<=1 ){
                             candlists.push(SOUND_EVENTS);
                             addObjects=true;
                             excludeAggregates=true;                            
