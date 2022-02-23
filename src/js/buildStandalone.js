@@ -39,12 +39,17 @@ function buildStandalone(sourceCode) {
 	}
 	var homepage_stripped = homepage.replace(/^https?:\/\//,'');
 
+	var background_color="black";
 	if ('background_color' in state.metadata) {
-		htmlString = htmlString.replace(/black;\/\*Don\'t/g,state.bgcolor+';\/\*Don\'t');	
+		background_color=state.bgcolor;		
 	}
+	htmlString = htmlString.replace(/___BGCOLOR___/g,background_color);	
+
+	var text_color="lightblue";
 	if ('text_color' in state.metadata) {
-		htmlString = htmlString.replace(/lightblue;\/\*Don\'t/g,state.fgcolor+';\/\*Don\'t');	
+		text_color = state.fgcolor;	
 	}
+	htmlString = htmlString.replace(/___TEXTCOLOR___/g,text_color);	
 
 	htmlString = htmlString.replace(/__GAMETITLE__/g,title);
 
@@ -52,9 +57,14 @@ function buildStandalone(sourceCode) {
 	htmlString = htmlString.replace(/__HOMEPAGE__/g,homepage);
 	htmlString = htmlString.replace(/__HOMEPAGE_STRIPPED_PROTOCOL__/g,homepage_stripped);
 
-	// $ has special meaning to JavaScript's String.replace ($0, $1, etc.) Escape $ as $$.
+	// $ has special meaning to JavaScript's String.replace ($0, $1, etc.) 
+	// '$$'s are inserted as single '$'s.
+
+	// First we double all strings - remember that replace interprets '$$' 
+	// as a single'$', so we need to type four to double
 	sourceCode = sourceCode.replace(/\$/g, '$$$$');
 
+	// Then when we substitute them, the doubled $'s will be reduced to single ones.
 	htmlString = htmlString.replace(/__GAMEDAT__/g,sourceCode);
 
 	var BB = get_blob();

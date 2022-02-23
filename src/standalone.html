@@ -7,8 +7,9 @@
 <style>
 
 body {
-	background-color:black; /*don't modify this line at all, needs text to be the same*/
-	font-family:"Courier New", Courier, monospace
+	background-color:___BGCOLOR___;
+	font-family:"Courier New", Courier, monospace;
+    touch-action: none;
 }
 #gameCanvas {
   position:absolute;
@@ -19,7 +20,7 @@ body {
   bottom: 0px;
   right:0px;
   border: 0px;
-  background-color: black; /*don't modify this line at all, needs text to be the same*/
+  background-color: ___BGCOLOR___; 
   -webkit-tap-highlight-color: rgba(0,0,0,0);
   image-rendering: -moz-crisp-edges;
   image-rendering: -webkit-crisp-edges;
@@ -27,8 +28,14 @@ body {
   image-rendering: crisp-edges;
 } 
 
+.homepagelink {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 50%;
+}
+
 h1 {
-	color:lightblue;/*don't modify this line at all, needs text to be the same*/
+	color:___TEXTCOLOR___;
 	font-weight:normal;
     white-space: nowrap;
     overflow: hidden;
@@ -38,7 +45,7 @@ h1 {
     margin-bottom: 0.5em;
 }
 a {
-	color:lightblue;/*don't modify this line at all, needs text to be the same*/
+	color:___TEXTCOLOR___;
 }
 .title {	
 	background-color:none;
@@ -50,7 +57,7 @@ a {
 	left:10%;
 	right:10%;
 	top:0%;
-	height:10%;
+	height:3em;
 }
 
 .footer {	
@@ -59,24 +66,24 @@ a {
 	float:center;
 	color:white;
 	position:absolute;
-	margin-top:10px;
-	left:10%;
-	right:10%;
-	top:90%;
-	bottom:10%;
+	left:0%;
+	right:0%;
+	height:3em;
+	bottom:0;
 }
 .gameContainer {
 	background-color:none;
 	position:absolute;
-	left:10%;
-	right:10%;
-	top:70px;
-	bottom:70px; touch-action: none;
+	left:0%;
+	right:0%;
+	top:3.5em;
+	bottom:3em;
+  touch-action: none;
 }
 
   .mobile-menu {
       position: relative;
-      top: 4em;
+      top: 5em;
       margin-left: auto;
       margin-right: auto;
       font-weight: bold;
@@ -138,7 +145,7 @@ a {
 
   .tab-affordance {
       left: -2em;
-      top: 55px;
+      top: 5em;
   }
 
   .close-affordance {
@@ -214,22 +221,25 @@ a {
      user-select: none;
  }
 
+a {
+    display:inline-block;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 80%;
+}
 </style>
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 </head>
 <body>
-<div class="title"><h1>__GAMETITLE__</h1></div>
+<div class="title"><h1 id="gametitle">__GAMETITLE__</h1></div>
 <div class="gameContainer">
 <canvas 
-    id="gameCanvas" 
-    onmousemove="mouseMove(event)" 
-    onmouseout="mouseOut()"
-    onkeydown="keyDown()"
-></canvas>
+    id="gameCanvas" ></canvas>
 </div> 
 <div class="footer">
 <span id="errormessage" style="color:red;"></span>
-<a href="__HOMEPAGE__" target="_blank">__HOMEPAGE_STRIPPED_PROTOCOL__</a>
+<a id="homepagelink" href="__HOMEPAGE__" target="_blank">__HOMEPAGE_STRIPPED_PROTOCOL__</a>
 </div>
 
 <script src="js/storagewrapper.js"></script>
