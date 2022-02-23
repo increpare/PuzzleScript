@@ -780,4 +780,39 @@ var games_gallery = [
     "author": "nebu soku",
     "homepage": "https://nebu-soku.itch.io"
   },
+  {
+    "url": "https://www.puzzlescript.net/play.html?p=74aa33ccefeb1255f90227bca5ea4076",
+    "thumb": "teleportgun.gif",
+    "title": "I Need To Stop My Teleport Gun",
+    "author": "duyaa",
+    "homepage": "https://confoundingcalendar.itch.io/"
+  },
+  {
+    "url": "https://www.puzzlescript.net/play.html?p=361283c1cef6837b6563d25e8f01e444",
+    "thumb": "lightdown.gif",
+    "title": "Lightdown",
+    "author": "Stingby12",
+    "homepage": "https://stingby12.itch.io/"
+  },
+  {
+    "url": "https://www.puzzlescript.net/play.html?p=7fe2230e6d59af738b85826dd62b6e1d",
+    "thumb": "treestar.gif",
+    "title": "Every Star Needs a Tree",
+    "author": "Toombler",
+    "homepage": "https://toombler.itch.io/"
+  },
+  {
+    "url": "https://www.puzzlescript.net/play.html?p=44a295d7a2ab17a2048f555d72781a29",
+    "thumb": "longhaul.gif",
+    "title": "Long Haul Space Flight",
+    "author": "pap4qlxxlevb",
+    "homepage": "https://pap4qlxxlevb.itch.io/"
+  },
+  {
+    "url": "https://www.puzzlescript.net/play.html?p=bc59f54ac76fd119991b250979de70e0",
+    "thumb": "caramel.gif",
+    "title": "Caramelban",
+    "author": "Notan",
+    "homepage": "https://notaninart.itch.io/"
+  },
 ]
