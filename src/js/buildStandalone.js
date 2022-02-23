@@ -65,7 +65,7 @@ function buildStandalone(sourceCode) {
 	sourceCode = sourceCode.replace(/\$/g, '$$$$');
 
 	// Then when we substitute them, the doubled $'s will be reduced to single ones.
-	htmlString = htmlString.replace(/__GAMEDAT__/g,sourceCode);
+	htmlString = htmlString.replace(/"__GAMEDAT__"/g,sourceCode);
 
 	var BB = get_blob();
 	var blob = new BB([htmlString], {type: "text/plain;charset=utf-8"});
