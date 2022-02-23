@@ -193,7 +193,28 @@ function replaceContent() {
     }
     data.push(item);
   }
-  data = shuffle(data);
+  //reverse the array
+  data.reverse();
+  //now the first element is the newest.  
+
+  //Shuffle the first ten elements of data
+  var firstten = data.splice(0,20);
+  shuffle(firstten);
+  //Prepend the first ten back
+  data = firstten.concat(data);
+
+  //take the tail
+  var tail = data.splice(1,data.length);
+  //shuffle the whole tail
+  shuffle(tail);
+  //paste it back
+  data = data.concat(tail);
+  //now the first element of the array is a random taken from the first then, and the rest is shuffled.
+  //swap the first and second elements (so that the new game will be in the middle)
+  var temp = data[0];
+  data[0] = data[1];
+  data[1] = temp;
+  
   for (var i=0;i<columns.length;i++)
   {
     var dat = data[i];
