@@ -6,7 +6,7 @@ creates a highly compressed release build in bin of the contents of src
 
 packages used:
 
-npm i rimraf compress-images web-resource-inliner ncp gifsicle concat ycssmin terser gzipper html-minifier-terser glob   
+npm i rimraf compress-images web-resource-inliner ncp gifsicle@5.3.0 concat ycssmin terser gzipper html-minifier-terser glob
 */
 
 const fs = require("fs");
@@ -38,7 +38,9 @@ var start = new Date()
 
 console.log("removing bin")
 
-fs.rmdirSync("./bin", { recursive: true });
+if (fs.existsSync("./bin")) {
+    fs.rmdirSync("./bin", { recursive: true });
+}
 
 fs.mkdirSync('./bin');
 
@@ -99,7 +101,6 @@ ncp("./src", "./bin/", function (err) {
             fs.rmdirSync("./bin/css", { recursive: true });
             fs.mkdirSync('./bin/css');
             fs.rmdirSync("./bin/tests", { recursive: true });
-            fs.rmdirSync("./bin/Levels", { recursive: true });
 
             console.log('compressing css');
 

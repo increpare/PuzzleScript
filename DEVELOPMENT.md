@@ -15,7 +15,7 @@ The structure of PuzzleScript is the following:
 `./compile.js` uses [node](https://nodejs.org). So first off you have to install that.  Then you need to install the packages that it uses:
 
 ```
-npm i inliner ncp rimraf compress-images gifsicle glob concat ycssmin terser html-minifier-terser gzipper
+npm i rimraf compress-images web-resource-inliner ncp gifsicle@5.3.0 concat ycssmin terser gzipper html-minifier-terser glob
 ```
 
 Then you should be able to compile the site (outputted to the `./bin/` directory) with 
@@ -24,7 +24,7 @@ Then you should be able to compile the site (outputted to the `./bin/` directory
 node compile.js
 ```
 
-## Sandalone-exporting
+## Standalone-exporting
 
 If you load `./src/editor.html` directly, by double-clicking it or whatever, exporting won't work because the browser sandboxing prevents the `XMLHttpRequest` for `standalone_inlined.txt` from working.  To get it to work you need to run a local http server - see for instance [this](http://www.linuxjournal.com/content/tech-tip-really-simple-http-server-python) for an example of how to set one up with python.
 
