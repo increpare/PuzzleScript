@@ -393,11 +393,11 @@ var games_gallery = [
     "homepage": "https://twitter.com/trevnewt"
   },
   {
-    "url": "https://www.puzzlescript.net/play.html?p=d688de5e0e1e978f63fd",
+    "url": "https://www.puzzlescript.net/play.html?p=81b9430a6c09b355f6379c0f63beb04c",
     "thumb": "d688de5e0e1e978f63fd.gif",
     "title": "Marble Shoot",
     "author": "Stuart Burfield",
-    "homepage": "https://www.thepixelshelf.com"
+    "homepage": "https://www.stuartspixelgames.com"
   },
   {
     "url": "https://www.draknek.org/games/puzzlescript/cyber-lasso.php",
