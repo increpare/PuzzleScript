@@ -43,10 +43,10 @@ function logErrorCacheable(str, lineNumber,urgent) {
          } else {
             consolePrint(errorString);
             errorStrings.push(errorString);
+            errorCount++;
 			if (errorStrings.length>MAX_ERRORS_FOR_REAL){
                 TooManyErrors();
 			}
-            errorCount++;
         }
     }
 }
@@ -62,10 +62,10 @@ function logError(str, lineNumber,urgent) {
          } else {
             consolePrint(errorString,true);
             errorStrings.push(errorString);
+            errorCount++;
 			if (errorStrings.length>MAX_ERRORS_FOR_REAL){
                 TooManyErrors();
 			}
-            errorCount++;
         }
     }
 }
@@ -96,11 +96,11 @@ function logWarningNoLine(str,urgent) {
          } else {
             consolePrint(errorString,true);
             errorStrings.push(errorString);
+            errorCount++;
 			if (errorStrings.length>MAX_ERRORS_FOR_REAL){
                 TooManyErrors();
 			}
         }
-        errorCount++;
     }
 }
 
@@ -113,11 +113,11 @@ function logErrorNoLine(str,urgent) {
          } else {
             consolePrint(errorString,true);
             errorStrings.push(errorString);
+            errorCount++;
 			if (errorStrings.length>MAX_ERRORS_FOR_REAL){
                 TooManyErrors();
 			}
         }
-        errorCount++;
     }
 }
 
