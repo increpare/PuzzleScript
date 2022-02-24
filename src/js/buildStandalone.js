@@ -57,8 +57,9 @@ function buildStandalone(sourceCode) {
 	htmlString = htmlString.replace(/__HOMEPAGE__/g,homepage);
 	htmlString = htmlString.replace(/__HOMEPAGE_STRIPPED_PROTOCOL__/g,homepage_stripped);
 
-	// $ has special meaning to JavaScript's String.replace ($0, $1, etc.) 
-	// '$$'s are inserted as single '$'s.
+	// $ has special meaning to JavaScript's String.replace 
+	// c.f.	https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/replace#specifying_a_string_as_a_parameter
+	// basically: '$$'s are inserted as single '$'s.
 
 	// First we double all strings - remember that replace interprets '$$' 
 	// as a single'$', so we need to type four to double
