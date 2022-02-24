@@ -1510,6 +1510,24 @@ var codeMirrorFn = function() {
                         }       
                     } else {
                         stream.match(reg_notcommentstart, true);
+
+                        var key = state.metadata[state.metadata.length-2];
+                        var val = state.metadata[state.metadata.length-1];
+
+						if (key === "background_color" || key === "text_color"){
+							var candcol = val.trim().toLowerCase();
+                            if (candcol in colorPalettes.arnecolors) {
+                                return 'COLOR COLOR-' + candcol.toUpperCase();
+                            } else if (candcol==="transparent") {
+                                return 'COLOR FADECOLOR';
+                            } else if ( (candcol.length===4) || (candcol.length===7)) {
+                                var color = candcol.match(/#[0-9a-fA-F]+/);
+                                if (color!==null){                
+                                    return 'MULTICOLOR'+color[0];
+                                }
+                            }
+                                                       
+						}                        
                         return "METADATATEXT";
                     }
                     break;
