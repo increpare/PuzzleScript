@@ -1391,6 +1391,7 @@ var codeMirrorFn = function() {
                                 return 'LOGICWORD';
                             }
                             else {
+                                logError('Expecting the start of a win condition ("ALL","SOME","NO") but got "'+candword.toUpperCase()+"'.", state.lineNumber);
                                 return 'ERROR';
                             }
                         }
