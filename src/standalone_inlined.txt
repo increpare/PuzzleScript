@@ -10181,9 +10181,16 @@ for post-launch credits, check out activty on github.com/increpare/PuzzleScript
 */
 
 
+const MAX_ERRORS_FOR_REAL=100;
+
 var compiling = false;
 var errorStrings = [];//also stores warning strings
 var errorCount=0;//only counts errors
+
+function TooManyErrors(){
+    consolePrint("Too many errors/warnings; aborting compilation.",true);
+    throw new Error("Too many errors/warnings; aborting compilation.");
+}
 
 function logErrorCacheable(str, lineNumber,urgent) {
     if (compiling||urgent) {
@@ -10197,6 +10204,9 @@ function logErrorCacheable(str, lineNumber,urgent) {
             consolePrint(errorString);
             errorStrings.push(errorString);
             errorCount++;
+			if (errorStrings.length>MAX_ERRORS_FOR_REAL){
+                TooManyErrors();
+			}
         }
     }
 }
@@ -10213,6 +10223,9 @@ function logError(str, lineNumber,urgent) {
             consolePrint(errorString,true);
             errorStrings.push(errorString);
             errorCount++;
+			if (errorStrings.length>MAX_ERRORS_FOR_REAL){
+                TooManyErrors();
+			}
         }
     }
 }
@@ -10228,6 +10241,9 @@ function logWarning(str, lineNumber,urgent) {
          } else {
             consolePrint(errorString,true);
             errorStrings.push(errorString);
+			if (errorStrings.length>MAX_ERRORS_FOR_REAL){
+                TooManyErrors();
+			}
         }
     }
 }
@@ -10240,8 +10256,11 @@ function logWarningNoLine(str,urgent) {
          } else {
             consolePrint(errorString,true);
             errorStrings.push(errorString);
+            errorCount++;
+			if (errorStrings.length>MAX_ERRORS_FOR_REAL){
+                TooManyErrors();
+			}
         }
-        errorCount++;
     }
 }
 
@@ -10254,8 +10273,11 @@ function logErrorNoLine(str,urgent) {
          } else {
             consolePrint(errorString,true);
             errorStrings.push(errorString);
+            errorCount++;
+			if (errorStrings.length>MAX_ERRORS_FOR_REAL){
+                TooManyErrors();
+			}
         }
-        errorCount++;
     }
 }
 
@@ -11670,6 +11692,24 @@ var codeMirrorFn = function() {
                         }       
                     } else {
                         stream.match(reg_notcommentstart, true);
+
+                        var key = state.metadata[state.metadata.length-2];
+                        var val = state.metadata[state.metadata.length-1];
+
+						if (key === "background_color" || key === "text_color"){
+							var candcol = val.trim().toLowerCase();
+                            if (candcol in colorPalettes.arnecolors) {
+                                return 'COLOR COLOR-' + candcol.toUpperCase();
+                            } else if (candcol==="transparent") {
+                                return 'COLOR FADECOLOR';
+                            } else if ( (candcol.length===4) || (candcol.length===7)) {
+                                var color = candcol.match(/#[0-9a-fA-F]+/);
+                                if (color!==null){                
+                                    return 'MULTICOLOR'+color[0];
+                                }
+                            }
+                                                       
+						}                        
                         return "METADATATEXT";
                     }
                     break;
@@ -14550,7 +14590,8 @@ function compile(command, text, randomseed) {
     consolePrint('=================================');
     try {
         var state = loadFile(text);
-        //		consolePrint(JSON.stringify(state));
+    } catch(error){
+        consolePrint(error);
     } finally {
         compiling = false;
     }
@@ -14562,12 +14603,7 @@ function compile(command, text, randomseed) {
     if (errorCount > MAX_ERRORS) {
         return;
     }
-    /*catch(err)
-    {
-    	if (anyErrors===false) {
-    		logErrorNoLine(err.toString());
-    	}
-    }*/
+    
 
     if (errorCount > 0) {
         if (IDE===false){

@@ -306,7 +306,16 @@ function getData(){
 		if (state.metadata.homepage!==undefined) {
 			var homepage=state.metadata.homepage;
 			var homepageLink = document.getElementById("homepagelink");
-			homepageLink.innerHTML=strip_http(homepage);
+            if (id==="2fe3172d2b9fe684977d184f1b6226d5"){
+                // https://github.com/increpare/PuzzleScript/issues/829
+                // Supporting vulnerability on legacy grounds to enable Pushing It:
+                // https://www.puzzlescript.net/play.html?p=2fe3172d2b9fe684977d184f1b6226d5
+			    homepageLink.innerHTML=strip_http(homepage);
+            } else {
+                //sanitize tags from title   
+                homepageLink.textContent=strip_http(homepage);
+            }
+			
  			if (!homepage.match(/^https?:\/\//)) {
  				homepage = "https://" + homepage;
  			}
@@ -315,7 +324,7 @@ function getData(){
 		if (state.metadata.title!==undefined) {
 			var title=state.metadata.title;
 			var gametitle = document.getElementById("gametitle");
-			gametitle.innerHTML=title;
+            gametitle.textContent=title;
 			window.document.title=title+" - PuzzleScript Game";
 		}
                 
