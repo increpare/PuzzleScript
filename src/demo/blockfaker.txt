@@ -9,12 +9,14 @@ background_color white
 text_color black
 
 color_palette c64
+
 (
+
 A port of first several levels of Droqen's beautiful game:
 
 https://droqen.itch.io/block-faker
 
-(his game has secrets that this one does not)
+(His game has secrets that this one does not.)
 
 )
 
@@ -23,7 +25,7 @@ OBJECTS
 ========
 
 Background
-White
+white
 
 Grille
 gray
@@ -34,10 +36,10 @@ gray
 0...0
 
 EndPoint
-Green
+green
 
 Player
-Black
+black
 00000
 00000
 0.0.0
@@ -45,10 +47,10 @@ Black
 00000
 
 Wall
-Gray
+gray
 
 WallBlock
-Black Grey
+black grey
 01111
 01111
 01111
@@ -56,7 +58,7 @@ Black Grey
 00001
 
 BlueBlock
-Blue
+blue
 00000
 00.00
 0.0.0
@@ -64,7 +66,7 @@ Blue
 00000
 
 GreenBlock
-LightGreen
+lightgreen
 00000
 00000
 00.00
@@ -72,7 +74,7 @@ LightGreen
 00000
 
 PinkBlock
-Red
+red
 00000
 00.00
 0...0
@@ -80,7 +82,7 @@ Red
 00000
 
 PurpleBlock
-Purple
+purple
 00000
 0...0
 0.0.0
@@ -88,13 +90,12 @@ Purple
 00000
 
 OrangeBlock
-Orange
+orange
 00000
 0.0.0
 00000
 0.0.0
 00000
-
 
 =======
 LEGEND
@@ -117,7 +118,6 @@ E = EndPoint
 x = Grille
 H = Grille and Player
 
-
 =========
 SOUNDS
 =========
@@ -135,20 +135,22 @@ Player, Wall, WallBlock, PinkBlock, BlueBlock, PurpleBlock, OrangeBlock, GreenBl
 RULES
 ======
 
-[ >  Moveable | Moveable ] -> [ > Moveable | > Moveable ]
+[ > Moveable | Moveable ] -> [ > Moveable | > Moveable ] 
 
-[ > Block | Grille ] -> [ Block | Grille ]
+[ > Block | Grille ] -> [ Block | Grille ] 
 
-late [ PinkBlock | PinkBlock | PinkBlock ] -> [ | | ]
-late [ BlueBlock | BlueBlock | BlueBlock ] -> [ | | ]
-late [ PurpleBlock | PurpleBlock | PurpleBlock ] -> [ | | ]
-late [ OrangeBlock | OrangeBlock | OrangeBlock ] -> [ | | ]
-late [ GreenBlock | GreenBlock | GreenBlock ] -> [ | | ]
+late [ PinkBlock | PinkBlock | PinkBlock ] -> [ | | ] 
+late [ BlueBlock | BlueBlock | BlueBlock ] -> [ | | ] 
+late [ PurpleBlock | PurpleBlock | PurpleBlock ] -> [ | | ] 
+late [ OrangeBlock | OrangeBlock | OrangeBlock ] -> [ | | ] 
+late [ GreenBlock | GreenBlock | GreenBlock ] -> [ | | ] 
 
 ==============
 WINCONDITIONS
 ==============
-some player on endpoint
+
+some Player on Endpoint
+
 =======
 LEVELS
 =======
@@ -226,3 +228,4 @@ message congrats: level 5!
 ......##......
 
 message now go play the real game
+

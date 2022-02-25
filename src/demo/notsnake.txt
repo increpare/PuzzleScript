@@ -18,7 +18,6 @@ lightblue
 Trail
 purple
 
-
 =======
 LEGEND
 =======
@@ -49,13 +48,13 @@ RULES
 ======
 
 [ > Player | No Trail ] -> [ Trail | Player ] sfx0
-[ > Player | Trail ] -> [  | Player ] sfx1
+[ > Player | Trail ] -> [ | Player ] sfx1
 
 ==============
 WINCONDITIONS
 ==============
 
-No Trail
+no Trail
 
 =======
 LEVELS

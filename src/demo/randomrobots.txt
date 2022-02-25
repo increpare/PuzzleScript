@@ -6,24 +6,21 @@ homepage www.puzzlescript.net
 OBJECTS
 ========
 
-
-Background  (special, automatically placed in its own layer)
-GREEN darkgreen
+Background (special, automatically placed in its own layer)
+green darkgreen
 11111
 01111
 11101
 11111
 10111
 
-
-Player    (Required by game)
-PINK
+Player (Required by game)
+pink
 ..0..
 00000
 ..0..
 .000.
 .0.0.
-
 
 Robot
 gray black red
@@ -32,7 +29,6 @@ gray black red
 ...0.
 00000
 01010
-
 
 =======
 LEGEND
@@ -57,7 +53,7 @@ Player, Robot
 RULES
 ======
 
-[ stationary Robot ] -> [randomDir Robot]
+[ stationary Robot ] -> [ randomDir Robot ] 
 
 ==============
 WINCONDITIONS

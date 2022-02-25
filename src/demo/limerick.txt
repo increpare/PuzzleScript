@@ -10,7 +10,8 @@ The first ten levels of a neato game - you can play the full version here
 
 http://www.kongregate.com/games/KissMaj7/lime-rick
 
-the full version includes some mechanics that aren't covered in the levels here, but they are supported.
+The full version includes some mechanics that aren't covered in the levels here, but they are supported.
+
 )
 
 ========
@@ -18,10 +19,10 @@ OBJECTS
 ========
 
 Background
-Black
+black
 
 Exit
-Red
+red
 .000.
 00000
 00000
@@ -29,7 +30,7 @@ Red
 .000.
 
 Apple
-Blue
+blue
 .000.
 00000
 00000
@@ -37,7 +38,7 @@ Blue
 .000.
 
 PlayerBodyH
-Green
+green
 .000.
 00000
 0...0
@@ -45,16 +46,15 @@ Green
 .000.
 
 PlayerBodyV
-Green
+green
 .000.
 00.00
 00.00
 00.00
 .000.
-
 
 Crate
-Orange
+orange
 00000
 0...0
 0...0
@@ -62,7 +62,7 @@ Orange
 00000
 
 PlayerHead1
-LightGreen
+lightgreen
 .000.
 0.0.0
 00000
@@ -70,35 +70,31 @@ LightGreen
 .000.
 
 PlayerHead2
-Yellow
+yellow
 .000.
 0.0.0
 00000
 00000
 .000.
-
 
 PlayerHead3
-Orange
+orange
 .000.
 0.0.0
 00000
 00000
 .000.
-
 
 PlayerHead4
-Red
+red
 .000.
 0.0.0
 00000
 00000
 .000.
 
-
-
 Wall
-Brown
+brown
 
 =======
 LEGEND
@@ -117,7 +113,8 @@ C = Crate
 =========
 SOUNDS
 =========
-sfx0  3295707 (player jump)
+
+sfx0 3295707 (player jump)
 sfx1 3538707 (player jump to max)
 sfx2 42451307 (player move horizontally)
 endlevel 96434300
@@ -132,33 +129,33 @@ Exit, Apple
 PlayerBody
 Player, Wall, Crate
 
-
 ======
 RULES
 ======
 
 (this game handles all the movement stuff itself - it removes all movements before the movement phase has a chance to tick at all)
 
-UP [ UP PlayerHead4 ] -> [ PlayerHead4 ]
+UP [ UP PlayerHead4 ] -> [ PlayerHead4 ] 
 UP [ UP PlayerHead3 | No Obstacle ] -> [ PlayerBodyV | PlayerHead4 ] sfx1
 UP [ UP PlayerHead2 | No Obstacle ] -> [ PlayerBodyV | PlayerHead3 ] sfx0
 UP [ UP PlayerHead1 | No Obstacle ] -> [ PlayerBodyV | PlayerHead2 ] sfx0
 
-Horizontal [ > Player | Crate | No Obstacle ] -> [ PlayerBodyH | PlayerHead1 | Crate ] sfx2
+horizontal [ > Player | Crate | No Obstacle ] -> [ PlayerBodyH | PlayerHead1 | Crate ] sfx2
 
-Horizontal [ > Player | No Obstacle ] -> [ PlayerBodyH  | PlayerHead1 ] sfx2
+horizontal [ > Player | No Obstacle ] -> [ PlayerBodyH | PlayerHead1 ] sfx2
 
-[ Player Apple ] [ PlayerBody ] -> [ Player Apple ] [ ]
-[ Player Apple ] -> [ Player ]
+[ Player Apple ] [ PlayerBody ] -> [ Player Apple ] [ ] 
+[ Player Apple ] -> [ Player ] 
 
-[ > Player ] -> [ Player ]
+[ > Player ] -> [ Player ] 
 
-DOWN [ Player | No Obstacle ] -> [ PlayerBodyV | PlayerHead1 ]
-DOWN [ Crate | No Obstacle ] -> [  | Crate ]
+DOWN [ Player | No Obstacle ] -> [ PlayerBodyV | PlayerHead1 ] 
+DOWN [ Crate | No Obstacle ] -> [ | Crate ] 
 
 ==============
 WINCONDITIONS
 ==============
+
 some player on exit
 
 =======
@@ -345,6 +342,5 @@ message level 10 of 10
 ###################
 #.................#
 ###################
-
 
 message congratulations!

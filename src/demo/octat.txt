@@ -5,7 +5,9 @@ homepage www.increpare.com
 noundo
 require_player_movement
 
-(A port of a flash game I made.  The original's here:
+(
+    
+A port of a flash game I made.  The original's here:
 
 http://ded.increpare.com/~locus/octat/
 
@@ -23,7 +25,7 @@ purple
 .000.
 .....
 
-activetile
+Activetile
 pink red
 00000
 0...0
@@ -32,7 +34,7 @@ pink red
 00000
 
 Target
-RED
+red
 0...0
 .0.0.
 ..0..
@@ -47,10 +49,10 @@ white
 .000.
 .....
 
-void 0
+Void 0
 black
 
-temp
+Temp
 black
 
 =======
@@ -58,10 +60,10 @@ LEGEND
 =======
 
 . = Background
-P = Player and activetile
-a = activetile
+P = Player and Activetile
+a = Activetile
 x = Target
-y = target and activetile
+y = target and Activetile
 
 =========
 SOUNDS
@@ -72,30 +74,30 @@ COLLISIONLAYERS
 ================
 
 Background
-void
-activetile
-player
-temp
+Void
+Activetile
+Player
+Temp
 Target
 
 ======
 RULES
 ======
 
-[ > player | no activetile ] -> cancel
-[ > player |  ] -> [ | player ]
+[ > Player | no Activetile ] -> cancel
+[ > Player | ] -> [ | Player ] 
 
-[ activetile | player ] -> [ temp | player ]
-[ no temp | player ] -> [activetile | player ]
-[ temp ] -> []
+[ Activetile | Player ] -> [ Temp | Player ] 
+[ no Temp | Player ] -> [ Activetile | Player ] 
+[ Temp ] -> [ ] 
 
-[activetile void ] -> [ void ]
+[ Activetile Void ] -> [ Void ] 
 
 ==============
 WINCONDITIONS
 ==============
 
-some player on target
+some Player on target
 
 =======
 LEVELS
@@ -127,9 +129,7 @@ message level 2 of 8
 ...........
 ...........
 
-
 message level 3 of 8
-
 
 ...........
 ...........
@@ -144,7 +144,6 @@ message level 3 of 8
 
 message level 4 of 8
 
-
 ...........
 ...........
 ...a.......
@@ -158,7 +157,6 @@ a.aya.a.ap.
 
 message level 5 of 8
 
-
 ...........
 ...........
 ...........
@@ -171,7 +169,6 @@ aaaaaaaaaaa
 ...........
 
 message level 6 of 8
-
 
 000000....0
 000000..0.0
@@ -187,13 +184,11 @@ message level 6 of 8
 
 message level 7 of 8
 
-
 ..AAA...000
 .AY.A...AP.
 ..AAA...000
 
 message level 8 of 8
-
 
 0AAAA..00
 0AAAA..00
@@ -202,5 +197,3 @@ YAAAA..AP
 0AAAA..00
 
 message the end
-
-

@@ -5,16 +5,21 @@ homepage www.draknek.org
 require_player_movement
 key_repeat_interval 0.12
 
-(a port of alan hazelden's game, By Your Side, in 6 lines of code, made with the permission of the author -
+(
+
+A port of alan hazelden's game, By Your Side, in 6 lines of code, made with the permission of the author -
 
 the original is here
-http://www.draknek.org/games/by-your-side/)
+http://www.draknek.org/games/by-your-side/
+
+)
 
 ========
 OBJECTS
 ========
 
-(Ojects in all scenes)
+(Objects in all scenes)
+
 Grass .
 darkgreen green
 00000
@@ -42,7 +47,7 @@ yellow
 (Initial Scenes)
 
 GirlFriend G
-Pink red
+pink red
 ..0..
 .010.
 ..1..
@@ -99,7 +104,6 @@ gray
 .000.
 .000.
 
-
 Spectator1 B
 black pink white
 ..0..
@@ -117,7 +121,7 @@ purple pink white
 00000
 
 Wife_Wedding W
-White Pink
+white pink
 ..1..
 .000.
 .101.
@@ -125,6 +129,7 @@ White Pink
 00000
 
 (Post Wedding Scene)
+
 house @
 black grey red
 ..0..
@@ -136,7 +141,6 @@ black grey red
 pavement `
 darkblue
 
-
 Road '
 gray white
 00000
@@ -146,7 +150,7 @@ gray white
 00000
 
 Wife_Repulsed X
-White Pink
+white pink
 ..1..
 .000.
 .101.
@@ -180,8 +184,9 @@ darkbrown brown black
 02220
 
 (final scene)
+
 Wife_Dying Y
-White Pink
+white pink
 ..1..
 .000.
 .101.
@@ -202,6 +207,7 @@ black
 =======
 LEGEND
 =======
+
 Target = TargetMain or Road
 Player = Player_Casual or Player_Formal
 Background = Grass or WoodenFloor or Pavement or GraveDirt
@@ -216,12 +222,13 @@ E = GrassyTarget
 =========
 SOUNDS
 =========
+
 Player cantmove 82269707
 endlevel 54461500
 startgame 10582309
 endgame 66004102
 Wife_Repulsed move 44043907
-Sfx0 16417502
+sfx0 16417502
 
 ================
 COLLISIONLAYERS
@@ -238,15 +245,15 @@ RULES
 
 (game logic)
 
-[ > Player ] [ Wife_Attracted ] -> [ > Player ] [ > Wife_Attracted ]
-[ > Player ] [ Wife_Repulsed ] -> [ > Player ] [ < Wife_Repulsed ]
+[ > Player ] [ Wife_Attracted ] -> [ > Player ] [ > Wife_Attracted ] 
+[ > Player ] [ Wife_Repulsed ] -> [ > Player ] [ < Wife_Repulsed ] 
 
-late [ Wife_Dying ] -> [ Wife_Coffin ]
-late [ Player | Wife_Coffin ] -> [ Player | Wife_Dying ]
+late [ Wife_Dying ] -> [ Wife_Coffin ] 
+late [ Player | Wife_Coffin ] -> [ Player | Wife_Dying ] 
 
 (level-specific events)
 late [ ColdFeet Player ] -> [ Player ] message ...
-late [ Wife Road ] -> Sfx0
+late [ Wife Road ] -> sfx0
 
 ==============
 WINCONDITIONS
@@ -276,8 +283,6 @@ LEVELS
 #.......##.....######
 .##############......
 
-
-
 ....#################
 ...###...#....#######
 ..##.........##.....#
@@ -295,7 +300,6 @@ LEVELS
 #...##...##...##....#
 #.......##.....######
 .##############......
-
 
 ....#################
 ...###...#....#######
@@ -315,7 +319,6 @@ LEVELS
 #.......##.....######
 .##############......
 
-
 HHHHHHHHHHHHHHHHHHHHH
 ,,,,,,,,,,,,,,,,,,,,,
 ,,,,,,,,,,,,,,,,,,,,,
@@ -329,7 +332,6 @@ A,T,,,,,,,,,,,,,W,,,C
 ,,,,,,,,,,,,,,,,,,,,,
 ,,,,,,,,,,,,,,,,,,,,,
 HHHHHHHHHHHHHHHHHHHHH
-
 
 `````````@@@@````````
 `````````@TT@````````
@@ -347,7 +349,6 @@ HHHHHHHHHHHHHHHHHHHHH
 @@@@@@@@@@@@@@@@@@@@@
 `````````````````````
 
-
 `````````@@@@````````
 `````````@PX@````````
 ``@@@@@@`@`@@````````
@@ -363,7 +364,6 @@ HHHHHHHHHHHHHHHHHHHHH
 '''''''''''''''''''''
 @@@@@@@@@@@@@@@@@@@@@
 `````````````````````
-
 
 `````````@@@@````````
 `````````@TT@````````
@@ -412,7 +412,6 @@ RRRRRRRRR~~R~~~~~~R~
 ~~R~~R~~~R~~~~~~R~~~
 ~~R~~R~~~~~RRR~~R~~~
 ~~RRRRRRRRRR~RRRR~~~
-
 
 RRRRRR~~~~~~~~~~~~~~
 R~~~~R~~~~~RRRRRR~~~

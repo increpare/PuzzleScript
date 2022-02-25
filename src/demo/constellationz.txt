@@ -2,8 +2,11 @@ title constellation z
 author increpare
 homepage www.increpare.com
 
-(a port of the first few levels of my game, the full version of which is
+(
+
+A port of the first few levels of my game, the full version of which is
 http://ded.increpare.com/~locus/constellationz/
+
 )
 
 ========
@@ -11,10 +14,10 @@ OBJECTS
 ========
 
 Background
-Black
+black
 
 BorderTile
-Red
+red
 
 Teleport
 white
@@ -28,7 +31,7 @@ blue
 .....
 
 Player
-PINK
+pink
 .....
 .000.
 .000.
@@ -36,7 +39,7 @@ PINK
 .....
 
 AltPlayer
-Black
+black
 
 =======
 LEGEND
@@ -48,10 +51,10 @@ P = Player
 O = Teleport
 t = target
 
-
 =========
 SOUNDS
 =========
+
 sfx1 44641500 (teleport)
 startgame 26858107
 startlevel 34443107
@@ -71,8 +74,8 @@ RULES
 
 late [ player Teleport ] -> [ altplayer Teleport ] sfx1
 
-late [ altplayer Teleport ] [ Teleport no altplayer ] -> [altplayer teleport] [Teleport player ]
-late [altplayer ] -> []
+late [ altplayer Teleport ] [ Teleport no altplayer ] -> [ altplayer teleport ] [ Teleport player ] 
+late [ altplayer ] -> [ ] 
 
 late [ player bordertile ] -> cancel
 
@@ -148,7 +151,6 @@ LEVELS
 #............#
 ##############
 
-
 ##############
 #............#
 #............#
@@ -190,7 +192,6 @@ LEVELS
 #............O...O...O............#
 ###################################
 
-
 ####################################
 #..................................#
 #...........p......................#
@@ -210,7 +211,6 @@ LEVELS
 #..................................#
 ####################################
 
-
 ####################################
 #..................................#
 #..................................#
@@ -229,8 +229,6 @@ LEVELS
 #..................................#
 #..................................#
 ####################################
-
-
 
 ##############
 #............#
@@ -257,8 +255,6 @@ LEVELS
 #............#
 #............#
 ##############
-
-
 
 ####################################
 #..................................#

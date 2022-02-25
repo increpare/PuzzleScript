@@ -3,11 +3,13 @@ author lexaloffle
 homepage www.lexaloffle.com
 
 (
+
 An inadequate but illustrative demake of one of my favourite puzzle games ever, by the extremely amicable Lexaloffle, and with his permission.
 
 www.lexaloffle.com/neko.htm
 
 The game proper has a lot of magic and love in it.
+
 )
 
 ========
@@ -15,10 +17,10 @@ OBJECTS
 ========
 
 Background .
-DarkBlue
+darkblue
 
 Fruit F
-Red Green LightRed
+red green lightred
 ..1..
 .000.
 00020
@@ -26,7 +28,7 @@ Red Green LightRed
 .000.
 
 Player P
-Gray White
+gray white
 .1.1.
 10101
 11111
@@ -40,6 +42,7 @@ LEGEND
 =========
 SOUNDS
 =========
+
 endlevel 97301508
 startgame 97301508
 endgame 97301508
@@ -55,16 +58,16 @@ Player, Fruit
 RULES
 ======
 
-[ > Player | ... | Fruit ] -> [ | ... | Player ]
-
+[ > Player | ... | Fruit ] -> [ | ... | Player ] 
 
 (if you're not sure what this line does, try removing it, and see what happens)
-[ > Player ] -> [ Player]
+[ > Player ] -> [ Player ] 
 
 ==============
 WINCONDITIONS
 ==============
-No fruit
+
+no Fruit
 
 =======
 LEVELS
@@ -79,7 +82,6 @@ F......F
 ........
 ........
 P.......
-
 
 message level 2 of 10
 
@@ -124,7 +126,6 @@ F...F...
 
 message level 6 of 10
 
-
 F.....F.
 ........
 ........
@@ -134,7 +135,6 @@ F.....F.
 .P......
 
 message level 7 of 10
-
 
 ...FP..F
 F.F.....

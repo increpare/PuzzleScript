@@ -10,7 +10,11 @@ color_palette mastersystem
 run_rules_on_level_start
 require_player_movement
 
-(This game is a port of the Whale section of my puzzle game English Country Tune (www.englishcountrytune.com), in only 8 lines of code)
+(
+    
+This game is a port of the Whale section of my puzzle game English Country Tune (www.englishcountrytune.com), in only 8 lines of code.
+
+)
 
 ========
 OBJECTS
@@ -42,7 +46,7 @@ black
 00000
 
 HBeam
-Yellow
+yellow
 .....
 .....
 0.0.0
@@ -50,7 +54,7 @@ Yellow
 .....
 
 VBeam
-Yellow
+yellow
 ..0..
 .....
 ..0..
@@ -96,31 +100,30 @@ RULES
 ======
 
 (while we allow whales to move onto the void, player's aren't)
-[ > player | void ] -> [ player | void ]
-
+[ > player | void ] -> [ player | void ] 
 
 (beams detect motion)
-Horizontal [ > Player | VBeam ] -> [ > Player | > VBeam ]
-Vertical [ > Player | HBeam ] -> [ > Player | > HBeam ]
+horizontal [ > Player | VBeam ] -> [ > Player | > VBeam ] 
+vertical [ > Player | HBeam ] -> [ > Player | > HBeam ] 
 
 (If beams detected motion, transfer that to the whales)
-[ Whale | ... | Perpendicular Beam ] -> [ Perpendicular Whale | ... | Perpendicular Beam ]
+[ Whale | ... | perpendicular Beam ] -> [ perpendicular Whale | ... | perpendicular Beam ] 
 
 (remove whales, if necessary)
-late [ Whale Void ] -> [ Void ]
+late [ Whale Void ] -> [ Void ] 
 
 (remove beams)
-[ Beam ] -> []
+[ Beam ] -> [ ] 
 
 (Place HVeams and VBeams)
-late Horizontal [ Whale | ... | ] -> [ Whale | ... | HBeam ]
-late Vertical [ Whale | ... | ] -> [ Whale | ... | VBeam ]
+late horizontal [ Whale | ... | ] -> [ Whale | ... | HBeam ] 
+late vertical [ Whale | ... | ] -> [ Whale | ... | VBeam ] 
 
 ==============
 WINCONDITIONS
 ==============
 
-No Whale
+no Whale
 
 =======
 LEVELS

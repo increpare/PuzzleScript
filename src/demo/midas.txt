@@ -2,7 +2,9 @@ title Midas
 author wanderlands
 homepage https://web.archive.org/web/20160706204929/http://wanderlands.org/
 
-(A port of the luxuriant Wanderlands game, Midas, with permission of the authors.  It's a bit messy, if you can find a way to tidy it up, let me know :]
+(
+
+A port of the luxuriant Wanderlands game, Midas, with permission of the authors.  It's a bit messy, if you can find a way to tidy it up, let me know : ] 
 
 the original is here
 https://web.archive.org/web/20120219201941/http://wanderlands.org/main/midas
@@ -16,22 +18,21 @@ OBJECTS
 ========
 
 Background
-WHITE
+white
 
 lovebase
 white
 
 Target
-BLACK
+black
 .....
 ..0..
 .000.
 ..0..
 .0.0.
 
-
 GoldTarget
-ORANGE
+orange
 .....
 ..0..
 .000.
@@ -39,7 +40,7 @@ ORANGE
 .0.0.
 
 PlayerGround
-BLACK
+black
 .....
 ..0..
 .000.
@@ -47,7 +48,7 @@ BLACK
 .0.0.
 
 PlayerJump1
-BLACK
+black
 .....
 ..0..
 00000
@@ -55,7 +56,7 @@ BLACK
 .0.0.
 
 PlayerJump2
-BLACK
+black
 .....
 ..0..
 00000
@@ -63,26 +64,24 @@ BLACK
 .0.0.
 
 Crown
-Orange
+orange
 .000.
 .0.0.
 .....
 .....
 .....
 
-
 GoldBlock
-Orange
-
+orange
 
 GoldingBlock
 brown
 
 Water
-Blue
+blue
 
 Wall
-GRAY
+gray
 
 love
 pink
@@ -108,13 +107,13 @@ W = Water
 G = GoldBlock
 D = GoldingBlock
 
-
 =========
 SOUNDS
 =========
-SFX0 28219707 (touch water)
-SFX1 45545307 (golding)
-SFX2 42491507 (make lady gold :/ )
+
+sfx0 28219707 (touch water)
+sfx1 45545307 (golding)
+sfx2 42491507 (make lady gold :/ )
 StartGame 8892900
 EndLevel 28067900
 EndGame 28067900
@@ -134,29 +133,30 @@ love
 RULES
 ======
 
-UP [ Up PlayerGround | No Obstacle ] -> [ Up PlayerJump2 | ]
-DOWN [ Up JumpingPlayer | no obstacle ] -> [ JumpingPlayer | ]
-DOWN [ Up PlayerJump2 | no obstacle ] -> [ PlayerJump2 | ]
+UP [ Up PlayerGround | No Obstacle ] -> [ Up PlayerJump2 | ] 
+DOWN [ Up JumpingPlayer | no obstacle ] -> [ JumpingPlayer | ] 
+DOWN [ Up PlayerJump2 | no obstacle ] -> [ PlayerJump2 | ] 
 
-[ Stationary CanFall ] -> [ Down CanFall ]
+[ stationary CanFall ] -> [ Down CanFall ] 
 
-HORIZONTAL [ > PlayerJump1 | NO obstacle ] -> [ | PlayerGround ]
-HORIZONTAL [ > PlayerJump2 | NO obstacle ] -> [ | PlayerJump1 ]
-LATE DOWN [ PlayerGround | NO obstacle ] -> [ | playerground ]
+horizontal [ > PlayerJump1 | NO obstacle ] -> [ | PlayerGround ] 
+horizontal [ > PlayerJump2 | NO obstacle ] -> [ | PlayerJump1 ] 
+LATE DOWN [ PlayerGround | NO obstacle ] -> [ | playerground ] 
 
-LATE [ crown no player ] [ player ] -> [ ] [ crown player ]
-LATE [ goldingblock ] -> [goldblock]
-LATE [ crown | wall ] -> [crown | goldingblock] SFX1
-LATE [ crown | water ] -> [ | water ] SFX0
-LATE [ crown | target ] -> [ crown | goldtarget ] SFX2
-LATE DOWN [ JumpingPlayer | Obstacle ] -> [ PlayerGround | Obstacle ]
+LATE [ crown no player ] [ player ] -> [ ] [ crown player ] 
+LATE [ goldingblock ] -> [ goldblock ] 
+LATE [ crown | wall ] -> [ crown | goldingblock ] sfx1
+LATE [ crown | water ] -> [ | water ] sfx0
+LATE [ crown | target ] -> [ crown | goldtarget ] sfx2
+LATE DOWN [ JumpingPlayer | Obstacle ] -> [ PlayerGround | Obstacle ] 
 
-LATE [ player | target ] -> [ player lovebase | target ]
-LATE UP [ lovebase | ] -> [ | love ]
+LATE [ player | target ] -> [ player lovebase | target ] 
+LATE UP [ lovebase | ] -> [ | love ] 
 
 ==============
 WINCONDITIONS
 ==============
+
 some love (Awwww!)
 
 =======
@@ -323,9 +323,7 @@ message And she feels so distant
 #...................#
 #####################
 
-
 message I live on borrowed time
-
 
 #####################
 #...................#
@@ -341,9 +339,7 @@ message I live on borrowed time
 #.......###W#.......#
 #####################
 
-
 message Is she still waiting?
-
 
 #####################
 #...................#
@@ -364,7 +360,6 @@ message Is she still waiting?
 
 message Is love just fool's gold?
 
-
 #####################
 #...................#
 #...................#
@@ -379,6 +374,5 @@ message Is love just fool's gold?
 #...................#
 #...................#
 #####################
-
 
 message Midas

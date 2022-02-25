@@ -1,4 +1,4 @@
-title Horizontal Block Pushing Game
+title horizontal Block Pushing Game
 author increpare
 homepage www.puzzlescript.net
 
@@ -7,16 +7,15 @@ OBJECTS
 ========
 
 Background
-LIGHTGREEN GREEN
+lightgreen green
 11111
 01111
 11101
 11111
 10111
 
-
 Target
-DarkBlue
+darkblue
 .....
 .000.
 .0.0.
@@ -24,7 +23,7 @@ DarkBlue
 .....
 
 Wall
-BROWN DARKBROWN
+brown darkbrown
 00010
 11111
 01000
@@ -32,7 +31,7 @@ BROWN DARKBROWN
 00010
 
 Player
-Black Orange White Blue
+black orange white blue
 .000.
 .111.
 22222
@@ -40,13 +39,12 @@ Black Orange White Blue
 .3.3.
 
 Crate
-Blue White
+blue white
 00000
 00000
 01110
 00000
 00000
-
 
 =======
 LEGEND
@@ -58,7 +56,6 @@ P = Player
 * = Crate
 @ = Crate and Target
 O = Target
-
 
 =======
 SOUNDS
@@ -78,13 +75,13 @@ Player, Wall, Crate
 RULES
 ======
 
-horizontal [ >  Player | Crate ] -> [  >  Player | > Crate  ]
+horizontal [ > Player | Crate ] -> [ > Player | > Crate ] 
 
 ==============
 WINCONDITIONS
 ==============
 
-All Target on Crate
+all Target on Crate
 
 =======
 LEVELS
