@@ -2803,7 +2803,8 @@ function compile(command, text, randomseed) {
     consolePrint('=================================');
     try {
         var state = loadFile(text);
-        //		consolePrint(JSON.stringify(state));
+    } catch(error){
+        consolePrint(error);
     } finally {
         compiling = false;
     }
@@ -2815,12 +2816,7 @@ function compile(command, text, randomseed) {
     if (errorCount > MAX_ERRORS) {
         return;
     }
-    /*catch(err)
-    {
-    	if (anyErrors===false) {
-    		logErrorNoLine(err.toString());
-    	}
-    }*/
+    
 
     if (errorCount > 0) {
         if (IDE===false){

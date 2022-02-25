@@ -21,9 +21,16 @@ for post-launch credits, check out activty on github.com/increpare/PuzzleScript
 */
 
 
+const MAX_ERRORS_FOR_REAL=100;
+
 var compiling = false;
 var errorStrings = [];//also stores warning strings
 var errorCount=0;//only counts errors
+
+function TooManyErrors(){
+    consolePrint("Too many errors/warnings; aborting compilation.",true);
+    throw new Error("Too many errors/warnings; aborting compilation.");
+}
 
 function logErrorCacheable(str, lineNumber,urgent) {
     if (compiling||urgent) {
@@ -37,6 +44,9 @@ function logErrorCacheable(str, lineNumber,urgent) {
             consolePrint(errorString);
             errorStrings.push(errorString);
             errorCount++;
+			if (errorStrings.length>MAX_ERRORS_FOR_REAL){
+                TooManyErrors();
+			}
         }
     }
 }
@@ -53,6 +63,9 @@ function logError(str, lineNumber,urgent) {
             consolePrint(errorString,true);
             errorStrings.push(errorString);
             errorCount++;
+			if (errorStrings.length>MAX_ERRORS_FOR_REAL){
+                TooManyErrors();
+			}
         }
     }
 }
@@ -68,6 +81,9 @@ function logWarning(str, lineNumber,urgent) {
          } else {
             consolePrint(errorString,true);
             errorStrings.push(errorString);
+			if (errorStrings.length>MAX_ERRORS_FOR_REAL){
+                TooManyErrors();
+			}
         }
     }
 }
@@ -80,8 +96,11 @@ function logWarningNoLine(str,urgent) {
          } else {
             consolePrint(errorString,true);
             errorStrings.push(errorString);
+            errorCount++;
+			if (errorStrings.length>MAX_ERRORS_FOR_REAL){
+                TooManyErrors();
+			}
         }
-        errorCount++;
     }
 }
 
@@ -94,8 +113,11 @@ function logErrorNoLine(str,urgent) {
          } else {
             consolePrint(errorString,true);
             errorStrings.push(errorString);
+            errorCount++;
+			if (errorStrings.length>MAX_ERRORS_FOR_REAL){
+                TooManyErrors();
+			}
         }
-        errorCount++;
     }
 }
 
