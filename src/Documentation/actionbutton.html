@@ -74,9 +74,11 @@ You must feel so powerful now that you know how to <b>ACTION</b>.
 <p>
 It's treated like a directional input, merely one that has no effect during the movement phase and is removed (so if you search for a moving player, it will detect someone doing an action.  If you want to detect someone moving who is not doing an action, you can use the word <b>ORTHOGONAL</b> (which just means up/down/left/right).
 <p>
-Action markers are discarded during the movement phase.
+Action markers are discarded during the movement phase.  
 <p>
-So, what are you going to use the action button for?  It seems to want to be a button for violence, and puzzle games mostly get by just fine without it, but maybe you have some awesome ideas :D</div><!-- /.container -->
+TIP: If you are using action in your games, you often will want to use <a href="prelude.html#norepeat_action"><b>norepeat_action</b></a> to prevent the player from repeatedly triggering the action even just by holding down action (this is especially useful when action toggles between two states - when toggling a button, say, you will probably want "one press" = "one toggle").
+<p>
+So, what are you going to use the action button for?  For pushing crates?  For swapping between characters? for pressing buttons?  There are many possibilities!</div><!-- /.container -->
 
 
     <!-- Bootstrap core JavaScript

@@ -87,7 +87,7 @@ A puzzlescript file is divided into 8 sections:
    	<p>
    	Rules are about pattern replacement.  There's a left side, and a right side, the engine looks for occurrences of the left side, possibly in many different orientations, and when it finds one, it replaces the contents with what's on the right.
    	<p>
-   	Let's look at the standard sokoban more closely.
+   	Let's look at the <a href="../editor.html?demo=sokoban_basic_debug">standard sokoban example</a> more closely:
    	<p>
    	<pre><code>[ > Player | Crate ] -> [ > Player | > Crate ]</code></pre>
    	<p>
@@ -103,7 +103,7 @@ A puzzlescript file is divided into 8 sections:
   <p>
     <pre><code>[ Player Spikes ] -> [ DeadPlayer Spikes ]</code></pre>
   <p>
-	If one wanted to match any player movements, not just movements towards the crate, one can replace the arrow with the <b>MOVING</b> keyword.
+	If one wanted to match any player movements, not just movements towards the crate, one could replace the arrow with the <b>MOVING</b> keyword.
    	<p>
    	   	<pre><code>[ MOVING Player | STATIONARY Crate ] -> [ MOVING Player | MOVING Crate ]</code></pre>
 	<p>
@@ -115,7 +115,7 @@ A puzzlescript file is divided into 8 sections:
 	<p>
 	It's possible for a rule to search for several disconnected bits.  For instance, you could have a bird that vanishes whenever the cat tries to jump up:
 	   	<p>
-   	   	<pre><code>[ UP Cat ]  [ Bird ] -> [ UP Cat ] []</code></pre>
+   	   	<pre><code>[ UP Cat ]  [ Bird ] -> [ UP Cat ] [ ]</code></pre>
 	<p>
 	It's possible to restrict rules to only operating in particular directions - for instance, the following removes anything that steps on lava:
 	<p>
@@ -137,7 +137,7 @@ A puzzlescript file is divided into 8 sections:
   <p>
   and never finish compiling.
   <p>
-	A point that might occasionally be relevant : ellipsis-based rules search from smallest to biggest.
+	A technical point that might occasionally be relevant : ellipsis-based rules search from smallest to biggest.
 	<h3>Right-hand Side</h3>
 	If we had the following rule
    	<p>
@@ -153,7 +153,7 @@ A puzzlescript file is divided into 8 sections:
      <p>
    	<pre><code>[ > Player |  ] -> [ > Player | NO Wall ]</code></pre>
    	<p>	
-   	<h2 id="commands">Commands</h2>
+   	<h2><span id="commands"></span>Commands</h2>
    	<p>
    	Sometimes you want other things to happen than to just replace tiles with tiles.  That's what commands are for. 
    	<p>
@@ -164,7 +164,7 @@ A puzzlescript file is divided into 8 sections:
    	In several games, it's important that if the player can't move, nothing else can happen either - so that you can't make time tick forward by repeatedly walking into walls.  There's a prelude setting for this, require_player_movement, but you can also simulate it as follows
    	<pre><code>[ Player ] -> [ Player Shadow ]
 late [ Player Shadow ] -> CANCEL
-late [Shadow] -> []</code></pre>   
+late [ Shadow ] -> [ ]</code></pre>   
 <p>
 	At the start of the turn, you put a counter on the square the player's in, and if they're still together after the movement phase, then cancel the whole move.
 	<p>

@@ -85,7 +85,7 @@
     <p>
     The player won't be able to push several crates in a row with this, because the first rule gets applied first, and then the second rule.  So order <em>does</em> matter - these aren't abstract replacement rules floating around in a vacuum.
     <p>
-    <h3>Zoom Level 3</h3>
+    <h3><span id="zoom3"></span>Zoom Level 3</h3>
     <p>
     Each rule gets applied in turn as often as it can be before the interpreter moves on to the next one.  It sounds quite simple, doesn't it, but there's one point of ambiguity.  The compiler compiles each rule you write down into several smaller rules (You can see the output by using the debug switch in the <a href="prelude.html">Prelude</a>).
     <p>
@@ -109,7 +109,7 @@
     You might wonder if you can construct rule groups yourself.  The answer is yes, with use of the modest <b>+</b> symbol..
     <p>
     <pre><code>[ > Player | Crate ] -> [ > Player | > Crate ]
-+[< Player | Crate ] -> [ < Player | < Crate ] </code></pre>
++ [ < Player | Crate ] -> [ < Player | < Crate ] </code></pre>
     <p>
     That assigns both rules (or rather, the rules that are generated from them) to the same rule group.
     <p>

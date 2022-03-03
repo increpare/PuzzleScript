@@ -124,54 +124,66 @@ Here are the possible options:
       <dd>The amount of time it takes an 'again' event to trigger.</dd>
       <dt>background_color blue</dt>
       <dd>Can accept a color name or hex code (in the form #412bbc). Controls the background color of title/message screens, as well as the background color of the website.  Text_color is its sibling.</dd>
-			<dt>debug</dt>
+			<dt><span id="debug"></span>debug</dt>
 			<dd>This outputs the compiled instructions whenever you build your file.  For instance, the line
 			<p>
-			<pre><code>[ > Player | Crate ] -> [ > Player | > Crate ]</code></pre>
+			<pre><code><a href="../editor.html?demo=sokoban_basic_debug" target="puzzleScript_EditorWindow" class="btn btn-default pull-right" ><span class="glyphicon glyphicon-cog"> Edit</span></a>[ > Player | Crate ] -> [ > Player | > Crate ]</code></pre>
 			<p>
-			is compiled into four instructions, as the output from debug shows:
-			<pre>Rule Assembly : (4 rules )
+			is compiled into four instructions, as the output from debug shows when you hit 'RUN':
+			<pre>===========
+Rule Assembly : (4 rules)
 ===========
-(52) UP [ up player | crate ] -> [ up player | up crate ] 
-(52) DOWN [ down player | crate ] -> [ down player | down crate ] 
-(52) LEFT [ left player | crate ] -> [ left player | left crate ] 
-(52) RIGHT [ right player | crate ] -> [ right player | right crate ] 
+  (83) DOWN [ crate | up player ] -> [ up crate | up player ]
++ (83) DOWN [ down player | crate ] -> [ down player | down crate ]
++ (83) RIGHT [ crate | left player ] -> [ left crate | left player ]
++ (83) RIGHT [ right player | crate ] -> [ right player | right crate ]
 ===========</pre>
-			the number on the far left is the group number of the disassembled - based on the line-number of the rules.  The compilation step removes all relative directions ( <b>^</b>, <b>v</b>, <b>&lt;</b>, and <b>></b>), and replaces them with <b>UP</b>, <b>DOWN</b>, <b>LEFT</b>, and <b>RIGHT</b>.
+			Going from left to right:
+      <ul>
+        <li>
+          The number near the left is the line-number the rule came from in the original source code.  You can click on the number to jump to that line in the file.
+        </li>
+        <li>
+          A plus-sign on the left of the line indicates that the rule is grouped with the previous one as part of a rule-group and the engine will loop through the group as a whole trying to apply the rules until no more rules in the group can be applied (See <a href="executionorder.html#zoom3">the rules page</a> for more info).
+        </li>  
+      </ul>
+      <p>
+        The compiler does a lot of stuff to the rules you give to it to 'simplify' them in various ways.  One thing it does for instance is replace all relative directions ( <b>^</b>, <b>v</b>, <b>&lt;</b>, and <b>></b>), with <b>UP</b>, <b>DOWN</b>, <b>LEFT</b>, and <b>RIGHT</b>, which often involves splitting a single rule into many more rules (as above). An other thing you'll notice is that the core engine has rules only going <B>DOWN</B> and  <b>RIGHT</b> - rules in other directions are flipped.  For more information about directions in puzzlescript, see <a href="directions.html">this page</a>.
+      
 			</dd>
 
 			<dt>flickscreen WxH</dt>
 			<dd>
-				Setting flickscreen divides each level into WxH grids, and zooms the camera in so that the player can only see one at a time - the camera does not follow the player around on a move-to-move basis, but if the player moves from one part of this grid to another, the camera <em>flicks</em> to the new position.
+				Setting flickscreen divides each level into WxH grids, and zooms the camera in so that the player can only see one at a time - the camera does not follow the player around on a move-to-move basis, but if the player moves from one part of this grid to another, the camera <em>flicks</em> to the new position.  See <a href="../editor.html?hack=6880313">Legend of Zokoban</a> for a cute example.
 			</dd>
 			<dt>homepage www.mypage.com</dt>
 			<dd>
-			The homepage of the author.  This doesn't appear directly in the game itself, but is included in the exported HTML build.
+			The homepage of the author.  This doesn't appear directly in the game itself, but is included in the shared game and exported HTML build.
 			</dd>
 			<dt>key_repeat_interval 0.1</dt> 
 			<dd>
-			When you hold down a key, how long is the delay between repeated presses getting sent to the game (in seconds)?
+			When you hold down a key, how long is the delay between repeated presses getting sent to the game (in seconds)?  The default value is 1.5.
 			</dd>
       <dt>noaction</dt>
-      <dd>Hides the action key (X) instruction from the title screen, and does not respond when the player pressed it (outside of menus and cutscenes and the like).</dd>
-      <dt>norepeat_action</dt>
+      <dd>Changes the action key (X) instruction from the title screen, and does not respond when the player pressed it (outside of menus and cutscenes and the like).</dd>
+      <dt><span id="norepeat_action"></span>norepeat_action</dt>
       <dd>For many games, you don't want holding action down to retrigger it - games where you're toggling a switch, say.  For these games, set norepeat_action, and the action button will only respond to individual presses.</dd>
 			<dt>noundo</dt>
-			<dd>Disables the undo key (Z)</dd>
+			<dd>Disables the undo key (Z) (I generally advise against disabling undo, FWIW).</dd>
 			<dt>norestart</dt>
 			<dd>Disables the restart key (R)</dd>
-      <dt>realtime_interval</dt> 
+      <dt><span id="realtime_interval"></span>realtime_interval</dt> 
       <dd>The number indicates how long each realtime frame should be.  In the above case, twice a second the game engine will tick, but with no input.  Player input is processed as regular. See <a href="realtime.html">this documentation</a> for more info on making realtime games.</dd>     
 			<dt>require_player_movement</dt>
 			<dd>
 			This is a common requirement in games - if the player doesn't move, cancel the whole move.  This is equivalent, where there's only one player character, to the following:
-			<pre><code>[Player]->[Player Temp]
+			<pre><code>[ Player ]->[ Player Temp ]
 late [ Player Temp ] -> CANCEL
 late [ Temp ] -> [ ]</code></pre>
 			</dd>
 			<dt>run_rules_on_level_start</dt>
 			<dd>
-			For some games, you will want, before the player sees the level, for the rules to be applied once.
+			For some games you will want, before the player sees the level, for the rules to be applied once.  (Games that have rules that generate level graphics on the fly, for instance, may want this.  Try out <a href="../editor.html?demo=dreizack">this game</a> with and without the prelude option and compare results.</a>)
 			</dd>
       <dt>scanline</dt>
       <dd>Applies a scanline visual effect - only draws every other line</dd>      
@@ -181,10 +193,10 @@ late [ Temp ] -> [ ]</code></pre>
 			<dd>The name of your game.  Appears on the title screen.</dd>
       <dt>throttle_movement</dt>
       <dd>For use in conjunction with realtime_interval - this stops you from moving crazy fast - repeated keypresses of the same movement direction will not increase your speed. This doesn't apply to the action button.  If you can think of an example that requires action be throttled, just let me know and I'll try accommodate you.</dd>
-      <dt>verbose_logging</dt>
+      <dt><span id="verbose_logging"></span>verbose_logging</dt>
       <dd>As you play the game, spits out information about all rules applied as you play, and also allows visual inspection of what exactly the rules do with the <a href="visual_debugger.html">visual debugger</a>.</dd>
 			<dt>zoomscreen WxH</dt>
-			<dd>Zooms the camera in to a WxH section of the map around the player, centered on the player.</dd>
+			<dd>Zooms the camera in to a WxH section of the map around the player, centered on the player.  <a href="../editor.html?demo=sokoban_basic_zoomscreen">Silly example</a>.</dd>
 		</dl>
 
 

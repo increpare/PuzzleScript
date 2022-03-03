@@ -69,13 +69,13 @@ If you want a robot spawnpoint that generates randomly coloured robots, have thi
 <p>
 and then use this in your script
 <p>
-<pre><code><a href="../editor.html?demo=randomspawner" target="puzzleScript_EditorWindow" class="btn btn-default pull-right" ><span class="glyphicon glyphicon-cog"> Edit</span></a>[ RobotSpawn no robot ] -> [ RobotSpawn random Robot]</code></pre>
+<pre><code><a href="../editor.html?demo=randomspawner" target="puzzleScript_EditorWindow" class="btn btn-default pull-right" ><span class="glyphicon glyphicon-cog"> Edit</span></a>[ RobotSpawn no robot ] -> [ RobotSpawn random Robot ]</code></pre>
 <p>
 <img src="images/robotspawner.gif">
 <p>
 You can only really use randomness once per cell - if you have several random statements they're all munged together.  For instance, the above rule is identical to writing
 <p>
-<pre><code>[ RobotSpawn no robot ] -> [ RobotSpawn random RedRobot random GreenRobot random BlueRobot]</code></pre>
+<pre><code>[ RobotSpawn no Robot ] -> [ RobotSpawn random RedRobot random GreenRobot random BlueRobot]</code></pre>
 <p>
 If you want to have a rule applied a single time, at random (if possible) do this:
 <p>
@@ -85,11 +85,11 @@ In detail: what it does is - it works not on a single rule but on a rule group -
 <p>
 If you want a robot to move in a random direction each turn*, do this:
 <p>
-<pre><code><a href="../editor.html?demo=randomrobots" target="puzzleScript_EditorWindow" class="btn btn-default pull-right" ><span class="glyphicon glyphicon-cog"> Edit</span></a>[ Stationary Robot ] -> [randomDir Robot]</code></pre>
+<pre><code><a href="../editor.html?demo=randomrobots" target="puzzleScript_EditorWindow" class="btn btn-default pull-right" ><span class="glyphicon glyphicon-cog"> Edit</span></a>[ Stationary Robot ] -> [ randomDir Robot ]</code></pre>
 <p>
 <img src="images/randomrobots.gif">
 <p>
-* WARNING: random object movement is super unfun in most situations. Do not use this if you think it's going to be fun unless you're REALLY sure it's going to be fun. Predictable movement tends to work a lot better in puzzlescript games.  See <a href="../editor.html?demo=leftrightnpcs">this demo</a> for an example of deterministic entity movement.
+* WARNING: random object movement is super unfun in most situations. Do not use this if you think it's going to be fun unless you're REALLY sure it's going to be fun. Predictable movement tends to work a lot better in puzzlescript games.  See <a href="../editor.html?demo=leftrightnpcs">this demo</a> for an example of deterministic entity movement (But even in this example it's not easy for the player to understand what happens when they try to walk into a spot and another character is trying to walk into the same spot.  It's tricky to have independently-moving creatures, even without having randomness on top).
 <p>
     </div><!-- /.container -->
 
