@@ -2382,9 +2382,11 @@ function resolveMovements(level, bannedGroup){
 							var rigidGroupIndex = rigidGroupIndexMask.getshiftor(0x1f, 5*j);
 							rigidGroupIndex--;//group indices start at zero, but are incremented for storing in the bitfield
 							var groupIndex = state.rigidGroupIndex_to_GroupIndex[rigidGroupIndex];
-							bannedGroup[groupIndex]=true;
-							//backtrackTarget = rigidBackups[rigidGroupIndex];
-							doUndo=true;
+							if (bannedGroup[groupIndex]!==true){
+								bannedGroup[groupIndex]=true
+								//backtrackTarget = rigidBackups[rigidGroupIndex];
+								doUndo=true;
+							}
 							break;
 						}
 					}
@@ -2538,6 +2540,8 @@ function processInput(dir,dontDoWin,dontModify) {
 
 		calculateRowColMasks();
 
+		var alreadyResolved=[];
+
         var i=0;
         do {
         //not particularly elegant, but it'll do for now - should copy the world state and check
@@ -2545,8 +2549,6 @@ function processInput(dir,dontDoWin,dontModify) {
         	rigidloop=false;
         	i++;
         	
-
-
         	applyRules(state.rules, state.loopPoint, startRuleGroupIndex, bannedGroup);
         	var shouldUndo = resolveMovements(level, bannedGroup);
 
@@ -2555,7 +2557,20 @@ function processInput(dir,dontDoWin,dontModify) {
 
 				{
 					// trackback
-					consolePrint("Rigid movement application failed. Rolling back...")
+					if (IDE){
+						// newBannedGroups is the list of keys of bannedGroup that aren't already in alreadyResolved
+						var newBannedGroups = [];
+						for (var key in bannedGroup) {
+							if (!alreadyResolved.includes(key)) {
+								newBannedGroups.push(key);
+								alreadyResolved.push(key);
+							}
+						}
+						var bannedLineNumbers = newBannedGroups.map( rgi => state.rules[rgi][0].lineNumber);
+						var ts = bannedLineNumbers.length>1 ? "lines " : "line ";
+						ts += bannedLineNumbers.map(ln => `<a onclick="jumpToLine(${ln});" href="javascript:void(0);">${ln}</a>`).join(", ");
+						consolePrint(`Rigid movement application failed in rule-Group starting from ${ts}, and will be disabled in resimulation. Rolling back...`)
+					}
 					//don't need to concat or anythign here, once something is restored it won't be used again.
 					level.objects = new Int32Array(startState.objects)
 					level.movements = new Int32Array(startState.movements)
