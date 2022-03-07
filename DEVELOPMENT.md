@@ -15,7 +15,7 @@ The structure of PuzzleScript is the following:
 `./compile.js` uses [node](https://nodejs.org). So first off you have to install that.  Then you need to install the packages that it uses:
 
 ```
-npm i rimraf compress-images web-resource-inliner ncp gifsicle@5.3.0 concat ycssmin terser gzipper html-minifier-terser glob
+npm i rimraf compress-images web-resource-inliner ncp gifsicle concat ycssmin terser gzipper html-minifier-terser glob
 ```
 
 Then you should be able to compile the site (outputted to the `./bin/` directory) with 
