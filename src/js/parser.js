@@ -310,7 +310,14 @@ var codeMirrorFn = function() {
                         }
                         idx = splits.indexOf(candname, 2);
                     }          
-                }                          
+                }   
+                for (var j=2;j<i;j+=2){
+                    var oname = splits[j];
+                    if(oname===nname){
+                        logWarning("You're repeating the object " + oname.toUpperCase() + " here multiple times on the RHS.  This makes no sense.  Don't do that.", state.lineNumber);
+                        ok=false;
+                    }
+                }                       
             } 
 
             //for every other word, check if it's a valid name
