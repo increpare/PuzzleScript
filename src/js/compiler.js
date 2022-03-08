@@ -1724,6 +1724,8 @@ function rulesToMask(state) {
                             if (state.propertiesDict.hasOwnProperty(object_name)) {
                                 values = state.propertiesDict[object_name];
                             } else {
+                                //get line number declaration of object_name
+                                logWarning(`In this rule you're asking me to spawn a random ${object_name.toUpperCase()} for you, but that's already a concrete single object.  You wanna be using random with properties (things defined in terms of OR in the legend) so there's some things to select between.`, rule.lineNumber);
                                 values = [object_name];
                             }
                             for (var m = 0; m < values.length; m++) {
