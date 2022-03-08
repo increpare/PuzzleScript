@@ -41,7 +41,7 @@ for (var i=0;i<errormessage_testdata.length;i++) {
 				var testcode = td[1][0];
 				var testerrors=td[1][1];
 				if (td[1].length!==3){
-					throw "Error/Warning message testdata has wrong number of fields, invalid. Accidentally pasted in level recording data?";
+					throw "Error/Warning message testdata has wrong number of fields, invalid. Accidentally pasted in level recording data?"+"\n\n\n"+testcode;
 				}
 				var errormessage =  testcode+"\n\n\ndesired errors : "+testerrors;
 				ok(runCompilationTest(td[1]),errormessage);
