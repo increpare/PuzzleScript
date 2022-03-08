@@ -2355,8 +2355,25 @@ function generateLoopPoints(state) {
     var outside = true;
     var source = 0;
     var target = 0;
-    if (state.loops.length % 2 === 1) {
-        logErrorNoLine("have to have matching number of  'startLoop' and 'endLoop' loop points.");
+    if (state.loops.length > 0) {
+        for (var i=0;i<state.loops.length;i++){
+            var loop = state.loops[i];
+            if (i%2===0){
+                if (loop[1]===-1){         
+                    logError("Found an ENDLOOP, but I'm not in a loop?",loop[0]);
+                }
+            } else {
+                if (loop[1]===1){         
+                    logError("Found a STARTLOOP, but I'm already inside a loop? (Puzzlescript can't nest loops, FWIW).",loop[0]);
+                }
+            }
+        }
+        var lastloop=state.loops[state.loops.length-1];
+        if (lastloop[1]!==-1){
+            logError("Yo I found a STARTLOOP without a corresponding ENDLOOP.",lastloop[0]);
+
+        }
+        // logError("Have to have matching number of  'startLoop' and 'endLoop' loop points.",state.loops[state.loops.length-1][0]);
     }
 
     for (var j = 0; j < state.loops.length; j++) {
@@ -2374,9 +2391,6 @@ function generateLoopPoints(state) {
                 if (firstRuleLine >= loop[0]) {
                     target = i;
                     outside = false;
-                    if (loop[1] === -1) {
-                        logErrorNoLine("Need have to have matching number of  'startLoop' and 'endLoop' loop points.");
-                    }
                     break;
                 }
             } else {
@@ -2384,9 +2398,6 @@ function generateLoopPoints(state) {
                     source = i - 1;
                     loopPoint[source] = target;
                     outside = true;
-                    if (loop[1] === 1) {
-                        logErrorNoLine("Need have to have matching number of  'startLoop' and 'endLoop' loop points.");
-                    }
                     break;
                 }
             }
@@ -2415,9 +2426,6 @@ function generateLoopPoints(state) {
                 if (firstRuleLine >= loop[0]) {
                     target = i;
                     outside = false;
-                    if (loop[1] === -1) {
-                        logErrorNoLine("Need have to have matching number of  'startLoop' and 'endLoop' loop points.");
-                    }
                     break;
                 }
             } else {
@@ -2425,9 +2433,6 @@ function generateLoopPoints(state) {
                     source = i - 1;
                     loopPoint[source] = target;
                     outside = true;
-                    if (loop[1] === 1) {
-                        logErrorNoLine("Need have to have matching number of  'startLoop' and 'endLoop' loop points.");
-                    }
                     break;
                 }
             }
