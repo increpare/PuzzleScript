@@ -300,8 +300,11 @@ ncp("./src", "./bin/", function (err) {
                         files = files.concat(glob.sync("./bin/**/*.css"));
                         files = files.concat(glob.sync("./bin/**/*.txt"));
 
-                        var compressionTasks = files.map(fn => new Compress(fn));
-                        var compressed = await Promise.all(compressionTasks.map(gzip => gzip.run()));
+                        for (var i=0;i<files.length;i++) {
+                            var file = files[i];
+                            var comp = new Compress(file);
+                            await comp.run();
+                        }
 
                         console.log("Files compressed. All good!");
 
