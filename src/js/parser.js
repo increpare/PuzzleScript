@@ -217,7 +217,7 @@ var codeMirrorFn = function() {
         logError(`You're talking about ${candname.toUpperCase()} but it's not defined anywhere.`, state.lineNumber);    
     }
 
-    function registerOriginalCaseName(state,candname,mixedCase){
+    function registerOriginalCaseName(state,candname,mixedCase,lineNumber){
 
         function escapeRegExp(str) {
           return str.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, "\\$&");
@@ -227,6 +227,7 @@ var codeMirrorFn = function() {
         var match = mixedCase.match(nameFinder);
         if (match!=null){
             state.original_case_names[candname] = match[0];
+            state.original_line_numbers[candname] = lineNumber;
         }
     }
 
@@ -314,8 +315,7 @@ var codeMirrorFn = function() {
                 for (var j=2;j<i;j+=2){
                     var oname = splits[j];
                     if(oname===nname){
-                        logWarning("You're repeating the object " + oname.toUpperCase() + " here multiple times on the RHS.  This makes no sense.  Don't do that.", state.lineNumber);
-                        ok=false;
+                        logWarning("You're repeating the object " + oname.toUpperCase() + " here multiple times on the RHS.  This makes no sense.  Don't do that.", state.lineNumber);                        
                     }
                 }                       
             } 
@@ -332,7 +332,7 @@ var codeMirrorFn = function() {
                 //SYNONYM
                 var synonym = [splits[0], splits[2]];
                 synonym.lineNumber = state.lineNumber;
-                registerOriginalCaseName(state,splits[0],mixedCase);
+                registerOriginalCaseName(state,splits[0],mixedCase,state.lineNumber);
                 state.legend_synonyms.push(synonym);
             } else if (splits[3]==='and'){
                 //AGGREGATE
@@ -370,7 +370,7 @@ var codeMirrorFn = function() {
                 }
                 newlegend.lineNumber = state.lineNumber;
 
-                registerOriginalCaseName(state,newlegend[0],mixedCase);
+                registerOriginalCaseName(state,newlegend[0],mixedCase,state.lineNumber);
                 state.legend_aggregates.push(newlegend);
         
             } else if (splits[3]==='or'){
@@ -427,7 +427,7 @@ var codeMirrorFn = function() {
                     }
                     newlegend.lineNumber = state.lineNumber;
 
-                    registerOriginalCaseName(state,newlegend[0],mixedCase);
+                    registerOriginalCaseName(state,newlegend[0],mixedCase,state.lineNumber);
                     state.legend_properties.push(newlegend);
                 }
             } else {
@@ -528,6 +528,7 @@ var codeMirrorFn = function() {
             }
 
             var original_case_namesCopy = Object.assign({},state.original_case_names);
+            var original_line_numbersCopy = Object.assign({},state.original_line_numbers);
             
             var nstate = {
               lineNumber: state.lineNumber,
@@ -564,6 +565,7 @@ var codeMirrorFn = function() {
               winconditions: winConditionsCopy,
 
               original_case_names : original_case_namesCopy,
+              original_line_numbers : original_line_numbersCopy,
 
               abbrevNames: state.abbrevNames.concat([]),
 
@@ -812,7 +814,7 @@ var codeMirrorFn = function() {
 
                             if (sol) {
                                 state.objects_candname = candname;
-                                registerOriginalCaseName(state,candname,mixedCase);
+                                registerOriginalCaseName(state,candname,mixedCase,state.lineNumber);
                                 state.objects[state.objects_candname] = {
                                                                         lineNumber: state.lineNumber,
                                                                         colors: [],
@@ -821,7 +823,7 @@ var codeMirrorFn = function() {
 
                             } else {
                                 //set up alias
-                                registerOriginalCaseName(state,candname,mixedCase);
+                                registerOriginalCaseName(state,candname,mixedCase,state.lineNumber);
                                 var synonym = [candname,state.objects_candname];
                                 synonym.lineNumber = state.lineNumber;
                                 state.legend_synonyms.push(synonym);
@@ -1171,7 +1173,7 @@ var codeMirrorFn = function() {
                                         } else {
                                             match=errorFallbackMatchToken(stream);
                                             //depending on whether the verb is directional or not, we log different errors
-                                            logError(`Ah I were expecting direction or a sound seed here after ${state.current_line_wip_array[state.current_line_wip_array.length-1][0].toUpperCase()}, but I don't know what to make of "${match[0].trim().toUpperCase()}".`, state.lineNumber);
+                                            logError(`Ah I was expecting direction or a sound seed here after ${state.current_line_wip_array[state.current_line_wip_array.length-1][0].toUpperCase()}, but I don't know what to make of "${match[0].trim().toUpperCase()}".`, state.lineNumber);
                                             tokentype = 'ERROR';
                                             state.current_line_wip_array.push("ERROR");
                                         }
@@ -1186,7 +1188,7 @@ var codeMirrorFn = function() {
                                     } else {
                                         match=errorFallbackMatchToken(stream);
                                         //depending on whether the verb is directional or not, we log different errors
-                                        logError(`Ah I were expecting a sound seed here after ${state.current_line_wip_array[state.current_line_wip_array.length-1][0].toUpperCase()}, but I don't know what to make of "${match[0].trim().toUpperCase()}".`, state.lineNumber);
+                                        logError(`Ah I was expecting a sound seed here after ${state.current_line_wip_array[state.current_line_wip_array.length-1][0].toUpperCase()}, but I don't know what to make of "${match[0].trim().toUpperCase()}".`, state.lineNumber);
                                         tokentype = 'ERROR';
                                         state.current_line_wip_array.push("ERROR");
                                     }
@@ -1346,7 +1348,7 @@ var codeMirrorFn = function() {
                         } else {
                             if (state.names.indexOf(m) >= 0) {
                                 if (sol) {
-                                    logError('Identifiers cannot appear outside of square brackets in rules, only directions can.', state.lineNumber);
+                                    logError('Objects cannot appear outside of square brackets in rules, only directions can.', state.lineNumber);
                                     return 'ERROR';
                                 } else {
                                     stream.match(/[\p{Z}\s]*/u, true);
@@ -1404,7 +1406,7 @@ var codeMirrorFn = function() {
                         }
                         else if (state.tokenIndex === 2) {
                             if (candword != 'on') {
-                                logError('Expecting the word "ON" but got "'+candword.toUpperCase()+"'.", state.lineNumber);
+                                logError('Expecting the word "ON" but got "'+candword.toUpperCase()+"\".", state.lineNumber);
                                 return 'ERROR';
                             } else {
                                 return 'LOGICWORD';
@@ -1618,6 +1620,7 @@ var codeMirrorFn = function() {
                 metadata: [],
 
                 original_case_names: {},
+                original_line_numbers: {},
 
                 abbrevNames: [],
 

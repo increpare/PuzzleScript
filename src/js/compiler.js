@@ -380,15 +380,25 @@ function generateExtraMembers(state) {
             backgroundid = o.id;
             backgroundlayer = o.layer;
         } else if ('background' in state.propertiesDict) {
-            var n = state.propertiesDict['background'][0];
+            var backgrounddef = state.propertiesDict['background'];
+            var n = backgrounddef[0];
             var o = state.objects[n];
             backgroundid = o.id;
             backgroundlayer = o.layer;
+            for (var i=1;i<backgrounddef.length;i++){
+                var nnew = backgrounddef[i];
+                var onew = state.objects[nnew];
+                if (onew.layer !== backgroundlayer) {
+                    var lineNumber = state.original_line_numbers['background'];
+                    logError('Background objects must be on the same layer',lineNumber);
+                }
+            }
         } else if ('background' in state.aggregatesDict) {
             var o = state.objects[state.idDict[0]];
             backgroundid = o.id;
             backgroundlayer = o.layer;
-            logError("background cannot be an aggregate (declared with 'and'), it has to be a simple type, or property (declared in terms of others using 'or').");
+            var lineNumber = state.original_line_numbers['background'];
+            logError("background cannot be an aggregate (declared with 'and'), it has to be a simple type, or property (declared in terms of others using 'or').",lineNumber);
         } else {
             var o = state.objects[state.idDict[0]];
             if (o!=null){
@@ -442,7 +452,7 @@ function levelFromString(state, level) {
                 if (state.propertiesDict[ch] === undefined) {
                     logError('Error, symbol "' + ch + '", used in map, not found.', level[0] + j);
                 } else {
-                    logError('Error, symbol "' + ch + '" is defined using \'or\', and therefore ambiguous - it cannot be used in a map. Did you mean to define it in terms of \'and\'?', level[0] + j);
+                    logError('Error, symbol "' + ch + '" is defined using OR, and therefore ambiguous - it cannot be used in a map. Did you mean to define it in terms of AND?', level[0] + j);
                 }
                 return o;
             }
@@ -660,14 +670,14 @@ function processRuleString(rule, state, curRules) {
                         has_plus=true;
                         if (groupNumber === lineNumber) {
                             if (curRules.length == 0) {
-                                logError('The "+" symbol, for joining a rule with the group of the previous rule, needs a previous rule to be applied to.');
+                                logError('The "+" symbol, for joining a rule with the group of the previous rule, needs a previous rule to be applied to.', lineNumber);
                             }
                             if (i !== 0) {
-                                logError('The "+" symbol, for joining a rule with the group of the previous rule, must be the first symbol on the line ');
+                                logError('The "+" symbol, for joining a rule with the group of the previous rule, must be the first symbol on the line ', lineNumber);
                             }
                             groupNumber = curRules[curRules.length - 1].groupNumber;
                         } else {
-                            logError('Two "+"s ("append to previous rule group" symbol) applied to the same rule.', lineNumber);
+                            logError('Two "+"s (the "append to previous rule group" symbol) applied to the same rule.', lineNumber);
                         }
                     } else if (token in directionaggregates) {
                         directions = directions.concat(directionaggregates[token]);
@@ -723,7 +733,7 @@ function processRuleString(rule, state, curRules) {
                         if (!incellrow) {
                             logWarning('Janky syntax.  "|" should only be used inside cell rows (the square brackety bits).', lineNumber);
                         } else if (curcell.length % 2 == 1) {
-                            logError('In a rule, if you specify a force, it has to act on an object.', lineNumber);
+                            logError('In a rule, if you specify a movement, it has to act on an object.', lineNumber);
                         } else {
                             curcellrow.push(curcell);
                             curcell = [];
@@ -739,7 +749,7 @@ function processRuleString(rule, state, curRules) {
                             if (curcell[0] === '...') {
                                 logError('Cannot end a rule with ellipses.', lineNumber);
                             } else {
-                                logError('In a rule, if you specify a force, it has to act on an object.', lineNumber);
+                                logError('In a rule, if you specify a movement, it has to act on an object.', lineNumber);
                             }
                         } else {
                             curcellrow.push(curcell);
@@ -1592,6 +1602,7 @@ function rulesToMask(state) {
                         objectsPresent = ellipsisPattern;
                         if (cell_l.length !== 2) {
                             logError("You can't have anything in with an ellipsis. Sorry.", rule.lineNumber);
+                            throw 'aborting compilation';//throwing here because I was getting infinite loops in the compiler otherwise
                         } else if ((k === 0) || (k === cellrow_l.length - 1)) {
                             logError("There's no point in putting an ellipsis at the very start or the end of a rule", rule.lineNumber);
                         } else if (rule.rhs.length > 0) {
@@ -1602,7 +1613,7 @@ function rulesToMask(state) {
                         }
                         break;
                     } else if (object_dir === 'random') {
-                        logError("'random' cannot be matched on the left-hand side, it can only appear on the right", rule.lineNumber);
+                        logError("RANDOM cannot be matched on the left-hand side, it can only appear on the right", rule.lineNumber);
                         continue;
                     }
 
@@ -2030,7 +2041,8 @@ function generateRigidGroupList(state) {
         }
     }
     if (rigidGroupIndex_to_GroupIndex.length > 30) {
-        logError("There can't be more than 30 rigid groups (rule groups containing rigid members).", rules[0][0][3]);
+        var group_index = rigidGroupIndex_to_GroupIndex[30];
+        logError("There can't be more than 30 rigid groups (rule groups containing rigid members).", state.rules[group_index][0].lineNumber);
     }
 
     state.rigidGroups = rigidGroups;
