@@ -813,6 +813,10 @@ function processRuleString(rule, state, curRules) {
         }
     }
 
+    if (late && rigid){
+        logError("Late rules cannot be marked as rigid (rigid rules are all about dealing with the consequences of unresolvable movements, and late rules can't even have movements).", lineNumber);
+    }
+    
     if (lhs_cells.length != rhs_cells.length) {
         if (commands.length > 0 && rhs_cells.length == 0) {
             //ok

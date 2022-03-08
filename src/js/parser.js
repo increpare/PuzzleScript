@@ -1419,6 +1419,9 @@ var codeMirrorFn = function() {
                             } else {
                                 return 'NAME';
                             }
+                        } else {
+                            logError("Error in win condition: I don't know what to do with "+candword.toUpperCase()+".", state.lineNumber);
+                            return 'ERROR';
                         }
                     }
                     break;
