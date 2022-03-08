@@ -1,176 +1,366 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="">
-    <meta name="author" content="">
-    <link rel="shortcut icon" type="image/x-icon" href="ico/favicon.ico" />
+ <head>
+ <meta charset="utf-8">
+ <meta name="viewport" content="width=device-width, initial-scale=1.0">
+ <meta name="description" content="">
+ <meta name="author" content="">
+ <link rel="shortcut icon" type="image/x-icon" href="ico/favicon.ico" />
 
-    <title>Extended Rigid Bodies - PuzzleScript Documentation</title>
+ <title>Extended Rigid Bodies - PuzzleScript Documentation</title>
 
-    <!-- Bootstrap core CSS -->
-    <link href="css/bootstrap.css" rel="stylesheet">
+ <!-- Bootstrap core CSS -->
+ <link href="css/bootstrap.css" rel="stylesheet">
 
-    <!-- Custom styles for this template -->
-    <link href="css/bootstrap-theme.css" rel="stylesheet">
+ <!-- Custom styles for this template -->
+ <link href="css/bootstrap-theme.css" rel="stylesheet">
 
-    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
-    <!--[if lt IE 9]>
-      <script src="../../assets/js/html5shiv.js"></script>
-      <script src="../../assets/js/respond.min.js"></script>
-    <![endif]-->
-  </head>
+ <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+ <!--[if lt IE 9]>
+ <script src="../../assets/js/html5shiv.js"></script>
+ <script src="../../assets/js/respond.min.js"></script>
+ <![endif]-->
+ </head>
 
-  <body>
+ <body>
 
-    <div class="navbar navbar-inverse navbar-fixed-top">
-      <div class="container">
-        <div class="navbar-header">
-          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-          </button>
-          <a class="navbar-brand" href="../index.html"><img src="../images/mascot_colorful.png"> PuzzleScript</a>
-        </div>
-        <div class="collapse navbar-collapse">
-          <ul class="nav navbar-nav">
-              <li><a href="../editor.html">Make A Game</a></li>
-              
-              <li class="active"><a href="documentation.html">Documentation</a></li>
-          </ul>          
-          <ul class="nav navbar-nav navbar-right">
-            <li><a href="https://groups.google.com/g/puzzlescript">Forum</a></li>
-            <li><a href="https://github.com/increpare/puzzlescript">GitHub</a></li>
-            <li><a href="https://github.com/sponsors/increpare">Sponsor</a></li>
-            <li><a href="about.html">About</a></li>
-          </ul>
-        </div><!--/.nav-collapse -->
-      </div>
-    </div>
+ <div class="navbar navbar-inverse navbar-fixed-top">
+ <div class="container">
+ <div class="navbar-header">
+  <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+  <span class="icon-bar"></span>
+  <span class="icon-bar"></span>
+  <span class="icon-bar"></span>
+  </button>
+  <a class="navbar-brand" href="../index.html"><img src="../images/mascot_colorful.png"> PuzzleScript</a>
+ </div>
+ <div class="collapse navbar-collapse">
+  <ul class="nav navbar-nav">
+  <li><a href="../editor.html">Make A Game</a></li>
+  
+  <li class="active"><a href="documentation.html">Documentation</a></li>
+  </ul>  
+  <ul class="nav navbar-nav navbar-right">
+  <li><a href="https://groups.google.com/g/puzzlescript">Forum</a></li>
+  <li><a href="https://github.com/increpare/puzzlescript">GitHub</a></li>
+  <li><a href="https://github.com/sponsors/increpare">Sponsor</a></li>
+  <li><a href="about.html">About</a></li>
+  </ul>
+ </div><!--/.nav-collapse -->
+ </div>
+ </div>
 
-    <div class="container">
+ <div class="container">
 
 <p>
 <ol class="breadcrumb">
-  <li><a href="documentation.html">Documentation</a></li>
-  <li class="active">Extended Rigid Bodies</li>
+ <li><a href="documentation.html">Documentation</a></li>
+ <li class="active">Extended Rigid Bodies</li>
 </ol>
-<p>
-
-    <h1>Extended Rigid Bodies</h1>
-    <p>
-    <img src="images/rigidbodies.gif">
-<p>
-So, it's nice to be able to push blocks around that are larger than 1x1.  An initial effort to achieve this will look like this:
-<p>
-<pre><code><a href="../editor.html?demo=rigidfail1" target="puzzleScript_EditorWindow" class="btn btn-default pull-right" ><span class="glyphicon glyphicon-cog"> Edit</span></a>[ >  Player | BigBlock ] -> [  >  Player | > BigBlock  ]     
-[ Moving BigBlock | BigBlock ] -> [ Moving BigBlock | MOVING BigBlock ]</code></pre>
-<p>
+</p><p>
+ <h1>Extended Rigid Bodies</h1>
+</p><p>
+ <ul class="nav nav-pills nav-stacked" class="pull-left">
+ <li><a href="#Introduction">Intro</a></li>
+ <li><a href="#one_one">One Player, One Extended Body</a></li>
+ <li><a href="#one_many">One Player, Multiple Extended Bodies</a></li>
+ <li><a href="#parallel_many">Multiple Parallel-Moving Players, Multiple Extended Bodies</a></li>
+ <li><a href="#one_unlimited">One Player, Unlimited Extended Bodies</a></li>
+ <li><a href="#many_many">Trying and failing to do Multiple Players + Multiple Extended Bodies</a></li>
+ <li><a href="#rigid_keyword">The RIGID keyword</a></li>
+ <li><a href="#rigid_example">An example using RIGID</a></li>
+</p><p>
+ <h3><span id="Introduction"></span>Introduction</h3>
+</p><p>
+So, it's nice to be able to push blocks around that are larger than 1x1. An initial effort to achieve this will look like this:
+</p><p>
+<pre><code><a href="../editor.html?demo=rigidfail1" target="puzzleScript_EditorWindow" class="btn btn-default pull-right" ><span class="glyphicon glyphicon-cog"> Edit</span></a>[ > Player | BigBlock ] -> [ > Player | > BigBlock ] 
+[ Moving BigBlock | BigBlock ] -> [ Moving BigBlock | Moving BigBlock ]</code></pre>
+</p><p>
 To the naked eye it will look splendid:
-<p>
+</p><p>
 <img src="images/rigidfail1.gif">
-<p>
-but upon closer inspection it will reveal itself to be rather a flimsy construction.
-<p>
+</p><p>
+but upon closer inspection it will reveal itself to be rather a flimsy construction:
+</p><p>
 <img src="images/rigidfail2.gif">
-<p>
-Here be a rabbit hole - there are many approaches of increasing complexity, depending on what you want to achieve - I'd advice to not read down any further into this document than you need to.
-<p>
-If you want rigidbodies that you can push, but without being able to push several objects in a row, you can use the following sort of code:
+</p><p>
+There are many different ways to solve this, depending on what your needs are. I'm going to approach the cases from simplest to most complex. For the purpose of illustration I'll be focussing on multiban style rules - where you can push objects, and the objects can furthermore push eachother.
+</p><p>
+WARNING: Here be a rabbit hole - there are many approaches of increasing complexity, depending on what you want to achieve.  I'd <em>strongly</em> advise to not read down any further into this document than you need to. This topic starts out fun but at its deepest extents is <em>exceedingly</em> delicate, and more akin to a research-subject than something of practical utility. This document was originally just a description of the RIGID keyword, but owing to its complexity/it being overkill in most situations, it ended up being a catalogue of helpful ways <em>not</em> to use it.
+</p><p>
+SO, let's start are catalogue of cases:
+</p><p>
+ <h3><span id="one_one"></span>One Player, One Extended body.</h3>
+</p><p>
+ <img src="images/rigid_11.gif">
+</p><p>
+ This is the easiest. You just push everything, and if one crate can't be pushed, you cancel everything:
+</p><p>
+ <pre><code><a href="../editor.html?demo=rigid_11" target="puzzleScript_EditorWindow" class="btn btn-default pull-right" ><span class="glyphicon glyphicon-cog"> Edit</span></a>[ > Player | Crate ] -> [ > Player | > Crate ]
+[ > Crate ] [ stationary Crate ] -> [ > Crate ] [ > Crate ]
+[ > Crate | Wall ] -> cancel</code></pre>
+</p><p>
+ <h3><span id="one_many"></span>One Player, Multiple Extended Bodies</h3>
+</p><p>
+ <img src="images/rigid_scott1.gif">
+</p><p>
+If you want to have several objects at once, you can do something like the following:
+</p><p>
 <pre><code><a href="../editor.html?demo=rigid_scott1" target="puzzleScript_EditorWindow" class="btn btn-default pull-right" ><span class="glyphicon glyphicon-cog"> Edit</span></a>[ > Player | Box ] -> [ > Player | > Box ]
 
 startloop
 
+(Propagate movements through crates of different types.)
 [ moving Box1 | Box1 ] -> [ moving Box1 | moving Box1 ]
 [ moving Box2 | Box2 ] -> [ moving Box2 | moving Box2 ]
 [ moving Box3 | Box3 ] -> [ moving Box3 | moving Box3 ]
 [ moving Box4 | Box4 ] -> [ moving Box4 | moving Box4 ]
 
+(Extend the movements between crates of different types.)
 [ > Box | Box ] -> [ > Box | > Box ]
 
 endloop
 
-[ > Box | Wall ] -> cancel</code></pre><p>
-<p>
-<img src="images/rigid_scott1.gif">
-<p>
-This breaks if you have several characters that are trying to push blocks in a single turn - because if any single effort fails, the whole turn is canceled.
-<p>
-To my knowledge (please prove me wrong!) it's impossible to get full rigidity in the basic rules system already described, because the movements are all carried out independently in the moving phase, and it's a pain to figure out what moved successfully, what didn't, and even if you could find out that part of a block couldn't successfully move, how would you stop everything else from moving?
-<p>
-Anyway, it's a gigantic can of worms.  The solution initially I thought would be to add a keyword to objects, to mark them as <b>rigid</b>.  However, I later realized that it was far nicer, and cooler, and more in-keeping with the engine, to think of rigidity as something you could apply to rules.  
-<p>
-So, a rigid object is one where, if one part can't move, no parts can.  And a rigid rule is a rule where, if anything it tries to move can't move, then the rule doesn't apply at all (it actually marks itself as disabled and resimulates the entire turn).  
-<p>
-So, for our example above
-<p>
-<pre><code><a href="../editor.html?demo=rigidfail1" target="puzzleScript_EditorWindow" class="btn btn-default pull-right" ><span class="glyphicon glyphicon-cog"> Edit</span></a>[ >  Player | BigBlock ] -> [  >  Player | > BigBlock  ]     
-[ Moving BigBlock | BigBlock ] -> [ Moving BigBlock | MOVING BigBlock ]</code></pre>
-<p>
-we want that, if any of the BigBlock pieces doesn't get to move, that whole rule just doesn't apply.  Actually, we probably also don't want the first rule to apply.  So what we do is that we group the rules together using the + symbol, and we mark them as rigid
-<p>
-<pre><code><a href="../editor.html?demo=rigid_one_object" target="puzzleScript_EditorWindow" class="btn btn-default pull-right" ><span class="glyphicon glyphicon-cog"> Edit</span></a>rigid [ >  Player | BigBlock ] -> [  >  Player | > BigBlock  ]     
-+ rigid [ Moving BigBlock | BigBlock ] -> [ Moving BigBlock | MOVING BigBlock ]</code></pre>
-<p>
-and magically it works
-<p>
-<img src="images/rigidsuccess_singleblock.gif">
-<p>
-So all's good if you have a single rigid block, but if you try to have blocks pushing other blocks it gets complicated.  Let's say  you want a big block to collide with little blocks.  You end up with stuff like this:
-<p>
-<pre><code><a href="../editor.html?demo=rigid_and_little" target="puzzleScript_EditorWindow" class="btn btn-default pull-right" ><span class="glyphicon glyphicon-cog"> Edit</span></a>[ > Player | LittleBlock ] -> [ > Player | > LittleBlock ]
+(Just cancel the whole turn if something can't move.)
+[ > Box | Wall ] -> cancel</code></pre></p><p>
+ Note that this can't be extended to having multiple players because if one player is blocked, the whole turn is cancelled.
+</p><p>
+<h3><span id="parallel_many"></span>Multiple Parallel-Moving Players, Multiple Extended Bodies</h3>
+</p><p>
+<img src="images/rigid_parallel_many.gif">
+</p><p>
+If we have many characters that want simultaneously to push several objects, but some may succeed and some may not, what do we do? Well, it's actually not <em>so</em> finnicky (at least if the characters are all trying to move in the same direction) - we do a three stage process:
+<ul>
+  <li>First we propagate movements like before, </li>
+  <li>then we see what things <em>can't</em> move, </li>
+  <li>then we extend this blockage back the chain,</li>
+  <li>then we clear all crate movements, and only try to move non-blocked crates.</li>
+  </ul>
+  </p><p> (Checking this example in the <a href="visual_debugger.html">visual debugger</a> is strongly recommended).
+  </p><p>
+<pre><code><a href="../editor.html?demo=rigid_parallel_many" target="puzzleScript_EditorWindow" class="btn btn-default pull-right" ><span class="glyphicon glyphicon-cog"> Edit</span></a>( 1. Propagate movements forward )
+[ > Mover | Movable ] -> [ > Mover | > Movable ]
++ [ > Box ] [ Box ] -> [ > Box ] [ > Box ]
++ [ > Crate ] [ Crate ] -> [ > Crate ] [ > Crate ]
++ [ > Chest ] [ Chest ] -> [ > Chest ] [ > Chest ]
++ [ moving Glue | Glue ] -> [ moving Glue | moving Glue ]
 
+( 2. Propagate obstructions backwards )
+[ > Mover | stationary Obstacle ] -> [ stationary Mover | Obstacle ]
++ [ > Crate ] [ stationary Crate ] -> [ stationary Crate ] [ Crate ]
++ [ > Box ] [ stationary Box ] -> [ stationary Box ] [ Box ]
++ [ > Chest ] [ stationary Chest ] -> [ stationary Chest ] [ Chest ]
++ [ moving Glue | stationary Glue ] -> [ stationary Glue | Glue ]
+
+( 3. remove all movement, keep a flag )
+[ > Movable ] -> [ Movable wanna_move ]
+
+( 4. propagate movement only on wanna_move things )
+( ie redo step 1 but with WANNA_MOVE added to the first line below )
+[ > Mover | Movable WANNA_MOVE ] -> [ > Mover | > Movable ]
++ [ > Box ] [ Box ] -> [ > Box ] [ > Box ]
++ [ > Crate ] [ Crate ] -> [ > Crate ] [ > Crate ]
++ [ > Chest ] [ Chest ] -> [ > Chest ] [ > Chest ]
++ [ moving Glue | Glue ] -> [ moving Glue | moving Glue ]
+
+( 5. cleanup, remove flag )
+[ wanna_move ] -> [ ]</code></pre>
+</p><p>
+ Which seems to work quite well, I'd say! The notion of propagating information around like this is generally a powerful technique in puzzlescript and puzzle games generally. 
+</p><p>
+  <h3><span id="one_unlimited"></span>One Player, Unlimited Extended Bodies</h3>
+</p><p>
+You don't have to define individual objects for each crate in regular sokoban, so why do you have to do it for extended bodies? Well, you don't; you can instead have a single CRATE block type and encode information about directional connections as 'metadata' on top of it (CRATE_U, CRATE_D, CRATE_L, CRATE_R) that rules use to propagate movements within single extended bodies like so:
+</p><p>
+
+<pre><code><a href="../editor.html?demo=rigid_one_unlimited" target="puzzleScript_EditorWindow" class="btn btn-default pull-right" ><span class="glyphicon glyphicon-cog"> Edit</span></a>(Propagate movements within and between extended bodies)
+[ > Pusher | Pushable ] -> [ > Pusher | > Pushable ]
++ up [ moving Crate Crate_U | Crate ] -> [ moving Crate Crate_U | moving Crate ]
++ down [ moving Crate Crate_D | Crate ] -> [ moving Crate Crate_D | moving Crate ]
++ left [ moving Crate Crate_L | Crate ] -> [ moving Crate Crate_L | moving Crate ]
++ right [ moving Crate Crate_R | Crate ] -> [ moving Crate Crate_R | moving Crate ]
+
+(Move connections along with the crates themselves)
+[ moving Crate stationary Crate_connection ] -> [ moving Crate moving Crate_connection ]
+
+(If any crate can't move, cancel the turn. This works because there's only one player.)
+[ > Crate | wall ] -> cancel  
+</code></pre>
+</p><p>
+Et voilà:
+</p><p>
+<img src="images/rigidbody_one_unlimited.gif">
+  </p><p>
+    This can be extended to cover multiple players, but you have to back-propagate blocked movements, so it's a biiit trickier. <a href="../editor.html?demo=rigid_one_unlimited">Here</a>'s a sketch if you want to look, but it's only one of several ways of trying to do it.
+<h3><span id="many_many"></span>Trying and failing to do Multiple Players + Multiple Extended Bodies</h3>
+</p><p>
+So I'm going to take the above example and push it beyond its limits. Let's say we take the above example but have two characters: a regular player, and a shadow player that moves in the opposite direction.
+</p><p>
+<pre><code><a href="../editor.html?demo=rigid_many_broken" target="puzzleScript_EditorWindow" class="btn btn-default pull-right" ><span class="glyphicon glyphicon-cog"> Edit</span></a>[ > player ] [ stationary shadow ] -> [ > player ] [ < shadow ]</code></pre><p>
+</p><p>
+The problem here is, what happens if you push the same extended body from two directions at once? Well, as you can see, the directions end up fighting with eachother and can't resolve:
+</p><p>
+<img src="images/rigidbroken2.gif">
+</p><p>
+A question you might ask yourself here would be: how would you expect this to resolve anyway? Well, in this case you could detect conflicting movements as obstructions like so in this step 2:
+</p><p>
+<pre><code><a href="../editor.html?demo=rigid_many_many" target="puzzleScript_EditorWindow" class="btn btn-default pull-right" ><span class="glyphicon glyphicon-cog"> Edit</span></a>( 2. Propagate obstructions backwards )
+[ > Mover | stationary Obstacle ] -> [ stationary Mover | Obstacle ]
+
+ (The next lines deal with directional conflicts:)
++ [ ^ Crate | < Crate ] -> [ stationary Crate | stationary Crate ] 
++ [ ^ Crate | > Crate ] -> [ stationary Crate | stationary Crate ] 
++ [ ^ Crate | v Crate ] -> [ stationary Crate | stationary Crate ] 
+
++ [ v Crate | < Crate ] -> [ stationary Crate | stationary Crate ] 
++ [ v Crate | > Crate ] -> [ stationary Crate | stationary Crate ] 
++ [ v Crate | ^ Crate ] -> [ stationary Crate | stationary Crate ] 
+
++ [ < Crate | > Crate ] -> [ stationary Crate | stationary Crate ] 
++ [ < Crate | ^ Crate ] -> [ stationary Crate | stationary Crate ] 
++ [ < Crate | v Crate ] -> [ stationary Crate | stationary Crate ] 
+
++ [ > Crate | < Crate ] -> [ stationary Crate | stationary Crate ] 
++ [ > Crate | ^ Crate ] -> [ stationary Crate | stationary Crate ] 
++ [ > Crate | v Crate ] -> [ stationary Crate | stationary Crate ] 
+
++ [ > Crate ] [ stationary Crate ] -> [ stationary Crate ] [ Crate ]
++ [ > Box ] [ stationary Box ] -> [ stationary Box ] [ Box ]
++ [ > Chest ] [ stationary Chest ] -> [ stationary Chest ] [ Chest ]
++ [ moving Glue | stationary Glue ] -> [ stationary Glue | Glue ]</code></pre><p>
+Which gives us this:
+</p><p>
+ <img src="images/rigid_many_many.gif">
+</p><p>
+And I might be feeling good about myself, but there's still a lot of ways that movement-resolution might not work out:
+</p><p>
+ <img src="images/rigidbroken_uff.gif">
+</p><p>
+ So you throw in this as well to detect when two objects are trying to move together and stick one of them in place:
+</p><p>
+ <pre><code><a href="../editor.html?demo=rigid_many_many2" target="puzzleScript_EditorWindow" class="btn btn-default pull-right" ><span class="glyphicon glyphicon-cog"> Edit</span></a>+ [ > Mover | | < Mover ] -> [ stationary Mover | | < Mover ]</code></pre><p></p>
+</p><p>
+ This patches up that behaviour quite nicely!
+</p><p>
+ <img src="images/rigid3.gif">
+</p><p>
+ But wait, no what about this:
+</p><p>
+ <img src="images/rigid_fail.gif">
+</p><p>
+ Well that's no good at all. 
+</p><p>
+ Anyway, this goes on and on and you can patch things up until the cows come home but ultimately you'll be nervous you're missing something. It's a gigantic and subtle kettle of worms, as I hope I've demonstrated.
+</p><p>
+ So how did I go about trying to help the engine support this in a more robust way? Read on!
+</p><p>
+<h3><span id="rigid_keyword"></span>The RIGID keyword</h3>
+</p><p>
+Initially I thought the solution would be to add a keyword to <em>objects</em>, to mark them as <b>rigid</b>. However, I later realized that it was far nicer, and cooler, and more in-keeping with the engine, to think of rigidity as something you could apply instead to <em>rules</em>. 
+</p><p>
+Let's just dive in and explain exactly what it is. 
+</p><p>
+ (I kinda regret adding this keyword to the engine. However it's in, and I'm going to continue to support it because it's there. However, it's quite complex and idiosyncratic. I'm going to depart from my normal expositional style for this section - the next 'specification' is more technical, and as much for my future reference as for expositional purposes. In the past I was very enthusiastic about this feature, but I can't keep it up - I now know the extents and capabilities of the PuzzleScript language waaay better than I did when I was desinging it in the beginning - many of the reasonably elegant techniques above were just not things I knew how to do when I was first designing the language, whence the heavy-handed and rather mystical RIGID keyword.)
+</p><p>
+ I'm first going to give the technical definition/specification (based on my post-hoc analysis of the code and creation of tests to figure out its semantics), then I'm going to give a high-level explanation of how/why it works, and in the final section I'll show an example of how you might use it.
+</p><p>
+ <h4>Semantics of RIGID</h4>
+ <ul>
+<li>The RIGID keyword is a keyword that can be applied to any rule.</li>
+ <li>When a RIGID RULE triggers movements, the MOVEMENTS are tagged as being RIGID, and coming from a particular RULE-GROUP.
+ <p>
+ <ul>
+ <li>Even if a rigid rule doesn't change the state of the level (let's say it tries to apply movements that already exist), it will still tag all movements as being rigid and coming from its rule-group.</li>
+ <li>Assigning ACTION counts as assigning a movement.</li>
+ <li>Assigning STATIONARY counts as assigning a movement.</li>
+ <li>There does need to be <em>some</em> movement mentioned though: <code>rigid [ Crate ] -> [ Crate ] Sfx0</code> will not cause anything to be marked as rigid.</li>
+ <li>If a movement is implicitly removed, by it being mentioned on the left but not on the right, it is not marked as being rigid (e.g. <code>rigid [ right Crate ] -> [ Crate ] </code> will not cause anything to be marked as rigid, whereas <code>rigid [ right Crate ] -> [ stationary Crate ] </code> will).</li>
+ <li>Even if subsequent rules (even in other rule-groups) alter the movement of this object, the RIGID tag persists.</li>
+ <li>Even if subsequent rules (even in other rule-groups) delete the objects, the RIGID tag persists and any subsequent unresolvable movements created on that tile in that layer will trigger the rigid cancellation.</li>
+ <li>Even a RIGID rule removing an object on a layer causes that position and that layer to be marked as RIGID.</li>
+ </ul>
+ </p><p>
+ I guess the rule-of-thumb is that RIGID applies a tag to a layer when any movement-related stuff is mentioned on the RHS of a rule.
+ </p>
+ </li>
+ <li>During the MOVE-RESOLUTION PHASE, if a MOVEMENT cannot be resolved, and if the movement is associated with a RIGID tag, the whole RULE-GROUP is disabled for that turn, and the TURN is simulated again from the beginning. This may happen iteratively, with additional RULE-GROUPS being disabled on subsequent resimulations.</li>
+ <ul>
+ <li>ACTION does not need to resolve - it's ignored during resolution.</li>
+ </ul>
+ </ul>
+ </p><p>
+ <h4>Hand-Wavey Description of RIGID</h4>
+ </p><p>
+So, if a rigid object would be one where, if one part can't move, no parts can, <b>a RIGID RULE is a RULE where, if anything it tries to move can't move, then its RULE-GROUP doesn't apply at all</b> (the unresolved rigid movement disables the rule-group that caused it for that turn and resimulates the entire turn).
+</p><p>
+<h3><span id="rigid_example"></span>An example using RIGID</h3>
+</p><p>
+Let's go back to the broken example right at the start:
+</p><p>
+<img src="images/rigidfail2.gif">
+</p><p>
+<pre><code><a href="../editor.html?demo=rigidfail1" target="puzzleScript_EditorWindow" class="btn btn-default pull-right" ><span class="glyphicon glyphicon-cog"> Edit</span></a>[ > Player | BigBlock ] -> [ > Player | > BigBlock ] 
+[ Moving BigBlock | BigBlock ] -> [ Moving BigBlock | Moving BigBlock ]</code></pre>
+</p><p>
+We want that, if any of the BigBlock pieces don't get to move, that whole rule just doesn't apply. Actually, we also don't want the first rule to apply. So what we do is that we group the rules together using the + symbol, and we mark them as rigid
+</p><p>
+<pre><code><a href="../editor.html?demo=rigid_one_object" target="puzzleScript_EditorWindow" class="btn btn-default pull-right" ><span class="glyphicon glyphicon-cog"> Edit</span></a>rigid [ > Player | BigBlock ] -> [ > Player | > BigBlock ] 
++ rigid [ Moving BigBlock | BigBlock ] -> [ Moving BigBlock | Moving BigBlock ]</code></pre>
+</p><p>
+and magically it works
+</p><p>
+<img src="images/rigidsuccess_singleblock.gif">
+</p><p>
+So all's good if you have a single rigid block, but if you try to have blocks pushing other blocks it gets complicated. Let's say you want a big block to collide with little blocks. You end up with stuff like this:
+</p><p>
+<pre><code><a href="../editor.html?demo=rigid_and_little" target="puzzleScript_EditorWindow" class="btn btn-default pull-right" ><span class="glyphicon glyphicon-cog"> Edit</span></a>[ > Player | LittleBlock ] -> [ > Player | > LittleBlock ]
 [ > LittleBlock | LittleBlock ] -> [ > LittleBlock | > LittleBlock ]
 
 rigid [ > LittleBlock | BigBlock ] -> [ > LittleBlock | > BigBlock ]
-+ rigid [ >  Player | BigBlock ] -> [  >  Player | > BigBlock  ] 
++ rigid [ > Player | BigBlock ] -> [ > Player | > BigBlock ] 
 + rigid [ moving BigBlock | BigBlock ] -> [ moving BigBlock | moving BigBlock ]
 + [ > BigBlock | LittleBlock ] -> [ > BigBlock | > LittleBlock ]</code></pre>
-<p>
-The rule is, anything that adds motion to a BigBlock has to be marked as rigid.  Repeating the code twice isn't so bad, really, but if one has more than two block types, there's no nice way of encompassing all the ways that they can interact. 
-<p>
-Let me illustrate with a simple example: let's try to model two crate types, where crates can push crates
-<p>
+</p><p>
+The rule is, anything that adds motion to a BigBlock has to be marked as rigid. Repeating the code twice isn't so bad, really, but if one has more than two block types, there's no compact method of encompassing all the ways that they can interact without maybe introducing one thing that I should mention.  We'll need to take a few steps back and look at a simple but related scenario:
+</p><p>
+Let's try to model two crate types, where crates can push crates.
+</p><p>
 <img src="images/rigid_twolittlecrates1.gif">
-<p>
+</p><p>
 
 <pre><code><a href="../editor.html?demo=twolittlecrates1" target="puzzleScript_EditorWindow" class="btn btn-default pull-right" ><span class="glyphicon glyphicon-cog"> Edit</span></a>=======
 LEGEND
 =======
 
 Crate = OrangeCrate or BlueCrate
+
 ======
-RULES     
-======     
+RULES 
+====== 
 
-[ >  Player | Crate ] -> [  >  Player | > Crate  ]     
-
+[ > Player | Crate ] -> [ > Player | > Crate ] 
 [ > Crate | Crate ] -> [ > Crate | > Crate ]
 </code></pre>
-<p>
-which works splendidly.  But what if we weren't allowed to refer to crate or combine them together into a rulegroup in the second rule?  We could try something like:
-<p>
-
-
-
-<pre><code><a href="../editor.html?demo=twolittlecrates2" target="puzzleScript_EditorWindow" class="btn btn-default pull-right" ><span class="glyphicon glyphicon-cog"> Edit</span></a>[ >  Player | Crate ] -> [  >  Player | > Crate  ]     
+</p><p>
+Thich works splendidly. But what if we weren't allowed to refer to the Crate but instead had to refer to them individually, or weren't allowed to combine them together into a rulegroup in the second rule? We could try something like:
+</p><p>
+<pre><code><a href="../editor.html?demo=twolittlecrates2" target="puzzleScript_EditorWindow" class="btn btn-default pull-right" ><span class="glyphicon glyphicon-cog"> Edit</span></a>[ > Player | Crate ] -> [ > Player | > Crate ] 
 
 [ > OrangeCrate | OrangeCrate ] -> [ > OrangeCrate | > OrangeCrate ]
 [ > OrangeCrate | BlueCrate ] -> [ > OrangeCrate | > BlueCrate ]
 [ > BlueCrate | OrangeCrate ] -> [ > BlueCrate | > OrangeCrate ]
 [ > BlueCrate | BlueCrate ] -> [ > BlueCrate | > BlueCrate ]</code></pre>
 
-you can push around pairs of blocks, but a big alternating sequence of blocks you can't deal with 
-<p>
+you can push around pairs of blocks, but a big alternating sequence of blocks you can't deal with:
+</p><p>
 <img src="images/rigid_twolittlecrates2.gif">
-<p>
-If only there were some way of looping through these four rules.  Well, adding them all to the same rulegroup is one way, but in the case of rigid rules we don't want to cancel the movement of EVERYTHING just because one block can't move - so we need another layer of loopiness.  So, let's introduce startloop and endloop;
-<p>
+</p><p>
+If only there were some way of looping through these four rules. Well, adding them all to the same rulegroup is one way, but in the case of rigid rules we don't want to cancel the movement of EVERYTHING just because one block can't move (e.g. let's say there's gravity pulling objects down - we don't want one object being prevented from falling to prevent all of them falling) - so we need another layer of loopiness. So, let's introduce startloop and endloop;
+</p><p>
 
 
-<pre><code><a href="../editor.html?demo=twolittlecrates3" target="puzzleScript_EditorWindow" class="btn btn-default pull-right" ><span class="glyphicon glyphicon-cog"> Edit</span></a>[ >  Player | Crate ] -> [  >  Player | > Crate  ]     
+<pre><code><a href="../editor.html?demo=twolittlecrates3" target="puzzleScript_EditorWindow" class="btn btn-default pull-right" ><span class="glyphicon glyphicon-cog"> Edit</span></a>[ > Player | Crate ] -> [ > Player | > Crate ] 
 
 startLoop
 
@@ -181,56 +371,54 @@ startLoop
 
 endLoop</code></pre>
 
-and voila! 
-<p>
+That fixes our weird theoretical problem (in a way that will be useful for solving the more complicated but less theoretical problem):
+</p><p>
 <img src="images/rigid_twolittlecrates3.gif">
-<p>
-For the above example, this is identical to saying
-<p>
-<pre><code><a href="../editor.html?demo=twolittlecrates4" target="puzzleScript_EditorWindow" class="btn btn-default pull-right" ><span class="glyphicon glyphicon-cog"> Edit</span></a>[ >  Player | Crate ] -> [  >  Player | > Crate  ]     
+</p><p>
+For the above example, this is more or less identical to saying
+</p><p>
+<pre><code><a href="../editor.html?demo=twolittlecrates4" target="puzzleScript_EditorWindow" class="btn btn-default pull-right" ><span class="glyphicon glyphicon-cog"> Edit</span></a>[ > Player | Crate ] -> [ > Player | > Crate ] 
 
 [ > OrangeCrate | OrangeCrate ] -> [ > OrangeCrate | > OrangeCrate ]
-+[ > OrangeCrate | BlueCrate ] -> [ > OrangeCrate | > BlueCrate ]
-+[ > BlueCrate | OrangeCrate ] -> [ > BlueCrate | > OrangeCrate ]
-+[ > BlueCrate | BlueCrate ] -> [ > BlueCrate | > BlueCrate ]</code></pre>
-<p>
-However, we don't have this luxury for rigidbodies.  So, with all that said, here's what code for a system with several rigid bodies and some small blocks looks like:
-<p>
++ [ > OrangeCrate | BlueCrate ] -> [ > OrangeCrate | > BlueCrate ]
++ [ > BlueCrate | OrangeCrate ] -> [ > BlueCrate | > OrangeCrate ]
++ [ > BlueCrate | BlueCrate ] -> [ > BlueCrate | > BlueCrate ]</code></pre>
+</p><p>
+However, we don't have this luxury for rigidbodies (Can you tell why not? It's because rigidbodies deactivate entire rule-groups - if our whole game logic is in one giant rule-group we can't selectively delete parts of it). So, with all that said, here's what code for a system with several rigid bodies and some small blocks looks like, thanks to the STARTLOOP and ENDLOOP keywords:
+</p><p>
 <pre><code><a href="../editor.html?demo=several_rigid_bodies" target="puzzleScript_EditorWindow" class="btn btn-default pull-right" ><span class="glyphicon glyphicon-cog"> Edit</span></a>startloop
 
 [ > Player | Smallcrate ] -> [ > Player | > SmallCrate ]
 
-[ >  Player | RedCrate ] -> [  >  Player | > RedCrate  ] 
+[ > Player | RedCrate ] -> [ > Player | > RedCrate ] 
 + rigid [ moving RedCrate | RedCrate ] -> [ moving RedCrate | moving RedCrate ]
-+ [ >  Crate | RedCrate ] -> [  >  Crate | > RedCrate  ] 
++ [ > Crate | RedCrate ] -> [ > Crate | > RedCrate ] 
 
-[ >  Player | GreenCrate ] -> [  >  Player | > GreenCrate  ] 
+[ > Player | GreenCrate ] -> [ > Player | > GreenCrate ] 
 + rigid [ moving GreenCrate | GreenCrate ] -> [ moving GreenCrate | moving GreenCrate ]
-+ [ >  Crate | GreenCrate ] -> [  >  Crate | > GreenCrate  ] 
++ [ > Crate | GreenCrate ] -> [ > Crate | > GreenCrate ] 
 
-
-[ >  Player | BlueCrate ] -> [  >  Player | > BlueCrate  ] 
+[ > Player | BlueCrate ] -> [ > Player | > BlueCrate ] 
 + rigid [ moving BlueCrate | BlueCrate ] -> [ moving BlueCrate | moving BlueCrate ]
-+ [ >  Crate | BlueCrate ] -> [  >  Crate | > BlueCrate  ] 
++ [ > Crate | BlueCrate ] -> [ > Crate | > BlueCrate ] 
 
-[ > Crate | SmallCrate ] -> [  > Crate | > SmallCrate ]
+[ > Crate | SmallCrate ] -> [ > Crate | > SmallCrate ]
 
 endloop</code></pre>
-<p>
-And this gives us the image at the beginning of this document:
-<p>
-    <img src="images/rigidbodies.gif">
-<p>
-I apologise that it's not easier to do.  I really thought the idea of rigid rules would trivialize a lot of the hard work, but it still left things a bit gross.  It's messy, code that uses it is going to be messy/hacky.  But, it's there if you want it.
-<p>
-If anyone has understood this and has a suggestion for a way they think is better for dealing with extended bodies, I would really like to hear it - I'll happily rip out the current rigid body system if there's something nicer : )
+</p><p>
+And this gives us the image at the beginning of this document. It works even if there are multiple player characters moving in multiple directions at a single time:
+</p><p>
+ <img src="images/rigidbodies.gif">
+</p><p>
+Anyway, that's it.  Thanks for bearing with me through this rather labourious description.  <a href="mailto:analytic@gmail.com">Drop me a mail</a> if you noticed I made a mistake anywhere.  This material is hairy, so it's very possible there are some errors above.
+</p>
 </div><!-- /.container -->
 
 
-    <!-- Bootstrap core JavaScript
-    ================================================== -->
-    <!-- Placed at the end of the document so the pages load faster -->
-    <script src="js/jquery.js"></script>
-    <script src="js/bootstrap.min.js"></script>
-  </body>
+ <!-- Bootstrap core JavaScript
+ ================================================== -->
+ <!-- Placed at the end of the document so the pages load faster -->
+ <script src="js/jquery.js"></script>
+ <script src="js/bootstrap.min.js"></script>
+ </body>
 </html>

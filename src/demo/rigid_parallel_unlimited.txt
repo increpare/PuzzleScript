@@ -1,0 +1,212 @@
+title Many parallel players, unlimited rigidbodies
+author increpare
+homepage www.increpare.com
+
+verbose_logging
+
+(
+
+This is a sample of 
+
+- Unlimited rigid bodies
+- 1 Player (should be extendable)
+
+It's made as an example for the extended rigid body tutorial here:
+
+https://www.puzzlescript.net/Documentation/rigidbodies.html
+
+)
+
+========
+OBJECTS
+========
+
+Background
+green
+
+Wall
+BROWN DARKBROWN
+00010
+11111
+01000
+11111
+00010
+
+Player
+Black Orange White Blue
+.000.
+.111.
+22222
+.333.
+.3.3.
+
+ Crate
+Yellow orange
+00000
+01110
+01110
+01110
+00000
+
+
+(The directional overlays bellow establish connections between crates)
+
+ Crate_U
+orange
+.000.
+.....
+.....
+.....
+.....
+
+ Crate_D
+orange
+.....
+.....
+.....
+.....
+.000.
+
+ Crate_L
+orange
+.....
+0....
+0....
+0....
+.....
+
+ Crate_R
+orange
+.....
+....0
+....0
+....0
+.....
+
+BLOCKED
+red
+.....
+.....
+..0..
+.....
+.....
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Player
+
+w = Crate and Crate_U
+x = Crate and Crate_D
+a = Crate and Crate_L
+d = Crate and Crate_R
+
+e = Crate and Crate_U and Crate_L
+z = Crate and Crate_D and Crate_L
+q = Crate and Crate_U and Crate_R
+c = Crate and Crate_D and Crate_R
+
+r = Crate and Crate_L and Crate_R
+t = Crate and Crate_D and Crate_U
+
+1 = Crate and Crate_D and Crate_L and Crate_R
+2 = Crate and Crate_U and Crate_L and Crate_R
+3 = Crate and Crate_U and Crate_D and Crate_L
+4 = Crate and Crate_U and Crate_D and Crate_R
+
+0 = Crate and Crate_U and Crate_D and Crate_L and Crate_R
+
+5 = Crate
+
+ Crate_Connection = Crate_U or Crate_D or Crate_L or Crate_R
+
+Pusher = Player or Crate
+Pushable = Crate 
+Solid = Crate or Player
+
+=======
+SOUNDS
+=======
+
+ Crate MOVE 36772507
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Player, Wall, Crate
+ Crate_U
+ Crate_D
+ Crate_L
+ Crate_R
+BLOCKED
+
+======
+RULES
+======
+
+(For making maps easily: uncomment out the next few lines + press action to discard all boundaries and recreate them)
+
+( [ action player ] [ Crate_connection ] -> [ action player ] [ ] )
+( up [ action player ] [ Crate | Crate ] -> [ action player ] [ Crate Crate_u | Crate Crate_d ] )
+( right [ action player ] [ Crate | Crate ] -> [ action player ] [ Crate Crate_r | Crate Crate_l ] )
+
+
+startloop
+
+(I'm using ACTION to mark 'BLOCKED's as old to allow the loop to exit once no new BLOCKEDs have been added)
+[ stationary BLOCKED ] -> [ action BLOCKED ]
+
+[ > Pusher | no BLOCKED Pushable ] -> [ > Pusher | > Pushable ]
++ up [ moving Crate Crate_U | no BLOCKED Crate ] -> [ moving Crate Crate_U | moving Crate ]
++ down [ moving Crate Crate_D | no BLOCKED Crate ] -> [ moving Crate Crate_D | moving Crate ]
++ left [ moving Crate Crate_L | no BLOCKED Crate ] -> [ moving Crate Crate_L | moving Crate ]
++ right [ moving Crate Crate_R | no BLOCKED Crate ] -> [ moving Crate Crate_R | moving Crate ]
+
+
+(If a crate can't move, we have to back-propagate the can't-move-ness, including possibly through players)
+[ > Solid | wall ] -> [ > Solid BLOCKED | wall ]
+
+[ no BLOCKED > Solid | BLOCKED Solid ] -> [ BLOCKED > Solid | BLOCKED Solid ]
++ up [ BLOCKED Crate Crate_U | no BLOCKED Crate ] -> [ BLOCKED Crate Crate_U | BLOCKED Crate ]
++ down [ BLOCKED Crate Crate_D | no BLOCKED Crate ] -> [ BLOCKED Crate Crate_D | BLOCKED Crate ]
++ left [ BLOCKED Crate Crate_L | no BLOCKED Crate ] -> [ BLOCKED Crate Crate_L | BLOCKED Crate ]
++ right [ BLOCKED Crate Crate_R | no BLOCKED Crate ] -> [ BLOCKED Crate Crate_R | BLOCKED Crate ]
+
+
+(Then we remove all movements from BLOCKED crates, along with the BLOCKED marker itself)
+[ BLOCKED moving Solid ] -> [ BLOCKED stationary Solid ]
+
+[ stationary BLOCKED ] [ moving crate ] -> [ stationary BLOCKED ] [ stationary crate ]
+endloop
+
+[ BLOCKED ] -> [  ]
+
+(To wrap it all up, move connections along with the crates themselves)
+[ moving Crate stationary Crate_connection ] -> [ moving Crate moving Crate_connection ]
+
+==============
+WINCONDITIONS
+==============
+
+=======
+LEVELS
+=======
+
+###############
+#..ca.........#
+#.ce....ca....#
+#.t...d1e.....#
+#.w....w......#
+#....d1ap5.dz.#
+#....pw...5.w5#
+#......dz.....#
+#.......t..dz.#
+#..x..cre...w.#
+#..w..w...5...#
+#.............#
+###############

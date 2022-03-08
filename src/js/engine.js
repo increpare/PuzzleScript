@@ -782,6 +782,7 @@ function RebuildLevelArrays() {
 	level.mapCellContents_Movements = new BitVec(STRIDE_MOV);
 
 	_movementVecs = [new BitVec(STRIDE_MOV),new BitVec(STRIDE_MOV),new BitVec(STRIDE_MOV)];
+	_rigidVecs = [new BitVec(STRIDE_MOV),new BitVec(STRIDE_MOV),new BitVec(STRIDE_MOV)];
 
 	_o1 = new BitVec(STRIDE_OBJ);
 	_o2 = new BitVec(STRIDE_OBJ);
@@ -885,8 +886,8 @@ function restoreLevel(lev) {
 
 		for (var i=0;i<level.n_tiles;i++) {
 			level.movements[i]=0;
-			level.rigidMovementAppliedMask[i]=0;
-			level.rigidGroupIndexMask[i]=0;
+			level.rigidMovementAppliedMask[i].setZero();
+			level.rigidGroupIndexMask[i].setZero();
 		}	
 
 	    for (var i=0;i<level.height;i++) {
@@ -1250,9 +1251,13 @@ Level.prototype.getMovements = function(index) {
 	_movementVecIndex=(_movementVecIndex+1)%_movementVecs.length;
 
 	for (var i=0;i<STRIDE_MOV;i++) {
-		_movementsVec.data[i]=this.movements[index*STRIDE_MOV+i];	
+		_movementsVec.data[i]= this.movements[index*STRIDE_MOV+i];	
 	}
 	return _movementsVec;
+}
+
+Level.prototype.getRigids = function(index) {
+	return this.rigidMovementAppliedMask[index].clone();
 }
 
 Level.prototype.getMovementsInto = function(index,targetarray) {
@@ -2365,6 +2370,7 @@ function resolveMovements(level, bannedGroup){
     }
     var doUndo=false;
 
+	//Search for any rigidly-caused movements remaining
 	for (var i=0;i<level.n_tiles;i++) {
 		var cellMask = level.getCellInto(i,_o6);
 		var movementMask = level.getMovements(i);
@@ -2407,8 +2413,8 @@ function resolveMovements(level, bannedGroup){
     	for (var j=0;j<STRIDE_MOV;j++) {
     		level.movements[j+i*STRIDE_MOV]=0;
     	}
-	    level.rigidGroupIndexMask[i]=0;
-	    level.rigidMovementAppliedMask[i]=0;
+	    level.rigidGroupIndexMask[i].setZero();
+	    level.rigidMovementAppliedMask[i].setZero();
     }
     return doUndo;
 }

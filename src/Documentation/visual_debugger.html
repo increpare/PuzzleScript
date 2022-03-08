@@ -60,7 +60,7 @@
 <p>
 
 <h1>Visual Debugger</h1>
-
+<p>
 If you run a game with the <b>verbose_logging</b> <A href="prelude.html#verbose_logging">prelude option</a> you can avail yourself of the visual debugger. 
 <p>
 As you play a level with this option, you'll see information about what rules were applied.  By hovering over them (or tapping them on touchscreen), you can see the state of the level after the indicated rules were applied: 
@@ -70,6 +70,10 @@ As you play a level with this option, you'll see information about what rules we
 Changes are indicated with black+white (or your custom background/text colours) outlined boxes.  In the above example, a new movement has been added to the indicated tile by the rule on line 139.
 <p>
 Movements are indicated with arrows overlayed on top of the cell.  They don't tell you what object the movements are attached to in that cell, they just tell you that the movement exists somewhere in the cell (if you have several overlapping objects on several layers moving in multiple directions at once, you will see all its movement arrows overlaid).
+<p>
+  The presence of <a href="rigidbodies.html#rigid_keyword">rigid</a> movements in a cell are indicated by a small r in the top-left:
+  <p>
+    <img src="images/visual_debugger_rigid.png" width="300px">
 <p>
     </div><!-- /.container -->
 

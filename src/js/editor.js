@@ -280,7 +280,8 @@ function addToDebugTimeline(level,lineNumber){
 		objects:new Int32Array(level.objects),
 		movements:new Int32Array(level.movements),
 		commandQueue:level.commandQueue.concat([]),
-		commandQueueSourceRules:level.commandQueueSourceRules.concat([])
+		commandQueueSourceRules:level.commandQueueSourceRules.concat([]),
+		rigidMovementAppliedMask:level.rigidMovementAppliedMask.map(a=>a.clone()),
 	};
 	
 

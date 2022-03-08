@@ -1,8 +1,13 @@
-title Iterated Extended Rigid Body Test
+title Extended Body Example: 1 Player, Multiple Extended Objects
 author Scott Hughes
 
 (
-usable in the case where there's only a single player that's pushing stuff around.
+
+Usable in the case where there's only a single player that's pushing stuff around.
+
+Example for
+https://www.puzzlescript.net/Documentation/rigidbodies.html#one_many
+
 )
 
 =======
@@ -63,15 +68,18 @@ RULES
 
 startloop
 
+(Propagate movements through crates of different types.)
 [ moving Box1 | Box1 ] -> [ moving Box1 | moving Box1 ]
 [ moving Box2 | Box2 ] -> [ moving Box2 | moving Box2 ]
 [ moving Box3 | Box3 ] -> [ moving Box3 | moving Box3 ]
 [ moving Box4 | Box4 ] -> [ moving Box4 | moving Box4 ]
 
+(Extend the movements between crates of different types.)
 [ > Box | Box ] -> [ > Box | > Box ]
 
 endloop
 
+(Just cancel the whole turn if something can't move.)
 [ > Box | Wall ] -> cancel
 
 =============

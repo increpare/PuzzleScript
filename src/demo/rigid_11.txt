@@ -1,10 +1,10 @@
-title BROKEN Naive Extended Bodies
+title Extended Body Example: 1 Player, 1 Extended Object
 author increpare
 homepage www.puzzlescript.net
 
 (
-naive/broken implementation of rigid bodies
-see https://www.puzzlescript.net/Documentation/rigidbodies.html#Introduction
+    Example for
+    https://www.puzzlescript.net/Documentation/rigidbodies.html#one_one
 )
 
 ========
@@ -44,14 +44,13 @@ Black Orange White Blue
 .333.
 .3.3.
 
-BigBlock
-Orange Yellow
+Crate
+Orange
 00000
 0...0
 0...0
 0...0
 00000
-
 
 =======
 LEGEND
@@ -60,16 +59,15 @@ LEGEND
 . = Background
 # = Wall
 P = Player
-* = BigBlock
-@ = BigBlock and Target
+* = Crate
+@ = Crate and Target
 O = Target
-
 
 =======
 SOUNDS
 =======
 
-BigBlock MOVE 36772507
+Crate MOVE 36772507
 
 ================
 COLLISIONLAYERS
@@ -77,26 +75,30 @@ COLLISIONLAYERS
 
 Background
 Target
-Player, Wall, BigBlock
+Player, Wall, Crate
 
 ======
 RULES
 ======
 
-[ >  Player | BigBlock ] -> [  >  Player | > BigBlock  ]
-[ moving BigBlock | BigBlock ] -> [moving BigBlock|moving BigBlock]
+[ >  Player | Crate ] -> [  >  Player | > Crate  ]
+[ > Crate ] [ stationary Crate ] -> [ > Crate ] [ > Crate ]
+[ > Crate | Wall ] -> cancel
 
 ==============
 WINCONDITIONS
 ==============
 
+All Target on Crate
+
 =======
 LEVELS
 =======
 
-.#######.
-#.......#
-#..***..#
-#..p*...#
-#.......#
-.#######.
+######
+#....#
+#.#..#
+#.*@.#
+#.O@.#
+#.p..#
+######
