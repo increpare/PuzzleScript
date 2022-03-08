@@ -1517,7 +1517,7 @@ var codeMirrorFn = function() {
                                     
                                     var m2 = stream.match(reg_notcommentstart, false);
                                     
-                                    if(m2!=null) {
+                                    if(m2!==null) {
                                         state.metadata.push(token);
                                         state.metadata.push(m2[0].trim());                                            
                                     } else {
@@ -1529,6 +1529,15 @@ var codeMirrorFn = function() {
                                     state.metadata.push(token);
                                     state.metadata.push("true");
                                     state.tokenIndex=-1;
+
+
+                                    var m2 = stream.match(reg_notcommentstart, false);
+                                    
+                                    if(m2!==null) {
+                                        var extra = m2[0].trim();      
+                                        logWarning('MetaData '+token.toUpperCase()+' doesn\'t take any parameters, but you went and gave it "'+extra+'".',state.lineNumber);                                      
+                                    } 
+
                                     return 'METADATA';
                                 } else  {
                                     logError('Unrecognised stuff in the prelude.', state.lineNumber);
