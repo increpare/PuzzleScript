@@ -682,7 +682,7 @@ function processRuleString(rule, state, curRules) {
                     } else if (token in directionaggregates) {
                         directions = directions.concat(directionaggregates[token]);
                     } else if (token === 'late') {
-                        late = true;
+                        late = true;                        
                     } else if (token === 'rigid') {
                         rigid = true;
                     } else if (token === 'random') {
@@ -708,7 +708,7 @@ function processRuleString(rule, state, curRules) {
                     break;
                 }
             case 1:
-                {
+                {                                        
                     if (token == '[') {
                         bracketbalance++;
                         if (bracketbalance > 1) {
@@ -764,6 +764,14 @@ function processRuleString(rule, state, curRules) {
                         curcellrow = [];
                         incellrow = false;
                     } else if (token === '->') {
+
+                        if (groupNumber !== lineNumber) {
+                            var parentrule = curRules[curRules.length - 1];
+                            if (parentrule.late!==late){
+                                logWarning('Oh gosh you can mix late and non-late rules in a rule-group if you really want to, but gosh why would you want to do that?  What do you expect to accomplish?', lineNumber);
+                            }
+                        }
+                        
                         if (incellrow) {
                             logError('Encountered an unexpected "->" inside square brackets.  It\'s used to separate states, it has no place inside them >:| .', lineNumber);
                         } else if (rhs) {
