@@ -570,6 +570,7 @@ var codeMirrorFn = function() {
               abbrevNames: state.abbrevNames.concat([]),
 
               metadata : state.metadata.concat([]),
+              metadata_lines: Object.assign({}, state.metadata_lines),
 
               levels: levelsCopy,
 
@@ -1522,7 +1523,12 @@ var codeMirrorFn = function() {
                                     
                                     if(m2!==null) {
                                         state.metadata.push(token);
-                                        state.metadata.push(m2[0].trim());                                            
+                                        state.metadata.push(m2[0].trim());  
+                                        if (token in state.metadata_lines){
+                                            var otherline = state.metadata_lines[token];
+                                            logWarning(`You've already defined a ${token.toUpperCase()} in the prelude on line <a onclick="jumpToLine(${otherline})>${otherline}</a>.`,state.lineNumber);
+                                        }
+                                        state.metadata_lines[token]=state.lineNumber;                                                                                    
                                     } else {
                                         logError('MetaData "'+token+'" needs a value.',state.lineNumber);
                                     }
@@ -1555,8 +1561,9 @@ var codeMirrorFn = function() {
                     } else {
                         stream.match(reg_notcommentstart, true);
 
-                        var key = state.metadata[state.metadata.length-2];
-                        var val = state.metadata[state.metadata.length-1];
+                        var key = state [state.metadata.length-3];
+                        var val = state.metadata[state.metadata.length-2];
+                        var oldLineNum = state.metadata[state.metadata.length-1];
 
 						if (key === "background_color" || key === "text_color"){
 							var candcol = val.trim().toLowerCase();
@@ -1630,6 +1637,7 @@ var codeMirrorFn = function() {
 
                 winconditions: [],
                 metadata: [],
+                metadata_lines: {},
 
                 original_case_names: {},
                 original_line_numbers: {},

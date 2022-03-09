@@ -2185,17 +2185,34 @@ function twiddleMetaData(state) {
         newmetadata[key] = val;
     }
 
+    var getCoords = function(str,lineNumber){
+        var coords = val.split('x');
+        if (coords.length!==2){
+            logWarning("Dimensions must be of the form AxB.",lineNumber);
+            return null;
+        } else {
+            var intcoords = [parseInt(coords[0],10), parseInt(coords[1],10)];
+            if (!isFinite(coords[0]) || !isFinite(coords[1]) || isNaN(intcoords[0]) || isNaN(intcoords[1])) {
+                logWarning(`Couldn't understand the dimensions given to me (you gave "${val}") - should be of the form AxB.`,lineNumber);
+                return null
+            } else {
+                return intcoords;
+            }
+        }
+    }
     if (newmetadata.flickscreen !== undefined) {
         var val = newmetadata.flickscreen;
-        var coords = val.split('x');
-        var intcoords = [parseInt(coords[0]), parseInt(coords[1])];
-        newmetadata.flickscreen = intcoords;
+        newmetadata.flickscreen = getCoords(val,state.metadata_lines.flickscreen);
+        if (newmetadata.flickscreen===null){
+            delete newmetadata.flickscreen;
+        }
     }
     if (newmetadata.zoomscreen !== undefined) {
         var val = newmetadata.zoomscreen;
-        var coords = val.split('x');
-        var intcoords = [parseInt(coords[0]), parseInt(coords[1])];
-        newmetadata.zoomscreen = intcoords;
+        newmetadata.zoomscreen = getCoords(val,state.metadata_lines.zoomscreen);
+        if (newmetadata.zoomscreen===null){
+            delete newmetadata.zoomscreen;
+        }
     }
 
     state.metadata = newmetadata;
