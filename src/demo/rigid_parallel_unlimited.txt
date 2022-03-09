@@ -9,7 +9,7 @@ verbose_logging
 This is a sample of 
 
 - Unlimited rigid bodies
-- 1 Player (should be extendable)
+- Multiple players moving in parallel
 
 It's made as an example for the extended rigid body tutorial here:
 
@@ -83,7 +83,7 @@ orange
 ....0
 .....
 
-BLOCKED
+CanMove
 red
 .....
 .....
@@ -143,7 +143,7 @@ Player, Wall, Crate
  Crate_D
  Crate_L
  Crate_R
-BLOCKED
+CanMove
 
 ======
 RULES
@@ -156,38 +156,40 @@ RULES
 ( right [ action player ] [ Crate | Crate ] -> [ action player ] [ Crate Crate_r | Crate Crate_l ] )
 
 
-startloop
-
-(I'm using ACTION to mark 'BLOCKED's as old to allow the loop to exit once no new BLOCKEDs have been added)
-[ stationary BLOCKED ] -> [ action BLOCKED ]
-
-[ > Pusher | no BLOCKED Pushable ] -> [ > Pusher | > Pushable ]
-+ up [ moving Crate Crate_U | no BLOCKED Crate ] -> [ moving Crate Crate_U | moving Crate ]
-+ down [ moving Crate Crate_D | no BLOCKED Crate ] -> [ moving Crate Crate_D | moving Crate ]
-+ left [ moving Crate Crate_L | no BLOCKED Crate ] -> [ moving Crate Crate_L | moving Crate ]
-+ right [ moving Crate Crate_R | no BLOCKED Crate ] -> [ moving Crate Crate_R | moving Crate ]
+(Step 1: propagate motions forward)
+[ > Pusher | Pushable ] -> [ > Pusher | > Pushable ]
++ up [ moving Crate Crate_U | Crate ] -> [ moving Crate Crate_U | moving Crate ]
++ down [ moving Crate Crate_D | Crate ] -> [ moving Crate Crate_D | moving Crate ]
++ left [ moving Crate Crate_L | Crate ] -> [ moving Crate Crate_L | moving Crate ]
++ right [ moving Crate Crate_R | Crate ] -> [ moving Crate Crate_R | moving Crate ]
 
 
-(If a crate can't move, we have to back-propagate the can't-move-ness, including possibly through players)
-[ > Solid | wall ] -> [ > Solid BLOCKED | wall ]
+(Step 1: If a crate can't move, we have to back-propagate the can't-move-ness, including possibly through players)
+[ > Solid | wall ] -> [ Solid | wall ]
 
-[ no BLOCKED > Solid | BLOCKED Solid ] -> [ BLOCKED > Solid | BLOCKED Solid ]
-+ up [ BLOCKED Crate Crate_U | no BLOCKED Crate ] -> [ BLOCKED Crate Crate_U | BLOCKED Crate ]
-+ down [ BLOCKED Crate Crate_D | no BLOCKED Crate ] -> [ BLOCKED Crate Crate_D | BLOCKED Crate ]
-+ left [ BLOCKED Crate Crate_L | no BLOCKED Crate ] -> [ BLOCKED Crate Crate_L | BLOCKED Crate ]
-+ right [ BLOCKED Crate Crate_R | no BLOCKED Crate ] -> [ BLOCKED Crate Crate_R | BLOCKED Crate ]
+[ > Solid | stationary Solid ] -> [ Solid | Solid ]
++ up [ moving Crate Crate_U | stationary Crate ] -> [ Crate Crate_U | Crate ]
++ down [ moving Crate Crate_D | stationary Crate ] -> [ Crate Crate_D | Crate ]
++ left [ moving Crate Crate_L | stationary Crate ] -> [ Crate Crate_L | Crate ]
++ right [ moving Crate Crate_R | stationary Crate ] -> [ Crate Crate_R | Crate ]
 
 
-(Then we remove all movements from BLOCKED crates, along with the BLOCKED marker itself)
-[ BLOCKED moving Solid ] -> [ BLOCKED stationary Solid ]
+(Step 3: Mark all crates that are still moving as possibly being able to move)
+[ moving Pushable ] -> [ Pushable CanMove ]
 
-[ stationary BLOCKED ] [ moving crate ] -> [ stationary BLOCKED ] [ stationary crate ]
-endloop
+(Step 4: redo Step 1, but only through things that are marked as being possibly able to move)
+[ > Pusher | CanMove Pushable ] -> [ > Pusher | CanMove > Pushable ]
++ up [ moving Crate Crate_U | CanMove Crate ] -> [ moving Crate Crate_U | CanMove moving Crate ]
++ down [ moving Crate Crate_D | CanMove Crate ] -> [ moving Crate Crate_D | CanMove moving Crate ]
++ left [ moving Crate Crate_L | CanMove Crate ] -> [ moving Crate Crate_L | CanMove moving Crate ]
++ right [ moving Crate Crate_R | CanMove Crate ] -> [ moving Crate Crate_R | CanMove moving Crate ]
 
-[ BLOCKED ] -> [  ]
+(Step 5: remove all the CanMove tags)
+[ CanMove ] -> [ ]
 
-(To wrap it all up, move connections along with the crates themselves)
+(Step 6: move connections along with the crates themselves)
 [ moving Crate stationary Crate_connection ] -> [ moving Crate moving Crate_connection ]
+
 
 ==============
 WINCONDITIONS
