@@ -2651,27 +2651,39 @@ function processInput(dir,dontDoWin,dontModify) {
 	    		var r = level.commandQueueSourceRules[level.commandQueue.indexOf('cancel')];
 	    		consolePrintFromRule('CANCEL command executed, cancelling turn.',r,true);
 			}
-			processOutputCommands(level.commandQueue);
+
+			if (!dontModify){
+				processOutputCommands(level.commandQueue);
+			}
+
+			var commandsleft = level.commandQueue.length>1;
+
     		addUndoState(bak);
     		DoUndo(true,false);
     		tryPlayCancelSound();
-    		return false;
+    		return commandsleft;
 	    } 
 
 	    if (level.commandQueue.indexOf('restart')>=0) {
 			
     		if (verbose_logging && runrulesonlevelstart_phase){
-    			logWarning('A "restart" command is being triggered in the "run_rules_on_level_start" section of level creation, which would cause an infinite loop if it was actually triggered, but it\'s being ignored, so it\'s not.',undefined,true);
+				var r = level.commandQueueSourceRules[level.commandQueue.indexOf('restart')];
+    			logWarning('A "restart" command is being triggered in the "run_rules_on_level_start" section of level creation, which would cause an infinite loop if it was actually triggered, but it\'s being ignored, so it\'s not.',r.lineNumber,true);
     		}
 
 	    	if (verbose_logging) { 
 	    		var r = level.commandQueueSourceRules[level.commandQueue.indexOf('restart')];
-	    		consolePrintFromRule('RESTART command executed, reverting to restart state.',r);
+	    		consolePrintFromRule('RESTART command executed, reverting to restart state.',r.lineNumber);
 	    		consoleCacheDump();
 			}
-			processOutputCommands(level.commandQueue);
+			if (!dontModify){
+				processOutputCommands(level.commandQueue);
+			}
     		addUndoState(bak);
-	    	DoRestart(true);
+
+			if (!dontModify){
+	    		DoRestart(true);
+			}
     		return true;
 		} 
 		
@@ -2735,7 +2747,9 @@ function processInput(dir,dontDoWin,dontModify) {
         	}
         }
 
-	    processOutputCommands(level.commandQueue);
+		if (!dontModify){
+	    	processOutputCommands(level.commandQueue);
+		}
 
 	    if (textMode===false) {
 	    	if (verbose_logging) { 
