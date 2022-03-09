@@ -1284,13 +1284,16 @@ var codeMirrorFn = function() {
                         }
                         
                         var foundOthers=[];
+                        var foundSelves=[];
                         for (var i=0;i<ar.length;i++){
                             var candname = ar[i];
                             for (var j=0;j<=state.collisionLayers.length-1;j++){
                                 var clj = state.collisionLayers[j];
                                 if (clj.indexOf(candname)>=0){
-                                    if (j!=state.collisionLayers.length-1){
+                                    if (j!==state.collisionLayers.length-1){
                                         foundOthers.push(j);
+                                    } else {
+                                        foundSelves.push(j);
                                     }
                                 }
                             }
@@ -1302,6 +1305,10 @@ var codeMirrorFn = function() {
                             }
                             warningStr+="#"+state.collisionLayers.length;
                             logWarning(warningStr +' ). You should fix this!',state.lineNumber);                                        
+                        }
+                        if (foundSelves.length>0){
+                            var warningStr = 'Object "'+candname.toUpperCase()+'" included multiple times (either directly or indirectly) in the same layer.';
+                            logWarning(warningStr,state.lineNumber);                                        
                         }
 
                         state.collisionLayers[state.collisionLayers.length - 1] = state.collisionLayers[state.collisionLayers.length - 1].concat(ar);
