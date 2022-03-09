@@ -1,4 +1,4 @@
-var testdata = [
+const testdata = [
 	[
 		"sokoban no win condition",
 		["(\nSimple block pushing example, simplified\n)\n\n========\nOBJECTS\n========\n\nBackground\nBlack\n\nTarget \nYELLOW\n\nPlayer \nPINK \n\nCrate\nRED\n\nWall \nBROWN DARKBROWN \n\n=======\nLEGEND\n=======\n\n. = Background\n# = Wall\nP = Player\n* = Crate\n@ = Crate and Target\nO = Target\n\n=========\nSOUNDS\n=========\n\n================\nCOLLISIONLAYERS\n================\n\nBackground\nTarget\nPlayer, Wall, Crate\n\n======\nRULES \n====== \n\n[ > Player | Crate ] -> [ > Player | > Crate ] \n\n==============\nWINCONDITIONS\n==============\n\n======= \nLEVELS\n=======\n\n#########\n#.......#\n#.....@.#\n#.P.*.O.#\n#.......#\n#.......#\n#########\n\n#########\n#.....@.#\n#.P.*.O.#\n#.......#\n#########\n\n#########\n#.....@.#\n#.P.*.O.# \n#.......#\n#########", [0, 0, 3, 3, 3, 3, 3, 2, 1, 0, 1, 2, 1, 1, 2, 3, 3, 2, 3, 0, 1, 0, 3, 0, 3, 2, 1, 2, 3, 1, 2, 3], "background wall:0,0,0,0,0,0,0,0,background:1,\n1,1,1,1,0,0,1,1,1,\n1,1,0,0,1,1,1,1,1,\n0,0,1,1,1,1,1,0,0,\n1,1,background player:2,1,1,0,0,1,background crate target:3,\n3,1,1,0,0,1,1,1,1,\n1,0,0,0,0,0,0,0,0,\n"]

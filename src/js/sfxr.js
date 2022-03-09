@@ -1,15 +1,15 @@
-var SOUND_VOL = 0.25;
-var SAMPLE_RATE = 5512;
-var BIT_DEPTH = 8;
+const SOUND_VOL = 0.25;
+const SAMPLE_RATE = 5512;
+const BIT_DEPTH = 8;
 
-var SQUARE = 0;
-var SAWTOOTH = 1;
-var SINE = 2;
-var NOISE = 3;
-var TRIANGLE = 4;
-var BREAKER = 5;
+const SQUARE = 0;
+const SAWTOOTH = 1;
+const SINE = 2;
+const NOISE = 3;
+const TRIANGLE = 4;
+const BREAKER = 5;
 
-var SHAPES = [
+const SHAPES = [
   'square', 'sawtooth', 'sine', 'noise', 'triangle', 'breaker'
 ];
 
@@ -986,7 +986,7 @@ if (typeof exports != 'undefined') {
 
 var sfxCache = {};
 var cachedSeeds = [];
-var CACHE_MAX = 50;
+const CACHE_MAX = 50;
 
 function cacheSeed(seed){
   if (seed in sfxCache) {

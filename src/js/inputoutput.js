@@ -178,7 +178,7 @@ function matchGlyph(inputmask,glyphAndMask) {
 	return '.';
 }
 
-var htmlEntityMap = {
+const htmlEntityMap = {
 	"&": "&amp;",
 	"<": "&lt;",
 	">": "&gt;",

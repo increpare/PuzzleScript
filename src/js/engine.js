@@ -14,7 +14,7 @@ z to undo, r to restart...........
 
 var RandomGen = new RNG();
 
-var intro_template = [
+const intro_template = [
 	"..................................",
 	"..................................",
 	"..................................",
@@ -30,7 +30,7 @@ var intro_template = [
 	".................................."
 ];
 
-var messagecontainer_template = [
+const messagecontainer_template = [
 	"..................................",
 	"..................................",
 	"..................................",
@@ -46,7 +46,7 @@ var messagecontainer_template = [
 	".................................."
 ];
 
-var titletemplate_firstgo = [
+const titletemplate_firstgo = [
 	"..................................",
 	"..................................",
 	"..................................",
@@ -61,7 +61,7 @@ var titletemplate_firstgo = [
 	".Z to undo, R to restart..........",
 	".................................."];
 
-var titletemplate_select0 = [
+const titletemplate_select0 = [
 	"..................................",
 	"..................................",
 	"..................................",
@@ -76,7 +76,7 @@ var titletemplate_select0 = [
 	".Z to undo, R to restart..........",
 	".................................."];
 
-var titletemplate_select1 = [
+	const titletemplate_select1 = [
 	"..................................",
 	"..................................",
 	"..................................",
@@ -91,8 +91,7 @@ var titletemplate_select1 = [
 	".Z to undo, R to restart..........",
 	".................................."];
 
-
-var titletemplate_firstgo_selected = [
+const titletemplate_firstgo_selected = [
 	"..................................",
 	"..................................",
 	"..................................",
@@ -107,7 +106,7 @@ var titletemplate_firstgo_selected = [
 	".Z to undo, R to restart..........",
 	".................................."];
 
-var titletemplate_select0_selected = [
+const titletemplate_select0_selected = [
 	"..................................",
 	"..................................",
 	"..................................",
@@ -122,7 +121,7 @@ var titletemplate_select0_selected = [
 	".Z to undo, R to restart..........",
 	".................................."];
 
-var titletemplate_select1_selected = [
+const titletemplate_select1_selected = [
 	"..................................",
 	"..................................",
 	"..................................",
@@ -138,8 +137,8 @@ var titletemplate_select1_selected = [
 	"................................."];
 
 var titleImage=[];
-var titleWidth=titletemplate_select1[0].length;
-var titleHeight=titletemplate_select1.length;
+const titleWidth=titletemplate_select1[0].length;
+const titleHeight=titletemplate_select1.length;
 var textMode=true;
 var titleScreen=true;
 var titleMode=0;//1 means there are options
@@ -1282,7 +1281,7 @@ Level.prototype.setMovements = function(index, vec) {
 
 }
 
-var ellipsisPattern = ['ellipsis'];
+const ellipsisPattern = ['ellipsis'];
 
 function BitVec(init) {
 	this.data = new Int32Array(init);
