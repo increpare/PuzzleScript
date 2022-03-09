@@ -142,6 +142,23 @@ editor.on('change', function(cm, changeObj) {
   checkEditorDirty();
 });
 
+var mapObj = {
+   parallel:"&#8741;",
+   perpendicular:"&#8869;"
+};
+
+/*
+editor.on("beforeChange", function(instance, change) {
+    var startline = 
+    for (var i = 0; i < change.text.length; ++i)
+      text.push(change.text[i].replace(/parallel|perpendicular/gi, function(matched){ 
+        return mapObj[matched];
+      }));
+
+    change.update(null, null, text);
+});*/
+
+
 code.editorreference = editor;
 editor.setOption('theme', 'midnight');
 

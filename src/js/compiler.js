@@ -511,7 +511,7 @@ function levelsToArray(state) {
     state.levels = processedLevels;
 }
 
-const directionaggregates = {
+var directionaggregates = {
     'horizontal': ['left', 'right'],
     'horizontal_par': ['left', 'right'],
     'horizontal_perp': ['left', 'right'],
@@ -524,12 +524,12 @@ const directionaggregates = {
     'parallel': ['<', '>']
 };
 
-const relativeDirections = ['^', 'v', '<', '>', 'perpendicular', 'parallel'];
-const simpleAbsoluteDirections = ['up', 'down', 'left', 'right'];
-const simpleRelativeDirections = ['^', 'v', '<', '>'];
-const reg_directions_only = /^(\>|\<|\^|v|up|down|left|right|moving|stationary|no|randomdir|random|horizontal|vertical|orthogonal|perpendicular|parallel|action)$/;
+var relativeDirections = ['^', 'v', '<', '>', 'perpendicular', 'parallel'];
+var simpleAbsoluteDirections = ['up', 'down', 'left', 'right'];
+var simpleRelativeDirections = ['^', 'v', '<', '>'];
+var reg_directions_only = /^(\>|\<|\^|v|up|down|left|right|moving|stationary|no|randomdir|random|horizontal|vertical|orthogonal|perpendicular|parallel|action)$/;
 //redeclaring here, i don't know why
-const commandwords = ["sfx0", "sfx1", "sfx2", "sfx3", "sfx4", "sfx5", "sfx6", "sfx7", "sfx8", "sfx9", "sfx10", "cancel", "checkpoint", "restart", "win", "message", "again"];
+var commandwords = ["sfx0", "sfx1", "sfx2", "sfx3", "sfx4", "sfx5", "sfx6", "sfx7", "sfx8", "sfx9", "sfx10", "cancel", "checkpoint", "restart", "win", "message", "again"];
 
 
 function directionalRule(rule) {
@@ -1542,9 +1542,9 @@ function convertRelativeDirsToAbsolute(rule) {
     }
 }
 
-const relativeDirs = ['^', 'v', '<', '>', 'parallel', 'perpendicular']; //used to index the following
+var relativeDirs = ['^', 'v', '<', '>', 'parallel', 'perpendicular']; //used to index the following
 //I use _par/_perp just to keep track of providence for replacement purposes later.
-const relativeDict = {
+var relativeDict = {
     'right': ['up', 'down', 'left', 'right', 'horizontal_par', 'vertical_perp'],
     'up': ['left', 'right', 'down', 'up', 'vertical_par', 'horizontal_perp'],
     'down': ['right', 'left', 'up', 'down', 'vertical_par', 'horizontal_perp'],
@@ -2517,7 +2517,7 @@ function validSeed(seed) {
     return /^\s*\d+\s*$/.exec(seed) !== null;
 }
 
-const soundDirectionIndicatorMasks = {
+var soundDirectionIndicatorMasks = {
     'up': parseInt('00001', 2),
     'down': parseInt('00010', 2),
     'left': parseInt('00100', 2),
@@ -2528,7 +2528,7 @@ const soundDirectionIndicatorMasks = {
     '___action____': parseInt('10000', 2)
 };
 
-const soundDirectionIndicators = ["up", "down", "left", "right", "horizontal", "vertical", "orthogonal", "___action____"];
+var soundDirectionIndicators = ["up", "down", "left", "right", "horizontal", "vertical", "orthogonal", "___action____"];
 
 
 function generateSoundData(state) {
@@ -2757,7 +2757,7 @@ function formatHomePage(state) {
     }
 }
 
-const MAX_ERRORS = 5;
+var MAX_ERRORS = 5;
 
 function loadFile(str) {
     var processor = new codeMirrorFn();

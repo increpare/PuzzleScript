@@ -1,4 +1,4 @@
-const get_blob = function() {
+var get_blob = function() {
 		return self.Blob;
 }
 

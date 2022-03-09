@@ -1,4 +1,4 @@
-const games_gallery = [
+var games_gallery = [
   {
     "url": "https://www.puzzlescript.net/play.html?p=6841165",
     "thumb": "6841165.gif",

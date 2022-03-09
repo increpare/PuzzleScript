@@ -1,4 +1,4 @@
-const colorPalettesAliases = {
+colorPalettesAliases = {
 	1 : "mastersystem",
 	2 : "gameboycolour",
 	3 : "amiga",
@@ -15,7 +15,7 @@ const colorPalettesAliases = {
 	14 : "whitingjp"
 };
 
-const colorPalettes = {
+colorPalettes = {
 	mastersystem : {
 	black   		: "#000000",
 	white			: "#FFFFFF",
@@ -396,9 +396,9 @@ whitingjp : {
 }
 };
 
-const reg_color_names = /(black|white|darkgray|lightgray|gray|grey|darkgrey|lightgrey|red|darkred|lightred|brown|darkbrown|lightbrown|orange|yellow|green|darkgreen|lightgreen|blue|lightblue|darkblue|purple|pink|transparent)\s*/;
+var reg_color_names = /(black|white|darkgray|lightgray|gray|grey|darkgrey|lightgrey|red|darkred|lightred|brown|darkbrown|lightbrown|orange|yellow|green|darkgreen|lightgreen|blue|lightblue|darkblue|purple|pink|transparent)\s*/;
 
-const reg_color = /(black|white|gray|darkgray|lightgray|grey|darkgrey|lightgrey|red|darkred|lightred|brown|darkbrown|lightbrown|orange|yellow|green|darkgreen|lightgreen|blue|lightblue|darkblue|purple|pink|transparent|#(?:[0-9a-f]{3}){1,2})\s*/;
+var reg_color = /(black|white|gray|darkgray|lightgray|grey|darkgrey|lightgrey|red|darkred|lightred|brown|darkbrown|lightbrown|orange|yellow|green|darkgreen|lightgreen|blue|lightblue|darkblue|purple|pink|transparent|#(?:[0-9a-f]{3}){1,2})\s*/;
 
 
 

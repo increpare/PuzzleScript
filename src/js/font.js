@@ -1,4 +1,5 @@
-const font = {
+
+var font = {
     '0':`
 00000
 00000

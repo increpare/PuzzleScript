@@ -1,7 +1,7 @@
-const canSetHTMLColors=true;
-const canDump=false;
-const canOpenEditor=false;
-const IDE=false;
+var canSetHTMLColors=true;
+var canDump=false;
+var canOpenEditor=false;
+var IDE=false;
 const diffToVisualize=null;
 
 function stripTags(str) {

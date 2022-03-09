@@ -48,7 +48,7 @@ function regenText(spritecanvas,spritectx) {
     }
 }
 
-const editor_s_grille=[[0,1,1,1,0],[1,0,0,0,0],[0,1,1,1,0],[0,0,0,0,1],[0,1,1,1,0]];
+var editor_s_grille=[[0,1,1,1,0],[1,0,0,0,0],[0,1,1,1,0],[0,0,0,0,1],[0,1,1,1,0]];
 
 var spriteimages;
 function regenSpriteImages() {

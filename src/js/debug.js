@@ -1,10 +1,10 @@
-const canSetHTMLColors=false;
-const canDump=true;
+var canSetHTMLColors=false;
+var canDump=true;
 var recordingStartsFromLevel=0;
 var inputHistory=[];
 var compiledText;
-const canOpenEditor=true;
-const IDE=true;
+var canOpenEditor=true;
+var IDE=true;
 
 var debugger_turnIndex=0;
 var debug_visualisation_array=[];

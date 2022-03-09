@@ -1,4 +1,5 @@
-const errormessage_testdata = [
+
+var errormessage_testdata = [
     [
         `Background missing`,
         ["title Simple Block Pushing Game\nauthor David Skinner\nhomepage www.puzzlescript.net\n\n========\nOBJECTS\n========\n\n\nTarget\nDarkBlue\n.....\n.000.\n.0.0.\n.000.\n.....\n\nWall\nBROWN DARKBROWN\n00010\n11111\n01000\n11111\n00010\n\nPlayer\nBlack Orange White Blue\n.000.\n.111.\n22222\n.333.\n.3.3.\n\nCrate\nOrange Yellow\n00000\n0...0\n0...0\n0...0\n00000\n\n\n=======\nLEGEND\n=======\n\n. = target\n# = Wall\nP = Player\n* = Crate\n@ = Crate and Target\nO = Target\n\n\n=======\nSOUNDS\n=======\n\nCrate MOVE 36772507\n\n================\nCOLLISIONLAYERS\n================\n\nTarget\nPlayer, Wall, Crate\n\n======\nRULES\n======\n\n[ > Player | Crate ] -> [ > Player | > Crate ]\n\n==============\nWINCONDITIONS\n==============\n\nAll Target on Crate\n\n=======\nLEVELS\n=======\n\n\n####..\n#.O#..\n#..###\n#@P..#\n#..*.#\n#..###\n####..\n\n\n######\n#....#\n#.#P.#\n#.*@.#\n#.O@.#\n#....#\n######\n\n",["you have to define something to be the background"],1]
