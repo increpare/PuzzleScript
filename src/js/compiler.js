@@ -2452,6 +2452,9 @@ function generateLoopPoints(state) {
             var firstRuleLine = firstRule.lineNumber;
             var lastRuleLine = lastRule.lineNumber;
 
+            if (loop[0] >= firstRuleLine && loop[0] <= lastRuleLine) {
+                logWarning("Found a loop point in the middle of a rule. You probably don't want to do this, right?", loop[0]);
+            }
             if (outside) {
                 if (firstRuleLine >= loop[0]) {
                     target = i;
