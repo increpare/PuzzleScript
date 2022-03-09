@@ -218,12 +218,12 @@ function generateTitleScreen()
 	if (state.metadata.author!==undefined){
 		if ( titlelines.length>3){
 			titlelines.splice(3);
-			logWarning("Game title is too long to fit on screen, truncating to three lines.",undefined,true);
+			logWarning("Game title is too long to fit on screen, truncating to three lines.",state.metadata_lines.title,true);
 		}
 	} else {
 		if ( titlelines.length>5){
 			titlelines.splice(5);
-			logWarning("Game title is too long to fit on screen, truncating to five lines.",undefined,true);
+			logWarning("Game title is too long to fit on screen, truncating to five lines.",state.metadata_lines.title,true);
 		}
 
 	}
@@ -243,7 +243,7 @@ function generateTitleScreen()
 		}
 		if (attributionsplit.length>3){
 			attributionsplit.splice(3);
-			logWarning("Author list too long to fit on screen, truncating to three lines.",undefined,true);
+			logWarning("Author list too long to fit on screen, truncating to three lines.",state.metadata_lines.author,true);
 		}
 		for (var i=0;i<attributionsplit.length;i++) {
 			var line = attributionsplit[i]+" ";
