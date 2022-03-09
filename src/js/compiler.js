@@ -2177,6 +2177,10 @@ function checkObjectsAreLayered(state) {
     }
 }
 
+function isInt(value) {
+return !isNaN(value) && (function(x) { return (x | 0) === x; })(parseFloat(value))
+}
+
 function twiddleMetaData(state) {
     var newmetadata = {};
     for (var i = 0; i < state.metadata.length; i += 2) {
@@ -2185,17 +2189,35 @@ function twiddleMetaData(state) {
         newmetadata[key] = val;
     }
 
-    var getCoords = function(str,lineNumber){
+
+    const getIntCheckedPositive = function(s,lineNumber){
+        if (!isFinite(s) || !isInt(s)){
+            logWarning(`Wasn't able to make sense of "${s}" as a (whole number) dimension.`,lineNumber);
+            return NaN;
+        }
+        var result = parseInt(s);
+        if (isNaN(result)){
+            logWarning(`Wasn't able to make sense of "${s}" as an dimension.`,lineNumber);
+        }
+        if (result<=0){
+            logWarning(`The dimension given to me (you gave "${s}") is baad - it should be greater than 0.`,lineNumber);
+        }
+        return result;
+    }
+    const getCoords = function(str,lineNumber){
         var coords = val.split('x');
         if (coords.length!==2){
             logWarning("Dimensions must be of the form AxB.",lineNumber);
             return null;
         } else {
-            var intcoords = [parseInt(coords[0],10), parseInt(coords[1],10)];
+            var intcoords = [getIntCheckedPositive(coords[0],lineNumber), getIntCheckedPositive(coords[0],lineNumber)];
             if (!isFinite(coords[0]) || !isFinite(coords[1]) || isNaN(intcoords[0]) || isNaN(intcoords[1])) {
                 logWarning(`Couldn't understand the dimensions given to me (you gave "${val}") - should be of the form AxB.`,lineNumber);
                 return null
             } else {
+                if (intcoords[0]<=0 || intcoords[1]<=0){
+                    logWarning(`The dimensions given to me (you gave "${val}") are baad - they should be > 0.`,lineNumber);
+                }
                 return intcoords;
             }
         }
