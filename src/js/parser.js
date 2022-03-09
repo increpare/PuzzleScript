@@ -1560,11 +1560,16 @@ var codeMirrorFn = function() {
                         }       
                     } else {
                         stream.match(reg_notcommentstart, true);
+                        state.tokenIndex++;
 
                         var key = state [state.metadata.length-3];
                         var val = state.metadata[state.metadata.length-2];
                         var oldLineNum = state.metadata[state.metadata.length-1];
 
+                        if( state.tokenIndex>2){
+                            logWarning("Error: you can't embed comments in metadata values. Anything after the comment will be ignored.",state.lineNumber);
+                            return 'ERROR';
+                        }
 						if (key === "background_color" || key === "text_color"){
 							var candcol = val.trim().toLowerCase();
                             if (candcol in colorPalettes.arnecolors) {
