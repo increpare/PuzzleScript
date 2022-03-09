@@ -200,9 +200,13 @@ late [ Shadow ] -> [ ]</code></pre>
       <dt>sfx0 ... sfx10</dt>
       <dd>Sound effects banks - you associate these to sounds in the <a href="sounds.html">sounds</a> section, and then you can trigger them in rules by mentioning them.</dd>
     </dl>
-<p>
+	<p>
    	<h3>What stuff is hard to do?</h3>
    	<p>
+	<h4>Loops</h4> 
+	<p>
+	Wait actually loops are pretty easy.  Check out the <a href="executionorder.html">execution order</a> docs for more information (specifically about rule-groups and the StartLoop/EndLoop construction).
+	<p>
    	<h4>Counting</h4> 
    	<p>
    	If you had a rule that said "if there are two walls next to the player, destroy it", that would be tough.  You can do it with tricks, like putting temporary counters down as markers, but it's not hooked up that way.

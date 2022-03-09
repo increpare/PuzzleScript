@@ -58,12 +58,18 @@
   <li class="active">Execution Order</li>
 </ol>
 <p>
-
     <h1>Execution Order</h1>
     <p>
-    Let's start with the vaguest picture, and zoom in a bit each section (the final level of depth will be dealt with in <a href="rigidbodies.html">another article</a>).
+      <ul>
+        <li><a href="#zoom1">Zoom Level 1</a></li>
+        <li><a href="#zoom2">Zoom Level 2</a></li>
+        <li><a href="#zoom3">Zoom Level 3</a></li>
+        <li><a href="#loops">StartLoop/EndLoop</a></li>
+      </ul>
     <p>
-    <h3>Zoom level 1</h3>
+    Let's start with the vaguest picture, and zoom in a bit each section for a more detailed description, and in the end describe a final looping construct that you may find yourself needing at some point.
+    <p>
+    <h3><span id="zoom1" ></span>Zoom Level 1</h3>
     <p>
     According to <A href="rules101.html">Rules 101</A>, a turn is like this:
     <p>
@@ -74,7 +80,7 @@
     <li>An optional extra stage for rules you want to apply at the very end.</li>
     </ol>
     <p>
-    <h3>Zoom Level 2</h3>
+    <h3><span id="zoom2" ></span>Zoom Level 2</h3>
     <p>
     Let's look at step 2.  What does it mean? 
     <p>
@@ -114,11 +120,44 @@
     That assigns both rules (or rather, the rules that are generated from them) to the same rule group.
     <p>
     This technique is used  in the <a href="rigidbodies.html">extended rigid bodies</a> section (warning: it's a bit of an arcane subject).
+    <p>
+    <h3><span id="loops" ></span>StartLoop/EndLoop</h3>
+    <p>
+    Having rule-groups is nice, and they should be your first port of call for loop-constructions.  But <a href="rigidbodies.html#rigid_keyword">there are reasons</a> why you might want to nest loops, to have groups of rule groups iterating themselves in a loop to exhaustion.
+    <p>
+      Thankfully you can realize this, at least to a depth of two, using the STARTLOOP/ENDLOOP keywords. Let's take the standard sokoban example:
+    <p>
+    <pre><code>[ > Player | Crate ] -> [ > Player | > Crate ]</code></pre>
+    <p>
+    This gets compiled to something like the following rule-group:
+    <p>
+      <pre><code>DOWN [ crate | up player ] -> [ up crate | up player ] 
++ DOWN [ down player | crate ] -> [ down player | down crate ]
++ RIGHT [ crate | left player ] -> [ left crate | left player ] 
++ RIGHT [ right player | crate ] -> [ right player | right crate ]</code></pre>
+    <p>
+      The alternative STARTLOOP/ENDLOOP form of this rule-group is the following:
+    <p>
+      <pre><code>STARTLOOP
+DOWN [ crate | up player ] -> [ up crate | up player ]
+DOWN [ down player | crate ] -> [ down player | down crate ]
+RIGHT [ crate | left player ] -> [ left crate | left player ]
+RIGHT [ right player | crate ] -> [ right player | right crate ]
+ENDLOOP</code></pre>
 <p>
-
-</div><!-- /.container -->
-
-
+  So, what does this do? This is in this case exactly the same as the rule-group.  It iterates each rule separately, and once it reaches ENDLOOP, if any rule changed any movement or object during the run it jumps back to the STARTLOOP line (even if changes were subsequently reverted later in the loop).  It can only leave when it reaches ENDLOOP without any rule since STARTLOOP having modified any object or movement.
+<p>
+  And that's also how it works if there are bigger rule groups.  So basically it's just another way to write loops where rule-groups can be nested inside (See the <a href="rigidbody.html#rigid_keyword">rigidbody</a> description for (slightly complicated) examples of use).  
+<p>
+  Things to note:
+<ul>
+  <li>You can't nest multiple STARTLOOP/ENDLOOP loops inside eachother.</li>
+  <li>You can't put STARTLOOP/ENDLOOP loops inside a rule-group. They are strictly on the outer level.</li>
+  <li>To be clear: if any rule in any rule-group within a STARTLOOP/ENDLOOP block makes any changes to objects/movements, the loop will repeat.</li>
+</ul>
+<p>
+  And that's it.  It's actually a pretty simple/chill construct that does more or less what it says on the tin.  I'd still recommend rule-groups as a first port-of-call, but these are here if you need them. :)
+<p>
     <!-- Bootstrap core JavaScript
     ================================================== -->
     <!-- Placed at the end of the document so the pages load faster -->
