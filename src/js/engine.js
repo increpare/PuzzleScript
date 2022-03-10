@@ -2848,14 +2848,21 @@ function checkWin(dontDoWin) {
 			var wincondition = state.winconditions[wcIndex];
 			var filter1 = wincondition[1];
 			var filter2 = wincondition[2];
+			var aggr1 = wincondition[4];
+			var aggr2 = wincondition[5];
+
 			var rulePassed=true;
+			
+			const f1 = aggr1 ? c=>filter1.bitsSetInArray(c) : c=>!filter1.bitsClearInArray(c);
+			const f2 = aggr2 ? c=>filter2.bitsSetInArray(c) : c=>!filter2.bitsClearInArray(c);
+
 			switch(wincondition[0]) {
 				case -1://NO
 				{
 					for (var i=0;i<level.n_tiles;i++) {
 						var cell = level.getCellInto(i,_o10);
-						if ( (!filter1.bitsClearInArray(cell.data)) &&  
-							 (!filter2.bitsClearInArray(cell.data)) ) {
+						if ( (f1(cell.data)) &&  
+							 (f2(cell.data)) ) {
 							rulePassed=false;
 							break;
 						}
@@ -2868,8 +2875,8 @@ function checkWin(dontDoWin) {
 					var passedTest=false;
 					for (var i=0;i<level.n_tiles;i++) {
 						var cell = level.getCellInto(i,_o10);
-						if ( (!filter1.bitsClearInArray(cell.data)) &&  
-							 (!filter2.bitsClearInArray(cell.data)) ) {
+						if ( (f1(cell.data)) &&  
+							 (f2(cell.data)) ) {
 							passedTest=true;
 							break;
 						}
@@ -2883,8 +2890,8 @@ function checkWin(dontDoWin) {
 				{
 					for (var i=0;i<level.n_tiles;i++) {
 						var cell = level.getCellInto(i,_o10);
-						if ( (!filter1.bitsClearInArray(cell.data)) &&  
-							 (filter2.bitsClearInArray(cell.data)) ) {
+						if ( (f1(cell.data)) &&  
+							 (!f2(cell.data)) ) {
 							rulePassed=false;
 							break;
 						}

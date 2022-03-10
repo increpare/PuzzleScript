@@ -2159,6 +2159,22 @@ function generateMasks(state) {
     objectMask["\nall\n"] = all_obj;
 
     state.objectMasks = objectMask;
+
+    
+    state.aggregateMasks = {};
+
+    //set aggregate masks similarly
+    for (var aggregateName of Object.keys(state.aggregatesDict)) {
+        var objectnames = state.aggregatesDict[aggregateName];
+        
+        var aggregateMask = new BitVec(STRIDE_OBJ);
+        for (var i = 0; i < objectnames.length; i++) {
+            var n = objectnames[i];
+            var o = state.objects[n];
+            aggregateMask.ior(objectMask[n]);
+        }
+        state.aggregateMasks[aggregateName] = aggregateMask;
+    }
 }
 
 function checkObjectsAreLayered(state) {
@@ -2276,17 +2292,28 @@ function processWinConditions(state) {
 
         var mask1 = 0;
         var mask2 = 0;
+        var aggr1 = false;
+        var aggr2 = false;
+
         if (n1 in state.objectMasks) {
+            aggr1 = false;
             mask1 = state.objectMasks[n1];
+        } else if (n1 in state.aggregateMasks){
+            aggr1 = true;
+            mask1 = state.aggregateMasks[n1];
         } else {
-            logError('Unwelcome term "' + n1 + '" found in win condition. Win conditions objects have to be objects or properties (defined using "or", in terms of other properties)', lineNumber);
+            logError('Unwelcome term "' + n1 + '" found in win condition. I don\'t know what I\'m supposed to do with this. ', lineNumber);
         }
         if (n2 in state.objectMasks) {
+            aggr2=false;
             mask2 = state.objectMasks[n2];
-        } else {
-            logError('Unwelcome term "' + n2 + '" found in win condition. Win conditions objects have to be objects or properties (defined using "or", in terms of other properties)', lineNumber);
+        } else if (n2 in state.aggregateMasks){
+            aggr2 = true;
+            mask2 = state.aggregateMasks[n2];
+        } else  {
+            logError('Unwelcome term "' + n1 + '" found in win condition. I don\'t know what I\'m supposed to do with this. ', lineNumber);
         }
-        var newcondition = [num, mask1, mask2, lineNumber];
+        var newcondition = [num, mask1, mask2, lineNumber, aggr1, aggr2];
         newconditions.push(newcondition);
     }
     state.winconditions = newconditions;
