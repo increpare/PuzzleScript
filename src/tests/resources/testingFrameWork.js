@@ -49,7 +49,7 @@ function runTest(dataarray) {
 	var success=true;
 	if (levelString !== dataarray[2]) {
 		success=false;
-		QUnit.pushFailure("Resulting level state is not the expected one.");
+		QUnit.assert.equal(levelString,dataarray[2],"Resulting level state is not the expected one.");
 	}
 
 	if (audio_output!==null){
