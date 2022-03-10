@@ -46,13 +46,19 @@ function runTest(dataarray) {
 	unitTesting=false;
 	var levelString = convertLevelToString();
 	var success = levelString == dataarray[2];
+	var success=true;
+	if (levelString !== dataarray[2]) {
+		success=false;
+		QUnit.pushFailure("Resulting level state is not the expected one.");
+	}
+
 	if (audio_output!==null){
 		//check if soundHistory array is same as audio_output
 		var audio_recorded = soundHistory.join(";");
 		var audio_expected = audio_output.join(";");
 		if (audio_recorded!=audio_expected){			
-			QUnit.assert.equal(audio_recorded,audio_expected,"Audio output is not as expected");
 			success=false;
+			QUnit.assert.equal(audio_recorded,audio_expected,"Audio output is not as expected");
 		}
 	}
 	if (success) {
