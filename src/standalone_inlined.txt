@@ -8329,8 +8329,8 @@ function repositionEntitiesOnLayer(positionIndex,layer,dirMask)
         return false;
     }
 
-	for (var i=0;i<state.sfx_MovementMasks.length;i++) {
-		var o = state.sfx_MovementMasks[i];
+	for (var i=0;i<state.sfx_MovementMasks[layer].length;i++) {
+		var o = state.sfx_MovementMasks[layer][i];
 		var objectMask = o.objectMask;
 		if (objectMask.anyBitsInCommon(sourceMask)) {
 			var movementMask = level.getMovements(positionIndex);
@@ -9554,7 +9554,7 @@ function resolveMovements(level, bannedGroup){
 		var movementMask = level.getMovements(i);
 		if (!movementMask.iszero()) {
 			var rigidMovementAppliedMask = level.rigidMovementAppliedMask[i];
-			if (rigidMovementAppliedMask !== 0) {
+			if (!rigidMovementAppliedMask.iszero()) {
 				movementMask.iand(rigidMovementAppliedMask);
 				if (!movementMask.iszero()) {
 					//find what layer was restricted
@@ -9833,27 +9833,39 @@ function processInput(dir,dontDoWin,dontModify) {
 	    		var r = level.commandQueueSourceRules[level.commandQueue.indexOf('cancel')];
 	    		consolePrintFromRule('CANCEL command executed, cancelling turn.',r,true);
 			}
-			processOutputCommands(level.commandQueue);
+
+			if (!dontModify){
+				processOutputCommands(level.commandQueue);
+			}
+
+			var commandsleft = level.commandQueue.length>1;
+
     		addUndoState(bak);
     		DoUndo(true,false);
     		tryPlayCancelSound();
-    		return false;
+    		return commandsleft;
 	    } 
 
 	    if (level.commandQueue.indexOf('restart')>=0) {
 			
     		if (verbose_logging && runrulesonlevelstart_phase){
-    			logWarning('A "restart" command is being triggered in the "run_rules_on_level_start" section of level creation, which would cause an infinite loop if it was actually triggered, but it\'s being ignored, so it\'s not.',undefined,true);
+				var r = level.commandQueueSourceRules[level.commandQueue.indexOf('restart')];
+    			logWarning('A "restart" command is being triggered in the "run_rules_on_level_start" section of level creation, which would cause an infinite loop if it was actually triggered, but it\'s being ignored, so it\'s not.',r.lineNumber,true);
     		}
 
 	    	if (verbose_logging) { 
 	    		var r = level.commandQueueSourceRules[level.commandQueue.indexOf('restart')];
-	    		consolePrintFromRule('RESTART command executed, reverting to restart state.',r);
+	    		consolePrintFromRule('RESTART command executed, reverting to restart state.',r.lineNumber);
 	    		consoleCacheDump();
 			}
-			processOutputCommands(level.commandQueue);
+			if (!dontModify){
+				processOutputCommands(level.commandQueue);
+			}
     		addUndoState(bak);
-	    	DoRestart(true);
+
+			if (!dontModify){
+	    		DoRestart(true);
+			}
     		return true;
 		} 
 		
@@ -9917,7 +9929,9 @@ function processInput(dir,dontDoWin,dontModify) {
         	}
         }
 
-	    processOutputCommands(level.commandQueue);
+		if (!dontModify){
+	    	processOutputCommands(level.commandQueue);
+		}
 
 	    if (textMode===false) {
 	    	if (verbose_logging) { 
@@ -11481,13 +11495,16 @@ var codeMirrorFn = function() {
                         }
                         
                         var foundOthers=[];
+                        var foundSelves=[];
                         for (var i=0;i<ar.length;i++){
                             var candname = ar[i];
                             for (var j=0;j<=state.collisionLayers.length-1;j++){
                                 var clj = state.collisionLayers[j];
                                 if (clj.indexOf(candname)>=0){
-                                    if (j!=state.collisionLayers.length-1){
+                                    if (j!==state.collisionLayers.length-1){
                                         foundOthers.push(j);
+                                    } else {
+                                        foundSelves.push(j);
                                     }
                                 }
                             }
@@ -11499,6 +11516,10 @@ var codeMirrorFn = function() {
                             }
                             warningStr+="#"+state.collisionLayers.length;
                             logWarning(warningStr +' ). You should fix this!',state.lineNumber);                                        
+                        }
+                        if (foundSelves.length>0){
+                            var warningStr = 'Object "'+candname.toUpperCase()+'" included multiple times (either directly or indirectly) in the same layer.';
+                            logWarning(warningStr,state.lineNumber);                                        
                         }
 
                         state.collisionLayers[state.collisionLayers.length - 1] = state.collisionLayers[state.collisionLayers.length - 1].concat(ar);
@@ -11757,11 +11778,16 @@ var codeMirrorFn = function() {
                         }       
                     } else {
                         stream.match(reg_notcommentstart, true);
+                        state.tokenIndex++;
 
                         var key = state [state.metadata.length-3];
                         var val = state.metadata[state.metadata.length-2];
                         var oldLineNum = state.metadata[state.metadata.length-1];
 
+                        if( state.tokenIndex>2){
+                            logWarning("Error: you can't embed comments in metadata values. Anything after the comment will be ignored.",state.lineNumber);
+                            return 'ERROR';
+                        }
 						if (key === "background_color" || key === "text_color"){
 							var candcol = val.trim().toLowerCase();
                             if (candcol in colorPalettes.arnecolors) {
@@ -12537,7 +12563,7 @@ function processRuleString(rule, state, curRules) {
                     } else if (token in directionaggregates) {
                         directions = directions.concat(directionaggregates[token]);
                     } else if (token === 'late') {
-                        late = true;
+                        late = true;                        
                     } else if (token === 'rigid') {
                         rigid = true;
                     } else if (token === 'random') {
@@ -12563,7 +12589,7 @@ function processRuleString(rule, state, curRules) {
                     break;
                 }
             case 1:
-                {
+                {                                        
                     if (token == '[') {
                         bracketbalance++;
                         if (bracketbalance > 1) {
@@ -12619,6 +12645,14 @@ function processRuleString(rule, state, curRules) {
                         curcellrow = [];
                         incellrow = false;
                     } else if (token === '->') {
+
+                        if (groupNumber !== lineNumber) {
+                            var parentrule = curRules[curRules.length - 1];
+                            if (parentrule.late!==late){
+                                logWarning('Oh gosh you can mix late and non-late rules in a rule-group if you really want to, but gosh why would you want to do that?  What do you expect to accomplish?', lineNumber);
+                            }
+                        }
+                        
                         if (incellrow) {
                             logError('Encountered an unexpected "->" inside square brackets.  It\'s used to separate states, it has no place inside them >:| .', lineNumber);
                         } else if (rhs) {
@@ -14032,6 +14066,10 @@ function checkObjectsAreLayered(state) {
     }
 }
 
+function isInt(value) {
+return !isNaN(value) && (function(x) { return (x | 0) === x; })(parseFloat(value))
+}
+
 function twiddleMetaData(state) {
     var newmetadata = {};
     for (var i = 0; i < state.metadata.length; i += 2) {
@@ -14040,17 +14078,35 @@ function twiddleMetaData(state) {
         newmetadata[key] = val;
     }
 
-    var getCoords = function(str,lineNumber){
+
+    const getIntCheckedPositive = function(s,lineNumber){
+        if (!isFinite(s) || !isInt(s)){
+            logWarning(`Wasn't able to make sense of "${s}" as a (whole number) dimension.`,lineNumber);
+            return NaN;
+        }
+        var result = parseInt(s);
+        if (isNaN(result)){
+            logWarning(`Wasn't able to make sense of "${s}" as an dimension.`,lineNumber);
+        }
+        if (result<=0){
+            logWarning(`The dimension given to me (you gave "${s}") is baad - it should be greater than 0.`,lineNumber);
+        }
+        return result;
+    }
+    const getCoords = function(str,lineNumber){
         var coords = val.split('x');
         if (coords.length!==2){
             logWarning("Dimensions must be of the form AxB.",lineNumber);
             return null;
         } else {
-            var intcoords = [parseInt(coords[0],10), parseInt(coords[1],10)];
+            var intcoords = [getIntCheckedPositive(coords[0],lineNumber), getIntCheckedPositive(coords[0],lineNumber)];
             if (!isFinite(coords[0]) || !isFinite(coords[1]) || isNaN(intcoords[0]) || isNaN(intcoords[1])) {
                 logWarning(`Couldn't understand the dimensions given to me (you gave "${val}") - should be of the form AxB.`,lineNumber);
                 return null
             } else {
+                if (intcoords[0]<=0 || intcoords[1]<=0){
+                    logWarning(`The dimensions given to me (you gave "${val}") are baad - they should be > 0.`,lineNumber);
+                }
                 return intcoords;
             }
         }
@@ -14277,6 +14333,9 @@ function generateLoopPoints(state) {
             var firstRuleLine = firstRule.lineNumber;
             var lastRuleLine = lastRule.lineNumber;
 
+            if (loop[0] >= firstRuleLine && loop[0] <= lastRuleLine) {
+                logWarning("Found a loop point in the middle of a rule. You probably don't want to do this, right?", loop[0]);
+            }
             if (outside) {
                 if (firstRuleLine >= loop[0]) {
                     target = i;
@@ -14357,7 +14416,7 @@ function generateSoundData(state) {
     var sfx_Events = {};
     var sfx_CreationMasks = [];
     var sfx_DestructionMasks = [];
-    var sfx_MovementMasks = [];
+    var sfx_MovementMasks = state.collisionLayers.map(x => []);
     var sfx_MovementFailureMasks = [];
 
     for (var i = 0; i < state.sounds.length; i++) {
@@ -14481,11 +14540,12 @@ function generateSoundData(state) {
                     var o = {
                         objectMask: objectMask,
                         directionMask: shiftedDirectionMask,
+                        layer:targetLayer,
                         seed: seed
                     };
 
                     if (verb === 'move') {
-                        sfx_MovementMasks.push(o);
+                        sfx_MovementMasks[targetLayer].push(o);
                     } else {
                         sfx_MovementFailureMasks.push(o);
                     }
