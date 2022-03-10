@@ -60,23 +60,26 @@ function dumpTestCase() {
 	consolePrint("<br>Compilation error/warning data (for error message tests - errormessage_testdata.js):<br><br><br><span id=\""+tag+"\" onclick=\"selectText('"+tag+"',event)\">"+resultstring+"</span><br><br><br>",true);
 
 	
-	//normal session recording data
-	var levelDat = compiledText;
-	var input = inputHistory.concat([]);
-	var outputDat = convertLevelToString();
+	//if the game is currently running and not on the title screen, dump the recording data
+	if (!titleScreen) {
+		//normal session recording data
+		var levelDat = compiledText;
+		var input = inputHistory.concat([]);
+		var outputDat = convertLevelToString();
 
-	var resultarray = [levelDat,input,outputDat,recordingStartsFromLevel,loadedLevelSeed];
-	var resultstring = JSON.stringify(resultarray);
-	resultstring = `<br>
-	[<br>
-		"${state.metadata.title||"untitled test"}",<br>
-		${resultstring}<br>
-	],`;
-	
-	selectableint++;
-	var tag = 'selectable'+selectableint;
-	
-	consolePrint("<br>Recorded play session data (for play session tests - testdata.js):<br><br><br><span id=\""+tag+"\" onclick=\"selectText('"+tag+"',event)\">"+resultstring+"</span><br><br><br>",true);
+		var resultarray = [levelDat,input,outputDat,recordingStartsFromLevel,loadedLevelSeed];
+		var resultstring = JSON.stringify(resultarray);
+		resultstring = `<br>
+		[<br>
+			"${state.metadata.title||"untitled test"}",<br>
+			${resultstring}<br>
+		],`;
+		
+		selectableint++;
+		var tag = 'selectable'+selectableint;
+		
+		consolePrint("<br>Recorded play session data (for play session tests - testdata.js):<br><br><br><span id=\""+tag+"\" onclick=\"selectText('"+tag+"',event)\">"+resultstring+"</span><br><br><br>",true);
+	}
 
 }
 
