@@ -1278,6 +1278,25 @@ function makeSpawnedObjectsStationary(state,rule,lineNumber){
 
 }
 
+function getRHSMoves(rule){
+    var result = [];
+    for (var j = 0; j < rule.rhs.length; j++) {
+        var row_r = rule.rhs[j];
+        for (var k = 0; k < row_r.length; k++) {
+            var cell=row_r[k];
+            for (var l = 0; l < cell.length; l += 2) {
+                var dir = cell[l];
+                if (dir in directionaggregates){
+                    if (result.indexOf(dir)===-1){
+                        result.push(dir);
+                    }
+                }
+            }
+        }
+    }
+    return result;
+}
+
 function concretizeMovingRule(state, rule, lineNumber) {
 
     var shouldremove;
@@ -1288,12 +1307,18 @@ function concretizeMovingRule(state, rule, lineNumber) {
         for (var i = 0; i < result.length; i++) {
             //only need to iterate through lhs
             var cur_rule = result[i];
+
+            var rhs_movements = getRHSMoves(cur_rule);
+            
             shouldremove = false;
             for (var j = 0; j < cur_rule.lhs.length; j++) {
                 var cur_rulerow = cur_rule.lhs[j];
                 for (var k = 0; k < cur_rulerow.length; k++) {
                     var cur_cell = cur_rulerow[k];
                     var movings = getMovings(state, cur_cell); //finds aggregate directions
+                    //filter out movements that are not in the RHS
+                    movings = movings.filter(m=>rhs_movements.indexOf(m[1])>=0);
+                    
                     if (movings.length > 0) {
                         shouldremove = true;
                         modified = true;

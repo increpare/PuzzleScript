@@ -1566,7 +1566,7 @@ CellPattern.prototype.generateMatchString = function() {
 			fn += '\t\t&& !(' + co + '&' + om + ')\n';
 		if (mp) {
 			if (mp&(mp-1))
-				fn += '\t\t&& ((' + cm + '&' + mp + ')===' + mp + ')\n';
+				fn += '\t\t&& ((' + cm + '&' + mp + '))\n';
 			else
 				fn += '\t\t&& (' + cm + '&' + mp + ')\n';
 		}
@@ -1825,10 +1825,10 @@ function DoesCellRowMatch(direction,cellRow,i,k) {
 function matchCellRow(direction, cellRowMatch, cellRow, cellRowMask,cellRowMask_Movements,d) {	
 	var result=[];
 	
-	if ((!cellRowMask.bitsSetInArray(level.mapCellContents.data))||
-	(!cellRowMask_Movements.bitsSetInArray(level.mapCellContents_Movements.data))) {
-		return result;
-	}
+	// if ((!cellRowMask.bitsSetInArray(level.mapCellContents.data))||
+	// (!cellRowMask_Movements.bitsSetInArray(level.mapCellContents_Movements.data))) {
+	// 	return result;
+	// }
 
 	var xmin=0;
 	var xmax=level.width;
@@ -1867,10 +1867,10 @@ function matchCellRow(direction, cellRowMatch, cellRow, cellRowMask,cellRowMask_
     var horizontal=direction>2;
     if (horizontal) {
 		for (var y=ymin;y<ymax;y++) {
-			if (!cellRowMask.bitsSetInArray(level.rowCellContents[y].data) 
-			|| !cellRowMask_Movements.bitsSetInArray(level.rowCellContents_Movements[y].data)) {
-				continue;
-			}
+			// if (!cellRowMask.bitsSetInArray(level.rowCellContents[y].data) 
+			// || !cellRowMask_Movements.bitsSetInArray(level.rowCellContents_Movements[y].data)) {
+			// 	continue;
+			// }
 
 			for (var x=xmin;x<xmax;x++) {
 				var i = x*level.height+y;
@@ -1882,10 +1882,10 @@ function matchCellRow(direction, cellRowMatch, cellRow, cellRowMask,cellRowMask_
 		}
 	} else {
 		for (var x=xmin;x<xmax;x++) {
-			if (!cellRowMask.bitsSetInArray(level.colCellContents[x].data)
-			|| !cellRowMask_Movements.bitsSetInArray(level.colCellContents_Movements[x].data)) {
-				continue;
-			}
+			// if (!cellRowMask.bitsSetInArray(level.colCellContents[x].data)
+			// || !cellRowMask_Movements.bitsSetInArray(level.colCellContents_Movements[x].data)) {
+			// 	continue;
+			// }
 
 			for (var y=ymin;y<ymax;y++) {
 				var i = x*level.height+y;
