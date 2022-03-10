@@ -1143,8 +1143,65 @@ function concretizePropertyRule(state, rule, lineNumber) {
                             continue;
                         }
 
+                        var subhappened=false;
+
                         var aliases = state.propertiesDict[property];
 
+                        if (!ambiguousProperties[property]){
+                            var layerCount = state.collisionLayers.length;
+                            var mixedgroups=[];
+                            for (var i1=0;i1<layerCount;i1++){
+                                mixedgroups.push([]);
+                            }
+
+                            var somesamelayer = false;
+                            var somedifferentlayer = false;
+                            for (var i1=0;i1<aliases.length;i1++){
+                                var alias = aliases[i1];
+                                var layer = state.objects[alias].layer;
+                                mixedgroups[layer].push(alias)
+                            }
+
+                            for (var i1=0;i1<mixedgroups.length;i1++){
+                                var mixedgroup=mixedgroups[i1];
+                                if (mixedgroup.length===1){
+                                    continue;
+                                }
+                                //see if there's a single-layer property that corresponds, substitute it
+                                var singleLayerObjectNames = Object.keys(state.propertiesSingleLayer);
+                                for (var i2=0;i2<singleLayerObjectNames.length;i2++){
+                                    var singleLayerObjectName = singleLayerObjectNames[i2];
+                                    //get objects covered by this property
+                                    
+                                    var singleLayerObjects = state.propertiesDict[singleLayerObjectName];
+                                    if (ambiguousProperties[singleLayerObjectName]){
+                                        continue;
+                                    }
+                                    if (singleLayerObjects.length!==mixedgroup.length){
+                                        continue;
+                                    }
+                                    var allfound = true;
+                                    for (var i3=0;i3<mixedgroup.length;i3++){
+                                        if (singleLayerObjects.indexOf(mixedgroup[i])===-1){
+                                            allfound=false;
+                                            break;
+                                        }
+                                    }
+                                    if (allfound){
+                                        mixedgroups[i1]=[singleLayerObjectName];
+                                        console.log("substituted "+singleLayerObjectName+" for "+mixedgroup.join(","));
+                                        subhappened=true;
+                                    }
+                                }
+                            }
+                            if (somesamelayer && somedifferentlayer){
+                                console.log("MIXED LAYERS REFERENCED IN RULES OHA");
+                            }
+                            if (subhappened){
+                                aliases = Array.prototype.concat.apply([], mixedgroups);
+                            }
+                        }
+                        
                         shouldremove = true;
                         modified = true;
 
@@ -2922,7 +2979,8 @@ function compile(command, text, randomseed) {
         }
     }
 
-    if (state!==null){//otherwise error
+
+    if (state){//otherwise error
         setGameState(state, command, randomseed);
     }
 
