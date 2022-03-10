@@ -1891,7 +1891,7 @@ function collapseRules(groups) {
             var newrule = [0, [], oldrule.rhs.length > 0, oldrule.lineNumber /*ellipses,group number,rigid,commands,randomrule,[cellrowmasks]*/ ];
             var ellipses = [];
             for (var j = 0; j < oldrule.lhs.length; j++) {
-                ellipses.push(false);
+                ellipses.push(0);
             }
 
             newrule[0] = dirMasks[oldrule.direction];
@@ -1899,10 +1899,10 @@ function collapseRules(groups) {
                 var cellrow_l = oldrule.lhs[j];
                 for (var k = 0; k < cellrow_l.length; k++) {
                     if (cellrow_l[k] === ellipsisPattern) {
-                        if (ellipses[j]) {
-                            logError("You can't use two ellipses in a single cell match pattern.  If you really want to, please implement it yourself and send me a patch :) ", oldrule.lineNumber);
+                        ellipses[j] ++;
+                        if (ellipses[j]>2) {
+                            logError("You can't use more than two ellipses in a single cell match pattern.", oldrule.lineNumber);
                         }
-                        ellipses[j] = true;
                     }
                 }
                 newrule[1][j] = cellrow_l;
