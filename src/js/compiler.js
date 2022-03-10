@@ -2535,7 +2535,7 @@ function generateSoundData(state) {
     var sfx_Events = {};
     var sfx_CreationMasks = [];
     var sfx_DestructionMasks = [];
-    var sfx_MovementMasks = [];
+    var sfx_MovementMasks = state.collisionLayers.map(x => []);
     var sfx_MovementFailureMasks = [];
 
     for (var i = 0; i < state.sounds.length; i++) {
@@ -2659,11 +2659,12 @@ function generateSoundData(state) {
                     var o = {
                         objectMask: objectMask,
                         directionMask: shiftedDirectionMask,
+                        layer:targetLayer,
                         seed: seed
                     };
 
                     if (verb === 'move') {
-                        sfx_MovementMasks.push(o);
+                        sfx_MovementMasks[targetLayer].push(o);
                     } else {
                         sfx_MovementFailureMasks.push(o);
                     }

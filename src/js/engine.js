@@ -1147,8 +1147,8 @@ function repositionEntitiesOnLayer(positionIndex,layer,dirMask)
         return false;
     }
 
-	for (var i=0;i<state.sfx_MovementMasks.length;i++) {
-		var o = state.sfx_MovementMasks[i];
+	for (var i=0;i<state.sfx_MovementMasks[layer].length;i++) {
+		var o = state.sfx_MovementMasks[layer][i];
 		var objectMask = o.objectMask;
 		if (objectMask.anyBitsInCommon(sourceMask)) {
 			var movementMask = level.getMovements(positionIndex);
@@ -2372,7 +2372,7 @@ function resolveMovements(level, bannedGroup){
 		var movementMask = level.getMovements(i);
 		if (!movementMask.iszero()) {
 			var rigidMovementAppliedMask = level.rigidMovementAppliedMask[i];
-			if (rigidMovementAppliedMask !== 0) {
+			if (!rigidMovementAppliedMask.iszero()) {
 				movementMask.iand(rigidMovementAppliedMask);
 				if (!movementMask.iszero()) {
 					//find what layer was restricted
