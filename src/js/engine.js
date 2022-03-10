@@ -526,7 +526,7 @@ canvasResize();
 function tryPlaySimpleSound(soundname) {
 	if (state.sfx_Events[soundname]!==undefined) {
 		var seed = state.sfx_Events[soundname];
-		playSound(seed);
+		playSound(seed,true);
 	}
 }
 function tryPlayTitleSound() {
@@ -2725,7 +2725,7 @@ function processInput(dir,dontDoWin,dontModify) {
 			return false;
 		}
 
-        for (var i=0;i<seedsToPlay_CantMove.length;i++) {
+        for (var i=0;i<seedsToPlay_CantMove.length;i++) {			
 	        	playSound(seedsToPlay_CantMove[i]);
         }
 

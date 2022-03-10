@@ -1012,7 +1012,10 @@ function cacheSeed(seed){
 }
 
 
-function playSound(seed) {
+function playSound(seed,ignore) {
+  if (ignore!==true){
+    pushSoundToHistory(seed);
+  }
   if (muted){
     return;
   }

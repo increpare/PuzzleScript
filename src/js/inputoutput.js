@@ -744,6 +744,7 @@ function checkKey(e,justPressed) {
 	    				quittingTitleScreen=true;
 	    				generateTitleScreen();
 	    				canvasResize();
+						clearInputHistory();
 	    			}
     			}
     		} else {

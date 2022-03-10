@@ -96,7 +96,7 @@ var editor = window.CodeMirror.fromTextArea(code, {
 editor.on('mousedown', function(cm, event) {
   if (event.target.className == 'cm-SOUND') {
     var seed = parseInt(event.target.innerHTML);
-    playSound(seed);
+    playSound(seed,true);
   } else if (event.target.className == 'cm-LEVEL') {
     if (event.ctrlKey||event.metaKey) {
 	  document.activeElement.blur();  // unfocus code panel

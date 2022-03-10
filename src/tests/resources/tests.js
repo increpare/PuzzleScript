@@ -15,6 +15,9 @@ for (var i=0;i<testdata.length;i++) {
 				var testcode = td[1][0];
 				var testinput=td[1][1];
 				var testresult=td[1][2];
+				var targetlevel=td[1][3];
+				var randomseed=td[1][4];
+				var audiooutput=td[1][5];
 				var input="";
 				for (var j=0;j<testinput.length;j++) {
 					if (j%5==0 && j>0) {
@@ -23,6 +26,13 @@ for (var i=0;i<testdata.length;i++) {
 					input += inputVals[testinput[j]];
 				}
 				var errormessage =  testcode+"\n\n\ninput : "+input;
+				errormessage += "\ntargetlevel : "+targetlevel;
+				if (randomseed!==undefined) {
+					errormessage += "\nrandomseed : "+randomseed;
+				}
+				if (audiooutput!==undefined) {
+					errormessage += "\naudioinput : "+audiooutput.join(";");
+				}
 				ok(runTest(td[1]),errormessage);
 			};
 		}(i)

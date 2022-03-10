@@ -8,7 +8,7 @@ function newSound(instrument) {
 
 	var frame = parent.frames[4];
 	var code = document.getElementById('consoletextarea');
-	consolePrint(generatorNames[instrument] + ' : ' + '<span class="cm-SOUND" onclick="playSound(' + seed.toString() + ')">' + seed.toString() + '</span>',true);
+	consolePrint(generatorNames[instrument] + ' : ' + '<span class="cm-SOUND" onclick="playSound(' + seed.toString() + ',true)">' + seed.toString() + '</span>',true);
 	var params = generateFromSeed(seed);
 	params.sound_vol = SOUND_VOL;
 	params.sample_rate = SAMPLE_RATE;

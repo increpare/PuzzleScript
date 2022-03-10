@@ -14,6 +14,8 @@ function runTest(dataarray) {
 	
 	var randomseed = dataarray[4]!==undefined ? dataarray[4] : null;
 
+	var audio_output = dataarray[5]!==undefined ? dataarray[5] : null;
+
 	if (targetlevel===undefined) {
 		targetlevel=0;
 	}
@@ -44,6 +46,15 @@ function runTest(dataarray) {
 	unitTesting=false;
 	var levelString = convertLevelToString();
 	var success = levelString == dataarray[2];
+	if (audio_output!==null){
+		//check if soundHistory array is same as audio_output
+		var audio_recorded = soundHistory.join(";");
+		var audio_expected = audio_output.join(";");
+		if (audio_recorded!=audio_expected){			
+			QUnit.assert.equal(audio_recorded,audio_expected,"Audio output is not as expected");
+			success=false;
+		}
+	}
 	if (success) {
 		return true;
 	} else {
@@ -82,9 +93,9 @@ function runCompilationTest(dataarray) {
 	}
 
 	if (i_recorded<recordedErrorStrings.length){
-		var simualted_summary = strippedErrorStrings.join("\n");
+		var simulated_summary = strippedErrorStrings.join("\n");
 		var recorded_summary = recordedErrorStrings.join("\n");
-		QUnit.assert.equal(simualted_summary,recorded_summary)
+		QUnit.assert.equal(simulated_summary,recorded_summary)
 		return false;
 	}
 	return true;
