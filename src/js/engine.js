@@ -777,6 +777,8 @@ function RebuildLevelArrays() {
 	level.mapCellContents = new BitVec(STRIDE_OBJ);
 	level.mapCellContents_Movements = new BitVec(STRIDE_MOV);
 
+	//I have these to avoid dynamic allocation - I generate 3 because why not, 
+	//but according to my tests I never seem to call this while a previous copy is still in scope
 	_movementVecs = [new BitVec(STRIDE_MOV),new BitVec(STRIDE_MOV),new BitVec(STRIDE_MOV)];
 	_rigidVecs = [new BitVec(STRIDE_MOV),new BitVec(STRIDE_MOV),new BitVec(STRIDE_MOV)];
 
