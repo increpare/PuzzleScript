@@ -95,7 +95,7 @@ Player, Rock
 RULES
 ======
 
-(The h and v sand effects are cosmetic - how could this be done in a single line if there was only one type brushed sand?)
+(The h and v sand effects are cosmetic - how could this be done in a single line if there was only one type of brushed sand?)
 
 horizontal [ UnbrushedSand > Player ] -> [ HBrushedSand > Player ] 
 vertical [ UnbrushedSand > Player ] -> [ VBrushedSand > Player ] 

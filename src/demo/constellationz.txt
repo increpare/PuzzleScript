@@ -22,7 +22,7 @@ red
 Teleport
 white
 
-target
+Target
 blue
 .....
 .000.
@@ -49,13 +49,13 @@ LEGEND
 . = Background
 P = Player
 O = Teleport
-t = target
+t = Target
 
 =========
 SOUNDS
 =========
 
-sfx1 44641500 (teleport)
+sfx1 44641500 (Teleport)
 startgame 26858107
 startlevel 34443107
 endlevel 34292905
@@ -65,27 +65,27 @@ COLLISIONLAYERS
 ================
 
 Background
-Teleport,BorderTile, target
+Teleport,BorderTile, Target
 Player, AltPlayer
 
 ======
 RULES
 ======
 
-late [ player Teleport ] -> [ altplayer Teleport ] sfx1
+late [ Player Teleport ] -> [ AltPlayer Teleport ] sfx1
 
-late [ altplayer Teleport ] [ Teleport no altplayer ] -> [ altplayer teleport ] [ Teleport player ] 
-late [ altplayer ] -> [ ] 
+late [ AltPlayer Teleport ] [ Teleport no AltPlayer ] -> [ AltPlayer Teleport ] [ Teleport Player ] 
+late [ AltPlayer ] -> [ ] 
 
-late [ player bordertile ] -> cancel
+late [ Player BorderTile ] -> cancel
 
 ==============
 WINCONDITIONS
 ==============
 
-some player
-all player on target
-all target on player
+some Player
+all Player on Target
+all Target on Player
 
 =======
 LEVELS
