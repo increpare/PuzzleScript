@@ -43,3 +43,4 @@ function logErrorNoLine(str){
 
 function clearInputHistory() {}
 function pushInput(inp) {}
+function pushSoundToHistory(seed) {}
