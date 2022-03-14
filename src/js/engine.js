@@ -1522,7 +1522,7 @@ Rule.prototype.generateCellRowMatchesFunction = function(cellRow,ellipsisCount) 
 		fn+=") {\n";
 
 		//try match middle part
-		fn+="	for (var k1=kmin;k1<kmax;k1++) {\n"
+		fn+="	for (var k1=k1min;k1<k1max;k1++) {\n"
 		fn+="		if(cellRow["+(ellipsis_index_1+1)+"].matches((i+d*(k1+"+(ellipsis_index_1+1-1)+")), objects, movements)";
 		for (var idx=ellipsis_index_1+2;idx<ellipsis_index_2;idx++) {
 			fn+="&&cellRow["+idx+"].matches((i+d*(k1+"+(idx-1)+")), objects, movements)";			
@@ -1530,10 +1530,10 @@ Rule.prototype.generateCellRowMatchesFunction = function(cellRow,ellipsisCount) 
 		fn+="		){\n";
 		//try match right part
 
-		fn+="			for (var k2=k1;k2<kmax;k2++) {\n"
-		fn+="				if(cellRow["+(ellipsis_index_2+1)+"].matches((i+d*(k2+"+(ellipsis_index_2+1-1)+")), objects, movements)";
-		for (var idx=ellipsis_index_1+2;idx<ellipsis_index_2;idx++) {
-			fn+="&&cellRow["+idx+"].matches((i+d*(k2+"+(idx-1)+")), objects, movements)";			
+		fn+="			for (var k2=k2min;k1+k2<kmax && k2<k2max;k2++) {\n"
+		fn+="				if(cellRow["+(ellipsis_index_2+1)+"].matches((i+d*(k1+k2+"+(ellipsis_index_2+1-2)+")), objects, movements)";
+		for (var idx=ellipsis_index_2+2;idx<cr_l;idx++) {
+			fn+="&&cellRow["+idx+"].matches((i+d*(k1+k2+"+(idx-2)+")), objects, movements)";			
 		}
 		fn+="				){\n";
 		fn+="					result.push([i,k1,k2]);\n";
@@ -1549,7 +1549,7 @@ Rule.prototype.generateCellRowMatchesFunction = function(cellRow,ellipsisCount) 
 			return matchCache[fn];
 		}
 		//console.log(fn.replace(/\s+/g, ' '));
-		return matchCache[fn] = new Function("cellRow","i","kmax","kmin", 'd', "objects", "movements",fn);
+		return matchCache[fn] = new Function("cellRow","i","kmax","kmin", "k1max","k1min","k2max","k2min", 'd', "objects", "movements",fn);
 
 	}
 //say cellRow has length 3, with a split in the middle
@@ -2017,7 +2017,11 @@ function matchCellRowWildCard(direction, cellRowMatch, cellRow,cellRowMask,cellR
 					window.console.log("EEEP2 "+direction);					
 				}
 
-				result.push.apply(result, cellRowMatch(cellRow,i,kmax,0, d, level.objects, level.movements));
+				if (wildcardCount===1) {
+					result.push.apply(result, cellRowMatch(cellRow,i,kmax,0, d, level.objects, level.movements));
+				} else {
+					result.push.apply(result, cellRowMatch(cellRow,i,kmax,0,kmax,0,kmax,0, d, level.objects, level.movements));
+				}
 			}
 		}
 	} else {
@@ -2038,7 +2042,11 @@ function matchCellRowWildCard(direction, cellRowMatch, cellRow,cellRowMask,cellR
 				} else {
 					window.console.log("EEEP2 "+direction);
 				}
-				result.push.apply(result, cellRowMatch(cellRow,i,kmax,0, d, level.objects, level.movements));
+				if (wildcardCount===1) {
+					result.push.apply(result, cellRowMatch(cellRow,i,kmax,0, d, level.objects, level.movements));
+				} else {
+					result.push.apply(result, cellRowMatch(cellRow,i,kmax,0, kmax,0, kmax,0, d, level.objects, level.movements));
+				}
 			}
 		}		
 	}
@@ -2124,12 +2132,33 @@ Rule.prototype.applyAt = function(level,tuple,check,delta) {
 		{
 			if (this.ellipsisCount[cellRowIndex]===1)
 			{
-				if ( this.cellRowMatches[cellRowIndex](this.patterns[cellRowIndex], tuple[cellRowIndex][0], tuple[cellRowIndex][1]+1, tuple[cellRowIndex][1], delta, level.objects, level.movements).length == 0 )
+				if ( this.cellRowMatches[cellRowIndex](
+						this.patterns[cellRowIndex], 
+						tuple[cellRowIndex][0], 
+						tuple[cellRowIndex][1]+1, 
+							tuple[cellRowIndex][1], 
+						delta, level.objects, level.movements
+					).length == 0 )
 					return false
 			} else if (this.ellipsisCount[cellRowIndex]===2){
-				///AAAH PUT CODE HERE
+				if ( this.cellRowMatches[cellRowIndex](
+					this.patterns[cellRowIndex], 
+						tuple[cellRowIndex][0],  
+						tuple[cellRowIndex][1]+tuple[cellRowIndex][2]+1, 
+							tuple[cellRowIndex][1]+tuple[cellRowIndex][2], 
+						tuple[cellRowIndex][1]+1, 
+							tuple[cellRowIndex][1],  
+						tuple[cellRowIndex][2]+1, 
+							tuple[cellRowIndex][2], 
+							delta, level.objects, level.movements
+						).length == 0 )
+					return false
 			} else {
-				if ( ! this.cellRowMatches[cellRowIndex](this.patterns[cellRowIndex], tuple[cellRowIndex], delta, level.objects, level.movements) )
+				if ( ! this.cellRowMatches[cellRowIndex](
+					this.patterns[cellRowIndex], 
+						tuple[cellRowIndex], 
+						delta, level.objects, level.movements
+						) )
 				return false
 			}
 		}
@@ -2137,12 +2166,13 @@ Rule.prototype.applyAt = function(level,tuple,check,delta) {
 
 
     var result=false;
-    var ellipse_index=0;
+	var anyellipses=false;
 
     //APPLY THE RULE
     for (var cellRowIndex=0;cellRowIndex<rule.patterns.length;cellRowIndex++) {
         var preRow = rule.patterns[cellRowIndex];
-        
+    	var ellipse_index=0;
+
         var currentIndex = rule.ellipsisCount[cellRowIndex]>0 ? tuple[cellRowIndex][0] : tuple[cellRowIndex];
         for (var cellIndex=0;cellIndex<preRow.length;cellIndex++) {
             var preCell = preRow[cellIndex];
@@ -2150,6 +2180,7 @@ Rule.prototype.applyAt = function(level,tuple,check,delta) {
             if (preCell === ellipsisPattern) {
             	var k = tuple[cellRowIndex][1+ellipse_index];
 				ellipse_index++;
+				anyellipses=true;
             	currentIndex += delta*k;
             	continue;
             }
@@ -2167,7 +2198,29 @@ Rule.prototype.applyAt = function(level,tuple,check,delta) {
 		}
 
 		var inspect_ID =  addToDebugTimeline(level,rule.lineNumber);
-		var logString = `<font color="green">Rule <a onclick="jumpToLine(${rule.lineNumber});"  href="javascript:void(0);">${rule.lineNumber}</a> ${ruleDirection} applied.</font>`;
+		var gapMessage="";
+		// var gapcount=0;
+		// if (anyellipses){
+		// 	var added=0;
+		// 	for(var i=0;i<tuple.length;i++){
+		// 		var tuples_cellrow = tuple[i];
+		// 		//Start at index 1 because index 0 just is the index where the rule starts.
+		// 		for (var j=1;j<tuples_cellrow.length;j++){
+		// 			added++;
+		// 			if (gapMessage.length>0){
+		// 				gapMessage+=", ";
+		// 			}
+		// 			gapMessage+=tuples_cellrow[j];
+		// 		}			
+		// 	}
+		// 	if (added===1){
+		// 		gapMessage = " (ellipsis gap of length "+gapMessage+")";
+		// 	} else {
+		// 		gapMessage = " (ellipsis gaps of length "+gapMessage+")";
+		// 	}
+		// }
+		
+		var logString = `<font color="green">Rule <a onclick="jumpToLine(${rule.lineNumber});"  href="javascript:void(0);">${rule.lineNumber}</a> ${ruleDirection} applied${gapMessage}.</font>`;
 		consolePrint(logString,false,rule.lineNumber,inspect_ID);
 		
 	}

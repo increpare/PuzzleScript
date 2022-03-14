@@ -1902,6 +1902,10 @@ function collapseRules(groups) {
                         ellipses[j] ++;
                         if (ellipses[j]>2) {
                             logError("You can't use more than two ellipses in a single cell match pattern.", oldrule.lineNumber);
+                        } else {
+                            if (k>0 && cellrow_l[k-1]===ellipsisPattern){
+                                logWarning("Why would you go and have two ellipses in a row like that? It's exactly the same as just having a single ellipsis, right?", oldrule.lineNumber);
+                            }
                         }
                     }
                 }
