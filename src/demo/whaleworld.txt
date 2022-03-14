@@ -99,20 +99,20 @@ VBeam
 RULES
 ======
 
-(while we allow whales to move onto the void, player's aren't)
+(While we allow whales to move onto the void, player's aren't)
 [ > player | void ] -> [ player | void ] 
 
-(beams detect motion)
+(Beams detect motion)
 horizontal [ > Player | VBeam ] -> [ > Player | > VBeam ] 
 vertical [ > Player | HBeam ] -> [ > Player | > HBeam ] 
 
 (If beams detected motion, transfer that to the whales)
 [ Whale | ... | perpendicular Beam ] -> [ perpendicular Whale | ... | perpendicular Beam ] 
 
-(remove whales, if necessary)
+(Remove whales, if necessary)
 late [ Whale Void ] -> [ Void ] 
 
-(remove beams)
+(Remove beams)
 [ Beam ] -> [ ] 
 
 (Place HVeams and VBeams)

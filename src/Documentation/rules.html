@@ -123,7 +123,7 @@ A puzzlescript file is divided into 8 sections:
 	<p>
 	The direction <b>DOWN</b> indicates what direction the pattern will be oriented.
 	<p>
-	One can also have ellipses in patterns, that allow for them to be variable length.  Here's a lava gun that turns anyone in-line with it into a Corpse
+	One can also have ellipses in patterns, that allow for them to be variable length.  Here's a lava gun that turns anyone in line with it into a Corpse:
 	<p>
 		<pre><code> late [ LavaGun | ... | Mortal ] -> [ LavaGun | ... | Corpse ]</code></pre>
 	<p>
@@ -137,7 +137,14 @@ A puzzlescript file is divided into 8 sections:
   <p>
   and never finish compiling.
   <p>
-	A technical point that might occasionally be relevant : ellipsis-based rules search from smallest to biggest.
+	A technical point that might occasionally be relevant : ellipsis-based rules search from smallest to biggest.  
+	<p>
+		Also, it's possible to use two ellipses in a single pattern, such as stiff like this.
+		<pre><code>(92) [ > Player | ... | Crate | ... | Crate ] -> [ > Player | ... | > Crate | ... | Crate ]
+		</code></pre>
+		<p>
+			(Please be a little bit careful with using multiple ellipses in a single rule - it might get a bit slow).
+			<p>
 	<h3>Right-hand Side</h3>
 	If we had the following rule
    	<p>

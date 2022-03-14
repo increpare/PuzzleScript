@@ -1417,7 +1417,7 @@ function Rule(rule) {
 	this.patterns = rule[1];		/* lists of CellPatterns to match */
 	this.hasReplacements = rule[2];
 	this.lineNumber = rule[3];		/* rule source for debugging */
-	this.isEllipsis = rule[4];		/* true if pattern has ellipsis */
+	this.ellipsisCount = rule[4];		/* number of ellipses present */
 	this.groupNumber = rule[5];		/* execution group number of rule */
 	this.isRigid = rule[6];
 	this.commands = rule[7];		/* cancel, restart, sfx, etc */
@@ -1433,15 +1433,15 @@ function Rule(rule) {
 
 	this.cellRowMatches = [];
 	for (var i=0;i<this.patterns.length;i++) {
-		this.cellRowMatches.push(this.generateCellRowMatchesFunction(this.patterns[i],this.isEllipsis[i]));
+		this.cellRowMatches.push(this.generateCellRowMatchesFunction(this.patterns[i],this.ellipsisCount[i]));
 	}
 	/* TODO: eliminate isRigid, groupNumber, isRandom
 	from this class by moving them up into a RuleGroup class */
 }
 
 
-Rule.prototype.generateCellRowMatchesFunction = function(cellRow,hasEllipsis)  {
-	if (hasEllipsis==false) {
+Rule.prototype.generateCellRowMatchesFunction = function(cellRow,ellipsisCount)  {
+	if (ellipsisCount===0) {
 		var cr_l = cellRow.length;
 
 		/*
@@ -1467,7 +1467,7 @@ Rule.prototype.generateCellRowMatchesFunction = function(cellRow,hasEllipsis)  {
 		}
 		//console.log(fn.replace(/\s+/g, ' '));
 		return matchCache[fn] = new Function("cellRow","i", 'd', 'objects', 'movements',fn);
-	} else {
+	} else if (ellipsisCount===1){
 		var cr_l = cellRow.length;
 
 		var fn = "var result = [];\n"
@@ -1497,6 +1497,60 @@ Rule.prototype.generateCellRowMatchesFunction = function(cellRow,hasEllipsis)  {
 		}
 		//console.log(fn.replace(/\s+/g, ' '));
 		return matchCache[fn] = new Function("cellRow","i","kmax","kmin", 'd', "objects", "movements",fn);
+	} else { //ellipsisCount===2
+		var cr_l = cellRow.length;
+
+		var ellipsis_index_1=-1;
+		var ellipsis_index_2=-1;
+		for (var cellIndex=0;cellIndex<cr_l;cellIndex++) {
+			if (cellRow[cellIndex]===ellipsisPattern) {
+				if (ellipsis_index_1===-1) {
+					ellipsis_index_1=cellIndex;
+				} else {
+					ellipsis_index_2=cellIndex;
+					break;
+				}
+			}
+		}
+
+		var fn = "var result = [];\n"
+		fn += "if(cellRow[0].matches(i, objects, movements)";
+
+		for (var idx=1;idx<ellipsis_index_1;idx++) {
+			fn+="&&cellRow["+idx+"].matches(i+"+idx+"*d, objects, movements)";
+		}
+		fn+=") {\n";
+
+		//try match middle part
+		fn+="	for (var k1=k1min;k1<k1max;k1++) {\n"
+		fn+="		if(cellRow["+(ellipsis_index_1+1)+"].matches((i+d*(k1+"+(ellipsis_index_1+1-1)+")), objects, movements)";
+		for (var idx=ellipsis_index_1+2;idx<ellipsis_index_2;idx++) {
+			fn+="&&cellRow["+idx+"].matches((i+d*(k1+"+(idx-1)+")), objects, movements)";			
+		}
+		fn+="		){\n";
+		//try match right part
+
+		fn+="			for (var k2=k2min;k1+k2<kmax && k2<k2max;k2++) {\n"
+		fn+="				if(cellRow["+(ellipsis_index_2+1)+"].matches((i+d*(k1+k2+"+(ellipsis_index_2+1-2)+")), objects, movements)";
+		for (var idx=ellipsis_index_2+2;idx<cr_l;idx++) {
+			fn+="&&cellRow["+idx+"].matches((i+d*(k1+k2+"+(idx-2)+")), objects, movements)";			
+		}
+		fn+="				){\n";
+		fn+="					result.push([i,k1,k2]);\n";
+		fn+="				}\n"
+		fn+="			}\n"
+		fn+="		}\n"
+		fn+="	}\n";				
+		fn+="}\n";		
+		fn+="return result;"
+
+
+		if (fn in matchCache) {
+			return matchCache[fn];
+		}
+		//console.log(fn.replace(/\s+/g, ' '));
+		return matchCache[fn] = new Function("cellRow","i","kmax","kmin", "k1max","k1min","k2max","k2min", 'd', "objects", "movements",fn);
+
 	}
 //say cellRow has length 3, with a split in the middle
 /*
@@ -1901,7 +1955,7 @@ function matchCellRow(direction, cellRowMatch, cellRow, cellRowMask,cellRowMask_
 }
 
 
-function matchCellRowWildCard(direction, cellRowMatch, cellRow,cellRowMask,cellRowMask_Movements,d) {
+function matchCellRowWildCard(direction, cellRowMatch, cellRow,cellRowMask,cellRowMask_Movements,d,wildcardCount) {
 	var result=[];
 	if ((!cellRowMask.bitsSetInArray(level.mapCellContents.data))
 	|| (!cellRowMask_Movements.bitsSetInArray(level.mapCellContents_Movements.data))) {
@@ -1913,7 +1967,7 @@ function matchCellRowWildCard(direction, cellRowMatch, cellRow,cellRowMask,cellR
 	var ymin=0;
 	var ymax=level.height;
 
-	var len=cellRow.length-1;//remove one to deal with wildcard
+	var len=cellRow.length-wildcardCount;//remove one to deal with wildcard
     switch(direction) {
     	case 1://up
     	{
@@ -1963,7 +2017,11 @@ function matchCellRowWildCard(direction, cellRowMatch, cellRow,cellRowMask,cellR
 					window.console.log("EEEP2 "+direction);					
 				}
 
-				result.push.apply(result, cellRowMatch(cellRow,i,kmax,0, d, level.objects, level.movements));
+				if (wildcardCount===1) {
+					result.push.apply(result, cellRowMatch(cellRow,i,kmax,0, d, level.objects, level.movements));
+				} else {
+					result.push.apply(result, cellRowMatch(cellRow,i,kmax,0,kmax,0,kmax,0, d, level.objects, level.movements));
+				}
 			}
 		}
 	} else {
@@ -1984,7 +2042,11 @@ function matchCellRowWildCard(direction, cellRowMatch, cellRow,cellRowMask,cellR
 				} else {
 					window.console.log("EEEP2 "+direction);
 				}
-				result.push.apply(result, cellRowMatch(cellRow,i,kmax,0, d, level.objects, level.movements));
+				if (wildcardCount===1) {
+					result.push.apply(result, cellRowMatch(cellRow,i,kmax,0, d, level.objects, level.movements));
+				} else {
+					result.push.apply(result, cellRowMatch(cellRow,i,kmax,0, kmax,0, kmax,0, d, level.objects, level.movements));
+				}
 			}
 		}		
 	}
@@ -2026,11 +2088,13 @@ Rule.prototype.findMatches = function() {
     for (var cellRowIndex=0;cellRowIndex<this.patterns.length;cellRowIndex++) {
         var cellRow = this.patterns[cellRowIndex];
         var matchFunction = this.cellRowMatches[cellRowIndex];
-        if (this.isEllipsis[cellRowIndex]) {//if ellipsis     
-        	var match = matchCellRowWildCard(this.direction,matchFunction,cellRow,cellRowMasks[cellRowIndex],cellRowMasks_Movements[cellRowIndex],d);  
-        } else {
+        if (this.ellipsisCount[cellRowIndex]===1) {//if ellipsis     
+        	var match = matchCellRowWildCard(this.direction,matchFunction,cellRow,cellRowMasks[cellRowIndex],cellRowMasks_Movements[cellRowIndex],d,this.ellipsisCount[cellRowIndex]);  
+        } else  if (this.ellipsisCount[cellRowIndex]===0) {
         	var match = matchCellRow(this.direction,matchFunction,cellRow,cellRowMasks[cellRowIndex],cellRowMasks_Movements[cellRowIndex],d);               	
-        }
+        } else { // ellipsiscount===2
+        	var match = matchCellRowWildCard(this.direction,matchFunction,cellRow,cellRowMasks[cellRowIndex],cellRowMasks_Movements[cellRowIndex],d,this.ellipsisCount[cellRowIndex]);  
+		}
         if (match.length===0) {
             return [];
         } else {
@@ -2066,29 +2130,57 @@ Rule.prototype.applyAt = function(level,tuple,check,delta) {
 	{
 		for (var cellRowIndex=0; cellRowIndex<this.patterns.length; cellRowIndex++)
 		{
-			if (this.isEllipsis[cellRowIndex]) //if ellipsis
+			if (this.ellipsisCount[cellRowIndex]===1)
 			{
-				if ( this.cellRowMatches[cellRowIndex](this.patterns[cellRowIndex], tuple[cellRowIndex][0], tuple[cellRowIndex][1]+1, tuple[cellRowIndex][1], delta, level.objects, level.movements).length == 0 )
+				if ( this.cellRowMatches[cellRowIndex](
+						this.patterns[cellRowIndex], 
+						tuple[cellRowIndex][0], 
+						tuple[cellRowIndex][1]+1, 
+							tuple[cellRowIndex][1], 
+						delta, level.objects, level.movements
+					).length == 0 )
 					return false
-			}
-			else if ( ! this.cellRowMatches[cellRowIndex](this.patterns[cellRowIndex], tuple[cellRowIndex], delta, level.objects, level.movements) )
+			} else if (this.ellipsisCount[cellRowIndex]===2){
+				if ( this.cellRowMatches[cellRowIndex](
+					this.patterns[cellRowIndex], 
+						tuple[cellRowIndex][0],  
+						tuple[cellRowIndex][1]+tuple[cellRowIndex][2]+1, 
+							tuple[cellRowIndex][1]+tuple[cellRowIndex][2], 
+						tuple[cellRowIndex][1]+1, 
+							tuple[cellRowIndex][1],  
+						tuple[cellRowIndex][2]+1, 
+							tuple[cellRowIndex][2], 
+							delta, level.objects, level.movements
+						).length == 0 )
+					return false
+			} else {
+				if ( ! this.cellRowMatches[cellRowIndex](
+					this.patterns[cellRowIndex], 
+						tuple[cellRowIndex], 
+						delta, level.objects, level.movements
+						) )
 				return false
+			}
 		}
 	}
 
 
     var result=false;
-    
+	var anyellipses=false;
+
     //APPLY THE RULE
     for (var cellRowIndex=0;cellRowIndex<rule.patterns.length;cellRowIndex++) {
         var preRow = rule.patterns[cellRowIndex];
-        
-        var currentIndex = rule.isEllipsis[cellRowIndex] ? tuple[cellRowIndex][0] : tuple[cellRowIndex];
+    	var ellipse_index=0;
+
+        var currentIndex = rule.ellipsisCount[cellRowIndex]>0 ? tuple[cellRowIndex][0] : tuple[cellRowIndex];
         for (var cellIndex=0;cellIndex<preRow.length;cellIndex++) {
             var preCell = preRow[cellIndex];
 
             if (preCell === ellipsisPattern) {
-            	var k = tuple[cellRowIndex][1];
+            	var k = tuple[cellRowIndex][1+ellipse_index];
+				ellipse_index++;
+				anyellipses=true;
             	currentIndex += delta*k;
             	continue;
             }
@@ -2106,7 +2198,29 @@ Rule.prototype.applyAt = function(level,tuple,check,delta) {
 		}
 
 		var inspect_ID =  addToDebugTimeline(level,rule.lineNumber);
-		var logString = `<font color="green">Rule <a onclick="jumpToLine(${rule.lineNumber});"  href="javascript:void(0);">${rule.lineNumber}</a> ${ruleDirection} applied.</font>`;
+		var gapMessage="";
+		// var gapcount=0;
+		// if (anyellipses){
+		// 	var added=0;
+		// 	for(var i=0;i<tuple.length;i++){
+		// 		var tuples_cellrow = tuple[i];
+		// 		//Start at index 1 because index 0 just is the index where the rule starts.
+		// 		for (var j=1;j<tuples_cellrow.length;j++){
+		// 			added++;
+		// 			if (gapMessage.length>0){
+		// 				gapMessage+=", ";
+		// 			}
+		// 			gapMessage+=tuples_cellrow[j];
+		// 		}			
+		// 	}
+		// 	if (added===1){
+		// 		gapMessage = " (ellipsis gap of length "+gapMessage+")";
+		// 	} else {
+		// 		gapMessage = " (ellipsis gaps of length "+gapMessage+")";
+		// 	}
+		// }
+		
+		var logString = `<font color="green">Rule <a onclick="jumpToLine(${rule.lineNumber});"  href="javascript:void(0);">${rule.lineNumber}</a> ${ruleDirection} applied${gapMessage}.</font>`;
 		consolePrint(logString,false,rule.lineNumber,inspect_ID);
 		
 	}

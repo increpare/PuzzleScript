@@ -85,13 +85,12 @@ RULES
 ======
 
 [ > Player | no Activetile ] -> cancel
-[ > Player | ] -> [ | Player ] 
 
-[ Activetile | Player ] -> [ Temp | Player ] 
-[ no Temp | Player ] -> [ Activetile | Player ] 
-[ Temp ] -> [ ] 
+late [ Activetile | Player ] -> [ Temp | Player ] 
+late [ no Temp | Player ] -> [ Activetile | Player ] 
+late [ Temp ] -> [ ] 
 
-[ Activetile Void ] -> [ Void ] 
+late [ Activetile Void ] -> [ Void ] 
 
 ==============
 WINCONDITIONS
