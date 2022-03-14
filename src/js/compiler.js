@@ -2238,7 +2238,7 @@ function twiddleMetaData(state) {
             logWarning("Dimensions must be of the form AxB.",lineNumber);
             return null;
         } else {
-            var intcoords = [getIntCheckedPositive(coords[0],lineNumber), getIntCheckedPositive(coords[0],lineNumber)];
+            var intcoords = [getIntCheckedPositive(coords[0],lineNumber), getIntCheckedPositive(coords[1],lineNumber)];
             if (!isFinite(coords[0]) || !isFinite(coords[1]) || isNaN(intcoords[0]) || isNaN(intcoords[1])) {
                 logWarning(`Couldn't understand the dimensions given to me (you gave "${val}") - should be of the form AxB.`,lineNumber);
                 return null
