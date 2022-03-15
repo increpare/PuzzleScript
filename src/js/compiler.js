@@ -2930,21 +2930,37 @@ function compile(command, text, randomseed) {
             consoleError('<span class="systemMessage">Errors detected during compilation; the game may not work correctly.</span>');
         }
     } else {
+        var lastRuleID =1;
+
         var ruleCount = 0;
         for (var i = 0; i < state.rules.length; i++) {
             ruleCount += state.rules[i].length;
+            var rulegroup = state.rules[i];
+            for (var j = 0; j < rulegroup.length; j++) {
+                var rule = rulegroup[j];
+                rule.id=(lastRuleID);
+                lastRuleID++;
+            }
         }
         for (var i = 0; i < state.lateRules.length; i++) {
             ruleCount += state.lateRules[i].length;
+            var rulegroup = state.lateRules[i];
+            for (var j = 0; j < rulegroup.length; j++) {
+                var rule = rulegroup[j];
+                rule.id=(lastRuleID);
+                lastRuleID++;
+            }
         }
+        
         if (command[0] == "restart") {
             consolePrint('<span class="systemMessage">Successful Compilation, generated ' + ruleCount + ' instructions.</span>');
         } else {
             consolePrint('<span class="systemMessage">Successful live recompilation, generated ' + ruleCount + ' instructions.</span>');
 
         }
-
-
+        
+        state.lastRuleID = lastRuleID;
+        state.latePhase = false;
         
         if (IDE){
             if (state.metadata.title!==undefined) {

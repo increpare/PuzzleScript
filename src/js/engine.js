@@ -777,6 +777,17 @@ function RebuildLevelArrays() {
 	level.mapCellContents = new BitVec(STRIDE_OBJ);
 	level.mapCellContents_Movements = new BitVec(STRIDE_MOV);
 
+	// Index meaning (given "C" is max rule ID (Starts at 1))
+	// 		-1 = dead
+	// (C+2)*(turnNumber%5)+D, where D is:
+	//  	0 - player movement application (also the default value)
+	//  	1 ... C - rule application
+	//  	C+1 movement resolution
+
+	level.turnNumber=0;
+	level.lastModifiedByRule_Row = [];
+	level.lastModifiedByRule_Col = [];
+
 	//I have these to avoid dynamic allocation - I generate 3 because why not, 
 	//but according to my tests I never seem to call this while a previous copy is still in scope
 	_movementVecs = [new BitVec(STRIDE_MOV),new BitVec(STRIDE_MOV),new BitVec(STRIDE_MOV)];
@@ -813,6 +824,17 @@ function RebuildLevelArrays() {
     for (var i=0;i<level.width;i++) {
     	level.colCellContents_Movements[i]=new BitVec(STRIDE_MOV);	    	
     }
+
+	const C = state.lastRuleID;
+
+	level.lastModifiedByRule_Col = new Int32Array(level.width);
+	for (var i=0;i<level.width;i++) {
+		level.lastModifiedByRule_Col[i]=(C+2)+0;
+	}
+	level.lastModifiedByRule_Row = new Int32Array(level.height);
+	for (var i=0;i<level.height;i++) {
+		level.lastModifiedByRule_Row[i]=(C+2)+0;
+	}
 
     for (var i=0;i<level.n_tiles;i++)
     {
@@ -888,13 +910,16 @@ function restoreLevel(lev) {
 			level.rigidGroupIndexMask[i].setZero();
 		}	
 
+		level.turnNumber=0;
 	    for (var i=0;i<level.height;i++) {
 	    	var rcc = level.rowCellContents[i];
 	    	rcc.setZero();
+			level.lastModifiedByRule_Row[i]=0;
 	    }
 	    for (var i=0;i<level.width;i++) {
 	    	var ccc = level.colCellContents[i];
 	    	ccc.setZero();
+			level.lastModifiedByRule_Col[i]=0;
 	    }
 	}
 
@@ -1073,6 +1098,9 @@ function getLayersOfMask(cellMask) {
 }
 
 function moveEntitiesAtIndex(positionIndex, entityMask, dirMask) {
+	const C = state.lastRuleID;
+	const lastmoved_idx = (C+2)*(level.turnNumber%5)+0;
+
     var cellMask = level.getCell(positionIndex);
     cellMask.iand(entityMask);
     var layers = getLayersOfMask(cellMask);
@@ -1081,13 +1109,28 @@ function moveEntitiesAtIndex(positionIndex, entityMask, dirMask) {
     for (var i=0;i<layers.length;i++) {
     	movementMask.ishiftor(dirMask, 5 * layers[i]);
     }
-    level.setMovements(positionIndex, movementMask);
+    level.setMovements(positionIndex, movementMask,lastmoved_idx);
 
 	var colIndex=(positionIndex/level.height)|0;
 	var rowIndex=(positionIndex%level.height);
 	level.colCellContents_Movements[colIndex].ior(movementMask);
 	level.rowCellContents_Movements[rowIndex].ior(movementMask);
 	level.mapCellContents_Movements.ior(movementMask);
+
+	const old_last_index = (C+2)*((level.turnNumber+1)%5)+0;
+	for (var i=0;i<level.width;i++){
+		if ( level.lastModifiedByRule_Col[i] === old_last_index ){
+			level.lastModifiedByRule_Col[i] = -1;
+		}
+	}
+	for (var i=0;i<level.height;i++){
+		if ( level.lastModifiedByRule_Row[i] === old_last_index ){
+			level.lastModifiedByRule_Row[i] = -1;
+		}
+	}
+
+	level.lastModifiedByRule_Col[colIndex]=lastmoved_idx;//this function only gets called by the Player-movement code, which is indexed as 0
+	level.lastModifiedByRule_Row[rowIndex]=lastmoved_idx;//this function only gets called by the Player-movement code, which is indexed as 0
 }
 
 
@@ -1174,7 +1217,14 @@ function repositionEntitiesOnLayer(positionIndex,layer,dirMask)
 	
     level.colCellContents[colIndex].ior(movingEntities);
     level.rowCellContents[rowIndex].ior(movingEntities);
-	//corresponding movement stuff in setmovements
+	
+	//This just happens in resolvemovements, which is (C+2)*(turnNumber%2)+(C+1)
+	//Is setting the lastmodified stuff here enough or does it also need to be done in setmovements?
+	const C = state.lastRuleID;
+	const idx = (C+2)*(level.turnNumber%5)+(C+1);
+	level.lastModifiedByRule_Col[colIndex]=idx;
+	level.lastModifiedByRule_Row[rowIndex]=idx;
+
     return true;
 }
 
@@ -1195,7 +1245,8 @@ function repositionEntitiesAtCell(positionIndex) {
         }
     }
 
-   	level.setMovements(positionIndex, movementMask);
+	const C = state.lastRuleID;
+   	level.setMovements(positionIndex, movementMask, C+1);
 
     return moved;
 }
@@ -1266,7 +1317,7 @@ Level.prototype.getMovementsInto = function(index,targetarray) {
 	return _movementsVec;
 }
 
-Level.prototype.setMovements = function(index, vec) {
+Level.prototype.setMovements = function(index, vec, lastModified_idx) {
 	for (var i = 0; i < vec.data.length; ++i) {
 		this.movements[index * STRIDE_MOV + i] = vec.data[i];
 	}
@@ -1280,7 +1331,8 @@ Level.prototype.setMovements = function(index, vec) {
 	level.rowCellContents_Movements[rowIndex].ior(vec);
 	level.mapCellContents_Movements.ior(vec);
 
-
+	level.lastModifiedByRule_Col[colIndex]=lastModified_idx;
+	level.lastModifiedByRule_Row[rowIndex]=lastModified_idx;
 }
 
 var ellipsisPattern = ['ellipsis'];
@@ -1754,8 +1806,12 @@ CellPattern.prototype.replace = function(rule, currentIndex) {
 		destroyed.iclear(curCellMask);
 		sfxDestroyMask.ior(destroyed);
 
+
+		const lastModified_idx = (state.lastRuleID+2)*(level.turnNumber%5)
+									+(rule.id);
+
 		level.setCell(currentIndex, curCellMask);
-		level.setMovements(currentIndex, curMovementMask);
+		level.setMovements(currentIndex, curMovementMask, lastModified_idx);
 
 		var colIndex=(currentIndex/level.height)|0;
 		var rowIndex=(currentIndex%level.height);
@@ -1766,6 +1822,9 @@ CellPattern.prototype.replace = function(rule, currentIndex) {
 		level.colCellContents_Movements[colIndex].ior(curMovementMask);
 		level.rowCellContents_Movements[rowIndex].ior(curMovementMask);
 		level.mapCellContents_Movements.ior(curMovementMask);
+
+		level.lastModifiedByRule_Row[rowIndex] = lastModified_idx;
+		level.lastModifiedByRule_Col[colIndex] = lastModified_idx;
 
 	}
 
@@ -1921,7 +1980,8 @@ function matchCellRow(direction, cellRowMatch, cellRow, cellRowMask,cellRowMask_
     var horizontal=direction>2;
     if (horizontal) {
 		for (var y=ymin;y<ymax;y++) {
-			if (!cellRowMask.bitsSetInArray(level.rowCellContents[y].data) 
+			if ( level.lastModifiedByRule_Row[y]===-1
+			|| !cellRowMask.bitsSetInArray(level.rowCellContents[y].data) 
 			|| !cellRowMask_Movements.bitsSetInArray(level.rowCellContents_Movements[y].data)) {
 				continue;
 			}
@@ -1936,7 +1996,8 @@ function matchCellRow(direction, cellRowMatch, cellRow, cellRowMask,cellRowMask_
 		}
 	} else {
 		for (var x=xmin;x<xmax;x++) {
-			if (!cellRowMask.bitsSetInArray(level.colCellContents[x].data)
+			if ( level.lastModifiedByRule_Col[x]===-1
+			|| !cellRowMask.bitsSetInArray(level.colCellContents[x].data)
 			|| !cellRowMask_Movements.bitsSetInArray(level.colCellContents_Movements[x].data)) {
 				continue;
 			}
@@ -2000,7 +2061,8 @@ function matchCellRowWildCard(direction, cellRowMatch, cellRow,cellRowMask,cellR
     var horizontal=direction>2;
     if (horizontal) {
 		for (var y=ymin;y<ymax;y++) {
-			if (!cellRowMask.bitsSetInArray(level.rowCellContents[y].data)
+			if ( level.lastModifiedByRule_Row[y]===-1
+			|| !cellRowMask.bitsSetInArray(level.rowCellContents[y].data)
 			|| !cellRowMask_Movements.bitsSetInArray(level.rowCellContents_Movements[y].data) ) {
 				continue;
 			}
@@ -2026,7 +2088,8 @@ function matchCellRowWildCard(direction, cellRowMatch, cellRow,cellRowMask,cellR
 		}
 	} else {
 		for (var x=xmin;x<xmax;x++) {
-			if (!cellRowMask.bitsSetInArray(level.colCellContents[x].data)
+			if ( level.lastModifiedByRule_Col[x]===-1
+			|| !cellRowMask.bitsSetInArray(level.colCellContents[x].data)
 			|| !cellRowMask_Movements.bitsSetInArray(level.colCellContents_Movements[x].data)) {
 				continue;
 			}
@@ -2229,6 +2292,22 @@ Rule.prototype.applyAt = function(level,tuple,check,delta) {
 };
 
 Rule.prototype.tryApply = function(level) {
+
+	const C = state.lastRuleID;
+	const old_last_index = (C+2)*((level.turnNumber+1)%5)
+								+(this.id);
+				
+	for (var i=0;i<level.width;i++){
+		if ( level.lastModifiedByRule_Col[i] === old_last_index ){
+			level.lastModifiedByRule_Col[i] = -1;
+		}
+	}
+	for (var i=0;i<level.height;i++){
+		if ( level.lastModifiedByRule_Row[i] === old_last_index ){
+			level.lastModifiedByRule_Row[i] = -1;
+		}
+	}
+
 	const delta = level.delta_index(this.direction);
 
     //get all cellrow matches
@@ -2425,6 +2504,7 @@ function applyRules(rules, loopPoint, startRuleGroupindex, bannedGroup){
     //when we're going back in, let's loop, to be sure to be sure
     var loopPropagated = startRuleGroupindex>0;
     var loopCount = 0;
+
     for (var ruleGroupIndex=startRuleGroupindex;ruleGroupIndex<rules.length;) {
     	if (bannedGroup && bannedGroup[ruleGroupIndex]) {
     		//do nothing
@@ -2472,6 +2552,22 @@ function applyRules(rules, loopPoint, startRuleGroupindex, bannedGroup){
 
 //if this returns!=null, need to go back and reprocess
 function resolveMovements(level, bannedGroup){
+
+
+	const C = state.lastRuleID;
+	const old_last_index = (C+2)*((level.turnNumber+1)%5)
+								+(C+1);
+	for (var i=0;i<level.width;i++){
+		if ( level.lastModifiedByRule_Col[i] === old_last_index ){
+			level.lastModifiedByRule_Col[i] = -1;
+		}
+	}
+	for (var i=0;i<level.height;i++){
+		if ( level.lastModifiedByRule_Row[i] === old_last_index ){
+			level.lastModifiedByRule_Row[i] = -1;
+		}
+	}
+	
     var moved=true;
     while(moved){
         moved=false;
@@ -2575,6 +2671,7 @@ function processInput(dir,dontDoWin,dontModify) {
 	againing = false;
 
 
+	level.turnNumber = (level.turnNumber+1)%5;
 
 	var bak = backupLevel();
 	var inputindex=dir;
@@ -2726,7 +2823,10 @@ function processInput(dir,dontDoWin,dontModify) {
 						consolePrint('Applying late rules');
 					}
 				}
+				state.latePhase=true;
         		applyRules(state.lateRules, state.lateLoopPoint, 0);
+				
+				state.latePhase=false;
         		startRuleGroupIndex=0;
         	}
         } while (i < 50 && rigidloop);
