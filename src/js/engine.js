@@ -1763,10 +1763,6 @@ CellPattern.prototype.replace = function(rule, currentIndex) {
 		level.rowCellContents[rowIndex].ior(curCellMask);
 		level.mapCellContents.ior(curCellMask);
 
-		level.colCellContents_Movements[colIndex].ior(curMovementMask);
-		level.rowCellContents_Movements[rowIndex].ior(curMovementMask);
-		level.mapCellContents_Movements.ior(curMovementMask);
-
 	}
 
 	return result;
