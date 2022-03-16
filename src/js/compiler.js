@@ -2910,6 +2910,7 @@ function compile(command, text, randomseed) {
         var state = loadFile(text);
     } catch(error){
         consolePrint(error);
+        console.log(error);
     } finally {
         compiling = false;
     }
