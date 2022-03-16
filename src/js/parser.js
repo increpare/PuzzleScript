@@ -1211,6 +1211,8 @@ var codeMirrorFn = function() {
                     if (sol) {
                         //create new collision layer
                         state.collisionLayers.push([]);
+                        //empty current_line_wip_array
+                        state.current_line_wip_array = [];
                         state.tokenIndex=0;
                     }
 
@@ -1286,10 +1288,10 @@ var codeMirrorFn = function() {
                         var foundOthers=[];
                         var foundSelves=[];
                         for (var i=0;i<ar.length;i++){
-                            var candname = ar[i];
+                            var tcandname = ar[i];
                             for (var j=0;j<=state.collisionLayers.length-1;j++){
                                 var clj = state.collisionLayers[j];
-                                if (clj.indexOf(candname)>=0){
+                                if (clj.indexOf(tcandname)>=0){
                                     if (j!==state.collisionLayers.length-1){
                                         foundOthers.push(j);
                                     } else {
@@ -1306,10 +1308,12 @@ var codeMirrorFn = function() {
                             warningStr+="#"+state.collisionLayers.length;
                             logWarning(warningStr +' ). You should fix this!',state.lineNumber);                                        
                         }
-                        if (foundSelves.length>0){
-                            var warningStr = 'Object "'+candname.toUpperCase()+'" included multiple times (either directly or indirectly) in the same layer.';
-                            logWarning(warningStr,state.lineNumber);                                        
+
+                        if (state.current_line_wip_array.indexOf(candname)>=0){
+                            var warningStr = 'Object "'+candname.toUpperCase()+'" included explicitly multiple times in the same layer. Don\'t do that innit.';
+                            logWarning(warningStr,state.lineNumber);         
                         }
+                        state.current_line_wip_array.push(candname);
 
                         state.collisionLayers[state.collisionLayers.length - 1] = state.collisionLayers[state.collisionLayers.length - 1].concat(ar);
                         if (ar.length>0) {
