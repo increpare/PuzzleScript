@@ -30,3 +30,11 @@ var editor = {
 }
 
 function addToDebugTimeline(level, lineNumber){}
+
+var code = {
+	editorreference:editor
+}
+
+window.form1 = {
+	code: code,
+}

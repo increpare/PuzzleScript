@@ -977,13 +977,6 @@ window.console.log(psstring);*/
   return sound;
 };
 
-if (typeof exports != 'undefined') {
-  // For node.js
-  var RIFFWAVE = require('./riffwave').RIFFWAVE;
-  exports.Params = Params;
-  exports.generate = generate;
-}
-
 var sfxCache = {};
 var cachedSeeds = [];
 var CACHE_MAX = 50;
