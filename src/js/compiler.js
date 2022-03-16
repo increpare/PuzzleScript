@@ -2961,6 +2961,7 @@ function compile(command, text, randomseed) {
 
     consoleCacheDump();
 
+    return errorCount;
 }
 
 
