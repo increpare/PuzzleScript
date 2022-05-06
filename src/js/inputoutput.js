@@ -734,41 +734,43 @@ function checkKey(e,justPressed) {
     	if (state.levels.length===0) {
     		//do nothing
     	} else if (titleScreen) {
-    		if (titleMode===0) {
-    			if (inputdir===4&&justPressed) {
-    				if (titleSelected===false) {    				
-						tryPlayStartGameSound();
-	    				titleSelected=true;
-	    				messageselected=false;
-	    				timer=0;
-	    				quittingTitleScreen=true;
-	    				generateTitleScreen();
-	    				canvasResize();
-						clearInputHistory();
-	    			}
-    			}
-    		} else {
-    			if (inputdir==4&&justPressed) {
-    				if (titleSelected===false) {    				
-						tryPlayStartGameSound();
-	    				titleSelected=true;
-	    				messageselected=false;
-	    				timer=0;
-	    				quittingTitleScreen=true;
-	    				generateTitleScreen();
-	    				redraw();
-	    			}
-    			}
-    			else if (inputdir===0||inputdir===2) {
-    				if (inputdir===0){
-    					titleSelection=0;    					
-    				} else {
-    					titleSelection=1;    					    					
-    				}
-    				generateTitleScreen();
-    				redraw();
-    			}
-    		}
+			if (quittingTitleScreen===false){
+				if (titleMode===0) {
+					if (inputdir===4&&justPressed) {
+						if (titleSelected===false) {    				
+							tryPlayStartGameSound();
+							titleSelected=true;
+							messageselected=false;
+							timer=0;
+							quittingTitleScreen=true;
+							generateTitleScreen();
+							canvasResize();
+							clearInputHistory();
+						}
+					}
+				} else {
+					if (inputdir==4&&justPressed) {
+						if (titleSelected===false) {    				
+							tryPlayStartGameSound();
+							titleSelected=true;
+							messageselected=false;
+							timer=0;
+							quittingTitleScreen=true;
+							generateTitleScreen();
+							redraw();
+						}
+					}
+					else if (inputdir===0||inputdir===2) {
+						if (inputdir===0){
+							titleSelection=0;    					
+						} else {
+							titleSelection=1;    					    					
+						}
+						generateTitleScreen();
+						redraw();
+					}
+				}
+			}
     	} else {
     		if (inputdir==4&&justPressed) {    				
 				if (unitTesting) {
