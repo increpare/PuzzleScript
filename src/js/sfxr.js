@@ -588,11 +588,13 @@ var generatorNames = [
 i like 9675111
 */
 generateFromSeed = function(seed) {
-  rng = new RNG((seed / 100) | 0);
-  var generatorindex = seed % 100;
+  var seedSplit = seed.toString().split(':');
+  rng = new RNG((seedSplit[0] / 100) | 0);
+  var generatorindex = seedSplit[0] % 100;
   var soundGenerator = generators[generatorindex % generators.length];
   seeded = true;
   var result = soundGenerator();
+  result.sound_vol = seedSplit[1] / 100 || SOUND_VOL;
   result.seed = seed;
   seeded = false;
   return result;
@@ -994,7 +996,6 @@ function cacheSeed(seed){
   }
 
   var params = generateFromSeed(seed);
-  params.sound_vol = SOUND_VOL;
   params.sample_rate = SAMPLE_RATE;
   params.bit_depth = BIT_DEPTH;
 
