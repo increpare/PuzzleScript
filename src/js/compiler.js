@@ -2545,7 +2545,7 @@ function generateLoopPoints(state) {
 }
 
 function validSeed(seed) {
-    return /^\s*\d+(:\d+)?\s*$/.exec(seed) !== null;
+    return /^\s*\d+([+-]\d+)?\s*$/.exec(seed) !== null;
 }
 
 var soundDirectionIndicatorMasks = {

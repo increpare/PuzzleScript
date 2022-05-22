@@ -239,7 +239,7 @@ var codeMirrorFn = function() {
     const reg_commands = /[\p{Z}\s]*(sfx0|sfx1|sfx2|sfx3|Sfx4|sfx5|sfx6|sfx7|sfx8|sfx9|sfx10|cancel|checkpoint|restart|win|message|again)[\p{Z}\s]*/u;
     const reg_name = /[\p{L}\p{N}_]+[\p{Z}\s]*/u;///\w*[a-uw-zA-UW-Z0-9_]/;
     const reg_number = /[\d]+/;
-    const reg_soundseed = /\d+(:\d+)?\b/u;
+    const reg_soundseed = /\d+([+-]\d+)?\b/u;
     const reg_spriterow = /[\.0-9]{5}[\p{Z}\s]*/u;
     const reg_sectionNames = /(objects|collisionlayers|legend|sounds|rules|winconditions|levels)(?![\p{L}\p{N}_])[\p{Z}\s]*/u;
     const reg_equalsrow = /[\=]+/;

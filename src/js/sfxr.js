@@ -1,4 +1,4 @@
-var SOUND_VOL = 0.25;
+var BASE_GAIN = 0.284;
 var SAMPLE_RATE = 5512;
 var BIT_DEPTH = 8;
 
@@ -588,13 +588,13 @@ var generatorNames = [
 i like 9675111
 */
 generateFromSeed = function(seed) {
-  var seedSplit = seed.toString().split(':');
+  var seedSplit = seed.toString().split(/([+-]\d+)/);
   rng = new RNG((seedSplit[0] / 100) | 0);
   var generatorindex = seedSplit[0] % 100;
   var soundGenerator = generators[generatorindex % generators.length];
   seeded = true;
   var result = soundGenerator();
-  result.sound_vol = seedSplit[1] / 100 || SOUND_VOL;
+  result.sound_vol = seedSplit[1] || 0;
   result.seed = seed;
   seeded = false;
   return result;
@@ -789,8 +789,9 @@ window.console.log(psstring);*/
     rep_limit = 0;
 
   //var gain = 2.0 * Math.log(1 + (Math.E - 1) * ps.sound_vol);
-  var gain = 2.0 * ps.sound_vol;
-  var gain = Math.exp(ps.sound_vol) - 1;
+  //var gain = 2.0 * ps.sound_vol;
+  //var gain = Math.exp(ps.sound_vol) - 1;
+  var gain = BASE_GAIN * 10 ** (ps.sound_vol / 20)
 
   var num_clipped = 0;
 
@@ -853,7 +854,7 @@ window.console.log(psstring);*/
       env_time = 1;
       env_stage++;
       while (env_stage < 3 && env_length[env_stage] === 0)
-	env_stage++;
+	      env_stage++;
       if (env_stage === 3)
         break;
     }
