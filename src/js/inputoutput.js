@@ -801,8 +801,12 @@ function checkKey(e,justPressed) {
     }
 }
 
-
+// main loop! it'll repeat itself at 60fps
+//  (or the browser's refresh rate)
+// and will auto-pause when the tab loses focus
 function update() {
+    requestAnimationFrame(update);
+
     timer+=deltatime;
     input_throttle_timer+=deltatime;
     if (quittingTitleScreen) {
@@ -867,24 +871,4 @@ function update() {
     }
 }
 
-var looping=false;
-// Lights, camera…function!
-var loop = function(){
-	looping=true;
-	update();
-	if (document.visibilityState==='hidden'){
-		looping=false;
-		return;
-	};
-	setTimeout(loop,deltatime);
-}
-
-document.addEventListener('visibilitychange', function logData() {
-	if (document.visibilityState === 'visible') {
-		if (looping===false){
-			loop();
-		}
-	}
-  });
-
-loop();
+window.onload=update
