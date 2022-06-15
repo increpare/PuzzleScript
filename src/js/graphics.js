@@ -10,9 +10,11 @@ function createSprite(name,spritegrid, colors, padding) {
 
 	var w = spritegrid[0].length;
 	var h = spritegrid.length;
-	var cw = ~~(cellwidth / (w + (padding|0)));
-    var ch = ~~(cellheight / (h + (padding|0)));
-    var pixh=ch;
+	var cw = cellwidth / (w + (padding|0));
+    var ch = cellheight / (h + (padding|0));
+	var pixw = Math.ceil(cw);
+	var pixh = Math.ceil(ch);
+	
     if ("scanline" in state.metadata) {
         pixh=Math.ceil(ch/2);
     }
@@ -24,7 +26,7 @@ function createSprite(name,spritegrid, colors, padding) {
                 var cy = (j * ch)|0;
                 var cx = (k * cw)|0;
                 spritectx.fillStyle = colors[val];
-                spritectx.fillRect(cx, cy, cw, pixh);
+                spritectx.fillRect(cx, cy, pixw, pixh);
             }
         }
     }
