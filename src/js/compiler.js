@@ -1236,6 +1236,7 @@ function concretizePropertyRule(state, rule, lineNumber) {
 
     if (rhsPropertyRemains.length > 0) {
         logError('This rule has a property on the right-hand side, \"' + rhsPropertyRemains.toUpperCase() + "\", that can't be inferred from the left-hand side.  (either for every property on the right there has to be a corresponding one on the left in the same cell, OR, if there's a single occurrence of a particular property name on the left, all properties of the same name on the right are assumed to be the same).", lineNumber);
+        return [];
     }
 
     return result;
