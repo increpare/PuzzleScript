@@ -391,6 +391,8 @@ function logErrorNoLine(str){
 
 function clearInputHistory() {}
 function pushInput(inp) {}
+function pushSoundToHistory(seed) {}
+
 </script>
 <script>
 
@@ -6022,7 +6024,10 @@ function cacheSeed(seed){
 }
 
 
-function playSound(seed) {
+function playSound(seed,ignore) {
+  if (ignore!==true){
+    pushSoundToHistory(seed);
+  }
   if (muted){
     return;
   }
@@ -7708,7 +7713,7 @@ canvasResize();
 function tryPlaySimpleSound(soundname) {
 	if (state.sfx_Events[soundname]!==undefined) {
 		var seed = state.sfx_Events[soundname];
-		playSound(seed);
+		playSound(seed,true);
 	}
 }
 function tryPlayTitleSound() {
@@ -7959,6 +7964,8 @@ function RebuildLevelArrays() {
 	level.mapCellContents = new BitVec(STRIDE_OBJ);
 	level.mapCellContents_Movements = new BitVec(STRIDE_MOV);
 
+	//I have these to avoid dynamic allocation - I generate 3 because why not, 
+	//but according to my tests I never seem to call this while a previous copy is still in scope
 	_movementVecs = [new BitVec(STRIDE_MOV),new BitVec(STRIDE_MOV),new BitVec(STRIDE_MOV)];
 	_rigidVecs = [new BitVec(STRIDE_MOV),new BitVec(STRIDE_MOV),new BitVec(STRIDE_MOV)];
 
@@ -8354,7 +8361,6 @@ function repositionEntitiesOnLayer(positionIndex,layer,dirMask)
 	
     level.colCellContents[colIndex].ior(movingEntities);
     level.rowCellContents[rowIndex].ior(movingEntities);
-    level.mapCellContents.ior(movingEntities);
 	//corresponding movement stuff in setmovements
     return true;
 }
@@ -8598,7 +8604,7 @@ function Rule(rule) {
 	this.patterns = rule[1];		/* lists of CellPatterns to match */
 	this.hasReplacements = rule[2];
 	this.lineNumber = rule[3];		/* rule source for debugging */
-	this.isEllipsis = rule[4];		/* true if pattern has ellipsis */
+	this.ellipsisCount = rule[4];		/* number of ellipses present */
 	this.groupNumber = rule[5];		/* execution group number of rule */
 	this.isRigid = rule[6];
 	this.commands = rule[7];		/* cancel, restart, sfx, etc */
@@ -8614,15 +8620,15 @@ function Rule(rule) {
 
 	this.cellRowMatches = [];
 	for (var i=0;i<this.patterns.length;i++) {
-		this.cellRowMatches.push(this.generateCellRowMatchesFunction(this.patterns[i],this.isEllipsis[i]));
+		this.cellRowMatches.push(this.generateCellRowMatchesFunction(this.patterns[i],this.ellipsisCount[i]));
 	}
 	/* TODO: eliminate isRigid, groupNumber, isRandom
 	from this class by moving them up into a RuleGroup class */
 }
 
 
-Rule.prototype.generateCellRowMatchesFunction = function(cellRow,hasEllipsis)  {
-	if (hasEllipsis==false) {
+Rule.prototype.generateCellRowMatchesFunction = function(cellRow,ellipsisCount)  {
+	if (ellipsisCount===0) {
 		var cr_l = cellRow.length;
 
 		/*
@@ -8648,7 +8654,7 @@ Rule.prototype.generateCellRowMatchesFunction = function(cellRow,hasEllipsis)  {
 		}
 		//console.log(fn.replace(/\s+/g, ' '));
 		return matchCache[fn] = new Function("cellRow","i", 'd', 'objects', 'movements',fn);
-	} else {
+	} else if (ellipsisCount===1){
 		var cr_l = cellRow.length;
 
 		var fn = "var result = [];\n"
@@ -8678,6 +8684,60 @@ Rule.prototype.generateCellRowMatchesFunction = function(cellRow,hasEllipsis)  {
 		}
 		//console.log(fn.replace(/\s+/g, ' '));
 		return matchCache[fn] = new Function("cellRow","i","kmax","kmin", 'd', "objects", "movements",fn);
+	} else { //ellipsisCount===2
+		var cr_l = cellRow.length;
+
+		var ellipsis_index_1=-1;
+		var ellipsis_index_2=-1;
+		for (var cellIndex=0;cellIndex<cr_l;cellIndex++) {
+			if (cellRow[cellIndex]===ellipsisPattern) {
+				if (ellipsis_index_1===-1) {
+					ellipsis_index_1=cellIndex;
+				} else {
+					ellipsis_index_2=cellIndex;
+					break;
+				}
+			}
+		}
+
+		var fn = "var result = [];\n"
+		fn += "if(cellRow[0].matches(i, objects, movements)";
+
+		for (var idx=1;idx<ellipsis_index_1;idx++) {
+			fn+="&&cellRow["+idx+"].matches(i+"+idx+"*d, objects, movements)";
+		}
+		fn+=") {\n";
+
+		//try match middle part
+		fn+="	for (var k1=k1min;k1<k1max;k1++) {\n"
+		fn+="		if(cellRow["+(ellipsis_index_1+1)+"].matches((i+d*(k1+"+(ellipsis_index_1+1-1)+")), objects, movements)";
+		for (var idx=ellipsis_index_1+2;idx<ellipsis_index_2;idx++) {
+			fn+="&&cellRow["+idx+"].matches((i+d*(k1+"+(idx-1)+")), objects, movements)";			
+		}
+		fn+="		){\n";
+		//try match right part
+
+		fn+="			for (var k2=k2min;k1+k2<kmax && k2<k2max;k2++) {\n"
+		fn+="				if(cellRow["+(ellipsis_index_2+1)+"].matches((i+d*(k1+k2+"+(ellipsis_index_2+1-2)+")), objects, movements)";
+		for (var idx=ellipsis_index_2+2;idx<cr_l;idx++) {
+			fn+="&&cellRow["+idx+"].matches((i+d*(k1+k2+"+(idx-2)+")), objects, movements)";			
+		}
+		fn+="				){\n";
+		fn+="					result.push([i,k1,k2]);\n";
+		fn+="				}\n"
+		fn+="			}\n"
+		fn+="		}\n"
+		fn+="	}\n";				
+		fn+="}\n";		
+		fn+="return result;"
+
+
+		if (fn in matchCache) {
+			return matchCache[fn];
+		}
+		//console.log(fn.replace(/\s+/g, ' '));
+		return matchCache[fn] = new Function("cellRow","i","kmax","kmin", "k1max","k1min","k2max","k2min", 'd', "objects", "movements",fn);
+
 	}
 //say cellRow has length 3, with a split in the middle
 /*
@@ -8890,10 +8950,6 @@ CellPattern.prototype.replace = function(rule, currentIndex) {
 		level.rowCellContents[rowIndex].ior(curCellMask);
 		level.mapCellContents.ior(curCellMask);
 
-		level.colCellContents_Movements[colIndex].ior(curMovementMask);
-		level.rowCellContents_Movements[rowIndex].ior(curMovementMask);
-		level.mapCellContents_Movements.ior(curMovementMask);
-
 	}
 
 	return result;
@@ -9082,7 +9138,7 @@ function matchCellRow(direction, cellRowMatch, cellRow, cellRowMask,cellRowMask_
 }
 
 
-function matchCellRowWildCard(direction, cellRowMatch, cellRow,cellRowMask,cellRowMask_Movements,d) {
+function matchCellRowWildCard(direction, cellRowMatch, cellRow,cellRowMask,cellRowMask_Movements,d,wildcardCount) {
 	var result=[];
 	if ((!cellRowMask.bitsSetInArray(level.mapCellContents.data))
 	|| (!cellRowMask_Movements.bitsSetInArray(level.mapCellContents_Movements.data))) {
@@ -9094,7 +9150,7 @@ function matchCellRowWildCard(direction, cellRowMatch, cellRow,cellRowMask,cellR
 	var ymin=0;
 	var ymax=level.height;
 
-	var len=cellRow.length-1;//remove one to deal with wildcard
+	var len=cellRow.length-wildcardCount;//remove one to deal with wildcard
     switch(direction) {
     	case 1://up
     	{
@@ -9144,7 +9200,11 @@ function matchCellRowWildCard(direction, cellRowMatch, cellRow,cellRowMask,cellR
 					window.console.log("EEEP2 "+direction);					
 				}
 
-				result.push.apply(result, cellRowMatch(cellRow,i,kmax,0, d, level.objects, level.movements));
+				if (wildcardCount===1) {
+					result.push.apply(result, cellRowMatch(cellRow,i,kmax,0, d, level.objects, level.movements));
+				} else {
+					result.push.apply(result, cellRowMatch(cellRow,i,kmax,0,kmax,0,kmax,0, d, level.objects, level.movements));
+				}
 			}
 		}
 	} else {
@@ -9165,7 +9225,11 @@ function matchCellRowWildCard(direction, cellRowMatch, cellRow,cellRowMask,cellR
 				} else {
 					window.console.log("EEEP2 "+direction);
 				}
-				result.push.apply(result, cellRowMatch(cellRow,i,kmax,0, d, level.objects, level.movements));
+				if (wildcardCount===1) {
+					result.push.apply(result, cellRowMatch(cellRow,i,kmax,0, d, level.objects, level.movements));
+				} else {
+					result.push.apply(result, cellRowMatch(cellRow,i,kmax,0, kmax,0, kmax,0, d, level.objects, level.movements));
+				}
 			}
 		}		
 	}
@@ -9207,11 +9271,13 @@ Rule.prototype.findMatches = function() {
     for (var cellRowIndex=0;cellRowIndex<this.patterns.length;cellRowIndex++) {
         var cellRow = this.patterns[cellRowIndex];
         var matchFunction = this.cellRowMatches[cellRowIndex];
-        if (this.isEllipsis[cellRowIndex]) {//if ellipsis     
-        	var match = matchCellRowWildCard(this.direction,matchFunction,cellRow,cellRowMasks[cellRowIndex],cellRowMasks_Movements[cellRowIndex],d);  
-        } else {
+        if (this.ellipsisCount[cellRowIndex]===1) {//if ellipsis     
+        	var match = matchCellRowWildCard(this.direction,matchFunction,cellRow,cellRowMasks[cellRowIndex],cellRowMasks_Movements[cellRowIndex],d,this.ellipsisCount[cellRowIndex]);  
+        } else  if (this.ellipsisCount[cellRowIndex]===0) {
         	var match = matchCellRow(this.direction,matchFunction,cellRow,cellRowMasks[cellRowIndex],cellRowMasks_Movements[cellRowIndex],d);               	
-        }
+        } else { // ellipsiscount===2
+        	var match = matchCellRowWildCard(this.direction,matchFunction,cellRow,cellRowMasks[cellRowIndex],cellRowMasks_Movements[cellRowIndex],d,this.ellipsisCount[cellRowIndex]);  
+		}
         if (match.length===0) {
             return [];
         } else {
@@ -9247,29 +9313,57 @@ Rule.prototype.applyAt = function(level,tuple,check,delta) {
 	{
 		for (var cellRowIndex=0; cellRowIndex<this.patterns.length; cellRowIndex++)
 		{
-			if (this.isEllipsis[cellRowIndex]) //if ellipsis
+			if (this.ellipsisCount[cellRowIndex]===1)
 			{
-				if ( this.cellRowMatches[cellRowIndex](this.patterns[cellRowIndex], tuple[cellRowIndex][0], tuple[cellRowIndex][1]+1, tuple[cellRowIndex][1], delta, level.objects, level.movements).length == 0 )
+				if ( this.cellRowMatches[cellRowIndex](
+						this.patterns[cellRowIndex], 
+						tuple[cellRowIndex][0], 
+						tuple[cellRowIndex][1]+1, 
+							tuple[cellRowIndex][1], 
+						delta, level.objects, level.movements
+					).length == 0 )
 					return false
-			}
-			else if ( ! this.cellRowMatches[cellRowIndex](this.patterns[cellRowIndex], tuple[cellRowIndex], delta, level.objects, level.movements) )
+			} else if (this.ellipsisCount[cellRowIndex]===2){
+				if ( this.cellRowMatches[cellRowIndex](
+					this.patterns[cellRowIndex], 
+						tuple[cellRowIndex][0],  
+						tuple[cellRowIndex][1]+tuple[cellRowIndex][2]+1, 
+							tuple[cellRowIndex][1]+tuple[cellRowIndex][2], 
+						tuple[cellRowIndex][1]+1, 
+							tuple[cellRowIndex][1],  
+						tuple[cellRowIndex][2]+1, 
+							tuple[cellRowIndex][2], 
+							delta, level.objects, level.movements
+						).length == 0 )
+					return false
+			} else {
+				if ( ! this.cellRowMatches[cellRowIndex](
+					this.patterns[cellRowIndex], 
+						tuple[cellRowIndex], 
+						delta, level.objects, level.movements
+						) )
 				return false
+			}
 		}
 	}
 
 
     var result=false;
-    
+	var anyellipses=false;
+
     //APPLY THE RULE
     for (var cellRowIndex=0;cellRowIndex<rule.patterns.length;cellRowIndex++) {
         var preRow = rule.patterns[cellRowIndex];
-        
-        var currentIndex = rule.isEllipsis[cellRowIndex] ? tuple[cellRowIndex][0] : tuple[cellRowIndex];
+    	var ellipse_index=0;
+
+        var currentIndex = rule.ellipsisCount[cellRowIndex]>0 ? tuple[cellRowIndex][0] : tuple[cellRowIndex];
         for (var cellIndex=0;cellIndex<preRow.length;cellIndex++) {
             var preCell = preRow[cellIndex];
 
             if (preCell === ellipsisPattern) {
-            	var k = tuple[cellRowIndex][1];
+            	var k = tuple[cellRowIndex][1+ellipse_index];
+				ellipse_index++;
+				anyellipses=true;
             	currentIndex += delta*k;
             	continue;
             }
@@ -9287,7 +9381,29 @@ Rule.prototype.applyAt = function(level,tuple,check,delta) {
 		}
 
 		var inspect_ID =  addToDebugTimeline(level,rule.lineNumber);
-		var logString = `<font color="green">Rule <a onclick="jumpToLine(${rule.lineNumber});"  href="javascript:void(0);">${rule.lineNumber}</a> ${ruleDirection} applied.</font>`;
+		var gapMessage="";
+		// var gapcount=0;
+		// if (anyellipses){
+		// 	var added=0;
+		// 	for(var i=0;i<tuple.length;i++){
+		// 		var tuples_cellrow = tuple[i];
+		// 		//Start at index 1 because index 0 just is the index where the rule starts.
+		// 		for (var j=1;j<tuples_cellrow.length;j++){
+		// 			added++;
+		// 			if (gapMessage.length>0){
+		// 				gapMessage+=", ";
+		// 			}
+		// 			gapMessage+=tuples_cellrow[j];
+		// 		}			
+		// 	}
+		// 	if (added===1){
+		// 		gapMessage = " (ellipsis gap of length "+gapMessage+")";
+		// 	} else {
+		// 		gapMessage = " (ellipsis gaps of length "+gapMessage+")";
+		// 	}
+		// }
+		
+		var logString = `<font color="green">Rule <a onclick="jumpToLine(${rule.lineNumber});"  href="javascript:void(0);">${rule.lineNumber}</a> ${ruleDirection} applied${gapMessage}.</font>`;
 		consolePrint(logString,false,rule.lineNumber,inspect_ID);
 		
 	}
@@ -9907,7 +10023,7 @@ function processInput(dir,dontDoWin,dontModify) {
 			return false;
 		}
 
-        for (var i=0;i<seedsToPlay_CantMove.length;i++) {
+        for (var i=0;i<seedsToPlay_CantMove.length;i++) {			
 	        	playSound(seedsToPlay_CantMove[i]);
         }
 
@@ -10029,14 +10145,21 @@ function checkWin(dontDoWin) {
 			var wincondition = state.winconditions[wcIndex];
 			var filter1 = wincondition[1];
 			var filter2 = wincondition[2];
+			var aggr1 = wincondition[4];
+			var aggr2 = wincondition[5];
+
 			var rulePassed=true;
+			
+			const f1 = aggr1 ? c=>filter1.bitsSetInArray(c) : c=>!filter1.bitsClearInArray(c);
+			const f2 = aggr2 ? c=>filter2.bitsSetInArray(c) : c=>!filter2.bitsClearInArray(c);
+
 			switch(wincondition[0]) {
 				case -1://NO
 				{
 					for (var i=0;i<level.n_tiles;i++) {
 						var cell = level.getCellInto(i,_o10);
-						if ( (!filter1.bitsClearInArray(cell.data)) &&  
-							 (!filter2.bitsClearInArray(cell.data)) ) {
+						if ( (f1(cell.data)) &&  
+							 (f2(cell.data)) ) {
 							rulePassed=false;
 							break;
 						}
@@ -10049,8 +10172,8 @@ function checkWin(dontDoWin) {
 					var passedTest=false;
 					for (var i=0;i<level.n_tiles;i++) {
 						var cell = level.getCellInto(i,_o10);
-						if ( (!filter1.bitsClearInArray(cell.data)) &&  
-							 (!filter2.bitsClearInArray(cell.data)) ) {
+						if ( (f1(cell.data)) &&  
+							 (f2(cell.data)) ) {
 							passedTest=true;
 							break;
 						}
@@ -10064,8 +10187,8 @@ function checkWin(dontDoWin) {
 				{
 					for (var i=0;i<level.n_tiles;i++) {
 						var cell = level.getCellInto(i,_o10);
-						if ( (!filter1.bitsClearInArray(cell.data)) &&  
-							 (filter2.bitsClearInArray(cell.data)) ) {
+						if ( (f1(cell.data)) &&  
+							 (!f2(cell.data)) ) {
 							rulePassed=false;
 							break;
 						}
@@ -11422,6 +11545,8 @@ var codeMirrorFn = function() {
                     if (sol) {
                         //create new collision layer
                         state.collisionLayers.push([]);
+                        //empty current_line_wip_array
+                        state.current_line_wip_array = [];
                         state.tokenIndex=0;
                     }
 
@@ -11497,10 +11622,10 @@ var codeMirrorFn = function() {
                         var foundOthers=[];
                         var foundSelves=[];
                         for (var i=0;i<ar.length;i++){
-                            var candname = ar[i];
+                            var tcandname = ar[i];
                             for (var j=0;j<=state.collisionLayers.length-1;j++){
                                 var clj = state.collisionLayers[j];
-                                if (clj.indexOf(candname)>=0){
+                                if (clj.indexOf(tcandname)>=0){
                                     if (j!==state.collisionLayers.length-1){
                                         foundOthers.push(j);
                                     } else {
@@ -11517,10 +11642,12 @@ var codeMirrorFn = function() {
                             warningStr+="#"+state.collisionLayers.length;
                             logWarning(warningStr +' ). You should fix this!',state.lineNumber);                                        
                         }
-                        if (foundSelves.length>0){
-                            var warningStr = 'Object "'+candname.toUpperCase()+'" included multiple times (either directly or indirectly) in the same layer.';
-                            logWarning(warningStr,state.lineNumber);                                        
+
+                        if (state.current_line_wip_array.indexOf(candname)>=0){
+                            var warningStr = 'Object "'+candname.toUpperCase()+'" included explicitly multiple times in the same layer. Don\'t do that innit.';
+                            logWarning(warningStr,state.lineNumber);         
                         }
+                        state.current_line_wip_array.push(candname);
 
                         state.collisionLayers[state.collisionLayers.length - 1] = state.collisionLayers[state.collisionLayers.length - 1].concat(ar);
                         if (ar.length>0) {
@@ -13117,6 +13244,7 @@ function concretizePropertyRule(state, rule, lineNumber) {
 
     if (rhsPropertyRemains.length > 0) {
         logError('This rule has a property on the right-hand side, \"' + rhsPropertyRemains.toUpperCase() + "\", that can't be inferred from the left-hand side.  (either for every property on the right there has to be a corresponding one on the left in the same cell, OR, if there's a single occurrence of a particular property name on the left, all properties of the same name on the right are assumed to be the same).", lineNumber);
+        return [];
     }
 
     return result;
@@ -13772,7 +13900,7 @@ function collapseRules(groups) {
             var newrule = [0, [], oldrule.rhs.length > 0, oldrule.lineNumber /*ellipses,group number,rigid,commands,randomrule,[cellrowmasks]*/ ];
             var ellipses = [];
             for (var j = 0; j < oldrule.lhs.length; j++) {
-                ellipses.push(false);
+                ellipses.push(0);
             }
 
             newrule[0] = dirMasks[oldrule.direction];
@@ -13780,10 +13908,14 @@ function collapseRules(groups) {
                 var cellrow_l = oldrule.lhs[j];
                 for (var k = 0; k < cellrow_l.length; k++) {
                     if (cellrow_l[k] === ellipsisPattern) {
-                        if (ellipses[j]) {
-                            logError("You can't use two ellipses in a single cell match pattern.  If you really want to, please implement it yourself and send me a patch :) ", oldrule.lineNumber);
+                        ellipses[j] ++;
+                        if (ellipses[j]>2) {
+                            logError("You can't use more than two ellipses in a single cell match pattern.", oldrule.lineNumber);
+                        } else {
+                            if (k>0 && cellrow_l[k-1]===ellipsisPattern){
+                                logWarning("Why would you go and have two ellipses in a row like that? It's exactly the same as just having a single ellipsis, right?", oldrule.lineNumber);
+                            }
                         }
-                        ellipses[j] = true;
                     }
                 }
                 newrule[1][j] = cellrow_l;
@@ -14040,6 +14172,22 @@ function generateMasks(state) {
     objectMask["\nall\n"] = all_obj;
 
     state.objectMasks = objectMask;
+
+    
+    state.aggregateMasks = {};
+
+    //set aggregate masks similarly
+    for (var aggregateName of Object.keys(state.aggregatesDict)) {
+        var objectnames = state.aggregatesDict[aggregateName];
+        
+        var aggregateMask = new BitVec(STRIDE_OBJ);
+        for (var i = 0; i < objectnames.length; i++) {
+            var n = objectnames[i];
+            var o = state.objects[n];
+            aggregateMask.ior(objectMask[n]);
+        }
+        state.aggregateMasks[aggregateName] = aggregateMask;
+    }
 }
 
 function checkObjectsAreLayered(state) {
@@ -14099,7 +14247,7 @@ function twiddleMetaData(state) {
             logWarning("Dimensions must be of the form AxB.",lineNumber);
             return null;
         } else {
-            var intcoords = [getIntCheckedPositive(coords[0],lineNumber), getIntCheckedPositive(coords[0],lineNumber)];
+            var intcoords = [getIntCheckedPositive(coords[0],lineNumber), getIntCheckedPositive(coords[1],lineNumber)];
             if (!isFinite(coords[0]) || !isFinite(coords[1]) || isNaN(intcoords[0]) || isNaN(intcoords[1])) {
                 logWarning(`Couldn't understand the dimensions given to me (you gave "${val}") - should be of the form AxB.`,lineNumber);
                 return null
@@ -14157,17 +14305,28 @@ function processWinConditions(state) {
 
         var mask1 = 0;
         var mask2 = 0;
+        var aggr1 = false;
+        var aggr2 = false;
+
         if (n1 in state.objectMasks) {
+            aggr1 = false;
             mask1 = state.objectMasks[n1];
+        } else if (n1 in state.aggregateMasks){
+            aggr1 = true;
+            mask1 = state.aggregateMasks[n1];
         } else {
-            logError('Unwelcome term "' + n1 + '" found in win condition. Win conditions objects have to be objects or properties (defined using "or", in terms of other properties)', lineNumber);
+            logError('Unwelcome term "' + n1 + '" found in win condition. I don\'t know what I\'m supposed to do with this. ', lineNumber);
         }
         if (n2 in state.objectMasks) {
+            aggr2=false;
             mask2 = state.objectMasks[n2];
-        } else {
-            logError('Unwelcome term "' + n2 + '" found in win condition. Win conditions objects have to be objects or properties (defined using "or", in terms of other properties)', lineNumber);
+        } else if (n2 in state.aggregateMasks){
+            aggr2 = true;
+            mask2 = state.aggregateMasks[n2];
+        } else  {
+            logError('Unwelcome term "' + n1 + '" found in win condition. I don\'t know what I\'m supposed to do with this. ', lineNumber);
         }
-        var newcondition = [num, mask1, mask2, lineNumber];
+        var newcondition = [num, mask1, mask2, lineNumber, aggr1, aggr2];
         newconditions.push(newcondition);
     }
     state.winconditions = newconditions;
@@ -14760,6 +14919,7 @@ function compile(command, text, randomseed) {
         var state = loadFile(text);
     } catch(error){
         consolePrint(error);
+        console.log(error);
     } finally {
         compiling = false;
     }
@@ -15559,40 +15719,43 @@ function checkKey(e,justPressed) {
     	if (state.levels.length===0) {
     		//do nothing
     	} else if (titleScreen) {
-    		if (titleMode===0) {
-    			if (inputdir===4&&justPressed) {
-    				if (titleSelected===false) {    				
-						tryPlayStartGameSound();
-	    				titleSelected=true;
-	    				messageselected=false;
-	    				timer=0;
-	    				quittingTitleScreen=true;
-	    				generateTitleScreen();
-	    				canvasResize();
-	    			}
-    			}
-    		} else {
-    			if (inputdir==4&&justPressed) {
-    				if (titleSelected===false) {    				
-						tryPlayStartGameSound();
-	    				titleSelected=true;
-	    				messageselected=false;
-	    				timer=0;
-	    				quittingTitleScreen=true;
-	    				generateTitleScreen();
-	    				redraw();
-	    			}
-    			}
-    			else if (inputdir===0||inputdir===2) {
-    				if (inputdir===0){
-    					titleSelection=0;    					
-    				} else {
-    					titleSelection=1;    					    					
-    				}
-    				generateTitleScreen();
-    				redraw();
-    			}
-    		}
+			if (quittingTitleScreen===false){
+				if (titleMode===0) {
+					if (inputdir===4&&justPressed) {
+						if (titleSelected===false) {    				
+							tryPlayStartGameSound();
+							titleSelected=true;
+							messageselected=false;
+							timer=0;
+							quittingTitleScreen=true;
+							generateTitleScreen();
+							canvasResize();
+							clearInputHistory();
+						}
+					}
+				} else {
+					if (inputdir==4&&justPressed) {
+						if (titleSelected===false) {    				
+							tryPlayStartGameSound();
+							titleSelected=true;
+							messageselected=false;
+							timer=0;
+							quittingTitleScreen=true;
+							generateTitleScreen();
+							redraw();
+						}
+					}
+					else if (inputdir===0||inputdir===2) {
+						if (inputdir===0){
+							titleSelection=0;    					
+						} else {
+							titleSelection=1;    					    					
+						}
+						generateTitleScreen();
+						redraw();
+					}
+				}
+			}
     	} else {
     		if (inputdir==4&&justPressed) {    				
 				if (unitTesting) {
