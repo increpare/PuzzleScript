@@ -10,10 +10,22 @@
 }*/
 
 
-img {
+
+#uppertoolbar {
 	image-rendering: -moz-crisp-edges;
 	image-rendering: -webkit-crisp-edges;
 	image-rendering: pixelated;
 	image-rendering: crisp-edges;
+	scrollbar-width: none;
+
+}
+
+#uppertoolbar::-webkit-scrollbar {
+  display: none;
 }
   
+
+  /* Hide scrollbar for Chrome, Safari and Opera */
+.example::-webkit-scrollbar {
+  display: none;
+}
