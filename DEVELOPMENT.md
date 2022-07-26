@@ -24,7 +24,7 @@ Then you should be able to compile the site (outputted to the `./bin/` directory
 node compile.js
 ```
 
-## Sandalone-exporting
+## Stadalone-exporting
 
 If you load `./src/editor.html` directly, by double-clicking it or whatever, exporting won't work because the browser sandboxing prevents the `XMLHttpRequest` for `standalone_inlined.txt` from working.  To get it to work you need to run a local http server - see for instance [this](http://www.linuxjournal.com/content/tech-tip-really-simple-http-server-python) for an example of how to set one up with python.
 
