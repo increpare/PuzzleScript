@@ -40,25 +40,36 @@ github.load = function(id, done) {
 			return;
 		}
 
+		var limit = window.parseInt(githubHTTPClient.getResponseHeader("x-ratelimit-limit"));
+		var used = window.parseInt(githubHTTPClient.getResponseHeader("x-ratelimit-used"));
+		var reset = new Date(1000 * window.parseInt(githubHTTPClient.getResponseHeader("x-ratelimit-reset")));
+		console.log("Rate limit used " + used + "/" + limit + " (resets " + reset.toISOString() + ")");
+
 		var result = JSON.parse(githubHTTPClient.responseText);
 		if (githubHTTPClient.status===403) {
-			done(null, result.message);
-			return;
+			if (!github.isSignedIn() && (result.message.indexOf("rate limit") !== -1)) {
+				done(null, "Exceeded GitHub rate limits. Try signing in from the editor.");
+			} else {
+				done(null, result.message);
+			}
+		} else if (githubHTTPClient.status===401) {
+			github.signOut();
+			done(null, "Authorization check failed.  Try reloading or signing back in from the editor.");
+		} else if (githubHTTPClient.status>=500) {
+			done(null, "HTTP Error "+ githubHTTPClient.status + " - " + githubHTTPClient.statusText + ".");
 		} else if (githubHTTPClient.status!==200 && githubHTTPClient.status!==201) {
 			done(null, "HTTP Error "+ githubHTTPClient.status + " - " + githubHTTPClient.statusText);
-			return;
+		} else {
+			var result = JSON.parse(githubHTTPClient.responseText);
+			var code=result["files"]["script.txt"]["content"];
+			done(code, null);
 		}
-		var result = JSON.parse(githubHTTPClient.responseText);
-		var code=result["files"]["script.txt"]["content"];
-		done(code, null);
 	}
 
-	// if (storage_has("oauth_access_token")) {
-	//     var oauthAccessToken = storage_get("oauth_access_token");
-	//     if (typeof oauthAccessToken === "string") {
-	//         githubHTTPClient.setRequestHeader("Authorization","token "+oauthAccessToken);
-	//     }
-	// }
+	if (github.isSignedIn()) {
+		var oauthAccessToken = storage_get("oauth_access_token");
+		githubHTTPClient.setRequestHeader("Authorization", "Token "+oauthAccessToken);
+	}
 	githubHTTPClient.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
 	githubHTTPClient.send();
 };
@@ -93,13 +104,14 @@ github.save = function(title, code, done) {
 		var result = JSON.parse(githubHTTPClient.responseText);
 		if (githubHTTPClient.status===403) {
 			done(null, result.message);
-		} else if (githubHTTPClient.status!==200&&githubHTTPClient.status!==201) {
+		} else if (githubHTTPClient.status===401) {
 			github.signOut();
-			if (githubHTTPClient.statusText==="Unauthorized"){
-				done(null, "Authorization check failed.  You have to log back into GitHub (or give it permission again or something).");
-			} else {
-				done(null, "HTTP Error "+ githubHTTPClient.status + " - " + githubHTTPClient.statusText + ".  Try giving puzzlescript permission again, that might fix things...");
-			}
+			done(null, "Authorization check failed.  You have to log back into GitHub (or give it permission again or something).");
+		} else if (githubHTTPClient.status>=500) {
+			done(null, "HTTP Error "+ githubHTTPClient.status + " - " + githubHTTPClient.statusText + ".");
+		} else if (githubHTTPClient.status!==200 && githubHTTPClient.status!==201) {
+			github.signOut();
+			done(null, "HTTP Error "+ githubHTTPClient.status + " - " + githubHTTPClient.statusText + ".  Try giving puzzlescript permission again, that might fix things...");
 		} else {
 			done(result.id, null);
 		}
