@@ -35,7 +35,6 @@ var throttle_movement=false;
 var cache_console_messages=false;
 var quittingTitleScreen=false;
 var quittingMessageScreen=false;
-var deltatime=17;
 var timer=0;
 var repeatinterval=150;
 var autotick=0;
