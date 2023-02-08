@@ -801,15 +801,11 @@ function checkKey(e,justPressed) {
     }
 }
 
-// main loop! it'll repeat itself at the browser's refresh rate (generally 60fps)
+// main loop! it'll repeat itself at 60fps
+//  (or the browser's refresh rate)
 // and will auto-pause when the tab loses focus
-var prevTimestamp;
-function loop(timestamp) {
-    var deltatime = 0
-    if (prevTimestamp !== undefined) {
-        deltatime = timestamp - prevTimestamp;
-    }
-    prevTimestamp = timestamp
+function update() {
+    requestAnimationFrame(update);
 
     timer+=deltatime;
     input_throttle_timer+=deltatime;
@@ -873,7 +869,6 @@ function loop(timestamp) {
             }
         }
     }
-    window.requestAnimationFrame(loop);
 }
 
-window.requestAnimationFrame(loop);
+window.onload=update
