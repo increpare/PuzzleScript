@@ -2,15 +2,11 @@
 
 /* 
 
-Creates a highly compressed release build in bin of the contents of src
+creates a highly compressed release build in bin of the contents of src
 
-Before running, install node using the following command:
+packages used:
 
->node install
-
-Packages used:
-npm i rimraf@3 compress-images web-resource-inliner ncp gifsicle@5.3.0 concat ycssmin terser gzipper html-minifier-terser glob   
-
+npm i rimraf compress-images web-resource-inliner ncp gifsicle@5.3.0 concat ycssmin terser gzipper html-minifier-terser glob@8   
 */
 
 const fs = require("fs");
