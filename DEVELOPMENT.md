@@ -15,10 +15,11 @@ The structure of PuzzleScript is the following:
 `./compile.js` uses [node](https://nodejs.org). So first off you have to install that.  Then you need to install the packages that it uses:
 
 ```
-node install
+npm install
 ```
 
-The specific packages and versions are now in `package.json`.
+This will install the specific packages and versions as listed in `package.json`.
+
 Then you should be able to compile the site (outputted to the `./bin/` directory) with 
 
 ```
