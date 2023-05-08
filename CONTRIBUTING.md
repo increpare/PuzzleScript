@@ -25,8 +25,6 @@ appreciation, which we would also be very happy about:
 - [I Want To Contribute](#i-want-to-contribute)
   - [Reporting Bugs](#reporting-bugs)
   - [Suggesting Enhancements](#suggesting-enhancements)
-  - [Your First Code Contribution](#your-first-code-contribution)
-  - [Improving The Documentation](#improving-the-documentation)
 
 ## I Have a Question
 
@@ -140,7 +138,8 @@ the community to understand your suggestion and find related suggestions.
 <!-- omit in toc -->
 #### How Do I Submit a Good Enhancement Suggestion?
 
-Enhancement suggestions are tracked as [GitHub issues](https://github.com/increpare/PuzzleScript/issues).
+Enhancement suggestions are tracked as [GitHub
+issues](https://github.com/increpare/PuzzleScript/issues).
 
 - Use a **clear and descriptive title** for the issue to identify the
     suggestion.
@@ -161,7 +160,6 @@ Enhancement suggestions are tracked as [GitHub issues](https://github.com/increp
     which could serve as inspiration.
 
 <!-- TODO: More sections we could add in the future
-
 ### Your First Code Contribution
 Include Setup of env, IDE and typical getting started instructions?
 
