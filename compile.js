@@ -6,7 +6,7 @@ creates a highly compressed release build in bin of the contents of src
 
 packages used:
 
-npm i rimraf compress-images web-resource-inliner ncp gifsicle@5.3.0 concat ycssmin terser gzipper html-minifier-terser glob   
+npm i rimraf compress-images web-resource-inliner ncp gifsicle@5.3.0 concat ycssmin terser gzipper html-minifier-terser glob@8   
 */
 
 const fs = require("fs");
