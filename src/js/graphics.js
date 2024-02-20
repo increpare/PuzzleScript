@@ -527,16 +527,17 @@ var oldcellheight=0;
 var oldtextmode=-1;
 var oldfgcolor=-1;
 var forceRegenImages=false;
-function canvasResize() {
+function canvasResize(displaylevel) {
+    displaylevel||=level;
     canvas.width = canvas.parentNode.clientWidth;
     canvas.height = canvas.parentNode.clientHeight;
 
-    screenwidth=level.width;
-    screenheight=level.height;
+    screenwidth=displaylevel.width;
+    screenheight=displaylevel.height;
     if (state!==undefined){
         flickscreen=state.metadata.flickscreen!==undefined;
         zoomscreen=state.metadata.zoomscreen!==undefined;
-	    if (levelEditorOpened) {
+	    if (levelEditorOpened ) {
             screenwidth+=2;
             var glyphcount = glyphCount();
             editorRowCount = Math.ceil(glyphcount/(screenwidth-1));

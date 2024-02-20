@@ -7103,16 +7103,17 @@ var oldcellheight=0;
 var oldtextmode=-1;
 var oldfgcolor=-1;
 var forceRegenImages=false;
-function canvasResize() {
+function canvasResize(displaylevel) {
+    displaylevel||=level;
     canvas.width = canvas.parentNode.clientWidth;
     canvas.height = canvas.parentNode.clientHeight;
 
-    screenwidth=level.width;
-    screenheight=level.height;
+    screenwidth=displaylevel.width;
+    screenheight=displaylevel.height;
     if (state!==undefined){
         flickscreen=state.metadata.flickscreen!==undefined;
         zoomscreen=state.metadata.zoomscreen!==undefined;
-	    if (levelEditorOpened) {
+	    if (levelEditorOpened ) {
             screenwidth+=2;
             var glyphcount = glyphCount();
             editorRowCount = Math.ceil(glyphcount/(screenwidth-1));
@@ -11907,9 +11908,8 @@ var codeMirrorFn = function() {
                         stream.match(reg_notcommentstart, true);
                         state.tokenIndex++;
 
-                        var key = state [state.metadata.length-3];
-                        var val = state.metadata[state.metadata.length-2];
-                        var oldLineNum = state.metadata[state.metadata.length-1];
+                        var key = state.metadata[state.metadata.length-2];
+                        var val = state.metadata[state.metadata.length-1];
 
                         if( state.tokenIndex>2){
                             logWarning("Error: you can't embed comments in metadata values. Anything after the comment will be ignored.",state.lineNumber);

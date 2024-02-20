@@ -257,12 +257,12 @@ editor.on('keyup', function (editor, event) {
 
 function debugPreview(turnIndex,lineNumber){
 	diffToVisualize=debug_visualisation_array[turnIndex][lineNumber];
-	redraw();
+	canvasResize(diffToVisualize.level);
 }
 
 function debugUnpreview(){
 	diffToVisualize=null;
-	redraw();
+	canvasResize();
 }
 
 function addToDebugTimeline(level,lineNumber){
@@ -282,6 +282,7 @@ function addToDebugTimeline(level,lineNumber){
 		commandQueue:level.commandQueue.concat([]),
 		commandQueueSourceRules:level.commandQueueSourceRules.concat([]),
 		rigidMovementAppliedMask:level.rigidMovementAppliedMask.map(a=>a.clone()),
+		level: level,
 	};
 	
 
