@@ -679,7 +679,8 @@ Mobile.debugDot = function (event) {
             height: "100%",
             overflow: "hidden",
             position: "fixed",
-            width: "100%"
+            width: "100%",
+            margin: 0
         }
         
         var styleString = "";
