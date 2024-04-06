@@ -815,4 +815,11 @@ var games_gallery = [
     "author": "Notan",
     "homepage": "https://notaninart.itch.io/"
   },
+  {
+    "url": "https://www.puzzlescript.net/play.html?p=fe33549f62cd7666ea14eedcfc3863a3",
+    "thumb": "clearingspace.gif",
+    "title": "Clearing Space",
+    "author": "Sevan",
+    "homepage": "https://www.puzzlescript.net/play.html?p=fe33549f62cd7666ea14eedcfc3863a3"
+  },
 ]
