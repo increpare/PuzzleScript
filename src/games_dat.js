@@ -822,4 +822,25 @@ var games_gallery = [
     "author": "Sevan",
     "homepage": "https://www.puzzlescript.net/play.html?p=fe33549f62cd7666ea14eedcfc3863a3"
   },
+  {
+    "url": "https://www.puzzlescript.net/play.html?p=bc8f853dae0cf7a2ad336a75ab24ba09",
+    "thumb": "crateassembler.gif",
+    "title": "Crate Assembler",
+    "author": "MoonSoup",
+    "homepage": "https://moonsoup.itch.io/"
+  },
+  {
+    "url": "https://theconspiracy.itch.io/single-screen-scream",
+    "thumb": "singlescreenscream.gif",
+    "title": "Single Screen Scream",
+    "author": "Kip Fabish",
+    "homepage": "https://theconspiracy.itch.io"
+  },
+  {
+    "url": "https://www.puzzlescript.net/play.html?p=8249c02ca46b1902e43054b844656d9d",
+    "thumb": "lovebirds_hatebirds.gif",
+    "title": "Lovebirds and Hatebirds",
+    "author": "Dee <3",
+    "homepage": "https://dee-3.itch.io/lovebirds-and-hatebirds"
+  },
 ]
