@@ -6838,7 +6838,7 @@ var cellheight;
 var xoffset;
 var yoffset;
 
-window.addEventListener('resize', canvasResize, false);
+window.addEventListener('resize', function(){canvasResize();}, false);
 canvas = document.getElementById('gameCanvas');
 ctx = canvas.getContext('2d');
 x = 0;
