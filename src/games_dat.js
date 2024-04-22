@@ -836,11 +836,4 @@ var games_gallery = [
     "author": "Kip Fabish",
     "homepage": "https://theconspiracy.itch.io"
   },
-  {
-    "url": "https://www.puzzlescript.net/play.html?p=8249c02ca46b1902e43054b844656d9d",
-    "thumb": "lovebirds_hatebirds.gif",
-    "title": "Lovebirds and Hatebirds",
-    "author": "Dee <3",
-    "homepage": "https://dee-3.itch.io/lovebirds-and-hatebirds"
-  },
 ]
