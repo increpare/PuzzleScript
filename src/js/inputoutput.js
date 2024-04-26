@@ -700,6 +700,7 @@ function checkKey(e,justPressed) {
         	break;	
         }
 		case 189://-
+		case 109://numpad -		
 		{
         	if (levelEditorOpened&&justPressed) {
 				if (glyphSelectedIndex>0) {
@@ -711,6 +712,7 @@ function checkKey(e,justPressed) {
         	break;	
 		}
 		case 187://+
+		case 107://numpad +
 		{
         	if (levelEditorOpened&&justPressed) {
 				if (glyphSelectedIndex+1<glyphImages.length) {
