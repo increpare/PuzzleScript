@@ -2578,7 +2578,7 @@ function generateSoundData(state) {
         var lineNumber = sound[sound.length - 1];
 
         if (sound.length === 2) {
-            logError('incorrect sound declaration.', lineNumber);
+            logWarning('incorrect sound declaration.', lineNumber);
             continue;
         }
 

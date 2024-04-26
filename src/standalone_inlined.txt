@@ -7060,8 +7060,11 @@ function drawEditorIcons(mini,minj) {
             
         }
     }
+    if (mouseIndex===-1){
+        tooltip_string = "print level to console"
+    }
     // prepare tooltip: content of a level's cell
-    else if ( (mouseCoordX >= 0) && (mouseCoordY >= 0) && (mouseCoordX < screenwidth) && (mouseCoordY < screenheight-editorRowCount) )
+    else if ( (mouseCoordX >= 0) && (mouseCoordY >= 0) && (mouseCoordX < screenwidth) && (mouseCoordY < screenheight-editorRowCount-2) )
     {
         const posMask = level.getCellInto((mouseCoordY+minj) + (mouseCoordX+mini)*level.height, _o12);
         tooltip_objects = state.idDict.filter( (x,k) => (posMask.get(k) != 0) )
@@ -14586,7 +14589,7 @@ function generateSoundData(state) {
         var lineNumber = sound[sound.length - 1];
 
         if (sound.length === 2) {
-            logError('incorrect sound declaration.', lineNumber);
+            logWarning('incorrect sound declaration.', lineNumber);
             continue;
         }
 
@@ -14996,7 +14999,7 @@ function selectText(containerid,e) {
 	e = e || window.event;
 	var myspan = document.getElementById(containerid);
 	if (e&&(e.ctrlKey || e.metaKey)) {
-		var levelarr = ["console"].concat(myspan.innerHTML.split("<br>"));
+		var levelarr = ["console"].concat(myspan.innerText.split("\n"));
 		var leveldat = levelFromString(state,levelarr);
 		loadLevelFromLevelDat(state,leveldat,null);
 		canvasResize();
@@ -15685,6 +15688,7 @@ function checkKey(e,justPressed) {
         	break;	
         }
 		case 189://-
+		case 109://numpad -		
 		{
         	if (levelEditorOpened&&justPressed) {
 				if (glyphSelectedIndex>0) {
@@ -15696,6 +15700,7 @@ function checkKey(e,justPressed) {
         	break;	
 		}
 		case 187://+
+		case 107://numpad +
 		{
         	if (levelEditorOpened&&justPressed) {
 				if (glyphSelectedIndex+1<glyphImages.length) {
