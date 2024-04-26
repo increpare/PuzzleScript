@@ -62,7 +62,11 @@ function makeGIF() {
 	encoder.finish();
 	const data_url = 'data:image/gif;base64,'+btoa(encoder.stream().getData());
 	consolePrint('<img class="generatedgif" src="'+data_url+'">');
-	consolePrint('<a href="'+data_url+'" download>Download GIF</a>');
+	const gametitle = state.metadata.title ? state.metadata.title : 'puzzlescript-anim';
+	var filename = gametitle.replace(/\s+/g, '-').toLowerCase()+'.gif';
+	//also remove double-quotes (this actually the only important bit tbh)
+	filename = filename.replace(/"/g,'');
+	consolePrint('<a href="'+data_url+'" download="'+filename+'">Download GIF</a>');
   	
   	unitTesting = false;
 
