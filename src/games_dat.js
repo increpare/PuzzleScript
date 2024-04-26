@@ -836,4 +836,11 @@ var games_gallery = [
     "author": "Kip Fabish",
     "homepage": "https://theconspiracy.itch.io"
   },
+  {
+    "url": "https://www.puzzlescript.net/play.html?p=fce521be3852cca725e85154d122e53f",
+    "thumb": "sokoban3d.gif",
+    "title": "Sokoban... in 3D!",
+    "author": "beekie",
+    "homepage": "https://beekie.itch.io/sokoban-in-3d"
+  },
 ]
