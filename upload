@@ -1,0 +1,3 @@
+#personal script for uploading to the puzzlescript.net server. you don't wanna use this :)
+node compile.js
+rsync -avW -e ssh bin/ r3okadmin_puzzlescript@ssh.nyc1.nearlyfreespeech.net:/home/public/
