@@ -11,7 +11,7 @@ function selectText(containerid,e) {
 	e = e || window.event;
 	var myspan = document.getElementById(containerid);
 	if (e&&(e.ctrlKey || e.metaKey)) {
-		var levelarr = ["console"].concat(myspan.innerHTML.split("<br>"));
+		var levelarr = ["console"].concat(myspan.innerText.split("\n"));
 		var leveldat = levelFromString(state,levelarr);
 		loadLevelFromLevelDat(state,leveldat,null);
 		canvasResize();
