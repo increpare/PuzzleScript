@@ -484,8 +484,11 @@ function drawEditorIcons(mini,minj) {
             
         }
     }
+    if (mouseIndex===-1){
+        tooltip_string = "print level to console"
+    }
     // prepare tooltip: content of a level's cell
-    else if ( (mouseCoordX >= 0) && (mouseCoordY >= 0) && (mouseCoordX < screenwidth) && (mouseCoordY < screenheight-editorRowCount) )
+    else if ( (mouseCoordX >= 0) && (mouseCoordY >= 0) && (mouseCoordX < screenwidth) && (mouseCoordY < screenheight-editorRowCount-2) )
     {
         const posMask = level.getCellInto((mouseCoordY+minj) + (mouseCoordX+mini)*level.height, _o12);
         tooltip_objects = state.idDict.filter( (x,k) => (posMask.get(k) != 0) )
