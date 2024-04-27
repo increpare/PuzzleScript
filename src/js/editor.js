@@ -220,11 +220,24 @@ function tryLoadFile(fileName) {
   			return;
   		}
   		
-		editor.setValue(fileOpenClient.responseText);
-		clearConsole();
-		setEditorClean();
-		unloadGame();
-		compile(["restart"]);
+		function doStuff(){
+			editor.setValue(fileOpenClient.responseText);
+			clearConsole();
+			setEditorClean();
+			unloadGame();
+			compile(["restart"]);
+		}
+		if (document.readyState === "complete") {
+			doStuff();
+		} else {
+			let handler = (event)=>{
+				if (document.readyState === "complete") {
+					doStuff();			
+					document.removeEventListener("readystatechange",handler);							
+				}
+			};
+			document.addEventListener("readystatechange",handler);
+		}
 	}
 	fileOpenClient.send();
 }
