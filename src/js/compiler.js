@@ -773,7 +773,7 @@ function processRuleString(rule, state, curRules) {
                         }
                         
                         if (incellrow) {
-                            logError('Encountered an unexpected "->" inside square brackets.  It\'s used to separate states, it has no place inside them >:| .', lineNumber);
+                            logWarning('Encountered an unexpected "->" inside square brackets.  It\'s used to separate states, it has no place inside them >:| .', lineNumber);
                         } else if (rhs) {
                             logError('Error, you can only use "->" once in a rule; it\'s used to separate before and after states.', lineNumber);
                         } else {
@@ -829,7 +829,7 @@ function processRuleString(rule, state, curRules) {
         if (commands.length > 0 && rhs_cells.length == 0) {
             //ok
         } else {
-            logError('Error, when specifying a rule, the number of matches (square bracketed bits) on the left hand side of the arrow must equal the number on the right', lineNumber);
+            logWarning('Error, when specifying a rule, the number of matches (square bracketed bits) on the left hand side of the arrow must equal the number on the right', lineNumber);
         }
     } else {
         for (var i = 0; i < lhs_cells.length; i++) {
