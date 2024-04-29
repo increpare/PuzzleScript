@@ -903,6 +903,9 @@ function rulesToArray(state) {
         var ruledirs = rule.directions;
         for (var j = 0; j < ruledirs.length; j++) {
             var dir = ruledirs[j];
+            // The following block is never getting hit by any tests. 
+            // Presumably in the past it was used to expand out rules with
+            // multiple directions, but now that's done somewhere else.
             if (dir in directionaggregates && directionalRule(rule)) {
                 var dirs = directionaggregates[dir];
                 for (var k = 0; k < dirs.length; k++) {
