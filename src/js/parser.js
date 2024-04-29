@@ -1201,8 +1201,6 @@ var codeMirrorFn = function() {
                     }     
 
                     return tokentype;
-
-                    break;
                 }
             case 'collisionlayers':
                 {
@@ -1279,6 +1277,7 @@ var codeMirrorFn = function() {
                         var ar = substitutor(candname);
 
                         if (state.collisionLayers.length===0) {
+                            //pre-empted by other messages
                             logError("no layers found.",state.lineNumber);
                             return 'ERROR';
                         }
@@ -1456,12 +1455,14 @@ var codeMirrorFn = function() {
                             if (state.levels[state.levels.length - 1].length == 0) {
                                 state.levels.splice(state.levels.length - 1, 0, newdat);
                             } else {
+                                //don't seem to ever reach this.
                                 state.levels.push(newdat);
                             }
                             return 'MESSAGE_VERB';
                         } else {
                             var matches = stream.match(reg_notcommentstart, false);
                             if (matches===null || matches.length===0){
+                                //not sure if it's possible to get here.
                                 logError("Detected a comment where I was expecting a level. Oh gosh; if this is to do with you using '(' as a character in the legend, please don't do that ^^",state.lineNumber);
                                 state.commentLevel++;
                                 stream.skipToEnd();
@@ -1562,6 +1563,7 @@ var codeMirrorFn = function() {
                                     return 'ERROR';
                                 }
                             } else if (state.tokenIndex==-1) {
+                                //no idea how to get here. covered with a similar error message above.
                                 logError('MetaData "'+token+'" has no parameters.',state.lineNumber);
                                 return 'ERROR';
                             }
@@ -1600,6 +1602,7 @@ var codeMirrorFn = function() {
         
 
             if (stream.eol()) {
+                //don't know how to reach this.
                 return null;
             }
 
