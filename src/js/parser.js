@@ -1064,7 +1064,7 @@ var codeMirrorFn = function() {
                         if (match === null) { 
                             match = stream.match(reg_name, true);
                             if (match !== null) {
-                                if (wordAlreadyDeclared(state, match[0])){
+                                if (wordAlreadyDeclared(state, match[0].trim())){
                                     tokentype = 'NAME';
                                 } else {
                                     tokentype = 'ERROR';                   
