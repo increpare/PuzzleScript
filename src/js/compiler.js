@@ -2546,10 +2546,6 @@ function generateLoopPoints(state) {
     state.lateLoopPoint = loopPoint;
 }
 
-function validSeed(seed) {
-    return /^\s*\d+\s*$/.exec(seed) !== null;
-}
-
 var soundDirectionIndicatorMasks = {
     'up': parseInt('00001', 2),
     'down': parseInt('00010', 2),
