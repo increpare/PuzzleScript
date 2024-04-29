@@ -707,6 +707,7 @@ var codeMirrorFn = function() {
                     }
                 } else if (state.visitedSections.indexOf(sectionNames[sectionIndex - 1]) == -1) {
                     if (sectionIndex===-1) {
+                        //honestly not sure how I could get here.
                         logError('no such section as "' + state.section.toUpperCase() + '".', state.lineNumber);
                     } else {
                         logError('section "' + state.section.toUpperCase() + '" is out of order, must follow  "' + sectionNames[sectionIndex - 1].toUpperCase() + '" (or it could be that the section "'+sectionNames[sectionIndex - 1].toUpperCase()+`"is just missing totally.  You have to include all section headings, even if the section itself is empty).`, state.lineNumber);                            
@@ -774,6 +775,7 @@ var codeMirrorFn = function() {
                 return 'HEADER';
             } else {
                 if (state.section === undefined) {
+                    //unreachable I think, pre-empted caught above
                     logError('must start with section "OBJECTS"', state.lineNumber);
                 }
             }
@@ -850,7 +852,6 @@ var codeMirrorFn = function() {
                         {
                             state.objects_spritematrix = [];
                             return tryParseName();
-                            break;
                         }
                     case 2:
                         {
@@ -878,7 +879,6 @@ var codeMirrorFn = function() {
                                     return 'MULTICOLOR'+match_color[0];
                                 }
                             }
-                            break;
                         }
                     case 3:
                         {
