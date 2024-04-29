@@ -362,6 +362,7 @@ var codeMirrorFn = function() {
                             return [n];
                         }
                     }
+                    //seems like this shouldn't be reachable?
                     return [n];
                 };
                                                 
