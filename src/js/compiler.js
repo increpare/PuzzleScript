@@ -2831,10 +2831,6 @@ function loadFile(str) {
 
     removeDuplicateRules(state);
 
-    if (state.invalid>0){
-        return null;
-    }
-
     rulesToMask(state);
 
 
