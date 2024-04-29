@@ -2530,9 +2530,9 @@ var sfxCreateMask=null;
 var sfxDestroyMask=null;
 
 function calculateRowColMasks() {
-	for(var i=0;i<level.mapCellContents.length;i++) {
-		level.mapCellContents[i]=0;
-		level.mapCellContents_Movements[i]=0;	
+	for(var i=0;i<level.mapCellContents.data.length;i++) {
+		level.mapCellContents.data[i]=0;
+		level.mapCellContents_Movements.data[i]=0;	
 	}
 
 	for (var i=0;i<level.width;i++) {
