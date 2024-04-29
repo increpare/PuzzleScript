@@ -2271,6 +2271,7 @@ function processWinConditions(state) {
     for (var i = 0; i < state.winconditions.length; i++) {
         var wincondition = state.winconditions[i];
         if (wincondition.length == 0) {
+            //I feel like here should never be reached, right? Not sure if it warrants an error though.
             return;
         }
         var num = 0;
