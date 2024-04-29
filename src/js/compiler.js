@@ -2570,6 +2570,7 @@ function generateSoundData(state) {
     for (var i = 0; i < state.sounds.length; i++) {
         var sound = state.sounds[i];
         if (sound.length <= 1) {
+            //don't see that this would ever be triggered
             continue;
         }
         var lineNumber = sound[sound.length - 1];
@@ -2587,11 +2588,15 @@ function generateSoundData(state) {
         var seed = sound[sound.length - 2][0];
         var seed_t = sound[sound.length - 2][1];
         if (seed_t !== 'SOUND') {
+            // unreachable?
+            // seems to be pre-empted by "Was expecting a soundverb here 
+            // (MOVE, DESTROY, CANTMOVE, or the like), but found something else" message
             logError("Expecting sfx data, instead found \"" + seed + "\".", lineNumber);
         }
 
         if (t0 === "SOUNDEVENT") {
 
+            //pretty sure neither of the following are reachable, they're caught by the parser before.
             if (sound.length > 4) {
                 logError("too much stuff to define a sound event.", lineNumber);
             } else {
@@ -2614,11 +2619,12 @@ function generateSoundData(state) {
                 if (sound[j][1] === 'DIRECTION') {
                     directions.push(sound[j][0]);      
                 } else {
-                    //Don't know how if I can get here, but just in case
+                    //Don't think I can get here, but just in case
                     logError(`Expected a direction here, but found instead "$(sound[j][0])".`, lineNumber);
                 }
             }
             if (directions.length > 0 && (verb !== 'move' && verb !== 'cantmove')) {
+                //this is probably unreachable, as the parser catches it before it gets here
                 logError('Incorrect sound declaration - cannot have directions (UP/DOWN/etc.) attached to non-directional sound verbs (CREATE is not directional, but MOVE is directional).', lineNumber);
             }
 
