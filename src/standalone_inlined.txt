@@ -10700,6 +10700,7 @@ var codeMirrorFn = function() {
                             return [n];
                         }
                     }
+                    //seems like this shouldn't be reachable?
                     return [n];
                 };
                                                 
@@ -11044,6 +11045,7 @@ var codeMirrorFn = function() {
                     }
                 } else if (state.visitedSections.indexOf(sectionNames[sectionIndex - 1]) == -1) {
                     if (sectionIndex===-1) {
+                        //honestly not sure how I could get here.
                         logError('no such section as "' + state.section.toUpperCase() + '".', state.lineNumber);
                     } else {
                         logError('section "' + state.section.toUpperCase() + '" is out of order, must follow  "' + sectionNames[sectionIndex - 1].toUpperCase() + '" (or it could be that the section "'+sectionNames[sectionIndex - 1].toUpperCase()+`"is just missing totally.  You have to include all section headings, even if the section itself is empty).`, state.lineNumber);                            
@@ -11111,6 +11113,7 @@ var codeMirrorFn = function() {
                 return 'HEADER';
             } else {
                 if (state.section === undefined) {
+                    //unreachable I think, pre-empted caught above
                     logError('must start with section "OBJECTS"', state.lineNumber);
                 }
             }
@@ -11187,7 +11190,6 @@ var codeMirrorFn = function() {
                         {
                             state.objects_spritematrix = [];
                             return tryParseName();
-                            break;
                         }
                     case 2:
                         {
@@ -11215,7 +11217,6 @@ var codeMirrorFn = function() {
                                     return 'MULTICOLOR'+match_color[0];
                                 }
                             }
-                            break;
                         }
                     case 3:
                         {
@@ -11251,10 +11252,6 @@ var codeMirrorFn = function() {
                                 var n = parseInt(ch);
                                 if (n>=o.colors.length) {
                                     logError("Trying to access color number "+n+" from the color palette of sprite " +state.objects_candname.toUpperCase()+", but there are only "+o.colors.length+" defined in it.",state.lineNumber);
-                                    return 'ERROR';
-                                }
-                                if (isNaN(n)) {
-                                    logError('Invalid character "' + ch + '" in sprite for ' + state.objects_candname.toUpperCase(), state.lineNumber);
                                     return 'ERROR';
                                 }
                                 return 'COLOR BOLDCOLOR COLOR-' + o.colors[n].toUpperCase();
@@ -11405,7 +11402,7 @@ var codeMirrorFn = function() {
                         if (match === null) { 
                             match = stream.match(reg_name, true);
                             if (match !== null) {
-                                if (wordAlreadyDeclared(state, match[0])){
+                                if (wordAlreadyDeclared(state, match[0].trim())){
                                     tokentype = 'NAME';
                                 } else {
                                     tokentype = 'ERROR';                   
@@ -11542,8 +11539,6 @@ var codeMirrorFn = function() {
                     }     
 
                     return tokentype;
-
-                    break;
                 }
             case 'collisionlayers':
                 {
@@ -11620,6 +11615,7 @@ var codeMirrorFn = function() {
                         var ar = substitutor(candname);
 
                         if (state.collisionLayers.length===0) {
+                            //pre-empted by other messages
                             logError("no layers found.",state.lineNumber);
                             return 'ERROR';
                         }
@@ -11797,12 +11793,14 @@ var codeMirrorFn = function() {
                             if (state.levels[state.levels.length - 1].length == 0) {
                                 state.levels.splice(state.levels.length - 1, 0, newdat);
                             } else {
+                                //don't seem to ever reach this.
                                 state.levels.push(newdat);
                             }
                             return 'MESSAGE_VERB';
                         } else {
                             var matches = stream.match(reg_notcommentstart, false);
                             if (matches===null || matches.length===0){
+                                //not sure if it's possible to get here.
                                 logError("Detected a comment where I was expecting a level. Oh gosh; if this is to do with you using '(' as a character in the legend, please don't do that ^^",state.lineNumber);
                                 state.commentLevel++;
                                 stream.skipToEnd();
@@ -11903,6 +11901,7 @@ var codeMirrorFn = function() {
                                     return 'ERROR';
                                 }
                             } else if (state.tokenIndex==-1) {
+                                //no idea how to get here. covered with a similar error message above.
                                 logError('MetaData "'+token+'" has no parameters.',state.lineNumber);
                                 return 'ERROR';
                             }
@@ -11941,6 +11940,7 @@ var codeMirrorFn = function() {
         
 
             if (stream.eol()) {
+                //don't know how to reach this.
                 return null;
             }
 
@@ -12427,7 +12427,7 @@ function generateExtraMembers(state) {
     state.backgroundlayer = backgroundlayer;
 }
 
-Level.prototype.calcBackgroundMask = function(state) {
+Level.prototype.calcBackgroundMask = function(state) {    
     if (state.backgroundlayer === undefined) {
         logError("you have to have a background layer");
     }
@@ -12561,9 +12561,6 @@ function directionalRule(rule) {
     }
     for (var i = 0; i < rule.rhs.length; i++) {
         var cellRow = rule.rhs[i];
-        if (cellRow.length > 1) {
-            return true;
-        }
         for (var j = 0; j < cellRow.length; j++) {
             var cell = cellRow[j];
             for (var k = 0; k < cell.length; k += 2) {
@@ -12922,6 +12919,9 @@ function rulesToArray(state) {
         var ruledirs = rule.directions;
         for (var j = 0; j < ruledirs.length; j++) {
             var dir = ruledirs[j];
+            // The following block is never getting hit by any tests. 
+            // Presumably in the past it was used to expand out rules with
+            // multiple directions, but now that's done somewhere else.
             if (dir in directionaggregates && directionalRule(rule)) {
                 var dirs = directionaggregates[dir];
                 for (var k = 0; k < dirs.length; k++) {
@@ -14238,7 +14238,7 @@ function twiddleMetaData(state) {
         }
         var result = parseInt(s);
         if (isNaN(result)){
-            logWarning(`Wasn't able to make sense of "${s}" as an dimension.`,lineNumber);
+            logWarning(`Wasn't able to make sense of "${s}" as a dimension.`,lineNumber);
         }
         if (result<=0){
             logWarning(`The dimension given to me (you gave "${s}") is baad - it should be greater than 0.`,lineNumber);
@@ -14287,6 +14287,7 @@ function processWinConditions(state) {
     for (var i = 0; i < state.winconditions.length; i++) {
         var wincondition = state.winconditions[i];
         if (wincondition.length == 0) {
+            //I feel like here should never be reached, right? Not sure if it warrants an error though.
             return;
         }
         var num = 0;
@@ -14557,10 +14558,6 @@ function generateLoopPoints(state) {
     state.lateLoopPoint = loopPoint;
 }
 
-function validSeed(seed) {
-    return /^\s*\d+\s*$/.exec(seed) !== null;
-}
-
 var soundDirectionIndicatorMasks = {
     'up': parseInt('00001', 2),
     'down': parseInt('00010', 2),
@@ -14585,6 +14582,7 @@ function generateSoundData(state) {
     for (var i = 0; i < state.sounds.length; i++) {
         var sound = state.sounds[i];
         if (sound.length <= 1) {
+            //don't see that this would ever be triggered
             continue;
         }
         var lineNumber = sound[sound.length - 1];
@@ -14602,11 +14600,15 @@ function generateSoundData(state) {
         var seed = sound[sound.length - 2][0];
         var seed_t = sound[sound.length - 2][1];
         if (seed_t !== 'SOUND') {
+            // unreachable?
+            // seems to be pre-empted by "Was expecting a soundverb here 
+            // (MOVE, DESTROY, CANTMOVE, or the like), but found something else" message
             logError("Expecting sfx data, instead found \"" + seed + "\".", lineNumber);
         }
 
         if (t0 === "SOUNDEVENT") {
 
+            //pretty sure neither of the following are reachable, they're caught by the parser before.
             if (sound.length > 4) {
                 logError("too much stuff to define a sound event.", lineNumber);
             } else {
@@ -14629,11 +14631,12 @@ function generateSoundData(state) {
                 if (sound[j][1] === 'DIRECTION') {
                     directions.push(sound[j][0]);      
                 } else {
-                    //Don't know how if I can get here, but just in case
+                    //Don't think I can get here, but just in case
                     logError(`Expected a direction here, but found instead "$(sound[j][0])".`, lineNumber);
                 }
             }
             if (directions.length > 0 && (verb !== 'move' && verb !== 'cantmove')) {
+                //this is probably unreachable, as the parser catches it before it gets here
                 logError('Incorrect sound declaration - cannot have directions (UP/DOWN/etc.) attached to non-directional sound verbs (CREATE is not directional, but MOVE is directional).', lineNumber);
             }
 
@@ -14652,6 +14655,7 @@ function generateSoundData(state) {
             } else if (target in state.objectMasks) {
 
             } else {
+                //probably unreachable
                 logError('Object "' + target + '" not found.', lineNumber);
             }
 
@@ -14662,6 +14666,7 @@ function generateSoundData(state) {
                 directions[j] = directions[j].trim();
                 var direction = directions[j];
                 if (soundDirectionIndicators.indexOf(direction) === -1) {
+                    //pre-emted by parser
                     logError('Was expecting a direction, instead found "' + direction + '".', lineNumber);
                 } else {
                     var soundDirectionMask = soundDirectionIndicatorMasks[direction];
@@ -14837,10 +14842,6 @@ function loadFile(str) {
     cacheAllRuleNames(state);
 
     removeDuplicateRules(state);
-
-    if (state.invalid>0){
-        return null;
-    }
 
     rulesToMask(state);
 
