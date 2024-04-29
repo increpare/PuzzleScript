@@ -545,9 +545,6 @@ function directionalRule(rule) {
     }
     for (var i = 0; i < rule.rhs.length; i++) {
         var cellRow = rule.rhs[i];
-        if (cellRow.length > 1) {
-            return true;
-        }
         for (var j = 0; j < cellRow.length; j++) {
             var cell = cellRow[j];
             for (var k = 0; k < cell.length; k += 2) {
