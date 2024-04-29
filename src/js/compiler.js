@@ -2643,6 +2643,7 @@ function generateSoundData(state) {
             } else if (target in state.objectMasks) {
 
             } else {
+                //probably unreachable
                 logError('Object "' + target + '" not found.', lineNumber);
             }
 
@@ -2653,6 +2654,7 @@ function generateSoundData(state) {
                 directions[j] = directions[j].trim();
                 var direction = directions[j];
                 if (soundDirectionIndicators.indexOf(direction) === -1) {
+                    //pre-emted by parser
                     logError('Was expecting a direction, instead found "' + direction + '".', lineNumber);
                 } else {
                     var soundDirectionMask = soundDirectionIndicatorMasks[direction];
