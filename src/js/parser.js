@@ -916,10 +916,6 @@ var codeMirrorFn = function() {
                                     logError("Trying to access color number "+n+" from the color palette of sprite " +state.objects_candname.toUpperCase()+", but there are only "+o.colors.length+" defined in it.",state.lineNumber);
                                     return 'ERROR';
                                 }
-                                if (isNaN(n)) {
-                                    logError('Invalid character "' + ch + '" in sprite for ' + state.objects_candname.toUpperCase(), state.lineNumber);
-                                    return 'ERROR';
-                                }
                                 return 'COLOR BOLDCOLOR COLOR-' + o.colors[n].toUpperCase();
                             }
                             return 'COLOR FADECOLOR';
