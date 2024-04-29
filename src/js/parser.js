@@ -28,8 +28,9 @@ var errorStrings = [];//also stores warning strings
 var errorCount=0;//only counts errors
 
 function TooManyErrors(){
-    consolePrint("Too many errors/warnings; aborting compilation.",true);
-    throw new Error("Too many errors/warnings; aborting compilation.");
+    const message = compiling ? "Too many errors/warnings; aborting compilation." : "Too many errors/warnings; noping out.";
+    consolePrint(message,true);
+    throw new Error(message);
 }
 
 function logErrorCacheable(str, lineNumber,urgent) {
