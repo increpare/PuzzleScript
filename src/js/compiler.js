@@ -2222,7 +2222,7 @@ function twiddleMetaData(state) {
         }
         var result = parseInt(s);
         if (isNaN(result)){
-            logWarning(`Wasn't able to make sense of "${s}" as an dimension.`,lineNumber);
+            logWarning(`Wasn't able to make sense of "${s}" as a dimension.`,lineNumber);
         }
         if (result<=0){
             logWarning(`The dimension given to me (you gave "${s}") is baad - it should be greater than 0.`,lineNumber);
