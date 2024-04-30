@@ -269,7 +269,14 @@ x = 0;
 y = 0;
 
 function glyphCount(){
-    return state.glyphOrder.length;
+    //could also just return glyphImages.length
+    var count=0;
+	for (var n of state.glyphOrder) {
+		if (n.length==1 && state.glyphDict.hasOwnProperty(n)) {    
+            count++;
+        }
+    }
+    return count;
 }
 
 function redraw() {
