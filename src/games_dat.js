@@ -131,9 +131,9 @@ var games_gallery = [
     "homepage": "zarat.us"
   },
   {
-    "url": "https://www.puzzlescript.net/play.html?p=6893137",
+    "url": "https://www.puzzlescript.net/play.html?p=d9edc0b4d587f688b3495c834ca4735297d40e52",
     "thumb": "6893137.gif",
-    "title": "tiny treasure hunt 1.0",
+    "title": "tiny treasure hunt",
     "author": "Weeble",
     "homepage": "www.twitter.com/weeble"
   },
