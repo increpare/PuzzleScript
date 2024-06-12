@@ -2881,9 +2881,9 @@ function processInput(dir,dontDoWin,dontModify) {
 				restartTarget=level4Serialization();
 				hasUsedCheckpoint=true;
 				var backupStr = JSON.stringify(restartTarget);
-				storage_set(document.URL+'_checkpoint',backupStr);
-				storage_set(document.URL,curlevel);				
-			}	 
+				storage_set('_checkpoint',backupStr);
+				storage_set('',curlevel);
+			}
 
 		    if (level.commandQueue.indexOf('again')>=0 && modified) {
 
@@ -3094,8 +3094,8 @@ function nextLevel() {
 			}
 		} else {
 			try{
-				storage_remove(document.URL);
-				storage_remove(document.URL+'_checkpoint');				
+				storage_remove('');
+				storage_remove('_checkpoint');				
 			} catch(ex){
 					
 			}
@@ -3109,13 +3109,13 @@ function nextLevel() {
 	}
 	try {
 		
-		storage_set(document.URL,curlevel);
+		storage_set('',curlevel);
 		if (curlevelTarget!==null){
 			restartTarget=level4Serialization();
 			var backupStr = JSON.stringify(restartTarget);
-			storage_set(document.URL+'_checkpoint',backupStr);
+			storage_set('_checkpoint',backupStr);
 		} else {
-			storage_remove(document.URL+"_checkpoint");
+			storage_remove("_checkpoint");
 		}		
 		
 	} catch (ex) {
