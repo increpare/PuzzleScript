@@ -151,6 +151,7 @@ function showContinueOptionOnTitleScreen(){
 }
 
 function unloadGame() {
+	levelEditorOpened=false;
 	state=introstate;
 	level = new Level(0, 5, 5, 2, null);
 	level.objects = new Int32Array(0);
