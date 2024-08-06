@@ -23,11 +23,13 @@ function colorToHex(palette, str) {
 
 
 function generateSpriteMatrix(dat) {
+    let height = dat.length;
+    let width = dat[0].length;
 
     var result = [];
-    for (var i = 0; i < dat.length; i++) {
+    for (var i = 0; i < height; i++) {
         var row = [];
-        for (var j = 0; j < dat.length; j++) {
+        for (var j = 0; j < width; j++) {
             var ch = dat[i].charAt(j);
             if (ch == '.') {
                 row.push(-1);
@@ -145,16 +147,9 @@ function generateExtraMembers(state) {
             }
             if (o.spritematrix.length === 0) {
                 o.spritematrix = [
-                    [0, 0, 0, 0, 0],
-                    [0, 0, 0, 0, 0],
-                    [0, 0, 0, 0, 0],
-                    [0, 0, 0, 0, 0],
-                    [0, 0, 0, 0, 0]
+                    [0],
                 ];
             } else {
-                if (o.spritematrix.length !== 5 || o.spritematrix[0].length !== 5 || o.spritematrix[1].length !== 5 || o.spritematrix[2].length !== 5 || o.spritematrix[3].length !== 5 || o.spritematrix[4].length !== 5) {
-                    logWarning("Sprite graphics must be 5 wide and 5 high exactly.", o.lineNumber);
-                }
                 o.spritematrix = generateSpriteMatrix(o.spritematrix);
             }
         }

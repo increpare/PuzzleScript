@@ -473,11 +473,7 @@ var codeMirrorFn = function() {
     //  var keywordRegex = new RegExp("\\b(("+cons.join(")|(")+"))$", 'i');
 
     var fullSpriteMatrix = [
-        '00000',
-        '00000',
-        '00000',
-        '00000',
-        '00000'
+        '0',
     ];
 
     return {
@@ -798,7 +794,7 @@ var codeMirrorFn = function() {
                         if (match_name == null) {
                             stream.match(reg_notcommentstart, true);
                             if (stream.pos>0){                                
-                                logWarning('Unknown junk in object section (possibly: sprites have to be 5 pixels wide and 5 pixels high exactly. Or maybe: the main names for objects have to be words containing only the letters a-z0.9 - if you want to call them something like ",", do it in the legend section).',state.lineNumber);
+                                logWarning('Unknown junk in object section (possibly: the main names for objects have to be words containing only the letters a-z0.9 - if you want to call them something like ",", do it in the legend section).',state.lineNumber);
                             }
                             return 'ERROR';
                         } else {
@@ -884,31 +880,37 @@ var codeMirrorFn = function() {
                         {
                             var ch = stream.eat(/[.\d]/);
                             var spritematrix = state.objects_spritematrix;
+                            var o = state.objects[state.objects_candname];
+                            
+                            let height = spritematrix.length;
+                            let y = height - 1;
+                            
+                            o.spritematrix = spritematrix;
+                            
+                            if (sol) {
+                                if (height >= 2 && spritematrix[y].length !== spritematrix[0].length) {
+                                    logWarning('Sprite width mismatch for object ' + state.objects_candname.toUpperCase() + '.', state.lineNumber);
+                                    spritematrix[y] += '.'.repeat(spritematrix[0].length - spritematrix[y].length)
+                                }
+                                spritematrix.push('');
+                                height++
+                                y++
+                            }
+                            
                             if (ch === undefined) {
-                                if (spritematrix.length === 0) {
+                                if (height === 0) {
                                     return tryParseName();
                                 }
-                                logError('Unknown junk in spritematrix for object ' + state.objects_candname.toUpperCase() + '.', state.lineNumber);
-                                stream.match(reg_notcommentstart, true);
-                                return null;
-                            }
-
-                            if (sol) {
-                                spritematrix.push('');
-                            }
-
-                            var o = state.objects[state.objects_candname];
-
-                            spritematrix[spritematrix.length - 1] += ch;
-                            if (spritematrix[spritematrix.length-1].length>5){
-                                logWarning('Sprites must be 5 wide and 5 high.', state.lineNumber);
-                                stream.match(reg_notcommentstart, true);
-                                return null;
-                            }
-                            o.spritematrix = state.objects_spritematrix;
-                            if (spritematrix.length === 5 && spritematrix[spritematrix.length - 1].length == 5) {
+                                if (spritematrix[y].length !== 0) {
+                                    logError('Unknown junk in spritematrix for object ' + state.objects_candname.toUpperCase() + '.', state.lineNumber);
+                                    stream.match(reg_notcommentstart, true);
+                                    return null;
+                                }
                                 state.objects_section = 0;
+                                return null;
                             }
+
+                            spritematrix[y] += ch;
 
                             if (ch!=='.') {
                                 var n = parseInt(ch);
