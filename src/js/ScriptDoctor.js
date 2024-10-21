@@ -71,7 +71,8 @@ function playTest() {
   compile(['restart'], editor.getValue());
   console.log('Playtesting...');
   // Load the first level
-  solveLevel(0);
+  sol = solveLevel(0);
+  console.log('Solution:', sol);
 }
 
 
@@ -80,22 +81,28 @@ function solveLevel(level) {
   compile(['loadLevel', level]);
   console.log('Solving level', level);
   frontier = [backupLevel()];
+  action_seqs = [[]];
   frontier_set = new Set(frontier);
-  console.log('poo')
   while (frontier.length > 0) {
-    const level = frontier.pop();
+    const level = frontier.pop(0);
+    console.log('Level:', level);
+    action_seq = action_seqs.pop(0);
     frontier_set.delete(level);
     for (const move of Array(5).keys()) {
       restoreLevel(level);
+      // Make a copy of the action sequence
+      new_action_seq = action_seq.slice();
+      new_action_seq.push(move);
       changed = processInput(move);
       console.log('Frontier size:', frontier.length);
       if (winning) {
         console.log('Winning!');
-        return;
+        return action_seq;
       }
       else if (changed) {
         if (!frontier_set.has(backupLevel())) {
           frontier.push(backupLevel());
+          action_seqs.push(new_action_seq);
           frontier_set.add(backupLevel());
         }
       }
