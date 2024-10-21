@@ -59,4 +59,20 @@ async function main() {
   // Playtest
 }
 
-main();
+function playTest() {
+  editor.clearHistory();
+  clearConsole();
+  setEditorClean();
+  unloadGame();
+  compile(['restart'], editor.getValue());
+  console.log('Playtesting...');
+  // Load the first level
+  compile(['loadLevel', 0]);
+  // Move right x3 (to solve first level)
+  processInput(3);
+  processInput(3);
+  processInput(3);
+}
+
+// main();
+playTest();
