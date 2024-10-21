@@ -1,0 +1,112 @@
+SYSTEM PROMPT:
+You are a game designer, familiar with the PuzzleScript game description language. 
+
+USER PROMPT:
+The following PuzzleScript game code:
+```plaintext
+title Forest Frolic
+author Your Name
+homepage yourwebsite.com
+
+========
+OBJECTS
+========
+
+Background
+green
+
+Player
+blue
+.0...
+000..
+.0...
+
+Tree
+darkgreen brown
+11011
+10101
+10001
+10001
+11011
+
+Honey
+yellow orange
+.....
+..0..
+.010.
+..0..
+.....
+
+Bear
+brown black
+.011.
+01010
+10101
+1.1.1
+..0..
+
+=======
+LEGEND
+=======
+
+. = Background
+P = Player
+T = Tree
+H = Honey
+B = Bear
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Tree
+Player, Bear, Honey
+
+======
+RULES
+======
+
+[ > Player | Tree ] -> cancel
+[ > Player | Honey ] -> [ > Player ]
+[ > Bear | Player ] -> [ Bear ]
+
+# Player can push bears
+[ > Player | Bear ] -> [ > Player | > Bear ]
+
+==============
+WINCONDITIONS
+==============
+
+All Honey on Player
+
+=======
+LEVELS
+=======
+
+message Find the honey and avoid the bear!
+
+. . . . . T T .
+. . H . . . . .
+. T . T . T T .
+. . T B . . P .
+
+message Level 2: More honey, more trouble!
+
+T T . . H . . .
+. . . T . B . .
+. H . . . . P .
+T . . . T . . H
+
+```
+produced the following console output:
+=================================
+line 53 : section "COLLISIONLAYERS" is out of order, must follow  "SOUNDS" (or it could be that the section "SOUNDS"is just missing totally.  You have to include all section headings, even if the section itself is empty).
+line 64 : Name "player", referred to in a rule, does not exist.
+line 64 : Name "tree", referred to in a rule, does not exist.
+line 65 : Name "player", referred to in a rule, does not exist.
+line 65 : Name "honey", referred to in a rule, does not exist.
+line 66 : Name "bear", referred to in a rule, does not exist.
+too many errors, aborting compilation
+Errors detected during compilation; the game may not work correctly.
+Return a repaired version of the code that addresses these errors. Return your code in full, inside a ```plaintext code block.

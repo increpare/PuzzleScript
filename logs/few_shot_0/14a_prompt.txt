@@ -1,0 +1,128 @@
+SYSTEM PROMPT:
+You are a game designer, familiar with the PuzzleScript game description language. 
+
+USER PROMPT:
+The following PuzzleScript game code:
+```plaintext
+title Forest Frolic
+author Your Name
+homepage yourwebsite.com
+
+========
+OBJECTS
+========
+
+Background
+green
+.....
+.....
+.....
+.....
+.....
+
+Player
+blue
+.0...
+000..
+.0...
+.....
+.....
+
+Tree
+darkgreen brown
+11011
+10101
+10001
+10001
+11011
+
+Honey
+yellow orange
+.....
+..0..
+.010.
+..0..
+.....
+
+Bear
+brown black
+.011.
+01010
+10101
+1.1.1
+..0..
+
+Empty
+#000000
+.....
+.....
+.....
+.....
+.....
+
+=======
+LEGEND
+=======
+
+. = Background
+P = Player
+T = Tree
+H = Honey
+B = Bear
+_ = Empty
+
+================
+SOUNDS
+================
+
+# This section intentionally left blank for now
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Empty
+Tree
+Player, Bear, Honey
+
+======
+RULES
+======
+
+[ > Player | Tree ] -> cancel
+[ > Player | Honey ] -> [ > Player | Background ]
+
+[ > Bear | Player ] -> [ Bear | Player ]
+[ > Player | Bear ] -> [ > Player | > Bear ]
+
+==============
+WINCONDITIONS
+==============
+
+All Honey on Player
+
+=======
+LEVELS
+=======
+
+message Find the honey and avoid the bear!
+
+TTT_TT
+_T_H_
+TTT_TT
+T_B__P
+T_TTTT
+
+message Level 2: More honey, more trouble!
+
+TTT_H_
+___T_B
+T_H___
+T___P_
+T___TH
+
+```
+compiled, but a solvability check returned the following error:
+
+Return your code in full, inside a ```plaintext code block.

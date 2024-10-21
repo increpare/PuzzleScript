@@ -1,0 +1,113 @@
+Here’s a repaired version of your PuzzleScript game code. The issue was with the color definitions in your objects. In PuzzleScript, each character in the sprite definition corresponds to a color index in your color palette. Both the "Wall" and "CrateOnTarget" sprites were referencing color indices that were not defined in their palette.
+
+```plaintext
+title Sokoban Puzzle
+author Your Name
+
+========
+OBJECTS
+========
+
+Background
+LIGHTGRAY
+
+Wall
+BLACK
+11111
+11111
+11111
+11111
+11111
+
+Player
+BLUE
+..0..
+.000.
+..0..
+..0..
+.....
+
+Crate
+BROWN
+.....
+.000.
+.000.
+.000.
+.....
+
+Target
+YELLOW
+.....
+.....
+.000.
+.....
+.....
+
+CrateOnTarget
+DARKGREEN
+.....
+.000.
+.111.
+.000.
+.....
+
+=======     
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Player
+C = Crate
+T = Target
+O = CrateOnTarget
+
+=========
+SOUNDS
+=========
+
+Crate MOVE 36178105
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Target
+Player, Crate, Wall
+
+======
+RULES
+======
+
+[ > Player | Crate ] -> [ > Player | > Crate ] SFX0
+
+[ Crate | Target ] -> [ CrateOnTarget | Background ]
+[ CrateOnTarget | Background ] -> [ Crate | Target ]
+
+==============
+WINCONDITIONS
+==============
+
+All Crate on Target
+
+======= 
+LEVELS
+=======
+
+message Level 1
+
+#####
+#...#
+#C#P#
+#..T#
+#####
+
+message Congratulations, you've won!
+```
+
+Modifications:
+- Defined `Wall` with the correct BLACK color index.
+- Ensured `CrateOnTarget` uses a valid `DARKGREEN` color, and its pattern is correctly rendered by its palette definition (only differentiating a single color shade against the existing colors).
+
+By making these adjustments, the game should now compile without errors, and the visuals of your objects should display as intended.

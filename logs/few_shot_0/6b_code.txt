@@ -1,0 +1,111 @@
+It looks like there are issues with the comments and formatting in your PuzzleScript code. PuzzleScript does not support comments in the rules section, and that's causing errors. Here's a repaired version of your code without comments in the problematic sections:
+
+```plaintext
+title Forest Frolic
+author Your Name
+homepage yourwebsite.com
+
+========
+OBJECTS
+========
+
+Background
+green
+.....
+.....
+.....
+.....
+.....
+
+Player
+blue
+.0...
+000..
+.0...
+.....
+.....
+
+Tree
+darkgreen brown
+11011
+10101
+10001
+10001
+11011
+
+Honey
+yellow orange
+.....
+..0..
+.010.
+..0..
+.....
+
+Bear
+brown black
+.011.
+01010
+10101
+1.1.1
+..0..
+
+=======
+LEGEND
+=======
+
+. = Background
+P = Player
+T = Tree
+H = Honey
+B = Bear
+
+================
+SOUNDS
+================
+
+# Defining an empty sound section because PuzzleScript mandates it.
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Tree
+Player, Bear, Honey
+
+======
+RULES
+======
+
+[ > Player | Tree ] -> cancel
+[ > Player | Honey ] -> [ > Player ]
+
+[ > Bear | Player ] -> [ Bear ]
+[ > Player | Bear ] -> [ > Player | > Bear ]
+
+==============
+WINCONDITIONS
+==============
+
+All Honey on Player
+
+=======
+LEVELS
+=======
+
+message Find the honey and avoid the bear!
+
+. . . . . T T .
+. . H . . . . .
+. T . T . T T .
+. . T B . . P .
+
+message Level 2: More honey, more trouble!
+
+T T . . H . . .
+. . . T . B . .
+. H . . . . P .
+T . . . T . . H
+```
+
+I removed the comments from the rules section. Comments in PuzzleScript can only be placed outside of the rules section; for example, at the beginning of the file or between sections.

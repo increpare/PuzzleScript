@@ -22,8 +22,13 @@ async function main() {
   consoleText = '';
   nGenAttempts = 0;
   code = '';
-  while (nGenAttempts == 0 | errorCount > 0) {
-    if (nGenAttempts > 0) {
+  compilationSuccess = false;
+  solvable = false;
+  solverText = '';
+  while (nGenAttempts == 0 | !compilationSuccess | !solvable) {
+    if (errorCount > 0) {
+      compilationSuccess = false;
+      solvable = false;
       console.error(`Errors: ${errorCount}. Iterating on the game code. Attempt ${nGenAttempts}.`);
     }
 
@@ -33,6 +38,8 @@ async function main() {
       body: JSON.stringify({ 
         code: code,
         console_text: consoleText,
+        solver_text: solverText,
+        compilation_success: compilationSuccess,
         n_iter: nGenAttempts,
     }),
     });
@@ -53,10 +60,35 @@ async function main() {
     unloadGame();
     compile(['restart'], code);
     consoleText = getConsoleText();
+
+    if (errorCount == 0) {
+      compilationSuccess = true;
+      solverText = '';
+      solvable = true;
+      console.log('No compilation errors. Performing playtest.');
+      for (level_i in state.levels) {
+        console.log('Levels:', state.levels);
+        // Check if type `Level` or dict
+        if (!state.levels[level_i].hasOwnProperty('height')) {
+          console.log(`Skipping level ${level_i} as it does not appear to be a map (just a message?): ${state.levels[level_i]}.`);
+          continue;
+        }
+        sol = await solveLevel(level_i);
+        console.log('Solution:', sol);
+        if (sol.length > 0) {
+          console.log('Level is solvable.');
+        } else {
+          console.log(`Level ${level_i} is not solvable.`);
+          solvable = false;
+          solverText = `Level ${level_i} is not solvable. Please repair it.`
+          break
+        }
+      }
+    }
+
     nGenAttempts++;
   }
   console.log('No errors!');
-  // Playtest
 }
 
 function sleep(ms) {
@@ -137,7 +169,8 @@ async function solveLevel(level) {
     }
     i++;
   }
+  return [];
 }
 
-// main();
-playTest();
+main();
+// playTest();

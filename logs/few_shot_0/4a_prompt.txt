@@ -1,0 +1,125 @@
+SYSTEM PROMPT:
+You are a game designer, familiar with the PuzzleScript game description language. 
+
+USER PROMPT:
+The following PuzzleScript game code:
+```plaintext
+title Forest Frolic
+author Your Name
+homepage yourwebsite.com
+
+========
+OBJECTS
+========
+
+Background
+green
+
+Player
+blue
+.0...
+000..
+.0...
+
+Tree
+darkgreen brown
+11011
+10101
+10001
+10001
+11011
+
+Honey
+yellow orange
+.....
+..0..
+.010.
+..0..
+.....
+
+Bear
+brown black
+.011.
+01010
+10101
+1.1.1
+..0..
+
+=======
+LEGEND
+=======
+
+. = Background
+P = Player
+T = Tree
+H = Honey
+B = Bear
+
+======
+SOUNDS
+======
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Tree
+Player, Bear, Honey
+
+======
+RULES
+======
+
+[ > Player | Tree ] -> cancel
+[ > Player | Honey ] -> [ > Player ]
+[ > Bear | Player ] -> [ Bear ]
+
+# Player can push bears
+[ > Player | Bear ] -> [ > Player | > Bear ]
+
+==============
+WINCONDITIONS
+==============
+
+All Honey on Player
+
+=======
+LEVELS
+=======
+
+message Find the honey and avoid the bear!
+
+. . . . . T T .
+. . H . . . . .
+. T . T . T T .
+. . T B . . P .
+
+message Level 2: More honey, more trouble!
+
+T T . . H . . .
+. . . T . B . .
+. H . . . . P .
+T . . . T . . H
+
+```
+produced the following console output:
+=================================
+line 72 : Name "#", referred to in a rule, does not exist.
+line 72 : Name "can", referred to in a rule, does not exist.
+line 72 : Name "push", referred to in a rule, does not exist.
+line 72 : Name "bears", referred to in a rule, does not exist.
+line 12 : Sprite graphics must be 5 wide and 5 high exactly.
+line 87 : Error, symbol " ", used in map, not found.
+line 94 : Error, symbol " ", used in map, not found.
+line 69 : In a rule, each pattern to match on the left must have a corresponding pattern on the right of equal length (number of cells).
+line 70 : In a rule, each pattern to match on the left must have a corresponding pattern on the right of equal length (number of cells).
+line 72 : A rule has to have an arrow in it.  There's no arrow here! Consider reading up about rules - you're clearly doing something weird
+line 72 : The start of a rule must consist of some number of directions (possibly 0), before the first bracket, specifying in what directions to look (with no direction specified, it applies in all four directions).  It seems you've just entered "#".
+line 72 : The start of a rule must consist of some number of directions (possibly 0), before the first bracket, specifying in what directions to look (with no direction specified, it applies in all four directions).  It seems you've just entered "PLAYER".
+line 72 : The start of a rule must consist of some number of directions (possibly 0), before the first bracket, specifying in what directions to look (with no direction specified, it applies in all four directions).  It seems you've just entered "CAN".
+line 72 : The start of a rule must consist of some number of directions (possibly 0), before the first bracket, specifying in what directions to look (with no direction specified, it applies in all four directions).  It seems you've just entered "PUSH".
+line 72 : The start of a rule must consist of some number of directions (possibly 0), before the first bracket, specifying in what directions to look (with no direction specified, it applies in all four directions).  It seems you've just entered "BEARS".
+line 72 : This rule refers to nothing.  What the heck? :O
+Errors detected during compilation; the game may not work correctly.
+Return a repaired version of the code that addresses these errors. Return your code in full, inside a ```plaintext code block.

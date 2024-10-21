@@ -1,0 +1,137 @@
+Certainly! The main issues here are the missing legend definition for the dot (`.`) representing empty space and ensuring that the levels are properly rectangular. 
+Here is the fixed code:
+
+```plaintext
+title Advanced Block Pushing Challenge
+author David Skinner
+homepage www.puzzlescript.net
+
+========
+OBJECTS
+========
+
+Background
+lightgreen green
+11111
+01111
+11101
+11111
+10111
+
+Target
+darkblue
+.....
+.000.
+.0.0.
+.000.
+.....
+
+Wall
+brown darkbrown
+00010
+11111
+01000
+11111
+00010
+
+Player
+black orange white blue
+.000.
+.111.
+22222
+.333.
+.3.3.
+
+Crate
+orange
+00000
+0...0
+0...0
+0...0
+00000
+
+FastCrate
+red orange
+00000
+0...0
+0...0
+0...0
+00000
+
+Teleport
+purple
+.....
+.0.0.
+..0..
+.0.0.
+.....
+
+=======
+LEGEND
+=======
+
+b = Background
+# = Wall
+P = Player
+* = Crate
+F = FastCrate
+@ = Crate and Target
+! = FastCrate and Target
+O = Target
+T = Teleport
+. = Background
+
+=======
+SOUNDS
+=======
+
+Crate move 36772507
+FastCrate move 52753251
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Target
+Player, Wall, Crate, FastCrate, Teleport
+
+======
+RULES
+======
+
+[ > Player | Crate ] -> [ > Player | > Crate ]
+[ > Player | FastCrate ] -> [ > Player | > FastCrate ]
+[ Player | Teleport ] -> [ Player | Teleport ]
+
+==============
+WINCONDITIONS
+==============
+
+all Target on Crate
+all Target on FastCrate
+
+=======
+LEVELS
+=======
+
+####bb
+#.O#T.
+#..###
+# P@F#
+# .*.#
+# ####
+####bb
+
+######
+#    #
+#.#PT#
+#.*@.#
+#.O@.#
+#..F.#
+######
+```
+
+Key changes:
+- Added the `.` to the legend, representing the `Background` object.
+- Made sure all rows in the levels are of equal length to maintain rectangular structure.

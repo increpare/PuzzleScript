@@ -1,0 +1,103 @@
+To address the issues in your PuzzleScript code, we'll need to reorder the sections to include the `SOUNDS` section, even if it's empty, and ensure that all references to object names in the `RULES` section use the correct case. Here's the corrected code:
+
+```plaintext
+title Forest Frolic
+author Your Name
+homepage yourwebsite.com
+
+========
+OBJECTS
+========
+
+Background
+green
+
+Player
+blue
+.0...
+000..
+.0...
+
+Tree
+darkgreen brown
+11011
+10101
+10001
+10001
+11011
+
+Honey
+yellow orange
+.....
+..0..
+.010.
+..0..
+.....
+
+Bear
+brown black
+.011.
+01010
+10101
+1.1.1
+..0..
+
+=======
+LEGEND
+=======
+
+. = Background
+P = Player
+T = Tree
+H = Honey
+B = Bear
+
+======
+SOUNDS
+======
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Tree
+Player, Bear, Honey
+
+======
+RULES
+======
+
+[ > Player | Tree ] -> cancel
+[ > Player | Honey ] -> [ > Player ]
+[ > Bear | Player ] -> [ Bear ]
+
+# Player can push bears
+[ > Player | Bear ] -> [ > Player | > Bear ]
+
+==============
+WINCONDITIONS
+==============
+
+All Honey on Player
+
+=======
+LEVELS
+=======
+
+message Find the honey and avoid the bear!
+
+. . . . . T T .
+. . H . . . . .
+. T . T . T T .
+. . T B . . P .
+
+message Level 2: More honey, more trouble!
+
+T T . . H . . .
+. . . T . B . .
+. H . . . . P .
+T . . . T . . H
+```
+
+In this corrected version of the code, I've added an empty `SOUNDS` section, and I've ensured that object names in the rules match the case used in the `LEGEND` section. Now it should compile without errors.

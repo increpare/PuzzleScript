@@ -1,3 +1,5 @@
+from enum import IntEnum
+import json
 import os
 import re
 
@@ -5,9 +7,25 @@ from dotenv import load_dotenv
 from flask import Flask, jsonify, request, send_from_directory
 import openai
 
+from utils import num_tokens_from_string, truncate_str_to_token_len
 
-starter_game = 'sokoban_basic'
-log_dir = os.path.join('logs', f'{starter_game}_0')
+
+class GenModes(IntEnum):
+    ZERO_SHOT = 0
+    FEWSHOT = 1
+    MUTATE = 2
+
+
+seed = 1
+gen_mode = GenModes.FEWSHOT
+if gen_mode == GenModes.ZERO_SHOT:
+    exp_name = f'zero_shot_{seed}'
+elif gen_mode == GenModes.FEWSHOT:
+    exp_name = f'few_shot_{seed}'
+elif gen_mode == GenModes.MUTATE:
+    starter_game = 'sokoban_basic'
+    exp_name = f'{starter_game}_{seed}'
+log_dir = os.path.join('logs', exp_name)
 if not os.path.isdir(log_dir):
     os.makedirs(log_dir)
 load_dotenv()
@@ -34,15 +52,25 @@ game_gen_0shot_prompt = (
     """Output the code for a complete PuzzleScript game. """
     + formatting_prompt
 )
+game_gen_fewshot_prompt = (
+    """Output the code for a complete PuzzleScript game. """
+    f"{formatting_prompt}\n"
+    """Here are some example games, for inspiration:\n"""
+)
 game_mutate_prompt = (
     """Consider the following PuzzleScript game code:\n```plaintext\n{code}\n```\n"""
     """Create a variation on this game. """
     + formatting_prompt
 )
-game_repair_prompt = (
+game_compile_repair_prompt = (
     """The following PuzzleScript game code:\n```plaintext\n{code}\n```\n"""
-    """Produced the following console output:\n{console_text}\n"""
+    """produced the following console output:\n{console_text}\n"""
     """Return a repaired version of the code that addresses these errors. """
+    + formatting_prompt
+)
+game_solvability_repair_prompt = (
+    """The following PuzzleScript game code:\n```plaintext\n{code}\n```\n"""
+    """compiled, but a solvability check returned the following error:\n{solver_text}\n"""
     + formatting_prompt
 )
 
@@ -68,26 +96,45 @@ def extract_ps_code(text):
 def gen_game():
     data = request.json
     code = data['code']
+    compilation_success = data['compilation_success']
     console_text = data['console_text']
+    solver_text = data['solver_text']
     n_iter = data['n_iter']
     if console_text:
         compile_output_path = os.path.join(log_dir, f'{data["n_iter"]-1}c_compile.txt')
         if not os.path.isfile(compile_output_path):
             with open(compile_output_path, 'w') as f:
                 f.write(console_text)
+        solver_output_path = os.path.join(log_dir, f'{data["n_iter"]-1}d_solver.txt')
+        if solver_text and not os.path.isfile(solver_output_path):
+            with open(solver_output_path, 'w') as f:
+                f.write(solver_text)
     gen_game_output_path = os.path.join(log_dir, f'{n_iter}b_code.txt')
     if not os.path.isfile(gen_game_output_path):
-        breakpoint()
         gen_game_prompt_output_path = os.path.join(log_dir, f'{n_iter}a_prompt.txt')
         system_prompt = game_gen_system_prompt
-        if code:
-            prompt = game_repair_prompt.format(code=code, console_text=console_text)
-        else:
+        if n_iter == 0:
             # prompt = game_gen_prompt
-            with open(os.path.join('src', 'demo', f'{starter_game}.txt'), 'r') as f:
-                code = f.read()
-            prompt = game_mutate_prompt.format(code=code)
+            if gen_mode == GenModes.ZERO_SHOT:
+                prompt = game_gen_0shot_prompt
+            elif gen_mode == GenModes.FEWSHOT:
+                with open('example_games.json', 'r') as f:
+                    example_games = json.load(f)
+                n_tokens_avail = 10_000 - num_tokens_from_string(system_prompt, 'gpt-4o')
+                prompt = game_gen_fewshot_prompt
+                while num_tokens_from_string(system_prompt + prompt, 'gpt-4o') < n_tokens_avail:
+                    prompt += example_games.pop() + '\n'
+                prompt = truncate_str_to_token_len(prompt, 'gpt-4o', n_tokens_avail)
+            elif gen_mode == GenModes.MUTATE:
+                with open(os.path.join('src', 'demo', f'{starter_game}.txt'), 'r') as f:
+                    code = f.read()
+                prompt = game_mutate_prompt.format(code=code)
+        elif not compilation_success:
+            prompt = game_compile_repair_prompt.format(code=code, console_text=console_text)
+        else:
+            prompt = game_solvability_repair_prompt.format(code=code, solver_text=solver_text)
         save_prompts(system_prompt, prompt, gen_game_prompt_output_path)
+        breakpoint()
         response = openai_client.chat.completions.create(
             model='gpt-4o',
             messages=[

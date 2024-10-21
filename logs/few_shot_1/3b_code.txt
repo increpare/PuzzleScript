@@ -1,0 +1,111 @@
+The errors you are encountering are due to the way colors are defined for the `Wall` and `CrateOnTarget` objects. The color palette in PuzzleScript objects uses the numbers to reference specific colors from the object's defined palette. If you only declare one color, you should use only that color number (0), instead of trying to access non-existent colors.
+
+Here's the corrected version of your PuzzleScript game code:
+
+```plaintext
+title Sokoban Puzzle
+author Your Name
+
+========
+OBJECTS
+========
+
+Background
+LIGHTGRAY
+
+Wall
+BLACK
+00000
+00000
+00000
+00000
+00000
+
+Player
+BLUE
+..0..
+.000.
+..0..
+..0..
+.....
+
+Crate
+BROWN
+.....
+.000.
+.000.
+.000.
+.....
+
+Target
+YELLOW
+.....
+.....
+.000.
+.....
+.....
+
+CrateOnTarget
+DARKGREEN
+.....
+.000.
+.000.
+.000.
+.....
+
+=======     
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Player
+C = Crate
+T = Target
+O = CrateOnTarget
+
+=========
+SOUNDS
+=========
+
+Crate MOVE 36178105
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Target
+Player, Crate, Wall
+
+======
+RULES
+======
+
+[ > Player | Crate ] -> [ > Player | > Crate ] SFX0
+
+[ Crate | Target ] -> [ CrateOnTarget | Background ]
+[ CrateOnTarget | Background ] -> [ Crate | Target ]
+
+==============
+WINCONDITIONS
+==============
+
+All Crate on Target
+
+======= 
+LEVELS
+=======
+
+message Level 1
+
+#####
+#...#
+#C#P#
+#..T#
+#####
+
+message Congratulations, you've won!
+```
+
+In this version, I changed all instances of '1' in the sprite definition of `Wall` and `CrateOnTarget` to '0', since they only have one color defined in their palette, which is color 0.

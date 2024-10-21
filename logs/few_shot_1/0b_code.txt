@@ -1,0 +1,119 @@
+Certainly! Below is a simple PuzzleScript game code that represents a basic Sokoban-style block-pushing puzzle game. The player can push crates onto target spots to win the level.
+
+```plaintext
+title Sokoban Puzzle
+author Your Name
+
+========
+OBJECTS
+========
+
+Background
+LIGHTGRAY
+
+Wall
+BLACK
+11111
+11111
+11111
+11111
+11111
+
+Player
+BLUE
+..0..
+.000.
+..0..
+..0..
+.....
+
+Crate
+BROWN
+.....
+.111.
+.111.
+.111.
+.....
+
+Target
+YELLOW
+.....
+.....
+.333.
+.....
+.....
+
+CrateOnTarget
+GREEN
+.....
+.111.
+.333.
+.111.
+.....
+
+=======     
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Player
+C = Crate
+T = Target
+O = CrateOnTarget
+
+=========
+SOUNDS
+=========
+
+Crate MOVE 36178105
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Target
+Player, Crate, Wall
+
+======
+RULES
+======
+
+[ > Player | Crate ] -> [ > Player | > Crate ] SFX0
+
+[ Crate | Target ] -> [ CrateOnTarget | Background ]
+[ CrateOnTarget | Background ] -> [ Crate | Target ]
+
+==============
+WINCONDITIONS
+==============
+
+All Crate on Target
+
+======= 
+LEVELS
+=======
+
+message Level 1
+
+#####
+#...#
+#C#P#
+#..T#
+#####
+
+message Congratulations, you've won!
+```
+
+This game features:
+- **Title & Author**: Basic metadata.
+- **Objects**: Definition of all in-game elements: Background, Walls, Player, Crate, Target, and CrateOnTarget.
+- **Legend**: Simplifies game design by assigning symbols to objects.
+- **Sounds**: Adds sound for crate movement.
+- **Collision Layers**: Defines the layers for game objects.
+- **Rules**: Controls game mechanics like block pushing and converting blocks on targets.
+- **Win Conditions**: Player wins when all crates are on targets.
+- **Levels**: Design of a sample game level.
+
+Make sure to paste this into the PuzzleScript editor and experiment with adding more levels or rules!

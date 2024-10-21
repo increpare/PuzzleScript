@@ -1,0 +1,116 @@
+SYSTEM PROMPT:
+You are a game designer, familiar with the PuzzleScript game description language. 
+
+USER PROMPT:
+The following PuzzleScript game code:
+```plaintext
+title Sokoban Puzzle
+author Your Name
+
+========
+OBJECTS
+========
+
+Background
+LIGHTGRAY
+
+Wall
+BLACK
+00000
+00000
+00000
+00000
+00000
+
+Player
+BLUE
+..0..
+.000.
+..0..
+..0..
+.....
+
+Crate
+BROWN
+.....
+.000.
+.000.
+.000.
+.....
+
+Target
+YELLOW
+.....
+.....
+.000.
+.....
+.....
+
+CrateOnTarget
+DARKGREEN
+.....
+.000.
+.000.
+.000.
+.....
+
+=======     
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Player
+C = Crate
+T = Target
+O = CrateOnTarget
+
+=========
+SOUNDS
+=========
+
+Crate MOVE 36178105
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Target
+Player, Crate, Wall
+
+======
+RULES
+======
+
+[ > Player | Crate ] -> [ > Player | > Crate ] SFX0
+
+[ Crate | Target ] -> [ CrateOnTarget | Background ]
+[ CrateOnTarget | Background ] -> [ Crate | Target ]
+
+==============
+WINCONDITIONS
+==============
+
+All Crate on Target
+
+======= 
+LEVELS
+=======
+
+message Level 1
+
+#####
+#...#
+#C#P#
+#..T#
+#####
+
+message Congratulations, you've won!
+
+```
+produced the following console output:
+=================================
+line 43 : Object "CRATEONTARGET" has been defined, but not assigned to a layer.
+Errors detected during compilation; the game may not work correctly.
+Return a repaired version of the code that addresses these errors. Return your code in full, inside a ```plaintext code block.

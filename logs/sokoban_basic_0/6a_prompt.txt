@@ -1,0 +1,147 @@
+SYSTEM PROMPT:
+You are a game designer, familiar with the PuzzleScript game description language. 
+
+USER PROMPT:
+The following PuzzleScript game code:
+```plaintext
+title Advanced Block Pushing Challenge
+author David Skinner
+homepage www.puzzlescript.net
+
+========
+OBJECTS
+========
+
+Background
+lightgreen green
+11111
+01111
+11101
+11111
+10111
+
+Target
+darkblue
+.....
+.000.
+.0.0.
+.000.
+.....
+
+Wall
+brown darkbrown
+00010
+11111
+01000
+11111
+00010
+
+Player
+black orange white blue
+.000.
+.111.
+22222
+.333.
+.3.3.
+
+Crate
+orange
+00000
+0...0
+0...0
+0...0
+00000
+
+FastCrate
+red orange
+00000
+0...0
+0...0
+0...0
+00000
+
+Teleport
+purple
+.....
+.0.0.
+..0..
+.0.0.
+.....
+
+=======
+LEGEND
+=======
+
+b = Background
+# = Wall
+P = Player
+* = Crate
+F = FastCrate
+@ = Crate and Target
+! = FastCrate and Target
+O = Target
+T = Teleport
+
+=======
+SOUNDS
+=======
+
+Crate move 36772507
+FastCrate move 52753251
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Target
+Player, Wall, Crate, FastCrate, Teleport
+
+======
+RULES
+======
+
+[ > Player | Crate ] -> [ > Player | > Crate ]
+[ > Player | FastCrate ] -> [ > Player | > FastCrate ]
+[ Player | Teleport ] -> [ Player | Teleport ]
+
+==============
+WINCONDITIONS
+==============
+
+all Target on Crate
+all Target on FastCrate
+
+=======
+LEVELS
+=======
+
+####bb
+#.O#T 
+#..###
+# P@F#
+# .*.#
+# .###
+####bb
+
+######
+#    #
+#.#PT#
+#.*@.#
+#.O@.#
+#..F.#
+######
+
+```
+produced the following console output:
+=================================
+line 114 : Maps must be rectangular, yo (In a level, the length of each row must be the same).
+line 114 : Key "." not found. Do you need to add it to the legend, or define a new object?
+line 115 : Key "." not found. Do you need to add it to the legend, or define a new object?
+line 117 : Key "." not found. Do you need to add it to the legend, or define a new object?
+line 118 : Key "." not found. Do you need to add it to the legend, or define a new object?
+line 123 : Key "." not found. Do you need to add it to the legend, or define a new object?
+line 124 : Key "." not found. Do you need to add it to the legend, or define a new object?
+too many errors, aborting compilation
+Errors detected during compilation; the game may not work correctly.
+Return a repaired version of the code that addresses these errors. Return your code in full, inside a ```plaintext code block.

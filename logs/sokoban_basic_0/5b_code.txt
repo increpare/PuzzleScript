@@ -1,0 +1,144 @@
+The console output indicates a couple of problems with your PuzzleScript code. Here's how to address them:
+
+1. **Line 78 Error:** It seems that there's a misunderstanding about the 'Background' symbol in the `LEGEND` section. Instead of using `' '` (a space), consider using a symbol that hasn't been used yet, like `b`.
+
+2. **Line 115-119 Errors:** Your level maps are not rectangular. You need to ensure each row within a level is of the same length. Add spaces (or designate another background symbol) to balance the rows.
+
+3. **Line 117 Error:** This still relates to the undefined symbol in your map for space. Adjust it as already mentioned.
+
+Let's fix these:
+
+```plaintext
+title Advanced Block Pushing Challenge
+author David Skinner
+homepage www.puzzlescript.net
+
+========
+OBJECTS
+========
+
+Background
+lightgreen green
+11111
+01111
+11101
+11111
+10111
+
+Target
+darkblue
+.....
+.000.
+.0.0.
+.000.
+.....
+
+Wall
+brown darkbrown
+00010
+11111
+01000
+11111
+00010
+
+Player
+black orange white blue
+.000.
+.111.
+22222
+.333.
+.3.3.
+
+Crate
+orange
+00000
+0...0
+0...0
+0...0
+00000
+
+FastCrate
+red orange
+00000
+0...0
+0...0
+0...0
+00000
+
+Teleport
+purple
+.....
+.0.0.
+..0..
+.0.0.
+.....
+
+=======
+LEGEND
+=======
+
+b = Background
+# = Wall
+P = Player
+* = Crate
+F = FastCrate
+@ = Crate and Target
+! = FastCrate and Target
+O = Target
+T = Teleport
+
+=======
+SOUNDS
+=======
+
+Crate move 36772507
+FastCrate move 52753251
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Target
+Player, Wall, Crate, FastCrate, Teleport
+
+======
+RULES
+======
+
+[ > Player | Crate ] -> [ > Player | > Crate ]
+[ > Player | FastCrate ] -> [ > Player | > FastCrate ]
+[ Player | Teleport ] -> [ Player | Teleport ]
+
+==============
+WINCONDITIONS
+==============
+
+all Target on Crate
+all Target on FastCrate
+
+=======
+LEVELS
+=======
+
+####bb
+#.O#T 
+#..###
+# P@F#
+# .*.#
+# .###
+####bb
+
+######
+#    #
+#.#PT#
+#.*@.#
+#.O@.#
+#..F.#
+######
+```
+
+- Made sure to balance each row with either the use of the `b` symbol or spaces so they are rectangular.
+- Replaced the undefined space in maps with the `b` symbol for `Background`.
+
+This version should compile without errors.
