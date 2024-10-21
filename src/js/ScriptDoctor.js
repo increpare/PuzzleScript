@@ -63,50 +63,79 @@ function sleep(ms) {
   return new Promise(resolve => setTimeout(resolve, ms));
 }
 
-function playTest() {
+async function playTest() {
   editor.clearHistory();
   clearConsole();
   setEditorClean();
   unloadGame();
   compile(['restart'], editor.getValue());
   console.log('Playtesting...');
-  // Load the first level
-  sol = solveLevel(0);
+  // sol = solveLevel(0);
+
+  // Load the the text file demo/sokoban_match3.txt
+  // tryLoadFile('sokoban_match3');
+  var client = new XMLHttpRequest();
+  client.open('GET', '/demo/sokoban_match3.txt');
+  client.onreadystatechange = function() {
+    console.log('Ready state:', client.readyState);
+    console.log('Response', client.responseText);
+    editor.setValue(client.responseText);
+    sol = solveLevel(0);
+  }
+  client.send();
+  // console.log('Loaded level:', editor.getValue());
   console.log('Solution:', sol);
 }
 
 
-function solveLevel(level) {
+function serialize(val) {
+  return JSON.stringify(val);
+}
+
+
+async function solveLevel(level) {
   // Load the level
-  compile(['loadLevel', level]);
+  compile(['loadLevel', level], editor.getValue());
   console.log('Solving level', level);
-  frontier = [backupLevel()];
+  init_level = backupLevel();
+  init_level_map = init_level['dat'];
+  frontier = [init_level];
   action_seqs = [[]];
-  frontier_set = new Set(frontier);
+  visited = new Set([serialize(init_level_map)]);
+  i = 0;
+  start_time = Date.now();
   while (frontier.length > 0) {
     const level = frontier.pop(0);
-    console.log('Level:', level);
     action_seq = action_seqs.pop(0);
-    frontier_set.delete(level);
     for (const move of Array(5).keys()) {
       restoreLevel(level);
-      // Make a copy of the action sequence
       new_action_seq = action_seq.slice();
       new_action_seq.push(move);
       changed = processInput(move);
-      console.log('Frontier size:', frontier.length);
       if (winning) {
         console.log('Winning!');
-        return action_seq;
+        return new_action_seq;
       }
       else if (changed) {
-        if (!frontier_set.has(backupLevel())) {
-          frontier.push(backupLevel());
+        new_level = backupLevel();
+        new_level_map = new_level['dat'];
+        if (!visited.has(serialize(new_level_map))) {
+          
+          // UNCOMMENT THESE LINES FOR VISUAL DEBUGGING
+          // await new Promise(resolve => setTimeout(resolve, 1)); // Small delay for live feedback
+          // redraw();
+
+          frontier.push(new_level);
           action_seqs.push(new_action_seq);
-          frontier_set.add(backupLevel());
-        }
+          visited.add(serialize(new_level_map));
+        } 
       }
     }
+    if (i % 1000 == 0) {
+      console.log('Iteration:', i);
+      console.log('FPS:', i / (Date.now() - start_time) * 1000);
+    }
+    i++;
   }
 }
 
