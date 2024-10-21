@@ -5,7 +5,7 @@ To install requirements: `pip install -r requirements.txt`. To run a local serve
 
 The main function is run client-side, from inside `ScriptDoctor.js`, which is included in the `editor.html` (which is served by the server). This JS process asks for a game from the server (which makes an OpenAI API call), then throws it in the editor.
 
-Next: compilation, iterative feedback, playtesting. Also fewshot prompting.
+Next: playtesting. Making generated games not suck.
 
 Notes:
 - We made a single edit to `compile.js` to fix an issue importing gzipper, but we don't actually use the compressed version of the engine at the moment (the one in `bin`---instead just using the one in `src`).

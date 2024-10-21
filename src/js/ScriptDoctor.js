@@ -59,6 +59,10 @@ async function main() {
   // Playtest
 }
 
+function sleep(ms) {
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
+
 function playTest() {
   editor.clearHistory();
   clearConsole();
@@ -67,11 +71,36 @@ function playTest() {
   compile(['restart'], editor.getValue());
   console.log('Playtesting...');
   // Load the first level
-  compile(['loadLevel', 0]);
-  // Move right x3 (to solve first level)
-  processInput(3);
-  processInput(3);
-  processInput(3);
+  solveLevel(0);
+}
+
+
+function solveLevel(level) {
+  // Load the level
+  compile(['loadLevel', level]);
+  console.log('Solving level', level);
+  frontier = [backupLevel()];
+  frontier_set = new Set(frontier);
+  console.log('poo')
+  while (frontier.length > 0) {
+    const level = frontier.pop();
+    frontier_set.delete(level);
+    for (const move of Array(5).keys()) {
+      restoreLevel(level);
+      changed = processInput(move);
+      console.log('Frontier size:', frontier.length);
+      if (winning) {
+        console.log('Winning!');
+        return;
+      }
+      else if (changed) {
+        if (!frontier_set.has(backupLevel())) {
+          frontier.push(backupLevel());
+          frontier_set.add(backupLevel());
+        }
+      }
+    }
+  }
 }
 
 // main();
