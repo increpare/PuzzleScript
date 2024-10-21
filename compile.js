@@ -21,7 +21,11 @@ const gifsicle = require('gifsicle');
 const concat = require('concat');
 const cssmin = require('ycssmin').cssmin;
 const { minify } = require("terser");
-const { Compress } = require('gzipper');
+const { openai } = require('openai');
+(async () => {
+    const { Compress } = await import('gzipper');
+    globalThis.Compress = Compress;  // Makes Compress available globally
+})();
 const htmlminify = require('html-minifier-terser').minify;
 const glob = require("glob")
 
