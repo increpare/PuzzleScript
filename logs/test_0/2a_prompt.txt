@@ -1,0 +1,102 @@
+SYSTEM PROMPT:
+ You are a game designer, familiar with the PuzzleScript game description language. 
+
+USER PROMPT:
+ The following PuzzleScript game code:
+Title: Simple Sokoban
+Author: GameDesigner
+
+===========
+OBJECTS
+===========
+
+Background
+black
+
+Wall
+gray
+
+Player
+blue
+
+Crate
+brown
+
+Target
+green
+
+CrateOnTarget
+darkgreen
+
+PlayerOnTarget
+lightgreen
+
+===========
+LEGEND
+===========
+
+. = Background
+# = Wall
+P = Player
+C = Crate
+T = Target
+
+============
+COLLISIONLAYERS
+============
+
+Background
+Wall
+Target, Crate, Player, CrateOnTarget, PlayerOnTarget
+
+===========
+RULES
+===========
+
+[ Player | Crate ] -> [ | Player ] [ Crate | Background ] -> [ Crate | ]
+[ Crate | Background ] -> [ | Crate ]
+[ Target | Crate ] -> [ | CrateOnTarget ]
+[ Target | Player ] -> [ | PlayerOnTarget ]
+
+===========
+WINCONDITIONS
+===========
+
+All CrateOnTarget
+
+============
+LEVELS
+============
+
+#####
+#...#
+#.#C#
+#.#T#
+#P###
+#####
+
+#######
+#.C.T.#
+#.....#
+#..P..#
+#######
+
+######
+#P..T#
+######
+#C...#
+##....#
+#....#
+######
+
+Produced the following console output:
+=================================
+line 40 : section "COLLISIONLAYERS" is out of order, must follow  "SOUNDS" (or it could be that the section "SOUNDS"is just missing totally.  You have to include all section headings, even if the section itself is empty).
+line 51 : Name "player", referred to in a rule, does not exist.
+line 51 : Name "crate", referred to in a rule, does not exist.
+line 51 : Name "background", referred to in a rule, does not exist.
+line 52 : Name "crate", referred to in a rule, does not exist.
+line 52 : Name "background", referred to in a rule, does not exist.
+too many errors, aborting compilation
+Errors detected during compilation; the game may not work correctly.
+Return a repaired version of the code that addresses these errors.
