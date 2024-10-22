@@ -1,0 +1,138 @@
+The error messages indicate that there is an issue with the rules at lines 86 and 87, specifically regarding the pattern length on the left and right sides of the rules. In these rules, we need to ensure that each cell pattern on the left matches every cell pattern on the right. Let's break down the rules causing the errors:
+
+1. `[ > Player | Crate | Target ] -> [ > Player | > CrateOnTarget ]`
+   - The left side is matching three cells: Player, Crate, and Target.
+   - The right side is matching two cells but trying to replace the Crate with CrateOnTarget.
+
+2. `[ > Player | CrateOnTarget ] -> [ > Player | > Crate | Target ]`
+   - The left side is matching two cells: Player and CrateOnTarget.
+   - The right side is matching three cells but trying to replace CrateOnTarget with Crate and Target.
+
+To fix these, we must ensure the number of cell patterns on the left matches the number on the right. Here’s the corrected code:
+
+```plaintext
+title Sokoban Clone
+author Developer
+homepage http://www.puzzlescript.net
+
+========
+OBJECTS
+========
+
+Background
+lightgreen green
+11111
+01111
+11101
+11111
+10111
+
+Wall
+brown darkbrown
+00000
+01110
+01110
+01110
+00000
+
+Player
+black yellow red blue
+..00.
+.0110
+22222
+.333.
+.3.3.
+
+Crate
+orange
+00000
+0...0
+0...0
+0...0
+00000
+
+Target
+darkblue
+.....
+.000.
+.0.0.
+.000.
+.....
+
+CrateOnTarget
+orange darkblue
+00000
+0...0
+0.0.0
+0...0
+00000
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Player
+* = Crate
+@ = Target
++ = CrateOnTarget
+
+=======
+SOUNDS
+=======
+
+Crate MOVE 36772507
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Target
+Player, Wall, Crate, CrateOnTarget
+
+======
+RULES
+======
+
+[ > Player | Crate | Target ] -> [ > Player | > CrateOnTarget | ]
+[ > Player | CrateOnTarget | Target ] -> [ > Player | > Crate | Target ]
+
+(allow moving on target)
+[ Player | Target ] -> [ Player | Target ]
+
+==============
+WINCONDITIONS
+==============
+
+All Target on CrateOnTarget
+
+=======
+LEVELS
+=======
+
+###### 
+#..@.#
+#..*.#
+#.P..#
+###### 
+
+#######
+#..@..#
+#.*.P.#
+#.*.@.#
+#######
+
+#######
+#..@..#
+#.*@*.#
+#..P..#
+#######
+```
+
+**Changes Made:**
+- In the first erroneous rule, added an empty cell `|` at the end to match the right side pattern length with the left side.
+- In the second rule, added `Target` after `CrateOnTarget` on the left side to match what happens when a Crate is moved from `CrateOnTarget` to an adjacent `Target`. 
+
+This ensures that the patterns on both sides are of equal length and corrects the issues.

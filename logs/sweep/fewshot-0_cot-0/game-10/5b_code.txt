@@ -1,0 +1,140 @@
+The error message states that there is a mismatch in the pattern lengths between the left and right side of a rule. In PuzzleScript, every pattern on the left-hand side of a rule must have a corresponding pattern on the right-hand side of the rule with the same number of elements. The error likely comes from the rule:
+
+```
+[ > Player | Crate | Target ] -> [ > Player | > CrateOnTarget | ]
+```
+
+Looking at this rule, there are 3 elements on the left side (`> Player | Crate | Target`), but only 2 on the right side (`> Player | > CrateOnTarget`). The extra `|` without any element after it on the right side causes the mismatch. We need to ensure the number of elements on both sides is the same. 
+
+To fix the rules, we should align the number of elements:
+
+1. For the rule `[ > Player | Crate | Target ] -> [ > Player | > CrateOnTarget | ]`, we need to either add an element after `CrateOnTarget` to match the left side or change these rules to place `Target` after `CrateOnTarget` as the CrateOnTarget ultimately goes onto the Target.
+   
+2. Ensure every transformation involving `CrateOnTarget` correctly retains the `Target` layer underneath when being pushed or released.
+
+With these fixes in mind, the updated game code is:
+
+```plaintext
+title Sokoban Clone
+author Developer
+homepage http://www.puzzlescript.net
+
+========
+OBJECTS
+========
+
+Background
+lightgreen green
+11111
+01111
+11101
+11111
+10111
+
+Wall
+brown darkbrown
+00000
+01110
+01110
+01110
+00000
+
+Player
+black yellow red blue
+..00.
+.0110
+22222
+.333.
+.3.3.
+
+Crate
+orange
+00000
+0...0
+0...0
+0...0
+00000
+
+Target
+darkblue
+.....
+.000.
+.0.0.
+.000.
+.....
+
+CrateOnTarget
+orange darkblue
+00000
+0...0
+0.0.0
+0...0
+00000
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Player
+* = Crate
+@ = Target
++ = CrateOnTarget
+
+=======
+SOUNDS
+=======
+
+Crate MOVE 36772507
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Target
+Player, Wall, Crate, CrateOnTarget
+
+======
+RULES
+======
+
+[ > Player | Crate | Target ] -> [ > Player | > CrateOnTarget ]
+[ > Player | CrateOnTarget | ] -> [ > Player | > Crate | Target ]
+
+[ Player | Target ] -> [ Player | Target ]
+
+[ CrateOnTarget | ] -> [ CrateOnTarget | Target ]
+[ Crate | Target ] -> [ CrateOnTarget ]
+
+==============
+WINCONDITIONS
+==============
+
+All Target on CrateOnTarget
+
+=======
+LEVELS
+=======
+
+###### 
+#..@.#
+#....#
+#.*P.#
+###### 
+
+#######
+#..@..#
+#.*.P.#
+#...@.#
+#######
+
+#######
+#.@..@#
+#.*.*.#
+#..P..#
+#######
+```
+
+This modification keeps the `Target` consistent across interactions with `CrateOnTarget`.

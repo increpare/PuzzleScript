@@ -1,0 +1,144 @@
+The error messages in the console output indicate that there is a mismatch in the number of patterns on the left and right sides of some rules. Specifically, lines 87 and 91 have these issues. In PuzzleScript, for each pattern defined on the left side of a rule, there must be a corresponding pattern on the right side, and they should match in the number of cells involved.
+
+Let's break down the two problematic lines:
+
+1. **Line 87:**
+   - **Current Rule:** `[ > Player | Crate | Target ] -> [ > Player | CrateOnTarget | Target ]`
+   - **Problem:** The number of items matches, but the logic suggests that a crate moving onto a target should change into a CrateOnTarget, not that it will stay there with CrateOnTarget still on target.
+   - **Resolution:** Change the rule to reflect that the Crate should become CrateOnTarget when moved onto the Target.
+
+2. **Line 91:**
+   - **Current Rule:** `[ > Player | CrateOnTarget ] -> [ > Player | Crate | Target ]`
+   - **Problem:** This pattern suggests that a player 'pushed' a CrateOnTarget but leaves behind a Crate and Target. This should correctly reflect popping a crate off the target.
+   - **Resolution:** Adjust it to reflect the logical removal of the Crate from the CrateOnTarget as it is pushed back to its Crate state.
+
+Additionally, there seems to be an error with the win condition `All Target on CrateOnTarget`. We need to ensure that the conditions are correctly formulated to reflect game logic that wants all Crates to be on Targets.
+
+Here is the corrected version of the code:
+
+```plaintext
+title Sokoban Clone
+author Developer
+homepage http://www.puzzlescript.net
+
+========
+OBJECTS
+========
+
+Background
+lightgreen green
+11111
+01111
+11101
+11111
+10111
+
+Wall
+brown darkbrown
+00000
+01110
+01110
+01110
+00000
+
+Player
+black yellow red blue
+..00.
+.0110
+22222
+.333.
+.3.3.
+
+Crate
+orange
+00000
+0...0
+0...0
+0...0
+00000
+
+Target
+darkblue
+.....
+.000.
+.0.0.
+.000.
+.....
+
+CrateOnTarget
+orange darkblue
+00000
+0...0
+0.0.0
+0...0
+00000
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Player
+* = Crate
+@ = Target
++ = CrateOnTarget
+
+=======
+SOUNDS
+=======
+
+Crate MOVE 36772507
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Target
+Player, Wall, Crate, CrateOnTarget
+
+======
+RULES
+======
+
+[ > Player | Crate | Target ] -> [ > Player | CrateOnTarget ]
+
+[ > Player | CrateOnTarget ] -> [ > Player | Crate ]
+
+[ Player | Target ] -> [ Player | Target ]
+
+[ Crate | Target ] -> [ CrateOnTarget ]
+
+==============
+WINCONDITIONS
+==============
+
+All Target on Crate
+
+=======
+LEVELS
+=======
+
+###### 
+#..@.#
+#....#
+#.*P.#
+###### 
+
+#######
+#..@..#
+#.*.P.#
+#...@.#
+#######
+
+#######
+#.@..@#
+#.*.*.#
+#..P..#
+#######
+
+```
+
+- **Rules Adjustments:** We corrected the consequences of pushing Crate onto a Target and the effect of pushing a CrateOnTarget off.
+- **Win Condition Fix:** Changed `All Target on CrateOnTarget` to `All Target on Crate` to better reflect the intention of the game logic in Sokoban, which is to have all targets covered by crates.

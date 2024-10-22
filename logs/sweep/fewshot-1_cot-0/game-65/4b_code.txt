@@ -1,0 +1,130 @@
+The errors in the provided PuzzleScript code are due to the inclusion of English comments enclosed in semicolons, which is not the correct syntax for comments in the PuzzleScript language. In PuzzleScript, comments are wrapping in parentheses `()` or can be placed after a prime mark `'`. To fix these errors, I will replace the inline comments with the correct format. 
+
+Here is the corrected version of the code:
+
+```plaintext
+title Key Hunter
+author Your Name
+homepage www.puzzlescript.net
+
+========
+OBJECTS
+========
+
+Background
+LightGrey
+.....
+.....
+.....
+.....
+.....
+
+Wall
+Brown
+.....
+.....
+.....
+.....
+.....
+
+Player
+Blue
+..0..
+.000.
+00000
+.0.0.
+..0..
+
+Key
+Yellow
+.....
+..0..
+.000.
+..0..
+.....
+
+Exit
+Green
+.....
+.000.
+.0.0.
+.000.
+.....
+
+Exit_active
+DarkGreen
+.....
+.000.
+.0.0.
+.000.
+.....
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Player
+K = Key
+E = Exit
+X = Exit_active
+
+=======
+SOUNDS
+=======
+
+Key MOVE 34857890
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Player, Wall, Key, Exit, Exit_active
+
+======
+RULES
+======
+
+( Player picks up a key )
+[ Player | Key ] -> [ Player ] SFX0
+
+( All keys collected, transform exit to active state )
+[ Player | Exit no Key ] -> [ Player | Exit_active ]
+
+==============
+WINCONDITIONS
+==============
+
+All Exit_active
+
+=======
+LEVELS
+=======
+
+#######
+#.....#
+#..K..#
+#..P..#
+#..E..#
+#..K..#
+#######
+
+#######
+#.....#
+#.K.#.#
+#..P..#
+#.#.#.#
+#.E.K.#
+#######
+
+#######
+#K#K#K#
+#.#.#.#
+#.P.K.#
+#.K.E.#
+#.#.#.#
+#######
+```
+I've replaced the inline comments with properly formatted comments enclosed in parentheses. This should resolve the syntax errors and ensure the game compiles correctly.

@@ -1,0 +1,135 @@
+The error messages indicate that the rule patterns on the left and right sides must have the same number of elements in the specified direction. In this case, the rules should be adjusted so that each element on the left of the arrow has a direct counterpart on the right, even if it's unchanged. Here's how we can fix the rules:
+
+1. For the rule where the Player picks up the Key, the Key should become Background (i.e. disappear), maintaining the overall pattern length.
+
+2. For the rule where the Exit turns into Exit_active upon collecting all keys, there should be a direct pattern match. Since the player doesn't need to change position, we'll rewrite the rule with the corresponding patterns.
+
+Here's the repaired code:
+
+```plaintext
+title Key Hunter
+author Your Name
+homepage www.puzzlescript.net
+
+========
+OBJECTS
+========
+
+Background
+LightGrey
+.....
+.....
+.....
+.....
+.....
+
+Wall
+Brown
+.....
+.....
+.....
+.....
+.....
+
+Player
+Blue
+..0..
+.000.
+00000
+.0.0.
+..0..
+
+Key
+Yellow
+.....
+..0..
+.000.
+..0..
+.....
+
+Exit
+Green
+.....
+.000.
+.0.0.
+.000.
+.....
+
+Exit_active
+DarkGreen
+.....
+.000.
+.0.0.
+.000.
+.....
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Player
+K = Key
+E = Exit
+X = Exit_active
+
+=======
+SOUNDS
+=======
+
+Key MOVE 34857890
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Player, Wall, Key, Exit, Exit_active
+
+======
+RULES
+======
+
+( Player picks up a key )
+[ Player | Key ] -> [ Player | Background ] SFX0
+
+( All keys collected, transform exit to active state )
+[ Player | Exit ] [ no Key ] -> [ Player | Exit_active ]
+
+==============
+WINCONDITIONS
+==============
+
+All Exit_active
+
+=======
+LEVELS
+=======
+
+#######
+#.....#
+#..K..#
+#..P..#
+#..E..#
+#..K..#
+#######
+
+#######
+#.....#
+#.K.#.#
+#..P..#
+#.#.#.#
+#.E.K.#
+#######
+
+#######
+#K#K#K#
+#.#.#.#
+#.P.K.#
+#.K.E.#
+#.#.#.#
+#######
+```
+
+This corrected version ensures each rule's left and right sides correspond to the same number of objects within their cells, addressing the compilation error.

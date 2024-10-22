@@ -18,78 +18,11 @@ function getConsoleText() {
   return plainTextOutput
 }
 
-async function main() {
-  consoleText = '';
-  nGenAttempts = 0;
-  code = '';
-  compilationSuccess = false;
-  solvable = false;
-  solverText = '';
-  while (nGenAttempts == 0 | !compilationSuccess | !solvable) {
-    if (errorCount > 0) {
-      compilationSuccess = false;
-      solvable = false;
-        solverText = '';
-      console.error(`Errors: ${errorCount}. Iterating on the game code. Attempt ${nGenAttempts}.`);
-    }
-
-    const response = await fetch('/gen_game', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ 
-        code: code,
-        console_text: consoleText,
-        solver_text: solverText,
-        compilation_success: compilationSuccess,
-        n_iter: nGenAttempts,
-    }),
-    });
-  
-    if (!response.ok) {
-      throw new Error(`API error: ${response.statusText}`);
-    }
-  
-    const data = await response.json();
-    for (const line of data.text.split('\n')) {
-      consolePrint(line);
-    }
-    code = data.code;
-    editor.setValue(code);
-    editor.clearHistory();
-    clearConsole();
-    setEditorClean();
-    unloadGame();
-    compile(['restart'], code);
-    consoleText = getConsoleText();
-
-    if (errorCount == 0) {
-      compilationSuccess = true;
-      solverText = '';
-      solvable = true;
-      console.log('No compilation errors. Performing playtest.');
-      for (level_i in state.levels) {
-        console.log('Levels:', state.levels);
-        // Check if type `Level` or dict
-        if (!state.levels[level_i].hasOwnProperty('height')) {
-          console.log(`Skipping level ${level_i} as it does not appear to be a map (just a message?): ${state.levels[level_i]}.`);
-          continue;
-        }
-        sol = await solveLevel(level_i);
-        console.log('Solution:', sol);
-        if (sol.length > 0) {
-          console.log('Level is solvable.');
-        } else {
-          console.log(`Level ${level_i} is not solvable.`);
-          solvable = false;
-          solverText = `Level ${level_i} is not solvable. Please repair it.`
-          break
-        }
-      }
-    }
-
-    nGenAttempts++;
+class GameIndividual {
+  constructor(code, fitness) {
+    this.code = code;
+    this.fitness = fitness;
   }
-  console.log('No errors!');
 }
 
 function sleep(ms) {
@@ -147,7 +80,7 @@ async function solveLevel(level) {
       changed = processInput(move);
       if (winning) {
         console.log('Winning!');
-        return new_action_seq;
+        return new_action_seq, i;
       }
       else if (changed) {
         new_level = backupLevel();
@@ -170,8 +103,146 @@ async function solveLevel(level) {
     }
     i++;
   }
-  return [];
+  let sol = [];
+  return sol, i;
 }
 
-main();
+
+async function genGame(genMode, parents, saveDir, seed, fewshot, cot) {
+  consoleText = '';
+  nGenAttempts = 0;
+  code = '';
+  compilationSuccess = false;
+  solvable = false;
+  solverText = '';
+  while (nGenAttempts < maxGenAttempts & (nGenAttempts == 0 | !compilationSuccess | !solvable)) {
+
+    const response = await fetch('/gen_game', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ 
+        seed: seed,
+        fewshot: fewshot,
+        cot: cot,
+        save_dir: saveDir,
+        gen_mode: genMode,
+        parents: parents,
+        code: code,
+        console_text: consoleText,
+        solver_text: solverText,
+        compilation_success: compilationSuccess,
+        n_iter: nGenAttempts,
+    }),
+    });
+  
+    if (!response.ok) {
+      throw new Error(`API error: ${response.statusText}`);
+    }
+  
+    const data = await response.json();
+    for (const line of data.text.split('\n')) {
+      consolePrint(line);
+    }
+    code = data.code;
+    editor.setValue(code);
+    editor.clearHistory();
+    clearConsole();
+    setEditorClean();
+    unloadGame();
+    compile(['restart'], code);
+    consoleText = getConsoleText();
+
+    if (errorCount > 0) {
+      compilationSuccess = false;
+      solvable = false;
+        solverText = '';
+      console.error(`Errors: ${errorCount}. Iterating on the game code. Attempt ${nGenAttempts}.`);
+      fitness = -errorCount;
+    } else {
+      compilationSuccess = true;
+      solverText = '';
+      solvable = true;
+      var sol;
+      var n_search_iters;
+      console.log('No compilation errors. Performing playtest.');
+      for (level_i in state.levels) {
+        console.log('Levels:', state.levels);
+        // Check if type `Level` or dict
+        if (!state.levels[level_i].hasOwnProperty('height')) {
+          console.log(`Skipping level ${level_i} as it does not appear to be a map (just a message?): ${state.levels[level_i]}.`);
+          continue;
+        }
+        sol, n_search_iters = await solveLevel(level_i);
+        fitness = Math.max(fitness, n_search_iters)
+        console.log('Solution:', sol);
+        // check if sol is undefined
+        if (sol) {
+          console.log('Level is solvable.');
+          solverText += `Found solution for ${level_i} in ${n_search_iters} iterations.`
+        } else {
+          console.log(`Level ${level_i} is not solvable.`);
+          solvable = false;
+          solverText += `Level ${level_i} is not solvable. Please repair it.`
+        }
+      }
+    }
+
+    nGenAttempts++;
+  }
+  return new GameIndividual(code, fitness);
+}
+
+
+const maxGenAttempts = 10;
+const popSize = 3;
+const nGens = 10;
+
+async function evolve() {
+  // Create an initial population of 10 games
+  pop = [];
+  for (i = 0; i < popSize*2; i++) {
+    saveDir = `gen0/game${i}`;
+    game_i = await genGame('init', [], saveDir, seed=seed, fewshot=fewshot, cot=cot);
+    pop.push(game_i);
+  }
+  for (gen = 0; gen < nGens; gen++) {
+    // Sort the population by fitness
+    pop.sort((a, b) => a.fitness - b.fitness);
+    // Select the top half of the population as parents
+    parents = pop.slice(0, popSize);
+    // Generate the next generation
+    newPop = [];
+    for (i = 0; i < popSize * 2; i++) {
+      doCrossOver = Math.random() < 0.5;
+      if (doCrossOver) {
+        genMode = 'crossover';
+        // Get two random games from list without replacement
+        parent1 = parents[Math.floor(Math.random() * popSize)];
+        // Create copy of array without parent1
+        remainingParents = parents.filter(parent => parent != parent1);
+        parent2 = remainingParents[Math.floor(Math.random() * (popSize - 1))];
+        parents = [parent1, parent2];
+      } else {
+        genMode = 'mutate';
+        parents = [parents[Math.floor(Math.random() * popSize)]];
+      }
+      saveDir = `gen${gen}/game${i}`;
+      newPop.push(genGame('mutate', parents, saveDir, seed=seed, fewshot=fewshot, cot=cot));
+    }
+  }
+}
+
+async function sweep() {
+  for (seed = 0; seed < 10; seed++) {
+    for (cot in [true, false]) {
+      for (fewshot in [true, false]) {
+        gameInd = await genGame('init', [], `sweep/fewshot-${fewshot}_cot-${cot}/game-${i}`,
+          seed, fewshot, cot);
+      }
+    }
+  }
+}
+
+sweep()
+// evolve();
 // playTest();

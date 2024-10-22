@@ -1,0 +1,141 @@
+To design a new PuzzleScript game, I need to determine a theme or concept, establish the interactions between game elements, and then conceive the winning conditions and levels. Here's the plan:
+
+1. **Theme**: I'll create a simple maze game where the player has to collect all keys to unlock the exit door, akin to a treasure hunt or key collection challenge.
+
+2. **Objects**: I'll utilize basic elements such as walls, a player character, collectable keys, and an exit door.
+
+3. **Legend**: Define the game symbols for ease of use in levels.
+
+4. **Sounds**: Incorporate basic sounds for picking up keys and opening the exit.
+
+5. **Collision Layers**: Detail which objects can move and interact, for instance, keys should be collectible, and walls should block movement.
+
+6. **Rules**: Specify how the player interacts with keys and exits.
+
+7. **Win Conditions**: The player must collect all keys to activate and pass through the exit.
+
+8. **Levels**: Design multiple levels, each with increasing complexity.
+
+Now, here's the complete code for a PuzzleScript game:
+
+```plaintext
+title Key Hunter
+author Your Name
+homepage www.puzzlescript.net
+
+========
+OBJECTS
+========
+
+Background
+LightGrey
+.....
+.....
+.....
+.....
+.....
+
+Wall
+Brown
+11111
+11111
+11111
+11111
+11111
+
+Player
+Blue
+..0..
+.000.
+00000
+.0.0.
+..0..
+
+Key
+Yellow
+.....
+..0..
+.000.
+..0..
+.....
+
+Exit
+Green
+.....
+.000.
+.0.0.
+.000.
+.....
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Player
+K = Key
+E = Exit
+
+=======
+SOUNDS
+=======
+
+Key Create 34857890
+Exit Open 34857891
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Player, Wall, Key, Exit
+
+======
+RULES
+======
+
+# Player picks up a key
+[ Player | Key ] -> [ Player ]
+
+# Check if all keys are collected
+[ Exit | Player ] -> [ Exit | Player | Exit_active ]
+
+[_] -> [_ Exit_active]
+
+==============
+WINCONDITIONS
+==============
+
+All Exit_active
+
+=======
+LEVELS
+=======
+
+#######
+#.....#
+#..K..#
+#..P..#
+#..E..#
+#..K..#
+#######
+
+#######
+#.....#
+#.K.#.#
+#..P..#
+#.#.#.#
+#.E.K.#
+#######
+
+#######
+#K#K#K#
+#.#.#.#
+#.P.K.#
+#.K.E.#
+#.#.#.#
+#######
+```
+
+This game challenges players to think strategically about how to move and collect all keys before reaching the exit. Each level provides escalating difficulty to ensure engaging gameplay.
