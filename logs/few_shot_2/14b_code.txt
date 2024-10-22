@@ -1,0 +1,130 @@
+```plaintext
+title Switch Maze
+author Your Name
+homepage www.example.com
+
+========
+OBJECTS
+========
+
+Background
+White
+
+Wall
+Black
+.....
+.....
+.....
+.....
+.....
+
+Player
+Green
+.000.
+.0.0.
+.000.
+.0.0.
+.000.
+
+Goal
+Yellow
+.....
+..0..
+.000.
+..0..
+.....
+
+Switch
+Blue
+.....
+..0..
+.....
+.....
+.....
+
+Barrier
+Red
+.....
+.....
+.....
+.....
+.....
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Player
+G = Goal
+S = Switch
+B = Barrier
+
+=======
+SOUNDS
+=======
+
+SFX0 36772507 (moveplayer)
+SFX1 30958409 (switchtoggle)
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Player, Wall, Goal, Switch, Barrier
+
+======
+RULES
+======
+
+[ > Player | Switch ] -> [ > Player | ] sfx1
+[ > Player | Barrier Background ] -> [ > Player | Background Barrier ]
+[ Barrier Background ] -> [ Background Barrier ]
+[ Background Switch ] -> [ Barrier Background ]
+
+==============
+WINCONDITIONS
+==============
+
+All Player on Goal
+
+=======
+LEVELS
+=======
+
+message Level 1
+#######
+#.....#
+#.P#G.#
+#..S..#
+#..B..#
+#######
+
+message Level 2
+#########
+#.#...G.#
+#.#.###.#
+#S....#.#
+#.#####.#
+#.#P#...#
+###.##.##
+#########
+
+message Level 3
+###########
+#.......G.#
+#.#####.#.#
+#.S.....#.#
+#.#.#####.#
+#.#.......#
+#.#.#####.#
+#.#.S#P#.##
+#####.#####
+###########
+
+
+```
+
+In Level 1, I moved the Barrier (`B`) to a reachable position by the Player. This way, the Player can reach the Goal (`G`) after toggling the Switch (`S`).

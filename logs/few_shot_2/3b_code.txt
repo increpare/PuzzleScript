@@ -1,0 +1,138 @@
+```plaintext
+title Switch Maze
+author Your Name
+homepage www.example.com
+
+========
+OBJECTS
+========
+
+Background
+White
+
+Wall
+Black
+.....
+.....
+.....
+.....
+.....
+
+Player
+Green
+.000.
+.0.0.
+.000.
+.0.0.
+.000.
+
+Goal
+Yellow
+.....
+..0..
+.000.
+..0..
+.....
+
+Switch
+Blue
+.....
+..0..
+.....
+.....
+.....
+
+Barrier
+Red
+.....
+.....
+.....
+.....
+.....
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Player
+G = Goal
+S = Switch
+B = Barrier
+
+=======
+SOUNDS
+=======
+
+moveplayer 36772507
+switchtoggle 30958409
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Player, Wall, Goal, Switch, Barrier
+
+======
+RULES
+======
+
+[ > Player | Switch ] -> [ > Player | ] sfx1
+[ Barrier ] -> [ Background ]
+[ Background Switch ] -> [ Barrier Background ]
+
+==============
+WINCONDITIONS
+==============
+
+All Player on Goal
+
+=======
+LEVELS
+=======
+
+message Level 1
+#######
+#..P..#
+#.#.#.#
+#.#G#.#
+#.#.#.#
+#.#.#.#
+#######
+
+message Level 2
+#########
+#.#...G.#
+#.#.###.#
+#.....#.#
+#.#####.#
+#.#P#...#
+###.S#.##
+#########
+
+message Level 3
+###########
+#.......G.#
+#.#####.#.#
+#.S.....#.#
+#.#.#####.#
+#.#.......#
+#.#.#####.#
+#.#.S#P#.##
+#####.#####
+###########
+```
+
+Changes made:
+
+1. Updated the `sound` line to match the correct syntax with appropriate identifiers. Changed:
+    - `MovePlayer Move` to `moveplayer 36772507`
+    - `SwitchToggle 12345678` to `switchtoggle 30958409`
+   
+2. Revised problematic rules related to "Reverse" (since it wasn't defined):
+    - Removed `[ Switch ] -> [ Switch Reverse ]` and `[ Reverse [ Switch ] -> [ Switch Reverse ]`.
+    - Updated the switch-barrier toggle logic with `[ Background Switch ] -> [ Barrier Background ]`.
+
+The code should handle the toggle mechanic correctly without syntax errors.

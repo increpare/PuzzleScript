@@ -1,6 +1,7 @@
 from enum import IntEnum
 import json
 import os
+import random
 import re
 
 from dotenv import load_dotenv
@@ -16,7 +17,7 @@ class GenModes(IntEnum):
     MUTATE = 2
 
 
-seed = 1
+seed = 2
 gen_mode = GenModes.FEWSHOT
 if gen_mode == GenModes.ZERO_SHOT:
     exp_name = f'zero_shot_{seed}'
@@ -44,18 +45,15 @@ def serve_js(filename):
 
 formatting_prompt = \
     """Return your code in full, inside a ```plaintext code block."""
-
 game_gen_system_prompt = (
     "You are a game designer, familiar with the PuzzleScript game description language. "
+)
+fewshow_examples_prompt = (
+    "Here are some example games, for inspiration (do not reproduce these games exactly):"""
 )
 game_gen_0shot_prompt = (
     """Output the code for a complete PuzzleScript game. """
     + formatting_prompt
-)
-game_gen_fewshot_prompt = (
-    """Output the code for a complete PuzzleScript game. """
-    f"{formatting_prompt}\n"
-    """Here are some example games, for inspiration:\n"""
 )
 game_mutate_prompt = (
     """Consider the following PuzzleScript game code:\n```plaintext\n{code}\n```\n"""
@@ -75,7 +73,7 @@ game_solvability_repair_prompt = (
 )
 
 def save_prompts(sys_prompt, prompt, filename):
-    with open(filename, 'w') as f:
+    with open(filename, 'w', encoding='utf-8') as f:
         f.write(
             f"SYSTEM PROMPT:\n{sys_prompt}\n\nUSER PROMPT:\n{prompt}"
         )
@@ -118,13 +116,7 @@ def gen_game():
             if gen_mode == GenModes.ZERO_SHOT:
                 prompt = game_gen_0shot_prompt
             elif gen_mode == GenModes.FEWSHOT:
-                with open('example_games.json', 'r') as f:
-                    example_games = json.load(f)
-                n_tokens_avail = 10_000 - num_tokens_from_string(system_prompt, 'gpt-4o')
-                prompt = game_gen_fewshot_prompt
-                while num_tokens_from_string(system_prompt + prompt, 'gpt-4o') < n_tokens_avail:
-                    prompt += example_games.pop() + '\n'
-                prompt = truncate_str_to_token_len(prompt, 'gpt-4o', n_tokens_avail)
+                prompt = game_gen_0shot_prompt
             elif gen_mode == GenModes.MUTATE:
                 with open(os.path.join('src', 'demo', f'{starter_game}.txt'), 'r') as f:
                     code = f.read()
@@ -133,8 +125,22 @@ def gen_game():
             prompt = game_compile_repair_prompt.format(code=code, console_text=console_text)
         else:
             prompt = game_solvability_repair_prompt.format(code=code, solver_text=solver_text)
+        if not gen_mode == GenModes.ZERO_SHOT:
+            # Randomly add fewshot examples to the system prompt (within our token limit)
+            with open('example_games.json', 'r') as f:
+                example_games = json.load(f)
+            n_tokens_avail = 10_000 - num_tokens_from_string(system_prompt, 'gpt-4o')
+            fewshot_examples_prompt_i = fewshow_examples_prompt
+            last_fewshot_examples_prompt_i = fewshot_examples_prompt_i
+            while num_tokens_from_string(system_prompt + fewshot_examples_prompt_i + prompt, 'gpt-4o') < n_tokens_avail:
+                last_fewshot_examples_prompt_i = fewshot_examples_prompt_i
+                rand_example_i = random.randint(0, len(example_games) - 1)
+                fewshot_examples_prompt_i += '\n\n' + example_games.pop(rand_example_i)
+            fewshot_examples_prompt_i = last_fewshot_examples_prompt_i
+            system_prompt += fewshot_examples_prompt_i
         save_prompts(system_prompt, prompt, gen_game_prompt_output_path)
-        breakpoint()
+        if n_iter % 10 == 0:
+            breakpoint()
         response = openai_client.chat.completions.create(
             model='gpt-4o',
             messages=[

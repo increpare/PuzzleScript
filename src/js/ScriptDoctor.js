@@ -29,6 +29,7 @@ async function main() {
     if (errorCount > 0) {
       compilationSuccess = false;
       solvable = false;
+        solverText = '';
       console.error(`Errors: ${errorCount}. Iterating on the game code. Attempt ${nGenAttempts}.`);
     }
 
