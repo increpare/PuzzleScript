@@ -1,0 +1,87 @@
+Here's a revised version of the code with the sounds corrected. In PuzzleScript, the sounds section should be properly defined without extra lines, and followed by a comma if it's a sound effect assigned to an event or movement:
+
+```plaintext
+title Escape the Maze
+author GameDesigner
+
+========
+OBJECTS
+========
+
+Background
+#444444
+
+Wall
+#000000
+
+Player
+#00FF00
+..0..
+.000.
+.000.
+.000.
+..0..
+
+Goal
+#FFFF00
+.....
+..0..
+.000.
+..0..
+.....
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Player
+G = Goal
+
+=======
+SOUNDS
+=======
+
+Move 83047309
+Crash 72628405
+GoalSound 28173601
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Wall
+Player
+Goal
+
+======
+RULES
+======
+
+[ > Player | no Wall ] -> [ > Player | ]
+
+==============
+WINCONDITIONS
+==============
+
+All Player on Goal
+
+=======
+LEVELS
+=======
+
+message Welcome to the Maze! Reach the Goal to win!
+
+######
+#....#
+#.##.#
+#..#.#
+##P#.#
+##..G#
+######
+
+message Congratulations! You've escaped the maze!
+```
+The corrected sounds now fit the expected format for the PuzzleScript language.

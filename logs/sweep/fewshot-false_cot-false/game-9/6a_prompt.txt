@@ -1,0 +1,105 @@
+SYSTEM PROMPT:
+You are a game designer, familiar with the PuzzleScript game description language. 
+
+USER PROMPT:
+The following PuzzleScript game code:
+```plaintext
+Title: Box Pusher
+Author: Your Name
+Homepage: http://www.yourwebsite.com
+# Prefix ranges are | and \
+
+===========
+OBJECTS
+===========
+
+Background
+transparent
+
+Wall
+brown
+
+Player
+lightblue
+
+Box
+yellow
+
+Target
+pink
+
+BoxOnTarget
+lightred
+
+PlayerOnTarget
+purple
+
+===========
+LEGEND
+===========
+
+. = Background
+# = Wall
+P = Player
+B = Box
+X = Target
+O = BoxOnTarget
+Q = PlayerOnTarget
+
+===========
+SOUNDS
+===========
+
+===========
+COLLISIONLAYERS
+===========
+
+Background
+Wall
+Player, PlayerOnTarget
+Box, BoxOnTarget
+Target
+
+===========
+RULES
+===========
+
+[> Player | Box] -> [> Player | > Box]
+[> PlayerOnTarget | Box] -> [> PlayerOnTarget | > Box]
+[> Player | Target] -> [> PlayerOnTarget]
+[> Player | BoxOnTarget] -> [> Player | > Box]
+[PlayerOnTarget | Background] -> [Player | Background]
+[Box | Target] -> [BoxOnTarget]
+
+===========
+WINCONDITIONS
+===========
+
+All BoxOnTarget
+
+===========
+LEVELS
+===========
+
+#####
+#...#
+#.#.#
+#P#B#
+#...#
+#####
+
+#######
+#..####
+#..X..#
+#.###.#
+#.P#..#
+#..#..#
+#######
+
+```
+produced the following console output:
+=================================
+line 63 : In a rule, each pattern to match on the left must have a corresponding pattern on the right of equal length (number of cells).
+line 66 : In a rule, each pattern to match on the left must have a corresponding pattern on the right of equal length (number of cells).
+Errors detected during compilation; the game may not work correctly.
+Return a repaired version of the code that addresses these errors. Return your code in full, inside a ```plaintext code block.

@@ -1,0 +1,109 @@
+Certainly! Below is the complete code for a simple PuzzleScript game titled "Treasure Hunt".
+
+```plaintext
+title Treasure Hunt
+author PuzzleScriptUser
+homepage www.puzzlescript.net
+
+========
+OBJECTS
+========
+
+Background
+lightblue
+
+Player
+brown
+..0..
+..0..
+.111.
+01110
+..0..
+
+Wall
+darkgrey
+
+Treasure
+gold
+.....
+.0.0.
+.000.
+.0.0.
+.....
+
+OpenSpace
+green
+.....
+.....
+.....
+.....
+.....
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Player
+T = Treasure
+O = OpenSpace
+
+=======
+SOUNDS
+=======
+
+Treasure collect 18800002
+
+================
+COLLISIONLAYERS
+================
+
+Background
+OpenSpace
+Player, Wall, Treasure
+
+======
+RULES
+======
+
+[ >  Player | Treasure ] -> [ > Player | OpenSpace ] collect
+
+==============
+WINCONDITIONS
+==============
+
+no Treasure
+
+=======
+LEVELS
+=======
+
+message Collect all the treasures!
+#########
+#       #
+# P  T  #
+#   #   #
+#   T   #
+#       #
+#########
+
+#########
+#T      #
+#       #
+#   P   #
+#       #
+#     T #
+#########
+
+#########
+#  T    #
+#       #
+# #   P #
+#       #
+#    T  #
+#########
+
+```
+
+This game challenges the player to navigate through a maze to collect all treasures. Use the arrow keys to move the player character `P`, while avoiding walls `#`. The game is won when all treasures `T` are collected. Enjoy!

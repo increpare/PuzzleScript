@@ -1,0 +1,117 @@
+SYSTEM PROMPT:
+You are a game designer, familiar with the PuzzleScript game description language. 
+
+USER PROMPT:
+The following PuzzleScript game code:
+```plaintext
+Title: Box Pusher
+Author: Your Name
+Homepage: http://www.yourwebsite.com
+# Prefix ranges are | and \
+
+===========
+OBJECTS
+===========
+
+Background
+transparent
+
+Wall
+brown
+
+Player
+light blue
+
+Box
+gold
+
+Target
+pink
+
+BoxOnTarget
+light red
+
+PlayerOnTarget
+purple
+
+===========
+LEGEND
+===========
+
+. = Background
+# = Wall
+P = Player
+B = Box
+X = Target
+O = BoxOnTarget
+Q = PlayerOnTarget
+
+===========
+SOUNDS
+===========
+
+===========
+COLLISIONLAYERS
+===========
+
+Background
+Wall
+Player, PlayerOnTarget
+Box, BoxOnTarget
+Target
+
+===========
+RULES
+===========
+
+[> Player | Box] -> [> Player | > Box]
+[> PlayerOnTarget | Box] -> [> Player | > BoxOnTarget]
+
+# Player moving onto Target
+[> Player | Target] -> [> PlayerOnTarget]
+[> Player | BoxOnTarget] -> [> Player|> Box]
+
+# Player moves off Target
+PlayerOnTarget -> Player
+BoxOnTarget Target -> BoxOnTarget
+Box Target -> BoxOnTarget
+
+===========
+WINCONDITIONS
+===========
+
+All BoxOnTarget
+
+===========
+LEVELS
+===========
+
+#####
+#...#
+#.#.#
+#P#$#
+#...#
+#####
+
+####
+#..###
+#.*..#
+#.###.
+#.P#..
+#..#..
+#..###
+####
+
+
+```
+produced the following console output:
+=================================
+line 17 : Was looking for color for object PLAYER, got "light " instead.
+line 20 : Was looking for color for object BOX, got "gold" instead.
+line 26 : Was looking for color for object BOXONTARGET, got "light " instead.
+line 64 : Objects cannot appear outside of square brackets in rules, only directions can.
+line 64 : Name "moving", referred to in a rule, does not exist.
+line 64 : Name "onto", referred to in a rule, does not exist.
+too many errors, aborting compilation
+Errors detected during compilation; the game may not work correctly.
+Return a repaired version of the code that addresses these errors. Return your code in full, inside a ```plaintext code block.

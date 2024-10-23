@@ -1,0 +1,100 @@
+To fix the errors in the provided PuzzleScript code, we need to define the objects before using them in the legend section. We'll create a section called "OBJECTS" and define "Player," "Star," "Wall," and "Background" objects. Below is the corrected code:
+
+```plaintext
+////////////////////////////////////////////////////////////
+// Catch the Star
+// Author: Your Name
+////////////////////////////////////////////////////////////
+
+////////////////////////////////
+// Objects
+////////////////////////////////
+
+objects
+    Player
+        P
+        yellow
+    Star
+        S
+        yellow
+    Wall
+        W
+        grey
+    Background
+        .
+        black
+
+////////////////////////////////
+// Legend
+////////////////////////////////
+
+legend
+    P = Player
+    S = Star
+    W = Wall
+    . = Background
+
+////////////////////////////////
+// Sounds
+////////////////////////////////
+
+sounds
+    player push wall
+    player move star
+
+////////////////////////////////
+// Collision Layers
+////////////////////////////////
+
+collisionlayers
+    background
+    Wall
+    Player, Star
+
+////////////////////////////////
+// Rules
+////////////////////////////////
+
+rules
+    [ > Player | Star ] -> [ > Player | ]
+
+////////////////////////////////
+// Win Conditions
+////////////////////////////////
+
+winconditions
+    (no Star)
+
+////////////////////////////////
+// Levels
+////////////////////////////////
+
+levels
+    XXXXX
+    X.P.X
+    X...X
+    X.S.X
+    XXXXX
+
+    XXXX
+    X..X
+    XWPX
+    XS.X
+    XXXX
+
+    XXXXXXX
+    X.....X
+    X.WP..X
+    X...W.X
+    X..S..X
+    XXXXXXX
+
+////////////////////////////////
+// Post Conditions
+////////////////////////////////
+
+postconditions
+    shouldrestart on [ Player Star ] // if player collides with a star
+```
+
+This code correctly defines the objects used in the game. The "OBJECTS" section is where you specify how each game element is represented and styled. I've assigned simple colors for visualization. Adjust the colors as desired to fit your game's theme.

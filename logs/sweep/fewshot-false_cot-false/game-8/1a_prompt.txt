@@ -1,0 +1,142 @@
+SYSTEM PROMPT:
+You are a game designer, familiar with the PuzzleScript game description language. 
+
+USER PROMPT:
+The following PuzzleScript game code:
+```plaintext
+===========
+OBJECTS
+===========
+
+Background
+LIGHTBLUE
+00000
+00000
+00000
+00000
+00000
+
+Wall
+GREY
+11111
+11111
+11111
+11111
+11111
+
+Player
+YELLOW
+0..0.
+.0.0.
+..0..
+.000.
+0...0
+
+Box
+BROWN
+.....
+.000.
+.0.0.
+.000.
+.....
+
+Goal
+GREEN
+.....
+.....
+..0..
+.....
+.....
+
+BoxOnGoal
+DARKGREEN
+.....
+..0..
+.....
+..0..
+.....
+
+PlayerOnGoal
+LUIGREEN
+0..0.
+.0.0.
+..0..
+.000.
+0...0
+
+===========
+LEGEND
+===========
+
+. = Background
+# = Wall
+P = Player
+B = Box
+G = Goal
+O = BoxOnGoal
+Q = PlayerOnGoal
+
+===========
+SOUNDS
+===========
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Player, PlayerOnGoal
+Wall, Box, BoxOnGoal
+Goal
+
+===========
+RULES
+===========
+
+[Player | Box] -> [ > Player | > Box]
+[Player | Goal] -> [PlayerOnGoal | Goal]
+[PlayerOnGoal | Box] -> [ > PlayerOnGoal | > Box]
+
+[PlayerOnGoal] -> [Player]
+[Box | Goal] -> [BoxOnGoal | Goal]
+[BoxOnGoal | Goal] -> [BoxOnGoal]
+[Goal | BoxOnGoal] -> [Goal]
+
+===========
+WINCONDITIONS
+===========
+
+All BoxOnGoal
+
+===========
+LEVELS
+===========
+
+#######
+#.....#
+#..B..#
+#..P..#
+#..G..#
+#.....#
+#######
+
+#######
+#.....#
+#..B..#
+#..G..#
+#..P..#
+#.....#
+#######
+
+```
+produced the following console output:
+=================================
+line 15 : Trying to access color number 1 from the color palette of sprite WALL, but there are only 1 defined in it.
+line 16 : Trying to access color number 1 from the color palette of sprite WALL, but there are only 1 defined in it.
+line 17 : Trying to access color number 1 from the color palette of sprite WALL, but there are only 1 defined in it.
+line 18 : Trying to access color number 1 from the color palette of sprite WALL, but there are only 1 defined in it.
+line 19 : Trying to access color number 1 from the color palette of sprite WALL, but there are only 1 defined in it.
+line 54 : Was looking for color for object PLAYERONGOAL, got "luigreen" instead.
+too many errors, aborting compilation
+Errors detected during compilation; the game may not work correctly.
+Return a repaired version of the code that addresses these errors. Return your code in full, inside a ```plaintext code block.

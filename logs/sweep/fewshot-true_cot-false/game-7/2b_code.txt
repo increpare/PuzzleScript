@@ -1,0 +1,122 @@
+```plaintext
+title Collect the Coins
+author YourName
+homepage www.example.com
+
+========
+OBJECTS
+========
+
+Background
+blue
+
+Wall
+darkblue
+.....
+.....
+.....
+.....
+.....
+
+Player
+green
+.....
+.....
+.....
+.....
+.....
+
+Coin
+yellow
+.....
+..1..
+.111.
+..1..
+.....
+
+Enemy
+red
+.111.
+1...1
+1...1
+1...1
+.111.
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Player
+C = Coin
+E = Enemy
+
+=========
+SOUNDS
+=========
+
+collect 44564808
+hit 78564407
+win 56233809
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Player, Enemy, Wall, Coin
+
+======
+RULES
+======
+
+# Player collects coin
+[ > Player | Coin ] -> [ > Player | ] sfx0
+
+# Player hits enemy (temporary end game example)
+[ > Player | Enemy ] -> [ Player | Enemy ] sfx1
+
+# Enemies move automatically
+up [ Enemy | Background ] -> [ | Enemy ]
+(Enemies move up)
+
+down [ Enemy ] -> [ Enemy ]
+(Keep moving down if nothing is in the way)
+
+==============
+WINCONDITIONS
+==============
+
+no Coin
+
+=======
+LEVELS
+=======
+
+message Collect all the coins!
+
+#######
+#.....#
+#.P.#C#
+#...E.#
+#C.#..#
+#.....#
+#######
+
+message Level 2: More challenges!
+
+#######
+#.....#
+#.P.#.#
+#....C#
+#C.#E.#
+#.....#
+#######
+
+message Congratulations! You collected all the coins!
+
+```
+
+Changes made:
+- Changed the color numbers in the `Coin` and `Enemy` sprites from `3` to `1`, since `1` is the default indexed color (the first defined color) for each sprite.

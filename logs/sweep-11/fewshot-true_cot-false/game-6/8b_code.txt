@@ -1,0 +1,136 @@
+The issue in your code stems from the use of the `#` character in the levels section, which is not defined in the legend. To fix this, you need to define `#` as a Wall (or any other object you prefer that will serve as a boundary). Here's the repaired version of the code:
+
+```plaintext
+title Galaxy Collector
+author PuzzleMaster
+
+========
+OBJECTS
+========
+
+Background
+Black
+
+Wall
+#333333
+.....
+.....
+.....
+.....
+.....
+
+Star
+Yellow
+..0..
+.000.
+..0..
+.....
+.....
+
+Planet
+Blue
+....
+.000
+.000
+....
+
+Asteroid
+Grey
+.000.
+00000
+.000.
+.....
+.....
+
+Player
+Red
+.....
+.000.
+.000.
+.....
+
+StarCollectedText
+#ffff00
+0..0.
+.00..
+0..0.
+.0...
+.....
+
+PlanetCollectedText
+#00ffff
+.....
+.000.
+0000.
+.000.
+.....
+
+AsteroidCollectedText
+#d3d3d3
+00000
+0...0
+0...0
+0...0
+00000
+
+=======
+LEGEND
+=======
+
+. = Background
+P = Player
+S = Star
+C = Planet
+A = Asteroid
+T = StarCollectedText
+U = PlanetCollectedText
+X = AsteroidCollectedText
+# = Wall
+
+=======
+SOUNDS
+=======
+
+SFX0 51771508 (pickup)
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Player, Star, Planet, Asteroid, StarCollectedText, PlanetCollectedText, AsteroidCollectedText
+Wall
+
+======
+RULES
+======
+
+[ > Player | Star ] -> [ > Player | StarCollectedText ] SFX0
+[ > Player | Planet ] -> [ > Player | PlanetCollectedText ] SFX0
+[ > Player | Asteroid ] -> [ > Player | AsteroidCollectedText ] SFX0
+
+==============
+WINCONDITIONS
+==============
+
+no Star
+no Planet
+no Asteroid
+
+=======
+LEVELS
+=======
+
+message Collect all celestial objects!
+
+#########
+#...S...#
+#...P...#
+#...C...#
+#...A...#
+#########
+
+message Well done! You've collected the galaxy!
+```
+
+In this version, I added the `Wall` object and updated the levels to include the new legend definition for `#`. This should resolve the compilation errors.

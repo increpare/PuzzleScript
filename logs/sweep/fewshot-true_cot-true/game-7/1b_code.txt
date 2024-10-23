@@ -1,0 +1,130 @@
+To fix the errors in the PuzzleScript code, I will address the following issues:
+
+1. **Proper Section Ordering**: The error mentions that the `COLLISIONLAYERS` section must follow the `SOUNDS` section, or perhaps the `SOUNDS` section is missing. I'll add an empty `SOUNDS` section before the `COLLISIONLAYERS`.
+
+2. **Naming Conventions**: The error output indicates that object names in the rules section (`player`, `key`, `door`) are not recognized. In PuzzleScript, object names in the `RULES` section should match exactly those defined in the `LEGEND` section. In the updated `LEGEND`, I should ensure the correct capitalization is used (`Player`, `Key`, `Door`).
+
+3. **Rule Corrections**: Adjust rules to properly translate object names from the `LEGEND`, and ensure the logic aligns with game design intent.
+
+Let's fix the code accordingly:
+
+```plaintext
+title KeyCollector
+author PuzzleScriptDesigner
+homepage www.puzzlescript.net
+
+========
+OBJECTS
+========
+
+Background
+White
+
+Player
+Blue
+..0..
+.000.
+.0.0.
+00000
+.0.0.
+
+Wall
+Black
+00000
+00000
+00000
+00000
+00000
+
+Key
+Yellow
+..0..
+.0.0.
+0...0
+.0.0.
+..0..
+
+Door
+Red
+.....
+.000.
+0.0.0
+.000.
+.....
+
+Exit
+Green
+..0..
+.0.0.
+00000
+.0.0.
+..0..
+
+=======
+LEGEND
+=======
+
+. = Background
+P = Player
+# = Wall
+K = Key
+D = Door
+E = Exit
+
+=======
+SOUNDS
+=======
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Key, Exit
+Player, Wall, Door
+
+======
+RULES
+======
+
+[P | K] -> [P]
+[P no K | D] -> [D]
+[K | no P] -> [K]
+[D | P] -> [P]
+
+==============
+WINCONDITIONS
+==============
+
+All Player on Exit
+
+=======
+LEVELS
+=======
+
+message level 1 - Get the Key!
+########
+#..K...#
+#..#..D#
+#..#..##
+#P....E#
+########
+
+message level 2 - Use the Key Wisely
+########
+#P..####
+#..K.D.#
+#..#.E.#
+#..#..##
+#......#
+########
+
+message Congratulations!
+You have completed all the levels!
+```
+
+### Explanation
+
+- **SOUNDS Section**: Added an empty `SOUNDS` section to the program to adhere to the expected order.
+- **Legend Matching**: Used correct case-sensitive names as defined in the `LEGEND` section in the rules.
+- **Rule Consistency**: Ensured the rules refer to game objects with the same names defined in the `LEGEND`.

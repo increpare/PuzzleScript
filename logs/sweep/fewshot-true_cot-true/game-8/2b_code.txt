@@ -1,0 +1,102 @@
+The error in the code is due to the misplacement of the `Move` sound definition in the `SOUNDS` section. The correct term to use is `movement`. In PuzzleScript, sound types must match predefined keywords, such as `movement`, `win`, `undo`, etc. 
+
+To fix this, replace `Move` with `movement` in the `SOUNDS` section. Here is the corrected code:
+
+```plaintext
+title Treasure Cave Explorer
+author YourName
+homepage www.example.com
+
+========
+OBJECTS
+========
+
+Background
+lightgray
+
+Wall
+darkgray
+
+Player
+lightgreen
+
+TreasureChest
+#FFD700
+
+Target
+darkblue
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Player
+* = TreasureChest
+@ = TreasureChest and Target
+O = Target
+
+=======
+SOUNDS
+=======
+
+movement 36772507
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Target
+Player, Wall, TreasureChest
+
+======
+RULES
+======
+
+[ > Player | TreasureChest ] -> [ > Player | > TreasureChest ]
+
+==============
+WINCONDITIONS
+==============
+
+All Target on TreasureChest
+
+=======
+LEVELS
+=======
+
+#######
+#.....#
+#.O*P.#
+#.....#
+#######
+
+#######
+#.....#
+#..#..#
+#..O..#
+#.P*..#
+#..#..#
+#..#.##
+#.....#
+#######
+
+#####
+#...#
+#.P.#
+#.*O#
+#...#
+#####
+
+#######
+#.....#
+#.O.#.#
+#..*.P#
+#.O.#.#
+#.....#
+#######
+```
+
+I've corrected the `SOUNDS` section so that the keyword `movement` is used instead of `Move`. This should resolve the syntax error related to the sound token and allow the game to compile and run correctly.

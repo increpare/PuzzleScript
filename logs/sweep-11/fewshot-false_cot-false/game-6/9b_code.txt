@@ -1,0 +1,116 @@
+The errors you are encountering are due to the presence of invalid characters ("#") in the sprite matrix for the `Player` and `Star` objects. PuzzleScript uses a subset of ASCII for its sprite definitions, where only `0`, `1`, `2`, `3`, `4`, `5`, `6`, `7`, `8`, `9`, `a`, `b`, `c`, `d`, `e`, `f`, `g`, `h` are valid. In puzzle script the significance of the character is determined by the color palette you designate, and your sprites should be composed of those valid characters that correspond to your colors. Typically, all other symbols, including `#`, are not valid for defining sprites.
+
+Below is the corrected version of your game code replacing `#` with `b` which corresponds to the color you've chosen:
+
+```plaintext
+////////////////////////////////////////////////////////////
+// Catch the Star
+// Author: Your Name
+////////////////////////////////////////////////////////////
+
+////////////////////////////////
+// Objects
+////////////////////////////////
+
+objects
+    Background
+        black
+
+    Player
+        blue
+        ..b..
+        ..b..
+        .bbb.
+        ..b..
+        ..b..
+
+    Star
+        yellow
+        .....
+        ..b..
+        .bbb.
+        ..b..
+        .....
+
+    Wall
+        gray
+        bbbbb
+        bbbbb
+        bbbbb
+        bbbbb
+        bbbbb
+
+////////////////////////////////
+// Legend
+////////////////////////////////
+
+legend
+    . = Background
+    P = Player
+    S = Star
+    W = Wall
+
+////////////////////////////////
+// Sounds
+////////////////////////////////
+
+sounds
+    player push wall
+    player move star
+
+////////////////////////////////
+// Collision Layers
+////////////////////////////////
+
+collisionlayers
+    Background
+    Wall
+    Player, Star
+
+////////////////////////////////
+// Rules
+////////////////////////////////
+
+rules
+    [ > Player | Star ] -> [ > Player | ]
+
+////////////////////////////////
+// Win Conditions
+////////////////////////////////
+
+winconditions
+    (no Star)
+
+////////////////////////////////
+// Levels
+////////////////////////////////
+
+levels
+    XXXXX
+    X.P.X
+    X...X
+    X.S.X
+    XXXXX
+
+    XXXX
+    X..X
+    XWPX
+    XS.X
+    XXXX
+
+    XXXXXXX
+    X.....X
+    X.WP..X
+    X...W.X
+    X..S..X
+    XXXXXXX
+
+////////////////////////////////
+// Post Conditions
+////////////////////////////////
+
+postconditions
+    shouldrestart on [ Player Star ] // if player collides with a star
+```
+
+This code replaces the `#` characters in sprite definitions for the `Player` and `Star` objects with `b`, which should correspond to the colors you've defined. Ensure that all characters within the sprite definitions are chosen from the valid range of characters that match your color setup. Adjust the character if needed to align with your intended design and palette.

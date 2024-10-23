@@ -1,0 +1,91 @@
+To create a complete PuzzleScript game, let's outline the main components that need to be defined:
+
+1. **Title**: Every game needs a name.
+2. **Objects**: Define the graphics and colors of all pieces in the game.
+3. **Legend**: Create symbolic letters representing each object.
+4. **Sokoban-style behavior**: This is a common type of game, where the player pushes boxes to goals.
+5. **Sounds**: Optional but can be included for actions like moving or winning.
+6. **Rules**: Define how objects interact, such as how the player and boxes move.
+7. **Win Condition**: Define how the player wins, typically when all goals are covered by boxes.
+8. **Levels**: Design one or more levels to be solved.
+
+I will create a simple Sokoban-style game where the player must push boxes onto goals.
+
+```plaintext
+title Simple Sokoban
+
+# Define the game objects with colors
+objects
+  Wall
+    000000
+    11111
+    11111
+    11111
+    11111
+    11111
+  Player
+    00f
+    ..... 
+    ..0..
+    .000.
+    ..0..
+  Box
+    f80
+    .....
+    .0.0.
+    ...0.
+    .0.0.
+  Goal
+    f00
+    .....
+    ..0..
+    ..0..
+    .....
+  BoxOnGoal
+    f0f
+    .....
+    .0.0.
+    ...0.
+    .0.0.
+
+# Use symbols to easily reference objects
+legend
+  W = Wall
+  P = Player
+  B = Box
+  G = Goal
+  O = BoxOnGoal
+
+# Define how the player and boxes interact
+rules
+  [ > Player | Box ] -> [ > Player | > Box ]
+  [ Box | Goal ] -> [ BoxOnGoal ]
+  [ BoxOnGoal | > Player ] -> [ Player | > BoxOnGoal ]
+  [ Player | BoxOnGoal ] -> [ > Player | Goal ]
+
+# Define how a player wins the level
+wincondition
+  All BoxOnGoal on Goal
+
+# Create one or more levels
+levels
+  #####
+  #..G#
+  #PB.#
+  #####
+  
+  #######
+  #..G..#
+  #.BBB.#
+  #.P...#
+  #######
+```
+
+**Explanation**:
+- **Objects**: Define basic game pieces with simple 5x5 pixel graphics using hexadecimal colors.
+- **Legend**: Symbols like `P`, `B`, and `G` are used to represent objects like Player, Box, and Goal.
+- **Rules**: Player pushes boxes to get them on goals. Boxes can sit on goals and carrots indicate new goals. Custom rules ensure that when a box is pushed onto a goal, it transforms into another object (`BoxOnGoal`).
+- **Win Condition**: The game checks if all goals are covered.
+- **Levels**: Define grid layouts that represent a level using pre-defined symbols.
+
+This simple code demonstrates setting up a fundamental Sokoban puzzle with basic mechanics. You can expand this by adding more levels, sounds, or even new mechanics to diversify the gameplay.

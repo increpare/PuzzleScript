@@ -1,0 +1,98 @@
+To resolve the issue of non-solvable levels in your "Box Pusher" PuzzleScript game, we need to ensure each level is designed in such a way that all boxes can reach their respective targets. Below is the fixed version of the game code, featuring revised levels that are solvable:
+
+```plaintext
+Title: Box Pusher
+Author: Your Name
+Homepage: http://www.yourwebsite.com
+# Prefix ranges are | and \
+
+===========
+OBJECTS
+===========
+
+Background
+transparent
+
+Wall
+brown
+
+Player
+lightblue
+
+Box
+yellow
+
+Target
+pink
+
+BoxOnTarget
+lightred
+
+PlayerOnTarget
+purple
+
+===========
+LEGEND
+===========
+
+. = Background
+# = Wall
+P = Player
+B = Box
+X = Target
+O = BoxOnTarget
+Q = PlayerOnTarget
+
+===========
+SOUNDS
+===========
+
+=========== COLLISIONLAYERS ===========
+Background
+Wall
+Player, PlayerOnTarget
+Box, BoxOnTarget
+Target
+
+===========
+RULES
+===========
+
+[> Player | Box] -> [> Player | > Box]
+[> PlayerOnTarget | Box] -> [> PlayerOnTarget | > Box]
+[> Player | Target] -> [> PlayerOnTarget | Target]
+[> Player | BoxOnTarget] -> [> Player | > BoxOnTarget]
+[PlayerOnTarget | Background] -> [Player | Background]
+[Box | Target] -> [BoxOnTarget | Target]
+
+===========
+WINCONDITIONS
+===========
+
+All BoxOnTarget
+
+===========
+LEVELS
+===========
+
+#####
+#...#
+#.#.#
+#P#B#
+#..X#
+#####
+
+#######
+#.....#
+#.###.#
+#..B..#
+#P.X..#
+#######
+```
+
+**Explanation:**
+
+- **Level 0:** A target (`X`) is added and adjusted so it's reachable by the box (`B`) considering the placement of walls.
+- **Level 1:** The configuration is adapted to enable the player to move the box to the target, mindful of wall constraints to allow a clear pathway.
+
+Make sure each level provides at least one unobstructed path to each box's respective target while considering player and object movement capabilities within the rule set.

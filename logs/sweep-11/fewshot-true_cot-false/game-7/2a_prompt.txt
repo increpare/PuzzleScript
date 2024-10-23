@@ -1,0 +1,1950 @@
+SYSTEM PROMPT:
+You are a game designer, familiar with the PuzzleScript game description language. Here are some example games, for inspiration (do not reproduce these games exactly):
+
+title Heroes of Sokoban II: Monsters
+author Jonah Ostroff
+text_color yellow
+key_repeat_interval 0.25
+
+========
+OBJECTS
+========
+
+Background
+#989898 #C8C8C8
+00000
+00100
+00000
+00010
+00000
+
+Goal
+Brown Yellow
+.000.
+00000
+00010
+00000
+00000
+
+Wall
+Darkgrey #222222
+01000
+11111
+00010
+00010
+11111
+
+Fighter (Warrior sounds better in-game, but I want different abbreviations for the classes in the editor.)
+#FF4444 Pink DarkBrown
+.000.
+.111.
+00000
+.000.
+.2.2.
+
+Wizard
+#2266FF Pink
+.000.
+.010.
+00000
+.000.
+00000
+
+Thief
+#66DD66 Pink DarkBrown
+.000.
+.010.
+00000
+.0.0.
+.0.0.
+
+Priest
+#FFFFAA Pink
+.000.
+.111.
+00000
+.000.
+00000
+
+SFighter
+#880000 Pink DarkBrown
+.000.
+.111.
+00000
+.000.
+.2.2.
+
+SWizard
+#000088 Pink
+.000.
+.010.
+00000
+.000.
+00000
+
+SThief
+#006600 Pink DarkBrown
+.000.
+.010.
+00000
+.0.0.
+.0.0.
+
+SPriest
+#B8B800 Pink
+.000.
+.111.
+00000
+.000.
+00000
+
+Crate
+Orange #552200
+.111.
+10001
+10001
+10001
+.111.
+
+YellowSwitch
+Yellow Black
+.....
+.111.
+.101.
+.111.
+.....
+
+YellowOpen
+Yellow
+0...0
+.....
+.....
+.....
+0...0
+
+YellowDoor
+Yellow #AA7722
+01010
+10001
+00000
+10001
+01010
+
+PurpleSwitch
+#6611CC Black
+.....
+.111.
+.101.
+.111.
+.....
+
+PurpleDoor
+#6611CC #220088
+01010
+10001
+00000
+10001
+01010
+
+PurpleOpen
+#6611CC
+0...0
+.....
+.....
+.....
+0...0
+
+MonsterDoor
+DarkGrey #222222 Red
+21002
+22122
+20212
+20012
+21112
+
+Warpball
+Blue
+
+ShadowDoor
+Purple
+
+DragonLeft
+Green Red Orange Yellow DarkGreen
+.....
+1100.
+3210.
+1100.
+...4.
+
+DragonRight
+Green Red Orange Yellow DarkGreen
+.....
+.0011
+.0123
+.0011
+.4...
+
+Goblin
+Green DarkBrown DarkGreen
+0.2.0
+00000
+..0..
+.111.
+.1.1.
+
+Dying
+White
+
+Saved
+#D8D800
+..0..
+.000.
+..0..
+..0..
+.....
+
+HasSaved
+Yellow
+.....
+.....
+.....
+.....
+.....
+
+Corpse
+#CCC
+.000.
+.000.
+00000
+.0.0.
+.0.0.
+
+LFireball
+Orange
+
+RFireball
+Orange
+
+DidNotMove
+Purple
+
+=======
+LEGEND
+=======
+
+Dragon = DragonLeft or DragonRight
+Player = Fighter or Wizard or Thief or Priest
+SPlayer = Swizard or Sthief or SFighter or SPriest
+Hero = Player or Splayer
+Healer = Priest or SPriest (Unlike the other heroes, priests must function even when inactive. "Healer" is the generic term for an active or inactive priest.)
+ClosedDoor = PurpleDoor or YellowDoor or MonsterDoor
+OpenDoor = YellowOpen or PurpleOpen
+Switch = PurpleSwitch or YellowSwitch
+Monster = Dragon or Goblin
+Moveable = Crate or SPlayer or Monster
+Static = Wall or ClosedDoor
+Weighing = Crate or Hero or Monster
+Vulnerable = Hero or Monster
+Invulnerable = Crate or Static
+Fireball = LFireball or RFireball
+. = Background
+# = Wall
+F = Fighter
+W = Wizard
+T = Thief
+P = Priest
+1 = SFighter
+2 = SThief
+3 = SWizard
+4 = SPriest
+* = Crate
+G = Goal
+[ = YellowDoor
+] = PurpleDoor
+{ = YellowSwitch
+} = PurpleSwitch
+L = DragonLeft
+R = DragonRight
+O = Goblin
+M = MonsterDoor
+
+=======
+SOUNDS
+=======
+
+Moveable move 82056307
+Sfx0 21221308 (teleport)
+Endlevel 36315908
+Sfx1 66399906 (switch player)
+Sfx2 92172900 (close door)
+Sfx3 15129100 (open door)
+Sfx4 69860105 (saved)
+Sfx5 63194902 (kill enemy)
+Sfx6 81996702 (dying player)
+EndGame 86793500
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Warpball, Dying
+Goal, Switch, OpenDoor, ShadowDoor
+ClosedDoor, Hero, Crate, Wall, Monster, Corpse
+RFireball, Saved, DidNotMove
+LFireball, HasSaved
+
+======
+RULES
+======
+[Saved] [Wall] -> [] [Wall HasSaved] (Remembering whether we saved someone last round by attaching a note to some wall.)
+
+[Corpse] -> Restart
+
+(Adds a DidNotMove to where the player currently is, to cancel moves where they bump into a wall.)
+
+[Player] -> [Player DidNotMove]
+
+[ >  Fighter | Moveable ] -> [  >  Fighter | > Moveable  ]
+[ > Moveable | Moveable ] [ Fighter] -> [ > Moveable | > Moveable ] [ Fighter] (Fighters push.)
+
+[ < Thief | Moveable ] -> [ < Thief | < Moveable ] (Thieves pull.)
+
+[ > Wizard ] -> [ Wizard > Warpball]
+[ > Warpball | no Moveable no Static] -> [ | > Warpball]
+[ > Warpball | Static] [Wizard] -> [ | Static ] [> Wizard]
+[ > Warpball | Moveable ] [Wizard] -> [ | Wizard Sfx0] [Moveable] (Wizards telexport. What they really do is shoot a "warpball", which causes them to move normally if it hits a wall and warp if it hits something they can warp with.)
+
+(The following mess is for changing characters.)
+[ Action Fighter] [SThief] -> [SFighter] [Thief Sfx1]
+[ Action Thief] [SWizard] -> [SThief] [Wizard Sfx1]
+[ Action Wizard] [SPriest] -> [SWizard] [Priest Sfx1]
+[ Action Priest] [SFighter] -> [SPriest] [Fighter Sfx1]
+
+[ Action Fighter] [no SThief] [SWizard] -> [SFighter] [no SThief] [Wizard Sfx1]
+[ Action Thief] [no Swizard] [SPriest] -> [SThief] [no SWizard] [Priest Sfx1]
+[ Action Wizard] [no SPriest] [SFighter] -> [SWizard] [no SPriest] [Fighter Sfx1]
+[ Action Priest] [no SFighter] [SThief] -> [SPriest] [no SFighter] [Thief Sfx1]
+
+[ Action Fighter] [no SThief] [no SWizard] [SPriest] -> [SFighter] [no SThief] [no SWizard] [Priest Sfx1]
+[ Action Thief] [no SWizard] [no SPriest] [SFighter] -> [SThief] [no SWizard] [no SPriest] [Fighter Sfx1]
+[ Action Wizard] [no SPriest] [no SFighter] [SThief] -> [SWizard] [no SPriest] [no SFighter] [Thief Sfx1]
+[ Action Priest] [no SFighter] [no SThief] [SWizard] -> [SPriest] [no SFighter] [no SThief] [Wizard Sfx1]
+
+(Cancels the move if the player is in the same place that they started. Notice that switching characters negates this. Only matters in levels where one dragon has multiple targets.)
+
+Late [Player DidNotMove] -> Cancel
+Late [DidNotMove] -> []
+
+(Now enemies attack.)
+
+Late [DragonLeft] -> [LFireball DragonLeft]
+Late [DragonRight] -> [RFireball DragonRight]
+
+Late RIGHT [RFireball | No Vulnerable no Invulnerable] -> [ | RFireball]
+Late LEFT [LFireball | No Vulnerable no Invulnerable] -> [ | LFireball]
+Late RIGHT [RFireball | Vulnerable] -> [ | Dying Vulnerable]
+Late Right [RFireball | Invulnerable] -> [ | Invulnerable]
+Late Left [LFireball | Vulnerable] -> [ | Dying Vulnerable]
+Late LEFT [LFireball | Invulnerable] -> [ | Invulnerable]
+
+Late [Goblin | Vulnerable] -> [Goblin | Dying Vulnerable]
+
+(Vulnerable objects that are attacked are designated as "Dying", but heroes can be saved by the Priest. Then the stuff that didn't get saved dies.)
+
+Late [Dying Healer] -> [Saved Healer]
+Late [Healer | Dying Hero] -> [Healer | Saved Hero]
+Late [Dying Monster] -> [Sfx5]
+Late [Dying Hero] -> [Corpse Sfx6]
+
+(Doors opening.)
+
+late [Weighing  YellowSwitch] [YellowDoor] -> [Weighing  YellowSwitch] [ShadowDoor]
+late [YellowSwitch no Weighing] [YellowOpen] -> [YellowSwitch] [YellowDoor sfx2]
+late [YellowSwitch no Weighing] [ShadowDoor] -> [YellowSwitch] [YellowDoor]
+late [ShadowDoor] -> [YellowOpen sfx3]
+
+late [Weighing PurpleSwitch] [PurpleDoor] -> [Weighing PurpleSwitch] [ShadowDoor]
+late [PurpleSwitch no Weighing] [PurpleOpen] -> [PurpleSwitch] [PurpleDoor sfx2]
+late [PurpleSwitch no Weighing] [ShadowDoor] -> [PurpleSwitch] [PurpleDoor]
+late [ShadowDoor] -> [PurpleOpen sfx3]
+
+late [MonsterDoor] -> [ShadowDoor]
+late [ShadowDoor] [Monster] -> [MonsterDoor] [Monster]
+late [ShadowDoor] -> [sfx3]
+
+(Looks for a HasSaved on a wall and moves it to the Priest. Then, if someone was saved this turn, plays the sound only if the Priest doesn't have the HasSaved note. Finally, cleans that up.)
+
+late [Wall HasSaved] [Healer] -> [Wall] [Healer HasSaved]
+late [Saved] [Healer no HasSaved] -> [Saved sfx4] [Healer]
+late [HasSaved] -> []
+
+==============
+WINCONDITIONS
+==============
+
+All Hero on Goal
+All Goal on Hero
+
+=======
+LEVELS
+=======
+
+Message Welcome back.
+
+Message [You've played the original, yes?]
+
+Message [If not, this might be confusing.]
+
+#############
+#.......[...#
+#.*.F.{.[.G.#
+#############
+#.......[...#
+#.*.2.{.[.G.#
+#############
+#.......[...#
+#.*.3.{.[.G.#
+#############
+
+Message Watch out for goblins.
+
+#############
+#F.O.......O#
+#...O.......#
+#.......O...#
+#O..........#
+#....O......#
+#O.......O..#
+#.O.....O.G.#
+#############
+
+#############
+###O###O#####
+#W.*****...O#
+#..*****....#
+#####O###O..#
+#O########..#
+#*G...O.O...#
+##..O..O.O..#
+#############
+
+Message Goblins attack each other too.
+
+#############
+#.......#...#
+#...*...#.G.#
+#.F...O.#...#
+#...*...##O##
+#...........#
+#############
+
+Message Dragons breath fire.
+
+###############
+#.............#
+#..T..###.....#
+#.....L.#.....#
+#.......#.....#
+#.............#
+#.....#.......#
+#.....#.R..G..#
+#.....###.....#
+#.............#
+###############
+
+Message Fire hurts enemies.
+
+##############
+#...#....O.RG#
+#.T.#......R.#
+#...#R*L...R.#
+#R*.#...#..R.#
+#...#...#..R.#
+#...O.*.#..R.#
+#.......#....#
+##############
+
+###########
+#3.O.O.O.T#
+#.#########
+#......G.G#
+#.#########
+#R.O.O.O.O#
+###########
+
+Message Think fast!
+
+#############
+#R.O.O.O.O.T#
+###########{#
+###########]#
+#G#3.[.}.G#G#
+#]###########
+#{###########
+#1..O...O..L#
+#############
+
+Message Sorry about that one.
+
+#######
+##G*G##
+##.G.##
+#R...##
+##...##
+##...##
+##...##
+##...L#
+##...##
+##F23##
+#######
+
+Message Kill monsters to open the M wall.
+
+###########
+#L...R#...#
+#.....#...#
+#.....M.G.#
+#.T.*.#...#
+#.....#...#
+###########
+
+#############
+#.......#...#
+#..O.O..#...#
+#R......M.G.#
+#.*.F.*.#...#
+#.......#...#
+#############
+
+#############
+#.......#...#
+#.{.*.{.#...#
+#..W.O..M.G.#
+#.{.*.[.#...#
+#.......#...#
+#############
+
+Message Yellow priest is protected.
+
+###########
+#...#O#O#O#
+#.P.......#
+#...**O**.#
+#********.#
+#R..G.....#
+###########
+
+###########
+#W#######G#
+#.#O#O#O#.#
+#.........#
+#.##O#O##.#
+#4#######G#
+###########
+
+Message Heroes next to a priest are safe.
+
+############
+#...#.O#O###
+#.F.#......#
+#...#.##O..#
+#.4...O#G.G#
+#...#.##.O.#
+############
+
+############
+#.#..T..#4##
+#.#.{.*...L#
+#.#.....#..#
+#G[.*.{...L#
+#.#.....#..#
+#.#.{.*...L#
+#.#.....#G##
+############
+
+###########
+#W...O#...#
+#.....#.G.#
+#..4..M...#
+#.....#.G.#
+#O...O#...#
+###########
+
+###########
+#.T.##O#O##
+#.........#
+#.4.#O#O..#
+########.##
+#G..####.O#
+#G#.O###.##
+###.###O..#
+#O..O#....#
+##...*....#
+###########
+
+###########
+#{*F#.4#.3#
+#{*.#..#..#
+###[#[###.#
+#R[.......#
+####O#.##.#
+######.##.#
+#G.G.G.#O*#
+###########
+
+###########
+#.T.####O##
+#.3......O#
+#.4.###O.##
+#####O##.##
+#.G..*.O.##
+#G.G#O##.##
+###########
+
+###########
+##O#O#O#O##
+#T[.[.[.[.#
+##{#{#{#{.#
+#.........#
+#.3G*G*G4.#
+#.........#
+###########
+
+Message The final challenge.
+
+#############
+#...#O.O#...#
+#.F.#G.G#.2.#
+#...#.O.#...#
+##.###*###.##
+#R*L.....R*L#
+#.#.......#.#
+#R*L.....R*L#
+##.###M###.##
+#...#...#...#
+#.3.#G.G#.4.#
+#...#...#...#
+#############
+
+Message Thanks for playing!
+
+title Midas
+author wanderlands
+homepage https://web.archive.org/web/20160706204929/http://wanderlands.org/
+
+(
+
+A port of the luxuriant Wanderlands game, Midas, with permission of the authors.  It's a bit messy, if you can find a way to tidy it UP, let me know : ] 
+
+the original is here
+https://web.archive.org/web/20120219201941/http://wanderlands.org/main/midas
+
+update: uh, it's flash, so not a playable link any more...also the original developer site is gone.
+
+)
+
+========
+OBJECTS
+========
+
+Background
+white
+
+Lovebase
+white
+
+Target
+black
+.....
+..0..
+.000.
+..0..
+.0.0.
+
+GoldTarget
+orange
+.....
+..0..
+.000.
+..0..
+.0.0.
+
+PlayerGround
+black
+.....
+..0..
+.000.
+.000.
+.0.0.
+
+PlayerJump1
+black
+.....
+..0..
+00000
+.000.
+.0.0.
+
+PlayerJump2
+black
+.....
+..0..
+00000
+.000.
+.0.0.
+
+Crown
+orange
+.000.
+.0.0.
+.....
+.....
+.....
+
+GoldBlock
+orange
+
+GoldingBlock
+brown
+
+Water
+blue
+
+Wall
+gray
+
+Love
+pink
+.0.0.
+00000
+00000
+.000.
+..0..
+
+=======
+LEGEND
+=======
+
+JumpingPlayer = PlayerJump1 or PlayerJump2
+Player = PlayerGround or PlayerJump1 or PlayerJump2
+Obstacle = Player or Wall or Water or GoldingBlock or GoldBlock or Target or GoldTarget
+CanFall = GoldBlock or Target or GoldTarget
+. = Background
+# = Wall
+P = PlayerGround and Crown
+T = Target
+W = Water
+G = GoldBlock
+D = GoldingBlock
+
+=========
+SOUNDS
+=========
+
+sfx0 28219707 (touch Water)
+sfx1 45545307 (golding)
+sfx2 42491507 (make lady gold :/ )
+StartGame 8892900
+EndLevel 28067900
+EndGame 28067900
+CloseMessage 44855507
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Lovebase
+PlayerGround, PlayerJump1,PlayerJump2, Wall, Water, GoldBlock, Target, GoldTarget, GoldingBlock
+Crown
+Love
+
+======
+RULES
+======
+
+UP [ UP PlayerGround | NO Obstacle ] -> [ UP PlayerJump2 | ] 
+DOWN [ UP JumpingPlayer | NO Obstacle ] -> [ JumpingPlayer | ] 
+DOWN [ UP PlayerJump2 | NO Obstacle ] -> [ PlayerJump2 | ] 
+
+[ STATIONARY CanFall ] -> [ Down CanFall ] 
+
+HORIZONTAL [ > PlayerJump1 | NO Obstacle ] -> [ | PlayerGround ] 
+HORIZONTAL [ > PlayerJump2 | NO Obstacle ] -> [ | PlayerJump1 ] 
+LATE DOWN [ PlayerGround | NO Obstacle ] -> [ | PlayerGround ] 
+
+LATE [ Crown NO Player ] [ Player ] -> [ ] [ Crown Player ] 
+LATE [ GoldingBlock ] -> [ GoldBlock ] 
+LATE [ Crown | Wall ] -> [ Crown | GoldingBlock ] sfx1
+LATE [ Crown | Water ] -> [ | Water ] sfx0
+LATE [ Crown | Target ] -> [ Crown | GoldTarget ] sfx2
+LATE DOWN [ JumpingPlayer | Obstacle ] -> [ PlayerGround | Obstacle ] 
+
+LATE [ Player | Target ] -> [ Player Lovebase | Target ] 
+LATE UP [ Lovebase | ] -> [ | Love ] 
+
+==============
+WINCONDITIONS
+==============
+
+some Love (Awwww!)
+
+=======
+LEVELS
+=======
+##############
+#............#
+#............#
+#.P.......T..#
+##G######WWW##
+##############
+
+message MIDAS
+
+###############
+#.............#
+#.............#
+#.....#.......#
+#.P..##..#.T..#
+##G#######WWW##
+###############
+
+message She waits for me every day
+
+###############
+#.............#
+#.............#
+#.............#
+#.....#.#.....#
+#.P..##.#..T..#
+##G#######WWW##
+###############
+
+message This is the price of gold:
+
+##############
+#............#
+#............#
+#.P..........#
+##G###T##WWW##
+##############
+
+message A heavy heart
+
+#################
+#...............#
+#...............#
+#......#.#......#
+#.....#####.....#
+#.......#.......#
+#.T.P...#.......#
+####G#######WWW##
+#################
+
+message I step in the same river
+message again and again
+
+#####################
+#...................#
+#...................#
+#...................#
+#.........#.#.......#
+#..P........#.......#
+#..d##########......#
+#.......######......#
+#...................#
+#.......T...........#
+#....#########WWW...#
+#...................#
+#...................#
+#...................#
+#####################
+
+message Just so I can touch her hand.
+
+#####################
+#...................#
+#...................#
+#...................#
+#...................#
+#..P................#
+#..d##T########WWW..#
+#.....#.............#
+#...................#
+#...................#
+#####################
+
+message I am a prison to Pactolus
+
+#####################
+#...................#
+#........###........#
+#.......#####.......#
+#......##...##......#
+#.....T##.P.##W.....#
+#.....####d####.....#
+#.....#########.....#
+#...................#
+#####################
+
+message But I must have her!
+
+#####################
+#...................#
+#...................#
+#..T..#...###..W....#
+#..#####...#####....#
+#.....###...#.......#
+#........P..........#
+#.....###D###.......#
+#.....#######.......#
+#...................#
+#...................#
+#####################
+
+message My burden only grows
+
+#####################
+#...................#
+#........G..........#
+#.....W.GGG.T.......#
+#.....#######.......#
+#.....#.....#.......#
+#.....#..P..#.......#
+#.....###D###.......#
+#.....#######.......#
+#...................#
+#...................#
+#...................#
+#####################
+
+message My world collapses.
+
+#####################
+#...................#
+#...................#
+#..G....WW..........#
+#..##.####..........#
+#.....####..........#
+#...................#
+#.#...........T.....#
+#.##.......P..#.....#
+#..############.....#
+#...#.....####......#
+#...................#
+#...................#
+#...................#
+#...................#
+#...................#
+#####################
+
+message And she feels so distant
+
+#####################
+#...................#
+#...................#
+#...................#
+#...................#
+#..P......#.........#
+#..GG...........WW..#
+#..##T############..#
+#....#..............#
+#...................#
+#...................#
+#####################
+
+message I live on borrowed time
+
+#####################
+#...................#
+#...................#
+#..........T........#
+#.........##........#
+#...................#
+#.......P...........#
+#.......D##.........#
+#...........#.......#
+#...................#
+#...................#
+#.......###W#.......#
+#####################
+
+message Is she still waiting?
+
+#####################
+#...................#
+#....###########....#
+#...................#
+#....P.........W....#
+#....###########....#
+#....#.........#....#
+#...................#
+#.........#.........#
+#......#..#..#......#
+#....T.#..#..#......#
+#....###########....#
+#...................#
+#...................#
+#...................#
+#####################
+
+message Is Love just fool's gold?
+
+#####################
+#...................#
+#...................#
+#...........####....#
+#..T##.##..#...#....#
+#..#..#..#.#.P.#....#
+#..#.....#...G#.....#
+#...#...#....#......#
+#....#W#.....#......#
+#.....#.............#
+#............#......#
+#...................#
+#...................#
+#####################
+
+message Midas
+
+
+title Wrapping Recipe
+author increpare
+homepage http://www.puzzlescript.net
+
+========
+OBJECTS
+========
+
+Wrap
+Black
+
+Background
+White
+
+Player
+Blue
+
+=======
+LEGEND
+=======
+
+. = Background
+~ = Wrap
+@ = Player
+
+=======
+SOUNDS
+=======
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Wrap
+Player
+
+======
+RULES
+======
+
+[ Wrap | < Player | ... | | Wrap ] -> [ Wrap | | ... | Player | Wrap ]
+
+==============
+WINCONDITIONS
+==============
+
+=======
+LEVELS
+=======
+
+~~~~~~~
+~.....~
+~.....~
+~..@..~
+~.....~
+~.....~
+~~~~~~~
+
+
+title One player, unlimited rigidbodies
+author increpare
+homepage www.increpare.com
+
+(
+
+This is a sample of 
+
+- Unlimited rigid bodies
+- 1 Player (should be extendable)
+
+It's made as an example for the extended rigid body tutorial here:
+
+https://www.puzzlescript.net/Documentation/rigidbodies.html
+
+)
+
+========
+OBJECTS
+========
+
+Background
+green
+
+Wall
+BROWN DARKBROWN
+00010
+11111
+01000
+11111
+00010
+
+Player
+Black Orange White Blue
+.000.
+.111.
+22222
+.333.
+.3.3.
+
+ Crate
+Yellow orange
+00000
+01110
+01110
+01110
+00000
+
+
+(The directional overlays bellow establish connections between crates)
+
+ Crate_U
+orange
+.000.
+.....
+.....
+.....
+.....
+
+ Crate_D
+orange
+.....
+.....
+.....
+.....
+.000.
+
+ Crate_L
+orange
+.....
+0....
+0....
+0....
+.....
+
+ Crate_R
+orange
+.....
+....0
+....0
+....0
+.....
+
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Player
+
+w = Crate and Crate_U
+x = Crate and Crate_D
+a = Crate and Crate_L
+d = Crate and Crate_R
+
+e = Crate and Crate_U and Crate_L
+z = Crate and Crate_D and Crate_L
+q = Crate and Crate_U and Crate_R
+c = Crate and Crate_D and Crate_R
+
+r = Crate and Crate_L and Crate_R
+t = Crate and Crate_D and Crate_U
+
+1 = Crate and Crate_D and Crate_L and Crate_R
+2 = Crate and Crate_U and Crate_L and Crate_R
+3 = Crate and Crate_U and Crate_D and Crate_L
+4 = Crate and Crate_U and Crate_D and Crate_R
+
+0 = Crate and Crate_U and Crate_D and Crate_L and Crate_R
+
+5 = Crate
+
+ Crate_Connection = Crate_U or Crate_D or Crate_L or Crate_R
+
+Pusher = Player or Crate
+Pushable = Crate or Crate_connection
+
+=======
+SOUNDS
+=======
+
+ Crate MOVE 36772507
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Player, Wall, Crate
+ Crate_U
+ Crate_D
+ Crate_L
+ Crate_R
+
+======
+RULES
+======
+
+(For making maps easily: uncomment out the next few lines + press action to discard all boundaries and recreate them)
+
+( [ action player ] [ Crate_connection ] -> [ action player ] [ ] )
+( up [ action player ] [ Crate | Crate ] -> [ action player ] [ Crate Crate_u | Crate Crate_d ] )
+( right [ action player ] [ Crate | Crate ] -> [ action player ] [ Crate Crate_r | Crate Crate_l ] )
+
+(Propagate movements within and between extended bodies)
+[ > Pusher | Pushable ] -> [ > Pusher | > Pushable ]
++ up [ moving Crate Crate_U | Crate ] -> [ moving Crate Crate_U | moving Crate ]
++ down [ moving Crate Crate_D | Crate ] -> [ moving Crate Crate_D | moving Crate ]
++ left [ moving Crate Crate_L | Crate ] -> [ moving Crate Crate_L | moving Crate ]
++ right [ moving Crate Crate_R | Crate ] -> [ moving Crate Crate_R | moving Crate ]
+
+(Move connections along with the crates themselves)
+[ moving Crate stationary Crate_connection ] -> [ moving Crate moving Crate_connection ]
+
+(If any crate can't move, cancel the turn. This works because there's only one player.)
+[ > Crate | wall ] -> cancel
+
+==============
+WINCONDITIONS
+==============
+
+=======
+LEVELS
+=======
+
+###############
+#.............#
+#..ca...ca.dz.#
+#.ce..d1e...w.#
+#.t....w......#
+#.w.d1a..5.5..#
+#....w....5...#
+#......dz.....#
+#...p...t..dz.#
+#..x..cre...w.#
+#..w..w...5...#
+#.............#
+###############
+
+title tiny treasure hunt 1.0
+author Weeble
+homepage www.twitter.com/weeble
+run_rules_on_level_start
+
+========
+OBJECTS
+========
+LowFloorRaw
+BLACK
+
+LowFloor1
+#111411 #191d19 #202020 #252725
+01011
+12310
+23320
+02321
+02110
+
+LowFloor2
+#111411 #191d19 #202020 #252725
+01001
+22312
+12331
+01310
+10101
+
+WallFacade
+#555555 #666666 #777777
+21221
+10011
+.....
+.....
+.....
+
+HighFloor
+#909090 #999999 #bbbbbb #cccccc
+33232
+31012
+20002
+31012
+32222
+
+LowPlayer
+#686868 #707070 #787878 #808080
+.....
+.....
+.232.
+.121.
+.0.0.
+
+HighPlayer
+#e8e8e8 #f0f0f0 #f8f8f8 #ffffff
+.232.
+.121.
+.0.0.
+.....
+.....
+
+Crate
+#999944 #88883a #777733
+10001
+00000
+10001
+22222
+22222
+
+HighCrate
+#dddd55 #eeee50 #cccc48
+10001
+00000
+10001
+22222
+22222
+
+BurntCrate
+#222222 #111111 #000000
+10001
+00000
+10001
+22222
+22222
+
+MeltingIce
+White LightBlue #9999ff #330000
+.33..
+3333.
+31013
+11330
+21112
+
+
+StaticIce
+White LightBlue #9999ff
+10002
+1...0
+0...1
+10012
+21122
+
+IceCubeN
+White LightBlue #9999ff
+10002
+1...0
+0...1
+10012
+21122
+
+IceCubeE
+White LightBlue #9999ff
+10002
+1...0
+0...1
+10012
+21122
+
+IceCubeS
+White LightBlue #9999ff
+10002
+1...0
+0...1
+10012
+21122
+
+IceCubeW
+White LightBlue #9999ff
+10002
+1...0
+0...1
+10012
+21122
+
+FirePit1
+#990000 #770000 #550000 #330000
+02111
+13321
+02321
+32110
+23121
+
+FirePit2
+#990000 #770000 #550000 #330000
+10311
+21233
+11021
+23213
+20122
+
+
+Pillar
+#cccccc #dddddd #eeeeee #ffffff #bbbbbb #aaaaaa
+32123
+33333
+02120
+22122
+01310
+
+IceCubeShadow
+RED
+.....
+.....
+..0..
+.....
+.....
+
+Coin
+WHITE #eeee55 #aaaa33
+.000.
+01112
+01212
+01112
+.222.
+
+
+StairsNorth
+#333333 #444444 #555555 #666666 #777777
+44444
+43334
+32223
+21112
+10001
+=======
+LEGEND
+=======
+. = LowFloorRaw
+" = HighFloor
+@ = LowPlayer and LowFloorRaw
+$ = Coin and HighFloor
+£ = Coin
+H = HighCrate and HighFloor
+: = WallFacade and FirePit1 and LowFloorRaw
+~ = WallFacade and LowFloorRaw
+# = Crate and LowFloorRaw
+W = Crate and LowFloorRaw and WallFacade
+! = FirePit1 and LowFloorRaw
+I = Pillar and HighFloor
+% = StaticIce and LowFloorRaw
+& = StaticIce and LowFloorRaw and WallFacade
+/ = StairsNorth and LowFloorRaw
+FirePit = FirePit1 or FirePit2
+LowFloor = LowFloor1 or LowFloor2
+Background = LowFloor or HighFloor or LowFloorRaw
+Player = LowPlayer or HighPlayer
+Obstacle = StairsNorth
+BlocksLow = Crate or HighFloor or StaticIce or Pillar or BurntCrate
+Pushable = Crate or StaticIce
+MovingIce = IceCubeE or IceCubeS or IceCubeW or IceCubeN
+IceCube = StaticIce or MovingIce
+Grounded = IceCube or LowPlayer or Crate
+
+=======
+SOUNDS
+=======
+
+Coin DESTROY 77169700
+Crate MOVE 24442507
+SFX0 98605308 ( Hiss )
+SFX1 89033504 ( Snap )
+SFX2 70543502 ( Plink )
+SFX3 34905302 ( Slam )
+SFX4 93355705 ( Squeak )
+SFX5 52776702 ( Grind )
+SFX6 86238705 ( Bounce )
+
+================
+COLLISIONLAYERS
+================
+
+Background
+StairsNorth, FirePit
+WallFacade
+Crate, IceCube, MovingIce, LowPlayer, MeltingIce, BurntCrate
+Pillar, HighPlayer, HighCrate, Coin
+IceCubeShadow
+
+======
+RULES
+======
+
+(Make stuff pretty)
+[ LowFloorRaw ] -> [ random LowFloor ]
+[ FirePit ] -> [ random FirePit ]
+
+(Pushing stuff)
+[ > LowPlayer | Pushable ] -> [ > LowPlayer | > Pushable ]
+[ > HighPlayer | HighCrate ] -> [ > HighPlayer | > HighCrate ]
+
+(Don't walk under pillars. Probably redundant.)
+[ > Grounded | Pillar ] -> [ Grounded | Pillar ]
+
+(Ice melts in lava)
+[ MeltingIce FirePit ] -> [ ]
+[ IceCube FirePit ] -> [ MeltingIce FirePit ] sfx0 again
+
+(Ice slides)
+RIGHT [ > StaticIce ] -> [ > IceCubeE ] sfx2
+DOWN [ > StaticIce ] -> [ > IceCubeS ] sfx2
+LEFT [ > StaticIce ] -> [ > IceCubeW ] sfx2
+UP [ > StaticIce ] -> [ > IceCubeN ] sfx2
+[ MovingIce no IceCubeShadow ] -> [ MovingIce IceCubeShadow ]
+RIGHT [ IceCubeE ] -> [ > IceCubeE ] again
+DOWN [ IceCubeS ] -> [ > IceCubeS ] again
+LEFT [ IceCubeW ] -> [ > IceCubeW ] again
+UP [ IceCubeN ] -> [ > IceCubeN ] again
+
+(Stop things from overlapping the stairs)
+[ > IceCube | Obstacle ] -> [ StaticIce | Obstacle ]
+[ > Crate | Obstacle ] -> [ Crate | Obstacle ]
+
+(Lava kills you)
+late [ LowPlayer FirePit ] -> [ FirePit ] sfx5 message Ouch, hot!
+
+(More ice rules)
+late [ MovingIce IceCubeShadow ] -> [ StaticIce ] sfx5
+late [ IceCubeShadow ] -> [ ]
+
+(Crates get charred in lava)
+late [ Crate FirePit ] -> [ BurntCrate FirePit ] sfx5
+
+(Player collects coins)
+[ > HighPlayer | Coin HighFloor ] -> [ | HighPlayer HighFloor ]
+[ > LowPlayer | Coin LowFloor ] -> [ | LowPlayer LowFloor ]
+
+(Player can climb stairs)
+UP [ > LowPlayer StairsNorth | HighFloor ] -> [ StairsNorth | HighPlayer HighFloor ] sfx6
+
+(Stop things from getting pushed up onto ledges)
+[ > Grounded | HighFloor ] -> [ Grounded | HighFloor ]
+
+(Players and crates fall)
+late [ HighPlayer no BlocksLow ] -> [ LowPlayer ] sfx1 again
+late [ HighCrate no BlocksLow ] -> [ Crate ] sfx1 again
+
+==============
+WINCONDITIONS
+==============
+
+No Coin
+
+=======
+LEVELS
+=======
+
+message 1. the outer walls
+
+""""""!!!"""
+"h""""..!"$"
+""""""#.!"""
+""""""..!"""
+i~~/i/..!:::
+"..."...!!!!
+i"""i.......
+"/~~"!!...#.
+i.@.i!!.....
+
+message 2. cold storage
+
+..........£
+.!!!!!!!!!.
+.!!!!!!!!!.
+.!!.%%%.!!.
+.!!%...%!!.
+.!!%.@.%!!.
+.!!%...%!!.
+.!!.%%%.!!.
+.!!!!!!!!!.
+.!!!!!!!!!.
+...........
+
+
+message 3. bifrost
+
+!!.@.""""!!
+!!%.."~/"!!
+!!.%.&..~!!
+!!%..%...!!
+!!.%.%.%.!!
+!!%..%..%!!
+!!.%.%.%.!!
+!!...%..%!!
+!!...%.%.!!
+!!$.."..%!!
+!!"""".%.!!
+
+
+message 4. clutter
+
+""""""""""$
+"""""""""""
+~~~~W~W~~::
+.%@.#..#.!!
+....#.#..!!
+!!!!"""""..
+!!!!"""""..
+....~/~~~..
+...........
+
+message 5. arena
+
+!"!!!!!!!!!"
+!~.."..""..:
+!...~../~$.!
+!"......@~.!
+!~...".....!
+!....~.%...!
+!....%.....!
+!."....%...!
+!.~......."!
+!.."......~!
+!".~..."...!
+!:!!!!!:!!!!
+
+
+message 6. the gauntlet
+
+
+..""."."."..!!!
+..w~."#".~#.!"!
+""...~.~#.."!~!
+~&..@......~!£!
+""....#"""."!.!
+~~...#."/"#~!"!
+.......~."..!:!
+
+
+message 7. throne room
+
+...#."$".#...
+..#.."""..#..
+!!.#.:::.#.!!
+$"!...!...!"$
+""!.!!!!!.!""
+~~!.!h"h!.!~~
+.#!!!"""!!!#.
+.....h"h.....
+"!!.."""..!!"
+""!..~/~..!""
+"""...@..."""
+:~~.%.%.%.~~:
+!...........!
+
+message Well done!
+
+
+title Extended Body Example: 1 Player, Multiple Extended Objects
+author Scott Hughes
+
+(
+
+Usable in the case where there's only a single player that's pushing stuff around.
+
+Example for
+https://www.puzzlescript.net/Documentation/rigidbodies.html#one_many
+
+)
+
+=======
+OBJECTS
+=======
+
+Background
+white
+
+Player
+pink
+
+Box1
+red
+
+Box2
+green
+
+Box3
+blue
+
+Box4
+orange
+
+Wall
+grey
+
+======
+LEGEND
+======
+
+. = Background
+@ = Player
+1 = Box1
+2 = Box2
+3 = Box3
+4 = Box4
+# = Wall
+
+Box = Box1 or Box2 or Box3 or Box4
+
+======
+SOUNDS
+======
+
+===============
+COLLISIONLAYERS
+===============
+
+Background
+Player, Box, Wall
+
+=====
+RULES
+=====
+
+[ > Player | Box ] -> [ > Player | > Box ]
+
+startloop
+
+(Propagate movements through crates of different types.)
+[ moving Box1 | Box1 ] -> [ moving Box1 | moving Box1 ]
+[ moving Box2 | Box2 ] -> [ moving Box2 | moving Box2 ]
+[ moving Box3 | Box3 ] -> [ moving Box3 | moving Box3 ]
+[ moving Box4 | Box4 ] -> [ moving Box4 | moving Box4 ]
+
+(Extend the movements between crates of different types.)
+[ > Box | Box ] -> [ > Box | > Box ]
+
+endloop
+
+(Just cancel the whole turn if something can't move.)
+[ > Box | Wall ] -> cancel
+
+=============
+WINCONDITIONS
+=============
+
+======
+LEVELS
+======
+
+################
+#....###.......#
+#....#.....##..#
+#...........#..#
+#...@..222..#..#
+##.....2.......#
+#...3.....1....#
+#..33.....1....#
+#..3.....11....#
+#....4........##
+#...444...##...#
+#..#.....##....#
+################
+
+
+========
+OBJECTS
+========
+
+Background .
+black
+
+Player
+green
+
+=======
+LEGEND
+=======
+
+=======
+SOUNDS
+=======
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Player
+
+======
+RULES
+======
+
+==============
+WINCONDITIONS
+==============
+
+=======
+LEVELS
+=======
+.
+
+
+USER PROMPT:
+The following PuzzleScript game code:
+```plaintext
+title Portal Puzzles
+author AI Game Designer
+homepage www.puzzlescript.net
+
+========
+OBJECTS
+========
+
+Background
+#EAEAEA
+
+Player
+#FFCC00 #FF9900
+.....
+..0..
+.111.
+..0..
+.....
+
+PortalOrange
+#FFA500 #FF4500
+.....
+..0..
+.111.
+..0..
+.....
+
+PortalBlue
+#1E90FF #0000FF
+.....
+..0..
+.111.
+..0..
+.....
+
+Wall
+#555555
+11111
+
+Crate
+#8B4513 #CD853F
+.....
+.111.
+.1.1.
+.111.
+.....
+
+Goal
+#32CD32
+.000.
+.0.0.
+.000.
+.....
+
+=======
+LEGEND
+=======
+
+. = Background
+P = Player
+O = PortalOrange
+B = PortalBlue
+# = Wall
+* = Crate
+G = Goal
+
+=======
+SOUNDS
+=======
+
+playerMove 18467108
+goal 14539908
+portal 32566708
+crateMove 12345678
+
+===============
+COLLISIONLAYERS
+===============
+
+Background
+Player, PortalOrange, PortalBlue, Goal
+Crate
+Wall
+
+======
+RULES
+======
+
+[ -> Player | No Crate ] -> [ -> Player | ]
+[ Player | PortalOrange ] -> [ PortalBlue | Player portal ]
+[ Player | PortalBlue ] -> [ PortalOrange | Player portal ]
+[ > Player | Goal ] -> [ Player playerMove goal ]
+[ > Player | Crate ] -> [ > Player | > Crate crateMove ]
+
+=============
+WINCONDITIONS
+=============
+
+All Player on Goal
+
+=======
+LEVELS
+=======
+
+message Level 1 - Portal Practice
+#######
+#P....#
+#.....#
+#.....#
+#G...O#
+#######
+
+message Level 2 - Crate Portal
+#######
+#P....#
+#..*..#
+#.....#
+#G...O#
+#######B
+
+message Level 3 - Tactical Portals
+#########
+#P......#
+#....*..#
+#....*..#
+#G...O..#
+###..*..#
+#B......#
+#########
+
+message Congratulations! You've mastered the portals!
+
+
+```
+produced the following console output:
+=================================
+line 38 : Trying to access color number 1 from the color palette of sprite WALL, but there are only 1 defined in it.
+line 71 : unexpected sound token "playermove".
+line 72 : Was expecting a soundverb here (MOVE, DESTROY, CANTMOVE, or the like), but found something else.
+line 73 : unexpected sound token "portal".
+line 74 : unexpected sound token "cratemove".
+line 90 : Name "portal", referred to in a rule, does not exist.
+too many errors, aborting compilation
+Errors detected during compilation; the game may not work correctly.
+Return a repaired version of the code that addresses these errors. Return your code in full, inside a ```plaintext code block.

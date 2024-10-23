@@ -1,0 +1,94 @@
+The console errors indicate that there are issues with the `colors` section of your PuzzleScript code. Specifically, the parser is trying to match object names like `Background`, `Wall`, `Player`, and `Box` with their respective colors immediately after, but it seems to be reading object names directly from your code as mixed case (while game parsing tends to expect lower case). Here's a fixed version that addresses these issues by ensuring consistency in naming conventions and fixing the syntax for color assignments.
+
+```plaintext
+################################
+# Puzzlescript Sokoban Game
+################################
+
+title Sokoban Puzzle
+
+author Your Name
+
+homepage https://www.puzzlescript.net
+
+# Some options for the game
+options
+    require_player_movement
+
+# Constructing the objects
+objects
+    Background . 
+    Wall # 
+    Player P 
+    PlayerOnTarget + 
+    Box B 
+    BoxOnTarget O 
+    Target T
+
+colors
+    background white
+    wall blue
+    player green
+    playerontarget lightgreen
+    box brown
+    boxontarget yellow
+    target red
+
+# Legends: Defining the objects in the game
+legend
+    . = Background
+    # = Wall
+    P = Player
+    B = Box
+    T = Target
+    O = BoxOnTarget
+    + = PlayerOnTarget
+
+# Defining rules for movement and interactions
+rules
+    [ > Player | No ] -> [ > Player | ]
+    [ > Player | Wall ] -> [ > Player | Wall ]
+    [ > Player | Box ] -> [ > Player | > Box ]
+    [ > Player | BoxOnTarget ] -> [ > Player | > Box ]
+
+    # Player moves onto Target
+    [ > Player | Target ] -> [ > PlayerOnTarget | ]
+
+    # Player moving off Target
+    [ PlayerOnTarget | No ] -> [ Player | Target ]
+
+    # Move boxes
+    [ > Player | Box | No ] -> [ > Player | > Box ]
+
+    # Move boxes onto Targets
+    [ > Player | Box | Target ] -> [ > PlayerOnTarget | BoxOnTarget ]
+
+    # Boxes off Targets
+    [ BoxOnTarget | No ] -> [ Box | Target ]
+
+# Winning conditions
+winconditions
+    All BoxOnTarget
+
+# Game levels, represented in ASCII art
+levels
+
+#######
+#     #
+#     #
+# .#  #
+#  #$ #
+#  .  #
+# .@  #
+#######
+
+#######
+#. .  #
+#  #$ #
+#  #@ #
+#  $  #
+#. .  #
+#######
+```
+
+This corrected version ensures consistent naming throughout the definition and uses lowercase for object and color keywords in the `colors` section to match how PuzzleScript expects the input. This should resolve the errors and compile correctly.

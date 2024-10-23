@@ -1,0 +1,102 @@
+To make this game solvable, we need to adjust the levels so that the player can push the TreasureChests onto the Targets. Here is the revised PuzzleScript code with solvable levels:
+
+```plaintext
+title Treasure Cave Explorer
+author YourName
+homepage www.example.com
+
+========
+OBJECTS
+========
+
+Background
+lightgray
+
+Wall
+darkgray
+
+Player
+lightgreen
+
+TreasureChest
+#FFD700
+
+Target
+darkblue
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Player
+* = TreasureChest
+@ = TreasureChest and Target
+O = Target
+
+=======
+SOUNDS
+=======
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Target
+Player, Wall, TreasureChest
+
+======
+RULES
+======
+
+[ > Player | TreasureChest ] -> [ > Player | > TreasureChest ]
+
+==============
+WINCONDITIONS
+==============
+
+All Target on TreasureChest
+
+=======
+LEVELS
+=======
+
+#######
+#.....#
+#..O..#
+#.P*..#
+#.....#
+#######
+
+#######
+#.....#
+#..#O.#
+#.*#..#
+#..#P.#
+#.....#
+#######
+
+#####
+#..O#
+#..P#
+#.*.#
+#####
+
+#######
+#.....#
+#.O*P.#
+#.#...#
+#.....#
+#######
+
+#######
+#.O...#
+#.#P* #
+#.....#
+#######
+
+```
+
+The changes made include ensuring that there is a clear path for the player to push the TreasureChest onto the Target in each level. Adjustments are needed to walls and object positions to facilitate this. Play-testing these levels can help ensure they are indeed solvable.

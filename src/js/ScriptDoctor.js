@@ -19,9 +19,11 @@ function getConsoleText() {
 }
 
 class GameIndividual {
-  constructor(code, fitness) {
+  constructor(code, fitness, compiledIters, solvedIters) {
     this.code = code;
     this.fitness = fitness;
+    this.compiledIters = compiledIters;
+    this.solvedIters = solvedIters;
   }
 }
 
@@ -59,13 +61,15 @@ function serialize(val) {
 }
 
 
-async function solveLevel(level) {
+function solveLevel(level) {
   // Load the level
   compile(['loadLevel', level], editor.getValue());
   // console.log('Solving level', level);
   init_level = backupLevel();
   init_level_map = init_level['dat'];
   frontier = [init_level];
+  sol = [];
+  console.log(sol.length);
   action_seqs = [[]];
   visited = new Set([serialize(init_level_map)]);
   i = 0;
@@ -79,8 +83,8 @@ async function solveLevel(level) {
       new_action_seq.push(move);
       changed = processInput(move);
       if (winning) {
-        // console.log('Winning!');
-        return new_action_seq, i;
+        console.log(`Winning! Solution:, ${new_action_seq}`);
+        return [new_action_seq, i];
       }
       else if (changed) {
         new_level = backupLevel();
@@ -103,8 +107,7 @@ async function solveLevel(level) {
     }
     i++;
   }
-  let sol = [];
-  return sol, i;
+  return [sol, i];
 }
 
 
@@ -115,6 +118,9 @@ async function genGame(genMode, parents, saveDir, seed, fewshot, cot) {
   compilationSuccess = false;
   solvable = false;
   solverText = '';
+  compiledIters = [];
+  solvedIters = [];
+  sols = {};
   while (nGenAttempts < maxGenAttempts & (nGenAttempts == 0 | !compilationSuccess | !solvable)) {
 
     const response = await fetch('/gen_game', {
@@ -128,11 +134,12 @@ async function genGame(genMode, parents, saveDir, seed, fewshot, cot) {
         gen_mode: genMode,
         parents: parents,
         code: code,
+        sols: sols,
         console_text: consoleText,
         solver_text: solverText,
         compilation_success: compilationSuccess,
         n_iter: nGenAttempts,
-    }),
+      }),
     });
   
     if (!response.ok) {
@@ -144,6 +151,7 @@ async function genGame(genMode, parents, saveDir, seed, fewshot, cot) {
       consolePrint(line);
     }
     code = data.code;
+    sols = data.sols;
     errorLoadingLevel = false;
     try {
       editor.setValue(code);
@@ -173,6 +181,7 @@ async function genGame(genMode, parents, saveDir, seed, fewshot, cot) {
       // console.log(`Errors: ${errorCount}. Iterating on the game code. Attempt ${nGenAttempts}.`);
       fitness = -errorCount;
     } else {
+      compiledIters.push(nGenAttempts);
       compilationSuccess = true;
       solverText = '';
       solvable = true;
@@ -188,18 +197,25 @@ async function genGame(genMode, parents, saveDir, seed, fewshot, cot) {
         }
         try {
           console.log(`Solving level ${level_i}...`);
-          sol, n_search_iters = await solveLevel(level_i);
+          if (sols.length > 0) {
+            sol, n_search_iters = sols[level_i];
+          }
+          [sol, n_search_iters] = solveLevel(level_i);
           console.log(`Solution for level ${level_i}:`, sol);
         } catch (e) {
-          console.log('Error while solveing level:', e);
+          console.log('Error while solving level:', e);
           sol = [];
           n_search_iters = -1;
           solverText += ` Level ${level_i} resulted in error: ${e}. Please repair it.`;
         }
+        if (!sol) {
+          console.log(`sol undefined`);
+        }
+        sols[level_i] = [sol, n_search_iters];
         fitness = Math.max(fitness, n_search_iters)
         // console.log('Solution:', sol);
         // check if sol is undefined
-        if (sol) {
+        if (sol.length > 0) {
           // console.log('Level is solvable.');
           solverText += `Found solution for ${level_i} in ${n_search_iters} iterations.`
         } else {
@@ -208,11 +224,25 @@ async function genGame(genMode, parents, saveDir, seed, fewshot, cot) {
           solverText += ` Level ${level_i} is not solvable. Please repair it.`
         }
       }
+      if (solvable) {
+        solvedIters.push(nGenAttempts)
+
+        await fetch('/save_sols', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ 
+            save_dir: saveDir,
+            sols: sols,
+            n_iter: nGenAttempts,
+          }),
+        });
+
+      }
     }
 
     nGenAttempts++;
   }
-  return new GameIndividual(code, fitness);
+  return new GameIndividual(code, fitness, compiledIters, solvedIters);
 }
 
 

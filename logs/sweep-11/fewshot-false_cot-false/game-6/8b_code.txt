@@ -1,0 +1,116 @@
+The errors in the code are due to incorrect sprite definitions using `.` and `#`. PuzzleScript expects the sprites to be designed using a consistent number of characters in each row of the sprite. Let's fix this by ensuring that each sprite row has the same number of characters.
+
+Here's the corrected version of the code:
+
+```plaintext
+////////////////////////////////////////////////////////////
+// Catch the Star
+// Author: Your Name
+////////////////////////////////////////////////////////////
+
+////////////////////////////////
+// Objects
+////////////////////////////////
+
+objects
+    Background
+        black
+
+    Player
+        blue
+        ..#..
+        ..#..
+        .###.
+        ..#..
+        ..#..
+
+    Star
+        yellow
+        .....
+        ..#..
+        .###.
+        ..#..
+        .....
+
+    Wall
+        gray
+        #####
+        #####
+        #####
+        #####
+        #####
+
+////////////////////////////////
+// Legend
+////////////////////////////////
+
+legend
+    . = Background
+    P = Player
+    S = Star
+    W = Wall
+
+////////////////////////////////
+// Sounds
+////////////////////////////////
+
+sounds
+    player push wall
+    player move star
+
+////////////////////////////////
+// Collision Layers
+////////////////////////////////
+
+collisionlayers
+    Background
+    Wall
+    Player, Star
+
+////////////////////////////////
+// Rules
+////////////////////////////////
+
+rules
+    [ > Player | Star ] -> [ > Player | ]
+
+////////////////////////////////
+// Win Conditions
+////////////////////////////////
+
+winconditions
+    (no Star)
+
+////////////////////////////////
+// Levels
+////////////////////////////////
+
+levels
+    XXXXX
+    X.P.X
+    X...X
+    X.S.X
+    XXXXX
+
+    XXXX
+    X..X
+    XWPX
+    XS.X
+    XXXX
+
+    XXXXXXX
+    X.....X
+    X.WP..X
+    X...W.X
+    X..S..X
+    XXXXXXX
+
+////////////////////////////////
+// Post Conditions
+////////////////////////////////
+
+postconditions
+    shouldrestart on [ Player Star ] // if player collides with a star
+```
+
+I've ensured that the sprite for the Player has consistent rows and the Star's sprite definition is properly aligned with the correct width. This should eliminate the errors found in the original game code.

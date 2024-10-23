@@ -1,0 +1,98 @@
+The errors you're seeing are likely caused by comments within the RULES section. In PuzzleScript, comments within code sections are not supported directly, and these lines might be mistakenly read as part of the syntax. Here’s a repaired version of your code with cleaned-up RULES:
+
+```plaintext
+Title: Box Pusher
+Author: Your Name
+Homepage: http://www.yourwebsite.com
+# Prefix ranges are | and \
+
+===========
+OBJECTS
+===========
+
+Background
+transparent
+
+Wall
+brown
+
+Player
+lightblue
+
+Box
+yellow
+
+Target
+pink
+
+BoxOnTarget
+lightred
+
+PlayerOnTarget
+purple
+
+===========
+LEGEND
+===========
+
+. = Background
+# = Wall
+P = Player
+B = Box
+X = Target
+O = BoxOnTarget
+Q = PlayerOnTarget
+
+===========
+SOUNDS
+===========
+
+===========
+COLLISIONLAYERS
+===========
+
+Background
+Wall
+Player, PlayerOnTarget
+Box, BoxOnTarget
+Target
+
+===========
+RULES
+===========
+
+[> Player | Box] -> [> Player | > Box]
+[> PlayerOnTarget | Box] -> [> PlayerOnTarget | > Box]
+[> Player | Target] -> [> PlayerOnTarget]
+[> Player | BoxOnTarget] -> [> Player |> Box]
+[PlayerOnTarget | Background] -> [Player | Background]
+[Box | Target] -> [BoxOnTarget]
+
+===========
+WINCONDITIONS
+===========
+
+All BoxOnTarget
+
+===========
+LEVELS
+===========
+
+#####
+#...#
+#.#.#
+#P#B#
+#...#
+#####
+
+####
+#..###
+#.*..#
+#.###.
+#.P#..
+#..#..
+#..###
+####
+```
+
+I've removed the inline comments from the RULES section to ensure the code compiles correctly. The comments outside of code sections like where you place `########` are generally fine and helpful for readability.

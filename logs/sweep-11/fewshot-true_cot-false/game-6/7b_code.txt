@@ -1,0 +1,129 @@
+Here's the corrected version of the PuzzleScript game code. I've resolved the errors, including the use of a reserved keyword for an object's name, and fixed the win condition syntax errors.
+
+```plaintext
+title Galaxy Collector
+author PuzzleMaster
+
+========
+OBJECTS
+========
+
+Background
+Black
+
+Star
+Yellow
+..0..
+.000.
+..0..
+.....
+.....
+
+Planet
+Blue
+....
+.000
+.000
+....
+
+Asteroid
+Grey
+.000.
+00000
+.000.
+.....
+.....
+
+Player
+Red
+.....
+.000.
+.000.
+.....
+
+StarCollectedText
+#ffff00
+0..0.
+.00..
+0..0.
+.0...
+.....
+
+PlanetCollectedText
+#00ffff
+.....
+.000.
+0000.
+.000.
+.....
+
+AsteroidCollectedText
+#d3d3d3
+00000
+0...0
+0...0
+0...0
+00000
+
+=======
+LEGEND
+=======
+
+. = Background
+P = Player
+S = Star
+C = Planet
+A = Asteroid
+T = StarCollectedText
+U = PlanetCollectedText
+X = AsteroidCollectedText
+
+=======
+SOUNDS
+=======
+
+SFX0 51771508 (pickup)
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Player, Star, Planet, Asteroid, StarCollectedText, PlanetCollectedText, AsteroidCollectedText
+
+======
+RULES
+======
+
+[ > Player | Star ] -> [ > Player | StarCollectedText ] SFX0
+[ > Player | Planet ] -> [ > Player | PlanetCollectedText ] SFX0
+[ > Player | Asteroid ] -> [ > Player | AsteroidCollectedText ] SFX0
+
+==============
+WINCONDITIONS
+==============
+
+no Star
+no Planet
+no Asteroid
+
+=======
+LEVELS
+=======
+
+message Collect all celestial objects!
+
+#########
+#...S...#
+#...P...#
+#...C...#
+#...A...#
+#########
+
+message Well done! You've collected the galaxy!
+
+```
+
+I've made the following changes:
+- Changed the object name "V" to "X" to avoid using a reserved keyword.
+- Corrected the win condition syntax by separating the conditions onto separate lines. Each condition now checks for the absence of each object type individually.

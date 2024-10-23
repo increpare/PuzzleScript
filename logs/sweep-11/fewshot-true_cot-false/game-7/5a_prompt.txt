@@ -1,0 +1,1952 @@
+SYSTEM PROMPT:
+You are a game designer, familiar with the PuzzleScript game description language. Here are some example games, for inspiration (do not reproduce these games exactly):
+
+title maze generator
+run_rules_on_level_start
+again_interval 0
+
+========
+OBJECTS
+========
+
+Background .
+black white
+00000
+01110
+01110
+01110
+00000
+
+Player P
+transparent
+
+visited
+transparent
+
+filler
+transparent
+
+w_up
+white
+.000.
+.000.
+.000.
+.000.
+.....
+
+w_down
+white
+.....
+.000.
+.000.
+.000.
+.000.
+
+w_left
+white
+.....
+0000.
+0000.
+0000.
+.....
+
+w_right
+white
+.....
+.0000
+.0000
+.0000
+.....
+
+to_delete
+transparent
+
+temp
+transparent
+
+tempA
+transparent
+
+=======
+LEGEND
+=======
+
+
+=======
+SOUNDS
+=======
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Player
+filler
+visited
+w_up
+w_down
+w_left
+w_right
+to_delete
+temp
+tempA
+
+======
+RULES
+======
+
+(place player randomly on the first turn only)
+random [ no filler ] -> [player visited]
+[no filler] -> [filler]
+
+(propagate path until you can't move any more)
+random [ player |  no visited ] ->  [  visited > to_delete |  < to_delete player ] again
+
+(if you can't extend the current path, continue from some random other neighbouring point)
+[player | no visited ] -> [ player tempA | ]
+random [player no tempA] [ visited | no visited ] -> [ visited ] [ visited player |  ] again
+[tempA]->[]
+
+[ up to_delete ] -> [ w_up ]
+[ down to_delete ] -> [ w_down ]
+[ left to_delete ] -> [ w_left ]
+[ right to_delete ] -> [ w_right ]
+
+==============
+WINCONDITIONS
+==============
+
+
+=======
+LEVELS
+=======
+
+........................................
+........................................
+........................................
+........................................
+........................................
+........................................
+........................................
+........................................
+........................................
+........................................
+........................................
+........................................
+........................................
+........................................
+........................................
+........................................
+........................................
+........................................
+........................................
+........................................
+........................................
+........................................
+........................................
+........................................
+........................................
+........................................
+........................................
+........................................
+........................................
+........................................
+
+
+
+
+title Multi-word Dictionary Game
+author Sarah Northway
+homepage www.sarahnorthway.com
+
+(included with permission of Sarah Northway)
+
+========
+OBJECTS
+========
+
+Background
+pink
+
+Wall
+grey
+
+Player
+Blue
+
+Won
+yellow
+
+LetterC
+white black
+.111.
+1....
+1....
+1....
+.111.
+
+LetterA
+white black
+.111.
+1...1
+11111
+1...1
+1...1
+
+LetterT
+white black
+11111
+..1..
+..1..
+..1..
+..1..
+
+=======
+LEGEND
+=======
+
+Letter = LetterA or LetterC or LetterT
+. = Background
+# = Wall
+P = Player
+W = Won
+C = LetterC
+A = LetterA
+T = LetterT
+
+=======
+SOUNDS
+=======
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Won
+Player, Wall, Letter
+
+======
+RULES
+======
+
+[ >  Player | Letter ] -> [  >  Player | > Letter  ]
+[ <  Player | Letter ] -> [  <  Player | < Letter  ]
+
+late right [LetterC | LetterA | LetterT ] -> [ Won LetterC | Won LetterA | Won LetterT ] message You spelled CAT!
+late right [LetterA | LetterC | LetterT] -> [ Won LetterA | Won LetterC | Won LetterT ] message You spelled ACT!
+
+==============
+WINCONDITIONS
+==============
+
+Some Won
+
+=======
+LEVELS
+=======
+
+#########
+#.......#
+#.A..C..#
+#.......#
+#...P...#
+#.T.....#
+#########
+
+
+title Simple Block Pushing Game
+author David Skinner
+homepage www.puzzlescript.net
+zoomscreen 3x3
+========
+OBJECTS
+========
+
+Background
+LIGHTGREEN GREEN
+11111
+01111
+11101
+11111
+10111
+
+
+Target
+DarkBlue
+.....
+.000.
+.0.0.
+.000.
+.....
+
+Wall
+BROWN DARKBROWN
+00010
+11111
+01000
+11111
+00010
+
+Player
+Black Orange White Blue
+.000.
+.111.
+22222
+.333.
+.3.3.
+
+Crate
+Orange
+00000
+0...0
+0...0
+0...0
+00000
+
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Player
+* = Crate
+@ = Crate and Target
+O = Target
+
+
+=======
+SOUNDS
+=======
+
+Crate MOVE 36772507
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Target
+Player, Wall, Crate
+
+======
+RULES
+======
+
+[ >  Player | Crate ] -> [  >  Player | > Crate  ]
+
+==============
+WINCONDITIONS
+==============
+
+All Target on Crate
+
+=======
+LEVELS
+=======
+
+
+####..
+#.O#..
+#..###
+#@P..#
+#..*.#
+#..###
+####..
+
+
+######
+#....#
+#.#P.#
+#.*@.#
+#.O@.#
+#....#
+######
+
+
+title By Your Side
+author Alan Hazelden
+homepage www.draknek.org
+
+require_player_movement
+key_repeat_interval 0.12
+
+(
+
+A port of alan hazelden's game, By Your Side, in 6 lines of code, made with the permission of the author -
+
+the original is here
+http://www.draknek.org/games/by-your-side/
+
+)
+
+========
+OBJECTS
+========
+
+(Objects in all scenes)
+
+Grass .
+darkgreen green
+00000
+01000
+00000
+00010
+00000
+
+Player_Casual P
+black pink gray
+..0..
+..1..
+.222.
+..2..
+.2.2.
+
+TargetMain T
+yellow
+00000
+0...0
+0...0
+0...0
+00000
+
+(Initial Scenes)
+
+GirlFriend G
+pink red
+..0..
+.010.
+..1..
+.111.
+.0.0.
+
+Tree #
+darkbrown lightgreen
+.111.
+11111
+.111.
+..0..
+..0..
+
+(Wedding Scene)
+
+Player_Formal Q
+black pink white
+..0..
+..1..
+.020.
+..0..
+.0.0.
+
+WoodenFloor ,
+brown
+00000
+00000
+00000
+00000
+00000
+
+ChurchWall H
+darkbrown brown
+11101
+00000
+10111
+00000
+11101
+
+Chair C
+darkbrown brown
+11111
+11101
+11101
+00001
+01101
+
+Altar A
+gray
+.....
+00000
+.000.
+.000.
+.000.
+
+Spectator1 B
+black pink white
+..0..
+..1..
+.020.
+..0..
+.0.0.
+
+Spectator2 D
+purple pink white
+..0..
+..1..
+10001
+.000.
+00000
+
+Wife_Wedding W
+white pink
+..1..
+.000.
+.101.
+.000.
+00000
+
+(Post Wedding Scene)
+
+house @
+black grey red
+..0..
+.000.
+00000
+.111.
+.121.
+
+pavement `
+darkblue
+
+Road '
+gray white
+00000
+00000
+01110
+00000
+00000
+
+Wife_Repulsed X
+white pink
+..1..
+.000.
+.101.
+.000.
+00000
+
+(grave scene)
+
+gravedirt ~
+green brown
+01001
+10000
+00100
+00001
+01000
+
+grave R
+lightgray darkgray grey
+.111.
+10201
+12221
+10201
+10001
+
+coffin F
+darkbrown brown black
+.000.
+01210
+02220
+01210
+02220
+
+(final scene)
+
+Wife_Dying Y
+white pink
+..1..
+.000.
+.101.
+.000.
+00000
+
+Wife_Coffin
+darkbrown brown black
+.000.
+01210
+02220
+01210
+02220
+
+ColdFeet I
+black
+
+=======
+LEGEND
+=======
+
+Target = TargetMain or Road
+Player = Player_Casual or Player_Formal
+Background = Grass or WoodenFloor or Pavement or GraveDirt
+Spectator = Spectator1 or Spectator2
+Obstacle = House or Spectator or Chair or Tree or Altar or Grave or Coffin or Wife_Coffin or ChurchWall
+Wife_Attracted = Girlfriend or Wife_Wedding or Wife_Dying
+Wife = Wife_Attracted or Wife_Repulsed or Wife_Coffin
+Person = Player or Wife
+GrassyTarget = Grass and TargetMain
+E = GrassyTarget
+
+=========
+SOUNDS
+=========
+
+Player cantmove 82269707
+endlevel 54461500
+startgame 10582309
+endgame 66004102
+Wife_Repulsed move 44043907
+sfx0 16417502
+
+================
+COLLISIONLAYERS
+================
+
+ColdFeet
+Background
+Target
+Obstacle, Person
+
+======
+RULES
+======
+
+(game logic)
+
+[ > Player ] [ Wife_Attracted ] -> [ > Player ] [ > Wife_Attracted ] 
+[ > Player ] [ Wife_Repulsed ] -> [ > Player ] [ < Wife_Repulsed ] 
+
+late [ Wife_Dying ] -> [ Wife_Coffin ] 
+late [ Player | Wife_Coffin ] -> [ Player | Wife_Dying ] 
+
+(level-specific events)
+late [ ColdFeet Player ] -> [ Player ] message ...
+late [ Wife Road ] -> sfx0
+
+==============
+WINCONDITIONS
+==============
+
+all person on target
+
+=======
+LEVELS
+=======
+
+....#################
+...###...#....#######
+..##.........##.....#
+.##...#######.......#
+##....#....###......#
+#...###.............#
+#...#...#...#..######
+#...#...#..##.P.....#
+#....####.T##..######
+##......#...#.......#
+###..##..#...#...##.#
+#.##..#..##..#...#..#
+#..#..#....###...#..#
+#..##........#......#
+#...##...##...##....#
+#.......##.....######
+.##############......
+
+....#################
+...###...#....#######
+..##.........##.....#
+.##...#######.......#
+##....#....###......#
+#...###.............#
+#...#...#...#..######
+#...#...#..##..T...T#
+#....####.P##G.######
+##......#...#.......#
+###..##..#...#...##.#
+#.##..#..##..#...#..#
+#..#..#....###...#..#
+#..##........#......#
+#...##...##...##....#
+#.......##.....######
+.##############......
+
+....#################
+...###...#....#######
+..##.........##.....#
+.##...#######.......#
+##....#....###......#
+#...###.............#
+#...#T..#...#..######
+#...#T..#..##..P...G#
+#....####..##..######
+##......#...#.......#
+###..##..#...#...##.#
+#.##..#..##..#...#..#
+#..#..#....###...#..#
+#..##........#......#
+#...##...##...##....#
+#.......##.....######
+.##############......
+
+HHHHHHHHHHHHHHHHHHHHH
+,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,
+,CCCCCCCCCCCCCCCCCCCC
+,CCCCCCCCCCCCCCCCCCCC
+A,B,,D,B,D,,B,D,,,B,C
+A,T,,I,,,I,,,,I,Q,,,C
+A,T,,,,,,,,,,,,,W,,,C
+,CCCCCCCCCCCCCCCCCCCC
+,CCCCCCCCCCCCCCCCCCCC
+,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,
+HHHHHHHHHHHHHHHHHHHHH
+
+`````````@@@@````````
+`````````@TT@````````
+``@@@@@@`@`@@````````
+``@````@`@`@@@@``````
+``@`@@`@`@````@``````
+``@`@@`@`@`@@@@``````
+``@`@@`@@@P@`````````
+``@```````W@@@@@@````
+``@`@@@@@@``````@````
+``@`@````@`@@@@`@````
+``@`@````@`@``@`@````
+@@@@@@@@@@@@@@@@@@@@@
+'''''''''''''''''''''
+@@@@@@@@@@@@@@@@@@@@@
+`````````````````````
+
+`````````@@@@````````
+`````````@PX@````````
+``@@@@@@`@`@@````````
+``@````@`@`@@@@``````
+``@`@@`@`@````@``````
+``@`@@`@`@`@@@@``````
+``@`@@`@@@T@`````````
+``@```````T@@@@@@````
+``@`@@@@@@``````@````
+``@`@````@`@@@@`@````
+``@`@````@`@``@`@````
+@@@@@@@@@@@@@@@@@@@@@
+'''''''''''''''''''''
+@@@@@@@@@@@@@@@@@@@@@
+`````````````````````
+
+`````````@@@@````````
+`````````@TT@````````
+``@@@@@@`@`@@````````
+``@````@`@`@@@@``````
+``@`@@`@`@````@``````
+``@`@@`@`@`@@@@``````
+``@`@@`@@@P@`````````
+``@```````X@@@@@@````
+``@`@@@@@@``````@````
+``@`@````@`@@@@`@````
+``@`@````@`@``@`@````
+@@@`@@@@@@`@@@@`@@@@@
+'''''''''''''''''''''
+@@@@@@@@@@@@@@@@@@@@@
+`````````````````````
+
+RRRRRRR~RRRRRR~RRRRR
+R~~~~~R~R~~~~R~R~~~~
+R~~~~~~~R~~~~R~R~~~~
+R~~~~~R~R~~~~R~R~~~~
+RRRRRRR~RR~~RR~RRRRR
+R~~~~BDBDBDBDBD~~~~R
+RQ~~~~~i~i~~i~~~~EFR
+RRRRRRRRRRRRRRRRRRRR
+R~~R~~~~~~~~~~~R~~~~
+R~~R~~~~~~~~~~~R~~~~
+R~~RRR~~~RRRR~~R~~~~
+R~~~~~~~~R~~~~~R~~~R
+R~~R~~~~~R~~R~~~~~~R
+R~~R~~~~~R~~R~~~~~~R
+RRRRRRRRRR~~RRRRRRRR
+
+RRRRRR~~~~~~~~~~~~~~
+R~~~~R~~~~~RRRRRR~~~
+R~QY~R~~~~~R~~~~R~~~
+R~~~~R~~RRRRR~R~R~~~
+R~~~~RRRR~~R~~R~R~~~
+R~~~~~~~~~~R~~R~RRR~
+RRRRRRRRR~~R~~~~~~R~
+~~R~~~~~R~~R~RRR~~R~
+~~R~~R~~R~~RRR~R~~R~
+~~R~~R~~~~~~~~~~~~R~
+~~R~~R~~RR~~~~~RRRR~
+~~R~~R~~~RRRRRTTR~~~
+~~R~~R~~~R~~~~~~R~~~
+~~R~~R~~~~~RRR~~R~~~
+~~RRRRRRRRRR~RRRR~~~
+
+RRRRRR~~~~~~~~~~~~~~
+R~~~~R~~~~~RRRRRR~~~
+R~~~~R~~~~~R~~~~R~~~
+R~~~~R~~RRRRR~R~R~~~
+R~~~~RRRR~~R~~R~R~~~
+R~~~~~~~~~~RT~R~RRR~
+RRRRRRRRR~~RT~~~~~R~
+~~R~~~~~R~~R@RRR~~R~
+~~R~~R~~R~~RRR~R~~R~
+~~R~~R~~~~~~~~~~~~R~
+~~R~~R~~RR~~~~~RRRR~
+~~R~~R~~~RRRRRYQR~~~
+~~R~~R~~~R~~~~~~R~~~
+~~R~~R~~~~~RRR~~R~~~
+~~RRRRRRRRRR~RRRR~~~
+
+message Commiserations
+
+message It is over
+
+title Cliched River Puzzle
+author Weeble
+homepage www.puzzlescript.net
+
+========
+OBJECTS
+========
+
+Grass
+#559922 GREEN
+11111
+01111
+11101
+11111
+10111
+
+
+Player
+Yellow
+00.00
+0...0
+.....
+0...0
+00.00
+
+Water1
+#3333ff #5555ff #7777ff
+00121
+10100
+12001
+10010
+01000
+
+Water2
+#3333ff #5555ff #7777ff
+10000
+00010
+00121
+01100
+10001
+
+Carrot
+ORANGE #55cc00
+11111
+.000.
+.000.
+.000.
+..0..
+
+Fox
+ORANGE WHITE BLACK
+.2.2.
+00000
+12021
+.111.
+..2..
+
+Rabbit
+WHITE #ff88bb
+00.00
+.0.0.
+.000.
+.101.
+.000.
+
+EmptyBoat
+BROWN DARKBROWN
+.000.
+01110
+01110
+01110
+00000
+Platform
+GREY
+.....
+.....
+.....
+.....
+.....
+
+LeftB
+BLUE
+.....
+.....
+.....
+.....
+.....
+
+RightB
+RED
+.....
+.....
+.....
+.....
+.....
+
+Dude
+BLACK
+..0..
+00000
+..0..
+.0.0.
+0...0
+
+Dock
+YELLOW
+.....
+.....
+.....
+.....
+.....
+
+=======
+LEGEND
+=======
+
+. = Grass and LeftB
+, = Grass and RightB
+~ = Water1 and LeftB
+^ = Water1 and RightB
+P = Player and LeftB
+C = Carrot and Platform and LeftB
+F = Fox and Platform and LeftB
+R = Rabbit and Platform and LeftB
+_ = EmptyBoat and LeftB and Water1
+* = Platform and RightB
+[ = Dude and Dock and LeftB
+] = Dock and RightB
+Water = Water1 or Water2
+Background = Grass or Water1 or Water2
+Object = Rabbit or Fox or Carrot
+Bank = LeftB or RightB
+=======
+SOUNDS
+=======
+
+SFX0 81232704
+SFX1 47027309
+SFX2 92562507
+SFX3 11245308
+
+================
+COLLISIONLAYERS
+================
+
+Background
+EmptyBoat, Platform, Dock
+LeftB, RightB
+Carrot, Rabbit, Fox, Dude
+Player
+
+======
+RULES
+======
+
+(Loading the boat)
+[ action Player Object Platform ] [ EmptyBoat no Object ] -> [ Player Platform ] [ EmptyBoat Object ] sfx2
+
+(Emptying the boat)
+[ action Player Object EmptyBoat LeftB ] [ Platform no Object LeftB ] -> [ Player EmptyBoat LeftB ] [ Platform Object LeftB ] sfx2
+[ action Player Object EmptyBoat RightB ] [ Platform no Object RightB ] -> [ Player EmptyBoat RightB ] [ Platform Object RightB ] sfx2
+
+( Eating rules for stuff on the left bank )
+late [ RightB Dude ] [ LeftB Rabbit ] [ LeftB Fox ] -> [ RightB Dude ] [ LeftB ] [ LeftB Fox ] sfx0 message Fox eats rabbit! Chomp!
+late [ RightB Dude ] [ LeftB Carrot ] [ LeftB Rabbit ] -> [ RightB Dude ] [ LeftB ] [ LeftB Rabbit ] sfx1 message Rabbit eats carrot! Chomp!
+
+( Same rules for stuff on the right bank )
+late [ LeftB Dude ] [ RightB Rabbit ] [ RightB Fox ] -> [ LeftB Dude ] [ RightB ] [ RightB Fox ] sfx0 message Fox eats rabbit! Chomp!
+late [ LeftB Dude ] [ RightB Carrot ] [ RightB Rabbit ] -> [ LeftB Dude ] [ RightB ] [ RightB Rabbit ] sfx1 message Rabbit eats carrot! Chomp!
+
+( Animate the water )
+[ Water ] -> [ random Water ]
+
+( Row across the river with an object )
+[ action Player Dude | EmptyBoat Object | ... | | Dock ] -> [ | | ... | EmptyBoat Object | Player Dude Dock ] sfx3
+
+( Row across the river without an object )
+[ action Player Dude | EmptyBoat no Object | ... | | Dock ] -> [ | | ... | EmptyBoat | Player Dude Dock ] sfx3
+
+( Victory condition )
+[ RightB Platform Rabbit ] [ RightB Platform Fox ] [ RightB Platform Carrot] -> win
+
+==============
+WINCONDITIONS
+==============
+
+=======
+LEVELS
+=======
+
+.....~~~^^,,,,,
+.....~~~^^,,,,,
+...F.~~~^^,*,,,
+..RP[_~~^^],*,,
+...C.~~~~^,*,,,
+.....~~~^^,,,,,
+.....~~~^^,,,,,
+
+
+
+title Octat
+author increpare
+homepage www.increpare.com
+
+noundo
+require_player_movement
+
+(
+    
+A port of a flash game I made.  The original's here:
+
+http://ded.increpare.com/~locus/octat/
+
+)
+
+========
+OBJECTS
+========
+
+Background
+purple
+.....
+.000.
+.000.
+.000.
+.....
+
+Activetile
+pink red
+00000
+0...0
+0...0
+0...0
+00000
+
+Target
+red
+0...0
+.0.0.
+..0..
+.0.0.
+0...0
+
+Player
+white
+.....
+.000.
+.000.
+.000.
+.....
+
+Void 0
+black
+
+Temp
+black
+
+=======
+LEGEND
+=======
+
+. = Background
+P = Player and Activetile
+a = Activetile
+x = Target
+y = target and Activetile
+
+=========
+SOUNDS
+=========
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Void
+Activetile
+Player
+Temp
+Target
+
+======
+RULES
+======
+
+[ > Player | no Activetile ] -> cancel
+
+late [ Activetile | Player ] -> [ Temp | Player ] 
+late [ no Temp | Player ] -> [ Activetile | Player ] 
+late [ Temp ] -> [ ] 
+
+late [ Activetile Void ] -> [ Void ] 
+
+==============
+WINCONDITIONS
+==============
+
+some Player on target
+
+=======
+LEVELS
+=======
+
+message level 1 of 8
+
+..........
+..........
+..........
+..........
+..........
+.x...ap...
+..........
+..........
+..........
+..........
+
+message level 2 of 8
+
+...........
+...........
+...........
+...........
+...........
+....xpa....
+...........
+...........
+...........
+...........
+
+message level 3 of 8
+
+...........
+...........
+...........
+...........
+..a........
+.axaaap....
+..a........
+...........
+...........
+...........
+
+message level 4 of 8
+
+...........
+...........
+...a.......
+..a.a......
+.a.a.a.....
+a.aya.a.ap.
+.a.a.a.....
+..a.a......
+...a.......
+...........
+
+message level 5 of 8
+
+...........
+...........
+...........
+...........
+aaaaaaaaaaa
+...y..ap...
+aaaaaaaaaaa
+...........
+...........
+...........
+
+message level 6 of 8
+
+000000....0
+000000..0.0
+000000..0..
+000000000..
+....A...0.0
+.AY.A...AAP
+....A...0.0
+000000000..
+000000..0..
+000000..0.0
+000000....0
+
+message level 7 of 8
+
+..AAA...000
+.AY.A...AP.
+..AAA...000
+
+message level 8 of 8
+
+0AAAA..00
+0AAAA..00
+YAAAA..AP
+0AAAA..00
+0AAAA..00
+
+message the end
+
+
+title Tunnel Rat
+author James Noeckel
+noundo
+again_interval 0.07
+youtube SG1uBb104Is
+========
+OBJECTS
+========
+Background
+#4c352b #4e382f #533c30
+01010
+02211
+20010
+00012
+12102
+
+PlayerS
+#a65200 red #6f3c0a
+.0.0.
+.000.
+21012
+20002
+22022
+
+PlayerU
+#a65200 red #6f3c0a
+.0.0.
+.101.
+20002
+22022
+.2.2.
+
+inflow
+yellow orange white
+00000
+00000
+22222
+11111
+11111
+
+exit
+green
+.0.0.
+0.0.0
+.0.0.
+0.0.0
+.0.0.
+
+tempwall
+blue
+
+DirtM
+#82642b #876b35 #927538
+01010
+02211
+20010
+00012
+12102
+
+DirtU
+#82642b #876b35 #927538 #b19154
+22222
+33333
+00000
+01012
+12102
+
+
+Rock
+#e0e0e0 #a4a4a4 #8a8a8a #7c7c7c
+.000.
+01112
+11123
+11223
+.233.
+
+enemy
+white #ff7070 black #880000 red
+01414
+14343
+14343
+14443
+43232
+
+h_grav
+black
+.....
+.....
+..0..
+.....
+.....
+
+h_step
+red
+.....
+.....
+..0..
+.....
+.....
+
+(h_dead
+black
+)
+pickupoverlay
+pink
+
+enemyoverlay
+pink
+
+destroy
+red
+0...0
+.0.0.
+..0..
+.0.0.
+0...0
+scrolling
+blue
+.....
+.....
+..0..
+.....
+.....
+
+Shoes
+#ff11f7 #9711ff #641d9a
+...0.
+...10
+...01
+.1111
+.2222
+
+Eraser
+#00ff12 #99ffa0 #008509
+..10.
+.1000
+10000
+.2000
+..20.
+
+Unraser
+#00ff12 #99ffa0 #008509
+.01..
+0001.
+00001
+0002.
+.02..
+
+Shoesworn
+purple pink
+.....
+.....
+.....
+.....
+10.01
+
+
+=======
+LEGEND
+=======
+# = Dirtm
+. = Background
+P = playerS
+o = Rock
+s = shoes
+x = enemy
+@ = dirtm and destroy
+$ = dirtm and inflow
+e = exit and Dirtm
+% = unraser
+
+dirt = dirtm or dirtu
+Player = PlayerS or PlayerU
+Helpers = h_grav or scrolling or h_step
+Pickups = shoes or Eraser or Unraser
+Heldpickups = shoesworn
+Solid = Dirt or Player or Rock or Pickups or enemy
+Heavy = Rock or Pickups or enemy
+overlays = pickupoverlay or enemyoverlay
+Everything = Solid or tempwall or overlays
+
+=======
+SOUNDS
+=======
+SFX1 36137902
+SFX2 78903905
+SFX3 14420703
+SFX4 25525902
+SFX5 49701704
+SFX6 98046907
+SFX7 16284302
+SFX8 96668708
+SFX9 86449100
+================
+COLLISIONLAYERS
+================
+
+helpers
+Background
+tempwall, solid
+Heldpickups
+overlays
+destroy, inflow, exit
+
+
+======
+RULES
+======
+
+up [ > PlayerU ] -> cancel
+down [ > PlayerU ] -> [ PlayerS ]
+
+(digging/jumping up)
+up [ > PlayerS | no Solid | no Solid no inflow ] -> [ | | PlayerU scrolling ] SFX2
+up [ > PlayerS | no Solid | Dirt no inflow ] -> [ | | PlayerU scrolling ] SFX7
+up [ > PlayerS | no Solid no inflow ] -> [ | PlayerU scrolling ] SFX2
+up [ > PlayerS | Dirt no inflow ] -> [ | PlayerU scrolling ] SFX7
+
+(scrolling and terraingen)
+[ scrolling ] [ Everything destroy ] -> [ scrolling ] [ destroy ]
+[ scrolling ] [ inflow no Player ] -> [ scrolling ] [ inflow tempwall ]
+random [ scrolling ] [ inflow ] -> [ scrolling ] [ inflow random overlays ]
+random [ scrolling ] [ inflow ] -> [ scrolling ] [ inflow random overlays ]
+random [ scrolling ] [ inflow ] -> [ scrolling ] [ inflow random overlays ]
+random [ scrolling ] [ inflow ] -> [ scrolling ] [ inflow random overlays ]
+random [ scrolling ] [ inflow ] -> [ scrolling ] [ inflow enemyoverlay ]
+random [ scrolling ] [ inflow ] -> [ scrolling ] [ inflow enemyoverlay ]
+
+
+
+startloop
+random [ tempwall ] -> [ dirtm ]
+random [ tempwall ] -> [ dirtm ]
+random [ tempwall ] -> [ dirtm ]
+random [ tempwall ] -> [ dirtm ]
+random [ tempwall ] -> [ dirtm ]
+random [ tempwall ] -> [ dirtm ]
+random [ tempwall ] -> [ ]
+random [ tempwall ] -> [ ]
+random down [ tempwall | solid ] -> [ rock | Solid ]
+random down [ tempwall | solid ] -> [ rock | Solid ]
+endloop
+
+
+[ pickupoverlay rock ] -> [ random pickups]
+[ enemyoverlay rock ] -> [ enemy ]
+
+random down [ Solid inflow | rock | rock ] -> [ rock inflow | rock | rock ]
+[ no Solid | inflow Solid | no Solid ] -> [ | inflow | ]
+[ no Solid | inflow Solid | inflow Solid | no Solid ] -> [ | inflow | inflow | ]
+
+
+down [ scrolling ] [ Everything ] -> [ scrolling ] [ > Everything ]
+
+
+(gravity)
+down [ Heavy ] -> [ down Heavy ] again
+
+(up [ > PlayerS | no Solid ] [ Everything destroy ] -> [ > PlayerS scrolling | ] [ destroy ]
+up [ > PlayerS | Dirt ] [ Everything destroy ] -> [ > PlayerS scrolling | dirt ] [ destroy ]
+down [ Everything ] [ Player scrolling ] -> [ > Everything ] [ PlayerU scrolling ]
+)
+
+(movement in general)
+horizontal [ > PlayerU | Dirt ] -> [ | PlayerS ] SFX1
+horizontal [ > PlayerU ] -> [ > PlayerS ]
+
+[ action PlayerU ] -> [ PlayerS ]
+[ > Player | Dirt ] -> [ | Player ] SFX1
+
+
+(use pickup)
+
+up [ action PlayerS shoesworn | Solid | no inflow no exit ] -> [ | Solid | PlayerS ] SFX4
+up [ action PlayerS shoesworn | | Solid | no inflow no exit ] -> [ | | Solid | PlayerS ] SFX4
+up [ action PlayerS shoesworn | | | | no inflow no exit ] -> [ | | | | PlayerU ] SFX4
+
+(pushing)
+Horizontal [ > Player | Heavy ] -> [ > Player | > Heavy ] SFX6
+Horizontal [ > Heavy | Heavy ] -> [ > Heavy | > Heavy ]
+Horizontal [ > Enemy | Dirt ] -> [ > Enemy | ] SFX1
+Horizontal [ > Enemy | pickups | Solid ] -> [ > Enemy | | Solid ] SFX4
+([Enemy h_dead no h_grav] -> message flattened to death)
+(down [ Enemy h_dead | destroy ] -> [ Enemy | destroy ] message flattened to death)
+([ > Enemy | Player ] -> [ | Enemy h_dead ] SFX5)
+([ moving Enemy h_dead ] -> [ moving Enemy moving h_dead ])
+[ moving Enemy h_grav ] -> [ moving Enemy moving h_grav ]
+down [ > Enemy h_grav | Solid no Player no Enemy ] -> [ | Enemy ] SFX4
+down [ > Enemy | Player ] -> [ > Enemy | ] SFX4
+
+
+
+
+(pickup)
+
+[ > Player | shoes ] -> [ | stationary Player shoesworn ] SFX3
+
+[ > Player | Eraser ] [ Solid no Player no Pickups ] -> [ > Player | Eraser ] [ DirtM ]
+startloop
+random [ > Player | Unraser ] [ Solid no Player | no Solid ] -> [ > Player | Unraser ] [ Solid | Rock ]
+random [ > Player | Unraser ] [ Solid no Player | no Solid ] -> [ > Player | Unraser ] [ Solid | Dirtm ]
+random [ > Player | Unraser ] [ Solid no Player | no Solid ] -> [ > Player | Unraser ] [ Solid | Dirtm ]
+random [ > Player | Unraser ] [ Solid no Player | no Solid ] -> [ > Player | Unraser ] [ Solid | Dirtm ]
+endloop
+[ > Player | Pickups ] -> [ | stationary Player ] SFX8
+
+(steps)
+up [ PlayerS | no Solid ] -> [ PlayerS | h_step ]
+[ moving PlayerS ] [ h_step ] -> [ moving PlayerS ] [ moving h_step ]
+
+(late steps)
+late down [ h_step | Player ] -> [ | Player ]
+late [h_grav] [h_step] -> [h_grav] []
+late down [ h_step no Solid | no Player ] [ PlayerS ] -> [ PlayerS | ] [ ]
+late down [ h_step Dirt | no Player ] [ PlayerS ] -> [ PlayerS | ] [ ] SFX1
+
+(player gravity)
+late down [ PlayerS | h_grav ] -> [ | PlayerS ]
+late down [ PlayerS | no Solid ] -> [ PlayerS | h_grav ]
+
+late [ Player no shoesworn] [ shoesworn ] -> [ Player shoesworn ] [ ]
+
+(enemy gravity)
+late down [ enemy | no Solid ] -> [ enemy h_grav | ]
+late down [ enemy | Player ] -> [ enemy h_grav | ]
+
+
+(cleanup)
+late [scrolling] -> []
+late [overlays] -> []
+late [h_step] -> []
+
+(beautify)
+late up [ Dirtm | no Dirt ] -> [ DirtU | ]
+late up [ DirtU | Dirt ] -> [ Dirtm | Dirt ]
+
+(death)
+[ Player destroy ] -> [ destroy ] SFX4
+
+(life)
+late [ Player exit ] [ exit no Player ] -> [ Player exit ] [ ] SFX9
+==============
+WINCONDITIONS
+==============
+all exit on player
+=======
+LEVELS
+=======
+
+message Survive. x to use held item.
+$$$$$$$$$$$$$$$$$$$
+eeeeeeeeeeeeeeeeeee
+eeeeeeeeeeeeeeeeeee
+###################
+###################
+###################
+###################
+###################
+###################
+###################
+###################
+###################
+###################
+###################
+###################
+###################
+#########P#########
+###################
+###################
+###################
+###################
+###################
+###################
+@@@@@@@@@@@@@@@@@@@
+
+message Is that a light at the end of the tunnel?
+$$$$$$$$$$$$$$$$$$$$$$$$$
+eeeeeeeeeeeeeeeeeeeeeeeee
+eeeeeeeeeeeeeeeeeeeeeeeee
+o.......................o
+o.......................o
+o..x.x.x.x.xpx.x.x.x.x..o
+o#.#.#.#.#.#x#.#.#.#.#.#o
+o.#.#.#.#.#.#.#.#.#.#.#.o
+o#.#.#.#.#.#.#.#.#.#.#.#o
+o.#.#.#.#.#.#.#.#.#.#.#.o
+o#.#.#.#.#.#.#.#.#.#.#.#o
+o.#.#.#.#.#.#.#.#.#.#.#.o
+o#.#.#.#.#.#.#.#.#.#.#.#o
+o.......................o
+o.......................o
+o.......................o
+o.......................o
+o......#................o
+o.....##..............#.o
+o....###...%...#..#..##.o
+###..############.#######
+########.##.#############
+####.#####..#############
+########.....############
+#########################
+#########################
+@@@@@@@@@@@@@@@@@@@@@@@@@
+
+title Extended Body Example: 1 Player, Multiple Extended Objects
+author Scott Hughes
+
+(
+
+Usable in the case where there's only a single player that's pushing stuff around.
+
+Example for
+https://www.puzzlescript.net/Documentation/rigidbodies.html#one_many
+
+)
+
+=======
+OBJECTS
+=======
+
+Background
+white
+
+Player
+pink
+
+Box1
+red
+
+Box2
+green
+
+Box3
+blue
+
+Box4
+orange
+
+Wall
+grey
+
+======
+LEGEND
+======
+
+. = Background
+@ = Player
+1 = Box1
+2 = Box2
+3 = Box3
+4 = Box4
+# = Wall
+
+Box = Box1 or Box2 or Box3 or Box4
+
+======
+SOUNDS
+======
+
+===============
+COLLISIONLAYERS
+===============
+
+Background
+Player, Box, Wall
+
+=====
+RULES
+=====
+
+[ > Player | Box ] -> [ > Player | > Box ]
+
+startloop
+
+(Propagate movements through crates of different types.)
+[ moving Box1 | Box1 ] -> [ moving Box1 | moving Box1 ]
+[ moving Box2 | Box2 ] -> [ moving Box2 | moving Box2 ]
+[ moving Box3 | Box3 ] -> [ moving Box3 | moving Box3 ]
+[ moving Box4 | Box4 ] -> [ moving Box4 | moving Box4 ]
+
+(Extend the movements between crates of different types.)
+[ > Box | Box ] -> [ > Box | > Box ]
+
+endloop
+
+(Just cancel the whole turn if something can't move.)
+[ > Box | Wall ] -> cancel
+
+=============
+WINCONDITIONS
+=============
+
+======
+LEVELS
+======
+
+################
+#....###.......#
+#....#.....##..#
+#...........#..#
+#...@..222..#..#
+##.....2.......#
+#...3.....1....#
+#..33.....1....#
+#..3.....11....#
+#....4........##
+#...444...##...#
+#..#.....##....#
+################
+
+
+title Multiple Patterns
+author increpare
+homepage www.puzzlescript.net
+
+========
+OBJECTS
+========
+
+Background
+lightgreen green
+11111
+01111
+11101
+11111
+10111
+
+Wall
+brown darkbrown
+00010
+11111
+01000
+11111
+00010
+
+Player
+black orange white blue
+.000.
+.111.
+22222
+.333.
+.3.3.
+
+Sumo
+pink white
+..0..
+00000
+.000.
+.111.
+.0.0.
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Player
+S = Sumo
+
+=======
+SOUNDS
+=======
+
+Sumo MOVE 48878907
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Player, Wall, Sumo
+
+======
+RULES
+======
+
+[ > Player ] [ Sumo ] -> [ > Player ] [ > Sumo ] 
+
+==============
+WINCONDITIONS
+==============
+
+=======
+LEVELS
+=======
+
+########
+#......#
+#......#
+#.P..S.#
+#......#
+#......#
+########
+
+
+USER PROMPT:
+The following PuzzleScript game code:
+```plaintext
+title Portal Puzzles
+author AI Game Designer
+homepage www.puzzlescript.net
+
+========
+OBJECTS
+========
+
+Background
+#EAEAEA
+
+Player
+#FFCC00 #FF9900
+.....
+..0..
+.111.
+..0..
+.....
+
+PortalOrange
+#FFA500 #FF4500
+.....
+..0..
+.111.
+..0..
+.....
+
+PortalBlue
+#1E90FF #0000FF
+.....
+..0..
+.111.
+..0..
+.....
+
+Wall
+#555555 #555555
+11111
+11111
+11111
+11111
+11111
+
+Crate
+#8B4513 #CD853F
+.....
+.111.
+.1.1.
+.111.
+.....
+
+Goal
+#32CD32
+.....
+.000.
+.0.0.
+.000.
+
+=======
+LEGEND
+=======
+
+. = Background
+P = Player
+O = PortalOrange
+B = PortalBlue
+# = Wall
+* = Crate
+G = Goal
+
+=======
+SOUNDS
+=======
+
+Player MOVE 18467108
+Goal REACH 14539908
+Player WARP 32566708
+Crate MOVE 12345678
+
+===============
+COLLISIONLAYERS
+===============
+
+Background
+PortalOrange, PortalBlue
+Player, Goal
+Crate
+Wall
+
+======
+RULES
+======
+
+[ > Player | No Crate ] -> [ > Player | ]
+[ Player | PortalOrange ] -> [ PortalBlue | Player Player WARP ]
+[ Player | PortalBlue ] -> [ PortalOrange | Player Player WARP ]
+[ > Player | Goal ] -> [ Player Goal REACH ]
+[ > Player | Crate ] -> [ > Player | > Crate Crate MOVE ]
+
+=============
+WINCONDITIONS
+=============
+
+All Player on Goal
+
+=======
+LEVELS
+=======
+
+message Level 1 - Portal Practice
+#######
+#P....#
+#.....#
+#.....#
+#G...O#
+#######
+
+message Level 2 - Crate Portal
+#######
+#P....#
+#..*..#
+#.....#
+#G...O#
+#####B#
+
+message Level 3 - Tactical Portals
+#########
+#P......#
+#....*..#
+#....*..#
+#G...O..#
+###..*..#
+#B......#
+#########
+
+message Congratulations! You've mastered the portals!
+
+```
+produced the following console output:
+=================================
+line 76 : Was expecting a soundverb here (MOVE, DESTROY, CANTMOVE, or the like), but found something else.
+line 77 : Was expecting a soundverb here (MOVE, DESTROY, CANTMOVE, or the like), but found something else.
+line 95 : Name "warp", referred to in a rule, does not exist.
+line 96 : Name "warp", referred to in a rule, does not exist.
+line 97 : Name "reach", referred to in a rule, does not exist.
+line 98 : Name "move", referred to in a rule, does not exist.
+too many errors, aborting compilation
+Errors detected during compilation; the game may not work correctly.
+Return a repaired version of the code that addresses these errors. Return your code in full, inside a ```plaintext code block.

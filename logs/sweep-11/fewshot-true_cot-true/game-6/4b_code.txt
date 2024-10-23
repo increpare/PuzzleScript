@@ -1,0 +1,115 @@
+The errors you encountered indicate that the game is trying to access colors in the sprites' palettes that haven't been defined. In PuzzleScript, each color used in an object's sprite should be declared in its definition.
+
+Let's break down the issues and fix them accordingly:
+
+1. **Wall Definition**:
+    - The `Wall` sprite attempts to use three colors `111`, but only one color `blue` is defined. This means you should define three colors for the wall, whether they're the same or different shades.
+
+2. **Target Definition**:
+    - The `Target` sprite attempts to use three `333`, but only one color `red` is defined. Again, define three colors, which could be same or different shades.
+
+For each object that is causing issues, I will ensure at least three colors are defined (if there are three digits in the sprite). Here is a corrected version of your code:
+
+```plaintext
+title Sokoban Junior
+author Your Name
+
+========
+OBJECTS
+========
+
+Background
+white
+
+Player
+white
+.0.
+000
+.0.
+
+Wall
+blue blue blue
+111
+111
+111
+
+Crate
+brown brown brown
+222
+222
+222
+
+Target
+red red red
+333
+333
+333
+
+CrateOnTarget
+green brown green
+222
+232
+222
+
+=======
+LEGEND
+=======
+. = Background
+P = Player
+# = Wall
+B = Crate
+T = Target
+X = CrateOnTarget
+
+Player = Player
+Wall = Wall
+Crate = Crate or CrateOnTarget
+Target = Target
+
+================
+COLLISIONLAYERS
+================
+Background
+Target
+Player
+Wall
+Crate
+
+======
+RULES
+======
+
+(right)
+[ > Player | Crate | No Crate ] -> [ > Player | > Crate | ]
+
+(up)
+[ Up Player | Crate | No Crate ] -> [ Up Player | Up Crate | ]
+(down)
+[ Down Player | Crate | No Crate ] -> [ Down Player | Down Crate | ]
+(left)
+[ Left Player | Crate | No Crate ] -> [ Left Player | Left Crate | ]
+
+(on target)
+[ Crate | Target ] -> [ CrateOnTarget ]
+(on target move off)
+[ CrateOnTarget | No Target ] -> [ Crate ]
+
+==============
+WINCONDITIONS
+==============
+All CrateOnTarget
+
+=======
+LEVELS
+=======
+#.#.#.#.#.#.#.#.#.#
+#.P....#....B..#..T#
+#.#.#.#.#..###.#.#.#
+#.....B...........T#
+#.#.#..#.#.#.#....#
+#...#....T..B......#
+#.#.#.#.#.#.###.#.#.#
+
+```
+
+This fixed version defines all necessary colors for each sprite, reflecting the intended design without accessing out-of-bounds indices in the color array.

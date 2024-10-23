@@ -1,0 +1,104 @@
+The issue with the current levels is that the player cannot reach the targets due to possible walls blocking the paths or otherwise unreachable targets. It's important to design the levels such that the player can push the treasure chests onto the targets without obstacles that make this impossible.
+
+Here's the fixed version of the code with solvable levels:
+
+```plaintext
+title Treasure Cave Explorer
+author YourName
+homepage www.example.com
+
+========
+OBJECTS
+========
+
+Background
+lightgray
+
+Wall
+darkgray
+
+Player
+lightgreen
+
+TreasureChest
+#FFD700
+
+Target
+darkblue
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Player
+* = TreasureChest
+@ = TreasureChest and Target
+O = Target
+
+=======
+SOUNDS
+=======
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Target
+Player, Wall, TreasureChest
+
+======
+RULES
+======
+
+[ > Player | TreasureChest ] -> [ > Player | > TreasureChest ]
+
+==============
+WINCONDITIONS
+==============
+
+All Target on TreasureChest
+
+=======
+LEVELS
+=======
+
+#######
+#..O..#
+#.P*..#
+#.....#
+#######
+
+#######
+#.....#
+#..#O.#
+#.*#P.#
+#..##.#
+#.....#
+#######
+
+#####
+#..O#
+#.*P#
+#...#
+#####
+
+#######
+#.....#
+#.O*P.#
+#.#.#.#
+#.....#
+#######
+
+```
+
+Explanation:
+
+1. **Level 0**: Moved the player next to the treasure chest to allow easy pushing.
+2. **Level 1**: Ensured there is a path for the player to maneuver the chest without getting blocked by walls.
+3. **Level 2**: Positioned player and treasure chest such that pushing to target is possible.
+4. **Level 3**: Adjusted player position for access to push the chest easily.
+
+These changes should make each level solvable while retaining the challenge of the game.

@@ -84,7 +84,19 @@ def extract_ps_code(text):
         return code, plaintext
     else:
         breakpoint()
-    
+
+
+@app.route('/save_sols', methods=['POST'])
+def save_sols():
+    data = request.json
+    sols = data['sols']
+    n_iter = data['n_iter']
+    save_dir = os.path.join('logs', data['save_dir'])
+    sols_path = os.path.join(save_dir, f'{n_iter}e_sols.json')
+    with open(sols_path, 'w') as f:
+        json.dump(sols, f, indent=4)
+    return jsonify({})
+
 
 @app.route('/gen_game', methods=['POST'])
 def gen_game():
@@ -165,9 +177,17 @@ def gen_game():
         with open(gen_game_output_path, 'r') as f:
             text = f.read()
     code, plaintext = extract_ps_code(text)
+    # If the code we just generated has already been solved, pass it to the client so it doesn't apply the solver to it
+    sols_path = os.path.join(save_dir, f'{n_iter}e_sols.json')
+    if os.path.exists(sols_path):
+        with open(sols_path, 'r') as f:
+            sols = json.load(f)
+    else:
+        sols = {}
     return jsonify({
         'code': code,
         'text': plaintext,
+        'sols': sols,
     })
 
 

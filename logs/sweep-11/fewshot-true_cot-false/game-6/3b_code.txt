@@ -1,0 +1,125 @@
+```plaintext
+title Galaxy Collector
+author PuzzleMaster
+
+========
+OBJECTS
+========
+
+Background
+Black
+
+Star
+Yellow
+..0..
+.000.
+..0..
+.....
+.....
+
+Planet
+Blue
+....
+.111.
+.111.
+.111.
+....
+
+Asteroid
+Grey
+.000.
+00000
+.000.
+.....
+.....
+
+Player
+Red
+.....
+.111.
+.111.
+.....
+
+StarCollectedText
+#ffff00
+0..0.
+.00..
+0..0.
+.0...
+.....
+
+PlanetCollectedText
+#00ffff
+.....
+.111.
+1111.
+.111.
+.....
+
+AsteroidCollectedText
+#d3d3d3
+00000
+0...0
+0...0
+0...0
+00000
+
+=======
+LEGEND
+=======
+
+. = Background
+P = Player
+S = Star
+C = Planet
+A = Asteroid
+T = StarCollectedText
+U = PlanetCollectedText
+V = AsteroidCollectedText
+
+=======
+SOUNDS
+=======
+
+SFX0 51771508 (pickup)
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Player, Star, Planet, Asteroid, StarCollectedText, PlanetCollectedText, AsteroidCollectedText
+
+======
+RULES
+======
+
+[ > Player | Star ] -> [ > Player | StarCollectedText ] SFX0
+[ > Player | Planet ] -> [ > Player | PlanetCollectedText ] SFX0
+[ > Player | Asteroid ] -> [ > Player | AsteroidCollectedText ] SFX0
+
+==============
+WINCONDITIONS
+==============
+
+no Star and no Planet and no Asteroid
+
+=======
+LEVELS
+=======
+
+message Collect all celestial objects!
+
+#########
+#...S...#
+#...P...#
+#...C...#
+#...A...#
+#########
+
+message Well done! You've collected the galaxy!
+
+```
+
+**Changes made:**
+1. Added missing `.` in the art definition for `Planet`, `Player`, and `PlanetCollectedText` to ensure each row has the right number of columns, thereby matching the expected format with at least two colors in use (one for empty spaces/background and one for filled regions representing the actual object).

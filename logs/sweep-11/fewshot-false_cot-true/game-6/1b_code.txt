@@ -1,0 +1,131 @@
+To address the issues with the provided PuzzleScript code, let's analyze the errors step by step and clarify the sections that require correction:
+
+1. **Unknown Junk in Object Section (Lines 32 and 34):**  
+   The error suggests issues in the OBJECTS section. In PuzzleScript, object definitions should be concise and only contain the object's name followed by a color or ASCII pattern. Ensure object names contain valid characters (a-z0-9).
+
+2. **Legend Errors (Lines 44, 46):**  
+   Legends need to map symbols to object names correctly. Check for syntax errors like formatting legends properly (e.g., ". = Background").
+
+3. **Unexpected Sound Token (Lines 48, 49):**
+   Sound section in PuzzleScript does not support `1 fx 100 0.1` format directly as used here. Currently, PuzzleScript does not formally support sound; this might be a speculative or placeholder feature. Remove the SOUNDS section for the time being since it’s not standard.
+
+Here's the corrected version of the code:
+
+```plaintext
+# Sokoban-like Block Push Puzzle Game
+
+# === Metadata ===
+title Sokoban Puzzle
+author OpenAI
+homepage https://example.com
+# === End Metadata ===
+
+# === Objects ===
+OBJECTS
+Background
+lightgray
+
+Wall
+gray
+
+Player
+yellow
+
+Block
+blue
+
+Goal
+red
+
+BlockOnGoal
+purple
+
+PlayerOnGoal
+orange
+
+# === End Objects ===
+
+# === Legend ===
+LEGEND
+. = Background
+# = Wall
+P = Player
+B = Block
+G = Goal
+O = BlockOnGoal
+@ = PlayerOnGoal
+
+# === End Legend ===
+
+# === Collision Layers ===
+COLLISIONLAYERS
+Background
+Wall
+Player, PlayerOnGoal
+Block, BlockOnGoal
+Goal
+
+# === End Collision Layers ===
+
+# === Rules ===
+RULES
+[ Player | Block ] -> [ Player | ] [ Player | Block ]
+
+[ PlayerOnGoal | Block ] -> [ Player | ] [ @ | Block ]
+
+[ Player | Goal ] -> [ PlayerOnGoal | ]
+[ PlayerOnGoal | ] -> [ Player | ]
+
+[ Block | Goal ] -> [ BlockOnGoal | ]
+[ BlockOnGoal | ] -> [ Block | ]
+
+# Win condition
+WinCondition
+All BlockOnGoal
+
+# === End Rules ===
+
+# === Levels ===
+LEVELS
+
+#######
+#     #
+#  .  #
+#     #
+#  B  #
+#  P  #
+#######
+
+#######
+#     #
+#     #
+#  .  #
+#  B  #
+#  P  #
+#######
+
+#######
+#     #
+#  .  #
+#     #
+# B B #
+#  P  #
+#######
+
+#######
+#   . #
+#     #
+# B . #
+#   P #
+#   B #
+# ##### 
+
+# === End Levels ===
+```
+
+### Key Changes:
+- **Sound Section Removed:** Since it's not standard in PuzzleScript, it has been stripped out to prevent errors.
+- **Rules Update:** Ensured the push behavior is expressed in a typical manner using collisions.
+- **Valid Object Definitions:** Confirmed that object names and definitions adhere to the PuzzleScript format.
+
+By correcting these issues, the script should compile without errors and behave as expected for a Sokoban-like block-pushing game.

@@ -1,0 +1,105 @@
+SYSTEM PROMPT:
+You are a game designer, familiar with the PuzzleScript game description language. 
+
+USER PROMPT:
+The following PuzzleScript game code:
+```plaintext
+======
+
+title Collect the Key
+author Game Designer
+homepage https://puzzlescript.net
+
+======
+
+OBJECTS
+
+Background
+black
+
+Player
+yellow
+
+Key
+red
+
+Door
+blue
+
+Goal
+green
+
+Wall
+grey
+
+======
+
+LEGEND
+
+. = Background
+P = Player
+K = Key
+D = Door
+G = Goal
+W = Wall
+
+======
+
+SOUNDS
+
+======
+
+COLLISIONLAYERS
+
+Background
+Player
+Key
+Door
+Goal
+Wall
+
+======
+
+RULES
+
+[ > Player | Key ] -> [ Player | Background ]
+[ Player | Key ] -> [ Player | Background ]
+[ > Player | Door ] -> [ Player | Background ]
+[ Player | Goal ] -> [ Player | Background ]
+
+======
+
+WINCONDITIONS
+
+All Goal
+
+======
+
+LEVELS
+
+P . . . .
+. W W W D
+. W K G W
+. W W W W
+. . . . .
+
+. . . P .
+W W W W .
+W D K G .
+W . . . .
+W . . . .
+
+======
+
+END
+
+```
+produced the following console output:
+=================================
+line 88 : Key "E" not found. Do you need to add it to the legend, or define a new object?
+line 88 : Key "N" not found. Do you need to add it to the legend, or define a new object?
+line 74 : Error, symbol " ", used in map, not found.
+line 80 : Error, symbol " ", used in map, not found.
+line 88 : Error, symbol "e", used in map, not found.
+Errors detected during compilation; the game may not work correctly.
+Return a repaired version of the code that addresses these errors. Return your code in full, inside a ```plaintext code block.

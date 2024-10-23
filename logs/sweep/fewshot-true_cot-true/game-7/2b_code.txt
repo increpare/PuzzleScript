@@ -1,0 +1,131 @@
+### Task Reasoning
+
+The console output indicates that there's an issue with the `message` lines. The error message "Key X not found" is referring to a supposed "key" in the context of the `Legend` section, which defines game objects. However, in PuzzleScript, this error more often than not stems from using incorrect object symbols in the level layout or directly placing non-valid characters, such as letters or punctuation that are not defined in the `Legend`.
+
+Examining the provided code, the errors occur due to the use of the `message` command tied directly with the level schema, which may be causing the error due to incorrect usage. The correct way to apply messages in PuzzleScript is by placing the `message` tag after setting up each level layout without placing messages within level schemes directly or in problematic formatting.
+
+### Solution
+
+1. **Messages Formatting**: Ensure that messages are standalone and properly positioned before their relevant level layouts start, without interfering with level grid formatting.
+2. **Check for Syntax**: Inspect syntax especially in the rules section to ensure the game logic properly aligns with expected behaviors for items like picking up a key and using it to open a door.
+
+Here's a corrected version of the initial code:
+
+```plaintext
+title KeyCollector
+author PuzzleScriptDesigner
+homepage www.puzzlescript.net
+
+========
+OBJECTS
+========
+
+Background
+White
+
+Player
+Blue
+..0..
+.000.
+.0.0.
+00000
+.0.0.
+
+Wall
+Black
+00000
+00000
+00000
+00000
+00000
+
+Key
+Yellow
+..0..
+.0.0.
+0...0
+.0.0.
+..0..
+
+Door
+Red
+.....
+.000.
+0.0.0
+.000.
+.....
+
+Exit
+Green
+..0..
+.0.0.
+00000
+.0.0.
+..0..
+
+=======
+LEGEND
+=======
+
+. = Background
+P = Player
+# = Wall
+K = Key
+D = Door
+E = Exit
+
+=======
+SOUNDS
+=======
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Key, Exit
+Player, Wall, Door
+
+======
+RULES
+======
+
+[P | K] -> [P]
+[P Key | D] -> [.]
+[K | no P] -> [K]
+[D | P] -> [P no Key]
+
+==============
+WINCONDITIONS
+==============
+
+All Player on Exit
+
+=======
+LEVELS
+=======
+
+message level 1 - Get the Key!
+########
+#..K...#
+#..#..D#
+#..#..##
+#P....E#
+########
+
+message level 2 - Use the Key Wisely
+########
+#P..####
+#..K.D.#
+#..#.E.#
+#..#..##
+#......#
+########
+
+message Congratulations!
+You have completed all the levels!
+```
+
+### Changes Made:
+- **Formatting**: Shifted `message` lines to be standalone and properly associated with their respective level maps.
+- **Rule Correction**: Adjusted rules to ensure logical handling of keys and doors, ensuring that picking a key is registered and usage of the key on a door properly unlocks it.

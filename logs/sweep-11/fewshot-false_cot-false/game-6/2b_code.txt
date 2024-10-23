@@ -1,0 +1,124 @@
+Certainly! The errors in the console output indicate issues with object definitions and the use of the objects' names. In PuzzleScript, colors and object definitions must be correctly aligned. Below is a corrected version of your PuzzleScript game code:
+
+```plaintext
+////////////////////////////////////////////////////////////
+// Catch the Star
+// Author: Your Name
+////////////////////////////////////////////////////////////
+
+////////////////////////////////
+// Objects
+////////////////////////////////
+
+objects
+    Player
+        P
+        00000
+        00000
+        05550
+        00000
+        00000
+
+    Star
+        S
+        05550
+        05550
+        05550
+        05550
+        05550
+
+    Wall
+        W
+        11111
+        11111
+        11111
+        11111
+        11111
+
+    Background
+        .
+        00000
+        00000
+        00000
+        00000
+        00000
+
+////////////////////////////////
+// Legend
+////////////////////////////////
+
+legend
+    P = Player
+    S = Star
+    W = Wall
+    . = Background
+
+////////////////////////////////
+// Sounds
+////////////////////////////////
+
+sounds
+    player push wall
+    player move star
+
+////////////////////////////////
+// Collision Layers
+////////////////////////////////
+
+collisionlayers
+    Background
+    Wall
+    Player, Star
+
+////////////////////////////////
+// Rules
+////////////////////////////////
+
+rules
+    [ > Player | Star ] -> [ > Player | ]
+
+////////////////////////////////
+// Win Conditions
+////////////////////////////////
+
+winconditions
+    (no Star)
+
+////////////////////////////////
+// Levels
+////////////////////////////////
+
+levels
+    XXXXX
+    X.P.X
+    X...X
+    X.S.X
+    XXXXX
+
+    XXXX
+    X..X
+    XWPX
+    XS.X
+    XXXX
+
+    XXXXXXX
+    X.....X
+    X.WP..X
+    X...W.X
+    X..S..X
+    XXXXXXX
+
+////////////////////////////////
+// Post Conditions
+////////////////////////////////
+
+postconditions
+    shouldrestart on [ Player Star ] // if player collides with a star
+```
+
+In this version:
+- Player, Star, Wall, and Background are correctly defined with valid 5x5 sprite matrix patterns. 
+- The color specifications were replaced with sprite matrix patterns, because PuzzleScript expects a 5x5 matrix for objects rather than just a color definition.
+- Object definitions and references have been aligned correctly between objects and the legend section.
+
+This should resolve the errors you were encountering.

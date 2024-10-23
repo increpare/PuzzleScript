@@ -1,0 +1,90 @@
+Certainly! Below is a simple example of a complete PuzzleScript game code called "Catch the Star". The objective of this game is to control a player to catch a star while navigating through obstacles. 
+
+```plaintext
+////////////////////////////////////////////////////////////
+// Catch the Star
+// Author: Your Name
+////////////////////////////////////////////////////////////
+
+////////////////////////////////
+// Legend
+////////////////////////////////
+
+legend
+    P = Player
+    S = Star
+    W = Wall
+    . = Background
+
+////////////////////////////////
+// Sounds
+////////////////////////////////
+
+sounds
+    player push wall
+    player move star
+
+////////////////////////////////
+// Collision Layers
+////////////////////////////////
+
+collisionlayers
+    background
+    Wall
+    Player, Star
+
+////////////////////////////////
+// Rules
+////////////////////////////////
+
+rules
+    [ > Player | Star ] -> [ > Player | ]
+
+////////////////////////////////
+// Win Conditions
+////////////////////////////////
+
+winconditions
+    (no Star)
+
+////////////////////////////////
+// Levels
+////////////////////////////////
+
+levels
+    XXXXX
+    X.P.X
+    X...X
+    X.S.X
+    XXXXX
+
+    XXXX
+    X..X
+    XWPX
+    XS.X
+    XXXX
+
+    XXXXXXX
+    X.....X
+    X.WP..X
+    X...W.X
+    X..S..X
+    XXXXXXX
+
+////////////////////////////////
+// Post Conditions
+////////////////////////////////
+
+postconditions
+    shouldrestart on [ Player Star ] // if player collides with a star
+```
+
+Details:
+
+- **Legend section** defines the game's characters: Player (P), Star (S), Wall (W), and Background (.).
+- **Collision Layers** ensure the Player and Star can move freely while respecting Walls.
+- **Rules** outline interactions: Players can 'catch' Stars, making them disappear.
+- **Win Conditions** specify the victory condition: when no stars remain.
+- **Levels** provide sample stages for gameplay. Each character is depicted in a grid-like format.
+
+Feel free to customize the levels or extend the game further by adding more complex obstacles, additional rules, or interesting mechanics!

@@ -1,0 +1,60 @@
+SYSTEM PROMPT:
+You are a game designer, familiar with the PuzzleScript game description language. 
+
+USER PROMPT:
+The following PuzzleScript game code:
+```plaintext
+# Title and Author
+title Sokoban Simple
+author Game Designer
+
+==== OBJECTS ====
+Background . yellow
+Player @ blue
+Wall # black
+Box B red
+Target O green
+BoxOnTarget G yellow
+
+==== LEGEND ====
+. = Background
+@ = Player
+# = Wall
+B = Box
+O = Target
+G = BoxOnTarget
+
+==== COLLISIONLAYERS ====
+Background
+Player
+Box, BoxOnTarget
+Wall, Target
+
+==== RULES ====
+[ > Player | Box ] -> [ > Player | > Box ]
+[ Box | Target ] -> [ BoxOnTarget | Target ]
+[ BoxOnTarget | ] -> [ | Box ]
+
+==== WINCONDITIONS ====
+All BoxOnTarget on Target
+
+==== LEVELS ====
+# Level 1
+#######
+#..O..#
+#..B..#
+#..@..#
+#######
+
+```
+produced the following console output:
+=================================
+line 5 : Only comments should go after a bunch of equals signs ('===') on a line.
+line 6 : Unrecognised stuff in the prelude.
+line 7 : Unrecognised stuff in the prelude.
+line 8 : Unrecognised stuff in the prelude.
+line 9 : Unrecognised stuff in the prelude.
+line 10 : Unrecognised stuff in the prelude.
+too many errors, aborting compilation
+Errors detected during compilation; the game may not work correctly.
+Return a repaired version of the code that addresses these errors. First, reason about your task and determine the best plan of action. Then, write your code. Return your code in full, inside a ```plaintext code block.

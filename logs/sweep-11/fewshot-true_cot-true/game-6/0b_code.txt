@@ -1,0 +1,128 @@
+Creating a PuzzleScript game requires several components, such as defining the game's objects, rules, and win conditions. Here's an outline to help ensure a clear approach to developing a new game:
+
+### Plan of Action:
+1. **Conceptualization**: Decide on a game concept. PuzzleScript games are often simple, involving movement, pushing objects, or sequences to solve puzzles.
+2. **Objects**: Define objects and their appearances in the game.
+3. **Legend**: Create shorthand notations for objects to simplify level design.
+4. **Collision Layers**: Establish interactions between different game layers.
+5. **Rules**: Develop rules for object interactions, including movement, pushing, and other mechanics.
+6. **Win Conditions**: Specify what conditions need to be met to win the game.
+7. **Levels**: Design a few levels to demonstrate gameplay.
+
+For this game, I will design a simple Sokoban-like game where a player has to push boxes onto target spots.
+
+### Game Concept:
+- The player needs to push all crates onto designated target spaces to win.
+- The player can only move in four directions and push one crate at a time.
+
+### Game Code:
+```plaintext
+title Sokoban Junior
+author Your Name
+
+========
+OBJECTS
+========
+
+Background
+#000000
+
+Player
+White
+.0.
+000
+.0.
+
+Wall
+Blue
+111
+111
+111
+
+Crate
+Brown
+222
+222
+222
+
+Target
+Red
+333
+333
+333
+
+CrateOnTarget
+Green
+222
+232
+222
+
+=======
+LEGEND
+=======
+. = Background
+P = Player
+# = Wall
+B = Crate
+T = Target
+X = CrateOnTarget
+
+Player = Player
+Wall = Wall
+Crate = Crate or CrateOnTarget
+Target = Target
+
+================
+COLLISIONLAYERS
+================
+Background
+Target
+Player
+Wall
+Crate
+
+======
+RULES
+======
+
+(right)
+[ > Player | Crate | No Crate ] -> [ > Player | > Crate | ]
+
+(up)
+[ Up Player | Crate | No Crate ] -> [ Up Player | Up Crate | ]
+(down)
+[ Down Player | Crate | No Crate ] -> [ Down Player | Down Crate | ]
+(left)
+[ Left Player | Crate | No Crate ] -> [ Left Player | Left Crate | ]
+
+(on target)
+[ Crate | Target ] -> [ CrateOnTarget ]
+(on target move off)
+[ CrateOnTarget | No Target ] -> [ Crate ]
+
+==============
+WINCONDITIONS
+==============
+All CrateOnTarget
+
+=======
+LEVELS
+=======
+#.#.#.#.#.#.#.#.#.#
+#.P....#....B..#..T#
+#.#.#.#.#..###.#.#.#
+#.....B...........T#
+#.#.#..#.#.#.#....#.#
+#...#....T..B.......#
+#.#.#.#.#.#.###.#.#.#
+```
+
+### Explanation:
+- **Objects**: Defined a player, walls, crates, targets, and crates on targets.
+- **Legend**: Created shorthand for easier level design.
+- **Collision Layers**: Ensured layers are properly scrolling together for seamless interaction.
+- **Rules**: Included player movement, crate pushing mechanics, and conditions aligning crates onto targets.
+- **Win Conditions**: Win the game when all crates are on targets.
+- **Levels**: Designed an example level layout to demonstrate the game concept.
+
+This game provides a simple puzzle-solving experience requiring logical thinking and strategic movement to align the crates with the targets.

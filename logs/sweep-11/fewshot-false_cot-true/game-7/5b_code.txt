@@ -1,0 +1,77 @@
+The errors given seem to be related to the way objects are defined in the PuzzleScript game. The correct format for defining objects in PuzzleScript should include a name that is followed by a color and optionally a character for the sprite. For each object, you can specify the color and the ASCII character on separate lines. Additionally, make sure to not repeat the definition of the player character or other objects in another section like the Legend. The Legend section is used to define how to refer to these objects when specifying levels or layers.
+
+Here's how to repair the code by correctly defining the objects according to PuzzleScript's expectations:
+
+1. Each object should have a name followed by a color description. You can also specify the ASCII character used for the object on the grid in a separate line if desired.
+2. Adjust the order and format of the object definitions in the `Legend` section.
+
+Here's the revised game code:
+
+```plaintext
+# Title and Author
+title Sokoban Simple
+author Game Designer
+
+# Objects
+Background
+color yellow
+
+Player
+@
+color blue
+
+Wall
+#
+color black
+
+Box
+B
+color red
+
+Target
+O
+color green
+
+BoxOnTarget
+G
+color yellow
+
+# Legend
+. = Background
+@ = Player
+# = Wall
+B = Box
+O = Target
+G = BoxOnTarget
+
+# Collision Layers
+Background
+Player
+Box, BoxOnTarget
+Wall, Target
+
+# Rules
+[ > Player | Box ] -> [ > Player | > Box ]
+[ Box | Target ] -> [ BoxOnTarget | Target ]
+[ BoxOnTarget | ] -> [ | Box ]
+
+# Win Conditions
+All BoxOnTarget on Target
+
+# Levels
+# Level 1
+#######
+#..O..#
+#..B..#
+#..@..#
+#######
+
+# Level 2
+#######
+#..O..#
+#..B..#
+#..@..#
+#######
+```
+
+This should solve the issues with the unrecognized input errors by adhering to the correct syntax expected by PuzzleScript for defining game objects and the Legend section.

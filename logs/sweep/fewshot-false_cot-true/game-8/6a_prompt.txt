@@ -1,0 +1,99 @@
+SYSTEM PROMPT:
+You are a game designer, familiar with the PuzzleScript game description language. 
+
+USER PROMPT:
+The following PuzzleScript game code:
+```plaintext
+Title Sokoban Clone
+Author PuzzleDesigner
+
+========
+OBJECTS
+========
+Background
+WHITE
+00000
+00000
+00000
+00000
+00000
+
+Player
+BLUE WHITE
+00000
+00100
+01110
+00100
+00000
+
+Wall
+BLACK GREY
+00000
+01110
+01110
+01110
+00000
+
+Box
+YELLOW GREY
+00000
+01110
+01100
+01110
+00000
+
+Goal
+GREEN GREEN
+00000
+01110
+01110
+01110
+00000
+
+========
+LEGEND
+========
+. = Background
+# = Wall
+P = Player
+B = Box
+G = Goal
+
+======
+SOUNDS
+======
+
+================
+COLLISIONLAYERS
+================
+Background
+Wall
+Player, Box
+Goal
+
+======
+RULES
+======
+[ > Player | Box ] -> [ > Player | > Box ]
+[ Player | Goal ] -> [ Player | Goal ]
+
+========
+WINCONDITIONS
+========
+All Box on Goal
+
+=======
+LEVELS
+=======
+########
+#......#
+#..#...#
+#..B.G.#
+#..P...#
+########
+
+
+```
+compiled, but a solvability check returned the following error:
+ Level 0 is not solvable. Please repair it.
+Return your code in full, inside a ```plaintext code block.

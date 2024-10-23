@@ -1,0 +1,128 @@
+To address the errors observed in the console output, we need to investigate the specific issues outlined and make necessary adjustments:
+
+1. **Output Issue:** "Key 'Y', 'O', 'U', 'H', 'A', 'V' not found."
+   - **Reason:** This error occurs because while displaying the message "Congratulations! You have completed all the levels!", PuzzleScript is trying to interpret each character as an object or identifier in the legend. Messages should be enclosed in quotes or separated by a comment-like annotation if deemed as non-code, preventing PuzzleScript from interpreting them as game objects.
+   - **Solution:** Use a `message` keyword followed by a quoted string for text at the end, ensuring it is separate from game code handling. 
+
+2. **Other Observations:**
+   - No syntactical issues with defined game objects, legend mappings, or rules. However, the erroneous lines suggest additional checks on the code's logic consistency, specifically on rule handling and win conditions.
+
+Now, let’s correct the code based on the identified issue:
+
+```plaintext
+title KeyCollector
+author PuzzleScriptDesigner
+homepage www.puzzlescript.net
+
+========
+OBJECTS
+========
+
+Background
+White
+
+Player
+Blue
+..0..
+.000.
+.0.0.
+00000
+.0.0.
+
+Wall
+Black
+00000
+00000
+00000
+00000
+00000
+
+Key
+Yellow
+..0..
+.0.0.
+0...0
+.0.0.
+..0..
+
+Door
+Red
+.....
+.000.
+0.0.0
+.000.
+.....
+
+Exit
+Green
+..0..
+.0.0.
+00000
+.0.0.
+..0..
+
+=======
+LEGEND
+=======
+
+. = Background
+P = Player
+# = Wall
+K = Key
+D = Door
+E = Exit
+
+=======
+SOUNDS
+=======
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Key, Exit
+Player, Wall, Door
+
+======
+RULES
+======
+
+[P | K] -> [P]
+[P Key | D] -> [.]
+[K | no P] -> [K]
+[D | P] -> [P no Key]
+
+==============
+WINCONDITIONS
+==============
+
+All Player on Exit
+
+=======
+LEVELS
+=======
+
+message level 1 - Get the Key!
+########
+#..K...#
+#..#..D#
+#..#..##
+#P....E#
+########
+
+message level 2 - Use the Key Wisely
+########
+#P..####
+#..K.D.#
+#..#.E.#
+#..#..##
+#......#
+########
+
+message "Congratulations!\nYou have completed all the levels!"
+
+```
+
+**Explanation:**
+- The final message is wrapped as a quoted string, indicating it's intended as a message for the user rather than being processed as part of the game code. This approach separates the game logic from text output, preventing misinterpretation.

@@ -1,0 +1,84 @@
+```plaintext
+title Escape the Maze
+author GameDesigner
+
+========
+OBJECTS
+========
+
+Background
+#444444
+
+Wall
+#000000
+
+Player
+#00FF00
+..0..
+.000.
+.000.
+.000.
+..0..
+
+Goal
+#FFFF00
+.....
+..0..
+.000.
+..0..
+.....
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Player
+G = Goal
+
+=======
+SOUNDS
+=======
+
+Move 83047309
+Crash 72628405
+GoalSound 28173601
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Player, Wall, Goal
+
+======
+RULES
+======
+
+[ > Player | no Wall ] -> [ > Player | ]
+
+==============
+WINCONDITIONS
+==============
+
+All Player on Goal
+
+=======
+LEVELS
+=======
+
+message Welcome to the Maze! Reach the Goal to win!
+
+######
+#....#
+#.##.#
+#..#.#
+##P#.#
+##..G#
+######
+
+message Congratulations! You've escaped the maze!
+```
+
+In the fixed version of the code, the rule on line 58 is corrected to ensure that the right-hand side has the same length as the left-hand side. The "no Wall" cell still remains on the right-hand side but as an implied empty cell for the rule to maintain the structure of the assertion.

@@ -1,0 +1,117 @@
+Certainly! Here's a complete example of a simple PuzzleScript game called "Collect the Key". In this game, the player must collect a key to unlock a door and reach a goal.
+
+```plaintext
+======
+
+Title: Collect the Key
+Author: Game Designer
+Homepage: https://puzzlescript.net
+
+======
+
+OBJEC
+
+Background
+black
+
+Player
+yellow
+
+Key
+red
+
+Door
+blue
+
+Goal
+green
+
+Wall
+grey
+
+======
+
+LEGEND
+
+. = Background
+P = Player
+K = Key
+D = Door
+G = Goal
+W = Wall
+
+======
+
+SOUND
+
+Key
+This is the sound when the player collects the key.
+
+Door
+This is the sound when the player opens the door.
+
+Win
+This is the sound when the player reaches the goal.
+
+======
+
+RULES
+
+[ > Player | No Key] -> [Player | Key]
+[Player | Key] -> [Player | No Key]
+[ > Player Key | Door] -> [Player No Key | Background]
+[Player | Goal] -> [Win]
+
+======
+
+WINCONDITIONS
+
+Key Open All
+Goal All
+
+======
+
+LEVELS
+
+```
+P . . . . 
+. W W W D 
+. W K G W 
+. W W W W 
+. . . . . 
+
+. . . P . 
+W W W W . 
+W D K G . 
+W . . . . 
+W . . . . 
+
+======
+
+END
+```
+
+### Explanation:
+
+- **Objects**: 
+  - `Background`: Represents empty space.
+  - `Player`: The character that the player controls.
+  - `Key`: Collectible that allows the door to be opened.
+  - `Door`: Blocking object that can be opened with the `Key`.
+  - `Goal`: The target that the player needs to reach to win.
+  - `Wall`: An impassable barrier.
+
+- **Legend**: How each object is represented on the level grid.
+
+- **Sounds**: Placeholder for sounds that can be associated with key game events (this is just descriptive text here as direct sound implementation isn't shown).
+
+- **Rules**: Define the interaction mechanics:
+  - Player collects the key.
+  - Player can open the door if they have the key.
+  - Player wins by reaching the goal.
+
+- **Win conditions**: Specifies how the player can win the level, by reaching the goal and having all necessary conditions fulfilled.
+
+- **Levels**: Defines the layout of the game level grids.
+
+This simple PuzzleScript setup illustrates the basic framework needed for a game where players collect items to navigate through obstacles and reach goals.

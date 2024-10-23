@@ -1,0 +1,115 @@
+To address the errors in the PuzzleScript game code, we need to understand the complaints from the console output. The errors indicate that the color numbers specified in the `Wall` and `Crate` objects exceed the number of colors defined. For each sprite, the number of unique colors should match the number of colors used in its representation.
+
+Here's a step-by-step plan:
+
+1. **Check Object Color Definitions**: The `Wall` and `Crate` objects must have color codes aligned with their pixel representations. 
+2. **Correct Color Definitions**:
+   - For `Wall`, the definition should accommodate the color indices used in its pixel pattern, needing exactly three colors.
+   - For `Crate`, its pattern requires that exactly three colors are defined (Brown multiple times for uniqueness, if needed).
+3. **Verify Sprite Representation**: Ensure each object’s representation matches its color palette size.
+
+Now, we implement these corrections:
+
+```plaintext
+title Sokoban Junior
+author Your Name
+
+========
+OBJECTS
+========
+
+Background
+#000000
+
+Player
+White
+.0.
+000
+.0.
+
+Wall
+Blue
+111
+111
+111
+
+Crate
+Brown Brown Brown
+222
+222
+222
+
+Target
+Red
+333
+333
+333
+
+CrateOnTarget
+Green Brown Green
+222
+232
+222
+
+=======
+LEGEND
+=======
+. = Background
+P = Player
+# = Wall
+B = Crate
+T = Target
+X = CrateOnTarget
+
+Player = Player
+Wall = Wall
+Crate = Crate or CrateOnTarget
+Target = Target
+
+================
+COLLISIONLAYERS
+================
+Background
+Target
+Player
+Wall
+Crate
+
+======
+RULES
+======
+
+(right)
+[ > Player | Crate | No Crate ] -> [ > Player | > Crate | ]
+
+(up)
+[ Up Player | Crate | No Crate ] -> [ Up Player | Up Crate | ]
+(down)
+[ Down Player | Crate | No Crate ] -> [ Down Player | Down Crate | ]
+(left)
+[ Left Player | Crate | No Crate ] -> [ Left Player | Left Crate | ]
+
+(on target)
+[ Crate | Target ] -> [ CrateOnTarget ]
+(on target move off)
+[ CrateOnTarget | No Target ] -> [ Crate ]
+
+==============
+WINCONDITIONS
+==============
+All CrateOnTarget
+
+=======
+LEVELS
+=======
+#.#.#.#.#.#.#.#.#.#
+#.P....#....B..#..T#
+#.#.#.#.#..###.#.#.#
+#.....B...........T#
+#.#.#..#.#.#.#....#.#
+#...#....T..B.......#
+#.#.#.#.#.#.###.#.#.#
+
+```
+
+This updated code ensures all sprite definitions include the right number of colors for their palette, fixing the compilation issues mentioned in the console output.

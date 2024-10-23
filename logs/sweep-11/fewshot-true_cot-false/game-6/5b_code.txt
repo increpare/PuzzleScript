@@ -1,0 +1,126 @@
+```plaintext
+title Galaxy Collector
+author PuzzleMaster
+
+========
+OBJECTS
+========
+
+Background
+Black
+
+Star
+Yellow
+..0..
+.000.
+..0..
+.....
+.....
+
+Planet
+Blue
+....
+.111
+.111
+....
+
+Asteroid
+Grey
+.000.
+00000
+.000.
+.....
+.....
+
+Player
+Red
+.....
+.111.
+.111.
+.....
+
+StarCollectedText
+#ffff00
+0..0.
+.00..
+0..0.
+.0...
+.....
+
+PlanetCollectedText
+#00ffff
+.....
+.111.
+1111.
+.111.
+.....
+
+AsteroidCollectedText
+#d3d3d3
+00000
+0...0
+0...0
+0...0
+00000
+
+=======
+LEGEND
+=======
+
+. = Background
+P = Player
+S = Star
+C = Planet
+A = Asteroid
+T = StarCollectedText
+U = PlanetCollectedText
+V = AsteroidCollectedText
+
+=======
+SOUNDS
+=======
+
+SFX0 51771508 (pickup)
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Player, Star, Planet, Asteroid, StarCollectedText, PlanetCollectedText, AsteroidCollectedText
+
+======
+RULES
+======
+
+[ > Player | Star ] -> [ > Player | StarCollectedText ] SFX0
+[ > Player | Planet ] -> [ > Player | PlanetCollectedText ] SFX0
+[ > Player | Asteroid ] -> [ > Player | AsteroidCollectedText ] SFX0
+
+==============
+WINCONDITIONS
+==============
+
+no Star and no Planet and no Asteroid
+
+=======
+LEVELS
+=======
+
+message Collect all celestial objects!
+
+#########
+#...S...#
+#...P...#
+#...C...#
+#...A...#
+#########
+
+message Well done! You've collected the galaxy!
+
+```
+
+### Changes Made:
+- Corrected the sprite pattern for `Planet` and `Player`. They both were using `..11` which accessed a color index `1` that didn't exist.
+- Changed `..11` to `.111` for both `Planet` and `Player` object definitions. This pattern uses a color index `1` as required by the sprite definition, which is consistent with the indices being defined.
+- Ensured that all sprites have consistent use of colors based on their index and pattern definitions.

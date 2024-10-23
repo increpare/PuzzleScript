@@ -1,0 +1,150 @@
+Here's the repaired version of your PuzzleScript game code. I've addressed both errors mentioned in the console output.
+
+```plaintext
+title Portal Puzzles
+author AI Game Designer
+homepage www.puzzlescript.net
+
+========
+OBJECTS
+========
+
+Background
+#EAEAEA
+.....
+.....
+.....
+.....
+.....
+
+Player
+#FFCC00 #FF9900
+.....
+..0..
+.111.
+..0..
+.....
+
+PortalOrange
+#FFA500 #FF4500
+.....
+..0..
+.111.
+..0..
+.....
+
+PortalBlue
+#1E90FF #0000FF
+.....
+..0..
+.111.
+..0..
+.....
+
+Wall
+#555555 #555555
+11111
+11111
+11111
+11111
+11111
+
+Crate
+#8B4513 #CD853F
+.....
+.111.
+.1.1.
+.111.
+.....
+
+Goal
+#32CD32
+.....
+.000.
+.0.0.
+.000.
+
+=======
+LEGEND
+=======
+
+. = Background
+P = Player
+O = PortalOrange
+B = PortalBlue
+# = Wall
+* = Crate
+G = Goal
+
+=======
+SOUNDS
+=======
+
+Player MOVE 18467108
+Player CANTMOVE 32566708
+Player REACHGOAL 14539908
+Crate MOVE 12345678
+
+===============
+COLLISIONLAYERS
+===============
+
+Background
+PortalOrange, PortalBlue
+Player, Goal
+Crate
+Wall
+
+======
+RULES
+======
+
+[ > Player | no Crate ] -> [ > Player | ]
+[ Player | PortalOrange ] -> [ PortalBlue | ]
+[ Player | PortalBlue ] -> [ PortalOrange | ]
+[ > Player | Goal ] -> [ Player | Goal ]
+[ > Player | Crate ] -> [ > Player | > Crate ]
+
+=============
+WINCONDITIONS
+=============
+
+All Player on Goal
+
+=======
+LEVELS
+=======
+
+message Level 1 - Portal Practice
+#######
+#P....#
+#.....#
+#.....#
+#G...O#
+#######
+
+message Level 2 - Crate Portal
+#######
+#P....#
+#..*..#
+#.....#
+#G...O#
+#####B#
+
+message Level 3 - Tactical Portals
+#########
+#P......#
+#....*..#
+#....*..#
+#G...O..#
+###..*..#
+#B......#
+#########
+
+message Congratulations! You've mastered the portals!
+
+```
+
+Changes made:
+1. Added a visual representation for the `Background` object to be 5x5 pixels, as required by PuzzleScript.
+2. Updated the `PortalOrange` and `PortalBlue` rules to correctly implement teleportation by replacing the player with the teleportation target location.

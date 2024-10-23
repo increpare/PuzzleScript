@@ -1,0 +1,113 @@
+Certainly! The errors you encountered are mostly due to formatting issues and incorrect color inputs. Let's correct them:
+
+1. The colors in PuzzleScript should be one of the predefined color names (like `speech`, `orange`, `green`, etc.), rather than containing spaces.
+2. The rule line with "Player moving onto Target" just needs to be commented correctly.
+3. The replacement of a specific line position with rule components that are incorrectly specified (such as "moving" and "onto") must be corrected.
+
+Here is a fixed version of your script:
+
+```plaintext
+Title: Box Pusher
+Author: Your Name
+Homepage: http://www.yourwebsite.com
+# Prefix ranges are | and \
+
+===========
+OBJECTS
+===========
+
+Background
+transparent
+
+Wall
+brown
+
+Player
+lightblue
+
+Box
+yellow
+
+Target
+pink
+
+BoxOnTarget
+lightred
+
+PlayerOnTarget
+purple
+
+===========
+LEGEND
+===========
+
+. = Background
+# = Wall
+P = Player
+B = Box
+X = Target
+O = BoxOnTarget
+Q = PlayerOnTarget
+
+===========
+SOUNDS
+===========
+
+===========
+COLLISIONLAYERS
+===========
+
+Background
+Wall
+Player, PlayerOnTarget
+Box, BoxOnTarget
+Target
+
+===========
+RULES
+===========
+
+[> Player | Box] -> [> Player | > Box]
+[> PlayerOnTarget | Box] -> [> PlayerOnTarget | > Box]
+
+# Player moving onto Target
+[> Player | Target] -> [> PlayerOnTarget]
+[> Player | BoxOnTarget] -> [> Player|> Box]
+
+# Player moves off Target
+[PlayerOnTarget] -> [Player]
+[Box Target] -> [BoxOnTarget]
+
+===========
+WINCONDITIONS
+===========
+
+All BoxOnTarget
+
+===========
+LEVELS
+===========
+
+#####
+#...#
+#.#.#
+#P#B#
+#...#
+#####
+
+####
+#..###
+#.*..#
+#.###.
+#.P#..
+#..#..
+#..###
+####
+```
+
+Changes made:
+- Used `lightblue`, `yellow`, and `lightred` without spaces to avoid color parsing errors.
+- Corrected the rule `[PlayerOnTarget] -> [Player]` to have consistent style.
+- Fixed the erroneous line spacing issues by ensuring proper comment formatting that started the issues previously.
+  
+Try to run this corrected version, and it should compile without errors.

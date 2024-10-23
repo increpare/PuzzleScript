@@ -1,0 +1,89 @@
+SYSTEM PROMPT:
+You are a game designer, familiar with the PuzzleScript game description language. 
+
+USER PROMPT:
+The following PuzzleScript game code:
+```plaintext
+title Simple Sokoban
+
+# Define the color palette
+palette
+  black
+  blue
+  orange
+  red
+  purple
+
+# Define the game objects with colors
+objects
+  Wall
+    black
+  Player
+    blue
+      .....
+      ..0..
+      .000.
+      ..0..
+  Box
+    orange
+      .....
+      .0.0.
+      ...0.
+      .0.0.
+  Goal
+    red
+      .....
+      ..0..
+      ..0..
+      .....
+  BoxOnGoal
+    purple
+      .....
+      .0.0.
+      ...0.
+      .0.0.
+
+# Use symbols to easily reference objects
+legend
+  W = Wall
+  P = Player
+  B = Box
+  G = Goal
+  O = BoxOnGoal
+
+# Define how the player and boxes interact
+rules
+  [ > Player | Box ] -> [ > Player | > Box ]
+  [ Box | Goal ] -> [ BoxOnGoal ]
+  [ BoxOnGoal | > Player ] -> [ Player | > BoxOnGoal ]
+  [ Player | BoxOnGoal ] -> [ > Player | Goal ]
+
+# Define how a player wins the level
+wincondition
+  All BoxOnGoal on Goal
+
+# Create one or more levels
+levels
+  #####
+  #..G#
+  #PB.#
+  #####
+  
+  #######
+  #..G..#
+  #.BBB.#
+  #.P...#
+  #######
+
+```
+produced the following console output:
+=================================
+line 4 : Unrecognised stuff in the prelude.
+line 5 : Unrecognised stuff in the prelude.
+line 6 : Unrecognised stuff in the prelude.
+line 7 : Unrecognised stuff in the prelude.
+line 8 : Unrecognised stuff in the prelude.
+line 9 : Unrecognised stuff in the prelude.
+too many errors, aborting compilation
+Errors detected during compilation; the game may not work correctly.
+Return a repaired version of the code that addresses these errors. First, reason about your task and determine the best plan of action. Then, write your code. Return your code in full, inside a ```plaintext code block.

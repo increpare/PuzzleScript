@@ -1,0 +1,103 @@
+SYSTEM PROMPT:
+You are a game designer, familiar with the PuzzleScript game description language. 
+
+USER PROMPT:
+The following PuzzleScript game code:
+```plaintext
+Title Sokoban Clone
+Author PuzzleDesigner
+
+========
+OBJECTS
+========
+Background
+WHITE
+00000
+00000
+00000
+00000
+00000
+
+Player
+BLUE
+00000
+00100
+01110
+00100
+00000
+
+Wall
+BLACK
+00000
+01110
+01110
+01110
+00000
+
+Box
+YELLOW GREY
+00000
+01110
+01100
+01110
+00000
+
+Goal
+GREEN
+00000
+01110
+01110
+01110
+00000
+
+========
+LEGEND
+========
+. = Background
+# = Wall
+P = Player
+B = Box
+G = Goal
+
+================
+COLLISIONLAYERS
+================
+Background
+Wall
+Player, Box
+Goal
+
+======
+RULES
+======
+[ > Player | Box ] -> [ > Player | > Box ]
+[ Player | Goal ] -> [ Player | Goal ]
+
+========
+WINCONDITIONS
+========
+All Box on Goal
+
+=======
+LEVELS
+=======
+/ Sample Level 1
+########
+#......#
+#..#...#
+#..B.G.#
+#..P...#
+########
+
+```
+produced the following console output:
+=================================
+line 18 : Trying to access color number 1 from the color palette of sprite PLAYER, but there are only 1 defined in it.
+line 19 : Trying to access color number 1 from the color palette of sprite PLAYER, but there are only 1 defined in it.
+line 20 : Trying to access color number 1 from the color palette of sprite PLAYER, but there are only 1 defined in it.
+line 26 : Trying to access color number 1 from the color palette of sprite WALL, but there are only 1 defined in it.
+line 27 : Trying to access color number 1 from the color palette of sprite WALL, but there are only 1 defined in it.
+line 28 : Trying to access color number 1 from the color palette of sprite WALL, but there are only 1 defined in it.
+too many errors, aborting compilation
+Errors detected during compilation; the game may not work correctly.
+Return a repaired version of the code that addresses these errors. First, reason about your task and determine the best plan of action. Then, write your code. Return your code in full, inside a ```plaintext code block.

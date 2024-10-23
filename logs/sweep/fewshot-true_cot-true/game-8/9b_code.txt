@@ -1,0 +1,104 @@
+The error message indicates that there is an issue with the use of the character " " (a space) in the level maps. In PuzzleScript, the character " " is not automatically mapped to the Background object unless explicitly specified. An easy fix is to ensure the space in the level maps is correctly interpreted as the Background. 
+
+To resolve this, I will introduce a mapping for the space character in the LEGEND section as Background:
+
+```plaintext
+title Treasure Cave Explorer
+author YourName
+homepage www.example.com
+
+========
+OBJECTS
+========
+
+Background
+lightgray
+
+Wall
+darkgray
+
+Player
+lightgreen
+
+TreasureChest
+#FFD700
+
+Target
+darkblue
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Player
+* = TreasureChest
+@ = TreasureChest and Target
+O = Target
+  = Background  # Added rule to handle spaces
+
+=======
+SOUNDS
+=======
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Target
+Player, Wall, TreasureChest
+
+======
+RULES
+======
+
+[ > Player | TreasureChest ] -> [ > Player | > TreasureChest ]
+
+==============
+WINCONDITIONS
+==============
+
+All Target on TreasureChest
+
+=======
+LEVELS
+=======
+
+#######
+#.....#
+#..O..#
+#.P*..#
+#.....#
+#######
+
+#######
+#.....#
+#..#O.#
+#.*#..#
+#..#P.#
+#.....#
+#######
+
+#####
+#..O#
+#..P#
+#.*.#
+#####
+
+#######
+#.....#
+#.O*P.#
+#.#...#
+#.....#
+#######
+
+#######
+#.O...#
+#.#P* #
+#.....#
+#######
+```
+
+By adding the space character as a representation of the Background, the error should be resolved. Now, the space in the level's map will be correctly interpreted as representing the Background object.

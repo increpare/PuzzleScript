@@ -1,0 +1,167 @@
+The console output indicates issues with color definitions and sprite matrix errors. These issues need to be addressed one by one:
+
+1. **Color Definition Issue** - The errors on lines 12, 20, and 28 suggest there's an issue with the color definitions for the objects Background, Wall, and Player. In PuzzleScript, the syntax requires a newline after the `color` declaration and before the sprite matrix begins. If this isn't followed correctly, it can result in parsing issues. 
+  
+2. **Sprite Matrix Errors** - The sprite matrix issue for the Wall object (lines 22 to 24). These errors indicate problems within the Wall object's sprite matrix, which might not be well-formatted or contain unwanted characters.
+
+3. **Overall Plan** - Review the object definitions for errors in their syntax, such as missing whitespace or invalid characters, and fix accordingly. Ensure each color declaration is properly formatted with a newline separation from the sprite matrix definitions.
+
+Here's the repaired version of the code:
+
+```plaintext
+# Sokoban-like Block Push Puzzle Game
+
+# === Metadata ===
+title Sokoban Puzzle
+author OpenAI
+homepage https://example.com
+# === End Metadata ===
+
+# === Objects ===
+OBJECTS
+Background
+color #000000
+.....
+.....
+.....
+.....
+.....
+
+Wall
+color #888888
+XXXXX
+XXXXX
+XXXXX
+XXXXX
+XXXXX
+
+Player
+color #FFFF00
+.....
+..O..
+.OOO.
+..O..
+.....
+
+Block
+color #FF0000
+.....
+..X..
+.X.X.
+..X..
+.....
+
+Goal
+color #00FF00
+.....
+.....
+..X..
+.....
+.....
+
+BlockOnGoal
+color #FF00FF
+.....
+..X..
+.XOX.
+..X..
+.....
+
+PlayerOnGoal
+color #00FFFF
+.....
+..O..
+.OXO.
+..O..
+.....
+
+# === End Objects ===
+
+# === Legend ===
+LEGEND
+. = Background
+# = Wall
+P = Player
+B = Block
+G = Goal
+O = BlockOnGoal
+@ = PlayerOnGoal
+
+# === End Legend ===
+
+# === Sounds ===
+SOUNDS
+# This section is empty but needed for correct ordering
+
+# === End Sounds ===
+
+# === Collision Layers ===
+COLLISIONLAYERS
+Background
+Wall
+Player, PlayerOnGoal
+Block, BlockOnGoal
+Goal
+
+# === End Collision Layers ===
+
+# === Rules ===
+RULES
+[ Player | Block ] -> [ Player | ] [ Player | Block ]
+[ PlayerOnGoal | Block ] -> [ Player | ] [ @ | Block ]
+
+[ Player | Goal ] -> [ PlayerOnGoal | ]
+[ PlayerOnGoal | ] -> [ Player | ]
+
+[ Block | Goal ] -> [ BlockOnGoal | ]
+[ BlockOnGoal | ] -> [ Block | ]
+
+# Win condition
+WinCondition
+All BlockOnGoal
+
+# === End Rules ===
+
+# === Levels ===
+LEVELS
+#######
+#     #
+#  G  #
+#     #
+#  B  #
+#  P  #
+#######
+
+#######
+#     #
+#     #
+#  G  #
+#  B  #
+#  P  #
+#######
+
+#######
+#     #
+#  G  #
+#     #
+# B B #
+#  P  #
+#######
+
+#######
+#   G #
+#     #
+# B G #
+#   P #
+#   B #
+#######
+
+# === End Levels ===
+
+```
+
+### Changes Made:
+1. Added a newline after the `color` statement in each object definition.
+2. Corrected the Wall object sprite matrix to ensure it matches the typical size expected by PuzzleScript (5x5 sprite matrix). I used `XXXXX` for the Wall to make sure it is consistent and correct. 
+
+These changes align with the expected formatting in PuzzleScript and should resolve the errors reported during compilation.

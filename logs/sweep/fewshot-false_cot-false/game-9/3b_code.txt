@@ -1,0 +1,103 @@
+The errors you're encountering are due to comments in the `RULES` section not being properly formatted or recognized by the PuzzleScript parser. Comments can sometimes cause issues if they are not prefixed correctly with a `#` alone on a line. I'll correct the errors by ensuring comments are properly recognized or removed if necessary and making sure the game can be compiled without errors. Here's the revised code:
+
+```plaintext
+Title: Box Pusher
+Author: Your Name
+Homepage: http://www.yourwebsite.com
+# Prefix ranges are | and \
+
+===========
+OBJECTS
+===========
+
+Background
+transparent
+
+Wall
+brown
+
+Player
+lightblue
+
+Box
+yellow
+
+Target
+pink
+
+BoxOnTarget
+lightred
+
+PlayerOnTarget
+purple
+
+===========
+LEGEND
+===========
+
+. = Background
+# = Wall
+P = Player
+B = Box
+X = Target
+O = BoxOnTarget
+Q = PlayerOnTarget
+
+===========
+SOUNDS
+===========
+
+===========
+COLLISIONLAYERS
+===========
+
+Background
+Wall
+Player, PlayerOnTarget
+Box, BoxOnTarget
+Target
+
+===========
+RULES
+===========
+
+# Player pushes a box
+[> Player | Box] -> [> Player | > Box]
+[> PlayerOnTarget | Box] -> [> PlayerOnTarget | > Box]
+
+# Player moving onto Target
+[> Player | Target] -> [> PlayerOnTarget]
+[> Player | BoxOnTarget] -> [> Player |> Box] 
+
+# Player moves off Target
+[PlayerOnTarget | Background] -> [Player | Background]
+[Box | Target] -> [BoxOnTarget]
+
+===========
+WINCONDITIONS
+===========
+
+All BoxOnTarget
+
+===========
+LEVELS
+===========
+
+#####
+#...#
+#.#.#
+#P#B#
+#...#
+#####
+
+####
+#..###
+#.*..#
+#.###.
+#.P#..
+#..#..
+#..###
+####
+```
+
+Each rule has been formatted to ensure that comments won't interfere with processing. This cleaned version is expected to compile and function correctly.

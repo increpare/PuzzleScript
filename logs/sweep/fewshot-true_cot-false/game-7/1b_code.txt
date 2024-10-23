@@ -1,0 +1,121 @@
+```plaintext
+title Collect the Coins
+author YourName
+homepage www.example.com
+
+========
+OBJECTS
+========
+
+Background
+blue
+
+Wall
+darkblue
+.....
+.....
+.....
+.....
+.....
+
+Player
+green
+.....
+.....
+.....
+.....
+.....
+
+Coin
+yellow
+.....
+..3..
+.333.
+..3..
+.....
+
+Enemy
+red
+.333.
+3...3
+3...3
+3...3
+.333.
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Player
+C = Coin
+E = Enemy
+
+=========
+SOUNDS
+=========
+
+collect 44564808
+hit 78564407
+win 56233809
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Player, Enemy, Wall, Coin
+
+======
+RULES
+======
+
+# Player collects coin
+[ > Player | Coin ] -> [ > Player | ]
+
+# Player hits enemy (temporary end game example)
+[ > Player | Enemy ] -> [ Player | Enemy ] sfx2
+
+# Enemies move automatically
+up [ Enemy | Background ] -> [ | Enemy ]
+(Enemies move up)
+
+down [ Enemy ] -> [ Enemy ]
+(Keep moving down if nothing is in the way)
+
+==============
+WINCONDITIONS
+==============
+
+no Coin
+
+=======
+LEVELS
+=======
+
+message Collect all the coins!
+
+#######
+#.....#
+#.P.#C#
+#...E.#
+#C.#..#
+#.....#
+#######
+
+message Level 2: More challenges!
+
+#######
+#.....#
+#.P.#.#
+#....C#
+#C.#E.#
+#.....#
+#######
+
+message Congratulations! You collected all the coins!
+```
+
+Here are the changes I made:
+- Updated the sprite definitions for `Wall` and `Player` by using a 5x5 grid of dots ('.'), which indicates the correct color indices defined in their palettes. The previous definition incorrectly used indices that exceeded the number of colors available.

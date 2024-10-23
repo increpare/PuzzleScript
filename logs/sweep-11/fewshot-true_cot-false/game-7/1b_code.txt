@@ -1,0 +1,143 @@
+```plaintext
+title Portal Puzzles
+author AI Game Designer
+homepage www.puzzlescript.net
+
+========
+OBJECTS
+========
+
+Background
+#EAEAEA
+
+Player
+#FFCC00 #FF9900
+.....
+..0..
+.111.
+..0..
+.....
+
+PortalOrange
+#FFA500 #FF4500
+.....
+..0..
+.111.
+..0..
+.....
+
+PortalBlue
+#1E90FF #0000FF
+.....
+..0..
+.111.
+..0..
+.....
+
+Wall
+#555555
+11111
+
+Crate
+#8B4513 #CD853F
+.....
+.111.
+.1.1.
+.111.
+.....
+
+Goal
+#32CD32
+.000.
+.0.0.
+.000.
+.....
+
+=======
+LEGEND
+=======
+
+. = Background
+P = Player
+O = PortalOrange
+B = PortalBlue
+# = Wall
+* = Crate
+G = Goal
+
+=======
+SOUNDS
+=======
+
+playerMove 18467108
+goal 14539908
+portal 32566708
+crateMove 12345678
+
+===============
+COLLISIONLAYERS
+===============
+
+Background
+Player, PortalOrange, PortalBlue, Goal
+Crate
+Wall
+
+======
+RULES
+======
+
+[ -> Player | No Crate ] -> [ -> Player | ]
+[ Player | PortalOrange ] -> [ PortalBlue | Player portal ]
+[ Player | PortalBlue ] -> [ PortalOrange | Player portal ]
+[ > Player | Goal ] -> [ Player playerMove goal ]
+[ > Player | Crate ] -> [ > Player | > Crate crateMove ]
+
+=============
+WINCONDITIONS
+=============
+
+All Player on Goal
+
+=======
+LEVELS
+=======
+
+message Level 1 - Portal Practice
+#######
+#P....#
+#.....#
+#.....#
+#G...O#
+#######
+
+message Level 2 - Crate Portal
+#######
+#P....#
+#..*..#
+#.....#
+#G...O#
+#######B
+
+message Level 3 - Tactical Portals
+#########
+#P......#
+#....*..#
+#....*..#
+#G...O..#
+###..*..#
+#B......#
+#########
+
+message Congratulations! You've mastered the portals!
+
+```
+
+### Explanation of the Changes:
+1. **Wall Object Definition:** In the `Wall` object, the sprite data has been reduced to a one-line definition (`11111`) because only one color is defined for this object. This addresses the console errors about trying to access more colors than are present.
+
+2. **Sound Name:** The sound `movePlayer` in the `SOUNDS` section was changed to `playerMove` to match the usage in the rules section which utilizes `playerMove` instead. This addresses the unexpected sound token error.
+
+3. **Consistency in Sound Usage:** Consistency has been ensured in the rules section by using `playerMove` instead of `movePlayer`.
+
+These corrections should resolve the errors and allow the game to compile correctly.

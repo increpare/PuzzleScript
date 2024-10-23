@@ -1,0 +1,126 @@
+Here's the corrected code for the game "Collect the Coins" with Level 1 made solvable. I've also included Level 3 as a celebratory level with no gameplay, as the message suggests that you've already completed the game.
+
+```plaintext
+title Collect the Coins
+author YourName
+homepage www.example.com
+
+========
+OBJECTS
+========
+
+Background
+blue
+.....
+
+Wall
+darkblue
+.....
+.....
+.....
+.....
+.....
+
+Player
+green
+.....
+.....
+.....
+.....
+.....
+
+Coin
+yellow yellow
+.....
+..1..
+.111.
+..1..
+.....
+
+Enemy
+red red
+.111.
+1...1
+1...1
+1...1
+.111.
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Player
+C = Coin
+E = Enemy
+
+=========
+SOUNDS
+=========
+
+sfx0 44564808
+sfx1 78564407
+sfx2 56233809
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Wall, Player, Enemy, Coin
+
+======
+RULES
+======
+
+[ > Player | Coin ] -> [ > Player | ] sfx0
+
+[ > Player | Enemy ] -> [ Player | Enemy ] sfx1
+
+right [ E | Background ] -> [ | E ]
+left  [ E | Background ] -> [ E | ]
+
+==============
+WINCONDITIONS
+==============
+
+no Coin
+
+=======
+LEVELS
+=======
+
+message Collect all the coins!
+
+#######
+#.....#
+#..P#C#
+#...E.#
+#C.#..#
+#.....#
+#######
+
+message Level 2: More challenges!
+
+#######
+#C....#
+#..P..#
+#.##..#
+#CE.#C#
+#.....#
+#######
+
+message Congratulations! You collected all the coins!
+
+#######
+#.....#
+#.....#
+#..P..#
+#.....#
+#.....#
+#######
+
+```
+
+In Level 1, the Player (P) now has a clear path to collect all Coins (C) without getting stuck or immediately encountering an Enemy (E). Level 3 serves as the end message without any gameplay challenge.

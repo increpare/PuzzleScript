@@ -1,0 +1,94 @@
+The errors in your PuzzleScript game code are primarily caused by attempting to use spaces as part of the level layout. In PuzzleScript, you're encouraged to use dots or periods as placeholders for empty tiles or backgrounds. I'll address these issues by replacing spaces with dots in the level layouts and ensure all other markings align. Here’s the corrected version of the game code:
+
+```plaintext
+======
+
+title Collect the Key
+author Game Designer
+homepage https://puzzlescript.net
+
+======
+
+OBJECTS
+
+Background
+black
+
+Player
+yellow
+
+Key
+red
+
+Door
+blue
+
+Goal
+green
+
+Wall
+grey
+
+======
+
+LEGEND
+
+. = Background
+P = Player
+K = Key
+D = Door
+G = Goal
+W = Wall
+
+======
+
+SOUNDS
+
+======
+
+COLLISIONLAYERS
+
+Background
+Player
+Key
+Door
+Goal
+Wall
+
+======
+
+RULES
+
+[ > Player | Key ] -> [ Player | Background ]
+[ Player | Key ] -> [ Player | Background ]
+[ > Player | Door ] -> [ Player | Background ]
+[ Player | Goal ] -> [ Player | Background ]
+
+======
+
+WINCONDITIONS
+
+All Goal
+
+======
+
+LEVELS
+
+P . . . .
+. W W W D
+. W K G W
+. W W W W
+. . . . .
+
+. . . P .
+W W W W .
+W D K G .
+W . . . .
+W . . . .
+
+======
+
+END
+```
+
+By ensuring the code uses dots for all empty spaces, these errors should no longer occur during compilation. Let me know if there's anything else you need.

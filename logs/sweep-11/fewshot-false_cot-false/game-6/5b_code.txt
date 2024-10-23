@@ -1,0 +1,121 @@
+Certainly! The errors in the original code mainly revolve around incorrect color and art definitions. Here's a fixed version of the code:
+
+```plaintext
+////////////////////////////////////////////////////////////
+// Catch the Star
+// Author: Your Name
+////////////////////////////////////////////////////////////
+
+////////////////////////////////
+// Objects
+////////////////////////////////
+
+objects
+    Background
+        color black
+
+    Player
+        color blue
+        00000
+        00000
+        02220
+        00000
+        00000
+
+    Star
+        color yellow
+        01110
+        11111
+        01110
+        11111
+        01110
+
+    Wall
+        color gray
+        11111
+        11111
+        11111
+        11111
+        11111
+
+////////////////////////////////
+// Legend
+////////////////////////////////
+
+legend
+    . = Background
+    P = Player
+    S = Star
+    W = Wall
+
+////////////////////////////////
+// Sounds
+////////////////////////////////
+
+sounds
+    player push wall
+    player move star
+
+////////////////////////////////
+// Collision Layers
+////////////////////////////////
+
+collisionlayers
+    Background
+    Wall
+    Player, Star
+
+////////////////////////////////
+// Rules
+////////////////////////////////
+
+rules
+    [ > Player | Star ] -> [ > Player | ]
+
+////////////////////////////////
+// Win Conditions
+////////////////////////////////
+
+winconditions
+    (no Star)
+
+////////////////////////////////
+// Levels
+////////////////////////////////
+
+levels
+    XXXXX
+    X.P.X
+    X...X
+    X.S.X
+    XXXXX
+
+    XXXX
+    X..X
+    XWPX
+    XS.X
+    XXXX
+
+    XXXXXXX
+    X.....X
+    X.WP..X
+    X...W.X
+    X..S..X
+    XXXXXXX
+
+////////////////////////////////
+// Post Conditions
+////////////////////////////////
+
+postconditions
+    shouldrestart on [ Player Star ] // if player collides with a star
+```
+
+### Key Changes
+
+- Removed `noart` from the Background object as it is invalid. The `Background` object can be left with its color definition only.
+- Corrected the `Player` art by removing the unnecessary 'P' character, as it was incorrectly placed in the object definition, and it's not needed.
+- Removed unnecessary color designations from art definitions since defined colors are interpreted as is.
+- Adjusted postconditions for clarity, ensuring rules or postconditions match the desired game behavior if necessary. 
+
+This should fix the compilation errors you encountered. Enjoy your game!

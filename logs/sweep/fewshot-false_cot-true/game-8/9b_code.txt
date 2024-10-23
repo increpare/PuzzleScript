@@ -1,0 +1,95 @@
+Certainly! The issue with the provided level is likely due to the arrangement of the walls, player, box, and goal, which makes it impossible to complete the objective of moving all boxes to the goals. Here's a revised version of the level to ensure it's solvable:
+
+```plaintext
+Title Sokoban Clone
+Author PuzzleDesigner
+
+========
+OBJECTS
+========
+Background
+WHITE
+00000
+00000
+00000
+00000
+00000
+
+Player
+BLUE WHITE
+00000
+00100
+01110
+00100
+00000
+
+Wall
+BLACK GREY
+00000
+01110
+01110
+01110
+00000
+
+Box
+YELLOW GREY
+00000
+01110
+01100
+01110
+00000
+
+Goal
+GREEN GREEN
+00000
+01110
+01110
+01110
+00000
+
+========
+LEGEND
+========
+. = Background
+# = Wall
+P = Player
+B = Box
+G = Goal
+
+======
+SOUNDS
+======
+
+================
+COLLISIONLAYERS
+================
+Background
+Wall
+Player, Box
+Goal
+
+======
+RULES
+======
+[ > Player | Box ] -> [ > Player | > Box ]
+[ Player | Goal ] -> [ Player | Goal ]
+
+========
+WINCONDITIONS
+========
+All Box on Goal
+
+=======
+LEVELS
+=======
+########
+#......#
+#..#...#
+#..P.BG#
+#......#
+#......#
+########
+
+```
+
+In this level, the player is positioned next to a box, which can be pushed onto the goal (G) directly, making it solvable. This arrangement allows for a straightforward completion while retaining the fundamental mechanics of Sokoban.

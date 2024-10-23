@@ -1,0 +1,125 @@
+The error messages you provided indicate that the compiler is misinterpreting elements in the `WINCONDITIONS` section and the `LEVELS` section as keys, i.e., objects that haven't been defined. These "keys" that are not found actually correspond to the message texts. This is usually caused by improperly terminating or formatting sections of the code. 
+
+To resolve these issues, we should:
+1. Ensure that the `WINCONDITIONS` section is properly formatted and uses the correct syntax.
+2. Ensure that the `LEVELS` section is properly formatted with the message only following a valid `level` descriptor.
+3. Rearrange or reformat the end sections to ensure no confusion arises due to missing or unexpected textual content.
+ 
+Here's a corrected version of the game code:
+
+```plaintext
+title KeyCollector
+author PuzzleScriptDesigner
+homepage www.puzzlescript.net
+
+========
+OBJECTS
+========
+
+Background
+White
+
+Player
+Blue
+..0..
+.000.
+.0.0.
+00000
+.0.0.
+
+Wall
+Black
+00000
+00000
+00000
+00000
+00000
+
+Key
+Yellow
+..0..
+.0.0.
+0...0
+.0.0.
+..0..
+
+Door
+Red
+.....
+.000.
+0.0.0
+.000.
+.....
+
+Exit
+Green
+..0..
+.0.0.
+00000
+.0.0.
+..0..
+
+=======
+LEGEND
+=======
+
+. = Background
+P = Player
+# = Wall
+K = Key
+D = Door
+E = Exit
+
+=======
+SOUNDS
+=======
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Key, Exit
+Player, Wall, Door
+
+======
+RULES
+======
+
+[P | K] -> [P]
+[P Key | D] -> [.]
+[K | no P] -> [K]
+[D | P] -> [P no Key]
+
+==============
+WINCONDITIONS
+==============
+
+All Player on Exit
+
+=======
+LEVELS
+=======
+
+message level 1 - Get the Key!
+########
+#..K...#
+#..#..D#
+#..#..##
+#P....E#
+########
+
+message level 2 - Use the Key Wisely
+########
+#P..####
+#..K.D.#
+#..#.E.#
+#..#..##
+#......#
+########
+
+message Congratulations!
+You have completed all the levels!
+```
+
+With these changes, the game should compile without errors, as all sections and messages are properly formatted.

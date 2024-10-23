@@ -1,0 +1,107 @@
+To create a complete PuzzleScript game, we need to define the game's title, author, and homepage and then proceed to define the objects, rules, collision layers, win conditions, and levels. Here's a systematic approach to creating a simple PuzzleScript game:
+
+### Game Concept
+Let's create a simple Sokoban-style game where the player needs to push crates into designated target areas. Here's a brief outline:
+- **Player (P):** The entity the player controls.
+- **Crate (C):** The box that can be pushed.
+- **Wall (#):** Impassable obstacles.
+- **Target (T):** Destination spot for the crate.
+- **Background (.):** Free space.
+
+### Plan
+
+1. **Title, Author, and Meta Information:** This is where we define the core details and any optional metadata like homepage.
+2. **Objects:** Define each item that will appear in the game grid: Player, Wall, Crate, Target, and Background.
+3. **Legend:** Assign a shorthand notation for each object.
+4. **Collision Layers:** Define which objects can overlap with others.
+5. **Rules:** Define how objects interact, specifically how the player pushes crates.
+6. **Win Conditions:** The condition to win the game is having all crates on the targets.
+7. **Levels:** Define grid-based levels that the player must solve.
+
+### Implementation
+
+```plaintext
+title Sokoban Puzzle
+author Your Name
+homepage www.example.com
+
+========
+OBJECTS
+========
+
+Background
+lightgray
+
+Wall
+darkgray
+
+Player
+blue
+
+Crate
+brown
+
+Target
+yellow
+
+CrateOnTarget
+green
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Player
+C = Crate
+T = Target
+ct = CrateOnTarget
+
+==============
+COLLISIONLAYERS
+==============
+
+Background
+Target
+Player, Wall, Crate, CrateOnTarget
+
+======
+RULES
+======
+
+[Player | Crate] -> [ > Player | > Crate]
+[> Player | Target] -> [> Player | Target]
+
+[Crate | Target] -> [CrateOnTarget | Target]
+[CrateOnTarget] -> [Crate]
+
+==============
+WINCONDITIONS
+==============
+
+All CrateOnTarget on Target
+
+=======
+LEVELS
+=======
+
+.....
+.P#..
+.C#T.
+.T...
+
+```
+
+### Explanation
+
+- **Objects:** We define the visual and behavioral characteristics of each object.
+- **Legend:** Represents each object with a shorthand to make levels easy to read.
+- **Collision Layers:** Establish which objects can exist in the same space or block each other.
+- **Rules:** 
+  - The player can push crates, and crates are marked as "on target" when they reach a target.
+  - CrateOnTarget simplifies win condition checks by existing only when a crate is truly over a target.
+- **Win Conditions:** The game checks for all crates to be on targets for the player to win.
+- **Levels:** Customized level design predefines a grid layout representing the environment and challenges. 
+
+You can expand this game by adding more levels, different mechanics such as undo functionality, and sound for interactive feedback.

@@ -1,0 +1,61 @@
+SYSTEM PROMPT:
+You are a game designer, familiar with the PuzzleScript game description language. 
+
+USER PROMPT:
+The following PuzzleScript game code:
+```plaintext
+=== OBJECTS ===
+Background
+wall
+player
+goal
+floor
+playerOnGoal
+
+=== LEGEND ===
+. = Background
+# = wall
+P = player
+G = goal
+F = floor
+@ = playerOnGoal
+
+=== COLLISIONLAYERS ===
+wall,
+player, goal
+
+=== RULES ===
+# Automatically transform player on goal
+[ player | goal ] -> [ playerOnGoal ]
+
+=== WINCONDITIONS ===
+All playerOnGoal
+
+=== LEVELS ===
+# Level 1
+...G...
+..###..
+..#P#..
+..###..
+...F...
+
+# Level 2
+.....G.
+..#...
+..#.P.
+..#...
+...G...
+
+
+```
+produced the following console output:
+=================================
+line 1 : Only comments should go after a bunch of equals signs ('===') on a line.
+line 2 : Unrecognised stuff in the prelude.
+line 3 : Unrecognised stuff in the prelude.
+line 4 : Unrecognised stuff in the prelude.
+line 5 : Unrecognised stuff in the prelude.
+line 6 : Unrecognised stuff in the prelude.
+too many errors, aborting compilation
+Errors detected during compilation; the game may not work correctly.
+Return a repaired version of the code that addresses these errors. Return your code in full, inside a ```plaintext code block.

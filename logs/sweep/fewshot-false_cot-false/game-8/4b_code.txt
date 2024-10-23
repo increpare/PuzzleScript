@@ -1,0 +1,133 @@
+To address the errors indicated in the console output, we need to fix two main issues: the WALL object color definition and the rule errors (ensuring the pattern on the left matches the pattern on the right in terms of length). Here's the corrected version of your code:
+
+```plaintext
+===========
+OBJECTS
+===========
+
+Background
+LIGHTBLUE
+00000
+00000
+00000
+00000
+00000
+
+Wall
+GREY
+11111
+11111
+11111
+11111
+11111
+
+Player
+YELLOW
+0..0.
+.0.0.
+..0..
+.000.
+0...0
+
+Box
+BROWN
+.....
+.000.
+.0.0.
+.000.
+.....
+
+Goal
+GREEN
+.....
+.....
+..0..
+.....
+.....
+
+BoxOnGoal
+DARKGREEN
+.....
+.....
+..0..
+.....
+.....
+
+PlayerOnGoal
+LIGHTGREEN
+0..0.
+.0.0.
+..0..
+.000.
+0...0
+
+===========
+LEGEND
+===========
+
+. = Background
+# = Wall
+P = Player
+B = Box
+G = Goal
+O = BoxOnGoal
+Q = PlayerOnGoal
+
+===========
+SOUNDS
+===========
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Player, PlayerOnGoal
+Wall, Box, BoxOnGoal
+Goal
+
+===========
+RULES
+===========
+
+[Player | Box] -> [ > Player | > Box]
+[Player | Goal] -> [PlayerOnGoal | Goal]
+[PlayerOnGoal | Box] -> [ > PlayerOnGoal | > Box]
+
+[PlayerOnGoal] -> [Player | Goal]
+[Box | Goal] -> [BoxOnGoal | Goal]
+[BoxOnGoal | Goal] -> [BoxOnGoal | Goal]
+
+===========
+WINCONDITIONS
+===========
+
+All BoxOnGoal
+
+===========
+LEVELS
+===========
+
+#######
+#.....#
+#..B..#
+#..P..#
+#..G..#
+#.....#
+#######
+
+#######
+#.....#
+#..B..#
+#..G..#
+#..P..#
+#.....#
+#######
+
+```
+
+### Changes Made:
+1. **Wall Object Fix**: Corrected the WALL object's definition to use '11111' consistently. The original code improperly used '.' for grey, which is interpreted as unrevealed pixels, resulting in an inconsistency with color assignment.
+  
+2. **Rule Corrections**: 
+   - Ensured there are corresponding patterns on both sides of the rule with the same number of elements for `Goal`. The rules relating to goals needed a placeholder for the unchanged states. For example, when transitioning `Player` on `Goal` to `PlayerOnGoal`, we ensure `Goal` remains as `| Goal`.

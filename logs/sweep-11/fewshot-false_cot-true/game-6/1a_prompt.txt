@@ -1,0 +1,143 @@
+SYSTEM PROMPT:
+You are a game designer, familiar with the PuzzleScript game description language. 
+
+USER PROMPT:
+The following PuzzleScript game code:
+```plaintext
+# Sokoban-like Block Push Puzzle Game
+
+# === Metadata ===
+title Sokoban Puzzle
+author OpenAI
+homepage https://example.com
+# === End Metadata ===
+
+# === Objects ===
+OBJECTS
+Background
+lightgray
+
+Wall
+gray
+
+Player
+yellow
+
+Block
+blue
+
+Goal
+red
+
+BlockOnGoal
+purple
+
+PlayerOnGoal
+orange
+
+# === End Objects ===
+
+# === Legend ===
+LEGEND
+. = Background
+# = Wall
+P = Player
+B = Block
+G = Goal
+O = BlockOnGoal
+@ = PlayerOnGoal
+
+# === End Legend ===
+
+# === Sounds ===
+SOUNDS
+move
+    1 fx 100 0.1
+
+push
+    0 200 0.1
+
+winLevel
+    2 fx 800 0.2
+
+# === End Sounds ===
+
+# === Collision Layers ===
+COLLISIONLAYERS
+Background
+Wall
+Player, PlayerOnGoal
+Block, BlockOnGoal
+Goal
+
+# === End Collision Layers ===
+
+# === Rules ===
+RULES
+[ Player | Block ] -> [ Player | ] [ Player | Block ] move push
+
+[ PlayerOnGoal | Block ] -> [ Player | ] [ @ | Block ] move push
+ 
+[ Player | Goal ] -> [ PlayerOnGoal | ]
+[ PlayerOnGoal | ] -> [ Player | ]
+
+[ Block | Goal ] -> [ BlockOnGoal | ]
+[ BlockOnGoal | ] -> [ Block | ]
+
+# Win condition
+WinCondition
+All BlockOnGoal
+
+# === End Rules ===
+
+# === Levels ===
+LEVELS
+
+#######
+#     #
+#  .  #
+#     #
+#  B  #
+#  P  #
+#######
+
+#######
+#     #
+#     #
+#  .  #
+#  B  #
+#  P  #
+#######
+
+#######
+#     #
+#  .  #
+#     #
+# B B #
+#  P  #
+#######
+
+#######
+#   . #
+#     #
+# B . #
+#   P #
+#   B #
+# ##### 
+
+# === End Levels ===
+
+```
+produced the following console output:
+=================================
+line 32 : Unknown junk in object section (possibly: sprites have to be 5 pixels wide and 5 pixels high exactly. Or maybe: the main names for objects have to be words containing only the letters a-z0.9 - if you want to call them something like ",", do it in the legend section).
+line 34 : Unknown junk in object section (possibly: sprites have to be 5 pixels wide and 5 pixels high exactly. Or maybe: the main names for objects have to be words containing only the letters a-z0.9 - if you want to call them something like ",", do it in the legend section).
+line 44 : Something bad's happening in the LEGEND
+line 44 : Incorrect format of legend - should be one of "A = B", "A = B or C [ or D ...]", "A = B and C [ and D ...]", but it looks like you have a dangling "="?
+line 46 : Something bad's happening in the LEGEND
+line 46 : Incorrect format of legend - should be one of "A = B", "A = B or C [ or D ...]", "A = B and C [ and D ...]", but it looks like you have a dangling "="?
+line 48 : unexpected sound token "move".
+line 49 : unexpected sound token "1".
+too many errors, aborting compilation
+Errors detected during compilation; the game may not work correctly.
+Return a repaired version of the code that addresses these errors. First, reason about your task and determine the best plan of action. Then, write your code. Return your code in full, inside a ```plaintext code block.

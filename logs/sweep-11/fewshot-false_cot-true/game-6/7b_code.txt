@@ -1,0 +1,166 @@
+The console errors indicate that there are issues with the color definitions and sprite matrices for the objects in the game code. The game is expecting hexadecimal color codes prefixed by `#`, and the console messages suggest that some color definitions are not properly formatted or missing.
+
+Additionally, there are errors related to the sprite matrices themselves. This might be due to an incorrect character count (PuzzleScript uses a 5x5 grid for each sprite) or syntax errors. 
+
+Here's a step-by-step plan to resolve these issues:
+
+1. **Review the Color Definitions**: Ensure that each object has a valid color definition using a standard six-digit hexadecimal color code prefixed with `#`.
+
+2. **Check Sprite Definitions**: Ensure that each object sprite matrix is a valid 5x5 grid. If there’s any unexpected character beyond the recognized ones (`.`, `X`, `O`), correct them. 
+
+3. **Correct the Known Junk Errors**: Make sure all sprite lines align with the 5x5 matrix requirement, and that any unexpected character is removed.
+
+Now I will provide a corrected version of the PuzzleScript code:
+
+```plaintext
+# Sokoban-like Block Push Puzzle Game
+
+# === Metadata ===
+title Sokoban Puzzle
+author OpenAI
+homepage https://example.com
+# === End Metadata ===
+
+# === Objects ===
+OBJECTS
+Background
+color #000000
+.....
+.....
+.....
+.....
+.....
+
+Wall
+color #888888
+.....
+.....
+.....
+.....
+.XXX.
+
+Player
+color #FFFF00
+.....
+..O..
+.OOO.
+..O..
+.....
+
+Block
+color #FF0000
+.....
+..X..
+.X.X.
+..X..
+.....
+
+Goal
+color #00FF00
+.....
+.....
+..X..
+.....
+.....
+
+BlockOnGoal
+color #FF00FF
+.....
+.....
+.XOX.
+.....
+.....
+
+PlayerOnGoal
+color #00FFFF
+.....
+..O..
+.OXO.
+..O..
+.....
+
+# === End Objects ===
+
+# === Legend ===
+LEGEND
+. = Background
+# = Wall
+P = Player
+B = Block
+G = Goal
+O = BlockOnGoal
+@ = PlayerOnGoal
+
+# === End Legend ===
+
+# === Sounds ===
+SOUNDS
+# This section is empty but needed for correct ordering
+
+# === End Sounds ===
+
+# === Collision Layers ===
+COLLISIONLAYERS
+Background
+Wall
+Player, PlayerOnGoal
+Block, BlockOnGoal
+Goal
+
+# === End Collision Layers ===
+
+# === Rules ===
+RULES
+[ Player | Block ] -> [ Player | ] [ Player | Block ]
+[ PlayerOnGoal | Block ] -> [ Player | ] [ @ | Block ]
+
+[ Player | Goal ] -> [ PlayerOnGoal | ]
+[ PlayerOnGoal | ] -> [ Player | ]
+
+[ Block | Goal ] -> [ BlockOnGoal | ]
+[ BlockOnGoal | ] -> [ Block | ]
+
+# Win condition
+WinCondition
+All BlockOnGoal
+
+# === End Rules ===
+
+# === Levels ===
+LEVELS
+#######
+#     #
+#  G  #
+#     #
+#  B  #
+#  P  #
+#######
+
+#######
+#     #
+#     #
+#  G  #
+#  B  #
+#  P  #
+#######
+
+#######
+#     #
+#  G  #
+#     #
+# B B #
+#  P  #
+#######
+
+#######
+#   G #
+#     #
+# B G #
+#   P #
+#   B #
+#######
+
+# === End Levels ===
+```
+
+This should resolve the errors related to color and sprite definitions encountered during script parsing.

@@ -1,0 +1,92 @@
+The console output indicates that there are errors related to the formatting of the objects section. Each object should have three fields: the object's name, a color, and a sprite grid representation. The color should be defined by a color name or an RGB value. Here is a corrected version of your PuzzleScript code:
+
+```plaintext
+=== OBJECTS ===
+Background
+yellow
+00000
+00000
+00000
+00000
+00000
+
+wall
+red
+11111
+11111
+11111
+11111
+11111
+
+player
+blue
+00000
+00100
+01110
+00100
+00000
+
+goal
+green
+00000
+00100
+00100
+00100
+00000
+
+floor
+grey
+11111
+10001
+10001
+10001
+11111
+
+playerOnGoal
+lightblue
+00000
+00100
+01110
+00100
+00000
+
+=== LEGEND ===
+. = Background
+# = wall
+P = player
+G = goal
+F = floor
+@ = playerOnGoal
+
+=== COLLISIONLAYERS ===
+Background, floor
+wall
+goal
+player
+
+=== RULES ===
+# Automatically transform player on goal
+[ player | goal ] -> [ playerOnGoal ]
+
+=== WINCONDITIONS ===
+All playerOnGoal
+
+=== LEVELS ===
+# Level 1
+...G...
+..###..
+..#P#..
+..###..
+...F...
+
+# Level 2
+.....G.
+..#....
+..#.P..
+..#....
+...G...
+```
+
+In this corrected version:
+- Each object now has a 5x5 sprite grid representing its appearance.
+- I've provided a simple representation for each object using `0` for transparent and `1` for the colored pixels. Feel free to adjust the sprite representation as needed for your game.

@@ -1,0 +1,118 @@
+The errors in your PuzzleScript game code are related to incorrect sprite matrix definitions. In PuzzleScript, the sprite matrix should be a grid of characters where each character represents a color. Your current sprite matrix uses dots and letters, which aren't valid characters for colors in the sprite. To fix this, we'll need to use a consistent color notation. Here's the corrected version of your code:
+
+```plaintext
+Title: Collect the Keys
+Author: Puzzle Designer
+Homepage: http://www.puzzlescript.net
+
+========
+OBJECTS
+========
+
+Background
+lightblue
+
+Player
+lightgreen
+.000.
+.0.0.
+.0.0.
+.0.0.
+.....
+
+Key
+yellow
+.....
+..0..
+.000.
+..0..
+.....
+
+Door
+darkred
+.....
+..00.
+.000.
+.0.00
+.....
+
+Wall
+gray
+.....
+.000.
+.000.
+.000.
+.....
+
+========
+LEGEND
+========
+
+. = Background
+P = Player
+K = Key
+D = Door
+W = Wall
+
+========
+SOUNDS
+========
+
+KeyCollect
+sfx9
+KeyMusic
+sfx5
+DoorOpen
+sfx6
+Win
+sfx7
+
+========
+RULES
+========
+
+# Player can move
+[ > P | ] -> [ > | P ]
+[ < P | ] -> [ < | P ]
+[ P | > ] -> [ | > P ]
+[ P | < ] -> [ | < P ]
+[ ^ P ] -> [ | P ]
+[ P ^ ] -> [ P | ]
+
+# Collect Key
+[ Player | Key ] -> [ Player ]
+
+# Open Door (Win)
+[ Player | Door ] -> [ Player | Background ]
+message Win
+
+========
+WINCONDITIONS
+========
+
+All Key gone
+
+========
+LEVELS
+========
+
+# Level 1
+......
+.P..K.
+..WW..
+.D....
+
+# Level 2
+......
+PW.KK.
+.WW..D
+.K....
+
+# Level 3
+.P..W.
+.WDW.K
+.KK...
+......
+```
+
+The sprite matrices have been simplified to use valid character representations, with `0` to represent the color and `.` for transparency. Make sure each object has an appropriate representation for better visibility in your game.

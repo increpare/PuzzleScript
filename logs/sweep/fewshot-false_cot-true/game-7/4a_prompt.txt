@@ -1,0 +1,88 @@
+SYSTEM PROMPT:
+You are a game designer, familiar with the PuzzleScript game description language. 
+
+USER PROMPT:
+The following PuzzleScript game code:
+```plaintext
+title Simple Sokoban
+
+# Define the game objects with colors
+objects
+  Wall
+    #000000
+  Player
+    #0000FF
+      .....
+      ..0..
+      .000.
+      ..0..
+  Box
+    #FFA500
+      .....
+      .0.0.
+      ...0.
+      .0.0.
+  Goal
+    #FF0000
+      .....
+      ..0..
+      ..0..
+      .....
+  BoxOnGoal
+    #800080
+      .....
+      .0.0.
+      ...0.
+      .0.0.
+
+# Use symbols to easily reference objects
+legend
+  W = Wall
+  P = Player
+  B = Box
+  G = Goal
+  O = BoxOnGoal
+
+# Define how the player and boxes interact
+rules
+  [ > Player | Box ] -> [ > Player | > Box ]
+  [ Box | Goal ] -> [ BoxOnGoal ]
+  [ BoxOnGoal | > Player ] -> [ Player | > BoxOnGoal ]
+  [ Player | BoxOnGoal ] -> [ > Player | Goal ]
+
+# Define how a player wins the level
+wincondition
+  All BoxOnGoal on Goal
+
+# Create one or more levels
+levels
+  #####
+  #..G#
+  #PB.#
+  #####
+  
+  #######
+  #..G..#
+  #.BBB.#
+  #.P...#
+  #######
+
+```
+produced the following console output:
+=================================
+line 13 : Unknown junk in spritematrix for object PLAYER.
+line 14 : Unknown junk in spritematrix for object PLAYER.
+line 16 : Unknown junk in object section (possibly: sprites have to be 5 pixels wide and 5 pixels high exactly. Or maybe: the main names for objects have to be words containing only the letters a-z0.9 - if you want to call them something like ",", do it in the legend section).
+line 17 : Unknown junk in object section (possibly: sprites have to be 5 pixels wide and 5 pixels high exactly. Or maybe: the main names for objects have to be words containing only the letters a-z0.9 - if you want to call them something like ",", do it in the legend section).
+line 18 : Unknown junk in object section (possibly: sprites have to be 5 pixels wide and 5 pixels high exactly. Or maybe: the main names for objects have to be words containing only the letters a-z0.9 - if you want to call them something like ",", do it in the legend section).
+line 25 : Unknown junk in spritematrix for object GOAL.
+line 26 : Unknown junk in spritematrix for object GOAL.
+line 28 : Unknown junk in object section (possibly: sprites have to be 5 pixels wide and 5 pixels high exactly. Or maybe: the main names for objects have to be words containing only the letters a-z0.9 - if you want to call them something like ",", do it in the legend section).
+line 29 : Unknown junk in object section (possibly: sprites have to be 5 pixels wide and 5 pixels high exactly. Or maybe: the main names for objects have to be words containing only the letters a-z0.9 - if you want to call them something like ",", do it in the legend section).
+line 30 : Unknown junk in object section (possibly: sprites have to be 5 pixels wide and 5 pixels high exactly. Or maybe: the main names for objects have to be words containing only the letters a-z0.9 - if you want to call them something like ",", do it in the legend section).
+line 32 : Unknown junk in object section (possibly: sprites have to be 5 pixels wide and 5 pixels high exactly. Or maybe: the main names for objects have to be words containing only the letters a-z0.9 - if you want to call them something like ",", do it in the legend section).
+line 36 : You're talking about BOX but it's not defined anywhere.
+line 38 : You're talking about BOXONGOAL but it's not defined anywhere.
+too many errors, aborting compilation
+Errors detected during compilation; the game may not work correctly.
+Return a repaired version of the code that addresses these errors. First, reason about your task and determine the best plan of action. Then, write your code. Return your code in full, inside a ```plaintext code block.

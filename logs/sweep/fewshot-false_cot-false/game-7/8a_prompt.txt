@@ -1,0 +1,108 @@
+SYSTEM PROMPT:
+You are a game designer, familiar with the PuzzleScript game description language. 
+
+USER PROMPT:
+The following PuzzleScript game code:
+```plaintext
+################################
+# Puzzlescript Sokoban Game
+################################
+
+title Sokoban Puzzle
+
+author Your Name
+
+# homepage https://www.puzzlescript.net
+
+# Correcting some options for the game
+options
+    require_player_movement
+
+# Constructing the objects
+objects
+    Background . 
+    Wall # 
+    Player P 
+    PlayerOnTarget + 
+    Box B 
+    BoxOnTarget O 
+    Target T
+
+# Correct colors assignment
+colors
+    Background white
+    Wall blue
+    Player green
+    PlayerOnTarget lightgreen
+    Box brown
+    BoxOnTarget yellow
+    Target red
+
+# Legends: Defining the objects in the game
+legend
+    . = Background
+    # = Wall
+    P = Player
+    B = Box
+    T = Target
+    O = BoxOnTarget
+    + = PlayerOnTarget
+
+# Defining rules for movement and interactions
+rules
+    [ > Player | No ] -> [ > Player | ]
+    [ > Player | Wall ] -> [ > Player | Wall ]
+    [ > Player | Box ] -> [ > Player | > Box ]
+    [ > Player | BoxOnTarget ] -> [ > Player | > Box ]
+
+    # Player moves onto Target
+    [ > Player | Target ] -> [ > PlayerOnTarget | ]
+
+    # Player moving off Target
+    [ PlayerOnTarget | No ] -> [ Player | Target ]
+
+    # Move boxes
+    [ > Player | Box | No ] -> [ > Player | > Box ]
+
+    # Move boxes onto Targets
+    [ > Player | Box | Target ] -> [ > PlayerOnTarget | BoxOnTarget ]
+
+    # Boxes off Targets
+    [ BoxOnTarget | No ] -> [ Box | Target ]
+
+# Winning conditions
+winconditions
+    All BoxOnTarget
+
+# Game levels, represented in ASCII art
+levels
+
+#######
+#     #
+#     #
+#  #  #
+#   B #
+#  .  #
+# .P  #
+#######
+
+#######
+#. .  #
+#  #B #
+#  #P #
+#  B  #
+#. .  #
+#######
+
+```
+produced the following console output:
+=================================
+line 12 : Unrecognised stuff in the prelude.
+line 18 : Was looking for color for object BACKGROUND, got "wall " instead.
+line 18 : Was looking for color for object BACKGROUND, got "# " instead.
+line 20 : Was looking for color for object PLAYER, got "playerontarget " instead.
+line 20 : Was looking for color for object PLAYER, got "+ " instead.
+line 22 : Was looking for color for object BOX, got "boxontarget " instead.
+too many errors, aborting compilation
+Errors detected during compilation; the game may not work correctly.
+Return a repaired version of the code that addresses these errors. Return your code in full, inside a ```plaintext code block.

@@ -1,0 +1,56 @@
+Sure! Here's a simple PuzzleScript game code:
+
+```plaintext
+#Legend
+player a
+goal  b
+wall  c
+floor d
+
+=== Objectives ===
+All a on b
+
+=== Legend ===
+# a : Player
+# b : Goal
+# c : Wall
+# d : Floor
+
+=== Sounds ===
+
+=== CollisionLayers ===
+Background
+PlayerLayer     =  a
+GoalLayer       =  b
+WallLayer       =  c
+
+=== Rules ===
+# Player movement
+[right]  a -> a [right]
+[left]   a -> a [left]
+[up]     a -> a [up]
+[down]   a -> a [down]
+
+# Goals checking
+a b -> y b
+
+=== WinConditions ===
+All y on b
+
+=== Levels ===
+# Level 1
+...b...
+..ccc..
+..ca...
+..ccc..
+...d...
+
+# Level 2
+.....b.
+..c...
+..c.a.
+..c... 
+...b...
+```
+
+This example creates a simple game where the player represented by 'a' needs to reach the goal 'b'. The player moves around navigating through walls 'c' and floors 'd'. The game features two levels. Adjust the level layout in the `Levels` section to create more complex puzzles!

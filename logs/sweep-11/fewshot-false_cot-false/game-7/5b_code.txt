@@ -1,0 +1,49 @@
+To fix the errors reported in the console output, we need to adhere to the PuzzleScript syntax conventions. Below is the corrected version of your code:
+
+```plaintext
+# Legend
+player = Player
+goal = Goal
+wall = Wall
+floor = Floor
+playerOnGoal = PlayerOnGoal
+
+=== COLLISIONLAYERS ===
+Background,
+wall,
+player, goal
+
+=== RULES ===
+# Player movement doesn't need explicit rules unless combined with other actions
+
+# Goal check
+[ player | goal ] -> [ playerOnGoal ]
+[ playerOnGoal ] -> [ playerOnGoal ]
+
+=== WINCONDITIONS ===
+All playerOnGoal
+
+=== LEVELS ===
+# Level 1
+...goal...
+..wallwallwall..
+..wallplayer...
+..wallwallwall..
+...floor...
+
+# Level 2
+.....goal.
+..wall...
+..wall.player.
+..wall...
+...goal...
+```
+
+### Explanation of Changes:
+1. **Legend Definitions:** Make sure the object definitions match variable names and logical naming, such as `player` for `Player`, `goal` for `Goal`, etc. This aligns with how PuzzleScript expects objects to be defined.
+
+2. **Collision Layers:** Use the same casing and naming as defined in the Legend section. Ensure lowercase use where appropriate, as `PuzzleScript` case sensitivity can be crucial.
+
+3. **Rules for Object Transitions:** The rules were restructured from old syntax, ensuring that conditions accurately depict how objects transform. Use proper positional shorthand like `[ player | goal ] -> [ playerOnGoal ]`.
+
+4. **Level Mapping:** Replace shorthand characters with full names as defined in the Legend section to ensure consistency and clarity.

@@ -1,0 +1,167 @@
+SYSTEM PROMPT:
+You are a game designer, familiar with the PuzzleScript game description language. 
+
+USER PROMPT:
+The following PuzzleScript game code:
+```plaintext
+# Sokoban-like Block Push Puzzle Game
+
+# === Metadata ===
+title Sokoban Puzzle
+author OpenAI
+homepage https://example.com
+# === End Metadata ===
+
+# === Objects ===
+OBJECTS
+Background
+color #000000
+.....
+.....
+.....
+.....
+.....
+
+Wall
+color #888888
+.....
+.....
+.....
+.....
+.XXX.
+
+Player
+color #FFFF00
+.....
+..O..
+.OOO.
+..O..
+.....
+
+Block
+color #FF0000
+.....
+..X..
+.X.X.
+..X..
+.....
+
+Goal
+color #00FF00
+.....
+.....
+..X..
+.....
+.....
+
+BlockOnGoal
+color #FF00FF
+.....
+.....
+.XOX.
+.....
+.....
+
+PlayerOnGoal
+color #00FFFF
+.....
+..O..
+.OXO.
+..O..
+.....
+
+# === End Objects ===
+
+# === Legend ===
+LEGEND
+. = Background
+# = Wall
+P = Player
+B = Block
+G = Goal
+O = BlockOnGoal
+@ = PlayerOnGoal
+
+# === End Legend ===
+
+# === Sounds ===
+SOUNDS
+# This section is empty but needed for correct ordering
+
+# === End Sounds ===
+
+# === Collision Layers ===
+COLLISIONLAYERS
+Background
+Wall
+Player, PlayerOnGoal
+Block, BlockOnGoal
+Goal
+
+# === End Collision Layers ===
+
+# === Rules ===
+RULES
+[ Player | Block ] -> [ Player | ] [ Player | Block ]
+[ PlayerOnGoal | Block ] -> [ Player | ] [ @ | Block ]
+
+[ Player | Goal ] -> [ PlayerOnGoal | ]
+[ PlayerOnGoal | ] -> [ Player | ]
+
+[ Block | Goal ] -> [ BlockOnGoal | ]
+[ BlockOnGoal | ] -> [ Block | ]
+
+# Win condition
+WinCondition
+All BlockOnGoal
+
+# === End Rules ===
+
+# === Levels ===
+LEVELS
+#######
+#     #
+#  G  #
+#     #
+#  B  #
+#  P  #
+#######
+
+#######
+#     #
+#     #
+#  G  #
+#  B  #
+#  P  #
+#######
+
+#######
+#     #
+#  G  #
+#     #
+# B B #
+#  P  #
+#######
+
+#######
+#   G #
+#     #
+# B G #
+#   P #
+#   B #
+#######
+
+# === End Levels ===
+
+```
+produced the following console output:
+=================================
+line 12 : Was looking for color for object BACKGROUND, got "color " instead.
+line 20 : Was looking for color for object WALL, got "color " instead.
+line 25 : Unknown junk in spritematrix for object WALL.
+line 28 : Was looking for color for object PLAYER, got "color " instead.
+line 30 : Unknown junk in spritematrix for object PLAYER.
+line 31 : Unknown junk in spritematrix for object PLAYER.
+too many errors, aborting compilation
+Errors detected during compilation; the game may not work correctly.
+Return a repaired version of the code that addresses these errors. First, reason about your task and determine the best plan of action. Then, write your code. Return your code in full, inside a ```plaintext code block.

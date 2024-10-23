@@ -1,0 +1,131 @@
+Certainly! Below is a basic PuzzleScript game code that you can use as a template. This example is a simple Sokoban-style game where the player pushes boxes onto goals.
+
+```plaintext
+===========
+OBJECTS
+===========
+
+Background
+LIGHTBLUE
+00000
+00000
+00000
+00000
+00000
+
+Wall
+GREY
+11111
+11111
+11111
+11111
+11111
+
+Player
+YELLOW
+0..0.
+.0.0.
+..0..
+.000.
+0...0
+
+Box
+BROWN
+.....
+.000.
+.0.0.
+.000.
+.....
+
+Goal
+GREEN
+.....
+.....
+..0..
+.....
+.....
+
+BoxOnGoal
+DARKGREEN
+.....
+..0..
+.....
+..0..
+.....
+
+PlayerOnGoal
+LUIGREEN
+0..0.
+.0.0.
+..0..
+.000.
+0...0
+
+===========
+LEGEND
+===========
+
+. = Background
+# = Wall
+P = Player
+B = Box
+G = Goal
+O = BoxOnGoal
+Q = PlayerOnGoal
+
+===========
+SOUNDS
+===========
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Player, PlayerOnGoal
+Wall, Box, BoxOnGoal
+Goal
+
+===========
+RULES
+===========
+
+[Player | Box] -> [ > Player | > Box]
+[Player | Goal] -> [PlayerOnGoal | Goal]
+[PlayerOnGoal | Box] -> [ > PlayerOnGoal | > Box]
+
+[PlayerOnGoal] -> [Player]
+[Box | Goal] -> [BoxOnGoal | Goal]
+[BoxOnGoal | Goal] -> [BoxOnGoal]
+[Goal | BoxOnGoal] -> [Goal]
+
+===========
+WINCONDITIONS
+===========
+
+All BoxOnGoal
+
+===========
+LEVELS
+===========
+
+#######
+#.....#
+#..B..#
+#..P..#
+#..G..#
+#.....#
+#######
+
+#######
+#.....#
+#..B..#
+#..G..#
+#..P..#
+#.....#
+#######
+```
+
+This game consists of simple mechanics where the player (`P`) pushes boxes (`B`) onto goals (`G`). When a box is on a goal, it becomes (`O`), and when the player is on a goal, they become (`Q`). The player wins when all boxes are on goals (`BoxOnGoal`).
+
+Feel free to expand on this template. Add more levels, objects, or rules to create a more complex game!

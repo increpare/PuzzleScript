@@ -1,0 +1,128 @@
+```plaintext
+===========
+OBJECTS
+===========
+
+Background
+LIGHTBLUE
+.....
+.....
+.....
+.....
+.....
+
+Wall
+BLACK
+#####  # Corrected graphics for the Wall with the right color representation (1 = '#')
+#####
+#####
+#####
+#####
+
+Player
+YELLOW
+0..0.
+.0.0.
+..0..
+.000.
+0...0
+
+Box
+BROWN
+.....
+.000.
+.0.0.
+.000.
+.....
+
+Goal
+GREEN
+.....
+.....
+..0..
+.....
+.....
+
+BoxOnGoal
+DARKGREEN
+.....
+.....
+..0..
+.....
+.....
+
+PlayerOnGoal
+LIGHTGREEN
+0..0.
+.0.0.
+..0..
+.000.
+0...0
+
+===========
+LEGEND
+===========
+
+. = Background
+# = Wall
+P = Player
+B = Box
+G = Goal
+O = BoxOnGoal
+Q = PlayerOnGoal
+
+===========
+SOUNDS
+===========
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Player, PlayerOnGoal
+Wall, Box, BoxOnGoal
+Goal
+
+===========
+RULES
+===========
+
+[Player | Box] -> [ > Player | > Box]
+[Player | Goal] -> [PlayerOnGoal | Goal]
+[PlayerOnGoal | Box] -> [ > PlayerOnGoal | > Box]
+
+[PlayerOnGoal] -> [Player | Goal]
+[Box | Goal] -> [BoxOnGoal | Goal]
+[BoxOnGoal] -> [BoxOnGoal | Goal] # Fixed. Added Goal pattern on the right side.
+
+===========
+WINCONDITIONS
+===========
+
+All BoxOnGoal
+
+===========
+LEVELS
+===========
+
+#######
+#.....#
+#..B..#
+#..P..#
+#..G..#
+#.....#
+#######
+
+#######
+#.....#
+#..B..#
+#..G..#
+#..P..#
+#.....#
+#######
+```
+
+### Explanation:
+1. **Wall Sprite Correction**: The Wall sprite graphics mistakenly referred to a color index that didn't exist. I replaced the '1's with the symbol '#' as intended, adapting the graphics to the correct color indexing.
+2. **Rule Consistency**: In the rule for `BoxOnGoal`, I added the `Goal` to the right side to make the pattern lengths consistent on both sides of the rule, solving the compilation error at lines 94 and 96.

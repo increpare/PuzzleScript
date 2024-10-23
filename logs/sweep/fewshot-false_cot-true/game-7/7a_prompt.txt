@@ -1,0 +1,97 @@
+SYSTEM PROMPT:
+You are a game designer, familiar with the PuzzleScript game description language. 
+
+USER PROMPT:
+The following PuzzleScript game code:
+```plaintext
+title Simple Sokoban
+
+# Define the game objects with colors
+objects
+  Wall
+    #000000
+  Player
+    #0000FF
+      .....
+      ..0..
+      .000.
+      ..0..
+      .....
+  Box
+    #FFA500
+      .....
+      .0.0.
+      ..0..
+      .0.0.
+      .....
+  Goal
+    #FF0000
+      .....
+      .....
+      ..0..
+      .....
+      .....
+  BoxOnGoal
+    #800080
+      .....
+      .0.0.
+      ..0..
+      .0.0.
+      .....
+
+# Use symbols to easily reference objects
+legend
+  W = Wall
+  P = Player
+  B = Box
+  G = Goal
+  O = BoxOnGoal
+
+# Define empty sounds section as required by structure
+sounds
+
+# Define layers of objects
+collisionlayers
+  Player
+  Box, BoxOnGoal
+  Wall, Goal
+
+# Define how the player and boxes interact
+rules
+  [ > Player | Box ] -> [ > Player | > Box ]
+  [ Box | Goal ] -> [ BoxOnGoal ]
+  [ BoxOnGoal | Player ] -> [ Player | BoxOnGoal ]
+  [ Player | BoxOnGoal ] -> [ > Player | Goal ]
+
+# Define how a player wins the level
+wincondition
+  All BoxOnGoal on Goal
+
+# Create one or more levels
+levels
+  #####
+  #..G#
+  #PB.#
+  #####
+  
+  #######
+  #..G..#
+  #.BBB.#
+  #.P...#
+  #######
+
+
+```
+produced the following console output:
+=================================
+line 36 : Unknown junk in object section (possibly: sprites have to be 5 pixels wide and 5 pixels high exactly. Or maybe: the main names for objects have to be words containing only the letters a-z0.9 - if you want to call them something like ",", do it in the legend section).
+line 44 : In the legend, define new items using the equals symbol - declarations must look like "A = B", "A = B or C [ or D ...]", "A = B and C [ and D ...]".
+line 44 : Incorrect format of legend - should be one of "A = B", "A = B or C [ or D ...]", "A = B and C [ and D ...]", but it looks like you have a dangling "ERROR"?
+line 47 : Was expecting a sound event (like SFX3, or ENDLEVEL) or an object name, but didn't find either.
+line 53 : error detected - unexpected character #
+line 53 : Cannot add "DEFINE" to a collision layer; it has not been declared.
+line 53 : Cannot add "HOW" to a collision layer; it has not been declared.
+line 53 : Cannot add "THE" to a collision layer; it has not been declared.
+too many errors, aborting compilation
+Errors detected during compilation; the game may not work correctly.
+Return a repaired version of the code that addresses these errors. First, reason about your task and determine the best plan of action. Then, write your code. Return your code in full, inside a ```plaintext code block.

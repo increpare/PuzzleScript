@@ -1,0 +1,107 @@
+SYSTEM PROMPT:
+You are a game designer, familiar with the PuzzleScript game description language. 
+
+USER PROMPT:
+The following PuzzleScript game code:
+```plaintext
+Title Sokoban Clone
+Author PuzzleDesigner
+
+========
+OBJECTS
+========
+Background
+WHITE
+00000
+00000
+00000
+00000
+00000
+
+Player
+BLUE WHITE
+00000
+00100
+01110
+00100
+00000
+
+Wall
+BLACK GREY
+00000
+01110
+01110
+01110
+00000
+
+Box
+YELLOW GREY
+00000
+01110
+01100
+01110
+00000
+
+Goal
+GREEN GREEN
+00000
+01110
+01110
+01110
+00000
+
+========
+LEGEND
+========
+. = Background
+# = Wall
+P = Player
+B = Box
+G = Goal
+
+======
+SOUNDS
+======
+
+================
+COLLISIONLAYERS
+================
+Background
+Wall
+Player, Box
+Goal
+
+======
+RULES
+======
+[ > Player | Box ] -> [ > Player | > Box ]
+[ Player | Goal ] -> [ Player | Goal ]
+
+========
+WINCONDITIONS
+========
+All Box on Goal
+
+=======
+LEVELS
+=======
+; Sample Level 1
+########
+#......#
+#..#...#
+#..B.G.#
+#..P...#
+########
+
+```
+produced the following console output:
+=================================
+line 82 : Key ";" not found. Do you need to add it to the legend, or define a new object?
+line 82 : Key "S" not found. Do you need to add it to the legend, or define a new object?
+line 82 : Key "A" not found. Do you need to add it to the legend, or define a new object?
+line 82 : Key "M" not found. Do you need to add it to the legend, or define a new object?
+line 82 : Key "L" not found. Do you need to add it to the legend, or define a new object?
+line 82 : Key "E" not found. Do you need to add it to the legend, or define a new object?
+too many errors, aborting compilation
+Errors detected during compilation; the game may not work correctly.
+Return a repaired version of the code that addresses these errors. First, reason about your task and determine the best plan of action. Then, write your code. Return your code in full, inside a ```plaintext code block.

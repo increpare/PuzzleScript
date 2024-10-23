@@ -1,0 +1,116 @@
+To fix the provided PuzzleScript game code, I need to address the errors in the console output:
+
+1. **Color Access Error**: The error mentions trying to access color number 3, but the color palettes defined only have three colors indexed 0, 1, and 2. This error appears in line 31 for `Target` and line 38 for `CrateOnTarget`. I need to adjust the indexes in the visual representation to correctly map them to existing colors.
+
+2. **Duplicate Name Error**: The error points out that the name "PLAYER" is already in use. In PuzzleScript, the `Player` object is already defined by default, so redefining it in the `LEGEND` section leads to a conflict.
+
+3. **Recursive Definition Error**: The same object cannot be defined in terms of itself, which is related to the `Player` issue outlined above.
+
+To resolve these issues, I'll:
+- Adjust the color indexes in the sprites for `Target` and `CrateOnTarget` to use valid indexes (0, 1, or 2).
+- Remove redundant or erroneous entries from the `LEGEND` section to avoid conflicts.
+
+Here's the corrected code:
+
+```plaintext
+title Sokoban Junior
+author Your Name
+
+========
+OBJECTS
+========
+
+Background
+white
+
+Player
+white
+.0.
+000
+.0.
+
+Wall
+blue blue blue
+111
+111
+111
+
+Crate
+brown brown brown
+222
+222
+222
+
+Target
+red red red
+111
+111
+111
+
+CrateOnTarget
+green brown green
+222
+212
+222
+
+=======
+LEGEND
+=======
+. = Background
+P = Player
+# = Wall
+B = Crate
+T = Target
+X = CrateOnTarget
+
+================
+COLLISIONLAYERS
+================
+Background
+Target
+Player
+Wall
+Crate
+
+======
+RULES
+======
+
+(right)
+[ > Player | Crate | No Crate ] -> [ > Player | > Crate | ]
+
+(up)
+[ Up Player | Crate | No Crate ] -> [ Up Player | Up Crate | ]
+
+(down)
+[ Down Player | Crate | No Crate ] -> [ Down Player | Down Crate | ]
+
+(left)
+[ Left Player | Crate | No Crate ] -> [ Left Player | Left Crate | ]
+
+(on target)
+[ Crate | Target ] -> [ CrateOnTarget ]
+
+(on target move off)
+[ CrateOnTarget | No Target ] -> [ Crate ]
+
+==============
+WINCONDITIONS
+==============
+All CrateOnTarget
+
+=======
+LEVELS
+=======
+#.#.#.#.#.#.#.#.#.#
+#.P....#....B..#..T#
+#.#.#.#.#..###.#.#.#
+#.....B...........T#
+#.#.#..#.#.#.#....#
+#...#....T..B......#
+#.#.#.#.#.#.###.#.#.#
+```
+
+Changes made:
+- Corrected `Target` and `CrateOnTarget` sprite representations to use valid color indexes (0, 1, or 2).
+- Removed unnecessary redefinition of `Player` in the `LEGEND` section to avoid conflict.

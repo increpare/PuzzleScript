@@ -1,0 +1,118 @@
+The issue is caused by an incorrect sprite matrix. When defining sprites in PuzzleScript, each character must represent a color from the specific palette, and each matrix row must have the same number of characters. Here's the corrected version of your code:
+
+```plaintext
+Title: Collect the Keys
+Author: Puzzle Designer
+Homepage: http://www.puzzlescript.net
+
+========
+OBJECTS
+========
+
+Background
+lightblue
+
+Player
+lightgreen
+.00..
+.0X0.
+.0.0.
+.X0X.
+.0.0.
+
+Key
+yellow
+..o..
+.oOo.
+oOoOo
+.oOo.
+..o..
+
+Door
+darkred
+..DD.
+.DDDD
+.D.DD
+DDDDD
+..DD.
+
+Wall
+gray
+.XX..
+.XX..
+.XX..
+.XX..
+.XX..
+
+========
+LEGEND
+========
+
+. = Background
+P = Player
+K = Key
+D = Door
+W = Wall
+
+========
+SOUNDS
+========
+
+KeyCollect
+sfx9
+KeyMusic
+sfx5
+DoorOpen
+sfx6
+Win
+sfx7
+
+========
+RULES
+========
+
+# Player can move
+[ > P | ] -> [ > | P ]
+[ < P | ] -> [ < | P ]
+[ P | > ] -> [ | > P ]
+[ P | < ] -> [ | < P ]
+[ ^ P ] -> [ | P ]
+[ P ^ ] -> [ P | ]
+
+# Collect Key
+[ Player | Key ] -> [ Player ]
+
+# Open Door (Win)
+[ Player | Door ] -> [ Player | Background ]
+message Win
+
+========
+WINCONDITIONS
+========
+
+All Key gone
+
+========
+LEVELS
+========
+
+# Level 1
+......
+.P..K.
+..WW..
+.D....
+
+# Level 2
+......
+PW.KK.
+.WW..D
+.K....
+
+# Level 3
+.P..W.
+.WDW.K
+.KK...
+......
+```
+
+In the sprite matrix for `Key`, I ensured that each row had a consistent number of symbols and adjusted the pattern to maintain alignment with the expectations of the PuzzleScript engine.

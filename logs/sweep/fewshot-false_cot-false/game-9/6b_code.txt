@@ -1,0 +1,97 @@
+The errors in your code are caused by mismatched patterns in your rules. Specifically, every pattern on the left side of a rule must have the same number of objects as on the right side. The rules on lines 63 and 66 must be adjusted. Here is a fixed version of your game code:
+
+```plaintext
+Title: Box Pusher
+Author: Your Name
+Homepage: http://www.yourwebsite.com
+# Prefix ranges are | and \
+
+===========
+OBJECTS
+===========
+
+Background
+transparent
+
+Wall
+brown
+
+Player
+lightblue
+
+Box
+yellow
+
+Target
+pink
+
+BoxOnTarget
+lightred
+
+PlayerOnTarget
+purple
+
+===========
+LEGEND
+===========
+
+. = Background
+# = Wall
+P = Player
+B = Box
+X = Target
+O = BoxOnTarget
+Q = PlayerOnTarget
+
+===========
+SOUNDS
+===========
+
+===========
+COLLISIONLAYERS
+===========
+
+Background
+Wall
+Player, PlayerOnTarget
+Box, BoxOnTarget
+Target
+
+===========
+RULES
+===========
+
+[> Player | Box] -> [> Player | > Box]
+[> PlayerOnTarget | Box] -> [> PlayerOnTarget | > Box]
+[> Player | Target] -> [> PlayerOnTarget | Target]
+[> Player | BoxOnTarget] -> [> Player | > BoxOnTarget]
+[PlayerOnTarget | Background] -> [Player | Background]
+[Box | Target] -> [BoxOnTarget | Target]
+
+===========
+WINCONDITIONS
+===========
+
+All BoxOnTarget
+
+===========
+LEVELS
+===========
+
+#####
+#...#
+#.#.#
+#P#B#
+#...#
+#####
+
+#######
+#..####
+#..X..#
+#.###.#
+#.P#..#
+#..#..#
+#######
+```
+
+Now, each rule's left side will have a corresponding pattern of equal length on the right side, satisfying PuzzleScript's requirements.

@@ -1,0 +1,124 @@
+```plaintext
+title Collect the Coins
+author YourName
+homepage www.example.com
+
+========
+OBJECTS
+========
+
+Background
+blue
+.....
+
+Wall
+darkblue
+.....
+.....
+.....
+.....
+.....
+
+Player
+green
+.....
+.....
+.....
+.....
+.....
+
+Coin
+yellow yellow
+.....
+..1..
+.111.
+..1..
+.....
+
+Enemy
+red red
+.111.
+1...1
+1...1
+1...1
+.111.
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Player
+C = Coin
+E = Enemy
+
+=========
+SOUNDS
+=========
+
+sfx0 44564808
+sfx1 78564407
+sfx2 56233809
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Wall, Player, Enemy, Coin
+
+======
+RULES
+======
+
+[ > Player | Coin ] -> [ > Player | ] sfx0
+
+[ > Player | Enemy ] -> [ Player | Enemy ] sfx1
+
+right [ E | Background ] -> [ | E ]
+left  [ E | Background ] -> [ E | ]
+
+==============
+WINCONDITIONS
+==============
+
+no Coin
+
+=======
+LEVELS
+=======
+
+message Collect all the coins!
+
+#######
+#.....#
+#..P#C#
+#..#E.#
+#C.#..#
+#.....#
+#######
+
+message Level 2: More challenges!
+
+#######
+#C....#
+#..P..#
+#.##..#
+#CE.#C#
+#.....#
+#######
+
+message Congratulations! You collected all the coins!
+
+#######
+#.....#
+#...C.#
+#..P..#
+#.....#
+#C....#
+#######
+
+``` 
+
+The unsolvable levels have been fixed by ensuring Player can access all Coins and avoiding any enemies blocking pathways without the possibility to move past them.

@@ -1,0 +1,100 @@
+The errors you're encountering are due to the use of semicolons to mark comments in the levels section. PuzzleScript does not support semicolon-prefixed comments in the levels part of the game definition. Instead, comments should be in the correct places, such as at the beginning of a new section, and not inline with level data.
+
+Here's a plan of action:
+1. Remove the comment marked by a semicolon in the levels section.
+2. Ensure the level data is correctly formatted, using only the defined objects in the legend.
+
+Here is a repaired version of the code:
+
+```plaintext
+Title Sokoban Clone
+Author PuzzleDesigner
+
+========
+OBJECTS
+========
+Background
+WHITE
+00000
+00000
+00000
+00000
+00000
+
+Player
+BLUE WHITE
+00000
+00100
+01110
+00100
+00000
+
+Wall
+BLACK GREY
+00000
+01110
+01110
+01110
+00000
+
+Box
+YELLOW GREY
+00000
+01110
+01100
+01110
+00000
+
+Goal
+GREEN GREEN
+00000
+01110
+01110
+01110
+00000
+
+========
+LEGEND
+========
+. = Background
+# = Wall
+P = Player
+B = Box
+G = Goal
+
+======
+SOUNDS
+======
+
+================
+COLLISIONLAYERS
+================
+Background
+Wall
+Player, Box
+Goal
+
+======
+RULES
+======
+[ > Player | Box ] -> [ > Player | > Box ]
+[ Player | Goal ] -> [ Player | Goal ]
+
+========
+WINCONDITIONS
+========
+All Box on Goal
+
+=======
+LEVELS
+=======
+########
+#......#
+#..#...#
+#..B.G.#
+#..P...#
+########
+
+```
+
+This version of the code removes the comment from the levels section, thus resolving the compilation errors that were preventing your game from working correctly. As a result, the game should now compile and run properly with the supplied level data.

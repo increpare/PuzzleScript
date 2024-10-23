@@ -1,0 +1,131 @@
+SYSTEM PROMPT:
+You are a game designer, familiar with the PuzzleScript game description language. 
+
+USER PROMPT:
+The following PuzzleScript game code:
+```plaintext
+Title: Collect the Keys
+Author: Puzzle Designer
+Homepage: http://www.puzzlescript.net
+
+========
+OBJECTS
+========
+
+Background
+lightblue
+
+Player
+lightgreen
+.00..
+.0X0.
+.0.0.
+.X0X.
+.0.0.
+
+Key
+yellow
+..o..
+.oOo.
+oOoOo
+.oOo.
+..o..
+
+Door
+darkred
+..DD.
+.DDDD
+.D.DD
+DDDDD
+..DD.
+
+Wall
+gray
+.XX..
+.XX..
+.XX..
+.XX..
+.XX..
+
+========
+LEGEND
+========
+
+. = Background
+P = Player
+K = Key
+D = Door
+W = Wall
+
+========
+SOUNDS
+========
+
+KeyCollect
+sfx9
+KeyMusic
+sfx5
+DoorOpen
+sfx6
+Win
+sfx7
+
+========
+RULES
+========
+
+# Player can move
+[ > P | ] -> [ > | P ]
+[ < P | ] -> [ < | P ]
+[ P | > ] -> [ | > P ]
+[ P | < ] -> [ | < P ]
+[ ^ P ] -> [ | P ]
+[ P ^ ] -> [ P | ]
+
+# Collect Key
+[ Player | Key ] -> [ Player ]
+
+# Open Door (Win)
+[ Player | Door ] -> [ Player | Background ]
+message Win
+
+========
+WINCONDITIONS
+========
+
+All Key gone
+
+========
+LEVELS
+========
+
+# Level 1
+......
+.P..K.
+..WW..
+.D....
+
+# Level 2
+......
+PW.KK.
+.WW..D
+.K....
+
+# Level 3
+.P..W.
+.WDW.K
+.KK...
+......
+
+```
+produced the following console output:
+=================================
+line 15 : Unknown junk in spritematrix for object PLAYER.
+line 17 : Unknown junk in spritematrix for object PLAYER.
+line 22 : Unknown junk in spritematrix for object KEY.
+line 23 : Unknown junk in spritematrix for object KEY.
+line 24 : Unknown junk in spritematrix for object KEY.
+line 25 : Unknown junk in spritematrix for object KEY.
+too many errors, aborting compilation
+Errors detected during compilation; the game may not work correctly.
+Return a repaired version of the code that addresses these errors. Return your code in full, inside a ```plaintext code block.

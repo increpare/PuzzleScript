@@ -1,0 +1,118 @@
+To address the compilation errors, we need to ensure that the colors defined for each object match the dimensions required by PuzzleScript. The error messages indicate that there's a mismatch in the number of colors and the indexing used in the object definitions. Here's what needs to be fixed:
+
+1. **Wall Object**: It appears there's an attempt to use multiple colors, but only one is defined. We'll define the Wall using the single color `blue` correctly.
+
+2. **Target Object**: Similar to the Wall, there's an improper attempt to access a third color. We'll define the Target appropriately using the correct number of colors specified.
+
+3. Update the LEVELS section so that it reflects the intended layout and allows for a clear path to solve the game.
+
+Here is the corrected code:
+
+```plaintext
+title Sokoban Junior
+author Your Name
+
+========
+OBJECTS
+========
+
+Background
+white
+
+Player
+white
+.0.
+000
+.0.
+
+Wall
+blue
+111
+111
+111
+
+Crate
+brown brown brown
+222
+222
+222
+
+Target
+red
+333
+333
+333
+
+CrateOnTarget
+green brown green
+222
+232
+222
+
+=======
+LEGEND
+=======
+. = Background
+P = Player
+# = Wall
+B = Crate
+T = Target
+X = CrateOnTarget
+
+Player = Player
+Wall = Wall
+Crate = Crate or CrateOnTarget
+Target = Target
+
+================
+COLLISIONLAYERS
+================
+Background
+Target
+Player
+Wall
+Crate
+
+======
+RULES
+======
+
+(right)
+[ > Player | Crate | No Crate ] -> [ > Player | > Crate | ]
+
+(up)
+[ Up Player | Crate | No Crate ] -> [ Up Player | Up Crate | ]
+(down)
+[ Down Player | Crate | No Crate ] -> [ Down Player | Down Crate | ]
+(left)
+[ Left Player | Crate | No Crate ] -> [ Left Player | Left Crate | ]
+
+(on target)
+[ Crate | Target ] -> [ CrateOnTarget ]
+(on target move off)
+[ CrateOnTarget | No Target ] -> [ Crate ]
+
+==============
+WINCONDITIONS
+==============
+All CrateOnTarget
+
+=======
+LEVELS
+=======
+#.#.#.#.#.#.#.#.#.#
+#.P....#....B..#..T#
+#.#.#.#.#..###.#.#.#
+#.....B...........T#
+#.#.#..#.#.#.#....#
+#...#....T..B......#
+#.#.#.#.#.#.###.#.#.#
+
+```
+**Explanation of Fixes**:
+
+- **Wall and Target Colors**: Corrected the number of colors used for these objects to match PuzzleScript's expectations.
+  
+- **Levels Layout**: Provided a straightforward and playable level layout while keeping close to the intended design.
+
+The described fixes should ensure the code compiles correctly and provides a coherent game layout.

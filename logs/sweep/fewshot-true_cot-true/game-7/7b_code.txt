@@ -1,0 +1,134 @@
+Upon reviewing the PuzzleScript game code provided, it appears that several syntax errors caused the compilation errors noted in the output. The game's rules section has issues where words not enclosed in square brackets are being used, and invalid object names are referenced. 
+
+Here’s a plan of action to correct these errors:
+
+1. **Check Rule Syntax**: 
+   - Ensure all objects and directions in rule statements are enclosed in proper square brackets `[ ]`.
+   - The steps and order of objects/actions should be clearly specified in `[condition] -> [result]` format.
+
+2. **Verify Object Names**: 
+   - Ensure that all object names mentioned in rules (`Crate` and `Key` in the original code) correctly match defined objects or are properly justified in the context of game logic.
+
+3. **Correct Rule Statements**: 
+   - Fix any misnamed or missing objects and ensure that rules logically correspond with intended game mechanics.
+
+Here is the corrected version of the code:
+
+```plaintext
+title KeyCollector
+author PuzzleScriptDesigner
+homepage www.puzzlescript.net
+
+========
+OBJECTS
+========
+
+Background
+White
+
+Player
+Blue
+..0..
+.000.
+.0.0.
+00000
+.0.0.
+
+Wall
+Black
+00000
+00000
+00000
+00000
+00000
+
+Key
+Yellow
+..0..
+.0.0.
+0...0
+.0.0.
+..0..
+
+Door
+Red
+.....
+.000.
+0.0.0
+.000.
+.....
+
+Exit
+Green
+..0..
+.0.0.
+00000
+.0.0.
+..0..
+
+=======
+LEGEND
+=======
+
+. = Background
+P = Player
+# = Wall
+K = Key
+D = Door
+E = Exit
+
+=======
+SOUNDS
+=======
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Key, Exit
+Player, Wall, Door
+
+======
+RULES
+======
+# Collect Key
+[ Player | Key ] -> [ Player | Background ]
+
+# Open Door with Key if next to it on the right
+[right Player Key | Door] -> [ Player | Background | Background]
+
+===============
+WINCONDITIONS
+===============
+
+All Player on Exit
+
+=======
+LEVELS
+=======
+
+message level 1 - Get the Key!
+########
+#..K...#
+#..#..D#
+#..#..##
+#P....E#
+########
+
+message level 2 - Use the Key Wisely
+########
+#P..####
+#..K.D.#
+#..#.E.#
+#..#..##
+#......#
+########
+
+message "Congratulations!\nYou have completed all the levels!"
+```
+
+**Explanation of Changes:**
+- In the rules section, I removed misnamed references like `Crate` which was not defined in the objects section, and appropriately used `Key` for collecting keys.
+- Fixed the syntax by ensuring all objects/actions are correctly enclosed in square brackets and aligned with the defined game mechanics.
+- Updated the logic to correctly utilize the `Key` object within the rules to ensure players can collect keys and interact with doors correctly.

@@ -1,0 +1,137 @@
+```plaintext
+title Portal Puzzles
+author AI Game Designer
+homepage www.puzzlescript.net
+
+========
+OBJECTS
+========
+
+Background
+#EAEAEA
+
+Player
+#FFCC00 #FF9900
+.....
+..0..
+.111.
+..0..
+.....
+
+PortalOrange
+#FFA500 #FF4500
+.....
+..0..
+.111.
+..0..
+.....
+
+PortalBlue
+#1E90FF #0000FF
+.....
+..0..
+.111.
+..0..
+.....
+
+Wall
+#555555
+11111
+11111
+11111
+11111
+11111
+
+Crate
+#8B4513 #CD853F
+.....
+.111.
+.1.1.
+.111.
+.....
+
+Goal
+#32CD32
+.000.
+.0.0.
+.000.
+.....
+
+=======
+LEGEND
+=======
+
+. = Background
+P = Player
+O = PortalOrange
+B = PortalBlue
+# = Wall
+* = Crate
+G = Goal
+
+=======
+SOUNDS
+=======
+
+movePlayer 18467108
+goal 14539908
+portal 32566708
+crateMove 12345678
+
+===============
+COLLISIONLAYERS
+===============
+
+Background
+Player, PortalOrange, PortalBlue, Goal
+Crate
+Wall
+
+======
+RULES
+======
+
+[ -> Player | No Crate ] -> [ -> Player | ]
+[ Player | PortalOrange ] -> [ PortalBlue | Player portal ]
+[ Player | PortalBlue ] -> [ PortalOrange | Player portal ]
+[ > Player | Goal ] -> [ Player movePlayer goal ]
+[ > Player | Crate ] -> [ > Player | > Crate crateMove ]
+
+=============
+WINCONDITIONS
+=============
+
+All Player on Goal
+
+=======
+LEVELS
+=======
+
+message Level 1 - Portal Practice
+#######
+#P....#
+#.....#
+#.....#
+#G...O#
+#######
+
+message Level 2 - Crate Portal
+#######
+#P....#
+#..*..#
+#.....#
+#G...O#
+#######B
+
+message Level 3 - Tactical Portals
+#########
+#P......#
+#....*..#
+#....*..#
+#G...O..#
+###..*..#
+#B......#
+#########
+
+message Congratulations! You've mastered the portals!
+```

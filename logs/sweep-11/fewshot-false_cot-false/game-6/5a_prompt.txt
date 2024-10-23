@@ -1,0 +1,131 @@
+SYSTEM PROMPT:
+You are a game designer, familiar with the PuzzleScript game description language. 
+
+USER PROMPT:
+The following PuzzleScript game code:
+```plaintext
+////////////////////////////////////////////////////////////
+// Catch the Star
+// Author: Your Name
+////////////////////////////////////////////////////////////
+
+////////////////////////////////
+// Objects
+////////////////////////////////
+
+objects
+    Background
+        color black
+        noart
+
+    Player
+        color blue
+        P
+        00000
+        00000
+        02220
+        00000
+        00000
+
+    Star
+        color yellow
+        S
+        01110
+        11111
+        01110
+        11111
+        01110
+
+    Wall
+        color gray
+        W
+        11111
+        11111
+        11111
+        11111
+        11111
+
+////////////////////////////////
+// Legend
+////////////////////////////////
+
+legend
+    . = Background
+    P = Player
+    S = Star
+    W = Wall
+
+////////////////////////////////
+// Sounds
+////////////////////////////////
+
+sounds
+    player push wall
+    player move star
+
+////////////////////////////////
+// Collision Layers
+////////////////////////////////
+
+collisionlayers
+    Background
+    Wall
+    Player, Star
+
+////////////////////////////////
+// Rules
+////////////////////////////////
+
+rules
+    [ > Player | Star ] -> [ > Player | ]
+
+////////////////////////////////
+// Win Conditions
+////////////////////////////////
+
+winconditions
+    (no Star)
+
+////////////////////////////////
+// Levels
+////////////////////////////////
+
+levels
+    XXXXX
+    X.P.X
+    X...X
+    X.S.X
+    XXXXX
+
+    XXXX
+    X..X
+    XWPX
+    XS.X
+    XXXX
+
+    XXXXXXX
+    X.....X
+    X.WP..X
+    X...W.X
+    X..S..X
+    XXXXXXX
+
+////////////////////////////////
+// Post Conditions
+////////////////////////////////
+
+postconditions
+    shouldrestart on [ Player Star ] // if player collides with a star
+
+```
+produced the following console output:
+=================================
+line 12 : Was looking for color for object BACKGROUND, got "color " instead.
+line 16 : Was looking for color for object PLAYER, got "color " instead.
+line 18 : Was looking for color for object P, got "00000" instead.
+line 19 : Trying to access color number 0 from the color palette of sprite P, but there are only 0 defined in it.
+line 20 : Trying to access color number 0 from the color palette of sprite P, but there are only 0 defined in it.
+line 20 : Trying to access color number 2 from the color palette of sprite P, but there are only 0 defined in it.
+too many errors, aborting compilation
+Errors detected during compilation; the game may not work correctly.
+Return a repaired version of the code that addresses these errors. Return your code in full, inside a ```plaintext code block.

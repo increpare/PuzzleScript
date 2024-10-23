@@ -1,0 +1,47 @@
+Certainly! Your original script seems to have placed the legend after an extra heading line that was incorrectly placed. The PuzzleScript language expects properly defined sections, and lines without the proper structure will lead to errors. Let’s address that and adjust your code accordingly:
+
+```plaintext
+=== LEGEND ===
+player = Player
+goal = Goal
+wall = Wall
+floor = Floor
+playerOnGoal = PlayerOnGoal
+
+=== COLLISIONLAYERS ===
+Background,
+wall,
+player, goal
+
+=== RULES ===
+# Player movement doesn't need explicit rules unless combined with other actions
+
+# Goal check
+[ player | goal ] -> [ playerOnGoal ]
+
+=== WINCONDITIONS ===
+All playerOnGoal
+
+=== LEVELS ===
+# Level 1
+...goal...
+..wallwallwall..
+..wallplayer...
+..wallwallwall..
+...floor...
+
+# Level 2
+.....goal.
+..wall...
+..wall.player.
+..wall...
+...goal...
+```
+
+Here are the important changes and adjustments made:
+
+1. Added the `=== LEGEND ===` section header before the legend entries at the start of the script.
+
+2. Removed the redundant rule `[ playerOnGoal ] -> [ playerOnGoal ]` because it does not change the state and is not necessary for transformations, thus simplifying the rule set.
+
+These changes follow the usual conventions expected by the PuzzleScript language. Try this corrected version to see if it resolves the previous errors.

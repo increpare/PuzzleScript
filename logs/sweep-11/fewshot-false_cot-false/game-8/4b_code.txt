@@ -1,0 +1,108 @@
+Certainly! Here is a corrected version of your PuzzleScript code. I've fixed the errors related to the sound declaration and ensured symbols in the `LEVELS` section are defined correctly.
+
+```plaintext
+======
+
+title Collect the Key
+author Game Designer
+homepage https://puzzlescript.net
+
+======
+
+OBJECTS
+
+Background
+black
+
+Player
+yellow
+
+Key
+red
+
+Door
+blue
+
+Goal
+green
+
+Wall
+grey
+
+======
+
+LEGEND
+
+. = Background
+P = Player
+K = Key
+D = Door
+G = Goal
+W = Wall
+
+======
+
+SOUNDS
+
+SFX1
+Key
+
+SFX2
+Door
+
+SFX3
+Win
+
+======
+
+COLLISIONLAYERS
+
+Background
+Player
+Key
+Door
+Goal
+Wall
+
+======
+
+RULES
+
+[ > Player | Key ] -> [ Player | Background ] SFX1
+[ Player | Key ] -> [ Player | Background ] SFX1
+[ > Player | Door ] -> [ Player | Background ] SFX2
+[ Player | Goal ] -> [ Player | Background ] SFX3
+
+======
+
+WINCONDITIONS
+
+All Goal
+
+======
+
+LEVELS
+
+P . . . .
+. W W W D
+. W K G W
+. W W W W
+. . . . .
+
+. . . P .
+W W W W .
+W D K G .
+W . . . .
+W . . . .
+
+======
+
+END
+```
+
+Changes made:
+- Fixed the `SOUNDS` section to declare the sounds correctly using identifiers `SFX1`, `SFX2`, and `SFX3`.
+- Updated `RULES` section to use the correct sound identifiers for sound effects.
+- Ensured the `.`, `P`, `K`, `D`, `G`, `W` symbols are consistent in both the `LEGEND` and `LEVELS` section, and no unnecessary letters/symbols are used in the `LEVELS`.
+
+The game should now compile without the previous errors.

@@ -1,0 +1,92 @@
+```plaintext
+======
+
+title Collect the Key
+author Game Designer
+homepage https://puzzlescript.net
+
+======
+
+OBJECTS
+
+Background
+black
+
+Player
+yellow
+
+Key
+red
+
+Door
+blue
+
+Goal
+green
+
+Wall
+grey
+
+======
+
+LEGEND
+
+. = Background
+P = Player
+K = Key
+D = Door
+G = Goal
+W = Wall
+
+======
+
+SOUNDS
+
+======
+
+COLLISIONLAYERS
+
+Background
+Player
+Key
+Door
+Goal
+Wall
+
+======
+
+RULES
+
+[ > Player | Key ] -> [ Player | Background ]
+[ Player | Key ] -> [ Player | Background ]
+[ > Player | Door ] -> [ Player | Background ]
+[ Player | Goal ] -> [ Player | Background ]
+
+======
+
+WINCONDITIONS
+
+All Goal
+
+======
+
+LEVELS
+
+P . . . .
+. W W W D
+. W K G W
+. W W W W
+. . . . .
+
+. . . P .
+W W W W .
+W D K G .
+W . . . .
+W . . . .
+
+======
+
+END
+``` 
+
+The console errors you encountered were mostly due to spacing inconsistencies or errors in the LEVELS section. Make sure there are no extraneous characters and that all levels adhere to the defined LEGEND. The fixed version above should eliminate the previous errors.

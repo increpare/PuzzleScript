@@ -1,0 +1,14 @@
+=================================
+line 36 : section "COLLISIONLAYERS" is out of order, must follow  "SOUNDS" (or it could be that the section "SOUNDS"is just missing totally.  You have to include all section headings, even if the section itself is empty).
+line 47 : Name "player", referred to in a rule, does not exist.
+line 47 : Name "treasurechest", referred to in a rule, does not exist.
+line 53 : Error in win condition: "TARGET" is not a valid object name.
+line 53 : Error in win condition: "TREASURECHEST" is not a valid object name.
+line 47 : Error, malformed cell rule - was looking for cell contents, but found "player".  What am I supposed to do with this, eh, please tell me that.
+line 47 : In a rule, if you specify a movement, it has to act on an object.
+line 47 : Error, malformed cell rule - was looking for cell contents, but found "treasurechest".  What am I supposed to do with this, eh, please tell me that.
+line 47 : Error, malformed cell rule - encountered a "["" before previous bracket was closed
+line 47 : Error, an item can only have one direction/action at a time, but you're looking for several at once!
+You have an totally empty pattern on the left-hand side.  This will match *everything*.  You certainly don't want this.
+TypeError: Cannot read properties of undefined (reading 'generateMatchString')
+Errors detected during compilation; the game may not work correctly.

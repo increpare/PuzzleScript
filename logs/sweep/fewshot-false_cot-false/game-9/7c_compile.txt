@@ -1,0 +1,10 @@
+=================================
+line 47 : Only comments should go after a bunch of equals signs ('===') on a line.
+line 50 : Was expecting a soundverb here (MOVE, DESTROY, CANTMOVE, or the like), but found something else.
+line 51 : Was expecting a soundverb here (MOVE, DESTROY, CANTMOVE, or the like), but found something else.
+line 55 : section "RULES" is out of order, must follow  "COLLISIONLAYERS" (or it could be that the section "COLLISIONLAYERS"is just missing totally.  You have to include all section headings, even if the section itself is empty).
+No collision layers defined.  All objects need to be in collision layers.
+error, didn't find any object called player, either in the objects section, or the legends section. there must be a player!
+you have to have a background layer
+TypeError: Cannot read properties of undefined (reading 'anyBitsInCommon')
+Errors detected during compilation; the game may not work correctly.

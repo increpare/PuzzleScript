@@ -1,0 +1,95 @@
+To make the level solvable, you need to ensure that the Box can be moved onto the Goal tile. Here's a revised version of your PuzzleScript game code that fixes the unsolvable level by adjusting the placement of the Box (B) and the Goal (G), making sure there is space to move the Box to the Goal:
+
+```plaintext
+Title Sokoban Clone
+Author PuzzleDesigner
+
+========
+OBJECTS
+========
+Background
+WHITE
+00000
+00000
+00000
+00000
+00000
+
+Player
+BLUE WHITE
+00000
+00100
+01110
+00100
+00000
+
+Wall
+BLACK GREY
+00000
+01110
+01110
+01110
+00000
+
+Box
+YELLOW GREY
+00000
+01110
+01100
+01110
+00000
+
+Goal
+GREEN GREEN
+00000
+01110
+01110
+01110
+00000
+
+========
+LEGEND
+========
+. = Background
+# = Wall
+P = Player
+B = Box
+G = Goal
+
+======
+SOUNDS
+======
+
+================
+COLLISIONLAYERS
+================
+Background
+Wall
+Player, Box
+Goal
+
+======
+RULES
+======
+[ > Player | Box ] -> [ > Player | > Box ]
+[ Player | Goal ] -> [ Player | Goal ]
+
+========
+WINCONDITIONS
+========
+All Box on Goal
+
+=======
+LEVELS
+=======
+########
+#......#
+#..#...#
+#..P.B.#
+#..G...#
+#......#
+########
+
+```
+
+In this version of the level, the Box (B) is now placed to ensure it can be pushed onto the Goal (G), making the puzzle solvable.

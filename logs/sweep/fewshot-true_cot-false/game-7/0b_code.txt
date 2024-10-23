@@ -1,0 +1,122 @@
+Certainly! Here's a complete PuzzleScript game code for a simple game where the objective is for the player to collect all the coins while avoiding moving enemies.
+
+```plaintext
+title Collect the Coins
+author YourName
+homepage www.example.com
+
+========
+OBJECTS
+========
+
+Background
+blue
+
+Wall
+darkblue
+00000
+02220
+02220
+02220
+00000
+
+Player
+green
+.111.
+.1.1.
+.111.
+...1.
+.....
+
+Coin
+yellow
+.....
+..3..
+.333.
+..3..
+.....
+
+Enemy
+red
+.333.
+3...3
+3...3
+3...3
+.333.
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Player
+C = Coin
+E = Enemy
+
+=========
+SOUNDS
+=========
+
+collect 44564808
+hit 78564407
+win 56233809
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Player, Enemy, Wall, Coin
+
+======
+RULES
+======
+
+# Player collects coin
+[ > Player | Coin ] -> [ > Player | ]
+
+# Player hits enemy (temporary end game example)
+[ > Player | Enemy ] -> [ Player | Enemy ] sfx2
+
+# Enemies move automatically
+up [ Enemy | Background ] -> [ | Enemy ]
+(Enemies move up)
+
+down [ Enemy ] -> [ Enemy ]
+(Keep moving down if nothing is in the way)
+
+==============
+WINCONDITIONS
+==============
+
+no Coin
+
+=======
+LEVELS
+=======
+
+message Collect all the coins!
+
+#######
+#.....#
+#.P.#C#
+#...E.#
+#C.#..#
+#.....#
+#######
+
+message Level 2: More challenges!
+
+#######
+#.....#
+#.P.#.#
+#....C#
+#C.#E.#
+#.....#
+#######
+
+message Congratulations! You collected all the coins!
+``` 
+
+This game requires the player to collect all the coins represented by "C" on the map while avoiding the enemy, which moves vertically. Once all coins are collected, the game recognizes victory. You can expand this game further by adding more levels, different enemy patterns or more complex obstacles.

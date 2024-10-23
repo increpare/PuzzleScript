@@ -1,0 +1,72 @@
+The error messages indicate that there is an issue with how the colors are defined for the `Wall` object. The message "Was looking for color for object WALL, got '000000' instead" suggests that the color values are not defined correctly. It seems the code mistakenly included unnecessary numbers after the color code, which PuzzleScript does not recognize as a valid color definition.
+
+In PuzzleScript, each object should have a valid color code that corresponds to its appearance. Colors are represented in hexadecimal format, and no further numbers or lines should follow after the hex color code in the definition of an object’s appearance, unless you are specifying the layout of pixels using the 'X.', where 'X' refers to the color and '.' refers to transparent.
+
+Therefore, to fix this issue, we need to correct the object definitions to use valid colors without extra numbers below the color code line. Let's update the code by simplifying the color setups for each object:
+
+```plaintext
+title Simple Sokoban
+
+# Define the game objects with colors
+objects
+  Wall
+    000000
+  Player
+    00f
+      .....
+      ..0..
+      .000.
+      ..0..
+  Box
+    f80
+      .....
+      .0.0.
+      ...0.
+      .0.0.
+  Goal
+    f00
+      .....
+      ..0..
+      ..0..
+      .....
+  BoxOnGoal
+    f0f
+      .....
+      .0.0.
+      ...0.
+      .0.0.
+
+# Use symbols to easily reference objects
+legend
+  W = Wall
+  P = Player
+  B = Box
+  G = Goal
+  O = BoxOnGoal
+
+# Define how the player and boxes interact
+rules
+  [ > Player | Box ] -> [ > Player | > Box ]
+  [ Box | Goal ] -> [ BoxOnGoal ]
+  [ BoxOnGoal | > Player ] -> [ Player | > BoxOnGoal ]
+  [ Player | BoxOnGoal ] -> [ > Player | Goal ]
+
+# Define how a player wins the level
+wincondition
+  All BoxOnGoal on Goal
+
+# Create one or more levels
+levels
+  #####
+  #..G#
+  #PB.#
+  #####
+  
+  #######
+  #..G..#
+  #.BBB.#
+  #.P...#
+  #######
+```
+
+In this updated code, the `Wall` object has a single line with a hex color, corrected to fix the issues with color specification. Other objects have their colors and pixel patterns separately defined after the color specification. This ensures you have a correct setup for displaying objects in the game.

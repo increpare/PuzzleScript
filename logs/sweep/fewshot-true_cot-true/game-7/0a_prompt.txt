@@ -1,0 +1,1757 @@
+SYSTEM PROMPT:
+You are a game designer, familiar with the PuzzleScript game description language. Here are some example games, for inspiration (do not reproduce these games exactly):
+
+title ScriptCross
+author Dennis Au
+homepage www.puzzlescript.net
+
+========
+OBJECTS
+========
+
+Background
+White
+
+Target
+Black
+
+Fill
+Black
+
+Cross
+LightGrey
+0...0
+.0.0.
+..0..
+.0.0.
+0...0
+
+
+Player
+Green
+00000
+0...0
+0...0
+0...0
+00000
+
+Border #
+LightGrey
+
+(Clues 0-9)
+Clue0 0
+LightGrey
+
+Clue1 1
+LightGrey Black
+00000
+0...0
+0.1.0
+0...0
+00000
+
+Clue2 2
+LightGrey Black
+00000
+0..10
+0...0
+01..0
+00000
+
+Clue3 3
+LightGrey Black
+00000
+0..10
+0.1.0
+01..0
+00000
+
+Clue4 4
+LightGrey Black
+00000
+01.10
+0...0
+01.10
+00000
+
+Clue5 5
+LightGrey Black
+00000
+01.10
+0.1.0
+01.10
+00000
+
+Clue6 6
+LightGrey Black
+00000
+01.10
+01.10
+01.10
+00000
+
+Clue7 7
+LightGrey Black
+00000
+01110
+0.1.0
+01110
+00000
+
+Clue8 8
+LightGrey Black
+00000
+01110
+0.110
+01110
+00000
+
+Clue9 9
+LightGrey Black
+00000
+01110
+01110
+01110
+00000
+
+
+=======
+LEGEND
+=======
+
+. = Background
+P = Player and Border
+b = Target
+Clue = Clue0 or Clue1 or Clue2 or Clue3 or Clue4 or Clue5 or Clue6 or Clue7 or Clue8 or Clue9
+NoEmpty = Fill or Cross or Clue or Border
+
+=======
+SOUNDS
+=======
+EndLevel 37348103
+EndGame 64173909
+
+================
+COLLISIONLAYERS
+================
+
+(switch order of target and background to see the solutions)
+Target
+Background
+Border, Clue, Fill, Cross
+Player
+
+
+======
+RULES
+======
+
+[Action Player no NoEmpty] -> [Player Fill]
+[Action Player Fill] -> [Player Cross]
+[Action Player Cross] -> [Player]
+
+
+
+==============
+WINCONDITIONS
+==============
+
+All Target on Fill
+All Fill on Target
+
+=======
+LEVELS
+=======
+
+(P123456789)
+
+message level 1 - oh so stable
+
+P12
+1.b
+2bb
+
+message level 2 - it is what it is
+P#1###
+##113#
+##311#
+3.bbb.
+1...b.
+3.bbb.
+1.b...
+3.bbb.
+
+message level 3 - i see you!
+P##1#1#
+###111#
+##.....
+11.b.b.
+##.....
+#3.bbb.
+##.....
+
+message level 4 - that's ace
+P#######1####
+#######111###
+######14141##
+#####8111118#
+###8.bbbbbbb.
+##11.b.....b.
+#131.b.bbb.b.
+1111.b.b.b.b.
+#131.b.bbb.b.
+1111.b.b.b.b.
+##11.b.....b.
+###8.bbbbbbb.
+####.........
+
+message congratulations!
+
+
+title By Your Side
+author Alan Hazelden
+homepage www.draknek.org
+
+require_player_movement
+key_repeat_interval 0.12
+
+(
+
+A port of alan hazelden's game, By Your Side, in 6 lines of code, made with the permission of the author -
+
+the original is here
+http://www.draknek.org/games/by-your-side/
+
+)
+
+========
+OBJECTS
+========
+
+(Objects in all scenes)
+
+Grass .
+darkgreen green
+00000
+01000
+00000
+00010
+00000
+
+Player_Casual P
+black pink gray
+..0..
+..1..
+.222.
+..2..
+.2.2.
+
+TargetMain T
+yellow
+00000
+0...0
+0...0
+0...0
+00000
+
+(Initial Scenes)
+
+GirlFriend G
+pink red
+..0..
+.010.
+..1..
+.111.
+.0.0.
+
+Tree #
+darkbrown lightgreen
+.111.
+11111
+.111.
+..0..
+..0..
+
+(Wedding Scene)
+
+Player_Formal Q
+black pink white
+..0..
+..1..
+.020.
+..0..
+.0.0.
+
+WoodenFloor ,
+brown
+00000
+00000
+00000
+00000
+00000
+
+ChurchWall H
+darkbrown brown
+11101
+00000
+10111
+00000
+11101
+
+Chair C
+darkbrown brown
+11111
+11101
+11101
+00001
+01101
+
+Altar A
+gray
+.....
+00000
+.000.
+.000.
+.000.
+
+Spectator1 B
+black pink white
+..0..
+..1..
+.020.
+..0..
+.0.0.
+
+Spectator2 D
+purple pink white
+..0..
+..1..
+10001
+.000.
+00000
+
+Wife_Wedding W
+white pink
+..1..
+.000.
+.101.
+.000.
+00000
+
+(Post Wedding Scene)
+
+house @
+black grey red
+..0..
+.000.
+00000
+.111.
+.121.
+
+pavement `
+darkblue
+
+Road '
+gray white
+00000
+00000
+01110
+00000
+00000
+
+Wife_Repulsed X
+white pink
+..1..
+.000.
+.101.
+.000.
+00000
+
+(grave scene)
+
+gravedirt ~
+green brown
+01001
+10000
+00100
+00001
+01000
+
+grave R
+lightgray darkgray grey
+.111.
+10201
+12221
+10201
+10001
+
+coffin F
+darkbrown brown black
+.000.
+01210
+02220
+01210
+02220
+
+(final scene)
+
+Wife_Dying Y
+white pink
+..1..
+.000.
+.101.
+.000.
+00000
+
+Wife_Coffin
+darkbrown brown black
+.000.
+01210
+02220
+01210
+02220
+
+ColdFeet I
+black
+
+=======
+LEGEND
+=======
+
+Target = TargetMain or Road
+Player = Player_Casual or Player_Formal
+Background = Grass or WoodenFloor or Pavement or GraveDirt
+Spectator = Spectator1 or Spectator2
+Obstacle = House or Spectator or Chair or Tree or Altar or Grave or Coffin or Wife_Coffin or ChurchWall
+Wife_Attracted = Girlfriend or Wife_Wedding or Wife_Dying
+Wife = Wife_Attracted or Wife_Repulsed or Wife_Coffin
+Person = Player or Wife
+GrassyTarget = Grass and TargetMain
+E = GrassyTarget
+
+=========
+SOUNDS
+=========
+
+Player cantmove 82269707
+endlevel 54461500
+startgame 10582309
+endgame 66004102
+Wife_Repulsed move 44043907
+sfx0 16417502
+
+================
+COLLISIONLAYERS
+================
+
+ColdFeet
+Background
+Target
+Obstacle, Person
+
+======
+RULES
+======
+
+(game logic)
+
+[ > Player ] [ Wife_Attracted ] -> [ > Player ] [ > Wife_Attracted ] 
+[ > Player ] [ Wife_Repulsed ] -> [ > Player ] [ < Wife_Repulsed ] 
+
+late [ Wife_Dying ] -> [ Wife_Coffin ] 
+late [ Player | Wife_Coffin ] -> [ Player | Wife_Dying ] 
+
+(level-specific events)
+late [ ColdFeet Player ] -> [ Player ] message ...
+late [ Wife Road ] -> sfx0
+
+==============
+WINCONDITIONS
+==============
+
+all person on target
+
+=======
+LEVELS
+=======
+
+....#################
+...###...#....#######
+..##.........##.....#
+.##...#######.......#
+##....#....###......#
+#...###.............#
+#...#...#...#..######
+#...#...#..##.P.....#
+#....####.T##..######
+##......#...#.......#
+###..##..#...#...##.#
+#.##..#..##..#...#..#
+#..#..#....###...#..#
+#..##........#......#
+#...##...##...##....#
+#.......##.....######
+.##############......
+
+....#################
+...###...#....#######
+..##.........##.....#
+.##...#######.......#
+##....#....###......#
+#...###.............#
+#...#...#...#..######
+#...#...#..##..T...T#
+#....####.P##G.######
+##......#...#.......#
+###..##..#...#...##.#
+#.##..#..##..#...#..#
+#..#..#....###...#..#
+#..##........#......#
+#...##...##...##....#
+#.......##.....######
+.##############......
+
+....#################
+...###...#....#######
+..##.........##.....#
+.##...#######.......#
+##....#....###......#
+#...###.............#
+#...#T..#...#..######
+#...#T..#..##..P...G#
+#....####..##..######
+##......#...#.......#
+###..##..#...#...##.#
+#.##..#..##..#...#..#
+#..#..#....###...#..#
+#..##........#......#
+#...##...##...##....#
+#.......##.....######
+.##############......
+
+HHHHHHHHHHHHHHHHHHHHH
+,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,
+,CCCCCCCCCCCCCCCCCCCC
+,CCCCCCCCCCCCCCCCCCCC
+A,B,,D,B,D,,B,D,,,B,C
+A,T,,I,,,I,,,,I,Q,,,C
+A,T,,,,,,,,,,,,,W,,,C
+,CCCCCCCCCCCCCCCCCCCC
+,CCCCCCCCCCCCCCCCCCCC
+,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,
+HHHHHHHHHHHHHHHHHHHHH
+
+`````````@@@@````````
+`````````@TT@````````
+``@@@@@@`@`@@````````
+``@````@`@`@@@@``````
+``@`@@`@`@````@``````
+``@`@@`@`@`@@@@``````
+``@`@@`@@@P@`````````
+``@```````W@@@@@@````
+``@`@@@@@@``````@````
+``@`@````@`@@@@`@````
+``@`@````@`@``@`@````
+@@@@@@@@@@@@@@@@@@@@@
+'''''''''''''''''''''
+@@@@@@@@@@@@@@@@@@@@@
+`````````````````````
+
+`````````@@@@````````
+`````````@PX@````````
+``@@@@@@`@`@@````````
+``@````@`@`@@@@``````
+``@`@@`@`@````@``````
+``@`@@`@`@`@@@@``````
+``@`@@`@@@T@`````````
+``@```````T@@@@@@````
+``@`@@@@@@``````@````
+``@`@````@`@@@@`@````
+``@`@````@`@``@`@````
+@@@@@@@@@@@@@@@@@@@@@
+'''''''''''''''''''''
+@@@@@@@@@@@@@@@@@@@@@
+`````````````````````
+
+`````````@@@@````````
+`````````@TT@````````
+``@@@@@@`@`@@````````
+``@````@`@`@@@@``````
+``@`@@`@`@````@``````
+``@`@@`@`@`@@@@``````
+``@`@@`@@@P@`````````
+``@```````X@@@@@@````
+``@`@@@@@@``````@````
+``@`@````@`@@@@`@````
+``@`@````@`@``@`@````
+@@@`@@@@@@`@@@@`@@@@@
+'''''''''''''''''''''
+@@@@@@@@@@@@@@@@@@@@@
+`````````````````````
+
+RRRRRRR~RRRRRR~RRRRR
+R~~~~~R~R~~~~R~R~~~~
+R~~~~~~~R~~~~R~R~~~~
+R~~~~~R~R~~~~R~R~~~~
+RRRRRRR~RR~~RR~RRRRR
+R~~~~BDBDBDBDBD~~~~R
+RQ~~~~~i~i~~i~~~~EFR
+RRRRRRRRRRRRRRRRRRRR
+R~~R~~~~~~~~~~~R~~~~
+R~~R~~~~~~~~~~~R~~~~
+R~~RRR~~~RRRR~~R~~~~
+R~~~~~~~~R~~~~~R~~~R
+R~~R~~~~~R~~R~~~~~~R
+R~~R~~~~~R~~R~~~~~~R
+RRRRRRRRRR~~RRRRRRRR
+
+RRRRRR~~~~~~~~~~~~~~
+R~~~~R~~~~~RRRRRR~~~
+R~QY~R~~~~~R~~~~R~~~
+R~~~~R~~RRRRR~R~R~~~
+R~~~~RRRR~~R~~R~R~~~
+R~~~~~~~~~~R~~R~RRR~
+RRRRRRRRR~~R~~~~~~R~
+~~R~~~~~R~~R~RRR~~R~
+~~R~~R~~R~~RRR~R~~R~
+~~R~~R~~~~~~~~~~~~R~
+~~R~~R~~RR~~~~~RRRR~
+~~R~~R~~~RRRRRTTR~~~
+~~R~~R~~~R~~~~~~R~~~
+~~R~~R~~~~~RRR~~R~~~
+~~RRRRRRRRRR~RRRR~~~
+
+RRRRRR~~~~~~~~~~~~~~
+R~~~~R~~~~~RRRRRR~~~
+R~~~~R~~~~~R~~~~R~~~
+R~~~~R~~RRRRR~R~R~~~
+R~~~~RRRR~~R~~R~R~~~
+R~~~~~~~~~~RT~R~RRR~
+RRRRRRRRR~~RT~~~~~R~
+~~R~~~~~R~~R@RRR~~R~
+~~R~~R~~R~~RRR~R~~R~
+~~R~~R~~~~~~~~~~~~R~
+~~R~~R~~RR~~~~~RRRR~
+~~R~~R~~~RRRRRYQR~~~
+~~R~~R~~~R~~~~~~R~~~
+~~R~~R~~~~~RRR~~R~~~
+~~RRRRRRRRRR~RRRR~~~
+
+message Commiserations
+
+message It is over
+
+title The closet and the castle
+author HeskHwis and Holly Hatter
+homepage heskhwis.tumblr.com
+background_color white
+text_color black
+
+flickscreen 8x8
+
+noundo
+norestart
+
+========
+OBJECTS
+========
+Background
+white
+
+Wallv
+black
+.000.
+.000.
+.000.
+.000.
+.000.
+
+Wallh
+black
+.....
+00000
+00000
+00000
+.....
+
+Wallchl
+black
+.....
+.0000
+.0000
+.0000
+.000.
+
+Wallchr
+black
+.....
+0000.
+0000.
+0000.
+.000.
+
+Wallcdl
+black
+.000.
+.0000
+.0000
+.0000
+.....
+
+Wallcdr
+black
+.000.
+0000.
+0000.
+0000.
+.....
+
+Wallcdi
+black
+.000.
+0000.
+0000.
+0000.
+.....
+
+Walltd
+black
+.....
+00000
+00000
+00000
+.000.
+
+Wallth
+black
+.000.
+00000
+00000
+00000
+.....
+
+Walltr
+black
+.000.
+.0000
+.0000
+.0000
+.000.
+
+Walltl
+black
+.000.
+0000.
+0000.
+0000.
+.000.
+
+Wallendhl
+black
+.....
+.0000
+.0000
+.0000
+.....
+
+Wallendhr
+black
+.....
+0000.
+0000.
+0000.
+.....
+
+Wallendv
+black
+.000.
+.000.
+.000.
+.000.
+.....
+
+Wallwhite
+white
+
+
+Player
+black
+..0..
+00000
+.000.
+.000.
+.0.0.
+
+Pan
+black
+.....
+00000
+..000
+..000
+.....
+
+Cap
+black
+.....
+000..
+000..
+00000
+.....
+
+Bottle
+black
+..0..
+..0..
+.000.
+.000.
+.000.
+
+Sign
+black
+.000.
+.000.
+.000.
+..0..
+..0..
+
+Pot
+black
+00000
+.000.
+.000.
+.000.
+.000.
+
+Hat
+black
+.000.
+.000.
+.000.
+.000.
+00000
+
+Shirt
+black
+00.00
+.0.0.
+.000.
+.000.
+.000.
+
+Trousers
+black
+.000.
+.000.
+.000.
+.0.0.
+00.00
+
+Glass
+black
+.000.
+.000.
+.000.
+..0..
+.000.
+
+Flask
+black
+.000.
+..0..
+.000.
+.000.
+.000.
+
+Sink
+black
+.00..
+..0..
+..0..
+00000
+.000.
+
+Umbrella
+black
+.000.
+00000
+..0..
+..0..
+..00.
+
+Pants
+black
+.....
+00000
+0...0
+0.0.0
+00000
+
+Chest
+black
+.....
+00000
+0.0.0
+0...0
+00000
+
+TV
+black
+00000
+0...0
+0...0
+00000
+.000.
+
+Bagage
+black
+.000.
+00000
+0...0
+0...0
+00000
+
+Table
+black
+00000
+00000
+..0..
+.0.0.
+0...0
+
+Radio
+black
+0...0
+.0.0.
+..0..
+00000
+00000
+
+Closet
+black
+00000
+000.0
+000.0
+00000
+0.0.0
+
+Castle
+black
+0.0.0
+00000
+0.000
+0.000
+00000
+
+Plug
+black
+.....
+.0.0.
+00000
+00000
+.000.
+
+Car
+black
+.....
+.000.
+00000
+00000
+.0.0.
+
+=======
+LEGEND
+=======
+
+. = Background
+& = Wallv
+" = Wallh
+§ = Wallchl
+è = Wallchr
+! = Wallcdl
+ç = Wallcdr
+à = Wallcdi
+é = Walltd
+' = Walltr
+; = Wallth
+? = Walltl
+: = Wallendhl
++ = Wallendhr
+/ = Wallendv
+- = Wallwhite
+P = Player
+0 = Pan
+1 = Bottle
+2 = Pot
+3 = Shirt
+4 = Glass
+5 = Sink
+6 = Pants
+7 = TV
+8 = Table
+9 = Closet
+° = Plug
+
+Wall = Wallv or Wallh or Wallchl or Wallchr or Wallcdl or Wallcdr or Wallcdi or Wallwhite or Walltd or Wallth or Walltr or Walltl or Wallendhl or Wallendhr or Wallendv
+
+=======
+SOUNDS
+=======
+
+sfx1 93735300
+sfx2 41048100
+sfx3 72273500
+sfx4 42872102
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Wall, Player, Pan, Cap, Bottle, Sign, Pot, Hat, Shirt, Trousers, Glass, Flask, Sink, Umbrella, Pants, Chest, TV, Bagage, Table, Radio, Closet, Castle, Plug, Car
+
+======
+RULES
+======
+
+[ > Player | Pan ] -> [ Player | Cap ] sfx1
+[ Action Player | Pan ] -> [ Action Player | Pan ] sfx3 message She should begin to cook if she wants to have a supper.
+[ > Player | Cap ] -> [ Player | Pan ] sfx2
+[ Action Player | Cap ] -> [ Action Player | Cap ] sfx3 message It isn't very important to take a cap when yo are going to England, but it's always good to be provident.
+
+[ > Player | Bottle ] -> [ Player | Sign ] sfx1
+[ Action Player | Bottle ] -> [ Action Player | Bottle ] sfx3 message It is empty. Luckily she has two other bottles like this one in her basement.
+[ > Player | Sign ] -> [ Player | Bottle ] sfx2
+[ Action Player | Sign ] -> [ Action Player | Sign ] sfx3 message "London 512 miles" reads the sign.
+
+[ > Player | Pot ] -> [ Player | Hat ] sfx1
+[ Action Player | Pot ] -> [ Action Player | Pot ] sfx3 message She didn't take care of the flower and now, it's dead.
+[ > Player | Hat ] -> [ Player | Pot ] sfx2
+[ Action Player | Hat ] -> [ Action Player | Hat ] sfx3 message In London, everyone is a gentleman.
+
+[ > Player | Shirt ] -> [ Player | Trousers ] sfx1
+[ Action Player | Shirt ] -> [ Action Player | Shirt ] sfx3 message It isn't very clean, but nobody cares, it's just a black T-shirt.
+[ > Player | Trousers ] -> [ Player | Shirt ] sfx2
+[ Action Player | Trousers ] -> [ Action Player | Trousers ] sfx3 message Better take an appropriate outfit when you go exploring the Stonehenge.
+
+[ > Player | Glass ] -> [ Player | Flask ] sfx1
+[ Action Player | Glass ] -> [ Action Player | Glass ] sfx3 message At least she drinks in beautiful glasses.
+[ > Player | Flask ] -> [ Player | Glass ] sfx2
+[ Action Player | Flask ] -> [ Action Player | Flask ] sfx3 message She read about ancient flasks of amber-colored whisky in a magazine last week.
+
+[ > Player | Sink ] -> [ Player | Umbrella ] sfx1
+[ Action Player | Sink ] -> [ Action Player | Sink ] sfx3 message The sink is clogged up and filled with dirty water.
+[ > Player | Umbrella ] -> [ Player | Sink ] sfx2
+[ Action Player | Umbrella ] -> [ Action Player | Umbrella ] sfx3 message Well, it's said to be very rainy in Great Britain...
+
+[ > Player | Pants ] -> [ Player | Chest ] sfx1
+[ Action Player | Pants ] -> [ Action Player | Pants ] sfx3 message Just some pants.
+[ > Player | Chest ] -> [ Player | Pants ] sfx2
+[ Action Player | Chest ] -> [ Action Player | Chest ] sfx3 message There would be treasures in Glenanore and Slieve Anore, in Ireland... She HAS to go, find something wonderful and become rich.
+
+[ > Player | TV ] -> [ Player | Bagage ] sfx1
+[ Action Player | TV ] -> [ Action Player | TV ] sfx3 message There is nothing worth watching on the TV for now.
+[ > Player | Bagage ] -> [ Player | TV ] sfx2
+[ Action Player | Bagage ] -> [ Action Player | Bagage ] sfx3 message It's decided : one day, she will pack her suitcase and go away from this town.
+
+[ > Player | Table ] -> [ Player | Radio ] sfx1
+[ Action Player | Table ] -> [ Action Player | Table ] sfx3 message She bought this table at a flea market. It was in a bar before.
+[ > Player | Radio ] -> [ Player | Table ] sfx2
+[ Action Player | Radio ] -> [ Action Player | Radio ] sfx3 message She likes to listen to foreign songs. She has many CDs of celtic traditional music.
+
+[ > Player | Closet ] -> [ Player | Castle ] sfx1
+[ Action Player | Closet ] -> [ Action Player | Closet ] sfx3 message There are some books, a box of pills and a teddy bear in here.
+[ > Player | Castle ] -> [ Player | Closet ] sfx2
+[ Action Player | Castle ] -> [ Action Player | Castle ] sfx3 message Her dreams are filled with scottish castles and medieval towers.
+
+[ > Player | Plug ] -> [ Player | Car ] sfx1
+[ Action Player | Plug ] -> [ Action Player | Plug ] sfx3 message What is the point in putting a plug outside, anyways ?
+[ > Player | Car ] -> [ Player | Plug ] sfx2
+[ Action Player | Car ] -> sfx4 win
+
+==============
+WINCONDITIONS
+==============
+
+=======
+LEVELS
+=======
+
+
+§""""""è§""""""è.------.
+&...7..!ç41....&§"""""è.
+&..............!ç....3&.
+&......§è...8......6..&.
+&......&&......§è.....&.
+&...p..&&......&'"""é"ç.
+&9.....&&......&&...&--.
+!""""""ç!"è.§""ç&..5&-..
+:""""""è§"ç.!"""ç..0&-..
+.......&&...........&-..
+.......&&......§""""ç-..
+......./!"+.:""ç------..
+............2...-.......
+................-.......
+................-.......
+.........°......-.......
+
+message Enough talking !
+message She drives away to the airport and flies to Great Britain.
+message Castles, umbrellas, celtic music and pants... Here we are !
+message THE END
+
+title Heroes of Sokoban III: The Bard and The Druid
+author Jonah Ostroff
+text_color yellow
+key_repeat_interval 0.25
+run_rules_on_level_start
+
+========
+OBJECTS
+========
+
+Background
+#989898 #C8C8C8
+00000
+00100
+00000
+00010
+00000
+
+Goal
+Brown Yellow
+.000.
+00000
+00010
+00000
+00000
+
+Wall
+Darkgrey #222222
+01000
+11111
+00010
+00010
+11111
+
+Fighter (Warrior sounds better in-game, but I want different abbreviations for the classes in the editor.)
+#FF4444 Pink DarkBrown
+.000.
+.111.
+00000
+.000.
+.2.2.
+
+Wizard
+#2266FF Pink
+.000.
+.010.
+00000
+.000.
+00000
+
+Thief
+#66DD66 Pink DarkBrown
+.000.
+.010.
+00000
+.0.0.
+.0.0.
+
+Priest
+#FFFFAA Pink
+.000.
+.111.
+00000
+.000.
+00000
+
+Bard
+#8800FF #884400 #444444
+.222.
+.111.
+00000
+.000.
+.0.0.
+
+Druid
+#FF8800 Pink DarkBrown
+.212.
+.111.
+00000
+.000.
+00000
+
+SFighter
+#880000 Pink DarkBrown
+.000.
+.111.
+00000
+.000.
+.2.2.
+
+SWizard
+#000088 Pink
+.000.
+.010.
+00000
+.000.
+00000
+
+SThief
+#006600 Pink DarkBrown
+.000.
+.010.
+00000
+.0.0.
+.0.0.
+
+SPriest
+#B8B800 Pink
+.000.
+.111.
+00000
+.000.
+00000
+
+SBard
+#440088 #884400 #444444
+.222.
+.111.
+00000
+.000.
+.0.0.
+
+SDruid
+#884400 Pink DarkBrown
+.212.
+.111.
+00000
+.000.
+00000
+
+Crate
+Orange #552200
+.111.
+10001
+10001
+10001
+.111.
+
+YellowSwitch
+Yellow Black
+.....
+.111.
+.101.
+.111.
+.....
+
+YellowOpen
+Yellow
+0...0
+.....
+.....
+.....
+0...0
+
+YellowDoor
+Yellow #AA7722
+01010
+10001
+00000
+10001
+01010
+
+PurpleSwitch
+#6611CC Black
+.....
+.111.
+.101.
+.111.
+.....
+
+PurpleDoor
+#6611CC #220088
+01010
+10001
+00000
+10001
+01010
+
+PurpleOpen
+#6611CC
+0...0
+.....
+.....
+.....
+0...0
+
+MonsterDoor
+DarkGrey #222222 Red
+21002
+22122
+20212
+20012
+21112
+
+Warpball
+Blue
+
+ShadowDoor
+Purple
+
+Goblin
+Green DarkBrown DarkGreen
+0.2.0
+00000
+..0..
+.111.
+.1.1.
+
+Dying
+White
+
+Saved
+#D8D800
+..0..
+.000.
+..0..
+..0..
+.....
+
+HasSavedDoor
+Yellow
+.....
+.....
+.....
+.....
+.....
+
+Corpse
+#CCC
+.000.
+.000.
+00000
+.0.0.
+.0.0.
+
+Note
+#8800FF
+.....
+..00.
+.00..
+.00..
+.....
+
+=======
+LEGEND
+=======
+
+Player = Fighter or Wizard or Thief or Priest or Bard or Druid
+SPlayer = Swizard or Sthief or SFighter or SPriest or SBard or SDruid
+Hero = Player or Splayer
+Healer = Priest or SPriest (Unlike the other heroes, priests must function even when inactive. "Healer" is the generic term for an active or inactive priest.)
+ClosedDoor = PurpleDoor or YellowDoor or MonsterDoor
+OpenDoor = YellowOpen or PurpleOpen
+Switch = PurpleSwitch or YellowSwitch
+Monster =  Goblin
+Moveable = Crate or SPlayer or Monster
+Static = Wall or ClosedDoor
+Weighing = Crate or Hero or Monster or Wall
+Vulnerable = Hero or Monster
+Invulnerable = Crate or Static
+. = Background
+# = Wall
+F = Fighter
+W = Wizard
+T = Thief
+P = Priest
+B = Bard
+D = Druid
+1 = SFighter
+2 = SThief
+3 = SWizard
+4 = SPriest
+5 = SBard
+6 = SDruid
+* = Crate
+G = Goal
+[ = YellowDoor
+] = PurpleDoor
+{ = YellowSwitch
+} = PurpleSwitch
+O = Goblin
+M = MonsterDoor
+
+=======
+SOUNDS
+=======
+
+Moveable move 82056307
+Sfx0 21221308 (teleport)
+Endlevel 36315908
+Sfx1 66399906 (switch player)
+Sfx2 92172900 (close door)
+Sfx3 15129100 (open door)
+Sfx4 69860105 (saved)
+Sfx5 63194902 (kill enemy)
+Sfx6 81996702 (dying player)
+Sfx7 20187909 (Bard leading)
+Sfx8 93615108 (Transmutation)
+EndGame 86793500
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Warpball, Dying
+Goal, Switch, OpenDoor, ShadowDoor, HasSavedDoor
+ClosedDoor, Hero, Crate, Wall, Monster, Corpse
+Saved
+Note
+
+======
+RULES
+======
+[Saved] [Goal] -> [] [HasSavedDoor] (Remembering whether we saved someone last round by temporarily changing some door to a HasSavedDoor. This is purely for sound effects purposes.)
+
+[Corpse] -> Restart
+
+[ >  Fighter | Moveable ] -> [  >  Fighter | > Moveable  ]
+[ > Moveable | Moveable ] [ Fighter] -> [ > Moveable | > Moveable ] [ Fighter] (Fighters push.)
+
+[ < Thief | Moveable ] -> [ < Thief | < Moveable ] (Thieves pull.)
+
+[ > Wizard ] -> [ Wizard > Warpball]
+[ > Warpball | no Moveable no Static] -> [ | > Warpball]
+[ > Warpball | Static] [Wizard] -> [ | Static ] [> Wizard]
+[ > Warpball | Moveable ] [Wizard] -> [ | Wizard Sfx0] [Moveable]
+[ > Warpball] [Wizard] -> [] [> Wizard]
+(Wizards telexport. What they really do is shoot a "warpball", which causes them to move normally if it hits a wall or the edge of the screen and warp if it hits something they can warp with.)
+
+(Druid does his thing. Warpball gets reused as a placeholder here. That's gonna happen a lot.)
+[> Druid | Crate] -> [Druid | Wall Sfx8]
+[> Druid | Monster] -> [Druid | Wall Sfx8]
+[> Druid | Wall] -> [Druid | Crate Sfx8]
+[> Druid | Healer] -> [Druid | Healer Saved]
+[> Druid | Hero] -> [Druid | Hero Warpball]
+[Warpball | Healer] -> [Saved | Healer]
+[Warpball Hero] -> [Wall Sfx8]
+(What strategic purpose could it serve for healers to protect against petrification? None, but it's fun.)
+
+(I mean, theoretically you could write some horrid dragon breath timing puzzle where the ability to delay an extra turn without moving or switching characters is necessary in order to let you move someone else at the correct moment, but even if dragons still existed, that sounds like a really gross level.)
+
+(Bard moves stuff. Reusing "WarpBall" for totally different purpose, so we can cancel the move if he doesn't move.)
+[> Bard no Note] -> [> Note > Bard WarpBall]
+[> Note] [Note] -> [> Note] [> Note]
+[> Note Moveable | no Static no Moveable no Bard] -> [| Moveable Sfx7]
++[> Note Bard WarpBall| no Static no Moveable no Bard] -> [| Bard]
+
+(Why are we doing this pseudo-movement instead of using the built-in version? Because using movement directions makes the note-adding stuff way easier below, and you can't use movement directions in the LATE phase, so the actual moving has to be done before then.)
+
+[WarpBall] -> Cancel
+[Note] -> []
+
+(The following mess is for changing characters. But at least it's less messy than before. Thanks to Stephen for spotting my silly redundancies.)
+[ Action Fighter] [SThief] -> [SFighter] [Thief Sfx1]
+[ Action Thief] [SWizard] -> [SThief] [Wizard Sfx1]
+[ Action Wizard] [SPriest] -> [SWizard] [Priest Sfx1]
+[ Action Priest] [SBard] -> [SPriest] [Bard Sfx1]
+[ Action Bard] [SDruid] -> [SBard] [Druid Sfx1]
+[ Action Druid] [SFighter] -> [SDruid] [Fighter Sfx1]
+
+[ Action Fighter] [SWizard] -> [SFighter] [Wizard Sfx1]
+[ Action Thief] [SPriest] -> [SThief] [Priest Sfx1]
+[ Action Wizard] [SBard] -> [SWizard] [Bard Sfx1]
+[ Action Priest] [SDruid] -> [SPriest] [Druid Sfx1]
+[ Action Bard] [SFighter] -> [SBard] [Fighter Sfx1]
+[ Action Druid] [SThief] -> [SDruid] [Thief Sfx1]
+
+[ Action Fighter] [SPriest] -> [SFighter] [Priest Sfx1]
+[ Action Thief] [SBard] -> [SThief] [Bard Sfx1]
+[ Action Wizard] [SDruid] -> [SWizard] [Druid Sfx1]
+[ Action Priest] [SFighter] -> [SPriest] [Fighter Sfx1]
+[ Action Bard] [SThief] -> [SBard] [Thief Sfx1]
+[ Action Druid] [SWizard] -> [SDruid] [Wizard Sfx1]
+
+[ Action Fighter] [SBard] -> [SFighter] [Bard Sfx1]
+[ Action Thief] [SDruid] -> [SThief] [Druid Sfx1]
+[ Action Wizard] [SFighter] -> [SWizard] [Fighter Sfx1]
+[ Action Priest] [SThief] -> [SPriest] [Thief Sfx1]
+[ Action Bard] [SWizard] -> [SBard] [Wizard Sfx1]
+[ Action Druid] [SPriest] -> [SDruid] [Priest Sfx1]
+
+[ Action Fighter] [SDruid] -> [SFighter] [Druid Sfx1]
+[ Action Thief] [SFighter] -> [SThief] [Fighter Sfx1]
+[ Action Wizard] [SThief] -> [SWizard] [Thief Sfx1]
+[ Action Priest] [SWizard] -> [SPriest] [Wizard Sfx1]
+[ Action Bard] [SPriest] -> [SBard] [Priest Sfx1]
+[ Action Druid] [SBard] -> [SDruid] [Bard Sfx1]
+
+(Bard plays music. This is my favorite part of the code, btw. Yes, you can make square area effects with just one object!)
+[no Note | no Note | Bard] -> [^ Note | ^ Note | Bard]
+[no Note | Bard] -> [^ Note | Bard]
+[> Note | no Note | no Note] -> [Note | Note | Note]
+[> Note | no Note] -> [Note | Note]
+[> Note] -> [Note]
+
+(Now enemies attack. Yeah, there's only one kind of enemy now.)
+
+Late [Goblin | Vulnerable] -> [Goblin | Dying Vulnerable]
+
+(Vulnerable objects that are attacked are designated as "Dying", but heroes can be saved by the Priest. Then the stuff that didn't get saved dies.)
+
+Late [Dying Healer] -> [Saved Healer]
+Late [Healer | Dying Hero] -> [Healer | Saved Hero]
+Late [Dying Monster] -> [Sfx5]
+Late [Dying Hero] -> [Corpse Sfx6]
+
+(Doors opening.)
+
+late [Weighing  YellowSwitch] [YellowDoor] -> [Weighing  YellowSwitch] [ShadowDoor]
+late [YellowSwitch no Weighing] [YellowOpen] -> [YellowSwitch] [YellowDoor sfx2]
+late [YellowSwitch no Weighing] [ShadowDoor] -> [YellowSwitch] [YellowDoor]
+late [ShadowDoor] -> [YellowOpen sfx3]
+
+late [Weighing PurpleSwitch] [PurpleDoor] -> [Weighing PurpleSwitch] [ShadowDoor]
+late [PurpleSwitch no Weighing] [PurpleOpen] -> [PurpleSwitch] [PurpleDoor sfx2]
+late [PurpleSwitch no Weighing] [ShadowDoor] -> [PurpleSwitch] [PurpleDoor]
+late [ShadowDoor] -> [PurpleOpen sfx3]
+
+late [MonsterDoor] -> [ShadowDoor]
+late [ShadowDoor] [Monster] -> [MonsterDoor] [Monster]
+late [ShadowDoor] -> [sfx3]
+
+(Looks for a HasSavedDoor and, if there is one, puts a warpball on the Priest. Then, if someone was saved this turn, plays the sound only if the Priest doesn't have the warpball. Finally, cleans that up.)
+
+late [HasSavedDoor] [Healer] -> [Goal] [Healer WarpBall]
+late [Saved] [Healer no WarpBall] -> [Saved sfx4] [Healer]
+late [HasSavedDoor] -> [Goal]
+late [WarpBall] -> []
+
+late [Note no Moveable] -> []
+
+==============
+WINCONDITIONS
+==============
+
+All Hero on Goal
+All Goal on Hero
+
+=======
+LEVELS
+=======
+
+Message Many years have passed since the events of Heroes of Sokoban II.
+
+Message Dragons have vanished from the realm, never to be seen again.
+
+Message And new heroes have cropped up, as if there were only room for so many beings in one world.
+
+###################
+#.F.#.........#**G#
+#***#...*****.#..*#
+#.G.#...*...*.#2..#
+#####...*...*.#####
+#.......*...*.....#
+#.......*...*.....#
+#####..**..**.#####
+#*..#.***.***.#..G#
+#*G*#..*...*..#.O.#
+#3.*#.........#4..#
+###################
+
+Message Purple bard charms nearby crates.
+
+#############
+#{#....{#...#
+#.#.*#B.[.G.#
+#*#.....#...#
+#############
+
+###############
+#..############
+#.B..****.....#
+#..######.#####
+#########G#####
+###############
+
+Message Monsters may also be charmed.
+
+#############
+#.......#...#
+#...#...#...#
+#O..B..OM.G.#
+#...#...#...#
+#.......#...#
+#############
+
+Message No one can resist the bard's music.
+
+############
+#G#.F.{..O.#
+#.[........#
+#G#.5.{..O.#
+############
+
+############
+##[[[[[[[###
+##[#####[###
+##[##[[[[{*#
+#...#[######
+#.T.#......#
+#...#.5.G.G#
+############
+
+########
+#*G{####
+###.####
+#...[W##
+###.#.5#
+#*G*####
+########
+
+#########
+#....G#G#
+#.#*..#[#
+#.**....#
+#.......#
+#.{4{B{.#
+#...{...#
+#########
+
+############
+#*.{..{.**{#
+############
+#B21.......#
+##########[#
+#.G..G..G..#
+############
+
+Message Orange druid turns stone into wood, wood into stone.
+
+#############
+#.[.{.2.#.D.#
+#.#########.#
+#....G.G..#.#
+#############
+
+#############
+#...#####{{{#
+#.D.##...{{{#
+#...##.##{{{#
+#############
+#...#..######
+#.1.#..##G.G#
+#...#..#[...#
+#############
+
+#############
+#O*....{...3#
+##.####.#####
+##.###O.O##G#
+##.####.###.#
+##D[....###G#
+#############
+
+Message Living things may also be turned into stone.
+
+Message Try not to think about the moral implications, and don't do it any more than necessary.
+
+#############
+####.4..##G.#
+#O..F..OM#.G#
+####.6..##G.#
+#############
+
+###############
+#.............#
+#.5.}}}.]]]]].#
+#...}}}.]G.G].#
+#.D.}}}.]]]]].#
+#.............#
+###############
+
+#########
+#G#####W#
+#########
+#G#####6#
+#########
+
+#############
+#......O.G.G#
+#.###########
+#.###########
+#...#########
+#B.6#########
+#############
+
+################
+#...#...########
+#.G.#.}.....{[O#
+#...#.F.########
+#...#...########
+#.G.].4.########
+#...#...########
+#...#.5.########
+#.G.#.}.....{[O#
+#...#...########
+################
+
+#####M########
+#G.GM#F.2###O#
+#...#M.......#
+#G.GM#3.6###O#
+#####M########
+
+############
+#6######B###
+#........###
+############
+#.#######.4#
+#.......##1#
+#G.G.G.G##O#
+############
+
+###############
+#....#O.O#...G#
+#..##W...1##..#
+#..#O..O..O#.G#
+#4.#..OGO..#..#
+#..#O..O..O#.G#
+#..##2...6##..#
+#....#O.O#...G#
+###############
+
+Message Get ready.
+
+#######################
+#.F.*....#G.G#....*.4.#
+#...#....#...#....#...#
+#######.........#######
+#####.#####O#####.#####
+#..##O#..#...#..#O##..#
+#.2.*....#G.G#....*.5.#
+#..##O#..*...#..#O##..#
+#####.####...####.#####
+#######..#..*O.*#######
+#...###.#######...#...#
+#.3.###.##G.G##...#.6.#
+#######################
+
+################
+#..............#
+#.1.4......G.G.#
+#..............#
+#.2.B......G.G.#
+#..............#
+#.3.6......G.G.#
+#..............#
+################
+
+Message Thanks for playing!
+
+USER PROMPT:
+Output the code for a complete PuzzleScript game. First, reason about your task and determine the best plan of action. Then, write your code. Return your code in full, inside a ```plaintext code block.

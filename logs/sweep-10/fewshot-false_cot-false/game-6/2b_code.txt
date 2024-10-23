@@ -1,0 +1,118 @@
+The compilation errors are due to the fact that all the sprite representations in your code are 6x5, while the PuzzleScript specification requires that sprites be 5x5. Here's the corrected version of your game code with the sprites adjusted to the 5x5 requirement:
+
+```plaintext
+Title: Collect the Keys
+Author: Puzzle Designer
+Homepage: http://www.puzzlescript.net
+
+========
+OBJECTS
+========
+
+Background
+lightblue
+
+Player
+lightgreen
+.00..
+.0X0.
+.0.0.
+.X0X.
+.0.0.
+
+Key
+yellow
+.ooo.
+.oOo.
+oOoOo
+.oOo.
+.ooo.
+
+Door
+darkred
+..DD.
+.DDDD
+.D.DD
+DDDDD
+..DD.
+
+Wall
+gray
+.XX..
+.XX..
+.XX..
+.XX..
+.XX..
+
+========
+LEGEND
+========
+
+. = Background
+P = Player
+K = Key
+D = Door
+W = Wall
+
+========
+SOUNDS
+========
+
+KeyCollect
+sfx9
+KeyMusic
+sfx5
+DoorOpen
+sfx6
+Win
+sfx7
+
+========
+RULES
+========
+
+# Player can move
+[ > P | ] -> [ > | P ]
+[ < P | ] -> [ < | P ]
+[ P | > ] -> [ | > P ]
+[ P | < ] -> [ | < P ]
+[ ^ P ] -> [ | P ]
+[ P ^ ] -> [ P | ]
+
+# Collect Key
+[ Player | Key ] -> [ Player ]
+
+# Open Door (Win)
+[ Player | Door ] -> [ Player | Background ]
+message Win
+
+========
+WINCONDITIONS
+========
+
+All Key gone
+
+========
+LEVELS
+========
+
+# Level 1
+......
+.P..K.
+..WW..
+.D....
+
+# Level 2
+......
+PW.KK.
+.WW..D
+.K....
+
+# Level 3
+.P..W.
+.WDW.K
+.KK...
+......
+```
+
+This corrected version should now compile without errors, as the sprites meet the 5x5 requirement.

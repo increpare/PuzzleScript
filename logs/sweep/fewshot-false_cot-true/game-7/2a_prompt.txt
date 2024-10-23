@@ -1,0 +1,81 @@
+SYSTEM PROMPT:
+You are a game designer, familiar with the PuzzleScript game description language. 
+
+USER PROMPT:
+The following PuzzleScript game code:
+```plaintext
+title Simple Sokoban
+
+# Define the game objects with colors
+objects
+  Wall
+    000000
+  Player
+    00f
+      .....
+      ..0..
+      .000.
+      ..0..
+  Box
+    f80
+      .....
+      .0.0.
+      ...0.
+      .0.0.
+  Goal
+    f00
+      .....
+      ..0..
+      ..0..
+      .....
+  BoxOnGoal
+    f0f
+      .....
+      .0.0.
+      ...0.
+      .0.0.
+
+# Use symbols to easily reference objects
+legend
+  W = Wall
+  P = Player
+  B = Box
+  G = Goal
+  O = BoxOnGoal
+
+# Define how the player and boxes interact
+rules
+  [ > Player | Box ] -> [ > Player | > Box ]
+  [ Box | Goal ] -> [ BoxOnGoal ]
+  [ BoxOnGoal | > Player ] -> [ Player | > BoxOnGoal ]
+  [ Player | BoxOnGoal ] -> [ > Player | Goal ]
+
+# Define how a player wins the level
+wincondition
+  All BoxOnGoal on Goal
+
+# Create one or more levels
+levels
+  #####
+  #..G#
+  #PB.#
+  #####
+  
+  #######
+  #..G..#
+  #.BBB.#
+  #.P...#
+  #######
+
+```
+produced the following console output:
+=================================
+line 6 : Was looking for color for object WALL, got "000000" instead.
+line 8 : Was looking for color for object PLAYER, got "00f" instead.
+line 10 : Trying to access color number 0 from the color palette of sprite PLAYER, but there are only 0 defined in it.
+line 11 : Trying to access color number 0 from the color palette of sprite PLAYER, but there are only 0 defined in it.
+line 12 : Trying to access color number 0 from the color palette of sprite PLAYER, but there are only 0 defined in it.
+line 13 : Unknown junk in spritematrix for object PLAYER.
+too many errors, aborting compilation
+Errors detected during compilation; the game may not work correctly.
+Return a repaired version of the code that addresses these errors. First, reason about your task and determine the best plan of action. Then, write your code. Return your code in full, inside a ```plaintext code block.

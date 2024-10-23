@@ -1,0 +1,105 @@
+It seems there are some syntax errors in the rules section of the PuzzleScript code. Specifically, there are comments written without prefixing them with a `#` at the beginning of the line, and there seems to be an incorrect processing of rule logic due to this. Let's fix the comments and ensure that the rules follow the correct syntax.
+
+```plaintext
+Title: Box Pusher
+Author: Your Name
+Homepage: http://www.yourwebsite.com
+# Prefix ranges are | and \
+
+===========
+OBJECTS
+===========
+
+Background
+transparent
+
+Wall
+brown
+
+Player
+lightblue
+
+Box
+yellow
+
+Target
+pink
+
+BoxOnTarget
+lightred
+
+PlayerOnTarget
+purple
+
+===========
+LEGEND
+===========
+
+. = Background
+# = Wall
+P = Player
+B = Box
+X = Target
+O = BoxOnTarget
+Q = PlayerOnTarget
+
+===========
+SOUNDS
+===========
+
+===========
+COLLISIONLAYERS
+===========
+
+Background
+Wall
+Player, PlayerOnTarget
+Box, BoxOnTarget
+Target
+
+===========
+RULES
+===========
+
+[> Player | Box] -> [> Player | > Box]
+[> PlayerOnTarget | Box] -> [> PlayerOnTarget | > Box]
+
+# Player moving onto Target
+[> Player | Target] -> [> PlayerOnTarget]
+[> Player | BoxOnTarget] -> [> Player|> Box]
+
+# Player moves off Target
+[PlayerOnTarget | Background] -> [Player | Background]
+[Box | Target] -> [BoxOnTarget]
+
+===========
+WINCONDITIONS
+===========
+
+All BoxOnTarget
+
+===========
+LEVELS
+===========
+
+#####
+#...#
+#.#.#
+#P#B#
+#...#
+#####
+
+####
+#..###
+#.*..#
+#.###.
+#.P#..
+#..#..
+#..###
+####
+```
+
+### Key Fixes:
+- Removed the problematic lines that were interpreted as rule logic.
+- All comments related to logic should use `# ` at the start of a line to be correctly interpreted as comments.
+- Adjusted a rule for when the player moves off a target to ensure both player and background are accounted for within brackets.

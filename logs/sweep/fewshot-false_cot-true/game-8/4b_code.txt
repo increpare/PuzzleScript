@@ -1,0 +1,98 @@
+The errors in the provided PuzzleScript game code are due to the text "/ Sample Level 1" at the beginning of the 'LEVELS' section. In PuzzleScript, comments should be placed at the start of a line with a semicolon (';'), and any non-object character on levels (including comments) are parsed as new objects unless it's a valid comment.
+
+To fix the problem, replace the '/' with a ';' to comment out the "Sample Level 1" text, so it isn't parsed as part of the level. Also, ensure that other lines in the LEVELS section only include valid characters defined in the LEGEND part of the script.
+
+Here's the corrected version of the code:
+
+```plaintext
+Title Sokoban Clone
+Author PuzzleDesigner
+
+========
+OBJECTS
+========
+Background
+WHITE
+00000
+00000
+00000
+00000
+00000
+
+Player
+BLUE WHITE
+00000
+00100
+01110
+00100
+00000
+
+Wall
+BLACK GREY
+00000
+01110
+01110
+01110
+00000
+
+Box
+YELLOW GREY
+00000
+01110
+01100
+01110
+00000
+
+Goal
+GREEN GREEN
+00000
+01110
+01110
+01110
+00000
+
+========
+LEGEND
+========
+. = Background
+# = Wall
+P = Player
+B = Box
+G = Goal
+
+======
+SOUNDS
+======
+
+================
+COLLISIONLAYERS
+================
+Background
+Wall
+Player, Box
+Goal
+
+======
+RULES
+======
+[ > Player | Box ] -> [ > Player | > Box ]
+[ Player | Goal ] -> [ Player | Goal ]
+
+========
+WINCONDITIONS
+========
+All Box on Goal
+
+=======
+LEVELS
+=======
+; Sample Level 1
+########
+#......#
+#..#...#
+#..B.G.#
+#..P...#
+########
+```
+
+This code should now compile and function correctly, with the 'Sample Level 1' label correctly commented out.
