@@ -1,0 +1,93 @@
+The errors in your PuzzleScript game are due to incorrect sprite matrix lines for the Player and Star objects. Each object sprite should consist of three lines of three characters, using only the defined colors: '0' for black (Background), 'p' for purple (Player), and 's' for yellow (Star).
+
+Here's the corrected game code:
+
+```plaintext
+Title: Catch the Star
+
+Author: PuzzleScript Developer
+
+==========
+
+OBJECTS
+Background
+black
+000
+000
+000
+
+Player
+purple
+0p0
+ppp
+0p0
+
+Star
+yellow
+0s0
+sss
+0s0
+
+Wall
+green
+www
+www
+www
+
+==========
+
+LEGEND
+0 = Background
+P = Player
+S = Star
+W = Wall
+
+==========
+
+SOUNDS
+SFX0
+playNote C4;1
+
+SFX1
+playNote G4;15
+
+==========
+
+COLLISIONLAYERS
+Background
+Star
+Player, Wall
+
+==========
+
+RULES
+[ > Player | no Star ] -> [ > Player ]
+[ Player | Star ] -> [ > Player | ]
+
+==========
+
+WINCONDITIONS
+No Star
+
+==========
+
+LEVELS
+000000
+0P0000
+000000
+000S00
+000000
+
+000000
+P00000
+0WWW00
+0W0S00
+0WWW00
+
+00P000
+WW0W00
+0W0S00
+WW0W00
+```
+
+The changes made are to ensure that the player and star sprites match the expected format with the correct characters.

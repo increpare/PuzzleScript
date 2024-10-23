@@ -1,0 +1,85 @@
+SYSTEM PROMPT:
+You are a game designer, familiar with the PuzzleScript game description language. 
+
+USER PROMPT:
+The following PuzzleScript game code:
+```plaintext
+title Sokoban Puzzles
+author GameDesigner
+
+===========
+
+legend
+    . = Space
+    @ = Player
+    # = Wall
+    $ = Box
+    . = Target
+    
+    box = $ 
+    target = . 
+    wall = #
+    player = @
+    on_target = teller box on target
+    
+===========
+
+sounds
+    # No sounds in this simple game.
+
+===========
+
+collisionlayers
+    player, box
+    wall
+    target
+
+===========
+
+rules
+    [> Player | ] -> [> Player | > ]
+    [> Player | Box | ] -> [> Player | > Box | > ]
+
+===========
+
+winconditions
+    All Box on target
+
+===========
+
+levels
+#######
+# .   #
+#     #
+# $   #
+###@###
+#######
+---
+#######
+# .   #
+# $   #
+#     #
+###@###
+#######
+---
+########
+# @    #
+#   #  #
+#   $$ #
+# .#.. #
+##   ###
+ ########
+
+```
+produced the following console output:
+=================================
+line 6 : section "LEGEND" is out of order, must follow  "OBJECTS" (or it could be that the section "OBJECTS"is just missing totally.  You have to include all section headings, even if the section itself is empty).
+line 7 : You're talking about SPACE but it's not defined anywhere.
+line 8 : You're talking about PLAYER but it's not defined anywhere.
+line 9 : You're talking about WALL but it's not defined anywhere.
+line 10 : You're talking about BOX but it's not defined anywhere.
+line 11 : Name "." already in use (on line line 7).
+line 11 : You're talking about TARGET but it's not defined anywhere.
+too many errors, aborting compilation
+Errors detected during compilation; the game may not work correctly.
+Return a repaired version of the code that addresses these errors. First, reason about your task and determine the best plan of action. Then, write your code. Return your code in full, inside a ```plaintext code block.

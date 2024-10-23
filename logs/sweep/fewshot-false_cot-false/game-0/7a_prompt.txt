@@ -1,0 +1,136 @@
+SYSTEM PROMPT:
+You are a game designer, familiar with the PuzzleScript game description language. 
+
+USER PROMPT:
+The following PuzzleScript game code:
+```plaintext
+Title: Sokoban Mini
+
+Author: PuzzleScript Enthusiast
+
+========
+OBJECTS
+========
+
+Background
+transparent
+
+Player
+Yellow
+.....
+..00.
+.0000
+..00.
+.....
+
+Crate
+Brown
+.....
+.000.
+0..0.
+.000.
+.....
+
+Wall
+Grey
+.....
+.000.
+0..0.
+.000.
+.....
+
+Target
+Red
+.....
+.....
+..00.
+..00.
+.....
+
+CrateOnTarget
+Orange
+.....
+.....
+..00.
+..00.
+.....
+
+========
+LEGEND
+========
+
+. = Background
+P = Player
+C = Crate
+W = Wall
+T = Target
+O = CrateOnTarget
+
+========
+SOUNDS
+========
+
+========
+COLLISIONLAYERS
+========
+
+Background
+Target
+Wall, Crate, CrateOnTarget
+Player
+
+========
+RULES
+========
+
+[ > Player | Crate] -> [ > Player | > Crate]
+[ > Player | CrateOnTarget] -> [ > Player | > Crate]
+[Player | Target] -> [ | Player] 
+[Crate | Target] -> [CrateOnTarget | ]
+[CrateOnTarget | ] -> [Crate | Target]
+
+========
+WINCONDITIONS
+========
+
+All CrateOnTarget
+
+========
+PLAYER
+========
+
+P
+
+========
+LEVELS
+========
+
+WWWW.
+W.TW.
+WCO.W
+WP.WW
+WWWW.
+
+WWWWW
+W...W
+WCO.W
+WP..W
+WWWWW
+
+WWWWWW
+W....W
+W.T..W
+W.CO.W
+W..PW
+WWWWWW
+
+```
+produced the following console output:
+=================================
+line 93 : Expecting the start of a win condition ("ALL","SOME","NO") but got "PLAYER'.
+line 96 : Expecting the start of a win condition ("ALL","SOME","NO") but got "P'.
+line 118 : Maps must be rectangular, yo (In a level, the length of each row must be the same).
+line 93 : Unwelcome term "93" found in win condition. I don't know what I'm supposed to do with this.
+line 96 : Unwelcome term "96" found in win condition. I don't know what I'm supposed to do with this.
+Errors detected during compilation; the game may not work correctly.
+Return a repaired version of the code that addresses these errors. Return your code in full, inside a ```plaintext code block.

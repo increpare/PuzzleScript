@@ -1,0 +1,138 @@
+To create a complete PuzzleScript game, let's start by outlining the essential components needed:
+
+1. **Objects**: Define the various objects that will be part of the game: player, walls, goals, and crates are common for a Sokoban-like puzzle as an example.
+
+2. **Legend**: Connect symbols to the objects for ease of use in defining levels.
+
+3. **Rules**: Set up game mechanics that establish how objects interact, especially the movement of the player and any pushing mechanics for crates.
+
+4. **Win Condition**: Establish how a player wins, typically when crates cover all goals.
+
+5. **Levels**: Design levels that offer a variety of challenges.
+
+6. **Metadata**: Describe the game settings, like title and author.
+
+We will create a simple Sokoban-esque PuzzleScript game. Here's how the components come together according to the above plan:
+
+```plaintext
+========================================
+title Simple Sokoban
+author PuzzleDesigner
+
+========================================
+===========
+OBJECTS
+===========
+
+Background
+TRANSPARENT
+
+Wall
+#000000
+
+Player
+#00FF00
+
+Crate
+#FFAA00
+
+Goal
+#FF0000
+
+CrateOnGoal
+#FFAA00
+BACKGROUND #FF0000
+
+PlayerOnGoal
+#00FF00
+BACKGROUND #FF0000
+
+===========
+LEGEND
+===========
+
+. = Background
+# = Wall
+P = Player
+B = Crate
+G = Goal
+O = CrateOnGoal
+Q = PlayerOnGoal
+
+===========
+SOUNDS
+===========
+
+===========
+COLLISIONLAYERS
+===========
+
+Background
+Wall
+Player, PlayerOnGoal
+Crate, CrateOnGoal
+Goal
+
+===========
+RULES
+===========
+
+# Movement of Player
+[right Player | Crate] -> [ > Player | > Crate]
+[left Player | Crate] -> [ < Player | < Crate]
+[up Player | Crate] -> [ ^ Player | ^ Crate]
+[down Player | Crate] -> [ v Player | v Crate]
+
+[right Player] -> [ > Player]
+[left Player] -> [ < Player]
+[up Player] -> [ ^ Player]
+[down Player] -> [ v Player]
+
+# Transforming Crates/Players on Goals
+[Player | Goal] -> [PlayerOnGoal]
+[PlayerOnGoal | Player] -> [Player]
+[Crate | Goal] -> [CrateOnGoal]
+[CrateOnGoal | Crate] -> [Crate]
+
+[PlayerOnGoal | Goal] -> [PlayerOnGoal]
+[CrateOnGoal | Goal] -> [CrateOnGoal]
+
+===========
+WINCONDITIONS
+===========
+
+All CratesOnGoal
+
+===========
+LEVELS
+===========
+
+#######
+#.....#
+#.GPG.#
+#.B...#
+#######
+
+#######
+#.G.#.#
+#..PB.#
+#.....#
+#######
+
+#######
+#.....#
+#.BG..#
+#..P..#
+#######
+```
+
+**Explanation:**
+
+- **Objects**: Defined each game object with associated colors.
+- **Legend**: Mapped each character to its respective object.
+- **Collision Layers**: Set layers to control which objects can overlap or block each other.
+- **Rules**: Defined movement controls and interactions for pushing crates and standing on goals.
+- **Win Conditions**: Player wins when all crates are on goal tiles.
+- **Levels**: Three simple layout levels are provided.
+
+This setup should provide a complete and functional Sokoban-style puzzle game in PuzzleScript.

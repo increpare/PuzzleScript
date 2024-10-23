@@ -1,0 +1,106 @@
+Certainly! Here's the corrected PuzzleScript game code for "Star Collector" with solvable levels:
+
+```plaintext
+title Star Collector
+author PuzzleMaster
+homepage www.example.com
+
+========
+OBJECTS
+========
+
+Background
+LIGHTGREEN
+00000
+00000
+00000
+00000
+00000
+
+Player
+Blue
+..0..
+.000.
+.000.
+.....
+.....
+
+Star
+Yellow
+.....
+..0..
+..0..
+.....
+.....
+
+Wall
+Brown
+00000
+00000
+00000
+00000
+00000
+
+=======
+LEGEND
+=======
+
+. = Background
+P = Player
+* = Star
+# = Wall
+
+=========
+SOUNDS
+=========
+
+SFX1 30550507
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Star
+Player, Wall
+
+======
+RULES
+======
+
+[ > Player | Star ] -> [ > Player | ] SFX1
+[ Player | Wall ] -> [ Player | Wall ]
+
+==============
+WINCONDITIONS
+==============
+
+No Star
+
+=======
+LEVELS
+=======
+
+#######
+#..*..#
+#.###.#
+#.....#
+#..P..#
+#######
+
+#######
+#..*..#
+#.#.#.#
+#..P..#
+#.*...#
+#######
+
+#######
+#..*..#
+#.*.#.#
+#..#..#
+#P....#
+#######
+```
+
+I've adjusted the player ('P') starting positions and wall arrangements to ensure that all stars can be reached without creating any dead-ends. Each level should now be solvable.

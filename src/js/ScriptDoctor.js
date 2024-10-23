@@ -62,7 +62,7 @@ function serialize(val) {
 async function solveLevel(level) {
   // Load the level
   compile(['loadLevel', level], editor.getValue());
-  console.log('Solving level', level);
+  // console.log('Solving level', level);
   init_level = backupLevel();
   init_level_map = init_level['dat'];
   frontier = [init_level];
@@ -79,7 +79,7 @@ async function solveLevel(level) {
       new_action_seq.push(move);
       changed = processInput(move);
       if (winning) {
-        console.log('Winning!');
+        // console.log('Winning!');
         return new_action_seq, i;
       }
       else if (changed) {
@@ -98,8 +98,8 @@ async function solveLevel(level) {
       }
     }
     if (i % 1000 == 0) {
-      console.log('Iteration:', i);
-      console.log('FPS:', i / (Date.now() - start_time) * 1000);
+      // console.log('Iteration:', i);
+      // console.log('FPS:', i / (Date.now() - start_time) * 1000);
     }
     i++;
   }
@@ -144,19 +144,33 @@ async function genGame(genMode, parents, saveDir, seed, fewshot, cot) {
       consolePrint(line);
     }
     code = data.code;
-    editor.setValue(code);
-    editor.clearHistory();
-    clearConsole();
-    setEditorClean();
-    unloadGame();
-    compile(['restart'], code);
-    consoleText = getConsoleText();
+    errorLoadingLevel = false;
+    try {
+      editor.setValue(code);
+      editor.clearHistory();
+      clearConsole();
+      setEditorClean();
+      unloadGame();
+    } catch (e) {
+      console.log('Error while loading code:', e);
+      errorLoadingLevel = true;
+      consoleText = `Error while loading code into editor: ${e}.`;
+      errorCount = 10;
+    }
+    if (!errorLoadingLevel) {
+      try {
+        compile(['restart'], code);
+      } catch (e) {
+        console.log('Error while compiling code:', e);
+      }
+      consoleText = getConsoleText();
+    }
 
     if (errorCount > 0) {
       compilationSuccess = false;
       solvable = false;
         solverText = '';
-      console.error(`Errors: ${errorCount}. Iterating on the game code. Attempt ${nGenAttempts}.`);
+      // console.log(`Errors: ${errorCount}. Iterating on the game code. Attempt ${nGenAttempts}.`);
       fitness = -errorCount;
     } else {
       compilationSuccess = true;
@@ -164,25 +178,34 @@ async function genGame(genMode, parents, saveDir, seed, fewshot, cot) {
       solvable = true;
       var sol;
       var n_search_iters;
-      console.log('No compilation errors. Performing playtest.');
+      // console.log('No compilation errors. Performing playtest.');
       for (level_i in state.levels) {
-        console.log('Levels:', state.levels);
+        // console.log('Levels:', state.levels);
         // Check if type `Level` or dict
         if (!state.levels[level_i].hasOwnProperty('height')) {
-          console.log(`Skipping level ${level_i} as it does not appear to be a map (just a message?): ${state.levels[level_i]}.`);
+          // console.log(`Skipping level ${level_i} as it does not appear to be a map (just a message?): ${state.levels[level_i]}.`);
           continue;
         }
-        sol, n_search_iters = await solveLevel(level_i);
+        try {
+          console.log(`Solving level ${level_i}...`);
+          sol, n_search_iters = await solveLevel(level_i);
+          console.log(`Solution for level ${level_i}:`, sol);
+        } catch (e) {
+          console.log('Error while solveing level:', e);
+          sol = [];
+          n_search_iters = -1;
+          solverText += ` Level ${level_i} resulted in error: ${e}. Please repair it.`;
+        }
         fitness = Math.max(fitness, n_search_iters)
-        console.log('Solution:', sol);
+        // console.log('Solution:', sol);
         // check if sol is undefined
         if (sol) {
-          console.log('Level is solvable.');
+          // console.log('Level is solvable.');
           solverText += `Found solution for ${level_i} in ${n_search_iters} iterations.`
         } else {
-          console.log(`Level ${level_i} is not solvable.`);
+          // console.log(`Level ${level_i} is not solvable.`);
           solvable = false;
-          solverText += `Level ${level_i} is not solvable. Please repair it.`
+          solverText += ` Level ${level_i} is not solvable. Please repair it.`
         }
       }
     }
@@ -232,12 +255,18 @@ async function evolve() {
   }
 }
 
+seed = 0;
+
 async function sweep() {
-  for (seed = 0; seed < 10; seed++) {
-    for (cot in [true, false]) {
-      for (fewshot in [true, false]) {
-        gameInd = await genGame('init', [], `sweep/fewshot-${fewshot}_cot-${cot}/game-${i}`,
-          seed, fewshot, cot);
+  for (gameIdx = 6; gameIdx < 10; gameIdx++) {
+    for (cot_i = 0; cot_i < 2; cot_i++) {
+      cot = cot_i == 1
+      for (fewshot_i = 0; fewshot_i < 2; fewshot_i++) {
+        fewshot = fewshot_i == 1
+        gameStr = `sweep-${seed}/fewshot-${fewshot}_cot-${cot}/game-${gameIdx}`;
+        console.log(`Generating game ${gameStr}`);
+        gameInd = await genGame('init', [], gameStr,
+          gameIdx, fewshot, cot);
       }
     }
   }

@@ -1,0 +1,132 @@
+Certainly! Let's correct the issues identified in the console output. The main problems seem to be:
+
+1. The `PLAYER` and `P` sections are misplaced and interpreted as incorrect inputs in the `WINCONDITIONS`.
+2. The levels must have the same number of columns in each row; they must be rectangular.
+
+Here is the corrected version of the code:
+
+```plaintext
+Title: Sokoban Mini
+
+Author: PuzzleScript Enthusiast
+
+========
+OBJECTS
+========
+
+Background
+transparent
+
+Player
+Yellow
+.....
+..00.
+.0000
+..00.
+.....
+
+Crate
+Brown
+.....
+.000.
+0..0.
+.000.
+.....
+
+Wall
+Grey
+.....
+.000.
+0..0.
+.000.
+.....
+
+Target
+Red
+.....
+.....
+..00.
+..00.
+.....
+
+CrateOnTarget
+Orange
+.....
+.....
+..00.
+..00.
+.....
+
+========
+LEGEND
+========
+
+. = Background
+P = Player
+C = Crate
+W = Wall
+T = Target
+O = CrateOnTarget
+
+========
+SOUNDS
+========
+
+========
+COLLISIONLAYERS
+========
+
+Background
+Target
+Wall, Crate, CrateOnTarget
+Player
+
+========
+RULES
+========
+
+[ > Player | Crate] -> [ > Player | > Crate]
+[ > Player | CrateOnTarget] -> [ > Player | > Crate]
+[Player | Target] -> [ | Player] 
+[Crate | Target] -> [CrateOnTarget | ]
+[CrateOnTarget | ] -> [Crate | Target]
+
+========
+WINCONDITIONS
+========
+
+All CrateOnTarget
+
+========
+LEVELS
+========
+
+WWWWW
+W.TW.
+WCO.W
+WP.WW
+WWWWW
+
+WWWWW
+W...W
+WCO.W
+WP..W
+WWWWW
+
+WWWWWW
+W....W
+W.T..W
+W.CO.W
+W..PW.
+WWWWWW
+
+========
+PLAYER
+========
+
+P
+
+```
+
+- The `PLAYER` section has been moved to the correct location after `WINCONDITIONS`.
+- The levels have been corrected to ensure all rows are the same length, making them rectangular.

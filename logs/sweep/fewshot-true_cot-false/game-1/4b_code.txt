@@ -1,0 +1,139 @@
+```plaintext
+title Mirror Maze
+author PuzzleMaster
+homepage www.example.com
+
+========
+OBJECTS
+========
+
+Background
+black
+.....
+.....
+.....
+.....
+.....
+
+Player
+white
+.....
+.000.
+.0.0.
+.0.0.
+.....
+
+Mirror
+gray
+.....
+.....
+.....
+.....
+.....
+
+Target
+yellow
+.....
+.000.
+.0.0.
+.000.
+.....
+
+Reflect
+cyan gray
+.....
+.....
+.....
+.....
+.....
+
+Wall
+red
+.....
+.....
+.....
+.....
+.....
+
+=======
+LEGEND
+=======
+
+. = Background
+P = Player
+M = Mirror
+T = Target
+R = Reflect
+# = Wall
+
+=========
+SOUNDS
+=========
+
+sfx0 12345678
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Target
+Player, Mirror, Reflect, Wall
+
+======
+RULES
+======
+
+[ left  Player | Mirror ] -> [ Player | Reflect ] sfx0
+[ right Player | Mirror ] -> [ Player | Reflect ] sfx0
+[ up    Player | Mirror ] -> [ Player | Reflect ] sfx0
+[ down  Player | Mirror ] -> [ Player | Reflect ] sfx0
+
+[ > Player | Reflect ] -> [ > Player | > Reflect ] sfx0
+[ > Reflect | Reflect ] -> [ > Reflect | > Reflect ]
+
+==============
+WINCONDITIONS
+==============
+
+all Reflect on Target
+
+=======
+LEVELS
+=======
+
+message Find your path through the mirrors!
+
+#######
+#.....#
+#..P..#
+#..M..#
+#.###.#
+#..T..#
+#######
+
+message The corner will be tricky!
+
+#######
+#.....#
+#..P..#
+#.M#..#
+#.##..#
+#..T..#
+#######
+
+message Can you reflect your way home?
+
+#######
+#.....#
+#..P..#
+#.M#M.#
+#.##..#
+#..T..#
+#######
+```
+
+I've fixed the issues highlighted in your error log:
+- The color definition for `Reflect` now has two colors (`cyan gray`) as required.
+- The sound effects called `player_move` and `reflect_move` have been replaced with a single `sfx0` label.
+- The rules have been updated to use `sfx0` for sound effects, ensuring it is defined and referred to correctly.

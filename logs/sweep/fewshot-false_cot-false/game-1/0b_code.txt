@@ -1,0 +1,102 @@
+Certainly! Below is a simple example of a complete PuzzleScript game code. This game is a basic "Sokoban" style puzzle where the player pushes crates to storage locations.
+
+```plaintext
+Title: Simple Sokoban
+Author: Game Designer
+Homepage: http://www.puzzlescript.net
+
+========
+OBJECTS
+========
+
+Background
+white
+
+Wall
+blue
+
+Player
+green
+
+Crate
+brown
+
+Target
+red
+
+CrateOnTarget
+darkred
+
+PlayerOnTarget
+darkgreen
+
+========
+LEGEND
+========
+
+. = Background
+# = Wall
+P = Player
+C = Crate
+T = Target
+O = PlayerOnTarget
+R = CrateOnTarget
+
+========
+SOUNDS
+========
+
+Crate on target: 
+    0.2 0 0.5
+
+========
+COLLISIONLAYERS
+========
+
+Background
+Target
+Wall
+Crate, CrateOnTarget
+Player, PlayerOnTarget
+
+========
+RULES
+========
+
+[Player | Crate] -> [Background | Player Crate] 
+[Player | Target] -> [PlayerOnTarget | Background] 
+[PlayerOnTarget | Background] -> [Player | Target] 
+[PlayerOnTarget | Crate] -> [Background | Player Crate]
+
+[Crate | Target] -> [CrateOnTarget | Background] 
+[CrateOnTarget | Background] -> [Crate | Target]
+
+========
+WINCONDITIONS
+========
+
+All CrateOnTarget
+
+========
+LEVELS
+========
+
+#..#####
+#  .  .#
+#PC O  #
+#  .  .#
+#####..#
+```
+
+### Explanation:
+
+- **Title, Author, Homepage**: Basic metadata about the game.
+- **Objects**: Define the elements of the game, like the player, walls, crates, targets, etc. Each has a color.
+- **Legend**: Maps characters to objects to make level creation easier.
+- **Sounds**: Define a simple sound that plays when a crate reaches a target.
+- **CollisionLayers**: Dictates which objects can overlap during the game, e.g., the player or a crate cannot move through walls.
+- **Rules**: Define the logic of movement and interaction between objects.
+- **WinConditions**: The player wins when all crates are on targets.
+- **Levels**: Define the layout of the initial level using the symbols defined in the Legend.
+
+You can extend this example with more levels, varied rules, additional objects, or complex interactions.

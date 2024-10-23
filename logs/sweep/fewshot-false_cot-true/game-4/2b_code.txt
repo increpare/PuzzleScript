@@ -1,0 +1,24 @@
+The errors in the console output indicate that there are parsing issues with the declaration of objects and their associated colors. Each line appears to misinterpret the objects and their colors, producing parsing errors. The root cause seems to be unrecognized or misplaced characters possibly due to formatting mistakes, such as extraneous spaces or misplaced newline characters.
+
+To resolve these errors, I'll ensure that each object is defined correctly with the format: `ObjectName Symbol Color`. After checking the recorded errors, it seems like some lines may have inadvertently missed spaces or were improperly parsed. 
+
+Here is the corrected version of the code:
+
+```plaintext
+========
+objects
+========
+Background . BLACK
+Wall         W GRAY
+Player       P BLUE
+Block        B RED
+Goal         G GREEN
+BlockOnGoal  O YELLOW
+```
+
+Key Actions Taken:
+1. Checked and aligned object declarations to ensure each object name, symbol, and color are separated by spaces.
+2. Ensured there is consistent formatting for each line to avoid parsing errors.
+3. Double-checked that there are no hidden or extra characters between items or at the end of lines that could cause issues. 
+
+This should now properly define each object with its respective symbol and assigned color, allowing the game to compile correctly.

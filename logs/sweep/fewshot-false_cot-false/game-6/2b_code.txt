@@ -1,0 +1,103 @@
+The errors in your PuzzleScript game relate to the formatting of the metadata section. Each metadata field should be followed by a colon (`:`) and its corresponding value on the same line. I'll adjust the metadata section accordingly and provide the corrected version below.
+
+```plaintext
+===========
+title: Collect the Stars
+author: PuzzleScriptFan
+homepage: https://www.puzzlescript.net
+===========
+Sprite definitions
+===========
+player
+00011
+00111
+22222
+22222
+12211
+
+wall
+22222
+22222
+22222
+22222
+22222
+
+floor
+22222
+22222
+22222
+22222
+22222
+
+star
+..0..
+.000.
+00000
+.000.
+..0..
+
+===========
+Legend
+===========
+P = player
+W = wall
+. = floor
+* = star
+
+===========
+Sounds
+===========
+SOUNDS win 0.5 "sfx/collect.wav"
+
+===========
+CollisionLayers
+===========
+BACKGROUND
+floor
+OBJECTS
+wall
+star
+player
+
+===========
+Rules
+===========
+[ > player | star ] -> [ > player ]
+
+===========
+WinConditions
+===========
+All star on 
+
+===========
+Levels
+===========
+#####
+#...#
+#.P.#
+#.*.#
+#####
+
+#######
+#.P.#.#
+#...*.#
+#.***.#
+#.....#
+#######
+
+===========
+Color
+===========
+Background 0 0 0
+player 255 255 255
+wall 128 128 128
+floor 50 50 50
+star 255 255 0
+
+===========
+Performance
+===========
+limitedUndo
+```
+
+This should resolve the console errors related to the metadata section. Make sure that each piece of metadata is on its own line with the appropriate colon separating the key from its value.

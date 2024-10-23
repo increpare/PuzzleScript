@@ -1,0 +1,94 @@
+The error in your PuzzleScript code is due to using a space character (' ') in the levels section that wasn't properly defined. In PuzzleScript, every symbol used in the map representation needs to be declared in the LEGEND section, even if it represents an empty space. Let's fix this issue by declaring the space character as ‘Background’ in the LEGEND section.
+
+Here's the repaired version of your code:
+
+```plaintext
+Title: Simple Sokoban
+Author: Game Designer
+Homepage: http://www.puzzlescript.net
+
+========
+OBJECTS
+========
+
+Background
+white
+
+Wall
+blue
+
+Player
+green
+
+Crate
+brown
+
+Target
+red
+
+CrateOnTarget
+darkred
+
+PlayerOnTarget
+darkgreen
+
+========
+LEGEND
+========
+
+# = Wall
+P = Player
+C = Crate
+T = Target
+O = PlayerOnTarget
+R = CrateOnTarget
+  = Background
+
+========
+SOUNDS
+========
+
+CrateOnTarget MOVE 1
+
+========
+COLLISIONLAYERS
+========
+
+Background
+Target
+Wall
+Crate, CrateOnTarget
+Player, PlayerOnTarget
+
+========
+RULES
+========
+
+[Player | Crate] -> [Background | Player Crate]
+[Player | Target] -> [PlayerOnTarget | Background]
+[PlayerOnTarget | Background] -> [Player | Target]
+[PlayerOnTarget | Crate] -> [Background | Player Crate]
+
+[Crate | Target] -> [CrateOnTarget | Background]
+[CrateOnTarget | Background] -> [Crate | Target]
+
+========
+WINCONDITIONS
+========
+
+All CrateOnTarget
+
+========
+LEVELS
+========
+
+#######
+#     #
+# .T. #
+# .C. #
+# PT  #
+#######
+
+```
+
+In this correction, I added a space in the LEGEND section and associated it with 'Background'. This allows the game to recognize the space character in level maps and eliminates the error you encountered.

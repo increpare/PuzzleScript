@@ -1,0 +1,68 @@
+SYSTEM PROMPT:
+You are a game designer, familiar with the PuzzleScript game description language. 
+
+USER PROMPT:
+The following PuzzleScript game code:
+```plaintext
+[Objects]
+player P
+wall #
+box B
+target .
+grass G
+
+[CollisionLayers]
+player, box
+wall
+grass
+
+[Rules]
+[right player | box | ] -> [ | player | box]
+[left  player | box | ] -> [ | player | box]
+[up    player | box | ] -> [ | player | box]
+[down  player | box | ] -> [ | player | box]
+
+[right player | grass] -> [grass | player]
+[left  player | grass] -> [grass | player]
+[up    player | grass] -> [grass | player]
+[down  player | grass] -> [grass | player]
+
+[WinConditions]
+all box on target
+
+[Levels]
+;;;;level 1
+#####
+#P  #
+#   #
+#B  #
+#.. #
+#####
+;;;;level 2
+#######
+#P   ##
+# B. #
+##   #
+######
+
+;;;;level 3
+########
+#P  #  #
+# BB#..#
+#  #   #
+#  ### #
+#      #
+########
+
+```
+produced the following console output:
+=================================
+line 2 : Unrecognised stuff in the prelude.
+line 3 : Unrecognised stuff in the prelude.
+line 4 : Unrecognised stuff in the prelude.
+line 5 : Unrecognised stuff in the prelude.
+line 6 : Unrecognised stuff in the prelude.
+line 9 : Unrecognised stuff in the prelude.
+too many errors, aborting compilation
+Errors detected during compilation; the game may not work correctly.
+Return a repaired version of the code that addresses these errors. First, reason about your task and determine the best plan of action. Then, write your code. Return your code in full, inside a ```plaintext code block.

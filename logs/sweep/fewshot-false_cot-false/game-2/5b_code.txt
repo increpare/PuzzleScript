@@ -1,0 +1,59 @@
+```plaintext
+=======
+title Sokoban Clone
+author YourName
+
+========
+objects
+  Wall
+    color #422
+  Floor
+    color #ccc
+  Player
+    color #00f
+    layer 1
+  Box
+    color #ff0
+    layer 2
+  Goal
+    color #f00
+    layer 3
+
+========
+legend
+    . = Floor
+    # = Wall
+    P = Player
+    B = Box
+    X = Goal
+
+========
+sounds
+    movePlayer = action
+    moveBox = action
+
+=======
+rules
+[ Player | Box ] -> [ | Player Box ]
+[ Player | ] (up) -> [ | Player ^ ]
+[ Player | ] (down) -> [ | Player v ]
+[ Player | ] (left) -> [ | Player < ]
+[ Player | ] (right) -> [ | Player > ]
+
+=======
+winconditions
+All Box on Goal
+
+=======
+levels
+
+#####   
+#...# 
+#.#.# 
+#.P.# 
+#.B.# 
+##### 
+
+```
+
+This fixed version of the code corrects the spacing and syntax issues, ensuring color values are correctly associated with the object definitions.

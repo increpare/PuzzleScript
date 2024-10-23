@@ -1,0 +1,119 @@
+SYSTEM PROMPT:
+You are a game designer, familiar with the PuzzleScript game description language. 
+
+USER PROMPT:
+The following PuzzleScript game code:
+```plaintext
+# Sokoban-like PuzzleScript Game
+
+########
+#       #
+# Your Name #
+#    2023    #
+########
+
+[title]
+Simple Sokoban
+
+[author]
+Your Name
+
+========
+[objects]
+Player
+Red
+..
+#0000FF
+####
+
+Wall
+Blue
+..
+#3333FF
+####
+
+Box
+Yellow
+..
+#FFDD00
+####
+
+Target
+Green
+..
+#00FF00
+####
+
+Grass
+LightGrey
+..
+#DDDDDD
+####
+
+========
+[legend]
+P = Player
+W = Wall
+B = Box
+T = Target
+G = Grass
+
+========
+[collisionlayers]
+Background
+Player, Box, Grass
+Wall
+
+========
+[rule]
+right [ Player | Box ] -> [ Grass | Player Box ]
+left  [ Player | Box ] -> [ Grass | Player Box ]
+up    [ Player | Box ] -> [ Grass | Player Box ]
+down  [ Player | Box ] -> [ Grass | Player Box ]
+
+right [ Player | Grass ] -> [ Grass | Player Grass ]
+left  [ Player | Grass ] -> [ Grass | Player Grass ]
+up    [ Player | Grass ] -> [ Grass | Player Grass ]
+down  [ Player | Grass ] -> [ Grass | Player Grass ]
+
+========
+[winconditions]
+All Box on Target
+
+========
+[levels]
+;;;;level 1
+#####
+#P  #
+#   #
+#B  #
+#.. #
+#####
+;;;;level 2
+#######
+#P   ##
+# BT #
+##   #
+######
+
+;;;;level 3
+########
+#P  #  #
+# BB#..#
+#  #   #
+#  ### #
+#      #
+########
+
+```
+produced the following console output:
+=================================
+line 10 : Unrecognised stuff in the prelude.
+line 13 : Unrecognised stuff in the prelude.
+line 17 : Unrecognised stuff in the prelude.
+line 18 : Unrecognised stuff in the prelude.
+line 23 : Unrecognised stuff in the prelude.
+line 24 : Unrecognised stuff in the prelude.
+too many errors, aborting compilation
+Errors detected during compilation; the game may not work correctly.
+Return a repaired version of the code that addresses these errors. First, reason about your task and determine the best plan of action. Then, write your code. Return your code in full, inside a ```plaintext code block.

@@ -1,0 +1,95 @@
+```plaintext
+title Gem Collector
+
+========
+OBJECTS
+========
+
+Background
+black
+
+Player
+LightBlue
+.....
+..0..
+.....
+.....
+.....
+
+Wall
+DarkGray
+.....
+00000
+.....
+.....
+.....
+
+Gem
+Yellow
+.....
+..0..
+.....
+.....
+.....
+
+Finish
+LightGreen
+.....
+.0...
+.....
+.....
+.....
+
+=======
+LEGEND
+=======
+
+. = Background
+P = Player
+# = Wall
+G = Gem
+F = Finish
+
+=======
+SOUNDS
+=======
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Player, Wall, Gem, Finish
+
+======
+RULES
+======
+
+[ > Player | Gem ] -> [ > Player | Background ]
+
+[ > Player | Finish ] -> win
+
+==============
+WINCONDITIONS
+==============
+
+no Gem
+
+========
+LEVELS
+========
+
+..####..
+..#..#..
+..#..#..
+P.#..#.F
+..#..#..
+..#..#..
+..####..
+```
+
+Changes made:
+- Added an empty `SOUNDS` section.
+- Fixed capitalization errors to ensure consistency with the defined object names.
+- Adjusted the `RULES` section to use the correct object names with appropriate capitalization and added the movement character `>` in front of `Player` to denote direction.
+- Modified the `WINCONDITIONS` to use `no Gem`, which means all Gems must be collected for the player to win.

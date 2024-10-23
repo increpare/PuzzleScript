@@ -1,0 +1,77 @@
+Below is a simple yet complete PuzzleScript game code for a classic Sokoban-style puzzle game.
+
+```plaintext
+=======
+title Sokoban Clone
+author YourName
+
+========
+legend
+    . = Floor
+    # = Wall
+    P = Player
+    B = Box
+    X = Goal
+
+========
+sounds
+    movePlayer = action
+    moveBox = action
+
+========
+collisions
+    P -> movePlayer
+    B -> moveBox
+
+========
+objects
+  Wall 
+    color #422
+    solid true
+  Floor
+    color #ccc
+  Player
+    color #00f
+    layer 1
+  Box 
+    color #ff0
+    layer 2
+  Goal
+    color #f00
+    layer 3
+
+=======
+rules
+[ Player | Box ] -> [ | Player Box ]
+[ Player | ] (up) -> [ | Player ^ ]
+[ Player | ] (down) -> [ | Player v ]
+[ Player | ] (left) -> [ | Player < ]
+[ Player | ] (right) -> [ | Player > ]
+
+=======
+winconditions
+All Box on Goal
+
+=======
+levels
+
+#####   
+#...# 
+#.#.# 
+#.P.# 
+#.B.# 
+##### 
+```
+
+### Explanation:
+
+- **Title and Author**: Sets up the title and author of the game.
+- **Legend**: Defines symbols used in levels with their corresponding game objects.
+- **Sounds**: Associates sound effects with player and box movements.
+- **Collisions**: Specifies what sounds to play when a player or box moves.
+- **Objects**: Defines game objects with properties like colors and whether they are solid.
+- **Rules**: Describes movement rules, including pushing boxes and moving the player.
+- **Win Conditions**: The game is won when all boxes are on goal tiles.
+- **Levels**: A simple level layout with walls, goals, a player, and a box to solve.
+
+This provides a foundation for a basic Sokoban game. You can create additional levels by adding more level layouts in the levels section.

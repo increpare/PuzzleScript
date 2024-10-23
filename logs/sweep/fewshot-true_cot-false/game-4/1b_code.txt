@@ -1,0 +1,83 @@
+```plaintext
+title Gem Collector
+
+========
+OBJECTS
+========
+
+Background
+black
+
+Player
+LightBlue
+.....
+..P..
+.PPP.
+..P..
+.....
+
+Wall
+DarkGray
+.....
+WWWWW
+WWWWW
+WWWWW
+.....
+
+Gem
+Yellow
+.....
+..G..
+.GGG.
+..G..
+.....
+
+Finish
+LightGreen
+.....
+FFFFF
+FFFFF
+FFFFF
+.....
+
+=======
+LEGEND
+=======
+
+. = Background
+P = Player
+# = Wall
+G = Gem
+F = Finish
+
+======
+RULES
+======
+
+[ Player | Gem  ] -> [ Player | Background ]
+
+[ Player | Finish ] -> win
+
+==============
+WINCONDITIONS
+==============
+
+all Gem on Background
+
+========
+LEVELS
+========
+
+..####..
+..#..#..
+..#..#..
+P.#..#.F
+..#..#..
+..#..#..
+..####..
+```
+
+Changes made:
+1. Fixed the sprite matrices for `Player`, `Wall`, `Gem`, and `Finish` to have the correct number of rows and columns (5x5).
+2. Corrected the color for `Gem` from "Gold" to "Yellow" for compatibility.
+3. Ensured consistency in sprite matrix rows across all objects.

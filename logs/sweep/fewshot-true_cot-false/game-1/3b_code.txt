@@ -1,0 +1,143 @@
+Certainly! Here's the corrected version of the PuzzleScript code:
+
+```plaintext
+title Mirror Maze
+author PuzzleMaster
+homepage www.example.com
+
+========
+OBJECTS
+========
+
+Background
+black
+.....
+.....
+.....
+.....
+.....
+
+Player
+white
+.....
+.000.
+.0.0.
+.0.0.
+.....
+
+Mirror
+gray
+.....
+.....
+.....
+.....
+.....
+
+Target
+yellow
+.....
+.000.
+.0.0.
+.000.
+.....
+
+Reflect
+cyan darkgray
+.....
+.....
+.....
+.....
+.....
+
+Wall
+red
+.....
+.....
+.....
+.....
+.....
+
+=======
+LEGEND
+=======
+
+. = Background
+P = Player
+M = Mirror
+T = Target
+R = Reflect
+# = Wall
+
+=========
+SOUNDS
+=========
+
+player_move 12345678
+reflect_move 87654321
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Target
+Player, Mirror, Reflect, Wall
+
+======
+RULES
+======
+
+[ left  Player | Mirror ] -> [ Player | Reflect reflect_move]
+[ right Player | Mirror ] -> [ Player | Reflect reflect_move]
+[ up    Player | Mirror ] -> [ Player | Reflect reflect_move]
+[ down  Player | Mirror ] -> [ Player | Reflect reflect_move]
+
+[ > Player | Reflect ] -> [ > Player | > Reflect player_move]
+[ > Reflect | Reflect ] -> [ > Reflect | > Reflect ]
+
+==============
+WINCONDITIONS
+==============
+
+all Reflect on Target
+
+=======
+LEVELS
+=======
+
+message Find your path through the mirrors!
+
+#######
+#.....#
+#..P..#
+#..M..#
+#.###.#
+#..T..#
+#######
+
+message The corner will be tricky!
+
+#######
+#.....#
+#..P..#
+#.M#..#
+#.##..#
+#..T..#
+#######
+
+message Can you reflect your way home?
+
+#######
+#.....#
+#..P..#
+#.M#M.#
+#.##..#
+#..T..#
+#######
+
+```
+
+### Changes Made:
+1. Corrected the `Reflect` object color definition by removing the trailing space.
+2. Changed `PlayerMove` to `player_move` and `ReflectMove` to `reflect_move` for consistency with conventional naming formats.
+3. Updated the rule sounds to match the corrected sound names.

@@ -1,0 +1,125 @@
+SYSTEM PROMPT:
+You are a game designer, familiar with the PuzzleScript game description language. 
+
+USER PROMPT:
+The following PuzzleScript game code:
+```plaintext
+Title: Simple Sokoban
+
+Author: PuzzleDesigner
+
+===========
+OBJECTS
+===========
+
+Background
+. # Typically define a color explicitly if you have multiple colors
+. # Example: a (if you have a color palette defined)
+
+Wall
+# # Define a single character color here (e.g., a, or 1, and same below)
+aaa
+aXa
+aaa
+
+Player
+P
+0P0
+PPP
+0P0
+
+Crate
+C
+CCC
+C0C
+CCC
+
+Target
+T
+0T0
+0T0
+0T0
+
+Cratedone
+D
+0C0
+0T0
+0C0
+
+===========
+LEGEND
+===========
+
+. = Background
+# = Wall
+P = Player
+C = Crate
+T = Target
+D = Cratedone
+
+===========
+SOUNDS
+===========
+
+# Add your custom sounds if needed
+
+===========
+COLLISIONLAYERS
+===========
+
+Background
+Target
+Wall
+Crate, Cratedone
+Player
+
+===========
+RULES
+===========
+
+[Player | Crate] -> [ > Player | > Crate]
+[Crate | Target] -> [CrateDone]
+[CrateDone | Player] -> [ > CrateDone | > Player]
+
+===========
+WINCONDITIONS
+===========
+
+All CrateDone on Target
+
+===========
+LEVELS
+===========
+
+# Level 1
+########
+#....T.#
+#..C.P.#
+#....T.#
+########
+
+# Level 2
+########
+#..P.T#
+#.C...#
+#..T..#
+########
+
+########
+#..T..#
+#.C...#
+#..T..#
+#######
+
+```
+produced the following console output:
+=================================
+line 10 : Was looking for color for object BACKGROUND, got ". # typically define a color explicitly if you have multiple colors" instead.
+line 11 : Unknown junk in spritematrix for object BACKGROUND.
+line 14 : Was looking for color for object WALL, got "# # define a single character color here " instead.
+line 16 : Was looking for color for object AAA, got "axa" instead.
+line 17 : Object "AAA" defined multiple times.
+line 20 : Was looking for color for object PLAYER, got "p" instead.
+too many errors, aborting compilation
+Errors detected during compilation; the game may not work correctly.
+Return a repaired version of the code that addresses these errors. Return your code in full, inside a ```plaintext code block.

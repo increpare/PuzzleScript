@@ -1,0 +1,111 @@
+The errors you're encountering are due to the wall and floor sprites trying to access color numbers that don't exist. In the PuzzleScript game, each sprite can only use colors numbered from 0 upwards, where each '1' in the sprite design references the next color in the sequence that you've defined. The sprites for `wall` and `floor` are trying to access a color index that has not been defined, since each only has one color defined (index 0).
+
+Here's the corrected version of the code, where I've updated the `wall` and `floor` sprites to have a single '0' instead, which fixes those errors:
+
+```plaintext
+// title: Collect the Stars
+// author: PuzzleScriptFan
+// homepage: https://www.puzzlescript.net
+===========
+OBJECTS
+===========
+Background
+BLACK
+
+player
+WHITE
+.000.
+.0.0.
+00000
+00000
+.000.
+
+wall
+GRAY
+00000
+00000
+00000
+00000
+00000
+
+floor
+DARKGRAY
+00000
+00000
+00000
+00000
+00000
+
+star
+YELLOW
+.0.0.
+.000.
+00000
+.000.
+.0.0.
+
+===========
+LEGEND
+===========
+P = player
+W = wall
+. = floor
+* = star
+
+===========
+SOUNDS
+===========
+win 0.5 "sfx/collect.wav"
+
+===========
+COLLISIONLAYERS
+===========
+Background 
+floor
+wall
+player
+star
+
+===========
+RULES
+===========
+[ > player | star ] -> [ > player ]
+
+===========
+WINCONDITIONS
+===========
+All star on 
+
+===========
+LEVELS
+===========
+#####
+#...#
+#.P.#
+#.*.#
+#####
+
+#######
+#.P.#.#
+#...*.#
+#.***.#
+#.....#
+#######
+
+===========
+COLORS
+===========
+Background 0 0 0
+player 255 255 255
+wall 128 128 128
+floor 50 50 50
+star 255 255 0
+
+===========
+PERFORMANCE
+===========
+limitedUndo
+
+```
+
+By changing the '1's to '0's, both the `wall` and `floor` sprites correctly reference the color defined in their object declarations.

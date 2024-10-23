@@ -1,0 +1,135 @@
+Certainly! It seems like there might be an issue with the level design or the logic determining when boxes can be placed on goals. Let's review the given game code for any potential errors and fix them to ensure all levels are solvable:
+
+```plaintext
+title Box Push Puzzle
+author Your Name
+
+========
+OBJECTS
+========
+Background
+Black
+
+Wall
+Grey
+.....
+.....
+.....
+.....
+.....
+
+Player
+Green LightGreen DarkGreen Yellow
+..0..
+..1..
+.222.
+..1..
+.....
+
+Box
+Yellow
+.....
+.000.
+.0.0.
+.000.
+.....
+
+Goal
+Red LightRed DarkRed Orange
+.....
+..1..
+.222.
+..1..
+.....
+
+BoxOnGoal
+Orange
+.....
+.000.
+.0.0.
+.000.
+.....
+
+=======
+LEGEND
+=======
+. = Background
+# = Wall
+P = Player
+B = Box
+G = Goal
+@ = BoxOnGoal
+
+=======
+SOUNDS
+=======
+sfx0 1000
+
+================
+COLLISIONLAYERS
+================
+Background
+Goal
+Player, Box, Wall, BoxOnGoal
+
+======
+RULES
+======
+[ > Player | Box ] -> [ > Player | > Box ] sfx0
+[ Player | Goal ] -> [ Player | Goal ]
+[ Box | Goal ] -> [ BoxOnGoal | Goal ]
+[ BoxOnGoal ] -> [ BoxOnGoal ]
+[ BoxOnGoal | Goal ] -> [ BoxOnGoal | Goal ]
+
+==============
+WINCONDITIONS
+==============
+All BoxOnGoal on Goal
+
+=======
+LEVELS
+=======
+#######
+#.....#
+#..PB.#
+#..G..#
+#######
+
+#######
+#G.P.B#
+#.....#
+#..G..#
+#######
+
+```
+
+**Explanation and Solutions for Errors:**
+
+1. **Level 0 Problem Identification:** 
+   - The design places the Box (`B`) directly above the Goal (`G`). The Box can't be pushed down unless there is a clear path behind `P` that allows `B` movement onto `G`.
+   
+2. **Level 1 Problem Identification:**
+   - The Box `B` and Player `P` positioning seems like they might be prevented from reaching `G` at the bottom.
+
+**Corrected Levels:** 
+- You may want to alter the arrangement of walls or starting positions to make sure the player can push the box onto the goal. Below are adjusted levels aiming for solvability.
+
+```plaintext
+=======
+LEVELS
+=======
+#######
+#.....#
+#..P..#
+#.#BG.#
+#######
+
+#######
+#G.P..#
+#.....#
+#.....#
+#.B...#
+#######
+
+```
+These revisions aim to ensure that the player can push the `Box` onto the `Goal`. You should manually test these levels in the PuzzleScript engine to validate they're playable.

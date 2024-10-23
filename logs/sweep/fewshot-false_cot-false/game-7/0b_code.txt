@@ -1,0 +1,96 @@
+Here's a simple PuzzleScript game code for a Sokoban-style game. The objective is to push all the crates onto the target locations.
+
+```plaintext
+################################
+# Puzzlescript Sokoban Game
+################################
+
+title Sokoban Puzzle
+
+author Your Name
+
+homepage https://www.puzzlescript.net
+
+# Some options for the game
+options
+{
+    require_player_movement true
+}
+
+# Legends: Defining the objects in the game
+legend
+    . = Background
+    # = Wall
+    P = Player
+    B = Box
+    T = Target
+    O = BoxOnTarget
+    + = PlayerOnTarget
+
+# Constructing the objects
+objects
+    Background . 
+    Wall # 
+    Player P 
+   [ PlayerOnTarget ] + 
+    Box B 
+   [ BoxOnTarget ] O 
+    Target T
+
+colors
+    Background white
+    Wall blue
+    Player green
+    PlayerOnTarget lightgreen
+    Box brown
+    BoxOnTarget yellow
+    Target red
+
+# Defining rules for movement and interactions
+rules
+    [ >  Player |  No  ] -> [  >  Player |  ]
+    [ >  Player | Wall ] -> [ >  Player | Wall ]
+    [ >  Player |  Box  ] -> [ >  Player |  >  Box  ]
+    [ >  Player | BoxOnTarget ] -> [ >  Player | > Box ]
+
+    # Player moves onto Target
+    [ > Player | Target ] -> [ > PlayerOnTarget|  ]
+
+    # Player moving off Target
+    [ PlayerOnTarget | No ] -> [ Player | Target ]
+
+    # Move boxes
+    [ > Player | Box | No ] -> [ > Player | > Box ]
+
+    # Move boxes onto Targets
+    [ > Player | Box | Target ] -> [ > PlayerOnTarget | BoxOnTarget ]
+
+    # Boxes off Targets
+    [ BoxOnTarget | No ] -> [ Box | Target ]
+
+# Winning conditions
+winconditions
+    All BoxOnTarget
+
+# Game levels, represented in ASCII art
+levels
+
+#######
+#     #
+#     #
+# .#  #
+#  #$ #
+#  .  #
+# .@  #
+#######
+
+#######
+#. .  #
+#  #$ #
+#  #@ #
+#  $  #
+#. .  #
+#######
+``` 
+
+Copy this text into the PuzzleScript editor to load and play the game. You can edit levels or rules as desired for further customization!

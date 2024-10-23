@@ -1,0 +1,101 @@
+The issue you're encountering is due to incorrect indentation and syntax in the `Sprite definitions` section of your PuzzleScript code. Sprite definitions have to be defined in 5x5 pixel blocks without spaces for their matrix, and the labels should be aligned correctly with no spaces above or below the definitions. Here's the corrected version of your code:
+
+```plaintext
+// title: Collect the Stars
+// author: PuzzleScriptFan
+// homepage: https://www.puzzlescript.net
+===========
+Sprite definitions
+===========
+player
+00010
+00110
+11111
+11111
+01110
+
+wall
+11111
+11111
+11111
+11111
+11111
+
+floor
+11111
+11111
+11111
+11111
+11111
+
+star
+00100
+01110
+11111
+01110
+00100
+
+===========
+Legend
+===========
+P = player
+W = wall
+. = floor
+* = star
+
+===========
+Sounds
+===========
+win 0.5 "sfx/collect.wav"
+
+===========
+CollisionLayers
+===========
+Background 
+floor
+wall
+player
+star
+
+===========
+Rules
+===========
+[ > player | star ] -> [ > player ]
+
+===========
+WinConditions
+===========
+All star on 
+
+===========
+Levels
+===========
+#####
+#...#
+#.P.#
+#.*.#
+#####
+
+#######
+#.P.#.#
+#...*.#
+#.***.#
+#.....#
+#######
+
+===========
+Colors
+===========
+Background 0 0 0
+player 255 255 255
+wall 128 128 128
+floor 50 50 50
+star 255 255 0
+
+===========
+Performance
+===========
+limitedUndo
+```
+
+I've also corrected the `Sounds` section for proper syntax. Ensure your whole game structure is correct with proper line separation. If you encounter any more issues, double-check for any missing or extra line breaks, alignment, and newline characters between sections.

@@ -1,0 +1,109 @@
+SYSTEM PROMPT:
+You are a game designer, familiar with the PuzzleScript game description language. 
+
+USER PROMPT:
+The following PuzzleScript game code:
+```plaintext
+Title: Simple Sokoban
+
+Author: PuzzleDesigner
+
+===========
+OBJECTS
+===========
+
+Background
+darkgrey
+
+Wall
+grey
+XXXXX
+
+Player
+yellow
+.P0P.
+
+Crate
+brown
+.C0C.
+
+Target
+green
+.T0T.
+
+CrateDone
+orange
+.D0D.
+
+===========
+LEGEND
+===========
+
+. = Background
+# = Wall
+P = Player
+C = Crate
+T = Target
+D = CrateDone
+
+===========
+SOUNDS
+===========
+
+# Add your custom sounds if needed
+
+===========
+COLLISIONLAYERS
+===========
+
+Background
+Target
+Wall
+Crate, CrateDone
+Player
+
+===========
+RULES
+===========
+
+[Player | Crate] -> [ > Player | > Crate]
+[Crate | Target] -> [CrateDone | Target]
+[CrateDone | Player] -> [ > CrateDone | > Player]
+
+===========
+WINCONDITIONS
+===========
+
+All CrateDone
+
+===========
+LEVELS
+===========
+
+# Level 1
+########
+#....T.#
+#..C.P.#
+#....T.#
+########
+
+# Level 2
+########
+#..P..T#
+#.C....#
+#..T...#
+########
+
+```
+produced the following console output:
+=================================
+line 18 : Unknown junk in spritematrix for object PLAYER.
+line 22 : Unknown junk in spritematrix for object CRATE.
+line 26 : Unknown junk in spritematrix for object TARGET.
+line 30 : Unknown junk in spritematrix for object CRATEDONE.
+line 47 : Was expecting a sound event (like SFX3, or ENDLEVEL) or an object name, but didn't find either.
+line 77 : Key "L" not found. Do you need to add it to the legend, or define a new object?
+line 77 : Key "E" not found. Do you need to add it to the legend, or define a new object?
+too many errors, aborting compilation
+Errors detected during compilation; the game may not work correctly.
+Return a repaired version of the code that addresses these errors. Return your code in full, inside a ```plaintext code block.

@@ -1,0 +1,119 @@
+To address the compilation errors reported in the PuzzleScript game code, we need to address formatting issues related to comments and ensure they adhere to PuzzleScript's syntax rules. Specifically, PuzzleScript doesn't allow for unbracketed text within the `RULES` section. Comments must use `#` at the beginning of the line, not mid-line. Since PuzzleScript likely misinterpreted the in-line comments as part of the rule syntax, the issues stem from commenting style. Here's a step-by-step plan:
+
+1. Remove or reformat the comments that are causing the errors by placing comments entirely on their own lines.
+2. Ensure no other syntax issues are present by keeping comments outside the rule lines.
+
+With these corrections, here's the revised version of the code:
+
+```plaintext
+========================================
+title Simple Sokoban
+author PuzzleDesigner
+
+========================================
+===========
+OBJECTS
+===========
+
+Background
+TRANSPARENT
+
+Wall
+#000000
+
+Player
+#00FF00
+
+Crate
+#FFAA00
+
+Goal
+#FF0000
+
+CrateOnGoal
+#FFAA00 #FF0000
+
+PlayerOnGoal
+#00FF00 #FF0000
+
+===========
+LEGEND
+===========
+
+. = Background
+# = Wall
+P = Player
+B = Crate
+G = Goal
+O = CrateOnGoal
+Q = PlayerOnGoal
+
+===========
+SOUNDS
+===========
+
+===========
+COLLISIONLAYERS
+===========
+
+Background
+Wall
+Player, PlayerOnGoal
+Crate, CrateOnGoal
+Goal
+
+===========
+RULES
+===========
+
+# Movement of Player
+[right Player | Crate] -> [ > Player | > Crate]
+[left Player | Crate] -> [ < Player | < Crate]
+[up Player | Crate] -> [ ^ Player | ^ Crate]
+[down Player | Crate] -> [ v Player | v Crate]
+
+[right Player] -> [ > Player]
+[left Player] -> [ < Player]
+[up Player] -> [ ^ Player]
+[down Player] -> [ v Player]
+
+# Transforming Crates/Players on Goals
+[Player | Goal] -> [PlayerOnGoal]
+[PlayerOnGoal] -> [Player]
+[Crate | Goal] -> [CrateOnGoal]
+[CrateOnGoal] -> [Crate]
+
+[PlayerOnGoal | Goal] -> [PlayerOnGoal]
+[CrateOnGoal | Goal] -> [CrateOnGoal]
+
+===========
+WINCONDITIONS
+===========
+
+All CrateOnGoal
+
+===========
+LEVELS
+===========
+
+#######
+#.....#
+#.GPG.#
+#.B...#
+#######
+
+#######
+#.G.#.#
+#..PB.#
+#.....#
+#######
+
+#######
+#.....#
+#.BG..#
+#..P..#
+#######
+
+```
+
+The comments have been adjusted to be on lines by themselves, thus ensuring the syntax adheres to PuzzleScript's expectations.

@@ -1,0 +1,194 @@
+SYSTEM PROMPT:
+You are a game designer, familiar with the PuzzleScript game description language. 
+
+USER PROMPT:
+The following PuzzleScript game code:
+```plaintext
+Title: Simple Sokoban
+Author: OpenAI
+
+===========
+OBJECTS
+===========
+
+Background
+GREEN
+
+Wall
+BLACK
+
+Player
+BLUE
+
+Crate
+BROWN
+
+Target
+RED
+
+CrateOnTarget
+PURPLE
+
+PlayerOnTarget
+LIGHTBLUE
+
+===========
+LEGEND
+===========
+
+. = Background
+# = Wall
+P = Player
+C = Crate
+T = Target
+X = CrateOnTarget
+O = PlayerOnTarget
+
+===========
+SOUNDS
+===========
+
+===========
+COLLISIONLAYERS
+===========
+
+Background
+Target
+Wall
+Crate, CrateOnTarget
+Player, PlayerOnTarget
+
+===========
+RULES
+===========
+
+[right]
+[ Player | Crate ] -> [ Player | > ]
+
+[right]
+[ Player | CrateOnTarget ] -> [ PlayerOnTarget | > ]
+
+[right]
+[ PlayerOnTarget | Crate ] -> [ Player | > ]
+
+[up]
+[ Player | Crate ] -> [ Player | ^ ]
+
+[up]
+[ Player | CrateOnTarget ] -> [ PlayerOnTarget | ^ ]
+
+[up]
+[ PlayerOnTarget | Crate ] -> [ Player | ^ ]
+
+[left]
+[ Player | Crate ] -> [ Player | < ]
+
+[left]
+[ Player | CrateOnTarget ] -> [ PlayerOnTarget | < ]
+
+[left]
+[ PlayerOnTarget | Crate ] -> [ Player | < ]
+
+[down]
+[ Player | Crate ] -> [ Player | v ]
+
+[down]
+[ Player | CrateOnTarget ] -> [ PlayerOnTarget | v ]
+
+[down]
+[ PlayerOnTarget | Crate ] -> [ Player | v ]
+
+[ Crate | Target ] -> [ CrateOnTarget ]
+
+[ Player | Target ] -> [ PlayerOnTarget ]
+
+[ CrateOnTarget | Background ] -> [ Crate ]
+
+[ PlayerOnTarget | Background ] -> [ Player ]
+
+===========
+WINCONDITIONS
+===========
+
+All CrateOnTarget
+
+===========
+LEVELS
+===========
+
+#####
+#..X#
+#P  #
+#   #
+#####
+
+```
+produced the following console output:
+=================================
+line 116 : Error, symbol " ", used in map, not found.
+line 59 : A rule has to have an arrow in it.  There's no arrow here! Consider reading up about rules - you're clearly doing something weird
+line 59 : In a rule, if you specify a movement, it has to act on an object.
+line 59 : Error, when specifying a rule, the number of matches (square bracketed bits) on the left hand side of the arrow must equal the number on the right
+line 60 : In a rule, if you specify a movement, it has to act on an object.
+line 60 : In a rule, each pattern to match on the left must have a corresponding pattern on the right of equal length (number of cells).
+line 62 : A rule has to have an arrow in it.  There's no arrow here! Consider reading up about rules - you're clearly doing something weird
+line 62 : In a rule, if you specify a movement, it has to act on an object.
+line 62 : Error, when specifying a rule, the number of matches (square bracketed bits) on the left hand side of the arrow must equal the number on the right
+line 63 : In a rule, if you specify a movement, it has to act on an object.
+line 63 : In a rule, each pattern to match on the left must have a corresponding pattern on the right of equal length (number of cells).
+line 65 : A rule has to have an arrow in it.  There's no arrow here! Consider reading up about rules - you're clearly doing something weird
+line 65 : In a rule, if you specify a movement, it has to act on an object.
+line 65 : Error, when specifying a rule, the number of matches (square bracketed bits) on the left hand side of the arrow must equal the number on the right
+line 66 : In a rule, if you specify a movement, it has to act on an object.
+line 66 : In a rule, each pattern to match on the left must have a corresponding pattern on the right of equal length (number of cells).
+line 68 : A rule has to have an arrow in it.  There's no arrow here! Consider reading up about rules - you're clearly doing something weird
+line 68 : In a rule, if you specify a movement, it has to act on an object.
+line 68 : Error, when specifying a rule, the number of matches (square bracketed bits) on the left hand side of the arrow must equal the number on the right
+line 69 : In a rule, if you specify a movement, it has to act on an object.
+line 69 : In a rule, each pattern to match on the left must have a corresponding pattern on the right of equal length (number of cells).
+line 71 : A rule has to have an arrow in it.  There's no arrow here! Consider reading up about rules - you're clearly doing something weird
+line 71 : In a rule, if you specify a movement, it has to act on an object.
+line 71 : Error, when specifying a rule, the number of matches (square bracketed bits) on the left hand side of the arrow must equal the number on the right
+line 72 : In a rule, if you specify a movement, it has to act on an object.
+line 72 : In a rule, each pattern to match on the left must have a corresponding pattern on the right of equal length (number of cells).
+line 74 : A rule has to have an arrow in it.  There's no arrow here! Consider reading up about rules - you're clearly doing something weird
+line 74 : In a rule, if you specify a movement, it has to act on an object.
+line 74 : Error, when specifying a rule, the number of matches (square bracketed bits) on the left hand side of the arrow must equal the number on the right
+line 75 : In a rule, if you specify a movement, it has to act on an object.
+line 75 : In a rule, each pattern to match on the left must have a corresponding pattern on the right of equal length (number of cells).
+line 77 : A rule has to have an arrow in it.  There's no arrow here! Consider reading up about rules - you're clearly doing something weird
+line 77 : In a rule, if you specify a movement, it has to act on an object.
+line 77 : Error, when specifying a rule, the number of matches (square bracketed bits) on the left hand side of the arrow must equal the number on the right
+line 78 : In a rule, if you specify a movement, it has to act on an object.
+line 78 : In a rule, each pattern to match on the left must have a corresponding pattern on the right of equal length (number of cells).
+line 80 : A rule has to have an arrow in it.  There's no arrow here! Consider reading up about rules - you're clearly doing something weird
+line 80 : In a rule, if you specify a movement, it has to act on an object.
+line 80 : Error, when specifying a rule, the number of matches (square bracketed bits) on the left hand side of the arrow must equal the number on the right
+line 81 : In a rule, if you specify a movement, it has to act on an object.
+line 81 : In a rule, each pattern to match on the left must have a corresponding pattern on the right of equal length (number of cells).
+line 83 : A rule has to have an arrow in it.  There's no arrow here! Consider reading up about rules - you're clearly doing something weird
+line 83 : In a rule, if you specify a movement, it has to act on an object.
+line 83 : Error, when specifying a rule, the number of matches (square bracketed bits) on the left hand side of the arrow must equal the number on the right
+line 84 : In a rule, if you specify a movement, it has to act on an object.
+line 84 : In a rule, each pattern to match on the left must have a corresponding pattern on the right of equal length (number of cells).
+line 86 : A rule has to have an arrow in it.  There's no arrow here! Consider reading up about rules - you're clearly doing something weird
+line 86 : In a rule, if you specify a movement, it has to act on an object.
+line 86 : Error, when specifying a rule, the number of matches (square bracketed bits) on the left hand side of the arrow must equal the number on the right
+line 87 : In a rule, if you specify a movement, it has to act on an object.
+line 87 : In a rule, each pattern to match on the left must have a corresponding pattern on the right of equal length (number of cells).
+line 89 : A rule has to have an arrow in it.  There's no arrow here! Consider reading up about rules - you're clearly doing something weird
+line 89 : In a rule, if you specify a movement, it has to act on an object.
+line 89 : Error, when specifying a rule, the number of matches (square bracketed bits) on the left hand side of the arrow must equal the number on the right
+line 90 : In a rule, if you specify a movement, it has to act on an object.
+line 90 : In a rule, each pattern to match on the left must have a corresponding pattern on the right of equal length (number of cells).
+line 92 : A rule has to have an arrow in it.  There's no arrow here! Consider reading up about rules - you're clearly doing something weird
+line 92 : In a rule, if you specify a movement, it has to act on an object.
+line 92 : Error, when specifying a rule, the number of matches (square bracketed bits) on the left hand side of the arrow must equal the number on the right
+line 93 : In a rule, if you specify a movement, it has to act on an object.
+line 93 : In a rule, each pattern to match on the left must have a corresponding pattern on the right of equal length (number of cells).
+line 95 : In a rule, each pattern to match on the left must have a corresponding pattern on the right of equal length (number of cells).
+line 97 : In a rule, each pattern to match on the left must have a corresponding pattern on the right of equal length (number of cells).
+line 99 : In a rule, each pattern to match on the left must have a corresponding pattern on the right of equal length (number of cells).
+line 101 : In a rule, each pattern to match on the left must have a corresponding pattern on the right of equal length (number of cells).
+Errors detected during compilation; the game may not work correctly.
+Return a repaired version of the code that addresses these errors. Return your code in full, inside a ```plaintext code block.

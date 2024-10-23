@@ -1,0 +1,98 @@
+Based on the error messages, it seems like there were a few issues with the syntax and order of sections in your PuzzleScript game code. I've corrected these issues in the code below. The sections are now in the correct order, and I've fixed the `require_player_movement` option to its correct form. Additionally, I addressed the references in the `legend` section by ensuring that all objects are properly defined in the `objects` section.
+
+Here's the corrected version of your PuzzleScript game code:
+
+```plaintext
+################################
+# Puzzlescript Sokoban Game
+################################
+
+title Sokoban Puzzle
+
+author Your Name
+
+homepage https://www.puzzlescript.net
+
+# Some options for the game
+options
+{
+    require_player_movement
+}
+
+# Constructing the objects
+objects
+    Background . 
+    Wall # 
+    Player P 
+    PlayerOnTarget + 
+    Box B 
+    BoxOnTarget O 
+    Target T
+
+colors
+    Background white
+    Wall blue
+    Player green
+    PlayerOnTarget lightgreen
+    Box brown
+    BoxOnTarget yellow
+    Target red
+
+# Legends: Defining the objects in the game
+legend
+    . = Background
+    # = Wall
+    P = Player
+    B = Box
+    T = Target
+    O = BoxOnTarget
+    + = PlayerOnTarget
+
+# Defining rules for movement and interactions
+rules
+    [ > Player | No ] -> [ > Player | ]
+    [ > Player | Wall ] -> [ > Player | Wall ]
+    [ > Player | Box ] -> [ > Player | > Box ]
+    [ > Player | BoxOnTarget ] -> [ > Player | > Box ]
+
+    # Player moves onto Target
+    [ > Player | Target ] -> [ > PlayerOnTarget | ]
+
+    # Player moving off Target
+    [ PlayerOnTarget | No ] -> [ Player | Target ]
+
+    # Move boxes
+    [ > Player | Box | No ] -> [ > Player | > Box ]
+
+    # Move boxes onto Targets
+    [ > Player | Box | Target ] -> [ > PlayerOnTarget | BoxOnTarget ]
+
+    # Boxes off Targets
+    [ BoxOnTarget | No ] -> [ Box | Target ]
+
+# Winning conditions
+winconditions
+    All BoxOnTarget
+
+# Game levels, represented in ASCII art
+levels
+
+#######
+#     #
+#     #
+# .#  #
+#  #$ #
+#  .  #
+# .@  #
+#######
+
+#######
+#. .  #
+#  #$ #
+#  #@ #
+#  $  #
+#. .  #
+#######
+```
+
+With these corrections, the game should compile without errors. Make sure that sections are in the correct order, and that every object referenced in the `legend` is properly defined in the `objects` section. The option `require_player_movement` does not take any parameters, so simply including it alone is sufficient.

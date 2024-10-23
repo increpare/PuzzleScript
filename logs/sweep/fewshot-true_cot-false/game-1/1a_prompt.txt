@@ -1,0 +1,1554 @@
+SYSTEM PROMPT:
+You are a game designer, familiar with the PuzzleScript game description language. Here are some example games, for inspiration (do not reproduce these games exactly):
+
+title Modality
+author Sean Barrett
+homepage www.silverspaceship.com
+background_color #603060
+noaction
+
+========
+OBJECTS
+========
+
+White
+White
+
+Black
+#202020
+
+
+Grey
+#505050 #a0a0a0
+01010
+10101
+01010
+10101
+01010
+
+
+Background
+Red
+
+Target
+#3030a0
+.....
+.000.
+.0.0.
+.000.
+.....
+
+Player
+Black Orange #c0c0c0 Blue
+.000.
+.111.
+22222
+.333.
+.3.3.
+
+Crate
+Orange Yellow
+00000
+0...0
+0...0
+0...0
+00000
+
+
+=======
+LEGEND
+=======
+
+. = Black
++ = White
+g = Grey
+p = Player and Black
+Q = Player and White
+* = Crate and Black
+@ = Crate and White
+t = Target and Black
+U = Target and White
+
+Nonwhite = Black or Grey
+Nonblack = White or Grey
+
+=======
+SOUNDS
+=======
+
+================
+COLLISIONLAYERS
+================
+
+Background
+White, Black, Grey
+Target
+Player, Crate
+
+======
+RULES
+======
+
+[ >  Player Nonblack | Crate Nonblack ] -> [  > Player Nonblack | > Crate Nonblack ]
+[ >  Player Black | Crate Black ] -> [  > Player Black | > Crate Black ]
+[ > Player White | Black ] -> CANCEL
+[ > Player Black | White ] -> CANCEL
+
+==============
+WINCONDITIONS
+==============
+
+All Crate on Target
+
+=======
+LEVELS
+=======
+
+
+u+...
+@+g.p
++++..
+
+++++q
++.*.+
+u++.+
++g..+
++++++
+
+......
+.++.+.
+.+q++.
+..u.++
+g.*.++
+++++++
+
+...t.......
+...+.......
+.+.+.+...++
+.+.++++..++
+q@g++..++++
+.+.++...+++
+.+.+....+++
+.+......+++
+.++++++++++
+
+
+
+(
+level ideas
+push battery horizontally
+have to assemble and then disassemble a circuit, in order to complete it
+add a piece to a circut, then break the circuit from another point
+level that starts with a closed circuit
+level with very dangerous + block
+)
+title Robot Arm
+author increpare
+homepage www.increpare.com
+
+run_rules_on_level_start
+color_palette c64
+
+run_rules_on_level_start
+
+norepeat_action
+
+========
+OBJECTS
+========
+
+Background .
+darkblue
+
+Player P
+Black orange grey Blue
+.111.
+.111.
+22222
+13331
+.3.3.
+
+R0_Up 0
+grey lightgrey
+.111.
+10001
+10001
+10001
+.111.
+
+R0_Down
+grey lightgrey
+.111.
+10001
+10001
+10001
+.111.
+
+R0_Left
+grey lightgrey
+.111.
+10001
+10001
+10001
+.111.
+
+R0_Right
+grey lightgrey
+.111.
+10001
+10001
+10001
+.111.
+
+
+R1_Up 1
+grey lightgrey
+.111.
+10001
+10001
+10001
+.111.
+
+R1_Down
+grey lightgrey
+.111.
+10001
+10001
+10001
+.111.
+
+R1_Left
+grey lightgrey
+.111.
+10001
+10001
+10001
+.111.
+
+R1_Right
+grey lightgrey
+.111.
+10001
+10001
+10001
+.111.
+
+
+R2_Up 2
+grey lightgrey
+.111.
+10001
+10001
+10001
+.111.
+
+R2_Down
+grey lightgrey
+.111.
+10001
+10001
+10001
+.111.
+
+R2_Left
+grey lightgrey
+.111.
+10001
+10001
+10001
+.111.
+
+R2_Right
+grey lightgrey
+.111.
+10001
+10001
+10001
+.111.
+
+R3 3
+grey lightgrey
+.....
+..0..
+.010.
+..0..
+.....
+
+Connector_Up
+grey lightgrey
+.101.
+.111.
+.....
+.....
+.....
+
+Connector_Down
+grey lightgrey
+.....
+.....
+.....
+.111.
+.101.
+
+Connector_Left
+grey lightgrey
+.....
+11...
+01...
+11...
+.....
+
+Connector_Right
+grey lightgrey
+.....
+...11
+...10
+...11
+.....
+
+Moved
+transparent
+
+Parent
+transparent
+
+GrandParent
+transparent
+
+NewRot
+transparent
+
+NewRot2
+transparent
+
+force
+transparent
+
+explosion
+red yellow
+.101.
+10101
+01010
+10101
+.101.
+
+explosionb
+red yellow
+.101.
+10101
+01010
+10101
+.101.
+
+explosion2
+yellow red
+.101.
+10101
+01010
+10101
+.101.
+
+Wall #
+darkgrey grey lightgrey
+00000
+01110
+01010
+01110
+00000
+
+water ,
+blue lightblue
+00000
+00010
+00000
+00000
+01000
+
+Fruit F
+Red Green LightRed
+..1..
+.000.
+00020
+00000
+.000.
+
+
+FruitPicked G
+Red Green LightRed grey grey
+..4..
+.030.
+43334
+00300
+.040.
+
+DeadFruit
+black black black black black
+..4..
+.030.
+43334
+00300
+.040.
+
+EndPoint E
+darkgreen Yellow black green
+30003
+02220
+02220
+02220
+30003
+
+
+=======
+LEGEND
+=======
+R0 = R0_up or R0_down or R0_left or R0_right
+R1 = R1_up or R1_down or R1_left or R1_right
+R2 = R2_up or R2_down or R2_left or R2_right
+RobotPiece = R0 or R1 or R2 or R3
+* = RobotPiece or Player
+connector = connector_up or connector_down or connector_left or connector_right
+
+=======
+SOUNDS
+=======
+
+sfx0 43004308 (explosion)
+sfx1 69392707
+sfx2 57370907 (push machine)
+sfx3 62083508 (rotate machine)
+sfx4 90419908 (grab)
+sfx5 50782902 (drop in hole)
+sfx6 76878101 (empty grab)
+sfx7 13941101 (dead fruit)
+sfx8 42541302 (release)
+Player move 88476108
+startgame 30513908
+endlevel 5524308
+endgame 5524308
+showmessage 41852908
+closemessage 41852908
+
+================
+COLLISIONLAYERS
+================
+Background
+water
+EndPoint
+Player
+Moved
+Fruit
+FRUITPICKED
+deadfruit
+R0_up, R0_down, R0_left, R0_right
+R1_up, R1_down, R1_left, R1_right
+R2_up, R2_down, R2_left, R2_right
+connector_up
+connector_down
+connector_left
+connector_right
+R3
+parent
+GrandParent
+newrot
+newrot2
+force
+wall
+explosion, explosion2, explosionb
+
+======
+RULES
+======
+
+[ connector ] -> [ ]
+
+[ > player | fruit ] -> cancel
+
+[ > player | water ] -> cancel
+
+[ > player | ] -> [ > player | > force ]
+
+[ > player | robotpiece | wall ] -> cancel
+
+(place movement arrows)
+up [ R0_Up | ] -> [ up R0_Up | up Parent ]
+up [ R1_Up | ] -> [ up R1_Up | up Parent ]
+up [ R2_Up | ] -> [ up R2_Up | up Parent ]
+
+down [ R0_down | ] -> [ down R0_down | down Parent ]
+down [ R1_down | ] -> [ down R1_down | down Parent ]
+down [ R2_down | ] -> [ down R2_down | down Parent ]
+
+left [ R0_left | ] -> [ left R0_left | left Parent ]
+left [ R1_left | ] -> [ left R1_left | left Parent ]
+left [ R2_left | ] -> [ left R2_left | left Parent ]
+
+right [ R0_right | ] -> [ right R0_right | right Parent ]
+right [ R1_right | ] -> [ right R1_right | right Parent ]
+right [ R2_right | ] -> [ right R2_right | right Parent ]
+
+
+( force propagation like this isn't very nice )
+( [ > force < parent | ] -> [ < parent | > force ] )
+
+[ R3 > force < parent ] [ > R0 ] [ v R1 ] [ R2 ] -> [ R3 < parent ] [ > R0 ] [ v R1 ] [ r2 > force ]
+[ R3 > force < parent ] [ > R0 ] [ ^ R1 ] [ R2 ] -> [ R3 < parent ] [ > R0 ] [ ^ R1 ] [ r2 > force ]
+
+[ > force < parent no R0] [R0]-> [ < parent ] [ > force R0 ]
+[ > force R3 perpendicular parent ] [ R2 < parent ] [ R0 ] -> [ R3 perpendicular parent ] [ R2 < parent ] [ > force R0 ]
+
+[ > force R2 perpendicular parent ] [ R1 < parent ] [ R0 ] -> [ R2 perpendicular parent ] [ R1 < parent ] [ > force R0 ]
+
+
+[ > force moving R0 | ] -> [ | moving R0] sfx2
+
+[ > force moving R1 perpendicular parent ] [ R0 ] -> [ moving R1 perpendicular parent ] [ > R0 ] sfx3
+[ > force moving R2 perpendicular parent ] [ R1 ] -> [ moving R2 perpendicular parent ] [ > R1 ] sfx3
+[ > force 		R3 perpendicular parent ] [ R2 ] -> [ R3 perpendicular parent ] [ > R2 ] sfx3
+
+
+(rebuild arm)
+
+(add new parents)
+
+[ > R1 ] [ R2 ] -> [ > R1 ] [ R2 > NewRot ]
+[ > R0 ] [ R1 ] [ R2 ] -> [ > R0 ] [ R1 > NewRot ] [ R2 > NewRot2 ]
+
+[ > Parent R1 ] [ R2 ] -> [ > Parent R1 ] [ > GrandParent R2 ]
+
+[ ^ Parent > NewRot > RobotPiece ] -> [ V RobotPiece ]
+[ ^ Parent > NewRot v RobotPiece ] -> [ < RobotPiece ]
+[ ^ Parent > NewRot < RobotPiece ] -> [ ^ RobotPiece ]
+[ ^ Parent > NewRot ^ RobotPiece ] -> [ > RobotPiece ]
+
+[ ^ Parent < NewRot > RobotPiece ] -> [ ^ RobotPiece ]
+[ ^ Parent < NewRot v RobotPiece ] -> [ > RobotPiece ]
+[ ^ Parent < NewRot < RobotPiece ] -> [ V RobotPiece ]
+[ ^ Parent < NewRot ^ RobotPiece ] -> [ < RobotPiece ]
+
+
+[ ^ GrandParent > NewRot2 > R2 ] -> [ V R2 ]
+[ ^ GrandParent > NewRot2 v R2 ] -> [ < R2 ]
+[ ^ GrandParent > NewRot2 < R2 ] -> [ ^ R2 ]
+[ ^ GrandParent > NewRot2 ^ R2 ] -> [ > R2 ]
+
+[ ^ GrandParent < NewRot2 > R2 ] -> [ ^ R2 ]
+[ ^ GrandParent < NewRot2 v R2 ] -> [ > R2 ]
+[ ^ GrandParent < NewRot2 < R2 ] -> [ V R2 ]
+[ ^ GrandParent < NewRot2 ^ R2 ] -> [ < R2 ]
+
+[ NewRot ] -> [ ]
+[ NewRot2 ] -> [ ]
+[ Parent ] -> [ ]
+[ GrandParent ] -> [ ]
+
+
+(change sprites)
+[ up R0 ] -> [ up R0_Up ]
+[ up R1 ] -> [ up R1_Up ]
+[ up R2 ] -> [ up R2_Up ]
+
+[ down R0 ] -> [ down R0_down ]
+[ down R1 ] -> [ down R1_down ]
+[ down R2 ] -> [ down R2_down ]
+
+[ left R0 ] -> [ left R0_left ]
+[ left R1 ] -> [ left R1_left ]
+[ left R2 ] -> [ left R2_left ]
+
+[ right R0 ] -> [ right R0_Right ]
+[ right R1 ] -> [ right R1_Right ]
+[ right R2 ] -> [ right R2_Right ]
+
+(work from the base up when placing)
+up [ up R0 | no R1 ] [ moving R1 ] -> [ up R0 | moving R1 ] [ ]
+down [ down R0 | no R1 ] [ moving R1 ] -> [ down R0 | moving R1 ] [ ]
+left [ left R0 | no R1 ] [ moving R1 ] -> [ left R0 | moving R1 ] [ ]
+right [ right R0 | no R1 ] [ moving R1 ] -> [ right R0 | moving R1 ] [ ]
+
+up [ up R1 | no R2 ] [ moving R2 ] -> [ up R1 | moving R2 ] [ ]
+down [ down R1 | no R2 ] [ moving R2 ] -> [ down R1 | moving R2 ] [ ]
+left [ left R1 | no R2 ] [ moving R2 ] -> [ left R1 | moving R2 ] [ ]
+right [ right R1 | no R2 ] [ moving R2 ] -> [ right R1 | moving R2 ] [ ]
+
+
+up [ up R2 | no R3 ] [ R3 ] -> [ up R2 | R3 ] [ ]
+down [ down R2 | no R3 ] [ R3 ] -> [ down R2 | R3 ] [ ]
+left [ left R2 | no R3 ] [ R3 ] -> [ left R2 | R3 ] [ ]
+right [ right R2 | no R3 ] [ R3 ] -> [ right R2 | R3 ] [ ]
+
+
+
+
+up [ up R2 | no R3 ] [ R3 ] -> [ R2_up | R3 ] [ ]
+down [ down R2 | no R3 ] [ R3 ] -> [ R2_down | R3 ] [ ]
+left [ left R2 | no R3 ] [ R3 ] -> [ R2_left | R3 ] [ ]
+right [ right R2 | no R3 ] [ R3 ] -> [ R2_right | R3 ] [ ]
+
+
+[ > RobotPiece no moved ] -> [ RobotPiece ]
+
+
+up [ R0_Up | ] -> [ R0_Up connector_up | connector_down ]
+up [ R1_Up | ] -> [ R1_Up connector_up | connector_down ]
+up [ R2_Up | ] -> [ R2_Up connector_up | connector_down ]
+
+down [ R0_down | ] -> [ R0_down connector_down | connector_up ]
+down [ R1_down | ] -> [ R1_down connector_down | connector_up ]
+down [ R2_down | ] -> [ R2_down connector_down | connector_up ]
+
+left [ R0_left | ] -> [ R0_left connector_left | connector_right ]
+left [ R1_left | ] -> [ R1_left connector_left | connector_right ]
+left [ R2_left | ] -> [ R2_left connector_left | connector_right ]
+
+right [ R0_right | ] -> [ R0_right connector_right | connector_left ]
+right [ R1_right | ] -> [ R1_right connector_right | connector_left ]
+right [ R2_right | ] -> [ R2_right connector_right | connector_left ]
+
+[RobotPiece Wall no explosion no explosion2 ] -> [ RobotPiece Wall explosion ] sfx0
+
+[ R0 R2 no explosion no explosion2] -> [ R0 R2 explosion ] sfx0
+[ R0 R3 no explosion no explosion2 ] -> [ R0 r3 explosion ] sfx0
+[ R1 R3 no explosion no explosion2 ] -> [ R1 R3 explosion ] sfx0
+
+[ explosion2 ] -> [ explosionb ] again
+[ explosion ] -> [ explosion2] again
+[ explosionb ] -> [explosion] again
+
+[ > player  | wall ] -> cancel
+
+[FruitPicked ] [ R3 no FruitPicked ] -> [ ] [ R3 FruitPicked ]
+
+[ action player ] [ R3 Fruit no fruitpicked ] -> [ player ] [ R3 Fruitpicked] sfx4
+[ action player ] [ R3 fruitpicked no fruit ] -> [ player ] [ r3 fruit ] sfx8
+
+[action player ] [ r3 no fruit no fruitpicked ] -> sfx6
+
+
+[ fruit endpoint ] -> [endpoint] sfx5
+[ fruit water ] -> [ deadfruit water ] sfx7
+late [R0 water ] -> cancel
+[R0 fruit ] -> cancel
+
+==============
+WINCONDITIONS
+==============
+
+no fruit
+no fruitpicked
+no deadfruit
+
+=======
+LEVELS
+=======
+
+message press x to grip and ungrip the mechanical arm
+message put fruit in hole
+
+message Level 1 of 3
+
+###################
+###################
+###################
+###..,........,.###
+###..,...3....,.###
+###..,...2....,.###
+###.F,.E.1.,,,F,###
+###..,...0....,.###
+###..,..P.....,.###
+###..,........,.###
+###################
+###################
+###################
+
+message Level 2 of 3
+
+##############
+##############
+##############
+###..3.....###
+###..2.....###
+###..1.,,,,###
+###.E0.,...###
+###....,FF.###
+###.P..,...###
+##############
+##############
+##############
+
+message Level 3 of 3
+
+###################
+###################
+###################
+########........###
+###..3.#...##.f.###
+###..2..........###
+###..1...#....#.###
+###.e0..........###
+###..p..#...#.f.###
+#########.......###
+###################
+###################
+###################
+
+message congratulations
+
+
+title Cratopia
+author CHz [v1]
+homepage quiteajolt.com
+
+again_interval 0.06
+run_rules_on_level_start
+
+========
+OBJECTS
+========
+
+BlueSky
+Blue
+
+CrateInfection
+#3F5AC2 #5063C5 Blue
+00000
+02120
+01110
+02120
+00000
+
+
+Space
+Black
+
+EditModeDrop
+Black
+.....
+.....
+.....
+.....
+.....
+
+EditModeArrow
+White Black
+11011
+11011
+11011
+10001
+11011
+
+EditModeCursor
+Red
+00.00
+0...0
+.....
+0...0
+00.00
+
+
+Goal
+DarkBlue #0D1319
+11111
+10001
+10001
+10001
+10001
+
+GoalLocked
+DarkBlue #0D1319 Gray
+12121
+22222
+12021
+22222
+12021
+
+Key
+Yellow
+.....
+.....
+...00
+00000
+0.0..
+
+Crate
+#765026 #C77629
+00000
+0.1.0
+01110
+0.1.0
+00000
+
+Ladder
+DarkBrown
+0...0
+00000
+0...0
+00000
+0...0
+
+
+Fire
+Brown #765026 Orange Red
+33232
+32222
+22220
+00000
+00100
+
+BurningCrate
+DarkRed Red
+00000
+0.1.0
+01110
+0.1.0
+00000
+
+BurntCrate
+DarkGray Gray
+00000
+0.1.0
+01110
+0.1.0
+00000
+
+
+PlayerRight
+Black Orange White Red
+.000.
+.111.
+.2222
+.333.
+.3.3.
+
+PlayerLeft
+Black Orange White Red
+.000.
+.111.
+2222.
+.333.
+.3.3.
+
+PlayerLadder
+Black Orange White Red
+.000.
+.111.
+22222
+.333.
+.3.3.
+
+PlayerRightDisabled
+Gray
+.000.
+.000.
+.0000
+.000.
+.0.0.
+
+PlayerLeftDisabled
+Gray
+.000.
+.000.
+0000.
+.000.
+.0.0.
+
+PlayerLadderDisabled
+Gray
+.000.
+.000.
+00000
+.000.
+.0.0.
+
+PlayerJumpLeft
+Black
+
+PlayerJumpRight
+Black
+
+
+Orb
+Red Purple DarkBlue
+.000.
+01110
+01210
+01110
+.000.
+
+CrateArtifact
+#765026 #C77629
+.....
+.000.
+.010.
+.000.
+.....
+
+CrateInfectionSeed
+White
+
+CrateInfectionComplete
+White
+.....
+.....
+.....
+.....
+.....
+
+CrateInfectionTemp
+White
+.....
+.....
+.....
+.....
+.....
+
+
+Grass
+Brown #765026 Green LightGreen
+23233
+02002
+10000
+00000
+00100
+
+Dirt
+Brown #765026
+00001
+00000
+10000
+00000
+00100
+
+Crumble
+Brown
+0.0.0
+00000
+.....
+.....
+.....
+
+
+=======
+LEGEND
+=======
+
+Background = BlueSky or CrateInfection
+. = BlueSky
++ = CrateInfection
+S = Space
+
+D = EditModeDrop and Space
+
+G = Goal
+@ = GoalLocked
+K = Key
+L = Ladder
+
+> = PlayerRight
+< = PlayerLeft
+^ = PlayerLadder
+Player = PlayerLeft or PlayerRight or PlayerLadder or EditModeCursor
+NonCursorPlayer = PlayerLeft or PlayerRight or PlayerLadder
+PlayerJump = PlayerJumpLeft or PlayerJumpRight
+PlayerDisabled = PlayerLeftDisabled or PlayerRightDisabled or PlayerLadderDisabled
+
+C = Crate
+
+O = Orb
+A = CrateArtifact and CrateInfection
+T = Dirt and EditModeDrop
+Y = Goal and CrateInfectionSeed
+U = Grass and EditModeDrop
+I = EditModeDrop
+
+* = Grass
+# = Dirt
+F = Fire
+- = Crumble
+Ground = Grass or Dirt or Fire or Crumble
+
+Solid = Crate or Ground or Space or Key or Fire or Crumble
+
+Thing = Orb or Player or PlayerDisabled or Crate or Ground or EditModeArrow or Key or Fire or Crumble
+
+Transformable = Key or Ladder or Fire or BurningCrate or BurntCrate or Grass or Dirt or Crumble
+
+
+=======
+SOUNDS
+=======
+
+ShowMessage 72692706
+
+Crate Move Horizontal 99804707
+EditModeCursor Move 44871706
+
+SFX0 97366302 (win; manually triggered because some levels are cutscenes)
+SFX1 41487108 (activate edit mode)
+SFX2 37184702 (bridge crumble)
+SFX3 79796108 (CRATE RAIN)
+SFX4 73912901 (leave edit mode)
+SFX5 26404105 (jump)
+SFX6 31560708 (get orb)
+SFX7 16509700 (get key)
+SFX8 38835508 (crate fire)
+SFX9 24561108 (crate infection)
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Goal, GoalLocked, Ladder, EditModeDrop
+Orb, Key, Player, PlayerJump, PlayerDisabled, Crate, Ground, Space, EditModeArrow, Fire, BurningCrate, BurntCrate, CrateArtifact
+EditModeCursor, CrateInfectionSeed, CrateInfectionComplete, CrateInfectionTemp
+
+======
+RULES
+======
+
+( ==================
+  ENDGAME ANIMATIONS
+  ================== )
+
+(play the sound effect when infection begins)
+[ NonCursorPlayer CrateInfectionSeed ] -> [ Crate CrateInfectionSeed ] SFX9
+[ Goal CrateInfectionSeed ] -> [ Goal CrateInfectionSeed ] SFX9
+
+(infection radiation)
+[ CrateInfectionSeed | no CrateInfectionComplete no Space ] -> [ CrateInfectionSeed | CrateInfectionTemp ] again
+[ CrateInfectionSeed ] -> [ CrateInfectionComplete ]
+
+(when the infection hits a specified trigger tile, move on to the next level; due to the object limit, I'm using EditModeDrop for this)
+[ CrateInfectionComplete EditModeDrop ] -> [ CrateInfectionComplete EditModeDrop ] win
+
+(infection tile transformations)
+late [ CrateInfectionTemp BlueSky ] -> [ CrateInfectionTemp CrateInfection ]
+late [ CrateInfectionTemp Transformable ] -> [ CrateInfectionTemp Crate ]
+late [ CrateInfectionTemp ] -> [ CrateInfectionSeed ]
+
+(when the player touches the artifact, start infection)
+[ > NonCursorPlayer | CrateArtifact ] -> [ | NonCursorPlayer CrateInfectionSeed ]
+
+
+( =========
+  EDIT MODE
+  ========= )
+
+(hitting the X key when in the normal game activates the edit mode)
+[ EditModeDrop Space ] UP [ ACTION NonCursorPlayer | ... | EditModeDrop ] -> [ EditModeDrop Space ] [ ACTION NonCursorPlayer | ... | EditModeDrop EditModeCursor ] SFX1
+[ EditModeDrop Space ] [ ACTION NonCursorPlayer ] -> [ EditModeDrop EditModeArrow ] [ ACTION NonCursorPlayer ]
+[ EditModeDrop EditModeArrow ] [ ACTION PlayerLeft ] -> [ EditModeDrop EditModeArrow ] [ PlayerLeftDisabled ]
+[ EditModeDrop EditModeArrow ] [ ACTION PlayerRight ] -> [ EditModeDrop EditModeArrow ] [ PlayerRightDisabled ]
+[ EditModeDrop EditModeArrow ] [ ACTION PlayerLadder ] -> [ EditModeDrop EditModeArrow ] [ PlayerLadderDisabled ]
+
+(hitting the X key while in edit mode returns to platform control)
+[ ACTION EditModeCursor ] [ EditModeDrop EditModeArrow ] -> [ ACTION EditModeCursor ] [ EditModeDrop Space ]
+[ ACTION EditModeCursor ] [ PlayerLeftDisabled ] -> [ ACTION EditModeCursor ] [ PlayerLeft ]
+[ ACTION EditModeCursor ] [ PlayerRightDisabled ] -> [ ACTION EditModeCursor ] [ PlayerRight ]
+[ ACTION EditModeCursor ] [ PlayerLadderDisabled ] -> [ ACTION EditModeCursor ] [ PlayerLadder ]
+[ ACTION EditModeCursor ] -> [ ] SFX4
+
+(restrict the cursor's movement)
+HORIZONTAL [ > EditModeCursor | no EditModeArrow ] -> [ EditModeCursor | no EditModeArrow ]
+[ UP EditModeCursor ] -> [ EditModeCursor ]
+
+( {1} )
+(Hitting the down arrow in edit mode drops a crate. The rule that does this is further down so that it happens after the normal gravity assertion; if it were here, the crate would fall one row before drawing and would appear to start on the second row from the top.
+
+Search for {2} to find the rule.)
+
+
+
+( ===============
+  NORMAL MOVEMENT
+  =============== )
+
+(forces another turn after player movement to assert gravity)
+[ MOVING NonCursorPlayer ] -> [ MOVING NonCursorPlayer ] again
+
+(Change the player's orientation based on movement.)
+[ LEFT NonCursorPlayer ] -> [ LEFT PlayerLeft ]
+[ RIGHT NonCursorPlayer ] -> [ RIGHT PlayerRight ]
+late [ NonCursorPlayer Ladder ] -> [ PlayerLadder Ladder ]
+
+(shove crates)
+HORIZONTAL [ > NonCursorPlayer | Crate ] -> [ > NonCursorPlayer | > Crate ]
+
+(level 2 ends when you grab the orb)
+[ > NonCursorPlayer | Orb ] -> [ > NonCursorPlayer | Orb ] SFX6 win
+
+(burn some crates)
+[ BurntCrate ] -> [ ]
+[ BurningCrate ] -> [ BurntCrate ] again
+[ BurntCrate | Crate ] -> [ BurntCrate | BurningCrate ]
+DOWN [ Crate no CrateInfection | Fire ] -> [ BurningCrate | Fire ] SFX8 again
+
+
+
+( ==================
+  CLIMBING & GRAVITY
+  ================== )
+
+(A player can climb on top of a crate by walking into it or pressing up while facing it, but only if there's something on the other side of the crate so the player can't push it, and also if there's nothing above the player or the crate. Done by using a temporary player object that moves up if there's no obstacle above and then moves on top of the crate if there's no obstacle there.)
+RIGHT [ > NonCursorPlayer | Crate | Solid ] -> [ PlayerJumpRight | Crate | Solid ]
+RIGHT [ ^ PlayerRight | Crate | Solid ] -> [ PlayerJumpRight | Crate | Solid ]
+UP [ PlayerJumpRight | no Solid ] -> [ PlayerJumpRight | v PlayerRight ]
+LEFT [ > NonCursorPlayer | Crate | Solid ] -> [ PlayerJumpLeft | Crate | Solid ]
+LEFT [ v PlayerLeft | Crate | Solid ] -> [ PlayerJumpLeft | Crate | Solid ]
+UP [ PlayerJumpLeft | no Solid ] -> [ PlayerJumpLeft | ^ PlayerLeft ]
+
+(don't let the player move up or down unless they're on a ladder)
+[ UP NonCursorPlayer no Ladder ] -> [ NonCursorPlayer no Ladder ]
+
+(assert gravity)
+DOWN [ STATIONARY Crate ] -> [ > Crate ] again
+DOWN [ STATIONARY NonCursorPlayer no Ladder | no Ladder ] -> [ > NonCursorPlayer no Ladder | no Ladder ] again
+
+(get keys and unlock goals; happens after gravity so you can fall on keys)
+HORIZONTAL DOWN [ > NonCursorPlayer | Key ] [ GoalLocked ] -> [ > NonCursorPlayer | ] [ Goal ] SFX7
+
+(Clean up after jumping.)
+(If the player is on top of a temporary jump token, then the player moved up but was blocked by an obstacle on top of the crate, so move the player back down.)
+late DOWN [ NonCursorPlayer | PlayerJump ] -> [ | NonCursorPlayer ]
+(If the player and the temporary jump token both exist here, then the player jumped successfully. Clear the token and destroy the crumbling floor if the player was standing on one.)
+late DOWN [ NonCursorPlayer ] [ PlayerJump | Crumble ] -> [ NonCursorPlayer ] [ | ] SFX5 SFX2
+late [ NonCursorPlayer ] [ PlayerJump ] -> [ NonCursorPlayer ] [ ] SFX5
+(If there's a temporary jump token remaining here, then the player tried jumping but was blocked from above. Turn the token back into the player.)
+late [ PlayerJumpLeft ] -> [ PlayerLeft ]
+late [ PlayerJumpRight ] -> [ PlayerRight ]
+
+
+
+( =============
+  MISCELLANEOUS
+  ============= )
+
+( {2} )
+(Hitting X over one of the arrows in edit mode drops a crate. Search for {1} for an explanation of why this rule is here after gravity.)
+DOWN [ DOWN EditModeCursor | no Thing ] -> [ EditModeCursor | Crate ] SFX3 again
+[ DOWN EditModeCursor ] -> [ EditModeCursor ]
+
+(win condition; player must be standing on solid ground to enter the goal)
+late DOWN [ NonCursorPlayer Goal | Solid ] -> [ NonCursorPlayer Goal | Solid ] SFX0 win
+
+(crumble breakable floors if the player is walking away after standing on one; happens after pushing, climbing, & gravity)
+DOWN [ PERPENDICULAR NonCursorPlayer no Ladder | Crumble ] -> [ PERPENDICULAR NonCursorPlayer no Ladder | ] SFX2
+
+
+
+==============
+WINCONDITIONS
+==============
+
+(win condition is a rule to enforce that the player must be stationary on the goal)
+
+=======
+LEVELS
+=======
+
+message I love crates.
+message I could push them or climb on them every day.
+
+(mechanics tutorial)
+SSSSSSSSS
+S.......S
+S.*..C..S
+S.#****LS
+SG.C..#LS
+S..C..#LS
+S*****#LS
+S......LS
+S>.C..C.S
+S*******S
+SSSSSSSSS
+
+(mechanics quiz)
+SSSSSSSSSSSSSSSSSSSSS
+S................C..S
+S..............****LS
+S................C.LS
+S.......C.CL...****LS
+S.......***L.......LS
+SG....>......***...LS
+S**...C....C......C*S
+S##*.**************#S
+S###*###############S
+SSSSSSSSSSSSSSSSSSSSS
+
+message I wish the world had more crates.
+
+(rain tutorial prelude)
+SSSSSSSSSSSSSSSSSSS
+SG..<.............S
+S*.*L.............S
+S...L.............S
+S.***.********....S
+S..C..............S
+SL***.****.****...S
+SL.........C...***S
+SL.......L***....OS
+S*......C.....C.**S
+S#*************.##S
+S##############*##S
+SSSSSSSSSSSSSSSSSSS
+
+message [Press X to rain crates. Use the arrow keys to drop crates and X to return.]
+message
+message Who said that?
+
+(rain tutorial)
+SDDDDDDDDDDDDDDDDDS
+SG................S
+S*.*L.............S
+S...L.............S
+S.***.********....S
+S.................S
+SL***.****.****...S
+SL.............***S
+SL.......L***....>S
+S*.....CC......C**S
+S#*************C##S
+S##############*##S
+SSSSSSSSSSSSSSSSSSS
+
+message This is... exhilarating.
+
+(rain 1)
+SDDDS
+SG..S
+S*..S
+S...S
+S...S
+S...S
+S>..S
+S***S
+SSSSS
+
+(rain 2)
+SDDDDDDDDDDDDS
+S.K.........<S
+S.**.**.**.**S
+S...........@S
+S..........**S
+S............S
+S............S
+S............S
+S************S
+SSSSSSSSSSSSSS
+
+(rain 3)
+SDDDDDDDS
+S......KS
+SL**.***S
+SL.C.C..S
+SL.C.C..S
+SL.C.C..S
+SL.C@C..S
+SL.C*C..S
+SL.C^C..S
+SL.C*C..S
+SL.C.C..S
+SL.C.C..S
+SL*****LS
+SL.....LS
+SSSSSSSSS
+
+(fire 1)
+SDDDDDDDDDDDS
+S...........S
+S@.......C<.S
+S******L***LS
+S..........LS
+SK..*......LS
+S*C...C.C..*S
+S#*****F***#S
+SSSSSSSSSSSSS
+
+(fire 2)
+SDDDDDDDDDDS
+S......C...S
+S..**L***..S
+S....L....KS
+S....L...**S
+S>.C..C...@S
+S****F*****S
+SSSSSSSSSSSS
+
+(fire 3)
+SDDDDDDDDDS
+S.........S
+S...^.....S
+S*.***....S
+S#.#......S
+S#.#K*....S
+S#.#......S
+S#.#**....S
+S#.....**LS
+S#.....@#LS
+S......*#LS
+S........LS
+S***F*****S
+SSSSSSSSSSS
+
+(crumble 1)
+SDDDDDDDDDDDS
+SK..........S
+S****...L...S
+S@.>........S
+S****-----**S
+S####*FFF*##S
+SSSSSSSSSSSSS
+
+(crumble 2)
+SDDDDDDDDDS
+S.......**S
+S.****..##S
+S.......C<S
+S*----****S
+S#..F*####S
+S#....G###S
+S#F.***###S
+S##*######S
+SSSSSSSSSSS
+
+(crumble 3)
+SDDDDDDDDDDDDDDDS
+S*******.*******S
+S...............S
+SL*.**.****L***LS
+SL.........L...LS
+SL**.***.****.*LS
+SL.............LS
+SL*.****.*.F*.*LS
+SL.............LS
+SL****-.*.-*F.*LS
+SL......G......LS
+S*C.....^.....C*S
+S#**FFF***FFF**#S
+SSSSSSSSSSSSSSSSS
+
+(endgame 1 [temple])
+SSSSSSSSSSSSSSSSSSSSS
+S................+++S
+S..............+++++S
+S............+++++A+S
+S>........+++++++CCCS
+S*******CCCCCCCCCCCCS
+ST##CCCCCCCCCCCCCCCCS
+SSSSSSSSSSSSSSSSSSSSS
+
+(endgame 2 [crumble 3 redux])
+SSSSSSSSSSSSSSSSS
+SU******.*******S
+S...............S
+SL*.**.****L***LS
+SL.........L...LS
+SL**.***.****.*LS
+SL.............LS
+SL*.****.*.F*.*LS
+SL.............LS
+SL****-.*.-*F.*LS
+SL......Y......LS
+S*C...........C*S
+S#**FFF***FFF**#S
+SSSSSSSSSSSSSSSSS
+
+(endgame 3 [mechanics tutorial redux])
+SSSSSSSSS
+S.......S
+S.*..C..S
+S.#****LS
+SY.C..#LS
+S..C..#LS
+S*****#LS
+S......LS
+S..C..C.S
+S******US
+SSSSSSSSS
+
+(endgame 4 [planet])
+SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS
+SSSSSSSSSSSS###.....SSSSSSSSSSSS
+SSSSSSSSS#####**#......SSSSSSSSS
+SSSSSSSS######****#.....SSSSSSSS
+SSSSSY##########***#.....*SSSSSS
+SSSSS#############.........SSSSS
+SSSS###FFFFF................SSSS
+SSSS................****###.SSSS
+SSS................****######SSS
+SSFF..............#****####**.SS
+SS##....*.........##########**SS
+SS#.....#..........##########.SS
+S#.................#######.....S
+S.................#######......S
+S...............FFF##..........S
+S............#FF...............S
+S........#######..........F....S
+S......#####****#..............S
+S.......#####***#..............S
+S..............................S
+SS............................SS
+SSFFF......................***SS
+SS.FFF.....................***SS
+SSS.##......................*SSS
+SSSS#.......................SSSS
+SSSS........................SSSS
+SSSSS#....................ISSSSS
+SSSSSS###.................SSSSSS
+SSSSSSSS####............SSSSSSSS
+SSSSSSSSS######........SSSSSSSSS
+SSSSSSSSSSSS######..SSSSSSSSSSSS
+SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS
+
+message
+message
+message Bliss.
+
+
+
+USER PROMPT:
+The following PuzzleScript game code:
+```plaintext
+title Mirror Maze
+author PuzzleMaster
+homepage www.example.com
+
+========
+OBJECTS
+========
+
+Background
+black
+
+Player
+white
+.000.
+.0.0.
+.0.0.
+.000.
+....
+
+Mirror
+gray
+/////
+/////
+/////
+/////
+/////
+
+Target
+yellow
+.....
+.000.
+.0.0.
+.000.
+.....
+
+Reflect
+cyan
+.....
+..0..
+.....
+..0..
+.....
+
+Wall
+red
+.....
+
+=======
+LEGEND
+=======
+
+. = Background
+P = Player
+M = Mirror
+T = Target
+R = Reflect
+# = Wall
+
+=========
+SOUNDS
+=========
+
+Move 12345678
+Reflect 87654321
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Target
+Player, Mirror, Reflect, Wall
+
+======
+RULES
+======
+
+[ left  Player | Mirror ] -> [ Player | Reflect ] SFX Reflect
+[ right Player | Mirror ] -> [ Player | Reflect ] SFX Reflect
+[ up    Player | Mirror ] -> [ Player | Reflect ] SFX Reflect
+[ down  Player | Mirror ] -> [ Player | Reflect ] SFX Reflect
+
+[ > Player | Reflect ] -> [ > Player | > Reflect ] SFX Move
+[ > Reflect | Reflect ] -> [ > Reflect | > Reflect ]
+
+==============
+WINCONDITIONS
+==============
+
+all Reflect on Target
+
+=======
+LEVELS
+=======
+
+message Find your path through the mirrors!
+
+#######
+#.....#
+#..P..#
+#..M..#
+#.###.#
+#..T..#
+#######
+
+
+message The corner will be tricky!
+
+#######
+#.....#
+#..P..#
+#.M#..#
+#.##..#
+#..T..#
+#######
+
+message Can you reflect your way home?
+
+#######
+#.....#
+#..P..#
+#.M#M.#
+#.##..#
+#..T..#
+#######
+
+```
+produced the following console output:
+=================================
+line 22 : Unknown junk in object section (possibly: sprites have to be 5 pixels wide and 5 pixels high exactly. Or maybe: the main names for objects have to be words containing only the letters a-z0.9 - if you want to call them something like ",", do it in the legend section).
+line 23 : Unknown junk in object section (possibly: sprites have to be 5 pixels wide and 5 pixels high exactly. Or maybe: the main names for objects have to be words containing only the letters a-z0.9 - if you want to call them something like ",", do it in the legend section).
+line 24 : Unknown junk in object section (possibly: sprites have to be 5 pixels wide and 5 pixels high exactly. Or maybe: the main names for objects have to be words containing only the letters a-z0.9 - if you want to call them something like ",", do it in the legend section).
+line 25 : Unknown junk in object section (possibly: sprites have to be 5 pixels wide and 5 pixels high exactly. Or maybe: the main names for objects have to be words containing only the letters a-z0.9 - if you want to call them something like ",", do it in the legend section).
+line 26 : Unknown junk in object section (possibly: sprites have to be 5 pixels wide and 5 pixels high exactly. Or maybe: the main names for objects have to be words containing only the letters a-z0.9 - if you want to call them something like ",", do it in the legend section).
+line 37 : Was looking for color for object REFLECT, got "cyan" instead.
+line 39 : Trying to access color number 0 from the color palette of sprite REFLECT, but there are only 0 defined in it.
+line 41 : Trying to access color number 0 from the color palette of sprite REFLECT, but there are only 0 defined in it.
+line 63 : unexpected sound token "move".
+line 64 : Was expecting a soundverb here (MOVE, DESTROY, CANTMOVE, or the like), but found something else.
+line 78 : Name "sfx", referred to in a rule, does not exist.
+too many errors, aborting compilation
+Errors detected during compilation; the game may not work correctly.
+Return a repaired version of the code that addresses these errors. Return your code in full, inside a ```plaintext code block.

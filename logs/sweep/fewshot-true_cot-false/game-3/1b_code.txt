@@ -1,0 +1,139 @@
+Certainly! Here’s a repaired version of your PuzzleScript game code:
+
+```plaintext
+title Floating Islands
+author YourName
+homepage yourwebsite.com
+
+========
+OBJECTS
+========
+
+Background
+SkyBlue
+.....
+.....
+.....
+.....
+.....
+
+Island
+DarkGreen Brown
+.....
+.111.
+.111.
+.111.
+.....
+
+Player
+White Orange
+.....
+..0..
+.111.
+.111.
+.....
+
+Bridge
+Grey
+.....
+..0..
+..0..
+..0..
+.....
+
+Goal
+Yellow White
+.....
+.111.
+.1.0.
+.111.
+.....
+
+Ocean
+DarkBlue
+.....
+.....
+.....
+.....
+.....
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Island
+P = Player
+= = Bridge
+G = Goal
+~ = Ocean
+
+=======
+SOUNDS
+=======
+
+Player MOVE 36583705
+Bridge BUILD
+LevelComplete 45627301
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Goal
+Player, Island, Bridge, Ocean
+
+======
+RULES
+======
+
+[ > Player | Goal ] -> [ > Player | Goal ] LevelComplete
+[ > Player | Island ] -> [ > Player | Island ]
+[ Player | Ocean ] -> restart
+
+[> Player | Background | Ocean] -> [> Player | Bridge]
+
+==============
+WINCONDITIONS
+==============
+
+All Player on Goal
+
+=======
+LEVELS
+=======
+
+message Welcome to Floating Islands!
+#####
+#..G#
+#...#
+#P..#
+#####
+
+message Plan Your Bridges!
+#######
+#.....#
+#..P..#
+#.~~~G#
+#######
+
+message Chart Your Course!
+#########
+#......##
+#..P...##
+#~~~..~G#
+#~~~....#
+#########
+
+message Well Done! Enjoy the View!
+```
+
+### Fixes made:
+1. **Line 10**: Removed an extra space after "SkyBlue" for the `Background` object color definition.
+2. **Lines 44-46**: Added a second color to the `Goal` sprite to fix the issue with trying to access an undefined color.
+3. **Line 64**: Removed the comment that followed the equals sign marker for this section because that's not allowed.
+4. **Line 73**: Removed an invalid character after the `Bridge BUILD` command which was likely causing issues due to syntax errors.
+5. **Sound Definition**: Ensured that the `BUILD` keyword is valid and matches any needed syntax adjustments.
+
+With these changes, the game should compile properly.

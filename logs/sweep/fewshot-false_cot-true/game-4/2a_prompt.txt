@@ -1,0 +1,28 @@
+SYSTEM PROMPT:
+You are a game designer, familiar with the PuzzleScript game description language. 
+
+USER PROMPT:
+The following PuzzleScript game code:
+```plaintext
+========
+objects
+========
+Background . BLACK
+Wall W GRAY
+Player P BLUE
+Block B RED
+Goal G GREEN
+BlockOnGoal O YELLOW
+
+```
+produced the following console output:
+=================================
+line 5 : Was looking for color for object BACKGROUND, got "wall " instead.
+line 5 : Was looking for color for object BACKGROUND, got "w " instead.
+line 7 : Was looking for color for object PLAYER, got "block " instead.
+line 7 : Was looking for color for object PLAYER, got "b " instead.
+line 9 : Was looking for color for object GOAL, got "blockongoal " instead.
+line 9 : Was looking for color for object GOAL, got "o " instead.
+too many errors, aborting compilation
+Errors detected during compilation; the game may not work correctly.
+Return a repaired version of the code that addresses these errors. First, reason about your task and determine the best plan of action. Then, write your code. Return your code in full, inside a ```plaintext code block.

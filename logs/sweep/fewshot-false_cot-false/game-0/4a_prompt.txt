@@ -1,0 +1,141 @@
+SYSTEM PROMPT:
+You are a game designer, familiar with the PuzzleScript game description language. 
+
+USER PROMPT:
+The following PuzzleScript game code:
+```plaintext
+Title: Sokoban Mini
+
+Author: PuzzleScript Enthusiast
+
+========
+OBJECTS
+========
+
+Background
+transparent
+
+Player
+Yellow
+..00.
+.0000.
+..00..
+..00..
+.....
+
+Crate
+Brown
+.000.
+0..0.
+0..0.
+.000.
+.....
+
+Wall
+Grey
+.000.
+0..0.
+0..0.
+.000.
+.....
+
+Target
+Red
+.....
+.00..
+.00..
+.....
+.....
+
+CrateOnTarget
+Orange
+.000.
+0..0.
+0..0.
+.000.
+.....
+
+========
+LEGEND
+========
+
+= = Background
+P = Player
+C = Crate
+W = Wall
+T = Target
+O = CrateOnTarget
+
+========
+SOUNDS
+========
+
+========
+COLLISIONLAYERS
+========
+
+Background
+Target
+Wall, Crate, CrateOnTarget
+Player
+
+========
+RULES
+========
+
+[ > Player | Crate] -> [ > Player | > Crate]
+[ > Player | CrateOnTarget] -> [ > Player | > Crate]
+[Player | Target] -> [ | Player] 
+[Crate | Target] -> [CrateOnTarget | ]
+[CrateOnTarget | ] -> [Crate | Target]
+
+========
+WINCONDITIONS
+========
+
+All CrateOnTarget on Target
+
+========
+PLAYER
+========
+
+Player
+
+========
+LEVELS
+========
+
+####
+# T#
+#CO#
+#P #
+####
+
+#####
+#..#
+#CO #
+#P  #
+#####
+
+######
+#    #
+# T .#
+# CO #
+#  P #
+######
+
+```
+produced the following console output:
+=================================
+line 15 : Sprites must be 5 wide and 5 high.
+line 16 : Sprites must be 5 wide and 5 high.
+line 17 : Sprites must be 5 wide and 5 high.
+line 56 : Only comments should go after a bunch of equals signs ('===') on a line.
+line 93 : Expecting the start of a win condition ("ALL","SOME","NO") but got "PLAYER'.
+line 96 : Expecting the start of a win condition ("ALL","SOME","NO") but got "PLAYER'.
+line 102 : Key "#" not found. Do you need to add it to the legend, or define a new object?
+line 103 : Key "#" not found. Do you need to add it to the legend, or define a new object?
+line 104 : Key "#" not found. Do you need to add it to the legend, or define a new object?
+too many errors, aborting compilation
+Errors detected during compilation; the game may not work correctly.
+Return a repaired version of the code that addresses these errors. Return your code in full, inside a ```plaintext code block.

@@ -1,0 +1,119 @@
+It seems the issue with the game might be that the win condition specifies all `RescuedCat` must be on `Cage`, but there's no rule to turn a `Crate` into a `RescuedCat` when pushed onto a `Cage`. Let's fix this by adding a rule to transform `Crate` into `RescuedCat` upon contacting a `Cage`. Here's the corrected code:
+
+```plaintext
+title Rescue the Cats
+author Anonymous
+
+========
+OBJECTS
+========
+
+Background
+LightGreen
+
+Wall
+DarkGrey
+.....
+.000.
+.0.0.
+.000.
+.....
+
+Player
+Blue
+.....
+..0..
+.000.
+..0..
+.....
+
+Crate
+Brown
+.....
+.000.
+.0.0.
+.000.
+.....
+
+Cage
+Orange
+.....
+..0..
+.000.
+..0..
+.....
+
+RescuedCat
+Yellow
+.....
+..0..
+.0.0.
+..0..
+.....
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Player
+* = Crate
+C = Cage
+R = RescuedCat
+
+=======
+SOUNDS
+=======
+
+Player MOVE 12345678
+Crate MOVE 87654321
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Player, Crate, Cage, RescuedCat, Wall
+
+======
+RULES
+======
+
+[ > Player | Crate ] -> [ > Player | > Crate ]
+[ Crate | Cage ] -> [ RescuedCat | Cage ] sfx3
+
+==============
+WINCONDITIONS
+==============
+
+All RescuedCat on Cage
+
+=======
+LEVELS
+=======
+#####
+#...#
+#.#*#
+#P.C#
+#####
+
+#######
+#..P..#
+#.###*#
+#.*.C.#
+###.#.#
+#C...#
+######
+
+########
+#C.P..*#
+#.#..#.#
+#......#
+#..###.#
+#...C..#
+#.###..#
+########
+```
+
+With this change, the game should now be solvable because the `Crate` is transformed into `RescuedCat` when pushed onto a `Cage`, thus meeting the win condition: "All `RescuedCat` on `Cage`."

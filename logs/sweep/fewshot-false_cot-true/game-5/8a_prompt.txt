@@ -1,0 +1,117 @@
+SYSTEM PROMPT:
+You are a game designer, familiar with the PuzzleScript game description language. 
+
+USER PROMPT:
+The following PuzzleScript game code:
+```plaintext
+========================================
+title Simple Sokoban
+author PuzzleDesigner
+
+========================================
+===========
+OBJECTS
+===========
+
+Background
+TRANSPARENT
+
+Wall
+#000000
+
+Player
+#00FF00
+
+Crate
+#FFAA00
+
+Goal
+#FF0000
+
+CrateOnGoal
+#FFAA00 #FF0000
+
+PlayerOnGoal
+#00FF00 #FF0000
+
+===========
+LEGEND
+===========
+
+. = Background
+# = Wall
+P = Player
+B = Crate
+G = Goal
+O = CrateOnGoal
+Q = PlayerOnGoal
+
+===========
+SOUNDS
+===========
+
+===========
+COLLISIONLAYERS
+===========
+
+Background
+Wall
+Player, PlayerOnGoal
+Crate, CrateOnGoal
+Goal
+
+===========
+RULES
+===========
+
+[right Player | Crate] -> [ > Player | > Crate]
+[left Player | Crate] -> [ < Player | < Crate]
+[up Player | Crate] -> [ ^ Player | ^ Crate]
+[down Player | Crate] -> [ v Player | v Crate]
+
+[right Player] -> [ > Player]
+[left Player] -> [ < Player]
+[up Player] -> [ ^ Player]
+[down Player] -> [ v Player]
+
+[Player | Goal] -> [PlayerOnGoal | Goal]
+[PlayerOnGoal | Goal] -> [Player | Goal]
+[Crate | Goal] -> [CrateOnGoal | Goal]
+[CrateOnGoal | Goal] -> [Crate | Goal]
+
+[PlayerOnGoal | Goal] -> [PlayerOnGoal | Goal]
+[CrateOnGoal | Goal] -> [CrateOnGoal | Goal]
+
+===========
+WINCONDITIONS
+===========
+
+All CrateOnGoal
+
+===========
+LEVELS
+===========
+
+#######
+#.....#
+#.G.P.#
+#..B..#
+#.....#
+#######
+
+#######
+#.G.#.#
+#..PBG#
+#.....#
+#######
+
+#######
+#.G...#
+#..B..#
+#..P..#
+#######
+
+```
+compiled, but a solvability check returned the following error:
+Level 0 is not solvable. Please repair it.Level 1 is not solvable. Please repair it.Level 2 is not solvable. Please repair it.
+Return your code in full, inside a ```plaintext code block.

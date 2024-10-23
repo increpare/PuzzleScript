@@ -1,0 +1,104 @@
+Certainly! Here is a corrected version of the code. The issue was due to the incorrect use of the SOUND keyword and sound ID. PuzzleScript does not allow sound effects to be directly referenced in the rules. I've corrected the rule to properly handle sound effects in the PuzzleScript environment.
+
+```plaintext
+title Reflective Puzzle
+author Assistant
+homepage www.puzzlescript.net
+
+========
+OBJECTS
+========
+
+Background
+LightGray White
+00000
+00000
+00000
+00000
+00000
+
+Wall
+DarkGray Black
+11111
+10001
+10001
+10001
+11111
+
+Player
+Red Orange
+..0..
+.000.
+.0.0.
+.000.
+.....
+
+Mirror
+Gray LightGray
+..0..
+.000.
+0...0
+.000.
+..0..
+
+Gem
+Blue LightBlue
+.....
+..0..
+.000.
+..0..
+.....
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Player
+M = Mirror
+G = Gem
+
+=======
+SOUNDS
+=======
+
+gemcollect 10293847
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Player, Wall, Mirror, Gem
+
+======
+RULES
+======
+
+[ > Player | Gem ] -> [ > Player | Background ] gemcollect
+[right Player | Mirror no Player] -> [ > Player | > Mirror ]
+
+==============
+WINCONDITIONS
+==============
+
+no Gem
+
+=======
+LEVELS
+=======
+
+########
+#..G...#
+#.####.#
+#.#..#.#
+#.#.P#.#
+#M#..#.#
+#...G..#
+########
+```
+
+Changes made:
+- Removed the `SOUND` keyword and directly linked the `gemcollect` sound identifier to the rule where the player collects a gem. This uses the correct syntax for PuzzleScript.
+- Ensured that the syntax follows PuzzleScript's rule structure by using the sound identifier directly after the rule.

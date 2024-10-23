@@ -1,0 +1,127 @@
+```plaintext
+title Color Swap
+author PuzzleMaster
+homepage www.puzzlescript.net
+
+========
+OBJECTS
+========
+
+Background
+black
+
+Player
+#ffffff #000000
+.....
+..0..
+.000.
+..0..
+.....
+
+Wall
+#333333 #666666
+.....
+.....
+.0.0.
+.....
+.....
+
+YellowBox
+#ffcc00 #000000
+.....
+.111.
+.101.
+.111.
+.....
+
+BlueBox
+#0066cc #000000
+.....
+.111.
+.101.
+.111.
+.....
+
+RedBox
+#ff0000 #000000
+.....
+.111.
+.101.
+.111.
+.....
+
+Target
+#33cc33
+.....
+.....
+.....
+.....
+.....
+
+=======
+LEGEND
+=======
+
+. = Background
+P = Player
+# = Wall
+Y = YellowBox
+B = BlueBox
+R = RedBox
+T = Target
+
+Crate = YellowBox or BlueBox or RedBox
+
+=======
+SOUNDS
+=======
+
+MoveSound 10576352
+SwapSound 48284869
+PutDownSound 60553576
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Target
+Player, Wall, YellowBox, BlueBox, RedBox
+
+======
+RULES
+======
+
+[> Player | Crate] -> [> Player > Crate] MoveSound
+[Player | YellowBox] -> [BlueBox | Player] SwapSound
+[Player | BlueBox] -> [RedBox | Player] SwapSound
+[Player | RedBox] -> [YellowBox | Player] SwapSound
+[YellowBox | Target] -> [ | ] PutDownSound
+[BlueBox | Target] -> [ | ] PutDownSound
+[RedBox | Target] -> [ | ] PutDownSound
+
+==============
+WINCONDITIONS
+==============
+
+No YellowBox
+No BlueBox
+No RedBox
+
+=======
+LEVELS
+=======
+
+#######
+#..P..#
+#..Y..#
+#.B.R.#
+#..T..#
+#######
+
+```
+
+Key changes made:
+1. Added a `Crate` alias under the `LEGEND` section representing `YellowBox`, `BlueBox`, and `RedBox`.
+2. Renamed sound names in the `SOUNDS` section to `MoveSound`, `SwapSound`, and `PutDownSound` to prevent collisions with reserved keywords.
+3. Modified the usage of sound effects in `RULES` to use the correct sound identifiers.

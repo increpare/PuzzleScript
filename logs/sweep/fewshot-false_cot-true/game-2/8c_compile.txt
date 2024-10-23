@@ -1,0 +1,11 @@
+=================================
+line 62 : Unknown junk in object section (possibly: sprites have to be 5 pixels wide and 5 pixels high exactly. Or maybe: the main names for objects have to be words containing only the letters a-z0.9 - if you want to call them something like ",", do it in the legend section).
+line 71 : Only comments should go after a bunch of equals signs ('===') on a line.
+line 76 : Was expecting a sound seed here (a number like 123123, like you generate by pressing the buttons above the console panel), but found something else.
+line 78 : Was expecting a sound event (like SFX3, or ENDLEVEL) or an object name, but didn't find either.
+line 82 : Background must be in a layer by itself.
+line 96 : incorrect format of win condition.
+line 0 : Palette "default" not found, defaulting to arnecolors.
+line 101 : Error, symbol " ", used in map, not found.
+line 96 : Unwelcome term "define" found in win condition. I don't know what I'm supposed to do with this.
+Errors detected during compilation; the game may not work correctly.

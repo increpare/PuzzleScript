@@ -1,0 +1,142 @@
+To create a complete PuzzleScript game, I'll first define a simple concept that will guide the game's design. Let's create a game based on the theme of "Rescue the Cats," where the player must navigate a maze to save cats trapped in cages. The player must push crates to clear paths and reach the cages.
+
+Here's the plan:
+
+1. **Title and Author**: Define the title and author details.
+2. **Objects**:
+   - **Background**: Standard background for the game.
+   - **Wall**: To form the maze boundaries.
+   - **Player**: The character controlled by the player.
+   - **Crate**: Moveable blocks that can be pushed to access new areas.
+   - **Cage**: Represents the trapped cats.
+   - **RescuedCat**: Cats that have been rescued.
+3. **Legend**: Define symbols for various objects in the game.
+4. **Sounds**: Define sounds for player movement and rescue actions.
+5. **CollisionLayers**: Define layers to handle object interactions.
+6. **Rules**:
+   - Allow the player to push crates.
+   - Transform a cage into a rescued cat when the player reaches it.
+7. **WinConditions**: The player wins when all cats are rescued.
+8. **Levels**: Create a few levels illustrating increasing difficulty.
+
+Now, I'll write the code implementing this plan.
+
+```plaintext
+title Rescue the Cats
+author Anonymous
+
+========
+OBJECTS
+========
+
+Background
+LightGreen
+
+Wall
+DarkGrey
+.....
+.000.
+.0.0.
+.000.
+.....
+
+Player
+Blue
+.....
+..0..
+.000.
+..0..
+.....
+
+Crate
+Brown
+.....
+.000.
+.0.0.
+.000.
+.....
+
+Cage
+Orange
+.....
+..0..
+.000.
+..0..
+.....
+
+RescuedCat
+Yellow
+.....
+..0..
+.0.0.
+..0..
+.....
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Player
+* = Crate
+C = Cage
+R = RescuedCat
+
+=======
+SOUNDS
+=======
+
+Player MOVE 12345678
+Crate MOVE 87654321
+RescueCat CREATE 12345678
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Player, Crate, Cage, RescuedCat, Wall
+
+======
+RULES
+======
+
+[ > Player | Crate ] -> [ > Player | > Crate ]
+[ Player | Cage ] -> [ Player | RescuedCat ] sfx3
+
+==============
+WINCONDITIONS
+==============
+
+All Cage on RescuedCat
+
+=======
+LEVELS
+=======
+
+#####
+#...#
+#.#.#
+#P*C#
+#####
+
+#######
+#.....#
+#.*.*.#
+#.P.C.#
+###.#.#
+#C...#
+#######
+
+########
+#C.#..*#
+#.#..#.#
+#..P...#
+#..###.#
+#...C..#
+#.###..#
+########
+```
+
+This game features simple mechanics where the player pushes crates to navigate a maze and rescue cats from cages. The player wins when all cats are rescued.

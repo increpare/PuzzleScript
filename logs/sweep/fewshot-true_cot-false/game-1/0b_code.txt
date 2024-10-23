@@ -1,0 +1,127 @@
+```plaintext
+title Mirror Maze
+author PuzzleMaster
+homepage www.example.com
+
+========
+OBJECTS
+========
+
+Background
+black
+
+Player
+white
+.000.
+.0.0.
+.0.0.
+.000.
+....
+
+Mirror
+gray
+/////
+/////
+/////
+/////
+/////
+
+Target
+yellow
+.....
+.000.
+.0.0.
+.000.
+.....
+
+Reflect
+cyan
+.....
+..0..
+.....
+..0..
+.....
+
+Wall
+red
+.....
+
+=======
+LEGEND
+=======
+
+. = Background
+P = Player
+M = Mirror
+T = Target
+R = Reflect
+# = Wall
+
+=========
+SOUNDS
+=========
+
+Move 12345678
+Reflect 87654321
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Target
+Player, Mirror, Reflect, Wall
+
+======
+RULES
+======
+
+[ left  Player | Mirror ] -> [ Player | Reflect ] SFX Reflect
+[ right Player | Mirror ] -> [ Player | Reflect ] SFX Reflect
+[ up    Player | Mirror ] -> [ Player | Reflect ] SFX Reflect
+[ down  Player | Mirror ] -> [ Player | Reflect ] SFX Reflect
+
+[ > Player | Reflect ] -> [ > Player | > Reflect ] SFX Move
+[ > Reflect | Reflect ] -> [ > Reflect | > Reflect ]
+
+==============
+WINCONDITIONS
+==============
+
+all Reflect on Target
+
+=======
+LEVELS
+=======
+
+message Find your path through the mirrors!
+
+#######
+#.....#
+#..P..#
+#..M..#
+#.###.#
+#..T..#
+#######
+
+
+message The corner will be tricky!
+
+#######
+#.....#
+#..P..#
+#.M#..#
+#.##..#
+#..T..#
+#######
+
+message Can you reflect your way home?
+
+#######
+#.....#
+#..P..#
+#.M#M.#
+#.##..#
+#..T..#
+#######
+```

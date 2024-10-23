@@ -1,0 +1,74 @@
+Certainly! Here's a complete PuzzleScript game called "Gem Collector":
+
+```plaintext
+title Gem Collector
+
+========
+OBJECTS
+========
+
+Background
+black
+
+Player
+LightBlue
+.P.
+PPP
+.P.
+
+Wall
+DarkGray
+WWWW
+WWWW
+WWWW
+
+Gem
+Gold
+.G.
+GGG
+.G.
+
+Finish
+LightGreen
+FFFF
+FFFF
+FFFF
+
+=======
+LEGEND
+=======
+
+. = Background
+P = Player
+# = Wall
+G = Gem
+F = Finish
+
+======
+RULES
+======
+
+[ Player | Gem  ] -> [ Player | Background ]
+
+[ Player | Finish ] -> win
+
+==============
+WINCONDITIONS
+==============
+
+all Gem on Background
+
+========
+LEVELS
+========
+
+..####..
+..#..#..
+..#..#..
+P.#..#.F
+..#..#..
+..#..#..
+..####..
+```
+
+In "Gem Collector", your goal is to guide the player to collect all the gems scattered throughout the level. Once all gems are collected and the player reaches the finish line, the player wins the game. Use arrow keys to move the player. Avoid the walls and strategize your path to collect all gems efficiently. Enjoy the game!

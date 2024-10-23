@@ -1,0 +1,121 @@
+```plaintext
+title Color Swap
+author PuzzleMaster
+homepage www.puzzlescript.net
+
+========
+OBJECTS
+========
+
+Background
+black
+
+Player
+#ffffff #000000
+.....
+..0..
+.000.
+..0..
+.....
+
+Wall
+#333333 #666666
+.....
+.....
+.0.0.
+.....
+.....
+
+YellowBox
+#ffcc00
+.111.
+.101.
+.111.
+.....
+.....
+
+BlueBox
+#0066cc
+.111.
+.101.
+.111.
+.....
+.....
+
+RedBox
+#ff0000
+.111.
+.101.
+.111.
+.....
+.....
+
+Target
+#33cc33
+.....
+.....
+.....
+.....
+.....
+
+=======
+LEGEND
+=======
+
+. = Background
+P = Player
+# = Wall
+Y = YellowBox
+B = BlueBox
+R = RedBox
+T = Target
+
+=======
+SOUNDS
+=======
+
+move 10576352
+swap 48284869
+putdown 60553576
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Target
+Player, Wall, YellowBox, BlueBox, RedBox
+
+======
+RULES
+======
+
+[> Player | Crate] -> [> Player > Crate] move
+[Player | YellowBox] -> [BlueBox | Player] swap
+[Player | BlueBox] -> [RedBox | Player] swap
+[Player | RedBox] -> [YellowBox | Player] swap
+[YellowBox | Target] -> [ | ] putdown
+[BlueBox | Target] -> [ | ] putdown
+[RedBox | Target] -> [ | ] putdown
+
+==============
+WINCONDITIONS
+==============
+
+No YellowBox
+No BlueBox
+No RedBox
+
+=======
+LEVELS
+=======
+
+#######
+#..P..#
+#..Y..#
+#.B.R.#
+#..T..#
+#######
+```
+
+This is a simple PuzzleScript game where the player can swap colors of boxes (Yellow, Blue, and Red) by stepping on them. The goal is to place the boxes on the target square to remove them.

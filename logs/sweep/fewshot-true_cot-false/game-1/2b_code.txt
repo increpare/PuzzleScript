@@ -1,0 +1,144 @@
+Below is the repaired version of the code addressing the errors mentioned in the console output:
+
+```plaintext
+title Mirror Maze
+author PuzzleMaster
+homepage www.example.com
+
+========
+OBJECTS
+========
+
+Background
+black
+.....
+.....
+.....
+.....
+.....
+
+Player
+white
+.....
+.000.
+.0.0.
+.0.0.
+.....
+
+Mirror
+gray
+.....
+.....
+.....
+.....
+.....
+
+Target
+yellow
+.....
+.000.
+.0.0.
+.000.
+.....
+
+Reflect
+cyan darkgray
+.....
+.....
+.....
+.....
+.....
+
+Wall
+red
+.....
+.....
+.....
+.....
+.....
+
+=======
+LEGEND
+=======
+
+. = Background
+P = Player
+M = Mirror
+T = Target
+R = Reflect
+# = Wall
+
+=========
+SOUNDS
+=========
+
+PlayerMove 12345678
+ReflectMove 87654321
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Target
+Player, Mirror, Reflect, Wall
+
+======
+RULES
+======
+
+[ left  Player | Mirror ] -> [ Player | Reflect ReflectMove]
+[ right Player | Mirror ] -> [ Player | Reflect ReflectMove]
+[ up    Player | Mirror ] -> [ Player | Reflect ReflectMove]
+[ down  Player | Mirror ] -> [ Player | Reflect ReflectMove]
+
+[ > Player | Reflect ] -> [ > Player | > Reflect PlayerMove]
+[ > Reflect | Reflect ] -> [ > Reflect | > Reflect ]
+
+==============
+WINCONDITIONS
+==============
+
+all Reflect on Target
+
+=======
+LEVELS
+=======
+
+message Find your path through the mirrors!
+
+#######
+#.....#
+#..P..#
+#..M..#
+#.###.#
+#..T..#
+#######
+
+
+message The corner will be tricky!
+
+#######
+#.....#
+#..P..#
+#.M#..#
+#.##..#
+#..T..#
+#######
+
+message Can you reflect your way home?
+
+#######
+#.....#
+#..P..#
+#.M#M.#
+#.##..#
+#..T..#
+#######
+
+```
+
+**Changes made:**
+1. For the `Reflect` object, an additional color was added to fix the console error.
+2. The sound names `MOVE` were replaced with `PlayerMove` and `ReflectMove` to match the usage in the rules.
+3. Updated the rules to use the correct sound names by removing `MOVE` and appending them correctly as `ReflectMove` and `PlayerMove`.

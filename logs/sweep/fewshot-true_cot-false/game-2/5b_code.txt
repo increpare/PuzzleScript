@@ -1,0 +1,102 @@
+Sure, here is the corrected version of the PuzzleScript game code:
+
+```plaintext
+title Reflective Puzzle
+author Assistant
+homepage www.puzzlescript.net
+
+========
+OBJECTS
+========
+
+Background
+LightGray White
+00000
+00000
+00000
+00000
+00000
+
+Wall
+DarkGray Black
+11111
+10001
+10001
+10001
+11111
+
+Player
+Red Orange
+..0..
+.000.
+.0.0.
+.000.
+.....
+
+Mirror
+Gray LightGray
+..0..
+.000.
+0...0
+.000.
+..0..
+
+Gem
+Blue LightBlue
+.....
+..0..
+.000.
+..0..
+.....
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Player
+M = Mirror
+G = Gem
+
+=======
+SOUNDS
+=======
+
+gem_collect 10293847
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Player, Wall, Mirror, Gem
+
+======
+RULES
+======
+
+[ > Player | Gem ] -> [ > Player | Background ] gem_collect
+[right Player | Mirror no Player] -> [ > Player | > Mirror ]
+
+==============
+WINCONDITIONS
+==============
+
+no Gem
+
+=======
+LEVELS
+=======
+
+########
+#..G...#
+#.####.#
+#.#..#.#
+#.#.P#.#
+#M#..#.#
+#...G..#
+########
+```
+
+I've corrected the error by adding an underscore to the sound token `gemcollect` to make it `gem_collect`, ensuring it has a valid identifier format and updating it in the rule as well. Let me know if you need further changes!

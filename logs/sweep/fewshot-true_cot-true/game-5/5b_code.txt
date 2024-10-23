@@ -1,0 +1,118 @@
+The error messages indicate that the rules are being misinterpreted due to the comments within the script. PuzzleScript does not support inline comments within rule definitions using `//`, which results in the script trying to interpret them incorrectly. To resolve this issue, we must remove the comments placed at the end of the rule lines.
+
+Here's how you can fix it:
+- Remove the comments from each rule line, as PuzzleScript does not support inline comments.
+
+Below is the repaired version of the code:
+
+```plaintext
+title Simple Sliding Puzzle
+author New Game Designer
+homepage www.puzzlescript.net
+
+========
+OBJECTS
+========
+
+Background
+LightGray
+00000
+00000
+00000
+00000
+00000
+
+Player
+DarkBlue Blue
+.000.
+.111.
+.111.
+.000.
+.....
+
+Target
+DarkGreen Green LightGreen
+.....
+.....
+.222.
+.....
+.....
+
+Wall
+DarkGray Gray
+11111
+11111
+11111
+11111
+11111
+
+=======
+LEGEND
+=======
+
+. = Background
+P = Player
+T = Target
+# = Wall
+
+=======
+SOUNDS
+=======
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Target
+Player
+Wall
+
+======
+RULES
+======
+
+[ > Player | no Wall ] -> [ > Player ] 
+[ < Player | no Wall ] -> [ < Player ] 
+[ UP Player | no Wall ] -> [ UP Player ] 
+[ DOWN Player | no Wall ] -> [ DOWN Player ] 
+
+==============
+WINCONDITIONS
+==============
+
+All Player on Target
+
+=======
+LEVELS
+=======
+
+# Simple starter level
+#########
+#...T...#
+#..###..#
+#...P...#
+#########
+
+# Slightly harder level
+#########
+#..T....#
+#..#..###
+#...P...#
+###.###.#
+#.......#
+#########
+
+# A more complex level
+#########
+#.T.#...#
+#.#.#.#.#
+#.#...#.#
+###.#.#.#
+#...P...#
+#.#.#.###
+#.......#
+#########
+```
+
+By removing all inline comments within the rule lines, the code should now compile without errors.

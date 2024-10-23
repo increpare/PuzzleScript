@@ -1,0 +1,117 @@
+To ensure the levels in the Simple Sokoban game are solvable, let's first review the levels and make necessary adjustments. The key is to ensure that crates can be moved to goals without being stuck against walls or each other. Here is the revised version of the game:
+
+```plaintext
+========================================
+title Simple Sokoban
+author PuzzleDesigner
+
+========================================
+===========
+OBJECTS
+===========
+
+Background
+TRANSPARENT
+
+Wall
+#000000
+
+Player
+#00FF00
+
+Crate
+#FFAA00
+
+Goal
+#FF0000
+
+CrateOnGoal
+#FFAA00 #FF0000
+
+PlayerOnGoal
+#00FF00 #FF0000
+
+===========
+LEGEND
+===========
+
+. = Background
+# = Wall
+P = Player
+B = Crate
+G = Goal
+O = CrateOnGoal
+Q = PlayerOnGoal
+
+===========
+SOUNDS
+===========
+
+===========
+COLLISIONLAYERS
+===========
+
+Background
+Wall
+Player, PlayerOnGoal
+Crate, CrateOnGoal
+Goal
+
+===========
+RULES
+===========
+
+[right Player | Crate] -> [ > Player | > Crate]
+[left Player | Crate] -> [ < Player | < Crate]
+[up Player | Crate] -> [ ^ Player | ^ Crate]
+[down Player | Crate] -> [ v Player | v Crate]
+
+[right Player] -> [ > Player]
+[left Player] -> [ < Player]
+[up Player] -> [ ^ Player]
+[down Player] -> [ v Player]
+
+[Player | Goal] -> [PlayerOnGoal | Goal]
+[PlayerOnGoal | Goal] -> [Player | Goal]
+[Crate | Goal] -> [CrateOnGoal | Goal]
+[CrateOnGoal | Goal] -> [Crate | Goal]
+
+[PlayerOnGoal | Goal] -> [PlayerOnGoal | Goal]
+[CrateOnGoal | Goal] -> [CrateOnGoal | Goal]
+
+===========
+WINCONDITIONS
+===========
+
+All CrateOnGoal
+
+===========
+LEVELS
+===========
+
+#######
+#.....#
+#.G.P.#
+#..B..#
+#######
+
+#######
+#.G.#.#
+#..PBG#
+#.....#
+#######
+
+#######
+#.G...#
+#..B..#
+#..P..#
+#######
+
+```
+
+Here's what was changed:
+1. **Level 0**: The position of the player and the crate was modified for the player to have access to push the crate toward the goal.
+2. **Level 1**: The layout was adjusted to give the player the ability to move the crate without blocking it.
+3. **Level 2**: Made sure the player could easily push the crate to the goal without any complex setups or corners trapping it.
+
+By ensuring these conditions, all levels should now be solvable.

@@ -1,0 +1,123 @@
+The errors you are encountering are due to comments in the rules section being interpreted as code. PuzzleScript does not support inline comments in the rules section. To fix this, you should remove the comment lines from the rules section. Here is the corrected version of your game code:
+
+```plaintext
+Title: Simple Sokoban
+Author: OpenAI
+
+===========
+OBJECTS
+===========
+
+Background
+GREEN
+
+Wall
+BLACK
+
+Player
+BLUE
+
+Crate
+BROWN
+
+Target
+RED
+
+CrateOnTarget
+PURPLE
+
+PlayerOnTarget
+LIGHTBLUE
+
+===========
+LEGEND
+===========
+
+. = Background
+# = Wall
+P = Player
+C = Crate
+T = Target
+X = CrateOnTarget
+O = PlayerOnTarget
+
+===========
+SOUNDS
+===========
+
+===========
+COLLISIONLAYERS
+===========
+
+Background
+Target
+Wall
+Crate, CrateOnTarget
+Player, PlayerOnTarget
+
+===========
+RULES
+===========
+
+[right]
+[ Player | Crate ] -> [ Player | > ]
+
+[right]
+[ Player | CrateOnTarget ] -> [ PlayerOnTarget | > ]
+
+[right]
+[ PlayerOnTarget | Crate ] -> [ Player | > ]
+
+[up]
+[ Player | Crate ] -> [ Player | ^ ]
+
+[up]
+[ Player | CrateOnTarget ] -> [ PlayerOnTarget | ^ ]
+
+[up]
+[ PlayerOnTarget | Crate ] -> [ Player | ^ ]
+
+[left]
+[ Player | Crate ] -> [ Player | < ]
+
+[left]
+[ Player | CrateOnTarget ] -> [ PlayerOnTarget | < ]
+
+[left]
+[ PlayerOnTarget | Crate ] -> [ Player | < ]
+
+[down]
+[ Player | Crate ] -> [ Player | v ]
+
+[down]
+[ Player | CrateOnTarget ] -> [ PlayerOnTarget | v ]
+
+[down]
+[ PlayerOnTarget | Crate ] -> [ Player | v ]
+
+[ Crate | Target ] -> [ CrateOnTarget ]
+
+[ Player | Target ] -> [ PlayerOnTarget ]
+
+[ CrateOnTarget | Background ] -> [ Crate ]
+
+[ PlayerOnTarget | Background ] -> [ Player ]
+
+===========
+WINCONDITIONS
+===========
+
+All CrateOnTarget
+
+===========
+LEVELS
+===========
+
+#####
+#..X#
+#P  #
+#   #
+#####
+```
+
+This version should compile correctly as it removes the inline comment lines within the rules section.

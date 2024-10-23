@@ -1,0 +1,130 @@
+The issues in the provided code are due to having unrecognized map symbols and incorrect rules missing conditions to move the player with direction constraints on areas. To fix this, here’s a corrected version of your code:
+
+1. Add a symbol in the LEGEND section to represent empty spaces.
+2. Ensure each rule transformation has balanced brackets on both sides.
+3. Correct any directional or movement issues in the rules.
+
+Here's the revised version of your PuzzleScript code:
+
+```plaintext
+Title: Simple Sokoban
+Author: OpenAI
+
+===========
+OBJECTS
+===========
+
+Background
+GREEN
+
+Wall
+BLACK
+
+Player
+BLUE
+
+Crate
+BROWN
+
+Target
+RED
+
+CrateOnTarget
+PURPLE
+
+PlayerOnTarget
+LIGHTBLUE
+
+===========
+LEGEND
+===========
+
+. = Background
+# = Wall
+P = Player
+C = Crate
+T = Target
+X = CrateOnTarget
+O = PlayerOnTarget
+  = Background
+
+===========
+SOUNDS
+===========
+
+===========
+COLLISIONLAYERS
+===========
+
+Background
+Target
+Wall
+Crate, CrateOnTarget
+Player, PlayerOnTarget
+
+===========
+RULES
+===========
+
+[right]
+[ Player | Crate ] -> [ > | Player ]
+
+[right]
+[ Player | CrateOnTarget ] -> [ > | PlayerOnTarget ]
+
+[right]
+[ PlayerOnTarget | Crate ] -> [ > | Player ]
+
+[up]
+[ Player | Crate ] -> [ ^ | Player ]
+
+[up]
+[ Player | CrateOnTarget ] -> [ ^ | PlayerOnTarget ]
+
+[up]
+[ PlayerOnTarget | Crate ] -> [ ^ | Player ]
+
+[left]
+[ Player | Crate ] -> [ < | Player ]
+
+[left]
+[ Player | CrateOnTarget ] -> [ < | PlayerOnTarget ]
+
+[left]
+[ PlayerOnTarget | Crate ] -> [ < | Player ]
+
+[down]
+[ Player | Crate ] -> [ v | Player ]
+
+[down]
+[ Player | CrateOnTarget ] -> [ v | PlayerOnTarget ]
+
+[down]
+[ PlayerOnTarget | Crate ] -> [ v | Player ]
+
+[ Crate | Target ] -> [ CrateOnTarget ]
+
+[ Player | Target ] -> [ PlayerOnTarget ]
+
+[ CrateOnTarget | Background ] -> [ Crate ]
+
+[ PlayerOnTarget | Background ] -> [ Player ]
+
+===========
+WINCONDITIONS
+===========
+
+All CrateOnTarget
+
+===========
+LEVELS
+===========
+
+#####
+#..X#
+#P  #
+#   #
+#####
+```
+
+In this fixed code, an empty space is defined as part of the LEGEND. Additionally, spacing around the symbols in the RULES section has been appropriately adjusted to correct any rule transformation issues.

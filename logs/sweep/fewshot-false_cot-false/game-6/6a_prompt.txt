@@ -1,0 +1,114 @@
+SYSTEM PROMPT:
+You are a game designer, familiar with the PuzzleScript game description language. 
+
+USER PROMPT:
+The following PuzzleScript game code:
+```plaintext
+// title: Collect the Stars
+// author: PuzzleScriptFan
+// homepage: https://www.puzzlescript.net
+===========
+Sprite definitions
+===========
+player
+00010
+00110
+11111
+11111
+01110
+
+wall
+11111
+11111
+11111
+11111
+11111
+
+floor
+11111
+11111
+11111
+11111
+11111
+
+star
+00100
+01110
+11111
+01110
+00100
+
+===========
+Legend
+===========
+P = player
+W = wall
+. = floor
+* = star
+
+===========
+Sounds
+===========
+win 0.5 "sfx/collect.wav"
+
+===========
+CollisionLayers
+===========
+Background 
+floor
+wall
+player
+star
+
+===========
+Rules
+===========
+[ > player | star ] -> [ > player ]
+
+===========
+WinConditions
+===========
+All star on 
+
+===========
+Levels
+===========
+#####
+#...#
+#.P.#
+#.*.#
+#####
+
+#######
+#.P.#.#
+#...*.#
+#.***.#
+#.....#
+#######
+
+===========
+Colors
+===========
+Background 0 0 0
+player 255 255 255
+wall 128 128 128
+floor 50 50 50
+star 255 255 0
+
+===========
+Performance
+===========
+limitedUndo
+
+```
+produced the following console output:
+=================================
+line 5 : Unrecognised stuff in the prelude.
+line 7 : Unrecognised stuff in the prelude.
+line 8 : Unrecognised stuff in the prelude.
+line 9 : Unrecognised stuff in the prelude.
+line 10 : Unrecognised stuff in the prelude.
+line 11 : Unrecognised stuff in the prelude.
+too many errors, aborting compilation
+Errors detected during compilation; the game may not work correctly.
+Return a repaired version of the code that addresses these errors. Return your code in full, inside a ```plaintext code block.

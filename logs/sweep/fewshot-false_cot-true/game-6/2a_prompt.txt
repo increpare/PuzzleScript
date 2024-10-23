@@ -1,0 +1,85 @@
+SYSTEM PROMPT:
+You are a game designer, familiar with the PuzzleScript game description language. 
+
+USER PROMPT:
+The following PuzzleScript game code:
+```plaintext
+title Sokoban Puzzles
+author GameDesigner
+
+===========
+
+objects
+    background  #000000
+    Space .     #ffffff
+    Player @    #ff0000
+    Wall #      #0000ff
+    Box $       #00ff00
+    Target t    #ff00ff
+
+===========
+
+legend
+    . = Space
+    @ = Player
+    # = Wall
+    $ = Box
+    t = Target
+    box = $
+    target = t
+    wall = #
+    player = @
+    on_target = box on target
+
+===========
+
+sounds
+    # No sounds in this simple game.
+
+===========
+
+collisionlayers
+    player, box
+    wall
+    target
+
+===========
+
+rules
+    [> Player | ] -> [> Player | > ]
+    [> Player | Box | ] -> [> Player | > Box | > ]
+
+===========
+
+winconditions
+    All Box on Target
+
+===========
+
+levels
+#######
+# t   #
+#     #
+# $   #
+###@###
+#######
+---
+#######
+# t   #
+# $   #
+#     #
+###@###
+#######
+---
+########
+# @    #
+#   #  #
+#   $$ #
+# t#tt #
+##   ###
+ ########
+
+```
+produced the following console output:
+Error while loading code into editor: RangeError: Maximum call stack size exceeded.
+Return a repaired version of the code that addresses these errors. First, reason about your task and determine the best plan of action. Then, write your code. Return your code in full, inside a ```plaintext code block.

@@ -1,0 +1,24 @@
+The error messages indicate that the compiler was expecting color codes for various objects but instead encountered unexpected strings. The cause of these errors is likely due to incorrect line formatting or misalignment between object identifiers and their color codes, leading to the misinterpretation of strings as incorrect input.
+
+The goal is to review the formatting of each line to ensure that it follows the proper structure of: `ObjectName   Symbol   Color`. The alignment should be consistent, and proper spaces or tab stops must be used between the object name, symbol, and color.
+
+Here's a plan of action:
+1. Ensure each object line follows the pattern: `ObjectName Symbol Color`
+2. Each field must be separated adequately, usually by whitespace, while ensuring there are no extra spaces that could misalign the parser.
+3. Ensure no trailing or leading spaces in each line.
+
+Let's apply these corrections to the code.
+
+```plaintext
+========
+objects
+========
+Background . BLACK
+Wall       W GRAY
+Player     P BLUE
+Block      B RED
+Goal       G GREEN
+BlockOnGoal O YELLOW
+```
+
+I've corrected the alignment issues to ensure each component is properly separated and in line with the expected formatting to resolve the parsing errors.

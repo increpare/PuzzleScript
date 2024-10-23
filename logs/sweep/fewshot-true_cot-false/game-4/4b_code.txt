@@ -1,0 +1,92 @@
+Below is the repaired version of the PuzzleScript game code. I've fixed the spritematrix errors by using the proper matrix format and ensured that the rule section is placed correctly after defining the collision layers. Here's the correct code:
+
+```plaintext
+title Gem Collector
+
+========
+OBJECTS
+========
+
+Background
+black
+
+Player
+LightBlue
+.....
+..0..
+.....
+.....
+.....
+
+Wall
+DarkGray
+.....
+00000
+.....
+.....
+.....
+
+Gem
+Yellow
+.....
+..0..
+.....
+.....
+.....
+
+Finish
+LightGreen
+.....
+.0...
+.....
+.....
+.....
+
+=======
+LEGEND
+=======
+
+. = Background
+P = Player
+# = Wall
+G = Gem
+F = Finish
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Player, Wall, Gem, Finish
+
+======
+RULES
+======
+
+[ Player | Gem ] -> [ Player | Background ]
+
+[ Player | Finish ] -> win
+
+==============
+WINCONDITIONS
+==============
+
+all Gem on Background
+
+========
+LEVELS
+========
+
+..####..
+..#..#..
+..#..#..
+P.#..#.F
+..#..#..
+..#..#..
+..####..
+```
+
+Changes made include:
+1. Corrected the spritematrix for each object by using '0' instead of incorrect symbols like 'P', 'W', 'G', 'F'.
+2. Added the `COLLISIONLAYERS` section before the `RULES` section.
+3. Ensured consistency within the rule and object names as defined in the `LEGEND` section.

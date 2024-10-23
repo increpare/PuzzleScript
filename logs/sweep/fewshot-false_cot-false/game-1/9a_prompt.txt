@@ -1,0 +1,98 @@
+SYSTEM PROMPT:
+You are a game designer, familiar with the PuzzleScript game description language. 
+
+USER PROMPT:
+The following PuzzleScript game code:
+```plaintext
+Title: Simple Sokoban
+Author: Game Designer
+Homepage: http://www.puzzlescript.net
+
+========
+OBJECTS
+========
+
+Background
+white
+
+Wall
+blue
+
+Player
+green
+
+Crate
+brown
+
+Target
+red
+
+CrateOnTarget
+darkred
+
+PlayerOnTarget
+darkgreen
+
+========
+LEGEND
+========
+
+. = Background
+# = Wall
+P = Player
+C = Crate
+T = Target
+O = PlayerOnTarget
+R = CrateOnTarget
+
+========
+SOUNDS
+========
+
+CrateOnTarget MOVE 1
+
+========
+COLLISIONLAYERS
+========
+
+Background
+Target
+Wall
+Crate, CrateOnTarget
+Player, PlayerOnTarget
+
+========
+RULES
+========
+
+[Player | Crate] -> [Background | Player Crate] 
+[Player | Target] -> [PlayerOnTarget | Background] 
+[PlayerOnTarget | Background] -> [Player | Target] 
+[PlayerOnTarget | Crate] -> [Background | Player Crate]
+
+[Crate | Target] -> [CrateOnTarget | Background] 
+[CrateOnTarget | Background] -> [Crate | Target]
+
+========
+WINCONDITIONS
+========
+
+All CrateOnTarget
+
+========
+LEVELS
+========
+
+#######
+#     #
+# .T. #
+# .C. #
+# PT  #
+#######
+
+```
+produced the following console output:
+=================================
+line 81 : Error, symbol " ", used in map, not found.
+Errors detected during compilation; the game may not work correctly.
+Return a repaired version of the code that addresses these errors. Return your code in full, inside a ```plaintext code block.

@@ -1,0 +1,104 @@
+Here are the necessary adjustments to make the level solvable. In the original code, players were unable to reach and collect all gems due to wall and mirror obstruction. By adjusting mirrors, walls, and open paths, the player will have a path to all gems. Here is your updated code:
+
+```plaintext
+title Reflective Puzzle
+author Assistant
+homepage www.puzzlescript.net
+
+========
+OBJECTS
+========
+
+Background
+LightGray White
+00000
+00000
+00000
+00000
+00000
+
+Wall
+DarkGray Black
+11111
+10001
+10001
+10001
+11111
+
+Player
+Red Orange
+..0..
+.000.
+.0.0.
+.000.
+.....
+
+Mirror
+Gray LightGray
+..0..
+.000.
+0...0
+.000.
+..0..
+
+Gem
+Blue LightBlue
+.....
+..0..
+.000.
+..0..
+.....
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Player
+M = Mirror
+G = Gem
+
+=======
+SOUNDS
+=======
+
+SFX1 10293847
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Player, Wall, Mirror, Gem
+
+======
+RULES
+======
+
+[ > Player | Gem ] -> [ > Player | Background ] SFX1
+[right Player | Mirror no Player] -> [ > Player | > Mirror ]
+
+==============
+WINCONDITIONS
+==============
+
+no Gem
+
+=======
+LEVELS
+=======
+
+########
+#......#
+#.####G#
+#......#
+#.#####M
+#.#..#.#
+#P#....#
+########
+
+```
+
+Key changes:
+- Rearranged existing mirrors and walls to create a free path to all gems, ensuring that there are no inescapable traps or blocked-off sections obstructing the player from collecting the gems.

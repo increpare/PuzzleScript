@@ -1,0 +1,129 @@
+Certainly! Below is a complete code for a simple PuzzleScript game called "Collect the Stars". In this game, the player controls a character that must collect all the stars on the map to win.
+
+```plaintext
+===========
+Title
+===========
+Collect the Stars
+
+===========
+Author
+===========
+PuzzleScriptFan
+
+===========
+Homepage
+===========
+https://www.puzzlescript.net
+
+===========
+Sprite definitions
+===========
+player
+00011
+00111
+22222
+22222
+12211
+
+wall
+22222
+22222
+22222
+22222
+22222
+
+floor
+22222
+22222
+22222
+22222
+22222
+
+star
+..0..
+.000.
+00000
+.000.
+..0..
+
+===========
+Legend
+===========
+P = player
+W = wall
+. = floor
+* = star
+
+===========
+Sounds
+===========
+SOUNDS win 0.5 "sfx/collect.wav"
+
+===========
+CollisionLayers
+===========
+BACKGROUND
+floor
+OBJECTS
+wall
+star
+player
+
+===========
+Rules
+===========
+[ > player | star ] -> [ > player ]
+
+===========
+WinConditions
+===========
+All star on 
+
+===========
+Levels
+===========
+#####
+#...#
+#.P.#
+#.*.#
+#####
+
+#######
+#.P.#.#
+#...*.#
+#.***.#
+#.....#
+#######
+
+===========
+Color
+===========
+Background 0 0 0
+player 255 255 255
+wall 128 128 128
+floor 50 50 50
+star 255 255 0
+
+===========
+Performance
+===========
+limitedUndo
+```
+
+Here is what each section does:
+
+- **Title**: The title of the game.
+- **Author**: The game's author.
+- **Homepage**: The webpage for the game.
+- **Sprite definitions**: Contains the sprite design for all objects used in the game (player, wall, floor, star).
+- **Legend**: Links characters in levels to their in-game representations.
+- **Sounds**: Associates sound effects with in-game events.
+- **CollisionLayers**: Defines movement logic between different game objects.
+- **Rules**: Specifies interactions between objects (e.g., what happens when a player moves onto a star).
+- **WinConditions**: Sets the condition for game completion (all stars collected).
+- **Levels**: Level design represented as ASCII maps.
+- **Color**: Colors for game objects.
+- **Performance**: Contains performance settings, like undo limitations.
+
+This basic game serves as a foundation that can be expanded with more rules, sounds, and creative designs.

@@ -1,0 +1,11 @@
+=================================
+line 63 : Unknown junk in object section (possibly: sprites have to be 5 pixels wide and 5 pixels high exactly. Or maybe: the main names for objects have to be words containing only the letters a-z0.9 - if you want to call them something like ",", do it in the legend section).
+line 77 : Was expecting a sound event (like SFX3, or ENDLEVEL) or an object name, but didn't find either.
+line 86 : error detected - unexpected character #
+line 86 : Cannot add "DEFINE" to a collision layer; it has not been declared.
+line 86 : Cannot add "THE" to a collision layer; it has not been declared.
+line 86 : Cannot add "LEVEL" to a collision layer; it has not been declared.
+line 88 : section "LEVELS" is out of order, must follow  "WINCONDITIONS" (or it could be that the section "WINCONDITIONS"is just missing totally.  You have to include all section headings, even if the section itself is empty).
+line 90 : Key "A" not found. Do you need to add it to the legend, or define a new object?
+too many errors, aborting compilation
+Errors detected during compilation; the game may not work correctly.

@@ -1,0 +1,104 @@
+SYSTEM PROMPT:
+You are a game designer, familiar with the PuzzleScript game description language. 
+
+USER PROMPT:
+The following PuzzleScript game code:
+```plaintext
+Title: Catch the Star
+
+Author: PuzzleScript Developer
+
+==========
+
+OBJECTS
+Background
+sky
+000
+000
+000
+
+Player
+purple
+.P.
+0P0
+.P.
+
+Star
+yellow
+.S.
+0S0
+.S.
+
+Wall
+green
+WWW
+WWW
+WWW
+
+==========
+
+LEGEND
+0 = Background
+P = Player
+S = Star
+W = Wall
+
+==========
+
+SOUNDS
+SFX0
+playNote C4;1
+
+SFX1
+playNote G4;15
+
+==========
+
+COLLISIONLAYERS
+Background
+Star
+Player, Wall
+
+==========
+
+RULES
+[ > Player | no Star ] -> [ > Player ]
+[ Player | Star ] -> [ > Player | ]
+
+==========
+
+WINCONDITIONS
+No Star
+
+==========
+
+LEVELS
+000000
+0P0000
+000000
+000S00
+000000
+
+000000
+P00000
+0WWW00
+0W0S00
+0WWW00
+
+00P000
+WW0W00
+0W0S00
+WW0W00
+
+```
+produced the following console output:
+=================================
+line 9 : Was looking for color for object BACKGROUND, got "sky" instead.
+line 10 : Trying to access color number 0 from the color palette of sprite BACKGROUND, but there are only 0 defined in it.
+line 11 : Trying to access color number 0 from the color palette of sprite BACKGROUND, but there are only 0 defined in it.
+line 12 : Trying to access color number 0 from the color palette of sprite BACKGROUND, but there are only 0 defined in it.
+line 16 : Unknown junk in spritematrix for object PLAYER.
+line 17 : Unknown junk in spritematrix for object PLAYER.
+too many errors, aborting compilation
+Errors detected during compilation; the game may not work correctly.
+Return a repaired version of the code that addresses these errors. Return your code in full, inside a ```plaintext code block.

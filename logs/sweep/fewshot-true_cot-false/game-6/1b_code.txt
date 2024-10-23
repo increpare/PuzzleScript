@@ -1,0 +1,151 @@
+Certainly! Based on the errors you reported, here's a repaired version of the PuzzleScript game code with explanations for each fix:
+
+1. **Player Sprite Color Error**: The `Player` sprite uses more color indexes than the palette defines. We adjust the sprite artwork to use only the two defined colors (black and lightblue).
+
+2. **Sound Verb Error**: The `BOUNCE` sound is being defined without a proper verb like `MOVE`, `DESTROY`, etc. We should ensure that `BOUNCE` is appropriately used in rules or replace it with a standard verb if needed.
+
+3. **Rule Pattern Mismatch Error**: Each pattern on the left in a rule must correspond to a pattern of the same length on the right.
+
+Here's the repaired code:
+
+```plaintext
+title Bouncy Blocks
+author Puzzle Designer
+homepage www.puzzlescript.net
+
+========= 
+OBJECTS 
+=========
+
+Background
+lightgray darkgray
+11111
+01110
+11111
+01110
+11111
+
+Wall
+brown darkbrown
+00010
+11111
+01000
+11111
+00010
+
+Player
+black lightblue
+.000.
+.111.
+.111.
+.111.
+..1..
+
+BouncyBlock
+lightgreen darkgreen
+.000.
+.0.0.
+0...0
+.0.0.
+.000.
+
+Target
+darkblue
+.....
+.000.
+.0.0.
+.000.
+.....
+
+========
+LEGEND
+========
+
+. = Background
+# = Wall
+P = Player
+B = BouncyBlock
+O = Target
+
+=========
+SOUNDS
+=========
+
+BouncyBlock MOVE 36772507
+endlevel 83744503
+startgame 92244503
+
+==================
+COLLISIONLAYERS
+==================
+
+Background
+Target
+Player, Wall, BouncyBlock
+
+=======
+RULES
+=======
+
+[ > Player | BouncyBlock ] -> [ > Player | > BouncyBlock ] 
+[ Player | BouncyBlock ] -> [ Player | > BouncyBlock ] 
+[ BouncyBlock | Wall ] -> [ BouncyBlock | Wall ]
+
+==============
+WINCONDITIONS
+==============
+
+all Target on BouncyBlock
+
+========
+LEVELS
+========
+
+message level 1 of 5
+#####
+#...#
+#.O.#
+#B.P#
+#####
+
+message level 2 of 5
+######
+#....#
+#..O.#
+#.B..#
+#..P.#
+######
+
+message level 3 of 5
+######
+#....#
+#..O.#
+#B..P#
+#....#
+######
+
+message level 4 of 5
+######
+#....#
+#O...#
+#.BP.#
+#....#
+######
+
+message level 5 of 5
+######
+#...O#
+#..B.#
+#P...#
+#....#
+######
+
+message Congratulations! You've completed the game!
+```
+
+**Changes Made**:
+- Simplified the `Player` sprite to use only the two defined colors (black and lightblue).
+- Updated the sound declaration to use the `MOVE` verb for `BouncyBlock`.
+- Corrected the rule "[BouncyBlock | Wall] -> [BouncyBlock]" to ensure the pattern matches are of equal length by expressing it as "[BouncyBlock | Wall] -> [BouncyBlock | Wall]".
+
+This version addresses the errors and should compile correctly.

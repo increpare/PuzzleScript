@@ -1,0 +1,151 @@
+Let's create a simple PuzzleScript game that introduces a new concept. We'll design a game in which the player has to push mirrors to reflect a laser beam onto a target. The game will involve basic mechanics like moving the player, pushing mirrors, and reflecting a beam. 
+
+**Game Outline:**
+- The player can move in four directions (up, down, left, right).
+- Mirrors can be pushed and will reflect the laser beam.
+- The laser beam can be turned on or off by a switch.
+- The objective is to direct the laser beam to hit the target.
+
+**Objects:**
+- Player: Movable character controlled by the player.
+- Mirror: Reflects the laser beam.
+- Laser: Initially off, can be turned on by switching.
+- Target: Needs to be hit by the laser to win the game.
+- Switch: Toggles the laser on and off.
+- Wall: Impedes movement.
+
+**Win Condition:**
+- The laser beam must hit the target.
+
+Here's the complete code for our game:
+
+```plaintext
+title Laser Reflection Challenge
+author PuzzleScript User
+
+========
+OBJECTS
+========
+
+Background
+Grey
+
+Wall
+DarkGrey
+
+Player
+Blue
+..0..
+..0..
+.111.
+.111.
+.....
+
+Mirror
+LightGrey
+..0..
+.111.
+..0..
+..0..
+.....
+
+Laser
+Red
+..0..
+..0..
+..0..
+..0..
+.....
+
+Target
+Gold
+.....
+.....
+..0..
+.....
+.....
+
+Switch
+Green
+.....
+..0..
+.0.0.
+..0..
+.....
+
+LaserOn
+Red
+..0..
+..0..
+.111.
+..0..
+.....
+
+Beam
+Orange
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Player
+M = Mirror
+L = Laser
+T = Target
+S = Switch
+B = Beam
+
+=======
+SOUNDS
+=======
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Switch
+Target
+Player, Wall, Mirror, Laser, Beam
+
+======
+RULES
+======
+
+[> Player | Switch] -> [> Player | Switch] [Laser -> LaserOn] 
+
+[right Player | Mirror] -> [right Player | mirror]
+[left Player | Mirror] -> [left Player | mirror]
+[up Player | Mirror] -> [up Player | mirror]
+[down Player | Mirror] -> [down Player | mirror]
+
+[L | Mirror] -> [Beam | Mirror] 
+[Beam | Mirror] [up Target] -> [Beam | Target]
+[Beam no Mirror | Wall] -> []
+[Beam | Target] -> [Beam | Target] Win
+
+==============
+WINCONDITIONS
+==============
+
+All Beam on Target
+
+=======
+LEVELS
+=======
+
+#P#.#.#
+#..M..#
+##..L.#
+S.#..T
+#######
+```
+
+**Game Walkthrough:**
+- The player pushes mirrors to reflect the laser beam.
+- The player can toggle the laser beam on and off by hitting the switch.
+- The objective is to hit the target with the laser beam by arranging mirrors strategically.
+
+This simple game introduces the concept of directing a beam using movable mirrors and a switch, offering a basic puzzle to solve with clear objectives.

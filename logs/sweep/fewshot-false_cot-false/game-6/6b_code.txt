@@ -1,0 +1,108 @@
+It looks like the game description has incorrect formatting for the sprite definitions section. Let's fix the sprite definitions so the compiler can recognize them properly. Here's the corrected code:
+
+```plaintext
+// title: Collect the Stars
+// author: PuzzleScriptFan
+// homepage: https://www.puzzlescript.net
+===========
+OBJECTS
+===========
+Background
+BLACK
+
+player
+WHITE
+.000.
+.0.0.
+00000
+00000
+.000.
+
+wall
+GRAY
+11111
+11111
+11111
+11111
+11111
+
+floor
+DARKGRAY
+11111
+11111
+11111
+11111
+11111
+
+star
+YELLOW
+.0.0.
+.000.
+00000
+.000.
+.0.0.
+
+===========
+LEGEND
+===========
+P = player
+W = wall
+. = floor
+* = star
+
+===========
+SOUNDS
+===========
+win 0.5 "sfx/collect.wav"
+
+===========
+COLLISIONLAYERS
+===========
+Background 
+floor
+wall
+player
+star
+
+===========
+RULES
+===========
+[ > player | star ] -> [ > player ]
+
+===========
+WINCONDITIONS
+===========
+All star on 
+
+===========
+LEVELS
+===========
+#####
+#...#
+#.P.#
+#.*.#
+#####
+
+#######
+#.P.#.#
+#...*.#
+#.***.#
+#.....#
+#######
+
+===========
+COLORS
+===========
+Background 0 0 0
+player 255 255 255
+wall 128 128 128
+floor 50 50 50
+star 255 255 0
+
+===========
+PERFORMANCE
+===========
+limitedUndo
+```
+
+In this version of the code, I've made sure the sprite definitions are consistent with the syntax conventions of the PuzzleScript language by using the `OBJECTS` keyword, specifying color for each object, and ensuring the size of each sprite matches the engine's requirements (5x5 with centered designs using dots for transparency where appropriate).

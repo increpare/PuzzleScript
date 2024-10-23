@@ -1,0 +1,91 @@
+To address the errors in the provided PuzzleScript code, let's examine and adjust the problematic sections:
+
+1. **Object Section Formatting**: Each object needs to be followed by a valid color hex code. The errors indicate that there's confusion about which line should be handling what object. Each object should be declared with proper spacing.
+
+2. **Legend Overlaps**: The legend defines symbols that overlap with other definitions or leave gaps in object definition, leading to duplication errors. Ensure that each symbol represents only one object without conflicts.
+
+3. **Ensure Rules Consistency**: Verify the player's symbol matches also in rules.
+
+After addressing the above errors, the code should look like this:
+
+```plaintext
+title Sokoban Puzzles
+author GameDesigner
+
+===========
+
+objects
+    Background .  #ffffff
+    Player     P  #ff0000
+    Wall       W  #0000ff
+    Box        B  #00ff00
+    Target     T  #ff00ff
+
+===========
+
+legend
+    . = Background
+    P = Player
+    W = Wall
+    B = Box
+    T = Target
+
+===========
+
+sounds
+    # No sounds in this simple game.
+
+===========
+
+collisionlayers
+    Background, Target
+    Player, Box
+    Wall
+
+===========
+
+rules
+    [ > Player | ] -> [ Player | > ]
+    [ > Player | Box | ] -> [ > | Player | Box ]
+    [ > Player | Box on Target | ] -> [ > | Player | Box on Target ]
+
+===========
+
+winconditions
+    All Box on Target
+
+===========
+
+levels
+WWWWWWW
+W T   W
+W     W
+W B   W
+WPW@WWW
+WWWWWWW
+---
+WWWWWWW
+W T   W
+W B   W
+W     W
+WPW@WWW
+WWWWWWW
+---
+WWWWWWWW
+WP     W
+W   W  W
+W   BB W
+W TWTT W
+WW   WWW
+WWWWWWWW
+
+```
+
+### Corrections Made:
+
+- **Spacing & Color Codes**: Ensured correct spacing follows each declaration with the appropriate color code.
+- **Consistent Player Symbol**: Made sure that the Player symbol `P` is used consistently in the objects, legend, and rules sections.
+- **Legend and Rules Clean-up**: Removed any ambiguities or overlaps in the legend and fixed the rules to properly represent the intended game mechanics.
+- **Level Definition**: Correct the placement of the Player symbol (`P`) to match with the defined player. 
+
+The repaired version should compile without errors and run the game as intended.

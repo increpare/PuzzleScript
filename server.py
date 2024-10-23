@@ -93,7 +93,6 @@ def gen_game():
     fewshot = data['fewshot']
     cot = data['cot']
     cot_prompt_text = cot_prompt if cot else ''
-    fewshot = True
     log_dir = os.path.join(
         'logs',
     #     (

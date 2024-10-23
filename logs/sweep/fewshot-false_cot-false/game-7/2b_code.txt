@@ -1,0 +1,96 @@
+The errors in the console output suggest issues with unexpected tokens in the prelude section and the colors section. Specifically, there are formatting problems in how the colors are associated with the objects. Let's fix these by ensuring the colors are linked properly, and the syntax is correct.
+
+Here's the corrected version of the PuzzleScript game code:
+
+```plaintext
+################################
+# Puzzlescript Sokoban Game
+################################
+
+title Sokoban Puzzle
+
+author Your Name
+
+homepage https://www.puzzlescript.net
+
+# Some options for the game
+options
+    require_player_movement
+
+# Constructing the objects
+objects
+    Background . 
+    Wall # 
+    Player P 
+    PlayerOnTarget + 
+    Box B 
+    BoxOnTarget O 
+    Target T
+
+colors
+    Background white
+    Wall blue
+    Player green
+    PlayerOnTarget lightgreen
+    Box brown
+    BoxOnTarget yellow
+    Target red
+
+# Legends: Defining the objects in the game
+legend
+    . = Background
+    # = Wall
+    P = Player
+    B = Box
+    T = Target
+    O = BoxOnTarget
+    + = PlayerOnTarget
+
+# Defining rules for movement and interactions
+rules
+    [ > Player | No ] -> [ > Player | ]
+    [ > Player | Wall ] -> [ > Player | Wall ]
+    [ > Player | Box ] -> [ > Player | > Box ]
+    [ > Player | BoxOnTarget ] -> [ > Player | > Box ]
+
+    # Player moves onto Target
+    [ > Player | Target ] -> [ > PlayerOnTarget | ]
+
+    # Player moving off Target
+    [ PlayerOnTarget | No ] -> [ Player | Target ]
+
+    # Move boxes
+    [ > Player | Box | No ] -> [ > Player | > Box ]
+
+    # Move boxes onto Targets
+    [ > Player | Box | Target ] -> [ > PlayerOnTarget | BoxOnTarget ]
+
+    # Boxes off Targets
+    [ BoxOnTarget | No ] -> [ Box | Target ]
+
+# Winning conditions
+winconditions
+    All BoxOnTarget
+
+# Game levels, represented in ASCII art
+levels
+
+#######
+#     #
+#     #
+# .#  #
+#  #$ #
+#  .  #
+# .@  #
+#######
+
+#######
+#. .  #
+#  #$ #
+#  #@ #
+#  $  #
+#. .  #
+#######
+```
+
+These corrections ensure that the `options` block syntax is right (without curly braces), and the way colors are defined matches the PuzzleScript syntax expectations, linking each object to its respective color correctly.

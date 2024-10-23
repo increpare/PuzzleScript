@@ -1,0 +1,79 @@
+SYSTEM PROMPT:
+You are a game designer, familiar with the PuzzleScript game description language. 
+
+USER PROMPT:
+The following PuzzleScript game code:
+```plaintext
+=======
+title Sokoban Clone
+author YourName
+
+========
+legend
+    . = Floor
+    # = Wall
+    P = Player
+    B = Box
+    X = Goal
+
+========
+sounds
+    movePlayer = action
+    moveBox = action
+
+========
+collisions
+    P -> movePlayer
+    B -> moveBox
+
+========
+objects
+  Wall 
+    color #422
+    solid true
+  Floor
+    color #ccc
+  Player
+    color #00f
+    layer 1
+  Box 
+    color #ff0
+    layer 2
+  Goal
+    color #f00
+    layer 3
+
+=======
+rules
+[ Player | Box ] -> [ | Player Box ]
+[ Player | ] (up) -> [ | Player ^ ]
+[ Player | ] (down) -> [ | Player v ]
+[ Player | ] (left) -> [ | Player < ]
+[ Player | ] (right) -> [ | Player > ]
+
+=======
+winconditions
+All Box on Goal
+
+=======
+levels
+
+#####   
+#...# 
+#.#.# 
+#.P.# 
+#.B.# 
+##### 
+
+```
+produced the following console output:
+=================================
+line 6 : section "LEGEND" is out of order, must follow  "OBJECTS" (or it could be that the section "OBJECTS"is just missing totally.  You have to include all section headings, even if the section itself is empty).
+line 7 : You're talking about FLOOR but it's not defined anywhere.
+line 8 : You're talking about WALL but it's not defined anywhere.
+line 9 : You're talking about PLAYER but it's not defined anywhere.
+line 10 : You're talking about BOX but it's not defined anywhere.
+line 11 : You're talking about GOAL but it's not defined anywhere.
+too many errors, aborting compilation
+Errors detected during compilation; the game may not work correctly.
+Return a repaired version of the code that addresses these errors. Return your code in full, inside a ```plaintext code block.

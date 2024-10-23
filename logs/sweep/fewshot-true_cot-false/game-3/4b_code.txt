@@ -1,0 +1,132 @@
+```plaintext
+title Floating Islands
+author YourName
+homepage yourwebsite.com
+
+========
+OBJECTS
+========
+
+Background
+SkyBlue
+.....
+.....
+.....
+.....
+.....
+
+Island
+DarkGreen Brown
+.....
+.111.
+.111.
+.111.
+.....
+
+Player
+White Orange
+.....
+..0..
+.111.
+.111.
+.....
+
+Bridge
+Grey
+.....
+..0..
+..0..
+..0..
+.....
+
+Goal
+Yellow White
+.....
+.111.
+.1.0.
+.111.
+.....
+
+Ocean
+DarkBlue
+.....
+.....
+.....
+.....
+.....
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Island
+P = Player
+= = Bridge
+G = Goal
+~ = Ocean
+
+=======
+SOUNDS
+=======
+
+Player MOVE 36583705
+Bridge DESTROY 12345678
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Goal
+Player, Island, Bridge, Ocean
+
+======
+RULES
+======
+
+[ > Player | Goal ] -> [ > Player | Goal ]
+[ > Player | Island ] -> [ > Player | Island ]
+[ Player | Ocean ] -> restart
+
+[ > Player | Ocean Background ] -> [ > Player | Bridge Background ]
+
+==============
+WINCONDITIONS
+==============
+
+All Player on Goal
+
+=======
+LEVELS
+=======
+
+message Welcome to Floating Islands!
+#####
+#..G#
+#...#
+#P..#
+#####
+
+message Plan Your Bridges!
+#######
+#.....#
+#..P..#
+#.~~~G#
+#######
+
+message Chart Your Course!
+#########
+#......##
+#..P...##
+#~~~..~G#
+#~~~....#
+#########
+
+message Well Done! Enjoy the View!
+```
+
+Explanation of Fixes:
+1. The color definition for the `Background` object was incorrect. `SkyBlue` should not be repeated. It should be defined as a single color.
+2. There was an erroneous equals sign in the `SOUNDS` section, which should not be there, according to the error message.
+3. In the rule `[ > Player | Background | Ocean ] -> [ > Player | Bridge ]`, each left side pattern component should have a corresponding component on the right side. So, I matched the `Background` with `Background` in the rule `[ > Player | Ocean Background ] -> [ > Player | Bridge Background ]`.

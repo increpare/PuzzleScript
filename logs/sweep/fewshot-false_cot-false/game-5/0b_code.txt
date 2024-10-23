@@ -1,0 +1,111 @@
+Certainly! Below is a complete PuzzleScript game code for a simple Sokoban-style puzzle game.
+
+```plaintext
+Title: Simple Sokoban
+
+Author: PuzzleDesigner
+
+===========
+OBJECTS
+===========
+
+Background
+B
+
+Wall
+#
+000
+0X0
+000
+
+Player
+P
+0P0
+PPP
+0P0
+
+Crate
+C
+CCC
+C0C
+CCC
+
+Target
+T
+0T0
+0T0
+0T0
+
+Cratedone
+D
+0C0
+0T0
+0C0
+
+===========
+LEGEND
+===========
+
+. = Background
+# = Wall
+P = Player
+C = Crate
+T = Target
+D = Cratedone
+
+===========
+SOUNDS
+===========
+
+# Add your custom sounds if needed
+
+===========
+COLLISIONLAYERS
+===========
+
+Background
+Target
+Wall
+Crate, Cratedone
+Player
+
+===========
+RULES
+===========
+
+[Player | Crate] -> [ > Player | > Crate]
+[Crate | Target] -> [CrateDone]
+[CrateDone | Player] -> [ > CrateDone | > Player]
+
+===========
+WINCONDITIONS
+===========
+
+All CrateDone on Target
+
+===========
+LEVELS
+===========
+
+# Level 1
+########
+#....T.#
+#..C.P.#
+#....T.#
+########
+
+# Level 2
+########
+#..P.T#
+#.C...#
+#..T..#
+########
+
+########
+#..T..#
+#.C...#
+#..T..#
+#######
+```
+
+This game features simple rules where the player pushes crates into target locations. When a crate is on a target, it transforms into a "CrateDone." The objective is to have all crates on targets to win each level. You can expand and modify this template to create more complex puzzles or add additional elements.

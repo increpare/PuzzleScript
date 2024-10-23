@@ -1,0 +1,102 @@
+The errors are caused by incorrect sprite definitions and a stray empty line in the SOUNDS section. PuzzleScript sprites should be on a single line of text. Let's correct the sprite definitions and remove any unnecessary lines. Here's the repaired version of the code:
+
+```plaintext
+Title: Simple Sokoban
+
+Author: PuzzleDesigner
+
+===========
+OBJECTS
+===========
+
+Background
+darkgrey
+
+Wall
+grey
+XXXXX
+
+Player
+yellow
+.P...
+
+
+
+Crate
+brown
+.C...
+
+
+
+Target
+green
+.T...
+
+
+
+CrateDone
+orange
+.D...
+
+
+
+===========
+LEGEND
+===========
+
+. = Background
+# = Wall
+P = Player
+C = Crate
+T = Target
+D = CrateDone
+
+===========
+SOUNDS
+===========
+
+# Add your custom sounds if needed
+
+===========
+COLLISIONLAYERS
+===========
+
+Background
+Target
+Wall
+Crate, CrateDone
+Player
+
+===========
+RULES
+===========
+
+[Player | Crate] -> [ > Player | > Crate]
+[Crate | Target] -> [CrateDone | Target]
+[CrateDone | Player] -> [ > CrateDone | > Player]
+
+===========
+WINCONDITIONS
+===========
+
+All CrateDone
+
+===========
+LEVELS
+===========
+
+# Level 1
+########
+#....T.#
+#..C.P.#
+#....T.#
+########
+
+# Level 2
+########
+#..P..T#
+#.C....#
+#..T...#
+########
+```
+Notice that I have collapsed the sprite matrices for `Player`, `Crate`, `Target`, and `CrateDone` into single lines, and removed the unwanted lines from the SOUNDS section. This should resolve the errors and allow your game to compile correctly.

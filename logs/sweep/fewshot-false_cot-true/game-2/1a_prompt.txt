@@ -1,0 +1,25 @@
+SYSTEM PROMPT:
+You are a game designer, familiar with the PuzzleScript game description language. 
+
+USER PROMPT:
+The following PuzzleScript game code:
+```plaintext
+#### Level 1
+#### A simple introductory level
+########
+#      #
+# .O.$ #
+#    P #
+#.    .#
+#      #
+########
+
+```
+produced the following console output:
+=================================
+No collision layers defined.  All objects need to be in collision layers.
+you have to define something to be the background
+error, didn't find any object called player, either in the objects section, or the legends section. there must be a player!
+No levels found.  Add some levels!
+Errors detected during compilation; the game may not work correctly.
+Return a repaired version of the code that addresses these errors. First, reason about your task and determine the best plan of action. Then, write your code. Return your code in full, inside a ```plaintext code block.

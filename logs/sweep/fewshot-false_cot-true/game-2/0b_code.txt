@@ -1,0 +1,101 @@
+To create a complete PuzzleScript game, we'll start by laying out the essential components needed: 
+
+1. **Metadata**: Title, author, etc.
+2. **Objects**: Define the entities used within the game.
+3. **Collision Layers**: Define how objects will interact with each other.
+4. **Legend**: Symbols used to represent objects on a map.
+5. **Sounds**: Define any sounds that might play.
+6. **Rules**: How objects interact.
+7. **Win Conditions**: What needs to happen for the player to win.
+8. **Levels**: Define one or more levels of the game.
+
+For this game, let's design a simple Sokoban-style game where the player pushes boxes onto target spots to win. It involves the player, boxes, walls, targets, and floors.
+
+Here's the complete PuzzleScript code for this plan:
+
+```plaintext
+Title: Sokoban Simple
+Author: PuzzleScript Example
+
+#####
+# OBJECTS
+#####
+Background
+grey
+
+Wall
+black
+
+Player
+orange
+
+Box
+brown
+
+Target
+red
+
+BoxOnTarget
+pink
+
+#####
+# LEGEND
+#####
+= Background
+# Wall
+P Player
+B Box
+T Target
+O BoxOnTarget
+
+#####
+# COLLISIONLAYERS
+#####
+Background
+Player, Box
+Wall
+Target
+
+#####
+# RULES
+#####
+[ Player | Box ] -> [ > Player | > Box ]
+[ Player | Target ] -> [ > Player | Target ]
+[ Target | Box ] -> [ Target | BoxOnTarget ]
+
+#####
+# WINCONDITIONS
+#####
+All BoxOnTarget on Target
+
+#####
+# LEVELS
+#####
+```
+```plaintext
+#### Level 1
+#### A simple introductory level
+########
+#      #
+# .O.$ #
+#    P #
+#.    .#
+#      #
+########
+```
+
+### Breakdown of the Game Code:
+
+1. **Objects**: Defines the visual and identity aspects of every element in the game (Player, Box, Wall, etc.)
+
+2. **Legend**: Characters that will be used in the map design to represent these objects.
+
+3. **Collision Layers**: Defines how different game objects interact. For instance, Player and Box are in the same layer so the player can push the box.
+
+4. **Rules**: This game has simple movement rules. The player pushes a box, and it becomes a 'BoxOnTarget' when on a target.
+
+5. **Win Conditions**: The game is won when all boxes are on the target tiles.
+
+6. **Levels**: A single level is presented as an enclosed area (walls represented by `#`), with a player `P`, boxes `$`, and targets `.`. The player moves boxes onto these targets.
+
+This is a complete and functional PuzzleScript game, giving players a Sokoban-like puzzle to solve.

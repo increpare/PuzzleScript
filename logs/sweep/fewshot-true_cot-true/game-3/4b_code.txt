@@ -1,0 +1,117 @@
+```plaintext
+title Rescue the Cats
+author Anonymous
+
+========
+OBJECTS
+========
+
+Background
+LightGreen
+
+Wall
+DarkGrey
+.....
+.000.
+.0.0.
+.000.
+.....
+
+Player
+Blue
+.....
+..0..
+.000.
+..0..
+.....
+
+Crate
+Brown
+.....
+.000.
+.0.0.
+.000.
+.....
+
+Cage
+Orange
+.....
+..0..
+.000.
+..0..
+.....
+
+RescuedCat
+Yellow
+.....
+..0..
+.0.0.
+..0..
+.....
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Player
+* = Crate
+C = Cage
+R = RescuedCat
+
+=======
+SOUNDS
+=======
+
+Player MOVE 12345678
+Crate MOVE 87654321
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Player, Crate, Cage, RescuedCat, Wall
+
+======
+RULES
+======
+
+[ > Player | Crate ] -> [ > Player | > Crate ]
+[ Player | Cage ] -> [ Player | RescuedCat ] sfx3
+
+==============
+WINCONDITIONS
+==============
+
+All RescuedCat on Cage
+
+=======
+LEVELS
+=======
+#####
+#...#
+#.#*#
+#P.C#
+#####
+
+#######
+#..P..#
+#.###*#
+#.*.C.#
+###.#.#
+#C...#
+######
+
+########
+#C.P..*#
+#.#..#.#
+#......#
+#..###.#
+#...C..#
+#.###..#
+########
+```
+
+I have modified the `WINCONDITIONS` section from `All Cage on RescuedCat` to `All RescuedCat on Cage`. This ensures that the win condition makes logical sense according to the described rules of the game. You may also need to rearrange the levels to ensure they are solvable, considering the objective is to transform cages into rescued cats.

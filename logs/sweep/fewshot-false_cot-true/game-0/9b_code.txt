@@ -1,0 +1,69 @@
+The error messages indicate that comments (or nothing) should be present on the same line as the section names, and actual content should follow on subsequent lines. The incorrect formatting in the provided game code stems from putting game elements on the same line as section headers. To rectify this, we should move all content onto separate lines from the section headers.
+
+Here's the revised version of the code:
+
+```plaintext
+Title: PushBox
+
+Objects:
+player
+  yellow
+  .....
+
+box
+  brown
+  .....
+
+target
+  green
+  .....
+
+wall
+  grey
+  .....
+
+Legend:
+  P = player
+  B = box
+  T = target
+  W = wall
+
+Sounds:
+
+CollisionLayers:
+  wall
+  player
+  box
+  target
+
+Rules:
+  [> Player | Box] -> [> Player | > Box]
+  [ Player | Target ] -> [ Player | Target ]
+  [ Box | Target ] -> [ Box | Target ]
+
+WinConditions:
+  All B on T
+
+Levels:
+#####
+#.P.#
+#.B.#
+#.T.#
+#####
+
+######  
+#..P.#  
+#.B.##  
+#.BT.#  
+##.#### 
+#.....# 
+#######
+
+#######
+#..P..#
+##B.B##
+#..T..#
+#######
+```
+
+Adjusting the content so that each section name ends a line on its own should reduce the compilation errors and maintain the intended game structure.

@@ -1,0 +1,66 @@
+Here's the corrected version of the PuzzleScript game code. I've rearranged the sections and ensured all object definitions are in the correct place:
+
+```plaintext
+=======
+title Sokoban Clone
+author YourName
+
+========
+objects
+  Wall 
+    color #422
+    solid true
+  Floor
+    color #ccc
+  Player
+    color #00f
+    layer 1
+  Box 
+    color #ff0
+    layer 2
+  Goal
+    color #f00
+    layer 3
+
+========
+legend
+    . = Floor
+    # = Wall
+    P = Player
+    B = Box
+    X = Goal
+
+========
+sounds
+    movePlayer = action
+    moveBox = action
+
+========
+collisions
+    P -> movePlayer
+    B -> moveBox
+
+=======
+rules
+[ Player | Box ] -> [ | Player Box ]
+[ Player | ] (up) -> [ | Player ^ ]
+[ Player | ] (down) -> [ | Player v ]
+[ Player | ] (left) -> [ | Player < ]
+[ Player | ] (right) -> [ | Player > ]
+
+=======
+winconditions
+All Box on Goal
+
+=======
+levels
+
+#####   
+#...# 
+#.#.# 
+#.P.# 
+#.B.# 
+##### 
+```
+
+This version should work correctly in PuzzleScript, as it follows the appropriate structure and includes all necessary sections in the correct order.

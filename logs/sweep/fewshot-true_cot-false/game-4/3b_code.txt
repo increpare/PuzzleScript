@@ -1,0 +1,82 @@
+Certainly! The errors in your PuzzleScript code relate to the sprite matrices in the OBJECTS section, where some rows of the matrices contain more than what is allowed. Each line in a sprite matrix should not have more than one character other than the period ("."). Here is the fixed code:
+
+```plaintext
+title Gem Collector
+
+========
+OBJECTS
+========
+
+Background
+black
+
+Player
+LightBlue
+.....
+..P..
+.....
+.....
+.....
+
+Wall
+DarkGray
+.....
+WWWWW
+.....
+.....
+.....
+
+Gem
+Yellow
+.....
+..G..
+.....
+.....
+.....
+
+Finish
+LightGreen
+.....
+.F...
+.....
+.....
+.....
+
+=======
+LEGEND
+=======
+
+. = Background
+P = Player
+# = Wall
+G = Gem
+F = Finish
+
+======
+RULES
+======
+
+[ Player | Gem ] -> [ Player | Background ]
+
+[ Player | Finish ] -> win
+
+==============
+WINCONDITIONS
+==============
+
+all Gem on Background
+
+========
+LEVELS
+========
+
+..####..
+..#..#..
+..#..#..
+P.#..#.F
+..#..#..
+..#..#..
+..####..
+```
+
+In this corrected version, I have adjusted the sprite matrices for the Player, Wall, Gem, and Finish objects to meet the formatting requirements. Each object should have a simple character representation in a grid format. This ensures your game can compile without errors.

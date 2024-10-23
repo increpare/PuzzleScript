@@ -1,0 +1,119 @@
+Certainly, here's the revised PuzzleScript game code with the levels corrected for solvability:
+
+```plaintext
+title Simple Sliding Puzzle
+author New Game Designer
+homepage www.puzzlescript.net
+
+========
+OBJECTS
+========
+
+Background
+LightGray
+00000
+00000
+00000
+00000
+00000
+
+Player
+DarkBlue Blue
+.000.
+.111.
+.111.
+.000.
+.....
+
+Target
+DarkGreen Green LightGreen
+.....
+.....
+.222.
+.....
+.....
+
+Wall
+DarkGray Gray
+11111
+11111
+11111
+11111
+11111
+
+=======
+LEGEND
+=======
+
+. = Background
+P = Player
+T = Target
+# = Wall
+
+=======
+SOUNDS
+=======
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Target
+Player
+Wall
+
+======
+RULES
+======
+
+[ > Player | no Wall ] -> [ Background | Player ]
+[ < Player | no Wall ] -> [ Background | Player ]
+[ UP Player | no Wall ] -> [ Background | Player ]
+[ DOWN Player | no Wall ] -> [ Background | Player ]
+
+right [> Player | Wall] -> [ Player | Wall]
+left [< Player | Wall] -> [ Player | Wall]
+up [UP Player | Wall] -> [ Player | Wall]
+down [DOWN Player | Wall] -> [ Player | Wall]
+
+==============
+WINCONDITIONS
+==============
+
+All Player on Target
+
+=======
+LEVELS
+=======
+
+#########
+#.......#
+#..###..#
+#...P...#
+#..###..#
+#.......#
+#...T...#
+#########
+
+#########
+#.......#
+#..T....#
+#..#..###
+#...#...#
+###.#.###
+#...P...#
+#########
+
+#########
+#.......#
+#.T.#...#
+#.#.#.#.#
+#.#...#.#
+###.#.#.#
+#.......#
+#...P...#
+#########
+```
+
+These levels have been adjusted so that the player can be moved to reach the target without getting stuck, ensuring they are solvable within the rules provided.

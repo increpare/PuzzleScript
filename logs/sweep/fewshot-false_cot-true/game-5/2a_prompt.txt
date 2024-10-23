@@ -1,0 +1,128 @@
+SYSTEM PROMPT:
+You are a game designer, familiar with the PuzzleScript game description language. 
+
+USER PROMPT:
+The following PuzzleScript game code:
+```plaintext
+========================================
+title Simple Sokoban
+author PuzzleDesigner
+
+========================================
+===========
+OBJECTS
+===========
+
+Background
+TRANSPARENT
+
+Wall
+#000000
+
+Player
+#00FF00
+
+Crate
+#FFAA00
+
+Goal
+#FF0000
+
+CrateOnGoal
+#FFAA00
+BACKGROUND #FF0000
+
+PlayerOnGoal
+#00FF00
+BACKGROUND #FF0000
+
+===========
+LEGEND
+===========
+
+. = Background
+# = Wall
+P = Player
+B = Crate
+G = Goal
+O = CrateOnGoal
+Q = PlayerOnGoal
+
+===========
+SOUNDS
+===========
+
+===========
+COLLISIONLAYERS
+===========
+
+Background
+Wall
+Player, PlayerOnGoal
+Crate, CrateOnGoal
+Goal
+
+===========
+RULES
+===========
+
+# Movement of Player
+[right Player | Crate] -> [ > Player | > Crate]
+[left Player | Crate] -> [ < Player | < Crate]
+[up Player | Crate] -> [ ^ Player | ^ Crate]
+[down Player | Crate] -> [ v Player | v Crate]
+
+[right Player] -> [ > Player]
+[left Player] -> [ < Player]
+[up Player] -> [ ^ Player]
+[down Player] -> [ v Player]
+
+# Transforming Crates/Players on Goals
+[Player | Goal] -> [PlayerOnGoal]
+[PlayerOnGoal] -> [Player]
+[Crate | Goal] -> [CrateOnGoal]
+[CrateOnGoal] -> [Crate]
+
+[PlayerOnGoal | Goal] -> [PlayerOnGoal]
+[CrateOnGoal | Goal] -> [CrateOnGoal]
+
+===========
+WINCONDITIONS
+===========
+
+All CrateOnGoal
+
+===========
+LEVELS
+===========
+
+#######
+#.....#
+#.GPG.#
+#.B...#
+#######
+
+#######
+#.G.#.#
+#..PB.#
+#.....#
+#######
+
+#######
+#.....#
+#.BG..#
+#..P..#
+#######
+
+```
+produced the following console output:
+=================================
+line 27 : Object "BACKGROUND" defined multiple times.
+line 31 : Object "BACKGROUND" defined multiple times.
+line 31 : Name "#FF0000" already in use.
+line 63 : Objects cannot appear outside of square brackets in rules, only directions can.
+line 63 : Name "movement", referred to in a rule, does not exist.
+line 63 : Name "of", referred to in a rule, does not exist.
+too many errors, aborting compilation
+Errors detected during compilation; the game may not work correctly.
+Return a repaired version of the code that addresses these errors. First, reason about your task and determine the best plan of action. Then, write your code. Return your code in full, inside a ```plaintext code block.

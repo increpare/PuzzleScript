@@ -1,0 +1,119 @@
+SYSTEM PROMPT:
+You are a game designer, familiar with the PuzzleScript game description language. 
+
+USER PROMPT:
+The following PuzzleScript game code:
+```plaintext
+# ====================
+# PuzzleScript Game
+# ====================
+
+# The game description goes here
+title PuzzleScript Repair Example
+author Game Designer
+homepage none
+color_palette 0
+
+# Define the objects in the game
+========
+OBJECTS
+========
+Background
+black
+.....
+.....
+.....
+.....
+.....
+
+Wall
+brown
+.....
+..0..
+.000.
+..0..
+.....
+
+Box
+yellow
+.....
+.....
+.000.
+.....
+.....
+
+Target
+red
+.....
+.....
+..0..
+.....
+.....
+
+Player
+blue
+.....
+..0..
+.000.
+.....
+.....
+
+Floor
+black
+.....
+.....
+.....
+.....
+.....
+
+# Use legends for shorthand in levels
+========
+LEGEND
+========
+. = Floor
+# = Wall
+O = Box
+$ = Target
+P = Player
+
+# Define the sounds 
+========
+SOUNDS
+========
+
+# Define the collision layers
+========
+COLLISIONLAYERS
+========
+Background
+Wall
+Box, Player
+Target
+
+# Define the level
+========
+LEVELS
+========
+#### A simple introductory level
+########
+#      #
+# .O.$ #
+#    P #
+#.    .#
+#      #
+########
+
+```
+produced the following console output:
+=================================
+line 63 : Unknown junk in object section (possibly: sprites have to be 5 pixels wide and 5 pixels high exactly. Or maybe: the main names for objects have to be words containing only the letters a-z0.9 - if you want to call them something like ",", do it in the legend section).
+line 73 : In the legend, define new items using the equals symbol - declarations must look like "A = B", "A = B or C [ or D ...]", "A = B and C [ and D ...]".
+line 73 : Incorrect format of legend - should be one of "A = B", "A = B or C [ or D ...]", "A = B and C [ and D ...]", but it looks like you have a dangling "ERROR"?
+line 78 : Was expecting a sound event (like SFX3, or ENDLEVEL) or an object name, but didn't find either.
+line 87 : error detected - unexpected character #
+line 87 : Cannot add "DEFINE" to a collision layer; it has not been declared.
+line 87 : Cannot add "THE" to a collision layer; it has not been declared.
+line 87 : Cannot add "LEVEL" to a collision layer; it has not been declared.
+too many errors, aborting compilation
+Errors detected during compilation; the game may not work correctly.
+Return a repaired version of the code that addresses these errors. First, reason about your task and determine the best plan of action. Then, write your code. Return your code in full, inside a ```plaintext code block.

@@ -1,0 +1,112 @@
+Here is a corrected version of your PuzzleScript code:
+
+```plaintext
+Title: Simple Sokoban
+
+Author: PuzzleDesigner
+
+===========
+OBJECTS
+===========
+
+Background
+. # darkgrey
+
+Wall
+# # grey
+aaa
+aXa
+aaa
+
+Player
+P # yellow
+0P0
+PPP
+0P0
+
+Crate
+C # brown
+CCC
+C0C
+CCC
+
+Target
+T # green
+0T0
+0T0
+0T0
+
+Cratedone
+D # brown
+0C0
+0T0
+0C0
+
+===========
+LEGEND
+===========
+
+. = Background
+# = Wall
+P = Player
+C = Crate
+T = Target
+D = Cratedone
+
+===========
+SOUNDS
+===========
+
+# Add your custom sounds if needed
+
+===========
+COLLISIONLAYERS
+===========
+
+Background
+Target
+Wall
+Crate, Cratedone
+Player
+
+===========
+RULES
+===========
+
+[Player | Crate] -> [ > Player | > Crate]
+[Crate | Target] -> [CrateDone]
+[CrateDone | Player] -> [ > CrateDone | > Player]
+
+===========
+WINCONDITIONS
+===========
+
+All CrateDone on Target
+
+===========
+LEVELS
+===========
+
+# Level 1
+########
+#....T.#
+#..C.P.#
+#....T.#
+########
+
+# Level 2
+########
+#..P..T#
+#.C....#
+#..T...#
+########
+
+########
+#..T..#
+#.C...#
+#..T..#
+#######
+
+```
+
+The major issues addressed include ensuring that each object has a defined color. It's necessary to ensure the game objects have a consistent structure according to the PuzzleScript specification. While your code had unintended comments and extra characters that caused errors, this formatted version should work correctly.

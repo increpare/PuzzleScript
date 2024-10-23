@@ -1,0 +1,105 @@
+```plaintext
+title Reflective Puzzle
+author Assistant
+homepage www.puzzlescript.net
+
+========
+OBJECTS
+========
+
+Background
+LightGray White
+00000
+00000
+00000
+00000
+00000
+
+Wall
+DarkGray Black
+11111
+10001
+10001
+10001
+11111
+
+Player
+Red Orange
+..0..
+.000.
+.0.0.
+.000.
+.....
+
+Mirror
+Gray LightGray
+..0..
+.000.
+0...0
+.000.
+..0..
+
+Gem
+Blue LightBlue
+.....
+..0..
+.000.
+..0..
+.....
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Player
+M = Mirror
+G = Gem
+
+=======
+SOUNDS
+=======
+
+GemCollect DESTROY 10293847
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Player, Wall, Mirror, Gem
+
+======
+RULES
+======
+
+[ > Player | Gem ] -> [ > Player | Background ] GemCollect
+[right Player | Mirror no Player ] -> [ > Player | > Mirror ]
+
+==============
+WINCONDITIONS
+==============
+
+all Background on Gem
+
+=======
+LEVELS
+=======
+
+########
+#..G...#
+#.####.#
+#.#..#.#
+#.#.P#.#
+#M#..#.#
+#...G..#
+########
+```
+This corrected version of the game should compile without errors:
+
+1. Corrected the color name for the "Mirror" object to use "Gray" instead of "Silver".
+2. Corrected the color name for the "Gem" object to use "LightBlue" instead of "Cyan".
+3. Changed the incorrect sound call syntax to use a valid sound verb "GemCollect" instead of incorrectly using "sound Gem collect".
+4. Added an actual behavior for the Mirror to interact properly with the Player in the rules.
+5. Corrected the rule formation to align with the PuzzleScript syntax for movement and interactions.

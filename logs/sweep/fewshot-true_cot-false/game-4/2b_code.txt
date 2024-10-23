@@ -1,0 +1,80 @@
+```plaintext
+title Gem Collector
+
+========
+OBJECTS
+========
+
+Background
+black
+
+Player
+LightBlue
+.....
+..P..
+.PPP.
+..P..
+.....
+
+Wall
+DarkGray
+.....
+WWWWW
+WWWWW
+WWWWW
+.....
+
+Gem
+Yellow
+.....
+..G..
+.GGG.
+..G..
+.....
+
+Finish
+LightGreen
+.....
+.FFFF
+.FFFF
+.FFFF
+.....
+
+=======
+LEGEND
+=======
+
+. = Background
+P = Player
+# = Wall
+G = Gem
+F = Finish
+
+======
+RULES
+======
+
+[ Player | Gem ] -> [ Player | Background ]
+
+[ Player | Finish ] -> win
+
+==============
+WINCONDITIONS
+==============
+
+all Gem on Background
+
+========
+LEVELS
+========
+
+..####..
+..#..#..
+..#..#..
+P.#..#.F
+..#..#..
+..#..#..
+..####..
+```
+
+I have addressed the errors by removing the extra characters in the `Player`, `Wall`, and `Finish` sprite matrices that were causing the compilation error. These matrices must adhere to a maximum grid size of 5x5, so I adjusted them accordingly.

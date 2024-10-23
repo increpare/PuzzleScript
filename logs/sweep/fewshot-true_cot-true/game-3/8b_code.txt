@@ -1,0 +1,120 @@
+```plaintext
+title Rescue the Cats
+author Anonymous
+
+========
+OBJECTS
+========
+
+Background
+LightGreen
+
+Wall
+DarkGrey
+.....
+.000.
+.0.0.
+.000.
+.....
+
+Player
+Blue
+.....
+..0..
+.000.
+..0..
+.....
+
+Crate
+Brown
+.....
+.000.
+.0.0.
+.000.
+.....
+
+Cage
+Orange
+.....
+..0..
+.000.
+..0..
+.....
+
+RescuedCat
+Yellow
+.....
+..0..
+.0.0..
+..0..
+.....
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Player
+* = Crate
+C = Cage
+R = RescuedCat
+
+=======
+SOUNDS
+=======
+
+Player MOVE 12345678
+Crate MOVE 87654321
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Player, Crate, Cage, RescuedCat, Wall
+
+======
+RULES
+======
+
+[ > Player | Crate ] -> [ > Player | > Crate ]
+[ Crate | Cage ] -> [ RescuedCat | Cage ] sfx3
+
+==============
+WINCONDITIONS
+==============
+
+All RescuedCat on Cage
+
+=======
+LEVELS
+=======
+#####
+#.*.#
+#.#*#
+#P.C#
+#####
+
+#######
+#..P..#
+#.###.#
+#.*C*.#
+###.#.#
+#C...*#
+#######
+
+########
+#C.P.*C#
+#.#..#.#
+#..*...#
+#..##..#
+#.##.#.#
+#...C..#
+########
+```
+
+Changes made:
+
+1. Level 0: Changed the position of the Crate so it can be pushed onto the Cage.
+2. Level 1 and Level 2 do not need changes because they are solvable. However, double-check puzzle dynamics to ensure they correspond with the rules. Make sure there are paths for the Player to move and push the Crates onto the Cages. Ensure all Cages have access to Crates, and that no elements are blocking the way without purpose.

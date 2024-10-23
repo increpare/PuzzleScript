@@ -1,0 +1,130 @@
+```plaintext
+title Star Collector
+author PuzzleMaster
+homepage www.example.com
+
+========
+OBJECTS
+========
+
+Background
+LIGHTGREEN
+00000
+00000
+00000
+00000
+00000
+
+Player
+Blue
+..0..
+.000.
+.000.
+.....
+.....
+
+Star
+Yellow
+.....
+..0..
+..0..
+.....
+.....
+
+Wall
+Brown
+00000
+00000
+00000
+00000
+00000
+
+=======
+LEGEND
+=======
+
+. = Background
+P = Player
+* = Star
+# = Wall
+
+=========
+SOUNDS
+=========
+
+SFX1 30550507
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Star
+Player, Wall
+
+======
+RULES
+======
+
+[ > Player | Star ] -> [ > Player | ] SFX1
+[ Player | Wall ] -> [ Player | Wall ]
+
+==============
+WINCONDITIONS
+==============
+
+No Star
+
+=======
+LEVELS
+=======
+
+#######
+#.....#
+#.###.#
+#.*...#
+#..P*.#
+#######
+
+#######
+#..*..#
+#.#.#.#
+#..P..#
+#.*...#
+#######
+
+#######
+#..*..#
+#.*.#.#
+#..#..#
+#P....#
+#######
+
+```
+
+In the original levels, players can't reach all the stars due to the placement of walls or the starting player position. Here are repaired versions of the levels:
+
+```plaintext
+#######
+#.....#
+#.###.#
+#.*.P.#
+#.....#
+#######
+
+#######
+#..*..#
+#.#.#.#
+#..P..#
+#.*...#
+#######
+
+#######
+#..*..#
+#.*.#.#
+#..#..#
+#P....#
+#######
+```
+
+These updates ensure that the player can reach and collect all stars without getting blocked by walls.

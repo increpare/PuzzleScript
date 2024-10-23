@@ -1,0 +1,89 @@
+SYSTEM PROMPT:
+You are a game designer, familiar with the PuzzleScript game description language. 
+
+USER PROMPT:
+The following PuzzleScript game code:
+```plaintext
+title Sokoban Puzzles
+author GameDesigner
+
+===========
+
+objects
+    Background . #ffffff
+    Player     P #ff0000
+    Wall       W #0000ff
+    Box        B #00ff00
+    Target     T #ff00ff
+
+===========
+
+legend
+    . = Background
+    P = Player
+    W = Wall
+    B = Box
+    T = Target
+
+===========
+
+sounds
+    # No sounds in this simple game.
+
+===========
+
+collisionlayers
+    Background, Target
+    Player, Box
+    Wall
+
+===========
+
+rules
+    [ > Player | ] -> [ Player | > ]
+    [ > Player | Box | ] -> [ > | Player | Box ]
+    [ > Player | Box on Target | ] -> [ > | Player | Box on Target ]
+
+===========
+
+winconditions
+    All Box on Target
+
+===========
+
+levels
+WWWWWWW
+W T   W
+W     W
+W B   W
+WPW WWW
+WWWWWWW
+---
+WWWWWWW
+W T   W
+W B   W
+W     W
+WPW WWW
+WWWWWWW
+---
+WWWWWWWW
+WP     W
+W   W  W
+W   BB W
+W TWTT W
+WW   WWW
+WWWWWWWW
+
+
+```
+produced the following console output:
+=================================
+line 8 : Was looking for color for object BACKGROUND, got "player     " instead.
+line 8 : Was looking for color for object BACKGROUND, got "p " instead.
+line 10 : Was looking for color for object WALL, got "box        " instead.
+line 10 : Was looking for color for object WALL, got "b " instead.
+line 16 : Name "." already in use (on line line 7).
+line 17 : You're talking about PLAYER but it's not defined anywhere.
+too many errors, aborting compilation
+Errors detected during compilation; the game may not work correctly.
+Return a repaired version of the code that addresses these errors. First, reason about your task and determine the best plan of action. Then, write your code. Return your code in full, inside a ```plaintext code block.

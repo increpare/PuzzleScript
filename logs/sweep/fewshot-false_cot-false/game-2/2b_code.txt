@@ -1,0 +1,65 @@
+The errors you're encountering are primarily due to invalid object definitions and their properties. In PuzzleScript, you need to use proper syntax for defining objects and their properties. Here's the corrected version of your code:
+
+```plaintext
+=======
+title Sokoban Clone
+author YourName
+
+========
+objects
+  Wall 
+    color #422
+  Floor
+    color #ccc
+  Player
+    color #00f
+    layer 1
+  Box 
+    color #ff0
+    layer 2
+  Goal
+    color #f00
+    layer 3
+
+========
+legend
+    . = Floor
+    # = Wall
+    P = Player
+    B = Box
+    X = Goal
+
+========
+sounds
+    movePlayer = action
+    moveBox = action
+
+=======
+rules
+[ Player | Box ] -> [ | Player Box ]
+[ Player | ] (up) -> [ | Player ^ ]
+[ Player | ] (down) -> [ | Player v ]
+[ Player | ] (left) -> [ | Player < ]
+[ Player | ] (right) -> [ | Player > ]
+
+=======
+winconditions
+All Box on Goal
+
+=======
+levels
+
+#####   
+#...# 
+#.#.# 
+#.P.# 
+#.B.# 
+##### 
+```
+
+### Changes Made:
+- Removed the `solid true` line from the `Wall` definition. `solid` is not a standard property for direct syntax.
+- Overlapping the `Box` with `Goal` requirements was not originally covered in the `rules`, so the statements assume a logical Sokoban style setup and adjustments may need updates based on additional mechanics or constraints.
+- Cleaned up spacing and removed any unneeded lines for improved formatting and readability. 
+
+Your newly formatted code should resolve the errors while providing the basic mechanics described for a Sokoban-style game.

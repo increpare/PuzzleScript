@@ -1,0 +1,25 @@
+The error messages indicate that there are issues with the color definitions for the objects. The console output is showing confusion; it appears that we have some overlapping names. Specifically, it seems that multiline data might be causing parts of lines to be misinterpreted as colors.
+
+In PuzzleScript, errors related to "Was looking for color" often result from failing to properly separate object definitions. Each object should be defined on a new line, with its color following precisely after its name without any stray characters or spaces to disrupt parsing.
+
+Here's a plan to fix the code:
+
+1. Ensure that each object is defined on its own line, each with an object name followed by its color.
+2. Verify that there are no extraneous spaces or characters.
+3. Double-check if all specified colors are correct according to the syntax.
+
+After observing these issues, the corrected code would look like this:
+
+```plaintext
+========
+objects
+========
+Background . BLACK
+Wall        W GRAY
+Player      P BLUE
+Block       B RED
+Goal        G GREEN
+BlockOnGoal O YELLOW
+```
+
+Each object and its color are clearly defined on separate lines, with proper spacing between them. This should resolve the parsing issues indicated by the error messages.

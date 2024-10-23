@@ -1,0 +1,140 @@
+SYSTEM PROMPT:
+You are a game designer, familiar with the PuzzleScript game description language. 
+
+USER PROMPT:
+The following PuzzleScript game code:
+```plaintext
+Title: Simple Sokoban
+Author: OpenAI
+
+===========
+OBJECTS
+===========
+
+Background
+GREEN
+
+Wall
+BLACK
+
+Player
+BLUE
+
+Crate
+BROWN
+
+Target
+RED
+
+CrateOnTarget
+PURPLE
+
+PlayerOnTarget
+CYAN
+
+===========
+LEGEND
+===========
+
+. = Background
+# = Wall
+P = Player
+C = Crate
+T = Target
+X = CrateOnTarget
+O = PlayerOnTarget
+
+===========
+SOUNDS
+===========
+
+===========
+COLLISIONLAYERS
+===========
+
+Background
+Target
+Wall
+Crate, CrateOnTarget
+Player, PlayerOnTarget
+
+===========
+RULES
+===========
+
+[right]
+Player | Crate -> > | Player
+[right]
+Player | CrateOnTarget -> > | PlayerOnTarget
+
+[right]
+PlayerOnTarget | Crate -> > | Player
+
+[up]
+Player | Crate -> ^ | Player
+[up]
+Player | CrateOnTarget -> ^ | PlayerOnTarget
+
+[up]
+PlayerOnTarget | Crate -> ^ | Player
+
+[left]
+Player | Crate -> < | Player
+[left]
+Player | CrateOnTarget -> < | PlayerOnTarget
+
+[left]
+PlayerOnTarget | Crate -> < | Player
+
+[down]
+Player | Crate -> v | Player
+[down]
+Player | CrateOnTarget -> v | PlayerOnTarget
+
+[down]
+PlayerOnTarget | Crate -> v | Player
+
+// Transition crate to target
+[ ]
+Crate | Target -> CrateOnTarget
+
+// Transition player on target
+[ ]
+Player | Target -> PlayerOnTarget
+
+// Transition crate off target
+[ ]
+CrateOnTarget | Background -> Crate
+
+// Transition player off target
+[ ]
+PlayerOnTarget | Background -> Player
+
+===========
+WINCONDITIONS
+===========
+
+All CrateOnTarget
+
+===========
+LEVELS
+===========
+
+#####
+#..X#
+#P  #
+#   #
+#####
+
+```
+produced the following console output:
+=================================
+line 27 : Was looking for color for object PLAYERONTARGET, got "cyan" instead.
+line 60 : Objects cannot appear outside of square brackets in rules, only directions can.
+line 62 : Objects cannot appear outside of square brackets in rules, only directions can.
+line 65 : Objects cannot appear outside of square brackets in rules, only directions can.
+line 68 : Objects cannot appear outside of square brackets in rules, only directions can.
+line 70 : Objects cannot appear outside of square brackets in rules, only directions can.
+too many errors, aborting compilation
+Errors detected during compilation; the game may not work correctly.
+Return a repaired version of the code that addresses these errors. Return your code in full, inside a ```plaintext code block.

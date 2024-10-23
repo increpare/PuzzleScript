@@ -1,0 +1,110 @@
+SYSTEM PROMPT:
+You are a game designer, familiar with the PuzzleScript game description language. 
+
+USER PROMPT:
+The following PuzzleScript game code:
+```plaintext
+Title: Simple Sokoban
+Author: OpenAI
+
+===========
+OBJECTS
+===========
+
+Background
+GREEN
+
+Wall
+BLACK
+
+Player
+BLUE
+
+Crate
+BROWN
+
+Target
+RED
+
+CrateOnTarget
+PURPLE
+
+PlayerOnTarget
+LIGHTBLUE
+
+===========
+LEGEND
+===========
+
+. = Background
+# = Wall
+P = Player
+C = Crate
+T = Target
+X = CrateOnTarget
+O = PlayerOnTarget
+  = Background
+
+===========
+SOUNDS
+===========
+
+===========
+COLLISIONLAYERS
+===========
+
+Background
+Target
+Wall
+Crate, CrateOnTarget
+Player, PlayerOnTarget
+
+===========
+RULES
+===========
+
+[right Player | Crate] -> [> Player | > Crate]
+[right Player | CrateOnTarget] -> [> PlayerOnTarget | > Crate]
+[right PlayerOnTarget | Crate] -> [> Player | > Crate]
+
+[up Player | Crate] -> [^ Player | ^ Crate]
+[up Player | CrateOnTarget] -> [^ PlayerOnTarget | ^ Crate]
+[up PlayerOnTarget | Crate] -> [^ Player | ^ Crate]
+
+[left Player | Crate] -> [< Player | < Crate]
+[left Player | CrateOnTarget] -> [< PlayerOnTarget | < Crate]
+[left PlayerOnTarget | Crate] -> [< Player | < Crate]
+
+[down Player | Crate] -> [v Player | v Crate]
+[down Player | CrateOnTarget] -> [v PlayerOnTarget | v Crate]
+[down PlayerOnTarget | Crate] -> [v Player | v Crate]
+
+[Crate | Target] -> [CrateOnTarget | Target]
+[Player | Target] -> [PlayerOnTarget | Target]
+
+[CrateOnTarget | Background] -> [Crate | Background]
+[PlayerOnTarget | Background] -> [Player | Background]
+
+===========
+WINCONDITIONS
+===========
+
+All CrateOnTarget
+
+===========
+LEVELS
+===========
+
+#####
+#..X#
+#P  #
+#   #
+#####
+
+```
+produced the following console output:
+=================================
+line 40 : Only comments should go after a bunch of equals signs ('===') on a line.
+line 95 : Error, symbol " ", used in map, not found.
+Errors detected during compilation; the game may not work correctly.
+Return a repaired version of the code that addresses these errors. Return your code in full, inside a ```plaintext code block.

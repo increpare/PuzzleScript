@@ -1,0 +1,125 @@
+Certainly! The errors in the console output are due to incorrect syntax for specifying sounds. In PuzzleScript, the sound names should be lowercase if they are referred to in the `RULES` section. Let's correct those:
+
+```plaintext
+title Color Swap
+author PuzzleMaster
+homepage www.puzzlescript.net
+
+========
+OBJECTS
+========
+
+Background
+black
+
+Player
+#ffffff #000000
+.....
+..0..
+.000.
+..0..
+.....
+
+Wall
+#333333 #666666
+.....
+.....
+.0.0.
+.....
+.....
+
+YellowBox
+#ffcc00 #000000
+.....
+.111.
+.101.
+.111.
+.....
+
+BlueBox
+#0066cc #000000
+.....
+.111.
+.101.
+.111.
+.....
+
+RedBox
+#ff0000 #000000
+.....
+.111.
+.101.
+.111.
+.....
+
+Target
+#33cc33
+.....
+.....
+.....
+.....
+.....
+
+=======
+LEGEND
+=======
+
+. = Background
+P = Player
+# = Wall
+Y = YellowBox
+B = BlueBox
+R = RedBox
+T = Target
+
+Crate = YellowBox or BlueBox or RedBox
+
+=======
+SOUNDS
+=======
+
+movesound 10576352
+swapsound 48284869
+putdownsound 60553576
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Target
+Player, Wall, YellowBox, BlueBox, RedBox
+
+======
+RULES
+======
+
+[> Player | Crate] -> [> Player > Crate] movesound
+[Player | YellowBox] -> [BlueBox | Player] swapsound
+[Player | BlueBox] -> [RedBox | Player] swapsound
+[Player | RedBox] -> [YellowBox | Player] swapsound
+[YellowBox | Target] -> [ | ] putdownsound
+[BlueBox | Target] -> [ | ] putdownsound
+[RedBox | Target] -> [ | ] putdownsound
+
+==============
+WINCONDITIONS
+==============
+
+No YellowBox
+No BlueBox
+No RedBox
+
+=======
+LEVELS
+=======
+
+#######
+#..P..#
+#..Y..#
+#.B.R.#
+#..T..#
+#######
+```
+
+This version corrects the case of the sound names and ensures they match the references within the rules.

@@ -1,0 +1,10 @@
+=================================
+line 33 : Unknown junk in object section (possibly: sprites have to be 5 pixels wide and 5 pixels high exactly. Or maybe: the main names for objects have to be words containing only the letters a-z0.9 - if you want to call them something like ",", do it in the legend section).
+line 43 : In the legend, define new items using the equals symbol - declarations must look like "A = B", "A = B or C [ or D ...]", "A = B and C [ and D ...]".
+line 43 : Incorrect format of legend - should be one of "A = B", "A = B or C [ or D ...]", "A = B and C [ and D ...]", but it looks like you have a dangling "ERROR"?
+line 45 : section "COLLISIONLAYERS" is out of order, must follow  "SOUNDS" (or it could be that the section "SOUNDS"is just missing totally.  You have to include all section headings, even if the section itself is empty).
+line 52 : error detected - unexpected character #
+line 52 : Cannot add "DEFINE" to a collision layer; it has not been declared.
+line 52 : Cannot add "THE" to a collision layer; it has not been declared.
+too many errors, aborting compilation
+Errors detected during compilation; the game may not work correctly.

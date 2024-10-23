@@ -1,0 +1,19 @@
+The errors in the code are due to improper handling of whitespace, mainly not aligning columns correctly or providing inconsistent whitespace characters. The PuzzleScript game description language expects specific formatting, particularly aligned column formatting for the object names, sprites, and colors.
+
+Given the console output, it seems there's an inconsistency between how the colors for each object are defined. Each color should be defined immediately after the object name and character, with a single space separating each part: the name, the character, and the color.
+
+Let's fix these issues by aligning the code consistently. Here's the corrected version of your code:
+
+```plaintext
+========
+objects
+========
+Background   .   BLACK
+Wall         W   GRAY
+Player       P   BLUE
+Block        B   RED
+Goal         G   GREEN
+BlockOnGoal  O   YELLOW
+```
+
+I ensured that each line has consistent spacing: the object names and corresponding characters and colors are separated by two spaces each. This should resolve the errors you encountered.

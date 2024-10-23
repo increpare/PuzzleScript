@@ -1,0 +1,92 @@
+SYSTEM PROMPT:
+You are a game designer, familiar with the PuzzleScript game description language. 
+
+USER PROMPT:
+The following PuzzleScript game code:
+```plaintext
+========
+title SokobanPuzzle
+author Your Name
+homepage 
+========
+
+========
+objects
+========
+Background . 
+Wall W
+Player P
+Block B
+Goal G
+BlockOnGoal O
+
+========
+legend
+========
+. = Background
+W = Wall
+P = Player
+B = Block
+G = Goal
+O = BlockOnGoal
+
+========
+sounds
+========
+
+========
+collisionlayers
+========
+Background
+Wall
+Player, Block, BlockOnGoal
+Goal
+
+========
+rules
+========
+[ > Player | Block ] -> [ > Player | > Block ]
+[ Player | Goal ] -> [ Player | Goal ]
+[ Block | Goal ] -> [ BlockOnGoal ]
+
+[ > Player | BlockOnGoal ] -> [ > Player | > BlockOnGoal ]
+[ BlockOnGoal | Goal ] -> [ BlockOnGoal ]
+
+========
+winconditions
+========
+All BlockOnGoal on Goal
+
+========
+levels
+========
+..W.W
+..WGW
+WW.BW
+W..PW
+WWWWW
+
+.WWWW
+WG.GW
+W.BPW
+WG.GW
+.WWWW
+
+..WWW
+.P.WW
+WGWGW
+W.B.W
+WWWWW
+
+```
+produced the following console output:
+=================================
+line 4 : MetaData "homepage" needs a value.
+line 11 : Was looking for color for object BACKGROUND, got "wall " instead.
+line 11 : Was looking for color for object BACKGROUND, got "w" instead.
+line 13 : Was looking for color for object PLAYER, got "block " instead.
+line 13 : Was looking for color for object PLAYER, got "b" instead.
+line 15 : Was looking for color for object GOAL, got "blockongoal " instead.
+too many errors, aborting compilation
+Errors detected during compilation; the game may not work correctly.
+Return a repaired version of the code that addresses these errors. First, reason about your task and determine the best plan of action. Then, write your code. Return your code in full, inside a ```plaintext code block.

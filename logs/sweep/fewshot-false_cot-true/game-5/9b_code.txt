@@ -1,0 +1,117 @@
+The issues with the original game levels stem from lacking paths to move crates to their respective goals or having no goals to aim for. To resolve this, we follow the standard Sokoban principle: ensure every crate has a reachable goal.
+
+Here's a corrected version of the code with the levels adjusted to make them solvable:
+
+```plaintext
+========================================
+title Simple Sokoban
+author PuzzleDesigner
+
+========================================
+===========
+OBJECTS
+===========
+
+Background
+TRANSPARENT
+
+Wall
+#000000
+
+Player
+#00FF00
+
+Crate
+#FFAA00
+
+Goal
+#FF0000
+
+CrateOnGoal
+#FFAA00 #FF0000
+
+PlayerOnGoal
+#00FF00 #FF0000
+
+===========
+LEGEND
+===========
+
+. = Background
+# = Wall
+P = Player
+B = Crate
+G = Goal
+O = CrateOnGoal
+Q = PlayerOnGoal
+
+===========
+SOUNDS
+===========
+
+===========
+COLLISIONLAYERS
+===========
+
+Background
+Wall
+Player, PlayerOnGoal
+Crate, CrateOnGoal
+Goal
+
+===========
+RULES
+===========
+
+[right Player | Crate] -> [ > Player | > Crate]
+[left Player | Crate] -> [ < Player | < Crate]
+[up Player | Crate] -> [ ^ Player | ^ Crate]
+[down Player | Crate] -> [ v Player | v Crate]
+
+[right Player] -> [ > Player]
+[left Player] -> [ < Player]
+[up Player] -> [ ^ Player]
+[down Player] -> [ v Player]
+
+[Player | Goal] -> [PlayerOnGoal | Goal]
+[PlayerOnGoal | Goal] -> [Player | Goal]
+[Crate | Goal] -> [CrateOnGoal | Goal]
+[CrateOnGoal | Goal] -> [Crate | Goal]
+
+[PlayerOnGoal | Goal] -> [PlayerOnGoal | Goal]
+[CrateOnGoal | Goal] -> [CrateOnGoal | Goal]
+
+===========
+WINCONDITIONS
+===========
+
+All CrateOnGoal
+
+===========
+LEVELS
+===========
+
+#######
+#..G..#
+#.BP..#
+#.....#
+#######
+
+#######
+#.....#
+#..BG.#
+#..P..#
+#######
+
+#######
+#...G.#
+#.PB..#
+#..G..#
+#######
+```
+
+- Level 0: The crate has a clear path to the goal. 
+- Level 1: The crate is positioned with a goal ahead. 
+- Level 2: The goal is directly accessible for the crate. 
+
+These changes should ensure that each level is now solvable, adhering to Sokoban mechanics where the player can push crates to their goals without obstructions.

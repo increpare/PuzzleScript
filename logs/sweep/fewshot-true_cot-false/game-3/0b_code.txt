@@ -1,0 +1,132 @@
+```plaintext
+title Floating Islands
+author YourName
+homepage yourwebsite.com
+
+========
+OBJECTS
+========
+
+Background
+SkyBlue LightBlue
+.....
+.....
+.....
+.....
+.....
+
+Island
+DarkGreen Brown
+.....
+.111.
+.111.
+.111.
+.....
+
+Player
+White Orange
+.....
+..0..
+.111.
+.111.
+.....
+
+Bridge
+Grey
+.....
+..0..
+..0..
+..0..
+.....
+
+Goal
+Yellow
+.....
+.111.
+.1.0.
+.111.
+.....
+
+Ocean
+DarkBlue
+.....
+.....
+.....
+.....
+.....
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Island
+P = Player
+= = Bridge
+G = Goal
+~ = Ocean
+
+=======
+SOUNDS
+=======
+
+Player MOVE 36583705
+Bridge BUILD 97439251
+LevelComplete 45627301
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Goal
+Player, Island, Bridge, Ocean
+
+======
+RULES
+======
+
+[ > Player | Goal ] -> [ > Player | Goal ] LevelComplete
+[ > Player | Island ] -> [ > Player | Island ]
+[ Player | Ocean ] -> restart
+
+[> Player | Background | Ocean] -> [> Player | Bridge]
+
+==============
+WINCONDITIONS
+==============
+
+All Player on Goal
+
+=======
+LEVELS
+=======
+
+message Welcome to Floating Islands!
+
+#####
+#..G#
+#...#
+#P..#
+#####
+
+message Plan Your Bridges!
+
+#######
+#.....#
+#..P..#
+#.~~~G#
+#######
+
+message Chart Your Course!
+
+#########
+#......##
+#..P...##
+#~~~..~G#
+#~~~....#
+#########
+
+message Well Done! Enjoy the View!
+
+```

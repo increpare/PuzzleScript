@@ -1,0 +1,95 @@
+To create a complete PuzzleScript game, I'll follow a structured approach to ensure that all necessary components are included. The key components of a PuzzleScript game are:
+
+1. **Title**: A name for the game.
+2. **Author**: Information about who created the game.
+3. **Homepage/Note**: Optional description or additional information about the game.
+4. **Legend**: Definitions of all objects used in the game.
+5. **Sounds**: (Optional) Definitions for sound effects.
+6. **Collision Layers**: Organize objects into layers and handle interactions.
+7. **Rules**: Define the interactions and behaviors of objects.
+8. **Win Conditions**: Specify how the player wins the game.
+9. **Levels**: Provide the maps where the game is played.
+
+For this example, I'll design a simple Sokoban-style game where the player pushes boxes to target locations.
+
+Here's the complete code for a basic Sokoban-style game in PuzzleScript:
+
+```plaintext
+title Sokoban Puzzles
+author GameDesigner
+
+===========
+
+legend
+    . = Space
+    @ = Player
+    # = Wall
+    $ = Box
+    . = Target
+    
+    box = $ 
+    target = . 
+    wall = #
+    player = @
+    on_target = teller box on target
+    
+===========
+
+sounds
+    # No sounds in this simple game.
+
+===========
+
+collisionlayers
+    player, box
+    wall
+    target
+
+===========
+
+rules
+    [> Player | ] -> [> Player | > ]
+    [> Player | Box | ] -> [> Player | > Box | > ]
+
+===========
+
+winconditions
+    All Box on target
+
+===========
+
+levels
+#######
+# .   #
+#     #
+# $   #
+###@###
+#######
+---
+#######
+# .   #
+# $   #
+#     #
+###@###
+#######
+---
+########
+# @    #
+#   #  #
+#   $$ #
+# .#.. #
+##   ###
+ ########
+```
+
+**Breakdown of Game Components**:
+
+1. **Title & Author**: Sets the identity of the game and who created it.
+2. **Legend**: Maps shorthand symbols to object names. Objects include Player, Wall, Box, and Target.
+3. **Collision Layers**: Determines how different object types are layered over one another, ensuring that the player and boxes can only be in designated layers.
+4. **Rules**: Describe movement and interactions:
+   - The player can move into empty spaces or push a box if there's space ahead.
+5. **Win Conditions**: Specifies that all boxes must be on target spaces for the player to win.
+6. **Levels**: The maps where the game is played. They consist of wall ('#'), target ('.'), player ('@'), and box ('$') placements.
+
+With these elements, you have a complete, working Sokoban-style game in PuzzleScript. Adjust the level designs and potentially add more features like sound for a more robust gaming experience.

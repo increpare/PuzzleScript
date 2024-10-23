@@ -1,0 +1,106 @@
+Certainly! It looks like the initial configuration of the level doesn't allow for solving. Here's a revised version of the game that ensures the initial level is solvable:
+
+```plaintext
+title Simple Sokoban
+author PuzzlescriptUser
+homepage none
+
+========
+OBJECTS
+========
+Background
+DarkGreen Black
+11111
+11111
+11111
+11111
+11111
+
+Wall
+Grey Black
+11111
+11111
+11111
+11111
+11111
+
+Player
+Red
+.....
+..0..
+.000.
+..0..
+.....
+
+Block
+Orange
+.....
+..0..
+.000.
+..0..
+.....
+
+Target
+Blue
+.....
+..0..
+.000.
+..0..
+.....
+
+BlockOnTarget
+LightBlue
+.....
+..0..
+.000.
+..0..
+.....
+
+=======
+LEGEND
+=======
+. = Background
+# = Wall
+P = Player
+* = Block
+O = Target
+& = BlockOnTarget
+
+=======
+SOUNDS
+=======
+
+================
+COLLISIONLAYERS
+================
+Background
+Target
+Wall
+Player, Block, BlockOnTarget
+
+======
+RULES
+======
+[ > Player | Block ] -> [ > Player | > Block ]
+
+[ Block | Target ] -> [ BlockOnTarget | Target ]
+[ BlockOnTarget | Target ] -> [ Block | Target ]
+
+==============
+WINCONDITIONS
+==============
+All BlockOnTarget on Target
+
+=======
+LEVELS
+=======
+message Move all blocks onto targets.
+#####
+#...#
+#.*P#
+#O..#
+#####
+```
+
+Changes made:
+- Adjusted the level layout so that the player (`P`) can successfully push the block (`*`) onto the target (`O`). The original layout trapped the player between two blocks. This updated level allows for a clear path to solve the puzzle.

@@ -1,0 +1,128 @@
+To create a complete PuzzleScript game, we need to define several key components: 
+1. **Title and Author**: Basic metadata about the game.
+2. **Objects**: The entities that exist in the game world.
+3. **Legends**: Shortcuts or groupings for objects to simplify level design and rules.
+4. **Sounds**: Define any sounds that should be associated with in-game events.
+5. **Collision Layers**: Layers that define which objects can overlap.
+6. **Rules**: Game mechanics that describe how objects interact or change state.
+7. **Win Conditions**: Conditions to satisfy to win the level.
+8. **Levels**: The actual maps or puzzles the player will interact with.
+
+With these elements in mind, let's create a simple Sokoban-like game. In this game, the player pushes boxes onto goals to win.
+
+Here's the complete code:
+
+```plaintext
+# Title and Author
+title Sokoban Puzzle
+author Game Designer
+
+# Objects
+========
+Background
+yellow
+00000
+00000
+00000
+00000
+00000
+
+Player
+red
+.00..
+09990
+.9889
+.0990
+.....
+
+Wall
+blue
+11111
+11111
+11111
+11111
+11111
+
+Box
+brown
+.....
+.999.
+.999.
+.999.
+.....
+
+Goal
+green
+.....
+..3..
+.333.
+..3..
+.....
+
+CrateOnGoal
+lightbrown
+.....
+.777.
+.777.
+.777.
+.....
+
+# Collisions
+========
+Background
+Player
+Wall
+Box
+Goal
+CrateOnGoal
+
+# Legends
+========
+# Legend is not strictly necessary here, but helps if you have complex rules or larger levels.
+NoLegend
+
+# Sounds
+========
+PUSH player box
+PUSH player crateongoal
+
+# Rules
+========
+[ Player | Box ] -> [  | Player ]
+[ Player | Goal ] -> [  | Player ]
+
+[ Box | Goal ] -> [ CrateOnGoal | ]
+[ CrateOnGoal | Goal ] -> [ CrateOnGoal | ] # Necessary to maintain CrateOnGoal on space
+
+# Win Condition
+========
+All CrateOnGoals on Goal
+
+# Levels
+========
+# A simple level to demonstrate the concept.
+# Legend:
+# . = Background
+# P = Player
+# W = Wall
+# B = Box
+# G = Goal
+
+level
+name "Easy Start"
+########
+#..P...#
+#..B...#
+#..G...#
+#......#
+########
+```
+
+### Explanation:
+- **Objects**: Defined with ASCII-style art and color for visualization. The player, box, wall, goal, and the new state "CrateOnGoal" (when a box is on a goal).
+- **Collision Layers**: Established to determine that boxes and crate-on-goals cannot overlap, ensuring clear rules for player movement.
+- **Rules**: Basic Sokoban mechanics—push a box, if a box lands on a goal, it becomes a "CrateOnGoal".
+- **Win Condition**: The player wins when all boxes are correctly positioned on goals, thus becoming "CrateOnGoal".
+- **Levels**: A simple level to illustrate the gameplay, showcasing the interaction between the player, movable boxes, and stationary goals.
+
+This simple game lays the groundwork for expanding into more complex puzzles by adding more walls, boxes, and goals in different configurations.

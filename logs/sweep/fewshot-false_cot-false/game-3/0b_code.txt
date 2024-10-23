@@ -1,0 +1,134 @@
+Certainly! Below is a complete PuzzleScript game code. This is a simple sokoban-style puzzle game where the player pushes crates onto target areas. You can copy and paste this into the PuzzleScript Editor to play it.
+
+```plaintext
+Title: Simple Sokoban
+Author: OpenAI
+
+===========
+OBJECTS
+===========
+
+Background
+GREEN
+0
+
+Wall
+BLACK
+0
+
+Player
+BLUE
+0
+
+Crate
+BROWN
+0
+
+Target
+RED
+0
+
+CrateOnTarget
+PURPLE
+0
+
+PlayerOnTarget
+CYAN
+0
+
+===========
+LEGEND
+===========
+
+. = Background
+# = Wall
+P = Player
+C = Crate
+T = Target
+X = CrateOnTarget
+O = PlayerOnTarget
+
+===========
+SOUNDS
+===========
+
+===========
+COLLISIONLAYERS
+===========
+
+Background
+Target
+Wall
+Crate, CrateOnTarget
+Player, PlayerOnTarget
+
+===========
+RULES
+===========
+
+[right] 
+Player | Crate -> > | Player
+[right] 
+Player | CrateOnTarget -> > | PlayerOnTarget
+
+[right] 
+PlayerOnTarget | Crate -> > | Player
+
+[up] 
+Player | Crate -> ^ | Player
+[up] 
+Player | CrateOnTarget -> ^ | PlayerOnTarget
+
+[up] 
+PlayerOnTarget | Crate -> ^ | Player
+
+[left] 
+Player | Crate -> < | Player
+[left] 
+Player | CrateOnTarget -> < | PlayerOnTarget
+
+[left] 
+PlayerOnTarget | Crate -> < | Player
+
+[down]
+Player | Crate -> v | Player
+[down] 
+Player | CrateOnTarget -> v | PlayerOnTarget
+
+[down] 
+PlayerOnTarget | Crate -> v | Player
+
+// Transition crate to target
+[Action]
+Crate | Target -> CrateOnTarget
+
+// Transition player on target
+[Action]
+Player | Target -> PlayerOnTarget
+
+// Transition crate off target
+[Action]
+CrateOnTarget | Background -> Crate
+
+// Transition player off target 
+[Action]
+PlayerOnTarget | Background -> Player
+
+===========
+WINCONDITIONS
+===========
+
+All CrateOnTarget
+
+===========
+LEVELS
+===========
+
+#####
+#..X#
+#P  #
+#   #
+#####
+```
+
+In this game, `#` represents walls, `P` is the player, `C` is a crate, and `T` is the target. The goal is to move all crates (`C`) onto the targets (`T`) to change them into `X`, representing "CrateOnTarget". The level included is simplified, but you can expand the game by adding more complex levels under the `LEVELS` section.

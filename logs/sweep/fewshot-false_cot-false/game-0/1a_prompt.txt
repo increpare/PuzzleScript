@@ -1,0 +1,145 @@
+SYSTEM PROMPT:
+You are a game designer, familiar with the PuzzleScript game description language. 
+
+USER PROMPT:
+The following PuzzleScript game code:
+```plaintext
+Title: Sokoban Mini
+
+Author: PuzzleScript Enthusiast
+
+========
+OBJECTS
+========
+
+Background
+transparent
+
+Player
+Yellow
+..00..
+.0000.
+..00..
+..00..
+......
+..00..
+
+Crate
+Brown
+0000
+0..0
+0..0
+0000
+
+Wall
+Grey
+0000
+0..0
+0..0
+0000
+
+Target
+Red
+.... 
+.00. 
+.00. 
+.... 
+
+CrateOnTarget
+Orange
+0000
+0..0
+0..0
+0000
+
+========
+LEGEND
+========
+
+. = Background
+P = Player
+C = Crate
+W = Wall
+T = Target
+O = CrateOnTarget
+
+========
+SOUNDS
+========
+
+CrateSlide
+Push
+
+Win
+Triumphant
+
+========
+RULES
+========
+
+[Crate | Player | Target] -> [CrateOnTarget | Player | Target]
+[Player | Crate | ] -> [ | Player | Crate]
+[Player | Target] -> [ | Player]
+[Crate] -> [CrateOnTarget | Crate]
+
+========
+COLLISIONLAYERS
+========
+
+Background
+Target
+Wall, Crate, CrateOnTarget
+Player
+
+========
+PLAYER
+========
+
+Player
+
+========
+LEVELS
+========
+
+####
+#.T#
+#CO#
+#P #
+####
+
+#####
+# ..#
+#CO #
+#P  #
+#####
+
+######
+#    #
+# T .#
+# CO #
+#  P #
+######
+
+========
+WINCONDITIONS
+========
+
+All CrateOnTarget on Target
+
+
+```
+produced the following console output:
+=================================
+line 14 : Sprites must be 5 wide and 5 high.
+line 15 : Sprites must be 5 wide and 5 high.
+line 16 : Sprites must be 5 wide and 5 high.
+line 17 : Sprites must be 5 wide and 5 high.
+line 19 : Was looking for color for object PLAYER, got "..00.." instead.
+line 53 : Name "." already in use (on line line 18).
+line 64 : unexpected sound token "crateslide".
+line 65 : unexpected sound token "push".
+line 67 : unexpected sound token "win".
+line 68 : unexpected sound token "triumphant".
+too many errors, aborting compilation
+Errors detected during compilation; the game may not work correctly.
+Return a repaired version of the code that addresses these errors. Return your code in full, inside a ```plaintext code block.
