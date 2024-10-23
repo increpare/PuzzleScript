@@ -1,0 +1,120 @@
+The errors in the original PuzzleScript code indicate multiple issues. Here's a breakdown of the problems and how they can be fixed:
+
+1. **Prelude Unrecognised Stuff**: It seems the line numbering is incorrect due to how the errors are reported after encountering multiple issues. There doesn't appear to be extraneous text early in the prelude based on the provided lines. Ensure that only valid prelude keywords are present. In the setup, `SOUNDS` is missing as a mandatory section that needs to be declared, even if it's empty.
+
+2. **Duplicated Object Names in Legend**: Each object in the `OBJECTS` section is associated with a symbol and these symbols are being reused in the `LEGEND` section. However, they need to be consistent. Check for possible case-sensitivity or duplication issues.
+
+3. **Section Order Error**: `COLLISIONLAYERS` needs to come after `SOUNDS`, so we'll add an empty `SOUNDS` section to address this.
+
+Here's the repaired version of the code that incorporates these changes:
+
+```plaintext
+====== 
+title Sokoban Clone
+author You
+homepage none
+zoom 4
+====== 
+
+===========
+OBJECTS
+===========
+Background
+white
+
+Wall
+black
+
+Player
+blue
+P
+
+Box
+brown
+B
+
+Target
+red
+T
+
+BoxOnTarget
+green
+o
+
+===========
+LEGEND
+===========
+. = Background
+# = Wall
+P = Player
+B = Box
+T = Target
+o = BoxOnTarget
+
+===========
+SOUNDS
+===========
+
+===========
+COLLISIONLAYERS
+===========
+Background
+Target, BoxOnTarget
+Wall
+Player, Box
+
+===========
+RULES
+===========
+[ > Player | ] -> [ > Player ]
+[ > Player | Wall ] -> [ > Player | Wall ]
+[ > Player | Box | ] -> [ > Player | Box | ]
+[ > Player | Box | Box | ] -> [ > Player | Box | Box | ]
+
+# Pushing box onto an empty target
+[ > Player | Box | Target ] -> [ > Player | | o ]
+
+# Moving box off target
+[ > Player | o ] -> [ > Player | Box ]
+
+# Moving player onto target
+[ Player | Target ] -> [ Player | Target ]
+
+===========
+WINCONDITIONS
+===========
+All BoxOnTarget
+
+===========
+LEVELS
+===========
+
+#### 
+#..#
+#.P#
+#B.#
+#.T#
+#### 
+
+####  
+#..#
+#B.# 
+#PT#
+#### 
+
+####   
+#.T#
+#.B#
+#P.# 
+#### 
+
+######
+#....#
+#P#B.#
+#.##.#
+#...T#
+######
+
+```
+
+The addition of the `SOUNDS` section resolves the ordering error, and verifying that the objects and legend sections correctly map symbols should prevent collision errors. This set of changes should rectify the compilation issues.

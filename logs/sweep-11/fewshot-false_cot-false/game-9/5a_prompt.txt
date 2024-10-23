@@ -1,0 +1,138 @@
+SYSTEM PROMPT:
+You are a game designer, familiar with the PuzzleScript game description language. 
+
+USER PROMPT:
+The following PuzzleScript game code:
+```plaintext
+Title: Box Pusher
+
+Author: PuzzleScript
+
+Homepage: https://www.puzzlescript.net
+
+# Comment: A simple box pushing game.
+
+===============
+OBJECTS
+===============
+
+Background
+black
+
+Player
+green
+.....
+..0..
+.000.
+..0..
+.....
+
+Wall
+gray
+.....
+.000.
+.0.0.
+.000.
+.....
+
+Box
+brown
+.....
+.000.
+.0.0.
+.000.
+.....
+
+Target
+red
+.....
+..0..
+.0.0.
+..0..
+.....
+
+BoxOnTarget
+pink
+.....
+.000.
+.0.0.
+.000.
+.....
+
+PlayerOnTarget
+lightgreen
+.....
+..0..
+.000.
+..0..
+.....
+
+================
+LEGEND
+================
+
+. = Background
+# = Wall
+P = Player
+B = Box
+X = Target
+O = BoxOnTarget
+Y = PlayerOnTarget
+
+================
+SOUNDS
+================
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Player, PlayerOnTarget
+Wall
+Box, BoxOnTarget
+Target
+
+=====================
+RULES
+=====================
+
+[ Player | Box ] -> [ | Player | Box ]
+[ Player | Target ] -> [ | PlayerOnTarget ]
+
+[ PlayerOnTarget | Box ] -> [ | PlayerOnTarget | Box ]
+[ PlayerOnTarget | Target ] -> [ | PlayerOnTarget ]
+
+[ Box | Target ] -> [ Target | BoxOnTarget ]
+[ BoxOnTarget ] -> [ Target ]
+
+[ PlayerOnTarget ] -> [ Target ]
+[ PlayerOnTarget ] -> [ | Player ]
+
+==================
+WINCONDITIONS
+==================
+
+No Box # You win when there are no boxes left that are not on a target.
+
+================
+LEVELS
+================
+
+######
+#....#
+#.XX.#
+#....#
+#..P.#
+#....#
+######
+
+```
+produced the following console output:
+=================================
+line 110 : incorrect format of win condition.
+line 94 : In a rule, each pattern to match on the left must have a corresponding pattern on the right of equal length (number of cells).
+line 97 : In a rule, each pattern to match on the left must have a corresponding pattern on the right of equal length (number of cells).
+line 104 : In a rule, each pattern to match on the left must have a corresponding pattern on the right of equal length (number of cells).
+Errors detected during compilation; the game may not work correctly.
+Return a repaired version of the code that addresses these errors. Return your code in full, inside a ```plaintext code block.

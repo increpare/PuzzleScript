@@ -1,0 +1,134 @@
+Let's address the errors found in the PuzzleScript game code. The console output indicates there are issues with the color definitions in the sprites for "Player" and "Crate". Let's analyze and fix them:
+
+1. **Player Sprite:**
+   - The Player object attempts to use three colors (Blue, White, and another for the number 3 in the pattern), but only two colors were defined. We need to fix this inconsistency by either removing the need for a third color or defining a third color correctly.
+   - Since the third color seems to be unused or unnecessary, we can remove "00300" line because it only requires two colors (Blue and White).
+
+2. **Crate Sprite:**
+   - The Crate object uses numbers greater than 0 in the pattern but only one color is defined. We need to define more colors.
+   - For the crate, we will assume a second color, such as DarkBrown, so it can properly utilize different numbers in its pattern.
+
+3. **Target Sprite:**
+   - Similar issue as the player; a third color is attempted to be used. We will need to adjust the pattern to only use the defined colors (Green).
+
+Here's the corrected version of the code:
+
+```plaintext
+title Maze Adventure
+author YourName
+
+========
+OBJECTS
+========
+
+Background
+LightGrey
+
+Wall
+DarkGrey Black
+11111
+11111
+11111
+11111
+11111
+
+Player
+Blue White
+.0.0.
+00000
+0.0.0
+00000
+.0.0.
+
+Crate
+Brown DarkBrown
+.111.
+12221
+12121
+12221
+.111.
+
+Target
+Green White
+.0.0.
+00000
+0.0.0
+00000
+.0.0.
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Player
+C = Crate
+T = Target
+
+=======
+SOUNDS
+=======
+
+Crate Move 35477408
+Player Move 83704102
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Target
+Player, Crate, Wall
+
+======
+RULES
+======
+
+[ Player | > Crate | No Player ] -> [ > Player | > Crate ]
+
+==============
+WINCONDITIONS
+==============
+
+All Player on Target
+
+=======
+LEVELS
+=======
+
+message Welcome to Maze Adventure!
+#######
+#.....#
+#.#C#P#
+#.##..#
+#T....#
+#######
+
+message Level 2
+#######
+#.....#
+#.#C#.#
+#P#...#
+#T..C.#
+#######
+
+message Level 3
+#######
+#..C..#
+#.#.#.#
+#PC.T.#
+#.C.#.#
+#######
+
+message Congratulations! You completed all levels!
+```
+
+**Explanation:**
+
+- The Player sprite no longer uses a third color.
+- The Crate now uses a pattern with two defined colors: Brown and DarkBrown.
+- The Target sprite maintains two colors without trying to use an undefined third color.
+- Adjusted the remaining relevant colors in Player and others to match the intended design pattern.
+
+This should resolve the errors noted while maintaining the intended design and gameplay functionality.

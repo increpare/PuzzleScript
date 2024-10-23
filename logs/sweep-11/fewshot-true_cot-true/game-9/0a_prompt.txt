@@ -1,0 +1,1545 @@
+SYSTEM PROMPT:
+You are a game designer, familiar with the PuzzleScript game description language. Here are some example games, for inspiration (do not reproduce these games exactly):
+
+title MazezaM
+author Malcolm Tyrrell
+homepage https://sites.google.com/site/malcolmsprojects/
+
+noaction
+
+(
+License:
+
+(C)2013 Malcolm Tyrrell
+You can use and distribute this code under the terms of the AGPLv3:
+
+http://www.gnu.org/licenses/agpl-3.0.html
+)
+
+========
+OBJECTS
+========
+
+Background
+DarkBlue Black
+11111
+01111
+11101
+11111
+10111
+
+Entrance
+Blue
+.....
+.....
+.....
+.....
+.....
+
+Wall
+Lightgrey Darkgrey Grey
+11101
+12111
+11112
+11011
+11111
+
+CPlayer
+Red DarkGreen Green
+..0..
+22222
+02220
+01110
+.1.1.
+
+LPlayer
+Red DarkGreen Green
+0.0..
+.222.
+0002.
+.111.
+.1.1.
+
+
+RPlayer
+Red DarkGreen Green
+..0.0
+.222.
+.2000
+.111.
+.1.1.
+
+ACrate
+Orange Brown DarkBrown
+00001
+01102
+01012
+00112
+12222
+
+LCrate
+Orange Brown DarkBrown
+00000
+01101
+01011
+00111
+12222
+
+ICrate
+Orange Brown DarkBrown
+00000
+11101
+11011
+10111
+22222
+
+RCrate
+Orange Brown DarkBrown
+00001
+11102
+11012
+10112
+22222
+
+Target
+Orange Yellow
+.....
+.....
+.....
+.....
+.....
+
+Exit
+DarkBrown
+.....
+.000.
+.0.0.
+.000.
+.....
+
+Gate
+DarkBrown
+.0.0.
+00000
+.0.0.
+00000
+.0.0.
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = CPlayer
+C = ACrate
+L = LCrate
+R = RCrate
+I = ICrate
++ = Entrance
+* = Exit
+X = Target
+
+Crate = ACrate or LCrate or RCrate or ICrate
+WallLike = Wall or Gate or Exit
+Obstacle = Gate or Wall
+Object = Obstacle or Crate
+Player = CPlayer or LPLayer or RPlayer
+Space = Background or Exit
+
+=======
+SOUNDS
+=======
+
+Player CantMove 68096304
+Gate Create 97629502
+Crate Move 64536307
+EndLevel 56439303
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Exit, Entrance, Target
+Player, RPlayer, Wall, LCrate, Crate, RCrate, ICrate, Gate
+
+======
+RULES
+======
+
+(Select the appropriate pushing sprite)
+
+Right [ > Player ] -> [ > RPlayer ]
+Left [ > Player ] -> [ > LPlayer ]
+
+(Except when moving vertically or not pushing)
+
+Vertical [ > Player ] -> [ > CPlayer ]
+Horizontal [ > Player | No Object ] -> [ > CPlayer | ]
+
+(The player can push a crate when the end of the row is free)
+
+Horizontal [ > Player | Crate | ... | No Object | WallLike ] -> [ > Player | > Crate | ... | | WallLike ]
+
+(All crates on a row move together)
+
+Horizontal [ > Crate | ... | Crate ] -> [ > Crate | ... | > Crate ]
+Horizontal [ Crate | ... | > Crate ] -> [ > Crate | ... | > Crate ]
+
+(The gate closes when the player passes the entrance)
+
+Late Right [ Entrance | Player ] -> [ Gate | Player ]
+
+==============
+WINCONDITIONS
+==============
+
+All Player on Target
+
+=======
+LEVELS
+=======
+
+message First Principles
+
+(Pushes: rRRuLdrRurr)
+(Moves: rRRuLdrRurr)
+
+###########
+###.C.C.*.X
+P.+.C...###
+###########
+
+message Humble Origins
+
+(Pushes: rdRRurRdLuLrdLLrurRdrrr)
+(Moves: rdRRurRdLuLrdLLrurRdrrr)
+
+#############
+P.+.C..LR.###
+###.C..C..*.X
+#############
+
+message Baby Steps
+
+(Pushes: rddRRuRuLrdLurRdRdLLuuLrdLurRdRdLruLdrrur)
+(Moves: rddRRuRuLrdLurRdRdLLuuLrdLurRdLdRRurr)
+
+#############
+P.+.LR..LR###
+###.C.C.C.*.X
+###.LR.C..###
+#############
+
+message Easy Does It
+
+(Pushes: rurRdRRuLuLrdRdLLuurRdLuLrdLurRddRRurr)
+(Moves: rurRdRRuLuLrdRdLLuurRdLuLrdLurRddRRurr)
+
+##############
+###..C..LIR###
+###..C.C.C.*.X
+P.+.C.C.C..###
+##############
+
+message Little Rascal
+
+(Pushes: ruuuRRddRdlLuluurrdLddrRuLdLruLdrRuruuLLLrrrddldlLuuurrrdddr)
+(Moves: ruuuRRddRdlLuluurrdLddrRuLdLruLdrRuruuLLLddRdLruLuurrrdddr)
+
+
+###########
+###.C...###
+###.C.LR###
+###.C.C.###
+P.+.C..C*.X
+###########
+
+message Leap-frog
+
+(Pushes: rRdRRuLLdlddRRuLuuRRddRdLruLdLruuuLLddRdLruLuuRRddRdrrr)
+(Moves: rRdRRuLLdlddRRuLuuRRddRdLruLdLruuLLdRdLruLuRRdRdrrr)
+
+#############
+P.+.C.C.C.###
+###C.LIR..###
+###.C.C.LR###
+###.C..C..*.X
+#############
+
+message Shuttles
+
+(Pushes: rrdRRdddLLuuurrdLLddrRRRuuuLLLLdRRurruLdrruLdlldLLuRRRRdddlLLLuuurruRRddddrr)
+(Moves: rrdRRdddLLuuurrdLLddrRRRuuuLLLLdRRurruLLddLLuRRRRdddlLLLuuurruRRddddrr)
+
+#############
+P.+..LIR.C###
+###..C.C..###
+###..C.LIR###
+###C.C.C.C###
+###..C..C.*.X
+#############
+
+message The Nudge
+
+(Pushes: rRuuRRRRdLdLLuLurrdRRuLLdLdRRuRuLLrrdLdLLuRurrdLurrrddr)
+(Moves: rRuuRRRRdLdLLuLurrdRRuLLdLdRRuRuLLrrdLdLLuLuRRRRRdrdr)
+
+##############
+###C.C.....###
+###..C.C.LR###
+P.+.LR.LIR.*.X
+##############
+
+message Opening Gambit
+
+(Pushes: rurRRdLdLdRRuRRuuLLLdRRuLrdLurrrdLdLLdLLuRuRurrrddr)
+(Moves: rurRRdLdLdRRuRRuuLLLdRRuLrdLurrrdLdLLdLLuRuRurrrddr)
+
+#############
+###..C.C..###
+P.+.LR.LR.###
+###.C.C.C.*.X
+###C.LIR..###
+#############
+
+message Loop-de-Loop
+
+(Pushes: rrrdrRRuruLdLruRRRdrRRuLdLruLdrdLuLruLdLruRRRdrrdLdlLLLuuuLdrRRuLdLruLdLruRRRdrrddr)
+(Moves: rrrdrRRuruLdLruRRRdrRRuLdLruLdrdLuLruLdLruRRRdrrdLdlLLLuuuLdrRRuLdLruLdLruRRRdrrddr)
+
+####################
+###.LIIIR.LR.LR..###
+P.+...LR..LR..LR.###
+###LR..C.LR.LIR..###
+###...LIIIIIIR..C*.X
+####################
+
+message Nudge-nudge
+
+(Pushes: ruRldRlddrruRuLLddrRuuRuLLdLddrruLLuRuRRdRdrdLLLLrrruuLuLLdLdRdrrrruur)
+(Moves: rRluRdldRdrRuuLLddrruuRuLLdLddrruLLuRuRRdRdrdLLLLrrruuLuLLdLdRdrrrruur)
+
+#############
+###.LR.LR.###
+P.+.C.C.C.*.X
+###.C.LIR.###
+###...LR..###
+#############
+
+message To and Fro
+
+(Pushes: rrdRdRdrdLdRRurrdLLurrRdrRRuruuLLrrddldlLLullLdRRulldLLuurRuRRRururrrr)
+(Moves: rrdRdRdrdLdRRurrdLLurrRdrRRuruuLLrrddldlLLullLdRRulldLLuRuRuRRRururrrr)
+
+###################
+P.+...LIIIR.....*.X
+###C.LIIIR..LIR.###
+###.C.LIR.LIIR..###
+###C.C..LIIIIIR.###
+###.LIR.C...LR..###
+###C.C.C.LR..C..###
+###################
+
+message Ragged Rascal
+
+(Pushes: ruuuRRRddRululllddddrRuLuluurrrdrdLuLrdLurRdrddlLLLuRuRuLrdLdLdrrrruuur)
+(Moves: ruRlddrRuLuluuRRRRddLuLrdLurRdrddlLLLuRuRuLrdLdLdrrrruuur)
+
+############
+###.C....###
+###.LR..C*.X
+###.LR.C.###
+P.+.C.LIR###
+###..C...###
+############
+
+message Hold Your Horses
+
+(Pushes: rruuRRllddRdRRRRuLLuLullldddrrrruRRdLLLLulluurrrdLddRRRRuuruLLLLrrrdddLLLLuuRurrrrdLddrr)
+(Moves: rruuRRllddRdRRRRuLLuLullldddrrrruRRdLLLLulluurrrdLddRRRRuuruLLLLrrrdddLLLLuuRurrrrdLddrr)
+
+##############
+###..LIR...###
+###..LR.LIR###
+P.+..LIR.C.###
+###.C.C....*.X
+##############
+
+message Knot Theory
+
+(Pushes: rrdddRRuuuLLddddRRuuuurrddLLdddLLuuuuuRRddrruuLLddddLLuuuuRRdddLLuRRRdrddr)
+(Moves: rrdddRRuLLddRRuurruuLLdddddLLuuuRRuurrddLLddLLuuRRdLLuuuRRddRdrddr)
+
+############
+P.+..C.C.###
+###C.C.C.###
+###..C.C.###
+###C.LR..###
+###C.LR..###
+###..C.LR*.X
+############
+
+message Rack and Pinion
+
+(Pushes: rrRRddLruRRdRdRRuLuLuLLdLdRdLuLrdLuruRuRRdLdRdRRuuuLLLdRRuLrdLurrrdLddLLuLuRurrrddr)
+(Moves: rrRRddLruRRdRdRRuLuLuLLdLdRdLuLrdLuruRRdRdRRuLuLuLLdLdRdLuLrdLuruRRdRdRRuLuLurrrddr)
+
+################
+P.+..LR.C.C..###
+###LIR.C.LR..###
+###.LR..C.C.C*.X
+###LR.LIR.C..###
+################
+
+message Blue Meanie
+
+(Pushes: rRRdLdRuRldRdLruLdLruLdrRRRuuuLLLdLruRRdRddlLLLuRuLrdLdrRRRuruuLrddldlLLLuurRuRRddrdr)
+(Moves: rRRdLdRRdLLuurRdLLdrRRRuuuLLLdLruRRdRddlLLLuRuLrdLdrRRRuruuLrddldlLLLuurRuRRddrdr)
+
+#############
+P.+.LR.C..###
+###.C..C.C###
+###C.LIR..###
+###..C..C.*.X
+#############
+
+message Up, Up and Away
+
+(Pushes: rRRluRdlluuuRuRRdLdddlluuuuuuRuRRdLLuluuurRllddRluurrdLdddRRuLLdlddddddrruuuRuLLdldddrruuRuuruLuuruuur)
+(Moves: rRRluRdlluuuRuRRdLLuluuRuRRdLLuluRluurRdLdddRRuLLdlddrdRRuLLdldddrruuRuuruLuuruuur)
+
+###########
+###..C..*.X
+###.C.LR###
+###.LR..###
+###C.C..###
+###.C.C.###
+###.LIR.###
+###C.C..###
+###.C.C.###
+###.C.C.###
+###C.LR.###
+P.+.C...###
+###########
+
+message Great Things
+
+(Pushes: ruuRRRdddlLuluRddrRuLdLruLdrRuRuLLddLruLdrRuRRuuLLLdRRuLrdLurrrdLdLLdlLuRuRurrrdddr)
+(Moves: ruuRRRdddlLuluRddrRuLdLruLdrRuRuLLddLruLdrRuRRuuLLLdRRuLrdLurrrdLdLLdlLuRuRurrrdddr)
+
+#############
+###.C.C...###
+###.LR.LR.###
+P.+..C.C.C###
+###.C..LIR*.X
+#############
+
+message Through and Through
+
+(Pushes: rRRdLuruRRddrRRuLdLruLdLruRRuLLuLrdLddrRRuuRRRurRdLuLrdRddLruLdLruLuurRdLuLrdLddrRRuruur)
+(Moves: rRRdLuruRRddrRRuLdLruLdLruRRuLLuLrdLddrRRuuRRRurRdddLruLdLruLdrRRuLuLuLrdLLdRRRurrur)
+
+#####################
+###.LIIR..LIIR..LR*.X
+###.C.LR.LR.C.LR..###
+P.+.C.LR.LIIR.LR..###
+###.C.LR..LIIR..C.###
+#####################
+
+message Just Enough
+
+(Pushes: rrruRuRRdLdLLLdRRuRuRuLLdLdLddrRuLLuRuRuRRdLdRRdrdLLLLrrruuLLuRuLLdLdLddRRRRRurur)
+(Moves: rrruRuRRdLdLLLdRRuRuRuLLdLdLddrRuLLuRuRuRRdLdRRdrdLLLLrrruuLLuRuLLdLdLddRRRRRurur)
+
+##############
+###C.C.LR..###
+###LR.C.LR.###
+P.+...C.C.C*.X
+###C.LIIR..###
+###...C.C..###
+##############
+
+message The Secret Staircase
+
+(Pushes: rRRRRdlLdldRuRldRRRRRRuuuLLLLLddlLruruRRRdRdRdLLLLLuuLrddRRRRRuuRuLLrrdLddLLLLLulLrurRuRRRdddrrrur)
+(Moves: rRRRdLdRuRldlLdRRRRRRuuuLLLLdLruRRRdRddLLLLLuRuLddRRRRRRuuRuLLrrdLddLLLLLulLrurRuRRRdddrrrur)
+
+#################
+P.+.LIR.LR....###
+###.LR..LR.C.C###
+###C..LIIR.LR.*.X
+###C.LR.......###
+#################
+
+message Clear the Way
+
+(Pushes: ruurrddRdlLuluurrdLddrRuLdLruLdrRuRRuuLLuLrdLuLrdrRRddLLdlLuuuurRRdrRldRulLLLdLddrRuRRuurrr)
+(Moves: ruurrddRdlLuluurrdLddrRuLdLruLdrRuRRuuLLLruLLrdrRRddLLdlLuuuurRRdrRldRulLLLdLddrRuRRuRurr)
+
+##############
+###..C..LIR###
+###...LR..C*.X
+###.C.LIR.C###
+P.+.C.C.LR.###
+###.C..C.LR###
+##############
+
+message A Mismatch Made in Heaven
+
+(Pushes: rRRRuRRdLLLLuRuRRullLdddRRRRRuLLdlllluururrRdLLurrRRRddLrrdLLLrruuullLLLdRdRRdrrruuur)
+(Moves: rRRRuRRdLLLLuRuRRullLdddRRRRRuLLuLLurRRRRdrddLLruLruullLLLdRdRdRRRuruur)
+
+###############
+###.C...C...*.X
+###LR.LIIR..###
+###LIR.LR...###
+P.+.C.C.....###
+###############
+
+message Double Cross
+
+(Pushes: ruRuuRuuLrddRdLruLdLruuLururRdRRddRdrddlllllLLuurruLdlddrrrrrrruuuur)
+(Moves: ruRuuRRdLLrruLuuLrdLururRdRRddRdrddlllllLLuurruLdlddrrrrrrruuuur)
+
+###############
+###.C..LIIR.###
+###.C..C.LR.###
+###.C.LIIR.C*.X
+###C.LR..C..###
+###..C...LIR###
+###.LIIIIR..###
+P.+..C......###
+###############
+
+message Zen Garden
+
+(Pushes: rdRRurRdLuLrdLuLrdLurRRddRululLLdRuRldRulLdlddrdRulluururRdLuLrdLurRRdrdLdLLddlluuRlddrruLdrrrrruuuulldRululLLdRuRldRulLdlddrddrrrrruuLLruLdrruuur)
+(Moves: rdRRurRdLuLrdLuLrdLurRRddRululLLdRuRldRulLdlddrdRulluururRdLuLrdLurRRdrdLdLLdLdrrrrruuuulldRululLLdRuRldRulLdlddRddrrrrruuLLruLdrruuur)
+
+#############
+P.+.C..LR.*.X
+###.C.LR..###
+###LIIR.C.###
+###...C.LR###
+###C.LIIR.###
+###.......###
+#############
+
+message Inside Out
+
+(Pushes: ruuuuRldRuluuurrrrrrrrrrdLdlllllLdLLdldddddrrrrrrrrrrrruuuuLrdLrdddlllllllllllluuRuRRurruLLdrrRRurRuRRuruur)
+(Moves: ruRluRluRluuRluurrrrrrrrrrddddlLLdllLLuRRdlldLLuuluRuluurrrrrrrrrrdLdllllLLdLLdddRRurruLLdrrRRurRuRRuruur)
+
+###################
+###...........C.*.X
+###.LIIIIIIIR..C###
+###.LIR......LR.###
+###.C.LIIIIIR.C.###
+###.LIR.LIR..LR.###
+###.C.C...C..LR.###
+###.C.LIIIIR.LR.###
+P.+.C.C.C...LIR.###
+###.LIIIIIIIIIR.###
+###.............###
+###################
+
+message Double Decker
+
+(Pushes: ruRRRddRRuuLrdLuLrdRdLLuuLrdLuLrdRdRRuurrdLurrddLruulldRulldLdRRuRulldLdLLuuRldRuRldLdRRuulLddllddrdRdRRRuLrdLLLLuRRuLLddRRuLLuRRRdrRRdLuLLuLLLdRdRRRururrr)
+(Moves: ruRRRddRRuuLrdLuLrdRdLLuuLrdLuLrdRdRRuurrdLurrddLruulldRulldLdRRuRulldLdLLuuRldRuRldLdRRuulLddllddrdRdRRRuLrdLLLLuRRuLLddRRuLLuRRRdrRRdLuLLuLLLdRdRRRurRurr)
+
+###############
+###.C..LR...###
+P.+.LR.C.C.C###
+###C.C.LR...###
+###.LIIIIIIR###
+###..C.LIIR.*.X
+###C.LR..C..###
+###.C.LCR...###
+###############
+
+message Back to Front
+
+(Pushes: rrrrrrrrrrrddddLLLLuRRRdllluLLLuRRRdRRRdllluuLLdLLLdRRRRdRRdLdLruRuLLuLLLLuRRRuRRddrrrrdddLLLuRuulluuLLdLLLdRRRRddLLdRluRdRluRdRluuRRRdLLdRluRRuLLLdLLdlllddrrrrrrrrrrr)
+(Moves: rrrrrrrrrrrddddLLLLuRRRdllluLLLuRRRdRRRdllluuLLdLLLdRRRRdRRdLdLruRuLLuLLLLuRRRuRRddrrrrdddLLLuRuulluuLLdLLLdRRRRddLLdRluRdRluRdRluuRRRdLLdRluRRuLLLdLLdlllddrrrrrrrrrrr)
+
+#################
+P.+...........###
+###LIIIIIIIIR.###
+###LIR.LIIR...###
+###C.C.LR.C...###
+###....C.LIIR.###
+###LIIIR.LR...###
+###.LIR.LR.LR.###
+###....LR..LIR###
+###.LIIIIIIIIR###
+###...........*.X
+#################
+
+message The Beast
+
+(Pushes: rRddRRuuLLddlddddrRlluuuurrrdddRdLLLuuluurrrddRdLLulluurrrdLddRRuLLLddRRRuLuRRuuLLLLuuRRddRRddLLdRdLLLuuRuRuuuLLddRlldddrdRRRuuRRuuRuurrr)
+(Moves: rRddRRuuLLddlddddrRlluuuurrrdddRdLLLuuluurrrddRdLLulluurrrdLddRRuLLLddRRRuLuRRuuLLLLuuRRddRRddLLdRdLLLuuRuRuuuLLddRlldddrdRRRuuRRuuRuurrr)
+
+################
+P.+.C.LR.C...*.X
+###C.C.LIR.LR###
+###..C.C.C...###
+###.LR.LR.LIR###
+###..C.C.C.C.###
+###.LR.C.LIR.###
+###..C.LIR.C.###
+################
+
+message Well done. You escaped.
+
+
+
+title tiny treasure hunt 1.0
+author Weeble
+homepage www.twitter.com/weeble
+run_rules_on_level_start
+
+========
+OBJECTS
+========
+LowFloorRaw
+BLACK
+
+LowFloor1
+#111411 #191d19 #202020 #252725
+01011
+12310
+23320
+02321
+02110
+
+LowFloor2
+#111411 #191d19 #202020 #252725
+01001
+22312
+12331
+01310
+10101
+
+WallFacade
+#555555 #666666 #777777
+21221
+10011
+.....
+.....
+.....
+
+HighFloor
+#909090 #999999 #bbbbbb #cccccc
+33232
+31012
+20002
+31012
+32222
+
+LowPlayer
+#686868 #707070 #787878 #808080
+.....
+.....
+.232.
+.121.
+.0.0.
+
+HighPlayer
+#e8e8e8 #f0f0f0 #f8f8f8 #ffffff
+.232.
+.121.
+.0.0.
+.....
+.....
+
+Crate
+#999944 #88883a #777733
+10001
+00000
+10001
+22222
+22222
+
+HighCrate
+#dddd55 #eeee50 #cccc48
+10001
+00000
+10001
+22222
+22222
+
+BurntCrate
+#222222 #111111 #000000
+10001
+00000
+10001
+22222
+22222
+
+MeltingIce
+White LightBlue #9999ff #330000
+.33..
+3333.
+31013
+11330
+21112
+
+
+StaticIce
+White LightBlue #9999ff
+10002
+1...0
+0...1
+10012
+21122
+
+IceCubeN
+White LightBlue #9999ff
+10002
+1...0
+0...1
+10012
+21122
+
+IceCubeE
+White LightBlue #9999ff
+10002
+1...0
+0...1
+10012
+21122
+
+IceCubeS
+White LightBlue #9999ff
+10002
+1...0
+0...1
+10012
+21122
+
+IceCubeW
+White LightBlue #9999ff
+10002
+1...0
+0...1
+10012
+21122
+
+FirePit1
+#990000 #770000 #550000 #330000
+02111
+13321
+02321
+32110
+23121
+
+FirePit2
+#990000 #770000 #550000 #330000
+10311
+21233
+11021
+23213
+20122
+
+
+Pillar
+#cccccc #dddddd #eeeeee #ffffff #bbbbbb #aaaaaa
+32123
+33333
+02120
+22122
+01310
+
+IceCubeShadow
+RED
+.....
+.....
+..0..
+.....
+.....
+
+Coin
+WHITE #eeee55 #aaaa33
+.000.
+01112
+01212
+01112
+.222.
+
+
+StairsNorth
+#333333 #444444 #555555 #666666 #777777
+44444
+43334
+32223
+21112
+10001
+=======
+LEGEND
+=======
+. = LowFloorRaw
+" = HighFloor
+@ = LowPlayer and LowFloorRaw
+$ = Coin and HighFloor
+£ = Coin
+H = HighCrate and HighFloor
+: = WallFacade and FirePit1 and LowFloorRaw
+~ = WallFacade and LowFloorRaw
+# = Crate and LowFloorRaw
+W = Crate and LowFloorRaw and WallFacade
+! = FirePit1 and LowFloorRaw
+I = Pillar and HighFloor
+% = StaticIce and LowFloorRaw
+& = StaticIce and LowFloorRaw and WallFacade
+/ = StairsNorth and LowFloorRaw
+FirePit = FirePit1 or FirePit2
+LowFloor = LowFloor1 or LowFloor2
+Background = LowFloor or HighFloor or LowFloorRaw
+Player = LowPlayer or HighPlayer
+Obstacle = StairsNorth
+BlocksLow = Crate or HighFloor or StaticIce or Pillar or BurntCrate
+Pushable = Crate or StaticIce
+MovingIce = IceCubeE or IceCubeS or IceCubeW or IceCubeN
+IceCube = StaticIce or MovingIce
+Grounded = IceCube or LowPlayer or Crate
+
+=======
+SOUNDS
+=======
+
+Coin DESTROY 77169700
+Crate MOVE 24442507
+SFX0 98605308 ( Hiss )
+SFX1 89033504 ( Snap )
+SFX2 70543502 ( Plink )
+SFX3 34905302 ( Slam )
+SFX4 93355705 ( Squeak )
+SFX5 52776702 ( Grind )
+SFX6 86238705 ( Bounce )
+
+================
+COLLISIONLAYERS
+================
+
+Background
+StairsNorth, FirePit
+WallFacade
+Crate, IceCube, MovingIce, LowPlayer, MeltingIce, BurntCrate
+Pillar, HighPlayer, HighCrate, Coin
+IceCubeShadow
+
+======
+RULES
+======
+
+(Make stuff pretty)
+[ LowFloorRaw ] -> [ random LowFloor ]
+[ FirePit ] -> [ random FirePit ]
+
+(Pushing stuff)
+[ > LowPlayer | Pushable ] -> [ > LowPlayer | > Pushable ]
+[ > HighPlayer | HighCrate ] -> [ > HighPlayer | > HighCrate ]
+
+(Don't walk under pillars. Probably redundant.)
+[ > Grounded | Pillar ] -> [ Grounded | Pillar ]
+
+(Ice melts in lava)
+[ MeltingIce FirePit ] -> [ ]
+[ IceCube FirePit ] -> [ MeltingIce FirePit ] sfx0 again
+
+(Ice slides)
+RIGHT [ > StaticIce ] -> [ > IceCubeE ] sfx2
+DOWN [ > StaticIce ] -> [ > IceCubeS ] sfx2
+LEFT [ > StaticIce ] -> [ > IceCubeW ] sfx2
+UP [ > StaticIce ] -> [ > IceCubeN ] sfx2
+[ MovingIce no IceCubeShadow ] -> [ MovingIce IceCubeShadow ]
+RIGHT [ IceCubeE ] -> [ > IceCubeE ] again
+DOWN [ IceCubeS ] -> [ > IceCubeS ] again
+LEFT [ IceCubeW ] -> [ > IceCubeW ] again
+UP [ IceCubeN ] -> [ > IceCubeN ] again
+
+(Stop things from overlapping the stairs)
+[ > IceCube | Obstacle ] -> [ StaticIce | Obstacle ]
+[ > Crate | Obstacle ] -> [ Crate | Obstacle ]
+
+(Lava kills you)
+late [ LowPlayer FirePit ] -> [ FirePit ] sfx5 message Ouch, hot!
+
+(More ice rules)
+late [ MovingIce IceCubeShadow ] -> [ StaticIce ] sfx5
+late [ IceCubeShadow ] -> [ ]
+
+(Crates get charred in lava)
+late [ Crate FirePit ] -> [ BurntCrate FirePit ] sfx5
+
+(Player collects coins)
+[ > HighPlayer | Coin HighFloor ] -> [ | HighPlayer HighFloor ]
+[ > LowPlayer | Coin LowFloor ] -> [ | LowPlayer LowFloor ]
+
+(Player can climb stairs)
+UP [ > LowPlayer StairsNorth | HighFloor ] -> [ StairsNorth | HighPlayer HighFloor ] sfx6
+
+(Stop things from getting pushed up onto ledges)
+[ > Grounded | HighFloor ] -> [ Grounded | HighFloor ]
+
+(Players and crates fall)
+late [ HighPlayer no BlocksLow ] -> [ LowPlayer ] sfx1 again
+late [ HighCrate no BlocksLow ] -> [ Crate ] sfx1 again
+
+==============
+WINCONDITIONS
+==============
+
+No Coin
+
+=======
+LEVELS
+=======
+
+message 1. the outer walls
+
+""""""!!!"""
+"h""""..!"$"
+""""""#.!"""
+""""""..!"""
+i~~/i/..!:::
+"..."...!!!!
+i"""i.......
+"/~~"!!...#.
+i.@.i!!.....
+
+message 2. cold storage
+
+..........£
+.!!!!!!!!!.
+.!!!!!!!!!.
+.!!.%%%.!!.
+.!!%...%!!.
+.!!%.@.%!!.
+.!!%...%!!.
+.!!.%%%.!!.
+.!!!!!!!!!.
+.!!!!!!!!!.
+...........
+
+
+message 3. bifrost
+
+!!.@.""""!!
+!!%.."~/"!!
+!!.%.&..~!!
+!!%..%...!!
+!!.%.%.%.!!
+!!%..%..%!!
+!!.%.%.%.!!
+!!...%..%!!
+!!...%.%.!!
+!!$.."..%!!
+!!"""".%.!!
+
+
+message 4. clutter
+
+""""""""""$
+"""""""""""
+~~~~W~W~~::
+.%@.#..#.!!
+....#.#..!!
+!!!!"""""..
+!!!!"""""..
+....~/~~~..
+...........
+
+message 5. arena
+
+!"!!!!!!!!!"
+!~.."..""..:
+!...~../~$.!
+!"......@~.!
+!~...".....!
+!....~.%...!
+!....%.....!
+!."....%...!
+!.~......."!
+!.."......~!
+!".~..."...!
+!:!!!!!:!!!!
+
+
+message 6. the gauntlet
+
+
+..""."."."..!!!
+..w~."#".~#.!"!
+""...~.~#.."!~!
+~&..@......~!£!
+""....#"""."!.!
+~~...#."/"#~!"!
+.......~."..!:!
+
+
+message 7. throne room
+
+...#."$".#...
+..#.."""..#..
+!!.#.:::.#.!!
+$"!...!...!"$
+""!.!!!!!.!""
+~~!.!h"h!.!~~
+.#!!!"""!!!#.
+.....h"h.....
+"!!.."""..!!"
+""!..~/~..!""
+"""...@..."""
+:~~.%.%.%.~~:
+!...........!
+
+message Well done!
+
+
+title Spriteaporter
+author increpare
+homepage www.puzzlescript.net
+
+========
+OBJECTS
+========
+
+Temp
+black
+
+Background
+lightgreen green
+11111
+01111
+11101
+11111
+10111
+
+Target
+darkblue
+.....
+.000.
+.0.0.
+.000.
+.....
+
+Wall
+brown darkbrown
+00010
+11111
+01000
+11111
+00010
+
+Player
+black orange white blue
+.000.
+.111.
+22222
+.333.
+.3.3.
+
+Sprite
+pink blue red
+.....
+.000.
+00100
+01110
+.202.
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Player
+O = Sprite
+
+=======
+SOUNDS
+=======
+
+sfx0 67117309
+
+================
+COLLISIONLAYERS
+================
+
+Temp
+Background
+Target
+Player, Wall, Sprite
+
+======
+RULES
+======
+
+late [ Sprite | ... | Player ] -> [ Temp | ... | Sprite ] 
+late [ Temp ] -> [ Player ] 
+
+==============
+WINCONDITIONS
+==============
+
+=======
+LEVELS
+=======
+
+#########
+#.......#
+#....O..#
+#.P.....#
+#.......#
+#.......#
+#########
+
+
+title neko puzzle
+author lexaloffle
+homepage www.lexaloffle.com
+
+(
+
+An inadequate but illustrative demake of one of my favourite puzzle games ever, by the extremely amicable Lexaloffle, and with his permission.
+
+www.lexaloffle.com/neko.htm
+
+The game proper has a lot of magic and love in it.
+
+)
+
+========
+OBJECTS
+========
+
+Background .
+darkblue
+
+Fruit F
+red green lightred
+..1..
+.000.
+00020
+00000
+.000.
+
+Player P
+gray white
+.1.1.
+10101
+11111
+.111.
+00.00
+
+=======
+LEGEND
+=======
+
+=========
+SOUNDS
+=========
+
+endlevel 97301508
+startgame 97301508
+endgame 97301508
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Player, Fruit
+
+======
+RULES
+======
+
+[ > Player | ... | Fruit ] -> [ | ... | Player ] 
+
+(if you're not sure what this line does, try removing it, and see what happens)
+[ > Player ] -> [ Player ] 
+
+==============
+WINCONDITIONS
+==============
+
+no Fruit
+
+=======
+LEVELS
+=======
+
+message level 1 of 10
+
+......F.
+........
+F......F
+......FF
+........
+........
+P.......
+
+message level 2 of 10
+
+........
+....P...
+...F.F..
+........
+........
+..F.FF..
+........
+
+message level 3 of 10
+
+........
+.FF....F
+........
+........
+F...P...
+........
+........
+F.F.....
+
+message level 4 of 10
+
+....F..F
+........
+.......F
+F.......
+P.......
+........
+F...F...
+
+message level 5 of 10
+
+........
+....F.P.
+F.F.....
+........
+F...F...
+..F.F...
+........
+
+message level 6 of 10
+
+F.....F.
+........
+........
+FF..F...
+F.....F.
+........
+.P......
+
+message level 7 of 10
+
+...FP..F
+F.F.....
+F......F
+........
+........
+..F.....
+........
+
+message level 8 of 10
+
+..F..P..
+........
+........
+.FFF....
+F..F..F.
+........
+........
+
+message level 9 of 10
+
+....F..F
+........
+.F..F...
+........
+.F.P..F.
+.F......
+........
+
+message level 10 of 10
+
+....F.F.
+........
+.F..F..F
+...F..F.
+.......F
+...FP...
+........
+
+message congratulations!
+
+
+title Slidings
+author Alain Brobecker
+homepage abrobecker.free.fr
+
+========
+OBJECTS
+========
+
+Background
+#d8a96c #e5b679
+11111
+10101
+11111
+10101
+11111
+
+Target
+DarkBlue
+.....
+.000.
+.0.0.
+.000.
+.....
+
+Wall
+#88bbbb #448888
+11111
+01111
+11101
+11111
+10111
+
+OverWall
+#88bbbb #448888
+11111
+01111
+11101
+11111
+10111
+
+Count
+#88bbbb #448888 White
+11111
+02221
+12221
+12221
+10111
+
+CountEnd
+#88bbbb #448888
+11111
+01111
+11101
+11111
+10111
+
+Player
+#88ff22 #44ff00 #11cc00
+.112.
+10012
+10012
+21122
+.222.
+
+PlayerHasMoved
+#ffe02c #ffc700 #c87700
+.112.
+10012
+10012
+21122
+.222.
+
+DeadPlayer
+#ffe02c #ffc700 #c87700
+.112.
+10012
+10012
+21122
+.222.
+
+BallA
+#999999 #777777 #444444
+.112.
+10012
+10012
+21122
+.222.
+
+BallB
+#999999 #777777 #444444
+.112.
+10012
+10012
+21122
+.222.
+
+BallC
+#999999 #777777 #444444
+.112.
+10012
+10012
+21122
+.222.
+
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+A = BallA
+B = BallB
+C = BallC
+D = BallB and OverWall
+E = BallC and OverWall
+P = Player
+O = Target
+m = Count
+n = CountEnd
+
+Item = Player or Wall or BallA or BallB or BallC or Count or CountEnd
+
+=======
+SOUNDS
+=======
+
+sfx0 5160507 (move)
+sfx1 83704102 (wrong move)
+sfx2 16709508
+EndLevel 123413 (win)
+EndGame 10475908
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Target
+Player, Wall, BallA, BallB, BallC, Count, CountEnd, DeadPlayer, PlayerHasMoved
+OverWall
+
+======
+RULES
+======
+
+(Player movements)
+[> Player | Item] -> [ Player | Item] sfx1
+[> Player | No Item] -> [ | > Player] again sfx0
+[> Player] -> [ PlayerHasMoved ]
+
+(swap between balls)
+[Action Player] [BallA] [BallB] [BallC] -> [BallC] [Player] [BallA] [BallB]
+[ Player OverWall ] [BallA] [BallB] [BallC] -> [BallC OverWall ] [Player] [BallA] [BallB] again
+
+(count remaining moves)
+[ PlayerHasMoved ] [ Wall | CountEnd | Wall ] ->  [ DeadPlayer ] [Wall | Wall | Wall]
+[ DeadPlayer ] -> [ DeadPlayer ] sfx2
+[ DeadPlayer ] -> restart
+[ PlayerHasMoved ] [ Count | CountEnd ] -> [Player] [CountEnd | Wall ]
+[ PlayerHasMoved ] -> [ Player ]
+
+==============
+WINCONDITIONS
+==============
+
+All Player on Target
+
+=======
+LEVELS
+=======
+
+(you must always have a # before the first counter)
+
+message Bring a ball on the spot.         X to control next sliding ball.                                                                          level 1: 3 moves
+#mmmn#
+#PA..#
+#..O.#
+D####E
+
+message level 2: 4 moves
+#mmmmn
+#.O..#
+#P####
+#A####
+D####E
+
+message level 3: 4 moves
+#mmmmn#
+#PAO..#
+##....#
+D#####E
+
+message level 4: 5 moves
+#mmmmmn
+#.....#
+#..O..#
+#PA####
+D#####E
+
+message level 5: 7 moves
+##mmmmmmmn
+##..O..P##
+#.......A#
+D########E
+
+message level 6: 7 moves
+#mmmmmmmn
+#P.A....#
+#.......#
+#.......#
+#..O#...#
+#.......#
+#.......#
+#B......#
+########E
+
+message level 7: 8 moves
+#mmmmmmm
+#.O.#P.m
+#...#ABn
+#......#
+#...#..#
+#...#..#
+#######E
+
+message level 8: 5 moves
+#mmmmmn
+#....P#
+#A.O..#
+#B....#
+#.C...#
+#######
+
+message level 9: 9 moves
+#mmmmmmm
+##..P..m
+##.....m
+##..O..n
+##A....#
+##....B#
+#######E
+
+message level 10: 9 moves
+#mmmmmmm
+###..##m
+##...P#m
+#..O...n
+#......#
+##.A..##
+###..###
+D######E
+
+message level 11: 13 moves
+mmmmmmmm
+m.P....m
+m...O..m
+#A....nm
+D######E
+
+
+
+USER PROMPT:
+Output the code for a complete PuzzleScript game. First, reason about your task and determine the best plan of action. Then, write your code. Return your code in full, inside a ```plaintext code block.

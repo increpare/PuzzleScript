@@ -1,0 +1,120 @@
+SYSTEM PROMPT:
+You are a game designer, familiar with the PuzzleScript game description language. 
+
+USER PROMPT:
+The following PuzzleScript game code:
+```plaintext
+====== 
+title Sokoban Clone
+author You
+homepage none
+zoom 4
+======
+
+===========
+OBJECTS
+===========
+Background
+white
+
+Wall
+black
+
+Player
+blue
+P
+
+Box
+brown
+B
+
+Target
+red
+T
+
+BoxOnTarget
+green
+o
+
+===========
+LEGEND
+===========
+. = Background
+# = Wall
+
+===========
+SOUNDS
+===========
+
+===========
+COLLISIONLAYERS
+===========
+Background
+Target, BoxOnTarget
+Wall
+Player, Box
+
+===========
+RULES
+===========
+[ > Player | ] -> [ > Player ]
+[ > Player | Wall ] -> [ > Player | Wall ]
+[ > Player | Box | ] -> [ > Player | Box | ]
+[ > Player | Box | Box | ] -> [ > Player | Box | Box | ]
+
+# Pushing box onto an empty target
+[ > Player | Box | Target ] -> [ > Player | | BoxOnTarget ]
+
+# Moving box off target
+[ > Player | BoxOnTarget ] -> [ > Player | Box ]
+
+# Correct rule for moving player onto target
+[ Player | Background Target ] -> [ Player Target ]
+
+===========
+WINCONDITIONS
+===========
+All BoxOnTarget
+
+===========
+LEVELS
+===========
+
+#### 
+#..#
+#.P#
+#B.#
+#.T#
+#### 
+
+####  
+#..#
+#B.# 
+#PT#
+#### 
+
+####   
+#.T#
+#.B#
+#P.# 
+#### 
+
+######
+#....#
+#P#B.#
+#.##.#
+#...T#
+######
+
+```
+produced the following console output:
+=================================
+line 5 : Unrecognised stuff in the prelude.
+line 59 : Objects cannot appear outside of square brackets in rules, only directions can.
+line 59 : Name "pushing", referred to in a rule, does not exist.
+line 59 : Name "onto", referred to in a rule, does not exist.
+line 59 : Name "an", referred to in a rule, does not exist.
+line 59 : Name "empty", referred to in a rule, does not exist.
+too many errors, aborting compilation
+Errors detected during compilation; the game may not work correctly.
+Return a repaired version of the code that addresses these errors. First, reason about your task and determine the best plan of action. Then, write your code. Return your code in full, inside a ```plaintext code block.

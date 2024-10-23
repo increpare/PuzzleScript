@@ -1,0 +1,124 @@
+SYSTEM PROMPT:
+You are a game designer, familiar with the PuzzleScript game description language. 
+
+USER PROMPT:
+The following PuzzleScript game code:
+```plaintext
+title Simple Sokoban
+author Game Designer
+
+========
+OBJECTS
+========
+Player
+grey
+00000
+01110
+00100
+01110
+00000
+
+Wall
+black
+11111
+11111
+11111
+11111
+11111
+
+Crate
+brown
+00000
+01110
+11011
+01110
+00000
+
+Target
+red
+00000
+00100
+01110
+11111
+00100
+
+Floor
+beige
+00000
+00000
+00000
+00000
+00000
+
+===========
+COLLISIONLAYERS
+===========
+Background
+Static
+Movable
+Player
+
+======
+LEGEND
+======
+= Wall
+. Floor
+P Player
+C Crate
+X Target
+
+======
+SOUNDS
+======
+CrateMovePush
+    500
+CrateMoveStop
+    700
+
+=====
+RULES
+=====
+[ >Player | Crate ] -> [ >Player | >Crate ]
+
+===
+WIN
+===
+All Crate on Target
+
+======
+LEVELS
+======
+# Level 1
+####
+#P C#
+#  X#
+####
+
+# Level 2
+#####
+#   #
+# P #
+# C #
+##X##
+  ###
+
+# Level 3
+######
+#    #
+# P C#
+# CC #
+##XX##
+ ####
+
+```
+produced the following console output:
+=================================
+line 10 : Trying to access color number 1 from the color palette of sprite PLAYER, but there are only 1 defined in it.
+line 11 : Trying to access color number 1 from the color palette of sprite PLAYER, but there are only 1 defined in it.
+line 12 : Trying to access color number 1 from the color palette of sprite PLAYER, but there are only 1 defined in it.
+line 17 : Trying to access color number 1 from the color palette of sprite WALL, but there are only 1 defined in it.
+line 18 : Trying to access color number 1 from the color palette of sprite WALL, but there are only 1 defined in it.
+line 19 : Trying to access color number 1 from the color palette of sprite WALL, but there are only 1 defined in it.
+too many errors, aborting compilation
+Errors detected during compilation; the game may not work correctly.
+Return a repaired version of the code that addresses these errors. First, reason about your task and determine the best plan of action. Then, write your code. Return your code in full, inside a ```plaintext code block.

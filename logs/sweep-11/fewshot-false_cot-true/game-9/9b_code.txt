@@ -1,0 +1,111 @@
+The error in the provided PuzzleScript code is caused by a mismatch between the pattern lengths on the left-hand side (LHS) and the right-hand side (RHS) of a rule. In PuzzleScript, each pattern on the LHS of a rule must have an equivalent pattern of the same length on the RHS. The error occurs in the following rule:
+
+```plaintext
+[ > Player | Box | Target ] -> [ > Player | | BoxOnTarget ]
+```
+
+Here, there are three parts on the LHS (`Player`, `Box`, `Target`) but only two parts on the RHS (`Player`, `BoxOnTarget`). This discrepancy is causing the error.
+
+To correct this, we need to ensure that each element on the LHS has a corresponding element on the RHS. Let's adjust the rule so that it correctly moves the `Box` onto the `Target` and transforms it into a `BoxOnTarget` while retaining symmetry in pattern length. The revised rule should maintain three parts by explicitly setting an empty space (denoted by `Background`) in place of the `Box`.
+
+Let's rewrite the code with this correction:
+```plaintext
+====== 
+title Sokoban Clone
+author You
+homepage none
+======
+
+===========
+OBJECTS
+===========
+Background
+white
+
+Wall
+black
+
+Player
+blue
+
+Box
+brown
+
+Target
+red
+
+BoxOnTarget
+green
+
+===========
+LEGEND
+===========
+. = Background
+# = Wall
+P = Player
+B = Box
+T = Target
+o = BoxOnTarget
+
+===========
+SOUNDS
+===========
+
+===========
+COLLISIONLAYERS
+===========
+Background
+Target, BoxOnTarget
+Wall
+Player, Box
+
+===========
+RULES
+===========
+[ > Player | ] -> [ > Player ]
+[ > Player | Wall ] -> [ > Player | Wall ]
+[ > Player | Box | ] -> [ > Player | Box | ]
+[ > Player | Box | Box | ] -> [ > Player | Box | Box | ]
+
+[ > Player | Box | Target ] -> [ > Player | Background | BoxOnTarget ]
+
+[ > Player | BoxOnTarget ] -> [ > Player | Box ]
+
+===========
+WINCONDITIONS
+===========
+All BoxOnTarget
+
+===========
+LEVELS
+===========
+
+#### 
+#..#
+#.P#
+#B.#
+#.T#
+#### 
+
+####  
+#..#
+#B.# 
+#PT#
+#### 
+
+####   
+#.T#
+#.B#
+#P.# 
+#### 
+
+######
+#....#
+#P#B.#
+#.##.#
+#...T#
+######
+
+```
+
+With this change, every component on the left side of the pattern has a corresponding component on the right side, maintaining the symmetry required by PuzzleScript rules and fixing the error.

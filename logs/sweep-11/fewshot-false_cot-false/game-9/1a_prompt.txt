@@ -1,0 +1,136 @@
+SYSTEM PROMPT:
+You are a game designer, familiar with the PuzzleScript game description language. 
+
+USER PROMPT:
+The following PuzzleScript game code:
+```plaintext
+Title: Box Pusher
+
+Author: PuzzleScript
+
+Homepage: https://www.puzzlescript.net
+
+Comment: A simple box pushing game.
+
+===============
+OBJECTS
+===============
+
+Background
+black
+
+Player
+green
+.ooo.
+o...o
+o.o.o
+.ooo.
+..o..
+
+Wall
+gray
+.....
+..o..
+.o.o.
+..o..
+.....
+
+Box
+brown
+.....
+.o.o.
+.o.o.
+.....
+.....
+
+Target
+red
+.....
+..o..
+.o.o.
+..o..
+.....
+
+BoxOnTarget
+pink
+.....
+.o.o.
+.o.o.
+.....
+.....
+
+PlayerOnTarget
+lightgreen
+.ooo.
+o...o
+o.o.o
+.ooo.
+..o..
+
+================
+LEGEND
+================
+
+. = Background
+# = Wall
+P = Player
+B = Box
+X = Target
+O = BoxOnTarget
+Y = PlayerOnTarget
+
+===============
+SOUNDS
+===============
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Player, PlayerOnTarget
+Wall
+Box, BoxOnTarget
+Target
+
+=====================
+RULES
+=====================
+
+[ Player | Box ] -> [ | Player ] [ Box ]
+[ Player | Target ] -> [ | PlayerOnTarget ]
+
+[ PlayerOnTarget | Box ] -> [ | PlayerOnTarget ] [ Box ]
+[ PlayerOnTarget | Target ] -> [ | PlayerOnTarget ]
+
+[ Box | Target ] -> [ | BoxOnTarget ]
+[ BoxOnTarget ] -> [ Target ]
+
+[ PlayerOnTarget ] -> [ Target ]
+[ PlayerOnTarget ] -> [ Player | ]
+
+================
+LEVELS
+================
+
+######
+#....#
+#.XX.#
+#....#
+#..P.#
+#....#
+######
+
+
+```
+produced the following console output:
+=================================
+line 7 : Unrecognised stuff in the prelude.
+line 18 : Unknown junk in spritematrix for object PLAYER.
+line 19 : Unknown junk in spritematrix for object PLAYER.
+line 20 : Unknown junk in spritematrix for object PLAYER.
+line 21 : Unknown junk in spritematrix for object PLAYER.
+line 22 : Unknown junk in spritematrix for object PLAYER.
+too many errors, aborting compilation
+Errors detected during compilation; the game may not work correctly.
+Return a repaired version of the code that addresses these errors. Return your code in full, inside a ```plaintext code block.

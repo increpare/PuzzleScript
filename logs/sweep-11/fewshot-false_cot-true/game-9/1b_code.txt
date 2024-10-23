@@ -1,0 +1,122 @@
+To repair the code, the following steps should be taken:
+
+1. **Remove the incorrect syntax in the prelude**: 
+   The initial lines with comments explaining the legend should be removed, as PuzzleScript does not support comments in that format. This will address the `Unrecognised stuff in the prelude` error.
+   
+2. **Ensure unique object characters**:
+   Remove duplicate definitions of objects in the LEGEND section. Specifically, it's important to ensure that each character in the legend maps to a unique object. The `B` character is being used two times (`Box` and `BoxOnTarget`), which causes conflicts. This can be resolved by using a different character for `BoxOnTarget`.
+
+3. **Redefine rules and win conditions accordingly**:
+   The rules must align with the objects and characters from the legend. Ensure that the rules correctly reference the updated legend.
+
+Here is the amended code:
+```plaintext
+======= 
+title Sokoban Clone
+author You
+homepage none
+zoom 4
+======= 
+
+===========
+OBJECTS
+===========
+Background
+white
+
+Wall
+black
+
+Player
+blue
+P
+
+Box
+brown
+B
+
+Target
+red
+T
+
+BoxOnTarget
+green
+o
+
+===========
+LEGEND
+===========
+. = Background
+# = Wall
+P = Player
+B = Box
+T = Target
+o = BoxOnTarget
+
+===========
+SOUNDS
+===========
+# No sound effects needed for this simple game
+
+===========
+COLLISIONLAYERS
+===========
+Background
+Target
+Wall
+Player, Box, BoxOnTarget
+
+===========
+RULES
+===========
+[ > Player | ] -> [ > Player ]
+[ > Player | Wall ] -> [ > Player | Wall ]
+[ > Player | Box | ] -> [ > Player | Box | ]
+[ > Player | Box | Box | ] -> [ > Player | Box | Box | ]
+
+# Pushing box onto an empty target
+[ > Player | Box | Target ] -> [ > Player | | o ]
+
+# Moving box off target
+[ > Player | o ] -> [ > Player | Box ]
+
+# Moving player onto target
+[ Player | Target ] -> [ Player ]
+
+===========
+WINCONDITIONS
+===========
+All BoxOnTarget
+
+===========
+LEVELS
+===========
+
+#### 
+#..#
+#.P#
+#B.#
+#.T#
+#### 
+
+####  
+#..#
+#B.# 
+#PT#
+#### 
+
+####   
+#.T#
+#.B#
+#P.# 
+#### 
+
+######
+#....#
+#P#B.#
+#.##.#
+#...T#
+######
+```
+
+Adjustments were made to ensure unique representation of each object within the game and the legend. This should resolve compilation issues and ensure the game adheres to PuzzleScript standards.

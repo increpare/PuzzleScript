@@ -1,0 +1,112 @@
+To address the compilation errors in the PuzzleScript code, let's analyze the structure and identify the problem areas. The console output shines light on a few issues primarily related to comments within the `RULES` section. In PuzzleScript, everything outside of the brackets in the `RULES` section, except for recognized commands, is interpreted as directions or commands. Therefore, comments written like plain text will trigger errors unless they are properly formatted.
+
+The errors are triggered by lines interpreted as parts of rule definitions when they are meant to be comments. In PuzzleScript, comments are typically prefaced by a `#` at the start of the line. 
+
+Let's make sure the comments are properly formatted with `#` and remove any unnecessary text, which is causing parsing issues:
+
+```plaintext
+====== 
+title Sokoban Clone
+author You
+homepage none
+======
+
+===========
+OBJECTS
+===========
+Background
+white
+
+Wall
+black
+
+Player
+blue
+
+Box
+brown
+
+Target
+red
+
+BoxOnTarget
+green
+
+===========
+LEGEND
+===========
+. = Background
+# = Wall
+P = Player
+B = Box
+T = Target
+o = BoxOnTarget
+
+===========
+SOUNDS
+===========
+
+===========
+COLLISIONLAYERS
+===========
+Background
+Target, BoxOnTarget
+Wall
+Player, Box
+
+===========
+RULES
+===========
+[ > Player | ] -> [ > Player ]
+[ > Player | Wall ] -> [ > Player | Wall ]
+[ > Player | Box | ] -> [ > Player | Box | ]
+[ > Player | Box | Box | ] -> [ > Player | Box | Box | ]
+
+# Pushing box onto an empty target
+[ > Player | Box | Target ] -> [ > Player | | BoxOnTarget ]
+
+# Moving box off target
+[ > Player | BoxOnTarget ] -> [ > Player | Box ]
+
+===========
+WINCONDITIONS
+===========
+All BoxOnTarget
+
+===========
+LEVELS
+===========
+
+#### 
+#..#
+#.P#
+#B.#
+#.T#
+#### 
+
+####  
+#..#
+#B.# 
+#PT#
+#### 
+
+####   
+#.T#
+#.B#
+#P.# 
+#### 
+
+######
+#....#
+#P#B.#
+#.##.#
+#...T#
+######
+
+```
+
+In this revised version of the script:
+- I placed comment markers `#` correctly at the start of the comment lines within the `RULES` section to clarify they are comments.
+- I retained the overall structure and essentials of the game as per your original intent.
+
+This should compile without errors and function correctly as a Sokoban clone.

@@ -1,0 +1,133 @@
+```plaintext
+title Paint Maze
+author AI Game Designer
+homepage www.example.com
+
+========
+OBJECTS
+========
+
+Background
+Yellow
+00000
+00000
+00000
+00000
+00000
+
+Wall
+DarkGray
+.....
+.....
+.....
+.....
+.....
+
+Player
+Red Orange White
+..1..
+.111.
+.111.
+..1..
+.....
+
+PaintBucket
+Blue
+.....
+.....
+.....
+.....
+.....
+
+PaintedFloor
+Blue
+00000
+00000
+00000
+00000
+00000
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Player
+B = PaintBucket
+f = PaintedFloor
+
+Obstacle = Wall or PaintBucket
+UnpaintedFloor = Background
+
+=======
+SOUNDS
+=======
+
+sfx0 32737236
+sfx1 52003190
+
+================
+COLLISIONLAYERS
+================
+
+Background
+PaintedFloor
+Player, Wall, PaintBucket
+
+======
+RULES
+======
+
+[ > Player | Wall ] -> cancel
+[ Player | PaintBucket ] -> [ Player | PaintedFloor ] sfx1
+[ Player | UnpaintedFloor ] -> [ Player | PaintedFloor ] sfx0
+
+==============
+WINCONDITIONS
+==============
+
+All PaintedFloor
+
+=======
+LEVELS
+=======
+
+message Level 1: Basic Painting
+
+#########
+#.......#
+#.P.....#
+#.......#
+#.#...B.#
+#.......#
+#########
+
+message Level 2: Obstacles
+
+#########
+#.P.....#
+#...#...#
+#...#...#
+#.B.#...#
+#.......#
+#########
+
+message Level 3: Complex Maze
+
+#########
+#.......#
+#.###...#
+#.#P##..#
+#.#.....#
+#.#.###.#
+#.#B....#
+#.......#
+#########
+
+message You win, congratulations!
+```
+
+In this repaired version:
+- The `PaintBucket` object definition previously had additional lines incorrectly attempting to access non-existent colors. This has been fixed by simplifying the sprite to a single color with no layers beyond its initial definition.
+- Proper `sfx` sound indices have been declared in the `SOUNDS` section to replace `MOVE` and `COLLECT` with corresponding `sfx0` and `sfx1`, which are correctly referenced in the rules.

@@ -1,0 +1,136 @@
+SYSTEM PROMPT:
+You are a game designer, familiar with the PuzzleScript game description language. 
+
+USER PROMPT:
+The following PuzzleScript game code:
+```plaintext
+title Simple Sokoban
+author Game Designer
+
+========
+OBJECTS
+========
+Player
+grey O
+00000000
+01100110
+00111100
+01111110
+01111110
+01111110
+00111100
+00000000
+
+Wall
+black
+11111111
+11111111
+11111111
+11111111
+11111111
+11111111
+11111111
+11111111
+
+Crate
+brown C
+00000000
+07711110
+0FF111F0
+0F1111F0
+0FFF1F10
+01111110
+01FFFF10
+00000000
+
+Target
+red X
+00000000
+00000000
+00000000
+00111000
+01111100
+00000000
+00000000
+00000000
+
+Floor
+beige .
+
+===========
+COLLISIONLAYERS
+===========
+Background
+Static
+Movable
+Player
+
+======
+LEGEND
+======
+= Wall
+. Floor
+P Player
+C Crate
+X Target
+
+======
+SOUNDS
+======
+CrateMovePush
+    500
+CrateMoveStop
+    700
+
+=====
+RULES
+=====
+[ >Player | Crate ] -> [ >Player | >Crate ]
+
+===
+WIN
+===
+All Crate on Target
+
+======
+LEVELS
+======
+# Level 1
+####
+#P C#
+#  X#
+####
+
+# Level 2
+#####
+#   #
+# P #
+# C #
+##X##
+  ###
+
+# Level 3
+######
+#    #
+# P C#
+# CC #
+##XX##
+ ####
+
+
+```
+produced the following console output:
+=================================
+line 8 : Was looking for color for object PLAYER, got "o" instead.
+line 9 : Sprites must be 5 wide and 5 high.
+line 10 : Trying to access color number 1 from the color palette of sprite PLAYER, but there are only 1 defined in it.
+line 10 : Sprites must be 5 wide and 5 high.
+line 11 : Trying to access color number 1 from the color palette of sprite PLAYER, but there are only 1 defined in it.
+line 11 : Sprites must be 5 wide and 5 high.
+line 12 : Trying to access color number 1 from the color palette of sprite PLAYER, but there are only 1 defined in it.
+line 12 : Sprites must be 5 wide and 5 high.
+line 13 : Trying to access color number 1 from the color palette of sprite PLAYER, but there are only 1 defined in it.
+line 14 : Was looking for color for object PLAYER, got "01111110" instead.
+too many errors, aborting compilation
+Errors detected during compilation; the game may not work correctly.
+Return a repaired version of the code that addresses these errors. First, reason about your task and determine the best plan of action. Then, write your code. Return your code in full, inside a ```plaintext code block.

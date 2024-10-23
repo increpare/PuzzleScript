@@ -1,0 +1,114 @@
+Certainly! It looks like there was a missing level definition for level 5 in your original code, causing the error. Below is a corrected version of your game code with only three levels:
+
+```plaintext
+title Maze Adventure
+author YourName
+
+========
+OBJECTS
+========
+
+Background
+LightGrey
+
+Wall
+DarkGrey Black
+11111
+11111
+11111
+11111
+11111
+
+Player
+Blue White
+.0.0.
+00000
+0.0.0
+00000
+.0.0.
+
+Crate
+Brown DarkBrown
+.111.
+.111.
+.111.
+.111.
+.111.
+
+Target
+Green White
+.0.0.
+00000
+0.0.0
+00000
+.0.0.
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Player
+C = Crate
+T = Target
+
+=======
+SOUNDS
+=======
+
+Crate Move 35477408
+Player Move 83704102
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Target
+Player, Crate, Wall
+
+======
+RULES
+======
+
+[ Player | > Crate | No Crate ] -> [ > Player | > Crate | ]
+
+==============
+WINCONDITIONS
+==============
+
+All Player on Target
+
+=======
+LEVELS
+=======
+
+message Welcome to Maze Adventure!
+#######
+#.....#
+#.#C#P#
+#.##..#
+#T....#
+#######
+
+message Level 2
+#######
+#.....#
+#.#C#.#
+#P#...#
+#T..C.#
+#######
+
+message Level 3
+#######
+#..C..#
+#.#.#.#
+#PC.T.#
+#.C.#.#
+#######
+
+message Congratulations! You completed all levels!
+```
+
+Please ensure that the levels are designed such that all crates can be moved onto targets, and that the player can be moved to the target in the final level configuration.

@@ -1,0 +1,118 @@
+To address the issues in the PuzzleScript code, we need to follow the error messages and fix each problem accordingly:
+
+1. **Prelude Error**: This error is due to an incorrect section or keyword in the initial part of the script. The line "zoom 4" is not a recognized prelude term in PuzzleScript. The prelude section should only contain `title`, `author`, and `homepage`.
+
+2. **Naming Conflicts**: The symbols `P`, `B`, `T`, and `o` are defined multiple times with both object definitions and as legend entries. The `LEGEND` section uses these symbols to map to objects, which is intended. However, the `OBJECTS` section does not need the legend symbol redefinition directly after the object name. Therefore, we should remove these letters from where they occur immediately after each object name.
+
+3. **Rule Syntax Error**: The error at line 63 is due to a rule attempting to reference an object directly outside of brackets or within an incorrect pattern format. This refers to the malformed rule:
+   ```
+   [ > Player | Target ] -> [ > Player | Target ]
+   ```
+   This rule doesn't move the player or change state, so it may actually be unnecessary or incorrectly intended. We will remove or fix it after checking it for purpose.
+
+Here is a corrected version of the code with the mentioned fixes:
+
+```plaintext
+====== 
+title Sokoban Clone
+author You
+homepage none
+======
+
+===========
+OBJECTS
+===========
+Background
+white
+
+Wall
+black
+
+Player
+blue
+
+Box
+brown
+
+Target
+red
+
+BoxOnTarget
+green
+
+===========
+LEGEND
+===========
+. = Background
+# = Wall
+P = Player
+B = Box
+T = Target
+o = BoxOnTarget
+
+===========
+SOUNDS
+===========
+
+===========
+COLLISIONLAYERS
+===========
+Background
+Target, BoxOnTarget
+Wall
+Player, Box
+
+===========
+RULES
+===========
+[ > Player | ] -> [ > Player ]
+[ > Player | Wall ] -> [ > Player | Wall ]
+[ > Player | Box | ] -> [ > Player | Box | ]
+[ > Player | Box | Box | ] -> [ > Player | Box | Box | ]
+
+# Pushing box onto an empty target
+[ > Player | Box | Target ] -> [ > Player | | BoxOnTarget ]
+
+# Moving box off target
+[ > Player | BoxOnTarget ] -> [ > Player | Box ]
+
+===========
+WINCONDITIONS
+===========
+All BoxOnTarget
+
+===========
+LEVELS
+===========
+
+#### 
+#..#
+#.P#
+#B.#
+#.T#
+#### 
+
+####  
+#..#
+#B.# 
+#PT#
+#### 
+
+####   
+#.T#
+#.B#
+#P.# 
+#### 
+
+######
+#....#
+#P#B.#
+#.##.#
+#...T#
+######
+```
+
+In this corrected code:
+- The `zoom` line has been removed from the prelude.
+- The legend definitions have been adjusted so they don't conflict with object names.
+- The redundant rule handling moving the player directly onto target was removed, as it's unnecessary and may have been causing confusion.

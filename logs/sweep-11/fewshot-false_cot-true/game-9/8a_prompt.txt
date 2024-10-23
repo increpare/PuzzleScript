@@ -1,0 +1,117 @@
+SYSTEM PROMPT:
+You are a game designer, familiar with the PuzzleScript game description language. 
+
+USER PROMPT:
+The following PuzzleScript game code:
+```plaintext
+====== 
+title Sokoban Clone
+author You
+homepage none
+======
+
+===========
+OBJECTS
+===========
+Background
+white
+
+Wall
+black
+
+Player
+blue
+
+Box
+brown
+
+Target
+red
+
+BoxOnTarget
+green
+
+===========
+LEGEND
+===========
+. = Background
+# = Wall
+P = Player
+B = Box
+T = Target
+o = BoxOnTarget
+
+===========
+SOUNDS
+===========
+
+===========
+COLLISIONLAYERS
+===========
+Background
+Target, BoxOnTarget
+Wall
+Player, Box
+
+===========
+RULES
+===========
+[ > Player | ] -> [ > Player ]
+[ > Player | Wall ] -> [ > Player | Wall ]
+[ > Player | Box | ] -> [ > Player | Box | ]
+[ > Player | Box | Box | ] -> [ > Player | Box | Box | ]
+
+# Pushing box onto an empty target
+[ > Player | Box | Target ] -> [ > Player | | BoxOnTarget ]
+
+# Moving box off target
+[ > Player | BoxOnTarget ] -> [ > Player | Box ]
+
+===========
+WINCONDITIONS
+===========
+All BoxOnTarget
+
+===========
+LEVELS
+===========
+
+#### 
+#..#
+#.P#
+#B.#
+#.T#
+#### 
+
+####  
+#..#
+#B.# 
+#PT#
+#### 
+
+####   
+#.T#
+#.B#
+#P.# 
+#### 
+
+######
+#....#
+#P#B.#
+#.##.#
+#...T#
+######
+
+
+```
+produced the following console output:
+=================================
+line 58 : Objects cannot appear outside of square brackets in rules, only directions can.
+line 58 : Name "pushing", referred to in a rule, does not exist.
+line 58 : Name "onto", referred to in a rule, does not exist.
+line 58 : Name "an", referred to in a rule, does not exist.
+line 58 : Name "empty", referred to in a rule, does not exist.
+line 61 : Objects cannot appear outside of square brackets in rules, only directions can.
+too many errors, aborting compilation
+Errors detected during compilation; the game may not work correctly.
+Return a repaired version of the code that addresses these errors. First, reason about your task and determine the best plan of action. Then, write your code. Return your code in full, inside a ```plaintext code block.

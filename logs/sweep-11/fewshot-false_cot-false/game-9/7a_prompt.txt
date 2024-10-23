@@ -1,0 +1,137 @@
+SYSTEM PROMPT:
+You are a game designer, familiar with the PuzzleScript game description language. 
+
+USER PROMPT:
+The following PuzzleScript game code:
+```plaintext
+Title: Box Pusher
+
+Author: PuzzleScript
+
+Homepage: https://www.puzzlescript.net
+
+# Comment: A simple box pushing game.
+
+===============
+OBJECTS
+===============
+
+Background
+black
+
+Player
+green
+.....
+..0..
+.000.
+..0..
+.....
+
+Wall
+gray
+.....
+.000.
+.0.0.
+.000.
+.....
+
+Box
+brown
+.....
+.000.
+.0.0.
+.000.
+.....
+
+Target
+red
+.....
+..0..
+.0.0.
+..0..
+.....
+
+BoxOnTarget
+pink
+.....
+.000.
+.0.0.
+.000.
+.....
+
+PlayerOnTarget
+lightgreen
+.....
+..0..
+.000.
+..0..
+.....
+
+================
+LEGEND
+================
+
+. = Background
+# = Wall
+P = Player
+B = Box
+X = Target
+O = BoxOnTarget
+Y = PlayerOnTarget
+
+================
+SOUNDS
+================
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Player, PlayerOnTarget
+Wall
+Box, BoxOnTarget
+Target
+
+=====================
+RULES
+=====================
+
+[ > Player | Box ] -> [ > Player | > Box ]
+[ > PlayerOnTarget | Box ] -> [ > PlayerOnTarget | > Box ]
+
+[ Player | Target ] -> [ PlayerOnTarget | ]
+[ PlayerOnTarget | Target ] -> [ PlayerOnTarget | ]
+
+[ Box | Target ] -> [ BoxOnTarget | ]
+[ BoxOnTarget ] -> [ Box | ]
+
+[ PlayerOnTarget ] -> [ Target | Player ]
+
+==================
+WINCONDITIONS
+==================
+
+All BoxOnTarget on Target # You win when all boxes are on targets.
+
+================
+LEVELS
+================
+
+######
+#....#
+#.XX.#
+#....#
+#..P.#
+#....#
+######
+
+
+```
+produced the following console output:
+=================================
+line 109 : incorrect format of win condition.
+line 101 : In a rule, each pattern to match on the left must have a corresponding pattern on the right of equal length (number of cells).
+line 103 : In a rule, each pattern to match on the left must have a corresponding pattern on the right of equal length (number of cells).
+Errors detected during compilation; the game may not work correctly.
+Return a repaired version of the code that addresses these errors. Return your code in full, inside a ```plaintext code block.

@@ -1,0 +1,124 @@
+SYSTEM PROMPT:
+You are a game designer, familiar with the PuzzleScript game description language. 
+
+USER PROMPT:
+The following PuzzleScript game code:
+```plaintext
+title Simple Sokoban
+author Game Designer
+
+========
+OBJECTS
+========
+Player
+transparent grey
+00000
+01110
+00100
+01110
+00000
+
+Wall
+transparent black
+11111
+11111
+11111
+11111
+11111
+
+Crate
+transparent brown
+00000
+01110
+11011
+01110
+00000
+
+Target
+transparent red
+00000
+00100
+01110
+11111
+00100
+
+Floor
+transparent lightgrey
+00000
+00000
+00000
+00000
+00000
+
+======
+LEGEND
+======
+= Wall
+. Floor
+P Player
+C Crate
+X Target
+
+===========
+COLLISIONLAYERS
+===========
+Background = []
+Static = [Wall Target]
+Movable = [Crate]
+PlayerLayer = [Player]
+
+======
+SOUNDS
+======
+CrateMovePush
+    500
+CrateMoveStop
+    700
+
+=====
+RULES
+=====
+[ >Player | Crate ] -> [ >Player | >Crate ]
+
+===
+WIN
+=== All Crate on Target
+
+======
+LEVELS
+======
+# Level 1
+####
+#P C#
+#  X#
+####
+
+# Level 2
+#####
+#   #
+# P #
+# C #
+##X##
+  ###
+
+# Level 3
+######
+#    #
+# P C#
+# CC #
+##XX##
+ ####
+
+```
+produced the following console output:
+=================================
+line 50 : Only comments should go after a bunch of equals signs ('===') on a line.
+line 51 : In the legend, define new items using the equals symbol - declarations must look like "A = B", "A = B or C [ or D ...]", "A = B and C [ and D ...]".
+line 51 : Incorrect format of legend - should be one of "A = B", "A = B or C [ or D ...]", "A = B and C [ and D ...]", but it looks like you have a dangling "ERROR"?
+line 52 : In the legend, define new items using the equals symbol - declarations must look like "A = B", "A = B or C [ or D ...]", "A = B and C [ and D ...]".
+line 52 : Incorrect format of legend - should be one of "A = B", "A = B or C [ or D ...]", "A = B and C [ and D ...]", but it looks like you have a dangling "ERROR"?
+line 53 : In the legend, define new items using the equals symbol - declarations must look like "A = B", "A = B or C [ or D ...]", "A = B and C [ and D ...]".
+line 53 : Incorrect format of legend - should be one of "A = B", "A = B or C [ or D ...]", "A = B and C [ and D ...]", but it looks like you have a dangling "ERROR"?
+too many errors, aborting compilation
+Errors detected during compilation; the game may not work correctly.
+Return a repaired version of the code that addresses these errors. First, reason about your task and determine the best plan of action. Then, write your code. Return your code in full, inside a ```plaintext code block.

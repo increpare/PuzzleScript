@@ -1,0 +1,132 @@
+SYSTEM PROMPT:
+You are a game designer, familiar with the PuzzleScript game description language. 
+
+USER PROMPT:
+The following PuzzleScript game code:
+```plaintext
+# Legend
+# Player: P
+# Box: B
+# Target: T
+# Wall: #
+# Floor: .
+
+======= 
+title Sokoban Clone
+author You
+homepage none
+zoom 4
+======= 
+
+===========
+OBJECTS
+===========
+Background
+white
+
+Wall
+black
+
+Player
+blue
+P
+
+Box
+brown
+B
+
+Target
+red
+T
+
+BoxOnTarget
+green
+B
+
+===========
+LEGEND
+===========
+. = Background
+# = Wall
+P = Player
+B = Box
+T = Target
+b = BoxOnTarget
+
+===========
+SOUNDS
+===========
+# No sound effects needed for this simple game
+
+===========
+COLLISIONLAYERS
+===========
+Background
+Target
+Wall
+Player, Box, BoxOnTarget
+
+===========
+RULES
+===========
+[ > Player | ] -> [ > Player ]
+[ > Player | Wall ] -> [ > Player | Wall ]
+[ > Player | Box | ] -> [ > Player | Box | ]
+[ > Player | Box | Box | ] -> [ > Player | Box | Box | ]
+
+# Pushing box onto an empty target
+[ > Player | Box | Target ] -> [ > Player | | b ]
+
+# Moving box off target
+[ > Player | b ] -> [ > Player | BoxOnTarget ]
+
+# Moving player onto target
+[ Player | Target ] -> [ PlayerOnTarget ]
+
+===========
+WINCONDITIONS
+===========
+All BoxOnTarget
+
+===========
+LEVELS
+===========
+
+#### 
+#..#
+#.P#
+#B.#
+#.T#
+#### 
+
+####  
+#..#
+#B.# 
+#PT#
+#### 
+
+####   
+#.T#
+#.B#
+#P.# 
+#### 
+
+######
+#....#
+#P#B.#
+#.##.#
+#...T#
+######
+
+```
+produced the following console output:
+=================================
+line 12 : Unrecognised stuff in the prelude.
+line 38 : Object "B" defined multiple times.
+line 45 : Name "P" already in use (on line line 26).
+line 46 : Name "B" already in use (on line line 30).
+line 47 : Name "T" already in use (on line line 34).
+line 48 : Name "B" already in use (on line line 30).
+too many errors, aborting compilation
+Errors detected during compilation; the game may not work correctly.
+Return a repaired version of the code that addresses these errors. First, reason about your task and determine the best plan of action. Then, write your code. Return your code in full, inside a ```plaintext code block.
