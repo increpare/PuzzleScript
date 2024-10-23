@@ -1,0 +1,127 @@
+To address the errors reported in the console output for the provided PuzzleScript game code, let's break down the main issues and the fixes required:
+
+1. **Player Sprite Color Palette Error**: The sprite for the `Player` object is using index 3 in its color grid, but the palette only defines three colors, meaning the indices available are 0, 1, and 2. We need to adjust the sprite to not use the index 3 or add an additional color.
+
+2. **Gem Sprite Color Errors**: The sprite colors for the `Gem` object are incorrectly defined with spaces or possibly incorrect capitalization. We'll need to ensure colors are properly defined and match valid color names recognized by PuzzleScript.
+
+After understanding these issues, we can proceed with the corrections:
+
+- For the `Player`, either modify the sprite to use only colors 0, 1, and 2, or add another color to the palette.
+- For the `Gem`, ensure that colors are without extra spaces and are valid names.
+
+Here is the corrected version of the code:
+
+```plaintext
+title Gem Collector
+author YourName
+homepage http://example.com
+
+========
+OBJECTS
+========
+
+Background
+LightGray
+
+Wall
+Brown DarkBrown
+00010
+11111
+01000
+11111
+00010
+
+Player
+Black Yellow White
+.000.
+.111.
+22222
+.222.
+.2.2.
+
+Gem
+LightCyan Teal
+.....
+..0..
+.000.
+..0..
+.....
+
+Exit
+Green
+.....
+.0.0.
+00000
+.0.0.
+.....
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Player
+G = Gem
+E = Exit
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Wall
+Player, Gem, Exit
+
+======
+RULES
+======
+
+// Player movement
+[ > Player | Gem ] -> [ > Player | ]
+
+// Reveal exit when all gems are collected
+[ no Gem | Exit ] -> [ | Exit ]
+
+==============
+WINCONDITIONS
+==============
+
+All Exit on Player
+
+=======
+LEVELS
+=======
+
+##########
+#P....G..#
+#..#.##..#
+##......##
+#..###...#
+#G......##
+#..#..##.#
+##....G..#
+#.#####..#
+#......E.#
+##########
+
+##########
+#P....G..#
+###..#####
+#...##...#
+#..G..#..#
+#..####..#
+#..#.....#
+#....#####
+####..G..#
+#E.......#
+##########
+```
+
+**Explanations of Fixes:**
+
+- **Player**: Adjusted the color indices used in the last two rows of the sprite to fit within the palette of 3 colors (`Black`, `Yellow`, `White`), changing index `3` to `2`.
+  
+- **Gem**: Removed any trailing spaces from `LightCyan` and ensured `Teal` is recognized as a valid color name.
+
+This adjustment should resolve the issues, allowing the game to compile and run correctly.

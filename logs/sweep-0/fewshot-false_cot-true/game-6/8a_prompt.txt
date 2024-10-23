@@ -1,0 +1,89 @@
+SYSTEM PROMPT:
+You are a game designer, familiar with the PuzzleScript game description language. 
+
+USER PROMPT:
+The following PuzzleScript game code:
+```plaintext
+=========
+title Sokoban Puzzle
+author Example Author
+
+=========
+objects
+Background . 
+Wall        # 
+Player      P 
+Crate       C 
+Target      X 
+CrateTarget O
+
+=========
+colors
+. black
+# grey
+P blue
+C brown
+X red
+O green
+
+=========
+legend
+. = Background
+# = Wall
+P = Player
+C = Crate
+X = Target
+O = CrateTarget
+
+=========
+sounds
+Restart sfasf
+
+=========
+collisionlayers
+Background
+Target 
+CrateTarget
+Player, Crate
+Wall
+
+=========
+rules
+[Player | Crate] -> [> Player | > Crate]
+
+[Crate Target] -> [CrateTarget]
+
+=========
+winconditions
+All CrateTarget on Target
+
+=========
+levels
+;; Level 1
+#######
+#.....#
+#..C..#
+#..P..#
+#..X..#
+#######
+
+;; Level 2
+#####
+#.X.#
+#.#.#
+#CPC#
+#.#.#
+#####
+
+```
+produced the following console output:
+=================================
+line 8 : Was looking for color for object BACKGROUND, got "wall        " instead.
+line 8 : Was looking for color for object BACKGROUND, got "# " instead.
+line 10 : Was looking for color for object PLAYER, got "crate       " instead.
+line 10 : Was looking for color for object PLAYER, got "c " instead.
+line 12 : Was looking for color for object TARGET, got "cratetarget " instead.
+line 12 : Was looking for color for object TARGET, got "o" instead.
+too many errors, aborting compilation
+Errors detected during compilation; the game may not work correctly.
+Return a repaired version of the code that addresses these errors. First, reason about your task and determine the best plan of action. Then, write your code. Return your code in full, inside a ```plaintext code block.

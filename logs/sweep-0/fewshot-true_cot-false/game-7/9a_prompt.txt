@@ -1,0 +1,1773 @@
+SYSTEM PROMPT:
+You are a game designer, familiar with the PuzzleScript game description language. Here are some example games, for inspiration (do not reproduce these games exactly):
+
+title EYE EYE EYE
+author increpare
+homepage www.puzzlescript.net
+
+========
+OBJECTS
+========
+
+Background
+lightgreen green
+11111
+01111
+11101
+11111
+10111
+
+Target
+darkblue
+.....
+.000.
+.0.0.
+.000.
+.....
+
+Wall
+brown darkbrown
+00010
+11111
+01000
+11111
+00010
+
+Player
+black orange white blue
+.000.
+.111.
+22222
+.333.
+.3.3.
+
+EyeBall
+white blue red
+.000.
+00100
+01110
+20102
+.202.
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Player
+O = EyeBall
+
+=======
+SOUNDS
+=======
+
+sfx0 67117309
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Target
+Player, Wall, EyeBall
+
+======
+RULES
+======
+
+[ Eyeball | ... | Player ] -> [ > Eyeball | ... | Player ] sfx0
+
+==============
+WINCONDITIONS
+==============
+
+(There's no way to win against a floating eyeball :S )
+
+=======
+LEVELS
+=======
+
+#########
+#.......#
+#....O..#
+#.P.....#
+#.......#
+#.......#
+#########
+
+
+title Heroes of Sokoban III: The Bard and The Druid
+author Jonah Ostroff
+text_color yellow
+key_repeat_interval 0.25
+run_rules_on_level_start
+
+========
+OBJECTS
+========
+
+Background
+#989898 #C8C8C8
+00000
+00100
+00000
+00010
+00000
+
+Goal
+Brown Yellow
+.000.
+00000
+00010
+00000
+00000
+
+Wall
+Darkgrey #222222
+01000
+11111
+00010
+00010
+11111
+
+Fighter (Warrior sounds better in-game, but I want different abbreviations for the classes in the editor.)
+#FF4444 Pink DarkBrown
+.000.
+.111.
+00000
+.000.
+.2.2.
+
+Wizard
+#2266FF Pink
+.000.
+.010.
+00000
+.000.
+00000
+
+Thief
+#66DD66 Pink DarkBrown
+.000.
+.010.
+00000
+.0.0.
+.0.0.
+
+Priest
+#FFFFAA Pink
+.000.
+.111.
+00000
+.000.
+00000
+
+Bard
+#8800FF #884400 #444444
+.222.
+.111.
+00000
+.000.
+.0.0.
+
+Druid
+#FF8800 Pink DarkBrown
+.212.
+.111.
+00000
+.000.
+00000
+
+SFighter
+#880000 Pink DarkBrown
+.000.
+.111.
+00000
+.000.
+.2.2.
+
+SWizard
+#000088 Pink
+.000.
+.010.
+00000
+.000.
+00000
+
+SThief
+#006600 Pink DarkBrown
+.000.
+.010.
+00000
+.0.0.
+.0.0.
+
+SPriest
+#B8B800 Pink
+.000.
+.111.
+00000
+.000.
+00000
+
+SBard
+#440088 #884400 #444444
+.222.
+.111.
+00000
+.000.
+.0.0.
+
+SDruid
+#884400 Pink DarkBrown
+.212.
+.111.
+00000
+.000.
+00000
+
+Crate
+Orange #552200
+.111.
+10001
+10001
+10001
+.111.
+
+YellowSwitch
+Yellow Black
+.....
+.111.
+.101.
+.111.
+.....
+
+YellowOpen
+Yellow
+0...0
+.....
+.....
+.....
+0...0
+
+YellowDoor
+Yellow #AA7722
+01010
+10001
+00000
+10001
+01010
+
+PurpleSwitch
+#6611CC Black
+.....
+.111.
+.101.
+.111.
+.....
+
+PurpleDoor
+#6611CC #220088
+01010
+10001
+00000
+10001
+01010
+
+PurpleOpen
+#6611CC
+0...0
+.....
+.....
+.....
+0...0
+
+MonsterDoor
+DarkGrey #222222 Red
+21002
+22122
+20212
+20012
+21112
+
+Warpball
+Blue
+
+ShadowDoor
+Purple
+
+Goblin
+Green DarkBrown DarkGreen
+0.2.0
+00000
+..0..
+.111.
+.1.1.
+
+Dying
+White
+
+Saved
+#D8D800
+..0..
+.000.
+..0..
+..0..
+.....
+
+HasSavedDoor
+Yellow
+.....
+.....
+.....
+.....
+.....
+
+Corpse
+#CCC
+.000.
+.000.
+00000
+.0.0.
+.0.0.
+
+Note
+#8800FF
+.....
+..00.
+.00..
+.00..
+.....
+
+=======
+LEGEND
+=======
+
+Player = Fighter or Wizard or Thief or Priest or Bard or Druid
+SPlayer = Swizard or Sthief or SFighter or SPriest or SBard or SDruid
+Hero = Player or Splayer
+Healer = Priest or SPriest (Unlike the other heroes, priests must function even when inactive. "Healer" is the generic term for an active or inactive priest.)
+ClosedDoor = PurpleDoor or YellowDoor or MonsterDoor
+OpenDoor = YellowOpen or PurpleOpen
+Switch = PurpleSwitch or YellowSwitch
+Monster =  Goblin
+Moveable = Crate or SPlayer or Monster
+Static = Wall or ClosedDoor
+Weighing = Crate or Hero or Monster or Wall
+Vulnerable = Hero or Monster
+Invulnerable = Crate or Static
+. = Background
+# = Wall
+F = Fighter
+W = Wizard
+T = Thief
+P = Priest
+B = Bard
+D = Druid
+1 = SFighter
+2 = SThief
+3 = SWizard
+4 = SPriest
+5 = SBard
+6 = SDruid
+* = Crate
+G = Goal
+[ = YellowDoor
+] = PurpleDoor
+{ = YellowSwitch
+} = PurpleSwitch
+O = Goblin
+M = MonsterDoor
+
+=======
+SOUNDS
+=======
+
+Moveable move 82056307
+Sfx0 21221308 (teleport)
+Endlevel 36315908
+Sfx1 66399906 (switch player)
+Sfx2 92172900 (close door)
+Sfx3 15129100 (open door)
+Sfx4 69860105 (saved)
+Sfx5 63194902 (kill enemy)
+Sfx6 81996702 (dying player)
+Sfx7 20187909 (Bard leading)
+Sfx8 93615108 (Transmutation)
+EndGame 86793500
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Warpball, Dying
+Goal, Switch, OpenDoor, ShadowDoor, HasSavedDoor
+ClosedDoor, Hero, Crate, Wall, Monster, Corpse
+Saved
+Note
+
+======
+RULES
+======
+[Saved] [Goal] -> [] [HasSavedDoor] (Remembering whether we saved someone last round by temporarily changing some door to a HasSavedDoor. This is purely for sound effects purposes.)
+
+[Corpse] -> Restart
+
+[ >  Fighter | Moveable ] -> [  >  Fighter | > Moveable  ]
+[ > Moveable | Moveable ] [ Fighter] -> [ > Moveable | > Moveable ] [ Fighter] (Fighters push.)
+
+[ < Thief | Moveable ] -> [ < Thief | < Moveable ] (Thieves pull.)
+
+[ > Wizard ] -> [ Wizard > Warpball]
+[ > Warpball | no Moveable no Static] -> [ | > Warpball]
+[ > Warpball | Static] [Wizard] -> [ | Static ] [> Wizard]
+[ > Warpball | Moveable ] [Wizard] -> [ | Wizard Sfx0] [Moveable]
+[ > Warpball] [Wizard] -> [] [> Wizard]
+(Wizards telexport. What they really do is shoot a "warpball", which causes them to move normally if it hits a wall or the edge of the screen and warp if it hits something they can warp with.)
+
+(Druid does his thing. Warpball gets reused as a placeholder here. That's gonna happen a lot.)
+[> Druid | Crate] -> [Druid | Wall Sfx8]
+[> Druid | Monster] -> [Druid | Wall Sfx8]
+[> Druid | Wall] -> [Druid | Crate Sfx8]
+[> Druid | Healer] -> [Druid | Healer Saved]
+[> Druid | Hero] -> [Druid | Hero Warpball]
+[Warpball | Healer] -> [Saved | Healer]
+[Warpball Hero] -> [Wall Sfx8]
+(What strategic purpose could it serve for healers to protect against petrification? None, but it's fun.)
+
+(I mean, theoretically you could write some horrid dragon breath timing puzzle where the ability to delay an extra turn without moving or switching characters is necessary in order to let you move someone else at the correct moment, but even if dragons still existed, that sounds like a really gross level.)
+
+(Bard moves stuff. Reusing "WarpBall" for totally different purpose, so we can cancel the move if he doesn't move.)
+[> Bard no Note] -> [> Note > Bard WarpBall]
+[> Note] [Note] -> [> Note] [> Note]
+[> Note Moveable | no Static no Moveable no Bard] -> [| Moveable Sfx7]
++[> Note Bard WarpBall| no Static no Moveable no Bard] -> [| Bard]
+
+(Why are we doing this pseudo-movement instead of using the built-in version? Because using movement directions makes the note-adding stuff way easier below, and you can't use movement directions in the LATE phase, so the actual moving has to be done before then.)
+
+[WarpBall] -> Cancel
+[Note] -> []
+
+(The following mess is for changing characters. But at least it's less messy than before. Thanks to Stephen for spotting my silly redundancies.)
+[ Action Fighter] [SThief] -> [SFighter] [Thief Sfx1]
+[ Action Thief] [SWizard] -> [SThief] [Wizard Sfx1]
+[ Action Wizard] [SPriest] -> [SWizard] [Priest Sfx1]
+[ Action Priest] [SBard] -> [SPriest] [Bard Sfx1]
+[ Action Bard] [SDruid] -> [SBard] [Druid Sfx1]
+[ Action Druid] [SFighter] -> [SDruid] [Fighter Sfx1]
+
+[ Action Fighter] [SWizard] -> [SFighter] [Wizard Sfx1]
+[ Action Thief] [SPriest] -> [SThief] [Priest Sfx1]
+[ Action Wizard] [SBard] -> [SWizard] [Bard Sfx1]
+[ Action Priest] [SDruid] -> [SPriest] [Druid Sfx1]
+[ Action Bard] [SFighter] -> [SBard] [Fighter Sfx1]
+[ Action Druid] [SThief] -> [SDruid] [Thief Sfx1]
+
+[ Action Fighter] [SPriest] -> [SFighter] [Priest Sfx1]
+[ Action Thief] [SBard] -> [SThief] [Bard Sfx1]
+[ Action Wizard] [SDruid] -> [SWizard] [Druid Sfx1]
+[ Action Priest] [SFighter] -> [SPriest] [Fighter Sfx1]
+[ Action Bard] [SThief] -> [SBard] [Thief Sfx1]
+[ Action Druid] [SWizard] -> [SDruid] [Wizard Sfx1]
+
+[ Action Fighter] [SBard] -> [SFighter] [Bard Sfx1]
+[ Action Thief] [SDruid] -> [SThief] [Druid Sfx1]
+[ Action Wizard] [SFighter] -> [SWizard] [Fighter Sfx1]
+[ Action Priest] [SThief] -> [SPriest] [Thief Sfx1]
+[ Action Bard] [SWizard] -> [SBard] [Wizard Sfx1]
+[ Action Druid] [SPriest] -> [SDruid] [Priest Sfx1]
+
+[ Action Fighter] [SDruid] -> [SFighter] [Druid Sfx1]
+[ Action Thief] [SFighter] -> [SThief] [Fighter Sfx1]
+[ Action Wizard] [SThief] -> [SWizard] [Thief Sfx1]
+[ Action Priest] [SWizard] -> [SPriest] [Wizard Sfx1]
+[ Action Bard] [SPriest] -> [SBard] [Priest Sfx1]
+[ Action Druid] [SBard] -> [SDruid] [Bard Sfx1]
+
+(Bard plays music. This is my favorite part of the code, btw. Yes, you can make square area effects with just one object!)
+[no Note | no Note | Bard] -> [^ Note | ^ Note | Bard]
+[no Note | Bard] -> [^ Note | Bard]
+[> Note | no Note | no Note] -> [Note | Note | Note]
+[> Note | no Note] -> [Note | Note]
+[> Note] -> [Note]
+
+(Now enemies attack. Yeah, there's only one kind of enemy now.)
+
+Late [Goblin | Vulnerable] -> [Goblin | Dying Vulnerable]
+
+(Vulnerable objects that are attacked are designated as "Dying", but heroes can be saved by the Priest. Then the stuff that didn't get saved dies.)
+
+Late [Dying Healer] -> [Saved Healer]
+Late [Healer | Dying Hero] -> [Healer | Saved Hero]
+Late [Dying Monster] -> [Sfx5]
+Late [Dying Hero] -> [Corpse Sfx6]
+
+(Doors opening.)
+
+late [Weighing  YellowSwitch] [YellowDoor] -> [Weighing  YellowSwitch] [ShadowDoor]
+late [YellowSwitch no Weighing] [YellowOpen] -> [YellowSwitch] [YellowDoor sfx2]
+late [YellowSwitch no Weighing] [ShadowDoor] -> [YellowSwitch] [YellowDoor]
+late [ShadowDoor] -> [YellowOpen sfx3]
+
+late [Weighing PurpleSwitch] [PurpleDoor] -> [Weighing PurpleSwitch] [ShadowDoor]
+late [PurpleSwitch no Weighing] [PurpleOpen] -> [PurpleSwitch] [PurpleDoor sfx2]
+late [PurpleSwitch no Weighing] [ShadowDoor] -> [PurpleSwitch] [PurpleDoor]
+late [ShadowDoor] -> [PurpleOpen sfx3]
+
+late [MonsterDoor] -> [ShadowDoor]
+late [ShadowDoor] [Monster] -> [MonsterDoor] [Monster]
+late [ShadowDoor] -> [sfx3]
+
+(Looks for a HasSavedDoor and, if there is one, puts a warpball on the Priest. Then, if someone was saved this turn, plays the sound only if the Priest doesn't have the warpball. Finally, cleans that up.)
+
+late [HasSavedDoor] [Healer] -> [Goal] [Healer WarpBall]
+late [Saved] [Healer no WarpBall] -> [Saved sfx4] [Healer]
+late [HasSavedDoor] -> [Goal]
+late [WarpBall] -> []
+
+late [Note no Moveable] -> []
+
+==============
+WINCONDITIONS
+==============
+
+All Hero on Goal
+All Goal on Hero
+
+=======
+LEVELS
+=======
+
+Message Many years have passed since the events of Heroes of Sokoban II.
+
+Message Dragons have vanished from the realm, never to be seen again.
+
+Message And new heroes have cropped up, as if there were only room for so many beings in one world.
+
+###################
+#.F.#.........#**G#
+#***#...*****.#..*#
+#.G.#...*...*.#2..#
+#####...*...*.#####
+#.......*...*.....#
+#.......*...*.....#
+#####..**..**.#####
+#*..#.***.***.#..G#
+#*G*#..*...*..#.O.#
+#3.*#.........#4..#
+###################
+
+Message Purple bard charms nearby crates.
+
+#############
+#{#....{#...#
+#.#.*#B.[.G.#
+#*#.....#...#
+#############
+
+###############
+#..############
+#.B..****.....#
+#..######.#####
+#########G#####
+###############
+
+Message Monsters may also be charmed.
+
+#############
+#.......#...#
+#...#...#...#
+#O..B..OM.G.#
+#...#...#...#
+#.......#...#
+#############
+
+Message No one can resist the bard's music.
+
+############
+#G#.F.{..O.#
+#.[........#
+#G#.5.{..O.#
+############
+
+############
+##[[[[[[[###
+##[#####[###
+##[##[[[[{*#
+#...#[######
+#.T.#......#
+#...#.5.G.G#
+############
+
+########
+#*G{####
+###.####
+#...[W##
+###.#.5#
+#*G*####
+########
+
+#########
+#....G#G#
+#.#*..#[#
+#.**....#
+#.......#
+#.{4{B{.#
+#...{...#
+#########
+
+############
+#*.{..{.**{#
+############
+#B21.......#
+##########[#
+#.G..G..G..#
+############
+
+Message Orange druid turns stone into wood, wood into stone.
+
+#############
+#.[.{.2.#.D.#
+#.#########.#
+#....G.G..#.#
+#############
+
+#############
+#...#####{{{#
+#.D.##...{{{#
+#...##.##{{{#
+#############
+#...#..######
+#.1.#..##G.G#
+#...#..#[...#
+#############
+
+#############
+#O*....{...3#
+##.####.#####
+##.###O.O##G#
+##.####.###.#
+##D[....###G#
+#############
+
+Message Living things may also be turned into stone.
+
+Message Try not to think about the moral implications, and don't do it any more than necessary.
+
+#############
+####.4..##G.#
+#O..F..OM#.G#
+####.6..##G.#
+#############
+
+###############
+#.............#
+#.5.}}}.]]]]].#
+#...}}}.]G.G].#
+#.D.}}}.]]]]].#
+#.............#
+###############
+
+#########
+#G#####W#
+#########
+#G#####6#
+#########
+
+#############
+#......O.G.G#
+#.###########
+#.###########
+#...#########
+#B.6#########
+#############
+
+################
+#...#...########
+#.G.#.}.....{[O#
+#...#.F.########
+#...#...########
+#.G.].4.########
+#...#...########
+#...#.5.########
+#.G.#.}.....{[O#
+#...#...########
+################
+
+#####M########
+#G.GM#F.2###O#
+#...#M.......#
+#G.GM#3.6###O#
+#####M########
+
+############
+#6######B###
+#........###
+############
+#.#######.4#
+#.......##1#
+#G.G.G.G##O#
+############
+
+###############
+#....#O.O#...G#
+#..##W...1##..#
+#..#O..O..O#.G#
+#4.#..OGO..#..#
+#..#O..O..O#.G#
+#..##2...6##..#
+#....#O.O#...G#
+###############
+
+Message Get ready.
+
+#######################
+#.F.*....#G.G#....*.4.#
+#...#....#...#....#...#
+#######.........#######
+#####.#####O#####.#####
+#..##O#..#...#..#O##..#
+#.2.*....#G.G#....*.5.#
+#..##O#..*...#..#O##..#
+#####.####...####.#####
+#######..#..*O.*#######
+#...###.#######...#...#
+#.3.###.##G.G##...#.6.#
+#######################
+
+################
+#..............#
+#.1.4......G.G.#
+#..............#
+#.2.B......G.G.#
+#..............#
+#.3.6......G.G.#
+#..............#
+################
+
+Message Thanks for playing!
+
+title Bouncers
+author Tyler Glaiel
+homepage twitter.com/tylerglaiel
+
+========
+OBJECTS
+========
+
+Bg
+#111111 #222222
+00010
+11111
+01000
+01000
+11111
+
+Selection
+white gray
+..1..
+..1..
+11011
+..1..
+..1..
+
+Wall
+DarkBlue DarkGreen #333333
+20002
+22022
+22122
+21112
+11111
+
+Hole
+DarkGray Gray Black
+.111.
+12221
+10001
+10001
+.111.
+
+
+Arrow
+Red Red
+..1..
+..11.
+11111
+..11.
+..1..
+
+
+HudDivider
+white black
+00000
+11111
+11111
+11111
+11111
+
+IconGO
+green white
+10111
+10011
+10001
+10011
+10111
+
+Going
+green white
+10111
+10011
+10001
+10011
+10111
+
+LeftBouncer
+White White Blue
+.221.
+2.1.2
+21..2
+2.1.2
+.221.
+
+RightBouncer
+White White Blue
+.122.
+2.1.2
+2..12
+2.1.2
+.122.
+
+UpBouncer
+White White Blue
+.222.
+2.1.2
+21.12
+1...1
+.222.
+
+DownBouncer
+White White Blue
+.222.
+1...1
+21.12
+2.1.2
+.222.
+
+HudBG
+black
+
+Empty
+black
+
+PlayEmpty
+black
+.....
+.....
+.....
+.....
+.....
+
+
+Ball
+#003300 Green
+.000.
+01110
+01110
+01110
+.000.
+
+WinBall
+LightBlue LightGreen
+.000.
+01110
+01110
+01110
+.000.
+
+
+
+BallUp
+#003300 Green Black
+.000.
+01210
+01110
+01110
+.000.
+
+BallDown
+#003300 Green Black
+.000.
+01110
+01110
+01210
+.000.
+
+BallLeft
+#003300 Green Black
+.000.
+01110
+02110
+01110
+.000.
+
+BallRight
+#003300 Green Black
+.000.
+01110
+01120
+01110
+.000.
+
+
+
+
+=======
+LEGEND
+=======
+Background = Bg or HudBG
+. = bg and PlayEmpty
+S = Selection and PlayEmpty
+- = HudDivider and Wall
+H = HudBG and PlayEmpty
+A = Arrow and HudBG
+G = IconGO
+W = Wall
+O = Hole
+
+L = LeftBouncer and HudBG
+R = RightBouncer and HudBG
+U = UpBouncer and HudBG
+D = DownBouncer and HudBG
+
+B = BallLeft
+N = BallRight
+M = BallUp
+K = BallDown
+
+Player = Selection
+
+
+PlacedLeftbouncer = LeftBouncer and Selection
+PlacedRightbouncer = RightBouncer and Selection
+PlacedUpbouncer = UpBouncer and Selection
+PlacedDownbouncer = DownBouncer and Selection
+
+Bouncer = LeftBouncer or RightBouncer or UpBouncer or DownBouncer
+
+emptyPlayer = Selection and PlayEmpty
+
+
+ballSwitchLeft = Ball and LeftBouncer
+ballSwitchRight = Ball and RightBouncer
+ballSwitchUp = Ball and UpBouncer
+ballSwitchDown = Ball and DownBouncer
+
+ballSwitchedLeft = BallLeft and LeftBouncer
+ballSwitchedRight = BallRight and RightBouncer
+ballSwitchedUp = BallUp and UpBouncer
+ballSwitchedDown = BallDown and DownBouncer
+
+gameGo = Selection and IconGO
+gameGoing =  Going
+
+
+
+WinL = BallLeft and Hole
+WinR = BallRight and Hole
+WinU = BallUp and Hole
+WinD = BallDown and Hole
+
+Win = WinBall
+
+MovingBall = Ball or BallLeft or BallRight or BallUp or BallDown
+
+=======
+SOUNDS
+=======
+SFX0 41242705 (place bouncer)
+SFX1 73889302 (press go)
+MovingBall Move 68254307 (ball move)
+SFX2 68257500 (pocket ball)
+SFX3 82752503 (ball switch direction)
+
+================
+COLLISIONLAYERS
+================
+
+Background
+
+Arrow, Empty, LeftBouncer, RightBouncer, UpBouncer, DownBouncer, PlayEmpty, IconGO, Going, Hole
+WinBall
+Wall, Ball, BallUp, BallDown, BallLeft, BallRight
+Selection, HudDivider
+
+
+======
+RULES
+======
+
+(action button: take icon to the right of the arrow, place under selector)
+[action selection PlayEmpty][Arrow|LeftBouncer] -> [PlacedLeftbouncer][Arrow|Empty] SFX0
+[action selection PlayEmpty][Arrow|RightBouncer] -> [PlacedRightbouncer][Arrow|Empty] SFX0
+[action selection PlayEmpty][Arrow|UpBouncer] -> [PlacedUpbouncer][Arrow|Empty] SFX0
+[action selection PlayEmpty][Arrow|DownBouncer] -> [PlacedDownbouncer][Arrow|Empty] SFX0
+
+(win conditions)
+[WinL] -> [Win] again SFX2
+[WinR] -> [Win] again SFX2
+[WinU] -> [Win] again SFX2
+[WinD] -> [Win] again SFX2
+
+(slide unused icons over to the left if there's space between them and the arrow)
+right [Empty | Bouncer] -> [Bouncer | Empty]
+
+(selector on top of go button -> signals game to run)
+[action selection iconGO] -> [gameGoing] again SFX1
+
+(make genericball match the direction of the bouncer)
+[ballSwitchLeft]->[ballSwitchedLeft] again
+[ballSwitchRight]->[ballSwitchedRight] again
+[ballSwitchUp]->[ballSwitchedUp] again
+[ballSwitchDown]->[ballSwitchedDown] again
+
+(if ball is going to move on top of a bouncer, switch it to generic ball first)
+right [Going][Bouncer | BallLeft] -> [Going][Bouncer | Left Ball] again SFX3
+left  [Going][Bouncer | BallRight] -> [Going][Bouncer | Right Ball] again SFX3
+up    [Going][Bouncer | BallDown] -> [Going][Bouncer | Down Ball] again SFX3
+down  [Going][Bouncer | BallUp] -> [Going][Bouncer | Up Ball] again SFX3
+
+
+
+(move the ball if Going)
+[Going][BallLeft] -> [Going][LEFT BallLeft] again
+[Going][BallRight] -> [Going][RIGHT BallRight] again
+[Going][BallUp] -> [Going][UP BallUp] again
+[Going][BallDown] -> [Going][DOWN BallDown] again
+
+
+
+[Going] -> [Going] again
+
+==============
+WINCONDITIONS
+==============
+
+no MovingBall
+
+=======
+LEVELS
+=======
+
+message place bouncers, hit play
+
+......w.....
+..o...w.....
+......w.....
+......w.....
+......w..b..
+......s.....
+............
+g-----------
+-hhadluhhhhh
+
+message Level 2
+
+............
+......o.....
+..s.........
+......w.....
+...o.....b..
+......m.....
+............
+g-----------
+-hhalurhhhhh
+
+message Level 3
+
+............
+............
+..o.wwww....
+..s.n..b....
+....wwww.o..
+............
+............
+g-----------
+-hhaudrlhhhh
+
+message Level 4
+
+............
+............
+..o......o..
+............
+............
+.s..bbbb....
+............
+............
+..o......o..
+............
+g-----------
+-hhalrudu...
+
+message Level 5
+
+.....n......w...
+..wwww.k....o.w.
+......b..m......
+...o............
+.......w........
+.....b.w........
+......wwo.......
+w.ww.www........
+.o..............
+....s...........
+..........wwwo..
+g---------------
+-hhaddddddrrr...
+
+message I didn't feel like making more levels
+
+title Sokobond: The Demake
+author Jonah Ostroff
+homepage www.sokobond.com
+text_color #202020
+background_color #FDFDFD
+key_repeat_interval 0.25
+run_rules_on_level_start
+noaction
+youtube 2R0sTlruOZc
+
+========
+OBJECTS
+========
+
+Background
+#FFFFFF #F8F8F8
+00000
+01010
+00000
+01010
+00000
+
+Player
+#FFBBEE
+00000
+0...0
+0...0
+0...0
+00000
+
+Wall
+Yellow White
+00000
+00000
+00000
+00000
+00000
+
+Hydrogen
+Red Black
+.....
+.111.
+.101.
+.111.
+.....
+
+Nitrogen
+Green Black
+.....
+.111.
+.101.
+.111.
+.....
+
+Oxygen
+Blue Black
+.....
+.111.
+.101.
+.111.
+.....
+
+Carbon
+Yellow Black
+.....
+.111.
+.101.
+.111.
+.....
+
+Helium
+White Black
+.....
+.111.
+.101.
+.111.
+.....
+
+1Electron
+LightGray
+.....
+.0...
+.....
+.....
+.....
+
+2Electron
+LightGray
+.....
+...0.
+.....
+.0...
+.....
+
+3Electron
+LightGray
+.....
+.0.0.
+.....
+.0...
+.....
+
+4Electron
+LightGray
+.....
+.0.0.
+.....
+.0.0.
+.....
+
+BondU
+Black
+..0..
+.....
+.....
+.....
+.....
+
+BondL
+Black
+.....
+.....
+0....
+.....
+.....
+
+BondR
+Black
+.....
+.....
+....0
+.....
+.....
+
+BondD
+Black
+.....
+.....
+.....
+.....
+..0..
+
+
+BondUL
+Black
+..0..
+.....
+0....
+.....
+.....
+
+BondUR
+Black
+..0..
+.....
+....0
+.....
+.....
+
+BondUD
+Black
+..0..
+.....
+.....
+.....
+..0..
+
+BondLR
+Black
+.....
+.....
+0...0
+.....
+.....
+
+BondLD
+Black
+.....
+.....
+0....
+.....
+..0..
+
+BondRD
+Black
+.....
+.....
+....0
+.....
+..0..
+
+BondULR
+Black
+..0..
+.....
+0...0
+.....
+.....
+
+BondULD
+Black
+..0..
+.....
+0....
+.....
+..0..
+
+BondURD
+Black
+..0..
+.....
+....0
+.....
+..0..
+
+BondLRD
+Black
+.....
+.....
+0...0
+.....
+..0..
+
+BondULRD
+Black
+..0..
+.....
+0...0
+.....
+..0..
+
+Temp1
+Red
+
+Temp2 (These are placeholders for various things.)
+Green
+
+Temp3
+Blue
+
+Temp4
+Yellow
+
+=======
+LEGEND
+=======
+
+Atom = Hydrogen or Oxygen or Nitrogen or Carbon or Helium
+Orbital = 1Electron or 2Electron or 3Electron or 4Electron
+UBond = BondU or BondUL or BondUR or BondUD or BondULR or BondULD or BondURD or BondULRD
+LBond = BondL or BondUL or BondLR or BondLD or BondULR or BondULD or BondLRD or BondULRD
+RBond = BondR or BondUR or BondLR or BondRD or BondULR or BondURD or BondLRD or BondULRD
+DBond = BondD or BondUD or BondLD or BondRD or BondULD or BondURD or BondLRD or BondULRD
+1Bond = BondU or BondL or BondR or BondD
+2Bond = BondUL or BondUR or BondUD or BondLR or BondLD or BondRD
+3Bond = BondULR or BondULD or BondURD or BondLRD
+Bond = 1Bond or 2Bond or 3Bond or BondULRD
+Temps = Temp1 or Temp2 or Temp3 or Temp4
+AtomStuff = Bond or Orbital
+
+. = Background
+# = Wall
+H = Hydrogen and 1Electron
+O = Oxygen and 2Electron
+N = Nitrogen and 3Electron
+C = Carbon and 4Electron
+E = Helium
+0 = Helium  and Player
+1 = Hydrogen and 1Electron and Player
+2 = Oxygen and 2Electron and Player
+3 = Nitrogen and 3Electron and Player
+4 = Carbon and 4Electron and Player
+P = Player
+
+=======
+SOUNDS
+=======
+
+Sfx1 64050702 (Bonding sound)
+EndLevel 96545300 (End level)
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Player
+Bond
+Wall, Atom
+Orbital
+Temps
+
+======
+RULES
+======
+
+(This is the old way I did movement, and it was super inefficient.)
+([> Player Atom] -> [> Player > Atom]
+
+Up [ Moving Atom UBond | Atom] -> [ Moving Atom UBond | Moving Atom]
++ Left [ Moving Atom LBond | Atom] -> [ Moving Atom LBond | Moving Atom]
++ Right [ Moving Atom RBond | Atom] -> [ Moving Atom RBond | Moving Atom]
++ Down [ Moving Atom DBond | Atom] -> [ Moving Atom DBond | Moving Atom]
++ [> Atom | Atom] -> [> Atom | > Atom])
+
+[Up Player] -> [Up Player Temp1]
+[Left Player] -> [Left Player Temp2]
+[Right Player] -> [Right Player Temp3]
+[Down Player] -> [Down Player Temp4]
+
+Up [Temps UBond | no Temps] -> [Temps Ubond | Temps]
++ Left [Temps LBond | no Temps] -> [Temps Lbond | Temps]
++ Right [Temps RBond | no Temps] -> [Temps Rbond | Temps]
++ DOwn [Temps DBond | no Temps] -> [Temps Dbond | Temps]
++ Up [Temp1 | Atom no Temp1] -> [Temp1 | Atom Temp1]
++ Left [Temp2 | Atom no Temp2] -> [Temp2 | Atom Temp2]
++ Right [Temp3 | Atom no Temp3] -> [Temp3 | Atom Temp3]
++ Down [Temp4 | Atom no Temp4] -> [Temp4 | Atom Temp4]
+
+[Temp1 Atom] -> [Up Atom]
+[Temp2 Atom] -> [Left Atom]
+[Temp3 Atom] -> [Right Atom]
+[Temp4 Atom] -> [Down Atom]
+
+[ > Atom | Wall] -> Cancel
+
+[ > Atom AtomStuff] -> [ > Atom > AtomStuff]
+
+Late Right [Orbital no Temps no RBond|Orbital no Temps no LBond] -> [Orbital Temp1|Orbital Temp2 Sfx1] (Bond horizontally.)
++ Late [Temp1 no Bond] -> [Temp3 BondR]
++ Late [Temp1 BondU] -> [Temp3 BondUR]
++ Late [Temp1 BondL] -> [Temp3 BondLR]
++ Late [Temp1 BondD] -> [Temp3 BondRD]
++ Late [Temp1 BondUL] -> [Temp3 BondULR]
++ Late [Temp1 BondUD] -> [Temp3 BondURD]
++ Late [Temp1 BondLD] -> [Temp3 BondLRD]
++ Late [Temp1 BondULD] -> [Temp3 BondULRD]
++ Late [Temp2 no Bond] -> [Temp3 BondL]
++ Late [Temp2 BondU] -> [Temp3 BondUL]
++ Late [Temp2 BondR] -> [Temp3 BondLR]
++ Late [Temp2 BondD] -> [Temp3 BondLD]
++ Late [Temp2 BondUR] -> [Temp3 BondULR]
++ Late [Temp2 BondUD] -> [Temp3 BondULD]
++ Late [Temp2 BondRD] -> [Temp3 BondLRD]
++ Late [Temp2 BondURD] -> [Temp3 BondULRD]
++ Late [Temp3 1Electron] -> []
++ Late [Temp3 2Electron] -> [1Electron]
++ Late [Temp3 3Electron] -> [2Electron]
++ Late [Temp3 4Electron] -> [3Electron]
+
+Late Down [Orbital no Temps no DBond|Orbital no Temps no UBond] -> [Orbital Temp1|Orbital Temp2 Sfx1] (Bond vertically.)
++ Late [Temp1 no Bond] -> [Temp3 BondD]
++ Late [Temp1 BondU] -> [Temp3 BondUD]
++ Late [Temp1 BondL] -> [Temp3 BondLD]
++ Late [Temp1 BondR] -> [Temp3 BondRD]
++ Late [Temp1 BondUL] -> [Temp3 BondULD]
++ Late [Temp1 BondUR] -> [Temp3 BondURD]
++ Late [Temp1 BondLR] -> [Temp3 BondLRD]
++ Late [Temp1 BondULR] -> [Temp3 BondULRD]
++ Late [Temp2 no Bond] -> [Temp3 BondU]
++ Late [Temp2 BondL] -> [Temp3 BondUL]
++ Late [Temp2 BondR] -> [Temp3 BondUR]
++ Late [Temp2 BondD] -> [Temp3 BondUD]
++ Late [Temp2 BondLR] -> [Temp3 BondULR]
++ Late [Temp2 BondLD] -> [Temp3 BondULD]
++ Late [Temp2 BondRD] -> [Temp3 BondURD]
++ Late [Temp2 BondLRD] -> [Temp3 BondULRD]
++ Late [Temp3 1Electron] -> []
++ Late [Temp3 2Electron] -> [1Electron]
++ Late [Temp3 3Electron] -> [2Electron]
++ Late [Temp3 4Electron] -> [3Electron]
+
+==============
+WINCONDITIONS
+==============
+
+No Orbital
+
+=======
+LEVELS
+=======
+
+Message This is a demake of Sokobond by Alan Hazelden and Harry Lee.
+
+Message Get the full version at www.sokobond.com!
+
+#########
+####....#
+####....#
+#....#H.#
+#...O#..#
+#.1.....#
+#....####
+#########
+
+Message Water atoms are icosahedral.
+
+######
+#H..O#
+#....#
+#1.###
+######
+
+Message The blue tint seen in large bodies of water comes from the pigment in the oxygen atoms.
+
+########
+###...##
+#2.H.H.#
+###...##
+########
+
+Message The Earth's surface and the human body are both 70% water. That CAN'T be a coincidence, right?
+
+#######
+#..O..#
+#..#..#
+#.1#H.#
+#..#..#
+#..O..#
+#######
+
+Message "One hydrogen per oxide" is defined as the speed at which atoms move.
+
+#######
+#.H.3.#
+#.....#
+#.H.H.#
+#######
+
+Message Ammonia is an inflammatory condition of the lungs.
+
+#######
+#.....#
+#.....#
+#H#H#H#
+#.....#
+#..3..#
+#######
+
+Message Hang on, I was thinking of "pneumonia".
+
+#########
+####4####
+###...###
+##.H.H.##
+#.......#
+##.H.H.##
+###...###
+####.####
+#########
+
+Message 90% of all the methane in the world is produced in Arizona.
+
+#########
+##H...H##
+#...4...#
+##H...H##
+#########
+
+Message Methane contains the name "Ethan". Do you think it was discovered by a guy named Ethan?
+
+########
+#......#
+#...H..#
+#O.H..3#
+#...H..#
+#......#
+########
+
+Message Hydroxylamine contains almost every vowel of the alphabet almost exactly once.
+
+#########
+#.......#
+#..H.H..#
+#.2...C.#
+#..H.H..#
+#.......#
+#########
+
+Message Methanol occurs naturally in peppermint oils.
+
+#########
+#.......#
+#.1...E.#
+###.H.###
+###...###
+###.O.###
+#########
+
+Message Helium is named after the Greek god Helios, who first discovered its existence.
+
+#########
+#.......#
+#.E.E.E.#
+###H.1###
+###.H.###
+###...###
+###.N.###
+#########
+
+Message Inhaling helium contracts the ear drum, causing pitches to sound higher. Your voice is perceived normally by everyone else.
+
+#######
+###..##
+##..H.#
+#..N..#
+#.H..H#
+##..0.#
+#######
+
+Message The first helium balloons were used at the wedding of Queen Victoria and Prince Albert, popularizing the term "noble gas".
+
+#######
+#.....#
+#..N..#
+#..0..#
+#H.H.H#
+#.#.#.#
+#.....#
+#######
+
+Message Helium does not form chemical bonds with other elements, but it's the bonds of friendship that really matter.
+
+########
+#......#
+#...H#N#
+#......#
+##H#H.0#
+##.....#
+####...#
+########
+
+Message Scientists have been searching for centuries to discover the missing elements between hydrogen and helium on the periodic table.
+
+Message Thanks for playing! Go get the full version, which has lots of cool stuff that I couldn't write in PuzzleScript: www.sokobond.com
+
+USER PROMPT:
+The following PuzzleScript game code:
+```plaintext
+title Cube Collector
+author Your Name
+homepage example.com
+
+========
+OBJECTS
+========
+
+Background
+black
+
+Player
+#00ff00
+..0..
+.000.
+00.00
+.000.
+..0..
+
+Cube
+#ff0000
+.0.0.
+.000.
+00000
+.000.
+.0.0.
+
+Wall
+#7f7f7f #7f7f7f
+11111
+1...1
+1...1
+1...1
+11111
+
+Target
+#0000ff #0000ff
+.....
+..1..
+.111.
+..1..
+.....
+
+=======
+LEGEND
+=======
+
+. = Background
+P = Player
+C = Cube
+# = Wall
+X = Target
+
+Obstacle = Wall or Cube
+
+=======
+SOUNDS
+=======
+
+SFX0 41242705
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Target
+Player, Wall, Cube
+
+======
+RULES
+======
+
+[ > Player | Cube | Obstacle ] -> [ > Player | Cube | ] 
+[ Player | Cube | Target ] -> [ Player | Background | Cube ] 
+
+==============
+WINCONDITIONS
+==============
+
+all Cube on Target
+
+=======
+LEVELS
+=======
+
+#####  
+#...#
+#P.C#
+#...#
+#..X#
+#####
+
+#####  
+#P..#
+#C..#
+#..X#
+#####
+
+```
+compiled, but a solvability check returned the following error:
+ Level 0 is not solvable. Please repair it. Level 1 is not solvable. Please repair it.
+Return your code in full, inside a ```plaintext code block.

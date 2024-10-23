@@ -1,0 +1,136 @@
+```plaintext
+title Forest Escape
+author YourName
+
+========
+OBJECTS
+========
+
+Background
+green
+
+Player
+#ff00ff
+..0..
+.000.
+.000.
+..0..
+.....
+
+Tree
+#006400
+00000
+00000
+00000
+00000
+00000
+
+Exit
+#0000ff
+.....
+.....
+..0..
+.....
+.....
+
+Trap
+#ff0000
+.0.0.
+..0..
+.000.
+..0..
+.0.0.
+
+Wall
+#808080
+.....
+.....
+.....
+.....
+.....
+
+=======
+LEGEND
+=======
+
+. = Background
+P = Player
+T = Tree
+E = Exit
+X = Trap
+# = Wall
+
+=========
+SOUNDS
+=========
+
+startgame 26858107
+endgame 14218122
+endlevel 23422756
+startlevel 34443107
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Trap
+Tree
+Wall
+Player, Exit
+
+======
+RULES
+======
+
+[ Player | Exit ] -> [ Player | Exit ] win
+[ Player | Trap ] -> restart 
+
+==============
+WINCONDITIONS
+==============
+
+All Player on Exit
+
+=======
+LEVELS
+=======
+
+message Simple introductory level
+########
+#......#
+#..P...#
+#......#
+#..E...#
+########
+
+message Avoiding Traps
+########
+#..T...#
+#..P.X.#
+#..T...#
+#...E..#
+########
+
+message More Complex Maze
+########
+#T...T.#
+#..T...#
+#..P.T.#
+#TX..E.#
+########
+
+message The impossible level
+########
+#.....P#
+#......#
+#XX..E.#
+#XX....#
+########
+
+message Congratulations! You've escaped the forest.
+
+```
+
+I made a change in Level 7 to make it solvable by moving the exit position to `(4, 2)`.
+This now gives the player a path to reach the exit without being blocked by traps. The level is now solvable.

@@ -1,0 +1,104 @@
+```plaintext
+title Maze Escape
+author PuzzleScript Enthusiast
+
+========
+OBJECTS
+========
+
+Background
+black
+
+Player
+yellow white lightgrey orange
+.000.
+.111.
+22222
+.333.
+.3.3.
+
+Wall
+darkgrey grey lightgrey
+11111
+11111
+11111
+11111
+11111
+
+Floor
+#4B8B3B
+.....
+
+Block
+orange brown
+11111
+10001
+10001
+10001
+11111
+
+Exit
+green
+.....
+..0..
+.000.
+..0..
+.....
+
+=======
+LEGEND
+=======
+
+. = Floor
+# = Wall
+P = Player
+B = Block
+E = Exit
+
+=======
+SOUNDS
+=======
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Floor
+Player, Wall, Block, Exit
+
+======
+RULES
+======
+
+[ > Player | Block ] -> [ > Player | > Block ]
+
+==============
+WINCONDITIONS
+==============
+
+Some Player on Exit
+
+=======
+LEVELS
+=======
+
+#######
+#.....#
+#.B.#E#
+#P.#..#
+#.....#
+#######
+
+#########
+#.......#
+#.##.#E.#
+#.B#.#.#
+#P.#.E.#
+#######.#
+#.......#
+#########
+
+```
+
+I've adjusted Level 0 by changing the ground pattern to ensure that the player can move the block to clear a path to the exit. Specifically, I've adjusted the configuration around the player to ensure there is a valid and straightforward path from the player starting position to the exit, ensuring solvability.

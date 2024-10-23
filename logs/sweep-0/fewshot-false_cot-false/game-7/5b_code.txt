@@ -1,0 +1,116 @@
+Below is a revised version of your PuzzleScript game code that should resolve the errors mentioned in the console output:
+
+```plaintext
+Title: Simple Sokoban
+Author: PuzzleScript Enthusiast
+
+========
+OBJECTS
+========
+
+Background
+transparent
+00000
+...00
+...00
+
+Player
+yellow
+..0..
+..0..
+00000
+
+Crate
+red
+00000
+00000
+00000
+
+Target
+green
+..0..
+..0..
+..0..
+
+Wall
+grey
+00000
+00000
+00000
+
+CrateOnTarget
+brown
+00000
+00.00
+00000
+
+========
+LEGEND
+========
+
+= Background
+P = Player
+# = Wall
+B = Crate
+T = Target
+O = CrateOnTarget
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Wall
+Player, Crate, CrateOnTarget
+Target
+
+========
+RULES
+========
+
+RIGHT [ > Player | B ] -> [ > Player | > B ]
+LEFT  [ < Player | B ] -> [ < Player | < B ]
+UP    [ ^ Player | B ] -> [ ^ Player | ^ B ]
+DOWN  [ v Player | B ] -> [ v Player | v B ]
+
+[ B | T ] -> [ O | T ]
+[ O | T ] -> [ O | T ]
+
+===============
+WINCONDITIONS
+===============
+
+All O on T
+
+========
+LEVELS
+========
+
+#####
+#   #
+# P #
+# B #
+# T #
+#   #
+#####
+
+ ######
+ #    #
+ # P  #
+ ##B ##
+  #T#
+  ###
+
+```
+
+### Changes Made:
+1. **Objects Section**: No changes were needed.
+2. **Legend Section**: No changes were needed.
+3. **CollisionLayers Section**: Changed the separator from `==========` to `================` to maintain consistency.
+4. **Rules Section**: Adjusted the rule for crate and target: 
+   - `[ B | T ] -> [ O | T ]` ensures that a crate on a target turns into a CrateOnTarget and maintains the target underneath.
+   - `[ O | T ] -> [ O | T ]` maintains the state as is with CrateOnTarget over the Target.
+5. **WinConditions Section**: Added `All O on T` to properly define the win condition.
+6. **Levels Section**: Removed the `// Level 1` and `// Level 2` comments to fix errors related to undefined keys. These weren't needed as PuzzleScript doesn't require labels like `Level 1` for level definition.
+
+These adjustments should fix the compilation errors and make the game run as intended.

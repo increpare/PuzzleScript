@@ -1,0 +1,119 @@
+SYSTEM PROMPT:
+You are a game designer, familiar with the PuzzleScript game description language. 
+
+USER PROMPT:
+The following PuzzleScript game code:
+```plaintext
+Title: Simple Sokoban
+Author: PuzzleScript Enthusiast
+
+========
+OBJECTS
+========
+
+Background
+transparent
+00000
+...00
+...00
+
+Player
+yellow
+..0..
+..0..
+00000
+
+Crate
+red
+00000
+00000
+00000
+
+Target
+green
+..0..
+..0..
+..0..
+
+Wall
+grey
+00000
+00000
+00000
+
+CrateOnTarget
+brown
+00000
+00.00
+00000
+
+========
+LEGEND
+========
+
+= Background
+P = Player
+# = Wall
+B = Crate
+T = Target
+O = CrateOnTarget
+
+=======
+SOUNDS
+=======
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Wall
+Player, Crate, CrateOnTarget
+Target
+
+========
+RULES
+========
+
+RIGHT [ > Player | Crate ] -> [ > Player | > Crate ]
+LEFT  [ < Player | Crate ] -> [ < Player | < Crate ]
+UP    [ ^ Player | Crate ] -> [ ^ Player | ^ Crate ]
+DOWN  [ v Player | Crate ] -> [ v Player | v Crate ]
+
+[ Crate | Target ] -> [ CrateOnTarget | ]
+[ CrateOnTarget | ] -> win
+
+========
+LEVELS
+========
+
+// Level 1
+#####
+#   #
+# P #
+# B #
+#   #
+#   #
+#   #
+#####
+
+// Level 2
+ ######
+ #    #
+ # P  #
+ ##B ##
+  #T#
+  ###
+
+```
+produced the following console output:
+=================================
+line 48 : Only comments should go after a bunch of equals signs ('===') on a line.
+line 81 : section "LEVELS" is out of order, must follow  "WINCONDITIONS" (or it could be that the section "WINCONDITIONS"is just missing totally.  You have to include all section headings, even if the section itself is empty).
+line 84 : Key "/" not found. Do you need to add it to the legend, or define a new object?
+line 84 : Key "L" not found. Do you need to add it to the legend, or define a new object?
+line 84 : Key "E" not found. Do you need to add it to the legend, or define a new object?
+line 84 : Key "V" not found. Do you need to add it to the legend, or define a new object?
+too many errors, aborting compilation
+Errors detected during compilation; the game may not work correctly.
+Return a repaired version of the code that addresses these errors. Return your code in full, inside a ```plaintext code block.

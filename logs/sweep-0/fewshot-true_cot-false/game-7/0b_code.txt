@@ -1,0 +1,105 @@
+```plaintext
+title Cube Collector
+author Your Name
+homepage example.com
+
+========
+OBJECTS
+========
+
+Background
+black
+
+Player
+#00ff00
+..0..
+.000.
+00.00
+.000.
+..0..
+
+Cube
+#ff0000
+.0.0.
+.000.
+00000
+.000.
+.0.0.
+
+Wall
+#7f7f7f
+11111
+1...1
+1...1
+1...1
+11111
+
+Target
+#0000ff
+.....
+..1..
+.111.
+..1..
+.....
+
+=======
+LEGEND
+=======
+
+. = Background
+P = Player
+C = Cube
+# = Wall
+X = Target
+
+Obstacle = Wall or Cube
+
+=======
+SOUNDS
+=======
+
+move 640507
+push 1204913
+collect 2010923
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Target
+Player, Wall, Cube
+
+======
+RULES
+======
+
+[ > Player | Cube ] -> [ Player | > Cube ] sfx0
+[ > Player | Cube | no Obstacle ] -> [ Player | Cube | Cube ] sfx1
+[ Player | Cube on Target ] -> [ Player | Background ] sfx2
+
+==============
+WINCONDITIONS
+==============
+
+all Cube on Target
+
+=======
+LEVELS
+=======
+
+#####  
+#...#
+#P.C#
+#...#
+#..X#
+#####
+
+#####  
+#P..#
+#C..#
+#..X#
+#####
+```
+
+This complete PuzzleScript game involves collecting cubes and placing them on targets. The player, represented by "P", can move cubes "C" onto the target "X". The game comprises walls "#" and backgrounds "." to define the play area. The player wins when all cubes are on targets, with levels designed to require strategic movement and cube placement.

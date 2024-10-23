@@ -1,0 +1,119 @@
+To address the errors in the provided PuzzleScript game code, we need to make the following changes:
+
+1. **Block Color Error**: The error messages indicate that the `Block` sprite is trying to reference multiple colors, but only one color is defined. To fix this, we need to specify additional colors that the sprite demands.
+
+2. **Section Order Error**: The `COLLISIONLAYERS` section is out of order. We need to insert an empty `SOUNDS` section before it to maintain the appropriate sequence of PuzzleScript sections.
+
+Here is the corrected version of the code:
+
+```plaintext
+title Maze Escape
+author PuzzleScript Enthusiast
+
+========
+OBJECTS
+========
+
+Background
+black
+
+Player
+yellow white lightgrey orange
+.000.
+.111.
+22222
+.333.
+.3.3.
+
+Wall
+darkgrey grey lightgrey
+11111
+11111
+11111
+11111
+11111
+
+Floor
+#4B8B3B
+.....
+
+Block
+orange brown darkorange
+22222
+20002
+20002
+20002
+22222
+
+Exit
+green
+.....
+..0..
+.000.
+..0..
+.....
+
+=======
+LEGEND
+=======
+
+. = Floor
+# = Wall
+P = Player
+B = Block
+E = Exit
+
+=======
+SOUNDS
+=======
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Floor
+Player, Wall, Block, Exit
+
+======
+RULES
+======
+
+[ > Player | Block ] -> [ > Player | > Block ]
+
+==============
+WINCONDITIONS
+==============
+
+Some Player on Exit
+
+=======
+LEVELS
+=======
+
+# Level 1
+#######
+#.....#
+#.#.#.#
+#P#B#E#
+#.....#
+#######
+
+# Level 2
+#########
+#.......#
+#.###.#.#
+#.#B#.#.#
+#P.#.#E.#
+#######.#
+#.......#
+#########
+```
+
+**Explanation of Changes:**
+
+- **Block Color**: The `Block` sprite now uses three colors (orange, brown, and darkorange) to address the error related to multiple colors being referenced but only one color being defined.
+  
+- **Section Order**: An empty `SOUNDS` section was added to ensure that the `COLLISIONLAYERS` section follows the correct order. This resolves the ordering error.
+
+This should compile without errors and run as intended.

@@ -1,0 +1,1886 @@
+SYSTEM PROMPT:
+You are a game designer, familiar with the PuzzleScript game description language. Here are some example games, for inspiration (do not reproduce these games exactly):
+
+title neko puzzle
+author lexaloffle
+homepage www.lexaloffle.com
+
+(
+
+An inadequate but illustrative demake of one of my favourite puzzle games ever, by the extremely amicable Lexaloffle, and with his permission.
+
+www.lexaloffle.com/neko.htm
+
+The game proper has a lot of magic and love in it.
+
+)
+
+========
+OBJECTS
+========
+
+Background .
+darkblue
+
+Fruit F
+red green lightred
+..1..
+.000.
+00020
+00000
+.000.
+
+Player P
+gray white
+.1.1.
+10101
+11111
+.111.
+00.00
+
+=======
+LEGEND
+=======
+
+=========
+SOUNDS
+=========
+
+endlevel 97301508
+startgame 97301508
+endgame 97301508
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Player, Fruit
+
+======
+RULES
+======
+
+[ > Player | ... | Fruit ] -> [ | ... | Player ] 
+
+(if you're not sure what this line does, try removing it, and see what happens)
+[ > Player ] -> [ Player ] 
+
+==============
+WINCONDITIONS
+==============
+
+no Fruit
+
+=======
+LEVELS
+=======
+
+message level 1 of 10
+
+......F.
+........
+F......F
+......FF
+........
+........
+P.......
+
+message level 2 of 10
+
+........
+....P...
+...F.F..
+........
+........
+..F.FF..
+........
+
+message level 3 of 10
+
+........
+.FF....F
+........
+........
+F...P...
+........
+........
+F.F.....
+
+message level 4 of 10
+
+....F..F
+........
+.......F
+F.......
+P.......
+........
+F...F...
+
+message level 5 of 10
+
+........
+....F.P.
+F.F.....
+........
+F...F...
+..F.F...
+........
+
+message level 6 of 10
+
+F.....F.
+........
+........
+FF..F...
+F.....F.
+........
+.P......
+
+message level 7 of 10
+
+...FP..F
+F.F.....
+F......F
+........
+........
+..F.....
+........
+
+message level 8 of 10
+
+..F..P..
+........
+........
+.FFF....
+F..F..F.
+........
+........
+
+message level 9 of 10
+
+....F..F
+........
+.F..F...
+........
+.F.P..F.
+.F......
+........
+
+message level 10 of 10
+
+....F.F.
+........
+.F..F..F
+...F..F.
+.......F
+...FP...
+........
+
+message congratulations!
+
+
+title Wrapping Recipe
+author increpare
+homepage http://www.puzzlescript.net
+
+========
+OBJECTS
+========
+
+Wrap
+Black
+
+Background
+White
+
+Player
+Blue
+
+=======
+LEGEND
+=======
+
+. = Background
+~ = Wrap
+@ = Player
+
+=======
+SOUNDS
+=======
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Wrap
+Player
+
+======
+RULES
+======
+
+[ Wrap | < Player | ... | | Wrap ] -> [ Wrap | | ... | Player | Wrap ]
+
+==============
+WINCONDITIONS
+==============
+
+=======
+LEVELS
+=======
+
+~~~~~~~
+~.....~
+~.....~
+~..@..~
+~.....~
+~.....~
+~~~~~~~
+
+
+title Robot Spawner
+author increpare
+homepage www.puzzlescript.net
+
+========
+OBJECTS
+========
+
+Background (special, automatically placed in its own layer)
+green darkgreen
+11111
+01111
+11101
+11111
+10111
+
+Spawner (Name)
+yellow 	(Color)
+..... 	(Sprite)
+..0..
+.000.
+..0..
+.....
+
+Player (Required by game)
+pink
+..0..
+00000
+..0..
+.000.
+.0.0.
+
+RedRobot
+gray black red
+.000.
+.200.
+...0.
+00000
+01010
+
+GreenRobot
+gray black lightgreen
+.000.
+.200.
+...0.
+00000
+01010
+
+BlueRobot
+gray black lightblue
+.000.
+.200.
+...0.
+00000
+01010
+
+=======
+LEGEND
+=======
+
+Robot = RedRobot or GreenRobot or BlueRobot
+Obstacle = Player or Robot
+. = Background
+P = Player
+* = Robot
+O = Spawner
+
+=========
+SOUNDS
+=========
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Spawner
+Player, Robot
+
+======
+RULES
+======
+
+[ stationary Robot ] -> [ randomDir Robot ] 
+[ Spawner no Obstacle ] -> [ Spawner random Robot ] 
+
+==============
+WINCONDITIONS
+==============
+
+=======
+LEVELS
+=======
+
+.......
+.......
+.......
+...O...
+.......
+.P.....
+.......
+
+
+========
+OBJECTS
+========
+
+Background .
+black
+
+Player
+green
+
+=======
+LEGEND
+=======
+
+=======
+SOUNDS
+=======
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Player
+
+======
+RULES
+======
+
+==============
+WINCONDITIONS
+==============
+
+=======
+LEVELS
+=======
+.
+
+
+title Block Faker
+author Droqen
+homepage www.droqen.com
+
+require_player_movement
+key_repeat_interval 0.12
+
+background_color white
+text_color black
+
+color_palette c64
+
+(
+
+A port of first several levels of Droqen's beautiful game:
+
+https://droqen.itch.io/block-faker
+
+(His game has secrets that this one does not.)
+
+)
+
+========
+OBJECTS
+========
+
+Background
+white
+
+Grille
+gray
+0...0
+.0.0.
+..0..
+.0.0.
+0...0
+
+EndPoint
+green
+
+Player
+black
+00000
+00000
+0.0.0
+00000
+00000
+
+Wall
+gray
+
+WallBlock
+black grey
+01111
+01111
+01111
+01111
+00001
+
+BlueBlock
+blue
+00000
+00.00
+0.0.0
+00.00
+00000
+
+GreenBlock
+lightgreen
+00000
+00000
+00.00
+00000
+00000
+
+PinkBlock
+red
+00000
+00.00
+0...0
+00.00
+00000
+
+PurpleBlock
+purple
+00000
+0...0
+0.0.0
+0...0
+00000
+
+OrangeBlock
+orange
+00000
+0.0.0
+00000
+0.0.0
+00000
+
+=======
+LEGEND
+=======
+
+Block = PinkBlock or BlueBlock or PurpleBlock or OrangeBlock or GreenBlock
+Moveable = Player or Block
+PlayerObstacle = Block or Wall or WallBlock
+BlockObstacle = Player or Wall or WallBlock or Grille or Block or EndPoint
+. = Background
+# = Wall
+@ = WallBlock
+P = Player
+B = BlueBlock
+G = GreenBLock
+K = PinkBlock
+R = PurpleBlock
+O = OrangeBlock
+E = EndPoint
+x = Grille
+H = Grille and Player
+
+=========
+SOUNDS
+=========
+
+================
+COLLISIONLAYERS
+================
+
+Background
+EndPoint
+Grille
+Player, Wall, WallBlock, PinkBlock, BlueBlock, PurpleBlock, OrangeBlock, GreenBlock
+
+======
+RULES
+======
+
+[ > Moveable | Moveable ] -> [ > Moveable | > Moveable ] 
+
+[ > Block | Grille ] -> [ Block | Grille ] 
+
+late [ PinkBlock | PinkBlock | PinkBlock ] -> [ | | ] 
+late [ BlueBlock | BlueBlock | BlueBlock ] -> [ | | ] 
+late [ PurpleBlock | PurpleBlock | PurpleBlock ] -> [ | | ] 
+late [ OrangeBlock | OrangeBlock | OrangeBlock ] -> [ | | ] 
+late [ GreenBlock | GreenBlock | GreenBlock ] -> [ | | ] 
+
+==============
+WINCONDITIONS
+==============
+
+some Player on Endpoint
+
+=======
+LEVELS
+=======
+
+........########
+################
+########@@@@@###
+####@@@@@...@###
+###@..OO....@@##
+##@..@@@@@....@#
+##@.@..@@@..E@@#
+#@..@.O...@@@@##
+##@...@.P.######
+####@.@@@@######
+####@@##########
+########........
+
+message congrats: level 2!
+
+##########
+####R.R###
+#x....#x##
+#xO#O.OxE#
+#xx##.#xx#
+#####R####
+#####P####
+O#########
+
+message congrats: level 3!
+
+......#######...
+.....##P.#####..
+....###....####.
+..#####O...#B..#
+..#####.#.##BB.#
+##EBB..O.O.....#
+..#####.#.#....#
+..######..#G.###
+....####..#.OOx.
+.....###.GG.#x..
+......#######...
+
+message congrats: level 4!
+
+######xx######
+######GG######
+##xx#...#xEx##
+##..O...#x..##
+##..#...##O###
+#..##.......##
+xG....##....Gx
+xG....##....Gx
+##.......GG###
+###G##...#xx##
+##x..#...O.x##
+##.P.#...#xx##
+######GG######
+######xx######
+
+message congrats: level 5!
+
+......##......
+....######....
+..##########..
+..#.OG..kk.#..
+.##OPO..Gkk##.
+.##GOG..GGk##.
+###...##...###
+###...##...###
+.##kkG##ROR##.
+.##Gkk..OEO##.
+..#.Gk..RO.#..
+..##########..
+....######....
+......##......
+
+message now go play the real game
+
+
+
+title Sticky Candy Puzzle Saga
+author Alan Hazelden
+homepage www.draknek.org
+
+run_rules_on_level_start
+
+noaction
+
+========
+OBJECTS
+========
+
+Background
+Black DarkGrey
+00000
+00000
+00000
+00000
+00000
+
+
+Wall
+Pink #febfc6
+10001
+00011
+00110
+01100
+11000
+
+Player
+Pink #febfc6
+.000.
+.111.
+00100
+.000.
+.0.0.
+
+Yellow
+Yellow White Orange
+.000.
+01100
+01000
+00002
+.022.
+
+Red
+Red Orange DarkRed
+.000.
+01100
+01000
+00002
+.022.
+
+Blue
+LightBlue White #3468f7
+.000.
+01100
+01000
+00002
+.022.
+
+YellowTarget
+Brown Yellow
+00000
+01110
+01010
+01110
+00000
+
+RedTarget
+DarkBrown Red
+00000
+01110
+01010
+01110
+00000
+
+BlueTarget
+Purple LightBlue
+00000
+01110
+01010
+01110
+00000
+
+Marker
+White
+.....
+.....
+.....
+.....
+.....
+
+WallL
+White
+0....
+0....
+0....
+0....
+0....
+
+WallR
+White
+....0
+....0
+....0
+....0
+....0
+
+WallU
+White
+00000
+.....
+.....
+.....
+.....
+
+WallD
+White
+.....
+.....
+.....
+.....
+00000
+
+WallLR
+White
+0...0
+0...0
+0...0
+0...0
+0...0
+
+WallUD
+White
+00000
+.....
+.....
+.....
+00000
+
+JoinL
+#febfc6
+0....
+.....
+.....
+.....
+0....
+
+JoinR
+#febfc6
+....0
+.....
+.....
+.....
+....0
+
+JoinU
+#febfc6
+0...0
+.....
+.....
+.....
+.....
+
+JoinD
+#febfc6
+.....
+.....
+.....
+.....
+0...0
+
+JoinBoth
+#febfc6
+0...0
+.....
+.....
+.....
+0...0
+
+Zero
+Purple
+.000.
+.0.0.
+.0.0.
+.0.0.
+.000.
+
+One
+Purple
+.00..
+..0..
+..0..
+..0..
+.000.
+
+Two
+Purple
+.000.
+...0.
+.000.
+.0...
+.000.
+
+Three
+Purple
+.000.
+...0.
+.000.
+...0.
+.000.
+
+Four
+Purple
+.0.0.
+.0.0.
+.000.
+...0.
+...0.
+
+Five
+Purple
+.000.
+.0...
+.000.
+...0.
+.000.
+
+Six
+Purple
+.000.
+.0...
+.000.
+.0.0.
+.000.
+
+Seven
+Purple
+.000.
+...0.
+...0.
+...0.
+...0.
+
+Eight
+Purple
+.000.
+.0.0.
+.000.
+.0.0.
+.000.
+
+Nine
+Purple
+.000.
+.0.0.
+.000.
+...0.
+.000.
+
+
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Player
+A = Red
+B = Yellow
+C = Blue
+X = RedTarget
+Y = YellowTarget
+Z = BlueTarget
+
+WallCoverLR = WallL or WallR or WallLR
+WallCoverUD = WallU or WallD or WallUD
+
+JoinCoverLR = JoinL or JoinR or JoinBoth
+JoinCoverUD = JoinU or JoinD
+
+Join = JoinCoverLR or JoinCoverUD
+
+CoverLR = WallCoverLR or JoinCoverLR
+CoverUD = WallCoverUD or JoinCoverUD
+
+0 = Zero and Wall
+1 = One and Wall
+2 = Two and Wall
+3 = Three and Wall
+4 = Four and Wall
+5 = Five and Wall
+6 = Six and Wall
+7 = Seven and Wall
+8 = Eight and Wall
+9 = Nine and Wall
+
+Number = Zero or One or Two or Three or Four or Five or Six or Seven or Eight or Nine
+
+Candy = Yellow or Red or Blue
+Target = YellowTarget or RedTarget or BlueTarget
+
+
+=======
+SOUNDS
+=======
+
+sfx1 6045907 (candies sticking)
+sfx2 27189102 (can't move)
+sfx3 27189102 (can't push)
+Candy MOVE 48059907
+Player MOVE 11429307
+EndLevel 85763108
+Restart 65287309
+Undo 84906107
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Marker
+Target
+Player, Wall, Candy
+CoverUD
+CoverLR, Number
+
+======
+RULES
+======
+
+[ >  Player | Candy ] -> [  >  Player | > Candy  ]
+[ moving Candy | stationary Candy ] -> [ moving Candy | moving Candy ]
+
+(Prevent movement in a way that triggers the "can't move" sound)
+
+[ > Candy | Wall ] [ > Player | > Candy ] -> [ Candy | Wall ] [ > Player | Candy ]
+[ > Player | stationary Candy ] [ moving Candy ] -> [ > Player | Candy ] [ Candy ]
+
+(Trigger the "candies sticking" sound)
+
+[ > Candy | no Candy ] -> [ > Candy | Marker ]
+
+[ Marker | stationary Candy ] -> sfx1
+
+[ Marker ] -> []
+
+(Can't move sounds)
+
+[ > Player | Wall ] -> sfx2
+[ > Player | stationary Candy ] -> sfx3
+
+(Wall borders)
+
+left [ Wall no WallCoverLR | no Wall ] -> [ Wall WallL | ]
+right [ Wall no WallCoverLR | no Wall ] -> [ Wall WallR | ]
+right [ Wall WallL | no Wall ] -> [ Wall WallLR | ]
+
+up [ Wall no WallCoverUD | no Wall ] -> [ Wall WallU | ]
+down [ Wall no WallCoverUD | no Wall ] -> [ Wall WallD | ]
+down [ Wall WallU | no Wall ] -> [ Wall WallUD | ]
+
+(Candy joins)
+
+late [ Join ] -> []
+
+late left [ Candy | Candy ] -> [ Candy JoinL | Candy ]
+late right [ Candy no JoinL | Candy ] -> [ Candy JoinR | Candy ]
+late right [ Candy JoinL | Candy ] -> [ Candy JoinBoth | Candy ]
+
+late up [ Candy no JoinBoth | Candy ] -> [ Candy JoinU | Candy ]
+late down [ Candy no JoinU no JoinBoth | Candy ] -> [ Candy JoinD | Candy ]
+late down [ Candy JoinU | Candy ] -> [ Candy JoinBoth | Candy ]
+
+==============
+WINCONDITIONS
+==============
+
+All Yellow on YellowTarget
+All Red on RedTarget
+All Blue on BlueTarget
+
+=======
+LEVELS
+=======
+
+message Transport the sticky candies to the collection areas.
+
+#######
+##...##
+#..b.y#
+#pb#.y#
+#..b.y#
+##...##
+1######
+
+#########
+##.....##
+#..a.#.x#
+#pa....x#
+#..a.#.x#
+##.....##
+2########
+
+message Don't let different candies stick together!
+
+########
+#p...yy#
+#.b.ayy#
+#..b.a.#
+#.a.b..#
+#xxa.b.#
+#xx....#
+3#######
+
+###########
+#....p....#
+#..b.c.b..#
+#...c.c...#
+###.zzz.###
+####b.b####
+####yyy####
+#####y#####
+4##########
+
+#########
+#.a...###
+#.a...###
+#..c.axx#
+#zz.p.xx#
+#zzc.a..#
+###...c.#
+###...c.#
+5########
+
+###########
+##.......##
+#y.#.p.#.z#
+#yc.b.c.bz#
+##.......##
+###..#..###
+6##########
+
+#########
+#####..z#
+#...b.zz#
+#.b.bb.z#
+#p.###..#
+#y.cc.c.#
+#yy.c...#
+#y..#####
+7########
+
+#########
+##......#
+#x.c.#by#
+#.b.p..y#
+#z.a.#by#
+##......#
+8########
+
+#########
+#yy.c.x.#
+#y.b..xx#
+#.b.....#
+#...#..b#
+#.a...c.#
+#.aa.c.z#
+#p....zz#
+9########
+
+#########
+#yy###zz#
+#...x...#
+#.##a##.#
+#..b.b..#
+#..#.#..#
+#..c.c..#
+##..p..##
+10#######
+
+###########
+#####y#####
+####yyy####
+###.b.b.###
+###a...c###
+#z...p...x#
+#za.b.b.cx#
+###.....###
+11#########
+
+###########
+####...A###
+##......###
+#..#A#..xx#
+#pA...A.xx#
+#..#A#..xx#
+##......###
+####...A###
+12#########
+
+#########
+#..xxx..#
+#..#a#..#
+#..b.b..#
+##.#p#.##
+##.aya.##
+##..y..##
+13#######
+
+###########
+##..zzz..##
+#..a.p.b..#
+#yy#ccc#xx#
+#..b...a..#
+##...#...##
+14#########
+
+#############
+#...#####...#
+#....c.b....#
+#yy#..p..#zz#
+#.y.cc.bb.z.#
+####.....####
+15###########
+
+#########
+#...#...#
+#.a.a.a.#
+#...x...#
+#z#.x.#y#
+#zc.x.by#
+#.c.p.b.#
+###...###
+16#######
+
+###########
+##......###
+##.#..c...#
+#...c#..zz#
+#pc..#c#zz#
+#...c#..zz#
+##.#..c...#
+##......###
+17#########
+
+###############
+#...###z###...#
+#....bzzzb....#
+#...c.c.c.c...#
+#####.yyy.#####
+#####.#b#.#####
+#####.....#####
+######.p.######
+18#############
+
+#############
+###x#...#z###
+#.xxa.c.azz.#
+#..c.....c..#
+###..#a#..###
+####..p..####
+19###########
+
+###########
+###.....###
+##c.a.a.b##
+#.cyy.zzb.#
+#..yy.zz..#
+#a..c.b..a#
+#..xc.bx..#
+#..xxxxx..#
+##a..a..a##
+###...p.###
+20#########
+
+message Thanks for playing! :)
+
+
+
+
+title IceCrates
+author Tyler Glaiel
+homepage twitter.com/tylerglaiel
+run_rules_on_level_start true
+noaction
+
+========
+OBJECTS
+========
+
+Background
+DarkBlue White LightBlue
+22112
+21122
+11222
+12221
+22211
+
+
+
+
+Wall_0000
+DarkBlue Gray DarkGray DarkGray Gray
+10001
+00000
+00000
+00000
+30003
+
+Wall_0001
+DarkBlue Gray DarkGray DarkGray Gray
+11111
+00000
+00000
+00000
+30003
+
+Wall_0010
+DarkBlue Gray DarkGray DarkGray Gray
+10002
+00002
+00002
+00002
+30002
+
+Wall_0011
+DarkBlue Gray DarkGray DarkGray Gray
+11111
+00002
+00002
+00002
+30002
+
+Wall_0100
+DarkBlue Gray DarkGray DarkGray Gray
+10001
+00000
+00000
+00000
+33333
+
+Wall_0101
+DarkBlue Gray DarkGray DarkGray Gray
+11111
+00000
+00000
+00000
+33333
+
+Wall_0110
+DarkBlue Gray DarkGray DarkGray Gray
+10002
+00002
+00002
+00002
+33333
+
+Wall_0111
+DarkBlue Gray DarkGray DarkGray Gray
+11111
+00002
+00002
+00002
+33333
+
+Wall_1000
+DarkBlue Gray DarkGray DarkGray Gray
+40001
+40000
+40000
+40000
+40003
+
+Wall_1001
+DarkBlue Gray DarkGray DarkGray Gray
+11111
+40000
+40000
+40000
+40003
+
+Wall_1010
+DarkBlue Gray DarkGray DarkGray Gray
+40002
+40002
+40002
+40002
+40002
+
+Wall_1011
+DarkBlue Gray DarkGray DarkGray Gray
+11111
+40002
+40002
+40002
+40002
+
+Wall_1100
+DarkBlue Gray DarkGray DarkGray Gray
+40001
+40000
+40000
+40000
+33333
+
+Wall_1101
+DarkBlue Gray DarkGray DarkGray Gray
+11111
+40000
+40000
+40000
+33333
+
+Wall_1110
+DarkBlue Gray DarkGray DarkGray Gray
+40002
+40002
+40002
+40002
+33333
+
+Wall_1111
+DarkBlue Gray DarkGray DarkGray Gray
+11111
+40002
+40002
+40002
+33333
+
+
+
+PlayerStill
+Red Orange DarkGrey Gray Black
+.000.
+01110
+04140
+01210
+.333.
+
+PlayerL
+Red Orange DarkGrey Gray Black
+.000.
+04110
+01410
+02110
+.333.
+
+PlayerR
+Red Orange DarkGrey Gray Black
+.000.
+01140
+01410
+01120
+.333.
+
+PlayerU
+Red Orange DarkGrey Gray Black
+.000.
+04140
+01110
+01210
+.333.
+
+PlayerD
+Red Orange DarkGrey Gray Black
+.000.
+01110
+01110
+04240
+.333.
+
+
+Crate
+Brown Yellow Orange
+11111
+10002
+10002
+10002
+22222
+
+
+Water1
+Blue LightBlue
+00000
+01100
+10011
+00000
+01100
+
+Water2
+Blue LightBlue
+00000
+00110
+11001
+00000
+00110
+
+Water3
+Blue LightBlue
+00000
+00011
+11100
+00000
+00011
+
+Water4
+Blue LightBlue
+00000
+10001
+01110
+00000
+10001
+
+Water5
+Blue LightBlue
+00000
+11000
+00111
+00000
+11000
+
+Water6
+Blue LightBlue
+00000
+01100
+10011
+00000
+01100
+
+FilledWater
+LightBrown LightBlue White
+11111
+10002
+10002
+10002
+22222
+
+Goal
+Black Green DarkGreen
+..12.
+.112.
+1112.
+...2.
+...2.
+
+
+
+StillCrate
+Orange
+
+
+
+=======
+LEGEND
+=======
+
+Wall = Wall_0000 or Wall_0001 or Wall_0010 or Wall_0011 or Wall_0100 or Wall_0101 or Wall_0110 or Wall_0111 or Wall_1000 or Wall_1001 or Wall_1010 or Wall_1011 or Wall_1100 or Wall_1101 or Wall_1110 or Wall_1111
+
+Water = Water1 or Water2 or Water3 or Water4 or Water5 or Water6
+
+. = Background
+# = Wall_1111
+P = PlayerStill
+* = Crate
+W = Water1
+G = Goal
+(@ = Crate and Target
+O = Target)
+
+Player = PlayerStill or PlayerL or PlayerR or PlayerU or PlayerD
+Obstacle = Wall or StillCrate or Water
+
+=======
+SOUNDS
+=======
+
+================
+COLLISIONLAYERS
+================
+
+Background
+FilledWater
+Goal
+(Target)
+Player, Wall, Crate, StillCrate, Water
+
+======
+RULES
+======
+
+(     0001
+
+1000         0010
+
+      0100
+)
+
+(make pretty walls)
+Right [Wall | Wall_1111 | Wall] -> [Wall | Wall_0101 | Wall]
+Right [Wall_1111 | Wall] -> [Wall_1101 | Wall]
+Right [Wall | Wall_1111] -> [Wall | Wall_0111]
+
+
+Down [Wall | Wall_1111 | Wall] -> [Wall | Wall_1010 | Wall]
+Down [Wall_1111 | Wall] -> [Wall_1011 | Wall]
+Down [Wall | Wall_1111] -> [Wall | Wall_1110]
+
+
+Down [Wall | Wall_0101 | Wall] -> [Wall | Wall_0000 | Wall]
+Down [Wall_0101 | Wall] -> [Wall_0001 | Wall]
+Down [Wall | Wall_0101] -> [Wall | Wall_0100]
+
+
+Down [Wall | Wall_1101 | Wall] -> [Wall | Wall_1000 | Wall]
+Down [Wall_1101 | Wall] -> [Wall_1001 | Wall]
+Down [Wall | Wall_1101] -> [Wall | Wall_1100]
+
+
+Down [Wall | Wall_0111 | Wall] -> [Wall | Wall_0010 | Wall]
+Down [Wall_0111 | Wall] -> [Wall_0011 | Wall]
+Down [Wall | Wall_0111] -> [Wall | Wall_0110]
+
+
+(animate water)
+[Water5]->[Water6]
+[Water4]->[Water5]
+[Water3]->[Water4]
+[Water2]->[Water3]
+[Water1]->[Water2]
+
+[Water6]->[Water1]
+
+
+(game logic)
+
+[ LEFT  PlayerStill ] -> [ PlayerL ]
+LEFT [ PlayerL | Crate ] -> [ PlayerL | LEFT Crate ] again
+LEFT [ > Crate | Crate ] -> [ > Crate | > Crate ] again
+LEFT [ > Crate | Water ] -> [ | FilledWater]
+LEFT [ > Crate | Obstacle ] -> [StillCrate | Obstacle]
+LEFT [ PlayerL | Obstacle ] -> [ PlayerStill | Obstacle ]
+[ PlayerL ] -> [ LEFT PlayerL ] again
+
+[ RIGHT  PlayerStill ] -> [ PlayerR ]
+RIGHT [ PlayerR | Crate ] -> [ PlayerR | RIGHT Crate ] again
+RIGHT [ > Crate | Crate ] -> [ > Crate | > Crate ] again
+RIGHT [ > Crate | Water ] -> [ | FilledWater]
+RIGHT[ > Crate | Obstacle ] -> [StillCrate | Obstacle]
+RIGHT [ PlayerR | Obstacle ] -> [ PlayerStill | Obstacle ]
+[ PlayerR ] -> [ RIGHT PlayerR ] again
+
+[ UP  PlayerStill ] -> [ PlayerU ]
+UP [ PlayerU | Crate ] -> [ PlayerU | UP Crate ] again
+UP [ > Crate | Crate ] -> [ > Crate | > Crate ] again
+UP [ > Crate | Water ] -> [ | FilledWater]
+UP [ > Crate | Obstacle ] -> [StillCrate | Obstacle]
+UP [ PlayerU | Obstacle ] -> [ PlayerStill | Obstacle ]
+[ PlayerU ] -> [ UP PlayerU ] again
+
+[ DOWN  PlayerStill ] -> [ PlayerD ]
+DOWN [ PlayerD | Crate ] -> [ PlayerD | DOWN Crate ] again
+DOWN [ > Crate | Crate ] -> [ > Crate | > Crate ] again
+DOWN [ > Crate | Water ] -> [ | FilledWater]
+DOWN [ > Crate | Obstacle ] -> [StillCrate | Obstacle]
+DOWN [ PlayerD | Obstacle ] -> [ PlayerStill | Obstacle ]
+[ PlayerD ] -> [ DOWN PlayerD ] again
+
+[StillCrate]->[Crate]
+
+
+==============
+WINCONDITIONS
+==============
+
+Some PlayerStill on Goal
+
+=======
+LEVELS
+=======
+
+
+
+message Level 1: Get to the Goal
+
+#######
+#g.#..#
+#.....#
+#.....#
+#.#.p.#
+###...#
+#######
+
+message Level 2: You must land ON the goal
+
+#########
+#########
+#...g...#
+#.......#
+#....#p.#
+#.......#
+#....#..#
+##....#.#
+#########
+
+message Level 3: Push Crates
+
+#########
+####.####
+#.......#
+#..#...g#
+##......#
+#...*.###
+#.....###
+###....p#
+..##....#
+...######
+
+
+message Level 4: Fill the Water Hole
+
+###########
+#.........#
+####......#
+#g..W..p..#
+####...#..#
+#..#***.#.#
+#..#......#
+#........##
+##...##..##
+###########
+
+message Level 5
+
+#############
+#......#....#
+#...........#
+#........p..#
+##....w.....#
+#..**wgw....#
+#.....w....##
+#.....*.....#
+#.....*.....#
+#...........#
+#....#......#
+#############
+
+message Level 6
+
+##############.
+#...###......#.
+#.#...#....####
+#.#...w..**...#
+#.....#.......#
+#####w#......##
+.##..........#.
+.##..........#.
+###.*........#.
+.###.g....p..#.
+.#.##........#.
+##..##.......#.
+.#############.
+
+message You are win congratulations
+
+
+title Extended Body Example: 1 Player, 1 Extended Object
+author increpare
+homepage www.puzzlescript.net
+
+(
+    Example for
+    https://www.puzzlescript.net/Documentation/rigidbodies.html#one_one
+)
+
+========
+OBJECTS
+========
+
+Background
+LIGHTGREEN GREEN
+11111
+01111
+11101
+11111
+10111
+
+
+Target
+DarkBlue
+.....
+.000.
+.0.0.
+.000.
+.....
+
+Wall
+BROWN DARKBROWN
+00010
+11111
+01000
+11111
+00010
+
+Player
+Black Orange White Blue
+.000.
+.111.
+22222
+.333.
+.3.3.
+
+Crate
+Orange
+00000
+0...0
+0...0
+0...0
+00000
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Player
+* = Crate
+@ = Crate and Target
+O = Target
+
+=======
+SOUNDS
+=======
+
+Crate MOVE 36772507
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Target
+Player, Wall, Crate
+
+======
+RULES
+======
+
+[ >  Player | Crate ] -> [  >  Player | > Crate  ]
+[ > Crate ] [ stationary Crate ] -> [ > Crate ] [ > Crate ]
+[ > Crate | Wall ] -> cancel
+
+==============
+WINCONDITIONS
+==============
+
+All Target on Crate
+
+=======
+LEVELS
+=======
+
+######
+#....#
+#.#..#
+#.*@.#
+#.O@.#
+#.p..#
+######
+
+
+USER PROMPT:
+The following PuzzleScript game code:
+```plaintext
+title Simple Puzzle Game
+author User
+
+========
+OBJECTS
+========
+
+Background
+lightgreen
+00000
+00000
+00000
+00000
+00000
+
+Wall
+brown darkbrown
+11111
+11111
+11111
+11111
+11111
+
+Player
+pink yellow green purple red
+.000.
+.111.
+.222.
+.333.
+.4.4.
+
+Goal
+lightblue
+.....
+.000.
+.0.0.
+.000.
+.....
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Player
+G = Goal
+
+=======
+SOUNDS
+=======
+
+==============
+COLLISIONLAYERS
+==============
+
+Background
+Player, Wall, Goal
+
+======
+RULES
+======
+
+[ > Player ] -> [ > Player ] 
+
+==============
+WINCONDITIONS
+==============
+
+All Player on Goal
+
+=======
+LEVELS
+=======
+
+##########
+#P......G#
+#........#
+#........#
+#........#
+#........#
+#....#...#
+#........#
+#........#
+#........#
+##########
+
+
+```
+compiled, but a solvability check returned the following error:
+ Level 0 is not solvable. Please repair it.
+Return your code in full, inside a ```plaintext code block.

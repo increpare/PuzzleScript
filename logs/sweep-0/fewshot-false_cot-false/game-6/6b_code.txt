@@ -1,0 +1,83 @@
+Here is the corrected version of the game code:
+
+```plaintext
+==========
+title Level Crossing
+author GameDesigner42
+
+==========
+homepage
+http://game.com
+
+==========
+objects
+background = black
+empty = black
+player = orange
+wall = gray
+floor = brown
+block = blue
+destination = green
+
+==========
+legend
+. = empty
+P = player
+W = wall
+F = floor
+B = block
+D = destination
+
+==========
+sounds
+win fanfare win
+
+==========
+collisionlayers
+background, empty
+player, block
+wall, floor, destination
+
+==========
+rules
+[ > player | destination ] -> [ > floor | player ]
+
+[ player | block ] -> [ > player | > block ]
+
+[ > player | wall ] -> [ wall | player ]
+
+==========
+winconditions
+All block on destination
+
+==========
+levels
+-----
+....
+.P..
+.W..
+.B..
+.D..
+-----
+WWW.
+P.F.
+..W.
+..BD
+.....
+-----
+WWW..
+PWF..
+..WB.
+.DDD.
+.....
+
+==========
+message
+Brought to you by GameDesigner42
+```
+
+### Key Corrections:
+- Removed extra spaces between object names and the `=` sign in the **objects** section.
+- Ensured that each line specifying an object color uses a unique object name.
+- MetaData "homepage" was already correctly included; the error may have been prompted by incorrect parsing due to additional spaces.
+- Ensured that the **legend** section is properly aligned with single spaces between symbols and object names for consistency.

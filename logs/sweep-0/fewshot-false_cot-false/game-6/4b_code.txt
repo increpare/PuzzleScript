@@ -1,0 +1,82 @@
+Certainly! Here is a repaired version of the PuzzleScript game code:
+
+```plaintext
+==========
+title Level Crossing
+author GameDesigner42
+
+==========
+homepage
+http://game.com
+
+==========
+objects
+background = black
+empty    = . [black]
+player   = P [orange]
+wall     = W [gray]
+floor    = F [brown]
+block    = B [blue]
+destination = D [green]
+
+==========
+legend
+.    = empty
+P    = player
+W    = wall
+F    = floor
+B    = block
+D    = destination
+
+==========
+sounds
+win fanfare win
+
+==========
+collisionlayers
+background, empty
+player, block
+wall, floor, destination
+
+==========
+rules
+[ > player | destination ] -> [ > floor | player ]
+
+[ player | block ] -> [ > player | > block ]
+
+[ > player | wall ] -> [ wall | player ]
+
+==========
+winconditions
+All block on destination
+
+==========
+levels
+-----
+....
+.P..
+.W..
+.B..
+.D..
+-----
+WWW.
+P.F.
+..W.
+..BD
+.....
+-----
+WWW..
+PWF..
+..WB.
+.DDD.
+.....
+
+==========
+message
+Brought to you by GameDesigner42
+```
+
+### Key Changes:
+1. **Corrected Metadata for Homepage**: Added a valid URL inside the homepage section.
+2. **Fixed Object Definitions**: Standardized object color and definition for 'background' and other objects.
+3. **Corrected Collision Layers**: Ensured the proper use of object names with lowercase to match those you defined in the objects section.

@@ -1,0 +1,131 @@
+Here is the repaired version of your PuzzleScript game code. I have removed the unexpected sound token and fixed the syntax issues in the rules.
+
+```plaintext
+title Shadow Puppet
+author Your Name
+homepage www.yourhomepage.com
+
+========
+OBJECTS
+========
+
+Background
+black
+
+Wall
+white white
+11111
+11111
+11111
+11111
+11111
+
+Player
+yellow black
+..0..
+.000.
+.010.
+.000.
+..0..
+
+Shadow
+grey
+.....
+..0..
+.....
+.....
+.....
+
+Target
+lightblue lightblue
+..0..
+.010.
+00100
+.010.
+..0..
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Player
+S = Shadow
+X = Target
+
+=======
+SOUNDS
+=======
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Shadow
+Player, Wall
+
+======
+RULES
+======
+
+[ > Shadow | no Wall | no Player ] -> [ | Shadow ]
+[ Player | Shadow ] -> [ Player | ]
+
+[ > Player | no Wall ] -> [ > Player | ]
+
+[ Player Target ] -> win
+
+==============
+WINCONDITIONS
+==============
+
+All Player on Target
+
+=======
+LEVELS
+=======
+
+##########
+#.......X#
+#.###.####
+#.#......#
+#.#.####.#
+#.#.####.#
+#.#...#..#
+#.#.#.#..#
+#P#.#....#
+##########
+
+##########
+#..X.....#
+####.###.#
+#.......##
+#.#.###..#
+#.#.....##
+#.#.###..#
+#.......##
+#..P.###.#
+##########
+
+##########
+#X.......#
+#####..###
+#.#......#
+#.#.######
+#.#.#....#
+#.#.###..#
+#.#......#
+#P#######.
+##########
+
+message Good luck!
+```
+
+Changes made:
+- Removed the `move 12345` sound token as it caused an error and was not essential to the basic game functionality.
+- Adjusted the rule `[ > Player | no Wall ] -> [ > Player | ]` to remove an unnecessary space.
+- Corrected the rule `[ Player on Target ] -> win` to `[ Player Target ] -> win` for proper syntax.
+
+Please test the game to ensure it works as expected.

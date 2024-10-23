@@ -1,0 +1,110 @@
+To resolve the errors in the provided PuzzleScript code, we need to address the color-related issues flagged by the console output.
+
+The errors indicate that the colors "Gold" and "Tomato" have been specified for the objects 'Key' and 'Exit', but these are not recognized. PuzzleScript uses a restricted set of named colors, and the colors "Gold" and "Tomato" are not part of this set. 
+
+To fix these errors, we should replace "Gold" and "Tomato" with valid color names from the PuzzleScript color palette. Let's select "Yellow" to replace "Gold" for the 'Key' and "Red" to replace "Tomato" for the 'Exit'. These are common colors that are usually part of the PuzzleScript palette.
+
+Here's the corrected code:
+
+```plaintext
+title Simple Key Maze
+author PuzzleScript Enthusiast
+homepage www.puzzlescript.net
+
+========
+OBJECTS
+========
+Background
+lightblue
+.....
+.....
+.....
+.....
+.....
+
+Player
+Yellow
+.0...
+000..
+.000.
+..0..
+.....
+
+Wall
+Gray
+.....
+.....
+.....
+.....
+.....
+
+Key
+Yellow
+.....
+..0..
+.000.
+.....
+.....
+
+Exit
+Red
+.....
+..0..
+.000.
+..0..
+.....
+
+=======
+LEGEND
+=======
+. = Background
+# = Wall
+P = Player
+K = Key
+E = Exit
+
+=======
+SOUNDS
+=======
+
+================
+COLLISIONLAYERS
+================
+Background
+Key, Exit, Player, Wall
+
+======
+RULES
+======
+[> Player | Key] -> [> Player]
+[Player | Exit] -> WIN
+
+==============
+WINCONDITIONS
+==============
+No Key
+
+=======
+LEVELS
+=======
+# Level 1
+#########
+#...K...#
+#.#####.#
+#.P...#.#
+###...###
+..#...E..
+..#####..
+
+# Level 2
+#########
+#P.#...K#
+#...#.#.#
+#.###.#.#
+#.....#.#
+#.#####.#
+#K...E..#
+#########
+```
+
+This corrected version uses "Yellow" for the 'Key' object and "Red" for the 'Exit' object, both of which should be properly recognized by PuzzleScript. This should resolve the compilation issues related to undefined colors.

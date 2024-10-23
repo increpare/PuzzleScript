@@ -1,0 +1,124 @@
+Here is a repaired version of your PuzzleScript code, addressing the errors found in your original script:
+
+```plaintext
+Title: Simple Sokoban
+Author: PuzzleScript Enthusiast
+
+========
+OBJECTS
+========
+
+Background
+transparent
+.....
+.....
+.....
+.....
+.....
+
+Player
+yellow
+.....
+..0..
+..0..
+.000.
+.....
+
+Crate
+red
+.....
+.....
+.000.
+.....
+.....
+
+Target
+green
+.....
+.....
+.....
+..0..
+.....
+
+Wall
+grey
+.....
+..00.
+.000.
+..00.
+.....
+
+CrateOnTarget
+brown
+.....
+.....
+.0.0.
+.....
+.....
+
+========
+LEGEND
+========
+
+= Background
+P = Player
+# = Wall
+B = Crate
+T = Target
+O = CrateOnTarget
+
+========
+SOUNDS
+========
+
+==================
+COLLISIONLAYERS
+==================
+
+Background
+Wall
+Player, Crate, CrateOnTarget
+Target
+
+========
+RULES
+========
+
+RIGHT [ > Player | Crate ] -> [ > Player | > Crate ]
+LEFT  [ < Player | Crate ] -> [ < Player | < Crate ]
+UP    [ ^ Player | Crate ] -> [ ^ Player | ^ Crate ]
+DOWN  [ v Player | Crate ] -> [ v Player | v Crate ]
+
+[ Crate | Target ] -> [ CrateOnTarget | Target ]
+[ CrateOnTarget | Target ] -> [ CrateOnTarget | Target ]
+
+===============
+WINCONDITIONS
+===============
+
+All CrateOnTarget on Target
+
+========
+LEVELS
+========
+
+#####
+#   #
+# P #
+# B #
+# T #
+#####
+
+#####
+#   #
+# P #
+##B##
+# T #
+#####
+
+```
+
+### Fixes Made:
+1. **Line 58**: Adjusted the "COLLISIONLAYERS" section so that no extra equals signs are on the same line with a comment.
+2. **Line 8**: Fixed the dimensions of the `Background` sprite to be exactly 5x5.
+3. **Line 101 & Line 108**: Defined the space ' ' symbol in levels by adding an entry for `Background` to the legend to resolve unknown symbol errors in maps.

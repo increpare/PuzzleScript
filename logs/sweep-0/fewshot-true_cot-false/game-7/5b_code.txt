@@ -1,0 +1,97 @@
+```plaintext
+title Cube Collector
+author Your Name
+homepage example.com
+
+========
+OBJECTS
+========
+
+Background
+black
+
+Player
+#00ff00
+..0..
+.000.
+00.00
+.000.
+..0..
+
+Cube
+#ff0000
+.0.0.
+.000.
+00000
+.000.
+.0.0.
+
+Wall
+#7f7f7f #7f7f7f
+11111
+1...1
+1...1
+1...1
+11111
+
+Target
+#0000ff #0000ff
+.....
+..1..
+.111.
+..1..
+.....
+
+=======
+LEGEND
+=======
+
+. = Background
+P = Player
+C = Cube
+# = Wall
+X = Target
+
+Obstacle = Wall or Cube
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Target
+Player, Wall, Cube
+
+======
+RULES
+======
+
+[ > Player | Cube ] -> [ Player | > Cube ] 
+[ > Player | Cube | no Obstacle ] -> [ Player | Cube | Cube ] 
+[ Player | Cube | Target ] -> [ Player | Background ]
+
+==============
+WINCONDITIONS
+==============
+
+all Cube on Target
+
+=======
+LEVELS
+=======
+
+#####  
+#...#
+#P.C#
+#...#
+#..X#
+#####
+
+#####  
+#P..#
+#C..#
+#..X#
+#####
+```
+
+Note: Removed sound-related lines as sounds are not directly supported in PuzzleScript syntax. Also corrected the rule to use "Target" instead of "on Target" as this was causing an error.

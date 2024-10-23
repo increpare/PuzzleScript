@@ -1,0 +1,125 @@
+SYSTEM PROMPT:
+You are a game designer, familiar with the PuzzleScript game description language. 
+
+USER PROMPT:
+The following PuzzleScript game code:
+```plaintext
+Title: Simple Sokoban
+Author: PuzzleScript Enthusiast
+
+========
+OBJECTS
+========
+
+Background
+transparent
+.....
+.....
+.....
+
+Player
+yellow
+..0..
+..0..
+.000.
+
+Crate
+red
+.....
+.....
+.000.
+
+Target
+green
+.....
+.....
+..0..
+
+Wall
+grey
+.....
+.....
+.000.
+
+CrateOnTarget
+brown
+.....
+.....
+.0.0.
+
+========
+LEGEND
+========
+
+= Background
+P = Player
+# = Wall
+B = Crate
+T = Target
+O = CrateOnTarget
+
+========
+SOUNDS
+========
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Wall
+Player, Crate, CrateOnTarget
+Target
+
+========
+RULES
+========
+
+RIGHT [ > Player | Crate ] -> [ > Player | > Crate ]
+LEFT  [ < Player | Crate ] -> [ < Player | < Crate ]
+UP    [ ^ Player | Crate ] -> [ ^ Player | ^ Crate ]
+DOWN  [ v Player | Crate ] -> [ v Player | v Crate ]
+
+[ Crate | Target ] -> [ CrateOnTarget | Target ]
+[ CrateOnTarget | Target ] -> [ CrateOnTarget | Target ]
+
+===============
+WINCONDITIONS
+===============
+
+All O on T
+
+========
+LEVELS
+========
+
+#####
+#   #
+# P #
+# B #
+# T #
+#####
+
+ #####
+ #   #
+ # P #
+ ##B##
+  #T#
+  ###
+
+```
+produced the following console output:
+=================================
+line 48 : Only comments should go after a bunch of equals signs ('===') on a line.
+line 101 : Maps must be rectangular, yo (In a level, the length of each row must be the same).
+line 102 : Maps must be rectangular, yo (In a level, the length of each row must be the same).
+line 8 : Sprite graphics must be 5 wide and 5 high exactly.
+line 14 : Sprite graphics must be 5 wide and 5 high exactly.
+line 20 : Sprite graphics must be 5 wide and 5 high exactly.
+line 26 : Sprite graphics must be 5 wide and 5 high exactly.
+line 32 : Sprite graphics must be 5 wide and 5 high exactly.
+line 38 : Sprite graphics must be 5 wide and 5 high exactly.
+line 91 : Error, symbol " ", used in map, not found.
+line 98 : Error, symbol " ", used in map, not found.
+Errors detected during compilation; the game may not work correctly.
+Return a repaired version of the code that addresses these errors. Return your code in full, inside a ```plaintext code block.

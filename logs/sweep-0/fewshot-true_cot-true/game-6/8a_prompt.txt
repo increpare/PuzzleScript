@@ -1,0 +1,1748 @@
+SYSTEM PROMPT:
+You are a game designer, familiar with the PuzzleScript game description language. Here are some example games, for inspiration (do not reproduce these games exactly):
+
+title Sok7
+author Kevin Cancienne
+homepage https://twitter.com/potatojin
+
+color_palette whitingjp
+noaction
+
+========
+OBJECTS
+========
+
+
+Background  (special, automatically placed in its own layer)
+darkgray black
+10000
+10000
+10000
+10000
+11111
+
+Player
+RED PINK
+.1.1.
+.000.
+11111
+.111.
+.1.1.
+
+Garbage1
+lightgray black
+00000
+01110
+01010
+01110
+00000
+
+Garbage2
+lightgray darkgray darkgray
+00200
+01110
+21012
+01110
+00200
+
+
+One
+green white
+00100
+00100
+00100
+00100
+00100
+
+Two
+yellow white
+01110
+00010
+01110
+01000
+01110
+
+Three
+orange white
+01110
+00010
+00110
+00010
+01110
+
+Four
+red white
+01010
+01010
+01110
+00010
+00010
+
+Five
+purple white
+01110
+01000
+01110
+00010
+01110
+
+Six
+lightblue white
+01110
+01000
+01110
+01010
+01110
+
+Seven
+darkblue white
+01110
+00010
+00010
+00010
+00010
+
+Wall
+black
+00000
+00000
+00000
+00000
+00000
+
+O (unoccupied cell)
+white
+00000
+00000
+00000
+00000
+00000
+
+X (occupied cell)
+black
+00000
+00000
+00000
+00000
+00000
+
+E (explosion)
+black
+00000
+00000
+00000
+00000
+00000
+
+D (disappeared disc)
+black
+00000
+00000
+00000
+00000
+00000
+
+C (counter)
+black
+00000
+00000
+00000
+00000
+00000
+
+=======
+LEGEND
+=======
+
+. = Background
+P = Player
+1 = One
+2 = Two
+3 = Three
+4 = Four
+5 = Five
+6 = Six
+7 = Seven
+W = Wall
+Garbage = Garbage1 or Garbage2
+Garbage1_1 = Garbage1
+Garbage1_2 = Garbage1
+Garbage1_3 = Garbage1
+Disc = One or Two or Three or Four or Five or Six or Seven or Garbage
+RandomDisc = One or Two or Three or Four or Five or Six or Garbage1 or Garbage1_1 or Garbage1_2 or Garbage1_3
+NumberDisc = One or Two or Three or Four or Five or Six or Seven
+Object = Disc or Player
+
+
+
+=========
+SOUNDS
+=========
+Disc Move 53338707
+Disc Destroy 56624700
+Endlevel 34957309
+SFX0 67673302
+
+================
+COLLISIONLAYERS
+================
+
+C
+E, D
+O, X
+Background
+Wall, Player, One, Two, Three, Four, Five, Six, Seven, Garbage
+
+
+
+======
+RULES
+======
+
+
+[> Player | Disc] -> [> Player | > Disc]
+
+[D] -> [ ]
+[X] -> [O]
+[ ] -> [O]
+[One O] -> [One X]
+[Two O] -> [Two X]
+[Three O] -> [Three X]
+[Four O] -> [Four X]
+[Five O] -> [Five X]
+[Six O] -> [Six X]
+[Seven O] -> [Seven X]
+[Garbage O] -> [Garbage X]
+
+(1 rules)
+[O | One | O] -> [O | D X | O] again
+
+(2 rules)
+[O | Two | X | O] -> [O | D X | X | O] again
+
+(3 rules)
+[O | Three | X | X | O] -> [O | D X | X | X | O] again
+[O | X | Three | X | O] -> [O | X | D X | X | O] again
+[O | X | X | Three | O] -> [O | X | X | D X | O] again
+
+(4 rules)
+[O | Four | X | X | X | O] -> [O | D X | X | X | X | O] again
+[O | X | Four | X | X | O] -> [O | X | D X | X | X | O] again
+[O | X | X | Four | X | O] -> [O | X | X | D X | X | O] again
+[O | X | X | X | Four | O] -> [O | X | X | X | D X | O] again
+
+(5 rules)
+[O | Five | X | X | X | X | O] -> [O | D X | X | X | X | X | O] again
+[O | X | Five | X | X | X | O] -> [O | X | D X | X | X | X | O] again
+[O | X | X | Five | X | X | O] -> [O | X | X | D X | X | X | O] again
+[O | X | X | X | Five | X | O] -> [O | X | X | X | D X | X | O] again
+[O | X | X | X | X | Five | O] -> [O | X | X | X | X | D X | O] again
+
+(6 rules)
+[O | Six | X | X | X | X | X | O] -> [O | D X | X | X | X | X | X | O] again
+[O | X | Six | X | X | X | X | O] -> [O | X | D X | X | X | X | X | O] again
+[O | X | X | Six | X | X | X | O] -> [O | X | X | D X | X | X | X | O] again
+[O | X | X | X | Six | X | X | O] -> [O | X | X | X | D X | X | X | O] again
+[O | X | X | X | X | Six | X | O] -> [O | X | X | X | X | D X | X | O] again
+[O | X | X | X | X | X | Six | O] -> [O | X | X | X | X | X | D X | O] again
+
+(7 rules)
+[O | Seven | X | X | X | X | X | X | O] -> [O | D X | X | X | X | X | X | X | O] again
+[O | X | Seven | X | X | X | X | X | O] -> [O | X | D X | X | X | X | X | X | O] again
+[O | X | X | Seven | X | X | X | X | O] -> [O | X | X | D X | X | X | X | X | O] again
+[O | X | X | X | Seven | X | X | X | O] -> [O | X | X | X | D X | X | X | X | O] again
+[O | X | X | X | X | Seven | X | X | O] -> [O | X | X | X | X | D X | X | X | O] again
+[O | X | X | X | X | X | Seven | X | O] -> [O | X | X | X | X | X | D X | X | O] again
+[O | X | X | X | X | X | X | Seven | O] -> [O | X | X | X | X | X | X | D X | O] again
+
+
+(garbage rules)
+[C X] -> [ X]
+[> Player | ] -> [> Player | C]
+[C No Object | C No Object | C No Object | C No Object| C No Object | C No Object] -> [ |  | random RandomDisc | |  | ] SFX0
+[D | Garbage1] -> [ | Garbage2]
+[D | Garbage2] -> [ | random NumberDisc]
+
+
+
+==============
+WINCONDITIONS
+==============
+No Disc
+
+=======
+LEVELS
+=======
+
+
+WWWWWWWWWWWWWW
+W....13......W
+W.4..2..5....W
+W....2..3....W
+W.77....6....W
+W....3..5....W
+W.P........2.W
+W....2.......W
+WWWWWWWWWWWWWW
+
+message Board Clear: You Win
+
+
+title Extended Bodies:Multiple Parallel Players, Multiple Extended Object
+author Anonymous
+homepage www.puzzlescript.net
+
+verbose_logging
+
+(
+    
+THIS IS A DELIBERATELY BROKEN GAME, JUST FOR ILLUSTRATION
+
+see https://www.puzzlescript.net/Documentation/rigidbodies.html#parallel_many
+)
+
+
+========
+OBJECTS
+========
+
+Background 
+white  
+
+Target 
+DarkBlue    
+
+Wall 
+DarkGrey
+
+Player
+Blue
+..0..
+..0.0
+00000
+.000.
+.0.0.
+
+( three multi-cells blocks )
+Crate 
+orange
+
+Chest
+green
+
+Box
+red
+
+( 1-cell small block )
+Small
+darkred
+.....
+.000.
+.000.
+.000.
+.....
+
+( sticky, multicellular block when in contact )
+Glue
+pink
+.000.
+00000
+00000
+00000
+.000.
+
+( a flag to know what is allowed move )
+Wanna_Move
+#ff00ff
+.....
+.....
+..0..
+.....
+.....
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Player
+* = Crate
++ = Box
+% = Chest
+o = Small
+g = Glue
+
+( blocks that can be moved by the player )
+Movable = Crate or Box or Chest or Small or Glue
+
+( all things that can move and push blocks )
+Mover = Player or Movable
+
+( things that can stop a movement if they are stationary )
+Obstacle = Wall or Mover
+
+=======
+SOUNDS
+=======
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Target
+Obstacle
+Wanna_Move
+
+======
+RULES     
+======     
+
+( 1. Propagate movements forward )
+[ > Mover | Movable ] -> [ > Mover | > Movable  ]
++ [ > Box    ] [ Box   ] -> [ > Box    ] [ > Box    ]
++ [ > Crate  ] [ Crate ] -> [ > Crate  ] [ > Crate  ]
++ [ > Chest  ] [ Chest ] -> [ > Chest  ] [ > Chest  ]
++ [ moving Glue | Glue ] -> [ moving Glue | moving Glue ]
+
+( 2. Propagate obstructions backwards )
+[ > Mover  | stationary Obstacle ] -> [ stationary Mover | Obstacle ]
++ [ > Crate  ] [ stationary Crate ] -> [ stationary Crate ] [ Crate ]
++ [ > Box    ] [ stationary Box   ] -> [ stationary Box   ] [ Box   ]
++ [ > Chest  ] [ stationary Chest ] -> [ stationary Chest ] [ Chest ]
++ [ moving Glue | stationary Glue ] -> [ stationary Glue | Glue ]
+
+( 3. remove all movement, keep a flag )
+[ > Movable ] -> [ Movable wanna_move ]
+
+( 4. propagate movement only on wanna_move things )
+(    ie redo step 1 but with WANNA_MOVE added to the first line below )
+[ > Mover  | Movable WANNA_MOVE ] -> [ > Mover | > Movable ]
++ [ > Box   ] [ Box   ] -> [ > Box   ] [ > Box   ]
++ [ > Crate ] [ Crate ] -> [ > Crate ] [ > Crate ]
++ [ > Chest ] [ Chest ] -> [ > Chest ] [ > Chest ]
++ [ moving Glue | Glue ] -> [ moving Glue | moving Glue ]
+
+( 5. cleanup, remove flag )
+[ wanna_move ] -> [ ]
+
+==============
+WINCONDITIONS
+==============
+
+=======     
+LEVELS
+=======
+
+###################
+#.................#
+#.................#
+#...*..g.g.#......#
+#...*......#...g###
+#...*...o.%%%.....#
+#...+++.o.%.......#
+#....+....%%%.....#
+#....+.....P...g..#
+#....p.gg.........#
+###################
+
+
+title Puzzles
+author increpare
+homepage www.puzzlescript.net
+
+(
+Unfortunately, just the first level - trying to emulate the later ones proved too complex :[
+
+You can play the original game here:
+http://www.increpare.com/2012/06/puzzles/
+)
+
+background_color white
+text_color blue
+
+run_rules_on_level_start
+
+
+========
+OBJECTS
+========
+
+DyingPlayer
+Black
+
+Void
+White
+
+OBackground
+Orange
+
+GBackground
+LightGrey
+
+BlueWall
+Blue
+
+
+GreyWall
+Grey
+
+RedCrate
+Red
+.....
+.000.
+.000.
+.000.
+.....
+GreyCrate
+DarkGrey
+.....
+.000.
+.000.
+.000.
+.....
+
+RedWhale
+Red White
+00100
+00000
+10001
+00000
+00100
+
+GreyWhale
+DarkGrey White
+00100
+00000
+10001
+00000
+00100
+
+RedEndPoint
+DarkRed
+.....
+.000.
+.0.0.
+.000.
+.....
+
+GreyEndPoint
+Darkgrey
+.....
+.....
+.....
+.....
+.....
+
+RedStartPoint
+darkRed
+.....
+.....
+.....
+.....
+.....
+
+GreyStartPoint
+darkRed
+.....
+.000.
+.0.0.
+.000.
+.....
+
+YellowPlayer
+yellow
+.....
+.000.
+.000.
+.000.
+.....
+
+GreyPlayer
+DarkGrey
+.....
+.000.
+.000.
+.000.
+.....
+
+LeftBeam
+white
+.....
+.....
+00000
+.....
+.....
+
+RightBeam
+white
+.....
+.....
+00000
+.....
+.....
+
+UpBeam
+white
+..0..
+..0..
+..0..
+..0..
+..0..
+
+DownBeam
+white
+..0..
+..0..
+..0..
+..0..
+..0..
+
+=======
+LEGEND
+=======
+
+Background = Void or OBackground or GBackground
+Player = YellowPlayer or GreyPlayer or DyingPlayer
+Wall = BlueWall or GreyWall
+Crate = RedCrate or GreyCrate
+Whale = RedWhale or GreyWhale
+StartPoint = RedStartPoint or GreyStartPoint
+EndPoint = RedEndPoint or GreyEndPoint
+. = OBackground
+, = Void
+# = BlueWall
+W = RedWhale
+C = RedCrate
+S = RedStartPoint and YellowPlayer
+E = RedEndPoint
+Obstacle = Player or Whale or Crate or Wall
+Beam = UPBeam or DownBeam or LeftBeam or RightBeam
+VBeam = UPBeam or DownBeam
+HBeam = LeftBeam or RightBeam
+HBeamSource = HBeam or Whale
+VBeamSource = VBeam or Whale
+Pushable = Player or Whale or Crate
+RedPushable = YellowPlayer or RedWhale or RedCrate
+GreyPushable = GreyPlayer or GreyWhale or GreyCrate
+
+=======
+SOUNDS
+=======
+
+================
+COLLISIONLAYERS
+================
+
+Background
+StartPoint, EndPoint
+Player, Wall, Crate, Whale
+UpBeam, DownBeam
+LeftBeam, RightBeam
+
+======
+RULES
+======
+
+
+left [ LeftBeam | < Player ] -> [ LeftBeam | Player ]
+right [ RightBeam | < Player ] -> [ RightBeam | Player ]
+up [ UpBeam | < Player ] -> [ UpBeam | Player ]
+down [ DownBeam | < Player ] -> [ DownBeam | Player ]
+
+right [ RightBeam | stationary Pushable ] -> [ RightBeam | > Pushable ]
+left [ LeftBeam | stationary Pushable ] -> [ LeftBeam | > Pushable ]
+up [ UpBeam | stationary Pushable ] -> [ UpBeam | > Pushable ]
+down [ DownBeam | stationary Pushable ] -> [ DownBeam | > Pushable ]
+
+[ Whale | stationary Pushable ] -> [ Whale | > Pushable ]
+
+
+[ Beam ] -> []
+
+
+[ >  Player | Crate ] -> [  >  Player | > Crate  ]
+[ > Crate | stationary Crate ] -> [ > Crate | > Crate ]
+
+( using red/greypushable is an optimization - cuts down on unecessary rules by quite a lot, beause red and grey things never coexist)
+[ > RedPushable | v RedPushable ] -> [ RedPushable | v RedPushable ]
+[ > RedPushable | ^ RedPushable ] -> [ RedPushable | ^ RedPushable ]
+[ > RedPushable | < RedPushable ] -> [ RedPushable | < RedPushable ]
+
+[ > GreyPushable | v GreyPushable ] -> [ GreyPushable | v GreyPushable ]
+[ > GreyPushable | ^ GreyPushable ] -> [ GreyPushable | ^ GreyPushable ]
+[ > GreyPushable | < GreyPushable ] -> [ GreyPushable | < GreyPushable ]
+
+late Up [ Whale | no Obstacle ] -> [ Whale | UpBeam ]
+late Down [ Whale | no Obstacle ] -> [ Whale | DownBeam ]
+late Left [ Whale | no Obstacle ] -> [ Whale | LeftBeam ]
+late Right [ Whale | no Obstacle ] -> [ Whale | RightBeam ]
+
+late horizontal [ HBeam | no obstacle ] -> [ HBeam | HBeam ]
+late vertical [ VBeam | no obstacle ] -> [ VBeam | VBeam ]
+
+
+(DEATH TRANSITION)
+late Horizontal [ HBeamSource | YellowPlayer ]  -> [ HBeamSource | DyingPlayer ]
+late Vertical [ VBeamSource | YellowPlayer ]  -> [ VBeamSource | DyingPlayer ]
+
+late [ DyingPlayer ] [ BlueWall ] -> [ DyingPlayer ] [ GreyWall ]
+late [ DyingPlayer ] [ RedWhale ] -> [ DyingPlayer ] [ GreyWhale ]
+late [ DyingPlayer ] [ RedCrate ] -> [ DyingPlayer ] [ GreyCrate ]
+late [ DyingPlayer ] [ RedStartPoint ] -> [ DyingPlayer ] [ GreyStartPoint ]
+late [ DyingPlayer ] [ RedEndPoint ] -> [ DyingPlayer ] [ GreyEndPoint ]
+late [ DyingPlayer ] [ OBackground ] -> [ DyingPlayer ] [ GBackground ]
+late [ DyingPlayer ] -> [ GreyPlayer ]
+
+late [DyingPlayer] -> [GreyPlayer]
+
+(LIFE TRANSITION)
+late [ GreyPlayer GreyStartPoint ] [ GreyWall ] -> [ GreyPlayer GreyStartPoint ] [ BlueWall ]
+late [ GreyPlayer GreyStartPoint ] [ GreyCrate ] -> [ GreyPlayer GreyStartPoint ] [ RedCrate ]
+late [ GreyPlayer GreyStartPoint ] [ GreyWhale ] -> [ GreyPlayer GreyStartPoint ] [ RedWhale ]
+late [ GreyPlayer GreyStartPoint ] [ GreyEndPoint ] -> [ GreyPlayer GreyStartPoint ] [ RedEndPoint ]
+late [ GreyPlayer GreyStartPoint ] [ GBackground ] -> [ GreyPlayer GreyStartPoint ] [ OBackground ]
+
+late [ GreyPlayer GreyStartPoint ] -> [ YellowPlayer RedStartPoint ]
+
+late [player]->again
+
+==============
+WINCONDITIONS
+==============
+
+All Player on RedEndPoint
+
+=======
+LEVELS
+=======
+
+
+#########
+#......E#
+#..CC..##
+#.....##,
+#.....W#,
+##.#####,
+#......#,
+#..CC..#,
+#..CC..#,
+##.....#,
+#W.....#,
+######.#,
+#......#,
+#......#,
+##S#####,
+########,
+
+
+
+title chaos wizard
+author mark wonnacott
+homepage http://twitter.com/ragzouken
+
+youtube JDIj3zPwEvw
+
+(run_rules_on_level_start)
+
+realtime_interval 0.2
+
+========
+OBJECTS
+========
+
+Space
+black darkblue
+00010
+00000
+00000
+01000
+00000
+
+Background
+darkblue darkgreen
+00000
+01000
+00010
+00001
+00100
+
+Wall
+black darkbrown darkblue
+01112
+21212
+02121
+20021
+00010
+
+Indestructible
+darkgreen grey darkgrey
+01112
+21212
+02121
+20021
+00010
+
+Red
+red lightred darkred
+..0..
+.010.
+22110
+.220.
+..2..
+
+Blue
+blue lightblue purple
+..0..
+.010.
+22110
+.220.
+..2..
+
+Green
+green lightgreen darkgreen
+..0..
+.010.
+22110
+.220.
+..2..
+
+Stone
+grey lightgrey darkgrey
+..0..
+.010.
+22110
+.220.
+..2..
+
+Charge
+red darkred
+1.0.1
+..0..
+00000
+..0..
+1.0.1
+
+Prism
+white lightblue grey
+..0..
+.000.
+00000
+.000.
+..0..
+
+
+MoveUp
+white
+
+MoveDown
+white
+
+MoveLeft
+white
+
+MoveRight
+white
+
+Expand
+white
+
+Inhibit
+white
+
+Hold
+blue lightblue
+.1.1.
+1.0.1
+.0.0.
+1.0.1
+.1.1.
+
+Burn
+red orange yellow white
+.010.
+01210
+12321
+01210
+.010.
+
+Player
+black darkgrey yellow
+..1..
+.111.
+.212.
+00100
+00000
+
+Rival
+black darkgrey red
+..1..
+.111.
+.212.
+00100
+00000
+
+Goal
+black
+0.0.0
+.0.0.
+0.0.0
+.0.0.
+0.0.0
+
+=======
+LEGEND
+=======
+, = Space
+. = Background
++ = Prism
+# = Wall
+X = Indestructible
+@ = Player and Inhibit
+R = Red
+G = Green
+B = Blue
+S = Stone
+? = Goal
+$ = Charge
+% = Rival
+
+3 = Space and Blue
+£ = Space and Charge
+
+Wizard = Player or Rival
+
+Gem = Red or Blue or Green or Stone
+
+Movement = MoveUp or MoveDown or MoveLeft or MoveRight or Expand
+Mediator = Hold or Burn
+
+Moveable = Wizard or Gem
+Destructable = Wizard or Gem or Wall
+
+=======
+SOUNDS
+=======
+
+(sfx0 76693900 (prism))
+sfx1 68148303 (cast)
+sfx2 24680901 (fall)
+
+Burn destroy 17088108
+
+================
+COLLISIONLAYERS
+================
+
+MoveUp, MoveDown, MoveLeft, MoveRight, Expand, Inhibit
+Background
+Space
+Charge, Goal
+Wizard, Gem, Stone, Wall, Prism, Indestructible
+Hold, Burn
+
+======
+RULES
+======
+
+[ Inhibit ] [ moving Player ] -> [ ] [ Player ]
+[ Inhibit ] -> cancel
+
+[ moving Player Hold ] -> [ Player Hold ]
+
+(rival ai)
+[ Rival no Goal | Goal ] -> [ > Rival | Goal ]
+
+(objects fall into pits when not held)
+late [ Moveable no Hold Space ] -> [ Space ] sfx2
+
+[ parallel Wizard | Gem ] -> [ parallel Wizard | parallel Gem ]
+
+[ > Gem | Charge ] -> [ Gem | Charge ]
+[ > Gem | Gem ] -> [ > Gem | > Gem ]
+
+[ action Wizard Charge ] -> [ Wizard ]
+[ Charge ] [ action Wizard ] -> [ ] [ Wizard Charge ]
+
+[ action Wizard ] -> [ Wizard Charge ]
+
+
+(spells recipes)
+[ Blue | Charge no Wizard ] -> [ | > Hold ] sfx1
+[ Red  | Charge no Wizard ] -> [ | > Burn ] sfx1
+
+[ Blue | Green | Charge no Wizard ] -> [ Blue | Blue | Blue ] sfx1
+[ Red  | Green | Charge no Wizard ] -> [ Red  | Red  | Red  ] sfx1
+
+[ Green | Charge no Wizard ] -> [ Red | Blue ] sfx1
+
+[ Stone | Charge no Wizard ] -> [ Prism | ] sfx1
+[ Prism | Charge no Wizard ] -> [ Stone | ] sfx1
+
+(prism expands a spell)
+[ stationary Player ] [ Mediator Prism ] -> [ Player ] [ Expand Mediator Prism ] sfx0
+
+(shortcut to create directional mediators)
+[    up Mediator ] -> [ Mediator MoveUp    ]
+[  down Mediator ] -> [ Mediator MoveDown  ]
+[  left Mediator ] -> [ Mediator MoveLeft  ]
+[ right Mediator ] -> [ Mediator MoveRight ]
+
+(apply movement to mediators)
+[ stationary Player ] [ Mediator MoveUp    ] -> [ Player ] [    up Mediator    up MoveUp    ]
+[ stationary Player ] [ Mediator MoveDown  ] -> [ Player ] [  down Mediator  down MoveDown  ]
+[ stationary Player ] [ Mediator MoveLeft  ] -> [ Player ] [  left Mediator  left MoveLeft  ]
+[ stationary Player ] [ Mediator MoveRight ] -> [ Player ] [ right Mediator right MoveRight ]
+
+(expand multiplies the spell in all directions)
+     up [ Mediator Expand | no Movement no Wall ] -> [ Mediator Expand | Mediator MoveUp    ]
++  down [ Mediator Expand | no Movement no Wall ] -> [ Mediator Expand | Mediator MoveDown  ]
++  left [ Mediator Expand | no Movement no Wall ] -> [ Mediator Expand | Mediator MoveLeft  ]
++ right [ Mediator Expand | no Movement no Wall ] -> [ Mediator Expand | Mediator MoveRight ]
+
+[ stationary Player ] [ > Mediator > Movement | Prism ] -> [ Player ] [ > Mediator Movement | Prism ]
+[ stationary Player ] [ Mediator Expand ] -> [ Player ] [ ]
+
+(teleport fizzles on dirt and wall)
+[ Hold Wall ] -> [ Wall ]
+[ Hold Indestructible ] -> [ Indestructible ]
+
+(fireball destroys dirt, fizzles on wall)
+[ Burn Destructable   ] -> [ ]
+[ Burn Indestructible ] -> [ Indestructible ]
+
+(spells cancel out)
+[ stationary Player ] [ > Mediator Movement | Mediator Movement ] -> [ Player ] [ | ]
+
+(clean up spell-less move commands)
+[ stationary Player ] [ Movement no Mediator ] -> [ Player ] [ ]
+
+(teleport moves objects)
+[ > Hold Moveable ] -> [ > Hold > Moveable ]
+
+(spells end on goal)
+[ > Mediator Movement | Goal ] -> [ | Goal ]
+
+(rival leaves level)
+[ Rival Goal ] -> [ Goal ]
+
+==============
+WINCONDITIONS
+==============
+
+some Player on Goal
+no Rival
+
+=======
+LEVELS
+=======
+
+message you are a chaos wizard - heir of an ancient sigil - a sigil with the power to free magick from its mineral slumber
+
+message cast spells by placing your sigil next to mana ores. escape this tomb
+
+(rival wizard, introduce teleport, teach pulling)
+x##xxxxxxx##x
+xxxxxbbbxxxxx
+x,,xx...xx,,x
+,,,,#...#,,,,
+,,,,#...#,,,,
+,,,,#...#,,,,
+,,,,#...#,,,,
+,,,,#.@.#,,,,
+,,,,#...#,,,,
+,,,,#...#,,,,
+,,,,#...#,,,,
+,,,,#$$$#,,,,
+x,,xxbbbxx,,x
+xxxxx.%.xxxxx
+x##xx???xx##x
+
+(move demo, teach teleport)
+x,,xxxxxxx,,x
+xxxxx...xxxxx
+x##xx.@.xx##x
+####x...x####
+##xxx...xxx##
+##xb......x##
+##x.x...x.x##
+##x...b.b.x##
+##x...$...x##
+##x.x.%.x.x##
+##x,,.....x##
+##x,,,,,..x##
+##x,x,,,xbx##
+##x,,..,,,x##
+##xxx...xxx##
+####x???x####
+
+(teach that mana can be teleported)
+##xxxxxx#####
+##x.....x####
+##x.@...,x###
+##.....,,,x##
+##....,,...x#
+#.b##x,b...x#
+#.####x..b.x#
+#..###.$.$.x#
+##.....b.%.x#
+#######x.,,x#
+#######x,,,x#
+#######x,,,x#
+#######x,..x#
+#######x???x#
+
+(introduce fireball, teach fireball)
+###xxxxxxx###
+###xx...xx###
+###xx.@.xx###
+###xx...xx###
+###xx...xx###
+###xx...xx###
+#rr#x...xx###
+rrrr..$.xx###
+rr####R.xx###
+r#######xx###
+r#######xx###
+######..xx###
+###xx...xx###
+###xx.%.xx###
+###xx???xx###
+
+(puzzle: teleport, fireball, teleporting mana)
+###############
+#####xxxxx#####
+#xxxxxbrbxxxxx#
+#x,,,,...,,,,x#
+#x,....@....,x#
+#x,.,,...,,.,x#
+#x,.,,,,,,,.,x#
+#xr..,x#x,..bx#
+#xr..,#.#,..rx#
+#xr$.,x#x,.$bx#
+#x,,,,,,,,,,,x#
+#x,.,,rrr,,.,x#
+#x,.........,x#
+#x,,,,$$$,,,,x#
+#xxx#.bbbxxxxx#
+#####x.%.x#####
+#####x???x#####
+
+(introduce & teach pre-sigil)
+###xxxxxxx###
+###xx...xx###
+###x..@..x###
+##x.....##x##
+#x.r....###x#
+#x$#r#x..##x#
+#x###x.b.$bx#
+#x###x$x..,x#
+#x.##x%x..,x#
+#x..#,...,,x#
+#x...,,,,,,x#
+##x...,,,,x##
+###x....,x###
+###xx...xx###
+###xx???xx###
+
+(puzzle: fireball, pre-sigil)
+#################
+#####xxxxxxx#####
+#xxxxxx...xxxxxx#
+#xr...x.@.xr###x#
+#xr.....#...###x#
+#xrr..x...x..##x#
+#xxxx..,,,.#xxxx#
+####x.x,,,x.x####
+####x..,,,.#x####
+####x.x,,,x#x####
+####x..,,,.#x####
+####x.x,,,x.x####
+####x..,,,.#x####
+####xx#$.$.xx####
+#####xxr%rxx#####
+#####xx???xx#####
+
+(introduce split, teach split)
+###xxxxxxx###
+###xx...xx###
+###xx.@.xx###
+###xx...xx###
+###xx...xx###
+###xx.g.xx###
+####x...xx###
+#####...xx###
+#######.xx###
+########xx###
+######,,xx###
+#####,,,xx###
+####x,..xx###
+###xx.%.xx###
+###xx???xx###
+
+(puzzle: teleport, fireball, split)
+#######xxxxx#
+#xxxxxxx...x#
+#x###b...@.x#
+#x####r$...x#
+#x##r$...,.##
+#x#.gxx.,,,,#
+#x...x##,,,,#
+#x###x##,,,,#
+#xg##x##,,,,#
+#x...xxx,,,.#
+#x.......,,.#
+#x.....###,b#
+#x....###.#x#
+#xxxxxxx.%.x#
+#######x???x#
+
+(introduce multiply, teach multiply)
+x###xxxxx###x
+xx#xx...xx#xx
+,x#x.@...x#x,
+xxxxx...xxxxx
+xbg$x.$#x$grx
+xbg$x.r#x$grx
+xxxxx$##xxxxx
+,x#x.r...x#x,
+xxxxx##.xxxxx
+xbg$###...grx
+xbg$x..,x.,,x
+xxxxx.,,xxxxx
+,x#x.,,,.x#x,
+xx#xx,,%xx#xx
+x###x???x###x
+
+(puzzle: fireball, teleport mana, multiply)
+####xxxxxxx####
+####xx...xx####
+###xxx.@.xxx###
+###x.xr.rx.x###
+###x...r...x###
+xxxx.......xxxx
+x..x,.$$$.,x.rx
+x.g.,.rrr.,...x
+x.#...x#x.....x
+x...,#####,...x
+xb.x,##.##,x..x
+xxxx#...#..xxxx
+###x.##..##x###
+###x.x.%#x#x###
+###xxx???xxx###
+
+(puzzle: fireball, teleport, teleport mana, split, multiply)
+####xxxxxxx####
+####xx.@.xx####
+#####r...g#####
+####r.,,,.#####
+####r.,,,.#g###
+####..,,,..####
+###b.....$.#g##
+###....,,r..###
+###...,,,,..###
+####.$,,,,,,###
+####$r,,,#...##
+####r,,###....#
+###,,,####....#
+####xx#%#xx.r##
+####xx???xx####
+
+(introduce amplification, teach amplification)
+###xxxxxxx###
+#xxxx...xxxx#
+#xrxx.@.xx,x#
+#x.........x#
+#x,,.xxxxxgx#
+#x+,#x###x.x#
+#x,,.xxxxx.x#
+#x.r..#...rx#
+#xgxxxxx.,,x#
+#x#x###x#,+x#
+#x#xxxxx.,,x#
+#x.###....$x#
+#x,xx...xxbx#
+#xxxx.%.xxxx#
+###xx???xx###
+
+(amplified teleport)
+,,xxxxxxx,,
+,#xx...xx#,
+,#xx.@.xx#,
+#+.,$b.,.+#
+,..#...,..#
+,,,#,,###,#
+,..#...#..#
+#+.,.+r£.+#
+#..,##.,..,
+,,,,,,,,,,,
+,.#,##.,..#
+#x.,.x.,.+#
+##xx...xx##
+#,xx.%.xx,#
+,,xx???xx#,
+
+(puzzle: fireball, amplified fireball)
+###xxxxxxx###
+#xxxx...xxxx#
+#xrxx.@.xxrx#
+#xr.......rx#
+#x..##.#...x#
+#x..,,,,,##x#
+#x#.,,,,#.#x#
+#x###,+,###x#
+#x..#,,,##.x#
+#x..,,,,,##x#
+#x.######..x#
+#x.#####...x#
+#xrxx#.#xxrx#
+#xxxx.%.xxxx#
+###xx???xx###
+
+(puzzle: fireball, split, amplified teleport)
+###xxxxxxx###
+#xxxx...xxxx#
+#xbxx.@.xx.x#
+#x..x...x...#
+#x...,.,...,#
+#x...,.,...,#
+#x..,...,..,#
+#x.#...r.#.##
+#x.x,,,,,x.x#
+#xgx+,+,+x.x#
+#x#xxx,xxx.x#
+#x##..$...#x#
+#x#xx.r.xx#x#
+#xxxx.%.xxxx#
+###xx???xx###
+
+(puzzle: fireball, sigil-first, split, multiply, amplified teleport)
+###xxxxxxx###
+#xxxx...xxxx#
+#x#xx.@.xx.x#
+#x........gx#
+#xgx..x..x.x#
+#x.x.....x.x#
+#x,,x...x,,x#
+#x+,..,..,+x#
+#x,,x$.$x,,x#
+#x.x.r.r.x.x#
+#x.x.#x#.x.x#
+#x...###...x#
+#x.xx#.#xx.x#
+#xxxx.%.xxxx#
+###xx???xx###
+
+(introduce mobile amplify, teach mobile amplify)
+(puzzle: teleport, amplified teleport)
+###xxxxxxxx,,
+#xxxx...xxx,,
+#x.xx.@.xx,,,
+#xbbs...,,,,#
+#xx.,,.,,,+##
+#xx.,,.,,,,,#
+#xx,,x.x,,,,,
+#x,,,r$,,,+##
+#xx,,x,x,,,##
+#xx.,,,,,,,,#
+#xx.,##,,,,,,
+#x....##,,,,,
+#x.xx..#xx,,,
+#xxxx.%.xxx,,
+###xx???xxx,,
+
+(puzzle: teleport, fireball, mobile amplify)
+#################
+#####xxxxxxx#####
+#xxxxxx.@.xxxxxx#
+#x.bbx.+++.x+.+x#
+#x...x.....x.xrx#
+#x#.....b....x$x#
+#x..$x..$..x.x.x#
+#x..rx.....x+.+x#
+#xx$xx#.%..xxxxx#
+#x#r..##.....##x#
+#x#...#,,,.###.x#
+#x##...,,,.#.##x#
+#x##...,,,.##.bx#
+#xxxxxx...xxxxxx#
+#####xx...xx#####
+#####xx???xx#####
+
+message i cannot allow you to proceed
+
+(gauntlet i: fireball dodging)
+,,xxxxxxxxx,,
+,,xxx...xxx,,
+,,,xx.@.xx,,,
+x,,,,...,,,,,
++.,,,.b.,,,,x
+..x,,.$.,,,.+
++.+.,.%.,,x..
+...x,...,.+.+
++.+.,...,x...
+$.x,,...,.+.+
+rx,,,...,,x.$
+x,,,,...,,,xr
+,,,,,...,,,,x
+,,,xx...xx,,,
+,,xxx...xxx,,
+,,xxx???xxx,,
+
+message your power waxes and thus mine wanes
+
+(gauntlet ii: impending fireball doom)
+####xxxxx####
+#xxxxbbbxxxx#
+#x.,..@..,.x#
+#x.,.....,.x#
+#x.,.....,.x#
+#x.,#####,.x#
+#x,#######,x#
+#x,#######,x#
+#x,#######,x#
+#x,#######,x#
+#x,#######,x#
+#x,#######,x#
+#x,#######,x#
+#x,#######,x#
+#x,#######,x#
+#x,#######,x#
+#x,#######,x#
+#x,,#####,,x#
+#x,,,,,,,,,x#
+#x,x+++++x,x#
+#x.xxx$xxx.x#
+#x....r....x#
+#xxxx.%.xxxx#
+####x???x####
+
+(message it seems you cannot be stopped
+
+(gauntlet iii: interference pattern)
+#######xxxxx#######
+###xxxxx...xxxxx###
+###x...s.@.s...x###
+###x...s...s...x###
+#xxx,,,,sbs,,,,xxx#
+#x+,,,,,...,,,,,,x#
+#x+,,,,,$r.,,,,,,x#
+#x+,,,,,...,,,,,,x#
+#x+,,,,,$$$,,,,,,x#
+#xxx,,,,bbb,,,,xxx#
+###x...$...$...x###
+###x...r...r...x###
+###xxxxx.%.xxxxx###
+#######x???x#######)
+
+message there isn't enough mana in the cosmos to stop fate
+message ...but you shall not leave whilst i live
+
+(boss)
+,,x###xxxxx###x,,
+,,xrrrxb.bxrrrx,,
+,,,.....@.....,,,
+,,,,,,,...,,,,,,,
+,,,,,,,,,,,,,,,,,
+,+x,,,,,,,,,,,x+,
++x+,,,,,£3,,,,+x+
+x+%,,,,,,,,,,,.+x
+,,,,,,x,x,x,,,,,,
+,,,,,,,???,,,,,,,
+,,,,,,x???x,,,,,,
+,,,,,,,???,,,,,,,
+,,,,,,x,x,x,,,,,,
+x+.,,,,3£,,,,,.+x
++x+,,,,,,,,,,,+x+
+,+x,,,,,,,,,,,x+,
+,,,,,,,,,,,,,,,,,
+
+message all of this has happened before, and all of this will happen again, my son
+
+title Broken Rigid Body example
+author Anonymous
+homepage www.puzzlescript.net
+
+verbose_logging
+
+(
+
+Example for
+https://www.puzzlescript.net/Documentation/rigidbodies.html#many_many
+
+)
+
+========
+OBJECTS
+========
+
+Background 
+white  
+
+Target 
+DarkBlue    
+
+Wall 
+DarkGrey
+
+Player
+Blue
+..0..
+..0.0
+00000
+.000.
+.0.0.
+
+Shadow
+Black
+..0..
+0.0..
+00000
+.000.
+.0.0.
+
+( three multi-cells blocks )
+Crate 
+orange
+
+Chest
+green
+
+Box
+red
+
+( 1-cell small block )
+Small
+darkred
+.....
+.000.
+.000.
+.000.
+.....
+
+( sticky, multicellular block when in contact )
+Glue
+pink
+.000.
+00000
+00000
+00000
+.000.
+
+( a flag to know what is allowed move )
+Wanna_Move
+#ff00ff
+.....
+.....
+..0..
+.....
+.....
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Player
+S = Shadow
+* = Crate
++ = Box
+% = Chest
+o = Small
+g = Glue
+
+( blocks that can be moved by the player )
+Movable = Crate or Box or Chest or Small or Glue
+
+( all things that can move and push blocks )
+Mover = Player or Shadow or Movable 
+
+( things that can stop a movement if they are stationary )
+Obstacle = Wall or Mover
+
+=======
+SOUNDS
+=======
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Target
+Obstacle
+Wanna_Move
+
+======
+RULES     
+======     
+
+[ > player ] [ stationary shadow ] -> [ > player ] [ < shadow ]
+
+( 1. Propagate movements forward )
+[ > Mover | stationary Movable ] -> [ > Mover | > Movable  ]
++ [ > Box    ] [ stationary Box   ] -> [ > Box    ] [ > Box    ]
++ [ > Crate  ] [ stationary Crate ] -> [ > Crate  ] [ > Crate  ]
++ [ > Chest  ] [ stationary Chest ] -> [ > Chest  ] [ > Chest  ]
++ [ moving Glue | stationary Glue ] -> [ moving Glue | moving Glue ]
+
+( 2. Propagate obstructions backwards )
+[ > Mover  | stationary Obstacle ] -> [ stationary Mover | Obstacle ]
++ [ > Crate  ] [ stationary Crate ] -> [ stationary Crate ] [ Crate ]
++ [ > Box    ] [ stationary Box   ] -> [ stationary Box   ] [ Box   ]
++ [ > Chest  ] [ stationary Chest ] -> [ stationary Chest ] [ Chest ]
++ [ moving Glue | stationary Glue ] -> [ stationary Glue | Glue ]
+
+( 3. remove all movement, keep a flag )
+[ > Movable ] -> [ Movable wanna_move ]
+
+( 4. propagate movement only on wanna_move things )
+(    ie redo step 1 but with WANNA_MOVE added to the first line below )
+[ > Mover  | stationary Movable WANNA_MOVE ] -> [ > Mover | > Movable ]
++ [ > Box   ] [ stationary Box   ] -> [ > Box   ] [ > Box   ]
++ [ > Crate ] [ stationary Crate ] -> [ > Crate ] [ > Crate ]
++ [ > Chest ] [ stationary Chest ] -> [ > Chest ] [ > Chest ]
++ [ moving Glue | stationary Glue ] -> [ moving Glue | moving Glue ]
+
+( 5. cleanup, remove flag )
+[ wanna_move ] -> [ ]
+
+==============
+WINCONDITIONS
+==============
+
+=======     
+LEVELS
+=======
+
+###################
+#.................#
+#............s....#
+#...*..g.g.#......#
+#...*......#...g###
+#...*...o.%%%.....#
+#...+++.o.%.......#
+#....+....%%%.....#
+#....+.........g..#
+#....p.gg.........#
+###################
+
+#########
+#.......#
+#.p.+...#
+#...+...#
+#...+.s.#
+#.......#
+#########
+
+
+USER PROMPT:
+The following PuzzleScript game code:
+```plaintext
+title Maze Escape
+author PuzzleScript Enthusiast
+
+========
+OBJECTS
+========
+
+Background
+black
+
+Player
+yellow white lightgrey orange
+.000.
+.111.
+22222
+.333.
+.3.3.
+
+Wall
+darkgrey grey lightgrey
+11111
+11111
+11111
+11111
+11111
+
+Floor
+#4B8B3B
+.....
+
+Block
+orange brown
+11111
+10001
+10001
+10001
+11111
+
+Exit
+green
+.....
+..0..
+.000.
+..0..
+.....
+
+=======
+LEGEND
+=======
+
+. = Floor
+# = Wall
+P = Player
+B = Block
+E = Exit
+
+=======
+SOUNDS
+=======
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Floor
+Player, Wall, Block, Exit
+
+======
+RULES
+======
+
+[ > Player | Block ] -> [ > Player | > Block ]
+
+==============
+WINCONDITIONS
+==============
+
+Some Player on Exit
+
+=======
+LEVELS
+=======
+
+#######
+#.....#
+#.B.#E#
+#P.#..#
+#.....#
+#######
+
+#########
+#.......#
+#.##.#E.#
+#.B#.#.#
+#P.#.E.#
+#######.#
+#.......#
+#########
+
+
+```
+compiled, but a solvability check returned the following error:
+ Level 0 is not solvable. Please repair it. Level 1 is not solvable. Please repair it.
+Return your code in full, inside a ```plaintext code block.

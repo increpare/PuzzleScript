@@ -1,0 +1,107 @@
+```plaintext
+Title: Simple Sokoban
+Author: PuzzleScript Enthusiast
+
+========
+OBJECTS
+========
+
+Background
+transparent
+00000
+...00
+...00
+
+Player
+yellow
+..0..
+..0..
+00000
+
+Crate
+red
+00000
+00000
+00000
+
+Target
+green
+..0..
+..0..
+..0..
+
+Wall
+grey
+00000
+00000
+00000
+
+CrateOnTarget
+brown
+00000
+00.00
+00000
+
+========
+LEGEND
+========
+
+= Background
+P = Player
+# = Wall
+B = Crate
+T = Target
+O = CrateOnTarget
+
+=======
+SOUNDS
+=======
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Wall
+Player, Crate, CrateOnTarget
+Target
+
+========
+RULES
+========
+
+RIGHT [ > Player | Crate ] -> [ > Player | > Crate ]
+LEFT  [ < Player | Crate ] -> [ < Player | < Crate ]
+UP    [ ^ Player | Crate ] -> [ ^ Player | ^ Crate ]
+DOWN  [ v Player | Crate ] -> [ v Player | v Crate ]
+
+[ Crate | Target ] -> [ CrateOnTarget | ]
+[ CrateOnTarget | ] -> win
+
+========
+LEVELS
+========
+
+// Level 1
+#####
+#   #
+# P #
+# B #
+#   #
+#   #
+#   #
+#####
+
+// Level 2
+ ######
+ #    #
+ # P  #
+ ##B ##
+  #T#
+  ###
+```
+
+Changes made:
+1. Added an empty `SOUNDS` section, as it was previously missing.
+2. Fixed the case sensitivity issue by ensuring consistent use of object names with initial uppercase letters in `COLLISIONLAYERS` and `RULES`. The terms `Player` and `Crate` should be capitalized in the `RULES` section to match their definitions in the `OBJECTS` section. 
+3. Verified that there are no erroneous lines after the line of equality signs (e.g., `========`) other than the specified section heading.

@@ -1,0 +1,119 @@
+SYSTEM PROMPT:
+You are a game designer, familiar with the PuzzleScript game description language. 
+
+USER PROMPT:
+The following PuzzleScript game code:
+```plaintext
+Title: Simple Sokoban
+Author: PuzzleScript Enthusiast
+
+========
+OBJECTS
+========
+
+Background
+transparent
+00000
+...00
+...00
+
+Player
+yellow
+..0..
+..0..
+00000
+
+Crate
+red
+00000
+00000
+00000
+
+Target
+green
+..0..
+..0..
+..0..
+
+Wall
+grey
+00000
+00000
+00000
+
+CrateOnTarget
+brown
+00000
+00.00
+00000
+
+========
+LEGEND
+========
+
+= Background
+P = Player
+# = Wall
+B = Crate
+T = Target
+O = CrateOnTarget
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Wall
+Player, Crate, CrateOnTarget
+Target
+
+========
+RULES
+========
+
+RIGHT [ > Player | B ] -> [ > Player | > B ]
+LEFT  [ < Player | B ] -> [ < Player | < B ]
+UP    [ ^ Player | B ] -> [ ^ Player | ^ B ]
+DOWN  [ v Player | B ] -> [ v Player | v B ]
+
+[ B | T ] -> [ O | T ]
+[ O | T ] -> [ O | T ]
+
+===============
+WINCONDITIONS
+===============
+
+All O on T
+
+========
+LEVELS
+========
+
+#####
+#   #
+# P #
+# B #
+# T #
+#   #
+#####
+
+ ######
+ #    #
+ # P  #
+ ##B ##
+  #T#
+  ###
+
+
+```
+produced the following console output:
+=================================
+line 48 : Only comments should go after a bunch of equals signs ('===') on a line.
+line 56 : section "COLLISIONLAYERS" is out of order, must follow  "SOUNDS" (or it could be that the section "SOUNDS"is just missing totally.  You have to include all section headings, even if the section itself is empty).
+line 68 : Name "player", referred to in a rule, does not exist.
+line 68 : Name "b", referred to in a rule, does not exist.
+line 69 : Name "player", referred to in a rule, does not exist.
+line 69 : Name "b", referred to in a rule, does not exist.
+too many errors, aborting compilation
+Errors detected during compilation; the game may not work correctly.
+Return a repaired version of the code that addresses these errors. Return your code in full, inside a ```plaintext code block.

@@ -1,0 +1,99 @@
+Here is a simple PuzzleScript game code. This game is inspired by the classic Sokoban where the player has to push crates onto target goals:
+
+```plaintext
+Title: Simple Sokoban
+Author: Your Name
+Homepage: http://yourhomepage.com
+
+===========
+OBJECTS
+===========
+
+Background
+yellow
+
+Player
+green
+...
+..g
+.g.
+...
+
+Wall
+black
+
+Crate
+brown
+
+Target
+red
+
+CrateOnTarget
+darkred
+
+===========
+LEGEND
+===========
+
+. = Background
+# = Wall
+P = Player
+C = Crate
+T = Target
+H = CrateOnTarget
+
+===========
+SOUNDS
+===========
+
+Crate on Target
+move 100.20 0.2
+action 80.40 0.2
+tinkle 80.70 0.1
+
+Player into Wall
+fail 0.1 100
+
+===========
+COLLISIONLAYERS
+===========
+
+Background
+Player
+Wall
+Crate, CrateOnTarget
+Target
+
+===========
+RULES
+===========
+
+[Player | Crate] -> [ | Player | Crate]
+[Crate | Target] -> [CrateOnTarget | Target]
+[CrateOnTarget | ] -> [Crate | ]
+[Player | Wall] -> fail
+
+===========
+WINCONDITIONS
+===========
+
+All CrateOnTarget on Target
+
+===========
+LEVELS
+===========
+
+####
+#..#
+#PC#
+#..#
+####
+
+####
+#..T#
+#PC.#
+#..T#
+####
+```
+
+This game defines a few different objects: `Player`, `Wall`, `Crate`, `Target`, and `CrateOnTarget`. The objective of this simple game is to push all crates onto targets. The levels are constructed within the `LEVELS` section. The `RULES` section defines the game mechanics, like moving crates and handling crate-on-target logic. The `WINCONDITIONS` section is used to determine when the game is won, which occurs when all crates are on targets.

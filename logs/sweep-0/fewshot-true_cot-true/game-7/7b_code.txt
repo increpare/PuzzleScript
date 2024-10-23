@@ -1,0 +1,110 @@
+The errors in the console output are primarily due to malformed level descriptions. The levels must be introduced correctly, and each line in the levels must have the same length. Additionally, the levels should not contain lines with titles like "Level 1" or "Level 2" within the level data itself. Here is how you can correct and format the code properly.
+
+1. **Level Names**: The lines "Level 1" and "Level 2" in the level data are not recognized by the code as valid. They need to be comments or separate from the actual level data.
+
+2. **Ensure Rectangular Levels**: Make sure that every line of the level maps contains the same number of characters.
+
+Here's the corrected code:
+
+```plaintext
+title Simple Key Maze
+author PuzzleScript Enthusiast
+homepage www.puzzlescript.net
+
+========
+OBJECTS
+========
+Background
+lightblue
+.....
+.....
+.....
+.....
+.....
+
+Player
+Yellow
+.0...
+000..
+.000.
+..0..
+.....
+
+Wall
+Gray
+.....
+.....
+.....
+.....
+.....
+
+Key
+Yellow
+.....
+..0..
+.000.
+.....
+.....
+
+Exit
+Red
+.....
+..0..
+.000.
+..0..
+.....
+
+=======
+LEGEND
+=======
+. = Background
+# = Wall
+P = Player
+K = Key
+E = Exit
+
+=======
+SOUNDS
+=======
+
+================
+COLLISIONLAYERS
+================
+Background
+Key, Exit, Player, Wall
+
+======
+RULES
+======
+[> Player | Key] -> [> Player]
+[Player | Exit] -> WIN
+
+==============
+WINCONDITIONS
+==============
+No Key
+
+=======
+LEVELS
+=======
+#########
+#...K...#
+#.#####.#
+#.P...#.#
+###...###
+..#...E..
+..#####..
+
+#########
+#P.#...K#
+#...#.#.#
+#.###.#.#
+#.....#.#
+#.#####.#
+#K...E..#
+#########
+```
+
+Changes:
+- Removed "Level 1" and "Level 2" text lines that were improperly formatted into level data.
+- Ensured all lines of the levels have the same length for each corresponding level.

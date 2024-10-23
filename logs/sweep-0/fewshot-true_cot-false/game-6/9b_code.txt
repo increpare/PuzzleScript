@@ -1,0 +1,247 @@
+```plaintext
+title Push & Connect
+author Anonymous
+homepage www.puzzlescript.net
+
+========
+OBJECTS
+========
+
+Background
+white
+.....
+.....
+.....
+.....
+.....
+
+Wall
+DarkGrey
+00000
+00000
+00000
+00000
+00000
+
+Player
+Blue
+..0..
+..0..
+.000.
+.0.0.
+.0.0.
+
+Connector
+lightblue
+.....
+..0..
+.000.
+..0..
+.....
+
+Goal
+Yellow
+.....
+.....
+..0..
+.....
+.....
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Player
+C = Connector
+G = Goal
+
+=======
+SOUNDS
+=======
+
+Connector move 69367194
+Player move 33088407
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Connector
+Player, Wall, Goal
+
+======
+RULES
+======
+
+[ > Player | Connector ] -> [ > Player | > Connector ] sfx0
+[ Player | Goal ] -> [ Player | Goal ]
+
+==============
+WINCONDITIONS
+==============
+
+All Connector on Goal
+
+=======
+LEVELS
+=======
+
+message Level 1
+#######
+#.....#
+#..P..#
+#..C..#
+#..G..#
+#######
+
+message Level 2
+#######
+#..G..#
+#.....#
+#..C..#
+#..P..#
+#######
+
+message Level 3
+#######
+#G....#
+#####.#
+#..C..#
+#####.#
+#..P..#
+#.....#
+#######
+
+```
+
+I have reviewed the puzzle levels, and to ensure solvability, I will make the following changes:
+
+1. **Level 1**: Move the Goal to a position where the Connector can be pushed onto it by the Player.
+2. **Level 3**: Adjust wall positions and ensure pathways to allow the Player to push the Connector to the Goal.
+
+Here's the revised version of the game:
+
+```plaintext
+title Push & Connect
+author Anonymous
+homepage www.puzzlescript.net
+
+========
+OBJECTS
+========
+
+Background
+white
+.....
+.....
+.....
+.....
+.....
+
+Wall
+DarkGrey
+00000
+00000
+00000
+00000
+00000
+
+Player
+Blue
+..0..
+..0..
+.000.
+.0.0.
+.0.0.
+
+Connector
+lightblue
+.....
+..0..
+.000.
+..0..
+.....
+
+Goal
+Yellow
+.....
+.....
+..0..
+.....
+.....
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Player
+C = Connector
+G = Goal
+
+=======
+SOUNDS
+=======
+
+Connector move 69367194
+Player move 33088407
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Connector
+Player, Wall, Goal
+
+======
+RULES
+======
+
+[ > Player | Connector ] -> [ > Player | > Connector ] sfx0
+[ Player | Goal ] -> [ Player | Goal ]
+
+==============
+WINCONDITIONS
+==============
+
+All Connector on Goal
+
+=======
+LEVELS
+=======
+
+message Level 1
+#######
+#.....#
+#..P..#
+#..C..#
+#.....#
+#..G..#
+#######
+
+message Level 2
+#######
+#..G..#
+#.....#
+#..C..#
+#..P..#
+#######
+
+message Level 3
+#######
+#G....#
+#.....#
+#..C..#
+#.....#
+#..P..#
+#.....#
+#######
+
+```
+
+These changes ensure that it's possible for the Player to push the Connector to the Goal in each provided level.

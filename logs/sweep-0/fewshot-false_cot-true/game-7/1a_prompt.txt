@@ -1,0 +1,106 @@
+SYSTEM PROMPT:
+You are a game designer, familiar with the PuzzleScript game description language. 
+
+USER PROMPT:
+The following PuzzleScript game code:
+```plaintext
+===========
+Title
+===========
+Simple Sokoban
+
+===========
+Author
+===========
+Your Name
+
+===========
+Objects
+===========
+Background
+WHITE
+
+Player
+LIGHTBLUE
+.
+.1.
+L1L
+.1.
+
+Wall
+BLACK
+000
+000
+000
+
+Block
+RED
+.R.
+RRR
+.R.
+
+Target
+YELLOW
+...
+...
+...
+
+BlockOnTarget
+ORANGE
+.OR.
+ORRORO
+.OR.
+
+===========
+Legend
+===========
+P = Player
+# = Wall
+B = Block
+T = Target
+O = BlockOnTarget
+
+===========
+Sounds
+===========
+
+===========
+CollisionLayers
+===========
+Background
+Target
+Player, Block, BlockOnTarget
+Wall
+
+===========
+Rules
+===========
+[Player | Block] -> [ > Player | > Block]
+[Block | Target] -> [BlockOnTarget | ]
+
+===========
+WinConditions
+===========
+All BlockOnTarget on Target
+
+===========
+Levels
+===========
+####
+# .#
+#PB#
+#  #
+####
+
+```
+produced the following console output:
+=================================
+line 2 : MetaData "title" needs a value.
+line 4 : Unrecognised stuff in the prelude.
+line 7 : MetaData "author" needs a value.
+line 9 : Unrecognised stuff in the prelude.
+line 20 : Trying to access color number 1 from the color palette of sprite PLAYER, but there are only 1 defined in it.
+line 21 : Unknown junk in spritematrix for object PLAYER.
+too many errors, aborting compilation
+Errors detected during compilation; the game may not work correctly.
+Return a repaired version of the code that addresses these errors. First, reason about your task and determine the best plan of action. Then, write your code. Return your code in full, inside a ```plaintext code block.

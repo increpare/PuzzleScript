@@ -1,0 +1,126 @@
+To create a complete PuzzleScript game, we'll need to cover several key components within the PuzzleScript language. These components include:
+
+1. **Objects**: Define the visual representations of different entities in the game.
+2. **Legend**: Connect objects to easily referable characters or names.
+3. **Sound**: Optional but can add an extra layer of feedback (skipped for simplicity).
+4. **Collision Layers**: Determine the interaction between objects by defining which can overlap.
+5. **Rules**: Set the behavior and interactions of objects each turn.
+6. **Win Conditions**: Specify what conditions must be met to win a level.
+7. **Levels**: Design the actual layout or puzzles of the game.
+
+### Game Concept
+Let's create a simple game with the following idea:
+- The player controls a character that pushes blocks to targets.
+- Once all blocks are on targets, the player wins.
+- This concept is akin to a simple Sokoban-type game.
+
+### Game Components
+
+- **Objects**: Player, Wall, Block, Target
+- **Rules**: Player can move in four directions, can push blocks.
+- **Win Condition**: All blocks are on targets.
+- **Levels**: Include a simple starting level with walls, blocks, and targets.
+
+### PuzzleScript Code
+
+```plaintext
+===========
+Title
+===========
+Simple Sokoban
+
+===========
+Author
+===========
+Your Name
+
+===========
+Objects
+===========
+Background
+WHITE
+
+Player
+LIGHTBLUE
+.
+.1.
+L1L
+.1.
+
+Wall
+BLACK
+000
+000
+000
+
+Block
+RED
+.R.
+RRR
+.R.
+
+Target
+YELLOW
+...
+...
+...
+
+BlockOnTarget
+ORANGE
+.OR.
+ORRORO
+.OR.
+
+===========
+Legend
+===========
+P = Player
+# = Wall
+B = Block
+T = Target
+O = BlockOnTarget
+
+===========
+Sounds
+===========
+
+===========
+CollisionLayers
+===========
+Background
+Target
+Player, Block, BlockOnTarget
+Wall
+
+===========
+Rules
+===========
+[Player | Block] -> [ > Player | > Block]
+[Block | Target] -> [BlockOnTarget | ]
+
+===========
+WinConditions
+===========
+All BlockOnTarget on Target
+
+===========
+Levels
+===========
+####
+# .#
+#PB#
+#  #
+####
+```
+
+### Explanation
+- **Objects**: Defined visual representations for the player, wall, block, target, and block on target.
+- **Legend**: Links single characters (P, #, B, T, O) to respective objects.
+- **Collision Layers**: Specifies the layer hierarchy and indicates that "Player" and "Block" occupy the same layer which allows for interaction.
+- **Rules**:
+  - Players can push blocks.
+  - Blocks become 'BlockOnTarget' when pushed onto targets.
+- **Win Conditions**: You win when all blocks are on targets.
+- **Levels**: Basic level layout for initial puzzle-solving experience.
+
+This simple game captures the essence of Sokoban-style gameplay using PuzzleScript language. You can expand it by adding more complex levels and interactions (like multiple players, undo functionality, etc.).

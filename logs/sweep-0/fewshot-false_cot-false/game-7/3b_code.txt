@@ -1,0 +1,116 @@
+Certainly! Let's fix the issues present in your PuzzleScript game code. Here is a corrected version of the code:
+
+```plaintext
+Title: Simple Sokoban
+Author: PuzzleScript Enthusiast
+
+========
+OBJECTS
+========
+
+Background
+transparent
+00000
+...00
+...00
+
+Player
+yellow
+..0..
+..0..
+00000
+
+Crate
+red
+00000
+00000
+00000
+
+Target
+green
+..0..
+..0..
+..0..
+
+Wall
+grey
+00000
+00000
+00000
+
+CrateOnTarget
+brown
+00000
+00.00
+00000
+
+========
+LEGEND
+========
+
+= Background
+P = Player
+# = Wall
+B = Crate
+T = Target
+O = CrateOnTarget
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Wall
+Player, Crate, CrateOnTarget
+Target
+
+========
+RULES
+========
+
+RIGHT [ > Player | Crate ] -> [ > Player | > Crate ]
+LEFT  [ < Player | Crate ] -> [ < Player | < Crate ]
+UP    [ ^ Player | Crate ] -> [ ^ Player | ^ Crate ]
+DOWN  [ v Player | Crate ] -> [ v Player | v Crate ]
+
+[ Crate | Target ] -> [ CrateOnTarget | ]
+[ CrateOnTarget | ] -> win
+
+===============
+WINCONDITIONS
+===============
+
+// You can add specific win conditions here if needed
+
+========
+LEVELS
+========
+
+// Level 1
+#####
+#   #
+# P #
+# B #
+# T #
+#   #
+#####
+
+// Level 2
+ ######
+ #    #
+ # P  #
+ ##B ##
+  #T#
+  ###
+
+```
+
+### Fixes made:
+
+1. **Rearranged the Sections**: Added a `WINCONDITIONS` section to follow the expected order. PuzzleScript requires that `WINCONDITIONS` must precede `LEVELS`. Even if there are no win conditions other than the default, you should include the section header.
+
+2. **Level Data Correction**: Removed accidental spaces and aligned the level map properly to ensure consistency. Spaces and unintended characters can cause errors on those lines.
+
+3. **Corrected Comments Format**: Ensure comment lines (like for Level 1 and Level 2) are properly named and do not introduce any unknown characters.
+
+By addressing these errors, the game should compile successfully. Adjust the win conditions section if you need any custom conditions beyond the default winning rules.

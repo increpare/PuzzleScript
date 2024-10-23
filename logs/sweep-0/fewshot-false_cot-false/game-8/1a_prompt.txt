@@ -1,0 +1,112 @@
+SYSTEM PROMPT:
+You are a game designer, familiar with the PuzzleScript game description language. 
+
+USER PROMPT:
+The following PuzzleScript game code:
+```plaintext
+Title: Simple Sokoban
+Author: Your Name
+Homepage: http://yourhomepage.com
+
+===========
+OBJECTS
+===========
+
+Background
+yellow
+
+Player
+green
+...
+..g
+.g.
+...
+
+Wall
+black
+
+Crate
+brown
+
+Target
+red
+
+CrateOnTarget
+darkred
+
+===========
+LEGEND
+===========
+
+. = Background
+# = Wall
+P = Player
+C = Crate
+T = Target
+H = CrateOnTarget
+
+===========
+SOUNDS
+===========
+
+Crate on Target
+move 100.20 0.2
+action 80.40 0.2
+tinkle 80.70 0.1
+
+Player into Wall
+fail 0.1 100
+
+===========
+COLLISIONLAYERS
+===========
+
+Background
+Player
+Wall
+Crate, CrateOnTarget
+Target
+
+===========
+RULES
+===========
+
+[Player | Crate] -> [ | Player | Crate]
+[Crate | Target] -> [CrateOnTarget | Target]
+[CrateOnTarget | ] -> [Crate | ]
+[Player | Wall] -> fail
+
+===========
+WINCONDITIONS
+===========
+
+All CrateOnTarget on Target
+
+===========
+LEVELS
+===========
+
+####
+#..#
+#PC#
+#..#
+####
+
+####
+#..T#
+#PC.#
+#..T#
+####
+
+```
+produced the following console output:
+=================================
+line 15 : Unknown junk in spritematrix for object PLAYER.
+line 16 : Unknown junk in spritematrix for object PLAYER.
+line 46 : Was expecting a soundverb here (MOVE, DESTROY, CANTMOVE, or the like), but found something else.
+line 47 : unexpected sound token "move".
+line 48 : unexpected sound token "action".
+line 49 : unexpected sound token "tinkle".
+too many errors, aborting compilation
+Errors detected during compilation; the game may not work correctly.
+Return a repaired version of the code that addresses these errors. Return your code in full, inside a ```plaintext code block.

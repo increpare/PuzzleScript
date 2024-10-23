@@ -1,0 +1,84 @@
+The errors in the console output indicate that the game is having issues parsing the lines in the `colors` section. Specifically, the issue is that the object names are not correctly matched with their colors due to indentation inconsistencies. PuzzleScript expects a strict layout, and each line in the `colors` section needs to have the object name and color correctly matched without extra spaces.
+
+Here are the steps to fix the game code:
+
+1. Review each line in the `colors` section and ensure that each line properly matches the object name with its respective color.
+2. Eliminate any discrepancies in spaces or misaligned attributes.
+3. Correct any malformed syntax according to PuzzleScript expectations.
+
+Let's rewrite the `colors` section to ensure that the objects are correctly matched with their colors.
+
+```plaintext
+=========
+title Sokoban Puzzle
+author Example Author
+
+=========
+objects
+Background . 
+Wall        # 
+Player      P 
+Crate       C 
+Target      X 
+CrateTarget O
+
+=========
+colors
+Background black
+Wall grey
+Player blue
+Crate brown
+Target red
+CrateTarget green
+
+=========
+legend
+. = Background
+# = Wall
+P = Player
+C = Crate
+X = Target
+O = CrateTarget
+
+=========
+sounds
+Restart sfasf
+
+=========
+collisionlayers
+Background
+Target 
+CrateTarget
+Player, Crate
+Wall
+
+=========
+rules
+[Player | Crate] -> [> Player | > Crate]
+
+[Crate Target] -> [CrateTarget]
+
+=========
+winconditions
+All CrateTarget on Target
+
+=========
+levels
+;; Level 1
+#######
+#.....#
+#..C..#
+#..P..#
+#..X..#
+#######
+
+;; Level 2
+#####
+#.X.#
+#.#.#
+#CPC#
+#.#.#
+#####
+```
+
+This updated code should now compile without errors related to the `colors` section. All object names should align directly with their assigned colors, which matches the puzzle script specification for defining colors.

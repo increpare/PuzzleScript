@@ -1,0 +1,103 @@
+SYSTEM PROMPT:
+You are a game designer, familiar with the PuzzleScript game description language. 
+
+USER PROMPT:
+The following PuzzleScript game code:
+```plaintext
+Title: Simple Sokoban
+Author: Your Name
+Homepage: http://yourhomepage.com
+
+===========
+OBJECTS
+===========
+
+Background
+yellow
+
+Player
+green
+
+Wall
+black
+
+Crate
+brown
+
+Target
+red
+
+CrateOnTarget
+darkred
+
+===========
+LEGEND
+===========
+
+. = Background
+# = Wall
+P = Player
+C = Crate
+T = Target
+H = CrateOnTarget
+
+===========
+SOUNDS
+===========
+
+Crate on Target
+SFX 70 
+
+Player into Wall
+SFX 90
+
+===========
+COLLISIONLAYERS
+===========
+
+Background
+Player
+Wall
+Crate, CrateOnTarget
+Target
+
+===========
+RULES
+===========
+
+[Player | Crate] -> [ | Player Crate]
+[Crate | Target] -> [CrateOnTarget | Target]
+[CrateOnTarget] -> [Crate]
+[Player | Wall] -> [Player | Wall]
+
+===========
+WINCONDITIONS
+===========
+
+All CrateOnTarget on Target
+
+===========
+LEVELS
+===========
+
+####
+#..#
+#PC#
+#..#
+####
+
+#####
+#..T#
+#PC.#
+#..T#
+#####
+
+```
+produced the following console output:
+=================================
+line 42 : Was expecting a soundverb here (MOVE, DESTROY, CANTMOVE, or the like), but found something else.
+line 43 : unexpected sound token "sfx".
+line 45 : Was expecting a soundverb here (MOVE, DESTROY, CANTMOVE, or the like), but found something else.
+line 46 : unexpected sound token "sfx".
+Errors detected during compilation; the game may not work correctly.
+Return a repaired version of the code that addresses these errors. Return your code in full, inside a ```plaintext code block.

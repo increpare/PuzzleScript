@@ -1,0 +1,93 @@
+```plaintext
+title Simple Puzzle Game
+author User
+
+========
+OBJECTS
+========
+
+Background
+lightgreen
+00000
+00000
+00000
+00000
+00000
+
+Wall
+brown darkbrown
+11111
+11111
+11111
+11111
+11111
+
+Player
+pink yellow green purple red
+.000.
+.111.
+.222.
+.333.
+.4.4.
+
+Goal
+lightblue
+.....
+.000.
+.0.0.
+.000.
+.....
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Player
+G = Goal
+
+=======
+SOUNDS
+=======
+
+==============
+COLLISIONLAYERS
+==============
+
+Background
+Goal
+Player, Wall
+
+======
+RULES
+======
+
+[ > Player | Goal ] -> [ Player | < Player ] 
+
+==============
+WINCONDITIONS
+==============
+
+All Player on Goal
+
+=======
+LEVELS
+=======
+
+##########
+#P......G#
+#........#
+#........#
+#........#
+#........#
+#....#...#
+#........#
+#........#
+#........#
+##########
+```
+
+Changes made:
+- Added a rule `[ > Player | Goal ] -> [ Player | < Player ]` to mark when the player reaches the goal.
+- Adjusted the order in `COLLISIONLAYERS` so that the `Goal` layer comes before the `Player` layer, allowing the player to move onto the goal.

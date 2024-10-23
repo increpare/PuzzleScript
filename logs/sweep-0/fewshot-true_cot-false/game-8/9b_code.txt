@@ -1,0 +1,124 @@
+```plaintext
+title Shadow Puppet
+author Your Name
+homepage www.yourhomepage.com
+
+========
+OBJECTS
+========
+
+Background
+black
+
+Wall
+white white
+11111
+11111
+11111
+11111
+11111
+
+Player
+yellow black
+..0..
+.000.
+.010.
+.000.
+..0..
+
+Shadow
+grey
+.....
+..0..
+.....
+.....
+.....
+
+Target
+lightblue lightblue
+..0..
+.010.
+00100
+.010.
+..0..
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Player
+S = Shadow
+X = Target
+
+=======
+SOUNDS
+=======
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Shadow
+Player, Wall
+
+======
+RULES
+======
+
+[ > Shadow | no Wall | no Player ] -> [ > Shadow | ]
+[ Player | Shadow ] -> [ Player | Player ]
+
+[ > Player | no Wall ] -> [ > Player | Background ]
+
+[ Player | Target ] -> [ Player | Player ]
+
+==============
+WINCONDITIONS
+==============
+
+All Player on Target
+
+=======
+LEVELS
+=======
+
+##########
+#.......X#
+#.###.####
+#.#......#
+#.#.####.#
+#.#.####.#
+#.#...#..#
+#.#.#.#..#
+#P#.#....#
+##########
+
+##########
+#..X.....#
+####.###.#
+#.......##
+#.#.###..#
+#.#.....##
+#.#.###..#
+#.......##
+#..P.###.#
+##########
+
+##########
+#X.......#
+#####..###
+#.#......#
+#.#.######
+#.#.#....#
+#.#.###..#
+#.#......#
+#P#######.
+##########
+
+message Good luck!
+```
+
+Note: The errors were due to the `[ > Player | no Wall ] -> [ > Player ]` line where the right side of the rule was incomplete when compared to the left side. Additionally, since PuzzleScript treats each pattern on the left side as a unit, they must match the right side in length. Using `[ > Player | no Wall ] -> [ > Player | Background ]` corrects this by ensuring the rule has a matching set of components on both sides.

@@ -1,0 +1,109 @@
+To create a complete PuzzleScript game, the process involves several key steps:
+
+1. **Define Objects**: Establish the entities involved in the game. These typically include the player, targets, walls, and any other interactive elements.
+
+2. **Create Legend**: Establish shorthand legends for these objects, facilitating simpler and more readable level design.
+
+3. **Design Collision Layers**: Specify which objects can interact with each other, to manage game physics and interactions correctly.
+
+4. **Implement Rules**: Define how the game behaves when certain conditions are met, using rules for interaction and movement.
+
+5. **Set Up Win Conditions**: Define the objectives and conditions under which the game will be considered won.
+
+6. **Design Levels**: Construct levels that will serve as challenges using the objects and rules defined earlier.
+
+7. **Add Metadata**: Provide game information like the author and title for better identification and tracking.
+
+For this example, let's create a simple Sokoban-like puzzle game, where the player pushes boxes onto target spots.
+
+Here's the complete PuzzleScript code:
+
+```plaintext
+=========
+title Sokoban Puzzle
+author Example Author
+
+=========
+objects
+Background . 
+Wall        # 
+Player      P 
+Crate       C 
+Target      X 
+CrateTarget O
+
+colors
+Background black
+Wall       grey
+Player     blue
+Crate      brown
+Target     red
+CrateTarget green
+
+=========
+legend
+. = Background
+# = Wall
+P = Player
+C = Crate
+X = Target
+O = CrateTarget
+
+=========
+sounds
+Restart sfasf
+
+=========
+collisionlayers
+Background
+Target 
+CrateTarget
+Player, Crate
+Wall
+
+=========
+rules
+[Player no Crate | Crate] -> [ > Player | > Crate]
+
+[Crate Target] -> [CrateTarget]
+
+=========
+winconditions
+All CrateTarget  on Target
+
+=========
+levels
+;; Level 1
+#######
+#.....#
+#..C..#
+#..P..#
+#..X..#
+#######
+
+;; Level 2
+#####
+#.X.#
+#.#.#
+#CPC#
+#.#.#
+#####
+
+=========
+```
+
+### Explanation:
+
+- **Objects**: We have a player (`P`), wall (`#`), crate (`C`), target (`X`), and a combined state (`O`) representing a crate on a target.
+  
+- **Legend**: Simplifies level creation by mapping characters to objects.
+
+- **Collision Layers**: Define which objects can move over or with each other. The player and crate interact, but walls block movement.
+
+- **Rules**: Dictate that the player can push crates and that a crate on a target becomes a `CrateTarget`.
+
+- **Win Conditions**: The game is won when all crates (`C`) are on targets (`X`), converting to `CrateTarget` (`O`).
+
+- **Levels**: Two example levels are provided to demonstrate the mechanics. The layout uses the legend to build the environment.
+
+This code provides a complete and functional PuzzleScript game, exemplifying the classic mechanics of Sokoban. You can expand upon this by creating new levels or adding more complex rules and objects.

@@ -1,0 +1,113 @@
+To fix the solvability issues in your PuzzleScript game "Maze Escape," I'll provide the corrected code along with explanations for the changes. The primary issue with the levels is that the exit is not reachable by the player because the blocks or walls statically block the path or impede the player's movement beyond entry points. I'll adjust the level layouts to ensure they are solvable. Here's the revised code:
+
+```plaintext
+title Maze Escape
+author PuzzleScript Enthusiast
+
+========
+OBJECTS
+========
+
+Background
+black
+
+Player
+yellow white lightgrey orange
+.000.
+.111.
+22222
+.333.
+.3.3.
+
+Wall
+darkgrey grey lightgrey
+11111
+11111
+11111
+11111
+11111
+
+Floor
+#4B8B3B
+.....
+
+Block
+orange brown
+11111
+10001
+10001
+10001
+11111
+
+Exit
+green
+.....
+..0..
+.000.
+..0..
+.....
+
+=======
+LEGEND
+=======
+
+. = Floor
+# = Wall
+P = Player
+B = Block
+E = Exit
+
+=======
+SOUNDS
+=======
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Floor
+Player, Wall, Block, Exit
+
+======
+RULES
+======
+
+[ > Player | Block ] -> [ > Player | > Block ]
+
+==============
+WINCONDITIONS
+==============
+
+Some Player on Exit
+
+=======
+LEVELS
+=======
+
+#######
+#.....#
+#[B]..E#
+#P....#
+#.....#
+#######
+
+#########
+#.......#
+#.##.E..#
+#.B#.#.#
+#P.#....#
+#######.#
+#.......#
+#########
+
+```
+
+### Explanation of Changes:
+1. **Level 0:**
+    - Made `B` into `[B]` to represent a potential starting block that the player will push to the right, clearing a path to `E`.
+  
+2. **Level 1:**
+    - Adjusted the block and wall placements to ensure that the player can maneuver around and reach the exit `E`. The player can now navigate around the obstacles without them being impossible blockages.
+
+These adjustments provide a feasible path to reach the exits from each starting point. Ensure that the player can push the block and reach the exit by tweaking the layouts so that no static blockages are left in the player's paths.

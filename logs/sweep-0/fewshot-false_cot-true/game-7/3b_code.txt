@@ -1,0 +1,99 @@
+To address the errors in the provided PuzzleScript code, we need to correct a few key issues:
+
+1. **MetaData errors**: Ensure that the title and author metadata entries have values. The metadata values should follow directly after the metadata header without a line, so the parts labelled `title` and `author` need values specified immediately after them.
+
+2. **Sprite matrix issues**: Sprites are defined in a grid-like manner. Here, the `Player` and `Block` objects have their sprite definition incorrectly formatted — they must conform to a specific height and width. In this setup, a 3x3 matrix was attempted, but misaligned. For legibility, let’s switch to one character per pixel for simplicity.
+
+3. **Potential issues with rules and layouts**: Ensure rules and level contents are correctly using defined symbols.
+
+Here is how the corrected script should look:
+
+```plaintext
+===========
+title
+===========
+Simple Sokoban
+
+===========
+author
+===========
+Your Name
+
+===========
+objects
+===========
+Background
+WHITE
+
+Player
+LIGHTBLUE
+.L. 
+LLL 
+...
+
+Wall
+BLACK
+000
+000
+000
+
+Block
+RED
+RRR
+.R.
+RRR
+
+Target
+YELLOW
+...
+...
+...
+
+BlockOnTarget
+ORANGE
+OOO
+.O.
+OOO
+
+===========
+legend
+===========
+P = Player
+# = Wall
+B = Block
+T = Target
+O = BlockOnTarget
+
+===========
+collisionlayers
+===========
+Background
+Target
+Player, Block, BlockOnTarget
+Wall
+
+===========
+rules
+===========
+[Player | Block] -> [ > Player | > Block]
+[Block | Target] -> [BlockOnTarget | ]
+
+===========
+winconditions
+===========
+All BlockOnTarget on Target
+
+===========
+levels
+===========
+####
+# .#
+#PB#
+#  #
+####
+```
+
+The key changes include:
+- Adding direct values under `title` and `author` headers.
+- Consistently format sprites using a single character per pixel for clarity, ensuring alignment per object.
+- I added some descriptions within spaces in the sprite matrices to conform to strict positioning without leaving out undetermined space, aligning visual correct form on each item.

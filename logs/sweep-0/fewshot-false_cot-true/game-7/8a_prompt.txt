@@ -1,0 +1,100 @@
+SYSTEM PROMPT:
+You are a game designer, familiar with the PuzzleScript game description language. 
+
+USER PROMPT:
+The following PuzzleScript game code:
+```plaintext
+===========
+title Simple Sokoban
+===========
+
+===========
+author Your Name
+===========
+
+===========
+objects
+===========
+Background
+WHITE
+.
+
+Player
+LIGHTBLUE
+P
+
+Wall
+BLACK
+0
+
+Block
+RED
+R
+
+Target
+YELLOW
+.
+
+BlockOnTarget
+ORANGE
+O
+
+===========
+legend
+===========
+P = Player
+B = Block
+T = Target
+# = Wall
+O = BlockOnTarget
+
+===========
+sounds
+===========
+
+===========
+collisionlayers
+===========
+Background
+Target
+Player, Block, BlockOnTarget
+Wall
+
+===========
+rules
+===========
+[Player | Block] -> [> Player | > Block]
+[Block | Target] -> [BlockOnTarget | ]
+
+===========
+winconditions
+===========
+All BlockOnTarget on Target
+
+===========
+levels
+===========
+####
+# .#
+#PB#
+#  #
+####
+
+```
+produced the following console output:
+=================================
+line 39 : Name "P" already in use (on line line 18).
+line 43 : Name "O" already in use (on line line 34).
+line 72 : Key "." not found. Do you need to add it to the legend, or define a new object?
+line 12 : Sprite graphics must be 5 wide and 5 high exactly.
+line 18 : color not specified for object "p".
+line 20 : Sprite graphics must be 5 wide and 5 high exactly.
+line 26 : color not specified for object "r".
+line 28 : Sprite graphics must be 5 wide and 5 high exactly.
+line 34 : color not specified for object "o".
+line 72 : Error, symbol " ", used in map, not found.
+line 18 : Object "P" has been defined, but not assigned to a layer.
+line 26 : Object "R" has been defined, but not assigned to a layer.
+line 34 : Object "O" has been defined, but not assigned to a layer.
+Errors detected during compilation; the game may not work correctly.
+Return a repaired version of the code that addresses these errors. First, reason about your task and determine the best plan of action. Then, write your code. Return your code in full, inside a ```plaintext code block.

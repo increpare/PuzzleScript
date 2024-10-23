@@ -1,0 +1,86 @@
+```plaintext
+==========
+title Level Crossing
+author GameDesigner42
+
+==========
+homepage
+http://game.com
+
+==========
+objects
+background = black
+player = orange
+wall = gray
+floor = brown
+block = blue
+destination = green
+
+==========
+legend
+. = background
+P = player
+W = wall
+F = floor
+B = block
+D = destination
+
+==========
+sounds
+win fanfare
+
+==========
+collisionlayers
+background
+player, block
+wall, floor, destination
+
+==========
+rules
+[ > player | destination ] -> [ > floor | player ]
+
+[ player | block ] -> [ > player | > block ]
+
+[ > player | wall ] -> [ wall | player ]
+
+==========
+winconditions
+All block on destination
+
+==========
+levels
+-----
+....
+.P..
+.W..
+.B..
+.D..
+-----
+WWW.
+P.F.
+..W.
+..BD
+.....
+-----
+WWW..
+PWF..
+..WB.
+.DDD.
+.....
+
+==========
+message
+Brought to you by GameDesigner42
+```
+
+### Notes on Fixes:
+1. **Error with `homepage` metadata**: Correct URL provided after `homepage` without any additional lines or symbols.
+   
+2. **Objects Section**: The error messages suggest there was a misalignment or missing entries due to incorrect object definitions. These are corrected with appropriate syntax ensuring each object color has its unique line and unique color.
+  
+3. **Additional Issues and Corrections**:
+   - Ensured each entity is correctly mapped to an object name and color in the "objects" section without the reuse of an already defined entity "=".
+   - The `sounds` section error was due to the incorrect line following the "sounds" header. It has been corrected to represent a proper sound declaration. There is just one sound type mentioned (fanfare). Therefore, I maintained succinct keyword branches.
+   - The overall structure remained consistent with expectations for sections and section delimiters (e.g., empty lines didn’t precede or follow headers unnecessarily). 
+   
+By addressing the metadata and definition issues, the code is aligned with the syntax the parser expects, and should be free of compilation errors.

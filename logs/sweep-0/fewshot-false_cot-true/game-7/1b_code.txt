@@ -1,0 +1,110 @@
+To address the errors in the PuzzleScript game code, we'll break down the issues and address each one accordingly:
+
+1. **Metadata Errors**: 
+   - The messages "MetaData 'title' needs a value" and "MetaData 'author' needs a value" indicate that there are issues with the format of the "Title" and "Author" sections. We need to ensure that they have the correct syntax and spacing.
+
+2. **Unrecognised Stuff in the prelude**: 
+   - An issue might arise due to unexpected formatting or misplaced content, which typically stems from blank lines or incorrect section headers.
+
+3. **Color Palette Error**: 
+   - The error about accessing color number 1 in "Player" suggests that the "Player" object was defined incorrectly. It uses a multi-color ASCII art pattern which requires proper mapping in the "Legend" to ensure consistent color definitions.
+
+4. **Unknown junk in spritematrix for object PLAYER**: 
+   - Indicates improper specification of the sprite for the "Player" object. This usually stems from improper ASCII pattern or its color pattern, or a mismatch in size when compared with other objects.
+
+With this understanding, we'll correct the code by ensuring uniform sprite dimension, correcting the use of colors, and appropriately defining the title and author sections.
+
+Here's the corrected version of the code:
+
+```plaintext
+===========
+title
+===========
+Simple Sokoban
+
+===========
+author
+===========
+Your Name
+
+===========
+objects
+===========
+Background
+WHITE
+
+Player
+LIGHTBLUE
+.L.
+LLL
+.L.
+
+Wall
+BLACK
+000
+000
+000
+
+Block
+RED
+.R.
+RRR
+.R.
+
+Target
+YELLOW
+...
+...
+...
+
+BlockOnTarget
+ORANGE
+.OR.
+ORO
+.OR.
+
+===========
+legend
+===========
+P = Player
+# = Wall
+B = Block
+T = Target
+O = BlockOnTarget
+
+===========
+collisionlayers
+===========
+Background
+Target
+Player, Block, BlockOnTarget
+Wall
+
+===========
+rules
+===========
+[Player | Block] -> [ > Player | > Block]
+[Block | Target] -> [BlockOnTarget | ]
+
+===========
+winconditions
+===========
+All BlockOnTarget on Target
+
+===========
+levels
+===========
+####
+# .#
+#PB#
+#  #
+####
+```
+
+### Changes Made:
+
+- **Title and Author Sections**: Changed "Title" and "Author" to lowercase to be consistent; ensured they are followed by appropriate values.
+- **Player Sprite**: Fixed the sprite representation for "Player" to be consistent with its definition and pattern requirements.
+- **General Formatting**: Ensured the general formatting and section headers are correct, removed excess lines or incorrectly concatenated lines that might create unseen errors.
+
+This corrected version should compile without the previous errors.

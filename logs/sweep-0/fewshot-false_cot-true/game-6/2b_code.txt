@@ -1,0 +1,80 @@
+The error messages indicate a problem with parsing the `colors` section of the PuzzleScript code. The errors occurred because the colors for the objects were not recognized as they should be. In the PuzzleScript game description language, each color assignment should begin on a new line. It seems like the format of the `colors` section is incorrect, causing the parser to misinterpret it.
+
+To fix these issues, I will ensure each object has its color assigned on a separate line in the `colors` section. Here's the corrected version of the PuzzleScript code:
+
+```plaintext
+=========
+title Sokoban Puzzle
+author Example Author
+
+=========
+objects
+Background . 
+Wall        # 
+Player      P 
+Crate       C 
+Target      X 
+CrateTarget O
+
+=========
+colors
+Background black
+Wall grey
+Player blue
+Crate brown
+Target red
+CrateTarget green
+
+=========
+legend
+. = Background
+# = Wall
+P = Player
+C = Crate
+X = Target
+O = CrateTarget
+
+=========
+sounds
+Restart sfasf
+
+=========
+collisionlayers
+Background
+Target 
+CrateTarget
+Player, Crate
+Wall
+
+=========
+rules
+[Player no Crate | Crate] -> [ > Player | > Crate]
+
+[Crate Target] -> [CrateTarget]
+
+=========
+winconditions
+All CrateTarget on Target
+
+=========
+levels
+;; Level 1
+#######
+#.....#
+#..C..#
+#..P..#
+#..X..#
+#######
+
+;; Level 2
+#####
+#.X.#
+#.#.#
+#CPC#
+#.#.#
+#####
+
+=========
+```
+
+I've ensured that the colors section is correctly formatted, with each object on a separate line, so the program can parse it correctly. This should resolve the compilation errors.

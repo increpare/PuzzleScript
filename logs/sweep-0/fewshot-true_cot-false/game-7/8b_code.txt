@@ -1,0 +1,106 @@
+Certainly! The errors you are seeing are due to incorrect usage of the `~` operator and the rule structure. Here's a corrected version of the code:
+
+```plaintext
+title Cube Collector
+author Your Name
+homepage example.com
+
+========
+OBJECTS
+========
+
+Background
+black
+
+Player
+#00ff00
+..0..
+.000.
+00.00
+.000.
+..0..
+
+Cube
+#ff0000
+.0.0.
+.000.
+00000
+.000.
+.0.0.
+
+Wall
+#7f7f7f #7f7f7f
+11111
+1...1
+1...1
+1...1
+11111
+
+Target
+#0000ff #0000ff
+.....
+..1..
+.111.
+..1..
+.....
+
+=======
+LEGEND
+=======
+
+. = Background
+P = Player
+C = Cube
+# = Wall
+X = Target
+
+Obstacle = Wall or Cube
+
+=======
+SOUNDS
+=======
+
+SFX0 41242705
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Target
+Player, Wall, Cube
+
+======
+RULES
+======
+
+[ > Player | Cube | Obstacle ] -> [ > Player | Cube | ] 
+[ Player | Cube | Target ] -> [ Player | Background | Cube ] 
+
+==============
+WINCONDITIONS
+==============
+
+all Cube on Target
+
+=======
+LEVELS
+=======
+
+#####  
+#...#
+#P.C#
+#...#
+#..X#
+#####
+
+#####  
+#P..#
+#C..#
+#..X#
+#####
+```
+
+**Corrections Made:**
+1. The `~Obstacle` was replaced with just `Obstacle`, as the tilde is meant for indicating "no object here" and cannot be used correctly with a legend term in this context.
+2. Ensured in rules that each corresponding pattern on the left has a corresponding pattern on the right of equal length, thus the rules are balanced.

@@ -1,0 +1,114 @@
+The error message indicates that there is an issue with the RULES section, specifically a mismatch between the number of cells in the pattern on the left-hand side and the right-hand side of a rule. Each rule in PuzzleScript should have matching patterns on both sides.
+
+Let's examine the rules:
+
+1. `[> Player | Key] -> [> Player]`: This rule is correct because it specifies that when the player moves into a key, the key should be removed (the key is replaced by nothing on the right).
+
+2. `[Player | Exit] -> WIN`: This rule seems to be the one causing the error. The rule aims to make the player win by moving to the exit, but there's a mismatch because the left side specifies two objects (`Player` next to `Exit`) and the right side doesn't specify anything, which is invalid. To fix this, we should replace the player and exit with the player (to indicate the player's position is consistent) and simply add `WIN` on the right.
+
+Another issue is with the WINCONDITIONS. It currently states `No Key`, which suggests that the player wins when there are no keys left, which might not be the intended behavior. If you want to win by reaching the exit, you should ensure the exit rule executes correctly.
+
+Here's the corrected version of the code:
+
+```plaintext
+title Simple Key Maze
+author PuzzleScript Enthusiast
+homepage www.puzzlescript.net
+
+========
+OBJECTS
+========
+Background
+lightblue
+.....
+.....
+.....
+.....
+.....
+
+Player
+Yellow
+.0...
+000..
+.000.
+..0..
+.....
+
+Wall
+Gray
+.....
+.....
+.....
+.....
+.....
+
+Key
+Yellow
+.....
+..0..
+.000.
+.....
+.....
+
+Exit
+Red
+.....
+..0..
+.000.
+..0..
+.....
+
+=======
+LEGEND
+=======
+. = Background
+# = Wall
+P = Player
+K = Key
+E = Exit
+
+=======
+SOUNDS
+=======
+
+================
+COLLISIONLAYERS
+================
+Background
+Key, Exit, Player, Wall
+
+======
+RULES
+======
+[> Player | Key] -> [> Player]
+[Player | Exit] -> [Player | Exit] WIN
+
+==============
+WINCONDITIONS
+==============
+All Player on Exit
+
+=======
+LEVELS
+=======
+#########
+#...K...#
+#.#####.#
+#.P...#.#
+###...###
+..#...E..
+..#####..
+
+#########
+#P.#...K#
+#...#.#.#
+#.###.#.#
+#.....#.#
+#.#####.#
+#K...E..#
+#########
+```
+
+Changes made:
+- Corrected the rule `[Player | Exit] -> [Player | Exit] WIN` to ensure balance in pattern length.
+- Updated the WINCONDITIONS section to `All Player on Exit`, reflecting the intended goal of reaching the exit to win.

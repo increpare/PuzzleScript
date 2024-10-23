@@ -1,0 +1,85 @@
+The errors in the console output are related to the incorrect parsing of the `colors` section in the PuzzleScript code. This happens because the colors are not properly linked due to the way the `colors` section is structured. In PuzzleScript, it's important to have one object per line followed by its color. The correct syntax requires each object to be assigned a color on a separate line without misalignment or missing objects.
+
+Here's the plan to fix the errors:
+1. Ensure that each object in the `objects` section has a corresponding color defined in the `colors` section.
+2. Align the object definitions and color assignments properly, with one object per line.
+
+Considering these points, here is the corrected version of your PuzzleScript code:
+
+```plaintext
+=========
+title Sokoban Puzzle
+author Example Author
+
+=========
+objects
+Background . 
+Wall        # 
+Player      P 
+Crate       C 
+Target      X 
+CrateTarget O
+
+=========
+colors
+Background black
+Wall       grey
+Player     blue
+Crate      brown
+Target     red
+CrateTarget green
+
+=========
+legend
+. = Background
+# = Wall
+P = Player
+C = Crate
+X = Target
+O = CrateTarget
+
+=========
+sounds
+Restart sfasf
+
+=========
+collisionlayers
+Background
+Target 
+CrateTarget
+Player, Crate
+Wall
+
+=========
+rules
+[Player no Crate | Crate] -> [ > Player | > Crate]
+
+[Crate Target] -> [CrateTarget]
+
+=========
+winconditions
+All CrateTarget on Target
+
+=========
+levels
+;; Level 1
+#######
+#.....#
+#..C..#
+#..P..#
+#..X..#
+#######
+
+;; Level 2
+#####
+#.X.#
+#.#.#
+#CPC#
+#.#.#
+#####
+
+=========
+
+```
+
+With the corrections made in the `colors` and overall formatting, the code should now compile correctly without errors.

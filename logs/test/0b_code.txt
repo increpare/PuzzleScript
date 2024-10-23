@@ -1,0 +1,137 @@
+To design a complete PuzzleScript game, we should first outline the core elements of the game. These include the game's objective, mechanics, and levels. For this example, I'll design a game that involves collecting items while navigating through a series of mazes. The player character must collect all the gems to unlock the exit and move to the next level.
+
+Here's a plan for the game:
+
+1. **Game Title and Information**: Define the title, author, and any necessary metadata.
+2. **Objects**: Design the game objects, such as the player, walls, gems, and exit.
+3. **Legend**: Map symbolic representations to game objects.
+4. **Collision Layers**: Determine how objects interact and occupy space in the game world.
+5. **Rules**: Define the player's movement and interactions with other objects.
+6. **Win Conditions**: Specify what constitutes a win (e.g., collecting all gems).
+7. **Levels**: Create multiple levels of increasing difficulty.
+
+Following this plan, here's a complete code for a simple PuzzleScript game:
+
+```plaintext
+title Gem Collector
+author YourName
+homepage http://example.com
+zoom_screen 2
+
+========
+OBJECTS
+========
+
+Background
+LightGray
+
+Wall
+Brown
+00010
+11111
+01000
+11111
+00010
+
+Player
+Black Yellow
+.000.
+.111.
+22222
+.333.
+.3.3.
+
+Gem
+Cyan
+.....
+..0..
+.000.
+..0..
+.....
+
+Exit
+Green
+.....
+.0.0.
+00000
+.0.0.
+.....
+
+
+
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Player
+G = Gem
+E = Exit
+
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Wall
+Player, Gem, Exit
+
+======
+RULES
+======
+
+// Player movement
+[ > Player | Gem ] -> [ > Player | ]
+
+// Reveal exit when all gems are collected
+[ no Gem | Exit ] -> [ | Exit ]
+
+==============
+WINCONDITIONS
+==============
+
+All Exit on Player
+
+=======
+LEVELS
+=======
+
+##########
+#P....G..#
+#..#.##..#
+##......##
+#..###...#
+#G......##
+#..#..##.#
+##....G..#
+#.#####..#
+#......E.#
+##########
+
+##########
+#P....G..#
+###..#####
+#...##...#
+#..G..#..#
+#..####..#
+#..#.....#
+#....#####
+####..G..#
+#E.......#
+##########
+
+```
+
+### Explanation:
+
+- **Game Title and Objects**: The game is named "Gem Collector". Objects include the background, walls, the player, gems, and an exit.
+- **Legend**: Symbols represent each object for easier level design.
+- **Collision Layers**: Define how objects can overlap and interact.
+- **Rules**: Allow the player to collect gems and make the exit open only when all gems are collected. 
+- **Win Conditions**: You win the level by moving the player onto the exit position only after collecting all gems.
+- **Levels**: Two levels are included, requiring collection of all gems to unlock and use the exit.
+
+Using these components, you can expand the game by adding more levels or introducing new mechanics for variety and increased challenge.

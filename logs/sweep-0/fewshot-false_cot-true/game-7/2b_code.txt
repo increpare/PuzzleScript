@@ -1,0 +1,105 @@
+The errors provided in the console output indicate several issues with the game code. Let's address them one by one:
+
+1. **Metadata Title and Author**: The `title` and `author` sections require an actual value after the keyword. We need to provide values there.
+
+2. **Unrecognised Stuff in the Prelude**: This is most likely due to missing or incorrect section dividers (the `===` lines between sections). We need to ensure there is a separating line between sections.
+
+3. **Unknown Junk in Spritematrix for Player**: This error suggests there’s an issue with the representation of the Player. Sprites in the PuzzleScript language should be defined with characters for visibility but be sure they are consistent (usually 3x3 grids made up of characters like spaces or a specific letter).
+
+We should:
+
+- Provide a value for `title` and `author`.
+- Ensure all sections are correctly separated by dividers.
+- Correctly define the sprite representation for the Player.
+
+Here's the corrected version of the code:
+
+```plaintext
+===========
+title
+===========
+Simple Sokoban
+
+===========
+author
+===========
+Your Name
+
+===========
+objects
+===========
+Background
+WHITE
+
+Player
+LIGHTBLUE
+... 
+.L. 
+...
+
+Wall
+BLACK
+000
+000
+000
+
+Block
+RED
+.R.
+RRR
+.R.
+
+Target
+YELLOW
+...
+...
+...
+
+BlockOnTarget
+ORANGE
+.OR.
+ORO
+.OR.
+
+===========
+legend
+===========
+P = Player
+# = Wall
+B = Block
+T = Target
+O = BlockOnTarget
+
+===========
+collisionlayers
+===========
+Background
+Target
+Player, Block, BlockOnTarget
+Wall
+
+===========
+rules
+===========
+[Player | Block] -> [ > Player | > Block]
+[Block | Target] -> [BlockOnTarget | ]
+
+===========
+winconditions
+===========
+All BlockOnTarget on Target
+
+===========
+levels
+===========
+####
+# .#
+#PB#
+#  #
+####
+```
+
+Key modifications:
+
+- I've added actual values for `title` ("Simple Sokoban") and `author` ("Your Name") ensuring that these fields are no longer empty.
+- Corrected the `Player` sprite definition to be a visible 3x3 grid with a distinct letter representation.

@@ -1,0 +1,146 @@
+```plaintext
+title Gem Collector
+author YourName
+homepage http://example.com
+
+========
+OBJECTS
+========
+
+Background
+LightGray
+
+Wall
+Brown DarkBrown
+00010
+11111
+01000
+11111
+00010
+
+Player
+Black Yellow White
+.000.
+.111.
+22222
+.222.
+.2.2.
+
+Gem
+#00FFFF #008B8B
+.....
+..0..
+.000.
+..0..
+.....
+
+Exit
+Green
+.....
+.0.0.
+00000
+.0.0.
+.....
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Player
+G = Gem
+E = Exit
+
+=======
+SOUNDS
+=======
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Wall
+Player, Gem, Exit
+
+======
+RULES
+======
+
+[ > Player | Gem ] -> [ > Player | ]
+[ no Gem | Exit ] -> [ | Exit ]
+
+==============
+WINCONDITIONS
+==============
+
+All Exit on Player
+
+=======
+LEVELS
+=======
+
+##########
+#P....G..#
+#..#.##..#
+##......##
+#..###...#
+#G......##
+#..#..##.#
+##....G..#
+#.#####..#
+#......E.#
+##########
+
+##########
+#P....G..#
+###..#####
+#...##...#
+#..G..#..#
+#..####..#
+#..#.....#
+#....#####
+####..G..#
+#E.......#
+##########
+```
+
+To ensure solvability, let's make adjustments to the levels:
+1. Make sure all gems are collectible and the path to the exit is clear after all gems are collected.
+2. Alter wall placements to avoid dead ends that make it impossible to collect all gems or reach the exit.
+
+### Adjusted Levels
+Level 0:
+
+```plaintext
+##########
+#P....G..#
+#..#.##..#
+##......##
+#..###...#
+#G.....#.#
+#..#..##E#
+##....G..#
+#.#####..#
+#........#
+##########
+```
+
+Level 1:
+
+```plaintext
+##########
+#P....G..#
+###..#####
+#...##...#
+#..G..#..#
+#..####..#
+#..#.....#
+#..#.#####
+####..G..#
+#....E...#
+##########
+```
+
+These changes ensure that there is a path to collect all the gems in each level and then reach the exit.

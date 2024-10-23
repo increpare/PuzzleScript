@@ -171,19 +171,23 @@ def gen_game():
             ]
         )
         text = response.choices[0].message.content
-        with open(gen_game_output_path, 'w') as f:
+        with open(gen_game_output_path, 'w', encoding='utf-8') as f:
             f.write(text)
     else:
         with open(gen_game_output_path, 'r') as f:
             text = f.read()
+    if text == '':
+        breakpoint()
     code, plaintext = extract_ps_code(text)
     # If the code we just generated has already been solved, pass it to the client so it doesn't apply the solver to it
     sols_path = os.path.join(save_dir, f'{n_iter}e_sols.json')
     if os.path.exists(sols_path):
+        breakpoint()
         with open(sols_path, 'r') as f:
             sols = json.load(f)
     else:
         sols = {}
+    print(save_dir)
     return jsonify({
         'code': code,
         'text': plaintext,

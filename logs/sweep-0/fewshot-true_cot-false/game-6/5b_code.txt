@@ -1,0 +1,117 @@
+```plaintext
+title Push & Connect
+author Anonymous
+homepage www.puzzlescript.net
+
+========
+OBJECTS
+========
+
+Background
+white
+.....
+.....
+.....
+.....
+.....
+
+Wall
+DarkGrey
+00000
+00000
+00000
+00000
+00000
+
+Player
+Blue
+..0..
+..0..
+.000.
+.0.0.
+.0.0.
+
+Connector
+lightblue
+.....
+..0..
+.000.
+..0..
+.....
+
+Goal
+Gold Yellow
+.....
+.....
+..0..
+.....
+.....
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Player
+C = Connector
+G = Goal
+
+=======
+SOUNDS
+=======
+
+Connector move 69367194
+Player move 33088407
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Connector
+Player, Wall, Goal
+
+======
+RULES
+======
+
+[ > Player | Connector ] -> [ > Player | > Connector ] sfx0
+[ Player | Goal ] -> [ Player | Goal ]
+
+==============
+WINCONDITIONS
+==============
+
+All Connector on Goal
+
+=======
+LEVELS
+=======
+
+message Level 1
+#######
+#.....#
+#..P..#
+#..C..#
+#.G...#
+#######
+
+message Level 2
+#######
+#..G..#
+#.....#
+#..C..#
+#..P..#
+#######
+
+message Level 3
+#######
+#G....#
+#####.#
+#..C..#
+#####.#
+#..P..#
+#.....#
+#######
+```

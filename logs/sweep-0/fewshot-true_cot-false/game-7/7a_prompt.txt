@@ -1,0 +1,1658 @@
+SYSTEM PROMPT:
+You are a game designer, familiar with the PuzzleScript game description language. Here are some example games, for inspiration (do not reproduce these games exactly):
+
+title Bouncers
+author Tyler Glaiel
+homepage twitter.com/tylerglaiel
+
+========
+OBJECTS
+========
+
+Bg
+#111111 #222222
+00010
+11111
+01000
+01000
+11111
+
+Selection
+white gray
+..1..
+..1..
+11011
+..1..
+..1..
+
+Wall
+DarkBlue DarkGreen #333333
+20002
+22022
+22122
+21112
+11111
+
+Hole
+DarkGray Gray Black
+.111.
+12221
+10001
+10001
+.111.
+
+
+Arrow
+Red Red
+..1..
+..11.
+11111
+..11.
+..1..
+
+
+HudDivider
+white black
+00000
+11111
+11111
+11111
+11111
+
+IconGO
+green white
+10111
+10011
+10001
+10011
+10111
+
+Going
+green white
+10111
+10011
+10001
+10011
+10111
+
+LeftBouncer
+White White Blue
+.221.
+2.1.2
+21..2
+2.1.2
+.221.
+
+RightBouncer
+White White Blue
+.122.
+2.1.2
+2..12
+2.1.2
+.122.
+
+UpBouncer
+White White Blue
+.222.
+2.1.2
+21.12
+1...1
+.222.
+
+DownBouncer
+White White Blue
+.222.
+1...1
+21.12
+2.1.2
+.222.
+
+HudBG
+black
+
+Empty
+black
+
+PlayEmpty
+black
+.....
+.....
+.....
+.....
+.....
+
+
+Ball
+#003300 Green
+.000.
+01110
+01110
+01110
+.000.
+
+WinBall
+LightBlue LightGreen
+.000.
+01110
+01110
+01110
+.000.
+
+
+
+BallUp
+#003300 Green Black
+.000.
+01210
+01110
+01110
+.000.
+
+BallDown
+#003300 Green Black
+.000.
+01110
+01110
+01210
+.000.
+
+BallLeft
+#003300 Green Black
+.000.
+01110
+02110
+01110
+.000.
+
+BallRight
+#003300 Green Black
+.000.
+01110
+01120
+01110
+.000.
+
+
+
+
+=======
+LEGEND
+=======
+Background = Bg or HudBG
+. = bg and PlayEmpty
+S = Selection and PlayEmpty
+- = HudDivider and Wall
+H = HudBG and PlayEmpty
+A = Arrow and HudBG
+G = IconGO
+W = Wall
+O = Hole
+
+L = LeftBouncer and HudBG
+R = RightBouncer and HudBG
+U = UpBouncer and HudBG
+D = DownBouncer and HudBG
+
+B = BallLeft
+N = BallRight
+M = BallUp
+K = BallDown
+
+Player = Selection
+
+
+PlacedLeftbouncer = LeftBouncer and Selection
+PlacedRightbouncer = RightBouncer and Selection
+PlacedUpbouncer = UpBouncer and Selection
+PlacedDownbouncer = DownBouncer and Selection
+
+Bouncer = LeftBouncer or RightBouncer or UpBouncer or DownBouncer
+
+emptyPlayer = Selection and PlayEmpty
+
+
+ballSwitchLeft = Ball and LeftBouncer
+ballSwitchRight = Ball and RightBouncer
+ballSwitchUp = Ball and UpBouncer
+ballSwitchDown = Ball and DownBouncer
+
+ballSwitchedLeft = BallLeft and LeftBouncer
+ballSwitchedRight = BallRight and RightBouncer
+ballSwitchedUp = BallUp and UpBouncer
+ballSwitchedDown = BallDown and DownBouncer
+
+gameGo = Selection and IconGO
+gameGoing =  Going
+
+
+
+WinL = BallLeft and Hole
+WinR = BallRight and Hole
+WinU = BallUp and Hole
+WinD = BallDown and Hole
+
+Win = WinBall
+
+MovingBall = Ball or BallLeft or BallRight or BallUp or BallDown
+
+=======
+SOUNDS
+=======
+SFX0 41242705 (place bouncer)
+SFX1 73889302 (press go)
+MovingBall Move 68254307 (ball move)
+SFX2 68257500 (pocket ball)
+SFX3 82752503 (ball switch direction)
+
+================
+COLLISIONLAYERS
+================
+
+Background
+
+Arrow, Empty, LeftBouncer, RightBouncer, UpBouncer, DownBouncer, PlayEmpty, IconGO, Going, Hole
+WinBall
+Wall, Ball, BallUp, BallDown, BallLeft, BallRight
+Selection, HudDivider
+
+
+======
+RULES
+======
+
+(action button: take icon to the right of the arrow, place under selector)
+[action selection PlayEmpty][Arrow|LeftBouncer] -> [PlacedLeftbouncer][Arrow|Empty] SFX0
+[action selection PlayEmpty][Arrow|RightBouncer] -> [PlacedRightbouncer][Arrow|Empty] SFX0
+[action selection PlayEmpty][Arrow|UpBouncer] -> [PlacedUpbouncer][Arrow|Empty] SFX0
+[action selection PlayEmpty][Arrow|DownBouncer] -> [PlacedDownbouncer][Arrow|Empty] SFX0
+
+(win conditions)
+[WinL] -> [Win] again SFX2
+[WinR] -> [Win] again SFX2
+[WinU] -> [Win] again SFX2
+[WinD] -> [Win] again SFX2
+
+(slide unused icons over to the left if there's space between them and the arrow)
+right [Empty | Bouncer] -> [Bouncer | Empty]
+
+(selector on top of go button -> signals game to run)
+[action selection iconGO] -> [gameGoing] again SFX1
+
+(make genericball match the direction of the bouncer)
+[ballSwitchLeft]->[ballSwitchedLeft] again
+[ballSwitchRight]->[ballSwitchedRight] again
+[ballSwitchUp]->[ballSwitchedUp] again
+[ballSwitchDown]->[ballSwitchedDown] again
+
+(if ball is going to move on top of a bouncer, switch it to generic ball first)
+right [Going][Bouncer | BallLeft] -> [Going][Bouncer | Left Ball] again SFX3
+left  [Going][Bouncer | BallRight] -> [Going][Bouncer | Right Ball] again SFX3
+up    [Going][Bouncer | BallDown] -> [Going][Bouncer | Down Ball] again SFX3
+down  [Going][Bouncer | BallUp] -> [Going][Bouncer | Up Ball] again SFX3
+
+
+
+(move the ball if Going)
+[Going][BallLeft] -> [Going][LEFT BallLeft] again
+[Going][BallRight] -> [Going][RIGHT BallRight] again
+[Going][BallUp] -> [Going][UP BallUp] again
+[Going][BallDown] -> [Going][DOWN BallDown] again
+
+
+
+[Going] -> [Going] again
+
+==============
+WINCONDITIONS
+==============
+
+no MovingBall
+
+=======
+LEVELS
+=======
+
+message place bouncers, hit play
+
+......w.....
+..o...w.....
+......w.....
+......w.....
+......w..b..
+......s.....
+............
+g-----------
+-hhadluhhhhh
+
+message Level 2
+
+............
+......o.....
+..s.........
+......w.....
+...o.....b..
+......m.....
+............
+g-----------
+-hhalurhhhhh
+
+message Level 3
+
+............
+............
+..o.wwww....
+..s.n..b....
+....wwww.o..
+............
+............
+g-----------
+-hhaudrlhhhh
+
+message Level 4
+
+............
+............
+..o......o..
+............
+............
+.s..bbbb....
+............
+............
+..o......o..
+............
+g-----------
+-hhalrudu...
+
+message Level 5
+
+.....n......w...
+..wwww.k....o.w.
+......b..m......
+...o............
+.......w........
+.....b.w........
+......wwo.......
+w.ww.www........
+.o..............
+....s...........
+..........wwwo..
+g---------------
+-hhaddddddrrr...
+
+message I didn't feel like making more levels
+
+title Heroes of Sokoban III: The Bard and The Druid
+author Jonah Ostroff
+text_color yellow
+key_repeat_interval 0.25
+run_rules_on_level_start
+
+========
+OBJECTS
+========
+
+Background
+#989898 #C8C8C8
+00000
+00100
+00000
+00010
+00000
+
+Goal
+Brown Yellow
+.000.
+00000
+00010
+00000
+00000
+
+Wall
+Darkgrey #222222
+01000
+11111
+00010
+00010
+11111
+
+Fighter (Warrior sounds better in-game, but I want different abbreviations for the classes in the editor.)
+#FF4444 Pink DarkBrown
+.000.
+.111.
+00000
+.000.
+.2.2.
+
+Wizard
+#2266FF Pink
+.000.
+.010.
+00000
+.000.
+00000
+
+Thief
+#66DD66 Pink DarkBrown
+.000.
+.010.
+00000
+.0.0.
+.0.0.
+
+Priest
+#FFFFAA Pink
+.000.
+.111.
+00000
+.000.
+00000
+
+Bard
+#8800FF #884400 #444444
+.222.
+.111.
+00000
+.000.
+.0.0.
+
+Druid
+#FF8800 Pink DarkBrown
+.212.
+.111.
+00000
+.000.
+00000
+
+SFighter
+#880000 Pink DarkBrown
+.000.
+.111.
+00000
+.000.
+.2.2.
+
+SWizard
+#000088 Pink
+.000.
+.010.
+00000
+.000.
+00000
+
+SThief
+#006600 Pink DarkBrown
+.000.
+.010.
+00000
+.0.0.
+.0.0.
+
+SPriest
+#B8B800 Pink
+.000.
+.111.
+00000
+.000.
+00000
+
+SBard
+#440088 #884400 #444444
+.222.
+.111.
+00000
+.000.
+.0.0.
+
+SDruid
+#884400 Pink DarkBrown
+.212.
+.111.
+00000
+.000.
+00000
+
+Crate
+Orange #552200
+.111.
+10001
+10001
+10001
+.111.
+
+YellowSwitch
+Yellow Black
+.....
+.111.
+.101.
+.111.
+.....
+
+YellowOpen
+Yellow
+0...0
+.....
+.....
+.....
+0...0
+
+YellowDoor
+Yellow #AA7722
+01010
+10001
+00000
+10001
+01010
+
+PurpleSwitch
+#6611CC Black
+.....
+.111.
+.101.
+.111.
+.....
+
+PurpleDoor
+#6611CC #220088
+01010
+10001
+00000
+10001
+01010
+
+PurpleOpen
+#6611CC
+0...0
+.....
+.....
+.....
+0...0
+
+MonsterDoor
+DarkGrey #222222 Red
+21002
+22122
+20212
+20012
+21112
+
+Warpball
+Blue
+
+ShadowDoor
+Purple
+
+Goblin
+Green DarkBrown DarkGreen
+0.2.0
+00000
+..0..
+.111.
+.1.1.
+
+Dying
+White
+
+Saved
+#D8D800
+..0..
+.000.
+..0..
+..0..
+.....
+
+HasSavedDoor
+Yellow
+.....
+.....
+.....
+.....
+.....
+
+Corpse
+#CCC
+.000.
+.000.
+00000
+.0.0.
+.0.0.
+
+Note
+#8800FF
+.....
+..00.
+.00..
+.00..
+.....
+
+=======
+LEGEND
+=======
+
+Player = Fighter or Wizard or Thief or Priest or Bard or Druid
+SPlayer = Swizard or Sthief or SFighter or SPriest or SBard or SDruid
+Hero = Player or Splayer
+Healer = Priest or SPriest (Unlike the other heroes, priests must function even when inactive. "Healer" is the generic term for an active or inactive priest.)
+ClosedDoor = PurpleDoor or YellowDoor or MonsterDoor
+OpenDoor = YellowOpen or PurpleOpen
+Switch = PurpleSwitch or YellowSwitch
+Monster =  Goblin
+Moveable = Crate or SPlayer or Monster
+Static = Wall or ClosedDoor
+Weighing = Crate or Hero or Monster or Wall
+Vulnerable = Hero or Monster
+Invulnerable = Crate or Static
+. = Background
+# = Wall
+F = Fighter
+W = Wizard
+T = Thief
+P = Priest
+B = Bard
+D = Druid
+1 = SFighter
+2 = SThief
+3 = SWizard
+4 = SPriest
+5 = SBard
+6 = SDruid
+* = Crate
+G = Goal
+[ = YellowDoor
+] = PurpleDoor
+{ = YellowSwitch
+} = PurpleSwitch
+O = Goblin
+M = MonsterDoor
+
+=======
+SOUNDS
+=======
+
+Moveable move 82056307
+Sfx0 21221308 (teleport)
+Endlevel 36315908
+Sfx1 66399906 (switch player)
+Sfx2 92172900 (close door)
+Sfx3 15129100 (open door)
+Sfx4 69860105 (saved)
+Sfx5 63194902 (kill enemy)
+Sfx6 81996702 (dying player)
+Sfx7 20187909 (Bard leading)
+Sfx8 93615108 (Transmutation)
+EndGame 86793500
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Warpball, Dying
+Goal, Switch, OpenDoor, ShadowDoor, HasSavedDoor
+ClosedDoor, Hero, Crate, Wall, Monster, Corpse
+Saved
+Note
+
+======
+RULES
+======
+[Saved] [Goal] -> [] [HasSavedDoor] (Remembering whether we saved someone last round by temporarily changing some door to a HasSavedDoor. This is purely for sound effects purposes.)
+
+[Corpse] -> Restart
+
+[ >  Fighter | Moveable ] -> [  >  Fighter | > Moveable  ]
+[ > Moveable | Moveable ] [ Fighter] -> [ > Moveable | > Moveable ] [ Fighter] (Fighters push.)
+
+[ < Thief | Moveable ] -> [ < Thief | < Moveable ] (Thieves pull.)
+
+[ > Wizard ] -> [ Wizard > Warpball]
+[ > Warpball | no Moveable no Static] -> [ | > Warpball]
+[ > Warpball | Static] [Wizard] -> [ | Static ] [> Wizard]
+[ > Warpball | Moveable ] [Wizard] -> [ | Wizard Sfx0] [Moveable]
+[ > Warpball] [Wizard] -> [] [> Wizard]
+(Wizards telexport. What they really do is shoot a "warpball", which causes them to move normally if it hits a wall or the edge of the screen and warp if it hits something they can warp with.)
+
+(Druid does his thing. Warpball gets reused as a placeholder here. That's gonna happen a lot.)
+[> Druid | Crate] -> [Druid | Wall Sfx8]
+[> Druid | Monster] -> [Druid | Wall Sfx8]
+[> Druid | Wall] -> [Druid | Crate Sfx8]
+[> Druid | Healer] -> [Druid | Healer Saved]
+[> Druid | Hero] -> [Druid | Hero Warpball]
+[Warpball | Healer] -> [Saved | Healer]
+[Warpball Hero] -> [Wall Sfx8]
+(What strategic purpose could it serve for healers to protect against petrification? None, but it's fun.)
+
+(I mean, theoretically you could write some horrid dragon breath timing puzzle where the ability to delay an extra turn without moving or switching characters is necessary in order to let you move someone else at the correct moment, but even if dragons still existed, that sounds like a really gross level.)
+
+(Bard moves stuff. Reusing "WarpBall" for totally different purpose, so we can cancel the move if he doesn't move.)
+[> Bard no Note] -> [> Note > Bard WarpBall]
+[> Note] [Note] -> [> Note] [> Note]
+[> Note Moveable | no Static no Moveable no Bard] -> [| Moveable Sfx7]
++[> Note Bard WarpBall| no Static no Moveable no Bard] -> [| Bard]
+
+(Why are we doing this pseudo-movement instead of using the built-in version? Because using movement directions makes the note-adding stuff way easier below, and you can't use movement directions in the LATE phase, so the actual moving has to be done before then.)
+
+[WarpBall] -> Cancel
+[Note] -> []
+
+(The following mess is for changing characters. But at least it's less messy than before. Thanks to Stephen for spotting my silly redundancies.)
+[ Action Fighter] [SThief] -> [SFighter] [Thief Sfx1]
+[ Action Thief] [SWizard] -> [SThief] [Wizard Sfx1]
+[ Action Wizard] [SPriest] -> [SWizard] [Priest Sfx1]
+[ Action Priest] [SBard] -> [SPriest] [Bard Sfx1]
+[ Action Bard] [SDruid] -> [SBard] [Druid Sfx1]
+[ Action Druid] [SFighter] -> [SDruid] [Fighter Sfx1]
+
+[ Action Fighter] [SWizard] -> [SFighter] [Wizard Sfx1]
+[ Action Thief] [SPriest] -> [SThief] [Priest Sfx1]
+[ Action Wizard] [SBard] -> [SWizard] [Bard Sfx1]
+[ Action Priest] [SDruid] -> [SPriest] [Druid Sfx1]
+[ Action Bard] [SFighter] -> [SBard] [Fighter Sfx1]
+[ Action Druid] [SThief] -> [SDruid] [Thief Sfx1]
+
+[ Action Fighter] [SPriest] -> [SFighter] [Priest Sfx1]
+[ Action Thief] [SBard] -> [SThief] [Bard Sfx1]
+[ Action Wizard] [SDruid] -> [SWizard] [Druid Sfx1]
+[ Action Priest] [SFighter] -> [SPriest] [Fighter Sfx1]
+[ Action Bard] [SThief] -> [SBard] [Thief Sfx1]
+[ Action Druid] [SWizard] -> [SDruid] [Wizard Sfx1]
+
+[ Action Fighter] [SBard] -> [SFighter] [Bard Sfx1]
+[ Action Thief] [SDruid] -> [SThief] [Druid Sfx1]
+[ Action Wizard] [SFighter] -> [SWizard] [Fighter Sfx1]
+[ Action Priest] [SThief] -> [SPriest] [Thief Sfx1]
+[ Action Bard] [SWizard] -> [SBard] [Wizard Sfx1]
+[ Action Druid] [SPriest] -> [SDruid] [Priest Sfx1]
+
+[ Action Fighter] [SDruid] -> [SFighter] [Druid Sfx1]
+[ Action Thief] [SFighter] -> [SThief] [Fighter Sfx1]
+[ Action Wizard] [SThief] -> [SWizard] [Thief Sfx1]
+[ Action Priest] [SWizard] -> [SPriest] [Wizard Sfx1]
+[ Action Bard] [SPriest] -> [SBard] [Priest Sfx1]
+[ Action Druid] [SBard] -> [SDruid] [Bard Sfx1]
+
+(Bard plays music. This is my favorite part of the code, btw. Yes, you can make square area effects with just one object!)
+[no Note | no Note | Bard] -> [^ Note | ^ Note | Bard]
+[no Note | Bard] -> [^ Note | Bard]
+[> Note | no Note | no Note] -> [Note | Note | Note]
+[> Note | no Note] -> [Note | Note]
+[> Note] -> [Note]
+
+(Now enemies attack. Yeah, there's only one kind of enemy now.)
+
+Late [Goblin | Vulnerable] -> [Goblin | Dying Vulnerable]
+
+(Vulnerable objects that are attacked are designated as "Dying", but heroes can be saved by the Priest. Then the stuff that didn't get saved dies.)
+
+Late [Dying Healer] -> [Saved Healer]
+Late [Healer | Dying Hero] -> [Healer | Saved Hero]
+Late [Dying Monster] -> [Sfx5]
+Late [Dying Hero] -> [Corpse Sfx6]
+
+(Doors opening.)
+
+late [Weighing  YellowSwitch] [YellowDoor] -> [Weighing  YellowSwitch] [ShadowDoor]
+late [YellowSwitch no Weighing] [YellowOpen] -> [YellowSwitch] [YellowDoor sfx2]
+late [YellowSwitch no Weighing] [ShadowDoor] -> [YellowSwitch] [YellowDoor]
+late [ShadowDoor] -> [YellowOpen sfx3]
+
+late [Weighing PurpleSwitch] [PurpleDoor] -> [Weighing PurpleSwitch] [ShadowDoor]
+late [PurpleSwitch no Weighing] [PurpleOpen] -> [PurpleSwitch] [PurpleDoor sfx2]
+late [PurpleSwitch no Weighing] [ShadowDoor] -> [PurpleSwitch] [PurpleDoor]
+late [ShadowDoor] -> [PurpleOpen sfx3]
+
+late [MonsterDoor] -> [ShadowDoor]
+late [ShadowDoor] [Monster] -> [MonsterDoor] [Monster]
+late [ShadowDoor] -> [sfx3]
+
+(Looks for a HasSavedDoor and, if there is one, puts a warpball on the Priest. Then, if someone was saved this turn, plays the sound only if the Priest doesn't have the warpball. Finally, cleans that up.)
+
+late [HasSavedDoor] [Healer] -> [Goal] [Healer WarpBall]
+late [Saved] [Healer no WarpBall] -> [Saved sfx4] [Healer]
+late [HasSavedDoor] -> [Goal]
+late [WarpBall] -> []
+
+late [Note no Moveable] -> []
+
+==============
+WINCONDITIONS
+==============
+
+All Hero on Goal
+All Goal on Hero
+
+=======
+LEVELS
+=======
+
+Message Many years have passed since the events of Heroes of Sokoban II.
+
+Message Dragons have vanished from the realm, never to be seen again.
+
+Message And new heroes have cropped up, as if there were only room for so many beings in one world.
+
+###################
+#.F.#.........#**G#
+#***#...*****.#..*#
+#.G.#...*...*.#2..#
+#####...*...*.#####
+#.......*...*.....#
+#.......*...*.....#
+#####..**..**.#####
+#*..#.***.***.#..G#
+#*G*#..*...*..#.O.#
+#3.*#.........#4..#
+###################
+
+Message Purple bard charms nearby crates.
+
+#############
+#{#....{#...#
+#.#.*#B.[.G.#
+#*#.....#...#
+#############
+
+###############
+#..############
+#.B..****.....#
+#..######.#####
+#########G#####
+###############
+
+Message Monsters may also be charmed.
+
+#############
+#.......#...#
+#...#...#...#
+#O..B..OM.G.#
+#...#...#...#
+#.......#...#
+#############
+
+Message No one can resist the bard's music.
+
+############
+#G#.F.{..O.#
+#.[........#
+#G#.5.{..O.#
+############
+
+############
+##[[[[[[[###
+##[#####[###
+##[##[[[[{*#
+#...#[######
+#.T.#......#
+#...#.5.G.G#
+############
+
+########
+#*G{####
+###.####
+#...[W##
+###.#.5#
+#*G*####
+########
+
+#########
+#....G#G#
+#.#*..#[#
+#.**....#
+#.......#
+#.{4{B{.#
+#...{...#
+#########
+
+############
+#*.{..{.**{#
+############
+#B21.......#
+##########[#
+#.G..G..G..#
+############
+
+Message Orange druid turns stone into wood, wood into stone.
+
+#############
+#.[.{.2.#.D.#
+#.#########.#
+#....G.G..#.#
+#############
+
+#############
+#...#####{{{#
+#.D.##...{{{#
+#...##.##{{{#
+#############
+#...#..######
+#.1.#..##G.G#
+#...#..#[...#
+#############
+
+#############
+#O*....{...3#
+##.####.#####
+##.###O.O##G#
+##.####.###.#
+##D[....###G#
+#############
+
+Message Living things may also be turned into stone.
+
+Message Try not to think about the moral implications, and don't do it any more than necessary.
+
+#############
+####.4..##G.#
+#O..F..OM#.G#
+####.6..##G.#
+#############
+
+###############
+#.............#
+#.5.}}}.]]]]].#
+#...}}}.]G.G].#
+#.D.}}}.]]]]].#
+#.............#
+###############
+
+#########
+#G#####W#
+#########
+#G#####6#
+#########
+
+#############
+#......O.G.G#
+#.###########
+#.###########
+#...#########
+#B.6#########
+#############
+
+################
+#...#...########
+#.G.#.}.....{[O#
+#...#.F.########
+#...#...########
+#.G.].4.########
+#...#...########
+#...#.5.########
+#.G.#.}.....{[O#
+#...#...########
+################
+
+#####M########
+#G.GM#F.2###O#
+#...#M.......#
+#G.GM#3.6###O#
+#####M########
+
+############
+#6######B###
+#........###
+############
+#.#######.4#
+#.......##1#
+#G.G.G.G##O#
+############
+
+###############
+#....#O.O#...G#
+#..##W...1##..#
+#..#O..O..O#.G#
+#4.#..OGO..#..#
+#..#O..O..O#.G#
+#..##2...6##..#
+#....#O.O#...G#
+###############
+
+Message Get ready.
+
+#######################
+#.F.*....#G.G#....*.4.#
+#...#....#...#....#...#
+#######.........#######
+#####.#####O#####.#####
+#..##O#..#...#..#O##..#
+#.2.*....#G.G#....*.5.#
+#..##O#..*...#..#O##..#
+#####.####...####.#####
+#######..#..*O.*#######
+#...###.#######...#...#
+#.3.###.##G.G##...#.6.#
+#######################
+
+################
+#..............#
+#.1.4......G.G.#
+#..............#
+#.2.B......G.G.#
+#..............#
+#.3.6......G.G.#
+#..............#
+################
+
+Message Thanks for playing!
+
+title Ponies Jumping Synchronously
+author vytah
+
+background_color #990044
+text_color white
+
+========
+OBJECTS
+========
+
+
+Background  (special, automatically placed in its own layer)
+lightblue
+
+JumpVariableA
+lightblue
+0...0
+.000.
+.0.0.
+.000.
+0...0
+
+JumpVariableA1
+lightblue
+0...0
+..0..
+..0..
+..0..
+0...0
+
+JumpVariableA2
+lightblue
+0...0
+.0.0.
+.0.0.
+.0.0.
+0...0
+
+JumpVariableT
+lightblue
+..0..
+.000.
+.0.0.
+.000.
+.....
+
+JumpVariableT1
+lightblue
+..0..
+..0..
+..0..
+..0..
+.....
+
+JumpVariableT2
+lightblue
+..0..
+.0.0.
+.0.0.
+.0.0.
+.....
+
+JumpVariableB
+lightblue
+.....
+.000.
+.0.0.
+.000.
+..0..
+
+JumpVariableB1
+lightblue
+.....
+..0..
+..0..
+..0..
+..0..
+
+JumpVariableB2
+lightblue
+.....
+.0.0.
+.0.0.
+.0.0.
+..0..
+
+Dirt
+brown darkbrown
+00000
+01000
+00000
+00010
+00000
+
+Tunnel
+brown darkbrown
+00000
+01000
+.....
+.....
+.....
+
+
+Grass
+brown lightgreen green darkBrown
+11211
+21020
+00000
+00030
+00000
+
+Exit
+pink red
+.1.1.
+10101
+10001
+.101.
+..1..
+
+WoodenWall
+Brown orange
+.111.
+.001.
+.111.
+.100.
+.111.
+
+Teleport
+Brown darkBrown pink white
+23332
+02220
+00000
+00010
+00000
+
+Fire
+red orange yellow
+..0..
+.00..
+0110.
+01210
+.020.
+
+TwiLeft
+purple
+.0...
+00...
+.0000
+.0.0.
+.0.0.
+
+TwiRight
+purple
+...0.
+...00
+0000.
+.0.0.
+.0.0.
+
+TeleportingTwilight
+purple
+...0.
+...00
+0000.
+.0.0.
+.0.0.
+
+RdLeft
+#00dddd
+.0...
+00...
+.0000
+.0.0.
+.0.0.
+
+RdRight
+#00dddd
+...0.
+...00
+0000.
+.0.0.
+.0.0.
+
+AbLeft
+yellow red
+..1..
+.01..
+00...
+.0000
+.0.0.
+
+AbRight
+yellow red
+..1..
+..10.
+...00
+0000.
+.0.0.
+
+AjLeft
+orange
+.0...
+00...
+.0000
+.0.0.
+.0.0.
+
+AjRight
+orange
+...0.
+...00
+0000.
+.0.0.
+.0.0.
+
+DeadPony
+lightGray darkGray
+.111.
+10001
+10101
+10001
+10101
+
+Boulder
+lightGray darkGray
+.....
+.111.
+10001
+10001
+.111.
+
+=======
+LEGEND
+=======
+
+Applejack=AjLeft or AjRight
+RainbowDash=RdLeft or RdRight
+Twilight=TwiLeft or TwiRight
+AppleBloom=AbLeft or AbRight
+(NotPegasus=Twilight or Applejack or AppleBloom or TeleportingTwilight)
+Player=Twilight or Applejack or AppleBloom or RainbowDash
+Obstacle=Grass or Dirt or DeadPony or WoodenWall or Teleport or Boulder
+JumpObstacle=Obstacle or Player or Tunnel
+JumpObstacleForFillies=Obstacle or Player
+JumpVariablePositiveA=JumpVariableA1 or JumpVariableA2
+JumpVariablePositiveT=JumpVariableT1 or JumpVariableT2
+JumpVariablePositiveB=JumpVariableB1 or JumpVariableB2
+
+. = Background
+# = Dirt
+~ = Grass
+| = WoodenWall
+T = TwiRight
+A = AjRight
+D = RdRight
+B = AbRight
+J = JumpVariableA
+H = JumpVariableT
+L = JumpVariableB
+E = Exit
+^ = Teleport
+F = Fire
+O = Boulder
+- = Tunnel
+
+=========
+SOUNDS
+=========
+
+sfx0 47251907 (aj push)
+sfx1 13930501 (twi zap)
+sfx2 99083104 (death)
+sfx3 12667901 (twi teleport)
+sfx4 60310105 (jump)
+sfx5 58764102 (rd smash)
+sfx7 74120302 (aj buck)
+endlevel 64815700
+
+
+
+================
+COLLISIONLAYERS
+================
+
+Background
+JumpVariableA, JumpVariablePositiveA, JumpVariableT,JumpVariablePositiveT, JumpVariableB, JumpVariablePositiveB
+Exit, Fire, Tunnel
+Player, Obstacle, TeleportingTwilight
+
+======
+RULES
+======
+
+[> Player |Stationary Player] -> cancel
+[> Player |< Player] -> cancel
+
+[> Applejack| Tunnel] -> [Applejack|Tunnel]
+[> RainbowDash| Tunnel] -> [RainbowDash|Tunnel]
+[> Twilight| Tunnel] -> [Twilight|Tunnel]
+Vertical [> AppleBloom|Tunnel] -> [AppleBloom|Tunnel]
+
+[Left TwiRight] -> [Left TwiLeft]
+[Right TwiLeft] -> [Right TwiRight]
+[Left RdRight] -> [Left RdLeft]
+[Right RdLeft] -> [Right RdRight]
+[Left AjRight] -> [Left AjLeft]
+[Right AjLeft] -> [Right AjRight]
+[Left AbRight] -> [Left AbLeft]
+[Right AbLeft] -> [Right AbRight]
+
+Right[Action Applejack|WoodenWall] -> [AjLeft|]sfx7
+Left[Action Applejack|WoodenWall] -> [AjRight|]sfx7
+
+Down[Action Twilight|Teleport][no Player|Teleport]-> [|Teleport][TeleportingTwilight|Teleport] sfx3
+late[TeleportingTwilight]->[TwiRight]
+
+
+UP [ Up Applejack | No Obstacle No Player no tunnel] [JumpVariableA] -> [ Up Applejack | ] [JumpVariableA2] sfx4
+DOWN [ Up Applejack | no obstacle No Player no tunnel ][JumpVariablePositiveA] -> [ Applejack | ][JumpVariablePositiveA]
+DOWN [ Up Applejack | no obstacle No Player no tunnel][JumpVariableA2] -> [ Applejack | ][JumpVariableA2]
+HORIZONTAL [ > Applejack | NO obstacle No Player no tunnel][JumpVariableA1] -> [ | Applejack ][JumpVariableA]
+HORIZONTAL [ > Applejack | NO obstacle No Player no tunnel][JumpVariableA2] -> [ | Applejack ][JumpVariableA1]
+HORIZONTAL [ > Applejack | JumpObstacle][JumpVariableA1] -> [ Applejack|JumpObstacle ][JumpVariableA]
+HORIZONTAL [ > Applejack | JumpObstacle][JumpVariableA2] -> [ Applejack|JumpObstacle ][JumpVariableA1]
+LATE DOWN [ Applejack | NO obstacle No Player no tunnel][JumpVariableA] -> [ | Applejack ][JumpVariableA]
+LATE DOWN [ Applejack | Obstacle ][JumpVariablePositiveA] -> [ Applejack | Obstacle ][JumpVariableA]
+
+
+UP [ Up Twilight | No Obstacle No Player no tunnel] [JumpVariableT] -> [ Up Twilight | ] [JumpVariableT2] sfx4
+DOWN [ Up Twilight | no obstacle No Player no tunnel ][JumpVariablePositiveT] -> [ Twilight | ][JumpVariablePositiveT]
+DOWN [ Up Twilight | no obstacle No Player no tunnel][JumpVariableT2] -> [ Twilight | ][JumpVariableT2]
+HORIZONTAL [ > Twilight | NO obstacle No Player no tunnel][JumpVariableT1] -> [ | Twilight ][JumpVariableT]
+HORIZONTAL [ > Twilight | NO obstacle No Player no tunnel][JumpVariableT2] -> [ | Twilight ][JumpVariableT1]
+HORIZONTAL [ > Twilight | JumpObstacle][JumpVariableT1] -> [ Twilight|JumpObstacle ][JumpVariableT]
+HORIZONTAL [ > Twilight | JumpObstacle][JumpVariableT2] -> [ Twilight|JumpObstacle ][JumpVariableT1]
+LATE DOWN [ Twilight | NO obstacle No Player no tunnel][JumpVariableT] -> [ | Twilight ][JumpVariableT]
+LATE DOWN [ Twilight | Obstacle ][JumpVariablePositiveT] -> [ Twilight | Obstacle ][JumpVariableT]
+
+
+UP [ Up AppleBloom | No Obstacle No Player no tunnel] [JumpVariableB] -> [ Up AppleBloom | ] [JumpVariableB2] sfx4
+DOWN [ Up AppleBloom | no obstacle No Player no tunnel ][JumpVariablePositiveB] -> [ AppleBloom | ][JumpVariablePositiveB]
+DOWN [ Up AppleBloom | no obstacle No Player no tunnel][JumpVariableB2] -> [ AppleBloom | ][JumpVariableB2]
+HORIZONTAL [ > AppleBloom | NO obstacle No Player][JumpVariableB1] -> [ | AppleBloom ][JumpVariableB]
+HORIZONTAL [ > AppleBloom | NO obstacle No Player][JumpVariableB2] -> [ | AppleBloom ][JumpVariableB1]
+HORIZONTAL [ > AppleBloom | JumpObstacleForFillies][JumpVariableB1] -> [ AppleBloom|JumpObstacleForFillies ][JumpVariableB]
+HORIZONTAL [ > AppleBloom | JumpObstacleForFillies][JumpVariableB2] -> [ AppleBloom|JumpObstacleForFillies ][JumpVariableB1]
+LATE DOWN [ AppleBloom | NO obstacle No Player no tunnel][JumpVariableB] -> [ | AppleBloom ][JumpVariableB]
+LATE DOWN [ AppleBloom | Obstacle ][JumpVariablePositiveB] -> [ AppleBloom | Obstacle ][JumpVariableB]
+)
+
+late [Player Fire] -> [DeadPony Fire] sfx2
+
+[> Applejack|Boulder|no Obstacle No Player] -> [> Applejack| > Boulder |] sfx0
+[> RainbowDash|Boulder|no Obstacle No Player] -> [> RainbowDash||] sfx5
+Right [Action TwiRight|Boulder] -> [TwiRight|] sfx1
+Left [Action TwiLeft|Boulder] -> [TwiLeft|] sfx1
+
+[Boulder Fire] -> [Boulder]
+
+late down [Boulder|Player] -> [|DeadPony] sfx2
+late down [Boulder| no Obstacle no Tunnel] -> [|Boulder no Fire]
+late [Boulder Fire] -> [Boulder]
+
+==============
+WINCONDITIONS
+==============
+
+some Player
+all Exit on Player
+no DeadPony
+
+
+=======
+LEVELS
+=======
+
+(message #1. Grab the Crystal Heart.)
+
+..........H
+...........
+.........E.
+..T....~~~~
+~~~~~~#####
+###########
+
+
+message #2. Applejack bucks and pushes.
+
+..........J
+..~~~~~~~~~
+...########
+.A.|.o...E#
+######.####
+###########
+
+message #3. Twilight teleports and zaps.
+
+...........H
+............
+............
+.T....E.O...
+~^~FFF~~~~^~
+############
+
+message #4. Rainbow Dash flies and smashes.
+
+#########
+....#..E#
+....O..##
+....#..##
+.D..#..##
+#########
+
+message #5. Rocks fall, everyone dies.
+
+.........J
+..........
+...~~~~~.~
+~~O..O...#
+##|A.O..E#
+##########
+
+message #6. Cooperate with friends.
+
+J.....###
+......###
+...D..#.E
+....#..O#
+.A..O..|#
+~~~######
+#########
+
+message #7. Cooperate with family.
+
+##.......JL#####
+---..O.A.O.#...#
+###~.~~~~~.#..E#
+###.F..B..F-.###
+####.#####.#####
+################
+
+
+message #8. Help a filly get a cutie mark!
+~~~~~..........L
+#####.........D.
+###E-....O......
+######...O......
+#######.###...B.
+############~~~~
+
+message Aww... Still no cutie mark...
+
+message #9. Explore dangerous caves!
+
+.........##############
+.......###O############
+JHL..#####O############
+...#######O############
+..#####..-O------O-E###
+######..##O######O#####
+#####..###|...A..O.....
+####..####O###^.#######
+####.-----O-------...B.
+##########O############
+..........O..........T.
+############^##########
+
+message #10. Friendship is magic!
+
+JH.........###
+.......O.#.#OE
+DAT....|.#..O#
+~~~.~~~.~###O#
+.......F.#..O#
+########^#^###
+
+message #11. Evil enchantress.
+~~~~~...............JHL
+#####~~~~~~~~~~........
+################.......
+###......###...........
+###..O.O.F.....#.#..D..
+#E-..#B#.|O........A.T.
+#############.~~~~~~~~~
+#######################
+
+
+message #12. Equestrian Games.
+
+###############################
+#########O#####################
+#########O#####################
+###......O..................JHL
+###..O.#.O..............D......
+#E-..#B#.O.....................
+#########O#####################
+#........|.....................
+#########O#####..|.|.|.|.|.....
+#........O....##.#.#.#.#.#.A...
+############...################
+#############..................
+###############...F........T...
+###############################
+
+message Congratulations!
+
+message The Mushroom Kingdom is now safe!
+
+message I mean, the Crystal Empire.
+
+USER PROMPT:
+The following PuzzleScript game code:
+```plaintext
+title Cube Collector
+author Your Name
+homepage example.com
+
+========
+OBJECTS
+========
+
+Background
+black
+
+Player
+#00ff00
+..0..
+.000.
+00.00
+.000.
+..0..
+
+Cube
+#ff0000
+.0.0.
+.000.
+00000
+.000.
+.0.0.
+
+Wall
+#7f7f7f #7f7f7f
+11111
+1...1
+1...1
+1...1
+11111
+
+Target
+#0000ff #0000ff
+.....
+..1..
+.111.
+..1..
+.....
+
+=======
+LEGEND
+=======
+
+. = Background
+P = Player
+C = Cube
+# = Wall
+X = Target
+
+Obstacle = Wall or Cube
+
+=======
+SOUNDS
+=======
+
+# This section is required even if left empty.
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Target
+Player, Wall, Cube
+
+======
+RULES
+======
+
+[ > Player | Cube ] -> [ > Player | > Cube ] 
+[ > Player | Cube | not Obstacle ] -> [ > Player | > Cube | ] 
+[ Player | Cube | Target ] -> [ Player | Background ]
+
+==============
+WINCONDITIONS
+==============
+
+all Cube on Target
+
+=======
+LEVELS
+=======
+
+#####  
+#...#
+#P.C#
+#...#
+#..X#
+#####
+
+#####  
+#P..#
+#C..#
+#..X#
+#####
+
+
+```
+produced the following console output:
+=================================
+line 60 : Was expecting a sound event (like SFX3, or ENDLEVEL) or an object name, but didn't find either.
+line 75 : Name "not", referred to in a rule, does not exist.
+line 75 : Error, malformed cell rule - was looking for cell contents, but found "not".  What am I supposed to do with this, eh, please tell me that.
+line 76 : In a rule, each pattern to match on the left must have a corresponding pattern on the right of equal length (number of cells).
+Errors detected during compilation; the game may not work correctly.
+Return a repaired version of the code that addresses these errors. Return your code in full, inside a ```plaintext code block.

@@ -1,0 +1,114 @@
+SYSTEM PROMPT:
+You are a game designer, familiar with the PuzzleScript game description language. 
+
+USER PROMPT:
+The following PuzzleScript game code:
+```plaintext
+===========
+title Simple Sokoban
+===========
+
+===========
+author Your Name
+===========
+
+===========
+objects
+===========
+Background
+WHITE
+.....
+
+Player
+LIGHTBLUE
+..P..
+..P..
+..P..
+.....
+.....
+
+Wall
+BLACK
+.....
+.000.
+.000.
+.000.
+.....
+
+Block
+RED
+.....
+.RRR.
+.RRR.
+.RRR.
+.....
+
+Target
+YELLOW
+.....
+..T..
+..T..
+..T..
+.....
+
+BlockOnTarget
+ORANGE
+.....
+.OOO.
+.OOO.
+.OOO.
+.....
+
+===========
+legend
+===========
+P = Player
+R = Block
+T = Target
+# = Wall
+O = BlockOnTarget
+
+===========
+sounds
+===========
+
+===========
+collisionlayers
+===========
+Background
+Target
+Player, Block, BlockOnTarget
+Wall
+
+===========
+rules
+===========
+[Player | Block] -> [> Player | > Block]
+[Block | Target] -> [BlockOnTarget | ]
+
+===========
+winconditions
+===========
+All BlockOnTarget on Target
+
+===========
+levels
+===========
+####
+# T#
+#PR#
+#  #
+####
+
+```
+produced the following console output:
+=================================
+line 18 : Unknown junk in spritematrix for object PLAYER.
+line 19 : Unknown junk in spritematrix for object PLAYER.
+line 20 : Unknown junk in spritematrix for object PLAYER.
+line 35 : Unknown junk in spritematrix for object BLOCK.
+line 36 : Unknown junk in spritematrix for object BLOCK.
+line 37 : Unknown junk in spritematrix for object BLOCK.
+too many errors, aborting compilation
+Errors detected during compilation; the game may not work correctly.
+Return a repaired version of the code that addresses these errors. First, reason about your task and determine the best plan of action. Then, write your code. Return your code in full, inside a ```plaintext code block.

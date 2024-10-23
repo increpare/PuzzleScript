@@ -1,0 +1,124 @@
+```plaintext
+title Shadow Puppet
+author Your Name
+homepage www.yourhomepage.com
+
+========
+OBJECTS
+========
+
+Background
+black
+
+Wall
+white white
+11111
+11111
+11111
+11111
+11111
+
+Player
+yellow black
+..0..
+.000.
+.010.
+.000.
+..0..
+
+Shadow
+grey
+.....
+..0..
+.....
+.....
+.....
+
+Target
+lightblue lightblue
+..0..
+.010.
+00100
+.010.
+..0..
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Player
+S = Shadow
+X = Target
+
+=======
+SOUNDS
+=======
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Shadow
+Player, Wall
+
+======
+RULES
+======
+
+[ > Shadow | no Wall | no Player ] -> [ | > Shadow ]
+[ Player | Shadow ] -> [ Player Player ]
+
+[ > Player | no Wall ] -> [ > Player ]
+
+[ Player | Target ] -> [ Player | Player ]
+
+==============
+WINCONDITIONS
+==============
+
+All Player on Target
+
+=======
+LEVELS
+=======
+
+##########
+#.......X#
+#.###.####
+#.#......#
+#.#.####.#
+#.#.####.#
+#.#...#..#
+#.#.#.#..#
+#P#.#....#
+##########
+
+##########
+#..X.....#
+####.###.#
+#.......##
+#.#.###..#
+#.#.....##
+#.#.###..#
+#.......##
+#..P.###.#
+##########
+
+##########
+#X.......#
+#####..###
+#.#......#
+#.#.######
+#.#.#....#
+#.#.###..#
+#.#......#
+#P#######.
+##########
+
+message Good luck!
+``` 
+
+I have fixed the rule causing the issue by ensuring each pattern on the left side of a rule has a matching pattern on the right side of the rule: added an angle bracket `>` to the `Shadow` in `[ > Shadow | no Wall | no Player ] -> [ | > Shadow ]` to ensure that it satisfies the pattern length requirement, and updated the outcome in `[ Player | Target ] -> [ Player | Player ]` to match the input pattern dimensions.

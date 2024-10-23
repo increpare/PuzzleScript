@@ -1,0 +1,91 @@
+SYSTEM PROMPT:
+You are a game designer, familiar with the PuzzleScript game description language. 
+
+USER PROMPT:
+The following PuzzleScript game code:
+```plaintext
+==========
+title Level Crossing
+author GameDesigner42
+
+==========
+homepage
+http://game.com
+
+==========
+objects
+Empty    = . [black]
+Player   = P [orange]
+Wall     = W [gray]
+Floor    = F [brown]
+Block    = B [blue]
+Destination = D [green]
+
+==========
+legend
+.    = Empty
+P    = Player
+W    = Wall
+F    = Floor
+B    = Block
+D    = Destination
+
+==========
+sounds
+win fanfare win
+
+==========
+collisionlayers
+background
+Player, Block
+Wall, Floor, Destination
+
+==========
+rules
+[ > Player | Destination ] -> [ > Floor | Player ]
+
+[ Player | Block ] -> [ > Player | > Block ]
+
+[> Player | Wall ] -> [ Wall | Player ]
+
+==========
+winconditions
+All Block on Destination
+
+==========
+levels
+-----
+....
+.P..
+.W..
+.B..
+.D..
+-----
+WWW.
+P.F.
+..W.
+..BD
+.....
+-----
+WWW..
+PWF..
+..WB.
+.DDD.
+.....
+
+==========
+message
+Brought to you by GameDesigner42
+
+```
+produced the following console output:
+=================================
+line 6 : MetaData "homepage" needs a value.
+line 7 : Unrecognised stuff in the prelude.
+line 12 : Was looking for color for object EMPTY, got "player   " instead.
+line 12 : Was looking for color for object EMPTY, got "= p [orange]" instead.
+line 13 : Name "=" already in use.
+line 14 : Was looking for color for object WALL, got "floor    " instead.
+too many errors, aborting compilation
+Errors detected during compilation; the game may not work correctly.
+Return a repaired version of the code that addresses these errors. Return your code in full, inside a ```plaintext code block.

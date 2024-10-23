@@ -1,0 +1,347 @@
+SYSTEM PROMPT:
+You are a game designer, familiar with the PuzzleScript game description language. Here are some example games, for inspiration (do not reproduce these games exactly):
+
+title Several Rigid Bodies
+author increpare
+homepage www.puzzlescript.net
+
+========
+OBJECTS
+========
+
+Background
+darkgreen
+
+Target
+YELLOW
+
+Player
+PINK
+
+RedCrate q
+RED
+
+GreenCrate w
+Green
+
+BlueCrate e
+Blue
+
+SmallCrate r
+Purple
+.....
+.000.
+.000.
+.000.
+.....
+
+Wall
+DARKBROWN
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Player
+bigcrate = redcrate or greencrate or bluecrate
+Crate = smallcrate or bigcrate
+O = Target
+
+=========
+SOUNDS
+=========
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Target
+Player, Wall, Crate
+
+======
+RULES
+======
+
+startloop
+
+[ > Player | Smallcrate ] -> [ > Player | > SmallCrate ]
+
+[ >  Player | RedCrate ] -> [  >  Player | > RedCrate  ]
++ rigid [ moving RedCrate | RedCrate ] -> [ moving RedCrate | moving RedCrate ]
++ [ >  Crate | RedCrate ] -> [  >  Crate | > RedCrate  ]
+
+[ >  Player | GreenCrate ] -> [  >  Player | > GreenCrate  ]
++ rigid [ moving GreenCrate | GreenCrate ] -> [ moving GreenCrate | moving GreenCrate ]
++ [ >  Crate | GreenCrate ] -> [  >  Crate | > GreenCrate  ]
+
+
+[ >  Player | BlueCrate ] -> [  >  Player | > BlueCrate  ]
++ rigid [ moving BlueCrate | BlueCrate ] -> [ moving BlueCrate | moving BlueCrate ]
++ [ >  Crate | BlueCrate ] -> [  >  Crate | > BlueCrate  ]
+
+[ > Crate | SmallCrate ] -> [  > Crate | > SmallCrate ]
+
+endloop
+
+==============
+WINCONDITIONS
+==============
+
+=======
+LEVELS
+=======
+
+...............
+...............
+...............
+.....#.........
+...............
+...r.r.........
+..P....#.......
+..qq..w.eer....
+..q.wwweer.....
+..q.#..........
+...............
+...............
+...............
+
+
+
+title Extended Body Example: 1 Player, 1 Extended Object
+author increpare
+homepage www.puzzlescript.net
+
+(
+    Example for
+    https://www.puzzlescript.net/Documentation/rigidbodies.html#one_one
+)
+
+========
+OBJECTS
+========
+
+Background
+LIGHTGREEN GREEN
+11111
+01111
+11101
+11111
+10111
+
+
+Target
+DarkBlue
+.....
+.000.
+.0.0.
+.000.
+.....
+
+Wall
+BROWN DARKBROWN
+00010
+11111
+01000
+11111
+00010
+
+Player
+Black Orange White Blue
+.000.
+.111.
+22222
+.333.
+.3.3.
+
+Crate
+Orange
+00000
+0...0
+0...0
+0...0
+00000
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Player
+* = Crate
+@ = Crate and Target
+O = Target
+
+=======
+SOUNDS
+=======
+
+Crate MOVE 36772507
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Target
+Player, Wall, Crate
+
+======
+RULES
+======
+
+[ >  Player | Crate ] -> [  >  Player | > Crate  ]
+[ > Crate ] [ stationary Crate ] -> [ > Crate ] [ > Crate ]
+[ > Crate | Wall ] -> cancel
+
+==============
+WINCONDITIONS
+==============
+
+All Target on Crate
+
+=======
+LEVELS
+=======
+
+######
+#....#
+#.#..#
+#.*@.#
+#.O@.#
+#.p..#
+######
+
+
+USER PROMPT:
+The following PuzzleScript game code:
+```plaintext
+title Forest Escape
+author YourName
+
+========
+OBJECTS
+========
+
+Background
+green
+
+Player
+magenta
+..0..
+.000.
+.000.
+..0..
+.....
+
+Tree
+darkgreen
+00000
+00000
+00000
+00000
+00000
+
+Exit
+blue
+.....
+.....
+..0..
+.....
+.....
+
+Trap
+red
+.0.0.
+..0..
+.000.
+..0..
+.0.0.
+
+=======
+LEGEND
+=======
+
+. = Background
+P = Player
+T = Tree
+E = Exit
+X = Trap
+
+=========
+SOUNDS
+=========
+
+startgame 26858107
+endgame 14218122
+endlevel 23422756
+startlevel 34443107
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Trap
+Tree, Exit
+Player
+
+======
+RULES
+======
+
+[ Player | Exit ] -> [ Player | Exit ] win
+[ Player | Trap ] -> [ | Trap ] lose
+
+==============
+WINCONDITIONS
+==============
+
+All Player on Exit
+
+=======
+LEVELS
+=======
+
+# Simple introductory level
+########
+#......#
+#..P...#
+#......#
+#..E...#
+########
+
+# Avoiding Traps
+########
+#..T...#
+#..P.X.#
+#..T...#
+#...E..#
+########
+
+# More Complex Maze
+########
+#T...T.#
+#..T...#
+#..P.T.#
+#TX..E.#
+########
+
+message Congratulations! You've escaped the forest.
+
+
+```
+produced the following console output:
+=================================
+line 12 : Was looking for color for object PLAYER, got "magenta" instead.
+line 13 : Trying to access color number 0 from the color palette of sprite PLAYER, but there are only 0 defined in it.
+line 14 : Trying to access color number 0 from the color palette of sprite PLAYER, but there are only 0 defined in it.
+line 15 : Trying to access color number 0 from the color palette of sprite PLAYER, but there are only 0 defined in it.
+line 16 : Trying to access color number 0 from the color palette of sprite PLAYER, but there are only 0 defined in it.
+line 76 : Name "lose", referred to in a rule, does not exist.
+too many errors, aborting compilation
+Errors detected during compilation; the game may not work correctly.
+Return a repaired version of the code that addresses these errors. First, reason about your task and determine the best plan of action. Then, write your code. Return your code in full, inside a ```plaintext code block.

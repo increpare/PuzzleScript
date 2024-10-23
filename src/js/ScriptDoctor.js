@@ -31,29 +31,29 @@ function sleep(ms) {
   return new Promise(resolve => setTimeout(resolve, ms));
 }
 
-async function playTest() {
-  editor.clearHistory();
-  clearConsole();
-  setEditorClean();
-  unloadGame();
-  compile(['restart'], editor.getValue());
-  console.log('Playtesting...');
-  // sol = solveLevel(0);
+// async function playTest() {
+//   editor.clearHistory();
+//   clearConsole();
+//   setEditorClean();
+//   unloadGame();
+//   compile(['restart'], editor.getValue());
+//   console.log('Playtesting...');
+//   // sol = solveLevel(0);
 
-  // Load the the text file demo/sokoban_match3.txt
-  // tryLoadFile('sokoban_match3');
-  var client = new XMLHttpRequest();
-  client.open('GET', '/demo/sokoban_match3.txt');
-  client.onreadystatechange = function() {
-    console.log('Ready state:', client.readyState);
-    console.log('Response', client.responseText);
-    editor.setValue(client.responseText);
-    sol = solveLevel(0);
-  }
-  client.send();
-  // console.log('Loaded level:', editor.getValue());
-  console.log('Solution:', sol);
-}
+//   // Load the the text file demo/sokoban_match3.txt
+//   // tryLoadFile('sokoban_match3');
+//   var client = new XMLHttpRequest();
+//   client.open('GET', '/demo/sokoban_match3.txt');
+//   client.onreadystatechange = function() {
+//     console.log('Ready state:', client.readyState);
+//     console.log('Response', client.responseText);
+//     editor.setValue(client.responseText);
+//     sol = solveLevel(0);
+//   }
+//   client.send();
+//   // console.log('Loaded level:', editor.getValue());
+//   console.log('Solution:', sol);
+// }
 
 
 function serialize(val) {
@@ -111,7 +111,7 @@ function solveLevel(level) {
 }
 
 
-async function genGame(genMode, parents, saveDir, seed, fewshot, cot) {
+async function genGame(genMode, parents, saveDir, seed, fewshot, cot, maxGenAttempts=10) {
   consoleText = '';
   nGenAttempts = 0;
   code = '';
@@ -123,6 +123,7 @@ async function genGame(genMode, parents, saveDir, seed, fewshot, cot) {
   sols = {};
   while (nGenAttempts < maxGenAttempts & (nGenAttempts == 0 | !compilationSuccess | !solvable)) {
 
+    // Get our GPT completion from python
     const response = await fetch('/gen_game', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -198,10 +199,12 @@ async function genGame(genMode, parents, saveDir, seed, fewshot, cot) {
         try {
           console.log(`Solving level ${level_i}...`);
           if (sols.length > 0) {
+            console.log('Using cached solution.');
             sol, n_search_iters = sols[level_i];
           }
           [sol, n_search_iters] = solveLevel(level_i);
           console.log(`Solution for level ${level_i}:`, sol);
+          console.debug();
         } catch (e) {
           console.log('Error while solving level:', e);
           sol = [];
@@ -217,7 +220,8 @@ async function genGame(genMode, parents, saveDir, seed, fewshot, cot) {
         // check if sol is undefined
         if (sol.length > 0) {
           // console.log('Level is solvable.');
-          solverText += `Found solution for ${level_i} in ${n_search_iters} iterations.`
+          solverText += `Found solution for level ${level_i} in ${n_search_iters} iterations: ${sol}. `
+          console.debug();
         } else {
           // console.log(`Level ${level_i} is not solvable.`);
           solvable = false;
@@ -246,7 +250,6 @@ async function genGame(genMode, parents, saveDir, seed, fewshot, cot) {
 }
 
 
-const maxGenAttempts = 10;
 const popSize = 3;
 const nGens = 10;
 
@@ -302,6 +305,8 @@ async function sweep() {
   }
 }
 
-sweep()
+// sweep()
 // evolve();
 // playTest();
+
+genGame('init', [], 'test_99', 99, fewshot=true, cot=true, maxGenAttempts=20);

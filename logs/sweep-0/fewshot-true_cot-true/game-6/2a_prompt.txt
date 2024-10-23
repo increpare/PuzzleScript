@@ -1,0 +1,713 @@
+SYSTEM PROMPT:
+You are a game designer, familiar with the PuzzleScript game description language. Here are some example games, for inspiration (do not reproduce these games exactly):
+
+title MazezaM
+author Malcolm Tyrrell
+homepage https://sites.google.com/site/malcolmsprojects/
+
+noaction
+
+(
+License:
+
+(C)2013 Malcolm Tyrrell
+You can use and distribute this code under the terms of the AGPLv3:
+
+http://www.gnu.org/licenses/agpl-3.0.html
+)
+
+========
+OBJECTS
+========
+
+Background
+DarkBlue Black
+11111
+01111
+11101
+11111
+10111
+
+Entrance
+Blue
+.....
+.....
+.....
+.....
+.....
+
+Wall
+Lightgrey Darkgrey Grey
+11101
+12111
+11112
+11011
+11111
+
+CPlayer
+Red DarkGreen Green
+..0..
+22222
+02220
+01110
+.1.1.
+
+LPlayer
+Red DarkGreen Green
+0.0..
+.222.
+0002.
+.111.
+.1.1.
+
+
+RPlayer
+Red DarkGreen Green
+..0.0
+.222.
+.2000
+.111.
+.1.1.
+
+ACrate
+Orange Brown DarkBrown
+00001
+01102
+01012
+00112
+12222
+
+LCrate
+Orange Brown DarkBrown
+00000
+01101
+01011
+00111
+12222
+
+ICrate
+Orange Brown DarkBrown
+00000
+11101
+11011
+10111
+22222
+
+RCrate
+Orange Brown DarkBrown
+00001
+11102
+11012
+10112
+22222
+
+Target
+Orange Yellow
+.....
+.....
+.....
+.....
+.....
+
+Exit
+DarkBrown
+.....
+.000.
+.0.0.
+.000.
+.....
+
+Gate
+DarkBrown
+.0.0.
+00000
+.0.0.
+00000
+.0.0.
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = CPlayer
+C = ACrate
+L = LCrate
+R = RCrate
+I = ICrate
++ = Entrance
+* = Exit
+X = Target
+
+Crate = ACrate or LCrate or RCrate or ICrate
+WallLike = Wall or Gate or Exit
+Obstacle = Gate or Wall
+Object = Obstacle or Crate
+Player = CPlayer or LPLayer or RPlayer
+Space = Background or Exit
+
+=======
+SOUNDS
+=======
+
+Player CantMove 68096304
+Gate Create 97629502
+Crate Move 64536307
+EndLevel 56439303
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Exit, Entrance, Target
+Player, RPlayer, Wall, LCrate, Crate, RCrate, ICrate, Gate
+
+======
+RULES
+======
+
+(Select the appropriate pushing sprite)
+
+Right [ > Player ] -> [ > RPlayer ]
+Left [ > Player ] -> [ > LPlayer ]
+
+(Except when moving vertically or not pushing)
+
+Vertical [ > Player ] -> [ > CPlayer ]
+Horizontal [ > Player | No Object ] -> [ > CPlayer | ]
+
+(The player can push a crate when the end of the row is free)
+
+Horizontal [ > Player | Crate | ... | No Object | WallLike ] -> [ > Player | > Crate | ... | | WallLike ]
+
+(All crates on a row move together)
+
+Horizontal [ > Crate | ... | Crate ] -> [ > Crate | ... | > Crate ]
+Horizontal [ Crate | ... | > Crate ] -> [ > Crate | ... | > Crate ]
+
+(The gate closes when the player passes the entrance)
+
+Late Right [ Entrance | Player ] -> [ Gate | Player ]
+
+==============
+WINCONDITIONS
+==============
+
+All Player on Target
+
+=======
+LEVELS
+=======
+
+message First Principles
+
+(Pushes: rRRuLdrRurr)
+(Moves: rRRuLdrRurr)
+
+###########
+###.C.C.*.X
+P.+.C...###
+###########
+
+message Humble Origins
+
+(Pushes: rdRRurRdLuLrdLLrurRdrrr)
+(Moves: rdRRurRdLuLrdLLrurRdrrr)
+
+#############
+P.+.C..LR.###
+###.C..C..*.X
+#############
+
+message Baby Steps
+
+(Pushes: rddRRuRuLrdLurRdRdLLuuLrdLurRdRdLruLdrrur)
+(Moves: rddRRuRuLrdLurRdRdLLuuLrdLurRdLdRRurr)
+
+#############
+P.+.LR..LR###
+###.C.C.C.*.X
+###.LR.C..###
+#############
+
+message Easy Does It
+
+(Pushes: rurRdRRuLuLrdRdLLuurRdLuLrdLurRddRRurr)
+(Moves: rurRdRRuLuLrdRdLLuurRdLuLrdLurRddRRurr)
+
+##############
+###..C..LIR###
+###..C.C.C.*.X
+P.+.C.C.C..###
+##############
+
+message Little Rascal
+
+(Pushes: ruuuRRddRdlLuluurrdLddrRuLdLruLdrRuruuLLLrrrddldlLuuurrrdddr)
+(Moves: ruuuRRddRdlLuluurrdLddrRuLdLruLdrRuruuLLLddRdLruLuurrrdddr)
+
+
+###########
+###.C...###
+###.C.LR###
+###.C.C.###
+P.+.C..C*.X
+###########
+
+message Leap-frog
+
+(Pushes: rRdRRuLLdlddRRuLuuRRddRdLruLdLruuuLLddRdLruLuuRRddRdrrr)
+(Moves: rRdRRuLLdlddRRuLuuRRddRdLruLdLruuLLdRdLruLuRRdRdrrr)
+
+#############
+P.+.C.C.C.###
+###C.LIR..###
+###.C.C.LR###
+###.C..C..*.X
+#############
+
+message Shuttles
+
+(Pushes: rrdRRdddLLuuurrdLLddrRRRuuuLLLLdRRurruLdrruLdlldLLuRRRRdddlLLLuuurruRRddddrr)
+(Moves: rrdRRdddLLuuurrdLLddrRRRuuuLLLLdRRurruLLddLLuRRRRdddlLLLuuurruRRddddrr)
+
+#############
+P.+..LIR.C###
+###..C.C..###
+###..C.LIR###
+###C.C.C.C###
+###..C..C.*.X
+#############
+
+message The Nudge
+
+(Pushes: rRuuRRRRdLdLLuLurrdRRuLLdLdRRuRuLLrrdLdLLuRurrdLurrrddr)
+(Moves: rRuuRRRRdLdLLuLurrdRRuLLdLdRRuRuLLrrdLdLLuLuRRRRRdrdr)
+
+##############
+###C.C.....###
+###..C.C.LR###
+P.+.LR.LIR.*.X
+##############
+
+message Opening Gambit
+
+(Pushes: rurRRdLdLdRRuRRuuLLLdRRuLrdLurrrdLdLLdLLuRuRurrrddr)
+(Moves: rurRRdLdLdRRuRRuuLLLdRRuLrdLurrrdLdLLdLLuRuRurrrddr)
+
+#############
+###..C.C..###
+P.+.LR.LR.###
+###.C.C.C.*.X
+###C.LIR..###
+#############
+
+message Loop-de-Loop
+
+(Pushes: rrrdrRRuruLdLruRRRdrRRuLdLruLdrdLuLruLdLruRRRdrrdLdlLLLuuuLdrRRuLdLruLdLruRRRdrrddr)
+(Moves: rrrdrRRuruLdLruRRRdrRRuLdLruLdrdLuLruLdLruRRRdrrdLdlLLLuuuLdrRRuLdLruLdLruRRRdrrddr)
+
+####################
+###.LIIIR.LR.LR..###
+P.+...LR..LR..LR.###
+###LR..C.LR.LIR..###
+###...LIIIIIIR..C*.X
+####################
+
+message Nudge-nudge
+
+(Pushes: ruRldRlddrruRuLLddrRuuRuLLdLddrruLLuRuRRdRdrdLLLLrrruuLuLLdLdRdrrrruur)
+(Moves: rRluRdldRdrRuuLLddrruuRuLLdLddrruLLuRuRRdRdrdLLLLrrruuLuLLdLdRdrrrruur)
+
+#############
+###.LR.LR.###
+P.+.C.C.C.*.X
+###.C.LIR.###
+###...LR..###
+#############
+
+message To and Fro
+
+(Pushes: rrdRdRdrdLdRRurrdLLurrRdrRRuruuLLrrddldlLLullLdRRulldLLuurRuRRRururrrr)
+(Moves: rrdRdRdrdLdRRurrdLLurrRdrRRuruuLLrrddldlLLullLdRRulldLLuRuRuRRRururrrr)
+
+###################
+P.+...LIIIR.....*.X
+###C.LIIIR..LIR.###
+###.C.LIR.LIIR..###
+###C.C..LIIIIIR.###
+###.LIR.C...LR..###
+###C.C.C.LR..C..###
+###################
+
+message Ragged Rascal
+
+(Pushes: ruuuRRRddRululllddddrRuLuluurrrdrdLuLrdLurRdrddlLLLuRuRuLrdLdLdrrrruuur)
+(Moves: ruRlddrRuLuluuRRRRddLuLrdLurRdrddlLLLuRuRuLrdLdLdrrrruuur)
+
+############
+###.C....###
+###.LR..C*.X
+###.LR.C.###
+P.+.C.LIR###
+###..C...###
+############
+
+message Hold Your Horses
+
+(Pushes: rruuRRllddRdRRRRuLLuLullldddrrrruRRdLLLLulluurrrdLddRRRRuuruLLLLrrrdddLLLLuuRurrrrdLddrr)
+(Moves: rruuRRllddRdRRRRuLLuLullldddrrrruRRdLLLLulluurrrdLddRRRRuuruLLLLrrrdddLLLLuuRurrrrdLddrr)
+
+##############
+###..LIR...###
+###..LR.LIR###
+P.+..LIR.C.###
+###.C.C....*.X
+##############
+
+message Knot Theory
+
+(Pushes: rrdddRRuuuLLddddRRuuuurrddLLdddLLuuuuuRRddrruuLLddddLLuuuuRRdddLLuRRRdrddr)
+(Moves: rrdddRRuLLddRRuurruuLLdddddLLuuuRRuurrddLLddLLuuRRdLLuuuRRddRdrddr)
+
+############
+P.+..C.C.###
+###C.C.C.###
+###..C.C.###
+###C.LR..###
+###C.LR..###
+###..C.LR*.X
+############
+
+message Rack and Pinion
+
+(Pushes: rrRRddLruRRdRdRRuLuLuLLdLdRdLuLrdLuruRuRRdLdRdRRuuuLLLdRRuLrdLurrrdLddLLuLuRurrrddr)
+(Moves: rrRRddLruRRdRdRRuLuLuLLdLdRdLuLrdLuruRRdRdRRuLuLuLLdLdRdLuLrdLuruRRdRdRRuLuLurrrddr)
+
+################
+P.+..LR.C.C..###
+###LIR.C.LR..###
+###.LR..C.C.C*.X
+###LR.LIR.C..###
+################
+
+message Blue Meanie
+
+(Pushes: rRRdLdRuRldRdLruLdLruLdrRRRuuuLLLdLruRRdRddlLLLuRuLrdLdrRRRuruuLrddldlLLLuurRuRRddrdr)
+(Moves: rRRdLdRRdLLuurRdLLdrRRRuuuLLLdLruRRdRddlLLLuRuLrdLdrRRRuruuLrddldlLLLuurRuRRddrdr)
+
+#############
+P.+.LR.C..###
+###.C..C.C###
+###C.LIR..###
+###..C..C.*.X
+#############
+
+message Up, Up and Away
+
+(Pushes: rRRluRdlluuuRuRRdLdddlluuuuuuRuRRdLLuluuurRllddRluurrdLdddRRuLLdlddddddrruuuRuLLdldddrruuRuuruLuuruuur)
+(Moves: rRRluRdlluuuRuRRdLLuluuRuRRdLLuluRluurRdLdddRRuLLdlddrdRRuLLdldddrruuRuuruLuuruuur)
+
+###########
+###..C..*.X
+###.C.LR###
+###.LR..###
+###C.C..###
+###.C.C.###
+###.LIR.###
+###C.C..###
+###.C.C.###
+###.C.C.###
+###C.LR.###
+P.+.C...###
+###########
+
+message Great Things
+
+(Pushes: ruuRRRdddlLuluRddrRuLdLruLdrRuRuLLddLruLdrRuRRuuLLLdRRuLrdLurrrdLdLLdlLuRuRurrrdddr)
+(Moves: ruuRRRdddlLuluRddrRuLdLruLdrRuRuLLddLruLdrRuRRuuLLLdRRuLrdLurrrdLdLLdlLuRuRurrrdddr)
+
+#############
+###.C.C...###
+###.LR.LR.###
+P.+..C.C.C###
+###.C..LIR*.X
+#############
+
+message Through and Through
+
+(Pushes: rRRdLuruRRddrRRuLdLruLdLruRRuLLuLrdLddrRRuuRRRurRdLuLrdRddLruLdLruLuurRdLuLrdLddrRRuruur)
+(Moves: rRRdLuruRRddrRRuLdLruLdLruRRuLLuLrdLddrRRuuRRRurRdddLruLdLruLdrRRuLuLuLrdLLdRRRurrur)
+
+#####################
+###.LIIR..LIIR..LR*.X
+###.C.LR.LR.C.LR..###
+P.+.C.LR.LIIR.LR..###
+###.C.LR..LIIR..C.###
+#####################
+
+message Just Enough
+
+(Pushes: rrruRuRRdLdLLLdRRuRuRuLLdLdLddrRuLLuRuRuRRdLdRRdrdLLLLrrruuLLuRuLLdLdLddRRRRRurur)
+(Moves: rrruRuRRdLdLLLdRRuRuRuLLdLdLddrRuLLuRuRuRRdLdRRdrdLLLLrrruuLLuRuLLdLdLddRRRRRurur)
+
+##############
+###C.C.LR..###
+###LR.C.LR.###
+P.+...C.C.C*.X
+###C.LIIR..###
+###...C.C..###
+##############
+
+message The Secret Staircase
+
+(Pushes: rRRRRdlLdldRuRldRRRRRRuuuLLLLLddlLruruRRRdRdRdLLLLLuuLrddRRRRRuuRuLLrrdLddLLLLLulLrurRuRRRdddrrrur)
+(Moves: rRRRdLdRuRldlLdRRRRRRuuuLLLLdLruRRRdRddLLLLLuRuLddRRRRRRuuRuLLrrdLddLLLLLulLrurRuRRRdddrrrur)
+
+#################
+P.+.LIR.LR....###
+###.LR..LR.C.C###
+###C..LIIR.LR.*.X
+###C.LR.......###
+#################
+
+message Clear the Way
+
+(Pushes: ruurrddRdlLuluurrdLddrRuLdLruLdrRuRRuuLLuLrdLuLrdrRRddLLdlLuuuurRRdrRldRulLLLdLddrRuRRuurrr)
+(Moves: ruurrddRdlLuluurrdLddrRuLdLruLdrRuRRuuLLLruLLrdrRRddLLdlLuuuurRRdrRldRulLLLdLddrRuRRuRurr)
+
+##############
+###..C..LIR###
+###...LR..C*.X
+###.C.LIR.C###
+P.+.C.C.LR.###
+###.C..C.LR###
+##############
+
+message A Mismatch Made in Heaven
+
+(Pushes: rRRRuRRdLLLLuRuRRullLdddRRRRRuLLdlllluururrRdLLurrRRRddLrrdLLLrruuullLLLdRdRRdrrruuur)
+(Moves: rRRRuRRdLLLLuRuRRullLdddRRRRRuLLuLLurRRRRdrddLLruLruullLLLdRdRdRRRuruur)
+
+###############
+###.C...C...*.X
+###LR.LIIR..###
+###LIR.LR...###
+P.+.C.C.....###
+###############
+
+message Double Cross
+
+(Pushes: ruRuuRuuLrddRdLruLdLruuLururRdRRddRdrddlllllLLuurruLdlddrrrrrrruuuur)
+(Moves: ruRuuRRdLLrruLuuLrdLururRdRRddRdrddlllllLLuurruLdlddrrrrrrruuuur)
+
+###############
+###.C..LIIR.###
+###.C..C.LR.###
+###.C.LIIR.C*.X
+###C.LR..C..###
+###..C...LIR###
+###.LIIIIR..###
+P.+..C......###
+###############
+
+message Zen Garden
+
+(Pushes: rdRRurRdLuLrdLuLrdLurRRddRululLLdRuRldRulLdlddrdRulluururRdLuLrdLurRRdrdLdLLddlluuRlddrruLdrrrrruuuulldRululLLdRuRldRulLdlddrddrrrrruuLLruLdrruuur)
+(Moves: rdRRurRdLuLrdLuLrdLurRRddRululLLdRuRldRulLdlddrdRulluururRdLuLrdLurRRdrdLdLLdLdrrrrruuuulldRululLLdRuRldRulLdlddRddrrrrruuLLruLdrruuur)
+
+#############
+P.+.C..LR.*.X
+###.C.LR..###
+###LIIR.C.###
+###...C.LR###
+###C.LIIR.###
+###.......###
+#############
+
+message Inside Out
+
+(Pushes: ruuuuRldRuluuurrrrrrrrrrdLdlllllLdLLdldddddrrrrrrrrrrrruuuuLrdLrdddlllllllllllluuRuRRurruLLdrrRRurRuRRuruur)
+(Moves: ruRluRluRluuRluurrrrrrrrrrddddlLLdllLLuRRdlldLLuuluRuluurrrrrrrrrrdLdllllLLdLLdddRRurruLLdrrRRurRuRRuruur)
+
+###################
+###...........C.*.X
+###.LIIIIIIIR..C###
+###.LIR......LR.###
+###.C.LIIIIIR.C.###
+###.LIR.LIR..LR.###
+###.C.C...C..LR.###
+###.C.LIIIIR.LR.###
+P.+.C.C.C...LIR.###
+###.LIIIIIIIIIR.###
+###.............###
+###################
+
+message Double Decker
+
+(Pushes: ruRRRddRRuuLrdLuLrdRdLLuuLrdLuLrdRdRRuurrdLurrddLruulldRulldLdRRuRulldLdLLuuRldRuRldLdRRuulLddllddrdRdRRRuLrdLLLLuRRuLLddRRuLLuRRRdrRRdLuLLuLLLdRdRRRururrr)
+(Moves: ruRRRddRRuuLrdLuLrdRdLLuuLrdLuLrdRdRRuurrdLurrddLruulldRulldLdRRuRulldLdLLuuRldRuRldLdRRuulLddllddrdRdRRRuLrdLLLLuRRuLLddRRuLLuRRRdrRRdLuLLuLLLdRdRRRurRurr)
+
+###############
+###.C..LR...###
+P.+.LR.C.C.C###
+###C.C.LR...###
+###.LIIIIIIR###
+###..C.LIIR.*.X
+###C.LR..C..###
+###.C.LCR...###
+###############
+
+message Back to Front
+
+(Pushes: rrrrrrrrrrrddddLLLLuRRRdllluLLLuRRRdRRRdllluuLLdLLLdRRRRdRRdLdLruRuLLuLLLLuRRRuRRddrrrrdddLLLuRuulluuLLdLLLdRRRRddLLdRluRdRluRdRluuRRRdLLdRluRRuLLLdLLdlllddrrrrrrrrrrr)
+(Moves: rrrrrrrrrrrddddLLLLuRRRdllluLLLuRRRdRRRdllluuLLdLLLdRRRRdRRdLdLruRuLLuLLLLuRRRuRRddrrrrdddLLLuRuulluuLLdLLLdRRRRddLLdRluRdRluRdRluuRRRdLLdRluRRuLLLdLLdlllddrrrrrrrrrrr)
+
+#################
+P.+...........###
+###LIIIIIIIIR.###
+###LIR.LIIR...###
+###C.C.LR.C...###
+###....C.LIIR.###
+###LIIIR.LR...###
+###.LIR.LR.LR.###
+###....LR..LIR###
+###.LIIIIIIIIR###
+###...........*.X
+#################
+
+message The Beast
+
+(Pushes: rRddRRuuLLddlddddrRlluuuurrrdddRdLLLuuluurrrddRdLLulluurrrdLddRRuLLLddRRRuLuRRuuLLLLuuRRddRRddLLdRdLLLuuRuRuuuLLddRlldddrdRRRuuRRuuRuurrr)
+(Moves: rRddRRuuLLddlddddrRlluuuurrrdddRdLLLuuluurrrddRdLLulluurrrdLddRRuLLLddRRRuLuRRuuLLLLuuRRddRRddLLdRdLLLuuRuRuuuLLddRlldddrdRRRuuRRuuRuurrr)
+
+################
+P.+.C.LR.C...*.X
+###C.C.LIR.LR###
+###..C.C.C...###
+###.LR.LR.LIR###
+###..C.C.C.C.###
+###.LR.C.LIR.###
+###..C.LIR.C.###
+################
+
+message Well done. You escaped.
+
+
+
+USER PROMPT:
+The following PuzzleScript game code:
+```plaintext
+title Maze Escape
+author PuzzleScript Enthusiast
+
+========
+OBJECTS
+========
+
+Background
+black
+
+Player
+yellow white lightgrey orange
+.000.
+.111.
+22222
+.333.
+.3.3.
+
+Wall
+darkgrey grey lightgrey
+11111
+11111
+11111
+11111
+11111
+
+Floor
+#4B8B3B
+.....
+
+Block
+orange
+22222
+20002
+20002
+20002
+22222
+
+Exit
+green
+.....
+..0..
+.000.
+..0..
+.....
+
+=======
+LEGEND
+=======
+
+. = Floor
+# = Wall
+P = Player
+B = Block
+E = Exit
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Floor
+Player, Wall, Block, Exit
+
+======
+RULES
+======
+
+[ > Player | Block ] -> [ > Player | > Block ]
+
+==============
+WINCONDITIONS
+==============
+
+Some Player on Exit
+
+=======
+LEVELS
+=======
+
+# Level 1
+#######
+#.....#
+#.#.#.#
+#P#B#E#
+#.....#
+#######
+
+# Level 2
+#########
+#.......#
+#.###.#.#
+#.#B#.#.#
+#P.#.#E.#
+#######.#
+#.......#
+#########
+
+
+```
+produced the following console output:
+=================================
+line 33 : Trying to access color number 2 from the color palette of sprite BLOCK, but there are only 1 defined in it.
+line 34 : Trying to access color number 2 from the color palette of sprite BLOCK, but there are only 1 defined in it.
+line 35 : Trying to access color number 2 from the color palette of sprite BLOCK, but there are only 1 defined in it.
+line 36 : Trying to access color number 2 from the color palette of sprite BLOCK, but there are only 1 defined in it.
+line 37 : Trying to access color number 2 from the color palette of sprite BLOCK, but there are only 1 defined in it.
+line 58 : section "COLLISIONLAYERS" is out of order, must follow  "SOUNDS" (or it could be that the section "SOUNDS"is just missing totally.  You have to include all section headings, even if the section itself is empty).
+too many errors, aborting compilation
+Errors detected during compilation; the game may not work correctly.
+Return a repaired version of the code that addresses these errors. First, reason about your task and determine the best plan of action. Then, write your code. Return your code in full, inside a ```plaintext code block.

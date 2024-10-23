@@ -1,0 +1,100 @@
+SYSTEM PROMPT:
+You are a game designer, familiar with the PuzzleScript game description language. 
+
+USER PROMPT:
+The following PuzzleScript game code:
+```plaintext
+===========
+title
+===========
+Simple Sokoban
+
+===========
+author
+===========
+Your Name
+
+===========
+objects
+===========
+Background
+WHITE
+.
+
+Player
+LIGHTBLUE
+PPP
+.P.
+PPP
+
+Wall
+BLACK
+000
+000
+000
+
+Block
+RED
+RRR
+.R.
+RRR
+
+Target
+YELLOW
+...
+
+BlockOnTarget
+ORANGE
+OOO
+.O.
+OOO
+
+===========
+legend
+===========
+P = Player
+# = Wall
+B = Block
+T = Target
+O = BlockOnTarget
+
+===========
+collisionlayers
+===========
+Background
+Target
+Player, Block, BlockOnTarget
+Wall
+
+===========
+rules
+===========
+[Player | Block] -> [ > Player | > Block]
+[Block | Target] -> [BlockOnTarget | ]
+
+===========
+winconditions
+===========
+All BlockOnTarget on Target
+
+===========
+levels
+===========
+####
+# .#
+#PB#
+#  #
+####
+
+```
+produced the following console output:
+=================================
+line 2 : MetaData "title" needs a value.
+line 4 : Unrecognised stuff in the prelude.
+line 7 : MetaData "author" needs a value.
+line 9 : Unrecognised stuff in the prelude.
+line 21 : Was looking for color for object PPP, got ".p." instead.
+line 22 : Object "PPP" defined multiple times.
+too many errors, aborting compilation
+Errors detected during compilation; the game may not work correctly.
+Return a repaired version of the code that addresses these errors. First, reason about your task and determine the best plan of action. Then, write your code. Return your code in full, inside a ```plaintext code block.

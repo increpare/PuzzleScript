@@ -1,0 +1,64 @@
+```plaintext
+==========
+title Level Crossing
+author GameDesigner42
+
+==========
+homepage
+game.com
+
+==========
+legend
+.    = Empty
+P    = Player
+W    = Wall
+F    = Floor
+B    = Block
+D    = Destination
+
+==========
+sounds
+win fanfare win
+
+==========
+collisionlayers
+background
+objects
+
+==========
+rules
+[ > Player | Destination ] -> [ > Floor | Player ] 
+
+[ Player | Crate ] -> [ > Player | > Crate ]
+
+[ > Player | Wall ] -> [ Wall | Player ]
+
+==========
+winconditions
+All Crate on Destination
+
+==========
+levels
+-----
+....
+.P..
+.W..
+.B..
+.D..
+-----
+WWW.
+P.F.
+..W.
+..BD
+.....
+-----
+WWW..
+PWF..
+..WB.
+.DDD.
+.....
+
+==========
+message
+Brought to you by GameDesigner42
+```

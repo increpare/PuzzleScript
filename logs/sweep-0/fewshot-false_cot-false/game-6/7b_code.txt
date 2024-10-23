@@ -1,0 +1,79 @@
+```plaintext
+==========
+title Level Crossing
+author GameDesigner42
+
+==========
+homepage
+http://game.com
+
+==========
+objects
+background = black
+player = orange
+wall = gray
+floor = brown
+block = blue
+destination = green
+
+==========
+legend
+. = background
+P = player
+W = wall
+F = floor
+B = block
+D = destination
+
+==========
+sounds
+win fanfare win
+
+==========
+collisionlayers
+background
+player, block
+wall, floor, destination
+
+==========
+rules
+[ > player | destination ] -> [ > floor | player ]
+
+[ player | block ] -> [ > player | > block ]
+
+[ > player | wall ] -> [ wall | player ]
+
+==========
+winconditions
+All block on destination
+
+==========
+levels
+-----
+....
+.P..
+.W..
+.B..
+.D..
+-----
+WWW.
+P.F.
+..W.
+..BD
+.....
+-----
+WWW..
+PWF..
+..WB.
+.DDD.
+.....
+
+==========
+message
+Brought to you by GameDesigner42
+```
+
+### Key Changes:
+- The `legend` section was corrected to use `background` instead of `empty`.
+- The `collisionlayers` section now recognizes `background` as its own standalone layer.
+- Resolved the metadata error by ensuring a space after "http://game.com".
