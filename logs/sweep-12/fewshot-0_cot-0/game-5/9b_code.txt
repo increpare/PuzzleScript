@@ -1,0 +1,123 @@
+Certainly! Here is the revised code that should make the levels solvable. The main issue typically lies in ensuring the path and positioning allow the player to push the blocks onto targets properly.
+
+```plaintext
+Title: Block Pusher
+Author: PuzzleScript Game Designer
+
+===========
+OBJECTS
+===========
+
+Background
+transparent
+
+Player
+blue
+.....
+..0..
+.000.
+..0..
+.....
+
+Block
+red
+.....
+.....
+.000.
+.....
+.....
+
+Target
+green
+.....
+..0..
+.....
+.....
+
+BlockOnTarget
+yellow
+.....
+..0..
+.000.
+.....
+
+Wall
+grey
+#####
+#####
+#####
+#####
+#####
+
+===========
+LEGEND
+===========
+
+. = Background
+P = Player
+B = Block
+T = Target
+U = BlockOnTarget
+# = Wall
+
+===========
+SOUNDS
+===========
+
+SFX2
+
+===========
+COLLISIONLAYERS
+===========
+
+Background
+Target
+Player, Block, BlockOnTarget
+Wall
+
+===========
+RULES
+===========
+
+[> Player | Block] -> [> Player | > Block] SFX2
+
+[Block | Target] -> [BlockOnTarget | Target]
+
+[BlockOnTarget | Target] -> [BlockOnTarget | Target]
+
+===========
+WINCONDITIONS
+===========
+
+All BlockOnTarget on Target
+
+===========
+LEVELS
+===========
+
+#######
+#.....#
+#..T..#
+#..B..#
+#..P..#
+#######
+
+#######
+#.....#
+#..T..#
+#..B.#P
+#.....#
+#######
+
+#######
+#..T..#
+#..B..#
+#..P..#
+#.....#
+#######
+
+```
+
+For Level 0, ensure there is enough space for the player to push the block directly to the target. Same applies to Level 1 and 2. Ensure there are no walls preventing the necessary movement for solving the puzzle.
+
+A simple testing method: Run each level manually to check if the player can push the block onto the target without obstruction. If needed, rearrange the walls or modify block/target positions to ensure solvability.

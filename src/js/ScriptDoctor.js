@@ -442,8 +442,8 @@ async function solveLevel(level) {
   i = 0;
   start_time = Date.now();
   while (frontier.length > 0) {
-    const level = frontier.pop(-1);
-    const action_seq = action_seqs.pop(-1);
+    const level = frontier.pop(0);
+    const action_seq = action_seqs.pop(0);
     if (!action_seq) {
       console.log(`Action sequence is empty. Length of frontier: ${frontier.length}`);
     }
@@ -498,8 +498,8 @@ async function genGame(genMode, parents, saveDir, seed, fewshot, cot, maxGenAtte
   solverText = '';
   compiledIters = [];
   solvedIters = [];
-  sols = {};
   while (nGenAttempts < maxGenAttempts & (nGenAttempts == 0 | !compilationSuccess | !solvable)) {
+    console.log(`Game ${saveDir}, attempt ${nGenAttempts}.`);
 
     // Get our GPT completion from python
     const response = await fetch('/gen_game', {
@@ -513,7 +513,6 @@ async function genGame(genMode, parents, saveDir, seed, fewshot, cot, maxGenAtte
         gen_mode: genMode,
         parents: parents,
         code: code,
-        sols: sols,
         console_text: consoleText,
         solver_text: solverText,
         compilation_success: compilationSuccess,
@@ -564,6 +563,7 @@ async function genGame(genMode, parents, saveDir, seed, fewshot, cot, maxGenAtte
       compilationSuccess = true;
       solverText = '';
       solvable = true;
+      var anySolvable = false;
       var sol;
       var n_search_iters;
       // console.log('No compilation errors. Performing playtest.');
@@ -575,14 +575,15 @@ async function genGame(genMode, parents, saveDir, seed, fewshot, cot, maxGenAtte
           continue;
         }
         try {
-          console.log(`Solving level ${level_i}...`);
-          if (sols.length > 0) {
+          // Check if level_i is in sols
+          if (sols.hasOwnProperty(level_i)) {
             console.log('Using cached solution.');
-            sol, n_search_iters = sols[level_i];
+            [sol, n_search_iters] = sols[level_i];
+          } else {
+            console.log(`Solving level ${level_i}...`);
+            [sol, n_search_iters] = await solveLevel(level_i);
+            console.log(`Solution for level ${level_i}:`, sol);
           }
-          [sol, n_search_iters] = await solveLevel(level_i);
-          console.log(`Solution for level ${level_i}:`, sol);
-          console.debug();
         } catch (e) {
           console.log('Error while solving level:', e);
           sol = [];
@@ -599,7 +600,7 @@ async function genGame(genMode, parents, saveDir, seed, fewshot, cot, maxGenAtte
         if (sol.length > 0) {
           // console.log('Level is solvable.');
           solverText += `Found solution for level ${level_i} in ${n_search_iters} iterations: ${sol}. `
-          console.debug();
+          anySolvable = true;
         } else {
           // console.log(`Level ${level_i} is not solvable.`);
           solvable = false;
@@ -608,20 +609,20 @@ async function genGame(genMode, parents, saveDir, seed, fewshot, cot, maxGenAtte
       }
       if (solvable) {
         solvedIters.push(nGenAttempts)
-
-        const newlySaved = await fetch('/save_sols', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ 
-            save_dir: saveDir,
-            sols: sols,
-            n_iter: nGenAttempts,
-          }),
-        });
-
-        // if (newlySaved)
-
       }
+      const newlySaved = await fetch('/save_sols', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ 
+          save_dir: saveDir,
+          sols: sols,
+          n_iter: nGenAttempts,
+        }),
+      });
+
+      // if (newlySaved)
+      // Save a gif of each solution
+
     }
 
     nGenAttempts++;
@@ -672,18 +673,30 @@ const seed = 12;
 
 async function sweep() {
   results = {};
-  for (var gameIdx = 0; gameIdx < 10; gameIdx++) {
+  for (var fewshot_i = 0; fewshot_i < 2; fewshot_i++) {
     for (var cot_i = 0; cot_i < 2; cot_i++) {
-      cot = cot_i == 1
-      for (var fewshot_i = 0; fewshot_i < 2; fewshot_i++) {
+      results[`fewshot-${fewshot_i}_cot-${cot_i}`] = [];
+      for (var gameIdx = 0; gameIdx < 10; gameIdx++) {
+        saveDir = `sweep-${seed}`
+        gameStr = `${saveDir}/fewshot-${fewshot_i}_cot-${cot_i}/game-${gameIdx}`;
+        cot = cot_i == 1
         fewshot = fewshot_i == 1
-        gameStr = `sweep-${seed}/fewshot-${fewshot}_cot-${cot}/game-${gameIdx}`;
         console.log(`Generating game ${gameStr}`);
         gameInd = await genGame('init', [], gameStr,
           gameIdx, fewshot, cot);
+        results[`fewshot-${fewshot_i}_cot-${cot_i}`].push(gameInd);
       }
     }
   }
+  // Call `save_sweep_stats function in python
+  const response = await fetch('/save_sweep_stats', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ 
+      save_dir: saveDir,
+      results: results,
+    }),
+  });
 }
 
 sweep()

@@ -86,6 +86,15 @@ def extract_ps_code(text):
         breakpoint()
 
 
+@app.route('/save_sweep_stats', methods=['POST'])
+def save_sweep_stats():
+    data = request.json
+    save_dir = os.path.join('logs', data['save_dir'])
+    with open(os.path.join(save_dir, 'sweep_stats.json'), 'w') as f:
+        json.dump(data, f, indent=4)
+    return jsonify({})
+
+
 @app.route('/save_sols', methods=['POST'])
 def save_sols():
     data = request.json
@@ -169,7 +178,8 @@ def gen_game():
             messages=[
                 {'role': 'system', 'content': system_prompt},
                 {'role': 'user', 'content': prompt},
-            ]
+            ],
+            seed=seed,
         )
         text = response.choices[0].message.content
         with open(gen_game_output_path, 'w', encoding='utf-8') as f:

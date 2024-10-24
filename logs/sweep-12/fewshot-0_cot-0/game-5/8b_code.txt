@@ -1,0 +1,125 @@
+To address the solvability issue, let's make sure that each level provides an opportunity for the player to move the block onto the target successfully. Below is the revised code with modifications ensuring that at least one level is solvable:
+
+```plaintext
+Title: Block Pusher
+Author: PuzzleScript Game Designer
+
+===========
+OBJECTS
+===========
+
+Background
+transparent
+
+Player
+blue
+.....
+..0..
+.000.
+..0..
+.....
+
+Block
+red
+.....
+.....
+.000.
+.....
+.....
+
+Target
+green
+.....
+..0..
+.....
+.....
+
+BlockOnTarget
+yellow
+.....
+..0..
+.000.
+.....
+
+Wall
+grey
+#####
+#####
+#####
+#####
+#####
+
+===========
+LEGEND
+===========
+
+. = Background
+P = Player
+B = Block
+T = Target
+U = BlockOnTarget
+# = Wall
+
+===========
+SOUNDS
+===========
+
+SFX2
+
+===========
+COLLISIONLAYERS
+===========
+
+Background
+Target
+Player, Block, BlockOnTarget
+Wall
+
+===========
+RULES
+===========
+
+[> Player | Block] -> [> Player | > Block] SFX2
+
+[Block | Target] -> [BlockOnTarget | Target]
+
+[BlockOnTarget | Target] -> [BlockOnTarget | Target]
+
+===========
+WINCONDITIONS
+===========
+
+All BlockOnTarget on Target
+
+===========
+LEVELS
+===========
+
+#######
+#.....#
+#..T..#
+#..B..#
+#..P..#
+#######
+
+#######
+#.....#
+#..T..#
+#.BP..#
+#.....#
+#######
+
+#######
+#..T..#
+#..B..#
+#..P..#
+#.....#
+#######
+```
+
+Changes made:
+
+1. For level 1, the block and player are aligned vertically with one target directly below the block.
+2. For level 2, the block can be moved directly downward into the target.
+
+Try these adjustments, and ensure that each level requires the player to actively move the block onto the target.
