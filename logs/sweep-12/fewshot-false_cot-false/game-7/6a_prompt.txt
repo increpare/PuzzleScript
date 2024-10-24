@@ -1,0 +1,128 @@
+SYSTEM PROMPT:
+You are a game designer, familiar with the PuzzleScript game description language. 
+
+USER PROMPT:
+The following PuzzleScript game code:
+```plaintext
+Title: Treasure Hunt
+Author: You
+Homepage: https://www.puzzlescript.net
+
+===========
+OBJECTS
+===========
+
+Background
+LIGHTGREEN
+00000
+00000
+00000
+00000
+00000
+
+Player
+ORANGE
+.....
+..0..
+.000.
+..0..
+.....
+
+Wall
+BLUE
+.....
+.....
+.....
+.....
+.....
+
+Treasure
+YELLOW
+.....
+..0..
+.000.
+..0..
+.....
+
+Goal
+RED
+.....
+..0..
+.0.0.
+..0..
+.....
+
+===========
+
+LEGEND
+===========
+
+.=Background
+P=Player
+W=Wall
+T=Treasure
+G=Goal
+
+===========
+
+COLLISIONLAYERS
+===========
+
+Background
+Wall
+Treasure, Goal
+Player
+
+===========
+
+RULES
+===========
+
+[ > Player | Treasure ] -> [ > Player ] [ ]
+[ > Player | Goal no Treasure ] -> [ > Player win ]
+
+===========
+
+WINCONDITIONS
+===========
+
+No Treasure
+
+===========
+
+LEVELS
+===========
+
+#######
+#.....#
+#.T.#.#
+#.W.#.#
+#..P.G#
+#######
+
+#######
+#T....#
+#.....#
+#..W..#
+#G.P..#
+#######
+
+#######
+#WTPW.#
+#W.PG.#
+#W..#.#
+#######
+
+
+```
+produced the following console output:
+=================================
+line 62 : section "COLLISIONLAYERS" is out of order, must follow  "SOUNDS" (or it could be that the section "SOUNDS"is just missing totally.  You have to include all section headings, even if the section itself is empty).
+line 75 : Name "player", referred to in a rule, does not exist.
+line 75 : Name "treasure", referred to in a rule, does not exist.
+line 76 : Name "player", referred to in a rule, does not exist.
+line 76 : Name "goal", referred to in a rule, does not exist.
+line 76 : Name "treasure", referred to in a rule, does not exist.
+too many errors, aborting compilation
+Errors detected during compilation; the game may not work correctly.
+Return a repaired version of the code that addresses these errors. Return your code in full, inside a ```plaintext code block.

@@ -1,0 +1,1822 @@
+SYSTEM PROMPT:
+You are a game designer, familiar with the PuzzleScript game description language. Here are some example games, for inspiration (do not reproduce these games exactly):
+
+title Match 3 Block Push
+author increpare
+homepage www.puzzlescript.net
+
+========
+OBJECTS
+========
+
+Background
+lightgreen green
+11111
+01111
+11101
+11111
+10111
+
+
+Target
+darkblue
+.....
+.000.
+.0.0.
+.000.
+.....
+
+Wall
+brown darkbrown
+00010
+11111
+01000
+11111
+00010
+
+Player
+black orange white blue
+.000.
+.111.
+22222
+.333.
+.3.3.
+
+Crate
+orange yellow
+00000
+0...0
+0...0
+0...0
+00000
+
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Player
+* = Crate
+@ = Crate and Target
+O = Target
+
+
+=======
+SOUNDS
+=======
+
+Crate MOVE 36772507
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Target
+Player, Wall, Crate
+
+======
+RULES
+======
+
+[ >  Player | Crate ] -> [  >  Player | > Crate  ]
+
+late [ Crate | Crate | Crate ] -> [ | | ]
+
+==============
+WINCONDITIONS
+==============
+
+all Crate on Target
+
+=======
+LEVELS
+=======
+
+#########
+#.......#
+#.*.*.@.#
+#.P...O.#
+#...*.*.#
+#.......#
+#########
+
+.#######.
+.#.....#.
+.#O##..##
+##.##.*.#
+#.*..**.#
+#.OOO.#.#
+#.P.....#
+#########
+
+
+========
+OBJECTS
+========
+
+Background .
+black
+
+Player
+green
+
+=======
+LEGEND
+=======
+
+=======
+SOUNDS
+=======
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Player
+
+======
+RULES
+======
+
+==============
+WINCONDITIONS
+==============
+
+=======
+LEVELS
+=======
+.
+
+
+title Simple Block Pushing Game
+author increpare
+homepage www.puzzlescript.net
+
+========
+OBJECTS
+========
+
+Background
+LIGHTGREEN GREEN
+11111
+01111
+11101
+11111
+10111
+
+
+Target
+DarkBlue
+.....
+.000.
+.0.0.
+.000.
+.....
+
+Wall
+BROWN DARKBROWN
+00010
+11111
+01000
+11111
+00010
+
+Player
+Black Orange White Blue
+.000.
+.111.
+22222
+.333.
+.3.3.
+
+BlueCrate B
+lightblue
+00000
+0...0
+0...0
+0...0
+00000
+
+
+OrangeCrate O
+Orange
+00000
+0...0
+0...0
+0...0
+00000
+
+
+=======
+LEGEND
+=======
+
+Crate = OrangeCrate or BlueCrate
+. = Background
+# = Wall
+P = Player
+
+
+=======
+SOUNDS
+=======
+
+Crate MOVE 36772507
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Target
+Player, Wall, Crate
+
+======
+RULES
+======
+
+[ >  Player | Crate ] -> [  >  Player | > Crate  ]
+
+[ > Crate | Crate ] -> [ > Crate | > Crate ]
+
+==============
+WINCONDITIONS
+==============
+
+=======
+LEVELS
+=======
+
+#########
+#.......#
+#...B...#
+#.P.B.O.#
+#....O..#
+#.......#
+#########
+
+
+
+title Atlas Shrank
+author James Noeckel
+run_rules_on_level_start
+flickscreen 18x11
+
+========
+OBJECTS
+========
+
+Background
+#0e193f #202a4c #20324a #1f3649 #00003d
+00004
+13210
+04000
+10111
+00032
+
+Exit
+#d0691d #9a521d #7b441c #ad5a1d #8e4c1c yellow
+.222.
+23140
+23140
+25140
+23140
+
+DoorO
+#cf732f
+0...0
+0...0
+0...0
+0...0
+0...0
+
+Switch
+#ec5656 #ec3232 #b31313
+01.01
+1...2
+.....
+0...2
+12.22
+
+Door
+#d0691d #9a521d #7b441c #ad5a1d #8e4c1c
+03412
+04132
+03112
+01142
+04112
+
+ShadowDoor
+black
+
+ShadowDoorO
+black
+
+WallUD
+#697490 #485b76 #8083ba #646f8a #6d7b96
+23041
+23041
+23041
+23041
+23041
+
+WallRL
+#697490 #485b76 #8083ba #646f8a #6d7b96
+22222
+33333
+00000
+44444
+11111
+
+WallR
+#697490 #485b76 #8083ba #646f8a #6d7b96
+40401
+03401
+40031
+03001
+00001
+
+WallL
+#697490 #485b76 #8083ba #646f8a #6d7b96
+20404
+20430
+23004
+20030
+20000
+
+WallU
+#697490 #485b76 #8083ba #646f8a #6d7b96
+22222
+00000
+40300
+03044
+40430
+
+WallD
+#697490 #485b76 #8083ba #646f8a #6d7b96
+04030
+03400
+04004
+30304
+11111
+
+WallM
+#697490 #485b76 #8083ba #646f8a #6d7b96
+03040
+34430
+43340
+44303
+30030
+
+
+Wallsolo
+#697490 #485b76 #8083ba #a7aae3 #2d425e #646f8a #6d7b96
+32220
+20651
+25561
+26601
+01114
+
+PlayerS
+#ffb173 #ff6464 #d7d7d7 #d74629
+.000.
+.101.
+02220
+03230
+.0.0.
+
+PlayerL
+#ffb173 #ff6464 #d7d7d7 #d74629
+.000.
+.100.
+.223.
+.233.
+.0.0.
+
+PlayerR
+#ffb173 #ff6464 #d7d7d7 #d74629
+.000.
+.001.
+.322.
+.332.
+.0.0.
+
+PlayerLH
+#ffb173 #ff6464 #d7d7d7 #d74629
+.0.0.
+.100.
+.220.
+.233.
+.0.0.
+
+PlayerRH
+#ffb173 #ff6464 #d7d7d7 #d74629
+.0.0.
+.001.
+.022.
+.332.
+.0.0.
+
+Crate
+#9f7666 #c8917c #945a50 #8b4c42
+.000.
+00113
+01123
+01223
+.333.
+
+Heldcrate
+#9f7666 #c8917c #945a50 #8b4c42
+.000.
+00113
+01123
+01223
+.333.
+
+Shadowcrate
+black
+
+H_pickup
+red
+.....
+.....
+..0..
+.....
+.....
+
+H_drop
+red
+.....
+.....
+..0..
+.....
+.....
+
+H_grav
+gray
+.....
+.....
+..0..
+.....
+.....
+
+H_step
+yellow
+.....
+.....
+..0..
+.....
+.....
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wallsolo
+P = PlayerS
+* = Crate
+O = Exit
+X = Door
+T = Switch
+@ = Switch and Crate
+Wall = WallUD or WallRL or WallR or WallL or WallM or Wallsolo or WallU or WallD
+Player = PlayerL or PlayerR or PlayerS or PlayerRH or PlayerLH
+Solid = Player or Crate or Wall or Heldcrate or Door or Shadowcrate or Shadowdoor
+Massive =  Crate
+Helpers = H_pickup or H_drop or H_grav or H_step
+Weight = Player or Crate
+
+=======
+SOUNDS
+=======
+SFX1 87921103
+SFX2 82865707
+SFX3 70226500
+SFX4 68263307
+
+SFX5 60968508
+SFX6 358900
+================
+COLLISIONLAYERS
+================
+
+Background
+Exit
+Player, Solid
+Helpers
+DoorO, ShadowdoorO, Switch
+
+======
+RULES
+======
+
+(Wallify)
+Vertical [ Wall | Wallsolo | Wall ] -> [ Wall | WallUD | Wall ]
+Horizontal [ Wall | Wallsolo | Wall ] -> [ Wall | WallRL | Wall ]
+Horizontal [ Wall | WallUD | Wall ] -> [ Wall | WallM | Wall ]
+Left [ WallUD | Wall ] -> [ WallR | Wall ]
+Right [ WallUD | Wall ] -> [ WallL | Wall ]
+Up [ WallRL | Wall ] -> [ WallD | Wall ]
+Down [ WallRL | Wall ] -> [ WallU | Wall ]
+
+(steps)
+up [ Player | no Solid ] -> [ Player | H_step ]
+up [ Player | Heldcrate no H_step ] -> [ Player | Heldcrate H_step ]
+[ Moving Player ] [ H_step ] -> [ Moving Player ] [ Moving H_step ]
+
+(gravity)
+down [ Player no H_grav | no Solid ] -> [ Player H_grav | ]
+down [ Player ] [ H_grav ] -> [ > Player ] [ H_grav ] again
+Down [ Massive ] -> [ down Massive ] again
+
+[ up Player ] -> cancel
+
+(movement/pushing)
+Right [ > Player ] -> [ > PlayerR ]
+Left [ > Player ] -> [ > PlayerL ]
+Horizontal [ >  Player | Crate | no Solid ] -> [  >  Player | > Crate | ] SFX2
+
+(picking up and holding crates)
+Horizontal [ Crate | Action PlayerS | Crate ] -> message I am paralyzed with indecision!
+Right [ Action PlayerR | Crate ] [Player no H_pickup ] -> [ Player | Shadowcrate ] [ Player H_pickup ] SFX1
+Left [ Action PlayerL | Crate ] [Player no H_pickup ] -> [ Player | Shadowcrate ] [ Player H_pickup ] SFX1
+([ Moving Player ] [ Heldcrate ] -> [ Moving Player ] [ Moving Heldcrate ])
+([ > Player | no Solid ] [ Heldcrate ] -> [ > Player |  ] [ > Heldcrate ])
+(late Up [ Player | no Solid ] [ Heldcrate ] -> [ Player | Heldcrate ] [ ])
+
+(putting down)
+(Left [ Action Heldcrate | no Solid ] [ PlayerLH ] -> [ | Crate ] [ PlayerL ]
+Right [ Action Heldcrate | no Solid ] [ PlayerRH ] -> [ | Crate ] [ PlayerR ])
+Right [ Heldcrate | no Solid ] [ Action PlayerRH ] -> [ Heldcrate | H_drop ] [ PlayerR ]
+Left [ Heldcrate | no Solid ] [ Action PlayerLH ] -> [ Heldcrate | H_drop ] [ PlayerL ]
+
+
+(steps late)
+late [ H_step ] [H_grav ] -> [ ] [ H_grav ]
+late Down [ H_step | Player ] -> [ | Player ]
+late up [ H_step no Solid | no Solid ] [ Heldcrate ] -> [ H_step | Heldcrate ] [ ]
+late [ H_step no Solid ] [ Player ] -> [ Player ] [ ] SFX4
+
+(crate rules)
+late [ Heldcrate ] [ H_drop ] -> [ ] [ Crate ]
+late up [ Player | no Solid ] [ Heldcrate ] -> [ Player | Heldcrate ] [ ]
+
+late Up [ H_pickup | no Solid ] [ Shadowcrate ] -> [ | Heldcrate ] [ ]
+late [ Shadowcrate ] -> [ Crate ]
+late Down [ Heldcrate | no Player ] -> [ Crate | ]
+
+late up [ PlayerR ] [ Heldcrate ] -> [ PlayerRH ] [ Heldcrate ]
+late up [ PlayerL ] [ Heldcrate ] -> [ PlayerLH ] [ Heldcrate ]
+
+
+(cleanup)
+late [ H_pickup ] -> [ ]
+late [ H_grav ] -> [ ]
+late [ H_step ] -> [ ]
+
+
+late [ Player Exit ] -> SFX3
+
+(doors)
+late [ Door ] -> [ Shadowdoor ]
+late [ DoorO ] -> [ ShadowDoorO ]
+late [ ShadowdoorO no Solid ] [ ShadowdoorO Solid ] -> [ DoorO ] [ ShadowdoorO Solid ]
+late [ Switch no Weight ] [ ShadowDoorO no Solid ] -> [ Switch ] [ Door ] SFX5
+late [ Switch no Weight ] [ Shadowdoor ] -> [ Switch ] [ Door ]
+late [ Shadowdoor ] -> [ DoorO ] SFX6
+late [ ShadowdoorO ] -> [ DoorO ]
+
+==============
+WINCONDITIONS
+==============
+all Exit on Player
+
+=======
+LEVELS
+=======
+message Demoted again
+###############
+#.......O.....#
+#.......#.....#
+#......##.....#
+#.....###.....#
+#.P..####**...#
+###############
+
+message First gas planets, and now this
+message [Pick up with x]
+###############
+#.............#
+#...........O.#
+#..........####
+#..........#..#
+#P..**...*.#..#
+###############
+
+##################
+############.....#
+#########*##.....#
+#########*##.....#
+####.....*....o..#
+####.....*.#######
+####.....*.#######
+####.....*########
+#####....*########
+######..p*########
+##################
+
+###############
+#..*###....#..#
+#..*..........#
+#..####.......#
+#.**......**P.#
+#.#############
+#......*.#....#
+#...*..#.X..O.#
+#...##.#T######
+###############
+
+message what is even my job
+*#####*###########
+#*##.##.#...#....#
+##.#..#..........#
+#.....#*........O#
+#......###.....###
+#.........#....###
+#......*..*....###
+#....#############
+#...#............#
+#**..............#
+#####...##########
+****.#..##########
+****..#..#########
+****...#....######
+****....#.......*#
+*###....##......*#
+*.....#####...####
+#......###....####
+*.......x..#######
+##.#....x.########
+.p.*.*ttx#########
+##################
+
+message I could lift these all day
+######x###########
+##*#..x.......#..#
+###...x*......x.o#
+#.....##.....*x.##
+#....#xp..@..#x..#
+#...##x###########
+#*..*.x.....######
+######x.....#....#
+######x......*...#
+######.#*....##..#
+######.###########
+
+##################
+#............*...#
+#..@......*.t@p..#
+#xxx#xxxxxxxxxxx##
+#.#.#...........##
+#.#.#.#.#.#.#.#.##
+#.#.#.#.#.#.#.#.##
+#...#########.####
+##....*x.....*...#
+###...##....###.o#
+##################
+
+##################
+##...........x...#
+##...........x.*.#
+##.........t####.#
+##..........#....#
+##..........#....#
+##...***#####.##x#
+##...***##.o..###*
+##...***####.....#
+##.p.***##.......#
+##################
+
+message I miss the reassuring weight of a globe across my shoulders
+#.................
+#..#.#.#.#.......#
+#..#.#.#.#.......#
+#..#.#.t*........#
+#..#.#*###.......#
+#...*.*...*......#
+*..#####.###.....#
+#.*.........#...*#
+####.......*....##
+##t*.p.....#.##.##
+##t###t#x#########
+##t#####x#########
+##t##.......######
+####.........#####
+###...........####
+##......o......###
+#......###......##
+.................#
+..................
+
+.....................##*#*****....*...................
+..o....##.#.######....##******...**.........#.........
+..#.###############....####*********........#........*
+################.#.##..x############........#........#
+#####............#..#..x....................#.........
+###.#............#..#.*x....................#.........
+#.*.#................#####..................#.........
+#***#............#*....*..p**.........t.*..#.........*
+#####...........######################.#####.........#
+#..............#########################...##.........
+#.............#########.#.#.#...............#**.......
+#............#########..#.#.#...............####......
+#............########..#*#*#*#..............#.########
+#............########..#*#*#*#..............#.#....###
+#*...........#####......#.#.#...............#.#......#
+#*.......#######........#...................#.#......#
+#*......######..............................#.#......#
+#*.....#..##............*...................#.#......#
+#**...**......*.......#.#.#.#..........t....#.#.....##
+#####*#######**###########################*######*####
+
+*#***#*.#...##....#...........########...............*#................#
+*#***#*.....#.....*...........#.#.#.#................*#................#
+*#***##.....#.....**...#.#....*.*.*..................##................#
+*#***#......#.....##...#.#....########...............##................#
+*#***......*#.....##*..#.#....##***###...............#*................#
+*#**#......#......*#####.#########**##...............##................#
+*#**.......#......***##...###....##**####............##..........*.....#
+*#**.......#......***......#......##*##*#............xx..........##....#
+##*###############****............##****#............xx............#...#
+##*################****.....#..o..##*#**#p....@.@.@..xx....@.@.@...**..#
+####################################*##*################################
+
+.................############*#.#.##
+.................#..*........*.....#
+.................#.t###....*########
+#................#.....*...#o......#
+#.....................##########...#
+#....................#.....**.....*#
+#................##.#....###x#######
+#...............###.#*.......*.....#
+#.........*..###############x###...#
+##....p..**................*......*#
+############################x#######
+....................................
+
+message Congratulations!
+message You rearranged the rubble!
+message the end
+
+title Block Faker
+author Droqen
+homepage www.droqen.com
+
+require_player_movement
+key_repeat_interval 0.12
+
+background_color white
+text_color black
+
+color_palette c64
+
+(
+
+A port of first several levels of Droqen's beautiful game:
+
+https://droqen.itch.io/block-faker
+
+(His game has secrets that this one does not.)
+
+)
+
+========
+OBJECTS
+========
+
+Background
+white
+
+Grille
+gray
+0...0
+.0.0.
+..0..
+.0.0.
+0...0
+
+EndPoint
+green
+
+Player
+black
+00000
+00000
+0.0.0
+00000
+00000
+
+Wall
+gray
+
+WallBlock
+black grey
+01111
+01111
+01111
+01111
+00001
+
+BlueBlock
+blue
+00000
+00.00
+0.0.0
+00.00
+00000
+
+GreenBlock
+lightgreen
+00000
+00000
+00.00
+00000
+00000
+
+PinkBlock
+red
+00000
+00.00
+0...0
+00.00
+00000
+
+PurpleBlock
+purple
+00000
+0...0
+0.0.0
+0...0
+00000
+
+OrangeBlock
+orange
+00000
+0.0.0
+00000
+0.0.0
+00000
+
+=======
+LEGEND
+=======
+
+Block = PinkBlock or BlueBlock or PurpleBlock or OrangeBlock or GreenBlock
+Moveable = Player or Block
+PlayerObstacle = Block or Wall or WallBlock
+BlockObstacle = Player or Wall or WallBlock or Grille or Block or EndPoint
+. = Background
+# = Wall
+@ = WallBlock
+P = Player
+B = BlueBlock
+G = GreenBLock
+K = PinkBlock
+R = PurpleBlock
+O = OrangeBlock
+E = EndPoint
+x = Grille
+H = Grille and Player
+
+=========
+SOUNDS
+=========
+
+================
+COLLISIONLAYERS
+================
+
+Background
+EndPoint
+Grille
+Player, Wall, WallBlock, PinkBlock, BlueBlock, PurpleBlock, OrangeBlock, GreenBlock
+
+======
+RULES
+======
+
+[ > Moveable | Moveable ] -> [ > Moveable | > Moveable ] 
+
+[ > Block | Grille ] -> [ Block | Grille ] 
+
+late [ PinkBlock | PinkBlock | PinkBlock ] -> [ | | ] 
+late [ BlueBlock | BlueBlock | BlueBlock ] -> [ | | ] 
+late [ PurpleBlock | PurpleBlock | PurpleBlock ] -> [ | | ] 
+late [ OrangeBlock | OrangeBlock | OrangeBlock ] -> [ | | ] 
+late [ GreenBlock | GreenBlock | GreenBlock ] -> [ | | ] 
+
+==============
+WINCONDITIONS
+==============
+
+some Player on Endpoint
+
+=======
+LEVELS
+=======
+
+........########
+################
+########@@@@@###
+####@@@@@...@###
+###@..OO....@@##
+##@..@@@@@....@#
+##@.@..@@@..E@@#
+#@..@.O...@@@@##
+##@...@.P.######
+####@.@@@@######
+####@@##########
+########........
+
+message congrats: level 2!
+
+##########
+####R.R###
+#x....#x##
+#xO#O.OxE#
+#xx##.#xx#
+#####R####
+#####P####
+O#########
+
+message congrats: level 3!
+
+......#######...
+.....##P.#####..
+....###....####.
+..#####O...#B..#
+..#####.#.##BB.#
+##EBB..O.O.....#
+..#####.#.#....#
+..######..#G.###
+....####..#.OOx.
+.....###.GG.#x..
+......#######...
+
+message congrats: level 4!
+
+######xx######
+######GG######
+##xx#...#xEx##
+##..O...#x..##
+##..#...##O###
+#..##.......##
+xG....##....Gx
+xG....##....Gx
+##.......GG###
+###G##...#xx##
+##x..#...O.x##
+##.P.#...#xx##
+######GG######
+######xx######
+
+message congrats: level 5!
+
+......##......
+....######....
+..##########..
+..#.OG..kk.#..
+.##OPO..Gkk##.
+.##GOG..GGk##.
+###...##...###
+###...##...###
+.##kkG##ROR##.
+.##Gkk..OEO##.
+..#.Gk..RO.#..
+..##########..
+....######....
+......##......
+
+message now go play the real game
+
+
+
+title Cratopia
+author CHz [v1]
+homepage quiteajolt.com
+
+again_interval 0.06
+run_rules_on_level_start
+
+========
+OBJECTS
+========
+
+BlueSky
+Blue
+
+CrateInfection
+#3F5AC2 #5063C5 Blue
+00000
+02120
+01110
+02120
+00000
+
+
+Space
+Black
+
+EditModeDrop
+Black
+.....
+.....
+.....
+.....
+.....
+
+EditModeArrow
+White Black
+11011
+11011
+11011
+10001
+11011
+
+EditModeCursor
+Red
+00.00
+0...0
+.....
+0...0
+00.00
+
+
+Goal
+DarkBlue #0D1319
+11111
+10001
+10001
+10001
+10001
+
+GoalLocked
+DarkBlue #0D1319 Gray
+12121
+22222
+12021
+22222
+12021
+
+Key
+Yellow
+.....
+.....
+...00
+00000
+0.0..
+
+Crate
+#765026 #C77629
+00000
+0.1.0
+01110
+0.1.0
+00000
+
+Ladder
+DarkBrown
+0...0
+00000
+0...0
+00000
+0...0
+
+
+Fire
+Brown #765026 Orange Red
+33232
+32222
+22220
+00000
+00100
+
+BurningCrate
+DarkRed Red
+00000
+0.1.0
+01110
+0.1.0
+00000
+
+BurntCrate
+DarkGray Gray
+00000
+0.1.0
+01110
+0.1.0
+00000
+
+
+PlayerRight
+Black Orange White Red
+.000.
+.111.
+.2222
+.333.
+.3.3.
+
+PlayerLeft
+Black Orange White Red
+.000.
+.111.
+2222.
+.333.
+.3.3.
+
+PlayerLadder
+Black Orange White Red
+.000.
+.111.
+22222
+.333.
+.3.3.
+
+PlayerRightDisabled
+Gray
+.000.
+.000.
+.0000
+.000.
+.0.0.
+
+PlayerLeftDisabled
+Gray
+.000.
+.000.
+0000.
+.000.
+.0.0.
+
+PlayerLadderDisabled
+Gray
+.000.
+.000.
+00000
+.000.
+.0.0.
+
+PlayerJumpLeft
+Black
+
+PlayerJumpRight
+Black
+
+
+Orb
+Red Purple DarkBlue
+.000.
+01110
+01210
+01110
+.000.
+
+CrateArtifact
+#765026 #C77629
+.....
+.000.
+.010.
+.000.
+.....
+
+CrateInfectionSeed
+White
+
+CrateInfectionComplete
+White
+.....
+.....
+.....
+.....
+.....
+
+CrateInfectionTemp
+White
+.....
+.....
+.....
+.....
+.....
+
+
+Grass
+Brown #765026 Green LightGreen
+23233
+02002
+10000
+00000
+00100
+
+Dirt
+Brown #765026
+00001
+00000
+10000
+00000
+00100
+
+Crumble
+Brown
+0.0.0
+00000
+.....
+.....
+.....
+
+
+=======
+LEGEND
+=======
+
+Background = BlueSky or CrateInfection
+. = BlueSky
++ = CrateInfection
+S = Space
+
+D = EditModeDrop and Space
+
+G = Goal
+@ = GoalLocked
+K = Key
+L = Ladder
+
+> = PlayerRight
+< = PlayerLeft
+^ = PlayerLadder
+Player = PlayerLeft or PlayerRight or PlayerLadder or EditModeCursor
+NonCursorPlayer = PlayerLeft or PlayerRight or PlayerLadder
+PlayerJump = PlayerJumpLeft or PlayerJumpRight
+PlayerDisabled = PlayerLeftDisabled or PlayerRightDisabled or PlayerLadderDisabled
+
+C = Crate
+
+O = Orb
+A = CrateArtifact and CrateInfection
+T = Dirt and EditModeDrop
+Y = Goal and CrateInfectionSeed
+U = Grass and EditModeDrop
+I = EditModeDrop
+
+* = Grass
+# = Dirt
+F = Fire
+- = Crumble
+Ground = Grass or Dirt or Fire or Crumble
+
+Solid = Crate or Ground or Space or Key or Fire or Crumble
+
+Thing = Orb or Player or PlayerDisabled or Crate or Ground or EditModeArrow or Key or Fire or Crumble
+
+Transformable = Key or Ladder or Fire or BurningCrate or BurntCrate or Grass or Dirt or Crumble
+
+
+=======
+SOUNDS
+=======
+
+ShowMessage 72692706
+
+Crate Move Horizontal 99804707
+EditModeCursor Move 44871706
+
+SFX0 97366302 (win; manually triggered because some levels are cutscenes)
+SFX1 41487108 (activate edit mode)
+SFX2 37184702 (bridge crumble)
+SFX3 79796108 (CRATE RAIN)
+SFX4 73912901 (leave edit mode)
+SFX5 26404105 (jump)
+SFX6 31560708 (get orb)
+SFX7 16509700 (get key)
+SFX8 38835508 (crate fire)
+SFX9 24561108 (crate infection)
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Goal, GoalLocked, Ladder, EditModeDrop
+Orb, Key, Player, PlayerJump, PlayerDisabled, Crate, Ground, Space, EditModeArrow, Fire, BurningCrate, BurntCrate, CrateArtifact
+EditModeCursor, CrateInfectionSeed, CrateInfectionComplete, CrateInfectionTemp
+
+======
+RULES
+======
+
+( ==================
+  ENDGAME ANIMATIONS
+  ================== )
+
+(play the sound effect when infection begins)
+[ NonCursorPlayer CrateInfectionSeed ] -> [ Crate CrateInfectionSeed ] SFX9
+[ Goal CrateInfectionSeed ] -> [ Goal CrateInfectionSeed ] SFX9
+
+(infection radiation)
+[ CrateInfectionSeed | no CrateInfectionComplete no Space ] -> [ CrateInfectionSeed | CrateInfectionTemp ] again
+[ CrateInfectionSeed ] -> [ CrateInfectionComplete ]
+
+(when the infection hits a specified trigger tile, move on to the next level; due to the object limit, I'm using EditModeDrop for this)
+[ CrateInfectionComplete EditModeDrop ] -> [ CrateInfectionComplete EditModeDrop ] win
+
+(infection tile transformations)
+late [ CrateInfectionTemp BlueSky ] -> [ CrateInfectionTemp CrateInfection ]
+late [ CrateInfectionTemp Transformable ] -> [ CrateInfectionTemp Crate ]
+late [ CrateInfectionTemp ] -> [ CrateInfectionSeed ]
+
+(when the player touches the artifact, start infection)
+[ > NonCursorPlayer | CrateArtifact ] -> [ | NonCursorPlayer CrateInfectionSeed ]
+
+
+( =========
+  EDIT MODE
+  ========= )
+
+(hitting the X key when in the normal game activates the edit mode)
+[ EditModeDrop Space ] UP [ ACTION NonCursorPlayer | ... | EditModeDrop ] -> [ EditModeDrop Space ] [ ACTION NonCursorPlayer | ... | EditModeDrop EditModeCursor ] SFX1
+[ EditModeDrop Space ] [ ACTION NonCursorPlayer ] -> [ EditModeDrop EditModeArrow ] [ ACTION NonCursorPlayer ]
+[ EditModeDrop EditModeArrow ] [ ACTION PlayerLeft ] -> [ EditModeDrop EditModeArrow ] [ PlayerLeftDisabled ]
+[ EditModeDrop EditModeArrow ] [ ACTION PlayerRight ] -> [ EditModeDrop EditModeArrow ] [ PlayerRightDisabled ]
+[ EditModeDrop EditModeArrow ] [ ACTION PlayerLadder ] -> [ EditModeDrop EditModeArrow ] [ PlayerLadderDisabled ]
+
+(hitting the X key while in edit mode returns to platform control)
+[ ACTION EditModeCursor ] [ EditModeDrop EditModeArrow ] -> [ ACTION EditModeCursor ] [ EditModeDrop Space ]
+[ ACTION EditModeCursor ] [ PlayerLeftDisabled ] -> [ ACTION EditModeCursor ] [ PlayerLeft ]
+[ ACTION EditModeCursor ] [ PlayerRightDisabled ] -> [ ACTION EditModeCursor ] [ PlayerRight ]
+[ ACTION EditModeCursor ] [ PlayerLadderDisabled ] -> [ ACTION EditModeCursor ] [ PlayerLadder ]
+[ ACTION EditModeCursor ] -> [ ] SFX4
+
+(restrict the cursor's movement)
+HORIZONTAL [ > EditModeCursor | no EditModeArrow ] -> [ EditModeCursor | no EditModeArrow ]
+[ UP EditModeCursor ] -> [ EditModeCursor ]
+
+( {1} )
+(Hitting the down arrow in edit mode drops a crate. The rule that does this is further down so that it happens after the normal gravity assertion; if it were here, the crate would fall one row before drawing and would appear to start on the second row from the top.
+
+Search for {2} to find the rule.)
+
+
+
+( ===============
+  NORMAL MOVEMENT
+  =============== )
+
+(forces another turn after player movement to assert gravity)
+[ MOVING NonCursorPlayer ] -> [ MOVING NonCursorPlayer ] again
+
+(Change the player's orientation based on movement.)
+[ LEFT NonCursorPlayer ] -> [ LEFT PlayerLeft ]
+[ RIGHT NonCursorPlayer ] -> [ RIGHT PlayerRight ]
+late [ NonCursorPlayer Ladder ] -> [ PlayerLadder Ladder ]
+
+(shove crates)
+HORIZONTAL [ > NonCursorPlayer | Crate ] -> [ > NonCursorPlayer | > Crate ]
+
+(level 2 ends when you grab the orb)
+[ > NonCursorPlayer | Orb ] -> [ > NonCursorPlayer | Orb ] SFX6 win
+
+(burn some crates)
+[ BurntCrate ] -> [ ]
+[ BurningCrate ] -> [ BurntCrate ] again
+[ BurntCrate | Crate ] -> [ BurntCrate | BurningCrate ]
+DOWN [ Crate no CrateInfection | Fire ] -> [ BurningCrate | Fire ] SFX8 again
+
+
+
+( ==================
+  CLIMBING & GRAVITY
+  ================== )
+
+(A player can climb on top of a crate by walking into it or pressing up while facing it, but only if there's something on the other side of the crate so the player can't push it, and also if there's nothing above the player or the crate. Done by using a temporary player object that moves up if there's no obstacle above and then moves on top of the crate if there's no obstacle there.)
+RIGHT [ > NonCursorPlayer | Crate | Solid ] -> [ PlayerJumpRight | Crate | Solid ]
+RIGHT [ ^ PlayerRight | Crate | Solid ] -> [ PlayerJumpRight | Crate | Solid ]
+UP [ PlayerJumpRight | no Solid ] -> [ PlayerJumpRight | v PlayerRight ]
+LEFT [ > NonCursorPlayer | Crate | Solid ] -> [ PlayerJumpLeft | Crate | Solid ]
+LEFT [ v PlayerLeft | Crate | Solid ] -> [ PlayerJumpLeft | Crate | Solid ]
+UP [ PlayerJumpLeft | no Solid ] -> [ PlayerJumpLeft | ^ PlayerLeft ]
+
+(don't let the player move up or down unless they're on a ladder)
+[ UP NonCursorPlayer no Ladder ] -> [ NonCursorPlayer no Ladder ]
+
+(assert gravity)
+DOWN [ STATIONARY Crate ] -> [ > Crate ] again
+DOWN [ STATIONARY NonCursorPlayer no Ladder | no Ladder ] -> [ > NonCursorPlayer no Ladder | no Ladder ] again
+
+(get keys and unlock goals; happens after gravity so you can fall on keys)
+HORIZONTAL DOWN [ > NonCursorPlayer | Key ] [ GoalLocked ] -> [ > NonCursorPlayer | ] [ Goal ] SFX7
+
+(Clean up after jumping.)
+(If the player is on top of a temporary jump token, then the player moved up but was blocked by an obstacle on top of the crate, so move the player back down.)
+late DOWN [ NonCursorPlayer | PlayerJump ] -> [ | NonCursorPlayer ]
+(If the player and the temporary jump token both exist here, then the player jumped successfully. Clear the token and destroy the crumbling floor if the player was standing on one.)
+late DOWN [ NonCursorPlayer ] [ PlayerJump | Crumble ] -> [ NonCursorPlayer ] [ | ] SFX5 SFX2
+late [ NonCursorPlayer ] [ PlayerJump ] -> [ NonCursorPlayer ] [ ] SFX5
+(If there's a temporary jump token remaining here, then the player tried jumping but was blocked from above. Turn the token back into the player.)
+late [ PlayerJumpLeft ] -> [ PlayerLeft ]
+late [ PlayerJumpRight ] -> [ PlayerRight ]
+
+
+
+( =============
+  MISCELLANEOUS
+  ============= )
+
+( {2} )
+(Hitting X over one of the arrows in edit mode drops a crate. Search for {1} for an explanation of why this rule is here after gravity.)
+DOWN [ DOWN EditModeCursor | no Thing ] -> [ EditModeCursor | Crate ] SFX3 again
+[ DOWN EditModeCursor ] -> [ EditModeCursor ]
+
+(win condition; player must be standing on solid ground to enter the goal)
+late DOWN [ NonCursorPlayer Goal | Solid ] -> [ NonCursorPlayer Goal | Solid ] SFX0 win
+
+(crumble breakable floors if the player is walking away after standing on one; happens after pushing, climbing, & gravity)
+DOWN [ PERPENDICULAR NonCursorPlayer no Ladder | Crumble ] -> [ PERPENDICULAR NonCursorPlayer no Ladder | ] SFX2
+
+
+
+==============
+WINCONDITIONS
+==============
+
+(win condition is a rule to enforce that the player must be stationary on the goal)
+
+=======
+LEVELS
+=======
+
+message I love crates.
+message I could push them or climb on them every day.
+
+(mechanics tutorial)
+SSSSSSSSS
+S.......S
+S.*..C..S
+S.#****LS
+SG.C..#LS
+S..C..#LS
+S*****#LS
+S......LS
+S>.C..C.S
+S*******S
+SSSSSSSSS
+
+(mechanics quiz)
+SSSSSSSSSSSSSSSSSSSSS
+S................C..S
+S..............****LS
+S................C.LS
+S.......C.CL...****LS
+S.......***L.......LS
+SG....>......***...LS
+S**...C....C......C*S
+S##*.**************#S
+S###*###############S
+SSSSSSSSSSSSSSSSSSSSS
+
+message I wish the world had more crates.
+
+(rain tutorial prelude)
+SSSSSSSSSSSSSSSSSSS
+SG..<.............S
+S*.*L.............S
+S...L.............S
+S.***.********....S
+S..C..............S
+SL***.****.****...S
+SL.........C...***S
+SL.......L***....OS
+S*......C.....C.**S
+S#*************.##S
+S##############*##S
+SSSSSSSSSSSSSSSSSSS
+
+message [Press X to rain crates. Use the arrow keys to drop crates and X to return.]
+message
+message Who said that?
+
+(rain tutorial)
+SDDDDDDDDDDDDDDDDDS
+SG................S
+S*.*L.............S
+S...L.............S
+S.***.********....S
+S.................S
+SL***.****.****...S
+SL.............***S
+SL.......L***....>S
+S*.....CC......C**S
+S#*************C##S
+S##############*##S
+SSSSSSSSSSSSSSSSSSS
+
+message This is... exhilarating.
+
+(rain 1)
+SDDDS
+SG..S
+S*..S
+S...S
+S...S
+S...S
+S>..S
+S***S
+SSSSS
+
+(rain 2)
+SDDDDDDDDDDDDS
+S.K.........<S
+S.**.**.**.**S
+S...........@S
+S..........**S
+S............S
+S............S
+S............S
+S************S
+SSSSSSSSSSSSSS
+
+(rain 3)
+SDDDDDDDS
+S......KS
+SL**.***S
+SL.C.C..S
+SL.C.C..S
+SL.C.C..S
+SL.C@C..S
+SL.C*C..S
+SL.C^C..S
+SL.C*C..S
+SL.C.C..S
+SL.C.C..S
+SL*****LS
+SL.....LS
+SSSSSSSSS
+
+(fire 1)
+SDDDDDDDDDDDS
+S...........S
+S@.......C<.S
+S******L***LS
+S..........LS
+SK..*......LS
+S*C...C.C..*S
+S#*****F***#S
+SSSSSSSSSSSSS
+
+(fire 2)
+SDDDDDDDDDDS
+S......C...S
+S..**L***..S
+S....L....KS
+S....L...**S
+S>.C..C...@S
+S****F*****S
+SSSSSSSSSSSS
+
+(fire 3)
+SDDDDDDDDDS
+S.........S
+S...^.....S
+S*.***....S
+S#.#......S
+S#.#K*....S
+S#.#......S
+S#.#**....S
+S#.....**LS
+S#.....@#LS
+S......*#LS
+S........LS
+S***F*****S
+SSSSSSSSSSS
+
+(crumble 1)
+SDDDDDDDDDDDS
+SK..........S
+S****...L...S
+S@.>........S
+S****-----**S
+S####*FFF*##S
+SSSSSSSSSSSSS
+
+(crumble 2)
+SDDDDDDDDDS
+S.......**S
+S.****..##S
+S.......C<S
+S*----****S
+S#..F*####S
+S#....G###S
+S#F.***###S
+S##*######S
+SSSSSSSSSSS
+
+(crumble 3)
+SDDDDDDDDDDDDDDDS
+S*******.*******S
+S...............S
+SL*.**.****L***LS
+SL.........L...LS
+SL**.***.****.*LS
+SL.............LS
+SL*.****.*.F*.*LS
+SL.............LS
+SL****-.*.-*F.*LS
+SL......G......LS
+S*C.....^.....C*S
+S#**FFF***FFF**#S
+SSSSSSSSSSSSSSSSS
+
+(endgame 1 [temple])
+SSSSSSSSSSSSSSSSSSSSS
+S................+++S
+S..............+++++S
+S............+++++A+S
+S>........+++++++CCCS
+S*******CCCCCCCCCCCCS
+ST##CCCCCCCCCCCCCCCCS
+SSSSSSSSSSSSSSSSSSSSS
+
+(endgame 2 [crumble 3 redux])
+SSSSSSSSSSSSSSSSS
+SU******.*******S
+S...............S
+SL*.**.****L***LS
+SL.........L...LS
+SL**.***.****.*LS
+SL.............LS
+SL*.****.*.F*.*LS
+SL.............LS
+SL****-.*.-*F.*LS
+SL......Y......LS
+S*C...........C*S
+S#**FFF***FFF**#S
+SSSSSSSSSSSSSSSSS
+
+(endgame 3 [mechanics tutorial redux])
+SSSSSSSSS
+S.......S
+S.*..C..S
+S.#****LS
+SY.C..#LS
+S..C..#LS
+S*****#LS
+S......LS
+S..C..C.S
+S******US
+SSSSSSSSS
+
+(endgame 4 [planet])
+SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS
+SSSSSSSSSSSS###.....SSSSSSSSSSSS
+SSSSSSSSS#####**#......SSSSSSSSS
+SSSSSSSS######****#.....SSSSSSSS
+SSSSSY##########***#.....*SSSSSS
+SSSSS#############.........SSSSS
+SSSS###FFFFF................SSSS
+SSSS................****###.SSSS
+SSS................****######SSS
+SSFF..............#****####**.SS
+SS##....*.........##########**SS
+SS#.....#..........##########.SS
+S#.................#######.....S
+S.................#######......S
+S...............FFF##..........S
+S............#FF...............S
+S........#######..........F....S
+S......#####****#..............S
+S.......#####***#..............S
+S..............................S
+SS............................SS
+SSFFF......................***SS
+SS.FFF.....................***SS
+SSS.##......................*SSS
+SSSS#.......................SSSS
+SSSS........................SSSS
+SSSSS#....................ISSSSS
+SSSSSS###.................SSSSSS
+SSSSSSSS####............SSSSSSSS
+SSSSSSSSS######........SSSSSSSSS
+SSSSSSSSSSSS######..SSSSSSSSSSSS
+SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS
+
+message
+message
+message Bliss.
+
+
+
+USER PROMPT:
+The following PuzzleScript game code:
+```plaintext
+title Simple Game
+author Example Author
+
+========
+OBJECTS
+========
+
+Background
+DarkGreen
+.....
+.....
+.....
+.....
+.....
+
+Wall
+Gray
+.....
+.....
+.....
+.....
+.....
+
+Player
+Red
+.....
+..0..
+.000.
+.....
+.....
+
+Exit
+Yellow
+.....
+.....
+.....
+.....
+.....
+
+Trap
+DarkGray
+.....
+.....
+.....
+.....
+.....
+
+=======
+LEGEND
+=======
+
+# = Wall
+P = Player
+E = Exit
+T = Trap
+. = Background
+
+=========
+SOUNDS
+=========
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Wall
+Trap
+Player, Exit
+
+======
+RULES
+======
+
+[ Player | Exit ] -> [ Player | Exit ] message Game completed!
+
+==============
+WINCONDITIONS
+==============
+
+Some Player on Exit
+
+=======
+LEVELS
+=======
+
+#######
+#..E..#
+#P##T.#
+###.###
+#..T..#
+#.T.#.#
+#...T.#
+#######
+
+```
+compiled, but a solvability check returned the following error:
+ Level 0 is not solvable. Please repair it.
+Return your code in full, inside a ```plaintext code block.

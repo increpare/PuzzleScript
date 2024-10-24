@@ -1,0 +1,105 @@
+SYSTEM PROMPT:
+You are a game designer, familiar with the PuzzleScript game description language. 
+
+USER PROMPT:
+The following PuzzleScript game code:
+```plaintext
+title Sokoban Simple
+author OpenAI
+
+OBJECTS
+--------
+Background
+black
+.....
+
+Player
+blue
+.....
+.000.
+.000.
+.000.
+.....
+
+Wall
+gray
+.....
+.....
+.....
+.....
+.....
+
+Box
+brown
+.....
+.....
+.....
+.....
+.....
+
+Target
+green
+.....
+.....
+.....
+.....
+.....
+
+BoxOnTarget
+yellow
+.....
+.....
+.....
+.....
+.....
+
+LEGEND
+--------
+. = Background
+P = Player
+# = Wall
+B = Box
+T = Target
+O = BoxOnTarget
+
+COLLISIONLAYERS
+--------
+Background
+Player, Box, BoxOnTarget
+Wall
+Target
+
+RULES
+--------
+[ Player | Box ] -> [ Player | ] [ Box ]
+[ Player | BoxOnTarget ] -> [ Player | ] [ Box ]
+[ Box | Target ] -> [ BoxOnTarget | ]
+[ BoxOnTarget ] -> [ Box | Target ]
+
+WINCONDITIONS
+--------
+All BoxOnTarget on Target
+
+LEVELS
+--------
+# # # # # # #
+# . . . . . #
+# . B B T . #
+# . . P . . #
+# T . . . . #
+# # # # # # #
+
+
+```
+produced the following console output:
+=================================
+line 5 : Unknown junk in object section (possibly: sprites have to be 5 pixels wide and 5 pixels high exactly. Or maybe: the main names for objects have to be words containing only the letters a-z0.9 - if you want to call them something like ",", do it in the legend section).
+line 51 : Incorrect format of legend - should be one of "A = B", "A = B or C [ or D ...]", "A = B and C [ and D ...]".
+line 59 : section "COLLISIONLAYERS" is out of order, must follow  "SOUNDS" (or it could be that the section "SOUNDS"is just missing totally.  You have to include all section headings, even if the section itself is empty).
+line 60 : error detected - unexpected character -
+line 67 : Name "--------", referred to in a rule, does not exist.
+line 68 : Name "player", referred to in a rule, does not exist.
+line 68 : Name "box", referred to in a rule, does not exist.
+too many errors, aborting compilation
+Errors detected during compilation; the game may not work correctly.
+Return a repaired version of the code that addresses these errors. First, reason about your task and determine the best plan of action. Then, write your code. Return your code in full, inside a ```plaintext code block.

@@ -1,0 +1,148 @@
+```plaintext
+title Colorful Connections
+author PuzzleScript Creator
+
+========
+OBJECTS
+========
+
+Background
+#282828
+
+Wall
+#404040 #606060
+00000
+00100
+01110
+00100
+00000
+
+Player
+#FFDD44 #FFFFFF #000000
+.000.
+.111.
+.000.
+.111.
+.....
+
+RedBlock
+#DD4444
+.000.
+.0.0.
+.0.0.
+.000.
+.....
+
+YellowBlock
+#DDDD44
+.000.
+.0.0.
+.0.0.
+.000.
+.....
+
+BlueBlock
+#4444DD
+.000.
+.0.0.
+.0.0.
+.000.
+.....
+
+RedTarget
+#FF8888
+.....
+.....
+.....
+.....
+.....
+
+YellowTarget
+#FFFF88
+.....
+.....
+.....
+.....
+.....
+
+BlueTarget
+#8888FF
+.....
+.....
+.....
+.....
+.....
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Player
+R = RedBlock
+Y = YellowBlock
+B = BlueBlock
+X = RedTarget
+O = YellowTarget
+Z = BlueTarget
+
+=========
+SOUNDS
+=========
+
+player_move 11429307
+block_move 16777215
+end_level 85763108
+end_game 65287309
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Player, Wall, RedBlock, YellowBlock, BlueBlock, RedTarget, YellowTarget, BlueTarget
+
+======
+RULES
+======
+
+[ > Player | RedBlock ] -> [ > Player | > RedBlock ] player_move
+[ > Player | YellowBlock ] -> [ > Player | > YellowBlock ] player_move
+[ > Player | BlueBlock ] -> [ > Player | > BlueBlock ] player_move
+
+==============
+WINCONDITIONS
+==============
+
+All RedBlock on RedTarget
+All YellowBlock on YellowTarget
+All BlueBlock on BlueTarget
+
+=======
+LEVELS
+=======
+
+####
+#P.#
+#RY#
+#BO#
+#ZX#
+####
+
+#######
+#.....#
+#RYBOZ#
+#.....#
+#XP...#
+#######
+
+#########
+#.YO....#
+#P..R.Z.#
+#....B..#
+#.X....O#
+#########
+```
+
+Note: I corrected the sound token names to match the format: `player_move`, `block_move`, `end_level`, and `end_game` to correctly address the sound syntax issues in the code. Additionally, I updated the rule triggers to use these correct sound identifiers.

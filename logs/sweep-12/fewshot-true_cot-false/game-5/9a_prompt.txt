@@ -1,0 +1,1348 @@
+SYSTEM PROMPT:
+You are a game designer, familiar with the PuzzleScript game description language. Here are some example games, for inspiration (do not reproduce these games exactly):
+
+title Threes: The Demake
+author Benjamin Davis
+homepage threesgame.com
+
+again_interval 0.5
+background_color #F9F9F9
+color_palette arnecolors
+flickscreen 11x6
+key_repeat_interval 0.25
+noaction
+noundo
+text_color #777E8C
+run_rules_on_level_start
+
+========
+OBJECTS
+========
+
+1
+#F9F9F9
+000.0
+000.0
+000.0
+000.0
+000.0
+
+2
+#F9F9F9
+....0
+000.0
+....0
+.0000
+....0
+
+3
+#F9F9F9
+....0
+000.0
+0...0
+000.0
+....0
+
+4
+#F9F9F9
+.00.0
+.00.0
+....0
+000.0
+000.0
+
+5
+#F9F9F9
+....0
+.0000
+....0
+000.0
+....0
+
+6
+#F9F9F9
+.0000
+.0000
+....0
+.00.0
+....0
+
+7
+#F9F9F9
+....0
+000.0
+000.0
+000.0
+000.0
+
+8
+#F9F9F9
+....0
+.00.0
+....0
+.00.0
+....0
+
+9
+#F9F9F9
+....0
+.00.0
+....0
+000.0
+000.0
+
+0
+#F9F9F9
+....0
+.00.0
+.00.0
+.00.0
+....0
+
+Carry
+#F9F9F9
+00000
+00.00
+0...0
+00.00
+00000
+
+Block1
+#65CDFF #5DAAFA
+.000.
+.000.
+.000.
+.111.
+.....
+
+Block2
+#FF6780 #CA4F7B
+.000.
+.000.
+.000.
+.111.
+.....
+
+Block1Grey
+#999999 #666666
+.000.
+.000.
+.000.
+.111.
+.....
+
+Block2Grey
+#666666 #333333
+.000.
+.000.
+.000.
+.111.
+.....
+
+Block3
+White #F8CB66 LightGrey #D8A667
+.200.
+.000.
+.000.
+.111.
+.....
+
+Block6
+White #F8CB66 LightGrey #D8A667
+.220.
+.000.
+.000.
+.111.
+.....
+
+Block12
+White #F8CB66 LightGrey #D8A667
+.222.
+.000.
+.000.
+.111.
+.....
+
+Block24
+White #F8CB66 LightGrey #D8A667
+.222.
+.200.
+.000.
+.111.
+.....
+
+Block48
+White #F8CB66 LightGrey #D8A667
+.222.
+.220.
+.000.
+.111.
+.....
+
+Block96
+White #F8CB66 LightGrey #D8A667
+.222.
+.222.
+.000.
+.111.
+.....
+
+Block192
+White #F8CB66 LightGrey #D8A667
+.222.
+.222.
+.200.
+.311.
+.....
+
+Block384
+White #F8CB66 LightGrey #D8A667
+.222.
+.222.
+.220.
+.331.
+.....
+
+Block768
+White #F8CB66 LightGrey #D8A667
+.222.
+.222.
+.222.
+.333.
+.....
+
+Scored
+#999999
+.....
+.....
+.....
+.000.
+.....
+
+Scoring
+#FF6780 #CA4F7B
+.0.0.
+.....
+.0.0.
+.1.1.
+.....
+
+Background
+#505050 #484848 #414141 #3A3A3A #333333
+00000
+11111
+22222
+33333
+44444
+
+Grid
+#D2E5DF #BBD9D9
+00000
+01110
+01110
+01110
+00000
+
+Spawn
+#D2E5DF
+
+Wall
+#F9F9F9
+(.....
+.....
+.....
+.....
+.....)
+
+Grey
+#999999 #919191 #8A8A8A #838383 #7B7B7B
+00000
+11111
+22222
+33333
+44444
+
+Player
+Black
+.....
+.....
+.....
+.....
+.....
+
+=======
+LEGEND
+=======
+
+Block = Block1 or Block2 or Block3 or Block6 or Block12 or Block24 or Block48 or Block96 or Block192 or Block384 or Block768 or Block1Grey or Block2Grey
+Lost = Grey
+Number = 1 or 2 or 3 or 4 or 5 or 6 or 7 or 8 or 9 or 0
+
+, = Background
+. = Grid and Spawn
+q = Spawn and Wall
+s = Spawn
+# = Wall
++ = Carry
+
+a = Grid and Spawn and Block48
+b = Grid and Spawn and Block96
+c = Grid and Spawn and Block192
+d = Grid and Spawn and Block384
+e = Grid and Spawn and Block768
+
+=======
+SOUNDS
+=======
+
+Player Move 58475507
+
+SFX0 2494907
+SFX1 98118707
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Spawn Grey
+Grid Carry
+Block
+Player Number Scored
+Wall Scoring
+
+======
+RULES
+======
+
+( Reset bonus pool )
+right [ Wall Spawn | Wall Spawn | Wall Spawn | Wall Spawn | Wall Spawn | Wall Spawn | Wall Spawn | Wall Spawn | Wall Spawn | Wall Spawn | Wall Spawn | Wall Spawn | Wall Spawn | Wall Spawn | Wall Spawn | Wall Spawn | Wall Spawn | Wall Spawn | Wall Spawn | Wall Spawn | Wall Spawn ] -> [ Wall Spawn Block1Grey | Wall Spawn Block1Grey | Wall Spawn Block1Grey | Wall Spawn Block1Grey | Wall Spawn Block1Grey | Wall Spawn Block1Grey | Wall Spawn Block1Grey | Wall Spawn Block1Grey | Wall Spawn Block1Grey | Wall Spawn Block1Grey | Wall Spawn Block1Grey | Wall Spawn Block1Grey | Wall Spawn Block1Grey | Wall Spawn Block1Grey | Wall Spawn Block1Grey | Wall Spawn Block1Grey | Wall Spawn Block1Grey | Wall Spawn Block1Grey | Wall Spawn Block1Grey | Wall Spawn Block1Grey | Wall Spawn Block1Grey ]
+
+( Create bonus block )
+right [ Wall Spawn Block1Grey | Wall no Spawn ] [ Grid Block768 ] -> [ Wall Spawn random Block6 random Block12 random Block24 random Block48 random Block96 | Wall ] [ Grid Block768 ]
+right [ Wall Spawn Block1Grey | Wall no Spawn ] [ Grid Block384 ] -> [ Wall Spawn random Block6 random Block12 random Block24 random Block48 | Wall ] [ Grid Block384 ]
+right [ Wall Spawn Block1Grey | Wall no Spawn ] [ Grid Block192 ] -> [ Wall Spawn random Block6 random Block12 random Block24 | Wall ] [ Grid Block192 ]
+right [ Wall Spawn Block1Grey | Wall no Spawn ] [ Grid Block96 ] -> [ Wall Spawn random Block6 random Block12 | Wall ] [ Grid Block96 ]
+right [ Wall Spawn Block1Grey | Wall no Spawn ] [ Grid Block48 ] -> [ Wall Spawn Block6 | Wall ] [ Grid Block48 ]
+
+( Restock stack if empty )
+right [ Wall Spawn no Block | Wall Spawn no Block | Wall Spawn no Block | Wall Spawn no Block | Wall Spawn no Block | Wall Spawn no Block | Wall Spawn no Block | Wall Spawn no Block | Wall Spawn no Block | Wall Spawn no Block | Wall Spawn no Block | Wall Spawn no Block | Spawn no Wall ] -> [ Wall Spawn Block1 | Wall Spawn Block1 | Wall Spawn Block1 | Wall Spawn Block1 | Wall Spawn Block2 | Wall Spawn Block2 | Wall Spawn Block2 | Wall Spawn Block2 | Wall Spawn Block3 | Wall Spawn Block3 | Wall Spawn Block3 | Wall Spawn Block3 | Spawn no Wall ]
+
+( Take 9 cards from the stack and place them onto the grid at the start )
+random right [ Grid Spawn no Block ] [ Spawn Wall Block | ... | Spawn no Wall no Grid ] -> [ Grid Spawn Block Player ] [ Spawn Wall | ... | Spawn ]
+random right [ Grid Spawn no Block ] [ Spawn Wall Block | ... | Spawn no Wall no Grid ] -> [ Grid Spawn Block Player ] [ Spawn Wall | ... | Spawn ]
+random right [ Grid Spawn no Block ] [ Spawn Wall Block | ... | Spawn no Wall no Grid ] -> [ Grid Spawn Block Player ] [ Spawn Wall | ... | Spawn ]
+random right [ Grid Spawn no Block ] [ Spawn Wall Block | ... | Spawn no Wall no Grid ] -> [ Grid Spawn Block Player ] [ Spawn Wall | ... | Spawn ]
+random right [ Grid Spawn no Block ] [ Spawn Wall Block | ... | Spawn no Wall no Grid ] -> [ Grid Spawn Block Player ] [ Spawn Wall | ... | Spawn ]
+random right [ Grid Spawn no Block ] [ Spawn Wall Block | ... | Spawn no Wall no Grid ] -> [ Grid Spawn Block Player ] [ Spawn Wall | ... | Spawn ]
+random right [ Grid Spawn no Block ] [ Spawn Wall Block | ... | Spawn no Wall no Grid ] -> [ Grid Spawn Block Player ] [ Spawn Wall | ... | Spawn ]
+random right [ Grid Spawn no Block ] [ Spawn Wall Block | ... | Spawn no Wall no Grid ] -> [ Grid Spawn Block Player ] [ Spawn Wall | ... | Spawn ]
+random right [ Grid Spawn no Block ] [ Spawn Wall Block | ... | Spawn no Wall no Grid ] -> [ Grid Spawn Block Player ] [ Spawn Wall | ... | Spawn ]
+
+( Clear Spawns at start )
+[ Grid Spawn ] -> [ Grid No Spawn ]
+
+( Move Block when Player moves )
+[ Moving Player Stationary Block ] -> [ Moving Player Moving Block ]
+
+( Stop when we hit a Wall )
+[ > Block | Wall ] -> [ Block | Wall ]
+
+startloop
+
+[ > Block1   | Player Stationary Block2   ] -> [ > Block3   | ] SFX0
+[ > Block2   | Player Stationary Block1   ] -> [ > Block3   | ] SFX0
+[ > Block3   | Player Stationary Block3   ] -> [ > Block6   | ] SFX0
+[ > Block6   | Player Stationary Block6   ] -> [ > Block12  | ] SFX0
+[ > Block12  | Player Stationary Block12  ] -> [ > Block24  | ] SFX0
+[ > Block24  | Player Stationary Block24  ] -> [ > Block48  | ] SFX0
+[ > Block48  | Player Stationary Block48  ] -> [ > Block96  | ] SFX0
+[ > Block96  | Player Stationary Block96  ] -> [ > Block192 | ] SFX0
+[ > Block192 | Player Stationary Block192 ] -> [ > Block384 | ] SFX0
+[ > Block384 | Player Stationary Block384 ] -> [ > Block768 | ] SFX0
+
+( Stop when we hit a stationary Block )
+[ > Block | Stationary Block ] -> [ action Block | Block ]
+
+[ action Block ] -> [ Block ]
+
+endloop
+
+( Stop Player when Block stops )
+[ Moving Player Stationary Block ] -> [ Stationary Player Stationary Block ]
+
+( Move block from spawn to side of grid )
+up random [ Spawn Block no Wall ] [ Wall | Grid | ... | up Player ] -> [ Spawn ] [ Wall up Block up Player | Grid | ... | up Player ]
+down random [ Spawn Block no Wall ] [ Wall | Grid | ... | down Player ] -> [ Spawn ] [ Wall down Block down Player | Grid | ... | down Player ]
+left random [ Spawn Block no Wall ] [ Wall | Grid | ... | left Player ] -> [ Spawn ] [ Wall left Block left Player | Grid | ... | left Player ]
+right random [ Spawn Block no Wall ] [ Wall | Grid | ... | right Player ] -> [ Spawn ] [ Wall right Block right Player | Grid | ... | right Player ]
+up random [ Spawn Block no Wall ] [ Wall | Grid up Player ] -> [ Spawn ] [ Wall up Block up Player | Grid up Player ]
+down random [ Spawn Block no Wall ] [ Wall | Grid down Player ] -> [ Spawn ] [ Wall down Block down Player | Grid down Player ]
+left random [ Spawn Block no Wall ] [ Wall | Grid left Player ] -> [ Spawn ] [ Wall left Block left Player | Grid left Player ]
+right random [ Spawn Block no Wall ] [ Wall | Grid right Player ] -> [ Spawn ] [ Wall right Block right Player | Grid right Player ]
+
+( Take random block from bonus pool )
+random right [ Spawn Wall Block | ... | Wall | Wall | Grid ] [ Spawn no Wall no Block ] -> [ Spawn Wall | ... | Wall | Wall | Grid ] [ Spawn Block ]
+
+( If bonus block is a grey 1, discard it )
+right [ Spawn no Wall Block1Grey | Wall ] -> [ Spawn | Wall ]
+
+( If not using a bonus block, take new block from stack )
+random right [ Spawn Wall Block | ... | Spawn No Block No Number no Wall no Grid ] -> [ Spawn Wall | ... | Spawn Block ]
+
+( Lose condition: All Grids have Blocks on and there are no compatible blocks next to each other [e.g. 1 | 2 or 3 | 3 )
+
+( Set as lost )
+Late [ Grid No Lost ] -> [ Grid Lost ]
+
+( Check for conditions which mean it's not lost )
+Late [ Lost Grid No Block ] -> [ Grid ]
+Late [ Lost Block1 | Block2 ] -> [ Block1 | Block2 ]
+Late [ Lost Block3 | Block3 ] -> [ Block3 | Block3 ]
+Late [ Lost Block6 | Block6 ] -> [ Block6 | Block6 ]
+Late [ Lost Block12 | Block12 ] -> [ Block12 | Block12 ]
+Late [ Lost Block24 | Block24 ] -> [ Block24 | Block24 ]
+Late [ Lost Block48 | Block48 ] -> [ Block48 | Block48 ]
+Late [ Lost Block96 | Block96 ] -> [ Block96 | Block96 ]
+Late [ Lost Block192 | Block192 ] -> [ Block192 | Block192 ]
+Late [ Lost Block384 | Block384 ] -> [ Block384 | Block384 ]
+
+( If there are any tiles without a Lost, remove all Losts)
+Late [ Grid No Lost | Grid Lost ] -> [ Grid | Grid ]
+
+( Move grid, removing Player )
+Late Right [ Lost Grid Block Player | | | | | | | ] -> [ | | | | | | | Lost Grid Block ]
+
+( Turn 1s and 2s grey )
+Late [ Lost Block1 ] -> [ Lost Block1Grey ]
+Late [ Lost Block2 ] -> [ Lost Block2Grey ]
+
+( Add )
+
+late down [ 1 | ... | 0 ] -> [ 0 | ... | 1 ]
+late down [ 2 | ... | 0 ] -> [ 0 | ... | 2 ]
+late down [ 3 | ... | 0 ] -> [ 0 | ... | 3 ]
+late down [ 4 | ... | 0 ] -> [ 0 | ... | 4 ]
+late down [ 5 | ... | 0 ] -> [ 0 | ... | 5 ]
+late down [ 6 | ... | 0 ] -> [ 0 | ... | 6 ]
+late down [ 7 | ... | 0 ] -> [ 0 | ... | 7 ]
+late down [ 8 | ... | 0 ] -> [ 0 | ... | 8 ]
+late down [ 9 | ... | 0 ] -> [ 0 | ... | 9 ]
+
+late down [ 1 | ... | 1 ] -> [ 0 | ... | 2 ]
+late down [ 2 | ... | 1 ] -> [ 0 | ... | 3 ]
+late down [ 3 | ... | 1 ] -> [ 0 | ... | 4 ]
+late down [ 4 | ... | 1 ] -> [ 0 | ... | 5 ]
+late down [ 5 | ... | 1 ] -> [ 0 | ... | 6 ]
+late down [ 6 | ... | 1 ] -> [ 0 | ... | 7 ]
+late down [ 7 | ... | 1 ] -> [ 0 | ... | 8 ]
+late down [ 8 | ... | 1 ] -> [ 0 | ... | 9 ]
+late down [ 9 | ... | 1 ] -> [ 0 | ... | 0 Carry ]
+
+late down [ 1 | ... | 2 ] -> [ 0 | ... | 3 ]
+late down [ 2 | ... | 2 ] -> [ 0 | ... | 4 ]
+late down [ 3 | ... | 2 ] -> [ 0 | ... | 5 ]
+late down [ 4 | ... | 2 ] -> [ 0 | ... | 6 ]
+late down [ 5 | ... | 2 ] -> [ 0 | ... | 7 ]
+late down [ 6 | ... | 2 ] -> [ 0 | ... | 8 ]
+late down [ 7 | ... | 2 ] -> [ 0 | ... | 9 ]
+late down [ 8 | ... | 2 ] -> [ 0 | ... | 0 Carry ]
+late down [ 9 | ... | 2 ] -> [ 0 | ... | 1 Carry ]
+
+late down [ 1 | ... | 3 ] -> [ 0 | ... | 4 ]
+late down [ 2 | ... | 3 ] -> [ 0 | ... | 5 ]
+late down [ 3 | ... | 3 ] -> [ 0 | ... | 6 ]
+late down [ 4 | ... | 3 ] -> [ 0 | ... | 7 ]
+late down [ 5 | ... | 3 ] -> [ 0 | ... | 8 ]
+late down [ 6 | ... | 3 ] -> [ 0 | ... | 9 ]
+late down [ 7 | ... | 3 ] -> [ 0 | ... | 0 Carry ]
+late down [ 8 | ... | 3 ] -> [ 0 | ... | 1 Carry ]
+late down [ 9 | ... | 3 ] -> [ 0 | ... | 2 Carry ]
+
+late down [ 1 | ... | 4 ] -> [ 0 | ... | 5 ]
+late down [ 2 | ... | 4 ] -> [ 0 | ... | 6 ]
+late down [ 3 | ... | 4 ] -> [ 0 | ... | 7 ]
+late down [ 4 | ... | 4 ] -> [ 0 | ... | 8 ]
+late down [ 5 | ... | 4 ] -> [ 0 | ... | 9 ]
+late down [ 6 | ... | 4 ] -> [ 0 | ... | 0 Carry ]
+late down [ 7 | ... | 4 ] -> [ 0 | ... | 1 Carry ]
+late down [ 8 | ... | 4 ] -> [ 0 | ... | 2 Carry ]
+late down [ 9 | ... | 4 ] -> [ 0 | ... | 3 Carry ]
+
+late down [ 1 | ... | 5 ] -> [ 0 | ... | 6 ]
+late down [ 2 | ... | 5 ] -> [ 0 | ... | 7 ]
+late down [ 3 | ... | 5 ] -> [ 0 | ... | 8 ]
+late down [ 4 | ... | 5 ] -> [ 0 | ... | 9 ]
+late down [ 5 | ... | 5 ] -> [ 0 | ... | 0 Carry ]
+late down [ 6 | ... | 5 ] -> [ 0 | ... | 1 Carry ]
+late down [ 7 | ... | 5 ] -> [ 0 | ... | 2 Carry ]
+late down [ 8 | ... | 5 ] -> [ 0 | ... | 3 Carry ]
+late down [ 9 | ... | 5 ] -> [ 0 | ... | 4 Carry ]
+
+late down [ 1 | ... | 6 ] -> [ 0 | ... | 7 ]
+late down [ 2 | ... | 6 ] -> [ 0 | ... | 8 ]
+late down [ 3 | ... | 6 ] -> [ 0 | ... | 9 ]
+late down [ 4 | ... | 6 ] -> [ 0 | ... | 0 Carry ]
+late down [ 5 | ... | 6 ] -> [ 0 | ... | 1 Carry ]
+late down [ 6 | ... | 6 ] -> [ 0 | ... | 2 Carry ]
+late down [ 7 | ... | 6 ] -> [ 0 | ... | 3 Carry ]
+late down [ 8 | ... | 6 ] -> [ 0 | ... | 4 Carry ]
+late down [ 9 | ... | 6 ] -> [ 0 | ... | 5 Carry ]
+
+late down [ 1 | ... | 7 ] -> [ 0 | ... | 8 ]
+late down [ 2 | ... | 7 ] -> [ 0 | ... | 9 ]
+late down [ 3 | ... | 7 ] -> [ 0 | ... | 0 Carry ]
+late down [ 4 | ... | 7 ] -> [ 0 | ... | 1 Carry ]
+late down [ 5 | ... | 7 ] -> [ 0 | ... | 2 Carry ]
+late down [ 6 | ... | 7 ] -> [ 0 | ... | 3 Carry ]
+late down [ 7 | ... | 7 ] -> [ 0 | ... | 4 Carry ]
+late down [ 8 | ... | 7 ] -> [ 0 | ... | 5 Carry ]
+late down [ 9 | ... | 7 ] -> [ 0 | ... | 6 Carry ]
+
+late down [ 1 | ... | 8 ] -> [ 0 | ... | 9 ]
+late down [ 2 | ... | 8 ] -> [ 0 | ... | 0 Carry ]
+late down [ 3 | ... | 8 ] -> [ 0 | ... | 1 Carry ]
+late down [ 4 | ... | 8 ] -> [ 0 | ... | 2 Carry ]
+late down [ 5 | ... | 8 ] -> [ 0 | ... | 3 Carry ]
+late down [ 6 | ... | 8 ] -> [ 0 | ... | 4 Carry ]
+late down [ 7 | ... | 8 ] -> [ 0 | ... | 5 Carry ]
+late down [ 8 | ... | 8 ] -> [ 0 | ... | 6 Carry ]
+late down [ 9 | ... | 8 ] -> [ 0 | ... | 7 Carry ]
+
+late down [ 1 | ... | 9 ] -> [ 0 | ... | 0 Carry ]
+late down [ 2 | ... | 9 ] -> [ 0 | ... | 1 Carry ]
+late down [ 3 | ... | 9 ] -> [ 0 | ... | 2 Carry ]
+late down [ 4 | ... | 9 ] -> [ 0 | ... | 3 Carry ]
+late down [ 5 | ... | 9 ] -> [ 0 | ... | 4 Carry ]
+late down [ 6 | ... | 9 ] -> [ 0 | ... | 5 Carry ]
+late down [ 7 | ... | 9 ] -> [ 0 | ... | 6 Carry ]
+late down [ 8 | ... | 9 ] -> [ 0 | ... | 7 Carry ]
+late down [ 9 | ... | 9 ] -> [ 0 | ... | 8 Carry ]
+
+( Carry )
+
+startloop
+
+	late right [ no Number | ... | 0 | Number Carry ] -> [ | ... | 1 | Number ]
+	late right [ no Number | ... | 1 | Number Carry ] -> [ | ... | 2 | Number ]
+	late right [ no Number | ... | 2 | Number Carry ] -> [ | ... | 3 | Number ]
+	late right [ no Number | ... | 3 | Number Carry ] -> [ | ... | 4 | Number ]
+	late right [ no Number | ... | 4 | Number Carry ] -> [ | ... | 5 | Number ]
+	late right [ no Number | ... | 5 | Number Carry ] -> [ | ... | 6 | Number ]
+	late right [ no Number | ... | 6 | Number Carry ] -> [ | ... | 7 | Number ]
+	late right [ no Number | ... | 7 | Number Carry ] -> [ | ... | 8 | Number ]
+	late right [ no Number | ... | 8 | Number Carry ] -> [ | ... | 9 | Number ]
+	late right [ no Number | ... | 9 no Carry | Number Carry ] -> [ | ... | 0 Carry | Number ]
+    late right [ no Number | 0 Carry ] -> [ | 0 ]
+
+endloop
+
+( After scoring, set block border to grey )
+late [ Scoring Block ] -> [ Scored Block ]
+
+( Count each block, starting with the lowest value )
+late [ Carry No Number No Block ] [ Grid Lost no Scored Block3 ] -> [ Carry Block3 ] [ Grid Lost Scoring Block3 ]
+late [ Carry No Number No Block ] [ Grid Lost no Scored Block6 ] -> [ Carry Block6 ] [ Grid Lost Scoring Block6 ]
+late [ Carry No Number No Block ] [ Grid Lost no Scored Block12 ] -> [ Carry Block12 ] [ Grid Lost Scoring Block12 ]
+late [ Carry No Number No Block ] [ Grid Lost no Scored Block24 ] -> [ Carry Block24 ] [ Grid Lost Scoring Block24 ]
+late [ Carry No Number No Block ] [ Grid Lost no Scored Block48 ] -> [ Carry Block48 ] [ Grid Lost Scoring Block48 ]
+late [ Carry No Number No Block ] [ Grid Lost no Scored Block96 ] -> [ Carry Block96 ] [ Grid Lost Scoring Block96 ]
+late [ Carry No Number No Block ] [ Grid Lost no Scored Block192 ] -> [ Carry Block192 ] [ Grid Lost Scoring Block192 ]
+late [ Carry No Number No Block ] [ Grid Lost no Scored Block384 ] -> [ Carry Block384 ] [ Grid Lost Scoring Block384 ]
+late [ Carry No Number No Block ] [ Grid Lost no Scored Block768 ] -> [ Carry Block768 ] [ Grid Lost Scoring Block768 ]
+
+( Set score to add )
+late right [ Carry Block3   | 0 | 0 | 0 | 0 | 0 ] -> [ Carry Block3   | 0 | 0 | 0 | 0 | 3 ] again
+late right [ Carry Block6   | 0 | 0 | 0 | 0 | 0 ] -> [ Carry Block6   | 0 | 0 | 0 | 0 | 9 ] again
+late right [ Carry Block12  | 0 | 0 | 0 | 0 | 0 ] -> [ Carry Block12  | 0 | 0 | 0 | 2 | 7 ] again
+late right [ Carry Block24  | 0 | 0 | 0 | 0 | 0 ] -> [ Carry Block24  | 0 | 0 | 0 | 8 | 1 ] again
+late right [ Carry Block48  | 0 | 0 | 0 | 0 | 0 ] -> [ Carry Block48  | 0 | 0 | 2 | 4 | 3 ] again
+late right [ Carry Block96  | 0 | 0 | 0 | 0 | 0 ] -> [ Carry Block96  | 0 | 0 | 7 | 2 | 9 ] again
+late right [ Carry Block192 | 0 | 0 | 0 | 0 | 0 ] -> [ Carry Block192 | 0 | 2 | 1 | 8 | 7 ] again
+late right [ Carry Block384 | 0 | 0 | 0 | 0 | 0 ] -> [ Carry Block384 | 0 | 6 | 5 | 6 | 1 ] again
+late right [ Carry Block768 | 0 | 0 | 0 | 0 | 0 ] -> [ Carry Block768 | 1 | 9 | 6 | 8 | 3 ] again
+
+( Colour adding row of numbers )
+late right [ Carry no Number | ... | Number ] -> [ Carry Grey | ... | Number Grey ]
+
+( Show numbers )
+Late [ Wall Number ] -> [ Number ]
+
+( Show only significant digits for the adding line )
+late right [ Carry No Number | 0 | 0 | 0 | 0 | 0 ] -> [ Carry Wall | 0 Wall | 0 Wall | 0 Wall | 0 Wall | 0 Wall ]
+late right [ Carry No Number | 0 | 0 | 0 | 0 ] -> [ Carry No Wall | 0 Wall | 0 Wall | 0 Wall | 0 Wall ]
+late right [ Carry No Number | 0 | 0 | 0 ] -> [ Carry No Wall | 0 Wall | 0 Wall | 0 Wall ]
+late right [ Carry No Number | 0 | 0 ] -> [ Carry No Wall | 0 Wall | 0 Wall ]
+late right [ Carry No Number | 0 ] -> [ Carry No Wall | 0 Wall ]
+
+late right [ Carry No Block ] -> [ Carry Wall ]
+
+( Remove block we're scoring from adding row )
+late [ Carry Block ] -> [ Carry Player ]
+
+==============
+WINCONDITIONS
+==============
+
+=======
+LEVELS
+=======
+
+############################################
+############qqqqqqqqqqqqs#....###,,,,#######
+##########################....###,,,,#+00000
+###qqqqqqqqqqqqqqqqqqqqq##....###,,,,#######
+##########################....###,,,,#000000
+############################################
+
+title Modality
+author Sean Barrett
+homepage www.silverspaceship.com
+background_color #603060
+noaction
+
+========
+OBJECTS
+========
+
+White
+White
+
+Black
+#202020
+
+
+Grey
+#505050 #a0a0a0
+01010
+10101
+01010
+10101
+01010
+
+
+Background
+Red
+
+Target
+#3030a0
+.....
+.000.
+.0.0.
+.000.
+.....
+
+Player
+Black Orange #c0c0c0 Blue
+.000.
+.111.
+22222
+.333.
+.3.3.
+
+Crate
+Orange Yellow
+00000
+0...0
+0...0
+0...0
+00000
+
+
+=======
+LEGEND
+=======
+
+. = Black
++ = White
+g = Grey
+p = Player and Black
+Q = Player and White
+* = Crate and Black
+@ = Crate and White
+t = Target and Black
+U = Target and White
+
+Nonwhite = Black or Grey
+Nonblack = White or Grey
+
+=======
+SOUNDS
+=======
+
+================
+COLLISIONLAYERS
+================
+
+Background
+White, Black, Grey
+Target
+Player, Crate
+
+======
+RULES
+======
+
+[ >  Player Nonblack | Crate Nonblack ] -> [  > Player Nonblack | > Crate Nonblack ]
+[ >  Player Black | Crate Black ] -> [  > Player Black | > Crate Black ]
+[ > Player White | Black ] -> CANCEL
+[ > Player Black | White ] -> CANCEL
+
+==============
+WINCONDITIONS
+==============
+
+All Crate on Target
+
+=======
+LEVELS
+=======
+
+
+u+...
+@+g.p
++++..
+
+++++q
++.*.+
+u++.+
++g..+
++++++
+
+......
+.++.+.
+.+q++.
+..u.++
+g.*.++
+++++++
+
+...t.......
+...+.......
+.+.+.+...++
+.+.++++..++
+q@g++..++++
+.+.++...+++
+.+.+....+++
+.+......+++
+.++++++++++
+
+
+
+title Cliched River Puzzle
+author Weeble
+homepage www.puzzlescript.net
+
+========
+OBJECTS
+========
+
+Grass
+#559922 GREEN
+11111
+01111
+11101
+11111
+10111
+
+
+Player
+Yellow
+00.00
+0...0
+.....
+0...0
+00.00
+
+Water1
+#3333ff #5555ff #7777ff
+00121
+10100
+12001
+10010
+01000
+
+Water2
+#3333ff #5555ff #7777ff
+10000
+00010
+00121
+01100
+10001
+
+Carrot
+ORANGE #55cc00
+11111
+.000.
+.000.
+.000.
+..0..
+
+Fox
+ORANGE WHITE BLACK
+.2.2.
+00000
+12021
+.111.
+..2..
+
+Rabbit
+WHITE #ff88bb
+00.00
+.0.0.
+.000.
+.101.
+.000.
+
+EmptyBoat
+BROWN DARKBROWN
+.000.
+01110
+01110
+01110
+00000
+Platform
+GREY
+.....
+.....
+.....
+.....
+.....
+
+LeftB
+BLUE
+.....
+.....
+.....
+.....
+.....
+
+RightB
+RED
+.....
+.....
+.....
+.....
+.....
+
+Dude
+BLACK
+..0..
+00000
+..0..
+.0.0.
+0...0
+
+Dock
+YELLOW
+.....
+.....
+.....
+.....
+.....
+
+=======
+LEGEND
+=======
+
+. = Grass and LeftB
+, = Grass and RightB
+~ = Water1 and LeftB
+^ = Water1 and RightB
+P = Player and LeftB
+C = Carrot and Platform and LeftB
+F = Fox and Platform and LeftB
+R = Rabbit and Platform and LeftB
+_ = EmptyBoat and LeftB and Water1
+* = Platform and RightB
+[ = Dude and Dock and LeftB
+] = Dock and RightB
+Water = Water1 or Water2
+Background = Grass or Water1 or Water2
+Object = Rabbit or Fox or Carrot
+Bank = LeftB or RightB
+=======
+SOUNDS
+=======
+
+SFX0 81232704
+SFX1 47027309
+SFX2 92562507
+SFX3 11245308
+
+================
+COLLISIONLAYERS
+================
+
+Background
+EmptyBoat, Platform, Dock
+LeftB, RightB
+Carrot, Rabbit, Fox, Dude
+Player
+
+======
+RULES
+======
+
+(Loading the boat)
+[ action Player Object Platform ] [ EmptyBoat no Object ] -> [ Player Platform ] [ EmptyBoat Object ] sfx2
+
+(Emptying the boat)
+[ action Player Object EmptyBoat LeftB ] [ Platform no Object LeftB ] -> [ Player EmptyBoat LeftB ] [ Platform Object LeftB ] sfx2
+[ action Player Object EmptyBoat RightB ] [ Platform no Object RightB ] -> [ Player EmptyBoat RightB ] [ Platform Object RightB ] sfx2
+
+( Eating rules for stuff on the left bank )
+late [ RightB Dude ] [ LeftB Rabbit ] [ LeftB Fox ] -> [ RightB Dude ] [ LeftB ] [ LeftB Fox ] sfx0 message Fox eats rabbit! Chomp!
+late [ RightB Dude ] [ LeftB Carrot ] [ LeftB Rabbit ] -> [ RightB Dude ] [ LeftB ] [ LeftB Rabbit ] sfx1 message Rabbit eats carrot! Chomp!
+
+( Same rules for stuff on the right bank )
+late [ LeftB Dude ] [ RightB Rabbit ] [ RightB Fox ] -> [ LeftB Dude ] [ RightB ] [ RightB Fox ] sfx0 message Fox eats rabbit! Chomp!
+late [ LeftB Dude ] [ RightB Carrot ] [ RightB Rabbit ] -> [ LeftB Dude ] [ RightB ] [ RightB Rabbit ] sfx1 message Rabbit eats carrot! Chomp!
+
+( Animate the water )
+[ Water ] -> [ random Water ]
+
+( Row across the river with an object )
+[ action Player Dude | EmptyBoat Object | ... | | Dock ] -> [ | | ... | EmptyBoat Object | Player Dude Dock ] sfx3
+
+( Row across the river without an object )
+[ action Player Dude | EmptyBoat no Object | ... | | Dock ] -> [ | | ... | EmptyBoat | Player Dude Dock ] sfx3
+
+( Victory condition )
+[ RightB Platform Rabbit ] [ RightB Platform Fox ] [ RightB Platform Carrot] -> win
+
+==============
+WINCONDITIONS
+==============
+
+=======
+LEVELS
+=======
+
+.....~~~^^,,,,,
+.....~~~^^,,,,,
+...F.~~~^^,*,,,
+..RP[_~~^^],*,,
+...C.~~~~^,*,,,
+.....~~~^^,,,,,
+.....~~~^^,,,,,
+
+
+
+title neko puzzle
+author lexaloffle
+homepage www.lexaloffle.com
+
+(
+
+An inadequate but illustrative demake of one of my favourite puzzle games ever, by the extremely amicable Lexaloffle, and with his permission.
+
+www.lexaloffle.com/neko.htm
+
+The game proper has a lot of magic and love in it.
+
+)
+
+========
+OBJECTS
+========
+
+Background .
+darkblue
+
+Fruit F
+red green lightred
+..1..
+.000.
+00020
+00000
+.000.
+
+Player P
+gray white
+.1.1.
+10101
+11111
+.111.
+00.00
+
+=======
+LEGEND
+=======
+
+=========
+SOUNDS
+=========
+
+endlevel 97301508
+startgame 97301508
+endgame 97301508
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Player, Fruit
+
+======
+RULES
+======
+
+[ > Player | ... | Fruit ] -> [ | ... | Player ] 
+
+(if you're not sure what this line does, try removing it, and see what happens)
+[ > Player ] -> [ Player ] 
+
+==============
+WINCONDITIONS
+==============
+
+no Fruit
+
+=======
+LEVELS
+=======
+
+message level 1 of 10
+
+......F.
+........
+F......F
+......FF
+........
+........
+P.......
+
+message level 2 of 10
+
+........
+....P...
+...F.F..
+........
+........
+..F.FF..
+........
+
+message level 3 of 10
+
+........
+.FF....F
+........
+........
+F...P...
+........
+........
+F.F.....
+
+message level 4 of 10
+
+....F..F
+........
+.......F
+F.......
+P.......
+........
+F...F...
+
+message level 5 of 10
+
+........
+....F.P.
+F.F.....
+........
+F...F...
+..F.F...
+........
+
+message level 6 of 10
+
+F.....F.
+........
+........
+FF..F...
+F.....F.
+........
+.P......
+
+message level 7 of 10
+
+...FP..F
+F.F.....
+F......F
+........
+........
+..F.....
+........
+
+message level 8 of 10
+
+..F..P..
+........
+........
+.FFF....
+F..F..F.
+........
+........
+
+message level 9 of 10
+
+....F..F
+........
+.F..F...
+........
+.F.P..F.
+.F......
+........
+
+message level 10 of 10
+
+....F.F.
+........
+.F..F..F
+...F..F.
+.......F
+...FP...
+........
+
+message congratulations!
+
+
+title Simple Action Example
+author increpare
+homepage www.puzzlescript.net
+
+========
+OBJECTS
+========
+
+Background
+LIGHTGREEN GREEN
+11111
+01111
+11101
+11111
+10111
+
+Wall
+BROWN DARKBROWN
+00010
+11111
+01000
+11111
+00010
+
+Player
+Black Orange White Blue
+.000.
+.111.
+22222
+.333.
+.3.3.
+
+
+Blood
+DarkRed red white
+.01.0
+.1202
+2.0.1
+02.1.
+.1.0.
+
+Sheep O
+black white gray
+..11.
+01111
+01112
+.212.
+.0.0.
+
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Player
+
+
+=======
+SOUNDS
+=======
+
+
+Sheep Create 76935307
+SFx0 52519108
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Blood
+Player, Wall, Sheep
+
+======
+RULES
+======
+
+random [ no Sheep ] -> [ Sheep ] again
+
+==============
+WINCONDITIONS
+==============
+
+=======
+LEVELS
+=======
+
+#################
+#...............#
+#...............#
+#...............#
+#...............#
+#.......P.......#
+#...............#
+#...............#
+#...............#
+#################
+
+
+
+USER PROMPT:
+The following PuzzleScript game code:
+```plaintext
+title Quantum Quokko
+author PuzzleNovice
+homepage nowhere.com
+
+========
+OBJECTS
+========
+
+Background
+#001f3f #003366 #004080
+00000
+00000
+00000
+00000
+11111
+
+Wall
+#666666
+11111
+11111
+11111
+11111
+11111
+
+Player
+#e6194b #ffffff
+.0.0.
+.000.
+01110
+..0..
+.....
+
+Box
+#3cb44b #006B3C #2E8B57
+02220
+22222
+22222
+02220
+.....
+
+Goal
+#ffe119 #ffd700
+33333
+31113
+31013
+31113
+33333
+
+Portal
+#005eff #ffffff
+.3.3.
+2.0.2
+0.030
+2.0.2
+.3.3.
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Player
+B = Box
+G = Goal
+O = Portal
+
+=======
+SOUNDS
+=======
+SFX0 69348406 ( Teleport )
+SFX1 56432708 ( Move )
+SFX2 89324001 ( Success )
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Wall
+Goal
+Portal
+Player, Box
+
+======
+RULES
+======
+
+[> Player | Box] -> [> Player | > Box] SFX1
+[> Player | Portal no Box] -> [Player Portal | ] SFX0 again
+[Player Portal] -> [Portal Player]
+
+==============
+WINCONDITIONS
+==============
+
+All Box on Goal
+
+=======
+LEVELS
+=======
+
+message Level 1: A Simple Start
+######
+#P...#
+#...B#
+#.##O#
+#....#
+#...G#
+######
+
+message Level 2: Plan Carefully
+########
+#.G....#
+#..##### 
+#P.B..O#
+##.#####
+#......#
+########
+
+message Congratulations! You've mastered quantum quokko physics!
+
+```
+produced the following console output:
+=================================
+line 19 : Trying to access color number 1 from the color palette of sprite WALL, but there are only 1 defined in it.
+line 20 : Trying to access color number 1 from the color palette of sprite WALL, but there are only 1 defined in it.
+line 21 : Trying to access color number 1 from the color palette of sprite WALL, but there are only 1 defined in it.
+line 22 : Trying to access color number 1 from the color palette of sprite WALL, but there are only 1 defined in it.
+line 23 : Trying to access color number 1 from the color palette of sprite WALL, but there are only 1 defined in it.
+line 43 : Trying to access color number 3 from the color palette of sprite GOAL, but there are only 2 defined in it.
+too many errors, aborting compilation
+Errors detected during compilation; the game may not work correctly.
+Return a repaired version of the code that addresses these errors. Return your code in full, inside a ```plaintext code block.

@@ -1,0 +1,137 @@
+The error messages indicate that there's an issue with the color definition for the `BoxOnTarget` object. PuzzleScript expects that the color specified is predefined or correctly defined within its color palette. The predefined colors include basic names like red, green, blue, etc., and the color `olive` doesn't seem to be part of this set. 
+
+To fix this issue, we can replace `olive` with one of the standard color names that PuzzleScript recognizes. Additionally, we need to ensure the color palette is correctly defined for `BoxOnTarget`. Let's choose a different available color, such as `darkgreen`, to replace `olive`. 
+
+Here's the repaired version of the code:
+
+```plaintext
+title Sokoban Puzzle
+
+========
+OBJECTS
+========
+
+Background
+black
+00000
+00000
+00000
+00000
+00000
+
+Player
+yellow
+.000.
+00000
+00000
+.000.
+..0..
+
+Wall
+gray
+00000
+00000
+00000
+00000
+00000
+
+Box
+brown
+.000.
+00000
+00000
+00000
+.000.
+
+Target
+green
+.....
+..0..
+.000.
+..0..
+.....
+
+BoxOnTarget
+darkgreen
+.000.
+00000
+00000
+00000
+.000.
+
+========
+LEGEND
+========
+
+. = Background
+P = Player
+# = Wall
+B = Box
+T = Target
+O = BoxOnTarget
+
+========
+SOUNDS
+========
+
+==================
+COLLISIONLAYERS
+==================
+
+Background
+Player
+Wall, Box, BoxOnTarget
+Target
+
+=========
+RULES
+=========
+
+// Moving
+[> Player | ] -> [> Player | ]
+
+// Pushing
+[> Player | Box] -> [> Player | > Box]
+[> Player | BoxOnTarget] -> [> Player | > BoxOnTarget]
+
+// Converting box and target interactions
+[ Box | Target ] -> [ BoxOnTarget | Background ]
+[ BoxOnTarget | Background ] -> [ Box | Background ]
+
+// Removing previous 'Box on Target' status
+[ BoxOnTarget ] -> [ Box ]
+[ Box | Target ] -> [ BoxOnTarget ]
+
+=============
+WINCONDITIONS
+=============
+
+All BoxOnTarget
+
+========
+LEVELS
+========
+
+;; Level 1
+#####
+#...#
+#.#.#
+#PB.#
+#####
+
+;; Level 2
+######
+#....#
+#..#B#
+#P.T.#
+######
+
+;; Level 3
+######
+#....#
+#..#B#
+#P.BT#
+######
+```
+
+By changing the color of `BoxOnTarget` to `darkgreen`, a likely recognized color in PuzzleScript, this should address the original compilation errors, allowing the game to function as intended.

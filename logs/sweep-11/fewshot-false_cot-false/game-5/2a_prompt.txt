@@ -1,0 +1,109 @@
+SYSTEM PROMPT:
+You are a game designer, familiar with the PuzzleScript game description language. 
+
+USER PROMPT:
+The following PuzzleScript game code:
+```plaintext
+Title: Reach the Goal
+Author: PuzzleScriptUser
+Homepage: https://www.puzzlescript.net
+
+===========
+OBJECTS
+===========
+
+Background
+lightgrey
+00000
+00000
+00000
+00000
+00000
+
+Player
+red
+.....
+..0..
+.000.
+..0..
+.....
+
+Wall
+black
+00000
+00000
+00000
+00000
+00000
+
+Goal
+green
+.....
+.....
+..0..
+.....
+.....
+
+===========
+LEGEND
+===========
+
+. = Background
+P = Player
+W = Wall
+G = Goal
+
+===========
+SOUNDS
+===========
+
+===========
+COLLISIONLAYERS
+===========
+
+Background
+Wall
+Player, Goal
+
+===========
+RULES
+===========
+
+[Player] -> [Player Right]
+
+[> Player | Goal] -> [Player | Goal]
+
+===========
+WINCONDITIONS
+===========
+
+Player on Goal
+
+===========
+LEVELS
+===========
+
+; Example Level 1
+WWWWWW
+W..PGW
+W..P.W
+WWWWWW
+
+; Example Level 2
+WWWWWW
+WP...W
+W.W.GW
+WWWWWW
+
+```
+produced the following console output:
+=================================
+line 74 : Expecting the start of a win condition ("ALL","SOME","NO") but got "PLAYER'.
+line 74 : Error in win condition: "ON" is not a valid object name.
+line 74 : Expecting the word "ON" but got "GOAL".
+line 80 : Key ";" not found. Do you need to add it to the legend, or define a new object?
+line 80 : Key "E" not found. Do you need to add it to the legend, or define a new object?
+line 80 : Key "X" not found. Do you need to add it to the legend, or define a new object?
+too many errors, aborting compilation
+Errors detected during compilation; the game may not work correctly.
+Return a repaired version of the code that addresses these errors. Return your code in full, inside a ```plaintext code block.

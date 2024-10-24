@@ -1,0 +1,111 @@
+SYSTEM PROMPT:
+You are a game designer, familiar with the PuzzleScript game description language. 
+
+USER PROMPT:
+The following PuzzleScript game code:
+```plaintext
+===========
+title Catch the Star
+===========
+
+===========
+author Your Name
+===========
+
+===========
+homepage www.example.com
+===========
+
+===========
+objects
+===========
+Background
+#000000
+
+Wall
+#2f4f4f
+
+Player
+#ff6347
+..0..
+.000.
+00.00
+..0..
+
+Star
+#ffd700
+..0..
+.0.0.
+00000
+
+===========
+legend
+===========
+. = Background
+# = Wall
+P = Player
+* = Star
+
+===========
+sounds
+===========
+
+===========
+collisionLayers
+===========
+Background
+Player, Star, Wall
+
+===========
+rules
+===========
+[Player | Star] -> [Player Star]
+
+===========
+winconditions
+===========
+All Star on Player
+
+===========
+levels
+===========
+####
+#P.#
+#..#
+#.*#
+####
+
+####
+#* #
+#.P#
+## #
+####
+
+########
+#.#..#.#
+#.###* #
+#P..   #
+########
+
+# Message: Congratulations! You caught the star!
+
+===========
+colorPalette
+===========
+Background #000000
+Wall #2f4f4f
+Player #ff6347
+Star #ffd700
+
+```
+produced the following console output:
+=================================
+line 84 : Key "M" not found. Do you need to add it to the legend, or define a new object?
+line 84 : Key "E" not found. Do you need to add it to the legend, or define a new object?
+line 84 : Key "S" not found. Do you need to add it to the legend, or define a new object?
+line 84 : Key "A" not found. Do you need to add it to the legend, or define a new object?
+line 84 : Key "G" not found. Do you need to add it to the legend, or define a new object?
+line 84 : Key ":" not found. Do you need to add it to the legend, or define a new object?
+too many errors, aborting compilation
+Errors detected during compilation; the game may not work correctly.
+Return a repaired version of the code that addresses these errors. Return your code in full, inside a ```plaintext code block.

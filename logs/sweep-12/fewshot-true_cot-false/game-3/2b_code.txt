@@ -1,0 +1,106 @@
+Certainly. Here is the corrected version of the game code, addressing the errors you identified:
+
+```plaintext
+title Light And Dark
+author YourName
+
+========
+OBJECTS
+========
+
+Background
+white
+
+Wall
+darkgray black
+00010
+11111
+01000
+11111
+00010
+
+Player
+black yellow
+.000.
+.111.
+.101.
+.111.
+.....
+
+LightSource
+yellow
+.....
+.....
+..0..
+.....
+.....
+
+Target
+lightblue
+.....
+.000.
+.0.0.
+.000.
+.....
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Player
+L = LightSource
+@ = Target
+
+=======
+SOUNDS
+=======
+
+sound_move 81000012
+sound_target 51001234
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Player, Wall, LightSource, Target
+
+======
+RULES
+======
+
+[ > Player | LightSource ] -> [ > Player | > LightSource ] sound_move
+
+(Activate targets when light is over them)
+[ LightSource | Target ] -> [ LightSource | Target ] sound_target
+
+(remove light from empty spaces)
+[ LightSource | no LightSource no Player no Target ] -> []
+
+==============
+WINCONDITIONS
+==============
+
+no Target
+
+=======
+LEVELS
+=======
+
+#########
+#..@...@#
+#.L#.#..#
+#..P..@.#
+#....@..#
+#########
+```
+
+### Changes Made:
+1. **Sound Definitions**: The sound identifiers were updated to have valid names (`sound_move` and `sound_target`) instead of using numbers directly.
+2. **RULES Section**: Updated the rule references to use the correct sound names (`sound_move` and `sound_target`) instead of the unexpected tokens.
+3. **Removed Extra Lines at Beginning of Levels**: Removed the misplaced lines `'` and `'Level 1` to ensure the levels section starts directly with the map.
+4. **Ensured Rectangular Level**: Verified that the levels are rectangular, which they already are. 
+
+With these changes, the game code should compile without errors.

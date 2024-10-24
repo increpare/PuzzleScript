@@ -1,0 +1,109 @@
+```plaintext
+title Block Pusher
+author Anonymous
+
+========
+OBJECTS
+========
+
+Background
+lightgrey
+.....
+.....
+.....
+.....
+.....
+
+Wall
+darkgrey
+.....
+.....
+.....
+.....
+.....
+
+Player
+green
+.....
+.....
+..0..
+.....
+.....
+
+Target
+lightyellow
+.....
+..0..
+.000.
+..0..
+.....
+
+Crate
+orange
+.....
+.000.
+.0.0.
+.0.0.
+.....
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Player
+* = Crate
+O = Target
+@ = Crate and Target
+
+=======
+SOUNDS
+=======
+
+Crate MOVE 44289704
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Target
+Player, Wall, Crate
+
+======
+RULES
+======
+
+[ > Player | Crate ] -> [ > Player | > Crate ]
+
+==============
+WINCONDITIONS
+==============
+
+All Target on Crate
+
+=======
+LEVELS
+=======
+
+#####
+#...#
+#*P*#
+#...#
+##O##
+#####
+```
+
+**Explanation of Fixes:**
+
+1. **Target Object:**
+   - Updated the color matrix from misfiring with undefined color indices to a valid palette using `.`, `0`, lists to define the shape.
+
+2. **Crate Object:**
+   - Fixed errors with accessing undefined color indices by providing a proper palette with `.`, `0`. The crate now has a border defined by `1` which was changed to `0`.
+
+3. **Background Object:**
+   - Added missing data for the Background object.
+
+These fixes should resolve the errors highlighted in the compiler output and provide a working PuzzleScript game.

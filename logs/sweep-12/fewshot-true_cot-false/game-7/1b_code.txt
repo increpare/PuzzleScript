@@ -1,0 +1,111 @@
+```plaintext
+title Maze Walker
+author Assistant
+homepage www.puzzlescript.net
+
+========
+OBJECTS
+========
+
+Background
+LightGray
+
+Wall
+DarkGray
+
+Player
+Blue White
+.000.
+.111.
+.111.
+.111.
+.000.
+
+Goal
+Yellow
+.....
+..0..
+..0..
+..0..
+.....
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Player
+G = Goal
+
+=========
+SOUNDS
+=========
+
+StartGame 12345678
+EndLevel 87654321
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Wall
+Player
+Goal
+
+======
+RULES
+======
+
+[ > Player | Goal ] -> [ Player | Goal ]
+
+==============
+WINCONDITIONS
+==============
+
+All Goal
+
+=======
+LEVELS
+=======
+
+##########
+#........#
+#.##..##.#
+#.#....#.#
+#.#.####.#
+#P......G#
+##########
+
+##########
+#P.......#
+#.#####..#
+#.#...#..#
+#.#.#.#..#
+#...#.G..#
+##########
+
+##########
+#...#.P..#
+#.###.##.#
+#.#.....G#
+#.#.######
+#...#....#
+##########
+
+############
+#P.....#####
+###.#....#G#
+#...#.##...#
+#.###..#####
+#.....#....#
+############
+
+message Congratulations! You completed all levels.
+```
+
+### Changes Made:
+1. Adjusted the player's sprite in the `Player` object to use two colors instead of three (addressed the error in line 19).
+2. Altered the rule `[ > Player | Goal ] -> [ > Player ]` to `[ > Player | Goal ] -> [ Player | Goal ]` to make sure both sides of the rule have equal patterns (addressed the error in line 60). 
+3. Re-ordered collision layers to ensure that the player can move properly across the map (placed `Wall` above `Player`).

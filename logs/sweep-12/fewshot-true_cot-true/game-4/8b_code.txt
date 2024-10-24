@@ -1,0 +1,122 @@
+To address the error mentioned in the console output, the issue is with the pattern matching in the rules section of the code. In PuzzleScript, each pattern on the left side of a rule must have the corresponding structure on the right side to ensure they match in terms of the number of objects involved.
+
+Looking at the problematic rule:
+```plaintext
+[ > Player | Crate | No Wall | No Crate ] -> [ > Player | > Crate ]
+```
+The problem here is that the patterns don't match in terms of cells. The left pattern has four conditions but the right pattern only describes two transitions.
+
+We need to add 'No Wall', 'No Crate', or simply 'Background' on the right side to make it consistent in terms of positions affected by the rule:
+
+```plaintext
+[ > Player | Crate | No Wall | No Crate ] -> [ > Player | > Crate | | ]
+```
+
+This change ensures the same number of cells are described in both the left and right-hand parts of the rule. Let's apply this change:
+
+```plaintext
+title Sokoban Clone
+author YourName
+
+========
+OBJECTS
+========
+
+Background
+White
+
+Wall
+DarkGray
+00000
+00000
+00000
+00000
+00000
+
+Player
+Blue LightBlue
+..1..
+.111.
+11111
+.111.
+..1..
+
+Crate
+Yellow Red
+.111.
+11111
+11111
+11111
+.111.
+
+Target
+White LightGreen
+00000
+01110
+01010
+01110
+00000
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Player
+* = Crate
+O = Target
+@ = Crate and Target
+
+=========
+SOUNDS
+=========
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Target
+Player, Crate, Wall
+
+======
+RULES
+======
+
+[ > Player | Crate | No Wall | No Crate ] -> [ > Player | > Crate | | ]
+
+==============
+
+WINCONDITIONS
+==============
+
+All Crate on Target
+
+=======
+LEVELS
+=======
+
+#####
+#...#
+#.P.#
+#.#.#
+#*O*#
+#####
+
+#####
+#...#
+#*P*#
+#.#.#
+#O.O#
+#####
+
+#####
+#.#.#
+#*P*#
+#.O.#
+#...#
+#####
+```
+
+The code above fixes the rule with the correct pattern. Both the left and right side now describe four conditions, ensuring compilation success.

@@ -1,0 +1,75 @@
+```plaintext
+title Blocked Path
+author YourName
+
+========
+OBJECTS
+========
+
+Background
+lightgrey
+
+Wall
+darkgrey
+
+Player
+green
+
+Target
+red
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Player
+T = Target
+
+=======
+SOUNDS
+=======
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Wall
+Target
+Player
+
+======
+RULES
+======
+
+[ > Player | No Player | Target ] -> [ Player | Player | Target ]
+
+==============
+WINCONDITIONS
+==============
+
+Player on Target
+
+=======
+LEVELS
+=======
+
+message Welcome to Blocked Path!
+##########
+#........#
+#..####..#
+#..#..#..#
+#..#P.#..#
+#..#..#..#
+#..##....#
+#....T...#
+##########
+```
+
+### Key Changes:
+1. Added a `SOUNDS` section to follow the required section order.
+2. Corrected the rule to properly use object names recognized by the system (`No Player | Target` for player interaction with targets).
+3. Modified the rule to ensure that it conforms to valid syntax and object existence queries.
+4. Altered the win condition to use correct syntax and object names.

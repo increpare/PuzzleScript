@@ -1,0 +1,130 @@
+The errors you're encountering relate to the incorrect palette definition for the `Treasure` object and issues in the `SOUNDS` section of your code. Here's a fixed version of your PuzzleScript game code:
+
+```plaintext
+Title: Treasure Hunter
+
+Author: Your Name
+
+Homepage: http://www.example.com
+
+========
+OBJECTS
+========
+
+Background
+lightgray
+00000
+00000
+00000
+00000
+00000
+
+Player
+Red
+.....
+..0..
+.000.
+..0..
+.....
+
+Wall
+DarkGray
+.....
+.....
+.....
+.....
+.....
+
+Treasure
+Yellow
+.000.
+.0.0.
+00000
+.0.0.
+.000.
+
+Goal
+Green
+.....
+.000.
+.0.0.
+.000.
+.....
+
+========
+LEGEND
+========
+
+. = Background
+P = Player
+# = Wall
+T = Treasure
+G = Goal
+
+========
+SOUNDS
+========
+
+FoundTreasure
+P Moved Treasure:
+    trebleUp
+
+========
+RULES
+========
+
+[> Player | Treasure] -> [Player | Goal]
+
+[Player|Goal]->[] // clear goal to advance
+
+========
+COLLISIONLAYERS
+========
+
+Background
+Player
+Wall
+Treasure
+Goal
+
+========
+WINCONDITIONS
+========
+
+No Treasure
+
+========
+LEVELS
+========
+
+/0
+#####
+#...#
+#P.T#
+#...#
+##### 
+
+/1
+#######
+#.....#
+#.#.#.#
+#.#.T.#
+#P#.#G#
+#.....#
+#######
+
+/2
+#########
+#..T..#.#
+#.#.##..#
+#...##..#
+#.P..G###
+#...T...#
+#########
+
+========
+```
+
+**Fixes applied:**
+1. Corrected the color data for the `Treasure` object to ensure it uses the correct pattern with distinct colors that align with the object definition.
+2. Fixed the `SOUNDS` section to properly match syntax and triggering conditions. The original sound configuration was incorrect and needed specifying a sound action verb (e.g., `Moved`) followed by the triggering conditions and the sound effect (e.g., `trebleUp`).

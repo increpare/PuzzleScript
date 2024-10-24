@@ -1,0 +1,150 @@
+Certainly! It looks like there were issues with the color definitions for some sprites. Specifically, each sprite must have enough colors declared as per the color index in their art patterns. Here's a fixed version of the code:
+
+```plaintext
+title Colorful Connections
+author PuzzleScript Creator
+
+========
+OBJECTS
+========
+
+Background
+#282828
+
+Wall
+#404040 #606060
+00000
+00100
+01110
+00100
+00000
+
+Player
+#FFDD44 #FFFFFF #000000
+.000.
+.111.
+.0310
+.111.
+.....
+
+RedBlock
+#DD4444
+.000.
+.0.0.
+.0.0.
+.000.
+.....
+
+YellowBlock
+#DDDD44
+.000.
+.0.0.
+.0.0.
+.000.
+.....
+
+BlueBlock
+#4444DD
+.000.
+.0.0.
+.0.0.
+.000.
+.....
+
+RedTarget
+#FF8888
+.....
+.111.
+.101.
+.111.
+.....
+
+YellowTarget
+#FFFF88
+.....
+.111.
+.101.
+.111.
+.....
+
+BlueTarget
+#8888FF
+.....
+.111.
+.101.
+.111.
+.....
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Player
+R = RedBlock
+Y = YellowBlock
+B = BlueBlock
+X = RedTarget
+O = YellowTarget
+Z = BlueTarget
+
+=========
+SOUNDS
+=========
+
+Player MOVE 11429307
+Block MOVE 16777215
+EndLevel 85763108
+Win 65287309
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Player, Wall, RedBlock, YellowBlock, BlueBlock
+
+======
+RULES
+======
+
+[ > Player | RedBlock ] -> [ > Player | > RedBlock ]
+[ > Player | YellowBlock ] -> [ > Player | > YellowBlock ]
+[ > Player | BlueBlock ] -> [ > Player | > BlueBlock ]
+
+==============
+WINCONDITIONS
+==============
+
+All RedBlock on RedTarget
+All YellowBlock on YellowTarget
+All BlueBlock on BlueTarget
+
+=======
+LEVELS
+=======
+
+####
+#P.#
+#RY#
+#BO#
+#ZX#
+####
+
+#######
+#.....#
+#RYBOZ#
+#.....#
+#XP...#
+#######
+
+#########
+#.YO....#
+#P..R.Z.#
+#....B..#
+#.X....O#
+#########
+```
+
+The changes implemented include fixing the color index in both the `Player` and target sprites (`RedTarget`, `YellowTarget`, and `BlueTarget`) to match the number of colors actually defined. This should correct the errors you're encountering.

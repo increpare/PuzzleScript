@@ -1,0 +1,100 @@
+SYSTEM PROMPT:
+You are a game designer, familiar with the PuzzleScript game description language. 
+
+USER PROMPT:
+The following PuzzleScript game code:
+```plaintext
+title Sokoban Simple
+author OpenAI
+
+OBJECTS
+Background
+black
+.....
+.....
+.....
+.....
+.....
+
+Player
+blue
+.....
+.000.
+.000.
+.000.
+.....
+
+Wall
+gray
+.....
+.....
+.....
+.....
+.....
+
+Box
+brown
+.....
+.....
+.....
+.....
+.....
+
+Target
+green
+.....
+.....
+.....
+.....
+.....
+
+BoxOnTarget
+yellow
+.....
+.....
+.....
+.....
+.....
+
+LEGEND
+. = Background
+P = Player
+# = Wall
+B = Box
+T = Target
+O = BoxOnTarget
+
+SOUNDS 
+
+COLLISIONLAYERS
+Background
+Player, Box, BoxOnTarget
+Wall
+Target
+
+RULES
+[ Player | Box ] -> [ Player | ] [ Box ]
+[ Player | BoxOnTarget ] -> [ Player | ] [ Box ]
+[ Box | Target ] -> [ BoxOnTarget | ]
+[ BoxOnTarget ] -> [ Box | Target ]
+
+WINCONDITIONS
+All BoxOnTarget on Target
+
+LEVELS
+# # # # # # #
+# . . . . . #
+# . B B T . #
+# . . P . . #
+# T . . . . #
+# # # # # # #
+
+```
+produced the following console output:
+=================================
+line 79 : Error, symbol " ", used in map, not found.
+line 70 : Error, when specifying a rule, the number of matches (square bracketed bits) on the left hand side of the arrow must equal the number on the right
+line 71 : Error, when specifying a rule, the number of matches (square bracketed bits) on the left hand side of the arrow must equal the number on the right
+line 73 : In a rule, each pattern to match on the left must have a corresponding pattern on the right of equal length (number of cells).
+Errors detected during compilation; the game may not work correctly.
+Return a repaired version of the code that addresses these errors. First, reason about your task and determine the best plan of action. Then, write your code. Return your code in full, inside a ```plaintext code block.

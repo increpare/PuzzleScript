@@ -1,0 +1,103 @@
+SYSTEM PROMPT:
+You are a game designer, familiar with the PuzzleScript game description language. 
+
+USER PROMPT:
+The following PuzzleScript game code:
+```plaintext
+Title: Reach the Goal
+Author: PuzzleScriptUser
+Homepage: https://www.puzzlescript.net
+
+===========
+OBJECTS
+===========
+
+Background
+lightgrey
+00000
+00000
+00000
+00000
+00000
+
+Player
+red
+.....
+..0..
+.000.
+..0..
+.....
+
+Wall
+black
+00000
+00000
+00000
+00000
+00000
+
+Goal
+green
+.....
+.....
+..0..
+.....
+.....
+
+===========
+LEGEND
+===========
+
+. = Background
+P = Player
+W = Wall
+G = Goal
+
+===========
+SOUNDS
+===========
+
+===========
+COLLISIONLAYERS
+===========
+
+Background
+Wall
+Player, Goal
+
+===========
+RULES
+===========
+
+[ Player | Goal ] -> [ > Player | Goal ]
+[ Player | ] -> [ > Player | ]
+
+===========
+WINCONDITIONS
+===========
+
+All Player on Goal
+
+===========
+LEVELS
+===========
+
+WWWWWW
+W....W
+W..P.W
+W....W
+W..G.W
+WWWWWW
+
+WWWWWW
+W....W
+W.P..W
+W..W.W
+W..G.W
+WWWWWW
+
+
+```
+compiled, but a solvability check returned the following error:
+ Level 0 is not solvable. Please repair it. Level 1 is not solvable. Please repair it.
+Return your code in full, inside a ```plaintext code block.

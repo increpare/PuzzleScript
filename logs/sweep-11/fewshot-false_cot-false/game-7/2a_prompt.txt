@@ -4,58 +4,121 @@ You are a game designer, familiar with the PuzzleScript game description languag
 USER PROMPT:
 The following PuzzleScript game code:
 ```plaintext
-# Legend
-a = Player
-b = Goal
-c = Wall
-d = Floor
+Title: Sokoban Puzzle
+Author: PuzzleScript Dev
+Homepage: https://www.puzzlescript.net
 
-# Objectives
-z = PlayerOnGoal
+===========
+OBJECTS
+===========
 
-=== CollisionLayers ===
 Background
-PlayerLayer = a
-GoalLayer   = b
-WallLayer   = c
+black
 
-=== Rules ===
-# Player movement
-[right] a -> a [right]
-[left]  a -> a [left]
-[up]    a -> a [up]
-[down]  a -> a [down]
+Wall
+grey
 
-# Goals checking
-a on b -> z
+Player
+yellow
 
-=== WinConditions ===
-All z
+Box
+blue
 
-=== Levels ===
-# Level 1
-...b...
-..ccc..
-..ca...
-..ccc..
-...d...
+Target
+green
 
-# Level 2
-.....b.
-..c...
-..c.a.
-..c...
-...b...
+BoxOnTarget
+lightgreen
+
+PlayerOnTarget
+yellow
+
+===========
+LEGEND
+===========
+
+. = Background
+# = Wall
+P = Player
+B = Box
+T = Target
+O = BoxOnTarget
+G = PlayerOnTarget
+
+===========
+SOUNDS
+===========
+
+Move
+    clink
+
+Push
+    slide
+
+Win
+    win
+
+===========
+COLLISIONLAYERS
+===========
+
+Background
+Wall
+Target
+Player, PlayerOnTarget
+Box, BoxOnTarget
+
+===========
+RULES
+===========
+
+[Player | Box] -> [ | Player] [Box | ]
+[PlayerOnTarget | Box] -> [Target | Player] [Box | ]
+[Player | Target] -> [PlayerOnTarget | ]
+[PlayerOnTarget | ] -> [Player | Target]
+
+[Box | Target] -> [BoxOnTarget | ]
+[BoxOnTarget | Background] -> [Box | Target]
+
+=======
+
+[no Box][no Target] -> WIN
+
+===========
+LEVELS
+===========
+
+#######
+#.....#
+#..T..#
+#..B..#
+#..P..#
+#######
+
+#######
+#..#..#
+#..B..#
+#.TP..#
+#..#..#
+#####.#
+
+########
+#......#
+#..B#..#
+#..T#..#
+#..P...#
+########
+
 
 ```
 produced the following console output:
 =================================
-line 2 : Unrecognised stuff in the prelude.
-line 3 : Unrecognised stuff in the prelude.
-line 4 : Unrecognised stuff in the prelude.
-line 5 : Unrecognised stuff in the prelude.
-line 8 : Unrecognised stuff in the prelude.
-line 10 : Only comments should go after a bunch of equals signs ('===') on a line.
+line 46 : unexpected sound token "move".
+line 47 : unexpected sound token "clink".
+line 49 : unexpected sound token "push".
+line 50 : unexpected sound token "slide".
+line 52 : unexpected sound token "win".
+line 53 : unexpected sound token "win".
 too many errors, aborting compilation
 Errors detected during compilation; the game may not work correctly.
 Return a repaired version of the code that addresses these errors. Return your code in full, inside a ```plaintext code block.

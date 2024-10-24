@@ -1,0 +1,99 @@
+SYSTEM PROMPT:
+You are a game designer, familiar with the PuzzleScript game description language. 
+
+USER PROMPT:
+The following PuzzleScript game code:
+```plaintext
+Title: Maze Runner
+Author: YourName
+Homepage: http://yourhomepage.com
+
+===========
+OBJECTS
+===========
+
+Background
+transparent
+. . . . 
+. . . . 
+. . . . 
+. . . . 
+
+Player
+#00F
+. 0 . . 
+. 1 2 . 
+. . 3 . 
+. . . . 
+
+Wall
+#333
+. . . . 
+. # # . 
+. # # . 
+. . . . 
+
+Target
+#0F0
+. . . . 
+. 2 0 . 
+. 1 3 . 
+. . . . 
+
+===========
+LEGEND
+===========
+
+. = Background
+P = Player
+W = Wall
+T = Target
+
+===========
+SOUNDS
+===========
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Player
+Wall
+Target
+
+===========
+RULES
+===========
+
+[ > Player | Target ] -> [ > Player | Player ]
+
+=============
+WINCONDITIONS
+=============
+
+All Target on Player
+
+===========
+LEVELS
+===========
+
+#######        
+#.....#        
+#.P.T.#        
+#.....#        
+#######        
+
+
+```
+produced the following console output:
+=================================
+line 19 : Trying to access color number 1 from the color palette of sprite PLAYER, but there are only 1 defined in it.
+line 19 : Trying to access color number 2 from the color palette of sprite PLAYER, but there are only 1 defined in it.
+line 20 : Trying to access color number 3 from the color palette of sprite PLAYER, but there are only 1 defined in it.
+line 26 : Unknown junk in spritematrix for object WALL.
+line 27 : Unknown junk in spritematrix for object WALL.
+line 33 : Trying to access color number 2 from the color palette of sprite TARGET, but there are only 1 defined in it.
+too many errors, aborting compilation
+Errors detected during compilation; the game may not work correctly.
+Return a repaired version of the code that addresses these errors. Return your code in full, inside a ```plaintext code block.

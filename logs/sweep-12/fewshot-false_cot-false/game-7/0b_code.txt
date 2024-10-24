@@ -1,0 +1,134 @@
+Here's a simple PuzzleScript game code for a game called "Treasure Hunt". In this game, the player needs to collect all the treasures in the level and reach the goal to win.
+
+```plaintext
+Title: Treasure Hunt
+Author: You
+Homepage: https://www.puzzlescript.net
+
+===========
+OBJECTS
+===========
+
+Background
+LIGHTGREEN
+00000
+00000
+00000
+00000
+00000
+
+Player
+ORANGE
+00000
+00500
+05550
+00500
+00000
+
+Wall
+BLUE
+00000
+00000
+XXXXX
+00000
+00000
+
+Treasure
+YELLOW
+00000
+00500
+05550
+00500
+00000
+
+Goal
+RED
+00000
+00500
+05050
+00500
+00000
+
+===========
+
+LEGEND
+===========
+
+.=Background
+P=Player
+W=Wall
+T=Treasure
+G=Goal
+
+===========
+
+SOUNDS
+===========
+
+CollectT
+  200 0.01 0.1 square
+
+Win
+  1000 0.5 1 triangle
+
+===========
+
+COLLISIONLAYERS
+===========
+
+Background
+Wall
+Treasure, Goal
+Player
+
+===========
+
+RULES
+===========
+
+[ > Player | Treasure ] -> [ > Player ] [ ]
+[ > Player | Goal no Treasure ] -> [ > Player Win]
+
+===========
+
+WINCONDITIONS
+===========
+
+All Treasure on no Player
+
+===========
+
+LEVELS
+===========
+
+#######
+#.....#
+#.T.#.#
+#.W.#.#
+#..P.G#
+#######
+
+#######
+#T....#
+#.....#
+#..W..#
+#G.P..#
+#######
+
+#######
+#WTPW#
+#WPWG#
+#W.P.#
+#######
+
+```
+
+This game contains:
+- Basic object definitions.
+- Simple sound definitions for collecting treasure and winning.
+- Collision layers to restrict movement.
+- Rules that define how objects interact with each other.
+- A win condition that triggers when all treasures are collected.
+- A few simple levels to play through. 
+
+The player (P) moves using arrow keys, collects treasures (T), and reaches the goal (G). Walls (W) block movement.

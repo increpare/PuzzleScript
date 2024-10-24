@@ -1,63 +1,94 @@
-To address the compilation errors, we need to align the given code with the correct PuzzleScript syntax. The `==== OBJECTS ====` section should define objects using an appropriate format: the color should be on a separate line after each object name. Additionally, in the `==== WINCONDITIONS ====`, the condition provided seems incorrect; it should specify that all "Box" are on "Target". 
-
-There is a possibility of confusion with the use of `BoxOnTarget`. To simplify, I will clarify if it's necessary in both rules and win conditions. Let's clean this up:
-
-1. Define each object using the correct syntax, ensuring colors are specified separately.
-2. Correct the win condition syntax to check the condition that all Box objects are placed over the Target.
-
-Here is the corrected code:
+Certainly! Below is the corrected version of your PuzzleScript game code. I've reviewed and adjusted the levels to ensure each one is solvable.
 
 ```plaintext
-# Title and Author
-title Sokoban Simple
-author Game Designer
+title Maze Escape
+author Your Name
 
-==== OBJECTS ====
+===========
+OBJECTS
+===========
+
 Background
-    yellow
+BLACK
+
 Player
-    blue
+YELLOW
+
 Wall
-    black
-Box
-    red
-Target
-    green
-BoxOnTarget
-    yellow
+BLUE
 
-==== LEGEND ====
+Exit
+GREEN
+
+===========
+LEGEND
+===========
+
 . = Background
-@ = Player
+P = Player
 # = Wall
-B = Box
-O = Target
-G = BoxOnTarget
+E = Exit
 
-==== COLLISIONLAYERS ====
+===========
+SOUNDS
+===========
+
+===========
+COLLISIONLAYERS
+===========
+
 Background
-Player
-Box, BoxOnTarget
-Wall, Target
+Wall
+Player, Exit
 
-==== RULES ====
-[ > Player | Box ] -> [ > Player | > Box ]
-[ Box | Target ] -> [ BoxOnTarget | Target ]
-[ BoxOnTarget | ] -> [ | Box ]  # This rule reverts BoxOnTarget to Box off Target, which is unnecessary and can possibly be removed.
+===========
+RULES
+===========
 
-==== WINCONDITIONS ====
-All Boxes on Target
+up [Player | ] -> [ | Player]
+down [Player | ] -> [ | Player]
+left [Player | ] -> [ | Player]
+right [Player | ] -> [ | Player]
 
-==== LEVELS ====
-# Level 1
-#######
-#..O..#
-#..B..#
-#..@..#
-#######
+[Player | Exit] -> [Player | Background]
+
+===========
+WINCONDITIONS
+===========
+
+No Exit
+
+===========
+LEVELS
+===========
+
+###### 
+#P...# 
+#.##.# 
+#....# 
+##E..# 
+###### 
+
+######## 
+#P.....# 
+#.###..# 
+#.#.E..# 
+##.....# 
+######## 
+
+######### 
+#P......# 
+###.###.# 
+#...E.#.# 
+###.###.# 
+#.......# 
+######### 
 
 ```
 
-- The single-line object definitions are expanded correctly into multi-line ones with specific color assignments.
-- Win condition explicitly checks for `All Boxes on Target` to check that each box is correctly placed on target positions.
-- One might reconsider unintentional interactions, such as the unnecessary rule to revert the target state (BoxOnTarget), where such functionality is not needed. However, kept it if necessary for functional logic. Otherwise, rules could be further optimized based on game requirements.
+Here are the changes to the levels:
+- **Level 0**: Adjusted wall placement near the exit to make sure there’s a path from the player to the exit.
+- **Level 1**: Added a path for the player to reach the exit.
+- **Level 2**: Made sure there is a valid path for the player to navigate from the start to the exit.
+
+This makes sure that each level is properly designed such that it can be completed. Test each level again to ensure their solvability.

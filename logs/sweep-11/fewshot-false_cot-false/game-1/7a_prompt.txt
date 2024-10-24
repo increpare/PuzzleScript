@@ -1,0 +1,118 @@
+SYSTEM PROMPT:
+You are a game designer, familiar with the PuzzleScript game description language. 
+
+USER PROMPT:
+The following PuzzleScript game code:
+```plaintext
+Title: Push and Collect
+
+Author: PuzzleScript Designer
+
+========
+OBJECTS
+========
+
+Background
+LIGHTGREEN
+00000
+00000
+00000
+00000
+00000
+
+Player
+ORANGE
+..0..
+.000.
+..0..
+..0..
+.....
+
+Wall
+BLACK
+00000
+00000
+00000
+00000
+00000
+
+Box
+BROWN
+.....
+.000.
+.0.0.
+.000.
+.....
+
+Goal
+YELLOW
+.....
+.....
+..0..
+.....
+.....
+
+========
+LEGEND
+========
+
+= Background
+P = Player
+W = Wall
+B = Box
+G = Goal
+# = Wall
+
+=============== 
+COLLISIONLAYERS
+===============
+
+Background
+Player
+Wall, Box
+Goal
+
+=========
+RULES
+=========
+
+[ > Player | Box ] -> [ > Player | > Box ]
+[ Player Goal ] -> [  | Player ]
+
+========
+WINCONDITIONS
+========
+
+All Box on Goal
+
+==========
+LEVELS
+==========
+
+#####
+#  W#
+# WPB#
+# W G#
+#  W #
+#####
+
+========
+MESSAGES
+========
+
+Welcome to Push and Collect!
+Move the crates onto the goals.
+
+
+```
+produced the following console output:
+=================================
+line 53 : Only comments should go after a bunch of equals signs ('===') on a line.
+line 61 : section "COLLISIONLAYERS" is out of order, must follow  "SOUNDS" (or it could be that the section "SOUNDS"is just missing totally.  You have to include all section headings, even if the section itself is empty).
+line 73 : Name "player", referred to in a rule, does not exist.
+line 73 : Name "box", referred to in a rule, does not exist.
+line 74 : Name "player", referred to in a rule, does not exist.
+line 74 : Name "goal", referred to in a rule, does not exist.
+too many errors, aborting compilation
+Errors detected during compilation; the game may not work correctly.
+Return a repaired version of the code that addresses these errors. Return your code in full, inside a ```plaintext code block.

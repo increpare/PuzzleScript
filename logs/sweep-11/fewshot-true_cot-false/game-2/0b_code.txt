@@ -1,0 +1,126 @@
+```plaintext
+title Magic Mirror
+author PuzzleMaster
+
+========
+OBJECTS
+========
+
+Background
+#ADD8E6
+.....
+.....
+.....
+.....
+.....
+
+Wall
+#8B4513
+11111
+11111
+11111
+11111
+11111
+
+Player
+#FFD700 #FF8C00
+.000.
+.111.
+02220
+.111.
+.222.
+
+Mirror
+#C0C0C0
+.111.
+.1001
+.1221
+.1001
+.111.
+
+PortalEntrance
+#4B0082 #8A2BE2
+22222
+21112
+21012
+21112
+22222
+
+PortalExit
+#32CD32 #7CFC00
+33333
+32223
+32123
+32223
+33333
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Player
+M = Mirror
+E = PortalEntrance
+X = PortalExit
+
+=======
+SOUNDS
+=======
+
+MirrorTouch
+66203702
+
+PortalTravel
+93301106
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Wall
+PortalExit, PortalEntrance
+Player, Mirror
+
+======
+RULES
+======
+
+# Player can push mirrors
+[ > Player | Mirror ] -> [ > Player | > Mirror ]
+
+# Mirrors can't be pushed into walls
+[ > Mirror | Wall ] -> [ Mirror | Wall ]
+
+# Player interaction with portal entrance
+[ Player PortalEntrance ] -> [ PortalTravel ]
+[ PortalTravel ] -> [ Background ] again
+[ Background PortalExit ] -> [ Player PortalExit ]
+
+# Portal sound effect when used
+[ PortalTravel ] -> [ PortalTravel ] SFX1
+
+==============
+WINCONDITIONS
+==============
+
+all PortalExit on Player
+
+=======
+LEVELS
+=======
+
+##########
+#........#
+#..#M#...#
+#.PE..M..#
+#........#
+#..M.#...#
+#...X....#
+##########
+
+message Collect the light, move the mirrors, and transport through portals!
+```
+This code outlines a basic puzzle game where the player interacts with mirrors and portals to advance through different levels. The "Magic Mirror" game involves strategic mirror placement to enable traveling through portals and reaching exit points.

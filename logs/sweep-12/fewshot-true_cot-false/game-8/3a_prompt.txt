@@ -1,0 +1,1402 @@
+SYSTEM PROMPT:
+You are a game designer, familiar with the PuzzleScript game description language. Here are some example games, for inspiration (do not reproduce these games exactly):
+
+title Memories Of Castlemouse
+author Wayne Myers
+homepage www.conniptions.org
+
+text_color lightgreen
+again_interval 0
+youtube CnjtQbU0Gg8
+
+========
+OBJECTS
+========
+
+Background
+Black
+
+Wall
+Brown DarkBrown
+00010
+11111
+01000
+11111
+00010
+
+Floor
+#888855 #885588
+00100
+01110
+11011
+01110
+00100
+
+
+Hole
+Black #222222 Brown
+21112
+10000
+10000
+10000
+10000
+
+Marker
+Red
+00.00
+0...0
+.....
+0...0
+00.00
+
+MMarker
+Purple
+00.00
+0...0
+.....
+0...0
+00.00
+
+CMarker
+Purple
+00.00
+0...0
+.....
+0...0
+00.00
+
+DMarker
+Purple
+00.00
+0...0
+.....
+0...0
+00.00
+
+EMarker
+Purple
+00.00
+0...0
+.....
+0...0
+00.00
+
+Mouse
+LightGrey Black
+.....
+.1.1.
+.000.
+.010.
+..1..
+
+UpMovingMouse
+LightGrey Black
+.....
+.1.1.
+.000.
+.010.
+..1..
+
+LeftMovingMouse
+LightGrey Black
+.....
+.1.1.
+.000.
+.010.
+..1..
+
+RightMovingMouse
+LightGrey Black
+.....
+.1.1.
+.000.
+.010.
+..1..
+
+DownMovingMouse
+LightGrey Black
+.....
+.1.1.
+.000.
+.010.
+..1..
+
+Cat
+White Green Pink Grey
+0...0
+00000
+01010
+30203
+.000.
+
+RightMovingCat
+White Green Pink Grey
+0...0
+00000
+01010
+30203
+.000.
+
+LeftMovingCat
+White Green Pink Grey
+0...0
+00000
+01010
+30203
+.000.
+
+UpMovingCat
+White Green Pink Grey
+0...0
+00000
+01010
+30203
+.000.
+
+DownMovingCat
+White Green Pink Grey
+0...0
+00000
+01010
+30203
+.000.
+
+Dog
+DarkBrown Black
+.0.0.
+01010
+00000
+00100
+01110
+
+UpMovingDog
+DarkBrown Black
+.0.0.
+01010
+00000
+00100
+01110
+
+DownMovingDog
+DarkBrown Black
+.0.0.
+01010
+00000
+00100
+01110
+
+LeftMovingDog
+DarkBrown Black
+.0.0.
+01010
+00000
+00100
+01110
+
+RightMovingDog
+DarkBrown Black
+.0.0.
+01010
+00000
+00100
+01110
+
+Elephant
+LightGrey Black #eeeeee Grey
+.000.
+31300
+32330
+30000
+.0..0
+
+UpMovingElephant
+LightGrey Black #eeeeee Grey
+.000.
+31300
+32330
+30000
+.0..0
+
+DownMovingElephant
+LightGrey Black #eeeeee Grey
+.000.
+31300
+32330
+30000
+.0..0
+
+LeftMovingElephant
+LightGrey Black #eeeeee Grey
+.000.
+31300
+32330
+30000
+.0..0
+
+RightMovingElephant
+LightGrey Black #eeeeee Grey
+.000.
+31300
+32330
+30000
+.0..0
+
+=======
+LEGEND
+=======
+
+X = Background
+. = Floor
+# = Wall
+E = Elephant and Floor and Marker
+D = Dog and Floor and Marker
+C = Cat and Floor and Marker
+M = Mouse and Floor and Marker
+3 = Elephant and Floor
+2 = Dog and Floor
+1 = Cat and Floor
+0 = Mouse and Floor
+H = Hole and Floor
+
+Player = Marker
+
+Obstacle = Wall or Hole
+
+VerticalMovingElephant = UpMovingElephant or DownMovingElephant
+HorizontalMovingElephant = LeftMovingElephant or RightMovingElephant
+MovingElephant = VerticalMovingElephant or HorizontalMovingElephant
+
+VerticalMovingDog = UpMovingDog or DownMovingDog
+HorizontalMovingDog = LeftMovingDog or RightMovingDog
+MovingDog = VerticalMovingDog or HorizontalMovingDog
+
+VerticalMovingCat = UpMovingCat or DownMovingCat
+HorizontalMovingCat = LeftMovingCat or RightMovingCat
+MovingCat = VerticalMovingCat or HorizontalMovingCat
+
+VerticalMovingMouse = UpMovingMouse or DownMovingMouse
+HorizontalMovingMouse = LeftMovingMouse or RightMovingMouse
+MovingMouse = VerticalMovingMouse or HorizontalMovingMouse
+
+MoveMarker = MMarker or CMarker or DMarker or EMarker
+
+=======
+SOUNDS
+=======
+
+SFX0 40739509 (Mouse in hole)
+SFX1 65087301 (Scared mouse)
+SFX2 10901907 (Hit wall)
+SFX3 45415107 (Scared dog)
+SFX4 80636305 (Scared cat)
+SFX5 3673502  (Scared elephant)
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Floor
+Hole
+Mouse, MovingMouse, Cat, MovingCat, Dog, MovingDog, Elephant, MovingElephant, Wall
+Marker, MoveMarker
+
+======
+RULES
+======
+
+(Marker rules)
+[ > Marker Mouse ] -> [ MMarker > Mouse ]
+[ > Marker Cat ] -> [ CMarker > Cat ]
+[ > Marker Dog ] -> [ DMarker > Dog ]
+[ > Marker Elephant ] -> [ EMarker > Elephant ]
+
+startLoop
+
+(Elephant rules)
+[ UP Elephant ] -> [ UP UpMovingElephant ]
+[ DOWN Elephant ] -> [ DOWN DownMovingElephant ]
+[ LEFT Elephant ] -> [ LEFT LeftMovingElephant ]
+[ RIGHT Elephant ] -> [ RIGHT RightMovingElephant ]
+
+[ UpMovingElephant ] -> [ Up UpMovingElephant ] again
+[ LeftMovingElephant ] -> [ Left LeftMovingElephant ] again
+[ RightMovingElephant ] -> [ Right RightMovingElephant ] again
+[ DownMovingElephant ] -> [ Down DownMovingElephant ] again
+
+right [ Elephant | Stationary Dog | No Obstacle ] -> [ Elephant | right Dog | SFX3 ]
+left [ Elephant | Stationary Dog | No Obstacle ] -> [ Elephant | left Dog | SFX3 ]
+up [ Elephant | Stationary Dog | No Obstacle ] -> [ Elephant | up Dog | SFX3 ]
+down [ Elephant | Stationary Dog | No Obstacle ] -> [ Elephant | down Dog | SFX3]
+right [ VerticalMovingElephant | Stationary Dog | No Obstacle ] -> [ VerticalMovingElephant | right Dog | SFX3 ]
+left [ VerticalMovingElephant | Stationary Dog | No Obstacle ] -> [ VerticalMovingElephant | left Dog | SFX3 ]
+up [ HorizontalMovingElephant | Stationary Dog | No Obstacle ] -> [ HorizontalMovingElephant | up Dog | SFX3 ]
+down [ HorizontalMovingElephant | Stationary Dog | No Obstacle ] -> [ HorizontalMovingElephant | down Dog | SFX3]
+
+[ > MovingElephant | Cat | ] -> [ Elephant | Cat | SFX5 ]
+[ > MovingElephant | Mouse ] -> [ Elephant | Mouse ]
+[ > MovingElephant | Dog | Obstacle | ] -> [ Elephant | Dog | Obstacle | SFX3 ]
+[ > MovingElephant | Dog | No Obstacle ] -> [ Elephant | > Dog | SFX3 ]
+[ > MovingElephant | Obstacle | ] -> [ Elephant | Obstacle | SFX2 ]
+
+(Dog rules)
+[ UP Dog ] -> [ UP UpMovingDog ]
+[ DOWN Dog ] -> [ DOWN DownMovingDog ]
+[ LEFT Dog ] -> [ LEFT LeftMovingDog ]
+[ RIGHT Dog ] -> [ RIGHT RightMovingDog ]
+
+[ UpMovingDog ] -> [ Up UpMovingDog ] again
+[ LeftMovingDog ] -> [ Left LeftMovingDog ] again
+[ RightMovingDog ] -> [ Right RightMovingDog ] again
+[ DownMovingDog ] -> [ Down DownMovingDog ] again
+
+right [ Dog | Stationary Cat | No Obstacle ] -> [ Dog | right Cat | SFX4 ]
+left [ Dog | Stationary Cat | No Obstacle ] -> [ Dog | left Cat | SFX4 ]
+up [ Dog | Stationary Cat | No Obstacle ] -> [ Dog | up Cat | SFX4 ]
+down [ Dog | Stationary Cat | No Obstacle ] -> [ Dog | down Cat | SFX4]
+right [ VerticalMovingDog | Stationary Cat | No Obstacle ] -> [ VerticalMovingDog | right Cat | SFX4 ]
+left [ VerticalMovingDog | Stationary Cat | No Obstacle ] -> [ VerticalMovingDog | left Cat | SFX4 ]
+up [ HorizontalMovingDog | Stationary Cat | No Obstacle ] -> [ HorizontalMovingDog | up Cat | SFX4 ]
+down [ HorizontalMovingDog | Stationary Cat | No Obstacle ] -> [ HorizontalMovingDog | down Cat | SFX4]
+
+[ > MovingDog | Mouse | ] -> [ Dog | Mouse | SFX3 ]
+[ > MovingDog | Elephant ] -> [ Dog | Elephant ]
+[ > MovingDog | Cat | Obstacle | ] -> [ Dog | Cat | Obstacle | SFX4 ]
+[ > MovingDog | Cat | No Obstacle ] -> [ Dog | > Cat | SFX4 ]
+[ > MovingDog | Obstacle | ] -> [ Dog | Obstacle | SFX2 ]
+
+(Cat rules)
+[ UP Cat ] -> [ UP UpMovingCat ]
+[ DOWN Cat ] -> [ DOWN DownMovingCat ]
+[ LEFT Cat ] -> [ LEFT LeftMovingCat ]
+[ RIGHT Cat ] -> [ RIGHT RightMovingCat ]
+
+[ UpMovingCat ] -> [ Up UpMovingCat ] again
+[ LeftMovingCat ] -> [ Left LeftMovingCat ] again
+[ RightMovingCat ] -> [ Right RightMovingCat ] again
+[ DownMovingCat ] -> [ Down DownMovingCat ] again
+
+right [ Cat | Stationary Mouse | No Wall ] -> [ Cat | right Mouse | SFX1 ]
+left [ Cat | Stationary Mouse | No Wall ] -> [ Cat | left Mouse | SFX1 ]
+up [ Cat | Stationary Mouse | No Wall ] -> [ Cat | up Mouse | SFX1 ]
+down [ Cat | Stationary Mouse | No Wall ] -> [ Cat | down Mouse | SFX1]
+right [ VerticalMovingCat | Stationary Mouse | No Wall ] -> [ VerticalMovingCat | right Mouse | SFX1 ]
+left [ VerticalMovingCat | Stationary Mouse | No Wall ] -> [ VerticalMovingCat | left Mouse | SFX1 ]
+up [ HorizontalMovingCat | Stationary Mouse | No Wall ] -> [ HorizontalMovingCat | up Mouse | SFX1 ]
+down [ HorizontalMovingCat | Stationary Mouse | No Wall ] -> [ HorizontalMovingCat | down Mouse | SFX1]
+
+[ > MovingCat | Elephant | ] -> [ Cat | Elephant | SFX4 ]
+[ > MovingCat | Dog ] -> [ Cat | Dog ]
+[ > MovingCat | Mouse | Wall | ] -> [ Cat | Mouse | Wall | SFX1 ]
+[ > MovingCat | Mouse | No Wall ] -> [ Cat | > Mouse | SFX1 ]
+[ > MovingCat | Obstacle | ] -> [ Cat | Obstacle | SFX2 ]
+
+(Mouse rules)
+[ UP Mouse ] -> [ UP UpMovingMouse ]
+[ DOWN Mouse ] -> [ DOWN DownMovingMouse ]
+[ LEFT Mouse ] -> [ LEFT LeftMovingMouse ]
+[ RIGHT Mouse ] -> [ RIGHT RightMovingMouse ]
+
+[ UpMovingMouse ] -> [ Up UpMovingMouse ] again
+[ LeftMovingMouse ] -> [ Left LeftMovingMouse ] again
+[ RightMovingMouse ] -> [ Right RightMovingMouse ] again
+[ DownMovingMouse ] -> [ Down DownMovingMouse ] again
+
+right [ Mouse | Stationary Elephant | No Obstacle ] -> [ Mouse | right Elephant | SFX5 ]
+left [ Mouse | Stationary Elephant | No Obstacle ] -> [ Mouse | left Elephant | SFX5 ]
+up [ Mouse | Stationary Elephant | No Obstacle ] -> [ Mouse | up Elephant | SFX5 ]
+down [ Mouse | Stationary Elephant | No Obstacle ] -> [ Mouse | down Elephant | SFX5]
+right [ VerticalMovingMouse | Stationary Elephant | No Obstacle ] -> [ VerticalMovingMouse | right Elephant | SFX5 ]
+left [ VerticalMovingMouse | Stationary Elephant | No Obstacle ] -> [ VerticalMovingMouse | left Elephant | SFX5 ]
+up [ HorizontalMovingMouse | Stationary Elephant | No Obstacle ] -> [ HorizontalMovingMouse | up Elephant | SFX5 ]
+down [ HorizontalMovingMouse | Stationary Elephant | No Obstacle ] -> [ HorizontalMovingMouse | down Elephant | SFX5]
+
+[ > MovingMouse | Dog | ] -> [ Mouse | Dog | SFX1 ]
+[ > MovingMouse | Cat ] -> [ Mouse | Cat ]
+[ > MovingMouse | Elephant | Wall | ] -> [ Mouse | Elephant | Wall | SFX5 ]
+[ > MovingMouse | Elephant | No Obstacle ] -> [ Mouse | > Elephant | SFX5 ]
+[ > MovingMouse | Wall | ] -> [ Mouse | Wall | SFX2 ]
+[ > MovingMouse | Hole | ] -> [ No MovingMouse | Hole | SFX0 ]
+
+endloop
+
+
+(Late marker rules)
+
+late [ Mouse ] [ MMarker ] -> [ Mouse Marker ] []
+late [ Cat ] [ CMarker ] -> [ Cat Marker ] []
+late [ Dog ] [ DMarker ] -> [ Dog Marker ] []
+late [ Elephant ] [ EMarker ] -> [ Elephant Marker ] []
+
+==============
+WINCONDITIONS
+==============
+
+No MovingMouse
+No Mouse
+
+=======
+LEVELS
+=======
+
+Message In 2001 I was very lost.
+
+XXXXXXXXXXXXXXXXXXXXX
+X###################X
+X#...............###X
+X#..#........#...###X
+X#...............###X
+X###...M..#........#X
+X##H..........#....#X
+X###..#.....#......#X
+X#.............#...#X
+X#..#....#.........#X
+X#..............####X
+X###################X
+XXXXXXXXXXXXXXXXXXXXX
+
+Message I was just trying to hide from the world.
+
+XXXXXXXXXXXXXXXXXXXXXXXXXX
+X########################X
+X#...##....###.###....###X
+X#...##....#H#........###X
+X#.M.............#......#X
+X#....##..##.....##.....#X
+X#.....#......##........#X
+X#..##.......###........#X
+X#..##....#.......###...#X
+X#.......##........##...#X
+X#...##..##........##...#X
+X#...##.................#X
+X###.........###.....####X
+X###.........###....#####X
+X########################X
+XXXXXXXXXXXXXXXXXXXXXXXXXX
+
+Message I spent a lot of time playing a game called Castlemouse.
+
+XXXXXXXXXXXXXXXXXXXXX
+X###################X
+X#.................#X
+X#.........#.......#X
+X###...............#X
+X##H.....0.....#...#X
+X###...............#X
+X#.................#X
+X#....#..........###X
+X#.........0.....H##X
+X#C..............###X
+X###################X
+XXXXXXXXXXXXXXXXXXXXX
+
+Message Everything seemed to be slipping away from me.
+
+XXXXXXXXXXXXXXXXXXXXXXXXXX
+X########################X
+X#.......##.###.........#X
+X#......##..#H#.........#X
+X#.................#....#X
+X#..........0...0#......#X
+X###....#...............#X
+X##H..................###X
+X###......0...........H##X
+X#........#.....#.....###X
+X#................#.....#X
+X#......0...............#X
+X#.C.......#H#..........#X
+X#.........###..........#X
+X########################X
+XXXXXXXXXXXXXXXXXXXXXXXXXX
+
+Message The world seemed full of fear.
+
+XXXXXXXXXXXXXXXXXXX
+X#################X
+X#...............#X
+X#.......1#......#X
+X###.............#X
+X##H....0........#X
+X###.............#X
+X#.............###X
+X#.D......0....H##X
+X#.#...........###X
+X#...#...........#X
+X#################X
+XXXXXXXXXXXXXXXXXXX
+
+Message Everything was falling apart for me at once.
+
+XXXXXXXXXXXXXXXXXXXXXXXXXX
+X########################X
+X###..................###X
+X##H.......0.0........H##X
+X###..................###X
+X#......................#X
+X#..#...................#X
+X#.1.........#..........#X
+X#.........0............#X
+X##.........1...........#X
+X#.......D..............#X
+X###..................###X
+X##H.........0........H##X
+X###.......#..........###X
+X########################X
+XXXXXXXXXXXXXXXXXXXXXXXXXX
+
+Message I don't remember that time very well.
+
+XXXXXXXXXXXXXXXXXXX
+X#################X
+X#...............#X
+X#.......1#......#X
+X###.............#X
+X##H....0........#X
+X###.............#X
+X#.............###X
+X#.....2..0....H##X
+X#...#.......E.###X
+X#...#...........#X
+X#################X
+XXXXXXXXXXXXXXXXXXX
+
+Message I don't even remember exactly how Castlemouse went.
+
+XXXXXXXXXXXXXXXXXXXXXXXXXX
+X########################X
+X#....................#.#X
+X#....1..........#......#X
+X#...........0...#...2..#X
+X#......................#X
+X#..........#H#.........#X
+X#..........###.........#X
+X#..........###.........#X
+X#..........#H#.........#X
+X#...........0..........#X
+X#...2...........1......#X
+X#.E...................##X
+X#......................#X
+X########################X
+XXXXXXXXXXXXXXXXXXXXXXXXXX
+
+Message Many things were set in motion at that time.
+
+XXXXXXXXXXXXXXXXXXX
+X#################X
+X#......0.......H#X
+X##..........3..##X
+X#H...0..........#X
+X##..............#X
+X####..1.........#X
+X#............#..#X
+X#...#..###......#X
+X#..D#..#H#......#X
+X#.......0.......#X
+X#..........1....#X
+X#################X
+XXXXXXXXXXXXXXXXXXX
+
+Message Many unexpected chains of events, not all bad.
+
+XXXXXXXXXXXXXXXXXXXXXXXXXX
+X########################X
+X#.....#..............###X
+X#.....0..............H##X
+X#.......3............###X
+X#......................#X
+X###....................#X
+X##H.................0..#X
+X###....................#X
+X#......................#X
+X#.....................C#X
+X#...2.................##X
+X#....#...2............##X
+X#.....................##X
+X########################X
+XXXXXXXXXXXXXXXXXXXXXXXXXX
+
+Message I'm doing a lot better now.
+
+Message Also, Castlemouse is a much better game than this - you should track it down.
+
+Message Thank you for playing.
+
+Message Music: Broken - Fit and the Conniptions (music.conniptions.org)
+
+title Block Faker
+author Droqen
+homepage www.droqen.com
+
+require_player_movement
+key_repeat_interval 0.12
+
+background_color white
+text_color black
+
+color_palette c64
+
+(
+
+A port of first several levels of Droqen's beautiful game:
+
+https://droqen.itch.io/block-faker
+
+(His game has secrets that this one does not.)
+
+)
+
+========
+OBJECTS
+========
+
+Background
+white
+
+Grille
+gray
+0...0
+.0.0.
+..0..
+.0.0.
+0...0
+
+EndPoint
+green
+
+Player
+black
+00000
+00000
+0.0.0
+00000
+00000
+
+Wall
+gray
+
+WallBlock
+black grey
+01111
+01111
+01111
+01111
+00001
+
+BlueBlock
+blue
+00000
+00.00
+0.0.0
+00.00
+00000
+
+GreenBlock
+lightgreen
+00000
+00000
+00.00
+00000
+00000
+
+PinkBlock
+red
+00000
+00.00
+0...0
+00.00
+00000
+
+PurpleBlock
+purple
+00000
+0...0
+0.0.0
+0...0
+00000
+
+OrangeBlock
+orange
+00000
+0.0.0
+00000
+0.0.0
+00000
+
+=======
+LEGEND
+=======
+
+Block = PinkBlock or BlueBlock or PurpleBlock or OrangeBlock or GreenBlock
+Moveable = Player or Block
+PlayerObstacle = Block or Wall or WallBlock
+BlockObstacle = Player or Wall or WallBlock or Grille or Block or EndPoint
+. = Background
+# = Wall
+@ = WallBlock
+P = Player
+B = BlueBlock
+G = GreenBLock
+K = PinkBlock
+R = PurpleBlock
+O = OrangeBlock
+E = EndPoint
+x = Grille
+H = Grille and Player
+
+=========
+SOUNDS
+=========
+
+================
+COLLISIONLAYERS
+================
+
+Background
+EndPoint
+Grille
+Player, Wall, WallBlock, PinkBlock, BlueBlock, PurpleBlock, OrangeBlock, GreenBlock
+
+======
+RULES
+======
+
+[ > Moveable | Moveable ] -> [ > Moveable | > Moveable ] 
+
+[ > Block | Grille ] -> [ Block | Grille ] 
+
+late [ PinkBlock | PinkBlock | PinkBlock ] -> [ | | ] 
+late [ BlueBlock | BlueBlock | BlueBlock ] -> [ | | ] 
+late [ PurpleBlock | PurpleBlock | PurpleBlock ] -> [ | | ] 
+late [ OrangeBlock | OrangeBlock | OrangeBlock ] -> [ | | ] 
+late [ GreenBlock | GreenBlock | GreenBlock ] -> [ | | ] 
+
+==============
+WINCONDITIONS
+==============
+
+some Player on Endpoint
+
+=======
+LEVELS
+=======
+
+........########
+################
+########@@@@@###
+####@@@@@...@###
+###@..OO....@@##
+##@..@@@@@....@#
+##@.@..@@@..E@@#
+#@..@.O...@@@@##
+##@...@.P.######
+####@.@@@@######
+####@@##########
+########........
+
+message congrats: level 2!
+
+##########
+####R.R###
+#x....#x##
+#xO#O.OxE#
+#xx##.#xx#
+#####R####
+#####P####
+O#########
+
+message congrats: level 3!
+
+......#######...
+.....##P.#####..
+....###....####.
+..#####O...#B..#
+..#####.#.##BB.#
+##EBB..O.O.....#
+..#####.#.#....#
+..######..#G.###
+....####..#.OOx.
+.....###.GG.#x..
+......#######...
+
+message congrats: level 4!
+
+######xx######
+######GG######
+##xx#...#xEx##
+##..O...#x..##
+##..#...##O###
+#..##.......##
+xG....##....Gx
+xG....##....Gx
+##.......GG###
+###G##...#xx##
+##x..#...O.x##
+##.P.#...#xx##
+######GG######
+######xx######
+
+message congrats: level 5!
+
+......##......
+....######....
+..##########..
+..#.OG..kk.#..
+.##OPO..Gkk##.
+.##GOG..GGk##.
+###...##...###
+###...##...###
+.##kkG##ROR##.
+.##Gkk..OEO##.
+..#.Gk..RO.#..
+..##########..
+....######....
+......##......
+
+message now go play the real game
+
+
+
+title Tunnel Rat
+author James Noeckel
+noundo
+again_interval 0.07
+youtube SG1uBb104Is
+========
+OBJECTS
+========
+Background
+#4c352b #4e382f #533c30
+01010
+02211
+20010
+00012
+12102
+
+PlayerS
+#a65200 red #6f3c0a
+.0.0.
+.000.
+21012
+20002
+22022
+
+PlayerU
+#a65200 red #6f3c0a
+.0.0.
+.101.
+20002
+22022
+.2.2.
+
+inflow
+yellow orange white
+00000
+00000
+22222
+11111
+11111
+
+exit
+green
+.0.0.
+0.0.0
+.0.0.
+0.0.0
+.0.0.
+
+tempwall
+blue
+
+DirtM
+#82642b #876b35 #927538
+01010
+02211
+20010
+00012
+12102
+
+DirtU
+#82642b #876b35 #927538 #b19154
+22222
+33333
+00000
+01012
+12102
+
+
+Rock
+#e0e0e0 #a4a4a4 #8a8a8a #7c7c7c
+.000.
+01112
+11123
+11223
+.233.
+
+enemy
+white #ff7070 black #880000 red
+01414
+14343
+14343
+14443
+43232
+
+h_grav
+black
+.....
+.....
+..0..
+.....
+.....
+
+h_step
+red
+.....
+.....
+..0..
+.....
+.....
+
+(h_dead
+black
+)
+pickupoverlay
+pink
+
+enemyoverlay
+pink
+
+destroy
+red
+0...0
+.0.0.
+..0..
+.0.0.
+0...0
+scrolling
+blue
+.....
+.....
+..0..
+.....
+.....
+
+Shoes
+#ff11f7 #9711ff #641d9a
+...0.
+...10
+...01
+.1111
+.2222
+
+Eraser
+#00ff12 #99ffa0 #008509
+..10.
+.1000
+10000
+.2000
+..20.
+
+Unraser
+#00ff12 #99ffa0 #008509
+.01..
+0001.
+00001
+0002.
+.02..
+
+Shoesworn
+purple pink
+.....
+.....
+.....
+.....
+10.01
+
+
+=======
+LEGEND
+=======
+# = Dirtm
+. = Background
+P = playerS
+o = Rock
+s = shoes
+x = enemy
+@ = dirtm and destroy
+$ = dirtm and inflow
+e = exit and Dirtm
+% = unraser
+
+dirt = dirtm or dirtu
+Player = PlayerS or PlayerU
+Helpers = h_grav or scrolling or h_step
+Pickups = shoes or Eraser or Unraser
+Heldpickups = shoesworn
+Solid = Dirt or Player or Rock or Pickups or enemy
+Heavy = Rock or Pickups or enemy
+overlays = pickupoverlay or enemyoverlay
+Everything = Solid or tempwall or overlays
+
+=======
+SOUNDS
+=======
+SFX1 36137902
+SFX2 78903905
+SFX3 14420703
+SFX4 25525902
+SFX5 49701704
+SFX6 98046907
+SFX7 16284302
+SFX8 96668708
+SFX9 86449100
+================
+COLLISIONLAYERS
+================
+
+helpers
+Background
+tempwall, solid
+Heldpickups
+overlays
+destroy, inflow, exit
+
+
+======
+RULES
+======
+
+up [ > PlayerU ] -> cancel
+down [ > PlayerU ] -> [ PlayerS ]
+
+(digging/jumping up)
+up [ > PlayerS | no Solid | no Solid no inflow ] -> [ | | PlayerU scrolling ] SFX2
+up [ > PlayerS | no Solid | Dirt no inflow ] -> [ | | PlayerU scrolling ] SFX7
+up [ > PlayerS | no Solid no inflow ] -> [ | PlayerU scrolling ] SFX2
+up [ > PlayerS | Dirt no inflow ] -> [ | PlayerU scrolling ] SFX7
+
+(scrolling and terraingen)
+[ scrolling ] [ Everything destroy ] -> [ scrolling ] [ destroy ]
+[ scrolling ] [ inflow no Player ] -> [ scrolling ] [ inflow tempwall ]
+random [ scrolling ] [ inflow ] -> [ scrolling ] [ inflow random overlays ]
+random [ scrolling ] [ inflow ] -> [ scrolling ] [ inflow random overlays ]
+random [ scrolling ] [ inflow ] -> [ scrolling ] [ inflow random overlays ]
+random [ scrolling ] [ inflow ] -> [ scrolling ] [ inflow random overlays ]
+random [ scrolling ] [ inflow ] -> [ scrolling ] [ inflow enemyoverlay ]
+random [ scrolling ] [ inflow ] -> [ scrolling ] [ inflow enemyoverlay ]
+
+
+
+startloop
+random [ tempwall ] -> [ dirtm ]
+random [ tempwall ] -> [ dirtm ]
+random [ tempwall ] -> [ dirtm ]
+random [ tempwall ] -> [ dirtm ]
+random [ tempwall ] -> [ dirtm ]
+random [ tempwall ] -> [ dirtm ]
+random [ tempwall ] -> [ ]
+random [ tempwall ] -> [ ]
+random down [ tempwall | solid ] -> [ rock | Solid ]
+random down [ tempwall | solid ] -> [ rock | Solid ]
+endloop
+
+
+[ pickupoverlay rock ] -> [ random pickups]
+[ enemyoverlay rock ] -> [ enemy ]
+
+random down [ Solid inflow | rock | rock ] -> [ rock inflow | rock | rock ]
+[ no Solid | inflow Solid | no Solid ] -> [ | inflow | ]
+[ no Solid | inflow Solid | inflow Solid | no Solid ] -> [ | inflow | inflow | ]
+
+
+down [ scrolling ] [ Everything ] -> [ scrolling ] [ > Everything ]
+
+
+(gravity)
+down [ Heavy ] -> [ down Heavy ] again
+
+(up [ > PlayerS | no Solid ] [ Everything destroy ] -> [ > PlayerS scrolling | ] [ destroy ]
+up [ > PlayerS | Dirt ] [ Everything destroy ] -> [ > PlayerS scrolling | dirt ] [ destroy ]
+down [ Everything ] [ Player scrolling ] -> [ > Everything ] [ PlayerU scrolling ]
+)
+
+(movement in general)
+horizontal [ > PlayerU | Dirt ] -> [ | PlayerS ] SFX1
+horizontal [ > PlayerU ] -> [ > PlayerS ]
+
+[ action PlayerU ] -> [ PlayerS ]
+[ > Player | Dirt ] -> [ | Player ] SFX1
+
+
+(use pickup)
+
+up [ action PlayerS shoesworn | Solid | no inflow no exit ] -> [ | Solid | PlayerS ] SFX4
+up [ action PlayerS shoesworn | | Solid | no inflow no exit ] -> [ | | Solid | PlayerS ] SFX4
+up [ action PlayerS shoesworn | | | | no inflow no exit ] -> [ | | | | PlayerU ] SFX4
+
+(pushing)
+Horizontal [ > Player | Heavy ] -> [ > Player | > Heavy ] SFX6
+Horizontal [ > Heavy | Heavy ] -> [ > Heavy | > Heavy ]
+Horizontal [ > Enemy | Dirt ] -> [ > Enemy | ] SFX1
+Horizontal [ > Enemy | pickups | Solid ] -> [ > Enemy | | Solid ] SFX4
+([Enemy h_dead no h_grav] -> message flattened to death)
+(down [ Enemy h_dead | destroy ] -> [ Enemy | destroy ] message flattened to death)
+([ > Enemy | Player ] -> [ | Enemy h_dead ] SFX5)
+([ moving Enemy h_dead ] -> [ moving Enemy moving h_dead ])
+[ moving Enemy h_grav ] -> [ moving Enemy moving h_grav ]
+down [ > Enemy h_grav | Solid no Player no Enemy ] -> [ | Enemy ] SFX4
+down [ > Enemy | Player ] -> [ > Enemy | ] SFX4
+
+
+
+
+(pickup)
+
+[ > Player | shoes ] -> [ | stationary Player shoesworn ] SFX3
+
+[ > Player | Eraser ] [ Solid no Player no Pickups ] -> [ > Player | Eraser ] [ DirtM ]
+startloop
+random [ > Player | Unraser ] [ Solid no Player | no Solid ] -> [ > Player | Unraser ] [ Solid | Rock ]
+random [ > Player | Unraser ] [ Solid no Player | no Solid ] -> [ > Player | Unraser ] [ Solid | Dirtm ]
+random [ > Player | Unraser ] [ Solid no Player | no Solid ] -> [ > Player | Unraser ] [ Solid | Dirtm ]
+random [ > Player | Unraser ] [ Solid no Player | no Solid ] -> [ > Player | Unraser ] [ Solid | Dirtm ]
+endloop
+[ > Player | Pickups ] -> [ | stationary Player ] SFX8
+
+(steps)
+up [ PlayerS | no Solid ] -> [ PlayerS | h_step ]
+[ moving PlayerS ] [ h_step ] -> [ moving PlayerS ] [ moving h_step ]
+
+(late steps)
+late down [ h_step | Player ] -> [ | Player ]
+late [h_grav] [h_step] -> [h_grav] []
+late down [ h_step no Solid | no Player ] [ PlayerS ] -> [ PlayerS | ] [ ]
+late down [ h_step Dirt | no Player ] [ PlayerS ] -> [ PlayerS | ] [ ] SFX1
+
+(player gravity)
+late down [ PlayerS | h_grav ] -> [ | PlayerS ]
+late down [ PlayerS | no Solid ] -> [ PlayerS | h_grav ]
+
+late [ Player no shoesworn] [ shoesworn ] -> [ Player shoesworn ] [ ]
+
+(enemy gravity)
+late down [ enemy | no Solid ] -> [ enemy h_grav | ]
+late down [ enemy | Player ] -> [ enemy h_grav | ]
+
+
+(cleanup)
+late [scrolling] -> []
+late [overlays] -> []
+late [h_step] -> []
+
+(beautify)
+late up [ Dirtm | no Dirt ] -> [ DirtU | ]
+late up [ DirtU | Dirt ] -> [ Dirtm | Dirt ]
+
+(death)
+[ Player destroy ] -> [ destroy ] SFX4
+
+(life)
+late [ Player exit ] [ exit no Player ] -> [ Player exit ] [ ] SFX9
+==============
+WINCONDITIONS
+==============
+all exit on player
+=======
+LEVELS
+=======
+
+message Survive. x to use held item.
+$$$$$$$$$$$$$$$$$$$
+eeeeeeeeeeeeeeeeeee
+eeeeeeeeeeeeeeeeeee
+###################
+###################
+###################
+###################
+###################
+###################
+###################
+###################
+###################
+###################
+###################
+###################
+###################
+#########P#########
+###################
+###################
+###################
+###################
+###################
+###################
+@@@@@@@@@@@@@@@@@@@
+
+message Is that a light at the end of the tunnel?
+$$$$$$$$$$$$$$$$$$$$$$$$$
+eeeeeeeeeeeeeeeeeeeeeeeee
+eeeeeeeeeeeeeeeeeeeeeeeee
+o.......................o
+o.......................o
+o..x.x.x.x.xpx.x.x.x.x..o
+o#.#.#.#.#.#x#.#.#.#.#.#o
+o.#.#.#.#.#.#.#.#.#.#.#.o
+o#.#.#.#.#.#.#.#.#.#.#.#o
+o.#.#.#.#.#.#.#.#.#.#.#.o
+o#.#.#.#.#.#.#.#.#.#.#.#o
+o.#.#.#.#.#.#.#.#.#.#.#.o
+o#.#.#.#.#.#.#.#.#.#.#.#o
+o.......................o
+o.......................o
+o.......................o
+o.......................o
+o......#................o
+o.....##..............#.o
+o....###...%...#..#..##.o
+###..############.#######
+########.##.#############
+####.#####..#############
+########.....############
+#########################
+#########################
+@@@@@@@@@@@@@@@@@@@@@@@@@
+
+USER PROMPT:
+The following PuzzleScript game code:
+```plaintext
+title Forest Journey
+author YourName
+homepage yourwebsite.com
+
+========
+OBJECTS
+========
+
+Background
+lightgreen green
+11111
+01111
+11101
+11111
+10111
+
+Wall
+brown darkbrown
+11111
+11111
+11111
+11111
+11111
+
+Player
+black white
+.000.
+00100
+00100
+00100
+.000.
+
+Treasure
+gold yellow
+.....
+.000.
+.0.0.
+.000.
+.....
+
+Monster
+red black
+.....
+.0.0.
+00.00
+.0.0.
+.....
+
+Hero
+blue orange
+.000.
+03330
+02320
+03330
+.000.
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Player
+T = Treasure
+M = Monster
+H = Hero
+
+=======
+SOUNDS
+=======
+
+sfx0 67117309
+sfx1 36772507
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Player, Wall, Treasure, Monster, Hero
+
+======
+RULES
+======
+
+[ Player | Treasure ] -> [ Player | Background ] sfx1
+
+[ Player | Monster ] -> restart sfx0
+
+[ > Player | Hero ] [ Monster | ... ] -> [ > Player | Background ] [ ... | Player ] sfx1
+
+==============
+WINCONDITIONS
+==============
+
+All Treasure on Background
+
+=======
+LEVELS
+=======
+
+#####...
+#P..#..M
+#..#..#
+#..###.
+#T.#TH#
+########
+
+message Collect all the treasure and avoid monsters!
+#####...
+#P..T..
+#..#..M
+#..#..#
+#..###.
+#T.#.H#
+########
+
+```
+produced the following console output:
+=================================
+line 34 : Was looking for color for object TREASURE, got "gold " instead.
+line 52 : Trying to access color number 3 from the color palette of sprite HERO, but there are only 2 defined in it.
+line 53 : Trying to access color number 2 from the color palette of sprite HERO, but there are only 2 defined in it.
+line 53 : Trying to access color number 3 from the color palette of sprite HERO, but there are only 2 defined in it.
+line 54 : Trying to access color number 3 from the color palette of sprite HERO, but there are only 2 defined in it.
+line 104 : Maps must be rectangular, yo (In a level, the length of each row must be the same).
+line 105 : Maps must be rectangular, yo (In a level, the length of each row must be the same).
+line 106 : Maps must be rectangular, yo (In a level, the length of each row must be the same).
+line 111 : Maps must be rectangular, yo (In a level, the length of each row must be the same).
+line 112 : Maps must be rectangular, yo (In a level, the length of each row must be the same).
+line 113 : Maps must be rectangular, yo (In a level, the length of each row must be the same).
+line 114 : Maps must be rectangular, yo (In a level, the length of each row must be the same).
+line 115 : Maps must be rectangular, yo (In a level, the length of each row must be the same).
+line 90 : An ellipsis on the right must be matched by one in the corresponding place on the left.
+line 90 : There's no point in putting an ellipsis at the very start or the end of a rule
+Errors detected during compilation; the game may not work correctly.
+Return a repaired version of the code that addresses these errors. Return your code in full, inside a ```plaintext code block.

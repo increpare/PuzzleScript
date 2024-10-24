@@ -1,0 +1,2028 @@
+SYSTEM PROMPT:
+You are a game designer, familiar with the PuzzleScript game description language. Here are some example games, for inspiration (do not reproduce these games exactly):
+
+title Coin Counter
+
+verbose_logging
+run_rules_on_level_start
+========
+OBJECTS
+========
+
+Background
+lightblue
+
+wall
+darkbrown
+
+t
+transparent
+
+tl
+transparent
+
+tr
+transparent
+
+m
+transparent
+
+bl
+transparent
+
+br
+transparent
+
+b
+transparent
+
+corner
+transparent
+
+on
+blue
+
+off
+darkbrown
+
+one 1
+transparent
+
+two 2
+transparent
+
+three 3
+transparent
+
+four 4
+transparent
+
+five 5
+transparent
+
+six 6
+transparent
+
+seven 7
+transparent
+
+eight 8
+transparent
+
+nine 9
+transparent
+
+zero 0
+transparent
+
+player
+green
+
+coin
+#ff0
+.....
+.000.
+.0.0.
+.000.
+.....
+
+ending
+transparent
+
+tens
+transparent
+
+carry
+transparent
+
+fiver
+#ff0
+..0..
+.000.
+00.00
+.000.
+..0..
+
+star
+#ff0 yellow orange
+0.0.0
+.121.
+02.20
+.121.
+0.0.0
+
+hund
+transparent
+
+won
+transparent
+
+last
+transparent
+
+fakecoin
+#ff0
+.....
+.000.
+.0.0.
+.000.
+.....
+=======
+LEGEND
+=======
+
+c = corner
+l = tl
+r = tr
+w = bl
+e = br
+seg = t or l or r or m or w or e or b
+num = zero or one or two or three or four or five or six or seven or eight or nine
+p = player
+k = coin
+. = background
+x = wall
+
+! = t and coin
+@ = l and coin
+# = r and coin
+$ = m and coin
+% = w and coin
+^ = e and coin
+& = b and coin
+* = c and coin
+
+{ = t and fiver
+} = l and fiver
+; = r and fiver
+: = m and fiver
+' = w and fiver
+" = e and fiver
+, = b and fiver
+/ = c and fiver
+
+f = fiver
+
+? = tens and wall
+
+- = fakecoin
+
+j = star
+` = hund
+z = ending
+~ = last
+=======
+SOUNDS
+=======
+
+================
+COLLISIONLAYERS
+================
+
+Background
+seg
+corner
+num
+on
+off
+coin, fiver
+star
+player, wall
+ending
+tens
+carry
+won
+hund
+last
+fakecoin
+======
+RULES
+======
+
+[last][ action player ]-> win
+[last ][moving player] -> win
+up [tens|no tens] -> [tens | tens]
+down [tens|no tens] -> [tens | tens]
+
+[> player | off] -> [stationary player | off]
+late [player off] -> [off]
+
+late [player coin] -> again
+late [player fiver] -> again
+late [player star] -> again
+
+[player coin][zero no tens] -> [player][one]
+[player coin][one no tens] -> [player][two]
+[player coin][two no tens] -> [player][three]
+[player coin][three no tens] -> [player][four]
+[player coin][four no tens] -> [player][five]
+[player coin][five no tens] -> [player][six]
+[player coin][six no tens] -> [player][seven]
+[player coin][seven no tens] -> [player][eight]
+[player coin][eight no tens] -> [player][nine]
+[player coin][nine no tens] -> [player][zero carry]
+
+[player fiver][zero no tens] -> [player][five]
+[player fiver][one no tens] -> [player][six]
+[player fiver][two no tens] -> [player][seven]
+[player fiver][three no tens] -> [player][eight]
+[player fiver][four no tens] -> [player][nine]
+[player fiver][five no tens] -> [player][zero carry]
+[player fiver][six no tens] -> [player][one carry]
+[player fiver][seven no tens] -> [player][two carry]
+[player fiver][eight no tens] -> [player][three carry]
+[player fiver][nine no tens] -> [player][four carry]
+
+[carry no tens][zero tens] -> [][one tens]
+[carry no tens ][one tens] -> [][two tens]
+[carry no tens ][two tens] -> [][three tens]
+[carry no tens ][three tens] -> [][four tens]
+[carry no tens ][four tens] -> [][five tens]
+[carry no tens ][five tens] -> [][six tens]
+[carry no tens ][six tens] -> [][seven tens]
+[carry no tens ][seven tens] -> [][eight tens]
+[carry no tens ][eight tens] -> [][nine tens]
+[carry no tens ][nine tens] -> [][zero tens carry]
+
+
+
+[hund] -> [hund off]
+
+[tens carry][hund off] -> [tens carry][hund on]
+[player won] -> win
+
+[star player][tens carry] -> [player won][tens no carry] again
+
+[carry no tens] -> []
+[seg no on] -> [seg on]
+[seg off] -> [seg]
+
+[m no tens][zero no tens] -> [m off][zero]
+[l no tens][one no tens] -> [l off][one]
+[w no tens][one no tens] -> [w off][one]
+[m no tens][one no tens] -> [m off][one]
+[t no tens][one no tens] -> [t off][one]
+[b no tens][one no tens] -> [b off][one]
+[l no tens][two no tens] -> [l off][two]
+[e no tens][two no tens] -> [e off][two]
+[l no tens][three no tens] -> [l off][three]
+[w no tens][three no tens] -> [w off][three]
+[b no tens][four no tens] -> [b off][four]
+[w no tens][four no tens] -> [w off][four]
+[t no tens][four no tens] -> [t off][four]
+[r no tens][five no tens] -> [r off][five]
+[w no tens][five no tens] -> [w off][five]
+[r no tens][six no tens] -> [r off][six]
+[l no tens][seven no tens] -> [l off][seven]
+[w no tens][seven no tens] -> [w off][seven]
+[m no tens][seven no tens] -> [m off][seven]
+[b no tens][seven no tens] -> [b off][seven]
+[w no tens][nine no tens] -> [w off][nine]
+
+[seg  tens][zero  tens] -> [seg off tens][zero tens]
+[l  tens][one tens] -> [l off tens][one tens]
+[w  tens][one  tens] -> [w off tens][one tens]
+[m  tens][one  tens] -> [m off tens][one tens]
+[t  tens][one  tens] -> [t off tens][one tens]
+[b  tens][one  tens] -> [b off tens][one tens]
+[l  tens][two  tens] -> [l off tens][two tens]
+[e  tens][two  tens] -> [e off tens][two tens]
+[l  tens][three  tens] -> [l off tens][three tens]
+[w  tens][three  tens] -> [w off tens][three tens]
+[b  tens][four  tens] -> [b off tens][four tens]
+[w  tens][four  tens] -> [w off tens][four tens]
+[t  tens][four  tens] -> [t off tens][four tens]
+[r  tens][five  tens] -> [r off tens][five tens]
+[w  tens][five  tens] -> [w off tens][five tens]
+[r tens][six  tens] -> [r off tens][six tens]
+[l tens][seven  tens] -> [l off tens][seven tens]
+[w tens][seven  tens] -> [w off tens][seven tens]
+[m tens][seven  tens] -> [m off tens][seven tens]
+[b tens][seven  tens] -> [b off tens][seven tens]
+[w tens][nine  tens] -> [w off tens][nine tens]
+
+ [hund on][seg off] -> [hund on][seg on]
+ [hund on][m on] -> [hund on][m off]
+
+[on off] -> [off]
+
+[corner no off] -> [corner off]
+[corner on] -> [corner]
+
+[corner off|seg on] -> [corner on| seg on]
+
+
+
+
+
+
+
+==============
+WINCONDITIONS
+==============
+no coin
+no fiver
+all ending on player
+=======
+LEVELS
+=======
+
+
+
+
+
+
+x-xxxxxxxxx
+xxxctcxctcx
+xxxlxrxlxrx
+xxxcmcxcmcx
+xxxwxexwxex
+xxxcbcxcbcx
+xjx???xxxxx
+xxxxxxxxxxx
+xp0k0.k..kz
+xxxxxxxxxxx
+
+xxxxxxxxxxxxxxx
+xxxxxxxctc....z
+xxxxxxxlxrxxxxx
+xxxxxxxcmcxxxxx
+xxxxxxxwxexxxxx
+p.3k.k.cbcxxxxx
+xxxxxxxxxxxxxxx
+
+xxxxxxzx
+x?xxxx.x
+x......x
+x.xxxxxx
+xckctckx
+xrxlxrxx
+xcxc$cxx
+xexwxexx
+xckcbckx
+xxxxxx.x
+p05....x
+xxxxxxxx
+
+
+x?xxxx?zx
+xxxxxxx0x
+xcx*!*x.x
+xrxlxrx.x
+xcx*$*x.x
+xexwxex.x
+xcx*&*1px
+xxxxxxx.x
+
+xx???xxxx?x
+z.ctc.c!c.x
+x.lxrx@x#.x
+x.cmcxc$c.x
+x9wxexwx^1x
+x.cbc.cbc.x
+xxxxxxxxxpx
+
+x????xxxxxx
+z.ctcfctc.p
+x.lxrxlx#.x
+x.cmcxcm*.x
+x2wxexwx^4x
+x.cbcfcbc.x
+xxxxxxxxxxx
+
+x????xxxxx
+xctc3ctcxx
+x@xrx}xrxx
+xc$cxc:c7p
+xwx^xwx".x
+xc&cxc,c.x
+xxxxxxxxzx
+
+x????xxxpx
+xctc6ctc.x
+x}x;x@x#.x
+xcmcxc$c1x
+x'x"xwx^.x
+xc,c.c&c.x
+xxxxxxxxzx
+
+xx???xxxxpx
+x..k91.k..x
+x.ctcxctc.x
+xklxrxlxrkx
+x.cmcxcmc.x
+xkwxexwxekx
+x.cbcxcbc.x
+x..k...k..x
+xzxxxxxxxxx
+
+
+
+xpxxxxxxxxx
+xkxxxxxxxxx
+x`xctcxctcx
+x`xlxrxlxrx
+x`xcmcxcmcx
+x`xwxexwxex
+x`xcbcxcbcx
+xjx???xxxxx
+xxxxxxxxxxx
+x.9.9.....z
+xxxxxxxxxxx
+
+xxx???xxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxx???xxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxx???.ctcxxxxxxxxxxxxxxxxxxxxxxxx
+xxx???xlxrxxxxxxxxxxxxxxxxxxxxxxxx
+xxx???xcmc..z.xxx.ctc..z.xxx.ctc.x
+xxx???xwxe.xx.xxxxlxr.xx.xxxxlxr.x
+xxx???xcbc.xx.xxxxcmc.xx.xxxxcmc.x
+xxx???xxxxzxx.xxxxwxe.xx.xxxxwxe.x
+xxx???xxxx.xx.xxx.cbc.xx.xxx.cbc.x
+xxxctc.ctc.xxxxxxxxxxzxxxxxxxxxx.x
+xxxl?rxlxr.xxxxxxxxxxxxxxxxxxxxxzx
+xxxcmcxcmc.xxxxxxxxxxxxxxxxxxxxx.x
+xxxw?exwxe.xxxxxx.....xxxxxxctcx.x
+xxxcbc.cbc.xxxx..xxxxx..xxxxlxrx.x
+xxx???xxxxzxxx.xxxxxxxxx.xxxcmcx.x
+xxx???xxxx.xxx.xx.xxx.xx.xxxwxex.x
+x..........xx.xxx.xxx.xxx.xxcbc..x
+x.xxx?xctc.xx.xxx.x.x.xxx.xxxxxx.x
+x.x?x?xlxr.xx.xxxxx~xxxxx.xxxxxxzx
+x.xxx?xcmc.xx.xx..xxx..xx.xxxxxx.x
+x.x?x?xwxe.xx.xx.......xx.x......x
+x.xxx?xcbc.xx..xx.....xx.xx.xxxxxx
+x..........xxx.xxx...xxx.xxx.ctc.x
+xzx???xxxxxxxxx..xxxxx..xxxxxlxrxx
+x.x???xxxxxxxxxxx.....xxxxxxxcmcxx
+xxxctcxctcxxxxxxxxxxxxxxxxxxxwxexx
+xxxl?rxlxrxxxxxxxxxxxxxxxxxx.cbc.x
+xxxcmcxcmcxxxxxxxxxxxxxxxxxxxxxx.x
+xxxw?exwxexxxxxxxxctc....z.......x
+xxxcbcxcbcxxxxxxxxlxrxxxxxxxxxxxxx
+xpx???xxxxxxxxxxxxcmcxxxxxxxxxxxxx
+xxx???xxxxxxxxxxxxwxexxxxxxxxxxxxx
+0...0.....z.......cbcxxxxxxxxxxxxx
+xxx???xxxxxxxxxxxxxxxxxxxxxxxxxxxx
+
+
+
+
+title Match 3 Block Push
+author increpare
+homepage www.puzzlescript.net
+
+========
+OBJECTS
+========
+
+Background
+lightgreen green
+11111
+01111
+11101
+11111
+10111
+
+
+Target
+darkblue
+.....
+.000.
+.0.0.
+.000.
+.....
+
+Wall
+brown darkbrown
+00010
+11111
+01000
+11111
+00010
+
+Player
+black orange white blue
+.000.
+.111.
+22222
+.333.
+.3.3.
+
+Crate
+orange yellow
+00000
+0...0
+0...0
+0...0
+00000
+
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Player
+* = Crate
+@ = Crate and Target
+O = Target
+
+
+=======
+SOUNDS
+=======
+
+Crate MOVE 36772507
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Target
+Player, Wall, Crate
+
+======
+RULES
+======
+
+[ >  Player | Crate ] -> [  >  Player | > Crate  ]
+
+late [ Crate | Crate | Crate ] -> [ | | ]
+
+==============
+WINCONDITIONS
+==============
+
+all Crate on Target
+
+=======
+LEVELS
+=======
+
+#########
+#.......#
+#.*.*.@.#
+#.P...O.#
+#...*.*.#
+#.......#
+#########
+
+.#######.
+.#.....#.
+.#O##..##
+##.##.*.#
+#.*..**.#
+#.OOO.#.#
+#.P.....#
+#########
+
+
+title Des Poseidons Dreizack
+author Stephen Lavelle
+homepage www.increpare.com
+
+text_color #e7cf5c
+background_color #041646
+
+noaction
+
+run_rules_on_level_start
+
+again_interval 0.1
+(verbose_logging)
+
+
+(flickscreen 14x13)
+
+========
+OBJECTS
+========
+
+Background
+blue #204ec5
+00000
+01000
+00000
+00010
+00000
+
+smrocks k
+brown darkbrown 
+.1.1.
+10101
+.1.1.
+10101
+.1.1.
+
+teleport T
+lightblue blue darkblue
+10101
+01210
+12221
+01210
+10101
+
+Target
+darkblue transparent 
+01110
+1.0.1
+10001
+1.0.1
+01110
+
+Wall
+green lightgreen #2d6d0c
+00000
+00010
+00000
+01000
+00000
+
+wallalt "
+green lightgreen #2d6d0c
+00000
+00000
+00000
+01000
+00000
+
+
+wallalt2 '
+green lightgreen #2d6d0c
+00000
+00010
+00000
+00000
+00000
+
+coast_u
+lightblue
+.0.0.
+.....
+.....
+.....
+.....
+
+coast_d
+lightblue
+.....
+.....
+.....
+.....
+.0.0.
+
+coast_l
+lightblue
+.....
+0....
+.....
+0....
+.....
+
+coast_r
+lightblue
+.....
+....0
+.....
+....0
+.....
+
+endhand x
+pink
+0.0.0
+.....
+0...0
+.....
+0.0.0
+
+
+Player
+brown orange yellow lightblue
+2.2.2
+2.2.2
+22222
+..1..
+.313.
+
+underplayer
+lightblue
+..0..
+.....
+.....
+.....
+.....
+
+magnet
+lightblue blue
+.0000
+0....
+0.000
+0...0
+.000.
+
+
+flowers 
+darkgreen brown
+.000.
+00000
+.000.
+..1..
+..1..
+
+hinge H
+orange green darkgray 
+10001
+02220
+02220
+02220
+10001
+
+door_l L
+pink darkgray transparent
+.2.2.
+0000.
+11110
+0000.
+.2.2.
+
+
+door_r R
+pink darkgray transparent
+.2.2.
+.0000
+01111
+.0000
+.2.2.
+
+
+
+door_u U
+pink darkgray transparent
+.010.
+20102
+.010.
+20102
+..0..
+
+door_d D
+pink darkgray transparent
+..0..
+20102
+.010.
+20102
+.010.
+
+
+door_dl 1
+pink darkgray
+.....
+..00.
+.010.
+010..
+10...
+
+
+door_dr 2
+pink darkgray
+.....
+.00..
+.010.
+..010
+...01
+
+
+door_ul 3
+pink darkgray
+10...
+010..
+.010.
+..00.
+.....
+
+door_ur 4
+pink darkgray
+...01
+..010
+.010.
+.00..
+.....
+
+ul
+orange
+0....
+.....
+.....
+.....
+.....
+
+ur
+orange
+....0
+.....
+.....
+.....
+.....
+
+
+dl
+orange
+.....
+.....
+.....
+.....
+0....
+
+
+dr
+orange
+.....
+.....
+.....
+.....
+....0
+
+wu
+green lightgreen
+10101
+.....
+.....
+.....
+.....
+
+wd
+green lightgreen
+.....
+.....
+.....
+.....
+10101
+
+wl
+green lightgreen
+1....
+0....
+1....
+0....
+1....
+
+wr
+green lightgreen
+....1
+....0
+....1
+....0
+....1
+
+suck_d
+lightblue
+.....
+.....
+.0.0.
+..0..
+.....
+
+
+suck_u
+lightblue
+.....
+..0..
+.0.0.
+.....
+.....
+
+
+suck_r
+lightblue
+.....
+..0..
+...0.
+..0..
+.....
+
+
+suck_l
+lightblue
+.....
+..0..
+.0...
+..0..
+.....
+
+temp
+transparent
+
+A 
+transparent
+
+S
+lightblue
+.0.0.
+0.0.0
+.0.0.
+0.0.0
+.0.0.
+
+nopull
+transparent
+
+spawned 
+transparent
+
+
+ip1 §
+#ffff05 #ffa33b
+0.0.0
+0.0.0
+00000
+..1..
+..1..
+
+ip2 ±
+#8e4833
+.....
+.....
+....0
+....0
+....0
+
+ip3 `
+#8e4833 #dbc297
+.....
+00000
+11111
+1.1.1
+11111
+
+ip4 ~
+#8e4833
+.....
+.....
+0....
+0....
+0....
+
+5
+#ffa33b #dbc297
+..0..
+.111.
+.111.
+.111.
+..011
+
+6
+#8e4833 #dbc297
+....0
+....0
+.....
+.....
+....1
+
+7
+#8e4833 #dbc297
+00000
+01110
+00000
+00000
+10001
+
+8
+#8e4833 #dbc297
+0....
+.....
+.....
+.....
+1....
+
+9
+#ffa33b #dbc297
+..0.1
+.....
+.....
+.....
+.....
+
+0
+#dbc297 white
+0..00
+00000
+.00.0
+....1
+....1
+
+bla !
+#dbc297 white
+00000
+00000
+00000
+10000
+11100
+
+blo @
+#dbc297
+00...
+000..
+000..
+0.00.
+..00.
+
+
+(BLANK)
+
+ble £
+white
+....0
+....0
+....0
+...00
+...00
+
+ble1 $
+white #dbc297
+00000
+00000
+00000
+00001
+00011
+
+ble2 \
+#dbc297 white
+..00.
+1.00.
+1000.
+1000.
+100..
+
+(SKIP)
+
+ble3 Y
+white #dbc297
+...00
+...00
+....1
+....1
+....1
+
+ble4 &
+white #dbc297
+00111
+1.111
+1..11
+1..11
+1..11
+
+ble5 *
+white
+0....
+.....
+.....
+.....
+.....
+
+
+ble6 -
+#dbc297
+.....
+...00
+.....
+.....
+.....
+
+ble7 =
+#dbc297
+0..00
+0.000
+.....
+.....
+.....
+
+
+
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Player
+M = magnet
+O = Target
+
+
+walls = wall or wallalt or wallalt2
+ortho = door_u or door_d or door_l or door_r
+diagonal = door_ul or door_ur or door_dl or door_dr
+Door = ortho or diagonal
+doorpart = door or hinge
+obstacle = walls or player or hinge or magnet or door or smrocks
+thick = wall or hinge or magnet or door or teleport
+
+
+fixture = wall or hinge 
+
+pixel = ul or ur or dl or dr
+walltype = wall or wallalt or wallalt2
+
+fillwalltype = wall  or hinge
+
+suck = suck_u or suck_d or suck_l or suck_r
+
+coast = coast_u or coast_d or coast_l or coast_r
+
+verge = wl or wr or wu or wd
+decoration = coast or verge 
+
+% = flowers and wall
+
+image = ip1 or ip2 or ip3 or ip4 or 5 or 6 or 7 or 8 or 9 or 0 or bla or blo or ble or ble1 or ble2 or ble3 or ble4 or ble5 or ble6 or ble7 
+
+
+=======
+SOUNDS
+=======
+
+sfx0 1415300 (swing)
+sfx1 7555504 (cantmove)
+sfx2 16800907 (whirlpool move)
+sfx3 77044105 (teleport)
+sfx4 43993702 (whirlpool destroy)
+sfx5 43993702 (whirlpool create)
+endlevel 30657706
+
+player cantmove  7555504
+
+================
+COLLISIONLAYERS
+================
+
+Background
+coast_u
+coast_d
+coast_l
+coast_r
+A
+Target
+S
+underplayer
+teleport
+endhand 
+Player, Wall, wallalt, wallalt2, magnet, hinge, door, smrocks
+flowers
+ul
+ur
+dl
+dr
+wu
+wd
+wl
+wr
+temp
+suck_u
+suck_d
+suck_l
+suck_r
+nopull
+spawned
+image
+
+======
+RULES
+======
+
+[ player teleport no spawned | ... | teleport ] -> [ teleport | ... | player teleport spawned ] sfx3
+
+[ teleport magnet ] -> [ ] sfx4
+
+[decoration]->[]
+[underplayer]->[]
+[A]->[]
+[temp]->[]
+[suck]->[]
+[nopull]->[]
+
+right [ walls | ]->[walls | coast_l ]
+left  [ walls | ]->[walls | coast_r ]
+down  [ walls | ]->[walls | coast_u ]
+up    [ walls | ]->[walls | coast_d ]
+
+
+
+up [ walls | no walltype ] -> [ walls wu | ]
+down [ walls | no walltype ] -> [ walls wd | ]
+left [ walls | no walltype ] -> [ walls wl | ]
+right [ walls | no walltype ] -> [ walls wr | ]
+
+[pixel]->[]
+
+
+[ > magnet | door ] -> cancel
+
+
+
+[ > Player | magnet  ] -> [ > Player | > magnet  ]
+
+[ > magnet | no obstacle ] -> [ | magnet ]  sfx2
++ [ > player | no obstacle ] -> [ | player  ] 
++ [ > player | no obstacle ] -> [ | player  ] 
+
+
+[player no spawned] [ spawned] -> [player] []
+
+[ magnet ] -> [ magnet suck_u suck_d suck_l suck_r ]
+
+up [ suck_d | no thick ] -> [ suck_d | suck_d ]
+down [ suck_u | no thick ] -> [ suck_u | suck_u ]
+left [ suck_r | no thick ] -> [ suck_r | suck_r ]
+right [ suck_l | no thick ] -> [ suck_l | suck_l ]
+
+
+[S]->[]
+
+
+up [ suck_d | door | no suck_u ]    -> [ suck_d | down door S | ]
+
+
+down [ suck_u | door S | no suck_d ]  -> [ suck_u | stationary door S | ]
+down [ suck_u | door no S | no suck_d ]  -> [ suck_u | up door S | ]
+
+
+left [ suck_r | door S | no suck_l ]  -> [ suck_r | stationary door S | ]
+left [ suck_r | door no S | no suck_l ]  -> [ suck_r | right door S | ]
+
+
+right [ suck_l | door S | no suck_r ] -> [ suck_l | stationary door S | ]
+right [ suck_l | door no S | no suck_r ] -> [ suck_l | left door S | ]
+
+[ > player | door no S ] -> [ > player | > door ]
+
+[s]->[]
+
+up    [ suck_d | door ]    -> [ suck_d | door S ]
+down  [ suck_u | door ]    -> [ suck_u | door S ]
+left  [ suck_r | door ]    -> [ suck_r | door S ]
+right [ suck_l | door ]    -> [ suck_l | door S ]
+
+
+([ > player | > door S ] -> [ > player | > door ])
+
+
+(push ortho doors)
+
+up    [ up    door_l | no obstacle ] -> [ | door_dl ] sfx0
+up    [ up    door_r | no obstacle ] -> [ | door_dr ] sfx0
+down  [ down  door_l | no obstacle ] -> [ | door_ul ] sfx0
+down  [ down  door_r | no obstacle ] -> [ | door_ur ] sfx0
+left  [ left  door_u | no obstacle ] -> [ | door_ur ] sfx0
+left  [ left  door_d | no obstacle ] -> [ | door_dr ] sfx0
+right [ right door_u | no obstacle ] -> [ | door_ul ] sfx0
+right [ right door_d | no obstacle ] -> [ | door_dl ] sfx0
+
+(push diag doors)
+up [ up door_ul | no obstacle ] -> [ | door_l ] sfx0
+up [ up door_ur | no obstacle ] -> [ | door_r ] sfx0
+left [ up door_dl no S | no obstacle ] -> [ | door_d ] sfx0
+right [ up door_dr no S | no obstacle ] -> [ | door_d ] sfx0
+
+left [ down door_ul no S | no obstacle ] -> [ | door_u ] sfx0
+right [ down door_ur no S | no obstacle ] -> [ | door_u ] sfx0
+down [ down door_dl | no obstacle ] -> [ | door_l ] sfx0
+down [ down door_dr | no obstacle ] -> [ | door_r ] sfx0
+
+left [ left door_ul | no obstacle ] -> [ | door_u ] sfx0
+up [ left door_ur no S | no obstacle ] -> [ | door_r ] sfx0
+left [ left door_dl | no obstacle ] -> [ | door_d ] sfx0
+down [ left door_dr no S | no obstacle ] -> [ | door_r ] sfx0
+
+up [ right door_ul no S | no obstacle ] -> [ | door_l ] sfx0
+right [ right door_ur | no obstacle ] -> [ | door_u ] sfx0
+down [ right door_dl no S | no obstacle ] -> [ | door_l ] sfx0
+right [ right door_dr | no obstacle ] -> [ | door_d ] sfx0
+
+
+
+
+[ moving door ] -> [ door ] 
+
+
+late up   [ door_ul | ] -> [ door_ul | dl ]
+late left [ door_ul | ] -> [ door_ul | ur ]
+
+late down [ door_dl | ] -> [ door_dl | ul ]
+late left [ door_dl | ] -> [ door_dl | dr ]
+
+late up    [ door_ur | ] -> [ door_ur | dr ]
+late right [ door_ur | ] -> [ door_ur | ul ]
+
+late down  [ door_dr | ] -> [ door_dr | ur ]
+late right [ door_dr | ] -> [ door_dr | dl ]
+
+late [ thick suck ] -> [ thick ]
+
+[player] -> again
+
+late [magnet suck]->[]
+late down [ player | ] -> [ player  | underplayer]
+
+late [ magnet target ] -> [ teleport ] sfx5 
+
+
+
+
+==============
+WINCONDITIONS
+==============
+
+all player on endhand
+
+=======
+LEVELS
+=======
+
+message Level 1 von 3 : Ausbruch
+
+##########%#%##
+#%##...####%##%
+####.m.######%#
+##.....##...###
+##...###.....##
+##....##.....##
+##.....##....##
+###hl..##....##
+###..........##
+###....#hl...##
+###.....#.#####
+#########.#####
+##....##......#
+#.t....#....o.#
+#...x..#..p...#
+##....##......#
+###############
+
+message Level 2 von 3 : Flucht
+
+##################
+##%#####.....#####
+#####%##.##.2...##
+########.##.1h#.##
+#....##..##h.##.##
+#.p..hh..###.##.##
+#....u.3####.#...#
+#hl##.######.#.x.#
+##.....#.....#...#
+#....o.#.t...#####
+#..m...#.....#####
+#......########%##
+##################
+
+message Level 3 von 3 : Fensterrose
+
+
+#######################
+#######.........#######
+######...........######
+##..##...kkkkk...##..##
+#....#...k...k...#....#
+#.t..#...k.t.k...#..x.#
+#....#...kk.kk...#....#
+#....#....2d1....#....#
+#..o.#...krhlk...#.t..#
+#....#...k...k...#....#
+#...##..m........#....#
+#.hl.............#....#
+#...##....p......#....#
+#######.........#######
+#######################
+
+............
+............
+....x.......
+............
+............
+............
+............
+........p...
+............
+
+............
+............
+....§±`~....
+....5678....
+....90!@....
+.....£$\....
+.....Y&*....
+.....-=.....
+............
+
+message ICH BIN DER POSEIDON
+
+
+(
+
+#####################
+#######.......#######
+######.........######
+##..##..kkkkk..##..##
+#....#..k...k..#....#
+#.t..#..k.t.k..#..x.#
+#....#..kk.kk..#....#
+#....#...2d1...#....#
+#..o.#..krhlk..#.t..#
+#....#..k...k..#....#
+#...##.m.......#....#
+#.hl...........#....#
+#...##...p.....#....#
+#######.......#######
+#####################
+
+#############
+##.........##
+#...........#
+#...kkkkk...#
+#...k...k...#
+#...k.x.k...#
+#...kk.kk...#
+#....2d1....#
+#...krhlk...#
+#...k...k...#
+#...........#
+#..m........#
+#....p......#
+##.........##
+#############
+
+
+#############
+##.........##
+#...........#
+#...kkkkk...#
+#...k...k...#
+#...k.x.k...#
+#...kk.kk...#
+#....2d1....#
+#...krhlk...#
+#...k...k...#
+#...........#
+#.m.........#
+#...........#
+#......p....#
+##.........##
+#############
+
+
+
+###############
+##...........##
+#.............#
+#.............#
+#....kkkkk....#
+#....k...k....#
+#....k.x.k....#
+#....kk.kk....#
+#.....2d1.....#
+#....krhlk....#
+#....k...k....#
+#...m.........#
+#.............#
+#.....p.......#
+#.............#
+#.............#
+##...........##
+###############
+
+###############
+##...........##
+#.............#
+#.............#
+#....kkkkk....#
+#....k...k....#
+#....k.x.k....#
+#....kk.kk....#
+#.....2d1.....#
+#....krhlk....#
+#....k...k....#
+#.............#
+#..........m..#
+#.............#
+#......p......#
+#.............#
+##...........##
+###############
+
+###############
+##...........##
+#.............#
+#.............#
+#....kkkkk....#
+#....k...k....#
+#....k.x.k....#
+#....kk.kk....#
+#.....2d1.....#
+#....krhlk....#
+#....k...k....#
+#.............#
+#.............#
+#...m.....m...#
+#.............#
+#......p......#
+##...........##
+###############
+
+######"########
+##...........##
+#.............#
+#.............#
+#....kkkkk....#
+#....k...k....#
+#....k.x.k....#
+#....kk.kk....#
+#....k.d.k....#
+#....krhlk....#
+#...kk.u.k....#
+#...kt...k..o.#
+#...kkkkkk....#
+#..m......m...#
+#.............#
+#......p......#
+##...........##
+###############
+
+###############
+##...........##
+#.............#
+#.............#
+#....kkkkk....#
+#....k...k....#
+#....k.x.k....#
+#....k.kkk....#
+#....k.d.k....#
+#....krhlk....#
+#....k.u.k....#
+#....k...k....#
+#....k.t.k..o.#
+#....kkkkk....#
+#...m.........#
+#.............#
+##.....p.....##
+###############
+
+###############
+##...........##
+#.............#
+#.............#
+#....kkkkk....#
+#....k...k....#
+#....k.x.k....#
+#....kk.kk....#
+#....k2d1k....#
+#....krhlk....#
+#....k........#
+#.............#
+#.............#
+#...m.....m...#
+#.............#
+#......p......#
+##...........##
+###############
+
+###############
+##...........##
+#.............#
+#.............#
+#....kkkkk....#
+#....k...k....#
+#....k.x.k....#
+#....kk.kk....#
+#....k2d1k....#
+#....krhlk....#
+#.............#
+#.............#
+#.............#
+#...m.....m...#
+#.............#
+#......p......#
+##...........##
+###############
+
+###############
+##...........##
+#.............#
+#.............#
+#....kkkkk....#
+#....k...k....#
+#....k.x.k....#
+#....k.kkk....#
+#....k2d......#
+#....krh......#
+#.....4u......#
+#.............#
+#.............#
+#...m.....m...#
+#.............#
+#......p......#
+##...........##
+###############
+
+###############
+##...........##
+#.............#
+#.............#
+#....kkkkk....#
+#....k...k....#
+#....k.x.k....#
+#....k.kkk....#
+#....k2d......#
+#....krh......#
+#....k4u......#
+#.............#
+#.............#
+#...m.....m...#
+#.............#
+#......p......#
+##...........##
+###############
+
+###############
+##...........##
+#.............#
+#.............#
+#....kkkkk....#
+#....k...k....#
+#....k.x.k....#
+#....k.kkk....#
+#....k2d......#
+#....krh......#
+#....k4.......#
+#.............#
+#.............#
+#...m.....m...#
+#.............#
+#......p......#
+##...........##
+###############
+
+###############
+##...........##
+#.............#
+#.............#
+#....kkkkk....#
+#....k...k....#
+#....k.x.k....#
+#....k...k....#
+#....k2d.k....#
+#....krh.k....#
+#....k4..k....#
+#....k.k.k....#
+#....k.kkk....#
+#...m.....m...#
+#.............#
+#......p......#
+##...........##
+###############
+
+###############
+##...........##
+#.............#
+#.............#
+#....kkkkk....#
+#....k...k....#
+#....k.x.k....#
+#....k.kkk....#
+#....k2d......#
+#....krh......#
+#....k4.......#
+#....k........#
+#....k........#
+#...m.....m...#
+#.............#
+#......p......#
+##...........##
+###############
+
+###############
+##...........##
+#.............#
+#.............#
+#....kkkkk....#
+#....k...k....#
+#....k.x.k....#
+#....k...k....#
+#....k2d.k....#
+#....krh.k....#
+#....k4u.k....#
+#....k.k.k....#
+#....k.kkk....#
+#...m.....m...#
+#.............#
+#......p......#
+##...........##
+###############
+
+............
+............
+............
+...kkkkk....
+...k...k....
+...k.x.k....
+...k...k....
+...k2d.k....
+...krh.k....
+...k4..k....
+...k.k.k....
+...k.kkk....
+..m.....m...
+............
+......p.....
+............
+
+............
+............
+............
+...kkkkk....
+...k...k....
+...k.x.k....
+...k...k....
+...k2d.k....
+...krh.k....
+...k4u.k....
+...k.k.k....
+...k.kkk....
+..m.....m...
+............
+......p.....
+............
+
+
+............
+............
+............
+...kkkkk....
+...k...k....
+...k.x.k....
+...k...k....
+...k2..k....
+...krh.k....
+...k4..k....
+...k.k.k....
+...k.kkk....
+..m.....m...
+............
+.....p......
+............
+
+............
+............
+............
+...kkkkk....
+...k...k....
+...k.x.k....
+...k...k....
+...k.d.k....
+...krh.k....
+...k.u.k....
+...k.k.k....
+...k.kkk....
+..m.....m...
+............
+.....p......
+............
+
+............
+............
+..kkkkk.....
+..k...k.....
+..k.x.k.....
+..k...k.....
+..k.d.k.....
+..krh.k.....
+..k.u.k.....
+..k.k.k.....
+..k.kkk.....
+............
+........m...
+............
+..........p.
+............
+
+##################
+#####.......#....#
+#####.......#....#
+#####..##...#....#
+####hlrh#hl.#..rh#
+####....#.rh#hl..#
+####hlrh#hl.#..rh#
+####....#.rh#hl..#
+####hlrh#hl.#..rh#
+####....#.rh#hl..#
+####....#...#....#
+#.......#........#
+#.m..p..##########
+#.......#.........
+#########.........
+
+##################
+#####.........#..#
+#####...mp....#..#
+#####..##d....#..#
+####h..h#h2...#rh#
+####u..u#..h###..#
+####h..h#hl...#rh#
+####u..u#.rh###..#
+####h..h#hl...#rh#
+####u..u#.rh###..#
+####....#.....#..#
+#.......#.....#..#
+#.......#........#
+#.......#........#
+##################
+
+
+###################
+####....#.........#
+####hlrh#.........#
+####....#.........#
+####hlrh#.........#
+####....#.........#
+####hlrh#.........#
+####....#.........#
+####....#.........#
+#.................#
+#.m..p............#
+#.................#
+###################
+
+
+
+##################
+#................#
+#................#
+#................#
+#................#
+#................#
+#................#
+###.###..........#
+#.....#..........#
+#.p...#..........#
+#.....#..........#
+#...m.#..........#
+#.....#..........#
+##################
+
+##################
+#####.........#..#
+#####.....pmk.#..#
+#####..##d..k.#..#
+####h..h#h2.k.#rh#
+####u..u#..h###..#
+####h..h#hl...#rh#
+####u..u#.rh###..#
+####h..h#hl...#rh#
+####u..u#.rh###..#
+####....#.....#..#
+#.......#.....#..#
+#...kkkk#........#
+#.......#........#
+##################
+
+##################
+#................#
+#................#
+#................#
+#................#
+#................#
+#................#
+#................#
+#................#
+#................#
+#................#
+#................#
+#................#
+##################
+
+)
+
+USER PROMPT:
+The following PuzzleScript game code:
+```plaintext
+title GemCollector
+author YourName
+homepage www.example.com
+
+color_palette
+blue black white red green yellow
+
+========
+OBJECTS
+========
+
+Background
+blue
+00000
+00000
+00000
+00000
+00000
+
+Player
+green
+..0..
+.000.
+.000.
+..0..
+.....
+
+Gem
+yellow
+.....
+..0..
+.000.
+..0..
+.....
+
+Wall
+black
+11111
+11111
+11111
+11111
+11111
+
+========
+LEGEND
+========
+
+. = Background
+P = Player
+G = Gem
+# = Wall
+
+=========
+SOUNDS
+=========
+
+collect 53868302
+playermove 12345678
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Player, Gem, Wall
+
+======
+RULES
+======
+
+[ > Player | Gem ] -> [ > Player | Background ] sfx collect
+[ > Player | ] -> [ > Player | ] sfx playermove
+
+==============
+WINCONDITIONS
+==============
+
+no Gem
+
+=======
+LEVELS
+=======
+
+# Level 1
+#####
+#P..#
+#..G#
+#...#
+#####
+
+# Level 2
+######
+#P...#
+#.#.G#
+#.#..#
+#..G.#
+######
+
+# Level 3
+#######
+#P....#
+#.###.#
+#..G..#
+#.#..#
+#.G..#
+#######
+
+
+```
+produced the following console output:
+=================================
+line 5 : MetaData "color_palette" needs a value.
+line 6 : Unrecognised stuff in the prelude.
+line 38 : Trying to access color number 1 from the color palette of sprite WALL, but there are only 1 defined in it.
+line 39 : Trying to access color number 1 from the color palette of sprite WALL, but there are only 1 defined in it.
+line 40 : Trying to access color number 1 from the color palette of sprite WALL, but there are only 1 defined in it.
+line 41 : Trying to access color number 1 from the color palette of sprite WALL, but there are only 1 defined in it.
+too many errors, aborting compilation
+Errors detected during compilation; the game may not work correctly.
+Return a repaired version of the code that addresses these errors. First, reason about your task and determine the best plan of action. Then, write your code. Return your code in full, inside a ```plaintext code block.

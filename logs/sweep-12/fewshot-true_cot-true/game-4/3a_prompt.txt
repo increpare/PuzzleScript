@@ -1,0 +1,1850 @@
+SYSTEM PROMPT:
+You are a game designer, familiar with the PuzzleScript game description language. Here are some example games, for inspiration (do not reproduce these games exactly):
+
+title Sticky Blocks
+author increpare
+homepage www.puzzlescript.net
+
+========
+OBJECTS
+========
+
+Background
+lightgreen green
+11111
+01111
+11101
+11111
+10111
+
+Target
+darkblue
+.....
+.000.
+.0.0.
+.000.
+.....
+
+Wall
+brown darkbrown
+00010
+11111
+01000
+11111
+00010
+
+Player
+black orange white blue
+.000.
+.111.
+22222
+.333.
+.3.3.
+
+Crate
+orange
+00000
+0...0
+0...0
+0...0
+00000
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Player
+* = Crate
+@ = Crate and Target
+O = Target
+
+=======
+SOUNDS
+=======
+
+Crate MOVE 36772507
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Target
+Player, Wall, Crate
+
+======
+RULES
+======
+
+[ < Player | Crate ] -> [ < Player | < Crate ] 
+
+==============
+WINCONDITIONS
+==============
+
+all Target on Crate
+
+=======
+LEVELS
+=======
+
+#########
+#.......#
+#.....@.#
+#.P.*.O.#
+#.......#
+#.......#
+#########
+
+.#######.
+.#.....#.
+.#O##..##
+##.##.*.#
+#.*..**.#
+#.OOO.#.#
+#.P.....#
+#########
+
+
+title Heroes of Sokoban II: Monsters
+author Jonah Ostroff
+text_color yellow
+key_repeat_interval 0.25
+
+========
+OBJECTS
+========
+
+Background
+#989898 #C8C8C8
+00000
+00100
+00000
+00010
+00000
+
+Goal
+Brown Yellow
+.000.
+00000
+00010
+00000
+00000
+
+Wall
+Darkgrey #222222
+01000
+11111
+00010
+00010
+11111
+
+Fighter (Warrior sounds better in-game, but I want different abbreviations for the classes in the editor.)
+#FF4444 Pink DarkBrown
+.000.
+.111.
+00000
+.000.
+.2.2.
+
+Wizard
+#2266FF Pink
+.000.
+.010.
+00000
+.000.
+00000
+
+Thief
+#66DD66 Pink DarkBrown
+.000.
+.010.
+00000
+.0.0.
+.0.0.
+
+Priest
+#FFFFAA Pink
+.000.
+.111.
+00000
+.000.
+00000
+
+SFighter
+#880000 Pink DarkBrown
+.000.
+.111.
+00000
+.000.
+.2.2.
+
+SWizard
+#000088 Pink
+.000.
+.010.
+00000
+.000.
+00000
+
+SThief
+#006600 Pink DarkBrown
+.000.
+.010.
+00000
+.0.0.
+.0.0.
+
+SPriest
+#B8B800 Pink
+.000.
+.111.
+00000
+.000.
+00000
+
+Crate
+Orange #552200
+.111.
+10001
+10001
+10001
+.111.
+
+YellowSwitch
+Yellow Black
+.....
+.111.
+.101.
+.111.
+.....
+
+YellowOpen
+Yellow
+0...0
+.....
+.....
+.....
+0...0
+
+YellowDoor
+Yellow #AA7722
+01010
+10001
+00000
+10001
+01010
+
+PurpleSwitch
+#6611CC Black
+.....
+.111.
+.101.
+.111.
+.....
+
+PurpleDoor
+#6611CC #220088
+01010
+10001
+00000
+10001
+01010
+
+PurpleOpen
+#6611CC
+0...0
+.....
+.....
+.....
+0...0
+
+MonsterDoor
+DarkGrey #222222 Red
+21002
+22122
+20212
+20012
+21112
+
+Warpball
+Blue
+
+ShadowDoor
+Purple
+
+DragonLeft
+Green Red Orange Yellow DarkGreen
+.....
+1100.
+3210.
+1100.
+...4.
+
+DragonRight
+Green Red Orange Yellow DarkGreen
+.....
+.0011
+.0123
+.0011
+.4...
+
+Goblin
+Green DarkBrown DarkGreen
+0.2.0
+00000
+..0..
+.111.
+.1.1.
+
+Dying
+White
+
+Saved
+#D8D800
+..0..
+.000.
+..0..
+..0..
+.....
+
+HasSaved
+Yellow
+.....
+.....
+.....
+.....
+.....
+
+Corpse
+#CCC
+.000.
+.000.
+00000
+.0.0.
+.0.0.
+
+LFireball
+Orange
+
+RFireball
+Orange
+
+DidNotMove
+Purple
+
+=======
+LEGEND
+=======
+
+Dragon = DragonLeft or DragonRight
+Player = Fighter or Wizard or Thief or Priest
+SPlayer = Swizard or Sthief or SFighter or SPriest
+Hero = Player or Splayer
+Healer = Priest or SPriest (Unlike the other heroes, priests must function even when inactive. "Healer" is the generic term for an active or inactive priest.)
+ClosedDoor = PurpleDoor or YellowDoor or MonsterDoor
+OpenDoor = YellowOpen or PurpleOpen
+Switch = PurpleSwitch or YellowSwitch
+Monster = Dragon or Goblin
+Moveable = Crate or SPlayer or Monster
+Static = Wall or ClosedDoor
+Weighing = Crate or Hero or Monster
+Vulnerable = Hero or Monster
+Invulnerable = Crate or Static
+Fireball = LFireball or RFireball
+. = Background
+# = Wall
+F = Fighter
+W = Wizard
+T = Thief
+P = Priest
+1 = SFighter
+2 = SThief
+3 = SWizard
+4 = SPriest
+* = Crate
+G = Goal
+[ = YellowDoor
+] = PurpleDoor
+{ = YellowSwitch
+} = PurpleSwitch
+L = DragonLeft
+R = DragonRight
+O = Goblin
+M = MonsterDoor
+
+=======
+SOUNDS
+=======
+
+Moveable move 82056307
+Sfx0 21221308 (teleport)
+Endlevel 36315908
+Sfx1 66399906 (switch player)
+Sfx2 92172900 (close door)
+Sfx3 15129100 (open door)
+Sfx4 69860105 (saved)
+Sfx5 63194902 (kill enemy)
+Sfx6 81996702 (dying player)
+EndGame 86793500
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Warpball, Dying
+Goal, Switch, OpenDoor, ShadowDoor
+ClosedDoor, Hero, Crate, Wall, Monster, Corpse
+RFireball, Saved, DidNotMove
+LFireball, HasSaved
+
+======
+RULES
+======
+[Saved] [Wall] -> [] [Wall HasSaved] (Remembering whether we saved someone last round by attaching a note to some wall.)
+
+[Corpse] -> Restart
+
+(Adds a DidNotMove to where the player currently is, to cancel moves where they bump into a wall.)
+
+[Player] -> [Player DidNotMove]
+
+[ >  Fighter | Moveable ] -> [  >  Fighter | > Moveable  ]
+[ > Moveable | Moveable ] [ Fighter] -> [ > Moveable | > Moveable ] [ Fighter] (Fighters push.)
+
+[ < Thief | Moveable ] -> [ < Thief | < Moveable ] (Thieves pull.)
+
+[ > Wizard ] -> [ Wizard > Warpball]
+[ > Warpball | no Moveable no Static] -> [ | > Warpball]
+[ > Warpball | Static] [Wizard] -> [ | Static ] [> Wizard]
+[ > Warpball | Moveable ] [Wizard] -> [ | Wizard Sfx0] [Moveable] (Wizards telexport. What they really do is shoot a "warpball", which causes them to move normally if it hits a wall and warp if it hits something they can warp with.)
+
+(The following mess is for changing characters.)
+[ Action Fighter] [SThief] -> [SFighter] [Thief Sfx1]
+[ Action Thief] [SWizard] -> [SThief] [Wizard Sfx1]
+[ Action Wizard] [SPriest] -> [SWizard] [Priest Sfx1]
+[ Action Priest] [SFighter] -> [SPriest] [Fighter Sfx1]
+
+[ Action Fighter] [no SThief] [SWizard] -> [SFighter] [no SThief] [Wizard Sfx1]
+[ Action Thief] [no Swizard] [SPriest] -> [SThief] [no SWizard] [Priest Sfx1]
+[ Action Wizard] [no SPriest] [SFighter] -> [SWizard] [no SPriest] [Fighter Sfx1]
+[ Action Priest] [no SFighter] [SThief] -> [SPriest] [no SFighter] [Thief Sfx1]
+
+[ Action Fighter] [no SThief] [no SWizard] [SPriest] -> [SFighter] [no SThief] [no SWizard] [Priest Sfx1]
+[ Action Thief] [no SWizard] [no SPriest] [SFighter] -> [SThief] [no SWizard] [no SPriest] [Fighter Sfx1]
+[ Action Wizard] [no SPriest] [no SFighter] [SThief] -> [SWizard] [no SPriest] [no SFighter] [Thief Sfx1]
+[ Action Priest] [no SFighter] [no SThief] [SWizard] -> [SPriest] [no SFighter] [no SThief] [Wizard Sfx1]
+
+(Cancels the move if the player is in the same place that they started. Notice that switching characters negates this. Only matters in levels where one dragon has multiple targets.)
+
+Late [Player DidNotMove] -> Cancel
+Late [DidNotMove] -> []
+
+(Now enemies attack.)
+
+Late [DragonLeft] -> [LFireball DragonLeft]
+Late [DragonRight] -> [RFireball DragonRight]
+
+Late RIGHT [RFireball | No Vulnerable no Invulnerable] -> [ | RFireball]
+Late LEFT [LFireball | No Vulnerable no Invulnerable] -> [ | LFireball]
+Late RIGHT [RFireball | Vulnerable] -> [ | Dying Vulnerable]
+Late Right [RFireball | Invulnerable] -> [ | Invulnerable]
+Late Left [LFireball | Vulnerable] -> [ | Dying Vulnerable]
+Late LEFT [LFireball | Invulnerable] -> [ | Invulnerable]
+
+Late [Goblin | Vulnerable] -> [Goblin | Dying Vulnerable]
+
+(Vulnerable objects that are attacked are designated as "Dying", but heroes can be saved by the Priest. Then the stuff that didn't get saved dies.)
+
+Late [Dying Healer] -> [Saved Healer]
+Late [Healer | Dying Hero] -> [Healer | Saved Hero]
+Late [Dying Monster] -> [Sfx5]
+Late [Dying Hero] -> [Corpse Sfx6]
+
+(Doors opening.)
+
+late [Weighing  YellowSwitch] [YellowDoor] -> [Weighing  YellowSwitch] [ShadowDoor]
+late [YellowSwitch no Weighing] [YellowOpen] -> [YellowSwitch] [YellowDoor sfx2]
+late [YellowSwitch no Weighing] [ShadowDoor] -> [YellowSwitch] [YellowDoor]
+late [ShadowDoor] -> [YellowOpen sfx3]
+
+late [Weighing PurpleSwitch] [PurpleDoor] -> [Weighing PurpleSwitch] [ShadowDoor]
+late [PurpleSwitch no Weighing] [PurpleOpen] -> [PurpleSwitch] [PurpleDoor sfx2]
+late [PurpleSwitch no Weighing] [ShadowDoor] -> [PurpleSwitch] [PurpleDoor]
+late [ShadowDoor] -> [PurpleOpen sfx3]
+
+late [MonsterDoor] -> [ShadowDoor]
+late [ShadowDoor] [Monster] -> [MonsterDoor] [Monster]
+late [ShadowDoor] -> [sfx3]
+
+(Looks for a HasSaved on a wall and moves it to the Priest. Then, if someone was saved this turn, plays the sound only if the Priest doesn't have the HasSaved note. Finally, cleans that up.)
+
+late [Wall HasSaved] [Healer] -> [Wall] [Healer HasSaved]
+late [Saved] [Healer no HasSaved] -> [Saved sfx4] [Healer]
+late [HasSaved] -> []
+
+==============
+WINCONDITIONS
+==============
+
+All Hero on Goal
+All Goal on Hero
+
+=======
+LEVELS
+=======
+
+Message Welcome back.
+
+Message [You've played the original, yes?]
+
+Message [If not, this might be confusing.]
+
+#############
+#.......[...#
+#.*.F.{.[.G.#
+#############
+#.......[...#
+#.*.2.{.[.G.#
+#############
+#.......[...#
+#.*.3.{.[.G.#
+#############
+
+Message Watch out for goblins.
+
+#############
+#F.O.......O#
+#...O.......#
+#.......O...#
+#O..........#
+#....O......#
+#O.......O..#
+#.O.....O.G.#
+#############
+
+#############
+###O###O#####
+#W.*****...O#
+#..*****....#
+#####O###O..#
+#O########..#
+#*G...O.O...#
+##..O..O.O..#
+#############
+
+Message Goblins attack each other too.
+
+#############
+#.......#...#
+#...*...#.G.#
+#.F...O.#...#
+#...*...##O##
+#...........#
+#############
+
+Message Dragons breath fire.
+
+###############
+#.............#
+#..T..###.....#
+#.....L.#.....#
+#.......#.....#
+#.............#
+#.....#.......#
+#.....#.R..G..#
+#.....###.....#
+#.............#
+###############
+
+Message Fire hurts enemies.
+
+##############
+#...#....O.RG#
+#.T.#......R.#
+#...#R*L...R.#
+#R*.#...#..R.#
+#...#...#..R.#
+#...O.*.#..R.#
+#.......#....#
+##############
+
+###########
+#3.O.O.O.T#
+#.#########
+#......G.G#
+#.#########
+#R.O.O.O.O#
+###########
+
+Message Think fast!
+
+#############
+#R.O.O.O.O.T#
+###########{#
+###########]#
+#G#3.[.}.G#G#
+#]###########
+#{###########
+#1..O...O..L#
+#############
+
+Message Sorry about that one.
+
+#######
+##G*G##
+##.G.##
+#R...##
+##...##
+##...##
+##...##
+##...L#
+##...##
+##F23##
+#######
+
+Message Kill monsters to open the M wall.
+
+###########
+#L...R#...#
+#.....#...#
+#.....M.G.#
+#.T.*.#...#
+#.....#...#
+###########
+
+#############
+#.......#...#
+#..O.O..#...#
+#R......M.G.#
+#.*.F.*.#...#
+#.......#...#
+#############
+
+#############
+#.......#...#
+#.{.*.{.#...#
+#..W.O..M.G.#
+#.{.*.[.#...#
+#.......#...#
+#############
+
+Message Yellow priest is protected.
+
+###########
+#...#O#O#O#
+#.P.......#
+#...**O**.#
+#********.#
+#R..G.....#
+###########
+
+###########
+#W#######G#
+#.#O#O#O#.#
+#.........#
+#.##O#O##.#
+#4#######G#
+###########
+
+Message Heroes next to a priest are safe.
+
+############
+#...#.O#O###
+#.F.#......#
+#...#.##O..#
+#.4...O#G.G#
+#...#.##.O.#
+############
+
+############
+#.#..T..#4##
+#.#.{.*...L#
+#.#.....#..#
+#G[.*.{...L#
+#.#.....#..#
+#.#.{.*...L#
+#.#.....#G##
+############
+
+###########
+#W...O#...#
+#.....#.G.#
+#..4..M...#
+#.....#.G.#
+#O...O#...#
+###########
+
+###########
+#.T.##O#O##
+#.........#
+#.4.#O#O..#
+########.##
+#G..####.O#
+#G#.O###.##
+###.###O..#
+#O..O#....#
+##...*....#
+###########
+
+###########
+#{*F#.4#.3#
+#{*.#..#..#
+###[#[###.#
+#R[.......#
+####O#.##.#
+######.##.#
+#G.G.G.#O*#
+###########
+
+###########
+#.T.####O##
+#.3......O#
+#.4.###O.##
+#####O##.##
+#.G..*.O.##
+#G.G#O##.##
+###########
+
+###########
+##O#O#O#O##
+#T[.[.[.[.#
+##{#{#{#{.#
+#.........#
+#.3G*G*G4.#
+#.........#
+###########
+
+Message The final challenge.
+
+#############
+#...#O.O#...#
+#.F.#G.G#.2.#
+#...#.O.#...#
+##.###*###.##
+#R*L.....R*L#
+#.#.......#.#
+#R*L.....R*L#
+##.###M###.##
+#...#...#...#
+#.3.#G.G#.4.#
+#...#...#...#
+#############
+
+Message Thanks for playing!
+
+title Robot Spawner
+author increpare
+homepage www.puzzlescript.net
+
+========
+OBJECTS
+========
+
+Background (special, automatically placed in its own layer)
+green darkgreen
+11111
+01111
+11101
+11111
+10111
+
+Spawner (Name)
+yellow 	(Color)
+..... 	(Sprite)
+..0..
+.000.
+..0..
+.....
+
+Player (Required by game)
+pink
+..0..
+00000
+..0..
+.000.
+.0.0.
+
+RedRobot
+gray black red
+.000.
+.200.
+...0.
+00000
+01010
+
+GreenRobot
+gray black lightgreen
+.000.
+.200.
+...0.
+00000
+01010
+
+BlueRobot
+gray black lightblue
+.000.
+.200.
+...0.
+00000
+01010
+
+=======
+LEGEND
+=======
+
+Robot = RedRobot or GreenRobot or BlueRobot
+Obstacle = Player or Robot
+. = Background
+P = Player
+* = Robot
+O = Spawner
+
+=========
+SOUNDS
+=========
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Spawner
+Player, Robot
+
+======
+RULES
+======
+
+[ stationary Robot ] -> [ randomDir Robot ] 
+[ Spawner no Obstacle ] -> [ Spawner random Robot ] 
+
+==============
+WINCONDITIONS
+==============
+
+=======
+LEVELS
+=======
+
+.......
+.......
+.......
+...O...
+.......
+.P.....
+.......
+
+
+(
+level ideas
+push battery horizontally
+have to assemble and then disassemble a circuit, in order to complete it
+add a piece to a circut, then break the circuit from another point
+level that starts with a closed circuit
+level with very dangerous + block
+)
+title LED Challenge
+author increpare
+homepage www.increpare.com
+
+run_rules_on_level_start
+color_palette famicom
+
+
+========
+OBJECTS
+========
+
+Background .
+darkgreen green
+00000
+00000
+00100
+00000
+00000
+
+
+Player
+Black brown grey Blue
+.111.
+.111.
+22222
+13331
+.3.3.
+
+
+Player_Dead
+darkgrey darkgrey darkgrey darkgrey
+.111.
+.111.
+22222
+.333.
+.3.3.
+
+Wall #
+black
+
+Red_Off R
+black DarkRed
+.....
+..1..
+.101.
+.101.
+.101.
+
+Red_On T
+pink red
+.....
+..1..
+.101.
+.101.
+.101.
+
+
+Green_Off G
+black Green
+.....
+..1..
+.101.
+.101.
+.101.
+
+Green_On H
+Green LightGreen
+.....
+..1..
+.101.
+.101.
+.101.
+
+
+Blue_Off B
+black DarkBlue
+.....
+..1..
+.101.
+.101.
+.101.
+
+Blue_On N
+Blue LightBlue
+.....
+..1..
+.101.
+.101.
+.101.
+
+Battery_H C
+Grey lightgrey
+.000.
+.010.
+01110
+.010.
+.000.
+
+Battery_V O
+Grey lightgrey
+..0..
+00100
+01110
+00100
+..0..
+
+
+cable_h q
+grey
+.....
+.....
+00000
+.....
+.....
+
+cable_v e
+grey
+..0..
+..0..
+..0..
+..0..
+..0..
+
+cable_ul w
+grey
+..0..
+..0..
+000..
+.....
+.....
+
+cable_ur d
+grey
+..0..
+..0..
+..000
+.....
+.....
+
+cable_dr s
+grey
+.....
+.....
+..000
+..0..
+..0..
+
+cable_dl a
+grey
+.....
+.....
+000..
+..0..
+..0..
+
+
+cable_omni z
+grey
+..0..
+..0..
+00000
+..0..
+..0..
+
+cable_dlr i
+grey
+.....
+.....
+00000
+..0..
+..0..
+
+cable_ulr k
+grey
+..0..
+..0..
+00000
+.....
+.....
+
+cable_udr j
+grey
+..0..
+..0..
+..000
+..0..
+..0..
+
+cable_udl l
+grey
+..0..
+..0..
+000..
+..0..
+..0..
+
+
+light
+black
+
+light_up
+yellow
+.000.
+.000.
+.000.
+.....
+.....
+
+light_down
+yellow
+.....
+.....
+.000.
+.000.
+.000.
+
+light_Left
+yellow
+.....
+000..
+000..
+000..
+.....
+
+light_right
+yellow
+.....
+..000
+..000
+..000
+.....
+
+=======
+LEGEND
+=======
+
+P = Player
+Unlit = Blue_Off or Green_Off or Red_Off
+Lit = Blue_On or Green_On or Red_On
+Cable = Cable_h or Cable_v or Cable_dr or Cable_dl or Cable_ul or Cable_ur or Cable_UL or Cable_UR or Cable_UDR or Cable_ULR or Cable_UDL or Cable_DLR or Cable_Omni
+Battery = Battery_H or Battery_V
+Item = Unlit or Lit or Battery or Cable
+Cable_Up = Cable_V or Cable_UL or Cable_UR or Battery_V or Cable_UDR or Cable_ULR or Cable_UDL or Cable_Omni or  Player
+Cable_Down = Cable_V or Cable_DL or Cable_DR or Battery_V or Cable_UDR or Cable_UDL or Cable_DLR or Cable_Omni or Player
+Cable_Left = Cable_H or Cable_UL or Cable_DL or Battery_H  or Cable_ULR or Cable_UDL or Cable_DLR or Cable_Omni or Player
+Cable_Right = Cable_H or Cable_UR or Cable_DR or Battery_H or Cable_UDR or Cable_ULR or Cable_DLR or Cable_Omni or Player
+LightEffect = Light_Up or Light_Down or Light_Left or Light_Right
+Object = Player or Item
+Player_Dying = Player and Light
+
+=======
+SOUNDS
+=======
+
+EndLevel 39731502
+EndGame 20540505
+Player Move 6330907
+Player_Dead Create 44233902
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Light
+Light_Up
+Light_Down
+Light_Left
+Light_Right
+Player, Player_Dead, Wall, Item
+
+======
+RULES
+======
+
+(init stage)
+[ Light ] -> [ ]
+[ LightEffect no Player] -> [ ]
+[ Red_On ] -> [ Red_Off ]
+[ Green_On ] -> [ Green_Off ]
+[ Blue_On ] -> [ Blue_Off ]
+
+(movement)
+[ >  Object | Object ] -> [  > Object | > Object ]
+
+(do circuits)
+startLoop
+late [ Battery ] -> [ Light Battery ]
+
+late left [ Player | Light_Right ] -> [ Light Player | Light_Right ]
+late right [ Player | Light_Left ] -> [ Light Player | Light_Left ]
+late up [ Player | Light_Down ] -> [ Light Player | Light_Down ]
+late down [ Player | Light_Up ] -> [ Light Player | Light_Up ]
+
+late up [ Player_Dead | Light_Down ] -> [ Light Player_Dead | Light_Down  ]
+late down [ Player_Dead | Light_up ] -> [ Light Player_Dead | Light_up  ]
+
+late left [ Cable_Left | Light_Right ] -> [ Light Cable_Left | Light_Right ]
+late right [ Cable_Right | Light_Left ] -> [ Light Cable_Right | Light_Left ]
+late up [ Cable_Up | Light_Down ] -> [ Light Cable_Up | Light_Down ]
+late down [ Cable_Down | Light_Up ] -> [ Light Cable_Down | Light_Up ]
+
+late down [ Red_Off | Light_Up ] -> [ Red_On | Light_Up ]
+late down [ Green_Off | Light_Up ] -> [ Green_On | Light_Up ]
+late down [ Blue_Off | Light_Up ] -> [ Blue_On | Light_Up ]
+
+late [ Light Cable_Up ] -> [ Light Light_Up Cable_Up ]
+late [ Light Cable_Down ] -> [ Light Light_Down Cable_Down ]
+late [ Light Cable_Left ] -> [ Light Light_Left Cable_Left ]
+late [ Light Cable_Right ] -> [ Light Light_Right Cable_Right ]
+endLoop
+
+late [ Player Light ] -> again
+late [ Player_Dead Light ] -> again
+late [ Player LightEffect ] -> [ Player_Dead LightEffect ]   again
+late [ Player_Dead Light ] -> [ Player_Dead ]
+
+==============
+WINCONDITIONS
+==============
+
+No Unlit
+No Player_Dead
+
+=======
+LEVELS
+=======
+
+message Level 1 of 4
+
+......
+.r.g..
+..o.p.
+.w.d..
+......
+
+message Level 2 of 4
+
+.....##.....
+.....##.w.d.
+..c.........
+...p....r.g.
+.....##.....
+
+message Level 3 of 4
+
+.......
+..rgb..
+..wkd..
+...o...
+.....p.
+.......
+
+message Level 4 of 4
+
+...........
+...ccccc...
+.d.crcgc.w.
+...ccccc...
+..........p
+
+(
+message Level 5 of 3
+
+.......
+.bgrgb.
+rdzczwr
+dqw.dqw
+.......
+)
+
+message Congratulations
+
+title Several Rigid Bodies
+author increpare
+homepage www.puzzlescript.net
+
+========
+OBJECTS
+========
+
+Background
+darkgreen
+
+Target
+YELLOW
+
+Player
+PINK
+
+RedCrate q
+RED
+
+GreenCrate w
+Green
+
+BlueCrate e
+Blue
+
+SmallCrate r
+Purple
+.....
+.000.
+.000.
+.000.
+.....
+
+Wall
+DARKBROWN
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Player
+bigcrate = redcrate or greencrate or bluecrate
+Crate = smallcrate or bigcrate
+O = Target
+
+=========
+SOUNDS
+=========
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Target
+Player, Wall, Crate
+
+======
+RULES
+======
+
+startloop
+
+[ > Player | Smallcrate ] -> [ > Player | > SmallCrate ]
+
+[ >  Player | RedCrate ] -> [  >  Player | > RedCrate  ]
++ rigid [ moving RedCrate | RedCrate ] -> [ moving RedCrate | moving RedCrate ]
++ [ >  Crate | RedCrate ] -> [  >  Crate | > RedCrate  ]
+
+[ >  Player | GreenCrate ] -> [  >  Player | > GreenCrate  ]
++ rigid [ moving GreenCrate | GreenCrate ] -> [ moving GreenCrate | moving GreenCrate ]
++ [ >  Crate | GreenCrate ] -> [  >  Crate | > GreenCrate  ]
+
+
+[ >  Player | BlueCrate ] -> [  >  Player | > BlueCrate  ]
++ rigid [ moving BlueCrate | BlueCrate ] -> [ moving BlueCrate | moving BlueCrate ]
++ [ >  Crate | BlueCrate ] -> [  >  Crate | > BlueCrate  ]
+
+[ > Crate | SmallCrate ] -> [  > Crate | > SmallCrate ]
+
+endloop
+
+==============
+WINCONDITIONS
+==============
+
+=======
+LEVELS
+=======
+
+...............
+...............
+...............
+.....#.........
+...............
+...r.r.........
+..P....#.......
+..qq..w.eer....
+..q.wwweer.....
+..q.#..........
+...............
+...............
+...............
+
+
+
+title tiny treasure hunt 1.0
+author Weeble
+homepage www.twitter.com/weeble
+run_rules_on_level_start
+
+========
+OBJECTS
+========
+LowFloorRaw
+BLACK
+
+LowFloor1
+#111411 #191d19 #202020 #252725
+01011
+12310
+23320
+02321
+02110
+
+LowFloor2
+#111411 #191d19 #202020 #252725
+01001
+22312
+12331
+01310
+10101
+
+WallFacade
+#555555 #666666 #777777
+21221
+10011
+.....
+.....
+.....
+
+HighFloor
+#909090 #999999 #bbbbbb #cccccc
+33232
+31012
+20002
+31012
+32222
+
+LowPlayer
+#686868 #707070 #787878 #808080
+.....
+.....
+.232.
+.121.
+.0.0.
+
+HighPlayer
+#e8e8e8 #f0f0f0 #f8f8f8 #ffffff
+.232.
+.121.
+.0.0.
+.....
+.....
+
+Crate
+#999944 #88883a #777733
+10001
+00000
+10001
+22222
+22222
+
+HighCrate
+#dddd55 #eeee50 #cccc48
+10001
+00000
+10001
+22222
+22222
+
+BurntCrate
+#222222 #111111 #000000
+10001
+00000
+10001
+22222
+22222
+
+MeltingIce
+White LightBlue #9999ff #330000
+.33..
+3333.
+31013
+11330
+21112
+
+
+StaticIce
+White LightBlue #9999ff
+10002
+1...0
+0...1
+10012
+21122
+
+IceCubeN
+White LightBlue #9999ff
+10002
+1...0
+0...1
+10012
+21122
+
+IceCubeE
+White LightBlue #9999ff
+10002
+1...0
+0...1
+10012
+21122
+
+IceCubeS
+White LightBlue #9999ff
+10002
+1...0
+0...1
+10012
+21122
+
+IceCubeW
+White LightBlue #9999ff
+10002
+1...0
+0...1
+10012
+21122
+
+FirePit1
+#990000 #770000 #550000 #330000
+02111
+13321
+02321
+32110
+23121
+
+FirePit2
+#990000 #770000 #550000 #330000
+10311
+21233
+11021
+23213
+20122
+
+
+Pillar
+#cccccc #dddddd #eeeeee #ffffff #bbbbbb #aaaaaa
+32123
+33333
+02120
+22122
+01310
+
+IceCubeShadow
+RED
+.....
+.....
+..0..
+.....
+.....
+
+Coin
+WHITE #eeee55 #aaaa33
+.000.
+01112
+01212
+01112
+.222.
+
+
+StairsNorth
+#333333 #444444 #555555 #666666 #777777
+44444
+43334
+32223
+21112
+10001
+=======
+LEGEND
+=======
+. = LowFloorRaw
+" = HighFloor
+@ = LowPlayer and LowFloorRaw
+$ = Coin and HighFloor
+£ = Coin
+H = HighCrate and HighFloor
+: = WallFacade and FirePit1 and LowFloorRaw
+~ = WallFacade and LowFloorRaw
+# = Crate and LowFloorRaw
+W = Crate and LowFloorRaw and WallFacade
+! = FirePit1 and LowFloorRaw
+I = Pillar and HighFloor
+% = StaticIce and LowFloorRaw
+& = StaticIce and LowFloorRaw and WallFacade
+/ = StairsNorth and LowFloorRaw
+FirePit = FirePit1 or FirePit2
+LowFloor = LowFloor1 or LowFloor2
+Background = LowFloor or HighFloor or LowFloorRaw
+Player = LowPlayer or HighPlayer
+Obstacle = StairsNorth
+BlocksLow = Crate or HighFloor or StaticIce or Pillar or BurntCrate
+Pushable = Crate or StaticIce
+MovingIce = IceCubeE or IceCubeS or IceCubeW or IceCubeN
+IceCube = StaticIce or MovingIce
+Grounded = IceCube or LowPlayer or Crate
+
+=======
+SOUNDS
+=======
+
+Coin DESTROY 77169700
+Crate MOVE 24442507
+SFX0 98605308 ( Hiss )
+SFX1 89033504 ( Snap )
+SFX2 70543502 ( Plink )
+SFX3 34905302 ( Slam )
+SFX4 93355705 ( Squeak )
+SFX5 52776702 ( Grind )
+SFX6 86238705 ( Bounce )
+
+================
+COLLISIONLAYERS
+================
+
+Background
+StairsNorth, FirePit
+WallFacade
+Crate, IceCube, MovingIce, LowPlayer, MeltingIce, BurntCrate
+Pillar, HighPlayer, HighCrate, Coin
+IceCubeShadow
+
+======
+RULES
+======
+
+(Make stuff pretty)
+[ LowFloorRaw ] -> [ random LowFloor ]
+[ FirePit ] -> [ random FirePit ]
+
+(Pushing stuff)
+[ > LowPlayer | Pushable ] -> [ > LowPlayer | > Pushable ]
+[ > HighPlayer | HighCrate ] -> [ > HighPlayer | > HighCrate ]
+
+(Don't walk under pillars. Probably redundant.)
+[ > Grounded | Pillar ] -> [ Grounded | Pillar ]
+
+(Ice melts in lava)
+[ MeltingIce FirePit ] -> [ ]
+[ IceCube FirePit ] -> [ MeltingIce FirePit ] sfx0 again
+
+(Ice slides)
+RIGHT [ > StaticIce ] -> [ > IceCubeE ] sfx2
+DOWN [ > StaticIce ] -> [ > IceCubeS ] sfx2
+LEFT [ > StaticIce ] -> [ > IceCubeW ] sfx2
+UP [ > StaticIce ] -> [ > IceCubeN ] sfx2
+[ MovingIce no IceCubeShadow ] -> [ MovingIce IceCubeShadow ]
+RIGHT [ IceCubeE ] -> [ > IceCubeE ] again
+DOWN [ IceCubeS ] -> [ > IceCubeS ] again
+LEFT [ IceCubeW ] -> [ > IceCubeW ] again
+UP [ IceCubeN ] -> [ > IceCubeN ] again
+
+(Stop things from overlapping the stairs)
+[ > IceCube | Obstacle ] -> [ StaticIce | Obstacle ]
+[ > Crate | Obstacle ] -> [ Crate | Obstacle ]
+
+(Lava kills you)
+late [ LowPlayer FirePit ] -> [ FirePit ] sfx5 message Ouch, hot!
+
+(More ice rules)
+late [ MovingIce IceCubeShadow ] -> [ StaticIce ] sfx5
+late [ IceCubeShadow ] -> [ ]
+
+(Crates get charred in lava)
+late [ Crate FirePit ] -> [ BurntCrate FirePit ] sfx5
+
+(Player collects coins)
+[ > HighPlayer | Coin HighFloor ] -> [ | HighPlayer HighFloor ]
+[ > LowPlayer | Coin LowFloor ] -> [ | LowPlayer LowFloor ]
+
+(Player can climb stairs)
+UP [ > LowPlayer StairsNorth | HighFloor ] -> [ StairsNorth | HighPlayer HighFloor ] sfx6
+
+(Stop things from getting pushed up onto ledges)
+[ > Grounded | HighFloor ] -> [ Grounded | HighFloor ]
+
+(Players and crates fall)
+late [ HighPlayer no BlocksLow ] -> [ LowPlayer ] sfx1 again
+late [ HighCrate no BlocksLow ] -> [ Crate ] sfx1 again
+
+==============
+WINCONDITIONS
+==============
+
+No Coin
+
+=======
+LEVELS
+=======
+
+message 1. the outer walls
+
+""""""!!!"""
+"h""""..!"$"
+""""""#.!"""
+""""""..!"""
+i~~/i/..!:::
+"..."...!!!!
+i"""i.......
+"/~~"!!...#.
+i.@.i!!.....
+
+message 2. cold storage
+
+..........£
+.!!!!!!!!!.
+.!!!!!!!!!.
+.!!.%%%.!!.
+.!!%...%!!.
+.!!%.@.%!!.
+.!!%...%!!.
+.!!.%%%.!!.
+.!!!!!!!!!.
+.!!!!!!!!!.
+...........
+
+
+message 3. bifrost
+
+!!.@.""""!!
+!!%.."~/"!!
+!!.%.&..~!!
+!!%..%...!!
+!!.%.%.%.!!
+!!%..%..%!!
+!!.%.%.%.!!
+!!...%..%!!
+!!...%.%.!!
+!!$.."..%!!
+!!"""".%.!!
+
+
+message 4. clutter
+
+""""""""""$
+"""""""""""
+~~~~W~W~~::
+.%@.#..#.!!
+....#.#..!!
+!!!!"""""..
+!!!!"""""..
+....~/~~~..
+...........
+
+message 5. arena
+
+!"!!!!!!!!!"
+!~.."..""..:
+!...~../~$.!
+!"......@~.!
+!~...".....!
+!....~.%...!
+!....%.....!
+!."....%...!
+!.~......."!
+!.."......~!
+!".~..."...!
+!:!!!!!:!!!!
+
+
+message 6. the gauntlet
+
+
+..""."."."..!!!
+..w~."#".~#.!"!
+""...~.~#.."!~!
+~&..@......~!£!
+""....#"""."!.!
+~~...#."/"#~!"!
+.......~."..!:!
+
+
+message 7. throne room
+
+...#."$".#...
+..#.."""..#..
+!!.#.:::.#.!!
+$"!...!...!"$
+""!.!!!!!.!""
+~~!.!h"h!.!~~
+.#!!!"""!!!#.
+.....h"h.....
+"!!.."""..!!"
+""!..~/~..!""
+"""...@..."""
+:~~.%.%.%.~~:
+!...........!
+
+message Well done!
+
+
+USER PROMPT:
+The following PuzzleScript game code:
+```plaintext
+title Sokoban Clone
+author YourName
+
+========
+OBJECTS
+========
+
+Background
+White
+
+Wall
+DarkGray
+00000
+00000
+00000
+00000
+00000
+
+Player
+Blue LightBlue
+..1..
+.111.
+11111
+.111.
+..1..
+
+Crate
+Orange darkorange
+.222.
+22222
+22222
+22222
+.222.
+
+Target
+LightGreen
+00000
+01110
+01210
+01110
+00000
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Player
+* = Crate
+O = Target
+@ = Crate and Target
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Target
+Player, Crate, Wall
+
+======
+RULES
+======
+
+[ > Player | Crate ] -> [ > Player | > Crate ]
+[ > Player | Wall ] -> [ Player | Wall ]
+
+==============
+WINCONDITIONS
+==============
+
+All Crate on Target
+
+=======
+LEVELS
+=======
+
+#####
+#...#
+#.P.#
+#.#.#
+#*O*#
+#####
+
+#####
+#...#
+#*P*#
+#.#.#
+#O.O#
+#####
+
+#####
+#.#.#
+#*P*#
+#.O.#
+#...#
+#####
+
+```
+produced the following console output:
+=================================
+line 28 : Was looking for color for object CRATE, got "darkorange" instead.
+line 29 : Trying to access color number 2 from the color palette of sprite CRATE, but there are only 1 defined in it.
+line 30 : Trying to access color number 2 from the color palette of sprite CRATE, but there are only 1 defined in it.
+line 31 : Trying to access color number 2 from the color palette of sprite CRATE, but there are only 1 defined in it.
+line 32 : Trying to access color number 2 from the color palette of sprite CRATE, but there are only 1 defined in it.
+line 33 : Trying to access color number 2 from the color palette of sprite CRATE, but there are only 1 defined in it.
+too many errors, aborting compilation
+Errors detected during compilation; the game may not work correctly.
+Return a repaired version of the code that addresses these errors. First, reason about your task and determine the best plan of action. Then, write your code. Return your code in full, inside a ```plaintext code block.

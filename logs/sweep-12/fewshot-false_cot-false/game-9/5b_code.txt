@@ -1,0 +1,127 @@
+Here is a corrected version of your PuzzleScript code. I've adjusted the syntax errors and modified the rules according to the PuzzleScript engine's requirements.
+```plaintext
+Title: Treasure Hunter
+
+Author: Your Name
+
+Homepage: http://www.example.com
+
+========
+OBJECTS
+========
+
+Background
+lightgray
+00000
+00000
+00000
+00000
+00000
+
+Player
+Red
+.....
+..0..
+.000.
+..0..
+.....
+
+Wall
+DarkGray
+.....
+.....
+.....
+.....
+.....
+
+Treasure
+Yellow
+.000.
+.0.0.
+00000
+.0.0.
+.000.
+
+Goal
+Green
+.....
+.000.
+.0.0.
+.000.
+.....
+
+========
+LEGEND
+========
+
+. = Background
+P = Player
+# = Wall
+T = Treasure
+G = Goal
+
+========
+SOUNDS
+========
+
+Player Move Treasure trebleup
+
+========
+COLLISIONLAYERS
+========
+
+Background
+Player
+Wall
+Treasure
+Goal
+
+========
+RULES
+========
+
+[> Player | Treasure] -> [Player | Goal]
+[Player | Goal] -> [Goal]
+
+========
+WINCONDITIONS
+========
+
+No Treasure
+
+========
+LEVELS
+========
+
+/0
+#####
+#...#
+#P.T#
+#...#
+##### 
+
+/1
+#######
+#.....#
+#.#.#.#
+#.#.T.#
+#P#.#G#
+#.....#
+#######
+
+/2
+#########
+#..T..#.#
+#.#.##..#
+#...##..#
+#.P..G###
+#...T...#
+#########
+
+========
+```
+
+Key changes made:
+1. Corrected the `SOUNDS` section syntax: `Player Move Treasure trebleup`.
+2. Fixed the syntax issue in the rules section (removed unnecessary tokens "// clear goal to advance"). 
+3. Reformulated the second rule to correct syntax.

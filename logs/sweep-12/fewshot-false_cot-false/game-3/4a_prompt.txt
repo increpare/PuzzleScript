@@ -1,0 +1,123 @@
+SYSTEM PROMPT:
+You are a game designer, familiar with the PuzzleScript game description language. 
+
+USER PROMPT:
+The following PuzzleScript game code:
+```plaintext
+Title: Box Pusher
+Author: GameDesigner
+
+========
+OBJECTS
+========
+
+Background
+transparent
+
+Wall
+brown
+
+Pusher
+red
+
+Box
+blue
+
+Target
+green
+
+BoxOnTarget
+cyan
+
+PusherOnTarget
+magenta
+
+========
+LEGEND
+========
+
+. = Background
+# = Wall
+P = Pusher
+B = Box
+T = Target
+O = BoxOnTarget
+@ = PusherOnTarget
+
+========
+COLLISIONLAYERS
+========
+
+Background
+Wall
+Box, BoxOnTarget
+Pusher, PusherOnTarget
+Target
+
+========
+RULES
+========
+
+[ P | B ] -> [ > | > ]
+[ P | T ] -> [ @ ]
+[ P | O ] -> [ @ | B ]
+[ @ ] -> [ P | T ]
+[ P | B | T ] -> [ > | > | O ]
+
+[ B | T ] -> [ O ]
+[ O ] -> [ B | T ]
+
+========
+WINCONDITIONS
+========
+
+All O
+
+========
+LEVELS
+========
+
+#####
+#...#
+#.O.#
+#...#
+#.P.#
+#..B#
+#####
+
+#####
+#...#
+#.O.#
+#...#
+#...#
+#PBO#
+#####
+
+#######
+#.....#
+#.O.O.#
+#.....#
+#PB.BO#
+#...B.#
+#######
+
+#########
+#.......#
+#.O.O.O.#
+#.......#
+#PB.BOBO#
+#.......#
+#########
+
+```
+produced the following console output:
+=================================
+line 24 : Was looking for color for object BOXONTARGET, got "cyan" instead.
+line 27 : Was looking for color for object PUSHERONTARGET, got "magenta" instead.
+line 42 : section "COLLISIONLAYERS" is out of order, must follow  "SOUNDS" (or it could be that the section "SOUNDS"is just missing totally.  You have to include all section headings, even if the section itself is empty).
+line 55 : Name "p", referred to in a rule, does not exist.
+line 55 : Name "b", referred to in a rule, does not exist.
+line 56 : Name "p", referred to in a rule, does not exist.
+too many errors, aborting compilation
+Errors detected during compilation; the game may not work correctly.
+Return a repaired version of the code that addresses these errors. Return your code in full, inside a ```plaintext code block.

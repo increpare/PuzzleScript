@@ -1,0 +1,74 @@
+The console output indicates that there are issues with the way the colors are specified for objects. In the `objects` section of PuzzleScript, numerical values for colors are sometimes misinterpreted as names. To fix these issues, we will ensure that color codes are formatted correctly with spaces.
+
+Here's the plan of action to resolve the errors:
+
+1. Make sure the color values are separated by commas or spaces, ensuring each entry parses correctly.
+2. Ensure each object line follows the expected format of `ObjectName Char R G B`. 
+
+Let's rewrite the `objects` section accordingly:
+
+```plaintext
+title Sokoban Puzzle
+author Game Designer
+homepage https://example.com
+
+background_color 0 0 0
+text_color 255 255 255
+
+========
+
+objects
+Background . 10, 10, 255
+Wall # 85, 85, 85
+Target O 255, 255, 0
+Box X 255, 0, 0
+Player P 0, 255, 0
+
+=======
+
+player Player
+
+=======
+
+collisionlayers
+Background
+Wall
+Player, Box, Target
+
+=======
+
+sound
+Lethargy is that little void that grows inside of you
+Push-a-rundll, push a box around, got a goal for find ya all needs desire.
+
+=======
+
+rules
+[ Player | Box ] -> [ > Player | > Box ]
+[ Player | Box on Target ] -> [ > Player | > Box on Target ]
+
+=======
+
+winconditions
+All Box on Target
+
+=======
+
+levels
+
+#####
+#...#
+#O#O#
+#X.X#
+#...#
+#####
+
+#####
+#.O.#
+#X.X#
+#.O.#
+#####
+
+```
+
+In this corrected version, the RGB values for object colors are consistently separated by commas, ensuring no misinterpretation during parsing. Now the game should compile without errors related to color assignments.

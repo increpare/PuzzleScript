@@ -1,0 +1,133 @@
+SYSTEM PROMPT:
+You are a game designer, familiar with the PuzzleScript game description language. 
+
+USER PROMPT:
+The following PuzzleScript game code:
+```plaintext
+Title: Block Pusher
+Author: PuzzleScript Game Designer
+
+===========
+OBJECTS
+===========
+
+Background
+transparent
+
+Player
+blue
+.....
+..0..
+.000.
+..0..
+.....
+
+Block
+red
+.....
+.....
+.000.
+.....
+.....
+
+Target
+green
+.....
+..0..
+..0..
+..0..
+.....
+
+BlockOnTarget
+yellow
+.....
+..0..
+.000.
+.000.
+.....
+
+===========
+LEGEND
+===========
+
+. = Background
+P = Player
+B = Block
+T = Target
+U = BlockOnTarget
+
+===========
+SOUNDS
+===========
+
+SFX1
+    move
+    
+SFX2
+    push
+
+===========
+COLLISIONLAYERS
+===========
+
+Background
+Target
+Player, Block, BlockOnTarget
+
+===========
+RULES
+===========
+
+[> Player | Block] -> [> Player | > Block] SFX2
+
+[Block | Target] -> [BlockOnTarget]
+
+[BlockOnTarget | Target] -> [BlockOnTarget]
+
+===========
+WINCONDITIONS
+===========
+
+All BlockOnTarget on Target
+
+===========
+LEVELS
+===========
+
+#######
+#.....#
+#..T..#
+#..B..#
+#..P..#
+#######
+
+#######
+#.....#
+#..T..#
+#..B..#
+#..P..#
+#.....#
+#..T..#
+#######
+
+#######
+#..T..#
+#..B..#
+#.PPP.#
+#..B..#
+#..T..#
+#######
+
+
+```
+produced the following console output:
+=================================
+line 58 : unexpected sound token "move".
+line 61 : unexpected sound token "push".
+line 91 : Key "#" not found. Do you need to add it to the legend, or define a new object?
+line 92 : Key "#" not found. Do you need to add it to the legend, or define a new object?
+line 93 : Key "#" not found. Do you need to add it to the legend, or define a new object?
+line 94 : Key "#" not found. Do you need to add it to the legend, or define a new object?
+too many errors, aborting compilation
+Errors detected during compilation; the game may not work correctly.
+Return a repaired version of the code that addresses these errors. Return your code in full, inside a ```plaintext code block.

@@ -1,0 +1,99 @@
+The console output indicates that there are errors in the prelude section of the PuzzleScript code. The provided code errors are likely due to issues in the object definitions or other parts of the prelude. Upon closer inspection of the script, the CLASH is happening because the object section syntax might be incorrect. This syntax includes a separate header, object color which is not present. PuzzleScript requires a title to be specified for each object, along with a specific character and color representation.
+
+Here is the corrected code:
+
+```plaintext
+Title: Simple Sokoban
+
+# OBJECTS
+Background
+. 
+Background
+grey
+
+Player
+P 
+#ff0000
+
+Wall
+W 
+#000000
+
+Box
+B 
+#00ff00
+
+Target
+T 
+#0000ff
+
+# LEGEND
+. = Background
+P = Player
+W = Wall
+B = Box
+T = Target
+
+# WINCONDITIONS
+All Box on Target
+
+# RULES
+[> Player | Box] -> [> Player > Box]
+
+# COLLISIONLAYERS
+Background
+Target
+Player
+Box
+Wall
+
+# LEVELS
+# Level 1
+#######
+#..P..#
+#.#.#.#
+#.BTC.#
+#.#.#.#
+#######
+
+# Level 2
+#######
+#P..T.#
+#..B..#
+#.###.#
+#.###.#
+#.....#
+#######
+
+# Level 3
+#######
+#P....#
+###B..#
+#..T..#
+#.###.#
+#..T..#
+#######
+
+# Level 4
+########
+#P..#..#
+#..BT..#
+#..###.#
+#..###.#
+#...T..#
+########
+```
+
+### Explanation:
+1. **Object Definition**: Each object is defined with a color. The format used is:
+   ```
+   ObjectName
+   Character
+   ColorCode
+   ```
+   
+2. **Legend Section**: Defines what each character stands for in the level descriptions.
+
+3. **Collision Layers Order**: The order in `# COLLISIONLAYERS` is important. "Background" and "Target" are generally at lower layers, while "Player," "Box," and "Wall" need to be in separate layers to enforce game physics (e.g., walls should block movement).
+
+With these changes, the code should be accepted by the PuzzleScript engine without generating errors, and the game should compile and run as expected.

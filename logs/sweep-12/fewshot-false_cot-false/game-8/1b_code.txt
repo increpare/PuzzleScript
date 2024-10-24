@@ -1,0 +1,88 @@
+The errors you're encountering are due to incorrect section headers. In PuzzleScript, section headers like "Title", "Author", and "Homepage" should use a single line header format without additional styling or equal signs. I'll replace them with the correct metadata format in the prelude. Here's the corrected code:
+
+```plaintext
+Title Simple Sokoban
+Author Game Designer
+Homepage https://www.example.com
+
+===========
+Legend
+===========
+# = Wall
+P = Player
+B = Box
+T = Target
+G = BoxOnTarget
+
+===========
+Sounds
+===========
+# No custom sounds specified.
+
+===========
+CollisionLayers
+===========
+Background
+Target
+Player, Box, BoxOnTarget, Wall
+
+===========
+Objects
+===========
+Background
+grey
+
+Wall
+orange
+
+Player
+yellow
+
+Box
+blue
+
+Target
+red
+
+BoxOnTarget
+green
+
+===========
+Legend ends
+===========
+
+===========
+WinConditions
+===========
+All BoxOnTarget on Target
+
+===========
+Rules
+===========
+[ > Player |  ] -> [ > Player | > ]
+[ Player | Box  ] -> [ > Player | > Box  ]
+[ Player | BoxOnTarget  ] -> [ > Player | > BoxOnTarget  ]
+
+[ Player | Box on Target ] -> [ > Player | > BoxOnTarget ]
+
+Box -> > | BoxOnTarget on Target
+BoxOnTarget -> > | Box not on Target 
+
+===========
+Levels
+===========
+-------
+#####  
+#...#  
+#.#.#  
+#P#B#  
+#####  
+
+-------
+#####  
+#...#  
+#B#P#  
+#####  
+```
+
+This version should compile without errors by correcting the metadata and ensuring proper section headers are used. The equal signs are not required in PuzzleScript descriptions.

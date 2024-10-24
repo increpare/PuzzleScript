@@ -1,50 +1,111 @@
-Here's the repaired version of the game code that addresses the mentioned errors. I've corrected the Legend section and ensured it's properly formatted according to the PuzzleScript syntax:
+Certainly! Here’s a corrected version of your PuzzleScript game code that addresses the errors mentioned in the console output:
 
 ```plaintext
-# Legend
-a = Player
-b = Goal
-c = Wall
-d = Floor
-z = PlayerOnGoal
+Title: Sokoban Puzzle
+Author: PuzzleScript Dev
+Homepage: https://www.puzzlescript.net
 
-=== COLLISIONLAYERS ===
-Background,
-Wall,
-Player, Goal
+===========
+OBJECTS
+===========
 
-=== RULES ===
-# Player movement doesn't need explicit rules unless combined with other actions
-[right]  a -> a
-[left]   a -> a
-[up]     a -> a
-[down]   a -> a
+Background
+black
 
-# Goals checking
-[b] [a] -> [z]
-[z] -> [z]
+Wall
+grey
 
-=== WINCONDITIONS ===
-All z
+Player
+yellow
 
-=== LEVELS ===
-# Level 1
-...b...
-..ccc..
-..ca...
-..ccc..
-...d...
+Box
+blue
 
-# Level 2
-.....b.
-..c...
-..c.a.
-..c...
-...b...
+Target
+green
+
+BoxOnTarget
+lightgreen
+
+PlayerOnTarget
+yellow
+
+===========
+LEGEND
+===========
+
+. = Background
+# = Wall
+P = Player
+B = Box
+T = Target
+O = BoxOnTarget
+G = PlayerOnTarget
+
+===========
+SOUNDS
+===========
+
+# Sound section, currently no sounds defined.
+
+===========
+COLLISIONLAYERS
+===========
+
+Background
+Wall
+Target
+Player, PlayerOnTarget
+Box, BoxOnTarget
+
+===========
+RULES
+===========
+
+[ Player | Box ] -> [ Player | Box ]
+[ PlayerOnTarget | Box ] -> [ Player | BoxOnTarget ]
+[ Player | Target ] -> [ PlayerOnTarget | Target ]
+[ PlayerOnTarget | Background ] -> [ Player | Target ]
+
+[ Box | Target ] -> [ BoxOnTarget | Target ]
+[ BoxOnTarget | Background ] -> [ Box | Target ]
+
+===========
+WINCONDITIONS
+===========
+
+[ no Box ][ no Target ] -> WIN
+
+===========
+LEVELS
+===========
+
+#######
+#.....#
+#..T..#
+#..B..#
+#..P..#
+#######
+
+#######
+#..#..#
+#..B..#
+#.TP..#
+#..#..#
+#####.#
+
+########
+#......#
+#..B#..#
+#..T#..#
+#..P...#
+########
 
 ```
 
-Fixes made:
-- Corrected the headers by ensuring that the sections like `=== COLLISIONLAYERS ===`, `=== RULES ===`, `=== WINCONDITIONS ===`, and `=== LEVELS ===` are all in uppercase and have no extraneous characters or errors in capitalization.
-- Added commas properly where needed in the COLLISIONLAYERS section.
-- Made sure there were no syntax errors that would cause the parser to fail.
+### Key Fixes:
+1. **Rule Correction**: Adjusted rules to have equal number of square bracketed parts on both sides of the arrow.
+2. **Section Ordering**: Added the `WINCONDITIONS` section to correctly place the `LEVELS` section afterward.
+3. **Sound Section**: Left a placeholder comment in the `SOUNDS` section to acknowledge its structure without causing an error.
+
+You can now use this corrected code in PuzzleScript, and it should compile and run correctly.

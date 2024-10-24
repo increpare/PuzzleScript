@@ -1,0 +1,138 @@
+SYSTEM PROMPT:
+You are a game designer, familiar with the PuzzleScript game description language. 
+
+USER PROMPT:
+The following PuzzleScript game code:
+```plaintext
+Title: Block Pusher
+Author: PuzzleScript Game Designer
+
+===========
+OBJECTS
+===========
+
+Background
+transparent
+
+Player
+blue
+.....
+..0..
+.000.
+..0..
+.....
+
+Block
+red
+.....
+.....
+.000.
+.....
+.....
+
+Target
+green
+.....
+..0..
+..0..
+..0..
+.....
+
+BlockOnTarget
+yellow
+.....
+..0..
+.000.
+.000.
+.....
+
+Wall
+grey
+#####
+#####
+#####
+#####
+#####
+
+===========
+LEGEND
+===========
+
+. = Background
+P = Player
+B = Block
+T = Target
+U = BlockOnTarget
+# = Wall
+
+===========
+COLLISIONLAYERS
+===========
+
+Background
+Target
+Player, Block, BlockOnTarget
+Wall
+
+===========
+RULES
+===========
+
+[> Player | Block] -> [> Player | > Block] SFX2
+
+[Block | Target] -> [BlockOnTarget]
+
+[BlockOnTarget | Target] -> [BlockOnTarget]
+
+===========
+WINCONDITIONS
+===========
+
+All BlockOnTarget on Target
+
+===========
+LEVELS
+===========
+
+#######
+#.....#
+#..T..#
+#..B..#
+#..P..#
+#######
+
+#######
+#.....#
+#..T..#
+#..B..#
+#..P..#
+#.....#
+#..T..#
+#######
+
+#######
+#..T..#
+#..B..#
+#.PPP.#
+#..B..#
+#..T..#
+#######
+
+
+```
+produced the following console output:
+=================================
+line 45 : Unknown junk in object section (possibly: sprites have to be 5 pixels wide and 5 pixels high exactly. Or maybe: the main names for objects have to be words containing only the letters a-z0.9 - if you want to call them something like ",", do it in the legend section).
+line 46 : Unknown junk in object section (possibly: sprites have to be 5 pixels wide and 5 pixels high exactly. Or maybe: the main names for objects have to be words containing only the letters a-z0.9 - if you want to call them something like ",", do it in the legend section).
+line 47 : Unknown junk in object section (possibly: sprites have to be 5 pixels wide and 5 pixels high exactly. Or maybe: the main names for objects have to be words containing only the letters a-z0.9 - if you want to call them something like ",", do it in the legend section).
+line 48 : Unknown junk in object section (possibly: sprites have to be 5 pixels wide and 5 pixels high exactly. Or maybe: the main names for objects have to be words containing only the letters a-z0.9 - if you want to call them something like ",", do it in the legend section).
+line 49 : Unknown junk in object section (possibly: sprites have to be 5 pixels wide and 5 pixels high exactly. Or maybe: the main names for objects have to be words containing only the letters a-z0.9 - if you want to call them something like ",", do it in the legend section).
+line 63 : section "COLLISIONLAYERS" is out of order, must follow  "SOUNDS" (or it could be that the section "SOUNDS"is just missing totally.  You have to include all section headings, even if the section itself is empty).
+line 75 : Name "player", referred to in a rule, does not exist.
+line 75 : Name "block", referred to in a rule, does not exist.
+line 77 : Name "block", referred to in a rule, does not exist.
+line 77 : Name "target", referred to in a rule, does not exist.
+line 77 : Name "blockontarget", referred to in a rule, does not exist.
+too many errors, aborting compilation
+Errors detected during compilation; the game may not work correctly.
+Return a repaired version of the code that addresses these errors. Return your code in full, inside a ```plaintext code block.

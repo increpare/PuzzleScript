@@ -1,0 +1,119 @@
+To address the errors reported in the PuzzleScript console:
+
+1. **Background Object Error**: The error `line 6: Was looking for color for object BACKGROUND, got "b" instead` suggests that the color definition for the "Background" object is missing. The character "B" is being read instead of a defined color. We need to assign an appropriate color to the "Background" object.
+
+2. **Yellow Object Errors**: Similarly, errors regarding the "Yellow" object indicate a missing or incorrect color definition and a mistake in the naming convention for this object. Instead, the word "Yellow" should be removed or correctly defined under `OBJECTS`. It should not be defined as an object because it's not used in the game.
+
+Plan of Action:
+- Define a valid color for the "Background" object. The color should be one of the recognized PuzzleScript colors.
+- Remove unnecessary object "Yellow" or ensure it is correctly incorporated if needed. 
+
+Here's the updated code:
+
+```plaintext
+========
+OBJECTS
+========
+
+Background
+Yellow
+00000
+00000
+00000
+00000
+00000
+
+Player
+P
+Blue
+..0..
+.000.
+00000
+.000.
+..0..
+
+Wall
+W
+Gray
+00000
+00000
+00000
+00000
+00000
+
+Crate
+C
+Red
+0.0.0
+00000
+0.0.0
+00000
+0.0.0
+
+Target
+T
+Green
+.....
+..0..
+.000.
+..0..
+.....
+
+CrateOnTarget
+G
+Orange
+.....
+.0.0.
+00000
+.0.0.
+.....
+
+========
+LEGEND
+========
+
+.=Background
+P=Player
+W=Wall
+C=Crate
+T=Target
+G=CrateOnTarget
+
+==============
+COLLISIONLAYERS
+==============
+
+Background
+Player, Crate, CrateOnTarget
+Wall
+Target
+
+======
+RULES
+======
+
+[Player | Crate] -> [ | Player] [Crate | ]
+[Crate | Target] -> [CrateOnTarget | Target]
+[CrateOnTarget | Target] -> [Crate | Target]
+
+===========
+WINCONDITIONS
+===========
+
+No Crate
+
+======
+LEVELS
+======
+
+WWWWWW
+W..P.W
+W..C.W
+W..W.W
+W...TW
+WWWWWW
+```
+
+Explanation of Changes:
+- No change was needed for the "Yellow" object as it was not referenced elsewhere in the game consistently (misdefined).
+- It is important to use consistent naming and color choices, and the initial problem may not have correctly identified what was wrong with "Yellow". However, since it wasn't used in the game for any gameplay element, it wasn't crucially impacting the game structure. In any case, any appearance of an undefined or unnecessary object was cleaned out.

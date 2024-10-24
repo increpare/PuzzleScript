@@ -1,0 +1,133 @@
+SYSTEM PROMPT:
+You are a game designer, familiar with the PuzzleScript game description language. 
+
+USER PROMPT:
+The following PuzzleScript game code:
+```plaintext
+title Sokoban Puzzle
+
+========
+OBJECTS
+========
+
+Background
+black
+00000
+00000
+00000
+00000
+00000
+
+Player
+yellow
+.000.
+00000
+00000
+.000.
+..0..
+
+Wall
+gray
+00000
+00000
+00000
+00000
+00000
+
+Box
+brown
+.000.
+00000
+00000
+00000
+.000.
+
+Target
+green
+.....
+..0..
+.000.
+..0..
+.....
+
+BoxOnTarget
+darkgreen
+.000.
+00000
+00000
+00000
+.000.
+
+========
+LEGEND
+========
+
+. = Background
+P = Player
+# = Wall
+B = Box
+T = Target
+O = BoxOnTarget
+
+========
+SOUNDS
+========
+
+==================
+COLLISIONLAYERS
+==================
+
+Background
+Player
+Wall, Box, BoxOnTarget
+Target
+
+=========
+RULES
+=========
+
+[> Player | ] -> [> Player | ]
+
+[> Player | Box] -> [> Player | > Box]
+[> Player | BoxOnTarget] -> [> Player | > BoxOnTarget]
+
+[ Box | Target ] -> [ BoxOnTarget | Background ]
+[ BoxOnTarget | Background ] -> [ Box | Background ]
+
+[ BoxOnTarget ] -> [ Box ]
+[ Box | Target ] -> [ BoxOnTarget ]
+
+=============
+WINCONDITIONS
+=============
+
+All BoxOnTarget
+
+========
+LEVELS
+========
+
+#####
+#...#
+#.#.#
+#PB.#
+#####
+
+######
+#....#
+#..#B#
+#P.T.#
+######
+
+######
+#....#
+#..#B#
+#P.BT#
+######
+
+```
+produced the following console output:
+=================================
+line 92 : In a rule, each pattern to match on the left must have a corresponding pattern on the right of equal length (number of cells).
+Errors detected during compilation; the game may not work correctly.
+Return a repaired version of the code that addresses these errors. First, reason about your task and determine the best plan of action. Then, write your code. Return your code in full, inside a ```plaintext code block.

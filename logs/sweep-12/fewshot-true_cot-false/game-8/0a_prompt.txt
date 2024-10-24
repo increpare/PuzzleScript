@@ -1,0 +1,1638 @@
+SYSTEM PROMPT:
+You are a game designer, familiar with the PuzzleScript game description language. Here are some example games, for inspiration (do not reproduce these games exactly):
+
+title Slidings
+author Alain Brobecker
+homepage abrobecker.free.fr
+
+========
+OBJECTS
+========
+
+Background
+#d8a96c #e5b679
+11111
+10101
+11111
+10101
+11111
+
+Target
+DarkBlue
+.....
+.000.
+.0.0.
+.000.
+.....
+
+Wall
+#88bbbb #448888
+11111
+01111
+11101
+11111
+10111
+
+OverWall
+#88bbbb #448888
+11111
+01111
+11101
+11111
+10111
+
+Count
+#88bbbb #448888 White
+11111
+02221
+12221
+12221
+10111
+
+CountEnd
+#88bbbb #448888
+11111
+01111
+11101
+11111
+10111
+
+Player
+#88ff22 #44ff00 #11cc00
+.112.
+10012
+10012
+21122
+.222.
+
+PlayerHasMoved
+#ffe02c #ffc700 #c87700
+.112.
+10012
+10012
+21122
+.222.
+
+DeadPlayer
+#ffe02c #ffc700 #c87700
+.112.
+10012
+10012
+21122
+.222.
+
+BallA
+#999999 #777777 #444444
+.112.
+10012
+10012
+21122
+.222.
+
+BallB
+#999999 #777777 #444444
+.112.
+10012
+10012
+21122
+.222.
+
+BallC
+#999999 #777777 #444444
+.112.
+10012
+10012
+21122
+.222.
+
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+A = BallA
+B = BallB
+C = BallC
+D = BallB and OverWall
+E = BallC and OverWall
+P = Player
+O = Target
+m = Count
+n = CountEnd
+
+Item = Player or Wall or BallA or BallB or BallC or Count or CountEnd
+
+=======
+SOUNDS
+=======
+
+sfx0 5160507 (move)
+sfx1 83704102 (wrong move)
+sfx2 16709508
+EndLevel 123413 (win)
+EndGame 10475908
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Target
+Player, Wall, BallA, BallB, BallC, Count, CountEnd, DeadPlayer, PlayerHasMoved
+OverWall
+
+======
+RULES
+======
+
+(Player movements)
+[> Player | Item] -> [ Player | Item] sfx1
+[> Player | No Item] -> [ | > Player] again sfx0
+[> Player] -> [ PlayerHasMoved ]
+
+(swap between balls)
+[Action Player] [BallA] [BallB] [BallC] -> [BallC] [Player] [BallA] [BallB]
+[ Player OverWall ] [BallA] [BallB] [BallC] -> [BallC OverWall ] [Player] [BallA] [BallB] again
+
+(count remaining moves)
+[ PlayerHasMoved ] [ Wall | CountEnd | Wall ] ->  [ DeadPlayer ] [Wall | Wall | Wall]
+[ DeadPlayer ] -> [ DeadPlayer ] sfx2
+[ DeadPlayer ] -> restart
+[ PlayerHasMoved ] [ Count | CountEnd ] -> [Player] [CountEnd | Wall ]
+[ PlayerHasMoved ] -> [ Player ]
+
+==============
+WINCONDITIONS
+==============
+
+All Player on Target
+
+=======
+LEVELS
+=======
+
+(you must always have a # before the first counter)
+
+message Bring a ball on the spot.         X to control next sliding ball.                                                                          level 1: 3 moves
+#mmmn#
+#PA..#
+#..O.#
+D####E
+
+message level 2: 4 moves
+#mmmmn
+#.O..#
+#P####
+#A####
+D####E
+
+message level 3: 4 moves
+#mmmmn#
+#PAO..#
+##....#
+D#####E
+
+message level 4: 5 moves
+#mmmmmn
+#.....#
+#..O..#
+#PA####
+D#####E
+
+message level 5: 7 moves
+##mmmmmmmn
+##..O..P##
+#.......A#
+D########E
+
+message level 6: 7 moves
+#mmmmmmmn
+#P.A....#
+#.......#
+#.......#
+#..O#...#
+#.......#
+#.......#
+#B......#
+########E
+
+message level 7: 8 moves
+#mmmmmmm
+#.O.#P.m
+#...#ABn
+#......#
+#...#..#
+#...#..#
+#######E
+
+message level 8: 5 moves
+#mmmmmn
+#....P#
+#A.O..#
+#B....#
+#.C...#
+#######
+
+message level 9: 9 moves
+#mmmmmmm
+##..P..m
+##.....m
+##..O..n
+##A....#
+##....B#
+#######E
+
+message level 10: 9 moves
+#mmmmmmm
+###..##m
+##...P#m
+#..O...n
+#......#
+##.A..##
+###..###
+D######E
+
+message level 11: 13 moves
+mmmmmmmm
+m.P....m
+m...O..m
+#A....nm
+D######E
+
+
+
+title Spriteaporter
+author increpare
+homepage www.puzzlescript.net
+
+========
+OBJECTS
+========
+
+Temp
+black
+
+Background
+lightgreen green
+11111
+01111
+11101
+11111
+10111
+
+Target
+darkblue
+.....
+.000.
+.0.0.
+.000.
+.....
+
+Wall
+brown darkbrown
+00010
+11111
+01000
+11111
+00010
+
+Player
+black orange white blue
+.000.
+.111.
+22222
+.333.
+.3.3.
+
+Sprite
+pink blue red
+.....
+.000.
+00100
+01110
+.202.
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Player
+O = Sprite
+
+=======
+SOUNDS
+=======
+
+sfx0 67117309
+
+================
+COLLISIONLAYERS
+================
+
+Temp
+Background
+Target
+Player, Wall, Sprite
+
+======
+RULES
+======
+
+late [ Sprite | ... | Player ] -> [ Temp | ... | Sprite ] 
+late [ Temp ] -> [ Player ] 
+
+==============
+WINCONDITIONS
+==============
+
+=======
+LEVELS
+=======
+
+#########
+#.......#
+#....O..#
+#.P.....#
+#.......#
+#.......#
+#########
+
+
+title Sticky Blocks
+author increpare
+homepage www.puzzlescript.net
+
+========
+OBJECTS
+========
+
+Background
+lightgreen green
+11111
+01111
+11101
+11111
+10111
+
+Target
+darkblue
+.....
+.000.
+.0.0.
+.000.
+.....
+
+Wall
+brown darkbrown
+00010
+11111
+01000
+11111
+00010
+
+Player
+black orange white blue
+.000.
+.111.
+22222
+.333.
+.3.3.
+
+Crate
+orange
+00000
+0...0
+0...0
+0...0
+00000
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Player
+* = Crate
+@ = Crate and Target
+O = Target
+
+=======
+SOUNDS
+=======
+
+Crate MOVE 36772507
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Target
+Player, Wall, Crate
+
+======
+RULES
+======
+
+[ < Player | Crate ] -> [ < Player | < Crate ] 
+
+==============
+WINCONDITIONS
+==============
+
+all Target on Crate
+
+=======
+LEVELS
+=======
+
+#########
+#.......#
+#.....@.#
+#.P.*.O.#
+#.......#
+#.......#
+#########
+
+.#######.
+.#.....#.
+.#O##..##
+##.##.*.#
+#.*..**.#
+#.OOO.#.#
+#.P.....#
+#########
+
+
+title Take Heart Lass
+author Kevin Zuhn
+homepage www.kevinzuhn.com
+
+========
+OBJECTS
+========
+
+Background
+LightGreen Green
+11111
+11011
+10101
+11011
+11111
+
+BackFlowers
+Green Purple Yellow
+10001
+00100
+01210
+00100
+10001
+
+Target
+RED LightRed
+.0.0.
+01010
+01110
+.010.
+..0..
+
+Wall
+Red DarkGreen
+00000
+00100
+01010
+00100
+00000
+
+DespairWall
+DarkBrown DarkBlue
+00000
+00100
+01010
+00100
+00000
+
+NewDespairWall
+DarkRed DarkBlue
+00000
+00100
+01010
+00100
+00000
+
+Player
+Blue LightRed Yellow DarkBlue
+.333.
+.323.
+20002
+.111.
+.000.
+
+OldHope
+White Pink
+11111
+11011
+10101
+11011
+11111
+
+NewHope
+White LightRed
+11111
+11011
+10101
+11011
+11111
+
+Crate
+Pink White
+.0.0.
+01010
+01110
+.010.
+..0..
+
+OldDespair
+Black DarkBlue
+01010
+10101
+01010
+10101
+01010
+
+AltOldDespair
+Black DarkBlue
+10101
+01010
+10101
+01010
+10101
+
+NewDespair
+DarkBlue DarkGray
+01010
+10101
+01010
+10101
+01010
+
+AltNewDespair
+DarkBlue DarkGray
+10101
+01010
+10101
+01010
+10101
+
+=======
+LEGEND
+=======
+
+. = Background
+f = BackFlowers
+# = Wall
+P = Player
+* = Crate
+@ = Crate and Target
+O = Target
+X = OldDespair
+Z = AltOldDespair
+H = OldHope
+
+Despair = OldDespair or NewDespair or AltOldDespair or AltNewDespair
+Hope = OldHope or NewHope
+Blocker = Despair or Crate or Target or Wall or Player or DespairWall or NewDespairWall or Hope
+HopeBlocker = Crate or Target or Wall or DespairWall or NewDespairWall or Hope
+
+
+=======
+SOUNDS
+=======
+
+Crate MOVE 36772507
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Target, BackFlowers, Hope
+Player, Wall, Crate, Despair, NewDespair, DespairWall, NewDespairWall
+
+======
+RULES
+======
+
+[NewDespair] -> [OldDespair]
+[AltNewDespair] -> [AltOldDespair]
+[NewDespairWall] -> [DespairWall]
+[NewHope] -> [OldHope]
+late [OldDespair | No Blocker] -> [OldDespair | AltNewDespair]
+late [AltOldDespair | No Blocker] -> [AltOldDespair | NewDespair]
+late [OldDespair | Wall] -> [OldDespair | NewDespairWall]
+late [DespairWall | Wall] -> [DespairWall | NewDespairWall]
+late [OldHope | No HopeBlocker] -> [ OldHope | NewHope]
+
+[> Player | Crate] -> [> Player | > Crate]
+[> Crate | Blocker] -> [ Crate | Blocker ]
+
+late [Target | Despair] -> [ Target |  ]
+late [Despair Target] -> [Target]
+late [Crate | Despair] -> [ Crate |  ]
+late [Hope Despair] -> [Hope]
+late [Hope | DespairWall] -> [Hope | Wall]
+late [Hope | NewDespairWall] -> [Hope | Wall]
+
+==============
+WINCONDITIONS
+==============
+
+Some Player on Target
+
+=======
+LEVELS
+=======
+
+message You have love in your heart, Lass.
+
+######
+#...x#
+#.ff.#
+#.ff.#
+#o..P#
+######
+
+message So your heart can weather Despair.
+
+#########
+#x.f...f#
+#.#.....#
+#.p.f#..#
+#.#..#f.#
+#xzf...o#
+#########
+
+message And you've others who love you.
+
+#########
+#x......#
+#...#...#
+#p..*..##
+#...#...#
+#x.....o#
+#########
+
+message The war can't last forever, Lass.
+
+########
+#.#zx#p#
+#....*.#
+#......#
+#o#*.#.#
+########
+
+message Think of the time we shared.
+
+###########
+#.........#
+#.*#.o.####
+#..*###...#
+#.......*.#
+#......#..#
+####...####
+#x.......p#
+###########
+
+message Then bottle your grief up tight.
+
+###########
+#o........#
+####.##.#.#
+#.....*.#.#
+#.#.###.#.#
+#.#....*..#
+#.#*.#.##.#
+#x#...p#z.#
+###########
+
+message I wish I could be there, Lass.
+
+###########
+#...o...zx#
+#.#.....#z#
+#...#.#...#
+#.........#
+#..**.**..#
+#z........#
+#xz......p#
+###########
+
+message You're loved. You'll find a way.
+
+###########
+#....o....#
+#..#####..#
+#.#.....#.#
+#...*p*...#
+#....*....#
+#...###...#
+#x.......x#
+###########
+
+message There is always Hope, Lass.
+
+###########
+#........H#
+#.......p.#
+#x........#
+#zx.......#
+#xzx......#
+#zxzx.....#
+#ozxzx....#
+###########
+
+message  It may waver, but it stays lit.
+
+###########
+#....p....#
+###.#*#.###
+#x.......x#
+###.*.*.###
+#HH*.....x#
+###.#.#.###
+#x.......o#
+###########
+
+message Temper your hope with wisdom.
+
+############
+#......zxzx#
+#.##.##.####
+#......*...#
+#.*p.#.#.#o#
+#...*.*.*#.#
+####.###...#
+#H.........#
+############
+
+message Save no Despair for me, Lass.
+
+##################
+#..*.#H#o........#
+#...*..#######.#.#
+#.##.#########.#*#
+#.#.....*....#.#.#
+#H#...#.p..#z.*H*#
+###...#.#*##...#.#
+#...##z.....#*.xz#
+#.*.......*...xzx#
+#x...#.*....#xzxz#
+##################
+
+message For I have hope as well.
+message Take Heart, Lass. Goodbye.
+
+title cute train
+author Mark Wonnacott
+homepage http://twitter.com/ragzouken
+
+flickscreen 16x10
+color_palette pastel
+youtube pTgEXwzk7XU
+
+noundo
+norestart
+
+========
+OBJECTS
+========
+
+Background
+lightgreen green
+01000
+00110
+10010
+10100
+01001
+
+Water
+blue white lightblue
+20010
+02002
+12020
+00220
+02002
+
+Water2
+blue white lightblue
+02000
+20210
+00202
+01022
+20200
+
+Gerald
+blue black
+.000.
+01010
+10001
+01110
+.000.
+
+Mountain
+darkbrown darkbrown
+..0..
+.10..
+.000.
+0000.
+11001
+
+Forest
+darkgreen brown
+.000.
+00000
+00000
+00100
+.111.
+
+Beach
+yellow white
+00010
+01000
+00001
+00100
+10000
+
+Player
+yellow black
+.000.
+01010
+10001
+01110
+.000.
+
+GhostVTrack
+yellow
+GhostHTrack
+yellow
+GhostURTrack
+yellow
+GhostULTrack
+yellow
+GhostDLTrack
+yellow
+GhostDRTrack
+yellow
+
+VTrack
+grey darkbrown
+0...0
+0...0
+01110
+0...0
+0...0
+
+HTrack
+grey darkbrown
+00000
+..1..
+..1..
+..1..
+00000
+
+Structs
+black darkbrown
+11111
+10101
+11111
+10101
+11111
+
+URTrack
+grey darkbrown
+...00
+..0..
+.01..
+0..1.
+0...1
+
+ULTrack
+grey darkbrown
+00...
+..0..
+..10.
+.1..0
+1...0
+
+DLTrack
+grey darkbrown
+1...0
+.1..0
+..10.
+..0..
+00...
+
+DRTrack
+grey darkbrown
+0...1
+0..1.
+.01..
+..0..
+...00
+
+UTrain
+red black darkred
+.000.
+01110
+00000
+00100
+00000
+
+RTrain
+red black darkred
+0000.
+00010
+01010
+00010
+0000.
+
+LTrain
+red black darkred
+.0000
+01000
+01010
+01000
+.0000
+
+DTrain
+red black darkred
+00000
+00100
+00000
+01110
+.000.
+
+Cart
+red black darkred
+22222
+21112
+21112
+21112
+22222
+
+Smoke1
+white
+..0..
+.0.0.
+0.0.0
+.0.0.
+..0..
+
+Smoke2
+white
+.....
+.0.0.
+..0..
+.0.0.
+.....
+
+Smoke3
+white
+.....
+..0..
+.0.0.
+..0..
+.....
+
+Switch
+red black
+...0.
+..1..
+.1...
+.111.
+.....
+
+=======
+LEGEND
+=======
+
+. = Background
+^ = Mountain
+% = Forest
+~ = Water
+, = Beach
+
+| = VTrack
+- = HTrack
+r = URTrack
+¬ = ULTrack
+l = DRTrack
+j = DLTrack
+X = VTrack and Structs
+Z = HTrack and Structs
+Q = ULTrack and Structs
+
+P = Player
+
+T = VTrack and UTrain
+C = VTrack and Cart
+
+[ = HTrack and RTrain
+] = HTrack and Cart
+
+/ = Switch
+
+1 = GhostHTrack and URTrack
+! = HTrack and GhostURTrack
+2 = HTrack and GhostDRTrack
+3 = HTrack and GhostULTrack
+4 = GhostHTrack and DLTrack
+5 = GhostVTrack and URTrack
+6 = GhostVTrack and DRTrack
+7 = GhostVTrack and ULTrack
+8 = GhostVTrack and DLTrack
+
+_ = Beach and HTrack
+
+WaterR = Water or Water2
+
+Ghost = GhostHTrack or GhostVTrack or GhostULTrack or GhostURTrack or GhostDLTrack or GhostDRTrack
+Track = HTrack or VTrack or ULTrack or URTrack or DLTrack or DRTrack
+
+Train = UTrain or DTrain or LTrain or RTrain
+Vehicle = Train or Cart
+Mover = Vehicle or Player
+
+G = Gerald and Structs
+
+=======
+SOUNDS
+=======
+
+Train move 91301709
+SFX1 53409305
+SFX2 38557307
+SFX3 99431502
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Beach GhostVTrack GhostHTrack GhostURTrack GhostULTrack GhostDLTrack GhostDRTrack
+Structs
+VTrack HTrack URTrack ULTrack DLTrack DRTrack Switch
+Water Water2 Mountain Forest Player UTrain RTrain LTrain DTrain Cart Gerald
+Smoke1 Smoke2 Smoke3
+
+======
+RULES
+======
+
+(animate water)
+[        WaterR ] -> [ action WaterR ]
+[ action WaterR ] -> [ random WaterR ]
+
+[ action Player no Structs | Cart ] [ Train ] -> [ Player | Cart ] [ action Train ]
+
+(move the train if we're on the impassable structs)
+[ Structs Mover ] [ Train ] -> [ Structs Mover ] [ action Train ]
+
+[ action Train ] -> [ action Train Smoke1 ]
+
+[ action UTrain ] -> [    up UTrain ]
+[ action DTrain ] -> [  down DTrain ]
+[ action RTrain ] -> [ right RTrain ]
+[ action LTrain ] -> [  left LTrain ]
+
+late [ Mover Structs ] -> [ Mover Structs ] again (repeat if the train is still on structs)
+
+(cart follows train, player follows cart)
+[ Cart   | moving Train ] -> [ > Cart   | moving Train ]
+[ Player | moving Cart  ] -> [ > Player | moving Cart  ]
+
+[ > Player | Structs no Gerald no Cart ] -> [ Player | Structs ] message It's dangerous to walk along railway bridges!
+
+(endgame message)
+[ >      Player | Gerald ] -> [ Player | Gerald ] message you made it! thanks for playing.
+[ action Player | Gerald ] -> [ Player | Gerald ] message you made it! thanks for playing.
+
+(train turns when entering corners)
+up    [ > UTrain | URTrack ] -> [ > RTrain | URTrack ]
+up    [ > UTrain | ULTrack ] -> [ > LTrain | ULTrack ]
+
+right [ > RTrain | ULTrack ] -> [ > DTrain | ULTrack ]
+right [ > RTrain | DLTrack ] -> [ > UTrain | DLTrack ]
+
+down  [ > DTrain | DRTrack ] -> [ > RTrain | DRTrack ]
+down  [ > DTrain | DLTrack ] -> [ > LTrain | DLTrack ]
+
+left  [ > LTrain | URTrack ] -> [ > DTrain | URTrack ]
+left  [ > LTrain | DRTrack ] -> [ > UTrain | DRTrack ]
+
+(animate smoke)
+[ Smoke3 ] -> [ ]
+[ Smoke2 ] -> [ Smoke3 ]
+[ Smoke1 ] -> [ Smoke2 ]
+
+[ action Player Switch ] -> [ Player action Switch ]
+
+(switch all uncovered tracks at once)
+[ action Switch ] [ Ghost Vehicle ] -> [ action Switch ] [ Ghost Vehicle ] SFX3 (play blocking sound if switch tracks are covered while switching)
+[ action Switch ] [ Ghost no Vehicle ] -> [ action Switch ] [ action Ghost ] SFX2
+
+[ action GhostHTrack URTrack no Vehicle ] -> [ HTrack GhostURTrack ]
+[ HTrack action GhostURTrack no Vehicle ] -> [ GhostHTrack URTrack ]
+[ action GhostHTrack DRTrack no Vehicle ] -> [ HTrack GhostDRTrack ]
+[ HTrack action GhostDRTrack no Vehicle ] -> [ GhostHTrack DRTrack ]
+[ action GhostHTrack ULTrack no Vehicle ] -> [ HTrack GhostULTrack ]
+[ HTrack action GhostULTrack no Vehicle ] -> [ GhostHTrack ULTrack ]
+[ action GhostHTrack DLTrack no Vehicle ] -> [ HTrack GhostDLTrack ]
+[ HTrack action GhostDLTrack no Vehicle ] -> [ GhostHTrack DLTrack ]
+
+[ action GhostVTrack URTrack no Vehicle ] -> [ VTrack GhostURTrack ]
+[ VTrack action GhostURTrack no Vehicle ] -> [ GhostVTrack URTrack ]
+[ action GhostVTrack DRTrack no Vehicle ] -> [ VTrack GhostDRTrack ]
+[ VTrack action GhostDRTrack no Vehicle ] -> [ GhostVTrack DRTrack ]
+[ action GhostVTrack ULTrack no Vehicle ] -> [ VTrack GhostULTrack ]
+[ VTrack action GhostULTrack no Vehicle ] -> [ GhostVTrack ULTrack ]
+[ action GhostVTrack DLTrack no Vehicle ] -> [ VTrack GhostDLTrack ]
+[ VTrack action GhostDLTrack no Vehicle ] -> [ GhostVTrack DLTrack ]
+
+==============
+WINCONDITIONS
+==============
+
+=======
+LEVELS
+=======
+
+(feel free to try making more puzzles!
+
+editing tip: copy out a few rows of screens to edit in isolation
+
+* use bridges (structs) to force the train over junctions before there's a chance to switch them
+* use bridges to make switches unreachable until junctions have been crossed
+* use the train itself and narrow passages to make switches unreachable until junctions have been crossed)
+
+message welcome to the breezy isles!
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~,,,,~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~,,,,,,,~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~,,..,,,,,~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~,,,p.,,,,,~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~,,....,,,,,~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~,,,.....,,,,~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~,,,......,,,~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~,,.......,,,,,,~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~,,,........,,,,,,,~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~,,,..........,,,,,,,,~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~,,...............,,,,,,~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~,~~,...%.........%....,,,,~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~,,,,,~..%.................,,,,~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~,,,,,,,,..~~%%%%%.r-------¬.....,,,,~~~~~~~~~~~~~~~~~~~~
+,,,,,,,,,,,,,....%%~%%%%%%t.......l-¬.....,,,~~~~~~~~~~~~~~~~~~~
+,,,,,,..........%%%~~%%%%%c%%.......l-¬....,,~~~~~~~~~~~~~~~~~~~
+........%%%..%%%%%%%~%%%%%|%%%%%....|.l--¬..,,~~~~~~~~~~~~~~~~~~
+.%%%%.%%%%%%%%%%%%%%~%%%%%|%%%%%%%..|...%l¬.,,~~~~~~~~~~~~~~~~~~
+%%%%%%%%%%%%%%%%%%%%~%%%%%|%%%%%%%%.l¬..%%|.,,~~~~~~~~~~~~~~~~~~
+%%%%%%%%%%%%%%%%%%%%~%%%%%|%%%%%%%%..|.%%%|.,,~~~~~~~~~~~~~~~~~~
+%%%%r---------------z-¬%%%|%%%%%%....|%%%%|.,,~~~~~~~~~~~~~~~~~~
+%%.rj........%%%%%%%~%l¬%.|..........|%%%rj,,,~~~~~~~~~~~~~~~~~~
+%%rj.~~~~G~~~~%%%%%%~^%l--¬..........l---j.,,,~~~~~~~~~~~~~~~~~~
+%.|.~~~~~x~~~~~%%%%^~^....|.....^^^........,,~~~~~~~~~~~~~~~~~~~
+%.|.~~~~~~~~~~~%%^^^~^....l¬...^^^^^^......,,~~~~~~~~~~~~~~~~~~~
+%.|.~~~~~~~~~~%%%^^^~^^^..^l¬^^^^^^^^^^^^^.,^^~~~~~~~~~~~~~~~~~~
+%%l¬.~~~~~~~%%%^^^^^~^^^^^^^l¬^^^^^^^^^^^^^^^^~~~~~~~~~~~~~~~~~~
+%%.|..~~~~%%%%^^^^^~~^^^^^^^^x~^^^^^^^^^^^^^^^^~~~~~~~~~~~~~~~~~
+%%%|.%%%%%%%%^^^^^^~^^^^^^^^~x~^^^^^^^^^^^^^^^^~~~~~~~~~~~~~~~~~
+%%%x%%%%%%%%%^^^^^~~^^^^^^^^~x~^^^^^^^^^^^^^^^^^^^^^^~~~~~~~~~~~
+%%rj%%%%%%%%%^^^^^^~^^^^^^^~~x~%...%%^^%%^^^^^^^^^^^^^~~^~~~~~~~
+%%5z---¬%%%%%^^^^^^~^^^^^^^~^l¬..%r------¬%%^^^^^^^^^^^~~~~~~~~~
+%%|%%%%|%%%%^^^^^^^~~^^^^^~~^^l¬..|.%%%%%|%%%.^^^^^^^^^^^~~~~~~~
+%r4z---¬%%%%^^^^^^^^~~^^^^~^^^.l--l---3--j%%..^^^^^^^^^^^^~~~~~~
+%x./%r-¬%%%%^^^^^^^^^~~^^~~^^^........|%%%%%..^^^^^^^^^^^^^~~~~~
+%l--zj¬j%%%%^^^^^^^^^^~~~~^^^^%%..../.|.%%...^^^^^^^^^^^^^~~~~~~
+%%%%%%5z¬z¬%^^^^^^^^^^^^~~^^^^^%%%....|......^^^^^^^^^^^^^^~~~~~
+%%r--¬x%lzj%^^^^^^^^^^^^~^^^^^^%%%%..~x~~~~~~~^^^^^^^^^^^^^^~^~~
+%%|%%|x%%%%%%^^^^^^^^^^^~^^^^^^%%%%%~~x~~~~~~~~^^^^^^^^^^^^^~~~~
+%%|%%|x%%%%%%%%^^^^^^^^^~^^^^^^%%%%%~~x~~~~~~~~^^^^^^^^^^^^^~~~~
+%%r--47---¬¬---zzzzz1zzzzz¬^^^^^%%%..~x~~~~....%^^^^^^^^^^^~~~~~
+%%|%%%x%.%lj%%^^^^^^x^^^~^lz¬^^^^%%...|..%...%.%%%^^^^^^,,~~~~~~
+%%|%/.l¬.%%%^^^^^^^^x^^^~~^^lz¬^^%%...|.....%...........,,~~~^^~
+%%|%%%lj%%%^^^^^^^^^x^^^^~^~^^x^^^%%.rl-----------r-----__zzz¬^~
+%%l¬%%%%%^^^^^^^^^^^x^^^^~~^^^x^^^%%.|........%...|.....,,~~^x^~
+%%lj%%%%%^^^^^^^^^^r-¬^^^~~~~^x^^^^^%|...%^^^.....l¬../.,,~~~x~~
+%%%%%%%%^^^^^^^^^^^|l¬%^^~~~~~x~^^^^^|.^^^^^^^^^^..|....^^^~~x~~
+%%%%%%%^^^^^^^^^^%rj%|%^^^~~^^x^^^^^rj%%^^^^^^^%%.%l¬.^^^^^^~x~~
+%%%%%%^^^^^^^^^^^%|%%|%^^~^^~^x^^^%.|...%%..%.......|....,,~~x~~
+%%%%^^^^^^^^^^^^^%|/.|%^~^^^^^x^^^%.|.%.............|...,,,~^x^~
+%%^^^^^^^^^^^^^^^%l--8^^^^^^^rj%^^..|..r----!-------2--1___zzj^~
+^^^^^^^^^^^^^^^^^%|%^x^^^^^^^x^^^^%.|.%|%%..|....%..|%.|,,,~~^~~
+^^^^^^^^^^^^^^^^^^|.rlzz--3z-4¬^^^%.|.%l¬...|.......|..l¬,,~~~~~
+^^^^^^^^^^^^^^^^^^x^|^^^..|^..|%^^..l¬%%l-----------j...|,,,~~~~
+^^^^^^^^^^^^^^^^^^l-|---¬/|^.%|%^^%..|.%.%%.l¬%....%....|,,,,~~~
+^^^^^^^^^^^^^^^^^^^%|.%%l-j---j%^^^%.l¬.....%l¬.%.....%.|,,,,~~~
+^^^^^^^^^^^^^^^^^^^%|%%%%%%%%%%^^^^%%.|.%%%...l--¬......l¬,,,~~~
+^^^^^^^^^^^^^^^^^^^^x^^^^%%%^^^^^^^%%.|..%..%...%l-¬%....|,,,~~~
+^^^^^^^^^^^^^^^^^^^^x^^^^^^^^^^^^^^%%%|%%%%..%%....l¬....|,,,,~~
+^^^^^^^^^^^^^^^^^^^^x^^^^^^^^^^^^^^^%%|%^^%%......%.l¬...|.,,,~~
+^^^^^^^^^^^^^^^^^^^^x^%%%%%^^^^^^^^^^^|%%^^^^^^.%%...|...|^^^,~~
+^^^^^^^^^^^^^^^^^^^%|%%....%%^^^^^^^^%|%%%^^^^^^^^^%.|.^^|^^,,~~
+^^^^^^^^^^^^^^^^^^^%|%..%^..%%^^^^^%%rj%%^^^^^^^%....|...|^,,,~~
+^^^^^^^^^^^^^^^^^^^%|./.^%%..%%^^^%%.|.%..%......../.6---¬^,,,~~
+^^^^^^^^^^^^^^^^^^^%|..%^%....%^^^%..|%..%...%......rj...|.,,,~~
+^^^^^^^^^^^^^^^^^^^%l--!z1--¬--zzz----------------!-j..%.|,,,,~~
+^^^^^^^^^^^^^^^^^^^^%%%|^|..|.%^^^%..|.%.%..%..%..|...%..|,,,,~~
+^^^^^^^^^^^^^^^^^^^^^^^x^|%%|%^^^^%%.|%%%.........|......|,,,,~~
+^^^^^^^^^^^^^^^^^^^^^^^x^x^^x^^^^^^%%|%^^^^^^.....|...^^rj^,,~~~
+^^^^^^^^^^^^^^^^^^^^^^^x^x^^x^^^^^^^^|%.^^^^^^^^%.|.^^^^|^^^^~~~
+^^^^^^^^^^^^^^^^^^^^^^^x^x^^x^^^^^^^%|^^^^^^^^.%..|.....|,,^^~~~
+^^^^^^^^^^^^^^^^^^^^^^^x^x^^l¬^^^^^%%|%%^^^.%.....|...%.|,,,~~~~
+^^^^^^^^^^^^^^^^^^^^^^^x^lzzjx^^^^%%.|..%%........|.%...|,,,~~~~
+^^^^^^^^^^^^^^^^^^^^^^^l¬^^^^x^^^^%%.l¬%......%..rj..%..|,,,~~~~
+^^^^^^^^^^^^^^^^^^^^^^^^x^^^^x^^^^%%%.l¬.%......rj.....rj,,,~~~~
+^^^^^^^^^^^^^^^^^^^^^^^^x^^^^x^^^^^%%%%l--------j------j,,,,~~~~
+^^^^^^^^^^^^^^^^^^^^^^^^lzzzzj^^^^^^^%%%%%.%%%%...%%%%^^^,,,~~~~
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^%%%%%^^^^^^^^^^^^^^^^^~~
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^~~
+
+
+
+title Extended Body Example: 1 Player, 1 Extended Object
+author increpare
+homepage www.puzzlescript.net
+
+(
+    Example for
+    https://www.puzzlescript.net/Documentation/rigidbodies.html#one_one
+)
+
+========
+OBJECTS
+========
+
+Background
+LIGHTGREEN GREEN
+11111
+01111
+11101
+11111
+10111
+
+
+Target
+DarkBlue
+.....
+.000.
+.0.0.
+.000.
+.....
+
+Wall
+BROWN DARKBROWN
+00010
+11111
+01000
+11111
+00010
+
+Player
+Black Orange White Blue
+.000.
+.111.
+22222
+.333.
+.3.3.
+
+Crate
+Orange
+00000
+0...0
+0...0
+0...0
+00000
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Player
+* = Crate
+@ = Crate and Target
+O = Target
+
+=======
+SOUNDS
+=======
+
+Crate MOVE 36772507
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Target
+Player, Wall, Crate
+
+======
+RULES
+======
+
+[ >  Player | Crate ] -> [  >  Player | > Crate  ]
+[ > Crate ] [ stationary Crate ] -> [ > Crate ] [ > Crate ]
+[ > Crate | Wall ] -> cancel
+
+==============
+WINCONDITIONS
+==============
+
+All Target on Crate
+
+=======
+LEVELS
+=======
+
+######
+#....#
+#.#..#
+#.*@.#
+#.O@.#
+#.p..#
+######
+
+
+title Broken Rigid Body example
+author Anonymous
+homepage www.puzzlescript.net
+
+verbose_logging
+
+(
+
+Example for
+https://www.puzzlescript.net/Documentation/rigidbodies.html#many_many
+
+)
+
+========
+OBJECTS
+========
+
+Background 
+white  
+
+Target 
+DarkBlue    
+
+Wall 
+DarkGrey
+
+Player
+Blue
+..0..
+..0.0
+00000
+.000.
+.0.0.
+
+Shadow
+Black
+..0..
+0.0..
+00000
+.000.
+.0.0.
+
+( three multi-cells blocks )
+Crate 
+orange
+
+Chest
+green
+
+Box
+red
+
+( 1-cell small block )
+Small
+darkred
+.....
+.000.
+.000.
+.000.
+.....
+
+( sticky, multicellular block when in contact )
+Glue
+pink
+.000.
+00000
+00000
+00000
+.000.
+
+( a flag to know what is allowed move )
+Wanna_Move
+#ff00ff
+.....
+.....
+..0..
+.....
+.....
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Player
+S = Shadow
+* = Crate
++ = Box
+% = Chest
+o = Small
+g = Glue
+
+( blocks that can be moved by the player )
+Movable = Crate or Box or Chest or Small or Glue
+
+( all things that can move and push blocks )
+Mover = Player or Shadow or Movable 
+
+( things that can stop a movement if they are stationary )
+Obstacle = Wall or Mover
+
+=======
+SOUNDS
+=======
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Target
+Obstacle
+Wanna_Move
+
+======
+RULES     
+======     
+
+[ > player ] [ stationary shadow ] -> [ > player ] [ < shadow ]
+
+( 1. Propagate movements forward )
+[ > Mover | stationary Movable ] -> [ > Mover | > Movable  ]
++ [ > Box    ] [ stationary Box   ] -> [ > Box    ] [ > Box    ]
++ [ > Crate  ] [ stationary Crate ] -> [ > Crate  ] [ > Crate  ]
++ [ > Chest  ] [ stationary Chest ] -> [ > Chest  ] [ > Chest  ]
++ [ moving Glue | stationary Glue ] -> [ moving Glue | moving Glue ]
+
+( 2. Propagate obstructions backwards )
+[ > Mover  | stationary Obstacle ] -> [ stationary Mover | Obstacle ]
++ [ > Crate  ] [ stationary Crate ] -> [ stationary Crate ] [ Crate ]
++ [ > Box    ] [ stationary Box   ] -> [ stationary Box   ] [ Box   ]
++ [ > Chest  ] [ stationary Chest ] -> [ stationary Chest ] [ Chest ]
++ [ moving Glue | stationary Glue ] -> [ stationary Glue | Glue ]
+
+( 3. remove all movement, keep a flag )
+[ > Movable ] -> [ Movable wanna_move ]
+
+( 4. propagate movement only on wanna_move things )
+(    ie redo step 1 but with WANNA_MOVE added to the first line below )
+[ > Mover  | stationary Movable WANNA_MOVE ] -> [ > Mover | > Movable ]
++ [ > Box   ] [ stationary Box   ] -> [ > Box   ] [ > Box   ]
++ [ > Crate ] [ stationary Crate ] -> [ > Crate ] [ > Crate ]
++ [ > Chest ] [ stationary Chest ] -> [ > Chest ] [ > Chest ]
++ [ moving Glue | stationary Glue ] -> [ moving Glue | moving Glue ]
+
+( 5. cleanup, remove flag )
+[ wanna_move ] -> [ ]
+
+==============
+WINCONDITIONS
+==============
+
+=======     
+LEVELS
+=======
+
+###################
+#.................#
+#............s....#
+#...*..g.g.#......#
+#...*......#...g###
+#...*...o.%%%.....#
+#...+++.o.%.......#
+#....+....%%%.....#
+#....+.........g..#
+#....p.gg.........#
+###################
+
+#########
+#.......#
+#.p.+...#
+#...+...#
+#...+.s.#
+#.......#
+#########
+
+
+title Multiple Patterns
+author increpare
+homepage www.puzzlescript.net
+
+========
+OBJECTS
+========
+
+Background
+lightgreen green
+11111
+01111
+11101
+11111
+10111
+
+Wall
+brown darkbrown
+00010
+11111
+01000
+11111
+00010
+
+Player
+black orange white blue
+.000.
+.111.
+22222
+.333.
+.3.3.
+
+Sumo
+pink white
+..0..
+00000
+.000.
+.111.
+.0.0.
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Player
+S = Sumo
+
+=======
+SOUNDS
+=======
+
+Sumo MOVE 48878907
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Player, Wall, Sumo
+
+======
+RULES
+======
+
+[ > Player ] [ Sumo ] -> [ > Player ] [ > Sumo ] 
+
+==============
+WINCONDITIONS
+==============
+
+=======
+LEVELS
+=======
+
+########
+#......#
+#......#
+#.P..S.#
+#......#
+#......#
+########
+
+
+USER PROMPT:
+Output the code for a complete PuzzleScript game. Return your code in full, inside a ```plaintext code block.

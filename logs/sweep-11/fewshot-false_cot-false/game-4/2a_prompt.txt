@@ -1,0 +1,90 @@
+SYSTEM PROMPT:
+You are a game designer, familiar with the PuzzleScript game description language. 
+
+USER PROMPT:
+The following PuzzleScript game code:
+```plaintext
+===========
+OBJECTS
+===========
+Background
+LightGray
+
+Player
+Green
+..0..
+.000.
+00000
+.000.
+..0..
+
+Wall
+Black
+00000
+00000
+00000
+00000
+00000
+
+Treasure
+Yellow
+..0..
+.000.
+.0.0.
+.000.
+..0..
+
+===========
+LEGEND
+===========
+. = Background
+P = Player
+# = Wall
+T = Treasure
+
+===========
+SOUNDS
+===========
+treasure sound DESTROY treasures.ogg
+
+===========
+COLLISIONLAYERS
+===========
+Background
+Wall
+Player, Treasure
+
+===========
+RULES
+===========
+[Player | Treasure] -> [Player | ] sound treasure
+
+===========
+WINCONDITIONS
+===========
+No Treasures
+
+===========
+LEVELS
+===========
+# ##### #
+# P . . #
+# . # . #
+# T . T #
+# . # . #
+# . . . #
+# ##### #
+
+
+```
+produced the following console output:
+=================================
+line 42 : Was expecting a soundverb here (MOVE, DESTROY, CANTMOVE, or the like), but found something else.
+line 54 : Name "sound", referred to in a rule, does not exist.
+line 59 : Error in win condition: "TREASURES" is not a valid object name.
+line 64 : Error, symbol " ", used in map, not found.
+line 54 : Error, malformed cell rule - was looking for cell contents, but found "sound".  What am I supposed to do with this, eh, please tell me that.
+line 54 : Invalid token TREASURE. Object names should only be used within cells (square brackets).
+line 59 : Unwelcome term "treasures" found in win condition. I don't know what I'm supposed to do with this.
+Errors detected during compilation; the game may not work correctly.
+Return a repaired version of the code that addresses these errors. Return your code in full, inside a ```plaintext code block.

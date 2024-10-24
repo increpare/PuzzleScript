@@ -1,0 +1,68 @@
+SYSTEM PROMPT:
+You are a game designer, familiar with the PuzzleScript game description language. 
+
+USER PROMPT:
+The following PuzzleScript game code:
+```plaintext
+[Title]
+Simple Sokoban
+
+[Author]
+Your Name
+
+[ColorPalette]
+1 1 1
+0 0 0
+252 255 252
+
+[BackgroundColor]
+000000
+
+[TextColor]
+ffffff
+
+[Legend]
+. = Background
+# = Wall
+P = Player
+B = Box
+G = Goal
+
+[Sounds]
+move P [440, 0.25]
+push B [340, 0.3]
+win [880, 1.0]
+
+[CollisionLayers]
+Background
+Player, Box
+Wall
+Goal
+
+[Rules]
+[> Player | Crate] -> [> Player | > Box]
+[Player | Goal] -> [PlayerOnGoal]
+[PlayerOnGoal] + [Box | Goal] -> [Win]
+
+[WinConditions]
+All [BoxOnGoal]
+
+[Levels]
+#####
+#...#
+#.#.#
+#PB #
+##### 
+
+```
+produced the following console output:
+=================================
+line 2 : Unrecognised stuff in the prelude.
+line 5 : Unrecognised stuff in the prelude.
+line 8 : Unrecognised stuff in the prelude.
+line 9 : Unrecognised stuff in the prelude.
+line 10 : Unrecognised stuff in the prelude.
+line 13 : Unrecognised stuff in the prelude.
+too many errors, aborting compilation
+Errors detected during compilation; the game may not work correctly.
+Return a repaired version of the code that addresses these errors. First, reason about your task and determine the best plan of action. Then, write your code. Return your code in full, inside a ```plaintext code block.

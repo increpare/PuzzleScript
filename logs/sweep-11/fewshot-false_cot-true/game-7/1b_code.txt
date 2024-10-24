@@ -1,84 +1,111 @@
-The errors in the provided PuzzleScript code indicate issues with the object definitions, particularly regarding the use of ASCII art to define the appearance of the objects. In PuzzleScript, objects are defined more simply without detailed pixel art, unless using a specific tool that requires this. Furthermore, the script lacks a correct representation of the objects and possibly misuses the syntax for their colors. 
+The errors in the original PuzzleScript code primarily revolve around the incorrect positioning of the `SOUNDS` section, incorrect sound token definitions, and improper logic for conditions in the rules. The compilation hints suggest:
 
-Here's a corrected version of the code that addresses the identified issues:
+1. The `SOUNDS` section is mispositioned and not being used correctly. In the corrected code, the `SOUNDS` section should typically define the sound effects used after declaring how they are referred to within the rules.
+2. The placement of the `RULES` section should indeed follow the `COLLISIONLAYERS` section.
+3. The logic for the winning state was wrongly connected: the rule stating "[ Player | Exit ] -> [ Player | Background ]" should be revised to define a condition that contributes to winning logically.
+4. The current rules definition attempts to play sounds not correctly called in the sound section.
+
+Here is the corrected version of the code:
 
 ```plaintext
-# Title and Author
-title Sokoban Simple
-author Game Designer
+title Maze Escape
+author Your Name
 
-# Objects
-=========
+===========
+OBJECTS
+===========
+
 Background
-yellow
+BLACK
 
 Player
-blue
-@ 
+YELLOW
 
 Wall
-black
-# 
+BLUE
 
-Box
-red
-B 
+Exit
+GREEN
 
-Target
-green
-O 
-
-BoxOnTarget
-yellow
-G 
-
-# Legend
 ===========
+LEGEND
+===========
+
 . = Background
+P = Player
 # = Wall
-@ = Player
-B = Box
-O = Target
-G = BoxOnTarget
+E = Exit
 
-# Collision Layers
-===================
-Background
-Player, Box, BoxOnTarget
-Wall, Target
-
-# Rules
 ===========
-[ > Player | Box ] -> [ > Player | > Box ]
-[ Box | Target ] -> [ BoxOnTarget | Target ]
-[ BoxOnTarget | ] -> [ | Box ]
+COLLISIONLAYERS
+===========
 
-# Win Conditions
-==================
-All BoxOnTarget on Target
+Background
+Wall
+Player, Exit
 
-# Levels
-=========
-# Level 1
-#######
-#..O..#
-#..B..#
-#..@..#
-#######
+===========
+SOUNDS
+===========
 
-# Level 2
-#######
-#..O..#
-#..B..#
-#..@..#
-#######
+Movement
+move.ogg
+
+Win
+win.ogg
+
+===========
+RULES
+===========
+
+[Player] -> [ Player ]
+
+up [Player | > ] -> [ | Player ] SOUND Movement
+down [Player | > ] -> [ | Player ] SOUND Movement
+left [Player | > ] -> [ | Player ] SOUND Movement
+right [Player | > ] -> [ | Player ] SOUND Movement
+
+[Player | Exit] -> [Player | Background] SOUND Win
+
+===========
+WINCONDITIONS
+===========
+
+No Exit
+
+===========
+LEVELS
+===========
+
+; Level 1
+######
+#P   #
+# ## #
+#    #
+# E  #
+######
+
+; Level 2
+########
+#P     #
+# ###  #
+# # E  #
+# #    #
+# #### #
+#      #
+########
+
+; Level 3
+#########
+#P      #
+### ### #
+#    E# #
+### ### #
+#       #
+#########
 ```
 
-### Explanation
-1. **Object Definitions**: I've simplified the object appearances to single characters, as PuzzleScript uses simple textual representations rather than detailed pixel art within the code. Each object is defined by a color followed by a character symbol.
-
-2. **Visual Representation**: Since PuzzleScript is a text-based tool, it works with single characters for visual depiction rather than a block of pixel art.
-
-3. **Overall Structure**: Retained the structure of the game, such as rules and levels, since they are properly defined. 
-
-This revised version should no longer produce the compilation errors related to object definitions.
+### Key Changes:
+- `SOUNDS` is now placed after `COLLISIONLAYERS` and properly defined.
+- Sound references have been correctly implemented in the `RULES` section using "SOUND Movement" after movement, ensuring that "move.ogg" and "win.ogg" ("Movement" and "Win") are used correctly.
+- A logic-based win condition ensures gameplay recognizes when an exit is reached, shifting focus to when an Exit is removed (disappeared) as a win condition.

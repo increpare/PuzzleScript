@@ -1,0 +1,141 @@
+SYSTEM PROMPT:
+You are a game designer, familiar with the PuzzleScript game description language. 
+
+USER PROMPT:
+The following PuzzleScript game code:
+```plaintext
+Title: Treasure Hunter
+
+Author: Your Name
+
+Homepage: http://www.example.com
+
+========
+OBJECTS
+========
+
+Background
+lightgray
+00000
+00000
+00000
+00000
+00000
+
+Player
+Red
+.....
+..0..
+.000.
+..0..
+.....
+
+Wall
+DarkGray
+.....
+.....
+.....
+.....
+.....
+
+Treasure
+Yellow
+.000.
+.0.0.
+00000
+.0.0.
+.000.
+
+Goal
+Green
+.....
+.000.
+.0.0.
+.000.
+.....
+
+========
+LEGEND
+========
+
+. = Background
+P = Player
+# = Wall
+T = Treasure
+G = Goal
+
+========
+SOUNDS
+========
+
+Collision
+Player Moved Treasure:
+    trebleup
+
+========
+COLLISIONLAYERS
+========
+
+Background
+Player
+Wall
+Treasure
+Goal
+
+========
+RULES
+========
+
+[> Player | Treasure] -> [Player | Goal]
+
+[Player | Goal] -> [Goal] // clear goal to advance
+
+========
+WINCONDITIONS
+========
+
+No Treasure
+
+========
+LEVELS
+========
+
+/0
+#####
+#...#
+#P.T#
+#...#
+##### 
+
+/1
+#######
+#.....#
+#.#.#.#
+#.#.T.#
+#P#.#G#
+#.....#
+#######
+
+/2
+#########
+#..T..#.#
+#.#.##..#
+#...##..#
+#.P..G###
+#...T...#
+#########
+
+========
+
+```
+produced the following console output:
+=================================
+line 65 : unexpected sound token "collision".
+line 66 : Was expecting a soundverb here (MOVE, DESTROY, CANTMOVE, or the like), but found something else.
+line 67 : unexpected sound token "trebleup".
+line 85 : Name "//", referred to in a rule, does not exist.
+line 85 : Name "clear", referred to in a rule, does not exist.
+line 85 : Name "to", referred to in a rule, does not exist.
+too many errors, aborting compilation
+Errors detected during compilation; the game may not work correctly.
+Return a repaired version of the code that addresses these errors. Return your code in full, inside a ```plaintext code block.

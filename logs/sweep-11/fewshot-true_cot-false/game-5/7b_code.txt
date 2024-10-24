@@ -1,0 +1,153 @@
+Here is the corrected version of your PuzzleScript code:
+
+```plaintext
+title Colorful Connections
+author PuzzleScript Creator
+
+========
+OBJECTS
+========
+
+Background
+#282828
+
+Wall
+#404040 #606060
+00000
+00100
+01110
+00100
+00000
+
+Player
+#FFDD44 #FFFFFF #000000
+.000.
+.111.
+.000.
+.111.
+.....
+
+RedBlock
+#DD4444
+.000.
+.0.0.
+.0.0.
+.000.
+.....
+
+YellowBlock
+#DDDD44
+.000.
+.0.0.
+.0.0.
+.000.
+.....
+
+BlueBlock
+#4444DD
+.000.
+.0.0.
+.0.0.
+.000.
+.....
+
+RedTarget
+#FF8888
+.....
+.....
+.....
+.....
+.....
+
+YellowTarget
+#FFFF88
+.....
+.....
+.....
+.....
+.....
+
+BlueTarget
+#8888FF
+.....
+.....
+.....
+.....
+.....
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Player
+R = RedBlock
+Y = YellowBlock
+B = BlueBlock
+X = RedTarget
+O = YellowTarget
+Z = BlueTarget
+
+=========
+SOUNDS
+=========
+
+playerMove 11429307
+blockMove 16777215
+endlevel 85763108
+endgame 65287309
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Player, Wall, RedBlock, YellowBlock, BlueBlock, RedTarget, YellowTarget, BlueTarget
+
+======
+RULES
+======
+
+[ > Player | RedBlock ] -> [ > Player | > RedBlock ] playerMove
+[ > Player | YellowBlock ] -> [ > Player | > YellowBlock ] playerMove
+[ > Player | BlueBlock ] -> [ > Player | > BlueBlock ] playerMove
+
+==============
+WINCONDITIONS
+==============
+
+All RedBlock on RedTarget
+All YellowBlock on YellowTarget
+All BlueBlock on BlueTarget
+
+=======
+LEVELS
+=======
+
+####
+#P.#
+#RY#
+#BO#
+#ZX#
+####
+
+#######
+#.....#
+#RYBOZ#
+#.....#
+#XP...#
+#######
+
+#########
+#.YO....#
+#P..R.Z.#
+#....B..#
+#.X....O#
+#########
+```
+
+### Fixes Implemented:
+1. **Sound Token Correction**: Changed sound event names from `player` and `block` to `playerMove` and `blockMove`, as sound names can't be directly `player` or `block` due to keyword conflict.
+2. **Token Name Fix**: Used `playerMove` instead of the keyword `PLAYER` in the RULES section.
+3. **Ensured Consistency**: Ensured that naming conventions are consistent across sound definitions and their subsequent usage in the rules.

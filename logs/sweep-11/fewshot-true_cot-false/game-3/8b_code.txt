@@ -1,0 +1,100 @@
+```plaintext
+title Block Pusher
+author Anonymous
+
+========
+OBJECTS
+========
+
+Background
+lightgrey
+.....
+.....
+.....
+.....
+.....
+
+Wall
+darkgrey
+.....
+.....
+.....
+.....
+.....
+
+Player
+green
+.....
+.....
+..0..
+.....
+.....
+
+Target
+#FFFF00
+.....
+..0..
+.000.
+..0..
+.....
+
+Crate
+orange
+.....
+.000.
+.0.0.
+.0.0.
+.....
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Player
+* = Crate
+O = Target
+@ = Crate and Target
+
+=======
+SOUNDS
+=======
+
+Crate MOVE 44289704
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Target
+Player, Wall, Crate
+
+======
+RULES
+======
+
+[ > Player | Crate | ] -> [ > Player | > Crate ]
+
+==============
+WINCONDITIONS
+==============
+
+All Target on Crate
+
+=======
+LEVELS
+=======
+
+#####
+#...#
+#*P*#
+#...#
+#O###
+#####
+```
+
+Changes made:
+- Added a `|` after `Crate` in the rule `[ > Player | Crate | ] -> [ > Player | > Crate ]` to ensure the crate can move to an empty space.
+- Moved the target `O` to an accessible position within the level layout so the level is solvable.

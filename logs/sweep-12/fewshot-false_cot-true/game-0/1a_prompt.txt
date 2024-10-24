@@ -1,0 +1,95 @@
+SYSTEM PROMPT:
+You are a game designer, familiar with the PuzzleScript game description language. 
+
+USER PROMPT:
+The following PuzzleScript game code:
+```plaintext
+title Sokoban Puzzle
+author Game Designer
+homepage https://example.com
+graphics
+%%%%%
+
+=======
+
+background_color 0 0 0
+text_color 255 255 255
+
+========
+
+objects
+Samira Samira pushing a series of boxes to the target area!
+. 0 0 255
+# 85 85 85
+T 120 120 130
+X 255 0 0
+O 255 255 0
+
+00000
+0...0
+0.X.0
+0...0
+00000
+
+=======
+
+player Samira
+% Samira
+. Background - green
+# Wall - grey
+X Box - red
+O Target - yellow
+
+========
+
+collisionlayers
+Background
+Player, Box, Target
+
+======
+
+sound
+Lethargy is that little void that grows inside of you
+Push-a-rundll, push a box around, got a goal for find ya all needs desire.
+
+====
+
+rules
+[ Samira | Box ] -> [ > Samira | > Box ]
+[ Samira | Box on Target ] -> [ > Samira | > Box on Target ]
+
+=======
+
+winconditions
+All Box on Target
+
+=======
+
+levels
+
+#####
+#...#
+#O#O#
+#X.X#
+#...#
+#####
+
+#####
+#.O.#
+#X.X#
+#.O.#
+#####
+
+```
+produced the following console output:
+=================================
+line 4 : Unrecognised stuff in the prelude.
+line 15 : Object "SAMIRA" defined multiple times.
+line 16 : Was looking for color for object SAMIRA, got ". 0 0 255" instead.
+line 17 : Unknown junk in object section (possibly: sprites have to be 5 pixels wide and 5 pixels high exactly. Or maybe: the main names for objects have to be words containing only the letters a-z0.9 - if you want to call them something like ",", do it in the legend section).
+line 18 : Name "120" already in use.
+line 19 : Was looking for color for object T, got "x " instead.
+line 19 : Was looking for color for object T, got "255 " instead.
+too many errors, aborting compilation
+Errors detected during compilation; the game may not work correctly.
+Return a repaired version of the code that addresses these errors. First, reason about your task and determine the best plan of action. Then, write your code. Return your code in full, inside a ```plaintext code block.

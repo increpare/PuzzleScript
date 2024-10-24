@@ -1,0 +1,95 @@
+Certainly! The errors encountered stem from a few issues which need fixing:
+
+1. Each sprite must be 5x5 instead of 4x4.
+2. The walls should be added to the LEGEND section.
+3. There is no need for a specific collision layer for Background since it's typically used as the default.
+4. The `WINCONDITIONS` should be adjusted because it's not possible to have a "Target on Player" if both will occupy the same space.
+
+Below is the corrected version of the code:
+
+```plaintext
+Title: Maze Runner
+Author: YourName
+Homepage: http://yourhomepage.com
+
+===========
+OBJECTS
+===========
+
+Background
+transparent
+. . . . . 
+. . . . . 
+. . . . . 
+. . . . . 
+. . . . . 
+
+Player
+#00F
+. 0 . . . 
+. 0 0 . . 
+. . 0 . . 
+. . . . . 
+. . . . . 
+
+Wall
+#333
+. . . . . 
+. 0 0 . . 
+. 0 0 . . 
+. . . . . 
+. . . . . 
+
+Target
+#0F0
+. . . . . 
+. 0 0 . . 
+. 0 0 . . 
+. . . . . 
+. . . . . 
+
+===========
+LEGEND
+===========
+
+. = Background
+P = Player
+W = Wall
+T = Target
+
+===========
+SOUNDS
+===========
+
+================
+COLLISIONLAYERS
+================
+
+Player
+Wall
+Target
+
+===========
+RULES
+===========
+
+[ > Player | Target ] -> [ > Player | Player ]
+
+=============
+WINCONDITIONS
+=============
+
+No Target
+
+===========
+LEVELS
+===========
+
+WWWWWWW        
+W.....W        
+W.P.T.W        
+W.....W        
+WWWWWWW        
+```
+
+In the `WINCONDITIONS`, since the player is supposed to reach and overlap with the target for victory, you use `No Target`, which means that all targets have been reached by the player. Additionally, make sure to include walls in the `LEGEND` as `W = Wall`. Additionally, the sprites have been corrected to have a size of 5x5.

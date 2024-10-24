@@ -1,0 +1,101 @@
+The error messages point out two main issues with the PuzzleScript code:
+
+1. **Section Order**: The `COLLISIONLAYERS` section is stated to be out of order because it should follow a `SOUNDS` section, even if the `SOUNDS` section is empty.
+
+2. **Case Sensitivity**: PuzzleScript is case-sensitive, and object names in the `RULES` section must match those defined in the `OBJECTS` section exactly, including their capitalization.
+
+To fix these issues, we need to:
+- Add an empty `SOUNDS` section before the `COLLISIONLAYERS` section.
+- Correct the capitalization of object names in the `RULES` section to match the definitions in the `OBJECTS` section.
+
+Here's the corrected version of the code:
+
+```plaintext
+title Sokoban Clone
+author Game Designer
+homepage www.example.com
+
+=====
+
+OBJECTS
+Background
+black
+
+Wall
+grey
+
+Pusher
+blue
+
+Crate
+brown
+
+Goal
+yellow
+
+CrateOnGoal
+green
+
+PusherOnGoal
+lightblue
+
+=====
+
+LEGEND
+. = Background
+# = Wall
+P = Pusher
+$ = Crate
+G = Goal
+* = CrateOnGoal
++ = PusherOnGoal
+
+=====
+
+SOUNDS
+
+=====
+
+COLLISIONLAYERS
+Background
+Wall
+Pusher, PusherOnGoal
+Crate, CrateOnGoal
+Goal
+
+=====
+
+RULES
+[> Pusher | Crate] -> [> Pusher | > Crate]
+[Pusher | Goal] -> [PusherOnGoal | Goal]
+[Crate | Goal] -> [CrateOnGoal | Goal]
+[PusherOnGoal Crate] -> [Pusher CrateOnGoal]
+[PusherOnGoal | CrateOnGoal] -> [Pusher | Crate]
+[PusherOnGoal | Goal] -> [PusherOnGoal | Goal]
+[Pusher Goal] -> [PusherOnGoal Goal]
+
+=====
+
+WINCONDITIONS
+All CrateOnGoal
+
+=====
+
+LEVELS
+########
+#......#
+#..$.G.#
+#..P...#
+#......#
+########
+
+########
+#......#
+#..$...#
+#.P.G..#
+#.#####.
+#.G....#
+########
+```
+
+This should ensure that the game code compiles correctly without errors.

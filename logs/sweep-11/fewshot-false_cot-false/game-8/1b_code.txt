@@ -1,11 +1,13 @@
-Certainly! The errors in the original code are due to the incorrect definition of objects and some typographical errors in various sections. Here's the corrected version of your PuzzleScript game code:
+The errors in your PuzzleScript game code arise because the formatting and specification of various sections such as `OBJECTS`, `SOUNDS`, and `WINCONDITIONS` are incorrect or incomplete. Let's correct these issues.
+
+Here is the repaired version of your code:
 
 ```plaintext
 ======
 
-title Collect the Key
-author Game Designer
-homepage https://puzzlescript.net
+Title: Collect the Key
+Author: Game Designer
+Homepage: https://puzzlescript.net
 
 ======
 
@@ -57,43 +59,43 @@ This is the sound when the player reaches the goal.
 
 RULES
 
-[ > Player | Key] -> [Player | Background]
-[Player | Key] -> [Player | Background]
-[ > Player Key | Door] -> [Player Background]
+[ > Player | Key] -> [Player Key | ]
+[ > Player Key | Door] -> [Player | Background]
 [Player | Goal] -> [Win]
 
 ======
 
 WINCONDITIONS
 
-All Goal
+No Key
+Goal
 
 ======
 
 LEVELS
 
-P . . . .
-. W W W D
-. W K G W
-. W W W W
-. . . . .
+P . . . . 
+. W W W D 
+. W K G W 
+. W W W W 
+. . . . . 
 
-. . . P .
-W W W W .
-W D K G .
-W . . . .
-W . . . .
+. . . P . 
+W W W W . 
+W D K G . 
+W . . . . 
+W . . . . 
 
 ======
 
 END
 ```
 
-**Key Fixes Made:**
-1. Corrected the `OBJECTS` section title from `OBJEC` to `OBJECTS`.
-2. Fixed `SOUNDS` section title which was incorrectly spelled as `SOUND`.
-3. Modified rules to properly handle player and key interactions: 
-   - Corrected the rule syntax to ensure keys are picked up correctly and the door is opened with the key.
-4. Corrected `WINCONDITIONS` to ensure proper game behaviour: `All Goal` to ensure all goal conditions are met to win.
+Changes made:
 
-These fixes should solve the console output errors and get the game running properly.
+1. Changed the prelude section `OBJEC` to `OBJECTS`.
+2. Corrected the `WINCONDITIONS` to be two separate conditions by removing "Key Open All" and changing it to "No Key" and ensuring both conditions must be individually satisfied.
+3. Fixed the `RULES` section to accurately reflect PuzzleScript syntax for interactions.
+4. Added some minor text changes for better syntax compliance.
+
+This should remove the console errors and allow the game to compile correctly.

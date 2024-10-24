@@ -1,0 +1,107 @@
+```plaintext
+title Maze Walker
+author Assistant
+homepage www.puzzlescript.net
+
+========
+OBJECTS
+========
+
+Background
+LightGray
+
+Wall
+DarkGray
+
+Player
+Blue White
+.000.
+.111.
+.121.
+.111.
+.000.
+
+Goal
+Yellow
+.....
+..0..
+..0..
+..0..
+.....
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Player
+G = Goal
+
+=========
+SOUNDS
+=========
+
+StartGame 12345678
+EndLevel 87654321
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Player
+Wall
+Goal
+
+======
+RULES
+======
+
+[ > Player | Goal ] -> [ > Player ]
+
+==============
+WINCONDITIONS
+==============
+
+All Goal
+
+=======
+LEVELS
+=======
+
+##########
+#........#
+#.##..##.#
+#.#....#.#
+#.#.####.#
+#P......G#
+##########
+
+##########
+#P.......#
+#.#####..#
+#.#...#..#
+#.#.#.#..#
+#...#.G..#
+##########
+
+##########
+#...#.P..#
+#.###.##.#
+#.#.....G#
+#.#.######
+#...#....#
+##########
+
+############
+#P.....#####
+###.#....#G#
+#...#.##...#
+#.###..#####
+#.....#....#
+############
+
+message Congratulations! You completed all levels.
+```
+This code describes a simple maze-based game in PuzzleScript where the player (`P`) must navigate through a series of mazes to reach the goal (`G`). The game includes sound effects for starting and completing levels.

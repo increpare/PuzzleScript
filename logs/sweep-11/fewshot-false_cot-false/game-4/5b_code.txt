@@ -1,0 +1,75 @@
+The error suggests that there is an unrecognized symbol in the map of the LEVELS section. This is because empty spaces have been used in place of Background objects. In PuzzleScript, each symbol in a level map must correspond to an object from the LEGEND section. To fix this, make sure to replace spaces with the symbol for Background, which is '.' in this case. Here is the corrected version of the code:
+
+```plaintext
+===========
+OBJECTS
+===========
+Background
+LightGray
+
+Player
+Green
+..0..
+.000.
+00000
+.000.
+..0..
+
+Wall
+Black
+00000
+00000
+00000
+00000
+00000
+
+Treasure
+Yellow
+..0..
+.000.
+.0.0.
+.000.
+..0..
+
+===========
+LEGEND
+===========
+. = Background
+P = Player
+# = Wall
+T = Treasure
+
+===========
+SOUNDS
+===========
+
+===========
+COLLISIONLAYERS
+===========
+Background
+Wall
+Player, Treasure
+
+===========
+RULES
+===========
+[P | T] -> [P | ]
+
+===========
+WINCONDITIONS
+===========
+No T
+
+===========
+LEVELS
+===========
+# # # # # # #
+# P . . . . #
+# . # . . . #
+# T . . T . #
+# . # . . . #
+# . . . . . #
+# # # # # # #
+```
+
+In the LEVELS section, the spaces are replaced with '.' to indicate Background.

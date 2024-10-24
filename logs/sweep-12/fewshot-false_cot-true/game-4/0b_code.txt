@@ -1,0 +1,76 @@
+To design a complete PuzzleScript game, we first need to determine the essential components and design a simple game loop. PuzzleScript games revolve around grid-based puzzles with specific rules for players to win or lose. We can create a basic puzzle game with a few essential elements:
+
+1. **Objects**: Define the basic objects involved in the game, e.g., player, walls, goals, and boxes.
+2. **Legend**: Create a mapping from characters to objects for use in level designs.
+3. **Sounds**: (Optional) Assign sounds to certain game actions.
+4. **Collision Layers**: Determine what can overlap or collide, managing game logic effectively.
+5. **Rules**: State the rules of how objects interact.
+6. **Win Conditions**: Define how the player wins the game.
+7. **Levels**: Design a series of levels to be played using characters defined in the legend.
+
+Let's make a simple Sokoban-like puzzle game where the player pushes boxes to goals.
+
+```plaintext
+[Title]
+Simple Sokoban
+
+[Author]
+Your Name
+
+[ColorPalette]
+1 1 1
+0 0 0
+252 255 252
+
+[BackgroundColor]
+000000
+
+[TextColor]
+ffffff
+
+[Legend]
+. = Background
+# = Wall
+P = Player
+B = Box
+G = Goal
+
+[Sounds]
+move P [440, 0.25]
+push B [340, 0.3]
+win [880, 1.0]
+
+[CollisionLayers]
+Background
+Player, Box
+Wall
+Goal
+
+[Rules]
+[> Player | Crate] -> [> Player | > Box]
+[Player | Goal] -> [PlayerOnGoal]
+[PlayerOnGoal] + [Box | Goal] -> [Win]
+
+[WinConditions]
+All [BoxOnGoal]
+
+[Levels]
+#####
+#...#
+#.#.#
+#PB #
+##### 
+```
+
+### Explanation of the Code:
+
+1. **Title & Author**: Sets the title and the author of the game. 
+2. **Palette & Colors**: Defines the color palette for the game including background and text colors.
+3. **Legend**: Assigns meanings to symbols used in level designs; this includes basic walls, players, boxes, and goals.
+4. **Sounds**: Optional, but it adds sound effects for actions such as pushing boxes or winning.
+5. **Collision Layers**: Defines how objects behave when they come into contact. For instance, the player and box can collide but not through walls.
+6. **Rules**: Basic interaction rules; for example, the player can push boxes in the direction they are moving.
+7. **Win Conditions**: The game is won when all boxes are on goals.
+8. **Levels**: An example level is provided, showing how to arrange walls, players, boxes, and goals.
+
+This setup represents a complete, albeit simple, PuzzleScript game. This game can easily be expanded with more levels or more complex rules.

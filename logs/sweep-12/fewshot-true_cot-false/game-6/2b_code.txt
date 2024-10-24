@@ -1,0 +1,86 @@
+```plaintext
+title Star Collector
+author Your Name
+homepage example.com
+
+========
+OBJECTS
+========
+
+Background
+LightBlue
+.....
+.....
+.....
+.....
+.....
+
+Player
+Yellow
+.....
+..0..
+.000.
+..0..
+.....
+
+Wall
+DarkGray
+.....
+.000.
+.000.
+.000.
+.....
+
+Star
+Yellow
+.....
+..0..
+.....
+..0..
+.....
+
+=======
+LEGEND
+=======
+
+. = Background
+P = Player
+# = Wall
+* = Star
+
+=======
+SOUNDS
+=======
+
+Star collect 55555555
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Player, Star, Wall
+
+======
+RULES
+======
+
+[> Player | Star] -> [> Player |] Star collect
+[ Player | Wall ] -> [ Player | Wall ]
+
+==============
+WINCONDITIONS
+==============
+
+No Star
+
+=======
+LEVELS
+=======
+
+#..*..#
+#.P.*.#
+#..*..#
+#######
+
+```

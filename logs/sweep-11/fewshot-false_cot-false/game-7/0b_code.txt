@@ -1,56 +1,110 @@
-Sure! Here's a simple PuzzleScript game code:
+Certainly! Below is a complete example of a PuzzleScript game code. This is a simple game where the player needs to push boxes onto targets, similar to Sokoban:
 
 ```plaintext
-#Legend
-player a
-goal  b
-wall  c
-floor d
+Title: Sokoban Puzzle
+Author: PuzzleScript Dev
+Homepage: https://www.puzzlescript.net
 
-=== Objectives ===
-All a on b
+===========
+OBJECTS
+===========
 
-=== Legend ===
-# a : Player
-# b : Goal
-# c : Wall
-# d : Floor
-
-=== Sounds ===
-
-=== CollisionLayers ===
 Background
-PlayerLayer     =  a
-GoalLayer       =  b
-WallLayer       =  c
+black
 
-=== Rules ===
-# Player movement
-[right]  a -> a [right]
-[left]   a -> a [left]
-[up]     a -> a [up]
-[down]   a -> a [down]
+Wall
+grey
 
-# Goals checking
-a b -> y b
+Player
+yellow
 
-=== WinConditions ===
-All y on b
+Box
+blue
 
-=== Levels ===
-# Level 1
-...b...
-..ccc..
-..ca...
-..ccc..
-...d...
+Target
+green
 
-# Level 2
-.....b.
-..c...
-..c.a.
-..c... 
-...b...
+BoxOnTarget
+lightgreen
+
+PlayerOnTarget
+lightyellow
+
+===========
+LEGEND
+===========
+
+. = Background
+# = Wall
+P = Player
+B = Box
+T = Target
+O = BoxOnTarget
+G = PlayerOnTarget
+
+===========
+SOUNDS
+===========
+
+Move
+    clink
+
+Push
+    slide
+
+Win
+    win
+
+===========
+COLLISIONLAYERS
+===========
+
+Background
+Wall
+Target
+Player, PlayerOnTarget
+Box, BoxOnTarget
+
+===========
+RULES
+===========
+
+[Player | Box] -> [ | Player] [Box | ]
+[PlayerOnTarget | Box] -> [Target | Player] [Box | ]
+[Player | Target] -> [PlayerOnTarget | ]
+[PlayerOnTarget | ] -> [Player | Target]
+
+[Box | Target] -> [BoxOnTarget | ]
+[BoxOnTarget | Background] -> [Box | Target]
+
+=======
+
+[no Box][no Target] -> WIN
+
+===========
+LEVELS
+===========
+
+#######
+#.....#
+#..T..#
+#..B..#
+#..P..#
+#######
+
+#######
+#..#..#
+#..B..#
+#.TP..#
+#..#..#
+#####.#
+
+########
+#......#
+#..B#..#
+#..T#..#
+#..P...#
+########
 ```
 
-This example creates a simple game where the player represented by 'a' needs to reach the goal 'b'. The player moves around navigating through walls 'c' and floors 'd'. The game features two levels. Adjust the level layout in the `Levels` section to create more complex puzzles!
+This code describes a classic Sokoban-style game. The player (P) moves boxes (B) onto targets (T) to turn them into the winning object state. When all boxes are on targets, the player wins the level. The game features simple rules for movement and handling of boxes and targets. Feel free to adjust the level layouts in the "LEVELS" section for more variety and challenge!

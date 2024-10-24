@@ -1,0 +1,130 @@
+SYSTEM PROMPT:
+You are a game designer, familiar with the PuzzleScript game description language. 
+
+USER PROMPT:
+The following PuzzleScript game code:
+```plaintext
+Title: Block Pusher
+Author: Your Name
+Homepage: http://www.yoursite.com
+
+===========
+OBJECTS
+===========
+
+Background
+white
+.....
+.....
+.....
+.....
+.....
+
+Player
+red
+.....
+..#..
+..#..
+..#..
+.....
+
+Block
+blue
+.....
+.....
+..#..
+..#..
+.....
+
+Target
+yellow
+.....
+..#..
+..#..
+..#..
+.....
+
+TargetBlock
+green
+.....
+.....
+..#..
+..#..
+.....
+
+============
+LEGEND
+============
+
+. = Background
+P = Player
+B = Block
+T = Target
+G = TargetBlock
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Player, Block
+Target, TargetBlock
+
+===============
+RULES
+===============
+
+# Player movement
+[ > Player | Background ] -> [ > Player | Background ]
+
+# Pushing blocks
+[ > Player | Block | Background ] -> [ > Player | > Block | Background ]
+
+# Block reaching target
+[ > Player | Block | Target ] -> [ > Player | > TargetBlock | Background ]
+
+# Player walking over targets
+[ Player | Target ] -> [ Background | Player ]
+
+# Winning condition - All Targets must have TargetBlocks
+WinCondition
+All TargetBlock on Target
+
+==============
+LEVELS
+==============
+
+# Level 1
+########
+#....T.#
+#..B...#
+#..P...#
+########
+
+# Level 2
+########
+#..T..#
+#..B..#
+#..P..#
+########
+
+# Level 3
+#########
+#..T...#
+#..B...#
+#..P...#
+#......#
+#########
+
+```
+produced the following console output:
+=================================
+line 20 : Unknown junk in spritematrix for object PLAYER.
+line 21 : Unknown junk in spritematrix for object PLAYER.
+line 22 : Unknown junk in spritematrix for object PLAYER.
+line 29 : Unknown junk in spritematrix for object BLOCK.
+line 30 : Unknown junk in spritematrix for object BLOCK.
+line 36 : Unknown junk in spritematrix for object TARGET.
+too many errors, aborting compilation
+Errors detected during compilation; the game may not work correctly.
+Return a repaired version of the code that addresses these errors. Return your code in full, inside a ```plaintext code block.

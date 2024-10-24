@@ -1,0 +1,132 @@
+Certainly! The error messages pointed out several issues in your original PuzzleScript code. Let's address them one by one:
+
+1. The sprite matrices for objects should be 5x5, using the intended design with `.` to fill remaining spaces.
+2. The color "limegreen" should be split into two separate words: "lime green".
+3. The `END` keyword is not needed and leading to confusion. It should be removed.
+4. Ensure there is no additional junk between the sprite lines.
+
+Here is the corrected code:
+
+```plaintext
+Title: Treasure Pusher
+Author: PuzzleScript Enthusiast
+Homepage: none
+
+===========
+OBJECTS
+===========
+
+Background
+transparent
+.....
+.....
+.....
+.....
+.....
+
+Player
+blue
+.....
+..@..
+.....
+.....
+.....
+
+Wall
+black
+#####
+#####
+#####
+#####
+#####
+
+Treasure
+yellow
+.....
+.....
+..$..
+.....
+.....
+
+Goal
+green
+.....
+.....
+.....
+.....
+.....
+
+TreasureOnGoal
+lime green
+.....
+.....
+..$..
+.....
+.....
+
+===========
+LEGEND
+===========
+
+. = Background
+P = Player
+# = Wall
+$ = Treasure
+& = TreasureOnGoal
+G = Goal
+
+===========
+SOUNDS
+===========
+
+===========
+COLLISIONLAYERS
+===========
+
+Background
+Wall
+Player
+Treasure, TreasureOnGoal
+Goal
+
+===========
+RULES
+===========
+
+[Player | Treasure | Goal] -> [Player | TreasureOnGoal | ]
+[Player | Treasure] -> [ | Player | Treasure]
+
+===========
+WINCONDITIONS
+===========
+
+All TreasureOnGoal on Goal
+
+===========
+LEVELS
+===========
+
+#######
+# P   #
+# $G  #
+# $.# #
+#  .# #
+#######
+
+#######
+#     #
+# $.  #
+# $G. #
+# .#  #
+#######
+
+#######
+#     #
+#. .P #
+#. #$ #
+#. #  #
+#######
+
+```
+
+This corrected version should compile without errors and run as expected.

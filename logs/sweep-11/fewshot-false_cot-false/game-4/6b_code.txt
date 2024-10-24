@@ -1,0 +1,76 @@
+The issue you are seeing is due to spaces used in the levels that have not been defined in the LEGEND section. To fix this, we need to define the empty space in the LEGEND section using a symbol, like a plus sign "+". Here is the corrected version of the code:
+
+```plaintext
+===========
+OBJECTS
+===========
+Background
+LightGray
+
+Player
+Green
+..0..
+.000.
+00000
+.000.
+..0..
+
+Wall
+Black
+00000
+00000
+00000
+00000
+00000
+
+Treasure
+Yellow
+..0..
+.000.
+.0.0.
+.000.
+..0..
+
+===========
+LEGEND
+===========
+. = Background
+P = Player
+# = Wall
+T = Treasure
++ = Background
+
+===========
+SOUNDS
+===========
+
+===========
+COLLISIONLAYERS
+===========
+Background
+Wall
+Player, Treasure
+
+===========
+RULES
+===========
+[P | T] -> [P | ]
+
+===========
+WINCONDITIONS
+===========
+No T
+
+===========
+LEVELS
+===========
+# # # # # # #
+# P + + + + #
+# + # + + + #
+# T + + T + #
+# + # + + + #
+# + + + + + #
+# # # # # # #
+```
+
+This new code should fix the error by defining "+" as another representation for the background, and replacing spaces in the LEVELS section with "+".

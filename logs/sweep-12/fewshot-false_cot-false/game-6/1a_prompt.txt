@@ -1,0 +1,122 @@
+SYSTEM PROMPT:
+You are a game designer, familiar with the PuzzleScript game description language. 
+
+USER PROMPT:
+The following PuzzleScript game code:
+```plaintext
+Title: Treasure Pusher
+Author: PuzzleScript Enthusiast
+Homepage: none
+
+===========
+OBJECTS
+===========
+
+Background
+transparent
+.
+
+Player
+blue
+@ 
+
+Wall
+black
+####
+
+Treasure
+yellow
+$
+
+Goal
+green
+.
+
+TreasureOnGoal
+lime
+$
+
+===========
+LEGEND
+===========
+
+. = Background
+P = Player
+# = Wall
+$ = Treasure
+. = Goal
+& = TreasureOnGoal
+
+===========
+SOUNDS
+===========
+
+===========
+COLLISIONLAYERS
+===========
+
+Background
+Wall
+Player
+Treasure, TreasureOnGoal
+Goal
+
+===========
+RULES
+===========
+
+[Player | Treasure | Goal] -> [Player | TreasureOnGoal | ]
+[Player | Treasure] -> [ | Player | Treasure]
+
+===========
+LEVELS
+===========
+
+#@######
+#      #
+# $.   #
+# $.#  #
+#  .#  #
+########
+
+#@######
+#  #####
+#$.    #
+#.$.   #
+# .#   #
+####   #
+
+#@######
+#      #
+#. . $ #
+#. # $ #
+#. #   #
+########
+
+===========
+
+winconditions
+===========
+
+All TreasureOnGoal on Goal
+
+===========
+END
+===========
+
+```
+produced the following console output:
+=================================
+line 15 : Unknown junk in object section (possibly: sprites have to be 5 pixels wide and 5 pixels high exactly. Or maybe: the main names for objects have to be words containing only the letters a-z0.9 - if you want to call them something like ",", do it in the legend section).
+line 19 : Unknown junk in object section (possibly: sprites have to be 5 pixels wide and 5 pixels high exactly. Or maybe: the main names for objects have to be words containing only the letters a-z0.9 - if you want to call them something like ",", do it in the legend section).
+line 23 : Unknown junk in object section (possibly: sprites have to be 5 pixels wide and 5 pixels high exactly. Or maybe: the main names for objects have to be words containing only the letters a-z0.9 - if you want to call them something like ",", do it in the legend section).
+line 30 : Was looking for color for object TREASUREONGOAL, got "lime" instead.
+line 31 : Unknown junk in object section (possibly: sprites have to be 5 pixels wide and 5 pixels high exactly. Or maybe: the main names for objects have to be words containing only the letters a-z0.9 - if you want to call them something like ",", do it in the legend section).
+line 41 : Name "." already in use (on line line 37).
+line 66 : section "LEVELS" is out of order, must follow  "WINCONDITIONS" (or it could be that the section "WINCONDITIONS"is just missing totally.  You have to include all section headings, even if the section itself is empty).
+line 69 : Key "@" not found. Do you need to add it to the legend, or define a new object?
+line 76 : Key "@" not found. Do you need to add it to the legend, or define a new object?
+line 83 : Key "@" not found. Do you need to add it to the legend, or define a new object?
+too many errors, aborting compilation
+Errors detected during compilation; the game may not work correctly.
+Return a repaired version of the code that addresses these errors. Return your code in full, inside a ```plaintext code block.

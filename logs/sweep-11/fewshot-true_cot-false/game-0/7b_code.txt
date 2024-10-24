@@ -1,0 +1,90 @@
+Here's a corrected version of the PuzzleScript game code that addresses the errors in your script:
+
+```plaintext
+title Simple Puzzle
+author Your Name
+
+========
+OBJECTS
+========
+
+Background
+darkgreen green
+00000
+00000
+00000
+00000
+00000
+
+Wall
+brown darkbrown
+00000
+00000
+00000
+00000
+00000
+
+Player
+black orange white blue
+.000.
+.111.
+22222
+.333.
+.3.3.
+
+Goal
+yellow
+.000.
+.....
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Player
+G = Goal
+
+=======
+SOUNDS
+=======
+
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Wall
+Player, Goal
+
+======
+RULES
+======
+
+[ > Player | Goal ] -> [ > Player | Goal ]
+
+==============
+WINCONDITIONS
+==============
+
+All Player on Goal
+
+=======
+LEVELS
+=======
+
+#######
+#..G..#
+#..P..#
+#..G..#
+#..G..#
+#######
+
+```
+
+### Key Fixes:
+1. **Goal Object Colors**: Reduced to one line of pixels, as its original state was attempting to use more colors than defined.
+2. **Order of Sections**: Added an empty `SOUNDS` section before the `COLLISIONLAYERS` section since every section is required even if empty.
+3. **Rules Section**: Corrected the "WINCONDITIONS" to reference the existing objects by ensuring Player is on Goal (the original statement was `All Goals on Player`, which was incorrect for the win condition logic).

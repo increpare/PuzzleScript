@@ -1,0 +1,116 @@
+To address the errors in the provided PuzzleScript game code, we need to examine and rectify two key issues that the console output highlighted:
+
+1. **Exception with Wall sprite:** The `Wall` object uses a color pattern that references multiple colors, but only one color is specified (`gray`). The console error indicates that colors are being accessed that haven't been defined. To fix this, we need to define a single color value for `Wall` or introduce multiple color values if the design demands more.
+
+2. **Error regarding levels:** The semicolon `;` at the beginning of level definitions suggests a comment or a malformed level definition. In PuzzleScript, levels should not start with a semicolon; they should start directly with their layout. Let's remove the semicolons to correct this mistake.
+
+Considering these adjustments, here is the corrected code:
+
+```plaintext
+title Block Pusher
+author PuzzleScriptCreator
+
+========
+OBJECTS
+========
+
+Background
+white
+
+Wall
+gray
+.....
+.....
+.....
+.....
+.....
+
+Player
+red
+..0..
+.000.
+..0..
+.....
+.....
+
+Block
+blue darkblue
+.....
+.000.
+.000.
+.000.
+.....
+
+Target
+green
+.....
+..0..
+..0..
+.000.
+.....
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Player
+B = Block
+T = Target
+
+=======
+SOUNDS
+=======
+
+=========== 
+COLLISIONLAYERS 
+===========
+
+Background
+Target
+Wall
+Block
+Player
+
+======
+RULES
+======
+
+[> Player | Block | no Wall] -> [> Player | > Block]
+[> Player | no Block | no Wall] -> [> Player]
+
+==============
+WINCONDITIONS
+==============
+
+All Block on Target
+
+=======
+LEVELS
+=======
+
+########
+#......#
+#..BTP.#
+#......#
+########
+
+########
+#......#
+#..BTP.#
+#..B...#
+#..T...#
+########
+
+##########
+#........#
+#..B.BTP.#
+#......T.#
+##########
+```
+
+**Corrections explained:**
+
+- **Wall object shape**: Now uses a single color (`gray`) in a consistent pattern.
+- **Levels corrected**: Removed semicolons before each level, directly starting with level layout descriptions to adhere to PuzzleScript syntax expectations.

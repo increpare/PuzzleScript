@@ -1,0 +1,118 @@
+To address the compilation errors in the provided PuzzleScript code, I'll apply the following plan:
+
+1. **Correct Object Declaration Syntax**: The current object definitions incorrectly associate a character with a color directly. Instead, the correct syntax separate the name, character, and color attributes.
+   
+2. **Resolve Duplicate Legend Entry**: Ensure that each character is mapped only once within the LEGEND section. In the current code, `O` is used for both `CrateOnTarget` and `o`.
+
+3. **Maintain Consistency**: The rules should use consistent terminology as per corrected legends.
+
+Let's fix the code now:
+
+```plaintext
+title Sokoban Puzzle
+
+author YourName
+
+homepage http://www.yourwebsite.com
+
+========
+OBJECTS
+========
+
+Background
+    color Yellow
+
+Player
+    @
+    color Red
+
+Crate
+    o
+    color Brown
+
+Wall
+    #
+    color Gray
+
+Target
+    .
+    color Green
+
+CrateOnTarget
+    O
+    color DarkGreen
+
+=======
+
+LEGEND
+=======
+
+. = Target
+# = Wall
+@ = Player
+o = Crate
+O = CrateOnTarget
+
+=============
+
+SOUNDS
+=============
+
+player_move
+  sfx blip
+
+crate_move
+  sfx push
+
+=============
+
+RULES
+=============
+[Player | Crate] -> [ ] | [Player CrateMove]
+CrateMove | Target -> CrateOnTarget | Target
+CrateMove | Background -> Crate | Background
+CrateOnTarget | Target -> CrateMove | Target
+
+=============
+
+WINCONDITIONS
+=============
+
+All CrateOnTarget on Target
+
+=============
+
+LEVELS
+=============
+
+[Level 1]
+#######
+#     #
+# .o  #
+#     #
+#  @  #
+#######
+
+[Level 2]
+#######
+#     #
+# .o. #
+#     #
+#  @  #
+#######
+
+[Level 3]
+########
+# @    #
+#  oo  #
+# .  o #
+#    . #
+########
+
+```
+
+### Explanation:
+- I've modified the object declarations to have separate lines for characters and colors.
+- Corrected the LEGEND section by ensuring each character is uniquely mapped.
+- Adjusted rule expressions to match with the corrected object names.
+- Changed the legend mapping: `.` refers to `Target`, and `:` (which was originally incorrectly used) is no longer necessary.

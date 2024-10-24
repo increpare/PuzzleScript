@@ -1,0 +1,114 @@
+Here's the repaired version of the code with the errors addressed:
+
+```plaintext
+Title: Push and Collect
+
+Author: PuzzleScript Designer
+
+========
+OBJECTS
+========
+
+Background
+LIGHTGREEN
+00000
+00000
+00000
+00000
+00000
+
+Player
+ORANGE
+..0..
+.000.
+..0..
+..0..
+.....
+
+Wall
+BLACK
+00000
+00000
+00000
+00000
+00000
+
+Box
+BROWN
+.....
+.000.
+.0.0.
+.000.
+.....
+
+Goal
+YELLOW
+.....
+.....
+..0..
+.....
+.....
+
+========
+LEGEND
+========
+
+= Background
+P = Player
+W = Wall
+B = Box
+G = Goal
+# = Wall
+
+=======
+SOUNDS
+=======
+
+==================
+COLLISIONLAYERS
+==================
+
+Background
+Player
+Wall, Box
+Goal
+
+=========
+RULES
+=========
+
+[ > Player | Box ] -> [ > Player | > Box ]
+[ Player | Goal ] -> [ | Player ]
+
+========
+WINCONDITIONS
+========
+
+All Box on Goal
+
+==========
+LEVELS
+==========
+
+#####
+#  W#
+# WPB#
+# W G#
+#  W #
+#####
+
+========
+MESSAGES
+========
+
+Welcome to Push and Collect!
+Move the crates onto the goals.
+```
+
+Changes made to fix the errors:
+
+1. Added the "SOUNDS" section even though it's empty, to maintain the required order.
+2. Fixed the case sensitivity issues in the "RULES" section by ensuring rule components match the case used in the "OBJECTS" section.
+3. In the rules `[ Player Goal ] -> [ | Player ]` was corrected to `[ Player | Goal ] -> [ | Player ]`, assuming a more typical swap from removing the Goal, instead of making that cell empty. 
+
+Now the script should compile without errors.

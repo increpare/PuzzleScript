@@ -1,0 +1,112 @@
+Certainly! Below is a sample PuzzleScript game code meant to create a simple game called "Chase the Gem". The player controls a character that must collect a gem while avoiding walls.
+
+```plaintext
+===========
+OBJECTS
+===========
+
+Background
+lightgray
+
+Wall
+black
+
+Player
+blue
+000
+0.0
+000
+
+Gem
+yellow
+0x0
+x00
+0x0
+
+===========
+LEGEND
+===========
+
+. = Background
+# = Wall
+P = Player
+G = Gem
+
+===========
+SOUNDS
+===========
+
+# Collecting a gem sound
+gemCollect
+    playNote 60
+    playNote 64
+    playNote 67
+    
+===========
+COLLISIONLAYERS
+===========
+
+Background
+Wall
+Player
+Gem
+
+===========
+RULES
+===========
+
+# Movement
+RIGHT [ > Player | ] -> [ > Player ]
+
+LEFT [ Player > | ] -> [ Player > ]
+
+UP [ Player | ] -> [ Player ]
+
+DOWN [ | Player ] -> [ | Player ]
+
+# Collect the gem
+PLAYER (player) on GEM (gem) -> GEM (collected)
+   
+===========
+WINCONDITIONS
+===========
+
+All gems on collected
+
+===========
+LEVELS
+===========
+
+#######
+#.....#
+#.###.#
+#.P.#.#
+#...G.#
+#######
+
+#######
+#P....#
+###.#.#
+#...#.#
+#..G#.#
+#######
+
+```
+
+### Explanation:
+
+- **Objects:** Defines the objects in the game: `Background`, `Wall`, `Player`, and `Gem`.
+  
+- **Legend:** Defines the characters for each object in levels: `.` for `Background`, `#` for `Wall`, `P` for `Player`, and `G` for `Gem`.
+
+- **CollisionLayers:** Layering order for object rendering. The player and gem are on top of the wall in this case.
+
+- **Rules:** Interactive behaviors:
+  - Basic movement rules to allow the player to move in all four directions.
+  - A rule triggers the collection of the gem when the `Player` moves onto the same tile as the `Gem`.
+
+- **WinConditions:** Specifies the game-winning condition, which is collecting all gems.
+
+- **Levels:** Two levels are defined, with walls, a player start position, and a gem to collect.
+
+This simple game provides a basic framework for working with PuzzleScript while engaging players in collecting gems and avoiding obstacles. Adjust the ASCII level maps and rules to create new challenges and expand gameplay!

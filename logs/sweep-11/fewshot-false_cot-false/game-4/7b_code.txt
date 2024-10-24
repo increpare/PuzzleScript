@@ -1,0 +1,76 @@
+The error message indicates that there is a problem with how symbols are defined and used. Specifically, the error is due to the presence of a space character ' ' in the map that is not defined in the LEGEND section. In PuzzleScript, each character used in the LEVELS section must correspond to an entry in the LEGEND. Let's fix the code:
+
+```plaintext
+===========
+OBJECTS
+===========
+Background
+LightGray
+
+Player
+Green
+..0..
+.000.
+00000
+.000.
+..0..
+
+Wall
+Black
+00000
+00000
+00000
+00000
+00000
+
+Treasure
+Yellow
+..0..
+.000.
+.0.0.
+.000.
+..0..
+
+===========
+LEGEND
+===========
+. = Background
+P = Player
+# = Wall
+T = Treasure
++ = Background
+
+===========
+SOUNDS
+===========
+
+===========
+COLLISIONLAYERS
+===========
+Background
+Wall
+Player, Treasure
+
+===========
+RULES
+===========
+[P | T] -> [P | ]
+
+===========
+WINCONDITIONS
+===========
+No T
+
+===========
+LEVELS
+===========
+#######
+#P++++#
+#+#+++#
+#T++T+#
+#+#+++#
+#+++++#
+#######
+```
+
+I've removed all spaces from the LEVELS section, ensuring that only defined characters are used. Each character used is now consistent with the LEGEND definitions.

@@ -1,0 +1,95 @@
+The console output indicates that there is an issue with the formatting of the PuzzleScript game code. Specifically, the problem lies in how sections are separated and possible typos. PuzzleScript uses specific section headers like `OBJECTS`, `LEGEND`, `RULES`, `WINCONDITIONS`, and `LEVELS` and expects specific formats for each section.
+
+1. The error messages suggest that the separators between sections (e.g., `======= OBJECTS =======`) are not recognized due to likely misalignment with expected formatting or placement of text.
+2. These errors occur because PuzzleScript expects a consistent format across these sections.
+3. 
+
+To resolve these errors, I will:
+- Ensure that the section separators and their headings are correctly formatted.
+- Confirm that there is no additional text or improper formatting.
+
+Here's the corrected version of the code:
+
+```plaintext
+title Sokoban
+
+========
+OBJECTS
+========
+
+Background
+color transparent
+. 
+
+Player
+color Blue
+p
+
+Wall
+color Grey
+w
+
+Block
+color Green
+b
+
+Goal
+color Red
+g
+
+========
+LEGEND
+========
+
+. = Background
+p = Player
+w = Wall
+b = Block
+g = Goal
+
+========
+RULES
+========
+
+[Player | Block] -> [ > Player | > Block ]
+[Player | ] -> [ > Player |  ]
+
+========
+WINCONDITIONS
+========
+
+All Block on Goal
+
+========
+LEVELS
+========
+
+// Level 1
+#####
+#p  #
+#   #
+# b #
+# g #
+#####
+
+// Level 2
+#####
+#p  #
+# b #
+#   #
+# gg#
+#   #
+#####
+
+// Level 3
+#######
+#     #
+#  p  #
+#  b  #
+#  b  #
+#  gg #
+#     #
+#######
+```
+
+I've corrected the headers to match the format expected by PuzzleScript, which uses `========` before and after each heading to separate sections clearly. This should address the errors reported in the console output.

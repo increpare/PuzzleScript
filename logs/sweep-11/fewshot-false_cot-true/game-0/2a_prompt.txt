@@ -1,0 +1,119 @@
+SYSTEM PROMPT:
+You are a game designer, familiar with the PuzzleScript game description language. 
+
+USER PROMPT:
+The following PuzzleScript game code:
+```plaintext
+title Sokoban Puzzle
+
+author YourName
+
+homepage http://www.yourwebsite.com
+
+========
+OBJECTS
+========
+
+Background
+    color Yellow
+
+Player
+    @
+    color Red
+
+Crate
+    o
+    color Brown
+
+Wall
+    #
+    color Gray
+
+Target
+    .
+    color Green
+
+CrateOnTarget
+    O
+    color DarkGreen
+
+=======
+
+LEGEND
+=======
+
+. = Target
+# = Wall
+@ = Player
+o = Crate
+O = CrateOnTarget
+
+=============
+
+SOUNDS
+=============
+
+player_move
+  sfx blip
+
+crate_move
+  sfx push
+
+=============
+
+RULES
+=============
+[Player | Crate] -> [ ] | [Player CrateMove]
+CrateMove | Target -> CrateOnTarget | Target
+CrateMove | Background -> Crate | Background
+CrateOnTarget | Target -> CrateMove | Target
+
+=============
+
+WINCONDITIONS
+=============
+
+All CrateOnTarget on Target
+
+=============
+
+LEVELS
+=============
+
+[Level 1]
+#######
+#     #
+# .o  #
+#     #
+#  @  #
+#######
+
+[Level 2]
+#######
+#     #
+# .o. #
+#     #
+#  @  #
+#######
+
+[Level 3]
+########
+# @    #
+#  oo  #
+# .  o #
+#    . #
+########
+
+
+```
+produced the following console output:
+=================================
+line 12 : Was looking for color for object BACKGROUND, got "color " instead.
+line 15 : Was looking for color for object PLAYER, got "@" instead.
+line 19 : Was looking for color for object CRATE, got "o" instead.
+line 20 : Object "COLOR" defined multiple times.
+line 23 : Was looking for color for object WALL, got "#" instead.
+line 24 : Object "COLOR" defined multiple times.
+too many errors, aborting compilation
+Errors detected during compilation; the game may not work correctly.
+Return a repaired version of the code that addresses these errors. First, reason about your task and determine the best plan of action. Then, write your code. Return your code in full, inside a ```plaintext code block.

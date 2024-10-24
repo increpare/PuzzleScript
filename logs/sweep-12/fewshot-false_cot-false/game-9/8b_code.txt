@@ -1,0 +1,120 @@
+The error messages indicate that there's an issue with the length of patterns in the rule definitions. Each pattern on the left side of a rule should match the length of the pattern on the right side. Here's your corrected code with properly matched patterns in the rules:
+
+```plaintext
+Title: Treasure Hunter
+
+Author: Your Name
+
+Homepage: http://www.example.com
+
+========
+OBJECTS
+========
+
+Background
+lightgray
+00000
+00000
+00000
+00000
+00000
+
+Player
+Red
+.....
+..0..
+.000.
+..0..
+.....
+
+Wall
+DarkGray
+.....
+.....
+.....
+.....
+.....
+
+Treasure
+Yellow
+.000.
+.0.0.
+00000
+.0.0.
+.000.
+
+Goal
+Green
+.....
+.000.
+.0.0.
+.000.
+.....
+
+========
+LEGEND
+========
+
+. = Background
+P = Player
+# = Wall
+T = Treasure
+G = Goal
+
+========
+SOUNDS
+========
+
+Player Move 1
+
+========
+COLLISIONLAYERS
+========
+
+Background
+Player
+Wall
+Treasure
+Goal
+
+========
+RULES
+========
+
+[ > Player | Treasure ] -> [ Goal | Player ]
+[ Player | Goal ] -> [ Player | Goal ]
+
+========
+WINCONDITIONS
+========
+
+No Treasure
+
+========
+LEVELS
+========
+
+#####
+#...#
+#P.T#
+#...#
+##### 
+
+#######
+#.....#
+#.#.#.#
+#.#.T.#
+#P#.#G#
+#.....#
+#######
+
+#########
+#..T..#.#
+#.#.##..#
+#...##..#
+#.P..G###
+#...T...#
+#########
+```
+
+In the fixed rules, each pattern now has the same number of cells on both sides of the transformation arrow `->`. This resolves the compilation errors and makes the patterns correctly defined.

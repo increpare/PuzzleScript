@@ -1,0 +1,113 @@
+The error message you're encountering indicates that the rules defined in the "RULES" section have mismatched patterns on the left and right sides. Each pattern on the left of the arrow (->) must have a corresponding pattern of equal length on the right, which means both the number of objects and layers involved should match.
+
+In the rules provided, the second rule `[> Player | no Block] -> [> Player]` doesn't have a corresponding pattern of equal cells on the right side because there is nothing after the Player to portray the empty cell from the "no Block" condition.
+
+To fix this problem, we should modify the second rule to match the number of elements after Player and fill this gap to indicate no action or presence to the right of the Player (keeping it empty). Here is how the corrected code looks:
+
+```plaintext
+title Block Pusher
+author PuzzleScriptCreator
+
+========
+OBJECTS
+========
+
+Background
+white
+
+Wall
+gray
+.....
+.....
+.....
+.....
+.....
+
+Player
+red
+..0..
+.000.
+..0..
+.....
+.....
+
+Block
+blue darkblue
+.....
+.000.
+.000.
+.000.
+.....
+
+Target
+green
+.....
+..0..
+..0..
+.000.
+.....
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Player
+B = Block
+T = Target
+
+=======
+SOUNDS
+=======
+
+=========== 
+COLLISIONLAYERS 
+===========
+
+Background
+Target
+Wall
+Block
+Player
+
+======
+RULES
+======
+
+[> Player | Block | no Wall] -> [> Player | > Block | no Wall]
+[> Player | no Block] -> [> Player | empty]
+
+==============
+WINCONDITIONS
+==============
+
+All Block on Target
+
+=======
+LEVELS
+=======
+
+########
+#......#
+#..BTP.#
+#......#
+########
+
+########
+#......#
+#..BTP.#
+#..B...#
+#..T...#
+########
+
+##########
+#........#
+#..B.BTP.#
+#......T.#
+##########
+
+```
+
+In this fix:
+- I added `empty` to the right pattern of the second rule `[> Player | no Block] -> [> Player | empty]` to make sure there's a corresponding pattern of equal length. The "empty" keyword in PuzzleScript is used to match background objects in the absence of any defined presence. Hence, it indicates that the cell is empty for both layers or corresponding objects.

@@ -1,0 +1,111 @@
+```plaintext
+title Sokoban Clone
+author YourName
+
+========
+OBJECTS
+========
+
+Background
+White
+
+Wall
+DarkGray
+00000
+00000
+00000
+00000
+00000
+
+Player
+Blue LightBlue
+..1..
+.111.
+11111
+.111.
+..1..
+
+Crate
+Yellow Red
+.111.
+11111
+11111
+11111
+.111.
+
+Target
+White LightGreen
+00000
+01110
+01010
+01110
+00000
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Player
+* = Crate
+O = Target
+@ = Crate and Target
+
+=========
+SOUNDS
+=========
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Target
+Player, Crate, Wall
+
+======
+RULES
+======
+
+[ > Player | Crate | No Wall | No Crate ] -> [ > Player | > Crate ]
+
+==============
+
+WINCONDITIONS
+==============
+
+All Crate on Target
+
+=======
+LEVELS
+=======
+
+#####
+#...#
+#.P.#
+#.#.#
+#*O*#
+#####
+
+#####
+#...#
+#*P*#
+#.#.#
+#O.O#
+#####
+
+#####
+#.#.#
+#*P*#
+#.O.#
+#...#
+#####
+```
+
+Modifications made:
+
+1. Updated the `RULES` section for moving Crate:
+   - Adjusted rule to prevent the player from trying to push the crate into a wall or another crate.
+
+By refining these rules and checking your crate positioning relative to the walls and targets, the level should be solvable now. Please test it to ensure everything works as expected in a working environment.

@@ -1,0 +1,97 @@
+The provided code snippet of a PuzzleScript game has several issues that need to be addressed for it to compile correctly. Let's go through the issues and fix them:
+
+1. **Color Declarations**: The error messages indicate that the color declarations for each object (`Background`, `Player`, `Wall`, `Block`, and `Goal`) are invalid as they are missing color assignments. We need to assign actual color values to each of these entities. PuzzleScript expects actual color names, and "Grey" and "Red" are not recognized. Instead, we can use recognized color names like `black`, `blue`, `green`, `orange`, and `red`.
+
+2. **Name Conflict**: The console error about `"Name "P" already in use (on line line 13)"` suggests that the letter `P` has been defined multiple times. In PuzzleScript, each object should have a unique character assigned to it in the legend to avoid conflicts. 
+
+To resolve these issues, I will adjust the colors to valid names recognized by PuzzleScript, and ensure there are no repeated legend assignments.
+
+Here's the corrected code:
+
+```plaintext
+title Sokoban
+
+========
+OBJECTS
+========
+
+Background
+color black
+. 
+
+Player
+color blue
+P
+
+Wall
+color black
+W
+
+Block
+color green
+B
+
+Goal
+color orange
+G
+
+========
+LEGEND
+========
+
+. = Background
+P = Player
+W = Wall
+B = Block
+G = Goal
+
+========
+RULES
+========
+
+[Player | Block] -> [ > Player | > Block ]
+[Player | ] -> [ > Player |  ]
+
+========
+WINCONDITIONS
+========
+
+All Block on Goal
+
+========
+LEVELS
+========
+
+// Level 1
+WWWWWW
+WP   W
+W    W
+W B  W
+W G  W
+WWWWWW
+
+// Level 2
+WWWWWW
+WP   W
+W B  W
+W    W
+W GG W
+W    W
+WWWWWW
+
+// Level 3
+WWWWWWW
+W     W
+W  P  W
+W  B  W
+W  B  W
+W  GG W
+W     W
+WWWWWWW
+```
+
+### Explanation of Fixes:
+- **Color Assignment**: Changed the color assignment to valid PuzzleScript colors: `black` for `Background` and `Wall`, `blue` for `Player`, `green` for `Block`, and `orange` for `Goal`.
+- **Legend Consistency**: Made sure that each object had a unique character that did not conflict with another object.
+
+This code should now compile and run without errors, provided the colors are recognized by PuzzleScript.

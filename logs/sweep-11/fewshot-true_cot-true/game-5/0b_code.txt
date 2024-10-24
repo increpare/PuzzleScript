@@ -1,0 +1,122 @@
+To output the code for a complete PuzzleScript game, I'll follow the template and structure commonly used in PuzzleScript games. Before writing the code, let's outline a basic plan:
+
+1. **Title and Metadata**: Set the title and author information for the game.
+2. **Objects**: Define the game objects, including the background, player, and other interactive elements like walls or targets.
+3. **Legend**: Define symbols to represent each of the objects created.
+4. **Sounds**: Optionally define sounds for interactions (not mandatory for functionality).
+5. **Collision Layers**: Organize objects into layers that define their interaction priorities.
+6. **Rules**: Establish the game mechanics and interaction rules between objects.
+7. **Win Conditions**: Specify the win conditions for the game.
+8. **Levels**: Design initial levels that showcase the game's mechanics.
+
+Given these criteria, I'll create a straightforward block-pushing puzzle game, similar to a traditional Sokoban variation, where players push crates onto predefined targets.
+
+```plaintext
+title Simple Crate Pusher
+author PuzzleDesigner
+homepage www.puzzlescript.net
+
+========
+OBJECTS
+========
+
+Background
+lightgreen green
+11111
+01111
+11101
+11111
+10111
+
+Wall
+brown darkbrown
+00010
+11111
+01000
+11111
+00010
+
+Player
+blue white
+.000.
+.111.
+22222
+.333.
+.3.3.
+
+Crate
+orange
+00000
+0...0
+0...0
+0...0
+00000
+
+Target
+darkblue
+.....
+.000.
+.0.0.
+.000.
+.....
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Player
+* = Crate
+@ = Crate and Target
+O = Target
+
+=======
+SOUNDS
+=======
+
+Crate MOVE 36772507
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Target
+Player, Wall, Crate
+
+======
+RULES
+======
+
+[ > Player | Crate ] -> [ > Player | > Crate ]
+
+==============
+WINCONDITIONS
+==============
+
+All Target on Crate
+
+=======
+LEVELS
+=======
+
+#########
+#.......#
+#...@...#
+#.*..P..#
+#.......#
+#########
+```
+
+**Explanation:**
+- **Title and Author**: The game is called "Simple Crate Pusher," with author set as "PuzzleDesigner."
+- **Objects**: Five objects are defined: Background, Wall, Player, Crate, and Target. Each has a unique color and pixel pattern.
+- **Legend**: Characters are used to symbolize these objects in level design.
+- **Sounds**: Optionally added sound for crate movement.
+- **Collision Layers**: Determine how objects interact; walls block movement, crates can be pushed, etc.
+- **Rules**: The main rule allows players to push crates in the direction they move.
+- **Win Conditions**: The game is won when all targets have crates on them.
+- **Levels**: A simple level is defined using the legend characters.
+
+This setup should allow players to push crates into targets, solving levels by strategically moving crates using the player's character.

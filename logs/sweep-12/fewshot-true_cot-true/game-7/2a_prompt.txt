@@ -1,0 +1,1670 @@
+SYSTEM PROMPT:
+You are a game designer, familiar with the PuzzleScript game description language. Here are some example games, for inspiration (do not reproduce these games exactly):
+
+title Rigid Body example
+author Anonymous
+homepage www.puzzlescript.net
+
+verbose_logging
+
+(
+
+Example for
+https://www.puzzlescript.net/Documentation/rigidbodies.html#many_many
+
+)
+
+========
+OBJECTS
+========
+
+Background 
+white  
+
+Target 
+DarkBlue    
+
+Wall 
+DarkGrey
+
+Player
+Blue
+..0..
+..0.0
+00000
+.000.
+.0.0.
+
+Shadow
+Black
+..0..
+0.0..
+00000
+.000.
+.0.0.
+
+( three multi-cells blocks )
+Crate 
+orange
+
+Chest
+green
+
+Box
+red
+
+( 1-cell small block )
+Small
+darkred
+.....
+.000.
+.000.
+.000.
+.....
+
+( sticky, multicellular block when in contact )
+Glue
+pink
+.000.
+00000
+00000
+00000
+.000.
+
+( a flag to know what is allowed move )
+Wanna_Move
+#ff00ff
+.....
+.....
+..0..
+.....
+.....
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Player
+S = Shadow
+* = Crate
++ = Box
+% = Chest
+o = Small
+g = Glue
+
+( blocks that can be moved by the player )
+Movable = Crate or Box or Chest or Small or Glue
+
+( all things that can move and push blocks )
+Mover = Player or Shadow or Movable 
+
+( things that can stop a movement if they are stationary )
+Obstacle = Wall or Mover
+
+=======
+SOUNDS
+=======
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Target
+Obstacle
+Wanna_Move
+
+======
+RULES     
+======     
+
+[ > player ] [ stationary shadow ] -> [ > player ] [ < shadow ]
+
+( 1. Propagate movements forward )
+[ > Mover | stationary Movable ] -> [ > Mover | > Movable  ]
++ [ > Box    ] [ stationary Box   ] -> [ > Box    ] [ > Box    ]
++ [ > Crate  ] [ stationary Crate ] -> [ > Crate  ] [ > Crate  ]
++ [ > Chest  ] [ stationary Chest ] -> [ > Chest  ] [ > Chest  ]
++ [ moving Glue | stationary Glue ] -> [ moving Glue | moving Glue ]
+
+( 2. Propagate obstructions backwards )
+[ > Mover  | stationary Obstacle ] -> [ stationary Mover | Obstacle ]
+
+	(the next lines deal with directional conflicts)
++ [ ^ Crate | < Crate ] -> [ stationary Crate | stationary Crate ] 
++ [ ^ Crate | > Crate ] -> [ stationary Crate | stationary Crate ] 
++ [ ^ Crate | v Crate ] -> [ stationary Crate | stationary Crate ] 
+
++ [ v Crate | < Crate ] -> [ stationary Crate | stationary Crate ] 
++ [ v Crate | > Crate ] -> [ stationary Crate | stationary Crate ] 
++ [ v Crate | ^ Crate ] -> [ stationary Crate | stationary Crate ] 
+
++ [ < Crate | > Crate ] -> [ stationary Crate | stationary Crate ] 
++ [ < Crate | ^ Crate ] -> [ stationary Crate | stationary Crate ] 
++ [ < Crate | v Crate ] -> [ stationary Crate | stationary Crate ] 
+
++ [ > Crate | < Crate ] -> [ stationary Crate | stationary Crate ] 
++ [ > Crate | ^ Crate ] -> [ stationary Crate | stationary Crate ] 
++ [ > Crate | v Crate ] -> [ stationary Crate | stationary Crate ] 
+
+(also one space removed)
++ [ > Mover | |  < Mover ] -> [ stationary Mover | |  < Mover ] 
+
++ [ > Crate  ] [ stationary Crate ] -> [ stationary Crate ] [ Crate ]
++ [ > Box    ] [ stationary Box   ] -> [ stationary Box   ] [ Box   ]
++ [ > Chest  ] [ stationary Chest ] -> [ stationary Chest ] [ Chest ]
++ [ moving Glue | stationary Glue ] -> [ stationary Glue | Glue ]
+
+( 3. remove all movement, keep a flag )
+[ > Movable ] -> [ Movable wanna_move ]
+
+( 4. propagate movement only on wanna_move things )
+(    ie redo step 1 but with WANNA_MOVE added to the first line below )
+[ > Mover  | stationary Movable WANNA_MOVE ] -> [ > Mover | > Movable ]
++ [ > Box   ] [ stationary Box   ] -> [ > Box   ] [ > Box   ]
++ [ > Crate ] [ stationary Crate ] -> [ > Crate ] [ > Crate ]
++ [ > Chest ] [ stationary Chest ] -> [ > Chest ] [ > Chest ]
++ [ moving Glue | stationary Glue ] -> [ moving Glue | moving Glue ]
+
+( 5. cleanup, remove flag )
+[ wanna_move ] -> [ ]
+
+
+==============
+WINCONDITIONS
+==============
+
+=======     
+LEVELS
+=======
+
+#########
+#.......#
+#..p....#
+#.......#
+#.......#
+#..***..#
+#.......#
+#....S..#
+#.......#
+#########
+
+
+
+title Many parallel players, unlimited rigidbodies
+author increpare
+homepage www.increpare.com
+
+verbose_logging
+
+(
+
+This is a sample of 
+
+- Unlimited rigid bodies
+- Multiple players moving in parallel
+
+It's made as an example for the extended rigid body tutorial here:
+
+https://www.puzzlescript.net/Documentation/rigidbodies.html
+
+)
+
+========
+OBJECTS
+========
+
+Background
+green
+
+Wall
+BROWN DARKBROWN
+00010
+11111
+01000
+11111
+00010
+
+Player
+Black Orange White Blue
+.000.
+.111.
+22222
+.333.
+.3.3.
+
+ Crate
+Yellow orange
+00000
+01110
+01110
+01110
+00000
+
+
+(The directional overlays bellow establish connections between crates)
+
+ Crate_U
+orange
+.000.
+.....
+.....
+.....
+.....
+
+ Crate_D
+orange
+.....
+.....
+.....
+.....
+.000.
+
+ Crate_L
+orange
+.....
+0....
+0....
+0....
+.....
+
+ Crate_R
+orange
+.....
+....0
+....0
+....0
+.....
+
+CanMove
+red
+.....
+.....
+..0..
+.....
+.....
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Player
+
+w = Crate and Crate_U
+x = Crate and Crate_D
+a = Crate and Crate_L
+d = Crate and Crate_R
+
+e = Crate and Crate_U and Crate_L
+z = Crate and Crate_D and Crate_L
+q = Crate and Crate_U and Crate_R
+c = Crate and Crate_D and Crate_R
+
+r = Crate and Crate_L and Crate_R
+t = Crate and Crate_D and Crate_U
+
+1 = Crate and Crate_D and Crate_L and Crate_R
+2 = Crate and Crate_U and Crate_L and Crate_R
+3 = Crate and Crate_U and Crate_D and Crate_L
+4 = Crate and Crate_U and Crate_D and Crate_R
+
+0 = Crate and Crate_U and Crate_D and Crate_L and Crate_R
+
+5 = Crate
+
+ Crate_Connection = Crate_U or Crate_D or Crate_L or Crate_R
+
+Pusher = Player or Crate
+Pushable = Crate 
+Solid = Crate or Player
+
+=======
+SOUNDS
+=======
+
+ Crate MOVE 36772507
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Player, Wall, Crate
+ Crate_U
+ Crate_D
+ Crate_L
+ Crate_R
+CanMove
+
+======
+RULES
+======
+
+(For making maps easily: uncomment out the next few lines + press action to discard all boundaries and recreate them)
+
+( [ action player ] [ Crate_connection ] -> [ action player ] [ ] )
+( up [ action player ] [ Crate | Crate ] -> [ action player ] [ Crate Crate_u | Crate Crate_d ] )
+( right [ action player ] [ Crate | Crate ] -> [ action player ] [ Crate Crate_r | Crate Crate_l ] )
+
+
+(Step 1: propagate motions forward)
+[ > Pusher | Pushable ] -> [ > Pusher | > Pushable ]
++ up [ moving Crate Crate_U | Crate ] -> [ moving Crate Crate_U | moving Crate ]
++ down [ moving Crate Crate_D | Crate ] -> [ moving Crate Crate_D | moving Crate ]
++ left [ moving Crate Crate_L | Crate ] -> [ moving Crate Crate_L | moving Crate ]
++ right [ moving Crate Crate_R | Crate ] -> [ moving Crate Crate_R | moving Crate ]
+
+
+(Step 1: If a crate can't move, we have to back-propagate the can't-move-ness, including possibly through players)
+[ > Solid | wall ] -> [ Solid | wall ]
+
+[ > Solid | stationary Solid ] -> [ Solid | Solid ]
++ up [ moving Crate Crate_U | stationary Crate ] -> [ Crate Crate_U | Crate ]
++ down [ moving Crate Crate_D | stationary Crate ] -> [ Crate Crate_D | Crate ]
++ left [ moving Crate Crate_L | stationary Crate ] -> [ Crate Crate_L | Crate ]
++ right [ moving Crate Crate_R | stationary Crate ] -> [ Crate Crate_R | Crate ]
+
+
+(Step 3: Mark all crates that are still moving as possibly being able to move)
+[ moving Pushable ] -> [ Pushable CanMove ]
+
+(Step 4: redo Step 1, but only through things that are marked as being possibly able to move)
+[ > Pusher | CanMove Pushable ] -> [ > Pusher | CanMove > Pushable ]
++ up [ moving Crate Crate_U | CanMove Crate ] -> [ moving Crate Crate_U | CanMove moving Crate ]
++ down [ moving Crate Crate_D | CanMove Crate ] -> [ moving Crate Crate_D | CanMove moving Crate ]
++ left [ moving Crate Crate_L | CanMove Crate ] -> [ moving Crate Crate_L | CanMove moving Crate ]
++ right [ moving Crate Crate_R | CanMove Crate ] -> [ moving Crate Crate_R | CanMove moving Crate ]
+
+(Step 5: remove all the CanMove tags)
+[ CanMove ] -> [ ]
+
+(Step 6: move connections along with the crates themselves)
+[ moving Crate stationary Crate_connection ] -> [ moving Crate moving Crate_connection ]
+
+
+==============
+WINCONDITIONS
+==============
+
+=======
+LEVELS
+=======
+
+###############
+#..ca.........#
+#.ce....ca....#
+#.t...d1e.....#
+#.w....w......#
+#....d1ap5.dz.#
+#....pw...5.w5#
+#......dz.....#
+#.......t..dz.#
+#..x..cre...w.#
+#..w..w...5...#
+#.............#
+###############
+
+
+title Random Robots
+author increpare
+homepage www.puzzlescript.net
+
+========
+OBJECTS
+========
+
+Background (special, automatically placed in its own layer)
+green darkgreen
+11111
+01111
+11101
+11111
+10111
+
+Player (Required by game)
+pink
+..0..
+00000
+..0..
+.000.
+.0.0.
+
+Robot
+gray black red
+.000.
+.200.
+...0.
+00000
+01010
+
+=======
+LEGEND
+=======
+
+. = Background
+P = Player
+* = Robot
+
+=========
+SOUNDS
+=========
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Player, Robot
+
+======
+RULES
+======
+
+[ stationary Robot ] -> [ randomDir Robot ] 
+
+==============
+WINCONDITIONS
+==============
+
+=======
+LEVELS
+=======
+
+...........
+.....*.....
+...........
+.....*.....
+...........
+.....*.....
+..P........
+.....*.....
+...........
+
+
+title The closet and the castle
+author HeskHwis and Holly Hatter
+homepage heskhwis.tumblr.com
+background_color white
+text_color black
+
+flickscreen 8x8
+
+noundo
+norestart
+
+========
+OBJECTS
+========
+Background
+white
+
+Wallv
+black
+.000.
+.000.
+.000.
+.000.
+.000.
+
+Wallh
+black
+.....
+00000
+00000
+00000
+.....
+
+Wallchl
+black
+.....
+.0000
+.0000
+.0000
+.000.
+
+Wallchr
+black
+.....
+0000.
+0000.
+0000.
+.000.
+
+Wallcdl
+black
+.000.
+.0000
+.0000
+.0000
+.....
+
+Wallcdr
+black
+.000.
+0000.
+0000.
+0000.
+.....
+
+Wallcdi
+black
+.000.
+0000.
+0000.
+0000.
+.....
+
+Walltd
+black
+.....
+00000
+00000
+00000
+.000.
+
+Wallth
+black
+.000.
+00000
+00000
+00000
+.....
+
+Walltr
+black
+.000.
+.0000
+.0000
+.0000
+.000.
+
+Walltl
+black
+.000.
+0000.
+0000.
+0000.
+.000.
+
+Wallendhl
+black
+.....
+.0000
+.0000
+.0000
+.....
+
+Wallendhr
+black
+.....
+0000.
+0000.
+0000.
+.....
+
+Wallendv
+black
+.000.
+.000.
+.000.
+.000.
+.....
+
+Wallwhite
+white
+
+
+Player
+black
+..0..
+00000
+.000.
+.000.
+.0.0.
+
+Pan
+black
+.....
+00000
+..000
+..000
+.....
+
+Cap
+black
+.....
+000..
+000..
+00000
+.....
+
+Bottle
+black
+..0..
+..0..
+.000.
+.000.
+.000.
+
+Sign
+black
+.000.
+.000.
+.000.
+..0..
+..0..
+
+Pot
+black
+00000
+.000.
+.000.
+.000.
+.000.
+
+Hat
+black
+.000.
+.000.
+.000.
+.000.
+00000
+
+Shirt
+black
+00.00
+.0.0.
+.000.
+.000.
+.000.
+
+Trousers
+black
+.000.
+.000.
+.000.
+.0.0.
+00.00
+
+Glass
+black
+.000.
+.000.
+.000.
+..0..
+.000.
+
+Flask
+black
+.000.
+..0..
+.000.
+.000.
+.000.
+
+Sink
+black
+.00..
+..0..
+..0..
+00000
+.000.
+
+Umbrella
+black
+.000.
+00000
+..0..
+..0..
+..00.
+
+Pants
+black
+.....
+00000
+0...0
+0.0.0
+00000
+
+Chest
+black
+.....
+00000
+0.0.0
+0...0
+00000
+
+TV
+black
+00000
+0...0
+0...0
+00000
+.000.
+
+Bagage
+black
+.000.
+00000
+0...0
+0...0
+00000
+
+Table
+black
+00000
+00000
+..0..
+.0.0.
+0...0
+
+Radio
+black
+0...0
+.0.0.
+..0..
+00000
+00000
+
+Closet
+black
+00000
+000.0
+000.0
+00000
+0.0.0
+
+Castle
+black
+0.0.0
+00000
+0.000
+0.000
+00000
+
+Plug
+black
+.....
+.0.0.
+00000
+00000
+.000.
+
+Car
+black
+.....
+.000.
+00000
+00000
+.0.0.
+
+=======
+LEGEND
+=======
+
+. = Background
+& = Wallv
+" = Wallh
+§ = Wallchl
+è = Wallchr
+! = Wallcdl
+ç = Wallcdr
+à = Wallcdi
+é = Walltd
+' = Walltr
+; = Wallth
+? = Walltl
+: = Wallendhl
++ = Wallendhr
+/ = Wallendv
+- = Wallwhite
+P = Player
+0 = Pan
+1 = Bottle
+2 = Pot
+3 = Shirt
+4 = Glass
+5 = Sink
+6 = Pants
+7 = TV
+8 = Table
+9 = Closet
+° = Plug
+
+Wall = Wallv or Wallh or Wallchl or Wallchr or Wallcdl or Wallcdr or Wallcdi or Wallwhite or Walltd or Wallth or Walltr or Walltl or Wallendhl or Wallendhr or Wallendv
+
+=======
+SOUNDS
+=======
+
+sfx1 93735300
+sfx2 41048100
+sfx3 72273500
+sfx4 42872102
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Wall, Player, Pan, Cap, Bottle, Sign, Pot, Hat, Shirt, Trousers, Glass, Flask, Sink, Umbrella, Pants, Chest, TV, Bagage, Table, Radio, Closet, Castle, Plug, Car
+
+======
+RULES
+======
+
+[ > Player | Pan ] -> [ Player | Cap ] sfx1
+[ Action Player | Pan ] -> [ Action Player | Pan ] sfx3 message She should begin to cook if she wants to have a supper.
+[ > Player | Cap ] -> [ Player | Pan ] sfx2
+[ Action Player | Cap ] -> [ Action Player | Cap ] sfx3 message It isn't very important to take a cap when yo are going to England, but it's always good to be provident.
+
+[ > Player | Bottle ] -> [ Player | Sign ] sfx1
+[ Action Player | Bottle ] -> [ Action Player | Bottle ] sfx3 message It is empty. Luckily she has two other bottles like this one in her basement.
+[ > Player | Sign ] -> [ Player | Bottle ] sfx2
+[ Action Player | Sign ] -> [ Action Player | Sign ] sfx3 message "London 512 miles" reads the sign.
+
+[ > Player | Pot ] -> [ Player | Hat ] sfx1
+[ Action Player | Pot ] -> [ Action Player | Pot ] sfx3 message She didn't take care of the flower and now, it's dead.
+[ > Player | Hat ] -> [ Player | Pot ] sfx2
+[ Action Player | Hat ] -> [ Action Player | Hat ] sfx3 message In London, everyone is a gentleman.
+
+[ > Player | Shirt ] -> [ Player | Trousers ] sfx1
+[ Action Player | Shirt ] -> [ Action Player | Shirt ] sfx3 message It isn't very clean, but nobody cares, it's just a black T-shirt.
+[ > Player | Trousers ] -> [ Player | Shirt ] sfx2
+[ Action Player | Trousers ] -> [ Action Player | Trousers ] sfx3 message Better take an appropriate outfit when you go exploring the Stonehenge.
+
+[ > Player | Glass ] -> [ Player | Flask ] sfx1
+[ Action Player | Glass ] -> [ Action Player | Glass ] sfx3 message At least she drinks in beautiful glasses.
+[ > Player | Flask ] -> [ Player | Glass ] sfx2
+[ Action Player | Flask ] -> [ Action Player | Flask ] sfx3 message She read about ancient flasks of amber-colored whisky in a magazine last week.
+
+[ > Player | Sink ] -> [ Player | Umbrella ] sfx1
+[ Action Player | Sink ] -> [ Action Player | Sink ] sfx3 message The sink is clogged up and filled with dirty water.
+[ > Player | Umbrella ] -> [ Player | Sink ] sfx2
+[ Action Player | Umbrella ] -> [ Action Player | Umbrella ] sfx3 message Well, it's said to be very rainy in Great Britain...
+
+[ > Player | Pants ] -> [ Player | Chest ] sfx1
+[ Action Player | Pants ] -> [ Action Player | Pants ] sfx3 message Just some pants.
+[ > Player | Chest ] -> [ Player | Pants ] sfx2
+[ Action Player | Chest ] -> [ Action Player | Chest ] sfx3 message There would be treasures in Glenanore and Slieve Anore, in Ireland... She HAS to go, find something wonderful and become rich.
+
+[ > Player | TV ] -> [ Player | Bagage ] sfx1
+[ Action Player | TV ] -> [ Action Player | TV ] sfx3 message There is nothing worth watching on the TV for now.
+[ > Player | Bagage ] -> [ Player | TV ] sfx2
+[ Action Player | Bagage ] -> [ Action Player | Bagage ] sfx3 message It's decided : one day, she will pack her suitcase and go away from this town.
+
+[ > Player | Table ] -> [ Player | Radio ] sfx1
+[ Action Player | Table ] -> [ Action Player | Table ] sfx3 message She bought this table at a flea market. It was in a bar before.
+[ > Player | Radio ] -> [ Player | Table ] sfx2
+[ Action Player | Radio ] -> [ Action Player | Radio ] sfx3 message She likes to listen to foreign songs. She has many CDs of celtic traditional music.
+
+[ > Player | Closet ] -> [ Player | Castle ] sfx1
+[ Action Player | Closet ] -> [ Action Player | Closet ] sfx3 message There are some books, a box of pills and a teddy bear in here.
+[ > Player | Castle ] -> [ Player | Closet ] sfx2
+[ Action Player | Castle ] -> [ Action Player | Castle ] sfx3 message Her dreams are filled with scottish castles and medieval towers.
+
+[ > Player | Plug ] -> [ Player | Car ] sfx1
+[ Action Player | Plug ] -> [ Action Player | Plug ] sfx3 message What is the point in putting a plug outside, anyways ?
+[ > Player | Car ] -> [ Player | Plug ] sfx2
+[ Action Player | Car ] -> sfx4 win
+
+==============
+WINCONDITIONS
+==============
+
+=======
+LEVELS
+=======
+
+
+§""""""è§""""""è.------.
+&...7..!ç41....&§"""""è.
+&..............!ç....3&.
+&......§è...8......6..&.
+&......&&......§è.....&.
+&...p..&&......&'"""é"ç.
+&9.....&&......&&...&--.
+!""""""ç!"è.§""ç&..5&-..
+:""""""è§"ç.!"""ç..0&-..
+.......&&...........&-..
+.......&&......§""""ç-..
+......./!"+.:""ç------..
+............2...-.......
+................-.......
+................-.......
+.........°......-.......
+
+message Enough talking !
+message She drives away to the airport and flies to Great Britain.
+message Castles, umbrellas, celtic music and pants... Here we are !
+message THE END
+
+title Drop Swap
+author Aaron Steed
+homepage www.robotacid.com
+
+key_repeat_interval 0.23
+again_interval 0.05
+noaction
+noundo
+background_color Black
+text_color Grey
+run_rules_on_level_start
+
+========
+OBJECTS
+========
+
+Background
+Black
+
+Player
+#ffffff #000000 #626263 #3c3b3c
+.222.
+21112
+23132
+20102
+.222.
+
+DeadPlayer
+#ffffff #000000 #626263 #3c3b3c
+.222.
+21112
+21112
+23132
+.222.
+
+BaseWall
+#222222 #333333 #444444 #ffffff
+11110
+12220
+12200
+12000
+00000
+
+APill
+#ff0000 #ff7374 #ff0000 #ff0000
+.111.
+11110
+11010
+11100
+.000.
+
+BPill
+#00de00 #cffa92 #ff0000 #ff0000
+.111.
+10010
+10110
+11100
+.000.
+
+CPill
+#7a35fc #b56bfd #ff0000 #ff0000
+.111.
+10110
+11010
+11100
+.000.
+
+DPill
+#0094fc #79b5fd #ff0000 #ff0000
+.111.
+10100
+11010
+10100
+.000.
+
+EPill
+#d1c200 #fff919 #ffffff #ff0000
+.111.
+10010
+10010
+11110
+.000.
+
+FPill
+#ff33b1 #ff76d2 #ff0000 #ff0000
+.111.
+10100
+11110
+10110
+.000.
+
+AllPill
+#eeee66 #ffffff #ffffcc #ffffff
+.112.
+11112
+11012
+21120
+.220.
+
+NoPill
+#ffffff #000000 #ffde85 #ff0000
+.000.
+00000
+21012
+.000.
+..2..
+
+Bomb
+#6e6e6e #000000 #ff0000 #fcf26b
+.020.
+02320
+01210
+01110
+.000.
+
+GemPill
+#ffffff #000000 #626263 #3c3b3c
+..0..
+.002.
+00022
+.223.
+..2..
+
+Count
+#ffffff #000000 #5a595a #ff0000
+.....
+.000.
+.000.
+.000.
+.....
+
+Marked
+#ffffff #000000
+.....
+..1..
+.101.
+..1..
+.....
+
+CountTray
+#333333
+
+GemTray
+#333333
+
+StartGem
+red
+
+Collect
+White
+
+Debris1
+#ffffff #0739f5 #1f0f42 #ffffff
+.0.0.
+00.00
+..0..
+00.00
+.0.0.
+
+Debris2
+#ffffff #0739f5 #1f0f42 #ffffff
+.....
+.0.0.
+..0..
+.0.0.
+.....
+
+Empty
+Black
+
+OldPos
+Black
+
+StartCount
+Black
+
+DropWall1
+#222222 #333333 #444444 #ffffff
+11110
+12220
+12200
+12200
+12200
+
+DropWall2
+#222222 #333333 #444444 #ffffff
+11110
+12220
+12200
+12200
+12200
+
+DropWall3
+#222222 #333333 #444444 #ffffff
+11110
+12220
+12200
+12200
+12200
+
+DropWall4
+#222222 #333333 #444444 #ffffff
+11110
+12220
+12200
+12200
+12200
+
+DropMarker
+Blue
+
+Init
+Purple
+
+=======
+LEGEND
+=======
+
+. = Background
+@ = Player
+p = DeadPlayer
+# = BaseWall
+a = APill
+b = BPill
+c = CPill
+d = DPill
+e = EPill
+f = FPill
+n = NoPill
+x = AllPill
+u = Count and CountTray
+w = Count and CountTray and StartCount
+g = GemPill
+q = GemTray
+o = GemTray and StartGem
+p = Bomb
+i = Init
+j = DropWall1
+k = DropWall2
+l = DropWall3
+m = DropWall4
+
+
+MatchPill = APill or BPill or CPill or DPill or EPill or FPill or AllPill
+Pill = MatchPill or NoPill or GemPill or Bomb
+Debris = Debris1 or Debris2
+AMatch = APill or AllPill
+BMatch = BPill or AllPill
+CMatch = CPill or AllPill
+DMatch = DPill or AllPill
+EMatch = EPill or AllPill
+FMatch = FPill or AllPill
+Wall = BaseWall or DropWall1 or DropWall2 or DropWall3 or DropWall4
+Item = Pill or Debris or Wall or Player
+Heavy = Pill or Player
+Dropping = Marked or DropMarker
+DropMix1 = APill or BPill or CPill or DPill or EPill
+DropMix2 = APill or BPill or CPill or DPill or EPill or GemPill
+DropMix3 = APill or BPill or CPill or DPill or EPill or NoPill
+DropMix4 = APill or BPill or CPill or DPill or EPill or FPill or GemPill
+DropMix5 = APill or BPill or CPill or DPill or EPill or FPill
+DropWallMarked = DropWall1 or DropWall3
+
+=======
+SOUNDS
+=======
+
+sfx0 54236904 (illegal)
+sfx1 5160507 (swap)
+sfx2 19008103 (allpill)
+sfx3 50665503 (crush 3)
+sfx4 80820507 (land)
+sfx5 2030908 (blast)
+sfx6 3032303 (bomb)
+sfx7 83704102 (dead)
+sfx8 7194508 (gem collect)
+EndLevel 16709508 (win)
+
+================
+COLLISIONLAYERS
+================
+
+
+Collect, StartCount, StartGem
+Background
+OldPos, CountTray, GemTray
+Player, Wall, Pill, Empty, Count, DeadPlayer, Bomb, Init
+Debris, Marked, DropMarker
+
+======
+RULES
+======
+
+(init)
+[ DropWall1 ] [ Init ] -> [ DropWall1 ] [ random DropMix1 Marked ]
+[ DropWall2 ] [ Init ] -> [ DropWall2 ] [ random DropMix1 ]
+[ DropWall3 ] [ Init ] -> [ DropWall3 ] [ random DropMix1 Marked ]
+[ DropWall4 ] [ Init ] -> [ DropWall4 ] [ random DropMix5 ]
+
+(debris clean up)
+[ Debris2 ] -> [ Empty ] again
+[ Debris1 ] -> [ Debris2 ] again
+
+(player - pill swapping)
+[ > Player | Pill ] -> [ Pill OldPos | Player ] sfx1
+[ Player Marked | OldPos ] -> [ Player | OldPos Marked ]
+
+(blocked move)
+[ > Player | No Pill ] -> [ Player | ] sfx0
+
+(pill combos)
+[ AMatch | AMatch | AMatch ] -> [ AMatch Collect | AMatch Collect | AMatch Collect ]
+[ BMatch | BMatch | BMatch ] -> [ BMatch Collect | BMatch Collect | BMatch Collect ]
+[ CMatch | CMatch | CMatch ] -> [ CMatch Collect | CMatch Collect | CMatch Collect ]
+[ DMatch | DMatch | DMatch ] -> [ DMatch Collect | DMatch Collect | DMatch Collect ]
+[ EMatch | EMatch | EMatch ] -> [ EMatch Collect | EMatch Collect | EMatch Collect ]
+[ FMatch | FMatch | FMatch ] -> [ FMatch Collect | FMatch Collect | FMatch Collect ]
+[ NoPill | NoPill | NoPill ] -> [ NoPill Collect | NoPill Collect | NoPill Collect ]
+
+(bomb activate)
+[ OldPos Bomb ] -> sfx5
+up [ OldPos Bomb | Pill ] -> [ OldPos Bomb | Pill > Collect ]
+right [ OldPos Bomb | Pill ] -> [ OldPos Bomb | Pill > Collect ]
+down [ OldPos Bomb | Pill ] -> [ OldPos Bomb | Pill > Collect ]
+left [ OldPos Bomb | Pill ] -> [ OldPos Bomb | Pill > Collect ]
+[ OldPos Bomb ] -> [ OldPos Empty ]
+
+(blast)
+up [ Pill > Collect | Pill ] -> [ Pill Collect | Pill > Collect ]
+right [ Pill > Collect | Pill ] -> [ Pill Collect | Pill > Collect ]
+down [ Pill > Collect | Pill ] -> [ Pill Collect | Pill > Collect ]
+left [ Pill > Collect | Pill ] -> [ Pill Collect | Pill > Collect ]
+[ > Collect ] -> [ Collect ]
+[ GemPill Collect ] -> [ GemPill ]
+
+(reward matches)
+(junction)
+Right [ Collect | Collect ] -> [ > Collect | > Collect ]
+Down [ Collect | Collect ] -> [ > Collect | > Collect ]
+[ Down Collect | Right Collect ] [ Collect OldPos ] -> [ Collect | Collect ] [ Bomb OldPos ] sfx6
+(4: create AllPill)
+[ MatchPill Collect | MatchPill Collect | MatchPill Collect | MatchPill Collect ] [ Collect OldPos ] -> [ MatchPill Collect | MatchPill Collect | MatchPill Collect | MatchPill Collect ] [ AllPill OldPos ] sfx2
+
+(count moves)
+(subtract on move)
+random right [ OldPos ] [ Count | No Count ] -> [ OldPos ] [ | ]
+(fill on Debris)
+[ Collect ] [ CountTray ] -> [ Collect ] [ CountTray Count ]
+
+(dead?)
+[ DeadPlayer ] -> cancel
+[ No Count StartCount CountTray ] [ Player ] -> [ No Count StartCount CountTray ] [ DeadPlayer ] sfx7
+[ Player | NoPill Collect ] -> [ DeadPlayer | NoPill ]
+[ DeadPlayer ] [ CountTray Count ] -> [ DeadPlayer ] [ CountTray ] sfx7
+
+(destroy matched)
+[ APill Collect ] -> [ Debris1 ] sfx3 again
+[ BPill Collect ] -> [ Debris1 ] sfx3 again
+[ CPill Collect ] -> [ Debris1 ] sfx3 again
+[ DPill Collect ] -> [ Debris1 ] sfx3 again
+[ EPill Collect ] -> [ Debris1 ] sfx3 again
+[ FPill Collect ] -> [ Debris1 ] sfx3 again
+[ AllPill Collect ] -> [ Debris1 ] sfx3 again
+[ Player ] [ NoPill Collect ] -> [ Player ] [ Debris1 ] sfx3 again
+
+(destroy NoPills)
+down [ NoPill | Wall ] -> [ Debris1 | Wall ] again
+
+(collect gems)
+down [ GemPill | Wall ] -> [ GemPill Collect | Wall ]
+[ GemPill Collect ] [ StartGem No GemPill ] -> [ Debris1 ] [ StartGem GemPill ] again sfx8
+right [ GemPill Collect ] [ GemPill GemTray | No GemPill GemTray ] -> [ Debris1 ] [ GemPill GemTray | GemPill GemTray ] again sfx8
+
+(drop)
+[ Heavy No Dropping ] -> [ Heavy DropMarker ]
+down [ Heavy Dropping | Empty ] -> [ Empty | Heavy Dropping ]
+[ DropMarker ] -> [ ]
+down [ DropWall1 | Empty ] -> [ DropWall1 | random DropMix1 ] again
+down [ DropWall2 | Empty ] -> [ DropWall2 | random DropMix2 ] again
+down [ DropWall3 | Empty ] -> [ DropWall3 | random DropMix3 ] again
+down [ DropWall4 | Empty ] -> [ DropWall4 | random DropMix4 ] again
+
+(gem drop win)
+right [ GemPill GemTray | Wall ] -> win
+
+[ OldPos ] -> [ ]
+
+==============
+WINCONDITIONS
+==============
+
+No Marked
+Some DropWallMarked
+
+=======
+LEVELS
+=======
+
+message collect orbs by matching 3
+message match 3 to restore move-energy
+message level 1: collect all marked orbs
+
+wuuuuu#
+#jjjjj#
+#iiiii#
+#iiiii#
+#iiiii#
+#iiiii#
+#ii@ii#
+#######
+
+message level 2: collect all marked orbs
+
+wuuuuuu#
+#jjjjjj#
+#iiiiii#
+#iiiiii#
+#iiiiii#
+#iiiiii#
+#iiiiii#
+#iiiiii#
+#iii@ii#
+########
+
+message collect gray gems by getting them to the bottom
+message level 3: collect 8 gems
+
+oqqqqqqq#
+wuuuuuuu#
+#kkkkkkk#
+#iiiiiii#
+#iiiiiii#
+#iiiiiii#
+#iiiiiii#
+#iiiiiii#
+#iiiiiii#
+#iiiiiii#
+#iii@iii#
+#########
+
+message if you are next to 3 matching skulls you die
+message skulls can be destroyed by getting them to the bottom
+message level 4: collect all marked orbs
+
+wuuuuuu#
+#llllll#
+#iiiiii#
+#iiiiii#
+#iiiiii#
+#iiiiii#
+#iiiiii#
+#iiiiii#
+#iii@ii#
+########
+
+message level 5: collect 7 gems
+
+oqqqqqqq#
+wuuuuuuu#
+#mmmmmmm#
+#iiiiiii#
+#iiiiiii#
+#iiiiiii#
+#iiiiiii#
+#iiiiiii#
+#iiiiiii#
+#iiiiiii#
+#iii@iii#
+#########
+
+message thanks for playing
+
+
+
+title Extended Bodies:Multiple Parallel Players, Multiple Extended Object
+author Anonymous
+homepage www.puzzlescript.net
+
+verbose_logging
+
+(
+    
+THIS IS A DELIBERATELY BROKEN GAME, JUST FOR ILLUSTRATION
+
+see https://www.puzzlescript.net/Documentation/rigidbodies.html#parallel_many
+)
+
+
+========
+OBJECTS
+========
+
+Background 
+white  
+
+Target 
+DarkBlue    
+
+Wall 
+DarkGrey
+
+Player
+Blue
+..0..
+..0.0
+00000
+.000.
+.0.0.
+
+( three multi-cells blocks )
+Crate 
+orange
+
+Chest
+green
+
+Box
+red
+
+( 1-cell small block )
+Small
+darkred
+.....
+.000.
+.000.
+.000.
+.....
+
+( sticky, multicellular block when in contact )
+Glue
+pink
+.000.
+00000
+00000
+00000
+.000.
+
+( a flag to know what is allowed move )
+Wanna_Move
+#ff00ff
+.....
+.....
+..0..
+.....
+.....
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Player
+* = Crate
++ = Box
+% = Chest
+o = Small
+g = Glue
+
+( blocks that can be moved by the player )
+Movable = Crate or Box or Chest or Small or Glue
+
+( all things that can move and push blocks )
+Mover = Player or Movable
+
+( things that can stop a movement if they are stationary )
+Obstacle = Wall or Mover
+
+=======
+SOUNDS
+=======
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Target
+Obstacle
+Wanna_Move
+
+======
+RULES     
+======     
+
+( 1. Propagate movements forward )
+[ > Mover | Movable ] -> [ > Mover | > Movable  ]
++ [ > Box    ] [ Box   ] -> [ > Box    ] [ > Box    ]
++ [ > Crate  ] [ Crate ] -> [ > Crate  ] [ > Crate  ]
++ [ > Chest  ] [ Chest ] -> [ > Chest  ] [ > Chest  ]
++ [ moving Glue | Glue ] -> [ moving Glue | moving Glue ]
+
+( 2. Propagate obstructions backwards )
+[ > Mover  | stationary Obstacle ] -> [ stationary Mover | Obstacle ]
++ [ > Crate  ] [ stationary Crate ] -> [ stationary Crate ] [ Crate ]
++ [ > Box    ] [ stationary Box   ] -> [ stationary Box   ] [ Box   ]
++ [ > Chest  ] [ stationary Chest ] -> [ stationary Chest ] [ Chest ]
++ [ moving Glue | stationary Glue ] -> [ stationary Glue | Glue ]
+
+( 3. remove all movement, keep a flag )
+[ > Movable ] -> [ Movable wanna_move ]
+
+( 4. propagate movement only on wanna_move things )
+(    ie redo step 1 but with WANNA_MOVE added to the first line below )
+[ > Mover  | Movable WANNA_MOVE ] -> [ > Mover | > Movable ]
++ [ > Box   ] [ Box   ] -> [ > Box   ] [ > Box   ]
++ [ > Crate ] [ Crate ] -> [ > Crate ] [ > Crate ]
++ [ > Chest ] [ Chest ] -> [ > Chest ] [ > Chest ]
++ [ moving Glue | Glue ] -> [ moving Glue | moving Glue ]
+
+( 5. cleanup, remove flag )
+[ wanna_move ] -> [ ]
+
+==============
+WINCONDITIONS
+==============
+
+=======     
+LEVELS
+=======
+
+###################
+#.................#
+#.................#
+#...*..g.g.#......#
+#...*......#...g###
+#...*...o.%%%.....#
+#...+++.o.%.......#
+#....+....%%%.....#
+#....+.....P...g..#
+#....p.gg.........#
+###################
+
+
+USER PROMPT:
+The following PuzzleScript game code:
+```plaintext
+title Maze Runner
+author YourName
+
+========
+OBJECTS
+========
+
+Background
+lightgray
+
+Wall
+darkgray
+
+Player
+blue
+.000.
+.0.0.
+00000
+.0.0.
+.000.
+
+Goal
+yellow
+.....
+.....
+..0..
+.....
+.....
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Player
+G = Goal
+
+=========
+SOUNDS
+=========
+
+startgame 53401705
+finish 73818207
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Goal
+Player, Wall
+
+======
+RULES
+======
+
+[ > Player | Wall ] -> [ Player | Wall ]
+[ Player | Goal ] -> [ Player | Goal ] finish
+
+==============
+WINCONDITIONS
+==============
+
+All Player on Goal
+
+=======
+LEVELS
+=======
+
+message Welcome to Maze Runner! Reach the golden goal.
+
+######
+#P...#
+#.##.#
+#..#.#
+#..G.#
+######
+
+
+```
+produced the following console output:
+=================================
+line 44 : unexpected sound token "finish".
+line 59 : Name "finish", referred to in a rule, does not exist.
+line 59 : Error, malformed cell rule - was looking for cell contents, but found "finish".  What am I supposed to do with this, eh, please tell me that.
+Errors detected during compilation; the game may not work correctly.
+Return a repaired version of the code that addresses these errors. First, reason about your task and determine the best plan of action. Then, write your code. Return your code in full, inside a ```plaintext code block.

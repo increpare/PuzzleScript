@@ -1,0 +1,104 @@
+The errors you are seeing are due to missing values for the metadata sections "title," "author," and "homepage." Each of these sections needs a value on the same line as the section identifier. I will fill these out with example values to make the code work. Additionally, any comments should be removed or placed after a valid section to avoid "unrecognized stuff in the prelude" errors.
+
+```plaintext
+===========
+title Catch the Star
+===========
+
+===========
+author Your Name
+===========
+
+===========
+homepage www.example.com
+===========
+
+===========
+objects
+===========
+Background
+00000
+
+Wall
+2f4f4f
+
+Player
+ff6347
+..0..
+.000.
+00.00
+..0..
+
+Star
+ffd700
+..*..
+.*.*.
+*****
+
+===========
+legend
+===========
+. = Background
+# = Wall
+P = Player
+* = Star
+
+===========
+sounds
+===========
+
+===========
+collisionLayers
+===========
+Background
+Player, Star, Wall
+
+===========
+rules
+===========
+
+[Player | Star] -> [Player Star]
+
+===========
+winconditions
+===========
+All Star on Player
+
+===========
+levels
+===========
+
+####
+#P.#
+#..#
+#.*#
+####
+
+####
+#* #
+#.P#
+## #
+####
+
+########
+#.#..#.#
+#.###* #
+#P..   #
+########
+
+===========
+messages
+===========
+Congratulations! You caught the star!
+
+===========
+colorPalette
+===========
+Background #000000
+Wall #2f4f4f
+Player #ff6347
+Star #ffd700
+
+```
+
+This version should compile properly. Now, the metadata sections directly follow the section identifier with no line breaks or extra lines in between the identifier and the value.

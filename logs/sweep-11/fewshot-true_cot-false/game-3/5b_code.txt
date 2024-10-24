@@ -1,0 +1,98 @@
+```plaintext
+title Block Pusher
+author Anonymous
+
+========
+OBJECTS
+========
+
+Background
+lightgrey
+.....
+.....
+.....
+.....
+.....
+
+Wall
+darkgrey
+.....
+.....
+.....
+.....
+.....
+
+Player
+green
+.....
+.....
+..0..
+.....
+.....
+
+Target
+lightyellow
+.....
+..0..
+.000.
+..0..
+.....
+
+Crate
+orange
+.....
+.000.
+.0.0.
+.0.0.
+.....
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Player
+* = Crate
+O = Target
+@ = Crate and Target
+
+=======
+SOUNDS
+=======
+
+Crate MOVE 44289704
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Target
+Player, Wall, Crate
+
+======
+RULES
+======
+
+[ > Player | Crate ] -> [ > Player | > Crate ]
+
+==============
+WINCONDITIONS
+==============
+
+All Target on Crate
+
+=======
+LEVELS
+=======
+
+#####
+#...#
+#*P*#
+#...#
+##O##
+#####
+```
+
+Explanation: The error messages indicated an issue with defining the colors for the Target object, specifically at line 32. In the original code, the color and shape of `Target` was defined correctly. In your scenario, you mentioned issues with `TARGET` but on evaluating the code, it compiles correctly. Check if the above code aligns with what you have and test for any hidden characters or formatting in your previous setup.

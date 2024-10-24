@@ -1,0 +1,91 @@
+SYSTEM PROMPT:
+You are a game designer, familiar with the PuzzleScript game description language. 
+
+USER PROMPT:
+The following PuzzleScript game code:
+```plaintext
+Title: Simple Sokoban
+
+# OBJECTS
+Background
+0
+
+Player
+1
+
+Wall
+2
+
+Box
+3
+
+Target
+4
+
+# LEGEND
+= 0  # Background
+P = 1  # Player
+W = 2  # Wall
+B = 3  # Box
+T = 4  # Target
+
+# WINCONDITIONS
+All Box on Target
+
+# RULES
+[> Player | Box] -> [> Player > Box]
+
+# COLLISIONLAYERS
+Background
+Player, Box
+Wall
+Target
+
+# LEVELS
+# Level 1
+########
+#..P..#
+#.#.#.#
+#.BTC.#
+#.#.#.#
+########
+
+# Level 2
+########
+#P..T.#
+#..B..#
+#.###.#
+#.###.#
+#.....#
+########
+
+# Level 3
+#######
+#P....#
+###B..#
+#..T..#
+#.###.#
+#..T..#
+#######
+
+# Level 4
+########
+#P..#..#
+#..BT..#
+#..###.#
+#..###.#
+#...T..#
+########
+
+```
+produced the following console output:
+=================================
+line 4 : Unrecognised stuff in the prelude.
+line 5 : Unrecognised stuff in the prelude.
+line 7 : Unrecognised stuff in the prelude.
+line 8 : Unrecognised stuff in the prelude.
+line 10 : Unrecognised stuff in the prelude.
+line 11 : Unrecognised stuff in the prelude.
+too many errors, aborting compilation
+Errors detected during compilation; the game may not work correctly.
+Return a repaired version of the code that addresses these errors. First, reason about your task and determine the best plan of action. Then, write your code. Return your code in full, inside a ```plaintext code block.

@@ -1,0 +1,2020 @@
+SYSTEM PROMPT:
+You are a game designer, familiar with the PuzzleScript game description language. Here are some example games, for inspiration (do not reproduce these games exactly):
+
+title Extended Bodies:Multiple Parallel Players, Multiple Extended Object
+author Anonymous
+homepage www.puzzlescript.net
+
+verbose_logging
+
+(
+    
+THIS IS A DELIBERATELY BROKEN GAME, JUST FOR ILLUSTRATION
+
+see https://www.puzzlescript.net/Documentation/rigidbodies.html#parallel_many
+)
+
+
+========
+OBJECTS
+========
+
+Background 
+white  
+
+Target 
+DarkBlue    
+
+Wall 
+DarkGrey
+
+Player
+Blue
+..0..
+..0.0
+00000
+.000.
+.0.0.
+
+( three multi-cells blocks )
+Crate 
+orange
+
+Chest
+green
+
+Box
+red
+
+( 1-cell small block )
+Small
+darkred
+.....
+.000.
+.000.
+.000.
+.....
+
+( sticky, multicellular block when in contact )
+Glue
+pink
+.000.
+00000
+00000
+00000
+.000.
+
+( a flag to know what is allowed move )
+Wanna_Move
+#ff00ff
+.....
+.....
+..0..
+.....
+.....
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Player
+* = Crate
++ = Box
+% = Chest
+o = Small
+g = Glue
+
+( blocks that can be moved by the player )
+Movable = Crate or Box or Chest or Small or Glue
+
+( all things that can move and push blocks )
+Mover = Player or Movable
+
+( things that can stop a movement if they are stationary )
+Obstacle = Wall or Mover
+
+=======
+SOUNDS
+=======
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Target
+Obstacle
+Wanna_Move
+
+======
+RULES     
+======     
+
+( 1. Propagate movements forward )
+[ > Mover | Movable ] -> [ > Mover | > Movable  ]
++ [ > Box    ] [ Box   ] -> [ > Box    ] [ > Box    ]
++ [ > Crate  ] [ Crate ] -> [ > Crate  ] [ > Crate  ]
++ [ > Chest  ] [ Chest ] -> [ > Chest  ] [ > Chest  ]
++ [ moving Glue | Glue ] -> [ moving Glue | moving Glue ]
+
+( 2. Propagate obstructions backwards )
+[ > Mover  | stationary Obstacle ] -> [ stationary Mover | Obstacle ]
++ [ > Crate  ] [ stationary Crate ] -> [ stationary Crate ] [ Crate ]
++ [ > Box    ] [ stationary Box   ] -> [ stationary Box   ] [ Box   ]
++ [ > Chest  ] [ stationary Chest ] -> [ stationary Chest ] [ Chest ]
++ [ moving Glue | stationary Glue ] -> [ stationary Glue | Glue ]
+
+( 3. remove all movement, keep a flag )
+[ > Movable ] -> [ Movable wanna_move ]
+
+( 4. propagate movement only on wanna_move things )
+(    ie redo step 1 but with WANNA_MOVE added to the first line below )
+[ > Mover  | Movable WANNA_MOVE ] -> [ > Mover | > Movable ]
++ [ > Box   ] [ Box   ] -> [ > Box   ] [ > Box   ]
++ [ > Crate ] [ Crate ] -> [ > Crate ] [ > Crate ]
++ [ > Chest ] [ Chest ] -> [ > Chest ] [ > Chest ]
++ [ moving Glue | Glue ] -> [ moving Glue | moving Glue ]
+
+( 5. cleanup, remove flag )
+[ wanna_move ] -> [ ]
+
+==============
+WINCONDITIONS
+==============
+
+=======     
+LEVELS
+=======
+
+###################
+#.................#
+#.................#
+#...*..g.g.#......#
+#...*......#...g###
+#...*...o.%%%.....#
+#...+++.o.%.......#
+#....+....%%%.....#
+#....+.....P...g..#
+#....p.gg.........#
+###################
+
+
+title BROKEN Rigid Body example
+author Anonymous
+homepage www.puzzlescript.net
+
+verbose_logging
+
+(
+
+BROKEN Example Game FOR ILLUSTRATION PURPOSES ONLY. DO NOT USE.
+
+Example for
+https://www.puzzlescript.net/Documentation/rigidbodies.html#many_many
+
+)
+
+========
+OBJECTS
+========
+
+Background 
+white  
+
+Target 
+DarkBlue    
+
+Wall 
+DarkGrey
+
+Player
+Blue
+..0..
+..0.0
+00000
+.000.
+.0.0.
+
+Shadow
+Black
+..0..
+0.0..
+00000
+.000.
+.0.0.
+
+( three multi-cells blocks )
+Crate 
+orange
+
+Chest
+green
+
+Box
+red
+
+( 1-cell small block )
+Small
+darkred
+.....
+.000.
+.000.
+.000.
+.....
+
+( sticky, multicellular block when in contact )
+Glue
+pink
+.000.
+00000
+00000
+00000
+.000.
+
+( a flag to know what is allowed move )
+Wanna_Move
+#ff00ff
+.....
+.....
+..0..
+.....
+.....
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Player
+S = Shadow
+* = Crate
++ = Box
+% = Chest
+o = Small
+g = Glue
+
+( blocks that can be moved by the player )
+Movable = Crate or Box or Chest or Small or Glue
+
+( all things that can move and push blocks )
+Mover = Player or Shadow or Movable 
+
+( things that can stop a movement if they are stationary )
+Obstacle = Wall or Mover
+
+=======
+SOUNDS
+=======
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Target
+Obstacle
+Wanna_Move
+
+======
+RULES     
+======     
+
+[ > player ] [ stationary shadow ] -> [ > player ] [ < shadow ]
+
+( 1. Propagate movements forward )
+[ > Mover | stationary Movable ] -> [ > Mover | > Movable  ]
++ [ > Box    ] [ stationary Box   ] -> [ > Box    ] [ > Box    ]
++ [ > Crate  ] [ stationary Crate ] -> [ > Crate  ] [ > Crate  ]
++ [ > Chest  ] [ stationary Chest ] -> [ > Chest  ] [ > Chest  ]
++ [ moving Glue | stationary Glue ] -> [ moving Glue | moving Glue ]
+
+( 2. Propagate obstructions backwards )
+[ > Mover  | stationary Obstacle ] -> [ stationary Mover | Obstacle ]
+
+	(the next lines deal with directional conflicts)
++ [ ^ Crate | < Crate ] -> [ stationary Crate | stationary Crate ] 
++ [ ^ Crate | > Crate ] -> [ stationary Crate | stationary Crate ] 
++ [ ^ Crate | v Crate ] -> [ stationary Crate | stationary Crate ] 
+
++ [ v Crate | < Crate ] -> [ stationary Crate | stationary Crate ] 
++ [ v Crate | > Crate ] -> [ stationary Crate | stationary Crate ] 
++ [ v Crate | ^ Crate ] -> [ stationary Crate | stationary Crate ] 
+
++ [ < Crate | > Crate ] -> [ stationary Crate | stationary Crate ] 
++ [ < Crate | ^ Crate ] -> [ stationary Crate | stationary Crate ] 
++ [ < Crate | v Crate ] -> [ stationary Crate | stationary Crate ] 
+
++ [ > Crate | < Crate ] -> [ stationary Crate | stationary Crate ] 
++ [ > Crate | ^ Crate ] -> [ stationary Crate | stationary Crate ] 
++ [ > Crate | v Crate ] -> [ stationary Crate | stationary Crate ] 
+
+(also one space removed)
++ [ > Mover | |  < Mover ] -> [ stationary Mover | |  < Mover ] 
+
++ [ > Crate  ] [ stationary Crate ] -> [ stationary Crate ] [ Crate ]
++ [ > Box    ] [ stationary Box   ] -> [ stationary Box   ] [ Box   ]
++ [ > Chest  ] [ stationary Chest ] -> [ stationary Chest ] [ Chest ]
++ [ moving Glue | stationary Glue ] -> [ stationary Glue | Glue ]
+
+( 3. remove all movement, keep a flag )
+[ > Movable ] -> [ Movable wanna_move ]
+
+( 4. propagate movement only on wanna_move things )
+(    ie redo step 1 but with WANNA_MOVE added to the first line below )
+[ > Mover  | stationary Movable WANNA_MOVE ] -> [ > Mover | > Movable ]
++ [ > Box   ] [ stationary Box   ] -> [ > Box   ] [ > Box   ]
++ [ > Crate ] [ stationary Crate ] -> [ > Crate ] [ > Crate ]
++ [ > Chest ] [ stationary Chest ] -> [ > Chest ] [ > Chest ]
++ [ moving Glue | stationary Glue ] -> [ moving Glue | moving Glue ]
+
+( 5. cleanup, remove flag )
+[ wanna_move ] -> [ ]
+
+
+==============
+WINCONDITIONS
+==============
+
+=======     
+LEVELS
+=======
+
+#########
+#.......#
+#..p...p#
+#.......#
+#.......#
+#..***..#
+#.......#
+#s...S..#
+#.......#
+#########
+
+#########
+#.......#
+#.......#
+#.......#
+#...s...#
+#..+++..#
+#...p...#
+#.......#
+#.......#
+#########
+
+
+title Cliched River Puzzle
+author Weeble
+homepage www.puzzlescript.net
+
+========
+OBJECTS
+========
+
+Grass
+#559922 GREEN
+11111
+01111
+11101
+11111
+10111
+
+
+Player
+Yellow
+00.00
+0...0
+.....
+0...0
+00.00
+
+Water1
+#3333ff #5555ff #7777ff
+00121
+10100
+12001
+10010
+01000
+
+Water2
+#3333ff #5555ff #7777ff
+10000
+00010
+00121
+01100
+10001
+
+Carrot
+ORANGE #55cc00
+11111
+.000.
+.000.
+.000.
+..0..
+
+Fox
+ORANGE WHITE BLACK
+.2.2.
+00000
+12021
+.111.
+..2..
+
+Rabbit
+WHITE #ff88bb
+00.00
+.0.0.
+.000.
+.101.
+.000.
+
+EmptyBoat
+BROWN DARKBROWN
+.000.
+01110
+01110
+01110
+00000
+Platform
+GREY
+.....
+.....
+.....
+.....
+.....
+
+LeftB
+BLUE
+.....
+.....
+.....
+.....
+.....
+
+RightB
+RED
+.....
+.....
+.....
+.....
+.....
+
+Dude
+BLACK
+..0..
+00000
+..0..
+.0.0.
+0...0
+
+Dock
+YELLOW
+.....
+.....
+.....
+.....
+.....
+
+=======
+LEGEND
+=======
+
+. = Grass and LeftB
+, = Grass and RightB
+~ = Water1 and LeftB
+^ = Water1 and RightB
+P = Player and LeftB
+C = Carrot and Platform and LeftB
+F = Fox and Platform and LeftB
+R = Rabbit and Platform and LeftB
+_ = EmptyBoat and LeftB and Water1
+* = Platform and RightB
+[ = Dude and Dock and LeftB
+] = Dock and RightB
+Water = Water1 or Water2
+Background = Grass or Water1 or Water2
+Object = Rabbit or Fox or Carrot
+Bank = LeftB or RightB
+=======
+SOUNDS
+=======
+
+SFX0 81232704
+SFX1 47027309
+SFX2 92562507
+SFX3 11245308
+
+================
+COLLISIONLAYERS
+================
+
+Background
+EmptyBoat, Platform, Dock
+LeftB, RightB
+Carrot, Rabbit, Fox, Dude
+Player
+
+======
+RULES
+======
+
+(Loading the boat)
+[ action Player Object Platform ] [ EmptyBoat no Object ] -> [ Player Platform ] [ EmptyBoat Object ] sfx2
+
+(Emptying the boat)
+[ action Player Object EmptyBoat LeftB ] [ Platform no Object LeftB ] -> [ Player EmptyBoat LeftB ] [ Platform Object LeftB ] sfx2
+[ action Player Object EmptyBoat RightB ] [ Platform no Object RightB ] -> [ Player EmptyBoat RightB ] [ Platform Object RightB ] sfx2
+
+( Eating rules for stuff on the left bank )
+late [ RightB Dude ] [ LeftB Rabbit ] [ LeftB Fox ] -> [ RightB Dude ] [ LeftB ] [ LeftB Fox ] sfx0 message Fox eats rabbit! Chomp!
+late [ RightB Dude ] [ LeftB Carrot ] [ LeftB Rabbit ] -> [ RightB Dude ] [ LeftB ] [ LeftB Rabbit ] sfx1 message Rabbit eats carrot! Chomp!
+
+( Same rules for stuff on the right bank )
+late [ LeftB Dude ] [ RightB Rabbit ] [ RightB Fox ] -> [ LeftB Dude ] [ RightB ] [ RightB Fox ] sfx0 message Fox eats rabbit! Chomp!
+late [ LeftB Dude ] [ RightB Carrot ] [ RightB Rabbit ] -> [ LeftB Dude ] [ RightB ] [ RightB Rabbit ] sfx1 message Rabbit eats carrot! Chomp!
+
+( Animate the water )
+[ Water ] -> [ random Water ]
+
+( Row across the river with an object )
+[ action Player Dude | EmptyBoat Object | ... | | Dock ] -> [ | | ... | EmptyBoat Object | Player Dude Dock ] sfx3
+
+( Row across the river without an object )
+[ action Player Dude | EmptyBoat no Object | ... | | Dock ] -> [ | | ... | EmptyBoat | Player Dude Dock ] sfx3
+
+( Victory condition )
+[ RightB Platform Rabbit ] [ RightB Platform Fox ] [ RightB Platform Carrot] -> win
+
+==============
+WINCONDITIONS
+==============
+
+=======
+LEVELS
+=======
+
+.....~~~^^,,,,,
+.....~~~^^,,,,,
+...F.~~~^^,*,,,
+..RP[_~~^^],*,,
+...C.~~~~^,*,,,
+.....~~~^^,,,,,
+.....~~~^^,,,,,
+
+
+
+title Dungeon Janitor
+author Farbs
+homepage www.farbs.org
+noundo
+noaction
+key_repeat_interval 0.1
+
+========
+OBJECTS
+========
+
+Background
+DARKBLUE BLACK
+11111
+10000
+10000
+10000
+10000
+
+Entry
+LIGHTBROWN BROWN DARKBROWN GRAY
+30103
+10101
+10121
+10101
+10101
+
+ExitClosed
+LIGHTBROWN BROWN DARKBROWN GRAY
+30103
+10101
+10121
+10101
+10101
+
+ExitOpen
+GRAY BLACK DARKBLUE
+01110
+11111
+11111
+11111
+12221
+
+Slime
+LIGHTGREEN GREEN DARKGREEN
+.....
+.....
+.....
+.....
+.....
+
+Head
+LIGHTGREEN GREEN DARKGREEN BLACK
+.000.
+03130
+11111
+23332
+.222.
+
+SlimeU
+LIGHTGREEN GREEN DARKGREEN
+11111
+21112
+.222.
+.....
+.....
+
+SlimeD
+LIGHTGREEN GREEN DARKGREEN
+.....
+.....
+.000.
+01110
+11111
+
+SlimeUD
+LIGHTGREEN GREEN DARKGREEN
+11111
+11111
+11111
+11111
+11111
+
+SlimeL
+LIGHTGREEN GREEN DARKGREEN
+00...
+110..
+111..
+112..
+22...
+
+SlimeR
+LIGHTGREEN GREEN DARKGREEN
+...00
+..011
+..111
+..211
+...22
+
+SlimeLR
+LIGHTGREEN GREEN DARKGREEN
+00000
+11111
+11111
+11111
+22222
+
+SlimeUL
+LIGHTGREEN GREEN DARKGREEN
+11111
+11112
+1112.
+112..
+22...
+
+SlimeUR
+LIGHTGREEN GREEN DARKGREEN
+11111
+21111
+.2111
+..211
+...22
+
+SlimeULR
+LIGHTGREEN GREEN DARKGREEN
+11111
+11111
+11111
+11111
+22222
+
+SlimeDL
+LIGHTGREEN GREEN DARKGREEN
+00...
+110..
+1110.
+11110
+11111
+
+SlimeDR
+LIGHTGREEN GREEN DARKGREEN
+...00
+..011
+.0111
+01111
+11111
+
+SlimeDLR
+LIGHTGREEN GREEN DARKGREEN
+00000
+11111
+11111
+11111
+11111
+
+SlimeUDLR
+LIGHTGREEN GREEN DARKGREEN
+11111
+11111
+11111
+11111
+11111
+
+SlimeSolo
+LIGHTGREEN GREEN DARKGREEN
+.000.
+01110
+11111
+21112
+.222.
+
+Wall
+LIGHTGREY GREY
+11111
+01000
+01000
+11111
+00010
+
+PlayerA
+Black Orange White Blue Brown
+.....
+.11..
+2224.
+333.4
+3.322
+
+PlayerB
+Black Orange White Blue Brown
+.....
+.11..
+.4222
+4.333
+223.3
+
+Temp
+PINK
+00000
+00000
+00000
+00000
+00000
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+E = Wall AND Entry
+P = PlayerA
+O = Slime AND Head
+X = Wall AND ExitClosed
+
+SlimeDecal = SlimeU OR SlimeD OR SlimeUD OR SlimeL OR SlimeR OR SlimeLR OR SlimeUL OR SlimeUR OR SlimeULR OR SlimeDL OR SlimeDR OR SlimeDLR OR SlimeUDLR OR SlimeSolo
+Player = PlayerA OR PlayerB
+
+=======
+SOUNDS
+=======
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Slime
+SlimeU, SlimeD, SlimeUD, SlimeL, SlimeR, SlimeLR, SlimeUL, SlimeUR, SlimeULR, SlimeDL, SlimeDR, SlimeDLR, SlimeUDLR, SlimeSolo, ExitOpen
+Player, Wall, PlayerA, PlayerB, Temp
+Head, Entry, ExitClosed
+
+======
+RULES
+======
+
+(Stomp Heads)
+[ > Player | Head ] -> [ > Player | NO Head ]
+[ > Player | Slime ] -> [ > Player | NO Slime ]
+
+(New Head)
+[ Head ] -> []
+RANDOM [ Slime NO Player ] -> [ Slime Head ]
+
+(Grow Slime)
+[ Head | NO Slime NO Wall NO Player ] -> [ Head | Slime ]
+
+(Clear Slime from under player)
+[ > Player | Slime ] -> [ > Player | NO Slime ]
+LATE [ Player Slime ] -> [ Player NO Head ]
+
+(Make slime pretty)
+[ SlimeDecal ] ->[ ]
+VERTICAL [ Slime | Slime | Slime ] -> [ Slime | Slime SlimeUD | Slime ]
+UP [ Slime NO SlimeUD | Slime ] -> [ Slime SlimeU | Slime ]
+DOWN [ Slime NO SlimeUD | Slime ] -> [ Slime SlimeD | Slime ]
+HORIZONTAL [ Slime | Slime NO SlimeU NO SlimeD NO SlimeUD | Slime ] -> [ Slime | Slime SlimeLR | Slime ]
+LEFT [ Slime NO SlimeU NO SlimeD NO SlimeUD NO SlimeLR | Slime ] -> [ Slime SlimeL | Slime ]
+RIGHT [ Slime NO SlimeU NO SlimeD NO SlimeUD NO SlimeLR | Slime ] -> [ Slime SlimeR | Slime ]
+HORIZONTAL [ Slime | Slime SlimeU | Slime ] -> [ Slime | Slime SlimeULR | Slime ]
+LEFT [ Slime SlimeU | Slime ] -> [ Slime SlimeUL | Slime ]
+RIGHT [ Slime SlimeU | Slime ] -> [ Slime SlimeUR | Slime ]
+HORIZONTAL [ Slime | Slime SlimeD | Slime ] -> [ Slime | Slime SlimeDLR | Slime ]
+LEFT [ Slime SlimeD | Slime ] -> [ Slime SlimeDL | Slime ]
+RIGHT [ Slime SlimeD | Slime ] -> [ Slime SlimeDR | Slime ]
+[ Slime NO SlimeDecal ] -> [ Slime SlimeSolo ]
+
+( Shut the door if slime still around)
+( Have to open it first unfortunately )
+[ ExitClosed Wall ] -> [ ExitOpen ]
+[ ExitOpen ][ Slime ] -> [ ExitClosed Wall ][ Slime ]
+
+(Player Anim)
+[ LEFT PlayerB ] -> [ LEFT PlayerA ]
+[ RIGHT PlayerA ] -> [ RIGHT PlayerB ]
+LATE [ PlayerA ] -> [ Temp ]
+LATE [ PlayerB ] -> [ PlayerA ]
+LATE [ Temp ] -> [ PlayerB ]
+==============
+WINCONDITIONS
+==============
+
+ALL Player ON ExitOpen
+
+=======
+LEVELS
+=======
+
+MESSAGE It's Thursday.
+MESSAGE Today I mop the slime pit.
+
+
+##X##
+##.##
+##.##
+##O##
+##.##
+##P##
+##E##
+
+MESSAGE Damn slime sticking to my shoes.
+
+..####..
+..#O.#..
+###..###
+#......#
+#P#..#.#
+#E#..#X#
+..####..
+
+MESSAGE Goes SHLUCK SHCLUK when I walk.
+
+######X#############
+###......#...#...###
+###.##.#...#...#...#
+##.....###########.#
+#..#.#.....#.......#
+#.##.###.#.##.######
+#......#.#.#.O.....#
+#.####.#.#.#.#####.#
+#P.....#.#.........#
+#E##################
+
+MESSAGE Last room before home.
+MESSAGE This one can take a while.
+
+##########X#########
+#..................#
+#..................#
+#..#######.######..#
+#..#.#...#.#.#..#..#
+#..#...#.#.#.#..#..#
+#..#.....#.#.#..#..#
+#..##....#.#...##..#
+#..#............#..#
+#..#......O.....#..#
+#..#............#..#
+#..#............#..#
+#..##############..#
+#.........P........#
+##########E#########
+
+MESSAGE Done for the day. Back tomorrow.
+MESSAGE Fridays is rat scrubbing day.
+
+title maze generator
+run_rules_on_level_start
+again_interval 0
+
+========
+OBJECTS
+========
+
+Background .
+black white
+00000
+01110
+01110
+01110
+00000
+
+Player P
+transparent
+
+visited
+transparent
+
+filler
+transparent
+
+w_up
+white
+.000.
+.000.
+.000.
+.000.
+.....
+
+w_down
+white
+.....
+.000.
+.000.
+.000.
+.000.
+
+w_left
+white
+.....
+0000.
+0000.
+0000.
+.....
+
+w_right
+white
+.....
+.0000
+.0000
+.0000
+.....
+
+to_delete
+transparent
+
+temp
+transparent
+
+tempA
+transparent
+
+=======
+LEGEND
+=======
+
+
+=======
+SOUNDS
+=======
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Player
+filler
+visited
+w_up
+w_down
+w_left
+w_right
+to_delete
+temp
+tempA
+
+======
+RULES
+======
+
+(place player randomly on the first turn only)
+random [ no filler ] -> [player visited]
+[no filler] -> [filler]
+
+(propagate path until you can't move any more)
+random [ player |  no visited ] ->  [  visited > to_delete |  < to_delete player ] again
+
+(if you can't extend the current path, continue from some random other neighbouring point)
+[player | no visited ] -> [ player tempA | ]
+random [player no tempA] [ visited | no visited ] -> [ visited ] [ visited player |  ] again
+[tempA]->[]
+
+[ up to_delete ] -> [ w_up ]
+[ down to_delete ] -> [ w_down ]
+[ left to_delete ] -> [ w_left ]
+[ right to_delete ] -> [ w_right ]
+
+==============
+WINCONDITIONS
+==============
+
+
+=======
+LEVELS
+=======
+
+........................................
+........................................
+........................................
+........................................
+........................................
+........................................
+........................................
+........................................
+........................................
+........................................
+........................................
+........................................
+........................................
+........................................
+........................................
+........................................
+........................................
+........................................
+........................................
+........................................
+........................................
+........................................
+........................................
+........................................
+........................................
+........................................
+........................................
+........................................
+........................................
+........................................
+
+
+
+
+title MC Escher's Equestrian Armageddon
+author Anna Clarke
+homepage www.puzzlescript.net
+again_interval 0.2
+
+========
+OBJECTS
+========
+
+Background
+BLACK DARKBLUE
+11111
+01111
+11101
+11111
+10111
+
+
+Target
+DarkBlue
+.....
+.000.
+.0.0.
+.000.
+.....
+
+Wall
+BROWN DARKBROWN
+00010
+11111
+01000
+11111
+00010
+
+Steps1
+BROWN DARKBROWN GREEN
+....0
+...11
+..000
+.1111
+00010
+
+Steps2
+BROWN DARKBROWN GREEN
+0....
+11...
+010..
+1111.
+00010
+
+
+Steps3
+BROWN DARKBROWN GREEN
+00010
+.1111
+..000
+...11
+....0
+
+Steps4
+BROWN DARKBROWN GREEN
+00010
+1111.
+010..
+11...
+0....
+
+Player1
+Black Orange White Blue
+.000.
+.111.
+22222
+.333.
+.3.3.
+
+Player2
+Black Orange White Blue
+..2..
+01233
+0123.
+01233
+..2..
+
+Player3
+Black Orange White Blue
+..2..
+33210
+.3210
+33210
+..2..
+
+Player4
+Black Orange White Blue
+.3.3.
+.333.
+22222
+.111.
+.000.
+
+Horse
+Orange Brown
+...0.
+...00
+0110.
+0000.
+0..0.
+
+Blood
+Red
+.....
+.....
+.....
+.....
+00000
+
+Crate
+Orange Yellow
+00000
+0...0
+0...0
+0...0
+00000
+
+
+=======
+LEGEND
+=======
+
+. = Background
+B = Blood
+# = Wall
+1 = Steps1
+2 = Steps2
+3 = Steps3
+4 = Steps4
+Steps = Steps1 or Steps2 or Steps3 or Steps4
+
+P = Player1
+Q = Player2
+
+Player = Player1 or Player2 or Player3 or Player4
+
+H = Horse
+
+Animated = Player or Horse
+* = Crate
+@ = Crate and Target
+O = Target
+
+Solid = Wall or Steps or Horse or Player
+
+=======
+SOUNDS
+=======
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Blood
+Target
+Player1, Player2, Player3, Player4, Wall, Crate, Steps, Horse
+
+======
+RULES
+======
+
+
+[ > Player1 ] -> [> Player1] again
+DOWN [ Player1 | No Solid ] -> [ | Player1 ] again
+
+[ > Player2 ] -> [> Player2] again
+right [ Player2 | No Solid ] -> [ | Player2 ] again
+
+[ > Player3 ] -> [> Player3] again
+left [ Player3 | No Solid ] -> [ | Player3 ] again
+
+[ > Player4 ] -> [> Player4] again
+up [ Player4 | No Solid ] -> [ | Player4 ] again
+
+right [ right  Player1 | Steps1 ] -> [ up Player2 | Steps1 ] again
+left [ left  Player1 | Steps2 ] -> [ up Player3 | Steps2 ] again
+
+down [ down  Player2 | Steps1 ] -> [ left Player1 | Steps1  ] again
+up [ up Player2 | Steps3 ] -> [ left Player4 | Steps3 ] again
+
+down [ down  Player3 | Steps2 ] -> [ right Player1 | Steps2  ] again
+up [ up Player3 | Steps4 ] -> [ right Player4 | Steps4 ] again
+
+left [ left Player4 | Steps4 ] -> [ down Player3 | Steps4 ] again
+right [ right Player4 | Steps3 ] -> [down Player2 | Steps3 ] again
+
+[ > Horse ] -> [> Horse] again
+DOWN [ Horse | No Solid ] -> [ | Horse ] again
+
+[ Action Player | Horse ] -> [  Action Player | Blood  ]
+
+==============
+WINCONDITIONS
+==============
+
+No Horse
+
+=======
+LEVELS
+=======
+#################
+#.....######....#
+#.....######....#
+#.P.............#
+####.........H..#
+#################
+
+#######
+#4...3#
+#.....#
+#....Q#
+#.....#
+#.....#
+#2.H.1#
+#######
+
+
+####################
+#4..3..3###4......3#
+#.......3#4........#
+#...H....#.....1...#
+#...P.........1#...#
+#2.1#2.H1##..1##.H.#
+####################
+
+
+###########################################
+#4........................3#
+#..........................#
+#.................####.....#
+#2P..............H####2....#
+#########################..#
+######4.....................#
+######.......................#
+######........................#
+######.........................#
+######.........................#
+######.....##..................#
+######2.H..##2.............2..1#
+###################........#####
+###################........4..3#
+###################............#
+#4.............................#
+#.................#............#
+#2......H........##H......H..1##
+##########################################
+
+
+title Lunar Lockout
+homepage http://bit.ly/WMmQrq
+
+========
+OBJECTS
+========
+
+Background
+Black
+
+Square
+LightGray Gray
+11111
+10001
+10001
+10001
+11111
+
+Space
+Black
+
+Target
+Red
+.....
+.000.
+.0.0.
+.000.
+.....
+
+Soldier
+DarkBlue LightGray Gray
+11111
+10001
+10201
+10001
+11111
+
+Captain
+Green LightGray Gray
+11111
+10001
+10201
+10001
+11111
+
+Player
+Orange
+.....
+.....
+..0..
+.....
+.....
+
+
+=======
+LEGEND
+=======
+
+Pawn = Soldier or Captain
+Block = Pawn
+
+@ = Space
+_ = Square
+P = Square and Player
+* = Square and Target
+O = Soldier
+$ = Soldier and Target
+C = Captain
+
+=======
+SOUNDS
+=======
+
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Space, Square
+Target
+Pawn, Captain
+Player
+
+======
+RULES
+======
+
+[ > Player | Space ] -> [ Player | Space ]
+[ > Player Pawn ] -> [ Player > Pawn ]
+[ > Pawn | Block ] -> [ Pawn | Block ]
+[ > Pawn | Square ] -> [ Square | > Pawn ]
+[ > Pawn | Space ] -> [ Square | Space ]
+
+==============
+WINCONDITIONS
+==============
+
+some Captain on Target
+
+=======
+LEVELS
+=======
+
+message challenge 4
+@@@@@@@
+@O___O@
+@___O_@
+@_P*__@
+@__O__@
+@_C___@
+@@@@@@@
+
+message challenge 16
+@@@@@@@
+@O_C__@
+@_____@
+@_O*_O@
+@__P__@
+@_O___@
+@@@@@@@
+
+message challenge 21
+@@@@@@@
+@__C__@
+@__O__@
+@_P$_O@
+@O____@
+@___O_@
+@@@@@@@
+
+message challenge 37
+@@@@@@@
+@O__OO@
+@_____@
+@_P*__@
+@O__C_@
+@_____@
+@@@@@@@
+
+
+
+title Heroes of Sokoban
+author Jonah Ostroff
+text_color yellow
+key_repeat_interval 0.25
+
+========
+OBJECTS
+========
+
+Background
+#AAAAAA #DDDDDD
+00000
+00100
+00000
+00010
+00000
+
+Goal
+Brown Yellow
+.000.
+00000
+00010
+00000
+00000
+
+Wall
+Darkgrey #222222
+01000
+11111
+00010
+00010
+11111
+
+Fighter
+#FF4444 Pink DarkBrown
+.000.
+.111.
+00000
+.000.
+.2.2.
+
+Wizard
+#2266FF Pink
+.000.
+.010.
+00000
+.000.
+00000
+
+Thief
+#00BB00 Pink DarkBrown
+.000.
+.010.
+00000
+.0.0.
+.0.0.
+
+SFighter
+#880000 Pink DarkBrown
+.000.
+.111.
+00000
+.000.
+.2.2.
+
+SWizard
+#000088 Pink
+.000.
+.010.
+00000
+.000.
+00000
+
+SThief
+#006600 Pink DarkBrown
+.000.
+.010.
+00000
+.0.0.
+.0.0.
+
+
+Crate
+Orange #552200
+.111.
+10001
+10001
+10001
+.111.
+
+YellowSwitch
+Yellow Black
+.....
+.111.
+.101.
+.111.
+.....
+
+YellowOpen
+Yellow
+0...0
+.....
+.....
+.....
+0...0
+
+YellowDoor
+Yellow #AA7722
+01010
+10001
+00000
+10001
+01010
+
+PurpleSwitch
+#6611CC Black
+.....
+.111.
+.101.
+.111.
+.....
+
+PurpleDoor
+#6611CC #220088
+01010
+10001
+00000
+10001
+01010
+
+PurpleOpen
+#6611CC
+0...0
+.....
+.....
+.....
+0...0
+
+Temp
+Pink
+
+ShadowDoor
+Purple
+
+=======
+LEGEND
+=======
+
+Player = Fighter or Wizard or Thief
+SPlayer = Swizard or Sthief or SFighter
+Hero = Player or Splayer
+ClosedDoor = PurpleDoor or YellowDoor
+OpenDoor = YellowOpen or PurpleOpen
+Switch = PurpleSwitch or YellowSwitch
+Moveable = Crate or SPlayer
+Static = Wall or ClosedDoor
+Weighing = Crate or Player or SPlayer
+. = Background
+# = Wall
+F = Fighter
+W = Wizard
+T = Thief
+1 = SFighter
+2 = SThief
+3 = SWizard
+* = Crate
+G = Goal
+[ = YellowDoor
+] = PurpleDoor
+{ = YellowSwitch
+} = PurpleSwitch
+
+=======
+SOUNDS
+=======
+
+Moveable move 82056307
+Sfx0 21221308
+Endlevel 36315908
+Sfx1 66399906
+Sfx2 92172900
+Sfx3 15129100
+EndGame 86793500
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Temp
+Goal, Switch, OpenDoor, ShadowDoor
+ClosedDoor, Hero, Crate, Wall
+
+======
+RULES
+======
+
+[ >  Fighter | Moveable ] -> [  >  Fighter | > Moveable  ]
+[ > Moveable | Moveable ] [ Fighter] -> [ > Moveable | > Moveable ] [ Fighter]
+
+[ < Thief | Moveable ] -> [ < Thief | < Moveable ]
+
+[ > Wizard ] -> [ Wizard > Temp]
+[ > Temp | no Moveable no Static] -> [ | > Temp]
+[ > Temp | Static] [Wizard] -> [ | Static ] [> Wizard]
+[ > Temp | Moveable ] [Wizard] -> [ | Wizard Sfx0] [Moveable]
+
+Late [Temp] -> []
+
+[ Action Fighter] [SThief] -> [SFighter] [Thief Sfx1]
+[ Action Thief] [SWizard] -> [SThief] [Wizard Sfx1]
+[ Action Wizard] [SFighter] -> [SWizard] [Fighter Sfx1]
+[ Action Fighter] [no SThief] [SWizard] -> [SFighter] [no SThief] [Wizard Sfx1]
+[ Action Thief] [no Swizard] [SFighter] -> [SThief] [no SWizard] [Fighter Sfx1]
+[ Action Wizard] [no SFighter] [SThief] -> [SWizard] [no SFighter] [Thief Sfx1]
+
+late [Weighing  YellowSwitch] [YellowDoor] -> [Weighing  YellowSwitch] [ShadowDoor]
+late [YellowSwitch no Weighing] [YellowOpen] -> [YellowSwitch] [YellowDoor sfx2]
+late [YellowSwitch no Weighing] [ShadowDoor] -> [YellowSwitch] [YellowDoor]
+late [ShadowDoor] -> [YellowOpen sfx3]
+
+late [Weighing PurpleSwitch] [PurpleDoor] -> [Weighing PurpleSwitch] [ShadowDoor]
+late [PurpleSwitch no Weighing] [PurpleOpen] -> [PurpleSwitch] [PurpleDoor sfx2]
+late [PurpleSwitch no Weighing] [ShadowDoor] -> [PurpleSwitch] [PurpleDoor]
+late [ShadowDoor] -> [PurpleOpen sfx3]
+
+==============
+WINCONDITIONS
+==============
+
+All Hero on Goal
+All Goal on Hero
+
+=======
+LEVELS
+=======
+
+Message Walk to the exit.
+
+#############
+#...........#
+#.F.......G.#
+#...........#
+#############
+
+Message Red warrior pushes blocks.
+
+#############
+#...#.*.#.*.#
+#.F...*.**G.#
+#...#.*.#.*.#
+#############
+
+Message Hold down switches to open doors.
+
+#############
+#...#...#...#
+#.F.*.{.#.G.#
+#...#...[...#
+#############
+
+Message Press multiple switches at once.
+
+#########
+#.....#G#
+#.#*..#[#
+#.**.F..#
+#.......#
+#.{.{.{.#
+#.......#
+#########
+
+Message Green thief pulls blocks.
+
+#############
+#...#..*#...#
+#.T.*.{.#.G.#
+#...#..*[...#
+#############
+
+#########
+#.....#G#
+#.#*..#[#
+#.**.T..#
+#.......#
+#.{.{.{.#
+#.......#
+#########
+
+#########
+#...##G.#
+#.#..##[#
+#....{..#
+#.#.#.#.#
+#..*.T..#
+#########
+
+Message Blue wizard teleports to blocks.
+
+#############
+#...*.{.#...#
+#.W.*.{.[.G.#
+#...#...#...#
+#############
+
+#########
+#.....#G#
+#.#*..#[#
+#.**.W..#
+#.......#
+#.{.{.{.#
+#.......#
+#########
+
+#######
+#W#G#*#
+#.#.#.#
+#*...*#
+#.###.#
+#*.*..#
+#######
+
+Message Press action to switch heroes.
+
+#############
+#...#...#...#
+#.F...}.[.G.#
+#...#...#...#
+#############
+#...#...#...#
+#.3.].{...G.#
+#...#...#...#
+#############
+
+Message Heroes can move each other.
+
+###########
+#*#..##G.G#
+#.#.2.#...#
+#.....#..##
+#W###.*..*#
+###########
+
+###########
+#F.*.#.*#{#
+#..#...*..#
+####...*.*#
+#..#.##[###
+#2...#*.GG#
+###########
+
+#############
+#.###########
+#*....{....3#
+#.####.######
+#.#..#.###..#
+#.#G....[].G#
+#.#..#.###..#
+#.####.######
+#.....}....T#
+#############
+
+#############
+##G.#F#*#...#
+#*..[.....{.#
+##G.#3###...#
+#############
+
+###########
+#W..{...[*#
+#######.#[#
+#G#G#G#.#2#
+#.......#1#
+###########
+
+#########
+#*......#
+#######.#
+#F23.]#.#
+#..##G#.#
+#..#GG#.#
+##.####.#
+#.......#
+##}####.#
+#########
+
+#############
+#...#G.G#...#
+#.*.#F23#.G.#
+#...#...#...#
+##[###.###[##
+#...#...#...#
+#.{...{...{.#
+#...#...#...#
+#############
+
+#######
+#G***F#
+#*****#
+#G***2#
+#*****#
+#G***3#
+#######
+
+########
+#3..G[*#
+########
+#F**G{{#
+########
+#2.[G..#
+########
+
+#############
+#...#...#...#
+#F#.*.#.*.#3#
+#...#...#...#
+######.######
+#...#...#####
+#2#.*.#...}*#
+#...#...#####
+######.######
+#G..#...#...#
+#G..].#...#.#
+#G..#...#...#
+#############
+
+#############
+#F.........G#
+#############
+#T.........G#
+#############
+#W.........G#
+#############
+Message Thanks for playing!
+
+
+USER PROMPT:
+The following PuzzleScript game code:
+```plaintext
+title Block Pusher
+author PuzzleScriptCreator
+
+========
+OBJECTS
+========
+
+Background
+white
+
+Wall
+gray
+22222
+22222
+22222
+22222
+22222
+
+Player
+red
+..0..
+.000.
+..0..
+.....
+.....
+
+Block
+blue darkblue
+.....
+.000.
+.000.
+.000.
+.....
+
+Target
+green
+.....
+..0..
+..0..
+.000.
+.....
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Player
+B = Block
+T = Target
+
+=======
+SOUNDS
+=======
+
+=========== 
+COLLISIONLAYERS 
+===========
+
+Background
+Target
+Wall
+Block
+Player
+
+======
+RULES
+======
+
+[> Player | Block | no Wall] -> [> Player | > Block]
+[> Player | no Block | no Wall] -> [> Player]
+
+==============
+WINCONDITIONS
+==============
+
+All Block on Target
+
+=======
+LEVELS
+=======
+
+; Level 1
+########
+#......#
+#..BTP.#
+#......#
+########
+
+; Level 2
+########
+#......#
+#..BTP.#
+#..B...#
+#..T...#
+########
+
+; Level 3
+##########
+#........#
+#..B.BTP.#
+#......T.#
+##########
+
+
+```
+produced the following console output:
+=================================
+line 13 : Trying to access color number 2 from the color palette of sprite WALL, but there are only 1 defined in it.
+line 14 : Trying to access color number 2 from the color palette of sprite WALL, but there are only 1 defined in it.
+line 15 : Trying to access color number 2 from the color palette of sprite WALL, but there are only 1 defined in it.
+line 16 : Trying to access color number 2 from the color palette of sprite WALL, but there are only 1 defined in it.
+line 17 : Trying to access color number 2 from the color palette of sprite WALL, but there are only 1 defined in it.
+line 84 : Key ";" not found. Do you need to add it to the legend, or define a new object?
+too many errors, aborting compilation
+Errors detected during compilation; the game may not work correctly.
+Return a repaired version of the code that addresses these errors. First, reason about your task and determine the best plan of action. Then, write your code. Return your code in full, inside a ```plaintext code block.

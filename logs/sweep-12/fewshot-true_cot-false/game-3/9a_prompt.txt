@@ -1,0 +1,107 @@
+SYSTEM PROMPT:
+You are a game designer, familiar with the PuzzleScript game description language. Here are some example games, for inspiration (do not reproduce these games exactly):
+
+USER PROMPT:
+The following PuzzleScript game code:
+```plaintext
+title Light And Dark
+author YourName
+
+========
+OBJECTS
+========
+
+Background
+white
+
+Wall
+darkgray black
+00010
+11111
+01000
+11111
+00010
+
+Player
+black yellow
+.000.
+.111.
+.101.
+.111.
+.....
+
+LightSource
+yellow
+.....
+.....
+..0..
+.....
+.....
+
+Target
+lightblue
+.....
+.000.
+.0.0.
+.000.
+.....
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Player
+L = LightSource
+@ = Target
+
+=======
+SOUNDS
+=======
+
+player MOVE 81000012
+target REACHED 51001234
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Player, Wall, LightSource, Target
+
+======
+RULES
+======
+
+[ > Player | LightSource ] -> [ > Player | > LightSource ]
+
+(Activate targets when light is over them)
+[ LightSource | Target ] -> [ LightSource | LightSource ] SFX1
+
+(remove light from empty spaces)
+[ LightSource | no LightSource no Player no Target ] -> [ Background | no LightSource no Player no Target ]
+
+==============
+WINCONDITIONS
+==============
+
+no Target
+
+=======
+LEVELS
+=======
+
+#########
+#..@...@#
+#.L#.#..#
+#..P..@.#
+#....@..#
+#########
+
+```
+produced the following console output:
+=================================
+line 58 : Was expecting a soundverb here (MOVE, DESTROY, CANTMOVE, or the like), but found something else.
+Errors detected during compilation; the game may not work correctly.
+Return a repaired version of the code that addresses these errors. Return your code in full, inside a ```plaintext code block.

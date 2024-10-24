@@ -1,0 +1,123 @@
+The unsolvable level is likely due to the arrangement of walls and objects that makes it impossible for the player to accomplish the win conditions. Let's adjust the level 2 design to ensure it is solvable. Ensuring that the player can push blocks onto targets, here's the revised game code with a fix for level 2:
+
+```plaintext
+Title: Block Pusher
+Author: PuzzleScript Game Designer
+
+===========
+OBJECTS
+===========
+
+Background
+transparent
+
+Player
+blue
+.....
+..0..
+.000.
+..0..
+.....
+
+Block
+red
+.....
+.....
+.000.
+.....
+.....
+
+Target
+green
+.....
+..0..
+.....
+.....
+
+BlockOnTarget
+yellow
+.....
+..0..
+.000.
+.....
+
+Wall
+grey
+#####
+#####
+#####
+#####
+#####
+
+===========
+LEGEND
+===========
+
+. = Background
+P = Player
+B = Block
+T = Target
+U = BlockOnTarget
+# = Wall
+
+===========
+SOUNDS
+===========
+
+SFX2
+
+===========
+COLLISIONLAYERS
+===========
+
+Background
+Target
+Player, Block, BlockOnTarget
+Wall
+
+===========
+RULES
+===========
+
+[> Player | Block] -> [> Player | > Block] SFX2
+
+[Block | Target] -> [BlockOnTarget | Target]
+
+[BlockOnTarget | Target] -> [BlockOnTarget | Target]
+
+===========
+WINCONDITIONS
+===========
+
+All BlockOnTarget on Target
+
+===========
+LEVELS
+===========
+
+#######
+#.....#
+#..T..#
+#..B..#
+#..P..#
+#######
+
+#######
+#.....#
+#..T..#
+#..B..#
+#..P..#
+#.....#
+#..T..#
+#######
+
+#######
+#.....#
+#..T..#
+#..B..#
+#..P..#
+#..T..#
+#######
+```
+
+In level 2, I've adjusted the level to be more consistent, ensuring that players have a clear path to push the blocks onto the targets. It now follows a similar pattern to the previous levels, making it solvable.

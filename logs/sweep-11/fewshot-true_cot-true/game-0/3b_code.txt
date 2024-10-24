@@ -1,0 +1,115 @@
+The error messages indicate that there are issues with the color definitions for the `Wall` and `Crate` objects. The errors stem from the fact that the specified indices for the colors in the drawing pattern exceed the number of colors actually defined for the object.
+
+### Understanding the Errors:
+
+1. **Wall Object**:
+   - The error states: "Trying to access color number 1 from the color palette of sprite WALL, but there are only 1 defined in it."
+   - The sprite drawing uses `1`, but only one color is defined (`DarkGray`). In PuzzleScript, we count colors starting from zero, so color `1` is indeed out of bounds since there's only a `0` color defined.
+
+2. **Crate Object**:
+   - The error states: "Trying to access color number 5 from the color palette of sprite CRATE, but there are only 1 defined in it."
+   - The sprite drawing uses `5`, but only one color is defined (`Orange`). Here as well, the color `5` is out of bounds, since there's only a `0` color defined.
+
+### Plan of Action:
+
+- For the `Wall` object, ensure that we only use the color `0` since only one color (`DarkGray`) is defined.
+- For the `Crate` object, remove references to `5` in the sprite drawing and replace them with `0`.
+
+### Revised Code:
+
+```plaintext
+title Crate Pusher
+author YourName
+
+========
+OBJECTS
+========
+
+Background
+Blue
+00000
+00000
+00000
+00000
+00000
+
+Wall
+DarkGray
+00000
+00000
+00000
+00000
+00000
+
+Player
+Black Orange
+.000.
+.000.
+00000
+.000.
+.0.0.
+
+Crate
+Orange
+00000
+00000
+00000
+00000
+00000
+
+Target
+Green
+.....
+..0..
+.000.
+..0..
+.....
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Player
+C = Crate
+O = Target
+
+============
+COLLISIONLAYERS
+============
+
+Background
+Player, Wall, Crate
+Target
+
+======
+RULES
+======
+
+[ > Player | Crate ] -> [ > Player | > Crate ]
+
+=====
+WINCONDITIONS
+=====
+
+All Crate on Target
+
+=======
+LEVELS
+=======
+
+#########
+#.......#
+#.P.C...#
+#.......#
+#..O....#
+#########
+```
+
+### Explanation of Changes:
+
+- **Wall:** Modified lines to `00000` ensuring we only use color index 0.
+- **Crate:** Modified lines to use `0` instead of the invalid `5`, ensuring compliance with defined color indices.
+
+These changes correct the color indexing errors and should fix the aborting compilation issue, allowing the game to run properly.

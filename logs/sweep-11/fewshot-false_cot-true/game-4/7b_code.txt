@@ -1,0 +1,131 @@
+The error messages indicate that there are inconsistencies or unsupported characters in the sprite matrices for the objects defined in the game. In PuzzleScript, the sprite matrix should only contain spaces or characters defined in the color table preceding it (e.g., `r` for red in the Player and `g` for grey or green in the Wall and Goal).
+
+Upon reviewing the original code, it seems that sprite matrices for some objects may contain characters that aren't matched with the respective color definition. Also, the `CrateOnGoal` object may need a color defined.
+
+The correct approach is to ensure the sprite matrix only uses the characters corresponding to the colors specified, and also, to rectify any potential undefined characters in the matrices.
+
+Let's correct this:
+
+1. Define the color character mappings properly.
+2. Ensure each sprite matrix uses only defined characters.
+3. Add a color definition for `CrateOnGoal` if missing.
+
+Here is the corrected version of the code:
+
+```plaintext
+# Main game code for a simple Sokoban-style game
+
+title Sokoban Simplified
+author YourName
+
+======
+
+OBJECTS
+  Player
+    red
+    .....
+    .111.
+    .1.1.
+    .111.
+    .....
+
+  Wall
+    grey
+    ..2..
+    ..2..
+    ..2..
+    ..2..
+    ..2..
+    
+  Crate
+    yellow
+    .....
+    .333.
+    .3.3.
+    .333.
+    .....
+
+  Floor
+    black
+    .....
+    .....
+    .....
+    .....
+    .....
+    
+  Goal
+    green
+    ..4..
+    ..4..
+    ..4..
+    ..4..
+    ..4..
+    
+  CrateOnGoal
+    orange
+    .....
+    .555.
+    .5.5.
+    .555.
+    .....
+
+======
+
+LEGEND
+  . = Floor
+  P = Player
+  # = Wall
+  R = Crate
+  G = Goal
+  Y = CrateOnGoal
+
+======
+
+SOUNDS
+
+======
+
+COLLISIONLAYERS
+  Floor
+  Wall
+  Player
+  Crate, CrateOnGoal
+  Goal
+
+======
+
+RULES
+[> Player | Crate ] -> [> Player | > Crate ]
+
+[ Player | CrateOnGoal ] -> [ Player | CrateOnGoal ]
+
+P [ ] -> [ P ]
+R [ ] -> [ R ]
+Y [ ] -> [ Y ]
+
+[Crate | Goal] -> [CrateOnGoal | Floor]
+[CrateOnGoal | Floor] -> [Crate | Goal]
+
+======
+
+WINCONDITIONS
+All CrateOnGoal
+
+======
+
+LEVELS
+#####
+#P. #
+# R #
+# G #
+#####
+
+#######
+#     #
+# ### #
+#PR G#
+#     #
+#######
+```
+
+The adjustments include defining the correct color code character scheme (`1` for red, `2` for grey, `3` for yellow, `4` for green, and `5` for orange) that matches the requirements for PuzzleScript. This should resolve the compilation errors.

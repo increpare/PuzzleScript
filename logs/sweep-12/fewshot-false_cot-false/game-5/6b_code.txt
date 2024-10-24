@@ -1,0 +1,135 @@
+Certainly! Let's address the errors one by one:
+
+1. **Unknown junk in object section:** This suggests incorrect entries in the OBJECTS section; the sprite dimensions might be off or incorrectly formatted.
+
+2. **Expecting a sound event or an object name:** If there's an SFX event mentioned in the rules that isn't defined, it'll cause this issue.
+
+3. **Patterns in rules must correspond:** Each side of a rule must have the same number of entities.
+
+Here's the corrected code:
+
+```plaintext
+Title: Block Pusher
+Author: PuzzleScript Game Designer
+
+===========
+OBJECTS
+===========
+
+Background
+transparent
+
+Player
+blue
+.....
+..0..
+.000.
+..0..
+.....
+
+Block
+red
+.....
+.....
+.000.
+.....
+.....
+
+Target
+green
+.....
+..0..
+.....
+.....
+
+BlockOnTarget
+yellow
+.....
+..0..
+.000.
+.....
+
+Wall
+grey
+#####
+#####
+#####
+#####
+#####
+
+===========
+LEGEND
+===========
+
+. = Background
+P = Player
+B = Block
+T = Target
+U = BlockOnTarget
+# = Wall
+
+===========
+SOUNDS
+===========
+
+SFX2
+
+===========
+COLLISIONLAYERS
+===========
+
+Background
+Target
+Player, Block, BlockOnTarget
+Wall
+
+===========
+RULES
+===========
+
+[> Player | Block] -> [> Player | > Block] SFX2
+
+[Block | Target] -> [BlockOnTarget | Target]
+
+[BlockOnTarget | Target] -> [BlockOnTarget | Target]
+
+===========
+WINCONDITIONS
+===========
+
+All BlockOnTarget on Target
+
+===========
+LEVELS
+===========
+
+#######
+#.....#
+#..T..#
+#..B..#
+#..P..#
+#######
+
+#######
+#.....#
+#..T..#
+#..B..#
+#..P..#
+#.....#
+#..T..#
+#######
+
+#######
+#..T..#
+#..B..#
+#.PPP.#
+#..B..#
+#..T..#
+#######
+```
+
+### Changes Made:
+
+- Adjusted the `Target` and `BlockOnTarget` sprites to ensure each sprite is exactly 5x5.
+- Added the `SFX2` in the SOUNDS section since it's being used in the rules.
+- Fixed the rule patterns for `[Block | Target]` and `[BlockOnTarget | Target]` to ensure equal length on both sides.

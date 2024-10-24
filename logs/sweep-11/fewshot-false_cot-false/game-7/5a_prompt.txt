@@ -4,57 +4,112 @@ You are a game designer, familiar with the PuzzleScript game description languag
 USER PROMPT:
 The following PuzzleScript game code:
 ```plaintext
-# Legend
-a = Player
-b = Goal
-c = Wall
-d = Floor
-z = PlayerOnGoal
+Title: Sokoban Puzzle
+Author: PuzzleScript Dev
+Homepage: https://www.puzzlescript.net
 
-=== COLLISIONLAYERS ===
-Background,
-Wall,
-Player, Goal
+===========
+OBJECTS
+===========
 
-=== RULES ===
-# Player movement doesn't need explicit rules unless combined with other actions
-[right]  a -> a
-[left]   a -> a
-[up]     a -> a
-[down]   a -> a
+Background
+black
 
-# Goals checking
-[b] [a] -> [z]
-[z] -> [z]
+Wall
+grey
 
-=== WINCONDITIONS ===
-All z
+Player
+yellow
 
-=== LEVELS ===
-# Level 1
-...b...
-..ccc..
-..ca...
-..ccc..
-...d...
+Box
+blue
 
-# Level 2
-.....b.
-..c...
-..c.a.
-..c...
-...b...
+Target
+green
+
+BoxOnTarget
+lightgreen
+
+PlayerOnTarget
+yellow
+
+===========
+LEGEND
+===========
+
+. = Background
+# = Wall
+P = Player
+B = Box
+T = Target
+O = BoxOnTarget
+G = PlayerOnTarget
+
+===========
+SOUNDS
+===========
+
+# Sound section, currently no sounds defined.
+
+===========
+COLLISIONLAYERS
+===========
+
+Background
+Wall
+Target
+Player, PlayerOnTarget
+Box, BoxOnTarget
+
+===========
+RULES
+===========
+
+[ Player | Box ] -> [ Player | Box ]
+[ PlayerOnTarget | Box ] -> [ Player | BoxOnTarget ]
+[ Player | Target ] -> [ PlayerOnTarget | Target ]
+[ PlayerOnTarget | Background ] -> [ Player | Target ]
+
+[ Box | Target ] -> [ BoxOnTarget | Target ]
+[ BoxOnTarget | Background ] -> [ Box | Target ]
+
+===========
+WINCONDITIONS
+===========
+
+[ no Box ][ no Target ] -> WIN
+
+===========
+LEVELS
+===========
+
+#######
+#.....#
+#..T..#
+#..B..#
+#..P..#
+#######
+
+#######
+#..#..#
+#..B..#
+#.TP..#
+#..#..#
+#####.#
+
+########
+#......#
+#..B#..#
+#..T#..#
+#..P...#
+########
 
 
 ```
 produced the following console output:
 =================================
-line 2 : Unrecognised stuff in the prelude.
-line 3 : Unrecognised stuff in the prelude.
-line 4 : Unrecognised stuff in the prelude.
-line 5 : Unrecognised stuff in the prelude.
-line 6 : Unrecognised stuff in the prelude.
-line 8 : Only comments should go after a bunch of equals signs ('===') on a line.
-too many errors, aborting compilation
+line 46 : Was expecting a sound event (like SFX3, or ENDLEVEL) or an object name, but didn't find either.
+line 74 : incorrect format of win condition.
+line 74 : Unwelcome term "no" found in win condition. I don't know what I'm supposed to do with this.
 Errors detected during compilation; the game may not work correctly.
 Return a repaired version of the code that addresses these errors. Return your code in full, inside a ```plaintext code block.

@@ -1,0 +1,99 @@
+SYSTEM PROMPT:
+You are a game designer, familiar with the PuzzleScript game description language. 
+
+USER PROMPT:
+The following PuzzleScript game code:
+```plaintext
+title Sokoban Clone
+author Game Designer
+homepage www.example.com
+
+=====
+
+OBJECTS
+Background
+black
+
+Wall
+grey
+
+Player
+blue
+
+Crate
+brown
+
+Goal
+yellow
+
+CrateOnGoal
+green
+
+PusherOnGoal
+lightblue
+
+=====
+
+LEGEND
+. = Background
+# = Wall
+P = Player
+$ = Crate
+G = Goal
+* = CrateOnGoal
++ = PusherOnGoal
+
+=====
+
+SOUNDS
+
+=====
+
+COLLISIONLAYERS
+Background
+Wall
+Player, PusherOnGoal
+Crate, CrateOnGoal
+Goal
+
+=====
+
+RULES
+[> Player | Crate] -> [> Player | > Crate]
+[Player | Goal] -> [PusherOnGoal | Goal]
+[Crate | Goal] -> [CrateOnGoal | Goal]
+[PusherOnGoal Crate] -> [Player CrateOnGoal]
+[PusherOnGoal | CrateOnGoal] -> [Player | Crate]
+[PusherOnGoal | Goal] -> [PusherOnGoal | Goal]
+[Pusher Goal] -> [PusherOnGoal Goal]
+
+=====
+
+WINCONDITIONS
+All CrateOnGoal
+
+=====
+
+LEVELS
+########
+#......#
+#..$.G.#
+#..P...#
+#......#
+########
+
+########
+#......#
+#..$...#
+#.P.G..#
+#.#####.
+#.G....#
+########
+
+```
+produced the following console output:
+=================================
+line 62 : Name "pusher", referred to in a rule, does not exist.
+line 62 : Error, malformed cell rule - was looking for cell contents, but found "pusher".  What am I supposed to do with this, eh, please tell me that.
+Errors detected during compilation; the game may not work correctly.
+Return a repaired version of the code that addresses these errors. First, reason about your task and determine the best plan of action. Then, write your code. Return your code in full, inside a ```plaintext code block.

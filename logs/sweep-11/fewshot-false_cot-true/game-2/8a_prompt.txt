@@ -1,0 +1,98 @@
+SYSTEM PROMPT:
+You are a game designer, familiar with the PuzzleScript game description language. 
+
+USER PROMPT:
+The following PuzzleScript game code:
+```plaintext
+title Sokoban
+
+========
+OBJECTS
+========
+
+Background
+color Grey
+. 
+
+Player
+color Blue
+P
+
+Wall
+color Grey
+W
+
+Block
+color Green
+B
+
+Goal
+color Red
+G
+
+========
+LEGEND
+========
+
+. = Background
+P = Player
+W = Wall
+B = Block
+G = Goal
+
+========
+RULES
+========
+
+[Player | Block] -> [ > Player | > Block ]
+[Player | ] -> [ > Player |  ]
+
+========
+WINCONDITIONS
+========
+
+All Block on Goal
+
+========
+LEVELS
+========
+
+// Level 1
+WWWWWW
+WP   W
+W    W
+W B  W
+W G  W
+WWWWWW
+
+// Level 2
+WWWWWW
+WP   W
+W B  W
+W    W
+W GG W
+W    W
+WWWWWW
+
+// Level 3
+WWWWWWW
+W     W
+W  P  W
+W  B  W
+W  B  W
+W  GG W
+W     W
+WWWWWWW
+
+```
+produced the following console output:
+=================================
+line 8 : Was looking for color for object BACKGROUND, got "color " instead.
+line 12 : Was looking for color for object PLAYER, got "color " instead.
+line 16 : Was looking for color for object WALL, got "color " instead.
+line 20 : Was looking for color for object BLOCK, got "color " instead.
+line 24 : Was looking for color for object GOAL, got "color " instead.
+line 32 : Name "P" already in use (on line line 13).
+too many errors, aborting compilation
+Errors detected during compilation; the game may not work correctly.
+Return a repaired version of the code that addresses these errors. First, reason about your task and determine the best plan of action. Then, write your code. Return your code in full, inside a ```plaintext code block.

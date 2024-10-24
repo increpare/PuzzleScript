@@ -1,0 +1,131 @@
+To resolve the compilation errors in your PuzzleScript code, we need to ensure that the colors specified for each object match the recognized color names in PuzzleScript or are defined using proper hex color codes. In your current code, the color "Gold" for the Treasure object seems to be causing errors since "Gold" isn't a recognized basic color in PuzzleScript. Instead, we'll use a standard color name or a hex code.
+
+Here's a repaired version of your code with "Yellow" used for the Treasure object color:
+
+```plaintext
+Title: Treasure Hunter
+
+Author: Your Name
+
+Homepage: http://www.example.com
+
+========
+OBJECTS
+========
+
+Background
+lightgray
+00000
+00000
+00000
+00000
+00000
+
+Player
+Red
+.....
+..0..
+.000.
+..0..
+.....
+
+Wall
+DarkGray
+.....
+.....
+.....
+.....
+.....
+
+Treasure
+yellow
+.000.
+.010.
+00000
+.010.
+.000.
+
+Goal
+Green
+.....
+.000.
+.0.0.
+.000.
+.....
+
+========
+LEGEND
+========
+
+. = Background
+P = Player
+# = Wall
+T = Treasure
+G = Goal
+
+========
+SOUNDS
+========
+
+SOUND_FOUND
+trebleUp
+P Moved T > appear G:
+    150
+
+========
+RULES
+========
+
+[> Player | Treasure] -> [Player | Goal]
+
+[Player|Goal]->[] // clear goal to advance
+
+========
+COLLISIONLAYERS
+========
+
+Background
+Player
+Wall
+Treasure
+Goal
+
+========
+WINCONDITIONS
+========
+
+No Treasure
+
+========
+LEVELS
+========
+
+/0
+#####
+#...#
+#P.T#
+#...#
+##### 
+
+/1
+#######
+#.....#
+#.#.#.#
+#.#.T.#
+#P#.#G#
+#.....#
+#######
+
+/2
+#########
+#..T..#.#
+#.#.##..#
+#...##..#
+#.P..G###
+#...T...#
+#########
+
+========
+```
+
+I've replaced "Gold" with "yellow" for the Treasure object, which is a recognized color in PuzzleScript, resolving the syntax errors related to the color specifications.

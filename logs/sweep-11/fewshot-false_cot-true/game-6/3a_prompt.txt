@@ -15,6 +15,7 @@ homepage https://example.com
 # === Objects ===
 OBJECTS
 Background
+lightgray
 .....
 .....
 .....
@@ -22,46 +23,52 @@ Background
 .....
 
 Wall
-.....
-XXXXX
-XXXXX
-XXXXX
-.....
+gray
+wwwww
+wwwww
+wwwww
+wwwww
+wwwww
 
 Player
+yellow
 .....
-..O..
-.OOO.
-..O..
-.....
+..p..
+.ppp.
+.p.p.
+.ppp.
 
 Block
+blue
 .....
-..X..
-.X.X.
-..X..
+.bbbb
+.b.b.
+.bbbb
 .....
 
 Goal
+red
 .....
 .....
-..X..
+..g..
 .....
 .....
 
 BlockOnGoal
+purple
 .....
-..X..
-.XOX.
-..X..
+.bbbb
+.b.b.
+.bbbb
 .....
 
 PlayerOnGoal
+orange
 .....
-..O..
-.OXO.
-..O..
-.....
+..p..
+.ppp.
+.p.p.
+.ppp.
 
 # === End Objects ===
 
@@ -79,7 +86,9 @@ O = BlockOnGoal
 
 # === Sounds ===
 SOUNDS
-# This section is empty but needed for correct ordering
+move 100
+push 200
+winLevel 800
 
 # === End Sounds ===
 
@@ -95,8 +104,9 @@ Goal
 
 # === Rules ===
 RULES
-[ Player | Block ] -> [ Player | ] [ Player | Block ]
-[ PlayerOnGoal | Block ] -> [ Player | ] [ @ | Block ]
+[ Player | Block ] -> [ Player | ] [ Player | Block ] move push
+
+[ PlayerOnGoal | Block ] -> [ Player | ] [ @ | Block ] move push
 
 [ Player | Goal ] -> [ PlayerOnGoal | ]
 [ PlayerOnGoal | ] -> [ Player | ]
@@ -112,9 +122,10 @@ All BlockOnGoal
 
 # === Levels ===
 LEVELS
+
 #######
 #     #
-#  G  #
+#  .  #
 #     #
 #  B  #
 #  P  #
@@ -123,23 +134,23 @@ LEVELS
 #######
 #     #
 #     #
-#  G  #
+#  .  #
 #  B  #
 #  P  #
 #######
 
 #######
 #     #
-#  G  #
+#  .  #
 #     #
 # B B #
 #  P  #
 #######
 
 #######
-#   G #
+#   . #
 #     #
-# B G #
+# B . #
 #   P #
 #   B #
 #######
@@ -149,12 +160,12 @@ LEVELS
 ```
 produced the following console output:
 =================================
-line 12 : Was looking for color for object BACKGROUND, got "....." instead.
-line 19 : Was looking for color for object WALL, got "....." instead.
-line 21 : Was looking for color for object XXXXX, got "xxxxx" instead.
-line 22 : Object "XXXXX" defined multiple times.
-line 26 : Was looking for color for object PLAYER, got "....." instead.
-line 27 : Unknown junk in spritematrix for object PLAYER.
+line 22 : Was looking for color for object WWWWW, got "wwwww" instead.
+line 23 : Object "WWWWW" defined multiple times.
+line 24 : Object "WWWWW" defined multiple times.
+line 25 : Object "WWWWW" defined multiple times.
+line 30 : Unknown junk in spritematrix for object PLAYER.
+line 31 : Unknown junk in spritematrix for object PLAYER.
 too many errors, aborting compilation
 Errors detected during compilation; the game may not work correctly.
 Return a repaired version of the code that addresses these errors. First, reason about your task and determine the best plan of action. Then, write your code. Return your code in full, inside a ```plaintext code block.

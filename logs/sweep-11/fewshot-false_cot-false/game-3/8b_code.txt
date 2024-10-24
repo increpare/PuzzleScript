@@ -1,0 +1,124 @@
+Certainly! It looks like the code provided has a few structural errors; let's rectify them. Here's the corrected version:
+
+```plaintext
+Title: Block Pusher
+Author: Your Name
+Homepage: http://www.yoursite.com
+
+===========
+OBJECTS
+===========
+
+Background
+white
+.....
+.....
+.....
+.....
+.....
+
+Player
+red
+.....
+..#..
+..#..
+..#..
+.....
+
+Block
+blue
+.....
+.....
+..#..
+..#..
+.....
+
+Target
+yellow
+.....
+..#..
+..#..
+..#..
+.....
+
+TargetBlock
+green
+.....
+.....
+..#..
+..#..
+.....
+
+============
+LEGEND
+============
+
+. = Background
+P = Player
+B = Block
+T = Target
+G = TargetBlock
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Player, Block
+Target, TargetBlock
+
+===============
+RULES
+===============
+
+# Player movement
+[ > Player | Background ] -> [ > Player | Background ]
+
+# Pushing blocks
+[ > Player | Block | Background ] -> [ > Player | > Block | Background ]
+
+# Block reaching target
+[ > Player | Block | Target ] -> [ > Player | > TargetBlock | Background ]
+
+# Player walking over targets
+[ Player | Target ] -> [ Background | Player ]
+
+# Winning condition - All Targets must have TargetBlocks
+WinCondition
+All TargetBlock on Target
+
+==============
+LEVELS
+==============
+
+# Level 1
+########
+#....T.#
+#..B...#
+#..P...#
+########
+
+# Level 2
+########
+#..T..#
+#..B..#
+#..P..#
+########
+
+# Level 3
+#########
+#..T...#
+#..B...#
+#..P...#
+#......#
+#########
+```
+
+### Corrections Made:
+1. **Sprite matrices**: Adjusted the `Player`, `Block`, `Target`, and `TargetBlock` sprite matrices to have consistent designations with the object functionality expected (ensuring each object has a distinguishable setup).
+
+2. **Sound section**: Completely removed the `SOUNDS` section since it was empty, to align with the classic PuzzleScript template instructions when not using sound.
+
+3. **Rules syntax**: Fixed the `WinCondition` clause from `All Target on TargetBlock` to `All TargetBlock on Target`, ensuring the game logic correctly identifies the win state when all targets are covered by target blocks.
+
+Please ensure these corrections are consistent with your intentions for game behavior and adjust if necessary.

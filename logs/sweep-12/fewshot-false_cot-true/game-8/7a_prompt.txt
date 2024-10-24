@@ -1,0 +1,105 @@
+SYSTEM PROMPT:
+You are a game designer, familiar with the PuzzleScript game description language. 
+
+USER PROMPT:
+The following PuzzleScript game code:
+```plaintext
+========
+title Sokoban Basic
+author Your Name
+homepage www.yourwebsite.com
+========
+
+========
+objects
+========
+Background . #000000
+Player P #00ff00
+Wall W #aaaaaa
+Box B #ff0000
+Target T #0000ff
+BoxOnTarget O #ff00ff
+
+========
+legend
+========
+. = Background
+P = Player
+W = Wall
+B = Box
+T = Target
+O = BoxOnTarget
+# = Wall
+
+========
+sounds
+========
+SfxMove 100
+SfxPush 241
+SfxWin 40
+
+========
+collisionlayers
+========
+Background
+Player, Box, BoxOnTarget
+Wall, Target
+
+========
+rules
+========
+// Player movement
+[> Player | ] -> [> Player | ] SfxMove
+[< Player | ] -> [< Player | ] SfxMove
+[^ Player | ] -> [^ Player | ] SfxMove
+[v Player | ] -> [v Player | ] SfxMove
+
+// Box pushing
+[> Player | Box ] -> [> Player | > Box ] SfxPush
+[< Player | Box ] -> [< Player | < Box ] SfxPush
+[^ Player | Box ] -> [^ Player | ^ Box ] SfxPush
+[v Player | Box ] -> [v Player | v Box ] SfxPush
+
+// Convert Box to BoxOnTarget
+[ Box | Target ] -> [ BoxOnTarget ]
+
+// Revert BoxOnTarget if moved off Target
+[ BoxOnTarget | ] -> [ Box ]
+
+========
+winconditions
+========
+All Boxes on Targets
+
+========
+levels
+========
+/* Level 1 */
+WWWWWW
+W....W
+W.PB.W
+WT...W
+WWWWWW
+
+/* Level 2 */
+WWWWWWW
+W.....W
+W.P.B.W
+W.B..TW
+W.....W
+WTWWWWW
+
+========
+
+```
+produced the following console output:
+=================================
+line 11 : Was looking for color for object BACKGROUND, got "player " instead.
+line 11 : Was looking for color for object BACKGROUND, got "p " instead.
+line 13 : Was looking for color for object WALL, got "box " instead.
+line 13 : Was looking for color for object WALL, got "b " instead.
+line 15 : Was looking for color for object TARGET, got "boxontarget " instead.
+line 15 : Was looking for color for object TARGET, got "o " instead.
+too many errors, aborting compilation
+Errors detected during compilation; the game may not work correctly.
+Return a repaired version of the code that addresses these errors. First, reason about your task and determine the best plan of action. Then, write your code. Return your code in full, inside a ```plaintext code block.

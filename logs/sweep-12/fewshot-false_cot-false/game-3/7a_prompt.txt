@@ -1,0 +1,126 @@
+SYSTEM PROMPT:
+You are a game designer, familiar with the PuzzleScript game description language. 
+
+USER PROMPT:
+The following PuzzleScript game code:
+```plaintext
+Title: Box Pusher
+Author: GameDesigner
+
+========
+OBJECTS
+========
+
+Background
+transparent
+
+Wall
+brown
+
+Pusher
+red
+
+Box
+blue
+
+Target
+green
+
+BoxOnTarget
+blue
+
+PusherOnTarget
+red
+
+========
+LEGEND
+========
+
+. = Background
+# = Wall
+P = Pusher
+B = Box
+T = Target
+O = BoxOnTarget
+@ = PusherOnTarget
+Player = Pusher or PusherOnTarget
+
+========
+SOUNDS
+========
+
+SFX0 # Placeholder sound event to resolve the error
+
+========
+COLLISIONLAYERS
+========
+
+Background
+Wall
+Box, BoxOnTarget
+Player
+Target
+
+========
+RULES
+========
+
+[> Player | Box] -> [> Player | > Box]
+[> Player | Target] -> [> PusherOnTarget | Target]
+[> Player | BoxOnTarget] -> [> PusherOnTarget | Box]
+[> PusherOnTarget] -> [> Player | Target]
+[> Player | Box | Target] -> [> Player | > BoxOnTarget | Target]
+
+[ Box | Target ] -> [ BoxOnTarget | Target]
+[ BoxOnTarget | Target] -> [ Box | Target]
+
+========
+WINCONDITIONS
+========
+
+All BoxOnTarget
+
+========
+LEVELS
+========
+
+#####
+#...#
+#.O.#
+#...#
+#.P.#
+#..B#
+#####
+
+#####
+#...#
+#.O.#
+#...#
+#...#
+#PBO#
+#####
+
+#######
+#.....#
+#.O.O.#
+#.....#
+#PB.BO#
+#...B.#
+#######
+
+#########
+#.......#
+#.O.O.O.#
+#.......#
+#PB.BOBO#
+#.......#
+#########
+
+
+```
+produced the following console output:
+=================================
+line 46 : Was expecting a sound seed here (a number like 123123, like you generate by pressing the buttons above the console panel), but found something else.
+line 65 : In a rule, each pattern to match on the left must have a corresponding pattern on the right of equal length (number of cells).
+Errors detected during compilation; the game may not work correctly.
+Return a repaired version of the code that addresses these errors. Return your code in full, inside a ```plaintext code block.

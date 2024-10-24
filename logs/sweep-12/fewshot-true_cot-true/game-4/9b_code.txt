@@ -1,0 +1,109 @@
+```plaintext
+title Sokoban Clone
+author YourName
+
+========
+OBJECTS
+========
+
+Background
+White
+
+Wall
+DarkGray
+00000
+00000
+00000
+00000
+00000
+
+Player
+Blue LightBlue
+..1..
+.111.
+11111
+.111.
+..1..
+
+Crate
+Yellow Red
+.111.
+11111
+11111
+11111
+.111.
+
+Target
+White LightGreen
+00000
+01110
+01010
+01110
+00000
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Player
+* = Crate
+O = Target
+@ = Crate and Target
+
+=========
+SOUNDS
+=========
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Target
+Player, Crate, Wall
+
+======
+RULES
+======
+
+[ > Player | Crate | No Wall | No Crate | No Target ] -> [ > Player | > Crate | | ]
+
+==============
+
+WINCONDITIONS
+==============
+
+All Crate on Target
+
+=======
+LEVELS
+=======
+
+#####
+#...#
+#.P.#
+#.#.#
+#*O*#
+#####
+
+#####
+#...#
+#*P*#
+#.#.#
+#O.O#
+#####
+
+#####
+#.#.#
+#*P*#
+#.O.#
+#...#
+#####
+
+```
+
+To resolve the errors noted in the solvability check, it's important to ensure that each game level can realistically be solved given the mechanics and layout. If the goal is to improve solvability, consider altering the positioning of crates, targets, walls, and the player to allow for clear and logical movement that can lead to the accomplishment of the game's win condition: moving all crates onto targets. 
+
+Note that a common issue for unsolvable levels is placing crates or targets in positions that cannot be navigated correctly by the player due to obstacles or the arrangement itself.

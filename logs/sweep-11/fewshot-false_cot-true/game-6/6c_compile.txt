@@ -1,9 +1,17 @@
 =================================
-line 12 : Was looking for color for object BACKGROUND, got "color " instead.
-line 20 : Was looking for color for object WALL, got "color " instead.
-line 25 : Unknown junk in spritematrix for object WALL.
-line 28 : Was looking for color for object PLAYER, got "color " instead.
-line 30 : Unknown junk in spritematrix for object PLAYER.
-line 31 : Unknown junk in spritematrix for object PLAYER.
+line 67 : Unknown junk in object section (possibly: sprites have to be 5 pixels wide and 5 pixels high exactly. Or maybe: the main names for objects have to be words containing only the letters a-z0.9 - if you want to call them something like ",", do it in the legend section).
+line 69 : Unknown junk in object section (possibly: sprites have to be 5 pixels wide and 5 pixels high exactly. Or maybe: the main names for objects have to be words containing only the letters a-z0.9 - if you want to call them something like ",", do it in the legend section).
+line 79 : Something bad's happening in the LEGEND
+line 79 : Incorrect format of legend - should be one of "A = B", "A = B or C [ or D ...]", "A = B and C [ and D ...]", but it looks like you have a dangling "="?
+line 81 : Something bad's happening in the LEGEND
+line 81 : Incorrect format of legend - should be one of "A = B", "A = B or C [ or D ...]", "A = B and C [ and D ...]", but it looks like you have a dangling "="?
+line 83 : Was expecting a sound event (like SFX3, or ENDLEVEL) or an object name, but didn't find either.
+line 84 : Was expecting a sound event (like SFX3, or ENDLEVEL) or an object name, but didn't find either.
+line 85 : Was expecting a sound event (like SFX3, or ENDLEVEL) or an object name, but didn't find either.
+line 86 : Was expecting a sound event (like SFX3, or ENDLEVEL) or an object name, but didn't find either.
+line 88 : Was expecting a sound event (like SFX3, or ENDLEVEL) or an object name, but didn't find either.
+line 90 : Was expecting a sound event (like SFX3, or ENDLEVEL) or an object name, but didn't find either.
+line 98 : error detected - unexpected character #
+line 98 : error detected - unexpected character =
 too many errors, aborting compilation
 Errors detected during compilation; the game may not work correctly.

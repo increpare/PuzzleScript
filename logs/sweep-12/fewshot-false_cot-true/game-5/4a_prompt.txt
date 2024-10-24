@@ -1,0 +1,75 @@
+SYSTEM PROMPT:
+You are a game designer, familiar with the PuzzleScript game description language. 
+
+USER PROMPT:
+The following PuzzleScript game code:
+```plaintext
+===========
+OBJECTS
+===========
+Background
+WHITE
+
+Wall
+BLACK
+
+Player
+BLUE
+
+Box
+RED
+
+Target
+YELLOW
+
+============
+LEGEND
+============
+. = Background
+# = Wall
+P = Player
+B = Box
+T = Target
+
+=======
+SOUNDS
+=======
+
+===============
+COLLISIONLAYERS
+===============
+Background
+Player, Box
+Wall, Target
+
+========
+RULES
+========
+[Player | Box] -> [ > Player | > Box] 
+
+========
+WINCONDITIONS
+========
+All Box on Target
+
+=======
+LEVELS
+=======
+#####
+#...#
+#.T.#
+#BTP#
+#...#
+#####
+
+######
+#.T..#
+#..B.#
+#PT..#
+#.T..#
+######
+
+```
+compiled, but a solvability check returned the following error:
+Found solution for level 0 in 9 iterations: 3,2,2,1,1,1,1,0,0,0.  Level 1 is not solvable. Please repair it.
+Return your code in full, inside a ```plaintext code block.

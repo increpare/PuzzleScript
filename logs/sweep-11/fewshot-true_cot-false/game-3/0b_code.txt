@@ -1,0 +1,92 @@
+```plaintext
+title Block Pusher
+author Anonymous
+
+========
+OBJECTS
+========
+
+Background
+lightgrey
+.....
+
+Wall
+darkgrey
+11111
+11111
+11111
+11111
+11111
+
+Player
+green
+..0..
+..0..
+.111.
+..0..
+.....
+
+Target
+lightyellow
+.....
+..1..
+.111.
+..1..
+.....
+
+Crate
+orange
+.111.
+.1.1.
+.1.1.
+.1.1.
+.111.
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Player
+* = Crate
+O = Target
+@ = Crate and Target
+
+=======
+SOUNDS
+=======
+
+Crate MOVE 44289704
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Target
+Player, Wall, Crate
+
+======
+RULES
+======
+
+[ > Player | Crate ] -> [ > Player | > Crate ]
+
+==============
+WINCONDITIONS
+==============
+
+All Target on Crate
+
+=======
+LEVELS
+=======
+
+#####
+#...#
+#*P*#
+#...#
+##O##
+#####
+```

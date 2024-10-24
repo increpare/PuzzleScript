@@ -1,0 +1,104 @@
+Here's a simple example of a PuzzleScript game. This will be a basic maze game where the player needs to reach a goal:
+
+```plaintext
+Title: Maze Runner
+Author: YourName
+Homepage: http://yourhomepage.com
+
+===========
+OBJECTS
+===========
+
+Background
+transparent
+. . . . 
+. . . . 
+. . . . 
+. . . . 
+
+Player
+#00F
+. 0 . . 
+. 1 2 . 
+. . 3 . 
+. . . . 
+
+Wall
+#333
+. . . . 
+. # # . 
+. # # . 
+. . . . 
+
+Target
+#0F0
+. . . . 
+. 2 0 . 
+. 1 3 . 
+. . . . 
+
+===========
+LEGEND
+===========
+
+. = Background
+P = Player
+W = Wall
+T = Target
+
+===========
+SOUNDS
+===========
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Player
+Wall
+Target
+
+===========
+RULES
+===========
+
+[ > Player | Target ] -> [ > Player | Player ]
+
+=============
+WINCONDITIONS
+=============
+
+All Target on Player
+
+===========
+LEVELS
+===========
+
+#######        
+#.....#        
+#.P.T.#        
+#.....#        
+#######        
+
+```
+
+This is a basic template for a PuzzleScript game. Let me explain the components briefly:
+
+1. **Title, Author, Homepage**: Metadata about the game.
+  
+2. **Objects**: Define the visual and properties of game entities such as Player, Wall, Target. The colors are set in hexadecimal notation.
+
+3. **Legend**: Maps shorthand symbols to object types used later in level descriptions.
+
+4. **Sounds**: This section is empty in this simple example, but it's where you could define sound effects for your game actions.
+
+5. **CollisionLayers**: Define how objects interact with each other. Objects in the same layer cannot overlap.
+
+6. **Rules**: Define game behavior. The given rule is a simple movement from Player to Target. Rules are usually set to describe interactions between objects or object transformations.
+
+7. **WinConditions**: Specifies what needs to happen for the game to be won. Here, all Targets need to be covered by the Player.
+
+8. **Levels**: Defines the structure of each level using the objects mapped out in the Legend section. Each level is defined with a grid of characters.
+
+This is a straightforward game where the player, represented by 'P', can move around to reach the target 'T' by finding a way through the walls 'W'. Feel free to expand upon it with more mechanics and rules.

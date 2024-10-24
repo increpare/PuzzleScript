@@ -1,0 +1,146 @@
+SYSTEM PROMPT:
+You are a game designer, familiar with the PuzzleScript game description language. 
+
+USER PROMPT:
+The following PuzzleScript game code:
+```plaintext
+title Sokoban Puzzle
+
+========
+OBJECTS
+========
+
+Background
+black
+00000
+00000
+00000
+00000
+00000
+
+Player
+yellow
+.000.
+00000
+00000
+.000.
+..0..
+
+Wall
+gray
+00000
+00000
+00000
+00000
+00000
+
+Box
+brown
+.000.
+00000
+00000
+00000
+.000.
+
+Target
+green
+.....
+..0..
+.000.
+..0..
+.....
+
+BoxOnTarget
+darkgreen
+.000.
+00000
+00000
+00000
+.000.
+
+========
+LEGEND
+========
+
+. = Background
+P = Player
+# = Wall
+B = Box
+T = Target
+O = BoxOnTarget
+
+========
+SOUNDS
+========
+
+==================
+COLLISIONLAYERS
+==================
+
+Background
+Player
+Wall, Box, BoxOnTarget
+Target
+
+=========
+RULES
+=========
+
+// Moving
+[> Player | ] -> [> Player | ]
+
+// Pushing
+[> Player | Box] -> [> Player | > Box]
+[> Player | BoxOnTarget] -> [> Player | > BoxOnTarget]
+
+// Converting box and target interactions
+[ Box | Target ] -> [ BoxOnTarget | Background ]
+[ BoxOnTarget | Background ] -> [ Box | Background ]
+
+// Removing previous 'Box on Target' status
+[ BoxOnTarget ] -> [ Box ]
+[ Box | Target ] -> [ BoxOnTarget ]
+
+=============
+WINCONDITIONS
+=============
+
+All BoxOnTarget
+
+========
+LEVELS
+========
+
+;; Level 1
+#####
+#...#
+#.#.#
+#PB.#
+#####
+
+;; Level 2
+######
+#....#
+#..#B#
+#P.T.#
+######
+
+;; Level 3
+######
+#....#
+#..#B#
+#P.BT#
+######
+
+```
+produced the following console output:
+=================================
+line 83 : Name "//", referred to in a rule, does not exist.
+line 83 : Name "moving", referred to in a rule, does not exist.
+line 86 : Name "//", referred to in a rule, does not exist.
+line 86 : Name "pushing", referred to in a rule, does not exist.
+line 90 : Name "//", referred to in a rule, does not exist.
+line 90 : Name "converting", referred to in a rule, does not exist.
+too many errors, aborting compilation
+Errors detected during compilation; the game may not work correctly.
+Return a repaired version of the code that addresses these errors. First, reason about your task and determine the best plan of action. Then, write your code. Return your code in full, inside a ```plaintext code block.

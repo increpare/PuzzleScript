@@ -1,142 +1,103 @@
-To create a complete PuzzleScript game, we need to follow several key steps. Firstly, let's outline the basic components of a PuzzleScript game:
+To create a complete PuzzleScript game, I'll need to consider a few key elements that make up a game in this language. The main components of a PuzzleScript game are:
 
-1. **Title and Author**: Define who created the game.
-2. **Game Objects**: Specify the objects that will be used in the game.
-3. **Collision Layers**: Arrange objects in layers to handle interaction logic.
-4. **Legend**: Define the symbols representing game objects in levels.
-5. **Sounds**: Define sound effects for player actions.
-6. **Rules**: Specify what happens each turn or in response to certain actions.
-7. **Win Conditions**: Establish what conditions must be met to win each level.
-8. **Levels**: Design the levels where the game will be played.
+1. **Objects**: Defining the elements that will be visible on screen.
+2. **Legend**: Connecting single-character symbols to each object for easier level creation.
+3. **Sounds**: Defining any sounds to be used (optional).
+4. **Collision Layers**: Specifying which objects can interact with each other.
+5. **Rules**: Defining how objects interact or transform in response to player actions.
+6. **Win Conditions**: Setting conditions that determine when a level is completed.
+7. **Levels**: Designing the levels themselves using a grid of symbols defined in the legend.
+8. **Metadata**: Including details like the title and authorship.
 
-For this example, let's make a simple Sokoban-style puzzle game where the player pushes crates to target locations. Here's how we can implement this:
+Let's create a simple Sokoban-style game where the player pushes boxes onto targets.
 
-### Plan:
-- **Title**: "Simple Sokoban"
-- **Author**: "Game Designer"
-- **Objects**: Player, Wall, Crate, Target, Floor
-- **Collision Layers**: Separate player, crates, and static elements (walls, floors)
-- **Legend**: Define concise symbols for each game object
-- **Rules**: Allow the player to push crates, and handle movements
-- **Win Conditions**: All crates must be on target locations
-- **Levels**: Three simple levels increasing in complexity
+### Plan
+1. **Objects**: Define a player, wall, box, target, and floor.
+2. **Legend**: Assign symbols to each object.
+3. **Collision Layers**: Set up layers for player, boxes, and others.
+4. **Rules**: Create simple rules for moving, pushing boxes, and win state.
+5. **Win Conditions**: The game is won when all boxes are on targets.
+6. **Levels**: Build a basic level to test the mechanics.
+7. **Metadata**: Add game title and author.
 
-### Code:
+Here's the complete PuzzleScript code for this idea:
 
 ```plaintext
-title Simple Sokoban
-author Game Designer
+Title: Simple Sokoban
+Author: PuzzleScript Designer
 
 ========
 OBJECTS
 ========
+Background 
+GREEN
+
 Player
-grey O
-00000000
-01100110
-00111100
-01111110
-01111110
-01111110
-00111100
-00000000
+BLUE
 
 Wall
-black
-11111111
-11111111
-11111111
-11111111
-11111111
-11111111
-11111111
-11111111
+GRAY
 
-Crate
-brown C
-00000000
-07711110
-0FF111F0
-0F1111F0
-0FFF1F10
-01111110
-01FFFF10
-00000000
+Box
+BROWN
 
 Target
-red X
-00000000
-00000000
-00000000
-00111000
-01111100
-00000000
-00000000
-00000000
+RED
 
-Floor
-beige .
+BoxOnTarget
+DARKRED
 
-===========
-COLLISIONLAYERS
-===========
-Background
-Static
-Movable
-Player
-
-======
+========
 LEGEND
-======
-= Wall
-. Floor
-P Player
-C Crate
-X Target
+========
+. = Background
+# = Wall
+P = Player
+B = Box
+T = Target
+O = BoxOnTarget
 
-======
-SOUNDS
-======
-CrateMovePush
-    500
-CrateMoveStop
-    700
+==============
+COLLISIONLAYERS
+==============
+Background
+Wall
+Player
+Targets
+Crates
 
-=====
+=======
 RULES
-=====
-[ >Player | Crate ] -> [ >Player | >Crate ]
+=======
+[ > Player | Box ] -> [ > Player | > Box ]
+[ Box | Target ] -> [ BoxOnTarget | Background ]
+[ BoxOnTarget | Player ] -> [ Box | Player ]
 
-===
-WIN
-===
-All Crate on Target
+// If a box is moved off a target, restore their states
+[ BoxOnTarget ] -> [ Box | Target ]
 
-======
+===========
+WINCONDITIONS
+===========
+All BoxOnTarget on Target
+
+=======
 LEVELS
-======
-# Level 1
-####
-#P C#
-#  X#
-####
-
-# Level 2
-#####
-#   #
-# P #
-# C #
-##X##
-  ###
-
-# Level 3
-######
-#    #
-# P C#
-# CC #
-##XX##
- ####
-
+=======
+# ##### 
+#T..T# 
+###..###
+#P B  O#
+#    ###
+####### 
 ```
 
-This game features a grid-based movement where the player can push crates ('C') onto target locations ('X'). The win condition is met when all crates are on targets. The levels are designed to progressively introduce the player to pushing mechanics and spatial reasoning. The rules delineate how interaction between player and crate occurs, and each object's graphical representation and collision properties are defined appropriately.
+### Explanation
+- **Objects**: These define our game elements visually and their attributes (like color).
+- **Legend**: Maps simple characters to objects for easy level writing.
+- **Collision Layers**: Ensures objects don't occupy the same space incorrectly. Boxes are treated separately from other objects.
+- **Rules**: Allows for box pushing and maintains the state of boxes on targets.
+- **Win Conditions**: Checks if all the boxes are on the targets, which triggers level completion.
+- **Levels**: A simple level layout where the player can test the game's mechanics.
+
+This provides a fundamental Sokoban-like game. You can elaborate further by adding more levels or tweaking win conditions and mechanics as desired.

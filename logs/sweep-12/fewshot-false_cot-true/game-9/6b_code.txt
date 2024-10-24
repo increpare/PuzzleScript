@@ -1,0 +1,133 @@
+The error messages indicate that the compiler is interpreting the comment markers `//` and text following them as object names or rule components. This error arises because PuzzleScript comments are not typically denoted with `//`. Instead, we usually add comments directly in text without any specific comment syntax, although this can sometimes vary based on unofficial or specific versions and setups of PuzzleScript engines.
+
+To fix the errors and ensure that the code is functional, we need to remove comment syntax (`//`) and the comments. This will allow the compiler to interpret the rules correctly. Let’s edit the code accordingly.
+
+Here is the corrected version of the game code:
+
+```plaintext
+title Sokoban Puzzle
+
+========
+OBJECTS
+========
+
+Background
+black
+00000
+00000
+00000
+00000
+00000
+
+Player
+yellow
+.000.
+00000
+00000
+.000.
+..0..
+
+Wall
+gray
+00000
+00000
+00000
+00000
+00000
+
+Box
+brown
+.000.
+00000
+00000
+00000
+.000.
+
+Target
+green
+.....
+..0..
+.000.
+..0..
+.....
+
+BoxOnTarget
+darkgreen
+.000.
+00000
+00000
+00000
+.000.
+
+========
+LEGEND
+========
+
+. = Background
+P = Player
+# = Wall
+B = Box
+T = Target
+O = BoxOnTarget
+
+========
+SOUNDS
+========
+
+==================
+COLLISIONLAYERS
+==================
+
+Background
+Player
+Wall, Box, BoxOnTarget
+Target
+
+=========
+RULES
+=========
+
+[> Player | ] -> [> Player | ]
+
+[> Player | Box] -> [> Player | > Box]
+[> Player | BoxOnTarget] -> [> Player | > BoxOnTarget]
+
+[ Box | Target ] -> [ BoxOnTarget | Background ]
+[ BoxOnTarget | Background ] -> [ Box | Background ]
+
+[ BoxOnTarget ] -> [ Box ]
+[ Box | Target ] -> [ BoxOnTarget ]
+
+=============
+WINCONDITIONS
+=============
+
+All BoxOnTarget
+
+========
+LEVELS
+========
+
+;; Level 1
+#####
+#...#
+#.#.#
+#PB.#
+#####
+
+;; Level 2
+######
+#....#
+#..#B#
+#P.T.#
+######
+
+;; Level 3
+######
+#....#
+#..#B#
+#P.BT#
+######
+```
+
+I removed the comments to ensure the code compiles without errors. This code should perform correctly if PuzzleScript’s comment guidelines are followed correctly.

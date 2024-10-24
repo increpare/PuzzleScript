@@ -1,0 +1,109 @@
+```plaintext
+title Unstable Platforms
+author GameDesigner
+
+========
+OBJECTS
+========
+
+Background
+lightblue
+
+Wall
+darkblue
+
+Player
+white
+.....
+.0.0.
+..0..
+.0.0.
+.....
+
+Platform
+orange
+.....
+.....
+.....
+.....
+.000.
+
+Button
+red
+.....
+..0..
+.000.
+..0..
+.....
+
+Box
+yellow
+.....
+.000.
+.0.0.
+.000.
+.....
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Player
+O = Box
+B = Button
+- = Platform
+
+=======
+SOUNDS
+=======
+
+sfx0 20819902
+sfx1 32490007
+sfx2 24379999
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Button
+Platform
+Player, Wall, Box
+
+======
+RULES
+======
+
+[ > Player | Box ] -> [ > Player | > Box ]
+
+[Box | Player | Button] -> [Box | Player | Button ] 
+[ > Player | Button ] -> [ > Player | Button ] sfx0
+
+[Box | Button] -> [ Background | Button ] sfx1
+
+[ Platform | Box ] -> [ Platform | Background ]
+
+==============
+WINCONDITIONS
+==============
+
+All Button on Background
+
+=======
+LEVELS
+=======
+
+#######
+#.....#
+#.P.#.#
+#.#.#.#
+#.#.#.#
+#.O#O.#
+#-#B#-#
+#######
+```
+
+### Explanation:
+The original rule `[Box | Button] -> [ Background ] sfx1` was incorrect because it did not have a corresponding button on the right-hand side. Each element on the left must have a corresponding element on the right with the same pattern size, so the rule `[Box | Button] -> [ Background | Button ] sfx1` aligns the rule correctly.

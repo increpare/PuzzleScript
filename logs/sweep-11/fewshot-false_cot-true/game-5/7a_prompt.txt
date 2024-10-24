@@ -1,0 +1,108 @@
+SYSTEM PROMPT:
+You are a game designer, familiar with the PuzzleScript game description language. 
+
+USER PROMPT:
+The following PuzzleScript game code:
+```plaintext
+title Treasure Hunt
+author GameDesigner
+homepage http://mygames.com
+
+===========
+OBJECTS
+===========
+Background
+yellow
+00000
+00000
+00000
+00000
+00000
+
+Player
+blue
+..0..
+..0..
+.000.
+..0..
+..0..
+
+Wall
+grey
+00000
+00000
+00000
+00000
+00000
+
+Treasure
+orange
+..000
+.000.
+.000.
+.000.
+..000
+
+===========
+LEGEND
+===========
+. = Background
+P = Player
+# = Wall
+T = Treasure
+
+===========
+SOUNDS
+===========
+
+================
+COLLISIONLAYERS
+================
+Background
+Player, Treasure
+Wall
+
+===========
+RULES
+===========
+[Player | Treasure] -> [Player | ] 
+SFX3
+
+[Player | Wall] -> [Player | Wall]
+
+===========
+WINCONDITIONS
+===========
+No Treasures
+
+===========
+LEVELS
+===========
+#####
+#P..#
+#.T.#
+#####
+
+#####
+#.P##
+#...#
+#..T#
+#####
+
+######
+#P...#
+##.###
+##.###
+##..T#
+######
+
+```
+produced the following console output:
+=================================
+line 70 : Error in win condition: "TREASURES" is not a valid object name.
+line 63 : A rule has to have an arrow in it.  There's no arrow here! Consider reading up about rules - you're clearly doing something weird
+line 63 : The start of a rule must consist of some number of directions (possibly 0), before the first bracket, specifying in what directions to look (with no direction specified, it applies in all four directions).  It seems you've just entered "SFX3".
+line 63 : This rule refers to nothing.  What the heck? :O
+line 70 : Unwelcome term "treasures" found in win condition. I don't know what I'm supposed to do with this.
+Errors detected during compilation; the game may not work correctly.
+Return a repaired version of the code that addresses these errors. First, reason about your task and determine the best plan of action. Then, write your code. Return your code in full, inside a ```plaintext code block.

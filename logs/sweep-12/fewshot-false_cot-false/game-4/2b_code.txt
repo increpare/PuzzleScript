@@ -1,0 +1,95 @@
+Certainly! The errors mentioned in the console output indicate issues with the syntax, sprite definitions, and rule definitions. I'll correct the errors and provide a repaired version of the code:
+
+1. The sprite matrix uses invalid characters apart from '.', which should be the pixel on (use '1') and off (use '.').
+2. The incorrect use of "on" in the rule needs to be corrected.
+   
+Here is the corrected version:
+
+```plaintext
+Title: Simple Reach the Goal Game
+Author: You
+Homepage: http://www.puzzlescript.net
+
+===========
+OBJECTS
+===========
+
+Background
+LIGHTGREEN
+
+Player
+BLUE
+.111.
+.111.
+..1..
+.1.1.
+.1.1.
+
+Goal
+YELLOW
+.....
+.....
+..1..
+.....
+.....
+
+=======
+LEGEND
+=======
+
+= Background
+P = Player
+G = Goal
+
+==============
+SOUNDS
+==============
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Player
+Goal
+
+==========
+RULES
+==========
+
+[ > Player | Goal ] -> [ Player Goal ]
+
+=======
+WINCONDITIONS
+=======
+
+All Goal on Player
+
+===============
+LEVELS
+===============
+
+; Level 1
+==========
+..P..
+.....
+.....
+.....
+..G..
+
+; Level 2
+==========
+..P..
+.....
+..G..
+.....
+.....
+```
+
+Key Changes Made:
+
+- The Player sprite now uses '1' for the blue pixels instead of 'o'.
+- Replaced `[ Player on Goal ]` in the rule with `[ Player Goal ]`.
+- Adjusted the goal rule to remove reference to 'on', ensuring they apply correctly for the format used in PuzzleScript.
+
+This should address the problems and facilitate proper compilation and execution of the game.

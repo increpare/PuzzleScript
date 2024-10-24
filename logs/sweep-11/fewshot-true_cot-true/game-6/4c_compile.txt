@@ -1,9 +1,11 @@
 =================================
-line 31 : Trying to access color number 3 from the color palette of sprite TARGET, but there are only 3 defined in it.
-line 32 : Trying to access color number 3 from the color palette of sprite TARGET, but there are only 3 defined in it.
-line 33 : Trying to access color number 3 from the color palette of sprite TARGET, but there are only 3 defined in it.
-line 38 : Trying to access color number 3 from the color palette of sprite CRATEONTARGET, but there are only 3 defined in it.
-line 51 : Name "PLAYER" already in use (on line line 11).
-line 51 : You can't define object PLAYER in terms of itself!
+line 19 : Trying to access color number 1 from the color palette of sprite WALL, but there are only 1 defined in it.
+line 20 : Trying to access color number 1 from the color palette of sprite WALL, but there are only 1 defined in it.
+line 21 : Trying to access color number 1 from the color palette of sprite WALL, but there are only 1 defined in it.
+line 32 : Sprites must be 5 wide and 5 high.
+line 33 : Sprites must be 5 wide and 5 high.
+line 52 : section "COLLISIONLAYERS" is out of order, must follow  "SOUNDS" (or it could be that the section "SOUNDS"is just missing totally.  You have to include all section headings, even if the section itself is empty).
+line 64 : Name "player", referred to in a rule, does not exist.
+line 64 : Name "crate", referred to in a rule, does not exist.
 too many errors, aborting compilation
 Errors detected during compilation; the game may not work correctly.

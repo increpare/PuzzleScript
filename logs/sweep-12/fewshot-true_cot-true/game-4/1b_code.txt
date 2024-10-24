@@ -1,0 +1,118 @@
+To address the compilation errors related to accessing colors in the color palette, we need to first understand the problem.
+
+The errors indicate that the `Player` and `Crate` objects are attempting to access colors that aren't defined. In PuzzleScript, the colors for each game object are defined line-by-line, and each number in the object's sprite pattern corresponds to a specific color. The color index numbers start from 0. If you're trying to access a color index that hasn't been defined, you'll encounter errors.
+
+In the code provided, the `Player` is using color index 1 without defining it. Similarly, the `Crate` is using color index 2, but only one color (index 0) is defined. We need to ensure that the color definitions for each object match the indices used in their patterns.
+
+Here's a corrected version of the code:
+
+```plaintext
+title Sokoban Clone
+author YourName
+
+========
+OBJECTS
+========
+
+Background
+White
+
+Wall
+DarkGray
+00000
+00000
+00000
+00000
+00000
+
+Player
+Blue LightBlue
+..1..
+.111.
+11111
+.111.
+..1..
+
+Crate
+Orange DarkOrange
+.222.
+22222
+22222
+22222
+.222.
+
+Target
+LightGreen
+00000
+01110
+01210
+01110
+00000
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Player
+* = Crate
+O = Target
+@ = Crate and Target
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Target
+Player, Crate, Wall
+
+======
+RULES
+======
+
+[ > Player | Crate ] -> [ > Player | > Crate ]
+[ > Player | Wall ] -> [ Player | Wall ]
+
+==============
+WINCONDITIONS
+==============
+
+All Crate on Target
+
+=======
+LEVELS
+=======
+
+#####
+#...#
+#.P.#
+#.#.#
+#*O*#
+#####
+
+#####
+#...#
+#*P*#
+#.#.#
+#O.O#
+#####
+
+#####
+#.#.#
+#*P*#
+#.O.#
+#...#
+#####
+
+```
+
+### Changes Made:
+1. **Player Object:**
+   - Added a second color `LightBlue` to match the indices used in the sprite pattern.
+
+2. **Crate Object:**
+   - Added a second color `DarkOrange` to match the indices used in the sprite pattern.
+  
+These changes should fix the color index errors and allow the code to compile and run correctly without issues.

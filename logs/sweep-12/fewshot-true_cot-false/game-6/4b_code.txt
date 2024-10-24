@@ -1,0 +1,88 @@
+```plaintext
+title Star Collector
+author Your Name
+homepage example.com
+
+========
+OBJECTS
+========
+
+Background
+LightBlue
+.....
+.....
+.....
+.....
+.....
+
+Player
+Yellow
+.....
+..0..
+.000.
+..0..
+.....
+
+Wall
+DarkGray
+.....
+.000.
+.000.
+.000.
+.....
+
+Star
+Yellow
+.....
+..0..
+.....
+..0..
+.....
+
+=======
+LEGEND
+=======
+
+. = Background
+P = Player
+# = Wall
+* = Star
+
+=======
+SOUNDS
+=======
+
+Star DESTROY 55555555
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Star, Wall, Player
+
+======
+RULES
+======
+
+[> Player | Star] -> [> Player] DESTROY
+
+==============
+WINCONDITIONS
+==============
+
+No Star
+
+=======
+LEVELS
+=======
+
+#..*..#
+#.P.*.#
+#..*..#
+#######
+
+```
+
+Explanation of Changes:
+- In the RULES section, the statement `[> Player | Star] -> [> Player] Star` has been corrected to `[> Player | Star] -> [> Player] DESTROY`. The keyword `DESTROY` is used in place of `Star` to indicate that the `Star` object should be removed when the player moves over it.

@@ -15,7 +15,7 @@ homepage https://example.com
 # === Objects ===
 OBJECTS
 Background
-color #000000
+lightgray
 .....
 .....
 .....
@@ -23,52 +23,52 @@ color #000000
 .....
 
 Wall
-color #888888
+gray
 .....
-..X..
-..X..
-..X..
+.....
+WWWWW
+.....
 .....
 
 Player
-color #FFFF00
+yellow
 .....
-..O..
-.OOO.
-..O..
-.....
+..@..
+.@@@.
+.@.@.
+.@@@.
 
 Block
-color #FF0000
+blue
 .....
-..X..
-.X.X.
-..X..
+..@@.
+.@@@.
+..@@.
 .....
 
 Goal
-color #00FF00
+red
 .....
 .....
-..X..
+..@..
 .....
 .....
 
 BlockOnGoal
-color #FF00FF
+purple
 .....
-..X..
-.XOX.
-..X..
+..@@.
+.@@@.
+..@@.
 .....
 
 PlayerOnGoal
-color #00FFFF
+orange
 .....
-..O..
-.OXO.
-..O..
-.....
+..@..
+.@@@.
+.@.@.
+.@@@.
 
 # === End Objects ===
 
@@ -86,7 +86,9 @@ O = BlockOnGoal
 
 # === Sounds ===
 SOUNDS
-# This section is empty but needed for correct ordering
+move 100
+push 200
+winLevel 800
 
 # === End Sounds ===
 
@@ -102,8 +104,9 @@ Goal
 
 # === Rules ===
 RULES
-[ Player | Block ] -> [ Player | ] [ Player | Block ]
-[ PlayerOnGoal | Block ] -> [ Player | ] [ @ | Block ]
+[ Player | Block ] -> [ Player | ] [ Player | Block ] move push
+
+[ PlayerOnGoal | Block ] -> [ Player | ] [ @ | Block ] move push
 
 [ Player | Goal ] -> [ PlayerOnGoal | ]
 [ PlayerOnGoal | ] -> [ Player | ]
@@ -119,9 +122,10 @@ All BlockOnGoal
 
 # === Levels ===
 LEVELS
+
 #######
 #     #
-#  G  #
+#  .  #
 #     #
 #  B  #
 #  P  #
@@ -130,23 +134,23 @@ LEVELS
 #######
 #     #
 #     #
-#  G  #
+#  .  #
 #  B  #
 #  P  #
 #######
 
 #######
 #     #
-#  G  #
+#  .  #
 #     #
 # B B #
 #  P  #
 #######
 
 #######
-#   G #
+#   . #
 #     #
-# B G #
+# B . #
 #   P #
 #   B #
 #######
@@ -156,12 +160,12 @@ LEVELS
 ```
 produced the following console output:
 =================================
-line 12 : Was looking for color for object BACKGROUND, got "color " instead.
-line 20 : Was looking for color for object WALL, got "color " instead.
-line 22 : Unknown junk in spritematrix for object WALL.
 line 23 : Unknown junk in spritematrix for object WALL.
-line 24 : Unknown junk in spritematrix for object WALL.
-line 28 : Was looking for color for object PLAYER, got "color " instead.
+line 30 : Unknown junk in spritematrix for object PLAYER.
+line 31 : Unknown junk in spritematrix for object PLAYER.
+line 32 : Unknown junk in spritematrix for object PLAYER.
+line 33 : Unknown junk in spritematrix for object PLAYER.
+line 38 : Unknown junk in spritematrix for object BLOCK.
 too many errors, aborting compilation
 Errors detected during compilation; the game may not work correctly.
 Return a repaired version of the code that addresses these errors. First, reason about your task and determine the best plan of action. Then, write your code. Return your code in full, inside a ```plaintext code block.

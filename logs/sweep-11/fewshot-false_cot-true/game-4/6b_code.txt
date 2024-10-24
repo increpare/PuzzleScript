@@ -1,0 +1,128 @@
+The error messages indicate problems in the definition of the sprite matrices for the `Player` and `Wall` objects. These errors often occur when the characters used in the sprite matrix are not defined in the color palette. The issue looks like it might be due to undefined characters (`A`, `b`, `D`, `E`, `F`) used in the sprite matrix without corresponding color definitions in the color palette (e.g., `red`, `grey`, etc.). The colors need to be matched with sprite elements.
+
+In PuzzleScript, each character in a sprite matrix represents a pixel in the sprite. If a character in the matrix is not defined in the color palette, the engine will generate an error.
+
+To fix this:
+
+1. Ensure that every character in the sprite matrix for each object corresponds to a color in the color palette.
+2. Replace matrix characters with those that match the colors you have defined (e.g., `red`, `grey`, `yellow`, `green`, `orange`).
+3. The simplest approach is to use dots `.` for transparency defined as `black` by default, and replace custom characters like `A`, `b`, `D`, `E`, `F` with the correct color placeholders (`r`, `y`, `g`, `o`).
+
+Here's the repaired code:
+```plaintext
+# Main game code for a simple Sokoban-style game
+
+title Sokoban Simplified
+author YourName
+
+======
+
+OBJECTS
+  Player
+    red
+    .....
+    .rrr.
+    .r.r.
+    .rrr.
+    .....
+
+  Wall
+    grey
+    ..g..
+    ..g..
+    ..g..
+    ..g..
+    ..g..
+    
+  Crate
+    yellow
+    .....
+    .yyy.
+    .y.y.
+    .yyy.
+    .....
+
+  Floor
+    black
+    .....
+    .....
+    .....
+    .....
+    .....
+    
+  Goal
+    green
+    ..g..
+    ..g..
+    ..g..
+    ..g..
+    ..g..
+    
+  CrateOnGoal
+    orange
+    .....
+    .ooo.
+    .o.o.
+    .ooo.
+    .....
+
+======
+
+LEGEND
+  . = Floor
+  P = Player
+  # = Wall
+  R = Crate
+  G = Goal
+  Y = CrateOnGoal
+
+======
+
+SOUNDS
+
+======
+
+COLLISIONLAYERS
+  Floor
+  Wall
+  Player
+  Crate, CrateOnGoal
+  Goal
+
+======
+
+RULES
+[> Player | Crate ] -> [> Player | > Crate ]
+
+[ Player | CrateOnGoal ] -> [ Player | CrateOnGoal ]
+
+P [ ] -> [ P ]
+R [ ] -> [ R ]
+Y [ ] -> [ Y ]
+
+[Crate | Goal] -> [CrateOnGoal | Floor]
+[CrateOnGoal | Floor] -> [Crate | Goal]
+
+======
+
+WINCONDITIONS
+All CrateOnGoal
+
+======
+
+LEVELS
+#####
+#P. #
+# R #
+# G #
+#####
+
+#######
+#     #
+# ### #
+#PR G#
+#     #
+#######
+
+```
+This revision fixes the errors by ensuring matrix characters are converted to placeholder characters defined in the color palette.

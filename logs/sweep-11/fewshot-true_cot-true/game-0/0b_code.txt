@@ -1,0 +1,119 @@
+To create a complete PuzzleScript game, we will follow these steps:
+
+1. **Define the Game Concept**: We will create a simple puzzle game where the player needs to push crates onto target spots. The player can move around in a maze-like environment and can only push crates, not pull them. The goal will be to place all crates on target spots.
+
+2. **Design the Game Elements**:
+   - **Background**: The base layer of the game.
+   - **Wall**: Solid obstacles that neither the player nor the crates can pass through.
+   - **Player**: The main character controlled by the player.
+   - **Crate**: Objects that can be pushed by the player into target spots.
+   - **Target**: Specific locations where crates need to be placed.
+
+3. **Write the Legend**: This section assigns symbols to each object used in the levels.
+
+4. **Develop the Collision Layers**: Ensure that objects that interact are placed within the appropriate layers.
+
+5. **Design the Rules**: Outline the movement and interaction rules for the player and crates.
+
+6. **Set Win Conditions**: Define conditions under which a player wins the game.
+
+7. **Create Levels**: Design at least one level to demonstrate the game mechanics.
+
+8. **Verify Game Playability**: Confirm that all elements work together to create a fun and functional game.
+
+Here is the complete code for the game:
+
+```plaintext
+title Crate Pusher
+author YourName
+
+========
+OBJECTS
+========
+
+Background
+SkyBlue
+00000
+00000
+00000
+00000
+00000
+
+Wall
+DarkGray
+11111
+11111
+11111
+11111
+11111
+
+Player
+Black Orange
+.333.
+.333.
+33333
+.333.
+.3.3.
+
+Crate
+Orange
+00000
+05550
+05550
+05550
+00000
+
+Target
+Green
+.....
+..0..
+.000.
+..0..
+.....
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Player
+C = Crate
+O = Target
+
+============
+COLLISIONLAYERS
+============
+
+Background
+Player, Wall, Crate
+Target
+
+======
+RULES
+======
+
+[ > Player | Crate ] -> [ > Player | > Crate ]
+
+=====
+WINCONDITIONS
+=====
+
+All Crate on Target
+
+=======
+LEVELS
+=======
+
+#########
+#.......#
+#.P.C...#
+#.......#
+#..O....#
+#########
+```
+
+**Explanation**:
+- The code includes all the necessary elements: game objects, a legend, collision layers, rules, win conditions, and levels.
+- The player (`P`) pushes the crate (`C`) onto the target (`O`) in a simple level.
+- Walls (`#`) serve as boundaries for movement. The win condition is achieved when all crates are on targets.

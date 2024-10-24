@@ -1,47 +1,110 @@
-Certainly! Your original script seems to have placed the legend after an extra heading line that was incorrectly placed. The PuzzleScript language expects properly defined sections, and lines without the proper structure will lead to errors. Let’s address that and adjust your code accordingly:
+Certainly! The provided game code has a few errors related to section ordering and inconsistent casing in object names. Let's correct those issues:
+
+1. The `COLLISIONLAYERS` section should follow the `SOUNDS` section. Even if you don't use sounds, you need to include an empty `SOUNDS` section for the order to be correct.
+2. Object names in rules should match exactly as they were defined in the `OBJECTS` section, including their casing.
+
+Here's the corrected version of your code:
 
 ```plaintext
-=== LEGEND ===
-player = Player
-goal = Goal
-wall = Wall
-floor = Floor
-playerOnGoal = PlayerOnGoal
+Title: Sokoban Puzzle
+Author: PuzzleScript Dev
+Homepage: https://www.puzzlescript.net
 
-=== COLLISIONLAYERS ===
-Background,
-wall,
-player, goal
+===========
+OBJECTS
+===========
 
-=== RULES ===
-# Player movement doesn't need explicit rules unless combined with other actions
+Background
+black
 
-# Goal check
-[ player | goal ] -> [ playerOnGoal ]
+Wall
+grey
 
-=== WINCONDITIONS ===
-All playerOnGoal
+Player
+yellow
 
-=== LEVELS ===
-# Level 1
-...goal...
-..wallwallwall..
-..wallplayer...
-..wallwallwall..
-...floor...
+Box
+blue
 
-# Level 2
-.....goal.
-..wall...
-..wall.player.
-..wall...
-...goal...
+Target
+green
+
+BoxOnTarget
+lightgreen
+
+PlayerOnTarget
+yellow
+
+===========
+LEGEND
+===========
+
+. = Background
+# = Wall
+P = Player
+B = Box
+T = Target
+O = BoxOnTarget
+G = PlayerOnTarget
+
+===========
+SOUNDS
+===========
+
+===========
+
+COLLISIONLAYERS
+===========
+
+Background
+Wall
+Target
+Player, PlayerOnTarget
+Box, BoxOnTarget
+
+===========
+RULES
+===========
+
+[ Player | Box ] -> [ Player | Box ]
+[ PlayerOnTarget | Box ] -> [ PlayerOnTarget | BoxOnTarget ]
+[ Player | Target ] -> [ PlayerOnTarget | Target ]
+[ PlayerOnTarget | Background ] -> [ Player | Target ]
+
+[ Box | Target ] -> [ BoxOnTarget | Target ]
+[ BoxOnTarget | Background ] -> [ Box | Target ]
+
+===========
+WINCONDITIONS
+===========
+
+All BoxOnTarget on Target
+
+===========
+LEVELS
+===========
+
+#######
+#.....#
+#..T..#
+#..B..#
+#..P..#
+#######
+
+#######
+#..#..#
+#..B..#
+#.TP..#
+#..#..#
+#####.#
+
+########
+#......#
+#..B#..#
+#..T#..#
+#..P...#
+########
+
 ```
 
-Here are the important changes and adjustments made:
-
-1. Added the `=== LEGEND ===` section header before the legend entries at the start of the script.
-
-2. Removed the redundant rule `[ playerOnGoal ] -> [ playerOnGoal ]` because it does not change the state and is not necessary for transformations, thus simplifying the rule set.
-
-These changes follow the usual conventions expected by the PuzzleScript language. Try this corrected version to see if it resolves the previous errors.
+These adjustments should resolve the errors you encountered, allowing your game to compile correctly.

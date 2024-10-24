@@ -1,0 +1,147 @@
+To fix the errors in your PuzzleScript game code, we need to ensure that each object sprite has the correct number of colors defined in its color palette. The errors indicated that the sprites had more colors defined in the sprites themselves than available in their respective color palettes. Here's the corrected game code:
+
+```plaintext
+title Block Swap Shuffle
+author PuzzleDesigner
+homepage www.puzzlescript.net
+
+========
+OBJECTS
+========
+
+Background
+White
+
+Wall
+Grey
+00000
+00000
+00000
+00000
+00000
+
+Player
+Red LightRed
+.0.
+.1.
+.0.
+
+Block1
+Blue LightBlue
+.....
+..1..
+.111.
+..1..
+.....
+
+Block2
+Green LightGreen
+.....
+..2..
+.222.
+..2..
+.....
+
+Block3
+Yellow LightYellow
+.....
+..3..
+.333.
+..3..
+.....
+
+Block4
+Orange LightOrange
+.....
+..4..
+.444.
+..4..
+.....
+
+Target
+DarkBlue LightBlue
+.....
+.000.
+.0.0.
+.000.
+.....
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Player
+B1 = Block1
+B2 = Block2
+B3 = Block3
+B4 = Block4
+B = Block1 or Block2 or Block3 or Block4
+T = Target
+
+=======
+SOUNDS
+=======
+
+Block1 MOVE 34577506
+Block2 MOVE 34668205
+Block3 MOVE 34758904
+Block4 MOVE 34849603
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Target
+Wall
+Player, Block1, Block2, Block3, Block4
+
+======
+RULES
+======
+
+[ > Player | B ] -> [ > Player | > B ]
+
+late [ B1 | B1 | B1 ] -> [ | | ]
+late [ B2 | B2 | B2 ] -> [ | | ]
+late [ B3 | B3 | B3 ] -> [ | | ]
+late [ B4 | B4 | B4 ] -> [ | | ]
+
+==============
+WINCONDITIONS
+==============
+
+all Block1 on Target
+all Block2 on Target
+all Block3 on Target
+all Block4 on Target
+
+=======
+LEVELS
+=======
+
+#########
+#.......#
+#.......#
+#.P.....#
+#...B1..#
+#.......#
+#.T.....#
+#..B2...#
+#.......#
+#########
+
+#########
+#.......#
+#...B3..#
+#.......#
+#.T...T.#
+#..B4...#
+#.......#
+####P####
+```
+
+Changes made:
+- Each object now includes a second color in the color palette as indicated in the sprite definition after the primary color. This is necessary for the multi-layer pixels in the sprite graphics. For `Player`, `Block1`, `Block2`, `Block3`, `Block4`, and `Target`, I've added secondary lighter colors. Adjust the colors to your preference if needed.

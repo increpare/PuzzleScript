@@ -1,0 +1,98 @@
+```plaintext
+title Block Pusher
+author Anonymous
+
+========
+OBJECTS
+========
+
+Background
+lightgrey
+.....
+.....
+.....
+.....
+.....
+
+Wall
+darkgrey
+.....
+.....
+.....
+.....
+.....
+
+Player
+green
+.....
+.....
+..0..
+.....
+.....
+
+Target
+#FFFF00
+.....
+..0..
+.000.
+..0..
+.....
+
+Crate
+orange
+.....
+.000.
+.0.0.
+.0.0.
+.....
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Player
+* = Crate
+O = Target
+@ = Crate and Target
+
+=======
+SOUNDS
+=======
+
+Crate MOVE 44289704
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Target
+Player, Wall, Crate
+
+======
+RULES
+======
+
+[ > Player | Crate ] -> [ > Player | > Crate ]
+
+==============
+WINCONDITIONS
+==============
+
+All Target on Crate
+
+=======
+LEVELS
+=======
+
+#####
+#...#
+#*P*#
+#...#
+#O###
+#####
+``` 
+
+This fixed version of the game ensures that the left pattern of the movement rule `[ > Player | Crate ]` has a matching right pattern `[ > Player | > Crate ]`, resolving the compilation error by providing a rule with consistent pattern lengths on both left and right sides.

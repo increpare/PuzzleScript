@@ -1,0 +1,90 @@
+To address the errors in the provided PuzzleScript game code, we need to align the syntax and format with the PuzzleScript language specifications.
+
+1. **Object Definitions**: Each object definition should start with the object's name followed by its sprite layout (one character per line equivalent to one game unit in height). The color is traditionally defined using a line starting with `color` followed by the hex code or color name. Ensure consistent formatting.
+
+2. **Legend Definitions**: The legend should match each visual character in the level to an object.
+
+3. **Player Behavior**: Ensure the rules match the defined legend symbols. 
+
+4. **Corrective Adjustments**: Ensure proper use of the `.`, `p`, `w`, `b`, `g`, and other symbols along with newlines to indicate the end of sections.
+
+Here is the revised version of the original code that complies with the correct PuzzleScript syntax:
+
+```plaintext
+title Sokoban
+
+======= OBJECTS =======
+
+Background
+color transparent
+. 
+
+Player
+color Blue
+p
+
+Wall
+color Grey
+w
+
+Block
+color Green
+b
+
+Goal
+color Red
+g
+
+======= LEGEND =======
+
+. = Background
+p = Player
+w = Wall
+b = Block
+g = Goal
+
+======= RULES =======
+
+[Player | Block] -> [ > Player | > Block ]
+[Player | ] -> [ > Player |  ]
+
+======= WINCONDITIONS =======
+
+All Block on Goal
+
+======= LEVELS =======
+
+// Level 1
+#####
+#p  #
+#   #
+# b #
+# g #
+#####
+
+// Level 2
+#####
+#p  #
+# b #
+#   #
+# gg#
+#   #
+#####
+
+// Level 3
+#######
+#     #
+#  p  #
+#  b  #
+#  b  #
+#  gg #
+#     #
+#######
+```
+
+**Key corrections in the code:** 
+- Corrected the layout of the objects where each has a single character representation.
+- Ensured that `color` lines follow the object declaration line.
+- Properly added `=======` for section separations with no other content on those lines.
+- Ensured consistency in how the objects are represented and matched in the legend.
+- Rectified missing line breaks and removed any redundant periods and whitespace.

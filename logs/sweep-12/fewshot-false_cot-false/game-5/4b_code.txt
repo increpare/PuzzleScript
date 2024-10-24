@@ -1,0 +1,123 @@
+Here's a repaired version of the PuzzleScript code that addresses the errors from the console output:
+
+```plaintext
+Title: Block Pusher
+Author: PuzzleScript Game Designer
+
+===========
+OBJECTS
+===========
+
+Background
+transparent
+
+Player
+blue
+.....
+..0..
+.000.
+..0..
+.....
+
+Block
+red
+.....
+.....
+.000.
+.....
+.....
+
+Target
+green
+.....
+..0..
+..0..
+..0..
+.....
+
+BlockOnTarget
+yellow
+.....
+..0..
+.000.
+.000.
+.....
+
+Wall
+grey
+#####
+#####
+#####
+#####
+#####
+
+===========
+LEGEND
+===========
+
+. = Background
+P = Player
+B = Block
+T = Target
+U = BlockOnTarget
+# = Wall
+
+===========
+COLLISIONLAYERS
+===========
+
+Background
+Target
+Player, Block, BlockOnTarget
+Wall
+
+===========
+RULES
+===========
+
+[> Player | Block] -> [> Player | > Block] SFX2
+
+[Block | Target] -> [BlockOnTarget]
+
+[BlockOnTarget | Target] -> [BlockOnTarget]
+
+===========
+WINCONDITIONS
+===========
+
+All BlockOnTarget on Target
+
+===========
+LEVELS
+===========
+
+#######
+#.....#
+#..T..#
+#..B..#
+#..P..#
+#######
+
+#######
+#.....#
+#..T..#
+#..B..#
+#..P..#
+#.....#
+#..T..#
+#######
+
+#######
+#..T..#
+#..B..#
+#.PPP.#
+#..B..#
+#..T..#
+#######
+
+```
+
+Changes made:
+1. Added a `Wall` object to define the "#" symbol, which was missing from the legend and object definitions.
+2. Added the `Wall` to the `COLLISIONLAYERS` to indicate it as part of the game world.
+3. Removed the `SOUNDS` section since PuzzleScript does not have built-in sound function syntax in standard library—those tokens were not recognized, leading to compilation errors.

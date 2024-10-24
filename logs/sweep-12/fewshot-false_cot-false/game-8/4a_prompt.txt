@@ -1,0 +1,110 @@
+SYSTEM PROMPT:
+You are a game designer, familiar with the PuzzleScript game description language. 
+
+USER PROMPT:
+The following PuzzleScript game code:
+```plaintext
+Title Simple Sokoban
+Author Game Designer
+Homepage https://www.example.com
+
+===========
+Objects
+===========
+Background
+grey
+
+Wall
+orange
+
+Player
+yellow
+
+Box
+blue
+
+Target
+red
+
+BoxOnTarget
+green
+
+===========
+Legend
+===========
+# = Wall
+P = Player
+B = Box
+T = Target
+G = BoxOnTarget
+
+===========
+Sounds
+===========
+# No custom sounds specified.
+
+===========
+CollisionLayers
+===========
+Background
+Target
+Player, Box, BoxOnTarget, Wall
+
+===========
+Rules
+===========
+[ > Player |  ] -> [ > Player | > ]
+[ Player | Box  ] -> [ > Player | > Box ]
+[ Player | BoxOnTarget  ] -> [ > Player | > BoxOnTarget ]
+
+[ Player | Box | Target ] -> [ > Player | BoxOnTarget ]
+
+[ Box | Target ] -> [ BoxOnTarget | Target ]
+[ BoxOnTarget |  ] -> [ Box |  ]
+
+===========
+WinConditions
+===========
+All BoxOnTarget on Target
+
+===========
+Levels
+===========
+-------
+#####  
+#...#  
+#.#.#  
+#P#B#  
+#####  
+
+-------
+#####  
+#...#  
+#B#P#  
+#####  
+
+```
+produced the following console output:
+=================================
+line 38 : Was expecting a sound event (like SFX3, or ENDLEVEL) or an object name, but didn't find either.
+line 67 : Key "-" not found. Do you need to add it to the legend, or define a new object?
+line 68 : Maps must be rectangular, yo (In a level, the length of each row must be the same).
+line 69 : Maps must be rectangular, yo (In a level, the length of each row must be the same).
+line 69 : Key "." not found. Do you need to add it to the legend, or define a new object?
+line 70 : Maps must be rectangular, yo (In a level, the length of each row must be the same).
+line 70 : Key "." not found. Do you need to add it to the legend, or define a new object?
+line 71 : Maps must be rectangular, yo (In a level, the length of each row must be the same).
+line 72 : Maps must be rectangular, yo (In a level, the length of each row must be the same).
+line 74 : Key "-" not found. Do you need to add it to the legend, or define a new object?
+line 75 : Maps must be rectangular, yo (In a level, the length of each row must be the same).
+line 76 : Maps must be rectangular, yo (In a level, the length of each row must be the same).
+line 76 : Key "." not found. Do you need to add it to the legend, or define a new object?
+line 77 : Maps must be rectangular, yo (In a level, the length of each row must be the same).
+line 78 : Maps must be rectangular, yo (In a level, the length of each row must be the same).
+line 67 : Error, symbol "-", used in map, not found.
+line 74 : Error, symbol "-", used in map, not found.
+line 50 : In a rule, if you specify a movement, it has to act on an object.
+line 50 : In a rule, each pattern to match on the left must have a corresponding pattern on the right of equal length (number of cells).
+line 54 : In a rule, each pattern to match on the left must have a corresponding pattern on the right of equal length (number of cells).
+Errors detected during compilation; the game may not work correctly.
+Return a repaired version of the code that addresses these errors. Return your code in full, inside a ```plaintext code block.

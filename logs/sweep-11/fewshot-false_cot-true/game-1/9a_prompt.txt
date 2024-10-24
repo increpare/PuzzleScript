@@ -1,0 +1,100 @@
+SYSTEM PROMPT:
+You are a game designer, familiar with the PuzzleScript game description language. 
+
+USER PROMPT:
+The following PuzzleScript game code:
+```plaintext
+# ======= OBJECTS =======
+Objects
+  # Define the player character
+  Player
+    color #ffff00 #000000
+    00000
+    01110
+    00100
+    00100
+    00000
+  
+  # Crate that needs to be pushed to the goal
+  Crate
+    color #ff0000 #000000
+    11111
+    10001
+    10001
+    10001
+    11111
+
+  # Stationary floor on which other objects lie
+  Floor
+    color #dddddd #dddddd
+    11111
+    11111
+    11111
+    11111
+    11111
+
+  # Goal area for crates
+  Goal
+    color #00ff00 #000000
+    00000
+    01110
+    00100
+    00100
+    00000
+
+  # Fixed boundary that blocks movement
+  Wall
+    color #999999 #999999
+    11111
+    11111
+    11111
+    11111
+    11111
+
+# ======= LEGEND =======
+Legend
+  P = Player
+  C = Crate
+  G = Goal
+  . = Floor
+  W = Wall
+
+# ======= RULES =======
+Rules
+  [ > P | C ] -> [ > P | > C ]
+
+  // Ensure crates on goals are displayed nicely
+  [ C | G ] -> [ C ]
+
+# ======= WIN CONDITIONS =======
+WinConditions
+  All Crate on Goal
+
+# ======= LEVELS =======
+Levels
+  WWWWW
+  W...W
+  W.G.W
+  W.GCW
+  W.P.W
+  WWWWW
+
+```
+produced the following console output:
+=================================
+line 3 : Unknown junk in object section (possibly: sprites have to be 5 pixels wide and 5 pixels high exactly. Or maybe: the main names for objects have to be words containing only the letters a-z0.9 - if you want to call them something like ",", do it in the legend section).
+line 5 : Was looking for color for object PLAYER, got "color " instead.
+line 12 : Unknown junk in object section (possibly: sprites have to be 5 pixels wide and 5 pixels high exactly. Or maybe: the main names for objects have to be words containing only the letters a-z0.9 - if you want to call them something like ",", do it in the legend section).
+line 14 : Was looking for color for object CRATE, got "color " instead.
+line 21 : Unknown junk in object section (possibly: sprites have to be 5 pixels wide and 5 pixels high exactly. Or maybe: the main names for objects have to be words containing only the letters a-z0.9 - if you want to call them something like ",", do it in the legend section).
+line 23 : Was looking for color for object FLOOR, got "color " instead.
+line 30 : Unknown junk in object section (possibly: sprites have to be 5 pixels wide and 5 pixels high exactly. Or maybe: the main names for objects have to be words containing only the letters a-z0.9 - if you want to call them something like ",", do it in the legend section).
+line 32 : Was looking for color for object GOAL, got "color " instead.
+line 39 : Unknown junk in object section (possibly: sprites have to be 5 pixels wide and 5 pixels high exactly. Or maybe: the main names for objects have to be words containing only the letters a-z0.9 - if you want to call them something like ",", do it in the legend section).
+line 41 : Was looking for color for object WALL, got "color " instead.
+line 48 : Unknown junk in object section (possibly: sprites have to be 5 pixels wide and 5 pixels high exactly. Or maybe: the main names for objects have to be words containing only the letters a-z0.9 - if you want to call them something like ",", do it in the legend section).
+line 56 : Something bad's happening in the LEGEND
+line 56 : Incorrect format of legend - should be one of "A = B", "A = B or C [ or D ...]", "A = B and C [ and D ...]", but it looks like you have a dangling "="?
+too many errors, aborting compilation
+Errors detected during compilation; the game may not work correctly.
+Return a repaired version of the code that addresses these errors. First, reason about your task and determine the best plan of action. Then, write your code. Return your code in full, inside a ```plaintext code block.

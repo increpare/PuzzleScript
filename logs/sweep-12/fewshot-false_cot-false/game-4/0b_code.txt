@@ -1,0 +1,105 @@
+Sure! Below is a simple complete PuzzleScript game where you move a player character to reach a goal.
+
+```plaintext
+Title: Simple Reach the Goal Game
+Author: You
+Homepage: http://www.puzzlescript.net
+
+===========
+OBJECTS
+===========
+
+Background
+LIGHTGREEN
+
+Player
+BLUE
+.ooo.
+.ooo.
+..0..
+.o.o.
+.o.o.
+
+Goal
+YELLOW
+.....
+.....
+..0..
+.....
+.....
+
+=======
+LEGEND
+=======
+
+= Background
+P = Player
+G = Goal
+
+==============
+SOUNDS
+==============
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Player
+Goal
+
+==========
+RULES
+==========
+
+[Player | Goal] -> [Player on Goal]
+
+=======
+WINCONDITIONS
+=======
+
+All Goal on Player
+
+===============
+LEVELS
+===============
+
+; Level 1
+==========
+..P..
+.....
+.....
+.....
+..G..
+
+; Level 2
+==========
+..P..
+.....
+..G..
+.....
+.....
+```
+
+### Explanation:
+
+- **Title, Author, Homepage**: Basic game details to identify the game.
+  
+- **Objects**: 
+  - *Background* is defined as `LIGHTGREEN`.
+  - *Player* is a blue object.
+  - *Goal* is a yellow object.
+
+- **Legend**: Defines symbols used in the level design.
+  
+- **CollisionLayers**: Establishes object layers. Objects listed on the same line can't overlap each other.
+
+- **Rules**: Defines interactions. Here, when the Player overlaps the Goal, it stays on it.
+
+- **WinConditions**: The player wins when all Goal objects have a Player on them.
+
+- **Levels**: Two simple levels are defined:
+  - Level 1 starts with the Player near the Goal.
+  - Level 2 has a different arrangement, requiring movement to reach the Goal.
+
+This code sets up a basic game where you control a player to move to the goal. You can expand it with more levels and additional rules for added complexity.

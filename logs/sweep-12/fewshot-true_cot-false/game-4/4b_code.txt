@@ -1,0 +1,116 @@
+```plaintext
+title Blocked Path
+author PuzzleScript AI
+
+========
+OBJECTS
+========
+
+Background
+lightgray
+.....
+.....
+.....
+.....
+.....
+
+Player
+blue
+..0..
+.000.
+..0..
+.....
+.....
+
+Target
+green
+..0..
+.0.0.
+.000.
+.0.0.
+..0..
+
+Wall
+black
+.....
+.000.
+.000.
+.000.
+.....
+
+=======
+LEGEND
+=======
+
+. = Background
+P = Player
+T = Target
+# = Wall
+
+=========
+SOUNDS
+=========
+
+# Move 39625601
+# EndLevel 24622400
+# StartLevel 15297100
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Target
+Wall
+Player
+
+======
+RULES
+======
+
+[ > Player | Target ] -> [ > Player | Target ]
+[ > Player | Wall ] -> [ Player | Wall ]
+
+==============
+WINCONDITIONS
+==============
+
+All Player on Target
+
+=======
+LEVELS
+=======
+
+message Welcome to Blocked Path!
+##########
+#........#
+#..####..#
+#..#..#..#
+#..#P.#..#
+#..#..#..#
+#..####..#
+#.....T..#
+##########
+
+message Congratulations! You reached the target.
+
+```
+
+The level is not solvable because the player is trapped within walls. To repair the level, you need to create a valid path for the player to reach the target. Below is the modified level:
+
+```plaintext
+LEVELS
+
+message Welcome to Blocked Path!
+##########
+#........#
+#..####..#
+#..#..#..#
+#..#P.#..#
+#..#..#..#
+#..##....#
+#....T...#
+##########
+```
+
+This modification removes part of the wall to create a path to the target.

@@ -1,0 +1,104 @@
+It seems there are a few issues with the code, particularly related to the way the messages section is formatted and defined. Let's fix these issues:
+
+1. The warning about line 85 suggests that a space should be added after the `message` keyword (if it were used), although your current messages block is not being used correctly. The messages section is likely not needed as messages should directly follow the `winconditions` (as feedback shown on screen).
+
+2. There's a parsing issue with the `messages`, and it's not using the proper syntax. We'll format and place comments instead of trying to use a separate `messages` block.
+
+Here's the corrected version of the code:
+
+```plaintext
+===========
+title Catch the Star
+===========
+
+===========
+author Your Name
+===========
+
+===========
+homepage www.example.com
+===========
+
+===========
+objects
+===========
+Background
+#000000
+
+Wall
+#2f4f4f
+
+Player
+#ff6347
+..0..
+.000.
+00.00
+..0..
+
+Star
+#ffd700
+..0..
+.0.0.
+00000
+
+===========
+legend
+===========
+. = Background
+# = Wall
+P = Player
+* = Star
+
+===========
+sounds
+===========
+
+===========
+collisionLayers
+===========
+Background
+Player, Star, Wall
+
+===========
+rules
+===========
+[Player | Star] -> [Player Star]
+
+===========
+winconditions
+===========
+All Star on Player
+
+===========
+levels
+===========
+####
+#P.#
+#..#
+#.*#
+####
+
+####
+#* #
+#.P#
+## #
+####
+
+########
+#.#..#.#
+#.###* #
+#P..   #
+########
+
+# Message: Congratulations! You caught the star!
+
+===========
+colorPalette
+===========
+Background #000000
+Wall #2f4f4f
+Player #ff6347
+Star #ffd700
+```
+
+Note: The intended 'congratulations' message can appear to users by including it in the level definition, but PuzzleScript does not currently support a dedicated `messages` section for endgame messages. Instead, use a comment or consider incorporating external elements to signal a win, potentially through level design or in-game feedback.

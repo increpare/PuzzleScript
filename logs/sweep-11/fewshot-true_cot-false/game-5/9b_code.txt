@@ -1,0 +1,150 @@
+Here's the corrected version of your PuzzleScript game code. In PuzzleScript, sound tokens such as `player_move`, `block_move`, `end_level`, and `end_game` aren't inherently recognized as specific by the language. Instead, you should use the predefined sound keywords like `sfx0`, `sfx1`, etc. The sounds are then referred to by these identifiers in the rules.
+
+```plaintext
+title Colorful Connections
+author PuzzleScript Creator
+
+========
+OBJECTS
+========
+
+Background
+#282828
+
+Wall
+#404040 #606060
+00000
+00100
+01110
+00100
+00000
+
+Player
+#FFDD44 #FFFFFF #000000
+.000.
+.111.
+.000.
+.111.
+.....
+
+RedBlock
+#DD4444
+.000.
+.0.0.
+.0.0.
+.000.
+.....
+
+YellowBlock
+#DDDD44
+.000.
+.0.0.
+.0.0.
+.000.
+.....
+
+BlueBlock
+#4444DD
+.000.
+.0.0.
+.0.0.
+.000.
+.....
+
+RedTarget
+#FF8888
+.....
+.....
+.....
+.....
+.....
+
+YellowTarget
+#FFFF88
+.....
+.....
+.....
+.....
+.....
+
+BlueTarget
+#8888FF
+.....
+.....
+.....
+.....
+.....
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Player
+R = RedBlock
+Y = YellowBlock
+B = BlueBlock
+X = RedTarget
+O = YellowTarget
+Z = BlueTarget
+
+=========
+SOUNDS
+=========
+
+sfx0 11429307
+sfx1 16777215
+endlevel 85763108
+endgame 65287309
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Player, Wall, RedBlock, YellowBlock, BlueBlock, RedTarget, YellowTarget, BlueTarget
+
+======
+RULES
+======
+
+[ > Player | RedBlock ] -> [ > Player | > RedBlock ] sfx0
+[ > Player | YellowBlock ] -> [ > Player | > YellowBlock ] sfx0
+[ > Player | BlueBlock ] -> [ > Player | > BlueBlock ] sfx0
+
+==============
+WINCONDITIONS
+==============
+
+All RedBlock on RedTarget
+All YellowBlock on YellowTarget
+All BlueBlock on BlueTarget
+
+=======
+LEVELS
+=======
+
+####
+#P.#
+#RY#
+#BO#
+#ZX#
+####
+
+#######
+#.....#
+#RYBOZ#
+#.....#
+#XP...#
+#######
+
+#########
+#.YO....#
+#P..R.Z.#
+#....B..#
+#.X....O#
+#########
+```
+
+This version should work without compilation errors.

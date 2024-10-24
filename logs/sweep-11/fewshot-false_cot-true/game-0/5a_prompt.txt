@@ -1,0 +1,119 @@
+SYSTEM PROMPT:
+You are a game designer, familiar with the PuzzleScript game description language. 
+
+USER PROMPT:
+The following PuzzleScript game code:
+```plaintext
+title Sokoban Puzzle
+
+author YourName
+
+homepage http://www.yourwebsite.com
+
+========
+OBJECTS
+========
+
+Background
+    color 255 255 0  // Yellow
+    .
+
+Player
+    color 255 0 0  // Red
+    @
+
+Crate
+    color 165 42 42  // Brown
+    o
+
+Wall
+    color 128 128 128  // Gray
+    #
+
+Target
+    color 0 255 0  // Green
+    .
+
+CrateOnTarget
+    color 0 100 0  // DarkGreen
+    O
+
+=======
+
+LEGEND
+=======
+
+. = Target
+# = Wall
+@ = Player
+o = Crate
+O = CrateOnTarget
+
+=============
+
+SOUNDS
+=============
+
+player_move
+    sfx blip 
+
+crate_move
+    sfx push
+
+=============
+
+RULES
+=============
+[Player | Crate] -> [ ] | [Player CrateMove]
+CrateMove | Target -> CrateOnTarget | Target
+CrateMove | Background -> Crate | Background
+CrateOnTarget | Target -> CrateMove | Target
+
+=============
+
+WINCONDITIONS
+=============
+
+All CrateOnTarget on Target
+
+=============
+
+LEVELS
+=============
+
+[Level 1]
+#######
+#     #
+# .o  #
+#     #
+#  @  #
+#######
+
+[Level 2]
+#######
+#     #
+# .o. #
+#     #
+#  @  #
+#######
+
+[Level 3]
+########
+# @    #
+#  oo  #
+# .  o #
+#    . #
+########
+
+```
+produced the following console output:
+=================================
+line 12 : Was looking for color for object BACKGROUND, got "color " instead.
+line 12 : Was looking for color for object BACKGROUND, got "255 " instead.
+line 12 : Was looking for color for object BACKGROUND, got "0  " instead.
+line 12 : Was looking for color for object BACKGROUND, got "// yellow" instead.
+line 16 : Was looking for color for object PLAYER, got "color " instead.
+line 16 : Was looking for color for object PLAYER, got "255 " instead.
+too many errors, aborting compilation
+Errors detected during compilation; the game may not work correctly.
+Return a repaired version of the code that addresses these errors. First, reason about your task and determine the best plan of action. Then, write your code. Return your code in full, inside a ```plaintext code block.

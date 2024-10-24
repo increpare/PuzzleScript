@@ -1,0 +1,99 @@
+The error messages indicate that the parser is expecting a color code for each object, but it encounters something unexpected due to format issues. It seems the spacing in the `objects` section is causing these errors. PuzzleScript expects specific formatting where each line in the `objects` section allows for clear delineation between the object name, character representation, and color. Let's correct this by ensuring consistent spacing and alignment.
+
+Here's the plan:
+1. Ensure there are two spaces separating each part (name, character, color) in the `objects` section, which is the typical PuzzleScript format.
+2. Verify that every object has a unique character associated with it and that there are no duplicates.
+3. Ensure colors are correctly specified as a six-digit hexadecimal value.
+
+Below is the corrected version of the code:
+
+```plaintext
+========
+title Sokoban Basic
+author Your Name
+homepage www.yourwebsite.com
+========
+
+========
+objects
+========
+Background  .  #000000
+Player      P  #00ff00
+Wall        W  #aaaaaa
+Box         B  #ff0000
+Target      T  #0000ff
+BoxOnTarget O  #ff00ff
+
+========
+legend
+========
+. = Background
+P = Player
+W = Wall
+B = Box
+T = Target
+O = BoxOnTarget
+# = Wall
+
+========
+sounds
+========
+SfxMove 100
+SfxPush 241
+SfxWin 40
+
+========
+collisionlayers
+========
+Background
+Player, Box, BoxOnTarget
+Wall, Target
+
+========
+rules
+========
+// Player movement
+[> Player | ] -> [> Player | ] SfxMove
+[< Player | ] -> [< Player | ] SfxMove
+[^ Player | ] -> [^ Player | ] SfxMove
+[v Player | ] -> [v Player | ] SfxMove
+
+// Box pushing
+[> Player | Box ] -> [> Player | > Box ] SfxPush
+[< Player | Box ] -> [< Player | < Box ] SfxPush
+[^ Player | Box ] -> [^ Player | ^ Box ] SfxPush
+[v Player | Box ] -> [v Player | v Box ] SfxPush
+
+// Convert Box to BoxOnTarget
+[ Box | Target ] -> [ BoxOnTarget ]
+
+// Revert BoxOnTarget if moved off Target
+[ BoxOnTarget | ] -> [ Box ]
+
+========
+winconditions
+========
+All Boxes on Targets
+
+========
+levels
+========
+/* Level 1 */
+WWWWWW
+W....W
+W.PB.W
+WT...W
+WWWWWW
+
+/* Level 2 */
+WWWWWWW
+W.....W
+W.P.B.W
+W.B..TW
+W.....W
+WTWWWWW
+
+========
+```
+
+The formatting adjustments in the `objects` section should correct the parsing errors, allowing the game to compile and work as intended.

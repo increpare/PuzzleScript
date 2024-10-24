@@ -1,0 +1,122 @@
+To address the errors reported by the PuzzleScript console output, we need to make the following changes:
+
+1. **Wall Color Definition**: The error regarding the `Wall` object pertains to its color definition. In PuzzleScript, each object is defined by a color palette that should have multiple colors if using a detailed ASCII art sprite. Since `Wall` is a solid grey, it should be a mono-color which can be represented using one color in the palette.
+
+2. **Section Order**: The error regarding the section order indicates that the `COLLISIONLAYERS` section is out of place. In a PuzzleScript game, all predefined sections (like `SOUNDS`) must be included, even if they are empty. I will include an empty `SOUNDS` section before `COLLISIONLAYERS`.
+
+Here is the corrected code:
+
+```plaintext
+title Block Pusher
+author PuzzleScriptCreator
+
+========
+OBJECTS
+========
+
+Background
+white
+
+Wall
+gray
+22222
+22222
+22222
+22222
+22222
+
+Player
+red
+..0..
+.000.
+..0..
+.....
+.....
+
+Block
+blue darkblue
+.....
+.000.
+.000.
+.000.
+.....
+
+Target
+green
+.....
+..0..
+..0..
+.000.
+.....
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Player
+B = Block
+T = Target
+
+=======
+SOUNDS
+=======
+
+=========== 
+COLLISIONLAYERS 
+===========
+
+Background
+Target
+Wall
+Block
+Player
+
+======
+RULES
+======
+
+[> Player | Block | no Wall] -> [> Player | > Block]
+[> Player | no Block | no Wall] -> [> Player]
+
+==============
+WINCONDITIONS
+==============
+
+All Block on Target
+
+=======
+LEVELS
+=======
+
+; Level 1
+########
+#......#
+#..BTP.#
+#......#
+########
+
+; Level 2
+########
+#......#
+#..BTP.#
+#..B...#
+#..T...#
+########
+
+; Level 3
+##########
+#........#
+#..B.BTP.#
+#......T.#
+##########
+
+```
+
+### Explanation of the Changes:
+- **Wall Definition**: I specified a single color in the palette, which is `gray`. This avoids the error related to trying to access non-existing indices in the color palette.
+  
+- **Empty Sounds Section**: I inserted an empty `SOUNDS` section to maintain the required order of sections in the PuzzleScript file. This prevents the `COLLISIONLAYERS` section from being out of order.
+
+These changes should resolve the compilation errors, and the game should now work correctly.

@@ -1,127 +1,122 @@
-To create a complete PuzzleScript game, I first need to consider the essential elements typically involved in constructing a PuzzleScript game. These elements include:
+To create a complete PuzzleScript game, we need to consider the essential components that make up such a game. PuzzleScript games are generally simple, grid-based puzzles or challenges that require players to achieve specific goals, such as navigating to an endpoint or arranging objects in a particular manner. The usual structure in PuzzleScript includes defining objects, specifying rules, creating levels, and describing a legend. It's crucial to keep the game straightforward because of the language's limitations and emphasis on simplicity and playability.
 
-1. **Title and Author Information**: Basic metadata about the game.
-2. **Objects**: Defining the sprites used in the game.
-3. **Legend**: Mapping characters to objects for use in levels.
-4. **Sound**: Optional sound settings.
-5. **Collision Layers**: Defining the different layers of interaction.
-6. **Rules**: Determining how objects interact or change state.
-7. **Win Conditions**: Specifying how the player wins a level.
-8. **Levels**: Designing the playable levels.
+We'll design a small puzzle game called "Maze Escape," where the player navigates a character through a maze to reach an exit. The game will consist of basic elements: a player character, walls, and an exit. The objective is to reach the exit while avoiding impassable walls.
 
-For this example, I'll create a simple Sokoban-style game where the player needs to push boxes onto target locations. I will include basic representations and straightforward rules to demonstrate PuzzleScript's capabilities.
+### Plan:
+1. **Title and Author**: Start with the basic metadata of the game.
+2. **Objects**: Define the game objects - player, wall, and exit.
+3. **Legends**: Describe the symbols associated with each game object.
+4. **Sounds**: Optionally add basic sounds for movement and winning.
+5. **Rules**: Define how the player can move and what happens upon reaching the exit.
+6. **Levels**: Create a few simple levels to demonstrate the gameplay.
+7. **Win Conditions**: Describe the conditions under which the player wins the level.
 
-Here's the complete code for a simple PuzzleScript game:
+Now, I'll provide the complete code for "Maze Escape" using PuzzleScript:
 
 ```plaintext
-# Title and Author
-title Sokoban Simple
-author Game Designer
+title Maze Escape
+author Your Name
 
-# Objects
-=========
+===========
+OBJECTS
+===========
+
 Background
-yellow
+BLACK
 
 Player
-@ blue
-00000
-0...0
-0.0.0
-0...0
-00000
+YELLOW
 
 Wall
-# black
-00000
-00000
-00000
-00000
-00000
+BLUE
 
-Box
-B red
-00000
-0...0
-0...0
-0...0
-00000
+Exit
+GREEN
 
-Target
-O green
-.....
-..0..
-..0..
-..0..
-.....
-
-BoxOnTarget
-G yellow
-00000
-0.0.0
-0...0
-0.0.0
-00000
-
-# Legend
 ===========
+LEGEND
+===========
+
 . = Background
+P = Player
 # = Wall
-@ = Player
-B = Box
-O = Target
-G = BoxOnTarget
+E = Exit
 
-# Sounds
 ===========
-# (Optional Sounds)
+SOUNDS
+===========
 
-# Collision Layers
-===================
+Movement
+move.ogg
+
+Win
+win.ogg
+
+===========
+RULES
+===========
+
+[Player] -> [ Player ]
+up [Player | ] -> [ | Player ]
+down [Player | ] -> [ | Player ]
+left [Player | ] -> [ | Player ]
+right [Player | ] -> [ | Player ]
+
+[ Player | Exit ] -> [ Player | Background ]
+Sound Win
+
+===========
+COLLISIONLAYERS
+===========
+
 Background
-Player, Box, BoxOnTarget
-Wall, Target
+Wall
+Player, Exit
 
-# Rules
 ===========
-[ > Player | Box ] -> [ > Player | > Box ]
-[ Box | Target ] -> [ BoxOnTarget | Target ]
-[ BoxOnTarget | ] -> [ | Box ]
+WINCONDITIONS
+===========
 
-# Win Conditions
-==================
-All BoxOnTarget on Target
+All Exit on Background
 
-# Levels
-=========
-# Level 1
-#######
-#..O..#
-#..B..#
-#..@..#
-#######
+===========
+LEVELS
+===========
 
-# Level 2
-#######
-#..O..#
-#..B..#
-#..@..#
-#######
+; Level 1
+######
+#P   #
+# ## #
+#    #
+# E  #
+######
+
+; Level 2
+########
+#P     #
+# ###  #
+# # E  #
+# #    #
+# #### #
+#      #
+########
+
+; Level 3
+#########
+#P      #
+### ### #
+#    E# #
+### ### #
+#       #
+#########
 ```
 
-### Explanation
-- **Title and Author**: Provides basic metadata for the game.
-- **Objects**: Define the visual appearance and characteristics of game elements.
-  - `Background`: The simple yellow floor.
-  - `Player`: The character controlled by the user.
-  - `Wall`: Impassable black barriers.
-  - `Box`: Movable red boxes.
-  - `Target`: Green locations where boxes need to be pushed.
-  - `BoxOnTarget`: Represents a box correctly placed on a target.
-- **Legend**: Maps simple characters to objects for easy level design.
-- **Collision Layers**: Defines which objects can occupy the same space.
-- **Rules**: Implement game mechanics, such as pushing boxes and transforming boxes when correctly placed.
-- **Win Conditions**: Specify that all targets must have boxes for the player to win.
-- **Levels**: Provides example layouts for gameplay.
+### Explanation:
+- **Objects**: We've defined four objects — a black Background, a yellow Player, a blue Wall, and a green Exit.
+- **Legend**: These objects are mapped to single characters for ease of level design.
+- **Rules**: Allow the player to move in all four directions without passing through walls, and define the win state when the player reaches the exit.
+- **Collision Layers**: Specifies object interactions, ensuring walls are solid objects that cannot be passed.
+- **Win Conditions**: The player wins when they reach the exit and it transforms into a Background space.
+- **Levels**: Three simple mazes that provide increasing difficulty.
 
-This is a complete yet simple instance of a PuzzleScript game, suitable for demonstrating basic mechanics and interactions within the system.
+This simple game provides a basic but functional PuzzleScript experience, showcasing how to navigate multiple levels with increasing complexity.

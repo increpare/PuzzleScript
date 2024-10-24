@@ -1,0 +1,122 @@
+The errors in the provided code are due to the use of the `#` character in the levels, which is not defined in the legend or objects section. In PuzzleScript, the `#` symbol is typically used to represent walls or borders that are impassable. Since this object is not defined, the compiler throws an error.
+
+To fix the errors, we need to:
+
+1. Define a new object for walls in the `OBJECTS` section.
+2. Add an entry to the `LEGEND` section to map the `#` character to the wall object.
+
+Let's add these definitions to the code:
+
+```plaintext
+title Block Pusher
+author YourName
+
+========
+OBJECTS
+========
+
+Background
+darkgray
+
+Player
+blue
+
+Crate
+brown
+
+Target
+yellow
+
+TargetedCrate
+green
+
+Wall
+black
+
+=======
+LEGEND
+=======
+
+. = Background
+P = Player
+C = Crate
+T = Target
+X = TargetedCrate
+# = Wall
+
+=========
+SOUNDS
+=========
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Player, Crate
+Target, Wall
+
+======
+RULES
+======
+
+[ Player | Crate ] -> [ > Player | > Crate ]
+
+[ Crate | Target ] -> [ TargetedCrate | Background ]
+[ TargetedCrate ] -> [ Crate ]
+
+==============
+WINCONDITIONS
+==============
+
+all TargetedCrate on Target
+
+=======
+LEVELS
+=======
+
+message Welcome to Block Pusher! Move all crates to targets.
+
+#######
+#.T...#
+#..C..#
+#..P..#
+#.T...#
+#######
+
+#######
+#.....#
+#.TCT.#
+#..P..#
+#..C..#
+#.T...#
+#######
+
+#######
+#..T..#
+#..C..#
+#.TPT.#
+#..C..#
+#..T..#
+#######
+
+#######
+#T.C.T#
+#..P..#
+#.CT.C#
+#..C..#
+#.T.T.#
+#######
+
+#######
+#.T...#
+#..CT.#
+#..P..#
+#..C..#
+#.T...#
+#######
+
+message Congratulations! You've completed all the levels.
+```
+
+In this fixed version, I've added a `Wall` object with a black color and updated the `LEGEND` section to include the `Wall` object, represented by the `#` character. This change ensures that the game correctly recognizes the `#` character as walls in the levels.

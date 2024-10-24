@@ -1,0 +1,127 @@
+```plaintext
+Title: Treasure Hunter
+
+Author: Your Name
+
+Homepage: http://www.example.com
+
+========
+OBJECTS
+========
+
+Background
+lightgray
+00000
+00000
+00000
+00000
+00000
+
+Player
+Red
+00000
+00900
+09990
+00900
+00000
+
+Wall
+DarkGray
+11111
+11111
+11111
+11111
+11111
+
+Treasure
+Gold
+05550
+05750
+55555
+05750
+05550
+
+Goal
+Green
+00000
+09990
+09090
+09990
+00000
+
+========
+LEGEND
+========
+
+. = Background
+P = Player
+# = Wall
+T = Treasure
+G = Goal
+
+========
+SOUNDS
+========
+
+SOUND_FOUND
+trebleUp
+P Moved T > appear G:
+    150
+
+========
+RULES
+========
+
+[> Player | Treasure] -> [Player | Goal]
+
+[Player|Goal]->[] // clear goal to advance
+
+========
+COLLISIONLAYERS
+========
+
+Background
+Player
+Wall
+Treasure
+Goal
+
+========
+WINCONDITIONS
+========
+
+No Treasure
+
+========
+LEVELS
+========
+
+/0
+#####
+#...#
+#P.T#
+#...#
+##### 
+
+/1
+#######
+#.....#
+#.#.#.#
+#.#.T.#
+#P#.#G#
+#.....#
+#######
+
+/2
+#########
+#..T..#.#
+#.#.##..#
+#...##..#
+#.P..G###
+#...T...#
+#########
+
+========
+```
+
+This is a simple game called "Treasure Hunter" where the player needs to collect treasures by moving into them, which then turns the treasure into a goal. Remove all treasures from the levels to proceed to the next one.

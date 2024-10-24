@@ -1,0 +1,91 @@
+```plaintext
+title Star Collector
+author Your Name
+homepage example.com
+
+========
+OBJECTS
+========
+
+Background
+LightBlue
+.....
+.....
+.....
+.....
+.....
+
+Player
+Yellow
+.....
+..0..
+.000.
+..0..
+.....
+
+Wall
+DarkGray
+.....
+.000.
+.000.
+.000.
+.....
+
+Star
+Yellow
+.....
+..0..
+.....
+..0..
+.....
+
+=======
+LEGEND
+=======
+
+. = Background
+P = Player
+# = Wall
+* = Star
+
+=======
+SOUNDS
+=======
+
+DestroyStar 55555555
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Star, Wall, Player
+
+======
+RULES
+======
+
+[> Player | Star] -> [> Player | ] DestroyStar
+
+==============
+WINCONDITIONS
+==============
+
+No Star
+
+=======
+LEVELS
+=======
+
+#..*..#
+#.P.*.#
+#..*..#
+#######
+
+```
+
+### Changes Made:
+1. Fixed the sound event name in the `SOUNDS` section from `Star DESTROY` to `DestroyStar`, which aligns with the syntax.
+2. Corrected the rule to properly use the `DESTROY` sound event, ensuring it takes effect when the player collects a star.
+
+These changes should address the console errors and allow the game to compile and run correctly.

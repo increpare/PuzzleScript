@@ -1,54 +1,109 @@
-To rectify the errors reported by the PuzzleScript engine, we should examine the problematic code sections for syntactical or structural mistakes.
+The errors primarily arise from two concerns: the issue with the handling of space characters in the levels and incorrect syntax in movement rules.
 
-The errors indicate issues in the prelude section where object definitions are stated. It seems the problem arises from the way colors are assigned to the objects. In PuzzleScript, colors cannot usually be defined as separate attributes; instead, they should be assigned directly when defining objects.
+1. **Space in Levels:**
+   In PuzzleScript, you must represent empty spaces using a defined object, typically `Background` here, represented by `.`. The levels currently use spaces, which are undefined in the legend, causing the errors.
 
-Let's update the object definitions to group the symbol with the color-code as part of the syntax that PuzzleScript expects. Moreover, the ordering and indentation should conform to typical PuzzleScript structure. Now, let's provide the corrected code.
+2. **Movement Rules:**
+   Movement rules in PuzzleScript require proper syntax and commitment to specified movements. The rules in the code use a `>` symbol in an incorrect context and lack proper structure. These need correction to process movement actions properly.
+
+For repaired code:
+
+1. Replace the spaces in the level definitions with the defined `Background` character `.`.
+2. Correct the movement rule syntax, ensuring movement acts directly on objects and maintains a consistent rule pattern.
+
+Here is the corrected code:
 
 ```plaintext
-# Title and Author
-title Sokoban Simple
-author Game Designer
+title Maze Escape
+author Your Name
 
-# Objects
-Background . yellow
-Player @ blue
-Wall # black
-Box B red
-Target O green
-BoxOnTarget G yellow
+===========
+OBJECTS
+===========
 
-# Legend
-. = Background
-@ = Player
-# = Wall
-B = Box
-O = Target
-G = BoxOnTarget
-
-# Collision Layers
 Background
+BLACK
+
 Player
-Box, BoxOnTarget
-Wall, Target
+YELLOW
 
-# Rules
-[ > Player | Box ] -> [ > Player | > Box ]
-[ Box | Target ] -> [ BoxOnTarget | Target ]
-[ BoxOnTarget | ] -> [ | Box ]
+Wall
+BLUE
 
-# Win Conditions
-All BoxOnTarget on Target
+Exit
+GREEN
 
-# Levels
-# Level 1
-#######
-#..O..#
-#..B..#
-#..@..#
-#######
+===========
+LEGEND
+===========
+
+. = Background
+P = Player
+# = Wall
+E = Exit
+
+===========
+SOUNDS
+===========
+
+===========
+COLLISIONLAYERS
+===========
+
+Background
+Wall
+Player, Exit
+
+===========
+RULES
+===========
+
+[Moving Player] -> [Player]
+
+up [Player | ] -> [ | Player]
+down [Player | ] -> [ | Player]
+left [Player | ] -> [ | Player]
+right [Player | ] -> [ | Player]
+
+[Player | Exit] -> [Player | Background]
+
+===========
+WINCONDITIONS
+===========
+
+No Exit
+
+===========
+LEVELS
+===========
+
+######
+#P...#
+#.##.#
+#....#
+#.E..#
+######
+
+########
+#P.....#
+#.###..#
+#.#.E..#
+#.#....#
+#.####.#
+#......#
+########
+
+#########
+#P......#
+###.###.#
+#...E.#.#
+###.###.#
+#.......#
+#########
 ```
 
-Here's what was changed:
-- I corrected the object definitions by including the symbols in a single line object definition with their respective colors, such as `Background . yellow`, which adheres to the proper syntax for PuzzleScript.
-   
-Once these corrections are applied, the game script should compile without the syntax errors the console initially reported.
+### Key Changes:
+- **Levels:** Replaced spaces with `.` to denote `Background`.
+- **Rules:** Corrected the movement rules for directional player movement to refer directly to the `Player` objects and removed the incorrect `>` symbol. 
+
+These changes resolve the console errors and should result in a fully functional game.

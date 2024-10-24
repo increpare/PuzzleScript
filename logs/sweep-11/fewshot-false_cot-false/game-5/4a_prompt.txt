@@ -1,0 +1,102 @@
+SYSTEM PROMPT:
+You are a game designer, familiar with the PuzzleScript game description language. 
+
+USER PROMPT:
+The following PuzzleScript game code:
+```plaintext
+Title: Reach the Goal
+Author: PuzzleScriptUser
+Homepage: https://www.puzzlescript.net
+
+===========
+OBJECTS
+===========
+
+Background
+lightgrey
+00000
+00000
+00000
+00000
+00000
+
+Player
+red
+.....
+..0..
+.000.
+..0..
+.....
+
+Wall
+black
+00000
+00000
+00000
+00000
+00000
+
+Goal
+green
+.....
+.....
+..0..
+.....
+.....
+
+===========
+LEGEND
+===========
+
+. = Background
+P = Player
+W = Wall
+G = Goal
+
+===========
+SOUNDS
+===========
+
+===========
+COLLISIONLAYERS
+===========
+
+Background
+Wall
+Player, Goal
+
+===========
+RULES
+===========
+
+[Player] -> [Player Right]
+
+[> Player | Goal] -> [Player | Goal]
+
+===========
+WINCONDITIONS
+===========
+
+All Player on Goal
+
+===========
+LEVELS
+===========
+
+WWWWWW
+W..PGW
+W..P.W
+WWWWWW
+
+WWWWWW
+WP...W
+W.W.GW
+WWWWWW
+
+```
+produced the following console output:
+=================================
+line 66 : In a rule, if you specify a movement, it has to act on an object.
+line 66 : In a rule, each pattern to match on the left must have a corresponding pattern on the right of equal length (number of cells).
+Errors detected during compilation; the game may not work correctly.
+Return a repaired version of the code that addresses these errors. Return your code in full, inside a ```plaintext code block.

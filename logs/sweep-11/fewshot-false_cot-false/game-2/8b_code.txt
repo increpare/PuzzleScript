@@ -1,0 +1,91 @@
+The error message indicates that Level 0 in your game "Maze Runner" is not solvable because the rule ` [ > Player | Target ] -> [ > Player | Background ] ` replaces the Target with a Background, but the Player cannot directly move onto the Target to trigger this rule. Let's make sure the game allows the player to reach the Target. 
+
+Here's the revised code that ensures Level 0 is solvable:
+
+```plaintext
+Title: Maze Runner
+Author: YourName
+Homepage: http://yourhomepage.com
+
+===========
+OBJECTS
+===========
+
+Background
+transparent
+.....
+.....
+.....
+.....
+..... 
+
+Player
+#00F
+.....
+.00..
+.00..
+.....
+..... 
+
+Wall
+#333
+.....
+.00..
+.00..
+.....
+..... 
+
+Target
+#0F0
+.....
+.00..
+.00..
+.....
+..... 
+
+===========
+LEGEND
+===========
+
+. = Background
+P = Player
+W = Wall
+T = Target
+
+===========
+SOUNDS
+===========
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Player
+Wall
+Target
+
+===========
+RULES
+===========
+
+[ > Player | Target ] -> [ > Player | Background ]
+
+=============
+WINCONDITIONS
+=============
+
+No Target
+
+===========
+LEVELS
+===========
+
+WWWWWWW        
+W.....W        
+W.P..TW        
+W.....W        
+WWWWWWW
+```
+
+I moved the Target one cell to the left, so the Player can now reach it and solve the level by stepping on the Target. This change should make the level solvable.

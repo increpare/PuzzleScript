@@ -1,0 +1,132 @@
+SYSTEM PROMPT:
+You are a game designer, familiar with the PuzzleScript game description language. 
+
+USER PROMPT:
+The following PuzzleScript game code:
+```plaintext
+# Main game code for a simple Sokoban-style game
+
+title Sokoban Simplified
+author YourName
+
+======
+
+OBJECTS
+  Player
+    red
+    .....
+    .AAA.
+    .A.A.
+    .AAA.
+    .....
+
+  Wall
+    grey
+    ..b..
+    ..b..
+    ..b..
+    ..b..
+    ..b..
+    
+  Crate
+    yellow
+    .....
+    .DDD.
+    .D.D.
+    .DDD.
+    .....
+
+  Floor
+    black
+    .....
+    .....
+    .....
+    .....
+    .....
+    
+  Goal
+    green
+    ..E..
+    ..E..
+    ..E..
+    ..E..
+    ..E..
+    
+  CrateOnGoal
+    orange
+    .....
+    .FFF.
+    .F.F.
+    .FFF.
+    .....
+
+======
+
+LEGEND
+  . = Floor
+  P = Player
+  # = Wall
+  R = Crate
+  G = Goal
+  Y = CrateOnGoal
+
+======
+
+SOUNDS
+
+======
+
+COLLISIONLAYERS
+  Floor
+  Wall
+  Player
+  Crate, CrateOnGoal
+  Goal
+
+======
+
+RULES
+[> Player | Crate ] -> [> Player | > Crate ]
+
+[ Player | CrateOnGoal ] -> [ Player | CrateOnGoal ]
+
+P [ ] -> [ P ]
+R [ ] -> [ R ]
+Y [ ] -> [ Y ]
+
+[Crate | Goal] -> [CrateOnGoal | Floor]
+[CrateOnGoal | Floor] -> [Crate | Goal]
+
+======
+
+WINCONDITIONS
+All CrateOnGoal
+
+======
+
+LEVELS
+#####
+#P. #
+# R #
+# G #
+#####
+
+#######
+#     #
+# ### #
+#PR G#
+#     #
+#######
+
+```
+produced the following console output:
+=================================
+line 12 : Unknown junk in spritematrix for object PLAYER.
+line 13 : Unknown junk in spritematrix for object PLAYER.
+line 14 : Unknown junk in spritematrix for object PLAYER.
+line 19 : Unknown junk in spritematrix for object WALL.
+line 20 : Unknown junk in spritematrix for object WALL.
+line 21 : Unknown junk in spritematrix for object WALL.
+too many errors, aborting compilation
+Errors detected during compilation; the game may not work correctly.
+Return a repaired version of the code that addresses these errors. First, reason about your task and determine the best plan of action. Then, write your code. Return your code in full, inside a ```plaintext code block.

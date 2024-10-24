@@ -1,0 +1,102 @@
+Certainly! The issues in your PuzzleScript code are related to the format of the win condition and level definition. Here’s a corrected version of your game code:
+
+```plaintext
+Title: Reach the Goal
+Author: PuzzleScriptUser
+Homepage: https://www.puzzlescript.net
+
+===========
+OBJECTS
+===========
+
+Background
+lightgrey
+00000
+00000
+00000
+00000
+00000
+
+Player
+red
+.....
+..0..
+.000.
+..0..
+.....
+
+Wall
+black
+00000
+00000
+00000
+00000
+00000
+
+Goal
+green
+.....
+.....
+..0..
+.....
+.....
+
+===========
+LEGEND
+===========
+
+. = Background
+P = Player
+W = Wall
+G = Goal
+
+===========
+SOUNDS
+===========
+
+===========
+COLLISIONLAYERS
+===========
+
+Background
+Wall
+Player, Goal
+
+===========
+RULES
+===========
+
+[Player] -> [Player Right]
+
+[> Player | Goal] -> [Player | Goal]
+
+===========
+WINCONDITIONS
+===========
+
+All Player on Goal
+
+===========
+LEVELS
+===========
+
+; Level 1
+WWWWWW
+W..PGW
+W..P.W
+WWWWWW
+
+; Level 2
+WWWWWW
+WP...W
+W.W.GW
+WWWWWW
+```
+
+### Explanation of Changes:
+
+1. **Win Condition**: The win condition format was incorrect. Updated to `All Player on Goal`, which is the correct structure for win conditions in PuzzleScript. Use "All", "Some", or "No" to define the win condition.
+
+2. **Levels**: The levels were incorrectly described due to an improper use of comments. Ensure no extra unintended characters interrupt your level layouts. I've matched them similarly to your provided examples.
+
+With these corrections, your game should now compile without errors.

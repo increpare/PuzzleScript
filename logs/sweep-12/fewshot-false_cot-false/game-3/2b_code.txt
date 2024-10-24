@@ -1,0 +1,112 @@
+Here's a corrected version of the PuzzleScript game code addressing the errors:
+
+```plaintext
+Title: Box Pusher
+Author: GameDesigner
+
+========
+OBJECTS
+========
+
+Background
+transparent
+
+Wall
+# Brown
+
+Pusher
+# Red
+
+Box
+# Blue
+
+Target
+# Green
+
+BoxOnTarget
+# Cyan
+
+PusherOnTarget
+# Magenta
+
+========
+LEGEND
+========
+
+. = Background
+# = Wall
+P = Pusher
+B = Box
+T = Target
+O = BoxOnTarget
+@ = PusherOnTarget
+
+========
+COLLISIONLAYERS
+========
+
+Background
+Wall
+Box, BoxOnTarget
+Pusher, PusherOnTarget
+Target
+
+========
+RULES
+========
+
+[ P | B ] -> [ > | > ]
+[ P | T ] -> [ @ ]
+[ P | O ] -> [ @ | B ]
+[ @ ] -> [ P | T ]
+[ P | B | T ] -> [ > | > | O ]
+
+[ B | T ] -> [ O ]
+[ O ] -> [ B | T ]
+
+========
+WINCONDITIONS
+========
+
+All O
+
+========
+LEVELS
+========
+
+#####
+#...#
+#.O.#
+#...#
+#.P.#
+#..B#
+#####
+
+#####
+#...#
+#.O.#
+#...#
+#...#
+#PBO#
+#####
+
+#######
+#.....#
+#.O.O.#
+#.....#
+#PB.BO#
+#...B.#
+#######
+
+#########
+#.......#
+#.O.O.O.#
+#.......#
+#PB.BOBO#
+#.......#
+#########
+```
+
+### Changes Made:
+1. Updated the color specifications in the `OBJECTS` section with a `#` prefix to correctly define the colors.
+2. Removed the `SOUNDS` section, as PuzzleScript does not support custom sound declarations in this format.

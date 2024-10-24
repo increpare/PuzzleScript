@@ -1,0 +1,96 @@
+SYSTEM PROMPT:
+You are a game designer, familiar with the PuzzleScript game description language. 
+
+USER PROMPT:
+The following PuzzleScript game code:
+```plaintext
+title Sokoban Simple
+author OpenAI
+
+===== OBJECTS =====
+Background
+black
+
+Player
+blue
+00011
+01111
+11111
+01111
+00011
+
+Wall
+gray
+11111
+11111
+11111
+11111
+11111
+
+Box
+brown
+11111
+11011
+11111
+11111
+11111
+
+Target
+green
+00000
+00110
+00110
+01100
+00000
+
+BoxOnTarget
+yellow
+11111
+11011
+11111
+11111
+11111
+
+===== LEGEND =====
+. = Background
+P = Player
+# = Wall
+B = Box
+T = Target
+O = BoxOnTarget
+
+===== COLLISIONLAYERS =====
+Background
+Player, Box, BoxOnTarget
+Wall
+Target
+
+===== RULES =====
+[ Player | Box ] -> [ Player | ] [ Box ]
+[ Player | BoxOnTarget ] -> [ Player | ] [ Box ]
+[ Box | Target ] -> [ BoxOnTarget | ]
+[ BoxOnTarget ] -> [ Box | Target ]
+
+===== WINCONDITIONS =====
+All BoxOnTarget on Target
+
+===== LEVELS =====
+# # # # # # #
+# . . . . . #
+# . B B T . #
+# . . P . . #
+# T . . . . #
+# # # # # # #
+
+```
+produced the following console output:
+=================================
+line 4 : Only comments should go after a bunch of equals signs ('===') on a line.
+line 5 : Unrecognised stuff in the prelude.
+line 6 : Unrecognised stuff in the prelude.
+line 8 : Unrecognised stuff in the prelude.
+line 9 : Unrecognised stuff in the prelude.
+line 10 : Unrecognised stuff in the prelude.
+too many errors, aborting compilation
+Errors detected during compilation; the game may not work correctly.
+Return a repaired version of the code that addresses these errors. First, reason about your task and determine the best plan of action. Then, write your code. Return your code in full, inside a ```plaintext code block.

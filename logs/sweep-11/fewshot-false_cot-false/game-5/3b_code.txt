@@ -1,0 +1,94 @@
+The issues you're encountering are primarily due to incorrect formatting for the level declarations. Levels in PuzzleScript should be defined without commentary lines, and each level should be represented as a rectangular grid without any introductory text like "Level 1" or "Level 2". Here's the corrected version of the code:
+
+```plaintext
+Title: Reach the Goal
+Author: PuzzleScriptUser
+Homepage: https://www.puzzlescript.net
+
+===========
+OBJECTS
+===========
+
+Background
+lightgrey
+00000
+00000
+00000
+00000
+00000
+
+Player
+red
+.....
+..0..
+.000.
+..0..
+.....
+
+Wall
+black
+00000
+00000
+00000
+00000
+00000
+
+Goal
+green
+.....
+.....
+..0..
+.....
+.....
+
+===========
+LEGEND
+===========
+
+. = Background
+P = Player
+W = Wall
+G = Goal
+
+===========
+SOUNDS
+===========
+
+===========
+COLLISIONLAYERS
+===========
+
+Background
+Wall
+Player, Goal
+
+===========
+RULES
+===========
+
+[Player] -> [Player Right]
+
+[> Player | Goal] -> [Player | Goal]
+
+===========
+WINCONDITIONS
+===========
+
+All Player on Goal
+
+===========
+LEVELS
+===========
+
+WWWWWW
+W..PGW
+W..P.W
+WWWWWW
+
+WWWWWW
+WP...W
+W.W.GW
+WWWWWW
+```
+
+In this version, each level is specified as a separate block of grid lines directly under the `LEVELS` section, ensuring conformity and removing level annotations.

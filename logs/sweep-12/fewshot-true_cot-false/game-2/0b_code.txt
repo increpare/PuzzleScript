@@ -1,0 +1,106 @@
+```plaintext
+title Unstable Platforms
+author GameDesigner
+
+========
+OBJECTS
+========
+
+Background
+lightblue
+
+Wall
+darkblue
+
+Player
+white
+.....
+.0.0.
+..0..
+.0.0.
+.....
+
+Platform
+orange
+.....
+.....
+.....
+.....
+.000.
+
+Button
+red
+.....
+..0..
+.000.
+..0..
+.....
+
+Box
+yellow
+.....
+.000.
+.0.0.
+.000.
+.....
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Player
+O = Box
+B = Button
+- = Platform
+
+=======
+SOUNDS
+=======
+
+Push 20819902
+ButtonPressed 32490007
+Move 24379999
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Button
+Platform
+Player, Wall, Box
+
+======
+RULES
+======
+
+[ > Player | Box ] -> [ > Player | > Box ]
+
+[Box | Player | Button] -> [Box | Player | ]
+[ > Player | Button ] -> [ > Player | Button ] sfx0
+
+[Box | Button] -> [ ] sfx1
+
+[ Platform | Box ] -> [ Platform | ]
+
+==============
+WINCONDITIONS
+==============
+
+All Button no Box
+
+=======
+LEVELS
+=======
+
+#######
+#.....#
+#.P.#.#
+#.#.#.#
+#.#.#.#
+#.O#O.#
+#-#B#-#
+#######
+```

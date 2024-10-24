@@ -1,0 +1,2100 @@
+SYSTEM PROMPT:
+You are a game designer, familiar with the PuzzleScript game description language. Here are some example games, for inspiration (do not reproduce these games exactly):
+
+title Slidings
+author Alain Brobecker
+homepage abrobecker.free.fr
+
+========
+OBJECTS
+========
+
+Background
+#d8a96c #e5b679
+11111
+10101
+11111
+10101
+11111
+
+Target
+DarkBlue
+.....
+.000.
+.0.0.
+.000.
+.....
+
+Wall
+#88bbbb #448888
+11111
+01111
+11101
+11111
+10111
+
+OverWall
+#88bbbb #448888
+11111
+01111
+11101
+11111
+10111
+
+Count
+#88bbbb #448888 White
+11111
+02221
+12221
+12221
+10111
+
+CountEnd
+#88bbbb #448888
+11111
+01111
+11101
+11111
+10111
+
+Player
+#88ff22 #44ff00 #11cc00
+.112.
+10012
+10012
+21122
+.222.
+
+PlayerHasMoved
+#ffe02c #ffc700 #c87700
+.112.
+10012
+10012
+21122
+.222.
+
+DeadPlayer
+#ffe02c #ffc700 #c87700
+.112.
+10012
+10012
+21122
+.222.
+
+BallA
+#999999 #777777 #444444
+.112.
+10012
+10012
+21122
+.222.
+
+BallB
+#999999 #777777 #444444
+.112.
+10012
+10012
+21122
+.222.
+
+BallC
+#999999 #777777 #444444
+.112.
+10012
+10012
+21122
+.222.
+
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+A = BallA
+B = BallB
+C = BallC
+D = BallB and OverWall
+E = BallC and OverWall
+P = Player
+O = Target
+m = Count
+n = CountEnd
+
+Item = Player or Wall or BallA or BallB or BallC or Count or CountEnd
+
+=======
+SOUNDS
+=======
+
+sfx0 5160507 (move)
+sfx1 83704102 (wrong move)
+sfx2 16709508
+EndLevel 123413 (win)
+EndGame 10475908
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Target
+Player, Wall, BallA, BallB, BallC, Count, CountEnd, DeadPlayer, PlayerHasMoved
+OverWall
+
+======
+RULES
+======
+
+(Player movements)
+[> Player | Item] -> [ Player | Item] sfx1
+[> Player | No Item] -> [ | > Player] again sfx0
+[> Player] -> [ PlayerHasMoved ]
+
+(swap between balls)
+[Action Player] [BallA] [BallB] [BallC] -> [BallC] [Player] [BallA] [BallB]
+[ Player OverWall ] [BallA] [BallB] [BallC] -> [BallC OverWall ] [Player] [BallA] [BallB] again
+
+(count remaining moves)
+[ PlayerHasMoved ] [ Wall | CountEnd | Wall ] ->  [ DeadPlayer ] [Wall | Wall | Wall]
+[ DeadPlayer ] -> [ DeadPlayer ] sfx2
+[ DeadPlayer ] -> restart
+[ PlayerHasMoved ] [ Count | CountEnd ] -> [Player] [CountEnd | Wall ]
+[ PlayerHasMoved ] -> [ Player ]
+
+==============
+WINCONDITIONS
+==============
+
+All Player on Target
+
+=======
+LEVELS
+=======
+
+(you must always have a # before the first counter)
+
+message Bring a ball on the spot.         X to control next sliding ball.                                                                          level 1: 3 moves
+#mmmn#
+#PA..#
+#..O.#
+D####E
+
+message level 2: 4 moves
+#mmmmn
+#.O..#
+#P####
+#A####
+D####E
+
+message level 3: 4 moves
+#mmmmn#
+#PAO..#
+##....#
+D#####E
+
+message level 4: 5 moves
+#mmmmmn
+#.....#
+#..O..#
+#PA####
+D#####E
+
+message level 5: 7 moves
+##mmmmmmmn
+##..O..P##
+#.......A#
+D########E
+
+message level 6: 7 moves
+#mmmmmmmn
+#P.A....#
+#.......#
+#.......#
+#..O#...#
+#.......#
+#.......#
+#B......#
+########E
+
+message level 7: 8 moves
+#mmmmmmm
+#.O.#P.m
+#...#ABn
+#......#
+#...#..#
+#...#..#
+#######E
+
+message level 8: 5 moves
+#mmmmmn
+#....P#
+#A.O..#
+#B....#
+#.C...#
+#######
+
+message level 9: 9 moves
+#mmmmmmm
+##..P..m
+##.....m
+##..O..n
+##A....#
+##....B#
+#######E
+
+message level 10: 9 moves
+#mmmmmmm
+###..##m
+##...P#m
+#..O...n
+#......#
+##.A..##
+###..###
+D######E
+
+message level 11: 13 moves
+mmmmmmmm
+m.P....m
+m...O..m
+#A....nm
+D######E
+
+
+
+title Sticky Blocks
+author increpare
+homepage www.puzzlescript.net
+
+========
+OBJECTS
+========
+
+Background
+lightgreen green
+11111
+01111
+11101
+11111
+10111
+
+Target
+darkblue
+.....
+.000.
+.0.0.
+.000.
+.....
+
+Wall
+brown darkbrown
+00010
+11111
+01000
+11111
+00010
+
+Player
+black orange white blue
+.000.
+.111.
+22222
+.333.
+.3.3.
+
+Crate
+orange
+00000
+0...0
+0...0
+0...0
+00000
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Player
+* = Crate
+@ = Crate and Target
+O = Target
+
+=======
+SOUNDS
+=======
+
+Crate MOVE 36772507
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Target
+Player, Wall, Crate
+
+======
+RULES
+======
+
+[ < Player | Crate ] -> [ < Player | < Crate ] 
+
+==============
+WINCONDITIONS
+==============
+
+all Target on Crate
+
+=======
+LEVELS
+=======
+
+#########
+#.......#
+#.....@.#
+#.P.*.O.#
+#.......#
+#.......#
+#########
+
+.#######.
+.#.....#.
+.#O##..##
+##.##.*.#
+#.*..**.#
+#.OOO.#.#
+#.P.....#
+#########
+
+
+title Sticky Candy Puzzle Saga
+author Alan Hazelden
+homepage www.draknek.org
+
+run_rules_on_level_start
+
+noaction
+
+========
+OBJECTS
+========
+
+Background
+Black DarkGrey
+00000
+00000
+00000
+00000
+00000
+
+
+Wall
+Pink #febfc6
+10001
+00011
+00110
+01100
+11000
+
+Player
+Pink #febfc6
+.000.
+.111.
+00100
+.000.
+.0.0.
+
+Yellow
+Yellow White Orange
+.000.
+01100
+01000
+00002
+.022.
+
+Red
+Red Orange DarkRed
+.000.
+01100
+01000
+00002
+.022.
+
+Blue
+LightBlue White #3468f7
+.000.
+01100
+01000
+00002
+.022.
+
+YellowTarget
+Brown Yellow
+00000
+01110
+01010
+01110
+00000
+
+RedTarget
+DarkBrown Red
+00000
+01110
+01010
+01110
+00000
+
+BlueTarget
+Purple LightBlue
+00000
+01110
+01010
+01110
+00000
+
+Marker
+White
+.....
+.....
+.....
+.....
+.....
+
+WallL
+White
+0....
+0....
+0....
+0....
+0....
+
+WallR
+White
+....0
+....0
+....0
+....0
+....0
+
+WallU
+White
+00000
+.....
+.....
+.....
+.....
+
+WallD
+White
+.....
+.....
+.....
+.....
+00000
+
+WallLR
+White
+0...0
+0...0
+0...0
+0...0
+0...0
+
+WallUD
+White
+00000
+.....
+.....
+.....
+00000
+
+JoinL
+#febfc6
+0....
+.....
+.....
+.....
+0....
+
+JoinR
+#febfc6
+....0
+.....
+.....
+.....
+....0
+
+JoinU
+#febfc6
+0...0
+.....
+.....
+.....
+.....
+
+JoinD
+#febfc6
+.....
+.....
+.....
+.....
+0...0
+
+JoinBoth
+#febfc6
+0...0
+.....
+.....
+.....
+0...0
+
+Zero
+Purple
+.000.
+.0.0.
+.0.0.
+.0.0.
+.000.
+
+One
+Purple
+.00..
+..0..
+..0..
+..0..
+.000.
+
+Two
+Purple
+.000.
+...0.
+.000.
+.0...
+.000.
+
+Three
+Purple
+.000.
+...0.
+.000.
+...0.
+.000.
+
+Four
+Purple
+.0.0.
+.0.0.
+.000.
+...0.
+...0.
+
+Five
+Purple
+.000.
+.0...
+.000.
+...0.
+.000.
+
+Six
+Purple
+.000.
+.0...
+.000.
+.0.0.
+.000.
+
+Seven
+Purple
+.000.
+...0.
+...0.
+...0.
+...0.
+
+Eight
+Purple
+.000.
+.0.0.
+.000.
+.0.0.
+.000.
+
+Nine
+Purple
+.000.
+.0.0.
+.000.
+...0.
+.000.
+
+
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Player
+A = Red
+B = Yellow
+C = Blue
+X = RedTarget
+Y = YellowTarget
+Z = BlueTarget
+
+WallCoverLR = WallL or WallR or WallLR
+WallCoverUD = WallU or WallD or WallUD
+
+JoinCoverLR = JoinL or JoinR or JoinBoth
+JoinCoverUD = JoinU or JoinD
+
+Join = JoinCoverLR or JoinCoverUD
+
+CoverLR = WallCoverLR or JoinCoverLR
+CoverUD = WallCoverUD or JoinCoverUD
+
+0 = Zero and Wall
+1 = One and Wall
+2 = Two and Wall
+3 = Three and Wall
+4 = Four and Wall
+5 = Five and Wall
+6 = Six and Wall
+7 = Seven and Wall
+8 = Eight and Wall
+9 = Nine and Wall
+
+Number = Zero or One or Two or Three or Four or Five or Six or Seven or Eight or Nine
+
+Candy = Yellow or Red or Blue
+Target = YellowTarget or RedTarget or BlueTarget
+
+
+=======
+SOUNDS
+=======
+
+sfx1 6045907 (candies sticking)
+sfx2 27189102 (can't move)
+sfx3 27189102 (can't push)
+Candy MOVE 48059907
+Player MOVE 11429307
+EndLevel 85763108
+Restart 65287309
+Undo 84906107
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Marker
+Target
+Player, Wall, Candy
+CoverUD
+CoverLR, Number
+
+======
+RULES
+======
+
+[ >  Player | Candy ] -> [  >  Player | > Candy  ]
+[ moving Candy | stationary Candy ] -> [ moving Candy | moving Candy ]
+
+(Prevent movement in a way that triggers the "can't move" sound)
+
+[ > Candy | Wall ] [ > Player | > Candy ] -> [ Candy | Wall ] [ > Player | Candy ]
+[ > Player | stationary Candy ] [ moving Candy ] -> [ > Player | Candy ] [ Candy ]
+
+(Trigger the "candies sticking" sound)
+
+[ > Candy | no Candy ] -> [ > Candy | Marker ]
+
+[ Marker | stationary Candy ] -> sfx1
+
+[ Marker ] -> []
+
+(Can't move sounds)
+
+[ > Player | Wall ] -> sfx2
+[ > Player | stationary Candy ] -> sfx3
+
+(Wall borders)
+
+left [ Wall no WallCoverLR | no Wall ] -> [ Wall WallL | ]
+right [ Wall no WallCoverLR | no Wall ] -> [ Wall WallR | ]
+right [ Wall WallL | no Wall ] -> [ Wall WallLR | ]
+
+up [ Wall no WallCoverUD | no Wall ] -> [ Wall WallU | ]
+down [ Wall no WallCoverUD | no Wall ] -> [ Wall WallD | ]
+down [ Wall WallU | no Wall ] -> [ Wall WallUD | ]
+
+(Candy joins)
+
+late [ Join ] -> []
+
+late left [ Candy | Candy ] -> [ Candy JoinL | Candy ]
+late right [ Candy no JoinL | Candy ] -> [ Candy JoinR | Candy ]
+late right [ Candy JoinL | Candy ] -> [ Candy JoinBoth | Candy ]
+
+late up [ Candy no JoinBoth | Candy ] -> [ Candy JoinU | Candy ]
+late down [ Candy no JoinU no JoinBoth | Candy ] -> [ Candy JoinD | Candy ]
+late down [ Candy JoinU | Candy ] -> [ Candy JoinBoth | Candy ]
+
+==============
+WINCONDITIONS
+==============
+
+All Yellow on YellowTarget
+All Red on RedTarget
+All Blue on BlueTarget
+
+=======
+LEVELS
+=======
+
+message Transport the sticky candies to the collection areas.
+
+#######
+##...##
+#..b.y#
+#pb#.y#
+#..b.y#
+##...##
+1######
+
+#########
+##.....##
+#..a.#.x#
+#pa....x#
+#..a.#.x#
+##.....##
+2########
+
+message Don't let different candies stick together!
+
+########
+#p...yy#
+#.b.ayy#
+#..b.a.#
+#.a.b..#
+#xxa.b.#
+#xx....#
+3#######
+
+###########
+#....p....#
+#..b.c.b..#
+#...c.c...#
+###.zzz.###
+####b.b####
+####yyy####
+#####y#####
+4##########
+
+#########
+#.a...###
+#.a...###
+#..c.axx#
+#zz.p.xx#
+#zzc.a..#
+###...c.#
+###...c.#
+5########
+
+###########
+##.......##
+#y.#.p.#.z#
+#yc.b.c.bz#
+##.......##
+###..#..###
+6##########
+
+#########
+#####..z#
+#...b.zz#
+#.b.bb.z#
+#p.###..#
+#y.cc.c.#
+#yy.c...#
+#y..#####
+7########
+
+#########
+##......#
+#x.c.#by#
+#.b.p..y#
+#z.a.#by#
+##......#
+8########
+
+#########
+#yy.c.x.#
+#y.b..xx#
+#.b.....#
+#...#..b#
+#.a...c.#
+#.aa.c.z#
+#p....zz#
+9########
+
+#########
+#yy###zz#
+#...x...#
+#.##a##.#
+#..b.b..#
+#..#.#..#
+#..c.c..#
+##..p..##
+10#######
+
+###########
+#####y#####
+####yyy####
+###.b.b.###
+###a...c###
+#z...p...x#
+#za.b.b.cx#
+###.....###
+11#########
+
+###########
+####...A###
+##......###
+#..#A#..xx#
+#pA...A.xx#
+#..#A#..xx#
+##......###
+####...A###
+12#########
+
+#########
+#..xxx..#
+#..#a#..#
+#..b.b..#
+##.#p#.##
+##.aya.##
+##..y..##
+13#######
+
+###########
+##..zzz..##
+#..a.p.b..#
+#yy#ccc#xx#
+#..b...a..#
+##...#...##
+14#########
+
+#############
+#...#####...#
+#....c.b....#
+#yy#..p..#zz#
+#.y.cc.bb.z.#
+####.....####
+15###########
+
+#########
+#...#...#
+#.a.a.a.#
+#...x...#
+#z#.x.#y#
+#zc.x.by#
+#.c.p.b.#
+###...###
+16#######
+
+###########
+##......###
+##.#..c...#
+#...c#..zz#
+#pc..#c#zz#
+#...c#..zz#
+##.#..c...#
+##......###
+17#########
+
+###############
+#...###z###...#
+#....bzzzb....#
+#...c.c.c.c...#
+#####.yyy.#####
+#####.#b#.#####
+#####.....#####
+######.p.######
+18#############
+
+#############
+###x#...#z###
+#.xxa.c.azz.#
+#..c.....c..#
+###..#a#..###
+####..p..####
+19###########
+
+###########
+###.....###
+##c.a.a.b##
+#.cyy.zzb.#
+#..yy.zz..#
+#a..c.b..a#
+#..xc.bx..#
+#..xxxxx..#
+##a..a..a##
+###...p.###
+20#########
+
+message Thanks for playing! :)
+
+
+
+
+title Extended Body Example: 1 Player, Multiple Extended Objects
+author Scott Hughes
+
+(
+
+Usable in the case where there's only a single player that's pushing stuff around.
+
+Example for
+https://www.puzzlescript.net/Documentation/rigidbodies.html#one_many
+
+)
+
+=======
+OBJECTS
+=======
+
+Background
+white
+
+Player
+pink
+
+Box1
+red
+
+Box2
+green
+
+Box3
+blue
+
+Box4
+orange
+
+Wall
+grey
+
+======
+LEGEND
+======
+
+. = Background
+@ = Player
+1 = Box1
+2 = Box2
+3 = Box3
+4 = Box4
+# = Wall
+
+Box = Box1 or Box2 or Box3 or Box4
+
+======
+SOUNDS
+======
+
+===============
+COLLISIONLAYERS
+===============
+
+Background
+Player, Box, Wall
+
+=====
+RULES
+=====
+
+[ > Player | Box ] -> [ > Player | > Box ]
+
+startloop
+
+(Propagate movements through crates of different types.)
+[ moving Box1 | Box1 ] -> [ moving Box1 | moving Box1 ]
+[ moving Box2 | Box2 ] -> [ moving Box2 | moving Box2 ]
+[ moving Box3 | Box3 ] -> [ moving Box3 | moving Box3 ]
+[ moving Box4 | Box4 ] -> [ moving Box4 | moving Box4 ]
+
+(Extend the movements between crates of different types.)
+[ > Box | Box ] -> [ > Box | > Box ]
+
+endloop
+
+(Just cancel the whole turn if something can't move.)
+[ > Box | Wall ] -> cancel
+
+=============
+WINCONDITIONS
+=============
+
+======
+LEVELS
+======
+
+################
+#....###.......#
+#....#.....##..#
+#...........#..#
+#...@..222..#..#
+##.....2.......#
+#...3.....1....#
+#..33.....1....#
+#..3.....11....#
+#....4........##
+#...444...##...#
+#..#.....##....#
+################
+
+
+title Several Rigid Bodies
+author increpare
+homepage www.puzzlescript.net
+
+========
+OBJECTS
+========
+
+Background
+darkgreen
+
+Target
+YELLOW
+
+Player
+PINK
+
+RedCrate q
+RED
+
+GreenCrate w
+Green
+
+BlueCrate e
+Blue
+
+SmallCrate r
+Purple
+.....
+.000.
+.000.
+.000.
+.....
+
+Wall
+DARKBROWN
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Player
+bigcrate = redcrate or greencrate or bluecrate
+Crate = smallcrate or bigcrate
+O = Target
+
+=========
+SOUNDS
+=========
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Target
+Player, Wall, Crate
+
+======
+RULES
+======
+
+startloop
+
+[ > Player | Smallcrate ] -> [ > Player | > SmallCrate ]
+
+[ >  Player | RedCrate ] -> [  >  Player | > RedCrate  ]
++ rigid [ moving RedCrate | RedCrate ] -> [ moving RedCrate | moving RedCrate ]
++ [ >  Crate | RedCrate ] -> [  >  Crate | > RedCrate  ]
+
+[ >  Player | GreenCrate ] -> [  >  Player | > GreenCrate  ]
++ rigid [ moving GreenCrate | GreenCrate ] -> [ moving GreenCrate | moving GreenCrate ]
++ [ >  Crate | GreenCrate ] -> [  >  Crate | > GreenCrate  ]
+
+
+[ >  Player | BlueCrate ] -> [  >  Player | > BlueCrate  ]
++ rigid [ moving BlueCrate | BlueCrate ] -> [ moving BlueCrate | moving BlueCrate ]
++ [ >  Crate | BlueCrate ] -> [  >  Crate | > BlueCrate  ]
+
+[ > Crate | SmallCrate ] -> [  > Crate | > SmallCrate ]
+
+endloop
+
+==============
+WINCONDITIONS
+==============
+
+=======
+LEVELS
+=======
+
+...............
+...............
+...............
+.....#.........
+...............
+...r.r.........
+..P....#.......
+..qq..w.eer....
+..q.wwweer.....
+..q.#..........
+...............
+...............
+...............
+
+
+
+title Dungeon Janitor
+author Farbs
+homepage www.farbs.org
+noundo
+noaction
+key_repeat_interval 0.1
+
+========
+OBJECTS
+========
+
+Background
+DARKBLUE BLACK
+11111
+10000
+10000
+10000
+10000
+
+Entry
+LIGHTBROWN BROWN DARKBROWN GRAY
+30103
+10101
+10121
+10101
+10101
+
+ExitClosed
+LIGHTBROWN BROWN DARKBROWN GRAY
+30103
+10101
+10121
+10101
+10101
+
+ExitOpen
+GRAY BLACK DARKBLUE
+01110
+11111
+11111
+11111
+12221
+
+Slime
+LIGHTGREEN GREEN DARKGREEN
+.....
+.....
+.....
+.....
+.....
+
+Head
+LIGHTGREEN GREEN DARKGREEN BLACK
+.000.
+03130
+11111
+23332
+.222.
+
+SlimeU
+LIGHTGREEN GREEN DARKGREEN
+11111
+21112
+.222.
+.....
+.....
+
+SlimeD
+LIGHTGREEN GREEN DARKGREEN
+.....
+.....
+.000.
+01110
+11111
+
+SlimeUD
+LIGHTGREEN GREEN DARKGREEN
+11111
+11111
+11111
+11111
+11111
+
+SlimeL
+LIGHTGREEN GREEN DARKGREEN
+00...
+110..
+111..
+112..
+22...
+
+SlimeR
+LIGHTGREEN GREEN DARKGREEN
+...00
+..011
+..111
+..211
+...22
+
+SlimeLR
+LIGHTGREEN GREEN DARKGREEN
+00000
+11111
+11111
+11111
+22222
+
+SlimeUL
+LIGHTGREEN GREEN DARKGREEN
+11111
+11112
+1112.
+112..
+22...
+
+SlimeUR
+LIGHTGREEN GREEN DARKGREEN
+11111
+21111
+.2111
+..211
+...22
+
+SlimeULR
+LIGHTGREEN GREEN DARKGREEN
+11111
+11111
+11111
+11111
+22222
+
+SlimeDL
+LIGHTGREEN GREEN DARKGREEN
+00...
+110..
+1110.
+11110
+11111
+
+SlimeDR
+LIGHTGREEN GREEN DARKGREEN
+...00
+..011
+.0111
+01111
+11111
+
+SlimeDLR
+LIGHTGREEN GREEN DARKGREEN
+00000
+11111
+11111
+11111
+11111
+
+SlimeUDLR
+LIGHTGREEN GREEN DARKGREEN
+11111
+11111
+11111
+11111
+11111
+
+SlimeSolo
+LIGHTGREEN GREEN DARKGREEN
+.000.
+01110
+11111
+21112
+.222.
+
+Wall
+LIGHTGREY GREY
+11111
+01000
+01000
+11111
+00010
+
+PlayerA
+Black Orange White Blue Brown
+.....
+.11..
+2224.
+333.4
+3.322
+
+PlayerB
+Black Orange White Blue Brown
+.....
+.11..
+.4222
+4.333
+223.3
+
+Temp
+PINK
+00000
+00000
+00000
+00000
+00000
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+E = Wall AND Entry
+P = PlayerA
+O = Slime AND Head
+X = Wall AND ExitClosed
+
+SlimeDecal = SlimeU OR SlimeD OR SlimeUD OR SlimeL OR SlimeR OR SlimeLR OR SlimeUL OR SlimeUR OR SlimeULR OR SlimeDL OR SlimeDR OR SlimeDLR OR SlimeUDLR OR SlimeSolo
+Player = PlayerA OR PlayerB
+
+=======
+SOUNDS
+=======
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Slime
+SlimeU, SlimeD, SlimeUD, SlimeL, SlimeR, SlimeLR, SlimeUL, SlimeUR, SlimeULR, SlimeDL, SlimeDR, SlimeDLR, SlimeUDLR, SlimeSolo, ExitOpen
+Player, Wall, PlayerA, PlayerB, Temp
+Head, Entry, ExitClosed
+
+======
+RULES
+======
+
+(Stomp Heads)
+[ > Player | Head ] -> [ > Player | NO Head ]
+[ > Player | Slime ] -> [ > Player | NO Slime ]
+
+(New Head)
+[ Head ] -> []
+RANDOM [ Slime NO Player ] -> [ Slime Head ]
+
+(Grow Slime)
+[ Head | NO Slime NO Wall NO Player ] -> [ Head | Slime ]
+
+(Clear Slime from under player)
+[ > Player | Slime ] -> [ > Player | NO Slime ]
+LATE [ Player Slime ] -> [ Player NO Head ]
+
+(Make slime pretty)
+[ SlimeDecal ] ->[ ]
+VERTICAL [ Slime | Slime | Slime ] -> [ Slime | Slime SlimeUD | Slime ]
+UP [ Slime NO SlimeUD | Slime ] -> [ Slime SlimeU | Slime ]
+DOWN [ Slime NO SlimeUD | Slime ] -> [ Slime SlimeD | Slime ]
+HORIZONTAL [ Slime | Slime NO SlimeU NO SlimeD NO SlimeUD | Slime ] -> [ Slime | Slime SlimeLR | Slime ]
+LEFT [ Slime NO SlimeU NO SlimeD NO SlimeUD NO SlimeLR | Slime ] -> [ Slime SlimeL | Slime ]
+RIGHT [ Slime NO SlimeU NO SlimeD NO SlimeUD NO SlimeLR | Slime ] -> [ Slime SlimeR | Slime ]
+HORIZONTAL [ Slime | Slime SlimeU | Slime ] -> [ Slime | Slime SlimeULR | Slime ]
+LEFT [ Slime SlimeU | Slime ] -> [ Slime SlimeUL | Slime ]
+RIGHT [ Slime SlimeU | Slime ] -> [ Slime SlimeUR | Slime ]
+HORIZONTAL [ Slime | Slime SlimeD | Slime ] -> [ Slime | Slime SlimeDLR | Slime ]
+LEFT [ Slime SlimeD | Slime ] -> [ Slime SlimeDL | Slime ]
+RIGHT [ Slime SlimeD | Slime ] -> [ Slime SlimeDR | Slime ]
+[ Slime NO SlimeDecal ] -> [ Slime SlimeSolo ]
+
+( Shut the door if slime still around)
+( Have to open it first unfortunately )
+[ ExitClosed Wall ] -> [ ExitOpen ]
+[ ExitOpen ][ Slime ] -> [ ExitClosed Wall ][ Slime ]
+
+(Player Anim)
+[ LEFT PlayerB ] -> [ LEFT PlayerA ]
+[ RIGHT PlayerA ] -> [ RIGHT PlayerB ]
+LATE [ PlayerA ] -> [ Temp ]
+LATE [ PlayerB ] -> [ PlayerA ]
+LATE [ Temp ] -> [ PlayerB ]
+==============
+WINCONDITIONS
+==============
+
+ALL Player ON ExitOpen
+
+=======
+LEVELS
+=======
+
+MESSAGE It's Thursday.
+MESSAGE Today I mop the slime pit.
+
+
+##X##
+##.##
+##.##
+##O##
+##.##
+##P##
+##E##
+
+MESSAGE Damn slime sticking to my shoes.
+
+..####..
+..#O.#..
+###..###
+#......#
+#P#..#.#
+#E#..#X#
+..####..
+
+MESSAGE Goes SHLUCK SHCLUK when I walk.
+
+######X#############
+###......#...#...###
+###.##.#...#...#...#
+##.....###########.#
+#..#.#.....#.......#
+#.##.###.#.##.######
+#......#.#.#.O.....#
+#.####.#.#.#.#####.#
+#P.....#.#.........#
+#E##################
+
+MESSAGE Last room before home.
+MESSAGE This one can take a while.
+
+##########X#########
+#..................#
+#..................#
+#..#######.######..#
+#..#.#...#.#.#..#..#
+#..#...#.#.#.#..#..#
+#..#.....#.#.#..#..#
+#..##....#.#...##..#
+#..#............#..#
+#..#......O.....#..#
+#..#............#..#
+#..#............#..#
+#..##############..#
+#.........P........#
+##########E#########
+
+MESSAGE Done for the day. Back tomorrow.
+MESSAGE Fridays is rat scrubbing day.
+
+title Gobble Rush!
+author Mark Richardson
+again_interval 0.05
+noaction
+require_player_movement
+run_rules_on_level_start
+
+
+========
+OBJECTS
+========
+
+Background
+Black
+
+Exit
+White Black
+01010
+10101
+01010
+10101
+01010
+
+Wall
+Brown
+
+Hole
+Brown
+00000
+00.00
+0...0
+0...0
+0...0
+
+Player
+Pink Blue Brown Red DarkBlue
+.222.
+.101.
+33333
+.444.
+44.44
+
+Enemy
+LightBrown
+.....
+0..0.
+.00..
+0000.
+0..0.
+
+Alert
+Red
+....0
+....0
+.....
+....0
+.....
+
+Chicken
+#EA3 #FC9 #FEA
+.....
+2....
+.110.
+01100
+.000.
+
+Lettuce
+#6C3 #5A2 #482 #361 #240
+.2.2.
+24342
+12421
+01310
+.002.
+
+LoS
+White
+.....
+.....
+.....
+.....
+.....
+
+MoveU
+White
+.....
+.....
+.....
+.....
+.....
+
+MoveD
+White
+.....
+.....
+.....
+.....
+.....
+
+MoveL
+White
+.....
+.....
+.....
+.....
+.....
+
+MoveR
+White
+.....
+.....
+.....
+.....
+.....
+
+CanMove
+White
+.....
+.....
+.....
+.....
+.....
+
+Level0
+White #F00
+.....
+.....
+.111.
+.....
+.....
+
+Level1
+White #F00
+00000
+.....
+.111.
+.....
+.....
+
+Level2
+White #F00
+.....
+00000
+.111.
+.....
+.....
+
+Level3
+White #F88
+.....
+.....
+01110
+.....
+.....
+
+Level4
+White #F00
+.....
+.....
+.111.
+00000
+.....
+
+Level5
+White #F00
+.....
+.....
+.111.
+.....
+00000
+
+
+=======
+LEGEND
+=======
+
+. = Background
+X = Exit
+# = Wall
+H = Hole
+P = Player
+Q = Player and Exit
+E = Enemy
+F = Enemy and Exit
+C = Chicken
+D = Chicken and Exit
+L = Lettuce
+M = Lettuce and Exit
+0 = Level0
+1 = Level1
+2 = Level2
+3 = Level3
+4 = Level4
+5 = Level5
+
+Move = MoveU or MoveD or MoveL or MoveR
+Obstacle = Wall or Enemy
+Food = Player or Chicken
+
+
+=======
+SOUNDS
+=======
+
+SFX0            97542903 (enemy alerted)
+Player  Destroy 41368102 (player eaten)
+Chicken Destroy 74663702 (chicken eaten)
+Lettuce Destroy 74663702 (lettuce eaten)
+Enemy   Create  81259707 (enemy moving)
+EndLevel        22595303
+
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Exit, Hole, Level0, Level1, Level2, Level3, Level4, Level5
+Wall, Player, Enemy, Chicken, Lettuce
+LoS, Move
+Alert, CanMove
+
+
+======
+RULES
+======
+
+(Prevent illegal moves)
+[ > Player | Hole ] -> cancel
+
+(Tell alert enemies to move)
+[ Enemy Move ] -> [ Enemy CanMove Move ]
+
+(Stop enemies)
+late up    [ Enemy CanMove MoveU |    Obstacle no Move ] -> [ Enemy | Obstacle ]
+late down  [ Enemy CanMove MoveD |    Obstacle no Move ] -> [ Enemy | Obstacle ]
+late left  [ Enemy CanMove MoveL |    Obstacle no Move ] -> [ Enemy | Obstacle ]
+late right [ Enemy CanMove MoveR |    Obstacle no Move ] -> [ Enemy | Obstacle ]
+late down  [ Enemy CanMove MoveD | Enemy CanMove MoveU ] -> [ Enemy | Enemy    ]
+late right [ Enemy CanMove MoveR | Enemy CanMove MoveL ] -> [ Enemy | Enemy    ]
+late up    [ Enemy CanMove MoveU | Enemy      no Move  ] -> [ Enemy | Enemy    ]
+late down  [ Enemy CanMove MoveD | Enemy      no Move  ] -> [ Enemy | Enemy    ]
+late left  [ Enemy CanMove MoveL | Enemy      no Move  ] -> [ Enemy | Enemy    ]
+late right [ Enemy CanMove MoveR | Enemy      no Move  ] -> [ Enemy | Enemy    ]
+
+(Move enemies)
+late up    [ Enemy CanMove MoveU | no Obstacle         ] -> [       | Enemy MoveU ] again
+late down  [ Enemy CanMove MoveD | no Obstacle         ] -> [       | Enemy MoveD ] again
+late left  [ Enemy CanMove MoveL | no Obstacle         ] -> [       | Enemy MoveL ] again
+late right [ Enemy CanMove MoveR | no Obstacle         ] -> [       | Enemy MoveR ] again
+late       [ Enemy CanMove       ]                       -> [ Enemy ]
+
+(Remove alerts)
+late       [ Enemy Alert         ]                       -> [ Enemy ]
+
+(Create line of sight)
+late [ Food no CanMove ] -> [ Food CanMove ]
+late [ Move ] [ CanMove ] -> [ Move ] [ ]
+
+(Chase player)
+late [ Player CanMove ] -> [ Player LoS ]
+late [ Player LoS | no Wall no LoS ] -> [ Player LoS | LoS ]
+late [ Player Los | ... | LoS | no Wall no LoS ] -> [ Player LoS | ... | LoS | LoS ]
+late up    [ Enemy LoS no Move | ... | Player LoS ] -> [ Enemy MoveU Alert | ... | Player LoS ] SFX0
+late down  [ Enemy LoS no Move | ... | Player LoS ] -> [ Enemy MoveD Alert | ... | Player LoS ] SFX0
+late left  [ Enemy LoS no Move | ... | Player LoS ] -> [ Enemy MoveL Alert | ... | Player LoS ] SFX0
+late right [ Enemy LoS no Move | ... | Player LoS ] -> [ Enemy MoveR Alert | ... | Player LoS ] SFX0
+late [ LoS ] -> [ ]
+
+(Chase chickens)
+startloop
+late random [ Chicken CanMove ] -> [ Chicken LoS ]
+late [ Chicken LoS | no Wall no LoS ] -> [ Chicken LoS | LoS ]
+late [ Chicken Los | ... | LoS | no Wall no LoS ] -> [ Chicken LoS | ... | LoS | LoS ]
+late up    [ Enemy LoS no Move | ... | Chicken LoS ] -> [ Enemy MoveU Alert | ... | Chicken LoS ] SFX0
+late down  [ Enemy LoS no Move | ... | Chicken LoS ] -> [ Enemy MoveD Alert | ... | Chicken LoS ] SFX0
+late left  [ Enemy LoS no Move | ... | Chicken LoS ] -> [ Enemy MoveL Alert | ... | Chicken LoS ] SFX0
+late right [ Enemy LoS no Move | ... | Chicken LoS ] -> [ Enemy MoveR Alert | ... | Chicken LoS ] SFX0
+late [ LoS ] -> [ ]
+endloop
+
+
+==============
+WINCONDITIONS
+==============
+
+some Exit on Player
+no Alert
+no Move
+
+
+=======
+LEVELS
+=======
+
+..#####....
+..#X..#...3
+..#...###.0
+..#E....#.0
+..###...#.0
+....#..P#.0
+....#####..
+
+..#######..
+..#P....#.4
+..#.....#.0
+..#####.#.0
+..#EX...#.0
+..###...#.0
+....#####..
+
+..#######..
+..#.....#.5
+..#..#..#.0
+..#.....#.0
+..#.P##E#.0
+..#..#XE#.0
+..#######..
+
+..#######..
+..#.....#.0
+..#.E...#.1
+..#.E...#.0
+..#.E...#.0
+..#XE.P.#.0
+..#######..
+
+..#######..
+..#..#.X#.0
+..#..E..#.2
+..##.#E##.0
+..#.....#.0
+..#P.#..#.0
+..#######..
+
+..#######..
+..#X...P#.0
+..##.#..#.3
+..#...#.#.0
+..#.....#.0
+..#.E#.E#.0
+..#######..
+
+..######...
+..#P.#.##.0
+..#.X..E#.4
+..##.#..#.0
+..#.....#.0
+..##..E.#.0
+...######..
+
+...####....
+..##..##..0
+..#.P..##.5
+..#..X.E#.0
+..##...##.0
+...##E##..0
+....###....
+
+..#######..
+..#XE...#.0
+..#EE..##.0
+..#..P..#.1
+..#.....#.0
+..#.#...#.0
+..#######..
+
+..#######..
+..#P..#X#.0
+..#.....#.0
+..##....#.2
+..#.....#.0
+..#E..#E#.0
+..#######..
+
+..#######..
+..#X...P#.0
+..#.###.#.0
+..#.....#.3
+..#E###.#.0
+..#....C#.0
+..#######..
+
+..#######..
+..#P....#.0
+..#..#.E#.0
+..#.....#.4
+..##.C.##.0
+...##X##..0
+....###....
+
+..#######..
+..#....C#.0
+..##X#.##.0
+..#EH..#..5
+..##...#..0
+...#.PC#..0
+...#####...
+
+...######..
+...#.#..#.0
+..##Q..E#.0
+..#...#.#.0
+..#..#..#.1
+..#.E.C.#.0
+..#######..
+
+.....####..
+...###.E#.0
+...#P...#.0
+..##..L.#.0
+..#..LXL#.2
+..#E..L.#.0
+..#######..
+
+...######..
+..##LLCX#.0
+..#LLCLC#.0
+..#LCL.L#.0
+..#ELLPL#.3
+..#LLC#L#.0
+..#######..
+
+..#######..
+..#....P#.0
+..#E.#E.#.0
+..#.....#.0
+..##LLL##.4
+...##X##..0
+....###....
+
+..#######..
+..##LXL##.0
+..#..L..#.0
+..#..#..#.0
+..#E...E#.5
+..##.P.##.0
+..#######..
+
+..#######..
+..#H.P..#.0
+..#XH...#.0
+..#..H.E#.0
+..#...H.#.0
+..#.E...#.1
+..#######..
+
+..#######..
+..#.E.E.#.0
+..#P....#.0
+..#..X.E#.0
+..#L..L.#.0
+..#.E.EL#.2
+..#######..
+
+..#######..
+..#L.L.L#.0
+..#L.L.L#.0
+..#L.P.L#.0
+..#L.L.L#.0
+..#L.L.L#.3
+..##X#X##..
+
+
+USER PROMPT:
+The following PuzzleScript game code:
+```plaintext
+title GemCollector
+author YourName
+homepage www.example.com
+
+========
+OBJECTS
+========
+
+Background
+blue
+00000
+00000
+00000
+00000
+00000
+
+Player
+green
+..0..
+.000.
+.000.
+..0..
+.....
+
+Gem
+yellow
+.....
+..0..
+.000.
+..0..
+.....
+
+Wall
+black darkgrey
+11111
+11111
+11111
+11111
+11111
+
+========
+LEGEND
+========
+
+. = Background
+P = Player
+G = Gem
+# = Wall
+
+===========
+SOUNDS
+===========
+
+# Placeholder for any future sounds, currently not defined properly.
+
+FinishGame 53868302
+MovePlayer 12345678
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Player, Gem, Wall
+
+======
+RULES
+======
+
+[ > Player | Gem ] -> [ > Player | Background ]
+[ > Player | ] -> [ > Player | ]
+
+==============
+WINCONDITIONS
+==============
+
+no Gem
+
+=======
+LEVELS
+=======
+
+# Level 1
+#####
+#P..#
+#..G#
+#...#
+#####
+
+# Level 2
+######
+#P...#
+#.#.G#
+#.#..#
+#..G.#
+######
+
+# Level 3
+#######
+#P....#
+#.###.#
+#..G..#
+#.#..#
+#.G..#
+#######
+
+```
+produced the following console output:
+=================================
+line 54 : Was expecting a sound event (like SFX3, or ENDLEVEL) or an object name, but didn't find either.
+line 56 : unexpected sound token "finishgame".
+line 57 : unexpected sound token "moveplayer".
+line 83 : Key "L" not found. Do you need to add it to the legend, or define a new object?
+line 83 : Key "E" not found. Do you need to add it to the legend, or define a new object?
+line 83 : Key "V" not found. Do you need to add it to the legend, or define a new object?
+line 83 : Key "1" not found. Do you need to add it to the legend, or define a new object?
+too many errors, aborting compilation
+Errors detected during compilation; the game may not work correctly.
+Return a repaired version of the code that addresses these errors. First, reason about your task and determine the best plan of action. Then, write your code. Return your code in full, inside a ```plaintext code block.

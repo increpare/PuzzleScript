@@ -1,0 +1,122 @@
+Creating a complete PuzzleScript game involves several steps, including defining the game objects, tiles, rules, and levels. PuzzleScript is a simple language for creating puzzle games, structured around these main components:
+
+1. **Objects**: Define the game's entities or characters, along with their appearance in ASCII art.
+2. **Legend**: Assign characters to each object for easy referencing in levels.
+3. **Collisions**: Define interactions between objects when they occupy the same space.
+4. **Rules**: Specify how objects behave or change state from one turn to another.
+5. **Levels**: Construct the levels using the symbols defined in the Legend section.
+6. **Win Conditions**: Define what constitutes winning a level.
+
+Given these components, we can plan to create a simple PuzzleScript game. How about a game where the player moves crates onto goal spots? This is a classic Sokoban-style game, and it gives us a good mix of object interactions and win conditions without being overly complex.
+
+Here's how it might be structured:
+
+1. **Objects**:
+   - Player (@)
+   - Crate (C)
+   - Wall (W)
+   - Floor (.)
+   - Goal (G)
+   - Crate on Goal (O)
+
+2. **Legend**: Assign characters to these objects.
+
+3. **Collision Rules**: Define how the Player can push crates and define the immovable walls.
+
+4. **Rules**: Implement rules for moving crates and checking for goals.
+
+5. **Levels**: Implement a few levels demonstrating these mechanics.
+
+6. **Win Conditions**: All crates need to be on goal tiles.
+
+Below is the complete PuzzleScript code for this game:
+
+```plaintext
+# Main game code for a simple Sokoban-style game
+
+title Sokoban Simplified
+author YourName
+
+======
+
+OBJECTS
+  Player
+    @
+    red
+  
+  Wall
+    #
+    grey
+    
+  Crate
+    C
+    yellow
+    
+  Floor
+    .
+    black
+    
+  Goal
+    G
+    green
+    
+  CrateOnGoal
+    O
+    orange
+
+======
+
+LEGEND
+  . = Floor
+  @ = Player
+  # = Wall
+  C = Crate
+  G = Goal
+  O = CrateOnGoal
+
+======
+
+COLLISIONLAYERS
+  Background
+  Crate, CrateOnGoal
+  Player
+  Wall
+  Goal
+
+======
+
+RULES
+[> Player | Crate ] -> [> Player | > Crate ]
+[ Player | CrateOnGoal ] -> [ Player | CrateOnGoal ]
+
+@ [ ] -> [ @ ]
+C [ ] -> [ C ]
+O [ ] -> [ O ]
+
+[Crate | Goal] -> [CrateOnGoal | Floor]
+[CrateOnGoal | Floor] -> [Crate | Goal]
+
+======
+
+WINCONDITIONS
+All CrateOnGoal
+
+======
+
+LEVELS
+#####
+#.@ #
+# C #
+# G #
+#####
+
+#######
+#     #
+# ### #
+#@C G#
+#     #
+#######
+
+```
+
+This game code offers a foundational Sokoban-style puzzle where the player pushes crates onto designated goal spots. Remember that PuzzleScript is limited to 5 colors per game, so the visual elements are purposefully simple. This game provides two levels that serve to illustrate the basic mechanics. You can expand upon these levels or adjust the rules and objects to diversify the gameplay further.

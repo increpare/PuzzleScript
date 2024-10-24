@@ -1,0 +1,96 @@
+SYSTEM PROMPT:
+You are a game designer, familiar with the PuzzleScript game description language. 
+
+USER PROMPT:
+The following PuzzleScript game code:
+```plaintext
+Title: Maze Runner
+Author: YourName
+Homepage: http://yourhomepage.com
+
+===========
+OBJECTS
+===========
+
+Background
+transparent
+. . . . . 
+. . . . . 
+. . . . . 
+. . . . . 
+. . . . . 
+
+Player
+#00F
+. 0 . . . 
+. 0 0 . . 
+. . 0 . . 
+. . . . . 
+. . . . . 
+
+Wall
+#333
+. . . . . 
+. 0 0 . . 
+. 0 0 . . 
+. . . . . 
+. . . . . 
+
+Target
+#0F0
+. . . . . 
+. 0 0 . . 
+. 0 0 . . 
+. . . . . 
+. . . . . 
+
+===========
+LEGEND
+===========
+
+. = Background
+P = Player
+W = Wall
+T = Target
+
+===========
+SOUNDS
+===========
+
+================
+COLLISIONLAYERS
+================
+
+Player
+Wall
+Target
+
+===========
+RULES
+===========
+
+[ > Player | Target ] -> [ > Player | Player ]
+
+=============
+WINCONDITIONS
+=============
+
+No Target
+
+===========
+LEVELS
+===========
+
+WWWWWWW        
+W.....W        
+W.P.T.W        
+W.....W        
+WWWWWWW        
+
+```
+produced the following console output:
+=================================
+you have to have a background layer
+TypeError: other is undefined
+Errors detected during compilation; the game may not work correctly.
+Return a repaired version of the code that addresses these errors. Return your code in full, inside a ```plaintext code block.

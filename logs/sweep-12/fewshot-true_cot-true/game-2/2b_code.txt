@@ -1,0 +1,121 @@
+The console error indicates that there's a mismatch in the rule definition, which means that the patterns defined on the left and right sides of the rule are not of equal length in terms of cells. Let's examine the rule:
+
+```plaintext
+[ P | G ] -> [ P ]
+```
+
+In PuzzleScript, rules should have patterns of the same length on both sides of the rule. Here, the pattern on the left consists of two cells, `P` and `G`, but on the right, there's only one cell, `P`. As a result, this rule will need to be corrected.
+
+To fix this, we can adjust the rule to ensure the cells match, like so:
+
+```plaintext
+[ P | G ] -> [ P | G ]
+```
+
+Where `G` remains on the right, which means the goal is not actively removed or altered by the player being on it (as generally, goals are beneath or otherwise persist).
+
+Additionally, since we now have goals as a separate object layer, we must ensure the win condition corresponds to when the player is on a goal.
+
+Let's correct the PuzzleScript code with these insights:
+
+```plaintext
+title Maze Explorer
+author YourName
+
+========
+OBJECTS
+========
+
+Background
+black
+
+Wall
+gray darkgray
+11111
+11111
+11111
+11111
+11111
+
+Player
+lightgreen darkgreen
+.000.
+.1.1.
+.000.
+.1.1.
+.000.
+
+Goal
+yellow
+.....
+..0..
+.000.
+..0..
+.....
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Player
+G = Goal
+
+=======
+SOUNDS
+=======
+
+EndLevel 12345678
+EndGame 87654321
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Goal
+Player, Wall
+
+======
+RULES
+======
+
+[ P | G ] -> [ P | G ]
+
+==============
+WINCONDITIONS
+==============
+
+All Goal on Player
+
+=======
+LEVELS
+=======
+
+#######
+#..P..#
+#.###.#
+#.....#
+#.###.#
+#..G..#
+#######
+
+#######
+#P....#
+#....##
+#.###.#
+#.....#
+##..G.#
+#######
+
+#######
+#..G..#
+#.###.#
+#.....#
+#.###.#
+#..P..#
+#######
+```
+
+This fixed version ensures the rule is consistent and addresses the pattern length mismatch error by maintaining the same cell count on both sides of the rule.

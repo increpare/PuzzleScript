@@ -1,0 +1,95 @@
+To create a PuzzleScript game, I need to define several key components: 
+
+1. **Title & Author** - Basic metadata about the game.
+2. **Legend** - Symbols representing game objects.
+3. **Sounds** - Optional but can be included for a richer experience.
+4. **Collision Layers** - Organization of objects into layers to prevent overlap issues.
+5. **Rules** - Logics that define how objects interact or move.
+6. **Win Conditions** – The objectives or conditions that determine the completion of a level.
+7. **Levels** - Layouts that the player will navigate through.
+
+For this example, I’ll create a simple Sokoban-like game where the player (represented by a "P") must push boxes ("B") onto target tiles ("T") to win. I'll focus on providing a straightforward and engaging puzzle experience.
+
+Here is the complete PuzzleScript code for such a game:
+
+```plaintext
+=========
+title Sokoban Simple
+author YourName
+
+=========
+legend
+P = Player
+B = Box
+T = Target
+. = Floor
+# = Wall
+
+=========
+sounds
+# Player movement
+moveP
+    play sound "beep"
+
+# Box being pushed
+moveB
+    play sound "thud"
+
+# Box placed on target
+moveB P T 
+    play sound "chime"
+
+=========
+collisionlayers
+background
+objects
+Player
+
+=========
+rules
+# Player movement
+[ > Player | ] -> [> Player |]
+[ < Player | ] -> [< Player |]
+[ ^ Player | ] -> [^ Player |]
+[ v Player | ] -> [v Player |]
+
+# Push the box
+[ > Player | Box ] -> [ > Player | > Box ]
+[ < Player | Box ] -> [ < Player | < Box ]
+[ ^ Player | Box ] -> [ ^ Player | ^ Box ]
+[ v Player | Box ] -> [ v Player | v Box ]
+
+=========
+winconditions
+All Box on Target
+
+=========
+levels
+
+# Level 1
+#########
+#.......#
+#..P....#
+#...B...#
+#...T...#
+#########
+
+# Level 2
+#########
+#..####.#
+#..#....#
+#..#BTP.#
+#..#....#
+#..####.#
+#########
+```
+
+### Explanation
+- **Title & Author**: Provides basic metadata.
+- **Legend**: Defines symbols like `P` for Player, `B` for Box, etc.
+- **Collision Layers**: Ensures players and boxes are on the same layer to allow interaction, while walls remain separate.
+- **Rules**: Dictate player movement and how boxes can be pushed.
+- **Win Conditions**: Require all boxes to be on targets.
+- **Levels**: Provide layouts for the game. Starting level is simple to introduce concepts, later levels can increase in complexity.
+
+This blueprint ensures a basic yet fully playable Sokoban-style game, suitable for expansion or modification.

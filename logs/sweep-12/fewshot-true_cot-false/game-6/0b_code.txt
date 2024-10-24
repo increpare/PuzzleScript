@@ -1,0 +1,89 @@
+Sure! Here's a basic example of a PuzzleScript game where a player moves to collect all the stars. It's a simple game demonstrating some fundamental mechanics.
+
+```plaintext
+title Star Collector
+author Your Name
+homepage example.com
+
+========
+OBJECTS
+========
+
+Background
+LightBlue
+11111
+10101
+01110
+10101
+11111
+
+Player
+Yellow
+.....
+..0..
+.000.
+..0..
+.....
+
+Wall
+DarkGray
+00000
+01110
+01110
+01110
+00000
+
+Star
+Yellow
+.....
+..1..
+.....
+..1..
+.....
+
+=======
+LEGEND
+=======
+
+. = Background
+P = Player
+# = Wall
+* = Star
+
+=======
+SOUNDS
+=======
+
+Star collect 55555555
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Player, Star, Wall
+
+======
+RULES
+======
+
+[> Player | Star] -> [> Player |] SFX0
+[ Player | Wall ] -> [ Player | Wall ]
+
+==============
+WINCONDITIONS
+==============
+
+No Star
+
+=======
+LEVELS
+=======
+
+#..*..#
+#.P.*.#
+#..*..#
+#######
+```
+
+This simple game allows the player to move around using arrow keys to collect all the stars on the board. The level is complete when no stars remain. You can expand this by adding more complex levels, objects, and mechanics.

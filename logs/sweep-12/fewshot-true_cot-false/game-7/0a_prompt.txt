@@ -1,0 +1,1513 @@
+SYSTEM PROMPT:
+You are a game designer, familiar with the PuzzleScript game description language. Here are some example games, for inspiration (do not reproduce these games exactly):
+
+title Simple Block Pushing Game
+author increpare
+homepage www.puzzlescript.net
+
+========
+OBJECTS
+========
+
+Background
+LIGHTGREEN GREEN
+11111
+01111
+11101
+11111
+10111
+
+
+Wall
+BROWN DARKBROWN
+00010
+11111
+01000
+11111
+00010
+
+Player
+Black Orange White Blue
+.000.
+.111.
+22222
+.333.
+.3.3.
+
+LeftPerson
+Orange Yellow
+...0.
+..0..
+.0...
+..0..
+...0.
+
+
+RightPerson
+Orange Yellow
+.0...
+..0..
+...0.
+..0..
+.0...
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Player
+L = LeftPerson
+R = RightPerson
+
+=======
+SOUNDS
+=======
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Player, Wall, LeftPerson, RightPerson
+
+======
+RULES
+======
+
+[ stationary LeftPerson ] -> [ left LeftPerson ]
+[ stationary RightPerson ] -> [ right RightPerson ]
+
+right [ wall |< LeftPerson ] -> [ wall | > RightPerson ]
+right [ > RightPerson | Wall ] -> [ < LeftPerson | Wall ]
+
+==============
+WINCONDITIONS
+==============
+
+
+=======
+LEVELS
+=======
+
+
+####..
+#.R#..
+#..###
+#LP..#
+#..R.#
+#..###
+####..
+
+
+
+title Midas
+author wanderlands
+homepage https://web.archive.org/web/20160706204929/http://wanderlands.org/
+
+(
+
+A port of the luxuriant Wanderlands game, Midas, with permission of the authors.  It's a bit messy, if you can find a way to tidy it UP, let me know : ] 
+
+the original is here
+https://web.archive.org/web/20120219201941/http://wanderlands.org/main/midas
+
+update: uh, it's flash, so not a playable link any more...also the original developer site is gone.
+
+)
+
+========
+OBJECTS
+========
+
+Background
+white
+
+Lovebase
+white
+
+Target
+black
+.....
+..0..
+.000.
+..0..
+.0.0.
+
+GoldTarget
+orange
+.....
+..0..
+.000.
+..0..
+.0.0.
+
+PlayerGround
+black
+.....
+..0..
+.000.
+.000.
+.0.0.
+
+PlayerJump1
+black
+.....
+..0..
+00000
+.000.
+.0.0.
+
+PlayerJump2
+black
+.....
+..0..
+00000
+.000.
+.0.0.
+
+Crown
+orange
+.000.
+.0.0.
+.....
+.....
+.....
+
+GoldBlock
+orange
+
+GoldingBlock
+brown
+
+Water
+blue
+
+Wall
+gray
+
+Love
+pink
+.0.0.
+00000
+00000
+.000.
+..0..
+
+=======
+LEGEND
+=======
+
+JumpingPlayer = PlayerJump1 or PlayerJump2
+Player = PlayerGround or PlayerJump1 or PlayerJump2
+Obstacle = Player or Wall or Water or GoldingBlock or GoldBlock or Target or GoldTarget
+CanFall = GoldBlock or Target or GoldTarget
+. = Background
+# = Wall
+P = PlayerGround and Crown
+T = Target
+W = Water
+G = GoldBlock
+D = GoldingBlock
+
+=========
+SOUNDS
+=========
+
+sfx0 28219707 (touch Water)
+sfx1 45545307 (golding)
+sfx2 42491507 (make lady gold :/ )
+StartGame 8892900
+EndLevel 28067900
+EndGame 28067900
+CloseMessage 44855507
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Lovebase
+PlayerGround, PlayerJump1,PlayerJump2, Wall, Water, GoldBlock, Target, GoldTarget, GoldingBlock
+Crown
+Love
+
+======
+RULES
+======
+
+UP [ UP PlayerGround | NO Obstacle ] -> [ UP PlayerJump2 | ] 
+DOWN [ UP JumpingPlayer | NO Obstacle ] -> [ JumpingPlayer | ] 
+DOWN [ UP PlayerJump2 | NO Obstacle ] -> [ PlayerJump2 | ] 
+
+[ STATIONARY CanFall ] -> [ Down CanFall ] 
+
+HORIZONTAL [ > PlayerJump1 | NO Obstacle ] -> [ | PlayerGround ] 
+HORIZONTAL [ > PlayerJump2 | NO Obstacle ] -> [ | PlayerJump1 ] 
+LATE DOWN [ PlayerGround | NO Obstacle ] -> [ | PlayerGround ] 
+
+LATE [ Crown NO Player ] [ Player ] -> [ ] [ Crown Player ] 
+LATE [ GoldingBlock ] -> [ GoldBlock ] 
+LATE [ Crown | Wall ] -> [ Crown | GoldingBlock ] sfx1
+LATE [ Crown | Water ] -> [ | Water ] sfx0
+LATE [ Crown | Target ] -> [ Crown | GoldTarget ] sfx2
+LATE DOWN [ JumpingPlayer | Obstacle ] -> [ PlayerGround | Obstacle ] 
+
+LATE [ Player | Target ] -> [ Player Lovebase | Target ] 
+LATE UP [ Lovebase | ] -> [ | Love ] 
+
+==============
+WINCONDITIONS
+==============
+
+some Love (Awwww!)
+
+=======
+LEVELS
+=======
+##############
+#............#
+#............#
+#.P.......T..#
+##G######WWW##
+##############
+
+message MIDAS
+
+###############
+#.............#
+#.............#
+#.....#.......#
+#.P..##..#.T..#
+##G#######WWW##
+###############
+
+message She waits for me every day
+
+###############
+#.............#
+#.............#
+#.............#
+#.....#.#.....#
+#.P..##.#..T..#
+##G#######WWW##
+###############
+
+message This is the price of gold:
+
+##############
+#............#
+#............#
+#.P..........#
+##G###T##WWW##
+##############
+
+message A heavy heart
+
+#################
+#...............#
+#...............#
+#......#.#......#
+#.....#####.....#
+#.......#.......#
+#.T.P...#.......#
+####G#######WWW##
+#################
+
+message I step in the same river
+message again and again
+
+#####################
+#...................#
+#...................#
+#...................#
+#.........#.#.......#
+#..P........#.......#
+#..d##########......#
+#.......######......#
+#...................#
+#.......T...........#
+#....#########WWW...#
+#...................#
+#...................#
+#...................#
+#####################
+
+message Just so I can touch her hand.
+
+#####################
+#...................#
+#...................#
+#...................#
+#...................#
+#..P................#
+#..d##T########WWW..#
+#.....#.............#
+#...................#
+#...................#
+#####################
+
+message I am a prison to Pactolus
+
+#####################
+#...................#
+#........###........#
+#.......#####.......#
+#......##...##......#
+#.....T##.P.##W.....#
+#.....####d####.....#
+#.....#########.....#
+#...................#
+#####################
+
+message But I must have her!
+
+#####################
+#...................#
+#...................#
+#..T..#...###..W....#
+#..#####...#####....#
+#.....###...#.......#
+#........P..........#
+#.....###D###.......#
+#.....#######.......#
+#...................#
+#...................#
+#####################
+
+message My burden only grows
+
+#####################
+#...................#
+#........G..........#
+#.....W.GGG.T.......#
+#.....#######.......#
+#.....#.....#.......#
+#.....#..P..#.......#
+#.....###D###.......#
+#.....#######.......#
+#...................#
+#...................#
+#...................#
+#####################
+
+message My world collapses.
+
+#####################
+#...................#
+#...................#
+#..G....WW..........#
+#..##.####..........#
+#.....####..........#
+#...................#
+#.#...........T.....#
+#.##.......P..#.....#
+#..############.....#
+#...#.....####......#
+#...................#
+#...................#
+#...................#
+#...................#
+#...................#
+#####################
+
+message And she feels so distant
+
+#####################
+#...................#
+#...................#
+#...................#
+#...................#
+#..P......#.........#
+#..GG...........WW..#
+#..##T############..#
+#....#..............#
+#...................#
+#...................#
+#####################
+
+message I live on borrowed time
+
+#####################
+#...................#
+#...................#
+#..........T........#
+#.........##........#
+#...................#
+#.......P...........#
+#.......D##.........#
+#...........#.......#
+#...................#
+#...................#
+#.......###W#.......#
+#####################
+
+message Is she still waiting?
+
+#####################
+#...................#
+#....###########....#
+#...................#
+#....P.........W....#
+#....###########....#
+#....#.........#....#
+#...................#
+#.........#.........#
+#......#..#..#......#
+#....T.#..#..#......#
+#....###########....#
+#...................#
+#...................#
+#...................#
+#####################
+
+message Is Love just fool's gold?
+
+#####################
+#...................#
+#...................#
+#...........####....#
+#..T##.##..#...#....#
+#..#..#..#.#.P.#....#
+#..#.....#...G#.....#
+#...#...#....#......#
+#....#W#.....#......#
+#.....#.............#
+#............#......#
+#...................#
+#...................#
+#####################
+
+message Midas
+
+
+(
+level ideas
+push battery horizontally
+have to assemble and then disassemble a circuit, in order to complete it
+add a piece to a circut, then break the circuit from another point
+level that starts with a closed circuit
+level with very dangerous + block
+)
+title LED Challenge
+author increpare
+homepage www.increpare.com
+
+run_rules_on_level_start
+color_palette famicom
+
+
+========
+OBJECTS
+========
+
+Background .
+darkgreen green
+00000
+00000
+00100
+00000
+00000
+
+
+Player
+Black brown grey Blue
+.111.
+.111.
+22222
+13331
+.3.3.
+
+
+Player_Dead
+darkgrey darkgrey darkgrey darkgrey
+.111.
+.111.
+22222
+.333.
+.3.3.
+
+Wall #
+black
+
+Red_Off R
+black DarkRed
+.....
+..1..
+.101.
+.101.
+.101.
+
+Red_On T
+pink red
+.....
+..1..
+.101.
+.101.
+.101.
+
+
+Green_Off G
+black Green
+.....
+..1..
+.101.
+.101.
+.101.
+
+Green_On H
+Green LightGreen
+.....
+..1..
+.101.
+.101.
+.101.
+
+
+Blue_Off B
+black DarkBlue
+.....
+..1..
+.101.
+.101.
+.101.
+
+Blue_On N
+Blue LightBlue
+.....
+..1..
+.101.
+.101.
+.101.
+
+Battery_H C
+Grey lightgrey
+.000.
+.010.
+01110
+.010.
+.000.
+
+Battery_V O
+Grey lightgrey
+..0..
+00100
+01110
+00100
+..0..
+
+
+cable_h q
+grey
+.....
+.....
+00000
+.....
+.....
+
+cable_v e
+grey
+..0..
+..0..
+..0..
+..0..
+..0..
+
+cable_ul w
+grey
+..0..
+..0..
+000..
+.....
+.....
+
+cable_ur d
+grey
+..0..
+..0..
+..000
+.....
+.....
+
+cable_dr s
+grey
+.....
+.....
+..000
+..0..
+..0..
+
+cable_dl a
+grey
+.....
+.....
+000..
+..0..
+..0..
+
+
+cable_omni z
+grey
+..0..
+..0..
+00000
+..0..
+..0..
+
+cable_dlr i
+grey
+.....
+.....
+00000
+..0..
+..0..
+
+cable_ulr k
+grey
+..0..
+..0..
+00000
+.....
+.....
+
+cable_udr j
+grey
+..0..
+..0..
+..000
+..0..
+..0..
+
+cable_udl l
+grey
+..0..
+..0..
+000..
+..0..
+..0..
+
+
+light
+black
+
+light_up
+yellow
+.000.
+.000.
+.000.
+.....
+.....
+
+light_down
+yellow
+.....
+.....
+.000.
+.000.
+.000.
+
+light_Left
+yellow
+.....
+000..
+000..
+000..
+.....
+
+light_right
+yellow
+.....
+..000
+..000
+..000
+.....
+
+=======
+LEGEND
+=======
+
+P = Player
+Unlit = Blue_Off or Green_Off or Red_Off
+Lit = Blue_On or Green_On or Red_On
+Cable = Cable_h or Cable_v or Cable_dr or Cable_dl or Cable_ul or Cable_ur or Cable_UL or Cable_UR or Cable_UDR or Cable_ULR or Cable_UDL or Cable_DLR or Cable_Omni
+Battery = Battery_H or Battery_V
+Item = Unlit or Lit or Battery or Cable
+Cable_Up = Cable_V or Cable_UL or Cable_UR or Battery_V or Cable_UDR or Cable_ULR or Cable_UDL or Cable_Omni or  Player
+Cable_Down = Cable_V or Cable_DL or Cable_DR or Battery_V or Cable_UDR or Cable_UDL or Cable_DLR or Cable_Omni or Player
+Cable_Left = Cable_H or Cable_UL or Cable_DL or Battery_H  or Cable_ULR or Cable_UDL or Cable_DLR or Cable_Omni or Player
+Cable_Right = Cable_H or Cable_UR or Cable_DR or Battery_H or Cable_UDR or Cable_ULR or Cable_DLR or Cable_Omni or Player
+LightEffect = Light_Up or Light_Down or Light_Left or Light_Right
+Object = Player or Item
+Player_Dying = Player and Light
+
+=======
+SOUNDS
+=======
+
+EndLevel 39731502
+EndGame 20540505
+Player Move 6330907
+Player_Dead Create 44233902
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Light
+Light_Up
+Light_Down
+Light_Left
+Light_Right
+Player, Player_Dead, Wall, Item
+
+======
+RULES
+======
+
+(init stage)
+[ Light ] -> [ ]
+[ LightEffect no Player] -> [ ]
+[ Red_On ] -> [ Red_Off ]
+[ Green_On ] -> [ Green_Off ]
+[ Blue_On ] -> [ Blue_Off ]
+
+(movement)
+[ >  Object | Object ] -> [  > Object | > Object ]
+
+(do circuits)
+startLoop
+late [ Battery ] -> [ Light Battery ]
+
+late left [ Player | Light_Right ] -> [ Light Player | Light_Right ]
+late right [ Player | Light_Left ] -> [ Light Player | Light_Left ]
+late up [ Player | Light_Down ] -> [ Light Player | Light_Down ]
+late down [ Player | Light_Up ] -> [ Light Player | Light_Up ]
+
+late up [ Player_Dead | Light_Down ] -> [ Light Player_Dead | Light_Down  ]
+late down [ Player_Dead | Light_up ] -> [ Light Player_Dead | Light_up  ]
+
+late left [ Cable_Left | Light_Right ] -> [ Light Cable_Left | Light_Right ]
+late right [ Cable_Right | Light_Left ] -> [ Light Cable_Right | Light_Left ]
+late up [ Cable_Up | Light_Down ] -> [ Light Cable_Up | Light_Down ]
+late down [ Cable_Down | Light_Up ] -> [ Light Cable_Down | Light_Up ]
+
+late down [ Red_Off | Light_Up ] -> [ Red_On | Light_Up ]
+late down [ Green_Off | Light_Up ] -> [ Green_On | Light_Up ]
+late down [ Blue_Off | Light_Up ] -> [ Blue_On | Light_Up ]
+
+late [ Light Cable_Up ] -> [ Light Light_Up Cable_Up ]
+late [ Light Cable_Down ] -> [ Light Light_Down Cable_Down ]
+late [ Light Cable_Left ] -> [ Light Light_Left Cable_Left ]
+late [ Light Cable_Right ] -> [ Light Light_Right Cable_Right ]
+endLoop
+
+late [ Player Light ] -> again
+late [ Player_Dead Light ] -> again
+late [ Player LightEffect ] -> [ Player_Dead LightEffect ]   again
+late [ Player_Dead Light ] -> [ Player_Dead ]
+
+==============
+WINCONDITIONS
+==============
+
+No Unlit
+No Player_Dead
+
+=======
+LEVELS
+=======
+
+message Level 1 of 4
+
+......
+.r.g..
+..o.p.
+.w.d..
+......
+
+message Level 2 of 4
+
+.....##.....
+.....##.w.d.
+..c.........
+...p....r.g.
+.....##.....
+
+message Level 3 of 4
+
+.......
+..rgb..
+..wkd..
+...o...
+.....p.
+.......
+
+message Level 4 of 4
+
+...........
+...ccccc...
+.d.crcgc.w.
+...ccccc...
+..........p
+
+(
+message Level 5 of 3
+
+.......
+.bgrgb.
+rdzczwr
+dqw.dqw
+.......
+)
+
+message Congratulations
+
+title PUSH
+author lonebot - demake by rmmh
+homepage http://lonebot.net/games/push/
+
+youtube UXlXgFDgXow
+again_interval 0.1
+noaction
+
+========
+OBJECTS
+========
+
+Background .
+#756C5E
+
+Wall #
+#635854
+
+StrongPlayer P
+#E8D2AC #67453D Black #282D3C Red
+11111
+02020
+40004
+43334
+33.33
+
+WeakPlayer
+#E8D2AC #67453D Black #282D3C
+11111
+02020
+.000.
+.333.
+33.33
+
+GibbedPlayer
+Red
+...0.
+.0...
+0..0.
+.....
+..0.0
+
+Rock *
+#202020 #706249 #A6957B
+.000.
+02220
+02210
+01110
+.000.
+
+RockDust (destroyed by a projectile)
+#A6957B
+...0.
+.0...
+0..0.
+.....
+..0.0
+
+Idol G
+#945527 #C97536 #F4EF0B
+.000.
+01210
+.222.
+.010.
+01210
+
+Pit _
+Black #5A5349
+.1.1.
+1000.
+.000.
+.0001
+..11.
+
+PitFilled
+Black #5A5349 #706249
+.1.1.
+1222.
+.222.
+.2221
+..11.
+
+PitPlayer
+Black #5A5349 #E8D2AC #282D3C
+.1.1.
+1020.
+.222.
+.3331
+..11.
+
+WeakGround x
+#5A5349
+.0..0
+00..0
+..00.
+00..0
+0.0..
+
+GunUSingle U
+Black Grey Yellow
+..0..
+12021
+11011
+11111
+.111.
+
+GunDSingle D
+Black Grey Yellow
+.111.
+11111
+11011
+12021
+..0..
+
+GunRSingle R
+Black Grey Yellow
+.111.
+1112.
+11000
+1112.
+.111.
+
+GunLSingle L
+Black Grey Yellow
+.111.
+.2111
+00011
+.2111
+.111.
+
+GunUMulti M
+Black Grey Red
+..0..
+.202.
+12021
+12221
+.111.
+
+GunLMulti N
+Black Grey Red
+..11.
+.2221
+00021
+.2221
+..11.
+
+GunRMulti O
+Black Grey Red
+.11..
+1222.
+12000
+1222.
+.11..
+
+
+Button T
+#969283 #4A4A4A
+.000.
+01110
+01010
+01110
+.000.
+
+ButtonPressed
+#969283 #3A3A3A
+.000.
+01110
+01110
+01110
+.000.
+
+ArrowU
+Brown
+..0..
+.000.
+..0..
+.....
+.....
+
+ArrowR
+Brown
+.....
+...0.
+..000
+...0.
+.....
+
+ArrowL
+Brown
+.....
+.0...
+000..
+.0...
+.....
+
+ArrowD
+Brown DarkBrown
+.....
+.....
+..0..
+.000.
+..0..
+
+Firing
+Black
+
+Fired
+Brown
+
+(used for linking buttons to guns, and for generic flags)
+LinkA
+Red
+
+LinkB
+Green
+
+LinkC
+Blue
+
+LinkD
+White
+
+LinkE
+Black
+
+=======
+LEGEND
+=======
+
+Player = StrongPlayer or WeakPlayer or GibbedPlayer
+DeadPlayer = GibbedPlayer or PitPlayer
+GunU = GunUSingle or GunUMulti
+GunD = GunDSingle
+GunL = GunLSingle or GunLMulti
+GunR = GunRSingle or GunRMulti
+MultiGun = GunUMulti or GunLMulti or GunRMulti
+Gun = GunU or GunR or GunD or GunL
+Movable = Rock or Gun
+Q = StrongPlayer and WeakGround
+Heavy = Movable or Player
+Arrow = ArrowU or ArrowR or ArrowD or ArrowL
+Link = LinkA or LinkB or LinkC or LinkD or LinkE
+Blockers = Player or Wall or Idol or Movable
+
+1 = Wall and LinkA
+2 = Wall and LinkB
+3 = Wall and LinkC
+4 = Wall and LinkD
+5 = Wall and LinkE
+
+7 = GunRSingle and LinkE
+8 = Button and LinkE
+
+=======
+SOUNDS
+=======
+
+Idol destroy 47224903
+Pit create 4141702
+PitPlayer create 19700104
+PitFilled create 87604304
+ButtonPressed create 25424301
+(using sfxN here to deal with bug where 'again' triggers sounds twice)
+sfx0 36787702 (rock destroyed by arrow)
+sfx1 59184504 (player explodes)
+Arrow create 98842708 (arrow shot)
+
+================
+COLLISIONLAYERS
+================
+
+Link (move layer to top for debugging linkages)
+Firing, Fired
+Background
+Pit, PitFilled, WeakGround, Button, ButtonPressed, PitPlayer, RockDust
+Blockers
+Arrow
+
+======
+RULES
+======
+
+(player can move an object only once)
+[ > StrongPlayer | Movable | no Blockers ] -> [ > WeakPlayer | > Movable | ]
+[ > Movable Link ] -> [ > Movable > Link ]
+[ DeadPlayer ] -> cancel
+
+(pit behaviors)
+late [ Player Pit ] -> [ PitPlayer ] (falling into a pit kills you)
+late [ Pit Rock ] -> [ PitFilled ]  (they can be filled)
+[ Player WeakGround ] -> [ Player WeakGround LinkA ] (mark WeakGround as visited)
+late [ WeakGround LinkA no Player ] -> [ Pit ] (pits appear when you move off weakground)
+
+(initialize gun linkages -- try linking on a line first)
+[Wall Link] [Button no Link | ... | Gun no Link] -> [Wall] [Button Link | ... | Gun Link]
+[Wall Link] [Button no Link] [Gun no Link] -> [Wall] [Button Link] [Gun Link]
+
+(buttons cause linked gun to fire)
+late [ Button Heavy LinkA ] [ Gun LinkA ] -> [ ButtonPressed Heavy ] [ Gun Firing ] again
+late [ Button Heavy LinkB ] [ Gun LinkB ] -> [ ButtonPressed Heavy ] [ Gun Firing ] again
+late [ Button Heavy LinkC ] [ Gun LinkC ] -> [ ButtonPressed Heavy ] [ Gun Firing ] again
+late [ Button Heavy LinkD ] [ Gun LinkD ] -> [ ButtonPressed Heavy ] [ Gun Firing ] again
+late [ Button Heavy LinkE ] [ Gun LinkE ] -> [ ButtonPressed Heavy ] [ Gun Firing ] again
+
+( MultiGuns fire 3 shots. do this by cycling LinkB->LinkA->None )
+[ MultiGun Firing no Link ] -> [ MultiGun Firing LinkB ]
+[ MultiGun Fired LinkB ] -> [ MultiGun Firing LinkA ]
+[ MultiGun Fired LinkA ] -> [ MultiGun Firing ]
+
+( create arrows )
+[ GunU Firing ] -> [ GunU ArrowU Fired ]
+[ GunR Firing ] -> [ GunR ArrowR Fired ]
+[ GunL Firing ] -> [ GunL ArrowL Fired ]
+[ GunD Firing ] -> [ GunD ArrowD Fired ]
+( move )
+[ ArrowL ] -> [ left ArrowL ] again
+[ ArrowU ] -> [ up ArrowU ] again
+[ ArrowR ] -> [ right ArrowR ] again
+[ ArrowD ] -> [ down ArrowD ] again
+
+late [ Arrow Rock ] -> [ RockDust ] sfx0
+late [ Arrow Player ] -> [ GibbedPlayer ] sfx1
+late [ Arrow Blockers ] -> [ Blockers ] sfx0
+
+(grabbing an idol)
+[ DeadPlayer ] -> cancel
+[ > Player | Idol ] -> [ Player | Pit ]
+
+==============
+WINCONDITIONS
+==============
+
+no Idol
+
+=======
+LEVELS
+=======
+
+message 1/20: You only get one push!
+###########
+#.........#
+#......*..#
+#.*.....*.#
+#...***...#
+#..**g*...#
+#..*.*....#
+#.........#
+#...p...*.#
+#.........#
+###########
+
+message 2/20: Mind the gap
+###########
+#**.......#
+#*....*.*.#
+#.........#
+#...***...#
+#...*g*...#
+#...*_*...#
+#*........#
+#..*.p..*.#
+#.........#
+###########
+
+message 3/20: Shaky footing
+###########
+#****g****#
+#.*_..****#
+#x********#
+#.********#
+#.x.xx...*#
+#*******x*#
+#......x.*#
+#.********#
+#p*.......#
+###########
+
+message 4/20: Firepower
+1##########
+#*...g...*#
+#........*#
+#*********#
+#**.....*.#
+#**.......#
+#**_.p....#
+#*t*...**.#
+#**_...**.#
+#**..u...*#
+###########
+
+message 5/20: Artillery
+1##########
+#**.....*.#
+#*......**#
+#...*g*...#
+#.*.......#
+#.........#
+#*********#
+#..*.**...#
+#*......t.#
+#..*.u...p#
+###########
+
+message 6/20: Traps
+1##########
+#t**.****.#
+#.*...**g*#
+#.x.....**#
+#.**.*....#
+#..*.*....#
+#.**......#
+#**.......#
+#**p..*...#
+#**..**.u*#
+###########
+
+message 7/20: Sequencing
+12#########
+#*********#
+#*t****_..#
+#*x*.d**..#
+#.....**..#
+#.....*...#
+#t..._*...#
+#r...**.g.#
+#...***...#
+#p..****..#
+###########
+
+message 8/20: Hamiltonian Cycle
+(8/20 - 3 guns, order irrelevant)
+123########
+#*....**.*#
+#..***l**.#
+#g****l***#
+#*****l***#
+#tx**xxxxx#
+#xxxqxxx*t#
+#xx*_**x_x#
+#*x_xxxxx*#
+#*xtx*x**_#
+###########
+
+message 9/20: Barrage
+(9/20 -- 4 guns, all inline with triggers)
+1234#######
+#****x***_#
+#***.tt.**#
+#xg_.dd.**#
+#*__......#
+#_*__**.lt#
+#_*..*..lt#
+#.........#
+#*p.......#
+#**...*..*#
+###########
+
+message 10/20: Rotary
+(10/20 -- 4 guns, mostly inline with triggers)
+1234#######
+#**_*...t.#
+#*......d.#
+#r......**#
+#*.****..*#
+#t.*.g**.*#
+#..******x#
+#....**_xt#
+#.....p***#
+#_.u*t._.l#
+###########
+
+message 11/20: Shooting Gallery
+(11/20)
+1234#######
+#t..*..*_l#
+#_.****.__#
+#r.*x**.t*#
+#******.**#
+#**xtr_.*g#
+#__.__..**#
+#_......**#
+#....p.u.*#
+#**....t..#
+###########
+
+message 12/20: Co-op
+(12/20: 2 players!)
+1##########
+#*t.._____#
+#...._*g__#
+#.r.._.*..#
+#...._*.**#
+#**_._.*.*#
+#****_....#
+#*..*_..**#
+#*.**_..**#
+#*p**_..p*#
+###########
+
+message 13/20: Rescue
+12#########
+#**...._.g#
+#*.t..._*.#
+#*...d._.*#
+#*p..__*_*#
+#*...__.u*#
+#.*..._.t*#
+#*...**_**#
+#*..***.**#
+#*.**....p#
+###########
+
+message 14/20: Friendly Fire
+(14/20 -- corridor toggle triggers left-wall gun )
+12#########
+#*********#
+#*********#
+#g*8...pl*#
+#*********#
+#7********#
+#...***...#
+#......p.t#
+#....*.*..#
+#.ut......#
+###########
+
+message 15/20: Interference
+123########
+#**..*..**#
+#*.......*#
+#....p...*#
+#t......**#
+#r.**..**g#
+#...*...**#
+#..uup..**#
+#*.......*#
+#**tt...**#
+###########
+
+message 16/20: Machine guns
+1##########
+#*********#
+#p..*g****#
+#....*****#
+#..*******#
+#..**.*.**#
+#***......#
+#***.p....#
+#....t.m..#
+#_........#
+###########
+
+message 17/20: Trapped
+(17/20 -- top toggle triggers magma)
+123########
+#p**...n*g#
+#*****..*_#
+#******.**#
+#***..t*.*#
+#*7_*.....#
+#8.x*....l#
+#...xp...x#
+#...u*.._t#
+#*..t*...x#
+###########
+
+message 18/20: Crossfire
+(18/20 -- modified to be more difficult)
+12345######
+#_g.*_****#
+#____**...#
+#.....*...#
+#rx.***.x.#
+#t..*.*...#
+#.px..*.pl#
+#o.**.*x.*#
+#t...*.x.t#
+#.xtm*mtx.#
+###########
+
+message 19/20: Stylite
+(19/20)
+1##########
+#*********#
+#..*t***x*#
+#p...*****#
+#.r..*g***#
+#.*_____*_#
+#**_...___#
+#*__p..___#
+#*x_...__*#
+#_*_______#
+###########
+
+message 20/20: Spinal Cannon
+(20/20 -- inverted so I don't have to make an upwards magma gun)
+1##########
+#p.**g*_.p#
+#....**x..#
+#_*.._..**#
+#.*..*...*#
+#..*.x....#
+#_x__*.._.#
+#*.x_*x.._#
+#*x..***..#
+#*_.tm.*..#
+###########
+
+(finale -- pushes gold into pit, gold gets smashed, eyes bug out)
+###########
+#*.......*#
+#....p....#
+#._....._.#
+#_...*..._#
+#_..._..._#
+#__._g_.__#
+#_________#
+#_________#
+#*_______*#
+###########
+
+message Congratulations!
+
+(Credits
+Code: Yotam Frid
+Art: Mati & Itamar Ernst
+Music: Jason Lord
+
+www.lonebot.net
+Ludam Dare 28)
+
+(blank level template()
+###########
+#.........#
+#.........#
+#.........#
+#.........#
+#.........#
+#.........#
+#.........#
+#.........#
+#.........#
+###########
+()
+
+USER PROMPT:
+Output the code for a complete PuzzleScript game. Return your code in full, inside a ```plaintext code block.

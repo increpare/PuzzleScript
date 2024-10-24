@@ -1,0 +1,135 @@
+SYSTEM PROMPT:
+You are a game designer, familiar with the PuzzleScript game description language. 
+
+USER PROMPT:
+The following PuzzleScript game code:
+```plaintext
+title Sokoban Simple
+
+========
+OBJECTS
+========
+
+Background
+WHITE
+........
+........
+........
+........
+
+Wall
+RED
+rrrr
+rRRRr
+rRRRr
+rrrr
+
+Player
+BLUE
+.b.
+bbb
+.b.
+
+Box
+BROWN
+bbb
+bbb
+bbb
+
+Target
+GREEN
+.g.
+ggg
+.g.
+
+BoxOnTarget
+DARKBROWN
+ddd
+dgd
+ddd
+
+========
+LEGEND
+========
+
+. = Background
+# = Wall
+P = Player
+B = Box
+T = Target
+O = BoxOnTarget
+
+========
+SOUNDS
+========
+
+# No sounds defined
+
+========
+COLLISIONLAYERS
+========
+
+Background
+Target
+Player, Box, BoxOnTarget
+Wall
+
+========
+RULES
+========
+
+# Player can move
+[> Player | ] -> [> Player | ] # Move Right
+[< Player | ] -> [< Player | ] # Move Left
+[^ Player | ] -> [^ Player | ] # Move Up
+[v Player | ] -> [v Player | ] # Move Down
+
+# Pushable boxes
+[> Player | Box] -> [> Player | > Box]
+[< Player | Box] -> [< Player | < Box]
+[^ Player | Box] -> [^ Player | ^ Box]
+[v Player | Box] -> [v Player | v Box]
+
+# Boxes on targets become a different object
+[ Box | Target ] -> [ BoxOnTarget | Target ]
+
+# Move box off target
+[> Player | BoxOnTarget] -> [> Player | > Box]
+[< Player | BoxOnTarget] -> [< Player | < Box]
+[^ Player | BoxOnTarget] -> [^ Player | ^ Box]
+[v Player | BoxOnTarget] -> [v Player | v Box]
+
+========
+WINCONDITIONS
+========
+
+All BoxOnTarget on Target
+
+========
+LEVELS
+========
+
+# Level 1
+#######
+#......#
+#..P...#
+#..BBB.#
+#..TTT.#
+#######
+
+```
+produced the following console output:
+=================================
+line 9 : Sprites must be 5 wide and 5 high.
+line 10 : Sprites must be 5 wide and 5 high.
+line 11 : Sprites must be 5 wide and 5 high.
+line 12 : Sprites must be 5 wide and 5 high.
+line 17 : Was looking for color for object RRRR, got "rrrrr" instead.
+line 19 : Was looking for color for object RRRRR, got "rrrr" instead.
+line 23 : Unknown junk in spritematrix for object PLAYER.
+line 24 : Unknown junk in spritematrix for object PLAYER.
+line 25 : Unknown junk in spritematrix for object PLAYER.
+line 30 : Was looking for color for object BBB, got "bbb" instead.
+too many errors, aborting compilation
+Errors detected during compilation; the game may not work correctly.
+Return a repaired version of the code that addresses these errors. First, reason about your task and determine the best plan of action. Then, write your code. Return your code in full, inside a ```plaintext code block.

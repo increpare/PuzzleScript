@@ -1,0 +1,128 @@
+SYSTEM PROMPT:
+You are a game designer, familiar with the PuzzleScript game description language. 
+
+USER PROMPT:
+The following PuzzleScript game code:
+```plaintext
+Title: Block Pusher
+Author: Your Name
+Homepage: http://www.yoursite.com
+# Required Metadata
+
+===========
+OBJECTS
+===========
+
+Background
+white
+
+Player
+red
+111
+101
+111
+
+Block
+blue
+111
+111
+111
+
+Target
+yellow
+111
+111
+111
+
+TargetBlock
+green
+111
+111
+111
+
+============
+LEGEND
+============
+
+. Background
+P Player
+B Block
+T Target
+G TargetBlock
+
+===============
+SOUNDS
+===============
+
+# Define game sounds here (optional)
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Player
+Block
+Target
+TargetBlock
+
+===============
+RULES
+===============
+
+# Player movement
+[ > Player | Background] -> [ > Player | Player]
+
+# Pushing blocks
+[ > Player | Block | Background] -> [ > Player | > Block | Player]
+
+# Block reaching target
+[ > Player | Block | Target] -> [ > Player | > TargetBlock | Player]
+
+# Player walking over targets
+[ Player | Player | Target] -> [ Player | Target | Player]
+
+# Winning condition - Block reaches Target
+WinCondition
+All Target on TargetBlock
+
+==============
+LEVELS
+==============
+
+# Add some initial levels
+# Level 1
+########
+#....T.#
+#..B...#
+#..P...#
+########
+
+# Level 2
+########
+#..T..#
+#..B..#
+#..P..#
+########
+
+# Level 3
+#########
+#..T...#
+#..B...#
+#..P...#
+#......#
+#########
+
+
+```
+produced the following console output:
+=================================
+line 15 : Trying to access color number 1 from the color palette of sprite PLAYER, but there are only 1 defined in it.
+line 16 : Trying to access color number 1 from the color palette of sprite PLAYER, but there are only 1 defined in it.
+line 17 : Trying to access color number 1 from the color palette of sprite PLAYER, but there are only 1 defined in it.
+line 21 : Trying to access color number 1 from the color palette of sprite BLOCK, but there are only 1 defined in it.
+line 22 : Trying to access color number 1 from the color palette of sprite BLOCK, but there are only 1 defined in it.
+line 23 : Trying to access color number 1 from the color palette of sprite BLOCK, but there are only 1 defined in it.
+too many errors, aborting compilation
+Errors detected during compilation; the game may not work correctly.
+Return a repaired version of the code that addresses these errors. Return your code in full, inside a ```plaintext code block.

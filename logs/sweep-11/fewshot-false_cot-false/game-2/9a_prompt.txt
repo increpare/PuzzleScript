@@ -1,0 +1,94 @@
+SYSTEM PROMPT:
+You are a game designer, familiar with the PuzzleScript game description language. 
+
+USER PROMPT:
+The following PuzzleScript game code:
+```plaintext
+Title: Maze Runner
+Author: YourName
+Homepage: http://yourhomepage.com
+
+===========
+OBJECTS
+===========
+
+Background
+transparent
+.....
+.....
+.....
+.....
+..... 
+
+Player
+#00F
+.....
+.00..
+.00..
+.....
+..... 
+
+Wall
+#333
+.....
+.00..
+.00..
+.....
+..... 
+
+Target
+#0F0
+.....
+.00..
+.00..
+.....
+..... 
+
+===========
+LEGEND
+===========
+
+. = Background
+P = Player
+W = Wall
+T = Target
+
+===========
+SOUNDS
+===========
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Player
+Wall
+Target
+
+===========
+RULES
+===========
+
+[ > Player | Target ] -> [ > Player | Background ]
+
+=============
+WINCONDITIONS
+=============
+
+No Target
+
+===========
+LEVELS
+===========
+
+WWWWWWW        
+W.....W        
+W.P..TW        
+W.....W        
+WWWWWWW
+
+```
+compiled, but a solvability check returned the following error:
+ Level 0 is not solvable. Please repair it.
+Return your code in full, inside a ```plaintext code block.

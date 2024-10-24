@@ -1,0 +1,1427 @@
+SYSTEM PROMPT:
+You are a game designer, familiar with the PuzzleScript game description language. Here are some example games, for inspiration (do not reproduce these games exactly):
+
+title Extended Body Example: 1 Player, 1 Extended Object
+author increpare
+homepage www.puzzlescript.net
+
+(
+    Example for
+    https://www.puzzlescript.net/Documentation/rigidbodies.html#one_one
+)
+
+========
+OBJECTS
+========
+
+Background
+LIGHTGREEN GREEN
+11111
+01111
+11101
+11111
+10111
+
+
+Target
+DarkBlue
+.....
+.000.
+.0.0.
+.000.
+.....
+
+Wall
+BROWN DARKBROWN
+00010
+11111
+01000
+11111
+00010
+
+Player
+Black Orange White Blue
+.000.
+.111.
+22222
+.333.
+.3.3.
+
+Crate
+Orange
+00000
+0...0
+0...0
+0...0
+00000
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Player
+* = Crate
+@ = Crate and Target
+O = Target
+
+=======
+SOUNDS
+=======
+
+Crate MOVE 36772507
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Target
+Player, Wall, Crate
+
+======
+RULES
+======
+
+[ >  Player | Crate ] -> [  >  Player | > Crate  ]
+[ > Crate ] [ stationary Crate ] -> [ > Crate ] [ > Crate ]
+[ > Crate | Wall ] -> cancel
+
+==============
+WINCONDITIONS
+==============
+
+All Target on Crate
+
+=======
+LEVELS
+=======
+
+######
+#....#
+#.#..#
+#.*@.#
+#.O@.#
+#.p..#
+######
+
+
+title PUSH
+author lonebot - demake by rmmh
+homepage http://lonebot.net/games/push/
+
+youtube UXlXgFDgXow
+again_interval 0.1
+noaction
+
+========
+OBJECTS
+========
+
+Background .
+#756C5E
+
+Wall #
+#635854
+
+StrongPlayer P
+#E8D2AC #67453D Black #282D3C Red
+11111
+02020
+40004
+43334
+33.33
+
+WeakPlayer
+#E8D2AC #67453D Black #282D3C
+11111
+02020
+.000.
+.333.
+33.33
+
+GibbedPlayer
+Red
+...0.
+.0...
+0..0.
+.....
+..0.0
+
+Rock *
+#202020 #706249 #A6957B
+.000.
+02220
+02210
+01110
+.000.
+
+RockDust (destroyed by a projectile)
+#A6957B
+...0.
+.0...
+0..0.
+.....
+..0.0
+
+Idol G
+#945527 #C97536 #F4EF0B
+.000.
+01210
+.222.
+.010.
+01210
+
+Pit _
+Black #5A5349
+.1.1.
+1000.
+.000.
+.0001
+..11.
+
+PitFilled
+Black #5A5349 #706249
+.1.1.
+1222.
+.222.
+.2221
+..11.
+
+PitPlayer
+Black #5A5349 #E8D2AC #282D3C
+.1.1.
+1020.
+.222.
+.3331
+..11.
+
+WeakGround x
+#5A5349
+.0..0
+00..0
+..00.
+00..0
+0.0..
+
+GunUSingle U
+Black Grey Yellow
+..0..
+12021
+11011
+11111
+.111.
+
+GunDSingle D
+Black Grey Yellow
+.111.
+11111
+11011
+12021
+..0..
+
+GunRSingle R
+Black Grey Yellow
+.111.
+1112.
+11000
+1112.
+.111.
+
+GunLSingle L
+Black Grey Yellow
+.111.
+.2111
+00011
+.2111
+.111.
+
+GunUMulti M
+Black Grey Red
+..0..
+.202.
+12021
+12221
+.111.
+
+GunLMulti N
+Black Grey Red
+..11.
+.2221
+00021
+.2221
+..11.
+
+GunRMulti O
+Black Grey Red
+.11..
+1222.
+12000
+1222.
+.11..
+
+
+Button T
+#969283 #4A4A4A
+.000.
+01110
+01010
+01110
+.000.
+
+ButtonPressed
+#969283 #3A3A3A
+.000.
+01110
+01110
+01110
+.000.
+
+ArrowU
+Brown
+..0..
+.000.
+..0..
+.....
+.....
+
+ArrowR
+Brown
+.....
+...0.
+..000
+...0.
+.....
+
+ArrowL
+Brown
+.....
+.0...
+000..
+.0...
+.....
+
+ArrowD
+Brown DarkBrown
+.....
+.....
+..0..
+.000.
+..0..
+
+Firing
+Black
+
+Fired
+Brown
+
+(used for linking buttons to guns, and for generic flags)
+LinkA
+Red
+
+LinkB
+Green
+
+LinkC
+Blue
+
+LinkD
+White
+
+LinkE
+Black
+
+=======
+LEGEND
+=======
+
+Player = StrongPlayer or WeakPlayer or GibbedPlayer
+DeadPlayer = GibbedPlayer or PitPlayer
+GunU = GunUSingle or GunUMulti
+GunD = GunDSingle
+GunL = GunLSingle or GunLMulti
+GunR = GunRSingle or GunRMulti
+MultiGun = GunUMulti or GunLMulti or GunRMulti
+Gun = GunU or GunR or GunD or GunL
+Movable = Rock or Gun
+Q = StrongPlayer and WeakGround
+Heavy = Movable or Player
+Arrow = ArrowU or ArrowR or ArrowD or ArrowL
+Link = LinkA or LinkB or LinkC or LinkD or LinkE
+Blockers = Player or Wall or Idol or Movable
+
+1 = Wall and LinkA
+2 = Wall and LinkB
+3 = Wall and LinkC
+4 = Wall and LinkD
+5 = Wall and LinkE
+
+7 = GunRSingle and LinkE
+8 = Button and LinkE
+
+=======
+SOUNDS
+=======
+
+Idol destroy 47224903
+Pit create 4141702
+PitPlayer create 19700104
+PitFilled create 87604304
+ButtonPressed create 25424301
+(using sfxN here to deal with bug where 'again' triggers sounds twice)
+sfx0 36787702 (rock destroyed by arrow)
+sfx1 59184504 (player explodes)
+Arrow create 98842708 (arrow shot)
+
+================
+COLLISIONLAYERS
+================
+
+Link (move layer to top for debugging linkages)
+Firing, Fired
+Background
+Pit, PitFilled, WeakGround, Button, ButtonPressed, PitPlayer, RockDust
+Blockers
+Arrow
+
+======
+RULES
+======
+
+(player can move an object only once)
+[ > StrongPlayer | Movable | no Blockers ] -> [ > WeakPlayer | > Movable | ]
+[ > Movable Link ] -> [ > Movable > Link ]
+[ DeadPlayer ] -> cancel
+
+(pit behaviors)
+late [ Player Pit ] -> [ PitPlayer ] (falling into a pit kills you)
+late [ Pit Rock ] -> [ PitFilled ]  (they can be filled)
+[ Player WeakGround ] -> [ Player WeakGround LinkA ] (mark WeakGround as visited)
+late [ WeakGround LinkA no Player ] -> [ Pit ] (pits appear when you move off weakground)
+
+(initialize gun linkages -- try linking on a line first)
+[Wall Link] [Button no Link | ... | Gun no Link] -> [Wall] [Button Link | ... | Gun Link]
+[Wall Link] [Button no Link] [Gun no Link] -> [Wall] [Button Link] [Gun Link]
+
+(buttons cause linked gun to fire)
+late [ Button Heavy LinkA ] [ Gun LinkA ] -> [ ButtonPressed Heavy ] [ Gun Firing ] again
+late [ Button Heavy LinkB ] [ Gun LinkB ] -> [ ButtonPressed Heavy ] [ Gun Firing ] again
+late [ Button Heavy LinkC ] [ Gun LinkC ] -> [ ButtonPressed Heavy ] [ Gun Firing ] again
+late [ Button Heavy LinkD ] [ Gun LinkD ] -> [ ButtonPressed Heavy ] [ Gun Firing ] again
+late [ Button Heavy LinkE ] [ Gun LinkE ] -> [ ButtonPressed Heavy ] [ Gun Firing ] again
+
+( MultiGuns fire 3 shots. do this by cycling LinkB->LinkA->None )
+[ MultiGun Firing no Link ] -> [ MultiGun Firing LinkB ]
+[ MultiGun Fired LinkB ] -> [ MultiGun Firing LinkA ]
+[ MultiGun Fired LinkA ] -> [ MultiGun Firing ]
+
+( create arrows )
+[ GunU Firing ] -> [ GunU ArrowU Fired ]
+[ GunR Firing ] -> [ GunR ArrowR Fired ]
+[ GunL Firing ] -> [ GunL ArrowL Fired ]
+[ GunD Firing ] -> [ GunD ArrowD Fired ]
+( move )
+[ ArrowL ] -> [ left ArrowL ] again
+[ ArrowU ] -> [ up ArrowU ] again
+[ ArrowR ] -> [ right ArrowR ] again
+[ ArrowD ] -> [ down ArrowD ] again
+
+late [ Arrow Rock ] -> [ RockDust ] sfx0
+late [ Arrow Player ] -> [ GibbedPlayer ] sfx1
+late [ Arrow Blockers ] -> [ Blockers ] sfx0
+
+(grabbing an idol)
+[ DeadPlayer ] -> cancel
+[ > Player | Idol ] -> [ Player | Pit ]
+
+==============
+WINCONDITIONS
+==============
+
+no Idol
+
+=======
+LEVELS
+=======
+
+message 1/20: You only get one push!
+###########
+#.........#
+#......*..#
+#.*.....*.#
+#...***...#
+#..**g*...#
+#..*.*....#
+#.........#
+#...p...*.#
+#.........#
+###########
+
+message 2/20: Mind the gap
+###########
+#**.......#
+#*....*.*.#
+#.........#
+#...***...#
+#...*g*...#
+#...*_*...#
+#*........#
+#..*.p..*.#
+#.........#
+###########
+
+message 3/20: Shaky footing
+###########
+#****g****#
+#.*_..****#
+#x********#
+#.********#
+#.x.xx...*#
+#*******x*#
+#......x.*#
+#.********#
+#p*.......#
+###########
+
+message 4/20: Firepower
+1##########
+#*...g...*#
+#........*#
+#*********#
+#**.....*.#
+#**.......#
+#**_.p....#
+#*t*...**.#
+#**_...**.#
+#**..u...*#
+###########
+
+message 5/20: Artillery
+1##########
+#**.....*.#
+#*......**#
+#...*g*...#
+#.*.......#
+#.........#
+#*********#
+#..*.**...#
+#*......t.#
+#..*.u...p#
+###########
+
+message 6/20: Traps
+1##########
+#t**.****.#
+#.*...**g*#
+#.x.....**#
+#.**.*....#
+#..*.*....#
+#.**......#
+#**.......#
+#**p..*...#
+#**..**.u*#
+###########
+
+message 7/20: Sequencing
+12#########
+#*********#
+#*t****_..#
+#*x*.d**..#
+#.....**..#
+#.....*...#
+#t..._*...#
+#r...**.g.#
+#...***...#
+#p..****..#
+###########
+
+message 8/20: Hamiltonian Cycle
+(8/20 - 3 guns, order irrelevant)
+123########
+#*....**.*#
+#..***l**.#
+#g****l***#
+#*****l***#
+#tx**xxxxx#
+#xxxqxxx*t#
+#xx*_**x_x#
+#*x_xxxxx*#
+#*xtx*x**_#
+###########
+
+message 9/20: Barrage
+(9/20 -- 4 guns, all inline with triggers)
+1234#######
+#****x***_#
+#***.tt.**#
+#xg_.dd.**#
+#*__......#
+#_*__**.lt#
+#_*..*..lt#
+#.........#
+#*p.......#
+#**...*..*#
+###########
+
+message 10/20: Rotary
+(10/20 -- 4 guns, mostly inline with triggers)
+1234#######
+#**_*...t.#
+#*......d.#
+#r......**#
+#*.****..*#
+#t.*.g**.*#
+#..******x#
+#....**_xt#
+#.....p***#
+#_.u*t._.l#
+###########
+
+message 11/20: Shooting Gallery
+(11/20)
+1234#######
+#t..*..*_l#
+#_.****.__#
+#r.*x**.t*#
+#******.**#
+#**xtr_.*g#
+#__.__..**#
+#_......**#
+#....p.u.*#
+#**....t..#
+###########
+
+message 12/20: Co-op
+(12/20: 2 players!)
+1##########
+#*t.._____#
+#...._*g__#
+#.r.._.*..#
+#...._*.**#
+#**_._.*.*#
+#****_....#
+#*..*_..**#
+#*.**_..**#
+#*p**_..p*#
+###########
+
+message 13/20: Rescue
+12#########
+#**...._.g#
+#*.t..._*.#
+#*...d._.*#
+#*p..__*_*#
+#*...__.u*#
+#.*..._.t*#
+#*...**_**#
+#*..***.**#
+#*.**....p#
+###########
+
+message 14/20: Friendly Fire
+(14/20 -- corridor toggle triggers left-wall gun )
+12#########
+#*********#
+#*********#
+#g*8...pl*#
+#*********#
+#7********#
+#...***...#
+#......p.t#
+#....*.*..#
+#.ut......#
+###########
+
+message 15/20: Interference
+123########
+#**..*..**#
+#*.......*#
+#....p...*#
+#t......**#
+#r.**..**g#
+#...*...**#
+#..uup..**#
+#*.......*#
+#**tt...**#
+###########
+
+message 16/20: Machine guns
+1##########
+#*********#
+#p..*g****#
+#....*****#
+#..*******#
+#..**.*.**#
+#***......#
+#***.p....#
+#....t.m..#
+#_........#
+###########
+
+message 17/20: Trapped
+(17/20 -- top toggle triggers magma)
+123########
+#p**...n*g#
+#*****..*_#
+#******.**#
+#***..t*.*#
+#*7_*.....#
+#8.x*....l#
+#...xp...x#
+#...u*.._t#
+#*..t*...x#
+###########
+
+message 18/20: Crossfire
+(18/20 -- modified to be more difficult)
+12345######
+#_g.*_****#
+#____**...#
+#.....*...#
+#rx.***.x.#
+#t..*.*...#
+#.px..*.pl#
+#o.**.*x.*#
+#t...*.x.t#
+#.xtm*mtx.#
+###########
+
+message 19/20: Stylite
+(19/20)
+1##########
+#*********#
+#..*t***x*#
+#p...*****#
+#.r..*g***#
+#.*_____*_#
+#**_...___#
+#*__p..___#
+#*x_...__*#
+#_*_______#
+###########
+
+message 20/20: Spinal Cannon
+(20/20 -- inverted so I don't have to make an upwards magma gun)
+1##########
+#p.**g*_.p#
+#....**x..#
+#_*.._..**#
+#.*..*...*#
+#..*.x....#
+#_x__*.._.#
+#*.x_*x.._#
+#*x..***..#
+#*_.tm.*..#
+###########
+
+(finale -- pushes gold into pit, gold gets smashed, eyes bug out)
+###########
+#*.......*#
+#....p....#
+#._....._.#
+#_...*..._#
+#_..._..._#
+#__._g_.__#
+#_________#
+#_________#
+#*_______*#
+###########
+
+message Congratulations!
+
+(Credits
+Code: Yotam Frid
+Art: Mati & Itamar Ernst
+Music: Jason Lord
+
+www.lonebot.net
+Ludam Dare 28)
+
+(blank level template()
+###########
+#.........#
+#.........#
+#.........#
+#.........#
+#.........#
+#.........#
+#.........#
+#.........#
+#.........#
+###########
+()
+
+title Colour Chained
+author Dennis Au
+youtube _VzrmRkLfxM
+run_rules_on_level_start
+again_interval 0.015
+noundo
+
+(version 201310152126 - added some harder levels, added sfx for rotate and drop, decided to use noundo)
+(version 201310142256 - tweaked scoring, added pop animation and reworked code)
+
+========
+OBJECTS
+========
+Background
+Black
+
+P1 p
+Black
+0...0
+.....
+.....
+.....
+0...0
+
+P2 q
+Black
+0...0
+.....
+.....
+.....
+0...0
+
+hasN
+Orange
+0....
+.....
+.....
+.....
+....0
+
+Remove
+White
+.....
+.....
+.....
+.....
+.....
+
+
+NP1 n
+White
+.....
+.....
+.....
+.....
+.....
+
+NP2 m
+White
+.....
+.....
+.....
+.....
+.....
+
+LoseFlag
+Grey Black LightGrey
+.....
+10120
+.....
+02010
+.....
+
+PieceGen
+Black
+
+HBorder -
+DarkGrey
+.....
+.....
+0...0
+.....
+.....
+
+VBorder |
+DarkGrey
+..0..
+.....
+.....
+.....
+..0..
+
+(pieces)
+C1 R
+Red LightGrey Black
+.000.
+00010
+00000
+00000
+.000.
+
+C2 G
+Green LightGrey Black
+.000.
+00010
+00000
+00000
+.000.
+
+C3 B
+Blue LightGrey Black
+.000.
+00010
+00000
+00000
+.000.
+
+C4 Y
+Yellow LightGrey Black
+.000.
+00010
+00000
+00000
+.000.
+
+(Numbers)
+No1 1
+DarkGrey
+..0..
+.00..
+..0..
+..0..
+.000.
+
+No2 2
+DarkGrey
+.00..
+0..0.
+..0..
+.0...
+0000.
+
+No3 3
+DarkGrey
+000..
+...0.
+.00..
+...0.
+000..
+
+No4 4
+DarkGrey
+..0..
+.00..
+0.0..
+0000.
+..0..
+
+No5 5
+DarkGrey
+0000.
+0....
+000..
+...0.
+000..
+
+No6 6
+DarkGrey
+.00..
+0....
+000..
+0..0.
+.00..
+
+No7 7
+DarkGrey
+0000.
+...0.
+..0..
+.0...
+0....
+
+No8 8
+DarkGrey
+.00..
+0..0.
+.00..
+0..0.
+.00..
+
+No9 9
+DarkGrey
+.00..
+0..0.
+.000.
+...0.
+.00..
+
+No0 0
+DarkGrey
+.00..
+0..0.
+0..0.
+0..0.
+.00..
+
+Pop
+LightGrey White
+...1.
+..101
+...1.
+.....
+.....
+
+Inc
+Black
+
+PlayArea
+Green
+
+
+=======
+LEGEND
+=======
+. = Background
+u = PieceGen
++ = Inc
+
+Player = P1 or P2
+Piece = C1 or C2 or C3 or C4
+PieceB = Piece
+
+NP = NP1 or NP2
+Border = HBorder or VBorder
+Score = No1 or No2 or No3 or No4 or No5 or No6 or No7 or No8 or No9 or No0
+
+Obstacle = Piece or Score
+Match3Logic = hasN or Remove or Pop
+
+=======
+SOUNDS
+=======
+startlevel 17589703
+
+(death)
+sfx0 45317502
+
+(match3)
+sfx1 530500
+
+(piece drop)
+sfx2 75273507
+
+(piece rotate)
+sfx3 21774107
+
+================
+COLLISIONLAYERS
+================
+PlayArea
+Background
+Player, NP, PieceGen, Border
+Piece, Score, Inc,
+Match3Logic, LoseFlag
+
+======
+RULES
+======
+(set preview area)
+[] -> [PlayArea]
+Down [NP|PlayArea] -> [NP|]
+Vertical [No PlayArea| PlayArea] -> [|]
+
+(match 3 rules)
+Right [C1|C1] -> [C1 hasN|C1 hasN]
+Right [C2|C2] -> [C2 hasN|C2 hasN]
+Right [C3|C3] -> [C3 hasN|C3 hasN]
+Right [C4|C4] -> [C4 hasN|C4 hasN]
+
+Vertical [C1 hasN|C1] -> [Remove C1| Remove C1]
+Vertical [C2 hasN|C2] -> [Remove C2| Remove C2]
+Vertical [C3 hasN|C3] -> [Remove C3| Remove C3]
+Vertical [C4 hasN|C4] -> [Remove C4| Remove C4]
+
+[Remove C1| C1] -> [Remove C1| Remove C1]
+[Remove C2| C2] -> [Remove C2| Remove C2]
+[Remove C3| C3] -> [Remove C3| Remove C3]
+[Remove C4| C4] -> [Remove C4| Remove C4]
+
+[C1|C1|C1] -> [Remove C1|Remove C1|Remove C1]
+[C2|C2|C2] -> [Remove C2|Remove C2|Remove C2]
+[C3|C3|C3] -> [Remove C3|Remove C3|Remove C3]
+[C4|C4|C4] -> [Remove C4|Remove C4|Remove C4]
+
+[hasN] -> []
+
+[PlayArea Remove Piece][P1] -> [PlayArea Pop][P1] sfx1
+random [Pop][inc] -> [][left inc] again
+
+
+(down drops pieces)
+Down [> Player Piece|No Piece] -> [Player|> Piece] sfx2
+Down [> Player No Piece] -> Cancel
+
+
+(x rotates clockwise)
+[Up P1|P2] -> [> P1|v P2] sfx3
+[Action P1|P2] -> [> P1|v P2] sfx3
+[Moving Player Piece] -> [Moving Player Moving Piece]
+[> Player| Border] -> cancel
+
+
+(gravity)
+Down [PlayArea Piece No Player|No Obstacle][stationary inc] -> [PlayArea|> Piece][stationary inc] again
+
+
+(explicit loss if piece ends on border)
+[Piece Border][stationary inc][P1] -> [Piece Border LoseFlag][inc][] sfx0
+[LoseFlag|No LoseFlag] -> [LoseFlag|LoseFlag] again
+
+
+(scoring)
+
+left [> inc| score] -> [> inc| > score]
+left [> No9| score] -> [No0|> score]
+left [> No9| border] -> [No0| border]
+
+left [> No0] -> [No1]
+left [> No1] -> [No2]
+left [> No2] -> [No3]
+left [> No3] -> [No4]
+left [> No4] -> [No5]
+left [> No5] -> [No6]
+left [> No6] -> [No7]
+left [> No7] -> [No8]
+left [> No8] -> [No9]
+
+
+(preview area)
+
+startloop
+(for endless mode)
+[PieceGen No Piece] -> [PieceGen Random Piece]
+(antigrav)
+Up [Piece No PlayArea No NP| No Obstacle] -> [|> Piece]
+(get next piece)
+[P1 no Piece][P2 no Piece][NP1 Piece|NP2 PieceB]-> [P1 Piece][P2 PieceB][NP1|NP2]
+endloop
+
+
+==============
+WINCONDITIONS
+==============
+No Piece
+No Pop
+
+=======
+LEVELS
+=======
+(Empty Level Template
+
+nm|..pq..|
+..|......|
+..|------|
+..|......|
+..|......|
+..|......|
+..|......|
+..|......|
+..|......|
+..|000000+
+
+)
+
+nm|..pq..|
+RR|......|
+..|------|
+..|......|
+..|......|
+..|......|
+..|..Y...|
+..|..RR..|
+..|R.YY..|
+..|000000+
+
+nm|..pq..|
+GR|......|
+..|------|
+..|......|
+..|......|
+..|....B.|
+..|...BG.|
+..|...RG.|
+..|.R.RB.|
+..|000000+
+
+nm|..pq..|
+RR|......|
+BB|------|
+BR|......|
+..|......|
+..|......|
+..|......|
+..|....B.|
+..|..RRB.|
+..|000000+
+
+
+nm|..pq..|
+BG|......|
+RB|------|
+..|......|
+..|......|
+..|......|
+..|......|
+..|..GB..|
+..|RRGB..|
+..|000000+
+
+nm|..pq..|
+BG|......|
+GB|------|
+..|......|
+..|......|
+..|......|
+..|...G..|
+..|..BB..|
+..|..GG.B|
+..|000000+
+
+nm|..pq..|
+RG|......|
+GB|------|
+BR|......|
+..|......|
+..|......|
+..|...G..|
+..|...B..|
+..|..RRG.|
+..|000000+
+
+nm|..pq..|
+GR|......|
+RY|------|
+BG|......|
+YB|......|
+..|......|
+..|..B...|
+..|..RB..|
+..|.GYB..|
+..|000000+
+
+nm|..pq..|
+RG|......|
+YY|------|
+YG|......|
+BB|......|
+..|BY....|
+..|YB.G..|
+..|YRRG..|
+..|BGGBBY|
+..|000000+
+
+nm|..pq..|
+rb|......|
+bb|------|
+by|......|
+ry|......|
+..|....r.|
+..|...rb.|
+..|.bybyb|
+..|bybyrr|
+..|000000+
+
+nm|..pq..|
+br|......|
+ry|------|
+yy|......|
+..|....b.|
+..|...gb.|
+..|...yy.|
+..|.bygb.|
+..|byrgrr|
+..|000000+
+
+
+nm|..pq..|
+by|......|
+ry|------|
+ry|......|
+yg|....y.|
+..|..rgby|
+..|b.gbyg|
+..|rrgbyg|
+..|bbyyrr|
+..|000000+
+
+
+message Thank you for playing.
+message Music: Puzzle Pieces - Desert of Lost Endings by Nick Tanski (nicholastanski.bandcamp.com)
+
+(endless mode)
+message Endless Mode unlocked!
+
+nm|..pq..|
+..|......|
+..|------|
+..|......|
+..|......|
+..|......|
+..|......|
+..|......|
+..|......|
+uu|000000+
+
+(CC BY-NC-SA 3.0)
+
+USER PROMPT:
+The following PuzzleScript game code:
+```plaintext
+title Block Swap Shuffle
+author PuzzleDesigner
+homepage www.puzzlescript.net
+
+========
+OBJECTS
+========
+
+Background
+White
+
+Wall
+Grey
+00000
+00000
+00000
+00000
+00000
+
+Player
+Red LightRed
+.0.
+.1.
+.0.
+
+Block1
+Blue LightBlue
+.....
+..1..
+.111.
+..1..
+.....
+
+Block2
+Green LightGreen
+.....
+..2..
+.222.
+..2..
+.....
+
+Block3
+Yellow LightYellow
+.....
+..3..
+.333.
+..3..
+.....
+
+Block4
+Orange LightOrange
+.....
+..4..
+.444.
+..4..
+.....
+
+Target
+DarkBlue LightBlue
+.....
+.000.
+.0.0.
+.000.
+.....
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Player
+B1 = Block1
+B2 = Block2
+B3 = Block3
+B4 = Block4
+B = Block1 or Block2 or Block3 or Block4
+T = Target
+
+=======
+SOUNDS
+=======
+
+Block1 MOVE 34577506
+Block2 MOVE 34668205
+Block3 MOVE 34758904
+Block4 MOVE 34849603
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Target
+Wall
+Player, Block1, Block2, Block3, Block4
+
+======
+RULES
+======
+
+[ > Player | B ] -> [ > Player | > B ]
+
+late [ B1 | B1 | B1 ] -> [ | | ]
+late [ B2 | B2 | B2 ] -> [ | | ]
+late [ B3 | B3 | B3 ] -> [ | | ]
+late [ B4 | B4 | B4 ] -> [ | | ]
+
+==============
+WINCONDITIONS
+==============
+
+all Block1 on Target
+all Block2 on Target
+all Block3 on Target
+all Block4 on Target
+
+=======
+LEVELS
+=======
+
+#########
+#.......#
+#.......#
+#.P.....#
+#...B1..#
+#.......#
+#.T.....#
+#..B2...#
+#.......#
+#########
+
+#########
+#.......#
+#...B3..#
+#.......#
+#.T...T.#
+#..B4...#
+#.......#
+####P####
+
+```
+produced the following console output:
+=================================
+line 37 : Trying to access color number 2 from the color palette of sprite BLOCK2, but there are only 2 defined in it.
+line 38 : Trying to access color number 2 from the color palette of sprite BLOCK2, but there are only 2 defined in it.
+line 39 : Trying to access color number 2 from the color palette of sprite BLOCK2, but there are only 2 defined in it.
+line 43 : Was looking for color for object BLOCK3, got "lightyellow" instead.
+line 45 : Trying to access color number 3 from the color palette of sprite BLOCK3, but there are only 1 defined in it.
+line 46 : Trying to access color number 3 from the color palette of sprite BLOCK3, but there are only 1 defined in it.
+too many errors, aborting compilation
+Errors detected during compilation; the game may not work correctly.
+Return a repaired version of the code that addresses these errors. Return your code in full, inside a ```plaintext code block.

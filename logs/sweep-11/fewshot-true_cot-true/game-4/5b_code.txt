@@ -1,0 +1,115 @@
+```plaintext
+title Coin Collector
+author AI GameDesigner
+homepage www.puzzlescript.net
+
+========
+OBJECTS
+========
+
+Background
+lightgray
+.....
+.....
+.....
+.....
+.....
+
+Player
+darkblue
+..0..
+.000.
+.000.
+..0..
+.....
+
+Wall
+brown darkbrown
+11111
+11111
+11111
+11111
+11111
+
+Coin
+yellow orange
+.000.
+.0.0.
+00000
+.0.0.
+.000.
+
+Trap
+red black
+.....
+..1..
+.111.
+..1..
+.....
+
+=======
+LEGEND
+=======
+
+. = Background
+P = Player
+# = Wall
+C = Coin
+T = Trap
+
+=======
+SOUNDS
+=======
+
+sfx0 20105505 (Collect Coin Sound)
+sfx1 40100001 (Hit Trap Sound)
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Coin
+Trap
+Player, Wall
+
+======
+RULES
+======
+
+[ > Player | Coin ] -> [ > Player | ] sfx0
+[ > Player | Trap ] -> RESTART sfx1
+
+==============
+WINCONDITIONS
+==============
+
+no Coin
+
+=======
+LEVELS
+=======
+
+#..C.....#
+#.######.#
+#........P#
+####.######
+#.......#C#
+#..###..#.#
+#....##...#
+#C##.....##
+###T#######
+
+#......C..#
+#.###..#.##
+#.#..T.#.C#
+#..P.#..#.#
+##.###.##.#
+#......#..#
+#.##T#.....#
+#.....#..##
+######.####
+
+message Congratulations! You have collected all the coins!
+```
+In order to fix the unsolvable level 0, make sure that the Player can reach all Coins without getting trapped or blocked by Walls. Specifically, check for any inaccessible or boxed-in Coins and adjust Wall placements or remove redundant blocks. If necessary, reposition the Player or add corridors to connect segregated areas.

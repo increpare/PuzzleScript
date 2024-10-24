@@ -1,0 +1,2039 @@
+SYSTEM PROMPT:
+You are a game designer, familiar with the PuzzleScript game description language. Here are some example games, for inspiration (do not reproduce these games exactly):
+
+title Extended Bodies:Multiple Parallel Players, Multiple Extended Object
+author Anonymous
+homepage www.puzzlescript.net
+
+verbose_logging
+
+(
+    
+THIS IS A DELIBERATELY BROKEN GAME, JUST FOR ILLUSTRATION
+
+see https://www.puzzlescript.net/Documentation/rigidbodies.html#parallel_many
+)
+
+
+========
+OBJECTS
+========
+
+Background 
+white  
+
+Target 
+DarkBlue    
+
+Wall 
+DarkGrey
+
+Player
+Blue
+..0..
+..0.0
+00000
+.000.
+.0.0.
+
+( three multi-cells blocks )
+Crate 
+orange
+
+Chest
+green
+
+Box
+red
+
+( 1-cell small block )
+Small
+darkred
+.....
+.000.
+.000.
+.000.
+.....
+
+( sticky, multicellular block when in contact )
+Glue
+pink
+.000.
+00000
+00000
+00000
+.000.
+
+( a flag to know what is allowed move )
+Wanna_Move
+#ff00ff
+.....
+.....
+..0..
+.....
+.....
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Player
+* = Crate
++ = Box
+% = Chest
+o = Small
+g = Glue
+
+( blocks that can be moved by the player )
+Movable = Crate or Box or Chest or Small or Glue
+
+( all things that can move and push blocks )
+Mover = Player or Movable
+
+( things that can stop a movement if they are stationary )
+Obstacle = Wall or Mover
+
+=======
+SOUNDS
+=======
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Target
+Obstacle
+Wanna_Move
+
+======
+RULES     
+======     
+
+( 1. Propagate movements forward )
+[ > Mover | Movable ] -> [ > Mover | > Movable  ]
++ [ > Box    ] [ Box   ] -> [ > Box    ] [ > Box    ]
++ [ > Crate  ] [ Crate ] -> [ > Crate  ] [ > Crate  ]
++ [ > Chest  ] [ Chest ] -> [ > Chest  ] [ > Chest  ]
++ [ moving Glue | Glue ] -> [ moving Glue | moving Glue ]
+
+( 2. Propagate obstructions backwards )
+[ > Mover  | stationary Obstacle ] -> [ stationary Mover | Obstacle ]
++ [ > Crate  ] [ stationary Crate ] -> [ stationary Crate ] [ Crate ]
++ [ > Box    ] [ stationary Box   ] -> [ stationary Box   ] [ Box   ]
++ [ > Chest  ] [ stationary Chest ] -> [ stationary Chest ] [ Chest ]
++ [ moving Glue | stationary Glue ] -> [ stationary Glue | Glue ]
+
+( 3. remove all movement, keep a flag )
+[ > Movable ] -> [ Movable wanna_move ]
+
+( 4. propagate movement only on wanna_move things )
+(    ie redo step 1 but with WANNA_MOVE added to the first line below )
+[ > Mover  | Movable WANNA_MOVE ] -> [ > Mover | > Movable ]
++ [ > Box   ] [ Box   ] -> [ > Box   ] [ > Box   ]
++ [ > Crate ] [ Crate ] -> [ > Crate ] [ > Crate ]
++ [ > Chest ] [ Chest ] -> [ > Chest ] [ > Chest ]
++ [ moving Glue | Glue ] -> [ moving Glue | moving Glue ]
+
+( 5. cleanup, remove flag )
+[ wanna_move ] -> [ ]
+
+==============
+WINCONDITIONS
+==============
+
+=======     
+LEVELS
+=======
+
+###################
+#.................#
+#.................#
+#...*..g.g.#......#
+#...*......#...g###
+#...*...o.%%%.....#
+#...+++.o.%.......#
+#....+....%%%.....#
+#....+.....P...g..#
+#....p.gg.........#
+###################
+
+
+title Coin Counter
+
+verbose_logging
+run_rules_on_level_start
+========
+OBJECTS
+========
+
+Background
+lightblue
+
+wall
+darkbrown
+
+t
+transparent
+
+tl
+transparent
+
+tr
+transparent
+
+m
+transparent
+
+bl
+transparent
+
+br
+transparent
+
+b
+transparent
+
+corner
+transparent
+
+on
+blue
+
+off
+darkbrown
+
+one 1
+transparent
+
+two 2
+transparent
+
+three 3
+transparent
+
+four 4
+transparent
+
+five 5
+transparent
+
+six 6
+transparent
+
+seven 7
+transparent
+
+eight 8
+transparent
+
+nine 9
+transparent
+
+zero 0
+transparent
+
+player
+green
+
+coin
+#ff0
+.....
+.000.
+.0.0.
+.000.
+.....
+
+ending
+transparent
+
+tens
+transparent
+
+carry
+transparent
+
+fiver
+#ff0
+..0..
+.000.
+00.00
+.000.
+..0..
+
+star
+#ff0 yellow orange
+0.0.0
+.121.
+02.20
+.121.
+0.0.0
+
+hund
+transparent
+
+won
+transparent
+
+last
+transparent
+
+fakecoin
+#ff0
+.....
+.000.
+.0.0.
+.000.
+.....
+=======
+LEGEND
+=======
+
+c = corner
+l = tl
+r = tr
+w = bl
+e = br
+seg = t or l or r or m or w or e or b
+num = zero or one or two or three or four or five or six or seven or eight or nine
+p = player
+k = coin
+. = background
+x = wall
+
+! = t and coin
+@ = l and coin
+# = r and coin
+$ = m and coin
+% = w and coin
+^ = e and coin
+& = b and coin
+* = c and coin
+
+{ = t and fiver
+} = l and fiver
+; = r and fiver
+: = m and fiver
+' = w and fiver
+" = e and fiver
+, = b and fiver
+/ = c and fiver
+
+f = fiver
+
+? = tens and wall
+
+- = fakecoin
+
+j = star
+` = hund
+z = ending
+~ = last
+=======
+SOUNDS
+=======
+
+================
+COLLISIONLAYERS
+================
+
+Background
+seg
+corner
+num
+on
+off
+coin, fiver
+star
+player, wall
+ending
+tens
+carry
+won
+hund
+last
+fakecoin
+======
+RULES
+======
+
+[last][ action player ]-> win
+[last ][moving player] -> win
+up [tens|no tens] -> [tens | tens]
+down [tens|no tens] -> [tens | tens]
+
+[> player | off] -> [stationary player | off]
+late [player off] -> [off]
+
+late [player coin] -> again
+late [player fiver] -> again
+late [player star] -> again
+
+[player coin][zero no tens] -> [player][one]
+[player coin][one no tens] -> [player][two]
+[player coin][two no tens] -> [player][three]
+[player coin][three no tens] -> [player][four]
+[player coin][four no tens] -> [player][five]
+[player coin][five no tens] -> [player][six]
+[player coin][six no tens] -> [player][seven]
+[player coin][seven no tens] -> [player][eight]
+[player coin][eight no tens] -> [player][nine]
+[player coin][nine no tens] -> [player][zero carry]
+
+[player fiver][zero no tens] -> [player][five]
+[player fiver][one no tens] -> [player][six]
+[player fiver][two no tens] -> [player][seven]
+[player fiver][three no tens] -> [player][eight]
+[player fiver][four no tens] -> [player][nine]
+[player fiver][five no tens] -> [player][zero carry]
+[player fiver][six no tens] -> [player][one carry]
+[player fiver][seven no tens] -> [player][two carry]
+[player fiver][eight no tens] -> [player][three carry]
+[player fiver][nine no tens] -> [player][four carry]
+
+[carry no tens][zero tens] -> [][one tens]
+[carry no tens ][one tens] -> [][two tens]
+[carry no tens ][two tens] -> [][three tens]
+[carry no tens ][three tens] -> [][four tens]
+[carry no tens ][four tens] -> [][five tens]
+[carry no tens ][five tens] -> [][six tens]
+[carry no tens ][six tens] -> [][seven tens]
+[carry no tens ][seven tens] -> [][eight tens]
+[carry no tens ][eight tens] -> [][nine tens]
+[carry no tens ][nine tens] -> [][zero tens carry]
+
+
+
+[hund] -> [hund off]
+
+[tens carry][hund off] -> [tens carry][hund on]
+[player won] -> win
+
+[star player][tens carry] -> [player won][tens no carry] again
+
+[carry no tens] -> []
+[seg no on] -> [seg on]
+[seg off] -> [seg]
+
+[m no tens][zero no tens] -> [m off][zero]
+[l no tens][one no tens] -> [l off][one]
+[w no tens][one no tens] -> [w off][one]
+[m no tens][one no tens] -> [m off][one]
+[t no tens][one no tens] -> [t off][one]
+[b no tens][one no tens] -> [b off][one]
+[l no tens][two no tens] -> [l off][two]
+[e no tens][two no tens] -> [e off][two]
+[l no tens][three no tens] -> [l off][three]
+[w no tens][three no tens] -> [w off][three]
+[b no tens][four no tens] -> [b off][four]
+[w no tens][four no tens] -> [w off][four]
+[t no tens][four no tens] -> [t off][four]
+[r no tens][five no tens] -> [r off][five]
+[w no tens][five no tens] -> [w off][five]
+[r no tens][six no tens] -> [r off][six]
+[l no tens][seven no tens] -> [l off][seven]
+[w no tens][seven no tens] -> [w off][seven]
+[m no tens][seven no tens] -> [m off][seven]
+[b no tens][seven no tens] -> [b off][seven]
+[w no tens][nine no tens] -> [w off][nine]
+
+[seg  tens][zero  tens] -> [seg off tens][zero tens]
+[l  tens][one tens] -> [l off tens][one tens]
+[w  tens][one  tens] -> [w off tens][one tens]
+[m  tens][one  tens] -> [m off tens][one tens]
+[t  tens][one  tens] -> [t off tens][one tens]
+[b  tens][one  tens] -> [b off tens][one tens]
+[l  tens][two  tens] -> [l off tens][two tens]
+[e  tens][two  tens] -> [e off tens][two tens]
+[l  tens][three  tens] -> [l off tens][three tens]
+[w  tens][three  tens] -> [w off tens][three tens]
+[b  tens][four  tens] -> [b off tens][four tens]
+[w  tens][four  tens] -> [w off tens][four tens]
+[t  tens][four  tens] -> [t off tens][four tens]
+[r  tens][five  tens] -> [r off tens][five tens]
+[w  tens][five  tens] -> [w off tens][five tens]
+[r tens][six  tens] -> [r off tens][six tens]
+[l tens][seven  tens] -> [l off tens][seven tens]
+[w tens][seven  tens] -> [w off tens][seven tens]
+[m tens][seven  tens] -> [m off tens][seven tens]
+[b tens][seven  tens] -> [b off tens][seven tens]
+[w tens][nine  tens] -> [w off tens][nine tens]
+
+ [hund on][seg off] -> [hund on][seg on]
+ [hund on][m on] -> [hund on][m off]
+
+[on off] -> [off]
+
+[corner no off] -> [corner off]
+[corner on] -> [corner]
+
+[corner off|seg on] -> [corner on| seg on]
+
+
+
+
+
+
+
+==============
+WINCONDITIONS
+==============
+no coin
+no fiver
+all ending on player
+=======
+LEVELS
+=======
+
+
+
+
+
+
+x-xxxxxxxxx
+xxxctcxctcx
+xxxlxrxlxrx
+xxxcmcxcmcx
+xxxwxexwxex
+xxxcbcxcbcx
+xjx???xxxxx
+xxxxxxxxxxx
+xp0k0.k..kz
+xxxxxxxxxxx
+
+xxxxxxxxxxxxxxx
+xxxxxxxctc....z
+xxxxxxxlxrxxxxx
+xxxxxxxcmcxxxxx
+xxxxxxxwxexxxxx
+p.3k.k.cbcxxxxx
+xxxxxxxxxxxxxxx
+
+xxxxxxzx
+x?xxxx.x
+x......x
+x.xxxxxx
+xckctckx
+xrxlxrxx
+xcxc$cxx
+xexwxexx
+xckcbckx
+xxxxxx.x
+p05....x
+xxxxxxxx
+
+
+x?xxxx?zx
+xxxxxxx0x
+xcx*!*x.x
+xrxlxrx.x
+xcx*$*x.x
+xexwxex.x
+xcx*&*1px
+xxxxxxx.x
+
+xx???xxxx?x
+z.ctc.c!c.x
+x.lxrx@x#.x
+x.cmcxc$c.x
+x9wxexwx^1x
+x.cbc.cbc.x
+xxxxxxxxxpx
+
+x????xxxxxx
+z.ctcfctc.p
+x.lxrxlx#.x
+x.cmcxcm*.x
+x2wxexwx^4x
+x.cbcfcbc.x
+xxxxxxxxxxx
+
+x????xxxxx
+xctc3ctcxx
+x@xrx}xrxx
+xc$cxc:c7p
+xwx^xwx".x
+xc&cxc,c.x
+xxxxxxxxzx
+
+x????xxxpx
+xctc6ctc.x
+x}x;x@x#.x
+xcmcxc$c1x
+x'x"xwx^.x
+xc,c.c&c.x
+xxxxxxxxzx
+
+xx???xxxxpx
+x..k91.k..x
+x.ctcxctc.x
+xklxrxlxrkx
+x.cmcxcmc.x
+xkwxexwxekx
+x.cbcxcbc.x
+x..k...k..x
+xzxxxxxxxxx
+
+
+
+xpxxxxxxxxx
+xkxxxxxxxxx
+x`xctcxctcx
+x`xlxrxlxrx
+x`xcmcxcmcx
+x`xwxexwxex
+x`xcbcxcbcx
+xjx???xxxxx
+xxxxxxxxxxx
+x.9.9.....z
+xxxxxxxxxxx
+
+xxx???xxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxx???xxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxx???.ctcxxxxxxxxxxxxxxxxxxxxxxxx
+xxx???xlxrxxxxxxxxxxxxxxxxxxxxxxxx
+xxx???xcmc..z.xxx.ctc..z.xxx.ctc.x
+xxx???xwxe.xx.xxxxlxr.xx.xxxxlxr.x
+xxx???xcbc.xx.xxxxcmc.xx.xxxxcmc.x
+xxx???xxxxzxx.xxxxwxe.xx.xxxxwxe.x
+xxx???xxxx.xx.xxx.cbc.xx.xxx.cbc.x
+xxxctc.ctc.xxxxxxxxxxzxxxxxxxxxx.x
+xxxl?rxlxr.xxxxxxxxxxxxxxxxxxxxxzx
+xxxcmcxcmc.xxxxxxxxxxxxxxxxxxxxx.x
+xxxw?exwxe.xxxxxx.....xxxxxxctcx.x
+xxxcbc.cbc.xxxx..xxxxx..xxxxlxrx.x
+xxx???xxxxzxxx.xxxxxxxxx.xxxcmcx.x
+xxx???xxxx.xxx.xx.xxx.xx.xxxwxex.x
+x..........xx.xxx.xxx.xxx.xxcbc..x
+x.xxx?xctc.xx.xxx.x.x.xxx.xxxxxx.x
+x.x?x?xlxr.xx.xxxxx~xxxxx.xxxxxxzx
+x.xxx?xcmc.xx.xx..xxx..xx.xxxxxx.x
+x.x?x?xwxe.xx.xx.......xx.x......x
+x.xxx?xcbc.xx..xx.....xx.xx.xxxxxx
+x..........xxx.xxx...xxx.xxx.ctc.x
+xzx???xxxxxxxxx..xxxxx..xxxxxlxrxx
+x.x???xxxxxxxxxxx.....xxxxxxxcmcxx
+xxxctcxctcxxxxxxxxxxxxxxxxxxxwxexx
+xxxl?rxlxrxxxxxxxxxxxxxxxxxx.cbc.x
+xxxcmcxcmcxxxxxxxxxxxxxxxxxxxxxx.x
+xxxw?exwxexxxxxxxxctc....z.......x
+xxxcbcxcbcxxxxxxxxlxrxxxxxxxxxxxxx
+xpx???xxxxxxxxxxxxcmcxxxxxxxxxxxxx
+xxx???xxxxxxxxxxxxwxexxxxxxxxxxxxx
+0...0.....z.......cbcxxxxxxxxxxxxx
+xxx???xxxxxxxxxxxxxxxxxxxxxxxxxxxx
+
+
+
+
+title Robot Spawner
+author increpare
+homepage www.puzzlescript.net
+
+========
+OBJECTS
+========
+
+Background (special, automatically placed in its own layer)
+green darkgreen
+11111
+01111
+11101
+11111
+10111
+
+Spawner (Name)
+yellow 	(Color)
+..... 	(Sprite)
+..0..
+.000.
+..0..
+.....
+
+Player (Required by game)
+pink
+..0..
+00000
+..0..
+.000.
+.0.0.
+
+RedRobot
+gray black red
+.000.
+.200.
+...0.
+00000
+01010
+
+GreenRobot
+gray black lightgreen
+.000.
+.200.
+...0.
+00000
+01010
+
+BlueRobot
+gray black lightblue
+.000.
+.200.
+...0.
+00000
+01010
+
+=======
+LEGEND
+=======
+
+Robot = RedRobot or GreenRobot or BlueRobot
+Obstacle = Player or Robot
+. = Background
+P = Player
+* = Robot
+O = Spawner
+
+=========
+SOUNDS
+=========
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Spawner
+Player, Robot
+
+======
+RULES
+======
+
+[ stationary Robot ] -> [ randomDir Robot ] 
+[ Spawner no Obstacle ] -> [ Spawner random Robot ] 
+
+==============
+WINCONDITIONS
+==============
+
+=======
+LEVELS
+=======
+
+.......
+.......
+.......
+...O...
+.......
+.P.....
+.......
+
+
+title Cake Monsters
+author Matt Rix
+homepage www.magicule.com
+color_palette whitingjp
+text_color #FF5588
+background_color #050A0A
+noaction
+youtube Z6ih1aKeETk (tycho!)
+
+========
+OBJECTS
+========
+
+(-----------------------)
+(----MONSTER COLOURS----)
+(-----------------------)
+
+RedMon
+#D8144D #B00F3F BLACK WHITE
+00000
+020.3
+000..
+00000
+1..1.
+
+YellowMon
+#F3F333 #C7C829 BLACK WHITE
+00000
+020.3
+000..
+00000
+1..1.
+
+BlueMon
+#0366E3 #0A52BB BLACK WHITE
+00000
+020.3
+000..
+00000
+1..1.
+
+PurpleMon
+#9E14E2 #800FBA BLACK WHITE
+00000
+020.3
+000..
+00000
+1..1.
+
+OrangeMon
+#E68A25 #BB711E BLACK WHITE
+00000
+020.3
+000..
+00000
+1..1.
+
+GreenMon
+#1CED55 #15C346 BLACK WHITE
+00000
+020.3
+000..
+00000
+1..1.
+
+TrashMon
+#7C6953 #6D5239 BLACK WHITE
+00000
+020.3
+000..
+00000
+1..1.
+
+
+(------------------------)
+(------CAKE COLOURS------)
+(------------------------)
+
+RedCake
+#D8144D #B00F3F
+.000.
+00000
+00000
+10001
+.111.
+
+YellowCake
+#F3F333 #C7C829
+.000.
+00000
+00000
+10001
+.111.
+
+BlueCake
+#0366E3 #0A52BB
+.000.
+00000
+00000
+10001
+.111.
+
+
+PurpleCake
+#9E14E2 #800FBA
+.000.
+00000
+00000
+10001
+.111.
+
+OrangeCake
+#E68A25 #BB711E
+.000.
+00000
+00000
+10001
+.111.
+
+GreenCake
+#1CED55 #15C346
+.000.
+00000
+00000
+10001
+.111.
+
+TrashCake
+#7C6953 #6D5239
+.000.
+00000
+00000
+10001
+.111.
+
+(-----------------------)
+(------OTHER STUFF------)
+(-----------------------)
+
+Destroyer
+#001111 #223333 #384949
+.222.
+20202
+12021
+10101
+.111.
+
+Background
+#152020 #192525
+01101
+10110
+01101
+11010
+01010
+
+
+Wall
+#334444 #384949 #445555 #475959 #4A6B6B
+34443
+23332
+12221
+01110
+00000
+
+Blackness
+#050A0A
+
+
+=======
+LEGEND
+=======
+
+
+. = Background
+_ = Blackness
+# = Wall
+X = Destroyer
+
+R = RedMon
+Y = YellowMon
+B = BlueMon
+P = PurpleMon
+O = OrangeMon
+G = GreenMon
+T = TrashMon
+
+Monster = RedMon or YellowMon or BlueMon or PurpleMon or OrangeMon or GreenMon or TrashMon
+Player = Monster
+
+PrimaryMon = RedMon or YellowMon or BlueMon
+SecondaryMon = PurpleMon or OrangeMon or GreenMon
+
+(each cake char is the next letter in the alphabet after the monster char)
+(except for orange, sadly)
+S = RedCake
+Z = YellowCake
+C = BlueCake
+Q = PurpleCake
+A = OrangeCake
+H = GreenCake
+U = TrashCake
+
+Cake = RedCake or YellowCake or BlueCake or PurpleCake or OrangeCake or GreenCake or TrashCake
+
+=======
+SOUNDS
+=======
+
+sfx0 8478107 (move)
+sfx1 18590508 (eat other monster)
+sfx2 61437309 (eat cake)
+sfx3 89161102 (monster destroyed)
+startlevel 563108
+endlevel 76028308
+undo 82948709
+restart 22851101
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Blackness, Wall, Destroyer
+Monster,Cake
+
+
+
+======
+RULES
+======
+
+(------------------------)
+(----MONSTER MOVEMENT----)
+(------------------------)
+
+(movement sound)
+[ > Monster ] -> [ > Monster ] sfx0
+
+(stop the monster if it hits a wall)
+[ > Monster | Wall ] -> [ Monster | Wall]
+
+(if monster hits a destroyer, remove the monster)
+[ > Monster | Destroyer ] -> [ | Destroyer] sfx3
+
+(monster eats cakes of the same color)
+[ > RedMon | RedCake] -> [ | RedMon] sfx2
+[ > BlueMon | BlueCake] -> [ | BlueMon] sfx2
+[ > YellowMon | YellowCake] -> [ | YellowMon] sfx2
+[ > PurpleMon | PurpleCake] -> [ | PurpleMon] sfx2
+[ > OrangeMon | OrangeCake] -> [ | OrangeMon] sfx2
+[ > GreenMon | GreenCake] -> [ | GreenMon] sfx2
+[ > TrashMon | TrashCake] -> [ | TrashMon] sfx2
+
+(stop the monster if it hits a cake of a different color)
+(note: this is necessary to make sure the monster is marked as stationary)
+[ > RedMon | Cake no RedCake] -> [ RedMon | Cake no RedCake]
+[ > BlueMon | Cake no BlueCake] -> [ BlueMon | Cake no BlueCake]
+[ > YellowMon | Cake no YellowCake] -> [ YellowMon | Cake no YellowCake]
+[ > PurpleMon | Cake no PurpleCake] -> [ PurpleMon | Cake no PurpleCake]
+[ > OrangeMon | Cake no OrangeCake] -> [ OrangeMon | Cake no OrangeCake]
+[ > GreenMon | Cake no GreenCake] -> [ GreenMon | Cake no GreenCake]
+[ > TrashMon | Cake no TrashCake] -> [ TrashMon | Cake no TrashCake]
+
+(--------------------------)
+(---MONSTER COLOR MIXING---)
+(--------------------------)
+
+(red+blue = purple)
+[ > BlueMon | stationary RedMon] -> [ | PurpleMon] sfx1
+[ > RedMon | stationary BlueMon] -> [ | PurpleMon] sfx1
+
+(red+yellow = orange)
+[ > RedMon | stationary YellowMon] -> [ | OrangeMon] sfx1
+[ > YellowMon | stationary RedMon] -> [ | OrangeMon] sfx1
+
+(blue+yellow = green)
+[ > BlueMon | stationary YellowMon] -> [ | GreenMon] sfx1
+[ > YellowMon | stationary BlueMon] -> [ | GreenMon] sfx1
+
+(primary color + secondary color = brown aka trash)
+[ > PrimaryMon | stationary SecondaryMon] -> [ | TrashMon] sfx1
+[ > SecondaryMon | stationary PrimaryMon] -> [ | TrashMon] sfx1
+
+(green+orange = trash)
+[ > GreenMon | stationary OrangeMon] -> [ | TrashMon] sfx1
+[ > OrangeMon | stationary GreenMon] -> [ | TrashMon] sfx1
+
+(purple+orange = trash)
+[ > PurpleMon | stationary OrangeMon] -> [ | TrashMon] sfx1
+[ > OrangeMon | stationary PurpleMon] -> [ | TrashMon] sfx1
+
+(green+purple = trash)
+[ > GreenMon | stationary PurpleMon] -> [ | TrashMon] sfx1
+[ > PurpleMon | stationary GreenMon] -> [ | TrashMon] sfx1
+
+(trash+anything = trash)
+[ > TrashMon | stationary Monster] -> [ | TrashMon] sfx1
+[ > Monster | stationary TrashMon] -> [ | TrashMon] sfx1
+
+(monster + monster of the same color = monster of the same color)
+[ > Monster | stationary Monster] -> [ | Monster] sfx1
+
+
+==============
+WINCONDITIONS
+==============
+
+No Cake
+
+
+=======
+LEVELS
+=======
+
+
+message WELCOME TO CAKE MONSTERS!
+message MONSTERS LIKE EATING CAKE
+
+_______
+#######
+#.....#
+#.r...#
+#...s.#
+#.....#
+#######
+_______
+(diff 0)
+
+message YOU MOVE ALL OF THE MONSTERS
+
+######_######
+#....#_#z...#
+#.r..#_#....#
+#..s.#_#....#
+#....#_#...y#
+######_######
+_____________
+######_######
+#.c..#_#....#
+#....#_#...h#
+#..b.#_#g...#
+#....#_#....#
+######_######
+(diff 0)
+
+message MONSTERS ONLY LIKE THEIR OWN CAKE
+message REMEMBER: Z TO UNDO, R TO RESTART
+_________
+#########
+#r.z....#
+#######.#
+#.......#
+#.sy....#
+#########
+_________
+(diff 1)
+
+message MONSTERS MIX WHEN THEY GET EATEN
+_________
+#########
+#.......#
+#.#####.#
+#.r.q.b.#
+#.#####.#
+#.......#
+#########
+_________
+(diff 1)
+
+
+message BROWN + ANY COLOR = BROWN
+__________
+##########
+#........#
+#.rybpog.#
+#........#
+#........#
+#.szcqah.#
+#........#
+#........#
+#.uuuuuu.#
+#........#
+##########
+__________
+(diff 1)
+
+
+message HAVE FUN!
+############
+#y........c#
+#b........z#
+#####..#####
+____#..#____
+____#..#____
+____#hh#____
+____####____
+(diff 1)
+
+(----------------------------)
+
+
+_____
+#####
+#RCQ#
+#.CS#
+#Q.B#
+#####
+_____
+(diff 2)
+
+
+
+
+______
+######
+#R...#
+#B...#
+#Q.QQ#
+#CSCS#
+######
+______
+(diff 2)
+
+_______
+#######
+#R.H.B#
+#.....#
+#.....#
+#Y.Q.B#
+#######
+_______
+(diff 2)
+
+_______
+#######
+#CCHCB#
+#.....#
+#YZHZZ#
+#######
+_______
+(diff 2)
+
+
+______
+######
+#R..B#
+#S.C.#
+#.A.C#
+#Y.C.#
+######
+______
+(diff 2)
+
+
+message PIECE OF CAKE, RIGHT?
+
+
+#########
+#ccccccc#
+#bcccccc#
+######cc#
+_____#ch#
+######zz#
+#yzzzzzz#
+#yzzzzzz#
+######zz#
+_____#sa#
+######ss#
+#rssssss#
+#sssssss#
+#########
+(diff 3, fun)
+
+_______
+#######
+#R.B.Y#
+#Y.B.R#
+#R.B.Y#
+#Y.B.R#
+#AHQHA#
+#######
+_______
+(diff 3)
+
+
+_______
+#######
+#AR.BA#
+#.#.#.#
+#H...H#
+##.A.##
+#HY#YH#
+#######
+_______
+(diff 3)
+
+
+
+message X TILES DESTROY MONSTERS
+_________
+_###_###_
+#...#...#
+#.q.x.p.#
+#...x...#
+_#..x..#_
+__#...#__
+___#.#___
+____#____
+_________
+(diff 0, destroyerz)
+
+
+_____
+#####
+#RAR#
+#RXY#
+#YAY#
+#####
+_____
+(diff 1, destroyerz)
+
+______
+######
+#BHHB#
+#YXXY#
+#YXXY#
+#BHHB#
+######
+______
+(diff 1 destroyerz)
+
+_______
+#######
+#RQXQR#
+#SQXQS#
+#BQXQB#
+#######
+_______
+(diff 1 destroyerz)
+
+___________
+#####_#####
+#sss#_#qqq#
+#sss###qqq#
+#x.......x#
+##x.rxb.x##
+#x.......x#
+#qqq###ccc#
+#qqq#_#ccc#
+#####_#####
+___________
+(diff 2 destroyerz)
+
+___________
+###########
+#...#q#.b.#
+#sxr#.#xx.#
+#.x.....c.#
+###########
+___________
+(diff 3 destroyerz)
+
+
+
+message YOU'RE CAKING THIS LOOK EASY!
+
+______
+######
+#RZSZ#
+#YSZS#
+#..SZ#
+#..ZS#
+######
+______
+(diff 3)
+
+
+#######
+#Y#B#Y#
+#.#R#.#
+#.#.#.#
+#.....#
+#.###.#
+#HHAHH#
+#######
+(diff 3, fun!)
+
+
+
+####__####
+#qc####cb#
+#c......c#
+##.####.##
+_#.#xx#.#_
+_#.c.r#.#_
+##.####.##
+#c......c#
+#qc####cq#
+####__####
+(diff 3)
+
+
+
+
+_#########_
+_#rrr.sss#_
+_#.......#_
+_#yyy.zzz#_
+_#.......#_
+##bbb.ccc##
+#.........#
+#.q..a..h.#
+#.........#
+###########
+
+______
+######
+#RA.Y#
+#....#
+#HH..#
+#SBCY#
+######
+______
+(diff 4)
+
+message LET'S CAKE IT TO THE NEXT TIER!
+
+
+#############
+#...#.h.#...#
+#.r.#...#.y.#
+#...c#c#s...#
+###c.....s###
+#..#.#h#.#..#
+#z.h.z.c.s.c#
+#..#.#s#.#..#
+###......z###
+#....#z#z...#
+#.b.#...#.g.#
+#...#.s.#...#
+#############
+(diff 3, easy but fun)
+
+
+_____
+#####
+#B.B#
+#RRY#
+#.Q.#
+#S.S#
+#CHC#
+#####
+_____
+(diff 5 - fun!)
+
+
+______
+######
+#HYBH#
+#YBYB#
+#BBBB#
+#HHHH#
+######
+______
+(diff 4)
+
+
+
+
+______
+######
+#BR.Y#
+#..A.#
+#SCZA#
+#CSZA#
+######
+______
+(diff 4)
+
+
+
+
+______
+######
+#CZG.#
+#ZCR##
+###..#
+#SHY##
+#HSB.#
+######
+______
+(diff 5 - very fun!)
+
+
+message YOU'RE GETTING BATTER!
+
+______
+######
+#YYYY#
+#...R#
+#AAAA#
+#ZZZZ#
+######
+______
+(diff 5 - fun but surprisingly hard)
+
+
+_______
+#######
+#Y..YA#
+#.BB.H#
+#R..RQ#
+#Y..YH#
+#######
+_______
+(diff 4)
+
+
+message ICING ON THE CAKE!
+
+______
+######
+#ZBBZ#
+#YBYB#
+#....#
+#ZHCZ#
+######
+______
+(diff 5)
+
+
+
+
+_______
+#######
+#A.S.A#
+#.Z.Z.#
+#SYRYS#
+#.ZYZ.#
+#A.S.A#
+#######
+_______
+(diff 5 - not too hard)
+
+
+
+message WILL YOU CAKE IT OUT ALIVE?
+______
+######
+#ZZZZ#
+#SSSS#
+#CCCC#
+#YRB.#
+######
+______
+(diff 6 - fun but tricky)
+
+
+
+
+message THE FINAL CHALLENGE!
+message DOUGH YOU HAVE WHAT IT CAKES?
+_____
+#####
+#AYA#
+#...#
+#CBC#
+#SZY#
+#RZS#
+#CBC#
+#...#
+#HOH#
+#####
+_____
+(diff 8 - a pretty tough one)
+
+
+
+message WELL, YOU REALLY TOOK THE CAKE!
+message CONGRATS, YOU WIN! :)
+
+
+
+
+title Kettle
+author increpare
+homepage www.increpare.com
+
+color_palette gameboycolour
+
+(
+
+A port of a flash game of mine, the original of which can be played here:
+http://ded.increpare.com/~locus/kettle
+
+)
+
+========
+OBJECTS
+========
+
+Background
+darkgray
+
+Target
+yellow
+00000
+0...0
+0...0
+0...0
+00000
+
+UPolice
+black
+.000.
+.000.
+00000
+.000.
+.0.0.
+
+DPolice
+black
+.000.
+.000.
+00000
+.000.
+.0.0.
+
+LPolice
+black
+.000.
+.000.
+0000.
+.000.
+.0.0.
+
+RPolice
+black
+.000.
+.000.
+.0000
+.000.
+.0.0.
+
+Crate
+blue
+..0..
+00000
+..0..
+.000.
+.0.0.
+
+Wall
+black
+
+=======
+LEGEND
+=======
+
+. = Background
+player = UPolice or DPolice or LPolice or RPolice
+i = UPolice
+k = DPolice
+j = LPolice
+l = RPolice
+c = Crate
+@ = Crate and Target
+t = Target
+# = Wall
+
+=========
+SOUNDS
+=========
+
+Target move 59810707
+Player move 86872107
+startlevel 63638302
+endlevel 86642102
+endgame 63929902
+showmessage 42200307
+closemessage 42200307
+startgame 94059902
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Target
+Player, Crate, Wall
+
+======
+RULES
+======
+
+(The idea is simple: lots of Players, each of which only responds to a particular input direction.)
+
+[ up RPolice ] -> [ RPolice ] 
+[ down RPolice ] -> [ RPolice ] 
+[ left RPolice ] -> [ RPolice ] 
+
+[ down UPolice ] -> [ UPolice ] 
+[ left UPolice ] -> [ UPolice ] 
+[ right UPolice ] -> [ UPolice ] 
+
+[ up LPolice ] -> [ LPolice ] 
+[ down LPolice ] -> [ LPolice ] 
+[ right LPolice ] -> [ LPolice ] 
+
+[ up DPolice ] -> [ DPolice ] 
+[ left DPolice ] -> [ DPolice ] 
+[ right DPolice ] -> [ DPolice ] 
+
+[ > Player | Crate ] -> [ > Player | > Crate ] 
+[ > Crate | Crate ] -> [ > Crate | > Crate ] 
+
+==============
+WINCONDITIONS
+==============
+
+all target on Crate
+
+=======
+LEVELS
+=======
+
+message Let's see your ID
+
+###############
+#.............#
+#.............#
+#.....kkkk....#
+#....l...cj...#
+#....l.tt.j...#
+#....lctt.j...#
+#....lc..cj...#
+#.....iiii....#
+#.............#
+#.............#
+#.............#
+###############
+
+message Area Secure
+message Gonna lock you up, sonny!
+
+###############
+#.............#
+#.............#
+#.....kkkk....#
+#....l@@t.j...#
+#....ltttcj...#
+#....l@t@cj...#
+#....lc.ccj...#
+#.....iiii....#
+#.............#
+#.............#
+#.............#
+###############
+
+message Area Secure
+message We didn't see nothing!
+
+###############
+#.............#
+#.............#
+#....kkkkk....#
+#...l@t@@cj...#
+#...l@@ttcj...#
+#...ltt@tcj...#
+#...lt@@@.j...#
+#...l.ccccj...#
+#....iiiii....#
+#.............#
+#.............#
+###############
+
+message Area Secure
+message You'll be late for class, eh!
+
+###############
+#.............#
+#.............#
+#....kkkkk....#
+#...lc.c.cj...#
+#...lc@tt.j...#
+#...l.tt@cj...#
+#...l.ttt.j...#
+#...lc...cj...#
+#....iiiii....#
+#.............#
+#.............#
+###############
+
+message Area Secure
+message Ha! You shat yourself!
+
+###############
+#.............#
+#.............#
+#....kkkkkk...#
+#...lc.c..cj..#
+#...lcttt..j..#
+#...l.t@@..j..#
+#...l.ttt..j..#
+#...lc...ccj..#
+#....iiiiii...#
+#.............#
+#.............#
+###############
+
+message Area Secure
+message Have to confiscate your camera!
+
+###############
+#.............#
+#.............#
+#....kkkkkk...#
+#...lcc..ccj..#
+#...l.tttt.j..#
+#...l.t@@t.j..#
+#...lcttt@cj..#
+#...lct@ttcj..#
+#...lcc..ccj..#
+#....iiiiii...#
+#.............#
+###############
+
+message Area Secure
+message Keeping the peace is hard work
+
+###############
+#.............#
+#...kkkkkkk...#
+#..l..cc..cj..#
+#..l.tttt..j..#
+#..lc@t@t..j..#
+#..lctttt.cj..#
+#..l.@@tt..j..#
+#..lc.....cj..#
+#..lcc.c..cj..#
+#...iiiiiii...#
+#.............#
+###############
+
+message Area Secure
+message You should've packed lunch!
+
+###############
+#.............#
+#..kkkkkkkk...#
+#.lccccc...j..#
+#.lct@@tt.cj..#
+#.l.t@t@t.cj..#
+#.lc@@ttt.cj..#
+#.lct@tttccj..#
+#.l.tt@@t..j..#
+#.l........j..#
+#.lc..cc...j..#
+#..iiiiiiii...#
+###############
+
+message Area Secure
+message I want to hit you
+
+###############
+#.............#
+#..kkkkkkkkk..#
+#.lc.cccc...j.#
+#.l.........j.#
+#.lccttttt..j.#
+#.lc.tt@tt.cj.#
+#.lc.tt@@t.cj.#
+#.l..@@tt@.cj.#
+#.l..t@t@t..j.#
+#.l.........j.#
+#.lc.c.c.c.cj.#
+#..iiiiiiiii..#
+###############
+
+message Area Secure
+message Don't be naughty!
+
+###############
+#.kkkkkkkkkk..#
+#lccc..c...cj.#
+#lc.........j.#
+#lc.@t@tt...j.#
+#lc.t@@@t...j.#
+#l..@ttt@..cj.#
+#lc.tt@@t..cj.#
+#l..ttttt...j.#
+#l..........j.#
+#l.........cj.#
+#l....c.c.ccj.#
+#.iiiiiiiiii..#
+###############
+
+message Area Secure
+message I'm upholding human rights!
+
+###############
+#.kkkkkkkkkkk.#
+#lccc.c.c...cj#
+#l....c......j#
+#lc.@ttttt...j#
+#l..@ttt@t...j#
+#l..t@@ttt..cj#
+#lc.@tt@@t..cj#
+#l..@@t@@t...j#
+#l..t@t@tt..cj#
+#lc..c.......j#
+#lc....c.....j#
+#lcc.c.c.c..cj#
+#.iiiiiiiiiii.#
+###############
+
+message Area Secure
+message I'm all out of lines, matey:
+message It's game over for you
+
+
+title Notsnake
+author Terry Cavanagh
+homepage www.distractionware.com
+
+color_palette c64
+require_player_movement
+
+========
+OBJECTS
+========
+
+Background
+blue
+
+Player
+lightblue
+
+Trail
+purple
+
+=======
+LEGEND
+=======
+
+. = Background
+P = Player
+O = Trail
+
+=======
+SOUNDS
+=======
+
+startgame 50287705
+sfx0 660507
+sfx1 41058704
+endgame 74955903
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Trail
+Player
+
+======
+RULES
+======
+
+[ > Player | No Trail ] -> [ Trail | Player ] sfx0
+[ > Player | Trail ] -> [ | Player ] sfx1
+
+==============
+WINCONDITIONS
+==============
+
+no Trail
+
+=======
+LEVELS
+=======
+
+OOOOOOOO
+OOOOOOOO
+O..POO.O
+OOOOOOOO
+OOOOOOOO
+
+
+USER PROMPT:
+The following PuzzleScript game code:
+```plaintext
+title Collect and Unlock
+author GameDesigner
+
+========
+OBJECTS
+========
+
+Background
+lightgray
+
+Wall
+darkgray
+00000
+00000
+00000
+00000
+00000
+
+Player
+blue
+.....
+..0..
+.000.
+..0..
+.....
+
+Key
+yellow
+.....
+..0..
+.000.
+..0..
+.....
+
+Door
+brown
+.....
+..0..
+.000.
+..0..
+.....
+
+OpenDoor
+lightgray
+.....
+.....
+.....
+.....
+
+Target
+green
+.....
+..0..
+.000.
+.....
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Player
+K = Key
+D = Door
+O = OpenDoor
+T = Target
+
+=========
+SOUNDS
+=========
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Wall, Player, Key, Door, OpenDoor, Target
+
+======
+RULES
+======
+
+[ Player | Key ] -> [ Player | ]
+[ Player | Door ] -> [ Player | OpenDoor ]
+
+==============
+WINCONDITIONS
+==============
+
+All Player on Target
+
+=======
+LEVELS
+=======
+
+# # # # # # # #
+# P . K . . . T #
+# # # . # # # #
+# # . D . . . #
+# # # # # # # #
+
+message Congratulations! You've unlocked the path and reached the goal!
+
+```
+produced the following console output:
+=================================
+line 98 : Maps must be rectangular, yo (In a level, the length of each row must be the same).
+line 43 : Sprite graphics must be 5 wide and 5 high exactly.
+line 50 : Sprite graphics must be 5 wide and 5 high exactly.
+line 97 : Error, symbol " ", used in map, not found.
+Errors detected during compilation; the game may not work correctly.
+Return a repaired version of the code that addresses these errors. First, reason about your task and determine the best plan of action. Then, write your code. Return your code in full, inside a ```plaintext code block.

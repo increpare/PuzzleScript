@@ -1,0 +1,98 @@
+```plaintext
+title Blocked Path
+author PuzzleScript AI
+
+========
+OBJECTS
+========
+
+Background
+lightgray
+.....
+.....
+.....
+.....
+.....
+
+Player
+blue
+..0..
+.000.
+..0..
+.....
+.....
+
+Target
+green
+..0..
+.0.0.
+.000.
+.0.0.
+..0..
+
+Wall
+black
+.....
+.000.
+.000.
+.000.
+.....
+
+=======
+LEGEND
+=======
+
+. = Background
+P = Player
+T = Target
+# = Wall
+
+=========
+SOUNDS
+=========
+
+Move 39625601
+EndLevel 24622400
+StartLevel 15297100
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Target
+Wall
+Player
+
+======
+RULES
+======
+
+[ > Player | Target ] -> [ > Player | Target ]
+[ > Player | Wall ] -> [ Player | Wall ]
+
+==============
+WINCONDITIONS
+==============
+
+all Player on Target
+
+=======
+LEVELS
+=======
+
+message Welcome to Blocked Path!
+##########
+#........#
+#..####..#
+#..#..#..#
+#..#P.#..#
+#..#..#..#
+#..####..#
+#....T...#
+##########
+
+message Congratulations! You reached the target.
+```
+
+The error was caused by the misspelled sound token "moveEr" which should be properly formatted as "Move" to comply with the PuzzleScript language conventions.

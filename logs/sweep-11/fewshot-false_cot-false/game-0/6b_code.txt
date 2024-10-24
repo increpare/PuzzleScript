@@ -1,0 +1,89 @@
+```plaintext
+===========
+title Simple Sokoban
+===========
+
+===========
+author GameDesigner
+===========
+
+===========
+palette
+===========
+Background 000000
+Player 00FF00
+Wall FF0000
+Box 0000FF
+Target FFFF00
+
+===========
+objects
+===========
+Background
+Player
+Wall
+Box
+Target
+
+===========
+legend
+===========
+. = Background
+# = Wall
+P = Player
+B = Box
+T = Target
+
+===========
+sounds
+===========
+
+===========
+collisionlayers
+===========
+Background
+Player, Box
+Wall
+Target
+
+===========
+rules
+===========
+[ > Player | Box ] -> [  > Player | > Box ]
+
+===========
+winconditions
+===========
+All Box on Target
+
+===========
+levels
+===========
+#####
+#...#
+#.T.#
+#PB.#
+#####
+
+#####
+#...#
+#T..#
+#B#P#
+#####
+
+#####
+#T..#
+#P.B#
+#..T#
+#####
+
+```
+
+### Explanation:
+
+1. **Object Definitions**: In the `objects` section, each object should be listed exactly once. The original code had duplicate entries. I removed the repeated entries for better clarity.
+
+2. **Collision Layers**: Adjusted the `collisionlayers` section to be consistent with typical ordering. It generally helps avoid potential issues with overlapping or interaction of objects in mind when deciding this.
+
+These changes resolve the issues reported in the console output, focusing on proper object definition and order.
+

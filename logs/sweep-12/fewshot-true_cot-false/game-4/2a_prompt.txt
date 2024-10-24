@@ -1,0 +1,1796 @@
+SYSTEM PROMPT:
+You are a game designer, familiar with the PuzzleScript game description language. Here are some example games, for inspiration (do not reproduce these games exactly):
+
+title Simple Block Pushing Game
+author increpare
+homepage www.puzzlescript.net
+
+========
+OBJECTS
+========
+
+Background
+LIGHTGREEN GREEN
+11111
+01111
+11101
+11111
+10111
+
+
+Target
+DarkBlue
+.....
+.000.
+.0.0.
+.000.
+.....
+
+Wall
+BROWN DARKBROWN
+00010
+11111
+01000
+11111
+00010
+
+Player
+Black Orange White Blue
+.000.
+.111.
+22222
+.333.
+.3.3.
+
+BlueCrate B
+lightblue
+00000
+0...0
+0...0
+0...0
+00000
+
+
+OrangeCrate O
+Orange
+00000
+0...0
+0...0
+0...0
+00000
+
+
+=======
+LEGEND
+=======
+
+Crate = OrangeCrate or BlueCrate
+. = Background
+# = Wall
+P = Player
+
+=======
+SOUNDS
+=======
+
+Crate MOVE 36772507
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Target
+Player, Wall, Crate
+
+======
+RULES
+======
+
+[ >  Player | Crate ] -> [  >  Player | > Crate  ]
+
+startLoop
+
+[ > OrangeCrate | OrangeCrate ] -> [ > OrangeCrate | > OrangeCrate ]
+[ > OrangeCrate | BlueCrate ] -> [ > OrangeCrate | > BlueCrate ]
+[ > BlueCrate | OrangeCrate ] -> [ > BlueCrate | > OrangeCrate ]
+[ > BlueCrate | BlueCrate ] -> [ > BlueCrate | > BlueCrate ]
+
+endLoop
+
+==============
+WINCONDITIONS
+==============
+
+=======
+LEVELS
+=======
+
+################
+#..............#
+#..............#
+#.P.BOBOBOBOB..#
+#..............#
+#..............#
+################
+
+
+title Extended Body Example: 1 Player, 1 Extended Object
+author increpare
+homepage www.puzzlescript.net
+
+(
+    Example for
+    https://www.puzzlescript.net/Documentation/rigidbodies.html#one_one
+)
+
+========
+OBJECTS
+========
+
+Background
+LIGHTGREEN GREEN
+11111
+01111
+11101
+11111
+10111
+
+
+Target
+DarkBlue
+.....
+.000.
+.0.0.
+.000.
+.....
+
+Wall
+BROWN DARKBROWN
+00010
+11111
+01000
+11111
+00010
+
+Player
+Black Orange White Blue
+.000.
+.111.
+22222
+.333.
+.3.3.
+
+Crate
+Orange
+00000
+0...0
+0...0
+0...0
+00000
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Player
+* = Crate
+@ = Crate and Target
+O = Target
+
+=======
+SOUNDS
+=======
+
+Crate MOVE 36772507
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Target
+Player, Wall, Crate
+
+======
+RULES
+======
+
+[ >  Player | Crate ] -> [  >  Player | > Crate  ]
+[ > Crate ] [ stationary Crate ] -> [ > Crate ] [ > Crate ]
+[ > Crate | Wall ] -> cancel
+
+==============
+WINCONDITIONS
+==============
+
+All Target on Crate
+
+=======
+LEVELS
+=======
+
+######
+#....#
+#.#..#
+#.*@.#
+#.O@.#
+#.p..#
+######
+
+
+title Simple Action Example
+author increpare
+homepage www.puzzlescript.net
+
+========
+OBJECTS
+========
+
+Background
+LIGHTGREEN GREEN
+11111
+01111
+11101
+11111
+10111
+
+Wall
+BROWN DARKBROWN
+00010
+11111
+01000
+11111
+00010
+
+Player
+Black Orange White Blue
+.000.
+.111.
+22222
+.333.
+.3.3.
+
+
+Blood
+DarkRed red white
+.01.0
+.1202
+2.0.1
+02.1.
+.1.0.
+
+Sheep O
+black white gray
+..11.
+01111
+01112
+.212.
+.0.0.
+
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Player
+
+
+=======
+SOUNDS
+=======
+
+
+Sheep Create 76935307
+SFx0 52519108
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Blood
+Player, Wall, Sheep
+
+======
+RULES
+======
+
+random [ no Sheep ] -> [ Sheep ] again
+
+==============
+WINCONDITIONS
+==============
+
+=======
+LEVELS
+=======
+
+#################
+#...............#
+#...............#
+#...............#
+#...............#
+#.......P.......#
+#...............#
+#...............#
+#...............#
+#################
+
+
+
+title By Your Side
+author Alan Hazelden
+homepage www.draknek.org
+
+require_player_movement
+key_repeat_interval 0.12
+
+(
+
+A port of alan hazelden's game, By Your Side, in 6 lines of code, made with the permission of the author -
+
+the original is here
+http://www.draknek.org/games/by-your-side/
+
+)
+
+========
+OBJECTS
+========
+
+(Objects in all scenes)
+
+Grass .
+darkgreen green
+00000
+01000
+00000
+00010
+00000
+
+Player_Casual P
+black pink gray
+..0..
+..1..
+.222.
+..2..
+.2.2.
+
+TargetMain T
+yellow
+00000
+0...0
+0...0
+0...0
+00000
+
+(Initial Scenes)
+
+GirlFriend G
+pink red
+..0..
+.010.
+..1..
+.111.
+.0.0.
+
+Tree #
+darkbrown lightgreen
+.111.
+11111
+.111.
+..0..
+..0..
+
+(Wedding Scene)
+
+Player_Formal Q
+black pink white
+..0..
+..1..
+.020.
+..0..
+.0.0.
+
+WoodenFloor ,
+brown
+00000
+00000
+00000
+00000
+00000
+
+ChurchWall H
+darkbrown brown
+11101
+00000
+10111
+00000
+11101
+
+Chair C
+darkbrown brown
+11111
+11101
+11101
+00001
+01101
+
+Altar A
+gray
+.....
+00000
+.000.
+.000.
+.000.
+
+Spectator1 B
+black pink white
+..0..
+..1..
+.020.
+..0..
+.0.0.
+
+Spectator2 D
+purple pink white
+..0..
+..1..
+10001
+.000.
+00000
+
+Wife_Wedding W
+white pink
+..1..
+.000.
+.101.
+.000.
+00000
+
+(Post Wedding Scene)
+
+house @
+black grey red
+..0..
+.000.
+00000
+.111.
+.121.
+
+pavement `
+darkblue
+
+Road '
+gray white
+00000
+00000
+01110
+00000
+00000
+
+Wife_Repulsed X
+white pink
+..1..
+.000.
+.101.
+.000.
+00000
+
+(grave scene)
+
+gravedirt ~
+green brown
+01001
+10000
+00100
+00001
+01000
+
+grave R
+lightgray darkgray grey
+.111.
+10201
+12221
+10201
+10001
+
+coffin F
+darkbrown brown black
+.000.
+01210
+02220
+01210
+02220
+
+(final scene)
+
+Wife_Dying Y
+white pink
+..1..
+.000.
+.101.
+.000.
+00000
+
+Wife_Coffin
+darkbrown brown black
+.000.
+01210
+02220
+01210
+02220
+
+ColdFeet I
+black
+
+=======
+LEGEND
+=======
+
+Target = TargetMain or Road
+Player = Player_Casual or Player_Formal
+Background = Grass or WoodenFloor or Pavement or GraveDirt
+Spectator = Spectator1 or Spectator2
+Obstacle = House or Spectator or Chair or Tree or Altar or Grave or Coffin or Wife_Coffin or ChurchWall
+Wife_Attracted = Girlfriend or Wife_Wedding or Wife_Dying
+Wife = Wife_Attracted or Wife_Repulsed or Wife_Coffin
+Person = Player or Wife
+GrassyTarget = Grass and TargetMain
+E = GrassyTarget
+
+=========
+SOUNDS
+=========
+
+Player cantmove 82269707
+endlevel 54461500
+startgame 10582309
+endgame 66004102
+Wife_Repulsed move 44043907
+sfx0 16417502
+
+================
+COLLISIONLAYERS
+================
+
+ColdFeet
+Background
+Target
+Obstacle, Person
+
+======
+RULES
+======
+
+(game logic)
+
+[ > Player ] [ Wife_Attracted ] -> [ > Player ] [ > Wife_Attracted ] 
+[ > Player ] [ Wife_Repulsed ] -> [ > Player ] [ < Wife_Repulsed ] 
+
+late [ Wife_Dying ] -> [ Wife_Coffin ] 
+late [ Player | Wife_Coffin ] -> [ Player | Wife_Dying ] 
+
+(level-specific events)
+late [ ColdFeet Player ] -> [ Player ] message ...
+late [ Wife Road ] -> sfx0
+
+==============
+WINCONDITIONS
+==============
+
+all person on target
+
+=======
+LEVELS
+=======
+
+....#################
+...###...#....#######
+..##.........##.....#
+.##...#######.......#
+##....#....###......#
+#...###.............#
+#...#...#...#..######
+#...#...#..##.P.....#
+#....####.T##..######
+##......#...#.......#
+###..##..#...#...##.#
+#.##..#..##..#...#..#
+#..#..#....###...#..#
+#..##........#......#
+#...##...##...##....#
+#.......##.....######
+.##############......
+
+....#################
+...###...#....#######
+..##.........##.....#
+.##...#######.......#
+##....#....###......#
+#...###.............#
+#...#...#...#..######
+#...#...#..##..T...T#
+#....####.P##G.######
+##......#...#.......#
+###..##..#...#...##.#
+#.##..#..##..#...#..#
+#..#..#....###...#..#
+#..##........#......#
+#...##...##...##....#
+#.......##.....######
+.##############......
+
+....#################
+...###...#....#######
+..##.........##.....#
+.##...#######.......#
+##....#....###......#
+#...###.............#
+#...#T..#...#..######
+#...#T..#..##..P...G#
+#....####..##..######
+##......#...#.......#
+###..##..#...#...##.#
+#.##..#..##..#...#..#
+#..#..#....###...#..#
+#..##........#......#
+#...##...##...##....#
+#.......##.....######
+.##############......
+
+HHHHHHHHHHHHHHHHHHHHH
+,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,
+,CCCCCCCCCCCCCCCCCCCC
+,CCCCCCCCCCCCCCCCCCCC
+A,B,,D,B,D,,B,D,,,B,C
+A,T,,I,,,I,,,,I,Q,,,C
+A,T,,,,,,,,,,,,,W,,,C
+,CCCCCCCCCCCCCCCCCCCC
+,CCCCCCCCCCCCCCCCCCCC
+,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,
+HHHHHHHHHHHHHHHHHHHHH
+
+`````````@@@@````````
+`````````@TT@````````
+``@@@@@@`@`@@````````
+``@````@`@`@@@@``````
+``@`@@`@`@````@``````
+``@`@@`@`@`@@@@``````
+``@`@@`@@@P@`````````
+``@```````W@@@@@@````
+``@`@@@@@@``````@````
+``@`@````@`@@@@`@````
+``@`@````@`@``@`@````
+@@@@@@@@@@@@@@@@@@@@@
+'''''''''''''''''''''
+@@@@@@@@@@@@@@@@@@@@@
+`````````````````````
+
+`````````@@@@````````
+`````````@PX@````````
+``@@@@@@`@`@@````````
+``@````@`@`@@@@``````
+``@`@@`@`@````@``````
+``@`@@`@`@`@@@@``````
+``@`@@`@@@T@`````````
+``@```````T@@@@@@````
+``@`@@@@@@``````@````
+``@`@````@`@@@@`@````
+``@`@````@`@``@`@````
+@@@@@@@@@@@@@@@@@@@@@
+'''''''''''''''''''''
+@@@@@@@@@@@@@@@@@@@@@
+`````````````````````
+
+`````````@@@@````````
+`````````@TT@````````
+``@@@@@@`@`@@````````
+``@````@`@`@@@@``````
+``@`@@`@`@````@``````
+``@`@@`@`@`@@@@``````
+``@`@@`@@@P@`````````
+``@```````X@@@@@@````
+``@`@@@@@@``````@````
+``@`@````@`@@@@`@````
+``@`@````@`@``@`@````
+@@@`@@@@@@`@@@@`@@@@@
+'''''''''''''''''''''
+@@@@@@@@@@@@@@@@@@@@@
+`````````````````````
+
+RRRRRRR~RRRRRR~RRRRR
+R~~~~~R~R~~~~R~R~~~~
+R~~~~~~~R~~~~R~R~~~~
+R~~~~~R~R~~~~R~R~~~~
+RRRRRRR~RR~~RR~RRRRR
+R~~~~BDBDBDBDBD~~~~R
+RQ~~~~~i~i~~i~~~~EFR
+RRRRRRRRRRRRRRRRRRRR
+R~~R~~~~~~~~~~~R~~~~
+R~~R~~~~~~~~~~~R~~~~
+R~~RRR~~~RRRR~~R~~~~
+R~~~~~~~~R~~~~~R~~~R
+R~~R~~~~~R~~R~~~~~~R
+R~~R~~~~~R~~R~~~~~~R
+RRRRRRRRRR~~RRRRRRRR
+
+RRRRRR~~~~~~~~~~~~~~
+R~~~~R~~~~~RRRRRR~~~
+R~QY~R~~~~~R~~~~R~~~
+R~~~~R~~RRRRR~R~R~~~
+R~~~~RRRR~~R~~R~R~~~
+R~~~~~~~~~~R~~R~RRR~
+RRRRRRRRR~~R~~~~~~R~
+~~R~~~~~R~~R~RRR~~R~
+~~R~~R~~R~~RRR~R~~R~
+~~R~~R~~~~~~~~~~~~R~
+~~R~~R~~RR~~~~~RRRR~
+~~R~~R~~~RRRRRTTR~~~
+~~R~~R~~~R~~~~~~R~~~
+~~R~~R~~~~~RRR~~R~~~
+~~RRRRRRRRRR~RRRR~~~
+
+RRRRRR~~~~~~~~~~~~~~
+R~~~~R~~~~~RRRRRR~~~
+R~~~~R~~~~~R~~~~R~~~
+R~~~~R~~RRRRR~R~R~~~
+R~~~~RRRR~~R~~R~R~~~
+R~~~~~~~~~~RT~R~RRR~
+RRRRRRRRR~~RT~~~~~R~
+~~R~~~~~R~~R@RRR~~R~
+~~R~~R~~R~~RRR~R~~R~
+~~R~~R~~~~~~~~~~~~R~
+~~R~~R~~RR~~~~~RRRR~
+~~R~~R~~~RRRRRYQR~~~
+~~R~~R~~~R~~~~~~R~~~
+~~R~~R~~~~~RRR~~R~~~
+~~RRRRRRRRRR~RRRR~~~
+
+message Commiserations
+
+message It is over
+
+title Atlas Shrank
+author James Noeckel
+run_rules_on_level_start
+flickscreen 18x11
+
+========
+OBJECTS
+========
+
+Background
+#0e193f #202a4c #20324a #1f3649 #00003d
+00004
+13210
+04000
+10111
+00032
+
+Exit
+#d0691d #9a521d #7b441c #ad5a1d #8e4c1c yellow
+.222.
+23140
+23140
+25140
+23140
+
+DoorO
+#cf732f
+0...0
+0...0
+0...0
+0...0
+0...0
+
+Switch
+#ec5656 #ec3232 #b31313
+01.01
+1...2
+.....
+0...2
+12.22
+
+Door
+#d0691d #9a521d #7b441c #ad5a1d #8e4c1c
+03412
+04132
+03112
+01142
+04112
+
+ShadowDoor
+black
+
+ShadowDoorO
+black
+
+WallUD
+#697490 #485b76 #8083ba #646f8a #6d7b96
+23041
+23041
+23041
+23041
+23041
+
+WallRL
+#697490 #485b76 #8083ba #646f8a #6d7b96
+22222
+33333
+00000
+44444
+11111
+
+WallR
+#697490 #485b76 #8083ba #646f8a #6d7b96
+40401
+03401
+40031
+03001
+00001
+
+WallL
+#697490 #485b76 #8083ba #646f8a #6d7b96
+20404
+20430
+23004
+20030
+20000
+
+WallU
+#697490 #485b76 #8083ba #646f8a #6d7b96
+22222
+00000
+40300
+03044
+40430
+
+WallD
+#697490 #485b76 #8083ba #646f8a #6d7b96
+04030
+03400
+04004
+30304
+11111
+
+WallM
+#697490 #485b76 #8083ba #646f8a #6d7b96
+03040
+34430
+43340
+44303
+30030
+
+
+Wallsolo
+#697490 #485b76 #8083ba #a7aae3 #2d425e #646f8a #6d7b96
+32220
+20651
+25561
+26601
+01114
+
+PlayerS
+#ffb173 #ff6464 #d7d7d7 #d74629
+.000.
+.101.
+02220
+03230
+.0.0.
+
+PlayerL
+#ffb173 #ff6464 #d7d7d7 #d74629
+.000.
+.100.
+.223.
+.233.
+.0.0.
+
+PlayerR
+#ffb173 #ff6464 #d7d7d7 #d74629
+.000.
+.001.
+.322.
+.332.
+.0.0.
+
+PlayerLH
+#ffb173 #ff6464 #d7d7d7 #d74629
+.0.0.
+.100.
+.220.
+.233.
+.0.0.
+
+PlayerRH
+#ffb173 #ff6464 #d7d7d7 #d74629
+.0.0.
+.001.
+.022.
+.332.
+.0.0.
+
+Crate
+#9f7666 #c8917c #945a50 #8b4c42
+.000.
+00113
+01123
+01223
+.333.
+
+Heldcrate
+#9f7666 #c8917c #945a50 #8b4c42
+.000.
+00113
+01123
+01223
+.333.
+
+Shadowcrate
+black
+
+H_pickup
+red
+.....
+.....
+..0..
+.....
+.....
+
+H_drop
+red
+.....
+.....
+..0..
+.....
+.....
+
+H_grav
+gray
+.....
+.....
+..0..
+.....
+.....
+
+H_step
+yellow
+.....
+.....
+..0..
+.....
+.....
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wallsolo
+P = PlayerS
+* = Crate
+O = Exit
+X = Door
+T = Switch
+@ = Switch and Crate
+Wall = WallUD or WallRL or WallR or WallL or WallM or Wallsolo or WallU or WallD
+Player = PlayerL or PlayerR or PlayerS or PlayerRH or PlayerLH
+Solid = Player or Crate or Wall or Heldcrate or Door or Shadowcrate or Shadowdoor
+Massive =  Crate
+Helpers = H_pickup or H_drop or H_grav or H_step
+Weight = Player or Crate
+
+=======
+SOUNDS
+=======
+SFX1 87921103
+SFX2 82865707
+SFX3 70226500
+SFX4 68263307
+
+SFX5 60968508
+SFX6 358900
+================
+COLLISIONLAYERS
+================
+
+Background
+Exit
+Player, Solid
+Helpers
+DoorO, ShadowdoorO, Switch
+
+======
+RULES
+======
+
+(Wallify)
+Vertical [ Wall | Wallsolo | Wall ] -> [ Wall | WallUD | Wall ]
+Horizontal [ Wall | Wallsolo | Wall ] -> [ Wall | WallRL | Wall ]
+Horizontal [ Wall | WallUD | Wall ] -> [ Wall | WallM | Wall ]
+Left [ WallUD | Wall ] -> [ WallR | Wall ]
+Right [ WallUD | Wall ] -> [ WallL | Wall ]
+Up [ WallRL | Wall ] -> [ WallD | Wall ]
+Down [ WallRL | Wall ] -> [ WallU | Wall ]
+
+(steps)
+up [ Player | no Solid ] -> [ Player | H_step ]
+up [ Player | Heldcrate no H_step ] -> [ Player | Heldcrate H_step ]
+[ Moving Player ] [ H_step ] -> [ Moving Player ] [ Moving H_step ]
+
+(gravity)
+down [ Player no H_grav | no Solid ] -> [ Player H_grav | ]
+down [ Player ] [ H_grav ] -> [ > Player ] [ H_grav ] again
+Down [ Massive ] -> [ down Massive ] again
+
+[ up Player ] -> cancel
+
+(movement/pushing)
+Right [ > Player ] -> [ > PlayerR ]
+Left [ > Player ] -> [ > PlayerL ]
+Horizontal [ >  Player | Crate | no Solid ] -> [  >  Player | > Crate | ] SFX2
+
+(picking up and holding crates)
+Horizontal [ Crate | Action PlayerS | Crate ] -> message I am paralyzed with indecision!
+Right [ Action PlayerR | Crate ] [Player no H_pickup ] -> [ Player | Shadowcrate ] [ Player H_pickup ] SFX1
+Left [ Action PlayerL | Crate ] [Player no H_pickup ] -> [ Player | Shadowcrate ] [ Player H_pickup ] SFX1
+([ Moving Player ] [ Heldcrate ] -> [ Moving Player ] [ Moving Heldcrate ])
+([ > Player | no Solid ] [ Heldcrate ] -> [ > Player |  ] [ > Heldcrate ])
+(late Up [ Player | no Solid ] [ Heldcrate ] -> [ Player | Heldcrate ] [ ])
+
+(putting down)
+(Left [ Action Heldcrate | no Solid ] [ PlayerLH ] -> [ | Crate ] [ PlayerL ]
+Right [ Action Heldcrate | no Solid ] [ PlayerRH ] -> [ | Crate ] [ PlayerR ])
+Right [ Heldcrate | no Solid ] [ Action PlayerRH ] -> [ Heldcrate | H_drop ] [ PlayerR ]
+Left [ Heldcrate | no Solid ] [ Action PlayerLH ] -> [ Heldcrate | H_drop ] [ PlayerL ]
+
+
+(steps late)
+late [ H_step ] [H_grav ] -> [ ] [ H_grav ]
+late Down [ H_step | Player ] -> [ | Player ]
+late up [ H_step no Solid | no Solid ] [ Heldcrate ] -> [ H_step | Heldcrate ] [ ]
+late [ H_step no Solid ] [ Player ] -> [ Player ] [ ] SFX4
+
+(crate rules)
+late [ Heldcrate ] [ H_drop ] -> [ ] [ Crate ]
+late up [ Player | no Solid ] [ Heldcrate ] -> [ Player | Heldcrate ] [ ]
+
+late Up [ H_pickup | no Solid ] [ Shadowcrate ] -> [ | Heldcrate ] [ ]
+late [ Shadowcrate ] -> [ Crate ]
+late Down [ Heldcrate | no Player ] -> [ Crate | ]
+
+late up [ PlayerR ] [ Heldcrate ] -> [ PlayerRH ] [ Heldcrate ]
+late up [ PlayerL ] [ Heldcrate ] -> [ PlayerLH ] [ Heldcrate ]
+
+
+(cleanup)
+late [ H_pickup ] -> [ ]
+late [ H_grav ] -> [ ]
+late [ H_step ] -> [ ]
+
+
+late [ Player Exit ] -> SFX3
+
+(doors)
+late [ Door ] -> [ Shadowdoor ]
+late [ DoorO ] -> [ ShadowDoorO ]
+late [ ShadowdoorO no Solid ] [ ShadowdoorO Solid ] -> [ DoorO ] [ ShadowdoorO Solid ]
+late [ Switch no Weight ] [ ShadowDoorO no Solid ] -> [ Switch ] [ Door ] SFX5
+late [ Switch no Weight ] [ Shadowdoor ] -> [ Switch ] [ Door ]
+late [ Shadowdoor ] -> [ DoorO ] SFX6
+late [ ShadowdoorO ] -> [ DoorO ]
+
+==============
+WINCONDITIONS
+==============
+all Exit on Player
+
+=======
+LEVELS
+=======
+message Demoted again
+###############
+#.......O.....#
+#.......#.....#
+#......##.....#
+#.....###.....#
+#.P..####**...#
+###############
+
+message First gas planets, and now this
+message [Pick up with x]
+###############
+#.............#
+#...........O.#
+#..........####
+#..........#..#
+#P..**...*.#..#
+###############
+
+##################
+############.....#
+#########*##.....#
+#########*##.....#
+####.....*....o..#
+####.....*.#######
+####.....*.#######
+####.....*########
+#####....*########
+######..p*########
+##################
+
+###############
+#..*###....#..#
+#..*..........#
+#..####.......#
+#.**......**P.#
+#.#############
+#......*.#....#
+#...*..#.X..O.#
+#...##.#T######
+###############
+
+message what is even my job
+*#####*###########
+#*##.##.#...#....#
+##.#..#..........#
+#.....#*........O#
+#......###.....###
+#.........#....###
+#......*..*....###
+#....#############
+#...#............#
+#**..............#
+#####...##########
+****.#..##########
+****..#..#########
+****...#....######
+****....#.......*#
+*###....##......*#
+*.....#####...####
+#......###....####
+*.......x..#######
+##.#....x.########
+.p.*.*ttx#########
+##################
+
+message I could lift these all day
+######x###########
+##*#..x.......#..#
+###...x*......x.o#
+#.....##.....*x.##
+#....#xp..@..#x..#
+#...##x###########
+#*..*.x.....######
+######x.....#....#
+######x......*...#
+######.#*....##..#
+######.###########
+
+##################
+#............*...#
+#..@......*.t@p..#
+#xxx#xxxxxxxxxxx##
+#.#.#...........##
+#.#.#.#.#.#.#.#.##
+#.#.#.#.#.#.#.#.##
+#...#########.####
+##....*x.....*...#
+###...##....###.o#
+##################
+
+##################
+##...........x...#
+##...........x.*.#
+##.........t####.#
+##..........#....#
+##..........#....#
+##...***#####.##x#
+##...***##.o..###*
+##...***####.....#
+##.p.***##.......#
+##################
+
+message I miss the reassuring weight of a globe across my shoulders
+#.................
+#..#.#.#.#.......#
+#..#.#.#.#.......#
+#..#.#.t*........#
+#..#.#*###.......#
+#...*.*...*......#
+*..#####.###.....#
+#.*.........#...*#
+####.......*....##
+##t*.p.....#.##.##
+##t###t#x#########
+##t#####x#########
+##t##.......######
+####.........#####
+###...........####
+##......o......###
+#......###......##
+.................#
+..................
+
+.....................##*#*****....*...................
+..o....##.#.######....##******...**.........#.........
+..#.###############....####*********........#........*
+################.#.##..x############........#........#
+#####............#..#..x....................#.........
+###.#............#..#.*x....................#.........
+#.*.#................#####..................#.........
+#***#............#*....*..p**.........t.*..#.........*
+#####...........######################.#####.........#
+#..............#########################...##.........
+#.............#########.#.#.#...............#**.......
+#............#########..#.#.#...............####......
+#............########..#*#*#*#..............#.########
+#............########..#*#*#*#..............#.#....###
+#*...........#####......#.#.#...............#.#......#
+#*.......#######........#...................#.#......#
+#*......######..............................#.#......#
+#*.....#..##............*...................#.#......#
+#**...**......*.......#.#.#.#..........t....#.#.....##
+#####*#######**###########################*######*####
+
+*#***#*.#...##....#...........########...............*#................#
+*#***#*.....#.....*...........#.#.#.#................*#................#
+*#***##.....#.....**...#.#....*.*.*..................##................#
+*#***#......#.....##...#.#....########...............##................#
+*#***......*#.....##*..#.#....##***###...............#*................#
+*#**#......#......*#####.#########**##...............##................#
+*#**.......#......***##...###....##**####............##..........*.....#
+*#**.......#......***......#......##*##*#............xx..........##....#
+##*###############****............##****#............xx............#...#
+##*################****.....#..o..##*#**#p....@.@.@..xx....@.@.@...**..#
+####################################*##*################################
+
+.................############*#.#.##
+.................#..*........*.....#
+.................#.t###....*########
+#................#.....*...#o......#
+#.....................##########...#
+#....................#.....**.....*#
+#................##.#....###x#######
+#...............###.#*.......*.....#
+#.........*..###############x###...#
+##....p..**................*......*#
+############################x#######
+....................................
+
+message Congratulations!
+message You rearranged the rubble!
+message the end
+
+title Simple Block Pushing Game
+author increpare
+homepage www.puzzlescript.net
+
+========
+OBJECTS
+========
+
+Background
+LIGHTGREEN GREEN
+11111
+01111
+11101
+11111
+10111
+
+
+Target
+DarkBlue
+.....
+.000.
+.0.0.
+.000.
+.....
+
+Wall
+BROWN DARKBROWN
+00010
+11111
+01000
+11111
+00010
+
+Player
+Black Orange White Blue
+.000.
+.111.
+22222
+.333.
+.3.3.
+
+BlueCrate B
+lightblue
+00000
+0...0
+0...0
+0...0
+00000
+
+
+OrangeCrate O
+Orange
+00000
+0...0
+0...0
+0...0
+00000
+
+
+=======
+LEGEND
+=======
+
+Crate = OrangeCrate or BlueCrate
+. = Background
+# = Wall
+P = Player
+
+
+=======
+SOUNDS
+=======
+
+Crate MOVE 36772507
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Target
+Player, Wall, Crate
+
+======
+RULES
+======
+
+[ >  Player | Crate ] -> [  >  Player | > Crate  ]
+
+[ > Crate | Crate ] -> [ > Crate | > Crate ]
+
+==============
+WINCONDITIONS
+==============
+
+=======
+LEVELS
+=======
+
+#########
+#.......#
+#...B...#
+#.P.B.O.#
+#....O..#
+#.......#
+#########
+
+
+
+title Simple Action Example
+author increpare
+homepage www.puzzlescript.net
+
+========
+OBJECTS
+========
+
+Background
+LIGHTGREEN GREEN
+11111
+01111
+11101
+11111
+10111
+
+Wall
+BROWN DARKBROWN
+00010
+11111
+01000
+11111
+00010
+
+Player
+Black Orange White Blue
+.000.
+.111.
+22222
+.333.
+.3.3.
+
+
+Blood
+DarkRed red white
+.01.0
+.1202
+2.0.1
+02.1.
+.1.0.
+
+Sheep O
+black white gray
+..11.
+01111
+01112
+.212.
+.0.0.
+
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Player
+
+
+=======
+SOUNDS
+=======
+
+Sheep MOVE 76935307
+SFx0 52519108
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Blood
+Player, Wall, Sheep
+
+======
+RULES
+======
+
+[ Action Player | Sheep ] -> [  Action  Player | > Sheep  ]
+
+[ > Sheep |  Sheep ] -> [ blood | > Sheep ] Sfx0
+
+==============
+WINCONDITIONS
+==============
+
+=======
+LEVELS
+=======
+
+#################
+#...............#
+#...............#
+#......ooo......#
+#########ooo....#
+#P.o...o..ooo...#
+#########oooo...#
+#...oooooooo....#
+#......oo.......#
+#...............#
+#################
+
+
+
+title EYE EYE EYE
+author increpare
+homepage www.puzzlescript.net
+
+========
+OBJECTS
+========
+
+Background
+lightgreen green
+11111
+01111
+11101
+11111
+10111
+
+Target
+darkblue
+.....
+.000.
+.0.0.
+.000.
+.....
+
+Wall
+brown darkbrown
+00010
+11111
+01000
+11111
+00010
+
+Player
+black orange white blue
+.000.
+.111.
+22222
+.333.
+.3.3.
+
+EyeBall
+white blue red
+.000.
+00100
+01110
+20102
+.202.
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Player
+O = EyeBall
+
+=======
+SOUNDS
+=======
+
+sfx0 67117309
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Target
+Player, Wall, EyeBall
+
+======
+RULES
+======
+
+[ Eyeball | ... | Player ] -> [ > Eyeball | ... | Player ] sfx0
+
+==============
+WINCONDITIONS
+==============
+
+(There's no way to win against a floating eyeball :S )
+
+=======
+LEVELS
+=======
+
+#########
+#.......#
+#....O..#
+#.P.....#
+#.......#
+#.......#
+#########
+
+
+title Simple Block Pushing Game
+author increpare
+homepage www.puzzlescript.net
+
+========
+OBJECTS
+========
+
+Background
+LIGHTGREEN GREEN
+11111
+01111
+11101
+11111
+10111
+
+
+Target
+DarkBlue
+.....
+.000.
+.0.0.
+.000.
+.....
+
+Wall
+BROWN DARKBROWN
+00010
+11111
+01000
+11111
+00010
+
+Player
+Black Orange White Blue
+.000.
+.111.
+22222
+.333.
+.3.3.
+
+BlueCrate B
+lightblue
+00000
+0...0
+0...0
+0...0
+00000
+
+
+OrangeCrate O
+Orange
+00000
+0...0
+0...0
+0...0
+00000
+
+
+=======
+LEGEND
+=======
+
+Crate = OrangeCrate or BlueCrate
+. = Background
+# = Wall
+P = Player
+
+=======
+SOUNDS
+=======
+
+Crate MOVE 36772507
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Target
+Player, Wall, Crate
+
+======
+RULES
+======
+
+[ >  Player | Crate ] -> [  >  Player | > Crate  ]
+
+
+[ > OrangeCrate | OrangeCrate ] -> [ > OrangeCrate | > OrangeCrate ]
++[ > OrangeCrate | BlueCrate ] -> [ > OrangeCrate | > BlueCrate ]
++[ > BlueCrate | OrangeCrate ] -> [ > BlueCrate | > OrangeCrate ]
++[ > BlueCrate | BlueCrate ] -> [ > BlueCrate | > BlueCrate ]
+
+==============
+WINCONDITIONS
+==============
+
+=======
+LEVELS
+=======
+
+################
+#..............#
+#..............#
+#.P.BOBOBOBOB..#
+#..............#
+#..............#
+################
+
+
+USER PROMPT:
+The following PuzzleScript game code:
+```plaintext
+title Blocked Path
+author PuzzleScript AI
+
+========
+OBJECTS
+========
+
+Background
+lightgray
+.....
+.....
+.....
+.....
+.....
+
+Player
+blue
+..0..
+.000.
+..0..
+.....
+.....
+
+Target
+green
+..0..
+.0.0.
+.000.
+.0.0.
+..0..
+
+Wall
+black
+.....
+.000.
+.000.
+.000.
+.....
+
+=======
+LEGEND
+=======
+
+. = Background
+P = Player
+T = Target
+# = Wall
+
+=========
+SOUNDS
+=========
+
+Move 39625601
+EndLevel 24622400
+StartLevel 15297100
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Target
+Wall
+Player
+
+======
+RULES
+======
+
+[ > Player | Target ] -> [ > Player | Target ]
+[ > Player | Wall ] -> [ Player | Wall ]
+
+==============
+WINCONDITIONS
+==============
+
+all Player on Target
+
+=======
+LEVELS
+=======
+
+message Welcome to Blocked Path!
+##########
+#........#
+#..####..#
+#..#..#..#
+#..#P.#..#
+#..#..#..#
+#..####..#
+#....T...#
+##########
+
+message Congratulations! You reached the target.
+
+```
+produced the following console output:
+=================================
+line 53 : unexpected sound token "move".
+Errors detected during compilation; the game may not work correctly.
+Return a repaired version of the code that addresses these errors. Return your code in full, inside a ```plaintext code block.

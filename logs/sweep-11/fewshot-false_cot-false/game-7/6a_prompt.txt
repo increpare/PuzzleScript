@@ -4,52 +4,110 @@ You are a game designer, familiar with the PuzzleScript game description languag
 USER PROMPT:
 The following PuzzleScript game code:
 ```plaintext
-# Legend
-player = Player
-goal = Goal
-wall = Wall
-floor = Floor
-playerOnGoal = PlayerOnGoal
+Title: Sokoban Puzzle
+Author: PuzzleScript Dev
+Homepage: https://www.puzzlescript.net
 
-=== COLLISIONLAYERS ===
-Background,
-wall,
-player, goal
+===========
+OBJECTS
+===========
 
-=== RULES ===
-# Player movement doesn't need explicit rules unless combined with other actions
+Background
+black
 
-# Goal check
-[ player | goal ] -> [ playerOnGoal ]
-[ playerOnGoal ] -> [ playerOnGoal ]
+Wall
+grey
 
-=== WINCONDITIONS ===
-All playerOnGoal
+Player
+yellow
 
-=== LEVELS ===
-# Level 1
-...goal...
-..wallwallwall..
-..wallplayer...
-..wallwallwall..
-...floor...
+Box
+blue
 
-# Level 2
-.....goal.
-..wall...
-..wall.player.
-..wall...
-...goal...
+Target
+green
+
+BoxOnTarget
+lightgreen
+
+PlayerOnTarget
+yellow
+
+===========
+LEGEND
+===========
+
+. = Background
+# = Wall
+P = Player
+B = Box
+T = Target
+O = BoxOnTarget
+G = PlayerOnTarget
+
+===========
+COLLISIONLAYERS
+===========
+
+Background
+Wall
+Target
+Player, PlayerOnTarget
+Box, BoxOnTarget
+
+===========
+RULES
+===========
+
+[ Player | Box ] -> [ Player | Box ]
+[ PlayerOnTarget | Box ] -> [ Player | BoxOnTarget ]
+[ Player | Target ] -> [ PlayerOnTarget | Target ]
+[ PlayerOnTarget | Background ] -> [ Player | Target ]
+
+[ Box | Target ] -> [ BoxOnTarget | Target ]
+[ BoxOnTarget | Background ] -> [ Box | Target ]
+
+===========
+WINCONDITIONS
+===========
+
+All BoxOnTarget on Target
+
+===========
+LEVELS
+===========
+
+#######
+#.....#
+#..T..#
+#..B..#
+#..P..#
+#######
+
+#######
+#..#..#
+#..B..#
+#.TP..#
+#..#..#
+#####.#
+
+########
+#......#
+#..B#..#
+#..T#..#
+#..P...#
+########
+
 
 ```
 produced the following console output:
 =================================
-line 2 : Unrecognised stuff in the prelude.
-line 3 : Unrecognised stuff in the prelude.
-line 4 : Unrecognised stuff in the prelude.
-line 5 : Unrecognised stuff in the prelude.
-line 6 : Unrecognised stuff in the prelude.
-line 8 : Only comments should go after a bunch of equals signs ('===') on a line.
+line 43 : section "COLLISIONLAYERS" is out of order, must follow  "SOUNDS" (or it could be that the section "SOUNDS"is just missing totally.  You have to include all section headings, even if the section itself is empty).
+line 56 : Name "player", referred to in a rule, does not exist.
+line 56 : Name "box", referred to in a rule, does not exist.
+line 57 : Name "playerontarget", referred to in a rule, does not exist.
+line 57 : Name "box", referred to in a rule, does not exist.
+line 57 : Name "player", referred to in a rule, does not exist.
 too many errors, aborting compilation
 Errors detected during compilation; the game may not work correctly.
 Return a repaired version of the code that addresses these errors. Return your code in full, inside a ```plaintext code block.

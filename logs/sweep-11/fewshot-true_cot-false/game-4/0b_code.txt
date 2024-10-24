@@ -1,0 +1,119 @@
+```plaintext
+title Teleport Maze
+author Assistant
+homepage www.example.com
+
+========
+OBJECTS
+========
+
+Background
+lightgrey
+.....
+.....
+.....
+.....
+.....
+
+Wall
+darkgrey
+.....
+XXXXX
+XXXXX
+XXXXX
+.....
+
+Player
+blue white
+.....
+..0..
+.000.
+..0..
+.....
+
+Exit
+green
+.....
+.....
+.....
+..0..
+.....
+
+Teleporter
+purple
+.....
+.....
+.....
+.....
+.....
+
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Player
+E = Exit
+T = Teleporter
+
+=======
+SOUNDS
+=======
+
+sfx0 67372036 (teleport sound)
+sfx1 59471512 (win sound)
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Wall
+Player, Teleporter
+Exit
+
+======
+RULES
+======
+
+[ Player | Teleporter ] -> [ Teleporter | Player ] SFX0 [ Teleporter | Player ]
+
+==============
+WINCONDITIONS
+==============
+
+All Player on Exit
+
+=======
+LEVELS
+=======
+
+#######
+#.....#
+#.###.#
+#.#E#.#
+#.#.#.#
+#...T.#
+#T.P..#
+#######
+
+#######
+#P#T#.#
+#.#.#.#
+#.#E#.#
+#...#.#
+#.#.#.#
+#T#T..#
+#######
+
+#######
+#..E..#
+#P##T.#
+###.###
+#.....#
+#.T.#.#
+#...T.#
+#######
+```

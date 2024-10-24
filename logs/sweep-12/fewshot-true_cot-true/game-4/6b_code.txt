@@ -1,0 +1,121 @@
+To address the console error regarding color access for the `Target` object, we need to ensure that the `Target` object has a properly defined pattern that includes multiple color indexes. The current code likely only defines a single color on the `Target` object's color palette, which causes the error when trying to access indices beyond what's available.
+
+Here's the plan of action:
+
+1. **Define a Proper Color Pattern for `Target`:** The error indicates that the `Target` object's current color pattern tries to access multiple colors, but only one is defined. We should redefine the `Target` object's color configuration to include multiple colors aligned with its 5x5 grid pattern.
+
+Given the setup, a way to set this up appropriately is to use a combination of white and light green, ensuring that the inner pattern uses multiple indices to color it properly.
+
+Let's update the code accordingly:
+
+```plaintext
+title Sokoban Clone
+author YourName
+
+========
+OBJECTS
+========
+
+Background
+White
+
+Wall
+DarkGray
+00000
+00000
+00000
+00000
+00000
+
+Player
+Blue LightBlue
+..1..
+.111.
+11111
+.111.
+..1..
+
+Crate
+Yellow Red
+.111.
+11111
+11111
+11111
+.111.
+
+Target
+White LightGreen
+00000
+01110
+01010
+01110
+00000
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Player
+* = Crate
+O = Target
+@ = Crate and Target
+
+=========
+SOUNDS
+=========
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Target
+Player, Crate, Wall
+
+======
+RULES
+======
+
+[ > Player | Crate ] -> [ > Player | > Crate ]
+[ > Player | Wall ] -> [ Player | Wall ]
+
+==============
+WINCONDITIONS
+==============
+
+All Crate on Target
+
+=======
+LEVELS
+=======
+
+#####
+#...#
+#.P.#
+#.#.#
+#*O*#
+#####
+
+#####
+#...#
+#*P*#
+#.#.#
+#O.O#
+#####
+
+#####
+#.#.#
+#*P*#
+#.O.#
+#...#
+#####
+
+```
+
+**Explanation:**
+
+- The `Target` object is modified to have two colors: Black and LightGreen (`White LightGreen`) in its color palette.
+- The grid pattern used for the `Target` object uses these colors appropriately to avoid accessing an undefined color index.
+- The game's functionality and goal remain unchanged.

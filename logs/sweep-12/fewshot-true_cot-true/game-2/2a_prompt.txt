@@ -1,0 +1,326 @@
+SYSTEM PROMPT:
+You are a game designer, familiar with the PuzzleScript game description language. Here are some example games, for inspiration (do not reproduce these games exactly):
+
+title Many parallel players, unlimited rigidbodies
+author increpare
+homepage www.increpare.com
+
+verbose_logging
+
+(
+
+This is a sample of 
+
+- Unlimited rigid bodies
+- Multiple players moving in parallel
+
+It's made as an example for the extended rigid body tutorial here:
+
+https://www.puzzlescript.net/Documentation/rigidbodies.html
+
+)
+
+========
+OBJECTS
+========
+
+Background
+green
+
+Wall
+BROWN DARKBROWN
+00010
+11111
+01000
+11111
+00010
+
+Player
+Black Orange White Blue
+.000.
+.111.
+22222
+.333.
+.3.3.
+
+ Crate
+Yellow orange
+00000
+01110
+01110
+01110
+00000
+
+
+(The directional overlays bellow establish connections between crates)
+
+ Crate_U
+orange
+.000.
+.....
+.....
+.....
+.....
+
+ Crate_D
+orange
+.....
+.....
+.....
+.....
+.000.
+
+ Crate_L
+orange
+.....
+0....
+0....
+0....
+.....
+
+ Crate_R
+orange
+.....
+....0
+....0
+....0
+.....
+
+CanMove
+red
+.....
+.....
+..0..
+.....
+.....
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Player
+
+w = Crate and Crate_U
+x = Crate and Crate_D
+a = Crate and Crate_L
+d = Crate and Crate_R
+
+e = Crate and Crate_U and Crate_L
+z = Crate and Crate_D and Crate_L
+q = Crate and Crate_U and Crate_R
+c = Crate and Crate_D and Crate_R
+
+r = Crate and Crate_L and Crate_R
+t = Crate and Crate_D and Crate_U
+
+1 = Crate and Crate_D and Crate_L and Crate_R
+2 = Crate and Crate_U and Crate_L and Crate_R
+3 = Crate and Crate_U and Crate_D and Crate_L
+4 = Crate and Crate_U and Crate_D and Crate_R
+
+0 = Crate and Crate_U and Crate_D and Crate_L and Crate_R
+
+5 = Crate
+
+ Crate_Connection = Crate_U or Crate_D or Crate_L or Crate_R
+
+Pusher = Player or Crate
+Pushable = Crate 
+Solid = Crate or Player
+
+=======
+SOUNDS
+=======
+
+ Crate MOVE 36772507
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Player, Wall, Crate
+ Crate_U
+ Crate_D
+ Crate_L
+ Crate_R
+CanMove
+
+======
+RULES
+======
+
+(For making maps easily: uncomment out the next few lines + press action to discard all boundaries and recreate them)
+
+( [ action player ] [ Crate_connection ] -> [ action player ] [ ] )
+( up [ action player ] [ Crate | Crate ] -> [ action player ] [ Crate Crate_u | Crate Crate_d ] )
+( right [ action player ] [ Crate | Crate ] -> [ action player ] [ Crate Crate_r | Crate Crate_l ] )
+
+
+(Step 1: propagate motions forward)
+[ > Pusher | Pushable ] -> [ > Pusher | > Pushable ]
++ up [ moving Crate Crate_U | Crate ] -> [ moving Crate Crate_U | moving Crate ]
++ down [ moving Crate Crate_D | Crate ] -> [ moving Crate Crate_D | moving Crate ]
++ left [ moving Crate Crate_L | Crate ] -> [ moving Crate Crate_L | moving Crate ]
++ right [ moving Crate Crate_R | Crate ] -> [ moving Crate Crate_R | moving Crate ]
+
+
+(Step 1: If a crate can't move, we have to back-propagate the can't-move-ness, including possibly through players)
+[ > Solid | wall ] -> [ Solid | wall ]
+
+[ > Solid | stationary Solid ] -> [ Solid | Solid ]
++ up [ moving Crate Crate_U | stationary Crate ] -> [ Crate Crate_U | Crate ]
++ down [ moving Crate Crate_D | stationary Crate ] -> [ Crate Crate_D | Crate ]
++ left [ moving Crate Crate_L | stationary Crate ] -> [ Crate Crate_L | Crate ]
++ right [ moving Crate Crate_R | stationary Crate ] -> [ Crate Crate_R | Crate ]
+
+
+(Step 3: Mark all crates that are still moving as possibly being able to move)
+[ moving Pushable ] -> [ Pushable CanMove ]
+
+(Step 4: redo Step 1, but only through things that are marked as being possibly able to move)
+[ > Pusher | CanMove Pushable ] -> [ > Pusher | CanMove > Pushable ]
++ up [ moving Crate Crate_U | CanMove Crate ] -> [ moving Crate Crate_U | CanMove moving Crate ]
++ down [ moving Crate Crate_D | CanMove Crate ] -> [ moving Crate Crate_D | CanMove moving Crate ]
++ left [ moving Crate Crate_L | CanMove Crate ] -> [ moving Crate Crate_L | CanMove moving Crate ]
++ right [ moving Crate Crate_R | CanMove Crate ] -> [ moving Crate Crate_R | CanMove moving Crate ]
+
+(Step 5: remove all the CanMove tags)
+[ CanMove ] -> [ ]
+
+(Step 6: move connections along with the crates themselves)
+[ moving Crate stationary Crate_connection ] -> [ moving Crate moving Crate_connection ]
+
+
+==============
+WINCONDITIONS
+==============
+
+=======
+LEVELS
+=======
+
+###############
+#..ca.........#
+#.ce....ca....#
+#.t...d1e.....#
+#.w....w......#
+#....d1ap5.dz.#
+#....pw...5.w5#
+#......dz.....#
+#.......t..dz.#
+#..x..cre...w.#
+#..w..w...5...#
+#.............#
+###############
+
+
+USER PROMPT:
+The following PuzzleScript game code:
+```plaintext
+title Maze Explorer
+author YourName
+
+========
+OBJECTS
+========
+
+Background
+black
+
+Wall
+gray darkgray
+11111
+11111
+11111
+11111
+11111
+
+Player
+lightgreen darkgreen
+.000.
+.1.1.
+.000.
+.1.1.
+.000.
+
+Goal
+yellow
+.....
+..0..
+.000.
+..0..
+.....
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Player
+G = Goal
+
+=======
+SOUNDS
+=======
+
+EndLevel 12345678
+EndGame 87654321
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Goal
+Player, Wall
+
+======
+RULES
+======
+
+[ P | G ] -> [ P ]
+
+==============
+WINCONDITIONS
+==============
+
+All Goal on Player
+
+=======
+LEVELS
+=======
+
+#######
+#..P..#
+#.###.#
+#.....#
+#.###.#
+#..G..#
+#######
+
+#######
+#P....#
+#....##
+#.###.#
+#.....#
+##..G.#
+#######
+
+#######
+#..G..#
+#.###.#
+#.....#
+#.###.#
+#..P..#
+#######
+
+```
+produced the following console output:
+=================================
+line 63 : In a rule, each pattern to match on the left must have a corresponding pattern on the right of equal length (number of cells).
+Errors detected during compilation; the game may not work correctly.
+Return a repaired version of the code that addresses these errors. First, reason about your task and determine the best plan of action. Then, write your code. Return your code in full, inside a ```plaintext code block.

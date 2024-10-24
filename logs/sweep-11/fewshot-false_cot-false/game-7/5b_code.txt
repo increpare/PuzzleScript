@@ -1,49 +1,106 @@
-To fix the errors reported in the console output, we need to adhere to the PuzzleScript syntax conventions. Below is the corrected version of your code:
+Certainly! The code you provided contains a few errors related to the sounds section and the win condition format. Let's correct them:
+
+1. **Sound Section**: PuzzleScript expects specific sound event definitions if you're going to have a sounds section. Since there are no sounds defined, you can simply remove this section if it's not being used.
+
+2. **Win Condition**: PuzzleScript uses specific conditions for winning. Instead of `[ no Box ][ no Target ]`, it should be a condition that matches when all boxes are on targets, such as transforming all `Box` into `BoxOnTarget`.
+
+Here's the revised code:
 
 ```plaintext
-# Legend
-player = Player
-goal = Goal
-wall = Wall
-floor = Floor
-playerOnGoal = PlayerOnGoal
+Title: Sokoban Puzzle
+Author: PuzzleScript Dev
+Homepage: https://www.puzzlescript.net
 
-=== COLLISIONLAYERS ===
-Background,
-wall,
-player, goal
+===========
+OBJECTS
+===========
 
-=== RULES ===
-# Player movement doesn't need explicit rules unless combined with other actions
+Background
+black
 
-# Goal check
-[ player | goal ] -> [ playerOnGoal ]
-[ playerOnGoal ] -> [ playerOnGoal ]
+Wall
+grey
 
-=== WINCONDITIONS ===
-All playerOnGoal
+Player
+yellow
 
-=== LEVELS ===
-# Level 1
-...goal...
-..wallwallwall..
-..wallplayer...
-..wallwallwall..
-...floor...
+Box
+blue
 
-# Level 2
-.....goal.
-..wall...
-..wall.player.
-..wall...
-...goal...
+Target
+green
+
+BoxOnTarget
+lightgreen
+
+PlayerOnTarget
+yellow
+
+===========
+LEGEND
+===========
+
+. = Background
+# = Wall
+P = Player
+B = Box
+T = Target
+O = BoxOnTarget
+G = PlayerOnTarget
+
+===========
+COLLISIONLAYERS
+===========
+
+Background
+Wall
+Target
+Player, PlayerOnTarget
+Box, BoxOnTarget
+
+===========
+RULES
+===========
+
+[ Player | Box ] -> [ Player | Box ]
+[ PlayerOnTarget | Box ] -> [ Player | BoxOnTarget ]
+[ Player | Target ] -> [ PlayerOnTarget | Target ]
+[ PlayerOnTarget | Background ] -> [ Player | Target ]
+
+[ Box | Target ] -> [ BoxOnTarget | Target ]
+[ BoxOnTarget | Background ] -> [ Box | Target ]
+
+===========
+WINCONDITIONS
+===========
+
+All BoxOnTarget on Target
+
+===========
+LEVELS
+===========
+
+#######
+#.....#
+#..T..#
+#..B..#
+#..P..#
+#######
+
+#######
+#..#..#
+#..B..#
+#.TP..#
+#..#..#
+#####.#
+
+########
+#......#
+#..B#..#
+#..T#..#
+#..P...#
+########
+
 ```
 
-### Explanation of Changes:
-1. **Legend Definitions:** Make sure the object definitions match variable names and logical naming, such as `player` for `Player`, `goal` for `Goal`, etc. This aligns with how PuzzleScript expects objects to be defined.
-
-2. **Collision Layers:** Use the same casing and naming as defined in the Legend section. Ensure lowercase use where appropriate, as `PuzzleScript` case sensitivity can be crucial.
-
-3. **Rules for Object Transitions:** The rules were restructured from old syntax, ensuring that conditions accurately depict how objects transform. Use proper positional shorthand like `[ player | goal ] -> [ playerOnGoal ]`.
-
-4. **Level Mapping:** Replace shorthand characters with full names as defined in the Legend section to ensure consistency and clarity.
+These changes should fix the errors and allow the game to compile correctly. If you wish to implement sounds, you can define specific sounds under the `SOUNDS` section, following the possible sound events in PuzzleScript (e.g., SFX0, SFX1, etc.).

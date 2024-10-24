@@ -1,0 +1,139 @@
+SYSTEM PROMPT:
+You are a game designer, familiar with the PuzzleScript game description language. 
+
+USER PROMPT:
+The following PuzzleScript game code:
+```plaintext
+Title: Treasure Hunt
+Author: You
+Homepage: https://www.puzzlescript.net
+
+===========
+OBJECTS
+===========
+
+Background
+LIGHTGREEN
+00000
+00000
+00000
+00000
+00000
+
+Player
+ORANGE
+.....
+..0..
+.000.
+..0..
+.....
+
+Wall
+BLUE
+.....
+.....
+.....
+.....
+.....
+
+Treasure
+YELLOW
+.....
+..0..
+.000.
+..0..
+.....
+
+Goal
+RED
+.....
+..0..
+.0.0.
+..0..
+.....
+
+===========
+
+LEGEND
+===========
+
+.=Background
+P=Player
+W=Wall
+T=Treasure
+G=Goal
+
+===========
+
+SOUNDS
+===========
+
+CollectT
+  200 0.01 0.1 square
+
+Win
+  1000 0.5 1 triangle
+
+===========
+
+COLLISIONLAYERS
+===========
+
+Background
+Wall
+Treasure, Goal
+Player
+
+===========
+
+RULES
+===========
+
+[ > Player | Treasure ] -> [ > Player ] [ ]
+[ > Player | Goal no Treasure ] -> [ > Player Win]
+
+===========
+
+WINCONDITIONS
+===========
+
+All Treasure on no Player
+
+===========
+
+LEVELS
+===========
+
+#######
+#.....#
+#.T.#.#
+#.W.#.#
+#..P.G#
+#######
+
+#######
+#T....#
+#.....#
+#..W..#
+#G.P..#
+#######
+
+#######
+#WTPW.#
+#W.PG.#
+#W..#.#
+#######
+
+
+```
+produced the following console output:
+=================================
+line 65 : unexpected sound token "collectt".
+line 66 : unexpected sound token "200".
+line 68 : unexpected sound token "win".
+line 69 : unexpected sound token "1000".
+line 94 : Error in win condition: "NO" is not a valid object name.
+line 94 : Error in win condition: I don't know what to do with PLAYER.
+too many errors, aborting compilation
+Errors detected during compilation; the game may not work correctly.
+Return a repaired version of the code that addresses these errors. Return your code in full, inside a ```plaintext code block.

@@ -1,0 +1,104 @@
+SYSTEM PROMPT:
+You are a game designer, familiar with the PuzzleScript game description language. 
+
+USER PROMPT:
+The following PuzzleScript game code:
+```plaintext
+# Main game code for a simple Sokoban-style game
+
+title Sokoban Simplified
+author YourName
+
+======
+
+OBJECTS
+  Player
+    @
+    red
+  
+  Wall
+    #
+    grey
+    
+  Crate
+    C
+    yellow
+    
+  Floor
+    .
+    black
+    
+  Goal
+    G
+    green
+    
+  CrateOnGoal
+    O
+    orange
+
+======
+
+LEGEND
+  . = Floor
+  @ = Player
+  # = Wall
+  C = Crate
+  G = Goal
+  O = CrateOnGoal
+
+======
+
+COLLISIONLAYERS
+  Background
+  Crate, CrateOnGoal
+  Player
+  Wall
+  Goal
+
+======
+
+RULES
+[> Player | Crate ] -> [> Player | > Crate ]
+[ Player | CrateOnGoal ] -> [ Player | CrateOnGoal ]
+
+@ [ ] -> [ @ ]
+C [ ] -> [ C ]
+O [ ] -> [ O ]
+
+[Crate | Goal] -> [CrateOnGoal | Floor]
+[CrateOnGoal | Floor] -> [Crate | Goal]
+
+======
+
+WINCONDITIONS
+All CrateOnGoal
+
+======
+
+LEVELS
+#####
+#.@ #
+# C #
+# G #
+#####
+
+#######
+#     #
+# ### #
+#@C G#
+#     #
+#######
+
+
+```
+produced the following console output:
+=================================
+line 10 : Was looking for color for object PLAYER, got "@" instead.
+line 14 : Was looking for color for object WALL, got "#" instead.
+line 18 : Was looking for color for object CRATE, got "c" instead.
+line 22 : Was looking for color for object FLOOR, got "." instead.
+line 26 : Was looking for color for object GOAL, got "g" instead.
+line 30 : Was looking for color for object CRATEONGOAL, got "o" instead.
+too many errors, aborting compilation
+Errors detected during compilation; the game may not work correctly.
+Return a repaired version of the code that addresses these errors. First, reason about your task and determine the best plan of action. Then, write your code. Return your code in full, inside a ```plaintext code block.

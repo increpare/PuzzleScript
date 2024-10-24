@@ -1,0 +1,89 @@
+The error messages indicate that the "LEGEND" section is out of order, and the object definitions are missing. The proper order should be:
+
+1. `OBJECTS`: Define objects, including their sprite representations.
+2. `LEGEND`: Map the objects to symbols.
+3. `SOUNDS`, `COLLISIONLAYERS`, `RULES`, `WINCONDITIONS`, `LEVELS`: These can follow in sequence.
+
+Therefore, to fix these errors, we'll need to redefine the objects first and then adjust the order of the sections. Here's the corrected version of your code:
+
+```plaintext
+=========
+title Sokoban Simple
+author YourName
+
+=========
+objects
+Player
+Box
+Target
+Floor
+Wall
+
+=========
+legend
+P = Player
+B = Box
+T = Target
+. = Floor
+# = Wall
+
+=========
+sounds
+# Player movement
+moveP
+    play sound "beep"
+
+# Box being pushed
+moveB
+    play sound "thud"
+
+# Box placed on target
+moveB P T 
+    play sound "chime"
+
+=========
+collisionlayers
+background
+objects
+Player
+
+=========
+rules
+# Player movement
+[ > Player | ] -> [> Player |]
+[ < Player | ] -> [< Player |]
+[ ^ Player | ] -> [^ Player |]
+[ v Player | ] -> [v Player |]
+
+# Push the box
+[ > Player | Box ] -> [ > Player | > Box ]
+[ < Player | Box ] -> [ < Player | < Box ]
+[ ^ Player | Box ] -> [ ^ Player | ^ Box ]
+[ v Player | Box ] -> [ v Player | v Box ]
+
+=========
+winconditions
+All Box on Target
+
+=========
+levels
+
+# Level 1
+#########
+#.......#
+#..P....#
+#...B...#
+#...T...#
+#########
+
+# Level 2
+#########
+#..####.#
+#..#....#
+#..#BTP.#
+#..#....#
+#..####.#
+#########
+```
+
+This version defines the objects at the beginning, then logically follow with the legend section that maps these objects with symbols, representing them in the levels. Make sure to always establish your objects first before referring to them in the legend and throughout the puzzle script.

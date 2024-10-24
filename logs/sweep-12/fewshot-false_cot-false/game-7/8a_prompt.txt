@@ -1,0 +1,130 @@
+SYSTEM PROMPT:
+You are a game designer, familiar with the PuzzleScript game description language. 
+
+USER PROMPT:
+The following PuzzleScript game code:
+```plaintext
+Title: Treasure Hunt
+Author: You
+Homepage: https://www.puzzlescript.net
+
+===========
+OBJECTS
+===========
+
+Background
+LIGHTGREEN
+00000
+00000
+00000
+00000
+00000
+
+Player
+ORANGE
+.....
+..0..
+.000.
+..0..
+.....
+
+Wall
+BLUE
+.....
+.....
+.....
+.....
+.....
+
+Treasure
+YELLOW
+.....
+..0..
+.000.
+..0..
+.....
+
+Goal
+RED
+.....
+..0..
+.0.0.
+..0..
+.....
+
+===========
+
+LEGEND
+===========
+
+.=Background
+P=Player
+W=Wall
+T=Treasure
+G=Goal
+#=Wall
+
+===========
+
+SOUNDS
+===========
+
+===========
+
+COLLISIONLAYERS
+===========
+
+Background
+Wall
+Treasure, Goal
+Player
+
+===========
+
+RULES
+===========
+
+[ > Player | Treasure ] -> [ > Player ] [ ]
+[ > Player | Goal no Treasure ] -> [ > Player win ]
+
+===========
+
+WINCONDITIONS
+===========
+
+No Treasure
+
+===========
+
+LEVELS
+===========
+
+#######
+#.....#
+#.T.#.#
+#.W.#.#
+#..P.G#
+#######
+
+#######
+#T....#
+#.....#
+#..W..#
+#G.P..#
+#######
+
+#######
+#WTPW.#
+#W.PG.#
+#W..#.#
+#######
+
+
+```
+produced the following console output:
+=================================
+line 81 : Error, when specifying a rule, the number of matches (square bracketed bits) on the left hand side of the arrow must equal the number on the right
+line 82 : Commands should only appear at the end of rules, not in or before the pattern-detection/-replacement sections.
+line 82 : In a rule, each pattern to match on the left must have a corresponding pattern on the right of equal length (number of cells).
+Errors detected during compilation; the game may not work correctly.
+Return a repaired version of the code that addresses these errors. Return your code in full, inside a ```plaintext code block.

@@ -1,0 +1,221 @@
+SYSTEM PROMPT:
+You are a game designer, familiar with the PuzzleScript game description language. Here are some example games, for inspiration (do not reproduce these games exactly):
+
+title Ebony & Ivory
+author Guilherme Töws
+homepage zarat.us
+
+========
+OBJECTS
+========
+
+Background
+Purple
+
+Gray
+GRAY
+
+White
+WHITE
+
+Black
+BLACK
+
+PlayerRed
+Red
+.....
+.000.
+.000.
+.000.
+.....
+
+PlayerGold
+Yellow
+.....
+.000.
+.000.
+.000.
+.....
+
+
+=======
+LEGEND
+=======
+
+. = White
+, = Black
+# = Gray
+: = PlayerRed and White
+; = PlayerRed and Black
+Player = PlayerRed or PlayerGold
+
+=======
+SOUNDS
+=======
+
+SFX0 72488907
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Black, White, Gray
+Player
+
+======
+RULES
+======
+
+[ PlayerGold ] -> [ PlayerRed ]
+[ >  Player White | Black ] -> [  > Player White | > Black ]
+[ >  Player Black | White ] -> [  > Player Black | > White ]
+[ > Black | White ] -> [ White | Black ] SFX0
+[ > White | Black ] -> [ Black | White ] SFX0
+[ >  Player White |  Black ] -> [  Player White |  Black ]
+[ >  Player Black |  White ] -> [  Player Black |  White ]
+[ >  Player |  Gray ] -> [  Player |  Gray ]
+late [ Player | PlayerRed ] -> [ Player | PlayerGold ]
+
+==============
+WINCONDITIONs
+==============
+
+No PlayerRed
+
+=======
+LEVELS
+=======
+
+########
+#..,,,,#
+#.:.,.,#
+#...,,,#
+#.,.,;,#
+#....,,#
+########
+
+USER PROMPT:
+The following PuzzleScript game code:
+```plaintext
+title Teleport Maze
+author Assistant
+homepage www.example.com
+
+========
+OBJECTS
+========
+
+Background
+lightgrey
+.....
+.....
+.....
+.....
+.....
+
+Wall
+darkgrey
+.....
+.....
+.....
+.....
+.....
+
+Player
+blue white
+.....
+..0..
+.000.
+..0..
+.....
+
+Exit
+green
+.....
+.....
+.....
+..0..
+.....
+
+Teleporter
+purple
+.....
+.....
+.....
+..0..
+.....
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Player
+E = Exit
+T = Teleporter
+
+=======
+SOUNDS
+=======
+
+sfx0 67372036 (teleport sound)
+sfx1 59471512 (win sound)
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Wall
+Player, Teleporter
+Exit
+
+======
+RULES
+======
+
+[ Player | Teleporter ] -> [ Teleporter | Player ] SFX0
+
+==============
+WINCONDITIONS
+==============
+
+All Player on Exit
+
+=======
+LEVELS
+=======
+
+#######
+#.....#
+#.###.#
+#.#E#.#
+#.#.#.#
+#...T.#
+#T.P..#
+#######
+
+#######
+#P#T#.#
+#.#.#.#
+#.#E#.#
+#...#.#
+#.#.#.#
+#T#T..#
+#######
+
+#######
+#..E..#
+#P##T.#
+###.###
+#.....#
+#.T.#.#
+#...T.#
+#######
+
+```
+compiled, but a solvability check returned the following error:
+Found solution for level 0 in 69 iterations: 3,3,3,0,0,1,1,3,3,3,2,2,1,1,1,1,1,1,0,2,3,3,3,3,3,0,0,0,1,3,3,2,2,2,1,1,1,1,1,0,1,3,3,3,3,3,3,3,0,0,1,1,1,1,1,3,3,3,3,3,3,0,0,1,1,1,0. Found solution for level 1 in 30 iterations: 3,3,3,3,3,2,2,2,2,2,2,1,1,1,1,1,1,0,2,3,3,3,3,3,0,0,1,1,1,0.  Level 2 resulted in error: Error: Too many errors/warnings; noping out.. Please repair it. Level 2 is not solvable. Please repair it.
+Return your code in full, inside a ```plaintext code block.

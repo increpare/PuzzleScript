@@ -1,77 +1,95 @@
-The errors given seem to be related to the way objects are defined in the PuzzleScript game. The correct format for defining objects in PuzzleScript should include a name that is followed by a color and optionally a character for the sprite. For each object, you can specify the color and the ASCII character on separate lines. Additionally, make sure to not repeat the definition of the player character or other objects in another section like the Legend. The Legend section is used to define how to refer to these objects when specifying levels or layers.
+Let's address the errors in the PuzzleScript game code step by step:
 
-Here's how to repair the code by correctly defining the objects according to PuzzleScript's expectations:
+1. **Sound Tokens:** In PuzzleScript, sound functionality is only mentioned but not implemented directly in the code since the PuzzleScript engine as of current knowledge does not support custom sounds linked to movements or win conditions. Therefore, the lines with sound references need to be removed as they cause errors.
 
-1. Each object should have a name followed by a color description. You can also specify the ASCII character used for the object on the grid in a separate line if desired.
-2. Adjust the order and format of the object definitions in the `Legend` section.
+2. **Level Initialization Error:** The error in line 70 about the semicolon and "L" indicates a misunderstanding in how levels are defined. In PuzzleScript, each level begins without any punctuation or labelling (like "Level 1"), using only grid representations composed of the legend elements.
 
-Here's the revised game code:
+By addressing these two categories of issues, we'll have a functional game description. Here's the corrected code:
 
 ```plaintext
-# Title and Author
-title Sokoban Simple
-author Game Designer
+title Maze Escape
+author Your Name
 
-# Objects
+===========
+OBJECTS
+===========
+
 Background
-color yellow
+BLACK
 
 Player
-@
-color blue
+YELLOW
 
 Wall
-#
-color black
+BLUE
 
-Box
-B
-color red
+Exit
+GREEN
 
-Target
-O
-color green
+===========
+LEGEND
+===========
 
-BoxOnTarget
-G
-color yellow
-
-# Legend
 . = Background
-@ = Player
+P = Player
 # = Wall
-B = Box
-O = Target
-G = BoxOnTarget
+E = Exit
 
-# Collision Layers
+===========
+COLLISIONLAYERS
+===========
+
 Background
-Player
-Box, BoxOnTarget
-Wall, Target
+Wall
+Player, Exit
 
-# Rules
-[ > Player | Box ] -> [ > Player | > Box ]
-[ Box | Target ] -> [ BoxOnTarget | Target ]
-[ BoxOnTarget | ] -> [ | Box ]
+===========
+RULES
+===========
 
-# Win Conditions
-All BoxOnTarget on Target
+[Player] -> [ Player ]
 
-# Levels
-# Level 1
-#######
-#..O..#
-#..B..#
-#..@..#
-#######
+up [Player | > ] -> [ | Player ] 
+down [Player | > ] -> [ | Player ] 
+left [Player | > ] -> [ | Player ] 
+right [Player | > ] -> [ | Player ] 
 
-# Level 2
-#######
-#..O..#
-#..B..#
-#..@..#
-#######
+[Player | Exit] -> [Player | Background]
+
+===========
+WINCONDITIONS
+===========
+
+No Exit
+
+===========
+LEVELS
+===========
+
+######
+#P   #
+# ## #
+#    #
+# E  #
+######
+
+########
+#P     #
+# ###  #
+# # E  #
+# #    #
+# #### #
+#      #
+########
+
+#########
+#P      #
+### ### #
+#    E# #
+### ### #
+#       #
+#########
+
 ```
 
-This should solve the issues with the unrecognized input errors by adhering to the correct syntax expected by PuzzleScript for defining game objects and the Legend section.
+With these corrections, the code should now compile without errors, allowing the game to function correctly.

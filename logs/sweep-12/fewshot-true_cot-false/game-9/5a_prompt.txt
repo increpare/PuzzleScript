@@ -1,0 +1,2155 @@
+SYSTEM PROMPT:
+You are a game designer, familiar with the PuzzleScript game description language. Here are some example games, for inspiration (do not reproduce these games exactly):
+
+title Dungeon Janitor
+author Farbs
+homepage www.farbs.org
+noundo
+noaction
+key_repeat_interval 0.1
+
+========
+OBJECTS
+========
+
+Background
+DARKBLUE BLACK
+11111
+10000
+10000
+10000
+10000
+
+Entry
+LIGHTBROWN BROWN DARKBROWN GRAY
+30103
+10101
+10121
+10101
+10101
+
+ExitClosed
+LIGHTBROWN BROWN DARKBROWN GRAY
+30103
+10101
+10121
+10101
+10101
+
+ExitOpen
+GRAY BLACK DARKBLUE
+01110
+11111
+11111
+11111
+12221
+
+Slime
+LIGHTGREEN GREEN DARKGREEN
+.....
+.....
+.....
+.....
+.....
+
+Head
+LIGHTGREEN GREEN DARKGREEN BLACK
+.000.
+03130
+11111
+23332
+.222.
+
+SlimeU
+LIGHTGREEN GREEN DARKGREEN
+11111
+21112
+.222.
+.....
+.....
+
+SlimeD
+LIGHTGREEN GREEN DARKGREEN
+.....
+.....
+.000.
+01110
+11111
+
+SlimeUD
+LIGHTGREEN GREEN DARKGREEN
+11111
+11111
+11111
+11111
+11111
+
+SlimeL
+LIGHTGREEN GREEN DARKGREEN
+00...
+110..
+111..
+112..
+22...
+
+SlimeR
+LIGHTGREEN GREEN DARKGREEN
+...00
+..011
+..111
+..211
+...22
+
+SlimeLR
+LIGHTGREEN GREEN DARKGREEN
+00000
+11111
+11111
+11111
+22222
+
+SlimeUL
+LIGHTGREEN GREEN DARKGREEN
+11111
+11112
+1112.
+112..
+22...
+
+SlimeUR
+LIGHTGREEN GREEN DARKGREEN
+11111
+21111
+.2111
+..211
+...22
+
+SlimeULR
+LIGHTGREEN GREEN DARKGREEN
+11111
+11111
+11111
+11111
+22222
+
+SlimeDL
+LIGHTGREEN GREEN DARKGREEN
+00...
+110..
+1110.
+11110
+11111
+
+SlimeDR
+LIGHTGREEN GREEN DARKGREEN
+...00
+..011
+.0111
+01111
+11111
+
+SlimeDLR
+LIGHTGREEN GREEN DARKGREEN
+00000
+11111
+11111
+11111
+11111
+
+SlimeUDLR
+LIGHTGREEN GREEN DARKGREEN
+11111
+11111
+11111
+11111
+11111
+
+SlimeSolo
+LIGHTGREEN GREEN DARKGREEN
+.000.
+01110
+11111
+21112
+.222.
+
+Wall
+LIGHTGREY GREY
+11111
+01000
+01000
+11111
+00010
+
+PlayerA
+Black Orange White Blue Brown
+.....
+.11..
+2224.
+333.4
+3.322
+
+PlayerB
+Black Orange White Blue Brown
+.....
+.11..
+.4222
+4.333
+223.3
+
+Temp
+PINK
+00000
+00000
+00000
+00000
+00000
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+E = Wall AND Entry
+P = PlayerA
+O = Slime AND Head
+X = Wall AND ExitClosed
+
+SlimeDecal = SlimeU OR SlimeD OR SlimeUD OR SlimeL OR SlimeR OR SlimeLR OR SlimeUL OR SlimeUR OR SlimeULR OR SlimeDL OR SlimeDR OR SlimeDLR OR SlimeUDLR OR SlimeSolo
+Player = PlayerA OR PlayerB
+
+=======
+SOUNDS
+=======
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Slime
+SlimeU, SlimeD, SlimeUD, SlimeL, SlimeR, SlimeLR, SlimeUL, SlimeUR, SlimeULR, SlimeDL, SlimeDR, SlimeDLR, SlimeUDLR, SlimeSolo, ExitOpen
+Player, Wall, PlayerA, PlayerB, Temp
+Head, Entry, ExitClosed
+
+======
+RULES
+======
+
+(Stomp Heads)
+[ > Player | Head ] -> [ > Player | NO Head ]
+[ > Player | Slime ] -> [ > Player | NO Slime ]
+
+(New Head)
+[ Head ] -> []
+RANDOM [ Slime NO Player ] -> [ Slime Head ]
+
+(Grow Slime)
+[ Head | NO Slime NO Wall NO Player ] -> [ Head | Slime ]
+
+(Clear Slime from under player)
+[ > Player | Slime ] -> [ > Player | NO Slime ]
+LATE [ Player Slime ] -> [ Player NO Head ]
+
+(Make slime pretty)
+[ SlimeDecal ] ->[ ]
+VERTICAL [ Slime | Slime | Slime ] -> [ Slime | Slime SlimeUD | Slime ]
+UP [ Slime NO SlimeUD | Slime ] -> [ Slime SlimeU | Slime ]
+DOWN [ Slime NO SlimeUD | Slime ] -> [ Slime SlimeD | Slime ]
+HORIZONTAL [ Slime | Slime NO SlimeU NO SlimeD NO SlimeUD | Slime ] -> [ Slime | Slime SlimeLR | Slime ]
+LEFT [ Slime NO SlimeU NO SlimeD NO SlimeUD NO SlimeLR | Slime ] -> [ Slime SlimeL | Slime ]
+RIGHT [ Slime NO SlimeU NO SlimeD NO SlimeUD NO SlimeLR | Slime ] -> [ Slime SlimeR | Slime ]
+HORIZONTAL [ Slime | Slime SlimeU | Slime ] -> [ Slime | Slime SlimeULR | Slime ]
+LEFT [ Slime SlimeU | Slime ] -> [ Slime SlimeUL | Slime ]
+RIGHT [ Slime SlimeU | Slime ] -> [ Slime SlimeUR | Slime ]
+HORIZONTAL [ Slime | Slime SlimeD | Slime ] -> [ Slime | Slime SlimeDLR | Slime ]
+LEFT [ Slime SlimeD | Slime ] -> [ Slime SlimeDL | Slime ]
+RIGHT [ Slime SlimeD | Slime ] -> [ Slime SlimeDR | Slime ]
+[ Slime NO SlimeDecal ] -> [ Slime SlimeSolo ]
+
+( Shut the door if slime still around)
+( Have to open it first unfortunately )
+[ ExitClosed Wall ] -> [ ExitOpen ]
+[ ExitOpen ][ Slime ] -> [ ExitClosed Wall ][ Slime ]
+
+(Player Anim)
+[ LEFT PlayerB ] -> [ LEFT PlayerA ]
+[ RIGHT PlayerA ] -> [ RIGHT PlayerB ]
+LATE [ PlayerA ] -> [ Temp ]
+LATE [ PlayerB ] -> [ PlayerA ]
+LATE [ Temp ] -> [ PlayerB ]
+==============
+WINCONDITIONS
+==============
+
+ALL Player ON ExitOpen
+
+=======
+LEVELS
+=======
+
+MESSAGE It's Thursday.
+MESSAGE Today I mop the slime pit.
+
+
+##X##
+##.##
+##.##
+##O##
+##.##
+##P##
+##E##
+
+MESSAGE Damn slime sticking to my shoes.
+
+..####..
+..#O.#..
+###..###
+#......#
+#P#..#.#
+#E#..#X#
+..####..
+
+MESSAGE Goes SHLUCK SHCLUK when I walk.
+
+######X#############
+###......#...#...###
+###.##.#...#...#...#
+##.....###########.#
+#..#.#.....#.......#
+#.##.###.#.##.######
+#......#.#.#.O.....#
+#.####.#.#.#.#####.#
+#P.....#.#.........#
+#E##################
+
+MESSAGE Last room before home.
+MESSAGE This one can take a while.
+
+##########X#########
+#..................#
+#..................#
+#..#######.######..#
+#..#.#...#.#.#..#..#
+#..#...#.#.#.#..#..#
+#..#.....#.#.#..#..#
+#..##....#.#...##..#
+#..#............#..#
+#..#......O.....#..#
+#..#............#..#
+#..#............#..#
+#..##############..#
+#.........P........#
+##########E#########
+
+MESSAGE Done for the day. Back tomorrow.
+MESSAGE Fridays is rat scrubbing day.
+
+title Des Poseidons Dreizack
+author Stephen Lavelle
+homepage www.increpare.com
+
+text_color #e7cf5c
+background_color #041646
+
+noaction
+
+run_rules_on_level_start
+
+again_interval 0.1
+(verbose_logging)
+
+
+(flickscreen 14x13)
+
+========
+OBJECTS
+========
+
+Background
+blue #204ec5
+00000
+01000
+00000
+00010
+00000
+
+smrocks k
+brown darkbrown 
+.1.1.
+10101
+.1.1.
+10101
+.1.1.
+
+teleport T
+lightblue blue darkblue
+10101
+01210
+12221
+01210
+10101
+
+Target
+darkblue transparent 
+01110
+1.0.1
+10001
+1.0.1
+01110
+
+Wall
+green lightgreen #2d6d0c
+00000
+00010
+00000
+01000
+00000
+
+wallalt "
+green lightgreen #2d6d0c
+00000
+00000
+00000
+01000
+00000
+
+
+wallalt2 '
+green lightgreen #2d6d0c
+00000
+00010
+00000
+00000
+00000
+
+coast_u
+lightblue
+.0.0.
+.....
+.....
+.....
+.....
+
+coast_d
+lightblue
+.....
+.....
+.....
+.....
+.0.0.
+
+coast_l
+lightblue
+.....
+0....
+.....
+0....
+.....
+
+coast_r
+lightblue
+.....
+....0
+.....
+....0
+.....
+
+endhand x
+pink
+0.0.0
+.....
+0...0
+.....
+0.0.0
+
+
+Player
+brown orange yellow lightblue
+2.2.2
+2.2.2
+22222
+..1..
+.313.
+
+underplayer
+lightblue
+..0..
+.....
+.....
+.....
+.....
+
+magnet
+lightblue blue
+.0000
+0....
+0.000
+0...0
+.000.
+
+
+flowers 
+darkgreen brown
+.000.
+00000
+.000.
+..1..
+..1..
+
+hinge H
+orange green darkgray 
+10001
+02220
+02220
+02220
+10001
+
+door_l L
+pink darkgray transparent
+.2.2.
+0000.
+11110
+0000.
+.2.2.
+
+
+door_r R
+pink darkgray transparent
+.2.2.
+.0000
+01111
+.0000
+.2.2.
+
+
+
+door_u U
+pink darkgray transparent
+.010.
+20102
+.010.
+20102
+..0..
+
+door_d D
+pink darkgray transparent
+..0..
+20102
+.010.
+20102
+.010.
+
+
+door_dl 1
+pink darkgray
+.....
+..00.
+.010.
+010..
+10...
+
+
+door_dr 2
+pink darkgray
+.....
+.00..
+.010.
+..010
+...01
+
+
+door_ul 3
+pink darkgray
+10...
+010..
+.010.
+..00.
+.....
+
+door_ur 4
+pink darkgray
+...01
+..010
+.010.
+.00..
+.....
+
+ul
+orange
+0....
+.....
+.....
+.....
+.....
+
+ur
+orange
+....0
+.....
+.....
+.....
+.....
+
+
+dl
+orange
+.....
+.....
+.....
+.....
+0....
+
+
+dr
+orange
+.....
+.....
+.....
+.....
+....0
+
+wu
+green lightgreen
+10101
+.....
+.....
+.....
+.....
+
+wd
+green lightgreen
+.....
+.....
+.....
+.....
+10101
+
+wl
+green lightgreen
+1....
+0....
+1....
+0....
+1....
+
+wr
+green lightgreen
+....1
+....0
+....1
+....0
+....1
+
+suck_d
+lightblue
+.....
+.....
+.0.0.
+..0..
+.....
+
+
+suck_u
+lightblue
+.....
+..0..
+.0.0.
+.....
+.....
+
+
+suck_r
+lightblue
+.....
+..0..
+...0.
+..0..
+.....
+
+
+suck_l
+lightblue
+.....
+..0..
+.0...
+..0..
+.....
+
+temp
+transparent
+
+A 
+transparent
+
+S
+lightblue
+.0.0.
+0.0.0
+.0.0.
+0.0.0
+.0.0.
+
+nopull
+transparent
+
+spawned 
+transparent
+
+
+ip1 §
+#ffff05 #ffa33b
+0.0.0
+0.0.0
+00000
+..1..
+..1..
+
+ip2 ±
+#8e4833
+.....
+.....
+....0
+....0
+....0
+
+ip3 `
+#8e4833 #dbc297
+.....
+00000
+11111
+1.1.1
+11111
+
+ip4 ~
+#8e4833
+.....
+.....
+0....
+0....
+0....
+
+5
+#ffa33b #dbc297
+..0..
+.111.
+.111.
+.111.
+..011
+
+6
+#8e4833 #dbc297
+....0
+....0
+.....
+.....
+....1
+
+7
+#8e4833 #dbc297
+00000
+01110
+00000
+00000
+10001
+
+8
+#8e4833 #dbc297
+0....
+.....
+.....
+.....
+1....
+
+9
+#ffa33b #dbc297
+..0.1
+.....
+.....
+.....
+.....
+
+0
+#dbc297 white
+0..00
+00000
+.00.0
+....1
+....1
+
+bla !
+#dbc297 white
+00000
+00000
+00000
+10000
+11100
+
+blo @
+#dbc297
+00...
+000..
+000..
+0.00.
+..00.
+
+
+(BLANK)
+
+ble £
+white
+....0
+....0
+....0
+...00
+...00
+
+ble1 $
+white #dbc297
+00000
+00000
+00000
+00001
+00011
+
+ble2 \
+#dbc297 white
+..00.
+1.00.
+1000.
+1000.
+100..
+
+(SKIP)
+
+ble3 Y
+white #dbc297
+...00
+...00
+....1
+....1
+....1
+
+ble4 &
+white #dbc297
+00111
+1.111
+1..11
+1..11
+1..11
+
+ble5 *
+white
+0....
+.....
+.....
+.....
+.....
+
+
+ble6 -
+#dbc297
+.....
+...00
+.....
+.....
+.....
+
+ble7 =
+#dbc297
+0..00
+0.000
+.....
+.....
+.....
+
+
+
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Player
+M = magnet
+O = Target
+
+
+walls = wall or wallalt or wallalt2
+ortho = door_u or door_d or door_l or door_r
+diagonal = door_ul or door_ur or door_dl or door_dr
+Door = ortho or diagonal
+doorpart = door or hinge
+obstacle = walls or player or hinge or magnet or door or smrocks
+thick = wall or hinge or magnet or door or teleport
+
+
+fixture = wall or hinge 
+
+pixel = ul or ur or dl or dr
+walltype = wall or wallalt or wallalt2
+
+fillwalltype = wall  or hinge
+
+suck = suck_u or suck_d or suck_l or suck_r
+
+coast = coast_u or coast_d or coast_l or coast_r
+
+verge = wl or wr or wu or wd
+decoration = coast or verge 
+
+% = flowers and wall
+
+image = ip1 or ip2 or ip3 or ip4 or 5 or 6 or 7 or 8 or 9 or 0 or bla or blo or ble or ble1 or ble2 or ble3 or ble4 or ble5 or ble6 or ble7 
+
+
+=======
+SOUNDS
+=======
+
+sfx0 1415300 (swing)
+sfx1 7555504 (cantmove)
+sfx2 16800907 (whirlpool move)
+sfx3 77044105 (teleport)
+sfx4 43993702 (whirlpool destroy)
+sfx5 43993702 (whirlpool create)
+endlevel 30657706
+
+player cantmove  7555504
+
+================
+COLLISIONLAYERS
+================
+
+Background
+coast_u
+coast_d
+coast_l
+coast_r
+A
+Target
+S
+underplayer
+teleport
+endhand 
+Player, Wall, wallalt, wallalt2, magnet, hinge, door, smrocks
+flowers
+ul
+ur
+dl
+dr
+wu
+wd
+wl
+wr
+temp
+suck_u
+suck_d
+suck_l
+suck_r
+nopull
+spawned
+image
+
+======
+RULES
+======
+
+[ player teleport no spawned | ... | teleport ] -> [ teleport | ... | player teleport spawned ] sfx3
+
+[ teleport magnet ] -> [ ] sfx4
+
+[decoration]->[]
+[underplayer]->[]
+[A]->[]
+[temp]->[]
+[suck]->[]
+[nopull]->[]
+
+right [ walls | ]->[walls | coast_l ]
+left  [ walls | ]->[walls | coast_r ]
+down  [ walls | ]->[walls | coast_u ]
+up    [ walls | ]->[walls | coast_d ]
+
+
+
+up [ walls | no walltype ] -> [ walls wu | ]
+down [ walls | no walltype ] -> [ walls wd | ]
+left [ walls | no walltype ] -> [ walls wl | ]
+right [ walls | no walltype ] -> [ walls wr | ]
+
+[pixel]->[]
+
+
+[ > magnet | door ] -> cancel
+
+
+
+[ > Player | magnet  ] -> [ > Player | > magnet  ]
+
+[ > magnet | no obstacle ] -> [ | magnet ]  sfx2
++ [ > player | no obstacle ] -> [ | player  ] 
++ [ > player | no obstacle ] -> [ | player  ] 
+
+
+[player no spawned] [ spawned] -> [player] []
+
+[ magnet ] -> [ magnet suck_u suck_d suck_l suck_r ]
+
+up [ suck_d | no thick ] -> [ suck_d | suck_d ]
+down [ suck_u | no thick ] -> [ suck_u | suck_u ]
+left [ suck_r | no thick ] -> [ suck_r | suck_r ]
+right [ suck_l | no thick ] -> [ suck_l | suck_l ]
+
+
+[S]->[]
+
+
+up [ suck_d | door | no suck_u ]    -> [ suck_d | down door S | ]
+
+
+down [ suck_u | door S | no suck_d ]  -> [ suck_u | stationary door S | ]
+down [ suck_u | door no S | no suck_d ]  -> [ suck_u | up door S | ]
+
+
+left [ suck_r | door S | no suck_l ]  -> [ suck_r | stationary door S | ]
+left [ suck_r | door no S | no suck_l ]  -> [ suck_r | right door S | ]
+
+
+right [ suck_l | door S | no suck_r ] -> [ suck_l | stationary door S | ]
+right [ suck_l | door no S | no suck_r ] -> [ suck_l | left door S | ]
+
+[ > player | door no S ] -> [ > player | > door ]
+
+[s]->[]
+
+up    [ suck_d | door ]    -> [ suck_d | door S ]
+down  [ suck_u | door ]    -> [ suck_u | door S ]
+left  [ suck_r | door ]    -> [ suck_r | door S ]
+right [ suck_l | door ]    -> [ suck_l | door S ]
+
+
+([ > player | > door S ] -> [ > player | > door ])
+
+
+(push ortho doors)
+
+up    [ up    door_l | no obstacle ] -> [ | door_dl ] sfx0
+up    [ up    door_r | no obstacle ] -> [ | door_dr ] sfx0
+down  [ down  door_l | no obstacle ] -> [ | door_ul ] sfx0
+down  [ down  door_r | no obstacle ] -> [ | door_ur ] sfx0
+left  [ left  door_u | no obstacle ] -> [ | door_ur ] sfx0
+left  [ left  door_d | no obstacle ] -> [ | door_dr ] sfx0
+right [ right door_u | no obstacle ] -> [ | door_ul ] sfx0
+right [ right door_d | no obstacle ] -> [ | door_dl ] sfx0
+
+(push diag doors)
+up [ up door_ul | no obstacle ] -> [ | door_l ] sfx0
+up [ up door_ur | no obstacle ] -> [ | door_r ] sfx0
+left [ up door_dl no S | no obstacle ] -> [ | door_d ] sfx0
+right [ up door_dr no S | no obstacle ] -> [ | door_d ] sfx0
+
+left [ down door_ul no S | no obstacle ] -> [ | door_u ] sfx0
+right [ down door_ur no S | no obstacle ] -> [ | door_u ] sfx0
+down [ down door_dl | no obstacle ] -> [ | door_l ] sfx0
+down [ down door_dr | no obstacle ] -> [ | door_r ] sfx0
+
+left [ left door_ul | no obstacle ] -> [ | door_u ] sfx0
+up [ left door_ur no S | no obstacle ] -> [ | door_r ] sfx0
+left [ left door_dl | no obstacle ] -> [ | door_d ] sfx0
+down [ left door_dr no S | no obstacle ] -> [ | door_r ] sfx0
+
+up [ right door_ul no S | no obstacle ] -> [ | door_l ] sfx0
+right [ right door_ur | no obstacle ] -> [ | door_u ] sfx0
+down [ right door_dl no S | no obstacle ] -> [ | door_l ] sfx0
+right [ right door_dr | no obstacle ] -> [ | door_d ] sfx0
+
+
+
+
+[ moving door ] -> [ door ] 
+
+
+late up   [ door_ul | ] -> [ door_ul | dl ]
+late left [ door_ul | ] -> [ door_ul | ur ]
+
+late down [ door_dl | ] -> [ door_dl | ul ]
+late left [ door_dl | ] -> [ door_dl | dr ]
+
+late up    [ door_ur | ] -> [ door_ur | dr ]
+late right [ door_ur | ] -> [ door_ur | ul ]
+
+late down  [ door_dr | ] -> [ door_dr | ur ]
+late right [ door_dr | ] -> [ door_dr | dl ]
+
+late [ thick suck ] -> [ thick ]
+
+[player] -> again
+
+late [magnet suck]->[]
+late down [ player | ] -> [ player  | underplayer]
+
+late [ magnet target ] -> [ teleport ] sfx5 
+
+
+
+
+==============
+WINCONDITIONS
+==============
+
+all player on endhand
+
+=======
+LEVELS
+=======
+
+message Level 1 von 3 : Ausbruch
+
+##########%#%##
+#%##...####%##%
+####.m.######%#
+##.....##...###
+##...###.....##
+##....##.....##
+##.....##....##
+###hl..##....##
+###..........##
+###....#hl...##
+###.....#.#####
+#########.#####
+##....##......#
+#.t....#....o.#
+#...x..#..p...#
+##....##......#
+###############
+
+message Level 2 von 3 : Flucht
+
+##################
+##%#####.....#####
+#####%##.##.2...##
+########.##.1h#.##
+#....##..##h.##.##
+#.p..hh..###.##.##
+#....u.3####.#...#
+#hl##.######.#.x.#
+##.....#.....#...#
+#....o.#.t...#####
+#..m...#.....#####
+#......########%##
+##################
+
+message Level 3 von 3 : Fensterrose
+
+
+#######################
+#######.........#######
+######...........######
+##..##...kkkkk...##..##
+#....#...k...k...#....#
+#.t..#...k.t.k...#..x.#
+#....#...kk.kk...#....#
+#....#....2d1....#....#
+#..o.#...krhlk...#.t..#
+#....#...k...k...#....#
+#...##..m........#....#
+#.hl.............#....#
+#...##....p......#....#
+#######.........#######
+#######################
+
+............
+............
+....x.......
+............
+............
+............
+............
+........p...
+............
+
+............
+............
+....§±`~....
+....5678....
+....90!@....
+.....£$\....
+.....Y&*....
+.....-=.....
+............
+
+message ICH BIN DER POSEIDON
+
+
+(
+
+#####################
+#######.......#######
+######.........######
+##..##..kkkkk..##..##
+#....#..k...k..#....#
+#.t..#..k.t.k..#..x.#
+#....#..kk.kk..#....#
+#....#...2d1...#....#
+#..o.#..krhlk..#.t..#
+#....#..k...k..#....#
+#...##.m.......#....#
+#.hl...........#....#
+#...##...p.....#....#
+#######.......#######
+#####################
+
+#############
+##.........##
+#...........#
+#...kkkkk...#
+#...k...k...#
+#...k.x.k...#
+#...kk.kk...#
+#....2d1....#
+#...krhlk...#
+#...k...k...#
+#...........#
+#..m........#
+#....p......#
+##.........##
+#############
+
+
+#############
+##.........##
+#...........#
+#...kkkkk...#
+#...k...k...#
+#...k.x.k...#
+#...kk.kk...#
+#....2d1....#
+#...krhlk...#
+#...k...k...#
+#...........#
+#.m.........#
+#...........#
+#......p....#
+##.........##
+#############
+
+
+
+###############
+##...........##
+#.............#
+#.............#
+#....kkkkk....#
+#....k...k....#
+#....k.x.k....#
+#....kk.kk....#
+#.....2d1.....#
+#....krhlk....#
+#....k...k....#
+#...m.........#
+#.............#
+#.....p.......#
+#.............#
+#.............#
+##...........##
+###############
+
+###############
+##...........##
+#.............#
+#.............#
+#....kkkkk....#
+#....k...k....#
+#....k.x.k....#
+#....kk.kk....#
+#.....2d1.....#
+#....krhlk....#
+#....k...k....#
+#.............#
+#..........m..#
+#.............#
+#......p......#
+#.............#
+##...........##
+###############
+
+###############
+##...........##
+#.............#
+#.............#
+#....kkkkk....#
+#....k...k....#
+#....k.x.k....#
+#....kk.kk....#
+#.....2d1.....#
+#....krhlk....#
+#....k...k....#
+#.............#
+#.............#
+#...m.....m...#
+#.............#
+#......p......#
+##...........##
+###############
+
+######"########
+##...........##
+#.............#
+#.............#
+#....kkkkk....#
+#....k...k....#
+#....k.x.k....#
+#....kk.kk....#
+#....k.d.k....#
+#....krhlk....#
+#...kk.u.k....#
+#...kt...k..o.#
+#...kkkkkk....#
+#..m......m...#
+#.............#
+#......p......#
+##...........##
+###############
+
+###############
+##...........##
+#.............#
+#.............#
+#....kkkkk....#
+#....k...k....#
+#....k.x.k....#
+#....k.kkk....#
+#....k.d.k....#
+#....krhlk....#
+#....k.u.k....#
+#....k...k....#
+#....k.t.k..o.#
+#....kkkkk....#
+#...m.........#
+#.............#
+##.....p.....##
+###############
+
+###############
+##...........##
+#.............#
+#.............#
+#....kkkkk....#
+#....k...k....#
+#....k.x.k....#
+#....kk.kk....#
+#....k2d1k....#
+#....krhlk....#
+#....k........#
+#.............#
+#.............#
+#...m.....m...#
+#.............#
+#......p......#
+##...........##
+###############
+
+###############
+##...........##
+#.............#
+#.............#
+#....kkkkk....#
+#....k...k....#
+#....k.x.k....#
+#....kk.kk....#
+#....k2d1k....#
+#....krhlk....#
+#.............#
+#.............#
+#.............#
+#...m.....m...#
+#.............#
+#......p......#
+##...........##
+###############
+
+###############
+##...........##
+#.............#
+#.............#
+#....kkkkk....#
+#....k...k....#
+#....k.x.k....#
+#....k.kkk....#
+#....k2d......#
+#....krh......#
+#.....4u......#
+#.............#
+#.............#
+#...m.....m...#
+#.............#
+#......p......#
+##...........##
+###############
+
+###############
+##...........##
+#.............#
+#.............#
+#....kkkkk....#
+#....k...k....#
+#....k.x.k....#
+#....k.kkk....#
+#....k2d......#
+#....krh......#
+#....k4u......#
+#.............#
+#.............#
+#...m.....m...#
+#.............#
+#......p......#
+##...........##
+###############
+
+###############
+##...........##
+#.............#
+#.............#
+#....kkkkk....#
+#....k...k....#
+#....k.x.k....#
+#....k.kkk....#
+#....k2d......#
+#....krh......#
+#....k4.......#
+#.............#
+#.............#
+#...m.....m...#
+#.............#
+#......p......#
+##...........##
+###############
+
+###############
+##...........##
+#.............#
+#.............#
+#....kkkkk....#
+#....k...k....#
+#....k.x.k....#
+#....k...k....#
+#....k2d.k....#
+#....krh.k....#
+#....k4..k....#
+#....k.k.k....#
+#....k.kkk....#
+#...m.....m...#
+#.............#
+#......p......#
+##...........##
+###############
+
+###############
+##...........##
+#.............#
+#.............#
+#....kkkkk....#
+#....k...k....#
+#....k.x.k....#
+#....k.kkk....#
+#....k2d......#
+#....krh......#
+#....k4.......#
+#....k........#
+#....k........#
+#...m.....m...#
+#.............#
+#......p......#
+##...........##
+###############
+
+###############
+##...........##
+#.............#
+#.............#
+#....kkkkk....#
+#....k...k....#
+#....k.x.k....#
+#....k...k....#
+#....k2d.k....#
+#....krh.k....#
+#....k4u.k....#
+#....k.k.k....#
+#....k.kkk....#
+#...m.....m...#
+#.............#
+#......p......#
+##...........##
+###############
+
+............
+............
+............
+...kkkkk....
+...k...k....
+...k.x.k....
+...k...k....
+...k2d.k....
+...krh.k....
+...k4..k....
+...k.k.k....
+...k.kkk....
+..m.....m...
+............
+......p.....
+............
+
+............
+............
+............
+...kkkkk....
+...k...k....
+...k.x.k....
+...k...k....
+...k2d.k....
+...krh.k....
+...k4u.k....
+...k.k.k....
+...k.kkk....
+..m.....m...
+............
+......p.....
+............
+
+
+............
+............
+............
+...kkkkk....
+...k...k....
+...k.x.k....
+...k...k....
+...k2..k....
+...krh.k....
+...k4..k....
+...k.k.k....
+...k.kkk....
+..m.....m...
+............
+.....p......
+............
+
+............
+............
+............
+...kkkkk....
+...k...k....
+...k.x.k....
+...k...k....
+...k.d.k....
+...krh.k....
+...k.u.k....
+...k.k.k....
+...k.kkk....
+..m.....m...
+............
+.....p......
+............
+
+............
+............
+..kkkkk.....
+..k...k.....
+..k.x.k.....
+..k...k.....
+..k.d.k.....
+..krh.k.....
+..k.u.k.....
+..k.k.k.....
+..k.kkk.....
+............
+........m...
+............
+..........p.
+............
+
+##################
+#####.......#....#
+#####.......#....#
+#####..##...#....#
+####hlrh#hl.#..rh#
+####....#.rh#hl..#
+####hlrh#hl.#..rh#
+####....#.rh#hl..#
+####hlrh#hl.#..rh#
+####....#.rh#hl..#
+####....#...#....#
+#.......#........#
+#.m..p..##########
+#.......#.........
+#########.........
+
+##################
+#####.........#..#
+#####...mp....#..#
+#####..##d....#..#
+####h..h#h2...#rh#
+####u..u#..h###..#
+####h..h#hl...#rh#
+####u..u#.rh###..#
+####h..h#hl...#rh#
+####u..u#.rh###..#
+####....#.....#..#
+#.......#.....#..#
+#.......#........#
+#.......#........#
+##################
+
+
+###################
+####....#.........#
+####hlrh#.........#
+####....#.........#
+####hlrh#.........#
+####....#.........#
+####hlrh#.........#
+####....#.........#
+####....#.........#
+#.................#
+#.m..p............#
+#.................#
+###################
+
+
+
+##################
+#................#
+#................#
+#................#
+#................#
+#................#
+#................#
+###.###..........#
+#.....#..........#
+#.p...#..........#
+#.....#..........#
+#...m.#..........#
+#.....#..........#
+##################
+
+##################
+#####.........#..#
+#####.....pmk.#..#
+#####..##d..k.#..#
+####h..h#h2.k.#rh#
+####u..u#..h###..#
+####h..h#hl...#rh#
+####u..u#.rh###..#
+####h..h#hl...#rh#
+####u..u#.rh###..#
+####....#.....#..#
+#.......#.....#..#
+#...kkkk#........#
+#.......#........#
+##################
+
+##################
+#................#
+#................#
+#................#
+#................#
+#................#
+#................#
+#................#
+#................#
+#................#
+#................#
+#................#
+#................#
+##################
+
+)
+
+title Take Heart Lass
+author Kevin Zuhn
+homepage www.kevinzuhn.com
+
+========
+OBJECTS
+========
+
+Background
+LightGreen Green
+11111
+11011
+10101
+11011
+11111
+
+BackFlowers
+Green Purple Yellow
+10001
+00100
+01210
+00100
+10001
+
+Target
+RED LightRed
+.0.0.
+01010
+01110
+.010.
+..0..
+
+Wall
+Red DarkGreen
+00000
+00100
+01010
+00100
+00000
+
+DespairWall
+DarkBrown DarkBlue
+00000
+00100
+01010
+00100
+00000
+
+NewDespairWall
+DarkRed DarkBlue
+00000
+00100
+01010
+00100
+00000
+
+Player
+Blue LightRed Yellow DarkBlue
+.333.
+.323.
+20002
+.111.
+.000.
+
+OldHope
+White Pink
+11111
+11011
+10101
+11011
+11111
+
+NewHope
+White LightRed
+11111
+11011
+10101
+11011
+11111
+
+Crate
+Pink White
+.0.0.
+01010
+01110
+.010.
+..0..
+
+OldDespair
+Black DarkBlue
+01010
+10101
+01010
+10101
+01010
+
+AltOldDespair
+Black DarkBlue
+10101
+01010
+10101
+01010
+10101
+
+NewDespair
+DarkBlue DarkGray
+01010
+10101
+01010
+10101
+01010
+
+AltNewDespair
+DarkBlue DarkGray
+10101
+01010
+10101
+01010
+10101
+
+=======
+LEGEND
+=======
+
+. = Background
+f = BackFlowers
+# = Wall
+P = Player
+* = Crate
+@ = Crate and Target
+O = Target
+X = OldDespair
+Z = AltOldDespair
+H = OldHope
+
+Despair = OldDespair or NewDespair or AltOldDespair or AltNewDespair
+Hope = OldHope or NewHope
+Blocker = Despair or Crate or Target or Wall or Player or DespairWall or NewDespairWall or Hope
+HopeBlocker = Crate or Target or Wall or DespairWall or NewDespairWall or Hope
+
+
+=======
+SOUNDS
+=======
+
+Crate MOVE 36772507
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Target, BackFlowers, Hope
+Player, Wall, Crate, Despair, NewDespair, DespairWall, NewDespairWall
+
+======
+RULES
+======
+
+[NewDespair] -> [OldDespair]
+[AltNewDespair] -> [AltOldDespair]
+[NewDespairWall] -> [DespairWall]
+[NewHope] -> [OldHope]
+late [OldDespair | No Blocker] -> [OldDespair | AltNewDespair]
+late [AltOldDespair | No Blocker] -> [AltOldDespair | NewDespair]
+late [OldDespair | Wall] -> [OldDespair | NewDespairWall]
+late [DespairWall | Wall] -> [DespairWall | NewDespairWall]
+late [OldHope | No HopeBlocker] -> [ OldHope | NewHope]
+
+[> Player | Crate] -> [> Player | > Crate]
+[> Crate | Blocker] -> [ Crate | Blocker ]
+
+late [Target | Despair] -> [ Target |  ]
+late [Despair Target] -> [Target]
+late [Crate | Despair] -> [ Crate |  ]
+late [Hope Despair] -> [Hope]
+late [Hope | DespairWall] -> [Hope | Wall]
+late [Hope | NewDespairWall] -> [Hope | Wall]
+
+==============
+WINCONDITIONS
+==============
+
+Some Player on Target
+
+=======
+LEVELS
+=======
+
+message You have love in your heart, Lass.
+
+######
+#...x#
+#.ff.#
+#.ff.#
+#o..P#
+######
+
+message So your heart can weather Despair.
+
+#########
+#x.f...f#
+#.#.....#
+#.p.f#..#
+#.#..#f.#
+#xzf...o#
+#########
+
+message And you've others who love you.
+
+#########
+#x......#
+#...#...#
+#p..*..##
+#...#...#
+#x.....o#
+#########
+
+message The war can't last forever, Lass.
+
+########
+#.#zx#p#
+#....*.#
+#......#
+#o#*.#.#
+########
+
+message Think of the time we shared.
+
+###########
+#.........#
+#.*#.o.####
+#..*###...#
+#.......*.#
+#......#..#
+####...####
+#x.......p#
+###########
+
+message Then bottle your grief up tight.
+
+###########
+#o........#
+####.##.#.#
+#.....*.#.#
+#.#.###.#.#
+#.#....*..#
+#.#*.#.##.#
+#x#...p#z.#
+###########
+
+message I wish I could be there, Lass.
+
+###########
+#...o...zx#
+#.#.....#z#
+#...#.#...#
+#.........#
+#..**.**..#
+#z........#
+#xz......p#
+###########
+
+message You're loved. You'll find a way.
+
+###########
+#....o....#
+#..#####..#
+#.#.....#.#
+#...*p*...#
+#....*....#
+#...###...#
+#x.......x#
+###########
+
+message There is always Hope, Lass.
+
+###########
+#........H#
+#.......p.#
+#x........#
+#zx.......#
+#xzx......#
+#zxzx.....#
+#ozxzx....#
+###########
+
+message  It may waver, but it stays lit.
+
+###########
+#....p....#
+###.#*#.###
+#x.......x#
+###.*.*.###
+#HH*.....x#
+###.#.#.###
+#x.......o#
+###########
+
+message Temper your hope with wisdom.
+
+############
+#......zxzx#
+#.##.##.####
+#......*...#
+#.*p.#.#.#o#
+#...*.*.*#.#
+####.###...#
+#H.........#
+############
+
+message Save no Despair for me, Lass.
+
+##################
+#..*.#H#o........#
+#...*..#######.#.#
+#.##.#########.#*#
+#.#.....*....#.#.#
+#H#...#.p..#z.*H*#
+###...#.#*##...#.#
+#...##z.....#*.xz#
+#.*.......*...xzx#
+#x...#.*....#xzxz#
+##################
+
+message For I have hope as well.
+message Take Heart, Lass. Goodbye.
+
+USER PROMPT:
+The following PuzzleScript game code:
+```plaintext
+title Colorful Conveyors
+author Game Designer
+homepage www.mypuzzle.com
+
+========
+OBJECTS
+========
+
+Background
+LightGrey
+.....
+.....
+.....
+.....
+.....
+
+Wall
+Grey DarkGrey
+00000
+01110
+01110
+01110
+00000
+
+Player
+Blue LightBlue
+.....
+..0..
+.010.
+..0..
+.....
+
+RedCrate
+Red DarkRed
+.....
+..0..
+.111.
+..0..
+.....
+
+GreenCrate
+Green DarkGreen
+.....
+..0..
+.111.
+..0..
+.....
+
+RedTarget
+DarkRed Red
+.....
+..0..
+.111..
+..0..
+
+GreenTarget
+DarkGreen Green
+.....
+..0..
+.111..
+..0..
+
+ConveyorL
+Yellow
+000..
+000..
+.....
+.....
+.....
+
+ConveyorR
+Yellow
+..000
+..000
+.....
+.....
+.....
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Player
+R = RedCrate
+G = GreenCrate
+X = RedTarget
+Y = GreenTarget
+
+Conveyor = ConveyorL or ConveyorR
+Target = RedTarget or GreenTarget
+Crate = RedCrate or GreenCrate
+
+=======
+SOUNDS
+=======
+
+SFX0 36772507
+SFX1 27089102
+SFX2 98765432
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Target
+Player, Wall, Crate
+Conveyor
+
+======
+RULES
+======
+
+[ > Player | Crate ] -> [ > Player | > Crate ]
+[ > Crate | ConveyorR ] -> [ > Crate | > ConveyorR ]
+[ < Crate | ConveyorL ] -> [ < Crate | < ConveyorL ]
+
+==============
+WINCONDITIONS
+==============
+
+All RedCrate on RedTarget
+All GreenCrate on GreenTarget
+
+=======
+LEVELS
+=======
+
+#######
+#.....#
+#..P..#
+#.R.G.#
+#..X..#
+#..Y..#
+#######
+
+#.#.#.#
+#R.G.X#
+#.#.#.#
+#.....#
+#######
+#.P...#
+#.Y...#
+#######
+
+message Align the crates to the targets!
+
+
+```
+compiled, but a solvability check returned the following error:
+Found solution for level 0 in 5758 iterations: 3,3,2,2,2,1,1,1,1,0,0,3,2,3,3,3,0,0,1,2,3,2,2,1,1,1,1,0,0,3,3,2,2,3,3,0,1,3,0,1,3,2,2,1,1,1,1,0,0,3,3,2,3,3,0,1,3,2,2,1,1,3,3,0,0,1,1,3,3,0,0,1,1,1,2,2,1,2,3,3,2,3,3,0,0,1,0,1,1,2,1,2,2,3,3,1,1,0,0,3,3,3,3,2,2,1,3,0,1.  Level 1 is not solvable. Please repair it.
+Return your code in full, inside a ```plaintext code block.

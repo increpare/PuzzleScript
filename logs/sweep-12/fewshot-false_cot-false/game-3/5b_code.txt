@@ -1,0 +1,122 @@
+Sure! Here is the revised version of the PuzzleScript game code with the necessary corrections:
+
+```plaintext
+Title: Box Pusher
+Author: GameDesigner
+
+========
+OBJECTS
+========
+
+Background
+transparent
+
+Wall
+brown
+
+Pusher
+red
+
+Box
+blue
+
+Target
+green
+
+BoxOnTarget
+blue
+
+PusherOnTarget
+red
+
+========
+LEGEND
+========
+
+. = Background
+# = Wall
+P = Pusher
+B = Box
+T = Target
+O = BoxOnTarget
+@ = PusherOnTarget
+Player = Pusher or PusherOnTarget
+
+========
+SOUNDS
+========
+
+# This section is intentionally left blank.
+
+========
+COLLISIONLAYERS
+========
+
+Background
+Wall
+Box, BoxOnTarget
+Player
+Target
+
+========
+RULES
+========
+
+[> Player | Box] -> [> Player | > Box]
+[> Player | Target] -> [> PusherOnTarget]
+[> Player | BoxOnTarget] -> [> PusherOnTarget | Box]
+[> PusherOnTarget] -> [> Player | Target]
+[> Player | Box | Target] -> [> Player | > BoxOnTarget]
+
+[ Box | Target ] -> [ BoxOnTarget ]
+[ BoxOnTarget ] -> [ Box | Target ]
+
+========
+WINCONDITIONS
+========
+
+All BoxOnTarget
+
+========
+LEVELS
+========
+
+#####
+#...#
+#.O.#
+#...#
+#.P.#
+#..B#
+#####
+
+#####
+#...#
+#.O.#
+#...#
+#...#
+#PBO#
+#####
+
+#######
+#.....#
+#.O.O.#
+#.....#
+#PB.BO#
+#...B.#
+#######
+
+#########
+#.......#
+#.O.O.O.#
+#.......#
+#PB.BOBO#
+#.......#
+#########
+```
+
+Modifications made:
+1. Added a `Player` alias in the `LEGEND` section to include `Pusher` and `PusherOnTarget`.
+2. Corrected the definitions of actions in the `RULES` section by using angle brackets (`>`), clarifying pattern lengths between left and right.
+3. Replaced ambiguous target states with distinct objects: `BoxOnTarget` and `PusherOnTarget`, already defined in the `OBJECTS` section.
+
+These changes should address the errors and allow the game to compile correctly.

@@ -1,0 +1,142 @@
+SYSTEM PROMPT:
+You are a game designer, familiar with the PuzzleScript game description language. 
+
+USER PROMPT:
+The following PuzzleScript game code:
+```plaintext
+Title: Treasure Hunter
+
+Author: Your Name
+
+Homepage: http://www.example.com
+
+========
+OBJECTS
+========
+
+Background
+lightgray
+00000
+00000
+00000
+00000
+00000
+
+Player
+Red
+00000
+00900
+09990
+00900
+00000
+
+Wall
+DarkGray
+11111
+11111
+11111
+11111
+11111
+
+Treasure
+Gold
+05550
+05750
+55555
+05750
+05550
+
+Goal
+Green
+00000
+09990
+09090
+09990
+00000
+
+========
+LEGEND
+========
+
+. = Background
+P = Player
+# = Wall
+T = Treasure
+G = Goal
+
+========
+SOUNDS
+========
+
+SOUND_FOUND
+trebleUp
+P Moved T > appear G:
+    150
+
+========
+RULES
+========
+
+[> Player | Treasure] -> [Player | Goal]
+
+[Player|Goal]->[] // clear goal to advance
+
+========
+COLLISIONLAYERS
+========
+
+Background
+Player
+Wall
+Treasure
+Goal
+
+========
+WINCONDITIONS
+========
+
+No Treasure
+
+========
+LEVELS
+========
+
+/0
+#####
+#...#
+#P.T#
+#...#
+##### 
+
+/1
+#######
+#.....#
+#.#.#.#
+#.#.T.#
+#P#.#G#
+#.....#
+#######
+
+/2
+#########
+#..T..#.#
+#.#.##..#
+#...##..#
+#.P..G###
+#...T...#
+#########
+
+========
+
+```
+produced the following console output:
+=================================
+line 22 : Trying to access color number 9 from the color palette of sprite PLAYER, but there are only 1 defined in it.
+line 23 : Trying to access color number 9 from the color palette of sprite PLAYER, but there are only 1 defined in it.
+line 24 : Trying to access color number 9 from the color palette of sprite PLAYER, but there are only 1 defined in it.
+line 29 : Trying to access color number 1 from the color palette of sprite WALL, but there are only 1 defined in it.
+line 30 : Trying to access color number 1 from the color palette of sprite WALL, but there are only 1 defined in it.
+line 31 : Trying to access color number 1 from the color palette of sprite WALL, but there are only 1 defined in it.
+too many errors, aborting compilation
+Errors detected during compilation; the game may not work correctly.
+Return a repaired version of the code that addresses these errors. Return your code in full, inside a ```plaintext code block.

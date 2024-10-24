@@ -1,0 +1,86 @@
+```plaintext
+title Star Collector
+author Your Name
+homepage example.com
+
+========
+OBJECTS
+========
+
+Background
+LightBlue
+.....
+.....
+.....
+.....
+.....
+
+Player
+Yellow
+.....
+..0..
+.000.
+..0..
+.....
+
+Wall
+DarkGray
+.....
+.000.
+.000.
+.000.
+.....
+
+Star
+Yellow
+.....
+..0..
+.....
+..0..
+.....
+
+=======
+LEGEND
+=======
+
+. = Background
+P = Player
+# = Wall
+* = Star
+
+=======
+SOUNDS
+=======
+
+sfx0 12345678 (This is a placeholder sound ID)
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Star, Wall, Player
+
+======
+RULES
+======
+
+[> Player | Star] -> [> Player | ] sfx0
+
+==============
+WINCONDITIONS
+==============
+
+No Star
+
+=======
+LEVELS
+=======
+
+#..*..#
+#.P.*.#
+#..*..#
+#######
+
+```
+Note: The sound effect "destroy_star" was not a recognized keyword, causing the error. I've replaced it with "sfx0" and assigned a placeholder sound ID. You will need to replace "12345678" with a valid sound ID if you want a specific sound effect to play.

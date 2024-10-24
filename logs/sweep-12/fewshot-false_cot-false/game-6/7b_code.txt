@@ -1,0 +1,129 @@
+Certainly! Here is a revised version of your PuzzleScript code. I've corrected the sprite matrix issues, fixed object definitions, specified all necessary colors, and ensured consistent rule structure.
+
+```plaintext
+Title: Treasure Pusher
+Author: PuzzleScript Enthusiast
+Homepage: none
+
+===========
+OBJECTS
+===========
+
+Background
+transparent
+.....
+.....
+.....
+.....
+.....
+
+Player
+blue
+.....
+..@..
+.....
+.....
+.....
+
+Wall
+black
+#####
+#####
+#####
+#####
+#####
+
+Treasure
+yellow
+.....
+..$..
+.....
+.....
+.....
+
+Goal
+green
+.....
+.....
+..G..
+.....
+.....
+
+TreasureOnGoal
+lime
+.....
+..$..
+.....
+.....
+.....
+
+===========
+LEGEND
+===========
+
+. = Background
+P = Player
+# = Wall
+$ = Treasure
+& = TreasureOnGoal
+G = Goal
+
+===========
+SOUNDS
+===========
+
+===========
+
+COLLISIONLAYERS
+===========
+
+Background
+Wall
+Player
+Treasure, TreasureOnGoal
+Goal
+
+===========
+RULES
+===========
+
+[Player | Treasure | Goal] -> [ | Player | TreasureOnGoal]
+[Player | Treasure | ] -> [ | Player | Treasure]
+
+===========
+WINCONDITIONS
+===========
+
+All TreasureOnGoal on Goal
+
+===========
+LEVELS
+===========
+
+#######
+#P....#
+#$.G..#
+#$.#..#
+#..#..#
+#######
+
+#######
+#.....#
+#.$...#
+#$G...#
+#.#...#
+#######
+
+#######
+#.....#
+#..P..#
+#.#$..#
+#.#...#
+#######
+```
+
+Key Changes:
+- Ensured all sprites are 5x5 pixels.
+- Specified color for all objects including `TreasureOnGoal`.
+- Adjusted the rules to ensure matching lengths for left and right pattern configurations.
+- Cleaned up formatting for clarity.

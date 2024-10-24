@@ -1,0 +1,98 @@
+The errors in the provided PuzzleScript code seem to stem from a couple of issues. First, there is an issue related to the `color` specifications. Each object should have a valid color with specified RGB values or a named color. Secondly, there is an ambiguity between the player's color and sprite representation due to using the same character 'P' for both. Let's fix these issues:
+
+1. **Color Syntax**: The color property for each object should be followed by a legitimate color specification. In PuzzleScript, you can use named colors or specify a custom color with RGB integer values.
+
+2. **Duplicate Legend Key**: The symbol 'P' is used both to specify the player color and as a part of the Player's legend symbol. Instead, the color should be specified in a valid format.
+
+Let's address these issues by correcting the color specifications:
+
+```plaintext
+title Sokoban
+
+========
+OBJECTS
+========
+
+Background
+color black
+. 
+
+Player
+color blue
+P
+
+Wall
+color grey
+W
+
+Block
+color green
+B
+
+Goal
+color orange
+G
+
+========
+LEGEND
+========
+
+. = Background
+P = Player
+W = Wall
+B = Block
+G = Goal
+
+========
+RULES
+========
+
+[Player | Block] -> [ > Player | > Block ]
+[Player | ] -> [ > Player |  ]
+
+========
+WINCONDITIONS
+========
+
+All Block on Goal
+
+========
+LEVELS
+========
+
+// Level 1
+WWWWWW
+WP   W
+W    W
+W B  W
+W G  W
+WWWWWW
+
+// Level 2
+WWWWWW
+WP   W
+W B  W
+W    W
+W GG W
+W    W
+WWWWWW
+
+// Level 3
+WWWWWWW
+W     W
+W  P  W
+W  B  W
+W  B  W
+W  GG W
+W     W
+WWWWWWW
+```
+
+Here’s what we’ve done to fix the code:
+
+- Changed the "Background" color to a recognized name 'black'.
+- Changed the "Wall" color to 'grey', which is another recognized name.
+- Ensured all objects have valid colors.
+- Left the player’s representation as 'P' without confusion in color specification.
+
+These adjustments should remove the errors and let the game compile and run correctly.

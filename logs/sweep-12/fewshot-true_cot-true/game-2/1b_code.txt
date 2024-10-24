@@ -1,0 +1,111 @@
+The errors provided indicate that the game is trying to access colors in the `Wall` and `Player` sprites that are not defined. The `Wall` sprite uses color number 1, but only defines one color, and the same issue is present for the `Player` sprite using color number 1, but with only one color defined. The PuzzleScript language uses color indices to fill the sprite pattern. The first step is to redefine the color palettes for these sprites so that they contain multiple colors and align with the pattern intended by the game's sprite design.
+
+Let's fix these sprites by adjusting the color palette to have the correct number of colors and ensure that each color index used in the sprite pattern is defined.
+
+Here's the repaired version of the code:
+
+```plaintext
+title Maze Explorer
+author YourName
+
+========
+OBJECTS
+========
+
+Background
+black
+
+Wall
+gray darkgray
+11111
+11111
+11111
+11111
+11111
+
+Player
+lightgreen darkgreen
+.000.
+.1.1.
+.000.
+.1.1.
+.000.
+
+Goal
+yellow
+.....
+..0..
+.000.
+..0..
+.....
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Player
+G = Goal
+
+=======
+SOUNDS
+=======
+
+EndLevel 12345678
+EndGame 87654321
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Goal
+Player, Wall
+
+======
+RULES
+======
+
+[ P | G ] -> [ P ]
+
+==============
+WINCONDITIONS
+==============
+
+All Goal on Player
+
+=======
+LEVELS
+=======
+
+#######
+#..P..#
+#.###.#
+#.....#
+#.###.#
+#..G..#
+#######
+
+#######
+#P....#
+#....##
+#.###.#
+#.....#
+##..G.#
+#######
+
+#######
+#..G..#
+#.###.#
+#.....#
+#.###.#
+#..P..#
+#######
+```
+
+### Changes Made:
+- For the `Wall` object, two colors have been defined: `gray` and `darkgray`. Now the index `1` will refer to `darkgray` and the sprite is filled correctly using both colors.
+- For the `Player` object, two colors have been defined: `lightgreen` and `darkgreen`. The pattern will now use `darkgreen` for index `1`, filling the sprite as per the intended design.
+
+With these corrections, the game's graphic definitions should now align with the intended patterns while avoiding out-of-bounds errors on color indices.

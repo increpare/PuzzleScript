@@ -1,0 +1,69 @@
+```plaintext
+title Blocked Path
+author YourName
+
+========
+OBJECTS
+========
+
+Background
+lightgrey
+
+Wall
+darkgrey
+
+Player
+green
+
+Target
+red
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Player
+T = Target
+
+=======
+SOUNDS
+=======
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Wall
+Target
+Player
+
+======
+RULES
+======
+
+[ > Player | No Player | Target ] -> [ Player | Player | Target ]
+
+==============
+WINCONDITIONS
+==============
+
+Some Player on Target
+
+=======
+LEVELS
+=======
+
+message Welcome to Blocked Path!
+##########
+#........#
+#..####..#
+#..#..#..#
+#..#P.#..#
+#..#..#..#
+#..##....#
+#....T...#
+##########
+```

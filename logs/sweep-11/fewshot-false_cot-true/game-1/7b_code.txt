@@ -1,0 +1,99 @@
+To repair the PuzzleScript game code, we need to address the issues present in the `Objects` section, particularly around the definition of sprite properties. The console output indicates a misunderstanding of the syntax in the object definition, especially for defining colors in sprites.
+
+The primary error messages indicate incorrect handling of colors and sprite matrices. In PuzzleScript, the syntax for color definitions and sprite matrices must be carefully adhered to.
+
+In the original code:
+- Line 5: There are issues with object definitions, especially the name "Colors" instead of "color".
+- The syntax for defining colors and sprite contents does not match the expected format in PuzzleScript.
+
+We'll correct these:
+1. Use the correct syntax "color" (lowercase singular) instead of "Colors".
+2. Correct the color definitions for each object.
+3. Ensure the sprite matrix correctly starts immediately after the color definition, with no extra lines or comments.
+
+Here's the corrected version of the code:
+```plaintext
+# Puzzlescript code defining a Sokoban-style game
+
+# ======= OBJECTS =======
+Objects
+  # Define the player character
+  Player
+    color #ffff00 #000000
+    00000
+    01110
+    00100
+    00100
+    00000
+  
+  # Crate that needs to be pushed to the goal
+  Crate
+    color #ff0000 #000000
+    11111
+    12221
+    12221
+    12221
+    11111
+
+  # Stationary floor on which other objects lie
+  Floor
+    color #dddddd
+    11111
+    11111
+    11111
+    11111
+    11111
+
+  # Goal area for crates
+  Goal
+    color #00ff00 #000000
+    00000
+    01110
+    00100
+    00100
+    00000
+
+  # Fixed boundary that blocks movement
+  Wall
+    color #999999
+    44444
+    44444
+    44444
+    44444
+    44444
+
+# ======= LEGEND =======
+Legend
+  P = Player
+  C = Crate
+  G = Goal
+  . = Floor
+  W = Wall
+
+# ======= RULES =======
+Rules
+  [ > P | C ] -> [ > P | > C ]
+  
+  // Ensure crates on goals are displayed nicely
+  [ C | G ] -> [ C ]
+
+# ======= WIN CONDITIONS =======
+WinConditions
+  All Crate on Goal
+
+# ======= LEVELS =======
+Levels
+  WWWWW
+  W...W
+  W.G.W
+  W.GCW
+  W.P.W
+  WWWWW
+```
+
+### Explanation:
+- Changed `Colors` to `color` to define the color palette correctly.
+- Ensured that colors are defined in the correct order (primary, secondary) as used in the sprite matrix.
+- Removed any inadvertent comments that got entangled with sprite matrix definitions.
+
+With these changes, the syntax should align correctly with PuzzleScript expectations, resolving the errors and allowing the game to compile successfully.

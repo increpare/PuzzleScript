@@ -1,0 +1,103 @@
+To create a complete PuzzleScript game, we need to consider several elements:
+
+1. **Title and Author:** Define the game title and the author.
+2. **Objects:** Specify the sprite designs that will represent individual game elements such as the player, goal, walls, and any other interactive or non-interactive objects.
+3. **Legend:** Map the characters in the level definition to these objects.
+4. **Sound:** Define sound effects for game actions.
+5. **Collision Layers:** Establish the hierarchy of objects to manage which objects can overlap.
+6. **Rules:** Define how the objects interact with one another and how they move based on player input.
+7. **Win Conditions:** Set conditions under which the game or levels are considered complete.
+8. **Levels:** Design the level layout using characters from the Legend.
+
+Let's create a simple puzzle game named "Sokoban Simple" where the player pushes boxes onto targets. This type of game is straightforward yet showcases object interaction and win conditions effectively.
+
+```plaintext
+title Sokoban Simple
+author OpenAI
+
+===== OBJECTS =====
+Background
+black
+
+Player
+blue
+00011
+01111
+11111
+01111
+00011
+
+Wall
+gray
+11111
+11111
+11111
+11111
+11111
+
+Box
+brown
+11111
+11011
+11111
+11111
+11111
+
+Target
+green
+00000
+00110
+00110
+01100
+00000
+
+BoxOnTarget
+yellow
+11111
+11011
+11111
+11111
+11111
+
+===== LEGEND =====
+. = Background
+P = Player
+# = Wall
+B = Box
+T = Target
+O = BoxOnTarget
+
+===== COLLISIONLAYERS =====
+Background
+Player, Box, BoxOnTarget
+Wall
+Target
+
+===== RULES =====
+[ Player | Box ] -> [ Player | ] [ Box ]
+[ Player | BoxOnTarget ] -> [ Player | ] [ Box ]
+[ Box | Target ] -> [ BoxOnTarget | ]
+[ BoxOnTarget ] -> [ Box | Target ]
+
+===== WINCONDITIONS =====
+All BoxOnTarget on Target
+
+===== LEVELS =====
+# # # # # # #
+# . . . . . #
+# . B B T . #
+# . . P . . #
+# T . . . . #
+# # # # # # #
+```
+
+### Explanation:
+
+- **Objects:** We define five objects: `Background`, `Player`, `Wall`, `Box`, `Target`, and a combined state `BoxOnTarget`.
+- **Legend:** Maps symbols like `P` to `Player` in levels for easy representation.
+- **Collision Layers:** Establishes which objects can exist separately or overlap, preventing illegal movements such as walking through walls.
+- **Rules:** Define how the player interacts with the boxes. Specifically, the player can push a box into an empty space or onto a target. Likewise, a box leaving a target reverts to a regular box.
+- **Win Conditions:** All boxes must be on the target spots for the game to declare a win.
+- **Levels:** Creates a simple level layout that employs all defined elements, providing a straightforward puzzle.
+
+This setup creates a foundational Sokoban-style game, showcasing basic movement, object interaction, and win conditions in PuzzleScript.

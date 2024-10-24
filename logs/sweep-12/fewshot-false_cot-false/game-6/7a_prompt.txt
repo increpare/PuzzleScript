@@ -1,0 +1,148 @@
+SYSTEM PROMPT:
+You are a game designer, familiar with the PuzzleScript game description language. 
+
+USER PROMPT:
+The following PuzzleScript game code:
+```plaintext
+Title: Treasure Pusher
+Author: PuzzleScript Enthusiast
+Homepage: none
+
+===========
+OBJECTS
+===========
+
+Background
+transparent
+.....
+.....
+.....
+.....
+.....
+
+Player
+blue
+.....
+..@..
+.....
+.....
+.....
+
+Wall
+black
+#####
+#####
+#####
+#####
+#####
+
+Treasure
+yellow
+.....
+..$..
+.....
+.....
+.....
+
+Goal
+green
+.....
+.....
+..G..
+.....
+.....
+
+TreasureOnGoal
+lime
+.....
+..$..
+.....
+.....
+.....
+
+===========
+LEGEND
+===========
+
+. = Background
+P = Player
+# = Wall
+$ = Treasure
+& = TreasureOnGoal
+G = Goal
+
+===========
+SOUNDS
+===========
+
+===========
+
+COLLISIONLAYERS
+===========
+
+Background
+Wall
+Player
+Treasure, TreasureOnGoal
+Goal
+
+===========
+RULES
+===========
+
+[Player | Treasure | Goal] -> [ | Player | TreasureOnGoal]
+[Player | Treasure] -> [ | Player | Treasure]
+
+===========
+WINCONDITIONS
+===========
+
+All TreasureOnGoal on Goal
+
+===========
+LEVELS
+===========
+
+#######
+#P....#
+#$.G..#
+#$.#..#
+#..#..#
+#######
+
+#######
+#.....#
+#.$...#
+#$G...#
+#.#...#
+#######
+
+#######
+#.....#
+#..P..#
+#.#$..#
+#.#...#
+#######
+
+
+```
+produced the following console output:
+=================================
+line 20 : Unknown junk in spritematrix for object PLAYER.
+line 27 : Unknown junk in object section (possibly: sprites have to be 5 pixels wide and 5 pixels high exactly. Or maybe: the main names for objects have to be words containing only the letters a-z0.9 - if you want to call them something like ",", do it in the legend section).
+line 28 : Unknown junk in object section (possibly: sprites have to be 5 pixels wide and 5 pixels high exactly. Or maybe: the main names for objects have to be words containing only the letters a-z0.9 - if you want to call them something like ",", do it in the legend section).
+line 29 : Unknown junk in object section (possibly: sprites have to be 5 pixels wide and 5 pixels high exactly. Or maybe: the main names for objects have to be words containing only the letters a-z0.9 - if you want to call them something like ",", do it in the legend section).
+line 30 : Unknown junk in object section (possibly: sprites have to be 5 pixels wide and 5 pixels high exactly. Or maybe: the main names for objects have to be words containing only the letters a-z0.9 - if you want to call them something like ",", do it in the legend section).
+line 31 : Unknown junk in object section (possibly: sprites have to be 5 pixels wide and 5 pixels high exactly. Or maybe: the main names for objects have to be words containing only the letters a-z0.9 - if you want to call them something like ",", do it in the legend section).
+line 36 : Unknown junk in spritematrix for object TREASURE.
+line 45 : Unknown junk in spritematrix for object GOAL.
+line 50 : Was looking for color for object TREASUREONGOAL, got "lime" instead.
+line 52 : Unknown junk in spritematrix for object TREASUREONGOAL.
+line 17 : Sprite graphics must be 5 wide and 5 high exactly.
+line 33 : Sprite graphics must be 5 wide and 5 high exactly.
+line 41 : Sprite graphics must be 5 wide and 5 high exactly.
+line 49 : color not specified for object "treasureongoal".
+line 49 : Sprite graphics must be 5 wide and 5 high exactly.
+line 88 : In a rule, each pattern to match on the left must have a corresponding pattern on the right of equal length (number of cells).
+Errors detected during compilation; the game may not work correctly.
+Return a repaired version of the code that addresses these errors. Return your code in full, inside a ```plaintext code block.

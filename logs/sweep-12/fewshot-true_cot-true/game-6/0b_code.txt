@@ -1,0 +1,147 @@
+To create a complete PuzzleScript game, we need to determine the game's theme, mechanics, and goals. Here is a structured plan:
+
+1. **Game Theme**: Let's make a game called "Alien Escape," where the player is an alien trying to collect energy orbs and escape through a portal to win.
+
+2. **Objects**: We'll have the following objects:
+   - `Background`: Basic tile for empty spaces.
+   - `Alien`: The player character.
+   - `Wall`: Impassable obstacles.
+   - `EnergyOrb`: Collectible items.
+   - `Portal`: The goal to reach after collecting all EnergyOrbs.
+   - `ForceField`: Blocks passage until all EnergyOrbs are collected (it will disappear then).
+
+3. **Mechanics**:
+   - The player (Alien) moves around the level, collecting all EnergyOrbs.
+   - Once all EnergyOrbs are collected, the ForceField disappears, allowing entry to the Portal.
+
+4. **Sounds and Visuals**:
+   - Unique designs for each object to make the game visually appealing.
+   - Sound effects for collecting an orb.
+
+5. **Win Conditions**: The level is completed when the player reaches the Portal after collecting all EnergyOrbs.
+
+6. **Levels**: A few simple levels to demonstrate the game mechanics.
+
+Here's the complete code for the game "Alien Escape":
+
+```plaintext
+title Alien Escape
+author PuzzleScript Designer
+
+========
+OBJECTS
+========
+
+Background
+darkblue
+
+Alien
+green lightgreen
+..0..
+.000.
+.0.0.
+00000
+.0.0.
+
+Wall
+darkgray gray
+00000
+00000
+11111
+00000
+00000
+
+EnergyOrb
+yellow
+..0..
+.010.
+00100
+.010.
+..0..
+
+Portal
+purple pink
+.....
+..0..
+.000.
+..0..
+.....
+
+ForceField
+lightblue
+..1..
+.111.
+11111
+.111.
+..1..
+
+=======
+LEGEND
+=======
+
+. = Background
+P = Alien
+# = Wall
+O = EnergyOrb
+X = Portal
+F = ForceField
+
+=========
+SOUNDS
+=========
+
+collect 87913214
+
+================
+COLLISIONLAYERS
+================
+
+Background
+EnergyOrb, Portal
+Alien, Wall, ForceField
+
+======
+RULES
+======
+
+[> Player | EnergyOrb] -> [> Player |] collect
+
+[> Player | Portal] -> [> Player | Portal] WIN
+
+(no forcefields after collecting all orbs)
+[ Player | no EnergyOrb | ForceField] -> [Player]
+
+==============
+WINCONDITIONS
+==============
+
+All Player on Portal
+
+=======
+LEVELS
+=======
+
+#######
+#.....#
+#.#.#.#
+#.OPO.#
+#.###.#
+#...X.#
+#######
+
+#######
+#.....#
+#.###.#
+#O.#.O#
+#.F#F.#
+#P..X.#
+#######
+```
+
+**Explanation**:
+- **Objects**: The game contains a series of tiles representing walls, the player (Alien), orbs, a portal, and forcefields. 
+- **Rules**: Players can collect orbs, and the forcefields only disappear once all orbs are collected, allowing the player to reach the portal.
+- **Win Condition**: The player wins by standing on the Portal after collecting all EnergyOrbs.
+- **Levels**: The levels demonstrate basic mechanics, with increasing complexity due to barriers and forcefields. 
+
+This code provides a simple yet engaging puzzle experience using the PuzzleScript platform.

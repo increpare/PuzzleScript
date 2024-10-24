@@ -1,0 +1,101 @@
+```plaintext
+title Block Pusher
+author Anonymous
+
+========
+OBJECTS
+========
+
+Background
+lightgrey
+.....
+.....
+.....
+.....
+.....
+
+Wall
+darkgrey
+.....
+.....
+.....
+.....
+.....
+
+Player
+green
+.....
+.....
+..0..
+.....
+.....
+
+Target
+#FFFF00
+.....
+..0..
+.000.
+..0..
+.....
+
+Crate
+orange
+.....
+.000.
+.0.0.
+.0.0.
+.....
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Player
+* = Crate
+O = Target
+@ = Crate and Target
+
+=======
+SOUNDS
+=======
+
+Crate MOVE 44289704
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Target
+Player, Wall, Crate
+
+======
+RULES
+======
+
+[ > Player | Crate ] -> [ > Player | > Crate ]
+
+==============
+WINCONDITIONS
+==============
+
+All Target on Crate
+
+=======
+LEVELS
+=======
+
+#####
+#...#
+#*P*#
+#...#
+##O##
+#####
+```
+**Explanation of Changes:**
+
+1. In the `Target` object definition, the stray `lightyellow` color name is removed and replaced with the actual `#FFFF00` color value. The hex color code #FFFF00 (yellow) was previously specified on line 34 but `lightyellow` (line 33) was incorrectly specified and removed.
+   
+2. Error messages commented on object "target" not having color specified, the modification ensures the correct color is assigned to the target object.

@@ -1,0 +1,142 @@
+SYSTEM PROMPT:
+You are a game designer, familiar with the PuzzleScript game description language. 
+
+USER PROMPT:
+The following PuzzleScript game code:
+```plaintext
+Title: Treasure Hunter
+
+Author: Your Name
+
+Homepage: http://www.example.com
+
+========
+OBJECTS
+========
+
+Background
+lightgray
+00000
+00000
+00000
+00000
+00000
+
+Player
+Red
+.....
+..0..
+.000.
+..0..
+.....
+
+Wall
+DarkGray
+.....
+.....
+.....
+.....
+.....
+
+Treasure
+Gold
+.000.
+.010.
+00000
+.010.
+.000.
+
+Goal
+Green
+.....
+.000.
+.0.0.
+.000.
+.....
+
+========
+LEGEND
+========
+
+. = Background
+P = Player
+# = Wall
+T = Treasure
+G = Goal
+
+========
+SOUNDS
+========
+
+SOUND_FOUND
+trebleUp
+P Moved T > appear G:
+    150
+
+========
+RULES
+========
+
+[> Player | Treasure] -> [Player | Goal]
+
+[Player|Goal]->[] // clear goal to advance
+
+========
+COLLISIONLAYERS
+========
+
+Background
+Player
+Wall
+Treasure
+Goal
+
+========
+WINCONDITIONS
+========
+
+No Treasure
+
+========
+LEVELS
+========
+
+/0
+#####
+#...#
+#P.T#
+#...#
+##### 
+
+/1
+#######
+#.....#
+#.#.#.#
+#.#.T.#
+#P#.#G#
+#.....#
+#######
+
+/2
+#########
+#..T..#.#
+#.#.##..#
+#...##..#
+#.P..G###
+#...T...#
+#########
+
+========
+
+```
+produced the following console output:
+=================================
+line 36 : Was looking for color for object TREASURE, got "gold" instead.
+line 37 : Trying to access color number 0 from the color palette of sprite TREASURE, but there are only 0 defined in it.
+line 38 : Trying to access color number 0 from the color palette of sprite TREASURE, but there are only 0 defined in it.
+line 38 : Trying to access color number 1 from the color palette of sprite TREASURE, but there are only 0 defined in it.
+line 39 : Trying to access color number 0 from the color palette of sprite TREASURE, but there are only 0 defined in it.
+line 40 : Trying to access color number 0 from the color palette of sprite TREASURE, but there are only 0 defined in it.
+too many errors, aborting compilation
+Errors detected during compilation; the game may not work correctly.
+Return a repaired version of the code that addresses these errors. Return your code in full, inside a ```plaintext code block.

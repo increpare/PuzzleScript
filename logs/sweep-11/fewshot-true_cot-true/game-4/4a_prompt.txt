@@ -1,0 +1,983 @@
+SYSTEM PROMPT:
+You are a game designer, familiar with the PuzzleScript game description language. Here are some example games, for inspiration (do not reproduce these games exactly):
+
+title By Your Side
+author Alan Hazelden
+homepage www.draknek.org
+
+require_player_movement
+key_repeat_interval 0.12
+
+(
+
+A port of alan hazelden's game, By Your Side, in 6 lines of code, made with the permission of the author -
+
+the original is here
+http://www.draknek.org/games/by-your-side/
+
+)
+
+========
+OBJECTS
+========
+
+(Objects in all scenes)
+
+Grass .
+darkgreen green
+00000
+01000
+00000
+00010
+00000
+
+Player_Casual P
+black pink gray
+..0..
+..1..
+.222.
+..2..
+.2.2.
+
+TargetMain T
+yellow
+00000
+0...0
+0...0
+0...0
+00000
+
+(Initial Scenes)
+
+GirlFriend G
+pink red
+..0..
+.010.
+..1..
+.111.
+.0.0.
+
+Tree #
+darkbrown lightgreen
+.111.
+11111
+.111.
+..0..
+..0..
+
+(Wedding Scene)
+
+Player_Formal Q
+black pink white
+..0..
+..1..
+.020.
+..0..
+.0.0.
+
+WoodenFloor ,
+brown
+00000
+00000
+00000
+00000
+00000
+
+ChurchWall H
+darkbrown brown
+11101
+00000
+10111
+00000
+11101
+
+Chair C
+darkbrown brown
+11111
+11101
+11101
+00001
+01101
+
+Altar A
+gray
+.....
+00000
+.000.
+.000.
+.000.
+
+Spectator1 B
+black pink white
+..0..
+..1..
+.020.
+..0..
+.0.0.
+
+Spectator2 D
+purple pink white
+..0..
+..1..
+10001
+.000.
+00000
+
+Wife_Wedding W
+white pink
+..1..
+.000.
+.101.
+.000.
+00000
+
+(Post Wedding Scene)
+
+house @
+black grey red
+..0..
+.000.
+00000
+.111.
+.121.
+
+pavement `
+darkblue
+
+Road '
+gray white
+00000
+00000
+01110
+00000
+00000
+
+Wife_Repulsed X
+white pink
+..1..
+.000.
+.101.
+.000.
+00000
+
+(grave scene)
+
+gravedirt ~
+green brown
+01001
+10000
+00100
+00001
+01000
+
+grave R
+lightgray darkgray grey
+.111.
+10201
+12221
+10201
+10001
+
+coffin F
+darkbrown brown black
+.000.
+01210
+02220
+01210
+02220
+
+(final scene)
+
+Wife_Dying Y
+white pink
+..1..
+.000.
+.101.
+.000.
+00000
+
+Wife_Coffin
+darkbrown brown black
+.000.
+01210
+02220
+01210
+02220
+
+ColdFeet I
+black
+
+=======
+LEGEND
+=======
+
+Target = TargetMain or Road
+Player = Player_Casual or Player_Formal
+Background = Grass or WoodenFloor or Pavement or GraveDirt
+Spectator = Spectator1 or Spectator2
+Obstacle = House or Spectator or Chair or Tree or Altar or Grave or Coffin or Wife_Coffin or ChurchWall
+Wife_Attracted = Girlfriend or Wife_Wedding or Wife_Dying
+Wife = Wife_Attracted or Wife_Repulsed or Wife_Coffin
+Person = Player or Wife
+GrassyTarget = Grass and TargetMain
+E = GrassyTarget
+
+=========
+SOUNDS
+=========
+
+Player cantmove 82269707
+endlevel 54461500
+startgame 10582309
+endgame 66004102
+Wife_Repulsed move 44043907
+sfx0 16417502
+
+================
+COLLISIONLAYERS
+================
+
+ColdFeet
+Background
+Target
+Obstacle, Person
+
+======
+RULES
+======
+
+(game logic)
+
+[ > Player ] [ Wife_Attracted ] -> [ > Player ] [ > Wife_Attracted ] 
+[ > Player ] [ Wife_Repulsed ] -> [ > Player ] [ < Wife_Repulsed ] 
+
+late [ Wife_Dying ] -> [ Wife_Coffin ] 
+late [ Player | Wife_Coffin ] -> [ Player | Wife_Dying ] 
+
+(level-specific events)
+late [ ColdFeet Player ] -> [ Player ] message ...
+late [ Wife Road ] -> sfx0
+
+==============
+WINCONDITIONS
+==============
+
+all person on target
+
+=======
+LEVELS
+=======
+
+....#################
+...###...#....#######
+..##.........##.....#
+.##...#######.......#
+##....#....###......#
+#...###.............#
+#...#...#...#..######
+#...#...#..##.P.....#
+#....####.T##..######
+##......#...#.......#
+###..##..#...#...##.#
+#.##..#..##..#...#..#
+#..#..#....###...#..#
+#..##........#......#
+#...##...##...##....#
+#.......##.....######
+.##############......
+
+....#################
+...###...#....#######
+..##.........##.....#
+.##...#######.......#
+##....#....###......#
+#...###.............#
+#...#...#...#..######
+#...#...#..##..T...T#
+#....####.P##G.######
+##......#...#.......#
+###..##..#...#...##.#
+#.##..#..##..#...#..#
+#..#..#....###...#..#
+#..##........#......#
+#...##...##...##....#
+#.......##.....######
+.##############......
+
+....#################
+...###...#....#######
+..##.........##.....#
+.##...#######.......#
+##....#....###......#
+#...###.............#
+#...#T..#...#..######
+#...#T..#..##..P...G#
+#....####..##..######
+##......#...#.......#
+###..##..#...#...##.#
+#.##..#..##..#...#..#
+#..#..#....###...#..#
+#..##........#......#
+#...##...##...##....#
+#.......##.....######
+.##############......
+
+HHHHHHHHHHHHHHHHHHHHH
+,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,
+,CCCCCCCCCCCCCCCCCCCC
+,CCCCCCCCCCCCCCCCCCCC
+A,B,,D,B,D,,B,D,,,B,C
+A,T,,I,,,I,,,,I,Q,,,C
+A,T,,,,,,,,,,,,,W,,,C
+,CCCCCCCCCCCCCCCCCCCC
+,CCCCCCCCCCCCCCCCCCCC
+,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,
+HHHHHHHHHHHHHHHHHHHHH
+
+`````````@@@@````````
+`````````@TT@````````
+``@@@@@@`@`@@````````
+``@````@`@`@@@@``````
+``@`@@`@`@````@``````
+``@`@@`@`@`@@@@``````
+``@`@@`@@@P@`````````
+``@```````W@@@@@@````
+``@`@@@@@@``````@````
+``@`@````@`@@@@`@````
+``@`@````@`@``@`@````
+@@@@@@@@@@@@@@@@@@@@@
+'''''''''''''''''''''
+@@@@@@@@@@@@@@@@@@@@@
+`````````````````````
+
+`````````@@@@````````
+`````````@PX@````````
+``@@@@@@`@`@@````````
+``@````@`@`@@@@``````
+``@`@@`@`@````@``````
+``@`@@`@`@`@@@@``````
+``@`@@`@@@T@`````````
+``@```````T@@@@@@````
+``@`@@@@@@``````@````
+``@`@````@`@@@@`@````
+``@`@````@`@``@`@````
+@@@@@@@@@@@@@@@@@@@@@
+'''''''''''''''''''''
+@@@@@@@@@@@@@@@@@@@@@
+`````````````````````
+
+`````````@@@@````````
+`````````@TT@````````
+``@@@@@@`@`@@````````
+``@````@`@`@@@@``````
+``@`@@`@`@````@``````
+``@`@@`@`@`@@@@``````
+``@`@@`@@@P@`````````
+``@```````X@@@@@@````
+``@`@@@@@@``````@````
+``@`@````@`@@@@`@````
+``@`@````@`@``@`@````
+@@@`@@@@@@`@@@@`@@@@@
+'''''''''''''''''''''
+@@@@@@@@@@@@@@@@@@@@@
+`````````````````````
+
+RRRRRRR~RRRRRR~RRRRR
+R~~~~~R~R~~~~R~R~~~~
+R~~~~~~~R~~~~R~R~~~~
+R~~~~~R~R~~~~R~R~~~~
+RRRRRRR~RR~~RR~RRRRR
+R~~~~BDBDBDBDBD~~~~R
+RQ~~~~~i~i~~i~~~~EFR
+RRRRRRRRRRRRRRRRRRRR
+R~~R~~~~~~~~~~~R~~~~
+R~~R~~~~~~~~~~~R~~~~
+R~~RRR~~~RRRR~~R~~~~
+R~~~~~~~~R~~~~~R~~~R
+R~~R~~~~~R~~R~~~~~~R
+R~~R~~~~~R~~R~~~~~~R
+RRRRRRRRRR~~RRRRRRRR
+
+RRRRRR~~~~~~~~~~~~~~
+R~~~~R~~~~~RRRRRR~~~
+R~QY~R~~~~~R~~~~R~~~
+R~~~~R~~RRRRR~R~R~~~
+R~~~~RRRR~~R~~R~R~~~
+R~~~~~~~~~~R~~R~RRR~
+RRRRRRRRR~~R~~~~~~R~
+~~R~~~~~R~~R~RRR~~R~
+~~R~~R~~R~~RRR~R~~R~
+~~R~~R~~~~~~~~~~~~R~
+~~R~~R~~RR~~~~~RRRR~
+~~R~~R~~~RRRRRTTR~~~
+~~R~~R~~~R~~~~~~R~~~
+~~R~~R~~~~~RRR~~R~~~
+~~RRRRRRRRRR~RRRR~~~
+
+RRRRRR~~~~~~~~~~~~~~
+R~~~~R~~~~~RRRRRR~~~
+R~~~~R~~~~~R~~~~R~~~
+R~~~~R~~RRRRR~R~R~~~
+R~~~~RRRR~~R~~R~R~~~
+R~~~~~~~~~~RT~R~RRR~
+RRRRRRRRR~~RT~~~~~R~
+~~R~~~~~R~~R@RRR~~R~
+~~R~~R~~R~~RRR~R~~R~
+~~R~~R~~~~~~~~~~~~R~
+~~R~~R~~RR~~~~~RRRR~
+~~R~~R~~~RRRRRYQR~~~
+~~R~~R~~~R~~~~~~R~~~
+~~R~~R~~~~~RRR~~R~~~
+~~RRRRRRRRRR~RRRR~~~
+
+message Commiserations
+
+message It is over
+
+title Many parallel players, unlimited rigidbodies
+author increpare
+homepage www.increpare.com
+
+verbose_logging
+
+(
+
+This is a sample of 
+
+- Unlimited rigid bodies
+- Multiple players moving in parallel
+
+It's made as an example for the extended rigid body tutorial here:
+
+https://www.puzzlescript.net/Documentation/rigidbodies.html
+
+)
+
+========
+OBJECTS
+========
+
+Background
+green
+
+Wall
+BROWN DARKBROWN
+00010
+11111
+01000
+11111
+00010
+
+Player
+Black Orange White Blue
+.000.
+.111.
+22222
+.333.
+.3.3.
+
+ Crate
+Yellow orange
+00000
+01110
+01110
+01110
+00000
+
+
+(The directional overlays bellow establish connections between crates)
+
+ Crate_U
+orange
+.000.
+.....
+.....
+.....
+.....
+
+ Crate_D
+orange
+.....
+.....
+.....
+.....
+.000.
+
+ Crate_L
+orange
+.....
+0....
+0....
+0....
+.....
+
+ Crate_R
+orange
+.....
+....0
+....0
+....0
+.....
+
+CanMove
+red
+.....
+.....
+..0..
+.....
+.....
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Player
+
+w = Crate and Crate_U
+x = Crate and Crate_D
+a = Crate and Crate_L
+d = Crate and Crate_R
+
+e = Crate and Crate_U and Crate_L
+z = Crate and Crate_D and Crate_L
+q = Crate and Crate_U and Crate_R
+c = Crate and Crate_D and Crate_R
+
+r = Crate and Crate_L and Crate_R
+t = Crate and Crate_D and Crate_U
+
+1 = Crate and Crate_D and Crate_L and Crate_R
+2 = Crate and Crate_U and Crate_L and Crate_R
+3 = Crate and Crate_U and Crate_D and Crate_L
+4 = Crate and Crate_U and Crate_D and Crate_R
+
+0 = Crate and Crate_U and Crate_D and Crate_L and Crate_R
+
+5 = Crate
+
+ Crate_Connection = Crate_U or Crate_D or Crate_L or Crate_R
+
+Pusher = Player or Crate
+Pushable = Crate 
+Solid = Crate or Player
+
+=======
+SOUNDS
+=======
+
+ Crate MOVE 36772507
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Player, Wall, Crate
+ Crate_U
+ Crate_D
+ Crate_L
+ Crate_R
+CanMove
+
+======
+RULES
+======
+
+(For making maps easily: uncomment out the next few lines + press action to discard all boundaries and recreate them)
+
+( [ action player ] [ Crate_connection ] -> [ action player ] [ ] )
+( up [ action player ] [ Crate | Crate ] -> [ action player ] [ Crate Crate_u | Crate Crate_d ] )
+( right [ action player ] [ Crate | Crate ] -> [ action player ] [ Crate Crate_r | Crate Crate_l ] )
+
+
+(Step 1: propagate motions forward)
+[ > Pusher | Pushable ] -> [ > Pusher | > Pushable ]
++ up [ moving Crate Crate_U | Crate ] -> [ moving Crate Crate_U | moving Crate ]
++ down [ moving Crate Crate_D | Crate ] -> [ moving Crate Crate_D | moving Crate ]
++ left [ moving Crate Crate_L | Crate ] -> [ moving Crate Crate_L | moving Crate ]
++ right [ moving Crate Crate_R | Crate ] -> [ moving Crate Crate_R | moving Crate ]
+
+
+(Step 1: If a crate can't move, we have to back-propagate the can't-move-ness, including possibly through players)
+[ > Solid | wall ] -> [ Solid | wall ]
+
+[ > Solid | stationary Solid ] -> [ Solid | Solid ]
++ up [ moving Crate Crate_U | stationary Crate ] -> [ Crate Crate_U | Crate ]
++ down [ moving Crate Crate_D | stationary Crate ] -> [ Crate Crate_D | Crate ]
++ left [ moving Crate Crate_L | stationary Crate ] -> [ Crate Crate_L | Crate ]
++ right [ moving Crate Crate_R | stationary Crate ] -> [ Crate Crate_R | Crate ]
+
+
+(Step 3: Mark all crates that are still moving as possibly being able to move)
+[ moving Pushable ] -> [ Pushable CanMove ]
+
+(Step 4: redo Step 1, but only through things that are marked as being possibly able to move)
+[ > Pusher | CanMove Pushable ] -> [ > Pusher | CanMove > Pushable ]
++ up [ moving Crate Crate_U | CanMove Crate ] -> [ moving Crate Crate_U | CanMove moving Crate ]
++ down [ moving Crate Crate_D | CanMove Crate ] -> [ moving Crate Crate_D | CanMove moving Crate ]
++ left [ moving Crate Crate_L | CanMove Crate ] -> [ moving Crate Crate_L | CanMove moving Crate ]
++ right [ moving Crate Crate_R | CanMove Crate ] -> [ moving Crate Crate_R | CanMove moving Crate ]
+
+(Step 5: remove all the CanMove tags)
+[ CanMove ] -> [ ]
+
+(Step 6: move connections along with the crates themselves)
+[ moving Crate stationary Crate_connection ] -> [ moving Crate moving Crate_connection ]
+
+
+==============
+WINCONDITIONS
+==============
+
+=======
+LEVELS
+=======
+
+###############
+#..ca.........#
+#.ce....ca....#
+#.t...d1e.....#
+#.w....w......#
+#....d1ap5.dz.#
+#....pw...5.w5#
+#......dz.....#
+#.......t..dz.#
+#..x..cre...w.#
+#..w..w...5...#
+#.............#
+###############
+
+
+title Simple Block Pushing Game
+author increpare
+homepage www.puzzlescript.net
+
+========
+OBJECTS
+========
+
+Background
+LIGHTGREEN GREEN
+11111
+01111
+11101
+11111
+10111
+
+
+Target
+DarkBlue
+.....
+.000.
+.0.0.
+.000.
+.....
+
+Wall
+BROWN DARKBROWN
+00010
+11111
+01000
+11111
+00010
+
+Player
+Black Orange White Blue
+.000.
+.111.
+22222
+.333.
+.3.3.
+
+BlueCrate B
+lightblue
+00000
+0...0
+0...0
+0...0
+00000
+
+
+OrangeCrate O
+Orange
+00000
+0...0
+0...0
+0...0
+00000
+
+
+=======
+LEGEND
+=======
+
+Crate = OrangeCrate or BlueCrate
+. = Background
+# = Wall
+P = Player
+
+
+=======
+SOUNDS
+=======
+
+Crate MOVE 36772507
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Target
+Player, Wall, Crate
+
+======
+RULES
+======
+
+[ >  Player | Crate ] -> [  >  Player | > Crate  ]
+
+
+[ > OrangeCrate | OrangeCrate ] -> [ > OrangeCrate | > OrangeCrate ]
+[ > OrangeCrate | BlueCrate ] -> [ > OrangeCrate | > BlueCrate ]
+[ > BlueCrate | OrangeCrate ] -> [ > BlueCrate | > OrangeCrate ]
+[ > BlueCrate | BlueCrate ] -> [ > BlueCrate | > BlueCrate ]
+
+==============
+WINCONDITIONS
+==============
+
+=======
+LEVELS
+=======
+
+################
+#..............#
+#..............#
+#.P.BOBOBOBOB..#
+#..............#
+#..............#
+################
+
+
+
+title EYE EYE EYE
+author increpare
+homepage www.puzzlescript.net
+
+========
+OBJECTS
+========
+
+Background
+lightgreen green
+11111
+01111
+11101
+11111
+10111
+
+Target
+darkblue
+.....
+.000.
+.0.0.
+.000.
+.....
+
+Wall
+brown darkbrown
+00010
+11111
+01000
+11111
+00010
+
+Player
+black orange white blue
+.000.
+.111.
+22222
+.333.
+.3.3.
+
+EyeBall
+white blue red
+.000.
+00100
+01110
+20102
+.202.
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Player
+O = EyeBall
+
+=======
+SOUNDS
+=======
+
+sfx0 67117309
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Target
+Player, Wall, EyeBall
+
+======
+RULES
+======
+
+[ Eyeball | ... | Player ] -> [ > Eyeball | ... | Player ] sfx0
+
+==============
+WINCONDITIONS
+==============
+
+(There's no way to win against a floating eyeball :S )
+
+=======
+LEVELS
+=======
+
+#########
+#.......#
+#....O..#
+#.P.....#
+#.......#
+#.......#
+#########
+
+
+USER PROMPT:
+The following PuzzleScript game code:
+```plaintext
+title Coin Collector
+author AI GameDesigner
+homepage www.puzzlescript.net
+
+========
+OBJECTS
+========
+
+Background
+lightgray
+.....
+.....
+.....
+.....
+.....
+
+Player
+darkblue
+..0..
+.000.
+.000.
+..0..
+.....
+
+Wall
+brown darkbrown
+11111
+11111
+11111
+11111
+11111
+
+Coin
+yellow orange
+.000.
+.0.0.
+00000
+.0.0.
+.000.
+
+Trap
+red black
+.....
+..1..
+.111.
+..1..
+.....
+
+=======
+LEGEND
+=======
+
+. = Background
+P = Player
+# = Wall
+C = Coin
+T = Trap
+
+=======
+SOUNDS
+=======
+
+sfx0 20105505 (Collect Coin Sound)
+sfx1 40100001 (Hit Trap Sound)
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Coin
+Trap
+Player, Wall
+
+======
+RULES
+======
+
+[ > Player | Coin ] -> [ > Player | ] sfx0
+[ > Player | Trap ] -> RESTART sfx1
+
+==============
+WINCONDITIONS
+==============
+
+no Coin
+
+=======
+LEVELS
+=======
+
+#..C.....#
+#.######.#
+#........P#
+####.######
+#.......#C#
+#..###..#T#
+#....##...#
+#C##.....##
+###T#######
+
+#......C..#
+#.###..#.##
+#.#..T#.#C#
+#..P.#..#.#
+##.###.##.#
+#......#..#
+#.##T#.....#
+#.....#..##
+######.####
+
+message Congratulations! You have collected all the coins!
+
+```
+compiled, but a solvability check returned the following error:
+ Level 0 is not solvable. Please repair it.Found solution for level 1 in 55 iterations: 1,2,2,3,3,3,3,2,3,3,3,0,0,0,0,2,2,2,2,1,1,1,0,1,1,1,1,0,0,1,0,0,0,3,3,3,3,3,3. 
+Return your code in full, inside a ```plaintext code block.

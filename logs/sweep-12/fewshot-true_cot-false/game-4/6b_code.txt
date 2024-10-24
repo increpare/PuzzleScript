@@ -1,0 +1,76 @@
+Here's an updated and corrected version of your PuzzleScript game code:
+
+```plaintext
+title Blocked Path
+author YourName
+
+========
+OBJECTS
+========
+
+Background
+lightgrey
+
+Wall
+darkgrey
+
+Player
+green
+
+Target
+red
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Player
+T = Target
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Wall
+Target
+Player
+
+======
+RULES
+======
+
+[ > Player | No Target ] -> [ Player | Target ]
+
+==============
+WINCONDITIONS
+==============
+
+Player on Target
+
+=======
+LEVELS
+=======
+
+message Welcome to Blocked Path!
+##########
+#........#
+#..####..#
+#..#..#..#
+#..#P.#..#
+#..#..#..#
+#..##....#
+#....T...#
+##########
+
+```
+
+### Changes Made:
+1. **COLLISIONLAYERS Section**: Added the missing `COLLISIONLAYERS` section to define object layers.
+2. **Rules Section**: Added a sample rule to showcase basic player movement onto the target. You might need to expand this based on your game's requirements.
+3. **Win Conditions**: Corrected syntax and ensured the win condition checks for the Player being on the Target. 
+4. Checked the player character exists per the legend and object definitions. 
+
+This should fix the errors and allow the game to run correctly. Adjust the `RULES` as needed to match your intended gameplay.

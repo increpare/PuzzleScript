@@ -1,0 +1,138 @@
+SYSTEM PROMPT:
+You are a game designer, familiar with the PuzzleScript game description language. 
+
+USER PROMPT:
+The following PuzzleScript game code:
+```plaintext
+title Sokoban Puzzle
+
+author YourName
+
+homepage http://www.yourwebsite.com
+
+========
+OBJECTS
+========
+
+Background
+    255 255 255 255 255
+    255 255 255 255 255
+    255 255 255 255 255
+    255 255 255 255 255
+    255 255 255 255 255
+
+Player
+    255 000 000  000 000
+    000 255 000  000 000
+    000 000 255  000 000
+    255 000 000  000 000
+    000 000 255  000 000
+
+Crate
+    165 042 042  165 042
+    042 165 165  042 165
+    165 042 042  165 042
+    042 165 165  042 165
+    165 165 165  165 042
+
+Wall
+    128 128 128  128 128
+    128 128 128  128 128
+    128 128 128  128 128
+    128 128 128  128 128
+    128 128 128  128 128
+
+Target
+    000 255 000  255 000
+    000 255 000  255 000
+    000 255 000  255 000
+    000 255 000  255 000
+    000 255 000  255 000
+
+CrateOnTarget
+    000 100 000  100 000
+    000 100 000  100 000
+    000 100 000  100 000
+    000 100 000  100 000
+    000 100 000  100 000
+
+=======
+
+LEGEND
+=======
+
+. = Target
+# = Wall
+@ = Player
+o = Crate
+O = CrateOnTarget
+
+=============
+
+SOUNDS
+=============
+
+player_move
+    sfx blip 
+
+crate_move
+    sfx push
+
+=============
+
+RULES
+=============
+[Player | Crate] -> [ ] | [Player CrateMove]
+CrateMove | Target -> CrateOnTarget | Target
+CrateMove | Background -> Crate | Background
+CrateOnTarget | Target -> CrateMove | Target
+
+=============
+
+WINCONDITIONS
+=============
+
+All CrateOnTarget on Target
+
+=============
+
+LEVELS
+=============
+
+[Level 1]
+#######
+#     #
+# .o  #
+#     #
+#  @  #
+#######
+
+[Level 2]
+#######
+#     #
+# .o. #
+#     #
+#  @  #
+#######
+
+[Level 3]
+########
+# @    #
+#  oo  #
+# .  o #
+#    . #
+########
+
+```
+produced the following console output:
+=================================
+line 12 : Was looking for color for object BACKGROUND, got "255 " instead.
+line 12 : Was looking for color for object BACKGROUND, got "255" instead.
+line 13 : Trying to access color number 2 from the color palette of sprite BACKGROUND, but there are only 0 defined in it.
+line 13 : Trying to access color number 5 from the color palette of sprite BACKGROUND, but there are only 0 defined in it.
+line 13 : Sprites must be 5 wide and 5 high.
+line 14 : Trying to access color number 2 from the color palette of sprite BACKGROUND, but there are only 0 defined in it.
+line 14 : Trying to access color number 5 from the color palette of sprite BACKGROUND, but there are only 0 defined in it.
+too many errors, aborting compilation
+Errors detected during compilation; the game may not work correctly.
+Return a repaired version of the code that addresses these errors. First, reason about your task and determine the best plan of action. Then, write your code. Return your code in full, inside a ```plaintext code block.

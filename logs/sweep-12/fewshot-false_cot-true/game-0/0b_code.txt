@@ -1,0 +1,101 @@
+Creating a complete PuzzleScript game requires a few essential components: metadata, objects, collision/layer rules, legend, sounds, and levels. Let's consider a simple Sokoban-style puzzle game where you push boxes into target areas. 
+
+**Plan of Action:**
+
+1. **Metadata**: Define the title, author, and other general game settings.
+2. **Objects**: Define the playfield objects such as the player, walls, boxes, and targets.
+3. **Legend**: Create a legend to assign symbols to each object for easy level design.
+4. **Sounds**: Optionally define sounds for player actions, such as moving or hitting a wall.
+5. **Collision/Layer Rules**: Define how objects interact with each other and their layering.
+6. **Levels**: Design a few puzzle levels that utilize the objects and rules defined.
+
+Here’s the code for a simple PuzzleScript game following the Sokoban concept:
+
+```plaintext
+title Sokoban Puzzle
+author Game Designer
+homepage https://example.com
+graphics
+%%%%%
+
+=======
+
+background_color 0 0 0
+text_color 255 255 255
+
+========
+
+objects
+Samira Samira pushing a series of boxes to the target area!
+. 0 0 255
+# 85 85 85
+T 120 120 130
+X 255 0 0
+O 255 255 0
+
+00000
+0...0
+0.X.0
+0...0
+00000
+
+=======
+
+player Samira
+% Samira
+. Background - green
+# Wall - grey
+X Box - red
+O Target - yellow
+
+========
+
+collisionlayers
+Background
+Player, Box, Target
+
+======
+
+sound
+Lethargy is that little void that grows inside of you
+Push-a-rundll, push a box around, got a goal for find ya all needs desire.
+
+====
+
+rules
+[ Samira | Box ] -> [ > Samira | > Box ]
+[ Samira | Box on Target ] -> [ > Samira | > Box on Target ]
+
+=======
+
+winconditions
+All Box on Target
+
+=======
+
+levels
+
+#####
+#...#
+#O#O#
+#X.X#
+#...#
+#####
+
+#####
+#.O.#
+#X.X#
+#.O.#
+#####
+```
+
+### Explanation:
+
+- **Metadata**: The title is "Sokoban Puzzle", it's authored by "Game Designer", and optional settings for homepage and colors are set.
+- **Objects**: There are five main objects: Player (Samira), Background (.), Wall (#), Box (X), and Target (O).
+- **Legend and Colors**: We've assigned colors and ASCII symbols to each object for visualization and easy representation in levels.
+- **Rules**: Include movement rules for the player (Samira) and interactions with boxes. If the player moves into a box, the box is pushed.
+- **Win Conditions**: The game identifies a win scenario when all boxes are on target spaces (O).
+- **Levels**: Two simple levels are created to demonstrate the game's mechanics. 
+
+This code provides a basic foundation and can be expanded with more complex levels, sounds, and refined rules for a deeper puzzle-solving experience.

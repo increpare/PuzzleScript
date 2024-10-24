@@ -1,0 +1,1274 @@
+SYSTEM PROMPT:
+You are a game designer, familiar with the PuzzleScript game description language. Here are some example games, for inspiration (do not reproduce these games exactly):
+
+title tiny treasure hunt 1.0
+author Weeble
+homepage www.twitter.com/weeble
+run_rules_on_level_start
+
+========
+OBJECTS
+========
+LowFloorRaw
+BLACK
+
+LowFloor1
+#111411 #191d19 #202020 #252725
+01011
+12310
+23320
+02321
+02110
+
+LowFloor2
+#111411 #191d19 #202020 #252725
+01001
+22312
+12331
+01310
+10101
+
+WallFacade
+#555555 #666666 #777777
+21221
+10011
+.....
+.....
+.....
+
+HighFloor
+#909090 #999999 #bbbbbb #cccccc
+33232
+31012
+20002
+31012
+32222
+
+LowPlayer
+#686868 #707070 #787878 #808080
+.....
+.....
+.232.
+.121.
+.0.0.
+
+HighPlayer
+#e8e8e8 #f0f0f0 #f8f8f8 #ffffff
+.232.
+.121.
+.0.0.
+.....
+.....
+
+Crate
+#999944 #88883a #777733
+10001
+00000
+10001
+22222
+22222
+
+HighCrate
+#dddd55 #eeee50 #cccc48
+10001
+00000
+10001
+22222
+22222
+
+BurntCrate
+#222222 #111111 #000000
+10001
+00000
+10001
+22222
+22222
+
+MeltingIce
+White LightBlue #9999ff #330000
+.33..
+3333.
+31013
+11330
+21112
+
+
+StaticIce
+White LightBlue #9999ff
+10002
+1...0
+0...1
+10012
+21122
+
+IceCubeN
+White LightBlue #9999ff
+10002
+1...0
+0...1
+10012
+21122
+
+IceCubeE
+White LightBlue #9999ff
+10002
+1...0
+0...1
+10012
+21122
+
+IceCubeS
+White LightBlue #9999ff
+10002
+1...0
+0...1
+10012
+21122
+
+IceCubeW
+White LightBlue #9999ff
+10002
+1...0
+0...1
+10012
+21122
+
+FirePit1
+#990000 #770000 #550000 #330000
+02111
+13321
+02321
+32110
+23121
+
+FirePit2
+#990000 #770000 #550000 #330000
+10311
+21233
+11021
+23213
+20122
+
+
+Pillar
+#cccccc #dddddd #eeeeee #ffffff #bbbbbb #aaaaaa
+32123
+33333
+02120
+22122
+01310
+
+IceCubeShadow
+RED
+.....
+.....
+..0..
+.....
+.....
+
+Coin
+WHITE #eeee55 #aaaa33
+.000.
+01112
+01212
+01112
+.222.
+
+
+StairsNorth
+#333333 #444444 #555555 #666666 #777777
+44444
+43334
+32223
+21112
+10001
+=======
+LEGEND
+=======
+. = LowFloorRaw
+" = HighFloor
+@ = LowPlayer and LowFloorRaw
+$ = Coin and HighFloor
+£ = Coin
+H = HighCrate and HighFloor
+: = WallFacade and FirePit1 and LowFloorRaw
+~ = WallFacade and LowFloorRaw
+# = Crate and LowFloorRaw
+W = Crate and LowFloorRaw and WallFacade
+! = FirePit1 and LowFloorRaw
+I = Pillar and HighFloor
+% = StaticIce and LowFloorRaw
+& = StaticIce and LowFloorRaw and WallFacade
+/ = StairsNorth and LowFloorRaw
+FirePit = FirePit1 or FirePit2
+LowFloor = LowFloor1 or LowFloor2
+Background = LowFloor or HighFloor or LowFloorRaw
+Player = LowPlayer or HighPlayer
+Obstacle = StairsNorth
+BlocksLow = Crate or HighFloor or StaticIce or Pillar or BurntCrate
+Pushable = Crate or StaticIce
+MovingIce = IceCubeE or IceCubeS or IceCubeW or IceCubeN
+IceCube = StaticIce or MovingIce
+Grounded = IceCube or LowPlayer or Crate
+
+=======
+SOUNDS
+=======
+
+Coin DESTROY 77169700
+Crate MOVE 24442507
+SFX0 98605308 ( Hiss )
+SFX1 89033504 ( Snap )
+SFX2 70543502 ( Plink )
+SFX3 34905302 ( Slam )
+SFX4 93355705 ( Squeak )
+SFX5 52776702 ( Grind )
+SFX6 86238705 ( Bounce )
+
+================
+COLLISIONLAYERS
+================
+
+Background
+StairsNorth, FirePit
+WallFacade
+Crate, IceCube, MovingIce, LowPlayer, MeltingIce, BurntCrate
+Pillar, HighPlayer, HighCrate, Coin
+IceCubeShadow
+
+======
+RULES
+======
+
+(Make stuff pretty)
+[ LowFloorRaw ] -> [ random LowFloor ]
+[ FirePit ] -> [ random FirePit ]
+
+(Pushing stuff)
+[ > LowPlayer | Pushable ] -> [ > LowPlayer | > Pushable ]
+[ > HighPlayer | HighCrate ] -> [ > HighPlayer | > HighCrate ]
+
+(Don't walk under pillars. Probably redundant.)
+[ > Grounded | Pillar ] -> [ Grounded | Pillar ]
+
+(Ice melts in lava)
+[ MeltingIce FirePit ] -> [ ]
+[ IceCube FirePit ] -> [ MeltingIce FirePit ] sfx0 again
+
+(Ice slides)
+RIGHT [ > StaticIce ] -> [ > IceCubeE ] sfx2
+DOWN [ > StaticIce ] -> [ > IceCubeS ] sfx2
+LEFT [ > StaticIce ] -> [ > IceCubeW ] sfx2
+UP [ > StaticIce ] -> [ > IceCubeN ] sfx2
+[ MovingIce no IceCubeShadow ] -> [ MovingIce IceCubeShadow ]
+RIGHT [ IceCubeE ] -> [ > IceCubeE ] again
+DOWN [ IceCubeS ] -> [ > IceCubeS ] again
+LEFT [ IceCubeW ] -> [ > IceCubeW ] again
+UP [ IceCubeN ] -> [ > IceCubeN ] again
+
+(Stop things from overlapping the stairs)
+[ > IceCube | Obstacle ] -> [ StaticIce | Obstacle ]
+[ > Crate | Obstacle ] -> [ Crate | Obstacle ]
+
+(Lava kills you)
+late [ LowPlayer FirePit ] -> [ FirePit ] sfx5 message Ouch, hot!
+
+(More ice rules)
+late [ MovingIce IceCubeShadow ] -> [ StaticIce ] sfx5
+late [ IceCubeShadow ] -> [ ]
+
+(Crates get charred in lava)
+late [ Crate FirePit ] -> [ BurntCrate FirePit ] sfx5
+
+(Player collects coins)
+[ > HighPlayer | Coin HighFloor ] -> [ | HighPlayer HighFloor ]
+[ > LowPlayer | Coin LowFloor ] -> [ | LowPlayer LowFloor ]
+
+(Player can climb stairs)
+UP [ > LowPlayer StairsNorth | HighFloor ] -> [ StairsNorth | HighPlayer HighFloor ] sfx6
+
+(Stop things from getting pushed up onto ledges)
+[ > Grounded | HighFloor ] -> [ Grounded | HighFloor ]
+
+(Players and crates fall)
+late [ HighPlayer no BlocksLow ] -> [ LowPlayer ] sfx1 again
+late [ HighCrate no BlocksLow ] -> [ Crate ] sfx1 again
+
+==============
+WINCONDITIONS
+==============
+
+No Coin
+
+=======
+LEVELS
+=======
+
+message 1. the outer walls
+
+""""""!!!"""
+"h""""..!"$"
+""""""#.!"""
+""""""..!"""
+i~~/i/..!:::
+"..."...!!!!
+i"""i.......
+"/~~"!!...#.
+i.@.i!!.....
+
+message 2. cold storage
+
+..........£
+.!!!!!!!!!.
+.!!!!!!!!!.
+.!!.%%%.!!.
+.!!%...%!!.
+.!!%.@.%!!.
+.!!%...%!!.
+.!!.%%%.!!.
+.!!!!!!!!!.
+.!!!!!!!!!.
+...........
+
+
+message 3. bifrost
+
+!!.@.""""!!
+!!%.."~/"!!
+!!.%.&..~!!
+!!%..%...!!
+!!.%.%.%.!!
+!!%..%..%!!
+!!.%.%.%.!!
+!!...%..%!!
+!!...%.%.!!
+!!$.."..%!!
+!!"""".%.!!
+
+
+message 4. clutter
+
+""""""""""$
+"""""""""""
+~~~~W~W~~::
+.%@.#..#.!!
+....#.#..!!
+!!!!"""""..
+!!!!"""""..
+....~/~~~..
+...........
+
+message 5. arena
+
+!"!!!!!!!!!"
+!~.."..""..:
+!...~../~$.!
+!"......@~.!
+!~...".....!
+!....~.%...!
+!....%.....!
+!."....%...!
+!.~......."!
+!.."......~!
+!".~..."...!
+!:!!!!!:!!!!
+
+
+message 6. the gauntlet
+
+
+..""."."."..!!!
+..w~."#".~#.!"!
+""...~.~#.."!~!
+~&..@......~!£!
+""....#"""."!.!
+~~...#."/"#~!"!
+.......~."..!:!
+
+
+message 7. throne room
+
+...#."$".#...
+..#.."""..#..
+!!.#.:::.#.!!
+$"!...!...!"$
+""!.!!!!!.!""
+~~!.!h"h!.!~~
+.#!!!"""!!!#.
+.....h"h.....
+"!!.."""..!!"
+""!..~/~..!""
+"""...@..."""
+:~~.%.%.%.~~:
+!...........!
+
+message Well done!
+
+
+title Manic Ammo
+author David Eastman
+homepage @eastmad
+
+========
+OBJECTS
+========
+
+Background
+gray
+
+Target
+darkgray gray lightgray white
+33333
+31112
+31002
+31002
+32222
+
+Wall
+BROWN
+
+Boom
+Red YELLOW orange
+.101.
+10001
+00200
+10001
+.101.
+
+
+Player
+PINK YELLOW BLACK
+.222.
+.000.
+22122
+.222.
+.2.2.
+
+
+CrateW
+Brown DarkBrown lightbrown
+11111
+12001
+11111
+12001
+11111
+
+CrateN
+Brown DarkBrown lightbrown
+11111
+12121
+10101
+10101
+11111
+
+CrateMineN
+Brown DarkBrown lightbrown darkblue
+11111
+12121
+10101
+10301
+11111
+
+CrateGunN
+Brown DarkBrown lightbrown darkred
+11111
+12121
+10101
+10301
+11111
+
+CrateGunS
+Brown DarkBrown lightbrown darkred
+11111
+12321
+10101
+10101
+11111
+
+
+CrateS
+Brown DarkBrown lightbrown
+11111
+10101
+10101
+12121
+11111
+
+CrateE
+Brown DarkBrown lightbrown
+11111
+10021
+11111
+10021
+11111
+
+
+Shell
+yellow orange
+..0..
+.000.
+.000.
+.000.
+.101.
+
+
+Bang
+Yellow LightRed
+.101.
+10001
+00000
+10001
+.101.
+
+GunN
+red lightred
+..0..
+..0..
+.101.
+00000
+.000.
+
+GunW
+red lightred
+...0.
+..100
+00000
+..100
+...0.
+
+GunS
+red lightred
+.000.
+00000
+.101.
+..0..
+..0..
+
+GunE
+red lightred
+.0...
+001..
+00000
+001..
+.0...
+
+InertMine
+darkblue blue lightblue
+.....
+.101.
+.020.
+.101.
+.....
+
+ActiveMine
+darkred red lightred
+.....
+.101.
+.020.
+.101.
+.....
+
+Squawk
+lightblue blue
+....0
+.0000
+.0000
+.11.0
+1111.
+
+SquawkBang
+orange lightblue
+....0
+.0000
+.0000
+.11.0
+1111.
+
+Droid
+black green
+..0..
+.000.
+00100
+.000.
+..0..
+
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Player
+N = CrateN
+E = CrateE
+W = CrateW
+S = CrateS
+O = Target
++ = Shell
+^ = GunN
+< = GunW
+> = GunE
+˅ = GunS
+M = InertMine
+A = ActiveMine
+B = Boom
+% = CrateGunN
+& = CrateMineN
+@ = CrateGunS
+X = Squawk
+D = Droid
+
+=======
+SOUNDS
+=======
+
+SFX1 55891909
+SFX2 5736502
+SFX4 6922102
+
+Shell move 61960307
+InertMine move 61960307
+Droid move 81713505
+EndLevel 8341708
+Shell create 91688700
+GunN create 91688700
+GunS create 91688700
+GunW create 91688700
+InertMine create 91688700
+ActiveMine create 93182703
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Target
+Player, Wall, CrateN, CrateE, CrateW, CrateS, Shell, GunN, GunW, GunE, GunS, Bang, InertMine, ActiveMine, Boom, CrateMineN, CrateGunN, CrateGunS, Squawk, Droid, SquawkBang
+
+======
+RULES
+======
+
+
+[Bang] -> [background]
+[boom] -> restart
+[> player][Droid] -> [> player][> Droid]
+[ >  Player | Shell ] -> [  >  Player | > Shell  ]
+[ >  Droid | Shell ] -> [  >  Droid | > Shell  ]
+[ >  Player | InertMine ] -> [  >  Player | > InertMine  ]
+[Action Player|InertMine] -> [Action Player|ActiveMine]
+[> Droid|InertMine] -> [Droid|ActiveMine]
+[> Player | ActiveMine] -> [Player | boom ]
+[> Droid | ActiveMine] -> [Droid | boom ]
+[> shell | ActiveMine] -> [boom | boom ]
+
+[Action Player|Squawk] -> [Action Player|SquawkBang]
+[> Droid|Squawk] -> [Droid |SquawkBang]
+
+[SquawkBang][CrateMineN] -> [SquawkBang][ActiveMine]
+[SquawkBang][CrateGunN] -> [SquawkBang][GunN]
+[SquawkBang][CrateGunS] -> [SquawkBang][GunS]
+[SquawkBang][CrateN] -> [SquawkBang][Shell]
+[SquawkBang][CrateS] -> [SquawkBang][Shell]
+[SquawkBang][CrateE] -> [SquawkBang][Shell]
+[SquawkBang][CrateW] -> [SquawkBang][Shell]
+[SquawkBang] -> [] SFX1
+
+DOWN [ Action Player |CrateN] -> [Action Player | Shell]
+UP [Action Player | CrateS] -> [Action Player | Shell]
+LEFT [Action Player | CrateE] -> [Action Player | Shell]
+RIGHT [Action Player | CrateW] -> [Action Player | Shell]
+DOWN [Action Player | CrateGunN] -> [Action Player | GunN]
+UP [Action Player | CrateGunS] -> [Action Player | GunS]
+DOWN [Action Player | CrateMineN] -> [Action Player | ActiveMine]
+
+UP [Action Player | GunN| No Bang ] -> [Player | GunN | Bang ] SFX4
+LEFT [Action Player | GunW | No Bang] -> [Player | GunW | Bang ] SFX4
+DOWN [Action Player | GunS| No Bang ] -> [Player | GunS | Bang ] SFX4
+RIGHT [Action Player | GunE | No Bang] -> [Player | GunE | Bang ] SFX4
+
+UP [ > Droid | GunN| No Bang ] -> [Droid | GunN | Bang ] SFX4
+LEFT [ > Droid | GunW | No Bang] -> [Droid | GunW | Bang ] SFX4
+DOWN [> Droid | GunS| No Bang ] -> [Droid | GunS | Bang ] SFX4
+RIGHT [> Droid | GunE | No Bang] -> [Droid | GunE | Bang ] SFX4
+[bang|shell] -> [bang|bang ]
+[boom|no player] -> [boom|boom] SFX2
+
+
+==============
+WINCONDITIONS
+==============
+
+All Player on Target
+
+=======
+LEVELS
+=======
+
+
+
+MESSAGE Due to a clerical error, You are trapped in a bunker
+
+########
+#.....P#
+#......#
+#......#
+#......#
+#O.....#
+########
+
+MESSAGE A bunker with several levels, full of crates and munitions
+
+########
+#.....O#
+#..+...#
+#......#
+#..N...#
+#P.....#
+########
+
+MESSAGE Crates open from one side
+
+########
+#...+.P#
+#....+.#
+#..++..#
+#++..++#
+#.ON...#
+########
+
+MESSAGE But shells are volatile
+MESSAGE Try firing the gun
+
+#########
+#..+.+.O#
+#..N+...#
+#....S..#
+#...^...#
+#.P.....#
+#########
+
+MESSAGE Chain reaction
+
+#########
+#+.+O+.P#
+#+.++...#
+#.+.+.N.#
+#+......#
+#E+++.<.#
+#########
+
+MESSAGE Inert mines, active mines
+
+#########
+#+.+P+..#
+#.......#
+#.......#
+#SSSSM..#
+#.O.E...#
+#########
+
+Message Crates can have any munitions in them
+
+#########
+#.......#
+#.&+..+.#
+#.+O&.+.#
+#.+++%..#
+#.P.S...#
+#########
+
+
+MESSAGE There seems to be another way to open crates
+
+#########
+#.X.....#
+#.......#
+#..P....#
+#....NNN#
+#.>..SON#
+#########
+
+
+MESSAGE Hey, it's a friendly worker droid!
+
+#########
+#.D...PN#
+#..+...N#
+#A.+....#
+#.NN.O..#
+#..+....#
+#########
+
+
+MESSAGE Now this is where the main bunker levels begin.
+
+###########
+#O+N..+.W.#
+#SN&..+.NX#
+#.DN.+.+..#
+#%.NWP.NS+#
+#...+N....#
+###########
+
+
+MESSAGE This doesn't look safe
+
+###########
+#P..&&&&&&#
+#DX.N....&#
+#...&&&&&&#
+#.N.N...O.#
+#&&&&&&&&&#
+###########
+
+
+MESSAGE Carefully packed
+
+###########
+#PESW.WDW.#
+#NW..&N@.N#
+#.N%NWN.X.#
+#N...NNNNN#
+#N.NNNNNON#
+###########
+
+MESSAGE Symbiosis
+
+###########
+#P.NNN.DN.#
+#MM>.+++N.#
+#..N.NN+..#
+#++N++....#
+#++...<.O.#
+###########
+
+MESSAGE Inert Mine field
+
+###########
+#.P..M.M..#
+#.MMM.M.MM#
+#..M..MNM.#
+#MM.MM.MOS#
+#.M..MD...#
+###########
+
+MESSAGE Last level
+
+###########
+#..+..P.+.#
+#.N..@.N..#
+#+.&..E.&.#
+#++..S.SSS#
+#.X+&..NO.#
+###########
+
+MESSAGE Congratulations! Now you can return to fighting on the front line.
+
+title Puzzles
+author increpare
+homepage www.puzzlescript.net
+
+(
+Unfortunately, just the first level - trying to emulate the later ones proved too complex :[
+
+You can play the original game here:
+http://www.increpare.com/2012/06/puzzles/
+)
+
+background_color white
+text_color blue
+
+run_rules_on_level_start
+
+
+========
+OBJECTS
+========
+
+DyingPlayer
+Black
+
+Void
+White
+
+OBackground
+Orange
+
+GBackground
+LightGrey
+
+BlueWall
+Blue
+
+
+GreyWall
+Grey
+
+RedCrate
+Red
+.....
+.000.
+.000.
+.000.
+.....
+GreyCrate
+DarkGrey
+.....
+.000.
+.000.
+.000.
+.....
+
+RedWhale
+Red White
+00100
+00000
+10001
+00000
+00100
+
+GreyWhale
+DarkGrey White
+00100
+00000
+10001
+00000
+00100
+
+RedEndPoint
+DarkRed
+.....
+.000.
+.0.0.
+.000.
+.....
+
+GreyEndPoint
+Darkgrey
+.....
+.....
+.....
+.....
+.....
+
+RedStartPoint
+darkRed
+.....
+.....
+.....
+.....
+.....
+
+GreyStartPoint
+darkRed
+.....
+.000.
+.0.0.
+.000.
+.....
+
+YellowPlayer
+yellow
+.....
+.000.
+.000.
+.000.
+.....
+
+GreyPlayer
+DarkGrey
+.....
+.000.
+.000.
+.000.
+.....
+
+LeftBeam
+white
+.....
+.....
+00000
+.....
+.....
+
+RightBeam
+white
+.....
+.....
+00000
+.....
+.....
+
+UpBeam
+white
+..0..
+..0..
+..0..
+..0..
+..0..
+
+DownBeam
+white
+..0..
+..0..
+..0..
+..0..
+..0..
+
+=======
+LEGEND
+=======
+
+Background = Void or OBackground or GBackground
+Player = YellowPlayer or GreyPlayer or DyingPlayer
+Wall = BlueWall or GreyWall
+Crate = RedCrate or GreyCrate
+Whale = RedWhale or GreyWhale
+StartPoint = RedStartPoint or GreyStartPoint
+EndPoint = RedEndPoint or GreyEndPoint
+. = OBackground
+, = Void
+# = BlueWall
+W = RedWhale
+C = RedCrate
+S = RedStartPoint and YellowPlayer
+E = RedEndPoint
+Obstacle = Player or Whale or Crate or Wall
+Beam = UPBeam or DownBeam or LeftBeam or RightBeam
+VBeam = UPBeam or DownBeam
+HBeam = LeftBeam or RightBeam
+HBeamSource = HBeam or Whale
+VBeamSource = VBeam or Whale
+Pushable = Player or Whale or Crate
+RedPushable = YellowPlayer or RedWhale or RedCrate
+GreyPushable = GreyPlayer or GreyWhale or GreyCrate
+
+=======
+SOUNDS
+=======
+
+================
+COLLISIONLAYERS
+================
+
+Background
+StartPoint, EndPoint
+Player, Wall, Crate, Whale
+UpBeam, DownBeam
+LeftBeam, RightBeam
+
+======
+RULES
+======
+
+
+left [ LeftBeam | < Player ] -> [ LeftBeam | Player ]
+right [ RightBeam | < Player ] -> [ RightBeam | Player ]
+up [ UpBeam | < Player ] -> [ UpBeam | Player ]
+down [ DownBeam | < Player ] -> [ DownBeam | Player ]
+
+right [ RightBeam | stationary Pushable ] -> [ RightBeam | > Pushable ]
+left [ LeftBeam | stationary Pushable ] -> [ LeftBeam | > Pushable ]
+up [ UpBeam | stationary Pushable ] -> [ UpBeam | > Pushable ]
+down [ DownBeam | stationary Pushable ] -> [ DownBeam | > Pushable ]
+
+[ Whale | stationary Pushable ] -> [ Whale | > Pushable ]
+
+
+[ Beam ] -> []
+
+
+[ >  Player | Crate ] -> [  >  Player | > Crate  ]
+[ > Crate | stationary Crate ] -> [ > Crate | > Crate ]
+
+( using red/greypushable is an optimization - cuts down on unecessary rules by quite a lot, beause red and grey things never coexist)
+[ > RedPushable | v RedPushable ] -> [ RedPushable | v RedPushable ]
+[ > RedPushable | ^ RedPushable ] -> [ RedPushable | ^ RedPushable ]
+[ > RedPushable | < RedPushable ] -> [ RedPushable | < RedPushable ]
+
+[ > GreyPushable | v GreyPushable ] -> [ GreyPushable | v GreyPushable ]
+[ > GreyPushable | ^ GreyPushable ] -> [ GreyPushable | ^ GreyPushable ]
+[ > GreyPushable | < GreyPushable ] -> [ GreyPushable | < GreyPushable ]
+
+late Up [ Whale | no Obstacle ] -> [ Whale | UpBeam ]
+late Down [ Whale | no Obstacle ] -> [ Whale | DownBeam ]
+late Left [ Whale | no Obstacle ] -> [ Whale | LeftBeam ]
+late Right [ Whale | no Obstacle ] -> [ Whale | RightBeam ]
+
+late horizontal [ HBeam | no obstacle ] -> [ HBeam | HBeam ]
+late vertical [ VBeam | no obstacle ] -> [ VBeam | VBeam ]
+
+
+(DEATH TRANSITION)
+late Horizontal [ HBeamSource | YellowPlayer ]  -> [ HBeamSource | DyingPlayer ]
+late Vertical [ VBeamSource | YellowPlayer ]  -> [ VBeamSource | DyingPlayer ]
+
+late [ DyingPlayer ] [ BlueWall ] -> [ DyingPlayer ] [ GreyWall ]
+late [ DyingPlayer ] [ RedWhale ] -> [ DyingPlayer ] [ GreyWhale ]
+late [ DyingPlayer ] [ RedCrate ] -> [ DyingPlayer ] [ GreyCrate ]
+late [ DyingPlayer ] [ RedStartPoint ] -> [ DyingPlayer ] [ GreyStartPoint ]
+late [ DyingPlayer ] [ RedEndPoint ] -> [ DyingPlayer ] [ GreyEndPoint ]
+late [ DyingPlayer ] [ OBackground ] -> [ DyingPlayer ] [ GBackground ]
+late [ DyingPlayer ] -> [ GreyPlayer ]
+
+late [DyingPlayer] -> [GreyPlayer]
+
+(LIFE TRANSITION)
+late [ GreyPlayer GreyStartPoint ] [ GreyWall ] -> [ GreyPlayer GreyStartPoint ] [ BlueWall ]
+late [ GreyPlayer GreyStartPoint ] [ GreyCrate ] -> [ GreyPlayer GreyStartPoint ] [ RedCrate ]
+late [ GreyPlayer GreyStartPoint ] [ GreyWhale ] -> [ GreyPlayer GreyStartPoint ] [ RedWhale ]
+late [ GreyPlayer GreyStartPoint ] [ GreyEndPoint ] -> [ GreyPlayer GreyStartPoint ] [ RedEndPoint ]
+late [ GreyPlayer GreyStartPoint ] [ GBackground ] -> [ GreyPlayer GreyStartPoint ] [ OBackground ]
+
+late [ GreyPlayer GreyStartPoint ] -> [ YellowPlayer RedStartPoint ]
+
+late [player]->again
+
+==============
+WINCONDITIONS
+==============
+
+All Player on RedEndPoint
+
+=======
+LEVELS
+=======
+
+
+#########
+#......E#
+#..CC..##
+#.....##,
+#.....W#,
+##.#####,
+#......#,
+#..CC..#,
+#..CC..#,
+##.....#,
+#W.....#,
+######.#,
+#......#,
+#......#,
+##S#####,
+########,
+
+
+
+USER PROMPT:
+The following PuzzleScript game code:
+```plaintext
+title Block Pusher
+author PuzzleScriptCreator
+
+========
+OBJECTS
+========
+
+Background
+white
+
+Wall
+grey
+11111
+11111
+11111
+11111
+11111
+
+Player
+red
+..0..
+.000.
+..0..
+.....
+.....
+
+Block
+blue darkblue
+.....
+.000.
+.000.
+.000.
+.....
+
+Target
+green
+.....
+..0..
+..0..
+.000.
+.....
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Player
+B = Block
+T = Target
+
+===========
+COLLISIONLAYERS
+===========
+
+Background
+Target
+Wall
+Block
+Player
+
+======
+RULES
+======
+
+[> Player | Block | no Wall] -> [> Player | > Block]
+[> Player | no Block | no Wall] -> [> Player]
+
+==============
+WINCONDITIONS
+==============
+
+All Block on Target
+
+=======
+LEVELS
+=======
+
+; Level 1
+########
+#......#
+#..BTP.#
+#......#
+########
+
+; Level 2
+########
+#......#
+#..BTP.#
+#..B...#
+#..T...#
+########
+
+; Level 3
+##########
+#........#
+#..B.BTP.#
+#......T.#
+##########
+
+```
+produced the following console output:
+=================================
+line 13 : Trying to access color number 1 from the color palette of sprite WALL, but there are only 1 defined in it.
+line 14 : Trying to access color number 1 from the color palette of sprite WALL, but there are only 1 defined in it.
+line 15 : Trying to access color number 1 from the color palette of sprite WALL, but there are only 1 defined in it.
+line 16 : Trying to access color number 1 from the color palette of sprite WALL, but there are only 1 defined in it.
+line 17 : Trying to access color number 1 from the color palette of sprite WALL, but there are only 1 defined in it.
+line 54 : section "COLLISIONLAYERS" is out of order, must follow  "SOUNDS" (or it could be that the section "SOUNDS"is just missing totally.  You have to include all section headings, even if the section itself is empty).
+too many errors, aborting compilation
+Errors detected during compilation; the game may not work correctly.
+Return a repaired version of the code that addresses these errors. First, reason about your task and determine the best plan of action. Then, write your code. Return your code in full, inside a ```plaintext code block.

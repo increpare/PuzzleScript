@@ -1,0 +1,1792 @@
+SYSTEM PROMPT:
+You are a game designer, familiar with the PuzzleScript game description language. Here are some example games, for inspiration (do not reproduce these games exactly):
+
+title Wrapping Recipe
+author increpare
+homepage http://www.puzzlescript.net
+
+========
+OBJECTS
+========
+
+Wrap
+Black
+
+Background
+White
+
+Player
+Blue
+
+=======
+LEGEND
+=======
+
+. = Background
+~ = Wrap
+@ = Player
+
+=======
+SOUNDS
+=======
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Wrap
+Player
+
+======
+RULES
+======
+
+[ Wrap | < Player | ... | | Wrap ] -> [ Wrap | | ... | Player | Wrap ]
+
+==============
+WINCONDITIONS
+==============
+
+=======
+LEVELS
+=======
+
+~~~~~~~
+~.....~
+~.....~
+~..@..~
+~.....~
+~.....~
+~~~~~~~
+
+
+title Sticky Candy Puzzle Saga
+author Alan Hazelden
+homepage www.draknek.org
+
+run_rules_on_level_start
+
+noaction
+
+========
+OBJECTS
+========
+
+Background
+Black DarkGrey
+00000
+00000
+00000
+00000
+00000
+
+
+Wall
+Pink #febfc6
+10001
+00011
+00110
+01100
+11000
+
+Player
+Pink #febfc6
+.000.
+.111.
+00100
+.000.
+.0.0.
+
+Yellow
+Yellow White Orange
+.000.
+01100
+01000
+00002
+.022.
+
+Red
+Red Orange DarkRed
+.000.
+01100
+01000
+00002
+.022.
+
+Blue
+LightBlue White #3468f7
+.000.
+01100
+01000
+00002
+.022.
+
+YellowTarget
+Brown Yellow
+00000
+01110
+01010
+01110
+00000
+
+RedTarget
+DarkBrown Red
+00000
+01110
+01010
+01110
+00000
+
+BlueTarget
+Purple LightBlue
+00000
+01110
+01010
+01110
+00000
+
+Marker
+White
+.....
+.....
+.....
+.....
+.....
+
+WallL
+White
+0....
+0....
+0....
+0....
+0....
+
+WallR
+White
+....0
+....0
+....0
+....0
+....0
+
+WallU
+White
+00000
+.....
+.....
+.....
+.....
+
+WallD
+White
+.....
+.....
+.....
+.....
+00000
+
+WallLR
+White
+0...0
+0...0
+0...0
+0...0
+0...0
+
+WallUD
+White
+00000
+.....
+.....
+.....
+00000
+
+JoinL
+#febfc6
+0....
+.....
+.....
+.....
+0....
+
+JoinR
+#febfc6
+....0
+.....
+.....
+.....
+....0
+
+JoinU
+#febfc6
+0...0
+.....
+.....
+.....
+.....
+
+JoinD
+#febfc6
+.....
+.....
+.....
+.....
+0...0
+
+JoinBoth
+#febfc6
+0...0
+.....
+.....
+.....
+0...0
+
+Zero
+Purple
+.000.
+.0.0.
+.0.0.
+.0.0.
+.000.
+
+One
+Purple
+.00..
+..0..
+..0..
+..0..
+.000.
+
+Two
+Purple
+.000.
+...0.
+.000.
+.0...
+.000.
+
+Three
+Purple
+.000.
+...0.
+.000.
+...0.
+.000.
+
+Four
+Purple
+.0.0.
+.0.0.
+.000.
+...0.
+...0.
+
+Five
+Purple
+.000.
+.0...
+.000.
+...0.
+.000.
+
+Six
+Purple
+.000.
+.0...
+.000.
+.0.0.
+.000.
+
+Seven
+Purple
+.000.
+...0.
+...0.
+...0.
+...0.
+
+Eight
+Purple
+.000.
+.0.0.
+.000.
+.0.0.
+.000.
+
+Nine
+Purple
+.000.
+.0.0.
+.000.
+...0.
+.000.
+
+
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Player
+A = Red
+B = Yellow
+C = Blue
+X = RedTarget
+Y = YellowTarget
+Z = BlueTarget
+
+WallCoverLR = WallL or WallR or WallLR
+WallCoverUD = WallU or WallD or WallUD
+
+JoinCoverLR = JoinL or JoinR or JoinBoth
+JoinCoverUD = JoinU or JoinD
+
+Join = JoinCoverLR or JoinCoverUD
+
+CoverLR = WallCoverLR or JoinCoverLR
+CoverUD = WallCoverUD or JoinCoverUD
+
+0 = Zero and Wall
+1 = One and Wall
+2 = Two and Wall
+3 = Three and Wall
+4 = Four and Wall
+5 = Five and Wall
+6 = Six and Wall
+7 = Seven and Wall
+8 = Eight and Wall
+9 = Nine and Wall
+
+Number = Zero or One or Two or Three or Four or Five or Six or Seven or Eight or Nine
+
+Candy = Yellow or Red or Blue
+Target = YellowTarget or RedTarget or BlueTarget
+
+
+=======
+SOUNDS
+=======
+
+sfx1 6045907 (candies sticking)
+sfx2 27189102 (can't move)
+sfx3 27189102 (can't push)
+Candy MOVE 48059907
+Player MOVE 11429307
+EndLevel 85763108
+Restart 65287309
+Undo 84906107
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Marker
+Target
+Player, Wall, Candy
+CoverUD
+CoverLR, Number
+
+======
+RULES
+======
+
+[ >  Player | Candy ] -> [  >  Player | > Candy  ]
+[ moving Candy | stationary Candy ] -> [ moving Candy | moving Candy ]
+
+(Prevent movement in a way that triggers the "can't move" sound)
+
+[ > Candy | Wall ] [ > Player | > Candy ] -> [ Candy | Wall ] [ > Player | Candy ]
+[ > Player | stationary Candy ] [ moving Candy ] -> [ > Player | Candy ] [ Candy ]
+
+(Trigger the "candies sticking" sound)
+
+[ > Candy | no Candy ] -> [ > Candy | Marker ]
+
+[ Marker | stationary Candy ] -> sfx1
+
+[ Marker ] -> []
+
+(Can't move sounds)
+
+[ > Player | Wall ] -> sfx2
+[ > Player | stationary Candy ] -> sfx3
+
+(Wall borders)
+
+left [ Wall no WallCoverLR | no Wall ] -> [ Wall WallL | ]
+right [ Wall no WallCoverLR | no Wall ] -> [ Wall WallR | ]
+right [ Wall WallL | no Wall ] -> [ Wall WallLR | ]
+
+up [ Wall no WallCoverUD | no Wall ] -> [ Wall WallU | ]
+down [ Wall no WallCoverUD | no Wall ] -> [ Wall WallD | ]
+down [ Wall WallU | no Wall ] -> [ Wall WallUD | ]
+
+(Candy joins)
+
+late [ Join ] -> []
+
+late left [ Candy | Candy ] -> [ Candy JoinL | Candy ]
+late right [ Candy no JoinL | Candy ] -> [ Candy JoinR | Candy ]
+late right [ Candy JoinL | Candy ] -> [ Candy JoinBoth | Candy ]
+
+late up [ Candy no JoinBoth | Candy ] -> [ Candy JoinU | Candy ]
+late down [ Candy no JoinU no JoinBoth | Candy ] -> [ Candy JoinD | Candy ]
+late down [ Candy JoinU | Candy ] -> [ Candy JoinBoth | Candy ]
+
+==============
+WINCONDITIONS
+==============
+
+All Yellow on YellowTarget
+All Red on RedTarget
+All Blue on BlueTarget
+
+=======
+LEVELS
+=======
+
+message Transport the sticky candies to the collection areas.
+
+#######
+##...##
+#..b.y#
+#pb#.y#
+#..b.y#
+##...##
+1######
+
+#########
+##.....##
+#..a.#.x#
+#pa....x#
+#..a.#.x#
+##.....##
+2########
+
+message Don't let different candies stick together!
+
+########
+#p...yy#
+#.b.ayy#
+#..b.a.#
+#.a.b..#
+#xxa.b.#
+#xx....#
+3#######
+
+###########
+#....p....#
+#..b.c.b..#
+#...c.c...#
+###.zzz.###
+####b.b####
+####yyy####
+#####y#####
+4##########
+
+#########
+#.a...###
+#.a...###
+#..c.axx#
+#zz.p.xx#
+#zzc.a..#
+###...c.#
+###...c.#
+5########
+
+###########
+##.......##
+#y.#.p.#.z#
+#yc.b.c.bz#
+##.......##
+###..#..###
+6##########
+
+#########
+#####..z#
+#...b.zz#
+#.b.bb.z#
+#p.###..#
+#y.cc.c.#
+#yy.c...#
+#y..#####
+7########
+
+#########
+##......#
+#x.c.#by#
+#.b.p..y#
+#z.a.#by#
+##......#
+8########
+
+#########
+#yy.c.x.#
+#y.b..xx#
+#.b.....#
+#...#..b#
+#.a...c.#
+#.aa.c.z#
+#p....zz#
+9########
+
+#########
+#yy###zz#
+#...x...#
+#.##a##.#
+#..b.b..#
+#..#.#..#
+#..c.c..#
+##..p..##
+10#######
+
+###########
+#####y#####
+####yyy####
+###.b.b.###
+###a...c###
+#z...p...x#
+#za.b.b.cx#
+###.....###
+11#########
+
+###########
+####...A###
+##......###
+#..#A#..xx#
+#pA...A.xx#
+#..#A#..xx#
+##......###
+####...A###
+12#########
+
+#########
+#..xxx..#
+#..#a#..#
+#..b.b..#
+##.#p#.##
+##.aya.##
+##..y..##
+13#######
+
+###########
+##..zzz..##
+#..a.p.b..#
+#yy#ccc#xx#
+#..b...a..#
+##...#...##
+14#########
+
+#############
+#...#####...#
+#....c.b....#
+#yy#..p..#zz#
+#.y.cc.bb.z.#
+####.....####
+15###########
+
+#########
+#...#...#
+#.a.a.a.#
+#...x...#
+#z#.x.#y#
+#zc.x.by#
+#.c.p.b.#
+###...###
+16#######
+
+###########
+##......###
+##.#..c...#
+#...c#..zz#
+#pc..#c#zz#
+#...c#..zz#
+##.#..c...#
+##......###
+17#########
+
+###############
+#...###z###...#
+#....bzzzb....#
+#...c.c.c.c...#
+#####.yyy.#####
+#####.#b#.#####
+#####.....#####
+######.p.######
+18#############
+
+#############
+###x#...#z###
+#.xxa.c.azz.#
+#..c.....c..#
+###..#a#..###
+####..p..####
+19###########
+
+###########
+###.....###
+##c.a.a.b##
+#.cyy.zzb.#
+#..yy.zz..#
+#a..c.b..a#
+#..xc.bx..#
+#..xxxxx..#
+##a..a..a##
+###...p.###
+20#########
+
+message Thanks for playing! :)
+
+
+
+
+title MC Escher's Equestrian Armageddon
+author Anna Clarke
+homepage www.puzzlescript.net
+again_interval 0.2
+
+========
+OBJECTS
+========
+
+Background
+BLACK DARKBLUE
+11111
+01111
+11101
+11111
+10111
+
+
+Target
+DarkBlue
+.....
+.000.
+.0.0.
+.000.
+.....
+
+Wall
+BROWN DARKBROWN
+00010
+11111
+01000
+11111
+00010
+
+Steps1
+BROWN DARKBROWN GREEN
+....0
+...11
+..000
+.1111
+00010
+
+Steps2
+BROWN DARKBROWN GREEN
+0....
+11...
+010..
+1111.
+00010
+
+
+Steps3
+BROWN DARKBROWN GREEN
+00010
+.1111
+..000
+...11
+....0
+
+Steps4
+BROWN DARKBROWN GREEN
+00010
+1111.
+010..
+11...
+0....
+
+Player1
+Black Orange White Blue
+.000.
+.111.
+22222
+.333.
+.3.3.
+
+Player2
+Black Orange White Blue
+..2..
+01233
+0123.
+01233
+..2..
+
+Player3
+Black Orange White Blue
+..2..
+33210
+.3210
+33210
+..2..
+
+Player4
+Black Orange White Blue
+.3.3.
+.333.
+22222
+.111.
+.000.
+
+Horse
+Orange Brown
+...0.
+...00
+0110.
+0000.
+0..0.
+
+Blood
+Red
+.....
+.....
+.....
+.....
+00000
+
+Crate
+Orange Yellow
+00000
+0...0
+0...0
+0...0
+00000
+
+
+=======
+LEGEND
+=======
+
+. = Background
+B = Blood
+# = Wall
+1 = Steps1
+2 = Steps2
+3 = Steps3
+4 = Steps4
+Steps = Steps1 or Steps2 or Steps3 or Steps4
+
+P = Player1
+Q = Player2
+
+Player = Player1 or Player2 or Player3 or Player4
+
+H = Horse
+
+Animated = Player or Horse
+* = Crate
+@ = Crate and Target
+O = Target
+
+Solid = Wall or Steps or Horse or Player
+
+=======
+SOUNDS
+=======
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Blood
+Target
+Player1, Player2, Player3, Player4, Wall, Crate, Steps, Horse
+
+======
+RULES
+======
+
+
+[ > Player1 ] -> [> Player1] again
+DOWN [ Player1 | No Solid ] -> [ | Player1 ] again
+
+[ > Player2 ] -> [> Player2] again
+right [ Player2 | No Solid ] -> [ | Player2 ] again
+
+[ > Player3 ] -> [> Player3] again
+left [ Player3 | No Solid ] -> [ | Player3 ] again
+
+[ > Player4 ] -> [> Player4] again
+up [ Player4 | No Solid ] -> [ | Player4 ] again
+
+right [ right  Player1 | Steps1 ] -> [ up Player2 | Steps1 ] again
+left [ left  Player1 | Steps2 ] -> [ up Player3 | Steps2 ] again
+
+down [ down  Player2 | Steps1 ] -> [ left Player1 | Steps1  ] again
+up [ up Player2 | Steps3 ] -> [ left Player4 | Steps3 ] again
+
+down [ down  Player3 | Steps2 ] -> [ right Player1 | Steps2  ] again
+up [ up Player3 | Steps4 ] -> [ right Player4 | Steps4 ] again
+
+left [ left Player4 | Steps4 ] -> [ down Player3 | Steps4 ] again
+right [ right Player4 | Steps3 ] -> [down Player2 | Steps3 ] again
+
+[ > Horse ] -> [> Horse] again
+DOWN [ Horse | No Solid ] -> [ | Horse ] again
+
+[ Action Player | Horse ] -> [  Action Player | Blood  ]
+
+==============
+WINCONDITIONS
+==============
+
+No Horse
+
+=======
+LEVELS
+=======
+#################
+#.....######....#
+#.....######....#
+#.P.............#
+####.........H..#
+#################
+
+#######
+#4...3#
+#.....#
+#....Q#
+#.....#
+#.....#
+#2.H.1#
+#######
+
+
+####################
+#4..3..3###4......3#
+#.......3#4........#
+#...H....#.....1...#
+#...P.........1#...#
+#2.1#2.H1##..1##.H.#
+####################
+
+
+###########################################
+#4........................3#
+#..........................#
+#.................####.....#
+#2P..............H####2....#
+#########################..#
+######4.....................#
+######.......................#
+######........................#
+######.........................#
+######.........................#
+######.....##..................#
+######2.H..##2.............2..1#
+###################........#####
+###################........4..3#
+###################............#
+#4.............................#
+#.................#............#
+#2......H........##H......H..1##
+##########################################
+
+
+title Bouncers
+author Tyler Glaiel
+homepage twitter.com/tylerglaiel
+
+========
+OBJECTS
+========
+
+Bg
+#111111 #222222
+00010
+11111
+01000
+01000
+11111
+
+Selection
+white gray
+..1..
+..1..
+11011
+..1..
+..1..
+
+Wall
+DarkBlue DarkGreen #333333
+20002
+22022
+22122
+21112
+11111
+
+Hole
+DarkGray Gray Black
+.111.
+12221
+10001
+10001
+.111.
+
+
+Arrow
+Red Red
+..1..
+..11.
+11111
+..11.
+..1..
+
+
+HudDivider
+white black
+00000
+11111
+11111
+11111
+11111
+
+IconGO
+green white
+10111
+10011
+10001
+10011
+10111
+
+Going
+green white
+10111
+10011
+10001
+10011
+10111
+
+LeftBouncer
+White White Blue
+.221.
+2.1.2
+21..2
+2.1.2
+.221.
+
+RightBouncer
+White White Blue
+.122.
+2.1.2
+2..12
+2.1.2
+.122.
+
+UpBouncer
+White White Blue
+.222.
+2.1.2
+21.12
+1...1
+.222.
+
+DownBouncer
+White White Blue
+.222.
+1...1
+21.12
+2.1.2
+.222.
+
+HudBG
+black
+
+Empty
+black
+
+PlayEmpty
+black
+.....
+.....
+.....
+.....
+.....
+
+
+Ball
+#003300 Green
+.000.
+01110
+01110
+01110
+.000.
+
+WinBall
+LightBlue LightGreen
+.000.
+01110
+01110
+01110
+.000.
+
+
+
+BallUp
+#003300 Green Black
+.000.
+01210
+01110
+01110
+.000.
+
+BallDown
+#003300 Green Black
+.000.
+01110
+01110
+01210
+.000.
+
+BallLeft
+#003300 Green Black
+.000.
+01110
+02110
+01110
+.000.
+
+BallRight
+#003300 Green Black
+.000.
+01110
+01120
+01110
+.000.
+
+
+
+
+=======
+LEGEND
+=======
+Background = Bg or HudBG
+. = bg and PlayEmpty
+S = Selection and PlayEmpty
+- = HudDivider and Wall
+H = HudBG and PlayEmpty
+A = Arrow and HudBG
+G = IconGO
+W = Wall
+O = Hole
+
+L = LeftBouncer and HudBG
+R = RightBouncer and HudBG
+U = UpBouncer and HudBG
+D = DownBouncer and HudBG
+
+B = BallLeft
+N = BallRight
+M = BallUp
+K = BallDown
+
+Player = Selection
+
+
+PlacedLeftbouncer = LeftBouncer and Selection
+PlacedRightbouncer = RightBouncer and Selection
+PlacedUpbouncer = UpBouncer and Selection
+PlacedDownbouncer = DownBouncer and Selection
+
+Bouncer = LeftBouncer or RightBouncer or UpBouncer or DownBouncer
+
+emptyPlayer = Selection and PlayEmpty
+
+
+ballSwitchLeft = Ball and LeftBouncer
+ballSwitchRight = Ball and RightBouncer
+ballSwitchUp = Ball and UpBouncer
+ballSwitchDown = Ball and DownBouncer
+
+ballSwitchedLeft = BallLeft and LeftBouncer
+ballSwitchedRight = BallRight and RightBouncer
+ballSwitchedUp = BallUp and UpBouncer
+ballSwitchedDown = BallDown and DownBouncer
+
+gameGo = Selection and IconGO
+gameGoing =  Going
+
+
+
+WinL = BallLeft and Hole
+WinR = BallRight and Hole
+WinU = BallUp and Hole
+WinD = BallDown and Hole
+
+Win = WinBall
+
+MovingBall = Ball or BallLeft or BallRight or BallUp or BallDown
+
+=======
+SOUNDS
+=======
+SFX0 41242705 (place bouncer)
+SFX1 73889302 (press go)
+MovingBall Move 68254307 (ball move)
+SFX2 68257500 (pocket ball)
+SFX3 82752503 (ball switch direction)
+
+================
+COLLISIONLAYERS
+================
+
+Background
+
+Arrow, Empty, LeftBouncer, RightBouncer, UpBouncer, DownBouncer, PlayEmpty, IconGO, Going, Hole
+WinBall
+Wall, Ball, BallUp, BallDown, BallLeft, BallRight
+Selection, HudDivider
+
+
+======
+RULES
+======
+
+(action button: take icon to the right of the arrow, place under selector)
+[action selection PlayEmpty][Arrow|LeftBouncer] -> [PlacedLeftbouncer][Arrow|Empty] SFX0
+[action selection PlayEmpty][Arrow|RightBouncer] -> [PlacedRightbouncer][Arrow|Empty] SFX0
+[action selection PlayEmpty][Arrow|UpBouncer] -> [PlacedUpbouncer][Arrow|Empty] SFX0
+[action selection PlayEmpty][Arrow|DownBouncer] -> [PlacedDownbouncer][Arrow|Empty] SFX0
+
+(win conditions)
+[WinL] -> [Win] again SFX2
+[WinR] -> [Win] again SFX2
+[WinU] -> [Win] again SFX2
+[WinD] -> [Win] again SFX2
+
+(slide unused icons over to the left if there's space between them and the arrow)
+right [Empty | Bouncer] -> [Bouncer | Empty]
+
+(selector on top of go button -> signals game to run)
+[action selection iconGO] -> [gameGoing] again SFX1
+
+(make genericball match the direction of the bouncer)
+[ballSwitchLeft]->[ballSwitchedLeft] again
+[ballSwitchRight]->[ballSwitchedRight] again
+[ballSwitchUp]->[ballSwitchedUp] again
+[ballSwitchDown]->[ballSwitchedDown] again
+
+(if ball is going to move on top of a bouncer, switch it to generic ball first)
+right [Going][Bouncer | BallLeft] -> [Going][Bouncer | Left Ball] again SFX3
+left  [Going][Bouncer | BallRight] -> [Going][Bouncer | Right Ball] again SFX3
+up    [Going][Bouncer | BallDown] -> [Going][Bouncer | Down Ball] again SFX3
+down  [Going][Bouncer | BallUp] -> [Going][Bouncer | Up Ball] again SFX3
+
+
+
+(move the ball if Going)
+[Going][BallLeft] -> [Going][LEFT BallLeft] again
+[Going][BallRight] -> [Going][RIGHT BallRight] again
+[Going][BallUp] -> [Going][UP BallUp] again
+[Going][BallDown] -> [Going][DOWN BallDown] again
+
+
+
+[Going] -> [Going] again
+
+==============
+WINCONDITIONS
+==============
+
+no MovingBall
+
+=======
+LEVELS
+=======
+
+message place bouncers, hit play
+
+......w.....
+..o...w.....
+......w.....
+......w.....
+......w..b..
+......s.....
+............
+g-----------
+-hhadluhhhhh
+
+message Level 2
+
+............
+......o.....
+..s.........
+......w.....
+...o.....b..
+......m.....
+............
+g-----------
+-hhalurhhhhh
+
+message Level 3
+
+............
+............
+..o.wwww....
+..s.n..b....
+....wwww.o..
+............
+............
+g-----------
+-hhaudrlhhhh
+
+message Level 4
+
+............
+............
+..o......o..
+............
+............
+.s..bbbb....
+............
+............
+..o......o..
+............
+g-----------
+-hhalrudu...
+
+message Level 5
+
+.....n......w...
+..wwww.k....o.w.
+......b..m......
+...o............
+.......w........
+.....b.w........
+......wwo.......
+w.ww.www........
+.o..............
+....s...........
+..........wwwo..
+g---------------
+-hhaddddddrrr...
+
+message I didn't feel like making more levels
+
+title Rigid Body example
+author Anonymous
+homepage www.puzzlescript.net
+
+verbose_logging
+
+(
+
+Example for
+https://www.puzzlescript.net/Documentation/rigidbodies.html#many_many
+
+)
+
+========
+OBJECTS
+========
+
+Background 
+white  
+
+Target 
+DarkBlue    
+
+Wall 
+DarkGrey
+
+Player
+Blue
+..0..
+..0.0
+00000
+.000.
+.0.0.
+
+Shadow
+Black
+..0..
+0.0..
+00000
+.000.
+.0.0.
+
+( three multi-cells blocks )
+Crate 
+orange
+
+Chest
+green
+
+Box
+red
+
+( 1-cell small block )
+Small
+darkred
+.....
+.000.
+.000.
+.000.
+.....
+
+( sticky, multicellular block when in contact )
+Glue
+pink
+.000.
+00000
+00000
+00000
+.000.
+
+( a flag to know what is allowed move )
+Wanna_Move
+#ff00ff
+.....
+.....
+..0..
+.....
+.....
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Player
+S = Shadow
+* = Crate
++ = Box
+% = Chest
+o = Small
+g = Glue
+
+( blocks that can be moved by the player )
+Movable = Crate or Box or Chest or Small or Glue
+
+( all things that can move and push blocks )
+Mover = Player or Shadow or Movable 
+
+( things that can stop a movement if they are stationary )
+Obstacle = Wall or Mover
+
+=======
+SOUNDS
+=======
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Target
+Obstacle
+Wanna_Move
+
+======
+RULES     
+======     
+
+[ > player ] [ stationary shadow ] -> [ > player ] [ < shadow ]
+
+( 1. Propagate movements forward )
+[ > Mover | stationary Movable ] -> [ > Mover | > Movable  ]
++ [ > Box    ] [ stationary Box   ] -> [ > Box    ] [ > Box    ]
++ [ > Crate  ] [ stationary Crate ] -> [ > Crate  ] [ > Crate  ]
++ [ > Chest  ] [ stationary Chest ] -> [ > Chest  ] [ > Chest  ]
++ [ moving Glue | stationary Glue ] -> [ moving Glue | moving Glue ]
+
+( 2. Propagate obstructions backwards )
+[ > Mover  | stationary Obstacle ] -> [ stationary Mover | Obstacle ]
+
+	(the next lines deal with directional conflicts)
++ [ ^ Crate | < Crate ] -> [ stationary Crate | stationary Crate ] 
++ [ ^ Crate | > Crate ] -> [ stationary Crate | stationary Crate ] 
++ [ ^ Crate | v Crate ] -> [ stationary Crate | stationary Crate ] 
+
++ [ v Crate | < Crate ] -> [ stationary Crate | stationary Crate ] 
++ [ v Crate | > Crate ] -> [ stationary Crate | stationary Crate ] 
++ [ v Crate | ^ Crate ] -> [ stationary Crate | stationary Crate ] 
+
++ [ < Crate | > Crate ] -> [ stationary Crate | stationary Crate ] 
++ [ < Crate | ^ Crate ] -> [ stationary Crate | stationary Crate ] 
++ [ < Crate | v Crate ] -> [ stationary Crate | stationary Crate ] 
+
++ [ > Crate | < Crate ] -> [ stationary Crate | stationary Crate ] 
++ [ > Crate | ^ Crate ] -> [ stationary Crate | stationary Crate ] 
++ [ > Crate | v Crate ] -> [ stationary Crate | stationary Crate ] 
+
+(also one space removed)
++ [ > Mover | |  < Mover ] -> [ stationary Mover | |  < Mover ] 
+
++ [ > Crate  ] [ stationary Crate ] -> [ stationary Crate ] [ Crate ]
++ [ > Box    ] [ stationary Box   ] -> [ stationary Box   ] [ Box   ]
++ [ > Chest  ] [ stationary Chest ] -> [ stationary Chest ] [ Chest ]
++ [ moving Glue | stationary Glue ] -> [ stationary Glue | Glue ]
+
+( 3. remove all movement, keep a flag )
+[ > Movable ] -> [ Movable wanna_move ]
+
+( 4. propagate movement only on wanna_move things )
+(    ie redo step 1 but with WANNA_MOVE added to the first line below )
+[ > Mover  | stationary Movable WANNA_MOVE ] -> [ > Mover | > Movable ]
++ [ > Box   ] [ stationary Box   ] -> [ > Box   ] [ > Box   ]
++ [ > Crate ] [ stationary Crate ] -> [ > Crate ] [ > Crate ]
++ [ > Chest ] [ stationary Chest ] -> [ > Chest ] [ > Chest ]
++ [ moving Glue | stationary Glue ] -> [ moving Glue | moving Glue ]
+
+( 5. cleanup, remove flag )
+[ wanna_move ] -> [ ]
+
+
+==============
+WINCONDITIONS
+==============
+
+=======     
+LEVELS
+=======
+
+#########
+#.......#
+#..p....#
+#.......#
+#.......#
+#..***..#
+#.......#
+#....S..#
+#.......#
+#########
+
+
+
+title ScriptCross
+author Dennis Au
+homepage www.puzzlescript.net
+
+========
+OBJECTS
+========
+
+Background
+White
+
+Target
+Black
+
+Fill
+Black
+
+Cross
+LightGrey
+0...0
+.0.0.
+..0..
+.0.0.
+0...0
+
+
+Player
+Green
+00000
+0...0
+0...0
+0...0
+00000
+
+Border #
+LightGrey
+
+(Clues 0-9)
+Clue0 0
+LightGrey
+
+Clue1 1
+LightGrey Black
+00000
+0...0
+0.1.0
+0...0
+00000
+
+Clue2 2
+LightGrey Black
+00000
+0..10
+0...0
+01..0
+00000
+
+Clue3 3
+LightGrey Black
+00000
+0..10
+0.1.0
+01..0
+00000
+
+Clue4 4
+LightGrey Black
+00000
+01.10
+0...0
+01.10
+00000
+
+Clue5 5
+LightGrey Black
+00000
+01.10
+0.1.0
+01.10
+00000
+
+Clue6 6
+LightGrey Black
+00000
+01.10
+01.10
+01.10
+00000
+
+Clue7 7
+LightGrey Black
+00000
+01110
+0.1.0
+01110
+00000
+
+Clue8 8
+LightGrey Black
+00000
+01110
+0.110
+01110
+00000
+
+Clue9 9
+LightGrey Black
+00000
+01110
+01110
+01110
+00000
+
+
+=======
+LEGEND
+=======
+
+. = Background
+P = Player and Border
+b = Target
+Clue = Clue0 or Clue1 or Clue2 or Clue3 or Clue4 or Clue5 or Clue6 or Clue7 or Clue8 or Clue9
+NoEmpty = Fill or Cross or Clue or Border
+
+=======
+SOUNDS
+=======
+EndLevel 37348103
+EndGame 64173909
+
+================
+COLLISIONLAYERS
+================
+
+(switch order of target and background to see the solutions)
+Target
+Background
+Border, Clue, Fill, Cross
+Player
+
+
+======
+RULES
+======
+
+[Action Player no NoEmpty] -> [Player Fill]
+[Action Player Fill] -> [Player Cross]
+[Action Player Cross] -> [Player]
+
+
+
+==============
+WINCONDITIONS
+==============
+
+All Target on Fill
+All Fill on Target
+
+=======
+LEVELS
+=======
+
+(P123456789)
+
+message level 1 - oh so stable
+
+P12
+1.b
+2bb
+
+message level 2 - it is what it is
+P#1###
+##113#
+##311#
+3.bbb.
+1...b.
+3.bbb.
+1.b...
+3.bbb.
+
+message level 3 - i see you!
+P##1#1#
+###111#
+##.....
+11.b.b.
+##.....
+#3.bbb.
+##.....
+
+message level 4 - that's ace
+P#######1####
+#######111###
+######14141##
+#####8111118#
+###8.bbbbbbb.
+##11.b.....b.
+#131.b.bbb.b.
+1111.b.b.b.b.
+#131.b.bbb.b.
+1111.b.b.b.b.
+##11.b.....b.
+###8.bbbbbbb.
+####.........
+
+message congratulations!
+
+
+USER PROMPT:
+The following PuzzleScript game code:
+```plaintext
+title Block Pusher
+author PuzzleScriptCreator
+
+========
+OBJECTS
+========
+
+Background
+white
+
+Wall
+gray
+.....
+.....
+.....
+.....
+.....
+
+Player
+red
+..0..
+.000.
+..0..
+.....
+.....
+
+Block
+blue darkblue
+.....
+.000.
+.000.
+.000.
+.....
+
+Target
+green
+.....
+..0..
+..0..
+.000.
+.....
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Player
+B = Block
+T = Target
+
+=======
+SOUNDS
+=======
+
+=========== 
+COLLISIONLAYERS 
+===========
+
+Background
+Target
+Wall
+Block
+Player
+
+======
+RULES
+======
+
+[> Player | Block | no Wall] -> [> Player | > Block]
+[> Player | no Block | no Wall] -> [> Player]
+
+==============
+WINCONDITIONS
+==============
+
+All Block on Target
+
+=======
+LEVELS
+=======
+
+########
+#......#
+#..BTP.#
+#......#
+########
+
+########
+#......#
+#..BTP.#
+#..B...#
+#..T...#
+########
+
+##########
+#........#
+#..B.BTP.#
+#......T.#
+##########
+
+```
+produced the following console output:
+=================================
+line 71 : In a rule, each pattern to match on the left must have a corresponding pattern on the right of equal length (number of cells).
+line 72 : In a rule, each pattern to match on the left must have a corresponding pattern on the right of equal length (number of cells).
+Errors detected during compilation; the game may not work correctly.
+Return a repaired version of the code that addresses these errors. First, reason about your task and determine the best plan of action. Then, write your code. Return your code in full, inside a ```plaintext code block.

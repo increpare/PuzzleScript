@@ -1,0 +1,142 @@
+```plaintext
+title Block Swap Shuffle
+author PuzzleDesigner
+homepage www.puzzlescript.net
+
+========
+OBJECTS
+========
+
+Background
+White
+
+Wall
+Grey
+00000
+00000
+00000
+00000
+00000
+
+Player
+Red
+.0.
+.1.
+.0.
+
+Block1
+Blue
+.....
+..1..
+.111.
+..1..
+.....
+
+Block2
+Green
+.....
+..2..
+.222.
+..2..
+.....
+
+Block3
+Yellow
+.....
+..3..
+.333.
+..3..
+.....
+
+Block4
+Orange
+.....
+..4..
+.444.
+..4..
+.....
+
+Target
+DarkBlue
+.....
+.000.
+.0.0.
+.000.
+.....
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Player
+B1 = Block1
+B2 = Block2
+B3 = Block3
+B4 = Block4
+B = Block1 or Block2 or Block3 or Block4
+T = Target
+
+=======
+SOUNDS
+=======
+
+Block1 MOVE 34577506
+Block2 MOVE 34668205
+Block3 MOVE 34758904
+Block4 MOVE 34849603
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Target
+Wall
+Player, Block1, Block2, Block3, Block4
+
+======
+RULES
+======
+
+[ > Player | B ] -> [ > Player | > B ]
+
+late [ B1 | B1 | B1 ] -> [ | | ]
+late [ B2 | B2 | B2 ] -> [ | | ]
+late [ B3 | B3 | B3 ] -> [ | | ]
+late [ B4 | B4 | B4 ] -> [ | | ]
+
+==============
+WINCONDITIONS
+==============
+
+all Block1 on Target
+all Block2 on Target
+all Block3 on Target
+all Block4 on Target
+
+=======
+LEVELS
+=======
+
+#########
+#.......#
+#.......#
+#.P.....#
+#...B1..#
+#.......#
+#.T.....#
+#..B2...#
+#.......#
+#########
+
+#########
+#.......#
+#...B3..#
+#.......#
+#.T...T.#
+#..B4...#
+#.......#
+####P####
+```

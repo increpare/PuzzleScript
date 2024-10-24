@@ -1,0 +1,103 @@
+Sure, let's fix the errors indicated in the console output. Here is the corrected version of your PuzzleScript game code:
+
+```plaintext
+===========
+OBJECTS
+===========
+
+Background
+lightgray
+
+Wall
+black
+
+Player
+blue
+000
+0.0
+000
+
+Gem
+yellow
+0.0
+.0.
+0.0
+
+===========
+LEGEND
+===========
+
+. = Background
+# = Wall
+P = Player
+G = Gem
+
+===========
+SOUNDS
+===========
+
+gemCollect
+    playNote 60
+    playNote 64
+    playNote 67
+    
+===========
+COLLISIONLAYERS
+===========
+
+Background
+Wall
+Player
+Gem
+
+===========
+RULES
+===========
+
+# Movement
+RIGHT [ > Player | ] -> [ > Player ]
+
+LEFT [ Player > | ] -> [ Player > ]
+
+UP [ Player | ] -> [ Player ]
+
+DOWN [ | Player ] -> [ | Player ]
+
+# Collect the gem
+[ Player | Gem ] -> [ Player ]
+gemCollect
+
+===========
+WINCONDITIONS
+===========
+
+All No Gem
+
+===========
+LEVELS
+===========
+
+#######
+#.....#
+#.###.#
+#.P.#.#
+#...G.#
+#######
+
+#######
+#P....#
+###.#.#
+#...#.#
+#..G#.#
+#######
+```
+
+Here are the corrections made:
+
+1. **Gem Sprite Matrix**: Fixed the 'x' characters in the Gem object matrix to '.' as 'x' is not valid syntax within sprite matrices. These '.' characters are placeholders to keep the grids 3x3 while making sure the sprite is concise.
+   
+2. **Sounds Section Mistakes**: It seems we initially placed the sound commands incorrectly. The correct format requires specifying when the sound should be played, which I've demonstrated under the Collect the gem rule by adding `gemCollect`. The sound will now play when the player collects a gem.
+
+3. **Win Condition**: The win condition was incorrectly specified. Fixed it to check when all gems are collected using `All No Gem`.
+
+These changes should resolve the compilation errors and get your game working correctly.

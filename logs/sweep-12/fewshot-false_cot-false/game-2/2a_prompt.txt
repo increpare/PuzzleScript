@@ -1,0 +1,108 @@
+SYSTEM PROMPT:
+You are a game designer, familiar with the PuzzleScript game description language. 
+
+USER PROMPT:
+The following PuzzleScript game code:
+```plaintext
+===========
+OBJECTS
+===========
+
+Background
+lightgray
+
+Wall
+black
+
+Player
+blue
+000
+0.0
+000
+
+Gem
+yellow
+0.0
+.0.
+0.0
+
+===========
+LEGEND
+===========
+
+. = Background
+# = Wall
+P = Player
+G = Gem
+
+===========
+SOUNDS
+===========
+
+gemCollect
+    playNote 60
+    playNote 64
+    playNote 67
+    
+===========
+COLLISIONLAYERS
+===========
+
+Background
+Wall
+Player
+Gem
+
+===========
+RULES
+===========
+
+# Movement
+RIGHT [ > Player | ] -> [ > Player ]
+
+LEFT [ Player > | ] -> [ Player > ]
+
+UP [ Player | ] -> [ Player ]
+
+DOWN [ | Player ] -> [ | Player ]
+
+# Collect the gem
+[ Player | Gem ] -> [ Player ]
+gemCollect
+
+===========
+WINCONDITIONS
+===========
+
+All No Gem
+
+===========
+LEVELS
+===========
+
+#######
+#.....#
+#.###.#
+#.P.#.#
+#...G.#
+#######
+
+#######
+#P....#
+###.#.#
+#...#.#
+#..G#.#
+#######
+
+```
+produced the following console output:
+=================================
+line 36 : unexpected sound token "gemcollect".
+line 37 : unexpected sound token "playnote".
+line 38 : unexpected sound token "playnote".
+line 39 : unexpected sound token "playnote".
+line 54 : Objects cannot appear outside of square brackets in rules, only directions can.
+line 54 : Name "movement", referred to in a rule, does not exist.
+too many errors, aborting compilation
+Errors detected during compilation; the game may not work correctly.
+Return a repaired version of the code that addresses these errors. Return your code in full, inside a ```plaintext code block.

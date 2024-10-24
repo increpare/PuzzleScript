@@ -1,0 +1,94 @@
+The errors in the provided PuzzleScript code can be attributed to incorrect structure and syntax in defining objects and other sections. PuzzleScript requires specific structure and syntax, particularly with sections being clearly defined, object colors defined with `color` and arrays for appearance.
+
+### Key Issues:
+
+1. **Object Definitions**: The `OBJECTS` section should have object names followed by `color` and then a grid. The colors need to be specified correctly for each object.
+2. **Legend Errors**: In the `LEGEND` section, the symbols mapping to objects were incorrect, which might cause issues in referencing them in levels.
+3. **Rule Formatting**: Rules must be carefully formatted to ensure proper parsing and execution.
+
+Here's the corrected version:
+
+```plaintext
+title Sokoban
+
+=== OBJECTS ===
+Background
+color transparent
+. . .
+. . .
+. . .
+
+Player
+color Blue
+. p .
+.p.p.
+
+Wall
+color Grey
+. . .
+.w.w.
+. w .
+
+Block
+color Green
+.b.b.
+.b.b.
+. b .
+
+Goal
+color Red
+. . .
+.g.g.
+. g .
+
+=== LEGEND ===
+. = Background
+p = Player
+w = Wall
+b = Block
+g = Goal
+
+=== RULES ===
+[Player | Block] -> [ > Player | > Block ]
+[Player | ] -> [ > Player |  ]
+
+=== WINCONDITIONS ===
+All Block on Goal
+
+=== LEVELS ===
+
+// Level 1
+#####
+#p  #
+#   #
+# b #
+# g #
+#####
+
+// Level 2
+#####
+#p  #
+# b #
+#   #
+# gg#
+#   #
+#####
+
+// Level 3
+#######
+#     #
+#  p  #
+#  b  #
+#  b  #
+#  gg #
+#     #
+#######
+```
+
+### Explanation:
+- **Object Definitions**: Each object now starts with its name followed by `color` and a 2D pattern array.
+- **Legend**: I've corrected the characters and ensured they're aligned with object identifiers.
+- **Rules**: Reformatted to ensure clarity. 
+- **Consistency**: The game rules and win conditions work with the defined objects, ensuring that the game logic is correctly interpreted.
+
+With these corrections, the PuzzleScript should compile without syntax errors, allowing the game to function as intended.

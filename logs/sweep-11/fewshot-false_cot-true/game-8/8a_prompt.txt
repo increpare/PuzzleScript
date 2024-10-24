@@ -4,121 +4,81 @@ You are a game designer, familiar with the PuzzleScript game description languag
 USER PROMPT:
 The following PuzzleScript game code:
 ```plaintext
-title Simple Sokoban
-author Game Designer
+Title: Simple Sokoban
+Author: PuzzleScript Designer
 
 ========
 OBJECTS
 ========
+Background
+GREEN
+
 Player
-transparent grey
-00000
-01110
-00100
-01110
-00000
+BLUE
 
 Wall
-transparent black
-11111
-11111
-11111
-11111
-11111
+GRAY
 
-Crate
-transparent brown
-00000
-01110
-11011
-01110
-00000
+Box
+BROWN
 
 Target
-transparent red
-00000
-00100
-01110
-11111
-00100
+RED
 
-Floor
-transparent beige
-00000
-00000
-00000
-00000
-00000
+BoxOnTarget
+DARKRED
 
-===========
-COLLISIONLAYERS
-===========
-Background
-Static
-Movable
-Player
-
-======
+========
 LEGEND
-======
-= Wall
-. Floor
-P Player
-C Crate
-X Target
+========
+. = Background
+# = Wall
+P = Player
+B = Box
+T = Target
+O = BoxOnTarget
 
-======
+==============
 SOUNDS
-======
-CrateMovePush
-    500
-CrateMoveStop
-    700
+==============
 
-=====
+==============
+COLLISIONLAYERS
+==============
+Background
+Wall
+Player
+Box
+Target
+BoxOnTarget
+
+=======
 RULES
-=====
-[ >Player | Crate ] -> [ >Player | >Crate ]
+=======
+[ > Player | Box ] -> [ > Player | > Box ]
+[ Box | Target ] -> [ BoxOnTarget | Background ]
+[ BoxOnTarget | Player ] -> [ Box | Player ]
+[ BoxOnTarget | Target ] -> [ Box | Target ]
 
-===
-WIN
-===
-All Crate on Target
+===========
+WINCONDITIONS
+===========
+All BoxOnTarget on Target
 
-======
+=======
 LEVELS
-======
-# Level 1
-####
-#P C#
-#  X#
-####
-
-# Level 2
-#####
-#   #
-# P #
-# C #
-##X##
-  ###
-
-# Level 3
-######
-#    #
-# P C#
-# CC #
-##XX##
- ####
+=======
+# ##### 
+#T..T#.
+###..###
+#P.B.O#
+#.....#
+#######
 
 ```
 produced the following console output:
 =================================
-line 40 : Was looking for color for object FLOOR, got "beige" instead.
-line 48 : section "COLLISIONLAYERS" is out of order, must follow  "SOUNDS" (or it could be that the section "SOUNDS"is just missing totally.  You have to include all section headings, even if the section itself is empty).
-line 50 : Cannot add "BACKGROUND" to a collision layer; it has not been declared.
-line 51 : Cannot add "STATIC" to a collision layer; it has not been declared.
-line 52 : Cannot add "MOVABLE" to a collision layer; it has not been declared.
-line 58 : Only comments should go after a bunch of equals signs ('===') on a line.
-too many errors, aborting compilation
+line 67 : Maps must be rectangular, yo (In a level, the length of each row must be the same).
+line 65 : Error, symbol " ", used in map, not found.
 Errors detected during compilation; the game may not work correctly.
 Return a repaired version of the code that addresses these errors. First, reason about your task and determine the best plan of action. Then, write your code. Return your code in full, inside a ```plaintext code block.

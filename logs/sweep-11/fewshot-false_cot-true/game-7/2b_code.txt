@@ -1,75 +1,113 @@
-The issues in the provided code relate to the fact that definitions of colors and symbols, which are part of the PuzzleScript prelude, aren't correctly formatted. The lines under "Objects" should contain the names and visuals of the objects, and below each object, its appearance in ASCII art format. Additionally, the legend definition should not repeat the objects and their characters since they are already defined as objects.
+When reviewing the console errors, it seems the primary issue is the ordering of sections and the incorrect handling of sounds within the "RULES" section. Let's address these in the following way:
 
-To fix these errors, let's clarify the correct format for the object declarations and remove repetitive legend definitions. We will assign colors directly within the object ASCII visualization. I will also ensure the "BoxOnTarget" object appears on the right collision layer by separating it from the Player and Box on a new line. Here's how the corrected code should look:
+1. The "COLLISIONLAYERS" section should come after the "LEGEND" section, but before the "SOUNDS" section. Currently, the sections are in the wrong order.
+
+2. In the existing code, sounds are played using the keyword "SOUND" which seems incorrect or outdated for the current PuzzleScript version. We will modify this to use the correct sound referencing method as per documented guidelines.
+
+3. Make sure sound filenames match exactly with what is provided in the game, ensuring case sensitivity, if applicable.
+
+Here's the corrected version of the code:
 
 ```plaintext
-# Title and Author
-title Sokoban Simple
-author Game Designer
+title Maze Escape
+author Your Name
 
-# Objects
-=========
+===========
+OBJECTS
+===========
+
 Background
-...
-yellow
+BLACK
 
 Player
-@ 
-blue
+YELLOW
 
 Wall
-#
-black
+BLUE
 
-Box
-B
-red
+Exit
+GREEN
 
-Target
-O
-green
-
-BoxOnTarget
-G
-yellow
-
-# Collision Layers
-===================
-Background
-Player
-Box, BoxOnTarget
-Wall, Target
-
-# Rules
 ===========
-[ > Player | Box ] -> [ > Player | > Box ]
-[ Box | Target ] -> [ BoxOnTarget | Target ]
-[ BoxOnTarget | ] -> [ | Box ]
+LEGEND
+===========
 
-# Win Conditions
-==================
-All BoxOnTarget on Target
+. = Background
+P = Player
+# = Wall
+E = Exit
 
-# Levels
-=========
-# Level 1
-#######
-#..O..#
-#..B..#
-#..@..#
-#######
+===========
+COLLISIONLAYERS
+===========
 
-# Level 2
-#######
-#..O..#
-#..B..#
-#..@..#
-#######
+Background
+Wall
+Player, Exit
+
+===========
+SOUNDS
+===========
+
+Movement
+move.ogg
+
+Win
+win.ogg
+
+===========
+RULES
+===========
+
+[Player] -> [ Player ]
+
+up [Player | > ] -> [ | Player ] M SOUND MOVE
+down [Player | > ] -> [ | Player ] M SOUND MOVE
+left [Player | > ] -> [ | Player ] M SOUND MOVE
+right [Player | > ] -> [ | Player ] M SOUND MOVE
+
+[Player | Exit] -> [Player | Background] M SOUND WIN
+
+===========
+WINCONDITIONS
+===========
+
+No Exit
+
+===========
+LEVELS
+===========
+
+; Level 1
+######
+#P   #
+# ## #
+#    #
+# E  #
+######
+
+; Level 2
+########
+#P     #
+# ###  #
+# # E  #
+# #    #
+# #### #
+#      #
+########
+
+; Level 3
+#########
+#P      #
+### ### #
+#    E# #
+### ### #
+#       #
+#########
 ```
 
-Let's look at the changes:
-- Object appearances now use immediate characters followed by their color definition inside the object section.
-- Corrected the use of collision layers by separating BoxOnTarget.
-- Eliminate duplication in the legend section, as it's unnecessary in the updated format.
-- The overall structure and rules remain functional.
-This should address the parser errors and set up the game correctly in PuzzleScript.
+Changes made:
+- Ensured the "COLLISIONLAYERS" section was properly ordered before "SOUNDS".
+- Corrected sound playing within the rules by using the correct format "M SOUND MOVE" and "M SOUND WIN".
+
+This should address the given errors and allow the game to function correctly.

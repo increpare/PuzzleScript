@@ -1,0 +1,1478 @@
+SYSTEM PROMPT:
+You are a game designer, familiar with the PuzzleScript game description language. Here are some example games, for inspiration (do not reproduce these games exactly):
+
+title Simple Block Pushing Game
+author David Skinner
+homepage www.puzzlescript.net
+zoomscreen 3x3
+========
+OBJECTS
+========
+
+Background
+LIGHTGREEN GREEN
+11111
+01111
+11101
+11111
+10111
+
+
+Target
+DarkBlue
+.....
+.000.
+.0.0.
+.000.
+.....
+
+Wall
+BROWN DARKBROWN
+00010
+11111
+01000
+11111
+00010
+
+Player
+Black Orange White Blue
+.000.
+.111.
+22222
+.333.
+.3.3.
+
+Crate
+Orange
+00000
+0...0
+0...0
+0...0
+00000
+
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Player
+* = Crate
+@ = Crate and Target
+O = Target
+
+
+=======
+SOUNDS
+=======
+
+Crate MOVE 36772507
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Target
+Player, Wall, Crate
+
+======
+RULES
+======
+
+[ >  Player | Crate ] -> [  >  Player | > Crate  ]
+
+==============
+WINCONDITIONS
+==============
+
+All Target on Crate
+
+=======
+LEVELS
+=======
+
+
+####..
+#.O#..
+#..###
+#@P..#
+#..*.#
+#..###
+####..
+
+
+######
+#....#
+#.#P.#
+#.*@.#
+#.O@.#
+#....#
+######
+
+
+title PUSH
+author lonebot - demake by rmmh
+homepage http://lonebot.net/games/push/
+
+youtube UXlXgFDgXow
+again_interval 0.1
+noaction
+
+========
+OBJECTS
+========
+
+Background .
+#756C5E
+
+Wall #
+#635854
+
+StrongPlayer P
+#E8D2AC #67453D Black #282D3C Red
+11111
+02020
+40004
+43334
+33.33
+
+WeakPlayer
+#E8D2AC #67453D Black #282D3C
+11111
+02020
+.000.
+.333.
+33.33
+
+GibbedPlayer
+Red
+...0.
+.0...
+0..0.
+.....
+..0.0
+
+Rock *
+#202020 #706249 #A6957B
+.000.
+02220
+02210
+01110
+.000.
+
+RockDust (destroyed by a projectile)
+#A6957B
+...0.
+.0...
+0..0.
+.....
+..0.0
+
+Idol G
+#945527 #C97536 #F4EF0B
+.000.
+01210
+.222.
+.010.
+01210
+
+Pit _
+Black #5A5349
+.1.1.
+1000.
+.000.
+.0001
+..11.
+
+PitFilled
+Black #5A5349 #706249
+.1.1.
+1222.
+.222.
+.2221
+..11.
+
+PitPlayer
+Black #5A5349 #E8D2AC #282D3C
+.1.1.
+1020.
+.222.
+.3331
+..11.
+
+WeakGround x
+#5A5349
+.0..0
+00..0
+..00.
+00..0
+0.0..
+
+GunUSingle U
+Black Grey Yellow
+..0..
+12021
+11011
+11111
+.111.
+
+GunDSingle D
+Black Grey Yellow
+.111.
+11111
+11011
+12021
+..0..
+
+GunRSingle R
+Black Grey Yellow
+.111.
+1112.
+11000
+1112.
+.111.
+
+GunLSingle L
+Black Grey Yellow
+.111.
+.2111
+00011
+.2111
+.111.
+
+GunUMulti M
+Black Grey Red
+..0..
+.202.
+12021
+12221
+.111.
+
+GunLMulti N
+Black Grey Red
+..11.
+.2221
+00021
+.2221
+..11.
+
+GunRMulti O
+Black Grey Red
+.11..
+1222.
+12000
+1222.
+.11..
+
+
+Button T
+#969283 #4A4A4A
+.000.
+01110
+01010
+01110
+.000.
+
+ButtonPressed
+#969283 #3A3A3A
+.000.
+01110
+01110
+01110
+.000.
+
+ArrowU
+Brown
+..0..
+.000.
+..0..
+.....
+.....
+
+ArrowR
+Brown
+.....
+...0.
+..000
+...0.
+.....
+
+ArrowL
+Brown
+.....
+.0...
+000..
+.0...
+.....
+
+ArrowD
+Brown DarkBrown
+.....
+.....
+..0..
+.000.
+..0..
+
+Firing
+Black
+
+Fired
+Brown
+
+(used for linking buttons to guns, and for generic flags)
+LinkA
+Red
+
+LinkB
+Green
+
+LinkC
+Blue
+
+LinkD
+White
+
+LinkE
+Black
+
+=======
+LEGEND
+=======
+
+Player = StrongPlayer or WeakPlayer or GibbedPlayer
+DeadPlayer = GibbedPlayer or PitPlayer
+GunU = GunUSingle or GunUMulti
+GunD = GunDSingle
+GunL = GunLSingle or GunLMulti
+GunR = GunRSingle or GunRMulti
+MultiGun = GunUMulti or GunLMulti or GunRMulti
+Gun = GunU or GunR or GunD or GunL
+Movable = Rock or Gun
+Q = StrongPlayer and WeakGround
+Heavy = Movable or Player
+Arrow = ArrowU or ArrowR or ArrowD or ArrowL
+Link = LinkA or LinkB or LinkC or LinkD or LinkE
+Blockers = Player or Wall or Idol or Movable
+
+1 = Wall and LinkA
+2 = Wall and LinkB
+3 = Wall and LinkC
+4 = Wall and LinkD
+5 = Wall and LinkE
+
+7 = GunRSingle and LinkE
+8 = Button and LinkE
+
+=======
+SOUNDS
+=======
+
+Idol destroy 47224903
+Pit create 4141702
+PitPlayer create 19700104
+PitFilled create 87604304
+ButtonPressed create 25424301
+(using sfxN here to deal with bug where 'again' triggers sounds twice)
+sfx0 36787702 (rock destroyed by arrow)
+sfx1 59184504 (player explodes)
+Arrow create 98842708 (arrow shot)
+
+================
+COLLISIONLAYERS
+================
+
+Link (move layer to top for debugging linkages)
+Firing, Fired
+Background
+Pit, PitFilled, WeakGround, Button, ButtonPressed, PitPlayer, RockDust
+Blockers
+Arrow
+
+======
+RULES
+======
+
+(player can move an object only once)
+[ > StrongPlayer | Movable | no Blockers ] -> [ > WeakPlayer | > Movable | ]
+[ > Movable Link ] -> [ > Movable > Link ]
+[ DeadPlayer ] -> cancel
+
+(pit behaviors)
+late [ Player Pit ] -> [ PitPlayer ] (falling into a pit kills you)
+late [ Pit Rock ] -> [ PitFilled ]  (they can be filled)
+[ Player WeakGround ] -> [ Player WeakGround LinkA ] (mark WeakGround as visited)
+late [ WeakGround LinkA no Player ] -> [ Pit ] (pits appear when you move off weakground)
+
+(initialize gun linkages -- try linking on a line first)
+[Wall Link] [Button no Link | ... | Gun no Link] -> [Wall] [Button Link | ... | Gun Link]
+[Wall Link] [Button no Link] [Gun no Link] -> [Wall] [Button Link] [Gun Link]
+
+(buttons cause linked gun to fire)
+late [ Button Heavy LinkA ] [ Gun LinkA ] -> [ ButtonPressed Heavy ] [ Gun Firing ] again
+late [ Button Heavy LinkB ] [ Gun LinkB ] -> [ ButtonPressed Heavy ] [ Gun Firing ] again
+late [ Button Heavy LinkC ] [ Gun LinkC ] -> [ ButtonPressed Heavy ] [ Gun Firing ] again
+late [ Button Heavy LinkD ] [ Gun LinkD ] -> [ ButtonPressed Heavy ] [ Gun Firing ] again
+late [ Button Heavy LinkE ] [ Gun LinkE ] -> [ ButtonPressed Heavy ] [ Gun Firing ] again
+
+( MultiGuns fire 3 shots. do this by cycling LinkB->LinkA->None )
+[ MultiGun Firing no Link ] -> [ MultiGun Firing LinkB ]
+[ MultiGun Fired LinkB ] -> [ MultiGun Firing LinkA ]
+[ MultiGun Fired LinkA ] -> [ MultiGun Firing ]
+
+( create arrows )
+[ GunU Firing ] -> [ GunU ArrowU Fired ]
+[ GunR Firing ] -> [ GunR ArrowR Fired ]
+[ GunL Firing ] -> [ GunL ArrowL Fired ]
+[ GunD Firing ] -> [ GunD ArrowD Fired ]
+( move )
+[ ArrowL ] -> [ left ArrowL ] again
+[ ArrowU ] -> [ up ArrowU ] again
+[ ArrowR ] -> [ right ArrowR ] again
+[ ArrowD ] -> [ down ArrowD ] again
+
+late [ Arrow Rock ] -> [ RockDust ] sfx0
+late [ Arrow Player ] -> [ GibbedPlayer ] sfx1
+late [ Arrow Blockers ] -> [ Blockers ] sfx0
+
+(grabbing an idol)
+[ DeadPlayer ] -> cancel
+[ > Player | Idol ] -> [ Player | Pit ]
+
+==============
+WINCONDITIONS
+==============
+
+no Idol
+
+=======
+LEVELS
+=======
+
+message 1/20: You only get one push!
+###########
+#.........#
+#......*..#
+#.*.....*.#
+#...***...#
+#..**g*...#
+#..*.*....#
+#.........#
+#...p...*.#
+#.........#
+###########
+
+message 2/20: Mind the gap
+###########
+#**.......#
+#*....*.*.#
+#.........#
+#...***...#
+#...*g*...#
+#...*_*...#
+#*........#
+#..*.p..*.#
+#.........#
+###########
+
+message 3/20: Shaky footing
+###########
+#****g****#
+#.*_..****#
+#x********#
+#.********#
+#.x.xx...*#
+#*******x*#
+#......x.*#
+#.********#
+#p*.......#
+###########
+
+message 4/20: Firepower
+1##########
+#*...g...*#
+#........*#
+#*********#
+#**.....*.#
+#**.......#
+#**_.p....#
+#*t*...**.#
+#**_...**.#
+#**..u...*#
+###########
+
+message 5/20: Artillery
+1##########
+#**.....*.#
+#*......**#
+#...*g*...#
+#.*.......#
+#.........#
+#*********#
+#..*.**...#
+#*......t.#
+#..*.u...p#
+###########
+
+message 6/20: Traps
+1##########
+#t**.****.#
+#.*...**g*#
+#.x.....**#
+#.**.*....#
+#..*.*....#
+#.**......#
+#**.......#
+#**p..*...#
+#**..**.u*#
+###########
+
+message 7/20: Sequencing
+12#########
+#*********#
+#*t****_..#
+#*x*.d**..#
+#.....**..#
+#.....*...#
+#t..._*...#
+#r...**.g.#
+#...***...#
+#p..****..#
+###########
+
+message 8/20: Hamiltonian Cycle
+(8/20 - 3 guns, order irrelevant)
+123########
+#*....**.*#
+#..***l**.#
+#g****l***#
+#*****l***#
+#tx**xxxxx#
+#xxxqxxx*t#
+#xx*_**x_x#
+#*x_xxxxx*#
+#*xtx*x**_#
+###########
+
+message 9/20: Barrage
+(9/20 -- 4 guns, all inline with triggers)
+1234#######
+#****x***_#
+#***.tt.**#
+#xg_.dd.**#
+#*__......#
+#_*__**.lt#
+#_*..*..lt#
+#.........#
+#*p.......#
+#**...*..*#
+###########
+
+message 10/20: Rotary
+(10/20 -- 4 guns, mostly inline with triggers)
+1234#######
+#**_*...t.#
+#*......d.#
+#r......**#
+#*.****..*#
+#t.*.g**.*#
+#..******x#
+#....**_xt#
+#.....p***#
+#_.u*t._.l#
+###########
+
+message 11/20: Shooting Gallery
+(11/20)
+1234#######
+#t..*..*_l#
+#_.****.__#
+#r.*x**.t*#
+#******.**#
+#**xtr_.*g#
+#__.__..**#
+#_......**#
+#....p.u.*#
+#**....t..#
+###########
+
+message 12/20: Co-op
+(12/20: 2 players!)
+1##########
+#*t.._____#
+#...._*g__#
+#.r.._.*..#
+#...._*.**#
+#**_._.*.*#
+#****_....#
+#*..*_..**#
+#*.**_..**#
+#*p**_..p*#
+###########
+
+message 13/20: Rescue
+12#########
+#**...._.g#
+#*.t..._*.#
+#*...d._.*#
+#*p..__*_*#
+#*...__.u*#
+#.*..._.t*#
+#*...**_**#
+#*..***.**#
+#*.**....p#
+###########
+
+message 14/20: Friendly Fire
+(14/20 -- corridor toggle triggers left-wall gun )
+12#########
+#*********#
+#*********#
+#g*8...pl*#
+#*********#
+#7********#
+#...***...#
+#......p.t#
+#....*.*..#
+#.ut......#
+###########
+
+message 15/20: Interference
+123########
+#**..*..**#
+#*.......*#
+#....p...*#
+#t......**#
+#r.**..**g#
+#...*...**#
+#..uup..**#
+#*.......*#
+#**tt...**#
+###########
+
+message 16/20: Machine guns
+1##########
+#*********#
+#p..*g****#
+#....*****#
+#..*******#
+#..**.*.**#
+#***......#
+#***.p....#
+#....t.m..#
+#_........#
+###########
+
+message 17/20: Trapped
+(17/20 -- top toggle triggers magma)
+123########
+#p**...n*g#
+#*****..*_#
+#******.**#
+#***..t*.*#
+#*7_*.....#
+#8.x*....l#
+#...xp...x#
+#...u*.._t#
+#*..t*...x#
+###########
+
+message 18/20: Crossfire
+(18/20 -- modified to be more difficult)
+12345######
+#_g.*_****#
+#____**...#
+#.....*...#
+#rx.***.x.#
+#t..*.*...#
+#.px..*.pl#
+#o.**.*x.*#
+#t...*.x.t#
+#.xtm*mtx.#
+###########
+
+message 19/20: Stylite
+(19/20)
+1##########
+#*********#
+#..*t***x*#
+#p...*****#
+#.r..*g***#
+#.*_____*_#
+#**_...___#
+#*__p..___#
+#*x_...__*#
+#_*_______#
+###########
+
+message 20/20: Spinal Cannon
+(20/20 -- inverted so I don't have to make an upwards magma gun)
+1##########
+#p.**g*_.p#
+#....**x..#
+#_*.._..**#
+#.*..*...*#
+#..*.x....#
+#_x__*.._.#
+#*.x_*x.._#
+#*x..***..#
+#*_.tm.*..#
+###########
+
+(finale -- pushes gold into pit, gold gets smashed, eyes bug out)
+###########
+#*.......*#
+#....p....#
+#._....._.#
+#_...*..._#
+#_..._..._#
+#__._g_.__#
+#_________#
+#_________#
+#*_______*#
+###########
+
+message Congratulations!
+
+(Credits
+Code: Yotam Frid
+Art: Mati & Itamar Ernst
+Music: Jason Lord
+
+www.lonebot.net
+Ludam Dare 28)
+
+(blank level template()
+###########
+#.........#
+#.........#
+#.........#
+#.........#
+#.........#
+#.........#
+#.........#
+#.........#
+#.........#
+###########
+()
+
+title maze generator
+run_rules_on_level_start
+again_interval 0
+
+========
+OBJECTS
+========
+
+Background .
+black white
+00000
+01110
+01110
+01110
+00000
+
+Player P
+transparent
+
+visited
+transparent
+
+filler
+transparent
+
+w_up
+white
+.000.
+.000.
+.000.
+.000.
+.....
+
+w_down
+white
+.....
+.000.
+.000.
+.000.
+.000.
+
+w_left
+white
+.....
+0000.
+0000.
+0000.
+.....
+
+w_right
+white
+.....
+.0000
+.0000
+.0000
+.....
+
+to_delete
+transparent
+
+temp
+transparent
+
+tempA
+transparent
+
+=======
+LEGEND
+=======
+
+
+=======
+SOUNDS
+=======
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Player
+filler
+visited
+w_up
+w_down
+w_left
+w_right
+to_delete
+temp
+tempA
+
+======
+RULES
+======
+
+(place player randomly on the first turn only)
+random [ no filler ] -> [player visited]
+[no filler] -> [filler]
+
+(propagate path until you can't move any more)
+random [ player |  no visited ] ->  [  visited > to_delete |  < to_delete player ] again
+
+(if you can't extend the current path, continue from some random other neighbouring point)
+[player | no visited ] -> [ player tempA | ]
+random [player no tempA] [ visited | no visited ] -> [ visited ] [ visited player |  ] again
+[tempA]->[]
+
+[ up to_delete ] -> [ w_up ]
+[ down to_delete ] -> [ w_down ]
+[ left to_delete ] -> [ w_left ]
+[ right to_delete ] -> [ w_right ]
+
+==============
+WINCONDITIONS
+==============
+
+
+=======
+LEVELS
+=======
+
+........................................
+........................................
+........................................
+........................................
+........................................
+........................................
+........................................
+........................................
+........................................
+........................................
+........................................
+........................................
+........................................
+........................................
+........................................
+........................................
+........................................
+........................................
+........................................
+........................................
+........................................
+........................................
+........................................
+........................................
+........................................
+........................................
+........................................
+........................................
+........................................
+........................................
+
+
+
+
+title Drop Swap
+author Aaron Steed
+homepage www.robotacid.com
+
+key_repeat_interval 0.23
+again_interval 0.05
+noaction
+noundo
+background_color Black
+text_color Grey
+run_rules_on_level_start
+
+========
+OBJECTS
+========
+
+Background
+Black
+
+Player
+#ffffff #000000 #626263 #3c3b3c
+.222.
+21112
+23132
+20102
+.222.
+
+DeadPlayer
+#ffffff #000000 #626263 #3c3b3c
+.222.
+21112
+21112
+23132
+.222.
+
+BaseWall
+#222222 #333333 #444444 #ffffff
+11110
+12220
+12200
+12000
+00000
+
+APill
+#ff0000 #ff7374 #ff0000 #ff0000
+.111.
+11110
+11010
+11100
+.000.
+
+BPill
+#00de00 #cffa92 #ff0000 #ff0000
+.111.
+10010
+10110
+11100
+.000.
+
+CPill
+#7a35fc #b56bfd #ff0000 #ff0000
+.111.
+10110
+11010
+11100
+.000.
+
+DPill
+#0094fc #79b5fd #ff0000 #ff0000
+.111.
+10100
+11010
+10100
+.000.
+
+EPill
+#d1c200 #fff919 #ffffff #ff0000
+.111.
+10010
+10010
+11110
+.000.
+
+FPill
+#ff33b1 #ff76d2 #ff0000 #ff0000
+.111.
+10100
+11110
+10110
+.000.
+
+AllPill
+#eeee66 #ffffff #ffffcc #ffffff
+.112.
+11112
+11012
+21120
+.220.
+
+NoPill
+#ffffff #000000 #ffde85 #ff0000
+.000.
+00000
+21012
+.000.
+..2..
+
+Bomb
+#6e6e6e #000000 #ff0000 #fcf26b
+.020.
+02320
+01210
+01110
+.000.
+
+GemPill
+#ffffff #000000 #626263 #3c3b3c
+..0..
+.002.
+00022
+.223.
+..2..
+
+Count
+#ffffff #000000 #5a595a #ff0000
+.....
+.000.
+.000.
+.000.
+.....
+
+Marked
+#ffffff #000000
+.....
+..1..
+.101.
+..1..
+.....
+
+CountTray
+#333333
+
+GemTray
+#333333
+
+StartGem
+red
+
+Collect
+White
+
+Debris1
+#ffffff #0739f5 #1f0f42 #ffffff
+.0.0.
+00.00
+..0..
+00.00
+.0.0.
+
+Debris2
+#ffffff #0739f5 #1f0f42 #ffffff
+.....
+.0.0.
+..0..
+.0.0.
+.....
+
+Empty
+Black
+
+OldPos
+Black
+
+StartCount
+Black
+
+DropWall1
+#222222 #333333 #444444 #ffffff
+11110
+12220
+12200
+12200
+12200
+
+DropWall2
+#222222 #333333 #444444 #ffffff
+11110
+12220
+12200
+12200
+12200
+
+DropWall3
+#222222 #333333 #444444 #ffffff
+11110
+12220
+12200
+12200
+12200
+
+DropWall4
+#222222 #333333 #444444 #ffffff
+11110
+12220
+12200
+12200
+12200
+
+DropMarker
+Blue
+
+Init
+Purple
+
+=======
+LEGEND
+=======
+
+. = Background
+@ = Player
+p = DeadPlayer
+# = BaseWall
+a = APill
+b = BPill
+c = CPill
+d = DPill
+e = EPill
+f = FPill
+n = NoPill
+x = AllPill
+u = Count and CountTray
+w = Count and CountTray and StartCount
+g = GemPill
+q = GemTray
+o = GemTray and StartGem
+p = Bomb
+i = Init
+j = DropWall1
+k = DropWall2
+l = DropWall3
+m = DropWall4
+
+
+MatchPill = APill or BPill or CPill or DPill or EPill or FPill or AllPill
+Pill = MatchPill or NoPill or GemPill or Bomb
+Debris = Debris1 or Debris2
+AMatch = APill or AllPill
+BMatch = BPill or AllPill
+CMatch = CPill or AllPill
+DMatch = DPill or AllPill
+EMatch = EPill or AllPill
+FMatch = FPill or AllPill
+Wall = BaseWall or DropWall1 or DropWall2 or DropWall3 or DropWall4
+Item = Pill or Debris or Wall or Player
+Heavy = Pill or Player
+Dropping = Marked or DropMarker
+DropMix1 = APill or BPill or CPill or DPill or EPill
+DropMix2 = APill or BPill or CPill or DPill or EPill or GemPill
+DropMix3 = APill or BPill or CPill or DPill or EPill or NoPill
+DropMix4 = APill or BPill or CPill or DPill or EPill or FPill or GemPill
+DropMix5 = APill or BPill or CPill or DPill or EPill or FPill
+DropWallMarked = DropWall1 or DropWall3
+
+=======
+SOUNDS
+=======
+
+sfx0 54236904 (illegal)
+sfx1 5160507 (swap)
+sfx2 19008103 (allpill)
+sfx3 50665503 (crush 3)
+sfx4 80820507 (land)
+sfx5 2030908 (blast)
+sfx6 3032303 (bomb)
+sfx7 83704102 (dead)
+sfx8 7194508 (gem collect)
+EndLevel 16709508 (win)
+
+================
+COLLISIONLAYERS
+================
+
+
+Collect, StartCount, StartGem
+Background
+OldPos, CountTray, GemTray
+Player, Wall, Pill, Empty, Count, DeadPlayer, Bomb, Init
+Debris, Marked, DropMarker
+
+======
+RULES
+======
+
+(init)
+[ DropWall1 ] [ Init ] -> [ DropWall1 ] [ random DropMix1 Marked ]
+[ DropWall2 ] [ Init ] -> [ DropWall2 ] [ random DropMix1 ]
+[ DropWall3 ] [ Init ] -> [ DropWall3 ] [ random DropMix1 Marked ]
+[ DropWall4 ] [ Init ] -> [ DropWall4 ] [ random DropMix5 ]
+
+(debris clean up)
+[ Debris2 ] -> [ Empty ] again
+[ Debris1 ] -> [ Debris2 ] again
+
+(player - pill swapping)
+[ > Player | Pill ] -> [ Pill OldPos | Player ] sfx1
+[ Player Marked | OldPos ] -> [ Player | OldPos Marked ]
+
+(blocked move)
+[ > Player | No Pill ] -> [ Player | ] sfx0
+
+(pill combos)
+[ AMatch | AMatch | AMatch ] -> [ AMatch Collect | AMatch Collect | AMatch Collect ]
+[ BMatch | BMatch | BMatch ] -> [ BMatch Collect | BMatch Collect | BMatch Collect ]
+[ CMatch | CMatch | CMatch ] -> [ CMatch Collect | CMatch Collect | CMatch Collect ]
+[ DMatch | DMatch | DMatch ] -> [ DMatch Collect | DMatch Collect | DMatch Collect ]
+[ EMatch | EMatch | EMatch ] -> [ EMatch Collect | EMatch Collect | EMatch Collect ]
+[ FMatch | FMatch | FMatch ] -> [ FMatch Collect | FMatch Collect | FMatch Collect ]
+[ NoPill | NoPill | NoPill ] -> [ NoPill Collect | NoPill Collect | NoPill Collect ]
+
+(bomb activate)
+[ OldPos Bomb ] -> sfx5
+up [ OldPos Bomb | Pill ] -> [ OldPos Bomb | Pill > Collect ]
+right [ OldPos Bomb | Pill ] -> [ OldPos Bomb | Pill > Collect ]
+down [ OldPos Bomb | Pill ] -> [ OldPos Bomb | Pill > Collect ]
+left [ OldPos Bomb | Pill ] -> [ OldPos Bomb | Pill > Collect ]
+[ OldPos Bomb ] -> [ OldPos Empty ]
+
+(blast)
+up [ Pill > Collect | Pill ] -> [ Pill Collect | Pill > Collect ]
+right [ Pill > Collect | Pill ] -> [ Pill Collect | Pill > Collect ]
+down [ Pill > Collect | Pill ] -> [ Pill Collect | Pill > Collect ]
+left [ Pill > Collect | Pill ] -> [ Pill Collect | Pill > Collect ]
+[ > Collect ] -> [ Collect ]
+[ GemPill Collect ] -> [ GemPill ]
+
+(reward matches)
+(junction)
+Right [ Collect | Collect ] -> [ > Collect | > Collect ]
+Down [ Collect | Collect ] -> [ > Collect | > Collect ]
+[ Down Collect | Right Collect ] [ Collect OldPos ] -> [ Collect | Collect ] [ Bomb OldPos ] sfx6
+(4: create AllPill)
+[ MatchPill Collect | MatchPill Collect | MatchPill Collect | MatchPill Collect ] [ Collect OldPos ] -> [ MatchPill Collect | MatchPill Collect | MatchPill Collect | MatchPill Collect ] [ AllPill OldPos ] sfx2
+
+(count moves)
+(subtract on move)
+random right [ OldPos ] [ Count | No Count ] -> [ OldPos ] [ | ]
+(fill on Debris)
+[ Collect ] [ CountTray ] -> [ Collect ] [ CountTray Count ]
+
+(dead?)
+[ DeadPlayer ] -> cancel
+[ No Count StartCount CountTray ] [ Player ] -> [ No Count StartCount CountTray ] [ DeadPlayer ] sfx7
+[ Player | NoPill Collect ] -> [ DeadPlayer | NoPill ]
+[ DeadPlayer ] [ CountTray Count ] -> [ DeadPlayer ] [ CountTray ] sfx7
+
+(destroy matched)
+[ APill Collect ] -> [ Debris1 ] sfx3 again
+[ BPill Collect ] -> [ Debris1 ] sfx3 again
+[ CPill Collect ] -> [ Debris1 ] sfx3 again
+[ DPill Collect ] -> [ Debris1 ] sfx3 again
+[ EPill Collect ] -> [ Debris1 ] sfx3 again
+[ FPill Collect ] -> [ Debris1 ] sfx3 again
+[ AllPill Collect ] -> [ Debris1 ] sfx3 again
+[ Player ] [ NoPill Collect ] -> [ Player ] [ Debris1 ] sfx3 again
+
+(destroy NoPills)
+down [ NoPill | Wall ] -> [ Debris1 | Wall ] again
+
+(collect gems)
+down [ GemPill | Wall ] -> [ GemPill Collect | Wall ]
+[ GemPill Collect ] [ StartGem No GemPill ] -> [ Debris1 ] [ StartGem GemPill ] again sfx8
+right [ GemPill Collect ] [ GemPill GemTray | No GemPill GemTray ] -> [ Debris1 ] [ GemPill GemTray | GemPill GemTray ] again sfx8
+
+(drop)
+[ Heavy No Dropping ] -> [ Heavy DropMarker ]
+down [ Heavy Dropping | Empty ] -> [ Empty | Heavy Dropping ]
+[ DropMarker ] -> [ ]
+down [ DropWall1 | Empty ] -> [ DropWall1 | random DropMix1 ] again
+down [ DropWall2 | Empty ] -> [ DropWall2 | random DropMix2 ] again
+down [ DropWall3 | Empty ] -> [ DropWall3 | random DropMix3 ] again
+down [ DropWall4 | Empty ] -> [ DropWall4 | random DropMix4 ] again
+
+(gem drop win)
+right [ GemPill GemTray | Wall ] -> win
+
+[ OldPos ] -> [ ]
+
+==============
+WINCONDITIONS
+==============
+
+No Marked
+Some DropWallMarked
+
+=======
+LEVELS
+=======
+
+message collect orbs by matching 3
+message match 3 to restore move-energy
+message level 1: collect all marked orbs
+
+wuuuuu#
+#jjjjj#
+#iiiii#
+#iiiii#
+#iiiii#
+#iiiii#
+#ii@ii#
+#######
+
+message level 2: collect all marked orbs
+
+wuuuuuu#
+#jjjjjj#
+#iiiiii#
+#iiiiii#
+#iiiiii#
+#iiiiii#
+#iiiiii#
+#iiiiii#
+#iii@ii#
+########
+
+message collect gray gems by getting them to the bottom
+message level 3: collect 8 gems
+
+oqqqqqqq#
+wuuuuuuu#
+#kkkkkkk#
+#iiiiiii#
+#iiiiiii#
+#iiiiiii#
+#iiiiiii#
+#iiiiiii#
+#iiiiiii#
+#iiiiiii#
+#iii@iii#
+#########
+
+message if you are next to 3 matching skulls you die
+message skulls can be destroyed by getting them to the bottom
+message level 4: collect all marked orbs
+
+wuuuuuu#
+#llllll#
+#iiiiii#
+#iiiiii#
+#iiiiii#
+#iiiiii#
+#iiiiii#
+#iiiiii#
+#iii@ii#
+########
+
+message level 5: collect 7 gems
+
+oqqqqqqq#
+wuuuuuuu#
+#mmmmmmm#
+#iiiiiii#
+#iiiiiii#
+#iiiiiii#
+#iiiiiii#
+#iiiiiii#
+#iiiiiii#
+#iiiiiii#
+#iii@iii#
+#########
+
+message thanks for playing
+
+
+
+USER PROMPT:
+The following PuzzleScript game code:
+```plaintext
+title Simple Game
+author Example Author
+
+========
+OBJECTS
+========
+
+// Define all the game objects
+
+Background
+DarkGreen
+
+Wall
+Gray
+
+Player
+Red
+
+Exit
+Yellow
+
+Trap
+DarkGray
+
+=======
+LEGEND
+=======
+
+# = Wall
+P = Player
+E = Exit
+T = Trap
+. = Background
+
+=========
+SOUNDS
+=========
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Wall
+Trap
+Player, Exit
+
+======
+RULES
+======
+
+// Define game rules here if needed
+[ Player | Exit ] -> [ Player ] message Game completed!
+
+==============
+WINCONDITIONS
+==============
+
+Some Player on Exit
+
+=======
+LEVELS
+=======
+
+#######
+#..E..#
+#P##T.#
+###.###
+#..T..#
+#.T.#.#
+#...T.#
+#######
+
+
+```
+produced the following console output:
+=================================
+line 8 : Unknown junk in object section (possibly: sprites have to be 5 pixels wide and 5 pixels high exactly. Or maybe: the main names for objects have to be words containing only the letters a-z0.9 - if you want to call them something like ",", do it in the legend section).
+line 52 : Name "//", referred to in a rule, does not exist.
+line 52 : Name "define", referred to in a rule, does not exist.
+line 52 : Name "game", referred to in a rule, does not exist.
+line 52 : Name "here", referred to in a rule, does not exist.
+line 52 : Name "if", referred to in a rule, does not exist.
+line 52 : Name "needed", referred to in a rule, does not exist.
+too many errors, aborting compilation
+Errors detected during compilation; the game may not work correctly.
+Return a repaired version of the code that addresses these errors. Return your code in full, inside a ```plaintext code block.

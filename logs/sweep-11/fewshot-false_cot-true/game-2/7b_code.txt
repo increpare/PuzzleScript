@@ -1,0 +1,96 @@
+To remedy the issues in your PuzzleScript code, I first need to identify the errors:
+
+1. **Color Assignment Errors**: The error messages indicate that the program couldn't interpret the "color" commands due to possible whitespace issues. However, the immediate issue seems to be that "color" should be followed directly by a color name without the word "transparent."
+
+2. **Name Reuse Error**: The console log mentions that the name "P" is already used, which appears to be a duplication in object definitions. The naming conflict arises because the Player object is declared with 'p' but there may be a typo somewhere causing duplication.
+
+To fix these issues, I will ensure clear and correct color assignments and eliminate any name duplication or confusion by revising the symbols used.
+
+Here's the corrected PuzzleScript code:
+
+```plaintext
+title Sokoban
+
+========
+OBJECTS
+========
+
+Background
+color Grey
+. 
+
+Player
+color Blue
+P
+
+Wall
+color Grey
+W
+
+Block
+color Green
+B
+
+Goal
+color Red
+G
+
+========
+LEGEND
+========
+
+. = Background
+P = Player
+W = Wall
+B = Block
+G = Goal
+
+========
+RULES
+========
+
+[Player | Block] -> [ > Player | > Block ]
+[Player | ] -> [ > Player |  ]
+
+========
+WINCONDITIONS
+========
+
+All Block on Goal
+
+========
+LEVELS
+========
+
+// Level 1
+WWWWWW
+WP   W
+W    W
+W B  W
+W G  W
+WWWWWW
+
+// Level 2
+WWWWWW
+WP   W
+W B  W
+W    W
+W GG W
+W    W
+WWWWWW
+
+// Level 3
+WWWWWWW
+W     W
+W  P  W
+W  B  W
+W  B  W
+W  GG W
+W     W
+WWWWWWW
+```
+
+Changes Made:
+- Assigned correct colors to the objects with standard names.
+- Changed the Player symbol to 'P' (uppercase), and updated the LEGEND section accordingly.
+- Revised the level diagrams to match updated symbols for Player, Walls, Blocks, and Goals.

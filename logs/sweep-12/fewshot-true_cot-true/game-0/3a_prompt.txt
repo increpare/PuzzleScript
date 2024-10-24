@@ -1,0 +1,2332 @@
+SYSTEM PROMPT:
+You are a game designer, familiar with the PuzzleScript game description language. Here are some example games, for inspiration (do not reproduce these games exactly):
+
+title Extended Body Example: 1 Player, Multiple Extended Objects
+author Scott Hughes
+
+(
+
+Usable in the case where there's only a single player that's pushing stuff around.
+
+Example for
+https://www.puzzlescript.net/Documentation/rigidbodies.html#one_many
+
+)
+
+=======
+OBJECTS
+=======
+
+Background
+white
+
+Player
+pink
+
+Box1
+red
+
+Box2
+green
+
+Box3
+blue
+
+Box4
+orange
+
+Wall
+grey
+
+======
+LEGEND
+======
+
+. = Background
+@ = Player
+1 = Box1
+2 = Box2
+3 = Box3
+4 = Box4
+# = Wall
+
+Box = Box1 or Box2 or Box3 or Box4
+
+======
+SOUNDS
+======
+
+===============
+COLLISIONLAYERS
+===============
+
+Background
+Player, Box, Wall
+
+=====
+RULES
+=====
+
+[ > Player | Box ] -> [ > Player | > Box ]
+
+startloop
+
+(Propagate movements through crates of different types.)
+[ moving Box1 | Box1 ] -> [ moving Box1 | moving Box1 ]
+[ moving Box2 | Box2 ] -> [ moving Box2 | moving Box2 ]
+[ moving Box3 | Box3 ] -> [ moving Box3 | moving Box3 ]
+[ moving Box4 | Box4 ] -> [ moving Box4 | moving Box4 ]
+
+(Extend the movements between crates of different types.)
+[ > Box | Box ] -> [ > Box | > Box ]
+
+endloop
+
+(Just cancel the whole turn if something can't move.)
+[ > Box | Wall ] -> cancel
+
+=============
+WINCONDITIONS
+=============
+
+======
+LEVELS
+======
+
+################
+#....###.......#
+#....#.....##..#
+#...........#..#
+#...@..222..#..#
+##.....2.......#
+#...3.....1....#
+#..33.....1....#
+#..3.....11....#
+#....4........##
+#...444...##...#
+#..#.....##....#
+################
+
+
+title Sticky Candy Puzzle Saga
+author Alan Hazelden
+homepage www.draknek.org
+
+run_rules_on_level_start
+
+noaction
+
+========
+OBJECTS
+========
+
+Background
+Black DarkGrey
+00000
+00000
+00000
+00000
+00000
+
+
+Wall
+Pink #febfc6
+10001
+00011
+00110
+01100
+11000
+
+Player
+Pink #febfc6
+.000.
+.111.
+00100
+.000.
+.0.0.
+
+Yellow
+Yellow White Orange
+.000.
+01100
+01000
+00002
+.022.
+
+Red
+Red Orange DarkRed
+.000.
+01100
+01000
+00002
+.022.
+
+Blue
+LightBlue White #3468f7
+.000.
+01100
+01000
+00002
+.022.
+
+YellowTarget
+Brown Yellow
+00000
+01110
+01010
+01110
+00000
+
+RedTarget
+DarkBrown Red
+00000
+01110
+01010
+01110
+00000
+
+BlueTarget
+Purple LightBlue
+00000
+01110
+01010
+01110
+00000
+
+Marker
+White
+.....
+.....
+.....
+.....
+.....
+
+WallL
+White
+0....
+0....
+0....
+0....
+0....
+
+WallR
+White
+....0
+....0
+....0
+....0
+....0
+
+WallU
+White
+00000
+.....
+.....
+.....
+.....
+
+WallD
+White
+.....
+.....
+.....
+.....
+00000
+
+WallLR
+White
+0...0
+0...0
+0...0
+0...0
+0...0
+
+WallUD
+White
+00000
+.....
+.....
+.....
+00000
+
+JoinL
+#febfc6
+0....
+.....
+.....
+.....
+0....
+
+JoinR
+#febfc6
+....0
+.....
+.....
+.....
+....0
+
+JoinU
+#febfc6
+0...0
+.....
+.....
+.....
+.....
+
+JoinD
+#febfc6
+.....
+.....
+.....
+.....
+0...0
+
+JoinBoth
+#febfc6
+0...0
+.....
+.....
+.....
+0...0
+
+Zero
+Purple
+.000.
+.0.0.
+.0.0.
+.0.0.
+.000.
+
+One
+Purple
+.00..
+..0..
+..0..
+..0..
+.000.
+
+Two
+Purple
+.000.
+...0.
+.000.
+.0...
+.000.
+
+Three
+Purple
+.000.
+...0.
+.000.
+...0.
+.000.
+
+Four
+Purple
+.0.0.
+.0.0.
+.000.
+...0.
+...0.
+
+Five
+Purple
+.000.
+.0...
+.000.
+...0.
+.000.
+
+Six
+Purple
+.000.
+.0...
+.000.
+.0.0.
+.000.
+
+Seven
+Purple
+.000.
+...0.
+...0.
+...0.
+...0.
+
+Eight
+Purple
+.000.
+.0.0.
+.000.
+.0.0.
+.000.
+
+Nine
+Purple
+.000.
+.0.0.
+.000.
+...0.
+.000.
+
+
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Player
+A = Red
+B = Yellow
+C = Blue
+X = RedTarget
+Y = YellowTarget
+Z = BlueTarget
+
+WallCoverLR = WallL or WallR or WallLR
+WallCoverUD = WallU or WallD or WallUD
+
+JoinCoverLR = JoinL or JoinR or JoinBoth
+JoinCoverUD = JoinU or JoinD
+
+Join = JoinCoverLR or JoinCoverUD
+
+CoverLR = WallCoverLR or JoinCoverLR
+CoverUD = WallCoverUD or JoinCoverUD
+
+0 = Zero and Wall
+1 = One and Wall
+2 = Two and Wall
+3 = Three and Wall
+4 = Four and Wall
+5 = Five and Wall
+6 = Six and Wall
+7 = Seven and Wall
+8 = Eight and Wall
+9 = Nine and Wall
+
+Number = Zero or One or Two or Three or Four or Five or Six or Seven or Eight or Nine
+
+Candy = Yellow or Red or Blue
+Target = YellowTarget or RedTarget or BlueTarget
+
+
+=======
+SOUNDS
+=======
+
+sfx1 6045907 (candies sticking)
+sfx2 27189102 (can't move)
+sfx3 27189102 (can't push)
+Candy MOVE 48059907
+Player MOVE 11429307
+EndLevel 85763108
+Restart 65287309
+Undo 84906107
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Marker
+Target
+Player, Wall, Candy
+CoverUD
+CoverLR, Number
+
+======
+RULES
+======
+
+[ >  Player | Candy ] -> [  >  Player | > Candy  ]
+[ moving Candy | stationary Candy ] -> [ moving Candy | moving Candy ]
+
+(Prevent movement in a way that triggers the "can't move" sound)
+
+[ > Candy | Wall ] [ > Player | > Candy ] -> [ Candy | Wall ] [ > Player | Candy ]
+[ > Player | stationary Candy ] [ moving Candy ] -> [ > Player | Candy ] [ Candy ]
+
+(Trigger the "candies sticking" sound)
+
+[ > Candy | no Candy ] -> [ > Candy | Marker ]
+
+[ Marker | stationary Candy ] -> sfx1
+
+[ Marker ] -> []
+
+(Can't move sounds)
+
+[ > Player | Wall ] -> sfx2
+[ > Player | stationary Candy ] -> sfx3
+
+(Wall borders)
+
+left [ Wall no WallCoverLR | no Wall ] -> [ Wall WallL | ]
+right [ Wall no WallCoverLR | no Wall ] -> [ Wall WallR | ]
+right [ Wall WallL | no Wall ] -> [ Wall WallLR | ]
+
+up [ Wall no WallCoverUD | no Wall ] -> [ Wall WallU | ]
+down [ Wall no WallCoverUD | no Wall ] -> [ Wall WallD | ]
+down [ Wall WallU | no Wall ] -> [ Wall WallUD | ]
+
+(Candy joins)
+
+late [ Join ] -> []
+
+late left [ Candy | Candy ] -> [ Candy JoinL | Candy ]
+late right [ Candy no JoinL | Candy ] -> [ Candy JoinR | Candy ]
+late right [ Candy JoinL | Candy ] -> [ Candy JoinBoth | Candy ]
+
+late up [ Candy no JoinBoth | Candy ] -> [ Candy JoinU | Candy ]
+late down [ Candy no JoinU no JoinBoth | Candy ] -> [ Candy JoinD | Candy ]
+late down [ Candy JoinU | Candy ] -> [ Candy JoinBoth | Candy ]
+
+==============
+WINCONDITIONS
+==============
+
+All Yellow on YellowTarget
+All Red on RedTarget
+All Blue on BlueTarget
+
+=======
+LEVELS
+=======
+
+message Transport the sticky candies to the collection areas.
+
+#######
+##...##
+#..b.y#
+#pb#.y#
+#..b.y#
+##...##
+1######
+
+#########
+##.....##
+#..a.#.x#
+#pa....x#
+#..a.#.x#
+##.....##
+2########
+
+message Don't let different candies stick together!
+
+########
+#p...yy#
+#.b.ayy#
+#..b.a.#
+#.a.b..#
+#xxa.b.#
+#xx....#
+3#######
+
+###########
+#....p....#
+#..b.c.b..#
+#...c.c...#
+###.zzz.###
+####b.b####
+####yyy####
+#####y#####
+4##########
+
+#########
+#.a...###
+#.a...###
+#..c.axx#
+#zz.p.xx#
+#zzc.a..#
+###...c.#
+###...c.#
+5########
+
+###########
+##.......##
+#y.#.p.#.z#
+#yc.b.c.bz#
+##.......##
+###..#..###
+6##########
+
+#########
+#####..z#
+#...b.zz#
+#.b.bb.z#
+#p.###..#
+#y.cc.c.#
+#yy.c...#
+#y..#####
+7########
+
+#########
+##......#
+#x.c.#by#
+#.b.p..y#
+#z.a.#by#
+##......#
+8########
+
+#########
+#yy.c.x.#
+#y.b..xx#
+#.b.....#
+#...#..b#
+#.a...c.#
+#.aa.c.z#
+#p....zz#
+9########
+
+#########
+#yy###zz#
+#...x...#
+#.##a##.#
+#..b.b..#
+#..#.#..#
+#..c.c..#
+##..p..##
+10#######
+
+###########
+#####y#####
+####yyy####
+###.b.b.###
+###a...c###
+#z...p...x#
+#za.b.b.cx#
+###.....###
+11#########
+
+###########
+####...A###
+##......###
+#..#A#..xx#
+#pA...A.xx#
+#..#A#..xx#
+##......###
+####...A###
+12#########
+
+#########
+#..xxx..#
+#..#a#..#
+#..b.b..#
+##.#p#.##
+##.aya.##
+##..y..##
+13#######
+
+###########
+##..zzz..##
+#..a.p.b..#
+#yy#ccc#xx#
+#..b...a..#
+##...#...##
+14#########
+
+#############
+#...#####...#
+#....c.b....#
+#yy#..p..#zz#
+#.y.cc.bb.z.#
+####.....####
+15###########
+
+#########
+#...#...#
+#.a.a.a.#
+#...x...#
+#z#.x.#y#
+#zc.x.by#
+#.c.p.b.#
+###...###
+16#######
+
+###########
+##......###
+##.#..c...#
+#...c#..zz#
+#pc..#c#zz#
+#...c#..zz#
+##.#..c...#
+##......###
+17#########
+
+###############
+#...###z###...#
+#....bzzzb....#
+#...c.c.c.c...#
+#####.yyy.#####
+#####.#b#.#####
+#####.....#####
+######.p.######
+18#############
+
+#############
+###x#...#z###
+#.xxa.c.azz.#
+#..c.....c..#
+###..#a#..###
+####..p..####
+19###########
+
+###########
+###.....###
+##c.a.a.b##
+#.cyy.zzb.#
+#..yy.zz..#
+#a..c.b..a#
+#..xc.bx..#
+#..xxxxx..#
+##a..a..a##
+###...p.###
+20#########
+
+message Thanks for playing! :)
+
+
+
+
+title Zen Puzzle Garden
+author lexaloffle
+homepage www.lexaloffle.com
+
+(
+
+A replication, with some really bad levels, of the rather superior Zen Puzzle Garden.  Made with permission of the unfailingly lovely Joseph White.
+
+http://www.lexaloffle.com/zen.htm
+
+)
+
+========
+OBJECTS
+========
+
+Background
+orange brown
+00100
+00000
+00010
+10000
+00000
+
+Player
+white black
+.0.0.
+01010
+00000
+.000.
+11.11
+
+Rock
+grey darkgrey yellow
+21002
+11000
+11000
+11000
+11101
+
+UnbrushedSand
+yellow orange
+00000
+01000
+00000
+00010
+00000
+
+HBrushedSand
+yellow orange
+00000
+01011
+00000
+11010
+00000
+
+VBrushedSand
+yellow orange
+01000
+01010
+00000
+01010
+00010
+
+=======
+LEGEND
+=======
+
+BrushedSand = HBrushedSand or VBrushedSand
+Sand = UnbrushedSand or BrushedSand
+Obstacle = BrushedSand or Rock
+; = Background
+O = Rock
+. = UnbrushedSand
+P = Player
+
+=========
+SOUNDS
+=========
+
+closemessage 52854909
+startgame 64192309
+endlevel 16398509
+endgame 62100709
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Sand
+Player, Rock
+
+======
+RULES
+======
+
+(The h and v sand effects are cosmetic - how could this be done in a single line if there was only one type of brushed sand?)
+
+horizontal [ UnbrushedSand > Player ] -> [ HBrushedSand > Player ] 
+vertical [ UnbrushedSand > Player ] -> [ VBrushedSand > Player ] 
+
+late [ Player BrushedSand ] -> cancel
+
+==============
+WINCONDITIONS
+==============
+
+no UnbrushedSand
+
+=======
+LEVELS
+=======
+
+message level 1 of 5
+
+;;;;;;;;;;;;
+;;;;;;;;;;;;
+;;;;;;;;;;;;
+;;;......;;;
+;;;......;;;
+;;;......;;;
+;P;..OO..;;;
+;;;......;;;
+;;;......;;;
+;;;;;;;;;;;;
+;;;;;;;;;;;;
+;;;;;;;;;;;;
+
+message level 2 of 5
+
+;;;;;;;;;;;;
+;;;;;;;;;;;;
+;;;;;;;;;;;;
+;;;......;;;
+;;;....O.;;;
+;;;......;;;
+;P;..O...;;;
+;;;......;;;
+;;;......;;;
+;;;;;;;;;;;;
+;;;;;;;;;;;;
+;;;;;;;;;;;;
+
+message level 3 of 5
+
+;;;;;;;;;;;;
+;;;;;;;;;;;;
+;;;;;;;;;;;;
+;;;......;;;
+;;;...O..;;;
+;;;......;;;
+;P;.O....;;;
+;;;....O.;;;
+;;;......;;;
+;;;;;;;;;;;;
+;;;;;;;;;;;;
+;;;;;;;;;;;;
+
+message level 4 of 5
+
+;;;;;;;;;;;;
+;;;;;;;;;;;;
+;;;;;;;;;;;;
+;;;..OO..;;;
+;;;O....O;;;
+;P;..OO..;;;
+;;;O....O;;;
+;;;..OO..;;;
+;;;;;;;;;;;;
+;;;;;;;;;;;;
+;;;;;;;;;;;;
+
+message level 5 of 5
+
+;;;;;;;;;;;;
+;;;;;;;;;;;;
+;;;;;;;;;;;;
+;;;O.....;;;
+;;;..O.O.;;;
+;;;O...O.;;;
+;P;..O...;;;
+;;;O...O.;;;
+;;;..O...;;;
+;;;;;;;;;;;;
+;;;;;;;;;;;;
+;;;;;;;;;;;;
+
+message congratulations!
+
+
+title Multi-word Dictionary Game
+author Sarah Northway
+homepage www.sarahnorthway.com
+
+(included with permission of Sarah Northway)
+
+========
+OBJECTS
+========
+
+Background
+pink
+
+Wall
+grey
+
+Player
+Blue
+
+Won
+yellow
+
+LetterC
+white black
+.111.
+1....
+1....
+1....
+.111.
+
+LetterA
+white black
+.111.
+1...1
+11111
+1...1
+1...1
+
+LetterT
+white black
+11111
+..1..
+..1..
+..1..
+..1..
+
+=======
+LEGEND
+=======
+
+Letter = LetterA or LetterC or LetterT
+. = Background
+# = Wall
+P = Player
+W = Won
+C = LetterC
+A = LetterA
+T = LetterT
+
+=======
+SOUNDS
+=======
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Won
+Player, Wall, Letter
+
+======
+RULES
+======
+
+[ >  Player | Letter ] -> [  >  Player | > Letter  ]
+[ <  Player | Letter ] -> [  <  Player | < Letter  ]
+
+late right [LetterC | LetterA | LetterT ] -> [ Won LetterC | Won LetterA | Won LetterT ] message You spelled CAT!
+late right [LetterA | LetterC | LetterT] -> [ Won LetterA | Won LetterC | Won LetterT ] message You spelled ACT!
+
+==============
+WINCONDITIONS
+==============
+
+Some Won
+
+=======
+LEVELS
+=======
+
+#########
+#.......#
+#.A..C..#
+#.......#
+#...P...#
+#.T.....#
+#########
+
+
+title Drop Swap
+author Aaron Steed
+homepage www.robotacid.com
+
+key_repeat_interval 0.23
+again_interval 0.05
+noaction
+noundo
+background_color Black
+text_color Grey
+run_rules_on_level_start
+
+========
+OBJECTS
+========
+
+Background
+Black
+
+Player
+#ffffff #000000 #626263 #3c3b3c
+.222.
+21112
+23132
+20102
+.222.
+
+DeadPlayer
+#ffffff #000000 #626263 #3c3b3c
+.222.
+21112
+21112
+23132
+.222.
+
+BaseWall
+#222222 #333333 #444444 #ffffff
+11110
+12220
+12200
+12000
+00000
+
+APill
+#ff0000 #ff7374 #ff0000 #ff0000
+.111.
+11110
+11010
+11100
+.000.
+
+BPill
+#00de00 #cffa92 #ff0000 #ff0000
+.111.
+10010
+10110
+11100
+.000.
+
+CPill
+#7a35fc #b56bfd #ff0000 #ff0000
+.111.
+10110
+11010
+11100
+.000.
+
+DPill
+#0094fc #79b5fd #ff0000 #ff0000
+.111.
+10100
+11010
+10100
+.000.
+
+EPill
+#d1c200 #fff919 #ffffff #ff0000
+.111.
+10010
+10010
+11110
+.000.
+
+FPill
+#ff33b1 #ff76d2 #ff0000 #ff0000
+.111.
+10100
+11110
+10110
+.000.
+
+AllPill
+#eeee66 #ffffff #ffffcc #ffffff
+.112.
+11112
+11012
+21120
+.220.
+
+NoPill
+#ffffff #000000 #ffde85 #ff0000
+.000.
+00000
+21012
+.000.
+..2..
+
+Bomb
+#6e6e6e #000000 #ff0000 #fcf26b
+.020.
+02320
+01210
+01110
+.000.
+
+GemPill
+#ffffff #000000 #626263 #3c3b3c
+..0..
+.002.
+00022
+.223.
+..2..
+
+Count
+#ffffff #000000 #5a595a #ff0000
+.....
+.000.
+.000.
+.000.
+.....
+
+Marked
+#ffffff #000000
+.....
+..1..
+.101.
+..1..
+.....
+
+CountTray
+#333333
+
+GemTray
+#333333
+
+StartGem
+red
+
+Collect
+White
+
+Debris1
+#ffffff #0739f5 #1f0f42 #ffffff
+.0.0.
+00.00
+..0..
+00.00
+.0.0.
+
+Debris2
+#ffffff #0739f5 #1f0f42 #ffffff
+.....
+.0.0.
+..0..
+.0.0.
+.....
+
+Empty
+Black
+
+OldPos
+Black
+
+StartCount
+Black
+
+DropWall1
+#222222 #333333 #444444 #ffffff
+11110
+12220
+12200
+12200
+12200
+
+DropWall2
+#222222 #333333 #444444 #ffffff
+11110
+12220
+12200
+12200
+12200
+
+DropWall3
+#222222 #333333 #444444 #ffffff
+11110
+12220
+12200
+12200
+12200
+
+DropWall4
+#222222 #333333 #444444 #ffffff
+11110
+12220
+12200
+12200
+12200
+
+DropMarker
+Blue
+
+Init
+Purple
+
+=======
+LEGEND
+=======
+
+. = Background
+@ = Player
+p = DeadPlayer
+# = BaseWall
+a = APill
+b = BPill
+c = CPill
+d = DPill
+e = EPill
+f = FPill
+n = NoPill
+x = AllPill
+u = Count and CountTray
+w = Count and CountTray and StartCount
+g = GemPill
+q = GemTray
+o = GemTray and StartGem
+p = Bomb
+i = Init
+j = DropWall1
+k = DropWall2
+l = DropWall3
+m = DropWall4
+
+
+MatchPill = APill or BPill or CPill or DPill or EPill or FPill or AllPill
+Pill = MatchPill or NoPill or GemPill or Bomb
+Debris = Debris1 or Debris2
+AMatch = APill or AllPill
+BMatch = BPill or AllPill
+CMatch = CPill or AllPill
+DMatch = DPill or AllPill
+EMatch = EPill or AllPill
+FMatch = FPill or AllPill
+Wall = BaseWall or DropWall1 or DropWall2 or DropWall3 or DropWall4
+Item = Pill or Debris or Wall or Player
+Heavy = Pill or Player
+Dropping = Marked or DropMarker
+DropMix1 = APill or BPill or CPill or DPill or EPill
+DropMix2 = APill or BPill or CPill or DPill or EPill or GemPill
+DropMix3 = APill or BPill or CPill or DPill or EPill or NoPill
+DropMix4 = APill or BPill or CPill or DPill or EPill or FPill or GemPill
+DropMix5 = APill or BPill or CPill or DPill or EPill or FPill
+DropWallMarked = DropWall1 or DropWall3
+
+=======
+SOUNDS
+=======
+
+sfx0 54236904 (illegal)
+sfx1 5160507 (swap)
+sfx2 19008103 (allpill)
+sfx3 50665503 (crush 3)
+sfx4 80820507 (land)
+sfx5 2030908 (blast)
+sfx6 3032303 (bomb)
+sfx7 83704102 (dead)
+sfx8 7194508 (gem collect)
+EndLevel 16709508 (win)
+
+================
+COLLISIONLAYERS
+================
+
+
+Collect, StartCount, StartGem
+Background
+OldPos, CountTray, GemTray
+Player, Wall, Pill, Empty, Count, DeadPlayer, Bomb, Init
+Debris, Marked, DropMarker
+
+======
+RULES
+======
+
+(init)
+[ DropWall1 ] [ Init ] -> [ DropWall1 ] [ random DropMix1 Marked ]
+[ DropWall2 ] [ Init ] -> [ DropWall2 ] [ random DropMix1 ]
+[ DropWall3 ] [ Init ] -> [ DropWall3 ] [ random DropMix1 Marked ]
+[ DropWall4 ] [ Init ] -> [ DropWall4 ] [ random DropMix5 ]
+
+(debris clean up)
+[ Debris2 ] -> [ Empty ] again
+[ Debris1 ] -> [ Debris2 ] again
+
+(player - pill swapping)
+[ > Player | Pill ] -> [ Pill OldPos | Player ] sfx1
+[ Player Marked | OldPos ] -> [ Player | OldPos Marked ]
+
+(blocked move)
+[ > Player | No Pill ] -> [ Player | ] sfx0
+
+(pill combos)
+[ AMatch | AMatch | AMatch ] -> [ AMatch Collect | AMatch Collect | AMatch Collect ]
+[ BMatch | BMatch | BMatch ] -> [ BMatch Collect | BMatch Collect | BMatch Collect ]
+[ CMatch | CMatch | CMatch ] -> [ CMatch Collect | CMatch Collect | CMatch Collect ]
+[ DMatch | DMatch | DMatch ] -> [ DMatch Collect | DMatch Collect | DMatch Collect ]
+[ EMatch | EMatch | EMatch ] -> [ EMatch Collect | EMatch Collect | EMatch Collect ]
+[ FMatch | FMatch | FMatch ] -> [ FMatch Collect | FMatch Collect | FMatch Collect ]
+[ NoPill | NoPill | NoPill ] -> [ NoPill Collect | NoPill Collect | NoPill Collect ]
+
+(bomb activate)
+[ OldPos Bomb ] -> sfx5
+up [ OldPos Bomb | Pill ] -> [ OldPos Bomb | Pill > Collect ]
+right [ OldPos Bomb | Pill ] -> [ OldPos Bomb | Pill > Collect ]
+down [ OldPos Bomb | Pill ] -> [ OldPos Bomb | Pill > Collect ]
+left [ OldPos Bomb | Pill ] -> [ OldPos Bomb | Pill > Collect ]
+[ OldPos Bomb ] -> [ OldPos Empty ]
+
+(blast)
+up [ Pill > Collect | Pill ] -> [ Pill Collect | Pill > Collect ]
+right [ Pill > Collect | Pill ] -> [ Pill Collect | Pill > Collect ]
+down [ Pill > Collect | Pill ] -> [ Pill Collect | Pill > Collect ]
+left [ Pill > Collect | Pill ] -> [ Pill Collect | Pill > Collect ]
+[ > Collect ] -> [ Collect ]
+[ GemPill Collect ] -> [ GemPill ]
+
+(reward matches)
+(junction)
+Right [ Collect | Collect ] -> [ > Collect | > Collect ]
+Down [ Collect | Collect ] -> [ > Collect | > Collect ]
+[ Down Collect | Right Collect ] [ Collect OldPos ] -> [ Collect | Collect ] [ Bomb OldPos ] sfx6
+(4: create AllPill)
+[ MatchPill Collect | MatchPill Collect | MatchPill Collect | MatchPill Collect ] [ Collect OldPos ] -> [ MatchPill Collect | MatchPill Collect | MatchPill Collect | MatchPill Collect ] [ AllPill OldPos ] sfx2
+
+(count moves)
+(subtract on move)
+random right [ OldPos ] [ Count | No Count ] -> [ OldPos ] [ | ]
+(fill on Debris)
+[ Collect ] [ CountTray ] -> [ Collect ] [ CountTray Count ]
+
+(dead?)
+[ DeadPlayer ] -> cancel
+[ No Count StartCount CountTray ] [ Player ] -> [ No Count StartCount CountTray ] [ DeadPlayer ] sfx7
+[ Player | NoPill Collect ] -> [ DeadPlayer | NoPill ]
+[ DeadPlayer ] [ CountTray Count ] -> [ DeadPlayer ] [ CountTray ] sfx7
+
+(destroy matched)
+[ APill Collect ] -> [ Debris1 ] sfx3 again
+[ BPill Collect ] -> [ Debris1 ] sfx3 again
+[ CPill Collect ] -> [ Debris1 ] sfx3 again
+[ DPill Collect ] -> [ Debris1 ] sfx3 again
+[ EPill Collect ] -> [ Debris1 ] sfx3 again
+[ FPill Collect ] -> [ Debris1 ] sfx3 again
+[ AllPill Collect ] -> [ Debris1 ] sfx3 again
+[ Player ] [ NoPill Collect ] -> [ Player ] [ Debris1 ] sfx3 again
+
+(destroy NoPills)
+down [ NoPill | Wall ] -> [ Debris1 | Wall ] again
+
+(collect gems)
+down [ GemPill | Wall ] -> [ GemPill Collect | Wall ]
+[ GemPill Collect ] [ StartGem No GemPill ] -> [ Debris1 ] [ StartGem GemPill ] again sfx8
+right [ GemPill Collect ] [ GemPill GemTray | No GemPill GemTray ] -> [ Debris1 ] [ GemPill GemTray | GemPill GemTray ] again sfx8
+
+(drop)
+[ Heavy No Dropping ] -> [ Heavy DropMarker ]
+down [ Heavy Dropping | Empty ] -> [ Empty | Heavy Dropping ]
+[ DropMarker ] -> [ ]
+down [ DropWall1 | Empty ] -> [ DropWall1 | random DropMix1 ] again
+down [ DropWall2 | Empty ] -> [ DropWall2 | random DropMix2 ] again
+down [ DropWall3 | Empty ] -> [ DropWall3 | random DropMix3 ] again
+down [ DropWall4 | Empty ] -> [ DropWall4 | random DropMix4 ] again
+
+(gem drop win)
+right [ GemPill GemTray | Wall ] -> win
+
+[ OldPos ] -> [ ]
+
+==============
+WINCONDITIONS
+==============
+
+No Marked
+Some DropWallMarked
+
+=======
+LEVELS
+=======
+
+message collect orbs by matching 3
+message match 3 to restore move-energy
+message level 1: collect all marked orbs
+
+wuuuuu#
+#jjjjj#
+#iiiii#
+#iiiii#
+#iiiii#
+#iiiii#
+#ii@ii#
+#######
+
+message level 2: collect all marked orbs
+
+wuuuuuu#
+#jjjjjj#
+#iiiiii#
+#iiiiii#
+#iiiiii#
+#iiiiii#
+#iiiiii#
+#iiiiii#
+#iii@ii#
+########
+
+message collect gray gems by getting them to the bottom
+message level 3: collect 8 gems
+
+oqqqqqqq#
+wuuuuuuu#
+#kkkkkkk#
+#iiiiiii#
+#iiiiiii#
+#iiiiiii#
+#iiiiiii#
+#iiiiiii#
+#iiiiiii#
+#iiiiiii#
+#iii@iii#
+#########
+
+message if you are next to 3 matching skulls you die
+message skulls can be destroyed by getting them to the bottom
+message level 4: collect all marked orbs
+
+wuuuuuu#
+#llllll#
+#iiiiii#
+#iiiiii#
+#iiiiii#
+#iiiiii#
+#iiiiii#
+#iiiiii#
+#iii@ii#
+########
+
+message level 5: collect 7 gems
+
+oqqqqqqq#
+wuuuuuuu#
+#mmmmmmm#
+#iiiiiii#
+#iiiiiii#
+#iiiiiii#
+#iiiiiii#
+#iiiiiii#
+#iiiiiii#
+#iiiiiii#
+#iii@iii#
+#########
+
+message thanks for playing
+
+
+
+title Ebony & Ivory
+author Guilherme Töws
+homepage zarat.us
+
+========
+OBJECTS
+========
+
+Background
+Purple
+
+Gray
+GRAY
+
+White
+WHITE
+
+Black
+BLACK
+
+PlayerRed
+Red
+.....
+.000.
+.000.
+.000.
+.....
+
+PlayerGold
+Yellow
+.....
+.000.
+.000.
+.000.
+.....
+
+
+=======
+LEGEND
+=======
+
+. = White
+, = Black
+# = Gray
+: = PlayerRed and White
+; = PlayerRed and Black
+Player = PlayerRed or PlayerGold
+
+=======
+SOUNDS
+=======
+
+SFX0 72488907
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Black, White, Gray
+Player
+
+======
+RULES
+======
+
+[ PlayerGold ] -> [ PlayerRed ]
+[ >  Player White | Black ] -> [  > Player White | > Black ]
+[ >  Player Black | White ] -> [  > Player Black | > White ]
+[ > Black | White ] -> [ White | Black ] SFX0
+[ > White | Black ] -> [ Black | White ] SFX0
+[ >  Player White |  Black ] -> [  Player White |  Black ]
+[ >  Player Black |  White ] -> [  Player Black |  White ]
+[ >  Player |  Gray ] -> [  Player |  Gray ]
+late [ Player | PlayerRed ] -> [ Player | PlayerGold ]
+
+==============
+WINCONDITIONs
+==============
+
+No PlayerRed
+
+=======
+LEVELS
+=======
+
+########
+#..,,,,#
+#.:.,.,#
+#...,,,#
+#.,.,;,#
+#....,,#
+########
+
+title Simple Action Example
+author increpare
+homepage www.puzzlescript.net
+
+========
+OBJECTS
+========
+
+Background
+LIGHTGREEN GREEN
+11111
+01111
+11101
+11111
+10111
+
+Wall
+BROWN DARKBROWN
+00010
+11111
+01000
+11111
+00010
+
+Player
+Black Orange White Blue
+.000.
+.111.
+22222
+.333.
+.3.3.
+
+
+Blood
+DarkRed red white
+.01.0
+.1202
+2.0.1
+02.1.
+.1.0.
+
+Sheep O
+black white gray
+..11.
+01111
+01112
+.212.
+.0.0.
+
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Player
+
+
+=======
+SOUNDS
+=======
+
+
+Sheep Create 76935307
+SFx0 52519108
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Blood
+Player, Wall, Sheep
+
+======
+RULES
+======
+
+random [ no Sheep ] -> [ Sheep ] again
+
+==============
+WINCONDITIONS
+==============
+
+=======
+LEVELS
+=======
+
+#################
+#...............#
+#...............#
+#...............#
+#...............#
+#.......P.......#
+#...............#
+#...............#
+#...............#
+#################
+
+
+
+title BROKEN Naive Extended Bodies
+author increpare
+homepage www.puzzlescript.net
+
+(
+naive/broken implementation of rigid bodies
+see https://www.puzzlescript.net/Documentation/rigidbodies.html#Introduction
+)
+
+========
+OBJECTS
+========
+
+Background
+LIGHTGREEN GREEN
+11111
+01111
+11101
+11111
+10111
+
+
+Target
+DarkBlue
+.....
+.000.
+.0.0.
+.000.
+.....
+
+Wall
+BROWN DARKBROWN
+00010
+11111
+01000
+11111
+00010
+
+Player
+Black Orange White Blue
+.000.
+.111.
+22222
+.333.
+.3.3.
+
+BigBlock
+Orange Yellow
+00000
+0...0
+0...0
+0...0
+00000
+
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Player
+* = BigBlock
+@ = BigBlock and Target
+O = Target
+
+
+=======
+SOUNDS
+=======
+
+BigBlock MOVE 36772507
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Target
+Player, Wall, BigBlock
+
+======
+RULES
+======
+
+[ >  Player | BigBlock ] -> [  >  Player | > BigBlock  ]
+[ moving BigBlock | BigBlock ] -> [moving BigBlock|moving BigBlock]
+
+==============
+WINCONDITIONS
+==============
+
+=======
+LEVELS
+=======
+
+.#######.
+#.......#
+#..***..#
+#..p*...#
+#.......#
+.#######.
+
+
+title It Dies In The Light
+author Christopher Wells
+homepage www.tophwells.com
+
+noaction
+run_rules_on_level_start
+again_interval 0.05
+
+========
+OBJECTS
+========
+
+BackgroundNeutral
+LIGHTGray Gray
+11011
+10101
+01110
+10101
+11011
+
+BackgroundDark
+Black
+
+Wall
+Lightblue Blue
+00010
+11111
+01000
+11111
+00010
+
+LivePlayer
+Black LightRed White Blue
+.000.
+.111.
+12321
+.232.
+.222.
+
+Corpse
+LightGrey
+.000.
+.0.0.
+0.0.0
+..0..
+.0.0.
+
+Crate
+Orange LightBrown Brown
+.222.
+21012
+20102
+21012
+.222.
+
+GoldCrate
+White Yellow Orange
+.222.
+21012
+20002
+21012
+.222.
+
+GlassCrate
+White
+.000.
+0...0
+0...0
+0...0
+.000.
+
+Prism
+LightBlue White
+.000.
+00110
+00010
+00000
+.000.
+
+ActivePrism
+LightBlue White Yellow
+.000.
+02120
+01110
+02120
+.000.
+
+Glass
+White
+00000
+0...0
+0...0
+0...0
+00000
+
+BeamVert
+White Yellow
+.101.
+.101.
+.101.
+.101.
+.101.
+
+BeamHor
+White Yellow
+.....
+11111
+00000
+11111
+.....
+
+BeamCross
+White Yellow
+.101.
+11011
+00000
+11011
+.101.
+
+Shadow
+Purple
+0.0.0
+.0.0.
+0.0.0
+.0.0.
+0.0.0
+
+TempShadow
+Purple
+0.0.0
+.0.0.
+0.0.0
+.0.0.
+0.0.0
+
+=======
+LEGEND
+=======
+
+. = BackgroundNeutral
+# = Wall
+P = LivePlayer
+C = Crate
+G = GoldCrate
+S = Shadow
+X = Prism
+O = Glass
+
+Background = BackgroundNeutral or BackgroundDark
+Player = LivePlayer or Corpse
+Light = BeamVert or BeamHor or BeamCross
+Hlight = BeamHor or BeamCross
+Vlight = BeamVert or BeamCross
+Opaque = Player or Crate or Wall or GoldCrate
+Pushable = Crate or GoldCrate or Prism or GlassCrate
+
+
+=======
+SOUNDS
+=======
+
+SFX0 93002904
+
+================
+COLLISIONLAYERS
+================
+
+Background
+BeamVert, BeamHor, BeamCross, Shadow, TempShadow
+Player, Corpse, Wall, Crate, GoldCrate, GlassCrate, Prism, ActivePrism, Glass
+
+======
+RULES
+======
+
+[> Corpse] -> RESTART
+[Light] -> []
+[ActivePrism] -> [Prism]
+[ >  Player | Pushable ] -> [  >  Player | > Pushable  ]
+late HORIZONTAL [GoldCrate|no Opaque no Light] -> [GoldCrate | BeamHor]
+late VERTICAL [GoldCrate|no Opaque no Light] -> [GoldCrate | BeamVert]
+late VERTICAL [GoldCrate|no Opaque BeamHor] -> [GoldCrate | BeamCross]
+late HORIZONTAL [Hlight|no Opaque no Light] -> [Hlight|BeamHor]
++ late HORIZONTAL [Hlight|no Opaque BeamVert] -> [Hlight|BeamCross]
++ late VERTICAL [Vlight|no Opaque no Light] -> [Vlight|BeamVert]
++ late VERTICAL [Vlight|no Opaque BeamHor] -> [Vlight|BeamCross]
++ late [Light Prism] ->[BeamCross ActivePrism]
+late [Shadow Pushable] -> [Pushable]
+late [TempShadow] -> [Shadow]
+late [Shadow | no Light no Wall no Pushable no Glass no Shadow] -> [shadow | Tempshadow] again
+late [Shadow] -> [Shadow BackgroundDark]
+late [TempShadow] -> [TempShadow BackgroundDark]
+late [no Shadow no TempShadow] -> [no Shadow BackgroundNeutral]
+late [Shadow Player] -> [Shadow Corpse]
+
+==============
+WINCONDITIONS
+==============
+
+no Shadow
+
+=======
+LEVELS
+=======
+
+......####.
+..#####ss#.
+###ssssss#.
+#..ssscss##
+#..#s#s#ss#
+#.g#s#ssss#
+#p.#s#ssss#
+#..css#sss#
+###########
+
+........########.
+........#...#.C#.
+...######...GC.##
+...#..CsssssO.C.#
+...#P.Csss#sO.CC#
+...#..Csss#sO#..#
+########ss#s....#
+#ssssssOss#s#####
+#sssssssss###....
+#########s#......
+........###......
+
+##########
+###G#G#G##
+##P......#
+#G.......#
+##..C....#
+#G.......#
+##..C....#
+#G.......#
+##......S#
+##########
+
+........########
+........#......#
+#########..#o#.#
+#........gooxo.#
+#g#####c#.sso#s#
+#.ssssss#.ss.ss#
+##soooss#.ss##s#
+##c.p.c###ss#ss#
+##.....#ssss#ss#
+#...g.......#ss#
+#########.xx#ss#
+........##sssss#
+.........#######
+
+MESSAGE Earth is safe once again.
+
+
+title Octat
+author increpare
+homepage www.increpare.com
+
+noundo
+require_player_movement
+
+(
+    
+A port of a flash game I made.  The original's here:
+
+http://ded.increpare.com/~locus/octat/
+
+)
+
+========
+OBJECTS
+========
+
+Background
+purple
+.....
+.000.
+.000.
+.000.
+.....
+
+Activetile
+pink red
+00000
+0...0
+0...0
+0...0
+00000
+
+Target
+red
+0...0
+.0.0.
+..0..
+.0.0.
+0...0
+
+Player
+white
+.....
+.000.
+.000.
+.000.
+.....
+
+Void 0
+black
+
+Temp
+black
+
+=======
+LEGEND
+=======
+
+. = Background
+P = Player and Activetile
+a = Activetile
+x = Target
+y = target and Activetile
+
+=========
+SOUNDS
+=========
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Void
+Activetile
+Player
+Temp
+Target
+
+======
+RULES
+======
+
+[ > Player | no Activetile ] -> cancel
+
+late [ Activetile | Player ] -> [ Temp | Player ] 
+late [ no Temp | Player ] -> [ Activetile | Player ] 
+late [ Temp ] -> [ ] 
+
+late [ Activetile Void ] -> [ Void ] 
+
+==============
+WINCONDITIONS
+==============
+
+some Player on target
+
+=======
+LEVELS
+=======
+
+message level 1 of 8
+
+..........
+..........
+..........
+..........
+..........
+.x...ap...
+..........
+..........
+..........
+..........
+
+message level 2 of 8
+
+...........
+...........
+...........
+...........
+...........
+....xpa....
+...........
+...........
+...........
+...........
+
+message level 3 of 8
+
+...........
+...........
+...........
+...........
+..a........
+.axaaap....
+..a........
+...........
+...........
+...........
+
+message level 4 of 8
+
+...........
+...........
+...a.......
+..a.a......
+.a.a.a.....
+a.aya.a.ap.
+.a.a.a.....
+..a.a......
+...a.......
+...........
+
+message level 5 of 8
+
+...........
+...........
+...........
+...........
+aaaaaaaaaaa
+...y..ap...
+aaaaaaaaaaa
+...........
+...........
+...........
+
+message level 6 of 8
+
+000000....0
+000000..0.0
+000000..0..
+000000000..
+....A...0.0
+.AY.A...AAP
+....A...0.0
+000000000..
+000000..0..
+000000..0.0
+000000....0
+
+message level 7 of 8
+
+..AAA...000
+.AY.A...AP.
+..AAA...000
+
+message level 8 of 8
+
+0AAAA..00
+0AAAA..00
+YAAAA..AP
+0AAAA..00
+0AAAA..00
+
+message the end
+
+
+USER PROMPT:
+The following PuzzleScript game code:
+```plaintext
+title Block Pusher
+author YourName
+
+========
+OBJECTS
+========
+
+Background
+darkgray
+
+Player
+blue
+
+Crate
+brown
+
+Target
+yellow
+
+TargetedCrate
+green
+
+Wall
+black
+
+=======
+LEGEND
+=======
+
+. = Background
+P = Player
+C = Crate
+T = Target
+X = TargetedCrate
+# = Wall
+
+=========
+SOUNDS
+=========
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Player, Crate
+Target, Wall
+
+======
+RULES
+======
+
+[ Player | Crate ] -> [ > Player | > Crate ]
+
+[ Crate | Target ] -> [ TargetedCrate | Background ]
+[ TargetedCrate ] -> [ Crate ]
+
+==============
+WINCONDITIONS
+==============
+
+all TargetedCrate on Target
+
+=======
+LEVELS
+=======
+
+message Welcome to Block Pusher! Move all crates to targets.
+
+#######
+#.T...#
+#..C..#
+#..P..#
+#.T...#
+#######
+
+#######
+#.....#
+#.TCT.#
+#..P..#
+#..C..#
+#.T...#
+#######
+
+#######
+#..T..#
+#..C..#
+#.TPT.#
+#..C..#
+#..T..#
+#######
+
+#######
+#T.C.T#
+#..P..#
+#.CT.C#
+#..C..#
+#.T.T.#
+#######
+
+#######
+#.T...#
+#..CT.#
+#..P..#
+#..C..#
+#.T...#
+#######
+
+message Congratulations! You've completed all the levels.
+
+```
+produced the following console output:
+=================================
+line 20 : Object "TARGETEDCRATE" has been defined, but not assigned to a layer.
+Errors detected during compilation; the game may not work correctly.
+Return a repaired version of the code that addresses these errors. First, reason about your task and determine the best plan of action. Then, write your code. Return your code in full, inside a ```plaintext code block.

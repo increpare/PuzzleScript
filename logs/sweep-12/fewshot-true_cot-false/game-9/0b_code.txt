@@ -1,0 +1,152 @@
+```plaintext
+title Colorful Conveyors
+author Game Designer
+homepage www.mypuzzle.com
+
+========
+OBJECTS
+========
+
+Background
+LightGrey
+.....
+.....
+.....
+.....
+.....
+
+Wall
+Grey DarkGrey
+00000
+01110
+01110
+01110
+00000
+
+Player
+Blue
+.....
+..0..
+.010.
+..0..
+.....
+
+RedCrate
+Red
+.....
+..0..
+.111.
+..0..
+.....
+
+GreenCrate
+Green
+.....
+..0..
+.111.
+..0..
+.....
+
+RedTarget
+DarkRed
+.....
+..0..
+.111.
+..0..
+.....
+
+GreenTarget
+DarkGreen
+.....
+..0..
+.111.
+..0..
+.....
+
+ConveyorL
+Yellow
+000..
+000..
+.....
+.....
+.....
+
+ConveyorR
+Yellow
+..000
+..000
+.....
+.....
+.....
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Player
+R = RedCrate
+G = GreenCrate
+X = RedTarget
+Y = GreenTarget
+
+Conveyor = ConveyorL or ConveyorR
+
+=======
+SOUNDS
+=======
+
+Crate MOVE 36772507
+Player MOVE 27089102
+Win 98765432
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Target
+Player, Wall, Crate
+Conveyor
+
+======
+RULES
+======
+
+[ > Player | Crate ] -> [ > Player | > Crate ]
+[ > Crate | ConveyorR ] -> [ > Crate | > ConveyorR ]
+[ < Crate | ConveyorL ] -> [ < Crate | < ConveyorL ]
+
+Crate MOVE -> SFX0
+
+==============
+WINCONDITIONS
+==============
+
+All RedCrate on RedTarget
+All GreenCrate on GreenTarget
+
+=======
+LEVELS
+=======
+
+#######
+#.....#
+#..P..#
+#.R.G.#
+#..X..#
+#..Y..#
+#######
+
+#.#.#.#
+#R.G.X#
+#.#.#.#
+#.....#
+#######
+#.P...#
+#.Y...#
+#######
+
+message Align the crates to the targets!
+```

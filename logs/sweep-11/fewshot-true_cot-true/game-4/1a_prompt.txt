@@ -1,0 +1,1171 @@
+SYSTEM PROMPT:
+You are a game designer, familiar with the PuzzleScript game description language. Here are some example games, for inspiration (do not reproduce these games exactly):
+
+title Zen Puzzle Garden
+author lexaloffle
+homepage www.lexaloffle.com
+
+(
+
+A replication, with some really bad levels, of the rather superior Zen Puzzle Garden.  Made with permission of the unfailingly lovely Joseph White.
+
+http://www.lexaloffle.com/zen.htm
+
+)
+
+========
+OBJECTS
+========
+
+Background
+orange brown
+00100
+00000
+00010
+10000
+00000
+
+Player
+white black
+.0.0.
+01010
+00000
+.000.
+11.11
+
+Rock
+grey darkgrey yellow
+21002
+11000
+11000
+11000
+11101
+
+UnbrushedSand
+yellow orange
+00000
+01000
+00000
+00010
+00000
+
+HBrushedSand
+yellow orange
+00000
+01011
+00000
+11010
+00000
+
+VBrushedSand
+yellow orange
+01000
+01010
+00000
+01010
+00010
+
+=======
+LEGEND
+=======
+
+BrushedSand = HBrushedSand or VBrushedSand
+Sand = UnbrushedSand or BrushedSand
+Obstacle = BrushedSand or Rock
+; = Background
+O = Rock
+. = UnbrushedSand
+P = Player
+
+=========
+SOUNDS
+=========
+
+closemessage 52854909
+startgame 64192309
+endlevel 16398509
+endgame 62100709
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Sand
+Player, Rock
+
+======
+RULES
+======
+
+(The h and v sand effects are cosmetic - how could this be done in a single line if there was only one type of brushed sand?)
+
+horizontal [ UnbrushedSand > Player ] -> [ HBrushedSand > Player ] 
+vertical [ UnbrushedSand > Player ] -> [ VBrushedSand > Player ] 
+
+late [ Player BrushedSand ] -> cancel
+
+==============
+WINCONDITIONS
+==============
+
+no UnbrushedSand
+
+=======
+LEVELS
+=======
+
+message level 1 of 5
+
+;;;;;;;;;;;;
+;;;;;;;;;;;;
+;;;;;;;;;;;;
+;;;......;;;
+;;;......;;;
+;;;......;;;
+;P;..OO..;;;
+;;;......;;;
+;;;......;;;
+;;;;;;;;;;;;
+;;;;;;;;;;;;
+;;;;;;;;;;;;
+
+message level 2 of 5
+
+;;;;;;;;;;;;
+;;;;;;;;;;;;
+;;;;;;;;;;;;
+;;;......;;;
+;;;....O.;;;
+;;;......;;;
+;P;..O...;;;
+;;;......;;;
+;;;......;;;
+;;;;;;;;;;;;
+;;;;;;;;;;;;
+;;;;;;;;;;;;
+
+message level 3 of 5
+
+;;;;;;;;;;;;
+;;;;;;;;;;;;
+;;;;;;;;;;;;
+;;;......;;;
+;;;...O..;;;
+;;;......;;;
+;P;.O....;;;
+;;;....O.;;;
+;;;......;;;
+;;;;;;;;;;;;
+;;;;;;;;;;;;
+;;;;;;;;;;;;
+
+message level 4 of 5
+
+;;;;;;;;;;;;
+;;;;;;;;;;;;
+;;;;;;;;;;;;
+;;;..OO..;;;
+;;;O....O;;;
+;P;..OO..;;;
+;;;O....O;;;
+;;;..OO..;;;
+;;;;;;;;;;;;
+;;;;;;;;;;;;
+;;;;;;;;;;;;
+
+message level 5 of 5
+
+;;;;;;;;;;;;
+;;;;;;;;;;;;
+;;;;;;;;;;;;
+;;;O.....;;;
+;;;..O.O.;;;
+;;;O...O.;;;
+;P;..O...;;;
+;;;O...O.;;;
+;;;..O...;;;
+;;;;;;;;;;;;
+;;;;;;;;;;;;
+;;;;;;;;;;;;
+
+message congratulations!
+
+
+title cute train
+author Mark Wonnacott
+homepage http://twitter.com/ragzouken
+
+flickscreen 16x10
+color_palette pastel
+youtube pTgEXwzk7XU
+
+noundo
+norestart
+
+========
+OBJECTS
+========
+
+Background
+lightgreen green
+01000
+00110
+10010
+10100
+01001
+
+Water
+blue white lightblue
+20010
+02002
+12020
+00220
+02002
+
+Water2
+blue white lightblue
+02000
+20210
+00202
+01022
+20200
+
+Gerald
+blue black
+.000.
+01010
+10001
+01110
+.000.
+
+Mountain
+darkbrown darkbrown
+..0..
+.10..
+.000.
+0000.
+11001
+
+Forest
+darkgreen brown
+.000.
+00000
+00000
+00100
+.111.
+
+Beach
+yellow white
+00010
+01000
+00001
+00100
+10000
+
+Player
+yellow black
+.000.
+01010
+10001
+01110
+.000.
+
+GhostVTrack
+yellow
+GhostHTrack
+yellow
+GhostURTrack
+yellow
+GhostULTrack
+yellow
+GhostDLTrack
+yellow
+GhostDRTrack
+yellow
+
+VTrack
+grey darkbrown
+0...0
+0...0
+01110
+0...0
+0...0
+
+HTrack
+grey darkbrown
+00000
+..1..
+..1..
+..1..
+00000
+
+Structs
+black darkbrown
+11111
+10101
+11111
+10101
+11111
+
+URTrack
+grey darkbrown
+...00
+..0..
+.01..
+0..1.
+0...1
+
+ULTrack
+grey darkbrown
+00...
+..0..
+..10.
+.1..0
+1...0
+
+DLTrack
+grey darkbrown
+1...0
+.1..0
+..10.
+..0..
+00...
+
+DRTrack
+grey darkbrown
+0...1
+0..1.
+.01..
+..0..
+...00
+
+UTrain
+red black darkred
+.000.
+01110
+00000
+00100
+00000
+
+RTrain
+red black darkred
+0000.
+00010
+01010
+00010
+0000.
+
+LTrain
+red black darkred
+.0000
+01000
+01010
+01000
+.0000
+
+DTrain
+red black darkred
+00000
+00100
+00000
+01110
+.000.
+
+Cart
+red black darkred
+22222
+21112
+21112
+21112
+22222
+
+Smoke1
+white
+..0..
+.0.0.
+0.0.0
+.0.0.
+..0..
+
+Smoke2
+white
+.....
+.0.0.
+..0..
+.0.0.
+.....
+
+Smoke3
+white
+.....
+..0..
+.0.0.
+..0..
+.....
+
+Switch
+red black
+...0.
+..1..
+.1...
+.111.
+.....
+
+=======
+LEGEND
+=======
+
+. = Background
+^ = Mountain
+% = Forest
+~ = Water
+, = Beach
+
+| = VTrack
+- = HTrack
+r = URTrack
+¬ = ULTrack
+l = DRTrack
+j = DLTrack
+X = VTrack and Structs
+Z = HTrack and Structs
+Q = ULTrack and Structs
+
+P = Player
+
+T = VTrack and UTrain
+C = VTrack and Cart
+
+[ = HTrack and RTrain
+] = HTrack and Cart
+
+/ = Switch
+
+1 = GhostHTrack and URTrack
+! = HTrack and GhostURTrack
+2 = HTrack and GhostDRTrack
+3 = HTrack and GhostULTrack
+4 = GhostHTrack and DLTrack
+5 = GhostVTrack and URTrack
+6 = GhostVTrack and DRTrack
+7 = GhostVTrack and ULTrack
+8 = GhostVTrack and DLTrack
+
+_ = Beach and HTrack
+
+WaterR = Water or Water2
+
+Ghost = GhostHTrack or GhostVTrack or GhostULTrack or GhostURTrack or GhostDLTrack or GhostDRTrack
+Track = HTrack or VTrack or ULTrack or URTrack or DLTrack or DRTrack
+
+Train = UTrain or DTrain or LTrain or RTrain
+Vehicle = Train or Cart
+Mover = Vehicle or Player
+
+G = Gerald and Structs
+
+=======
+SOUNDS
+=======
+
+Train move 91301709
+SFX1 53409305
+SFX2 38557307
+SFX3 99431502
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Beach GhostVTrack GhostHTrack GhostURTrack GhostULTrack GhostDLTrack GhostDRTrack
+Structs
+VTrack HTrack URTrack ULTrack DLTrack DRTrack Switch
+Water Water2 Mountain Forest Player UTrain RTrain LTrain DTrain Cart Gerald
+Smoke1 Smoke2 Smoke3
+
+======
+RULES
+======
+
+(animate water)
+[        WaterR ] -> [ action WaterR ]
+[ action WaterR ] -> [ random WaterR ]
+
+[ action Player no Structs | Cart ] [ Train ] -> [ Player | Cart ] [ action Train ]
+
+(move the train if we're on the impassable structs)
+[ Structs Mover ] [ Train ] -> [ Structs Mover ] [ action Train ]
+
+[ action Train ] -> [ action Train Smoke1 ]
+
+[ action UTrain ] -> [    up UTrain ]
+[ action DTrain ] -> [  down DTrain ]
+[ action RTrain ] -> [ right RTrain ]
+[ action LTrain ] -> [  left LTrain ]
+
+late [ Mover Structs ] -> [ Mover Structs ] again (repeat if the train is still on structs)
+
+(cart follows train, player follows cart)
+[ Cart   | moving Train ] -> [ > Cart   | moving Train ]
+[ Player | moving Cart  ] -> [ > Player | moving Cart  ]
+
+[ > Player | Structs no Gerald no Cart ] -> [ Player | Structs ] message It's dangerous to walk along railway bridges!
+
+(endgame message)
+[ >      Player | Gerald ] -> [ Player | Gerald ] message you made it! thanks for playing.
+[ action Player | Gerald ] -> [ Player | Gerald ] message you made it! thanks for playing.
+
+(train turns when entering corners)
+up    [ > UTrain | URTrack ] -> [ > RTrain | URTrack ]
+up    [ > UTrain | ULTrack ] -> [ > LTrain | ULTrack ]
+
+right [ > RTrain | ULTrack ] -> [ > DTrain | ULTrack ]
+right [ > RTrain | DLTrack ] -> [ > UTrain | DLTrack ]
+
+down  [ > DTrain | DRTrack ] -> [ > RTrain | DRTrack ]
+down  [ > DTrain | DLTrack ] -> [ > LTrain | DLTrack ]
+
+left  [ > LTrain | URTrack ] -> [ > DTrain | URTrack ]
+left  [ > LTrain | DRTrack ] -> [ > UTrain | DRTrack ]
+
+(animate smoke)
+[ Smoke3 ] -> [ ]
+[ Smoke2 ] -> [ Smoke3 ]
+[ Smoke1 ] -> [ Smoke2 ]
+
+[ action Player Switch ] -> [ Player action Switch ]
+
+(switch all uncovered tracks at once)
+[ action Switch ] [ Ghost Vehicle ] -> [ action Switch ] [ Ghost Vehicle ] SFX3 (play blocking sound if switch tracks are covered while switching)
+[ action Switch ] [ Ghost no Vehicle ] -> [ action Switch ] [ action Ghost ] SFX2
+
+[ action GhostHTrack URTrack no Vehicle ] -> [ HTrack GhostURTrack ]
+[ HTrack action GhostURTrack no Vehicle ] -> [ GhostHTrack URTrack ]
+[ action GhostHTrack DRTrack no Vehicle ] -> [ HTrack GhostDRTrack ]
+[ HTrack action GhostDRTrack no Vehicle ] -> [ GhostHTrack DRTrack ]
+[ action GhostHTrack ULTrack no Vehicle ] -> [ HTrack GhostULTrack ]
+[ HTrack action GhostULTrack no Vehicle ] -> [ GhostHTrack ULTrack ]
+[ action GhostHTrack DLTrack no Vehicle ] -> [ HTrack GhostDLTrack ]
+[ HTrack action GhostDLTrack no Vehicle ] -> [ GhostHTrack DLTrack ]
+
+[ action GhostVTrack URTrack no Vehicle ] -> [ VTrack GhostURTrack ]
+[ VTrack action GhostURTrack no Vehicle ] -> [ GhostVTrack URTrack ]
+[ action GhostVTrack DRTrack no Vehicle ] -> [ VTrack GhostDRTrack ]
+[ VTrack action GhostDRTrack no Vehicle ] -> [ GhostVTrack DRTrack ]
+[ action GhostVTrack ULTrack no Vehicle ] -> [ VTrack GhostULTrack ]
+[ VTrack action GhostULTrack no Vehicle ] -> [ GhostVTrack ULTrack ]
+[ action GhostVTrack DLTrack no Vehicle ] -> [ VTrack GhostDLTrack ]
+[ VTrack action GhostDLTrack no Vehicle ] -> [ GhostVTrack DLTrack ]
+
+==============
+WINCONDITIONS
+==============
+
+=======
+LEVELS
+=======
+
+(feel free to try making more puzzles!
+
+editing tip: copy out a few rows of screens to edit in isolation
+
+* use bridges (structs) to force the train over junctions before there's a chance to switch them
+* use bridges to make switches unreachable until junctions have been crossed
+* use the train itself and narrow passages to make switches unreachable until junctions have been crossed)
+
+message welcome to the breezy isles!
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~,,,,~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~,,,,,,,~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~,,..,,,,,~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~,,,p.,,,,,~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~,,....,,,,,~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~,,,.....,,,,~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~,,,......,,,~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~,,.......,,,,,,~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~,,,........,,,,,,,~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~,,,..........,,,,,,,,~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~,,...............,,,,,,~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~,~~,...%.........%....,,,,~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~,,,,,~..%.................,,,,~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~,,,,,,,,..~~%%%%%.r-------¬.....,,,,~~~~~~~~~~~~~~~~~~~~
+,,,,,,,,,,,,,....%%~%%%%%%t.......l-¬.....,,,~~~~~~~~~~~~~~~~~~~
+,,,,,,..........%%%~~%%%%%c%%.......l-¬....,,~~~~~~~~~~~~~~~~~~~
+........%%%..%%%%%%%~%%%%%|%%%%%....|.l--¬..,,~~~~~~~~~~~~~~~~~~
+.%%%%.%%%%%%%%%%%%%%~%%%%%|%%%%%%%..|...%l¬.,,~~~~~~~~~~~~~~~~~~
+%%%%%%%%%%%%%%%%%%%%~%%%%%|%%%%%%%%.l¬..%%|.,,~~~~~~~~~~~~~~~~~~
+%%%%%%%%%%%%%%%%%%%%~%%%%%|%%%%%%%%..|.%%%|.,,~~~~~~~~~~~~~~~~~~
+%%%%r---------------z-¬%%%|%%%%%%....|%%%%|.,,~~~~~~~~~~~~~~~~~~
+%%.rj........%%%%%%%~%l¬%.|..........|%%%rj,,,~~~~~~~~~~~~~~~~~~
+%%rj.~~~~G~~~~%%%%%%~^%l--¬..........l---j.,,,~~~~~~~~~~~~~~~~~~
+%.|.~~~~~x~~~~~%%%%^~^....|.....^^^........,,~~~~~~~~~~~~~~~~~~~
+%.|.~~~~~~~~~~~%%^^^~^....l¬...^^^^^^......,,~~~~~~~~~~~~~~~~~~~
+%.|.~~~~~~~~~~%%%^^^~^^^..^l¬^^^^^^^^^^^^^.,^^~~~~~~~~~~~~~~~~~~
+%%l¬.~~~~~~~%%%^^^^^~^^^^^^^l¬^^^^^^^^^^^^^^^^~~~~~~~~~~~~~~~~~~
+%%.|..~~~~%%%%^^^^^~~^^^^^^^^x~^^^^^^^^^^^^^^^^~~~~~~~~~~~~~~~~~
+%%%|.%%%%%%%%^^^^^^~^^^^^^^^~x~^^^^^^^^^^^^^^^^~~~~~~~~~~~~~~~~~
+%%%x%%%%%%%%%^^^^^~~^^^^^^^^~x~^^^^^^^^^^^^^^^^^^^^^^~~~~~~~~~~~
+%%rj%%%%%%%%%^^^^^^~^^^^^^^~~x~%...%%^^%%^^^^^^^^^^^^^~~^~~~~~~~
+%%5z---¬%%%%%^^^^^^~^^^^^^^~^l¬..%r------¬%%^^^^^^^^^^^~~~~~~~~~
+%%|%%%%|%%%%^^^^^^^~~^^^^^~~^^l¬..|.%%%%%|%%%.^^^^^^^^^^^~~~~~~~
+%r4z---¬%%%%^^^^^^^^~~^^^^~^^^.l--l---3--j%%..^^^^^^^^^^^^~~~~~~
+%x./%r-¬%%%%^^^^^^^^^~~^^~~^^^........|%%%%%..^^^^^^^^^^^^^~~~~~
+%l--zj¬j%%%%^^^^^^^^^^~~~~^^^^%%..../.|.%%...^^^^^^^^^^^^^~~~~~~
+%%%%%%5z¬z¬%^^^^^^^^^^^^~~^^^^^%%%....|......^^^^^^^^^^^^^^~~~~~
+%%r--¬x%lzj%^^^^^^^^^^^^~^^^^^^%%%%..~x~~~~~~~^^^^^^^^^^^^^^~^~~
+%%|%%|x%%%%%%^^^^^^^^^^^~^^^^^^%%%%%~~x~~~~~~~~^^^^^^^^^^^^^~~~~
+%%|%%|x%%%%%%%%^^^^^^^^^~^^^^^^%%%%%~~x~~~~~~~~^^^^^^^^^^^^^~~~~
+%%r--47---¬¬---zzzzz1zzzzz¬^^^^^%%%..~x~~~~....%^^^^^^^^^^^~~~~~
+%%|%%%x%.%lj%%^^^^^^x^^^~^lz¬^^^^%%...|..%...%.%%%^^^^^^,,~~~~~~
+%%|%/.l¬.%%%^^^^^^^^x^^^~~^^lz¬^^%%...|.....%...........,,~~~^^~
+%%|%%%lj%%%^^^^^^^^^x^^^^~^~^^x^^^%%.rl-----------r-----__zzz¬^~
+%%l¬%%%%%^^^^^^^^^^^x^^^^~~^^^x^^^%%.|........%...|.....,,~~^x^~
+%%lj%%%%%^^^^^^^^^^r-¬^^^~~~~^x^^^^^%|...%^^^.....l¬../.,,~~~x~~
+%%%%%%%%^^^^^^^^^^^|l¬%^^~~~~~x~^^^^^|.^^^^^^^^^^..|....^^^~~x~~
+%%%%%%%^^^^^^^^^^%rj%|%^^^~~^^x^^^^^rj%%^^^^^^^%%.%l¬.^^^^^^~x~~
+%%%%%%^^^^^^^^^^^%|%%|%^^~^^~^x^^^%.|...%%..%.......|....,,~~x~~
+%%%%^^^^^^^^^^^^^%|/.|%^~^^^^^x^^^%.|.%.............|...,,,~^x^~
+%%^^^^^^^^^^^^^^^%l--8^^^^^^^rj%^^..|..r----!-------2--1___zzj^~
+^^^^^^^^^^^^^^^^^%|%^x^^^^^^^x^^^^%.|.%|%%..|....%..|%.|,,,~~^~~
+^^^^^^^^^^^^^^^^^^|.rlzz--3z-4¬^^^%.|.%l¬...|.......|..l¬,,~~~~~
+^^^^^^^^^^^^^^^^^^x^|^^^..|^..|%^^..l¬%%l-----------j...|,,,~~~~
+^^^^^^^^^^^^^^^^^^l-|---¬/|^.%|%^^%..|.%.%%.l¬%....%....|,,,,~~~
+^^^^^^^^^^^^^^^^^^^%|.%%l-j---j%^^^%.l¬.....%l¬.%.....%.|,,,,~~~
+^^^^^^^^^^^^^^^^^^^%|%%%%%%%%%%^^^^%%.|.%%%...l--¬......l¬,,,~~~
+^^^^^^^^^^^^^^^^^^^^x^^^^%%%^^^^^^^%%.|..%..%...%l-¬%....|,,,~~~
+^^^^^^^^^^^^^^^^^^^^x^^^^^^^^^^^^^^%%%|%%%%..%%....l¬....|,,,,~~
+^^^^^^^^^^^^^^^^^^^^x^^^^^^^^^^^^^^^%%|%^^%%......%.l¬...|.,,,~~
+^^^^^^^^^^^^^^^^^^^^x^%%%%%^^^^^^^^^^^|%%^^^^^^.%%...|...|^^^,~~
+^^^^^^^^^^^^^^^^^^^%|%%....%%^^^^^^^^%|%%%^^^^^^^^^%.|.^^|^^,,~~
+^^^^^^^^^^^^^^^^^^^%|%..%^..%%^^^^^%%rj%%^^^^^^^%....|...|^,,,~~
+^^^^^^^^^^^^^^^^^^^%|./.^%%..%%^^^%%.|.%..%......../.6---¬^,,,~~
+^^^^^^^^^^^^^^^^^^^%|..%^%....%^^^%..|%..%...%......rj...|.,,,~~
+^^^^^^^^^^^^^^^^^^^%l--!z1--¬--zzz----------------!-j..%.|,,,,~~
+^^^^^^^^^^^^^^^^^^^^%%%|^|..|.%^^^%..|.%.%..%..%..|...%..|,,,,~~
+^^^^^^^^^^^^^^^^^^^^^^^x^|%%|%^^^^%%.|%%%.........|......|,,,,~~
+^^^^^^^^^^^^^^^^^^^^^^^x^x^^x^^^^^^%%|%^^^^^^.....|...^^rj^,,~~~
+^^^^^^^^^^^^^^^^^^^^^^^x^x^^x^^^^^^^^|%.^^^^^^^^%.|.^^^^|^^^^~~~
+^^^^^^^^^^^^^^^^^^^^^^^x^x^^x^^^^^^^%|^^^^^^^^.%..|.....|,,^^~~~
+^^^^^^^^^^^^^^^^^^^^^^^x^x^^l¬^^^^^%%|%%^^^.%.....|...%.|,,,~~~~
+^^^^^^^^^^^^^^^^^^^^^^^x^lzzjx^^^^%%.|..%%........|.%...|,,,~~~~
+^^^^^^^^^^^^^^^^^^^^^^^l¬^^^^x^^^^%%.l¬%......%..rj..%..|,,,~~~~
+^^^^^^^^^^^^^^^^^^^^^^^^x^^^^x^^^^%%%.l¬.%......rj.....rj,,,~~~~
+^^^^^^^^^^^^^^^^^^^^^^^^x^^^^x^^^^^%%%%l--------j------j,,,,~~~~
+^^^^^^^^^^^^^^^^^^^^^^^^lzzzzj^^^^^^^%%%%%.%%%%...%%%%^^^,,,~~~~
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^%%%%%^^^^^^^^^^^^^^^^^~~
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^~~
+
+
+
+title Midas
+author wanderlands
+homepage https://web.archive.org/web/20160706204929/http://wanderlands.org/
+
+(
+
+A port of the luxuriant Wanderlands game, Midas, with permission of the authors.  It's a bit messy, if you can find a way to tidy it UP, let me know : ] 
+
+the original is here
+https://web.archive.org/web/20120219201941/http://wanderlands.org/main/midas
+
+update: uh, it's flash, so not a playable link any more...also the original developer site is gone.
+
+)
+
+========
+OBJECTS
+========
+
+Background
+white
+
+Lovebase
+white
+
+Target
+black
+.....
+..0..
+.000.
+..0..
+.0.0.
+
+GoldTarget
+orange
+.....
+..0..
+.000.
+..0..
+.0.0.
+
+PlayerGround
+black
+.....
+..0..
+.000.
+.000.
+.0.0.
+
+PlayerJump1
+black
+.....
+..0..
+00000
+.000.
+.0.0.
+
+PlayerJump2
+black
+.....
+..0..
+00000
+.000.
+.0.0.
+
+Crown
+orange
+.000.
+.0.0.
+.....
+.....
+.....
+
+GoldBlock
+orange
+
+GoldingBlock
+brown
+
+Water
+blue
+
+Wall
+gray
+
+Love
+pink
+.0.0.
+00000
+00000
+.000.
+..0..
+
+=======
+LEGEND
+=======
+
+JumpingPlayer = PlayerJump1 or PlayerJump2
+Player = PlayerGround or PlayerJump1 or PlayerJump2
+Obstacle = Player or Wall or Water or GoldingBlock or GoldBlock or Target or GoldTarget
+CanFall = GoldBlock or Target or GoldTarget
+. = Background
+# = Wall
+P = PlayerGround and Crown
+T = Target
+W = Water
+G = GoldBlock
+D = GoldingBlock
+
+=========
+SOUNDS
+=========
+
+sfx0 28219707 (touch Water)
+sfx1 45545307 (golding)
+sfx2 42491507 (make lady gold :/ )
+StartGame 8892900
+EndLevel 28067900
+EndGame 28067900
+CloseMessage 44855507
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Lovebase
+PlayerGround, PlayerJump1,PlayerJump2, Wall, Water, GoldBlock, Target, GoldTarget, GoldingBlock
+Crown
+Love
+
+======
+RULES
+======
+
+UP [ UP PlayerGround | NO Obstacle ] -> [ UP PlayerJump2 | ] 
+DOWN [ UP JumpingPlayer | NO Obstacle ] -> [ JumpingPlayer | ] 
+DOWN [ UP PlayerJump2 | NO Obstacle ] -> [ PlayerJump2 | ] 
+
+[ STATIONARY CanFall ] -> [ Down CanFall ] 
+
+HORIZONTAL [ > PlayerJump1 | NO Obstacle ] -> [ | PlayerGround ] 
+HORIZONTAL [ > PlayerJump2 | NO Obstacle ] -> [ | PlayerJump1 ] 
+LATE DOWN [ PlayerGround | NO Obstacle ] -> [ | PlayerGround ] 
+
+LATE [ Crown NO Player ] [ Player ] -> [ ] [ Crown Player ] 
+LATE [ GoldingBlock ] -> [ GoldBlock ] 
+LATE [ Crown | Wall ] -> [ Crown | GoldingBlock ] sfx1
+LATE [ Crown | Water ] -> [ | Water ] sfx0
+LATE [ Crown | Target ] -> [ Crown | GoldTarget ] sfx2
+LATE DOWN [ JumpingPlayer | Obstacle ] -> [ PlayerGround | Obstacle ] 
+
+LATE [ Player | Target ] -> [ Player Lovebase | Target ] 
+LATE UP [ Lovebase | ] -> [ | Love ] 
+
+==============
+WINCONDITIONS
+==============
+
+some Love (Awwww!)
+
+=======
+LEVELS
+=======
+##############
+#............#
+#............#
+#.P.......T..#
+##G######WWW##
+##############
+
+message MIDAS
+
+###############
+#.............#
+#.............#
+#.....#.......#
+#.P..##..#.T..#
+##G#######WWW##
+###############
+
+message She waits for me every day
+
+###############
+#.............#
+#.............#
+#.............#
+#.....#.#.....#
+#.P..##.#..T..#
+##G#######WWW##
+###############
+
+message This is the price of gold:
+
+##############
+#............#
+#............#
+#.P..........#
+##G###T##WWW##
+##############
+
+message A heavy heart
+
+#################
+#...............#
+#...............#
+#......#.#......#
+#.....#####.....#
+#.......#.......#
+#.T.P...#.......#
+####G#######WWW##
+#################
+
+message I step in the same river
+message again and again
+
+#####################
+#...................#
+#...................#
+#...................#
+#.........#.#.......#
+#..P........#.......#
+#..d##########......#
+#.......######......#
+#...................#
+#.......T...........#
+#....#########WWW...#
+#...................#
+#...................#
+#...................#
+#####################
+
+message Just so I can touch her hand.
+
+#####################
+#...................#
+#...................#
+#...................#
+#...................#
+#..P................#
+#..d##T########WWW..#
+#.....#.............#
+#...................#
+#...................#
+#####################
+
+message I am a prison to Pactolus
+
+#####################
+#...................#
+#........###........#
+#.......#####.......#
+#......##...##......#
+#.....T##.P.##W.....#
+#.....####d####.....#
+#.....#########.....#
+#...................#
+#####################
+
+message But I must have her!
+
+#####################
+#...................#
+#...................#
+#..T..#...###..W....#
+#..#####...#####....#
+#.....###...#.......#
+#........P..........#
+#.....###D###.......#
+#.....#######.......#
+#...................#
+#...................#
+#####################
+
+message My burden only grows
+
+#####################
+#...................#
+#........G..........#
+#.....W.GGG.T.......#
+#.....#######.......#
+#.....#.....#.......#
+#.....#..P..#.......#
+#.....###D###.......#
+#.....#######.......#
+#...................#
+#...................#
+#...................#
+#####################
+
+message My world collapses.
+
+#####################
+#...................#
+#...................#
+#..G....WW..........#
+#..##.####..........#
+#.....####..........#
+#...................#
+#.#...........T.....#
+#.##.......P..#.....#
+#..############.....#
+#...#.....####......#
+#...................#
+#...................#
+#...................#
+#...................#
+#...................#
+#####################
+
+message And she feels so distant
+
+#####################
+#...................#
+#...................#
+#...................#
+#...................#
+#..P......#.........#
+#..GG...........WW..#
+#..##T############..#
+#....#..............#
+#...................#
+#...................#
+#####################
+
+message I live on borrowed time
+
+#####################
+#...................#
+#...................#
+#..........T........#
+#.........##........#
+#...................#
+#.......P...........#
+#.......D##.........#
+#...........#.......#
+#...................#
+#...................#
+#.......###W#.......#
+#####################
+
+message Is she still waiting?
+
+#####################
+#...................#
+#....###########....#
+#...................#
+#....P.........W....#
+#....###########....#
+#....#.........#....#
+#...................#
+#.........#.........#
+#......#..#..#......#
+#....T.#..#..#......#
+#....###########....#
+#...................#
+#...................#
+#...................#
+#####################
+
+message Is Love just fool's gold?
+
+#####################
+#...................#
+#...................#
+#...........####....#
+#..T##.##..#...#....#
+#..#..#..#.#.P.#....#
+#..#.....#...G#.....#
+#...#...#....#......#
+#....#W#.....#......#
+#.....#.............#
+#............#......#
+#...................#
+#...................#
+#####################
+
+message Midas
+
+
+USER PROMPT:
+The following PuzzleScript game code:
+```plaintext
+title Coin Collector
+author AI GameDesigner
+homepage www.puzzlescript.net
+
+========
+OBJECTS
+========
+
+Background
+lightgray
+.....
+.....
+.....
+.....
+.....
+
+Player
+darkblue
+..0..
+.000.
+.000.
+..0..
+.....
+
+Wall
+brown
+11111
+11111
+11111
+11111
+11111
+
+Coin
+gold
+.000.
+.0.0.
+00000
+.0.0.
+.000.
+
+Trap
+red
+.....
+..1..
+.111.
+..1..
+.....
+
+=======
+LEGEND
+=======
+
+. = Background
+P = Player
+# = Wall
+C = Coin
+T = Trap
+
+======= 
+SOUNDS 
+======= 
+
+CollectCoin 20105505
+HitTrap 40100001
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Coin
+Trap
+Player, Wall
+
+======
+RULES
+======
+
+[ > Player | Coin ] -> [ > Player | ] sound CollectCoin
+[ > Player | Trap ] -> RESTART sound HitTrap
+
+==============
+WINCONDITIONS
+==============
+
+no Coin
+
+=======
+LEVELS
+=======
+
+#..C.....#
+#..######.#
+#........P#
+####.######
+#.......#C#
+#..###..#T#
+#....##...#
+#C##.....##
+###T#######
+
+#......C..#
+#.###..#.##
+#.#..T#.#C#
+#..P.#..#.#
+##.###.##.#
+#......#..#
+#.##T#.....#
+#.....#..##
+######.####
+
+message Congratulations! You have collected all the coins!
+
+
+```
+produced the following console output:
+=================================
+line 27 : Trying to access color number 1 from the color palette of sprite WALL, but there are only 1 defined in it.
+line 28 : Trying to access color number 1 from the color palette of sprite WALL, but there are only 1 defined in it.
+line 29 : Trying to access color number 1 from the color palette of sprite WALL, but there are only 1 defined in it.
+line 30 : Trying to access color number 1 from the color palette of sprite WALL, but there are only 1 defined in it.
+line 31 : Trying to access color number 1 from the color palette of sprite WALL, but there are only 1 defined in it.
+line 34 : Was looking for color for object COIN, got "gold" instead.
+too many errors, aborting compilation
+Errors detected during compilation; the game may not work correctly.
+Return a repaired version of the code that addresses these errors. First, reason about your task and determine the best plan of action. Then, write your code. Return your code in full, inside a ```plaintext code block.

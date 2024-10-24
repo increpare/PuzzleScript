@@ -14,8 +14,8 @@ homepage https://example.com
 
 # === Objects ===
 OBJECTS
-Background 
-color #000000
+Background
+lightgray
 .....
 .....
 .....
@@ -23,52 +23,52 @@ color #000000
 .....
 
 Wall
-color #888888
-XXXXX
-XXXXX
-XXXXX
-XXXXX
-XXXXX
+gray
+.....
+.....
+00000
+.....
+.....
 
 Player
-color #FFFF00
+yellow
 .....
-..O..
-.OOO.
-..O..
-.....
+..0..
+.000.
+.0.0.
+.000.
 
 Block
-color #FF0000
+blue
 .....
-..X..
-.X.X.
-..X..
+..00.
+.000.
+..00.
 .....
 
 Goal
-color #00FF00
+red
 .....
 .....
-..X..
-.....
-.....
-
-BlockOnGoal
-color #FF00FF
-.....
-.....
-.XOX.
+..0..
 .....
 .....
 
-PlayerOnGoal
-color #00FFFF
+Blockongoal
+purple
 .....
-..O..
-.OXO.
-..O..
+..00.
+.000.
+..00.
 .....
+
+Playerongoal
+orange
+.....
+..0..
+.000.
+.0.0.
+.000.
 
 # === End Objects ===
 
@@ -79,14 +79,14 @@ LEGEND
 P = Player
 B = Block
 G = Goal
-O = BlockOnGoal
-@ = PlayerOnGoal
+O = Blockongoal
+@ = Playerongoal
 
 # === End Legend ===
 
 # === Sounds ===
 SOUNDS
-# This section is empty but needed for correct ordering
+# No sound effects used 
 
 # === End Sounds ===
 
@@ -94,31 +94,30 @@ SOUNDS
 COLLISIONLAYERS
 Background
 Wall
-Player, PlayerOnGoal
-Block, BlockOnGoal
+Player, Playerongoal
+Block, Blockongoal
 Goal
 
 # === End Collision Layers ===
 
 # === Rules ===
 RULES
-[ Player | Block ] -> [ | Player ] [ Block | Player ]
-[ PlayerOnGoal | Block ] -> [ | @ ] [ Block | Player ]
-
-[ Player | Goal ] -> [ PlayerOnGoal | ]
-[ PlayerOnGoal | ] -> [ Player | ]
-
-[ Block | Goal ] -> [ BlockOnGoal | ]
-[ BlockOnGoal | ] -> [ Block | ]
+[ Player | Block ] -> [ | Block | Player ]
+[ Playerongoal | Block ] -> [ | Block | @ ]
+[ Player | Goal ] -> [ @ | ]
+[ Playerongoal | ] -> [ Player | ]
+[ Block | Goal ] -> [ Blockongoal | ]
+[ Blockongoal | ] -> [ Block | ]
 
 # Win condition
 WinCondition
-All BlockOnGoal
+All Blockongoal
 
 # === End Rules ===
 
 # === Levels ===
 LEVELS
+
 #######
 #     #
 #  G  #
@@ -156,12 +155,17 @@ LEVELS
 ```
 produced the following console output:
 =================================
-line 12 : Was looking for color for object BACKGROUND, got "color " instead.
-line 20 : Was looking for color for object WALL, got "color " instead.
-line 22 : Was looking for color for object XXXXX, got "xxxxx" instead.
-line 23 : Object "XXXXX" defined multiple times.
-line 24 : Object "XXXXX" defined multiple times.
-line 25 : Object "XXXXX" defined multiple times.
+line 67 : Unknown junk in object section (possibly: sprites have to be 5 pixels wide and 5 pixels high exactly. Or maybe: the main names for objects have to be words containing only the letters a-z0.9 - if you want to call them something like ",", do it in the legend section).
+line 69 : Unknown junk in object section (possibly: sprites have to be 5 pixels wide and 5 pixels high exactly. Or maybe: the main names for objects have to be words containing only the letters a-z0.9 - if you want to call them something like ",", do it in the legend section).
+line 79 : Something bad's happening in the LEGEND
+line 79 : Incorrect format of legend - should be one of "A = B", "A = B or C [ or D ...]", "A = B and C [ and D ...]", but it looks like you have a dangling "="?
+line 81 : Something bad's happening in the LEGEND
+line 81 : Incorrect format of legend - should be one of "A = B", "A = B or C [ or D ...]", "A = B and C [ and D ...]", but it looks like you have a dangling "="?
+line 83 : Was expecting a sound event (like SFX3, or ENDLEVEL) or an object name, but didn't find either.
+line 85 : Was expecting a sound event (like SFX3, or ENDLEVEL) or an object name, but didn't find either.
+line 87 : Was expecting a sound event (like SFX3, or ENDLEVEL) or an object name, but didn't find either.
+line 95 : error detected - unexpected character #
+line 95 : error detected - unexpected character =
 too many errors, aborting compilation
 Errors detected during compilation; the game may not work correctly.
 Return a repaired version of the code that addresses these errors. First, reason about your task and determine the best plan of action. Then, write your code. Return your code in full, inside a ```plaintext code block.

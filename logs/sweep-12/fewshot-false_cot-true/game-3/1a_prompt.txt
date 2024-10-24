@@ -1,0 +1,117 @@
+SYSTEM PROMPT:
+You are a game designer, familiar with the PuzzleScript game description language. 
+
+USER PROMPT:
+The following PuzzleScript game code:
+```plaintext
+========
+OBJECTS
+========
+
+Background
+B
+Yellow
+
+Player
+P
+Blue
+.000.
+.0.0.
+00000
+.0.0.
+.0.0.
+
+Wall
+W
+Gray
+00000
+00000
+00000
+00000
+00000
+
+Crate
+C
+Red
+.0.0.
+00000
+0.0.0
+00000
+.0.0.
+
+Target
+T
+Green
+.....
+..0..
+.000.
+..0..
+.....
+
+CrateOnTarget
+G
+Orange
+.0.0.
+0LLL0
+LL0LL
+0LLL0
+.0.0.
+
+========
+LEGEND
+========
+
+.=Background
+P=Player
+W=Wall
+C=Crate
+T=Target
+G=CrateOnTarget
+
+==============
+COLLISIONLAYERS
+==============
+
+Background
+Player, Crate, CrateOnTarget
+Wall
+Target
+
+======
+RULES
+======
+
+[Player | Crate] -> [ | Player] [Crate | ]
+[Crate | Target] -> [CrateOnTarget | Target]
+[CrateOnTarget | Target] -> [Crate | Target]
+
+===========
+WINCONDITIONS
+===========
+
+No Crate
+
+======
+LEVELS
+======
+
+######
+#..P.#
+#..C.#
+#..W.#
+#...T#
+######
+
+
+```
+produced the following console output:
+=================================
+line 6 : Was looking for color for object BACKGROUND, got "b" instead.
+line 10 : Was looking for color for object PLAYER, got "p" instead.
+line 12 : Was looking for color for object BLUE, got ".000." instead.
+line 13 : Trying to access color number 0 from the color palette of sprite BLUE, but there are only 0 defined in it.
+line 14 : Trying to access color number 0 from the color palette of sprite BLUE, but there are only 0 defined in it.
+line 15 : Trying to access color number 0 from the color palette of sprite BLUE, but there are only 0 defined in it.
+too many errors, aborting compilation
+Errors detected during compilation; the game may not work correctly.
+Return a repaired version of the code that addresses these errors. First, reason about your task and determine the best plan of action. Then, write your code. Return your code in full, inside a ```plaintext code block.

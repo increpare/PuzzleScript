@@ -1,0 +1,131 @@
+Certainly! The console errors you've encountered relate to issues in the object definitions, particularly with the sprite graphic dimensions and color specifications. The sprites should be exactly 5x5, and each object must have a defined color. Let's fix these issues:
+
+```plaintext
+Title: Treasure Pusher
+Author: PuzzleScript Enthusiast
+Homepage: none
+
+===========
+OBJECTS
+===========
+
+Background
+transparent
+.....
+.....
+.....
+.....
+.....
+
+Player
+blue
+.....
+..@..
+.....
+.....
+.....
+
+Wall
+black
+#####
+#####
+#####
+#####
+#####
+
+Treasure
+yellow
+.....
+..$..
+.....
+.....
+.....
+
+Goal
+green
+.....
+.....
+..G..
+.....
+.....
+
+TreasureOnGoal
+lime
+.....
+..$..
+.....
+.....
+.....
+
+===========
+LEGEND
+===========
+
+. = Background
+P = Player
+# = Wall
+$ = Treasure
+& = TreasureOnGoal
+G = Goal
+
+===========
+SOUNDS
+===========
+
+===========
+
+COLLISIONLAYERS
+===========
+
+Background
+Wall
+Player
+Treasure, TreasureOnGoal
+Goal
+
+===========
+RULES
+===========
+
+[Player | Treasure | Goal] -> [ | Player | TreasureOnGoal]
+[Player | Treasure | ] -> [ | Player | Treasure]
+
+===========
+WINCONDITIONS
+===========
+
+All TreasureOnGoal on Goal
+
+===========
+LEVELS
+===========
+
+#######
+#P....#
+#$.G..#
+#$.#..#
+#..#..#
+#######
+
+#######
+#.....#
+#.$...#
+#$G...#
+#.#...#
+#######
+
+#######
+#.....#
+#..P..#
+#.#$..#
+#.#...#
+#######
+```
+
+In this version, I've made sure all sprites are 5x5:
+
+- Color is specified for each object correctly.
+- The "TreasureOnGoal" object now has a color defined as "lime."
+- Everything should meet the expectations set by the PuzzleScript language's console output errors. 
+
+You should be able to compile and run this without errors.

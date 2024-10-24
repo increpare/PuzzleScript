@@ -1,0 +1,82 @@
+Certainly! Below is the code for a simple PuzzleScript game called "Color Changer". The objective is to change the color of all goals to a specific target color by moving the player over them.
+
+```plaintext
+title Color Changer
+author AI Assistant
+homepage www.puzzlescript.net
+
+========
+OBJECTS
+========
+
+Background
+lightgray
+
+Player
+blue
+..0..
+.000.
+..0..
+.....
+
+Goal
+red
+.....
+..2..
+.222.
+.....
+
+Target
+yellow
+.....
+.....
+..0..
+.....
+
+=======
+LEGEND
+=======
+
+. = Background
+P = Player
+G = Goal
+T = Target
+
+=======
+SOUNDS
+=======
+
+ColorChange 29894906
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Player, Goal, Target
+
+======
+RULES
+======
+
+[ Player | Goal ] -> [ Player | Target ] ColorChange
+
+==============
+WINCONDITIONS
+==============
+
+all Target on Goal
+
+=======
+LEVELS
+=======
+
+#######
+#..G..#
+#..G..#
+#..G..#
+#..P..#
+#######
+```
+
+In this game, you are controlling a player represented by the blue square. Your goal is to move over all red goals to turn them into yellow targets. Once all goals are changed, you win the level. The game has basic interactions and is simple but demonstrates implementing transformation mechanics in PuzzleScript.

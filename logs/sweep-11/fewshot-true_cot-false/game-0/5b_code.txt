@@ -1,0 +1,101 @@
+```plaintext
+title Color Changer
+author AI Assistant
+homepage www.puzzlescript.net
+
+========
+OBJECTS
+========
+
+Background
+lightgray
+
+Player
+blue
+..0..
+.000.
+..0..
+.....
+
+Goal
+red
+.....
+.....
+.....
+.....
+
+Target
+yellow
+.....
+.....
+..0..
+.....
+
+Wall
+darkgray
+00000
+00000
+00000
+00000
+00000
+
+=======
+LEGEND
+=======
+
+. = Background
+P = Player
+G = Goal
+T = Target
+# = Wall
+
+=======
+SOUNDS
+=======
+
+sfx1 29894906
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Player, Goal, Target, Wall
+
+======
+RULES
+======
+
+[ Player | Goal ] -> [ Player | Target ] sfx1
+
+==============
+WINCONDITIONS
+==============
+
+all Target on Goal
+
+=======
+LEVELS
+=======
+
+#######
+#..G..#
+#..G..#
+#..G..#
+#..P..#
+#######
+
+```
+
+It appears that Level 0 is not solvable because the Player cannot reach any Goal to change it into a Target. To solve this issue, you might consider restructuring the level layout to allow the player to interact with the Goals. Here's a suggestion:
+
+```plaintext
+#######
+#..G..#
+#..P..#
+#..G..#
+#..G..#
+#######
+```
+
+In this layout, the Player is now adjacent to a Goal, allowing for interaction and conversion into a Target, making the level solvable according to the given rules and win conditions.

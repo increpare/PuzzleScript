@@ -1,0 +1,114 @@
+The task is to fix the errors in the given PuzzleScript game code so that it compiles and runs correctly. The error messages provide us with crucial information about what needs to be corrected:
+
+1. For the `Crate` object, the color "darkorange" is not correctly referenced. According to the error (`line 28 : Was looking for color for object CRATE, got "darkorange" instead`), it appears there's an issue with the way the color is specified. Typically, PuzzleScript expects only one primary color followed by optional secondary colors.
+
+2. The error messages about accessing color numbers (`Trying to access color number 2 from the color palette of sprite CRATE, but there are only 1 defined in it`) suggest that the sprite for the `Crate` object isn't using the colors as expected. In the colors 0, 1, and 2 in a sprite are supposed to refer to the defined colors, with 0 being typically for the background and 1 or other numbers for the sprite's colors.
+
+To fix these issues:
+- Correctly define the color for `Crate` using a single primary color followed by optional secondary colors if necessary.
+- Ensure the number of colors referenced in the sprite matches the number of colors provided.
+
+Here's the corrected code:
+
+```plaintext
+title Sokoban Clone
+author YourName
+
+========
+OBJECTS
+========
+
+Background
+White
+
+Wall
+DarkGray
+00000
+00000
+00000
+00000
+00000
+
+Player
+Blue LightBlue
+..1..
+.111.
+11111
+.111.
+..1..
+
+Crate
+Orange DarkOrange
+.111.
+11111
+11111
+11111
+.111.
+
+Target
+LightGreen
+00000
+01110
+01210
+01110
+00000
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Player
+* = Crate
+O = Target
+@ = Crate and Target
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Target
+Player, Crate, Wall
+
+======
+RULES
+======
+
+[ > Player | Crate ] -> [ > Player | > Crate ]
+[ > Player | Wall ] -> [ Player | Wall ]
+
+==============
+WINCONDITIONS
+==============
+
+All Crate on Target
+
+=======
+LEVELS
+=======
+
+#####
+#...#
+#.P.#
+#.#.#
+#*O*#
+#####
+
+#####
+#...#
+#*P*#
+#.#.#
+#O.O#
+#####
+
+#####
+#.#.#
+#*P*#
+#.O.#
+#...#
+#####
+```
+
+In the corrected code, the color palette for the `Crate` object has been adjusted to ensure that the color references in the sprite (numbered `1`) align with the number of colors defined. This should resolve the compilation errors.

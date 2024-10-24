@@ -1,0 +1,99 @@
+The errors in the console output are due to formatting issues in the `objects` section of the code. PuzzleScript requires clear and consistent formatting with proper indentation to correctly parse and identify objects and their attributes (such as color). Let's address these issues:
+
+1. Each object should be on a single line with proper alignment.
+2. Ensure that there are no additional spaces or breaks between object properties.
+
+Based on these points, I'll fix the formatting for the `objects` section.
+
+Here's the corrected code:
+
+```plaintext
+========
+title Sokoban Basic
+author Your Name
+homepage www.yourwebsite.com
+========
+
+========
+objects
+========
+Background . #000000
+Player P #00ff00
+Wall W #aaaaaa
+Box B #ff0000
+Target T #0000ff
+BoxOnTarget O #ff00ff
+
+========
+legend
+========
+. = Background
+P = Player
+W = Wall
+B = Box
+T = Target
+O = BoxOnTarget
+# = Wall
+
+========
+sounds
+========
+SfxMove 100
+SfxPush 241
+SfxWin 40
+
+========
+collisionlayers
+========
+Background
+Player, Box, BoxOnTarget
+Wall, Target
+
+========
+rules
+========
+// Player movement
+[> Player | ] -> [> Player | ] SfxMove
+[< Player | ] -> [< Player | ] SfxMove
+[^ Player | ] -> [^ Player | ] SfxMove
+[v Player | ] -> [v Player | ] SfxMove
+
+// Box pushing
+[> Player | Box ] -> [> Player | > Box ] SfxPush
+[< Player | Box ] -> [< Player | < Box ] SfxPush
+[^ Player | Box ] -> [^ Player | ^ Box ] SfxPush
+[v Player | Box ] -> [v Player | v Box ] SfxPush
+
+// Convert Box to BoxOnTarget
+[ Box | Target ] -> [ BoxOnTarget ]
+
+// Revert BoxOnTarget if moved off Target
+[ BoxOnTarget | ] -> [ Box ]
+
+========
+winconditions
+========
+All Boxes on Targets
+
+========
+levels
+========
+/* Level 1 */
+WWWWWW
+W....W
+W.PB.W
+WT...W
+WWWWWW
+
+/* Level 2 */
+WWWWWWW
+W.....W
+W.P.B.W
+W.B..TW
+W.....W
+WTWWWWW
+
+========
+```
+
+I've ensured that each line in the `objects` section is correctly formatted. Now, your PuzzleScript game should compile without those specific errors. If there are more issues beyond this, they'll need to be addressed separately based on further error messages.

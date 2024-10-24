@@ -1,0 +1,1991 @@
+SYSTEM PROMPT:
+You are a game designer, familiar with the PuzzleScript game description language. Here are some example games, for inspiration (do not reproduce these games exactly):
+
+title Robot Spawner
+author increpare
+homepage www.puzzlescript.net
+
+========
+OBJECTS
+========
+
+Background (special, automatically placed in its own layer)
+green darkgreen
+11111
+01111
+11101
+11111
+10111
+
+Spawner (Name)
+yellow 	(Color)
+..... 	(Sprite)
+..0..
+.000.
+..0..
+.....
+
+Player (Required by game)
+pink
+..0..
+00000
+..0..
+.000.
+.0.0.
+
+RedRobot
+gray black red
+.000.
+.200.
+...0.
+00000
+01010
+
+GreenRobot
+gray black lightgreen
+.000.
+.200.
+...0.
+00000
+01010
+
+BlueRobot
+gray black lightblue
+.000.
+.200.
+...0.
+00000
+01010
+
+=======
+LEGEND
+=======
+
+Robot = RedRobot or GreenRobot or BlueRobot
+Obstacle = Player or Robot
+. = Background
+P = Player
+* = Robot
+O = Spawner
+
+=========
+SOUNDS
+=========
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Spawner
+Player, Robot
+
+======
+RULES
+======
+
+[ stationary Robot ] -> [ randomDir Robot ] 
+[ Spawner no Obstacle ] -> [ Spawner random Robot ] 
+
+==============
+WINCONDITIONS
+==============
+
+=======
+LEVELS
+=======
+
+.......
+.......
+.......
+...O...
+.......
+.P.....
+.......
+
+
+title Lunar Lockout
+homepage http://bit.ly/WMmQrq
+
+========
+OBJECTS
+========
+
+Background
+Black
+
+Square
+LightGray Gray
+11111
+10001
+10001
+10001
+11111
+
+Space
+Black
+
+Target
+Red
+.....
+.000.
+.0.0.
+.000.
+.....
+
+Soldier
+DarkBlue LightGray Gray
+11111
+10001
+10201
+10001
+11111
+
+Captain
+Green LightGray Gray
+11111
+10001
+10201
+10001
+11111
+
+Player
+Orange
+.....
+.....
+..0..
+.....
+.....
+
+
+=======
+LEGEND
+=======
+
+Pawn = Soldier or Captain
+Block = Pawn
+
+@ = Space
+_ = Square
+P = Square and Player
+* = Square and Target
+O = Soldier
+$ = Soldier and Target
+C = Captain
+
+=======
+SOUNDS
+=======
+
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Space, Square
+Target
+Pawn, Captain
+Player
+
+======
+RULES
+======
+
+[ > Player | Space ] -> [ Player | Space ]
+[ > Player Pawn ] -> [ Player > Pawn ]
+[ > Pawn | Block ] -> [ Pawn | Block ]
+[ > Pawn | Square ] -> [ Square | > Pawn ]
+[ > Pawn | Space ] -> [ Square | Space ]
+
+==============
+WINCONDITIONS
+==============
+
+some Captain on Target
+
+=======
+LEVELS
+=======
+
+message challenge 4
+@@@@@@@
+@O___O@
+@___O_@
+@_P*__@
+@__O__@
+@_C___@
+@@@@@@@
+
+message challenge 16
+@@@@@@@
+@O_C__@
+@_____@
+@_O*_O@
+@__P__@
+@_O___@
+@@@@@@@
+
+message challenge 21
+@@@@@@@
+@__C__@
+@__O__@
+@_P$_O@
+@O____@
+@___O_@
+@@@@@@@
+
+message challenge 37
+@@@@@@@
+@O__OO@
+@_____@
+@_P*__@
+@O__C_@
+@_____@
+@@@@@@@
+
+
+
+title 2D Whale World
+author increpare
+homepage www.increpare.com
+
+background_color orange
+text_color darkblue
+
+color_palette mastersystem
+
+run_rules_on_level_start
+require_player_movement
+
+(
+    
+This game is a port of the Whale section of my puzzle game English Country Tune (www.englishcountrytune.com), in only 8 lines of code.
+
+)
+
+========
+OBJECTS
+========
+
+Background
+blue
+
+Void
+orange
+
+Player
+lightblue
+
+Whale
+brown
+00000
+00000
+00000
+00000
+00000
+
+Wall
+black
+00000
+0...0
+0...0
+0...0
+00000
+
+HBeam
+yellow
+.....
+.....
+0.0.0
+.....
+.....
+
+VBeam
+yellow
+..0..
+.....
+..0..
+.....
+..0..
+
+=======
+LEGEND
+=======
+
+Beam = HBeam or VBeam
+. = Background
+# = Wall
+P = Player
+W = Whale
+0 = Void
+
+=========
+SOUNDS
+=========
+
+whale destroy 62981708
+player move 69405107
+whale move 32823307
+endlevel 99636708
+restart 92555303
+startgame 60661308
+CloseMessage 123434
+ShowMessage 123434
+
+================
+COLLISIONLAYERS
+================
+
+Background
+void
+Player, Wall, Whale
+HBeam
+VBeam
+
+======
+RULES
+======
+
+(While we allow whales to move onto the void, player's aren't)
+[ > player | void ] -> [ player | void ] 
+
+(Beams detect motion)
+horizontal [ > Player | VBeam ] -> [ > Player | > VBeam ] 
+vertical [ > Player | HBeam ] -> [ > Player | > HBeam ] 
+
+(If beams detected motion, transfer that to the whales)
+[ Whale | ... | perpendicular Beam ] -> [ perpendicular Whale | ... | perpendicular Beam ] 
+
+(Remove whales, if necessary)
+late [ Whale Void ] -> [ Void ] 
+
+(Remove beams)
+[ Beam ] -> [ ] 
+
+(Place HVeams and VBeams)
+late horizontal [ Whale | ... | ] -> [ Whale | ... | HBeam ] 
+late vertical [ Whale | ... | ] -> [ Whale | ... | VBeam ] 
+
+==============
+WINCONDITIONS
+==============
+
+no Whale
+
+=======
+LEVELS
+=======
+
+message Push a whale off to free it.
+
+0000000000000000
+0########0000000
+0.......#0000000
+0###.W..###00000
+0.........#00000
+0#####.##.###000
+0000#...#...#000
+0000#...#...#000
+0000#...#...###0
+0000#.P.#.....#0
+0000#...#.....#0
+0000#####...W##0
+0000000000....#0
+0000000000#####0
+0000000000000000
+
+message level 2 of 8
+
+00000000000
+0000####000
+000##..##00
+0###....##0
+0#.......#0
+0###.W.###0
+000#P...000
+000#####000
+00000000000
+
+message level 3 of 8
+
+0000000000000000
+00###00000000000
+00#.#####0000000
+00#.#...##000000
+00#......#000000
+00#..##.#######0
+00#..#........#0
+00#..#........#0
+0##..######...#0
+0#........#.W.#0
+0##.......#..P#0
+00######..#####0
+00000000..000000
+0000000000000000
+
+message level 4 of 8
+
+0000000000000000
+000000#########0
+0######.......#0
+0.............#0
+0.....#.#####.#0
+0######.#.....#0
+00000##.#...P.#0
+00000#........#0
+00000##.#.W...#0
+000000#.......#0
+000000###.#...#0
+00000000#######0
+0000000000000000
+
+message level 5 of 8
+
+00000000000000000
+0000############0
+0000#.#........#0
+0000#..........#0
+0####..###.....#0
+0......#.#.....#0
+0####..#W#.#W#.#0
+0..........#.#.#0
+0####.....P###.#0
+0...#.#........#0
+0##...##########0
+00#####0000000000
+00000000000000000
+
+message level 6 of 8
+
+00000000000000000
+000000000#.#.#.#0
+000000000#.#.#.#0
+000000000#.#.#.#0
+000000000#.....#0
+0000000###...###0
+0000000#.#...#000
+0000000#.#.#.#000
+0#######.#.#.#000
+0#...........#000
+0#.#.W...W...#000
+0#...........#000
+0#.....P.....#000
+0#...........#000
+0#############000
+00000000000000000
+
+message level 7 of 8
+
+000000000#000000
+00000####.####00
+0####.........#0
+0........#....#0
+0####....W....#0
+0000#.........#0
+0000#.#W.P.W#..#
+0####.........#0
+0........W....#0
+0####....#....#0
+00000#........#0
+000000########00
+0000000000000000
+
+message level 8 of 8
+
+00000000000
+0########00
+0#...#..#00
+0##.....000
+0#......#00
+0#..WW..##0
+0#..WW...#0
+0##...P.##0
+0#...#.##00
+0#######000
+00000000000
+
+message all the 2d whales are freed
+
+
+title BROKEN Naive Extended Bodies
+author increpare
+homepage www.puzzlescript.net
+
+(
+naive/broken implementation of rigid bodies
+see https://www.puzzlescript.net/Documentation/rigidbodies.html#Introduction
+)
+
+========
+OBJECTS
+========
+
+Background
+LIGHTGREEN GREEN
+11111
+01111
+11101
+11111
+10111
+
+
+Target
+DarkBlue
+.....
+.000.
+.0.0.
+.000.
+.....
+
+Wall
+BROWN DARKBROWN
+00010
+11111
+01000
+11111
+00010
+
+Player
+Black Orange White Blue
+.000.
+.111.
+22222
+.333.
+.3.3.
+
+BigBlock
+Orange Yellow
+00000
+0...0
+0...0
+0...0
+00000
+
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Player
+* = BigBlock
+@ = BigBlock and Target
+O = Target
+
+
+=======
+SOUNDS
+=======
+
+BigBlock MOVE 36772507
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Target
+Player, Wall, BigBlock
+
+======
+RULES
+======
+
+[ >  Player | BigBlock ] -> [  >  Player | > BigBlock  ]
+[ moving BigBlock | BigBlock ] -> [moving BigBlock|moving BigBlock]
+
+==============
+WINCONDITIONS
+==============
+
+=======
+LEVELS
+=======
+
+.#######.
+#.......#
+#..***..#
+#..p*...#
+#.......#
+.#######.
+
+
+(
+level ideas
+push battery horizontally
+have to assemble and then disassemble a circuit, in order to complete it
+add a piece to a circut, then break the circuit from another point
+level that starts with a closed circuit
+level with very dangerous + block
+)
+title LED Challenge
+author increpare
+homepage www.increpare.com
+
+run_rules_on_level_start
+color_palette famicom
+
+
+========
+OBJECTS
+========
+
+Background .
+darkgreen green
+00000
+00000
+00100
+00000
+00000
+
+
+Player
+Black brown grey Blue
+.111.
+.111.
+22222
+13331
+.3.3.
+
+
+Player_Dead
+darkgrey darkgrey darkgrey darkgrey
+.111.
+.111.
+22222
+.333.
+.3.3.
+
+Wall #
+black
+
+Red_Off R
+black DarkRed
+.....
+..1..
+.101.
+.101.
+.101.
+
+Red_On T
+pink red
+.....
+..1..
+.101.
+.101.
+.101.
+
+
+Green_Off G
+black Green
+.....
+..1..
+.101.
+.101.
+.101.
+
+Green_On H
+Green LightGreen
+.....
+..1..
+.101.
+.101.
+.101.
+
+
+Blue_Off B
+black DarkBlue
+.....
+..1..
+.101.
+.101.
+.101.
+
+Blue_On N
+Blue LightBlue
+.....
+..1..
+.101.
+.101.
+.101.
+
+Battery_H C
+Grey lightgrey
+.000.
+.010.
+01110
+.010.
+.000.
+
+Battery_V O
+Grey lightgrey
+..0..
+00100
+01110
+00100
+..0..
+
+
+cable_h q
+grey
+.....
+.....
+00000
+.....
+.....
+
+cable_v e
+grey
+..0..
+..0..
+..0..
+..0..
+..0..
+
+cable_ul w
+grey
+..0..
+..0..
+000..
+.....
+.....
+
+cable_ur d
+grey
+..0..
+..0..
+..000
+.....
+.....
+
+cable_dr s
+grey
+.....
+.....
+..000
+..0..
+..0..
+
+cable_dl a
+grey
+.....
+.....
+000..
+..0..
+..0..
+
+
+cable_omni z
+grey
+..0..
+..0..
+00000
+..0..
+..0..
+
+cable_dlr i
+grey
+.....
+.....
+00000
+..0..
+..0..
+
+cable_ulr k
+grey
+..0..
+..0..
+00000
+.....
+.....
+
+cable_udr j
+grey
+..0..
+..0..
+..000
+..0..
+..0..
+
+cable_udl l
+grey
+..0..
+..0..
+000..
+..0..
+..0..
+
+
+light
+black
+
+light_up
+yellow
+.000.
+.000.
+.000.
+.....
+.....
+
+light_down
+yellow
+.....
+.....
+.000.
+.000.
+.000.
+
+light_Left
+yellow
+.....
+000..
+000..
+000..
+.....
+
+light_right
+yellow
+.....
+..000
+..000
+..000
+.....
+
+=======
+LEGEND
+=======
+
+P = Player
+Unlit = Blue_Off or Green_Off or Red_Off
+Lit = Blue_On or Green_On or Red_On
+Cable = Cable_h or Cable_v or Cable_dr or Cable_dl or Cable_ul or Cable_ur or Cable_UL or Cable_UR or Cable_UDR or Cable_ULR or Cable_UDL or Cable_DLR or Cable_Omni
+Battery = Battery_H or Battery_V
+Item = Unlit or Lit or Battery or Cable
+Cable_Up = Cable_V or Cable_UL or Cable_UR or Battery_V or Cable_UDR or Cable_ULR or Cable_UDL or Cable_Omni or  Player
+Cable_Down = Cable_V or Cable_DL or Cable_DR or Battery_V or Cable_UDR or Cable_UDL or Cable_DLR or Cable_Omni or Player
+Cable_Left = Cable_H or Cable_UL or Cable_DL or Battery_H  or Cable_ULR or Cable_UDL or Cable_DLR or Cable_Omni or Player
+Cable_Right = Cable_H or Cable_UR or Cable_DR or Battery_H or Cable_UDR or Cable_ULR or Cable_DLR or Cable_Omni or Player
+LightEffect = Light_Up or Light_Down or Light_Left or Light_Right
+Object = Player or Item
+Player_Dying = Player and Light
+
+=======
+SOUNDS
+=======
+
+EndLevel 39731502
+EndGame 20540505
+Player Move 6330907
+Player_Dead Create 44233902
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Light
+Light_Up
+Light_Down
+Light_Left
+Light_Right
+Player, Player_Dead, Wall, Item
+
+======
+RULES
+======
+
+(init stage)
+[ Light ] -> [ ]
+[ LightEffect no Player] -> [ ]
+[ Red_On ] -> [ Red_Off ]
+[ Green_On ] -> [ Green_Off ]
+[ Blue_On ] -> [ Blue_Off ]
+
+(movement)
+[ >  Object | Object ] -> [  > Object | > Object ]
+
+(do circuits)
+startLoop
+late [ Battery ] -> [ Light Battery ]
+
+late left [ Player | Light_Right ] -> [ Light Player | Light_Right ]
+late right [ Player | Light_Left ] -> [ Light Player | Light_Left ]
+late up [ Player | Light_Down ] -> [ Light Player | Light_Down ]
+late down [ Player | Light_Up ] -> [ Light Player | Light_Up ]
+
+late up [ Player_Dead | Light_Down ] -> [ Light Player_Dead | Light_Down  ]
+late down [ Player_Dead | Light_up ] -> [ Light Player_Dead | Light_up  ]
+
+late left [ Cable_Left | Light_Right ] -> [ Light Cable_Left | Light_Right ]
+late right [ Cable_Right | Light_Left ] -> [ Light Cable_Right | Light_Left ]
+late up [ Cable_Up | Light_Down ] -> [ Light Cable_Up | Light_Down ]
+late down [ Cable_Down | Light_Up ] -> [ Light Cable_Down | Light_Up ]
+
+late down [ Red_Off | Light_Up ] -> [ Red_On | Light_Up ]
+late down [ Green_Off | Light_Up ] -> [ Green_On | Light_Up ]
+late down [ Blue_Off | Light_Up ] -> [ Blue_On | Light_Up ]
+
+late [ Light Cable_Up ] -> [ Light Light_Up Cable_Up ]
+late [ Light Cable_Down ] -> [ Light Light_Down Cable_Down ]
+late [ Light Cable_Left ] -> [ Light Light_Left Cable_Left ]
+late [ Light Cable_Right ] -> [ Light Light_Right Cable_Right ]
+endLoop
+
+late [ Player Light ] -> again
+late [ Player_Dead Light ] -> again
+late [ Player LightEffect ] -> [ Player_Dead LightEffect ]   again
+late [ Player_Dead Light ] -> [ Player_Dead ]
+
+==============
+WINCONDITIONS
+==============
+
+No Unlit
+No Player_Dead
+
+=======
+LEVELS
+=======
+
+message Level 1 of 4
+
+......
+.r.g..
+..o.p.
+.w.d..
+......
+
+message Level 2 of 4
+
+.....##.....
+.....##.w.d.
+..c.........
+...p....r.g.
+.....##.....
+
+message Level 3 of 4
+
+.......
+..rgb..
+..wkd..
+...o...
+.....p.
+.......
+
+message Level 4 of 4
+
+...........
+...ccccc...
+.d.crcgc.w.
+...ccccc...
+..........p
+
+(
+message Level 5 of 3
+
+.......
+.bgrgb.
+rdzczwr
+dqw.dqw
+.......
+)
+
+message Congratulations
+
+title Spriteaporter
+author increpare
+homepage www.puzzlescript.net
+
+========
+OBJECTS
+========
+
+Temp
+black
+
+Background
+lightgreen green
+11111
+01111
+11101
+11111
+10111
+
+Target
+darkblue
+.....
+.000.
+.0.0.
+.000.
+.....
+
+Wall
+brown darkbrown
+00010
+11111
+01000
+11111
+00010
+
+Player
+black orange white blue
+.000.
+.111.
+22222
+.333.
+.3.3.
+
+Sprite
+pink blue red
+.....
+.000.
+00100
+01110
+.202.
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Player
+O = Sprite
+
+=======
+SOUNDS
+=======
+
+sfx0 67117309
+
+================
+COLLISIONLAYERS
+================
+
+Temp
+Background
+Target
+Player, Wall, Sprite
+
+======
+RULES
+======
+
+late [ Sprite | ... | Player ] -> [ Temp | ... | Sprite ] 
+late [ Temp ] -> [ Player ] 
+
+==============
+WINCONDITIONS
+==============
+
+=======
+LEVELS
+=======
+
+#########
+#.......#
+#....O..#
+#.P.....#
+#.......#
+#.......#
+#########
+
+
+title EYE EYE EYE
+author increpare
+homepage www.puzzlescript.net
+
+========
+OBJECTS
+========
+
+Background
+lightgreen green
+11111
+01111
+11101
+11111
+10111
+
+Target
+darkblue
+.....
+.000.
+.0.0.
+.000.
+.....
+
+Wall
+brown darkbrown
+00010
+11111
+01000
+11111
+00010
+
+Player
+black orange white blue
+.000.
+.111.
+22222
+.333.
+.3.3.
+
+EyeBall
+white blue red
+.000.
+00100
+01110
+20102
+.202.
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Player
+O = EyeBall
+
+=======
+SOUNDS
+=======
+
+sfx0 67117309
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Target
+Player, Wall, EyeBall
+
+======
+RULES
+======
+
+[ Eyeball | ... | Player ] -> [ > Eyeball | ... | Player ] sfx0
+
+==============
+WINCONDITIONS
+==============
+
+(There's no way to win against a floating eyeball :S )
+
+=======
+LEVELS
+=======
+
+#########
+#.......#
+#....O..#
+#.P.....#
+#.......#
+#.......#
+#########
+
+
+title Simple Block Pushing Game
+author increpare
+homepage www.puzzlescript.net
+
+========
+OBJECTS
+========
+
+Background
+LIGHTGREEN GREEN
+11111
+01111
+11101
+11111
+10111
+
+
+Target
+DarkBlue
+.....
+.000.
+.0.0.
+.000.
+.....
+
+Wall
+BROWN DARKBROWN
+00010
+11111
+01000
+11111
+00010
+
+Player
+Black Orange White Blue
+.000.
+.111.
+22222
+.333.
+.3.3.
+
+BlueCrate B
+lightblue
+00000
+0...0
+0...0
+0...0
+00000
+
+
+OrangeCrate O
+Orange
+00000
+0...0
+0...0
+0...0
+00000
+
+
+=======
+LEGEND
+=======
+
+Crate = OrangeCrate or BlueCrate
+. = Background
+# = Wall
+P = Player
+
+
+=======
+SOUNDS
+=======
+
+Crate MOVE 36772507
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Target
+Player, Wall, Crate
+
+======
+RULES
+======
+
+[ >  Player | Crate ] -> [  >  Player | > Crate  ]
+
+
+[ > OrangeCrate | OrangeCrate ] -> [ > OrangeCrate | > OrangeCrate ]
+[ > OrangeCrate | BlueCrate ] -> [ > OrangeCrate | > BlueCrate ]
+[ > BlueCrate | OrangeCrate ] -> [ > BlueCrate | > OrangeCrate ]
+[ > BlueCrate | BlueCrate ] -> [ > BlueCrate | > BlueCrate ]
+
+==============
+WINCONDITIONS
+==============
+
+=======
+LEVELS
+=======
+
+################
+#..............#
+#..............#
+#.P.BOBOBOBOB..#
+#..............#
+#..............#
+################
+
+
+
+title Heroes of Sokoban
+author Jonah Ostroff
+text_color yellow
+key_repeat_interval 0.25
+
+========
+OBJECTS
+========
+
+Background
+#AAAAAA #DDDDDD
+00000
+00100
+00000
+00010
+00000
+
+Goal
+Brown Yellow
+.000.
+00000
+00010
+00000
+00000
+
+Wall
+Darkgrey #222222
+01000
+11111
+00010
+00010
+11111
+
+Fighter
+#FF4444 Pink DarkBrown
+.000.
+.111.
+00000
+.000.
+.2.2.
+
+Wizard
+#2266FF Pink
+.000.
+.010.
+00000
+.000.
+00000
+
+Thief
+#00BB00 Pink DarkBrown
+.000.
+.010.
+00000
+.0.0.
+.0.0.
+
+SFighter
+#880000 Pink DarkBrown
+.000.
+.111.
+00000
+.000.
+.2.2.
+
+SWizard
+#000088 Pink
+.000.
+.010.
+00000
+.000.
+00000
+
+SThief
+#006600 Pink DarkBrown
+.000.
+.010.
+00000
+.0.0.
+.0.0.
+
+
+Crate
+Orange #552200
+.111.
+10001
+10001
+10001
+.111.
+
+YellowSwitch
+Yellow Black
+.....
+.111.
+.101.
+.111.
+.....
+
+YellowOpen
+Yellow
+0...0
+.....
+.....
+.....
+0...0
+
+YellowDoor
+Yellow #AA7722
+01010
+10001
+00000
+10001
+01010
+
+PurpleSwitch
+#6611CC Black
+.....
+.111.
+.101.
+.111.
+.....
+
+PurpleDoor
+#6611CC #220088
+01010
+10001
+00000
+10001
+01010
+
+PurpleOpen
+#6611CC
+0...0
+.....
+.....
+.....
+0...0
+
+Temp
+Pink
+
+ShadowDoor
+Purple
+
+=======
+LEGEND
+=======
+
+Player = Fighter or Wizard or Thief
+SPlayer = Swizard or Sthief or SFighter
+Hero = Player or Splayer
+ClosedDoor = PurpleDoor or YellowDoor
+OpenDoor = YellowOpen or PurpleOpen
+Switch = PurpleSwitch or YellowSwitch
+Moveable = Crate or SPlayer
+Static = Wall or ClosedDoor
+Weighing = Crate or Player or SPlayer
+. = Background
+# = Wall
+F = Fighter
+W = Wizard
+T = Thief
+1 = SFighter
+2 = SThief
+3 = SWizard
+* = Crate
+G = Goal
+[ = YellowDoor
+] = PurpleDoor
+{ = YellowSwitch
+} = PurpleSwitch
+
+=======
+SOUNDS
+=======
+
+Moveable move 82056307
+Sfx0 21221308
+Endlevel 36315908
+Sfx1 66399906
+Sfx2 92172900
+Sfx3 15129100
+EndGame 86793500
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Temp
+Goal, Switch, OpenDoor, ShadowDoor
+ClosedDoor, Hero, Crate, Wall
+
+======
+RULES
+======
+
+[ >  Fighter | Moveable ] -> [  >  Fighter | > Moveable  ]
+[ > Moveable | Moveable ] [ Fighter] -> [ > Moveable | > Moveable ] [ Fighter]
+
+[ < Thief | Moveable ] -> [ < Thief | < Moveable ]
+
+[ > Wizard ] -> [ Wizard > Temp]
+[ > Temp | no Moveable no Static] -> [ | > Temp]
+[ > Temp | Static] [Wizard] -> [ | Static ] [> Wizard]
+[ > Temp | Moveable ] [Wizard] -> [ | Wizard Sfx0] [Moveable]
+
+Late [Temp] -> []
+
+[ Action Fighter] [SThief] -> [SFighter] [Thief Sfx1]
+[ Action Thief] [SWizard] -> [SThief] [Wizard Sfx1]
+[ Action Wizard] [SFighter] -> [SWizard] [Fighter Sfx1]
+[ Action Fighter] [no SThief] [SWizard] -> [SFighter] [no SThief] [Wizard Sfx1]
+[ Action Thief] [no Swizard] [SFighter] -> [SThief] [no SWizard] [Fighter Sfx1]
+[ Action Wizard] [no SFighter] [SThief] -> [SWizard] [no SFighter] [Thief Sfx1]
+
+late [Weighing  YellowSwitch] [YellowDoor] -> [Weighing  YellowSwitch] [ShadowDoor]
+late [YellowSwitch no Weighing] [YellowOpen] -> [YellowSwitch] [YellowDoor sfx2]
+late [YellowSwitch no Weighing] [ShadowDoor] -> [YellowSwitch] [YellowDoor]
+late [ShadowDoor] -> [YellowOpen sfx3]
+
+late [Weighing PurpleSwitch] [PurpleDoor] -> [Weighing PurpleSwitch] [ShadowDoor]
+late [PurpleSwitch no Weighing] [PurpleOpen] -> [PurpleSwitch] [PurpleDoor sfx2]
+late [PurpleSwitch no Weighing] [ShadowDoor] -> [PurpleSwitch] [PurpleDoor]
+late [ShadowDoor] -> [PurpleOpen sfx3]
+
+==============
+WINCONDITIONS
+==============
+
+All Hero on Goal
+All Goal on Hero
+
+=======
+LEVELS
+=======
+
+Message Walk to the exit.
+
+#############
+#...........#
+#.F.......G.#
+#...........#
+#############
+
+Message Red warrior pushes blocks.
+
+#############
+#...#.*.#.*.#
+#.F...*.**G.#
+#...#.*.#.*.#
+#############
+
+Message Hold down switches to open doors.
+
+#############
+#...#...#...#
+#.F.*.{.#.G.#
+#...#...[...#
+#############
+
+Message Press multiple switches at once.
+
+#########
+#.....#G#
+#.#*..#[#
+#.**.F..#
+#.......#
+#.{.{.{.#
+#.......#
+#########
+
+Message Green thief pulls blocks.
+
+#############
+#...#..*#...#
+#.T.*.{.#.G.#
+#...#..*[...#
+#############
+
+#########
+#.....#G#
+#.#*..#[#
+#.**.T..#
+#.......#
+#.{.{.{.#
+#.......#
+#########
+
+#########
+#...##G.#
+#.#..##[#
+#....{..#
+#.#.#.#.#
+#..*.T..#
+#########
+
+Message Blue wizard teleports to blocks.
+
+#############
+#...*.{.#...#
+#.W.*.{.[.G.#
+#...#...#...#
+#############
+
+#########
+#.....#G#
+#.#*..#[#
+#.**.W..#
+#.......#
+#.{.{.{.#
+#.......#
+#########
+
+#######
+#W#G#*#
+#.#.#.#
+#*...*#
+#.###.#
+#*.*..#
+#######
+
+Message Press action to switch heroes.
+
+#############
+#...#...#...#
+#.F...}.[.G.#
+#...#...#...#
+#############
+#...#...#...#
+#.3.].{...G.#
+#...#...#...#
+#############
+
+Message Heroes can move each other.
+
+###########
+#*#..##G.G#
+#.#.2.#...#
+#.....#..##
+#W###.*..*#
+###########
+
+###########
+#F.*.#.*#{#
+#..#...*..#
+####...*.*#
+#..#.##[###
+#2...#*.GG#
+###########
+
+#############
+#.###########
+#*....{....3#
+#.####.######
+#.#..#.###..#
+#.#G....[].G#
+#.#..#.###..#
+#.####.######
+#.....}....T#
+#############
+
+#############
+##G.#F#*#...#
+#*..[.....{.#
+##G.#3###...#
+#############
+
+###########
+#W..{...[*#
+#######.#[#
+#G#G#G#.#2#
+#.......#1#
+###########
+
+#########
+#*......#
+#######.#
+#F23.]#.#
+#..##G#.#
+#..#GG#.#
+##.####.#
+#.......#
+##}####.#
+#########
+
+#############
+#...#G.G#...#
+#.*.#F23#.G.#
+#...#...#...#
+##[###.###[##
+#...#...#...#
+#.{...{...{.#
+#...#...#...#
+#############
+
+#######
+#G***F#
+#*****#
+#G***2#
+#*****#
+#G***3#
+#######
+
+########
+#3..G[*#
+########
+#F**G{{#
+########
+#2.[G..#
+########
+
+#############
+#...#...#...#
+#F#.*.#.*.#3#
+#...#...#...#
+######.######
+#...#...#####
+#2#.*.#...}*#
+#...#...#####
+######.######
+#G..#...#...#
+#G..].#...#.#
+#G..#...#...#
+#############
+
+#############
+#F.........G#
+#############
+#T.........G#
+#############
+#W.........G#
+#############
+Message Thanks for playing!
+
+
+title Modality
+author Sean Barrett
+homepage www.silverspaceship.com
+background_color #603060
+noaction
+
+========
+OBJECTS
+========
+
+White
+White
+
+Black
+#202020
+
+
+Grey
+#505050 #a0a0a0
+01010
+10101
+01010
+10101
+01010
+
+
+Background
+Red
+
+Target
+#3030a0
+.....
+.000.
+.0.0.
+.000.
+.....
+
+Player
+Black Orange #c0c0c0 Blue
+.000.
+.111.
+22222
+.333.
+.3.3.
+
+Crate
+Orange Yellow
+00000
+0...0
+0...0
+0...0
+00000
+
+
+=======
+LEGEND
+=======
+
+. = Black
++ = White
+g = Grey
+p = Player and Black
+Q = Player and White
+* = Crate and Black
+@ = Crate and White
+t = Target and Black
+U = Target and White
+
+Nonwhite = Black or Grey
+Nonblack = White or Grey
+
+=======
+SOUNDS
+=======
+
+================
+COLLISIONLAYERS
+================
+
+Background
+White, Black, Grey
+Target
+Player, Crate
+
+======
+RULES
+======
+
+[ >  Player Nonblack | Crate Nonblack ] -> [  > Player Nonblack | > Crate Nonblack ]
+[ >  Player Black | Crate Black ] -> [  > Player Black | > Crate Black ]
+[ > Player White | Black ] -> CANCEL
+[ > Player Black | White ] -> CANCEL
+
+==============
+WINCONDITIONS
+==============
+
+All Crate on Target
+
+=======
+LEVELS
+=======
+
+
+u+...
+@+g.p
++++..
+
+++++q
++.*.+
+u++.+
++g..+
++++++
+
+......
+.++.+.
+.+q++.
+..u.++
+g.*.++
+++++++
+
+...t.......
+...+.......
+.+.+.+...++
+.+.++++..++
+q@g++..++++
+.+.++...+++
+.+.+....+++
+.+......+++
+.++++++++++
+
+
+
+USER PROMPT:
+The following PuzzleScript game code:
+```plaintext
+title Sokoban Push
+author OpenAI
+homepage www.example.com
+
+========
+OBJECTS
+========
+
+Background
+#00FF00
+
+Wall
+grey darkgrey
+11111
+11111
+11111
+11111
+11111
+
+Player
+blue
+..0..
+.000.
+.0.0.
+.000.
+..0..
+
+Crate
+yellow
+.....
+.000.
+.0.0.
+.000.
+.....
+
+Target
+red darkred
+.....
+..1..
+.111.
+..1..
+.....
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Player
+C = Crate
+O = Target
+* = Crate and Target
+
+=========
+SOUNDS
+=========
+
+Crate MOVE 34710102
+Player MOVE 99454102
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Target
+Player, Wall, Crate
+
+======
+RULES
+======
+
+[right Player | Crate] -> [> Player | > Crate]
+[left Player | Crate] -> [< Player | < Crate]
+[up Player | Crate] -> [^ Player | ^ Crate]
+[down Player | Crate] -> [v Player | v Crate]
+
+==============
+WINCONDITIONS
+==============
+
+All Crate on Target
+
+=======
+LEVELS
+=======
+
+##########
+#.P..#...#
+#.C.O.#..#
+#...##...#
+##########
+
+##########
+#..#.....#
+#..#..C..#
+#..P....O#
+#.####...#
+#..#.....#
+##########
+
+##########
+#........#
+#..P#...O#
+#..##.#..#
+#..C...#.#
+#..#.....#
+#.####...#
+##########
+
+```
+compiled, but a solvability check returned the following error:
+ Level 0 is not solvable. Please repair it. Level 1 is not solvable. Please repair it. Level 2 is not solvable. Please repair it.
+Return your code in full, inside a ```plaintext code block.

@@ -1,0 +1,1031 @@
+SYSTEM PROMPT:
+You are a game designer, familiar with the PuzzleScript game description language. Here are some example games, for inspiration (do not reproduce these games exactly):
+
+title Robot Spawner
+author increpare
+homepage www.puzzlescript.net
+
+========
+OBJECTS
+========
+
+Background (special, automatically placed in its own layer)
+green darkgreen
+11111
+01111
+11101
+11111
+10111
+
+Spawner (Name)
+yellow 	(Color)
+..... 	(Sprite)
+..0..
+.000.
+..0..
+.....
+
+Player (Required by game)
+pink
+..0..
+00000
+..0..
+.000.
+.0.0.
+
+RedRobot
+gray black red
+.000.
+.200.
+...0.
+00000
+01010
+
+GreenRobot
+gray black lightgreen
+.000.
+.200.
+...0.
+00000
+01010
+
+BlueRobot
+gray black lightblue
+.000.
+.200.
+...0.
+00000
+01010
+
+=======
+LEGEND
+=======
+
+Robot = RedRobot or GreenRobot or BlueRobot
+Obstacle = Player or Robot
+. = Background
+P = Player
+* = Robot
+O = Spawner
+
+=========
+SOUNDS
+=========
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Spawner
+Player, Robot
+
+======
+RULES
+======
+
+[ stationary Robot ] -> [ randomDir Robot ] 
+[ Spawner no Obstacle ] -> [ Spawner random Robot ] 
+
+==============
+WINCONDITIONS
+==============
+
+=======
+LEVELS
+=======
+
+.......
+.......
+.......
+...O...
+.......
+.P.....
+.......
+
+
+title 2D Whale World
+author increpare
+homepage www.increpare.com
+
+background_color orange
+text_color darkblue
+
+color_palette mastersystem
+
+run_rules_on_level_start
+require_player_movement
+
+(
+    
+This game is a port of the Whale section of my puzzle game English Country Tune (www.englishcountrytune.com), in only 8 lines of code.
+
+)
+
+========
+OBJECTS
+========
+
+Background
+blue
+
+Void
+orange
+
+Player
+lightblue
+
+Whale
+brown
+00000
+00000
+00000
+00000
+00000
+
+Wall
+black
+00000
+0...0
+0...0
+0...0
+00000
+
+HBeam
+yellow
+.....
+.....
+0.0.0
+.....
+.....
+
+VBeam
+yellow
+..0..
+.....
+..0..
+.....
+..0..
+
+=======
+LEGEND
+=======
+
+Beam = HBeam or VBeam
+. = Background
+# = Wall
+P = Player
+W = Whale
+0 = Void
+
+=========
+SOUNDS
+=========
+
+whale destroy 62981708
+player move 69405107
+whale move 32823307
+endlevel 99636708
+restart 92555303
+startgame 60661308
+CloseMessage 123434
+ShowMessage 123434
+
+================
+COLLISIONLAYERS
+================
+
+Background
+void
+Player, Wall, Whale
+HBeam
+VBeam
+
+======
+RULES
+======
+
+(While we allow whales to move onto the void, player's aren't)
+[ > player | void ] -> [ player | void ] 
+
+(Beams detect motion)
+horizontal [ > Player | VBeam ] -> [ > Player | > VBeam ] 
+vertical [ > Player | HBeam ] -> [ > Player | > HBeam ] 
+
+(If beams detected motion, transfer that to the whales)
+[ Whale | ... | perpendicular Beam ] -> [ perpendicular Whale | ... | perpendicular Beam ] 
+
+(Remove whales, if necessary)
+late [ Whale Void ] -> [ Void ] 
+
+(Remove beams)
+[ Beam ] -> [ ] 
+
+(Place HVeams and VBeams)
+late horizontal [ Whale | ... | ] -> [ Whale | ... | HBeam ] 
+late vertical [ Whale | ... | ] -> [ Whale | ... | VBeam ] 
+
+==============
+WINCONDITIONS
+==============
+
+no Whale
+
+=======
+LEVELS
+=======
+
+message Push a whale off to free it.
+
+0000000000000000
+0########0000000
+0.......#0000000
+0###.W..###00000
+0.........#00000
+0#####.##.###000
+0000#...#...#000
+0000#...#...#000
+0000#...#...###0
+0000#.P.#.....#0
+0000#...#.....#0
+0000#####...W##0
+0000000000....#0
+0000000000#####0
+0000000000000000
+
+message level 2 of 8
+
+00000000000
+0000####000
+000##..##00
+0###....##0
+0#.......#0
+0###.W.###0
+000#P...000
+000#####000
+00000000000
+
+message level 3 of 8
+
+0000000000000000
+00###00000000000
+00#.#####0000000
+00#.#...##000000
+00#......#000000
+00#..##.#######0
+00#..#........#0
+00#..#........#0
+0##..######...#0
+0#........#.W.#0
+0##.......#..P#0
+00######..#####0
+00000000..000000
+0000000000000000
+
+message level 4 of 8
+
+0000000000000000
+000000#########0
+0######.......#0
+0.............#0
+0.....#.#####.#0
+0######.#.....#0
+00000##.#...P.#0
+00000#........#0
+00000##.#.W...#0
+000000#.......#0
+000000###.#...#0
+00000000#######0
+0000000000000000
+
+message level 5 of 8
+
+00000000000000000
+0000############0
+0000#.#........#0
+0000#..........#0
+0####..###.....#0
+0......#.#.....#0
+0####..#W#.#W#.#0
+0..........#.#.#0
+0####.....P###.#0
+0...#.#........#0
+0##...##########0
+00#####0000000000
+00000000000000000
+
+message level 6 of 8
+
+00000000000000000
+000000000#.#.#.#0
+000000000#.#.#.#0
+000000000#.#.#.#0
+000000000#.....#0
+0000000###...###0
+0000000#.#...#000
+0000000#.#.#.#000
+0#######.#.#.#000
+0#...........#000
+0#.#.W...W...#000
+0#...........#000
+0#.....P.....#000
+0#...........#000
+0#############000
+00000000000000000
+
+message level 7 of 8
+
+000000000#000000
+00000####.####00
+0####.........#0
+0........#....#0
+0####....W....#0
+0000#.........#0
+0000#.#W.P.W#..#
+0####.........#0
+0........W....#0
+0####....#....#0
+00000#........#0
+000000########00
+0000000000000000
+
+message level 8 of 8
+
+00000000000
+0########00
+0#...#..#00
+0##.....000
+0#......#00
+0#..WW..##0
+0#..WW...#0
+0##...P.##0
+0#...#.##00
+0#######000
+00000000000
+
+message all the 2d whales are freed
+
+
+title neko puzzle
+author lexaloffle
+homepage www.lexaloffle.com
+
+(
+
+An inadequate but illustrative demake of one of my favourite puzzle games ever, by the extremely amicable Lexaloffle, and with his permission.
+
+www.lexaloffle.com/neko.htm
+
+The game proper has a lot of magic and love in it.
+
+)
+
+========
+OBJECTS
+========
+
+Background .
+darkblue
+
+Fruit F
+red green lightred
+..1..
+.000.
+00020
+00000
+.000.
+
+Player P
+gray white
+.1.1.
+10101
+11111
+.111.
+00.00
+
+=======
+LEGEND
+=======
+
+=========
+SOUNDS
+=========
+
+endlevel 97301508
+startgame 97301508
+endgame 97301508
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Player, Fruit
+
+======
+RULES
+======
+
+[ > Player | ... | Fruit ] -> [ | ... | Player ] 
+
+(if you're not sure what this line does, try removing it, and see what happens)
+[ > Player ] -> [ Player ] 
+
+==============
+WINCONDITIONS
+==============
+
+no Fruit
+
+=======
+LEVELS
+=======
+
+message level 1 of 10
+
+......F.
+........
+F......F
+......FF
+........
+........
+P.......
+
+message level 2 of 10
+
+........
+....P...
+...F.F..
+........
+........
+..F.FF..
+........
+
+message level 3 of 10
+
+........
+.FF....F
+........
+........
+F...P...
+........
+........
+F.F.....
+
+message level 4 of 10
+
+....F..F
+........
+.......F
+F.......
+P.......
+........
+F...F...
+
+message level 5 of 10
+
+........
+....F.P.
+F.F.....
+........
+F...F...
+..F.F...
+........
+
+message level 6 of 10
+
+F.....F.
+........
+........
+FF..F...
+F.....F.
+........
+.P......
+
+message level 7 of 10
+
+...FP..F
+F.F.....
+F......F
+........
+........
+..F.....
+........
+
+message level 8 of 10
+
+..F..P..
+........
+........
+.FFF....
+F..F..F.
+........
+........
+
+message level 9 of 10
+
+....F..F
+........
+.F..F...
+........
+.F.P..F.
+.F......
+........
+
+message level 10 of 10
+
+....F.F.
+........
+.F..F..F
+...F..F.
+.......F
+...FP...
+........
+
+message congratulations!
+
+
+title Midas
+author wanderlands
+homepage https://web.archive.org/web/20160706204929/http://wanderlands.org/
+
+(
+
+A port of the luxuriant Wanderlands game, Midas, with permission of the authors.  It's a bit messy, if you can find a way to tidy it UP, let me know : ] 
+
+the original is here
+https://web.archive.org/web/20120219201941/http://wanderlands.org/main/midas
+
+update: uh, it's flash, so not a playable link any more...also the original developer site is gone.
+
+)
+
+========
+OBJECTS
+========
+
+Background
+white
+
+Lovebase
+white
+
+Target
+black
+.....
+..0..
+.000.
+..0..
+.0.0.
+
+GoldTarget
+orange
+.....
+..0..
+.000.
+..0..
+.0.0.
+
+PlayerGround
+black
+.....
+..0..
+.000.
+.000.
+.0.0.
+
+PlayerJump1
+black
+.....
+..0..
+00000
+.000.
+.0.0.
+
+PlayerJump2
+black
+.....
+..0..
+00000
+.000.
+.0.0.
+
+Crown
+orange
+.000.
+.0.0.
+.....
+.....
+.....
+
+GoldBlock
+orange
+
+GoldingBlock
+brown
+
+Water
+blue
+
+Wall
+gray
+
+Love
+pink
+.0.0.
+00000
+00000
+.000.
+..0..
+
+=======
+LEGEND
+=======
+
+JumpingPlayer = PlayerJump1 or PlayerJump2
+Player = PlayerGround or PlayerJump1 or PlayerJump2
+Obstacle = Player or Wall or Water or GoldingBlock or GoldBlock or Target or GoldTarget
+CanFall = GoldBlock or Target or GoldTarget
+. = Background
+# = Wall
+P = PlayerGround and Crown
+T = Target
+W = Water
+G = GoldBlock
+D = GoldingBlock
+
+=========
+SOUNDS
+=========
+
+sfx0 28219707 (touch Water)
+sfx1 45545307 (golding)
+sfx2 42491507 (make lady gold :/ )
+StartGame 8892900
+EndLevel 28067900
+EndGame 28067900
+CloseMessage 44855507
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Lovebase
+PlayerGround, PlayerJump1,PlayerJump2, Wall, Water, GoldBlock, Target, GoldTarget, GoldingBlock
+Crown
+Love
+
+======
+RULES
+======
+
+UP [ UP PlayerGround | NO Obstacle ] -> [ UP PlayerJump2 | ] 
+DOWN [ UP JumpingPlayer | NO Obstacle ] -> [ JumpingPlayer | ] 
+DOWN [ UP PlayerJump2 | NO Obstacle ] -> [ PlayerJump2 | ] 
+
+[ STATIONARY CanFall ] -> [ Down CanFall ] 
+
+HORIZONTAL [ > PlayerJump1 | NO Obstacle ] -> [ | PlayerGround ] 
+HORIZONTAL [ > PlayerJump2 | NO Obstacle ] -> [ | PlayerJump1 ] 
+LATE DOWN [ PlayerGround | NO Obstacle ] -> [ | PlayerGround ] 
+
+LATE [ Crown NO Player ] [ Player ] -> [ ] [ Crown Player ] 
+LATE [ GoldingBlock ] -> [ GoldBlock ] 
+LATE [ Crown | Wall ] -> [ Crown | GoldingBlock ] sfx1
+LATE [ Crown | Water ] -> [ | Water ] sfx0
+LATE [ Crown | Target ] -> [ Crown | GoldTarget ] sfx2
+LATE DOWN [ JumpingPlayer | Obstacle ] -> [ PlayerGround | Obstacle ] 
+
+LATE [ Player | Target ] -> [ Player Lovebase | Target ] 
+LATE UP [ Lovebase | ] -> [ | Love ] 
+
+==============
+WINCONDITIONS
+==============
+
+some Love (Awwww!)
+
+=======
+LEVELS
+=======
+##############
+#............#
+#............#
+#.P.......T..#
+##G######WWW##
+##############
+
+message MIDAS
+
+###############
+#.............#
+#.............#
+#.....#.......#
+#.P..##..#.T..#
+##G#######WWW##
+###############
+
+message She waits for me every day
+
+###############
+#.............#
+#.............#
+#.............#
+#.....#.#.....#
+#.P..##.#..T..#
+##G#######WWW##
+###############
+
+message This is the price of gold:
+
+##############
+#............#
+#............#
+#.P..........#
+##G###T##WWW##
+##############
+
+message A heavy heart
+
+#################
+#...............#
+#...............#
+#......#.#......#
+#.....#####.....#
+#.......#.......#
+#.T.P...#.......#
+####G#######WWW##
+#################
+
+message I step in the same river
+message again and again
+
+#####################
+#...................#
+#...................#
+#...................#
+#.........#.#.......#
+#..P........#.......#
+#..d##########......#
+#.......######......#
+#...................#
+#.......T...........#
+#....#########WWW...#
+#...................#
+#...................#
+#...................#
+#####################
+
+message Just so I can touch her hand.
+
+#####################
+#...................#
+#...................#
+#...................#
+#...................#
+#..P................#
+#..d##T########WWW..#
+#.....#.............#
+#...................#
+#...................#
+#####################
+
+message I am a prison to Pactolus
+
+#####################
+#...................#
+#........###........#
+#.......#####.......#
+#......##...##......#
+#.....T##.P.##W.....#
+#.....####d####.....#
+#.....#########.....#
+#...................#
+#####################
+
+message But I must have her!
+
+#####################
+#...................#
+#...................#
+#..T..#...###..W....#
+#..#####...#####....#
+#.....###...#.......#
+#........P..........#
+#.....###D###.......#
+#.....#######.......#
+#...................#
+#...................#
+#####################
+
+message My burden only grows
+
+#####################
+#...................#
+#........G..........#
+#.....W.GGG.T.......#
+#.....#######.......#
+#.....#.....#.......#
+#.....#..P..#.......#
+#.....###D###.......#
+#.....#######.......#
+#...................#
+#...................#
+#...................#
+#####################
+
+message My world collapses.
+
+#####################
+#...................#
+#...................#
+#..G....WW..........#
+#..##.####..........#
+#.....####..........#
+#...................#
+#.#...........T.....#
+#.##.......P..#.....#
+#..############.....#
+#...#.....####......#
+#...................#
+#...................#
+#...................#
+#...................#
+#...................#
+#####################
+
+message And she feels so distant
+
+#####################
+#...................#
+#...................#
+#...................#
+#...................#
+#..P......#.........#
+#..GG...........WW..#
+#..##T############..#
+#....#..............#
+#...................#
+#...................#
+#####################
+
+message I live on borrowed time
+
+#####################
+#...................#
+#...................#
+#..........T........#
+#.........##........#
+#...................#
+#.......P...........#
+#.......D##.........#
+#...........#.......#
+#...................#
+#...................#
+#.......###W#.......#
+#####################
+
+message Is she still waiting?
+
+#####################
+#...................#
+#....###########....#
+#...................#
+#....P.........W....#
+#....###########....#
+#....#.........#....#
+#...................#
+#.........#.........#
+#......#..#..#......#
+#....T.#..#..#......#
+#....###########....#
+#...................#
+#...................#
+#...................#
+#####################
+
+message Is Love just fool's gold?
+
+#####################
+#...................#
+#...................#
+#...........####....#
+#..T##.##..#...#....#
+#..#..#..#.#.P.#....#
+#..#.....#...G#.....#
+#...#...#....#......#
+#....#W#.....#......#
+#.....#.............#
+#............#......#
+#...................#
+#...................#
+#####################
+
+message Midas
+
+
+USER PROMPT:
+The following PuzzleScript game code:
+```plaintext
+title Simple Game
+author Example Author
+
+========
+OBJECTS
+========
+
+Background
+DarkGreen
+.....
+.....
+.....
+.....
+.....
+
+Wall
+Gray
+.....
+.....
+.....
+.....
+.....
+
+Player
+Red
+.....
+..0..
+.000.
+.....
+.....
+
+Exit
+Yellow
+.....
+.....
+.....
+.....
+.....
+
+Trap
+DarkGray
+.....
+.....
+.....
+.....
+.....
+
+=======
+LEGEND
+=======
+
+# = Wall
+P = Player
+E = Exit
+T = Trap
+. = Background
+
+=========
+SOUNDS
+=========
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Wall
+Trap
+Player, Exit
+
+======
+RULES
+======
+
+[ Player | Exit ] -> [ Player ] message Game completed!
+
+==============
+WINCONDITIONS
+==============
+
+Some Player on Exit
+
+=======
+LEVELS
+=======
+
+#######
+#..E..#
+#P##T.#
+###.###
+#..T..#
+#.T.#.#
+#...T.#
+#######
+
+```
+produced the following console output:
+=================================
+line 75 : In a rule, each pattern to match on the left must have a corresponding pattern on the right of equal length (number of cells).
+Errors detected during compilation; the game may not work correctly.
+Return a repaired version of the code that addresses these errors. Return your code in full, inside a ```plaintext code block.

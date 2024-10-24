@@ -1,0 +1,109 @@
+To fix the compilation errors in the provided PuzzleScript game code, we need to address the issues related to the color palette definitions for the "Wall" and "Player" objects. Specifically:
+
+1. **Wall Object Error**: The "Wall" object currently defines only one color (`DarkGray`) but uses that color across its entire sprite, which triggers the error because the engine expects distinct colors for the parts of the sprite due to the use of other indexed characters (`1`). Since the sprite expands the same color over the indices, no additional colors should be expected.
+
+2. **Player Object Error**: The "Player" object defines two colors (`Black` and `Orange`) but references a third color index (3) in the sprite design. This also causes a mismatch, as each `n` in a sprite should have a corresponding color, which can be solved by using only the two defined colors.
+
+Here's how we can correct these issues:
+
+- Adjust the color palettes for each object:
+  - Ensure each color index used in the sprite has a color defined in the palette.
+- Update the "Wall" object to use a uniform definition since we don't need multiple colors if the sprite is using only one.
+
+Applying these fixes results in the following corrected code:
+
+```plaintext
+title Crate Pusher
+author YourName
+
+========
+OBJECTS
+========
+
+Background
+Blue
+00000
+00000
+00000
+00000
+00000
+
+Wall
+DarkGray
+11111
+11111
+11111
+11111
+11111
+
+Player
+Black Orange
+.000.
+.000.
+00000
+.000.
+.0.0.
+
+Crate
+Orange
+00000
+05550
+05550
+05550
+00000
+
+Target
+Green
+.....
+..0..
+.000.
+..0..
+.....
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Player
+C = Crate
+O = Target
+
+============
+COLLISIONLAYERS
+============
+
+Background
+Player, Wall, Crate
+Target
+
+======
+RULES
+======
+
+[ > Player | Crate ] -> [ > Player | > Crate ]
+
+=====
+WINCONDITIONS
+=====
+
+All Crate on Target
+
+=======
+LEVELS
+=======
+
+#########
+#.......#
+#.P.C...#
+#.......#
+#..O....#
+#########
+
+```
+
+- For the `Wall`, it uses only color `DarkGray`. Thus, using `11111` consistently for a single color palette is fine. 
+- The `Player` sprite only requires two colors, now properly aligned to `Black (0)` and `Orange (3)` definitions, thus using `0` and `.` fits the intended output. 
+
+With these changes, the compilation errors should be resolved.

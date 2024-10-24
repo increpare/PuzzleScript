@@ -16,24 +16,59 @@ homepage https://example.com
 OBJECTS
 Background
 lightgray
+.....
+.....
+.....
+.....
+.....
 
 Wall
 gray
+wwwww
+wwwww
+wwwww
+wwwww
+wwwww
 
 Player
 yellow
+.....
+..p..
+.ppp.
+.p.p.
+.ppp.
 
 Block
 blue
+.....
+.bbbb
+b.bbb
+b.b.b
+.bbbb
 
 Goal
 red
+.....
+.....
+..g..
+.....
+.....
 
 BlockOnGoal
 purple
+.....
+.dddd
+d.d.d
+.dddd
+.....
 
 PlayerOnGoal
 orange
+.....
+..p..
+.ppp.
+.pgp.
+.ppp.
 
 # === End Objects ===
 
@@ -49,6 +84,14 @@ O = BlockOnGoal
 
 # === End Legend ===
 
+# === Sounds ===
+SOUNDS
+move 100
+push 200
+winLevel 800
+
+# === End Sounds ===
+
 # === Collision Layers ===
 COLLISIONLAYERS
 Background
@@ -61,9 +104,9 @@ Goal
 
 # === Rules ===
 RULES
-[ Player | Block ] -> [ Player | ] [ Player | Block ]
+[ Player | Block ] -> [ Player | ] [ Player | Block ] move push
 
-[ PlayerOnGoal | Block ] -> [ Player | ] [ @ | Block ]
+[ PlayerOnGoal | Block ] -> [ Player | ] [ @ | Block ] move push
 
 [ Player | Goal ] -> [ PlayerOnGoal | ]
 [ PlayerOnGoal | ] -> [ Player | ]
@@ -110,21 +153,19 @@ LEVELS
 # B . #
 #   P #
 #   B #
-# ##### 
+#####
 
 # === End Levels ===
 
 ```
 produced the following console output:
 =================================
-line 32 : Unknown junk in object section (possibly: sprites have to be 5 pixels wide and 5 pixels high exactly. Or maybe: the main names for objects have to be words containing only the letters a-z0.9 - if you want to call them something like ",", do it in the legend section).
-line 34 : Unknown junk in object section (possibly: sprites have to be 5 pixels wide and 5 pixels high exactly. Or maybe: the main names for objects have to be words containing only the letters a-z0.9 - if you want to call them something like ",", do it in the legend section).
-line 44 : Something bad's happening in the LEGEND
-line 44 : Incorrect format of legend - should be one of "A = B", "A = B or C [ or D ...]", "A = B and C [ and D ...]", but it looks like you have a dangling "="?
-line 46 : Something bad's happening in the LEGEND
-line 46 : Incorrect format of legend - should be one of "A = B", "A = B or C [ or D ...]", "A = B and C [ and D ...]", but it looks like you have a dangling "="?
-line 47 : section "COLLISIONLAYERS" is out of order, must follow  "SOUNDS" (or it could be that the section "SOUNDS"is just missing totally.  You have to include all section headings, even if the section itself is empty).
-line 54 : error detected - unexpected character #
+line 22 : Was looking for color for object WWWWW, got "wwwww" instead.
+line 23 : Object "WWWWW" defined multiple times.
+line 24 : Object "WWWWW" defined multiple times.
+line 25 : Object "WWWWW" defined multiple times.
+line 30 : Unknown junk in spritematrix for object PLAYER.
+line 31 : Unknown junk in spritematrix for object PLAYER.
 too many errors, aborting compilation
 Errors detected during compilation; the game may not work correctly.
 Return a repaired version of the code that addresses these errors. First, reason about your task and determine the best plan of action. Then, write your code. Return your code in full, inside a ```plaintext code block.

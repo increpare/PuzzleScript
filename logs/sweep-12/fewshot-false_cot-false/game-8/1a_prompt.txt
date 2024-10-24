@@ -1,0 +1,112 @@
+SYSTEM PROMPT:
+You are a game designer, familiar with the PuzzleScript game description language. 
+
+USER PROMPT:
+The following PuzzleScript game code:
+```plaintext
+===========
+Title
+===========
+Simple Sokoban
+
+===========
+Author
+===========
+Game Designer
+
+===========
+Homepage
+===========
+https://www.example.com
+
+===========
+Legend
+===========
+# = Wall
+P = Player
+B = Box
+T = Target
+G = BoxOnTarget
+
+===========
+Sounds
+===========
+# No custom sounds specified.
+
+===========
+CollisionLayers
+===========
+Background
+Target
+Player, Box, BoxOnTarget, Wall
+
+===========
+Objects
+===========
+Background
+grey
+
+Wall
+orange
+
+Player
+yellow
+
+Box
+blue
+
+Target
+red
+
+BoxOnTarget
+green
+
+===========
+Legend ends
+===========
+
+===========
+WinConditions
+===========
+All BoxOnTarget on Target
+
+===========
+Rules
+===========
+[ > Player |  ] -> [ > Player | > ]
+[ Player | Box  ] -> [ > Player | > Box  ]
+[ Player | BoxOnTarget  ] -> [ > Player | > BoxOnTarget  ]
+
+[ Player | Box on Target ] -> [ > Player | > BoxOnTarget ]
+
+Box -> > | BoxOnTarget on Target
+BoxOnTarget -> > | Box not on Target 
+
+===========
+Levels
+===========
+-------
+#####  
+#...#  
+#.#.#  
+#P#B#  
+#####  
+
+-------
+#####  
+#...#  
+#B#P#  
+#####  
+
+```
+produced the following console output:
+=================================
+line 2 : MetaData "title" needs a value.
+line 4 : Unrecognised stuff in the prelude.
+line 7 : MetaData "author" needs a value.
+line 9 : Unrecognised stuff in the prelude.
+line 12 : MetaData "homepage" needs a value.
+line 14 : Unrecognised stuff in the prelude.
+too many errors, aborting compilation
+Errors detected during compilation; the game may not work correctly.
+Return a repaired version of the code that addresses these errors. Return your code in full, inside a ```plaintext code block.

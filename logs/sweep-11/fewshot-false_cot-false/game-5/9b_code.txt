@@ -1,0 +1,103 @@
+Certainly! It appears that the levels in your PuzzleScript game currently have no path for the Player to reach the Goal. I will modify the levels to ensure that the Player can reach the Goal without any obstruction from the Walls. Here is the corrected version of your game code:
+
+```plaintext
+Title: Reach the Goal
+Author: PuzzleScriptUser
+Homepage: https://www.puzzlescript.net
+
+===========
+OBJECTS
+===========
+
+Background
+lightgrey
+00000
+00000
+00000
+00000
+00000
+
+Player
+red
+.....
+..0..
+.000.
+..0..
+.....
+
+Wall
+black
+00000
+00000
+00000
+00000
+00000
+
+Goal
+green
+.....
+.....
+..0..
+.....
+.....
+
+===========
+LEGEND
+===========
+
+. = Background
+P = Player
+W = Wall
+G = Goal
+
+===========
+SOUNDS
+===========
+
+===========
+COLLISIONLAYERS
+===========
+
+Background
+Wall
+Player, Goal
+
+===========
+RULES
+===========
+
+[ Player | Goal ] -> [ > Player | Goal ]
+[ Player | ] -> [ > Player | ]
+
+===========
+WINCONDITIONS
+===========
+
+All Player on Goal
+
+===========
+LEVELS
+===========
+
+WWWWWW
+W....W
+W..P.W
+W....W
+W....W
+W..G.W
+WWWWWW
+
+WWWWWW
+W....W
+W.P..W
+W..W.W
+W....W
+W..G.W
+WWWWWW
+```
+
+In the Above code:
+- **Level 0** has been adjusted to have a pathway from the Player to the Goal. 
+- **Level 1** has also been adjusted to allow the Player to reach the Goal by navigating around the Wall. 
+
+This ensures that in both levels, the Player has a clear path to the Goal that can be navigated successfully. You can adjust these levels further based on your desired difficulty or design.

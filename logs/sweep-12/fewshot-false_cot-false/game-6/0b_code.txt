@@ -1,0 +1,110 @@
+Below is a complete PuzzleScript game code. This is a simple Sokoban-style game called "Treasure Pusher" where the player needs to push treasures into designated goal areas.
+
+```plaintext
+Title: Treasure Pusher
+Author: PuzzleScript Enthusiast
+Homepage: none
+
+===========
+OBJECTS
+===========
+
+Background
+transparent
+.
+
+Player
+blue
+@ 
+
+Wall
+black
+####
+
+Treasure
+yellow
+$
+
+Goal
+green
+.
+
+TreasureOnGoal
+lime
+$
+
+===========
+LEGEND
+===========
+
+. = Background
+P = Player
+# = Wall
+$ = Treasure
+. = Goal
+& = TreasureOnGoal
+
+===========
+SOUNDS
+===========
+
+===========
+COLLISIONLAYERS
+===========
+
+Background
+Wall
+Player
+Treasure, TreasureOnGoal
+Goal
+
+===========
+RULES
+===========
+
+[Player | Treasure | Goal] -> [Player | TreasureOnGoal | ]
+[Player | Treasure] -> [ | Player | Treasure]
+
+===========
+LEVELS
+===========
+
+#@######
+#      #
+# $.   #
+# $.#  #
+#  .#  #
+########
+
+#@######
+#  #####
+#$.    #
+#.$.   #
+# .#   #
+####   #
+
+#@######
+#      #
+#. . $ #
+#. # $ #
+#. #   #
+########
+
+===========
+
+winconditions
+===========
+
+All TreasureOnGoal on Goal
+
+===========
+END
+===========
+```
+
+In this game:
+
+- The player (`P`) can push treasure (`$`) into goals (`.`).
+- Goals can become occupied by treasure (`TreasureOnGoal`, represented as `$`).
+- The objective is to position all treasure into the goal areas to win the game, in true Sokoban fashion.
+- The levels provide different setups for increasing difficulty. Adjust the levels section or add more rules to expand the game's complexity.

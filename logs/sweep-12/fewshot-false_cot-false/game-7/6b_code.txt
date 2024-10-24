@@ -1,0 +1,124 @@
+Certainly! The errors in your PuzzleScript code indicate that the ordering of the sections is incorrect, and you've referenced some object names incorrectly using lowercase letters instead of uppercase. Below is a corrected version of your game code:
+
+```plaintext
+Title: Treasure Hunt
+Author: You
+Homepage: https://www.puzzlescript.net
+
+===========
+OBJECTS
+===========
+
+Background
+LIGHTGREEN
+00000
+00000
+00000
+00000
+00000
+
+Player
+ORANGE
+.....
+..0..
+.000.
+..0..
+.....
+
+Wall
+BLUE
+.....
+.....
+.....
+.....
+.....
+
+Treasure
+YELLOW
+.....
+..0..
+.000.
+..0..
+.....
+
+Goal
+RED
+.....
+..0..
+.0.0.
+..0..
+.....
+
+===========
+
+LEGEND
+===========
+
+.=Background
+P=Player
+W=Wall
+T=Treasure
+G=Goal
+
+===========
+
+SOUNDS
+===========
+
+===========
+
+COLLISIONLAYERS
+===========
+
+Background
+Wall
+Treasure, Goal
+Player
+
+===========
+
+RULES
+===========
+
+[ > Player | Treasure ] -> [ > Player ] [ ]
+[ > Player | Goal no Treasure ] -> [ > Player win ]
+
+===========
+
+WINCONDITIONS
+===========
+
+No Treasure
+
+===========
+
+LEVELS
+===========
+
+#######
+#.....#
+#.T.#.#
+#.W.#.#
+#..P.G#
+#######
+
+#######
+#T....#
+#.....#
+#..W..#
+#G.P..#
+#######
+
+#######
+#WTPW.#
+#W.PG.#
+#W..#.#
+#######
+
+```
+
+Changes Made:
+1. Added the `SOUNDS` section, even if it is empty, to maintain the correct order of sections.
+2. Adjusted the case of object names in the `RULES` section to match those defined in the `OBJECTS` and `LEGEND` sections. The code now correctly references `Player`, `Treasure`, and `Goal` with an uppercase initial letter. 
+
+With these changes, your code should compile without errors.

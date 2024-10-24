@@ -1,0 +1,96 @@
+Certainly! The issue here is that PuzzleScript doesn't have a built-in feature for adding comments with a `!` symbol in the rules section, nor does it support natural language syntax like "Check if player is on the goal, game ends." To fix the issue, we'll remove that line and adjust the win conditions appropriately. Here's the repaired version of your code:
+
+```plaintext
+Title: Reach the Goal
+Author: PuzzleScriptUser
+Homepage: https://www.puzzlescript.net
+
+===========
+OBJECTS
+===========
+
+Background
+lightgrey
+00000
+00000
+00000
+00000
+00000
+
+Player
+red
+.....
+..0..
+.000.
+..0..
+.....
+
+Wall
+black
+00000
+00000
+00000
+00000
+00000
+
+Goal
+green
+.....
+.....
+..0..
+.....
+.....
+
+===========
+LEGEND
+===========
+
+. = Background
+P = Player
+W = Wall
+G = Goal
+
+===========
+SOUNDS
+===========
+
+===========
+COLLISIONLAYERS
+===========
+
+Background
+Wall
+Player, Goal
+
+===========
+RULES
+===========
+
+[Player] -> [Player Right]
+
+[> Player | Goal] -> [Player | Goal]
+
+===========
+WINCONDITIONS
+===========
+
+Player on Goal
+
+===========
+LEVELS
+===========
+
+; Example Level 1
+WWWWWW
+W..PGW
+W..P.W
+WWWWWW
+
+; Example Level 2
+WWWWWW
+WP...W
+W.W.GW
+WWWWWW
+```
+
+This version removes the invalid comments and properly sets the win condition to "Player on Goal," which checks if the player is on the goal for the game to be won.

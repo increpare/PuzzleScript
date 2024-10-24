@@ -1,0 +1,141 @@
+```plaintext
+title Corral Chaos
+author AI Game Designer
+
+color_palette c64
+
+========
+OBJECTS
+========
+
+Background
+#A4C2E0
+
+Grass
+#7DA270
+
+Wall
+#4A4A4A
+
+Sheep
+#FFFFFF
+..0..
+.000.
+..0..
+.0.0.
+.....
+
+Barn
+#8D5524
+.1.1.
+13331
+11111
+11111
+.....
+
+Player
+#DAA520
+..0..
+.0A0.
+A00A.
+..0..
+.....
+
+=======
+LEGEND
+=======
+. = Background
+# = Wall
+s = Sheep
+b = Barn
+p = Player
+= Grass
+
+=========
+SOUNDS
+=========
+Sheep bleat 45703848
+Player move 25380307
+Sheep move 37859038
+startlevel 5092838
+endlevel 8848105
+showmessage 43742098
+closemessage 43742098
+startgame 5908317
+endgame 509284
+
+================
+COLLISIONLAYERS
+================
+Background
+Grass
+Wall
+Barn
+Player
+Sheep
+
+======
+RULES
+======
+[ up Player | Sheep ] -> [ up Player | up Sheep ] sfx2
+[ down Player | Sheep ] -> [ down Player | down Sheep ] sfx2
+[ left Player | Sheep ] -> [ left Player | left Sheep ] sfx2
+[ right Player | Sheep ] -> [ right Player | right Sheep ] sfx2
+
+Sheep on Barn -> Barn sfx0
+
+==============
+WINCONDITIONS
+==============
+no Sheep
+
+=======
+LEVELS
+=======
+
+message Help the shepherd round up the sheep into the barn!
+
+#######
+#.....#
+#..p..#
+#..s..#
+#.....#
+#..b..#
+#.....#
+#######
+
+#######
+#.....#
+#..p..#
+#..s..#
+#..s..#
+#..b..#
+#..s..#
+#######
+
+#######
+#.....#
+#.p.s.#
+#.s.s.#
+#.s.s.#
+#.b.s.#
+#.....#
+#######
+
+#######
+#.....#
+#p..s.#
+#.s.s.#
+#.....#
+#..b..#
+#.....#
+#######
+
+#######
+#s..s.#
+#.p...#
+#.b...#
+#.....#
+#.....#
+#######
+```

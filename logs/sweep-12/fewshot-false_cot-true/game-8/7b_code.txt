@@ -1,0 +1,98 @@
+Based on the error messages, it seems the problem is with the format of the `objects` section. The description after each object incorrectly extends beyond the color specification, confusing the parser. In PuzzleScript, the correct format for each object in the `objects` section is:
+
+`Name symbol color` 
+
+Brief details or descriptions cannot follow the color directly and should instead be given in comments if needed. Let's correct these errors without extra information following the color.
+
+Here's the revised and corrected version of the code:
+
+```plaintext
+========
+title Sokoban Basic
+author Your Name
+homepage www.yourwebsite.com
+========
+
+========
+objects
+========
+Background . #000000
+Player P #00ff00
+Wall W #aaaaaa
+Box B #ff0000
+Target T #0000ff
+BoxOnTarget O #ff00ff
+
+========
+legend
+========
+. = Background
+P = Player
+W = Wall
+B = Box
+T = Target
+O = BoxOnTarget
+# = Wall
+
+========
+sounds
+========
+SfxMove 100
+SfxPush 241
+SfxWin 40
+
+========
+collisionlayers
+========
+Background
+Player, Box, BoxOnTarget
+Wall, Target
+
+========
+rules
+========
+// Player movement
+[> Player | ] -> [> Player | ] SfxMove
+[< Player | ] -> [< Player | ] SfxMove
+[^ Player | ] -> [^ Player | ] SfxMove
+[v Player | ] -> [v Player | ] SfxMove
+
+// Box pushing
+[> Player | Box ] -> [> Player | > Box ] SfxPush
+[< Player | Box ] -> [< Player | < Box ] SfxPush
+[^ Player | Box ] -> [^ Player | ^ Box ] SfxPush
+[v Player | Box ] -> [v Player | v Box ] SfxPush
+
+// Convert Box to BoxOnTarget
+[ Box | Target ] -> [ BoxOnTarget ]
+
+// Revert BoxOnTarget if moved off Target
+[ BoxOnTarget | ] -> [ Box ]
+
+========
+winconditions
+========
+All Boxes on Targets
+
+========
+levels
+========
+/* Level 1 */
+WWWWWW
+W....W
+W.PB.W
+WT...W
+WWWWWW
+
+/* Level 2 */
+WWWWWWW
+W.....W
+W.P.B.W
+W.B..TW
+W.....W
+WTWWWWW
+
+========
+```
+
+I've removed the additional information from the lines defining the `objects` in your code. It should now parse correctly and function as expected.

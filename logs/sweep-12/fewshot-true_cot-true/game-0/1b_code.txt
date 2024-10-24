@@ -1,0 +1,111 @@
+The error messages are caused by a misunderstanding of the comment syntax in the PuzzleScript language. The language does not support typical inline comments starting with `//`. The PuzzleScript rules syntax does not allow comments within the "RULES" section. To fix these errors, we must remove the comment from the "RULES" section in the code. Additionally, the rest of the game code seems correctly structured, assuming standard PuzzleScript rules and logic. Here is a revised version of the game code:
+
+```plaintext
+title Block Pusher
+author YourName
+
+========
+OBJECTS
+========
+
+Background
+darkgray
+
+Player
+blue
+
+Crate
+brown
+
+Target
+yellow
+
+TargetedCrate
+green
+
+=======
+LEGEND
+=======
+
+. = Background
+P = Player
+C = Crate
+T = Target
+X = TargetedCrate
+
+=========
+SOUNDS
+=========
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Player, Crate
+Target
+
+======
+RULES
+======
+
+[ Player | Crate ] -> [ > Player | > Crate ]
+
+[ Crate | Target ] -> [ TargetedCrate | Background ]
+[ TargetedCrate ] -> [ Crate ]
+
+==============
+WINCONDITIONS
+==============
+
+all TargetedCrate on Target
+
+=======
+LEVELS
+=======
+
+message Welcome to Block Pusher! Move all crates to targets.
+
+#######
+#.T...#
+#..C..#
+#..P..#
+#.T...#
+#######
+
+#######
+#.....#
+#.TCT.#
+#..P..#
+#..C..#
+#.T...#
+#######
+
+#######
+#..T..#
+#..C..#
+#.TPT.#
+#..C..#
+#..T..#
+#######
+
+#######
+#T.C.T#
+#..P..#
+#.CT.C#
+#..C..#
+#.T.T.#
+#######
+
+#######
+#.T...#
+#..CT.#
+#..P..#
+#..C..#
+#.T...#
+#######
+
+message Congratulations! You've completed all the levels.
+```
+
+This revised version removes the comment within the "RULES" section, which is not supported in PuzzleScript, thus resolving the errors and allowing the game to compile correctly.

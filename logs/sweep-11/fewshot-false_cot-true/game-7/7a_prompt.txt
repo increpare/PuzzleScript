@@ -4,57 +4,110 @@ You are a game designer, familiar with the PuzzleScript game description languag
 USER PROMPT:
 The following PuzzleScript game code:
 ```plaintext
-# Title and Author
-title Sokoban Simple
-author Game Designer
+title Maze Escape
+author Your Name
 
-# Objects
-Background = yellow
-Player @ = blue
-Wall # = black
-Box B = red
-Target O = green
-BoxOnTarget G = yellow
+===========
+OBJECTS
+===========
 
-# Legend
-. = Background
-@ = Player
-# = Wall
-B = Box
-O = Target
-G = BoxOnTarget
-
-# Collision Layers
 Background
+BLACK
+
 Player
-Box, BoxOnTarget
-Wall, Target
+YELLOW
 
-# Rules
-[ > Player | Box ] -> [ > Player | > Box ]
-[ Box | Target ] -> [ BoxOnTarget | Target ]
-[ BoxOnTarget | ] -> [ | Box ]
+Wall
+BLUE
 
-# Win Conditions
-All BoxOnTarget on Target
+Exit
+GREEN
 
-# Levels
-# Level 1
-#######
-#..O..#
-#..B..#
-#..@..#
-#######
+===========
+LEGEND
+===========
+
+. = Background
+P = Player
+# = Wall
+E = Exit
+
+===========
+SOUNDS
+===========
+
+===========
+COLLISIONLAYERS
+===========
+
+Background
+Wall
+Player, Exit
+
+===========
+RULES
+===========
+
+[Player] -> [ Player ]
+
+up [Player | > ] -> [ | Player ] 
+down [Player | > ] -> [ | Player ] 
+left [Player | > ] -> [ | Player ] 
+right [Player | > ] -> [ | Player ] 
+
+[Player | Exit] -> [Player | Background]
+
+===========
+WINCONDITIONS
+===========
+
+No Exit
+
+===========
+LEVELS
+===========
+
+######
+#P   #
+# ## #
+#    #
+# E  #
+######
+
+########
+#P     #
+# ###  #
+# # E  #
+# #    #
+# #### #
+#      #
+########
+
+#########
+#P      #
+### ### #
+#    E# #
+### ### #
+#       #
+#########
 
 ```
 produced the following console output:
 =================================
-line 6 : Unrecognised stuff in the prelude.
-line 7 : Unrecognised stuff in the prelude.
-line 8 : Unrecognised stuff in the prelude.
-line 9 : Unrecognised stuff in the prelude.
-line 10 : Unrecognised stuff in the prelude.
-line 11 : Unrecognised stuff in the prelude.
-too many errors, aborting compilation
+line 66 : Error, symbol " ", used in map, not found.
+line 73 : Error, symbol " ", used in map, not found.
+line 83 : Error, symbol " ", used in map, not found.
+line 47 : In a rule, if you specify a movement, it has to act on an object.
+line 47 : Error, malformed cell rule - encountered a "["" before previous bracket was closed
+line 47 : In a rule, each pattern to match on the left must have a corresponding pattern on the right of equal length (number of cells).
+line 48 : In a rule, if you specify a movement, it has to act on an object.
+line 48 : Error, malformed cell rule - encountered a "["" before previous bracket was closed
+line 48 : In a rule, each pattern to match on the left must have a corresponding pattern on the right of equal length (number of cells).
+line 49 : In a rule, if you specify a movement, it has to act on an object.
+line 49 : Error, malformed cell rule - encountered a "["" before previous bracket was closed
+line 49 : In a rule, each pattern to match on the left must have a corresponding pattern on the right of equal length (number of cells).
+line 50 : In a rule, if you specify a movement, it has to act on an object.
+line 50 : Error, malformed cell rule - encountered a "["" before previous bracket was closed
+line 50 : In a rule, each pattern to match on the left must have a corresponding pattern on the right of equal length (number of cells).
 Errors detected during compilation; the game may not work correctly.
 Return a repaired version of the code that addresses these errors. First, reason about your task and determine the best plan of action. Then, write your code. Return your code in full, inside a ```plaintext code block.

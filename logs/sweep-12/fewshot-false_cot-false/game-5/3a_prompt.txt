@@ -1,0 +1,133 @@
+SYSTEM PROMPT:
+You are a game designer, familiar with the PuzzleScript game description language. 
+
+USER PROMPT:
+The following PuzzleScript game code:
+```plaintext
+Title: Block Pusher
+Author: PuzzleScript Game Designer
+
+===========
+OBJECTS
+===========
+
+Background
+transparent
+
+Player
+blue
+.....
+..1..
+.111.
+..1..
+.....
+
+Block
+red
+.....
+.....
+.111.
+.....
+.....
+
+Target
+green
+.....
+..1..
+..1..
+..1..
+.....
+
+BlockOnTarget
+yellow
+.....
+..1..
+.111.
+.111.
+.....
+
+===========
+LEGEND
+===========
+
+. = Background
+P = Player
+B = Block
+T = Target
+U = BlockOnTarget
+
+===========
+SOUNDS
+===========
+
+SFX1
+    move
+    
+SFX2
+    push
+
+===========
+COLLISIONLAYERS
+===========
+
+Background
+Target
+Player, Block, BlockOnTarget
+
+===========
+RULES
+===========
+
+[> Player | Block] -> [> Player | > Block] SFX2
+
+[Block | Target] -> [BlockOnTarget]
+
+[BlockOnTarget | Target] -> [BlockOnTarget]
+
+===========
+WINCONDITIONS
+===========
+
+All BlockOnTarget on Target
+
+===========
+LEVELS
+===========
+
+#######
+#.....#
+#..T..#
+#..B..#
+#..P..#
+#######
+
+#######
+#.....#
+#..T..#
+#..B..#
+#..P..#
+#.....#
+#..T..#
+#######
+
+#######
+#..T..#
+#..B..#
+#.PPP.#
+#..B..#
+#..T..#
+#######
+
+
+```
+produced the following console output:
+=================================
+line 14 : Trying to access color number 1 from the color palette of sprite PLAYER, but there are only 1 defined in it.
+line 15 : Trying to access color number 1 from the color palette of sprite PLAYER, but there are only 1 defined in it.
+line 16 : Trying to access color number 1 from the color palette of sprite PLAYER, but there are only 1 defined in it.
+line 23 : Trying to access color number 1 from the color palette of sprite BLOCK, but there are only 1 defined in it.
+line 30 : Trying to access color number 1 from the color palette of sprite TARGET, but there are only 1 defined in it.
+line 31 : Trying to access color number 1 from the color palette of sprite TARGET, but there are only 1 defined in it.
+too many errors, aborting compilation
+Errors detected during compilation; the game may not work correctly.
+Return a repaired version of the code that addresses these errors. Return your code in full, inside a ```plaintext code block.

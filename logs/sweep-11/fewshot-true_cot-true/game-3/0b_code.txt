@@ -1,0 +1,118 @@
+To create a complete PuzzleScript game, I need to define several components:
+
+1. **Title and Metadata**: This section will include the title of the game, the author, and possibly a homepage.
+
+2. **Objects**: Define the different objects or entities that will appear in the game. These include the player, walls, targets, and any other interactive elements.
+
+3. **Legend**: This maps shorthand symbols to objects for easier level design.
+
+4. **Sounds**: Define any sound effects that will be triggered by game events.
+
+5. **Collision Layers**: Specify how objects are layered and interact with each other.
+
+6. **Rules**: Determine how objects interact when moved or when specific conditions are met.
+
+7. **Win Conditions**: Outline the criteria for winning a level, such as reaching a target or collecting items.
+
+8. **Levels**: Design the layout of levels using the shorthand symbols defined in the legend.
+
+Based on this plan, I'll create a simple PuzzleScript game where the objective is for the player to push boxes onto targets (similar to Sokoban). 
+
+```plaintext
+title Pushing Blocks
+author Your Name
+homepage www.example.com
+
+========
+OBJECTS
+========
+
+Background
+lightblue
+
+Target
+yellow
+
+Player
+green
+..0..
+..0..
+00000
+..0..
+..0..
+
+Wall
+darkgray
+
+Box
+orange
+
+BoxOnTarget
+red
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Player
+O = Target
+B = Box
+@ = BoxOnTarget
+
+=========
+SOUNDS
+=========
+
+# Add sounds here if necessary
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Target
+Player, Wall, Box, BoxOnTarget
+
+======
+RULES
+======
+
+# Movement of player and interaction with boxes
+[ > Player | Box ] -> [ > Player | > Box ]
+
+# Mark box as placed when moved onto a target
+[ > Box | Target ] -> [ > BoxOnTarget ]
+
+# Allow boxes on targets to be pushed off
+[ > Player | BoxOnTarget | ] -> [ > Player | > Box | ]
+
+# Transform a box on target back into a plain box when moved off
+[ BoxOnTarget | Background ] -> [ Box ]
+
+==============
+WINCONDITIONS
+==============
+
+all BoxOnTarget on Target
+
+=======
+LEVELS
+=======
+
+#######
+#.....#
+#..O..#
+#..B..#
+#..P..#
+#######
+```
+
+**Game Description**:
+- The player character ("P") is tasked with pushing all the "Box" ("B") objects onto "Targets" ("O").
+- "Walls" ("#") are obstacles that can't be moved.
+- When a "Box" is on a "Target", it becomes a "BoxOnTarget" ("@").
+- The win condition is met when all boxes are placed on targets.
+
+This game captures the essence of a simplistic Sokoban-style puzzle game, where strategic movement and planning are key to solving each level.

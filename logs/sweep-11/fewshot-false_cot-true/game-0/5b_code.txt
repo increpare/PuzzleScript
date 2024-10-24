@@ -1,0 +1,110 @@
+The errors in the console output suggest a misunderstanding of how color definitions should be formatted in PuzzleScript. Specifically, it seems that the parser is not expecting the `color` keyword or the inline comments following the color values. In PuzzleScript, colors should be defined within the object definition without additional keywords or comments.
+
+To resolve this issue, I will adjust the way colors are defined, eliminating `color` keyword and comments following the color values. 
+
+Here's how the revised code should look:
+
+```plaintext
+title Sokoban Puzzle
+
+author YourName
+
+homepage http://www.yourwebsite.com
+
+========
+OBJECTS
+========
+
+Background
+    255 255 0
+    .
+
+Player
+    255 0 0
+    @
+
+Crate
+    165 42 42
+    o
+
+Wall
+    128 128 128
+    #
+
+Target
+    0 255 0
+    .
+
+CrateOnTarget
+    0 100 0
+    O
+
+=======
+
+LEGEND
+=======
+
+. = Target
+# = Wall
+@ = Player
+o = Crate
+O = CrateOnTarget
+
+=============
+
+SOUNDS
+=============
+
+player_move
+    sfx blip 
+
+crate_move
+    sfx push
+
+=============
+
+RULES
+=============
+[Player | Crate] -> [ ] | [Player CrateMove]
+CrateMove | Target -> CrateOnTarget | Target
+CrateMove | Background -> Crate | Background
+CrateOnTarget | Target -> CrateMove | Target
+
+=============
+
+WINCONDITIONS
+=============
+
+All CrateOnTarget on Target
+
+=============
+
+LEVELS
+=============
+
+[Level 1]
+#######
+#     #
+# .o  #
+#     #
+#  @  #
+#######
+
+[Level 2]
+#######
+#     #
+# .o. #
+#     #
+#  @  #
+#######
+
+[Level 3]
+########
+# @    #
+#  oo  #
+# .  o #
+#    . #
+########
+```
+
+In this corrected code, each object has its RGB color values directly specified after its name, without any unnecessary keywords or comments. This should fix the parsing issues mentioned in the error log.

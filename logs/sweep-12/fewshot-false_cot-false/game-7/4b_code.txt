@@ -1,0 +1,132 @@
+The error messages are pointing to issues in the sounds and win conditions sections. The sound tokens should be defined correctly, and the win condition seems to reference objects in an incorrect format.
+
+Here is the corrected version of the code:
+
+```plaintext
+Title: Treasure Hunt
+Author: You
+Homepage: https://www.puzzlescript.net
+
+===========
+OBJECTS
+===========
+
+Background
+LIGHTGREEN
+00000
+00000
+00000
+00000
+00000
+
+Player
+ORANGE
+.....
+..0..
+.000.
+..0..
+.....
+
+Wall
+BLUE
+.....
+.....
+.....
+.....
+.....
+
+Treasure
+YELLOW
+.....
+..0..
+.000.
+..0..
+.....
+
+Goal
+RED
+.....
+..0..
+.0.0.
+..0..
+.....
+
+===========
+
+LEGEND
+===========
+
+.=Background
+P=Player
+W=Wall
+T=Treasure
+G=Goal
+
+===========
+
+SOUNDS
+===========
+
+collectt
+  200 0.01 0.1 square
+
+win
+  1000 0.5 1 triangle
+
+===========
+
+COLLISIONLAYERS
+===========
+
+Background
+Wall
+Treasure, Goal
+Player
+
+===========
+
+RULES
+===========
+
+[ > Player | Treasure ] -> [ > Player ] [ ]
+[ > Player | Goal no Treasure ] -> [ > Player win ]
+
+===========
+
+WINCONDITIONS
+===========
+
+No Treasure
+
+===========
+
+LEVELS
+===========
+
+#######
+#.....#
+#.T.#.#
+#.W.#.#
+#..P.G#
+#######
+
+#######
+#T....#
+#.....#
+#..W..#
+#G.P..#
+#######
+
+#######
+#WTPW.#
+#W.PG.#
+#W..#.#
+#######
+
+```
+
+Here's what's been fixed:
+1. Sound definitions: The sound names should be all lowercase, as PuzzleScript is case-sensitive. I've changed `CollectT` to `collectt` and `Win` to `win`.
+2. Win conditions: Changed "All Treasure on no Player" to "No Treasure" because the former was incorrectly trying to reference "no Player", which is not a valid state or object. "No Treasure" is the correct syntax for indicating all treasures have been collected.
+
+Ensure you test the game after these changes to verify that it runs as expected.

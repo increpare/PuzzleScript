@@ -1,0 +1,117 @@
+To address the errors highlighted in the console output, we need to make the following changes:
+
+1. **Wall Color Error**: The `Wall` object has one color defined (`grey`). However, the code tries to access additional colors, which does not exist. Based on the error message, we need to update the `Wall` object to utilize just one color.
+
+2. **Block Color Error**: The error indicates a parsing issue due to the extra dot in `blue.darkblue`. This should be split into two separate colors, `blue` and `darkblue`.
+
+Let's implement these changes:
+
+1. Remove the unnecessary color references from the `Wall` object.
+2. Correct the color specification for the `Block`.
+
+Here's the corrected code:
+
+```plaintext
+title Block Pusher
+author PuzzleScriptCreator
+
+========
+OBJECTS
+========
+
+Background
+white
+
+Wall
+grey
+11111
+11111
+11111
+11111
+11111
+
+Player
+red
+..0..
+.000.
+..0..
+.....
+.....
+
+Block
+blue darkblue
+.....
+.000.
+.000.
+.000.
+.....
+
+Target
+green
+.....
+..0..
+..0..
+.000.
+.....
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Player
+B = Block
+T = Target
+
+===========
+COLLISIONLAYERS
+===========
+
+Background
+Target
+Wall
+Block
+Player
+
+======
+RULES
+======
+
+[> Player | Block | no Wall] -> [> Player | > Block]
+[> Player | no Block | no Wall] -> [> Player]
+
+==============
+WINCONDITIONS
+==============
+
+All Block on Target
+
+=======
+LEVELS
+=======
+
+; Level 1
+########
+#......#
+#..BTP.#
+#......#
+########
+
+; Level 2
+########
+#......#
+#..BTP.#
+#..B...#
+#..T...#
+########
+
+; Level 3
+##########
+#........#
+#..B.BTP.#
+#......T.#
+##########
+```
+
+This revised code should resolve the compilation errors mentioned and allow the game to compile and run correctly.

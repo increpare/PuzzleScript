@@ -1,0 +1,120 @@
+When designing a complete PuzzleScript game, we need to define key elements of the game: objects, rules, collision layers, win conditions, and levels. I'll create a simple Sokoban-like puzzle game involving a player, walls, crates, and targets. The goal is to push all crates onto the targets to win. Here's how I'll structure the game:
+
+1. **Title and Author**: Establish a name and author for the new game.
+2. **Objects**: Define the visual representation and color of each object.
+3. **Legend**: Create shorthand symbols for objects for easy level design.
+4. **Collision Layers**: Specify how objects interact within the game grid.
+5. **Rules**: Define object behavior and game logic, including movement rules and interactions.
+6. **Win Conditions**: Set what conditions must be satisfied to consider the level complete.
+7. **Levels**: Design a few levels with increasing difficulty to provide a gameplay challenge.
+
+```plaintext
+title Sokoban Clone
+author YourName
+
+========
+OBJECTS
+========
+
+Background
+White
+
+Wall
+DarkGray
+00000
+00000
+00000
+00000
+00000
+
+Player
+Blue
+..1..
+.111.
+11111
+.111.
+..1..
+
+Crate
+Orange
+.222.
+22222
+22222
+22222
+.222.
+
+Target
+LightGreen
+00000
+01110
+01210
+01110
+00000
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Player
+* = Crate
+O = Target
+@ = Crate and Target
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Target
+Player, Crate, Wall
+
+======
+RULES
+======
+
+[ > Player | Crate ] -> [ > Player | > Crate ]
+[ > Player | Wall ] -> [ Player | Wall ]
+
+==============
+WINCONDITIONS
+==============
+
+All Crate on Target
+
+=======
+LEVELS
+=======
+
+#####
+#...#
+#.P.#
+#.#.#
+#*O*#
+#####
+
+#####
+#...#
+#*P*#
+#.#.#
+#O.O#
+#####
+
+#####
+#.#.#
+#*P*#
+#.O.#
+#...#
+#####
+```
+
+**Explanation**:
+- **Objects**: We've defined a player, walls, crates, and targets, each with a unique color and pattern.
+- **Legend**: We define concise symbols to use in level descriptions.
+- **Collision Layers**: Objects are arranged to determine collision priorities.
+- **Rules**: The primary rule allows the player to push a crate. If the player encounters a wall, movement is blocked.
+- **Win Conditions**: The level is won when all crates are on targets.
+- **Levels**: Three example levels are provided with progressive difficulty, represented using the defined symbols. The player must push all crates onto the targets to complete each level.
+
+This game design encapsulates the core mechanics of Sokoban, with the provided levels offering a basic challenge to test these mechanics.

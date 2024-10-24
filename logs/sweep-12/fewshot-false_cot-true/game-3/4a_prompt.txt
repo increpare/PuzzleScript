@@ -1,0 +1,115 @@
+SYSTEM PROMPT:
+You are a game designer, familiar with the PuzzleScript game description language. 
+
+USER PROMPT:
+The following PuzzleScript game code:
+```plaintext
+========
+OBJECTS
+========
+
+Background
+Yellow
+00000
+00000
+00000
+00000
+00000
+
+Player
+Blue
+..0..
+.000.
+00000
+.000.
+..0..
+
+Wall
+Gray
+00000
+00000
+00000
+00000
+00000
+
+Crate
+Red
+0.0.0
+00000
+0.0.0
+00000
+0.0.0
+
+Target
+Green
+.....
+..0..
+.000.
+..0..
+.....
+
+CrateOnTarget
+Orange
+.....
+.0.0.
+00000
+.0.0.
+.....
+
+========
+LEGEND
+========
+
+.=Background
+P=Player
+W=Wall
+C=Crate
+T=Target
+G=CrateOnTarget
+
+==============
+COLLISIONLAYERS
+==============
+
+Background
+Player, Crate, CrateOnTarget
+Wall
+Target
+
+======
+RULES
+======
+
+[Player | Crate] -> [ | Player] [Crate | ]
+[Crate | Target] -> [CrateOnTarget | Target]
+[CrateOnTarget | Target] -> [Crate | Target]
+
+===========
+WINCONDITIONS
+===========
+
+No Crate
+
+======
+LEVELS
+======
+
+WWWWWW
+W..P.W
+W..C.W
+W..W.W
+W...TW
+WWWWWW
+
+```
+produced the following console output:
+=================================
+line 65 : section "COLLISIONLAYERS" is out of order, must follow  "SOUNDS" (or it could be that the section "SOUNDS"is just missing totally.  You have to include all section headings, even if the section itself is empty).
+line 77 : Name "player", referred to in a rule, does not exist.
+line 77 : Name "crate", referred to in a rule, does not exist.
+line 78 : Name "crate", referred to in a rule, does not exist.
+line 78 : Name "target", referred to in a rule, does not exist.
+line 78 : Name "crateontarget", referred to in a rule, does not exist.
+too many errors, aborting compilation
+Errors detected during compilation; the game may not work correctly.
+Return a repaired version of the code that addresses these errors. First, reason about your task and determine the best plan of action. Then, write your code. Return your code in full, inside a ```plaintext code block.

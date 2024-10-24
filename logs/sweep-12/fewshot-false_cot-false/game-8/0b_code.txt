@@ -1,0 +1,122 @@
+Certainly! Below is a simple PuzzleScript game code. This game is called "Simple Sokoban" where the player needs to push the box onto the target to win the game.
+
+```plaintext
+===========
+Title
+===========
+Simple Sokoban
+
+===========
+Author
+===========
+Game Designer
+
+===========
+Homepage
+===========
+https://www.example.com
+
+===========
+Legend
+===========
+# = Wall
+P = Player
+B = Box
+T = Target
+G = BoxOnTarget
+
+===========
+Sounds
+===========
+# No custom sounds specified.
+
+===========
+CollisionLayers
+===========
+Background
+Target
+Player, Box, BoxOnTarget, Wall
+
+===========
+Objects
+===========
+Background
+grey
+
+Wall
+orange
+
+Player
+yellow
+
+Box
+blue
+
+Target
+red
+
+BoxOnTarget
+green
+
+===========
+Legend ends
+===========
+
+===========
+WinConditions
+===========
+All BoxOnTarget on Target
+
+===========
+Rules
+===========
+[ > Player |  ] -> [ > Player | > ]
+[ Player | Box  ] -> [ > Player | > Box  ]
+[ Player | BoxOnTarget  ] -> [ > Player | > BoxOnTarget  ]
+
+[ Player | Box on Target ] -> [ > Player | > BoxOnTarget ]
+
+Box -> > | BoxOnTarget on Target
+BoxOnTarget -> > | Box not on Target 
+
+===========
+Levels
+===========
+-------
+#####  
+#...#  
+#.#.#  
+#P#B#  
+#####  
+
+-------
+#####  
+#...#  
+#B#P#  
+#####  
+```
+
+### Explanation:
+- **Title and Metadata:** This section includes the title, author, and homepage.
+  
+- **Legend:** Defines symbols for the game's objects:
+  - `#` for Wall
+  - `P` for Player
+  - `B` for Box
+  - `T` for Target
+  - `G` for BoxOnTarget
+  
+- **Objects:** Specifies the colors for walls, player, box, targets, etc.
+
+- **CollisionLayers:** Sets up how objects are layered, affecting movement and interaction priorities.
+
+- **WinConditions:** The game is won when all boxes (`B`) are moved onto the targets (`T`).
+
+- **Rules:** The logic that handles player movement and box pushing. For example:
+  - Allows the player to move.
+  - Enables the player to push boxes.
+  - Special handling when a box is on a target.
+
+- **Levels:** Describes simple levels using the defined objects, composed of walls, targets, the player, and a box.
+
+Use this code to set up a game in the PuzzleScript editor, and you can play a basic sokoban-like game with pushable boxes and targets!

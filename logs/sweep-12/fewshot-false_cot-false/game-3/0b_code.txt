@@ -1,0 +1,131 @@
+Certainly! Below is a complete PuzzleScript game code. This simple game is called "Box Pusher," where the player (a pusher) must push boxes onto target spots.
+
+```plaintext
+Title: Box Pusher
+Author: GameDesigner
+
+========
+OBJECTS
+========
+
+Background
+transparent
+
+Wall
+Brown
+
+Pusher
+Red
+
+Box
+Blue
+
+Target
+Green
+
+BoxOnTarget
+Cyan
+
+PusherOnTarget
+Magenta
+
+========
+LEGEND
+========
+
+. = Background
+# = Wall
+P = Pusher
+B = Box
+T = Target
+O = BoxOnTarget
+@ = PusherOnTarget
+
+========
+SOUNDS
+========
+
+SFX1
+PUSH
+
+SFX2
+WIN
+
+========
+COLLISIONLAYERS
+========
+
+Background
+Wall
+Pusher, PusherOnTarget
+Box, BoxOnTarget
+Target
+
+========
+RULES
+========
+
+[ P | B ] -> [ > | > ] SFX1
+[ P | T ] -> [ @ ]
+[ P | O ] -> [ @ | B ]
+[ @ ] -> [ P | T ]
+[ P | B | T ] -> [ > | > | O ] SFX1
+
+[ B | T ] -> [ O ]
+[ O ] -> [ B | T ]
+
+========
+WINCONDITIONS
+========
+
+All BoxOnTarget
+
+========
+LEVELS
+========
+
+#####
+#...#
+#.O.#
+#...#
+#.P.#
+#..B#
+#####
+
+#####
+#...#
+#.O.#
+#...#
+#...#
+#PBO#
+#####
+
+#######
+#.....#
+#.O.O.#
+#.....#
+#PB.BO#
+#...B.#
+#######
+
+#########
+#.......#
+#.O.O.O.#
+#.......#
+#PB.BOBO#
+#.......#
+#########
+
+```
+
+Here is a brief overview of the game elements:
+
+- **OBJECTS** section defines various elements within the game like the pusher, boxes, walls, targets, etc.
+- **LEGEND** maps characters used in the level designs to their respective objects.
+- **SOUNDS** specifies sound effects for actions.
+- **COLLISIONLAYERS** indicates which objects can interact on different layers.
+- **RULES** define the game's mechanics when a player interacts with specific objects.
+- **WINCONDITIONS** describe the goal for completing a level, such as getting all boxes onto targets.
+- **LEVELS** section contains designs of different stages where the player navigates to achieve the win condition. 
+
+This setup creates a basic "Sokoban" style game where the player must correctly push boxes onto target spaces to win.

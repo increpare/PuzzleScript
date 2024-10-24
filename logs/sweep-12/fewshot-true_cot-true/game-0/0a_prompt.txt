@@ -1,0 +1,1566 @@
+SYSTEM PROMPT:
+You are a game designer, familiar with the PuzzleScript game description language. Here are some example games, for inspiration (do not reproduce these games exactly):
+
+title A single rigid body
+author increpare
+homepage www.puzzlescript.net
+
+========
+OBJECTS
+========
+
+Background
+brown
+
+Target
+YELLOW
+
+Player
+PINK
+
+BigBlock
+darkblue
+
+Wall
+darkbrown
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Player
+* = BigBlock
+@ = BigBlock and Target
+O = Target
+
+=========
+SOUNDS
+=========
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Target
+Player, Wall, BigBlock
+
+======
+RULES
+======
+
+rigid [ >  Player | BigBlock ] -> [  >  Player | > BigBlock  ]
++ rigid [ moving BigBlock | BigBlock ] -> [ moving BigBlock | moving BigBlock ]
+
+==============
+WINCONDITIONS
+==============
+
+=======
+LEVELS
+=======
+
+...............
+..........#....
+...............
+..#............
+.....***.......
+.....*.....#...
+..P..**#.......
+.....*.........
+...............
+..#............
+.........#.....
+...............
+...............
+
+
+
+title Zen Puzzle Garden
+author lexaloffle
+homepage www.lexaloffle.com
+
+(
+
+A replication, with some really bad levels, of the rather superior Zen Puzzle Garden.  Made with permission of the unfailingly lovely Joseph White.
+
+http://www.lexaloffle.com/zen.htm
+
+)
+
+========
+OBJECTS
+========
+
+Background
+orange brown
+00100
+00000
+00010
+10000
+00000
+
+Player
+white black
+.0.0.
+01010
+00000
+.000.
+11.11
+
+Rock
+grey darkgrey yellow
+21002
+11000
+11000
+11000
+11101
+
+UnbrushedSand
+yellow orange
+00000
+01000
+00000
+00010
+00000
+
+HBrushedSand
+yellow orange
+00000
+01011
+00000
+11010
+00000
+
+VBrushedSand
+yellow orange
+01000
+01010
+00000
+01010
+00010
+
+=======
+LEGEND
+=======
+
+BrushedSand = HBrushedSand or VBrushedSand
+Sand = UnbrushedSand or BrushedSand
+Obstacle = BrushedSand or Rock
+; = Background
+O = Rock
+. = UnbrushedSand
+P = Player
+
+=========
+SOUNDS
+=========
+
+closemessage 52854909
+startgame 64192309
+endlevel 16398509
+endgame 62100709
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Sand
+Player, Rock
+
+======
+RULES
+======
+
+(The h and v sand effects are cosmetic - how could this be done in a single line if there was only one type of brushed sand?)
+
+horizontal [ UnbrushedSand > Player ] -> [ HBrushedSand > Player ] 
+vertical [ UnbrushedSand > Player ] -> [ VBrushedSand > Player ] 
+
+late [ Player BrushedSand ] -> cancel
+
+==============
+WINCONDITIONS
+==============
+
+no UnbrushedSand
+
+=======
+LEVELS
+=======
+
+message level 1 of 5
+
+;;;;;;;;;;;;
+;;;;;;;;;;;;
+;;;;;;;;;;;;
+;;;......;;;
+;;;......;;;
+;;;......;;;
+;P;..OO..;;;
+;;;......;;;
+;;;......;;;
+;;;;;;;;;;;;
+;;;;;;;;;;;;
+;;;;;;;;;;;;
+
+message level 2 of 5
+
+;;;;;;;;;;;;
+;;;;;;;;;;;;
+;;;;;;;;;;;;
+;;;......;;;
+;;;....O.;;;
+;;;......;;;
+;P;..O...;;;
+;;;......;;;
+;;;......;;;
+;;;;;;;;;;;;
+;;;;;;;;;;;;
+;;;;;;;;;;;;
+
+message level 3 of 5
+
+;;;;;;;;;;;;
+;;;;;;;;;;;;
+;;;;;;;;;;;;
+;;;......;;;
+;;;...O..;;;
+;;;......;;;
+;P;.O....;;;
+;;;....O.;;;
+;;;......;;;
+;;;;;;;;;;;;
+;;;;;;;;;;;;
+;;;;;;;;;;;;
+
+message level 4 of 5
+
+;;;;;;;;;;;;
+;;;;;;;;;;;;
+;;;;;;;;;;;;
+;;;..OO..;;;
+;;;O....O;;;
+;P;..OO..;;;
+;;;O....O;;;
+;;;..OO..;;;
+;;;;;;;;;;;;
+;;;;;;;;;;;;
+;;;;;;;;;;;;
+
+message level 5 of 5
+
+;;;;;;;;;;;;
+;;;;;;;;;;;;
+;;;;;;;;;;;;
+;;;O.....;;;
+;;;..O.O.;;;
+;;;O...O.;;;
+;P;..O...;;;
+;;;O...O.;;;
+;;;..O...;;;
+;;;;;;;;;;;;
+;;;;;;;;;;;;
+;;;;;;;;;;;;
+
+message congratulations!
+
+
+title Heroes of Sokoban II: Monsters
+author Jonah Ostroff
+text_color yellow
+key_repeat_interval 0.25
+
+========
+OBJECTS
+========
+
+Background
+#989898 #C8C8C8
+00000
+00100
+00000
+00010
+00000
+
+Goal
+Brown Yellow
+.000.
+00000
+00010
+00000
+00000
+
+Wall
+Darkgrey #222222
+01000
+11111
+00010
+00010
+11111
+
+Fighter (Warrior sounds better in-game, but I want different abbreviations for the classes in the editor.)
+#FF4444 Pink DarkBrown
+.000.
+.111.
+00000
+.000.
+.2.2.
+
+Wizard
+#2266FF Pink
+.000.
+.010.
+00000
+.000.
+00000
+
+Thief
+#66DD66 Pink DarkBrown
+.000.
+.010.
+00000
+.0.0.
+.0.0.
+
+Priest
+#FFFFAA Pink
+.000.
+.111.
+00000
+.000.
+00000
+
+SFighter
+#880000 Pink DarkBrown
+.000.
+.111.
+00000
+.000.
+.2.2.
+
+SWizard
+#000088 Pink
+.000.
+.010.
+00000
+.000.
+00000
+
+SThief
+#006600 Pink DarkBrown
+.000.
+.010.
+00000
+.0.0.
+.0.0.
+
+SPriest
+#B8B800 Pink
+.000.
+.111.
+00000
+.000.
+00000
+
+Crate
+Orange #552200
+.111.
+10001
+10001
+10001
+.111.
+
+YellowSwitch
+Yellow Black
+.....
+.111.
+.101.
+.111.
+.....
+
+YellowOpen
+Yellow
+0...0
+.....
+.....
+.....
+0...0
+
+YellowDoor
+Yellow #AA7722
+01010
+10001
+00000
+10001
+01010
+
+PurpleSwitch
+#6611CC Black
+.....
+.111.
+.101.
+.111.
+.....
+
+PurpleDoor
+#6611CC #220088
+01010
+10001
+00000
+10001
+01010
+
+PurpleOpen
+#6611CC
+0...0
+.....
+.....
+.....
+0...0
+
+MonsterDoor
+DarkGrey #222222 Red
+21002
+22122
+20212
+20012
+21112
+
+Warpball
+Blue
+
+ShadowDoor
+Purple
+
+DragonLeft
+Green Red Orange Yellow DarkGreen
+.....
+1100.
+3210.
+1100.
+...4.
+
+DragonRight
+Green Red Orange Yellow DarkGreen
+.....
+.0011
+.0123
+.0011
+.4...
+
+Goblin
+Green DarkBrown DarkGreen
+0.2.0
+00000
+..0..
+.111.
+.1.1.
+
+Dying
+White
+
+Saved
+#D8D800
+..0..
+.000.
+..0..
+..0..
+.....
+
+HasSaved
+Yellow
+.....
+.....
+.....
+.....
+.....
+
+Corpse
+#CCC
+.000.
+.000.
+00000
+.0.0.
+.0.0.
+
+LFireball
+Orange
+
+RFireball
+Orange
+
+DidNotMove
+Purple
+
+=======
+LEGEND
+=======
+
+Dragon = DragonLeft or DragonRight
+Player = Fighter or Wizard or Thief or Priest
+SPlayer = Swizard or Sthief or SFighter or SPriest
+Hero = Player or Splayer
+Healer = Priest or SPriest (Unlike the other heroes, priests must function even when inactive. "Healer" is the generic term for an active or inactive priest.)
+ClosedDoor = PurpleDoor or YellowDoor or MonsterDoor
+OpenDoor = YellowOpen or PurpleOpen
+Switch = PurpleSwitch or YellowSwitch
+Monster = Dragon or Goblin
+Moveable = Crate or SPlayer or Monster
+Static = Wall or ClosedDoor
+Weighing = Crate or Hero or Monster
+Vulnerable = Hero or Monster
+Invulnerable = Crate or Static
+Fireball = LFireball or RFireball
+. = Background
+# = Wall
+F = Fighter
+W = Wizard
+T = Thief
+P = Priest
+1 = SFighter
+2 = SThief
+3 = SWizard
+4 = SPriest
+* = Crate
+G = Goal
+[ = YellowDoor
+] = PurpleDoor
+{ = YellowSwitch
+} = PurpleSwitch
+L = DragonLeft
+R = DragonRight
+O = Goblin
+M = MonsterDoor
+
+=======
+SOUNDS
+=======
+
+Moveable move 82056307
+Sfx0 21221308 (teleport)
+Endlevel 36315908
+Sfx1 66399906 (switch player)
+Sfx2 92172900 (close door)
+Sfx3 15129100 (open door)
+Sfx4 69860105 (saved)
+Sfx5 63194902 (kill enemy)
+Sfx6 81996702 (dying player)
+EndGame 86793500
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Warpball, Dying
+Goal, Switch, OpenDoor, ShadowDoor
+ClosedDoor, Hero, Crate, Wall, Monster, Corpse
+RFireball, Saved, DidNotMove
+LFireball, HasSaved
+
+======
+RULES
+======
+[Saved] [Wall] -> [] [Wall HasSaved] (Remembering whether we saved someone last round by attaching a note to some wall.)
+
+[Corpse] -> Restart
+
+(Adds a DidNotMove to where the player currently is, to cancel moves where they bump into a wall.)
+
+[Player] -> [Player DidNotMove]
+
+[ >  Fighter | Moveable ] -> [  >  Fighter | > Moveable  ]
+[ > Moveable | Moveable ] [ Fighter] -> [ > Moveable | > Moveable ] [ Fighter] (Fighters push.)
+
+[ < Thief | Moveable ] -> [ < Thief | < Moveable ] (Thieves pull.)
+
+[ > Wizard ] -> [ Wizard > Warpball]
+[ > Warpball | no Moveable no Static] -> [ | > Warpball]
+[ > Warpball | Static] [Wizard] -> [ | Static ] [> Wizard]
+[ > Warpball | Moveable ] [Wizard] -> [ | Wizard Sfx0] [Moveable] (Wizards telexport. What they really do is shoot a "warpball", which causes them to move normally if it hits a wall and warp if it hits something they can warp with.)
+
+(The following mess is for changing characters.)
+[ Action Fighter] [SThief] -> [SFighter] [Thief Sfx1]
+[ Action Thief] [SWizard] -> [SThief] [Wizard Sfx1]
+[ Action Wizard] [SPriest] -> [SWizard] [Priest Sfx1]
+[ Action Priest] [SFighter] -> [SPriest] [Fighter Sfx1]
+
+[ Action Fighter] [no SThief] [SWizard] -> [SFighter] [no SThief] [Wizard Sfx1]
+[ Action Thief] [no Swizard] [SPriest] -> [SThief] [no SWizard] [Priest Sfx1]
+[ Action Wizard] [no SPriest] [SFighter] -> [SWizard] [no SPriest] [Fighter Sfx1]
+[ Action Priest] [no SFighter] [SThief] -> [SPriest] [no SFighter] [Thief Sfx1]
+
+[ Action Fighter] [no SThief] [no SWizard] [SPriest] -> [SFighter] [no SThief] [no SWizard] [Priest Sfx1]
+[ Action Thief] [no SWizard] [no SPriest] [SFighter] -> [SThief] [no SWizard] [no SPriest] [Fighter Sfx1]
+[ Action Wizard] [no SPriest] [no SFighter] [SThief] -> [SWizard] [no SPriest] [no SFighter] [Thief Sfx1]
+[ Action Priest] [no SFighter] [no SThief] [SWizard] -> [SPriest] [no SFighter] [no SThief] [Wizard Sfx1]
+
+(Cancels the move if the player is in the same place that they started. Notice that switching characters negates this. Only matters in levels where one dragon has multiple targets.)
+
+Late [Player DidNotMove] -> Cancel
+Late [DidNotMove] -> []
+
+(Now enemies attack.)
+
+Late [DragonLeft] -> [LFireball DragonLeft]
+Late [DragonRight] -> [RFireball DragonRight]
+
+Late RIGHT [RFireball | No Vulnerable no Invulnerable] -> [ | RFireball]
+Late LEFT [LFireball | No Vulnerable no Invulnerable] -> [ | LFireball]
+Late RIGHT [RFireball | Vulnerable] -> [ | Dying Vulnerable]
+Late Right [RFireball | Invulnerable] -> [ | Invulnerable]
+Late Left [LFireball | Vulnerable] -> [ | Dying Vulnerable]
+Late LEFT [LFireball | Invulnerable] -> [ | Invulnerable]
+
+Late [Goblin | Vulnerable] -> [Goblin | Dying Vulnerable]
+
+(Vulnerable objects that are attacked are designated as "Dying", but heroes can be saved by the Priest. Then the stuff that didn't get saved dies.)
+
+Late [Dying Healer] -> [Saved Healer]
+Late [Healer | Dying Hero] -> [Healer | Saved Hero]
+Late [Dying Monster] -> [Sfx5]
+Late [Dying Hero] -> [Corpse Sfx6]
+
+(Doors opening.)
+
+late [Weighing  YellowSwitch] [YellowDoor] -> [Weighing  YellowSwitch] [ShadowDoor]
+late [YellowSwitch no Weighing] [YellowOpen] -> [YellowSwitch] [YellowDoor sfx2]
+late [YellowSwitch no Weighing] [ShadowDoor] -> [YellowSwitch] [YellowDoor]
+late [ShadowDoor] -> [YellowOpen sfx3]
+
+late [Weighing PurpleSwitch] [PurpleDoor] -> [Weighing PurpleSwitch] [ShadowDoor]
+late [PurpleSwitch no Weighing] [PurpleOpen] -> [PurpleSwitch] [PurpleDoor sfx2]
+late [PurpleSwitch no Weighing] [ShadowDoor] -> [PurpleSwitch] [PurpleDoor]
+late [ShadowDoor] -> [PurpleOpen sfx3]
+
+late [MonsterDoor] -> [ShadowDoor]
+late [ShadowDoor] [Monster] -> [MonsterDoor] [Monster]
+late [ShadowDoor] -> [sfx3]
+
+(Looks for a HasSaved on a wall and moves it to the Priest. Then, if someone was saved this turn, plays the sound only if the Priest doesn't have the HasSaved note. Finally, cleans that up.)
+
+late [Wall HasSaved] [Healer] -> [Wall] [Healer HasSaved]
+late [Saved] [Healer no HasSaved] -> [Saved sfx4] [Healer]
+late [HasSaved] -> []
+
+==============
+WINCONDITIONS
+==============
+
+All Hero on Goal
+All Goal on Hero
+
+=======
+LEVELS
+=======
+
+Message Welcome back.
+
+Message [You've played the original, yes?]
+
+Message [If not, this might be confusing.]
+
+#############
+#.......[...#
+#.*.F.{.[.G.#
+#############
+#.......[...#
+#.*.2.{.[.G.#
+#############
+#.......[...#
+#.*.3.{.[.G.#
+#############
+
+Message Watch out for goblins.
+
+#############
+#F.O.......O#
+#...O.......#
+#.......O...#
+#O..........#
+#....O......#
+#O.......O..#
+#.O.....O.G.#
+#############
+
+#############
+###O###O#####
+#W.*****...O#
+#..*****....#
+#####O###O..#
+#O########..#
+#*G...O.O...#
+##..O..O.O..#
+#############
+
+Message Goblins attack each other too.
+
+#############
+#.......#...#
+#...*...#.G.#
+#.F...O.#...#
+#...*...##O##
+#...........#
+#############
+
+Message Dragons breath fire.
+
+###############
+#.............#
+#..T..###.....#
+#.....L.#.....#
+#.......#.....#
+#.............#
+#.....#.......#
+#.....#.R..G..#
+#.....###.....#
+#.............#
+###############
+
+Message Fire hurts enemies.
+
+##############
+#...#....O.RG#
+#.T.#......R.#
+#...#R*L...R.#
+#R*.#...#..R.#
+#...#...#..R.#
+#...O.*.#..R.#
+#.......#....#
+##############
+
+###########
+#3.O.O.O.T#
+#.#########
+#......G.G#
+#.#########
+#R.O.O.O.O#
+###########
+
+Message Think fast!
+
+#############
+#R.O.O.O.O.T#
+###########{#
+###########]#
+#G#3.[.}.G#G#
+#]###########
+#{###########
+#1..O...O..L#
+#############
+
+Message Sorry about that one.
+
+#######
+##G*G##
+##.G.##
+#R...##
+##...##
+##...##
+##...##
+##...L#
+##...##
+##F23##
+#######
+
+Message Kill monsters to open the M wall.
+
+###########
+#L...R#...#
+#.....#...#
+#.....M.G.#
+#.T.*.#...#
+#.....#...#
+###########
+
+#############
+#.......#...#
+#..O.O..#...#
+#R......M.G.#
+#.*.F.*.#...#
+#.......#...#
+#############
+
+#############
+#.......#...#
+#.{.*.{.#...#
+#..W.O..M.G.#
+#.{.*.[.#...#
+#.......#...#
+#############
+
+Message Yellow priest is protected.
+
+###########
+#...#O#O#O#
+#.P.......#
+#...**O**.#
+#********.#
+#R..G.....#
+###########
+
+###########
+#W#######G#
+#.#O#O#O#.#
+#.........#
+#.##O#O##.#
+#4#######G#
+###########
+
+Message Heroes next to a priest are safe.
+
+############
+#...#.O#O###
+#.F.#......#
+#...#.##O..#
+#.4...O#G.G#
+#...#.##.O.#
+############
+
+############
+#.#..T..#4##
+#.#.{.*...L#
+#.#.....#..#
+#G[.*.{...L#
+#.#.....#..#
+#.#.{.*...L#
+#.#.....#G##
+############
+
+###########
+#W...O#...#
+#.....#.G.#
+#..4..M...#
+#.....#.G.#
+#O...O#...#
+###########
+
+###########
+#.T.##O#O##
+#.........#
+#.4.#O#O..#
+########.##
+#G..####.O#
+#G#.O###.##
+###.###O..#
+#O..O#....#
+##...*....#
+###########
+
+###########
+#{*F#.4#.3#
+#{*.#..#..#
+###[#[###.#
+#R[.......#
+####O#.##.#
+######.##.#
+#G.G.G.#O*#
+###########
+
+###########
+#.T.####O##
+#.3......O#
+#.4.###O.##
+#####O##.##
+#.G..*.O.##
+#G.G#O##.##
+###########
+
+###########
+##O#O#O#O##
+#T[.[.[.[.#
+##{#{#{#{.#
+#.........#
+#.3G*G*G4.#
+#.........#
+###########
+
+Message The final challenge.
+
+#############
+#...#O.O#...#
+#.F.#G.G#.2.#
+#...#.O.#...#
+##.###*###.##
+#R*L.....R*L#
+#.#.......#.#
+#R*L.....R*L#
+##.###M###.##
+#...#...#...#
+#.3.#G.G#.4.#
+#...#...#...#
+#############
+
+Message Thanks for playing!
+
+title BROKEN Rigid Body example
+author Anonymous
+homepage www.puzzlescript.net
+
+verbose_logging
+
+(
+
+BROKEN Example Game FOR ILLUSTRATION PURPOSES ONLY. DO NOT USE.
+
+Example for
+https://www.puzzlescript.net/Documentation/rigidbodies.html#many_many
+
+)
+
+========
+OBJECTS
+========
+
+Background 
+white  
+
+Target 
+DarkBlue    
+
+Wall 
+DarkGrey
+
+Player
+Blue
+..0..
+..0.0
+00000
+.000.
+.0.0.
+
+Shadow
+Black
+..0..
+0.0..
+00000
+.000.
+.0.0.
+
+( three multi-cells blocks )
+Crate 
+orange
+
+Chest
+green
+
+Box
+red
+
+( 1-cell small block )
+Small
+darkred
+.....
+.000.
+.000.
+.000.
+.....
+
+( sticky, multicellular block when in contact )
+Glue
+pink
+.000.
+00000
+00000
+00000
+.000.
+
+( a flag to know what is allowed move )
+Wanna_Move
+#ff00ff
+.....
+.....
+..0..
+.....
+.....
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Player
+S = Shadow
+* = Crate
++ = Box
+% = Chest
+o = Small
+g = Glue
+
+( blocks that can be moved by the player )
+Movable = Crate or Box or Chest or Small or Glue
+
+( all things that can move and push blocks )
+Mover = Player or Shadow or Movable 
+
+( things that can stop a movement if they are stationary )
+Obstacle = Wall or Mover
+
+=======
+SOUNDS
+=======
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Target
+Obstacle
+Wanna_Move
+
+======
+RULES     
+======     
+
+[ > player ] [ stationary shadow ] -> [ > player ] [ < shadow ]
+
+( 1. Propagate movements forward )
+[ > Mover | stationary Movable ] -> [ > Mover | > Movable  ]
++ [ > Box    ] [ stationary Box   ] -> [ > Box    ] [ > Box    ]
++ [ > Crate  ] [ stationary Crate ] -> [ > Crate  ] [ > Crate  ]
++ [ > Chest  ] [ stationary Chest ] -> [ > Chest  ] [ > Chest  ]
++ [ moving Glue | stationary Glue ] -> [ moving Glue | moving Glue ]
+
+( 2. Propagate obstructions backwards )
+[ > Mover  | stationary Obstacle ] -> [ stationary Mover | Obstacle ]
+
+	(the next lines deal with directional conflicts)
++ [ ^ Crate | < Crate ] -> [ stationary Crate | stationary Crate ] 
++ [ ^ Crate | > Crate ] -> [ stationary Crate | stationary Crate ] 
++ [ ^ Crate | v Crate ] -> [ stationary Crate | stationary Crate ] 
+
++ [ v Crate | < Crate ] -> [ stationary Crate | stationary Crate ] 
++ [ v Crate | > Crate ] -> [ stationary Crate | stationary Crate ] 
++ [ v Crate | ^ Crate ] -> [ stationary Crate | stationary Crate ] 
+
++ [ < Crate | > Crate ] -> [ stationary Crate | stationary Crate ] 
++ [ < Crate | ^ Crate ] -> [ stationary Crate | stationary Crate ] 
++ [ < Crate | v Crate ] -> [ stationary Crate | stationary Crate ] 
+
++ [ > Crate | < Crate ] -> [ stationary Crate | stationary Crate ] 
++ [ > Crate | ^ Crate ] -> [ stationary Crate | stationary Crate ] 
++ [ > Crate | v Crate ] -> [ stationary Crate | stationary Crate ] 
+
+(also one space removed)
++ [ > Mover | |  < Mover ] -> [ stationary Mover | |  < Mover ] 
+
++ [ > Crate  ] [ stationary Crate ] -> [ stationary Crate ] [ Crate ]
++ [ > Box    ] [ stationary Box   ] -> [ stationary Box   ] [ Box   ]
++ [ > Chest  ] [ stationary Chest ] -> [ stationary Chest ] [ Chest ]
++ [ moving Glue | stationary Glue ] -> [ stationary Glue | Glue ]
+
+( 3. remove all movement, keep a flag )
+[ > Movable ] -> [ Movable wanna_move ]
+
+( 4. propagate movement only on wanna_move things )
+(    ie redo step 1 but with WANNA_MOVE added to the first line below )
+[ > Mover  | stationary Movable WANNA_MOVE ] -> [ > Mover | > Movable ]
++ [ > Box   ] [ stationary Box   ] -> [ > Box   ] [ > Box   ]
++ [ > Crate ] [ stationary Crate ] -> [ > Crate ] [ > Crate ]
++ [ > Chest ] [ stationary Chest ] -> [ > Chest ] [ > Chest ]
++ [ moving Glue | stationary Glue ] -> [ moving Glue | moving Glue ]
+
+( 5. cleanup, remove flag )
+[ wanna_move ] -> [ ]
+
+
+==============
+WINCONDITIONS
+==============
+
+=======     
+LEVELS
+=======
+
+#########
+#.......#
+#..p...p#
+#.......#
+#.......#
+#..***..#
+#.......#
+#s...S..#
+#.......#
+#########
+
+#########
+#.......#
+#.......#
+#.......#
+#...s...#
+#..+++..#
+#...p...#
+#.......#
+#.......#
+#########
+
+
+title Manic Ammo
+author David Eastman
+homepage @eastmad
+
+========
+OBJECTS
+========
+
+Background
+gray
+
+Target
+darkgray gray lightgray white
+33333
+31112
+31002
+31002
+32222
+
+Wall
+BROWN
+
+Boom
+Red YELLOW orange
+.101.
+10001
+00200
+10001
+.101.
+
+
+Player
+PINK YELLOW BLACK
+.222.
+.000.
+22122
+.222.
+.2.2.
+
+
+CrateW
+Brown DarkBrown lightbrown
+11111
+12001
+11111
+12001
+11111
+
+CrateN
+Brown DarkBrown lightbrown
+11111
+12121
+10101
+10101
+11111
+
+CrateMineN
+Brown DarkBrown lightbrown darkblue
+11111
+12121
+10101
+10301
+11111
+
+CrateGunN
+Brown DarkBrown lightbrown darkred
+11111
+12121
+10101
+10301
+11111
+
+CrateGunS
+Brown DarkBrown lightbrown darkred
+11111
+12321
+10101
+10101
+11111
+
+
+CrateS
+Brown DarkBrown lightbrown
+11111
+10101
+10101
+12121
+11111
+
+CrateE
+Brown DarkBrown lightbrown
+11111
+10021
+11111
+10021
+11111
+
+
+Shell
+yellow orange
+..0..
+.000.
+.000.
+.000.
+.101.
+
+
+Bang
+Yellow LightRed
+.101.
+10001
+00000
+10001
+.101.
+
+GunN
+red lightred
+..0..
+..0..
+.101.
+00000
+.000.
+
+GunW
+red lightred
+...0.
+..100
+00000
+..100
+...0.
+
+GunS
+red lightred
+.000.
+00000
+.101.
+..0..
+..0..
+
+GunE
+red lightred
+.0...
+001..
+00000
+001..
+.0...
+
+InertMine
+darkblue blue lightblue
+.....
+.101.
+.020.
+.101.
+.....
+
+ActiveMine
+darkred red lightred
+.....
+.101.
+.020.
+.101.
+.....
+
+Squawk
+lightblue blue
+....0
+.0000
+.0000
+.11.0
+1111.
+
+SquawkBang
+orange lightblue
+....0
+.0000
+.0000
+.11.0
+1111.
+
+Droid
+black green
+..0..
+.000.
+00100
+.000.
+..0..
+
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Player
+N = CrateN
+E = CrateE
+W = CrateW
+S = CrateS
+O = Target
++ = Shell
+^ = GunN
+< = GunW
+> = GunE
+˅ = GunS
+M = InertMine
+A = ActiveMine
+B = Boom
+% = CrateGunN
+& = CrateMineN
+@ = CrateGunS
+X = Squawk
+D = Droid
+
+=======
+SOUNDS
+=======
+
+SFX1 55891909
+SFX2 5736502
+SFX4 6922102
+
+Shell move 61960307
+InertMine move 61960307
+Droid move 81713505
+EndLevel 8341708
+Shell create 91688700
+GunN create 91688700
+GunS create 91688700
+GunW create 91688700
+InertMine create 91688700
+ActiveMine create 93182703
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Target
+Player, Wall, CrateN, CrateE, CrateW, CrateS, Shell, GunN, GunW, GunE, GunS, Bang, InertMine, ActiveMine, Boom, CrateMineN, CrateGunN, CrateGunS, Squawk, Droid, SquawkBang
+
+======
+RULES
+======
+
+
+[Bang] -> [background]
+[boom] -> restart
+[> player][Droid] -> [> player][> Droid]
+[ >  Player | Shell ] -> [  >  Player | > Shell  ]
+[ >  Droid | Shell ] -> [  >  Droid | > Shell  ]
+[ >  Player | InertMine ] -> [  >  Player | > InertMine  ]
+[Action Player|InertMine] -> [Action Player|ActiveMine]
+[> Droid|InertMine] -> [Droid|ActiveMine]
+[> Player | ActiveMine] -> [Player | boom ]
+[> Droid | ActiveMine] -> [Droid | boom ]
+[> shell | ActiveMine] -> [boom | boom ]
+
+[Action Player|Squawk] -> [Action Player|SquawkBang]
+[> Droid|Squawk] -> [Droid |SquawkBang]
+
+[SquawkBang][CrateMineN] -> [SquawkBang][ActiveMine]
+[SquawkBang][CrateGunN] -> [SquawkBang][GunN]
+[SquawkBang][CrateGunS] -> [SquawkBang][GunS]
+[SquawkBang][CrateN] -> [SquawkBang][Shell]
+[SquawkBang][CrateS] -> [SquawkBang][Shell]
+[SquawkBang][CrateE] -> [SquawkBang][Shell]
+[SquawkBang][CrateW] -> [SquawkBang][Shell]
+[SquawkBang] -> [] SFX1
+
+DOWN [ Action Player |CrateN] -> [Action Player | Shell]
+UP [Action Player | CrateS] -> [Action Player | Shell]
+LEFT [Action Player | CrateE] -> [Action Player | Shell]
+RIGHT [Action Player | CrateW] -> [Action Player | Shell]
+DOWN [Action Player | CrateGunN] -> [Action Player | GunN]
+UP [Action Player | CrateGunS] -> [Action Player | GunS]
+DOWN [Action Player | CrateMineN] -> [Action Player | ActiveMine]
+
+UP [Action Player | GunN| No Bang ] -> [Player | GunN | Bang ] SFX4
+LEFT [Action Player | GunW | No Bang] -> [Player | GunW | Bang ] SFX4
+DOWN [Action Player | GunS| No Bang ] -> [Player | GunS | Bang ] SFX4
+RIGHT [Action Player | GunE | No Bang] -> [Player | GunE | Bang ] SFX4
+
+UP [ > Droid | GunN| No Bang ] -> [Droid | GunN | Bang ] SFX4
+LEFT [ > Droid | GunW | No Bang] -> [Droid | GunW | Bang ] SFX4
+DOWN [> Droid | GunS| No Bang ] -> [Droid | GunS | Bang ] SFX4
+RIGHT [> Droid | GunE | No Bang] -> [Droid | GunE | Bang ] SFX4
+[bang|shell] -> [bang|bang ]
+[boom|no player] -> [boom|boom] SFX2
+
+
+==============
+WINCONDITIONS
+==============
+
+All Player on Target
+
+=======
+LEVELS
+=======
+
+
+
+MESSAGE Due to a clerical error, You are trapped in a bunker
+
+########
+#.....P#
+#......#
+#......#
+#......#
+#O.....#
+########
+
+MESSAGE A bunker with several levels, full of crates and munitions
+
+########
+#.....O#
+#..+...#
+#......#
+#..N...#
+#P.....#
+########
+
+MESSAGE Crates open from one side
+
+########
+#...+.P#
+#....+.#
+#..++..#
+#++..++#
+#.ON...#
+########
+
+MESSAGE But shells are volatile
+MESSAGE Try firing the gun
+
+#########
+#..+.+.O#
+#..N+...#
+#....S..#
+#...^...#
+#.P.....#
+#########
+
+MESSAGE Chain reaction
+
+#########
+#+.+O+.P#
+#+.++...#
+#.+.+.N.#
+#+......#
+#E+++.<.#
+#########
+
+MESSAGE Inert mines, active mines
+
+#########
+#+.+P+..#
+#.......#
+#.......#
+#SSSSM..#
+#.O.E...#
+#########
+
+Message Crates can have any munitions in them
+
+#########
+#.......#
+#.&+..+.#
+#.+O&.+.#
+#.+++%..#
+#.P.S...#
+#########
+
+
+MESSAGE There seems to be another way to open crates
+
+#########
+#.X.....#
+#.......#
+#..P....#
+#....NNN#
+#.>..SON#
+#########
+
+
+MESSAGE Hey, it's a friendly worker droid!
+
+#########
+#.D...PN#
+#..+...N#
+#A.+....#
+#.NN.O..#
+#..+....#
+#########
+
+
+MESSAGE Now this is where the main bunker levels begin.
+
+###########
+#O+N..+.W.#
+#SN&..+.NX#
+#.DN.+.+..#
+#%.NWP.NS+#
+#...+N....#
+###########
+
+
+MESSAGE This doesn't look safe
+
+###########
+#P..&&&&&&#
+#DX.N....&#
+#...&&&&&&#
+#.N.N...O.#
+#&&&&&&&&&#
+###########
+
+
+MESSAGE Carefully packed
+
+###########
+#PESW.WDW.#
+#NW..&N@.N#
+#.N%NWN.X.#
+#N...NNNNN#
+#N.NNNNNON#
+###########
+
+MESSAGE Symbiosis
+
+###########
+#P.NNN.DN.#
+#MM>.+++N.#
+#..N.NN+..#
+#++N++....#
+#++...<.O.#
+###########
+
+MESSAGE Inert Mine field
+
+###########
+#.P..M.M..#
+#.MMM.M.MM#
+#..M..MNM.#
+#MM.MM.MOS#
+#.M..MD...#
+###########
+
+MESSAGE Last level
+
+###########
+#..+..P.+.#
+#.N..@.N..#
+#+.&..E.&.#
+#++..S.SSS#
+#.X+&..NO.#
+###########
+
+MESSAGE Congratulations! Now you can return to fighting on the front line.
+
+USER PROMPT:
+Output the code for a complete PuzzleScript game. First, reason about your task and determine the best plan of action. Then, write your code. Return your code in full, inside a ```plaintext code block.

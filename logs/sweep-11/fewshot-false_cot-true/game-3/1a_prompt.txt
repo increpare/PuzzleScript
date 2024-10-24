@@ -1,0 +1,109 @@
+SYSTEM PROMPT:
+You are a game designer, familiar with the PuzzleScript game description language. 
+
+USER PROMPT:
+The following PuzzleScript game code:
+```plaintext
+title Sokoban Clone
+author Game Designer
+homepage www.example.com
+
+=====
+
+OBJECTS
+Background
+black
+
+Wall
+grey
+
+Pusher
+blue
+
+Crate
+brown
+
+Goal
+yellow
+
+CrateOnGoal
+green
+
+PusherOnGoal
+lightblue
+
+=====
+
+LEGEND
+. = Background
+# = Wall
+P = Pusher
+$ = Crate
+G = Goal
+* = CrateOnGoal
++ = PusherOnGoal
+
+=====
+
+SOUNDS
+# No specific sounds for now
+move PUSHER
+move CRATE
+win
+
+=====
+
+COLLISIONLAYERS
+Background
+Wall
+Pusher, PusherOnGoal
+Crate, CrateOnGoal
+Goal
+
+=====
+
+RULES
+[> Player | Crate] -> [> Player | > Crate]
+[Player | Goal] -> [PusherOnGoal | Goal]
+[Crate | Goal] -> [CrateOnGoal | Goal]
+[PusherOnGoal Crate] -> [Pusher CrateOnGoal]
+[PusherOnGoal | CrateOnGoal] -> [Player | Crate]
+[PusherOnGoal | Goal] -> [PusherOnGoal | Goal]
+[Pusher Goal] -> [PusherOnGoal Goal]
+
+=====
+
+WINCONDITIONS
+All CrateOnGoal
+
+=====
+
+LEVELS
+########
+#......#
+#..$.G.#
+#..P...#
+#......#
+########
+
+########
+#......#
+#..$...#
+#.P.G..#
+#.#####.
+#.G....#
+########
+
+```
+produced the following console output:
+=================================
+line 43 : Was expecting a sound event (like SFX3, or ENDLEVEL) or an object name, but didn't find either.
+line 44 : unexpected sound token "move".
+line 45 : unexpected sound token "move".
+line 46 : unexpected sound token "win".
+line 60 : Name "player", referred to in a rule, does not exist.
+line 61 : Name "player", referred to in a rule, does not exist.
+line 64 : Name "player", referred to in a rule, does not exist.
+too many errors, aborting compilation
+Errors detected during compilation; the game may not work correctly.
+Return a repaired version of the code that addresses these errors. First, reason about your task and determine the best plan of action. Then, write your code. Return your code in full, inside a ```plaintext code block.

@@ -1,0 +1,89 @@
+```plaintext
+title Color Changer
+author AI Assistant
+homepage www.puzzlescript.net
+
+========
+OBJECTS
+========
+
+Background
+lightgray
+
+Player
+blue
+..0..
+.000.
+..0..
+.....
+
+Goal
+red
+.....
+.....
+.....
+.....
+
+Target
+yellow
+.....
+.....
+..0..
+.....
+
+Wall
+darkgray
+00000
+00000
+00000
+00000
+00000
+
+=======
+LEGEND
+=======
+
+. = Background
+P = Player
+G = Goal
+T = Target
+# = Wall
+
+=======
+SOUNDS
+=======
+
+sfx1 29894906
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Player, Goal, Target, Wall
+
+======
+RULES
+======
+
+[ Player | Goal ] -> [ Player | Target ] sfx1
+
+==============
+WINCONDITIONS
+==============
+
+all T on G
+
+=======
+LEVELS
+=======
+
+#######
+#..G..#
+#..G..#
+#..G..#
+#..P..#
+#######
+``` 
+
+In this corrected version, I added a definition for the `Wall` object and included it in the legend as `#`. The sound token `ColorChange` was replaced with a generic `sfx1` with the corresponding sound id. This should address the compilation errors you experienced.

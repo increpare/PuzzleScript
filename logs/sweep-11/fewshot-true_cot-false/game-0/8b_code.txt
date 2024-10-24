@@ -1,0 +1,89 @@
+Here's the corrected PuzzleScript game code with a solvable level:
+
+```plaintext
+title Simple Puzzle
+author Your Name
+
+========
+OBJECTS
+========
+
+Background
+darkgreen green
+00000
+00000
+00000
+00000
+00000
+
+Wall
+brown darkbrown
+00000
+00000
+00000
+00000
+00000
+
+Player
+black orange white blue
+.000.
+.111.
+22222
+.333.
+.3.3.
+
+Goal
+yellow
+.....
+.000.
+.....
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Player
+G = Goal
+
+=======
+SOUNDS
+=======
+
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Wall
+Player, Goal
+
+======
+RULES
+======
+
+[ > Player | Goal ] -> [ > Player | Goal ]
+
+==============
+WINCONDITIONS
+==============
+
+All Player on Goal
+
+=======
+LEVELS
+=======
+
+#######
+#..G..#
+#.....#
+#..P..#
+#.....#
+#..G..#
+#######
+
+```
+
+The Player now needs to reach all Goal tiles to win the level, and with the adjustment in layout, the level should be solvable.

@@ -1,0 +1,1941 @@
+SYSTEM PROMPT:
+You are a game designer, familiar with the PuzzleScript game description language. Here are some example games, for inspiration (do not reproduce these games exactly):
+
+title Broken Rigid Body example
+author Anonymous
+homepage www.puzzlescript.net
+
+verbose_logging
+
+(
+
+Example for
+https://www.puzzlescript.net/Documentation/rigidbodies.html#many_many
+
+)
+
+========
+OBJECTS
+========
+
+Background 
+white  
+
+Target 
+DarkBlue    
+
+Wall 
+DarkGrey
+
+Player
+Blue
+..0..
+..0.0
+00000
+.000.
+.0.0.
+
+Shadow
+Black
+..0..
+0.0..
+00000
+.000.
+.0.0.
+
+( three multi-cells blocks )
+Crate 
+orange
+
+Chest
+green
+
+Box
+red
+
+( 1-cell small block )
+Small
+darkred
+.....
+.000.
+.000.
+.000.
+.....
+
+( sticky, multicellular block when in contact )
+Glue
+pink
+.000.
+00000
+00000
+00000
+.000.
+
+( a flag to know what is allowed move )
+Wanna_Move
+#ff00ff
+.....
+.....
+..0..
+.....
+.....
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Player
+S = Shadow
+* = Crate
++ = Box
+% = Chest
+o = Small
+g = Glue
+
+( blocks that can be moved by the player )
+Movable = Crate or Box or Chest or Small or Glue
+
+( all things that can move and push blocks )
+Mover = Player or Shadow or Movable 
+
+( things that can stop a movement if they are stationary )
+Obstacle = Wall or Mover
+
+=======
+SOUNDS
+=======
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Target
+Obstacle
+Wanna_Move
+
+======
+RULES     
+======     
+
+[ > player ] [ stationary shadow ] -> [ > player ] [ < shadow ]
+
+( 1. Propagate movements forward )
+[ > Mover | stationary Movable ] -> [ > Mover | > Movable  ]
++ [ > Box    ] [ stationary Box   ] -> [ > Box    ] [ > Box    ]
++ [ > Crate  ] [ stationary Crate ] -> [ > Crate  ] [ > Crate  ]
++ [ > Chest  ] [ stationary Chest ] -> [ > Chest  ] [ > Chest  ]
++ [ moving Glue | stationary Glue ] -> [ moving Glue | moving Glue ]
+
+( 2. Propagate obstructions backwards )
+[ > Mover  | stationary Obstacle ] -> [ stationary Mover | Obstacle ]
++ [ > Crate  ] [ stationary Crate ] -> [ stationary Crate ] [ Crate ]
++ [ > Box    ] [ stationary Box   ] -> [ stationary Box   ] [ Box   ]
++ [ > Chest  ] [ stationary Chest ] -> [ stationary Chest ] [ Chest ]
++ [ moving Glue | stationary Glue ] -> [ stationary Glue | Glue ]
+
+( 3. remove all movement, keep a flag )
+[ > Movable ] -> [ Movable wanna_move ]
+
+( 4. propagate movement only on wanna_move things )
+(    ie redo step 1 but with WANNA_MOVE added to the first line below )
+[ > Mover  | stationary Movable WANNA_MOVE ] -> [ > Mover | > Movable ]
++ [ > Box   ] [ stationary Box   ] -> [ > Box   ] [ > Box   ]
++ [ > Crate ] [ stationary Crate ] -> [ > Crate ] [ > Crate ]
++ [ > Chest ] [ stationary Chest ] -> [ > Chest ] [ > Chest ]
++ [ moving Glue | stationary Glue ] -> [ moving Glue | moving Glue ]
+
+( 5. cleanup, remove flag )
+[ wanna_move ] -> [ ]
+
+==============
+WINCONDITIONS
+==============
+
+=======     
+LEVELS
+=======
+
+###################
+#.................#
+#............s....#
+#...*..g.g.#......#
+#...*......#...g###
+#...*...o.%%%.....#
+#...+++.o.%.......#
+#....+....%%%.....#
+#....+.........g..#
+#....p.gg.........#
+###################
+
+#########
+#.......#
+#.p.+...#
+#...+...#
+#...+.s.#
+#.......#
+#########
+
+
+title Smother
+author Team Borse
+
+background_color #9CBD0F
+text_color #0F380F
+
+run_rules_on_level_start
+
+========
+OBJECTS
+========
+
+Background
+#9CBD0F
+
+LaserGV
+#9CBD0F #8CAD0F #306230 #0F380F
+22222
+.222.
+..3..
+..3..
+.....
+
+LaserGH
+#9CBD0F #8CAD0F #306230 #0F380F
+2....
+22...
+2233.
+22...
+2....
+
+LaserV
+#9CBD0F #8CAD0F #306230 #0F380F
+.....
+..3..
+..3..
+..3..
+.....
+
+LaserH
+#9CBD0F #8CAD0F #306230 #0F380F
+.....
+.....
+.333.
+.....
+.....
+
+LaserB
+#9CBD0F #8CAD0F #306230 #0F380F
+.....
+..3..
+.333.
+..3..
+.....
+
+Exit
+#9CBD0F #8CAD0F #306230 #0F380F
+2...2
+2...2
+2...2
+2...2
+2.2.2
+
+Wall
+#9CBD0F #8CAD0F #306230 #0F380F
+33333
+31223
+32123
+32223
+33333
+
+Heart
+#9CBD0F #8CAD0F #306230 #0F380F
+.2.2.
+22222
+.222.
+..2..
+.....
+
+
+PlayerFull
+#9CBD0F #8CAD0F #306230 #0F380F
+.222.
+.323.
+.222.
+.222.
+.2.2.
+
+Protector
+#9CBD0F #8CAD0F #306230 #0F380F
+.333.
+.232.
+.333.
+.333.
+.3.3.
+
+ProtectorSolo
+#9CBD0F #8CAD0F #306230 #0F380F
+.333.
+.232.
+.333.
+.333.
+.3.3.
+
+victimSolo
+#9CBD0F #8CAD0F #306230 #0F380F
+.222.
+.323.
+.222.
+.222.
+.2.2.
+
+
+PlayerDead
+#9CBD0F #8CAD0F #306230 #0F380F
+.222.
+22222
+2.2.2
+.222.
+.222.
+
+pushBlock
+#9CBD0F #8CAD0F #306230 #0F380F
+33333
+31113
+31113
+31113
+33333
+
+=======
+LEGEND
+=======
+
+Player = PlayerFull or Protector or ProtectorSolo or victimSolo
+PlayerWin = PlayerFull or PlayerDead or Protector or victimSolo
+Laser = LaserV or LaserH or LaserB
+LaserBlock = Wall or Player or PlayerDead or Exit
+. = Background
+# = Wall
+g = LaserGV
+h = LaserGH
+P = PlayerFull
+n = Protector
+q = ProtectorSolo
+k = victimSolo
+O = Exit
+l = Heart
+b = pushBlock
+
+=======
+SOUNDS
+=======
+
+startgame 83279102 (sound at start of game)
+CloseMessage 123434 (close message noise)
+ShowMessage 123434 (show message noise)
+sfx0 8545502 (death)
+sfx1 26 (heart)
+
+
+================
+COLLISIONLAYERS
+================
+Background
+Laser
+Exit
+ProtectorSolo, Heart, Wall
+Player, Wall, PlayerDead, LaserGV, LaserGH, Protector, victimSolo, pushBlock
+
+======
+RULES
+======
+
+(clear lasers)
+late [Laser] -> []
+
+(zip the lasers out of the guns and through the levels)
+late down [LaserGV | no Laser] -> [LaserGV | LaserV]
+late right [LaserGH | no Laser] -> [LaserGH | LaserH]
+
+late down [LaserV no LaserBlock | ] -> [LaserV | LaserV]
+late right [LaserH no LaserBlock | ] -> [LaserH | LaserH]
+
+(generate overlapping lasers)
+late down [LaserV no LaserBlock | LaserH] -> [LaserV | LaserB]
+late down [LaserGV no LaserBlock | LaserH] -> [LaserGV | LaserB]
+late right [LaserH no LaserBlock | LaserV] -> [LaserH | LaserB]
+late right [LaserGH no LaserBlock | LaserV] -> [LaserGH | LaserB]
+
+(deal with overlapping lasers)
+late right [LaserB no LaserBlock | no Laser] -> [LaserB | LaserH]
+late right [LaserH no LaserBlock | no Laser] -> [LaserH | LaserH]
+late down [LaserB no LaserBlock | no Laser] -> [LaserB | LaserV]
+late down [LaserV no LaserBlock | no Laser] -> [LaserV | LaserV]
+
+(solo Victim can push a block)
+ [ > victimSolo | pushBlock ] -> [ > victimSolo| > pushBlock]
+
+(pushing block to switch breaks laser)
+[pushBlock  laser] -> [ wall]
+
+
+(if a player is over a laser, then cause them harm)
+late [ PlayerFull Laser ] -> [PlayerDead Laser] sfx0
+
+(victim solo dies in the laser)
+late [ victimSolo Laser ] -> [PlayerDead Laser] sfx0
+
+(protector levels)
+[ > ProtectorSolo | ... | Heart ] -> [ | ... | ProtectorSolo ] sfx1
+[ > ProtectorSolo ] -> [ ProtectorSolo]
+
+
+==============
+WINCONDITIONS
+==============
+All PlayerWin on Exit
+No Heart
+
+=======
+LEVELS
+=======
+
+message then...
+
+message I PROTECT YOU
+
+###g###g###
+#.........#
+#n.......o#
+#........o#
+#p...#....#
+#.........#
+###########
+
+message YOU SMOTHER ME
+
+###########
+#n........#
+#......#..#
+h..#h..#..#
+#p.....#..#
+#......#oo#
+###########
+
+message I DEFEND YOU
+
+#####g#####
+#.P.....n.#
+#.........#
+#..#...#..#
+#.........#
+#......oo.#
+###########
+
+message YOU SPEAK FOR ME
+
+#####g#####
+#n.......o#
+#....#h...#
+h....g....#
+#.....#..o#
+#p......#.#
+###########
+
+message WE ARE CARE FREE
+
+#P####g##g###
+#.#..#.#....#
+#..........o#
+h...........#
+#.#h..#..#.o#
+#.....#....n#
+#############
+
+message I CARRY OUR BURDENS
+
+message before...
+
+message I AM ALWAYS SEARCHING
+
+###########
+#l...l....#
+#....l....#
+#.........#
+#q..l.....#
+#l..l.....#
+###########
+
+
+message I NEVER SEE A FUTURE
+
+###########
+#.........#
+#..l..q.l.#
+#.l....l..#
+#.ll...l.l#
+#l.l...l..#
+###########
+
+message I NEVER FEEL COMFORTABLE
+
+###########
+#....l....#
+#lq..l..l.#
+#.l..l....#
+#.l.....l.#
+#....l....#
+###########
+
+
+message NO ONE GETS ME
+
+###########l##l#####
+#l.l...............#
+#.....ll...........#
+#l..l..............#
+#..q..l.......l....#
+#..ll..l......l....#
+###########........#
+###########l....l..#
+###########........#
+###########.l.l.l..#
+####################
+
+message I NEED CONTACT
+
+###################
+#.l...l############
+#......############
+#l.l..l##########l#
+#l.......l.....l#.#
+#....l............#
+#ll..q.........l.l#
+#..l.....l.......l#
+#.l..l............#
+###################
+
+message I NEED VALIDATION
+
+message before...
+
+message I AM INDEPENDENT
+
+###########
+#.k.g.....#
+#.......b.#
+#.b...###.#
+#.#.......#
+#...h.....#
+#...#...O.#
+###########
+
+
+message I AM STRONG
+
+
+###g##g##
+#.......#
+#kb.b...#
+#.......#
+h.....#.#
+#..#b#h.#
+#....#..#
+h....#o.#
+#.......#
+#########
+
+message I NEED NO ONE
+
+###g#######
+#.o.......#
+#...#.##..#
+#.#..bkb.##
+h...#.#.b.#
+#.......#.#
+#.....#...#
+###########
+
+message I ENJOY MY COMPANY
+
+#####g#####g#####g######
+#.k.....b...........o..#
+#..b....#.#.......##...#
+#.........b...#b..#g...#
+h..........#......#....#
+##.###.#######.####.#.##
+h..............#h......#
+####.#####.###.##.#.#.##
+###.b.#....#........#..#
+###.#....#b#.........b.#
+##.........#.......#...#
+########################
+
+message I AM FEARLESS
+
+##g##g#g####
+#o..#.#....#
+#...#.#.#..#
+#..........#
+#.....#..b.#
+#........b.#
+#..#.##.#b.#
+#..#......k#
+############
+
+message I AM ALONE
+
+
+message now...
+
+###########
+#...o.o...#
+#.........#
+#.........#
+#.........#
+#...n.p...#
+###########
+
+message WE DON'T SEE THINGS AS THEY ARE, WE SEE THEM AS WE ARE
+message Credits
+message Concept/Design/Programming/Graphics - Steven McStravog
+message Design/Programming/Graphics - Darragh McLernon
+message Porting/Design/Programming - Rachel Gawley
+message Artwork - Ricky Woodside
+
+
+title Sticky Candy Puzzle Saga
+author Alan Hazelden
+homepage www.draknek.org
+
+run_rules_on_level_start
+
+noaction
+
+========
+OBJECTS
+========
+
+Background
+Black DarkGrey
+00000
+00000
+00000
+00000
+00000
+
+
+Wall
+Pink #febfc6
+10001
+00011
+00110
+01100
+11000
+
+Player
+Pink #febfc6
+.000.
+.111.
+00100
+.000.
+.0.0.
+
+Yellow
+Yellow White Orange
+.000.
+01100
+01000
+00002
+.022.
+
+Red
+Red Orange DarkRed
+.000.
+01100
+01000
+00002
+.022.
+
+Blue
+LightBlue White #3468f7
+.000.
+01100
+01000
+00002
+.022.
+
+YellowTarget
+Brown Yellow
+00000
+01110
+01010
+01110
+00000
+
+RedTarget
+DarkBrown Red
+00000
+01110
+01010
+01110
+00000
+
+BlueTarget
+Purple LightBlue
+00000
+01110
+01010
+01110
+00000
+
+Marker
+White
+.....
+.....
+.....
+.....
+.....
+
+WallL
+White
+0....
+0....
+0....
+0....
+0....
+
+WallR
+White
+....0
+....0
+....0
+....0
+....0
+
+WallU
+White
+00000
+.....
+.....
+.....
+.....
+
+WallD
+White
+.....
+.....
+.....
+.....
+00000
+
+WallLR
+White
+0...0
+0...0
+0...0
+0...0
+0...0
+
+WallUD
+White
+00000
+.....
+.....
+.....
+00000
+
+JoinL
+#febfc6
+0....
+.....
+.....
+.....
+0....
+
+JoinR
+#febfc6
+....0
+.....
+.....
+.....
+....0
+
+JoinU
+#febfc6
+0...0
+.....
+.....
+.....
+.....
+
+JoinD
+#febfc6
+.....
+.....
+.....
+.....
+0...0
+
+JoinBoth
+#febfc6
+0...0
+.....
+.....
+.....
+0...0
+
+Zero
+Purple
+.000.
+.0.0.
+.0.0.
+.0.0.
+.000.
+
+One
+Purple
+.00..
+..0..
+..0..
+..0..
+.000.
+
+Two
+Purple
+.000.
+...0.
+.000.
+.0...
+.000.
+
+Three
+Purple
+.000.
+...0.
+.000.
+...0.
+.000.
+
+Four
+Purple
+.0.0.
+.0.0.
+.000.
+...0.
+...0.
+
+Five
+Purple
+.000.
+.0...
+.000.
+...0.
+.000.
+
+Six
+Purple
+.000.
+.0...
+.000.
+.0.0.
+.000.
+
+Seven
+Purple
+.000.
+...0.
+...0.
+...0.
+...0.
+
+Eight
+Purple
+.000.
+.0.0.
+.000.
+.0.0.
+.000.
+
+Nine
+Purple
+.000.
+.0.0.
+.000.
+...0.
+.000.
+
+
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Player
+A = Red
+B = Yellow
+C = Blue
+X = RedTarget
+Y = YellowTarget
+Z = BlueTarget
+
+WallCoverLR = WallL or WallR or WallLR
+WallCoverUD = WallU or WallD or WallUD
+
+JoinCoverLR = JoinL or JoinR or JoinBoth
+JoinCoverUD = JoinU or JoinD
+
+Join = JoinCoverLR or JoinCoverUD
+
+CoverLR = WallCoverLR or JoinCoverLR
+CoverUD = WallCoverUD or JoinCoverUD
+
+0 = Zero and Wall
+1 = One and Wall
+2 = Two and Wall
+3 = Three and Wall
+4 = Four and Wall
+5 = Five and Wall
+6 = Six and Wall
+7 = Seven and Wall
+8 = Eight and Wall
+9 = Nine and Wall
+
+Number = Zero or One or Two or Three or Four or Five or Six or Seven or Eight or Nine
+
+Candy = Yellow or Red or Blue
+Target = YellowTarget or RedTarget or BlueTarget
+
+
+=======
+SOUNDS
+=======
+
+sfx1 6045907 (candies sticking)
+sfx2 27189102 (can't move)
+sfx3 27189102 (can't push)
+Candy MOVE 48059907
+Player MOVE 11429307
+EndLevel 85763108
+Restart 65287309
+Undo 84906107
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Marker
+Target
+Player, Wall, Candy
+CoverUD
+CoverLR, Number
+
+======
+RULES
+======
+
+[ >  Player | Candy ] -> [  >  Player | > Candy  ]
+[ moving Candy | stationary Candy ] -> [ moving Candy | moving Candy ]
+
+(Prevent movement in a way that triggers the "can't move" sound)
+
+[ > Candy | Wall ] [ > Player | > Candy ] -> [ Candy | Wall ] [ > Player | Candy ]
+[ > Player | stationary Candy ] [ moving Candy ] -> [ > Player | Candy ] [ Candy ]
+
+(Trigger the "candies sticking" sound)
+
+[ > Candy | no Candy ] -> [ > Candy | Marker ]
+
+[ Marker | stationary Candy ] -> sfx1
+
+[ Marker ] -> []
+
+(Can't move sounds)
+
+[ > Player | Wall ] -> sfx2
+[ > Player | stationary Candy ] -> sfx3
+
+(Wall borders)
+
+left [ Wall no WallCoverLR | no Wall ] -> [ Wall WallL | ]
+right [ Wall no WallCoverLR | no Wall ] -> [ Wall WallR | ]
+right [ Wall WallL | no Wall ] -> [ Wall WallLR | ]
+
+up [ Wall no WallCoverUD | no Wall ] -> [ Wall WallU | ]
+down [ Wall no WallCoverUD | no Wall ] -> [ Wall WallD | ]
+down [ Wall WallU | no Wall ] -> [ Wall WallUD | ]
+
+(Candy joins)
+
+late [ Join ] -> []
+
+late left [ Candy | Candy ] -> [ Candy JoinL | Candy ]
+late right [ Candy no JoinL | Candy ] -> [ Candy JoinR | Candy ]
+late right [ Candy JoinL | Candy ] -> [ Candy JoinBoth | Candy ]
+
+late up [ Candy no JoinBoth | Candy ] -> [ Candy JoinU | Candy ]
+late down [ Candy no JoinU no JoinBoth | Candy ] -> [ Candy JoinD | Candy ]
+late down [ Candy JoinU | Candy ] -> [ Candy JoinBoth | Candy ]
+
+==============
+WINCONDITIONS
+==============
+
+All Yellow on YellowTarget
+All Red on RedTarget
+All Blue on BlueTarget
+
+=======
+LEVELS
+=======
+
+message Transport the sticky candies to the collection areas.
+
+#######
+##...##
+#..b.y#
+#pb#.y#
+#..b.y#
+##...##
+1######
+
+#########
+##.....##
+#..a.#.x#
+#pa....x#
+#..a.#.x#
+##.....##
+2########
+
+message Don't let different candies stick together!
+
+########
+#p...yy#
+#.b.ayy#
+#..b.a.#
+#.a.b..#
+#xxa.b.#
+#xx....#
+3#######
+
+###########
+#....p....#
+#..b.c.b..#
+#...c.c...#
+###.zzz.###
+####b.b####
+####yyy####
+#####y#####
+4##########
+
+#########
+#.a...###
+#.a...###
+#..c.axx#
+#zz.p.xx#
+#zzc.a..#
+###...c.#
+###...c.#
+5########
+
+###########
+##.......##
+#y.#.p.#.z#
+#yc.b.c.bz#
+##.......##
+###..#..###
+6##########
+
+#########
+#####..z#
+#...b.zz#
+#.b.bb.z#
+#p.###..#
+#y.cc.c.#
+#yy.c...#
+#y..#####
+7########
+
+#########
+##......#
+#x.c.#by#
+#.b.p..y#
+#z.a.#by#
+##......#
+8########
+
+#########
+#yy.c.x.#
+#y.b..xx#
+#.b.....#
+#...#..b#
+#.a...c.#
+#.aa.c.z#
+#p....zz#
+9########
+
+#########
+#yy###zz#
+#...x...#
+#.##a##.#
+#..b.b..#
+#..#.#..#
+#..c.c..#
+##..p..##
+10#######
+
+###########
+#####y#####
+####yyy####
+###.b.b.###
+###a...c###
+#z...p...x#
+#za.b.b.cx#
+###.....###
+11#########
+
+###########
+####...A###
+##......###
+#..#A#..xx#
+#pA...A.xx#
+#..#A#..xx#
+##......###
+####...A###
+12#########
+
+#########
+#..xxx..#
+#..#a#..#
+#..b.b..#
+##.#p#.##
+##.aya.##
+##..y..##
+13#######
+
+###########
+##..zzz..##
+#..a.p.b..#
+#yy#ccc#xx#
+#..b...a..#
+##...#...##
+14#########
+
+#############
+#...#####...#
+#....c.b....#
+#yy#..p..#zz#
+#.y.cc.bb.z.#
+####.....####
+15###########
+
+#########
+#...#...#
+#.a.a.a.#
+#...x...#
+#z#.x.#y#
+#zc.x.by#
+#.c.p.b.#
+###...###
+16#######
+
+###########
+##......###
+##.#..c...#
+#...c#..zz#
+#pc..#c#zz#
+#...c#..zz#
+##.#..c...#
+##......###
+17#########
+
+###############
+#...###z###...#
+#....bzzzb....#
+#...c.c.c.c...#
+#####.yyy.#####
+#####.#b#.#####
+#####.....#####
+######.p.######
+18#############
+
+#############
+###x#...#z###
+#.xxa.c.azz.#
+#..c.....c..#
+###..#a#..###
+####..p..####
+19###########
+
+###########
+###.....###
+##c.a.a.b##
+#.cyy.zzb.#
+#..yy.zz..#
+#a..c.b..a#
+#..xc.bx..#
+#..xxxxx..#
+##a..a..a##
+###...p.###
+20#########
+
+message Thanks for playing! :)
+
+
+
+
+title Notsnake
+author Terry Cavanagh
+homepage www.distractionware.com
+
+color_palette c64
+require_player_movement
+
+========
+OBJECTS
+========
+
+Background
+blue
+
+Player
+lightblue
+
+Trail
+purple
+
+=======
+LEGEND
+=======
+
+. = Background
+P = Player
+O = Trail
+
+=======
+SOUNDS
+=======
+
+startgame 50287705
+sfx0 660507
+sfx1 41058704
+endgame 74955903
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Trail
+Player
+
+======
+RULES
+======
+
+[ > Player | No Trail ] -> [ Trail | Player ] sfx0
+[ > Player | Trail ] -> [ | Player ] sfx1
+
+==============
+WINCONDITIONS
+==============
+
+no Trail
+
+=======
+LEVELS
+=======
+
+OOOOOOOO
+OOOOOOOO
+O..POO.O
+OOOOOOOO
+OOOOOOOO
+
+
+title A single rigid body
+author increpare
+homepage www.puzzlescript.net
+
+========
+OBJECTS
+========
+
+Background
+brown
+
+Target
+YELLOW
+
+Player
+PINK
+
+BigBlock
+darkblue
+
+Wall
+darkbrown
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Player
+* = BigBlock
+@ = BigBlock and Target
+O = Target
+
+=========
+SOUNDS
+=========
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Target
+Player, Wall, BigBlock
+
+======
+RULES
+======
+
+rigid [ >  Player | BigBlock ] -> [  >  Player | > BigBlock  ]
++ rigid [ moving BigBlock | BigBlock ] -> [ moving BigBlock | moving BigBlock ]
+
+==============
+WINCONDITIONS
+==============
+
+=======
+LEVELS
+=======
+
+...............
+..........#....
+...............
+..#............
+.....***.......
+.....*.....#...
+..P..**#.......
+.....*.........
+...............
+..#............
+.........#.....
+...............
+...............
+
+
+
+title cute train
+author Mark Wonnacott
+homepage http://twitter.com/ragzouken
+
+flickscreen 16x10
+color_palette pastel
+youtube pTgEXwzk7XU
+
+noundo
+norestart
+
+========
+OBJECTS
+========
+
+Background
+lightgreen green
+01000
+00110
+10010
+10100
+01001
+
+Water
+blue white lightblue
+20010
+02002
+12020
+00220
+02002
+
+Water2
+blue white lightblue
+02000
+20210
+00202
+01022
+20200
+
+Gerald
+blue black
+.000.
+01010
+10001
+01110
+.000.
+
+Mountain
+darkbrown darkbrown
+..0..
+.10..
+.000.
+0000.
+11001
+
+Forest
+darkgreen brown
+.000.
+00000
+00000
+00100
+.111.
+
+Beach
+yellow white
+00010
+01000
+00001
+00100
+10000
+
+Player
+yellow black
+.000.
+01010
+10001
+01110
+.000.
+
+GhostVTrack
+yellow
+GhostHTrack
+yellow
+GhostURTrack
+yellow
+GhostULTrack
+yellow
+GhostDLTrack
+yellow
+GhostDRTrack
+yellow
+
+VTrack
+grey darkbrown
+0...0
+0...0
+01110
+0...0
+0...0
+
+HTrack
+grey darkbrown
+00000
+..1..
+..1..
+..1..
+00000
+
+Structs
+black darkbrown
+11111
+10101
+11111
+10101
+11111
+
+URTrack
+grey darkbrown
+...00
+..0..
+.01..
+0..1.
+0...1
+
+ULTrack
+grey darkbrown
+00...
+..0..
+..10.
+.1..0
+1...0
+
+DLTrack
+grey darkbrown
+1...0
+.1..0
+..10.
+..0..
+00...
+
+DRTrack
+grey darkbrown
+0...1
+0..1.
+.01..
+..0..
+...00
+
+UTrain
+red black darkred
+.000.
+01110
+00000
+00100
+00000
+
+RTrain
+red black darkred
+0000.
+00010
+01010
+00010
+0000.
+
+LTrain
+red black darkred
+.0000
+01000
+01010
+01000
+.0000
+
+DTrain
+red black darkred
+00000
+00100
+00000
+01110
+.000.
+
+Cart
+red black darkred
+22222
+21112
+21112
+21112
+22222
+
+Smoke1
+white
+..0..
+.0.0.
+0.0.0
+.0.0.
+..0..
+
+Smoke2
+white
+.....
+.0.0.
+..0..
+.0.0.
+.....
+
+Smoke3
+white
+.....
+..0..
+.0.0.
+..0..
+.....
+
+Switch
+red black
+...0.
+..1..
+.1...
+.111.
+.....
+
+=======
+LEGEND
+=======
+
+. = Background
+^ = Mountain
+% = Forest
+~ = Water
+, = Beach
+
+| = VTrack
+- = HTrack
+r = URTrack
+¬ = ULTrack
+l = DRTrack
+j = DLTrack
+X = VTrack and Structs
+Z = HTrack and Structs
+Q = ULTrack and Structs
+
+P = Player
+
+T = VTrack and UTrain
+C = VTrack and Cart
+
+[ = HTrack and RTrain
+] = HTrack and Cart
+
+/ = Switch
+
+1 = GhostHTrack and URTrack
+! = HTrack and GhostURTrack
+2 = HTrack and GhostDRTrack
+3 = HTrack and GhostULTrack
+4 = GhostHTrack and DLTrack
+5 = GhostVTrack and URTrack
+6 = GhostVTrack and DRTrack
+7 = GhostVTrack and ULTrack
+8 = GhostVTrack and DLTrack
+
+_ = Beach and HTrack
+
+WaterR = Water or Water2
+
+Ghost = GhostHTrack or GhostVTrack or GhostULTrack or GhostURTrack or GhostDLTrack or GhostDRTrack
+Track = HTrack or VTrack or ULTrack or URTrack or DLTrack or DRTrack
+
+Train = UTrain or DTrain or LTrain or RTrain
+Vehicle = Train or Cart
+Mover = Vehicle or Player
+
+G = Gerald and Structs
+
+=======
+SOUNDS
+=======
+
+Train move 91301709
+SFX1 53409305
+SFX2 38557307
+SFX3 99431502
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Beach GhostVTrack GhostHTrack GhostURTrack GhostULTrack GhostDLTrack GhostDRTrack
+Structs
+VTrack HTrack URTrack ULTrack DLTrack DRTrack Switch
+Water Water2 Mountain Forest Player UTrain RTrain LTrain DTrain Cart Gerald
+Smoke1 Smoke2 Smoke3
+
+======
+RULES
+======
+
+(animate water)
+[        WaterR ] -> [ action WaterR ]
+[ action WaterR ] -> [ random WaterR ]
+
+[ action Player no Structs | Cart ] [ Train ] -> [ Player | Cart ] [ action Train ]
+
+(move the train if we're on the impassable structs)
+[ Structs Mover ] [ Train ] -> [ Structs Mover ] [ action Train ]
+
+[ action Train ] -> [ action Train Smoke1 ]
+
+[ action UTrain ] -> [    up UTrain ]
+[ action DTrain ] -> [  down DTrain ]
+[ action RTrain ] -> [ right RTrain ]
+[ action LTrain ] -> [  left LTrain ]
+
+late [ Mover Structs ] -> [ Mover Structs ] again (repeat if the train is still on structs)
+
+(cart follows train, player follows cart)
+[ Cart   | moving Train ] -> [ > Cart   | moving Train ]
+[ Player | moving Cart  ] -> [ > Player | moving Cart  ]
+
+[ > Player | Structs no Gerald no Cart ] -> [ Player | Structs ] message It's dangerous to walk along railway bridges!
+
+(endgame message)
+[ >      Player | Gerald ] -> [ Player | Gerald ] message you made it! thanks for playing.
+[ action Player | Gerald ] -> [ Player | Gerald ] message you made it! thanks for playing.
+
+(train turns when entering corners)
+up    [ > UTrain | URTrack ] -> [ > RTrain | URTrack ]
+up    [ > UTrain | ULTrack ] -> [ > LTrain | ULTrack ]
+
+right [ > RTrain | ULTrack ] -> [ > DTrain | ULTrack ]
+right [ > RTrain | DLTrack ] -> [ > UTrain | DLTrack ]
+
+down  [ > DTrain | DRTrack ] -> [ > RTrain | DRTrack ]
+down  [ > DTrain | DLTrack ] -> [ > LTrain | DLTrack ]
+
+left  [ > LTrain | URTrack ] -> [ > DTrain | URTrack ]
+left  [ > LTrain | DRTrack ] -> [ > UTrain | DRTrack ]
+
+(animate smoke)
+[ Smoke3 ] -> [ ]
+[ Smoke2 ] -> [ Smoke3 ]
+[ Smoke1 ] -> [ Smoke2 ]
+
+[ action Player Switch ] -> [ Player action Switch ]
+
+(switch all uncovered tracks at once)
+[ action Switch ] [ Ghost Vehicle ] -> [ action Switch ] [ Ghost Vehicle ] SFX3 (play blocking sound if switch tracks are covered while switching)
+[ action Switch ] [ Ghost no Vehicle ] -> [ action Switch ] [ action Ghost ] SFX2
+
+[ action GhostHTrack URTrack no Vehicle ] -> [ HTrack GhostURTrack ]
+[ HTrack action GhostURTrack no Vehicle ] -> [ GhostHTrack URTrack ]
+[ action GhostHTrack DRTrack no Vehicle ] -> [ HTrack GhostDRTrack ]
+[ HTrack action GhostDRTrack no Vehicle ] -> [ GhostHTrack DRTrack ]
+[ action GhostHTrack ULTrack no Vehicle ] -> [ HTrack GhostULTrack ]
+[ HTrack action GhostULTrack no Vehicle ] -> [ GhostHTrack ULTrack ]
+[ action GhostHTrack DLTrack no Vehicle ] -> [ HTrack GhostDLTrack ]
+[ HTrack action GhostDLTrack no Vehicle ] -> [ GhostHTrack DLTrack ]
+
+[ action GhostVTrack URTrack no Vehicle ] -> [ VTrack GhostURTrack ]
+[ VTrack action GhostURTrack no Vehicle ] -> [ GhostVTrack URTrack ]
+[ action GhostVTrack DRTrack no Vehicle ] -> [ VTrack GhostDRTrack ]
+[ VTrack action GhostDRTrack no Vehicle ] -> [ GhostVTrack DRTrack ]
+[ action GhostVTrack ULTrack no Vehicle ] -> [ VTrack GhostULTrack ]
+[ VTrack action GhostULTrack no Vehicle ] -> [ GhostVTrack ULTrack ]
+[ action GhostVTrack DLTrack no Vehicle ] -> [ VTrack GhostDLTrack ]
+[ VTrack action GhostDLTrack no Vehicle ] -> [ GhostVTrack DLTrack ]
+
+==============
+WINCONDITIONS
+==============
+
+=======
+LEVELS
+=======
+
+(feel free to try making more puzzles!
+
+editing tip: copy out a few rows of screens to edit in isolation
+
+* use bridges (structs) to force the train over junctions before there's a chance to switch them
+* use bridges to make switches unreachable until junctions have been crossed
+* use the train itself and narrow passages to make switches unreachable until junctions have been crossed)
+
+message welcome to the breezy isles!
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~,,,,~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~,,,,,,,~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~,,..,,,,,~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~,,,p.,,,,,~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~,,....,,,,,~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~,,,.....,,,,~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~,,,......,,,~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~,,.......,,,,,,~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~,,,........,,,,,,,~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~,,,..........,,,,,,,,~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~,,...............,,,,,,~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~,~~,...%.........%....,,,,~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~,,,,,~..%.................,,,,~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~,,,,,,,,..~~%%%%%.r-------¬.....,,,,~~~~~~~~~~~~~~~~~~~~
+,,,,,,,,,,,,,....%%~%%%%%%t.......l-¬.....,,,~~~~~~~~~~~~~~~~~~~
+,,,,,,..........%%%~~%%%%%c%%.......l-¬....,,~~~~~~~~~~~~~~~~~~~
+........%%%..%%%%%%%~%%%%%|%%%%%....|.l--¬..,,~~~~~~~~~~~~~~~~~~
+.%%%%.%%%%%%%%%%%%%%~%%%%%|%%%%%%%..|...%l¬.,,~~~~~~~~~~~~~~~~~~
+%%%%%%%%%%%%%%%%%%%%~%%%%%|%%%%%%%%.l¬..%%|.,,~~~~~~~~~~~~~~~~~~
+%%%%%%%%%%%%%%%%%%%%~%%%%%|%%%%%%%%..|.%%%|.,,~~~~~~~~~~~~~~~~~~
+%%%%r---------------z-¬%%%|%%%%%%....|%%%%|.,,~~~~~~~~~~~~~~~~~~
+%%.rj........%%%%%%%~%l¬%.|..........|%%%rj,,,~~~~~~~~~~~~~~~~~~
+%%rj.~~~~G~~~~%%%%%%~^%l--¬..........l---j.,,,~~~~~~~~~~~~~~~~~~
+%.|.~~~~~x~~~~~%%%%^~^....|.....^^^........,,~~~~~~~~~~~~~~~~~~~
+%.|.~~~~~~~~~~~%%^^^~^....l¬...^^^^^^......,,~~~~~~~~~~~~~~~~~~~
+%.|.~~~~~~~~~~%%%^^^~^^^..^l¬^^^^^^^^^^^^^.,^^~~~~~~~~~~~~~~~~~~
+%%l¬.~~~~~~~%%%^^^^^~^^^^^^^l¬^^^^^^^^^^^^^^^^~~~~~~~~~~~~~~~~~~
+%%.|..~~~~%%%%^^^^^~~^^^^^^^^x~^^^^^^^^^^^^^^^^~~~~~~~~~~~~~~~~~
+%%%|.%%%%%%%%^^^^^^~^^^^^^^^~x~^^^^^^^^^^^^^^^^~~~~~~~~~~~~~~~~~
+%%%x%%%%%%%%%^^^^^~~^^^^^^^^~x~^^^^^^^^^^^^^^^^^^^^^^~~~~~~~~~~~
+%%rj%%%%%%%%%^^^^^^~^^^^^^^~~x~%...%%^^%%^^^^^^^^^^^^^~~^~~~~~~~
+%%5z---¬%%%%%^^^^^^~^^^^^^^~^l¬..%r------¬%%^^^^^^^^^^^~~~~~~~~~
+%%|%%%%|%%%%^^^^^^^~~^^^^^~~^^l¬..|.%%%%%|%%%.^^^^^^^^^^^~~~~~~~
+%r4z---¬%%%%^^^^^^^^~~^^^^~^^^.l--l---3--j%%..^^^^^^^^^^^^~~~~~~
+%x./%r-¬%%%%^^^^^^^^^~~^^~~^^^........|%%%%%..^^^^^^^^^^^^^~~~~~
+%l--zj¬j%%%%^^^^^^^^^^~~~~^^^^%%..../.|.%%...^^^^^^^^^^^^^~~~~~~
+%%%%%%5z¬z¬%^^^^^^^^^^^^~~^^^^^%%%....|......^^^^^^^^^^^^^^~~~~~
+%%r--¬x%lzj%^^^^^^^^^^^^~^^^^^^%%%%..~x~~~~~~~^^^^^^^^^^^^^^~^~~
+%%|%%|x%%%%%%^^^^^^^^^^^~^^^^^^%%%%%~~x~~~~~~~~^^^^^^^^^^^^^~~~~
+%%|%%|x%%%%%%%%^^^^^^^^^~^^^^^^%%%%%~~x~~~~~~~~^^^^^^^^^^^^^~~~~
+%%r--47---¬¬---zzzzz1zzzzz¬^^^^^%%%..~x~~~~....%^^^^^^^^^^^~~~~~
+%%|%%%x%.%lj%%^^^^^^x^^^~^lz¬^^^^%%...|..%...%.%%%^^^^^^,,~~~~~~
+%%|%/.l¬.%%%^^^^^^^^x^^^~~^^lz¬^^%%...|.....%...........,,~~~^^~
+%%|%%%lj%%%^^^^^^^^^x^^^^~^~^^x^^^%%.rl-----------r-----__zzz¬^~
+%%l¬%%%%%^^^^^^^^^^^x^^^^~~^^^x^^^%%.|........%...|.....,,~~^x^~
+%%lj%%%%%^^^^^^^^^^r-¬^^^~~~~^x^^^^^%|...%^^^.....l¬../.,,~~~x~~
+%%%%%%%%^^^^^^^^^^^|l¬%^^~~~~~x~^^^^^|.^^^^^^^^^^..|....^^^~~x~~
+%%%%%%%^^^^^^^^^^%rj%|%^^^~~^^x^^^^^rj%%^^^^^^^%%.%l¬.^^^^^^~x~~
+%%%%%%^^^^^^^^^^^%|%%|%^^~^^~^x^^^%.|...%%..%.......|....,,~~x~~
+%%%%^^^^^^^^^^^^^%|/.|%^~^^^^^x^^^%.|.%.............|...,,,~^x^~
+%%^^^^^^^^^^^^^^^%l--8^^^^^^^rj%^^..|..r----!-------2--1___zzj^~
+^^^^^^^^^^^^^^^^^%|%^x^^^^^^^x^^^^%.|.%|%%..|....%..|%.|,,,~~^~~
+^^^^^^^^^^^^^^^^^^|.rlzz--3z-4¬^^^%.|.%l¬...|.......|..l¬,,~~~~~
+^^^^^^^^^^^^^^^^^^x^|^^^..|^..|%^^..l¬%%l-----------j...|,,,~~~~
+^^^^^^^^^^^^^^^^^^l-|---¬/|^.%|%^^%..|.%.%%.l¬%....%....|,,,,~~~
+^^^^^^^^^^^^^^^^^^^%|.%%l-j---j%^^^%.l¬.....%l¬.%.....%.|,,,,~~~
+^^^^^^^^^^^^^^^^^^^%|%%%%%%%%%%^^^^%%.|.%%%...l--¬......l¬,,,~~~
+^^^^^^^^^^^^^^^^^^^^x^^^^%%%^^^^^^^%%.|..%..%...%l-¬%....|,,,~~~
+^^^^^^^^^^^^^^^^^^^^x^^^^^^^^^^^^^^%%%|%%%%..%%....l¬....|,,,,~~
+^^^^^^^^^^^^^^^^^^^^x^^^^^^^^^^^^^^^%%|%^^%%......%.l¬...|.,,,~~
+^^^^^^^^^^^^^^^^^^^^x^%%%%%^^^^^^^^^^^|%%^^^^^^.%%...|...|^^^,~~
+^^^^^^^^^^^^^^^^^^^%|%%....%%^^^^^^^^%|%%%^^^^^^^^^%.|.^^|^^,,~~
+^^^^^^^^^^^^^^^^^^^%|%..%^..%%^^^^^%%rj%%^^^^^^^%....|...|^,,,~~
+^^^^^^^^^^^^^^^^^^^%|./.^%%..%%^^^%%.|.%..%......../.6---¬^,,,~~
+^^^^^^^^^^^^^^^^^^^%|..%^%....%^^^%..|%..%...%......rj...|.,,,~~
+^^^^^^^^^^^^^^^^^^^%l--!z1--¬--zzz----------------!-j..%.|,,,,~~
+^^^^^^^^^^^^^^^^^^^^%%%|^|..|.%^^^%..|.%.%..%..%..|...%..|,,,,~~
+^^^^^^^^^^^^^^^^^^^^^^^x^|%%|%^^^^%%.|%%%.........|......|,,,,~~
+^^^^^^^^^^^^^^^^^^^^^^^x^x^^x^^^^^^%%|%^^^^^^.....|...^^rj^,,~~~
+^^^^^^^^^^^^^^^^^^^^^^^x^x^^x^^^^^^^^|%.^^^^^^^^%.|.^^^^|^^^^~~~
+^^^^^^^^^^^^^^^^^^^^^^^x^x^^x^^^^^^^%|^^^^^^^^.%..|.....|,,^^~~~
+^^^^^^^^^^^^^^^^^^^^^^^x^x^^l¬^^^^^%%|%%^^^.%.....|...%.|,,,~~~~
+^^^^^^^^^^^^^^^^^^^^^^^x^lzzjx^^^^%%.|..%%........|.%...|,,,~~~~
+^^^^^^^^^^^^^^^^^^^^^^^l¬^^^^x^^^^%%.l¬%......%..rj..%..|,,,~~~~
+^^^^^^^^^^^^^^^^^^^^^^^^x^^^^x^^^^%%%.l¬.%......rj.....rj,,,~~~~
+^^^^^^^^^^^^^^^^^^^^^^^^x^^^^x^^^^^%%%%l--------j------j,,,,~~~~
+^^^^^^^^^^^^^^^^^^^^^^^^lzzzzj^^^^^^^%%%%%.%%%%...%%%%^^^,,,~~~~
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^%%%%%^^^^^^^^^^^^^^^^^~~
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^~~
+
+
+
+USER PROMPT:
+The following PuzzleScript game code:
+```plaintext
+title Quantum Quokko
+author PuzzleNovice
+homepage nowhere.com
+
+========
+OBJECTS
+========
+
+Background
+#001f3f #003366 #004080
+00000
+00000
+00000
+00000
+11111
+
+Wall
+#666666
+22222
+22222
+22222
+22222
+22222
+
+Player
+#e6194b
+.0.1.
+.010.
+01110
+..0..
+....1
+
+Box
+#3cb44b
+02220
+23332
+23332
+02220
+
+Goal
+#ffe119
+33333
+31113
+31013
+31113
+33333
+
+Portal
+#005eff
+.3.3.
+2.0.2
+0.030
+2.0.2
+.3.3.
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Player
+B = Box
+G = Goal
+O = Portal
+
+=======
+SOUNDS
+=======
+SFX0 69348406 ( Teleport )
+SFX1 56432708 ( Move )
+SFX2 89324001 ( Success )
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Wall
+Goal
+Portal
+Player, Box
+
+======
+RULES
+======
+
+[> Player | Box] -> [> Player | > Box] SFX1
+[> Player | Portal no Box] -> [Player Portal | ] SFX0 again
+[Player Portal] -> [Portal Player]
+
+==============
+WINCONDITIONS
+==============
+
+All Box on Goal
+
+=======
+LEVELS
+=======
+
+message Level 1: A Simple Start
+######
+#P...#
+#...B#
+#.##O#
+#....#
+#...G#
+######
+
+message Level 2: Plan Carefully
+########
+#.G....#
+#..##### 
+#P.B..O#
+##.#####
+#......#
+########
+
+message Congratulations! You've mastered quantum quokko physics!
+
+```
+produced the following console output:
+=================================
+line 19 : Trying to access color number 2 from the color palette of sprite WALL, but there are only 1 defined in it.
+line 20 : Trying to access color number 2 from the color palette of sprite WALL, but there are only 1 defined in it.
+line 21 : Trying to access color number 2 from the color palette of sprite WALL, but there are only 1 defined in it.
+line 22 : Trying to access color number 2 from the color palette of sprite WALL, but there are only 1 defined in it.
+line 23 : Trying to access color number 2 from the color palette of sprite WALL, but there are only 1 defined in it.
+line 27 : Trying to access color number 1 from the color palette of sprite PLAYER, but there are only 1 defined in it.
+too many errors, aborting compilation
+Errors detected during compilation; the game may not work correctly.
+Return a repaired version of the code that addresses these errors. Return your code in full, inside a ```plaintext code block.

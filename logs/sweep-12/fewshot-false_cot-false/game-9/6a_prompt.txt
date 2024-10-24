@@ -1,0 +1,150 @@
+SYSTEM PROMPT:
+You are a game designer, familiar with the PuzzleScript game description language. 
+
+USER PROMPT:
+The following PuzzleScript game code:
+```plaintext
+Title: Treasure Hunter
+
+Author: Your Name
+
+Homepage: http://www.example.com
+
+========
+OBJECTS
+========
+
+Background
+lightgray
+00000
+00000
+00000
+00000
+00000
+
+Player
+Red
+.....
+..0..
+.000.
+..0..
+.....
+
+Wall
+DarkGray
+.....
+.....
+.....
+.....
+.....
+
+Treasure
+Yellow
+.000.
+.0.0.
+00000
+.0.0.
+.000.
+
+Goal
+Green
+.....
+.000.
+.0.0.
+.000.
+.....
+
+========
+LEGEND
+========
+
+. = Background
+P = Player
+# = Wall
+T = Treasure
+G = Goal
+
+========
+SOUNDS
+========
+
+Player Move Treasure trebleup
+
+========
+COLLISIONLAYERS
+========
+
+Background
+Player
+Wall
+Treasure
+Goal
+
+========
+RULES
+========
+
+[> Player | Treasure] -> [Player | Goal]
+[Player | Goal] -> [Goal]
+
+========
+WINCONDITIONS
+========
+
+No Treasure
+
+========
+LEVELS
+========
+
+/0
+#####
+#...#
+#P.T#
+#...#
+##### 
+
+/1
+#######
+#.....#
+#.#.#.#
+#.#.T.#
+#P#.#G#
+#.....#
+#######
+
+/2
+#########
+#..T..#.#
+#.#.##..#
+#...##..#
+#.P..G###
+#...T...#
+#########
+
+========
+
+```
+produced the following console output:
+=================================
+line 65 : Ah I was expecting direction or a sound seed here after MOVE, but I don't know what to make of "TREASURE".
+line 94 : Key "/" not found. Do you need to add it to the legend, or define a new object?
+line 94 : Key "0" not found. Do you need to add it to the legend, or define a new object?
+line 95 : Maps must be rectangular, yo (In a level, the length of each row must be the same).
+line 96 : Maps must be rectangular, yo (In a level, the length of each row must be the same).
+line 97 : Maps must be rectangular, yo (In a level, the length of each row must be the same).
+line 98 : Maps must be rectangular, yo (In a level, the length of each row must be the same).
+line 99 : Maps must be rectangular, yo (In a level, the length of each row must be the same).
+line 101 : Key "/" not found. Do you need to add it to the legend, or define a new object?
+line 101 : Key "1" not found. Do you need to add it to the legend, or define a new object?
+line 102 : Maps must be rectangular, yo (In a level, the length of each row must be the same).
+line 103 : Maps must be rectangular, yo (In a level, the length of each row must be the same).
+line 104 : Maps must be rectangular, yo (In a level, the length of each row must be the same).
+line 105 : Maps must be rectangular, yo (In a level, the length of each row must be the same).
+line 106 : Maps must be rectangular, yo (In a level, the length of each row must be the same).
+line 107 : Maps must be rectangular, yo (In a level, the length of each row must be the same).
+line 108 : Maps must be rectangular, yo (In a level, the length of each row must be the same).
+line 110 : Key "/" not found. Do you need to add it to the legend, or define a new object?
+too many errors, aborting compilation
+Errors detected during compilation; the game may not work correctly.
+Return a repaired version of the code that addresses these errors. Return your code in full, inside a ```plaintext code block.

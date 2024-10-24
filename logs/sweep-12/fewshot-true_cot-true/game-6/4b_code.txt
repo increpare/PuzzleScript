@@ -1,0 +1,129 @@
+To fix the errors in the PuzzleScript code, we need to address the following issues:
+
+1. **Sound Verb Error**: The `REMOVE` keyword in the sound section is incorrect. The correct sound verbs are `MOVE`, `DESTROY`, `CANTMOVE`, etc. Since we're dealing with the removal of an `EnergyOrb`, we should use the verb `DESTROY`.
+
+2. **Object Reference in Rules**: The error at line 80 indicates that there's a reference to `REMOVE` within a rule. The rule there is malformed, as `REMOVE` is not a valid action within rules. Instead, we should use `> Alien` to replace `Alien` when the `Alien` collects the `EnergyOrb`.
+
+3. **Missing Player Declaration**: The error mentions that there is no player defined. We need to ensure that `Alien` is defined as the player in the game. We'll do this by adding an entry in the `LEGEND` section that defines `P` as `Player`.
+
+Let's integrate these changes into the PuzzleScript code to resolve the errors:
+
+```plaintext
+title Alien Escape
+author PuzzleScript Designer
+
+========
+OBJECTS
+========
+
+Background
+darkblue
+
+Alien
+green lightgreen
+..0..
+.000.
+.0.0.
+00000
+.0.0.
+
+Wall
+darkgray gray
+00000
+00000
+11111
+00000
+00000
+
+EnergyOrb
+black yellow
+..0..
+.010.
+00100
+.010.
+..0..
+
+Portal
+purple pink
+.....
+..0..
+.000.
+..0..
+.....
+
+ForceField
+lightblue
+..0..
+.000.
+00000
+.000.
+..0..
+
+=======
+LEGEND
+=======
+
+. = Background
+P = Alien
+Player = Alien
+# = Wall
+O = EnergyOrb
+X = Portal
+F = ForceField
+
+=========
+SOUNDS
+=========
+
+EnergyOrb DESTROY 87913214
+
+================
+COLLISIONLAYERS
+================
+
+Background
+EnergyOrb, Portal
+Alien, Wall, ForceField
+
+======
+RULES
+======
+
+[> Alien | EnergyOrb] -> [> Alien |] 
+
+[> Alien | Portal] -> [> Alien | Portal] WIN
+
+(no forcefields after collecting all orbs)
+[ Alien | no EnergyOrb | ForceField] -> [Alien | |]
+
+==============
+WINCONDITIONS
+==============
+
+All Alien on Portal
+
+=======
+LEVELS
+=======
+
+#######
+#.....#
+#.#.#.#
+#.OPO.#
+#.###.#
+#...X.#
+#######
+
+#######
+#.....#
+#.###.#
+#O.#.O#
+#.F#F.#
+#P..X.#
+#######
+```
+
+The changes made address the errors in the source code:
+- The `EnergyOrb` `REMOVE` keyword was changed to `DESTROY` in the `SOUNDS` section.
+- The rule with `REMOVE` was corrected to properly remove the `EnergyOrb` once collected.
+- The `Player` was defined as an alias for `Alien` under the `LEGEND` section.

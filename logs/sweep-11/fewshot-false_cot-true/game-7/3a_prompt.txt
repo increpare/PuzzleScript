@@ -4,78 +4,111 @@ You are a game designer, familiar with the PuzzleScript game description languag
 USER PROMPT:
 The following PuzzleScript game code:
 ```plaintext
-# Title and Author
-title Sokoban Simple
-author Game Designer
+title Maze Escape
+author Your Name
 
-# Objects
-=========
+===========
+OBJECTS
+===========
+
 Background
-...
-yellow
+BLACK
 
 Player
-@ 
-blue
+YELLOW
 
 Wall
-#
-black
+BLUE
 
-Box
-B
-red
+Exit
+GREEN
 
-Target
-O
-green
-
-BoxOnTarget
-G
-yellow
-
-# Collision Layers
-===================
-Background
-Player
-Box, BoxOnTarget
-Wall, Target
-
-# Rules
 ===========
-[ > Player | Box ] -> [ > Player | > Box ]
-[ Box | Target ] -> [ BoxOnTarget | Target ]
-[ BoxOnTarget | ] -> [ | Box ]
+LEGEND
+===========
 
-# Win Conditions
-==================
-All BoxOnTarget on Target
+. = Background
+P = Player
+# = Wall
+E = Exit
 
-# Levels
-=========
-# Level 1
-#######
-#..O..#
-#..B..#
-#..@..#
-#######
+===========
+COLLISIONLAYERS
+===========
 
-# Level 2
-#######
-#..O..#
-#..B..#
-#..@..#
-#######
+Background
+Wall
+Player, Exit
+
+===========
+SOUNDS
+===========
+
+Movement
+move.ogg
+
+Win
+win.ogg
+
+===========
+RULES
+===========
+
+[Player] -> [ Player ]
+
+up [Player | > ] -> [ | Player ] M SOUND MOVE
+down [Player | > ] -> [ | Player ] M SOUND MOVE
+left [Player | > ] -> [ | Player ] M SOUND MOVE
+right [Player | > ] -> [ | Player ] M SOUND MOVE
+
+[Player | Exit] -> [Player | Background] M SOUND WIN
+
+===========
+WINCONDITIONS
+===========
+
+No Exit
+
+===========
+LEVELS
+===========
+
+; Level 1
+######
+#P   #
+# ## #
+#    #
+# E  #
+######
+
+; Level 2
+########
+#P     #
+# ###  #
+# # E  #
+# #    #
+# #### #
+#      #
+########
+
+; Level 3
+#########
+#P      #
+### ### #
+#    E# #
+### ### #
+#       #
+#########
 
 ```
 produced the following console output:
 =================================
-line 7 : Unrecognised stuff in the prelude.
-line 9 : Unrecognised stuff in the prelude.
-line 11 : Unrecognised stuff in the prelude.
-line 13 : Unrecognised stuff in the prelude.
-line 15 : Unrecognised stuff in the prelude.
-line 17 : Unrecognised stuff in the prelude.
+line 30 : section "COLLISIONLAYERS" is out of order, must follow  "SOUNDS" (or it could be that the section "SOUNDS"is just missing totally.  You have to include all section headings, even if the section itself is empty).
+line 41 : unexpected sound token "movement".
+line 42 : unexpected sound token "move".
+line 44 : unexpected sound token "win".
+line 45 : unexpected sound token "win".
+line 53 : Name "m", referred to in a rule, does not exist.
 too many errors, aborting compilation
 Errors detected during compilation; the game may not work correctly.
 Return a repaired version of the code that addresses these errors. First, reason about your task and determine the best plan of action. Then, write your code. Return your code in full, inside a ```plaintext code block.

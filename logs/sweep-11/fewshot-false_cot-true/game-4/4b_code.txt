@@ -1,0 +1,125 @@
+The errors in the code suggest that there are issues with the sprite matrix definitions for the objects in the game. The error messages indicate there's "unknown junk" in the sprite matrices and object sections, probably due to incorrect sprite formatting or dimensions not matching the 5x5 requirement explicitly stated in PuzzleScript.
+
+Looking closely at the sprite matrices, the code does seem to adhere to the 5x5 size requirement, so the issue might be more nuanced, possibly with alignment or hidden characters (like spaces). Given these symptoms, we should re-examine the sprite matrices to ensure no hidden characters are present and ensure alignment is clear and consistent.
+
+Additionally, the `COLLISIONLAYERS` section has `Floor` as a single layer; however, this might generally not be needed separately unless you are managing specific interactions with it. Moreover, the order of `COLLISIONLAYERS` should typically have Player and Crate on different layers, letting the player and crate interact correctly.
+
+Here is a revised and cleaned-up version of the game code that addresses these errors:
+
+```plaintext
+# Main game code for a simple Sokoban-style game
+
+title Sokoban Simplified
+author YourName
+
+======
+
+OBJECTS
+  Player
+    red
+    .....
+    .@@@.
+    .@.@.
+    .@@@.
+    .....
+
+  Wall
+    grey
+    #####
+    #####
+    #####
+    #####
+    #####
+    
+  Crate
+    yellow
+    .....
+    .CCC.
+    .C.C.
+    .CCC.
+    .....
+
+  Floor
+    black
+    .....
+    .....
+    .....
+    .....
+    .....
+    
+  Goal
+    green
+    .....
+    .GGG.
+    .G.G.
+    .GGG.
+    .....
+    
+  CrateOnGoal
+    orange
+    .....
+    .OOO.
+    .O.O.
+    .OOO.
+    .....
+
+======
+
+LEGEND
+  . = Floor
+  P = Player
+  # = Wall
+  R = Crate
+  G = Goal
+  Y = CrateOnGoal
+
+======
+
+SOUNDS
+
+======
+
+COLLISIONLAYERS
+  Floor
+  Wall
+  Player
+  Crate, CrateOnGoal
+  Goal
+
+======
+
+RULES
+[> Player | Crate ] -> [> Player | > Crate ]
+
+[ Player | CrateOnGoal ] -> [ Player | CrateOnGoal ]
+
+P [ ] -> [ P ]
+R [ ] -> [ R ]
+Y [ ] -> [ Y ]
+
+[Crate | Goal] -> [CrateOnGoal | Floor]
+[CrateOnGoal | Floor] -> [Crate | Goal]
+
+======
+
+WINCONDITIONS
+All CrateOnGoal
+
+======
+
+LEVELS
+#####
+#P. #
+# R #
+# G #
+#####
+
+#######
+#     #
+# ### #
+#PR G#
+#     #
+#######
+```
+
+This refined version addresses potential hidden character issues and aligns the collision layers properly. Please check the behavior in a PuzzleScript environment to ensure the game behaves as expected.

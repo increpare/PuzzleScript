@@ -1,0 +1,116 @@
+SYSTEM PROMPT:
+You are a game designer, familiar with the PuzzleScript game description language. 
+
+USER PROMPT:
+The following PuzzleScript game code:
+```plaintext
+title Treasure Hunt
+author GameDesigner
+homepage http://mygames.com
+
+===========
+OBJECTS
+===========
+Background
+yellow
+00000
+00000
+00000
+00000
+00000
+
+Player
+blue
+..0..
+..0..
+.000.
+..0..
+..0..
+
+Wall
+grey
+00000
+00000
+00000
+00000
+00000
+
+Treasure
+orange
+..000
+.000.
+.000.
+.000.
+..000
+
+===========
+LEGEND
+===========
+. = Background
+P = Player
+# = Wall
+T = Treasure
+
+===========
+SOUNDS
+===========
+# Sounds should be attached to specific actions, see rules for example usage
+
+================
+COLLISIONLAYERS
+================
+Background
+Player, Treasure
+Wall
+
+===========
+RULES
+===========
+[Player | Treasure] -> [Player | ] 
+SFX3 // Play a sound and win when player touches treasure
+win
+
+[Player | Wall] -> [ Player | Wall ] // Prevent walking through walls
+
+===========
+WINCONDITIONS
+===========
+No Treasure
+
+===========
+LEVELS
+===========
+; Level 1
+#####
+#P..#
+#.T.#
+#####
+
+; Level 2
+#####
+#.P##
+#...#
+#..T#
+#####
+
+; Level 3
+######
+#P...#
+##.###
+##.###
+##..T#
+######
+
+```
+produced the following console output:
+=================================
+line 51 : Was expecting a sound event (like SFX3, or ENDLEVEL) or an object name, but didn't find either.
+line 64 : Name "//", referred to in a rule, does not exist.
+line 64 : Name "play", referred to in a rule, does not exist.
+line 64 : Name "a", referred to in a rule, does not exist.
+line 64 : Name "sound", referred to in a rule, does not exist.
+line 64 : Name "and", referred to in a rule, does not exist.
+line 64 : Name "when", referred to in a rule, does not exist.
+too many errors, aborting compilation
+Errors detected during compilation; the game may not work correctly.
+Return a repaired version of the code that addresses these errors. First, reason about your task and determine the best plan of action. Then, write your code. Return your code in full, inside a ```plaintext code block.

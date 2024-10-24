@@ -6,9 +6,9 @@ The following PuzzleScript game code:
 ```plaintext
 ======
 
-title Collect the Key
-author Game Designer
-homepage https://puzzlescript.net
+Title: Collect the Key
+Author: Game Designer
+Homepage: https://puzzlescript.net
 
 ======
 
@@ -60,32 +60,32 @@ This is the sound when the player reaches the goal.
 
 RULES
 
-[ > Player | Key] -> [Player | Background]
-[Player | Key] -> [Player | Background]
-[ > Player Key | Door] -> [Player Background]
+[ > Player | Key] -> [Player Key | ]
+[ > Player Key | Door] -> [Player | Background]
 [Player | Goal] -> [Win]
 
 ======
 
 WINCONDITIONS
 
-All Goal
+No Key
+Goal
 
 ======
 
 LEVELS
 
-P . . . .
-. W W W D
-. W K G W
-. W W W W
-. . . . .
+P . . . . 
+. W W W D 
+. W K G W 
+. W W W W 
+. . . . . 
 
-. . . P .
-W W W W .
-W D K G .
-W . . . .
-W . . . .
+. . . P . 
+W W W W . 
+W D K G . 
+W . . . . 
+W . . . . 
 
 ======
 
@@ -99,7 +99,7 @@ line 48 : unexpected sound token "this".
 line 50 : unexpected sound token "win".
 line 51 : unexpected sound token "this".
 line 55 : section "RULES" is out of order, must follow  "COLLISIONLAYERS" (or it could be that the section "COLLISIONLAYERS"is just missing totally.  You have to include all section headings, even if the section itself is empty).
-line 86 : Key "E" not found. Do you need to add it to the legend, or define a new object?
+line 66 : Expecting the start of a win condition ("ALL","SOME","NO") but got "GOAL'.
 too many errors, aborting compilation
 Errors detected during compilation; the game may not work correctly.
 Return a repaired version of the code that addresses these errors. Return your code in full, inside a ```plaintext code block.

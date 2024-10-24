@@ -1,0 +1,1930 @@
+SYSTEM PROMPT:
+You are a game designer, familiar with the PuzzleScript game description language. Here are some example games, for inspiration (do not reproduce these games exactly):
+
+title horizontal Block Pushing Game
+author increpare
+homepage www.puzzlescript.net
+
+========
+OBJECTS
+========
+
+Background
+lightgreen green
+11111
+01111
+11101
+11111
+10111
+
+Target
+darkblue
+.....
+.000.
+.0.0.
+.000.
+.....
+
+Wall
+brown darkbrown
+00010
+11111
+01000
+11111
+00010
+
+Player
+black orange white blue
+.000.
+.111.
+22222
+.333.
+.3.3.
+
+Crate
+blue white
+00000
+00000
+01110
+00000
+00000
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Player
+* = Crate
+@ = Crate and Target
+O = Target
+
+=======
+SOUNDS
+=======
+
+Crate MOVE 36772507
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Target
+Player, Wall, Crate
+
+======
+RULES
+======
+
+horizontal [ > Player | Crate ] -> [ > Player | > Crate ] 
+
+==============
+WINCONDITIONS
+==============
+
+all Target on Crate
+
+=======
+LEVELS
+=======
+
+#########
+#.......#
+#.....@.#
+#.P.*.O.#
+#.......#
+#.......#
+#########
+
+.#######.
+.#.....#.
+.#O##..##
+##.##.*.#
+#.*..**.#
+#.OOO.#.#
+#.P.....#
+#########
+
+
+title Simple Block Pushing Game
+author increpare
+homepage www.puzzlescript.net
+
+========
+OBJECTS
+========
+
+Background
+LIGHTGREEN GREEN
+11111
+01111
+11101
+11111
+10111
+
+
+Target
+DarkBlue
+.....
+.000.
+.0.0.
+.000.
+.....
+
+Wall
+BROWN DARKBROWN
+00010
+11111
+01000
+11111
+00010
+
+Player
+Black Orange White Blue
+.000.
+.111.
+22222
+.333.
+.3.3.
+
+BlueCrate B
+lightblue
+00000
+0...0
+0...0
+0...0
+00000
+
+
+OrangeCrate O
+Orange
+00000
+0...0
+0...0
+0...0
+00000
+
+
+=======
+LEGEND
+=======
+
+Crate = OrangeCrate or BlueCrate
+. = Background
+# = Wall
+P = Player
+
+=======
+SOUNDS
+=======
+
+Crate MOVE 36772507
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Target
+Player, Wall, Crate
+
+======
+RULES
+======
+
+[ >  Player | Crate ] -> [  >  Player | > Crate  ]
+
+
+[ > OrangeCrate | OrangeCrate ] -> [ > OrangeCrate | > OrangeCrate ]
++[ > OrangeCrate | BlueCrate ] -> [ > OrangeCrate | > BlueCrate ]
++[ > BlueCrate | OrangeCrate ] -> [ > BlueCrate | > OrangeCrate ]
++[ > BlueCrate | BlueCrate ] -> [ > BlueCrate | > BlueCrate ]
+
+==============
+WINCONDITIONS
+==============
+
+=======
+LEVELS
+=======
+
+################
+#..............#
+#..............#
+#.P.BOBOBOBOB..#
+#..............#
+#..............#
+################
+
+
+title Heroes of Sokoban
+author Jonah Ostroff
+text_color yellow
+key_repeat_interval 0.25
+
+========
+OBJECTS
+========
+
+Background
+#AAAAAA #DDDDDD
+00000
+00100
+00000
+00010
+00000
+
+Goal
+Brown Yellow
+.000.
+00000
+00010
+00000
+00000
+
+Wall
+Darkgrey #222222
+01000
+11111
+00010
+00010
+11111
+
+Fighter
+#FF4444 Pink DarkBrown
+.000.
+.111.
+00000
+.000.
+.2.2.
+
+Wizard
+#2266FF Pink
+.000.
+.010.
+00000
+.000.
+00000
+
+Thief
+#00BB00 Pink DarkBrown
+.000.
+.010.
+00000
+.0.0.
+.0.0.
+
+SFighter
+#880000 Pink DarkBrown
+.000.
+.111.
+00000
+.000.
+.2.2.
+
+SWizard
+#000088 Pink
+.000.
+.010.
+00000
+.000.
+00000
+
+SThief
+#006600 Pink DarkBrown
+.000.
+.010.
+00000
+.0.0.
+.0.0.
+
+
+Crate
+Orange #552200
+.111.
+10001
+10001
+10001
+.111.
+
+YellowSwitch
+Yellow Black
+.....
+.111.
+.101.
+.111.
+.....
+
+YellowOpen
+Yellow
+0...0
+.....
+.....
+.....
+0...0
+
+YellowDoor
+Yellow #AA7722
+01010
+10001
+00000
+10001
+01010
+
+PurpleSwitch
+#6611CC Black
+.....
+.111.
+.101.
+.111.
+.....
+
+PurpleDoor
+#6611CC #220088
+01010
+10001
+00000
+10001
+01010
+
+PurpleOpen
+#6611CC
+0...0
+.....
+.....
+.....
+0...0
+
+Temp
+Pink
+
+ShadowDoor
+Purple
+
+=======
+LEGEND
+=======
+
+Player = Fighter or Wizard or Thief
+SPlayer = Swizard or Sthief or SFighter
+Hero = Player or Splayer
+ClosedDoor = PurpleDoor or YellowDoor
+OpenDoor = YellowOpen or PurpleOpen
+Switch = PurpleSwitch or YellowSwitch
+Moveable = Crate or SPlayer
+Static = Wall or ClosedDoor
+Weighing = Crate or Player or SPlayer
+. = Background
+# = Wall
+F = Fighter
+W = Wizard
+T = Thief
+1 = SFighter
+2 = SThief
+3 = SWizard
+* = Crate
+G = Goal
+[ = YellowDoor
+] = PurpleDoor
+{ = YellowSwitch
+} = PurpleSwitch
+
+=======
+SOUNDS
+=======
+
+Moveable move 82056307
+Sfx0 21221308
+Endlevel 36315908
+Sfx1 66399906
+Sfx2 92172900
+Sfx3 15129100
+EndGame 86793500
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Temp
+Goal, Switch, OpenDoor, ShadowDoor
+ClosedDoor, Hero, Crate, Wall
+
+======
+RULES
+======
+
+[ >  Fighter | Moveable ] -> [  >  Fighter | > Moveable  ]
+[ > Moveable | Moveable ] [ Fighter] -> [ > Moveable | > Moveable ] [ Fighter]
+
+[ < Thief | Moveable ] -> [ < Thief | < Moveable ]
+
+[ > Wizard ] -> [ Wizard > Temp]
+[ > Temp | no Moveable no Static] -> [ | > Temp]
+[ > Temp | Static] [Wizard] -> [ | Static ] [> Wizard]
+[ > Temp | Moveable ] [Wizard] -> [ | Wizard Sfx0] [Moveable]
+
+Late [Temp] -> []
+
+[ Action Fighter] [SThief] -> [SFighter] [Thief Sfx1]
+[ Action Thief] [SWizard] -> [SThief] [Wizard Sfx1]
+[ Action Wizard] [SFighter] -> [SWizard] [Fighter Sfx1]
+[ Action Fighter] [no SThief] [SWizard] -> [SFighter] [no SThief] [Wizard Sfx1]
+[ Action Thief] [no Swizard] [SFighter] -> [SThief] [no SWizard] [Fighter Sfx1]
+[ Action Wizard] [no SFighter] [SThief] -> [SWizard] [no SFighter] [Thief Sfx1]
+
+late [Weighing  YellowSwitch] [YellowDoor] -> [Weighing  YellowSwitch] [ShadowDoor]
+late [YellowSwitch no Weighing] [YellowOpen] -> [YellowSwitch] [YellowDoor sfx2]
+late [YellowSwitch no Weighing] [ShadowDoor] -> [YellowSwitch] [YellowDoor]
+late [ShadowDoor] -> [YellowOpen sfx3]
+
+late [Weighing PurpleSwitch] [PurpleDoor] -> [Weighing PurpleSwitch] [ShadowDoor]
+late [PurpleSwitch no Weighing] [PurpleOpen] -> [PurpleSwitch] [PurpleDoor sfx2]
+late [PurpleSwitch no Weighing] [ShadowDoor] -> [PurpleSwitch] [PurpleDoor]
+late [ShadowDoor] -> [PurpleOpen sfx3]
+
+==============
+WINCONDITIONS
+==============
+
+All Hero on Goal
+All Goal on Hero
+
+=======
+LEVELS
+=======
+
+Message Walk to the exit.
+
+#############
+#...........#
+#.F.......G.#
+#...........#
+#############
+
+Message Red warrior pushes blocks.
+
+#############
+#...#.*.#.*.#
+#.F...*.**G.#
+#...#.*.#.*.#
+#############
+
+Message Hold down switches to open doors.
+
+#############
+#...#...#...#
+#.F.*.{.#.G.#
+#...#...[...#
+#############
+
+Message Press multiple switches at once.
+
+#########
+#.....#G#
+#.#*..#[#
+#.**.F..#
+#.......#
+#.{.{.{.#
+#.......#
+#########
+
+Message Green thief pulls blocks.
+
+#############
+#...#..*#...#
+#.T.*.{.#.G.#
+#...#..*[...#
+#############
+
+#########
+#.....#G#
+#.#*..#[#
+#.**.T..#
+#.......#
+#.{.{.{.#
+#.......#
+#########
+
+#########
+#...##G.#
+#.#..##[#
+#....{..#
+#.#.#.#.#
+#..*.T..#
+#########
+
+Message Blue wizard teleports to blocks.
+
+#############
+#...*.{.#...#
+#.W.*.{.[.G.#
+#...#...#...#
+#############
+
+#########
+#.....#G#
+#.#*..#[#
+#.**.W..#
+#.......#
+#.{.{.{.#
+#.......#
+#########
+
+#######
+#W#G#*#
+#.#.#.#
+#*...*#
+#.###.#
+#*.*..#
+#######
+
+Message Press action to switch heroes.
+
+#############
+#...#...#...#
+#.F...}.[.G.#
+#...#...#...#
+#############
+#...#...#...#
+#.3.].{...G.#
+#...#...#...#
+#############
+
+Message Heroes can move each other.
+
+###########
+#*#..##G.G#
+#.#.2.#...#
+#.....#..##
+#W###.*..*#
+###########
+
+###########
+#F.*.#.*#{#
+#..#...*..#
+####...*.*#
+#..#.##[###
+#2...#*.GG#
+###########
+
+#############
+#.###########
+#*....{....3#
+#.####.######
+#.#..#.###..#
+#.#G....[].G#
+#.#..#.###..#
+#.####.######
+#.....}....T#
+#############
+
+#############
+##G.#F#*#...#
+#*..[.....{.#
+##G.#3###...#
+#############
+
+###########
+#W..{...[*#
+#######.#[#
+#G#G#G#.#2#
+#.......#1#
+###########
+
+#########
+#*......#
+#######.#
+#F23.]#.#
+#..##G#.#
+#..#GG#.#
+##.####.#
+#.......#
+##}####.#
+#########
+
+#############
+#...#G.G#...#
+#.*.#F23#.G.#
+#...#...#...#
+##[###.###[##
+#...#...#...#
+#.{...{...{.#
+#...#...#...#
+#############
+
+#######
+#G***F#
+#*****#
+#G***2#
+#*****#
+#G***3#
+#######
+
+########
+#3..G[*#
+########
+#F**G{{#
+########
+#2.[G..#
+########
+
+#############
+#...#...#...#
+#F#.*.#.*.#3#
+#...#...#...#
+######.######
+#...#...#####
+#2#.*.#...}*#
+#...#...#####
+######.######
+#G..#...#...#
+#G..].#...#.#
+#G..#...#...#
+#############
+
+#############
+#F.........G#
+#############
+#T.........G#
+#############
+#W.........G#
+#############
+Message Thanks for playing!
+
+
+title Sticky Blocks
+author increpare
+homepage www.puzzlescript.net
+
+========
+OBJECTS
+========
+
+Background
+lightgreen green
+11111
+01111
+11101
+11111
+10111
+
+Target
+darkblue
+.....
+.000.
+.0.0.
+.000.
+.....
+
+Wall
+brown darkbrown
+00010
+11111
+01000
+11111
+00010
+
+Player
+black orange white blue
+.000.
+.111.
+22222
+.333.
+.3.3.
+
+Crate
+orange
+00000
+0...0
+0...0
+0...0
+00000
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Player
+* = Crate
+@ = Crate and Target
+O = Target
+
+=======
+SOUNDS
+=======
+
+Crate MOVE 36772507
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Target
+Player, Wall, Crate
+
+======
+RULES
+======
+
+[ < Player | Crate ] -> [ < Player | < Crate ] 
+
+==============
+WINCONDITIONS
+==============
+
+all Target on Crate
+
+=======
+LEVELS
+=======
+
+#########
+#.......#
+#.....@.#
+#.P.*.O.#
+#.......#
+#.......#
+#########
+
+.#######.
+.#.....#.
+.#O##..##
+##.##.*.#
+#.*..**.#
+#.OOO.#.#
+#.P.....#
+#########
+
+
+title Spriteaporter
+author increpare
+homepage www.puzzlescript.net
+
+========
+OBJECTS
+========
+
+Temp
+black
+
+Background
+lightgreen green
+11111
+01111
+11101
+11111
+10111
+
+Target
+darkblue
+.....
+.000.
+.0.0.
+.000.
+.....
+
+Wall
+brown darkbrown
+00010
+11111
+01000
+11111
+00010
+
+Player
+black orange white blue
+.000.
+.111.
+22222
+.333.
+.3.3.
+
+Sprite
+pink blue red
+.....
+.000.
+00100
+01110
+.202.
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Player
+O = Sprite
+
+=======
+SOUNDS
+=======
+
+sfx0 67117309
+
+================
+COLLISIONLAYERS
+================
+
+Temp
+Background
+Target
+Player, Wall, Sprite
+
+======
+RULES
+======
+
+late [ Sprite | ... | Player ] -> [ Temp | ... | Sprite ] 
+late [ Temp ] -> [ Player ] 
+
+==============
+WINCONDITIONS
+==============
+
+=======
+LEVELS
+=======
+
+#########
+#.......#
+#....O..#
+#.P.....#
+#.......#
+#.......#
+#########
+
+
+title By Your Side
+author Alan Hazelden
+homepage www.draknek.org
+
+require_player_movement
+key_repeat_interval 0.12
+
+(
+
+A port of alan hazelden's game, By Your Side, in 6 lines of code, made with the permission of the author -
+
+the original is here
+http://www.draknek.org/games/by-your-side/
+
+)
+
+========
+OBJECTS
+========
+
+(Objects in all scenes)
+
+Grass .
+darkgreen green
+00000
+01000
+00000
+00010
+00000
+
+Player_Casual P
+black pink gray
+..0..
+..1..
+.222.
+..2..
+.2.2.
+
+TargetMain T
+yellow
+00000
+0...0
+0...0
+0...0
+00000
+
+(Initial Scenes)
+
+GirlFriend G
+pink red
+..0..
+.010.
+..1..
+.111.
+.0.0.
+
+Tree #
+darkbrown lightgreen
+.111.
+11111
+.111.
+..0..
+..0..
+
+(Wedding Scene)
+
+Player_Formal Q
+black pink white
+..0..
+..1..
+.020.
+..0..
+.0.0.
+
+WoodenFloor ,
+brown
+00000
+00000
+00000
+00000
+00000
+
+ChurchWall H
+darkbrown brown
+11101
+00000
+10111
+00000
+11101
+
+Chair C
+darkbrown brown
+11111
+11101
+11101
+00001
+01101
+
+Altar A
+gray
+.....
+00000
+.000.
+.000.
+.000.
+
+Spectator1 B
+black pink white
+..0..
+..1..
+.020.
+..0..
+.0.0.
+
+Spectator2 D
+purple pink white
+..0..
+..1..
+10001
+.000.
+00000
+
+Wife_Wedding W
+white pink
+..1..
+.000.
+.101.
+.000.
+00000
+
+(Post Wedding Scene)
+
+house @
+black grey red
+..0..
+.000.
+00000
+.111.
+.121.
+
+pavement `
+darkblue
+
+Road '
+gray white
+00000
+00000
+01110
+00000
+00000
+
+Wife_Repulsed X
+white pink
+..1..
+.000.
+.101.
+.000.
+00000
+
+(grave scene)
+
+gravedirt ~
+green brown
+01001
+10000
+00100
+00001
+01000
+
+grave R
+lightgray darkgray grey
+.111.
+10201
+12221
+10201
+10001
+
+coffin F
+darkbrown brown black
+.000.
+01210
+02220
+01210
+02220
+
+(final scene)
+
+Wife_Dying Y
+white pink
+..1..
+.000.
+.101.
+.000.
+00000
+
+Wife_Coffin
+darkbrown brown black
+.000.
+01210
+02220
+01210
+02220
+
+ColdFeet I
+black
+
+=======
+LEGEND
+=======
+
+Target = TargetMain or Road
+Player = Player_Casual or Player_Formal
+Background = Grass or WoodenFloor or Pavement or GraveDirt
+Spectator = Spectator1 or Spectator2
+Obstacle = House or Spectator or Chair or Tree or Altar or Grave or Coffin or Wife_Coffin or ChurchWall
+Wife_Attracted = Girlfriend or Wife_Wedding or Wife_Dying
+Wife = Wife_Attracted or Wife_Repulsed or Wife_Coffin
+Person = Player or Wife
+GrassyTarget = Grass and TargetMain
+E = GrassyTarget
+
+=========
+SOUNDS
+=========
+
+Player cantmove 82269707
+endlevel 54461500
+startgame 10582309
+endgame 66004102
+Wife_Repulsed move 44043907
+sfx0 16417502
+
+================
+COLLISIONLAYERS
+================
+
+ColdFeet
+Background
+Target
+Obstacle, Person
+
+======
+RULES
+======
+
+(game logic)
+
+[ > Player ] [ Wife_Attracted ] -> [ > Player ] [ > Wife_Attracted ] 
+[ > Player ] [ Wife_Repulsed ] -> [ > Player ] [ < Wife_Repulsed ] 
+
+late [ Wife_Dying ] -> [ Wife_Coffin ] 
+late [ Player | Wife_Coffin ] -> [ Player | Wife_Dying ] 
+
+(level-specific events)
+late [ ColdFeet Player ] -> [ Player ] message ...
+late [ Wife Road ] -> sfx0
+
+==============
+WINCONDITIONS
+==============
+
+all person on target
+
+=======
+LEVELS
+=======
+
+....#################
+...###...#....#######
+..##.........##.....#
+.##...#######.......#
+##....#....###......#
+#...###.............#
+#...#...#...#..######
+#...#...#..##.P.....#
+#....####.T##..######
+##......#...#.......#
+###..##..#...#...##.#
+#.##..#..##..#...#..#
+#..#..#....###...#..#
+#..##........#......#
+#...##...##...##....#
+#.......##.....######
+.##############......
+
+....#################
+...###...#....#######
+..##.........##.....#
+.##...#######.......#
+##....#....###......#
+#...###.............#
+#...#...#...#..######
+#...#...#..##..T...T#
+#....####.P##G.######
+##......#...#.......#
+###..##..#...#...##.#
+#.##..#..##..#...#..#
+#..#..#....###...#..#
+#..##........#......#
+#...##...##...##....#
+#.......##.....######
+.##############......
+
+....#################
+...###...#....#######
+..##.........##.....#
+.##...#######.......#
+##....#....###......#
+#...###.............#
+#...#T..#...#..######
+#...#T..#..##..P...G#
+#....####..##..######
+##......#...#.......#
+###..##..#...#...##.#
+#.##..#..##..#...#..#
+#..#..#....###...#..#
+#..##........#......#
+#...##...##...##....#
+#.......##.....######
+.##############......
+
+HHHHHHHHHHHHHHHHHHHHH
+,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,
+,CCCCCCCCCCCCCCCCCCCC
+,CCCCCCCCCCCCCCCCCCCC
+A,B,,D,B,D,,B,D,,,B,C
+A,T,,I,,,I,,,,I,Q,,,C
+A,T,,,,,,,,,,,,,W,,,C
+,CCCCCCCCCCCCCCCCCCCC
+,CCCCCCCCCCCCCCCCCCCC
+,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,
+HHHHHHHHHHHHHHHHHHHHH
+
+`````````@@@@````````
+`````````@TT@````````
+``@@@@@@`@`@@````````
+``@````@`@`@@@@``````
+``@`@@`@`@````@``````
+``@`@@`@`@`@@@@``````
+``@`@@`@@@P@`````````
+``@```````W@@@@@@````
+``@`@@@@@@``````@````
+``@`@````@`@@@@`@````
+``@`@````@`@``@`@````
+@@@@@@@@@@@@@@@@@@@@@
+'''''''''''''''''''''
+@@@@@@@@@@@@@@@@@@@@@
+`````````````````````
+
+`````````@@@@````````
+`````````@PX@````````
+``@@@@@@`@`@@````````
+``@````@`@`@@@@``````
+``@`@@`@`@````@``````
+``@`@@`@`@`@@@@``````
+``@`@@`@@@T@`````````
+``@```````T@@@@@@````
+``@`@@@@@@``````@````
+``@`@````@`@@@@`@````
+``@`@````@`@``@`@````
+@@@@@@@@@@@@@@@@@@@@@
+'''''''''''''''''''''
+@@@@@@@@@@@@@@@@@@@@@
+`````````````````````
+
+`````````@@@@````````
+`````````@TT@````````
+``@@@@@@`@`@@````````
+``@````@`@`@@@@``````
+``@`@@`@`@````@``````
+``@`@@`@`@`@@@@``````
+``@`@@`@@@P@`````````
+``@```````X@@@@@@````
+``@`@@@@@@``````@````
+``@`@````@`@@@@`@````
+``@`@````@`@``@`@````
+@@@`@@@@@@`@@@@`@@@@@
+'''''''''''''''''''''
+@@@@@@@@@@@@@@@@@@@@@
+`````````````````````
+
+RRRRRRR~RRRRRR~RRRRR
+R~~~~~R~R~~~~R~R~~~~
+R~~~~~~~R~~~~R~R~~~~
+R~~~~~R~R~~~~R~R~~~~
+RRRRRRR~RR~~RR~RRRRR
+R~~~~BDBDBDBDBD~~~~R
+RQ~~~~~i~i~~i~~~~EFR
+RRRRRRRRRRRRRRRRRRRR
+R~~R~~~~~~~~~~~R~~~~
+R~~R~~~~~~~~~~~R~~~~
+R~~RRR~~~RRRR~~R~~~~
+R~~~~~~~~R~~~~~R~~~R
+R~~R~~~~~R~~R~~~~~~R
+R~~R~~~~~R~~R~~~~~~R
+RRRRRRRRRR~~RRRRRRRR
+
+RRRRRR~~~~~~~~~~~~~~
+R~~~~R~~~~~RRRRRR~~~
+R~QY~R~~~~~R~~~~R~~~
+R~~~~R~~RRRRR~R~R~~~
+R~~~~RRRR~~R~~R~R~~~
+R~~~~~~~~~~R~~R~RRR~
+RRRRRRRRR~~R~~~~~~R~
+~~R~~~~~R~~R~RRR~~R~
+~~R~~R~~R~~RRR~R~~R~
+~~R~~R~~~~~~~~~~~~R~
+~~R~~R~~RR~~~~~RRRR~
+~~R~~R~~~RRRRRTTR~~~
+~~R~~R~~~R~~~~~~R~~~
+~~R~~R~~~~~RRR~~R~~~
+~~RRRRRRRRRR~RRRR~~~
+
+RRRRRR~~~~~~~~~~~~~~
+R~~~~R~~~~~RRRRRR~~~
+R~~~~R~~~~~R~~~~R~~~
+R~~~~R~~RRRRR~R~R~~~
+R~~~~RRRR~~R~~R~R~~~
+R~~~~~~~~~~RT~R~RRR~
+RRRRRRRRR~~RT~~~~~R~
+~~R~~~~~R~~R@RRR~~R~
+~~R~~R~~R~~RRR~R~~R~
+~~R~~R~~~~~~~~~~~~R~
+~~R~~R~~RR~~~~~RRRR~
+~~R~~R~~~RRRRRYQR~~~
+~~R~~R~~~R~~~~~~R~~~
+~~R~~R~~~~~RRR~~R~~~
+~~RRRRRRRRRR~RRRR~~~
+
+message Commiserations
+
+message It is over
+
+title Love and Pieces
+author lexaloffle
+homepage www.lexaloffle.com
+
+========
+OBJECTS
+========
+
+Background
+White LightBlue
+00000
+01110
+01110
+01110
+00000
+
+
+Wall
+DarkBlue Black DarkGray LightGray White
+23330
+22300
+22100
+21110
+11111
+
+Player
+Yellow Orange Red White LightBrown
+20002
+01130
+01110
+04110
+20002
+
+GrayBlock
+Gray DarkGray Green
+10001
+01210
+02220
+01210
+10001
+
+LitBlock
+Green DarkGray
+00000
+01110
+01110
+01110
+00000
+
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Player
+o = GrayBlock
+Block = GrayBlock or Player
+
+=======
+SOUNDS
+=======
+
+GrayBlock MOVE 36772507
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Player, Wall, GrayBlock, LitBlock
+
+======
+RULES
+======
+
+[ > Player | Wall ] -> cancel
+late [ Player | GrayBlock ] -> [ Player | Player ]
+
+==============
+WINCONDITIONS
+==============
+
+No GrayBlock
+
+=======
+LEVELS
+=======
+
+
+
+############
+#...#......#
+#..........#
+#.p..o..o..#
+#..........#
+#..#.......#
+#..........#
+#......#...#
+#..........#
+############
+
+############
+#..........#
+#..........#
+#....#o....#
+#..#.o.#...#
+#....#.....#
+#....o.....#
+#.o......p.#
+#..........#
+############
+
+############
+#o...o.....#
+#.o...o....#
+#..o...o...#
+#...o...o..#
+#o...o...o.#
+#.o...o...o#
+#..o...o.p.#
+#...o...o..#
+############
+
+############
+#..........#
+#..o....o..#
+#.p#....#o.#
+#..........#
+#..........#
+#.o#....#o.#
+#..o....o..#
+#..........#
+############
+
+
+############
+#..o.......#
+#.....oo...#
+#...o......#
+#.o#..p..o.#
+#....o.....#
+#..o....o..#
+#o.o...#...#
+#...o...o..#
+############
+
+############
+#p.o.......#
+#..........#
+#.o..o...###
+#........###
+###.o......#
+###......o.#
+#o.....##..#
+#......##.o#
+############
+
+
+############
+#........o.#
+#..o.##....#
+#....o.o...#
+#.#......#.#
+#.#..p.o.#.#
+#..o.......#
+#....##....#
+#.o......o.#
+############
+
+
+############
+###........#
+##....o.o..#
+#....#.#...#
+#...o.o.o..#
+#....#.#...#
+#...o.o....#
+##........##
+###.p....###
+############
+
+
+###########o
+#....p....##
+#....p.....#
+#...ppp....#
+#ppppppppp.#
+#...ppp....#
+#..ppppp...#
+#.pp...pp..#
+#.p.....p..#
+############
+
+
+title Extended Body Example: 1 Player, 1 Extended Object
+author increpare
+homepage www.puzzlescript.net
+
+(
+    Example for
+    https://www.puzzlescript.net/Documentation/rigidbodies.html#one_one
+)
+
+========
+OBJECTS
+========
+
+Background
+LIGHTGREEN GREEN
+11111
+01111
+11101
+11111
+10111
+
+
+Target
+DarkBlue
+.....
+.000.
+.0.0.
+.000.
+.....
+
+Wall
+BROWN DARKBROWN
+00010
+11111
+01000
+11111
+00010
+
+Player
+Black Orange White Blue
+.000.
+.111.
+22222
+.333.
+.3.3.
+
+Crate
+Orange
+00000
+0...0
+0...0
+0...0
+00000
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Player
+* = Crate
+@ = Crate and Target
+O = Target
+
+=======
+SOUNDS
+=======
+
+Crate MOVE 36772507
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Target
+Player, Wall, Crate
+
+======
+RULES
+======
+
+[ >  Player | Crate ] -> [  >  Player | > Crate  ]
+[ > Crate ] [ stationary Crate ] -> [ > Crate ] [ > Crate ]
+[ > Crate | Wall ] -> cancel
+
+==============
+WINCONDITIONS
+==============
+
+All Target on Crate
+
+=======
+LEVELS
+=======
+
+######
+#....#
+#.#..#
+#.*@.#
+#.O@.#
+#.p..#
+######
+
+
+title Many parallel players, unlimited rigidbodies
+author increpare
+homepage www.increpare.com
+
+verbose_logging
+
+(
+
+This is a sample of 
+
+- Unlimited rigid bodies
+- Multiple players moving in parallel
+
+It's made as an example for the extended rigid body tutorial here:
+
+https://www.puzzlescript.net/Documentation/rigidbodies.html
+
+)
+
+========
+OBJECTS
+========
+
+Background
+green
+
+Wall
+BROWN DARKBROWN
+00010
+11111
+01000
+11111
+00010
+
+Player
+Black Orange White Blue
+.000.
+.111.
+22222
+.333.
+.3.3.
+
+ Crate
+Yellow orange
+00000
+01110
+01110
+01110
+00000
+
+
+(The directional overlays bellow establish connections between crates)
+
+ Crate_U
+orange
+.000.
+.....
+.....
+.....
+.....
+
+ Crate_D
+orange
+.....
+.....
+.....
+.....
+.000.
+
+ Crate_L
+orange
+.....
+0....
+0....
+0....
+.....
+
+ Crate_R
+orange
+.....
+....0
+....0
+....0
+.....
+
+CanMove
+red
+.....
+.....
+..0..
+.....
+.....
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Player
+
+w = Crate and Crate_U
+x = Crate and Crate_D
+a = Crate and Crate_L
+d = Crate and Crate_R
+
+e = Crate and Crate_U and Crate_L
+z = Crate and Crate_D and Crate_L
+q = Crate and Crate_U and Crate_R
+c = Crate and Crate_D and Crate_R
+
+r = Crate and Crate_L and Crate_R
+t = Crate and Crate_D and Crate_U
+
+1 = Crate and Crate_D and Crate_L and Crate_R
+2 = Crate and Crate_U and Crate_L and Crate_R
+3 = Crate and Crate_U and Crate_D and Crate_L
+4 = Crate and Crate_U and Crate_D and Crate_R
+
+0 = Crate and Crate_U and Crate_D and Crate_L and Crate_R
+
+5 = Crate
+
+ Crate_Connection = Crate_U or Crate_D or Crate_L or Crate_R
+
+Pusher = Player or Crate
+Pushable = Crate 
+Solid = Crate or Player
+
+=======
+SOUNDS
+=======
+
+ Crate MOVE 36772507
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Player, Wall, Crate
+ Crate_U
+ Crate_D
+ Crate_L
+ Crate_R
+CanMove
+
+======
+RULES
+======
+
+(For making maps easily: uncomment out the next few lines + press action to discard all boundaries and recreate them)
+
+( [ action player ] [ Crate_connection ] -> [ action player ] [ ] )
+( up [ action player ] [ Crate | Crate ] -> [ action player ] [ Crate Crate_u | Crate Crate_d ] )
+( right [ action player ] [ Crate | Crate ] -> [ action player ] [ Crate Crate_r | Crate Crate_l ] )
+
+
+(Step 1: propagate motions forward)
+[ > Pusher | Pushable ] -> [ > Pusher | > Pushable ]
++ up [ moving Crate Crate_U | Crate ] -> [ moving Crate Crate_U | moving Crate ]
++ down [ moving Crate Crate_D | Crate ] -> [ moving Crate Crate_D | moving Crate ]
++ left [ moving Crate Crate_L | Crate ] -> [ moving Crate Crate_L | moving Crate ]
++ right [ moving Crate Crate_R | Crate ] -> [ moving Crate Crate_R | moving Crate ]
+
+
+(Step 1: If a crate can't move, we have to back-propagate the can't-move-ness, including possibly through players)
+[ > Solid | wall ] -> [ Solid | wall ]
+
+[ > Solid | stationary Solid ] -> [ Solid | Solid ]
++ up [ moving Crate Crate_U | stationary Crate ] -> [ Crate Crate_U | Crate ]
++ down [ moving Crate Crate_D | stationary Crate ] -> [ Crate Crate_D | Crate ]
++ left [ moving Crate Crate_L | stationary Crate ] -> [ Crate Crate_L | Crate ]
++ right [ moving Crate Crate_R | stationary Crate ] -> [ Crate Crate_R | Crate ]
+
+
+(Step 3: Mark all crates that are still moving as possibly being able to move)
+[ moving Pushable ] -> [ Pushable CanMove ]
+
+(Step 4: redo Step 1, but only through things that are marked as being possibly able to move)
+[ > Pusher | CanMove Pushable ] -> [ > Pusher | CanMove > Pushable ]
++ up [ moving Crate Crate_U | CanMove Crate ] -> [ moving Crate Crate_U | CanMove moving Crate ]
++ down [ moving Crate Crate_D | CanMove Crate ] -> [ moving Crate Crate_D | CanMove moving Crate ]
++ left [ moving Crate Crate_L | CanMove Crate ] -> [ moving Crate Crate_L | CanMove moving Crate ]
++ right [ moving Crate Crate_R | CanMove Crate ] -> [ moving Crate Crate_R | CanMove moving Crate ]
+
+(Step 5: remove all the CanMove tags)
+[ CanMove ] -> [ ]
+
+(Step 6: move connections along with the crates themselves)
+[ moving Crate stationary Crate_connection ] -> [ moving Crate moving Crate_connection ]
+
+
+==============
+WINCONDITIONS
+==============
+
+=======
+LEVELS
+=======
+
+###############
+#..ca.........#
+#.ce....ca....#
+#.t...d1e.....#
+#.w....w......#
+#....d1ap5.dz.#
+#....pw...5.w5#
+#......dz.....#
+#.......t..dz.#
+#..x..cre...w.#
+#..w..w...5...#
+#.............#
+###############
+
+
+USER PROMPT:
+The following PuzzleScript game code:
+```plaintext
+title Sokoban Clone
+author YourName
+
+========
+OBJECTS
+========
+
+Background
+White
+
+Wall
+DarkGray
+00000
+00000
+00000
+00000
+00000
+
+Player
+Blue LightBlue
+..1..
+.111.
+11111
+.111.
+..1..
+
+Crate
+Orange DarkOrange
+.111.
+11111
+11111
+11111
+.111.
+
+Target
+LightGreen
+00000
+01110
+01210
+01110
+00000
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Player
+* = Crate
+O = Target
+@ = Crate and Target
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Target
+Player, Crate, Wall
+
+======
+RULES
+======
+
+[ > Player | Crate ] -> [ > Player | > Crate ]
+[ > Player | Wall ] -> [ Player | Wall ]
+
+==============
+WINCONDITIONS
+==============
+
+All Crate on Target
+
+=======
+LEVELS
+=======
+
+#####
+#...#
+#.P.#
+#.#.#
+#*O*#
+#####
+
+#####
+#...#
+#*P*#
+#.#.#
+#O.O#
+#####
+
+#####
+#.#.#
+#*P*#
+#.O.#
+#...#
+#####
+
+```
+produced the following console output:
+=================================
+line 28 : Was looking for color for object CRATE, got "darkorange" instead.
+line 29 : Trying to access color number 1 from the color palette of sprite CRATE, but there are only 1 defined in it.
+line 30 : Trying to access color number 1 from the color palette of sprite CRATE, but there are only 1 defined in it.
+line 31 : Trying to access color number 1 from the color palette of sprite CRATE, but there are only 1 defined in it.
+line 32 : Trying to access color number 1 from the color palette of sprite CRATE, but there are only 1 defined in it.
+line 33 : Trying to access color number 1 from the color palette of sprite CRATE, but there are only 1 defined in it.
+too many errors, aborting compilation
+Errors detected during compilation; the game may not work correctly.
+Return a repaired version of the code that addresses these errors. First, reason about your task and determine the best plan of action. Then, write your code. Return your code in full, inside a ```plaintext code block.

@@ -6,9 +6,9 @@ The following PuzzleScript game code:
 ```plaintext
 ======
 
-title Collect the Key
-author Game Designer
-homepage https://puzzlescript.net
+Title: Collect the Key
+Author: Game Designer
+Homepage: https://puzzlescript.net
 
 ======
 
@@ -47,6 +47,15 @@ W = Wall
 
 SOUNDS
 
+SFX0
+playSound sound0
+
+SFX1
+playSound sound1
+
+SFX2
+playSound sound2
+
 ======
 
 COLLISIONLAYERS
@@ -62,26 +71,26 @@ Wall
 
 RULES
 
-[ > Player | Key ] -> [ Player | Background ]
-[ Player | Key ] -> [ Player | Background ]
-[ > Player | Door ] -> [ Player | Background ]
-[ Player | Goal ] -> [ Player | Background ]
+[> Player | Key] -> [Player | Background] SFX0
+[> Player | Door] -> [Player | Background] SFX1
+[Player | Goal] -> [Player | Goal] SFX2
 
 ======
 
 WINCONDITIONS
 
+No Key
 All Goal
 
 ======
 
 LEVELS
 
-P . . . .
-. W W W D
-. W K G W
-. W W W W
-. . . . .
+P . . . . 
+. W W W D 
+. W K G W 
+. W W W W 
+. . . . . 
 
 . . . P .
 W W W W .
@@ -96,10 +105,16 @@ END
 ```
 produced the following console output:
 =================================
-line 88 : Key "E" not found. Do you need to add it to the legend, or define a new object?
-line 88 : Key "N" not found. Do you need to add it to the legend, or define a new object?
-line 74 : Error, symbol " ", used in map, not found.
-line 80 : Error, symbol " ", used in map, not found.
-line 88 : Error, symbol "e", used in map, not found.
+line 45 : unexpected sound token "playsound".
+line 48 : unexpected sound token "playsound".
+line 51 : unexpected sound token "playsound".
+line 97 : Key "E" not found. Do you need to add it to the legend, or define a new object?
+line 97 : Key "N" not found. Do you need to add it to the legend, or define a new object?
+line 83 : Error, symbol " ", used in map, not found.
+line 89 : Error, symbol " ", used in map, not found.
+line 97 : Error, symbol "e", used in map, not found.
+line 44 : incorrect sound declaration.
+line 47 : incorrect sound declaration.
+line 50 : incorrect sound declaration.
 Errors detected during compilation; the game may not work correctly.
 Return a repaired version of the code that addresses these errors. Return your code in full, inside a ```plaintext code block.

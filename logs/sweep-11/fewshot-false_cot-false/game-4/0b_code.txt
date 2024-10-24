@@ -1,0 +1,82 @@
+Certainly! Below is a complete PuzzleScript game code for a simple game called "Treasure Hunt". In this game, the player must navigate a maze and collect all the treasures to win.
+
+```plaintext
+===========
+OBJECTS
+===========
+Background
+LightGray
+
+Player
+Green
+..0..
+.000.
+00000
+.000.
+..0..
+
+Wall
+Black
+00000
+00000
+00000
+00000
+00000
+
+Treasure
+Yellow
+..0..
+.000.
+.0.0.
+.000.
+..0..
+
+===========
+LEGEND
+===========
+. = Background
+P = Player
+# = Wall
+T = Treasure
+
+===========
+SOUNDS
+===========
+Treasure sound treasures.ogg
+
+===========
+COLLISIONLAYERS
+===========
+Background
+Wall
+Player, Treasure
+
+===========
+RULES
+===========
+[Player | Treasure] -> [Player | ]
+
+===========
+WINCONDITIONS
+===========
+All Treasures on Background
+
+===========
+LEVELS
+===========
+# ##### #
+# P . . #
+# . # . #
+# T . T #
+# . # . #
+# . . . #
+# ##### #
+```
+
+In this game:
+- The `Player` object is controlled by the player and can move in four directions.
+- The `Wall` objects represent impassable boundaries.
+- The `Treasure` objects are collectable items the player must gather.
+- The game is won when all `Treasure` objects have been collected.
+
+This simple script includes the necessary game elements, objective, and a basic level to get started. You can further expand the game by adding more levels or enhancing the gameplay.

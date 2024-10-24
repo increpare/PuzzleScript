@@ -1,0 +1,128 @@
+SYSTEM PROMPT:
+You are a game designer, familiar with the PuzzleScript game description language. 
+
+USER PROMPT:
+The following PuzzleScript game code:
+```plaintext
+Title: Block Pusher
+Author: Your Name
+Homepage: http://www.yoursite.com
+# Required Metadata
+
+===========
+OBJECTS
+===========
+
+Background
+white
+
+Player
+red
+...
+...
+.#.
+
+Block
+blue
+...
+...
+...
+
+Target
+yellow
+...
+...
+...
+
+TargetBlock
+green
+...
+...
+...
+
+============
+LEGEND
+============
+
+. = Background
+P = Player
+B = Block
+T = Target
+G = TargetBlock
+
+===============
+SOUNDS
+===============
+
+# Define game sounds here (optional)
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Player
+Block
+Target
+TargetBlock
+
+===============
+RULES
+===============
+
+# Player movement
+[ > Player | Background] -> [ > Player | Player]
+
+# Pushing blocks
+[ > Player | Block | Background] -> [ > Player | > Block | Player]
+
+# Block reaching target
+[ > Player | Block | Target] -> [ > Player | > TargetBlock | Player]
+
+# Player walking over targets
+[ Player | Player | Target] -> [ Player | Target | Player]
+
+# Winning condition - Block reaches Target
+WinCondition
+All Target on TargetBlock
+
+==============
+LEVELS
+==============
+
+# Add some initial levels
+# Level 1
+########
+#....T.#
+#..B...#
+#..P...#
+########
+
+# Level 2
+########
+#..T..#
+#..B..#
+#..P..#
+########
+
+# Level 3
+#########
+#..T...#
+#..B...#
+#..P...#
+#......#
+#########
+
+```
+produced the following console output:
+=================================
+line 17 : Unknown junk in spritematrix for object PLAYER.
+line 51 : Was expecting a sound event (like SFX3, or ENDLEVEL) or an object name, but didn't find either.
+line 67 : Name "#", referred to in a rule, does not exist.
+line 67 : Name "movement", referred to in a rule, does not exist.
+line 70 : Name "#", referred to in a rule, does not exist.
+line 70 : Name "pushing", referred to in a rule, does not exist.
+line 70 : Name "blocks", referred to in a rule, does not exist.
+too many errors, aborting compilation
+Errors detected during compilation; the game may not work correctly.
+Return a repaired version of the code that addresses these errors. Return your code in full, inside a ```plaintext code block.

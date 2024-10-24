@@ -1,0 +1,118 @@
+SYSTEM PROMPT:
+You are a game designer, familiar with the PuzzleScript game description language. 
+
+USER PROMPT:
+The following PuzzleScript game code:
+```plaintext
+===========
+title Simple Sokoban
+===========
+
+===========
+author GameDesigner
+===========
+
+===========
+homepage www.example.com
+===========
+
+===========
+objective Push all the boxes onto the targets.
+===========
+
+===========
+palette
+===========
+BackgroundColor:
+000000
+PlayerColor:
+00FF00
+WallColor:
+FF0000
+BoxColor:
+0000FF
+TargetColor:
+FFFF00
+
+===========
+objects
+===========
+Background
+BackgroundColor
+
+Player
+PlayerColor
+
+Wall
+WallColor
+
+Box
+BoxColor
+
+Target
+TargetColor
+
+===========
+legend
+===========
+. = Background
+# = Wall
+P = Player
+B = Box
+T = Target
+
+===========
+sounds
+===========
+
+===========
+collisionlayers
+===========
+Background
+Wall
+Player, Box
+Target
+
+===========
+rules
+===========
+[ > Player | Box ] -> [  > Player | > Box ]
+
+===========
+winconditions
+===========
+All Box on Target
+
+===========
+levels
+===========
+#####
+#...#
+#.T.#
+#PB.#
+#####
+
+#####
+#...#
+#T..#
+#B#P#
+#####
+
+#####
+#T..#
+#P.B#
+#..T#
+#####
+
+```
+produced the following console output:
+=================================
+line 14 : Unrecognised stuff in the prelude.
+line 18 : Unrecognised stuff in the prelude.
+line 20 : Unrecognised stuff in the prelude.
+line 21 : Unrecognised stuff in the prelude.
+line 22 : Unrecognised stuff in the prelude.
+line 23 : Unrecognised stuff in the prelude.
+too many errors, aborting compilation
+Errors detected during compilation; the game may not work correctly.
+Return a repaired version of the code that addresses these errors. Return your code in full, inside a ```plaintext code block.

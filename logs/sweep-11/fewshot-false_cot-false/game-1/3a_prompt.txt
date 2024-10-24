@@ -1,0 +1,120 @@
+SYSTEM PROMPT:
+You are a game designer, familiar with the PuzzleScript game description language. 
+
+USER PROMPT:
+The following PuzzleScript game code:
+```plaintext
+Title: Push and Collect
+
+Author: PuzzleScript Designer
+
+========
+OBJECTS
+========
+
+Background
+LIGHTGREEN
+00000
+00000
+00000
+00000
+00000
+
+Player
+ORANGE
+..0..
+.000.
+..0..
+..0..
+.....
+
+Wall
+BLACK
+00000
+00000
+00000
+00000
+00000
+
+Box
+BROWN
+.....
+.000.
+.0.0.
+.000.
+.....
+
+Goal
+YELLOW
+.....
+.....
+..0..
+.....
+.....
+
+========
+LEGEND
+========
+
+= Background
+P = Player
+W = Wall
+B = Box
+G = Goal
+
+========
+SOUNDS
+========
+
+=============== 
+COLLISIONLAYERS
+===============
+
+Background
+Player
+Wall, Box
+Goal
+
+=========
+RULES
+=========
+
+[ > P | B ] -> [ > P | > B ]
+[ P G ] -> [  | P ]
+
+========
+WINCONDITIONS
+========
+
+All Goal on Box
+
+==========
+LEVELS
+==========
+
+#########
+#  WWW  #
+#  WPB  #
+#  W G  #
+#  WWW  #
+#########
+
+========
+MESSAGES
+========
+
+Welcome to Push and Collect!
+Move the crates onto the goals.
+
+```
+produced the following console output:
+=================================
+line 53 : Only comments should go after a bunch of equals signs ('===') on a line.
+line 89 : Key "#" not found. Do you need to add it to the legend, or define a new object?
+line 90 : Key "#" not found. Do you need to add it to the legend, or define a new object?
+line 91 : Key "#" not found. Do you need to add it to the legend, or define a new object?
+line 92 : Key "#" not found. Do you need to add it to the legend, or define a new object?
+line 93 : Key "#" not found. Do you need to add it to the legend, or define a new object?
+too many errors, aborting compilation
+Errors detected during compilation; the game may not work correctly.
+Return a repaired version of the code that addresses these errors. Return your code in full, inside a ```plaintext code block.

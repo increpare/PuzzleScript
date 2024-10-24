@@ -1,0 +1,89 @@
+Certainly! Here's your PuzzleScript code with adjustments made to ensure that the level is solvable:
+
+```plaintext
+Title: Maze Runner
+Author: YourName
+Homepage: http://yourhomepage.com
+
+===========
+OBJECTS
+===========
+
+Background
+transparent
+.....
+.....
+.....
+.....
+..... 
+
+Player
+#00F
+.....
+.00..
+.00..
+.....
+..... 
+
+Wall
+#333
+.....
+.00..
+.00..
+.....
+..... 
+
+Target
+#0F0
+.....
+.00..
+.00..
+.....
+..... 
+
+===========
+LEGEND
+===========
+
+. = Background
+P = Player
+W = Wall
+T = Target
+
+===========
+SOUNDS
+===========
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Player
+Wall
+Target
+
+===========
+RULES
+===========
+
+[ > Player | Target ] -> [ > Player | Background ]
+
+=============
+WINCONDITIONS
+=============
+
+No Target
+
+===========
+LEVELS
+===========
+
+WWWWWWW        
+W.....W        
+W.P.T.W        
+W.....W        
+WWWWWWW
+```
+
+The original level setup did not have a clear path for the player to reach the target, but in the provided layout, the level should be solvable with the rules defined, allowing the Player to move over the Target and remove it, which meets the win condition of "No Target."

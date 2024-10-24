@@ -1,0 +1,130 @@
+SYSTEM PROMPT:
+You are a game designer, familiar with the PuzzleScript game description language. 
+
+USER PROMPT:
+The following PuzzleScript game code:
+```plaintext
+Title: Box Pusher
+Author: GameDesigner
+
+========
+OBJECTS
+========
+
+Background
+transparent
+
+Wall
+brown
+
+Pusher
+red
+
+Box
+blue
+
+Target
+green
+
+BoxOnTarget
+blue
+
+PusherOnTarget
+red
+
+========
+LEGEND
+========
+
+. = Background
+# = Wall
+P = Pusher
+B = Box
+T = Target
+O = BoxOnTarget
+@ = PusherOnTarget
+Player = Pusher or PusherOnTarget
+
+========
+SOUNDS
+========
+
+SFX0 123456 # Example sound seed number
+
+========
+COLLISIONLAYERS
+========
+
+Background
+Wall
+Box, BoxOnTarget
+Player
+Target
+
+========
+RULES
+========
+
+[> Player | Box] -> [> Player | > Box]
+[> Player | Target] -> [> PusherOnTarget | Target]
+[> Player | BoxOnTarget] -> [> PusherOnTarget | Box]
+[> PusherOnTarget] -> [> Player | Target]
+[> Player | Box | Target] -> [> Player | > BoxOnTarget | Target]
+
+# Removed potentially incorrect rule to resolve length mismatch
+
+========
+WINCONDITIONS
+========
+
+All BoxOnTarget
+
+========
+LEVELS
+========
+
+#####
+#...#
+#.O.#
+#...#
+#.P.#
+#..B#
+#####
+
+#####
+#...#
+#.O.#
+#...#
+#...#
+#PBO#
+#####
+
+#######
+#.....#
+#.O.O.#
+#.....#
+#PB.BO#
+#...B.#
+#######
+
+#########
+#.......#
+#.O.O.O.#
+#.......#
+#PB.BOBO#
+#.......#
+#########
+
+
+```
+produced the following console output:
+=================================
+line 46 : I wasn't expecting anything after the sound declaration 123456 on this line, so I don't know what to do with "#" here.
+line 68 : Objects cannot appear outside of square brackets in rules, only directions can.
+line 68 : Name "removed", referred to in a rule, does not exist.
+line 68 : Name "potentially", referred to in a rule, does not exist.
+line 68 : Name "incorrect", referred to in a rule, does not exist.
+line 68 : Name "rule", referred to in a rule, does not exist.
+too many errors, aborting compilation
+Errors detected during compilation; the game may not work correctly.
+Return a repaired version of the code that addresses these errors. Return your code in full, inside a ```plaintext code block.

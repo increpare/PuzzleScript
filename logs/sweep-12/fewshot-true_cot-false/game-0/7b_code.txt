@@ -1,0 +1,157 @@
+```plaintext
+title Corral Chaos
+author AI Game Designer
+
+color_palette c64
+
+========
+OBJECTS
+========
+
+Background
+#A4C2E0
+.....
+.....
+.....
+.....
+.....
+
+Grass
+#7DA270
+.....
+.....
+.....
+.....
+.....
+
+Wall
+#4A4A4A
+.....
+.....
+.....
+.....
+.....
+
+Sheep
+#FFFFFF
+.....
+..0..
+.000.
+..0..
+.0.0.
+
+Barn
+#8D5524
+.....
+.0.0.
+00000
+00000
+.....
+
+Player
+#DAA520
+.....
+..0..
+.0A0.
+A00A.
+.....
+
+=======
+LEGEND
+=======
+. = Background
+# = Wall
+s = Sheep
+b = Barn
+p = Player
+= Grass
+
+=========
+SOUNDS
+=========
+Sheep MOVE 45703848
+Player MOVE 25380307
+startlevel 5092838
+endlevel 8848105
+showmessage 43742098
+closemessage 43742098
+startgame 5908317
+endgame 5092841
+
+================
+COLLISIONLAYERS
+================
+Background
+Grass
+Wall
+Barn
+Player
+Sheep
+
+======
+RULES
+======
+[ > Player | Sheep ] -> [ > Player | > Sheep ] 
+
+[Barn | no Sheep] -> [Barn] sfx0
+
+==============
+WINCONDITIONS
+==============
+no Sheep
+
+=======
+LEVELS
+=======
+
+message Help the shepherd round up the sheep into the barn!
+
+#######
+#.....#
+#..p..#
+#..s..#
+#.....#
+#..b..#
+#.....#
+#######
+
+#######
+#.....#
+#..p..#
+#..s..#
+#..s..#
+#..b..#
+#..s..#
+#######
+
+#######
+#.....#
+#.p.s.#
+#.s.s.#
+#.s.s.#
+#.b.s.#
+#.....#
+#######
+
+#######
+#.....#
+#p..s.#
+#.s.s.#
+#.....#
+#..b..#
+#.....#
+#######
+
+#######
+#s..s.#
+#.p...#
+#.b...#
+#.....#
+#.....#
+#######
+``` 
+
+### Summary of Fixes:
+1. **Player Sprite Matrix**: Fixed the player sprite to be exactly 5x5 pixels and cleaned up any 'junk' that was not conforming to the grid format.
+2. **Legend and Comments**: Reorganized and adjusted the syntax for sections following equals signs (`===`) to be in proper format.
+3. **Rule patterns**: Ensured each pattern on the left has a corresponding pattern of equal length on the right for rules.

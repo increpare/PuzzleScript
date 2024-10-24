@@ -1,0 +1,100 @@
+Sure! Here is a complete code for a simple PuzzleScript game called "Blocked Path". In this game, the player must navigate from the start to the target while avoiding obstacles.
+
+```plaintext
+title Blocked Path
+author PuzzleScript AI
+
+========
+OBJECTS
+========
+
+Background
+lightgray
+.....
+.....
+.....
+.....
+.....
+
+Player
+blue
+..0..
+.000.
+..0..
+.....
+.....
+
+Target
+green
+..0..
+.0.0.
+.000.
+.0.0.
+..0..
+
+Wall
+black
+.....
+.000.
+.000.
+.000.
+.....
+
+=======
+LEGEND
+=======
+
+. = Background
+P = Player
+T = Target
+# = Wall
+
+=========
+SOUNDS
+=========
+
+moveEr 39625601
+endlevel 24622400
+startlevel 15297100
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Target
+Wall
+Player
+
+======
+RULES
+======
+
+[ > Player | Target ] -> [ > Player | Target ]
+[ > Player | Wall ] -> [ Player | Wall ]
+
+==============
+WINCONDITIONS
+==============
+
+all Player on Target
+
+=======
+LEVELS
+=======
+
+message Welcome to Blocked Path!
+##########
+#........#
+#..####..#
+#..#..#..#
+#..#P.#..#
+#..#..#..#
+#..####..#
+#....T...#
+##########
+
+message Congratulations! You reached the target.
+```
+
+This game consists of simple rules and aims to teach basic navigation to reach the target. Adjust the layout of walls and player start/target positions within the `LEVELS` section to design different challenges.

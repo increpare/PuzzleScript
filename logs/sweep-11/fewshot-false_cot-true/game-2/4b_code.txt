@@ -1,0 +1,95 @@
+Let's first analyze the code to understand the errors and fix them:
+
+1. **Line Syntax:** The lines within the sections under `=== OBJECTS ===` are not formatted correctly.
+   - Each object should have a name followed by its depiction without spaces. This includes multi-line depictions.
+   - Correct object definition has three lines: name, color, and pixel representation.
+
+2. **Multiple Equals Error:** The syntax under `=== OBJECTS ===` should be properly laid out with no extra characters or spaces in color and pixel representations to introduce errors.
+
+3. **Missing Background in RULES:** Rules should have matching background, such as using the default object for spaces.
+
+4. **WinConditions:** The `All Block on Goal` is correctly stated but attention should be paid to alignment and whitespace.
+
+Let's adjust the code accordingly:
+
+```plaintext
+title Sokoban
+
+=== OBJECTS ===
+Background
+color transparent
+
+Player
+color Blue
+.p.
+.p.
+...
+
+Wall
+color Grey
+.w.
+.w.
+.w.
+
+Block
+color Green
+.b.
+.b.
+...
+
+Goal
+color Red
+.g.
+.g.
+...
+
+=== LEGEND ===
+. = Background
+p = Player
+w = Wall
+b = Block
+g = Goal
+
+=== RULES ===
+[Player | Block] -> [ > Player | > Block ]
+[Player | ] -> [ > Player |  ]
+
+=== WINCONDITIONS ===
+All Block on Goal
+
+=== LEVELS ===
+
+// Level 1
+#####
+#p  #
+#   #
+# b #
+# g #
+#####
+
+// Level 2
+#####
+#p  #
+# b #
+#   #
+# gg#
+#   #
+#####
+
+// Level 3
+#######
+#     #
+#  p  #
+#  b  #
+#  b  #
+#  gg #
+#     #
+#######
+```
+
+### Explanation of Fixes:
+- **Removed extra spaces** in the `color` and object representations.
+- **Ensured consistency** in the object definitions and alignment in the code.
+- The formatting within the sections `LEGEND`, `RULES`, `WINCONDITIONS`, and `LEVELS` was retained as it follows proper syntax.
+
+This corrected code should compile and execute without errors in the PuzzleScript engine.

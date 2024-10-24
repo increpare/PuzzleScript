@@ -6,9 +6,9 @@ The following PuzzleScript game code:
 ```plaintext
 ======
 
-title Collect the Key
-author Game Designer
-homepage https://puzzlescript.net
+Title: Collect the Key
+Author: Game Designer
+Homepage: https://puzzlescript.net
 
 ======
 
@@ -47,6 +47,10 @@ W = Wall
 
 SOUNDS
 
+SFX0
+SFX1
+SFX2
+
 ======
 
 COLLISIONLAYERS
@@ -62,15 +66,15 @@ Wall
 
 RULES
 
-[ > Player | Key ] -> [ Player | Background ]
-[ Player | Key ] -> [ Player | Background ]
-[ > Player | Door ] -> [ Player | Background ]
-[ Player | Goal ] -> [ Player | Background ]
+[> Player | Key] -> [Player | Background] SFX0
+[> Player | Door] -> [Player | Background] SFX1
+[Player | Goal] -> [Player | Goal] SFX2
 
 ======
 
 WINCONDITIONS
 
+No Key
 All Goal
 
 ======
@@ -96,10 +100,13 @@ END
 ```
 produced the following console output:
 =================================
-line 88 : Key "E" not found. Do you need to add it to the legend, or define a new object?
-line 88 : Key "N" not found. Do you need to add it to the legend, or define a new object?
-line 74 : Error, symbol " ", used in map, not found.
-line 80 : Error, symbol " ", used in map, not found.
-line 88 : Error, symbol "e", used in map, not found.
+line 92 : Key "E" not found. Do you need to add it to the legend, or define a new object?
+line 92 : Key "N" not found. Do you need to add it to the legend, or define a new object?
+line 78 : Error, symbol " ", used in map, not found.
+line 84 : Error, symbol " ", used in map, not found.
+line 92 : Error, symbol "e", used in map, not found.
+line 44 : incorrect sound declaration.
+line 45 : incorrect sound declaration.
+line 46 : incorrect sound declaration.
 Errors detected during compilation; the game may not work correctly.
 Return a repaired version of the code that addresses these errors. Return your code in full, inside a ```plaintext code block.

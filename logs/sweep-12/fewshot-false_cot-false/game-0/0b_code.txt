@@ -1,0 +1,85 @@
+Certainly! Below is an example of a simple PuzzleScript game called "Catch the Star". In this game, the player controls a character that must reach a star placed on the map.
+
+```plaintext
+===========
+Title
+===========
+Catch the Star
+
+===========
+Author
+===========
+Your Name
+
+===========
+Homepage
+===========
+www.example.com
+
+===========
+Legend
+===========
+. = Background
+# = Wall
+P = Player
+* = Star
+
+===========
+Sounds
+===========
+# Sound specifications can go here
+
+===========
+CollisionLayers
+===========
+Background
+Player, Star, Wall
+
+===========
+Rules
+===========
+
+[Player | Star] -> [Player Star]
+
+===========
+WinConditions
+===========
+All Star on Player
+
+===========
+Levels
+===========
+
+####
+#P.#
+#..#
+#.*#
+####
+
+####
+#* #
+#.P#
+## #
+####
+
+########
+#.#..#.#
+#.###* #
+#P..   #
+########
+
+===========
+Messages
+===========
+Congratulations! You caught the star!
+
+===========
+ColorPalette
+===========
+Background #000000
+Wall #2f4f4f
+Player #ff6347
+Star #ffd700
+```
+
+This code includes a simple 2D puzzle game where the objective is to move the player ('P') to the location of a star ('*') while avoiding walls ('#'). The game ends when the player successfully moves onto the star. You can adjust the levels or expand the game further by adding more complex rules and elements.

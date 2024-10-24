@@ -1,0 +1,119 @@
+The errors in your PuzzleScript code primarily stem from issues related to object color definitions. The console output reveals that the numeric values used for defining object colors are being misinterpreted as names, leading to conflicts and compilation failures.
+
+To fix these errors, let's examine the issues:
+
+1. **Naming Conflicts**: The issue suggests that numeric values like "0" or "255" are conflicting because they are being interpreted as object names. This usually happens when the object color is not defined correctly in the `objects` section.
+
+2. **Correct Syntax**: Each object should be defined using a name followed by a color in the form of "RGB" integers. If the syntax is incorrect, the game engine might not be able to distinguish between the object name and its color.
+
+3. **Formatting**: Ensure each object color is correctly formatted as three integers separated by spaces.
+
+To solve these issues, I will reformat the `objects` section to correctly assign colors using appropriate syntax. Here's the revised code:
+
+```plaintext
+=========
+title Sokoban Simple
+author YourName
+
+=========
+objects
+Background 255 255 255
+Wall 0 0 0
+Player 0 255 0
+Box 255 165 0
+Target 255 0 0
+
+=========
+legend
+P = Player
+B = Box
+T = Target
+. = Background
+# = Wall
+
+=========
+sounds
+# Player movement
+up Player
+    sfx0
+
+left Player
+    sfx0
+
+right Player
+    sfx0
+
+down Player
+    sfx0
+
+# Box being pushed
+up Player Box
+    sfx1
+
+left Player Box
+    sfx1
+
+right Player Box
+    sfx1
+
+down Player Box
+    sfx1
+
+# Box placed on target
+Player Box Target
+    sfx2
+
+=========
+collisionlayers
+Background
+Wall
+Box
+Player
+Target
+
+=========
+rules
+# Player movement
+[ > Player | ] -> [> Player | ]
+[ < Player | ] -> [< Player | ]
+[ ^ Player | ] -> [^ Player | ]
+[ v Player | ] -> [v Player | ]
+
+# Push the box
+[ > Player | Box | ] -> [> Player | > Box | ]
+[ < Player | Box | ] -> [< Player | < Box | ]
+[ ^ Player | Box | ] -> [^ Player | ^ Box | ]
+[ v Player | Box | ] -> [v Player | v Box | ]
+
+=========
+winconditions
+All Box on Target
+
+=========
+levels
+
+# Level 1
+#########
+#.......#
+#..P....#
+#...B...#
+#...T...#
+#########
+
+# Level 2
+#########
+#..####.#
+#..#....#
+#..#BTP.#
+#..#....#
+#..####.#
+#########
+
+```
+
+### Changes Made:
+- Changed `"Floor"` to `"Background"` for better consistency with how it is used in the script.
+- Specified Wall objects explicitly as their own collision layer for clarity.
+- Resolved color and object name confusion ensuring correct syntax for each component.
+
+This corrected code should resolve the issues encountered in the console output.

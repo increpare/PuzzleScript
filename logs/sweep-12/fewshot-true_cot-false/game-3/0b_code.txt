@@ -1,0 +1,99 @@
+```plaintext
+title Light And Dark
+author YourName
+
+========
+OBJECTS
+========
+
+Background
+white
+
+Wall
+darkgray
+00010
+11111
+01000
+11111
+00010
+
+Player
+black yellow
+.000.
+.111.
+.101.
+.111.
+.....
+
+LightSource
+yellow
+.....
+.....
+..0..
+.....
+.....
+
+Target
+lightblue
+.....
+.000.
+.0.0.
+.000.
+.....
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Player
+L = LightSource
+@ = Target
+
+=======
+SOUNDS
+=======
+
+move 81000012
+target 51001234
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Player, Wall, LightSource, Target
+
+======
+RULES
+======
+
+[ > Player | LightSource ] -> [ > Player | > LightSource ] move
+
+(Activate targets when light is over them)
+[ LightSource | Target ] -> [ LightSource | Target ] target
+
+(remove light from empty spaces)
+[ LightSource | no LightSource no Player no Target ] -> []
+
+==============
+WINCONDITIONS
+==============
+
+no Target
+
+=======
+LEVELS
+=======
+
+'''
+Level 1
+'''
+#########
+#..@...@#
+#.L#.#..#
+#..P..@.#
+#....@..#
+#########
+```

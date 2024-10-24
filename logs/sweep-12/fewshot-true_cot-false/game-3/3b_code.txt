@@ -1,0 +1,102 @@
+Here is the corrected version of the PuzzleScript code. The main issues in the original code were related to sound token usage and rule syntax errors:
+
+```plaintext
+title Light And Dark
+author YourName
+
+========
+OBJECTS
+========
+
+Background
+white
+
+Wall
+darkgray black
+00010
+11111
+01000
+11111
+00010
+
+Player
+black yellow
+.000.
+.111.
+.101.
+.111.
+.....
+
+LightSource
+yellow
+.....
+.....
+..0..
+.....
+.....
+
+Target
+lightblue
+.....
+.000.
+.0.0.
+.000.
+.....
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Player
+L = LightSource
+@ = Target
+
+=======
+SOUNDS
+=======
+
+move sound 81000012
+target sound 51001234
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Player, Wall, LightSource, Target
+
+======
+RULES
+======
+
+[ > Player | LightSource ] -> [ > Player | > LightSource ] move
+
+(Activate targets when light is over them)
+[ LightSource | Target ] -> [ LightSource | Target ] target
+
+(remove light from empty spaces)
+[ LightSource | no LightSource no Player no Target ] -> [ ]
+
+==============
+WINCONDITIONS
+==============
+
+no Target
+
+=======
+LEVELS
+=======
+
+#########
+#..@...@#
+#.L#.#..#
+#..P..@.#
+#....@..#
+#########
+```
+
+Key changes include:
+- Corrected the sound declaration syntax by using the pattern `name sound [sound_ID]`.
+- Fixed rule syntax associated with sound actions in the rules by removing the "sound_" prefix when calling the sound within a rule.

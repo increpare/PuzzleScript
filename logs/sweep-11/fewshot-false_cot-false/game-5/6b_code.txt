@@ -1,0 +1,97 @@
+The issue with your game code is that there is no way to move the `Player` to the `Goal` due to the placement of walls or other game mechanics preventing the goal from being reached. Here is a corrected version of the code where the levels are solvable:
+
+```plaintext
+Title: Reach the Goal
+Author: PuzzleScriptUser
+Homepage: https://www.puzzlescript.net
+
+===========
+OBJECTS
+===========
+
+Background
+lightgrey
+00000
+00000
+00000
+00000
+00000
+
+Player
+red
+.....
+..0..
+.000.
+..0..
+.....
+
+Wall
+black
+00000
+00000
+00000
+00000
+00000
+
+Goal
+green
+.....
+.....
+..0..
+.....
+.....
+
+===========
+LEGEND
+===========
+
+. = Background
+P = Player
+W = Wall
+G = Goal
+
+===========
+SOUNDS
+===========
+
+===========
+COLLISIONLAYERS
+===========
+
+Background
+Wall
+Player, Goal
+
+===========
+RULES
+===========
+
+[ Player | Goal ] -> [ > Player | Goal ]
+[ Player | ] -> [ > Player | ]
+
+===========
+WINCONDITIONS
+===========
+
+All Player on Goal
+
+===========
+LEVELS
+===========
+
+WWWWWW
+W....W
+W..PGW
+WWWWWW
+
+WWWWWW
+W....W
+WP.WGW
+WWWWWW
+```
+
+I have adjusted Level 0 so that the player can move to the goal:
+
+- The goal (G) is reachable by moving the player (P) one step to the right.
+
+Level 1 remains unchanged as it was already solvable in terms of goal placement.

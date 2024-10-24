@@ -133,6 +133,7 @@ def gen_game():
             with open(solver_output_path, 'w') as f:
                 f.write(solver_text)
     gen_game_output_path = os.path.join(save_dir, f'{n_iter}b_code.txt')
+    print(gen_game_output_path)
     if not os.path.isfile(gen_game_output_path):
         gen_game_prompt_output_path = os.path.join(save_dir, f'{n_iter}a_prompt.txt')
         system_prompt = game_gen_system_prompt
@@ -174,7 +175,7 @@ def gen_game():
         with open(gen_game_output_path, 'w', encoding='utf-8') as f:
             f.write(text)
     else:
-        with open(gen_game_output_path, 'r') as f:
+        with open(gen_game_output_path, 'r', encoding='utf-8') as f:
             text = f.read()
     if text == '':
         breakpoint()
@@ -182,12 +183,10 @@ def gen_game():
     # If the code we just generated has already been solved, pass it to the client so it doesn't apply the solver to it
     sols_path = os.path.join(save_dir, f'{n_iter}e_sols.json')
     if os.path.exists(sols_path):
-        breakpoint()
         with open(sols_path, 'r') as f:
             sols = json.load(f)
     else:
         sols = {}
-    print(save_dir)
     return jsonify({
         'code': code,
         'text': plaintext,

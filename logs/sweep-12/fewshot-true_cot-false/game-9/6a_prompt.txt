@@ -1,0 +1,2219 @@
+SYSTEM PROMPT:
+You are a game designer, familiar with the PuzzleScript game description language. Here are some example games, for inspiration (do not reproduce these games exactly):
+
+title Lime Rick
+author Tommi Tuovinen
+homepage http://www.kissmaj7.com/
+
+(
+
+Ported with the very gracious permission of Tommi Touvinen
+
+The first ten levels of a neato game - you can play the full version here
+
+http://www.kongregate.com/games/KissMaj7/lime-rick
+
+The full version includes some mechanics that aren't covered in the levels here, but they are supported.
+
+)
+
+========
+OBJECTS
+========
+
+Background
+black
+
+Exit
+red
+.000.
+00000
+00000
+00000
+.000.
+
+Apple
+blue
+.000.
+00000
+00000
+00000
+.000.
+
+PlayerBodyH
+green
+.000.
+00000
+0...0
+00000
+.000.
+
+PlayerBodyV
+green
+.000.
+00.00
+00.00
+00.00
+.000.
+
+Crate
+orange
+00000
+0...0
+0...0
+0...0
+00000
+
+PlayerHead1
+lightgreen
+.000.
+0.0.0
+00000
+00000
+.000.
+
+PlayerHead2
+yellow
+.000.
+0.0.0
+00000
+00000
+.000.
+
+PlayerHead3
+orange
+.000.
+0.0.0
+00000
+00000
+.000.
+
+PlayerHead4
+red
+.000.
+0.0.0
+00000
+00000
+.000.
+
+Wall
+brown
+
+=======
+LEGEND
+=======
+
+Player = PlayerHead1 or PlayerHead2 or PlayerHead3 or PlayerHead4
+Obstacle = PlayerBodyH or PlayerBodyV or Wall or Crate or Player
+PlayerBody = PlayerBodyH or PlayerBodyV
+. = Background
+P = PlayerHead1
+# = Wall
+E = Exit
+A = Apple
+C = Crate
+
+=========
+SOUNDS
+=========
+
+sfx0 3295707 (player jump)
+sfx1 3538707 (player jump to max)
+sfx2 42451307 (player move horizontally)
+endlevel 96434300
+startgame 49875902
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Exit, Apple
+PlayerBody
+Player, Wall, Crate
+
+======
+RULES
+======
+
+(this game handles all the movement stuff itself - it removes all movements before the movement phase has a chance to tick at all)
+
+UP [ UP PlayerHead4 ] -> [ PlayerHead4 ] 
+UP [ UP PlayerHead3 | No Obstacle ] -> [ PlayerBodyV | PlayerHead4 ] sfx1
+UP [ UP PlayerHead2 | No Obstacle ] -> [ PlayerBodyV | PlayerHead3 ] sfx0
+UP [ UP PlayerHead1 | No Obstacle ] -> [ PlayerBodyV | PlayerHead2 ] sfx0
+
+horizontal [ > Player | Crate | No Obstacle ] -> [ PlayerBodyH | PlayerHead1 | Crate ] sfx2
+
+horizontal [ > Player | No Obstacle ] -> [ PlayerBodyH | PlayerHead1 ] sfx2
+
+[ Player Apple ] [ PlayerBody ] -> [ Player Apple ] [ ] 
+[ Player Apple ] -> [ Player ] 
+
+[ > Player ] -> [ Player ] 
+
+DOWN [ Player | No Obstacle ] -> [ PlayerBodyV | PlayerHead1 ] 
+DOWN [ Crate | No Obstacle ] -> [ | Crate ] 
+
+==============
+WINCONDITIONS
+==============
+
+some player on exit
+
+=======
+LEVELS
+=======
+
+message level 1 of 10
+
+###################
+#.................#
+#.................#
+#............#....#
+#............#....#
+#.......#...##....#
+#..P....#...##..E.#
+###################
+###################
+..#...#...#...#...#
+#...#...#...#...#..
+###################
+###################
+###################
+###################
+
+message level 2 of 10
+
+###################
+#.................#
+#.................#
+#.................#
+#..P............E.#
+#####.........#####
+#####.............#
+#####.............#
+#####.............#
+#####.............#
+#####.....#########
+#####.............#
+#####.............#
+#####.............#
+###################
+###################
+###################
+
+message level 3 of 10
+
+###################
+#........#........#
+#........#........#
+###.............###
+#.................#
+#.....P.....E.....#
+#....###...###....#
+#..######.######..#
+#.......#.#.......#
+#.......###.......#
+###.............###
+#.................#
+#.................#
+######.......######
+###################
+
+message level 4 of 10
+
+###################
+#..#...........#..#
+#..#.....E.....#..#
+#..#....###....#..#
+#..#...........#..#
+#..#...........#..#
+#..#...........#..#
+#..#...........#..#
+#..#...........#..#
+#..#...........#..#
+#..#...........#..#
+#..#...........#..#
+#..#...........#..#
+#..#.....P.....#..#
+###################
+
+message level 5 of 10
+
+###################
+#.................#
+#.................#
+#.................#
+#...C........C....#
+#..###......###...#
+#.................#
+#...P........E....#
+#########.##.#.####
+###################
+#.................#
+#.................#
+#.................#
+###################
+
+message level 6 of 10
+
+###################
+#..#.#....#..#....#
+#..#.#.E..#..######
+#########.#..#....#
+#....#..#.####....#
+#....#..#....######
+#########....#.#..#
+#....#..#....#.#..#
+#########.#########
+#....#....#..#....#
+######....#..#....#
+#.#..#....#########
+#.#..####.#..#..#.#
+#.#..#..#P#..#..#.#
+###################
+
+message level 7 of 10
+
+###################
+#.................#
+#...............C.#
+#............####.#
+#.................#
+#.......#...#.#...#
+#..P....#...#.#E..#
+#.###############.#
+#.###############.#
+#.#...#...#...#...#
+#...#...#...#...#.#
+###################
+#.................#
+#.................#
+###################
+
+message level 8 of 10
+
+###################
+#.................#
+#......C...C......#
+#.....###.###.....#
+#.................#
+#......C...C......#
+#.....###.###.....#
+#.................#
+#..E...C...C...P..#
+#.#######.#######.#
+#.##...##.##...##.#
+#.##.#.##.##.#.##.#
+#.##.#.#####.#.##.#
+#.................#
+###################
+
+message level 9 of 10
+
+###################
+#.................#
+#...C.............#
+#...C.............#
+#...C.............#
+#...CCC...........#
+#...CCC.C.........#
+#..CCCC.CC.......E#
+#..CCCC.CC.......C#
+#..CCCCCCC.....C.C#
+#..CCCCCCC...C.C.C#
+#.CCCCCCCCC..C.C.C#
+#.CCCCCCCCC..C.C.C#
+#PCCCCCCCCCCCC.CCC#
+###################
+
+message level 10 of 10
+
+###################
+#.................#
+#.................#
+#.................#
+#.................#
+#.E..........C....#
+####.##.....###...#
+#######.....###...#
+#.................#
+#.................#
+#...P.............#
+#..#############..#
+###################
+#.................#
+###################
+
+message congratulations!
+
+
+title Robot Spawner
+author increpare
+homepage www.puzzlescript.net
+
+========
+OBJECTS
+========
+
+Background (special, automatically placed in its own layer)
+green darkgreen
+11111
+01111
+11101
+11111
+10111
+
+Spawner (Name)
+yellow 	(Color)
+..... 	(Sprite)
+..0..
+.000.
+..0..
+.....
+
+Player (Required by game)
+pink
+..0..
+00000
+..0..
+.000.
+.0.0.
+
+RedRobot
+gray black red
+.000.
+.200.
+...0.
+00000
+01010
+
+GreenRobot
+gray black lightgreen
+.000.
+.200.
+...0.
+00000
+01010
+
+BlueRobot
+gray black lightblue
+.000.
+.200.
+...0.
+00000
+01010
+
+=======
+LEGEND
+=======
+
+Robot = RedRobot or GreenRobot or BlueRobot
+Obstacle = Player or Robot
+. = Background
+P = Player
+* = Robot
+O = Spawner
+
+=========
+SOUNDS
+=========
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Spawner
+Player, Robot
+
+======
+RULES
+======
+
+[ stationary Robot ] -> [ randomDir Robot ] 
+[ Spawner no Obstacle ] -> [ Spawner random Robot ] 
+
+==============
+WINCONDITIONS
+==============
+
+=======
+LEVELS
+=======
+
+.......
+.......
+.......
+...O...
+.......
+.P.....
+.......
+
+
+title Zen Puzzle Garden
+author lexaloffle
+homepage www.lexaloffle.com
+
+(
+
+A replication, with some really bad levels, of the rather superior Zen Puzzle Garden.  Made with permission of the unfailingly lovely Joseph White.
+
+http://www.lexaloffle.com/zen.htm
+
+)
+
+========
+OBJECTS
+========
+
+Background
+orange brown
+00100
+00000
+00010
+10000
+00000
+
+Player
+white black
+.0.0.
+01010
+00000
+.000.
+11.11
+
+Rock
+grey darkgrey yellow
+21002
+11000
+11000
+11000
+11101
+
+UnbrushedSand
+yellow orange
+00000
+01000
+00000
+00010
+00000
+
+HBrushedSand
+yellow orange
+00000
+01011
+00000
+11010
+00000
+
+VBrushedSand
+yellow orange
+01000
+01010
+00000
+01010
+00010
+
+=======
+LEGEND
+=======
+
+BrushedSand = HBrushedSand or VBrushedSand
+Sand = UnbrushedSand or BrushedSand
+Obstacle = BrushedSand or Rock
+; = Background
+O = Rock
+. = UnbrushedSand
+P = Player
+
+=========
+SOUNDS
+=========
+
+closemessage 52854909
+startgame 64192309
+endlevel 16398509
+endgame 62100709
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Sand
+Player, Rock
+
+======
+RULES
+======
+
+(The h and v sand effects are cosmetic - how could this be done in a single line if there was only one type of brushed sand?)
+
+horizontal [ UnbrushedSand > Player ] -> [ HBrushedSand > Player ] 
+vertical [ UnbrushedSand > Player ] -> [ VBrushedSand > Player ] 
+
+late [ Player BrushedSand ] -> cancel
+
+==============
+WINCONDITIONS
+==============
+
+no UnbrushedSand
+
+=======
+LEVELS
+=======
+
+message level 1 of 5
+
+;;;;;;;;;;;;
+;;;;;;;;;;;;
+;;;;;;;;;;;;
+;;;......;;;
+;;;......;;;
+;;;......;;;
+;P;..OO..;;;
+;;;......;;;
+;;;......;;;
+;;;;;;;;;;;;
+;;;;;;;;;;;;
+;;;;;;;;;;;;
+
+message level 2 of 5
+
+;;;;;;;;;;;;
+;;;;;;;;;;;;
+;;;;;;;;;;;;
+;;;......;;;
+;;;....O.;;;
+;;;......;;;
+;P;..O...;;;
+;;;......;;;
+;;;......;;;
+;;;;;;;;;;;;
+;;;;;;;;;;;;
+;;;;;;;;;;;;
+
+message level 3 of 5
+
+;;;;;;;;;;;;
+;;;;;;;;;;;;
+;;;;;;;;;;;;
+;;;......;;;
+;;;...O..;;;
+;;;......;;;
+;P;.O....;;;
+;;;....O.;;;
+;;;......;;;
+;;;;;;;;;;;;
+;;;;;;;;;;;;
+;;;;;;;;;;;;
+
+message level 4 of 5
+
+;;;;;;;;;;;;
+;;;;;;;;;;;;
+;;;;;;;;;;;;
+;;;..OO..;;;
+;;;O....O;;;
+;P;..OO..;;;
+;;;O....O;;;
+;;;..OO..;;;
+;;;;;;;;;;;;
+;;;;;;;;;;;;
+;;;;;;;;;;;;
+
+message level 5 of 5
+
+;;;;;;;;;;;;
+;;;;;;;;;;;;
+;;;;;;;;;;;;
+;;;O.....;;;
+;;;..O.O.;;;
+;;;O...O.;;;
+;P;..O...;;;
+;;;O...O.;;;
+;;;..O...;;;
+;;;;;;;;;;;;
+;;;;;;;;;;;;
+;;;;;;;;;;;;
+
+message congratulations!
+
+
+title Manic Ammo
+author David Eastman
+homepage @eastmad
+
+========
+OBJECTS
+========
+
+Background
+gray
+
+Target
+darkgray gray lightgray white
+33333
+31112
+31002
+31002
+32222
+
+Wall
+BROWN
+
+Boom
+Red YELLOW orange
+.101.
+10001
+00200
+10001
+.101.
+
+
+Player
+PINK YELLOW BLACK
+.222.
+.000.
+22122
+.222.
+.2.2.
+
+
+CrateW
+Brown DarkBrown lightbrown
+11111
+12001
+11111
+12001
+11111
+
+CrateN
+Brown DarkBrown lightbrown
+11111
+12121
+10101
+10101
+11111
+
+CrateMineN
+Brown DarkBrown lightbrown darkblue
+11111
+12121
+10101
+10301
+11111
+
+CrateGunN
+Brown DarkBrown lightbrown darkred
+11111
+12121
+10101
+10301
+11111
+
+CrateGunS
+Brown DarkBrown lightbrown darkred
+11111
+12321
+10101
+10101
+11111
+
+
+CrateS
+Brown DarkBrown lightbrown
+11111
+10101
+10101
+12121
+11111
+
+CrateE
+Brown DarkBrown lightbrown
+11111
+10021
+11111
+10021
+11111
+
+
+Shell
+yellow orange
+..0..
+.000.
+.000.
+.000.
+.101.
+
+
+Bang
+Yellow LightRed
+.101.
+10001
+00000
+10001
+.101.
+
+GunN
+red lightred
+..0..
+..0..
+.101.
+00000
+.000.
+
+GunW
+red lightred
+...0.
+..100
+00000
+..100
+...0.
+
+GunS
+red lightred
+.000.
+00000
+.101.
+..0..
+..0..
+
+GunE
+red lightred
+.0...
+001..
+00000
+001..
+.0...
+
+InertMine
+darkblue blue lightblue
+.....
+.101.
+.020.
+.101.
+.....
+
+ActiveMine
+darkred red lightred
+.....
+.101.
+.020.
+.101.
+.....
+
+Squawk
+lightblue blue
+....0
+.0000
+.0000
+.11.0
+1111.
+
+SquawkBang
+orange lightblue
+....0
+.0000
+.0000
+.11.0
+1111.
+
+Droid
+black green
+..0..
+.000.
+00100
+.000.
+..0..
+
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Player
+N = CrateN
+E = CrateE
+W = CrateW
+S = CrateS
+O = Target
++ = Shell
+^ = GunN
+< = GunW
+> = GunE
+˅ = GunS
+M = InertMine
+A = ActiveMine
+B = Boom
+% = CrateGunN
+& = CrateMineN
+@ = CrateGunS
+X = Squawk
+D = Droid
+
+=======
+SOUNDS
+=======
+
+SFX1 55891909
+SFX2 5736502
+SFX4 6922102
+
+Shell move 61960307
+InertMine move 61960307
+Droid move 81713505
+EndLevel 8341708
+Shell create 91688700
+GunN create 91688700
+GunS create 91688700
+GunW create 91688700
+InertMine create 91688700
+ActiveMine create 93182703
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Target
+Player, Wall, CrateN, CrateE, CrateW, CrateS, Shell, GunN, GunW, GunE, GunS, Bang, InertMine, ActiveMine, Boom, CrateMineN, CrateGunN, CrateGunS, Squawk, Droid, SquawkBang
+
+======
+RULES
+======
+
+
+[Bang] -> [background]
+[boom] -> restart
+[> player][Droid] -> [> player][> Droid]
+[ >  Player | Shell ] -> [  >  Player | > Shell  ]
+[ >  Droid | Shell ] -> [  >  Droid | > Shell  ]
+[ >  Player | InertMine ] -> [  >  Player | > InertMine  ]
+[Action Player|InertMine] -> [Action Player|ActiveMine]
+[> Droid|InertMine] -> [Droid|ActiveMine]
+[> Player | ActiveMine] -> [Player | boom ]
+[> Droid | ActiveMine] -> [Droid | boom ]
+[> shell | ActiveMine] -> [boom | boom ]
+
+[Action Player|Squawk] -> [Action Player|SquawkBang]
+[> Droid|Squawk] -> [Droid |SquawkBang]
+
+[SquawkBang][CrateMineN] -> [SquawkBang][ActiveMine]
+[SquawkBang][CrateGunN] -> [SquawkBang][GunN]
+[SquawkBang][CrateGunS] -> [SquawkBang][GunS]
+[SquawkBang][CrateN] -> [SquawkBang][Shell]
+[SquawkBang][CrateS] -> [SquawkBang][Shell]
+[SquawkBang][CrateE] -> [SquawkBang][Shell]
+[SquawkBang][CrateW] -> [SquawkBang][Shell]
+[SquawkBang] -> [] SFX1
+
+DOWN [ Action Player |CrateN] -> [Action Player | Shell]
+UP [Action Player | CrateS] -> [Action Player | Shell]
+LEFT [Action Player | CrateE] -> [Action Player | Shell]
+RIGHT [Action Player | CrateW] -> [Action Player | Shell]
+DOWN [Action Player | CrateGunN] -> [Action Player | GunN]
+UP [Action Player | CrateGunS] -> [Action Player | GunS]
+DOWN [Action Player | CrateMineN] -> [Action Player | ActiveMine]
+
+UP [Action Player | GunN| No Bang ] -> [Player | GunN | Bang ] SFX4
+LEFT [Action Player | GunW | No Bang] -> [Player | GunW | Bang ] SFX4
+DOWN [Action Player | GunS| No Bang ] -> [Player | GunS | Bang ] SFX4
+RIGHT [Action Player | GunE | No Bang] -> [Player | GunE | Bang ] SFX4
+
+UP [ > Droid | GunN| No Bang ] -> [Droid | GunN | Bang ] SFX4
+LEFT [ > Droid | GunW | No Bang] -> [Droid | GunW | Bang ] SFX4
+DOWN [> Droid | GunS| No Bang ] -> [Droid | GunS | Bang ] SFX4
+RIGHT [> Droid | GunE | No Bang] -> [Droid | GunE | Bang ] SFX4
+[bang|shell] -> [bang|bang ]
+[boom|no player] -> [boom|boom] SFX2
+
+
+==============
+WINCONDITIONS
+==============
+
+All Player on Target
+
+=======
+LEVELS
+=======
+
+
+
+MESSAGE Due to a clerical error, You are trapped in a bunker
+
+########
+#.....P#
+#......#
+#......#
+#......#
+#O.....#
+########
+
+MESSAGE A bunker with several levels, full of crates and munitions
+
+########
+#.....O#
+#..+...#
+#......#
+#..N...#
+#P.....#
+########
+
+MESSAGE Crates open from one side
+
+########
+#...+.P#
+#....+.#
+#..++..#
+#++..++#
+#.ON...#
+########
+
+MESSAGE But shells are volatile
+MESSAGE Try firing the gun
+
+#########
+#..+.+.O#
+#..N+...#
+#....S..#
+#...^...#
+#.P.....#
+#########
+
+MESSAGE Chain reaction
+
+#########
+#+.+O+.P#
+#+.++...#
+#.+.+.N.#
+#+......#
+#E+++.<.#
+#########
+
+MESSAGE Inert mines, active mines
+
+#########
+#+.+P+..#
+#.......#
+#.......#
+#SSSSM..#
+#.O.E...#
+#########
+
+Message Crates can have any munitions in them
+
+#########
+#.......#
+#.&+..+.#
+#.+O&.+.#
+#.+++%..#
+#.P.S...#
+#########
+
+
+MESSAGE There seems to be another way to open crates
+
+#########
+#.X.....#
+#.......#
+#..P....#
+#....NNN#
+#.>..SON#
+#########
+
+
+MESSAGE Hey, it's a friendly worker droid!
+
+#########
+#.D...PN#
+#..+...N#
+#A.+....#
+#.NN.O..#
+#..+....#
+#########
+
+
+MESSAGE Now this is where the main bunker levels begin.
+
+###########
+#O+N..+.W.#
+#SN&..+.NX#
+#.DN.+.+..#
+#%.NWP.NS+#
+#...+N....#
+###########
+
+
+MESSAGE This doesn't look safe
+
+###########
+#P..&&&&&&#
+#DX.N....&#
+#...&&&&&&#
+#.N.N...O.#
+#&&&&&&&&&#
+###########
+
+
+MESSAGE Carefully packed
+
+###########
+#PESW.WDW.#
+#NW..&N@.N#
+#.N%NWN.X.#
+#N...NNNNN#
+#N.NNNNNON#
+###########
+
+MESSAGE Symbiosis
+
+###########
+#P.NNN.DN.#
+#MM>.+++N.#
+#..N.NN+..#
+#++N++....#
+#++...<.O.#
+###########
+
+MESSAGE Inert Mine field
+
+###########
+#.P..M.M..#
+#.MMM.M.MM#
+#..M..MNM.#
+#MM.MM.MOS#
+#.M..MD...#
+###########
+
+MESSAGE Last level
+
+###########
+#..+..P.+.#
+#.N..@.N..#
+#+.&..E.&.#
+#++..S.SSS#
+#.X+&..NO.#
+###########
+
+MESSAGE Congratulations! Now you can return to fighting on the front line.
+
+title Cake Monsters
+author Matt Rix
+homepage www.magicule.com
+color_palette whitingjp
+text_color #FF5588
+background_color #050A0A
+noaction
+youtube Z6ih1aKeETk (tycho!)
+
+========
+OBJECTS
+========
+
+(-----------------------)
+(----MONSTER COLOURS----)
+(-----------------------)
+
+RedMon
+#D8144D #B00F3F BLACK WHITE
+00000
+020.3
+000..
+00000
+1..1.
+
+YellowMon
+#F3F333 #C7C829 BLACK WHITE
+00000
+020.3
+000..
+00000
+1..1.
+
+BlueMon
+#0366E3 #0A52BB BLACK WHITE
+00000
+020.3
+000..
+00000
+1..1.
+
+PurpleMon
+#9E14E2 #800FBA BLACK WHITE
+00000
+020.3
+000..
+00000
+1..1.
+
+OrangeMon
+#E68A25 #BB711E BLACK WHITE
+00000
+020.3
+000..
+00000
+1..1.
+
+GreenMon
+#1CED55 #15C346 BLACK WHITE
+00000
+020.3
+000..
+00000
+1..1.
+
+TrashMon
+#7C6953 #6D5239 BLACK WHITE
+00000
+020.3
+000..
+00000
+1..1.
+
+
+(------------------------)
+(------CAKE COLOURS------)
+(------------------------)
+
+RedCake
+#D8144D #B00F3F
+.000.
+00000
+00000
+10001
+.111.
+
+YellowCake
+#F3F333 #C7C829
+.000.
+00000
+00000
+10001
+.111.
+
+BlueCake
+#0366E3 #0A52BB
+.000.
+00000
+00000
+10001
+.111.
+
+
+PurpleCake
+#9E14E2 #800FBA
+.000.
+00000
+00000
+10001
+.111.
+
+OrangeCake
+#E68A25 #BB711E
+.000.
+00000
+00000
+10001
+.111.
+
+GreenCake
+#1CED55 #15C346
+.000.
+00000
+00000
+10001
+.111.
+
+TrashCake
+#7C6953 #6D5239
+.000.
+00000
+00000
+10001
+.111.
+
+(-----------------------)
+(------OTHER STUFF------)
+(-----------------------)
+
+Destroyer
+#001111 #223333 #384949
+.222.
+20202
+12021
+10101
+.111.
+
+Background
+#152020 #192525
+01101
+10110
+01101
+11010
+01010
+
+
+Wall
+#334444 #384949 #445555 #475959 #4A6B6B
+34443
+23332
+12221
+01110
+00000
+
+Blackness
+#050A0A
+
+
+=======
+LEGEND
+=======
+
+
+. = Background
+_ = Blackness
+# = Wall
+X = Destroyer
+
+R = RedMon
+Y = YellowMon
+B = BlueMon
+P = PurpleMon
+O = OrangeMon
+G = GreenMon
+T = TrashMon
+
+Monster = RedMon or YellowMon or BlueMon or PurpleMon or OrangeMon or GreenMon or TrashMon
+Player = Monster
+
+PrimaryMon = RedMon or YellowMon or BlueMon
+SecondaryMon = PurpleMon or OrangeMon or GreenMon
+
+(each cake char is the next letter in the alphabet after the monster char)
+(except for orange, sadly)
+S = RedCake
+Z = YellowCake
+C = BlueCake
+Q = PurpleCake
+A = OrangeCake
+H = GreenCake
+U = TrashCake
+
+Cake = RedCake or YellowCake or BlueCake or PurpleCake or OrangeCake or GreenCake or TrashCake
+
+=======
+SOUNDS
+=======
+
+sfx0 8478107 (move)
+sfx1 18590508 (eat other monster)
+sfx2 61437309 (eat cake)
+sfx3 89161102 (monster destroyed)
+startlevel 563108
+endlevel 76028308
+undo 82948709
+restart 22851101
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Blackness, Wall, Destroyer
+Monster,Cake
+
+
+
+======
+RULES
+======
+
+(------------------------)
+(----MONSTER MOVEMENT----)
+(------------------------)
+
+(movement sound)
+[ > Monster ] -> [ > Monster ] sfx0
+
+(stop the monster if it hits a wall)
+[ > Monster | Wall ] -> [ Monster | Wall]
+
+(if monster hits a destroyer, remove the monster)
+[ > Monster | Destroyer ] -> [ | Destroyer] sfx3
+
+(monster eats cakes of the same color)
+[ > RedMon | RedCake] -> [ | RedMon] sfx2
+[ > BlueMon | BlueCake] -> [ | BlueMon] sfx2
+[ > YellowMon | YellowCake] -> [ | YellowMon] sfx2
+[ > PurpleMon | PurpleCake] -> [ | PurpleMon] sfx2
+[ > OrangeMon | OrangeCake] -> [ | OrangeMon] sfx2
+[ > GreenMon | GreenCake] -> [ | GreenMon] sfx2
+[ > TrashMon | TrashCake] -> [ | TrashMon] sfx2
+
+(stop the monster if it hits a cake of a different color)
+(note: this is necessary to make sure the monster is marked as stationary)
+[ > RedMon | Cake no RedCake] -> [ RedMon | Cake no RedCake]
+[ > BlueMon | Cake no BlueCake] -> [ BlueMon | Cake no BlueCake]
+[ > YellowMon | Cake no YellowCake] -> [ YellowMon | Cake no YellowCake]
+[ > PurpleMon | Cake no PurpleCake] -> [ PurpleMon | Cake no PurpleCake]
+[ > OrangeMon | Cake no OrangeCake] -> [ OrangeMon | Cake no OrangeCake]
+[ > GreenMon | Cake no GreenCake] -> [ GreenMon | Cake no GreenCake]
+[ > TrashMon | Cake no TrashCake] -> [ TrashMon | Cake no TrashCake]
+
+(--------------------------)
+(---MONSTER COLOR MIXING---)
+(--------------------------)
+
+(red+blue = purple)
+[ > BlueMon | stationary RedMon] -> [ | PurpleMon] sfx1
+[ > RedMon | stationary BlueMon] -> [ | PurpleMon] sfx1
+
+(red+yellow = orange)
+[ > RedMon | stationary YellowMon] -> [ | OrangeMon] sfx1
+[ > YellowMon | stationary RedMon] -> [ | OrangeMon] sfx1
+
+(blue+yellow = green)
+[ > BlueMon | stationary YellowMon] -> [ | GreenMon] sfx1
+[ > YellowMon | stationary BlueMon] -> [ | GreenMon] sfx1
+
+(primary color + secondary color = brown aka trash)
+[ > PrimaryMon | stationary SecondaryMon] -> [ | TrashMon] sfx1
+[ > SecondaryMon | stationary PrimaryMon] -> [ | TrashMon] sfx1
+
+(green+orange = trash)
+[ > GreenMon | stationary OrangeMon] -> [ | TrashMon] sfx1
+[ > OrangeMon | stationary GreenMon] -> [ | TrashMon] sfx1
+
+(purple+orange = trash)
+[ > PurpleMon | stationary OrangeMon] -> [ | TrashMon] sfx1
+[ > OrangeMon | stationary PurpleMon] -> [ | TrashMon] sfx1
+
+(green+purple = trash)
+[ > GreenMon | stationary PurpleMon] -> [ | TrashMon] sfx1
+[ > PurpleMon | stationary GreenMon] -> [ | TrashMon] sfx1
+
+(trash+anything = trash)
+[ > TrashMon | stationary Monster] -> [ | TrashMon] sfx1
+[ > Monster | stationary TrashMon] -> [ | TrashMon] sfx1
+
+(monster + monster of the same color = monster of the same color)
+[ > Monster | stationary Monster] -> [ | Monster] sfx1
+
+
+==============
+WINCONDITIONS
+==============
+
+No Cake
+
+
+=======
+LEVELS
+=======
+
+
+message WELCOME TO CAKE MONSTERS!
+message MONSTERS LIKE EATING CAKE
+
+_______
+#######
+#.....#
+#.r...#
+#...s.#
+#.....#
+#######
+_______
+(diff 0)
+
+message YOU MOVE ALL OF THE MONSTERS
+
+######_######
+#....#_#z...#
+#.r..#_#....#
+#..s.#_#....#
+#....#_#...y#
+######_######
+_____________
+######_######
+#.c..#_#....#
+#....#_#...h#
+#..b.#_#g...#
+#....#_#....#
+######_######
+(diff 0)
+
+message MONSTERS ONLY LIKE THEIR OWN CAKE
+message REMEMBER: Z TO UNDO, R TO RESTART
+_________
+#########
+#r.z....#
+#######.#
+#.......#
+#.sy....#
+#########
+_________
+(diff 1)
+
+message MONSTERS MIX WHEN THEY GET EATEN
+_________
+#########
+#.......#
+#.#####.#
+#.r.q.b.#
+#.#####.#
+#.......#
+#########
+_________
+(diff 1)
+
+
+message BROWN + ANY COLOR = BROWN
+__________
+##########
+#........#
+#.rybpog.#
+#........#
+#........#
+#.szcqah.#
+#........#
+#........#
+#.uuuuuu.#
+#........#
+##########
+__________
+(diff 1)
+
+
+message HAVE FUN!
+############
+#y........c#
+#b........z#
+#####..#####
+____#..#____
+____#..#____
+____#hh#____
+____####____
+(diff 1)
+
+(----------------------------)
+
+
+_____
+#####
+#RCQ#
+#.CS#
+#Q.B#
+#####
+_____
+(diff 2)
+
+
+
+
+______
+######
+#R...#
+#B...#
+#Q.QQ#
+#CSCS#
+######
+______
+(diff 2)
+
+_______
+#######
+#R.H.B#
+#.....#
+#.....#
+#Y.Q.B#
+#######
+_______
+(diff 2)
+
+_______
+#######
+#CCHCB#
+#.....#
+#YZHZZ#
+#######
+_______
+(diff 2)
+
+
+______
+######
+#R..B#
+#S.C.#
+#.A.C#
+#Y.C.#
+######
+______
+(diff 2)
+
+
+message PIECE OF CAKE, RIGHT?
+
+
+#########
+#ccccccc#
+#bcccccc#
+######cc#
+_____#ch#
+######zz#
+#yzzzzzz#
+#yzzzzzz#
+######zz#
+_____#sa#
+######ss#
+#rssssss#
+#sssssss#
+#########
+(diff 3, fun)
+
+_______
+#######
+#R.B.Y#
+#Y.B.R#
+#R.B.Y#
+#Y.B.R#
+#AHQHA#
+#######
+_______
+(diff 3)
+
+
+_______
+#######
+#AR.BA#
+#.#.#.#
+#H...H#
+##.A.##
+#HY#YH#
+#######
+_______
+(diff 3)
+
+
+
+message X TILES DESTROY MONSTERS
+_________
+_###_###_
+#...#...#
+#.q.x.p.#
+#...x...#
+_#..x..#_
+__#...#__
+___#.#___
+____#____
+_________
+(diff 0, destroyerz)
+
+
+_____
+#####
+#RAR#
+#RXY#
+#YAY#
+#####
+_____
+(diff 1, destroyerz)
+
+______
+######
+#BHHB#
+#YXXY#
+#YXXY#
+#BHHB#
+######
+______
+(diff 1 destroyerz)
+
+_______
+#######
+#RQXQR#
+#SQXQS#
+#BQXQB#
+#######
+_______
+(diff 1 destroyerz)
+
+___________
+#####_#####
+#sss#_#qqq#
+#sss###qqq#
+#x.......x#
+##x.rxb.x##
+#x.......x#
+#qqq###ccc#
+#qqq#_#ccc#
+#####_#####
+___________
+(diff 2 destroyerz)
+
+___________
+###########
+#...#q#.b.#
+#sxr#.#xx.#
+#.x.....c.#
+###########
+___________
+(diff 3 destroyerz)
+
+
+
+message YOU'RE CAKING THIS LOOK EASY!
+
+______
+######
+#RZSZ#
+#YSZS#
+#..SZ#
+#..ZS#
+######
+______
+(diff 3)
+
+
+#######
+#Y#B#Y#
+#.#R#.#
+#.#.#.#
+#.....#
+#.###.#
+#HHAHH#
+#######
+(diff 3, fun!)
+
+
+
+####__####
+#qc####cb#
+#c......c#
+##.####.##
+_#.#xx#.#_
+_#.c.r#.#_
+##.####.##
+#c......c#
+#qc####cq#
+####__####
+(diff 3)
+
+
+
+
+_#########_
+_#rrr.sss#_
+_#.......#_
+_#yyy.zzz#_
+_#.......#_
+##bbb.ccc##
+#.........#
+#.q..a..h.#
+#.........#
+###########
+
+______
+######
+#RA.Y#
+#....#
+#HH..#
+#SBCY#
+######
+______
+(diff 4)
+
+message LET'S CAKE IT TO THE NEXT TIER!
+
+
+#############
+#...#.h.#...#
+#.r.#...#.y.#
+#...c#c#s...#
+###c.....s###
+#..#.#h#.#..#
+#z.h.z.c.s.c#
+#..#.#s#.#..#
+###......z###
+#....#z#z...#
+#.b.#...#.g.#
+#...#.s.#...#
+#############
+(diff 3, easy but fun)
+
+
+_____
+#####
+#B.B#
+#RRY#
+#.Q.#
+#S.S#
+#CHC#
+#####
+_____
+(diff 5 - fun!)
+
+
+______
+######
+#HYBH#
+#YBYB#
+#BBBB#
+#HHHH#
+######
+______
+(diff 4)
+
+
+
+
+______
+######
+#BR.Y#
+#..A.#
+#SCZA#
+#CSZA#
+######
+______
+(diff 4)
+
+
+
+
+______
+######
+#CZG.#
+#ZCR##
+###..#
+#SHY##
+#HSB.#
+######
+______
+(diff 5 - very fun!)
+
+
+message YOU'RE GETTING BATTER!
+
+______
+######
+#YYYY#
+#...R#
+#AAAA#
+#ZZZZ#
+######
+______
+(diff 5 - fun but surprisingly hard)
+
+
+_______
+#######
+#Y..YA#
+#.BB.H#
+#R..RQ#
+#Y..YH#
+#######
+_______
+(diff 4)
+
+
+message ICING ON THE CAKE!
+
+______
+######
+#ZBBZ#
+#YBYB#
+#....#
+#ZHCZ#
+######
+______
+(diff 5)
+
+
+
+
+_______
+#######
+#A.S.A#
+#.Z.Z.#
+#SYRYS#
+#.ZYZ.#
+#A.S.A#
+#######
+_______
+(diff 5 - not too hard)
+
+
+
+message WILL YOU CAKE IT OUT ALIVE?
+______
+######
+#ZZZZ#
+#SSSS#
+#CCCC#
+#YRB.#
+######
+______
+(diff 6 - fun but tricky)
+
+
+
+
+message THE FINAL CHALLENGE!
+message DOUGH YOU HAVE WHAT IT CAKES?
+_____
+#####
+#AYA#
+#...#
+#CBC#
+#SZY#
+#RZS#
+#CBC#
+#...#
+#HOH#
+#####
+_____
+(diff 8 - a pretty tough one)
+
+
+
+message WELL, YOU REALLY TOOK THE CAKE!
+message CONGRATS, YOU WIN! :)
+
+
+
+
+title Extended Body Example: 1 Player, Multiple Extended Objects
+author Scott Hughes
+
+(
+
+Usable in the case where there's only a single player that's pushing stuff around.
+
+Example for
+https://www.puzzlescript.net/Documentation/rigidbodies.html#one_many
+
+)
+
+=======
+OBJECTS
+=======
+
+Background
+white
+
+Player
+pink
+
+Box1
+red
+
+Box2
+green
+
+Box3
+blue
+
+Box4
+orange
+
+Wall
+grey
+
+======
+LEGEND
+======
+
+. = Background
+@ = Player
+1 = Box1
+2 = Box2
+3 = Box3
+4 = Box4
+# = Wall
+
+Box = Box1 or Box2 or Box3 or Box4
+
+======
+SOUNDS
+======
+
+===============
+COLLISIONLAYERS
+===============
+
+Background
+Player, Box, Wall
+
+=====
+RULES
+=====
+
+[ > Player | Box ] -> [ > Player | > Box ]
+
+startloop
+
+(Propagate movements through crates of different types.)
+[ moving Box1 | Box1 ] -> [ moving Box1 | moving Box1 ]
+[ moving Box2 | Box2 ] -> [ moving Box2 | moving Box2 ]
+[ moving Box3 | Box3 ] -> [ moving Box3 | moving Box3 ]
+[ moving Box4 | Box4 ] -> [ moving Box4 | moving Box4 ]
+
+(Extend the movements between crates of different types.)
+[ > Box | Box ] -> [ > Box | > Box ]
+
+endloop
+
+(Just cancel the whole turn if something can't move.)
+[ > Box | Wall ] -> cancel
+
+=============
+WINCONDITIONS
+=============
+
+======
+LEVELS
+======
+
+################
+#....###.......#
+#....#.....##..#
+#...........#..#
+#...@..222..#..#
+##.....2.......#
+#...3.....1....#
+#..33.....1....#
+#..3.....11....#
+#....4........##
+#...444...##...#
+#..#.....##....#
+################
+
+
+title Notsnake
+author Terry Cavanagh
+homepage www.distractionware.com
+
+color_palette c64
+require_player_movement
+
+========
+OBJECTS
+========
+
+Background
+blue
+
+Player
+lightblue
+
+Trail
+purple
+
+=======
+LEGEND
+=======
+
+. = Background
+P = Player
+O = Trail
+
+=======
+SOUNDS
+=======
+
+startgame 50287705
+sfx0 660507
+sfx1 41058704
+endgame 74955903
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Trail
+Player
+
+======
+RULES
+======
+
+[ > Player | No Trail ] -> [ Trail | Player ] sfx0
+[ > Player | Trail ] -> [ | Player ] sfx1
+
+==============
+WINCONDITIONS
+==============
+
+no Trail
+
+=======
+LEVELS
+=======
+
+OOOOOOOO
+OOOOOOOO
+O..POO.O
+OOOOOOOO
+OOOOOOOO
+
+
+USER PROMPT:
+The following PuzzleScript game code:
+```plaintext
+title Colorful Conveyors
+author Game Designer
+homepage www.mypuzzle.com
+
+========
+OBJECTS
+========
+
+Background
+LightGrey
+.....
+.....
+.....
+.....
+.....
+
+Wall
+Grey DarkGrey
+00000
+01110
+01110
+01110
+00000
+
+Player
+Blue LightBlue
+.....
+..0..
+.010.
+..0..
+.....
+
+RedCrate
+Red DarkRed
+.....
+..0..
+.111.
+..0..
+.....
+
+GreenCrate
+Green DarkGreen
+.....
+..0..
+.111.
+..0..
+.....
+
+RedTarget
+DarkRed Red
+.....
+..0..
+.111..
+..0..
+
+GreenTarget
+DarkGreen Green
+.....
+..0..
+.111..
+..0..
+
+ConveyorL
+Yellow
+000..
+000..
+.....
+.....
+.....
+
+ConveyorR
+Yellow
+..000
+..000
+.....
+.....
+.....
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Player
+R = RedCrate
+G = GreenCrate
+X = RedTarget
+Y = GreenTarget
+
+Conveyor = ConveyorL or ConveyorR
+Target = RedTarget or GreenTarget
+Crate = RedCrate or GreenCrate
+
+=======
+SOUNDS
+=======
+
+SFX0 36772507
+SFX1 27089102
+SFX2 98765432
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Target
+Player, Wall, Crate
+Conveyor
+
+======
+RULES
+======
+
+[ > Player | Crate ] -> [ > Player | > Crate ]
+[ > Crate | ConveyorR ] -> [ > Crate | > ConveyorR ]
+[ < Crate | ConveyorL ] -> [ < Crate | < ConveyorL ]
+
+==============
+WINCONDITIONS
+==============
+
+All RedCrate on RedTarget
+All GreenCrate on GreenTarget
+
+=======
+LEVELS
+=======
+
+#######
+#.....#
+#..P..#
+#.R.G.#
+#..X..#
+#..Y..#
+#######
+
+message Align the crates to the targets!
+
+#######
+#.....#
+#..P..#
+#.RYG.#
+#######
+
+```
+compiled, but a solvability check returned the following error:
+Found solution for level 0 in 5758 iterations: 3,3,2,2,2,1,1,1,1,0,0,3,2,3,3,3,0,0,1,2,3,2,2,1,1,1,1,0,0,3,3,2,2,3,3,0,1,3,0,1,3,2,2,1,1,1,1,0,0,3,3,2,3,3,0,1,3,2,2,1,1,3,3,0,0,1,1,3,3,0,0,1,1,1,2,2,1,2,3,3,2,3,3,0,0,1,0,1,1,2,1,2,2,3,3,1,1,0,0,3,3,3,3,2,2,1,3,0,1.  Level 2 is not solvable. Please repair it.
+Return your code in full, inside a ```plaintext code block.

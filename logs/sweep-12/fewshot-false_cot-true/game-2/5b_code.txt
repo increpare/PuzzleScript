@@ -1,0 +1,86 @@
+In the PuzzleScript language, the prelude sections need to follow a specific structure and syntax. The errors in the console output indicate that there are problems with the way the objects and legend sections are defined. Specifically, the issue arises from the incorrect usage of numbers to define objects and the legend. In PuzzleScript, object definitions should directly follow with the character to be used, and the legend mappings are created using the characters not the numbers.
+
+Here's a plan to address these issues:
+
+1. Define each object with its name on its own line and specify a symbol to represent it.
+2. Rework the legend to map symbols to their corresponding objects.
+3. Ensure all references in the rules and levels correctly use these symbols.
+
+Considering these issues, here's the corrected code:
+
+```plaintext
+Title: Simple Sokoban
+
+# OBJECTS
+Background
+. 
+
+Player
+P 
+
+Wall
+W 
+
+Box
+B 
+
+Target
+T 
+
+# LEGEND
+= .
+P = P
+W = W
+B = B
+T = T
+
+# WINCONDITIONS
+All B on T
+
+# RULES
+[> Player | Box] -> [> Player > Box]
+
+# COLLISIONLAYERS
+Background
+Player, Box
+Wall
+Target
+
+# LEVELS
+# Level 1
+#######
+#..P..#
+#.#.#.#
+#.BTC.#
+#.#.#.#
+#######
+
+# Level 2
+#######
+#P..T.#
+#..B..#
+#.###.#
+#.###.#
+#.....#
+#######
+
+# Level 3
+#######
+#P....#
+###B..#
+#..T..#
+#.###.#
+#..T..#
+#######
+
+# Level 4
+########
+#P..#..#
+#..BT..#
+#..###.#
+#..###.#
+#...T..#
+########
+```
+
+By correctly setting up the object and legend definitions to use meaningful characters and ensuring consistency throughout the language rules, the game should now compile without errors.

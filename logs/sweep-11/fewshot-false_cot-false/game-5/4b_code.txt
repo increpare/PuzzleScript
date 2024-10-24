@@ -1,0 +1,100 @@
+The errors in the original code are due to issues in the rule definitions. Specifically, the first rule `[Player] -> [Player Right]` incorrectly attempts to apply a movement to a pattern that doesn't specify a target object or direction properly. Additionally, there is a typo-like structure in the second rule. 
+
+Here's a corrected version of your PuzzleScript code:
+
+```plaintext
+Title: Reach the Goal
+Author: PuzzleScriptUser
+Homepage: https://www.puzzlescript.net
+
+===========
+OBJECTS
+===========
+
+Background
+lightgrey
+00000
+00000
+00000
+00000
+00000
+
+Player
+red
+.....
+..0..
+.000.
+..0..
+.....
+
+Wall
+black
+00000
+00000
+00000
+00000
+00000
+
+Goal
+green
+.....
+.....
+..0..
+.....
+.....
+
+===========
+LEGEND
+===========
+
+. = Background
+P = Player
+W = Wall
+G = Goal
+
+===========
+SOUNDS
+===========
+
+===========
+COLLISIONLAYERS
+===========
+
+Background
+Wall
+Player, Goal
+
+===========
+RULES
+===========
+
+[ Player | Goal ] -> [ > Player | Goal ]
+[ Player | ] -> [ > Player | ]
+
+===========
+WINCONDITIONS
+===========
+
+All Player on Goal
+
+===========
+LEVELS
+===========
+
+WWWWWW
+W..PGW
+W..P.W
+WWWWWW
+
+WWWWWW
+WP...W
+W.W.GW
+WWWWWW
+```
+
+### Changes Made:
+1. **Rule Correction**: 
+   - Changed `[Player] -> [Player Right]` to `[ Player | ] -> [ > Player | ]` to properly govern player movement in empty spaces.
+   - Updated `[> Player | Goal] -> [Player | Goal]` to `[ Player | Goal ] -> [ > Player | Goal ]` to handle movement onto the goal square.
+
+Both are now explicitly instructing the Player to move right while interacting with the Goal or empty spaces, which should resolve the rule-related errors.

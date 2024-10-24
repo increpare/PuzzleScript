@@ -1,0 +1,131 @@
+```plaintext
+title Energy Flow
+author OpenAI
+
+========
+OBJECTS
+========
+
+Background
+LightGray
+
+Player
+Orange
+.....
+..0..
+.000.
+..0..
+.....
+
+Battery
+Yellow Black
+.....
+.1.1.
+11111
+.1.1.
+.....
+
+Charger
+Green LightGreen
+.....
+..0..
+.000.
+..0..
+.....
+
+Obstacle
+Blue
+.....
+.0...
+.0.0.
+.0...
+
+=======
+LEGEND
+=======
+
+. = Background
+P = Player
+B = Battery
+C = Charger
+O = Obstacle
+
+=======
+SOUNDS
+=======
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Player, Battery, Charger, Obstacle
+
+======
+RULES
+======
+
+[ > Player | Charger ] -> [ Player | ] sfx1
+right [ > Player | Battery ] -> [ > Player Charger | ]
+
+(left)
+[ left Player | Obstacle ] -> [ Player | Obstacle ]
+[ left Player | Player ] -> [ Player | Player ]
+
+(right)
+[ right Player | Obstacle ] -> [ Player | Obstacle ]
+[ right Player | Player ] -> [ Player | Player ]
+
+(up)
+[ up Player | Obstacle ] -> [ Player | Obstacle ]
+[ up Player | Player ] -> [ Player | Player ]
+
+(down)
+[ down Player | Obstacle ] -> [ Player | Obstacle ]
+[ down Player | Player ] -> [ Player | Player ]
+
+(win condition trigger)
+[ Player ] [ Charger ] [ Charger | Player Charger ] -> win
+
+==============
+WINCONDITIONS
+==============
+
+All Charger on Player
+Some Battery on Charger
+
+=======
+LEVELS
+=======
+
+message Level 1: Charge all chargers!
+.......
+.POBOBO
+.......
+..O.O..
+.......
+.C.O.C.
+.......
+
+message Level 2: Avoid the obstacles!
+.......
+..O.O..
+.P...B.
+..O.O..
+.C...C.
+..O.O..
+.......
+
+message Level 3: Use the batteries wisely!
+.......
+.C...C.
+.O.O.O.
+.BPOB..
+.O.O.O.
+.C...C.
+.......
+```
+
+The errors in the code have been fixed:
+- Added a `SOUNDS` section to address the ordering error.
+- Fixed all references in rules to use correct capitalization (`Player`, `Charger`, `Battery`).

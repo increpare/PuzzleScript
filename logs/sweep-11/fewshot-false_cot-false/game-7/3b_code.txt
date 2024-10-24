@@ -1,54 +1,103 @@
-The errors in the original code come from the incorrect structure, placement of sections, and possibly unsupported features or syntax issues. Let me revise the code so that it adheres to the correct PuzzleScript syntax and structure:
+The errors you've encountered are due to the sections being out of order and case sensitivity issues in referencing object names within the rules. Here's the corrected version of your PuzzleScript code with the required sections in order and case sensitivity issues fixed:
 
 ```plaintext
-# Legend
-a = Player
-b = Goal
-c = Wall
-d = Floor
-z = PlayerOnGoal
+Title: Sokoban Puzzle
+Author: PuzzleScript Dev
+Homepage: https://www.puzzlescript.net
 
-=== CollisionLayers ===
+===========
+OBJECTS
+===========
+
+Background
+black
+
+Wall
+grey
+
+Player
+yellow
+
+Box
+blue
+
+Target
+green
+
+BoxOnTarget
+lightgreen
+
+PlayerOnTarget
+yellow
+
+===========
+LEGEND
+===========
+
+. = Background
+# = Wall
+P = Player
+B = Box
+T = Target
+O = BoxOnTarget
+G = PlayerOnTarget
+
+===========
+SOUNDS
+===========
+
+# Sound section added but left empty for correct order
+
+===========
+COLLISIONLAYERS
+===========
+
 Background
 Wall
-Player, Goal
+Target
+Player, PlayerOnTarget
+Box, BoxOnTarget
 
-=== Rules ===
-# Player movement doesn't need explicit rules unless combined with other actions
-[right]  a -> a
-[left]   a -> a
-[up]     a -> a
-[down]   a -> a
+===========
+RULES
+===========
 
-# Goals checking
-[b] [a] -> [z]
-[z] -> [z]
+[ Player | Box ] -> [  | Player ] [ Box |  ]
+[ PlayerOnTarget | Box ] -> [ Target | Player ] [ Box |  ]
+[ Player | Target ] -> [ PlayerOnTarget |  ]
+[ PlayerOnTarget | ] -> [ Player | Target ]
 
-=== WinConditions ===
-All z
+[ Box | Target ] -> [ BoxOnTarget |  ]
+[ BoxOnTarget | Background ] -> [ Box | Target ]
 
-=== Levels ===
-# Level 1
-...b...
-..ccc..
-..ca...
-..ccc..
-...d...
+=======
 
-# Level 2
-.....b.
-..c...
-..c.a.
-..c...
-...b...
+[ no Box ][ no Target ] -> WIN
+
+===========
+LEVELS
+===========
+
+#######
+#.....#
+#..T..#
+#..B..#
+#..P..#
+#######
+
+#######
+#..#..#
+#..B..#
+#.TP..#
+#..#..#
+#####.#
+
+########
+#......#
+#..B#..#
+#..T#..#
+#..P...#
+########
 ```
 
-Key changes made:
-
-1. Reformatted the Legend and CollisionLayers to ensure valid structure.
-2. Combined `Player` and `Goal` into a single collision layer line, separated by a comma, so they can interact correctly.
-3. Adjusted the rule syntax to correctly reflect player interaction with goals (`[b] [a]` -> `[z]`).
-4. Removed unnecessary repeated rules (`z -> z` rule added for maintaining the state once goal is achieved).
-5. Deleted unnecessary comments and fixed section structures (`#` comments should be within logical sections).
-
-These changes should help resolve the initial errors and ensure the game functions correctly as per PuzzleScript conventions.
+In this version, I've made sure that all object names are consistently capitalized across the code to match their definitions in the OBJECTS section. Additionally, I've added an empty SOUNDS section to follow the required order for PuzzleScript documentation. The RULES section has also been adjusted to ensure it correctly references the object names with the correct case.

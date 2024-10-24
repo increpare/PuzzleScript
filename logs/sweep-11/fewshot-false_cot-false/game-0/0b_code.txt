@@ -1,0 +1,124 @@
+Certainly! Below is an example of a complete PuzzleScript game using a basic Sokoban-like puzzle:
+
+```plaintext
+===========
+title
+===========
+Simple Sokoban
+
+===========
+author
+===========
+GameDesigner
+
+===========
+homepage
+===========
+www.example.com
+
+===========
+objective
+===========
+Push all the boxes onto the targets.
+
+===========
+palette
+===========
+BackgroundColor:
+000000
+PlayerColor:
+00FF00
+WallColor:
+FF0000
+BoxColor:
+0000FF
+TargetColor:
+FFFF00
+
+===========
+objects
+===========
+Background
+BackgroundColor
+
+Player
+PlayerColor
+
+Wall
+WallColor
+
+Box
+BoxColor
+
+Target
+TargetColor
+
+on Box, Target
+Green
+
+===========
+legend
+===========
+. = Background
+# = Wall
+P = Player
+B = Box
+T = Target
+
+===========
+sounds
+===========
+
+===========
+collisionlayers
+===========
+Background
+Wall
+Player, Box
+Target
+
+===========
+rules
+===========
+[ > Player | Box ] -> [  > Player | > Box ]
+
+===========
+winconditions
+===========
+All Box on Target
+
+===========
+levels
+===========
+#####
+#...#
+#.T.#
+#PB.#
+#####
+
+#####
+#...#
+#T..#
+#B#P#
+#####
+
+#####
+#T..#
+#P.B#
+#..T#
+#####
+
+```
+
+### Important Sections Explained:
+
+- **Title and Author**: Basic meta-information about the game.
+- **Palette**: Defines the color of each object type for easy visualization.
+- **Objects**: Declares each object used in the game and its color.
+- **Legend**: Maps characters used in level definitions to actual objects.
+- **Collision Layers**: Defines which objects can interact with one another. 
+- **Rules**: Defines how objects move or interact when commands are issued. In this case, the player pushes a box.
+- **Win Conditions**: The conditions required to win the game, specifically having all boxes on all targets.
+- **Levels**: Offers simple example puzzles to solve. You can expand on them to create more challenging puzzles.
+
+Feel free to modify the code or expand the levels section to enhance the game further!

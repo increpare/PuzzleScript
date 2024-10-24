@@ -1,0 +1,1456 @@
+SYSTEM PROMPT:
+You are a game designer, familiar with the PuzzleScript game description language. Here are some example games, for inspiration (do not reproduce these games exactly):
+
+title It Dies In The Light
+author Christopher Wells
+homepage www.tophwells.com
+
+noaction
+run_rules_on_level_start
+again_interval 0.05
+
+========
+OBJECTS
+========
+
+BackgroundNeutral
+LIGHTGray Gray
+11011
+10101
+01110
+10101
+11011
+
+BackgroundDark
+Black
+
+Wall
+Lightblue Blue
+00010
+11111
+01000
+11111
+00010
+
+LivePlayer
+Black LightRed White Blue
+.000.
+.111.
+12321
+.232.
+.222.
+
+Corpse
+LightGrey
+.000.
+.0.0.
+0.0.0
+..0..
+.0.0.
+
+Crate
+Orange LightBrown Brown
+.222.
+21012
+20102
+21012
+.222.
+
+GoldCrate
+White Yellow Orange
+.222.
+21012
+20002
+21012
+.222.
+
+GlassCrate
+White
+.000.
+0...0
+0...0
+0...0
+.000.
+
+Prism
+LightBlue White
+.000.
+00110
+00010
+00000
+.000.
+
+ActivePrism
+LightBlue White Yellow
+.000.
+02120
+01110
+02120
+.000.
+
+Glass
+White
+00000
+0...0
+0...0
+0...0
+00000
+
+BeamVert
+White Yellow
+.101.
+.101.
+.101.
+.101.
+.101.
+
+BeamHor
+White Yellow
+.....
+11111
+00000
+11111
+.....
+
+BeamCross
+White Yellow
+.101.
+11011
+00000
+11011
+.101.
+
+Shadow
+Purple
+0.0.0
+.0.0.
+0.0.0
+.0.0.
+0.0.0
+
+TempShadow
+Purple
+0.0.0
+.0.0.
+0.0.0
+.0.0.
+0.0.0
+
+=======
+LEGEND
+=======
+
+. = BackgroundNeutral
+# = Wall
+P = LivePlayer
+C = Crate
+G = GoldCrate
+S = Shadow
+X = Prism
+O = Glass
+
+Background = BackgroundNeutral or BackgroundDark
+Player = LivePlayer or Corpse
+Light = BeamVert or BeamHor or BeamCross
+Hlight = BeamHor or BeamCross
+Vlight = BeamVert or BeamCross
+Opaque = Player or Crate or Wall or GoldCrate
+Pushable = Crate or GoldCrate or Prism or GlassCrate
+
+
+=======
+SOUNDS
+=======
+
+SFX0 93002904
+
+================
+COLLISIONLAYERS
+================
+
+Background
+BeamVert, BeamHor, BeamCross, Shadow, TempShadow
+Player, Corpse, Wall, Crate, GoldCrate, GlassCrate, Prism, ActivePrism, Glass
+
+======
+RULES
+======
+
+[> Corpse] -> RESTART
+[Light] -> []
+[ActivePrism] -> [Prism]
+[ >  Player | Pushable ] -> [  >  Player | > Pushable  ]
+late HORIZONTAL [GoldCrate|no Opaque no Light] -> [GoldCrate | BeamHor]
+late VERTICAL [GoldCrate|no Opaque no Light] -> [GoldCrate | BeamVert]
+late VERTICAL [GoldCrate|no Opaque BeamHor] -> [GoldCrate | BeamCross]
+late HORIZONTAL [Hlight|no Opaque no Light] -> [Hlight|BeamHor]
++ late HORIZONTAL [Hlight|no Opaque BeamVert] -> [Hlight|BeamCross]
++ late VERTICAL [Vlight|no Opaque no Light] -> [Vlight|BeamVert]
++ late VERTICAL [Vlight|no Opaque BeamHor] -> [Vlight|BeamCross]
++ late [Light Prism] ->[BeamCross ActivePrism]
+late [Shadow Pushable] -> [Pushable]
+late [TempShadow] -> [Shadow]
+late [Shadow | no Light no Wall no Pushable no Glass no Shadow] -> [shadow | Tempshadow] again
+late [Shadow] -> [Shadow BackgroundDark]
+late [TempShadow] -> [TempShadow BackgroundDark]
+late [no Shadow no TempShadow] -> [no Shadow BackgroundNeutral]
+late [Shadow Player] -> [Shadow Corpse]
+
+==============
+WINCONDITIONS
+==============
+
+no Shadow
+
+=======
+LEVELS
+=======
+
+......####.
+..#####ss#.
+###ssssss#.
+#..ssscss##
+#..#s#s#ss#
+#.g#s#ssss#
+#p.#s#ssss#
+#..css#sss#
+###########
+
+........########.
+........#...#.C#.
+...######...GC.##
+...#..CsssssO.C.#
+...#P.Csss#sO.CC#
+...#..Csss#sO#..#
+########ss#s....#
+#ssssssOss#s#####
+#sssssssss###....
+#########s#......
+........###......
+
+##########
+###G#G#G##
+##P......#
+#G.......#
+##..C....#
+#G.......#
+##..C....#
+#G.......#
+##......S#
+##########
+
+........########
+........#......#
+#########..#o#.#
+#........gooxo.#
+#g#####c#.sso#s#
+#.ssssss#.ss.ss#
+##soooss#.ss##s#
+##c.p.c###ss#ss#
+##.....#ssss#ss#
+#...g.......#ss#
+#########.xx#ss#
+........##sssss#
+.........#######
+
+MESSAGE Earth is safe once again.
+
+title Midas
+author wanderlands
+homepage https://web.archive.org/web/20160706204929/http://wanderlands.org/
+
+(
+
+A port of the luxuriant Wanderlands game, Midas, with permission of the authors.  It's a bit messy, if you can find a way to tidy it UP, let me know : ] 
+
+the original is here
+https://web.archive.org/web/20120219201941/http://wanderlands.org/main/midas
+
+update: uh, it's flash, so not a playable link any more...also the original developer site is gone.
+
+)
+
+========
+OBJECTS
+========
+
+Background
+white
+
+Lovebase
+white
+
+Target
+black
+.....
+..0..
+.000.
+..0..
+.0.0.
+
+GoldTarget
+orange
+.....
+..0..
+.000.
+..0..
+.0.0.
+
+PlayerGround
+black
+.....
+..0..
+.000.
+.000.
+.0.0.
+
+PlayerJump1
+black
+.....
+..0..
+00000
+.000.
+.0.0.
+
+PlayerJump2
+black
+.....
+..0..
+00000
+.000.
+.0.0.
+
+Crown
+orange
+.000.
+.0.0.
+.....
+.....
+.....
+
+GoldBlock
+orange
+
+GoldingBlock
+brown
+
+Water
+blue
+
+Wall
+gray
+
+Love
+pink
+.0.0.
+00000
+00000
+.000.
+..0..
+
+=======
+LEGEND
+=======
+
+JumpingPlayer = PlayerJump1 or PlayerJump2
+Player = PlayerGround or PlayerJump1 or PlayerJump2
+Obstacle = Player or Wall or Water or GoldingBlock or GoldBlock or Target or GoldTarget
+CanFall = GoldBlock or Target or GoldTarget
+. = Background
+# = Wall
+P = PlayerGround and Crown
+T = Target
+W = Water
+G = GoldBlock
+D = GoldingBlock
+
+=========
+SOUNDS
+=========
+
+sfx0 28219707 (touch Water)
+sfx1 45545307 (golding)
+sfx2 42491507 (make lady gold :/ )
+StartGame 8892900
+EndLevel 28067900
+EndGame 28067900
+CloseMessage 44855507
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Lovebase
+PlayerGround, PlayerJump1,PlayerJump2, Wall, Water, GoldBlock, Target, GoldTarget, GoldingBlock
+Crown
+Love
+
+======
+RULES
+======
+
+UP [ UP PlayerGround | NO Obstacle ] -> [ UP PlayerJump2 | ] 
+DOWN [ UP JumpingPlayer | NO Obstacle ] -> [ JumpingPlayer | ] 
+DOWN [ UP PlayerJump2 | NO Obstacle ] -> [ PlayerJump2 | ] 
+
+[ STATIONARY CanFall ] -> [ Down CanFall ] 
+
+HORIZONTAL [ > PlayerJump1 | NO Obstacle ] -> [ | PlayerGround ] 
+HORIZONTAL [ > PlayerJump2 | NO Obstacle ] -> [ | PlayerJump1 ] 
+LATE DOWN [ PlayerGround | NO Obstacle ] -> [ | PlayerGround ] 
+
+LATE [ Crown NO Player ] [ Player ] -> [ ] [ Crown Player ] 
+LATE [ GoldingBlock ] -> [ GoldBlock ] 
+LATE [ Crown | Wall ] -> [ Crown | GoldingBlock ] sfx1
+LATE [ Crown | Water ] -> [ | Water ] sfx0
+LATE [ Crown | Target ] -> [ Crown | GoldTarget ] sfx2
+LATE DOWN [ JumpingPlayer | Obstacle ] -> [ PlayerGround | Obstacle ] 
+
+LATE [ Player | Target ] -> [ Player Lovebase | Target ] 
+LATE UP [ Lovebase | ] -> [ | Love ] 
+
+==============
+WINCONDITIONS
+==============
+
+some Love (Awwww!)
+
+=======
+LEVELS
+=======
+##############
+#............#
+#............#
+#.P.......T..#
+##G######WWW##
+##############
+
+message MIDAS
+
+###############
+#.............#
+#.............#
+#.....#.......#
+#.P..##..#.T..#
+##G#######WWW##
+###############
+
+message She waits for me every day
+
+###############
+#.............#
+#.............#
+#.............#
+#.....#.#.....#
+#.P..##.#..T..#
+##G#######WWW##
+###############
+
+message This is the price of gold:
+
+##############
+#............#
+#............#
+#.P..........#
+##G###T##WWW##
+##############
+
+message A heavy heart
+
+#################
+#...............#
+#...............#
+#......#.#......#
+#.....#####.....#
+#.......#.......#
+#.T.P...#.......#
+####G#######WWW##
+#################
+
+message I step in the same river
+message again and again
+
+#####################
+#...................#
+#...................#
+#...................#
+#.........#.#.......#
+#..P........#.......#
+#..d##########......#
+#.......######......#
+#...................#
+#.......T...........#
+#....#########WWW...#
+#...................#
+#...................#
+#...................#
+#####################
+
+message Just so I can touch her hand.
+
+#####################
+#...................#
+#...................#
+#...................#
+#...................#
+#..P................#
+#..d##T########WWW..#
+#.....#.............#
+#...................#
+#...................#
+#####################
+
+message I am a prison to Pactolus
+
+#####################
+#...................#
+#........###........#
+#.......#####.......#
+#......##...##......#
+#.....T##.P.##W.....#
+#.....####d####.....#
+#.....#########.....#
+#...................#
+#####################
+
+message But I must have her!
+
+#####################
+#...................#
+#...................#
+#..T..#...###..W....#
+#..#####...#####....#
+#.....###...#.......#
+#........P..........#
+#.....###D###.......#
+#.....#######.......#
+#...................#
+#...................#
+#####################
+
+message My burden only grows
+
+#####################
+#...................#
+#........G..........#
+#.....W.GGG.T.......#
+#.....#######.......#
+#.....#.....#.......#
+#.....#..P..#.......#
+#.....###D###.......#
+#.....#######.......#
+#...................#
+#...................#
+#...................#
+#####################
+
+message My world collapses.
+
+#####################
+#...................#
+#...................#
+#..G....WW..........#
+#..##.####..........#
+#.....####..........#
+#...................#
+#.#...........T.....#
+#.##.......P..#.....#
+#..############.....#
+#...#.....####......#
+#...................#
+#...................#
+#...................#
+#...................#
+#...................#
+#####################
+
+message And she feels so distant
+
+#####################
+#...................#
+#...................#
+#...................#
+#...................#
+#..P......#.........#
+#..GG...........WW..#
+#..##T############..#
+#....#..............#
+#...................#
+#...................#
+#####################
+
+message I live on borrowed time
+
+#####################
+#...................#
+#...................#
+#..........T........#
+#.........##........#
+#...................#
+#.......P...........#
+#.......D##.........#
+#...........#.......#
+#...................#
+#...................#
+#.......###W#.......#
+#####################
+
+message Is she still waiting?
+
+#####################
+#...................#
+#....###########....#
+#...................#
+#....P.........W....#
+#....###########....#
+#....#.........#....#
+#...................#
+#.........#.........#
+#......#..#..#......#
+#....T.#..#..#......#
+#....###########....#
+#...................#
+#...................#
+#...................#
+#####################
+
+message Is Love just fool's gold?
+
+#####################
+#...................#
+#...................#
+#...........####....#
+#..T##.##..#...#....#
+#..#..#..#.#.P.#....#
+#..#.....#...G#.....#
+#...#...#....#......#
+#....#W#.....#......#
+#.....#.............#
+#............#......#
+#...................#
+#...................#
+#####################
+
+message Midas
+
+
+title Modality
+author Sean Barrett
+homepage www.silverspaceship.com
+background_color #603060
+noaction
+
+========
+OBJECTS
+========
+
+White
+White
+
+Black
+#202020
+
+
+Grey
+#505050 #a0a0a0
+01010
+10101
+01010
+10101
+01010
+
+
+Background
+Red
+
+Target
+#3030a0
+.....
+.000.
+.0.0.
+.000.
+.....
+
+Player
+Black Orange #c0c0c0 Blue
+.000.
+.111.
+22222
+.333.
+.3.3.
+
+Crate
+Orange Yellow
+00000
+0...0
+0...0
+0...0
+00000
+
+
+=======
+LEGEND
+=======
+
+. = Black
++ = White
+g = Grey
+p = Player and Black
+Q = Player and White
+* = Crate and Black
+@ = Crate and White
+t = Target and Black
+U = Target and White
+
+Nonwhite = Black or Grey
+Nonblack = White or Grey
+
+=======
+SOUNDS
+=======
+
+================
+COLLISIONLAYERS
+================
+
+Background
+White, Black, Grey
+Target
+Player, Crate
+
+======
+RULES
+======
+
+[ >  Player Nonblack | Crate Nonblack ] -> [  > Player Nonblack | > Crate Nonblack ]
+[ >  Player Black | Crate Black ] -> [  > Player Black | > Crate Black ]
+[ > Player White | Black ] -> CANCEL
+[ > Player Black | White ] -> CANCEL
+
+==============
+WINCONDITIONS
+==============
+
+All Crate on Target
+
+=======
+LEVELS
+=======
+
+
+u+...
+@+g.p
++++..
+
+++++q
++.*.+
+u++.+
++g..+
++++++
+
+......
+.++.+.
+.+q++.
+..u.++
+g.*.++
+++++++
+
+...t.......
+...+.......
+.+.+.+...++
+.+.++++..++
+q@g++..++++
+.+.++...+++
+.+.+....+++
+.+......+++
+.++++++++++
+
+
+
+title Colour Chained
+author Dennis Au
+youtube _VzrmRkLfxM
+run_rules_on_level_start
+again_interval 0.015
+noundo
+
+(version 201310152126 - added some harder levels, added sfx for rotate and drop, decided to use noundo)
+(version 201310142256 - tweaked scoring, added pop animation and reworked code)
+
+========
+OBJECTS
+========
+Background
+Black
+
+P1 p
+Black
+0...0
+.....
+.....
+.....
+0...0
+
+P2 q
+Black
+0...0
+.....
+.....
+.....
+0...0
+
+hasN
+Orange
+0....
+.....
+.....
+.....
+....0
+
+Remove
+White
+.....
+.....
+.....
+.....
+.....
+
+
+NP1 n
+White
+.....
+.....
+.....
+.....
+.....
+
+NP2 m
+White
+.....
+.....
+.....
+.....
+.....
+
+LoseFlag
+Grey Black LightGrey
+.....
+10120
+.....
+02010
+.....
+
+PieceGen
+Black
+
+HBorder -
+DarkGrey
+.....
+.....
+0...0
+.....
+.....
+
+VBorder |
+DarkGrey
+..0..
+.....
+.....
+.....
+..0..
+
+(pieces)
+C1 R
+Red LightGrey Black
+.000.
+00010
+00000
+00000
+.000.
+
+C2 G
+Green LightGrey Black
+.000.
+00010
+00000
+00000
+.000.
+
+C3 B
+Blue LightGrey Black
+.000.
+00010
+00000
+00000
+.000.
+
+C4 Y
+Yellow LightGrey Black
+.000.
+00010
+00000
+00000
+.000.
+
+(Numbers)
+No1 1
+DarkGrey
+..0..
+.00..
+..0..
+..0..
+.000.
+
+No2 2
+DarkGrey
+.00..
+0..0.
+..0..
+.0...
+0000.
+
+No3 3
+DarkGrey
+000..
+...0.
+.00..
+...0.
+000..
+
+No4 4
+DarkGrey
+..0..
+.00..
+0.0..
+0000.
+..0..
+
+No5 5
+DarkGrey
+0000.
+0....
+000..
+...0.
+000..
+
+No6 6
+DarkGrey
+.00..
+0....
+000..
+0..0.
+.00..
+
+No7 7
+DarkGrey
+0000.
+...0.
+..0..
+.0...
+0....
+
+No8 8
+DarkGrey
+.00..
+0..0.
+.00..
+0..0.
+.00..
+
+No9 9
+DarkGrey
+.00..
+0..0.
+.000.
+...0.
+.00..
+
+No0 0
+DarkGrey
+.00..
+0..0.
+0..0.
+0..0.
+.00..
+
+Pop
+LightGrey White
+...1.
+..101
+...1.
+.....
+.....
+
+Inc
+Black
+
+PlayArea
+Green
+
+
+=======
+LEGEND
+=======
+. = Background
+u = PieceGen
++ = Inc
+
+Player = P1 or P2
+Piece = C1 or C2 or C3 or C4
+PieceB = Piece
+
+NP = NP1 or NP2
+Border = HBorder or VBorder
+Score = No1 or No2 or No3 or No4 or No5 or No6 or No7 or No8 or No9 or No0
+
+Obstacle = Piece or Score
+Match3Logic = hasN or Remove or Pop
+
+=======
+SOUNDS
+=======
+startlevel 17589703
+
+(death)
+sfx0 45317502
+
+(match3)
+sfx1 530500
+
+(piece drop)
+sfx2 75273507
+
+(piece rotate)
+sfx3 21774107
+
+================
+COLLISIONLAYERS
+================
+PlayArea
+Background
+Player, NP, PieceGen, Border
+Piece, Score, Inc,
+Match3Logic, LoseFlag
+
+======
+RULES
+======
+(set preview area)
+[] -> [PlayArea]
+Down [NP|PlayArea] -> [NP|]
+Vertical [No PlayArea| PlayArea] -> [|]
+
+(match 3 rules)
+Right [C1|C1] -> [C1 hasN|C1 hasN]
+Right [C2|C2] -> [C2 hasN|C2 hasN]
+Right [C3|C3] -> [C3 hasN|C3 hasN]
+Right [C4|C4] -> [C4 hasN|C4 hasN]
+
+Vertical [C1 hasN|C1] -> [Remove C1| Remove C1]
+Vertical [C2 hasN|C2] -> [Remove C2| Remove C2]
+Vertical [C3 hasN|C3] -> [Remove C3| Remove C3]
+Vertical [C4 hasN|C4] -> [Remove C4| Remove C4]
+
+[Remove C1| C1] -> [Remove C1| Remove C1]
+[Remove C2| C2] -> [Remove C2| Remove C2]
+[Remove C3| C3] -> [Remove C3| Remove C3]
+[Remove C4| C4] -> [Remove C4| Remove C4]
+
+[C1|C1|C1] -> [Remove C1|Remove C1|Remove C1]
+[C2|C2|C2] -> [Remove C2|Remove C2|Remove C2]
+[C3|C3|C3] -> [Remove C3|Remove C3|Remove C3]
+[C4|C4|C4] -> [Remove C4|Remove C4|Remove C4]
+
+[hasN] -> []
+
+[PlayArea Remove Piece][P1] -> [PlayArea Pop][P1] sfx1
+random [Pop][inc] -> [][left inc] again
+
+
+(down drops pieces)
+Down [> Player Piece|No Piece] -> [Player|> Piece] sfx2
+Down [> Player No Piece] -> Cancel
+
+
+(x rotates clockwise)
+[Up P1|P2] -> [> P1|v P2] sfx3
+[Action P1|P2] -> [> P1|v P2] sfx3
+[Moving Player Piece] -> [Moving Player Moving Piece]
+[> Player| Border] -> cancel
+
+
+(gravity)
+Down [PlayArea Piece No Player|No Obstacle][stationary inc] -> [PlayArea|> Piece][stationary inc] again
+
+
+(explicit loss if piece ends on border)
+[Piece Border][stationary inc][P1] -> [Piece Border LoseFlag][inc][] sfx0
+[LoseFlag|No LoseFlag] -> [LoseFlag|LoseFlag] again
+
+
+(scoring)
+
+left [> inc| score] -> [> inc| > score]
+left [> No9| score] -> [No0|> score]
+left [> No9| border] -> [No0| border]
+
+left [> No0] -> [No1]
+left [> No1] -> [No2]
+left [> No2] -> [No3]
+left [> No3] -> [No4]
+left [> No4] -> [No5]
+left [> No5] -> [No6]
+left [> No6] -> [No7]
+left [> No7] -> [No8]
+left [> No8] -> [No9]
+
+
+(preview area)
+
+startloop
+(for endless mode)
+[PieceGen No Piece] -> [PieceGen Random Piece]
+(antigrav)
+Up [Piece No PlayArea No NP| No Obstacle] -> [|> Piece]
+(get next piece)
+[P1 no Piece][P2 no Piece][NP1 Piece|NP2 PieceB]-> [P1 Piece][P2 PieceB][NP1|NP2]
+endloop
+
+
+==============
+WINCONDITIONS
+==============
+No Piece
+No Pop
+
+=======
+LEVELS
+=======
+(Empty Level Template
+
+nm|..pq..|
+..|......|
+..|------|
+..|......|
+..|......|
+..|......|
+..|......|
+..|......|
+..|......|
+..|000000+
+
+)
+
+nm|..pq..|
+RR|......|
+..|------|
+..|......|
+..|......|
+..|......|
+..|..Y...|
+..|..RR..|
+..|R.YY..|
+..|000000+
+
+nm|..pq..|
+GR|......|
+..|------|
+..|......|
+..|......|
+..|....B.|
+..|...BG.|
+..|...RG.|
+..|.R.RB.|
+..|000000+
+
+nm|..pq..|
+RR|......|
+BB|------|
+BR|......|
+..|......|
+..|......|
+..|......|
+..|....B.|
+..|..RRB.|
+..|000000+
+
+
+nm|..pq..|
+BG|......|
+RB|------|
+..|......|
+..|......|
+..|......|
+..|......|
+..|..GB..|
+..|RRGB..|
+..|000000+
+
+nm|..pq..|
+BG|......|
+GB|------|
+..|......|
+..|......|
+..|......|
+..|...G..|
+..|..BB..|
+..|..GG.B|
+..|000000+
+
+nm|..pq..|
+RG|......|
+GB|------|
+BR|......|
+..|......|
+..|......|
+..|...G..|
+..|...B..|
+..|..RRG.|
+..|000000+
+
+nm|..pq..|
+GR|......|
+RY|------|
+BG|......|
+YB|......|
+..|......|
+..|..B...|
+..|..RB..|
+..|.GYB..|
+..|000000+
+
+nm|..pq..|
+RG|......|
+YY|------|
+YG|......|
+BB|......|
+..|BY....|
+..|YB.G..|
+..|YRRG..|
+..|BGGBBY|
+..|000000+
+
+nm|..pq..|
+rb|......|
+bb|------|
+by|......|
+ry|......|
+..|....r.|
+..|...rb.|
+..|.bybyb|
+..|bybyrr|
+..|000000+
+
+nm|..pq..|
+br|......|
+ry|------|
+yy|......|
+..|....b.|
+..|...gb.|
+..|...yy.|
+..|.bygb.|
+..|byrgrr|
+..|000000+
+
+
+nm|..pq..|
+by|......|
+ry|------|
+ry|......|
+yg|....y.|
+..|..rgby|
+..|b.gbyg|
+..|rrgbyg|
+..|bbyyrr|
+..|000000+
+
+
+message Thank you for playing.
+message Music: Puzzle Pieces - Desert of Lost Endings by Nick Tanski (nicholastanski.bandcamp.com)
+
+(endless mode)
+message Endless Mode unlocked!
+
+nm|..pq..|
+..|......|
+..|------|
+..|......|
+..|......|
+..|......|
+..|......|
+..|......|
+..|......|
+uu|000000+
+
+(CC BY-NC-SA 3.0)
+
+USER PROMPT:
+The following PuzzleScript game code:
+```plaintext
+title Corral Chaos
+author AI Game Designer
+
+color_palette c64
+
+========
+OBJECTS
+========
+
+Background
+#A4C2E0
+.....
+.....
+.....
+.....
+.....
+
+Grass
+#7DA270
+.....
+.....
+.....
+.....
+.....
+
+Wall
+#4A4A4A
+.....
+.....
+.....
+.....
+.....
+
+Sheep
+#FFFFFF
+.....
+..0..
+.000.
+..0..
+.0.0.
+
+Barn
+#8D5524
+.....
+.0.0.
+00000
+.0.0.
+.....
+
+Player
+#DAA520
+.....
+..0..
+.0A0.
+A0A0.
+.....
+
+=======
+LEGEND
+=======
+. = Background
+# = Wall
+s = Sheep
+b = Barn
+p = Player
+= Grass
+
+=========
+SOUNDS
+=========
+
+Sheep MOVE 45703848
+Player MOVE 25380307
+startlevel 5092838
+endlevel 8848105
+showmessage 43742098
+closemessage 43742098
+startgame 5908317
+endgame 5092841
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Grass
+Wall
+Barn
+Player
+Sheep
+
+======
+RULES
+======
+
+[ > Player | Sheep ] -> [ > Player | > Sheep ]
+
+[Barn | no Sheep] -> [Barn] sfx0
+
+==============
+WINCONDITIONS
+==============
+
+no Sheep
+
+=======
+LEVELS
+=======
+
+message Help the shepherd round up the sheep into the barn!
+
+#######
+#.....#
+#..p..#
+#..s..#
+#.....#
+#..b..#
+#.....#
+#######
+
+#######
+#.....#
+#..p..#
+#..s..#
+#..s..#
+#..b..#
+#..s..#
+#######
+
+#######
+#.....#
+#.p.s.#
+#.s.s.#
+#.s.s.#
+#.b.s.#
+#.....#
+#######
+
+#######
+#.....#
+#p..s.#
+#.s.s.#
+#.....#
+#..b..#
+#.....#
+#######
+
+#######
+#s..s.#
+#.p...#
+#.b...#
+#.....#
+#.....#
+#######
+
+
+```
+produced the following console output:
+=================================
+line 54 : Unknown junk in spritematrix for object PLAYER.
+line 55 : Unknown junk in spritematrix for object PLAYER.
+line 66 : Only comments should go after a bunch of equals signs ('===') on a line.
+line 50 : Sprite graphics must be 5 wide and 5 high exactly.
+line 98 : In a rule, each pattern to match on the left must have a corresponding pattern on the right of equal length (number of cells).
+Errors detected during compilation; the game may not work correctly.
+Return a repaired version of the code that addresses these errors. Return your code in full, inside a ```plaintext code block.

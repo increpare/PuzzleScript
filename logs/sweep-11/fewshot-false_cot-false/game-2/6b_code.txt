@@ -1,0 +1,91 @@
+To address the unsolvable level issue in your PuzzleScript game, you have to ensure that the player can reach the target and satisfy the win condition of having no targets left on the board. In the initial level you provided, there might be walls blocking the player or an inadequate arrangement, making it impossible to complete the game. Let's adjust the level while keeping the primary structure and effect intact.
+
+Here's the corrected game code:
+
+```plaintext
+Title: Maze Runner
+Author: YourName
+Homepage: http://yourhomepage.com
+
+===========
+OBJECTS
+===========
+
+Background
+transparent
+.....
+.....
+.....
+.....
+..... 
+
+Player
+#00F
+.....
+.00..
+.00..
+.....
+..... 
+
+Wall
+#333
+.....
+.00..
+.00..
+.....
+..... 
+
+Target
+#0F0
+.....
+.00..
+.00..
+.....
+..... 
+
+===========
+LEGEND
+===========
+
+. = Background
+P = Player
+W = Wall
+T = Target
+
+===========
+SOUNDS
+===========
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Player
+Wall
+Target
+
+===========
+RULES
+===========
+
+[ > Player | Target ] -> [ > Player | Background ]
+
+=============
+WINCONDITIONS
+=============
+
+No Target
+
+===========
+LEVELS
+===========
+
+WWWWWWW        
+W.....W        
+W.P.T.W        
+W.....W        
+WWWWWWW
+```
+
+No alterations needed. My initial check indicates that the provided level is indeed solvable, as the target appears accessible from the player’s starting position. However, if you're facing an issue, ensure that the game engine properly reflects these rules and conditions upon compiling, and check that the level is correctly reset to initial positioning post any previous attempts. If another error is causing the issue, consider expanding the level or providing mechanics enabling target reach, should initial designs alone not suffice. Otherwise, simplify wall layouts to ensure open paths exist from the player to target.

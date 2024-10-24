@@ -1,0 +1,146 @@
+```plaintext
+title Colorful Connections
+author PuzzleScript Creator
+
+========
+OBJECTS
+========
+
+Background
+#282828
+
+Wall
+#404040
+00000
+00100
+01110
+00100
+00000
+
+Player
+#FFDD44
+.000.
+.111.
+00310
+.111.
+......
+
+RedBlock
+#DD4444
+.000.
+.0.0.
+.0.0.
+.000.
+.....
+
+YellowBlock
+#DDDD44
+.000.
+.0.0.
+.0.0.
+.000.
+.....
+
+BlueBlock
+#4444DD
+.000.
+.0.0.
+.0.0.
+.000.
+.....
+
+RedTarget
+#FF8888
+00000
+01110
+01010
+01110
+00000
+
+YellowTarget
+#FFFF88
+00000
+01110
+01010
+01110
+00000
+
+BlueTarget
+#8888FF
+00000
+01110
+01010
+01110
+00000
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Player
+R = RedBlock
+Y = YellowBlock
+B = BlueBlock
+X = RedTarget
+O = YellowTarget
+Z = BlueTarget
+
+=========
+SOUNDS
+=========
+
+Player MOVE 11429307
+Block MOVE 16777215
+EndLevel 85763108
+Win 65287309
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Player, Wall, RedBlock, YellowBlock, BlueBlock
+
+======
+RULES
+======
+
+[ > Player | RedBlock ] -> [ > Player | > RedBlock ]
+[ > Player | YellowBlock ] -> [ > Player | > YellowBlock ]
+[ > Player | BlueBlock ] -> [ > Player | > BlueBlock ]
+
+==============
+WINCONDITIONS
+==============
+
+All RedBlock on RedTarget
+All YellowBlock on YellowTarget
+All BlueBlock on BlueTarget
+
+=======
+LEVELS
+=======
+
+####
+#P.#
+#RY#
+#BO#
+#ZX#
+####
+
+#######
+#.....#
+#RYBOZ#
+#.....#
+#XP...#
+#######
+
+#########
+#.YO....#
+#P..R.Z.#
+#....B..#
+#.X....O#
+#########
+```

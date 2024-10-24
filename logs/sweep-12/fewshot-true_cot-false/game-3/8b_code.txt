@@ -1,0 +1,98 @@
+```plaintext
+title Light And Dark
+author YourName
+
+========
+OBJECTS
+========
+
+Background
+white
+
+Wall
+darkgray black
+00010
+11111
+01000
+11111
+00010
+
+Player
+black yellow
+.000.
+.111.
+.101.
+.111.
+.....
+
+LightSource
+yellow
+.....
+.....
+..0..
+.....
+.....
+
+Target
+lightblue
+.....
+.000.
+.0.0.
+.000.
+.....
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Player
+L = LightSource
+@ = Target
+
+=======
+SOUNDS
+=======
+
+player MOVE 81000012
+target REACHED 51001234
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Player, Wall, LightSource, Target
+
+======
+RULES
+======
+
+[ > Player | LightSource ] -> [ > Player | > LightSource ]
+
+(Activate targets when light is over them)
+[ LightSource | Target ] -> [ LightSource | LightSource ] SFX1
+
+(remove light from empty spaces)
+[ LightSource | no LightSource no Player no Target ] -> [ Background | no LightSource no Player no Target ]
+
+==============
+WINCONDITIONS
+==============
+
+no Target
+
+=======
+LEVELS
+=======
+
+#########
+#..@...@#
+#.L#.#..#
+#..P..@.#
+#....@..#
+#########
+```
+
+I replaced the unrecognized soundverb "REACH" with "REACHED" for sound events in the SOUNDS section and added a sound effect at the end of "[ LightSource | Target ] -> [ LightSource | LightSource ]" with a generic placeholder "SFX1" to provide proper syntax for sound playing. Please make sure the sound id matches an existing one in your assets.

@@ -1,0 +1,134 @@
+To create a complete PuzzleScript game, we need to define several components: objects, legends, sounds (if any), collision layers, rules, win conditions, and levels. Based on the examples provided, I will design a simple block-pushing puzzle game where the player needs to push crates onto targets.
+
+### Game Design Plan:
+1. **Objective**: The player, represented by 'Player', needs to push crates onto designated target tiles.
+2. **Win Condition**: All crates should be on target tiles.
+3. **Objects**: 
+   - Background: The default background tile.
+   - Player: The controllable character.
+   - Crate: The movable object.
+   - Target: The goal tile where crates need to be moved.
+   - TargetedCrate: A crate on a target tile (this can be a combined state of Crate and Target).
+4. **Colors**:
+   - Background: Dark Gray
+   - Player: Blue
+   - Crate: Brown
+   - Target: Yellow
+   - TargetedCrate: Green (this will appear when a crate is on a target)
+5. **Levels**: Designing simple levels that gradually increase in complexity.
+
+Here's the complete PuzzleScript code for this game:
+
+```plaintext
+title Block Pusher
+author YourName
+
+========
+OBJECTS
+========
+
+Background
+darkgray
+
+Player
+blue
+
+Crate
+brown
+
+Target
+yellow
+
+TargetedCrate
+green
+
+=======
+LEGEND
+=======
+
+. = Background
+P = Player
+C = Crate
+T = Target
+X = TargetedCrate
+
+=========
+SOUNDS
+=========
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Player, Crate
+Target
+
+======
+RULES
+======
+
+[ Player | Crate ] -> [ > Player | > Crate ]
+
+[ Crate | Target ] -> [ TargetedCrate | Background ]
+[ TargetedCrate ] -> [ Crate ] // Allows player to move "TargetedCrate" objects as normal crates
+
+==============
+WINCONDITIONS
+==============
+
+all TargetedCrate on Target
+
+=======
+LEVELS
+=======
+
+message Welcome to Block Pusher! Move all crates to targets.
+
+#######
+#.T...#
+#..C..#
+#..P..#
+#.T...#
+#######
+
+#######
+#.....#
+#.TCT.#
+#..P..#
+#..C..#
+#.T...#
+#######
+
+#######
+#..T..#
+#..C..#
+#.TPT.#
+#..C..#
+#..T..#
+#######
+
+#######
+#T.C.T#
+#..P..#
+#.CT.C#
+#..C..#
+#.T.T.#
+#######
+
+#######
+#.T...#
+#..CT.#
+#..P..#
+#..C..#
+#.T...#
+#######
+
+message Congratulations! You've completed all the levels.
+```
+
+### Explanation:
+- **Objects**: I used basic colors to represent the background, player, crate, and target. A special object, `TargetedCrate`, visually differentiates when a crate is on a target.
+- **Rules**: The player can push crates. When a crate is on a target, it automatically turns into a `TargetedCrate`, which is still moveable as a regular crate.
+- **Win Conditions**: The game checks if all crates are properly placed on targets.
+- **Levels**: Several levels are provided, starting simple and increasing in complexity. You'll need to push all crates onto targets to complete each level.

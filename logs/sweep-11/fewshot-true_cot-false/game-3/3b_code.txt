@@ -1,0 +1,94 @@
+```plaintext
+title Block Pusher
+author Anonymous
+
+========
+OBJECTS
+========
+
+Background
+lightgrey
+.....
+
+Wall
+darkgrey
+.....
+.....
+.....
+.....
+.....
+
+Player
+green
+.....
+.....
+.000.
+.....
+.....
+
+Target
+lightyellow
+.....
+..1..
+.111.
+..1..
+.....
+
+Crate
+orange
+.111.
+.1.1.
+.1.1.
+.1.1.
+.111.
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Player
+* = Crate
+O = Target
+@ = Crate and Target
+
+=======
+SOUNDS
+=======
+
+Crate MOVE 44289704
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Target
+Player, Wall, Crate
+
+======
+RULES
+======
+
+[ > Player | Crate ] -> [ > Player | > Crate ]
+
+==============
+WINCONDITIONS
+==============
+
+All Target on Crate
+
+=======
+LEVELS
+=======
+
+#####
+#...#
+#*P*#
+#...#
+##O##
+#####
+```
+
+I fixed the errors related to color palette access by ensuring the `Wall` and `Player` objects in your game have a consistent number of colors in their palette. Each sprite definition should now use the correct color indexing.

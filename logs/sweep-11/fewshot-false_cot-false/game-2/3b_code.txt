@@ -1,0 +1,89 @@
+The error message "you have to have a background layer" indicates that a background layer is required but not specified in the `COLLISIONLAYERS`. Additionally, the TypeError suggests issues in rule syntax or layer definitions. Here's the corrected version of your code with the required `COLLISIONLAYERS` modification:
+
+```plaintext
+Title: Maze Runner
+Author: YourName
+Homepage: http://yourhomepage.com
+
+===========
+OBJECTS
+===========
+
+Background
+transparent
+. . . . . 
+. . . . . 
+. . . . . 
+. . . . . 
+. . . . . 
+
+Player
+#00F
+. 0 . . . 
+. 0 0 . . 
+. . 0 . . 
+. . . . . 
+. . . . . 
+
+Wall
+#333
+. . . . . 
+. 0 0 . . 
+. 0 0 . . 
+. . . . . 
+. . . . . 
+
+Target
+#0F0
+. . . . . 
+. 0 0 . . 
+. 0 0 . . 
+. . . . . 
+. . . . . 
+
+===========
+LEGEND
+===========
+
+. = Background
+P = Player
+W = Wall
+T = Target
+
+===========
+SOUNDS
+===========
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Player
+Wall
+Target
+
+===========
+RULES
+===========
+
+[ > Player | Target ] -> [ > Player | Player ]
+
+=============
+WINCONDITIONS
+=============
+
+No Target
+
+===========
+LEVELS
+===========
+
+WWWWWWW        
+W.....W        
+W.P.T.W        
+W.....W        
+WWWWWWW        
+```
+
+By adding `Background` to the `COLLISIONLAYERS`, the game should compile without errors related to the background layer. The rule appears to be correctly structured for the intended functionality, but if further issues occur, we might need to analyze the rules or level configurations more closely in relation to further potential errors.

@@ -1,0 +1,113 @@
+Here's the corrected PuzzleScript game code, ensuring that the initial level is solvable:
+
+```plaintext
+title Collect and Unlock
+author GameDesigner
+
+========
+OBJECTS
+========
+
+Background
+lightgray
+
+Wall
+darkgray
+00000
+00000
+00000
+00000
+00000
+
+Player
+blue
+.....
+..0..
+.000.
+..0..
+.....
+
+Key
+yellow
+.....
+..0..
+.000.
+..0..
+.....
+
+Door
+brown
+.....
+.....
+..0..
+.000.
+.....
+
+OpenDoor
+lightgray
+.....
+.....
+.....
+.....
+.....
+
+Target
+green
+.....
+..0..
+.000.
+.....
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Player
+K = Key
+D = Door
+O = OpenDoor
+T = Target
+
+=========
+SOUNDS
+=========
+
+# This section can remain empty.
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Wall, Player, Key, Door, OpenDoor, Target
+
+======
+RULES
+======
+
+[ Player | Key ] -> [ Player | ]
+[ Player | Door ] -> [ Player | OpenDoor ]
+
+==============
+WINCONDITIONS
+==============
+
+All Player on Target
+
+=======
+LEVELS
+=======
+
+#######
+#P.K..#
+###.###
+#..D..#
+#.T..##
+#######
+
+message Congratulations! You've unlocked the path and reached the goal!
+```
+
+In this level, the player can collect the key and use it to unlock the door, ensuring they can reach the target to resolve the level.

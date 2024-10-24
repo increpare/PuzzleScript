@@ -1,0 +1,119 @@
+Certainly! Here's an example of a simple PuzzleScript game called "Block Pusher", where the player pushes blocks to targets.
+
+```plaintext
+Title: Block Pusher
+Author: PuzzleScript Game Designer
+
+===========
+OBJECTS
+===========
+
+Background
+transparent
+
+Player
+blue
+..1..
+.111.
+.111.
+..1..
+.....
+
+Block
+red
+.....
+.111.
+.111.
+.111.
+.....
+
+Target
+green
+.....
+..1..
+..1..
+..1..
+.....
+
+BlockOnTarget
+yellow
+.....
+..1..
+.111.
+.111.
+.....
+
+===========
+LEGEND
+===========
+
+. = Background
+P = Player
+B = Block
+T = Target
+U = BlockOnTarget
+
+===========
+SOUNDS
+===========
+
+SFX1
+    move
+    
+SFX2
+    push
+
+===========
+COLLISIONLAYERS
+===========
+
+Background
+Target
+Player, Block, BlockOnTarget
+
+===========
+RULES
+===========
+
+[> Player | Block] -> [> Player | > Block] SFX2
+
+[Block | Target] -> [BlockOnTarget]
+
+[BlockOnTarget | Target] -> [BlockOnTarget]
+
+===========
+WINCONDITIONS
+===========
+
+All BlockOnTarget on Target
+
+===========
+LEVELS
+===========
+
+#######
+#.....#
+#..T..#
+#..B..#
+#..P..#
+#######
+
+#######
+#.....#
+#..T..#
+#..B..#
+#..P..#
+#.....#
+#..T..#
+#######
+
+#######
+#..T..#
+#..B..#
+#.PPP.#
+#..B..#
+#..T..#
+#######
+```
+
+This game features a player that pushes blocks onto target areas. When all the blocks are on the targets (represented as `BlockOnTarget`), the player wins the level. The game has three levels, each increasing in complexity. The sounds and graphics are simplistic, as is customary in PuzzleScript.

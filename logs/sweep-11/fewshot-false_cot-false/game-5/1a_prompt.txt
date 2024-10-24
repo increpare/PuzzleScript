@@ -1,0 +1,110 @@
+SYSTEM PROMPT:
+You are a game designer, familiar with the PuzzleScript game description language. 
+
+USER PROMPT:
+The following PuzzleScript game code:
+```plaintext
+Title: Reach the Goal
+Author: PuzzleScriptUser
+Homepage: https://www.puzzlescript.net
+
+===========
+OBJECTS
+===========
+
+Background
+lightgrey
+00000
+00000
+00000
+00000
+00000
+
+Player
+red
+.....
+..0..
+.000.
+..0..
+.....
+
+Wall
+black
+00000
+00000
+00000
+00000
+00000
+
+Goal
+green
+.....
+.....
+..0..
+.....
+.....
+
+===========
+LEGEND
+===========
+
+. = Background
+P = Player
+W = Wall
+G = Goal
+
+===========
+SOUNDS
+===========
+
+===========
+COLLISIONLAYERS
+===========
+
+Background
+Wall
+Player, Goal
+
+===========
+RULES
+===========
+
+[Player] -> [Player Right]
+
+[> Player | Goal] -> [Player | Goal]
+! Check if player is on the goal, game ends.
+
+===========
+WINCONDITIONS
+===========
+
+All Goal on Player
+
+===========
+LEVELS
+===========
+
+; Example Level 1
+WWWWWW
+W..PGW
+W..P.W
+WWWWWW
+
+; Example Level 2
+WWWWWW
+WP...W
+W.W.GW
+WWWWWW
+
+```
+produced the following console output:
+=================================
+line 69 : Name "!", referred to in a rule, does not exist.
+line 69 : Name "check", referred to in a rule, does not exist.
+line 69 : Name "if", referred to in a rule, does not exist.
+line 69 : Name "is", referred to in a rule, does not exist.
+line 69 : Name "on", referred to in a rule, does not exist.
+line 69 : Name "the", referred to in a rule, does not exist.
+too many errors, aborting compilation
+Errors detected during compilation; the game may not work correctly.
+Return a repaired version of the code that addresses these errors. Return your code in full, inside a ```plaintext code block.

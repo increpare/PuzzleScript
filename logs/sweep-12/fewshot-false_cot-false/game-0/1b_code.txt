@@ -1,0 +1,85 @@
+The errors you're encountering are due to missing colons after the metadata headers (`Title`, `Author`, `Homepage`). These should be followed by a colon ':' to properly define them as key-value pairs. I'll correct these issues for you:
+
+```plaintext
+===========
+title: 
+===========
+Catch the Star
+
+===========
+author: 
+===========
+Your Name
+
+===========
+homepage: 
+===========
+www.example.com
+
+===========
+legend
+===========
+. = Background
+# = Wall
+P = Player
+* = Star
+
+===========
+sounds
+===========
+# Sound specifications can go here
+
+===========
+collisionLayers
+===========
+Background
+Player, Star, Wall
+
+===========
+rules
+===========
+
+[Player | Star] -> [Player Star]
+
+===========
+winconditions
+===========
+All Star on Player
+
+===========
+levels
+===========
+
+####
+#P.#
+#..#
+#.*#
+####
+
+####
+#* #
+#.P#
+## #
+####
+
+########
+#.#..#.#
+#.###* #
+#P..   #
+########
+
+===========
+messages
+===========
+Congratulations! You caught the star!
+
+===========
+colorPalette
+===========
+Background #000000
+Wall #2f4f4f
+Player #ff6347
+Star #ffd700
+```
+
+With these corrections, your code should compile correctly. The colons after `title`, `author`, and `homepage` ensure that the metadata is properly formatted.

@@ -6,9 +6,9 @@ The following PuzzleScript game code:
 ```plaintext
 ======
 
-title Collect the Key
-author Game Designer
-homepage https://puzzlescript.net
+Title: Collect the Key
+Author: Game Designer
+Homepage: https://puzzlescript.net
 
 ======
 
@@ -48,51 +48,55 @@ W = Wall
 SOUNDS
 
 Key
-#soundcode 1
+# This is the sound when the player collects the key.
 
 Door
-#soundcode 2
+# This is the sound when the player opens the door.
 
 Win
-#soundcode 3
+# This is the sound when the player reaches the goal.
 
 ======
 
 COLLISIONLAYERS
 
 Background
-Player, Key, Door, Goal, Wall
+Player
+Key
+Door
+Goal
+Wall
 
 ======
 
 RULES
 
-[ > Player | Key] -> [Player | Background]
-[Player | Key] -> [Player | Background]
-[ > Player Key | Door] -> [Player Background]
+[ > Player | Key] -> [Player Key | ]
+[ > Player Key | Door] -> [Player | Background]
 [Player | Goal] -> [Win]
 
 ======
 
 WINCONDITIONS
 
+No Key
 All Goal
 
 ======
 
 LEVELS
 
-P . . . .
-. W W W D
-. W K G W
-. W W W W
-. . . . .
+P . . . . 
+. W W W D 
+. W K G W 
+. W W W W 
+. . . . . 
 
-. . . P .
-W W W W .
-W D K G .
-W . . . .
-W . . . .
+. . . P . 
+W W W W . 
+W D K G . 
+W . . . . 
+W . . . . 
 
 ======
 
@@ -105,13 +109,12 @@ line 45 : Was expecting a sound event (like SFX3, or ENDLEVEL) or an object name
 line 48 : Was expecting a sound event (like SFX3, or ENDLEVEL) or an object name, but didn't find either.
 line 50 : unexpected sound token "win".
 line 51 : Was expecting a sound event (like SFX3, or ENDLEVEL) or an object name, but didn't find either.
-line 93 : Key "E" not found. Do you need to add it to the legend, or define a new object?
-line 93 : Key "N" not found. Do you need to add it to the legend, or define a new object?
-line 79 : Error, symbol " ", used in map, not found.
-line 85 : Error, symbol " ", used in map, not found.
-line 93 : Error, symbol "e", used in map, not found.
-line 66 : In a rule, each pattern to match on the left must have a corresponding pattern on the right of equal length (number of cells).
-line 67 : Commands should only appear at the end of rules, not in or before the pattern-detection/-replacement sections.
-line 67 : In a rule, each pattern to match on the left must have a corresponding pattern on the right of equal length (number of cells).
+line 97 : Key "E" not found. Do you need to add it to the legend, or define a new object?
+line 97 : Key "N" not found. Do you need to add it to the legend, or define a new object?
+line 83 : Error, symbol " ", used in map, not found.
+line 89 : Error, symbol " ", used in map, not found.
+line 97 : Error, symbol "e", used in map, not found.
+line 70 : Commands should only appear at the end of rules, not in or before the pattern-detection/-replacement sections.
+line 70 : In a rule, each pattern to match on the left must have a corresponding pattern on the right of equal length (number of cells).
 Errors detected during compilation; the game may not work correctly.
 Return a repaired version of the code that addresses these errors. Return your code in full, inside a ```plaintext code block.

@@ -4,126 +4,85 @@ You are a game designer, familiar with the PuzzleScript game description languag
 USER PROMPT:
 The following PuzzleScript game code:
 ```plaintext
-title Simple Sokoban
-author Game Designer
+Title: Simple Sokoban
+Author: PuzzleScript Designer
 
 ========
 OBJECTS
 ========
+Background
+GREEN
+
 Player
-# Change to a two-color palette (0 = transparent, 1 = grey)
-transparent grey
-00000
-01110
-00100
-01110
-00000
+BLUE
 
 Wall
-# Change to a two-color palette (0 = black, 1 = black)
-black black
-00000
-11111
-11111
-11111
-00000
+GRAY
 
-Crate
-# Assume the predefined single color is correct for simplicity.
-brown
-00000
-01110
-11011
-01110
-00000
+Box
+BROWN
 
 Target
-# Assume the predefined single color is correct for simplicity.
-red
-00000
-00100
-01110
-11111
-00100
+RED
 
-Floor
-# Assume the predefined single color is correct for simplicity.
-beige
-00000
-00000
-00000
-00000
-00000
+BoxOnTarget
+DARKRED
 
-===========
-COLLISIONLAYERS
-===========
-Background
-Static
-Movable
-Player
-
-======
+========
 LEGEND
-======
-= Wall
-. Floor
-P Player
-C Crate
-X Target
+========
+. = Background
+# = Wall
+P = Player
+B = Box
+T = Target
+O = BoxOnTarget
 
-======
+==============
 SOUNDS
-======
-CrateMovePush
-    500
-CrateMoveStop
-    700
+==============
 
-=====
+==============
+COLLISIONLAYERS
+==============
+Background
+Wall
+Player
+Box
+Target
+BoxOnTarget
+
+=======
 RULES
-=====
-[ >Player | Crate ] -> [ >Player | >Crate ]
+=======
+[ > Player | Box ] -> [ > Player | > Box ]
+[ Box | Target ] -> [ BoxOnTarget | Background ]
+[ BoxOnTarget | Player ] -> [ Box | Player ]
+[ BoxOnTarget ] -> [ Box | Target ]
 
-===
-WIN
-===
-All Crate on Target
+===========
+WINCONDITIONS
+===========
+All BoxOnTarget on Target
 
-======
+=======
 LEVELS
-======
-# Level 1
-####
-#P C#
-#  X#
-####
-
-# Level 2
-#####
-#   #
-# P #
-# C #
-##X##
-  ###
-
-# Level 3
-######
-#    #
-# P C#
-# CC #
-##XX##
- ####
+=======
+# ##### 
+#T..T# 
+###..###
+#P B  O#
+#    ###
+####### 
 
 ```
 produced the following console output:
 =================================
-line 8 : Was looking for color for object PLAYER, got "# change to a two-color palette " instead.
-line 10 : Was looking for color for object TRANSPARENT, got "00000" instead.
-line 11 : Trying to access color number 0 from the color palette of sprite TRANSPARENT, but there are only 0 defined in it.
-line 11 : Trying to access color number 1 from the color palette of sprite TRANSPARENT, but there are only 0 defined in it.
-line 12 : Trying to access color number 0 from the color palette of sprite TRANSPARENT, but there are only 0 defined in it.
-line 12 : Trying to access color number 1 from the color palette of sprite TRANSPARENT, but there are only 0 defined in it.
-too many errors, aborting compilation
+line 66 : Maps must be rectangular, yo (In a level, the length of each row must be the same).
+line 67 : Maps must be rectangular, yo (In a level, the length of each row must be the same).
+line 68 : Maps must be rectangular, yo (In a level, the length of each row must be the same).
+line 69 : Maps must be rectangular, yo (In a level, the length of each row must be the same).
+line 65 : Error, symbol " ", used in map, not found.
+line 55 : In a rule, each pattern to match on the left must have a corresponding pattern on the right of equal length (number of cells).
 Errors detected during compilation; the game may not work correctly.
 Return a repaired version of the code that addresses these errors. First, reason about your task and determine the best plan of action. Then, write your code. Return your code in full, inside a ```plaintext code block.

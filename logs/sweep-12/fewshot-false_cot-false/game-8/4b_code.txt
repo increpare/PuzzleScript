@@ -1,0 +1,97 @@
+Certainly! Let's address the issues in the provided PuzzleScript code.
+
+1. **Sound Section**: Line 38 indicates an expected sound event or object name that wasn't found. As there is a comment instead of valid syntax, let's correct that.
+
+2. **Level Symbols**: The error concerning the `-` symbol is because it wasn't defined in the legend. Also, the `.` symbol has no definition. Typically, `.` is used for empty spaces or backgrounds.
+
+3. **Maps Must Be Rectangular**: Ensure each level line has the same number of characters for all rows.
+
+4. **Rule Issues**: The rule with the empty pattern `[ > Player |  ]` seems to miss an object to act on.
+
+Here's a corrected version of the code:
+
+```plaintext
+Title Simple Sokoban
+Author Game Designer
+Homepage https://www.example.com
+
+===========
+Objects
+===========
+Background
+grey
+
+Wall
+orange
+
+Player
+yellow
+
+Box
+blue
+
+Target
+red
+
+BoxOnTarget
+green
+
+===========
+Legend
+===========
+# = Wall
+P = Player
+B = Box
+T = Target
+G = BoxOnTarget
+. = Background
+
+===========
+Sounds
+===========
+# No custom sounds specified.
+
+===========
+CollisionLayers
+===========
+Background
+Target
+Player, Box, BoxOnTarget, Wall
+
+===========
+Rules
+===========
+[ > Player ] -> [ > Player ]
+[ Player | Box ] -> [ > Player | > Box ]
+[ Player | BoxOnTarget ] -> [ > Player | > BoxOnTarget ]
+
+[ Player | Box | Target ] -> [ > Player | BoxOnTarget | Target ]
+
+[ Box | Target ] -> [ BoxOnTarget | Target ]
+[ BoxOnTarget | ] -> [ Box | ]
+
+===========
+WinConditions
+===========
+All BoxOnTarget on Target
+
+===========
+Levels
+===========
+#####
+#...#
+#.#.#
+#P#B#
+#####
+
+#####
+#...#
+#B#P#
+#####
+```
+
+- **Legend Addition**: Added `.` for Background to ensure levels are parsed correctly.
+- **Level Rectangularity**: All level rows now have equal lengths.
+- **Rule Adjustment**: Adjusted the rule `[ > Player ] -> [ > Player ]` to avoid an empty target.
+
+This should resolve the compilation issues in the original script.

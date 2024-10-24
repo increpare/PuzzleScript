@@ -1,0 +1,114 @@
+SYSTEM PROMPT:
+You are a game designer, familiar with the PuzzleScript game description language. 
+
+USER PROMPT:
+The following PuzzleScript game code:
+```plaintext
+title Treasure Hunt
+author GameDesigner
+homepage http://mygames.com
+
+===========
+OBJECTS
+===========
+Background
+yellow
+00000
+00000
+00000
+00000
+00000
+
+Player
+blue
+..0..
+..0..
+.000.
+..0..
+..0..
+
+Wall
+grey
+00000
+00000
+00000
+00000
+00000
+
+Treasure
+gold
+..1..
+.111.
+.111.
+.111.
+..1..
+
+===========
+LEGEND
+===========
+. = Background
+P = Player
+# = Wall
+T = Treasure
+
+===========
+SOUNDS
+===========
+{"move": "BEEP"}
+{"win": "JINGLE"}
+
+================
+COLLISIONLAYERS
+================
+Background
+Player, Treasure
+Wall
+
+===========
+RULES
+===========
+[Player | Treasure] -> [Player | ] WIN // Win when player touches treasure
+[Player | Wall] -> [ Player | Wall ] // Prevent walking through walls
+
+===========
+WINCONDITIONS
+===========
+No Treasure
+
+===========
+LEVELS
+===========
+; Level 1
+#####
+#P..#
+#.T.#
+#####
+
+; Level 2
+#####
+#.P##
+#...#
+#..T#
+#####
+
+; Level 3
+######
+#P...#
+##.###
+##.###
+##..T#
+######
+
+
+```
+produced the following console output:
+=================================
+line 33 : Was looking for color for object TREASURE, got "gold" instead.
+line 34 : Trying to access color number 1 from the color palette of sprite TREASURE, but there are only 0 defined in it.
+line 35 : Trying to access color number 1 from the color palette of sprite TREASURE, but there are only 0 defined in it.
+line 36 : Trying to access color number 1 from the color palette of sprite TREASURE, but there are only 0 defined in it.
+line 37 : Trying to access color number 1 from the color palette of sprite TREASURE, but there are only 0 defined in it.
+line 38 : Trying to access color number 1 from the color palette of sprite TREASURE, but there are only 0 defined in it.
+too many errors, aborting compilation
+Errors detected during compilation; the game may not work correctly.
+Return a repaired version of the code that addresses these errors. First, reason about your task and determine the best plan of action. Then, write your code. Return your code in full, inside a ```plaintext code block.

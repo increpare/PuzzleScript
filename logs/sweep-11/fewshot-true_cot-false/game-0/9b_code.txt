@@ -1,0 +1,89 @@
+Certainly! Here's your corrected PuzzleScript game code with a fix to make the level solvable:
+
+```plaintext
+title Simple Puzzle
+author Your Name
+
+========
+OBJECTS
+========
+
+Background
+darkgreen green
+00000
+00000
+00000
+00000
+00000
+
+Wall
+brown darkbrown
+00000
+00000
+00000
+00000
+00000
+
+Player
+black orange white blue
+.000.
+.111.
+22222
+.333.
+.3.3.
+
+Goal
+yellow
+.....
+.000.
+.....
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Player
+G = Goal
+
+=======
+SOUNDS
+=======
+
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Wall
+Player, Goal
+
+======
+RULES
+======
+
+[ > Player | no Wall | Goal ] -> [ > Player | Goal ]
+
+==============
+WINCONDITIONS
+==============
+
+All Player on Goal
+
+=======
+LEVELS
+=======
+
+#######
+#.....#
+#..G..#
+#..P..#
+#.....#
+#..G..#
+#######
+
+```
+
+In this version, the rule `[ > Player | no Wall | Goal ] -> [ > Player | Goal ]` was added to ensure that the player can move into the goal. The goal and player's relative positioning in the level must also permit the player to reach the goal without being blocked by any walls. Now the level should be solvable because the player can directly reach the goals without obstruction.

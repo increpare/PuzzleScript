@@ -1,0 +1,123 @@
+SYSTEM PROMPT:
+You are a game designer, familiar with the PuzzleScript game description language. 
+
+USER PROMPT:
+The following PuzzleScript game code:
+```plaintext
+Title: Box Pusher
+Author: GameDesigner
+
+========
+OBJECTS
+========
+
+Background
+transparent
+
+Wall
+# Brown
+
+Pusher
+# Red
+
+Box
+# Blue
+
+Target
+# Green
+
+BoxOnTarget
+# Cyan
+
+PusherOnTarget
+# Magenta
+
+========
+LEGEND
+========
+
+. = Background
+# = Wall
+P = Pusher
+B = Box
+T = Target
+O = BoxOnTarget
+@ = PusherOnTarget
+
+========
+COLLISIONLAYERS
+========
+
+Background
+Wall
+Box, BoxOnTarget
+Pusher, PusherOnTarget
+Target
+
+========
+RULES
+========
+
+[ P | B ] -> [ > | > ]
+[ P | T ] -> [ @ ]
+[ P | O ] -> [ @ | B ]
+[ @ ] -> [ P | T ]
+[ P | B | T ] -> [ > | > | O ]
+
+[ B | T ] -> [ O ]
+[ O ] -> [ B | T ]
+
+========
+WINCONDITIONS
+========
+
+All O
+
+========
+LEVELS
+========
+
+#####
+#...#
+#.O.#
+#...#
+#.P.#
+#..B#
+#####
+
+#####
+#...#
+#.O.#
+#...#
+#...#
+#PBO#
+#####
+
+#######
+#.....#
+#.O.O.#
+#.....#
+#PB.BO#
+#...B.#
+#######
+
+#########
+#.......#
+#.O.O.O.#
+#.......#
+#PB.BOBO#
+#.......#
+#########
+
+```
+produced the following console output:
+=================================
+line 12 : Was looking for color for object WALL, got "# brown" instead.
+line 15 : Was looking for color for object PUSHER, got "# red" instead.
+line 18 : Was looking for color for object BOX, got "# blue" instead.
+line 21 : Was looking for color for object TARGET, got "# green" instead.
+line 24 : Was looking for color for object BOXONTARGET, got "# cyan" instead.
+line 27 : Was looking for color for object PUSHERONTARGET, got "# magenta" instead.
+too many errors, aborting compilation
+Errors detected during compilation; the game may not work correctly.
+Return a repaired version of the code that addresses these errors. Return your code in full, inside a ```plaintext code block.

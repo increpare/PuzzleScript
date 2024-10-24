@@ -1,0 +1,369 @@
+SYSTEM PROMPT:
+You are a game designer, familiar with the PuzzleScript game description language. Here are some example games, for inspiration (do not reproduce these games exactly):
+
+title Cliched River Puzzle
+author Weeble
+homepage www.puzzlescript.net
+
+========
+OBJECTS
+========
+
+Grass
+#559922 GREEN
+11111
+01111
+11101
+11111
+10111
+
+
+Player
+Yellow
+00.00
+0...0
+.....
+0...0
+00.00
+
+Water1
+#3333ff #5555ff #7777ff
+00121
+10100
+12001
+10010
+01000
+
+Water2
+#3333ff #5555ff #7777ff
+10000
+00010
+00121
+01100
+10001
+
+Carrot
+ORANGE #55cc00
+11111
+.000.
+.000.
+.000.
+..0..
+
+Fox
+ORANGE WHITE BLACK
+.2.2.
+00000
+12021
+.111.
+..2..
+
+Rabbit
+WHITE #ff88bb
+00.00
+.0.0.
+.000.
+.101.
+.000.
+
+EmptyBoat
+BROWN DARKBROWN
+.000.
+01110
+01110
+01110
+00000
+Platform
+GREY
+.....
+.....
+.....
+.....
+.....
+
+LeftB
+BLUE
+.....
+.....
+.....
+.....
+.....
+
+RightB
+RED
+.....
+.....
+.....
+.....
+.....
+
+Dude
+BLACK
+..0..
+00000
+..0..
+.0.0.
+0...0
+
+Dock
+YELLOW
+.....
+.....
+.....
+.....
+.....
+
+=======
+LEGEND
+=======
+
+. = Grass and LeftB
+, = Grass and RightB
+~ = Water1 and LeftB
+^ = Water1 and RightB
+P = Player and LeftB
+C = Carrot and Platform and LeftB
+F = Fox and Platform and LeftB
+R = Rabbit and Platform and LeftB
+_ = EmptyBoat and LeftB and Water1
+* = Platform and RightB
+[ = Dude and Dock and LeftB
+] = Dock and RightB
+Water = Water1 or Water2
+Background = Grass or Water1 or Water2
+Object = Rabbit or Fox or Carrot
+Bank = LeftB or RightB
+=======
+SOUNDS
+=======
+
+SFX0 81232704
+SFX1 47027309
+SFX2 92562507
+SFX3 11245308
+
+================
+COLLISIONLAYERS
+================
+
+Background
+EmptyBoat, Platform, Dock
+LeftB, RightB
+Carrot, Rabbit, Fox, Dude
+Player
+
+======
+RULES
+======
+
+(Loading the boat)
+[ action Player Object Platform ] [ EmptyBoat no Object ] -> [ Player Platform ] [ EmptyBoat Object ] sfx2
+
+(Emptying the boat)
+[ action Player Object EmptyBoat LeftB ] [ Platform no Object LeftB ] -> [ Player EmptyBoat LeftB ] [ Platform Object LeftB ] sfx2
+[ action Player Object EmptyBoat RightB ] [ Platform no Object RightB ] -> [ Player EmptyBoat RightB ] [ Platform Object RightB ] sfx2
+
+( Eating rules for stuff on the left bank )
+late [ RightB Dude ] [ LeftB Rabbit ] [ LeftB Fox ] -> [ RightB Dude ] [ LeftB ] [ LeftB Fox ] sfx0 message Fox eats rabbit! Chomp!
+late [ RightB Dude ] [ LeftB Carrot ] [ LeftB Rabbit ] -> [ RightB Dude ] [ LeftB ] [ LeftB Rabbit ] sfx1 message Rabbit eats carrot! Chomp!
+
+( Same rules for stuff on the right bank )
+late [ LeftB Dude ] [ RightB Rabbit ] [ RightB Fox ] -> [ LeftB Dude ] [ RightB ] [ RightB Fox ] sfx0 message Fox eats rabbit! Chomp!
+late [ LeftB Dude ] [ RightB Carrot ] [ RightB Rabbit ] -> [ LeftB Dude ] [ RightB ] [ RightB Rabbit ] sfx1 message Rabbit eats carrot! Chomp!
+
+( Animate the water )
+[ Water ] -> [ random Water ]
+
+( Row across the river with an object )
+[ action Player Dude | EmptyBoat Object | ... | | Dock ] -> [ | | ... | EmptyBoat Object | Player Dude Dock ] sfx3
+
+( Row across the river without an object )
+[ action Player Dude | EmptyBoat no Object | ... | | Dock ] -> [ | | ... | EmptyBoat | Player Dude Dock ] sfx3
+
+( Victory condition )
+[ RightB Platform Rabbit ] [ RightB Platform Fox ] [ RightB Platform Carrot] -> win
+
+==============
+WINCONDITIONS
+==============
+
+=======
+LEVELS
+=======
+
+.....~~~^^,,,,,
+.....~~~^^,,,,,
+...F.~~~^^,*,,,
+..RP[_~~^^],*,,
+...C.~~~~^,*,,,
+.....~~~^^,,,,,
+.....~~~^^,,,,,
+
+
+
+USER PROMPT:
+The following PuzzleScript game code:
+```plaintext
+title Colorful Conveyors
+author Game Designer
+homepage www.mypuzzle.com
+
+========
+OBJECTS
+========
+
+Background
+LightGrey
+.....
+.....
+.....
+.....
+.....
+
+Wall
+Grey DarkGrey
+00000
+01110
+01110
+01110
+00000
+
+Player
+Blue
+.....
+..0..
+.010.
+..0..
+.....
+
+RedCrate
+Red
+.....
+..0..
+.111.
+..0..
+.....
+
+GreenCrate
+Green
+.....
+..0..
+.111.
+..0..
+.....
+
+RedTarget
+DarkRed
+.....
+..0..
+.111.
+..0..
+.....
+
+GreenTarget
+DarkGreen
+.....
+..0..
+.111.
+..0..
+.....
+
+ConveyorL
+Yellow
+000..
+000..
+.....
+.....
+.....
+
+ConveyorR
+Yellow
+..000
+..000
+.....
+.....
+.....
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Player
+R = RedCrate
+G = GreenCrate
+X = RedTarget
+Y = GreenTarget
+
+Conveyor = ConveyorL or ConveyorR
+
+=======
+SOUNDS
+=======
+
+Crate MOVE 36772507
+Player MOVE 27089102
+Win 98765432
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Target
+Player, Wall, Crate
+Conveyor
+
+======
+RULES
+======
+
+[ > Player | Crate ] -> [ > Player | > Crate ]
+[ > Crate | ConveyorR ] -> [ > Crate | > ConveyorR ]
+[ < Crate | ConveyorL ] -> [ < Crate | < ConveyorL ]
+
+Crate MOVE -> SFX0
+
+==============
+WINCONDITIONS
+==============
+
+All RedCrate on RedTarget
+All GreenCrate on GreenTarget
+
+=======
+LEVELS
+=======
+
+#######
+#.....#
+#..P..#
+#.R.G.#
+#..X..#
+#..Y..#
+#######
+
+#.#.#.#
+#R.G.X#
+#.#.#.#
+#.....#
+#######
+#.P...#
+#.Y...#
+#######
+
+message Align the crates to the targets!
+
+```
+produced the following console output:
+=================================
+line 29 : Trying to access color number 1 from the color palette of sprite PLAYER, but there are only 1 defined in it.
+line 37 : Trying to access color number 1 from the color palette of sprite REDCRATE, but there are only 1 defined in it.
+line 45 : Trying to access color number 1 from the color palette of sprite GREENCRATE, but there are only 1 defined in it.
+line 53 : Trying to access color number 1 from the color palette of sprite REDTARGET, but there are only 1 defined in it.
+line 61 : Trying to access color number 1 from the color palette of sprite GREENTARGET, but there are only 1 defined in it.
+line 99 : unexpected sound token "crate".
+too many errors, aborting compilation
+Errors detected during compilation; the game may not work correctly.
+Return a repaired version of the code that addresses these errors. Return your code in full, inside a ```plaintext code block.

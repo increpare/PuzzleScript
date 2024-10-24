@@ -1,0 +1,94 @@
+SYSTEM PROMPT:
+You are a game designer, familiar with the PuzzleScript game description language. 
+
+USER PROMPT:
+The following PuzzleScript game code:
+```plaintext
+Title: Simple Reach the Goal Game
+Author: You
+Homepage: http://www.puzzlescript.net
+
+===========
+OBJECTS
+===========
+
+Background
+LIGHTGREEN
+
+Player
+BLUE
+..00.
+..00.
+..0..
+.0.0.
+.0.0.
+
+Goal
+YELLOW
+.....
+.....
+..0..
+.....
+.....
+
+=======
+LEGEND
+=======
+
+= Background
+P = Player
+G = Goal
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Player, Goal
+
+==========
+RULES
+==========
+
+[ > Player | Goal ] -> [ Player Goal ]
+
+=======
+WINCONDITIONS
+=======
+
+All Goal on Player
+
+===============
+LEVELS
+===============
+
+==========
+Level 1
+==========
+..P..
+.....
+.....
+.....
+..G..
+
+==========
+Level 2
+==========
+..P..
+.....
+.....
+.....
+..G..
+
+```
+produced the following console output:
+=================================
+line 32 : Only comments should go after a bunch of equals signs ('===') on a line.
+line 37 : section "COLLISIONLAYERS" is out of order, must follow  "SOUNDS" (or it could be that the section "SOUNDS"is just missing totally.  You have to include all section headings, even if the section itself is empty).
+line 47 : Name "player", referred to in a rule, does not exist.
+line 47 : Name "goal", referred to in a rule, does not exist.
+line 53 : Error in win condition: "GOAL" is not a valid object name.
+line 53 : Error in win condition: "PLAYER" is not a valid object name.
+too many errors, aborting compilation
+Errors detected during compilation; the game may not work correctly.
+Return a repaired version of the code that addresses these errors. Return your code in full, inside a ```plaintext code block.

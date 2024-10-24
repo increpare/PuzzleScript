@@ -1,0 +1,19 @@
+=================================
+line 108 : Cannot add "TARGET" to a collision layer; it has not been declared.
+line 109 : Cannot add "CRATE" to a collision layer; it has not been declared.
+line 116 : Name "crate", referred to in a rule, does not exist.
+line 117 : Name "crate", referred to in a rule, does not exist.
+line 118 : Name "crate", referred to in a rule, does not exist.
+line 116 : Error, malformed cell rule - was looking for cell contents, but found "crate".  What am I supposed to do with this, eh, please tell me that.
+line 116 : In a rule, if you specify a movement, it has to act on an object.
+line 116 : In a rule, each pattern to match on the left must have a corresponding pattern on the right of equal length (number of cells).
+line 117 : Error, malformed cell rule - was looking for cell contents, but found "crate".  What am I supposed to do with this, eh, please tell me that.
+line 117 : In a rule, if you specify a movement, it has to act on an object.
+line 117 : Error, an item can only have one direction/action at a time, but you're looking for several at once!
+line 118 : Error, malformed cell rule - was looking for cell contents, but found "crate".  What am I supposed to do with this, eh, please tell me that.
+line 118 : In a rule, if you specify a movement, it has to act on an object.
+line 118 : Error, an item can only have one direction/action at a time, but you're looking for several at once!
+line 120 : A rule has to have an arrow in it.  There's no arrow here! Consider reading up about rules - you're clearly doing something weird
+line 120 : The start of a rule must consist of some number of directions (possibly 0), before the first bracket, specifying in what directions to look (with no direction specified, it applies in all four directions).  It seems you've just entered "SFX0".
+line 120 : This rule refers to nothing.  What the heck? :O
+Errors detected during compilation; the game may not work correctly.

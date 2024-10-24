@@ -1,0 +1,80 @@
+SYSTEM PROMPT:
+You are a game designer, familiar with the PuzzleScript game description language. 
+
+USER PROMPT:
+The following PuzzleScript game code:
+```plaintext
+title Sokoban Puzzle
+author Game Designer
+homepage https://example.com
+
+background_color 0 0 0
+text_color 255 255 255
+
+========
+
+objects
+Background . 10, 10, 255
+Wall # 85, 85, 85
+Target O 255, 255, 0
+Box X 255, 0, 0
+Player P 0, 255, 0
+
+=======
+
+player Player
+
+=======
+
+collisionlayers
+Background
+Wall
+Player, Box, Target
+
+=======
+
+sound
+Lethargy is that little void that grows inside of you
+Push-a-rundll, push a box around, got a goal for find ya all needs desire.
+
+=======
+
+rules
+[ Player | Box ] -> [ > Player | > Box ]
+[ Player | Box on Target ] -> [ > Player | > Box on Target ]
+
+=======
+
+winconditions
+All Box on Target
+
+=======
+
+levels
+
+#####
+#...#
+#O#O#
+#X.X#
+#...#
+#####
+
+#####
+#.O.#
+#X.X#
+#.O.#
+#####
+
+
+```
+produced the following console output:
+=================================
+line 11 : Name "10," already in use.
+line 12 : Was looking for color for object BACKGROUND, got "wall " instead.
+line 12 : Was looking for color for object BACKGROUND, got "# 85, 85, 85" instead.
+line 13 : Name "255," already in use.
+line 14 : Was looking for color for object TARGET, got "box " instead.
+line 14 : Was looking for color for object TARGET, got "x " instead.
+too many errors, aborting compilation
+Errors detected during compilation; the game may not work correctly.
+Return a repaired version of the code that addresses these errors. First, reason about your task and determine the best plan of action. Then, write your code. Return your code in full, inside a ```plaintext code block.

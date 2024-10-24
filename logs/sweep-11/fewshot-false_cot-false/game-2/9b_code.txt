@@ -1,0 +1,89 @@
+Here's the revised game code with solvability in mind:
+
+```plaintext
+Title: Maze Runner
+Author: YourName
+Homepage: http://yourhomepage.com
+
+===========
+OBJECTS
+===========
+
+Background
+transparent
+.....
+.....
+.....
+.....
+..... 
+
+Player
+#00F
+.....
+.00..
+.00..
+.....
+..... 
+
+Wall
+#333
+.....
+.00..
+.00..
+.....
+..... 
+
+Target
+#0F0
+.....
+.00..
+.00..
+.....
+..... 
+
+===========
+LEGEND
+===========
+
+. = Background
+P = Player
+W = Wall
+T = Target
+
+===========
+SOUNDS
+===========
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Player
+Wall
+Target
+
+===========
+RULES
+===========
+
+[ > Player | Target ] -> [ > Player | Background ]
+
+=============
+WINCONDITIONS
+=============
+
+No Target
+
+===========
+LEVELS
+===========
+
+WWWWWWW        
+W.....W        
+W.P..TW        
+W..W..W        
+WWWWWWW
+```
+
+To fix the solvability issue, I added a path around the wall that blocked the Player from reaching the Target. This change ensures that the Player can navigate to the Target and complete the level.

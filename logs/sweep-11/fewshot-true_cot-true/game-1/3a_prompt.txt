@@ -1,0 +1,1812 @@
+SYSTEM PROMPT:
+You are a game designer, familiar with the PuzzleScript game description language. Here are some example games, for inspiration (do not reproduce these games exactly):
+
+title Rigid Body example
+author Anonymous
+homepage www.puzzlescript.net
+
+verbose_logging
+
+(
+
+Example for
+https://www.puzzlescript.net/Documentation/rigidbodies.html#many_many
+
+)
+
+========
+OBJECTS
+========
+
+Background 
+white  
+
+Target 
+DarkBlue    
+
+Wall 
+DarkGrey
+
+Player
+Blue
+..0..
+..0.0
+00000
+.000.
+.0.0.
+
+Shadow
+Black
+..0..
+0.0..
+00000
+.000.
+.0.0.
+
+( three multi-cells blocks )
+Crate 
+orange
+
+Chest
+green
+
+Box
+red
+
+( 1-cell small block )
+Small
+darkred
+.....
+.000.
+.000.
+.000.
+.....
+
+( sticky, multicellular block when in contact )
+Glue
+pink
+.000.
+00000
+00000
+00000
+.000.
+
+( a flag to know what is allowed move )
+Wanna_Move
+#ff00ff
+.....
+.....
+..0..
+.....
+.....
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Player
+S = Shadow
+* = Crate
++ = Box
+% = Chest
+o = Small
+g = Glue
+
+( blocks that can be moved by the player )
+Movable = Crate or Box or Chest or Small or Glue
+
+( all things that can move and push blocks )
+Mover = Player or Shadow or Movable 
+
+( things that can stop a movement if they are stationary )
+Obstacle = Wall or Mover
+
+=======
+SOUNDS
+=======
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Target
+Obstacle
+Wanna_Move
+
+======
+RULES     
+======     
+
+[ > player ] [ stationary shadow ] -> [ > player ] [ < shadow ]
+
+( 1. Propagate movements forward )
+[ > Mover | stationary Movable ] -> [ > Mover | > Movable  ]
++ [ > Box    ] [ stationary Box   ] -> [ > Box    ] [ > Box    ]
++ [ > Crate  ] [ stationary Crate ] -> [ > Crate  ] [ > Crate  ]
++ [ > Chest  ] [ stationary Chest ] -> [ > Chest  ] [ > Chest  ]
++ [ moving Glue | stationary Glue ] -> [ moving Glue | moving Glue ]
+
+( 2. Propagate obstructions backwards )
+[ > Mover  | stationary Obstacle ] -> [ stationary Mover | Obstacle ]
+
+	(the next lines deal with directional conflicts)
++ [ ^ Crate | < Crate ] -> [ stationary Crate | stationary Crate ] 
++ [ ^ Crate | > Crate ] -> [ stationary Crate | stationary Crate ] 
++ [ ^ Crate | v Crate ] -> [ stationary Crate | stationary Crate ] 
+
++ [ v Crate | < Crate ] -> [ stationary Crate | stationary Crate ] 
++ [ v Crate | > Crate ] -> [ stationary Crate | stationary Crate ] 
++ [ v Crate | ^ Crate ] -> [ stationary Crate | stationary Crate ] 
+
++ [ < Crate | > Crate ] -> [ stationary Crate | stationary Crate ] 
++ [ < Crate | ^ Crate ] -> [ stationary Crate | stationary Crate ] 
++ [ < Crate | v Crate ] -> [ stationary Crate | stationary Crate ] 
+
++ [ > Crate | < Crate ] -> [ stationary Crate | stationary Crate ] 
++ [ > Crate | ^ Crate ] -> [ stationary Crate | stationary Crate ] 
++ [ > Crate | v Crate ] -> [ stationary Crate | stationary Crate ] 
+
+(also one space removed)
++ [ > Mover | |  < Mover ] -> [ stationary Mover | |  < Mover ] 
+
++ [ > Crate  ] [ stationary Crate ] -> [ stationary Crate ] [ Crate ]
++ [ > Box    ] [ stationary Box   ] -> [ stationary Box   ] [ Box   ]
++ [ > Chest  ] [ stationary Chest ] -> [ stationary Chest ] [ Chest ]
++ [ moving Glue | stationary Glue ] -> [ stationary Glue | Glue ]
+
+( 3. remove all movement, keep a flag )
+[ > Movable ] -> [ Movable wanna_move ]
+
+( 4. propagate movement only on wanna_move things )
+(    ie redo step 1 but with WANNA_MOVE added to the first line below )
+[ > Mover  | stationary Movable WANNA_MOVE ] -> [ > Mover | > Movable ]
++ [ > Box   ] [ stationary Box   ] -> [ > Box   ] [ > Box   ]
++ [ > Crate ] [ stationary Crate ] -> [ > Crate ] [ > Crate ]
++ [ > Chest ] [ stationary Chest ] -> [ > Chest ] [ > Chest ]
++ [ moving Glue | stationary Glue ] -> [ moving Glue | moving Glue ]
+
+( 5. cleanup, remove flag )
+[ wanna_move ] -> [ ]
+
+
+==============
+WINCONDITIONS
+==============
+
+=======     
+LEVELS
+=======
+
+#########
+#.......#
+#..p....#
+#.......#
+#.......#
+#..***..#
+#.......#
+#....S..#
+#.......#
+#########
+
+
+
+title Sticky Blocks
+author increpare
+homepage www.puzzlescript.net
+
+========
+OBJECTS
+========
+
+Background
+lightgreen green
+11111
+01111
+11101
+11111
+10111
+
+Target
+darkblue
+.....
+.000.
+.0.0.
+.000.
+.....
+
+Wall
+brown darkbrown
+00010
+11111
+01000
+11111
+00010
+
+Player
+black orange white blue
+.000.
+.111.
+22222
+.333.
+.3.3.
+
+Crate
+orange
+00000
+0...0
+0...0
+0...0
+00000
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Player
+* = Crate
+@ = Crate and Target
+O = Target
+
+=======
+SOUNDS
+=======
+
+Crate MOVE 36772507
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Target
+Player, Wall, Crate
+
+======
+RULES
+======
+
+[ < Player | Crate ] -> [ < Player | < Crate ] 
+
+==============
+WINCONDITIONS
+==============
+
+all Target on Crate
+
+=======
+LEVELS
+=======
+
+#########
+#.......#
+#.....@.#
+#.P.*.O.#
+#.......#
+#.......#
+#########
+
+.#######.
+.#.....#.
+.#O##..##
+##.##.*.#
+#.*..**.#
+#.OOO.#.#
+#.P.....#
+#########
+
+
+title Microban
+author David Skinner
+homepage www.sneezingtiger.com/sokoban/levels/microbanText.html
+
+(My favourite set of sokoban levels - here're the first ten of the Microban set.
+
+I tried contacting this guy, but he seems to have vanished from the net. The levels are in lots of places online, so I'm just chancing my arm by including them.  BUT BE WARNED.)
+
+========
+OBJECTS
+========
+
+Background
+lightgreen green
+11111
+01111
+11101
+11111
+10111
+
+Target
+darkblue
+.....
+.000.
+.0.0.
+.000.
+.....
+
+Wall
+brown darkbrown
+00010
+11111
+01000
+11111
+00010
+
+Player
+black orange white blue
+.000.
+.111.
+22222
+.333.
+.3.3.
+
+Crate
+orange
+00000
+0...0
+0...0
+0...0
+00000
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Player
+* = Crate
+@ = Crate and Target
+O = Target
+
+=======
+SOUNDS
+=======
+
+Crate MOVE 36772507
+endlevel 83744503
+startgame 92244503
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Target
+Player, Wall, Crate
+
+======
+RULES
+======
+
+[ > Player | Crate ] -> [ > Player | > Crate ] 
+
+==============
+WINCONDITIONS
+==============
+
+all Target on Crate
+
+=======
+LEVELS
+=======
+
+message level 1 of 10
+
+####..
+#.O#..
+#..###
+#@P..#
+#..*.#
+#..###
+####..
+
+message level 2 of 10
+
+######
+#....#
+#.#P.#
+#.*@.#
+#.O@.#
+#....#
+######
+
+message level 3 of 10
+
+..####...
+###..####
+#.....*.#
+#.#..#*.#
+#.O.O#P.#
+#########
+
+message level 4 of 10
+
+########
+#......#
+#.O@@*P#
+#......#
+#####..#
+....####
+
+message level 5 of 10
+
+.#######
+.#.....#
+.#.O*O.#
+##.*P*.#
+#..O*O.#
+#......#
+########
+
+message level 6 of 10
+
+######.#####
+#....###...#
+#.**.....#P#
+#.*.#OOO...#
+#...########
+#####.......
+
+message level 7 of 10
+
+#######
+#.....#
+#.O*O.#
+#.*O*.#
+#.O*O.#
+#.*O*.#
+#..P..#
+#######
+
+message level 8 of 10
+
+..######
+..#.OOP#
+..#.**.#
+..##.###
+...#.#..
+...#.#..
+####.#..
+#....##.
+#.#...#.
+#...#.#.
+###...#.
+..#####.
+
+message level 9 of 10
+
+#####.
+#O..##
+#P**.#
+##...#
+.##..#
+..##O#
+...###
+
+message level 10 of 10
+
+......#####
+......#O..#
+......#O#.#
+#######O#.#
+#.P.*.*.*.#
+#.#.#.#.###
+#.......#..
+#########..
+
+message congratulations!
+
+
+title Sokobond: The Demake
+author Jonah Ostroff
+homepage www.sokobond.com
+text_color #202020
+background_color #FDFDFD
+key_repeat_interval 0.25
+run_rules_on_level_start
+noaction
+youtube 2R0sTlruOZc
+
+========
+OBJECTS
+========
+
+Background
+#FFFFFF #F8F8F8
+00000
+01010
+00000
+01010
+00000
+
+Player
+#FFBBEE
+00000
+0...0
+0...0
+0...0
+00000
+
+Wall
+Yellow White
+00000
+00000
+00000
+00000
+00000
+
+Hydrogen
+Red Black
+.....
+.111.
+.101.
+.111.
+.....
+
+Nitrogen
+Green Black
+.....
+.111.
+.101.
+.111.
+.....
+
+Oxygen
+Blue Black
+.....
+.111.
+.101.
+.111.
+.....
+
+Carbon
+Yellow Black
+.....
+.111.
+.101.
+.111.
+.....
+
+Helium
+White Black
+.....
+.111.
+.101.
+.111.
+.....
+
+1Electron
+LightGray
+.....
+.0...
+.....
+.....
+.....
+
+2Electron
+LightGray
+.....
+...0.
+.....
+.0...
+.....
+
+3Electron
+LightGray
+.....
+.0.0.
+.....
+.0...
+.....
+
+4Electron
+LightGray
+.....
+.0.0.
+.....
+.0.0.
+.....
+
+BondU
+Black
+..0..
+.....
+.....
+.....
+.....
+
+BondL
+Black
+.....
+.....
+0....
+.....
+.....
+
+BondR
+Black
+.....
+.....
+....0
+.....
+.....
+
+BondD
+Black
+.....
+.....
+.....
+.....
+..0..
+
+
+BondUL
+Black
+..0..
+.....
+0....
+.....
+.....
+
+BondUR
+Black
+..0..
+.....
+....0
+.....
+.....
+
+BondUD
+Black
+..0..
+.....
+.....
+.....
+..0..
+
+BondLR
+Black
+.....
+.....
+0...0
+.....
+.....
+
+BondLD
+Black
+.....
+.....
+0....
+.....
+..0..
+
+BondRD
+Black
+.....
+.....
+....0
+.....
+..0..
+
+BondULR
+Black
+..0..
+.....
+0...0
+.....
+.....
+
+BondULD
+Black
+..0..
+.....
+0....
+.....
+..0..
+
+BondURD
+Black
+..0..
+.....
+....0
+.....
+..0..
+
+BondLRD
+Black
+.....
+.....
+0...0
+.....
+..0..
+
+BondULRD
+Black
+..0..
+.....
+0...0
+.....
+..0..
+
+Temp1
+Red
+
+Temp2 (These are placeholders for various things.)
+Green
+
+Temp3
+Blue
+
+Temp4
+Yellow
+
+=======
+LEGEND
+=======
+
+Atom = Hydrogen or Oxygen or Nitrogen or Carbon or Helium
+Orbital = 1Electron or 2Electron or 3Electron or 4Electron
+UBond = BondU or BondUL or BondUR or BondUD or BondULR or BondULD or BondURD or BondULRD
+LBond = BondL or BondUL or BondLR or BondLD or BondULR or BondULD or BondLRD or BondULRD
+RBond = BondR or BondUR or BondLR or BondRD or BondULR or BondURD or BondLRD or BondULRD
+DBond = BondD or BondUD or BondLD or BondRD or BondULD or BondURD or BondLRD or BondULRD
+1Bond = BondU or BondL or BondR or BondD
+2Bond = BondUL or BondUR or BondUD or BondLR or BondLD or BondRD
+3Bond = BondULR or BondULD or BondURD or BondLRD
+Bond = 1Bond or 2Bond or 3Bond or BondULRD
+Temps = Temp1 or Temp2 or Temp3 or Temp4
+AtomStuff = Bond or Orbital
+
+. = Background
+# = Wall
+H = Hydrogen and 1Electron
+O = Oxygen and 2Electron
+N = Nitrogen and 3Electron
+C = Carbon and 4Electron
+E = Helium
+0 = Helium  and Player
+1 = Hydrogen and 1Electron and Player
+2 = Oxygen and 2Electron and Player
+3 = Nitrogen and 3Electron and Player
+4 = Carbon and 4Electron and Player
+P = Player
+
+=======
+SOUNDS
+=======
+
+Sfx1 64050702 (Bonding sound)
+EndLevel 96545300 (End level)
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Player
+Bond
+Wall, Atom
+Orbital
+Temps
+
+======
+RULES
+======
+
+(This is the old way I did movement, and it was super inefficient.)
+([> Player Atom] -> [> Player > Atom]
+
+Up [ Moving Atom UBond | Atom] -> [ Moving Atom UBond | Moving Atom]
++ Left [ Moving Atom LBond | Atom] -> [ Moving Atom LBond | Moving Atom]
++ Right [ Moving Atom RBond | Atom] -> [ Moving Atom RBond | Moving Atom]
++ Down [ Moving Atom DBond | Atom] -> [ Moving Atom DBond | Moving Atom]
++ [> Atom | Atom] -> [> Atom | > Atom])
+
+[Up Player] -> [Up Player Temp1]
+[Left Player] -> [Left Player Temp2]
+[Right Player] -> [Right Player Temp3]
+[Down Player] -> [Down Player Temp4]
+
+Up [Temps UBond | no Temps] -> [Temps Ubond | Temps]
++ Left [Temps LBond | no Temps] -> [Temps Lbond | Temps]
++ Right [Temps RBond | no Temps] -> [Temps Rbond | Temps]
++ DOwn [Temps DBond | no Temps] -> [Temps Dbond | Temps]
++ Up [Temp1 | Atom no Temp1] -> [Temp1 | Atom Temp1]
++ Left [Temp2 | Atom no Temp2] -> [Temp2 | Atom Temp2]
++ Right [Temp3 | Atom no Temp3] -> [Temp3 | Atom Temp3]
++ Down [Temp4 | Atom no Temp4] -> [Temp4 | Atom Temp4]
+
+[Temp1 Atom] -> [Up Atom]
+[Temp2 Atom] -> [Left Atom]
+[Temp3 Atom] -> [Right Atom]
+[Temp4 Atom] -> [Down Atom]
+
+[ > Atom | Wall] -> Cancel
+
+[ > Atom AtomStuff] -> [ > Atom > AtomStuff]
+
+Late Right [Orbital no Temps no RBond|Orbital no Temps no LBond] -> [Orbital Temp1|Orbital Temp2 Sfx1] (Bond horizontally.)
++ Late [Temp1 no Bond] -> [Temp3 BondR]
++ Late [Temp1 BondU] -> [Temp3 BondUR]
++ Late [Temp1 BondL] -> [Temp3 BondLR]
++ Late [Temp1 BondD] -> [Temp3 BondRD]
++ Late [Temp1 BondUL] -> [Temp3 BondULR]
++ Late [Temp1 BondUD] -> [Temp3 BondURD]
++ Late [Temp1 BondLD] -> [Temp3 BondLRD]
++ Late [Temp1 BondULD] -> [Temp3 BondULRD]
++ Late [Temp2 no Bond] -> [Temp3 BondL]
++ Late [Temp2 BondU] -> [Temp3 BondUL]
++ Late [Temp2 BondR] -> [Temp3 BondLR]
++ Late [Temp2 BondD] -> [Temp3 BondLD]
++ Late [Temp2 BondUR] -> [Temp3 BondULR]
++ Late [Temp2 BondUD] -> [Temp3 BondULD]
++ Late [Temp2 BondRD] -> [Temp3 BondLRD]
++ Late [Temp2 BondURD] -> [Temp3 BondULRD]
++ Late [Temp3 1Electron] -> []
++ Late [Temp3 2Electron] -> [1Electron]
++ Late [Temp3 3Electron] -> [2Electron]
++ Late [Temp3 4Electron] -> [3Electron]
+
+Late Down [Orbital no Temps no DBond|Orbital no Temps no UBond] -> [Orbital Temp1|Orbital Temp2 Sfx1] (Bond vertically.)
++ Late [Temp1 no Bond] -> [Temp3 BondD]
++ Late [Temp1 BondU] -> [Temp3 BondUD]
++ Late [Temp1 BondL] -> [Temp3 BondLD]
++ Late [Temp1 BondR] -> [Temp3 BondRD]
++ Late [Temp1 BondUL] -> [Temp3 BondULD]
++ Late [Temp1 BondUR] -> [Temp3 BondURD]
++ Late [Temp1 BondLR] -> [Temp3 BondLRD]
++ Late [Temp1 BondULR] -> [Temp3 BondULRD]
++ Late [Temp2 no Bond] -> [Temp3 BondU]
++ Late [Temp2 BondL] -> [Temp3 BondUL]
++ Late [Temp2 BondR] -> [Temp3 BondUR]
++ Late [Temp2 BondD] -> [Temp3 BondUD]
++ Late [Temp2 BondLR] -> [Temp3 BondULR]
++ Late [Temp2 BondLD] -> [Temp3 BondULD]
++ Late [Temp2 BondRD] -> [Temp3 BondURD]
++ Late [Temp2 BondLRD] -> [Temp3 BondULRD]
++ Late [Temp3 1Electron] -> []
++ Late [Temp3 2Electron] -> [1Electron]
++ Late [Temp3 3Electron] -> [2Electron]
++ Late [Temp3 4Electron] -> [3Electron]
+
+==============
+WINCONDITIONS
+==============
+
+No Orbital
+
+=======
+LEVELS
+=======
+
+Message This is a demake of Sokobond by Alan Hazelden and Harry Lee.
+
+Message Get the full version at www.sokobond.com!
+
+#########
+####....#
+####....#
+#....#H.#
+#...O#..#
+#.1.....#
+#....####
+#########
+
+Message Water atoms are icosahedral.
+
+######
+#H..O#
+#....#
+#1.###
+######
+
+Message The blue tint seen in large bodies of water comes from the pigment in the oxygen atoms.
+
+########
+###...##
+#2.H.H.#
+###...##
+########
+
+Message The Earth's surface and the human body are both 70% water. That CAN'T be a coincidence, right?
+
+#######
+#..O..#
+#..#..#
+#.1#H.#
+#..#..#
+#..O..#
+#######
+
+Message "One hydrogen per oxide" is defined as the speed at which atoms move.
+
+#######
+#.H.3.#
+#.....#
+#.H.H.#
+#######
+
+Message Ammonia is an inflammatory condition of the lungs.
+
+#######
+#.....#
+#.....#
+#H#H#H#
+#.....#
+#..3..#
+#######
+
+Message Hang on, I was thinking of "pneumonia".
+
+#########
+####4####
+###...###
+##.H.H.##
+#.......#
+##.H.H.##
+###...###
+####.####
+#########
+
+Message 90% of all the methane in the world is produced in Arizona.
+
+#########
+##H...H##
+#...4...#
+##H...H##
+#########
+
+Message Methane contains the name "Ethan". Do you think it was discovered by a guy named Ethan?
+
+########
+#......#
+#...H..#
+#O.H..3#
+#...H..#
+#......#
+########
+
+Message Hydroxylamine contains almost every vowel of the alphabet almost exactly once.
+
+#########
+#.......#
+#..H.H..#
+#.2...C.#
+#..H.H..#
+#.......#
+#########
+
+Message Methanol occurs naturally in peppermint oils.
+
+#########
+#.......#
+#.1...E.#
+###.H.###
+###...###
+###.O.###
+#########
+
+Message Helium is named after the Greek god Helios, who first discovered its existence.
+
+#########
+#.......#
+#.E.E.E.#
+###H.1###
+###.H.###
+###...###
+###.N.###
+#########
+
+Message Inhaling helium contracts the ear drum, causing pitches to sound higher. Your voice is perceived normally by everyone else.
+
+#######
+###..##
+##..H.#
+#..N..#
+#.H..H#
+##..0.#
+#######
+
+Message The first helium balloons were used at the wedding of Queen Victoria and Prince Albert, popularizing the term "noble gas".
+
+#######
+#.....#
+#..N..#
+#..0..#
+#H.H.H#
+#.#.#.#
+#.....#
+#######
+
+Message Helium does not form chemical bonds with other elements, but it's the bonds of friendship that really matter.
+
+########
+#......#
+#...H#N#
+#......#
+##H#H.0#
+##.....#
+####...#
+########
+
+Message Scientists have been searching for centuries to discover the missing elements between hydrogen and helium on the periodic table.
+
+Message Thanks for playing! Go get the full version, which has lots of cool stuff that I couldn't write in PuzzleScript: www.sokobond.com
+
+title Lunar Lockout
+homepage http://bit.ly/WMmQrq
+
+========
+OBJECTS
+========
+
+Background
+Black
+
+Square
+LightGray Gray
+11111
+10001
+10001
+10001
+11111
+
+Space
+Black
+
+Target
+Red
+.....
+.000.
+.0.0.
+.000.
+.....
+
+Soldier
+DarkBlue LightGray Gray
+11111
+10001
+10201
+10001
+11111
+
+Captain
+Green LightGray Gray
+11111
+10001
+10201
+10001
+11111
+
+Player
+Orange
+.....
+.....
+..0..
+.....
+.....
+
+
+=======
+LEGEND
+=======
+
+Pawn = Soldier or Captain
+Block = Pawn
+
+@ = Space
+_ = Square
+P = Square and Player
+* = Square and Target
+O = Soldier
+$ = Soldier and Target
+C = Captain
+
+=======
+SOUNDS
+=======
+
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Space, Square
+Target
+Pawn, Captain
+Player
+
+======
+RULES
+======
+
+[ > Player | Space ] -> [ Player | Space ]
+[ > Player Pawn ] -> [ Player > Pawn ]
+[ > Pawn | Block ] -> [ Pawn | Block ]
+[ > Pawn | Square ] -> [ Square | > Pawn ]
+[ > Pawn | Space ] -> [ Square | Space ]
+
+==============
+WINCONDITIONS
+==============
+
+some Captain on Target
+
+=======
+LEVELS
+=======
+
+message challenge 4
+@@@@@@@
+@O___O@
+@___O_@
+@_P*__@
+@__O__@
+@_C___@
+@@@@@@@
+
+message challenge 16
+@@@@@@@
+@O_C__@
+@_____@
+@_O*_O@
+@__P__@
+@_O___@
+@@@@@@@
+
+message challenge 21
+@@@@@@@
+@__C__@
+@__O__@
+@_P$_O@
+@O____@
+@___O_@
+@@@@@@@
+
+message challenge 37
+@@@@@@@
+@O__OO@
+@_____@
+@_P*__@
+@O__C_@
+@_____@
+@@@@@@@
+
+
+
+title Simple Block Pushing Game
+author increpare
+homepage www.puzzlescript.net
+
+========
+OBJECTS
+========
+
+Background
+LIGHTGREEN GREEN
+11111
+01111
+11101
+11111
+10111
+
+
+Target
+DarkBlue
+.....
+.000.
+.0.0.
+.000.
+.....
+
+Wall
+BROWN DARKBROWN
+00010
+11111
+01000
+11111
+00010
+
+Player
+Black Orange White Blue
+.000.
+.111.
+22222
+.333.
+.3.3.
+
+BlueCrate B
+lightblue
+00000
+0...0
+0...0
+0...0
+00000
+
+
+OrangeCrate O
+Orange
+00000
+0...0
+0...0
+0...0
+00000
+
+
+=======
+LEGEND
+=======
+
+Crate = OrangeCrate or BlueCrate
+. = Background
+# = Wall
+P = Player
+
+=======
+SOUNDS
+=======
+
+Crate MOVE 36772507
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Target
+Player, Wall, Crate
+
+======
+RULES
+======
+
+[ >  Player | Crate ] -> [  >  Player | > Crate  ]
+
+
+[ > OrangeCrate | OrangeCrate ] -> [ > OrangeCrate | > OrangeCrate ]
++[ > OrangeCrate | BlueCrate ] -> [ > OrangeCrate | > BlueCrate ]
++[ > BlueCrate | OrangeCrate ] -> [ > BlueCrate | > OrangeCrate ]
++[ > BlueCrate | BlueCrate ] -> [ > BlueCrate | > BlueCrate ]
+
+==============
+WINCONDITIONS
+==============
+
+=======
+LEVELS
+=======
+
+################
+#..............#
+#..............#
+#.P.BOBOBOBOB..#
+#..............#
+#..............#
+################
+
+
+title Cliched River Puzzle
+author Weeble
+homepage www.puzzlescript.net
+
+========
+OBJECTS
+========
+
+Grass
+#559922 GREEN
+11111
+01111
+11101
+11111
+10111
+
+
+Player
+Yellow
+00.00
+0...0
+.....
+0...0
+00.00
+
+Water1
+#3333ff #5555ff #7777ff
+00121
+10100
+12001
+10010
+01000
+
+Water2
+#3333ff #5555ff #7777ff
+10000
+00010
+00121
+01100
+10001
+
+Carrot
+ORANGE #55cc00
+11111
+.000.
+.000.
+.000.
+..0..
+
+Fox
+ORANGE WHITE BLACK
+.2.2.
+00000
+12021
+.111.
+..2..
+
+Rabbit
+WHITE #ff88bb
+00.00
+.0.0.
+.000.
+.101.
+.000.
+
+EmptyBoat
+BROWN DARKBROWN
+.000.
+01110
+01110
+01110
+00000
+Platform
+GREY
+.....
+.....
+.....
+.....
+.....
+
+LeftB
+BLUE
+.....
+.....
+.....
+.....
+.....
+
+RightB
+RED
+.....
+.....
+.....
+.....
+.....
+
+Dude
+BLACK
+..0..
+00000
+..0..
+.0.0.
+0...0
+
+Dock
+YELLOW
+.....
+.....
+.....
+.....
+.....
+
+=======
+LEGEND
+=======
+
+. = Grass and LeftB
+, = Grass and RightB
+~ = Water1 and LeftB
+^ = Water1 and RightB
+P = Player and LeftB
+C = Carrot and Platform and LeftB
+F = Fox and Platform and LeftB
+R = Rabbit and Platform and LeftB
+_ = EmptyBoat and LeftB and Water1
+* = Platform and RightB
+[ = Dude and Dock and LeftB
+] = Dock and RightB
+Water = Water1 or Water2
+Background = Grass or Water1 or Water2
+Object = Rabbit or Fox or Carrot
+Bank = LeftB or RightB
+=======
+SOUNDS
+=======
+
+SFX0 81232704
+SFX1 47027309
+SFX2 92562507
+SFX3 11245308
+
+================
+COLLISIONLAYERS
+================
+
+Background
+EmptyBoat, Platform, Dock
+LeftB, RightB
+Carrot, Rabbit, Fox, Dude
+Player
+
+======
+RULES
+======
+
+(Loading the boat)
+[ action Player Object Platform ] [ EmptyBoat no Object ] -> [ Player Platform ] [ EmptyBoat Object ] sfx2
+
+(Emptying the boat)
+[ action Player Object EmptyBoat LeftB ] [ Platform no Object LeftB ] -> [ Player EmptyBoat LeftB ] [ Platform Object LeftB ] sfx2
+[ action Player Object EmptyBoat RightB ] [ Platform no Object RightB ] -> [ Player EmptyBoat RightB ] [ Platform Object RightB ] sfx2
+
+( Eating rules for stuff on the left bank )
+late [ RightB Dude ] [ LeftB Rabbit ] [ LeftB Fox ] -> [ RightB Dude ] [ LeftB ] [ LeftB Fox ] sfx0 message Fox eats rabbit! Chomp!
+late [ RightB Dude ] [ LeftB Carrot ] [ LeftB Rabbit ] -> [ RightB Dude ] [ LeftB ] [ LeftB Rabbit ] sfx1 message Rabbit eats carrot! Chomp!
+
+( Same rules for stuff on the right bank )
+late [ LeftB Dude ] [ RightB Rabbit ] [ RightB Fox ] -> [ LeftB Dude ] [ RightB ] [ RightB Fox ] sfx0 message Fox eats rabbit! Chomp!
+late [ LeftB Dude ] [ RightB Carrot ] [ RightB Rabbit ] -> [ LeftB Dude ] [ RightB ] [ RightB Rabbit ] sfx1 message Rabbit eats carrot! Chomp!
+
+( Animate the water )
+[ Water ] -> [ random Water ]
+
+( Row across the river with an object )
+[ action Player Dude | EmptyBoat Object | ... | | Dock ] -> [ | | ... | EmptyBoat Object | Player Dude Dock ] sfx3
+
+( Row across the river without an object )
+[ action Player Dude | EmptyBoat no Object | ... | | Dock ] -> [ | | ... | EmptyBoat | Player Dude Dock ] sfx3
+
+( Victory condition )
+[ RightB Platform Rabbit ] [ RightB Platform Fox ] [ RightB Platform Carrot] -> win
+
+==============
+WINCONDITIONS
+==============
+
+=======
+LEVELS
+=======
+
+.....~~~^^,,,,,
+.....~~~^^,,,,,
+...F.~~~^^,*,,,
+..RP[_~~^^],*,,
+...C.~~~~^,*,,,
+.....~~~^^,,,,,
+.....~~~^^,,,,,
+
+
+
+title Octat
+author increpare
+homepage www.increpare.com
+
+noundo
+require_player_movement
+
+(
+    
+A port of a flash game I made.  The original's here:
+
+http://ded.increpare.com/~locus/octat/
+
+)
+
+========
+OBJECTS
+========
+
+Background
+purple
+.....
+.000.
+.000.
+.000.
+.....
+
+Activetile
+pink red
+00000
+0...0
+0...0
+0...0
+00000
+
+Target
+red
+0...0
+.0.0.
+..0..
+.0.0.
+0...0
+
+Player
+white
+.....
+.000.
+.000.
+.000.
+.....
+
+Void 0
+black
+
+Temp
+black
+
+=======
+LEGEND
+=======
+
+. = Background
+P = Player and Activetile
+a = Activetile
+x = Target
+y = target and Activetile
+
+=========
+SOUNDS
+=========
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Void
+Activetile
+Player
+Temp
+Target
+
+======
+RULES
+======
+
+[ > Player | no Activetile ] -> cancel
+
+late [ Activetile | Player ] -> [ Temp | Player ] 
+late [ no Temp | Player ] -> [ Activetile | Player ] 
+late [ Temp ] -> [ ] 
+
+late [ Activetile Void ] -> [ Void ] 
+
+==============
+WINCONDITIONS
+==============
+
+some Player on target
+
+=======
+LEVELS
+=======
+
+message level 1 of 8
+
+..........
+..........
+..........
+..........
+..........
+.x...ap...
+..........
+..........
+..........
+..........
+
+message level 2 of 8
+
+...........
+...........
+...........
+...........
+...........
+....xpa....
+...........
+...........
+...........
+...........
+
+message level 3 of 8
+
+...........
+...........
+...........
+...........
+..a........
+.axaaap....
+..a........
+...........
+...........
+...........
+
+message level 4 of 8
+
+...........
+...........
+...a.......
+..a.a......
+.a.a.a.....
+a.aya.a.ap.
+.a.a.a.....
+..a.a......
+...a.......
+...........
+
+message level 5 of 8
+
+...........
+...........
+...........
+...........
+aaaaaaaaaaa
+...y..ap...
+aaaaaaaaaaa
+...........
+...........
+...........
+
+message level 6 of 8
+
+000000....0
+000000..0.0
+000000..0..
+000000000..
+....A...0.0
+.AY.A...AAP
+....A...0.0
+000000000..
+000000..0..
+000000..0.0
+000000....0
+
+message level 7 of 8
+
+..AAA...000
+.AY.A...AP.
+..AAA...000
+
+message level 8 of 8
+
+0AAAA..00
+0AAAA..00
+YAAAA..AP
+0AAAA..00
+0AAAA..00
+
+message the end
+
+
+USER PROMPT:
+The following PuzzleScript game code:
+```plaintext
+title GemCollector
+author YourName
+homepage www.example.com
+
+========
+OBJECTS
+========
+
+Background
+blue
+00000
+00000
+00000
+00000
+00000
+
+Player
+green
+..0..
+.000.
+.000.
+..0..
+.....
+
+Gem
+yellow
+.....
+..0..
+.000.
+..0..
+.....
+
+Wall
+black
+11111
+11111
+11111
+11111
+11111
+
+========
+LEGEND
+========
+
+. = Background
+P = Player
+G = Gem
+# = Wall
+
+===========
+SOUNDS
+===========
+
+collect 53868302
+playermove 12345678
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Player, Gem, Wall
+
+======
+RULES
+======
+
+[ > Player | Gem ] -> [ > Player | Background ] sfx collect
+[ > Player | ] -> [ > Player | ] sfx playermove
+
+==============
+WINCONDITIONS
+==============
+
+no Gem
+
+=======
+LEVELS
+=======
+
+# Level 1
+#####
+#P..#
+#..G#
+#...#
+#####
+
+# Level 2
+######
+#P...#
+#.#.G#
+#.#..#
+#..G.#
+######
+
+# Level 3
+#######
+#P....#
+#.###.#
+#..G..#
+#.#..#
+#.G..#
+#######
+
+```
+produced the following console output:
+=================================
+line 35 : Trying to access color number 1 from the color palette of sprite WALL, but there are only 1 defined in it.
+line 36 : Trying to access color number 1 from the color palette of sprite WALL, but there are only 1 defined in it.
+line 37 : Trying to access color number 1 from the color palette of sprite WALL, but there are only 1 defined in it.
+line 38 : Trying to access color number 1 from the color palette of sprite WALL, but there are only 1 defined in it.
+line 39 : Trying to access color number 1 from the color palette of sprite WALL, but there are only 1 defined in it.
+line 54 : unexpected sound token "collect".
+too many errors, aborting compilation
+Errors detected during compilation; the game may not work correctly.
+Return a repaired version of the code that addresses these errors. First, reason about your task and determine the best plan of action. Then, write your code. Return your code in full, inside a ```plaintext code block.

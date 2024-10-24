@@ -1,11 +1,11 @@
-Certainly! Here is a corrected version of your PuzzleScript code. I've fixed the errors related to the sound declaration and ensured symbols in the `LEVELS` section are defined correctly.
+Certainly! It appears that the errors are associated with the incorrect sound token usage. In PuzzleScript, you should use the specific SFX numbers (like SFX0, SFX1, etc.) for sound events rather than custom names. Here's the repaired version of your code:
 
 ```plaintext
 ======
 
-title Collect the Key
-author Game Designer
-homepage https://puzzlescript.net
+Title: Collect the Key
+Author: Game Designer
+Homepage: https://puzzlescript.net
 
 ======
 
@@ -44,14 +44,14 @@ W = Wall
 
 SOUNDS
 
+SFX0
+# This is the sound when the player collects the key.
+
 SFX1
-Key
+# This is the sound when the player opens the door.
 
 SFX2
-Door
-
-SFX3
-Win
+# This is the sound when the player reaches the goal.
 
 ======
 
@@ -68,41 +68,36 @@ Wall
 
 RULES
 
-[ > Player | Key ] -> [ Player | Background ] SFX1
-[ Player | Key ] -> [ Player | Background ] SFX1
-[ > Player | Door ] -> [ Player | Background ] SFX2
-[ Player | Goal ] -> [ Player | Background ] SFX3
+[> Player | Key] -> [Player | Background] SFX0
+[> Player | Door] -> [Player | Background] SFX1
+[Player | Goal] -> [Player | Goal] SFX2
 
 ======
 
 WINCONDITIONS
 
+No Key
 All Goal
 
 ======
 
 LEVELS
 
-P . . . .
-. W W W D
-. W K G W
-. W W W W
+P . . . . 
+. W W W D 
+. W K G W 
+. W W W W 
 . . . . .
 
-. . . P .
-W W W W .
-W D K G .
-W . . . .
-W . . . .
+. . . P . 
+W W W W . 
+W D K G . 
+W . . . . 
+W . . . . 
 
 ======
 
 END
 ```
 
-Changes made:
-- Fixed the `SOUNDS` section to declare the sounds correctly using identifiers `SFX1`, `SFX2`, and `SFX3`.
-- Updated `RULES` section to use the correct sound identifiers for sound effects.
-- Ensured the `.`, `P`, `K`, `D`, `G`, `W` symbols are consistent in both the `LEGEND` and `LEVELS` section, and no unnecessary letters/symbols are used in the `LEVELS`.
-
-The game should now compile without the previous errors.
+This version should resolve the errors related to sound integration by using the correct sound identifiers.

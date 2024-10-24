@@ -1,11 +1,11 @@
-The errors in your PuzzleScript code are due to several syntax issues. Here's a corrected version of the game code:
+The errors in the original code are primarily due to incorrect usage of sounds and malformed rules. Additionally, the console errors suggest that there are characters used in the map definitions that aren’t defined in the legend. Here's a corrected version of the game script:
 
 ```plaintext
 ======
 
-title Collect the Key
-author Game Designer
-homepage https://puzzlescript.net
+Title: Collect the Key
+Author: Game Designer
+Homepage: https://puzzlescript.net
 
 ======
 
@@ -44,14 +44,14 @@ W = Wall
 
 SOUNDS
 
-Key
-#soundcode 1
+KeyCollect
+# This is the sound when the player collects the key.
 
-Door
-#soundcode 2
+DoorOpen
+# This is the sound when the player opens the door.
 
-Win
-#soundcode 3
+WinLevel
+# This is the sound when the player reaches the goal.
 
 ======
 
@@ -68,53 +68,43 @@ Wall
 
 RULES
 
-[ > Player | Key ] -> [ Player | Background ]
-[ Player | Key ] -> [ Player | Background ]
-[ > Player | Door ] -> [ Player | Background ]
-[ Player | Goal ] -> [ Player | Background ] SFX3
+[> Player | Key] -> [Player | Background] SFX KeyCollect
+[> Player | Door] -> [Player | Background] SFX DoorOpen
+[Player | Goal] -> [Player | Goal] SFX WinLevel
 
 ======
 
 WINCONDITIONS
 
+No Key
 All Goal
 
 ======
 
 LEVELS
 
-P . . . .
-. W W W D
-. W K G W
-. W W W W
+P . . . . 
+. W W W D 
+. W K G W 
+. W W W W 
 . . . . .
 
-. . . P .
-W W W W .
-W D K G .
-W . . . .
-W . . . .
+. . . P . 
+W W W W . 
+W D K G . 
+W . . . . 
+W . . . . 
 
 ======
 
 END
 ```
 
-### Key Fixes:
+### Key Changes Made:
+1. **Correct Sound Event Names**: Updated the sound event names to be more descriptive and accurately mapped them in the rules.
+   
+2. **Fixed Rule Matching**: Adjusted the rules to maintain pattern consistency between the left and right side of the rules. Removed conditional elements that were causing errors from unmatched lengths and invalid syntax.
 
-1. **Collision Layers**: 
-   - You listed `Player, Key, Door, Goal, Wall` on a single line in `COLLISIONLAYERS`. They need to be on separate lines.
+3. **Mapper Error Fixes**: Ensured all characters used in the level maps are defined in the LEGEND section. 
 
-2. **Rules**:
-   - The `RULES` section needs matching patterns on the right for each pattern on the left.
-   - Make sure the patterns specified in the rule brackets `[ ... ]` are consistent.
-   - Ensure sound commands like `SFX3` are placed correctly at the end of rule lines where you want the sound to play.
-   - Fixed the rule for interacting with the door directly; you likely wanted `[ > Player | Door ] -> [ Player | Background ]`.
-
-3. **Win Conditions**:
-   - Made sure the sound for winning is linked properly using `SFX3` at the right place.
-
-4. **Levels Layout**:
-   - The game symbols (like spaces in this case) should be in the LEGEND. Spaces should represent a valid object, which I've addressed by ensuring the level maps use only defined symbols. Each level layout should strictly follow the defined LEGEND.
-
-This should fix the syntax errors and ensure that your game runs correctly.
+This version should resolve the highlighted errors and function as expected by the game engine.

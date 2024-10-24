@@ -1,0 +1,101 @@
+SYSTEM PROMPT:
+You are a game designer, familiar with the PuzzleScript game description language. 
+
+USER PROMPT:
+The following PuzzleScript game code:
+```plaintext
+Title Simple Sokoban
+Author Game Designer
+Homepage https://www.example.com
+
+===========
+Legend
+===========
+# = Wall
+P = Player
+B = Box
+T = Target
+G = BoxOnTarget
+
+===========
+Sounds
+===========
+# No custom sounds specified.
+
+===========
+CollisionLayers
+===========
+Background
+Target
+Player, Box, BoxOnTarget, Wall
+
+===========
+Objects
+===========
+Background
+grey
+
+Wall
+orange
+
+Player
+yellow
+
+Box
+blue
+
+Target
+red
+
+BoxOnTarget
+green
+
+===========
+Legend ends
+===========
+
+===========
+WinConditions
+===========
+All BoxOnTarget on Target
+
+===========
+Rules
+===========
+[ > Player |  ] -> [ > Player | > ]
+[ Player | Box  ] -> [ > Player | > Box  ]
+[ Player | BoxOnTarget  ] -> [ > Player | > BoxOnTarget  ]
+
+[ Player | Box on Target ] -> [ > Player | > BoxOnTarget ]
+
+Box -> > | BoxOnTarget on Target
+BoxOnTarget -> > | Box not on Target 
+
+===========
+Levels
+===========
+-------
+#####  
+#...#  
+#.#.#  
+#P#B#  
+#####  
+
+-------
+#####  
+#...#  
+#B#P#  
+#####  
+
+```
+produced the following console output:
+=================================
+line 6 : section "LEGEND" is out of order, must follow  "OBJECTS" (or it could be that the section "OBJECTS"is just missing totally.  You have to include all section headings, even if the section itself is empty).
+line 8 : You're talking about WALL but it's not defined anywhere.
+line 9 : You're talking about PLAYER but it's not defined anywhere.
+line 10 : You're talking about BOX but it's not defined anywhere.
+line 11 : You're talking about TARGET but it's not defined anywhere.
+line 12 : You're talking about BOXONTARGET but it's not defined anywhere.
+too many errors, aborting compilation
+Errors detected during compilation; the game may not work correctly.
+Return a repaired version of the code that addresses these errors. Return your code in full, inside a ```plaintext code block.

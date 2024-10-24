@@ -1,0 +1,119 @@
+SYSTEM PROMPT:
+You are a game designer, familiar with the PuzzleScript game description language. 
+
+USER PROMPT:
+The following PuzzleScript game code:
+```plaintext
+title Sokoban Puzzle
+
+author YourName
+
+homepage http://www.yourwebsite.com
+
+========
+OBJECTS
+========
+
+Background
+yellow
+
+Player
+@
+red
+
+Crate
+o
+brown
+
+Wall
+#
+gray
+
+Target
+.
+green
+
+CrateOnTarget
+O
+darkgreen
+
+=======
+
+LEGEND
+=======
+
+. = Background
+# = Wall
+@ = Player
+o = Crate
+: = Target
+O = CrateOnTarget
+
+=============
+
+SOUNDS
+=============
+
+player_move
+  sfx blip
+
+crate_move
+  sfx push
+
+=============
+
+RULES
+=============
+[Player | Crate] -> [ ] | [Player CrateMove]
+CrateMove | Target -> CrateOnTarget | Target
+CrateMove | . -> Crate | .
+CrateOnTarget | Target -> CrateMove | Target
+
+=============
+
+WINCONDITIONS
+=============
+
+All CrateOnTarget on Target
+
+=============
+
+LEVELS
+=============
+
+[Level 1]
+#######
+#     #
+# .o  #
+#     #
+#  @  #
+#######
+
+[Level 2]
+#######
+#     #
+# .o. #
+#     #
+#  @  #
+#######
+
+[Level 3]
+########
+# @    #
+#  oo  #
+# .  o #
+#    . #
+########
+
+```
+produced the following console output:
+=================================
+line 15 : Was looking for color for object PLAYER, got "@" instead.
+line 19 : Was looking for color for object CRATE, got "o" instead.
+line 23 : Was looking for color for object WALL, got "#" instead.
+line 27 : Was looking for color for object TARGET, got "." instead.
+line 31 : Was looking for color for object CRATEONTARGET, got "o" instead.
+line 44 : Name "O" already in use (on line line 42).
+too many errors, aborting compilation
+Errors detected during compilation; the game may not work correctly.
+Return a repaired version of the code that addresses these errors. First, reason about your task and determine the best plan of action. Then, write your code. Return your code in full, inside a ```plaintext code block.

@@ -1,0 +1,105 @@
+The errors you are encountering are due to formatting issues with the metadata headings. Each metadata key (like title, author, homepage, and objective) requires a value immediately following it, without separating lines of equal signs. Let's fix those issues in the game code:
+
+```plaintext
+===========
+title Simple Sokoban
+===========
+
+===========
+author GameDesigner
+===========
+
+===========
+homepage www.example.com
+===========
+
+===========
+objective Push all the boxes onto the targets.
+===========
+
+===========
+palette
+===========
+BackgroundColor:
+000000
+PlayerColor:
+00FF00
+WallColor:
+FF0000
+BoxColor:
+0000FF
+TargetColor:
+FFFF00
+
+===========
+objects
+===========
+Background
+BackgroundColor
+
+Player
+PlayerColor
+
+Wall
+WallColor
+
+Box
+BoxColor
+
+Target
+TargetColor
+
+===========
+legend
+===========
+. = Background
+# = Wall
+P = Player
+B = Box
+T = Target
+
+===========
+sounds
+===========
+
+===========
+collisionlayers
+===========
+Background
+Wall
+Player, Box
+Target
+
+===========
+rules
+===========
+[ > Player | Box ] -> [  > Player | > Box ]
+
+===========
+winconditions
+===========
+All Box on Target
+
+===========
+levels
+===========
+#####
+#...#
+#.T.#
+#PB.#
+#####
+
+#####
+#...#
+#T..#
+#B#P#
+#####
+
+#####
+#T..#
+#P.B#
+#..T#
+#####
+```
+
+In this corrected version, the metadata headers are immediately followed by their corresponding values without separating them with lines of equal signs. This should resolve the compilation errors you were encountering.

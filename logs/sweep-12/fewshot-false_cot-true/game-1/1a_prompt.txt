@@ -1,0 +1,128 @@
+SYSTEM PROMPT:
+You are a game designer, familiar with the PuzzleScript game description language. 
+
+USER PROMPT:
+The following PuzzleScript game code:
+```plaintext
+title Sokoban Simple
+
+========
+OBJECTS
+========
+
+Background
+WHITE
+xxxxxxxxxxxxxxxx
+
+Wall
+RED
+0000
+0808
+0808
+0000
+
+Player
+BLUE
+.0.
+000
+0.0
+
+Box
+BROWN
+.1.
+111
+.1.
+
+Target
+GREEN
+.2.
+222
+.2.
+
+BoxOnTarget
+DARKBROWN
+.1.
+121
+.1.
+
+========
+LEGEND
+========
+
+. = Background
+# = Wall
+P = Player
+B = Box
+T = Target
+O = BoxOnTarget
+
+========
+SOUNDS
+========
+
+# No sounds defined
+
+========
+COLLISIONLAYERS
+========
+
+Background
+Target
+Player, Box, BoxOnTarget
+Wall
+
+========
+RULES
+========
+
+# Player can move
+[> Player | ] -> [> Player | ] # Move Right
+[< Player | ] -> [< Player | ] # Move Left
+[^ Player | ] -> [^ Player | ] # Move Up
+[v Player | ] -> [v Player | ] # Move Down
+
+# Pushable boxes
+[> Player | Box] -> [> Player | > Box]
+[< Player | Box] -> [< Player | < Box]
+[^ Player | Box] -> [^ Player | ^ Box]
+[v Player | Box] -> [v Player | v Box]
+
+# Boxes on targets become a different object
+[ Box | Target ] -> [ BoxOnTarget | Target ]
+
+# Move box off target
+[> Player | BoxOnTarget] -> [> Player | > Box]
+[< Player | BoxOnTarget] -> [< Player | < Box]
+[^ Player | BoxOnTarget] -> [^ Player | ^ Box]
+[v Player | BoxOnTarget] -> [v Player | v Box]
+
+========
+WINCONDITIONS
+========
+
+All BoxOnTarget on Target
+
+========
+LEVELS
+========
+
+# Level 1
+#######
+#......#
+#..P...#
+#..BBB.#
+#..TTT.#
+#######
+
+```
+produced the following console output:
+=================================
+line 14 : Trying to access color number 8 from the color palette of sprite WALL, but there are only 1 defined in it.
+line 15 : Trying to access color number 8 from the color palette of sprite WALL, but there are only 1 defined in it.
+line 26 : Trying to access color number 1 from the color palette of sprite BOX, but there are only 1 defined in it.
+line 27 : Trying to access color number 1 from the color palette of sprite BOX, but there are only 1 defined in it.
+line 28 : Trying to access color number 1 from the color palette of sprite BOX, but there are only 1 defined in it.
+line 32 : Trying to access color number 2 from the color palette of sprite TARGET, but there are only 1 defined in it.
+too many errors, aborting compilation
+Errors detected during compilation; the game may not work correctly.
+Return a repaired version of the code that addresses these errors. First, reason about your task and determine the best plan of action. Then, write your code. Return your code in full, inside a ```plaintext code block.

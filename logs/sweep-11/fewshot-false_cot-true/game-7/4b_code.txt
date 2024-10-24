@@ -1,84 +1,120 @@
-The errors in the console output suggest that there are issues with the definitions of objects in the initial part of the code. PuzzleScript expects a specific format in the object declarations section, and it seems that it's encountering something unexpected. 
+Upon reviewing the provided PuzzleScript code, there are two main issues to address:
 
-Let's go over the key points and fix the issues:
+1. **Section Order Issue**: The error message indicates that the section "COLLISIONLAYERS" is out of order, and it suggests that it should follow "SOUNDS" or another missing section based on the order. In PuzzleScript, there is a specific order to follow: 
+   - OBJECTS
+   - LEGEND
+   - SOUNDS
+   - COLLISIONLAYERS
+   - RULES
+   - WINCONDITIONS
+   - LEVELS
 
-1. **Object Definition Syntax**: In PuzzleScript, each object is defined with a name, followed by its character representation, and then its color. The syntax for defining objects should be consistent and correctly structured.
+   The "SOUNDS" section should appear before "COLLISIONLAYERS".
 
-2. **Incorrect Object Headers**: The line separating the `Objects` section with `=========`, `Legend`, and other sections is incorrect. The object declarations should not have a `=========`, which is making the compiler read it as part of the object declarations and causing confusion.
+2. **Name Case Sensitivity Issue**: The error messages indicate that "player" does not exist, suggesting a case sensitivity issue since "Player" with an uppercase 'P' was defined. The rules are using the lowercase "player". In PuzzleScript, names are case-sensitive, so it's necessary to use the correctly capitalized name, which is "Player".
 
-3. **Collision Layers and Rules**: These seem fine, but make sure that objects in collision layers are separated correctly.
+With these issues in mind, the plan of action includes:
+- Moving the "SOUNDS" section before the "COLLISIONLAYERS" section.
+- Correcting the use of "Player" with the proper capitalization in the rules.
 
-4. **Win Conditions and Levels**: These sections seem correct based on traditional PuzzleScript syntax.
-
-With these in mind, I'll adjust the code to follow proper PuzzleScript conventions.
-
-Here's the corrected version of the code:
+Here is the repaired version of the code:
 
 ```plaintext
-# Title and Author
-title Sokoban Simple
-author Game Designer
+title Maze Escape
+author Your Name
 
-# Objects
+===========
+OBJECTS
+===========
+
 Background
-yellow
+BLACK
 
 Player
-@ 
-blue
+YELLOW
 
 Wall
-# 
-black
+BLUE
 
-Box
-B 
-red
+Exit
+GREEN
 
-Target
-O 
-green
+===========
+LEGEND
+===========
 
-BoxOnTarget
-G 
-yellow
-
-# Legend
 . = Background
-@ = Player
+P = Player
 # = Wall
-B = Box
-O = Target
-G = BoxOnTarget
+E = Exit
 
-# Collision Layers
+===========
+SOUNDS
+===========
+
+Movement
+move.ogg
+
+Win
+win.ogg
+
+===========
+COLLISIONLAYERS
+===========
+
 Background
-Player
-Box, BoxOnTarget
-Wall, Target
+Wall
+Player, Exit
 
-# Rules
-[ > Player | Box ] -> [ > Player | > Box ]
-[ Box | Target ] -> [ BoxOnTarget | Target ]
-[ BoxOnTarget | ] -> [ | Box ]
+===========
+RULES
+===========
 
-# Win Conditions
-All BoxOnTarget on Target
+[Player] -> [ Player ]
 
-# Levels
-# Level 1
-#######
-#..O..#
-#..B..#
-#..@..#
-#######
+up [Player | > ] -> [ | Player ] 
+down [Player | > ] -> [ | Player ] 
+left [Player | > ] -> [ | Player ] 
+right [Player | > ] -> [ | Player ] 
 
-# Level 2
-#######
-#..O..#
-#..B..#
-#..@..#
-#######
+[Player | Exit] -> [Player | Background]
+
+===========
+WINCONDITIONS
+===========
+
+No Exit
+
+===========
+LEVELS
+===========
+
+; Level 1
+######
+#P   #
+# ## #
+#    #
+# E  #
+######
+
+; Level 2
+########
+#P     #
+# ###  #
+# # E  #
+# #    #
+# #### #
+#      #
+########
+
+; Level 3
+#########
+#P      #
+### ### #
+#    E# #
+### ### #
+#       #
+#########
 ```
 
-This corrected version removes unnecessary separators and ensures that each object has a clear and concise definition format that meets the PuzzleScript requirements.
+These changes should fix the errors mentioned in the console output.

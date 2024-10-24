@@ -4,109 +4,111 @@ You are a game designer, familiar with the PuzzleScript game description languag
 USER PROMPT:
 The following PuzzleScript game code:
 ```plaintext
-# Title and Author
-title Sokoban Simple
-author Game Designer
+title Maze Escape
+author Your Name
 
-# Objects
-=========
+===========
+OBJECTS
+===========
+
 Background
-yellow
+BLACK
 
 Player
-@ blue
-00000
-0...0
-0.0.0
-0...0
-00000
+YELLOW
 
 Wall
-# black
-00000
-00000
-00000
-00000
-00000
+BLUE
 
-Box
-B red
-00000
-0...0
-0...0
-0...0
-00000
+Exit
+GREEN
 
-Target
-O green
-.....
-..0..
-..0..
-..0..
-.....
-
-BoxOnTarget
-G yellow
-00000
-0.0.0
-0...0
-0.0.0
-00000
-
-# Legend
 ===========
+LEGEND
+===========
+
 . = Background
+P = Player
 # = Wall
-@ = Player
-B = Box
-O = Target
-G = BoxOnTarget
+E = Exit
 
-# Sounds
 ===========
-# (Optional Sounds)
+SOUNDS
+===========
 
-# Collision Layers
-===================
+Movement
+move.ogg
+
+Win
+win.ogg
+
+===========
+RULES
+===========
+
+[Player] -> [ Player ]
+up [Player | ] -> [ | Player ]
+down [Player | ] -> [ | Player ]
+left [Player | ] -> [ | Player ]
+right [Player | ] -> [ | Player ]
+
+[ Player | Exit ] -> [ Player | Background ]
+Sound Win
+
+===========
+COLLISIONLAYERS
+===========
+
 Background
-Player, Box, BoxOnTarget
-Wall, Target
+Wall
+Player, Exit
 
-# Rules
 ===========
-[ > Player | Box ] -> [ > Player | > Box ]
-[ Box | Target ] -> [ BoxOnTarget | Target ]
-[ BoxOnTarget | ] -> [ | Box ]
+WINCONDITIONS
+===========
 
-# Win Conditions
-==================
-All BoxOnTarget on Target
+All Exit on Background
 
-# Levels
-=========
-# Level 1
-#######
-#..O..#
-#..B..#
-#..@..#
-#######
+===========
+LEVELS
+===========
 
-# Level 2
-#######
-#..O..#
-#..B..#
-#..@..#
-#######
+; Level 1
+######
+#P   #
+# ## #
+#    #
+# E  #
+######
+
+; Level 2
+########
+#P     #
+# ###  #
+# # E  #
+# #    #
+# #### #
+#      #
+########
+
+; Level 3
+#########
+#P      #
+### ### #
+#    E# #
+### ### #
+#       #
+#########
 
 ```
 produced the following console output:
 =================================
-line 7 : Unrecognised stuff in the prelude.
-line 8 : Unrecognised stuff in the prelude.
-line 10 : Unrecognised stuff in the prelude.
-line 12 : Unrecognised stuff in the prelude.
-line 13 : Unrecognised stuff in the prelude.
-line 14 : Unrecognised stuff in the prelude.
+line 33 : unexpected sound token "movement".
+line 34 : unexpected sound token "move".
+line 36 : unexpected sound token "win".
+line 37 : unexpected sound token "win".
+line 40 : section "RULES" is out of order, must follow  "COLLISIONLAYERS" (or it could be that the section "COLLISIONLAYERS"is just missing totally.  You have to include all section headings, even if the section itself is empty).
+line 50 : Name "sound", referred to in a rule, does not exist.
 too many errors, aborting compilation
 Errors detected during compilation; the game may not work correctly.
 Return a repaired version of the code that addresses these errors. First, reason about your task and determine the best plan of action. Then, write your code. Return your code in full, inside a ```plaintext code block.

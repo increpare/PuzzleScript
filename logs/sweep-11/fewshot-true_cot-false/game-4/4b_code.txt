@@ -1,0 +1,134 @@
+```plaintext
+title Teleport Maze
+author Assistant
+homepage www.example.com
+
+========
+OBJECTS
+========
+
+Background
+lightgrey
+.....
+.....
+.....
+.....
+.....
+
+Wall
+darkgrey
+.....
+.....
+.....
+.....
+.....
+
+Player
+blue white
+.....
+..0..
+.000.
+..0..
+.....
+
+Exit
+green
+.....
+.....
+.....
+..0..
+.....
+
+Teleporter
+purple
+.....
+.....
+.....
+..0..
+.....
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Player
+E = Exit
+T = Teleporter
+
+=======
+SOUNDS
+=======
+
+sfx0 67372036 (teleport sound)
+sfx1 59471512 (win sound)
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Wall
+Player, Teleporter
+Exit
+
+======
+RULES
+======
+
+[ Player | Teleporter ] -> [ Teleporter | Player ] SFX0
+
+==============
+WINCONDITIONS
+==============
+
+All Player on Exit
+
+=======
+LEVELS
+=======
+
+#######
+#.....#
+#.###.#
+#.#E#.#
+#.#.#.#
+#...T.#
+#T.P..#
+#######
+
+#######
+#P#T#.#
+#.#.#.#
+#.#E#.#
+#...#.#
+#.#.#.#
+#T#T..#
+#######
+
+#######
+#..E..#
+#P##T.#
+###.###
+#.....#
+#.T.#.#
+#...T.#
+#######
+
+```
+
+To fix the solvability of level 2, let's adjust it by placing the `Exit` or `Teleporter` correctly so the player can reach the exit using teleporters:
+
+```plaintext
+#######
+#..E..#
+#P##T.#
+###.###
+#..T..#
+#.T.#.#
+#...T.#
+#######
+```
+
+This modification ensures that the teleporter allows the player to access the exit position. Adjust the level further if necessary based on the puzzle's intended difficulty.

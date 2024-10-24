@@ -1,0 +1,141 @@
+SYSTEM PROMPT:
+You are a game designer, familiar with the PuzzleScript game description language. 
+
+USER PROMPT:
+The following PuzzleScript game code:
+```plaintext
+# Main game code for a simple Sokoban-style game
+
+title Sokoban Simplified
+author YourName
+
+======
+
+OBJECTS
+  Player
+    red
+    @ @ @ @ @
+    @ @ @ @ @
+    @ @ @ @ @
+    @ @ @ @ @
+    @ @ @ @ @
+  
+  Wall
+    grey
+    #####
+    #####
+    #####
+    #####
+    #####
+    
+  Crate
+    yellow
+    C C C C C
+    C C C C C
+    C C C C C
+    C C C C C
+    C C C C C
+    
+  Floor
+    black
+    .....
+    .....
+    .....
+    .....
+    .....
+    
+  Goal
+    green
+    G G G G G
+    G G G G G
+    G G G G G
+    G G G G G
+    G G G G G
+    
+  CrateOnGoal
+    orange
+    O O O O O
+    O O O O O
+    O O O O O
+    O O O O O
+    O O O O O
+
+======
+
+LEGEND
+  . = Floor
+  @ = Player
+  # = Wall
+  C = Crate
+  G = Goal
+  O = CrateOnGoal
+
+======
+
+SOUNDS
+
+======
+
+COLLISIONLAYERS
+  Floor
+  Crate, CrateOnGoal
+  Player
+  Wall
+  Goal
+
+======
+
+RULES
+[> Player | Crate ] -> [> Player | > Crate ]
+[ Player | CrateOnGoal ] -> [ Player | CrateOnGoal ]
+
+@ [ ] -> [ @ ]
+C [ ] -> [ C ]
+O [ ] -> [ O ]
+
+[Crate | Goal] -> [CrateOnGoal | Floor]
+[CrateOnGoal | Floor] -> [Crate | Goal]
+
+======
+
+WINCONDITIONS
+All CrateOnGoal
+
+======
+
+LEVELS
+#####
+#.@ #
+# C #
+# G #
+#####
+
+#######
+#     #
+# ### #
+#@C G#
+#     #
+#######
+
+```
+produced the following console output:
+=================================
+line 11 : Unknown junk in object section (possibly: sprites have to be 5 pixels wide and 5 pixels high exactly. Or maybe: the main names for objects have to be words containing only the letters a-z0.9 - if you want to call them something like ",", do it in the legend section).
+line 12 : Unknown junk in object section (possibly: sprites have to be 5 pixels wide and 5 pixels high exactly. Or maybe: the main names for objects have to be words containing only the letters a-z0.9 - if you want to call them something like ",", do it in the legend section).
+line 13 : Unknown junk in object section (possibly: sprites have to be 5 pixels wide and 5 pixels high exactly. Or maybe: the main names for objects have to be words containing only the letters a-z0.9 - if you want to call them something like ",", do it in the legend section).
+line 14 : Unknown junk in object section (possibly: sprites have to be 5 pixels wide and 5 pixels high exactly. Or maybe: the main names for objects have to be words containing only the letters a-z0.9 - if you want to call them something like ",", do it in the legend section).
+line 15 : Unknown junk in object section (possibly: sprites have to be 5 pixels wide and 5 pixels high exactly. Or maybe: the main names for objects have to be words containing only the letters a-z0.9 - if you want to call them something like ",", do it in the legend section).
+line 19 : Unknown junk in object section (possibly: sprites have to be 5 pixels wide and 5 pixels high exactly. Or maybe: the main names for objects have to be words containing only the letters a-z0.9 - if you want to call them something like ",", do it in the legend section).
+line 20 : Unknown junk in object section (possibly: sprites have to be 5 pixels wide and 5 pixels high exactly. Or maybe: the main names for objects have to be words containing only the letters a-z0.9 - if you want to call them something like ",", do it in the legend section).
+line 21 : Unknown junk in object section (possibly: sprites have to be 5 pixels wide and 5 pixels high exactly. Or maybe: the main names for objects have to be words containing only the letters a-z0.9 - if you want to call them something like ",", do it in the legend section).
+line 22 : Unknown junk in object section (possibly: sprites have to be 5 pixels wide and 5 pixels high exactly. Or maybe: the main names for objects have to be words containing only the letters a-z0.9 - if you want to call them something like ",", do it in the legend section).
+line 23 : Unknown junk in object section (possibly: sprites have to be 5 pixels wide and 5 pixels high exactly. Or maybe: the main names for objects have to be words containing only the letters a-z0.9 - if you want to call them something like ",", do it in the legend section).
+line 27 : Object "C" defined multiple times.
+line 28 : Was looking for color for object C, got "c " instead.
+line 28 : Was looking for color for object C, got "c" instead.
+line 29 : Object "C" defined multiple times.
+line 30 : Object "C" defined multiple times.
+line 31 : Object "C" defined multiple times.
+too many errors, aborting compilation
+Errors detected during compilation; the game may not work correctly.
+Return a repaired version of the code that addresses these errors. First, reason about your task and determine the best plan of action. Then, write your code. Return your code in full, inside a ```plaintext code block.

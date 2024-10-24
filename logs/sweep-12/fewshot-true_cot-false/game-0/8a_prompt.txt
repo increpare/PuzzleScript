@@ -1,0 +1,1602 @@
+SYSTEM PROMPT:
+You are a game designer, familiar with the PuzzleScript game description language. Here are some example games, for inspiration (do not reproduce these games exactly):
+
+title Spriteaporter
+author increpare
+homepage www.puzzlescript.net
+
+========
+OBJECTS
+========
+
+Temp
+black
+
+Background
+lightgreen green
+11111
+01111
+11101
+11111
+10111
+
+Target
+darkblue
+.....
+.000.
+.0.0.
+.000.
+.....
+
+Wall
+brown darkbrown
+00010
+11111
+01000
+11111
+00010
+
+Player
+black orange white blue
+.000.
+.111.
+22222
+.333.
+.3.3.
+
+Sprite
+pink blue red
+.....
+.000.
+00100
+01110
+.202.
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Player
+O = Sprite
+
+=======
+SOUNDS
+=======
+
+sfx0 67117309
+
+================
+COLLISIONLAYERS
+================
+
+Temp
+Background
+Target
+Player, Wall, Sprite
+
+======
+RULES
+======
+
+late [ Sprite | ... | Player ] -> [ Temp | ... | Sprite ] 
+late [ Temp ] -> [ Player ] 
+
+==============
+WINCONDITIONS
+==============
+
+=======
+LEVELS
+=======
+
+#########
+#.......#
+#....O..#
+#.P.....#
+#.......#
+#.......#
+#########
+
+
+title chaos wizard
+author mark wonnacott
+homepage http://twitter.com/ragzouken
+
+youtube JDIj3zPwEvw
+
+(run_rules_on_level_start)
+
+realtime_interval 0.2
+
+========
+OBJECTS
+========
+
+Space
+black darkblue
+00010
+00000
+00000
+01000
+00000
+
+Background
+darkblue darkgreen
+00000
+01000
+00010
+00001
+00100
+
+Wall
+black darkbrown darkblue
+01112
+21212
+02121
+20021
+00010
+
+Indestructible
+darkgreen grey darkgrey
+01112
+21212
+02121
+20021
+00010
+
+Red
+red lightred darkred
+..0..
+.010.
+22110
+.220.
+..2..
+
+Blue
+blue lightblue purple
+..0..
+.010.
+22110
+.220.
+..2..
+
+Green
+green lightgreen darkgreen
+..0..
+.010.
+22110
+.220.
+..2..
+
+Stone
+grey lightgrey darkgrey
+..0..
+.010.
+22110
+.220.
+..2..
+
+Charge
+red darkred
+1.0.1
+..0..
+00000
+..0..
+1.0.1
+
+Prism
+white lightblue grey
+..0..
+.000.
+00000
+.000.
+..0..
+
+
+MoveUp
+white
+
+MoveDown
+white
+
+MoveLeft
+white
+
+MoveRight
+white
+
+Expand
+white
+
+Inhibit
+white
+
+Hold
+blue lightblue
+.1.1.
+1.0.1
+.0.0.
+1.0.1
+.1.1.
+
+Burn
+red orange yellow white
+.010.
+01210
+12321
+01210
+.010.
+
+Player
+black darkgrey yellow
+..1..
+.111.
+.212.
+00100
+00000
+
+Rival
+black darkgrey red
+..1..
+.111.
+.212.
+00100
+00000
+
+Goal
+black
+0.0.0
+.0.0.
+0.0.0
+.0.0.
+0.0.0
+
+=======
+LEGEND
+=======
+, = Space
+. = Background
++ = Prism
+# = Wall
+X = Indestructible
+@ = Player and Inhibit
+R = Red
+G = Green
+B = Blue
+S = Stone
+? = Goal
+$ = Charge
+% = Rival
+
+3 = Space and Blue
+£ = Space and Charge
+
+Wizard = Player or Rival
+
+Gem = Red or Blue or Green or Stone
+
+Movement = MoveUp or MoveDown or MoveLeft or MoveRight or Expand
+Mediator = Hold or Burn
+
+Moveable = Wizard or Gem
+Destructable = Wizard or Gem or Wall
+
+=======
+SOUNDS
+=======
+
+(sfx0 76693900 (prism))
+sfx1 68148303 (cast)
+sfx2 24680901 (fall)
+
+Burn destroy 17088108
+
+================
+COLLISIONLAYERS
+================
+
+MoveUp, MoveDown, MoveLeft, MoveRight, Expand, Inhibit
+Background
+Space
+Charge, Goal
+Wizard, Gem, Stone, Wall, Prism, Indestructible
+Hold, Burn
+
+======
+RULES
+======
+
+[ Inhibit ] [ moving Player ] -> [ ] [ Player ]
+[ Inhibit ] -> cancel
+
+[ moving Player Hold ] -> [ Player Hold ]
+
+(rival ai)
+[ Rival no Goal | Goal ] -> [ > Rival | Goal ]
+
+(objects fall into pits when not held)
+late [ Moveable no Hold Space ] -> [ Space ] sfx2
+
+[ parallel Wizard | Gem ] -> [ parallel Wizard | parallel Gem ]
+
+[ > Gem | Charge ] -> [ Gem | Charge ]
+[ > Gem | Gem ] -> [ > Gem | > Gem ]
+
+[ action Wizard Charge ] -> [ Wizard ]
+[ Charge ] [ action Wizard ] -> [ ] [ Wizard Charge ]
+
+[ action Wizard ] -> [ Wizard Charge ]
+
+
+(spells recipes)
+[ Blue | Charge no Wizard ] -> [ | > Hold ] sfx1
+[ Red  | Charge no Wizard ] -> [ | > Burn ] sfx1
+
+[ Blue | Green | Charge no Wizard ] -> [ Blue | Blue | Blue ] sfx1
+[ Red  | Green | Charge no Wizard ] -> [ Red  | Red  | Red  ] sfx1
+
+[ Green | Charge no Wizard ] -> [ Red | Blue ] sfx1
+
+[ Stone | Charge no Wizard ] -> [ Prism | ] sfx1
+[ Prism | Charge no Wizard ] -> [ Stone | ] sfx1
+
+(prism expands a spell)
+[ stationary Player ] [ Mediator Prism ] -> [ Player ] [ Expand Mediator Prism ] sfx0
+
+(shortcut to create directional mediators)
+[    up Mediator ] -> [ Mediator MoveUp    ]
+[  down Mediator ] -> [ Mediator MoveDown  ]
+[  left Mediator ] -> [ Mediator MoveLeft  ]
+[ right Mediator ] -> [ Mediator MoveRight ]
+
+(apply movement to mediators)
+[ stationary Player ] [ Mediator MoveUp    ] -> [ Player ] [    up Mediator    up MoveUp    ]
+[ stationary Player ] [ Mediator MoveDown  ] -> [ Player ] [  down Mediator  down MoveDown  ]
+[ stationary Player ] [ Mediator MoveLeft  ] -> [ Player ] [  left Mediator  left MoveLeft  ]
+[ stationary Player ] [ Mediator MoveRight ] -> [ Player ] [ right Mediator right MoveRight ]
+
+(expand multiplies the spell in all directions)
+     up [ Mediator Expand | no Movement no Wall ] -> [ Mediator Expand | Mediator MoveUp    ]
++  down [ Mediator Expand | no Movement no Wall ] -> [ Mediator Expand | Mediator MoveDown  ]
++  left [ Mediator Expand | no Movement no Wall ] -> [ Mediator Expand | Mediator MoveLeft  ]
++ right [ Mediator Expand | no Movement no Wall ] -> [ Mediator Expand | Mediator MoveRight ]
+
+[ stationary Player ] [ > Mediator > Movement | Prism ] -> [ Player ] [ > Mediator Movement | Prism ]
+[ stationary Player ] [ Mediator Expand ] -> [ Player ] [ ]
+
+(teleport fizzles on dirt and wall)
+[ Hold Wall ] -> [ Wall ]
+[ Hold Indestructible ] -> [ Indestructible ]
+
+(fireball destroys dirt, fizzles on wall)
+[ Burn Destructable   ] -> [ ]
+[ Burn Indestructible ] -> [ Indestructible ]
+
+(spells cancel out)
+[ stationary Player ] [ > Mediator Movement | Mediator Movement ] -> [ Player ] [ | ]
+
+(clean up spell-less move commands)
+[ stationary Player ] [ Movement no Mediator ] -> [ Player ] [ ]
+
+(teleport moves objects)
+[ > Hold Moveable ] -> [ > Hold > Moveable ]
+
+(spells end on goal)
+[ > Mediator Movement | Goal ] -> [ | Goal ]
+
+(rival leaves level)
+[ Rival Goal ] -> [ Goal ]
+
+==============
+WINCONDITIONS
+==============
+
+some Player on Goal
+no Rival
+
+=======
+LEVELS
+=======
+
+message you are a chaos wizard - heir of an ancient sigil - a sigil with the power to free magick from its mineral slumber
+
+message cast spells by placing your sigil next to mana ores. escape this tomb
+
+(rival wizard, introduce teleport, teach pulling)
+x##xxxxxxx##x
+xxxxxbbbxxxxx
+x,,xx...xx,,x
+,,,,#...#,,,,
+,,,,#...#,,,,
+,,,,#...#,,,,
+,,,,#...#,,,,
+,,,,#.@.#,,,,
+,,,,#...#,,,,
+,,,,#...#,,,,
+,,,,#...#,,,,
+,,,,#$$$#,,,,
+x,,xxbbbxx,,x
+xxxxx.%.xxxxx
+x##xx???xx##x
+
+(move demo, teach teleport)
+x,,xxxxxxx,,x
+xxxxx...xxxxx
+x##xx.@.xx##x
+####x...x####
+##xxx...xxx##
+##xb......x##
+##x.x...x.x##
+##x...b.b.x##
+##x...$...x##
+##x.x.%.x.x##
+##x,,.....x##
+##x,,,,,..x##
+##x,x,,,xbx##
+##x,,..,,,x##
+##xxx...xxx##
+####x???x####
+
+(teach that mana can be teleported)
+##xxxxxx#####
+##x.....x####
+##x.@...,x###
+##.....,,,x##
+##....,,...x#
+#.b##x,b...x#
+#.####x..b.x#
+#..###.$.$.x#
+##.....b.%.x#
+#######x.,,x#
+#######x,,,x#
+#######x,,,x#
+#######x,..x#
+#######x???x#
+
+(introduce fireball, teach fireball)
+###xxxxxxx###
+###xx...xx###
+###xx.@.xx###
+###xx...xx###
+###xx...xx###
+###xx...xx###
+#rr#x...xx###
+rrrr..$.xx###
+rr####R.xx###
+r#######xx###
+r#######xx###
+######..xx###
+###xx...xx###
+###xx.%.xx###
+###xx???xx###
+
+(puzzle: teleport, fireball, teleporting mana)
+###############
+#####xxxxx#####
+#xxxxxbrbxxxxx#
+#x,,,,...,,,,x#
+#x,....@....,x#
+#x,.,,...,,.,x#
+#x,.,,,,,,,.,x#
+#xr..,x#x,..bx#
+#xr..,#.#,..rx#
+#xr$.,x#x,.$bx#
+#x,,,,,,,,,,,x#
+#x,.,,rrr,,.,x#
+#x,.........,x#
+#x,,,,$$$,,,,x#
+#xxx#.bbbxxxxx#
+#####x.%.x#####
+#####x???x#####
+
+(introduce & teach pre-sigil)
+###xxxxxxx###
+###xx...xx###
+###x..@..x###
+##x.....##x##
+#x.r....###x#
+#x$#r#x..##x#
+#x###x.b.$bx#
+#x###x$x..,x#
+#x.##x%x..,x#
+#x..#,...,,x#
+#x...,,,,,,x#
+##x...,,,,x##
+###x....,x###
+###xx...xx###
+###xx???xx###
+
+(puzzle: fireball, pre-sigil)
+#################
+#####xxxxxxx#####
+#xxxxxx...xxxxxx#
+#xr...x.@.xr###x#
+#xr.....#...###x#
+#xrr..x...x..##x#
+#xxxx..,,,.#xxxx#
+####x.x,,,x.x####
+####x..,,,.#x####
+####x.x,,,x#x####
+####x..,,,.#x####
+####x.x,,,x.x####
+####x..,,,.#x####
+####xx#$.$.xx####
+#####xxr%rxx#####
+#####xx???xx#####
+
+(introduce split, teach split)
+###xxxxxxx###
+###xx...xx###
+###xx.@.xx###
+###xx...xx###
+###xx...xx###
+###xx.g.xx###
+####x...xx###
+#####...xx###
+#######.xx###
+########xx###
+######,,xx###
+#####,,,xx###
+####x,..xx###
+###xx.%.xx###
+###xx???xx###
+
+(puzzle: teleport, fireball, split)
+#######xxxxx#
+#xxxxxxx...x#
+#x###b...@.x#
+#x####r$...x#
+#x##r$...,.##
+#x#.gxx.,,,,#
+#x...x##,,,,#
+#x###x##,,,,#
+#xg##x##,,,,#
+#x...xxx,,,.#
+#x.......,,.#
+#x.....###,b#
+#x....###.#x#
+#xxxxxxx.%.x#
+#######x???x#
+
+(introduce multiply, teach multiply)
+x###xxxxx###x
+xx#xx...xx#xx
+,x#x.@...x#x,
+xxxxx...xxxxx
+xbg$x.$#x$grx
+xbg$x.r#x$grx
+xxxxx$##xxxxx
+,x#x.r...x#x,
+xxxxx##.xxxxx
+xbg$###...grx
+xbg$x..,x.,,x
+xxxxx.,,xxxxx
+,x#x.,,,.x#x,
+xx#xx,,%xx#xx
+x###x???x###x
+
+(puzzle: fireball, teleport mana, multiply)
+####xxxxxxx####
+####xx...xx####
+###xxx.@.xxx###
+###x.xr.rx.x###
+###x...r...x###
+xxxx.......xxxx
+x..x,.$$$.,x.rx
+x.g.,.rrr.,...x
+x.#...x#x.....x
+x...,#####,...x
+xb.x,##.##,x..x
+xxxx#...#..xxxx
+###x.##..##x###
+###x.x.%#x#x###
+###xxx???xxx###
+
+(puzzle: fireball, teleport, teleport mana, split, multiply)
+####xxxxxxx####
+####xx.@.xx####
+#####r...g#####
+####r.,,,.#####
+####r.,,,.#g###
+####..,,,..####
+###b.....$.#g##
+###....,,r..###
+###...,,,,..###
+####.$,,,,,,###
+####$r,,,#...##
+####r,,###....#
+###,,,####....#
+####xx#%#xx.r##
+####xx???xx####
+
+(introduce amplification, teach amplification)
+###xxxxxxx###
+#xxxx...xxxx#
+#xrxx.@.xx,x#
+#x.........x#
+#x,,.xxxxxgx#
+#x+,#x###x.x#
+#x,,.xxxxx.x#
+#x.r..#...rx#
+#xgxxxxx.,,x#
+#x#x###x#,+x#
+#x#xxxxx.,,x#
+#x.###....$x#
+#x,xx...xxbx#
+#xxxx.%.xxxx#
+###xx???xx###
+
+(amplified teleport)
+,,xxxxxxx,,
+,#xx...xx#,
+,#xx.@.xx#,
+#+.,$b.,.+#
+,..#...,..#
+,,,#,,###,#
+,..#...#..#
+#+.,.+r£.+#
+#..,##.,..,
+,,,,,,,,,,,
+,.#,##.,..#
+#x.,.x.,.+#
+##xx...xx##
+#,xx.%.xx,#
+,,xx???xx#,
+
+(puzzle: fireball, amplified fireball)
+###xxxxxxx###
+#xxxx...xxxx#
+#xrxx.@.xxrx#
+#xr.......rx#
+#x..##.#...x#
+#x..,,,,,##x#
+#x#.,,,,#.#x#
+#x###,+,###x#
+#x..#,,,##.x#
+#x..,,,,,##x#
+#x.######..x#
+#x.#####...x#
+#xrxx#.#xxrx#
+#xxxx.%.xxxx#
+###xx???xx###
+
+(puzzle: fireball, split, amplified teleport)
+###xxxxxxx###
+#xxxx...xxxx#
+#xbxx.@.xx.x#
+#x..x...x...#
+#x...,.,...,#
+#x...,.,...,#
+#x..,...,..,#
+#x.#...r.#.##
+#x.x,,,,,x.x#
+#xgx+,+,+x.x#
+#x#xxx,xxx.x#
+#x##..$...#x#
+#x#xx.r.xx#x#
+#xxxx.%.xxxx#
+###xx???xx###
+
+(puzzle: fireball, sigil-first, split, multiply, amplified teleport)
+###xxxxxxx###
+#xxxx...xxxx#
+#x#xx.@.xx.x#
+#x........gx#
+#xgx..x..x.x#
+#x.x.....x.x#
+#x,,x...x,,x#
+#x+,..,..,+x#
+#x,,x$.$x,,x#
+#x.x.r.r.x.x#
+#x.x.#x#.x.x#
+#x...###...x#
+#x.xx#.#xx.x#
+#xxxx.%.xxxx#
+###xx???xx###
+
+(introduce mobile amplify, teach mobile amplify)
+(puzzle: teleport, amplified teleport)
+###xxxxxxxx,,
+#xxxx...xxx,,
+#x.xx.@.xx,,,
+#xbbs...,,,,#
+#xx.,,.,,,+##
+#xx.,,.,,,,,#
+#xx,,x.x,,,,,
+#x,,,r$,,,+##
+#xx,,x,x,,,##
+#xx.,,,,,,,,#
+#xx.,##,,,,,,
+#x....##,,,,,
+#x.xx..#xx,,,
+#xxxx.%.xxx,,
+###xx???xxx,,
+
+(puzzle: teleport, fireball, mobile amplify)
+#################
+#####xxxxxxx#####
+#xxxxxx.@.xxxxxx#
+#x.bbx.+++.x+.+x#
+#x...x.....x.xrx#
+#x#.....b....x$x#
+#x..$x..$..x.x.x#
+#x..rx.....x+.+x#
+#xx$xx#.%..xxxxx#
+#x#r..##.....##x#
+#x#...#,,,.###.x#
+#x##...,,,.#.##x#
+#x##...,,,.##.bx#
+#xxxxxx...xxxxxx#
+#####xx...xx#####
+#####xx???xx#####
+
+message i cannot allow you to proceed
+
+(gauntlet i: fireball dodging)
+,,xxxxxxxxx,,
+,,xxx...xxx,,
+,,,xx.@.xx,,,
+x,,,,...,,,,,
++.,,,.b.,,,,x
+..x,,.$.,,,.+
++.+.,.%.,,x..
+...x,...,.+.+
++.+.,...,x...
+$.x,,...,.+.+
+rx,,,...,,x.$
+x,,,,...,,,xr
+,,,,,...,,,,x
+,,,xx...xx,,,
+,,xxx...xxx,,
+,,xxx???xxx,,
+
+message your power waxes and thus mine wanes
+
+(gauntlet ii: impending fireball doom)
+####xxxxx####
+#xxxxbbbxxxx#
+#x.,..@..,.x#
+#x.,.....,.x#
+#x.,.....,.x#
+#x.,#####,.x#
+#x,#######,x#
+#x,#######,x#
+#x,#######,x#
+#x,#######,x#
+#x,#######,x#
+#x,#######,x#
+#x,#######,x#
+#x,#######,x#
+#x,#######,x#
+#x,#######,x#
+#x,#######,x#
+#x,,#####,,x#
+#x,,,,,,,,,x#
+#x,x+++++x,x#
+#x.xxx$xxx.x#
+#x....r....x#
+#xxxx.%.xxxx#
+####x???x####
+
+(message it seems you cannot be stopped
+
+(gauntlet iii: interference pattern)
+#######xxxxx#######
+###xxxxx...xxxxx###
+###x...s.@.s...x###
+###x...s...s...x###
+#xxx,,,,sbs,,,,xxx#
+#x+,,,,,...,,,,,,x#
+#x+,,,,,$r.,,,,,,x#
+#x+,,,,,...,,,,,,x#
+#x+,,,,,$$$,,,,,,x#
+#xxx,,,,bbb,,,,xxx#
+###x...$...$...x###
+###x...r...r...x###
+###xxxxx.%.xxxxx###
+#######x???x#######)
+
+message there isn't enough mana in the cosmos to stop fate
+message ...but you shall not leave whilst i live
+
+(boss)
+,,x###xxxxx###x,,
+,,xrrrxb.bxrrrx,,
+,,,.....@.....,,,
+,,,,,,,...,,,,,,,
+,,,,,,,,,,,,,,,,,
+,+x,,,,,,,,,,,x+,
++x+,,,,,£3,,,,+x+
+x+%,,,,,,,,,,,.+x
+,,,,,,x,x,x,,,,,,
+,,,,,,,???,,,,,,,
+,,,,,,x???x,,,,,,
+,,,,,,,???,,,,,,,
+,,,,,,x,x,x,,,,,,
+x+.,,,,3£,,,,,.+x
++x+,,,,,,,,,,,+x+
+,+x,,,,,,,,,,,x+,
+,,,,,,,,,,,,,,,,,
+
+message all of this has happened before, and all of this will happen again, my son
+
+title The Legend of Zokoban
+author Joshua Minor
+homepage pixelverse.org
+flickscreen 9x7
+
+========
+OBJECTS
+========
+
+Background
+yellow orange
+00000
+01000
+00001
+00100
+10000
+
+Water
+blue lightblue
+00000
+01000
+00001
+00100
+10000
+
+Cave
+DarkBlue
+00000
+00000
+00000
+00000
+00000
+
+Goal
+DarkBlue Red
+00000
+00000
+00100
+00000
+00000
+
+RockWall
+BROWN Orange
+01110
+10000
+10010
+10000
+00100
+
+StoneWall
+darkgrey grey
+01110
+10000
+10010
+10000
+00100
+
+PlayerWithoutSword
+GREEN lightgreen
+.00..
+00000
+.000.
+.111.
+00.00
+
+PlayerWithSword
+GREEN lightgreen white grey
+.002.
+00020
+.0222
+.110.
+00.00
+
+Sword
+grey white
+..1..
+..1..
+.111.
+..0..
+.....
+
+Block
+BROWN Orange darkgrey
+.111.
+10001
+10002
+10002
+.222.
+
+EasyBaddie
+white red
+.111.
+10101
+11111
+11111
+11.11
+
+Money
+white lightblue
+..1..
+.001.
+10111
+.111.
+..1..
+
+=======
+LEGEND
+=======
+
+Wall = StoneWall or RockWall
+Solid = Wall or Block or Water
+Player = PlayerWithoutSword or PlayerWithSword
+Obstacle = Wall or Block or Player or Water
+Baddie = EasyBaddie
+
+. = Background
+# = RockWall
+S = StoneWall
+P = PlayerWithoutSword
+* = Block
+@ = Block and Cave
+O = Cave
+w = Water
+1 = EasyBaddie
++ = Sword
+G = Goal
+
+=======
+SOUNDS
+=======
+
+StartLevel 40430108 (music-ish)
+SFX0 16358103 (power up)
+SFX1 84057304 (push)
+SFX2 74654508 (stairs)
+SFX3 21293301 (fight)
+SFX4 49521903 (hurt)
+SFX5 47598700 (money)
+ShowMessage 82693708 (you win!)
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Cave, Goal
+Player, Wall, Block, Water, EasyBaddie
+Sword, Money
+
+======
+RULES
+======
+
+(baddies move at random)
+[ Stationary Baddie ] -> [ RandomDir Baddie ]
+
+(player can push blocks)
+[ > Player | Block ] -> [ > Player | > Block ] SFX1
+
+(blocks pushed into water become land)
+[ > Block | Water ] -> [ | ]
+
+(baddies can attack the player w/o sword)
+[ > Baddie | Player No Sword ] -> SFX4
+
+(player can pick up sword)
+([ > Player | Sword ] -> [ | Player Sword ] SFX0)
+[ PlayerWithoutSword Sword ] -> [ PlayerWithSword ] SFX0
+
+(player with sword can kill baddies & leave money)
+[ > PlayerWithSword | Baddie ] -> [ PlayerWithSword | Money ] SFX3
+(sword moves with player)
+([ > Player Sword ] -> [ > Player > Sword ])
+(sword doesn't move into obstacles)
+([ > Sword | Stationary Obstacle ] -> [ Sword | Stationary Obstacle ])
+
+(player can pick up money)
+[ > Player | Money ] -> [ | Player ] SFX5
+
+(blocks pushed into caves, teleport to other end of cave)
+random [ Moving Block Cave | ... | Cave ] -> [ Cave | ... | Block Cave ]
+(blocks sitting on cave exits will roll aside to let player follow them)
+late random [ Block Cave | No Obstacle ] -> [ Cave | Block ]
+(players can enter caves - teleporting to orthogonally matching cave)
+late random [ Player Cave | ... | Cave ] -> [ Cave | ... | Player Cave ] SFX2
+(sword follows player through the cave)
+(late random [ Sword Cave | ... | Cave ] -> [ Cave | ... | Sword Cave ])
+
+
+==============
+WINCONDITIONS
+==============
+
+All Player on Goal
+
+=======
+LEVELS
+=======
+
+sssssssss#################wwwwwwwwww
+ss.s1s..s#1#####.##..1..1.wwwwww..ww
+s.......s#.#####.##.#.#.#.wwwww..*.w
+s..*....o#.##o##.............ww....w
+s.s....ss#..........#.*.#....ww..1.w
+sss.s.sss##...............wwwwww..ww
+sssssssss#####..#####.....wwwwwwwwww
+sssssssss#####..#####.....wwwwwwwwww
+ss1...sss#####..####.....wwww.....ww
+s......os##o#....##...#.1www..s.s..w
+s..+...ss#.......##*......ww...g...w
+ss.....ss#...p..........#.ww..s.s.1w
+ssss..sss##.....###..#.1..www..1..ww
+sssssssss#################wwwwwwwwww
+
+message Congratulations!
+
+
+
+title Collapse
+author Terry Cavanagh
+homepage www.distractionware.com
+
+color_palette pastel
+youtube 4XglYW89WLQ
+
+background_color Black
+text_color LightRed
+
+noaction
+
+flickscreen 16x10
+
+========
+OBJECTS
+========
+
+Exit D
+Black
+.....
+.....
+.....
+.....
+.....
+
+OutdoorBackground
+lightred
+
+IndoorBackground
+white lightgray
+11011
+11011
+11011
+11011
+11011
+
+
+Wall W
+Yellow Orange
+00000
+00010
+00000
+01000
+00000
+
+SolidWall Q
+#FF0000 #992222
+00000
+00001
+00111
+01111
+11111
+
+Door X
+DarkBlue White Blue
+00200
+10201
+00200
+10201
+00200
+
+Jettrail1
+DarkGray
+..0..
+.000.
+00.00
+.000.
+..0..
+
+
+Jettrail2
+DarkGray
+.....
+..0..
+.0.0.
+..0..
+.....
+
+Key
+Blue
+.000.
+.0.0.
+.000.
+..0..
+.00..
+
+Flower F
+DarkBlue Green blue
+.22..
+2002.
+.22..
+..1..
+..1..
+
+Mine M
+Red #BB0000
+10001
+01110
+11011
+01110
+10001
+
+Blood
+#FF0000 #AA0000
+10101
+01110
+11011
+01110
+10101
+
+Blood2
+#FF0000 #AA0000
+01010
+10101
+01010
+10101
+01010
+
+
+PlayerDead
+Red Black
+10001
+10001
+00000
+10001
+10101
+
+PlayerGround P
+Black
+.000.
+.000.
+00000
+.000.
+.0.0.
+
+PlayerHover
+Black
+.000.
+00000
+.000.
+.000.
+0...0
+
+PlayerHoverLeft
+Black
+.000.
+0000.
+.000.
+.000.
+..0.0
+
+PlayerHoverRight
+Black
+.000.
+.0000
+.000.
+.000.
+0.0..
+
+Temp
+black
+
+=======
+LEGEND
+=======
+
+Background = OutdoorBackground or IndoorBackground
+Player = PlayerGround or PlayerHover or PlayerHoverLeft or PlayerHoverRight or PlayerDead
+InGamePlayer = PlayerGround or PlayerHover
+FlyingPlayer = PlayerHoverLeft or PlayerHoverRight
+Obstacle = Wall or Mine or SolidWall or Door
+ObstacleExMine = Wall or SolidWall or Door
+
+. = OutdoorBackground
+, = IndoorBackground
+# = Wall
+P = Player
+k = Key and IndoorBackground
+
+=======
+SOUNDS
+=======
+
+sfx0 53720504 (jump up)
+sfx1 14370308 (bomb)
+sfx2 41983504 (jetpack)
+sfx3 86827507 (fall)
+sfx4 56160703 (door)
+sfx5 98568902 (blockpush)
+sfx6 77665108 (collapse)
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Jettrail1, Jettrail2, Exit
+Player, Wall, Solidwall, temp, playerhoverleft, playerhoverright, mine, Key, Flower, Door
+blood, blood2
+
+======
+RULES
+======
+
+right [ moving Playerdead] -> [PlayerDead]
+
+[> IngamePlayer | mine ] -> [ > PlayerDead | blood ] sfx1
+Vertical [ PlayerGround | mine ] -> [ playerdead | blood2 ] sfx1
+Horizontal [flyingplayer | mine ] -> [ playerdead | blood2 ] sfx1
+
+Horizontal [> PlayerGround | Key] [Door] -> [> PlayerGround | Key] []
+Horizontal [> PlayerGround | Key]-> [> PlayerGround | ] sfx4
+
+Horizontal [> PlayerGround | Flower] [Door] -> [> PlayerGround | Flower] []
+Horizontal [> PlayerGround | Flower]-> [> PlayerGround | ] sfx6
+
+UP [Up PlayerGround | No Obstacle | No Obstacle] -> [ | | PlayerHover ] sfx0
+UP [Up PlayerGround | No Obstacle] -> [ | PlayerHover ] sfx0
+
+
+right [right PlayerHover] -> [PlayerHoverRight]
+left [left PlayerHover] -> [PlayerHoverLeft]
+up [up PlayerHover] -> [PlayerHover]
+down [down PlayerHover] -> [PlayerGround]
+
+down [JetTrail2] -> []
+down [JetTrail1] -> [JetTrail2]
+
+(random rule here is a hack workaround)
+random right [ PlayerHoverRight | No Obstacle] -> [ JetTrail1 | PlayerHoverRight] again sfx2
+horizontal [ PlayerHoverRight | ObstacleExMine] -> [ PlayerGround | ObstacleExMine]
+down [ PlayerHoverRight | ObstacleExMine] -> [ PlayerGround | ObstacleExMine]
+
+random left [ PlayerHoverLeft | No Obstacle] -> [JetTrail1 | PlayerHoverLeft] again sfx2
+horizontal [ PlayerHoverLeft | ObstacleExMine] -> [ PlayerGround | ObstacleExMine]
+down [ PlayerHoverLeft | ObstacleExMine] -> [ PlayerGround | ObstacleExMine]
+
+horizontal [> PlayerGround | Wall] -> [> PlayerGround | > wall] sfx5
+horizontal [> Wall | Wall] -> [> Wall | > wall]
+horizontal [> Wall | Mine] -> [> Wall | > Mine]
+
+down [stationary wall] -> [ down wall] again
+down [stationary mine] -> [ down mine] again
+
+[blood | no blood ] -> [blood | blood2] again
+[blood2 | no blood ] -> [blood2 | blood] again
+
+late down [  PlayerGround | No Obstacle ] -> [ JetTrail1 |  temp] again sfx3
+late down [temp] -> [playerground]
+
+==============
+WINCONDITIONS
+==============
+No Flower
+All Player on Exit
+
+=======
+LEVELS
+=======
+
+MESSAGE The last flower...
+MESSAGE Will I find it on this planet?
+
+qqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq
+q,,,,,,,,,,,,,,qqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq
+q,,,,,,,,,,,,,,,,,,,,,,,q,,,,,,,,,,,,qqqqqqqqqqq
+q,,,,,,,,qq,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,x,D
+q,,,,,,,,qqqqqqqqqqqqq,,K,,,,,,,,,,,,,,,,,,,,x,D
+qqq,,,,,,qqqqqqqqqqqqq,,qqqqqqqqqqq,,,,,,,,,,x,D
+qqq,p,,,,qqqqqqqqqqqqq,,,,,,,,,,,,,,,,,,qqq,,x,D
+qqqqq,,,,qqqqqqqqqqqqq,,,,,,,,,,,,,,,,,,qqqqqqqq
+qqqqqmmmmqqqqqqqqqqqqqmqqmmmmmmmmmmmmmqqqqqqqqqq
+qqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq
+
+qq................q........q..........w....qmmmmmmq.............q
+qq..................w.................w....qmmmmmmq.............q
+qq...............q..w.................wm....qmmmmmq.............q
+qqq..............q..w.................ww....qmmmmqq...........f.q
+qqq..............qwww.......w.........ww.....qmmmq...........wwwq
+q.........ww......wqwmmw....w.........ww..w..qwqqq...........wwwq
+DP........ww......q.mqwww...w........wwwwwwwwwwwww...........wwwq
+qww.......ww........qqqqq...w.wwwww..wwwwwwwwwqwww..........wwwwm
+qwwwwm..wwwwwwwwwwwww.qqqqmmw.wwwwww.wwwwwwwwwqqww...q...wwwmwwwq
+qwwwwwwqwwwwmwwwwwmww.wqqqwwwwwwwwwwmwwwwwwwwwqqqqwwwwwwwwqwwwwwq
+mxxxxxxxxxxxxxxxxxxxxxxqxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxq
+m....................q.q................................m.......q
+m......................q................................q.......q
+m......................q........................................q
+m......................q........................................q
+m......................q........................w...............q
+m...............w......q........w............w..w...............q
+mmm.....m..m....w.mmmm.mmm...m..w....mm..m...wmmw..m.mm.....m...q
+mwmmmmmmm.mmwmmmmmmmmmmmmwmmmmmmmwmmmmwmmmmmmmmmmmmmmmmm.mmmmmm.q
+mmwmmmmwmmmmmmmmmwmmmwmmmmmmmwmmmmmmmmmmwmmmmmmmmmmmmmmmmmmmmmmmq
+
+MESSAGE Collapse
+MESSAGE Music [Cryptobiosis by Sync24]
+MESSAGE Thanks for playing
+
+title EYE EYE EYE
+author increpare
+homepage www.puzzlescript.net
+
+========
+OBJECTS
+========
+
+Background
+lightgreen green
+11111
+01111
+11101
+11111
+10111
+
+Target
+darkblue
+.....
+.000.
+.0.0.
+.000.
+.....
+
+Wall
+brown darkbrown
+00010
+11111
+01000
+11111
+00010
+
+Player
+black orange white blue
+.000.
+.111.
+22222
+.333.
+.3.3.
+
+EyeBall
+white blue red
+.000.
+00100
+01110
+20102
+.202.
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Player
+O = EyeBall
+
+=======
+SOUNDS
+=======
+
+sfx0 67117309
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Target
+Player, Wall, EyeBall
+
+======
+RULES
+======
+
+[ Eyeball | ... | Player ] -> [ > Eyeball | ... | Player ] sfx0
+
+==============
+WINCONDITIONS
+==============
+
+(There's no way to win against a floating eyeball :S )
+
+=======
+LEVELS
+=======
+
+#########
+#.......#
+#....O..#
+#.P.....#
+#.......#
+#.......#
+#########
+
+
+USER PROMPT:
+The following PuzzleScript game code:
+```plaintext
+title Corral Chaos
+author AI Game Designer
+
+color_palette c64
+
+========
+OBJECTS
+========
+
+Background
+#A4C2E0
+.....
+.....
+.....
+.....
+.....
+
+Grass
+#7DA270
+.....
+.....
+.....
+.....
+.....
+
+Wall
+#4A4A4A
+.....
+.....
+.....
+.....
+.....
+
+Sheep
+#FFFFFF
+.....
+..0..
+.000.
+..0..
+.0.0.
+
+Barn
+#8D5524
+.....
+.0.0.
+00000
+00000
+.....
+
+Player
+#DAA520
+.....
+..0..
+.0A0.
+A00A.
+.....
+
+=======
+LEGEND
+=======
+. = Background
+# = Wall
+s = Sheep
+b = Barn
+p = Player
+= Grass
+
+=========
+SOUNDS
+=========
+Sheep MOVE 45703848
+Player MOVE 25380307
+startlevel 5092838
+endlevel 8848105
+showmessage 43742098
+closemessage 43742098
+startgame 5908317
+endgame 5092841
+
+================
+COLLISIONLAYERS
+================
+Background
+Grass
+Wall
+Barn
+Player
+Sheep
+
+======
+RULES
+======
+[ > Player | Sheep ] -> [ > Player | > Sheep ] 
+
+[Barn | no Sheep] -> [Barn] sfx0
+
+==============
+WINCONDITIONS
+==============
+no Sheep
+
+=======
+LEVELS
+=======
+
+message Help the shepherd round up the sheep into the barn!
+
+#######
+#.....#
+#..p..#
+#..s..#
+#.....#
+#..b..#
+#.....#
+#######
+
+#######
+#.....#
+#..p..#
+#..s..#
+#..s..#
+#..b..#
+#..s..#
+#######
+
+#######
+#.....#
+#.p.s.#
+#.s.s.#
+#.s.s.#
+#.b.s.#
+#.....#
+#######
+
+#######
+#.....#
+#p..s.#
+#.s.s.#
+#.....#
+#..b..#
+#.....#
+#######
+
+#######
+#s..s.#
+#.p...#
+#.b...#
+#.....#
+#.....#
+#######
+
+```
+produced the following console output:
+=================================
+line 54 : Unknown junk in spritematrix for object PLAYER.
+line 55 : Unknown junk in spritematrix for object PLAYER.
+line 66 : Only comments should go after a bunch of equals signs ('===') on a line.
+line 50 : Sprite graphics must be 5 wide and 5 high exactly.
+line 95 : In a rule, each pattern to match on the left must have a corresponding pattern on the right of equal length (number of cells).
+Errors detected during compilation; the game may not work correctly.
+Return a repaired version of the code that addresses these errors. Return your code in full, inside a ```plaintext code block.

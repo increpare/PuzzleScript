@@ -1,0 +1,117 @@
+SYSTEM PROMPT:
+You are a game designer, familiar with the PuzzleScript game description language. 
+
+USER PROMPT:
+The following PuzzleScript game code:
+```plaintext
+===========
+title Catch the Star
+===========
+
+===========
+author Your Name
+===========
+
+===========
+homepage www.example.com
+===========
+
+===========
+objects
+===========
+Background
+00000
+
+Wall
+2f4f4f
+
+Player
+ff6347
+..0..
+.000.
+00.00
+..0..
+
+Star
+ffd700
+..*..
+.*.*.
+*****
+
+===========
+legend
+===========
+. = Background
+# = Wall
+P = Player
+* = Star
+
+===========
+sounds
+===========
+
+===========
+collisionLayers
+===========
+Background
+Player, Star, Wall
+
+===========
+rules
+===========
+
+[Player | Star] -> [Player Star]
+
+===========
+winconditions
+===========
+All Star on Player
+
+===========
+levels
+===========
+
+####
+#P.#
+#..#
+#.*#
+####
+
+####
+#* #
+#.P#
+## #
+####
+
+########
+#.#..#.#
+#.###* #
+#P..   #
+########
+
+===========
+messages
+===========
+Congratulations! You caught the star!
+
+===========
+colorPalette
+===========
+Background #000000
+Wall #2f4f4f
+Player #ff6347
+Star #ffd700
+
+
+```
+produced the following console output:
+=================================
+line 17 : Was looking for color for object BACKGROUND, got "00000" instead.
+line 20 : Was looking for color for object WALL, got "2f4f4f" instead.
+line 23 : Was looking for color for object PLAYER, got "ff6347" instead.
+line 24 : Trying to access color number 0 from the color palette of sprite PLAYER, but there are only 0 defined in it.
+line 25 : Trying to access color number 0 from the color palette of sprite PLAYER, but there are only 0 defined in it.
+line 26 : Trying to access color number 0 from the color palette of sprite PLAYER, but there are only 0 defined in it.
+too many errors, aborting compilation
+Errors detected during compilation; the game may not work correctly.
+Return a repaired version of the code that addresses these errors. Return your code in full, inside a ```plaintext code block.

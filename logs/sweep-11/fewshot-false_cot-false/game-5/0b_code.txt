@@ -1,0 +1,99 @@
+Sure, here's an example of a simple PuzzleScript game where you move a character to reach a goal.
+
+```plaintext
+Title: Reach the Goal
+Author: PuzzleScriptUser
+Homepage: https://www.puzzlescript.net
+
+===========
+OBJECTS
+===========
+
+Background
+lightgrey
+00000
+00000
+00000
+00000
+00000
+
+Player
+red
+.....
+..0..
+.000.
+..0..
+.....
+
+Wall
+black
+00000
+00000
+00000
+00000
+00000
+
+Goal
+green
+.....
+.....
+..0..
+.....
+.....
+
+===========
+LEGEND
+===========
+
+. = Background
+P = Player
+W = Wall
+G = Goal
+
+===========
+SOUNDS
+===========
+
+===========
+COLLISIONLAYERS
+===========
+
+Background
+Wall
+Player, Goal
+
+===========
+RULES
+===========
+
+[Player] -> [Player Right]
+
+[> Player | Goal] -> [Player | Goal]
+! Check if player is on the goal, game ends.
+
+===========
+WINCONDITIONS
+===========
+
+All Goal on Player
+
+===========
+LEVELS
+===========
+
+; Example Level 1
+WWWWWW
+W..PGW
+W..P.W
+WWWWWW
+
+; Example Level 2
+WWWWWW
+WP...W
+W.W.GW
+WWWWWW
+```
+
+In this game, the player (red) needs to reach the goal (green) while navigating around walls (black). Each level is defined within the "LEVELS" section, where you can expand with additional configurations to increase the challenge.
+
+Enjoy creating your PuzzleScript game!

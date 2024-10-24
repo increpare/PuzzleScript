@@ -1,0 +1,114 @@
+To address the errors in the PuzzleScript game code, we first need to understand the issues reported by the console output:
+
+1. **Color Error for 'CRATE':** PuzzleScript is case-sensitive with color names. `DarkOrange` should be replaced with `darkorange` because the original code mentions "got 'darkorange' instead."
+
+2. **Color Palette Error for 'CRATE':** The console log indicates that we're trying to access a color that hasn't been defined correctly in the CRATE's sprite. In PuzzleScript, each row of colors in the sprite definition should correspond to colors specified at the start of the OBJECT definition. Ensure that the colors map correctly to the numbers used in the CRATE's visual representation.
+
+To fix these issues, ensure that the colors used in your sprite correspond to colors you have defined in the first line of the object's definition:
+
+- The first color is the main color for the CRATE, and the second one is for outlining or shading to create a sense of depth. Update the CRATE's colors to match this scheme.
+
+Let's modify the CRATE definition to fix the issues:
+
+```plaintext
+title Sokoban Clone
+author YourName
+
+========
+OBJECTS
+========
+
+Background
+White
+
+Wall
+DarkGray
+00000
+00000
+00000
+00000
+00000
+
+Player
+Blue LightBlue
+..1..
+.111.
+11111
+.111.
+..1..
+
+Crate
+Orange darkorange
+.222.
+22222
+22222
+22222
+.222.
+
+Target
+LightGreen
+00000
+01110
+01210
+01110
+00000
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Player
+* = Crate
+O = Target
+@ = Crate and Target
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Target
+Player, Crate, Wall
+
+======
+RULES
+======
+
+[ > Player | Crate ] -> [ > Player | > Crate ]
+[ > Player | Wall ] -> [ Player | Wall ]
+
+==============
+WINCONDITIONS
+==============
+
+All Crate on Target
+
+=======
+LEVELS
+=======
+
+#####
+#...#
+#.P.#
+#.#.#
+#*O*#
+#####
+
+#####
+#...#
+#*P*#
+#.#.#
+#O.O#
+#####
+
+#####
+#.#.#
+#*P*#
+#.O.#
+#...#
+#####
+```
+
+In this corrected version, the CRATE definition now includes two colors: `Orange` for the primary color and `darkorange` for the secondary color. This should resolve the color error issues during compilation.

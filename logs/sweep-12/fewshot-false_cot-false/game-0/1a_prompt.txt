@@ -1,0 +1,98 @@
+SYSTEM PROMPT:
+You are a game designer, familiar with the PuzzleScript game description language. 
+
+USER PROMPT:
+The following PuzzleScript game code:
+```plaintext
+===========
+Title
+===========
+Catch the Star
+
+===========
+Author
+===========
+Your Name
+
+===========
+Homepage
+===========
+www.example.com
+
+===========
+Legend
+===========
+. = Background
+# = Wall
+P = Player
+* = Star
+
+===========
+Sounds
+===========
+# Sound specifications can go here
+
+===========
+CollisionLayers
+===========
+Background
+Player, Star, Wall
+
+===========
+Rules
+===========
+
+[Player | Star] -> [Player Star]
+
+===========
+WinConditions
+===========
+All Star on Player
+
+===========
+Levels
+===========
+
+####
+#P.#
+#..#
+#.*#
+####
+
+####
+#* #
+#.P#
+## #
+####
+
+########
+#.#..#.#
+#.###* #
+#P..   #
+########
+
+===========
+Messages
+===========
+Congratulations! You caught the star!
+
+===========
+ColorPalette
+===========
+Background #000000
+Wall #2f4f4f
+Player #ff6347
+Star #ffd700
+
+```
+produced the following console output:
+=================================
+line 2 : MetaData "title" needs a value.
+line 4 : Unrecognised stuff in the prelude.
+line 7 : MetaData "author" needs a value.
+line 9 : Unrecognised stuff in the prelude.
+line 12 : MetaData "homepage" needs a value.
+line 14 : Unrecognised stuff in the prelude.
+too many errors, aborting compilation
+Errors detected during compilation; the game may not work correctly.
+Return a repaired version of the code that addresses these errors. Return your code in full, inside a ```plaintext code block.

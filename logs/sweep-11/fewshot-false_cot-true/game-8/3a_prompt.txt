@@ -4,121 +4,88 @@ You are a game designer, familiar with the PuzzleScript game description languag
 USER PROMPT:
 The following PuzzleScript game code:
 ```plaintext
-title Simple Sokoban
-author Game Designer
+Title: Simple Sokoban
+Author: PuzzleScript Designer
 
 ========
 OBJECTS
 ========
+Background 
+GREEN
+
 Player
-grey
-00000
-01110
-00100
-01110
-00000
+BLUE
 
 Wall
-black
-11111
-11111
-11111
-11111
-11111
+GRAY
 
-Crate
-brown
-00000
-01110
-11011
-01110
-00000
+Box
+BROWN
 
 Target
-red
-00000
-00100
-01110
-11111
-00100
+RED
 
-Floor
-beige
-00000
-00000
-00000
-00000
-00000
+BoxOnTarget
+DARKRED
 
-===========
-COLLISIONLAYERS
-===========
-Background
-Static
-Movable
-Player
-
-======
+========
 LEGEND
-======
-= Wall
-. Floor
-P Player
-C Crate
-X Target
+========
+. = Background
+# = Wall
+P = Player
+B = Box
+T = Target
+O = BoxOnTarget
 
-======
+==============
 SOUNDS
-======
-CrateMovePush
-    500
-CrateMoveStop
-    700
+==============
 
-=====
+==============
+COLLISIONLAYERS
+==============
+Background
+Wall
+Player
+Box
+Target
+BoxOnTarget
+
+=======
 RULES
-=====
-[ >Player | Crate ] -> [ >Player | >Crate ]
+=======
+[ > Player | Box ] -> [ > Player | > Box ]
+[ Box | Target ] -> [ BoxOnTarget | Background ]
+[ BoxOnTarget | Player ] -> [ Box | Player ]
 
-===
-WIN
-===
-All Crate on Target
+# If a box is moved off a target, restore their states
+[ BoxOnTarget ] -> [ Box | Target ]
 
-======
+===========
+WINCONDITIONS
+===========
+All BoxOnTarget on Target
+
+=======
 LEVELS
-======
-# Level 1
-####
-#P C#
-#  X#
-####
-
-# Level 2
-#####
-#   #
-# P #
-# C #
-##X##
-  ###
-
-# Level 3
-######
-#    #
-# P C#
-# CC #
-##XX##
- ####
+=======
+# ##### 
+#T..T# 
+###..###
+#P B  O#
+#    ###
+####### 
 
 ```
 produced the following console output:
 =================================
-line 10 : Trying to access color number 1 from the color palette of sprite PLAYER, but there are only 1 defined in it.
-line 11 : Trying to access color number 1 from the color palette of sprite PLAYER, but there are only 1 defined in it.
-line 12 : Trying to access color number 1 from the color palette of sprite PLAYER, but there are only 1 defined in it.
-line 17 : Trying to access color number 1 from the color palette of sprite WALL, but there are only 1 defined in it.
-line 18 : Trying to access color number 1 from the color palette of sprite WALL, but there are only 1 defined in it.
-line 19 : Trying to access color number 1 from the color palette of sprite WALL, but there are only 1 defined in it.
+line 56 : Objects cannot appear outside of square brackets in rules, only directions can.
+line 56 : Name "if", referred to in a rule, does not exist.
+line 56 : Name "a", referred to in a rule, does not exist.
+line 56 : Name "is", referred to in a rule, does not exist.
+line 56 : Name "moved", referred to in a rule, does not exist.
+line 56 : Name "off", referred to in a rule, does not exist.
 too many errors, aborting compilation
 Errors detected during compilation; the game may not work correctly.
 Return a repaired version of the code that addresses these errors. First, reason about your task and determine the best plan of action. Then, write your code. Return your code in full, inside a ```plaintext code block.

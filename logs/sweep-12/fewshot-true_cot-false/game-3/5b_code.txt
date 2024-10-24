@@ -1,0 +1,100 @@
+```plaintext
+title Light And Dark
+author YourName
+
+========
+OBJECTS
+========
+
+Background
+white
+
+Wall
+darkgray black
+00010
+11111
+01000
+11111
+00010
+
+Player
+black yellow
+.000.
+.111.
+.101.
+.111.
+.....
+
+LightSource
+yellow
+.....
+.....
+..0..
+.....
+.....
+
+Target
+lightblue
+.....
+.000.
+.0.0.
+.000.
+.....
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Player
+L = LightSource
+@ = Target
+
+=======
+SOUNDS
+=======
+
+player move 81000012
+target reach 51001234
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Player, Wall, LightSource, Target
+
+======
+RULES
+======
+
+[ > Player | LightSource ] -> [ > Player | > LightSource ]
+
+(Activate targets when light is over them)
+[ LightSource | Target ] -> [ LightSource | ]
+
+(remove light from empty spaces)
+[ LightSource | no LightSource no Player no Target ] -> [ ]
+
+==============
+WINCONDITIONS
+==============
+
+no Target
+
+=======
+LEVELS
+=======
+
+#########
+#..@...@#
+#.L#.#..#
+#..P..@.#
+#....@..#
+#########
+```
+
+In the corrected code:
+- Changed the sound tokens to valid sound verbs like `player move` and `target reach`.
+- Fixed the rule intended to activate targets by ensuring the patterns have the same number of cells on the left and right sides.

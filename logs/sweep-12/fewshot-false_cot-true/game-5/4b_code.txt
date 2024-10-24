@@ -1,0 +1,71 @@
+In order to make the second level solvable, we need to ensure that every box can reach a target. Here is the corrected code with an adjustment to the second level:
+
+```plaintext
+===========
+OBJECTS
+===========
+Background
+WHITE
+
+Wall
+BLACK
+
+Player
+BLUE
+
+Box
+RED
+
+Target
+YELLOW
+
+============
+LEGEND
+============
+. = Background
+# = Wall
+P = Player
+B = Box
+T = Target
+
+=======
+SOUNDS
+=======
+
+===============
+COLLISIONLAYERS
+===============
+Background
+Player, Box
+Wall, Target
+
+========
+RULES
+========
+[Player | Box] -> [ > Player | > Box] 
+
+========
+WINCONDITIONS
+========
+All Box on Target
+
+=======
+LEVELS
+=======
+#####
+#...#
+#.T.#
+#BTP#
+#...#
+#####
+
+######
+#.T..#
+#..B.#
+#P.T.#
+#.T..#
+######
+
+```
+
+In this corrected version, I've moved the position of certain elements in the second level to ensure that the box has a clear path to reach the target.

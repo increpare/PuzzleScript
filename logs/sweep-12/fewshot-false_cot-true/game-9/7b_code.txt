@@ -1,0 +1,135 @@
+The error messages you're encountering suggest there are several problems with your level definitions:
+1. The semicolon (`;`) is not needed and causes errors as it is not part of the PuzzleScript syntax for defining levels, nor is it defined in the legend.
+2. The lines indicating "Level 1", "Level 2", etc., cannot be interpreted because they are not part of PuzzleScript syntax and are recognized as object keys.
+3. Each level map must be rectangular, meaning each line must have the same length.
+
+Given these issues, we need to remove the comments that are not compatible with PuzzleScript and ensure each level board has equal row and column lengths where necessary.
+
+Here's the revised code:
+
+```plaintext
+title Sokoban Puzzle
+
+========
+OBJECTS
+========
+
+Background
+black
+00000
+00000
+00000
+00000
+00000
+
+Player
+yellow
+.000.
+00000
+00000
+.000.
+..0..
+
+Wall
+gray
+00000
+00000
+00000
+00000
+00000
+
+Box
+brown
+.000.
+00000
+00000
+00000
+.000.
+
+Target
+green
+.....
+..0..
+.000.
+..0..
+.....
+
+BoxOnTarget
+darkgreen
+.000.
+00000
+00000
+00000
+.000.
+
+========
+LEGEND
+========
+
+. = Background
+P = Player
+# = Wall
+B = Box
+T = Target
+O = BoxOnTarget
+
+========
+SOUNDS
+========
+
+==================
+COLLISIONLAYERS
+==================
+
+Background
+Player
+Wall, Box, BoxOnTarget
+Target
+
+=========
+RULES
+=========
+
+[> Player | ] -> [> Player | ]
+
+[> Player | Box] -> [> Player | > Box]
+[> Player | BoxOnTarget] -> [> Player | > BoxOnTarget]
+
+[ Box | Target ] -> [ BoxOnTarget | Background ]
+[ BoxOnTarget | Background ] -> [ Box | Background ]
+
+[ BoxOnTarget ] -> [ Box ]
+[ Box | Target ] -> [ BoxOnTarget ]
+
+=============
+WINCONDITIONS
+=============
+
+All BoxOnTarget
+
+========
+LEVELS
+========
+
+#####
+#...#
+#.#.#
+#PB.#
+#####
+
+######
+#....#
+#..#B#
+#P.T.#
+######
+
+######
+#....#
+#..#B#
+#P.BT#
+######
+```
+
+### Explanation:
+- Removed all semicolons and descriptions that were causing errors.
+- Validated that each map rows are of equal length to maintain a rectangular shape. Upon inspection, they were already correct here, but ensuring no previous changes were made to their dimensions just in case.

@@ -1,0 +1,88 @@
+```plaintext
+title Color Changer
+author AI Assistant
+homepage www.puzzlescript.net
+
+========
+OBJECTS
+========
+
+Background
+lightgray
+
+Player
+blue
+..0..
+.000.
+..0..
+.....
+
+Goal
+red
+.....
+.....
+.....
+.....
+
+Target
+yellow
+.....
+.....
+..0..
+.....
+
+Wall
+darkgray
+00000
+00000
+00000
+00000
+00000
+
+=======
+LEGEND
+=======
+
+. = Background
+P = Player
+G = Goal
+T = Target
+# = Wall
+
+=======
+SOUNDS
+=======
+
+sfx1 29894906
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Player, Goal, Target, Wall
+
+======
+RULES
+======
+
+[ Player | Goal ] -> [ Player | Target ] sfx1
+
+==============
+WINCONDITIONS
+==============
+
+all Target on Goal
+
+=======
+LEVELS
+=======
+
+#######
+#..G..#
+#..G..#
+#..G..#
+#..P..#
+#######
+
+```

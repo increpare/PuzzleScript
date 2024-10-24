@@ -1,0 +1,131 @@
+```plaintext
+title Magic Mirror
+author PuzzleMaster
+
+========
+OBJECTS
+========
+
+Background
+#ADD8E6
+.....
+.....
+.....
+.....
+.....
+
+Wall
+#8B4513
+.....
+.....
+.....
+.....
+.....
+
+Player
+#FFD700 #FF8C00 #ADD8E6 #000000 #FFFFFF
+.000.
+.111.
+.2220
+.111.
+.222.
+
+Mirror
+#C0C0C0 #FFFFFF #000000
+.111.
+.1001
+.1221
+.1001
+.111.
+
+PortalEntrance
+#4B0082 #8A2BE2
+22222
+21112
+21012
+21112
+22222
+
+PortalExit
+#32CD32 #7CFC00
+33333
+32223
+32123
+32223
+33333
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Player
+M = Mirror
+E = PortalEntrance
+X = PortalExit
+
+=======
+SOUNDS
+=======
+
+MirrorTouch
+66203702
+
+PortalTravel
+93301106
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Wall
+PortalExit, PortalEntrance
+Player, Mirror
+
+======
+RULES
+======
+
+# Player can push mirrors
+[ > Player | Mirror ] -> [ > Player | > Mirror ]
+
+# Mirrors can't be pushed into walls
+[ > Mirror | Wall ] -> [ Mirror | Wall ]
+
+# Player interaction with portal entrance
+[ Player PortalEntrance ] -> [ PortalTravel ]
+[ PortalTravel ] -> [ Background ] again
+[ Background PortalExit ] -> [ Player PortalExit ]
+
+# Portal sound effect when used
+[ PortalTravel ] -> [ PortalTravel ] SFX1
+
+==============
+WINCONDITIONS
+==============
+
+all PortalExit on Player
+
+=======
+LEVELS
+=======
+
+##########
+#........#
+#..#M#...#
+#.PE..M..#
+#........#
+#..M.#...#
+#...X....#
+##########
+
+message Collect the light, move the mirrors, and transport through portals!
+```
+
+### Changes Made:
+- **Player Object**: Added additional colors to the palette to ensure consistency with the sprite pattern usage.
+- **Mirror Object**: Added additional colors to the palette to ensure consistency with the sprite pattern usage.
+
+These fixes ensure that each color index used in the 5x5 sprite patterns is accounted for in the color definitions.

@@ -1,0 +1,121 @@
+The task here is to correct the errors in the given PuzzleScript code for the game "GemCollector". The errors are related to the sound definitions and how they're referenced in the rules.
+
+Issues in the Code:
+1. The error messages indicate that the sounds "collect" and "move" have unexpected tokens. This suggests that they might not be defined correctly in the `SOUNDS` section, or the way they're referenced in the rules is incorrect.
+2. The current use of `sfx collect` and `sfx move` inside rules is incorrect. The correct way to trigger sound effects is directly from the rule without the `sfx` keyword.
+
+Plan of Action:
+- First, define the sounds correctly in the `SOUNDS` section.
+- Second, remove the `sfx` keyword when referring to sound effects within the rules. The sound should be directly linked by using `soundID` numbers after the rule command where sounds are needed. Replace it with the appropriate predefined sound names if using numbers doesn't work.
+  
+Let's apply these fixes below:
+
+```plaintext
+title GemCollector
+author YourName
+homepage www.example.com
+
+========
+OBJECTS
+========
+
+Background
+blue
+00000
+00000
+00000
+00000
+00000
+
+Player
+green
+..0..
+.000.
+.000.
+..0..
+.....
+
+Gem
+yellow
+.....
+..0..
+.000.
+..0..
+.....
+
+Wall
+black darkgrey
+11111
+11111
+11111
+11111
+11111
+
+========
+LEGEND
+========
+
+. = Background
+P = Player
+G = Gem
+# = Wall
+
+===========
+SOUNDS
+===========
+
+collect DESTROY 53868302
+move 12345678
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Player, Gem, Wall
+
+======
+RULES
+======
+
+[ > Player | Gem ] -> [ > Player | Background ] collect
+[ > Player | ] -> [ > Player | ] move
+
+==============
+WINCONDITIONS
+==============
+
+no Gem
+
+=======
+LEVELS
+=======
+
+# Level 1
+#####
+#P..#
+#..G#
+#...#
+#####
+
+# Level 2
+######
+#P...#
+#.#.G#
+#.#..#
+#..G.#
+######
+
+# Level 3
+#######
+#P....#
+#.###.#
+#..G..#
+#.#..#
+#.G..#
+#######
+```
+
+In this updated version:
+- I added "collect" with the appropriate sound properties under the `SOUNDS` section and marked it with `DESTROY` since it aligns with gem collection (gem disappears).
+- I used the sound name directly inside the rules when specifying actions.

@@ -1,0 +1,139 @@
+When creating a complete PuzzleScript game, we need to consider the following components:
+
+1. **Title and Metadata**: We should define the game's title and author.
+
+2. **Objects**: Define the different objects that will be used in the game, including the player, walls, background, and any interactive elements.
+
+3. **Legend**: Create shorthand notations for game elements to simplify level design.
+
+4. **Sound**: Define any sound effects that will be used in the game.
+
+5. **Collision Layers**: Determine which objects can interact or collide with each other.
+
+6. **Rules**: Implement the game's logic through rules that define what happens when objects interact or when various conditions are met.
+
+7. **Win Conditions**: Define how the player can win the game or complete a level.
+
+8. **Levels**: Design the levels of the game.
+
+Here's a simple example of a game where the player must navigate a maze to reach a goal.
+
+```plaintext
+title Maze Explorer
+author YourName
+
+========
+OBJECTS
+========
+
+Background
+black
+
+Wall
+gray
+11111
+11111
+11111
+11111
+11111
+
+Player
+lightgreen
+.000.
+.1.1.
+.000.
+.1.1.
+.000.
+
+Goal
+yellow
+.....
+..0..
+.000.
+..0..
+.....
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Player
+G = Goal
+
+=======
+SOUNDS
+=======
+
+EndLevel 12345678
+EndGame 87654321
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Goal
+Player, Wall
+
+======
+RULES
+======
+
+[ P | G ] -> [ P ]
+
+==============
+WINCONDITIONS
+==============
+
+All Goal on Player
+
+=======
+LEVELS
+=======
+
+#######
+#..P..#
+#.###.#
+#.....#
+#.###.#
+#..G..#
+#######
+
+#######
+#P....#
+#....##
+#.###.#
+#.....#
+##..G.#
+#######
+
+#######
+#..G..#
+#.###.#
+#.....#
+#.###.#
+#..P..#
+#######
+```
+
+### Explanation:
+
+1. **Title**: "Maze Explorer" – This is a simple maze navigation game.
+   
+2. **Objects**: Includes `Background`, `Wall`, `Player`, and `Goal`. Each has a defined color and sprite.
+
+3. **Legend**: Symbols are assigned for convenience in typing levels.
+
+4. **Sound**: Sound assets are given placeholder IDs.
+
+5. **Collision Layers**: Allows you to separate objects into different layers ensuring proper collision detection. `Player` can collide with `Wall`.
+
+6. **Rules**: Simple rule specifying what happens when `Player` reaches the `Goal`.
+
+7. **Win Conditions**: Declares when a level is won, i.e., when `Player` is on `Goal`.
+
+8. **Levels**: A few simple labyrinth challenges are defined for the player to navigate.
+
+This example should guide you on crafting a basic PuzzleScript game with clear components and rules. Adjust colors, sprites, and rules to create a unique experience.

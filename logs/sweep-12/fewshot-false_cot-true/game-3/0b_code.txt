@@ -1,0 +1,133 @@
+To create a complete PuzzleScript game, we need to follow a structured approach. PuzzleScript games have specific components, which include:
+
+1. **Objects**: Define all necessary game objects (sprites).
+2. **Legend**: Map text names to the objects for use in levels.
+3. **Sounds**: Define any sound effects (can be optional).
+4. **Collision Layers**: Specify layers to control movement interactions.
+5. **Rules**: Set up the rules that govern the game's mechanics.
+6. **Win Conditions**: Define conditions to end a level successfully.
+7. **Levels**: Design one or more levels that use the defined objects and rules.
+
+### Plan for the Game:
+- **Theme**: Create a simple Sokoban-style puzzle game where the player pushes crates onto targets.
+- **Objects**: Player, Wall, Crate, Target.
+- **Legend**: Create mappings for the objects.
+- **Rules**: Allow player to move and push crates; crates cannot move through walls or other crates.
+- **Win Conditions**: All crates are on the targets.
+- **Levels**: Design a basic level that demonstrates the mechanics.
+
+Now, let's write the code for this game following these steps:
+
+```plaintext
+========
+OBJECTS
+========
+
+Background
+B
+Yellow
+
+Player
+P
+Blue
+.000.
+.0.0.
+00000
+.0.0.
+.0.0.
+
+Wall
+W
+Gray
+00000
+00000
+00000
+00000
+00000
+
+Crate
+C
+Red
+.0.0.
+00000
+0.0.0
+00000
+.0.0.
+
+Target
+T
+Green
+.....
+..0..
+.000.
+..0..
+.....
+
+CrateOnTarget
+G
+Orange
+.0.0.
+0LLL0
+LL0LL
+0LLL0
+.0.0.
+
+========
+LEGEND
+========
+
+.=Background
+P=Player
+W=Wall
+C=Crate
+T=Target
+G=CrateOnTarget
+
+==============
+COLLISIONLAYERS
+==============
+
+Background
+Player, Crate, CrateOnTarget
+Wall
+Target
+
+======
+RULES
+======
+
+[Player | Crate] -> [ | Player] [Crate | ]
+[Crate | Target] -> [CrateOnTarget | Target]
+[CrateOnTarget | Target] -> [Crate | Target]
+
+===========
+WINCONDITIONS
+===========
+
+No Crate
+
+======
+LEVELS
+======
+
+######
+#..P.#
+#..C.#
+#..W.#
+#...T#
+######
+
+```
+
+### Explanation:
+- **Objects**: We've defined sprites for each important object using a simple ASCII art design in a colorful format (Background, Player, Wall, Crate, Target, and a transformation of a crate on a target).
+- **Legend**: This provides shorthand references for each object.
+- **Collision Layers**: Set up layers to handle the interaction; the player and crates occupy the same layer to enable interaction.
+- **Rules**: 
+  - Player can push crates.
+  - Crates transform into `CrateOnTarget` upon reaching a target.
+  - Reverting crates from `CrateOnTarget` back to regular crates when moved off targets.
+- **Win Conditions**: The game is won when no regular crates remain, meaning all have been transformed to `CrateOnTarget`.
+- **Levels**: A straightforward level to illustrate the gameplay where the player needs to push one crate onto a target.
+
+This is a basic implementation to get the game mechanics started. You can build upon this by adding more rules, levels, and refining the win conditions for a complete game experience.

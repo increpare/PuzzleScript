@@ -1,0 +1,128 @@
+Here's the repaired version of your PuzzleScript game code:
+
+```plaintext
+Title: Treasure Hunter
+
+Author: Your Name
+
+Homepage: http://www.example.com
+
+========
+OBJECTS
+========
+
+Background
+lightgray
+00000
+00000
+00000
+00000
+00000
+
+Player
+Red
+.....
+..0..
+.000.
+..0..
+.....
+
+Wall
+DarkGray
+.....
+.....
+.....
+.....
+.....
+
+Treasure
+Yellow
+.000.
+.0.0.
+00000
+.0.0.
+.000.
+
+Goal
+Green
+.....
+.000.
+.0.0.
+.000.
+.....
+
+========
+LEGEND
+========
+
+. = Background
+P = Player
+# = Wall
+T = Treasure
+G = Goal
+
+========
+SOUNDS
+========
+
+Player Move trebleup
+
+========
+COLLISIONLAYERS
+========
+
+Background
+Player
+Wall
+Treasure
+Goal
+
+========
+RULES
+========
+
+[> Player | Treasure] -> [Player | Goal]
+[Player | Goal] -> [Goal]
+
+========
+WINCONDITIONS
+========
+
+No Treasure
+
+========
+LEVELS
+========
+
+#####
+#...#
+#P.T#
+#...#
+##### 
+
+#######
+#.....#
+#.#.#.#
+#.#.T.#
+#P#.#G#
+#.....#
+#######
+
+#########
+#..T..#.#
+#.#.##..#
+#...##..#
+#.P..G###
+#...T...#
+#########
+
+```
+
+### Changes Made:
+1. **SOUNDS Section**: Corrected the sound trigger by removing the word "Treasure". The correct syntax for sound associations should be `Player Move direction sound`.
+   
+2. **LEVELS Section**: Removed level headers (`/0`, `/1`, `/2`), as PuzzleScript does not require explicit level identifiers. By default, all level definitions are read sequentially, and the header markers were mistyped.
+
+3. **Rectangular Maps**: Checked that all rows in each level have the same length, as required by PuzzleScript. The earlier maps already seemed rectangular, but any non-compliance error is typically due to trailing spaces or inconsistent row lengths in level definitions, which should be closely monitored.
+
+With these changes, the game should compile without errors.

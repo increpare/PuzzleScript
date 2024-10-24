@@ -1,0 +1,1420 @@
+SYSTEM PROMPT:
+You are a game designer, familiar with the PuzzleScript game description language. Here are some example games, for inspiration (do not reproduce these games exactly):
+
+title ScriptCross
+author Dennis Au
+homepage www.puzzlescript.net
+
+========
+OBJECTS
+========
+
+Background
+White
+
+Target
+Black
+
+Fill
+Black
+
+Cross
+LightGrey
+0...0
+.0.0.
+..0..
+.0.0.
+0...0
+
+
+Player
+Green
+00000
+0...0
+0...0
+0...0
+00000
+
+Border #
+LightGrey
+
+(Clues 0-9)
+Clue0 0
+LightGrey
+
+Clue1 1
+LightGrey Black
+00000
+0...0
+0.1.0
+0...0
+00000
+
+Clue2 2
+LightGrey Black
+00000
+0..10
+0...0
+01..0
+00000
+
+Clue3 3
+LightGrey Black
+00000
+0..10
+0.1.0
+01..0
+00000
+
+Clue4 4
+LightGrey Black
+00000
+01.10
+0...0
+01.10
+00000
+
+Clue5 5
+LightGrey Black
+00000
+01.10
+0.1.0
+01.10
+00000
+
+Clue6 6
+LightGrey Black
+00000
+01.10
+01.10
+01.10
+00000
+
+Clue7 7
+LightGrey Black
+00000
+01110
+0.1.0
+01110
+00000
+
+Clue8 8
+LightGrey Black
+00000
+01110
+0.110
+01110
+00000
+
+Clue9 9
+LightGrey Black
+00000
+01110
+01110
+01110
+00000
+
+
+=======
+LEGEND
+=======
+
+. = Background
+P = Player and Border
+b = Target
+Clue = Clue0 or Clue1 or Clue2 or Clue3 or Clue4 or Clue5 or Clue6 or Clue7 or Clue8 or Clue9
+NoEmpty = Fill or Cross or Clue or Border
+
+=======
+SOUNDS
+=======
+EndLevel 37348103
+EndGame 64173909
+
+================
+COLLISIONLAYERS
+================
+
+(switch order of target and background to see the solutions)
+Target
+Background
+Border, Clue, Fill, Cross
+Player
+
+
+======
+RULES
+======
+
+[Action Player no NoEmpty] -> [Player Fill]
+[Action Player Fill] -> [Player Cross]
+[Action Player Cross] -> [Player]
+
+
+
+==============
+WINCONDITIONS
+==============
+
+All Target on Fill
+All Fill on Target
+
+=======
+LEVELS
+=======
+
+(P123456789)
+
+message level 1 - oh so stable
+
+P12
+1.b
+2bb
+
+message level 2 - it is what it is
+P#1###
+##113#
+##311#
+3.bbb.
+1...b.
+3.bbb.
+1.b...
+3.bbb.
+
+message level 3 - i see you!
+P##1#1#
+###111#
+##.....
+11.b.b.
+##.....
+#3.bbb.
+##.....
+
+message level 4 - that's ace
+P#######1####
+#######111###
+######14141##
+#####8111118#
+###8.bbbbbbb.
+##11.b.....b.
+#131.b.bbb.b.
+1111.b.b.b.b.
+#131.b.bbb.b.
+1111.b.b.b.b.
+##11.b.....b.
+###8.bbbbbbb.
+####.........
+
+message congratulations!
+
+
+title Lunar Lockout
+homepage http://bit.ly/WMmQrq
+
+========
+OBJECTS
+========
+
+Background
+Black
+
+Square
+LightGray Gray
+11111
+10001
+10001
+10001
+11111
+
+Space
+Black
+
+Target
+Red
+.....
+.000.
+.0.0.
+.000.
+.....
+
+Soldier
+DarkBlue LightGray Gray
+11111
+10001
+10201
+10001
+11111
+
+Captain
+Green LightGray Gray
+11111
+10001
+10201
+10001
+11111
+
+Player
+Orange
+.....
+.....
+..0..
+.....
+.....
+
+
+=======
+LEGEND
+=======
+
+Pawn = Soldier or Captain
+Block = Pawn
+
+@ = Space
+_ = Square
+P = Square and Player
+* = Square and Target
+O = Soldier
+$ = Soldier and Target
+C = Captain
+
+=======
+SOUNDS
+=======
+
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Space, Square
+Target
+Pawn, Captain
+Player
+
+======
+RULES
+======
+
+[ > Player | Space ] -> [ Player | Space ]
+[ > Player Pawn ] -> [ Player > Pawn ]
+[ > Pawn | Block ] -> [ Pawn | Block ]
+[ > Pawn | Square ] -> [ Square | > Pawn ]
+[ > Pawn | Space ] -> [ Square | Space ]
+
+==============
+WINCONDITIONS
+==============
+
+some Captain on Target
+
+=======
+LEVELS
+=======
+
+message challenge 4
+@@@@@@@
+@O___O@
+@___O_@
+@_P*__@
+@__O__@
+@_C___@
+@@@@@@@
+
+message challenge 16
+@@@@@@@
+@O_C__@
+@_____@
+@_O*_O@
+@__P__@
+@_O___@
+@@@@@@@
+
+message challenge 21
+@@@@@@@
+@__C__@
+@__O__@
+@_P$_O@
+@O____@
+@___O_@
+@@@@@@@
+
+message challenge 37
+@@@@@@@
+@O__OO@
+@_____@
+@_P*__@
+@O__C_@
+@_____@
+@@@@@@@
+
+
+
+title cute train
+author Mark Wonnacott
+homepage http://twitter.com/ragzouken
+
+flickscreen 16x10
+color_palette pastel
+youtube pTgEXwzk7XU
+
+noundo
+norestart
+
+========
+OBJECTS
+========
+
+Background
+lightgreen green
+01000
+00110
+10010
+10100
+01001
+
+Water
+blue white lightblue
+20010
+02002
+12020
+00220
+02002
+
+Water2
+blue white lightblue
+02000
+20210
+00202
+01022
+20200
+
+Gerald
+blue black
+.000.
+01010
+10001
+01110
+.000.
+
+Mountain
+darkbrown darkbrown
+..0..
+.10..
+.000.
+0000.
+11001
+
+Forest
+darkgreen brown
+.000.
+00000
+00000
+00100
+.111.
+
+Beach
+yellow white
+00010
+01000
+00001
+00100
+10000
+
+Player
+yellow black
+.000.
+01010
+10001
+01110
+.000.
+
+GhostVTrack
+yellow
+GhostHTrack
+yellow
+GhostURTrack
+yellow
+GhostULTrack
+yellow
+GhostDLTrack
+yellow
+GhostDRTrack
+yellow
+
+VTrack
+grey darkbrown
+0...0
+0...0
+01110
+0...0
+0...0
+
+HTrack
+grey darkbrown
+00000
+..1..
+..1..
+..1..
+00000
+
+Structs
+black darkbrown
+11111
+10101
+11111
+10101
+11111
+
+URTrack
+grey darkbrown
+...00
+..0..
+.01..
+0..1.
+0...1
+
+ULTrack
+grey darkbrown
+00...
+..0..
+..10.
+.1..0
+1...0
+
+DLTrack
+grey darkbrown
+1...0
+.1..0
+..10.
+..0..
+00...
+
+DRTrack
+grey darkbrown
+0...1
+0..1.
+.01..
+..0..
+...00
+
+UTrain
+red black darkred
+.000.
+01110
+00000
+00100
+00000
+
+RTrain
+red black darkred
+0000.
+00010
+01010
+00010
+0000.
+
+LTrain
+red black darkred
+.0000
+01000
+01010
+01000
+.0000
+
+DTrain
+red black darkred
+00000
+00100
+00000
+01110
+.000.
+
+Cart
+red black darkred
+22222
+21112
+21112
+21112
+22222
+
+Smoke1
+white
+..0..
+.0.0.
+0.0.0
+.0.0.
+..0..
+
+Smoke2
+white
+.....
+.0.0.
+..0..
+.0.0.
+.....
+
+Smoke3
+white
+.....
+..0..
+.0.0.
+..0..
+.....
+
+Switch
+red black
+...0.
+..1..
+.1...
+.111.
+.....
+
+=======
+LEGEND
+=======
+
+. = Background
+^ = Mountain
+% = Forest
+~ = Water
+, = Beach
+
+| = VTrack
+- = HTrack
+r = URTrack
+¬ = ULTrack
+l = DRTrack
+j = DLTrack
+X = VTrack and Structs
+Z = HTrack and Structs
+Q = ULTrack and Structs
+
+P = Player
+
+T = VTrack and UTrain
+C = VTrack and Cart
+
+[ = HTrack and RTrain
+] = HTrack and Cart
+
+/ = Switch
+
+1 = GhostHTrack and URTrack
+! = HTrack and GhostURTrack
+2 = HTrack and GhostDRTrack
+3 = HTrack and GhostULTrack
+4 = GhostHTrack and DLTrack
+5 = GhostVTrack and URTrack
+6 = GhostVTrack and DRTrack
+7 = GhostVTrack and ULTrack
+8 = GhostVTrack and DLTrack
+
+_ = Beach and HTrack
+
+WaterR = Water or Water2
+
+Ghost = GhostHTrack or GhostVTrack or GhostULTrack or GhostURTrack or GhostDLTrack or GhostDRTrack
+Track = HTrack or VTrack or ULTrack or URTrack or DLTrack or DRTrack
+
+Train = UTrain or DTrain or LTrain or RTrain
+Vehicle = Train or Cart
+Mover = Vehicle or Player
+
+G = Gerald and Structs
+
+=======
+SOUNDS
+=======
+
+Train move 91301709
+SFX1 53409305
+SFX2 38557307
+SFX3 99431502
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Beach GhostVTrack GhostHTrack GhostURTrack GhostULTrack GhostDLTrack GhostDRTrack
+Structs
+VTrack HTrack URTrack ULTrack DLTrack DRTrack Switch
+Water Water2 Mountain Forest Player UTrain RTrain LTrain DTrain Cart Gerald
+Smoke1 Smoke2 Smoke3
+
+======
+RULES
+======
+
+(animate water)
+[        WaterR ] -> [ action WaterR ]
+[ action WaterR ] -> [ random WaterR ]
+
+[ action Player no Structs | Cart ] [ Train ] -> [ Player | Cart ] [ action Train ]
+
+(move the train if we're on the impassable structs)
+[ Structs Mover ] [ Train ] -> [ Structs Mover ] [ action Train ]
+
+[ action Train ] -> [ action Train Smoke1 ]
+
+[ action UTrain ] -> [    up UTrain ]
+[ action DTrain ] -> [  down DTrain ]
+[ action RTrain ] -> [ right RTrain ]
+[ action LTrain ] -> [  left LTrain ]
+
+late [ Mover Structs ] -> [ Mover Structs ] again (repeat if the train is still on structs)
+
+(cart follows train, player follows cart)
+[ Cart   | moving Train ] -> [ > Cart   | moving Train ]
+[ Player | moving Cart  ] -> [ > Player | moving Cart  ]
+
+[ > Player | Structs no Gerald no Cart ] -> [ Player | Structs ] message It's dangerous to walk along railway bridges!
+
+(endgame message)
+[ >      Player | Gerald ] -> [ Player | Gerald ] message you made it! thanks for playing.
+[ action Player | Gerald ] -> [ Player | Gerald ] message you made it! thanks for playing.
+
+(train turns when entering corners)
+up    [ > UTrain | URTrack ] -> [ > RTrain | URTrack ]
+up    [ > UTrain | ULTrack ] -> [ > LTrain | ULTrack ]
+
+right [ > RTrain | ULTrack ] -> [ > DTrain | ULTrack ]
+right [ > RTrain | DLTrack ] -> [ > UTrain | DLTrack ]
+
+down  [ > DTrain | DRTrack ] -> [ > RTrain | DRTrack ]
+down  [ > DTrain | DLTrack ] -> [ > LTrain | DLTrack ]
+
+left  [ > LTrain | URTrack ] -> [ > DTrain | URTrack ]
+left  [ > LTrain | DRTrack ] -> [ > UTrain | DRTrack ]
+
+(animate smoke)
+[ Smoke3 ] -> [ ]
+[ Smoke2 ] -> [ Smoke3 ]
+[ Smoke1 ] -> [ Smoke2 ]
+
+[ action Player Switch ] -> [ Player action Switch ]
+
+(switch all uncovered tracks at once)
+[ action Switch ] [ Ghost Vehicle ] -> [ action Switch ] [ Ghost Vehicle ] SFX3 (play blocking sound if switch tracks are covered while switching)
+[ action Switch ] [ Ghost no Vehicle ] -> [ action Switch ] [ action Ghost ] SFX2
+
+[ action GhostHTrack URTrack no Vehicle ] -> [ HTrack GhostURTrack ]
+[ HTrack action GhostURTrack no Vehicle ] -> [ GhostHTrack URTrack ]
+[ action GhostHTrack DRTrack no Vehicle ] -> [ HTrack GhostDRTrack ]
+[ HTrack action GhostDRTrack no Vehicle ] -> [ GhostHTrack DRTrack ]
+[ action GhostHTrack ULTrack no Vehicle ] -> [ HTrack GhostULTrack ]
+[ HTrack action GhostULTrack no Vehicle ] -> [ GhostHTrack ULTrack ]
+[ action GhostHTrack DLTrack no Vehicle ] -> [ HTrack GhostDLTrack ]
+[ HTrack action GhostDLTrack no Vehicle ] -> [ GhostHTrack DLTrack ]
+
+[ action GhostVTrack URTrack no Vehicle ] -> [ VTrack GhostURTrack ]
+[ VTrack action GhostURTrack no Vehicle ] -> [ GhostVTrack URTrack ]
+[ action GhostVTrack DRTrack no Vehicle ] -> [ VTrack GhostDRTrack ]
+[ VTrack action GhostDRTrack no Vehicle ] -> [ GhostVTrack DRTrack ]
+[ action GhostVTrack ULTrack no Vehicle ] -> [ VTrack GhostULTrack ]
+[ VTrack action GhostULTrack no Vehicle ] -> [ GhostVTrack ULTrack ]
+[ action GhostVTrack DLTrack no Vehicle ] -> [ VTrack GhostDLTrack ]
+[ VTrack action GhostDLTrack no Vehicle ] -> [ GhostVTrack DLTrack ]
+
+==============
+WINCONDITIONS
+==============
+
+=======
+LEVELS
+=======
+
+(feel free to try making more puzzles!
+
+editing tip: copy out a few rows of screens to edit in isolation
+
+* use bridges (structs) to force the train over junctions before there's a chance to switch them
+* use bridges to make switches unreachable until junctions have been crossed
+* use the train itself and narrow passages to make switches unreachable until junctions have been crossed)
+
+message welcome to the breezy isles!
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~,,,,~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~,,,,,,,~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~,,..,,,,,~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~,,,p.,,,,,~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~,,....,,,,,~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~,,,.....,,,,~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~,,,......,,,~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~,,.......,,,,,,~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~,,,........,,,,,,,~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~,,,..........,,,,,,,,~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~,,...............,,,,,,~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~,~~,...%.........%....,,,,~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~,,,,,~..%.................,,,,~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~,,,,,,,,..~~%%%%%.r-------¬.....,,,,~~~~~~~~~~~~~~~~~~~~
+,,,,,,,,,,,,,....%%~%%%%%%t.......l-¬.....,,,~~~~~~~~~~~~~~~~~~~
+,,,,,,..........%%%~~%%%%%c%%.......l-¬....,,~~~~~~~~~~~~~~~~~~~
+........%%%..%%%%%%%~%%%%%|%%%%%....|.l--¬..,,~~~~~~~~~~~~~~~~~~
+.%%%%.%%%%%%%%%%%%%%~%%%%%|%%%%%%%..|...%l¬.,,~~~~~~~~~~~~~~~~~~
+%%%%%%%%%%%%%%%%%%%%~%%%%%|%%%%%%%%.l¬..%%|.,,~~~~~~~~~~~~~~~~~~
+%%%%%%%%%%%%%%%%%%%%~%%%%%|%%%%%%%%..|.%%%|.,,~~~~~~~~~~~~~~~~~~
+%%%%r---------------z-¬%%%|%%%%%%....|%%%%|.,,~~~~~~~~~~~~~~~~~~
+%%.rj........%%%%%%%~%l¬%.|..........|%%%rj,,,~~~~~~~~~~~~~~~~~~
+%%rj.~~~~G~~~~%%%%%%~^%l--¬..........l---j.,,,~~~~~~~~~~~~~~~~~~
+%.|.~~~~~x~~~~~%%%%^~^....|.....^^^........,,~~~~~~~~~~~~~~~~~~~
+%.|.~~~~~~~~~~~%%^^^~^....l¬...^^^^^^......,,~~~~~~~~~~~~~~~~~~~
+%.|.~~~~~~~~~~%%%^^^~^^^..^l¬^^^^^^^^^^^^^.,^^~~~~~~~~~~~~~~~~~~
+%%l¬.~~~~~~~%%%^^^^^~^^^^^^^l¬^^^^^^^^^^^^^^^^~~~~~~~~~~~~~~~~~~
+%%.|..~~~~%%%%^^^^^~~^^^^^^^^x~^^^^^^^^^^^^^^^^~~~~~~~~~~~~~~~~~
+%%%|.%%%%%%%%^^^^^^~^^^^^^^^~x~^^^^^^^^^^^^^^^^~~~~~~~~~~~~~~~~~
+%%%x%%%%%%%%%^^^^^~~^^^^^^^^~x~^^^^^^^^^^^^^^^^^^^^^^~~~~~~~~~~~
+%%rj%%%%%%%%%^^^^^^~^^^^^^^~~x~%...%%^^%%^^^^^^^^^^^^^~~^~~~~~~~
+%%5z---¬%%%%%^^^^^^~^^^^^^^~^l¬..%r------¬%%^^^^^^^^^^^~~~~~~~~~
+%%|%%%%|%%%%^^^^^^^~~^^^^^~~^^l¬..|.%%%%%|%%%.^^^^^^^^^^^~~~~~~~
+%r4z---¬%%%%^^^^^^^^~~^^^^~^^^.l--l---3--j%%..^^^^^^^^^^^^~~~~~~
+%x./%r-¬%%%%^^^^^^^^^~~^^~~^^^........|%%%%%..^^^^^^^^^^^^^~~~~~
+%l--zj¬j%%%%^^^^^^^^^^~~~~^^^^%%..../.|.%%...^^^^^^^^^^^^^~~~~~~
+%%%%%%5z¬z¬%^^^^^^^^^^^^~~^^^^^%%%....|......^^^^^^^^^^^^^^~~~~~
+%%r--¬x%lzj%^^^^^^^^^^^^~^^^^^^%%%%..~x~~~~~~~^^^^^^^^^^^^^^~^~~
+%%|%%|x%%%%%%^^^^^^^^^^^~^^^^^^%%%%%~~x~~~~~~~~^^^^^^^^^^^^^~~~~
+%%|%%|x%%%%%%%%^^^^^^^^^~^^^^^^%%%%%~~x~~~~~~~~^^^^^^^^^^^^^~~~~
+%%r--47---¬¬---zzzzz1zzzzz¬^^^^^%%%..~x~~~~....%^^^^^^^^^^^~~~~~
+%%|%%%x%.%lj%%^^^^^^x^^^~^lz¬^^^^%%...|..%...%.%%%^^^^^^,,~~~~~~
+%%|%/.l¬.%%%^^^^^^^^x^^^~~^^lz¬^^%%...|.....%...........,,~~~^^~
+%%|%%%lj%%%^^^^^^^^^x^^^^~^~^^x^^^%%.rl-----------r-----__zzz¬^~
+%%l¬%%%%%^^^^^^^^^^^x^^^^~~^^^x^^^%%.|........%...|.....,,~~^x^~
+%%lj%%%%%^^^^^^^^^^r-¬^^^~~~~^x^^^^^%|...%^^^.....l¬../.,,~~~x~~
+%%%%%%%%^^^^^^^^^^^|l¬%^^~~~~~x~^^^^^|.^^^^^^^^^^..|....^^^~~x~~
+%%%%%%%^^^^^^^^^^%rj%|%^^^~~^^x^^^^^rj%%^^^^^^^%%.%l¬.^^^^^^~x~~
+%%%%%%^^^^^^^^^^^%|%%|%^^~^^~^x^^^%.|...%%..%.......|....,,~~x~~
+%%%%^^^^^^^^^^^^^%|/.|%^~^^^^^x^^^%.|.%.............|...,,,~^x^~
+%%^^^^^^^^^^^^^^^%l--8^^^^^^^rj%^^..|..r----!-------2--1___zzj^~
+^^^^^^^^^^^^^^^^^%|%^x^^^^^^^x^^^^%.|.%|%%..|....%..|%.|,,,~~^~~
+^^^^^^^^^^^^^^^^^^|.rlzz--3z-4¬^^^%.|.%l¬...|.......|..l¬,,~~~~~
+^^^^^^^^^^^^^^^^^^x^|^^^..|^..|%^^..l¬%%l-----------j...|,,,~~~~
+^^^^^^^^^^^^^^^^^^l-|---¬/|^.%|%^^%..|.%.%%.l¬%....%....|,,,,~~~
+^^^^^^^^^^^^^^^^^^^%|.%%l-j---j%^^^%.l¬.....%l¬.%.....%.|,,,,~~~
+^^^^^^^^^^^^^^^^^^^%|%%%%%%%%%%^^^^%%.|.%%%...l--¬......l¬,,,~~~
+^^^^^^^^^^^^^^^^^^^^x^^^^%%%^^^^^^^%%.|..%..%...%l-¬%....|,,,~~~
+^^^^^^^^^^^^^^^^^^^^x^^^^^^^^^^^^^^%%%|%%%%..%%....l¬....|,,,,~~
+^^^^^^^^^^^^^^^^^^^^x^^^^^^^^^^^^^^^%%|%^^%%......%.l¬...|.,,,~~
+^^^^^^^^^^^^^^^^^^^^x^%%%%%^^^^^^^^^^^|%%^^^^^^.%%...|...|^^^,~~
+^^^^^^^^^^^^^^^^^^^%|%%....%%^^^^^^^^%|%%%^^^^^^^^^%.|.^^|^^,,~~
+^^^^^^^^^^^^^^^^^^^%|%..%^..%%^^^^^%%rj%%^^^^^^^%....|...|^,,,~~
+^^^^^^^^^^^^^^^^^^^%|./.^%%..%%^^^%%.|.%..%......../.6---¬^,,,~~
+^^^^^^^^^^^^^^^^^^^%|..%^%....%^^^%..|%..%...%......rj...|.,,,~~
+^^^^^^^^^^^^^^^^^^^%l--!z1--¬--zzz----------------!-j..%.|,,,,~~
+^^^^^^^^^^^^^^^^^^^^%%%|^|..|.%^^^%..|.%.%..%..%..|...%..|,,,,~~
+^^^^^^^^^^^^^^^^^^^^^^^x^|%%|%^^^^%%.|%%%.........|......|,,,,~~
+^^^^^^^^^^^^^^^^^^^^^^^x^x^^x^^^^^^%%|%^^^^^^.....|...^^rj^,,~~~
+^^^^^^^^^^^^^^^^^^^^^^^x^x^^x^^^^^^^^|%.^^^^^^^^%.|.^^^^|^^^^~~~
+^^^^^^^^^^^^^^^^^^^^^^^x^x^^x^^^^^^^%|^^^^^^^^.%..|.....|,,^^~~~
+^^^^^^^^^^^^^^^^^^^^^^^x^x^^l¬^^^^^%%|%%^^^.%.....|...%.|,,,~~~~
+^^^^^^^^^^^^^^^^^^^^^^^x^lzzjx^^^^%%.|..%%........|.%...|,,,~~~~
+^^^^^^^^^^^^^^^^^^^^^^^l¬^^^^x^^^^%%.l¬%......%..rj..%..|,,,~~~~
+^^^^^^^^^^^^^^^^^^^^^^^^x^^^^x^^^^%%%.l¬.%......rj.....rj,,,~~~~
+^^^^^^^^^^^^^^^^^^^^^^^^x^^^^x^^^^^%%%%l--------j------j,,,,~~~~
+^^^^^^^^^^^^^^^^^^^^^^^^lzzzzj^^^^^^^%%%%%.%%%%...%%%%^^^,,,~~~~
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^%%%%%^^^^^^^^^^^^^^^^^~~
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^~~
+
+
+
+title Multi-word Dictionary Game
+author Sarah Northway
+homepage www.sarahnorthway.com
+
+(included with permission of Sarah Northway)
+
+========
+OBJECTS
+========
+
+Background
+pink
+
+Wall
+grey
+
+Player
+Blue
+
+Won
+yellow
+
+LetterC
+white black
+.111.
+1....
+1....
+1....
+.111.
+
+LetterA
+white black
+.111.
+1...1
+11111
+1...1
+1...1
+
+LetterT
+white black
+11111
+..1..
+..1..
+..1..
+..1..
+
+=======
+LEGEND
+=======
+
+Letter = LetterA or LetterC or LetterT
+. = Background
+# = Wall
+P = Player
+W = Won
+C = LetterC
+A = LetterA
+T = LetterT
+
+=======
+SOUNDS
+=======
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Won
+Player, Wall, Letter
+
+======
+RULES
+======
+
+[ >  Player | Letter ] -> [  >  Player | > Letter  ]
+[ <  Player | Letter ] -> [  <  Player | < Letter  ]
+
+late right [LetterC | LetterA | LetterT ] -> [ Won LetterC | Won LetterA | Won LetterT ] message You spelled CAT!
+late right [LetterA | LetterC | LetterT] -> [ Won LetterA | Won LetterC | Won LetterT ] message You spelled ACT!
+
+==============
+WINCONDITIONS
+==============
+
+Some Won
+
+=======
+LEVELS
+=======
+
+#########
+#.......#
+#.A..C..#
+#.......#
+#...P...#
+#.T.....#
+#########
+
+
+title neko puzzle
+author lexaloffle
+homepage www.lexaloffle.com
+
+(
+
+An inadequate but illustrative demake of one of my favourite puzzle games ever, by the extremely amicable Lexaloffle, and with his permission.
+
+www.lexaloffle.com/neko.htm
+
+The game proper has a lot of magic and love in it.
+
+)
+
+========
+OBJECTS
+========
+
+Background .
+darkblue
+
+Fruit F
+red green lightred
+..1..
+.000.
+00020
+00000
+.000.
+
+Player P
+gray white
+.1.1.
+10101
+11111
+.111.
+00.00
+
+=======
+LEGEND
+=======
+
+=========
+SOUNDS
+=========
+
+endlevel 97301508
+startgame 97301508
+endgame 97301508
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Player, Fruit
+
+======
+RULES
+======
+
+[ > Player | ... | Fruit ] -> [ | ... | Player ] 
+
+(if you're not sure what this line does, try removing it, and see what happens)
+[ > Player ] -> [ Player ] 
+
+==============
+WINCONDITIONS
+==============
+
+no Fruit
+
+=======
+LEVELS
+=======
+
+message level 1 of 10
+
+......F.
+........
+F......F
+......FF
+........
+........
+P.......
+
+message level 2 of 10
+
+........
+....P...
+...F.F..
+........
+........
+..F.FF..
+........
+
+message level 3 of 10
+
+........
+.FF....F
+........
+........
+F...P...
+........
+........
+F.F.....
+
+message level 4 of 10
+
+....F..F
+........
+.......F
+F.......
+P.......
+........
+F...F...
+
+message level 5 of 10
+
+........
+....F.P.
+F.F.....
+........
+F...F...
+..F.F...
+........
+
+message level 6 of 10
+
+F.....F.
+........
+........
+FF..F...
+F.....F.
+........
+.P......
+
+message level 7 of 10
+
+...FP..F
+F.F.....
+F......F
+........
+........
+..F.....
+........
+
+message level 8 of 10
+
+..F..P..
+........
+........
+.FFF....
+F..F..F.
+........
+........
+
+message level 9 of 10
+
+....F..F
+........
+.F..F...
+........
+.F.P..F.
+.F......
+........
+
+message level 10 of 10
+
+....F.F.
+........
+.F..F..F
+...F..F.
+.......F
+...FP...
+........
+
+message congratulations!
+
+
+title Octat
+author increpare
+homepage www.increpare.com
+
+noundo
+require_player_movement
+
+(
+    
+A port of a flash game I made.  The original's here:
+
+http://ded.increpare.com/~locus/octat/
+
+)
+
+========
+OBJECTS
+========
+
+Background
+purple
+.....
+.000.
+.000.
+.000.
+.....
+
+Activetile
+pink red
+00000
+0...0
+0...0
+0...0
+00000
+
+Target
+red
+0...0
+.0.0.
+..0..
+.0.0.
+0...0
+
+Player
+white
+.....
+.000.
+.000.
+.000.
+.....
+
+Void 0
+black
+
+Temp
+black
+
+=======
+LEGEND
+=======
+
+. = Background
+P = Player and Activetile
+a = Activetile
+x = Target
+y = target and Activetile
+
+=========
+SOUNDS
+=========
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Void
+Activetile
+Player
+Temp
+Target
+
+======
+RULES
+======
+
+[ > Player | no Activetile ] -> cancel
+
+late [ Activetile | Player ] -> [ Temp | Player ] 
+late [ no Temp | Player ] -> [ Activetile | Player ] 
+late [ Temp ] -> [ ] 
+
+late [ Activetile Void ] -> [ Void ] 
+
+==============
+WINCONDITIONS
+==============
+
+some Player on target
+
+=======
+LEVELS
+=======
+
+message level 1 of 8
+
+..........
+..........
+..........
+..........
+..........
+.x...ap...
+..........
+..........
+..........
+..........
+
+message level 2 of 8
+
+...........
+...........
+...........
+...........
+...........
+....xpa....
+...........
+...........
+...........
+...........
+
+message level 3 of 8
+
+...........
+...........
+...........
+...........
+..a........
+.axaaap....
+..a........
+...........
+...........
+...........
+
+message level 4 of 8
+
+...........
+...........
+...a.......
+..a.a......
+.a.a.a.....
+a.aya.a.ap.
+.a.a.a.....
+..a.a......
+...a.......
+...........
+
+message level 5 of 8
+
+...........
+...........
+...........
+...........
+aaaaaaaaaaa
+...y..ap...
+aaaaaaaaaaa
+...........
+...........
+...........
+
+message level 6 of 8
+
+000000....0
+000000..0.0
+000000..0..
+000000000..
+....A...0.0
+.AY.A...AAP
+....A...0.0
+000000000..
+000000..0..
+000000..0.0
+000000....0
+
+message level 7 of 8
+
+..AAA...000
+.AY.A...AP.
+..AAA...000
+
+message level 8 of 8
+
+0AAAA..00
+0AAAA..00
+YAAAA..AP
+0AAAA..00
+0AAAA..00
+
+message the end
+
+
+USER PROMPT:
+The following PuzzleScript game code:
+```plaintext
+title Sokoban Push
+author OpenAI
+homepage www.example.com
+
+========
+OBJECTS
+========
+
+Background
+#00FF00
+.....
+
+Wall
+grey darkgrey
+11111
+11111
+11111
+11111
+11111
+
+Player
+blue
+..0..
+.000.
+.0.0.
+.000.
+..0..
+
+Crate
+yellow
+.....
+.000.
+.0.0.
+.000.
+.....
+
+Target
+red darkred
+.....
+..1..
+.111.
+..1..
+.....
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Player
+C = Crate
+O = Target
+* = Crate and Target
+
+=========
+SOUNDS
+=========
+
+Crate PUSH 34710102
+Player MOVE 99454102
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Target
+Player, Wall, Crate
+
+======
+RULES
+======
+
+[ > Player | Crate ] -> [ > Player | > Crate ]
+[ > Crate | Crate ] -> [ > Crate | > Crate ]
+[ > Crate | Wall ] -> [ Crate | Wall ]
+
+==============
+WINCONDITIONS
+==============
+
+All Crate on Target
+
+=======
+LEVELS
+=======
+
+##########
+#.P..#...#
+#.C.O.#..#
+#...##...#
+##########
+
+##########
+#..#.....#
+#..#..C..#
+#..P....O#
+#.####...#
+#..#.....#
+##########
+
+##########
+#........#
+#..P#...O#
+#..##.#..#
+#..C...#.#
+#..#.....#
+#.####...#
+##########
+
+```
+produced the following console output:
+=================================
+line 60 : Was expecting a soundverb here (MOVE, DESTROY, CANTMOVE, or the like), but found something else.
+line 9 : Sprite graphics must be 5 wide and 5 high exactly.
+Errors detected during compilation; the game may not work correctly.
+Return a repaired version of the code that addresses these errors. First, reason about your task and determine the best plan of action. Then, write your code. Return your code in full, inside a ```plaintext code block.

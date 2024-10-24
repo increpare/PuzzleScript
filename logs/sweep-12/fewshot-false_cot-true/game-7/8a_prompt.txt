@@ -1,0 +1,116 @@
+SYSTEM PROMPT:
+You are a game designer, familiar with the PuzzleScript game description language. 
+
+USER PROMPT:
+The following PuzzleScript game code:
+```plaintext
+=========
+title Sokoban Simple
+author YourName
+
+=========
+objects
+background . 255 255 255
+wall # 0 0 0
+player P 0 255 0
+box B 255 165 0
+target T 255 0 0
+
+=========
+legend
+P = player
+B = box
+T = target
+. = background
+# = wall
+
+=========
+sounds
+# Player movement
+up player
+    sfx0
+
+left player
+    sfx0
+
+right player
+    sfx0
+
+down player
+    sfx0
+
+# Box being pushed
+up player box
+    sfx1
+
+left player box
+    sfx1
+
+right player box
+    sfx1
+
+down player box
+    sfx1
+
+# Box placed on target
+player box target
+    sfx2
+
+=========
+collisionlayers
+background
+wall
+target
+box
+player
+
+=========
+rules
+# Player movement
+[ > player | ] -> [> player | ]
+[ < player | ] -> [< player | ]
+[ ^ player | ] -> [^ player | ]
+[ v player | ] -> [v player | ]
+
+# Push the box
+[ > player | box | ] -> [> player | > box | ]
+[ < player | box | ] -> [< player | < box | ]
+[ ^ player | box | ] -> [^ player | ^ box | ]
+[ v player | box | ] -> [v player | v box | ]
+
+=========
+winconditions
+All box on target
+
+=========
+levels
+
+# Level 1
+#########
+#.......#
+#..P....#
+#...B...#
+#...T...#
+#########
+
+# Level 2
+#########
+#..####.#
+#..#....#
+#..#BTP.#
+#..#....#
+#..####.#
+#########
+
+```
+produced the following console output:
+=================================
+line 7 : Name "255" already in use.
+line 8 : Was looking for color for object BACKGROUND, got "wall " instead.
+line 8 : Was looking for color for object BACKGROUND, got "# 0 0 0" instead.
+line 9 : Name "255" already in use.
+line 9 : Name "0" already in use.
+line 10 : Was looking for color for object PLAYER, got "box " instead.
+too many errors, aborting compilation
+Errors detected during compilation; the game may not work correctly.
+Return a repaired version of the code that addresses these errors. First, reason about your task and determine the best plan of action. Then, write your code. Return your code in full, inside a ```plaintext code block.

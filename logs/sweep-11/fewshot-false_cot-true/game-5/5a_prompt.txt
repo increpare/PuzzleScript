@@ -1,0 +1,112 @@
+SYSTEM PROMPT:
+You are a game designer, familiar with the PuzzleScript game description language. 
+
+USER PROMPT:
+The following PuzzleScript game code:
+```plaintext
+title Treasure Hunt
+author GameDesigner
+homepage http://mygames.com
+
+===========
+OBJECTS
+===========
+Background
+yellow
+00000
+00000
+00000
+00000
+00000
+
+Player
+blue
+..0..
+..0..
+.000.
+..0..
+..0..
+
+Wall
+grey
+00000
+00000
+00000
+00000
+00000
+
+Treasure
+orange
+..000
+.000.
+.000.
+.000.
+..000
+
+===========
+LEGEND
+===========
+. = Background
+P = Player
+# = Wall
+T = Treasure
+
+===========
+SOUNDS
+===========
+SFX3
+CLICK # Sound that plays when a treasure is collected
+
+================
+COLLISIONLAYERS
+================
+Background
+Player, Treasure
+Wall
+
+===========
+RULES
+===========
+[Player | Treasure] -> [Player | ] CLICK
+win
+
+[Player | Wall] -> [ Player | Wall ] 
+
+===========
+WINCONDITIONS
+===========
+No Treasure
+
+===========
+LEVELS
+===========
+#####
+#P..#
+#.T.#
+#####
+
+#####
+#.P##
+#...#
+#..T#
+#####
+
+######
+#P...#
+##.###
+##.###
+##..T#
+######
+
+```
+produced the following console output:
+=================================
+line 52 : unexpected sound token "click".
+line 64 : Name "click", referred to in a rule, does not exist.
+line 64 : Error, malformed cell rule - was looking for cell contents, but found "click".  What am I supposed to do with this, eh, please tell me that.
+line 65 : A rule has to have an arrow in it.  There's no arrow here! Consider reading up about rules - you're clearly doing something weird
+line 65 : The start of a rule must consist of some number of directions (possibly 0), before the first bracket, specifying in what directions to look (with no direction specified, it applies in all four directions).  It seems you've just entered "WIN".
+line 65 : This rule refers to nothing.  What the heck? :O
+line 51 : incorrect sound declaration.
+Errors detected during compilation; the game may not work correctly.
+Return a repaired version of the code that addresses these errors. First, reason about your task and determine the best plan of action. Then, write your code. Return your code in full, inside a ```plaintext code block.

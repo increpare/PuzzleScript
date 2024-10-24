@@ -1,0 +1,89 @@
+The errors you're encountering indicate issues with the color palette definitions in your sprites, as well as some errors in the wall sprite's matrix. Let's fix those problems. The color index numbers need to match the number of colors defined in the sprite, and the wall sprite matrix has some invalid characters. Here's the corrected code:
+
+```plaintext
+Title: Maze Runner
+Author: YourName
+Homepage: http://yourhomepage.com
+
+===========
+OBJECTS
+===========
+
+Background
+transparent
+. . . . 
+. . . . 
+. . . . 
+. . . . 
+
+Player
+#00F
+. 0 . . 
+. 0 0 . 
+. . 0 . 
+. . . . 
+
+Wall
+#333
+. . . . 
+. 0 0 . 
+. 0 0 . 
+. . . . 
+
+Target
+#0F0
+. . . . 
+. 0 0 . 
+. 0 0 . 
+. . . . 
+
+===========
+LEGEND
+===========
+
+. = Background
+P = Player
+W = Wall
+T = Target
+
+===========
+SOUNDS
+===========
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Player
+Wall
+Target
+
+===========
+RULES
+===========
+
+[ > Player | Target ] -> [ > Player | Player ]
+
+=============
+WINCONDITIONS
+=============
+
+All Target on Player
+
+===========
+LEVELS
+===========
+
+#######        
+#.....#        
+#.P.T.#        
+#.....#        
+#######        
+```
+
+### Changes Made
+1. Adjusted the `Player`, `Wall`, and `Target` sprites so they properly use only one color from their respective palettes (`#00F` for `Player`, `#333` for `Wall`, and `#0F0` for `Target`).
+2. Removed invalid characters from `Wall` sprite's matrix (replaced `#` with `0` to match the defined color).
+
+With these changes, your game should compile without errors.

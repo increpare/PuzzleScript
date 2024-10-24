@@ -1,0 +1,119 @@
+The errors you're encountering are due to the incorrect sprite definitions in the OBJECTS section. PuzzleScript requires the sprite matrix for each object to be strictly a 5x5 grid of characters where each `.` represents a pixel that should not be colored, and each `#` or other characters represent pixels that are colored.
+
+Let's fix the sprite definitions while maintaining a 5x5 grid by replacing stray characters in each sprite with dots:
+
+```plaintext
+Title: Block Pusher
+Author: Your Name
+Homepage: http://www.yoursite.com
+
+===========
+OBJECTS
+===========
+
+Background
+white
+.....
+.....
+.....
+.....
+.....
+
+Player
+red
+.....
+..#..
+..#..
+..#..
+.....
+
+Block
+blue
+.....
+.....
+..#..
+..#..
+.....
+
+Target
+yellow
+.....
+..#..
+.....
+..#..
+.....
+
+TargetBlock
+green
+.....
+.....
+..#..
+..#..
+.....
+
+============
+LEGEND
+============
+
+. = Background
+P = Player
+B = Block
+T = Target
+G = TargetBlock
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Player, Block
+Target, TargetBlock
+
+===============
+RULES
+===============
+
+# Player movement
+[ > Player | Background ] -> [ > Player | Background ]
+
+# Pushing blocks
+[ > Player | Block | Background ] -> [ > Player | > Block | Background ]
+
+# Block reaching target
+[ > Player | Block | Target ] -> [ > Player | > TargetBlock | Background ]
+
+# Player walking over targets
+[ Player | Target ] -> [ Background | Player ]
+
+# Winning condition - All Targets must have TargetBlocks
+WinCondition
+All TargetBlock on Target
+
+==============
+LEVELS
+==============
+
+# Level 1
+########
+#....T.#
+#..B...#
+#..P...#
+########
+
+# Level 2
+########
+#..T..#
+#..B..#
+#..P..#
+########
+
+# Level 3
+#########
+#..T...#
+#..B...#
+#..P...#
+#......#
+#########
+```
+
+I have corrected the sprite definitions for `Player`, `Block`, and `Target`, ensuring the matrices meet the 5x5 requirement and contain only valid characters. This should fix the errors and allow the game to compile correctly.

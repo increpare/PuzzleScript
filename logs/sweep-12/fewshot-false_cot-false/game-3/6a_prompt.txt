@@ -1,0 +1,129 @@
+SYSTEM PROMPT:
+You are a game designer, familiar with the PuzzleScript game description language. 
+
+USER PROMPT:
+The following PuzzleScript game code:
+```plaintext
+Title: Box Pusher
+Author: GameDesigner
+
+========
+OBJECTS
+========
+
+Background
+transparent
+
+Wall
+brown
+
+Pusher
+red
+
+Box
+blue
+
+Target
+green
+
+BoxOnTarget
+blue
+
+PusherOnTarget
+red
+
+========
+LEGEND
+========
+
+. = Background
+# = Wall
+P = Pusher
+B = Box
+T = Target
+O = BoxOnTarget
+@ = PusherOnTarget
+Player = Pusher or PusherOnTarget
+
+========
+SOUNDS
+========
+
+# This section is intentionally left blank.
+
+========
+COLLISIONLAYERS
+========
+
+Background
+Wall
+Box, BoxOnTarget
+Player
+Target
+
+========
+RULES
+========
+
+[> Player | Box] -> [> Player | > Box]
+[> Player | Target] -> [> PusherOnTarget]
+[> Player | BoxOnTarget] -> [> PusherOnTarget | Box]
+[> PusherOnTarget] -> [> Player | Target]
+[> Player | Box | Target] -> [> Player | > BoxOnTarget]
+
+[ Box | Target ] -> [ BoxOnTarget ]
+[ BoxOnTarget ] -> [ Box | Target ]
+
+========
+WINCONDITIONS
+========
+
+All BoxOnTarget
+
+========
+LEVELS
+========
+
+#####
+#...#
+#.O.#
+#...#
+#.P.#
+#..B#
+#####
+
+#####
+#...#
+#.O.#
+#...#
+#...#
+#PBO#
+#####
+
+#######
+#.....#
+#.O.O.#
+#.....#
+#PB.BO#
+#...B.#
+#######
+
+#########
+#.......#
+#.O.O.O.#
+#.......#
+#PB.BOBO#
+#.......#
+#########
+
+```
+produced the following console output:
+=================================
+line 46 : Was expecting a sound event (like SFX3, or ENDLEVEL) or an object name, but didn't find either.
+line 63 : In a rule, each pattern to match on the left must have a corresponding pattern on the right of equal length (number of cells).
+line 65 : In a rule, each pattern to match on the left must have a corresponding pattern on the right of equal length (number of cells).
+line 66 : In a rule, each pattern to match on the left must have a corresponding pattern on the right of equal length (number of cells).
+line 68 : In a rule, each pattern to match on the left must have a corresponding pattern on the right of equal length (number of cells).
+line 69 : In a rule, each pattern to match on the left must have a corresponding pattern on the right of equal length (number of cells).
+Errors detected during compilation; the game may not work correctly.
+Return a repaired version of the code that addresses these errors. Return your code in full, inside a ```plaintext code block.

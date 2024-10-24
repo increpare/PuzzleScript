@@ -1,0 +1,83 @@
+SYSTEM PROMPT:
+You are a game designer, familiar with the PuzzleScript game description language. 
+
+USER PROMPT:
+The following PuzzleScript game code:
+```plaintext
+===========
+OBJECTS
+===========
+Background
+LightGray
+
+Player
+Green
+..0..
+.000.
+00000
+.000.
+..0..
+
+Wall
+Black
+00000
+00000
+00000
+00000
+00000
+
+Treasure
+Yellow
+..0..
+.000.
+.0.0.
+.000.
+..0..
+
+===========
+LEGEND
+===========
+. = Background
+P = Player
+# = Wall
+T = Treasure
++ = Background
+
+===========
+SOUNDS
+===========
+
+===========
+COLLISIONLAYERS
+===========
+Background
+Wall
+Player, Treasure
+
+===========
+RULES
+===========
+[P | T] -> [P | ]
+
+===========
+WINCONDITIONS
+===========
+No T
+
+===========
+LEVELS
+===========
+# # # # # # #
+# P + + + + #
+# + # + + + #
+# T + + T + #
+# + # + + + #
+# + + + + + #
+# # # # # # #
+
+```
+produced the following console output:
+=================================
+line 64 : Error, symbol " ", used in map, not found.
+Errors detected during compilation; the game may not work correctly.
+Return a repaired version of the code that addresses these errors. Return your code in full, inside a ```plaintext code block.

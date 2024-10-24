@@ -1,0 +1,1588 @@
+SYSTEM PROMPT:
+You are a game designer, familiar with the PuzzleScript game description language. Here are some example games, for inspiration (do not reproduce these games exactly):
+
+title Multiple Patterns
+author increpare
+homepage www.puzzlescript.net
+
+========
+OBJECTS
+========
+
+Background
+lightgreen green
+11111
+01111
+11101
+11111
+10111
+
+Wall
+brown darkbrown
+00010
+11111
+01000
+11111
+00010
+
+Player
+black orange white blue
+.000.
+.111.
+22222
+.333.
+.3.3.
+
+Sumo
+pink white
+..0..
+00000
+.000.
+.111.
+.0.0.
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Player
+S = Sumo
+
+=======
+SOUNDS
+=======
+
+Sumo MOVE 48878907
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Player, Wall, Sumo
+
+======
+RULES
+======
+
+[ > Player ] [ Sumo ] -> [ > Player ] [ > Sumo ] 
+
+==============
+WINCONDITIONS
+==============
+
+=======
+LEVELS
+=======
+
+########
+#......#
+#......#
+#.P..S.#
+#......#
+#......#
+########
+
+
+title Sticky Blocks
+author increpare
+homepage www.puzzlescript.net
+
+========
+OBJECTS
+========
+
+Background
+lightgreen green
+11111
+01111
+11101
+11111
+10111
+
+Target
+darkblue
+.....
+.000.
+.0.0.
+.000.
+.....
+
+Wall
+brown darkbrown
+00010
+11111
+01000
+11111
+00010
+
+Player
+black orange white blue
+.000.
+.111.
+22222
+.333.
+.3.3.
+
+Crate
+orange
+00000
+0...0
+0...0
+0...0
+00000
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Player
+* = Crate
+@ = Crate and Target
+O = Target
+
+=======
+SOUNDS
+=======
+
+Crate MOVE 36772507
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Target
+Player, Wall, Crate
+
+======
+RULES
+======
+
+[ < Player | Crate ] -> [ < Player | < Crate ] 
+
+==============
+WINCONDITIONS
+==============
+
+all Target on Crate
+
+=======
+LEVELS
+=======
+
+#########
+#.......#
+#.....@.#
+#.P.*.O.#
+#.......#
+#.......#
+#########
+
+.#######.
+.#.....#.
+.#O##..##
+##.##.*.#
+#.*..**.#
+#.OOO.#.#
+#.P.....#
+#########
+
+
+title cute train
+author Mark Wonnacott
+homepage http://twitter.com/ragzouken
+
+flickscreen 16x10
+color_palette pastel
+youtube pTgEXwzk7XU
+
+noundo
+norestart
+
+========
+OBJECTS
+========
+
+Background
+lightgreen green
+01000
+00110
+10010
+10100
+01001
+
+Water
+blue white lightblue
+20010
+02002
+12020
+00220
+02002
+
+Water2
+blue white lightblue
+02000
+20210
+00202
+01022
+20200
+
+Gerald
+blue black
+.000.
+01010
+10001
+01110
+.000.
+
+Mountain
+darkbrown darkbrown
+..0..
+.10..
+.000.
+0000.
+11001
+
+Forest
+darkgreen brown
+.000.
+00000
+00000
+00100
+.111.
+
+Beach
+yellow white
+00010
+01000
+00001
+00100
+10000
+
+Player
+yellow black
+.000.
+01010
+10001
+01110
+.000.
+
+GhostVTrack
+yellow
+GhostHTrack
+yellow
+GhostURTrack
+yellow
+GhostULTrack
+yellow
+GhostDLTrack
+yellow
+GhostDRTrack
+yellow
+
+VTrack
+grey darkbrown
+0...0
+0...0
+01110
+0...0
+0...0
+
+HTrack
+grey darkbrown
+00000
+..1..
+..1..
+..1..
+00000
+
+Structs
+black darkbrown
+11111
+10101
+11111
+10101
+11111
+
+URTrack
+grey darkbrown
+...00
+..0..
+.01..
+0..1.
+0...1
+
+ULTrack
+grey darkbrown
+00...
+..0..
+..10.
+.1..0
+1...0
+
+DLTrack
+grey darkbrown
+1...0
+.1..0
+..10.
+..0..
+00...
+
+DRTrack
+grey darkbrown
+0...1
+0..1.
+.01..
+..0..
+...00
+
+UTrain
+red black darkred
+.000.
+01110
+00000
+00100
+00000
+
+RTrain
+red black darkred
+0000.
+00010
+01010
+00010
+0000.
+
+LTrain
+red black darkred
+.0000
+01000
+01010
+01000
+.0000
+
+DTrain
+red black darkred
+00000
+00100
+00000
+01110
+.000.
+
+Cart
+red black darkred
+22222
+21112
+21112
+21112
+22222
+
+Smoke1
+white
+..0..
+.0.0.
+0.0.0
+.0.0.
+..0..
+
+Smoke2
+white
+.....
+.0.0.
+..0..
+.0.0.
+.....
+
+Smoke3
+white
+.....
+..0..
+.0.0.
+..0..
+.....
+
+Switch
+red black
+...0.
+..1..
+.1...
+.111.
+.....
+
+=======
+LEGEND
+=======
+
+. = Background
+^ = Mountain
+% = Forest
+~ = Water
+, = Beach
+
+| = VTrack
+- = HTrack
+r = URTrack
+¬ = ULTrack
+l = DRTrack
+j = DLTrack
+X = VTrack and Structs
+Z = HTrack and Structs
+Q = ULTrack and Structs
+
+P = Player
+
+T = VTrack and UTrain
+C = VTrack and Cart
+
+[ = HTrack and RTrain
+] = HTrack and Cart
+
+/ = Switch
+
+1 = GhostHTrack and URTrack
+! = HTrack and GhostURTrack
+2 = HTrack and GhostDRTrack
+3 = HTrack and GhostULTrack
+4 = GhostHTrack and DLTrack
+5 = GhostVTrack and URTrack
+6 = GhostVTrack and DRTrack
+7 = GhostVTrack and ULTrack
+8 = GhostVTrack and DLTrack
+
+_ = Beach and HTrack
+
+WaterR = Water or Water2
+
+Ghost = GhostHTrack or GhostVTrack or GhostULTrack or GhostURTrack or GhostDLTrack or GhostDRTrack
+Track = HTrack or VTrack or ULTrack or URTrack or DLTrack or DRTrack
+
+Train = UTrain or DTrain or LTrain or RTrain
+Vehicle = Train or Cart
+Mover = Vehicle or Player
+
+G = Gerald and Structs
+
+=======
+SOUNDS
+=======
+
+Train move 91301709
+SFX1 53409305
+SFX2 38557307
+SFX3 99431502
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Beach GhostVTrack GhostHTrack GhostURTrack GhostULTrack GhostDLTrack GhostDRTrack
+Structs
+VTrack HTrack URTrack ULTrack DLTrack DRTrack Switch
+Water Water2 Mountain Forest Player UTrain RTrain LTrain DTrain Cart Gerald
+Smoke1 Smoke2 Smoke3
+
+======
+RULES
+======
+
+(animate water)
+[        WaterR ] -> [ action WaterR ]
+[ action WaterR ] -> [ random WaterR ]
+
+[ action Player no Structs | Cart ] [ Train ] -> [ Player | Cart ] [ action Train ]
+
+(move the train if we're on the impassable structs)
+[ Structs Mover ] [ Train ] -> [ Structs Mover ] [ action Train ]
+
+[ action Train ] -> [ action Train Smoke1 ]
+
+[ action UTrain ] -> [    up UTrain ]
+[ action DTrain ] -> [  down DTrain ]
+[ action RTrain ] -> [ right RTrain ]
+[ action LTrain ] -> [  left LTrain ]
+
+late [ Mover Structs ] -> [ Mover Structs ] again (repeat if the train is still on structs)
+
+(cart follows train, player follows cart)
+[ Cart   | moving Train ] -> [ > Cart   | moving Train ]
+[ Player | moving Cart  ] -> [ > Player | moving Cart  ]
+
+[ > Player | Structs no Gerald no Cart ] -> [ Player | Structs ] message It's dangerous to walk along railway bridges!
+
+(endgame message)
+[ >      Player | Gerald ] -> [ Player | Gerald ] message you made it! thanks for playing.
+[ action Player | Gerald ] -> [ Player | Gerald ] message you made it! thanks for playing.
+
+(train turns when entering corners)
+up    [ > UTrain | URTrack ] -> [ > RTrain | URTrack ]
+up    [ > UTrain | ULTrack ] -> [ > LTrain | ULTrack ]
+
+right [ > RTrain | ULTrack ] -> [ > DTrain | ULTrack ]
+right [ > RTrain | DLTrack ] -> [ > UTrain | DLTrack ]
+
+down  [ > DTrain | DRTrack ] -> [ > RTrain | DRTrack ]
+down  [ > DTrain | DLTrack ] -> [ > LTrain | DLTrack ]
+
+left  [ > LTrain | URTrack ] -> [ > DTrain | URTrack ]
+left  [ > LTrain | DRTrack ] -> [ > UTrain | DRTrack ]
+
+(animate smoke)
+[ Smoke3 ] -> [ ]
+[ Smoke2 ] -> [ Smoke3 ]
+[ Smoke1 ] -> [ Smoke2 ]
+
+[ action Player Switch ] -> [ Player action Switch ]
+
+(switch all uncovered tracks at once)
+[ action Switch ] [ Ghost Vehicle ] -> [ action Switch ] [ Ghost Vehicle ] SFX3 (play blocking sound if switch tracks are covered while switching)
+[ action Switch ] [ Ghost no Vehicle ] -> [ action Switch ] [ action Ghost ] SFX2
+
+[ action GhostHTrack URTrack no Vehicle ] -> [ HTrack GhostURTrack ]
+[ HTrack action GhostURTrack no Vehicle ] -> [ GhostHTrack URTrack ]
+[ action GhostHTrack DRTrack no Vehicle ] -> [ HTrack GhostDRTrack ]
+[ HTrack action GhostDRTrack no Vehicle ] -> [ GhostHTrack DRTrack ]
+[ action GhostHTrack ULTrack no Vehicle ] -> [ HTrack GhostULTrack ]
+[ HTrack action GhostULTrack no Vehicle ] -> [ GhostHTrack ULTrack ]
+[ action GhostHTrack DLTrack no Vehicle ] -> [ HTrack GhostDLTrack ]
+[ HTrack action GhostDLTrack no Vehicle ] -> [ GhostHTrack DLTrack ]
+
+[ action GhostVTrack URTrack no Vehicle ] -> [ VTrack GhostURTrack ]
+[ VTrack action GhostURTrack no Vehicle ] -> [ GhostVTrack URTrack ]
+[ action GhostVTrack DRTrack no Vehicle ] -> [ VTrack GhostDRTrack ]
+[ VTrack action GhostDRTrack no Vehicle ] -> [ GhostVTrack DRTrack ]
+[ action GhostVTrack ULTrack no Vehicle ] -> [ VTrack GhostULTrack ]
+[ VTrack action GhostULTrack no Vehicle ] -> [ GhostVTrack ULTrack ]
+[ action GhostVTrack DLTrack no Vehicle ] -> [ VTrack GhostDLTrack ]
+[ VTrack action GhostDLTrack no Vehicle ] -> [ GhostVTrack DLTrack ]
+
+==============
+WINCONDITIONS
+==============
+
+=======
+LEVELS
+=======
+
+(feel free to try making more puzzles!
+
+editing tip: copy out a few rows of screens to edit in isolation
+
+* use bridges (structs) to force the train over junctions before there's a chance to switch them
+* use bridges to make switches unreachable until junctions have been crossed
+* use the train itself and narrow passages to make switches unreachable until junctions have been crossed)
+
+message welcome to the breezy isles!
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~,,,,~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~,,,,,,,~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~,,..,,,,,~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~,,,p.,,,,,~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~,,....,,,,,~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~,,,.....,,,,~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~,,,......,,,~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~,,.......,,,,,,~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~,,,........,,,,,,,~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~,,,..........,,,,,,,,~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~,,...............,,,,,,~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~,~~,...%.........%....,,,,~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~,,,,,~..%.................,,,,~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~,,,,,,,,..~~%%%%%.r-------¬.....,,,,~~~~~~~~~~~~~~~~~~~~
+,,,,,,,,,,,,,....%%~%%%%%%t.......l-¬.....,,,~~~~~~~~~~~~~~~~~~~
+,,,,,,..........%%%~~%%%%%c%%.......l-¬....,,~~~~~~~~~~~~~~~~~~~
+........%%%..%%%%%%%~%%%%%|%%%%%....|.l--¬..,,~~~~~~~~~~~~~~~~~~
+.%%%%.%%%%%%%%%%%%%%~%%%%%|%%%%%%%..|...%l¬.,,~~~~~~~~~~~~~~~~~~
+%%%%%%%%%%%%%%%%%%%%~%%%%%|%%%%%%%%.l¬..%%|.,,~~~~~~~~~~~~~~~~~~
+%%%%%%%%%%%%%%%%%%%%~%%%%%|%%%%%%%%..|.%%%|.,,~~~~~~~~~~~~~~~~~~
+%%%%r---------------z-¬%%%|%%%%%%....|%%%%|.,,~~~~~~~~~~~~~~~~~~
+%%.rj........%%%%%%%~%l¬%.|..........|%%%rj,,,~~~~~~~~~~~~~~~~~~
+%%rj.~~~~G~~~~%%%%%%~^%l--¬..........l---j.,,,~~~~~~~~~~~~~~~~~~
+%.|.~~~~~x~~~~~%%%%^~^....|.....^^^........,,~~~~~~~~~~~~~~~~~~~
+%.|.~~~~~~~~~~~%%^^^~^....l¬...^^^^^^......,,~~~~~~~~~~~~~~~~~~~
+%.|.~~~~~~~~~~%%%^^^~^^^..^l¬^^^^^^^^^^^^^.,^^~~~~~~~~~~~~~~~~~~
+%%l¬.~~~~~~~%%%^^^^^~^^^^^^^l¬^^^^^^^^^^^^^^^^~~~~~~~~~~~~~~~~~~
+%%.|..~~~~%%%%^^^^^~~^^^^^^^^x~^^^^^^^^^^^^^^^^~~~~~~~~~~~~~~~~~
+%%%|.%%%%%%%%^^^^^^~^^^^^^^^~x~^^^^^^^^^^^^^^^^~~~~~~~~~~~~~~~~~
+%%%x%%%%%%%%%^^^^^~~^^^^^^^^~x~^^^^^^^^^^^^^^^^^^^^^^~~~~~~~~~~~
+%%rj%%%%%%%%%^^^^^^~^^^^^^^~~x~%...%%^^%%^^^^^^^^^^^^^~~^~~~~~~~
+%%5z---¬%%%%%^^^^^^~^^^^^^^~^l¬..%r------¬%%^^^^^^^^^^^~~~~~~~~~
+%%|%%%%|%%%%^^^^^^^~~^^^^^~~^^l¬..|.%%%%%|%%%.^^^^^^^^^^^~~~~~~~
+%r4z---¬%%%%^^^^^^^^~~^^^^~^^^.l--l---3--j%%..^^^^^^^^^^^^~~~~~~
+%x./%r-¬%%%%^^^^^^^^^~~^^~~^^^........|%%%%%..^^^^^^^^^^^^^~~~~~
+%l--zj¬j%%%%^^^^^^^^^^~~~~^^^^%%..../.|.%%...^^^^^^^^^^^^^~~~~~~
+%%%%%%5z¬z¬%^^^^^^^^^^^^~~^^^^^%%%....|......^^^^^^^^^^^^^^~~~~~
+%%r--¬x%lzj%^^^^^^^^^^^^~^^^^^^%%%%..~x~~~~~~~^^^^^^^^^^^^^^~^~~
+%%|%%|x%%%%%%^^^^^^^^^^^~^^^^^^%%%%%~~x~~~~~~~~^^^^^^^^^^^^^~~~~
+%%|%%|x%%%%%%%%^^^^^^^^^~^^^^^^%%%%%~~x~~~~~~~~^^^^^^^^^^^^^~~~~
+%%r--47---¬¬---zzzzz1zzzzz¬^^^^^%%%..~x~~~~....%^^^^^^^^^^^~~~~~
+%%|%%%x%.%lj%%^^^^^^x^^^~^lz¬^^^^%%...|..%...%.%%%^^^^^^,,~~~~~~
+%%|%/.l¬.%%%^^^^^^^^x^^^~~^^lz¬^^%%...|.....%...........,,~~~^^~
+%%|%%%lj%%%^^^^^^^^^x^^^^~^~^^x^^^%%.rl-----------r-----__zzz¬^~
+%%l¬%%%%%^^^^^^^^^^^x^^^^~~^^^x^^^%%.|........%...|.....,,~~^x^~
+%%lj%%%%%^^^^^^^^^^r-¬^^^~~~~^x^^^^^%|...%^^^.....l¬../.,,~~~x~~
+%%%%%%%%^^^^^^^^^^^|l¬%^^~~~~~x~^^^^^|.^^^^^^^^^^..|....^^^~~x~~
+%%%%%%%^^^^^^^^^^%rj%|%^^^~~^^x^^^^^rj%%^^^^^^^%%.%l¬.^^^^^^~x~~
+%%%%%%^^^^^^^^^^^%|%%|%^^~^^~^x^^^%.|...%%..%.......|....,,~~x~~
+%%%%^^^^^^^^^^^^^%|/.|%^~^^^^^x^^^%.|.%.............|...,,,~^x^~
+%%^^^^^^^^^^^^^^^%l--8^^^^^^^rj%^^..|..r----!-------2--1___zzj^~
+^^^^^^^^^^^^^^^^^%|%^x^^^^^^^x^^^^%.|.%|%%..|....%..|%.|,,,~~^~~
+^^^^^^^^^^^^^^^^^^|.rlzz--3z-4¬^^^%.|.%l¬...|.......|..l¬,,~~~~~
+^^^^^^^^^^^^^^^^^^x^|^^^..|^..|%^^..l¬%%l-----------j...|,,,~~~~
+^^^^^^^^^^^^^^^^^^l-|---¬/|^.%|%^^%..|.%.%%.l¬%....%....|,,,,~~~
+^^^^^^^^^^^^^^^^^^^%|.%%l-j---j%^^^%.l¬.....%l¬.%.....%.|,,,,~~~
+^^^^^^^^^^^^^^^^^^^%|%%%%%%%%%%^^^^%%.|.%%%...l--¬......l¬,,,~~~
+^^^^^^^^^^^^^^^^^^^^x^^^^%%%^^^^^^^%%.|..%..%...%l-¬%....|,,,~~~
+^^^^^^^^^^^^^^^^^^^^x^^^^^^^^^^^^^^%%%|%%%%..%%....l¬....|,,,,~~
+^^^^^^^^^^^^^^^^^^^^x^^^^^^^^^^^^^^^%%|%^^%%......%.l¬...|.,,,~~
+^^^^^^^^^^^^^^^^^^^^x^%%%%%^^^^^^^^^^^|%%^^^^^^.%%...|...|^^^,~~
+^^^^^^^^^^^^^^^^^^^%|%%....%%^^^^^^^^%|%%%^^^^^^^^^%.|.^^|^^,,~~
+^^^^^^^^^^^^^^^^^^^%|%..%^..%%^^^^^%%rj%%^^^^^^^%....|...|^,,,~~
+^^^^^^^^^^^^^^^^^^^%|./.^%%..%%^^^%%.|.%..%......../.6---¬^,,,~~
+^^^^^^^^^^^^^^^^^^^%|..%^%....%^^^%..|%..%...%......rj...|.,,,~~
+^^^^^^^^^^^^^^^^^^^%l--!z1--¬--zzz----------------!-j..%.|,,,,~~
+^^^^^^^^^^^^^^^^^^^^%%%|^|..|.%^^^%..|.%.%..%..%..|...%..|,,,,~~
+^^^^^^^^^^^^^^^^^^^^^^^x^|%%|%^^^^%%.|%%%.........|......|,,,,~~
+^^^^^^^^^^^^^^^^^^^^^^^x^x^^x^^^^^^%%|%^^^^^^.....|...^^rj^,,~~~
+^^^^^^^^^^^^^^^^^^^^^^^x^x^^x^^^^^^^^|%.^^^^^^^^%.|.^^^^|^^^^~~~
+^^^^^^^^^^^^^^^^^^^^^^^x^x^^x^^^^^^^%|^^^^^^^^.%..|.....|,,^^~~~
+^^^^^^^^^^^^^^^^^^^^^^^x^x^^l¬^^^^^%%|%%^^^.%.....|...%.|,,,~~~~
+^^^^^^^^^^^^^^^^^^^^^^^x^lzzjx^^^^%%.|..%%........|.%...|,,,~~~~
+^^^^^^^^^^^^^^^^^^^^^^^l¬^^^^x^^^^%%.l¬%......%..rj..%..|,,,~~~~
+^^^^^^^^^^^^^^^^^^^^^^^^x^^^^x^^^^%%%.l¬.%......rj.....rj,,,~~~~
+^^^^^^^^^^^^^^^^^^^^^^^^x^^^^x^^^^^%%%%l--------j------j,,,,~~~~
+^^^^^^^^^^^^^^^^^^^^^^^^lzzzzj^^^^^^^%%%%%.%%%%...%%%%^^^,,,~~~~
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^%%%%%^^^^^^^^^^^^^^^^^~~
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^~~
+
+
+
+title Bouncers
+author Tyler Glaiel
+homepage twitter.com/tylerglaiel
+
+========
+OBJECTS
+========
+
+Bg
+#111111 #222222
+00010
+11111
+01000
+01000
+11111
+
+Selection
+white gray
+..1..
+..1..
+11011
+..1..
+..1..
+
+Wall
+DarkBlue DarkGreen #333333
+20002
+22022
+22122
+21112
+11111
+
+Hole
+DarkGray Gray Black
+.111.
+12221
+10001
+10001
+.111.
+
+
+Arrow
+Red Red
+..1..
+..11.
+11111
+..11.
+..1..
+
+
+HudDivider
+white black
+00000
+11111
+11111
+11111
+11111
+
+IconGO
+green white
+10111
+10011
+10001
+10011
+10111
+
+Going
+green white
+10111
+10011
+10001
+10011
+10111
+
+LeftBouncer
+White White Blue
+.221.
+2.1.2
+21..2
+2.1.2
+.221.
+
+RightBouncer
+White White Blue
+.122.
+2.1.2
+2..12
+2.1.2
+.122.
+
+UpBouncer
+White White Blue
+.222.
+2.1.2
+21.12
+1...1
+.222.
+
+DownBouncer
+White White Blue
+.222.
+1...1
+21.12
+2.1.2
+.222.
+
+HudBG
+black
+
+Empty
+black
+
+PlayEmpty
+black
+.....
+.....
+.....
+.....
+.....
+
+
+Ball
+#003300 Green
+.000.
+01110
+01110
+01110
+.000.
+
+WinBall
+LightBlue LightGreen
+.000.
+01110
+01110
+01110
+.000.
+
+
+
+BallUp
+#003300 Green Black
+.000.
+01210
+01110
+01110
+.000.
+
+BallDown
+#003300 Green Black
+.000.
+01110
+01110
+01210
+.000.
+
+BallLeft
+#003300 Green Black
+.000.
+01110
+02110
+01110
+.000.
+
+BallRight
+#003300 Green Black
+.000.
+01110
+01120
+01110
+.000.
+
+
+
+
+=======
+LEGEND
+=======
+Background = Bg or HudBG
+. = bg and PlayEmpty
+S = Selection and PlayEmpty
+- = HudDivider and Wall
+H = HudBG and PlayEmpty
+A = Arrow and HudBG
+G = IconGO
+W = Wall
+O = Hole
+
+L = LeftBouncer and HudBG
+R = RightBouncer and HudBG
+U = UpBouncer and HudBG
+D = DownBouncer and HudBG
+
+B = BallLeft
+N = BallRight
+M = BallUp
+K = BallDown
+
+Player = Selection
+
+
+PlacedLeftbouncer = LeftBouncer and Selection
+PlacedRightbouncer = RightBouncer and Selection
+PlacedUpbouncer = UpBouncer and Selection
+PlacedDownbouncer = DownBouncer and Selection
+
+Bouncer = LeftBouncer or RightBouncer or UpBouncer or DownBouncer
+
+emptyPlayer = Selection and PlayEmpty
+
+
+ballSwitchLeft = Ball and LeftBouncer
+ballSwitchRight = Ball and RightBouncer
+ballSwitchUp = Ball and UpBouncer
+ballSwitchDown = Ball and DownBouncer
+
+ballSwitchedLeft = BallLeft and LeftBouncer
+ballSwitchedRight = BallRight and RightBouncer
+ballSwitchedUp = BallUp and UpBouncer
+ballSwitchedDown = BallDown and DownBouncer
+
+gameGo = Selection and IconGO
+gameGoing =  Going
+
+
+
+WinL = BallLeft and Hole
+WinR = BallRight and Hole
+WinU = BallUp and Hole
+WinD = BallDown and Hole
+
+Win = WinBall
+
+MovingBall = Ball or BallLeft or BallRight or BallUp or BallDown
+
+=======
+SOUNDS
+=======
+SFX0 41242705 (place bouncer)
+SFX1 73889302 (press go)
+MovingBall Move 68254307 (ball move)
+SFX2 68257500 (pocket ball)
+SFX3 82752503 (ball switch direction)
+
+================
+COLLISIONLAYERS
+================
+
+Background
+
+Arrow, Empty, LeftBouncer, RightBouncer, UpBouncer, DownBouncer, PlayEmpty, IconGO, Going, Hole
+WinBall
+Wall, Ball, BallUp, BallDown, BallLeft, BallRight
+Selection, HudDivider
+
+
+======
+RULES
+======
+
+(action button: take icon to the right of the arrow, place under selector)
+[action selection PlayEmpty][Arrow|LeftBouncer] -> [PlacedLeftbouncer][Arrow|Empty] SFX0
+[action selection PlayEmpty][Arrow|RightBouncer] -> [PlacedRightbouncer][Arrow|Empty] SFX0
+[action selection PlayEmpty][Arrow|UpBouncer] -> [PlacedUpbouncer][Arrow|Empty] SFX0
+[action selection PlayEmpty][Arrow|DownBouncer] -> [PlacedDownbouncer][Arrow|Empty] SFX0
+
+(win conditions)
+[WinL] -> [Win] again SFX2
+[WinR] -> [Win] again SFX2
+[WinU] -> [Win] again SFX2
+[WinD] -> [Win] again SFX2
+
+(slide unused icons over to the left if there's space between them and the arrow)
+right [Empty | Bouncer] -> [Bouncer | Empty]
+
+(selector on top of go button -> signals game to run)
+[action selection iconGO] -> [gameGoing] again SFX1
+
+(make genericball match the direction of the bouncer)
+[ballSwitchLeft]->[ballSwitchedLeft] again
+[ballSwitchRight]->[ballSwitchedRight] again
+[ballSwitchUp]->[ballSwitchedUp] again
+[ballSwitchDown]->[ballSwitchedDown] again
+
+(if ball is going to move on top of a bouncer, switch it to generic ball first)
+right [Going][Bouncer | BallLeft] -> [Going][Bouncer | Left Ball] again SFX3
+left  [Going][Bouncer | BallRight] -> [Going][Bouncer | Right Ball] again SFX3
+up    [Going][Bouncer | BallDown] -> [Going][Bouncer | Down Ball] again SFX3
+down  [Going][Bouncer | BallUp] -> [Going][Bouncer | Up Ball] again SFX3
+
+
+
+(move the ball if Going)
+[Going][BallLeft] -> [Going][LEFT BallLeft] again
+[Going][BallRight] -> [Going][RIGHT BallRight] again
+[Going][BallUp] -> [Going][UP BallUp] again
+[Going][BallDown] -> [Going][DOWN BallDown] again
+
+
+
+[Going] -> [Going] again
+
+==============
+WINCONDITIONS
+==============
+
+no MovingBall
+
+=======
+LEVELS
+=======
+
+message place bouncers, hit play
+
+......w.....
+..o...w.....
+......w.....
+......w.....
+......w..b..
+......s.....
+............
+g-----------
+-hhadluhhhhh
+
+message Level 2
+
+............
+......o.....
+..s.........
+......w.....
+...o.....b..
+......m.....
+............
+g-----------
+-hhalurhhhhh
+
+message Level 3
+
+............
+............
+..o.wwww....
+..s.n..b....
+....wwww.o..
+............
+............
+g-----------
+-hhaudrlhhhh
+
+message Level 4
+
+............
+............
+..o......o..
+............
+............
+.s..bbbb....
+............
+............
+..o......o..
+............
+g-----------
+-hhalrudu...
+
+message Level 5
+
+.....n......w...
+..wwww.k....o.w.
+......b..m......
+...o............
+.......w........
+.....b.w........
+......wwo.......
+w.ww.www........
+.o..............
+....s...........
+..........wwwo..
+g---------------
+-hhaddddddrrr...
+
+message I didn't feel like making more levels
+
+title Several Rigid Bodies
+author increpare
+homepage www.puzzlescript.net
+
+========
+OBJECTS
+========
+
+Background
+darkgreen
+
+Target
+YELLOW
+
+Player
+PINK
+
+RedCrate q
+RED
+
+GreenCrate w
+Green
+
+BlueCrate e
+Blue
+
+SmallCrate r
+Purple
+.....
+.000.
+.000.
+.000.
+.....
+
+Wall
+DARKBROWN
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Player
+bigcrate = redcrate or greencrate or bluecrate
+Crate = smallcrate or bigcrate
+O = Target
+
+=========
+SOUNDS
+=========
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Target
+Player, Wall, Crate
+
+======
+RULES
+======
+
+startloop
+
+[ > Player | Smallcrate ] -> [ > Player | > SmallCrate ]
+
+[ >  Player | RedCrate ] -> [  >  Player | > RedCrate  ]
++ rigid [ moving RedCrate | RedCrate ] -> [ moving RedCrate | moving RedCrate ]
++ [ >  Crate | RedCrate ] -> [  >  Crate | > RedCrate  ]
+
+[ >  Player | GreenCrate ] -> [  >  Player | > GreenCrate  ]
++ rigid [ moving GreenCrate | GreenCrate ] -> [ moving GreenCrate | moving GreenCrate ]
++ [ >  Crate | GreenCrate ] -> [  >  Crate | > GreenCrate  ]
+
+
+[ >  Player | BlueCrate ] -> [  >  Player | > BlueCrate  ]
++ rigid [ moving BlueCrate | BlueCrate ] -> [ moving BlueCrate | moving BlueCrate ]
++ [ >  Crate | BlueCrate ] -> [  >  Crate | > BlueCrate  ]
+
+[ > Crate | SmallCrate ] -> [  > Crate | > SmallCrate ]
+
+endloop
+
+==============
+WINCONDITIONS
+==============
+
+=======
+LEVELS
+=======
+
+...............
+...............
+...............
+.....#.........
+...............
+...r.r.........
+..P....#.......
+..qq..w.eer....
+..q.wwweer.....
+..q.#..........
+...............
+...............
+...............
+
+
+
+title Dungeon Janitor
+author Farbs
+homepage www.farbs.org
+noundo
+noaction
+key_repeat_interval 0.1
+
+========
+OBJECTS
+========
+
+Background
+DARKBLUE BLACK
+11111
+10000
+10000
+10000
+10000
+
+Entry
+LIGHTBROWN BROWN DARKBROWN GRAY
+30103
+10101
+10121
+10101
+10101
+
+ExitClosed
+LIGHTBROWN BROWN DARKBROWN GRAY
+30103
+10101
+10121
+10101
+10101
+
+ExitOpen
+GRAY BLACK DARKBLUE
+01110
+11111
+11111
+11111
+12221
+
+Slime
+LIGHTGREEN GREEN DARKGREEN
+.....
+.....
+.....
+.....
+.....
+
+Head
+LIGHTGREEN GREEN DARKGREEN BLACK
+.000.
+03130
+11111
+23332
+.222.
+
+SlimeU
+LIGHTGREEN GREEN DARKGREEN
+11111
+21112
+.222.
+.....
+.....
+
+SlimeD
+LIGHTGREEN GREEN DARKGREEN
+.....
+.....
+.000.
+01110
+11111
+
+SlimeUD
+LIGHTGREEN GREEN DARKGREEN
+11111
+11111
+11111
+11111
+11111
+
+SlimeL
+LIGHTGREEN GREEN DARKGREEN
+00...
+110..
+111..
+112..
+22...
+
+SlimeR
+LIGHTGREEN GREEN DARKGREEN
+...00
+..011
+..111
+..211
+...22
+
+SlimeLR
+LIGHTGREEN GREEN DARKGREEN
+00000
+11111
+11111
+11111
+22222
+
+SlimeUL
+LIGHTGREEN GREEN DARKGREEN
+11111
+11112
+1112.
+112..
+22...
+
+SlimeUR
+LIGHTGREEN GREEN DARKGREEN
+11111
+21111
+.2111
+..211
+...22
+
+SlimeULR
+LIGHTGREEN GREEN DARKGREEN
+11111
+11111
+11111
+11111
+22222
+
+SlimeDL
+LIGHTGREEN GREEN DARKGREEN
+00...
+110..
+1110.
+11110
+11111
+
+SlimeDR
+LIGHTGREEN GREEN DARKGREEN
+...00
+..011
+.0111
+01111
+11111
+
+SlimeDLR
+LIGHTGREEN GREEN DARKGREEN
+00000
+11111
+11111
+11111
+11111
+
+SlimeUDLR
+LIGHTGREEN GREEN DARKGREEN
+11111
+11111
+11111
+11111
+11111
+
+SlimeSolo
+LIGHTGREEN GREEN DARKGREEN
+.000.
+01110
+11111
+21112
+.222.
+
+Wall
+LIGHTGREY GREY
+11111
+01000
+01000
+11111
+00010
+
+PlayerA
+Black Orange White Blue Brown
+.....
+.11..
+2224.
+333.4
+3.322
+
+PlayerB
+Black Orange White Blue Brown
+.....
+.11..
+.4222
+4.333
+223.3
+
+Temp
+PINK
+00000
+00000
+00000
+00000
+00000
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+E = Wall AND Entry
+P = PlayerA
+O = Slime AND Head
+X = Wall AND ExitClosed
+
+SlimeDecal = SlimeU OR SlimeD OR SlimeUD OR SlimeL OR SlimeR OR SlimeLR OR SlimeUL OR SlimeUR OR SlimeULR OR SlimeDL OR SlimeDR OR SlimeDLR OR SlimeUDLR OR SlimeSolo
+Player = PlayerA OR PlayerB
+
+=======
+SOUNDS
+=======
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Slime
+SlimeU, SlimeD, SlimeUD, SlimeL, SlimeR, SlimeLR, SlimeUL, SlimeUR, SlimeULR, SlimeDL, SlimeDR, SlimeDLR, SlimeUDLR, SlimeSolo, ExitOpen
+Player, Wall, PlayerA, PlayerB, Temp
+Head, Entry, ExitClosed
+
+======
+RULES
+======
+
+(Stomp Heads)
+[ > Player | Head ] -> [ > Player | NO Head ]
+[ > Player | Slime ] -> [ > Player | NO Slime ]
+
+(New Head)
+[ Head ] -> []
+RANDOM [ Slime NO Player ] -> [ Slime Head ]
+
+(Grow Slime)
+[ Head | NO Slime NO Wall NO Player ] -> [ Head | Slime ]
+
+(Clear Slime from under player)
+[ > Player | Slime ] -> [ > Player | NO Slime ]
+LATE [ Player Slime ] -> [ Player NO Head ]
+
+(Make slime pretty)
+[ SlimeDecal ] ->[ ]
+VERTICAL [ Slime | Slime | Slime ] -> [ Slime | Slime SlimeUD | Slime ]
+UP [ Slime NO SlimeUD | Slime ] -> [ Slime SlimeU | Slime ]
+DOWN [ Slime NO SlimeUD | Slime ] -> [ Slime SlimeD | Slime ]
+HORIZONTAL [ Slime | Slime NO SlimeU NO SlimeD NO SlimeUD | Slime ] -> [ Slime | Slime SlimeLR | Slime ]
+LEFT [ Slime NO SlimeU NO SlimeD NO SlimeUD NO SlimeLR | Slime ] -> [ Slime SlimeL | Slime ]
+RIGHT [ Slime NO SlimeU NO SlimeD NO SlimeUD NO SlimeLR | Slime ] -> [ Slime SlimeR | Slime ]
+HORIZONTAL [ Slime | Slime SlimeU | Slime ] -> [ Slime | Slime SlimeULR | Slime ]
+LEFT [ Slime SlimeU | Slime ] -> [ Slime SlimeUL | Slime ]
+RIGHT [ Slime SlimeU | Slime ] -> [ Slime SlimeUR | Slime ]
+HORIZONTAL [ Slime | Slime SlimeD | Slime ] -> [ Slime | Slime SlimeDLR | Slime ]
+LEFT [ Slime SlimeD | Slime ] -> [ Slime SlimeDL | Slime ]
+RIGHT [ Slime SlimeD | Slime ] -> [ Slime SlimeDR | Slime ]
+[ Slime NO SlimeDecal ] -> [ Slime SlimeSolo ]
+
+( Shut the door if slime still around)
+( Have to open it first unfortunately )
+[ ExitClosed Wall ] -> [ ExitOpen ]
+[ ExitOpen ][ Slime ] -> [ ExitClosed Wall ][ Slime ]
+
+(Player Anim)
+[ LEFT PlayerB ] -> [ LEFT PlayerA ]
+[ RIGHT PlayerA ] -> [ RIGHT PlayerB ]
+LATE [ PlayerA ] -> [ Temp ]
+LATE [ PlayerB ] -> [ PlayerA ]
+LATE [ Temp ] -> [ PlayerB ]
+==============
+WINCONDITIONS
+==============
+
+ALL Player ON ExitOpen
+
+=======
+LEVELS
+=======
+
+MESSAGE It's Thursday.
+MESSAGE Today I mop the slime pit.
+
+
+##X##
+##.##
+##.##
+##O##
+##.##
+##P##
+##E##
+
+MESSAGE Damn slime sticking to my shoes.
+
+..####..
+..#O.#..
+###..###
+#......#
+#P#..#.#
+#E#..#X#
+..####..
+
+MESSAGE Goes SHLUCK SHCLUK when I walk.
+
+######X#############
+###......#...#...###
+###.##.#...#...#...#
+##.....###########.#
+#..#.#.....#.......#
+#.##.###.#.##.######
+#......#.#.#.O.....#
+#.####.#.#.#.#####.#
+#P.....#.#.........#
+#E##################
+
+MESSAGE Last room before home.
+MESSAGE This one can take a while.
+
+##########X#########
+#..................#
+#..................#
+#..#######.######..#
+#..#.#...#.#.#..#..#
+#..#...#.#.#.#..#..#
+#..#.....#.#.#..#..#
+#..##....#.#...##..#
+#..#............#..#
+#..#......O.....#..#
+#..#............#..#
+#..#............#..#
+#..##############..#
+#.........P........#
+##########E#########
+
+MESSAGE Done for the day. Back tomorrow.
+MESSAGE Fridays is rat scrubbing day.
+
+USER PROMPT:
+The following PuzzleScript game code:
+```plaintext
+title Maze Runner
+author YourName
+
+========
+OBJECTS
+========
+
+Background
+lightgray
+
+Wall
+darkgray
+
+Player
+blue
+.000.
+.0.0.
+00000
+.0.0.
+.000.
+
+Goal
+gold
+.....
+.....
+..0..
+.....
+.....
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Player
+G = Goal
+
+=========
+SOUNDS
+=========
+
+startgame 53401705
+endgame 73818207
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Goal
+Player, Wall
+
+======
+RULES
+======
+
+[ > Player | Wall ] -> [ Player | Wall ]
+[ Player | Goal ] -> [ Player | Goal  ] endgame
+
+==============
+WINCONDITIONS
+==============
+
+All Player on Goal
+
+=======
+LEVELS
+=======
+
+message Welcome to Maze Runner! Reach the golden goal.
+
+######
+#P...#
+#.##.#
+#..#.#
+#..G.#
+######
+
+```
+produced the following console output:
+=================================
+line 23 : Was looking for color for object GOAL, got "gold" instead.
+line 26 : Trying to access color number 0 from the color palette of sprite GOAL, but there are only 0 defined in it.
+line 59 : Name "endgame", referred to in a rule, does not exist.
+line 22 : color not specified for object "goal".
+line 59 : Error, malformed cell rule - was looking for cell contents, but found "endgame".  What am I supposed to do with this, eh, please tell me that.
+Errors detected during compilation; the game may not work correctly.
+Return a repaired version of the code that addresses these errors. First, reason about your task and determine the best plan of action. Then, write your code. Return your code in full, inside a ```plaintext code block.

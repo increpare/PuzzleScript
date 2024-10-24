@@ -1,0 +1,1855 @@
+SYSTEM PROMPT:
+You are a game designer, familiar with the PuzzleScript game description language. Here are some example games, for inspiration (do not reproduce these games exactly):
+
+title Extended Body Example: 1 Player, 1 Extended Object
+author increpare
+homepage www.puzzlescript.net
+
+(
+    Example for
+    https://www.puzzlescript.net/Documentation/rigidbodies.html#one_one
+)
+
+========
+OBJECTS
+========
+
+Background
+LIGHTGREEN GREEN
+11111
+01111
+11101
+11111
+10111
+
+
+Target
+DarkBlue
+.....
+.000.
+.0.0.
+.000.
+.....
+
+Wall
+BROWN DARKBROWN
+00010
+11111
+01000
+11111
+00010
+
+Player
+Black Orange White Blue
+.000.
+.111.
+22222
+.333.
+.3.3.
+
+Crate
+Orange
+00000
+0...0
+0...0
+0...0
+00000
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Player
+* = Crate
+@ = Crate and Target
+O = Target
+
+=======
+SOUNDS
+=======
+
+Crate MOVE 36772507
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Target
+Player, Wall, Crate
+
+======
+RULES
+======
+
+[ >  Player | Crate ] -> [  >  Player | > Crate  ]
+[ > Crate ] [ stationary Crate ] -> [ > Crate ] [ > Crate ]
+[ > Crate | Wall ] -> cancel
+
+==============
+WINCONDITIONS
+==============
+
+All Target on Crate
+
+=======
+LEVELS
+=======
+
+######
+#....#
+#.#..#
+#.*@.#
+#.O@.#
+#.p..#
+######
+
+
+(
+level ideas
+push battery horizontally
+have to assemble and then disassemble a circuit, in order to complete it
+add a piece to a circut, then break the circuit from another point
+level that starts with a closed circuit
+level with very dangerous + block
+)
+title Robot Arm
+author increpare
+homepage www.increpare.com
+
+run_rules_on_level_start
+color_palette c64
+
+run_rules_on_level_start
+
+norepeat_action
+
+========
+OBJECTS
+========
+
+Background .
+darkblue
+
+Player P
+Black orange grey Blue
+.111.
+.111.
+22222
+13331
+.3.3.
+
+R0_Up 0
+grey lightgrey
+.111.
+10001
+10001
+10001
+.111.
+
+R0_Down
+grey lightgrey
+.111.
+10001
+10001
+10001
+.111.
+
+R0_Left
+grey lightgrey
+.111.
+10001
+10001
+10001
+.111.
+
+R0_Right
+grey lightgrey
+.111.
+10001
+10001
+10001
+.111.
+
+
+R1_Up 1
+grey lightgrey
+.111.
+10001
+10001
+10001
+.111.
+
+R1_Down
+grey lightgrey
+.111.
+10001
+10001
+10001
+.111.
+
+R1_Left
+grey lightgrey
+.111.
+10001
+10001
+10001
+.111.
+
+R1_Right
+grey lightgrey
+.111.
+10001
+10001
+10001
+.111.
+
+
+R2_Up 2
+grey lightgrey
+.111.
+10001
+10001
+10001
+.111.
+
+R2_Down
+grey lightgrey
+.111.
+10001
+10001
+10001
+.111.
+
+R2_Left
+grey lightgrey
+.111.
+10001
+10001
+10001
+.111.
+
+R2_Right
+grey lightgrey
+.111.
+10001
+10001
+10001
+.111.
+
+R3 3
+grey lightgrey
+.....
+..0..
+.010.
+..0..
+.....
+
+Connector_Up
+grey lightgrey
+.101.
+.111.
+.....
+.....
+.....
+
+Connector_Down
+grey lightgrey
+.....
+.....
+.....
+.111.
+.101.
+
+Connector_Left
+grey lightgrey
+.....
+11...
+01...
+11...
+.....
+
+Connector_Right
+grey lightgrey
+.....
+...11
+...10
+...11
+.....
+
+Moved
+transparent
+
+Parent
+transparent
+
+GrandParent
+transparent
+
+NewRot
+transparent
+
+NewRot2
+transparent
+
+force
+transparent
+
+explosion
+red yellow
+.101.
+10101
+01010
+10101
+.101.
+
+explosionb
+red yellow
+.101.
+10101
+01010
+10101
+.101.
+
+explosion2
+yellow red
+.101.
+10101
+01010
+10101
+.101.
+
+Wall #
+darkgrey grey lightgrey
+00000
+01110
+01010
+01110
+00000
+
+water ,
+blue lightblue
+00000
+00010
+00000
+00000
+01000
+
+Fruit F
+Red Green LightRed
+..1..
+.000.
+00020
+00000
+.000.
+
+
+FruitPicked G
+Red Green LightRed grey grey
+..4..
+.030.
+43334
+00300
+.040.
+
+DeadFruit
+black black black black black
+..4..
+.030.
+43334
+00300
+.040.
+
+EndPoint E
+darkgreen Yellow black green
+30003
+02220
+02220
+02220
+30003
+
+
+=======
+LEGEND
+=======
+R0 = R0_up or R0_down or R0_left or R0_right
+R1 = R1_up or R1_down or R1_left or R1_right
+R2 = R2_up or R2_down or R2_left or R2_right
+RobotPiece = R0 or R1 or R2 or R3
+* = RobotPiece or Player
+connector = connector_up or connector_down or connector_left or connector_right
+
+=======
+SOUNDS
+=======
+
+sfx0 43004308 (explosion)
+sfx1 69392707
+sfx2 57370907 (push machine)
+sfx3 62083508 (rotate machine)
+sfx4 90419908 (grab)
+sfx5 50782902 (drop in hole)
+sfx6 76878101 (empty grab)
+sfx7 13941101 (dead fruit)
+sfx8 42541302 (release)
+Player move 88476108
+startgame 30513908
+endlevel 5524308
+endgame 5524308
+showmessage 41852908
+closemessage 41852908
+
+================
+COLLISIONLAYERS
+================
+Background
+water
+EndPoint
+Player
+Moved
+Fruit
+FRUITPICKED
+deadfruit
+R0_up, R0_down, R0_left, R0_right
+R1_up, R1_down, R1_left, R1_right
+R2_up, R2_down, R2_left, R2_right
+connector_up
+connector_down
+connector_left
+connector_right
+R3
+parent
+GrandParent
+newrot
+newrot2
+force
+wall
+explosion, explosion2, explosionb
+
+======
+RULES
+======
+
+[ connector ] -> [ ]
+
+[ > player | fruit ] -> cancel
+
+[ > player | water ] -> cancel
+
+[ > player | ] -> [ > player | > force ]
+
+[ > player | robotpiece | wall ] -> cancel
+
+(place movement arrows)
+up [ R0_Up | ] -> [ up R0_Up | up Parent ]
+up [ R1_Up | ] -> [ up R1_Up | up Parent ]
+up [ R2_Up | ] -> [ up R2_Up | up Parent ]
+
+down [ R0_down | ] -> [ down R0_down | down Parent ]
+down [ R1_down | ] -> [ down R1_down | down Parent ]
+down [ R2_down | ] -> [ down R2_down | down Parent ]
+
+left [ R0_left | ] -> [ left R0_left | left Parent ]
+left [ R1_left | ] -> [ left R1_left | left Parent ]
+left [ R2_left | ] -> [ left R2_left | left Parent ]
+
+right [ R0_right | ] -> [ right R0_right | right Parent ]
+right [ R1_right | ] -> [ right R1_right | right Parent ]
+right [ R2_right | ] -> [ right R2_right | right Parent ]
+
+
+( force propagation like this isn't very nice )
+( [ > force < parent | ] -> [ < parent | > force ] )
+
+[ R3 > force < parent ] [ > R0 ] [ v R1 ] [ R2 ] -> [ R3 < parent ] [ > R0 ] [ v R1 ] [ r2 > force ]
+[ R3 > force < parent ] [ > R0 ] [ ^ R1 ] [ R2 ] -> [ R3 < parent ] [ > R0 ] [ ^ R1 ] [ r2 > force ]
+
+[ > force < parent no R0] [R0]-> [ < parent ] [ > force R0 ]
+[ > force R3 perpendicular parent ] [ R2 < parent ] [ R0 ] -> [ R3 perpendicular parent ] [ R2 < parent ] [ > force R0 ]
+
+[ > force R2 perpendicular parent ] [ R1 < parent ] [ R0 ] -> [ R2 perpendicular parent ] [ R1 < parent ] [ > force R0 ]
+
+
+[ > force moving R0 | ] -> [ | moving R0] sfx2
+
+[ > force moving R1 perpendicular parent ] [ R0 ] -> [ moving R1 perpendicular parent ] [ > R0 ] sfx3
+[ > force moving R2 perpendicular parent ] [ R1 ] -> [ moving R2 perpendicular parent ] [ > R1 ] sfx3
+[ > force 		R3 perpendicular parent ] [ R2 ] -> [ R3 perpendicular parent ] [ > R2 ] sfx3
+
+
+(rebuild arm)
+
+(add new parents)
+
+[ > R1 ] [ R2 ] -> [ > R1 ] [ R2 > NewRot ]
+[ > R0 ] [ R1 ] [ R2 ] -> [ > R0 ] [ R1 > NewRot ] [ R2 > NewRot2 ]
+
+[ > Parent R1 ] [ R2 ] -> [ > Parent R1 ] [ > GrandParent R2 ]
+
+[ ^ Parent > NewRot > RobotPiece ] -> [ V RobotPiece ]
+[ ^ Parent > NewRot v RobotPiece ] -> [ < RobotPiece ]
+[ ^ Parent > NewRot < RobotPiece ] -> [ ^ RobotPiece ]
+[ ^ Parent > NewRot ^ RobotPiece ] -> [ > RobotPiece ]
+
+[ ^ Parent < NewRot > RobotPiece ] -> [ ^ RobotPiece ]
+[ ^ Parent < NewRot v RobotPiece ] -> [ > RobotPiece ]
+[ ^ Parent < NewRot < RobotPiece ] -> [ V RobotPiece ]
+[ ^ Parent < NewRot ^ RobotPiece ] -> [ < RobotPiece ]
+
+
+[ ^ GrandParent > NewRot2 > R2 ] -> [ V R2 ]
+[ ^ GrandParent > NewRot2 v R2 ] -> [ < R2 ]
+[ ^ GrandParent > NewRot2 < R2 ] -> [ ^ R2 ]
+[ ^ GrandParent > NewRot2 ^ R2 ] -> [ > R2 ]
+
+[ ^ GrandParent < NewRot2 > R2 ] -> [ ^ R2 ]
+[ ^ GrandParent < NewRot2 v R2 ] -> [ > R2 ]
+[ ^ GrandParent < NewRot2 < R2 ] -> [ V R2 ]
+[ ^ GrandParent < NewRot2 ^ R2 ] -> [ < R2 ]
+
+[ NewRot ] -> [ ]
+[ NewRot2 ] -> [ ]
+[ Parent ] -> [ ]
+[ GrandParent ] -> [ ]
+
+
+(change sprites)
+[ up R0 ] -> [ up R0_Up ]
+[ up R1 ] -> [ up R1_Up ]
+[ up R2 ] -> [ up R2_Up ]
+
+[ down R0 ] -> [ down R0_down ]
+[ down R1 ] -> [ down R1_down ]
+[ down R2 ] -> [ down R2_down ]
+
+[ left R0 ] -> [ left R0_left ]
+[ left R1 ] -> [ left R1_left ]
+[ left R2 ] -> [ left R2_left ]
+
+[ right R0 ] -> [ right R0_Right ]
+[ right R1 ] -> [ right R1_Right ]
+[ right R2 ] -> [ right R2_Right ]
+
+(work from the base up when placing)
+up [ up R0 | no R1 ] [ moving R1 ] -> [ up R0 | moving R1 ] [ ]
+down [ down R0 | no R1 ] [ moving R1 ] -> [ down R0 | moving R1 ] [ ]
+left [ left R0 | no R1 ] [ moving R1 ] -> [ left R0 | moving R1 ] [ ]
+right [ right R0 | no R1 ] [ moving R1 ] -> [ right R0 | moving R1 ] [ ]
+
+up [ up R1 | no R2 ] [ moving R2 ] -> [ up R1 | moving R2 ] [ ]
+down [ down R1 | no R2 ] [ moving R2 ] -> [ down R1 | moving R2 ] [ ]
+left [ left R1 | no R2 ] [ moving R2 ] -> [ left R1 | moving R2 ] [ ]
+right [ right R1 | no R2 ] [ moving R2 ] -> [ right R1 | moving R2 ] [ ]
+
+
+up [ up R2 | no R3 ] [ R3 ] -> [ up R2 | R3 ] [ ]
+down [ down R2 | no R3 ] [ R3 ] -> [ down R2 | R3 ] [ ]
+left [ left R2 | no R3 ] [ R3 ] -> [ left R2 | R3 ] [ ]
+right [ right R2 | no R3 ] [ R3 ] -> [ right R2 | R3 ] [ ]
+
+
+
+
+up [ up R2 | no R3 ] [ R3 ] -> [ R2_up | R3 ] [ ]
+down [ down R2 | no R3 ] [ R3 ] -> [ R2_down | R3 ] [ ]
+left [ left R2 | no R3 ] [ R3 ] -> [ R2_left | R3 ] [ ]
+right [ right R2 | no R3 ] [ R3 ] -> [ R2_right | R3 ] [ ]
+
+
+[ > RobotPiece no moved ] -> [ RobotPiece ]
+
+
+up [ R0_Up | ] -> [ R0_Up connector_up | connector_down ]
+up [ R1_Up | ] -> [ R1_Up connector_up | connector_down ]
+up [ R2_Up | ] -> [ R2_Up connector_up | connector_down ]
+
+down [ R0_down | ] -> [ R0_down connector_down | connector_up ]
+down [ R1_down | ] -> [ R1_down connector_down | connector_up ]
+down [ R2_down | ] -> [ R2_down connector_down | connector_up ]
+
+left [ R0_left | ] -> [ R0_left connector_left | connector_right ]
+left [ R1_left | ] -> [ R1_left connector_left | connector_right ]
+left [ R2_left | ] -> [ R2_left connector_left | connector_right ]
+
+right [ R0_right | ] -> [ R0_right connector_right | connector_left ]
+right [ R1_right | ] -> [ R1_right connector_right | connector_left ]
+right [ R2_right | ] -> [ R2_right connector_right | connector_left ]
+
+[RobotPiece Wall no explosion no explosion2 ] -> [ RobotPiece Wall explosion ] sfx0
+
+[ R0 R2 no explosion no explosion2] -> [ R0 R2 explosion ] sfx0
+[ R0 R3 no explosion no explosion2 ] -> [ R0 r3 explosion ] sfx0
+[ R1 R3 no explosion no explosion2 ] -> [ R1 R3 explosion ] sfx0
+
+[ explosion2 ] -> [ explosionb ] again
+[ explosion ] -> [ explosion2] again
+[ explosionb ] -> [explosion] again
+
+[ > player  | wall ] -> cancel
+
+[FruitPicked ] [ R3 no FruitPicked ] -> [ ] [ R3 FruitPicked ]
+
+[ action player ] [ R3 Fruit no fruitpicked ] -> [ player ] [ R3 Fruitpicked] sfx4
+[ action player ] [ R3 fruitpicked no fruit ] -> [ player ] [ r3 fruit ] sfx8
+
+[action player ] [ r3 no fruit no fruitpicked ] -> sfx6
+
+
+[ fruit endpoint ] -> [endpoint] sfx5
+[ fruit water ] -> [ deadfruit water ] sfx7
+late [R0 water ] -> cancel
+[R0 fruit ] -> cancel
+
+==============
+WINCONDITIONS
+==============
+
+no fruit
+no fruitpicked
+no deadfruit
+
+=======
+LEVELS
+=======
+
+message press x to grip and ungrip the mechanical arm
+message put fruit in hole
+
+message Level 1 of 3
+
+###################
+###################
+###################
+###..,........,.###
+###..,...3....,.###
+###..,...2....,.###
+###.F,.E.1.,,,F,###
+###..,...0....,.###
+###..,..P.....,.###
+###..,........,.###
+###################
+###################
+###################
+
+message Level 2 of 3
+
+##############
+##############
+##############
+###..3.....###
+###..2.....###
+###..1.,,,,###
+###.E0.,...###
+###....,FF.###
+###.P..,...###
+##############
+##############
+##############
+
+message Level 3 of 3
+
+###################
+###################
+###################
+########........###
+###..3.#...##.f.###
+###..2..........###
+###..1...#....#.###
+###.e0..........###
+###..p..#...#.f.###
+#########.......###
+###################
+###################
+###################
+
+message congratulations
+
+
+title Sticky Candy Puzzle Saga
+author Alan Hazelden
+homepage www.draknek.org
+
+run_rules_on_level_start
+
+noaction
+
+========
+OBJECTS
+========
+
+Background
+Black DarkGrey
+00000
+00000
+00000
+00000
+00000
+
+
+Wall
+Pink #febfc6
+10001
+00011
+00110
+01100
+11000
+
+Player
+Pink #febfc6
+.000.
+.111.
+00100
+.000.
+.0.0.
+
+Yellow
+Yellow White Orange
+.000.
+01100
+01000
+00002
+.022.
+
+Red
+Red Orange DarkRed
+.000.
+01100
+01000
+00002
+.022.
+
+Blue
+LightBlue White #3468f7
+.000.
+01100
+01000
+00002
+.022.
+
+YellowTarget
+Brown Yellow
+00000
+01110
+01010
+01110
+00000
+
+RedTarget
+DarkBrown Red
+00000
+01110
+01010
+01110
+00000
+
+BlueTarget
+Purple LightBlue
+00000
+01110
+01010
+01110
+00000
+
+Marker
+White
+.....
+.....
+.....
+.....
+.....
+
+WallL
+White
+0....
+0....
+0....
+0....
+0....
+
+WallR
+White
+....0
+....0
+....0
+....0
+....0
+
+WallU
+White
+00000
+.....
+.....
+.....
+.....
+
+WallD
+White
+.....
+.....
+.....
+.....
+00000
+
+WallLR
+White
+0...0
+0...0
+0...0
+0...0
+0...0
+
+WallUD
+White
+00000
+.....
+.....
+.....
+00000
+
+JoinL
+#febfc6
+0....
+.....
+.....
+.....
+0....
+
+JoinR
+#febfc6
+....0
+.....
+.....
+.....
+....0
+
+JoinU
+#febfc6
+0...0
+.....
+.....
+.....
+.....
+
+JoinD
+#febfc6
+.....
+.....
+.....
+.....
+0...0
+
+JoinBoth
+#febfc6
+0...0
+.....
+.....
+.....
+0...0
+
+Zero
+Purple
+.000.
+.0.0.
+.0.0.
+.0.0.
+.000.
+
+One
+Purple
+.00..
+..0..
+..0..
+..0..
+.000.
+
+Two
+Purple
+.000.
+...0.
+.000.
+.0...
+.000.
+
+Three
+Purple
+.000.
+...0.
+.000.
+...0.
+.000.
+
+Four
+Purple
+.0.0.
+.0.0.
+.000.
+...0.
+...0.
+
+Five
+Purple
+.000.
+.0...
+.000.
+...0.
+.000.
+
+Six
+Purple
+.000.
+.0...
+.000.
+.0.0.
+.000.
+
+Seven
+Purple
+.000.
+...0.
+...0.
+...0.
+...0.
+
+Eight
+Purple
+.000.
+.0.0.
+.000.
+.0.0.
+.000.
+
+Nine
+Purple
+.000.
+.0.0.
+.000.
+...0.
+.000.
+
+
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Player
+A = Red
+B = Yellow
+C = Blue
+X = RedTarget
+Y = YellowTarget
+Z = BlueTarget
+
+WallCoverLR = WallL or WallR or WallLR
+WallCoverUD = WallU or WallD or WallUD
+
+JoinCoverLR = JoinL or JoinR or JoinBoth
+JoinCoverUD = JoinU or JoinD
+
+Join = JoinCoverLR or JoinCoverUD
+
+CoverLR = WallCoverLR or JoinCoverLR
+CoverUD = WallCoverUD or JoinCoverUD
+
+0 = Zero and Wall
+1 = One and Wall
+2 = Two and Wall
+3 = Three and Wall
+4 = Four and Wall
+5 = Five and Wall
+6 = Six and Wall
+7 = Seven and Wall
+8 = Eight and Wall
+9 = Nine and Wall
+
+Number = Zero or One or Two or Three or Four or Five or Six or Seven or Eight or Nine
+
+Candy = Yellow or Red or Blue
+Target = YellowTarget or RedTarget or BlueTarget
+
+
+=======
+SOUNDS
+=======
+
+sfx1 6045907 (candies sticking)
+sfx2 27189102 (can't move)
+sfx3 27189102 (can't push)
+Candy MOVE 48059907
+Player MOVE 11429307
+EndLevel 85763108
+Restart 65287309
+Undo 84906107
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Marker
+Target
+Player, Wall, Candy
+CoverUD
+CoverLR, Number
+
+======
+RULES
+======
+
+[ >  Player | Candy ] -> [  >  Player | > Candy  ]
+[ moving Candy | stationary Candy ] -> [ moving Candy | moving Candy ]
+
+(Prevent movement in a way that triggers the "can't move" sound)
+
+[ > Candy | Wall ] [ > Player | > Candy ] -> [ Candy | Wall ] [ > Player | Candy ]
+[ > Player | stationary Candy ] [ moving Candy ] -> [ > Player | Candy ] [ Candy ]
+
+(Trigger the "candies sticking" sound)
+
+[ > Candy | no Candy ] -> [ > Candy | Marker ]
+
+[ Marker | stationary Candy ] -> sfx1
+
+[ Marker ] -> []
+
+(Can't move sounds)
+
+[ > Player | Wall ] -> sfx2
+[ > Player | stationary Candy ] -> sfx3
+
+(Wall borders)
+
+left [ Wall no WallCoverLR | no Wall ] -> [ Wall WallL | ]
+right [ Wall no WallCoverLR | no Wall ] -> [ Wall WallR | ]
+right [ Wall WallL | no Wall ] -> [ Wall WallLR | ]
+
+up [ Wall no WallCoverUD | no Wall ] -> [ Wall WallU | ]
+down [ Wall no WallCoverUD | no Wall ] -> [ Wall WallD | ]
+down [ Wall WallU | no Wall ] -> [ Wall WallUD | ]
+
+(Candy joins)
+
+late [ Join ] -> []
+
+late left [ Candy | Candy ] -> [ Candy JoinL | Candy ]
+late right [ Candy no JoinL | Candy ] -> [ Candy JoinR | Candy ]
+late right [ Candy JoinL | Candy ] -> [ Candy JoinBoth | Candy ]
+
+late up [ Candy no JoinBoth | Candy ] -> [ Candy JoinU | Candy ]
+late down [ Candy no JoinU no JoinBoth | Candy ] -> [ Candy JoinD | Candy ]
+late down [ Candy JoinU | Candy ] -> [ Candy JoinBoth | Candy ]
+
+==============
+WINCONDITIONS
+==============
+
+All Yellow on YellowTarget
+All Red on RedTarget
+All Blue on BlueTarget
+
+=======
+LEVELS
+=======
+
+message Transport the sticky candies to the collection areas.
+
+#######
+##...##
+#..b.y#
+#pb#.y#
+#..b.y#
+##...##
+1######
+
+#########
+##.....##
+#..a.#.x#
+#pa....x#
+#..a.#.x#
+##.....##
+2########
+
+message Don't let different candies stick together!
+
+########
+#p...yy#
+#.b.ayy#
+#..b.a.#
+#.a.b..#
+#xxa.b.#
+#xx....#
+3#######
+
+###########
+#....p....#
+#..b.c.b..#
+#...c.c...#
+###.zzz.###
+####b.b####
+####yyy####
+#####y#####
+4##########
+
+#########
+#.a...###
+#.a...###
+#..c.axx#
+#zz.p.xx#
+#zzc.a..#
+###...c.#
+###...c.#
+5########
+
+###########
+##.......##
+#y.#.p.#.z#
+#yc.b.c.bz#
+##.......##
+###..#..###
+6##########
+
+#########
+#####..z#
+#...b.zz#
+#.b.bb.z#
+#p.###..#
+#y.cc.c.#
+#yy.c...#
+#y..#####
+7########
+
+#########
+##......#
+#x.c.#by#
+#.b.p..y#
+#z.a.#by#
+##......#
+8########
+
+#########
+#yy.c.x.#
+#y.b..xx#
+#.b.....#
+#...#..b#
+#.a...c.#
+#.aa.c.z#
+#p....zz#
+9########
+
+#########
+#yy###zz#
+#...x...#
+#.##a##.#
+#..b.b..#
+#..#.#..#
+#..c.c..#
+##..p..##
+10#######
+
+###########
+#####y#####
+####yyy####
+###.b.b.###
+###a...c###
+#z...p...x#
+#za.b.b.cx#
+###.....###
+11#########
+
+###########
+####...A###
+##......###
+#..#A#..xx#
+#pA...A.xx#
+#..#A#..xx#
+##......###
+####...A###
+12#########
+
+#########
+#..xxx..#
+#..#a#..#
+#..b.b..#
+##.#p#.##
+##.aya.##
+##..y..##
+13#######
+
+###########
+##..zzz..##
+#..a.p.b..#
+#yy#ccc#xx#
+#..b...a..#
+##...#...##
+14#########
+
+#############
+#...#####...#
+#....c.b....#
+#yy#..p..#zz#
+#.y.cc.bb.z.#
+####.....####
+15###########
+
+#########
+#...#...#
+#.a.a.a.#
+#...x...#
+#z#.x.#y#
+#zc.x.by#
+#.c.p.b.#
+###...###
+16#######
+
+###########
+##......###
+##.#..c...#
+#...c#..zz#
+#pc..#c#zz#
+#...c#..zz#
+##.#..c...#
+##......###
+17#########
+
+###############
+#...###z###...#
+#....bzzzb....#
+#...c.c.c.c...#
+#####.yyy.#####
+#####.#b#.#####
+#####.....#####
+######.p.######
+18#############
+
+#############
+###x#...#z###
+#.xxa.c.azz.#
+#..c.....c..#
+###..#a#..###
+####..p..####
+19###########
+
+###########
+###.....###
+##c.a.a.b##
+#.cyy.zzb.#
+#..yy.zz..#
+#a..c.b..a#
+#..xc.bx..#
+#..xxxxx..#
+##a..a..a##
+###...p.###
+20#########
+
+message Thanks for playing! :)
+
+
+
+
+title Rigid Body example
+author Anonymous
+homepage www.puzzlescript.net
+
+verbose_logging
+
+(
+
+Example for
+https://www.puzzlescript.net/Documentation/rigidbodies.html#many_many
+
+)
+
+========
+OBJECTS
+========
+
+Background 
+white  
+
+Target 
+DarkBlue    
+
+Wall 
+DarkGrey
+
+Player
+Blue
+..0..
+..0.0
+00000
+.000.
+.0.0.
+
+Shadow
+Black
+..0..
+0.0..
+00000
+.000.
+.0.0.
+
+( three multi-cells blocks )
+Crate 
+orange
+
+Chest
+green
+
+Box
+red
+
+( 1-cell small block )
+Small
+darkred
+.....
+.000.
+.000.
+.000.
+.....
+
+( sticky, multicellular block when in contact )
+Glue
+pink
+.000.
+00000
+00000
+00000
+.000.
+
+( a flag to know what is allowed move )
+Wanna_Move
+#ff00ff
+.....
+.....
+..0..
+.....
+.....
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Player
+S = Shadow
+* = Crate
++ = Box
+% = Chest
+o = Small
+g = Glue
+
+( blocks that can be moved by the player )
+Movable = Crate or Box or Chest or Small or Glue
+
+( all things that can move and push blocks )
+Mover = Player or Shadow or Movable 
+
+( things that can stop a movement if they are stationary )
+Obstacle = Wall or Mover
+
+=======
+SOUNDS
+=======
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Target
+Obstacle
+Wanna_Move
+
+======
+RULES     
+======     
+
+[ > player ] [ stationary shadow ] -> [ > player ] [ < shadow ]
+
+( 1. Propagate movements forward )
+[ > Mover | stationary Movable ] -> [ > Mover | > Movable  ]
++ [ > Box    ] [ stationary Box   ] -> [ > Box    ] [ > Box    ]
++ [ > Crate  ] [ stationary Crate ] -> [ > Crate  ] [ > Crate  ]
++ [ > Chest  ] [ stationary Chest ] -> [ > Chest  ] [ > Chest  ]
++ [ moving Glue | stationary Glue ] -> [ moving Glue | moving Glue ]
+
+( 2. Propagate obstructions backwards )
+[ > Mover  | stationary Obstacle ] -> [ stationary Mover | Obstacle ]
+
+	(the next lines deal with directional conflicts)
++ [ ^ Crate | < Crate ] -> [ stationary Crate | stationary Crate ] 
++ [ ^ Crate | > Crate ] -> [ stationary Crate | stationary Crate ] 
++ [ ^ Crate | v Crate ] -> [ stationary Crate | stationary Crate ] 
+
++ [ v Crate | < Crate ] -> [ stationary Crate | stationary Crate ] 
++ [ v Crate | > Crate ] -> [ stationary Crate | stationary Crate ] 
++ [ v Crate | ^ Crate ] -> [ stationary Crate | stationary Crate ] 
+
++ [ < Crate | > Crate ] -> [ stationary Crate | stationary Crate ] 
++ [ < Crate | ^ Crate ] -> [ stationary Crate | stationary Crate ] 
++ [ < Crate | v Crate ] -> [ stationary Crate | stationary Crate ] 
+
++ [ > Crate | < Crate ] -> [ stationary Crate | stationary Crate ] 
++ [ > Crate | ^ Crate ] -> [ stationary Crate | stationary Crate ] 
++ [ > Crate | v Crate ] -> [ stationary Crate | stationary Crate ] 
+
+(also one space removed)
++ [ > Mover | |  < Mover ] -> [ stationary Mover | |  < Mover ] 
+
++ [ > Crate  ] [ stationary Crate ] -> [ stationary Crate ] [ Crate ]
++ [ > Box    ] [ stationary Box   ] -> [ stationary Box   ] [ Box   ]
++ [ > Chest  ] [ stationary Chest ] -> [ stationary Chest ] [ Chest ]
++ [ moving Glue | stationary Glue ] -> [ stationary Glue | Glue ]
+
+( 3. remove all movement, keep a flag )
+[ > Movable ] -> [ Movable wanna_move ]
+
+( 4. propagate movement only on wanna_move things )
+(    ie redo step 1 but with WANNA_MOVE added to the first line below )
+[ > Mover  | stationary Movable WANNA_MOVE ] -> [ > Mover | > Movable ]
++ [ > Box   ] [ stationary Box   ] -> [ > Box   ] [ > Box   ]
++ [ > Crate ] [ stationary Crate ] -> [ > Crate ] [ > Crate ]
++ [ > Chest ] [ stationary Chest ] -> [ > Chest ] [ > Chest ]
++ [ moving Glue | stationary Glue ] -> [ moving Glue | moving Glue ]
+
+( 5. cleanup, remove flag )
+[ wanna_move ] -> [ ]
+
+
+==============
+WINCONDITIONS
+==============
+
+=======     
+LEVELS
+=======
+
+#########
+#.......#
+#..p....#
+#.......#
+#.......#
+#..***..#
+#.......#
+#....S..#
+#.......#
+#########
+
+
+
+title Sticky Blocks
+author increpare
+homepage www.puzzlescript.net
+
+========
+OBJECTS
+========
+
+Background
+lightgreen green
+11111
+01111
+11101
+11111
+10111
+
+Target
+darkblue
+.....
+.000.
+.0.0.
+.000.
+.....
+
+Wall
+brown darkbrown
+00010
+11111
+01000
+11111
+00010
+
+Player
+black orange white blue
+.000.
+.111.
+22222
+.333.
+.3.3.
+
+Crate
+orange
+00000
+0...0
+0...0
+0...0
+00000
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Player
+* = Crate
+@ = Crate and Target
+O = Target
+
+=======
+SOUNDS
+=======
+
+Crate MOVE 36772507
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Target
+Player, Wall, Crate
+
+======
+RULES
+======
+
+[ < Player | Crate ] -> [ < Player | < Crate ] 
+
+==============
+WINCONDITIONS
+==============
+
+all Target on Crate
+
+=======
+LEVELS
+=======
+
+#########
+#.......#
+#.....@.#
+#.P.*.O.#
+#.......#
+#.......#
+#########
+
+.#######.
+.#.....#.
+.#O##..##
+##.##.*.#
+#.*..**.#
+#.OOO.#.#
+#.P.....#
+#########
+
+
+title Wrapping Recipe
+author increpare
+homepage http://www.puzzlescript.net
+
+========
+OBJECTS
+========
+
+Wrap
+Black
+
+Background
+White
+
+Player
+Blue
+
+=======
+LEGEND
+=======
+
+. = Background
+~ = Wrap
+@ = Player
+
+=======
+SOUNDS
+=======
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Wrap
+Player
+
+======
+RULES
+======
+
+[ Wrap | < Player | ... | | Wrap ] -> [ Wrap | | ... | Player | Wrap ]
+
+==============
+WINCONDITIONS
+==============
+
+=======
+LEVELS
+=======
+
+~~~~~~~
+~.....~
+~.....~
+~..@..~
+~.....~
+~.....~
+~~~~~~~
+
+
+title BROKEN Naive Extended Bodies
+author increpare
+homepage www.puzzlescript.net
+
+(
+naive/broken implementation of rigid bodies
+see https://www.puzzlescript.net/Documentation/rigidbodies.html#Introduction
+)
+
+========
+OBJECTS
+========
+
+Background
+LIGHTGREEN GREEN
+11111
+01111
+11101
+11111
+10111
+
+
+Target
+DarkBlue
+.....
+.000.
+.0.0.
+.000.
+.....
+
+Wall
+BROWN DARKBROWN
+00010
+11111
+01000
+11111
+00010
+
+Player
+Black Orange White Blue
+.000.
+.111.
+22222
+.333.
+.3.3.
+
+BigBlock
+Orange Yellow
+00000
+0...0
+0...0
+0...0
+00000
+
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Player
+* = BigBlock
+@ = BigBlock and Target
+O = Target
+
+
+=======
+SOUNDS
+=======
+
+BigBlock MOVE 36772507
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Target
+Player, Wall, BigBlock
+
+======
+RULES
+======
+
+[ >  Player | BigBlock ] -> [  >  Player | > BigBlock  ]
+[ moving BigBlock | BigBlock ] -> [moving BigBlock|moving BigBlock]
+
+==============
+WINCONDITIONS
+==============
+
+=======
+LEVELS
+=======
+
+.#######.
+#.......#
+#..***..#
+#..p*...#
+#.......#
+.#######.
+
+
+USER PROMPT:
+The following PuzzleScript game code:
+```plaintext
+title Magic Mirror
+author PuzzleMaster
+
+========
+OBJECTS
+========
+
+Background
+#ADD8E6
+.....
+.....
+.....
+.....
+.....
+
+Wall
+#8B4513
+11111
+11111
+11111
+11111
+11111
+
+Player
+#FFD700 #FF8C00
+.000.
+.111.
+.2220
+.111.
+.222.
+
+Mirror
+#C0C0C0
+.111.
+.1001
+.1221
+.1001
+.111.
+
+PortalEntrance
+#4B0082 #8A2BE2
+22222
+21112
+21012
+21112
+22222
+
+PortalExit
+#32CD32 #7CFC00
+33333
+32223
+32123
+32223
+33333
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Player
+M = Mirror
+E = PortalEntrance
+X = PortalExit
+
+=======
+SOUNDS
+=======
+
+MirrorTouch
+66203702
+
+PortalTravel
+93301106
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Wall
+PortalExit, PortalEntrance
+Player, Mirror
+
+======
+RULES
+======
+
+# Player can push mirrors
+[ > Player | Mirror ] -> [ > Player | > Mirror ]
+
+# Mirrors can't be pushed into walls
+[ > Mirror | Wall ] -> [ Mirror | Wall ]
+
+# Player interaction with portal entrance
+[ Player PortalEntrance ] -> [ PortalTravel ]
+[ PortalTravel ] -> [ Background ] again
+[ Background PortalExit ] -> [ Player PortalExit ]
+
+# Portal sound effect when used
+[ PortalTravel ] -> [ PortalTravel ] SFX1
+
+==============
+WINCONDITIONS
+==============
+
+all PortalExit on Player
+
+=======
+LEVELS
+=======
+
+##########
+#........#
+#..#M#...#
+#.PE..M..#
+#........#
+#..M.#...#
+#...X....#
+##########
+
+message Collect the light, move the mirrors, and transport through portals!
+
+
+```
+produced the following console output:
+=================================
+line 18 : Trying to access color number 1 from the color palette of sprite WALL, but there are only 1 defined in it.
+line 19 : Trying to access color number 1 from the color palette of sprite WALL, but there are only 1 defined in it.
+line 20 : Trying to access color number 1 from the color palette of sprite WALL, but there are only 1 defined in it.
+line 21 : Trying to access color number 1 from the color palette of sprite WALL, but there are only 1 defined in it.
+line 22 : Trying to access color number 1 from the color palette of sprite WALL, but there are only 1 defined in it.
+line 28 : Trying to access color number 2 from the color palette of sprite PLAYER, but there are only 2 defined in it.
+too many errors, aborting compilation
+Errors detected during compilation; the game may not work correctly.
+Return a repaired version of the code that addresses these errors. Return your code in full, inside a ```plaintext code block.

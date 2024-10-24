@@ -1,0 +1,1548 @@
+SYSTEM PROMPT:
+You are a game designer, familiar with the PuzzleScript game description language. Here are some example games, for inspiration (do not reproduce these games exactly):
+
+title Rigid Body example
+author Anonymous
+homepage www.puzzlescript.net
+
+verbose_logging
+
+(
+
+Example for
+https://www.puzzlescript.net/Documentation/rigidbodies.html#many_many
+
+)
+
+========
+OBJECTS
+========
+
+Background 
+white  
+
+Target 
+DarkBlue    
+
+Wall 
+DarkGrey
+
+Player
+Blue
+..0..
+..0.0
+00000
+.000.
+.0.0.
+
+Shadow
+Black
+..0..
+0.0..
+00000
+.000.
+.0.0.
+
+( three multi-cells blocks )
+Crate 
+orange
+
+Chest
+green
+
+Box
+red
+
+( 1-cell small block )
+Small
+darkred
+.....
+.000.
+.000.
+.000.
+.....
+
+( sticky, multicellular block when in contact )
+Glue
+pink
+.000.
+00000
+00000
+00000
+.000.
+
+( a flag to know what is allowed move )
+Wanna_Move
+#ff00ff
+.....
+.....
+..0..
+.....
+.....
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Player
+S = Shadow
+* = Crate
++ = Box
+% = Chest
+o = Small
+g = Glue
+
+( blocks that can be moved by the player )
+Movable = Crate or Box or Chest or Small or Glue
+
+( all things that can move and push blocks )
+Mover = Player or Shadow or Movable 
+
+( things that can stop a movement if they are stationary )
+Obstacle = Wall or Mover
+
+=======
+SOUNDS
+=======
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Target
+Obstacle
+Wanna_Move
+
+======
+RULES     
+======     
+
+[ > player ] [ stationary shadow ] -> [ > player ] [ < shadow ]
+
+( 1. Propagate movements forward )
+[ > Mover | stationary Movable ] -> [ > Mover | > Movable  ]
++ [ > Box    ] [ stationary Box   ] -> [ > Box    ] [ > Box    ]
++ [ > Crate  ] [ stationary Crate ] -> [ > Crate  ] [ > Crate  ]
++ [ > Chest  ] [ stationary Chest ] -> [ > Chest  ] [ > Chest  ]
++ [ moving Glue | stationary Glue ] -> [ moving Glue | moving Glue ]
+
+( 2. Propagate obstructions backwards )
+[ > Mover  | stationary Obstacle ] -> [ stationary Mover | Obstacle ]
+
+	(the next lines deal with directional conflicts)
++ [ ^ Crate | < Crate ] -> [ stationary Crate | stationary Crate ] 
++ [ ^ Crate | > Crate ] -> [ stationary Crate | stationary Crate ] 
++ [ ^ Crate | v Crate ] -> [ stationary Crate | stationary Crate ] 
+
++ [ v Crate | < Crate ] -> [ stationary Crate | stationary Crate ] 
++ [ v Crate | > Crate ] -> [ stationary Crate | stationary Crate ] 
++ [ v Crate | ^ Crate ] -> [ stationary Crate | stationary Crate ] 
+
++ [ < Crate | > Crate ] -> [ stationary Crate | stationary Crate ] 
++ [ < Crate | ^ Crate ] -> [ stationary Crate | stationary Crate ] 
++ [ < Crate | v Crate ] -> [ stationary Crate | stationary Crate ] 
+
++ [ > Crate | < Crate ] -> [ stationary Crate | stationary Crate ] 
++ [ > Crate | ^ Crate ] -> [ stationary Crate | stationary Crate ] 
++ [ > Crate | v Crate ] -> [ stationary Crate | stationary Crate ] 
+
+(also one space removed)
++ [ > Mover | |  < Mover ] -> [ stationary Mover | |  < Mover ] 
+
++ [ > Crate  ] [ stationary Crate ] -> [ stationary Crate ] [ Crate ]
++ [ > Box    ] [ stationary Box   ] -> [ stationary Box   ] [ Box   ]
++ [ > Chest  ] [ stationary Chest ] -> [ stationary Chest ] [ Chest ]
++ [ moving Glue | stationary Glue ] -> [ stationary Glue | Glue ]
+
+( 3. remove all movement, keep a flag )
+[ > Movable ] -> [ Movable wanna_move ]
+
+( 4. propagate movement only on wanna_move things )
+(    ie redo step 1 but with WANNA_MOVE added to the first line below )
+[ > Mover  | stationary Movable WANNA_MOVE ] -> [ > Mover | > Movable ]
++ [ > Box   ] [ stationary Box   ] -> [ > Box   ] [ > Box   ]
++ [ > Crate ] [ stationary Crate ] -> [ > Crate ] [ > Crate ]
++ [ > Chest ] [ stationary Chest ] -> [ > Chest ] [ > Chest ]
++ [ moving Glue | stationary Glue ] -> [ moving Glue | moving Glue ]
+
+( 5. cleanup, remove flag )
+[ wanna_move ] -> [ ]
+
+
+==============
+WINCONDITIONS
+==============
+
+=======     
+LEVELS
+=======
+
+#########
+#.......#
+#..p....#
+#.......#
+#.......#
+#..***..#
+#.......#
+#....S..#
+#.......#
+#########
+
+
+
+title Memories Of Castlemouse
+author Wayne Myers
+homepage www.conniptions.org
+
+text_color lightgreen
+again_interval 0
+youtube CnjtQbU0Gg8
+
+========
+OBJECTS
+========
+
+Background
+Black
+
+Wall
+Brown DarkBrown
+00010
+11111
+01000
+11111
+00010
+
+Floor
+#888855 #885588
+00100
+01110
+11011
+01110
+00100
+
+
+Hole
+Black #222222 Brown
+21112
+10000
+10000
+10000
+10000
+
+Marker
+Red
+00.00
+0...0
+.....
+0...0
+00.00
+
+MMarker
+Purple
+00.00
+0...0
+.....
+0...0
+00.00
+
+CMarker
+Purple
+00.00
+0...0
+.....
+0...0
+00.00
+
+DMarker
+Purple
+00.00
+0...0
+.....
+0...0
+00.00
+
+EMarker
+Purple
+00.00
+0...0
+.....
+0...0
+00.00
+
+Mouse
+LightGrey Black
+.....
+.1.1.
+.000.
+.010.
+..1..
+
+UpMovingMouse
+LightGrey Black
+.....
+.1.1.
+.000.
+.010.
+..1..
+
+LeftMovingMouse
+LightGrey Black
+.....
+.1.1.
+.000.
+.010.
+..1..
+
+RightMovingMouse
+LightGrey Black
+.....
+.1.1.
+.000.
+.010.
+..1..
+
+DownMovingMouse
+LightGrey Black
+.....
+.1.1.
+.000.
+.010.
+..1..
+
+Cat
+White Green Pink Grey
+0...0
+00000
+01010
+30203
+.000.
+
+RightMovingCat
+White Green Pink Grey
+0...0
+00000
+01010
+30203
+.000.
+
+LeftMovingCat
+White Green Pink Grey
+0...0
+00000
+01010
+30203
+.000.
+
+UpMovingCat
+White Green Pink Grey
+0...0
+00000
+01010
+30203
+.000.
+
+DownMovingCat
+White Green Pink Grey
+0...0
+00000
+01010
+30203
+.000.
+
+Dog
+DarkBrown Black
+.0.0.
+01010
+00000
+00100
+01110
+
+UpMovingDog
+DarkBrown Black
+.0.0.
+01010
+00000
+00100
+01110
+
+DownMovingDog
+DarkBrown Black
+.0.0.
+01010
+00000
+00100
+01110
+
+LeftMovingDog
+DarkBrown Black
+.0.0.
+01010
+00000
+00100
+01110
+
+RightMovingDog
+DarkBrown Black
+.0.0.
+01010
+00000
+00100
+01110
+
+Elephant
+LightGrey Black #eeeeee Grey
+.000.
+31300
+32330
+30000
+.0..0
+
+UpMovingElephant
+LightGrey Black #eeeeee Grey
+.000.
+31300
+32330
+30000
+.0..0
+
+DownMovingElephant
+LightGrey Black #eeeeee Grey
+.000.
+31300
+32330
+30000
+.0..0
+
+LeftMovingElephant
+LightGrey Black #eeeeee Grey
+.000.
+31300
+32330
+30000
+.0..0
+
+RightMovingElephant
+LightGrey Black #eeeeee Grey
+.000.
+31300
+32330
+30000
+.0..0
+
+=======
+LEGEND
+=======
+
+X = Background
+. = Floor
+# = Wall
+E = Elephant and Floor and Marker
+D = Dog and Floor and Marker
+C = Cat and Floor and Marker
+M = Mouse and Floor and Marker
+3 = Elephant and Floor
+2 = Dog and Floor
+1 = Cat and Floor
+0 = Mouse and Floor
+H = Hole and Floor
+
+Player = Marker
+
+Obstacle = Wall or Hole
+
+VerticalMovingElephant = UpMovingElephant or DownMovingElephant
+HorizontalMovingElephant = LeftMovingElephant or RightMovingElephant
+MovingElephant = VerticalMovingElephant or HorizontalMovingElephant
+
+VerticalMovingDog = UpMovingDog or DownMovingDog
+HorizontalMovingDog = LeftMovingDog or RightMovingDog
+MovingDog = VerticalMovingDog or HorizontalMovingDog
+
+VerticalMovingCat = UpMovingCat or DownMovingCat
+HorizontalMovingCat = LeftMovingCat or RightMovingCat
+MovingCat = VerticalMovingCat or HorizontalMovingCat
+
+VerticalMovingMouse = UpMovingMouse or DownMovingMouse
+HorizontalMovingMouse = LeftMovingMouse or RightMovingMouse
+MovingMouse = VerticalMovingMouse or HorizontalMovingMouse
+
+MoveMarker = MMarker or CMarker or DMarker or EMarker
+
+=======
+SOUNDS
+=======
+
+SFX0 40739509 (Mouse in hole)
+SFX1 65087301 (Scared mouse)
+SFX2 10901907 (Hit wall)
+SFX3 45415107 (Scared dog)
+SFX4 80636305 (Scared cat)
+SFX5 3673502  (Scared elephant)
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Floor
+Hole
+Mouse, MovingMouse, Cat, MovingCat, Dog, MovingDog, Elephant, MovingElephant, Wall
+Marker, MoveMarker
+
+======
+RULES
+======
+
+(Marker rules)
+[ > Marker Mouse ] -> [ MMarker > Mouse ]
+[ > Marker Cat ] -> [ CMarker > Cat ]
+[ > Marker Dog ] -> [ DMarker > Dog ]
+[ > Marker Elephant ] -> [ EMarker > Elephant ]
+
+startLoop
+
+(Elephant rules)
+[ UP Elephant ] -> [ UP UpMovingElephant ]
+[ DOWN Elephant ] -> [ DOWN DownMovingElephant ]
+[ LEFT Elephant ] -> [ LEFT LeftMovingElephant ]
+[ RIGHT Elephant ] -> [ RIGHT RightMovingElephant ]
+
+[ UpMovingElephant ] -> [ Up UpMovingElephant ] again
+[ LeftMovingElephant ] -> [ Left LeftMovingElephant ] again
+[ RightMovingElephant ] -> [ Right RightMovingElephant ] again
+[ DownMovingElephant ] -> [ Down DownMovingElephant ] again
+
+right [ Elephant | Stationary Dog | No Obstacle ] -> [ Elephant | right Dog | SFX3 ]
+left [ Elephant | Stationary Dog | No Obstacle ] -> [ Elephant | left Dog | SFX3 ]
+up [ Elephant | Stationary Dog | No Obstacle ] -> [ Elephant | up Dog | SFX3 ]
+down [ Elephant | Stationary Dog | No Obstacle ] -> [ Elephant | down Dog | SFX3]
+right [ VerticalMovingElephant | Stationary Dog | No Obstacle ] -> [ VerticalMovingElephant | right Dog | SFX3 ]
+left [ VerticalMovingElephant | Stationary Dog | No Obstacle ] -> [ VerticalMovingElephant | left Dog | SFX3 ]
+up [ HorizontalMovingElephant | Stationary Dog | No Obstacle ] -> [ HorizontalMovingElephant | up Dog | SFX3 ]
+down [ HorizontalMovingElephant | Stationary Dog | No Obstacle ] -> [ HorizontalMovingElephant | down Dog | SFX3]
+
+[ > MovingElephant | Cat | ] -> [ Elephant | Cat | SFX5 ]
+[ > MovingElephant | Mouse ] -> [ Elephant | Mouse ]
+[ > MovingElephant | Dog | Obstacle | ] -> [ Elephant | Dog | Obstacle | SFX3 ]
+[ > MovingElephant | Dog | No Obstacle ] -> [ Elephant | > Dog | SFX3 ]
+[ > MovingElephant | Obstacle | ] -> [ Elephant | Obstacle | SFX2 ]
+
+(Dog rules)
+[ UP Dog ] -> [ UP UpMovingDog ]
+[ DOWN Dog ] -> [ DOWN DownMovingDog ]
+[ LEFT Dog ] -> [ LEFT LeftMovingDog ]
+[ RIGHT Dog ] -> [ RIGHT RightMovingDog ]
+
+[ UpMovingDog ] -> [ Up UpMovingDog ] again
+[ LeftMovingDog ] -> [ Left LeftMovingDog ] again
+[ RightMovingDog ] -> [ Right RightMovingDog ] again
+[ DownMovingDog ] -> [ Down DownMovingDog ] again
+
+right [ Dog | Stationary Cat | No Obstacle ] -> [ Dog | right Cat | SFX4 ]
+left [ Dog | Stationary Cat | No Obstacle ] -> [ Dog | left Cat | SFX4 ]
+up [ Dog | Stationary Cat | No Obstacle ] -> [ Dog | up Cat | SFX4 ]
+down [ Dog | Stationary Cat | No Obstacle ] -> [ Dog | down Cat | SFX4]
+right [ VerticalMovingDog | Stationary Cat | No Obstacle ] -> [ VerticalMovingDog | right Cat | SFX4 ]
+left [ VerticalMovingDog | Stationary Cat | No Obstacle ] -> [ VerticalMovingDog | left Cat | SFX4 ]
+up [ HorizontalMovingDog | Stationary Cat | No Obstacle ] -> [ HorizontalMovingDog | up Cat | SFX4 ]
+down [ HorizontalMovingDog | Stationary Cat | No Obstacle ] -> [ HorizontalMovingDog | down Cat | SFX4]
+
+[ > MovingDog | Mouse | ] -> [ Dog | Mouse | SFX3 ]
+[ > MovingDog | Elephant ] -> [ Dog | Elephant ]
+[ > MovingDog | Cat | Obstacle | ] -> [ Dog | Cat | Obstacle | SFX4 ]
+[ > MovingDog | Cat | No Obstacle ] -> [ Dog | > Cat | SFX4 ]
+[ > MovingDog | Obstacle | ] -> [ Dog | Obstacle | SFX2 ]
+
+(Cat rules)
+[ UP Cat ] -> [ UP UpMovingCat ]
+[ DOWN Cat ] -> [ DOWN DownMovingCat ]
+[ LEFT Cat ] -> [ LEFT LeftMovingCat ]
+[ RIGHT Cat ] -> [ RIGHT RightMovingCat ]
+
+[ UpMovingCat ] -> [ Up UpMovingCat ] again
+[ LeftMovingCat ] -> [ Left LeftMovingCat ] again
+[ RightMovingCat ] -> [ Right RightMovingCat ] again
+[ DownMovingCat ] -> [ Down DownMovingCat ] again
+
+right [ Cat | Stationary Mouse | No Wall ] -> [ Cat | right Mouse | SFX1 ]
+left [ Cat | Stationary Mouse | No Wall ] -> [ Cat | left Mouse | SFX1 ]
+up [ Cat | Stationary Mouse | No Wall ] -> [ Cat | up Mouse | SFX1 ]
+down [ Cat | Stationary Mouse | No Wall ] -> [ Cat | down Mouse | SFX1]
+right [ VerticalMovingCat | Stationary Mouse | No Wall ] -> [ VerticalMovingCat | right Mouse | SFX1 ]
+left [ VerticalMovingCat | Stationary Mouse | No Wall ] -> [ VerticalMovingCat | left Mouse | SFX1 ]
+up [ HorizontalMovingCat | Stationary Mouse | No Wall ] -> [ HorizontalMovingCat | up Mouse | SFX1 ]
+down [ HorizontalMovingCat | Stationary Mouse | No Wall ] -> [ HorizontalMovingCat | down Mouse | SFX1]
+
+[ > MovingCat | Elephant | ] -> [ Cat | Elephant | SFX4 ]
+[ > MovingCat | Dog ] -> [ Cat | Dog ]
+[ > MovingCat | Mouse | Wall | ] -> [ Cat | Mouse | Wall | SFX1 ]
+[ > MovingCat | Mouse | No Wall ] -> [ Cat | > Mouse | SFX1 ]
+[ > MovingCat | Obstacle | ] -> [ Cat | Obstacle | SFX2 ]
+
+(Mouse rules)
+[ UP Mouse ] -> [ UP UpMovingMouse ]
+[ DOWN Mouse ] -> [ DOWN DownMovingMouse ]
+[ LEFT Mouse ] -> [ LEFT LeftMovingMouse ]
+[ RIGHT Mouse ] -> [ RIGHT RightMovingMouse ]
+
+[ UpMovingMouse ] -> [ Up UpMovingMouse ] again
+[ LeftMovingMouse ] -> [ Left LeftMovingMouse ] again
+[ RightMovingMouse ] -> [ Right RightMovingMouse ] again
+[ DownMovingMouse ] -> [ Down DownMovingMouse ] again
+
+right [ Mouse | Stationary Elephant | No Obstacle ] -> [ Mouse | right Elephant | SFX5 ]
+left [ Mouse | Stationary Elephant | No Obstacle ] -> [ Mouse | left Elephant | SFX5 ]
+up [ Mouse | Stationary Elephant | No Obstacle ] -> [ Mouse | up Elephant | SFX5 ]
+down [ Mouse | Stationary Elephant | No Obstacle ] -> [ Mouse | down Elephant | SFX5]
+right [ VerticalMovingMouse | Stationary Elephant | No Obstacle ] -> [ VerticalMovingMouse | right Elephant | SFX5 ]
+left [ VerticalMovingMouse | Stationary Elephant | No Obstacle ] -> [ VerticalMovingMouse | left Elephant | SFX5 ]
+up [ HorizontalMovingMouse | Stationary Elephant | No Obstacle ] -> [ HorizontalMovingMouse | up Elephant | SFX5 ]
+down [ HorizontalMovingMouse | Stationary Elephant | No Obstacle ] -> [ HorizontalMovingMouse | down Elephant | SFX5]
+
+[ > MovingMouse | Dog | ] -> [ Mouse | Dog | SFX1 ]
+[ > MovingMouse | Cat ] -> [ Mouse | Cat ]
+[ > MovingMouse | Elephant | Wall | ] -> [ Mouse | Elephant | Wall | SFX5 ]
+[ > MovingMouse | Elephant | No Obstacle ] -> [ Mouse | > Elephant | SFX5 ]
+[ > MovingMouse | Wall | ] -> [ Mouse | Wall | SFX2 ]
+[ > MovingMouse | Hole | ] -> [ No MovingMouse | Hole | SFX0 ]
+
+endloop
+
+
+(Late marker rules)
+
+late [ Mouse ] [ MMarker ] -> [ Mouse Marker ] []
+late [ Cat ] [ CMarker ] -> [ Cat Marker ] []
+late [ Dog ] [ DMarker ] -> [ Dog Marker ] []
+late [ Elephant ] [ EMarker ] -> [ Elephant Marker ] []
+
+==============
+WINCONDITIONS
+==============
+
+No MovingMouse
+No Mouse
+
+=======
+LEVELS
+=======
+
+Message In 2001 I was very lost.
+
+XXXXXXXXXXXXXXXXXXXXX
+X###################X
+X#...............###X
+X#..#........#...###X
+X#...............###X
+X###...M..#........#X
+X##H..........#....#X
+X###..#.....#......#X
+X#.............#...#X
+X#..#....#.........#X
+X#..............####X
+X###################X
+XXXXXXXXXXXXXXXXXXXXX
+
+Message I was just trying to hide from the world.
+
+XXXXXXXXXXXXXXXXXXXXXXXXXX
+X########################X
+X#...##....###.###....###X
+X#...##....#H#........###X
+X#.M.............#......#X
+X#....##..##.....##.....#X
+X#.....#......##........#X
+X#..##.......###........#X
+X#..##....#.......###...#X
+X#.......##........##...#X
+X#...##..##........##...#X
+X#...##.................#X
+X###.........###.....####X
+X###.........###....#####X
+X########################X
+XXXXXXXXXXXXXXXXXXXXXXXXXX
+
+Message I spent a lot of time playing a game called Castlemouse.
+
+XXXXXXXXXXXXXXXXXXXXX
+X###################X
+X#.................#X
+X#.........#.......#X
+X###...............#X
+X##H.....0.....#...#X
+X###...............#X
+X#.................#X
+X#....#..........###X
+X#.........0.....H##X
+X#C..............###X
+X###################X
+XXXXXXXXXXXXXXXXXXXXX
+
+Message Everything seemed to be slipping away from me.
+
+XXXXXXXXXXXXXXXXXXXXXXXXXX
+X########################X
+X#.......##.###.........#X
+X#......##..#H#.........#X
+X#.................#....#X
+X#..........0...0#......#X
+X###....#...............#X
+X##H..................###X
+X###......0...........H##X
+X#........#.....#.....###X
+X#................#.....#X
+X#......0...............#X
+X#.C.......#H#..........#X
+X#.........###..........#X
+X########################X
+XXXXXXXXXXXXXXXXXXXXXXXXXX
+
+Message The world seemed full of fear.
+
+XXXXXXXXXXXXXXXXXXX
+X#################X
+X#...............#X
+X#.......1#......#X
+X###.............#X
+X##H....0........#X
+X###.............#X
+X#.............###X
+X#.D......0....H##X
+X#.#...........###X
+X#...#...........#X
+X#################X
+XXXXXXXXXXXXXXXXXXX
+
+Message Everything was falling apart for me at once.
+
+XXXXXXXXXXXXXXXXXXXXXXXXXX
+X########################X
+X###..................###X
+X##H.......0.0........H##X
+X###..................###X
+X#......................#X
+X#..#...................#X
+X#.1.........#..........#X
+X#.........0............#X
+X##.........1...........#X
+X#.......D..............#X
+X###..................###X
+X##H.........0........H##X
+X###.......#..........###X
+X########################X
+XXXXXXXXXXXXXXXXXXXXXXXXXX
+
+Message I don't remember that time very well.
+
+XXXXXXXXXXXXXXXXXXX
+X#################X
+X#...............#X
+X#.......1#......#X
+X###.............#X
+X##H....0........#X
+X###.............#X
+X#.............###X
+X#.....2..0....H##X
+X#...#.......E.###X
+X#...#...........#X
+X#################X
+XXXXXXXXXXXXXXXXXXX
+
+Message I don't even remember exactly how Castlemouse went.
+
+XXXXXXXXXXXXXXXXXXXXXXXXXX
+X########################X
+X#....................#.#X
+X#....1..........#......#X
+X#...........0...#...2..#X
+X#......................#X
+X#..........#H#.........#X
+X#..........###.........#X
+X#..........###.........#X
+X#..........#H#.........#X
+X#...........0..........#X
+X#...2...........1......#X
+X#.E...................##X
+X#......................#X
+X########################X
+XXXXXXXXXXXXXXXXXXXXXXXXXX
+
+Message Many things were set in motion at that time.
+
+XXXXXXXXXXXXXXXXXXX
+X#################X
+X#......0.......H#X
+X##..........3..##X
+X#H...0..........#X
+X##..............#X
+X####..1.........#X
+X#............#..#X
+X#...#..###......#X
+X#..D#..#H#......#X
+X#.......0.......#X
+X#..........1....#X
+X#################X
+XXXXXXXXXXXXXXXXXXX
+
+Message Many unexpected chains of events, not all bad.
+
+XXXXXXXXXXXXXXXXXXXXXXXXXX
+X########################X
+X#.....#..............###X
+X#.....0..............H##X
+X#.......3............###X
+X#......................#X
+X###....................#X
+X##H.................0..#X
+X###....................#X
+X#......................#X
+X#.....................C#X
+X#...2.................##X
+X#....#...2............##X
+X#.....................##X
+X########################X
+XXXXXXXXXXXXXXXXXXXXXXXXXX
+
+Message I'm doing a lot better now.
+
+Message Also, Castlemouse is a much better game than this - you should track it down.
+
+Message Thank you for playing.
+
+Message Music: Broken - Fit and the Conniptions (music.conniptions.org)
+
+title A single rigid body
+author increpare
+homepage www.puzzlescript.net
+
+========
+OBJECTS
+========
+
+Background
+brown
+
+Target
+YELLOW
+
+Player
+PINK
+
+BigBlock
+darkblue
+
+Wall
+darkbrown
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Player
+* = BigBlock
+@ = BigBlock and Target
+O = Target
+
+=========
+SOUNDS
+=========
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Target
+Player, Wall, BigBlock
+
+======
+RULES
+======
+
+rigid [ >  Player | BigBlock ] -> [  >  Player | > BigBlock  ]
++ rigid [ moving BigBlock | BigBlock ] -> [ moving BigBlock | moving BigBlock ]
+
+==============
+WINCONDITIONS
+==============
+
+=======
+LEVELS
+=======
+
+...............
+..........#....
+...............
+..#............
+.....***.......
+.....*.....#...
+..P..**#.......
+.....*.........
+...............
+..#............
+.........#.....
+...............
+...............
+
+
+
+title Smother
+author Team Borse
+
+background_color #9CBD0F
+text_color #0F380F
+
+run_rules_on_level_start
+
+========
+OBJECTS
+========
+
+Background
+#9CBD0F
+
+LaserGV
+#9CBD0F #8CAD0F #306230 #0F380F
+22222
+.222.
+..3..
+..3..
+.....
+
+LaserGH
+#9CBD0F #8CAD0F #306230 #0F380F
+2....
+22...
+2233.
+22...
+2....
+
+LaserV
+#9CBD0F #8CAD0F #306230 #0F380F
+.....
+..3..
+..3..
+..3..
+.....
+
+LaserH
+#9CBD0F #8CAD0F #306230 #0F380F
+.....
+.....
+.333.
+.....
+.....
+
+LaserB
+#9CBD0F #8CAD0F #306230 #0F380F
+.....
+..3..
+.333.
+..3..
+.....
+
+Exit
+#9CBD0F #8CAD0F #306230 #0F380F
+2...2
+2...2
+2...2
+2...2
+2.2.2
+
+Wall
+#9CBD0F #8CAD0F #306230 #0F380F
+33333
+31223
+32123
+32223
+33333
+
+Heart
+#9CBD0F #8CAD0F #306230 #0F380F
+.2.2.
+22222
+.222.
+..2..
+.....
+
+
+PlayerFull
+#9CBD0F #8CAD0F #306230 #0F380F
+.222.
+.323.
+.222.
+.222.
+.2.2.
+
+Protector
+#9CBD0F #8CAD0F #306230 #0F380F
+.333.
+.232.
+.333.
+.333.
+.3.3.
+
+ProtectorSolo
+#9CBD0F #8CAD0F #306230 #0F380F
+.333.
+.232.
+.333.
+.333.
+.3.3.
+
+victimSolo
+#9CBD0F #8CAD0F #306230 #0F380F
+.222.
+.323.
+.222.
+.222.
+.2.2.
+
+
+PlayerDead
+#9CBD0F #8CAD0F #306230 #0F380F
+.222.
+22222
+2.2.2
+.222.
+.222.
+
+pushBlock
+#9CBD0F #8CAD0F #306230 #0F380F
+33333
+31113
+31113
+31113
+33333
+
+=======
+LEGEND
+=======
+
+Player = PlayerFull or Protector or ProtectorSolo or victimSolo
+PlayerWin = PlayerFull or PlayerDead or Protector or victimSolo
+Laser = LaserV or LaserH or LaserB
+LaserBlock = Wall or Player or PlayerDead or Exit
+. = Background
+# = Wall
+g = LaserGV
+h = LaserGH
+P = PlayerFull
+n = Protector
+q = ProtectorSolo
+k = victimSolo
+O = Exit
+l = Heart
+b = pushBlock
+
+=======
+SOUNDS
+=======
+
+startgame 83279102 (sound at start of game)
+CloseMessage 123434 (close message noise)
+ShowMessage 123434 (show message noise)
+sfx0 8545502 (death)
+sfx1 26 (heart)
+
+
+================
+COLLISIONLAYERS
+================
+Background
+Laser
+Exit
+ProtectorSolo, Heart, Wall
+Player, Wall, PlayerDead, LaserGV, LaserGH, Protector, victimSolo, pushBlock
+
+======
+RULES
+======
+
+(clear lasers)
+late [Laser] -> []
+
+(zip the lasers out of the guns and through the levels)
+late down [LaserGV | no Laser] -> [LaserGV | LaserV]
+late right [LaserGH | no Laser] -> [LaserGH | LaserH]
+
+late down [LaserV no LaserBlock | ] -> [LaserV | LaserV]
+late right [LaserH no LaserBlock | ] -> [LaserH | LaserH]
+
+(generate overlapping lasers)
+late down [LaserV no LaserBlock | LaserH] -> [LaserV | LaserB]
+late down [LaserGV no LaserBlock | LaserH] -> [LaserGV | LaserB]
+late right [LaserH no LaserBlock | LaserV] -> [LaserH | LaserB]
+late right [LaserGH no LaserBlock | LaserV] -> [LaserGH | LaserB]
+
+(deal with overlapping lasers)
+late right [LaserB no LaserBlock | no Laser] -> [LaserB | LaserH]
+late right [LaserH no LaserBlock | no Laser] -> [LaserH | LaserH]
+late down [LaserB no LaserBlock | no Laser] -> [LaserB | LaserV]
+late down [LaserV no LaserBlock | no Laser] -> [LaserV | LaserV]
+
+(solo Victim can push a block)
+ [ > victimSolo | pushBlock ] -> [ > victimSolo| > pushBlock]
+
+(pushing block to switch breaks laser)
+[pushBlock  laser] -> [ wall]
+
+
+(if a player is over a laser, then cause them harm)
+late [ PlayerFull Laser ] -> [PlayerDead Laser] sfx0
+
+(victim solo dies in the laser)
+late [ victimSolo Laser ] -> [PlayerDead Laser] sfx0
+
+(protector levels)
+[ > ProtectorSolo | ... | Heart ] -> [ | ... | ProtectorSolo ] sfx1
+[ > ProtectorSolo ] -> [ ProtectorSolo]
+
+
+==============
+WINCONDITIONS
+==============
+All PlayerWin on Exit
+No Heart
+
+=======
+LEVELS
+=======
+
+message then...
+
+message I PROTECT YOU
+
+###g###g###
+#.........#
+#n.......o#
+#........o#
+#p...#....#
+#.........#
+###########
+
+message YOU SMOTHER ME
+
+###########
+#n........#
+#......#..#
+h..#h..#..#
+#p.....#..#
+#......#oo#
+###########
+
+message I DEFEND YOU
+
+#####g#####
+#.P.....n.#
+#.........#
+#..#...#..#
+#.........#
+#......oo.#
+###########
+
+message YOU SPEAK FOR ME
+
+#####g#####
+#n.......o#
+#....#h...#
+h....g....#
+#.....#..o#
+#p......#.#
+###########
+
+message WE ARE CARE FREE
+
+#P####g##g###
+#.#..#.#....#
+#..........o#
+h...........#
+#.#h..#..#.o#
+#.....#....n#
+#############
+
+message I CARRY OUR BURDENS
+
+message before...
+
+message I AM ALWAYS SEARCHING
+
+###########
+#l...l....#
+#....l....#
+#.........#
+#q..l.....#
+#l..l.....#
+###########
+
+
+message I NEVER SEE A FUTURE
+
+###########
+#.........#
+#..l..q.l.#
+#.l....l..#
+#.ll...l.l#
+#l.l...l..#
+###########
+
+message I NEVER FEEL COMFORTABLE
+
+###########
+#....l....#
+#lq..l..l.#
+#.l..l....#
+#.l.....l.#
+#....l....#
+###########
+
+
+message NO ONE GETS ME
+
+###########l##l#####
+#l.l...............#
+#.....ll...........#
+#l..l..............#
+#..q..l.......l....#
+#..ll..l......l....#
+###########........#
+###########l....l..#
+###########........#
+###########.l.l.l..#
+####################
+
+message I NEED CONTACT
+
+###################
+#.l...l############
+#......############
+#l.l..l##########l#
+#l.......l.....l#.#
+#....l............#
+#ll..q.........l.l#
+#..l.....l.......l#
+#.l..l............#
+###################
+
+message I NEED VALIDATION
+
+message before...
+
+message I AM INDEPENDENT
+
+###########
+#.k.g.....#
+#.......b.#
+#.b...###.#
+#.#.......#
+#...h.....#
+#...#...O.#
+###########
+
+
+message I AM STRONG
+
+
+###g##g##
+#.......#
+#kb.b...#
+#.......#
+h.....#.#
+#..#b#h.#
+#....#..#
+h....#o.#
+#.......#
+#########
+
+message I NEED NO ONE
+
+###g#######
+#.o.......#
+#...#.##..#
+#.#..bkb.##
+h...#.#.b.#
+#.......#.#
+#.....#...#
+###########
+
+message I ENJOY MY COMPANY
+
+#####g#####g#####g######
+#.k.....b...........o..#
+#..b....#.#.......##...#
+#.........b...#b..#g...#
+h..........#......#....#
+##.###.#######.####.#.##
+h..............#h......#
+####.#####.###.##.#.#.##
+###.b.#....#........#..#
+###.#....#b#.........b.#
+##.........#.......#...#
+########################
+
+message I AM FEARLESS
+
+##g##g#g####
+#o..#.#....#
+#...#.#.#..#
+#..........#
+#.....#..b.#
+#........b.#
+#..#.##.#b.#
+#..#......k#
+############
+
+message I AM ALONE
+
+
+message now...
+
+###########
+#...o.o...#
+#.........#
+#.........#
+#.........#
+#...n.p...#
+###########
+
+message WE DON'T SEE THINGS AS THEY ARE, WE SEE THEM AS WE ARE
+message Credits
+message Concept/Design/Programming/Graphics - Steven McStravog
+message Design/Programming/Graphics - Darragh McLernon
+message Porting/Design/Programming - Rachel Gawley
+message Artwork - Ricky Woodside
+
+
+title Simple Block Pushing Game
+author increpare
+homepage www.puzzlescript.net
+
+========
+OBJECTS
+========
+
+Background
+LIGHTGREEN GREEN
+11111
+01111
+11101
+11111
+10111
+
+
+Target
+DarkBlue
+.....
+.000.
+.0.0.
+.000.
+.....
+
+Wall
+BROWN DARKBROWN
+00010
+11111
+01000
+11111
+00010
+
+Player
+Black Orange White Blue
+.000.
+.111.
+22222
+.333.
+.3.3.
+
+BlueCrate B
+lightblue
+00000
+0...0
+0...0
+0...0
+00000
+
+
+OrangeCrate O
+Orange
+00000
+0...0
+0...0
+0...0
+00000
+
+
+=======
+LEGEND
+=======
+
+Crate = OrangeCrate or BlueCrate
+. = Background
+# = Wall
+P = Player
+
+=======
+SOUNDS
+=======
+
+Crate MOVE 36772507
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Target
+Player, Wall, Crate
+
+======
+RULES
+======
+
+[ >  Player | Crate ] -> [  >  Player | > Crate  ]
+
+
+[ > OrangeCrate | OrangeCrate ] -> [ > OrangeCrate | > OrangeCrate ]
++[ > OrangeCrate | BlueCrate ] -> [ > OrangeCrate | > BlueCrate ]
++[ > BlueCrate | OrangeCrate ] -> [ > BlueCrate | > OrangeCrate ]
++[ > BlueCrate | BlueCrate ] -> [ > BlueCrate | > BlueCrate ]
+
+==============
+WINCONDITIONS
+==============
+
+=======
+LEVELS
+=======
+
+################
+#..............#
+#..............#
+#.P.BOBOBOBOB..#
+#..............#
+#..............#
+################
+
+
+USER PROMPT:
+The following PuzzleScript game code:
+```plaintext
+title Block Pusher
+author PuzzleScriptCreator
+
+========
+OBJECTS
+========
+
+Background
+white
+
+Wall
+grey
+11111
+11111
+11111
+11111
+11111
+
+Player
+red
+..0..
+.000.
+..0..
+.....
+.....
+
+Block
+blue.darkblue
+.....
+.000.
+.000.
+.000.
+.....
+
+Target
+green
+.....
+..0..
+..0..
+.000.
+.....
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Player
+B = Block
+T = Target
+
+===========
+COLLISIONLAYERS
+===========
+
+Background
+Target
+Wall
+Block
+Player
+
+======
+RULES
+======
+
+[> Player | Block | no Wall] -> [> Player | > Block]
+[> Player | no Block | no Wall] -> [> Player]
+
+==============
+WINCONDITIONS
+==============
+
+All Block on Target
+
+=======
+LEVELS
+=======
+
+; Level 1
+########
+#......#
+#..BTP.#
+#......#
+########
+
+; Level 2
+########
+#......#
+#..BTP.#
+#..B...#
+#..T...#
+########
+
+; Level 3
+##########
+#........#
+#..B.BTP.#
+#......T.#
+##########
+
+```
+produced the following console output:
+=================================
+line 13 : Trying to access color number 1 from the color palette of sprite WALL, but there are only 1 defined in it.
+line 14 : Trying to access color number 1 from the color palette of sprite WALL, but there are only 1 defined in it.
+line 15 : Trying to access color number 1 from the color palette of sprite WALL, but there are only 1 defined in it.
+line 16 : Trying to access color number 1 from the color palette of sprite WALL, but there are only 1 defined in it.
+line 17 : Trying to access color number 1 from the color palette of sprite WALL, but there are only 1 defined in it.
+line 28 : Was looking for color for object BLOCK, got ".darkblue" instead.
+too many errors, aborting compilation
+Errors detected during compilation; the game may not work correctly.
+Return a repaired version of the code that addresses these errors. First, reason about your task and determine the best plan of action. Then, write your code. Return your code in full, inside a ```plaintext code block.

@@ -4,80 +4,99 @@ You are a game designer, familiar with the PuzzleScript game description languag
 USER PROMPT:
 The following PuzzleScript game code:
 ```plaintext
-# Title and Author
-title Sokoban Simple
-author Game Designer
+title Maze Escape
+author Your Name
 
-# Objects
+===========
+OBJECTS
+===========
+
 Background
-color yellow
+BLACK
 
 Player
-@
-color blue
+YELLOW
 
 Wall
-#
-color black
+BLUE
 
-Box
-B
-color red
+Exit
+GREEN
 
-Target
-O
-color green
+===========
+LEGEND
+===========
 
-BoxOnTarget
-G
-color yellow
-
-# Legend
 . = Background
-@ = Player
+P = Player
 # = Wall
-B = Box
-O = Target
-G = BoxOnTarget
+E = Exit
 
-# Collision Layers
+===========
+COLLISIONLAYERS
+===========
+
 Background
-Player
-Box, BoxOnTarget
-Wall, Target
+Wall
+Player, Exit
 
-# Rules
-[ > Player | Box ] -> [ > Player | > Box ]
-[ Box | Target ] -> [ BoxOnTarget | Target ]
-[ BoxOnTarget | ] -> [ | Box ]
+===========
+RULES
+===========
 
-# Win Conditions
-All BoxOnTarget on Target
+[Player] -> [ Player ]
 
-# Levels
-# Level 1
-#######
-#..O..#
-#..B..#
-#..@..#
-#######
+up [Player | > ] -> [ | Player ] 
+down [Player | > ] -> [ | Player ] 
+left [Player | > ] -> [ | Player ] 
+right [Player | > ] -> [ | Player ] 
 
-# Level 2
-#######
-#..O..#
-#..B..#
-#..@..#
-#######
+[Player | Exit] -> [Player | Background]
+
+===========
+WINCONDITIONS
+===========
+
+No Exit
+
+===========
+LEVELS
+===========
+
+######
+#P   #
+# ## #
+#    #
+# E  #
+######
+
+########
+#P     #
+# ###  #
+# # E  #
+# #    #
+# #### #
+#      #
+########
+
+#########
+#P      #
+### ### #
+#    E# #
+### ### #
+#       #
+#########
+
 
 ```
 produced the following console output:
 =================================
-line 6 : Unrecognised stuff in the prelude.
-line 7 : Unrecognised stuff in the prelude.
-line 9 : Unrecognised stuff in the prelude.
-line 11 : Unrecognised stuff in the prelude.
-line 13 : Unrecognised stuff in the prelude.
-line 15 : Unrecognised stuff in the prelude.
+line 30 : section "COLLISIONLAYERS" is out of order, must follow  "SOUNDS" (or it could be that the section "SOUNDS"is just missing totally.  You have to include all section headings, even if the section itself is empty).
+line 41 : Name "player", referred to in a rule, does not exist.
+line 43 : Name "player", referred to in a rule, does not exist.
+line 44 : Name "player", referred to in a rule, does not exist.
+line 45 : Name "player", referred to in a rule, does not exist.
+line 46 : Name "player", referred to in a rule, does not exist.
 too many errors, aborting compilation
 Errors detected during compilation; the game may not work correctly.
 Return a repaired version of the code that addresses these errors. First, reason about your task and determine the best plan of action. Then, write your code. Return your code in full, inside a ```plaintext code block.

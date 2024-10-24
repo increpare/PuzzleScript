@@ -1,0 +1,108 @@
+```plaintext
+Title: Box Pusher
+Author: GameDesigner
+
+========
+OBJECTS
+========
+
+Background
+transparent
+
+Wall
+brown
+
+Pusher
+red
+
+Box
+blue
+
+Target
+green
+
+BoxOnTarget
+cyan
+
+PusherOnTarget
+magenta
+
+========
+LEGEND
+========
+
+. = Background
+# = Wall
+P = Pusher
+B = Box
+T = Target
+O = BoxOnTarget
+@ = PusherOnTarget
+
+========
+COLLISIONLAYERS
+========
+
+Background
+Wall
+Box, BoxOnTarget
+Pusher, PusherOnTarget
+Target
+
+========
+RULES
+========
+
+[ P | B ] -> [ > | > ]
+[ P | T ] -> [ @ ]
+[ P | O ] -> [ @ | B ]
+[ @ ] -> [ P | T ]
+[ P | B | T ] -> [ > | > | O ]
+
+[ B | T ] -> [ O ]
+[ O ] -> [ B | T ]
+
+========
+WINCONDITIONS
+========
+
+All O
+
+========
+LEVELS
+========
+
+#####
+#...#
+#.O.#
+#...#
+#.P.#
+#..B#
+#####
+
+#####
+#...#
+#.O.#
+#...#
+#...#
+#PBO#
+#####
+
+#######
+#.....#
+#.O.O.#
+#.....#
+#PB.BO#
+#...B.#
+#######
+
+#########
+#.......#
+#.O.O.O.#
+#.......#
+#PB.BOBO#
+#.......#
+#########
+```
+
+I removed the '#' character before the color names in the OBJECTS section, as it's incorrect usage in PuzzleScript to have it before color names. The colors are now correctly defined as plain text, resolving the console errors.

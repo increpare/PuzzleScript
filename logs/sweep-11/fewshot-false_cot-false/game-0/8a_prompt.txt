@@ -1,0 +1,81 @@
+SYSTEM PROMPT:
+You are a game designer, familiar with the PuzzleScript game description language. 
+
+USER PROMPT:
+The following PuzzleScript game code:
+```plaintext
+===========
+title Simple Sokoban
+===========
+
+author GameDesigner
+
+===========
+objects
+===========
+Background 000000
+Player 00FF00
+Wall FF0000
+Box 0000FF
+Target FFFF00
+
+===========
+legend
+===========
+. = Background
+# = Wall
+P = Player
+B = Box
+T = Target
+
+===========
+collisionlayers
+===========
+Background
+Player, Box
+Wall
+Target
+
+===========
+rules
+===========
+[ > Player | Box ] -> [ > Player | > Box ]
+
+===========
+winconditions
+===========
+All Box on Target
+
+===========
+levels
+===========
+#####
+#...#
+#.T.#
+#PB.#
+#####
+
+#####
+#...#
+#T..#
+#B#P#
+#####
+
+#####
+#T..#
+#P.B#
+#..T#
+#####
+
+```
+produced the following console output:
+=================================
+line 11 : Was looking for color for object BACKGROUND, got "player " instead.
+line 11 : Was looking for color for object BACKGROUND, got "00ff00" instead.
+line 13 : Was looking for color for object WALL, got "box " instead.
+line 13 : Was looking for color for object WALL, got "0000ff" instead.
+line 21 : You're talking about PLAYER but it's not defined anywhere.
+line 22 : You're talking about BOX but it's not defined anywhere.
+too many errors, aborting compilation
+Errors detected during compilation; the game may not work correctly.
+Return a repaired version of the code that addresses these errors. Return your code in full, inside a ```plaintext code block.

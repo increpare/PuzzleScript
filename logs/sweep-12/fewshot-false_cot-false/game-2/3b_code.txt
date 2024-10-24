@@ -1,0 +1,85 @@
+Here's the repaired version of your PuzzleScript game code. I've fixed the sound definition by removing it, as PuzzleScript does not support custom sounds directly. I've also corrected the movement rules to ensure that the player can move in all directions, and addressed the problem in line 54 by correcting the syntactic error related to the gem collection rule.
+
+```plaintext
+===========
+OBJECTS
+===========
+
+Background
+lightgray
+
+Wall
+black
+
+Player
+blue
+000
+0.0
+000
+
+Gem
+yellow
+0.0
+.0.
+0.0
+
+===========
+LEGEND
+===========
+
+. = Background
+# = Wall
+P = Player
+G = Gem
+
+===========
+COLLISIONLAYERS
+===========
+
+Background
+Wall
+Player
+Gem
+
+===========
+RULES
+===========
+
+# Movement
+[ > Player | ] -> [ > Player ]   // Right Movement
+
+[ Player | < ] -> [ Player | < ] // Left Movement
+
+[ Player |^ ] -> [ Player |^ ]   // Up Movement
+
+[ | v Player ] -> [ | Player v ] // Down Movement
+
+# Collect the gem
+[ Player | Gem ] -> [ Player | ] // Player collects the gem
+
+===========
+WINCONDITIONS
+===========
+
+No Gem
+
+===========
+LEVELS
+===========
+
+#######
+#.....#
+#.###.#
+#.P.#.#
+#...G.#
+#######
+
+#######
+#P....#
+###.#.#
+#...#.#
+#..G#.#
+#######
+```
+
+Please note that due to the inability to implement sound functions directly, the `SFX gemCollect` line was removed. Ensure your game platform supports custom sounds via another method, if required.

@@ -1,0 +1,98 @@
+SYSTEM PROMPT:
+You are a game designer, familiar with the PuzzleScript game description language. 
+
+USER PROMPT:
+The following PuzzleScript game code:
+```plaintext
+===========
+title: 
+===========
+Catch the Star
+
+===========
+author: 
+===========
+Your Name
+
+===========
+homepage: 
+===========
+www.example.com
+
+===========
+legend
+===========
+. = Background
+# = Wall
+P = Player
+* = Star
+
+===========
+sounds
+===========
+# Sound specifications can go here
+
+===========
+collisionLayers
+===========
+Background
+Player, Star, Wall
+
+===========
+rules
+===========
+
+[Player | Star] -> [Player Star]
+
+===========
+winconditions
+===========
+All Star on Player
+
+===========
+levels
+===========
+
+####
+#P.#
+#..#
+#.*#
+####
+
+####
+#* #
+#.P#
+## #
+####
+
+########
+#.#..#.#
+#.###* #
+#P..   #
+########
+
+===========
+messages
+===========
+Congratulations! You caught the star!
+
+===========
+colorPalette
+===========
+Background #000000
+Wall #2f4f4f
+Player #ff6347
+Star #ffd700
+
+```
+produced the following console output:
+=================================
+line 4 : Unrecognised stuff in the prelude.
+line 9 : Unrecognised stuff in the prelude.
+line 14 : Unrecognised stuff in the prelude.
+line 17 : section "LEGEND" is out of order, must follow  "OBJECTS" (or it could be that the section "OBJECTS"is just missing totally.  You have to include all section headings, even if the section itself is empty).
+line 19 : You're talking about BACKGROUND but it's not defined anywhere.
+line 20 : You're talking about WALL but it's not defined anywhere.
+too many errors, aborting compilation
+Errors detected during compilation; the game may not work correctly.
+Return a repaired version of the code that addresses these errors. Return your code in full, inside a ```plaintext code block.

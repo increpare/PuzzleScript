@@ -6,9 +6,9 @@ The following PuzzleScript game code:
 ```plaintext
 ======
 
-title Collect the Key
-author Game Designer
-homepage https://puzzlescript.net
+Title: Collect the Key
+Author: Game Designer
+Homepage: https://puzzlescript.net
 
 ======
 
@@ -47,14 +47,14 @@ W = Wall
 
 SOUNDS
 
+SFX0
+# This is the sound when the player collects the key.
+
 SFX1
-Key
+# This is the sound when the player opens the door.
 
 SFX2
-Door
-
-SFX3
-Win
+# This is the sound when the player reaches the goal.
 
 ======
 
@@ -71,32 +71,32 @@ Wall
 
 RULES
 
-[ > Player | Key ] -> [ Player | Background ] SFX1
-[ Player | Key ] -> [ Player | Background ] SFX1
-[ > Player | Door ] -> [ Player | Background ] SFX2
-[ Player | Goal ] -> [ Player | Background ] SFX3
+[> Player | Key] -> [Player | Background] SFX0
+[> Player | Door] -> [Player | Background] SFX1
+[Player | Goal] -> [Player | Goal] SFX2
 
 ======
 
 WINCONDITIONS
 
+No Key
 All Goal
 
 ======
 
 LEVELS
 
-P . . . .
-. W W W D
-. W K G W
-. W W W W
+P . . . . 
+. W W W D 
+. W K G W 
+. W W W W 
 . . . . .
 
-. . . P .
-W W W W .
-W D K G .
-W . . . .
-W . . . .
+. . . P . 
+W W W W . 
+W D K G . 
+W . . . . 
+W . . . . 
 
 ======
 
@@ -105,16 +105,16 @@ END
 ```
 produced the following console output:
 =================================
-line 51 : unexpected sound token "win".
+line 45 : Was expecting a sound event (like SFX3, or ENDLEVEL) or an object name, but didn't find either.
+line 48 : Was expecting a sound event (like SFX3, or ENDLEVEL) or an object name, but didn't find either.
+line 51 : Was expecting a sound event (like SFX3, or ENDLEVEL) or an object name, but didn't find either.
 line 97 : Key "E" not found. Do you need to add it to the legend, or define a new object?
 line 97 : Key "N" not found. Do you need to add it to the legend, or define a new object?
 line 83 : Error, symbol " ", used in map, not found.
 line 89 : Error, symbol " ", used in map, not found.
 line 97 : Error, symbol "e", used in map, not found.
 line 44 : incorrect sound declaration.
-line 45 : incorrect sound declaration.
 line 47 : incorrect sound declaration.
-line 48 : incorrect sound declaration.
 line 50 : incorrect sound declaration.
 Errors detected during compilation; the game may not work correctly.
 Return a repaired version of the code that addresses these errors. Return your code in full, inside a ```plaintext code block.

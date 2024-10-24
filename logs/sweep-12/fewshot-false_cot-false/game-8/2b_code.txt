@@ -1,0 +1,85 @@
+The order of the sections in a PuzzleScript game is important. The `Objects` section should come before the `Legend` section because you need to define the objects before you use them in the legend. Here's the corrected version of the code:
+
+```plaintext
+Title Simple Sokoban
+Author Game Designer
+Homepage https://www.example.com
+
+===========
+Objects
+===========
+Background
+grey
+
+Wall
+orange
+
+Player
+yellow
+
+Box
+blue
+
+Target
+red
+
+BoxOnTarget
+green
+
+===========
+Legend
+===========
+# = Wall
+P = Player
+B = Box
+T = Target
+G = BoxOnTarget
+
+===========
+Sounds
+===========
+# No custom sounds specified.
+
+===========
+CollisionLayers
+===========
+Background
+Target
+Player, Box, BoxOnTarget, Wall
+
+===========
+WinConditions
+===========
+All BoxOnTarget on Target
+
+===========
+Rules
+===========
+[ > Player |  ] -> [ > Player | > ]
+[ Player | Box  ] -> [ > Player | > Box  ]
+[ Player | BoxOnTarget  ] -> [ > Player | > BoxOnTarget  ]
+
+[ Player | Box on Target ] -> [ > Player | > BoxOnTarget ]
+
+Box -> > | BoxOnTarget on Target
+BoxOnTarget -> > | Box not on Target 
+
+===========
+Levels
+===========
+-------
+#####  
+#...#  
+#.#.#  
+#P#B#  
+#####  
+
+-------
+#####  
+#...#  
+#B#P#  
+#####  
+
+```
+
+Now, the `Objects` section is at the beginning, followed by the `Legend` section. This should resolve the errors you encountered.

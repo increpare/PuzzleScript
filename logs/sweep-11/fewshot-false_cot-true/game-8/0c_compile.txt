@@ -1,13 +1,9 @@
 =================================
-line 8 : Was looking for color for object PLAYER, got "o" instead.
-line 9 : Sprites must be 5 wide and 5 high.
-line 10 : Trying to access color number 1 from the color palette of sprite PLAYER, but there are only 1 defined in it.
-line 10 : Sprites must be 5 wide and 5 high.
-line 11 : Trying to access color number 1 from the color palette of sprite PLAYER, but there are only 1 defined in it.
-line 11 : Sprites must be 5 wide and 5 high.
-line 12 : Trying to access color number 1 from the color palette of sprite PLAYER, but there are only 1 defined in it.
-line 12 : Sprites must be 5 wide and 5 high.
-line 13 : Trying to access color number 1 from the color palette of sprite PLAYER, but there are only 1 defined in it.
-line 14 : Was looking for color for object PLAYER, got "01111110" instead.
+line 36 : section "COLLISIONLAYERS" is out of order, must follow  "SOUNDS" (or it could be that the section "SOUNDS"is just missing totally.  You have to include all section headings, even if the section itself is empty).
+line 41 : Cannot add "TARGETS" to a collision layer; it has not been declared.
+line 42 : Cannot add "CRATES" to a collision layer; it has not been declared.
+line 47 : Name "player", referred to in a rule, does not exist.
+line 47 : Name "box", referred to in a rule, does not exist.
+line 48 : Name "box", referred to in a rule, does not exist.
 too many errors, aborting compilation
 Errors detected during compilation; the game may not work correctly.
