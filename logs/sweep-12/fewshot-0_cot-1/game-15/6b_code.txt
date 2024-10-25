@@ -1,0 +1,116 @@
+To address the errors in the provided PuzzleScript code, we need to correct the object color representation. The errors mainly stem from using color values directly as strings in place of the expected string representation of colors like "black", "blue", etc. PuzzleScript expects colors in hexadecimal format preceded by a '#' without the "..". 
+
+The approach to fixing the script will involve:
+- Updating the color definitions for all objects to use the proper PuzzleScript syntax.
+- Ensuring that all object patterns are correctly formatted with the hexadecimal color code.
+
+Let's correct the errors and return a repaired version of the code:
+
+```plaintext
+===========
+title Key Quest
+===========
+
+===========
+objects
+===========
+
+Background
+000000
+000000
+000000
+000000
+000000
+
+Wall
+0000FF
+0000FF
+0000FF
+0000FF
+0000FF
+
+Player
+FFFF00
+FFFF00
+FFFF00
+FFFF00
+FFFF00
+
+Key
+00FF00
+00FF00
+00FF00
+00FF00
+00FF00
+
+Door
+FF0000
+FF0000
+FF0000
+FF0000
+FF0000
+
+Exit
+FFFFFF
+FFFFFF
+FFFFFF
+FFFFFF
+FFFFFF
+
+===========
+legends
+===========
+
+. = Background
+# = Wall
+P = Player
+k = Key
+D = Door 
+E = Exit
+
+===========
+rules
+===========
+
+# Basic Movement
+[ > Player | ] -> [ | Player > ]
+[ < Player | ] -> [ | Player < ]
+[ ^ Player | ] -> [ | Player ^ ]
+[ v Player | ] -> [ | Player v ]
+
+# Key Collection
+[ Player | Key ] -> [ Player | ]
+
+# Open Door when all keys are collected
+late [ Key ] -> [ Key ]
+[ Door ] -> [ Exit ]
+
+# Winning Condition
+[ Player | Exit ] -> win
+
+===========
+levels
+===========
+
+# Level 1
+#######
+#..k..#
+#.#.#.#
+#kP#kD#
+#.#.#.#
+#..k..#
+#######
+
+# Level 2
+#########
+#.....k.#
+#.###.#.#
+#..kP#k.#
+#.#.#.#.#
+#.k.k.k.#
+#.#####.#
+#......E#
+#########
+```
+
+This version should compile without errors, as it uses the correct hexadecimal color codes for the object definitions.

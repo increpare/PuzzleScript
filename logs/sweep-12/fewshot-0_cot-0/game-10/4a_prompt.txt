@@ -1,0 +1,91 @@
+SYSTEM PROMPT:
+You are a game designer, familiar with the PuzzleScript game description language. 
+
+USER PROMPT:
+The following PuzzleScript game code:
+```plaintext
+========
+title Simple Sokoban
+author OpenAI
+homepage http://www.puzzlescript.net
+
+========
+require_player_movement
+
+========
+background
+black
+
+========
+collisionlayers
+background
+wall
+player, box, goal
+
+========
+legend
+. = Background
+# = Wall
+P = Player
+B = Box
+G = Goal
+
+========
+sounds
+# Include music and sound effects if desired
+# (e.g., [Player Moving] [Player Victory] [Music])
+
+========
+winconditions
+All Box on Goal
+
+========
+levels
+#####
+#...#
+#.#.#
+#...#
+#####
+
+#####
+#P..#
+#.#.#
+#B.G#
+#####
+
+#######
+#     #
+#  B  #
+# PBG #
+#######
+
+========
+objects
+Background
+ color black
+
+Wall
+ color gray
+
+Player
+ color purple
+
+Box
+ color orange
+
+Goal
+ color green
+
+
+```
+produced the following console output:
+=================================
+line 10 : Unrecognised stuff in the prelude.
+line 11 : Unrecognised stuff in the prelude.
+line 14 : section "COLLISIONLAYERS" is out of order, must follow  "SOUNDS" (or it could be that the section "SOUNDS"is just missing totally.  You have to include all section headings, even if the section itself is empty).
+line 15 : Cannot add "BACKGROUND" to a collision layer; it has not been declared.
+line 16 : Cannot add "WALL" to a collision layer; it has not been declared.
+line 17 : Cannot add "PLAYER" to a collision layer; it has not been declared.
+too many errors, aborting compilation
+Errors detected during compilation; the game may not work correctly.
+Return a repaired version of the code that addresses these errors. Return your code in full, inside a ```plaintext code block.

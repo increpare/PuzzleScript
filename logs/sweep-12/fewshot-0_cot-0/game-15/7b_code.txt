@@ -1,0 +1,76 @@
+Certainly! The error suggests that the sound seeds provided in the `sounds` section are not formatted correctly. A sound seed is typically a sequence of digits, and it seems like either the formatting or values provided are incorrect or not recognized by the compiler. Let's correct these seeds and ensure the PuzzleScript code is correctly formatted:
+
+```plaintext
+========== 
+title Sliding Challenge
+author Game Designer
+homepage www.example.com
+==========
+==========
+objects
+==========
+Background
+black
+
+Player
+green
+
+Goal
+yellow
+
+Wall
+blue
+
+==========
+legend
+==========
+. = Background
+P = Player
+G = Goal 
+W = Wall
+
+==========
+sounds
+==========
+SFX3 MOVE 123456
+SFX1 ENDLEVEL 654321
+
+==========
+collisionlayers
+==========
+Background
+Player
+Goal
+Wall
+
+==========
+rules
+==========
+
+[> Player | ] -> [> Player | ]
+[< Player | ] -> [< Player | ]
+[^ Player | ] -> [^ Player | ]
+[v Player | ] -> [v Player | ]
+
+==========
+winconditions
+==========
+All Goal on Player
+
+==========
+levels
+==========
+..W..
+..W..
+P..G.
+..W..
+..W..
+
+..W..
+.P.W.
+..W..
+G..W.
+..W..
+```
+
+In this corrected version, I replaced the sound seeds with simple numeric sequences, `123456` and `654321`, which should be valid. This should resolve the errors mentioned in your console output.

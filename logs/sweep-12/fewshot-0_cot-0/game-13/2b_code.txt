@@ -1,0 +1,109 @@
+The errors in your PuzzleScript game code originate from the sprite matrices having incorrect dimensions. In PuzzleScript, sprites should be 5x5 matrices, but your definitions are 5x6. Let's correct the matrices to fit the required dimensions.
+
+Here's the repaired version of the code:
+
+```plaintext
+Title: Block Push
+
+Author: PuzzleScript
+
+===========
+OBJECTS
+===========
+
+Background
+WHITE
+. . . . . 
+. . . . . 
+. . . . . 
+. . . . . 
+. . . . . 
+
+Player
+RED
+. R R . .
+R . . R 
+R . . R 
+. R R . 
+. . . . 
+
+Block
+BLUE
+. B B . 
+B B B B 
+B B B B 
+. B B . 
+. . . . 
+
+Target
+YELLOW
+. T T . 
+T . . T 
+T . . T 
+. T T . 
+. . . . 
+
+===========
+LEGEND
+===========
+
+. = Background
+P = Player
+B = Block
+T = Target
+
+===========
+SOUNDS
+===========
+
+===========
+COLLISIONLAYERS
+===========
+
+Background
+Target
+Player, Block
+
+===========
+RULES
+===========
+
+[ > P B ] -> [ > B P ]
+[ P | T ] -> [ T | P ]
+
+===========
+WINCONDITIONS
+===========
+
+All Blocks on Target
+
+===========
+LEVELS
+===========
+
+#####
+#..T#
+#PBT#
+#...#
+#####
+
+#######
+#..T..#
+#..B..#
+#..P..#
+#..B..#
+#..T..#
+#######
+
+#########
+#.......#
+#..T.B..#
+#.......#
+#..B.P..#
+#.......#
+#..T....#
+#########
+
+```
+
+This should resolve the errors related to sprite matrix dimensions. If there are further adjustments needed, make sure the sprites and other game elements fit within their defined structures.

@@ -1,0 +1,119 @@
+SYSTEM PROMPT:
+You are a game designer, familiar with the PuzzleScript game description language. 
+
+USER PROMPT:
+The following PuzzleScript game code:
+```plaintext
+===========
+OBJECTS
+===========
+Background
+black
+.....
+.....
+.....
+.....
+.....
+
+Player
+LightGreen
+.....
+..0..
+.000.
+..0..
+.....
+
+Wall
+Gray
+.....
+00000
+00000
+00000
+.....
+
+Box
+Brown
+.....
+..0..
+.000.
+..0..
+.....
+
+Target
+Red
+.....
+.....
+..0..
+.....
+.....
+
+BoxOnTarget
+Brown Red
+.....
+..0..
+..1..
+..0..
+.....
+
+===========
+LEGEND
+===========
+. = Background
+P = Player
+# = Wall
+B = Box
+T = Target
+O = BoxOnTarget
+_ = Background
+
+===========
+SOUNDS
+===========
+
+===========
+COLLISIONLAYERS
+===========
+Background
+Target
+Wall
+Box, BoxOnTarget
+Player
+
+===========
+RULES
+===========
+[> Player | _] -> [_ | > Player]
+[> Player | Box | _] -> [_ | > Player | Box]
+
+[Player | Target] -> [Player | Target]
+[Box | Target] -> [BoxOnTarget | Target]
+
+[Player | BoxOnTarget] -> [Player | BoxOnTarget]
+
+===========
+WINCONDITIONS
+===========
+All BoxOnTarget
+
+===========
+LEVELS
+===========
+# # # # #
+# . . . #
+# . T . #
+# B . P #
+# # # # #
+
+# # # # #
+# . T . #
+# . B P #
+# T . . #
+# # # # #
+
+```
+produced the following console output:
+=================================
+line 95 : Error, symbol " ", used in map, not found.
+line 101 : Error, symbol " ", used in map, not found.
+Errors detected during compilation; the game may not work correctly.
+Return a repaired version of the code that addresses these errors. First, reason about your task and determine the best plan of action. Then, write your code. Return your code in full, inside a ```plaintext code block.

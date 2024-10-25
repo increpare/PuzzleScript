@@ -1,0 +1,64 @@
+Here's the corrected version of the PuzzleScript game code:
+
+```plaintext
+[Title]
+Gem Collector
+
+[Author]
+PuzzleScript Developer
+
+[Legend]
+P = Player
+G = Gem
+E = EnemyBot
+# = Wall
+
+[Sounds]
+gemCollectP = pickup2
+enemyCatchP = die
+
+[CollisionLayers]
+Background
+Player
+Gem
+EnemyBot
+Wall
+
+[Rules]
+[ > Player | Gem ] -> [ > Player ] (message "Gem collected!") (sound gemCollectP)
+[ Player | EnemyBot ] -> restart (message "Caught by an enemy!") (sound enemyCatchP)
+
+// Enemy Automatic Movement
+[> EnemyBot | no Player ] -> [ no Player | > EnemyBot ]
+
+[WinConditions]
+All Gem
+
+[Levels]
+
+// Level 0
+#####
+#...#
+#.P.#
+#...#
+#####
+
+// Level 1
+######
+#P..G#
+#..E.#
+#...##
+######
+
+[Text]
+title Win
+text You collected all the gems!
+```
+
+### Explanation of Changes:
+1. Removed `.` symbol for `Background` in the `[Legend]` section, hence no direct usage of `Background` in `CollisionLayers`.
+2. `CollisionLayers` should separate entities by specifying each on a new line, and correctly list what appears in the game (i.e., `Background`, `Player`, `Gem`, `EnemyBot`, `Wall`).
+3. Corrected the syntax in `[Rules]` by using the correct pattern `[ > Actor | Condition ] -> [ Change ]` and adding sound actions and messages correctly.
+4. Enhanced rule logic to use the correct pattern for detecting conditions and triggering sound effects.
+
+These changes should address the errors and make the game compile successfully.

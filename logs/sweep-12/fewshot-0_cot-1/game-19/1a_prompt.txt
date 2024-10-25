@@ -1,0 +1,119 @@
+SYSTEM PROMPT:
+You are a game designer, familiar with the PuzzleScript game description language. 
+
+USER PROMPT:
+The following PuzzleScript game code:
+```plaintext
+title Sokoban Puzzle
+author Game Designer
+
+========
+OBJECTS
+========
+
+Background
+blue
+.
+Player
+green
+@111
+@111
+@111
+
+Wall
+black
+000
+000
+000
+
+Box
+brown
+BBB
+BBB
+BBB
+
+Target
+yellow
+...
+... 
+...
+
+BoxOnTarget
+brown yellow
+BBB
+BBB
+BBB
+
+============
+LEGEND
+============
+
+. = Background
+P = Player
+# = Wall
+B = Box
+T = Target
+X = BoxOnTarget
+
+===============
+SOUNDS
+===============
+
+==================
+COLLISIONLAYERS
+==================
+
+Background
+Player, Box, BoxOnTarget
+Wall
+Target
+
+========
+RULES
+========
+
+[Player | Box] -> [ | Player | Box]
+[Box | Target] -> [BoxOnTarget | Target]
+[BoxOnTarget] -> [Box | ]
+
+[Player | BoxOnTarget] -> [ | Player | BoxOnTarget]
+[Player | Target] -> [Target | Player]
+
+===============
+WINCONDITIONS
+===============
+
+All BoxOnTarget on Target
+
+========
+LEVELS
+========
+
+#######
+#.....#
+#..B..#
+#..P..#
+#..T..#
+#######
+
+#######
+#.....#
+#..P..#
+#..B..#
+#..T..#
+#..#..#
+#..#..#
+#######
+
+```
+produced the following console output:
+=================================
+line 11 : Unknown junk in spritematrix for object BACKGROUND.
+line 12 : Unknown junk in spritematrix for object BACKGROUND.
+line 13 : Unknown junk in spritematrix for object BACKGROUND.
+line 14 : Unknown junk in spritematrix for object BACKGROUND.
+line 15 : Unknown junk in spritematrix for object BACKGROUND.
+line 26 : Was looking for color for object BBB, got "bbb" instead.
+too many errors, aborting compilation
+Errors detected during compilation; the game may not work correctly.
+Return a repaired version of the code that addresses these errors. First, reason about your task and determine the best plan of action. Then, write your code. Return your code in full, inside a ```plaintext code block.

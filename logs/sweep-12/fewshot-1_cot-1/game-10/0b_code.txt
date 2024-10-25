@@ -1,0 +1,154 @@
+Creating a complete PuzzleScript game involves several steps, including defining the game's title, objects, rules, and levels. I'll design a simple yet interesting puzzle game, inspired by classic block-pushing games like "Sokoban," but with a twist involving teleportation.
+
+**Plan:**
+
+1. **Title and Game Info:** Decide on a suitable title and provide basic game information.
+2. **Define Objects:** Create player, goal, wall, block, teleporter, and floor objects.
+3. **Define Legend:** Set up abbreviations for use within the level designs.
+4. **Sound Effects:** Add basic sound effects for movement and achievements.
+5. **Collision Layers:** Define object layers to control interactions.
+6. **Rules:** Establish movement and game logic rules, especially for teleportation.
+7. **Win Conditions:** Define conditions for winning the level.
+8. **Levels:** Create a few levels to complete the game.
+
+Now, let's proceed with writing the code.
+
+```plaintext
+title Teleporter's Quest
+author PuzzleMaker
+homepage www.puzzlescript.net
+
+========
+OBJECTS
+========
+
+Background
+black
+
+Player
+DarkBlue
+.000.
+.010.
+.010.
+.010.
+.000.
+
+Goal
+DarkGreen
+.....
+..0..
+..0..
+.....
+.....
+
+Wall
+DarkGrey
+.....
+
+Block
+Orange
+.000.
+.0.0.
+.0.0.
+.0.0.
+.000.
+
+Teleporter
+Purple
+.....
+..0..
+..0..
+.....
+
+Floor
+Grey
+
+=======
+LEGEND
+=======
+
+P = Player
+G = Goal
+# = Wall
+B = Block
+T = Teleporter
+. = Background or Floor
+
+=======
+SOUNDS
+=======
+
+Crate Move 17223204
+Goal Reached 34045802
+
+================
+COLLISIONLAYERS
+================
+
+Background, Floor
+Teleporter
+Wall, Player, Block, Goal
+
+======
+RULES
+======
+
+[ > Player | Floor ] -> [ > Player | Floor ]
+
+[ > Player | Block | Floor ] -> [ > Player | > Block | Floor ]
+
+[ Player Teleporter ] -> [ Teleporter Player ]
+
+--------------
+(Teleportation Rules)
+--------------
+late [ Player Teleporter ] [ Teleporter | Floor ] -> [ Teleporter | Floor ] [ | Player ]
+
+--------------
+(Movement)
+--------------
+Late [ > Block | Goal ] -> [ > Block | Goal ] SFX2
+Late [ > Player | Goal ] -> [ Goal | Player ] SFX1
+
+cleanup [ Goal | Block ] -> [ Goal ]
+
+==============
+WINCONDITIONS
+==============
+
+All Block on Goal
+
+=======
+LEVELS
+=======
+
+message Level 1
+. . . . # #
+. P B . G #
+. . # # . #
+. . . G # #
+. . # # # #
+. . . . . .
+
+message Level 2
+. . . # # # #
+. . P B T . G
+. . . # # . .
+. . . . . . #
+. . . . T G B
+. . . # # # #
+
+message Level 3
+. . # # # . .
+. P B . . G .
+# # . . # # #
+. . . # . B .
+. . . . . G .
+. . # # # # .
+```
+
+**Explanation:**
+- **Objects:** Include basic elements like the player, blocks, goals, walls, teleporters, and floor.
+- **Rules:** Define movement rules and interactions, particularly handling teleportation mechanics whereby a player standing on one teleporter instantly moves to another teleporter (if one exists).
+- **Win Conditions:** Achieve all blocks on goals.
+- **Levels:** Provide a progression of three levels of increasing difficulty, incorporating the use of teleportation.

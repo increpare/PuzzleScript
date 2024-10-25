@@ -1,0 +1,103 @@
+The errors you're encountering are due to the sprite matrices having incorrect syntax. In PuzzleScript, sprites should be made using a rectangular grid where each cell is either a color or empty. Let's rewrite the sprites correctly:
+
+```plaintext
+Title: Block Push
+
+Author: PuzzleScript
+
+===========
+OBJECTS
+===========
+
+Background
+WHITE
+.....
+
+Player
+RED
+..00.
+0000.
+0....
+000..
+.....
+
+Block
+BLUE
+..00.
+0000.
+0....
+000..
+.....
+
+Target
+YELLOW
+..00.
+0000.
+0....
+000..
+.....
+
+===========
+LEGEND
+===========
+
+. = Background
+P = Player
+B = Block
+T = Target
+
+===========
+SOUNDS
+===========
+
+===========
+
+COLLISIONLAYERS
+===========
+
+Background
+Target
+Player, Block
+
+===========
+RULES
+===========
+
+[ > P B ] -> [ > B P ]
+[ P | T ] -> [ T | P ]
+
+===========
+WINCONDITIONS
+===========
+
+All Blocks on Target
+
+===========
+LEVELS
+===========
+
+#####
+#..T#
+#PBT#
+#...#
+#####
+
+#######
+#..T..#
+#..B..#
+#..P..#
+#..B..#
+#..T..#
+#######
+
+#########
+#.......#
+#..T.B..#
+#.......#
+#..B.P..#
+#.......#
+#..T....#
+#########
+```
+
+It's important to note that I replaced the letter representations in the sprites with '0', representing the fill color of each object, which is a common convention in PuzzleScript. Ensure that the sprite matrix for each object is a 5x5 grid, matching the typical requirement for PuzzleScript's object size format.

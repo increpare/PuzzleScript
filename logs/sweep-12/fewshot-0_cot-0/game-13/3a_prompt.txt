@@ -1,0 +1,120 @@
+SYSTEM PROMPT:
+You are a game designer, familiar with the PuzzleScript game description language. 
+
+USER PROMPT:
+The following PuzzleScript game code:
+```plaintext
+Title: Block Push
+
+Author: PuzzleScript
+
+===========
+OBJECTS
+===========
+
+Background
+WHITE
+. . . . . 
+. . . . . 
+. . . . . 
+. . . . . 
+. . . . . 
+
+Player
+RED
+. R R . .
+R . . R 
+R . . R 
+. R R . 
+. . . . 
+
+Block
+BLUE
+. B B . 
+B B B B 
+B B B B 
+. B B . 
+. . . . 
+
+Target
+YELLOW
+. T T . 
+T . . T 
+T . . T 
+. T T . 
+. . . . 
+
+===========
+LEGEND
+===========
+
+. = Background
+P = Player
+B = Block
+T = Target
+
+===========
+SOUNDS
+===========
+
+===========
+COLLISIONLAYERS
+===========
+
+Background
+Target
+Player, Block
+
+===========
+RULES
+===========
+
+[ > P B ] -> [ > B P ]
+[ P | T ] -> [ T | P ]
+
+===========
+WINCONDITIONS
+===========
+
+All Blocks on Target
+
+===========
+LEVELS
+===========
+
+#####
+#..T#
+#PBT#
+#...#
+#####
+
+#######
+#..T..#
+#..B..#
+#..P..#
+#..B..#
+#..T..#
+#######
+
+#########
+#.......#
+#..T.B..#
+#.......#
+#..B.P..#
+#.......#
+#..T....#
+#########
+
+
+```
+produced the following console output:
+=================================
+line 19 : Unknown junk in spritematrix for object PLAYER.
+line 20 : Unknown junk in spritematrix for object PLAYER.
+line 21 : Unknown junk in spritematrix for object PLAYER.
+line 22 : Unknown junk in spritematrix for object PLAYER.
+line 27 : Unknown junk in spritematrix for object BLOCK.
+line 28 : Unknown junk in spritematrix for object BLOCK.
+too many errors, aborting compilation
+Errors detected during compilation; the game may not work correctly.
+Return a repaired version of the code that addresses these errors. Return your code in full, inside a ```plaintext code block.

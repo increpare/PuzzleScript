@@ -1,0 +1,106 @@
+To create a complete PuzzleScript game, we need to define several key components:
+
+1. **Objects**: The building blocks of the game, such as players, blocks, goals, walls, etc.
+2. **Legend**: A mapping of single-character symbols to the objects defined.
+3. **Colors**: The color representation for each of the objects.
+4. **Sounds**: Optional sound effects for game actions.
+5. **CollisionLayers**: Define how objects interact or block each other.
+6. **Rules**: The set of logic that defines game mechanics and interactions.
+7. **Win Conditions**: The criteria that must be met for a player to win the level.
+8. **Levels**: The actual layout of objects for one or more levels.
+
+With these in mind, I'll design a simple Sokoban-like game where the player pushes blocks onto goal spaces to win. Let's go through the components:
+
+1. **Objects**: We need objects for the player, the wall, a block (crate), a goal, and a block on a goal.
+2. **Legend**: We'll use symbols like `P` for player, `#` for wall, `B` for block, `.` for goal, and `G` for a block on a goal.
+3. **Colors**: Assign distinct colors to make each object visually recognizable.
+4. **Sounds**: Optional in this example as it focuses on core functionality.
+5. **CollisionLayers**: Separate out immovable objects like walls from player and blocks which can move.
+6. **Rules**: Define interactions like moving, pushing blocks, and handling blocks on goals.
+7. **Win Conditions**: Define that a win is achieved when all blocks have been pushed onto goals.
+8. **Levels**: Provide one example level to demonstrate gameplay.
+
+Here's the code for the PuzzleScript game:
+
+```plaintext
+===========
+OBJECTS
+===========
+Background
+color Transparent
+
+Player
+color Blue
+
+Wall
+color Black
+
+Block
+color Brown
+
+Goal
+color Yellow
+
+BlockOnGoal
+color Green
+
+===========
+LEGEND
+===========
+P = Player
+# = Wall
+B = Block
+. = Goal
+G = BlockOnGoal
+
+===========
+SOUNDS
+===========
+
+===========
+COLLISIONLAYERS
+===========
+Background
+Wall
+Goal
+Block, BlockOnGoal
+Player
+
+===========
+RULES
+===========
+[Player | Block] -> [ | Player Block]  // Move player and push block
+
+# Convert a Block into a BlockOnGoal when on a Goal
+[Block | Goal] -> [ | BlockOnGoal]
+
+# Convert a BlockOnGoal back to a Block if it moves away from a Goal
+[BlockOnGoal | ~Goal] -> [Block | Goal]
+
+===========
+WINCONDITIONS
+===========
+All BlockOnGoal
+
+===========
+LEVELS
+===========
+// Level 1
+########
+#..   #
+# PB# #
+# BB. #
+#   G #
+########
+```
+
+### Explanation:
+
+- **Objects** and **Colors** are straightforward definitions that specify our game entities and their display color.
+- **Legend** defines shorthand symbols for those entities in level definitions.
+- **CollisionLayers** ensure that walls are distinct, and blocks are in a separate layer.
+- **Rules** cover moving the player, pushing blocks, and transforming blocks when positioned on goals.
+- **WinConditions** specify victory when all blocks are on goals.
+- The **Level** offers a simple puzzle where the player (`P`) must push blocks (`B`) onto goals (`.`) to win.
+
+This simple game should be a good starting point for anyone wishing to explore PuzzleScript further.

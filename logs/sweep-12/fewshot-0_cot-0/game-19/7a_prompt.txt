@@ -1,0 +1,138 @@
+SYSTEM PROMPT:
+You are a game designer, familiar with the PuzzleScript game description language. 
+
+USER PROMPT:
+The following PuzzleScript game code:
+```plaintext
+Title: Sokoban Puzzles
+
+Author: PuzzleScript Dev
+
+Homepage: https://www.puzzlescript.net
+
+===========
+OBJECTS
+===========
+Background
+transparent
+.....
+.....
+.....
+.....
+.....
+
+Wall
+#000000
+#####
+#####
+#####
+#####
+#####
+
+Player
+#FF0000
+.....
+..P..
+..P..
+..P..
+.....
+
+Crate
+#00FF00
+.....
+..C..
+.CC..
+..C..
+.....
+
+Target
+#FFFF00
+.....
+.....
+..$..
+.....
+.....
+
+CrateOnTarget
+#00FF00
+.....
+..O..
+.OO..
+..O..
+.....
+
+PlayerOnTarget
+#FF0000
+.....
+..T..
+..T..
+..T..
+.....
+
+================
+LEGEND
+================
+. = Background
+# = Wall
+P = Player
+C = Crate
+$ = Target
+T = PlayerOnTarget
+O = CrateOnTarget
+
+=======
+RULES
+=======
+[Player | Crate] -> [ | Player Crate] 
+[Player Crate | ] -> [ | Player Crate] 
+[Player | Target] -> [PlayerOnTarget | ] 
+[PlayerOnTarget Crate | ] -> [ | PlayerOnTarget Crate] 
+[Crate | Target] -> [CrateOnTarget | ] 
+
+=======
+WINCONDITIONS
+=======
+All CrateOnTarget
+
+========
+LEVELS
+========
+########
+#....$.#
+#.C.P# #
+#.#### #
+#....# #
+########
+
+########
+#...$ .#
+#..$C# #
+#..P.# #
+#.#### #
+########
+
+########
+#...$. #
+#.C.P# #
+#.#### #
+#...## #
+######$
+
+
+```
+produced the following console output:
+=================================
+line 20 : Unknown junk in object section (possibly: sprites have to be 5 pixels wide and 5 pixels high exactly. Or maybe: the main names for objects have to be words containing only the letters a-z0.9 - if you want to call them something like ",", do it in the legend section).
+line 21 : Unknown junk in object section (possibly: sprites have to be 5 pixels wide and 5 pixels high exactly. Or maybe: the main names for objects have to be words containing only the letters a-z0.9 - if you want to call them something like ",", do it in the legend section).
+line 22 : Unknown junk in object section (possibly: sprites have to be 5 pixels wide and 5 pixels high exactly. Or maybe: the main names for objects have to be words containing only the letters a-z0.9 - if you want to call them something like ",", do it in the legend section).
+line 23 : Unknown junk in object section (possibly: sprites have to be 5 pixels wide and 5 pixels high exactly. Or maybe: the main names for objects have to be words containing only the letters a-z0.9 - if you want to call them something like ",", do it in the legend section).
+line 24 : Unknown junk in object section (possibly: sprites have to be 5 pixels wide and 5 pixels high exactly. Or maybe: the main names for objects have to be words containing only the letters a-z0.9 - if you want to call them something like ",", do it in the legend section).
+line 29 : Unknown junk in spritematrix for object PLAYER.
+line 30 : Unknown junk in spritematrix for object PLAYER.
+line 31 : Unknown junk in spritematrix for object PLAYER.
+line 37 : Unknown junk in spritematrix for object CRATE.
+line 38 : Unknown junk in spritematrix for object CRATE.
+line 39 : Unknown junk in spritematrix for object CRATE.
+too many errors, aborting compilation
+Errors detected during compilation; the game may not work correctly.
+Return a repaired version of the code that addresses these errors. Return your code in full, inside a ```plaintext code block.

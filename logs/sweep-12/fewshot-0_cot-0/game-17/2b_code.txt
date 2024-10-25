@@ -1,0 +1,99 @@
+The errors you're seeing are likely due to incorrect color indexing in the sprite definitions. In PuzzleScript, the first color in a sprite is typically the background color, which is accessed using number 0. Your indexes for the interior colors of the sprites are starting at 1, which causes out-of-bounds errors. Let's correct the sprite color indexing in your game code:
+
+```plaintext
+///////////////////////////////////////////////////////////////
+// PuzzleScript game definition for "Treasure Quest"
+///////////////////////////////////////////////////////////////
+ 
+// ======== OBJECTS ========
+OBJECTS
+Background
+transparent
+black
+
+Player
+red
+.000.
+..0..
+00000
+..0..
+.000.
+
+Wall
+grey
+11111
+11111
+11111
+11111
+11111
+
+Treasure
+yellow
+..0..
+.000.
+00000
+.000.
+..0..
+
+Lava
+orange
+.000.
+00000
+.000.
+00000
+.000.
+
+// ======== LEGEND ========
+LEGEND
+. = Background
+P = Player
+# = Wall
+T = Treasure
+L = Lava
+
+// ======== SOUNDS ========
+SOUNDS
+treasure
+  collect
+lava
+  explode
+
+// ======== COLLISIONLAYERS ========
+COLLISIONLAYERS
+Background
+Lava
+Wall
+Player
+Treasure
+
+// ======== RULES ========
+RULES
+[Player Treasure] -> SOUND treasure
+[Player Lava] -> SOUND lava DIE
+
+// ======== WINCONDITIONS ========
+WINCONDITIONS
+No Treasure
+
+// ======== LEVELS ========
+LEVELS
+// Level 1
+#######
+#.....#
+#..P..#
+#..T..#
+#.....#
+#.L.L.#
+#######
+
+// Level 2
+#######
+#.....#
+#..L..#
+#..P..#
+##..###
+#..T..#
+#######
+```
+
+I modified the sprite color indexes to start from 0, which is the correct way to address different colors in the sprite as per PuzzleScript's conventions. This should resolve the errors in your game code.

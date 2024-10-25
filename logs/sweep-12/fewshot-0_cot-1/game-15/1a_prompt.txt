@@ -1,0 +1,109 @@
+SYSTEM PROMPT:
+You are a game designer, familiar with the PuzzleScript game description language. 
+
+USER PROMPT:
+The following PuzzleScript game code:
+```plaintext
+===========
+title Key Quest
+===========
+
+===========
+objects
+===========
+
+Background
+black
+
+Wall
+blue
+
+Player
+yellow
+
+Key
+green
+
+Door
+red
+
+Exit
+white
+
+===========
+legends
+===========
+
+. = Background
+# = Wall
+P = Player
+k = Key
+D = Door 
+E = Exit
+
+===========
+sounds
+===========
+keyCollected k
+doorOpen D
+winGame E
+
+===========
+rules
+===========
+
+# Basic Movement
+[ > Player | ] -> [ | Player > ]
+[ < Player | ] -> [ | Player < ]
+[ ^ Player | ] -> [ | Player ^ ]
+[ v Player | ] -> [ | Player v ]
+
+# Key Collection
+[ Player | Key ] -> [ Player | ]
+
+# Open Door when all keys are collected
+late [ Key ] -> [ Key ]
+[ Door ] -> [ Exit ]
+
+# Winning Condition
+[ Player | Exit ] -> win
+
+===========
+levels
+===========
+
+# Level 1
+#######
+#..k..#
+#.#.#.#
+#kP#kD#
+#.#.#.#
+#..k..#
+#######
+
+# Level 2
+#########
+#.....k.#
+#.###.#.#
+#.kP#k.#
+#.#.#.#.#
+#.k.k.k.#
+#.#####.#
+#......E#
+#########
+
+
+```
+produced the following console output:
+=================================
+line 31 : Unknown junk in object section (possibly: sprites have to be 5 pixels wide and 5 pixels high exactly. Or maybe: the main names for objects have to be words containing only the letters a-z0.9 - if you want to call them something like ",", do it in the legend section).
+line 32 : Unknown junk in object section (possibly: sprites have to be 5 pixels wide and 5 pixels high exactly. Or maybe: the main names for objects have to be words containing only the letters a-z0.9 - if you want to call them something like ",", do it in the legend section).
+line 33 : Object "PLAYER" defined multiple times.
+line 34 : Was looking for color for object P, got "k " instead.
+line 34 : Was looking for color for object P, got "= key" instead.
+line 35 : Name "=" already in use.
+line 35 : Object "DOOR" defined multiple times.
+line 36 : Was looking for color for object D, got "e " instead.
+too many errors, aborting compilation
+Errors detected during compilation; the game may not work correctly.
+Return a repaired version of the code that addresses these errors. First, reason about your task and determine the best plan of action. Then, write your code. Return your code in full, inside a ```plaintext code block.

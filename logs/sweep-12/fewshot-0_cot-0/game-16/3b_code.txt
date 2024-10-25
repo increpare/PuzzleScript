@@ -1,0 +1,93 @@
+```plaintext
+Title: Simple Sokoban
+
+Author: PuzzleScript Creator
+
+Homepage: puzzlescript.net
+
+=========
+OBJECTS
+=========
+
+Background
+lightblue
+
+Wall
+black
+
+Crate
+brown
+
+CrateOnTarget
+yellow
+
+Target
+green
+
+Player
+red
+
+PlayerOnTarget
+pink
+
+=========
+LEGEND
+=========
+
+. = Background
+# = Wall
+B = Crate
+O = CrateOnTarget
+T = Target
+P = Player
+@ = PlayerOnTarget
+
+=========
+SOUNDS
+=========
+
+========= 
+COLLISIONLAYERS 
+========= 
+
+Background
+Wall
+Target
+Player, PlayerOnTarget
+Crate, CrateOnTarget
+
+=========
+RULES
+=========
+
+[ > Player | Crate ] -> [ > Player | > Crate ]
+[ > PlayerOnTarget | Crate ] -> [ > PlayerOnTarget | > Crate ]
+
+[ > Player | CrateOnTarget ] -> [ > Player | > CrateOnTarget ]
+[ > PlayerOnTarget | CrateOnTarget ] -> [ > PlayerOnTarget | > CrateOnTarget ]
+
+[ Target | Player ] -> [ Target | PlayerOnTarget ]
+[ PlayerOnTarget ] -> [ Player ]
+
+[ Target | Crate ] -> [ Target | CrateOnTarget ]
+[ CrateOnTarget ] -> [ Crate ]
+
+=========
+WINCONDITIONS
+=========
+
+All CrateOnTarget
+
+=========
+LEVELS
+=========
+
+#####
+#...#
+#.#.#
+#PB.#
+#####
+
+```
+
+In the corrected version, each left pattern is paired with a right pattern of the same length in the rules regarding `Player` and `Target`. I fixed these by adding `Target` on the right side of the rules for player interactions with targets. This ensures the target remains in place after interactions.

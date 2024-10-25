@@ -1,0 +1,106 @@
+Here's a complete code for a simple PuzzleScript game called "Sliding Puzzle". In this game, players need to slide the 'Box' onto the 'Target' to win.
+
+```plaintext
+title Sliding Puzzle
+author Game Designer
+
+========
+OBJECTS
+========
+
+Background
+LightBlue
+.....
+
+Player
+Yellow
+..0..
+.000.
+.0.0.
+.....
+
+Box
+Orange
+.....
+..0..
+.000.
+.....
+
+Wall
+Black
+.....
+.1111.
+.....
+
+Target
+Red
+.....
+.....
+..0..
+.000.
+
+=======
+LEGEND
+=======
+
+= Background Wall
+P = Player
+B = Box
+T = Target
+
+=======
+SOUNDS
+=======
+
+move_player 1
+move_box 2
+win 3
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Wall
+Target
+Box
+Player
+
+======
+RULES
+======
+
+# Player Movement
+[> Player | ] -> [> | Player] 
+[< Player | ] -> [< | Player]
+[^ Player | ] -> [^ | Player]
+[v Player | ] -> [v | Player]
+
+# Box Movement
+[> Player | Box] -> [> | Player]
+[< Player | Box] -> [< | Player]
+[^ Player | Box] -> [^ | Player]
+[v Player | Box] -> [v | Player]
+[> Player Box | ] -> [> Box | Player]
+[< Player Box | ] -> [< Box | Player]
+[^ Player Box | ] -> [^ Box | Player]
+[v Player Box | ] -> [v Box | Player]
+
+==============
+WINCONDITIONS
+==============
+
+All Box on Target
+
+=======
+LEVELS
+=======
+
+//// Level 1 ////
+....
+.P.B
+...T
+
+```
+
+In this game, the player ('P') pushes the box ('B') around the grid. The goal is to cover the target ('T') with the box. The player can move in any direction unless blocked by a wall or the box is against a wall.

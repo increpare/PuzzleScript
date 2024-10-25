@@ -1,0 +1,79 @@
+The error messages indicate that the colors specified for the objects are not being correctly interpreted by PuzzleScript. Typically, in a PuzzleScript game, color should be specified correctly to ensure the compilation works without errors.
+
+In this case, the `color` keyword is not valid syntax in PuzzleScript. Instead, PuzzleScript uses a percentage system for color, which defines how much of each primary color is present.
+
+I'll correct the mistakes by properly assigning colors as percentages in the OBJECTS section and then return the corrected code.
+
+```plaintext
+===========
+OBJECTS
+===========
+Background
+transparent
+
+Player
+blue
+
+Wall
+black
+
+Block
+brown
+
+Goal
+yellow
+
+BlockOnGoal
+green
+
+===========
+LEGEND
+===========
+P = Player
+# = Wall
+B = Block
+. = Goal
+G = BlockOnGoal
+
+===========
+SOUNDS
+===========
+
+===========
+COLLISIONLAYERS
+===========
+Background
+Wall
+Goal
+Block, BlockOnGoal
+Player
+
+===========
+RULES
+===========
+[Player | Block] -> [ | Player Block]  // Move player and push block
+
+# Convert a Block into a BlockOnGoal when on a Goal
+[Block | Goal] -> [ | BlockOnGoal]
+
+# Convert a BlockOnGoal back to a Block if it moves away from a Goal
+[BlockOnGoal | ~Goal] -> [Block | Goal]
+
+===========
+WINCONDITIONS
+===========
+All BlockOnGoal
+
+===========
+LEVELS
+===========
+// Level 1
+########
+#..   #
+# PB# #
+# BB. #
+#   G #
+########
+```
+
+In this corrected version, I've removed the incorrect `color` syntax and kept it simple as PuzzleScript allows using predefined color names. This should resolve the compilation errors while maintaining the original logic and design of the game.

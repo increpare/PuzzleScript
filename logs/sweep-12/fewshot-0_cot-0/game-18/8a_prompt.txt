@@ -1,0 +1,106 @@
+SYSTEM PROMPT:
+You are a game designer, familiar with the PuzzleScript game description language. 
+
+USER PROMPT:
+The following PuzzleScript game code:
+```plaintext
+// Title: Gem Collector
+// Author: PuzzleScript Developer
+
+===========
+OBJECTS
+===========
+
+Background
+transparent
+
+Player
+yellow
+P
+
+Gem
+green
+G
+
+EnemyBot
+red
+E
+
+Wall
+gray
+#
+
+===========
+LEGEND
+===========
+
+. = Background
+P = Player
+G = Gem
+E = EnemyBot
+# = Wall
+
+==============
+COLLISIONLAYERS
+==============
+
+Background
+Wall
+Gem
+EnemyBot
+Player
+
+===========
+RULES
+===========
+
+[ > Player | Gem ] -> [ > Player ] (message "Gem collected!") // Sound is not implemented in standard PuzzleScript
+[ Player | EnemyBot ] -> RESTART (message "Caught by an enemy!") // Sound is not implemented in standard PuzzleScript
+
+# Enemy Automatic Movement
+[> EnemyBot | no Player ] -> [ no Player | > EnemyBot ]
+
+==============
+WINCONDITIONS
+==============
+
+All Gem
+
+===========
+LEVELS
+===========
+
+// Level 0
+#####
+#...#
+#.P.#
+#...#
+#####
+
+// Level 1
+######
+#P..G#
+#..E.#
+#...##
+######
+
+===========
+TEXT
+===========
+
+title Win
+text You collected all the gems!
+
+```
+produced the following console output:
+=================================
+line 25 : Unknown junk in object section (possibly: sprites have to be 5 pixels wide and 5 pixels high exactly. Or maybe: the main names for objects have to be words containing only the letters a-z0.9 - if you want to call them something like ",", do it in the legend section).
+line 32 : Name "P" already in use (on line line 13).
+line 33 : Name "G" already in use (on line line 17).
+line 34 : Name "E" already in use (on line line 21).
+line 38 : section "COLLISIONLAYERS" is out of order, must follow  "SOUNDS" (or it could be that the section "SOUNDS"is just missing totally.  You have to include all section headings, even if the section itself is empty).
+line 51 : Name "player", referred to in a rule, does not exist.
+line 51 : Name "gem", referred to in a rule, does not exist.
+too many errors, aborting compilation
+Errors detected during compilation; the game may not work correctly.
+Return a repaired version of the code that addresses these errors. Return your code in full, inside a ```plaintext code block.

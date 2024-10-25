@@ -1,0 +1,82 @@
+SYSTEM PROMPT:
+You are a game designer, familiar with the PuzzleScript game description language. 
+
+USER PROMPT:
+The following PuzzleScript game code:
+```plaintext
+;;;;;;;;;;;;;;;;
+;; Sokoban Game ;;
+;;;;;;;;;;;;;;;;
+
+===OBJECTS===
+Background
+. 
+
+Wall
+######
+
+Target
+......
+
+Player
+P
+
+Crate
+o
+
+Crate_on_Target
+O
+
+Player_on_Target
+@
+
+===LEGEND===
+. = Background
+# = Wall
+o = Crate
+. = Target
+O = Crate_on_Target
+P = Player
+@ = Player_on_Target
+
+===COLLISIONLAYERS===
+Background
+Wall
+Player, Crate
+Target
+
+===RULES===
+[> Player | Crate] -> [> | Crate Player]
+[> Player | Wall] -> [> Player | Wall]
+
+[Player > | Crate] -> [Player Crate | >]
+[Player > | Wall] -> [Player > | Wall]
+
+[Player | Wall] -> [Player | Wall]
+[Player | Crate] -> [Player | Crate]
+
+===WINCONDITIONS===
+All Crate_on_Target
+
+===LEVELS===
+#####
+#...#
+#.#.#
+#.@.#
+#.$o.#
+#.@.#
+#.#.#
+#####
+
+```
+produced the following console output:
+=================================
+line 5 : Only comments should go after a bunch of equals signs ('===') on a line.
+line 6 : Unrecognised stuff in the prelude.
+line 9 : Unrecognised stuff in the prelude.
+line 12 : Unrecognised stuff in the prelude.
+line 15 : Unrecognised stuff in the prelude.
+line 16 : Unrecognised stuff in the prelude.
+too many errors, aborting compilation
+Errors detected during compilation; the game may not work correctly.
+Return a repaired version of the code that addresses these errors. Return your code in full, inside a ```plaintext code block.

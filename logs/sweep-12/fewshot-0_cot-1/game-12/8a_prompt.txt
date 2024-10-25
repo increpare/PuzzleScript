@@ -1,0 +1,98 @@
+SYSTEM PROMPT:
+You are a game designer, familiar with the PuzzleScript game description language. 
+
+USER PROMPT:
+The following PuzzleScript game code:
+```plaintext
+; Title: Simple Sokoban
+; Author: Game Designer AI
+
+===========
+OBJECTS
+===========
+
+Background
+lightgrey
+
+Wall
+brown
+
+Player
+yellow
+
+Crate
+orange
+
+Target
+lightblue
+
+TargetCrate
+purple
+
+===========
+LEGEND
+===========
+
+. = Background
+# = Wall
+P = Player
+C = Crate
+T = Target
+X = TargetCrate
+
+===========
+SOUNDS
+===========
+
+===============
+
+COLLISIONLAYERS
+===============
+
+Background
+Wall
+Crate, TargetCrate
+Player
+
+===========
+RULES
+===========
+
+[ Player | Crate ] -> [ > Player | > Crate ]
+[ Crate | Target ] -> [ TargetCrate | Target ]
+[ TargetCrate | Crate ] -> [ TargetCrate | Target ]
+[ TargetCrate ] -> [ Crate ]
+
+===========
+WINCONDITIONS
+===========
+
+All TargetCrate on Target
+
+===========
+LEVELS
+===========
+
+#####
+#...#
+#PCT#
+#####
+
+#######
+#.....#
+#..C..#
+#.PTP.#
+#######
+
+#####
+#C..#
+#.#.#
+#PTP#
+#####
+
+```
+produced the following console output:
+=================================
+line 20 : Object "TARGET" has been defined, but not assigned to a layer.
+Errors detected during compilation; the game may not work correctly.
+Return a repaired version of the code that addresses these errors. First, reason about your task and determine the best plan of action. Then, write your code. Return your code in full, inside a ```plaintext code block.

@@ -1,0 +1,141 @@
+```plaintext
+title Color Swap
+author PuzzleScripter
+homepage www.puzzlescript.net
+
+========
+OBJECTS
+========
+
+Background
+black
+
+Wall
+gray
+.....
+.....
+..000
+.....
+
+PlayerRed
+red
+.....
+..0..
+..0..
+..0..
+.....
+
+PlayerBlue
+blue
+.....
+..0..
+..0..
+..0..
+.....
+
+TargetRed
+red
+.....
+.....
+..0..
+.....
+
+TargetBlue
+blue
+.....
+.....
+..0..
+.....
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+R = PlayerRed
+B = PlayerBlue
+Tr = TargetRed
+Tb = TargetBlue
+
+=======
+SOUNDS
+=======
+
+sfx0 12345678 (swap player)
+sfx1 87654321 (goal reached)
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Wall
+TargetRed, TargetBlue
+PlayerRed, PlayerBlue
+
+======
+RULES
+======
+
+RIGHT [ > PlayerRed | NO Wall ] -> [ | PlayerRed ]
+LEFT  [ > PlayerRed | NO Wall ] -> [ | PlayerRed ]
+UP    [ > PlayerRed | NO Wall ] -> [ | PlayerRed ]
+DOWN  [ > PlayerRed | NO Wall ] -> [ | PlayerRed ]
+
+RIGHT [ > PlayerBlue | NO Wall ] -> [ | PlayerBlue ]
+LEFT  [ > PlayerBlue | NO Wall ] -> [ | PlayerBlue ]
+UP    [ > PlayerBlue | NO Wall ] -> [ | PlayerBlue ]
+DOWN  [ > PlayerBlue | NO Wall ] -> [ | PlayerBlue ]
+
+NO [ PlayerRed ] -> [ PlayerBlue ] sfx0
+NO [ PlayerBlue ] -> [ PlayerRed ] sfx0
+
+==============
+WINCONDITIONS
+==============
+
+All PlayerRed on TargetRed
+All PlayerBlue on TargetBlue
+
+=======
+LEVELS
+=======
+
+#####
+#R..#
+#.B.#
+#.Tb#
+#####
+
+message Try to match each colored Player with its corresponding Target!
+
+######
+#R#B.#
+##.T##
+#.##.#
+#.TB.#
+######
+
+message Switch between the players to solve the puzzles!
+
+#######
+#R..B.#
+#..#..#
+#..###.
+#Tb.##.
+#B#T.R#
+#######
+
+message The challenges increase, but you can do it!
+```
+
+### Explanation of Fixes:
+
+1. **Sound Declaration Errors**: Replaced incorrect `Swap` and `ReachGoal` tokens with `sfx0` and `sfx1`. Corrected references in the code.
+
+2. **Collision Layer Error**: Moved `Background` to its own layer as per requirements.
+
+3. **Action Error**: Changed `ACTION` to `NO` which is the default interaction key for toggling between objects or states. The `NO` keyword allows cycling through objects in the game.
+
+4. **Win Condition Error**: Corrected object name from `TargetsRed` and `TargetsBlue` to the appropriate `TargetRed` and `TargetBlue` within the win conditions.

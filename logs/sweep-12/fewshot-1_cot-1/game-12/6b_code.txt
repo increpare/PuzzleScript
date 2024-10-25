@@ -1,0 +1,140 @@
+The errors in the console output indicate a problem with the definition of the `BlockOnTarget` object, specifically regarding its color palette. The message "Was looking for color for object BLOCKONTARGET, got 'cyan' instead" suggests that the color "Cyan" wasn't recognized correctly. This could be due to a typo or the need for a more standard color specification.
+
+Here's a plan to fix the issue:
+1. Verify the color definition: Instead of using "Cyan," ensure you use a valid and correctly formatted color, typically a color code.
+2. Double-check the structure of the `BlockOnTarget` object's definition.
+
+Given that "Cyan" might be improperly recognized, we can replace it with its hexadecimal equivalent, `#00FFFF`.
+
+Let's proceed with these fixes.
+
+```plaintext
+title Block Pusher
+author Assistant
+homepage www.example.com
+
+========
+OBJECTS
+========
+Background
+White
+
+Player
+Yellow
+..0..
+.000.
+00000
+.000.
+..0..
+
+Wall
+Grey
+.....
+.....
+.....
+.....
+.....
+
+Floor
+#e0e0e0
+.....
+.....
+.....
+.....
+.....
+
+Block
+Blue
+.000.
+00000
+00000
+00000
+.000.
+
+Target
+Green
+..0..
+.000.
+00000
+.000.
+..0..
+
+BlockOnTarget
+#00FFFF  // Replaced "Cyan" with its hexadecimal color code
+.111.
+11111
+11111
+11111
+.111.
+
+=======
+LEGEND
+=======
+
+# = Wall
+. = Floor
+P = Player
+B = Block
+T = Target
+X = BlockOnTarget
+
+=====
+SOUNDS
+=====
+
+# Sound effects can be defined here if needed.
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Floor, Target
+Wall
+Block, BlockOnTarget
+Player
+
+======
+RULES
+======
+
+# Player moves
+[ > Player | Floor ] -> [ > Player ]
+
+# Player pushes block
+[ > Player | Block | Floor ] -> [ > Player | > Block ]
+
+# Block on Target turns into BlockOnTarget
+[ Block | Target ] -> [ BlockOnTarget | Target ]
+
+# BlockOnTarget behaves like Block
+[ > Player | BlockOnTarget | Floor ] -> [ > Player | BlockOnTarget > ]
+
+==============
+WINCONDITIONS
+==============
+
+All BlockOnTarget
+
+=======
+LEVELS
+=======
+
+# Simple layout
+#####
+#...#
+#P.B#
+#.#T#
+#####
+
+# More complex layout
+########
+#..#..T#
+#..B..T#
+#..P..T#
+#......#
+#..#..##
+########
+```
+
+This corrected version uses a hexadecimal color code, which should be recognized correctly by the PuzzleScript compiler, addressing the errors related to the `BlockOnTarget` object.

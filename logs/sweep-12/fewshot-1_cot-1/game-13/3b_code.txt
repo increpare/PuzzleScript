@@ -1,0 +1,127 @@
+To resolve the errors in the provided PuzzleScript game code, we should follow these steps:
+
+1. **Error 1 ("COLLISIONLAYERS" is out of order):** The `COLLISIONLAYERS` section is currently placed before the `SOUNDS` section. According to PuzzleScript's requirements, the `COLLISIONLAYERS` section should come after the `SOUNDS` section, or a `SOUNDS` section should be provided even if it’s empty. Adding an empty `SOUNDS` section will resolve this error.
+
+2. **Errors 2-4 (Name references in rules):** The rules section references objects like "player", "key", "door" in lowercase. PuzzleScript is case-sensitive, and since these objects are defined with capitalized names ("Player", "Key", "Door"), we need to ensure the rules use the correct, capitalized names.
+
+3. **Structural Review:** Given that the syntax seems correct besides the mentioned errors, we'll ensure sections are appropriately ordered and formatted.
+
+Here is the fixed version of the code:
+
+```plaintext
+title Maze Keys & Doors
+author Game Designer
+
+========
+OBJECTS
+========
+
+Background
+white
+.....
+.....
+.....
+.....
+.....
+
+Wall
+darkgrey
+00000
+00000
+00000
+00000
+00000
+
+Player
+blue
+.....
+..0..
+.000.
+..0..
+.....
+
+Key
+yellow orange
+.....
+..0..
+.000.
+..0..
+.....
+
+Door
+brown black
+.....
+..0..
+.000.
+..0..
+.....
+
+Exit
+green
+.....
+..0..
+.000.
+..0..
+.....
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Player
+K = Key
+D = Door
+E = Exit
+
+=======
+SOUNDS
+=======
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Wall
+Key, Door, Exit
+Player
+
+======
+RULES
+======
+
+[ > Player | Key ] -> [ > Player | ]
+[ Player | Door ] -> [ Player ]
+
+[ > Player | Door | no Key] -> cancel
+[ Player | Door | Key ] -> [ Player | ] 
+[ > Player | Exit ] -> [ Player | Exit ]
+
+==============
+WINCONDITIONS
+==============
+
+All Player on Exit
+
+=======
+LEVELS
+=======
+
+#######
+#P#.K.#
+#..#.##
+#..D..#
+###.###
+#.....#
+#..E..#
+#######
+```
+
+**Summary of Changes:**
+- Added an empty `SOUNDS` section before `COLLISIONLAYERS`.
+- Updated rule definitions to match case-sensitive object names.
+- Retained structural integrity and the logical order of code sections. 
+
+This corrected code should resolve all reported compilation errors.

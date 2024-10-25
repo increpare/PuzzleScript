@@ -1,0 +1,141 @@
+SYSTEM PROMPT:
+You are a game designer, familiar with the PuzzleScript game description language. 
+
+USER PROMPT:
+The following PuzzleScript game code:
+```plaintext
+////////////////////////////////////////////////////////////
+// Sokoban Puzzle Game
+////////////////////////////////////////////////////////////
+
+//Objects
+///////////
+OBJECTS
+Background
+GRAY
+.000.
+0000.
+.000.
+..0..
+
+Wall
+BROWN
+0000.
+0000.
+0000.
+0000.
+0000.
+
+Player
+YELLOW
+..0..
+.000.
+..0..
+..0..
+.....
+
+Crate
+ORANGE
+0000.
+0..0.
+0..0.
+0000.
+.....
+
+Target
+GREEN
+.0.0.
+0.00.
+..0..
+0.00.
+.0.0.
+
+CrateOnTarget
+ORANGE
+.000.
+0..0.
+00O0.
+0..0.
+.000.
+
+//Legend
+/////////
+LEGEND
+. = Background
+# = Wall
+P = Player
+C = Crate
+T = Target
+O = CrateOnTarget
+
+//Sounds
+/////////
+//(Note: defining sounds but not using them in this game for brevity)
+//SOUNDS
+//Sfx1 = push1
+
+//Collision Layers
+//////////////////
+COLLISIONLAYERS
+Background
+Target
+Player, CrateOnTarget, Crate
+Wall
+
+//Rules
+///////
+RULES
+//Moving
+Up [ Player | ] -> [ | Player ]
+Down [ | Player ] -> [ Player | ]
+Left [ Player | ] -> [ | Player ]
+Right [ | Player ] -> [ Player | ]
+
+//Pushing Crates
+[ Player | Crate ] -> [ | Player | Crate ]
+
+//Merge Crate with Target
+[ Target | Crate ] -> [ | CrateOnTarget ]
+[ Crate | Target ] -> [ CrateOnTarget | ]
+
+//Separate Crate from Target
+[ CrateOnTarget | ] -> [ Target | Player ]
+[ | CrateOnTarget ] -> [ Player | Target ]
+
+//Win Condition
+///////////////
+WINCONDITION
+No Crate
+
+//Levels
+/////////
+LEVELS
+//Level 1
+#####
+#...#
+#.#.#
+#PC.#
+#####
+
+//Level 2
+######
+#....#
+#.C..#
+#.CT.#
+#....#
+######
+
+```
+produced the following console output:
+=================================
+line 51 : Unknown junk in spritematrix for object CRATEONTARGET.
+line 55 : Unknown junk in object section (possibly: sprites have to be 5 pixels wide and 5 pixels high exactly. Or maybe: the main names for objects have to be words containing only the letters a-z0.9 - if you want to call them something like ",", do it in the legend section).
+line 56 : Unknown junk in object section (possibly: sprites have to be 5 pixels wide and 5 pixels high exactly. Or maybe: the main names for objects have to be words containing only the letters a-z0.9 - if you want to call them something like ",", do it in the legend section).
+line 65 : Incorrect format of legend - should be one of "A = B", "A = B or C [ or D ...]", "A = B and C [ and D ...]".
+line 66 : Incorrect format of legend - should be one of "A = B", "A = B or C [ or D ...]", "A = B and C [ and D ...]".
+line 67 : Incorrect format of legend - should be one of "A = B", "A = B or C [ or D ...]", "A = B and C [ and D ...]".
+line 68 : Incorrect format of legend - should be one of "A = B", "A = B or C [ or D ...]", "A = B and C [ and D ...]".
+line 69 : You're talking about PUSH1 but it's not defined anywhere.
+too many errors, aborting compilation
+Errors detected during compilation; the game may not work correctly.
+Return a repaired version of the code that addresses these errors. First, reason about your task and determine the best plan of action. Then, write your code. Return your code in full, inside a ```plaintext code block.

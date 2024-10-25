@@ -1,0 +1,119 @@
+The error message indicates that there's an issue with unrecognized symbols in the levels. Specifically, PuzzleScript requires each used symbol in the map to be properly defined in the "LEGEND" section. The console output suggests that the space character (" ") doesn't map correctly to any object. Spaces in the level maps traditionally represent empty spaces, but they require explicit mapping to a defined object in the legend. The "LEGEND" section is missing an entry for the blank spaces used in the maps.
+
+To resolve this:
+1. Ensure all symbols used in the level maps are defined in the "LEGEND" section. 
+2. Clarify that the space character (" ") in level maps corresponds to the "Background".
+
+Here's the repaired version of the code with the issues addressed:
+
+```plaintext
+===========
+OBJECTS
+===========
+Background
+black
+.....
+.....
+.....
+.....
+.....
+
+Player
+LightGreen
+.....
+..0..
+.000.
+..0..
+.....
+
+Wall
+Gray
+.....
+00000
+00000
+00000
+.....
+
+Box
+Brown
+.....
+..0..
+.000.
+..0..
+.....
+
+Target
+Red
+.....
+.....
+..0..
+.....
+.....
+
+BoxOnTarget
+Brown Red
+.....
+..0..
+..1..
+..0..
+.....
+
+===========
+LEGEND
+===========
+. = Background
+P = Player
+# = Wall
+B = Box
+T = Target
+O = BoxOnTarget
+_ = Background
+  = Background
+
+===========
+SOUNDS
+===========
+
+===========
+COLLISIONLAYERS
+===========
+Background
+Target
+Wall
+Box, BoxOnTarget
+Player
+
+===========
+RULES
+===========
+[> Player | _] -> [_ | > Player]
+[> Player | Box | _] -> [_ | > Player | Box]
+
+[Player | Target] -> [Player | Target]
+[Box | Target] -> [BoxOnTarget | Target]
+
+[Player | BoxOnTarget] -> [Player | BoxOnTarget]
+
+===========
+WINCONDITIONS
+===========
+All BoxOnTarget
+
+===========
+LEVELS
+===========
+# # # # #
+#       #
+#   T   #
+# B   P #
+# # # # #
+
+# # # # #
+#   T   #
+#   B P #
+# T     #
+# # # # #
+
+```
+
+The key change here is the addition of `  = Background` in the "LEGEND" section, allowing space characters to correspond to empty spaces ("Background") in the map definitions. This resolves the console error about the unrecognized symbol.

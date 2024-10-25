@@ -1,0 +1,128 @@
+```plaintext
+title Color Swap
+author PuzzleScripter
+homepage www.puzzlescript.net
+
+========
+OBJECTS
+========
+
+Background
+black
+
+Wall
+gray
+.....
+.....
+..000
+.....
+
+PlayerRed
+red
+.....
+..0..
+..0..
+..0..
+.....
+
+PlayerBlue
+blue
+.....
+..0..
+..0..
+..0..
+.....
+
+TargetRed
+red
+.....
+.....
+..0..
+.....
+
+TargetBlue
+blue
+.....
+.....
+..0..
+.....
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+R = PlayerRed
+B = PlayerBlue
+Tr = TargetRed
+Tb = TargetBlue
+
+=======
+SOUNDS
+=======
+
+Swap 12345678 (swap player)
+ReachGoal 87654321 (goal reached)
+
+================
+COLLISIONLAYERS
+================
+
+Background, Wall, TargetRed, TargetBlue
+PlayerRed, PlayerBlue
+
+======
+RULES
+======
+
+RIGHT [ > PlayerRed | NO Wall ] -> [ | PlayerRed ]
+LEFT  [ > PlayerRed | NO Wall ] -> [ | PlayerRed ]
+UP    [ > PlayerRed | NO Wall ] -> [ | PlayerRed ]
+DOWN  [ > PlayerRed | NO Wall ] -> [ | PlayerRed ]
+
+RIGHT [ > PlayerBlue | NO Wall ] -> [ | PlayerBlue ]
+LEFT  [ > PlayerBlue | NO Wall ] -> [ | PlayerBlue ]
+UP    [ > PlayerBlue | NO Wall ] -> [ | PlayerBlue ]
+DOWN  [ > PlayerBlue | NO Wall ] -> [ | PlayerBlue ]
+
+ACTION [ PlayerRed ] -> [ PlayerBlue ] sfx0
+ACTION [ PlayerBlue ] -> [ PlayerRed ] sfx0
+
+WINCONDITIONS
+==============
+
+All PlayerRed on TargetsRed
+All PlayerBlue on TargetsBlue
+
+=======
+LEVELS
+=======
+
+#####
+#R..#
+#.b.#
+#.TB#
+#####
+
+message Try to match each colored Player with its corresponding Target!
+
+######
+#R#b.#
+##.T##
+#.##.#
+#.TB.#
+######
+
+message Switch between the players to solve the puzzles!
+
+#######
+#R..b.#
+#..#..#
+#..###.
+#Tb.##.
+#b#T.R#
+#######
+
+message The challenges increase, but you can do it!
+```

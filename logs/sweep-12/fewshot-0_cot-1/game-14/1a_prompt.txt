@@ -1,0 +1,88 @@
+SYSTEM PROMPT:
+You are a game designer, familiar with the PuzzleScript game description language. 
+
+USER PROMPT:
+The following PuzzleScript game code:
+```plaintext
+===========
+OBJECTS
+===========
+Background
+color Transparent
+
+Player
+color Blue
+
+Wall
+color Black
+
+Block
+color Brown
+
+Goal
+color Yellow
+
+BlockOnGoal
+color Green
+
+===========
+LEGEND
+===========
+P = Player
+# = Wall
+B = Block
+. = Goal
+G = BlockOnGoal
+
+===========
+SOUNDS
+===========
+
+===========
+COLLISIONLAYERS
+===========
+Background
+Wall
+Goal
+Block, BlockOnGoal
+Player
+
+===========
+RULES
+===========
+[Player | Block] -> [ | Player Block]  // Move player and push block
+
+# Convert a Block into a BlockOnGoal when on a Goal
+[Block | Goal] -> [ | BlockOnGoal]
+
+# Convert a BlockOnGoal back to a Block if it moves away from a Goal
+[BlockOnGoal | ~Goal] -> [Block | Goal]
+
+===========
+WINCONDITIONS
+===========
+All BlockOnGoal
+
+===========
+LEVELS
+===========
+// Level 1
+########
+#..   #
+# PB# #
+# BB. #
+#   G #
+########
+
+```
+produced the following console output:
+=================================
+line 5 : Was looking for color for object BACKGROUND, got "color " instead.
+line 8 : Was looking for color for object PLAYER, got "color " instead.
+line 11 : Was looking for color for object WALL, got "color " instead.
+line 14 : Was looking for color for object BLOCK, got "color " instead.
+line 17 : Was looking for color for object GOAL, got "color " instead.
+line 20 : Was looking for color for object BLOCKONGOAL, got "color " instead.
+too many errors, aborting compilation
+Errors detected during compilation; the game may not work correctly.
+Return a repaired version of the code that addresses these errors. First, reason about your task and determine the best plan of action. Then, write your code. Return your code in full, inside a ```plaintext code block.

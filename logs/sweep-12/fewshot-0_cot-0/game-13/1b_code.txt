@@ -1,0 +1,109 @@
+The errors in the original code are caused by incorrect sprite matrices. PuzzleScript sprite matrices are 5x5 grids, so any matrix larger than this will cause errors. Additionally, the game rules around layering were not properly defined for proper player movement. Let's fix it:
+
+```plaintext
+Title: Block Push
+
+Author: PuzzleScript
+
+===========
+OBJECTS
+===========
+
+Background
+WHITE
+. . . . . 
+. . . . . 
+. . . . . 
+. . . . . 
+. . . . . 
+
+Player
+RED
+. R R . . 
+R . . R . 
+R . . R . 
+. R R . . 
+. . . . .
+
+Block
+BLUE
+. B B . . 
+B B B B . 
+B B B B . 
+. B B . . 
+. . . . .
+
+Target
+YELLOW
+. T T . . 
+T . . T . 
+T . . T . 
+. T T . . 
+. . . . .
+
+===========
+LEGEND
+===========
+
+. = Background
+P = Player
+B = Block
+T = Target
+
+===========
+SOUNDS
+===========
+
+===========
+COLLISIONLAYERS
+===========
+
+Background
+Target
+Player, Block
+
+===========
+RULES
+===========
+
+[ > P B ] -> [ > B P ]
+[ P | T ] -> [ T | P ]
+
+===========
+WINCONDITIONS
+===========
+
+All Blocks on Target
+
+===========
+LEVELS
+===========
+
+#####
+#..T#
+#PBT#
+#...#
+#####
+
+#######
+#..T..#
+#..B..#
+#..P..#
+#..B..#
+#..T..#
+#######
+
+#########
+#.......#
+#..T.B..#
+#.......#
+#..B.P..#
+#.......#
+#..T....#
+#########
+```
+
+Key changes:
+- Made sure the sprite matrices for `Player`, `Block`, and `Target` are 5x5 grids.
+- Fixed the rule definitions by adding a `>` which checks for directional moves and adjusted rules to include `Player` and `Block` swap actions properly.
+- Made sure all win conditions are clear and correctly defined as "All Blocks on Target" for the consistency of the intended game mechanics.

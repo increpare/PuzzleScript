@@ -1,0 +1,115 @@
+The error message indicates that the symbol " " (space) is used in the LEVELS section but is not defined in the LEGEND section. In PuzzleScript, any character used to represent an object in the LEVELS section must be defined in the LEGEND section. A common practice is to use an underscore ("_") or another character for Background, which is already defined in the legend. The issue here is that there's an inconsistency where the LEVELS use a space instead of the symbol "_" defined for Background.
+
+To fix this, we'll replace spaces with the underscore ("_") symbol in the LEVELS section. This change will ensure the LEVELS section uses the correct symbol for the Background, aligning with the LEGEND.
+
+Here's the corrected code:
+
+```plaintext
+===========
+OBJECTS
+===========
+Background
+black
+.....
+.....
+.....
+.....
+.....
+
+Player
+LightGreen
+.....
+..0..
+.000.
+..0..
+.....
+
+Wall
+Gray
+.....
+00000
+00000
+00000
+.....
+
+Box
+Brown
+.....
+..0..
+.000.
+..0..
+.....
+
+Target
+Red
+.....
+.....
+..0..
+.....
+.....
+
+BoxOnTarget
+Brown Red
+.....
+..0..
+..1..
+..0..
+.....
+
+===========
+LEGEND
+===========
+. = Background
+P = Player
+# = Wall
+B = Box
+T = Target
+O = BoxOnTarget
+_ = Background
+
+===========
+SOUNDS
+===========
+
+===========
+COLLISIONLAYERS
+===========
+Background
+Target
+Wall
+Box, BoxOnTarget
+Player
+
+===========
+RULES
+===========
+[> Player | _] -> [_ | > Player]
+[> Player | Box | _] -> [_ | > Player | Box]
+
+[Player | Target] -> [Player | Target]
+[Box | Target] -> [BoxOnTarget | Target]
+
+[Player | BoxOnTarget] -> [Player | BoxOnTarget]
+
+===========
+WINCONDITIONS
+===========
+All BoxOnTarget
+
+===========
+LEVELS
+===========
+# # # # #
+# _ _ _ #
+# _ T _ #
+# B _ P #
+# # # # #
+
+# # # # #
+# _ T _ #
+# _ B P #
+# T _ _ #
+# # # # #
+```
+
+By using "_" instead of spaces in the LEVELS section, we maintain consistency with the defined symbols in the LEGEND, thus resolving the error.

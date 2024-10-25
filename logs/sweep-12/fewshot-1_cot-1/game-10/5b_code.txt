@@ -1,0 +1,151 @@
+To address the errors in the provided PuzzleScript code, we'll follow these steps:
+
+1. **Fix Comments:** Comments in PuzzleScript should not use `#`, and they cannot be placed at the beginning of a line. Comments are usually included at the end of a line after a semi-colon.
+
+2. **Correct Misplaced Words/Objects:** In the rules, ensure that only directions (`up`, `down`, `left`, `right`, `action`) appear outside of brackets. All other objects or layers should be placed inside `[ ]`.
+
+3. **Resolve Legend and Naming Issues:** Ensure that all objects and symbols referenced in the code are properly defined in the "LEGEND" or "OBJECTS" section. Check that all objects have been defined correctly and consistently referenced in the rules.
+
+4. **Remove or Correct Invalid References:** Remove erroneous mentions such as "teleportation" and "interaction," which do not make sense in the context provided.
+
+5. **Pay Attention to CollisionLayers and Legend:** Ensure objects are correctly assigned to collision layers and are accounted for in the legend.
+
+Let's put these steps into practice and rewrite the code:
+
+```plaintext
+title Teleporter's Quest
+author PuzzleMaker
+homepage www.puzzlescript.net
+
+========
+OBJECTS
+========
+
+Background
+black
+
+Player
+DarkBlue LightBlue
+.000.
+.010.
+.010.
+.010.
+.000.
+
+Goal
+DarkGreen
+.....
+..0..
+..0..
+.....
+.....
+
+Wall
+DarkGrey
+.....
+
+Block
+Orange
+.000.
+.0.0.
+.0.0.
+.0.0.
+.000.
+
+Teleporter
+Purple
+.....
+..0..
+..0..
+.....
+
+Floor
+Grey
+
+=======
+LEGEND
+=======
+
+P = Player
+G = Goal
+# = Wall
+B = Block
+T = Teleporter
+. = Background or Floor
+
+=======
+SOUNDS
+=======
+
+sfx1 17223204
+sfx2 34045802
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Floor
+Teleporter
+Wall, Player, Block, Goal
+
+======
+RULES
+======
+
+[ > Player | Floor ] -> [ > Player | Floor ]
+
+[ > Player | Block | Floor ] -> [ > Player | > Block | Floor ] sfx1
+
+[ Player | Teleporter ] -> [ Teleporter | Floor ]
+
+; Teleportation Rules
+late [ Player | Teleporter ] [ Teleporter | Floor ] -> [ Teleporter | Floor ] [ Player | Floor ]
+
+; Goal Interaction
+late [ > Block | Goal ] -> [ > Block | Goal ] sfx2
+late [ > Player | Goal ] -> [ Player | Goal ]
+
+[ Goal | Block ] -> [ Goal ]
+
+==============
+WINCONDITIONS
+==============
+
+All Block on Goal
+
+=======
+LEVELS
+=======
+
+message Level 1
+. . . . # #
+. P B . G #
+. . # # . #
+. . . G # #
+. . # # # #
+. . . . . .
+
+message Level 2
+. . . # # # #
+. . P B T . G
+. . . # # . .
+. . . . . . #
+. . . . T G B
+. . . # # # #
+
+message Level 3
+. . # # # . .
+. P B . . G .
+# # . . # # #
+. . . # . B .
+. . . . . G .
+. . # # # # .
+```
+
+This corrected version should address the issues encountered in the initial code:
+
+- Comments are now properly formatted using `;`.
+- Objects are correctly utilized within rules.
+- Unnecessary words like "teleportation" and "interaction" are removed from rule expressions.
+- The `. = Background or Floor` definition is included in the legend to prevent any undefined references.

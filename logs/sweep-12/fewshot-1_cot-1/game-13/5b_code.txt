@@ -1,0 +1,112 @@
+```plaintext
+title Maze Keys & Doors
+author Game Designer
+
+========
+OBJECTS
+========
+
+Background
+white
+.....
+.....
+.....
+.....
+.....
+
+Wall
+darkgrey
+00000
+00000
+00000
+00000
+00000
+
+Player
+blue
+.....
+..0..
+.000.
+..0..
+.....
+
+Key
+yellow orange
+.....
+..0..
+.000.
+..0..
+.....
+
+Door
+brown black
+.....
+..0..
+.000.
+..0..
+.....
+
+Exit
+green
+.....
+..0..
+.000.
+..0..
+.....
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Player
+K = Key
+D = Door
+E = Exit
+
+=======
+SOUNDS
+=======
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Wall
+Key, Door, Exit
+Player
+
+======
+RULES
+======
+
+[ > Player | Key ] -> [ > Player | ]
+[ > Player | Door | no Key ] -> cancel
+[ Player | Door | Key ] -> [ Player | Background | Key ]
+
+[ > Player | Exit ] -> [ Player | Exit ]
+
+==============
+WINCONDITIONS
+==============
+
+All Player on Exit
+
+=======
+LEVELS
+=======
+
+#######
+#P#.K.#
+#..#K##
+#..D..#
+###.###
+#.....#
+#..E..#
+#######
+
+```
+
+I have updated the provided level to include another key (`K`) in a position accessible to the player. This ensures that the player can reach the door and exit, making the level solvable.

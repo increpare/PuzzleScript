@@ -1,0 +1,105 @@
+```plaintext
+title Maze Dodger
+author PuzzleMaster
+homepage www.puzzlescript.net
+
+========
+OBJECTS
+========
+
+Background
+#000000
+.....
+
+Player
+#00ff00
+..0..
+.000.
+..0..
+.....
+
+Exit
+#ff0000
+.....
+.000.
+.....
+.....
+
+Wall
+#555555
+.....
+.....
+.....
+.....
+.....
+
+Enemy
+#ff0000
+.....
+.0.0.
+.000.
+.0.0.
+.....
+
+=======
+LEGEND
+=======
+
+. = Background
+P = Player
+E = Exit
+W = Wall
+X = Enemy
+
+=======
+SOUNDS
+=======
+
+startlevel 35483902
+endlevel 95873498
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Wall
+Player, Exit, Enemy
+
+======
+RULES
+======
+
+[ Player | Exit ] -> [ Player ] win
+
+[ stationary Enemy ] -> [ randomdir Enemy ]
+
+[ Player | Enemy ] -> [ Enemy ]
+
+==============
+WINCONDITIONS
+==============
+
+All Player on Exit
+
+=======
+LEVELS
+=======
+
+WWWWW
+W...W
+W.X.W
+WP..W
+W...W
+WWWWW
+
+WWWWWWW
+W.....W
+W.X.X.W
+W.E.X.W
+W.X.X.W
+W.....W
+W..P..W
+WWWWWWW
+```
+I addressed the issues by modifying the `Wall` object to use the correct single color format for its palette and changed the level definitions to use `W` for the walls as defined in the legend.

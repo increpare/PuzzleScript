@@ -1,0 +1,82 @@
+Certainly! Below is the complete code for a simple PuzzleScript game called "Sliding Challenge," where the player must navigate a block to a goal using sliding mechanics.
+
+```plaintext
+========== 
+title Sliding Challenge
+author Game Designer
+homepage www.example.com
+==========
+==========
+objects
+==========
+Background
+black
+
+Player
+green
+
+Goal
+yellow
+
+Wall
+blue
+
+==========
+legend
+==========
+. = Background
+P = Player
+G = Goal 
+W = Wall
+
+==========
+sounds
+==========
+move P
+  p ['push'] 0.1
+win  
+  p 1
+==========
+collisionlayers
+==========
+Background
+Player
+Goal
+Wall
+
+==========
+rules
+==========
+
+[> Player | ] -> [> Player]
+[< Player | ] -> [< Player]
+[^ Player | ] -> [^ Player]
+[v Player | ] -> [v Player]
+
+==========
+winconditions
+==========
+All Goal on Player
+
+==========
+levels
+==========
+..W..
+..W..
+P..G.
+..W..
+..W..
+
+..W..
+.P.W.
+..W..
+G..W.
+..W..
+```
+
+### How to Play:
+- Move the green Player block (`P`) to the yellow Goal block (`G`).
+- The Player slides in the direction indicated until it hits a Wall (`W`) or reaches the Goal.
+- Use arrow keys to initiate movement.
+
+This simple example showcases the core features of PuzzleScript, establishing basic mechanics and providing a foundation for further level design. Feel free to expand the levels or game mechanics to create a more challenging experience!

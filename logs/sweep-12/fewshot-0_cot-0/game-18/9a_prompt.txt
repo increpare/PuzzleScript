@@ -1,0 +1,127 @@
+SYSTEM PROMPT:
+You are a game designer, familiar with the PuzzleScript game description language. 
+
+USER PROMPT:
+The following PuzzleScript game code:
+```plaintext
+// Title: Gem Collector
+// Author: PuzzleScript Developer
+
+===========
+OBJECTS
+===========
+
+Background
+transparent
+
+Player
+yellow
+.....
+..P..
+.....
+.....
+.....
+
+Gem
+green
+.....
+..G..
+.....
+.....
+.....
+
+EnemyBot
+red
+.....
+..E..
+.....
+.....
+.....
+
+Wall
+gray
+.....
+#####
+#####
+#####
+#####
+
+===========
+LEGEND
+===========
+
+. = Background
+P = Player
+G = Gem
+E = EnemyBot
+# = Wall
+
+===========
+SOUNDS
+===========
+
+==============
+
+COLLISIONLAYERS
+==============
+
+Background
+Wall
+Gem
+EnemyBot
+Player
+
+===========
+RULES
+===========
+
+[ > Player | Gem ] -> [ > Player ] (message "Gem collected!") // Sound is not implemented in standard PuzzleScript
+[ Player | EnemyBot ] -> RESTART (message "Caught by an enemy!") // Sound is not implemented in standard PuzzleScript
+
+# Enemy Automatic Movement
+[ > EnemyBot | no Player ] -> [ no Player | > EnemyBot ]
+
+==============
+WINCONDITIONS
+==============
+
+All Gem
+
+===========
+LEVELS
+===========
+
+// Level 0
+#####
+#...#
+#.P.#
+#...#
+#####
+
+// Level 1
+######
+#P..G#
+#..E.#
+#...##
+######
+
+===========
+TEXT
+===========
+
+title Win
+text You collected all the gems!
+
+
+```
+produced the following console output:
+=================================
+line 14 : Unknown junk in spritematrix for object PLAYER.
+line 22 : Unknown junk in spritematrix for object GEM.
+line 30 : Unknown junk in spritematrix for object ENEMYBOT.
+line 38 : Unknown junk in spritematrix for object WALL.
+line 39 : Unknown junk in spritematrix for object WALL.
+line 40 : Unknown junk in spritematrix for object WALL.
+too many errors, aborting compilation
+Errors detected during compilation; the game may not work correctly.
+Return a repaired version of the code that addresses these errors. Return your code in full, inside a ```plaintext code block.

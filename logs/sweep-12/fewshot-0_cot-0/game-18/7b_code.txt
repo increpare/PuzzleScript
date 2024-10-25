@@ -1,0 +1,95 @@
+The errors you're encountering are due to the syntax used in the `[Objects]` and `[CollisionLayers]` sections. PuzzleScript uses a specific format for these sections. Here's a corrected version of your code:
+
+```plaintext
+// Title: Gem Collector
+// Author: PuzzleScript Developer
+
+===========
+OBJECTS
+===========
+
+Background
+transparent
+
+Player
+yellow
+P
+
+Gem
+green
+G
+
+EnemyBot
+red
+E
+
+Wall
+gray
+#
+
+===========
+LEGEND
+===========
+
+. = Background
+P = Player
+G = Gem
+E = EnemyBot
+# = Wall
+
+==============
+COLLISIONLAYERS
+==============
+
+Background
+Wall
+Gem
+EnemyBot
+Player
+
+===========
+RULES
+===========
+
+[ > Player | Gem ] -> [ > Player ] (message "Gem collected!") // Sound is not implemented in standard PuzzleScript
+[ Player | EnemyBot ] -> RESTART (message "Caught by an enemy!") // Sound is not implemented in standard PuzzleScript
+
+# Enemy Automatic Movement
+[> EnemyBot | no Player ] -> [ no Player | > EnemyBot ]
+
+==============
+WINCONDITIONS
+==============
+
+All Gem
+
+===========
+LEVELS
+===========
+
+// Level 0
+#####
+#...#
+#.P.#
+#...#
+#####
+
+// Level 1
+######
+#P..G#
+#..E.#
+#...##
+######
+
+===========
+TEXT
+===========
+
+title Win
+text You collected all the gems!
+```
+
+Here are the corrections made:
+1. Corrected the `OBJECTS` section to properly define objects.
+2. Added a `LEGEND` section to provide mapping of character symbols to game objects.
+3. Maintained the same structure for other sections, as they appeared to be formatted correctly.

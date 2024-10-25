@@ -1,0 +1,129 @@
+SYSTEM PROMPT:
+You are a game designer, familiar with the PuzzleScript game description language. 
+
+USER PROMPT:
+The following PuzzleScript game code:
+```plaintext
+# Simple Sokoban PuzzleScript Game
+
+Title: Simple Sokoban
+Author: Game Designer
+Homepage: puzzlers.org
+
+===========
+OBJECTS
+===========
+
+Background
+WHITE
+
+Wall
+GRAY
+
+Player
+BLUE
+
+Box
+BROWN
+
+Target
+YELLOW
+
+BoxOnTarget
+ORANGE
+
+PlayerOnTarget
+GREEN
+
+===========
+LEGEND
+===========
+
+. = Background
+# = Wall
+P = Player
+B = Box
+T = Target
+O = BoxOnTarget
+* = PlayerOnTarget
+
+===========
+# SOUNDS (No sounds defined, but clear comment for proper parsing)
+===========
+
+# Left intentionally blank as no sounds are defined
+
+===========
+COLLISIONLAYERS
+===========
+
+Background
+Wall
+Target
+Box, BoxOnTarget
+Player, PlayerOnTarget
+
+===========
+RULES
+===========
+
+# Player movement
+[P | ] -> [ | P]
+[ | P] -> [P |]
+[P | T] -> [ | *]
+[T | P] -> [* | ]
+
+# Box pushing
+[P | B | ] -> [ | P | B]
+[* | B | ] -> [ | * | B]
+[P | B | T] -> [ | P | O]
+[* | B | T] -> [ | * | O]
+
+# Updating state when boxes move onto targets
+[B | T] -> [O]
+[* | O] -> [T | *]
+[P | O] -> [ | P | B]
+
+===========
+WINCONDITIONS
+===========
+
+All BoxOnTarget
+
+===========
+LEVELS
+===========
+
+# Level 1
+#####
+#   #
+# B.#
+# PT#
+#####
+
+# Level 2
+#######
+#     #
+# BP  #
+# ..  #
+#######
+
+# Level 3
+#####
+#P  #
+# B #
+#.. #
+#####
+
+```
+produced the following console output:
+=================================
+line 45 : In the legend, define new items using the equals symbol - declarations must look like "A = B", "A = B or C [ or D ...]", "A = B and C [ and D ...]".
+line 45 : Incorrect format of legend - should be one of "A = B", "A = B or C [ or D ...]", "A = B and C [ and D ...]", but it looks like you have a dangling "ERROR"?
+line 48 : In the legend, define new items using the equals symbol - declarations must look like "A = B", "A = B or C [ or D ...]", "A = B and C [ and D ...]".
+line 48 : Incorrect format of legend - should be one of "A = B", "A = B or C [ or D ...]", "A = B and C [ and D ...]", but it looks like you have a dangling "ERROR"?
+line 51 : section "COLLISIONLAYERS" is out of order, must follow  "SOUNDS" (or it could be that the section "SOUNDS"is just missing totally.  You have to include all section headings, even if the section itself is empty).
+line 64 : Name "#", referred to in a rule, does not exist.
+too many errors, aborting compilation
+Errors detected during compilation; the game may not work correctly.
+Return a repaired version of the code that addresses these errors. First, reason about your task and determine the best plan of action. Then, write your code. Return your code in full, inside a ```plaintext code block.

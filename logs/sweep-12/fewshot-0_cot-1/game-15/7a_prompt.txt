@@ -1,0 +1,127 @@
+SYSTEM PROMPT:
+You are a game designer, familiar with the PuzzleScript game description language. 
+
+USER PROMPT:
+The following PuzzleScript game code:
+```plaintext
+===========
+title Key Quest
+===========
+
+===========
+objects
+===========
+
+Background
+000000
+000000
+000000
+000000
+000000
+
+Wall
+0000FF
+0000FF
+0000FF
+0000FF
+0000FF
+
+Player
+FFFF00
+FFFF00
+FFFF00
+FFFF00
+FFFF00
+
+Key
+00FF00
+00FF00
+00FF00
+00FF00
+00FF00
+
+Door
+FF0000
+FF0000
+FF0000
+FF0000
+FF0000
+
+Exit
+FFFFFF
+FFFFFF
+FFFFFF
+FFFFFF
+FFFFFF
+
+===========
+legends
+===========
+
+. = Background
+# = Wall
+P = Player
+k = Key
+D = Door 
+E = Exit
+
+===========
+rules
+===========
+
+# Basic Movement
+[ > Player | ] -> [ | Player > ]
+[ < Player | ] -> [ | Player < ]
+[ ^ Player | ] -> [ | Player ^ ]
+[ v Player | ] -> [ | Player v ]
+
+# Key Collection
+[ Player | Key ] -> [ Player | ]
+
+# Open Door when all keys are collected
+late [ Key ] -> [ Key ]
+[ Door ] -> [ Exit ]
+
+# Winning Condition
+[ Player | Exit ] -> win
+
+===========
+levels
+===========
+
+# Level 1
+#######
+#..k..#
+#.#.#.#
+#kP#kD#
+#.#.#.#
+#..k..#
+#######
+
+# Level 2
+#########
+#.....k.#
+#.###.#.#
+#..kP#k.#
+#.#.#.#.#
+#.k.k.k.#
+#.#####.#
+#......E#
+#########
+
+```
+produced the following console output:
+=================================
+line 10 : Was looking for color for object BACKGROUND, got "000000" instead.
+line 11 : Trying to access color number 0 from the color palette of sprite BACKGROUND, but there are only 0 defined in it.
+line 11 : Sprites must be 5 wide and 5 high.
+line 12 : Trying to access color number 0 from the color palette of sprite BACKGROUND, but there are only 0 defined in it.
+line 12 : Sprites must be 5 wide and 5 high.
+line 13 : Trying to access color number 0 from the color palette of sprite BACKGROUND, but there are only 0 defined in it.
+line 13 : Sprites must be 5 wide and 5 high.
+line 14 : Trying to access color number 0 from the color palette of sprite BACKGROUND, but there are only 0 defined in it.
+line 14 : Sprites must be 5 wide and 5 high.
+line 17 : Was looking for color for object WALL, got "0000ff" instead.
+too many errors, aborting compilation
+Errors detected during compilation; the game may not work correctly.
+Return a repaired version of the code that addresses these errors. First, reason about your task and determine the best plan of action. Then, write your code. Return your code in full, inside a ```plaintext code block.

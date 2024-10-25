@@ -1,0 +1,147 @@
+To address the errors presented in the PuzzleScript game code, let's analyze and correct them step by step:
+
+1. **Line 66 Error**: The error indicates there should be a sound verb, like `again`, `cancel`, etc., but there is something incorrect. In the provided line, it's likely an issue with the `Block Move` which is not correctly structured for a sound. This should be part of the `SOUNDS` section and properly assigned to movements in the rules. 
+
+2. **Line 87 Error**: The "Name `--------------`, referred to in a rule, does not exist" likely means these comment lines are being mistakenly interpreted as rule elements. In PuzzleScript, comments generally aren't denoted this way. Comments should be removed or replaced with appropriate comments, which are either actual comments outside the rules (like preceding levels or objects without causing confusion) or should use `#` for commenting within sections.
+
+3. **Line 95 Error**: Refers to a non-existent name "reached" in a rule. It's probably a typo or incorrect implementation since PuzzleScript uses keywords such as `win` or `cancel` but doesn't use custom terms like "reached".
+
+Based on the above considerations, here's the corrected version of the game code:
+
+```plaintext
+title Teleporter's Quest
+author PuzzleMaker
+homepage www.puzzlescript.net
+
+========
+OBJECTS
+========
+
+Background
+black
+
+Player
+DarkBlue LightBlue
+.000.
+.010.
+.010.
+.010.
+.000.
+
+Goal
+DarkGreen
+.....
+..0..
+..0..
+.....
+.....
+
+Wall
+DarkGrey
+.....
+
+Block
+Orange
+.000.
+.0.0.
+.0.0.
+.0.0.
+.000.
+
+Teleporter
+Purple
+.....
+..0..
+..0..
+.....
+
+Floor
+Grey
+
+=======
+LEGEND
+=======
+
+P = Player
+G = Goal
+# = Wall
+B = Block
+T = Teleporter
+. = Background or Floor
+
+=======
+SOUNDS
+=======
+
+blockmove 17223204
+goalreached 34045802
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Floor
+Teleporter
+Wall, Player, Block, Goal
+
+======
+RULES
+======
+
+[ > Player | Floor ] -> [ > Player | Floor ]
+
+[ > Player | Block | Floor ] -> [ > Player | > Block | Floor ]
+
+[ Player Teleporter ] -> [ Teleporter Player ]
+
+# Teleportation Rules
+late [ Player Teleporter ] [ Teleporter | Floor ] -> [ Teleporter | Floor ] [ | Player ]
+
+# Movement
+late [ > Block | Goal ] -> [ > Block | Goal ] goalreached
+late [ > Player | Goal ] -> [ Goal | Player ] blockmove
+
+cleanup [ Goal | Block ] -> [ Goal ]
+
+==============
+WINCONDITIONS
+==============
+
+All Block on Goal
+
+=======
+LEVELS
+=======
+
+message Level 1
+. . . . # #
+. P B . G #
+. . # # . #
+. . . G # #
+. . # # # #
+. . . . . .
+
+message Level 2
+. . . # # # #
+. . P B T . G
+. . . # # . .
+. . . . . . #
+. . . . T G B
+. . . # # # #
+
+message Level 3
+. . # # # . .
+. P B . . G .
+# # . . # # #
+. . . # . B .
+. . . . . G .
+. . # # # # .
+```
+
+I've made the following changes:
+- Removed comment headers like `--------------` within the rules.
+- Used `#` to mark comments for clarity.
+- Properly declared sounds using lowercase "blockmove" and "goalreached" connected to specific events within the rules.
+
+This should address compilation issues and ensure the game operates correctly.

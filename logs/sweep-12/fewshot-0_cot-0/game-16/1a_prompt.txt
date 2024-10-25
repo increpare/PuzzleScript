@@ -1,0 +1,116 @@
+SYSTEM PROMPT:
+You are a game designer, familiar with the PuzzleScript game description language. 
+
+USER PROMPT:
+The following PuzzleScript game code:
+```plaintext
+Title: Simple Sokoban
+
+Author: PuzzleScript Creator
+
+Homepage: puzzlescript.net
+
+=========
+OBJECTS
+=========
+
+Background
+lightblue
+
+Wall
+black
+
+Crate
+brown
+
+CrateOnTarget
+yellow
+
+Target
+green
+
+Player
+red
+
+PlayerOnTarget
+pink
+
+=========
+LEGEND
+=========
+
+. = Background
+# = Wall
+B = Crate
+O = CrateOnTarget
+T = Target
+P = Player
+@ = PlayerOnTarget
+
+=========
+SOUNDS
+=========
+
+Crate Move 
+move.wav
+
+Player Move 
+step.wav
+
+Win
+win.wav
+
+=========
+COLLISIONLAYERS
+=========
+
+Background
+Wall
+Target
+Player, PlayerOnTarget
+Crate, CrateOnTarget
+
+=========
+RULES
+=========
+
+[ > Player | Crate ] -> [ > Player | > Crate ]
+[ > PlayerOnTarget | Crate ] -> [ > PlayerOnTarget | > Crate ]
+[ > Player | CrateOnTarget ] -> [ > Player | > Crate ]
+[ > PlayerOnTarget | CrateOnTarget ] -> [ > PlayerOnTarget | > Crate ]
+
+[ Target | Player ] -> [ PlayerOnTarget ]
+[ PlayerOnTarget ] -> [ Target | Player ]
+
+[ Target | Crate ] -> [ CrateOnTarget ]
+[ CrateOnTarget ] -> [ Target | Crate ]
+
+=========
+WINCONDITIONS
+=========
+
+All CrateOnTarget
+
+=========
+LEVELS
+=========
+
+#####
+#...#
+#.#.#
+#PB.#
+#####
+
+```
+produced the following console output:
+=================================
+line 49 : unexpected sound token "move".
+line 52 : unexpected sound token "step".
+line 54 : unexpected sound token "win".
+line 55 : unexpected sound token "win".
+line 76 : In a rule, each pattern to match on the left must have a corresponding pattern on the right of equal length (number of cells).
+line 77 : In a rule, each pattern to match on the left must have a corresponding pattern on the right of equal length (number of cells).
+line 79 : In a rule, each pattern to match on the left must have a corresponding pattern on the right of equal length (number of cells).
+line 80 : In a rule, each pattern to match on the left must have a corresponding pattern on the right of equal length (number of cells).
+Errors detected during compilation; the game may not work correctly.
+Return a repaired version of the code that addresses these errors. Return your code in full, inside a ```plaintext code block.

@@ -1,0 +1,109 @@
+SYSTEM PROMPT:
+You are a game designer, familiar with the PuzzleScript game description language. 
+
+USER PROMPT:
+The following PuzzleScript game code:
+```plaintext
+===========
+OBJECTS
+===========
+Background
+black
+
+Player
+LightGreen
+.0.
+000
+.0.
+
+Wall
+Gray
+000
+000
+000
+
+Box
+Brown
+.1.
+111
+.1.
+
+Target
+Red
+...
+.2.
+...
+
+BoxOnTarget
+Orange
+.1.
+.2.
+.1.
+
+===========
+LEGEND
+===========
+. = Background
+P = Player
+# = Wall
+B = Box
+T = Target
+O = BoxOnTarget
+
+===========
+SOUNDS
+===========
+
+===========
+COLLISIONLAYERS
+===========
+Background
+Target
+Wall
+Box, BoxOnTarget
+Player
+
+===========
+RULES
+===========
+[> Player |    ] -> [  | > Player]
+[> Player | Box ] -> [  | > Player | Box ]
+
+[Player | Target] -> [Player]
+[Box | Target] -> [BoxOnTarget]
+
+[Player | BoxOnTarget] -> [Player | Box]
+
+===========
+WINCONDITIONS
+===========
+All BoxOnTarget
+
+===========
+LEVELS
+===========
+# # # # #
+# . . . #
+# . T . #
+# B . P #
+# # # # #
+
+# # # # #
+# . T . #
+# . B P #
+# T . . #
+# # # # #
+
+
+```
+produced the following console output:
+=================================
+line 21 : Trying to access color number 1 from the color palette of sprite BOX, but there are only 1 defined in it.
+line 22 : Trying to access color number 1 from the color palette of sprite BOX, but there are only 1 defined in it.
+line 23 : Trying to access color number 1 from the color palette of sprite BOX, but there are only 1 defined in it.
+line 28 : Trying to access color number 2 from the color palette of sprite TARGET, but there are only 1 defined in it.
+line 33 : Trying to access color number 1 from the color palette of sprite BOXONTARGET, but there are only 1 defined in it.
+line 34 : Trying to access color number 2 from the color palette of sprite BOXONTARGET, but there are only 1 defined in it.
+too many errors, aborting compilation
+Errors detected during compilation; the game may not work correctly.
+Return a repaired version of the code that addresses these errors. First, reason about your task and determine the best plan of action. Then, write your code. Return your code in full, inside a ```plaintext code block.

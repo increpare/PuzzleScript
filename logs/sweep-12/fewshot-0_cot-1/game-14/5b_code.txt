@@ -1,0 +1,79 @@
+To resolve the errors in the PuzzleScript code, let's analyze each of the issues:
+
+1. **Error at line 51:** The error indicates that the "~Goal" object does not exist. In PuzzleScript, the tilde (~) is used to denote negation or absence of an object, and it must reference an existing object. In this case, `Goal` is defined, but the syntax in rules should correctly use the tilde with the object like `No Goal`, if there's an "empty" layer considered after removal of `BlockOnGoal`.
+
+2. **Errors at line 61:** The errors at this line state that keys "/", "L", "E", "V", "1" are not defined. On inspection, these letters appear in the level description comments. PuzzleScript isn't effectively handling inline comments, so let's correct it by utilizing `message` instead to avoid mixing comments into levels.
+
+Let's proceed with making these corrections:
+
+```plaintext
+===========
+OBJECTS
+===========
+Background
+transparent
+
+Player
+blue
+
+Wall
+black
+
+Block
+brown
+
+Goal
+yellow
+
+BlockOnGoal
+green
+
+===========
+LEGEND
+===========
+P = Player
+# = Wall
+B = Block
+. = Goal
+G = BlockOnGoal
+
+===========
+SOUNDS
+===========
+
+===========
+COLLISIONLAYERS
+===========
+Background
+Wall
+Goal
+Block, BlockOnGoal
+Player
+
+===========
+RULES
+===========
+[Player | Block] -> [ | Player Block]
+
+[Block | Goal] -> [ | BlockOnGoal]
+
+[BlockOnGoal No Goal] -> [Block | Goal]
+
+===========
+WINCONDITIONS
+===========
+All BlockOnGoal
+
+===========
+LEVELS
+===========
+message Level 1
+########
+#..   #
+# PB# #
+# BB. #
+#   G #
+########
+```
+
+In this version, I've replaced the potentially incorrect absence notation with `No Goal` in one of the rules, using `No` as it is the correct approach for checking the presence of space in the absence of an object like `Goal`. I also substituted the inline comments with `message` usage which allows annotating levels without interrupting their parsing.

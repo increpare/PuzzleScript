@@ -1,0 +1,86 @@
+SYSTEM PROMPT:
+You are a game designer, familiar with the PuzzleScript game description language. 
+
+USER PROMPT:
+The following PuzzleScript game code:
+```plaintext
+========
+title Simple Sokoban
+author OpenAI
+homepage http://www.puzzlescript.net
+
+========
+require_player_movement
+
+========
+legend
+. = Background
+# = Wall
+P = Player
+B = Box
+G = Goal
+
+========
+sounds
+# Include music and sound effects if desired
+# (e.g., [Player Moving] [Player Victory] [Music])
+
+========
+collisionlayers
+wall
+player, box, goal
+
+========
+winconditions
+All Box on Goal
+
+========
+levels
+#####
+#...#
+#.#.#
+#...#
+#####
+
+#####
+#P..#
+#.#.#
+#B.G#
+#####
+
+#######
+#     #
+#  B  #
+# PBG #
+#######
+
+========
+objects
+Background
+ color black
+
+Wall
+ color gray
+
+Player
+ color purple
+
+Box
+ color orange
+
+Goal
+ color green
+
+
+```
+produced the following console output:
+=================================
+line 10 : section "LEGEND" is out of order, must follow  "OBJECTS" (or it could be that the section "OBJECTS"is just missing totally.  You have to include all section headings, even if the section itself is empty).
+line 11 : You're talking about BACKGROUND but it's not defined anywhere.
+line 12 : You're talking about WALL but it's not defined anywhere.
+line 13 : You're talking about PLAYER but it's not defined anywhere.
+line 14 : You're talking about BOX but it's not defined anywhere.
+line 15 : You're talking about GOAL but it's not defined anywhere.
+too many errors, aborting compilation
+Errors detected during compilation; the game may not work correctly.
+Return a repaired version of the code that addresses these errors. Return your code in full, inside a ```plaintext code block.

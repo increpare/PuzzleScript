@@ -1,0 +1,123 @@
+The errors you're seeing are due to the incorrect use of colors in the sprite definitions for `Target` and `BoxOnTarget`. In PuzzleScript, you define a sprite's appearance in a 5x5 grid using 0s and 1s (or any other number you'd like) to represent the different colors that have been specified. If your grid uses numbers that aren't in the palette you've defined, you get errors.
+
+Let's fix the code by ensuring that the defined colors correspond with the numbers used in the sprite grids:
+
+```plaintext
+Title: Sokoban Simple
+
+Author: PuzzleScript Dev
+
+===============
+OBJECTS
+===============
+
+Background
+WHITE
+.....
+
+Player
+GREEN
+..0..
+.000.
+..0..
+.....
+.....
+
+Wall
+BLACK
+00000
+00000
+00000
+00000
+00000
+
+Box
+ORANGE
+00000
+00000
+00000
+00000
+00000
+
+Target
+BLUE
+.....
+..00.
+..00.
+.....
+
+BoxOnTarget
+LIGHTORANGE
+00000
+00000
+00000
+00000
+00000
+
+===============
+LEGEND
+===============
+
+. = Background
+P = Player
+# = Wall
+B = Box
+T = Target
+O = BoxOnTarget
+
+===============
+SOUNDS
+===============
+
+Move Player
+  MOVE 100
+Restart
+  CRASH 100
+
+===============
+COLLISIONLAYERS
+===============
+
+Background
+Wall
+Target BoxOnTarget
+Box
+Player
+
+===============
+RULES
+===============
+
+[Player | Box] -> [ > Player | > Box]
+[Player | Target Box] -> [ > Player | > BoxOnTarget]
+[Player | BoxOnTarget] -> [ > Player | > BoxOnTarget]
+[Player | Target] -> [ > Player]
+[BoxOnTarget | Target] -> [Target | BoxOnTarget]
+
+===============
+WINCONDITIONS
+===============
+
+All BoxOnTarget on Target
+
+===============
+LEVELS
+===============
+
+####
+#P  #
+# B #
+# T #
+####
+
+####
+#P  #
+# B #
+#   #
+##T##
+####
+```
+
+Changes made:
+1. Changed the number `7` to `0` in the `Target` sprite definition to match the single color available (BLUE).
+2. Adjusted the `BoxOnTarget` sprite to use `0` for the single defined color (LIGHTORANGE).

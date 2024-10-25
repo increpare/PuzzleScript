@@ -1,0 +1,121 @@
+SYSTEM PROMPT:
+You are a game designer, familiar with the PuzzleScript game description language. 
+
+USER PROMPT:
+The following PuzzleScript game code:
+```plaintext
+===========
+OBJECTS
+===========
+Background
+black
+.....
+.....
+.....
+.....
+.....
+
+Player
+LightGreen
+.....
+..0..
+.000.
+..0..
+.....
+
+Wall
+Gray
+.....
+00000
+00000
+00000
+.....
+
+Box
+Brown
+.....
+..0..
+.000.
+..0..
+.....
+
+Target
+Red
+.....
+.....
+..0..
+.....
+.....
+
+BoxOnTarget
+Brown Red
+.....
+..0..
+..1..
+..0..
+.....
+
+===========
+LEGEND
+===========
+. = Background
+P = Player
+# = Wall
+B = Box
+T = Target
+O = BoxOnTarget
+_ = Background
+
+===========
+SOUNDS
+===========
+
+===========
+COLLISIONLAYERS
+===========
+Background
+Target
+Wall
+Box, BoxOnTarget
+Player
+
+===========
+RULES
+===========
+[> Player | _] -> [_ | > Player]
+[> Player | Box | _] -> [_ | > Player | Box]
+
+[Player | Target] -> [Player]
+[Box | Target] -> [BoxOnTarget]
+
+[Player | BoxOnTarget] -> [Player | Box]
+
+===========
+WINCONDITIONS
+===========
+All BoxOnTarget
+
+===========
+LEVELS
+===========
+# # # # #
+# _ _ _ #
+# _ T _ #
+# B _ P #
+# # # # #
+
+# # # # #
+# _ T _ #
+# _ B P #
+# T _ _ #
+# # # # #
+
+```
+produced the following console output:
+=================================
+line 95 : Error, symbol " ", used in map, not found.
+line 101 : Error, symbol " ", used in map, not found.
+line 82 : In a rule, each pattern to match on the left must have a corresponding pattern on the right of equal length (number of cells).
+line 83 : In a rule, each pattern to match on the left must have a corresponding pattern on the right of equal length (number of cells).
+Errors detected during compilation; the game may not work correctly.
+Return a repaired version of the code that addresses these errors. First, reason about your task and determine the best plan of action. Then, write your code. Return your code in full, inside a ```plaintext code block.

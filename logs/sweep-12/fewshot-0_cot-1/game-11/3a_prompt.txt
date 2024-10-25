@@ -1,0 +1,80 @@
+SYSTEM PROMPT:
+You are a game designer, familiar with the PuzzleScript game description language. 
+
+USER PROMPT:
+The following PuzzleScript game code:
+```plaintext
+Title: Box Mover
+
+# =========OBJECTS========
+Background
+lightgreen
+
+Target
+yellow
+
+Box
+brown
+
+Player
+red
+
+Wall
+black
+
+# ========LEGEND==========
+.=Background
+P=Player
+o=Box
+T=Target
+#=Wall
+
+# =========SOUNDS=========
+# Optional: Define game sounds here
+
+# ========COLLISION LAYERS=========
+Background
+Target, Player, Box
+Wall
+
+# =========RULES==========
+[> Player | Box] -> [> Player | > Box]
+[Box | Target] -> [Goal | Target] 
+
+# =========WINCONDITIONS==========
+All Box on Target
+
+# =========LEVELS=========
+
+# Level 1
+#######
+#     #
+#  T  #
+# o   #
+#     #
+# P   #
+#######
+
+# Level 2
+#######
+#     #
+#  To #
+#     #
+#     #
+# P   #
+#######
+
+# =========END OF CODE==========
+
+```
+produced the following console output:
+=================================
+line 4 : Unrecognised stuff in the prelude.
+line 5 : Unrecognised stuff in the prelude.
+line 7 : Unrecognised stuff in the prelude.
+line 8 : Unrecognised stuff in the prelude.
+line 10 : Unrecognised stuff in the prelude.
+line 11 : Unrecognised stuff in the prelude.
+too many errors, aborting compilation
+Errors detected during compilation; the game may not work correctly.
+Return a repaired version of the code that addresses these errors. First, reason about your task and determine the best plan of action. Then, write your code. Return your code in full, inside a ```plaintext code block.

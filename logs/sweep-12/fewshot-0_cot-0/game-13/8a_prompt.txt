@@ -1,0 +1,123 @@
+SYSTEM PROMPT:
+You are a game designer, familiar with the PuzzleScript game description language. 
+
+USER PROMPT:
+The following PuzzleScript game code:
+```plaintext
+Title: Block Push
+
+Author: PuzzleScript
+
+===========
+OBJECTS
+===========
+
+Background
+WHITE
+.....
+.....
+.....
+.....
+.....
+
+Player
+RED
+.....
+..00.
+.000.
+.0...
+.....
+
+Block
+BLUE
+.....
+..00.
+.000.
+.0...
+.....
+
+Target
+YELLOW
+.....
+..00.
+.000.
+.0...
+.....
+
+Wall
+BLACK
+.....
+.....
+.....
+.....
+.....
+
+===========
+LEGEND
+===========
+
+. = Background
+P = Player
+B = Block
+T = Target
+# = Wall
+
+===========
+SOUNDS
+===========
+
+===========
+
+COLLISIONLAYERS
+===========
+
+Background
+Target
+Player, Block
+Wall
+
+===========
+RULES
+===========
+
+[ > P | B ] -> [ > B | P ]
+[ P | T ] -> [ T | P ]
+
+===========
+WINCONDITIONS
+===========
+
+All B on T
+
+===========
+LEVELS
+===========
+
+#####
+#..T#
+#PBT#
+#...#
+#####
+
+#######
+##.T..#
+#..B..#
+#.P...#
+##.B..#
+#..T..#
+#######
+
+#########
+#.......#
+#..T.B..#
+#.......#
+#..BP...#
+#.......#
+#...T...#
+#########
+
+
+```
+compiled, but a solvability check returned the following error:
+Found solution for level 0 in 0 iterations: 3.  Level 1 resulted in error: Error: Too many errors/warnings; noping out.. Please repair it. Level 1 is not solvable. Please repair it. Level 2 resulted in error: Error: Too many errors/warnings; noping out.. Please repair it. Level 2 is not solvable. Please repair it.
+Return your code in full, inside a ```plaintext code block.

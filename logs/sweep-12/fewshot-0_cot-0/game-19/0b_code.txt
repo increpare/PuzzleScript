@@ -1,0 +1,100 @@
+```plaintext
+Title: Sokoban Puzzles
+
+Author: PuzzleScript Dev
+
+Homepage: https://www.puzzlescript.net
+
+________________________________
+===========
+OBJECTS
+===========
+Background
+transparent
+.
+
+Wall
+#000000
+####
+
+Player
+#FF0000
+..P..
+.PP..
+.PP..
+..P..
+
+Crate
+#00FF00
+..C..
+.CC..
+.CC..
+..C..
+
+Target
+#FFFF00
+$$$$
+
+CrateOnTarget
+#00FF00
+$$$$
+
+PlayerOnTarget
+#FF0000
+$$$$
+
+================
+LEGEND
+================
+. = Background
+# = Wall
+P = Player
+C = Crate
+$ = Target
+
+============== 
+SOUNDS
+==============
+SokobanMove
+PUSH
+
+=======
+RULES
+=======
+[Player | Crate] -> [Player | CrateOnTarget]
+[Player Crate | ] -> [ | Player Crate] PUSH
+[Player | Target] -> [PlayerOnTarget | Target]
+[PlayerOnTarget Crate | ] -> [ | PlayerOnTarget CrateOnTarget] PUSH
+[Crate Target] -> [CrateOnTarget]
+
+=======
+WINCONDITIONS
+=======
+All CrateOnTarget
+
+========
+LEVELS
+========
+########
+#....$ #
+#.C.P# #
+#.#### #
+#....# #
+########
+
+########
+#..$.  #
+#..$C# #
+#..P.# #
+#.#### #
+########
+
+########
+#....$ #
+#.C.P# #
+#.#### #
+#....## #
+######$
+```
+
+This is a simple implementation of a Sokoban-like game using PuzzleScript syntax. The objective is to push all crates (`C`) onto the targets (`$`). The game includes basic rules for moving crates and conditions to win when all crates are on targets. The two levels included provide progressively challenging puzzles to solve.

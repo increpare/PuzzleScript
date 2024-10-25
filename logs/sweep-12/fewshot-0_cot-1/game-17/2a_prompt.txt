@@ -1,0 +1,111 @@
+SYSTEM PROMPT:
+You are a game designer, familiar with the PuzzleScript game description language. 
+
+USER PROMPT:
+The following PuzzleScript game code:
+```plaintext
+===========
+OBJECTS
+===========
+Background
+black
+
+Player
+LightGreen
+.0.
+000
+.0.
+
+Wall
+Gray
+000
+000
+000
+
+Box
+Brown
+.0.
+000
+.0.
+
+Target
+Red
+...
+.0.
+...
+
+BoxOnTarget
+Brown Red
+.0.
+.1.
+.0.
+
+===========
+LEGEND
+===========
+. = Background
+P = Player
+# = Wall
+B = Box
+T = Target
+O = BoxOnTarget
+
+===========
+SOUNDS
+===========
+
+===========
+COLLISIONLAYERS
+===========
+Background
+Target
+Wall
+Box, BoxOnTarget
+Player
+
+===========
+RULES
+===========
+[> Player |    ] -> [  | > Player]
+[> Player | Box ] -> [  | > Player | Box ]
+
+[Player | Target] -> [Player]
+[Box | Target] -> [BoxOnTarget]
+
+[Player | BoxOnTarget] -> [Player | Box]
+
+===========
+WINCONDITIONS
+===========
+All BoxOnTarget
+
+===========
+LEVELS
+===========
+# # # # #
+# . . . #
+# . T . #
+# B . P #
+# # # # #
+
+# # # # #
+# . T . #
+# . B P #
+# T . . #
+# # # # #
+
+```
+produced the following console output:
+=================================
+line 7 : Sprite graphics must be 5 wide and 5 high exactly.
+line 13 : Sprite graphics must be 5 wide and 5 high exactly.
+line 19 : Sprite graphics must be 5 wide and 5 high exactly.
+line 25 : Sprite graphics must be 5 wide and 5 high exactly.
+line 31 : Sprite graphics must be 5 wide and 5 high exactly.
+line 79 : Error, symbol " ", used in map, not found.
+line 85 : Error, symbol " ", used in map, not found.
+line 64 : In a rule, each pattern to match on the left must have a corresponding pattern on the right of equal length (number of cells).
+line 66 : In a rule, each pattern to match on the left must have a corresponding pattern on the right of equal length (number of cells).
+line 67 : In a rule, each pattern to match on the left must have a corresponding pattern on the right of equal length (number of cells).
+Errors detected during compilation; the game may not work correctly.
+Return a repaired version of the code that addresses these errors. First, reason about your task and determine the best plan of action. Then, write your code. Return your code in full, inside a ```plaintext code block.

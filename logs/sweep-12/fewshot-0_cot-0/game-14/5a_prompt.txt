@@ -1,0 +1,132 @@
+SYSTEM PROMPT:
+You are a game designer, familiar with the PuzzleScript game description language. 
+
+USER PROMPT:
+The following PuzzleScript game code:
+```plaintext
+Title: Sokoban Simple
+
+Author: PuzzleScript Dev
+
+===============
+OBJECTS
+===============
+
+Background
+WHITE
+.....
+
+Player
+GREEN
+..0..
+.000.
+..0..
+.....
+.....
+
+Wall
+BLACK
+00000
+00000
+00000
+00000
+00000
+
+Box
+ORANGE
+00000
+00000
+00000
+00000
+00000
+
+Target
+BLUE
+.....
+..00.
+..00.
+.....
+
+BoxOnTarget
+LIGHTORANGE
+00000
+00000
+00000
+00000
+00000
+
+===============
+LEGEND
+===============
+
+. = Background
+P = Player
+# = Wall
+B = Box
+T = Target
+O = BoxOnTarget
+
+===============
+SOUNDS
+===============
+
+Move Player
+  MOVE 100
+Restart
+  CRASH 100
+
+===============
+COLLISIONLAYERS
+===============
+
+Background
+Wall
+Target BoxOnTarget
+Box
+Player
+
+===============
+RULES
+===============
+
+[Player | Box] -> [ > Player | > Box]
+[Player | Target Box] -> [ > Player | > BoxOnTarget]
+[Player | BoxOnTarget] -> [ > Player | > BoxOnTarget]
+[Player | Target] -> [ > Player]
+[BoxOnTarget | Target] -> [Target | BoxOnTarget]
+
+===============
+WINCONDITIONS
+===============
+
+All BoxOnTarget on Target
+
+===============
+LEVELS
+===============
+
+####
+#P  #
+# B #
+# T #
+####
+
+####
+#P  #
+# B #
+#   #
+##T##
+####
+
+```
+produced the following console output:
+=================================
+line 45 : Was looking for color for object BOXONTARGET, got "lightorange" instead.
+line 46 : Trying to access color number 0 from the color palette of sprite BOXONTARGET, but there are only 0 defined in it.
+line 47 : Trying to access color number 0 from the color palette of sprite BOXONTARGET, but there are only 0 defined in it.
+line 48 : Trying to access color number 0 from the color palette of sprite BOXONTARGET, but there are only 0 defined in it.
+line 49 : Trying to access color number 0 from the color palette of sprite BOXONTARGET, but there are only 0 defined in it.
+line 50 : Trying to access color number 0 from the color palette of sprite BOXONTARGET, but there are only 0 defined in it.
+too many errors, aborting compilation
+Errors detected during compilation; the game may not work correctly.
+Return a repaired version of the code that addresses these errors. Return your code in full, inside a ```plaintext code block.

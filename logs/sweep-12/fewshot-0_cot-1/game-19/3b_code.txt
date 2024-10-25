@@ -1,0 +1,121 @@
+The error messages indicated that the sprite matrices for the `Player` and `Box` objects contain incorrect characters, specifically `@` and `B`. In PuzzleScript, sprite matrices use special characters to represent objects on a grid, with each character representing a different object or feature such as player, box, background, etc. The sprite matrices should only contain `.` (or spaces) to represent transparent spaces or parts of the object's colors, not functional game piece symbols like `@` or `B`.
+
+Here's a revised version of the game code with the corrected sprite definitions:
+
+```plaintext
+title Sokoban Puzzle
+author Game Designer
+
+========
+OBJECTS
+========
+
+Background
+blue
+.....
+.....
+.....
+.....
+.....
+
+Player
+green
+.....
+..0..
+.000.
+..0..
+.....
+
+Wall
+black
+.....
+.....
+00000
+.....
+.....
+
+Box
+brown
+.....
+.000.
+.000.
+.000.
+.....
+
+Target
+yellow
+.....
+.....
+.....
+.....
+.....
+
+BoxOnTarget
+brown yellow
+.....
+.000.
+.000.
+.000.
+.....
+
+============
+LEGEND
+============
+
+. = Background
+P = Player
+# = Wall
+B = Box
+T = Target
+X = BoxOnTarget
+
+===============
+SOUNDS
+===============
+
+==================
+COLLISIONLAYERS
+==================
+
+Background
+Player, Box, BoxOnTarget
+Wall
+Target
+
+========
+RULES
+========
+
+[Player | Box] -> [ | Player | Box]
+[Box | Target] -> [BoxOnTarget | ]
+[Player | BoxOnTarget] -> [ | Player | BoxOnTarget]
+[Player | Target] -> [ | Player | Target]
+
+===============
+WINCONDITIONS
+===============
+
+All BoxOnTarget on Target
+
+========
+LEVELS
+========
+
+#######
+#.....#
+#..B..#
+#..P..#
+#..T..#
+#######
+
+#######
+#.....#
+#..P..#
+#..B..#
+#..T..#
+#..#..#
+#..#..#
+#######
+```
+
+In this corrected version, every unintended character is replaced with `0` to represent the object within its respective colored area. The other sections remain unchanged, ensuring the game's logic and structure work as intended.

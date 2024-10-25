@@ -1,0 +1,134 @@
+SYSTEM PROMPT:
+You are a game designer, familiar with the PuzzleScript game description language. 
+
+USER PROMPT:
+The following PuzzleScript game code:
+```plaintext
+Title: Box Pusher
+Author: PuzzleMaster
+
+===========
+OBJECTS
+===========
+
+Background
+Black
+.....
+.....
+.....
+.....
+.....
+
+Wall
+Gray
+.....
+.XXXX
+.XXXX
+.XXXX
+.....
+
+Player
+Yellow
+.....
+..00.
+.0.00
+..00.
+..0..
+
+Box
+Brown
+.....
+.....
+..00.
+..00.
+.....
+
+Target
+Green
+.....
+.....
+..00.
+..00.
+.....
+
+BoxOnTarget
+DarkRed
+.....
+.....
+..00.
+..00.
+.....
+
+============
+LEGEND
+============
+
+.=Background
+#:Wall
+P:Player
+B:Box
+T:Target
+
+============
+SOUNDS
+============
+
+;no sound specified
+
+==================
+COLLISIONLAYERS
+==================
+
+Background
+Player, Box
+Wall
+Target
+
+=============
+RULES
+=============
+
+[ > Player | ] -> [ > Player | ]
+[ > Box | ] -> [ > Box | ]
+
+[Player | Box] -> [ > Player | > Box]
+
+[ Box | Target ] -> [BoxOnTarget | Target]
+[ BoxOnTarget | ] -> [Box | ]
+
+===============
+WINCONDITIONS
+===============
+
+All BoxOnTarget
+
+=========
+LEVELS
+=========
+
+#.#..#
+#P#B.#
+#..B.#
+#..T.#
+#..T.#
+######
+
+#..###
+#P.B.#
+###B.#
+.#..T#
+..T.#
+#####
+
+```
+produced the following console output:
+=================================
+line 19 : Unknown junk in spritematrix for object WALL.
+line 20 : Unknown junk in spritematrix for object WALL.
+line 21 : Unknown junk in spritematrix for object WALL.
+line 61 : Incorrect format of legend - should be one of "A = B", "A = B or C [ or D ...]", "A = B and C [ and D ...]".
+line 62 : Incorrect format of legend - should be one of "A = B", "A = B or C [ or D ...]", "A = B and C [ and D ...]".
+line 63 : Incorrect format of legend - should be one of "A = B", "A = B or C [ or D ...]", "A = B and C [ and D ...]".
+too many errors, aborting compilation
+Errors detected during compilation; the game may not work correctly.
+Return a repaired version of the code that addresses these errors. First, reason about your task and determine the best plan of action. Then, write your code. Return your code in full, inside a ```plaintext code block.

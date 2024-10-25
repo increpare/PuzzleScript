@@ -1,0 +1,10 @@
+=================================
+line 25 : Unknown junk in object section (possibly: sprites have to be 5 pixels wide and 5 pixels high exactly. Or maybe: the main names for objects have to be words containing only the letters a-z0.9 - if you want to call them something like ",", do it in the legend section).
+line 32 : Name "P" already in use (on line line 13).
+line 33 : Name "G" already in use (on line line 17).
+line 34 : Name "E" already in use (on line line 21).
+line 38 : section "COLLISIONLAYERS" is out of order, must follow  "SOUNDS" (or it could be that the section "SOUNDS"is just missing totally.  You have to include all section headings, even if the section itself is empty).
+line 51 : Name "player", referred to in a rule, does not exist.
+line 51 : Name "gem", referred to in a rule, does not exist.
+too many errors, aborting compilation
+Errors detected during compilation; the game may not work correctly.

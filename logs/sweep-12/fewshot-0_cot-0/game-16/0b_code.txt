@@ -1,0 +1,98 @@
+```plaintext
+Title: Simple Sokoban
+
+Author: PuzzleScript Creator
+
+Homepage: puzzlescript.net
+
+=========
+OBJECTS
+=========
+
+Background
+lightblue
+
+Wall
+black
+
+Crate
+brown
+
+CrateOnTarget
+yellow
+
+Target
+green
+
+Player
+red
+
+PlayerOnTarget
+pink
+
+=========
+LEGEND
+=========
+
+. = Background
+# = Wall
+B = Crate
+O = CrateOnTarget
+T = Target
+P = Player
+@ = PlayerOnTarget
+
+=========
+SOUNDS
+=========
+
+Crate Move 
+move.wav
+
+Player Move 
+step.wav
+
+Win
+win.wav
+
+=========
+COLLISIONLAYERS
+=========
+
+Background
+Wall
+Target
+Player, PlayerOnTarget
+Crate, CrateOnTarget
+
+=========
+RULES
+=========
+
+[ > Player | Crate ] -> [ > Player | > Crate ]
+[ > PlayerOnTarget | Crate ] -> [ > PlayerOnTarget | > Crate ]
+[ > Player | CrateOnTarget ] -> [ > Player | > Crate ]
+[ > PlayerOnTarget | CrateOnTarget ] -> [ > PlayerOnTarget | > Crate ]
+
+[ Target | Player ] -> [ PlayerOnTarget ]
+[ PlayerOnTarget ] -> [ Target | Player ]
+
+[ Target | Crate ] -> [ CrateOnTarget ]
+[ CrateOnTarget ] -> [ Target | Crate ]
+
+=========
+WINCONDITIONS
+=========
+
+All CrateOnTarget
+
+=========
+LEVELS
+=========
+
+#####
+#...#
+#.#.#
+#PB.#
+#####
+```

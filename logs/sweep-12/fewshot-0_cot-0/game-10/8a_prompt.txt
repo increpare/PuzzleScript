@@ -1,0 +1,86 @@
+SYSTEM PROMPT:
+You are a game designer, familiar with the PuzzleScript game description language. 
+
+USER PROMPT:
+The following PuzzleScript game code:
+```plaintext
+========
+title Simple Sokoban
+author OpenAI
+homepage http://www.puzzlescript.net
+
+========
+require_player_movement
+
+========
+objects
+Background
+  black
+
+Wall
+  gray
+
+Player
+  purple
+
+Box
+  orange
+
+Goal
+  green
+
+========
+legend
+. = Background
+# = Wall
+P = Player
+B = Box
+G = Goal
+
+========
+collisionlayers
+Background, Goal
+Wall
+Player, Box
+
+========
+rules
+# You can add your game rules here if needed
+
+========
+winconditions
+All Box on Goal
+
+========
+levels
+#####
+#...#
+#.#.#
+#...#
+#####
+
+#####
+#P..#
+#.#.#
+#B.G#
+#####
+
+#######
+#     #
+#  B  #
+# PBG #
+#######
+
+
+```
+produced the following console output:
+=================================
+line 35 : section "COLLISIONLAYERS" is out of order, must follow  "SOUNDS" (or it could be that the section "SOUNDS"is just missing totally.  You have to include all section headings, even if the section itself is empty).
+line 36 : Background must be in a layer by itself.
+line 42 : Name "#", referred to in a rule, does not exist.
+line 42 : Name "you", referred to in a rule, does not exist.
+line 42 : Name "can", referred to in a rule, does not exist.
+line 42 : Name "add", referred to in a rule, does not exist.
+too many errors, aborting compilation
+Errors detected during compilation; the game may not work correctly.
+Return a repaired version of the code that addresses these errors. Return your code in full, inside a ```plaintext code block.

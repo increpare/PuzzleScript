@@ -1,0 +1,87 @@
+SYSTEM PROMPT:
+You are a game designer, familiar with the PuzzleScript game description language. 
+
+USER PROMPT:
+The following PuzzleScript game code:
+```plaintext
+========
+title Simple Sokoban
+author OpenAI
+homepage http://www.puzzlescript.net
+
+========
+require_player_movement
+
+========
+objects
+Background
+ color black
+
+Wall
+ color gray
+
+Player
+ color purple
+
+Box
+ color orange
+
+Goal
+ color green
+
+========
+legend
+. = Background
+# = Wall
+P = Player
+B = Box
+G = Goal
+
+========
+sounds
+# Include music and sound effects if desired
+# (e.g., [Player Moving] [Player Victory] [Music])
+
+========
+collisionlayers
+wall
+player, box, goal
+
+========
+winconditions
+All Box on Goal
+
+========
+levels
+#####
+#...#
+#.#.#
+#...#
+#####
+
+#####
+#P..#
+#.#.#
+#B.G#
+#####
+
+#######
+#     #
+#  B  #
+# PBG #
+#######
+
+```
+produced the following console output:
+=================================
+line 12 : Was looking for color for object BACKGROUND, got "color " instead.
+line 15 : Was looking for color for object WALL, got "color " instead.
+line 18 : Was looking for color for object PLAYER, got "color " instead.
+line 21 : Was looking for color for object BOX, got "color " instead.
+line 24 : Was looking for color for object GOAL, got "color " instead.
+line 36 : Was expecting a sound event (like SFX3, or ENDLEVEL) or an object name, but didn't find either.
+line 37 : Was expecting a sound event (like SFX3, or ENDLEVEL) or an object name, but didn't find either.
+line 45 : section "WINCONDITIONS" is out of order, must follow  "RULES" (or it could be that the section "RULES"is just missing totally.  You have to include all section headings, even if the section itself is empty).
+too many errors, aborting compilation
+Errors detected during compilation; the game may not work correctly.
+Return a repaired version of the code that addresses these errors. Return your code in full, inside a ```plaintext code block.

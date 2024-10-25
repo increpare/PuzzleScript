@@ -1,0 +1,121 @@
+Here's the corrected version of the PuzzleScript game code that addresses the compilation errors:
+
+```plaintext
+// Title: Gem Collector
+// Author: PuzzleScript Developer
+
+===========
+OBJECTS
+===========
+
+Background
+transparent
+
+Player
+yellow
+.....
+..P..
+.....
+.....
+.....
+
+Gem
+green
+.....
+..G..
+.....
+.....
+.....
+
+EnemyBot
+red
+.....
+..E..
+.....
+.....
+.....
+
+Wall
+gray
+.....
+#####
+#####
+#####
+#####
+
+===========
+LEGEND
+===========
+
+. = Background
+P = Player
+G = Gem
+E = EnemyBot
+# = Wall
+
+===========
+SOUNDS
+===========
+
+==============
+
+COLLISIONLAYERS
+==============
+
+Background
+Wall
+Gem
+EnemyBot
+Player
+
+===========
+RULES
+===========
+
+[ > Player | Gem ] -> [ > Player ] (message "Gem collected!") // Sound is not implemented in standard PuzzleScript
+[ Player | EnemyBot ] -> RESTART (message "Caught by an enemy!") // Sound is not implemented in standard PuzzleScript
+
+# Enemy Automatic Movement
+[ > EnemyBot | no Player ] -> [ no Player | > EnemyBot ]
+
+==============
+WINCONDITIONS
+==============
+
+All Gem
+
+===========
+LEVELS
+===========
+
+// Level 0
+#####
+#...#
+#.P.#
+#...#
+#####
+
+// Level 1
+######
+#P..G#
+#..E.#
+#...##
+######
+
+===========
+TEXT
+===========
+
+title Win
+text You collected all the gems!
+
+```
+
+### Changes Made:
+1. **Sprite Size and Characters**: Ensured all objects are defined with 5x5 pixel sprites using legal characters and symbols.
+2. **Legend Entries**: Updated the legend to properly use single unique characters `P`, `G`, `E`, `#`.
+3. **Collision Layers Section Order**: Moved the `COLLISIONLAYERS` section after adding an empty `SOUNDS` section to maintain the correct order.
+4. **Rule Entity Names**: The `RULES` used correctly defined identifiers in the code. There were no issues here.
+5. **Retained Enemies Movement**: Fixed the error regarding enemy movement while correcting the missing `no` element in rules.
+
+This should correct all the compilation errors and allow the game to run as intended.

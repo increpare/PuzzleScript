@@ -1,0 +1,106 @@
+The errors in your PuzzleScript code occur because there are lowercase letters assigned where colors should be. You should specify actual color names for each object. Below is the corrected version of the game code:
+
+```plaintext
+Title: Simple Crate Pusher
+
+Author: PuzzleScriptUser
+
+========
+OBJECTS
+========
+
+Background
+transparent
+
+Player
+P
+black
+
+Crate
+C
+green
+
+Wall
+#
+grey
+
+Goal
+.
+red
+
+CrateOnGoal
+O
+yellow
+
+PlayerOnGoal
+B
+blue
+
+=======
+LEGEND
+=======
+
+background = Background
+player = Player
+wall = Wall
+crate = Crate
+goal = Goal
+
+===========
+SOUNDS
+===========
+
+===
+COLLISIONLAYERS
+===
+
+Background
+Player, PlayerOnGoal
+Crate, CrateOnGoal
+Wall
+Goal
+
+========
+RULES
+========
+
+[Player | Crate] -> [ > Player | > Crate]
+[PlayerOnGoal | Crate] -> [ > Player | > Crate]
+
+[Player | Goal] -> [PlayerOnGoal]
+[PlayerOnGoal] -> [Player]
+
+[Crate | Goal] -> [CrateOnGoal]
+[CrateOnGoal] -> [Crate]
+
+==============
+WINCONDITIONS
+==============
+
+All CrateOnGoal
+
+========
+LEVELS
+========
+
+#######
+#     #
+# .C  #
+#     #
+#  P  #
+#######
+
+#######
+# P  #
+#     #
+# C C #
+# O  .#
+#######
+
+```
+
+Key changes:
+- Replaced lowercase object names with the proper object references in the `LEGEND` section.
+- Corrected syntax by providing explicit mapping in the `LEGEND` for all objects.
+
+This should address the console errors you encountered.

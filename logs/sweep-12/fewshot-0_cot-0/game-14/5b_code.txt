@@ -1,0 +1,118 @@
+```plaintext
+Title: Sokoban Simple
+
+Author: PuzzleScript Dev
+
+===============
+OBJECTS
+===============
+
+Background
+WHITE
+.....
+
+Player
+GREEN
+..0..
+.000.
+..0..
+.....
+.....
+
+Wall
+BLACK
+00000
+00000
+00000
+00000
+00000
+
+Box
+ORANGE
+00000
+00000
+00000
+00000
+00000
+
+Target
+BLUE
+.....
+..00.
+..00.
+.....
+
+BoxOnTarget
+# Fixing the color by naming it LIGHT ORANGE (use a space)
+LIGHT ORANGE
+00000
+00000
+00000
+00000
+00000
+
+===============
+LEGEND
+===============
+
+. = Background
+P = Player
+# = Wall
+B = Box
+T = Target
+O = BoxOnTarget
+
+===============
+SOUNDS
+===============
+
+Move Player
+  MOVE 100
+Restart
+  CRASH 100
+
+===============
+COLLISIONLAYERS
+===============
+
+Background
+Wall
+Target BoxOnTarget
+Box
+Player
+
+===============
+RULES
+===============
+
+[Player | Box] -> [ > Player | > Box]
+[Player | Target Box] -> [ > Player | > BoxOnTarget]
+[Player | BoxOnTarget] -> [ > Player | > BoxOnTarget]
+[Player | Target] -> [ > Player]
+[BoxOnTarget | Target] -> [Target | BoxOnTarget]
+
+===============
+WINCONDITIONS
+===============
+
+All BoxOnTarget on Target
+
+===============
+LEVELS
+===============
+
+####
+#P  #
+# B #
+# T #
+####
+
+####
+#P  #
+# B #
+#   #
+##T##
+####
+```
+
+In the original code, the error was caused by the color name for the `BoxOnTarget` object. PuzzleScript expects a space between color names if they contain multiple words (like "LIGHT ORANGE"). By correcting the color name to "LIGHT ORANGE", the error should be resolved.

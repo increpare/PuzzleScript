@@ -1,0 +1,132 @@
+SYSTEM PROMPT:
+You are a game designer, familiar with the PuzzleScript game description language. 
+
+USER PROMPT:
+The following PuzzleScript game code:
+```plaintext
+# Simple Sokoban PuzzleScript Game
+
+Title: Simple Sokoban
+Author: Game Designer
+Homepage: puzzlers.org
+
+===========
+OBJECTS
+===========
+
+Background
+WHITE
+
+Wall
+GRAY
+
+Player
+CYAN
+
+Box
+BROWN
+
+Target
+YELLOW
+
+BoxOnTarget
+ORANGE
+
+PlayerOnTarget
+GREEN
+
+===========
+LEGEND
+===========
+
+. = Background
+# = Wall
+P = Player
+B = Box
+T = Target
+O = BoxOnTarget
+* = PlayerOnTarget
+
+===========
+SOUNDS
+===========
+# Optional sound settings can be added here
+
+===========
+COLLISIONLAYERS
+===========
+
+Background
+Wall
+Target
+Box, BoxOnTarget
+Player, PlayerOnTarget
+
+===========
+RULES
+===========
+
+# Player movement
+[Player | ] -> [ | Player]
+[ | Player] -> [Player |]
+[Player | PlayerOnTarget] -> [ | PlayerOnTarget]
+[PlayerOnTarget | Player] -> [PlayerOnTarget |]
+
+# Box pushing
+[Player | Box] -> [ | PlayerBox]
+[Box | ] -> [ | Box]
+
+[Player | BoxOnTarget] -> [ | PlayerOnTarget]
+[BoxOnTarget | ] -> [ | BoxOnTarget]
+
+[PlayerOnTarget | Box] -> [Target | PlayerBox]
+[Box | ] -> [ | Box]
+
+# Updating state when boxes move onto targets
+[Player | Box | Target] -> [ | Player | BoxOnTarget]
+[PlayerOnTarget | Box | Target] -> [Target | PlayerOnTarget | BoxOnTarget]
+
+===========
+WINCONDITIONS
+===========
+
+All BoxOnTarget
+
+===========
+LEVELS
+===========
+
+# Level 1
+#####
+#   #
+# B.#
+# PT#
+#####
+
+# Level 2
+#######
+#     #
+# BP  #
+# ..  #
+#######
+
+# Level 3
+#####
+#P  #
+# B #
+#.. #
+#####
+
+```
+produced the following console output:
+=================================
+line 18 : Was looking for color for object PLAYER, got "cyan" instead.
+line 47 : Was expecting a sound event (like SFX3, or ENDLEVEL) or an object name, but didn't find either.
+line 63 : Objects cannot appear outside of square brackets in rules, only directions can.
+line 63 : Name "movement", referred to in a rule, does not exist.
+line 69 : Objects cannot appear outside of square brackets in rules, only directions can.
+line 69 : Name "pushing", referred to in a rule, does not exist.
+line 70 : Name "playerbox", referred to in a rule, does not exist.
+too many errors, aborting compilation
+Errors detected during compilation; the game may not work correctly.
+Return a repaired version of the code that addresses these errors. First, reason about your task and determine the best plan of action. Then, write your code. Return your code in full, inside a ```plaintext code block.

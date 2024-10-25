@@ -1,0 +1,102 @@
+SYSTEM PROMPT:
+You are a game designer, familiar with the PuzzleScript game description language. 
+
+USER PROMPT:
+The following PuzzleScript game code:
+```plaintext
+;;;;;;;;;;;;;;;;
+;; Sokoban Game;;
+;;;;;;;;;;;;;;;;
+
+[Title]
+Sokoban
+
+[Author]
+YourName
+
+[Homepage]
+http://yourhomepage.com
+
+[Objects]
+Background
+GREEN
+. 
+
+Wall
+BLACK
+######
+
+Target
+RED
+......
+
+Player
+BLUE
+P
+
+Crate
+YELLOW
+O
+
+Crate_on_Target
+ORANGE
+X
+
+Player_on_Target
+CYAN
+@
+
+[Legend]
+# = Wall
+O = Crate
+. = Target
+X = Crate_on_Target
+P = Player
+@ = Player_on_Target
+
+[CollisionLayers]
+Background
+Wall
+Target
+Player, Crate
+
+[Sounds]
+; Sounds can be defined here if they are supported
+
+[Rules]
+[> Player | Crate] -> [> | Crate Player]
+[> Player | Wall] -> [> Player | Wall]
+
+[Player > | Crate] -> [Player Crate | >]
+[Player > | Wall] -> [Player > | Wall]
+
+[Player | Wall] -> [Player | Wall]
+
+[Player | Crate] -> [Player | Crate]
+
+[WinCondition]
+All Crate_on_Target
+
+[Levels]
+;; Level 1
+#####
+#...#
+#.#.#
+#.$.#
+#.$$#
+#.$.#
+#.#.#
+#####
+
+```
+produced the following console output:
+=================================
+line 6 : Unrecognised stuff in the prelude.
+line 9 : Unrecognised stuff in the prelude.
+line 12 : Unrecognised stuff in the prelude.
+line 15 : Unrecognised stuff in the prelude.
+line 16 : Unrecognised stuff in the prelude.
+line 19 : Unrecognised stuff in the prelude.
+too many errors, aborting compilation
+Errors detected during compilation; the game may not work correctly.
+Return a repaired version of the code that addresses these errors. Return your code in full, inside a ```plaintext code block.

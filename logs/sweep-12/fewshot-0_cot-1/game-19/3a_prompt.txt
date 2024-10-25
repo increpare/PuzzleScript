@@ -1,0 +1,132 @@
+SYSTEM PROMPT:
+You are a game designer, familiar with the PuzzleScript game description language. 
+
+USER PROMPT:
+The following PuzzleScript game code:
+```plaintext
+title Sokoban Puzzle
+author Game Designer
+
+========
+OBJECTS
+========
+
+Background
+blue
+.....
+.....
+.....
+.....
+.....
+
+Player
+green
+.....
+..@..
+..@..
+..@..
+.....
+
+Wall
+black
+.....
+.....
+00000
+.....
+.....
+
+Box
+brown
+.....
+.BBB.
+.BBB.
+.BBB.
+.....
+
+Target
+yellow
+.....
+.....
+.....
+.....
+.....
+
+BoxOnTarget
+brown yellow
+.....
+.BBB.
+.BBB.
+.BBB.
+.....
+
+============
+LEGEND
+============
+
+. = Background
+P = Player
+# = Wall
+B = Box
+T = Target
+X = BoxOnTarget
+
+===============
+SOUNDS
+===============
+
+==================
+COLLISIONLAYERS
+==================
+
+Background
+Player, Box, BoxOnTarget
+Wall
+Target
+
+========
+RULES
+========
+
+[Player | Box] -> [ | Player | Box]
+[Box | Target] -> [BoxOnTarget | ]
+[Player | BoxOnTarget] -> [ | Player | BoxOnTarget]
+[Player | Target] -> [ | Player | Target]
+
+===============
+WINCONDITIONS
+===============
+
+All BoxOnTarget on Target
+
+========
+LEVELS
+========
+
+#######
+#.....#
+#..B..#
+#..P..#
+#..T..#
+#######
+
+#######
+#.....#
+#..P..#
+#..B..#
+#..T..#
+#..#..#
+#..#..#
+#######
+
+```
+produced the following console output:
+=================================
+line 19 : Unknown junk in spritematrix for object PLAYER.
+line 20 : Unknown junk in spritematrix for object PLAYER.
+line 21 : Unknown junk in spritematrix for object PLAYER.
+line 35 : Unknown junk in spritematrix for object BOX.
+line 36 : Unknown junk in spritematrix for object BOX.
+line 37 : Unknown junk in spritematrix for object BOX.
+too many errors, aborting compilation
+Errors detected during compilation; the game may not work correctly.
+Return a repaired version of the code that addresses these errors. First, reason about your task and determine the best plan of action. Then, write your code. Return your code in full, inside a ```plaintext code block.

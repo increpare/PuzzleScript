@@ -1,0 +1,64 @@
+The errors in your PuzzleScript game code appear to be related to missing or incorrect sections and syntax in the prelude. Let's fix these problems by including the necessary missing sections and correcting the syntax. Here's the corrected game code:
+
+```plaintext
+[Title]
+Gem Collector
+
+[Author]
+PuzzleScript Developer
+
+[Objects]
+P = Player
+G = Gem
+E = EnemyBot
+# = Wall
+
+[Sounds]
+gemCollectP = pickup2
+enemyCatchP = die
+
+[CollisionLayers]
+Background
+Wall
+Gem
+EnemyBot
+Player
+
+[Rules]
+[ > Player | Gem ] -> [ > Player ] (message "Gem collected!") (sound gemCollectP)
+[ Player | EnemyBot ] -> restart (message "Caught by an enemy!") (sound enemyCatchP)
+
+// Enemy Automatic Movement
+[> EnemyBot | no Player ] -> [ no Player | > EnemyBot ]
+
+[WinConditions]
+All Gem
+
+[Levels]
+
+// Level 0
+#####
+#...#
+#.P.#
+#...#
+#####
+
+// Level 1
+######
+#P..G#
+#..E.#
+#...##
+######
+
+[Text]
+title Win
+text You collected all the gems!
+```
+
+### Key Corrections:
+
+1. **[Objects] Section**: Added an `[Objects]` section, which was missing. PuzzleScript requires you to declare your objects in this section.
+   
+2. **CollisionLayers Order**: Rearranged the `CollisionLayers` so that `Wall` is before `Gem`, `EnemyBot`, and `Player` to ensure proper interaction layering.
+
+These adjustments should resolve the "Unrecognised stuff in the prelude" errors you were encountering and ensure the game compiles and runs as expected.

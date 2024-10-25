@@ -1,0 +1,121 @@
+The errors in your PuzzleScript game code appear to be due to incorrect formatting in the object sprite sections. The sprites in PuzzleScript must be exactly 5 pixels wide and 5 pixels high, with period (`.`) characters representing transparency or empty space. The error messages are indicating junk input in lines where the sprite matrices should be.
+
+Here's the corrected code:
+
+```plaintext
+Title: Sokoban Puzzles
+
+Author: PuzzleScript Dev
+
+Homepage: https://www.puzzlescript.net
+
+===========
+OBJECTS
+===========
+Background
+transparent
+.....
+.....
+.....
+.....
+.....
+
+Wall
+#000000
+#####
+#####
+#####
+#####
+#####
+
+Player
+#FF0000
+.....
+..P..
+..P..
+..P..
+.....
+
+Crate
+#00FF00
+.....
+..C..
+.CC..
+..C..
+.....
+
+Target
+#FFFF00
+.....
+.....
+..$..
+.....
+.....
+
+CrateOnTarget
+#00FF00
+.....
+..O..
+.OO..
+..O..
+.....
+
+PlayerOnTarget
+#FF0000
+.....
+..T..
+..T..
+..T..
+.....
+
+================
+LEGEND
+================
+. = Background
+# = Wall
+P = Player
+C = Crate
+$ = Target
+T = PlayerOnTarget
+O = CrateOnTarget
+
+=======
+RULES
+=======
+[Player | Crate] -> [ | Player Crate] 
+[Player Crate | ] -> [ | Player Crate] 
+[Player | Target] -> [PlayerOnTarget | ] 
+[PlayerOnTarget Crate | ] -> [ | PlayerOnTarget Crate] 
+[Crate | Target] -> [CrateOnTarget | ] 
+
+=======
+WINCONDITIONS
+=======
+All CrateOnTarget
+
+========
+LEVELS
+========
+########
+#....$.#
+#.C.P# #
+#.#### #
+#....# #
+########
+
+########
+#...$ .#
+#..$C# #
+#..P.# #
+#.#### #
+########
+
+########
+#...$. #
+#.C.P# #
+#.#### #
+#...## #
+######$
+```
+
+I reviewed each sprite section to ensure they meet the 5x5 requirement. Make sure to carefully replace or adjust any custom sprites to maintain this size constraint. Please give this version a try and see if it resolves the errors you've encountered.

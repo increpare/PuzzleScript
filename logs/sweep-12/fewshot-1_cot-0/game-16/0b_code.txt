@@ -1,0 +1,109 @@
+```plaintext
+title Maze Dodger
+author PuzzleMaster
+homepage www.puzzlescript.net
+
+========
+OBJECTS
+========
+
+Background
+#000000
+.....
+
+Player
+#00ff00
+..0..
+.000.
+..0..
+.....
+
+Exit
+#ff0000
+.....
+.000.
+.....
+.....
+
+Wall
+#555555
+.....
+11111
+11111
+11111
+.....
+
+Enemy
+#ff0000
+.....
+.0.0.
+.000.
+.0.0.
+.....
+
+=======
+LEGEND
+=======
+
+. = Background
+P = Player
+E = Exit
+W = Wall
+X = Enemy
+
+=======
+SOUNDS
+=======
+
+startlevel 35483902
+endlevel 95873498
+enemysound 43759284
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Wall
+Player, Exit, Enemy
+
+======
+RULES
+======
+
+[ Player | Exit ] -> [ Player | ]
+[startlevel]
+[ model ] -> [ model ] startlevel
+
+[ stationary Enemy ] -> [ randomDir Enemy ] enemysound
+
+[ Player | Enemy ] -> [ Enemy ]
+
+==============
+WINCONDITIONS
+==============
+
+All Player on Exit
+
+=======
+LEVELS
+=======
+
+#####
+#...#
+#.X.#
+#P..#
+#...#
+#####
+
+#######
+#.....#
+#.X.X.#
+#.E.X.#
+#.X.X.#
+#.....#
+#..P..#
+#######
+```
+
+This game is called "Maze Dodger". The player navigates through a maze, avoiding enemies to reach the exit. The enemies move randomly and touching them resets your position. Your goal is to reach the exit marked as 'E' to win.

@@ -1,0 +1,113 @@
+Certainly! Below is a complete PuzzleScript game code with a simple block-pushing puzzle theme:
+
+```plaintext
+Title: Block Push
+
+Author: PuzzleScript
+
+===========
+OBJECTS
+===========
+
+Background
+WHITE
+. . . . 
+. . . . 
+. . . . 
+. . . . 
+
+Player
+RED
+. R R . 
+R . . R 
+R . . R 
+. R R . 
+
+Block
+BLUE
+. B B . 
+B B B B 
+B B B B 
+. B B . 
+
+Target
+YELLOW
+. T T . 
+T . . T 
+T . . T 
+. T T .
+
+===========
+LEGEND
+===========
+
+. = Background
+P = Player
+B = Block
+T = Target
+
+===========
+SOUNDS
+===========
+
+===========
+COLLISIONLAYERS
+===========
+
+Background
+Player
+Block
+Target
+
+===========
+RULES
+===========
+
+[ P | B ] -> [ B | P ]
+[ B | T ] -> [ T ]
+
+===========
+WINCONDITIONS
+===========
+
+All Targets on Block
+
+===========
+LEVELS
+===========
+
+#####
+#..T#
+#PBT#
+#...#
+#####
+
+#######
+#..T..#
+#..B..#
+#..P..#
+#..B..#
+#..T..#
+#######
+
+#########
+#.......#
+#..T.B..#
+#.......#
+#..B.P..#
+#.......#
+#..T....#
+#########
+```
+
+Here’s a brief explanation of the different sections:
+
+- **Title & Author**: Metadata for the game.
+- **Objects**: Defines the graphical representation and color of each object in the game.
+- **Legend**: Maps the character symbols to the objects they represent in the game environment.
+- **CollisionLayers**: Specifies the layers for different objects, affecting how they interact.
+- **Rules**: Dictates the behaviors and interactions between game objects. For instance, pushing a block swaps the player and the block.
+- **WinConditions**: Defines the conditions required to win the game. Here, all targets must have blocks on them.
+- **Levels**: Describes the grid layout of each game level using symbols defined in the legend.
+
+This game involves pushing blocks to cover targets, a classic puzzle mechanic that requires strategic movement planning.

@@ -1,0 +1,129 @@
+Certainly! Here's a simple PuzzleScript game code for a basic Sokoban-style game where the player needs to push boxes onto target goals:
+
+```plaintext
+Title: Sokoban Simple
+
+Author: PuzzleScript Dev
+
+===============
+OBJECTS
+===============
+
+Background
+WHITE
+........
+........
+........
+........
+........
+........
+........
+........
+
+Player
+GREEN
+..00....
+.0000...
+..00....
+
+Wall
+BLACK
+2222....
+2222....
+........
+........
+
+Box
+ORANGE
+6666....
+6666....
+........
+
+Target
+BLUE
+........
+.7777...
+.7777...
+........
+
+BoxOnTarget
+LIGHTORANGE
+5555....
+5555....
+........
+
+===============
+LEGEND
+===============
+
+. = Background
+P = Player
+# = Wall
+B = Box
+T = Target
+O = BoxOnTarget
+
+===============
+SOUNDS
+===============
+
+Move Player
+  MOVE 100
+Restart
+  CRASH 100
+
+===============
+COLLISIONLAYERS
+===============
+
+Background
+Wall
+Target BoxOnTarget
+Box
+Player
+
+===============
+RULES
+===============
+
+[Player | Box] -> [ > Player | > Box]
+[Player | Target Box] -> [ > Player | > BoxOnTarget]
+[Player | BoxOnTarget] -> [ > Player | > BoxOnTarget]
+[Player | Target] -> [ > Player]
+[BoxOnTarget | Target] -> [Target | BoxOnTarget]
+
+===============
+WINCONDITIONS
+===============
+
+All BoxOnTarget on Target
+
+===============
+LEVELS
+===============
+
+####
+#P  #
+# B #
+# T #
+####
+
+####
+#P  #
+# B #
+#   #
+##T##
+####
+```
+
+### Explanation:
+- **Title and Author**: Defines the title and creator of the game.
+- **Objects**: Specifies the visual representation of the objects in the game.
+- **Legend**: Maps symbols to objects for use in level design.
+- **Sounds**: Defines sounds for specific actions.
+- **CollisionLayers**: Sets up collision behavior layers for game mechanics.
+- **Rules**: Defines interaction rules, such as moving the player and pushing boxes.
+- **Win Conditions**: Specifies the condition to win the game.
+- **Levels**: Contains map data for levels.
+
+This setup creates a simple Sokoban puzzle with two levels. The objective is to push all the boxes (`B`) onto the target areas (`T`).

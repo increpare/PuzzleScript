@@ -1,0 +1,129 @@
+To address the given errors in the console output, we'll need to make a few adjustments to the PuzzleScript game code. Let's break down each issue:
+
+1. **Object Sprites are Incorrect:** The sprites must be exactly 5x5 in size. The error lines are related to the CrateOnTarget object, which mistakenly has only four lines in its sprite definition. We need to ensure all sprite definitions are five lines tall.
+
+2. **Legend Syntax Errors:** The legend section is incorrectly formatted. It contains an error where it seems some incomplete or incorrect syntax might have confused the parser. We'll ensure each legend item is defined correctly with the syntax `A = B`.
+
+3. **Section Order:** The `COLLISIONLAYERS` section is supposed to follow the `SOUNDS` section directly, but `SOUNDS` is currently missing. We'll add an empty `SOUNDS` section, since it's required even if it's unused.
+
+4. **Comment Lines in Rules Section:** There are errors in lines 73 and 74 beyond section rules. Assuming these are meant to be comments, proper comment formatting in PuzzleScript (`//`) must be followed.
+
+Let's address these issues and correct the code:
+
+```plaintext
+////////////////////////////////////////////////////////////
+// Sokoban Puzzle Game
+////////////////////////////////////////////////////////////
+
+//Objects
+///////////
+OBJECTS
+Background
+GRAY
+.....
+.....
+.....
+.....
+.....
+
+Wall
+BROWN
+0000.
+0000.
+0000.
+0000.
+0000.
+
+Player
+YELLOW
+.....
+..0..
+.000.
+..0..
+.....
+
+Crate
+ORANGE
+0000.
+0..0.
+0..0.
+0000.
+.....
+
+Target
+GREEN
+.....
+.0.0.
+0.00.
+.....
+.....
+
+CrateOnTarget
+ORANGE
+0000.
+0..0.
+0..0.
+0000.
+.....
+
+//Legend
+/////////
+LEGEND
+. = Background
+# = Wall
+P = Player
+C = Crate
+T = Target
+O = CrateOnTarget
+
+//Sounds
+/////////
+SOUNDS
+
+//Collision Layers
+//////////////////
+COLLISIONLAYERS
+Background
+Wall
+Player, Crate, CrateOnTarget, Target
+
+//Rules
+///////
+[ Player | ] -> [ | Player ]
+[ | Player ] -> [ Player | ]
+[ Player | Crate ] -> [ | Player | Crate ]
+[ | CrateOnTarget ] -> [ | Player | Target ]
+[ CrateOnTarget | ] -> [ Target | Player ]
+
+// Merge Crate with Target
+[ Target | Crate ] -> [ | CrateOnTarget ]
+[ Crate | Target ] -> [ CrateOnTarget | ]
+
+// Separate Crate from Target 
+[ CrateOnTarget | ] -> [ Target | ]
+[ | CrateOnTarget ] -> [ | Target ]
+
+//Win Condition
+///////////////
+WINCONDITION
+No Crate
+
+//Levels
+/////////
+//Level 1
+#####
+#...#
+#.#.#
+#PC.#
+#####
+
+//Level 2
+######
+#....#
+#.C..#
+#.CT.#
+#....#
+######
+```
+
+With these corrections, the game code should now compile correctly without errors.

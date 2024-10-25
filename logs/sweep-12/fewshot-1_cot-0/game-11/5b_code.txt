@@ -1,0 +1,109 @@
+Below is the corrected version of your PuzzleScript game code. The issues have been fixed by correcting color definitions, removing incorrect sound definitions, and ensuring rules are accurately defined.
+
+```plaintext
+title Gem Collector
+author YourName
+
+========
+OBJECTS
+========
+
+Background
+darkgreen
+
+Wall
+grey
+00000
+0...0
+0...0
+0...0
+00000
+
+Player
+blue
+..0..
+.000.
+00000
+.000.
+..0..
+
+Gem
+yellow
+.....
+..0..
+.000.
+..0..
+.....
+
+CollectedGem
+darkgreen
+.....
+.....
+..0..
+.....
+.....
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Player
+* = Gem
+@ = CollectedGem
+
+====
+SOUNDS
+====
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Gem, CollectedGem
+Player, Wall
+
+======
+RULES
+======
+
+[ > Player | Gem ] -> [ > Player | CollectedGem ]
+
+==============
+WINCONDITIONS
+==============
+
+no Gem
+
+=======
+LEVELS
+=======
+
+#######
+#.....#
+#.*.*.#
+#.P.*.#
+#######
+
+#####
+#...#
+#.*.#
+#P..#
+#####
+
+######
+#....#
+#.*.*#
+#P...#
+#....#
+######
+
+message Collect all the gems!
+```
+
+Changes made include:
+1. Fixed the color definition for `CollectedGem` to use an existing color.
+2. Removed incorrect sound definitions and references as there was no actual sound data provided.
+3. Resolved syntax to prevent malformed errors (e.g., referencing `GemCollected` incorrectly).

@@ -1,0 +1,105 @@
+The errors in your PuzzleScript code can be addressed by modifying the appearance of the `Wall` object, as it incorrectly uses the black color (index 1) not defined in the object section. Additionally, there are formatting issues in the `LEGEND` section caused by invalid characters.
+
+Here's a repaired version of your PuzzleScript game code:
+
+```plaintext
+///////////////////////////////////////////////////////////////
+// PuzzleScript game definition for "Treasure Quest"
+///////////////////////////////////////////////////////////////
+ 
+// ======== OBJECTS ========
+OBJECTS
+Background
+transparent
+black
+
+Player
+red
+.000.
+..0..
+00000
+..0..
+.000.
+
+Wall
+grey
+.....
+.....
+.....
+.....
+.....
+
+Treasure
+yellow
+..0..
+.000.
+00000
+.000.
+..0..
+
+Lava
+orange
+.000.
+00000
+.000.
+00000
+.000.
+
+// ======== LEGEND ========
+LEGEND
+. = Background
+P = Player
+# = Wall
+T = Treasure
+L = Lava
+
+// ======== SOUNDS ========
+SOUNDS
+treasure
+  collect
+lava
+  explode
+
+// ======== COLLISIONLAYERS ========
+COLLISIONLAYERS
+Background
+Lava
+Wall
+Player
+Treasure
+
+// ======== RULES ========
+RULES
+[Player Treasure] -> SOUND treasure
+[Player Lava] -> SOUND lava DIE
+
+// ======== WINCONDITIONS ========
+WINCONDITIONS
+No Treasure
+
+// ======== LEVELS ========
+LEVELS
+// Level 1
+#######
+#.....#
+#..P..#
+#..T..#
+#.....#
+#.L.L.#
+#######
+
+// Level 2
+#######
+#.....#
+#..L..#
+#..P..#
+##..###
+#..T..#
+#######
+```
+
+### Changes Made:
+1. **Wall Object**: Corrected the `Wall` object's appearance to fully grey so it doesn't use an undefined color index.
+2. **Fixed Formatting in `LEGEND`**: Ensured the legend section uses valid characters for definitions.
+
+This should resolve the errors and allow the game to compile and run correctly.

@@ -1,0 +1,109 @@
+The errors you are encountering are due to the use of an incorrect format for the sprite matrices. In PuzzleScript, object sprite matrices should strictly follow the defined dimensions and adhere to allowable characters. Here's a corrected version of the code, using consistent 5x5 sprites with appropriate characters to depict each object:
+
+```plaintext
+Title: Block Push
+
+Author: PuzzleScript
+
+===========
+OBJECTS
+===========
+
+Background
+WHITE
+. . . . . 
+. . . . . 
+. . . . . 
+. . . . . 
+. . . . . 
+
+Player
+RED
+. . R R . 
+R R R R . 
+R . . . . 
+R R R . . 
+. . . . . 
+
+Block
+BLUE
+. . B B . 
+B B B B . 
+B . . . . 
+B B B . . 
+. . . . . 
+
+Target
+YELLOW
+. . T T . 
+T T T T . 
+T . . . . 
+T T T . . 
+. . . . . 
+
+===========
+LEGEND
+===========
+
+. = Background
+P = Player
+B = Block
+T = Target
+
+===========
+SOUNDS
+===========
+
+===========
+COLLISIONLAYERS
+===========
+
+Background
+Target
+Player, Block
+
+===========
+RULES
+===========
+
+[ > P B ] -> [ > B P ]
+[ P | T ] -> [ T | P ]
+
+===========
+WINCONDITIONS
+===========
+
+All Blocks on Target
+
+===========
+LEVELS
+===========
+
+#####
+#..T#
+#PBT#
+#...#
+#####
+
+#######
+#..T..#
+#..B..#
+#..P..#
+#..B..#
+#..T..#
+#######
+
+#########
+#.......#
+#..T.B..#
+#.......#
+#..B.P..#
+#.......#
+#..T....#
+#########
+```
+
+Changes made:
+- Ensured all sprite matrices are 5x5 and modified some elements to meet that requirement.
+- Kept the design simple and aligned with the setup of a typical representation for these kinds of objects.
+Make sure the whole game adheres to the fixed-width convention at all times, which will prevent the "unknown junk" error from occurring.

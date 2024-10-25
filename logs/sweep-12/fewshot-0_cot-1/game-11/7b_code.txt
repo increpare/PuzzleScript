@@ -1,0 +1,89 @@
+The errors in the provided PuzzleScript code indicate issues with the object definitions and lack of sprites for those objects. PuzzleScript expects each object definition to be accompanied by a color specification and a sprite using "%%%%%" format for visual representation. Let's correct this by adding appropriate sprite representations for the game objects as needed.
+
+Let's fix these issues and make sure every defined object has the necessary sprite representation.
+
+```plaintext
+Title: Box Mover
+
+# =========OBJECTS========
+Background
+transparent
+. 
+%%%%%
+.....
+
+Target
+yellow
+T
+%%%%%
+.....
+..T..
+.....
+
+Box
+brown
+o
+%%%%%
+.....
+..o..
+.....
+
+Player
+red
+P
+%%%%%
+.....
+..P..
+.....
+
+Wall
+black
+#
+%%%%%
+#####
+
+# =========LEGEND==========
+. = Background
+P = Player
+o = Box
+T = Target
+# = Wall
+
+# ========COLLISION LAYERS=========
+Background
+Target
+Player
+Box
+Wall
+
+# =========RULES==========
+[> Player | Box] -> [> Player | > Box]
+[Box | Target] -> [Background | Target]
+
+# =========WINCONDITIONS==========
+All Box on Target
+
+# =========LEVELS=========
+
+# Level 1
+#######
+#     #
+#  T  #
+# o   #
+#     #
+# P   #
+#######
+
+# Level 2
+#######
+#     #
+#  To #
+#     #
+#     #
+# P   #
+#######
+
+# =========END OF CODE==========
+```
+
+In this repaired code, each object now has a defined sprite using the "%%%%%" format followed by a simple 5x1 or 5x5 pattern to represent each object visually. This should resolve the "Unrecognised stuff" errors related to incomplete object definitions in the prelude.

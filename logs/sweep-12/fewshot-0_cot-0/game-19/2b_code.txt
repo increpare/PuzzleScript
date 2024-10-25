@@ -1,0 +1,126 @@
+The error messages suggest issues with the object definitions and their sprite sections not adhering to the required 5x5 format, and illegal characters in object definitions. Additionally, some references in the `RULES` section also seem incorrectly defined. Here's a corrected version of your PuzzleScript game code:
+
+```plaintext
+Title: Sokoban Puzzles
+
+Author: PuzzleScript Dev
+
+Homepage: https://www.puzzlescript.net
+
+===========
+OBJECTS
+===========
+Background
+transparent
+.....
+
+Wall
+#000000
+#####
+#####
+#####
+#####
+#####
+
+Player
+#FF0000
+.....
+..P..
+.....
+.....
+.....
+
+Crate
+#00FF00
+.....
+..C..
+.....
+.....
+.....
+
+Target
+#FFFF00
+.....
+..$..
+.....
+.....
+.....
+
+CrateOnTarget
+#00FF00
+.....
+..O..
+.....
+.....
+.....
+
+PlayerOnTarget
+#FF0000
+.....
+..T..
+.....
+.....
+.....
+
+================
+LEGEND
+================
+. = Background
+# = Wall
+P = Player
+C = Crate
+$ = Target
+T = PlayerOnTarget
+O = CrateOnTarget
+
+==============
+SOUNDS
+==============
+SokobanMove
+PUSH
+
+=======
+RULES
+=======
+[Player | Crate] -> [ | Player Crate] 
+[Player Crate | ] -> [ | Player Crate] 
+[Player | Target] -> [PlayerOnTarget | ] 
+[PlayerOnTarget Crate | ] -> [ | PlayerOnTarget Crate] 
+[Crate | Target] -> [CrateOnTarget | ] 
+
+=======
+WINCONDITIONS
+=======
+All CrateOnTarget
+
+========
+LEVELS
+========
+########
+#....$.#
+#.C.P# #
+#.#### #
+#....# #
+########
+
+########
+#...$ .#
+#..$C# #
+#..P.# #
+#.#### #
+########
+
+########
+#...$. #
+#.C.P# #
+#.#### #
+#...## #
+######$ 
+```
+
+Changes made:
+1. Fixed sprite definitions for `Player`, `Crate`, `Target`, `CrateOnTarget`, and `PlayerOnTarget` to properly be 5x5 grids.
+2. Fixed rules by ensuring they correctly reference existing objects and adhere to acceptable syntax. 
+3. Removed unsupported sprite elements such as multiple character definitions for objects (e.g., `..PPP..` is changed to a simple representation that matches `P`).
+
+The revised code should now compile without errors. If there are further issues, ensure that your PuzzleScript environment supports the used features and formatting.

@@ -1,0 +1,128 @@
+Certainly! The issue seems to stem from the comments you've added that begin with `# LEVEL X` for the levels, which PuzzleScript interprets as part of the level data due to incorrect formatting of the levels. Additionally, the levels themselves are not properly rectangular, and there's also a stray `....` in level 1 that seems to be intended as a separator rather than level data.
+
+Let's address these errors by removing those comments, fixing the level maps to have consistent widths, and ensuring game objects are correctly defined and referenced.
+
+Here's a corrected version of your game script:
+
+```plaintext
+title Treasure Hunt
+author Code AI
+
+// A simple puzzle game where the player must collect all treasures and reach the exit.
+
+========
+OBJECTS
+========
+
+Background
+lightblue
+.....
+.....
+.....
+.....
+.....
+
+Wall
+brown darkbrown
+.....
+.....
+.....
+.....
+.....
+
+Player
+blue lightblue darkblue
+.....
+..0..
+.111.
+..0..
+.....
+
+Treasure
+yellow
+.....
+..0..
+.000.
+..0..
+.....
+
+Exit
+green
+.....
+.....
+..0..
+.....
+.....
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Player
+T = Treasure
+E = Exit
+
+========
+SOUNDS
+========
+
+SFX0 18389420 (treasure collected sound)
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Wall
+Treasure
+Player
+Exit
+
+======
+RULES
+======
+
+[ > Player | Treasure ] -> [ > Player | ] SFX0
+
+[ Player Exit ] -> [ Player Exit ] win
+
+==============
+WINCONDITIONS
+==============
+
+no Treasure
+
+=======
+LEVELS
+=======
+
+#######
+#.#.#.#
+#.TPT.#
+#.#.#.#
+###.###
+#.E...#
+#######
+
+########
+#..T..T#
+#.#.#.#.
+#T#P.#.T
+#...###.
+#..T..#.
+#.###.#.
+#.#.E.#.
+########
+
+message Congratulations! You collected all the treasures and reached the exit!
+
+```
+
+### Key Changes:
+- **Removed Level Comments and Separators:** PuzzleScript does not understand level comments or separators; everything needs to be part of a consistent map representation.
+- **Rectangular Levels Fixes:** Ensured every level line in the maps has the same width. Level 1 seemed to have `.......` line, which I've removed to maintain rectangular integrity.
+- **Legend Consistency:** Verified that all objects are correctly defined and matched the legend symbols to objects. 
+
+Please test this corrected version in your PuzzleScript environment.

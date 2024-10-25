@@ -1,0 +1,123 @@
+SYSTEM PROMPT:
+You are a game designer, familiar with the PuzzleScript game description language. 
+
+USER PROMPT:
+The following PuzzleScript game code:
+```plaintext
+===========
+title Key Quest
+===========
+
+===========
+objects
+===========
+
+Background
+0x000000
+0x000000
+0x000000
+0x000000
+0x000000
+
+Wall
+0x0000FF
+0x0000FF
+0x0000FF
+0x0000FF
+0x0000FF
+
+Player
+0xFFFF00
+0xFFFF00
+0xFFFF00
+0xFFFF00
+0xFFFF00
+
+Key
+0x00FF00
+0x00FF00
+0x00FF00
+0x00FF00
+0x00FF00
+
+Door
+0xFF0000
+0xFF0000
+0xFF0000
+0xFF0000
+0xFF0000
+
+Exit
+0xFFFFFF
+0xFFFFFF
+0xFFFFFF
+0xFFFFFF
+0xFFFFFF
+
+===========
+legends
+===========
+
+. = Background
+# = Wall
+P = Player
+k = Key
+D = Door 
+E = Exit
+
+===========
+rules
+===========
+
+# Basic Movement
+[ > Player | ] -> [ | Player > ]
+[ < Player | ] -> [ | Player < ]
+[ ^ Player | ] -> [ | Player ^ ]
+[ v Player | ] -> [ | Player v ]
+
+# Key Collection
+[ Player | Key ] -> [ Player | ]
+
+# Open Door when all keys are collected
+late [ Key ] -> [ Key ]
+[ Door ] -> [ Exit ]
+
+# Winning Condition
+[ Player | Exit ] -> win
+
+===========
+levels
+===========
+
+# Level 1
+#######
+#..k..#
+#.#.#.#
+#kP#kD#
+#.#.#.#
+#..k..#
+#######
+
+# Level 2
+#########
+#.....k.#
+#.###.#.#
+#..kP#k.#
+#.#.#.#.#
+#.k.k.k.#
+#.#####.#
+#......E#
+#########
+
+```
+produced the following console output:
+=================================
+line 10 : Was looking for color for object BACKGROUND, got "0x000000" instead.
+line 11 : Trying to access color number 0 from the color palette of sprite BACKGROUND, but there are only 0 defined in it.
+line 11 : Unknown junk in spritematrix for object BACKGROUND.
+line 12 : Trying to access color number 0 from the color palette of sprite BACKGROUND, but there are only 0 defined in it.
+line 12 : Unknown junk in spritematrix for object BACKGROUND.
+line 13 : Trying to access color number 0 from the color palette of sprite BACKGROUND, but there are only 0 defined in it.
+too many errors, aborting compilation
+Errors detected during compilation; the game may not work correctly.
+Return a repaired version of the code that addresses these errors. First, reason about your task and determine the best plan of action. Then, write your code. Return your code in full, inside a ```plaintext code block.

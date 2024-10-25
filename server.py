@@ -89,9 +89,19 @@ def extract_ps_code(text):
 @app.route('/save_sweep_stats', methods=['POST'])
 def save_sweep_stats():
     data = request.json
+    stats = data['results']
     save_dir = os.path.join('logs', data['save_dir'])
-    with open(os.path.join(save_dir, 'sweep_stats.json'), 'w') as f:
-        json.dump(data, f, indent=4)
+    with open(os.path.join(save_dir, 'stats.json'), 'w') as f:
+        json.dump(stats, f, indent=4)
+    concise_stats = {}
+    for hyp_settings in stats:
+        concise_stats[hyp_settings] = []
+        for val in stats[hyp_settings]:
+            val.pop('code')
+            concise_stats[hyp_settings].append(val)
+    with open(os.path.join(save_dir, 'concise_stats.json'), 'w') as f:
+        json.dump(concise_stats, f, indent=4)
+
     return jsonify({})
 
 

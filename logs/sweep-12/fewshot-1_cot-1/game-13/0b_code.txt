@@ -1,0 +1,132 @@
+To create a complete PuzzleScript game, we will need the following components:
+
+1. **Title and Author:** This sets the introduction of the game.
+2. **Objects:** Define the visual elements and game pieces.
+3. **Legend:** Map simple symbols to the objects for easier level design.
+4. **Collision Layers:** Determine which objects can overlap or stack.
+5. **Rules:** Establish how the game objects interact and the mechanics of the game.
+6. **Win Conditions:** Set criteria for completing a level.
+7. **Levels:** Design at least one level for the player to play.
+
+The game concept chosen here is a simple maze puzzle where the player must collect keys to unlock doors and reach the exit. The player moves through a maze, collects keys, and opens matching doors to progress to the exit point.
+
+Let's write the complete code below.
+
+```plaintext
+title Maze Keys & Doors
+author Game Designer
+
+========
+OBJECTS
+========
+
+Background
+White
+.....
+.....
+.....
+.....
+.....
+
+Wall
+DarkGrey
+00000
+00000
+00000
+00000
+00000
+
+Player
+Blue
+.....
+..0..
+.000.
+..0..
+.....
+
+Key
+Gold
+.....
+..1..
+.111.
+..1..
+.....
+
+Door
+Brown
+.....
+..2..
+.222.
+..2..
+.....
+
+Exit
+Green
+.....
+..3..
+.333.
+..3..
+.....
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Player
+K = Key
+D = Door
+E = Exit
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Wall
+Key, Door, Exit
+Player
+
+======
+RULES
+======
+
+[ > Player | Key ] -> [ > Player | ]
+[ Player | Door ] -> [ Player ]
+
+(later version with keys)
+[> Player | Door | no Key] -> cancel
+[ Player | Door | Key ] -> [ Player | ] 
+[> Player | Exit ] -> [ Player | Exit ]
+
+==============
+WINCONDITIONS
+==============
+
+All Player on Exit
+
+=======
+LEVELS
+=======
+
+#######
+#P#.K.#
+#..#.##
+#..D..#
+###.###
+#.....#
+#..E..#
+#######
+
+```
+
+### Explanation:
+- **Objects:** Include `Player`, `Wall`, `Key`, `Door`, `Exit`, and empty space represented by `Background`.
+- **Legend:** Maps simpler symbols to the objects for convenience in level creation.
+- **Collision Layers:** Ensure that the player cannot pass through walls, but can collect keys, unlock doors, and reach exits.
+- **Rules:** Allow the player to collect keys and unlock doors, preventing movement if a door is present without a key.
+- **Win Conditions:** The player must reach the `Exit` tile to win.
+- **Level Design:** A simple maze that includes key collection and door unlocking mechanics to reach the exit. 
+
+This template can be expanded with more levels, keys, and doors to increase complexity.

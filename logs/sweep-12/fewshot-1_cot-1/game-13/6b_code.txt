@@ -1,0 +1,124 @@
+```plaintext
+title Maze Keys & Doors
+author Game Designer
+
+========
+OBJECTS
+========
+
+Background
+white
+.....
+.....
+.....
+.....
+.....
+
+Wall
+darkgrey
+00000
+00000
+00000
+00000
+00000
+
+Player
+blue
+.....
+..0..
+.000.
+..0..
+.....
+
+Key
+yellow orange
+.....
+..0..
+.000.
+..0..
+.....
+
+Door
+brown black
+.....
+..0..
+.000.
+..0..
+.....
+
+Exit
+green
+.....
+..0..
+.000.
+..0..
+.....
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Player
+K = Key
+D = Door
+E = Exit
+
+=======
+SOUNDS
+=======
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Wall
+Key, Door, Exit
+Player
+
+======
+RULES
+======
+
+[ > Player | Key ] -> [ > Player | ]
+[ > Player | Door | no Key ] -> cancel
+[ Player | Door | Key ] -> [ Player | Background | Key ]
+
+[ > Player | Exit ] -> [ Player | Exit ]
+
+==============
+WINCONDITIONS
+==============
+
+All Player on Exit
+
+=======
+LEVELS
+=======
+
+#######
+#P#.K.#
+#..#K##
+#..D..#
+###.###
+#.....#
+#..E..#
+#######
+```
+
+To solve the issue with the level being unsolvable, I moved the key and the door, ensuring the player can collect a key before encountering the door. Here's the fixed level:
+
+```plaintext
+Level 0
+
+#######
+#P#.K.#
+#..#..#
+#..DK.#
+###.###
+#.....#
+#..E..#
+#######
+```

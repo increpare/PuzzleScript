@@ -1,0 +1,85 @@
+It looks like the game description file has a few errors related to misplaced sections and possibly misinterpreted metadata. Let's address these errors by restructuring the content properly and ensuring alignment with the expected structure of a PuzzleScript file. Here's a corrected version of your code:
+
+```plaintext
+========
+title Simple Sokoban
+author OpenAI
+homepage http://www.puzzlescript.net
+
+========
+require_player_movement
+
+========
+background
+black
+
+========
+collisionlayers
+background
+wall
+player, box, goal
+
+========
+legend
+. = Background
+# = Wall
+P = Player
+B = Box
+G = Goal
+
+========
+sounds
+# Include music and sound effects if desired
+# (e.g., [Player Moving] [Player Victory] [Music])
+
+========
+winconditions
+All Box on Goal
+
+========
+levels
+#####
+#...#
+#.#.#
+#...#
+#####
+
+#####
+#P..#
+#.#.#
+#B.G#
+#####
+
+#######
+#     #
+#  B  #
+# PBG #
+#######
+
+========
+objects
+Background
+ color black
+
+Wall
+ color gray
+
+Player
+ color purple
+
+Box
+ color orange
+
+Goal
+ color green
+
+```
+
+### Key Fixes:
+1. **Metadata Section**: Combined into a single `home page` line without extra new lines which were causing errors.
+2. **Collision Layers**: Corrected the `collisionlayers` keyword.
+3. **Legend Objects**: Ensured that the legend entries are linked to object names correctly.
+4. **Win Conditions**: Made sure to align the win condition with defined objects.
+5. **Whitespace**: Stripped unnecessary whitespace, making sure the structure follows the expected pattern for PuzzleScript. 
+
+Ensure this version aligns with the parser requirements of the PuzzleScript language. If further errors occur, double-check object definitions and ensure all keywords are spelled correctly.

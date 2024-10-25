@@ -1,0 +1,133 @@
+To address the compilation errors in the provided PuzzleScript game code, we'll need to examine and fix the issues based on the console feedback. Here's a breakdown of what needs to be corrected:
+
+1. **Line 56-57**: These lines likely belong to incorrect object definitions or syntax in the `RULES` section. Specifically, these lines should be corrected according to the rules described in the PuzzleScript documentation.
+
+2. **Line 66-67**: There are issues with the `LEGEND` definitions. Each definition should be of the form `"A = B"`, `"A = B or C"`, or `"A = B and C"`. Check these definitions for typos or logical errors.
+
+3. **Line 70-71**: There are missing sound definitions or incorrect formats. If no sounds are used, this section could be simply omitted.
+
+4. **Line 78-80**: These lines indicate problems in the `RULES` section, potentially due to syntax errors. Make sure there are no unexpected characters, and verify the condition formatting.
+
+5. **Collision Layer Error**: There's a reported problem with the `Player` object being placed in multiple collision layers. Each object should appear in one collision layer that appropriately corresponds to its role in the game.
+
+Let's correct these issues step-by-step.
+
+- Remove any superfluous or misnamed objects, particularly in the `COLLISIONLAYERS` and `RULES` sections.
+- Verify correct syntax in each section.
+- Ensure that the game rules are logically consistent and formatted correctly.
+
+Here is the corrected code:
+
+```plaintext
+////////////////////////////////////////////////////////////
+// Sokoban Puzzle Game
+////////////////////////////////////////////////////////////
+
+//Objects
+///////////
+OBJECTS
+Background
+GRAY
+.....
+.....
+.....
+.....
+.....
+
+Wall
+BROWN
+00000
+00000
+00000
+00000
+00000
+
+Player
+YELLOW
+.....
+..0..
+.000.
+..0..
+.....
+
+Crate
+ORANGE
+.....
+.000.
+.0.0.
+.000.
+.....
+
+Target
+GREEN
+.....
+.....
+..0..
+.....
+.....
+
+CrateOnTarget
+ORANGE
+.....
+.000.
+.0.0.
+.000.
+.....
+
+//Legend
+/////////
+LEGEND
+. = Background
+# = Wall
+P = Player
+C = Crate
+T = Target
+O = CrateOnTarget
+
+//Collision Layers
+//////////////////
+COLLISIONLAYERS
+Background
+Wall
+Player
+Crate, CrateOnTarget
+Target
+
+//Rules
+///////
+[Player | ] -> [ | Player]
+[ | Player] -> [Player | ]
+[Player | Crate] -> [ | Player | Crate]
+[Player | CrateOnTarget] -> [ | Player | CrateOnTarget]
+
+// Merge Crate with Target
+[Target | Crate] -> [ | CrateOnTarget]
+
+//Win Condition
+///////////////
+WINCONDITION
+All CrateOnTarget
+
+//Levels
+/////////
+//Level 1
+#####
+#...#
+#.#.#
+#PC.#
+#####
+
+//Level 2
+######
+#....#
+#.C..#
+#.CT.#
+#....#
+######
+```
+
+### Explanation for Changes:
+- **Collision Layers**: Adjusted to include `CrateOnTarget` in the same layer as `Crate` for correct interaction.
+- **Rules**: Removed and cleaned up incorrect rules and ensured merging of `Crate` with `Target` results in `CrateOnTarget`.
+- **Win Condition**: Altered to check that all crates are on the targets by using `All CrateOnTarget`.
+- **Removed redundant sections and errors**: Fixed syntax errors, including extraneous rule parts or incorrect split components.

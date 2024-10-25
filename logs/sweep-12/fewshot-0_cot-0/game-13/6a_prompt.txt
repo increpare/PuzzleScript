@@ -1,0 +1,121 @@
+SYSTEM PROMPT:
+You are a game designer, familiar with the PuzzleScript game description language. 
+
+USER PROMPT:
+The following PuzzleScript game code:
+```plaintext
+Title: Block Push
+
+Author: PuzzleScript
+
+===========
+OBJECTS
+===========
+
+Background
+WHITE
+.....
+
+Player
+RED
+..00.
+0000.
+0....
+000..
+.....
+
+Block
+BLUE
+..00.
+0000.
+0....
+000..
+.....
+
+Target
+YELLOW
+..00.
+0000.
+0....
+000..
+.....
+
+Wall
+BLACK
+00000
+00000
+00000
+00000
+00000
+
+===========
+LEGEND
+===========
+
+. = Background
+P = Player
+B = Block
+T = Target
+# = Wall
+
+===========
+SOUNDS
+===========
+
+===========
+
+COLLISIONLAYERS
+===========
+
+Background
+Target
+Player, Block
+Wall
+
+===========
+RULES
+===========
+
+[ > P B ] -> [ > B P ]
+[ P | T ] -> [ T | P ]
+
+===========
+WINCONDITIONS
+===========
+
+All B on T
+
+===========
+LEVELS
+===========
+
+#####
+#..T#
+#PBT#
+#...#
+#####
+
+#######
+#..T..#
+#..B..#
+#..P..#
+#..B..#
+#..T..#
+#######
+
+#########
+#.......#
+#..T.B..#
+#.......#
+#..B.P..#
+#.......#
+#..T....#
+#########
+
+```
+produced the following console output:
+=================================
+line 9 : Sprite graphics must be 5 wide and 5 high exactly.
+line 73 : BLOCK and PLAYER can never overlap, but this rule requires that to happen, so it's being culled.
+Errors detected during compilation; the game may not work correctly.
+Return a repaired version of the code that addresses these errors. Return your code in full, inside a ```plaintext code block.

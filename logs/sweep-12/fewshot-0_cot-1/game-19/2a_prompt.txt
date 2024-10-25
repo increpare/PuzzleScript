@@ -1,0 +1,126 @@
+SYSTEM PROMPT:
+You are a game designer, familiar with the PuzzleScript game description language. 
+
+USER PROMPT:
+The following PuzzleScript game code:
+```plaintext
+title Sokoban Puzzle
+author Game Designer
+
+========
+OBJECTS
+========
+
+Background
+blue
+
+Player
+green
+@11
+@11
+@11
+
+Wall
+black
+000
+000
+000
+
+Box
+brown
+BBB
+BBB
+BBB
+
+Target
+yellow
+...
+... 
+...
+
+BoxOnTarget
+brown yellow
+BBB
+BBB
+BBB
+
+============
+LEGEND
+============
+
+. = Background
+P = Player
+# = Wall
+B = Box
+T = Target
+X = BoxOnTarget
+
+===============
+SOUNDS
+===============
+
+==================
+COLLISIONLAYERS
+==================
+
+Background
+Player, Box, BoxOnTarget
+Wall
+Target
+
+========
+RULES
+========
+
+[Player | Box] -> [ | Player | Box]
+[Box | Target] -> [BoxOnTarget | Target]
+[BoxOnTarget] -> [Box | ]
+
+[Player | BoxOnTarget] -> [ | Player | BoxOnTarget]
+[Player | Target] -> [Target | Player]
+
+===============
+WINCONDITIONS
+===============
+
+All BoxOnTarget on Target
+
+========
+LEVELS
+========
+
+#######
+#.....#
+#..B..#
+#..P..#
+#..T..#
+#######
+
+#######
+#.....#
+#..P..#
+#..B..#
+#..T..#
+#..#..#
+#..#..#
+#######
+
+```
+produced the following console output:
+=================================
+line 13 : Unknown junk in object section (possibly: sprites have to be 5 pixels wide and 5 pixels high exactly. Or maybe: the main names for objects have to be words containing only the letters a-z0.9 - if you want to call them something like ",", do it in the legend section).
+line 14 : Unknown junk in object section (possibly: sprites have to be 5 pixels wide and 5 pixels high exactly. Or maybe: the main names for objects have to be words containing only the letters a-z0.9 - if you want to call them something like ",", do it in the legend section).
+line 15 : Unknown junk in object section (possibly: sprites have to be 5 pixels wide and 5 pixels high exactly. Or maybe: the main names for objects have to be words containing only the letters a-z0.9 - if you want to call them something like ",", do it in the legend section).
+line 26 : Was looking for color for object BBB, got "bbb" instead.
+line 27 : Object "BBB" defined multiple times.
+line 37 : Object "BBB" defined multiple times.
+line 38 : Object "BBB" defined multiple times.
+line 39 : Object "BBB" defined multiple times.
+line 17 : Sprite graphics must be 5 wide and 5 high exactly.
+line 25 : color not specified for object "bbb".
+line 29 : Sprite graphics must be 5 wide and 5 high exactly.
+line 69 : In a rule, each pattern to match on the left must have a corresponding pattern on the right of equal length (number of cells).
+line 71 : In a rule, each pattern to match on the left must have a corresponding pattern on the right of equal length (number of cells).
+line 73 : In a rule, each pattern to match on the left must have a corresponding pattern on the right of equal length (number of cells).
+Errors detected during compilation; the game may not work correctly.
+Return a repaired version of the code that addresses these errors. First, reason about your task and determine the best plan of action. Then, write your code. Return your code in full, inside a ```plaintext code block.

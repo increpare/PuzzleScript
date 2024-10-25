@@ -1,0 +1,90 @@
+```plaintext
+Title: Simple Sokoban
+
+Author: PuzzleScript Creator
+
+Homepage: puzzlescript.net
+
+=========
+OBJECTS
+=========
+
+Background
+lightblue
+
+Wall
+black
+
+Crate
+brown
+
+CrateOnTarget
+yellow
+
+Target
+green
+
+Player
+red
+
+PlayerOnTarget
+pink
+
+=========
+LEGEND
+=========
+
+. = Background
+# = Wall
+B = Crate
+O = CrateOnTarget
+T = Target
+P = Player
+@ = PlayerOnTarget
+
+=========
+COLLISIONLAYERS
+=========
+
+Background
+Wall
+Target
+Player, PlayerOnTarget
+Crate, CrateOnTarget
+
+=========
+RULES
+=========
+
+[ > Player | Crate ] -> [ > Player | > Crate ]
+[ > PlayerOnTarget | Crate ] -> [ > PlayerOnTarget | > Crate ]
+
+[ > Player | CrateOnTarget ] -> [ > Player | > CrateOnTarget ]
+[ > PlayerOnTarget | CrateOnTarget ] -> [ > PlayerOnTarget | > CrateOnTarget ]
+
+[ Target | Player ] -> [ PlayerOnTarget ]
+[ PlayerOnTarget ] -> [ Player ]
+
+[ Target | Crate ] -> [ CrateOnTarget ]
+[ CrateOnTarget ] -> [ Crate ]
+
+=========
+WINCONDITIONS
+=========
+
+All CrateOnTarget
+
+=========
+LEVELS
+=========
+
+#####
+#...#
+#.#.#
+#PB.#
+#####
+```
+
+Here's what was fixed:
+- Removed the "SOUNDS" block because PuzzleScript does not currently support a dedicated sound command or block for sound files.
+- Corrected the transformation rules so each pattern on the left has an equivalent pattern on the right. Specifically, the converted CrateOnTarget rules were not balanced. They now transform CrateOnTarget correctly.

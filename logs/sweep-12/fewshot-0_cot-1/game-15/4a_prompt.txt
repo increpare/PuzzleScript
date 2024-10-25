@@ -1,0 +1,140 @@
+SYSTEM PROMPT:
+You are a game designer, familiar with the PuzzleScript game description language. 
+
+USER PROMPT:
+The following PuzzleScript game code:
+```plaintext
+===========
+title Key Quest
+===========
+
+===========
+palette
+===========
+black 000000
+white FFFFFF
+yellow FFFF00
+blue 0000FF
+red FF0000
+green 00FF00
+
+===========
+objects
+===========
+
+Background
+black
+00000
+00000
+00000
+00000
+00000
+
+Wall
+blue
+00000
+00000
+00000
+00000
+00000
+
+Player
+yellow
+00000
+00100
+00100
+00100
+00000
+
+Key
+green
+00000
+00000
+00000
+00000
+00000
+
+Door
+red
+00000
+00000
+00000
+00000
+00000
+
+Exit
+white
+00000
+00000
+00000
+00000
+00000
+
+===========
+legends
+===========
+
+. = Background
+# = Wall
+P = Player
+k = Key
+D = Door 
+E = Exit
+
+===========
+rules
+===========
+
+# Basic Movement
+[ > Player | ] -> [ | Player > ]
+[ < Player | ] -> [ | Player < ]
+[ ^ Player | ] -> [ | Player ^ ]
+[ v Player | ] -> [ | Player v ]
+
+# Key Collection
+[ Player | Key ] -> [ Player | ]
+
+# Open Door when all keys are collected
+late [ Key ] -> [ Key ]
+[ Door ] -> [ Exit ]
+
+# Winning Condition
+[ Player | Exit ] -> win
+
+===========
+levels
+===========
+
+# Level 1
+#######
+#..k..#
+#.#.#.#
+#kP#kD#
+#.#.#.#
+#..k..#
+#######
+
+# Level 2
+#########
+#.....k.#
+#.###.#.#
+#..kP#k.#
+#.#.#.#.#
+#.k.k.k.#
+#.#####.#
+#......E#
+#########
+
+
+```
+produced the following console output:
+=================================
+line 6 : Unrecognised stuff in the prelude.
+line 8 : Unrecognised stuff in the prelude.
+line 9 : Unrecognised stuff in the prelude.
+line 10 : Unrecognised stuff in the prelude.
+line 11 : Unrecognised stuff in the prelude.
+line 12 : Unrecognised stuff in the prelude.
+too many errors, aborting compilation
+Errors detected during compilation; the game may not work correctly.
+Return a repaired version of the code that addresses these errors. First, reason about your task and determine the best plan of action. Then, write your code. Return your code in full, inside a ```plaintext code block.

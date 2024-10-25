@@ -1,0 +1,137 @@
+To address the errors related to the `BlockOnTarget` object in the PuzzleScript game, we need to ensure that the color specifications are correctly defined. The error message indicates that there was an incorrect color definition for `BlockOnTarget`, specifically that "cyan " was used, but there was a space which caused it to be misinterpreted.
+
+We'll fix this by ensuring that the colors for `BlockOnTarget` are properly defined with no extra spaces and with a standard color format. We'll also check the formatting of the color attributes for other objects to ensure there are no similar issues elsewhere.
+
+Here's the corrected game code:
+
+```plaintext
+title Block Pusher
+author Assistant
+homepage www.example.com
+
+========
+OBJECTS
+========
+Background
+White
+
+Player
+Yellow
+..0..
+.000.
+00000
+.000.
+..0..
+
+Wall
+Grey
+.....
+.....
+.....
+.....
+.....
+
+Floor
+#e0e0e0
+.....
+.....
+.....
+.....
+.....
+
+Block
+Blue
+.000.
+00000
+00000
+00000
+.000.
+
+Target
+Green
+..0..
+.000.
+00000
+.000.
+..0..
+
+BlockOnTarget
+Cyan
+.111.
+11111
+11111
+11111
+.111.
+
+=======
+LEGEND
+=======
+
+# = Wall
+. = Floor
+P = Player
+B = Block
+T = Target
+X = BlockOnTarget
+
+=====
+SOUNDS
+=====
+
+# Sound effects can be defined here if needed.
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Floor, Target
+Wall
+Block, BlockOnTarget
+Player
+
+======
+RULES
+======
+
+# Player moves
+[ > Player | Floor ] -> [ > Player ]
+
+# Player pushes block
+[ > Player | Block | Floor ] -> [ > Player | > Block ]
+
+# Block on Target turns into BlockOnTarget
+[ Block | Target ] -> [ BlockOnTarget | Target ]
+
+# BlockOnTarget behaves like Block
+[ > Player | BlockOnTarget | Floor ] -> [ > Player | BlockOnTarget > ]
+
+==============
+WINCONDITIONS
+==============
+
+All BlockOnTarget
+
+=======
+LEVELS
+=======
+
+# Simple layout
+#####
+#...#
+#P.B#
+#.#T#
+#####
+
+# More complex layout
+########
+#..#..T#
+#..B..T#
+#..P..T#
+#......#
+#..#..##
+########
+
+```
+
+In this corrected version, we made sure not to have any extra spaces in the color definition for `BlockOnTarget`. This should resolve the compilation errors you encountered, allowing the game to work correctly.

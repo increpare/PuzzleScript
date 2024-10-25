@@ -1,0 +1,114 @@
+SYSTEM PROMPT:
+You are a game designer, familiar with the PuzzleScript game description language. 
+
+USER PROMPT:
+The following PuzzleScript game code:
+```plaintext
+Title: Simple Crate Pusher
+
+Author: PuzzleScriptUser
+
+========
+OBJECTS
+========
+
+Background
+transparent
+
+Player
+P
+Black
+
+Crate
+C
+Green
+
+Wall
+#
+Grey
+
+Goal
+.
+Red
+
+CrateOnGoal
+O
+Yellow
+
+PlayerOnGoal
+B
+Blue
+
+=======
+LEGEND
+=======
+
+background = Background
+player = Player
+wall = Wall
+crate = Crate
+goal = Goal
+
+===========
+SOUNDS
+===========
+
+===
+COLLISIONLAYERS
+===
+
+Background
+Player, PlayerOnGoal
+Crate, CrateOnGoal
+Wall
+Goal
+
+========
+RULES
+========
+
+[Player | Crate] -> [ > Player | > Crate]
+[PlayerOnGoal | Crate] -> [ > Player | > Crate]
+
+[Player | Goal] -> [PlayerOnGoal]
+[PlayerOnGoal] -> [Player]
+
+[Crate | Goal] -> [CrateOnGoal]
+[CrateOnGoal] -> [Crate]
+
+==============
+WINCONDITIONS
+==============
+
+All CrateOnGoal
+
+========
+LEVELS
+========
+
+#######
+#     #
+# .C  #
+#     #
+#  P  #
+#######
+
+#######
+# P  #
+#     #
+# C C #
+# O  .#
+#######
+
+```
+produced the following console output:
+=================================
+line 13 : Was looking for color for object PLAYER, got "p" instead.
+line 17 : Was looking for color for object CRATE, got "c" instead.
+line 21 : Was looking for color for object WALL, got "#" instead.
+line 25 : Was looking for color for object GOAL, got "." instead.
+line 29 : Was looking for color for object CRATEONGOAL, got "o" instead.
+line 33 : Was looking for color for object PLAYERONGOAL, got "b" instead.
+too many errors, aborting compilation
+Errors detected during compilation; the game may not work correctly.
+Return a repaired version of the code that addresses these errors. Return your code in full, inside a ```plaintext code block.

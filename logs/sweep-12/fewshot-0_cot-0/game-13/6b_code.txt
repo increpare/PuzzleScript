@@ -1,0 +1,118 @@
+```plaintext
+Title: Block Push
+
+Author: PuzzleScript
+
+===========
+OBJECTS
+===========
+
+Background
+WHITE
+.....
+.....
+.....
+.....
+.....
+
+Player
+RED
+.....
+..00.
+.000.
+.0...
+.....
+
+Block
+BLUE
+.....
+..00.
+.000.
+.0...
+.....
+
+Target
+YELLOW
+.....
+..00.
+.000.
+.0...
+.....
+
+Wall
+BLACK
+.....
+.....
+.....
+.....
+.....
+
+===========
+LEGEND
+===========
+
+. = Background
+P = Player
+B = Block
+T = Target
+# = Wall
+
+===========
+SOUNDS
+===========
+
+===========
+
+COLLISIONLAYERS
+===========
+
+Background
+Target
+Player, Block
+Wall
+
+===========
+RULES
+===========
+
+[ > P | B ] -> [ > B | P ]
+[ P | T ] -> [ T | P ]
+
+===========
+WINCONDITIONS
+===========
+
+All B on T
+
+===========
+LEVELS
+===========
+
+#####
+#..T#
+#PBT#
+#...#
+#####
+
+#######
+#..T..#
+#..B..#
+#..P..#
+#..B..#
+#..T..#
+#######
+
+#########
+#.......#
+#..T.B..#
+#.......#
+#..B.P..#
+#.......#
+#..T....#
+#########
+
+```
+
+### Changes Made:
+1. Made all sprite graphics in the OBJECTS section exactly 5x5 in size.
+2. Corrected the rule syntax for pushing `Player` and `Block`, ensuring that they are valid for the collision layers. Switched from `[ > P B ] -> [ > B P ]` to `[ > P | B ] -> [ > B | P ]` which uses the adjacency operator `|` instead of the direct adjacency which was causing an issue. This change respects how objects can interact based on collision layers.

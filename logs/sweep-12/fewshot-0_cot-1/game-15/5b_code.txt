@@ -1,0 +1,117 @@
+The errors in the provided PuzzleScript code are due to invalid color definitions for the `Background` and `Wall` objects. In PuzzleScript, sprites are defined using colors, which are determined by the color palette provided or specified using names (like `red`, `blue`, etc.). The strings you provided (`00000`) are not valid colors or color names in this context.
+
+To correct these errors, I will:
+1. Use a color name instead of `00000` for the `Background` sprite.
+2. Use a standard color name for the `Wall` object.
+3. Ensure that all sprite definitions use valid predefined or standard color names.
+
+Here's how the revised code should look:
+
+```plaintext
+===========
+title Key Quest
+===========
+
+===========
+objects
+===========
+
+Background
+..black..
+..black..
+..black..
+..black..
+..black..
+
+Wall
+..blue..
+..blue..
+..blue..
+..blue..
+..blue..
+
+Player
+..yellow..
+..yellow..
+..yellow..
+..yellow..
+..yellow..
+
+Key
+..green..
+..green..
+..green..
+..green..
+..green..
+
+Door
+..red..
+..red..
+..red..
+..red..
+..red..
+
+Exit
+..white..
+..white..
+..white..
+..white..
+..white..
+
+===========
+legends
+===========
+
+. = Background
+# = Wall
+P = Player
+k = Key
+D = Door 
+E = Exit
+
+===========
+rules
+===========
+
+# Basic Movement
+[ > Player | ] -> [ | Player > ]
+[ < Player | ] -> [ | Player < ]
+[ ^ Player | ] -> [ | Player ^ ]
+[ v Player | ] -> [ | Player v ]
+
+# Key Collection
+[ Player | Key ] -> [ Player | ]
+
+# Open Door when all keys are collected
+late [ Key ] -> [ Key ]
+[ Door ] -> [ Exit ]
+
+# Winning Condition
+[ Player | Exit ] -> win
+
+===========
+levels
+===========
+
+# Level 1
+#######
+#..k..#
+#.#.#.#
+#kP#kD#
+#.#.#.#
+#..k..#
+#######
+
+# Level 2
+#########
+#.....k.#
+#.###.#.#
+#..kP#k.#
+#.#.#.#.#
+#.k.k.k.#
+#.#####.#
+#......E#
+#########
+```
+
+In this corrected version, the `Background` is defined with `black` color, and the `Wall` with `blue`. These are valid color definitions which should resolve the compilation errors.

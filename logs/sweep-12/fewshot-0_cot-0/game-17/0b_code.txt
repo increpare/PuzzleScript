@@ -1,0 +1,104 @@
+Certainly! Here's a simple PuzzleScript game for you. This game is called "Treasure Quest," where the player needs to reach the treasure while avoiding obstacles.
+
+```plaintext
+///////////////////////////////////////////////////////////////
+// PuzzleScript game definition for "Treasure Quest"
+///////////////////////////////////////////////////////////////
+
+// ======== OBJECTS ========
+========
+Background
+transparent
+black
+
+========
+Player
+red
+.111.
+..1..
+11111
+..1..
+.111.
+
+========
+Wall
+grey
+00000
+00000
+00000
+00000
+00000
+
+========
+Treasure
+yellow
+..2..
+.222.
+22222
+.222.
+..2..
+
+========
+Lava
+orange
+.333.
+33333
+.333.
+33333
+.333.
+
+// ======== LEGEND ========
+LEGEND
+. = Background
+P = Player
+# = Wall
+T = Treasure
+L = Lava
+
+// ======== SOUNDS ========
+SOUNDS
+treasure
+  collect
+lava
+  explode
+
+// ======== COLLISIONLAYERS ========
+COLLISIONLAYERS
+Background
+Lava
+Wall
+Player
+Treasure
+
+// ======== RULES ========
+RULES
+[Player Treasure] -> SOUND treasure
+[Player Lava] -> SOUND lava DIE
+
+// ======== WINCONDITIONS ========
+WINCONDITIONS
+No Treasure
+
+// ======== LEVELS ========
+LEVELS
+// Level 1
+#######
+#.....#
+#..P..#
+#..T..#
+#.....#
+#.L.L.#
+#######
+
+// Level 2
+#######
+#.....#
+#..L..#
+#..P..#
+##..###
+#..T..#
+#######
+
+```
+
+This game has two simple levels where the player ('P') must reach the treasure ('T') while avoiding the lava ('L'). The player uses the arrow keys to move, and the main objective is to collect all treasures in a level to win. The wall ('#') blocks the player's path and must be navigated around. If the player steps on lava, they lose that level.

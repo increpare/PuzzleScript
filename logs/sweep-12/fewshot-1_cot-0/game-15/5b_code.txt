@@ -1,0 +1,118 @@
+```plaintext
+title Treasure Hunt
+author Code AI
+
+// A simple puzzle game where the player must collect all treasures and reach the exit.
+
+========
+OBJECTS
+========
+
+Background
+lightblue
+.....
+.....
+.....
+.....
+.....
+
+Wall
+brown darkbrown
+.....
+.....
+.....
+.....
+.....
+
+Player
+blue lightblue darkblue
+.....
+..0..
+.111.
+..0..
+.....
+
+Treasure
+yellow
+.....
+..0..
+.000.
+..0..
+.....
+
+Exit
+green
+.....
+.....
+..0..
+.....
+.....
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Player
+T = Treasure
+E = Exit
+
+========
+SOUNDS
+========
+
+SFX0 18389420 (treasure collected sound)
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Wall
+Treasure
+Player
+Exit
+
+======
+RULES
+======
+
+[ > Player | Treasure ] -> [ > Player | ] SFX0
+
+[ Player Exit ] -> [ Player Exit ] win
+
+==============
+WINCONDITIONS
+==============
+
+no Treasure
+
+=======
+LEVELS
+=======
+
+# LEVEL 1
+#######
+#.#.#.#
+#.TPT.#
+#.#.#.#
+###.###
+.......
+....E..
+
+# LEVEL 2
+########
+#..T..T#
+#.#.#.#.
+#T#P.#.T
+#...###.
+#..T..#.
+#.###.#.
+#.#.E.#.
+########
+
+message Congratulations! You collected all the treasures and reached the exit!
+```
+
+I changed the level design to make each row of the levels have the same length, as required by PuzzleScript syntax. I also removed unnecessary lines that were causing errors. The updated code should now compile without errors.

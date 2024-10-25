@@ -1,0 +1,119 @@
+The errors you're encountering are related to the sprite definitions. In PuzzleScript, each object must have a 5x5 sprite representation. The objects in your code appear to have incorrect sprite definitions, as the error messages suggest, because some of the rows in the sprite matrices are incomplete or missing. Let's fix those issues by ensuring each object has a valid 5x5 sprite. Here's the corrected version of your PuzzleScript game code:
+
+```plaintext
+Title: Sokoban Puzzles
+
+Author: PuzzleScript Dev
+
+Homepage: https://www.puzzlescript.net
+
+===========
+OBJECTS
+===========
+Background
+transparent
+.....
+.....
+.....
+.....
+.....
+
+Wall
+#000000
+#####
+#####
+#####
+#####
+#####
+
+Player
+#FF0000
+.....
+..P..
+..P..
+..P..
+.....
+
+Crate
+#00FF00
+.....
+.....
+.CC..
+.....
+.....
+
+Target
+#FFFF00
+.....
+.....
+..$..
+.....
+.....
+
+CrateOnTarget
+#00FF00
+.....
+.....
+.OO..
+.....
+.....
+
+PlayerOnTarget
+#FF0000
+.....
+..T..
+.....
+.....
+.....
+
+================
+LEGEND
+================
+. = Background
+# = Wall
+P = Player
+C = Crate
+$ = Target
+T = PlayerOnTarget
+O = CrateOnTarget
+
+=======
+RULES
+=======
+[Player | Crate] -> [ | Player Crate] 
+[Player Crate | ] -> [ | Player Crate] 
+[Player | Target] -> [PlayerOnTarget | ] 
+[PlayerOnTarget Crate | ] -> [ | PlayerOnTarget Crate] 
+[Crate | Target] -> [CrateOnTarget | ] 
+
+=======
+WINCONDITIONS
+=======
+All CrateOnTarget
+
+========
+LEVELS
+========
+########
+#....$.#
+#.C.P# #
+#.#### #
+#....# #
+########
+
+########
+#...$ .#
+#..$C# #
+#..P.# #
+#.#### #
+########
+
+########
+#...$. #
+#.C.P# #
+#.#### #
+#...## #
+######$
+```
+
+In the corrected version, I've ensured that each object has a complete 5x5 grid for its sprite, which should fix the initial errors you received. Once you make these changes, the game should compile correctly without errors related to sprite definitions.

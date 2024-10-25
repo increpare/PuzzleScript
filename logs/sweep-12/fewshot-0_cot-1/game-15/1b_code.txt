@@ -1,0 +1,123 @@
+The errors in the provided code are related to the sprite definition section under "objects". PuzzleScript expects each object's sprite to be defined in a 5x5 grid of characters, which wasn't provided. Additionally, it seems like the formatting or definitions might have caused duplication errors. To fix these issues, we need to:
+
+1. Provide a 5x5 grid of characters for each object in the object section.
+2. Make sure there are no duplicate object definitions.
+3. Ensure that the objects have unique names that don't overlap.
+
+Here's the corrected version of the code with these issues resolved:
+
+```plaintext
+===========
+title Key Quest
+===========
+
+===========
+objects
+===========
+
+Background
+00000
+00000
+00000
+00000
+00000
+
+Wall
+BBBBB
+BBBBB
+BBBBB
+BBBBB
+BBBBB
+
+Player
+YYYYY
+Y...Y
+Y...Y
+Y...Y
+YYYYY
+
+Key
+.GGG.
+G...G
+G.G.G
+G...G
+.GGG.
+
+Door
+RRRRR
+R...R
+RRRRR
+R...R
+RRRRR
+
+Exit
+WWWWW
+W...W
+W...W
+W...W
+WWWWW
+
+===========
+legends
+===========
+
+. = Background
+# = Wall
+P = Player
+k = Key
+D = Door 
+E = Exit
+
+===========
+sounds
+===========
+keyCollected k
+doorOpen D
+winGame E
+
+===========
+rules
+===========
+
+# Basic Movement
+[ > Player | ] -> [ | Player > ]
+[ < Player | ] -> [ | Player < ]
+[ ^ Player | ] -> [ | Player ^ ]
+[ v Player | ] -> [ | Player v ]
+
+# Key Collection
+[ Player | Key ] -> [ Player | ]
+
+# Open Door when all keys are collected
+late [ Key ] -> [ Key ]
+[ Door ] -> [ Exit ]
+
+# Winning Condition
+[ Player | Exit ] -> win
+
+===========
+levels
+===========
+
+# Level 1
+#######
+#..k..#
+#.#.#.#
+#kP#kD#
+#.#.#.#
+#..k..#
+#######
+
+# Level 2
+#########
+#.....k.#
+#.###.#.#
+#.kP#k.#
+#.#.#.#.#
+#.k.k.k.#
+#.#####.#
+#......E#
+#########
+```
+
+In this version, I've defined each object with its own 5x5 sprite. The colors used in the sprite definitions are represented using different character symbols. Additionally, I've ensured that object definitions are unique and corrected any earlier formatting issues.

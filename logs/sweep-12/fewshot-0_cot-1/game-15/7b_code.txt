@@ -1,0 +1,116 @@
+The errors mentioned in the console output indicate a problem with sprite definitions, specifically with how the colors are defined. Each sprite should be defined with a 5x5 grid using specified colors. However, it seems like the system is not recognizing the color definitions due to possibly incorrect formatting or errors in color input.
+
+Here's how to fix it:
+1. Colors in PuzzleScript are defined as hexadecimal codes prefixed with 0x. For instance, "000000" for black should be written as "0x000000".
+2. Each sprite definition needs exactly 5 color numbers for each of the 5 lines, totaling 25 entries.
+
+Let's correct the color definitions and ensure each sprite has a 5x5 grid.
+
+```plaintext
+===========
+title Key Quest
+===========
+
+===========
+objects
+===========
+
+Background
+0x000000
+0x000000
+0x000000
+0x000000
+0x000000
+
+Wall
+0x0000FF
+0x0000FF
+0x0000FF
+0x0000FF
+0x0000FF
+
+Player
+0xFFFF00
+0xFFFF00
+0xFFFF00
+0xFFFF00
+0xFFFF00
+
+Key
+0x00FF00
+0x00FF00
+0x00FF00
+0x00FF00
+0x00FF00
+
+Door
+0xFF0000
+0xFF0000
+0xFF0000
+0xFF0000
+0xFF0000
+
+Exit
+0xFFFFFF
+0xFFFFFF
+0xFFFFFF
+0xFFFFFF
+0xFFFFFF
+
+===========
+legends
+===========
+
+. = Background
+# = Wall
+P = Player
+k = Key
+D = Door 
+E = Exit
+
+===========
+rules
+===========
+
+# Basic Movement
+[ > Player | ] -> [ | Player > ]
+[ < Player | ] -> [ | Player < ]
+[ ^ Player | ] -> [ | Player ^ ]
+[ v Player | ] -> [ | Player v ]
+
+# Key Collection
+[ Player | Key ] -> [ Player | ]
+
+# Open Door when all keys are collected
+late [ Key ] -> [ Key ]
+[ Door ] -> [ Exit ]
+
+# Winning Condition
+[ Player | Exit ] -> win
+
+===========
+levels
+===========
+
+# Level 1
+#######
+#..k..#
+#.#.#.#
+#kP#kD#
+#.#.#.#
+#..k..#
+#######
+
+# Level 2
+#########
+#.....k.#
+#.###.#.#
+#..kP#k.#
+#.#.#.#.#
+#.k.k.k.#
+#.#####.#
+#......E#
+#########
+```
+
+This corrected version addresses the color format issue, providing PuzzleScript with a recognizable color definition by prefixing each color with `0x`.

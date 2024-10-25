@@ -1,0 +1,137 @@
+SYSTEM PROMPT:
+You are a game designer, familiar with the PuzzleScript game description language. 
+
+USER PROMPT:
+The following PuzzleScript game code:
+```plaintext
+////////////////////////////////////////////////////////////
+// Sokoban Puzzle Game
+////////////////////////////////////////////////////////////
+
+//Objects
+///////////
+OBJECTS
+Background
+GRAY
+.....
+.....
+.....
+.....
+.....
+
+Wall
+BROWN
+0000.
+0000.
+0000.
+0000.
+0000.
+
+Player
+YELLOW
+.....
+..0..
+.000.
+..0..
+.....
+
+Crate
+ORANGE
+0000.
+0..0.
+0..0.
+0000.
+.....
+
+Target
+GREEN
+.....
+.0.0.
+0.00.
+.....
+.....
+
+CrateOnTarget
+ORANGE
+0000.
+0..0.
+0..0.
+0000.
+.....
+
+//Legend
+/////////
+LEGEND
+. = Background
+# = Wall
+P = Player
+C = Crate
+T = Target
+O = CrateOnTarget
+
+//Sounds
+/////////
+SOUNDS
+
+//Collision Layers
+//////////////////
+COLLISIONLAYERS
+Background
+Wall
+Player, Crate, CrateOnTarget, Target
+
+//Rules
+///////
+[ Player | ] -> [ | Player ]
+[ | Player ] -> [ Player | ]
+[ Player | Crate ] -> [ | Player | Crate ]
+[ | CrateOnTarget ] -> [ | Player | Target ]
+[ CrateOnTarget | ] -> [ Target | Player ]
+
+// Merge Crate with Target
+[ Target | Crate ] -> [ | CrateOnTarget ]
+[ Crate | Target ] -> [ CrateOnTarget | ]
+
+// Separate Crate from Target 
+[ CrateOnTarget | ] -> [ Target | ]
+[ | CrateOnTarget ] -> [ | Target ]
+
+//Win Condition
+///////////////
+WINCONDITION
+No Crate
+
+//Levels
+/////////
+//Level 1
+#####
+#...#
+#.#.#
+#PC.#
+#####
+
+//Level 2
+######
+#....#
+#.C..#
+#.CT.#
+#....#
+######
+
+```
+produced the following console output:
+=================================
+line 56 : Unknown junk in object section (possibly: sprites have to be 5 pixels wide and 5 pixels high exactly. Or maybe: the main names for objects have to be words containing only the letters a-z0.9 - if you want to call them something like ",", do it in the legend section).
+line 57 : Unknown junk in object section (possibly: sprites have to be 5 pixels wide and 5 pixels high exactly. Or maybe: the main names for objects have to be words containing only the letters a-z0.9 - if you want to call them something like ",", do it in the legend section).
+line 66 : Incorrect format of legend - should be one of "A = B", "A = B or C [ or D ...]", "A = B and C [ and D ...]".
+line 67 : Incorrect format of legend - should be one of "A = B", "A = B or C [ or D ...]", "A = B and C [ and D ...]".
+line 70 : Was expecting a sound event (like SFX3, or ENDLEVEL) or an object name, but didn't find either.
+line 71 : Was expecting a sound event (like SFX3, or ENDLEVEL) or an object name, but didn't find either.
+line 77 : error detected - unexpected character /
+line 78 : error detected - unexpected character /
+line 79 : error detected - unexpected character [
+line 79 : Object "PLAYER" included in multiple collision layers ( layers #3, #6 ). You should fix this!
+line 79 : error detected - unexpected character |
+too many errors, aborting compilation
+Errors detected during compilation; the game may not work correctly.
+Return a repaired version of the code that addresses these errors. First, reason about your task and determine the best plan of action. Then, write your code. Return your code in full, inside a ```plaintext code block.

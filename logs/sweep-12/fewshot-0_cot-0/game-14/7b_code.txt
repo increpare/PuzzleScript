@@ -1,0 +1,119 @@
+The errors in your code are due to the incorrect definition of the `BoxOnTarget` object. Let's correct it by defining `BoxOnTarget` properly with the correct color format. Here is the repaired version of the code:
+
+```plaintext
+Title: Sokoban Simple
+
+Author: PuzzleScript Dev
+
+===============
+OBJECTS
+===============
+
+Background
+WHITE
+.....
+
+Player
+GREEN
+..0..
+.000.
+..0..
+.....
+.....
+
+Wall
+BLACK
+00000
+00000
+00000
+00000
+00000
+
+Box
+ORANGE
+00000
+00000
+00000
+00000
+00000
+
+Target
+BLUE
+.....
+..00.
+..00.
+.....
+
+BoxOnTarget
+ORANGE
+00000
+00000
+00000
+00000
+00000
+
+===============
+LEGEND
+===============
+
+. = Background
+P = Player
+# = Wall
+B = Box
+T = Target
+O = BoxOnTarget
+
+===============
+SOUNDS
+===============
+
+Move Player
+  MOVE 100
+Restart
+  CRASH 100
+
+===============
+COLLISIONLAYERS
+===============
+
+Background
+Wall
+Target BoxOnTarget
+Box
+Player
+
+===============
+RULES
+===============
+
+[Player | Box] -> [ > Player | > Box]
+[Player | Target Box] -> [ > Player | > BoxOnTarget]
+[Player | BoxOnTarget] -> [ > Player | > BoxOnTarget]
+[Player | Target] -> [ > Player]
+[BoxOnTarget | Target] -> [Target | BoxOnTarget]
+
+===============
+WINCONDITIONS
+===============
+
+All BoxOnTarget on Target
+
+===============
+LEVELS
+===============
+
+####
+#P  #
+# B #
+# T #
+####
+
+####
+#P  #
+# B #
+#   #
+##T##
+####
+```
+
+In this corrected version, the `BoxOnTarget` object is defined with the color `ORANGE`, and no erroneous comment or incorrect color designation interrupts the object definition. This should address the compilation errors you encountered.

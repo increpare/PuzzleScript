@@ -1,0 +1,88 @@
+SYSTEM PROMPT:
+You are a game designer, familiar with the PuzzleScript game description language. 
+
+USER PROMPT:
+The following PuzzleScript game code:
+```plaintext
+===========
+OBJECTS
+===========
+Background
+transparent
+
+Player
+blue
+
+Wall
+black
+
+Block
+brown
+
+Goal
+yellow
+
+BlockOnGoal
+green
+
+===========
+LEGEND
+===========
+P = Player
+# = Wall
+B = Block
+. = Goal
+G = BlockOnGoal
+
+===========
+SOUNDS
+===========
+
+===========
+COLLISIONLAYERS
+===========
+Background
+Wall
+Goal
+Block, BlockOnGoal
+Player
+
+===========
+RULES
+===========
+[Player | Block] -> [ | Player Block]  // Move player and push block
+
+# Convert a Block into a BlockOnGoal when on a Goal
+[Block | Goal] -> [ | BlockOnGoal]
+
+# Convert a BlockOnGoal back to a Block if it moves away from a Goal
+[BlockOnGoal | ~Goal] -> [Block | Goal]
+
+===========
+WINCONDITIONS
+===========
+All BlockOnGoal
+
+===========
+LEVELS
+===========
+// Level 1
+########
+#..   #
+# PB# #
+# BB. #
+#   G #
+########
+
+```
+produced the following console output:
+=================================
+line 47 : Name "//", referred to in a rule, does not exist.
+line 47 : Name "move", referred to in a rule, does not exist.
+line 47 : Name "and", referred to in a rule, does not exist.
+line 47 : Name "push", referred to in a rule, does not exist.
+line 49 : Objects cannot appear outside of square brackets in rules, only directions can.
+line 49 : Name "convert", referred to in a rule, does not exist.
+too many errors, aborting compilation
+Errors detected during compilation; the game may not work correctly.
+Return a repaired version of the code that addresses these errors. First, reason about your task and determine the best plan of action. Then, write your code. Return your code in full, inside a ```plaintext code block.

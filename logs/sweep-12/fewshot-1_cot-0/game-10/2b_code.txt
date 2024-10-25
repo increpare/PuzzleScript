@@ -1,0 +1,76 @@
+```plaintext
+title Star Collector
+author YourName
+
+========
+OBJECTS
+========
+
+Background
+white
+
+Wall
+black
+00000
+00000
+00000
+00000
+00000
+
+Player
+green
+..0..
+.000.
+.000.
+.000.
+.....
+
+Star
+yellow
+.....
+..0..
+.000.
+..0..
+.....
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Player
+* = Star
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Player, Star
+Wall
+
+======
+RULES
+======
+
+[ > Player | Star ] -> [ > Player | ]
+
+==============
+WINCONDITIONS
+==============
+
+NO Star
+
+=======
+LEVELS
+=======
+
+#####
+#...#
+#.*.#
+#P*.#
+#####
+```
+
+Note: I have removed the `<SOUNDS>` section from the original code, as PuzzleScript doesn't support sound effects in this version.

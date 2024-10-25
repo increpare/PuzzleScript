@@ -1,0 +1,99 @@
+import json
+import os
+
+import numpy as np
+import pandas as pd
+
+
+seed = 12
+
+sweep_dir = os.path.join('logs', f'sweep-{seed}')
+with open(os.path.join(sweep_dir, 'concise_stats.json')) as f:
+    stats = json.load(f)
+
+agg_stats = {}
+for cot in [0, 1]:
+    for fewshot in [0, 1]:
+        key = f"fewshot-{fewshot}_cot-{cot}"
+        first_comps = []
+        first_solves = []
+        comps = 0
+        solves = 0
+        for stat in stats[key]:
+            compiled_iters = stat['compiledIters']
+            solved_iters = stat['solvedIters']
+            if compiled_iters:
+                comps += 1
+                first_comp = min(compiled_iters)
+            else:
+                first_comp = 20
+            if solved_iters:
+                solves += 1
+                first_solve = min(solved_iters)
+            else:
+                first_solve = 20
+            first_comps.append(first_comp)
+            first_solves.append(first_solve)
+        mean_first_comp = np.mean(first_comps)
+        std_first_comp = np.std(first_comps)
+        mean_first_solve = np.mean(first_solves)
+        std_first_solve = np.std(first_solves)
+        pct_comp = comps / len(stats[key])
+        pct_solve = solves / len(stats[key])
+        agg_stats[key] = {
+            'mean_first_comp': mean_first_comp,
+            'std_first_comp': std_first_comp,
+            'mean_first_solve': mean_first_solve,
+            'std_first_solve': std_first_solve,
+            'pct_comp': pct_comp,
+            'pct_solve': pct_solve,
+        }
+
+# Now make a pandas dataframe out of this
+# Convert to DataFrame
+df = pd.DataFrame(agg_stats).T
+
+# Extract hierarchical indices
+index_tuples = [
+    (bool(int(fewshot)), bool(int(cot)))
+    for fewshot, cot in df.index.str.extract(r'fewshot-(\d+)_cot-(\d+)').values
+]
+df.index = pd.MultiIndex.from_tuples(index_tuples, names=['Fewshot', 'Chain of Thought'])
+df.sort_index()
+
+# Format mean columns to include std as "+/-" values
+df["First Compile"] = df.apply(
+    lambda row: f"{row['mean_first_comp']:.1f} ± {row['std_first_comp']:.1f}", axis=1
+)
+df["First Solve"] = df.apply(
+    lambda row: f"{row['mean_first_solve']:.1f} ± {row['std_first_solve']:.1f}", axis=1
+)
+
+# Drop original columns
+df = df.drop(columns=[
+    'mean_first_comp', 'std_first_comp', 'mean_first_solve', 'std_first_solve'
+])
+
+# Bold the least values in "First Compile" and "First Solve" columns
+for col in ["First Compile", "First Solve"]:
+    min_value = df[col].apply(lambda x: float(x.split(" ± ")[0])).min()
+    df[col] = df[col].apply(
+        lambda x: f"\\textbf{{{x}}}" if float(x.split(" ± ")[0]) == min_value else x
+    )
+
+# Bold the greatest values in "pct_comp" and "pct_solve" columns
+for col in ["pct_comp", "pct_solve"]:
+    max_value = df[col].max()
+    df[col] = df[col].apply(lambda x: f"\\textbf{{{x}}}" if x == max_value else x)
+
+# Rename columns to remove underscores
+df = df.rename(columns=lambda x: x.replace("_", " ").title())
+
+# Save DataFrame to LaTeX
+# latex_path = "/mnt/data/modified_hierarchical_dataframe.tex"
+latex_path = os.path.join(sweep_dir, 'agg_stats.tex')
+df.to_latex(latex_path, escape=False)
+
+
+print(json.dumps(agg_stats, indent=4))
+

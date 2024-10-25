@@ -1,0 +1,101 @@
+Below is a repaired version of your PuzzleScript game code with the issues addressed:
+
+```plaintext
+///////////////////////////////////////////////////////////////
+// PuzzleScript game definition for "Treasure Quest"
+///////////////////////////////////////////////////////////////
+
+/////////// OBJECTS ///////////
+OBJECTS
+Background
+transparent
+black
+
+Player
+red
+.000.
+..0..
+00000
+..0..
+.000.
+
+Wall
+grey
+.....
+.....
+.....
+.....
+.....
+
+Treasure
+yellow
+..0..
+.000.
+00000
+.000.
+..0..
+
+Lava
+orange
+.000.
+00000
+.000.
+00000
+.000.
+
+////////// LEGEND //////////
+LEGEND
+. = Background
+P = Player
+# = Wall
+T = Treasure
+L = Lava
+
+////////// SOUNDS //////////
+SOUNDS
+treasure SFX1
+lava SFX2
+
+///// COLLISIONLAYERS /////
+COLLISIONLAYERS
+Background
+Lava
+Wall
+Player
+Treasure
+
+////////// RULES //////////
+RULES
+[Player | Treasure] -> [Player | ] SOUND treasure
+[Player | Lava] -> [] SOUND lava DIE
+
+///// WINCONDITIONS //////
+WINCONDITIONS
+No Treasure
+
+////////// LEVELS //////////
+LEVELS
+// Level 1
+#######
+#.....#
+#..P..#
+#..T..#
+#.....#
+#.L.L.#
+#######
+
+// Level 2
+#######
+#.....#
+#..L..#
+#..P..#
+##..###
+#..T..#
+#######
+```
+
+### Changes Made:
+1. Corrected the SOUNDS section by placing the sound identifier and sound effect on the same line.
+2. Modified the RULES section to ensure the correct syntax for rule definition with effects such as movement or sound; added brackets for clarity.
+3. Ensured consistent formatting throughout the code with headings and separators (e.g., `////////// LEGEND //////////`).
+4. Retained the structure and objectives, ensuring the rules and win conditions are set up to work properly with the provided levels.

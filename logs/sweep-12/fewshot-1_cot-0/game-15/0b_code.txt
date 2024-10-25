@@ -1,0 +1,119 @@
+```plaintext
+title Treasure Hunt
+author Code AI
+
+// A simple puzzle game where the player must collect all treasures and reach the exit.
+
+========
+OBJECTS
+========
+
+Background
+lightblue
+.....
+.....
+.....
+.....
+.....
+
+Wall
+brown
+33333
+33333
+33333
+33333
+33333
+
+Player
+blue
+.....
+..0..
+.111.
+..0..
+.....
+
+Treasure
+yellow
+.....
+..2..
+.222.
+..2..
+.....
+
+Exit
+green
+.....
+.....
+..0..
+.....
+.....
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Player
+T = Treasure
+E = Exit
+
+TR = Treasure
+PL = Player
+
+========
+SOUNDS
+========
+
+collectTreasure 18389420 (treasure collected sound)
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Wall
+Treasure
+Player
+Exit
+
+======
+RULES
+======
+
+[ > Player | Treasure ] -> [ > Player | ]
+
+[ Player Exit ] -> [ Player Exit ] win
+
+==============
+WINCONDITIONS
+==============
+
+no Treasure
+
+=======
+LEVELS
+=======
+
+# LEVEL 1
+.....#.....
+.#...T...#.
+..T..P...T.
+.#...T...#.
+.....#.....
+.....E.....
+
+# LEVEL 2
+###########
+#..T..T...#
+#.#####.#.#
+#T#P.#...T#
+#...###...#
+#..T..#...#
+#.#...#...#
+#.#.###.T.#
+#...#E#...#
+###########
+
+message Congratulations! You collected all the treasures and reached the exit!
+```

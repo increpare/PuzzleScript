@@ -1,0 +1,110 @@
+```plaintext
+title Galactic Beekeeper
+author AI Game Designer
+
+========
+OBJECTS
+========
+
+Background
+black
+
+Player
+yellow white
+.000.
+.010.
+01010
+.010.
+.000.
+
+Bee
+white
+..... 
+.0.0. 
+..0.. 
+.0.0. 
+.....
+
+Flower
+red green
+.....
+.....
+..1..
+.121.
+.....
+
+Hive
+orange yellow
+.....
+..1..
+..0..
+..1..
+.....
+
+=======
+LEGEND
+=======
+
+. = Background
+P = Player
+b = Bee
+F = Flower
+H = Hive
+
+=======
+SOUNDS
+=======
+
+SFX0 50005030
+SFX1 93058106
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Player, Bee, Flower, Hive
+
+======
+RULES
+======
+
+[ > Player | Flower ] -> [ > Player | Background ] SFX0
+
+[ > Player | Hive ] -> [ > Player | Hive ] SFX1
+
+(Bee random movement)
+[ Stationary Bee ] -> [ RandomDir Bee ]
+
+==============
+WINCONDITIONS
+==============
+
+all Flower on Background
+
+=======
+LEVELS
+=======
+
+message Collect all flowers and return to the hive!
+
+.........
+.P....F..
+.....b...
+.....b.F.
+..F......
+.........
+......H..
+
+message Level 2: Watch out for bees!
+
+.........
+.P....F..
+.....bbb.
+..F......
+.........
+......F..
+....b..H.
+
+message Congratulations!
+```

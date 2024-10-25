@@ -1,0 +1,84 @@
+Here's a simple PuzzleScript game where the player needs to collect all the stars:
+
+```plaintext
+title Star Collector
+author YourName
+
+========
+OBJECTS
+========
+
+Background
+white
+
+Wall
+black
+00000
+00000
+00000
+00000
+00000
+
+Player
+green
+..0..
+.000.
+.000.
+.000.
+.....
+
+Star
+yellow
+.....
+..0..
+.000.
+..0..
+.....
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Player
+* = Star
+
+=======
+SOUNDS
+=======
+
+collect 500000
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Player, Star
+Wall
+
+======
+RULES
+======
+
+[ > Player | Star ] -> [ > Player | ]
+
+==============
+WINCONDITIONS
+==============
+
+NO Star
+
+=======
+LEVELS
+=======
+
+#####
+#...#
+#.*.#
+#P*.#
+#####
+```
+
+In this game, the player, represented by `P`, moves around collecting stars `*`, while avoiding walls `#`. Once all stars are collected, the player wins the level.

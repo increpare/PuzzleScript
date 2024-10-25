@@ -1,0 +1,135 @@
+To address the errors in the provided PuzzleScript code, let's analyze each part:
+
+1. **Sprite Matrix Errors:** The "Wall" object sprite matrix lines are triggering errors due to incorrect characters (`X`). These should be periods or space as per PuzzleScript syntax, which only allows a dot (`.`) or a space (` `) to represent an empty cell.
+
+2. **Legend Errors:** The errors in the legend section suggest incorrect legend format. Each legend entry should map a single symbol (like `#`) to a unique object (like `Wall`). The correct syntax is `symbol = object`.
+
+With these corrections in mind, let's rewrite the problem sections:
+
+- Correct the `Wall` sprite matrix.
+- Fix the legend format.
+
+Here is the corrected code:
+
+```plaintext
+Title: Box Pusher
+Author: PuzzleMaster
+
+===========
+OBJECTS
+===========
+
+Background
+Black
+.....
+.....
+.....
+.....
+.....
+
+Wall
+Gray
+.....
+.....
+.....
+.....
+.....
+
+Player
+Yellow
+.....
+..00.
+.0.00
+..00.
+..0..
+
+Box
+Brown
+.....
+.....
+..00.
+..00.
+.....
+
+Target
+Green
+.....
+.....
+..00.
+..00.
+.....
+
+BoxOnTarget
+DarkRed
+.....
+.....
+..00.
+..00.
+.....
+
+============
+LEGEND
+============
+
+. = Background
+# = Wall
+P = Player
+B = Box
+T = Target
+
+============
+SOUNDS
+============
+
+;no sound specified
+
+==================
+COLLISIONLAYERS
+==================
+
+Background
+Player, Box
+Wall
+Target
+
+=============
+RULES
+=============
+
+[ > Player | ] -> [ > Player | ]
+[ > Box | ] -> [ > Box | ]
+
+[Player | Box] -> [ > Player | > Box]
+
+[ Box | Target ] -> [BoxOnTarget | Target]
+[ BoxOnTarget | ] -> [Box | ]
+
+===============
+WINCONDITIONS
+===============
+
+All BoxOnTarget
+
+=========
+LEVELS
+=========
+
+#.#..#
+#P#B.#
+#..B.#
+#..T.#
+#..T.#
+######
+
+#..###
+#P.B.#
+###B.#
+.#..T#
+..T.#
+#####
+```
+
+Key changes made:
+
+- Fixed the `Wall` sprite representation to use dots and spaces.
+- Corrected the LEGEND section to use the format `symbol = object`.

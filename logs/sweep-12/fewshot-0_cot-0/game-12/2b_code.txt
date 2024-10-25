@@ -1,0 +1,102 @@
+The errors in the console output are due to lowercase or non-color values being provided where a color name was expected in the OBJECTS section. Here is the corrected version of the game code with appropriate capitalization and valid color names:
+
+```plaintext
+Title: Simple Crate Pusher
+
+Author: PuzzleScriptUser
+
+========
+OBJECTS
+========
+
+Background
+transparent
+
+Player
+P
+black
+
+Crate
+C
+green
+
+Wall
+#
+grey
+
+Goal
+.
+red
+
+CrateOnGoal
+O
+yellow
+
+PlayerOnGoal
+B
+blue
+
+=======
+LEGEND
+=======
+
+background = Background
+player = Player
+wall = Wall
+crate = Crate
+goal = Goal
+
+===========
+SOUNDS
+===========
+
+===
+COLLISIONLAYERS
+===
+
+Background
+Player, PlayerOnGoal
+Crate, CrateOnGoal
+Wall
+Goal
+
+========
+RULES
+========
+
+[Player | Crate] -> [ > Player | > Crate]
+[PlayerOnGoal | Crate] -> [ > Player | > Crate]
+
+[Player | Goal] -> [PlayerOnGoal]
+[PlayerOnGoal] -> [Player]
+
+[Crate | Goal] -> [CrateOnGoal]
+[CrateOnGoal] -> [Crate]
+
+==============
+WINCONDITIONS
+==============
+
+All CrateOnGoal
+
+========
+LEVELS
+========
+
+#######
+#     #
+# .C  #
+#     #
+#  P  #
+#######
+
+#######
+# P  #
+#     #
+# C C #
+# O  .#
+#######
+
+```
+
+This code should compile without errors. Make sure to use capital letters for character markers in the OBJECTS section, as indicated, and retain the correct color names from the recognized color list.

@@ -1,0 +1,132 @@
+To address the errors indicated in the PuzzleScript console output, we need to ensure that every rule in the code has a corresponding pattern on the right side that equals the left side in terms of number of objects and layers. This means correcting the mismatch where cells are missing in the rule right sides. Let's analyze each rule:
+
+1. `[Player | Box] -> [Player | . | Box]`: Correct since the Player is pushing the Box to the right, with the Box moving into an empty space.
+
+2. `[Box | Target] -> [BoxOnTarget]`: This rule is problematic because the left side has two parts ([Box | Target]), but the right side has only one part ([BoxOnTarget]). To fix it, add another cell for the Target that would not change.
+
+3. `[Player | BoxOnTarget] -> [Player | . | BoxOnTarget]`: Similar to the first error, but this is correctly structured with three parts: Player, which stays, empty space the player is moving into, and the BoxOnTarget, which stays.
+
+4. `[Player | Target] -> [Player | Target]`: Both sides already have the same number of elements, one.
+
+Let’s rewrite the rules to ensure the left and right sides match properly in terms of pattern structure:
+
+```plaintext
+title Sokoban Puzzle
+author Game Designer
+
+========
+OBJECTS
+========
+
+Background
+blue
+.....
+.....
+.....
+.....
+.....
+
+Player
+green
+.....
+..0..
+.000.
+..0..
+.....
+
+Wall
+black
+.....
+.....
+00000
+.....
+.....
+
+Box
+brown
+.....
+.000.
+.000.
+.000.
+.....
+
+Target
+yellow
+.....
+.....
+.....
+.....
+.....
+
+BoxOnTarget
+brown yellow
+.....
+.000.
+.000.
+.000.
+.....
+
+============
+LEGEND
+============
+
+. = Background
+P = Player
+# = Wall
+B = Box
+T = Target
+X = BoxOnTarget
+
+===============
+SOUNDS
+===============
+
+==================
+COLLISIONLAYERS
+==================
+
+Background
+Player, Box, BoxOnTarget
+Wall
+Target
+
+========
+RULES
+========
+
+[Player | Box] -> [Player | . | Box]
+[Box | Target] -> [BoxOnTarget | Target]
+[Player | BoxOnTarget] -> [Player | . | BoxOnTarget]
+[Player | Target] -> [Player | Target]
+
+===============
+WINCONDITIONS
+===============
+
+All BoxOnTarget on Target
+
+========
+LEVELS
+========
+
+#######
+#.....#
+#..B..#
+#..P..#
+#..T..#
+#######
+
+#######
+#.....#
+#..P..#
+#..B..#
+#..T..#
+#..#..#
+#..#..#
+#######
+```
+
+Changes made:
+- Modified the rule `[Box | Target] -> [BoxOnTarget | Target]`, ensuring the right side now correctly has two components, matching the left side. The addition of `| Target` ensures rule symmetry. 
+
+This should resolve the compilation errors related to rule structure.

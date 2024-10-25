@@ -1,0 +1,113 @@
+Here's the corrected version of the game code, addressing the errors identified in the console output:
+
+```plaintext
+title Gem Collector
+author YourName
+
+========
+OBJECTS
+========
+
+Background
+darkgreen
+
+Wall
+grey
+00000
+0...0
+0...0
+0...0
+00000
+
+Player
+blue
+..0..
+.000.
+00000
+.000.
+..0..
+
+Gem
+yellow
+.....
+..0..
+.000.
+..0..
+.....
+
+CollectedGem
+lightyellow
+.....
+.....
+..0..
+.....
+.....
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Player
+* = Gem
+@ = CollectedGem
+
+=========
+SOUNDS
+=========
+
+GemCollected 26037607
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Gem, CollectedGem
+Player, Wall
+
+======
+RULES
+======
+
+[ > Player | Gem ] -> [ > Player | CollectedGem GemCollected]
+
+==============
+WINCONDITIONS
+==============
+
+no Gem
+
+=======
+LEVELS
+=======
+
+#######
+#.....#
+#.*.*.#
+#.P.*.#
+#######
+
+#####
+#...#
+#.*.#
+#P..#
+#####
+
+######
+#....#
+#.*.*#
+#P...#
+#....#
+######
+
+message Collect all the gems!
+```
+
+Changes made:
+1. Fixed the color specification for the `CollectedGem` object by ensuring the color name is correctly used and referenced.
+2. Changed the sound name to be capitalized 'GemCollected' (consistent with its usage in the rules). 
+3. Updated the RULES section to correctly include the sound in the action, using the format `[ > Player | Gem ] -> [ > Player | CollectedGem GemCollected]`. 
+
+These adjustments should correct the compilation errors and ensure the game functions as intended.

@@ -1,0 +1,112 @@
+SYSTEM PROMPT:
+You are a game designer, familiar with the PuzzleScript game description language. 
+
+USER PROMPT:
+The following PuzzleScript game code:
+```plaintext
+///////////////////////////////////////////////////////////////
+// PuzzleScript game definition for "Treasure Quest"
+///////////////////////////////////////////////////////////////
+
+/////////// OBJECTS ///////////
+OBJECTS
+Background
+transparent
+black
+
+Player
+red
+.000.
+..0..
+00000
+..0..
+.000.
+
+Wall
+grey
+.....
+.....
+.....
+.....
+.....
+
+Treasure
+yellow
+..0..
+.000.
+00000
+.000.
+..0..
+
+Lava
+orange
+.000.
+00000
+.000.
+00000
+.000.
+
+////////// LEGEND //////////
+LEGEND
+. = Background
+P = Player
+# = Wall
+T = Treasure
+L = Lava
+
+////////// SOUNDS //////////
+SOUNDS
+treasure SFX1
+lava SFX2
+
+///// COLLISIONLAYERS /////
+COLLISIONLAYERS
+Background
+Lava
+Wall
+Player
+Treasure
+
+////////// RULES //////////
+RULES
+[Player | Treasure] -> [Player | ] SOUND treasure
+[Player | Lava] -> [] SOUND lava DIE
+
+///// WINCONDITIONS //////
+WINCONDITIONS
+No Treasure
+
+////////// LEVELS //////////
+LEVELS
+// Level 1
+#######
+#.....#
+#..P..#
+#..T..#
+#.....#
+#.L.L.#
+#######
+
+// Level 2
+#######
+#.....#
+#..L..#
+#..P..#
+##..###
+#..T..#
+#######
+
+```
+produced the following console output:
+=================================
+line 43 : Unknown junk in object section (possibly: sprites have to be 5 pixels wide and 5 pixels high exactly. Or maybe: the main names for objects have to be words containing only the letters a-z0.9 - if you want to call them something like ",", do it in the legend section).
+line 51 : In the legend, define new items using the equals symbol - declarations must look like "A = B", "A = B or C [ or D ...]", "A = B and C [ and D ...]".
+line 51 : Incorrect format of legend - should be one of "A = B", "A = B or C [ or D ...]", "A = B and C [ and D ...]", but it looks like you have a dangling "ERROR"?
+line 53 : Was expecting a soundverb here (MOVE, DESTROY, CANTMOVE, or the like), but found something else.
+line 54 : Was expecting a soundverb here (MOVE, DESTROY, CANTMOVE, or the like), but found something else.
+line 56 : Was expecting a sound event (like SFX3, or ENDLEVEL) or an object name, but didn't find either.
+line 64 : error detected - unexpected character /
+line 66 : Name "sound", referred to in a rule, does not exist.
+too many errors, aborting compilation
+Errors detected during compilation; the game may not work correctly.
+Return a repaired version of the code that addresses these errors. Return your code in full, inside a ```plaintext code block.

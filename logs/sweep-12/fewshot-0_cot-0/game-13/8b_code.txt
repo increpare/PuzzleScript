@@ -1,0 +1,124 @@
+Let's take a closer look at the levels and ensure they are solvable within the game's mechanics. The main goals are to ensure that each Block ('B') can reach a Target ('T'), considering the Player ('P') can push them.
+
+Here's the revised code with solvable levels:
+
+```plaintext
+Title: Block Push
+
+Author: PuzzleScript
+
+===========
+OBJECTS
+===========
+
+Background
+WHITE
+.....
+.....
+.....
+.....
+.....
+
+Player
+RED
+.....
+..00.
+.000.
+.0...
+.....
+
+Block
+BLUE
+.....
+..00.
+.000.
+.0...
+.....
+
+Target
+YELLOW
+.....
+..00.
+.000.
+.0...
+.....
+
+Wall
+BLACK
+.....
+.....
+.....
+.....
+.....
+
+===========
+LEGEND
+===========
+
+. = Background
+P = Player
+B = Block
+T = Target
+# = Wall
+
+===========
+SOUNDS
+===========
+
+===========
+
+COLLISIONLAYERS
+===========
+
+Background
+Target
+Player, Block
+Wall
+
+===========
+RULES
+===========
+
+[ > P | B ] -> [ > B | P ]
+[ P | T ] -> [ T | P ]
+
+===========
+WINCONDITIONS
+===========
+
+All B on T
+
+===========
+LEVELS
+===========
+
+#####
+#..T#
+#PBT#
+#...#
+#####
+
+#######
+##.T..#
+#..B..#
+#..P..#
+##.B..#
+#..T..#
+#######
+
+#####
+#..T#
+#..P#
+#B..#
+#..T#
+#####
+```
+
+### Explanation of Changes:
+1. **Level 0**: This level remains unchanged as it was already solvable.
+   
+2. **Level 1**: Reduced complexity by ensuring clear paths for all Blocks ('B') to Targets ('T'), with the Player ('P') able to navigate and push the Blocks.
+   
+3. **Level 2**: Simplified the design to ensure the Player can reach the Block and push it to the Target. A simpler configuration ensures a clear path for the Player to maneuver the Block to its destination.
+
+With these adjustments, each level should now be solvable according to the game's pushing mechanics.

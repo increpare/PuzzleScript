@@ -1,0 +1,105 @@
+Sure, here's a simple PuzzleScript game that introduces basic mechanics of pushing blocks and reaching a goal. The player must push all crates onto goal tiles to win.
+
+```plaintext
+Title: Simple Crate Pusher
+
+Author: PuzzleScriptUser
+
+========
+OBJECTS
+========
+
+Background
+transparent
+
+Player
+P
+black
+
+Crate
+C
+green
+
+Wall
+#
+grey
+
+Goal
+.
+red
+
+CrateOnGoal
+O
+yellow
+
+PlayerOnGoal
+B
+blue
+
+=======
+LEGEND
+=======
+
+. = Background
+P = Player
+# = Wall
+C = Crate
+. = Goal
+
+===========
+SOUNDS
+===========
+
+===
+COLLISIONLAYERS
+===
+
+Background
+Player, PlayerOnGoal
+Crate, CrateOnGoal
+Wall
+Goal
+
+========
+RULES
+========
+
+[Player | Crate] -> [ > Player | > Crate]
+[PlayerOnGoal | Crate] -> [ > Player | > Crate]
+
+[Player | Goal] -> [PlayerOnGoal]
+[PlayerOnGoal] -> [Player]
+
+[Crate | Goal] -> [CrateOnGoal]
+[CrateOnGoal] -> [Crate]
+
+==============
+WINCONDITIONS
+==============
+
+All CrateOnGoal
+
+========
+LEVELS
+========
+
+#######
+#     #
+# .C  #
+#     #
+#  P  #
+#######
+
+#######
+# Pin #
+#     #
+# C C #
+# O  .#
+#######
+```
+
+This game consists of a player ('P') who can move crates ('C') onto goals ('.'). The player can also occupy goal spaces, turning into 'PlayerOnGoal' ('B'). Each crate should be moved onto a goal to transform into 'CrateOnGoal' ('O'). The win condition is fulfilled when all crates are on goals. 
+
+Remember, players can only push crates, not pull them, and cannot move through walls ('#'). 
+
+You can further expand this by adding more complex levels or additional rules and objects to deepen the mechanics. Enjoy creating your puzzles!

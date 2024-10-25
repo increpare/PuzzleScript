@@ -1,0 +1,104 @@
+The errors in your PuzzleScript code stem from some syntax issues. I'll address these and provide a corrected version of your game code.
+
+```plaintext
+///////////////////////////////////////////////////////////////
+// PuzzleScript game definition for "Treasure Quest"
+///////////////////////////////////////////////////////////////
+ 
+// ======== OBJECTS ========
+OBJECTS
+Background
+transparent
+black
+
+Player
+red
+.000.
+..0..
+00000
+..0..
+.000.
+
+Wall
+grey
+.....
+.....
+.....
+.....
+.....
+
+Treasure
+yellow
+..0..
+.000.
+00000
+.000.
+..0..
+
+Lava
+orange
+.000.
+00000
+.000.
+00000
+.000.
+
+// ======== LEGEND ========
+LEGEND
+. = Background
+P = Player
+# = Wall
+T = Treasure
+L = Lava
+
+// ======== SOUNDS ========
+SOUNDS
+treasure
+  SFX1
+lava
+  SFX2
+
+// ======== COLLISIONLAYERS ========
+COLLISIONLAYERS
+Background
+Lava
+Wall
+Player
+Treasure
+
+// ======== RULES ========
+RULES
+[Player Treasure] -> SOUND treasure
+[Player Lava] -> SOUND lava DIE
+
+// ======== WINCONDITIONS ========
+WINCONDITIONS
+No Treasure
+
+// ======== LEVELS ========
+LEVELS
+// Level 1
+#######
+#.....#
+#..P..#
+#..T..#
+#.....#
+#.L.L.#
+#######
+
+// Level 2
+#######
+#.....#
+#..L..#
+#..P..#
+##..###
+#..T..#
+#######
+```
+
+### Changes made:
+1. **SOUNDS Section**: The sound events were incorrect ('collect' and 'explode' are not default sound effects). They have been replaced with `SFX1` and `SFX2`, which are default system sound effects.
+
+2. **Syntax Errors**: The original document contained several errors related to structure, particularly around incorrect syntax for sound statements. By following the PuzzleScript syntax closely, these errors have been corrected.
+
+Make sure to test the code, as the sound effects (SFX1, SFX2) and these exact behaviors might differ slightly from your expectations since PuzzleScript has a fixed set of sound effects. Adjust accordingly if you're integrating custom sounds.

@@ -1,0 +1,145 @@
+The errors listed in the console output can be addressed by examining the rules and legend in the provided PuzzleScript code.
+
+### Error Analysis and Fixes:
+
+1. **Unexpected inputs in rules**: 
+   The error on lines that mention `; Teleportation Interaction` and `; Goal Interaction` arise because comments in PuzzleScript shouldn't include `;` or be read as keywords.
+
+2. **Dot character not defined properly**:
+   The error regarding the `.` symbol on line 105 usually indicates that while the dot is likely included as a placeholder to represent `Background` or `Floor` in the `LEGEND`, it might be that the `Background` or `Floor` objects aren't correctly placed where needed.
+
+3. **Rule Syntax Errors**: 
+   The rules should correctly process teleportation and should also account for block movement upon player interaction with or without teleport presence.
+
+The core problems come from incorrect comments marked by semicolons and the way the teleport mechanism and goal mechanism are structured.
+
+Here's the repaired version of the game code with comments removed and necessary adjustments in the legend:
+
+```plaintext
+title Teleporter's Quest
+author PuzzleMaker
+homepage www.puzzlescript.net
+
+========
+OBJECTS
+========
+
+Background
+black
+
+Player
+DarkBlue LightBlue
+.000.
+.010.
+.010.
+.010.
+.000.
+
+Goal
+DarkGreen
+.....
+..0..
+..0..
+.....
+.....
+
+Wall
+DarkGrey
+.....
+
+Block
+Orange
+.000.
+.0.0.
+.0.0.
+.0.0.
+.000.
+
+Teleporter
+Purple
+.....
+..0..
+..0..
+.....
+
+Floor
+Grey
+
+=======
+LEGEND
+=======
+
+. = Background
+P = Player
+G = Goal
+# = Wall
+B = Block
+T = Teleporter
+
+=======
+SOUNDS
+=======
+
+sfx1 17223204
+sfx2 34045802
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Floor
+Teleporter
+Wall, Player, Block, Goal
+
+======
+RULES
+======
+
+[ > Player | Floor ] -> [ > Player | Floor ]
+
+[ > Player | Block | Floor ] -> [ > Player | > Block | Floor ] sfx1
+
+late [ Player | Teleporter ] [ Teleporter | Floor ] -> [ Teleporter | Floor ] [ Player | Floor ]
+
+late [ > Block | Goal ] -> [ > Block | Goal ] sfx2
+late [ > Player | Goal ] -> [ Player | Goal ]
+
+[ Goal | Block ] -> [ Goal ]
+
+==============
+WINCONDITIONS
+==============
+
+All Block on Goal
+
+=======
+LEVELS
+=======
+
+message Level 1
+. . . . # #
+. P B . G #
+. . # # . #
+. . . G # #
+. . # # # #
+. . . . . .
+
+message Level 2
+. . . # # # #
+. . P B T . G
+. . . # # . .
+. . . . . . #
+. . . . T G B
+. . . # # # #
+
+message Level 3
+. . # # # . .
+. P B . . G .
+# # . . # # #
+. . . # . B .
+. . . . . G .
+. . # # # # .
+
+```
+This version removes the semicolon comments and correctly uses the legend mapping to avoid ambiguity. The logic for each of the features in the game (teleporter functionality and block-goal interaction) is maintained while ensuring syntax correctness in the context of PuzzleScript.

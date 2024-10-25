@@ -1,0 +1,136 @@
+SYSTEM PROMPT:
+You are a game designer, familiar with the PuzzleScript game description language. 
+
+USER PROMPT:
+The following PuzzleScript game code:
+```plaintext
+Title: Box Pusher
+Author: PuzzleMaster
+
+===========
+OBJECTS
+===========
+
+Background
+background
+111110
+111110
+111110
+111110
+111110
+111110
+
+Wall
+0
+00000
+01110
+01110
+01110
+00000
+
+Player
+Yellow
+.00.
+0.00
+.00.
+.0..
+
+Box
+Brown
+....
+.00.
+.00.
+....
+
+Target
+Green
+0000
+0110
+0110
+0000
+
+BoxOnTarget
+DarkRed
+0000
+0110
+0110
+0000
+1111
+
+============
+LEGEND
+============
+
+.=Background
+#:Wall
+P:Player
+B:Box
+T:Target
+
+============
+SOUNDS
+============
+
+;no sound specified
+
+==================
+COLLISIONLAYERS
+==================
+
+Background
+Player, Box
+Wall
+Target
+
+=============
+RULES
+=============
+
+[ > Player | ] -> [ > Player | ]
+[ > Box | ] -> [ > Box | ]
+
+[Player | Box] -> [ > Player | > Box]
+
+[ Box | Target ] -> [BoxOnTarget | Target]
+[ BoxOnTarget | ] -> [Box | ]
+
+===============
+WINCONDITIONS
+===============
+
+All BoxOnTarget
+
+=========
+LEVELS
+=========
+
+#.#..#
+#P#B.#
+#..B.#
+#..T.#
+#..T.#
+######
+
+#..###
+#P.B.#
+###B.#
+.#..T#
+..T.#
+#####
+
+```
+produced the following console output:
+=================================
+line 9 : Was looking for color for object BACKGROUND, got "background" instead.
+line 10 : Trying to access color number 1 from the color palette of sprite BACKGROUND, but there are only 0 defined in it.
+line 10 : Sprites must be 5 wide and 5 high.
+line 11 : Trying to access color number 1 from the color palette of sprite BACKGROUND, but there are only 0 defined in it.
+line 11 : Sprites must be 5 wide and 5 high.
+line 12 : Trying to access color number 1 from the color palette of sprite BACKGROUND, but there are only 0 defined in it.
+line 12 : Sprites must be 5 wide and 5 high.
+line 13 : Trying to access color number 1 from the color palette of sprite BACKGROUND, but there are only 0 defined in it.
+line 13 : Sprites must be 5 wide and 5 high.
+line 14 : Trying to access color number 1 from the color palette of sprite BACKGROUND, but there are only 0 defined in it.
+too many errors, aborting compilation
+Errors detected during compilation; the game may not work correctly.
+Return a repaired version of the code that addresses these errors. First, reason about your task and determine the best plan of action. Then, write your code. Return your code in full, inside a ```plaintext code block.

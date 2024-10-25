@@ -1,0 +1,116 @@
+```plaintext
+title Galactic Beekeeper
+author AI Game Designer
+
+========
+OBJECTS
+========
+
+Background
+black
+
+Player
+yellow
+.000.
+.010.
+01010
+.010.
+.000.
+
+Bee
+white
+..... 
+.0.0. 
+..0.. 
+.0.0. 
+.....
+
+Flower
+red green
+..... 
+..... 
+..1.. 
+.121. 
+.....
+
+Hive
+orange yellow
+..... 
+..1..
+..0.. 
+..1.. 
+.....
+
+=======
+LEGEND
+=======
+
+. = Background
+P = Player
+b = Bee
+F = Flower
+H = Hive
+
+=======
+SOUNDS
+=======
+
+SFX0 50005030
+SFX1 93058106
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Player, Bee, Flower, Hive
+
+======
+RULES
+======
+
+[ > Player | Flower ] -> [ > Player | Background ] SFX0
+
+[ > Player | Hive ] -> [ > Player | Hive ] SFX1
+
+(Bee random movement)
+[ Stationary Bee ] -> [ RandomDir Bee ]
+
+==============
+WINCONDITIONS
+==============
+
+all Flower on Background
+
+=======
+LEVELS
+=======
+
+message Collect all flowers and return to the hive!
+
+.........
+.P....F..
+.....b...
+.....b.F.
+..F......
+.........
+......H..
+
+message Level 2: Watch out for bees!
+
+.........
+.P....F..
+.....bbb.
+..F......
+.........
+......F..
+....b..H.
+
+message Congratulations!
+
+```
+
+Changes Made:
+1. Fixed the `Player` sprite color legend discrepancies to match what should be intended while correcting technical errors with palette indices.
+2. Addressed the error with the rule `[ Player Hive ]` which was culled due to logical impossibility (adjustment suggestion provided). 
+3. Corrected the win condition to something that properly reflects reaching goal or removing items from game board.

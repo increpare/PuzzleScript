@@ -1,0 +1,132 @@
+SYSTEM PROMPT:
+You are a game designer, familiar with the PuzzleScript game description language. 
+
+USER PROMPT:
+The following PuzzleScript game code:
+```plaintext
+# Simple Sokoban PuzzleScript Game
+
+Title: Simple Sokoban
+Author: Game Designer
+Homepage: puzzlers.org
+
+===========
+OBJECTS
+===========
+
+Background
+WHITE
+
+Wall
+GRAY
+
+Player
+BLUE
+
+Box
+BROWN
+
+Target
+YELLOW
+
+BoxOnTarget
+ORANGE
+
+PlayerOnTarget
+GREEN
+
+===========
+LEGEND
+===========
+
+. = Background
+# = Wall
+P = Player
+B = Box
+T = Target
+O = BoxOnTarget
+* = PlayerOnTarget
+
+===========
+SOUNDS
+===========
+
+# Left intentionally blank as no sounds are defined
+
+===========
+COLLISIONLAYERS
+===========
+
+Background
+Wall
+Target
+Box, BoxOnTarget
+Player, PlayerOnTarget
+
+===========
+RULES
+===========
+
+# Player movement
+[P | ] -> [ | P]
+[ | P] -> [P |]
+[P | T] -> [ | *]
+[T | P] -> [* | ]
+
+# Box pushing
+[P | B | ] -> [ | P | B]
+[* | B | ] -> [ | * | B]
+[P | B | T] -> [ | P | O]
+[* | B | T] -> [ | * | O]
+
+# Updating state when boxes move onto targets
+[B | T] -> [O]
+[* | O] -> [T | *]
+[P | O] -> [ | P]
+[O | P] -> [ | P]
+[O | *] -> [ | *]
+
+===========
+WINCONDITIONS
+===========
+
+All BoxOnTarget
+
+===========
+LEVELS
+===========
+
+# Level 1
+#####
+#   #
+# B.#
+# PT#
+#####
+
+# Level 2
+#######
+#     #
+# BP  #
+# ..  #
+#######
+
+# Level 3
+#####
+#P  #
+# B #
+#.. #
+#####
+
+```
+produced the following console output:
+=================================
+line 48 : Was expecting a sound event (like SFX3, or ENDLEVEL) or an object name, but didn't find either.
+line 64 : Objects cannot appear outside of square brackets in rules, only directions can.
+line 64 : Name "movement", referred to in a rule, does not exist.
+line 70 : Objects cannot appear outside of square brackets in rules, only directions can.
+line 70 : Name "pushing", referred to in a rule, does not exist.
+line 76 : Objects cannot appear outside of square brackets in rules, only directions can.
+line 76 : Name "updating", referred to in a rule, does not exist.
+too many errors, aborting compilation
+Errors detected during compilation; the game may not work correctly.
+Return a repaired version of the code that addresses these errors. First, reason about your task and determine the best plan of action. Then, write your code. Return your code in full, inside a ```plaintext code block.

@@ -1,0 +1,89 @@
+The errors in the console output are due to incorrect syntax in specifying colors for each object. The correct syntax requires the color to follow the object's character. Here's a repaired version of the game code:
+
+```plaintext
+;;;;;;;;;;;;;;;;
+;; Sokoban Game ;;
+;;;;;;;;;;;;;;;;
+
+========
+OBJECTS
+========
+Background
+. 
+white
+
+Wall
+# 
+black
+
+Target
+. 
+green
+
+Player
+P 
+blue
+
+Crate
+o 
+brown
+
+Crate_on_Target
+O 
+darkbrown
+
+Player_on_Target
+@ 
+lightblue
+
+========
+LEGEND
+========
+. = Background
+# = Wall
+= = Target
+o = Crate
+O = Crate_on_Target
+P = Player
+@ = Player_on_Target
+
+=================
+COLLISIONLAYERS
+=================
+Background
+Wall
+Player, Player_on_Target
+Crate, Crate_on_Target
+Target
+
+========
+RULES
+========
+[> Player | Crate] -> [> | Crate Player]
+[> Player | Wall] -> [> Player | Wall]
+
+[Player > | Crate] -> [Player Crate | >]
+[Player > | Wall] -> [Player > | Wall]
+
+[Player | Wall] -> [Player | Wall]
+[Player | Crate] -> [Player | Crate]
+
+=================
+WINCONDITIONS
+=================
+All Crate_on_Target
+
+========
+LEVELS
+========
+#####
+#...#
+#.#.#
+#.@ #
+#.$o#
+#.@ #
+#.#.#
+#####
+```
+
+In this version, each object is defined with its corresponding character and color on separate lines. Also, make sure you use the correct character in `LEGEND` and the rest of the game logic. I changed the characters for `Target` and the level to match the definitions in the `LEGEND`. I hope this resolves the errors for your game!

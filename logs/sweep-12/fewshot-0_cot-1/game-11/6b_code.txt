@@ -1,0 +1,90 @@
+The errors in the PuzzleScript code occur because of the incorrect formatting in the definition of objects and lack of sprites for those objects. PuzzleScript expects each object's definition to be accompanied by a color specification and a sprite using ASCII art. Let's walk through the necessary corrections:
+
+1. **Object Definitions**: 
+    - Each object definition should include not just the name and color but also a recognizable sprite (ASCII art).
+    - We must use each object's visual appearance to construct the sprite for it.
+
+2. **Legend Definitions**:
+    - While the original legend section is okay, it's best practice to ensure that characters used in the legend match with those in the level design and rule conditions.
+
+3. **Collisions and Rules**:
+    - Ensure that any interaction in rules refers to defined objects with their exact names. 
+    - Make sure that any operation, such as a transformation into another object, refers to defined objects.
+
+Here is the corrected version of the code:
+
+```plaintext
+Title: Box Mover
+
+# =========OBJECTS========
+Background
+transparent
+. 
+
+Target
+yellow
+T
+
+Box
+brown
+o
+
+Player
+red
+P
+
+Wall
+black
+#
+
+# =========LEGEND==========
+. = Background
+P = Player
+o = Box
+T = Target
+# = Wall
+
+# ========COLLISION LAYERS=========
+Background
+Target
+Player
+Box
+Wall
+
+# =========RULES==========
+[> Player | Box] -> [> Player | > Box]
+[Box | Target] -> [Background | Target]
+
+# =========WINCONDITIONS==========
+All Box on Target
+
+# =========LEVELS=========
+
+# Level 1
+#######
+#     #
+#  T  #
+# o   #
+#     #
+# P   #
+#######
+
+# Level 2
+#######
+#     #
+#  To #
+#     #
+#     #
+# P   #
+#######
+
+# =========END OF CODE==========
+```
+
+**Key Corrections**:
+- Added sprites (like `.` for Background) within object definitions.
+- Used the `Background` object instead of a non-existent `Goal` object in rules.
+- Adjusted the layering in the Legend for consistency.
+- Ensured all characters match throughout the scripts including the levels and legends.
+
+This should fix the errors and allow the code to compile correctly.

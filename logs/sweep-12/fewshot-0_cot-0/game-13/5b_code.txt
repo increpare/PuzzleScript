@@ -1,0 +1,116 @@
+The following updated version of the code addresses the issues raised in the console output by correcting the win condition and defining walls as objects within the game.
+
+```plaintext
+Title: Block Push
+
+Author: PuzzleScript
+
+===========
+OBJECTS
+===========
+
+Background
+WHITE
+.....
+
+Player
+RED
+..00.
+0000.
+0....
+000..
+.....
+
+Block
+BLUE
+..00.
+0000.
+0....
+000..
+.....
+
+Target
+YELLOW
+..00.
+0000.
+0....
+000..
+.....
+
+Wall
+BLACK
+00000
+00000
+00000
+00000
+00000
+
+===========
+LEGEND
+===========
+
+. = Background
+P = Player
+B = Block
+T = Target
+# = Wall
+
+===========
+SOUNDS
+===========
+
+===========
+
+COLLISIONLAYERS
+===========
+
+Background
+Target
+Player, Block
+Wall
+
+===========
+RULES
+===========
+
+[ > P B ] -> [ > B P ]
+[ P | T ] -> [ T | P ]
+
+===========
+WINCONDITIONS
+===========
+
+All B on T
+
+===========
+LEVELS
+===========
+
+#####
+#..T#
+#PBT#
+#...#
+#####
+
+#######
+#..T..#
+#..B..#
+#..P..#
+#..B..#
+#..T..#
+#######
+
+#########
+#.......#
+#..T.B..#
+#.......#
+#..B.P..#
+#.......#
+#..T....#
+#########
+```
+
+Key changes:
+1. Added the `Wall` object to define what "#" represents.
+2. Incorporated the `Wall` object in the `LEGEND` section.
+3. Fixed the win condition by using the correct object name `B` for `Block`.

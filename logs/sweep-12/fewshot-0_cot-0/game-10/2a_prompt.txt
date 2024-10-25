@@ -1,0 +1,105 @@
+SYSTEM PROMPT:
+You are a game designer, familiar with the PuzzleScript game description language. 
+
+USER PROMPT:
+The following PuzzleScript game code:
+```plaintext
+========
+title Simple Sokoban
+author OpenAI
+
+========
+homepage
+http://www.puzzlescript.net
+
+========
+run_rules
+title Screen
+  check
+    no player on goal
+  action
+    MESSAGE "The goal is to move all boxes onto the goals."
+
+========
+require_player_movement
+
+========
+background
+black
+
+========
+collision_layers
+background
+player, wall, box, goal
+
+========
+legend
+. = background
+# = wall
+P = player
+B = box
+G = goal
+
+========
+sounds
+# Include music and sound effects if desired
+# (e.g., [Player Moving] [Player Victory] [Music])
+
+========
+winconditions
+All box on goal
+
+========
+levels
+#####
+#...#
+#.#.#
+#...#
+#####
+
+
+#####
+#P..#
+#.#.#
+#B.G#
+#####
+
+
+#######
+#     #
+#  B  #
+# PBG #
+#######
+
+========
+objects
+Background
+ color black
+
+Wall
+ color gray
+
+Player
+ color purple
+
+Box
+ color orange
+
+Goal
+ color green
+
+========
+
+```
+produced the following console output:
+=================================
+line 6 : MetaData "homepage" needs a value.
+line 7 : Unrecognised stuff in the prelude.
+line 10 : Unrecognised stuff in the prelude.
+line 11 : You've already defined a TITLE in the prelude on line
+line 12 : Unrecognised stuff in the prelude.
+line 13 : Unrecognised stuff in the prelude.
+line 14 : Unrecognised stuff in the prelude.
+too many errors, aborting compilation
+Errors detected during compilation; the game may not work correctly.
+Return a repaired version of the code that addresses these errors. Return your code in full, inside a ```plaintext code block.

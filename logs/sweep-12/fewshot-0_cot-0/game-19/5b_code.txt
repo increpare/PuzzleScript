@@ -1,0 +1,119 @@
+Here's a repaired version of the PuzzleScript code. The main issue was that the object sprite definitions were not exactly five lines of five characters each, which is required by PuzzleScript. I've corrected this by ensuring all sprite representations are 5x5 grids:
+
+```plaintext
+Title: Sokoban Puzzles
+
+Author: PuzzleScript Dev
+
+Homepage: https://www.puzzlescript.net
+
+===========
+OBJECTS
+===========
+Background
+transparent
+.....
+.....
+.....
+.....
+.....
+
+Wall
+#000000
+#####
+#####
+#####
+#####
+#####
+
+Player
+#FF0000
+..P..
+..P..
+..P..
+.....
+.....
+
+Crate
+#00FF00
+.....
+.CC..
+.CC..
+.....
+.....
+
+Target
+#FFFF00
+.....
+..$..
+..$..
+.....
+.....
+
+CrateOnTarget
+#00FF00
+.....
+.OO..
+.OO..
+.....
+.....
+
+PlayerOnTarget
+#FF0000
+..T..
+..T..
+..T..
+.....
+.....
+
+================
+LEGEND
+================
+. = Background
+# = Wall
+P = Player
+C = Crate
+$ = Target
+T = PlayerOnTarget
+O = CrateOnTarget
+
+=======
+RULES
+=======
+[Player | Crate] -> [ | Player Crate] 
+[Player Crate | ] -> [ | Player Crate] 
+[Player | Target] -> [PlayerOnTarget | ] 
+[PlayerOnTarget Crate | ] -> [ | PlayerOnTarget Crate] 
+[Crate | Target] -> [CrateOnTarget | ] 
+
+=======
+WINCONDITIONS
+=======
+All CrateOnTarget
+
+========
+LEVELS
+========
+########
+#....$.#
+#.C.P# #
+#.#### #
+#....# #
+########
+
+########
+#...$ .#
+#..$C# #
+#..P.# #
+#.#### #
+########
+
+########
+#...$. #
+#.C.P# #
+#.#### #
+#...## #
+######$
+```
+
+The main changes were ensuring that the sprite definitions for each object in the OBJECTS section were 5x5 grids. Let me know if there are any more issues or if you need further assistance!

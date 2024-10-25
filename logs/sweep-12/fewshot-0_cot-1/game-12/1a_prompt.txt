@@ -1,0 +1,118 @@
+SYSTEM PROMPT:
+You are a game designer, familiar with the PuzzleScript game description language. 
+
+USER PROMPT:
+The following PuzzleScript game code:
+```plaintext
+; Title: Simple Sokoban
+; Author: Game Designer AI
+
+===========
+OBJECTS
+===========
+
+Background
+lightgrey
+
+Wall
+brown
+
+Player
+yellow
+
+Crate
+orange
+
+Target
+lightblue
+
+TargetCrate
+magenta
+
+===========
+LEGEND
+===========
+
+. = Background
+# = Wall
+P = Player
+C = Crate
+T = Target
+X = TargetCrate
+
+===========
+SOUNDS
+===========
+
+# (optional) For this simple game, sounds are not defined.
+
+===============
+COLLISIONLAYERS
+===============
+
+Background
+Wall
+Crate, TargetCrate
+Player
+
+===========
+RULES
+===========
+
+[Player | Crate] -> [ > Player | > Crate]
+[Crate | Target] -> [TargetCrate]
+[TargetCrate | Target] -> [TargetCrate]
+[TargetCrate | Crate] -> [TargetCrate]
+[TargetCrate | Wall] -> [TargetCrate]
+[TargetCrate] -> [Crate]
+
+===========
+WINCONDITIONS
+===========
+
+All TargetCrate on Target
+
+===========
+LEVELS
+===========
+
+# Introductory Level
+#####
+#...#
+#PCT#
+#####
+
+# Level 2
+#######
+#.....#
+#..C..#
+#.PTP.#
+#######
+
+# Level 3
+#####
+#C..#
+#.#.#
+#PTP#
+#####
+
+===========
+METADATA
+===========
+
+title Simple Sokoban
+author Game Designer AI
+
+```
+produced the following console output:
+=================================
+line 24 : Was looking for color for object TARGETCRATE, got "magenta" instead.
+line 41 : Was expecting a sound event (like SFX3, or ENDLEVEL) or an object name, but didn't find either.
+line 73 : Key "I" not found. Do you need to add it to the legend, or define a new object?
+line 73 : Key "N" not found. Do you need to add it to the legend, or define a new object?
+line 73 : Key "R" not found. Do you need to add it to the legend, or define a new object?
+line 73 : Key "O" not found. Do you need to add it to the legend, or define a new object?
+line 73 : Key "D" not found. Do you need to add it to the legend, or define a new object?
+too many errors, aborting compilation
+Errors detected during compilation; the game may not work correctly.
+Return a repaired version of the code that addresses these errors. First, reason about your task and determine the best plan of action. Then, write your code. Return your code in full, inside a ```plaintext code block.

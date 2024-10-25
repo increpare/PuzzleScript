@@ -1,0 +1,108 @@
+Sure! Below is a simple concept for a PuzzleScript game called "Gem Collector":
+
+```plaintext
+title Gem Collector
+author YourName
+
+========
+OBJECTS
+========
+
+Background
+darkgreen
+
+Wall
+grey
+00000
+0...0
+0...0
+0...0
+00000
+
+Player
+blue
+..0..
+.000.
+00000
+.000.
+..0..
+
+Gem
+yellow
+.....
+..0..
+.000.
+..0..
+.....
+
+CollectedGem
+lightyellow
+.....
+.....
+..0..
+.....
+.....
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Player
+* = Gem
+@ = CollectedGem
+
+=========
+SOUNDS
+=========
+
+Gem Collect 26037607
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Gem, CollectedGem
+Player, Wall
+
+======
+RULES
+======
+
+[ > Player | Gem ] -> [ > Player | CollectedGem ] Gem Collect
+
+==============
+WINCONDITIONS
+==============
+
+no Gem
+
+=======
+LEVELS
+=======
+
+#######
+#  *  #
+#. P .#
+#  *  #
+#######
+
+####
+#  #
+# *#
+#P#
+####
+
+######
+#    #
+# ** #
+# P  #
+#    #
+######
+
+message Collect all the gems!
+```
+
+This game involves a player character moving around a grid-based world collecting gems. The game ends when all the gems are collected. You can modify and expand upon this simple game to add more features or complexity.

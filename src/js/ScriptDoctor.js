@@ -632,7 +632,7 @@ async function genGame(genMode, parents, saveDir, seed, fewshot, cot, maxGenAtte
 
 
 const popSize = 3;
-const nGens = 10;
+const nGens = 20;
 
 async function evolve() {
   // Create an initial population of 10 games
@@ -676,7 +676,7 @@ async function sweep() {
   for (var fewshot_i = 0; fewshot_i < 2; fewshot_i++) {
     for (var cot_i = 0; cot_i < 2; cot_i++) {
       results[`fewshot-${fewshot_i}_cot-${cot_i}`] = [];
-      for (var gameIdx = 0; gameIdx < 10; gameIdx++) {
+      for (var gameIdx = 0; gameIdx < 16; gameIdx++) {
         saveDir = `sweep-${seed}`
         gameStr = `${saveDir}/fewshot-${fewshot_i}_cot-${cot_i}/game-${gameIdx}`;
         cot = cot_i == 1

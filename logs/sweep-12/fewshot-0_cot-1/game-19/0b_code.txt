@@ -1,0 +1,130 @@
+Creating a complete PuzzleScript game involves several components, including defining the title, author information, various game objects, rules, levels, and potentially some win conditions. Our goal is to create a simple yet complete PuzzleScript-based puzzle game.
+
+Let's break down the process:
+1. **Meta Information**: Define the title and author of the game.
+2. **Objects**: Define the sprites that will be present in the game. These usually include the player, walls, goals, and other necessary objects, such as boxes or targets in a Sokoban-style game.
+3. **Legend**: Establish what each character in the level maps to in terms of objects.
+4. **Sounds**: Define any sound effects for various events.
+5. **Collision Layers**: Organize the objects into layers that determine what can be on the same tile at the same time.
+6. **Rules**: Specify how the game reacts to player input; i.e., how objects move and interact.
+7. **Win Conditions**: Define what conditions must be met for a level to be considered complete.
+8. **Levels**: Create some levels for the game, using the defined objects and rules.
+
+For this exercise, let's stick with a simple and classic Sokoban-style game. The player must push boxes onto target spaces.
+
+Here's how the complete code might look:
+
+```plaintext
+title Sokoban Puzzle
+author Game Designer
+
+========
+OBJECTS
+========
+
+Background
+blue
+.
+Player
+green
+@111
+@111
+@111
+
+Wall
+black
+000
+000
+000
+
+Box
+brown
+BBB
+BBB
+BBB
+
+Target
+yellow
+...
+... 
+...
+
+BoxOnTarget
+brown yellow
+BBB
+BBB
+BBB
+
+============
+LEGEND
+============
+
+. = Background
+P = Player
+# = Wall
+B = Box
+T = Target
+X = BoxOnTarget
+
+===============
+SOUNDS
+===============
+
+==================
+COLLISIONLAYERS
+==================
+
+Background
+Player, Box, BoxOnTarget
+Wall
+Target
+
+========
+RULES
+========
+
+[Player | Box] -> [ | Player | Box]
+[Box | Target] -> [BoxOnTarget | Target]
+[BoxOnTarget] -> [Box | ]
+
+[Player | BoxOnTarget] -> [ | Player | BoxOnTarget]
+[Player | Target] -> [Target | Player]
+
+===============
+WINCONDITIONS
+===============
+
+All BoxOnTarget on Target
+
+========
+LEVELS
+========
+
+#######
+#.....#
+#..B..#
+#..P..#
+#..T..#
+#######
+
+#######
+#.....#
+#..P..#
+#..B..#
+#..T..#
+#..#..#
+#..#..#
+#######
+```
+
+### Explanation:
+
+- **Meta Information**: Simple metadata for the game.
+- **Objects**: Defined a player, wall, box, target, and a compound object for a box on target.
+- **Legend**: Connect each character used in level design with an in-game object.
+- **Collision Layers**: Specify which objects can stack and which cannot.
+- **Rules**: Basic movement rules are established, allowing players to push boxes and interact with targets.
+- **Win Conditions**: The player wins if all boxes are on targets.
+- **Levels**: Two simple levels demonstrating the concept. Players must push boxes onto targets to complete levels.
+
+This pseudo Sokoban game can be expanded with more levels and additional game mechanics, such as multiple boxes and players or more complex level structures.

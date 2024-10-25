@@ -1,0 +1,81 @@
+SYSTEM PROMPT:
+You are a game designer, familiar with the PuzzleScript game description language. 
+
+USER PROMPT:
+The following PuzzleScript game code:
+```plaintext
+#objects
+Background  .  Grey
+Player      P  Yellow
+Wall        W  Blue
+Key         K  Green
+Door        D  Red
+Goal        G  White
+
+#legend
+. = Background
+P = Player
+W = Wall
+K = Key
+D = Door
+G = Goal
+
+#sounds
+SFX1 WIN
+SFX2 CANCEL
+SFX3 UNDO
+SFX4 PUSH
+SFX5 MOVE
+SFX6 CREATE
+
+#rules
+[Player | Key] -> [Player | ]  SFX6
+[Player | Door with Key and Goal] -> [Player | Goal]  SFX1
+[Player | Door with Key] -> [Player | Background]  SFX5
+[Player | Door] -> [Player | Door]  SFX2 
+[Player] -> [Background]
+
+#winconditions
+All Goals
+
+#levels
+; Player must collect the key to open the door and reach the goal
+########
+#......#
+#.PKD..#
+#..GW..#
+#......#
+########
+
+; A slightly more challenging level with multiple keys and doors
+########
+#......#
+#..P...#
+#.K.WK.#
+#..WDW.#
+#.G....#
+#......#
+########
+
+; Introduce a maze-like level with keys and doors
+#############
+#...........#
+#..P.W.K....#
+#..WWWWW....#
+#..K.D.K.W..#
+#.WW.WD.W..G#
+#...........#
+#############
+
+```
+produced the following console output:
+=================================
+line 2 : Unrecognised stuff in the prelude.
+line 3 : Unrecognised stuff in the prelude.
+line 4 : Unrecognised stuff in the prelude.
+line 5 : Unrecognised stuff in the prelude.
+line 6 : Unrecognised stuff in the prelude.
+line 7 : Unrecognised stuff in the prelude.
+too many errors, aborting compilation
+Errors detected during compilation; the game may not work correctly.
+Return a repaired version of the code that addresses these errors. First, reason about your task and determine the best plan of action. Then, write your code. Return your code in full, inside a ```plaintext code block.

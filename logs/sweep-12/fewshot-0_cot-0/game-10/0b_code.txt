@@ -1,0 +1,110 @@
+```plaintext
+========
+title Simple Sokoban
+author OpenAI
+
+========
+homepage 
+www.puzzlescript.net
+
+========
+run_rules
+title Screen
+  check
+    no player on goal
+action
+  MESSAGE "The goal is to move all boxes onto the goals."
+
+========
+require_player_movement
+
+========
+background
+  black
+
+========
+collision_layers
+background
+player, wall, box, goal
+
+========
+legend
+. = background
+# = wall
+P = player
+B = box
+G = goal
+
+========
+sounds
+[Player Moving] 
+  [Player Victory] 
+  [Music] 
+
+========
+winconditions
+All boxes on goal
+
+========
+levels
+#####
+#...#
+#.#.#
+#...#
+#####
+
+
+#####
+#P..#
+#.#.#
+#B.G#
+#####
+
+#######
+#     #
+#  B  #
+# PBG #
+#######
+
+========
+objects
+Background
+ color black
+
+Wall
+ color gray
+
+Player
+ color purple
+
+
+Box
+ color orange
+
+Goal
+ color green
+
+========
+prelude
+========
+LAYER 0
+
+Background
+
+========
+LAYER 1
+
+Player aminates
+Wall
+
+========
+LAYER 2
+
+Goal
+
+========
+LAYER 3
+
+Box
+```
+This code defines a simple sokoban-style puzzle game using the PuzzleScript language. The player controls a character who must push boxes onto specific goal locations.

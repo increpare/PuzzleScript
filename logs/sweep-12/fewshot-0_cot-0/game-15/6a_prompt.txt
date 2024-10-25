@@ -1,0 +1,85 @@
+SYSTEM PROMPT:
+You are a game designer, familiar with the PuzzleScript game description language. 
+
+USER PROMPT:
+The following PuzzleScript game code:
+```plaintext
+========== 
+title Sliding Challenge
+author Game Designer
+homepage www.example.com
+==========
+==========
+objects
+==========
+Background
+black
+
+Player
+green
+
+Goal
+yellow
+
+Wall
+blue
+
+==========
+legend
+==========
+. = Background
+P = Player
+G = Goal 
+W = Wall
+
+==========
+sounds
+==========
+SFX3 MOVE 123456
+SFX1 ENDLEVEL 654321
+
+==========
+collisionlayers
+==========
+Background
+Player
+Goal
+Wall
+
+==========
+rules
+==========
+
+[> Player | ] -> [> Player | ]
+[< Player | ] -> [< Player | ]
+[^ Player | ] -> [^ Player | ]
+[v Player | ] -> [v Player | ]
+
+==========
+winconditions
+==========
+All Goal on Player
+
+==========
+levels
+==========
+..W..
+..W..
+P..G.
+..W..
+..W..
+
+..W..
+.P.W.
+..W..
+G..W.
+..W..
+
+
+```
+produced the following console output:
+=================================
+line 32 : Was expecting a sound seed here (a number like 123123, like you generate by pressing the buttons above the console panel), but found something else.
+line 33 : Was expecting a sound seed here (a number like 123123, like you generate by pressing the buttons above the console panel), but found something else.
+Errors detected during compilation; the game may not work correctly.
+Return a repaired version of the code that addresses these errors. Return your code in full, inside a ```plaintext code block.

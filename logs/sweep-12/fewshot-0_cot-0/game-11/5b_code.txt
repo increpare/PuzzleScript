@@ -1,0 +1,72 @@
+The errors in the provided PuzzleScript code arise from incorrectly formatted sections. Here is a corrected version of the code with proper formatting:
+
+```plaintext
+;;;;;;;;;;;;;;;;
+;; Sokoban Game ;;
+;;;;;;;;;;;;;;;;
+
+===OBJECTS===
+Background
+. 
+
+Wall
+######
+
+Target
+......
+
+Player
+P
+
+Crate
+o
+
+Crate_on_Target
+O
+
+Player_on_Target
+@
+
+===LEGEND===
+. = Background
+# = Wall
+o = Crate
+. = Target
+O = Crate_on_Target
+P = Player
+@ = Player_on_Target
+
+===COLLISIONLAYERS===
+Background
+Wall
+Player, Crate
+Target
+
+===RULES===
+[> Player | Crate] -> [> | Crate Player]
+[> Player | Wall] -> [> Player | Wall]
+
+[Player > | Crate] -> [Player Crate | >]
+[Player > | Wall] -> [Player > | Wall]
+
+[Player | Wall] -> [Player | Wall]
+[Player | Crate] -> [Player | Crate]
+
+===WINCONDITIONS===
+All Crate_on_Target
+
+===LEVELS===
+#####
+#...#
+#.#.#
+#.@.#
+#.$o.#
+#.@.#
+#.#.#
+#####
+```
+
+Key corrections:
+- `"===OBJECTS==="`, `"===LEGEND==="`, `"===COLLISIONLAYERS==="`, `"===RULES==="`, `"===WINCONDITIONS==="`, and `"===LEVELS==="` sections have been properly delimited and labeled.
+- Replaced `Crate_on_Target` and `Player_on_Target` symbols in `"===LEGEND==="` section to match the game legend correctly.
+- Fixed the collision layers to properly reflect associations and collisions between objects.

@@ -1,0 +1,116 @@
+SYSTEM PROMPT:
+You are a game designer, familiar with the PuzzleScript game description language. 
+
+USER PROMPT:
+The following PuzzleScript game code:
+```plaintext
+Title: Block Push
+
+Author: PuzzleScript
+
+===========
+OBJECTS
+===========
+
+Background
+WHITE
+.....
+
+Player
+RED
+..00.
+0000.
+0....
+000..
+.....
+
+Block
+BLUE
+..00.
+0000.
+0....
+000..
+.....
+
+Target
+YELLOW
+..00.
+0000.
+0....
+000..
+.....
+
+===========
+LEGEND
+===========
+
+. = Background
+P = Player
+B = Block
+T = Target
+
+===========
+SOUNDS
+===========
+
+===========
+
+COLLISIONLAYERS
+===========
+
+Background
+Target
+Player, Block
+
+===========
+RULES
+===========
+
+[ > P B ] -> [ > B P ]
+[ P | T ] -> [ T | P ]
+
+===========
+WINCONDITIONS
+===========
+
+All Blocks on Target
+
+===========
+LEVELS
+===========
+
+#####
+#..T#
+#PBT#
+#...#
+#####
+
+#######
+#..T..#
+#..B..#
+#..P..#
+#..B..#
+#..T..#
+#######
+
+#########
+#.......#
+#..T.B..#
+#.......#
+#..B.P..#
+#.......#
+#..T....#
+#########
+
+```
+produced the following console output:
+=================================
+line 70 : Error in win condition: "BLOCKS" is not a valid object name.
+line 76 : Key "#" not found. Do you need to add it to the legend, or define a new object?
+line 77 : Key "#" not found. Do you need to add it to the legend, or define a new object?
+line 78 : Key "#" not found. Do you need to add it to the legend, or define a new object?
+line 79 : Key "#" not found. Do you need to add it to the legend, or define a new object?
+line 80 : Key "#" not found. Do you need to add it to the legend, or define a new object?
+too many errors, aborting compilation
+Errors detected during compilation; the game may not work correctly.
+Return a repaired version of the code that addresses these errors. Return your code in full, inside a ```plaintext code block.

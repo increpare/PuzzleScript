@@ -1,0 +1,84 @@
+The error you encountered is due to the incorrect placement and formatting of the sound declaration. Here is a corrected version of the code:
+
+```plaintext
+title Star Collector
+author YourName
+
+========
+OBJECTS
+========
+
+Background
+white
+
+Wall
+black
+00000
+00000
+00000
+00000
+00000
+
+Player
+green
+..0..
+.000.
+.000.
+.000.
+.....
+
+Star
+yellow
+.....
+..0..
+.000.
+..0..
+.....
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Player
+* = Star
+
+=========
+SOUNDS
+=========
+
+collect 500000
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Player, Star
+Wall
+
+======
+RULES
+======
+
+[ > Player | Star ] -> [ > Player | ]
+
+==============
+WINCONDITIONS
+==============
+
+NO Star
+
+=======
+LEVELS
+=======
+
+#####
+#...#
+#.*.#
+#P*.#
+#####
+
+```
+In the corrected code, the `SOUNDS` section header has been changed from `SOUNDS` to `=========`. Ensure the sound section header reads as `=========`, and the placement of the `collect` sound follows that heading appropriately. Additionally, all sections of the script are appropriately delimited and correctly capitalized, corresponding to the usual syntax structure in PuzzleScript.

@@ -1,0 +1,99 @@
+The errors you're seeing are due to the incorrect syntax in the object definitions. PuzzleScript requires specific syntax for defining each object, which includes the object's name followed by its color and a pixel art representation. In your code, there's an invalid separator (`========`) between each object. You need to remove these separators and format each object correctly under the "OBJECTS" keyword. Here's the corrected code:
+
+```plaintext
+///////////////////////////////////////////////////////////////
+// PuzzleScript game definition for "Treasure Quest"
+///////////////////////////////////////////////////////////////
+
+// ======== OBJECTS ========
+OBJECTS
+Background
+transparent
+black
+
+Player
+red
+.111.
+..1..
+11111
+..1..
+.111.
+
+Wall
+grey
+00000
+00000
+00000
+00000
+00000
+
+Treasure
+yellow
+..2..
+.222.
+22222
+.222.
+..2..
+
+Lava
+orange
+.333.
+33333
+.333.
+33333
+.333.
+
+// ======== LEGEND ========
+LEGEND
+. = Background
+P = Player
+# = Wall
+T = Treasure
+L = Lava
+
+// ======== SOUNDS ========
+SOUNDS
+treasure
+  collect
+lava
+  explode
+
+// ======== COLLISIONLAYERS ========
+COLLISIONLAYERS
+Background
+Lava
+Wall
+Player
+Treasure
+
+// ======== RULES ========
+RULES
+[Player Treasure] -> SOUND treasure
+[Player Lava] -> SOUND lava DIE
+
+// ======== WINCONDITIONS ========
+WINCONDITIONS
+No Treasure
+
+// ======== LEVELS ========
+LEVELS
+// Level 1
+#######
+#.....#
+#..P..#
+#..T..#
+#.....#
+#.L.L.#
+#######
+
+// Level 2
+#######
+#.....#
+#..L..#
+#..P..#
+##..###
+#..T..#
+#######
+```
+
+This corrected version should compile without errors. The key changes are the removal of the invalid separators (`========`) and ensuring each object definition block follows the correct syntax under the "OBJECTS" header.

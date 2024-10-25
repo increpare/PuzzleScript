@@ -1,0 +1,95 @@
+SYSTEM PROMPT:
+You are a game designer, familiar with the PuzzleScript game description language. 
+
+USER PROMPT:
+The following PuzzleScript game code:
+```plaintext
+========== 
+title Sliding Challenge
+author Game Designer
+homepage www.example.com
+==========
+==========
+objects
+==========
+Background
+black
+
+Player
+green
+
+Goal
+yellow
+
+Wall
+blue
+
+==========
+legend
+==========
+. = Background
+P = Player
+G = Goal 
+W = Wall
+
+==========
+sounds
+==========
+move
+{
+  p ['push'] 0.1
+}
+win
+{
+  p 1
+}
+==========
+collisionlayers
+==========
+Background
+Player
+Goal
+Wall
+
+==========
+rules
+==========
+
+[> Player | ] -> [> Player | ]
+[< Player | ] -> [< Player | ]
+[^ Player | ] -> [^ Player | ]
+[v Player | ] -> [v Player | ]
+
+==========
+winconditions
+==========
+All Goal on Player
+
+==========
+levels
+==========
+..W..
+..W..
+P..G.
+..W..
+..W..
+
+..W..
+.P.W.
+..W..
+G..W.
+..W..
+
+```
+produced the following console output:
+=================================
+line 32 : unexpected sound token "move".
+line 33 : Was expecting a sound event (like SFX3, or ENDLEVEL) or an object name, but didn't find either.
+line 34 : Was expecting a soundverb here (MOVE, DESTROY, CANTMOVE, or the like), but found something else.
+line 35 : Was expecting a sound event (like SFX3, or ENDLEVEL) or an object name, but didn't find either.
+line 36 : unexpected sound token "win".
+line 37 : Was expecting a sound event (like SFX3, or ENDLEVEL) or an object name, but didn't find either.
+line 38 : Was expecting a soundverb here (MOVE, DESTROY, CANTMOVE, or the like), but found something else.
+line 39 : Was expecting a sound event (like SFX3, or ENDLEVEL) or an object name, but didn't find either.
+Errors detected during compilation; the game may not work correctly.
+Return a repaired version of the code that addresses these errors. Return your code in full, inside a ```plaintext code block.

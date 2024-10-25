@@ -1,0 +1,137 @@
+SYSTEM PROMPT:
+You are a game designer, familiar with the PuzzleScript game description language. 
+
+USER PROMPT:
+The following PuzzleScript game code:
+```plaintext
+Title: Sokoban Simple
+
+Author: PuzzleScript Dev
+
+===============
+OBJECTS
+===============
+
+Background
+WHITE
+.....
+.....
+.....
+.....
+.....
+
+Player
+GREEN
+.....
+..0..
+.000.
+..0..
+.....
+
+Wall
+BLACK
+.....
+00000
+00000
+00000
+.....
+
+Box
+ORANGE
+.....
+00000
+00000
+00000
+.....
+
+Target
+BLUE
+.....
+.....
+..00.
+..00.
+.....
+
+BoxOnTarget
+ORANGE
+.....
+00000
+00000
+00000
+.....
+
+===============
+LEGEND
+===============
+
+. = Background
+P = Player
+# = Wall
+B = Box
+T = Target
+O = BoxOnTarget
+
+===============
+SOUNDS
+===============
+
+SFX0 
+  MOVE 100
+SFX1
+  CRASH 100
+
+===============
+COLLISIONLAYERS
+===============
+
+Background
+Wall
+Target
+BoxOnTarget
+Box
+Player
+
+===============
+RULES
+===============
+
+[Player | Box] -> [ > Player | > Box]
+[Player | Target Box] -> [ > Player | > BoxOnTarget]
+[Player | BoxOnTarget] -> [ > Player | > BoxOnTarget]
+[Player | Target] -> [ > Player]
+[BoxOnTarget | Target] -> [ > BoxOnTarget]
+
+===============
+WINCONDITIONS
+===============
+
+All BoxOnTarget on Target
+
+===============
+LEVELS
+===============
+
+####
+#P #
+#B #
+#T #
+####
+
+#####
+#P  #
+# B #
+#   #
+##T##
+#####
+
+```
+produced the following console output:
+=================================
+line 73 : unexpected sound token "move".
+line 75 : unexpected sound token "crash".
+line 109 : Error, symbol " ", used in map, not found.
+line 116 : Error, symbol " ", used in map, not found.
+line 95 : In a rule, each pattern to match on the left must have a corresponding pattern on the right of equal length (number of cells).
+line 96 : In a rule, each pattern to match on the left must have a corresponding pattern on the right of equal length (number of cells).
+Errors detected during compilation; the game may not work correctly.
+Return a repaired version of the code that addresses these errors. Return your code in full, inside a ```plaintext code block.

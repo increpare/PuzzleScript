@@ -1,0 +1,116 @@
+SYSTEM PROMPT:
+You are a game designer, familiar with the PuzzleScript game description language. 
+
+USER PROMPT:
+The following PuzzleScript game code:
+```plaintext
+Title: Sokoban Puzzles
+
+Author: PuzzleScript Dev
+
+Homepage: https://www.puzzlescript.net
+
+________________________________
+===========
+OBJECTS
+===========
+Background
+transparent
+.
+
+Wall
+#000000
+####
+
+Player
+#FF0000
+..P..
+.PP..
+.PP..
+..P..
+
+Crate
+#00FF00
+..C..
+.CC..
+.CC..
+..C..
+
+Target
+#FFFF00
+$$$$
+
+CrateOnTarget
+#00FF00
+$$$$
+
+PlayerOnTarget
+#FF0000
+$$$$
+
+================
+LEGEND
+================
+. = Background
+# = Wall
+P = Player
+C = Crate
+$ = Target
+
+============== 
+SOUNDS
+==============
+SokobanMove
+PUSH
+
+=======
+RULES
+=======
+[Player | Crate] -> [Player | CrateOnTarget]
+[Player Crate | ] -> [ | Player Crate] PUSH
+[Player | Target] -> [PlayerOnTarget | Target]
+[PlayerOnTarget Crate | ] -> [ | PlayerOnTarget CrateOnTarget] PUSH
+[Crate Target] -> [CrateOnTarget]
+
+=======
+WINCONDITIONS
+=======
+All CrateOnTarget
+
+========
+LEVELS
+========
+########
+#....$ #
+#.C.P# #
+#.#### #
+#....# #
+########
+
+########
+#..$.  #
+#..$C# #
+#..P.# #
+#.#### #
+########
+
+########
+#....$ #
+#.C.P# #
+#.#### #
+#....## #
+######$
+
+```
+produced the following console output:
+=================================
+line 7 : Unrecognised stuff in the prelude.
+line 17 : Unknown junk in object section (possibly: sprites have to be 5 pixels wide and 5 pixels high exactly. Or maybe: the main names for objects have to be words containing only the letters a-z0.9 - if you want to call them something like ",", do it in the legend section).
+line 21 : Unknown junk in spritematrix for object PLAYER.
+line 22 : Unknown junk in spritematrix for object PLAYER.
+line 23 : Unknown junk in spritematrix for object PLAYER.
+line 24 : Unknown junk in spritematrix for object PLAYER.
+line 28 : Unknown junk in spritematrix for object CRATE.
+too many errors, aborting compilation
+Errors detected during compilation; the game may not work correctly.
+Return a repaired version of the code that addresses these errors. Return your code in full, inside a ```plaintext code block.

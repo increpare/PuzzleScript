@@ -1,0 +1,123 @@
+SYSTEM PROMPT:
+You are a game designer, familiar with the PuzzleScript game description language. 
+
+USER PROMPT:
+The following PuzzleScript game code:
+```plaintext
+===========
+title Key Quest
+===========
+
+===========
+objects
+===========
+
+Background
+..black..
+..black..
+..black..
+..black..
+..black..
+
+Wall
+..blue..
+..blue..
+..blue..
+..blue..
+..blue..
+
+Player
+..yellow..
+..yellow..
+..yellow..
+..yellow..
+..yellow..
+
+Key
+..green..
+..green..
+..green..
+..green..
+..green..
+
+Door
+..red..
+..red..
+..red..
+..red..
+..red..
+
+Exit
+..white..
+..white..
+..white..
+..white..
+..white..
+
+===========
+legends
+===========
+
+. = Background
+# = Wall
+P = Player
+k = Key
+D = Door 
+E = Exit
+
+===========
+rules
+===========
+
+# Basic Movement
+[ > Player | ] -> [ | Player > ]
+[ < Player | ] -> [ | Player < ]
+[ ^ Player | ] -> [ | Player ^ ]
+[ v Player | ] -> [ | Player v ]
+
+# Key Collection
+[ Player | Key ] -> [ Player | ]
+
+# Open Door when all keys are collected
+late [ Key ] -> [ Key ]
+[ Door ] -> [ Exit ]
+
+# Winning Condition
+[ Player | Exit ] -> win
+
+===========
+levels
+===========
+
+# Level 1
+#######
+#..k..#
+#.#.#.#
+#kP#kD#
+#.#.#.#
+#..k..#
+#######
+
+# Level 2
+#########
+#.....k.#
+#.###.#.#
+#..kP#k.#
+#.#.#.#.#
+#.k.k.k.#
+#.#####.#
+#......E#
+#########
+
+```
+produced the following console output:
+=================================
+line 10 : Was looking for color for object BACKGROUND, got "..black.." instead.
+line 11 : Unknown junk in spritematrix for object BACKGROUND.
+line 12 : Unknown junk in spritematrix for object BACKGROUND.
+line 13 : Unknown junk in spritematrix for object BACKGROUND.
+line 14 : Unknown junk in spritematrix for object BACKGROUND.
+line 17 : Was looking for color for object WALL, got "..blue.." instead.
+too many errors, aborting compilation
+Errors detected during compilation; the game may not work correctly.
+Return a repaired version of the code that addresses these errors. First, reason about your task and determine the best plan of action. Then, write your code. Return your code in full, inside a ```plaintext code block.

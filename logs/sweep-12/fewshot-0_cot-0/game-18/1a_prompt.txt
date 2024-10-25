@@ -1,0 +1,79 @@
+SYSTEM PROMPT:
+You are a game designer, familiar with the PuzzleScript game description language. 
+
+USER PROMPT:
+The following PuzzleScript game code:
+```plaintext
+[Title]
+Gem Collector
+
+[Author]
+PuzzleScript Developer
+
+[Homepage]
+http://www.puzzlescript.net
+
+[Background]
+You are on a quest to collect all the gems. Beware of the moving enemy bots!
+
+[Legend]
+. = Background
+P = Player
+G = Gem
+E = EnemyBot
+# = Wall
+
+[Sounds]
+crateMoveP = push1
+gemCollectP = pickup2
+enemyCatchP = die
+
+[CollisionLayers]
+Background
+Player, Gem, EnemyBot, Wall
+
+[Rules]
+Player > Gem → Player (message "Gem collected!") gemCollectP
+Player > EnemyBot → restart (message "Caught by an enemy!") enemyCatchP
+
+// Enemy Automatic Movement
+EnemyBot no Player → no Player | EnemyBot north
+EnemyBot no Player → no Player | EnemyBot south
+
+[WinConditions]
+All Gem
+
+[Levels]
+
+// Level 0
+#####
+#...#
+#.P.#
+#...#
+#####
+
+// Level 1
+######
+#P..G#
+#..E.#
+#...##
+######
+
+# Add more levels as needed
+
+[Text]
+title Win [Win]
+text You collected all the gems!
+
+```
+produced the following console output:
+=================================
+line 2 : Unrecognised stuff in the prelude.
+line 5 : Unrecognised stuff in the prelude.
+line 8 : Unrecognised stuff in the prelude.
+line 11 : Unrecognised stuff in the prelude.
+line 15 : Unrecognised stuff in the prelude.
+line 16 : Unrecognised stuff in the prelude.
+too many errors, aborting compilation
+Errors detected during compilation; the game may not work correctly.
+Return a repaired version of the code that addresses these errors. Return your code in full, inside a ```plaintext code block.

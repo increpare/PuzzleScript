@@ -1,0 +1,86 @@
+Certainly! It looks like there are some issues with the input you provided regarding the structure and ordering of the sections. Let's fix those errors in the code for the PuzzleScript game:
+
+```plaintext
+========
+title Simple Sokoban
+author OpenAI
+
+========
+homepage
+http://www.puzzlescript.net
+
+========
+require_player_movement
+
+========
+background
+black
+
+========
+collision_layers
+background
+player, wall, box, goal
+
+========
+legend
+. = background
+# = wall
+P = player
+B = box
+G = goal
+
+========
+sounds
+# Include music and sound effects if desired
+# (e.g., [Player Moving] [Player Victory] [Music])
+
+========
+winconditions
+All box on goal
+
+========
+levels
+#####
+#...#
+#.#.#
+#...#
+#####
+
+#####
+#P..#
+#.#.#
+#B.G#
+#####
+
+#######
+#     #
+#  B  #
+# PBG #
+#######
+
+========
+objects
+Background
+ color black
+
+Wall
+ color gray
+
+Player
+ color purple
+
+Box
+ color orange
+
+Goal
+ color green
+
+========
+```
+
+Key Adjustments:
+- Removed the incorrect `run_rules` section and its contents as it was incorrectly placed and without a proper context.
+- Ensured sections are properly separated by `========`.
+- Made sure all defined sections have correct syntax and are properly structured.
+
+This should fix the errors and allow the game to compile and run correctly.

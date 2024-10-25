@@ -1,0 +1,95 @@
+Here's the corrected version of your PuzzleScript game code. I have added the missing "SOUNDS" section (even though it's empty), and ensured that the object names in the rules section are correctly capitalized as defined in the OBJECTS section.
+
+```plaintext
+Title: Simple Sokoban
+
+Author: PuzzleScript Creator
+
+Homepage: puzzlescript.net
+
+=========
+OBJECTS
+=========
+
+Background
+lightblue
+
+Wall
+black
+
+Crate
+brown
+
+CrateOnTarget
+yellow
+
+Target
+green
+
+Player
+red
+
+PlayerOnTarget
+pink
+
+=========
+LEGEND
+=========
+
+. = Background
+# = Wall
+B = Crate
+O = CrateOnTarget
+T = Target
+P = Player
+@ = PlayerOnTarget
+
+=========
+SOUNDS
+=========
+
+========= 
+COLLISIONLAYERS 
+========= 
+
+Background
+Wall
+Target
+Player, PlayerOnTarget
+Crate, CrateOnTarget
+
+=========
+RULES
+=========
+
+[ > Player | Crate ] -> [ > Player | > Crate ]
+[ > PlayerOnTarget | Crate ] -> [ > PlayerOnTarget | > Crate ]
+
+[ > Player | CrateOnTarget ] -> [ > Player | > CrateOnTarget ]
+[ > PlayerOnTarget | CrateOnTarget ] -> [ > PlayerOnTarget | > CrateOnTarget ]
+
+[ Target | Player ] -> [ PlayerOnTarget ]
+[ PlayerOnTarget ] -> [ Player ]
+
+[ Target | Crate ] -> [ CrateOnTarget ]
+[ CrateOnTarget ] -> [ Crate ]
+
+=========
+WINCONDITIONS
+=========
+
+All CrateOnTarget
+
+=========
+LEVELS
+=========
+
+#####
+#...#
+#.#.#
+#PB.#
+#####
+
+```
+
+This should resolve the issues you encountered and allow your game to compile correctly.

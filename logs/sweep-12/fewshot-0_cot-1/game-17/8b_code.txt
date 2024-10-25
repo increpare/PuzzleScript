@@ -1,0 +1,113 @@
+To address the errors mentioned in the console output, we need to correct unspecified symbols in the provided level maps. The error specifically points to spaces (" ") used in the levels that are not defined in the legend. The `E` was incorrectly used as a space character in the ORIGINAL `LEGEND`, which intended to signify an empty space aliasing to a `Background`. The intended empty space character is traditionally `_`, as seen in `LEGEND`. We need to replace `E` with `_` in the `LEVELS` maps.
+
+Here's the repaired version of the code:
+
+```plaintext
+===========
+OBJECTS
+===========
+Background
+black
+.....
+.....
+.....
+.....
+.....
+
+Player
+LightGreen
+.....
+..0..
+.000.
+..0..
+.....
+
+Wall
+Gray
+.....
+00000
+00000
+00000
+.....
+
+Box
+Brown
+.....
+..0..
+.000.
+..0..
+.....
+
+Target
+Red
+.....
+.....
+..0..
+.....
+.....
+
+BoxOnTarget
+Brown Red
+.....
+..0..
+..1..
+..0..
+.....
+
+===========
+LEGEND
+===========
+. = Background
+P = Player
+# = Wall
+B = Box
+T = Target
+O = BoxOnTarget
+_ = Background
+
+===========
+SOUNDS
+===========
+
+===========
+COLLISIONLAYERS
+===========
+Background
+Target
+Wall
+Box, BoxOnTarget
+Player
+
+===========
+RULES
+===========
+[> Player | _] -> [_ | > Player]
+[> Player | Box | _] -> [_ | > Player | Box]
+
+[Player | Target] -> [Player | Target]
+[Box | Target] -> [BoxOnTarget | Target]
+
+[Player | BoxOnTarget] -> [Player | BoxOnTarget]
+
+===========
+WINCONDITIONS
+===========
+All BoxOnTarget
+
+===========
+LEVELS
+===========
+# # # # #
+# _ _ _ #
+# _ T _ #
+# B _ P #
+# # # # #
+
+# # # # #
+# _ T _ #
+# _ B P #
+# T _ _ #
+# # # # #
+```
+
+The main change was to replace all instances of `E` with `_` in the `LEVELS` section to match the correct symbol for the empty space as defined in the `LEGEND`. This should resolve the reported errors.

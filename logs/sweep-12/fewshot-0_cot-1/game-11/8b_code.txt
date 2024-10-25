@@ -1,0 +1,74 @@
+The errors in the PuzzleScript code are primarily focused on the formatting of the object representations. In PuzzleScript, the definition of an object has several components, including a name, color, visual representation, and optionally a legend character. Each object should be defined using only relevant lines, without excess visual appearance blocks. 
+
+The initial code mistakenly includes sections like `%%%%%` and `.....` which are not appropriate or necessary for object definitions. These lines have caused the "Unrecognised stuff in the prelude" errors. I will remove these extraneous lines from each object definition.
+
+Additionally, the collision layer sections and rest of the logic need checking to ensure validity, but they seem proper in this context.
+
+Here’s the corrected version of the PuzzleScript code:
+
+```plaintext
+Title: Box Mover
+
+# =========OBJECTS========
+Background
+transparent
+
+Target
+yellow
+T
+
+Box
+brown
+o
+
+Player
+red
+P
+
+Wall
+black
+#
+
+# =========LEGEND==========
+. = Background
+P = Player
+o = Box
+T = Target
+# = Wall
+
+# ========COLLISION LAYERS=========
+Background
+Target
+Player
+Box
+Wall
+
+# =========RULES==========
+[> Player | Box] -> [> Player | > Box]
+[Box | Target] -> [Background | Target]
+
+# =========WINCONDITIONS==========
+All Box on Target
+
+# =========LEVELS=========
+
+# Level 1
+#######
+#     #
+#  T  #
+# o   #
+#     #
+# P   #
+#######
+
+# Level 2
+#######
+#     #
+#  To #
+#     #
+#     #
+# P   #
+#######
+```
+
+All extraneous lines related to object definitions have been removed to fix the errors. The object definitions now only include a name, color, and a single visual character line as intended by PuzzleScript syntax.

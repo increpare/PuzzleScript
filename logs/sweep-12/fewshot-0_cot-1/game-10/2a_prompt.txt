@@ -1,0 +1,127 @@
+SYSTEM PROMPT:
+You are a game designer, familiar with the PuzzleScript game description language. 
+
+USER PROMPT:
+The following PuzzleScript game code:
+```plaintext
+# Simple Sokoban PuzzleScript Game
+
+Title: Simple Sokoban
+Author: Game Designer
+Homepage: puzzlers.org
+
+===========
+OBJECTS
+===========
+
+Background
+WHITE
+
+Wall
+GRAY
+
+Player
+BLUE
+
+Box
+BROWN
+
+Target
+YELLOW
+
+BoxOnTarget
+ORANGE
+
+PlayerOnTarget
+GREEN
+
+===========
+LEGEND
+===========
+
+. = Background
+# = Wall
+P = Player
+B = Box
+T = Target
+O = BoxOnTarget
+* = PlayerOnTarget
+
+===========
+# Removed the SOUNDS section as no sounds are defined.
+
+===========
+COLLISIONLAYERS
+===========
+
+Background
+Wall
+Target
+Box, BoxOnTarget
+Player, PlayerOnTarget
+
+===========
+RULES
+===========
+
+# Player movement
+[Player | ] -> [ | Player]
+[ | Player] -> [Player |]
+[PlayerOnTarget | ] -> [Target | Player]
+[ | PlayerOnTarget] -> [Player | Target]
+
+# Box pushing
+[Player | Box | ] -> [ | Player | Box]
+[PlayerOnTarget | Box | ] -> [Target | Player | Box]
+[Player | Box | Target] -> [ | Player | BoxOnTarget]
+[PlayerOnTarget | Box | Target] -> [Target | Player | BoxOnTarget]
+
+# Updating state when boxes move onto targets
+[Box | Target] -> [BoxOnTarget]
+[BoxOnTarget | ] -> [Box |]
+[Player | BoxOnTarget] -> [ | Player | Box]
+[PlayerOnTarget | BoxOnTarget] -> [Target | Player | Box]
+
+===========
+WINCONDITIONS
+===========
+
+All BoxOnTarget
+
+===========
+LEVELS
+===========
+
+# Level 1
+#####
+#   #
+# B.#
+# PT#
+#####
+
+# Level 2
+#######
+#     #
+# BP  #
+# ..  #
+#######
+
+# Level 3
+#####
+#P  #
+# B #
+#.. #
+#####
+
+```
+produced the following console output:
+=================================
+line 45 : In the legend, define new items using the equals symbol - declarations must look like "A = B", "A = B or C [ or D ...]", "A = B and C [ and D ...]".
+line 45 : Incorrect format of legend - should be one of "A = B", "A = B or C [ or D ...]", "A = B and C [ and D ...]", but it looks like you have a dangling "ERROR"?
+line 48 : section "COLLISIONLAYERS" is out of order, must follow  "SOUNDS" (or it could be that the section "SOUNDS"is just missing totally.  You have to include all section headings, even if the section itself is empty).
+line 61 : Name "#", referred to in a rule, does not exist.
+line 61 : Name "player", referred to in a rule, does not exist.
+line 61 : Name "movement", referred to in a rule, does not exist.
+too many errors, aborting compilation
+Errors detected during compilation; the game may not work correctly.
+Return a repaired version of the code that addresses these errors. First, reason about your task and determine the best plan of action. Then, write your code. Return your code in full, inside a ```plaintext code block.

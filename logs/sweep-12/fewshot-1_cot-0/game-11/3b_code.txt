@@ -1,0 +1,106 @@
+Below is the repaired version of the PuzzleScript game code. The issues are addressed by ensuring that the `CollectedGem` object has a properly specified color, updating the sound rule format, and ensuring the maps are rectangular. Additionally, unused symbols in maps were replaced by background symbols.
+
+```plaintext
+title Gem Collector
+author YourName
+
+========
+OBJECTS
+========
+
+Background
+darkgreen
+
+Wall
+grey
+00000
+0...0
+0...0
+0...0
+00000
+
+Player
+blue
+..0..
+.000.
+00000
+.000.
+..0..
+
+Gem
+yellow
+.....
+..0..
+.000.
+..0..
+.....
+
+CollectedGem
+lightyellow
+.....
+.....
+..0..
+.....
+.....
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Player
+* = Gem
+@ = CollectedGem
+
+=========
+SOUNDS
+=========
+
+gemCollected 26037607
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Gem, CollectedGem
+Player, Wall
+
+======
+RULES
+======
+
+[ > Player | Gem ] -> [ > Player | CollectedGem ] gemCollected
+
+==============
+WINCONDITIONS
+==============
+
+no Gem
+
+=======
+LEVELS
+=======
+
+#######
+#.....#
+#.*.*.#
+#.P.*.#
+#######
+
+#####
+#...#
+#.*.#
+#P..#
+#####
+
+######
+#....#
+#.*.*#
+#P...#
+#....#
+######
+
+message Collect all the gems!
+```

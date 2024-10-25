@@ -1,0 +1,123 @@
+The errors you encountered are due to incorrect color specifications for the "Wall" and "Box" objects. In PuzzleScript, each pixel in the sprite art should be represented by a number corresponding to a color defined for that object. If you specify numbers that exceed the number of defined colors, you'll get errors as seen in your output. 
+
+The errors show that you attempted to use colors labeled "2" for the "Wall" sprite and "6" for the "Box" sprite, which aren't defined. Since each sprite has only one color defined (BLACK for Wall and ORANGE for Box), the sprites should use only '0' to represent those colors.
+
+Here's the corrected version of your code:
+
+```plaintext
+Title: Sokoban Simple
+
+Author: PuzzleScript Dev
+
+===============
+OBJECTS
+===============
+
+Background
+WHITE
+.....
+
+Player
+GREEN
+..0..
+.000.
+..0..
+.....
+.....
+
+Wall
+BLACK
+00000
+00000
+00000
+00000
+00000
+
+Box
+ORANGE
+00000
+00000
+00000
+00000
+00000
+
+Target
+BLUE
+.....
+..77.
+..77.
+.....
+
+BoxOnTarget
+LIGHTORANGE
+55555
+55555
+55555
+55555
+55555
+
+===============
+LEGEND
+===============
+
+. = Background
+P = Player
+# = Wall
+B = Box
+T = Target
+O = BoxOnTarget
+
+===============
+SOUNDS
+===============
+
+Move Player
+  MOVE 100
+Restart
+  CRASH 100
+
+===============
+COLLISIONLAYERS
+===============
+
+Background
+Wall
+Target BoxOnTarget
+Box
+Player
+
+===============
+RULES
+===============
+
+[Player | Box] -> [ > Player | > Box]
+[Player | Target Box] -> [ > Player | > BoxOnTarget]
+[Player | BoxOnTarget] -> [ > Player | > BoxOnTarget]
+[Player | Target] -> [ > Player]
+[BoxOnTarget | Target] -> [Target | BoxOnTarget]
+
+===============
+WINCONDITIONS
+===============
+
+All BoxOnTarget on Target
+
+===============
+LEVELS
+===============
+
+####
+#P  #
+# B #
+# T #
+####
+
+####
+#P  #
+# B #
+#   #
+##T##
+####
+```
+
+This code corrects the sprite definitions by using '0' to represent the BLACK color for Wall and the ORANGE color for Box. This should resolve the compilation errors.
