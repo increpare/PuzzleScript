@@ -200,6 +200,10 @@ def gen_game():
     if text == '':
         breakpoint()
     code, plaintext = extract_ps_code(text)
+    if 'randomDir' in code:
+        skip = True
+    else:
+        skip = False
     # If the code we just generated has already been solved, pass it to the client so it doesn't apply the solver to it
     sols_path = os.path.join(save_dir, f'{n_iter}e_sols.json')
     if os.path.exists(sols_path):
@@ -211,6 +215,7 @@ def gen_game():
         'code': code,
         'text': plaintext,
         'sols': sols,
+        'skip': skip,
     })
 
 

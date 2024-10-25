@@ -1,0 +1,106 @@
+Certainly! Here is a corrected version of your PuzzleScript game code that ensures each level is solvable:
+
+```plaintext
+title Maze Explorer
+author YourName
+
+========
+OBJECTS
+========
+
+Background
+lightgreen
+.....
+.....
+.....
+.....
+.....
+
+Wall
+darkgrey
+.....
+.....
+.....
+.....
+.....
+
+Player
+blue
+.....
+..0..
+.000.
+..0..
+.....
+
+Goal
+yellow
+.....
+.....
+..0..
+.....
+.....
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Player
+G = Goal
+
+=========
+SOUNDS
+=========
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Player, Goal
+Wall
+
+======
+RULES
+======
+
+[ > Player | ] -> [ > Player | ]
+
+late [ Player Wall ] -> restart
+
+==============
+WINCONDITIONS
+==============
+
+Some Player on Goal
+
+=======
+LEVELS
+=======
+
+######
+#....#
+#..#P#
+#..#.#
+#..G.#
+######
+
+######
+#P.#.#
+#.##.#
+.#...#
+#.##.#
+#..G.#
+######
+
+######
+#P...#
+#.####
+#.#..#
+#..G.#
+######
+
+```
+
+I have adjusted the layout of the levels to ensure that there is a clear path for the `Player` (P) to reach the `Goal` (G). Please verify if the corrected levels meet your requirements. If you need further changes, let me know!

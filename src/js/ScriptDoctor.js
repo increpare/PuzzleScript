@@ -20,11 +20,12 @@ function getConsoleText() {
 }
 
 class GameIndividual {
-  constructor(code, fitness, compiledIters, solvedIters) {
+  constructor(code, fitness, compiledIters, solvedIters, skipped) {
     this.code = code;
     this.fitness = fitness;
     this.compiledIters = compiledIters;
     this.solvedIters = solvedIters;
+    this.skipped = skipped;
   }
 }
 
@@ -450,6 +451,10 @@ async function solveLevel(level) {
     // const level = frontier.shift();
     // const action_seq = action_seqs.shift();
     for (const move of Array(5).keys()) {
+      if (i > 1_000_000) {
+        console.log('Exceeded 2M iterations. Exiting.');
+        return [-1, i];
+      }
       restoreLevel(level);
       new_action_seq = action_seq.slice();
       new_action_seq.push(move);
@@ -530,6 +535,9 @@ async function genGame(genMode, parents, saveDir, seed, fewshot, cot, maxGenAtte
     }
     code = data.code;
     sols = data.sols;
+    if (data.skip) {
+      return new GameIndividual(code, -1, [], [], true);
+    }
     errorLoadingLevel = false;
     try {
       editor.setValue(code);
@@ -601,7 +609,11 @@ async function genGame(genMode, parents, saveDir, seed, fewshot, cot, maxGenAtte
           // console.log('Level is solvable.');
           solverText += `Found solution for level ${level_i} in ${n_search_iters} iterations: ${sol}. `
           anySolvable = true;
-        } else {
+        } else if (sol == -1) {
+          solvable = false;
+          solverText += `Hit maximum search depth of ${i} while attempting to solve ${level_i}. Are you sure it's solvable? If so, please make it a bit simpler.`
+        }
+        else {
           // console.log(`Level ${level_i} is not solvable.`);
           solvable = false;
           solverText += ` Level ${level_i} is not solvable. Please repair it.`
@@ -627,7 +639,7 @@ async function genGame(genMode, parents, saveDir, seed, fewshot, cot, maxGenAtte
 
     nGenAttempts++;
   }
-  return new GameIndividual(code, fitness, compiledIters, solvedIters);
+  return new GameIndividual(code, fitness, compiledIters, solvedIters, false);
 }
 
 
@@ -676,7 +688,7 @@ async function sweep() {
   for (var fewshot_i = 0; fewshot_i < 2; fewshot_i++) {
     for (var cot_i = 0; cot_i < 2; cot_i++) {
       results[`fewshot-${fewshot_i}_cot-${cot_i}`] = [];
-      for (var gameIdx = 0; gameIdx < 16; gameIdx++) {
+      for (var gameIdx = 0; gameIdx < 20; gameIdx++) {
         saveDir = `sweep-${seed}`
         gameStr = `${saveDir}/fewshot-${fewshot_i}_cot-${cot_i}/game-${gameIdx}`;
         cot = cot_i == 1

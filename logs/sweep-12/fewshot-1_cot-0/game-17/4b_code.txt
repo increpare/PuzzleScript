@@ -1,0 +1,81 @@
+Certainly! Here is the corrected version of your PuzzleScript code, addressing all the errors:
+
+```plaintext
+========
+OBJECTS
+========
+
+Background
+lightgrey
+00000
+00000
+00000
+00000
+00000
+
+Star
+black yellow
+..0..
+.010.
+00100
+.010.
+..0..
+
+Player
+blue
+..0..
+.000.
+00000
+.000.
+..0..
+
+=======
+LEGEND
+=======
+
+. = Background
+P = Player
+* = Star
+
+=======
+SOUNDS
+=======
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Player, Star
+
+======
+RULES
+======
+
+[ Player | Star ] -> [ Player ]
+
+==============
+WINCONDITIONS
+==============
+
+no Star
+
+=======
+LEVELS
+=======
+
+..........
+...*......
+..........
+.....P....
+..........
+..........
+
+```
+
+### Changes Made:
+1. **Order of Sections**: Added an empty `SOUNDS` section before `COLLISIONLAYERS`, as PuzzleScript requires all section headings, even if they are not used.
+2. **Case Sensitivity**: Ensured that object names in rules and win conditions are capitalized as they are defined (e.g., `Player`, `Star`).
+3. **Rule Correction**: Ensured the rule `[ Player | Star ] -> [ Player ]` has matching case for `Player` and `Star` to avoid errors.
+
+Now the script should compile and run without errors.

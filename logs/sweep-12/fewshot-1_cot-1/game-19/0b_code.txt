@@ -1,0 +1,150 @@
+To create a complete PuzzleScript game, we should begin by determining the concept, mechanics, and goals of the game. Since PuzzleScript is well-suited for puzzle and block-pushing games, we'll design a simple game called "Gem Collector". The objective will be for the player to collect all the gems on the board and reach a goal tile.
+
+### Game Design:
+
+1. **Theme**: The player is a collector in a cave filled with colorful gems.
+2. **Objective**: Collect all gems and reach the goal.
+3. **Mechanics**:
+   - The player can move up, down, left, and right.
+   - Gems are collected when the player steps on their tile.
+   - The level is completed when all gems are collected and the player reaches the goal tile.
+4. **Obstacles**: Walls and boulders block the player's path.
+5. **Visuals**: Use colors to distinguish different elements like the player, gems, walls, and goal.
+
+### Implementation Plan:
+
+1. **Define Objects**: Create visual representations for the player, gems, walls, boulders, and goal.
+2. **Specify Legend**: Create shorthand symbols for each object for easier level design.
+3. **Collision Layers**: Set layers to control which objects can overlap.
+4. **Rules**: Define movement and collection rules.
+5. **Win Conditions**: Define how the player wins a level.
+6. **Levels**: Design a series of levels with increasing complexity.
+
+### Code:
+
+```plaintext
+title Gem Collector
+author YourName
+homepage www.example.com
+
+========
+OBJECTS
+========
+
+Background
+black
+
+Player
+yellow
+.000.
+.111.
+.111.
+.000.
+.....
+
+Wall
+grey
+00000
+01110
+01110
+01110
+00000
+
+Boulder
+darkgrey
+..0..
+.000.
+00000
+.000.
+..0..
+
+Gem
+cyan
+.....
+..0..
+.010.
+..0..
+.....
+
+Goal
+green
+.....
+..1..
+.111.
+..1..
+.....
+
+=======
+LEGEND
+=======
+
+. = Background
+P = Player
+# = Wall
+B = Boulder
+* = Gem
+G = Goal
+
+=======
+SOUNDS
+=======
+
+Gem Collect 12345678
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Gem
+Player, Boulder, Wall, Goal
+
+======
+RULES
+======
+
+# Movement
+[ > Player | ] -> [ > Player | ]
+
+# Gem collection
+[ Player | Gem ] -> [ Player ]
+
+==============
+WINCONDITIONS
+==============
+
+no Gem some Player on Goal
+
+=======
+LEVELS
+=======
+
+#########
+#.......#
+#.P.*G..#
+#...#####
+#.*.#.B*#
+#.......#
+#########
+
+#########
+#.......#
+#.P....*#
+#...#####
+#.B.#...#
+#...G...#
+#.#.B#..#
+#...*...#
+#########
+
+#########
+#.......#
+#..#.G*..#
+#..#####.#
+#*...P..*#
+#.B#B#..#
+#.......#
+#########
+```
+
+This code block represents a simple puzzle game where the player collects all gems and reaches the goal to win. The game consists of different elements represented by colors, and a few levels that demonstrate the core mechanics.

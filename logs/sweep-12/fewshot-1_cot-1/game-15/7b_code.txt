@@ -1,0 +1,117 @@
+The error message indicates that the rule `[ Player Goal ] -> [ Player Background ]` is problematic because it isn't possible to replace `Goal` while simultaneously keeping the `Player` at the same cell. The rule also shouldn't set `Goal` to `Background`, because logically that would make the `Goal` behave as an empty space.
+
+Instead, we need to adjust this win condition by ensuring that the player still interacts with the goal properly. A better way would be to set a specific win condition that checks when the player is on the goal. Then we remove any rules that try to overwrite the `Goal` layer directly.
+
+Let's address this by implementing a correct win condition that detects when the player reaches a position overlapping with the `Goal`.
+
+Here's the revised code:
+
+```plaintext
+title Maze Explorer
+author YourName
+
+========
+OBJECTS
+========
+
+Background
+lightgreen
+.....
+.....
+.....
+.....
+.....
+
+Wall
+darkgrey
+.....
+.....
+.....
+.....
+.....
+
+Player
+blue
+.....
+..0..
+.000.
+..0..
+.....
+
+Goal
+yellow
+.....
+.....
+..0..
+.....
+.....
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Player
+G = Goal
+
+=========
+SOUNDS
+=========
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Player, Goal
+Wall
+
+======
+RULES
+======
+
+[ > Player | ] -> [ > Player | ]
+
+late [ Player Wall ] -> restart
+
+==============
+WINCONDITIONS
+==============
+
+Some Player on Goal
+
+=======
+LEVELS
+=======
+
+######
+#....#
+#..#P#
+#.#..#
+#..G.#
+######
+
+######
+#P.#.#
+#.####
+#....#
+#.##.#
+#..G.#
+######
+
+######
+#P.#.#
+#.####
+#.#..#
+#..G.#
+######
+```
+
+**Changes Made:**
+
+1. Removed the rule `[ Player Goal ] -> [ Player Background ]` since it was causing the overlap issue.
+2. Adjusted the win condition to `Some Player on Goal`. This checks if the player successfully moves onto the goal, which implicitly achieves the game's objective without modifying the `Goal` object.
+3. Kept the existing late restart rule for when `Player` touches a `Wall`—this ensures that levels will automatically reset when this happens.
+   
+These changes ensure the game can correctly detect and handle the win condition without needing to replace the `Goal` object directly, fixing the compilation error you encountered.

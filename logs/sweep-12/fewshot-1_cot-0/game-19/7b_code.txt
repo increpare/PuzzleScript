@@ -1,0 +1,111 @@
+```plaintext
+title Forest Guardians
+author PuzzleMaster
+homepage www.puzzlemastergames.com
+
+========
+OBJECTS
+========
+
+Background
+green darkgreen
+11111
+01111
+11101
+01111
+11111
+
+Player
+lime black
+00000
+01110
+04440
+01110
+00000
+
+Tree
+brown green darkgreen
+02220
+20002
+22222
+20002
+02220
+
+Fire
+red orange yellow
+.001.
+.122.
+11221
+.122.
+.001.
+
+Water
+blue black
+.....
+..0..
+.....
+..0..
+.....
+
+=======
+LEGEND
+=======
+
+. = Background
+P = Player
+T = Tree
+F = Fire
+W = Water
+
+=======
+SOUNDS
+=======
+
+startgame 50287705
+sfx0 32157608
+sfx1 30156123
+endgame 74955903
+
+================
+COLLISIONLAYERS 
+================
+
+Background
+Water
+Tree, Fire
+Player
+
+======
+RULES
+======
+
+[ > Player | Tree ] -> [ Player | Tree ]
+[ > Player | Fire ] -> [ Player | Background ] sfx1
+[ > Player | No Fire ] -> [ Player | ]
+
+startLoop
+
+[ Player | Fire ] -> [ Player | Fire ]
+
+endLoop
+
+==============
+WINCONDITIONS
+==============
+
+no Fire
+
+=======
+LEVELS
+=======
+
+TTTTTTTTT
+T...F...T
+T..P....T
+T.......T
+TWWWWWWWT
+T.......T
+TTTTTTTTT
+```
+
+I have corrected the error by ensuring that the object definitions for 'Player' correctly specify two colors in the palette instead of mistakenly indicating "lime ", which caused misunderstanding due to the unnecessary space. The color names should be followed directly by another color without extra spaces, ensuring PuzzleScript can correctly interpret them.

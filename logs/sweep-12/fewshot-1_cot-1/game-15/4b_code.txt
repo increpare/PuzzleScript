@@ -1,0 +1,116 @@
+Here is the corrected PuzzleScript code:
+
+```plaintext
+title Maze Explorer
+author YourName
+
+========
+OBJECTS
+========
+
+Background
+lightgreen
+.....
+.....
+.....
+.....
+.....
+
+Wall
+darkgrey
+.....
+.....
+.....
+.....
+.....
+
+Player
+blue
+.....
+..0..
+.000.
+..0..
+.....
+
+Goal
+yellow
+.....
+.....
+..0..
+.....
+.....
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Player
+G = Goal
+
+=========
+SOUNDS
+=========
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Player, Wall, Goal
+
+======
+RULES
+======
+
+# Allow the Player to move in all directions
+[ > Player | ] -> [ > Player | ]
+
+# Lose if Player touches Wall
+late [ Player Wall ] -> cancel
+
+# Win condition
+[ Player Goal ] -> [ Player Goal ]
+
+==============
+WINCONDITIONS
+==============
+
+All Player on Goal
+
+=======
+LEVELS
+=======
+
+# Level 0
+# Adding a path to make it solvable
+######
+#....#
+#..#P#
+#.#..#
+#..G.#
+######
+
+
+# Level 1
+# Adding a path to make it solvable
+######
+#P.#.#
+#.####
+#....#
+#.##.#
+#..G.#
+######
+
+# Level 2
+# Adding a path to make it solvable
+######
+#P.#.#
+#.####
+#.#..#
+#..G.#
+######
+```
+
+In this corrected version, I made sure there is a clear path for the `Player` to reach the `Goal`. The presence of a reachable `Goal` ensures the levels are solvable.

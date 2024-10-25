@@ -1,0 +1,125 @@
+The PuzzleScript game code provided contains syntax errors primarily due to the misunderstanding of how to write comments and structure rules within the script. Comments in PuzzleScript are denoted by parentheses `(` and `)`, and not by using `#`. Moreover, the provided rules do not correctly implement the intended behavior because they attempt to interact with objects improperly, like `[ Player Goal ] -> []`.
+
+Here's a clear plan of action to repair the code:
+
+1. Correct the comment syntax by replacing `#` with `(` and `)` to properly format comments.
+2. Remove unnecessary comments within rules and correct the logic if needed.
+3. Adjust the collision layers so that the Player's interaction with Wall results in a level reset (loss condition).
+
+After these changes, the code should look something like the following:
+
+```plaintext
+title Maze Explorer
+author YourName
+
+========
+OBJECTS
+========
+
+Background
+lightgreen
+.....
+.....
+.....
+.....
+.....
+
+Wall
+darkgrey
+.....
+.....
+.....
+.....
+.....
+
+Player
+blue
+.....
+..0..
+.000.
+..0..
+.....
+
+Goal
+yellow
+.....
+.....
+..0..
+.....
+.....
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Player
+G = Goal
+
+=========
+SOUNDS
+=========
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Player, Goal
+Wall
+
+======
+RULES
+======
+
+( Allow the Player to move in all directions )
+[ > Player | ] -> [ > Player | ]
+
+( Lose if Player touches Wall )
+late [ Player Wall ] -> restart
+
+( Win if Player reaches Goal )
+[ Player Goal ] -> [ Player Background ]
+
+==============
+WINCONDITIONS
+==============
+
+All Player on Background
+
+=======
+LEVELS
+=======
+
+( Level 0 - Adding a path to make it solvable )
+######
+#....#
+#..#P#
+#.#..#
+#..G.#
+######
+
+( Level 1 - Adding a path to make it solvable )
+######
+#P.#.#
+#.####
+#....#
+#.##.#
+#..G.#
+######
+
+( Level 2 - Adding a path to make it solvable )
+######
+#P.#.#
+#.####
+#.#..#
+#..G.#
+######
+
+```
+
+**Explanation:**
+- Comments (`#`) are replaced with parentheses for proper in-line documentation.
+- The rules section now includes restart on hitting a Wall and the player’s transformation to Background on reaching the Goal.
+- The collision layers are adjusted to place Walls in a higher priority than Goals to ensure the rules function correctly.

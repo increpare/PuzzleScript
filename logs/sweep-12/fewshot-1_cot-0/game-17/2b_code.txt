@@ -1,0 +1,87 @@
+```plaintext
+title Collect the Stars
+author PuzzleScript User
+
+========
+OBJECTS
+========
+
+Background
+#87CEFA
+
+Wall
+#8B0000
+
+Player
+#FFD700
+..0..
+.000.
+.000.
+.000.
+..0..
+
+Star
+#FFFF00
+..0..
+.010.
+00100
+.010.
+..0..
+
+=======
+LEGEND
+=======
+. = Background
+# = Wall
+P = Player
+* = Star
+
+=======
+SOUNDS
+=======
+SFX0 63262720
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Star
+Wall
+Player
+
+======
+RULES
+======
+
+[ > Player | Star ] -> [ > Player | ] SFX0
+
+==============
+WINCONDITIONS
+==============
+
+no Star
+
+=======
+LEVELS
+=======
+
+#####
+#...#
+#.P.#
+#.*.#
+#...#
+#####
+```
+
+The error in the previous code was caused by the `Star` object using color `1` in its pattern, but there was only one color defined for `Star`. The object requires two colors: one for the background and one for the star itself. Below is the revised definition of the `Star` object with two colors:
+
+```plaintext
+Star
+black #FFFF00
+..0..
+.010.
+00100
+.010.
+..0..
+```

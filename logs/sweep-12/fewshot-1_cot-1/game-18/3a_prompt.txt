@@ -1,0 +1,1270 @@
+SYSTEM PROMPT:
+You are a game designer, familiar with the PuzzleScript game description language. Here are some example games, for inspiration (do not reproduce these games exactly):
+
+title Manic Ammo
+author David Eastman
+homepage @eastmad
+
+========
+OBJECTS
+========
+
+Background
+gray
+
+Target
+darkgray gray lightgray white
+33333
+31112
+31002
+31002
+32222
+
+Wall
+BROWN
+
+Boom
+Red YELLOW orange
+.101.
+10001
+00200
+10001
+.101.
+
+
+Player
+PINK YELLOW BLACK
+.222.
+.000.
+22122
+.222.
+.2.2.
+
+
+CrateW
+Brown DarkBrown lightbrown
+11111
+12001
+11111
+12001
+11111
+
+CrateN
+Brown DarkBrown lightbrown
+11111
+12121
+10101
+10101
+11111
+
+CrateMineN
+Brown DarkBrown lightbrown darkblue
+11111
+12121
+10101
+10301
+11111
+
+CrateGunN
+Brown DarkBrown lightbrown darkred
+11111
+12121
+10101
+10301
+11111
+
+CrateGunS
+Brown DarkBrown lightbrown darkred
+11111
+12321
+10101
+10101
+11111
+
+
+CrateS
+Brown DarkBrown lightbrown
+11111
+10101
+10101
+12121
+11111
+
+CrateE
+Brown DarkBrown lightbrown
+11111
+10021
+11111
+10021
+11111
+
+
+Shell
+yellow orange
+..0..
+.000.
+.000.
+.000.
+.101.
+
+
+Bang
+Yellow LightRed
+.101.
+10001
+00000
+10001
+.101.
+
+GunN
+red lightred
+..0..
+..0..
+.101.
+00000
+.000.
+
+GunW
+red lightred
+...0.
+..100
+00000
+..100
+...0.
+
+GunS
+red lightred
+.000.
+00000
+.101.
+..0..
+..0..
+
+GunE
+red lightred
+.0...
+001..
+00000
+001..
+.0...
+
+InertMine
+darkblue blue lightblue
+.....
+.101.
+.020.
+.101.
+.....
+
+ActiveMine
+darkred red lightred
+.....
+.101.
+.020.
+.101.
+.....
+
+Squawk
+lightblue blue
+....0
+.0000
+.0000
+.11.0
+1111.
+
+SquawkBang
+orange lightblue
+....0
+.0000
+.0000
+.11.0
+1111.
+
+Droid
+black green
+..0..
+.000.
+00100
+.000.
+..0..
+
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Player
+N = CrateN
+E = CrateE
+W = CrateW
+S = CrateS
+O = Target
++ = Shell
+^ = GunN
+< = GunW
+> = GunE
+˅ = GunS
+M = InertMine
+A = ActiveMine
+B = Boom
+% = CrateGunN
+& = CrateMineN
+@ = CrateGunS
+X = Squawk
+D = Droid
+
+=======
+SOUNDS
+=======
+
+SFX1 55891909
+SFX2 5736502
+SFX4 6922102
+
+Shell move 61960307
+InertMine move 61960307
+Droid move 81713505
+EndLevel 8341708
+Shell create 91688700
+GunN create 91688700
+GunS create 91688700
+GunW create 91688700
+InertMine create 91688700
+ActiveMine create 93182703
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Target
+Player, Wall, CrateN, CrateE, CrateW, CrateS, Shell, GunN, GunW, GunE, GunS, Bang, InertMine, ActiveMine, Boom, CrateMineN, CrateGunN, CrateGunS, Squawk, Droid, SquawkBang
+
+======
+RULES
+======
+
+
+[Bang] -> [background]
+[boom] -> restart
+[> player][Droid] -> [> player][> Droid]
+[ >  Player | Shell ] -> [  >  Player | > Shell  ]
+[ >  Droid | Shell ] -> [  >  Droid | > Shell  ]
+[ >  Player | InertMine ] -> [  >  Player | > InertMine  ]
+[Action Player|InertMine] -> [Action Player|ActiveMine]
+[> Droid|InertMine] -> [Droid|ActiveMine]
+[> Player | ActiveMine] -> [Player | boom ]
+[> Droid | ActiveMine] -> [Droid | boom ]
+[> shell | ActiveMine] -> [boom | boom ]
+
+[Action Player|Squawk] -> [Action Player|SquawkBang]
+[> Droid|Squawk] -> [Droid |SquawkBang]
+
+[SquawkBang][CrateMineN] -> [SquawkBang][ActiveMine]
+[SquawkBang][CrateGunN] -> [SquawkBang][GunN]
+[SquawkBang][CrateGunS] -> [SquawkBang][GunS]
+[SquawkBang][CrateN] -> [SquawkBang][Shell]
+[SquawkBang][CrateS] -> [SquawkBang][Shell]
+[SquawkBang][CrateE] -> [SquawkBang][Shell]
+[SquawkBang][CrateW] -> [SquawkBang][Shell]
+[SquawkBang] -> [] SFX1
+
+DOWN [ Action Player |CrateN] -> [Action Player | Shell]
+UP [Action Player | CrateS] -> [Action Player | Shell]
+LEFT [Action Player | CrateE] -> [Action Player | Shell]
+RIGHT [Action Player | CrateW] -> [Action Player | Shell]
+DOWN [Action Player | CrateGunN] -> [Action Player | GunN]
+UP [Action Player | CrateGunS] -> [Action Player | GunS]
+DOWN [Action Player | CrateMineN] -> [Action Player | ActiveMine]
+
+UP [Action Player | GunN| No Bang ] -> [Player | GunN | Bang ] SFX4
+LEFT [Action Player | GunW | No Bang] -> [Player | GunW | Bang ] SFX4
+DOWN [Action Player | GunS| No Bang ] -> [Player | GunS | Bang ] SFX4
+RIGHT [Action Player | GunE | No Bang] -> [Player | GunE | Bang ] SFX4
+
+UP [ > Droid | GunN| No Bang ] -> [Droid | GunN | Bang ] SFX4
+LEFT [ > Droid | GunW | No Bang] -> [Droid | GunW | Bang ] SFX4
+DOWN [> Droid | GunS| No Bang ] -> [Droid | GunS | Bang ] SFX4
+RIGHT [> Droid | GunE | No Bang] -> [Droid | GunE | Bang ] SFX4
+[bang|shell] -> [bang|bang ]
+[boom|no player] -> [boom|boom] SFX2
+
+
+==============
+WINCONDITIONS
+==============
+
+All Player on Target
+
+=======
+LEVELS
+=======
+
+
+
+MESSAGE Due to a clerical error, You are trapped in a bunker
+
+########
+#.....P#
+#......#
+#......#
+#......#
+#O.....#
+########
+
+MESSAGE A bunker with several levels, full of crates and munitions
+
+########
+#.....O#
+#..+...#
+#......#
+#..N...#
+#P.....#
+########
+
+MESSAGE Crates open from one side
+
+########
+#...+.P#
+#....+.#
+#..++..#
+#++..++#
+#.ON...#
+########
+
+MESSAGE But shells are volatile
+MESSAGE Try firing the gun
+
+#########
+#..+.+.O#
+#..N+...#
+#....S..#
+#...^...#
+#.P.....#
+#########
+
+MESSAGE Chain reaction
+
+#########
+#+.+O+.P#
+#+.++...#
+#.+.+.N.#
+#+......#
+#E+++.<.#
+#########
+
+MESSAGE Inert mines, active mines
+
+#########
+#+.+P+..#
+#.......#
+#.......#
+#SSSSM..#
+#.O.E...#
+#########
+
+Message Crates can have any munitions in them
+
+#########
+#.......#
+#.&+..+.#
+#.+O&.+.#
+#.+++%..#
+#.P.S...#
+#########
+
+
+MESSAGE There seems to be another way to open crates
+
+#########
+#.X.....#
+#.......#
+#..P....#
+#....NNN#
+#.>..SON#
+#########
+
+
+MESSAGE Hey, it's a friendly worker droid!
+
+#########
+#.D...PN#
+#..+...N#
+#A.+....#
+#.NN.O..#
+#..+....#
+#########
+
+
+MESSAGE Now this is where the main bunker levels begin.
+
+###########
+#O+N..+.W.#
+#SN&..+.NX#
+#.DN.+.+..#
+#%.NWP.NS+#
+#...+N....#
+###########
+
+
+MESSAGE This doesn't look safe
+
+###########
+#P..&&&&&&#
+#DX.N....&#
+#...&&&&&&#
+#.N.N...O.#
+#&&&&&&&&&#
+###########
+
+
+MESSAGE Carefully packed
+
+###########
+#PESW.WDW.#
+#NW..&N@.N#
+#.N%NWN.X.#
+#N...NNNNN#
+#N.NNNNNON#
+###########
+
+MESSAGE Symbiosis
+
+###########
+#P.NNN.DN.#
+#MM>.+++N.#
+#..N.NN+..#
+#++N++....#
+#++...<.O.#
+###########
+
+MESSAGE Inert Mine field
+
+###########
+#.P..M.M..#
+#.MMM.M.MM#
+#..M..MNM.#
+#MM.MM.MOS#
+#.M..MD...#
+###########
+
+MESSAGE Last level
+
+###########
+#..+..P.+.#
+#.N..@.N..#
+#+.&..E.&.#
+#++..S.SSS#
+#.X+&..NO.#
+###########
+
+MESSAGE Congratulations! Now you can return to fighting on the front line.
+
+title Threes: The Demake
+author Benjamin Davis
+homepage threesgame.com
+
+again_interval 0.5
+background_color #F9F9F9
+color_palette arnecolors
+flickscreen 11x6
+key_repeat_interval 0.25
+noaction
+noundo
+text_color #777E8C
+run_rules_on_level_start
+
+========
+OBJECTS
+========
+
+1
+#F9F9F9
+000.0
+000.0
+000.0
+000.0
+000.0
+
+2
+#F9F9F9
+....0
+000.0
+....0
+.0000
+....0
+
+3
+#F9F9F9
+....0
+000.0
+0...0
+000.0
+....0
+
+4
+#F9F9F9
+.00.0
+.00.0
+....0
+000.0
+000.0
+
+5
+#F9F9F9
+....0
+.0000
+....0
+000.0
+....0
+
+6
+#F9F9F9
+.0000
+.0000
+....0
+.00.0
+....0
+
+7
+#F9F9F9
+....0
+000.0
+000.0
+000.0
+000.0
+
+8
+#F9F9F9
+....0
+.00.0
+....0
+.00.0
+....0
+
+9
+#F9F9F9
+....0
+.00.0
+....0
+000.0
+000.0
+
+0
+#F9F9F9
+....0
+.00.0
+.00.0
+.00.0
+....0
+
+Carry
+#F9F9F9
+00000
+00.00
+0...0
+00.00
+00000
+
+Block1
+#65CDFF #5DAAFA
+.000.
+.000.
+.000.
+.111.
+.....
+
+Block2
+#FF6780 #CA4F7B
+.000.
+.000.
+.000.
+.111.
+.....
+
+Block1Grey
+#999999 #666666
+.000.
+.000.
+.000.
+.111.
+.....
+
+Block2Grey
+#666666 #333333
+.000.
+.000.
+.000.
+.111.
+.....
+
+Block3
+White #F8CB66 LightGrey #D8A667
+.200.
+.000.
+.000.
+.111.
+.....
+
+Block6
+White #F8CB66 LightGrey #D8A667
+.220.
+.000.
+.000.
+.111.
+.....
+
+Block12
+White #F8CB66 LightGrey #D8A667
+.222.
+.000.
+.000.
+.111.
+.....
+
+Block24
+White #F8CB66 LightGrey #D8A667
+.222.
+.200.
+.000.
+.111.
+.....
+
+Block48
+White #F8CB66 LightGrey #D8A667
+.222.
+.220.
+.000.
+.111.
+.....
+
+Block96
+White #F8CB66 LightGrey #D8A667
+.222.
+.222.
+.000.
+.111.
+.....
+
+Block192
+White #F8CB66 LightGrey #D8A667
+.222.
+.222.
+.200.
+.311.
+.....
+
+Block384
+White #F8CB66 LightGrey #D8A667
+.222.
+.222.
+.220.
+.331.
+.....
+
+Block768
+White #F8CB66 LightGrey #D8A667
+.222.
+.222.
+.222.
+.333.
+.....
+
+Scored
+#999999
+.....
+.....
+.....
+.000.
+.....
+
+Scoring
+#FF6780 #CA4F7B
+.0.0.
+.....
+.0.0.
+.1.1.
+.....
+
+Background
+#505050 #484848 #414141 #3A3A3A #333333
+00000
+11111
+22222
+33333
+44444
+
+Grid
+#D2E5DF #BBD9D9
+00000
+01110
+01110
+01110
+00000
+
+Spawn
+#D2E5DF
+
+Wall
+#F9F9F9
+(.....
+.....
+.....
+.....
+.....)
+
+Grey
+#999999 #919191 #8A8A8A #838383 #7B7B7B
+00000
+11111
+22222
+33333
+44444
+
+Player
+Black
+.....
+.....
+.....
+.....
+.....
+
+=======
+LEGEND
+=======
+
+Block = Block1 or Block2 or Block3 or Block6 or Block12 or Block24 or Block48 or Block96 or Block192 or Block384 or Block768 or Block1Grey or Block2Grey
+Lost = Grey
+Number = 1 or 2 or 3 or 4 or 5 or 6 or 7 or 8 or 9 or 0
+
+, = Background
+. = Grid and Spawn
+q = Spawn and Wall
+s = Spawn
+# = Wall
++ = Carry
+
+a = Grid and Spawn and Block48
+b = Grid and Spawn and Block96
+c = Grid and Spawn and Block192
+d = Grid and Spawn and Block384
+e = Grid and Spawn and Block768
+
+=======
+SOUNDS
+=======
+
+Player Move 58475507
+
+SFX0 2494907
+SFX1 98118707
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Spawn Grey
+Grid Carry
+Block
+Player Number Scored
+Wall Scoring
+
+======
+RULES
+======
+
+( Reset bonus pool )
+right [ Wall Spawn | Wall Spawn | Wall Spawn | Wall Spawn | Wall Spawn | Wall Spawn | Wall Spawn | Wall Spawn | Wall Spawn | Wall Spawn | Wall Spawn | Wall Spawn | Wall Spawn | Wall Spawn | Wall Spawn | Wall Spawn | Wall Spawn | Wall Spawn | Wall Spawn | Wall Spawn | Wall Spawn ] -> [ Wall Spawn Block1Grey | Wall Spawn Block1Grey | Wall Spawn Block1Grey | Wall Spawn Block1Grey | Wall Spawn Block1Grey | Wall Spawn Block1Grey | Wall Spawn Block1Grey | Wall Spawn Block1Grey | Wall Spawn Block1Grey | Wall Spawn Block1Grey | Wall Spawn Block1Grey | Wall Spawn Block1Grey | Wall Spawn Block1Grey | Wall Spawn Block1Grey | Wall Spawn Block1Grey | Wall Spawn Block1Grey | Wall Spawn Block1Grey | Wall Spawn Block1Grey | Wall Spawn Block1Grey | Wall Spawn Block1Grey | Wall Spawn Block1Grey ]
+
+( Create bonus block )
+right [ Wall Spawn Block1Grey | Wall no Spawn ] [ Grid Block768 ] -> [ Wall Spawn random Block6 random Block12 random Block24 random Block48 random Block96 | Wall ] [ Grid Block768 ]
+right [ Wall Spawn Block1Grey | Wall no Spawn ] [ Grid Block384 ] -> [ Wall Spawn random Block6 random Block12 random Block24 random Block48 | Wall ] [ Grid Block384 ]
+right [ Wall Spawn Block1Grey | Wall no Spawn ] [ Grid Block192 ] -> [ Wall Spawn random Block6 random Block12 random Block24 | Wall ] [ Grid Block192 ]
+right [ Wall Spawn Block1Grey | Wall no Spawn ] [ Grid Block96 ] -> [ Wall Spawn random Block6 random Block12 | Wall ] [ Grid Block96 ]
+right [ Wall Spawn Block1Grey | Wall no Spawn ] [ Grid Block48 ] -> [ Wall Spawn Block6 | Wall ] [ Grid Block48 ]
+
+( Restock stack if empty )
+right [ Wall Spawn no Block | Wall Spawn no Block | Wall Spawn no Block | Wall Spawn no Block | Wall Spawn no Block | Wall Spawn no Block | Wall Spawn no Block | Wall Spawn no Block | Wall Spawn no Block | Wall Spawn no Block | Wall Spawn no Block | Wall Spawn no Block | Spawn no Wall ] -> [ Wall Spawn Block1 | Wall Spawn Block1 | Wall Spawn Block1 | Wall Spawn Block1 | Wall Spawn Block2 | Wall Spawn Block2 | Wall Spawn Block2 | Wall Spawn Block2 | Wall Spawn Block3 | Wall Spawn Block3 | Wall Spawn Block3 | Wall Spawn Block3 | Spawn no Wall ]
+
+( Take 9 cards from the stack and place them onto the grid at the start )
+random right [ Grid Spawn no Block ] [ Spawn Wall Block | ... | Spawn no Wall no Grid ] -> [ Grid Spawn Block Player ] [ Spawn Wall | ... | Spawn ]
+random right [ Grid Spawn no Block ] [ Spawn Wall Block | ... | Spawn no Wall no Grid ] -> [ Grid Spawn Block Player ] [ Spawn Wall | ... | Spawn ]
+random right [ Grid Spawn no Block ] [ Spawn Wall Block | ... | Spawn no Wall no Grid ] -> [ Grid Spawn Block Player ] [ Spawn Wall | ... | Spawn ]
+random right [ Grid Spawn no Block ] [ Spawn Wall Block | ... | Spawn no Wall no Grid ] -> [ Grid Spawn Block Player ] [ Spawn Wall | ... | Spawn ]
+random right [ Grid Spawn no Block ] [ Spawn Wall Block | ... | Spawn no Wall no Grid ] -> [ Grid Spawn Block Player ] [ Spawn Wall | ... | Spawn ]
+random right [ Grid Spawn no Block ] [ Spawn Wall Block | ... | Spawn no Wall no Grid ] -> [ Grid Spawn Block Player ] [ Spawn Wall | ... | Spawn ]
+random right [ Grid Spawn no Block ] [ Spawn Wall Block | ... | Spawn no Wall no Grid ] -> [ Grid Spawn Block Player ] [ Spawn Wall | ... | Spawn ]
+random right [ Grid Spawn no Block ] [ Spawn Wall Block | ... | Spawn no Wall no Grid ] -> [ Grid Spawn Block Player ] [ Spawn Wall | ... | Spawn ]
+random right [ Grid Spawn no Block ] [ Spawn Wall Block | ... | Spawn no Wall no Grid ] -> [ Grid Spawn Block Player ] [ Spawn Wall | ... | Spawn ]
+
+( Clear Spawns at start )
+[ Grid Spawn ] -> [ Grid No Spawn ]
+
+( Move Block when Player moves )
+[ Moving Player Stationary Block ] -> [ Moving Player Moving Block ]
+
+( Stop when we hit a Wall )
+[ > Block | Wall ] -> [ Block | Wall ]
+
+startloop
+
+[ > Block1   | Player Stationary Block2   ] -> [ > Block3   | ] SFX0
+[ > Block2   | Player Stationary Block1   ] -> [ > Block3   | ] SFX0
+[ > Block3   | Player Stationary Block3   ] -> [ > Block6   | ] SFX0
+[ > Block6   | Player Stationary Block6   ] -> [ > Block12  | ] SFX0
+[ > Block12  | Player Stationary Block12  ] -> [ > Block24  | ] SFX0
+[ > Block24  | Player Stationary Block24  ] -> [ > Block48  | ] SFX0
+[ > Block48  | Player Stationary Block48  ] -> [ > Block96  | ] SFX0
+[ > Block96  | Player Stationary Block96  ] -> [ > Block192 | ] SFX0
+[ > Block192 | Player Stationary Block192 ] -> [ > Block384 | ] SFX0
+[ > Block384 | Player Stationary Block384 ] -> [ > Block768 | ] SFX0
+
+( Stop when we hit a stationary Block )
+[ > Block | Stationary Block ] -> [ action Block | Block ]
+
+[ action Block ] -> [ Block ]
+
+endloop
+
+( Stop Player when Block stops )
+[ Moving Player Stationary Block ] -> [ Stationary Player Stationary Block ]
+
+( Move block from spawn to side of grid )
+up random [ Spawn Block no Wall ] [ Wall | Grid | ... | up Player ] -> [ Spawn ] [ Wall up Block up Player | Grid | ... | up Player ]
+down random [ Spawn Block no Wall ] [ Wall | Grid | ... | down Player ] -> [ Spawn ] [ Wall down Block down Player | Grid | ... | down Player ]
+left random [ Spawn Block no Wall ] [ Wall | Grid | ... | left Player ] -> [ Spawn ] [ Wall left Block left Player | Grid | ... | left Player ]
+right random [ Spawn Block no Wall ] [ Wall | Grid | ... | right Player ] -> [ Spawn ] [ Wall right Block right Player | Grid | ... | right Player ]
+up random [ Spawn Block no Wall ] [ Wall | Grid up Player ] -> [ Spawn ] [ Wall up Block up Player | Grid up Player ]
+down random [ Spawn Block no Wall ] [ Wall | Grid down Player ] -> [ Spawn ] [ Wall down Block down Player | Grid down Player ]
+left random [ Spawn Block no Wall ] [ Wall | Grid left Player ] -> [ Spawn ] [ Wall left Block left Player | Grid left Player ]
+right random [ Spawn Block no Wall ] [ Wall | Grid right Player ] -> [ Spawn ] [ Wall right Block right Player | Grid right Player ]
+
+( Take random block from bonus pool )
+random right [ Spawn Wall Block | ... | Wall | Wall | Grid ] [ Spawn no Wall no Block ] -> [ Spawn Wall | ... | Wall | Wall | Grid ] [ Spawn Block ]
+
+( If bonus block is a grey 1, discard it )
+right [ Spawn no Wall Block1Grey | Wall ] -> [ Spawn | Wall ]
+
+( If not using a bonus block, take new block from stack )
+random right [ Spawn Wall Block | ... | Spawn No Block No Number no Wall no Grid ] -> [ Spawn Wall | ... | Spawn Block ]
+
+( Lose condition: All Grids have Blocks on and there are no compatible blocks next to each other [e.g. 1 | 2 or 3 | 3 )
+
+( Set as lost )
+Late [ Grid No Lost ] -> [ Grid Lost ]
+
+( Check for conditions which mean it's not lost )
+Late [ Lost Grid No Block ] -> [ Grid ]
+Late [ Lost Block1 | Block2 ] -> [ Block1 | Block2 ]
+Late [ Lost Block3 | Block3 ] -> [ Block3 | Block3 ]
+Late [ Lost Block6 | Block6 ] -> [ Block6 | Block6 ]
+Late [ Lost Block12 | Block12 ] -> [ Block12 | Block12 ]
+Late [ Lost Block24 | Block24 ] -> [ Block24 | Block24 ]
+Late [ Lost Block48 | Block48 ] -> [ Block48 | Block48 ]
+Late [ Lost Block96 | Block96 ] -> [ Block96 | Block96 ]
+Late [ Lost Block192 | Block192 ] -> [ Block192 | Block192 ]
+Late [ Lost Block384 | Block384 ] -> [ Block384 | Block384 ]
+
+( If there are any tiles without a Lost, remove all Losts)
+Late [ Grid No Lost | Grid Lost ] -> [ Grid | Grid ]
+
+( Move grid, removing Player )
+Late Right [ Lost Grid Block Player | | | | | | | ] -> [ | | | | | | | Lost Grid Block ]
+
+( Turn 1s and 2s grey )
+Late [ Lost Block1 ] -> [ Lost Block1Grey ]
+Late [ Lost Block2 ] -> [ Lost Block2Grey ]
+
+( Add )
+
+late down [ 1 | ... | 0 ] -> [ 0 | ... | 1 ]
+late down [ 2 | ... | 0 ] -> [ 0 | ... | 2 ]
+late down [ 3 | ... | 0 ] -> [ 0 | ... | 3 ]
+late down [ 4 | ... | 0 ] -> [ 0 | ... | 4 ]
+late down [ 5 | ... | 0 ] -> [ 0 | ... | 5 ]
+late down [ 6 | ... | 0 ] -> [ 0 | ... | 6 ]
+late down [ 7 | ... | 0 ] -> [ 0 | ... | 7 ]
+late down [ 8 | ... | 0 ] -> [ 0 | ... | 8 ]
+late down [ 9 | ... | 0 ] -> [ 0 | ... | 9 ]
+
+late down [ 1 | ... | 1 ] -> [ 0 | ... | 2 ]
+late down [ 2 | ... | 1 ] -> [ 0 | ... | 3 ]
+late down [ 3 | ... | 1 ] -> [ 0 | ... | 4 ]
+late down [ 4 | ... | 1 ] -> [ 0 | ... | 5 ]
+late down [ 5 | ... | 1 ] -> [ 0 | ... | 6 ]
+late down [ 6 | ... | 1 ] -> [ 0 | ... | 7 ]
+late down [ 7 | ... | 1 ] -> [ 0 | ... | 8 ]
+late down [ 8 | ... | 1 ] -> [ 0 | ... | 9 ]
+late down [ 9 | ... | 1 ] -> [ 0 | ... | 0 Carry ]
+
+late down [ 1 | ... | 2 ] -> [ 0 | ... | 3 ]
+late down [ 2 | ... | 2 ] -> [ 0 | ... | 4 ]
+late down [ 3 | ... | 2 ] -> [ 0 | ... | 5 ]
+late down [ 4 | ... | 2 ] -> [ 0 | ... | 6 ]
+late down [ 5 | ... | 2 ] -> [ 0 | ... | 7 ]
+late down [ 6 | ... | 2 ] -> [ 0 | ... | 8 ]
+late down [ 7 | ... | 2 ] -> [ 0 | ... | 9 ]
+late down [ 8 | ... | 2 ] -> [ 0 | ... | 0 Carry ]
+late down [ 9 | ... | 2 ] -> [ 0 | ... | 1 Carry ]
+
+late down [ 1 | ... | 3 ] -> [ 0 | ... | 4 ]
+late down [ 2 | ... | 3 ] -> [ 0 | ... | 5 ]
+late down [ 3 | ... | 3 ] -> [ 0 | ... | 6 ]
+late down [ 4 | ... | 3 ] -> [ 0 | ... | 7 ]
+late down [ 5 | ... | 3 ] -> [ 0 | ... | 8 ]
+late down [ 6 | ... | 3 ] -> [ 0 | ... | 9 ]
+late down [ 7 | ... | 3 ] -> [ 0 | ... | 0 Carry ]
+late down [ 8 | ... | 3 ] -> [ 0 | ... | 1 Carry ]
+late down [ 9 | ... | 3 ] -> [ 0 | ... | 2 Carry ]
+
+late down [ 1 | ... | 4 ] -> [ 0 | ... | 5 ]
+late down [ 2 | ... | 4 ] -> [ 0 | ... | 6 ]
+late down [ 3 | ... | 4 ] -> [ 0 | ... | 7 ]
+late down [ 4 | ... | 4 ] -> [ 0 | ... | 8 ]
+late down [ 5 | ... | 4 ] -> [ 0 | ... | 9 ]
+late down [ 6 | ... | 4 ] -> [ 0 | ... | 0 Carry ]
+late down [ 7 | ... | 4 ] -> [ 0 | ... | 1 Carry ]
+late down [ 8 | ... | 4 ] -> [ 0 | ... | 2 Carry ]
+late down [ 9 | ... | 4 ] -> [ 0 | ... | 3 Carry ]
+
+late down [ 1 | ... | 5 ] -> [ 0 | ... | 6 ]
+late down [ 2 | ... | 5 ] -> [ 0 | ... | 7 ]
+late down [ 3 | ... | 5 ] -> [ 0 | ... | 8 ]
+late down [ 4 | ... | 5 ] -> [ 0 | ... | 9 ]
+late down [ 5 | ... | 5 ] -> [ 0 | ... | 0 Carry ]
+late down [ 6 | ... | 5 ] -> [ 0 | ... | 1 Carry ]
+late down [ 7 | ... | 5 ] -> [ 0 | ... | 2 Carry ]
+late down [ 8 | ... | 5 ] -> [ 0 | ... | 3 Carry ]
+late down [ 9 | ... | 5 ] -> [ 0 | ... | 4 Carry ]
+
+late down [ 1 | ... | 6 ] -> [ 0 | ... | 7 ]
+late down [ 2 | ... | 6 ] -> [ 0 | ... | 8 ]
+late down [ 3 | ... | 6 ] -> [ 0 | ... | 9 ]
+late down [ 4 | ... | 6 ] -> [ 0 | ... | 0 Carry ]
+late down [ 5 | ... | 6 ] -> [ 0 | ... | 1 Carry ]
+late down [ 6 | ... | 6 ] -> [ 0 | ... | 2 Carry ]
+late down [ 7 | ... | 6 ] -> [ 0 | ... | 3 Carry ]
+late down [ 8 | ... | 6 ] -> [ 0 | ... | 4 Carry ]
+late down [ 9 | ... | 6 ] -> [ 0 | ... | 5 Carry ]
+
+late down [ 1 | ... | 7 ] -> [ 0 | ... | 8 ]
+late down [ 2 | ... | 7 ] -> [ 0 | ... | 9 ]
+late down [ 3 | ... | 7 ] -> [ 0 | ... | 0 Carry ]
+late down [ 4 | ... | 7 ] -> [ 0 | ... | 1 Carry ]
+late down [ 5 | ... | 7 ] -> [ 0 | ... | 2 Carry ]
+late down [ 6 | ... | 7 ] -> [ 0 | ... | 3 Carry ]
+late down [ 7 | ... | 7 ] -> [ 0 | ... | 4 Carry ]
+late down [ 8 | ... | 7 ] -> [ 0 | ... | 5 Carry ]
+late down [ 9 | ... | 7 ] -> [ 0 | ... | 6 Carry ]
+
+late down [ 1 | ... | 8 ] -> [ 0 | ... | 9 ]
+late down [ 2 | ... | 8 ] -> [ 0 | ... | 0 Carry ]
+late down [ 3 | ... | 8 ] -> [ 0 | ... | 1 Carry ]
+late down [ 4 | ... | 8 ] -> [ 0 | ... | 2 Carry ]
+late down [ 5 | ... | 8 ] -> [ 0 | ... | 3 Carry ]
+late down [ 6 | ... | 8 ] -> [ 0 | ... | 4 Carry ]
+late down [ 7 | ... | 8 ] -> [ 0 | ... | 5 Carry ]
+late down [ 8 | ... | 8 ] -> [ 0 | ... | 6 Carry ]
+late down [ 9 | ... | 8 ] -> [ 0 | ... | 7 Carry ]
+
+late down [ 1 | ... | 9 ] -> [ 0 | ... | 0 Carry ]
+late down [ 2 | ... | 9 ] -> [ 0 | ... | 1 Carry ]
+late down [ 3 | ... | 9 ] -> [ 0 | ... | 2 Carry ]
+late down [ 4 | ... | 9 ] -> [ 0 | ... | 3 Carry ]
+late down [ 5 | ... | 9 ] -> [ 0 | ... | 4 Carry ]
+late down [ 6 | ... | 9 ] -> [ 0 | ... | 5 Carry ]
+late down [ 7 | ... | 9 ] -> [ 0 | ... | 6 Carry ]
+late down [ 8 | ... | 9 ] -> [ 0 | ... | 7 Carry ]
+late down [ 9 | ... | 9 ] -> [ 0 | ... | 8 Carry ]
+
+( Carry )
+
+startloop
+
+	late right [ no Number | ... | 0 | Number Carry ] -> [ | ... | 1 | Number ]
+	late right [ no Number | ... | 1 | Number Carry ] -> [ | ... | 2 | Number ]
+	late right [ no Number | ... | 2 | Number Carry ] -> [ | ... | 3 | Number ]
+	late right [ no Number | ... | 3 | Number Carry ] -> [ | ... | 4 | Number ]
+	late right [ no Number | ... | 4 | Number Carry ] -> [ | ... | 5 | Number ]
+	late right [ no Number | ... | 5 | Number Carry ] -> [ | ... | 6 | Number ]
+	late right [ no Number | ... | 6 | Number Carry ] -> [ | ... | 7 | Number ]
+	late right [ no Number | ... | 7 | Number Carry ] -> [ | ... | 8 | Number ]
+	late right [ no Number | ... | 8 | Number Carry ] -> [ | ... | 9 | Number ]
+	late right [ no Number | ... | 9 no Carry | Number Carry ] -> [ | ... | 0 Carry | Number ]
+    late right [ no Number | 0 Carry ] -> [ | 0 ]
+
+endloop
+
+( After scoring, set block border to grey )
+late [ Scoring Block ] -> [ Scored Block ]
+
+( Count each block, starting with the lowest value )
+late [ Carry No Number No Block ] [ Grid Lost no Scored Block3 ] -> [ Carry Block3 ] [ Grid Lost Scoring Block3 ]
+late [ Carry No Number No Block ] [ Grid Lost no Scored Block6 ] -> [ Carry Block6 ] [ Grid Lost Scoring Block6 ]
+late [ Carry No Number No Block ] [ Grid Lost no Scored Block12 ] -> [ Carry Block12 ] [ Grid Lost Scoring Block12 ]
+late [ Carry No Number No Block ] [ Grid Lost no Scored Block24 ] -> [ Carry Block24 ] [ Grid Lost Scoring Block24 ]
+late [ Carry No Number No Block ] [ Grid Lost no Scored Block48 ] -> [ Carry Block48 ] [ Grid Lost Scoring Block48 ]
+late [ Carry No Number No Block ] [ Grid Lost no Scored Block96 ] -> [ Carry Block96 ] [ Grid Lost Scoring Block96 ]
+late [ Carry No Number No Block ] [ Grid Lost no Scored Block192 ] -> [ Carry Block192 ] [ Grid Lost Scoring Block192 ]
+late [ Carry No Number No Block ] [ Grid Lost no Scored Block384 ] -> [ Carry Block384 ] [ Grid Lost Scoring Block384 ]
+late [ Carry No Number No Block ] [ Grid Lost no Scored Block768 ] -> [ Carry Block768 ] [ Grid Lost Scoring Block768 ]
+
+( Set score to add )
+late right [ Carry Block3   | 0 | 0 | 0 | 0 | 0 ] -> [ Carry Block3   | 0 | 0 | 0 | 0 | 3 ] again
+late right [ Carry Block6   | 0 | 0 | 0 | 0 | 0 ] -> [ Carry Block6   | 0 | 0 | 0 | 0 | 9 ] again
+late right [ Carry Block12  | 0 | 0 | 0 | 0 | 0 ] -> [ Carry Block12  | 0 | 0 | 0 | 2 | 7 ] again
+late right [ Carry Block24  | 0 | 0 | 0 | 0 | 0 ] -> [ Carry Block24  | 0 | 0 | 0 | 8 | 1 ] again
+late right [ Carry Block48  | 0 | 0 | 0 | 0 | 0 ] -> [ Carry Block48  | 0 | 0 | 2 | 4 | 3 ] again
+late right [ Carry Block96  | 0 | 0 | 0 | 0 | 0 ] -> [ Carry Block96  | 0 | 0 | 7 | 2 | 9 ] again
+late right [ Carry Block192 | 0 | 0 | 0 | 0 | 0 ] -> [ Carry Block192 | 0 | 2 | 1 | 8 | 7 ] again
+late right [ Carry Block384 | 0 | 0 | 0 | 0 | 0 ] -> [ Carry Block384 | 0 | 6 | 5 | 6 | 1 ] again
+late right [ Carry Block768 | 0 | 0 | 0 | 0 | 0 ] -> [ Carry Block768 | 1 | 9 | 6 | 8 | 3 ] again
+
+( Colour adding row of numbers )
+late right [ Carry no Number | ... | Number ] -> [ Carry Grey | ... | Number Grey ]
+
+( Show numbers )
+Late [ Wall Number ] -> [ Number ]
+
+( Show only significant digits for the adding line )
+late right [ Carry No Number | 0 | 0 | 0 | 0 | 0 ] -> [ Carry Wall | 0 Wall | 0 Wall | 0 Wall | 0 Wall | 0 Wall ]
+late right [ Carry No Number | 0 | 0 | 0 | 0 ] -> [ Carry No Wall | 0 Wall | 0 Wall | 0 Wall | 0 Wall ]
+late right [ Carry No Number | 0 | 0 | 0 ] -> [ Carry No Wall | 0 Wall | 0 Wall | 0 Wall ]
+late right [ Carry No Number | 0 | 0 ] -> [ Carry No Wall | 0 Wall | 0 Wall ]
+late right [ Carry No Number | 0 ] -> [ Carry No Wall | 0 Wall ]
+
+late right [ Carry No Block ] -> [ Carry Wall ]
+
+( Remove block we're scoring from adding row )
+late [ Carry Block ] -> [ Carry Player ]
+
+==============
+WINCONDITIONS
+==============
+
+=======
+LEVELS
+=======
+
+############################################
+############qqqqqqqqqqqqs#....###,,,,#######
+##########################....###,,,,#+00000
+###qqqqqqqqqqqqqqqqqqqqq##....###,,,,#######
+##########################....###,,,,#000000
+############################################
+
+title Robot Spawner
+author increpare
+homepage www.puzzlescript.net
+
+========
+OBJECTS
+========
+
+Background (special, automatically placed in its own layer)
+green darkgreen
+11111
+01111
+11101
+11111
+10111
+
+Spawner (Name)
+yellow 	(Color)
+..... 	(Sprite)
+..0..
+.000.
+..0..
+.....
+
+Player (Required by game)
+pink
+..0..
+00000
+..0..
+.000.
+.0.0.
+
+RedRobot
+gray black red
+.000.
+.200.
+...0.
+00000
+01010
+
+GreenRobot
+gray black lightgreen
+.000.
+.200.
+...0.
+00000
+01010
+
+BlueRobot
+gray black lightblue
+.000.
+.200.
+...0.
+00000
+01010
+
+=======
+LEGEND
+=======
+
+Robot = RedRobot or GreenRobot or BlueRobot
+Obstacle = Player or Robot
+. = Background
+P = Player
+* = Robot
+O = Spawner
+
+=========
+SOUNDS
+=========
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Spawner
+Player, Robot
+
+======
+RULES
+======
+
+[ stationary Robot ] -> [ randomDir Robot ] 
+[ Spawner no Obstacle ] -> [ Spawner random Robot ] 
+
+==============
+WINCONDITIONS
+==============
+
+=======
+LEVELS
+=======
+
+.......
+.......
+.......
+...O...
+.......
+.P.....
+.......
+
+
+USER PROMPT:
+The following PuzzleScript game code:
+```plaintext
+title Box Pusher
+author PuzzleScriptExample
+
+========
+OBJECTS
+========
+
+Background
+green darkgreen
+11111
+11111
+11111
+11111
+11111
+
+Wall
+brown darkbrown
+00000
+11111
+00000
+11111
+00000
+
+Player
+blue white
+.....
+..0..
+.111.
+..0..
+.....
+
+Crate
+orange white
+.....
+.....
+.111.
+.....
+.....
+
+Target
+red
+.....
+..0..
+.....
+..0..
+.....
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Player
+* = Crate
+O = Target
+@ = Crate and Target
+
+=======
+SOUNDS
+=======
+
+Crate MOVE 7325177
+endLevel 58190277
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Target
+Player, Wall, Crate
+
+======
+RULES
+======
+
+[ > Player | Crate ] -> [ > Player | > Crate ] 
+
+============== 
+WINCONDITIONS
+==============
+
+all Crate on Target
+
+=======
+LEVELS
+=======
+
+#####
+#...#
+#.*.#
+#PO*#
+#...#
+#####
+
+########
+#......#
+#.**O#.#
+#..PO..#
+########
+
+```
+compiled, but a solvability check returned the following error:
+ Level 0 is not solvable. Please repair it.Found solution for level 1 in 794 iterations: 3,3,3,0,0,1,1,1,2,3,2,1,3,3,3,0,0,1,1,1,1,1,2,3,3,1,1,2,3,3. 
+Return your code in full, inside a ```plaintext code block.

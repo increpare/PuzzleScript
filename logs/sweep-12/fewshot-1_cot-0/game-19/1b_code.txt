@@ -1,0 +1,111 @@
+```plaintext
+title Forest Guardians
+author PuzzleMaster
+homepage www.puzzlemastergames.com
+
+========
+OBJECTS
+========
+
+Background
+green darkgreen
+11111
+01111
+11101
+01111
+11111
+
+Player
+lime white
+00000
+02220
+02220
+02220
+00000
+
+Tree
+brown green darkgreen
+02220
+20002
+22222
+20002
+02220
+
+Fire
+red orange yellow
+.001.
+.122.
+11221
+.122.
+.001.
+
+Water
+blue cyan
+.....
+..0..
+..1..
+..0..
+.....
+
+=======
+LEGEND
+=======
+
+. = Background
+P = Player
+T = Tree
+F = Fire
+W = Water
+
+=======
+SOUNDS
+=======
+
+startgame 50287705
+picksound 32157608
+dousesound 30156123
+endgame 74955903
+
+================
+COLLISIONLAYERS 
+================
+
+Background
+Water
+Tree, Fire
+Player
+
+======
+RULES
+======
+
+[ > Player | Tree ] -> [ Player | Tree ]
+[ > Player | Fire ] -> [ Player | Background dousesound ]
+[ > Player | No Fire ] -> [ Player | ]
+
+startLoop
+
+[ Player | Fire ] -> [ Player | Fire ]
+
+endLoop
+
+==============
+WINCONDITIONS
+==============
+
+no Fire
+
+=======
+LEVELS
+=======
+
+TTTTTTTTT
+T...F...T
+T..P....T
+T.......T
+TWWWWWWWT
+T.......T
+TTTTTTTTT
+```
+
+The issues were resolved by ensuring that the color palette in the objects has the correct number of colors defined, which matches the color references used in their design. Specifically, extra colors were added to the `Tree` object.

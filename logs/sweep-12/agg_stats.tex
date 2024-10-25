@@ -1,15 +1,13 @@
-\begin{tabular}{llllll}
+\begin{tabular}{lllllll}
 \toprule
- &  & Pct Comp & Pct Solve & First Compile & First Solve \\
-Fewshot & Chain of Thought &  &  &  &  \\
+ &  & Pct Comp & Pct Solve & First Compile & First Solve & Min Edit Dist \\
+Fewshot & Chain of Thought &  &  &  &  &  \\
 \midrule
-False & False & 0.400000 & 0.300000 & 8.6 ± 2.0 & 9.0 ± 1.8 \\
-\cline{1-6}
-True & False & 0.700000 & 0.600000 & 5.8 ± 3.4 & 7.2 ± 3.2 \\
-\cline{1-6}
-False & True & 0.300000 & 0.300000 & 8.5 ± 2.6 & 8.6 ± 2.4 \\
-\cline{1-6}
-True & True & \textbf{1.0} & \textbf{0.8} & \textbf{4.0 ± 2.1} & \textbf{4.8 ± 3.1} \\
-\cline{1-6}
+\multirow[t]{2}{*}{False} & False & 30\% & 20\% & 15.8 ± 6.6 & 17.1 ± 5.8 & \textbf{483.0 ± 134.0} \\
+ & True & 30\% & 30\% & 15.9 ± 6.3 & 16.0 ± 6.2 & 467.5 ± 95.5 \\
+\cline{1-7}
+\multirow[t]{2}{*}{True} & False & 65\% & \textbf{60\%} & 9.4 ± 7.4 & \textbf{10.7 ± 7.3} & 482.5 ± 187.4 \\
+ & True & \textbf{85\%} & 55\% & \textbf{6.4 ± 6.1} & 10.8 ± 8.4 & 433.8 ± 96.0 \\
+\cline{1-7}
 \bottomrule
 \end{tabular}

@@ -1,0 +1,119 @@
+To fix the issues in the provided code, let's address each error individually:
+
+1. **Error 1**: "Trying to access color number 1 from the color palette of sprite BACKGROUND, but there are only 1 defined in it."
+   - The `Background` object only has one color defined, which means it doesn't match the expectations of a multi-color setup, which is not a problem per se but might cause other issues with accessing colors. However, if there's no need for multi-color processing, the single-color definition can remain as it is.
+
+2. **Error 2**: "Maps must be rectangular, yo (In a level, the length of each row must be the same)."
+   - All rows in the levels must have the same number of columns. We can adjust the levels to make sure each line has the same length.
+
+3. **Error 3**: "Sprite graphics must be 5 wide and 5 high exactly."
+   - This error refers to the `Wall` object's sprite, which is defined with a 5x5 grid filled with `.` (dots), which is correct in terms of dimensions and should not be causing an error. The issue might be elsewhere. On further inspection, everything here seems fine, so the problem might be due to misidentifying the Background where it should ideally have five rows, as per specification norms.
+
+Based on these insights, we can fix the code by:
+- Ensuring that the `Background` object is correctly defined with one color.
+- Adding placeholder rows to the `Background` object for clarity.
+- Making sure all level rows are the same length by adding extra dots or reducing length as needed.
+
+Here's the corrected code:
+
+```plaintext
+title Maze Explorer
+author YourName
+
+========
+OBJECTS
+========
+
+Background
+lightgreen
+.....
+.....
+.....
+.....
+.....
+
+Wall
+darkgrey
+.....
+.....
+.....
+.....
+.....
+
+Player
+blue
+.....
+..0..
+.000.
+..0..
+.....
+
+Goal
+yellow
+.....
+.....
+..0..
+.....
+.....
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Player
+G = Goal
+
+=========
+SOUNDS
+=========
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Player, Wall, Goal
+
+======
+RULES
+======
+
+[ > Player | Goal ] -> [ > Player | Goal ]
+
+==============
+WINCONDITIONS
+==============
+
+All Player on Goal
+
+=======
+LEVELS
+=======
+
+######
+#....#
+#..#P#
+#.####
+#....#
+#..G.#
+######
+
+######
+#P...#
+#.####
+#....#
+#.####
+#..G.#
+######
+
+######
+#P...#
+#.####
+#.#..#
+#..#G#
+######
+```
+
+The `Background` object now has a full 5x5 grid (though still effectively one color), and the levels have been adjusted to be rectangular by adding extra `.` where necessary to fill out the rows.

@@ -1,0 +1,127 @@
+```plaintext
+title Color Maze
+author Your Name
+homepage http://www.example.com
+
+========
+OBJECTS
+========
+
+Background
+black
+
+Wall
+gray
+00000
+11111
+11111
+11111
+00000
+
+Player
+white yellow
+..0..
+.000.
+..0..
+.....
+.....
+
+RedCrate
+red
+.....
+..0..
+.000.
+..0..
+.....
+
+GreenCrate
+green
+.....
+..0..
+.000.
+..0..
+.....
+
+RedTarget
+pink
+.....
+.....
+..0..
+.....
+.....
+
+GreenTarget
+lightgreen
+.....
+.....
+..0..
+.....
+.....
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Player
+R = RedCrate
+G = GreenCrate
+r = RedTarget
+g = GreenTarget
+
+Crate = RedCrate or GreenCrate
+Target = RedTarget or GreenTarget
+
+=======
+SOUNDS
+=======
+
+Crate MOVE 36772507
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Target
+Wall
+Crate
+Player
+
+======
+RULES
+======
+
+[ > Player | Crate ] -> [ > Player | > Crate ]
+
+==============
+WINCONDITIONS
+==============
+
+All RedCrate on RedTarget
+All GreenCrate on GreenTarget
+
+=======
+LEVELS
+=======
+
+#=ROW#=COLUMN
+######======#
+#R......g..G#
+#....P..r...#
+#....#####..#
+#...........#
+#############
+
+######======#
+#....R..g.Gr#
+#.P........G#
+#....#####..#
+#...........#
+#############
+
+message Welcome to Color Maze!
+```
+
+This game titled "Color Maze," features a player who navigates through a maze pushing colored crates onto their respective targets. Each level requires all crates to be on their matching targets to win.

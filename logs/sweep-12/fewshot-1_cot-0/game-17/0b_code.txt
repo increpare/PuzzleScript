@@ -1,0 +1,79 @@
+Certainly! Below is a complete code for a simple PuzzleScript game where a player collects stars to win. The player controls a character to navigate through the level and collect all stars to win. The game consists of a single level for demonstration purposes.
+
+```plaintext
+title Collect the Stars
+author PuzzleScript User
+
+========
+OBJECTS
+========
+
+Background
+#87CEFA
+
+Wall
+#8B0000
+
+Player
+#FFD700
+..1..
+.111.
+.111.
+.111.
+..1..
+
+Star
+#FFFF00
+..0..
+.010.
+00100
+.010.
+..0..
+
+=======
+LEGEND
+=======
+. = Background
+# = Wall
+P = Player
+* = Star
+
+=======
+SOUNDS
+=======
+SFX0 63262720
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Star
+Wall
+Player
+
+======
+RULES
+======
+
+[ > Player | Star ] -> [ > Player | ] SFX0
+
+==============
+WINCONDITIONS
+==============
+
+no Star
+
+=======
+LEVELS
+=======
+
+#####
+#...#
+#.P.#
+#.*.#
+#...#
+#####
+```
+
+This game features a player character that moves around a small grid. The player aims to collect the star, which will result in a win condition. Walls act as obstacles and cannot be passed through by the player.

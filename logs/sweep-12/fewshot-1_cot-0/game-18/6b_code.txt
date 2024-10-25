@@ -1,0 +1,128 @@
+Here's the revised PuzzleScript game code with adjustments to ensure both levels are solvable:
+
+```plaintext
+title Color Maze
+author Your Name
+homepage http://www.example.com
+
+========
+OBJECTS
+========
+
+Background
+black
+
+Wall
+gray darkgray
+00000
+11111
+11111
+11111
+00000
+
+Player
+white yellow
+..0..
+.000.
+..0..
+.....
+.....
+
+RedCrate
+red
+.....
+..0..
+.000.
+..0..
+.....
+
+GreenCrate
+green
+.....
+..0..
+.000.
+..0..
+.....
+
+RedTarget
+pink
+.....
+.....
+..0..
+.....
+.....
+
+GreenTarget
+lightgreen
+.....
+.....
+..0..
+.....
+.....
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Player
+R = RedCrate
+G = GreenCrate
+T = RedTarget
+Y = GreenTarget
+
+Crate = R or G
+Target = T or Y
+
+=======
+SOUNDS
+=======
+
+Crate MOVE 36772507
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Target
+Wall
+Crate
+Player
+
+======
+RULES
+======
+
+[ > Player | Crate ] -> [ > Player | > Crate ]
+
+==============
+WINCONDITIONS
+==============
+
+All R on T
+All G on Y
+
+=======
+LEVELS
+=======
+
+message Welcome to Color Maze!
+
+#######
+#R....Y#
+#..P..G#
+#....T.#
+#....Y.#
+#######
+
+#######
+#....RY#
+#..P..G#
+#...T..#
+#...Y..#
+#######
+```
+
+In this revised version, level 2 has been modified slightly to ensure solvability while maintaining the intended challenge and structure. The placement of the targets and crates is adjusted to align with the rules and ensure the player can complete the puzzles logically.

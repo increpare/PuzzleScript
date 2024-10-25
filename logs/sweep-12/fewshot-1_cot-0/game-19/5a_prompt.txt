@@ -1,0 +1,126 @@
+SYSTEM PROMPT:
+You are a game designer, familiar with the PuzzleScript game description language. Here are some example games, for inspiration (do not reproduce these games exactly):
+
+USER PROMPT:
+The following PuzzleScript game code:
+```plaintext
+title Forest Guardians
+author PuzzleMaster
+homepage www.puzzlemastergames.com
+
+========
+OBJECTS
+========
+
+Background
+green darkgreen
+11111
+01111
+11101
+01111
+11111
+
+Player
+lime black
+00000
+01110
+01110
+01110
+00000
+
+Tree
+brown green darkgreen
+02220
+20002
+22222
+20002
+02220
+
+Fire
+red orange yellow
+.001.
+.122.
+11221
+.122.
+.001.
+
+Water
+blue
+.....
+..0..
+.....
+..0..
+.....
+
+=======
+LEGEND
+=======
+
+. = Background
+P = Player
+T = Tree
+F = Fire
+W = Water
+
+=======
+SOUNDS
+=======
+
+startgame 50287705
+picksound 32157608
+dousesound 30156123
+endgame 74955903
+
+================
+COLLISIONLAYERS 
+================
+
+Background
+Water
+Tree, Fire
+Player
+
+======
+RULES
+======
+
+[ > Player | Tree ] -> [ Player | Tree ]
+[ > Player | Fire ] -> [ Player | Background dousesound ]
+[ > Player | No Fire ] -> [ Player | ]
+
+startLoop
+
+[ Player | Fire ] -> [ Player | Fire ]
+
+endLoop
+
+==============
+WINCONDITIONS
+==============
+
+no Fire
+
+=======
+LEVELS
+=======
+
+TTTTTTTTT
+T...F...T
+T..P....T
+T.......T
+TWWWWWWWT
+T.......T
+TTTTTTTTT
+
+```
+produced the following console output:
+=================================
+line 18 : Was looking for color for object PLAYER, got "lime " instead.
+line 20 : Trying to access color number 1 from the color palette of sprite PLAYER, but there are only 1 defined in it.
+line 21 : Trying to access color number 1 from the color palette of sprite PLAYER, but there are only 1 defined in it.
+line 22 : Trying to access color number 1 from the color palette of sprite PLAYER, but there are only 1 defined in it.
+line 64 : unexpected sound token "picksound".
+line 65 : unexpected sound token "dousesound".
+too many errors, aborting compilation
+Errors detected during compilation; the game may not work correctly.
+Return a repaired version of the code that addresses these errors. Return your code in full, inside a ```plaintext code block.

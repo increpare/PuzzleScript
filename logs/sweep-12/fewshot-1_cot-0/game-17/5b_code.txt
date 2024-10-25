@@ -1,0 +1,72 @@
+```plaintext
+========
+OBJECTS
+========
+
+Background
+lightgrey
+00000
+00000
+00000
+00000
+00000
+
+Star
+black yellow
+..0..
+.010.
+00100
+.010.
+..0..
+
+Player
+blue
+..0..
+.000.
+00000
+.000.
+..0..
+
+=======
+LEGEND
+=======
+
+. = Background
+P = Player
+* = Star
+
+=======
+SOUNDS
+=======
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Player, Star
+
+======
+RULES
+======
+
+[ Player | Star ] -> [ Player | ]
+
+==============
+WINCONDITIONS
+==============
+
+no Star
+
+=======
+LEVELS
+=======
+
+..........
+...*......
+..........
+.....P....
+..........
+..........
+```
+The error was due to the lack of a corresponding right-hand side pattern for `Star` in the rule. Adding `|` ensures both sides of the rule have the same token pattern.

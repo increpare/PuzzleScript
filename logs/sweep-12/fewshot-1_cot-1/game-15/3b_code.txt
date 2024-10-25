@@ -1,0 +1,102 @@
+Certainly! Based on the error message, it seems that your levels have blocks that prevent the Player from reaching the Goal. Let's adjust the levels to ensure they can be solved. Here is your game code with solvable levels:
+
+```plaintext
+title Maze Explorer
+author YourName
+
+========
+OBJECTS
+========
+
+Background
+lightgreen
+.....
+.....
+.....
+.....
+.....
+
+Wall
+darkgrey
+.....
+.....
+.....
+.....
+.....
+
+Player
+blue
+.....
+..0..
+.000.
+..0..
+.....
+
+Goal
+yellow
+.....
+.....
+..0..
+.....
+.....
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Player
+G = Goal
+
+=========
+SOUNDS
+=========
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Player, Wall, Goal
+
+======
+RULES
+======
+
+[ > Player | Goal ] -> [ > Player | Goal ]
+
+==============
+WINCONDITIONS
+==============
+
+All Player on Goal
+
+=======
+LEVELS
+=======
+
+######
+#....#
+#..#P#
+#.#..#
+#..G.#
+######
+
+######
+#P...#
+#.####
+#....#
+#.####
+#..G.#
+######
+
+######
+#P...#
+#.####
+#.#..#
+#..G.#
+######
+```
+
+I have updated the levels to make sure the player can reach the goal. Now, each level should be solvable with a clear path for the player to move to the goal.

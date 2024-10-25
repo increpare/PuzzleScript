@@ -1,0 +1,134 @@
+Let's address the issues step by step:
+
+1. **Line 37**: The errors related to the `Gem` object indicate issues with the color definition. Unlike other objects, the Gem's color setup seems incorrect. The color should be declared using color IDs from the color palette of PuzzleScript. We'll use two colors akin to other objects for consistency.
+
+2. **Sound Syntax Issue on Line 67**: The error indicates a misuse of the sound declaration `COLLECT`, which is not a recognized keyword for sound events. We must change this to a supported sound event type, like `MOVE` or `DESTROY`.
+
+Based on these insights, here's the corrected code for `Gem` and the adjustments on the sound settings:
+
+```plaintext
+title Gem Collector
+author YourName
+homepage www.example.com
+
+========
+OBJECTS
+========
+
+Background
+black
+
+Player
+yellow
+.000.
+.000.
+.000.
+.000.
+.....
+
+Wall
+grey
+00000
+00000
+00000
+00000
+00000
+
+Boulder
+darkgrey
+..0..
+.000.
+00000
+.000.
+..0..
+
+Gem
+darkcyan cyan
+.....
+..0..
+.010.
+..0..
+.....
+
+Goal
+green
+.....
+..0..
+.000.
+..0..
+.....
+
+=======
+LEGEND
+=======
+
+. = Background
+P = Player
+# = Wall
+B = Boulder
+* = Gem
+G = Goal
+
+=======
+SOUNDS
+=======
+
+Gem DESTROY 12345678
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Gem
+Player, Boulder, Wall, Goal
+
+======
+RULES
+======
+
+# Movement
+[ > Player | ] -> [ > Player | ]
+
+# Gem collection
+[ Player | Gem ] -> [ Player ]
+
+==============
+WINCONDITIONS
+==============
+
+no Gem and Player on Goal
+
+=======
+LEVELS
+=======
+
+#########
+#.......#
+#.P.*G..#
+#...#####
+#.*.#.B*#
+#.......#
+#########
+
+#########
+#.......#
+#.P....*#
+#...#####
+#.B.#...#
+#...G...#
+#.#.B#..#
+#...*...#
+#########
+
+#########
+#.......#
+#..#.G*..#
+#..#####.#
+#*...P..*#
+#.B#B#..#
+#.......#
+#########
+```
+
+This code should now be free of the compilation errors mentioned in your console output.

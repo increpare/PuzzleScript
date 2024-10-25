@@ -1,0 +1,119 @@
+The error messages indicate that the `CrateOnTarget` sprite has color number issues. Specifically, the `CrateOnTarget` sprite definition tries to use three colors (indicated by numbers 0, 1, and 2), but only two colors are defined in the palette. This can lead to inconsistencies and errors during rendering in PuzzleScript, which requires the number of colors in a sprite's palette to match the numbers used in its pattern.
+
+To address this, we need to modify the `CrateOnTarget` object definition to ensure that it uses only the defined colors. Let's break this down step-by-step:
+
+1. **Examine the Color Palette**: The `CrateOnTarget` object defines its color palette as `DarkGreen` and `LightGreen`. This means it should use only `0` and `1`.
+2. **Modify the Sprite**: The pattern for `CrateOnTarget` attempts to use a third color `2`, which is undefined. We should adjust the sprite pattern to only use `0` and `1`.
+
+Here's the fixed code with the adjustments applied:
+
+```plaintext
+title Sokoban Example
+author ExampleAuthor
+
+========
+OBJECTS
+========
+
+Background
+LightBlue
+00000
+00000
+00000
+00000
+00000
+
+Wall
+DarkGrey Grey
+11111
+11111
+11111
+11111
+11111
+
+Player
+Yellow Black
+..0..
+.010.
+00100
+.010.
+..0..
+
+Crate
+Brown Brown
+.....
+.111.
+.111.
+.111.
+.....
+
+Target
+DarkGreen Green
+.....
+..0..
+.000.
+..0..
+.....
+
+CrateOnTarget
+DarkGreen LightGreen
+.....
+.101.
+.111.
+.101.
+.....
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Player
+C = Crate
+T = Target
+O = CrateOnTarget
+
+=======
+SOUNDS
+=======
+
+Crate MOVE 34391103
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Target
+Player, Wall, Crate, CrateOnTarget
+
+======
+RULES
+======
+
+[ > Player | Crate ] -> [ > Player | > Crate ]
+[ Crate | Target ] -> [ CrateOnTarget | Target ]
+[ Player | CrateOnTarget ] -> [ > Player | > Crate ]
+
+==============
+WINCONDITIONS
+==============
+
+All CrateOnTarget on Target
+
+=======
+LEVELS
+=======
+
+#######
+#.....#
+#..P..#
+#.CTC.#
+#####.#
+
+```
+
+**Explanation of Changes**:
+- In the `CrateOnTarget` sprite definition, all occurrences of `2` have been changed to `1`, so that only existing colors `0` (DarkGreen) and `1` (LightGreen) are used.
+- This adjustment ensures that the game complies with the PuzzleScript requirements for coloring, resolving the compilation errors related to the color usage. 
