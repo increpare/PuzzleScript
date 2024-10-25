@@ -1,0 +1,154 @@
+To create a simplified demake of a game titled "Pirate Plunge" using PuzzleScript, we'll implement a simple grid-based version. The game will feature a player-controlled pirate that navigates through a grid to collect treasure while avoiding moving obstacles (representing rival buccaneers). We'll emulate the shifting seas by having certain tiles change state at intervals.
+
+### Plan:
+
+1. **Define Objects:**
+   - **Player (Pirate):** Represent the player-controlled character.
+   - **Treasure:** The item the player needs to collect.
+   - **Buccaneer:** The enemy that moves across the grid.
+   - **Sea:** The base navigable tile.
+   - **Island:** A static tile to represent obstacles.
+   - **Shifting Sea:** Tiles that alternate between sea and island to represent "shifting" mechanics.
+   
+2. **Define Colors:** Assign colors to each object for visibility.
+3. **Set Up Legend:** Map each character to its corresponding object.
+4. **Collision Layers:** Define which objects can occupy the same space.
+5. **Define Rules:**
+   - Player movement.
+   - Buccaneers move randomly each turn.
+   - Shifting sea tiles alternate state periodically.
+   - Collect treasure to win.
+6. **Win Condition:** All treasures collected.
+7. **Levels:** Create at least one level to demonstrate gameplay.
+   
+Here's the implementation:
+
+```plaintext
+title Pirate Plunge
+author You
+
+========
+OBJECTS
+========
+
+Background
+blue
+
+Player
+White
+..0..
+.000.
+.0.0.
+.000.
+..0..
+
+Treasure
+Yellow
+..0..
+.000.
+.000.
+.000.
+..0..
+
+Buccaneer
+Red
+..0..
+.000.
+.000.
+.000.
+..0..
+
+Sea
+LightBlue
+
+Island
+Green
+11111
+11111
+11111
+11111
+11111
+
+ShiftingSea
+Cyan
+.....
+.....
+.....
+.....
+.....
+
+=======
+LEGEND
+=======
+
+. = Sea
+P = Player
+T = Treasure
+B = Buccaneer
+S = ShiftingSea
+I = Island
+
+=======
+SOUNDS
+=======
+
+collect 66551203
+defeat 86465708
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Sea, Island, ShiftingSea
+Treasure
+Player, Buccaneer
+
+======
+RULES
+======
+
+RIGHT [> Player | Sea] -> [> Player | ]
+LEFT [< Player | Sea] -> [< Player | ]
+UP [^ Player | Sea] -> [^ Player | ]
+DOWN [v Player | Sea] -> [v Player | ]
+
+RANDOM [ > Buccaneer | Sea] -> [ > Buccaneer | ]
+RANDOM [ < Buccaneer | Sea] -> [ < Buccaneer | ]
+
+[Player | Treasure] -> [Player] sound collect
+
+[Player | Buccaneer] -> [Player] sound defeat
+[Buccaneer | Player] -> [Buccaneer] sound defeat
+
+RANDOM TURN [ShiftingSea] -> [Island]
+RANDOM TURN [Island] -> [ShiftingSea]
+
+==============
+WINCONDITIONS
+==============
+
+No Treasure
+
+=======
+LEVELS
+=======
+
+####### 
+#...T.#
+#..I..#
+#P.S.I#
+#..S..#
+#B...T#
+#######
+```
+
+### Explanation:
+
+- **Objects and Colors:** We've defined clear visual distinctions for each object. The player and enemies are easily noticeable.
+- **Legend:** This maps each character to the respective game piece.
+- **Collision Layers:** Ensure that certain objects only occupy appropriate layers, so they don't overlap incorrectly.
+- **Rules:** Allow the player to move over the sea and not on islands. Buccaneers move randomly and cause a defeat sound on collision with the player. The shifting seas will alternate their states occasionally, using the `RANDOM TURN` rule.
+- **Game Objective:** Collect all treasures to win.
+
+This provides a simplified snapshot of the intended gameplay experience in the "Pirate Plunge" theme.

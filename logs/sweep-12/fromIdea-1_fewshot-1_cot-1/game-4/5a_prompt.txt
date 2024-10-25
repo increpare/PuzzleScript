@@ -1,0 +1,123 @@
+SYSTEM PROMPT:
+You are a game designer, familiar with the PuzzleScript game description language. Here are some example games, for inspiration (do not reproduce these games exactly):
+
+USER PROMPT:
+The following PuzzleScript game code:
+```plaintext
+title Railway Riddle
+author GameDesignerPro
+homepage none
+
+========
+OBJECTS
+========
+Background
+#bbbbbb
+
+Player
+#ffcc00
+..0..
+..0..
+..0..
+..0..
+..0..
+
+TrackHorizontal
+#000000
+.....
+00000
+.....
+.....
+.....
+
+TrackVertical
+#000000
+..0..
+..0..
+..0..
+..0..
+.....
+
+TrackCorner
+#000000
+....0
+..000
+..0..
+.....
+.....
+
+Town
+#00ff00
+..0..
+..000
+..000
+..0..
+.....
+
+Obstacle
+#ff0000
+.....
+.000.
+.000.
+.000.
+.....
+
+========
+LEGEND
+========
+. = Background
+P = Player
+H = TrackHorizontal
+TV = TrackVertical
+C = TrackCorner
+T = Town
+X = Obstacle
+
+=======
+SOUNDS
+=======
+
+================
+COLLISIONLAYERS
+================
+Background
+Player, TrackHorizontal, TrackVertical, TrackCorner
+Town, Obstacle
+
+======
+RULES
+======
+[right P | Background no T no X] -> [ > P | H ]
+[left P | Background no T no X] -> [ < P | H ]
+[up P | Background no T no X] -> [ ^ P | C ]
+[down P | Background no T no X] -> [ v P | TV ]
+
+[P T] -> [P T]
+
+==============
+WINCONDITIONS
+==============
+all T on H
+
+=======
+LEVELS
+=======
+message Connect the Towns!
+T...........
+............
+.....P......
+............
+.........T..
+
+message Navigate the obstacles!
+T...........
+....X....X..
+....X....X..
+......PX....
+......X...T.
+
+
+```
+compiled, but a solvability check returned the following error:
+Hit maximum search depth of 1000001 while attempting to solve 1. Are you sure it's solvable? If so, please make it a bit simpler.Hit maximum search depth of 1000001 while attempting to solve 3. Are you sure it's solvable? If so, please make it a bit simpler.
+The game should be a simplified `demake` of the following game idea: **Railway Riddle:** Construct a seamless train track through challenging landscapes to connect distant towns before the clock runs out.. Return your code in full, inside a ```plaintext code block.

@@ -1,0 +1,161 @@
+To tackle the errors and revise the game code, let's first identify the source of the issues. The errors are related to the legend section, where certain keys are missing. These errors are likely due to spaces or characters being incorrectly interpreted or needing assignment.
+
+### Plan of Action:
+1. **Identify Missing Elements**: Check the elements referenced in the collision layers, rules, and win conditions against those defined in the legend section.
+2. **Correct Legend Section**: Ensure all characters used in the levels are defined in the legend.
+3. **Ensure Object and Layer Consistency**: Verify that all objects used within the rules and levels are consistently referred to in the corresponding sections.
+
+Next, I will correct the missing entries and ensure the game code conforms to PuzzleScript standards. Below is the revised code:
+
+```plaintext
+title Mechanimal Demake
+author AI Assistant
+
+========
+OBJECTS
+========
+
+Background
+white
+
+Player
+blue
+..0..
+.000.
+00.00
+.000.
+..0..
+
+Bird
+green
+.....
+.....
+..0..
+.....
+.....
+
+Rhino
+gray
+.....
+.000.
+00000
+.000.
+.....
+
+Bridge
+brown
+.....
+.....
+.....
+.....
+.....
+
+Gap
+black
+00000
+00000
+00000
+00000
+00000
+
+Wall
+black
+
+Goal
+yellow
+.000.
+0...0
+0...0
+0...0
+.000.
+
+=======
+LEGEND
+=======
+
+. = Background
+P = Player
+B = Bird
+R = Rhino
+H = Bridge
+G = Gap
+# = Wall
+X = Goal
+
+=======
+SOUNDS
+=======
+
+SFX0 66367200
+SFX1 47243307
+
+===============
+COLLISIONLAYERS
+===============
+
+Background
+Player, Bird, Rhino, Bridge, Wall, Gap, Goal
+
+=====
+RULES
+=====
+
+(Player moves onto a bird to control it)
+[ > Player | Bird ] -> [ | Player ] SFX0
+[ Player | Bird ] -> [ | Player ] SFX0
+
+(Player flies over gaps using a bird)
+[ Player Gap ] -> [ Player ]
+
+(Player moves rhinos to clear obstacles)
+[ > Player | Rhino ] -> [ > Player | > Rhino ] SFX0
+
+(Rhino can become a bridge over gaps)
+[ > Rhino | Gap ] -> [ > Bridge | ]
+
+(Player reaches goal)
+[ Player | Goal ] -> [ Player ] SFX1
+
+=============
+WINCONDITIONS
+=============
+
+All Player on Goal
+
+=======
+LEVELS
+=======
+
+# Basic Movement
+#######
+#P...X#
+#.....#
+#######
+
+# Bird Usage
+#######
+#P..B.#
+###G###
+#....X#
+#######
+
+# Rhino and Gap
+#########
+#P..R..X#
+##G.G.G##
+#########
+
+# Mixed
+#########
+#P.B.R.X#
+#.......#
+##G.G.G##
+#########
+```
+
+### Explanation:
+- **Legend Correction**: Ensure every character used in the level maps is defined in the `LEGEND` section. This includes ensuring entries for the `Player`, `Bird`, `Rhino`, `Bridge`, `Gap`, `Wall`, and `Goal`.
+- **Ensure Consistency**: Verify that all the referenced elements in the layers and rules are available and correctly defined.
+- **Verify Compilation**: Make sure the revised code should not produce any `Key not found` error during compilation as every character in levels is now clearly defined in the `LEGEND`.
+
+With these revisions, the game code should compile successfully and function as intended.

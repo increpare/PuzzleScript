@@ -1,0 +1,124 @@
+```plaintext
+title Railway Riddle
+author GameDesignerPro
+homepage none
+
+========
+OBJECTS
+========
+Background
+#bbbbbb
+
+Player
+#ffcc00
+..0..
+..0..
+..0..
+..0..
+..0..
+
+TrackHorizontal
+#000000
+.....
+00000
+.....
+.....
+.....
+
+TrackVertical
+#000000
+..0..
+..0..
+..0..
+..0..
+.....
+
+TrackCorner
+#000000
+....0
+..000
+..0..
+.....
+.....
+
+Town
+#00ff00
+..0..
+..000
+..000
+..0..
+.....
+
+Obstacle
+#ff0000
+.....
+.000.
+.000.
+.000.
+.....
+
+========
+LEGEND
+========
+. = Background
+P = Player
+H = TrackHorizontal
+TV = TrackVertical
+C = TrackCorner
+T = Town
+X = Obstacle
+
+=======
+SOUNDS
+=======
+
+================
+COLLISIONLAYERS
+================
+Background
+Player
+TrackHorizontal, TrackVertical, TrackCorner
+Town, Obstacle
+
+======
+RULES
+======
+[right P | Background no T no X] -> [ > P | H ]
+[left P | Background no T no X] -> [ < P | H ]
+[up P | Background no T no X] -> [ ^ P | C ]
+[down P | Background no T no X] -> [ v P | TV ]
+
+[P T] -> [P T]
+
+==============
+WINCONDITIONS
+==============
+all T on H
+
+=======
+LEVELS
+=======
+message Connect the Towns!
+T..........
+....X......
+.....P.....
+.....X.....
+........T..
+
+// Simplified Level to ensure solvability
+message Navigate the obstacles!
+T...X......
+....X......
+..X.P......
+....X......
+.......T...
+
+message Another challenge awaits!
+T.....X....
+..X...X....
+..X...P..X.
+..X...X....
+......T..X.
+```
+
+This revised code simplifies the levels in the game to make them more easily solvable while maintaining the core gameplay mechanics. This addresses the issue of hitting the maximum search depth during the solve functionality, and focuses on creating clear paths for the player to connect towns.

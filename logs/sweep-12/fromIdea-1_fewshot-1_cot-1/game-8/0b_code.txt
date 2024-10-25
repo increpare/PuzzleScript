@@ -1,0 +1,149 @@
+To create a PuzzleScript game based on the game idea "Olive Odyssey," we need to simplify the concept to fit within the constraints of the PuzzleScript language, while focusing on the core mechanics: harvesting ingredients and cooking them into magical dishes. 
+
+### Plan:
+
+1. **Objective**: The player collects ingredients (like olives) and brings them to a cooking spot (magic cauldron) to create a magical dish. This dish could unlock the exit to a new level or alter the current level layout.
+
+2. **Objects**:
+   - Background: The base layer for the game.
+   - Player: The character that collects ingredients.
+   - Olive: Represents an ingredient.
+   - Cauldron: Where the magic happens (cooking/combing ingredients).
+   - Exit: The objective to reach after cooking a dish.
+   - Wall: Obstacles that the player must navigate around.
+
+3. **Game Logic**:
+   - The player picks up olives.
+   - The player carries the ingredients to the cauldron.
+   - Upon "cooking" (dropping the olives into the cauldron), the exit is unlocked.
+
+4. **Win Condition**: 
+   - The player reaches the exit after cooking a dish.
+
+5. **Level Examples**: Include simple navigation puzzles to reach olives and return them to the cauldron.
+
+### Code Implementation
+
+```plaintext
+title Olive Odyssey: Demake
+author Game Designer
+
+========
+OBJECTS
+========
+
+Background
+green
+
+Wall
+grey
+
+Player
+blue
+.000.
+.000.
+.222.
+.030.
+.000.
+
+Olive
+yellow
+.....
+..0..
+.000.
+..0..
+.....
+
+Cauldron
+purple
+.....
+.....
+.222.
+.333.
+.....
+
+Exit
+red
+.....
+.....
+.2.2.
+.....
+.....
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+@ = Player
+O = Olive
+C = Cauldron
+E = Exit
+Dish = Olive and Cauldron
+
+======
+SOUNDS
+======
+
+sfx0 3295707 (ingredient collected)
+sfx1 96434300 (level completed)
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Exit, Olive
+Player, Wall, Cauldron
+
+======
+RULES
+======
+
+[ @ | O ] -> [ @ ] sfx0  # Player collects an olive
+
+[ @ | C ] -> [ @ | Dish ] # Player adds olive to cauldron
+
+[ Dish ] -> sfx1 
+[ Dish | Exit ] -> [ Exit ] # Transform cauldron to exit: unlock level completion
+
+# Pushing mechanic for player
+[ > Player | Olive ] -> [ > Player | > Olive ]
+
+[ Player on Exit ] -> WIN
+
+
+==============
+WINCONDITIONS
+==============
+
+All Exit on Player
+
+=======
+LEVELS
+=======
+
+# Level 1
+#######
+#.....#
+#..O..#
+#..@..#
+#..C..#
+#.....#
+#..E..#
+#######
+
+# Level 2
+##########
+#........#
+#..O.....#
+##.......#
+#..@..O..#
+#.....C..#
+#...###..#
+#.......E#
+##########
+```
+
+This setup introduces a simple gameplay loop for players to gather ingredients and process them at specific locations, thereby altering the level to allow progression. The game can be expanded by adding new levels with different configurations and additional puzzle elements.

@@ -1,0 +1,138 @@
+To create a simplified "demake" of a game called "Olive Odyssey" in PuzzleScript, we need to strip down the concept into a minimalistic puzzle game format. The main elements of the game idea involve harvesting ingredients and cooking them into dishes. In a simplified PuzzleScript version, we can break this down into:
+
+1. **Objects:**
+   - **Player:** The character that can move around and perform actions.
+   - **Ingredients:** Collectible items scattered around the level, similar to crates but thematic to olives and other ingredients.
+   - **Cauldron:** A stationary object where the player brings ingredients to cook them.
+   - **Dishes:** The resultant items after ingredients are cooked. For simplicity, transform the ingredients into dishes when they are delivered to the cauldron.
+
+2. **Mechanics:**
+   - Players collect the ingredients by stepping on them.
+   - Deliver ingredients by moving them to the cauldron to create dishes. The challenge is built around the placement and movement strategy to optimize the cooking.
+
+3. **Goals:**
+   - The victory condition could involve cooking a certain number of dishes by adding ingredients to the cauldron.
+
+Here's the complete code for the simplified game in PuzzleScript:
+
+```plaintext
+title Olive Odyssey
+author Assistant
+homepage www.puzzlescript.net
+
+========
+OBJECTS
+========
+
+Background
+lightgreen
+
+Player
+darkgreen white
+..0..
+.111.
+..0..
+.1.1.
+.0.0.
+
+Olive
+darkgreen
+.....
+..1..
+.....
+..1..
+.....
+
+Herb
+darkblue
+.....
+..2..
+.....
+..2..
+.....
+
+Garlic
+lightyellow
+.....
+..3..
+.....
+..3..
+.....
+
+Cauldron
+brown
+.....
+..4..
+.444.
+..4..
+.....
+
+Dish
+darkred
+.....
+..5..
+..5..
+.....
+
+=======
+LEGEND
+=======
+
+Ingredient = Olive or Herb or Garlic
+Goal = Cauldron
+
+=======
+SOUNDS
+=======
+
+Ingredient pickup 59039009
+Dish create 78340002
+Endlevel 12234100
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Player, Ingredient, Cauldron, Dish
+
+======
+RULES
+======
+
+[ > Player | Ingredient ] -> [ Player | ] 
+  add [ Dish ]
+  
+[ > Player | Cauldron ] -> [ Player | Dish ] 
+  message "You cooked a dish!"
+
+==============
+WINCONDITIONS
+==============
+
+some Dish
+
+=======
+LEVELS
+=======
+
+######
+#....#
+#..P.#
+#O.H.#
+#.G#.#
+#....#
+#C...#
+######
+```
+
+### Explanation:
+
+- **Objects**: We define six objects representing the player, three types of ingredients (Olive, Herb, Garlic), a cauldron, and a dish.
+- **Rules**: 
+  - When the player moves over an ingredient, the ingredient is collected, and a dish is created.
+  - When the player moves to the cauldron, any held ingredients are converted into dishes.
+- **Win Conditions**: The game is won if any dishes have been cooked.
+- **Levels**: A sample level is included where the goal is to move ingredients to the cauldron, creating dishes and achieving the win condition.
+
+This game is straightforward and encapsulates the essence of "harvesting and cooking," providing room for players to plan their captures and deliveries efficiently.

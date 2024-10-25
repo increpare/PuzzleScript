@@ -1,0 +1,132 @@
+To repair the provided PuzzleScript code, we need to address the errors highlighted in the console output. Here's how we can proceed:
+
+1. **Section Order:** The PuzzleScript language requires a specific order of sections. Since the code has mentioned that `COLLISIONLAYERS` is out of order and suggests that a `SOUNDS` section is missing, we must ensure the correct section order. The typical order is:
+
+    - `OBJECTS`
+    - `LEGEND`
+    - `SOUNDS`
+    - `COLLISIONLAYERS`
+    - `RULES`
+    - `WINCONDITIONS`
+    - `LEVELS`
+
+    We need to add an empty `SOUNDS` section before `COLLISIONLAYERS`.
+
+2. **Terminology in Rules:** The errors indicate that `player`, `background`, and `enemysoldier` are not correctly recognized. `LEGEND` definitions are required to match the names used in the `RULES`. Let's ensure that references in rules correctly use the legend terminology and existing definitions.
+
+3. **Legend Naming:** The names used in the `RULES` should directly map to the defined legends. We should carefully replace references in rules to align with the `LEGEND` section.
+
+4. **Simplified Game Functionality:** Ensure that the basic mechanics like movement and removal of Enemy Soldiers when they collide with Player Soldiers work correctly.
+
+Let's implement these corrections:
+
+```plaintext
+title Tile Tactics Demake
+author YourName
+
+========
+OBJECTS
+========
+
+Background
+Black
+00000
+00000
+00000
+00000
+00000
+
+PlayerSoldier
+LightGreen Green
+.111.
+01110
+11111
+.111.
+.111.
+
+EnemySoldier
+LightRed Red
+.111.
+01110
+11111
+.111.
+.111.
+
+AdvTerrain
+Yellow
+.....
+.000.
+00000
+.000.
+.....
+
+Wall
+DarkGray Black
+11111
+11111
+11111
+11111
+11111
+
+=======
+LEGEND
+=======
+
+. = Background
+P = PlayerSoldier
+E = EnemySoldier
+A = AdvTerrain
+# = Wall
+
+=========
+SOUNDS
+=========
+
+================
+COLLISIONLAYERS
+================
+
+Background
+AdvTerrain
+PlayerSoldier, EnemySoldier
+Wall
+
+======
+RULES
+======
+
+[ > PlayerSoldier | Background ] -> [ > PlayerSoldier | Background ]
+[ > EnemySoldier | Background ] -> [ > EnemySoldier | Background ]
+
+[ PlayerSoldier | EnemySoldier ] -> [ PlayerSoldier | Background ]
+[ EnemySoldier | PlayerSoldier ] -> [ EnemySoldier | Background ]
+
+==============
+WINCONDITIONS
+==============
+
+all AdvTerrain on PlayerSoldier
+
+=======
+LEVELS
+=======
+
+##### 
+#...#
+#APA#
+#...#
+##### 
+
+#######
+#.E.E.#
+#..P..#
+#.E.E.#
+#######
+
+```
+
+In this repair:
+
+- An empty `SOUNDS` section is added.
+- The `RULES` section now correctly references objects using the legend items, ensuring alignment with `LEGEND` definitions.
+- The game logic maintains its core simplicity, which involves using terrain advantage by correctly positioning `PlayerSoldier` on `AdvTerrain`.

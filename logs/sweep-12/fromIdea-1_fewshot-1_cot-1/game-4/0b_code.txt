@@ -1,0 +1,160 @@
+To create a simplified PuzzleScript game called "Railway Riddle", we need to think about the core components and mechanics of the game idea. Here, we'll outline the necessary elements and plan for the game:
+
+### Game Concept
+
+**Objective**: Construct a seamless train track through a grid-based landscape to connect two towns.
+
+**Core Mechanics**:
+- Players can build tracks on a map to form a connection between two endpoints (towns).
+- A successful connection completes the level.
+- Each level involves a timer; the player must construct the track before time runs out.
+
+### Game Components
+- **Player (Builder)**: The entity responsible for placing tracks.
+- **Track Piece**: Various parts of the train track (straight, corner, etc.).
+- **Town**: Starting and ending points that need to be connected.
+- **Obstacle**: Terrain or objects that must be navigated around or through.
+- **Timer**: Represented visually as part of the level, indicating a countdown.
+
+### Plan:
+
+1. **Define Objects**: Includes the player, different track pieces, towns, obstacles, and the timer.
+2. **Set Legend**: Establish characters and objects for easy reference in levels.
+3. **Define Rules**: Set rules for movement, track placement, and victory conditions.
+4. **Set Win Conditions**: Define what constitutes a level being completed.
+5. **Create Levels**: Design starting levels to teach mechanics, then increase difficulty.
+
+Let's get to the code:
+
+```plaintext
+title Railway Riddle
+author GameDesignerPro
+homepage none
+
+========
+OBJECTS
+========
+Background
+#bbbbbb
+
+Player
+#ffcc00
+..0..
+..0..
+..0..
+..0..
+..0..
+
+TrackHorizontal
+#000000
+.....
+00000
+.....
+.....
+.....
+
+TrackVertical
+#000000
+..0..
+..0..
+..0..
+..0..
+.....
+
+TrackCorner
+#000000
+....0
+..000
+..0..
+.....
+.....
+
+Town
+#00ff00
+..0..
+..000
+..000
+..0..
+.....
+
+Obstacle
+#ff0000
+.....
+.000.
+.000.
+.000.
+.....
+
+========
+LEGEND
+========
+. = Background
+P = Player
+H = TrackHorizontal
+V = TrackVertical
+C = TrackCorner
+T = Town
+X = Obstacle
+
+=========
+SOUNDS
+=========
+sfx0 58054315
+sfx1 61813487
+endgame 78945213
+
+================
+COLLISIONLAYERS
+================
+Background
+Player, TrackHorizontal, TrackVertical, TrackCorner
+Town, Obstacle
+
+======
+RULES
+======
+right [ > Player | Background no Town no Obstacle ] -> [ > | Player ]
+left [ < Player | Background no Town no Obstacle ] -> [ < | Player ]
+up [ ^ Player | Background no Town no Obstacle ] -> [ ^ | Player ]
+down [ v Player | Background no Town no Obstacle ] -> [ v | Player ]
+
+[action Player | Background ] -> [ Player | TrackHorizontal ] sfx0
+[action Player | Background ] down -> [ Player | TrackVertical ] sfx1
+
+late [ TrackHorizontal Player ] -> [ Player ]
+late [ TrackVertical Player ] -> [ Player ]
+
+[ Player Town ] -> SOUND endgame WIN
+
+==============
+WINCONDITIONS
+==============
+all Town on TrackHorizontal
+all Town on TrackVertical
+
+=======
+LEVELS
+=======
+message Connect the Towns!
+T...........
+............
+........P...
+............
+...........T
+
+message Navigate the obstacles!
+T...........
+....X....X..
+....X....X..
+..P....X....
+..X.X...X...
+......X..T..
+```
+
+### Explanation:
+
+- **Objects**: Defined `Player`, train track types, towns, and obstacles.
+- **Legend**: Symbols for the level design.
+- **Rules**: Allow the player to move and place tracks (horizontal and vertical).
+- **Win Conditions**: Train track connecting both towns.
+- **Levels**: Simple introductory levels showcasing basic game mechanics.

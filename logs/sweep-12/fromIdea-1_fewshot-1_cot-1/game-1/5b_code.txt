@@ -1,0 +1,146 @@
+To address the errors you encountered, let's break down the mistakes and fix them:
+
+1. **Level Definition Errors**: The characters `L`, `V`, `1`, `-`, `I`, and `N` were mistakenly interpreted as level definitions. These characters are not defined in the legend, thus causing errors. In the provided code, these characters appear to be part of formatting and comments, which should not be inside the level definitions.
+
+2. **Treasure and Exit**: It appears that the concept of Treasure and additional Win Conditions are not implemented correctly. Although a Treasure object is defined, it is unused in the levels.
+
+Here’s an updated version of the game code:
+
+```plaintext
+title Puzzlot: Simplified Demake
+author You
+
+========
+OBJECTS
+========
+Background
+DarkGreen
+
+Player
+Yellow
+..0..
+.000.
+.000.
+.....
+.....
+
+Boulder
+Brown
+00000
+0...0
+0...0
+0...0
+00000
+
+Target
+LightBlue
+.....
+..0..
+.000.
+..0..
+.....
+
+Wall
+DarkGrey
+00000
+00000
+00000
+00000
+00000
+
+Trap
+Red DarkRed
+.....
+..0..
+.....
+..0..
+.....
+
+Exit
+Yellow Orange
+.....
+..0..
+.000.
+..0..
+.....
+
+Treasure
+Yellow Orange
+.....
+..0..
+.000.
+..0..
+.....
+
+=======
+LEGEND
+=======
+. = Background
+P = Player
+* = Boulder
+O = Target
+# = Wall
+T = Trap
+E = Exit
+$ = Treasure
+
+=======
+SOUNDS
+=======
+
+================
+COLLISIONLAYERS
+================
+Background
+Target, Exit, Treasure
+Player, Wall, Boulder, Trap
+
+======
+RULES
+======
+[ > Player | Boulder ] -> [ > Player | > Boulder ]
+[ Player | Trap ] -> restart  (triggers restart if the Player steps on Trap)
+
+==============
+WINCONDITIONS
+==============
+All Player on Exit
+
+=======
+LEVELS
+=======
+#######
+#.....#
+#..*..#
+#..O..#
+#..P..#
+#..E..#
+#######
+
+#######
+#.###.#
+#..*..#
+#.*O*.#
+#..P..#
+#..E..#
+#######
+
+#######
+#.###.#
+#..T..#
+#.*O*.#
+#..P..#
+#..E..#
+#######
+
+```
+
+### Explanation of Changes:
+
+1. **Removed Unnecessary Characters**: Comments and unnecessary characters were removed from the levels that were causing errors. Levels now only contain valid tiles.
+
+2. **Simplified Levels**: These levels use valid objects defined in the legend, ensuring that the code is consistent and error-free.
+
+3. **Simplified Game Logic**: We focused on keeping the rules and win conditions simple to ensure functionality with PuzzleScript's constraints.
+
+This code should now compile without errors and provide a simpler experience while retaining the core gameplay of navigating traps and pushing boulders to reach the exit.

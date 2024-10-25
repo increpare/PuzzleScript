@@ -1,0 +1,143 @@
+To fix the errors in the provided PuzzleScript code and align it with the game idea of "Dungeon Dimensions," we need to make several corrections and adjustments:
+
+### Issues and Fixes:
+1. **Line Numbers and Comments**: The original code's comments on each line refer to line numbers. In PuzzleScript, there are no inherent line numbers or multi-word comments in the same line as code. We'll fix the format by referencing comments in a line above the code they describe.
+
+2. **Rule Syntax**: The errors refer to improper syntax in rule definitions. Specifically, the erroneous lines contain comments within the rules which PuzzleScript doesn't support. Furthermore, rules should not contain words like "dimension" or descriptions.
+
+3. **Dimensional Switching**: The original logic for dimensional switching via portals was incorrect. The game idea calls for switching between dimensions, but the objects were improperly swapped.
+
+4. **Gameplay Mechanics**: The idea references flipping between dimensions using portals. Thus, we should define more clear mechanics on what flipping entails; for simplicity, switching dimensions will toggle the player's presence in each dimension when stepping on a portal.
+
+Here's the simplified and corrected code:
+
+```plaintext
+title Dungeon Dimensions
+author A Game Designer
+
+========
+OBJECTS
+========
+
+Background
+LightGray
+
+Wall
+DarkGray
+00000
+00000
+00000
+00000
+00000
+
+Player
+Blue
+.....
+..0..
+.000.
+..0..
+.....
+
+Enemy
+Red
+.....
+..0..
+.000.
+..0..
+.....
+
+Portal
+Purple
+.0.0.
+0...0
+.....
+0...0
+.0.0.
+
+ActiveDimension
+White
+
+InactiveDimension
+Black
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Player
+E = Enemy
+O = Portal
+1 = ActiveDimension
+2 = InactiveDimension
+
+=======
+SOUNDS
+=======
+
+Player Create 87210004
+
+================
+COLLISIONLAYERS
+================
+
+Background
+InactiveDimension
+ActiveDimension
+Wall
+Portal
+Player, Enemy
+
+======
+RULES
+======
+
+# Player movement
+[ > Player | Player no Wall ] -> [ > Player ]
+
+# Dimension switching using portals
+
+# When in inactive dimension
+[ Player Portal | InactiveDimension ] -> [ Portal | ActiveDimension | Player ]
+# When in active dimension
+[ Player Portal | ActiveDimension ] -> [ Portal | InactiveDimension | Player ]
+
+# Player attacks enemy
+[ Player | Enemy ] -> [ Player ]
+
+==============
+WINCONDITIONS
+==============
+
+no Enemy
+
+=======
+LEVELS
+=======
+
+# Level 1
+11111111
+1P.....O1
+1...###.1
+1....E..1
+1O####..1
+11......1
+11111111
+
+22222222
+2.......2
+2.#...O.2
+2.#..E#.2
+2.#.....2
+2.O....2
+2.......2
+22222222
+```
+
+### Explanation:
+- The code now properly utilizes brackets and isolates rules without accompanying comments, fixing the syntax errors.
+- The rules on dimension switching are more straightforward: when the player reaches a portal, the dimension switches, represented by swapping the dimension layers.
+- The player can still defeat enemies by moving into their space, fulfilling the win condition of having no enemies remaining. 
+
+This corrected version should align with the demake game idea and correctly operate in the PuzzleScript environment.

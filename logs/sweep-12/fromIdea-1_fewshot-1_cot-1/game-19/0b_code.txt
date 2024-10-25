@@ -1,0 +1,142 @@
+**Reasoning:**
+
+To create a simplified PuzzleScript demake of "Tile Tactics," the game's core mechanics should be captured in a condensed form. 
+
+1. **Conceptualization:** The original game involves placing soldier tiles on a grid, using strategic positioning and terrain advantage to achieve victory. 
+   
+2. **Simplification:** In the PuzzleScript demake:
+   - A grid will function as the battlefield.
+   - Soldiers will be the primary movable pieces.
+   - Both the player and AI will position soldiers.
+   - Certain tiles might represent advantageous terrain for soldiers to win or lose against other soldier tiles.
+   - Achieving a victory condition is crucial, such as occupying certain key positions or eliminating all opposing soldiers.
+
+3. **Game Components:**
+   - Grid: Represented with simple background tiles.
+   - Soldiers: Different soldier types for mixed strategy. 
+   - Terrain: Tiles with special properties impacting battles.
+
+4. **Gameplay Mechanics:**
+   - Players take turns placing soldiers. 
+   - Winning condition: Have most soldiers on advantageous terrain or eliminate enemy soldiers.
+
+5. **PuzzleScript Elements:**
+   - Define objects for the background, soldiers, and terrain.
+   - Write rules for placing soldiers and terrain effects.
+   - Set up a basic winning condition.
+   - Design simple levels to demonstrate mechanics.
+
+```plaintext
+title Tile Tactics Demake
+author YourName
+
+========
+OBJECTS
+========
+
+Background
+Black
+00000
+00000
+00000
+00000
+00000
+
+PlayerSoldier
+Green
+.111.
+11111
+11111
+.111.
+
+EnemySoldier
+Red
+.111.
+11111
+11111
+.111.
+
+AdvTerrain
+Yellow
+.....
+.000.
+00000
+.000.
+
+=======
+LEGEND
+=======
+
+. = Background
+P = PlayerSoldier
+E = EnemySoldier
+A = AdvTerrain
+
+=======
+SOUNDS
+=======
+
+Place MOVE 468942345
+Win SOUND 104293048
+
+================
+COLLISIONLAYERS
+================
+
+Background
+AdvTerrain
+PlayerSoldier, EnemySoldier
+
+======
+RULES
+======
+
+[ >  PlayerSoldier | Background ] -> [ > PlayerSoldier | > Background ]
+[ >  EnemySoldier | Background ] -> [ > EnemySoldier | > Background ]
+
+[ PlayerSoldier | EnemySoldier ] -> [ PlayerSoldier | Background ]
+[ EnemySoldier | PlayerSoldier ] -> [ EnemySoldier | Background ]
+
+[ PlayerSoldier | A ] -> WIN
+[ EnemySoldier | A ] -> [ EnemySoldier | A ] (this could represent holding an advantageous position)
+PLAYERMOVE [A | PlayerSoldier]  -> PLACE PLACE (Ensures occupation wins)
+
+==============
+WINCONDITIONS
+==============
+
+All AdvTerrain on PlayerSoldier
+
+=======
+LEVELS
+=======
+
+#####
+#...#
+#APA#
+#...#
+#####
+
+#######
+#.E.E.#
+#..P..#
+#.E.E.#
+#######
+```
+
+**Explanation:**
+
+- **Objects:** Define simple visuals for the background, player soldiers, enemy soldiers, and advantageous terrain.
+
+- **Legend:** The legend assigns symbolic letters to each defined object for use in rules and levels.
+
+- **Collision Layers:** Ensure distinct layers so that soldiers can interact with the environment and one another correctly.
+
+- **Rules:**
+  - Soldier placement is permitted.
+  - Soldiers override enemy soldiers when moving onto their space.
+  - Winning condition is by occupying advantageous terrain with a player soldier.
+
+- **Levels:** A couple of example scenarios to illustrate the mechanics where one tile represents an advantageous terrain that must be occupied by player soldiers to win.
+
+This simplified demake introduces the core strategic mechanics of positioning and domination within PuzzleScript's limitations.

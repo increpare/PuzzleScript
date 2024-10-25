@@ -1,0 +1,140 @@
+To create a simplified demake of "Pirate Plunge" in PuzzleScript, we need to focus on capturing the core elements of navigating seas, evading pirates, and collecting treasures. We'll design a simple game with the following components:
+
+1. **Objects**:
+   - **Background**: Represents the sea.
+   - **Player**: The pirate ship.
+   - **Pirate**: Rival pirate ships to evade.
+   - **Treasure**: The objective to collect.
+   - **Island**: Cursed land or obstacles.
+
+2. **Rules**:
+   - The player can move in four directions.
+   - Pirates move in set patterns to simulate patrolling.
+   - Collecting a treasure removes it from the game.
+   - If the player and pirate collide, it's game over.
+   - Winning condition is collecting all treasures.
+
+3. **Levels**:
+   - Levels will consist of islands that form obstacles, treasures to collect, and pirates that the player needs to evade.
+
+Below is the complete PuzzleScript code for a simple demake of "Pirate Plunge":
+
+```plaintext
+title Pirate Plunge Demake
+author Your Name
+
+========
+OBJECTS
+========
+
+Background 
+lightblue
+
+Player
+black yellow
+..0..
+.111.
+00110
+01010
+01110
+
+Pirate
+red black
+..2..
+.222.
+22222
+..2..
+..2..
+
+Treasure
+gold
+.....
+..3..
+.333.
+..3..
+.....
+
+Island
+green 
+.111.
+11111
+.111.
+
+=======
+LEGEND
+=======
+
+. = Background
+P = Player
+R = Pirate
+T = Treasure
+I = Island
+
+=========
+SOUNDS
+=========
+
+Pirate MOVE 59710450
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Player, Pirate
+Treasure, Island
+
+======
+RULES
+======
+
+[ P | T ] -> [ P | . ]
+[ > Pirate | no Player ] -> [ | > Pirate ] 
+[ Pirate | Player ] -> [ Pirate | Player ] restart 
+
+==============
+WINCONDITIONS
+==============
+
+no Treasure
+
+=======
+LEVELS
+=======
+
+message level 1 - Set Sail for Adventure!
+
+IIIII
+IP..I
+I ToI
+I  .I
+IIIII
+
+message level 2 - Watchful Eye of the Buccaneers
+
+IIIII
+Ir..I
+I ToI
+I  .I
+IIIII
+
+message level 3 - Treasure Trove Awaits
+
+IIIII
+ITTPI
+IR Io
+I    I
+IIIII
+
+message Congratulations!
+
+```
+
+**Explanation**:
+- **Objects**: We created objects for the player (pirate ship), rival pirates, treasures, islands, and the background sea.
+- **Rules**: Defined rules for player movement, pirate patrol, treasure collection, and collision with pirates for game over.
+- **Collision Layers**: Ensured the correct interaction between layers.
+- **Win Conditions**: The game is won when all treasures are collected.
+- **Levels**: Introduced simple levels to showcase basic navigation and evasion mechanics. 
+
+This code organizes the basic mechanics for navigating, evading, and collecting in a simplified PuzzleScript game.

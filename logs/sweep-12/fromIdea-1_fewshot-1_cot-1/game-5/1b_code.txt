@@ -1,0 +1,131 @@
+To address the errors in the provided PuzzleScript game code and bring it in line with the theme "Haunted Hues," we'll need to make a few changes. Here's a plan to correct the code:
+
+1. **Fix the ColorTile Object Definition:** The error mentions that we're trying to access a color that isn't defined in the `ColorTile` object. We need to define two colors for each sprite: a main color and a background color.
+
+2. **Correct the Sound Definition:** The line defining the sound effect was in the wrong place. We need to move it to the correct section under `SOUNDS`, using the proper format.
+
+3. **Adjust the Sprite Dimensions:** All sprite definitions need to be 5x5, but it seems this is already correctly implemented in this code.
+
+4. **Correct Rule Syntax:** Ensure the rule for transforming `ColorTile` to `ActivatedTile` is properly formatted, as there was a syntax issue involving the `activate` token.
+
+5. **Check Rule for Sounds:** Ensure the syntax for triggering sounds when rules activate is correct.
+
+Let's adjust the code accordingly:
+
+```plaintext
+title Haunted Hues
+author PuzzleScriptUser
+homepage www.puzzlescript.net
+
+========
+OBJECTS
+========
+
+Background
+WHITE BLACK
+.....
+.....
+.....
+.....
+.....
+
+Wall
+BLACK
+.....
+.....
+.....
+.....
+.....
+
+Player
+Red Yellow
+.....
+..0..
+.010.
+..0..
+.....
+
+ColorTile
+Grey Black
+.....
+..0..
+.010.
+..0..
+.....
+
+ActivatedTile
+Green Black
+.....
+..0..
+.000.
+..0..
+.....
+
+Target
+Blue Black
+.....
+..0..
+.....
+.....
+.....
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Player
+C = ColorTile
+A = ActivatedTile
+T = Target
+
+=======
+SOUNDS
+=======
+
+activate 14729600
+
+================
+COLLISIONLAYERS
+================
+
+Background
+ActivatedTile
+Wall
+ColorTile
+Player
+Target
+
+======
+RULES
+======
+
+[ > Player | ColorTile ] -> [ > Player | ActivatedTile ] sfx activate
+
+==============
+WINCONDITIONS
+==============
+
+All ActivatedTile
+
+=======
+LEVELS
+=======
+
+##########
+#........#
+#..P.....#
+#..C..C..#
+#........#
+#..T.....#
+##########
+```
+
+### Explanation:
+- **ColorTile and ActivatedTile Colors:** Added a background color to ensure the color palette has two colors.
+- **Sound Definition Corrected:** Placed the sound effect declaration under `SOUNDS` and ensured it is referenced correctly in the rule using `sfx`.
+- **Rule Syntax:** Used `sfx activate` to tie the sound effect to the transformation rule.
+- **Sprite Dimensions:** Kept the `5x5` as-is for all objects, which you initially implemented correctly.
+
+These adjustments bring the game in line with PuzzleScript's requirements and implement the theme of "restoring color" to a previously black-and-white world.

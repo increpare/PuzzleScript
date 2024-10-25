@@ -97,6 +97,8 @@ def save_sweep_stats():
     data = request.json
     stats = data['results']
     save_dir = os.path.join('logs', data['save_dir'])
+    if not os.path.exists(save_dir):
+        os.makedirs(save_dir)
     with open(os.path.join(save_dir, 'stats.json'), 'w') as f:
         json.dump(stats, f, indent=4)
     concise_stats = {}
@@ -241,4 +243,5 @@ def gen_game():
 
 
 if __name__ == '__main__':
+    # app.run(debug=False, port=8000)
     app.run(debug=True, port=8000)

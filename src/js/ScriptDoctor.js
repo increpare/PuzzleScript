@@ -731,10 +731,11 @@ async function fromIdeaSweep() {
   fewshot_i = 1;
   fromIdea_i = 1;
   for (var cot_i = 0; cot_i < 2; cot_i++) {
-    results[`fewshot-${fewshot_i}_cot-${cot_i}`] = [];
+    hypStr = `fromIdea-${fromIdea_i}_fewshot-${fewshot_i}_cot-${cot_i}`;
+    results[hypStr] = [];
     for (var gameIdx = 0; gameIdx < 20; gameIdx++) {
       saveDir = `sweep-${seed}`
-      gameStr = `${saveDir}/fromIdea-${fromIdea_i}_fewshot-${fewshot_i}_cot-${cot_i}/game-${gameIdx}`;
+      gameStr = `${saveDir}/${hypStr}/game-${gameIdx}`;
       fewshot = fewshot_i == 1
       cot = cot_i == 1
       fromIdea = fromIdea_i == 1
@@ -743,7 +744,7 @@ async function fromIdeaSweep() {
       idea = ideas[ideaIdx];
       gameInd = await genGame('init', [], gameStr,
         gameIdx, fewshot, cot, fromIdea, idea);
-      results[`fewshot-${fewshot_i}_cot-${cot_i}`].push(gameInd);
+      results[hypStr].push(gameInd);
     }
   }
   saveStats(saveDir + '/fromIdea', results);

@@ -1,0 +1,137 @@
+To create a demake of the game "Time Trinkle" using the PuzzleScript game development language, we need to translate the core idea into simple mechanics that fit within PuzzleScript's structure. Given the theme of manipulating time by flipping tiles, the core mechanics involve changing the state of tiles which affects the game's progression. Let's outline the plan:
+
+1. **Game Concept:** 
+   - The player will be able to flip tiles on a grid to change their states between "past" and "future".
+   - The aim is to solve the puzzle by arranging the tiles into a specific configuration, representing a stable timeline.
+
+2. **Objects:**
+   - Background: A generic background.
+   - PastTile: Represents a tile in the past state.
+   - FutureTile: Represents a tile in the future state.
+   - Player: The entity controlled by the player that interacts with tiles.
+
+3. **Interaction:**
+   - The player moves over tiles, which toggles them between the past and future states.
+
+4. **Rules:**
+   - Define rules to toggle the tile states upon interaction.
+   - Set win conditions based on a specific configuration of tiles.
+
+5. **Levels:**
+   - Provide a couple of sample puzzle levels that require different configurations of tile states to win.
+
+6. **Sound & Effects:**
+   - Create minimal sounds to provide feedback upon flipping tiles and winning the level.
+
+Here is the PuzzleScript code implementing the above plan:
+
+```plaintext
+title Time Trinkle
+author Your Name
+homepage www.example.com
+
+========
+OBJECTS
+========
+
+Background
+LightBlue
+00000
+00000
+00000
+00000
+00000
+
+PastTile
+DarkGreen
+.....
+.....
+..0..
+.....
+.....
+
+FutureTile
+Orange
+.....
+.....
+..1..
+.....
+.....
+
+Player
+Yellow
+.....
+..0..
+.000.
+..0..
+.....
+
+=======
+LEGEND
+=======
+. = Background
+P = Player
+T = PastTile
+F = FutureTile
+
+=======
+SOUNDS
+=======
+Toggle 20592508 
+Win 51241523
+
+================
+COLLISIONLAYERS
+================
+
+Background
+PastTile, FutureTile
+Player
+
+======
+RULES
+======
+
+[ > Player | PastTile ] -> [ > Player | FutureTile ] sfx0
+[ > Player | FutureTile ] -> [ > Player | PastTile ] sfx0
+
+==============
+WINCONDITIONS
+==============
+
+All PastTile
+
+=======
+LEVELS
+=======
+
+message Welcome to Time Trinkle. Flip all tiles to their past state.
+
+TFTFT
+FTFTF
+TFTFT
+FTFTF
+TFTFT
+..P..
+
+message Another Level! Flip all tiles to their past state.
+
+FTTFT
+TTFTT
+FTFTF
+TFFTF
+TTTFT
+P....
+
+```
+
+### Explanation:
+
+- **Objects** define the graphical representation of the tiles and player.
+- **Legend** gives shorthand symbols for use in level designing.
+- **Sounds** allow for auditory feedback when tiles are toggled or when the game is won.
+- **Rules** detail how the player interacts with the tiles, flipping them between states.
+- **Win Conditions** require all tiles to be in the past state (turned into `PastTile`).
+- **Levels** specify initial configurations of the tiles and player starting positions.
+
+This basic demake abstracts the original concept into a more limited game suited for the PuzzleScript environment.

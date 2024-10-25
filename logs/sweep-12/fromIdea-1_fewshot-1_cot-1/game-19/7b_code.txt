@@ -1,0 +1,117 @@
+The error messages in the console output provide a clear understanding of what needs to be fixed in the PuzzleScript game code. The error messages suggest issues with the use of sounds and their references in rules. PuzzleScript requires sounds to be defined properly. Let's address these issues step by step and ensure the game runs correctly:
+
+1. **Remove Sound Definitions**: The current use of `move` and `win` under the `SOUNDS` section is incorrect. Sounds should be defined with actual sound data or mapped system sounds when used.
+
+2. **Remove Sound References in Rules**: The rules reference sounds `move` and `win`, which were not defined properly earlier. To fix this, one option is to remove these sound references from the rules for now, as PuzzleScript handles sounds differently.
+
+3. **Clarify Win Conditions**: The goal is to ensure that the player reaches an advantageous terrain tile (AdvTerrain). We need to ensure that the win condition is triggered when `AdvTerrain` is occupied by the `PlayerSoldier`.
+
+Here is the corrected version of the game:
+
+```plaintext
+title Tile Tactics Demake
+author YourName
+
+========
+OBJECTS
+========
+
+Background
+Black
+00000
+00000
+00000
+00000
+00000
+
+PlayerSoldier
+LightGreen Green
+.111.
+01110
+11111
+.111.
+.111.
+
+EnemySoldier
+LightRed Red
+.111.
+01110
+11111
+.111.
+.111.
+
+AdvTerrain
+Yellow
+.....
+.000.
+00000
+.000.
+.....
+
+Wall
+DarkGray Black
+11111
+11111
+11111
+11111
+11111
+
+=======
+LEGEND
+=======
+
+. = Background
+P = PlayerSoldier
+E = EnemySoldier
+A = AdvTerrain
+# = Wall
+Player = PlayerSoldier
+
+================
+COLLISIONLAYERS
+================
+
+Background
+AdvTerrain
+PlayerSoldier, EnemySoldier
+Wall
+
+======
+RULES
+======
+
+[ > Player | Background ] -> [ > Player | Background ]
+[ > EnemySoldier | Background ] -> [ > EnemySoldier | Background ]
+
+[ Player | EnemySoldier ] -> [ Player | Background ]
+[ EnemySoldier | Player ] -> [ EnemySoldier | Background ]
+
+==============
+WINCONDITIONS
+==============
+
+all AdvTerrain on Player
+
+=======
+LEVELS
+=======
+
+##### 
+#...#
+#APA#
+#...#
+##### 
+
+#######
+#.E.E.#
+#..P..#
+#.E.E.#
+#######
+```
+
+### Explanation:
+- **Sounds Removed**: Removed the erroneous `SOUNDS` section and sound references in the rules.
+- **Game Mechanics**: The goal remains the same, the player must maneuver onto an advantageous terrain tile to achieve victory.
+- **Collisions and Win Conditions**: Adjusted without the previous sound triggers, focusing on gameplay mechanics and ensuring all required win conditions are met directly.
+
+This revised code should meet your requirements and run without the compilation errors listed.

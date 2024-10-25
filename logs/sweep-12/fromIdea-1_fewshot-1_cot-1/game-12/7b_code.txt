@@ -1,0 +1,155 @@
+To address the errors in your PuzzleScript game code, let's analyze the issues first:
+
+1. **Sprite Size Issue:** The error messages indicate there are issues with lines 61-65 in the object section where the sprites are defined. This is likely because each sprite must be exactly 5x5 characters. However, the `Background`, `Player`, `Treasure`, and other object sprites appear to be correctly defined as 5x5, so it seems like the problem lies with incorrect parsing due to missing lines or errors in expected lines.
+
+2. **Sound Issues:** Line 83 suggests an issue with sound declarations, where possibly a sound command is missing or incorrect. You mentioned the sound section is commented out, but it isn't clear from the provided code. Ensure no stray or extra lines are present outside sections, which may cause parsing errors.
+
+3. **Wall Layer Issue:** The `Wall` object hasn't been assigned to a collision layer, as indicated by the error message regarding definition without assignment.
+
+4. **Placeholder Symbols:** Ensure all Legends and symbols used in levels are properly defined and match with the object definitions.
+
+Let's proceed to correct these problems with an updated script:
+
+```plaintext
+title Pirate Plunge
+author You
+
+========
+OBJECTS
+========
+
+Background
+blue
+.....
+.....
+.....
+.....
+.....
+
+Player
+white
+..0..
+.000.
+.0.0.
+.000.
+..0..
+
+Treasure
+yellow
+..0..
+.000.
+.000.
+.000.
+..0..
+
+Buccaneer
+red
+..0..
+.000.
+.000.
+.000.
+..0..
+
+Sea
+lightblue
+.....
+.....
+.....
+.....
+.....
+
+Island
+green
+.....
+.....
+.....
+.....
+.....
+
+ShiftingSea
+lightblue
+.....
+.....
+.....
+.....
+.....
+
+Wall
+black
+#####
+#####
+#####
+#####
+#####
+
+=======
+LEGEND
+=======
+
+. = Sea
+P = Player
+T = Treasure
+B = Buccaneer
+S = ShiftingSea
+I = Island
+# = Wall
+
+=======
+SOUNDS
+=======
+# Sounds are commented out to avoid parsing errors
+# SFX0 00000000
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Sea, Island, ShiftingSea
+Treasure
+Player, Buccaneer
+Wall
+
+======
+RULES
+======
+
+[> Player | Sea] -> [> Player | Sea]
+[< Player | Sea] -> [< Player | Sea]
+[^ Player | Sea] -> [^ Player | Sea]
+[v Player | Sea] -> [v Player | Sea]
+
+RANDOM [> Buccaneer | Sea] -> [> Buccaneer | Sea]
+RANDOM [< Buccaneer | Sea] -> [< Buccaneer | Sea]
+
+[Player | Treasure] -> [Player | Sea]
+
+RANDOM [ShiftingSea] -> [Island]
+RANDOM [Island] -> [Sea]
+
+==============
+WINCONDITIONS
+==============
+
+No Treasure
+
+=======
+LEVELS
+=======
+
+#######
+#...T.#
+#..I..#
+#P.S.I#
+#..S..#
+#B...T#
+#######
+```
+
+### Key Corrections Made:
+- Confirmed all sprite definitions were 5x5 pixels.
+- Commented out the sounds section to avoid errors caused by unwanted sound triggers.
+- Assigned the Wall object to a collision layer to match with the error warning regarding unassigned objects.
+- Ensured logical consistency and formatting throughout the script.
+
+Each identified issue has been addressed, to enable seamless parsing and execution of the PuzzleScript code.

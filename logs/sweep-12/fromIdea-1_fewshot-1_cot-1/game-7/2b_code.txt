@@ -1,0 +1,158 @@
+The error messages indicate that the keywords `move_sound` and `goal_reached` used in the `SOUNDS` section are incorrect. In PuzzleScript, you should use `SFXn` where `n` is a number, such as `SFX0`, `SFX1`, and so on. Each `SFXn` can be associated with a sound effect emitted when a rule that mentions the sound effect is triggered.
+
+To fix the issues, we need to:
+1. Correct the sound effect identifiers in the `SOUNDS` section using `SFXn`.
+2. Replace incorrectly referenced sound effect names in the rules with the corrected identifiers.
+
+Here's the repaired version of the code that addresses these issues:
+
+```plaintext
+title Mechanimal Demake
+author AI Assistant
+
+========
+OBJECTS
+========
+
+Background
+white
+
+Player
+blue
+..0..
+.000.
+00.00
+.000.
+..0..
+
+Bird
+green
+.....
+.....
+..0..
+.....
+.....
+
+Rhino
+gray
+.....
+.000.
+00000
+.000.
+.....
+
+Bridge
+brown
+.....
+.....
+.....
+.....
+.....
+
+Gap
+black
+00000
+00000
+00000
+00000
+00000
+
+Wall
+black
+
+Goal
+yellow
+.000.
+0...0
+0...0
+0...0
+.000.
+
+=======
+LEGEND
+=======
+
+. = Background
+P = Player
+B = Bird
+R = Rhino
+H = Bridge
+G = Gap
+# = Wall
+X = Goal
+
+=======
+SOUNDS
+=======
+
+SFX0 66367200
+SFX1 47243307
+
+===============
+COLLISIONLAYERS
+===============
+
+Background
+Player, Bird, Rhino, Bridge, Wall, Gap, Goal
+
+=====
+RULES
+=====
+
+(Player moves onto a bird to control it)
+[ > Player | Bird ] -> [ | Player ] SFX0
+[ Player | Bird ] -> [ | Player ] SFX0
+
+(Player flies over gaps using a bird)
+[ Player Gap ] -> [ Player ]
+
+(Player moves rhinos to clear obstacles)
+[ > Player | Rhino ] -> [ > Player | > Rhino ] SFX0
+
+(Rhino can become a bridge over gaps)
+[ > Rhino | Gap ] -> [ > Bridge | ]
+
+(Player reaches goal)
+[ Player | Goal ] -> [ Player ] SFX1
+
+=============
+WINCONDITIONS
+=============
+
+All Player on Goal
+
+=======
+LEVELS
+=======
+
+# Level 1: Basic Movement
+#######
+#P...X#
+#.....#
+#######
+
+# Level 2: Bird Usage
+#######
+#P..B.#
+###G###
+#....X#
+#######
+
+# Level 3: Rhino and Gap
+#########
+#P..R..X#
+##G.G.G##
+#########
+
+# Level 4: Mixed
+#########
+#P.B.R.X#
+#.......#
+##G.G.G##
+#########
+```
+
+Here's a summary of the changes made:
+- Replaced `move_sound` with `SFX0` for player movement and rhino movements.
+- Replaced `goal_reached` with `SFX1` for reaching the goal.
+- Updated the `SOUNDS` section to define `SFX0` and `SFX1` with appropriate sound effect codes.

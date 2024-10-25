@@ -1,0 +1,119 @@
+To address the compilation error, we need to ensure that there is a player object defined in the game code. In PuzzleScript, a player object must be explicitly identified in either the `OBJECTS` or `LEGEND` sections.
+
+The error suggests that the game could not find an object called "player." In the current code, there is an object `PlayerSoldier`, but it is not designated as the player. To fix this, we need to map the player control to the `PlayerSoldier` object in the `LEGEND` section.
+
+Here's how to fix the code:
+
+1. Add an entry in the `LEGEND` section to denote that `PlayerSoldier` is the player:
+   - The symbol `P` can map to `Player`, allowing the game engine to recognize `P` as the player object.
+
+2. Ensure there are no syntax or semantic errors remaining after the modification.
+
+Here's the revised code:
+
+```plaintext
+title Tile Tactics Demake
+author YourName
+
+========
+OBJECTS
+========
+
+Background
+Black
+00000
+00000
+00000
+00000
+00000
+
+PlayerSoldier
+LightGreen Green
+.111.
+01110
+11111
+.111.
+.111.
+
+EnemySoldier
+LightRed Red
+.111.
+01110
+11111
+.111.
+.111.
+
+AdvTerrain
+Yellow
+.....
+.000.
+00000
+.000.
+.....
+
+Wall
+DarkGray Black
+11111
+11111
+11111
+11111
+11111
+
+=======
+LEGEND
+=======
+
+. = Background
+P = PlayerSoldier
+E = EnemySoldier
+A = AdvTerrain
+# = Wall
+@ = PlayerSoldier  // Mark PlayerSoldier as Player
+
+=========
+SOUNDS
+=========
+
+================
+COLLISIONLAYERS
+================
+
+Background
+AdvTerrain
+PlayerSoldier, EnemySoldier
+Wall
+
+======
+RULES
+======
+
+[ > PlayerSoldier | Background ] -> [ > PlayerSoldier | Background ]
+[ > EnemySoldier | Background ] -> [ > EnemySoldier | Background ]
+
+[ PlayerSoldier | EnemySoldier ] -> [ PlayerSoldier | Background ]
+[ EnemySoldier | PlayerSoldier ] -> [ EnemySoldier | Background ]
+
+==============
+WINCONDITIONS
+==============
+
+all AdvTerrain on PlayerSoldier
+
+=======
+LEVELS
+=======
+
+##### 
+#...#
+#@A@#
+#...#
+##### 
+
+#######
+#.E.E.#
+#..@..#
+#.E.E.#
+#######
+```
+
+In this corrected version, `PlayerSoldier` is explicitly designated as the player using the `@` symbol in the `LEGEND` section. Now the engine recognizes `P` (marked by `@`) as the player's object, resolving the initial error. This should enable the game to compile and run correctly.

@@ -1,0 +1,136 @@
+The errors in the provided PuzzleScript code are due to incorrect syntax and the inappropriate use of comments inside the `RULES` section. To fix the errors, we need to ensure that comments are correctly formatted and that the gameplay rules are accurately implemented within square brackets. Here's a step-by-step plan to fix the code:
+
+1. **Comments Formatting:** In PuzzleScript, everything on the line should either be code or a comment. You can't have a mix of both. Comments should typically be at the start of the line, marked with `#`.
+
+2. **Correct Rules Syntax:** All game rules must be contained within square brackets. We need to modify the rules to follow PuzzleScript’s syntax.
+
+3. **Clarifying Rules:** Ensure each rule is syntactically correct without mixing code with comments.
+
+Below is the corrected version of the game code. I restructured the rules to follow these guidelines and separated comments to avoid mixing them with code:
+
+```plaintext
+title Dungeon Dimensions
+author A Game Designer
+
+========
+OBJECTS
+========
+
+Background
+LightGray
+
+Wall
+DarkGray
+00000
+00000
+00000
+00000
+00000
+
+Player
+Blue
+.....
+..0..
+.000.
+..0..
+.....
+
+Enemy
+Red
+.....
+..0..
+.000.
+..0..
+.....
+
+Portal
+Purple
+.0.0.
+0...0
+.....
+0...0
+.0.0.
+
+ActiveDimension
+White
+
+InactiveDimension
+Black
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Player
+E = Enemy
+O = Portal
+1 = ActiveDimension
+2 = InactiveDimension
+
+=======
+SOUNDS
+=======
+
+Player Create 87210004
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Wall
+Portal
+Player, Enemy
+
+======
+RULES
+======
+
+# Player moves right
+[ > Player | no Wall ] -> [ > Player ]
+
+# Dimension switching using portals
+# When in inactive dimension
+[ Player | Portal | InactiveDimension ] -> [ Portal | ActiveDimension | Player ]
+# When in active dimension
+[ Player | Portal | ActiveDimension ] -> [ Portal | InactiveDimension | Player ]
+
+# Player attacks enemy
+[ Player | Enemy ] -> [ Player ]
+
+==============
+WINCONDITIONS
+==============
+
+no Enemy
+
+=======
+LEVELS
+=======
+
+# Level 1
+11111111
+1P.....O1
+1...###.1
+1....E..1
+1O####..1
+11......1
+11111111
+
+22222222
+2.......2
+2.#...O.2
+2.#..E#.2
+2.#....2
+2.O....2
+2......2
+22222222
+
+```
+
+### Key Changes:
+- **Comment Placement:** Comments have been moved to be standalone lines.
+- **Correct Rule Definitions:** Ensured rules are defined correctly without extraneous syntax errors.
+- **Gameplay Logic:** Clarified dimension switching within the constraints of the example provided, leading to logical outcomes when a player enters a portal in different states.

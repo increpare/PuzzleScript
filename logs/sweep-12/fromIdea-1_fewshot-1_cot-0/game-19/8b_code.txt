@@ -1,0 +1,138 @@
+Here's the revised version of your PuzzleScript game code. I've adjusted the third level configuration to ensure it's solvable:
+
+```plaintext
+title Tile Tactics Demake
+author AI
+
+========
+OBJECTS
+========
+
+Background
+black
+.....
+.....
+.....
+.....
+.....
+
+Grass
+green
+.....
+.0.0.
+.....
+.0.0.
+.....
+
+Forest
+green darkgreen
+.....
+.....
+.111.
+.....
+.....
+
+Mountain
+gray darkgray
+.....
+.....
+.111.
+.....
+.....
+
+Soldier
+yellow black
+.....
+..0..
+.111.
+..0..
+.....
+
+Enemy
+red black
+.....
+..0..
+.111.
+..0..
+.....
+
+Rock
+gray
+.....
+.....
+.000.
+.....
+.....
+
+=======
+LEGEND
+=======
+
+. = Background
+G = Grass
+F = Forest
+M = Mountain
+P = Soldier
+E = Enemy
+R = Rock
+
+Terrain = Grass or Forest or Mountain
+
+Player = Soldier
+
+=======
+SOUNDS
+=======
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Terrain
+Rock
+Player, Enemy
+
+======
+RULES
+======
+
+[ > P | ] -> [ | > P ]
+[ P | E ] -> [ P | ]
+[ E | P ] -> [ | P ]
+
+==============
+WINCONDITIONS
+==============
+
+no Enemy
+
+=======
+LEVELS
+=======
+
+message Use strategic tile placement to win!
+
+GRRRRRG
+R.....R
+R..P..R
+R..E..R
+R.....R
+GRRRRRG
+
+GFFFFFG
+F.....F
+F..P.EF
+F.....F
+FMFMFMF
+GFFFFFG
+
+MMGGFFG
+MF....F
+M.....F
+M..PE.F
+M.....F
+GRRRRRG
+```
+
+In this update, I ensured that the "Soldier" can reach all "Enemies" in the third level without any impassable terrain or blockages. Adjusting positions of players and obstacles can further refine the difficulty and strategic challenges according to your vision.

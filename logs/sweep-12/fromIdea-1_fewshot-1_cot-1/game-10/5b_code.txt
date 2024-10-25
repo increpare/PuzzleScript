@@ -1,0 +1,156 @@
+```plaintext
+title Crops & Knights
+author YourName
+homepage www.puzzlescript.net
+
+========
+OBJECTS
+========
+
+Background
+lightgreen
+
+Player
+blue
+..0..
+.000.
+00.00
+..0..
+.....
+
+Soil
+brown
+.....
+.....
+..0..
+.....
+.....
+
+Seed
+yellow
+.....
+..0..
+.....
+.....
+.....
+
+Sprout
+yellowgreen
+.....
+.....
+..0..
+.....
+.....
+
+Crop
+green
+.....
+..0..
+.....
+.....
+.....
+
+Castle
+darkgray
+.000.
+0...0
+0...0
+0...0
+.000.
+
+Wall
+darkbrown lightbrown
+11111
+11111
+11111
+11111
+11111
+
+=======
+LEGEND
+=======
+
+. = Background
+P = Player
+s = Soil
+d = Seed
+r = Sprout
+c = Crop
+# = Wall
+H = Castle
+
+=========
+SOUNDS
+=========
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Castle, Wall
+Player, Soil, Seed, Sprout, Crop
+
+======
+RULES
+======
+
+[ Player | Soil ] -> [ Player | Seed ] 
+[ Player | Seed ] -> [ Player | Sprout ]
+[ Player | Sprout ] -> [ Player | Crop ]
+
+==============
+WINCONDITIONS
+==============
+
+All Crop on Castle
+
+=======
+LEVELS
+=======
+
+#.###..#####
+##......d..#
+#d..P..c...H
+##........##
+#...###..###
+
+..c...######
+##...d.....#
+##.#r..#...#
+#H..d..##.P#
+######.#####
+
+######
+#d..H#
+#r.Pd#
+##...#
+######
+
+message Level 0: Grow crops on the castle!
+
+#.##H..#####
+##......d..#
+#d..P......#
+##......c..#
+#...###..###
+
+
+message Level 1: Continue your farming strategy!
+
+##c...######
+##...d.....#
+##.#r..#...#
+#H..d..##.P#
+######.#####
+
+message Level 2: Protect the castle!
+
+######
+#d..H#
+#r.Pd#
+##...#
+######
+```
+
+I've made adjustments to the level configurations for better solvability. The goal is for the player to grow crops and place them on the castle spaces. Ensure the sequence follows the rules to transform soils into seeds, seeds into sprouts, and sprouts into crops, finally moving the crop onto a castle.

@@ -1,0 +1,145 @@
+To create a simplified demake of the game idea "Haunted Hues" in the PuzzleScript language, we will need to create a game where the player must interact with tiles to restore colors to a desaturated grid. Here is a plan to achieve this:
+
+### Plan:
+1. **Define the Objects:**
+   - `Background`: A simple desaturated background tile.
+   - `Player`: The character controlled by the player.
+   - `ColorTile`: Tiles which, when interacted with, will change the background to a vibrant color.
+   - `Wall`: Impassable tiles that constrain the movement area.
+   - `Target`: The goal or exit that opens when all `ColorTiles` are uncovered.
+
+2. **Define the Legend:**
+   - Assign unique symbols to each object for easy reference in level design.
+
+3. **Set up Collision Layers:**
+   - Determine the layers of interaction (e.g., background, player, obstacles).
+
+4. **Establish Rules:**
+   - Rules that allow the player to reveal colors when interacting with `ColorTiles`.
+   - Movement rules for the player.
+   - Game-winning condition: when all `ColorTiles` are activated.
+
+5. **Win Conditions:**
+   - Define what it means to win the game, such as activating all `ColorTiles`.
+
+6. **Design Levels:**
+   - Create one or more levels to demonstrate the game's mechanics.
+
+Now, using the plan above, let's write the PuzzleScript code.
+
+```plaintext
+title Haunted Hues
+author PuzzleScriptUser
+homepage www.puzzlescript.net
+
+========
+OBJECTS
+========
+
+Background
+WHITE BLACK
+.....
+.....
+.....
+.....
+.....
+
+Wall
+BLACK
+.....
+.....
+
+Player
+Red Yellow
+.....
+..0..
+.010.
+..0..
+.....
+
+ColorTile
+Grey
+..0..
+.010.
+..0..
+.....
+.....
+
+ActivatedTile
+Green
+..0..
+.000.
+..0..
+.....
+.....
+
+Target
+Blue
+.....
+..0..
+.....
+.....
+.....
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Player
+C = ColorTile
+A = ActivatedTile
+T = Target
+
+=======
+SOUNDS
+=======
+
+activate 14729600 (sound for activating a tile)
+
+================
+COLLISIONLAYERS
+================
+
+Background
+ActivatedTile
+Wall
+ColorTile
+Player
+Target
+
+======
+RULES
+======
+
+[ > Player | ColorTile ] -> [ > Player | ActivatedTile ] activate
+
+==============
+WINCONDITIONS
+==============
+
+All ActivatedTile
+
+=======
+LEVELS
+=======
+
+##########
+#........#
+#..P.....#
+#..C..C..#
+#........#
+#..T.....#
+##########
+```
+
+### Explanation:
+- **Objects:** We've defined basic objects such as `Player`, `Wall`, `ColorTile`, and `Background`.
+- **Legend:** Mapped symbols to objects.
+- **Collision Layers:** Ensured tiles are ordered correctly so they interact and display properly.
+- **Rules:** The main interaction is between the `Player` and `ColorTile`, which transforms `ColorTile` into an `ActivatedTile`.
+- **Win Conditions:** The player wins when all `ColorTiles` have been activated to `ActivatedTiles`.
+- **Levels:** Provided a simple starting level to illustrate the game's objectives and mechanics.
+
+This code snippet provides a foundation for a simple game focused on uncovering hidden colors and transforming a desaturated world into a vibrant one.

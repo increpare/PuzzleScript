@@ -1,0 +1,122 @@
+```plaintext
+title Haunted Hues: Demake
+author Game Designer
+homepage www.example.com
+
+========
+OBJECTS
+========
+
+Background
+GRAY
+
+ColoredBackground
+#84C1FF
+
+Wall
+#303030
+00000
+00000
+00000
+00000
+00000
+
+Player
+white lightblue
+..0..
+..0..
+00000
+.000.
+.0.0.
+
+DesaturatedTile
+#888888
+
+ColorPalette
+#FFD700
+.....
+..0..
+.000.
+..0..
+.....
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Player
+X = DesaturatedTile
+C = ColorPalette
+O = ColoredBackground
+
+=======
+SOUNDS
+=======
+
+startgame 937173004
+endgame 74955903
+sfx0 98568902
+
+================
+COLLISIONLAYERS
+================
+
+Background
+ColoredBackground
+Wall
+Player, DesaturatedTile, ColorPalette
+
+======
+RULES
+======
+
+[ > Player | ColorPalette ] -> [ > Player | Background ] sfx0
+[ > Player | DesaturatedTile | ColorPalette] -> [ Player | ColoredBackground | Background] sfx0
+[ Player | ColoredBackground ] -> [ Player | Background ]
+up [ Player | DesaturatedTile NO ColorPalette ] -> [ Player | DesaturatedTile ]
+
+==============
+WINCONDITIONS
+==============
+
+No DesaturatedTile
+
+=======
+LEVELS
+=======
+
+##########
+#........#
+#..XXXX..#
+#..XCXX..#
+#..XCXX..#
+#..XXXX..#
+#....P...#
+##########
+
+message "Restore all colors!"
+
+message Congratulations!
+```
+
+To fix the solvability issue, ensure the player can reach all `DesaturatedTile` and `ColorPalette` tiles in the given layout. In the layout, there are 4 Color Palettes (C), but one would suffice in this setup, as the logic currently allows only one palette interaction per move. Adjust the level to make sure the player can access each `X` tile and a `C` tile:
+
+- Make sure that there exists a straight path from the player to all Color Palettes.
+- Allow access to every `DesaturatedTile` after gaining a color palette.
+
+Here’s a possible solution:
+
+```plaintext
+##########
+#........#
+#..XXXX..#
+#..XCX...#
+#..XPX...#
+#..XXXX..#
+#........#
+##########
+```
+
+By adjusting the positioning of the ColorPalettes and DesaturatedTiles, the level should now be solvable, allowing the player (P) to reach each tile and use ColorPalette (C) interactions effectively.

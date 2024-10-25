@@ -1,0 +1,155 @@
+To create a simplified demake of the game **Dungeon Dimensions** in PuzzleScript, we need to consider the core elements of the game concept and condense them into manageable mechanics that fit within the constraints of PuzzleScript. The fundamental aspects of the game idea can be summarized as follows:
+
+1. **Alternate Dimensions:** A mechanic that allows switching between different layers or sets of rules.
+2. **Magical Portals:** An interaction mechanism to switch dimensions.
+3. **Spatial Puzzles:** Challenges that require movement and positioning.
+4. **Enemies:** Simple adversaries to avoid or outmaneuver in the puzzles.
+
+Here’s a plan to implement these elements:
+- Use PuzzleScript's ability to define layers and behaviors to create a mechanic for alternating dimensions.
+- Define objects like the player, dimension portals, walls, and enemies.
+- Set up rules that allow the player to use portals to "flip" between dimensions.
+- Define win conditions and levels that embody the puzzle and tactical elements of the game.
+
+Here's the complete PuzzleScript code for this simplified game, titled **Dimension Flip**:
+
+```plaintext
+title Dimension Flip
+author Your Name
+homepage Your Homepage
+
+========
+OBJECTS
+========
+
+Background
+lightblue
+
+Wall
+darkgrey
+
+Player
+yellow
+.111.
+.111.
+22222
+.333.
+.3.3.
+
+PlayerInAlt
+Pink
+.222.
+.333.
+22222
+.111.
+.1.3.
+
+Portal
+purple
+.....
+..0..
+.010.
+..0..
+.....
+
+Enemy
+red
+.....
+.0.0.
+.000.
+.0.0.
+.....
+
+EnemyInAlt
+darkred
+.....
+.0.0.
+.000.
+.0.0.
+.....
+
+AltWall
+darkgreen
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall or AltWall
+@ = Player or PlayerInAlt
+P = Portal
+E = Enemy or EnemyInAlt
+
+=======
+SOUNDS
+=======
+
+Portal Activate 50020005
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Player, PlayerInAlt, Portal, Wall, AltWall, Enemy, EnemyInAlt
+
+======
+RULES
+======
+
+[ > Player | Portal | Background ] -> [ PlayerInAlt | Portal | Background ] sfx0
+[ > PlayerInAlt | Portal | Background ] -> [ Player | Portal | Background ] sfx0
+
+[ > PlayerInAlt | AltWall ] -> [ PlayerInAlt | Unmove ]
+
+[startloop]
+[ > Player | Enemy ] -> restart
+[ > PlayerInAlt | EnemyInAlt ] -> restart
+[endloop]
+
+==============
+WINCONDITIONS
+==============
+
+All Player on Portal
+
+=======
+LEVELS
+=======
+
+message Welcome to Dimension Flip! Use portals to switch dimensions.
+##########
+#....E...#
+#....#...#
+#P...@...P
+#....#...#
+#....E...#
+##########
+
+message Guide the player to the portal.
+##########
+#...E....#
+#...#....#
+P...@...E
+#...#....#
+#........#
+##########
+
+```
+
+### Details:
+- **Objects:**
+  - `Player` and `PlayerInAlt`: Represent the player in different dimensions, altering their appearance to reflect the dimensional shift.
+  - `Portal`: Acts as the mechanic to switch dimensions and is interactable.
+  - `Wall` and `AltWall`: Represent obstacles in normal and alternate dimensions, respectively.
+  - `Enemy` and `EnemyInAlt`: Represent enemies in different dimensions.
+
+- **Rules:**
+  - The player can interact with the portal to switch between their normal and alternate states.
+  - Touching an enemy results in restarting the level, thus incorporating an avoidance challenge.
+  
+- **Win Condition:**
+  - Guide the player to reach a portal, showcasing successful navigation and puzzle-solving.
+
+This outlines a basic framework that captures the essence of dimension manipulation, spatial puzzles, and tactical movement within PuzzleScript's constraints.

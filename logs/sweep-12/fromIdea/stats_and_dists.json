@@ -1,0 +1,432 @@
+{
+    "fromIdea-1_fewshot-1_cot-0": [
+        {
+            "code": "title Crops & Castles\nauthor Assistant\nhomepage www.puzzlescript.net\n\n========\nOBJECTS\n========\n\nBackground\nGreen\n.....\n\nField\nDarkGreen\n.....\n\nTower\nGray\n.0.0.\n00000\n0...0\n0...0\n00000\n\nPlayer\nBlack Orange\n.000.\n.111.\n.....\n.....\n.....\n\nCrop\nYellow\n.....\n.....\n.000.\n.....\n.....\n\nSpell\nPurple\n.000.\n.0.0.\n00000\n.0.0.\n.000.\n\nEnemy\nRed\n.....\n.0.0.\n.000.\n.0.0.\n.....\n\n=======\nLEGEND\n=======\n\n. = Background\nP = Player\nF = Field\n# = Field\nC = Crop\nT = Tower\nS = Spell\nE = Enemy\n\n=======\nSOUNDS\n=======\nSFX0 53847109 (plant crop)\nSFX1 72947120 (harvest crop -> gain spell)\nSFX2 82654410 (place tower)\n\n================\nCOLLISIONLAYERS\n================\n\nBackground\nField\nPlayer, Crop, Spell, Tower, Enemy\n\n======\nRULES\n======\n\n[Action Player][Field] -> [Player][Crop] SFX0\n\n[> Player | Crop] -> [> Player | Spell] SFX1\n\n[> Player | Spell][Field] -> [> Player | Tower] SFX2\n\n[> Enemy | Tower] -> [> Enemy | Field]\n\n[> Enemy | Spell] -> [Field | Field]\n\nRIGHT [> Player | no Crop no Spell] -> [> Player | ]\nLEFT [< Player | no Crop no Spell] -> [< Player | ]\nDOWN [v Player | no Crop no Spell] -> [v Player | ]\nUP [^ Player | no Crop no Spell] -> [^ Player | ]\n\nRIGHT [> Enemy | no Tower] -> [> Enemy | ]\nLEFT [< Enemy | no Tower] -> [< Enemy | ]\nDOWN [v Enemy | no Tower] -> [v Enemy | ]\nUP [^ Enemy | no Tower] -> [^ Enemy | ]\n\n==============\nWINCONDITIONS\n==============\n\nNo Enemy\n\n=======\nLEVELS\n=======\n\n##########\n#........#\n#..P..E..#\n#........#\n#........#\n#........#\n#........#\n##########\n\n##########\n#..#..#..#\n#..P.....#\n#..#..#..#\n#..#..#..#\n#........#\n#.E......#\n##########\n\nmessage Congratulations! You've protected your kingdom!\n\n",
+            "fitness": -6,
+            "compiledIters": [
+                3
+            ],
+            "solvedIters": [
+                3
+            ],
+            "skipped": false,
+            "min_dist": 995
+        },
+        {
+            "code": "title Puzzlot\nauthor PuzzleScript Demake by AI\n\n========\nOBJECTS\n========\n\nBackground\nBlack White\n00000\n01110\n01010\n01110\n00000\n\nWall\nDarkGray Black\n11111\n11111\n11111\n11111\n11111\n\nTreasure\nYellow Orange\n.0.0.\n.000.\n.010.\n.000.\n.0.0.\n\nTrap\nRed DarkRed\n..0..\n.000.\n.010.\n.000.\n..0..\n\nKey\nLightGreen DarkGreen\n..0..\n.000.\n.010.\n.000.\n..0..\n\nDoor\nBrown DarkBrown\n00000\n00000\n00000\n00000\n00000\n\nPlayer\nLightBlue DarkBlue\n..0..\n.000.\n.010.\n.000.\n..0..\n\n=======\nLEGEND\n=======\n\n. = Background\n# = Wall\nT = Treasure\nX = Trap\nK = Key\nD = Door\nP = Player\n\n=======\nSOUNDS\n=======\n\nPickupTreasure 42873657\nPickupKey 46683972\nHitTrap 56147533\nUnlockDoor 33598382\n\n================\nCOLLISIONLAYERS\n================\n\nBackground\nTreasure, Trap, Key, Door\nPlayer, Wall\n\n======\nRULES\n======\n\n(Logic for picking up the treasure)\n[ Player | Treasure ] -> [ Player ] PickupTreasure\n\n(Logic for picking up the key)\n[ Player | Key ] -> [ Player ] PickupKey\n\n(Logic for unlocking doors - requires picking up the key before unlocking)\n[ Player | Door ] -> [ Player ] UnlockDoor\n\n(Trap activation logic - reset level)\n[ Player | Trap ] -> RESTART HitTrap\n\n(Movement Logic)\n[ UP Player | no Wall ] -> [ UP Player ]\n[ RIGHT Player | no Wall ] -> [ RIGHT Player ]\n[ DOWN Player | no Wall ] -> [ DOWN Player ]\n[ LEFT Player | no Wall ] -> [ LEFT Player ]\n\n==============\nWINCONDITIONS\n==============\n\nno Treasure\n\n=======\nLEVELS\n=======\n\n# Simple Level with a Trap and Treasure\n#######\n#..T..#\n#..K..#\n#..P..#\n#D#X#D#\n#######\n\n# Another Level with Doors\n#######\n#K...P#\n#..D..#\n#..T..#\n#..D..#\n#######\n",
+            "fitness": -6,
+            "compiledIters": [],
+            "solvedIters": [],
+            "skipped": false,
+            "min_dist": 961
+        },
+        {
+            "code": "title Pirate Plunge\nauthor Game Designer\nhomepage www.puzzlescript.net\n\n========\nOBJECTS\n========\n\nBackground\nblue cyan\n11111\n01111\n11101\n11111\n10111\n\nPirate\nblack orange\n..0..\n00000\n..0..\n.000.\n.0.0.\n\nRival\ndarkred white\n.000.\n.020.\n..0..\n00000\n.0.0.\n\nTreasure\nyellow\n.000.\n0...0\n0...0\n0...0\n.000.\n\nSea\ndarkblue\n.....\n.....\n.....\n.....\n.....\n\n=======\nLEGEND\n=======\n\n. = Background\nP = Pirate\nR = Rival\nT = Treasure\n~ = Sea\n\n=========\nSOUNDS\n=========\n\nTreasure collect 76935307\nRival move 52519108\n\n================\nCOLLISIONLAYERS\n================\n\nBackground\nSea\nTreasure\nPlayer, Rival\n\n======\nRULES\n======\n\n[ > Player | No Sea | Treasure ] -> [ > Player | No Sea ]\n\n// Rivals move randomly\n[ stationary Rival ] -> [ randomDir Rival ]\n\n// Prevent players from moving onto rivals\n[ > Player | Rival ] -> [ Player | Rival ]\n\n// Prevent players from moving onto sea\n[ > Player | Sea ] -> [ Player | Sea ]\n\n==============\nWINCONDITIONS\n==============\n\nAll Treasure\n\n=======\nLEVELS\n=======\n\nmessage Welcome to Pirate Plunge! Navigate carefully and collect the treasure!\n#########\n#.......#\n#.T...~.#\n#....~..#\n#...~.~T#\n#...~~~.#\n#..P~R..#\n#########\n",
+            "fitness": -1,
+            "compiledIters": [],
+            "solvedIters": [],
+            "skipped": true,
+            "min_dist": 609
+        },
+        {
+            "code": "title Time Trinkle\nauthor YourName\nhomepage www.example.com\n\n========\nOBJECTS\n========\n\nBackground\nBlack\n.....\n.....\n.....\n.....\n.....\n\nWall\nDarkGray\n#####\n#####\n#####\n#####\n#####\n\nTilePlain\nGray LightGray\n11111\n10001\n10001\n10001\n11111\n\nTileFuture\nBlue LightBlue\n11111\n10001\n10001\n10001\n11111\n\nTilePast\nGreen LightGreen\n11111\n10001\n10001\n10001\n11111\n\nTimeMachine\nYellow\n.....\n..0..\n..0..\n..0..\n.....\n\nPlayer\nRed\n.....\n..0..\n.000.\n.....\n.....\n\n=======\nLEGEND\n=======\n\n. = Background\n# = Wall\nP = Player\n1 = TilePlain\n2 = TileFuture\n3 = TilePast\n! = TimeMachine\n\n=======\nSOUNDS\n=======\n\n================\nCOLLISIONLAYERS\n================\n\nBackground\nWall\nTilePlain, TileFuture, TilePast\nTimeMachine\nPlayer\n\n======\nRULES\n======\n\n[ > Player | TilePlain ] -> [ > Player | TileFuture ]\n[ > Player | TileFuture ] -> [ > Player | TilePast ]\n[ > Player | TilePast ] -> [ > Player | TilePlain ]\n\n==============\nWINCONDITIONS\n==============\n\nAll TimeMachine on TileFuture\n\n=======\nLEVELS\n=======\n\n#########\n#.......#\n#.......#\n#P.1.2.3#\n#...!...#\n#.......#\n#.......#\n#########\n\nmessage Welcome to Time Trinkle! Flip tiles to synchronize time and solve the puzzle.\n",
+            "fitness": 284,
+            "compiledIters": [
+                9
+            ],
+            "solvedIters": [],
+            "skipped": false,
+            "min_dist": 606
+        },
+        {
+            "code": "title Railway Riddle Demake\nauthor PuzzleScriptUser\n\n========\nOBJECTS\n========\n\nBackground\ndarkgreen green\n00000\n00000\n00100\n00000\n00000\n\nTown\ndarkblue blue\n.....\n..0..\n.000.\n..0..\n.....\n\nTrackH\ndarkgrey grey\n.....\n.....\n00000\n.....\n.....\n\nTrackV\ndarkgrey grey\n..0..\n..0..\n..0..\n..0..\n..0..\n\nTrackL\ndarkgrey grey\n.....\n..00.\n..0..\n..0..\n.....\n\nTrackR\ndarkgrey grey\n.....\n.00..\n..0..\n..0..\n.....\n\nTrain\nblack red\n.....\n..1..\n.111.\n..1..\n.....\n\nCursor\nlightblue blue\n.....\n.....\n.0.0.\n.....\n.....\n\n=======\nLEGEND\n=======\n\n. = Background\nT = Town\n- = TrackH\n| = TrackV\nL = TrackL\nR = TrackR\n@ = Train\nC = Cursor\nTrack = TrackH or TrackV or TrackL or TrackR\n\n=======\nSOUNDS\n=======\n\nstartgame 4284710\n\n================\nCOLLISIONLAYERS\n================\n\nBackground\nTown\nCursor, Track, Train\n\n======\nRULES\n======\n\n# Cursor movement\n\n[ > C ] -> [ > C ]\n[ < C ] -> [ < C ]\n[ ^ C ] -> [ ^ C ]\n[ v C ] -> [ v C ]\n\n# Placing tracks with action\n\n[action C | no Track] -> [C | -]\n[action C | no Track] next_level TrackType -> [C | |]\n[action C | no Track] next_level TrackType -> [C | L]\n[action C | no Track] next_level TrackType -> [C | R]\n\n# Train moves through tracks\n\n[ > @ | - ] -> [ > @ | - ]\n[ v @ | | ] -> [ v @ | | ]\n[ > @ | L ] -> [ v @ | L ]\n[ v @ | R ] -> [ > @ | R ]\n\n==============\nWINCONDITIONS\n==============\n\nall @ on T\n\n=======\nLEVELS\n=======\nmessage Let's build a track!\n\n..........\n.T......T.\n..........\n....C.....\n@.........\n\n",
+            "fitness": -6,
+            "compiledIters": [],
+            "solvedIters": [],
+            "skipped": false,
+            "min_dist": 890
+        },
+        {
+            "code": "title Haunted Hues\nauthor Generated with AI\n\n========\nOBJECTS\n========\n\nBackgroundNeutral\nLightGray Gray\n11011\n10101\n01110\n10101\n11011\n\nBackgroundVibrant\nOrange Yellow\n11011\n10101\n01110\n10101\n11011\n\nPaletteTile\nTransparent Gray\n.....\n.1.1.\n11111\n.1.1.\n.....\n\nActivePaletteTile\nTransparent Orange\n.....\n.1.1.\n11111\n.1.1.\n.....\n\nPlayer\nBlack LightBlue\n.000.\n.0.0.\n00000\n.0.0.\n.0.0.\n\nWall\nDarkGray Black\n00010\n11111\n01000\n11111\n00010\n\n========\nLEGEND\n=======\n\nn = BackgroundNeutral\nv = BackgroundVibrant\n# = Wall\nP = Player\nt = PaletteTile\na = ActivePaletteTile\n. = BackgroundNeutral\n\n=========\nSOUNDS\n=========\n\nSFX0 123413\n\n================\nCOLLISIONLAYERS\n================\n\nBackgroundNeutral, BackgroundVibrant\nPlayer, Wall, PaletteTile, ActivePaletteTile\n\n======\nRULES\n======\n\n[ > Player | t ] -> [ > Player | a ] SFX0\n[ a n ] -> [ a v ]\n\n==============\nWINCONDITIONS\n==============\n\nall BackgroundNeutral on BackgroundVibrant\n\n=======\nLEVELS\n=======\n\n#####\n#PtP#\n#.#.#\n#Pa.#\n#####\n\n#####n####\n#P....t..#\n#..####n##\n#......t##\n###n##n###\n###....###\n#n#####..#\n###....###\n",
+            "fitness": -3,
+            "compiledIters": [],
+            "solvedIters": [],
+            "skipped": false,
+            "min_dist": 529
+        },
+        {
+            "code": "title Dungeon Dimensions Demake\nauthor Your Name\n\n========\nOBJECTS\n========\n\nBackground\nblack\n\nWall\nblue\n11111\n11111\n11111\n11111\n11111\n\nPlayer\nwhite\n..0..\n.000.\n..0..\n..0..\n.....\n\nEnemy\nred\n..0..\n.0.0.\n.000.\n.0.0.\n..0..\n\nPortal\npurple\n..0..\n.0.0.\n00000\n.0.0.\n..0..\n\nKey\nyellow\n.....\n..0..\n.000.\n..0..\n.....\n\nExit\ngreen\n.....\n.0.0.\n0...0\n.0.0.\n.....\n\n========\nLEGEND\n========\n\n. = Background\n# = Wall\nP = Player\nE = Enemy\nO = Portal\nK = Key\nX = Exit\n\nSolid = Wall or Enemy\nCollectible = Key or Exit\n\n=========\nSOUNDS\n=========\n\nsfx0 61176109\nsfx1 18887809\nsfx2 18174805\nsfx3 19622502\n\n================\nCOLLISIONLAYERS\n================\n\nBackground\nPortal, Key, Exit\nPlayer\nWall, Enemy\n\n======\nRULES\n======\n\n# Player movement if no obstacle\n[ > Player | no Solid ] -> [ > Player ]\n\n# Player defeats enemy\n[ Player | Enemy ] -> [ Player | Background ] sfx2\n\n# Collect keys\n[ Player | Key ] -> [ Player | Background ] sfx1\n\n# Use portal to shift dimensions\n[ action Player | Portal ] -> [ Background | Player Portal ] sfx0\n\n# Reach the exit when the key is collected (assuming the key connects to the exit)\n[ Player | Exit ] -> [ Player | Background ] sfx3\n\n# Block player on wall (Note: Already handled by collision layers, this line is redundant)\n# [> Player | Wall] -> [ Player | Wall ]\n\n==============\nWINCONDITIONS\n==============\n\nno Collectible\n\n=======\nLEVELS\n=======\n\n# Level 1\n# Level layout should start with key to activate exit\n.......\n.......\n..O.P..\n.......\n....#..\n.##....\nE....X.\n\n# Level 2\n# Ensure there is a reachable key\n........\n........\n#P...##.\n..O..E..\n#.......\n..K.....\n..#.X#..\n\n",
+            "fitness": -6,
+            "compiledIters": [],
+            "solvedIters": [],
+            "skipped": false,
+            "min_dist": 971
+        },
+        {
+            "code": "title Mechanimal: Simplified Demake\nauthor OpenAI\nhomepage www.puzzlescript.net\n\n========\nOBJECTS\n========\n\nBackground\n#ddeeff #aabbcc\n11111\n10101\n11111\n10101\n11111\n\nWall\n#223344 #112233\n11111\n10001\n10001\n10001\n11111\n\nPlayer\n#ffcc00 #ffffff #cc88ff #ddaaff\n.111.\n.1001\n12221\n.222.\n.....\n\nPart\n#666666 #999999\n.....\n.111.\n.111.\n.....\n.....\n\nMechanimal\n#44ee44 #88ee88\n.....\n.111.\n.101.\n.111.\n.....\n\nTarget\n#ff2200\n.....\n..0..\n.....\n.....\n\nBuiltMechanimal\n#2222ff #eeeeff #aabbff\n.222.\n.222.\n22222\n.222.\n.....\n\n=======\nLEGEND\n=======\n\n. = Background\n# = Wall\nP = Player\na = Part\nb = Mechanimal\nO = Target\nM = BuiltMechanimal\n\n=======\nSOUNDS\n=======\n\nPart MOVE 36005880\n\n================\nCOLLISIONLAYERS\n================\n\nBackground\nTarget\nPlayer, Wall, Part, Mechanimal, BuiltMechanimal\n\n======\nRULES\n======\n\n[ > Player | Part ] -> [ > Player | > Part ]\n\n[ > Mechanimal | Part ] -> [ BuiltMechanimal | > Part ]\n\n[ > Player | Mechanimal ] -> [ > Player | > Mechanimal ]\n\n==============\nWINCONDITIONS\n==============\n\nall Target on BuiltMechanimal\n\n=======\nLEVELS\n=======\n\nmessage Help the Mechanimal reach its destination!\n#########\n#.......#\n#.O.b...#\n##....a.#\n#..P....#\n#.......#\n#########\n\nmessage Combine parts to create a path!\n#########\n#.......#\n#..O....#\n#..a....#\n#..b....#\n#.P.....#\n#########\n\nmessage Use your creations wisely!\n#########\n#.......#\n#....b..#\n#.O.#.a.#\n#...#...#\n#P......#\n#########\n\n",
+            "fitness": 39262,
+            "compiledIters": [
+                9
+            ],
+            "solvedIters": [],
+            "skipped": false,
+            "min_dist": 713
+        },
+        {
+            "code": "title Olive Odyssey\nauthor PuzzleScript Fan\nhomepage www.puzzlescript.net\n\n========\nOBJECTS\n========\n\nBackground\n#556B2F\n\nOlive\ngreen\n..0..\n.000.\n.000.\n.000.\n..0..\n\nRecipeBook\nblack brown\n..0..\n.0.0.\n.0.0.\n.0.0.\n..0..\n\nPlayer\norange\n..0..\n.000.\n.0.0.\n.000.\n..0..\n\nPot\ngray\n.....\n.000.\n0...0\n0...0\n.000.\n\nDish\n#DAA520\n.....\n.....\n..0..\n.....\n.....\n\n=======\nLEGEND\n=======\n. = Background\nP = Player\nO = Olive\nR = RecipeBook\nT = Pot\nD = Dish\n\n======\nSOUNDS\n======\n\n================\nCOLLISIONLAYERS\n================\nBackground\nPlayer, Olive, RecipeBook, Pot, Dish\n\n======\nRULES\n======\n[> P | O] -> [> P | ]\n[right R | P] -> [R | > P]\n[ P | T | no D ] -> [ P | D | T ]\n\n==============\nWINCONDITIONS\n==============\n\nsome D\n\n=======\nLEVELS\n=======\n\nmessage Place the olive in the pot to create a dish!\n\n......\n..OT..\n......\n..PO..\n..R...\n\nmessage Level 2: Find, collect, and cook!\n\n....O..\nO..P...\n..T....\nR....O.\n.......\n\nmessage Level 3: Use your recipe book wisely!\n\n..O.P..\n......\n..TR...\n.......\nO......\n\n",
+            "fitness": 252,
+            "compiledIters": [
+                4,
+                5,
+                6,
+                7,
+                8,
+                9
+            ],
+            "solvedIters": [
+                9
+            ],
+            "skipped": false,
+            "min_dist": 512
+        },
+        {
+            "code": "title Tile Tactics Demake\nauthor YourName\n\n========\nOBJECTS\n========\n\nBackground\n#AEEA00\n.....\n.....\n.....\n.....\n.....\n\nTerrain\nDarkGreen\n.....\n.....\n.....\n.....\n.....\n\nPlayer\nRed Yellow\n.....\n..0..\n.101.\n.111.\n.....\n\nEnemy\nBlue Grey\n.....\n..0..\n.1.1.\n.111.\n.....\n\nFlag\nYellow White\n.....\n.111.\n.111.\n.111.\n.....\n\n=======\nLEGEND\n=======\n. = Background\nT = Terrain\nP = Player\nE = Enemy\nF = Flag\n\n=======\nSOUNDS\n=======\nSFX0 12345605\n\n================\nCOLLISIONLAYERS\n================\n\nBackground\nTerrain\nPlayer, Enemy, Flag\n\n======\nRULES\n======\n\n(Players can move onto empty tiles and control the player's move)\n[ > Player | Background ] -> [ > Player | > Background ] SFX0\n\n(Enemies can move randomly onto empty tiles, simulating movement)\nrandom [ > Enemy | Background ] -> [ > Enemy | > Background ]\n\n(Players can capture flags by moving onto them)\n[ > Player | Flag ] -> [ > Player | Background ] win\n\n(Enemies block the player and cannot be moved onto)\n[ Player | Enemy ] -> [ Player | Enemy ]\n\n==============\nWINCONDITIONS\n==============\n\nAll Flag on Background\n\n=======\nLEVELS\n=======\n\nmessage Command your army! Capture the flags!\n\nTTTTTTTTTT\nT....P...T\nT........T\nT....E...T\nT........T\nT...F....T\nT........T\nT..E.....T\nTTTTTTTTTT\n\n",
+            "fitness": 0,
+            "compiledIters": [
+                7
+            ],
+            "solvedIters": [
+                7
+            ],
+            "skipped": false,
+            "min_dist": 759
+        },
+        {
+            "code": "Title Crops & Castles\nAuthor Your Name\nhomepage www.yourwebsite.com\n\n========\nOBJECTS\n========\n\nBackground\nLIGHTGREEN GREEN\n11111\n01111\n11101\n11111\n10111\n\nCastle\nDARKGRAY GRAY\n.....\n.111.\n.111.\n.111.\n.....\n\nFarm\nBROWN DARKBROWN\n.....\n.111.\n.111.\n.111.\n.....\n\nPlayer\nBlack Orange White Blue\n.000.\n.111.\n22222\n.333.\n.3.3.\n\nCrop\nLightGreen White\n.....\n..0..\n..1..\n..0..\n.....\n\nSpell\nPurple Black\n..1..\n.111.\n11111\n.111.\n.....\n\nEnemy\nRed DarkRed\n.111.\n.111.\n11111\n.111.\n.1.1.\n\n=======\nLEGEND\n=======\n\n. = Background\n# = Castle\nC = Crop\nS = Spell\nE = Enemy\nF = Farm\nP = Player\n\n=======\nSOUNDS\n=======\n\nCrop MOVE 12122101\nPlayer MOVE 88351232\nEnemy MOVE 55123109\nSpell MOVE 99321211\nPlayer CANTMOVE 36972112\n\n================\nCOLLISIONLAYERS\n================\n\nBackground\nCrop, Spell, Enemy\nPlayer, Castle, Farm\n\n======\nRULES\n======\n\n[ > Player | Crop ] -> [ > Player | Farm ] SFX0\n[ > Player | Spell ] -> [ > Player | Farm ] SFX3\n[ > Player | Enemy ] -> [ Player | ] SFX4\n[ > Enemy | Background ] -> [ > Enemy ] SFX2\n\n==============\nWINCONDITIONS\n==============\n\nNo Enemy\n\n=======\nLEVELS\n=======\n\n#######\n#.....#\n#..P..#\n#..#..#\n#..F..#\n#..E..#\n#######\n\n#########\n#.......#\n#.C.E...#\n#.......#\n#..F.P..#\n#.......#\n#...E...#\n#########\n\nmessage LevelComplete Congratulations! Your kingdom is saved!\n",
+            "fitness": -1,
+            "compiledIters": [],
+            "solvedIters": [],
+            "skipped": false,
+            "min_dist": 629
+        },
+        {
+            "code": "title Puzzlot\nauthor Anonymous\nhomepage www.puzzlescript.net\n\n========\nOBJECTS\n========\n\nBackground\n#F0F0F0\n.....\n.....\n.....\n.....\n.....\n\nWall\n#707070\n00000\n00000\n00000\n00000\n00000\n\nPlayer\n#2020FF\n.....\n.....\n..0..\n.....\n.....\n\nCrate\n#FF0000\n.....\n.000.\n.000.\n.000.\n.....\n\nKey\nYellow\n.....\n.....\n..0..\n.....\n.....\n\nDoor\n#DDDD00 #202020 #FFBB00\n.....\n.....\n.0.0.\n.....\n.....\n\nTrap\n#222222\n.....\n.....\n..0..\n.....\n.....\n\nTreasure\n#FDBE00\n.....\n.....\n.0.0.\n.....\n.....\n\nOpenDoor\nGrey\n.....\n.....\n.....\n.....\n.....\n\n=======\nLEGEND\n=======\n\n. = Background\n# = Wall\nP = Player\nC = Crate\nK = Key\nD = Door\nT = Trap\nR = Treasure\nO = OpenDoor\n\nObstacle = Wall or Crate or Door\n\n=======\nSOUNDS\n=======\n\nSfx1 90927111\nSfx2 50503220\n\n================\nCOLLISIONLAYERS\n================\n\nBackground\nTreasure\nPlayer, Key\nObstacle, OpenDoor\nTrap\n\n======\nRULES\n======\n\n[ Player | Treasure ] -> [ Player | Background ] Sfx2\n[ Player | Key ] -> [ Player | Background ]\n[ Crate | Trap ] -> [ Background | Background ]\n\n[ > Player | Crate ] -> [ > Player | > Crate ]\n\n[ Player | Door ] -> [ OpenDoor | Player ] Sfx1\n[ Player | OpenDoor ] -> [ Player | Background ]\n\n==============\nWINCONDITIONS\n==============\n\nNo Treasure\n\n=======\nLEVELS\n=======\n\n#####  \n#...#\n#T.K#\n#PCD#\n#####  \n",
+            "fitness": 0,
+            "compiledIters": [
+                3
+            ],
+            "solvedIters": [
+                3
+            ],
+            "skipped": false,
+            "min_dist": 726
+        },
+        {
+            "code": "title Pirate Plunge\nauthor ChatGPT\n\n========\nOBJECTS\n========\n\nBackground\nDarkBlue\n\nIsland\nGreen\n\nPlayer\nYellow\n..0..\n.000.\n.000.\n.0.0.\n..0..\n\nPirate\nRed\n..0..\n.000.\n.000.\n.0.0.\n..0..\n\nTreasure\nYellow\n.0.0.\n00000\n.000.\n.000.\n.0.0.\n\nWave\nLightBlue\n\nWall\ngrey\n\n=======\nLEGEND\n=======\n\n. = Background\nP = Player\nI = Island\nT = Treasure\nR = Pirate\nW = Wave\n# = Wall\n\n=========\nSOUNDS\n=========\n\n================\nCOLLISIONLAYERS\n================\n\nBackground\nWave\nIsland, Wall, Treasure, Player, Pirate\n\n======\nRULES\n======\n\n(right movement for Player, includes handling of Treasure)\n[ > Player | no Wall | Treasure ] -> [ > Player | > Treasure ]\n[ > Player | Background ] -> [ > Player | Player ]\n\n(left movement for Player, includes handling of Treasure)\n[ < Player | no Wall | Treasure ] -> [ < Player | < Treasure ]\n[ < Player | Background ] -> [ < Player | Player ]\n\n(up movement for Player, includes handling of Treasure)\n[ UP Player | no Wall | Treasure ] -> [ UP Player | UP Treasure ]\n[ UP Player | Background ] -> [ UP Player | Player ]\n\n(down movement for Player, includes handling of Treasure)\n[ DOWN Player | no Wall | Treasure ] -> [ DOWN Player | DOWN Treasure ]\n[ DOWN Player | Background ] -> [ DOWN Player | Player ]\n\n(pirate movement rules)\n[ stationary Pirate | no Player no Wall ] -> [ left Pirate ]\n[ left Pirate | no Player no Wall ] -> [ left Pirate ]\n[ left Pirate | Player ] -> [ Pirate | Player ]\n\n(waves/ocean pattern)\n[ Wave | no Island no Wall ] -> [ left Wave ]\n[ Wave | Island ] -> [ Wave | Background ]\n\n==============\nWINCONDITIONS\n==============\n\nno Treasure\n\n=======\nLEVELS\n=======\n\n#######\n#.....#\n#..T..#\n#..I..#\n#..P..#\n#.....#\n#..R..#\n#######\n\nmessage Collect the treasure and avoid pirates!\n\n",
+            "fitness": -7,
+            "compiledIters": [
+                7
+            ],
+            "solvedIters": [],
+            "skipped": false,
+            "min_dist": 1048
+        },
+        {
+            "code": "title Time Trinkle\nauthor YourName\nhomepage www.example.com\n\n========\nOBJECTS\n========\n\nBackground\nBlack\n\nTile_Future\nLightBlue\n.....\n..0..\n.....\n.....\n.....\n\nTile_Present\nLightGreen\n.....\n..0..\n.....\n.....\n.....\n\nTile_Past\nYellow\n.....\n..0..\n.....\n.....\n.....\n\nPlayer\nOrange\n.....\n..0..\n.....\n.....\n.....\n\n=======\nLEGEND\n=======\n\n. = Background\nP = Player\nF = Tile_Future\nC = Tile_Present\nA = Tile_Past\n\nCurrentTile = Tile_Present or Tile_Future or Tile_Past\n\n======\nSOUNDS\n======\n\nsfx0 60452708\n\n================\nCOLLISIONLAYERS\n================\n\nBackground\nCurrentTile\nPlayer\n\n======\nRULES\n======\n\n[ Player | F ] -> [ Player | C ] sfx0\n[ Player | C ] -> [ Player | A ] sfx0\n[ Player | A ] -> [ Player | F ] sfx0\n\n==============\nWINCONDITIONS\n==============\n\nall Tile_Present on Background\n\n=======\nLEVELS\n=======\n\n..FFF..\n..FPF..\n..FFF..\n\n..AAA..\n..ACP..\n..AAA..\n\n..FCA..\n..PAP..\n..CAF..\n\nmessage Welcome to Time Trinkle! Flip tiles to their proper place in time.\n\n",
+            "fitness": 0,
+            "compiledIters": [
+                4
+            ],
+            "solvedIters": [
+                4
+            ],
+            "skipped": false,
+            "min_dist": 539
+        },
+        {
+            "code": "title Railway Riddle\nauthor PuzzleScript Community\nhomepage www.puzzlescript.net\n\n========\nOBJECTS\n========\n\nBackground\nlightgreen green\n00000\n00110\n11001\n10100\n01010\n\nTown\nwhite red\n..0..\n.000.\n00000\n.000.\n..0..\n\nMountain\ndarkgrey darkgrey\n.....\n.....\n..0..\n.....\n.....\n\nTrain\nblue black\n.000.\n.0.0.\n.000.\n.....\n.....\n\nTrack\ngrey darkgrey\n.....\n..0..\n.000.\n..0..\n.....\n\nWater\nblue white\n.00..\n0..0.\n.00..\n.....\n.....\n\nSwitch\nred black\n.....\n.....\n..0..\n.....\n.....\n\n=======\nLEGEND\n=======\n\n. = Background\no = Town\nM = Mountain\nR = Train\nt = Track\n~ = Water\nx = Switch\n\n=======\nSOUNDS\n=======\n\nTrainMove 91301709\nSwitchActivate 46905909\n\n================\nCOLLISIONLAYERS\n================\n\nBackground\nWater\nMountain, Town\nTrack, Switch\nTrain\n\n======\nRULES\n======\n\n[ > R | t ] -> [ > R | . ] sound TrainMove\n[ R | o ] -> [ R ]\n[ > R | x ] -> [ R | x ] sound SwitchActivate\n\n==============\nWINCONDITIONS\n==============\n\nAll Train on Town\n\n=======\nLEVELS\n=======\n\n..o...\noo.ooo\no...tT\n~..tT~\n~..tT~\n~.xtT~\n~R~~~~\n",
+            "fitness": -6,
+            "compiledIters": [],
+            "solvedIters": [],
+            "skipped": false,
+            "min_dist": 524
+        },
+        {
+            "code": "title Haunted Hues\nauthor PuzzleMaster\nhomepage www.puzzlescript.net\n\n========\nOBJECTS\n========\n\nBackground\nBlack\n\nColorTile\nGrey\n.....\n.000.\n.000.\n.000.\n.....\n\nRevealedTile\nRed\n.....\n.0.0.\n.....\n.0.0.\n.....\n\nRevealedTile2\nGreen\n.....\n.0.0.\n.....\n.0.0.\n.....\n\nRevealedTile3\nBlue\n.....\n.0.0.\n.....\n.0.0.\n.....\n\nPlayer\nWhite\n..0..\n.000.\n00000\n..0..\n.0.0.\n\nTarget\nWhite\n..0..\n.0.0.\n.....\n.0.0.\n..0..\n\nWall\n#333333\n.....\n.....\n.....\n.....\n.....\n\n=======\nLEGEND\n=======\n\n. = Background\nP = Player\nC = ColorTile\nR = RevealedTile\nG = RevealedTile2\nB = RevealedTile3\nT = Target\nW = Wall\n\nRevealed = RevealedTile or RevealedTile2 or RevealedTile3\n\n=======\nSOUNDS\n=======\n\nplayer MOVE 3306607\nstartlevel 91466748\nendlevel 79616604\n\n================\nCOLLISIONLAYERS\n================\n\nBackground\nColorTile\nRevealed\nTarget\nPlayer\nWall\n\n======\nRULES\n======\n\n[Player | ColorTile] -> [Player | RevealedTile]\n[Player | RevealedTile] -> [Player | RevealedTile2]\n[Player | RevealedTile2] -> [Player | RevealedTile3]\n\n==============\nWINCONDITIONS\n==============\n\nAll Target on Player\n\n=======\nLEVELS\n=======\n\nmessage Level 1: Unlock the colors of life!\n\nWWWWWWW\nW.....W\nW..C..W\nW.PT..W\nWWWWWWW\n\n",
+            "fitness": 0,
+            "compiledIters": [
+                6
+            ],
+            "solvedIters": [
+                6
+            ],
+            "skipped": false,
+            "min_dist": 657
+        },
+        {
+            "code": "title Dungeon Dimensions Demake\nauthor assistant\n\n========\nOBJECTS\n========\n\nBackground\ndarkgrey\n\nWall\ngray\n00000\n00000\n00000\n00000\n00000\n\nPlayer\nblack white\n.111.\n.111.\n.000.\n.111.\n.1.1.\n\nEnemy\nred\n.000.\n.000.\n00000\n.000.\n.0.0.\n\nPortal\npurple gray\n.....\n.000.\n.010.\n.000.\n.....\n\nAlternateBackground\ndarkblue\n\nAlternateWall\nblue gray\n00000\n11111\n01010\n11111\n00000\n\n=======\nLEGEND\n=======\n\n. = Background\n# = Wall\n@ = AlternateWall\nP = Player\nE = Enemy\nO = Portal\n\n=======\nSOUNDS\n=======\n\n================\nCOLLISIONLAYERS\n================\n\nBackground\nAlternateBackground\nPortal\nWall\nAlternateWall\nPlayer, Enemy\n\n======\nRULES\n======\n\n[ Player | Portal ] -> [ AlternateBackground Player | Portal ] \n[ Player | Enemy ] -> [ Player | Background ] \n\n[ > Player | Wall ] -> cancel\n[ > Player | AlternateWall ] -> cancel\n\n==============\nWINCONDITIONS\n==============\n\nno Enemy\n\n=======\nLEVELS\n=======\n\n#########\n#.......#\n#...E...#\n#.P...O.#\n#.......#\n#########\n\n.#######.\n.#.@..#.#\n.#O##E.##\n##.#..#.#\n#.P..##.#\n#######.#\n",
+            "fitness": 4,
+            "compiledIters": [
+                8
+            ],
+            "solvedIters": [
+                8
+            ],
+            "skipped": false,
+            "min_dist": 519
+        },
+        {
+            "code": "title Mechanimal\nauthor Anonymous\nhomepage www.puzzlescript.net\n\n========\nOBJECTS\n========\n\nBackground\nDarkGrey\n.....\n.....\n.....\n.....\n.....\n\nPlayer\nBlue LightBlue\n.....\n..0..\n.111.\n..0..\n.....\n\nMechanimal\nCyan LightCyan\n.....\n..0..\n.111.\n..0..\n.....\n\nConstructed\nMagenta LightMagenta\n.....\n..0..\n.111.\n..0..\n.....\n\nWall\nDarkGreen\n00000\n02220\n02320\n02220\n00000\n\nGoal\nYellow\n.....\n..0..\n.111.\n..0..\n.....\n\nSwitch\nOrange\n.....\n.....\n..0..\n.....\n.....\n\nBridge\nBrown\n.....\n.....\n.....\n.....\n.....\n\n=======\nLEGEND\n=======\n\n. = Background\nP = Player\nM = Mechanimal\nC = Constructed\n# = Wall\nG = Goal\n^ = Switch\n= = Bridge\n\n=======\nSOUNDS\n=======\n\nConstructed Transform 83866509\n\n================\nCOLLISIONLAYERS\n================\n\nBackground\nBridge\nGoal, Switch\nPlayer, Mechanimal, Constructed, Wall\n\n======\nRULES\n======\n\n[ > Player | Mechanimal ] -> [ > Player | > Constructed ] sfx0\n\n[ Player | Switch ] -> [ Player | = ]\nlate no Player [ = ] -> [ ^ ]\n\n==============\nWINCONDITIONS\n==============\n\nAll Player on Goal\n\n=======\nLEVELS\n=======\n\n#..#..#\n#P.#.M#\n#..^..#\n#######\n\n#####\n#.P.#\n#.#.#\n#M#.#\n####G\n\n#####\n#.C.#\n#.#.#\n#.#M#\n####G\n\nmessage Thank you for playing! Take care of the mechanimals!\n\n",
+            "fitness": -6,
+            "compiledIters": [],
+            "solvedIters": [],
+            "skipped": false,
+            "min_dist": 604
+        },
+        {
+            "code": "title Olive Odyssey\nauthor ChatGPT\nhomepage www.example.com\n\n========\nOBJECTS\n========\n\nBackground\nGreen\n\nPlayer\nYellow Green\n.....\n..0..\n.111.\n.0.0.\n.....\n\nOlive\nDarkGreen Yellow\n.....\n.....\n.111.\n.....\n.....\n\nMagicDish\nDarkBlue\n.....\n.....\n.....\n.....\n.....\n\nWall\nBrown\n\nRecipeBook\nRed\n.....\n.....\n.....\n.....\n.....\n\n=======\nLEGEND\n=======\n\n. = Background\nP = Player\nO = Olive\nD = MagicDish\nW = Wall\nR = RecipeBook\n\n=======\nSOUNDS\n=======\n\nOlive MOVE 11829345\n\n================\nCOLLISIONLAYERS\n================\n\nBackground\nPlayer, Olive, RecipeBook, MagicDish, Wall\n\n======\nRULES\n======\n\n# Player collects Olive, Olive disappears\n[ > Player | Olive ] -> [ > Player ]\n\n# If player is on recipe book, magic dish appears\n[ RecipeBook | Player ] -> [ MagicDish | Player ]\n\n# Allow player to walk over the magic dish\n[ > Player | MagicDish ] -> [ > Player ]\n\n==============\nWINCONDITIONS\n==============\n\nAll MagicDish\n\n=======\nLEVELS\n=======\n\n# Level 1: Introduction\nmessage Welcome to Olive Odyssey! Gather olives and make a magic dish.\n..WWW..\n..W.W..\nP..WO.W\n..W.W..\n..WWW..\n\n# Level 2: Challenge\nmessage Great job! Now find more olives and the recipe book.\nWWW.WWW\nW.O.O.W\nW...P.R\nW.O.W.W\nWWW.WWW\n\n# Level 3: Complex Paths\nmessage You're a master chef now! Solve the final puzzle.\nWWWWWWW\nW.....W\nW.WW.WW\nW.WP..R\nW.WW.WW\nW.....W\nWWWWWWW\n\nmessage Congratulations! You've completed Olive Odyssey!\n",
+            "fitness": -6,
+            "compiledIters": [],
+            "solvedIters": [],
+            "skipped": false,
+            "min_dist": 918
+        },
+        {
+            "code": "title Tile Tactics Demake\nauthor AI\n\n========\nOBJECTS\n========\n\nBackground\nblack\n.....\n.....\n.....\n.....\n.....\n\nGrass\ngreen\n.....\n.0.0.\n.....\n.0.0.\n.....\n\nForest\ngreen darkgreen\n.....\n.....\n.111.\n.....\n.....\n\nMountain\ngray darkgray\n.....\n.....\n.111.\n.....\n.....\n\nSoldier\nyellow black\n.....\n..0..\n.111.\n..0..\n.....\n\nEnemy\nred black\n.....\n..0..\n.111.\n..0..\n.....\n\nRock\ngray\n.....\n.....\n.000.\n.....\n.....\n\n=======\nLEGEND\n=======\n\n. = Background\nG = Grass\nF = Forest\nM = Mountain\nP = Soldier\nE = Enemy\nR = Rock\n\nTerrain = Grass or Forest or Mountain\n\nPlayer = Soldier\n\n=======\nSOUNDS\n=======\n\n================\nCOLLISIONLAYERS\n================\n\nBackground\nTerrain\nRock\nPlayer, Enemy\n\n======\nRULES\n======\n\n[ > P | ] -> [ | > P ]\n[ P | E ] -> [ P | ]\n[ E | P ] -> [ | P ]\n\n==============\nWINCONDITIONS\n==============\n\nno Enemy\n\n=======\nLEVELS\n=======\n\nmessage Use strategic tile placement to win!\n\nGRRRRRG\nR.....R\nR..P..R\nR..E..R\nR.....R\nGRRRRRG\n\nGFFFFFG\nF.....F\nF..P.EF\nF.....F\nFMFMFMF\nGFFFFFG\n\nMMGGFFG\nMF....F\nM.....F\nM..PE.F\nM.....F\nGRRRRRG\n",
+            "fitness": 12,
+            "compiledIters": [
+                7,
+                8
+            ],
+            "solvedIters": [
+                8
+            ],
+            "skipped": false,
+            "min_dist": 614
+        }
+    ],
+    "fromIdea-1_fewshot-1_cot-1": [
+        {
+            "code": "title Crops & Castles\nauthor AI Generated\n\n========\nOBJECTS\n========\n\nBackground\ngreen\n\nPlayer\nblue white black\n..0..\n.000.\n..0..\n22222\n.....\n\nCastle\nyellow\n\nCrop\n#007F0E\n\nEnemy\nred white black\n.111.\n.1.1.\n11111\n..1..\n.....\n\nSpell\npurple\n\n=======\nLEGEND\n=======\n\n. = Background\nP = Player\nC = Crop\nE = Enemy\nS = Castle\n* = Spell\n\n=======\nSOUNDS\n=======\n\nCrop MOVE 26339213\nSpell CREATE 45671208\nEnemy DESTROY 57733406\n\n================\nCOLLISIONLAYERS\n================\n\nBackground\nCrop, Enemy, Castle\nPlayer, Spell\n\n======\nRULES\n======\n\n[ > Player | Crop ] -> [ > Player | ] Crop \n\n[ > Player | Enemy ] -> [ > Player | Spell ] Spell\n[ > Player | Spell ] -> [ > Player | ] Spell\n\n[ Castle | Enemy ] -> [ Castle | ] Enemy\n\n==============\nWINCONDITIONS\n==============\n\nno Enemy on Castle\n\n=======\nLEVELS\n=======\n\n.....\n..P..\n.....\n..C..\n.....\n..S..\n.....\n\nmessage Protect the castle by harvesting crops!\n",
+            "fitness": 0,
+            "compiledIters": [
+                2
+            ],
+            "solvedIters": [
+                2
+            ],
+            "skipped": false,
+            "min_dist": 505
+        },
+        {
+            "code": "title Puzzlot: Simplified Demake\nauthor You\n\n========\nOBJECTS\n========\nBackground\nDarkGreen\n\nPlayer\nYellow\n..0..\n.000.\n.000.\n.....\n.....\n\nBoulder\nBrown\n00000\n0...0\n0...0\n0...0\n00000\n\nTarget\nLightBlue\n.....\n..0..\n.000.\n..0..\n.....\n\nWall\nDarkGrey\n00000\n00000\n00000\n00000\n00000\n\nTrap\nRed DarkRed\n.....\n..0..\n.....\n..0..\n.....\n\nExit\nYellow Orange\n.....\n..0..\n.000.\n..0..\n.....\n\nTreasure\nYellow Orange\n.....\n..0..\n.000.\n..0..\n.....\n\n=======\nLEGEND\n=======\n. = Background\nP = Player\n* = Boulder\nO = Target\n# = Wall\nT = Trap\nE = Exit\n$ = Treasure\n\n=======\nSOUNDS\n=======\n\n================\nCOLLISIONLAYERS\n================\nBackground\nTarget, Exit, Treasure\nPlayer, Wall, Boulder, Trap\n\n======\nRULES\n======\n[ > Player | Boulder ] -> [ > Player | > Boulder ]\n[ Player | Trap ] -> restart  (triggers restart if the Player steps on Trap)\n\n==============\nWINCONDITIONS\n==============\nAll Player on Exit\n\n=======\nLEVELS\n=======\n#######\n#.....#\n#..*..#\n#..O..#\n#..P..#\n#..E..#\n#######\n\n#######\n#.###.#\n#..*..#\n#.*O*.#\n#..P..#\n#..E..#\n#######\n\n#######\n#.###.#\n#..T..#\n#.*O*.#\n#..P..#\n#..E..#\n#######\n\n",
+            "fitness": 0,
+            "compiledIters": [
+                5
+            ],
+            "solvedIters": [
+                5
+            ],
+            "skipped": false,
+            "min_dist": 530
+        },
+        {
+            "code": "title Pirate Plunge Demake\nauthor Your Name\n\n========\nOBJECTS\n========\n\nBackground \nlightblue\n\nPlayer\nblack yellow\n..0..\n.111.\n00110\n01010\n.111.\n\nPirate\nred black red\n..2..\n.222.\n22222\n..2..\n.....\n\nTreasure\n#FFD700 black\n.....\n.....\n..0..\n..0..\n.....\n\nIsland\ngreen \n.0.0.\n00000\n.0.0.\n.....\n\n=======\nLEGEND\n=======\n\n. = Background\nP = Player\nR = Pirate\nT = Treasure\nI = Island\n\n=========\nSOUNDS\n=========\n\nPirate MOVE 59710450\n\n================\nCOLLISIONLAYERS\n================\n\nBackground\nPlayer, Pirate\nTreasure, Island\n\n======\nRULES\n======\n\n(Collect treasure)\n[ Player | Treasure ] -> [ Player | Background ]\n\n(Move pirates)\n[ > Pirate | no Player no Island ] -> [ | > Pirate ] \n\n(Restart if caught by a pirate)\n[ Pirate | Player ] -> restart\n\n(Player can move on background, but not off islands)\n[ > Player | Background ] -> [ > Player ]\n\n==============\nWINCONDITIONS\n==============\n\nno Treasure\n\n=======\nLEVELS\n=======\n\nmessage level 1 - Set Sail for Adventure!\n\nIIIII\nIP..I\nI.T.I\nI...I\nIIIII\n\nmessage level 2 - Watchful Eye of the Buccaneers\n\nIIIII\nIR..I\nI.T.I\nI...I\nIIIII\n\nmessage level 3 - Treasure Trove Awaits\n\nIIIII\nITTPI\nI...I\nI.R.I\nIIIII\n\nmessage Congratulations!\n\n",
+            "fitness": -1,
+            "compiledIters": [
+                3,
+                4
+            ],
+            "solvedIters": [],
+            "skipped": false,
+            "min_dist": 757
+        },
+        {
+            "code": "title Time Trinkle\nauthor YourName\nhomepage www.example.com\n\n========\nOBJECTS\n========\n\nBackground\nDarkGray\n\nWall\nBlack\n\nPlayer\nPink\n..0..\n.....\n.0.0.\n.....\n.....\n\nPastTile\nOrange\n.....\n.000.\n.000.\n.000.\n.....\n\nFutureTile\nBlue\n.....\n.000.\n.000.\n.000.\n.....\n\n=======\nLEGEND\n=======\n\n. = Background\n# = Wall\nP = Player\na = PastTile\nb = FutureTile\n\n=========\nSOUNDS\n=========\n\nsfx0 60091703\n\n================\nCOLLISIONLAYERS\n================\n\nBackground\nPlayer, Wall, PastTile, FutureTile\n\n======\nRULES\n======\n\n[ > Player | PastTile ] -> [ > Player | FutureTile ] sfx0\n[ > Player | FutureTile ] -> [ > Player | PastTile ] sfx0\n\n==============\nWINCONDITIONS\n==============\n\nAll FutureTile\n\n=======\nLEVELS\n=======\n\nmessage Welcome to Time Trinkle!\nmessage Flip all tiles to restore their future state.\n\n#########\n#aa.....#\n#..P....#\n#.....aa#\n#########\n",
+            "fitness": 0,
+            "compiledIters": [
+                3
+            ],
+            "solvedIters": [
+                3
+            ],
+            "skipped": false,
+            "min_dist": 425
+        },
+        {
+            "code": "title Railway Riddle\nauthor GameDesignerPro\nhomepage none\n\n========\nOBJECTS\n========\nBackground\n#bbbbbb\n\nPlayer\n#ffcc00\n..0..\n..0..\n..0..\n..0..\n..0..\n\nTrackHorizontal\n#000000\n.....\n00000\n.....\n.....\n.....\n\nTrackVertical\n#000000\n..0..\n..0..\n..0..\n..0..\n.....\n\nTrackCorner\n#000000\n....0\n..000\n..0..\n.....\n.....\n\nTown\n#00ff00\n..0..\n..000\n..000\n..0..\n.....\n\nObstacle\n#ff0000\n.....\n.000.\n.000.\n.000.\n.....\n\n========\nLEGEND\n========\n. = Background\nP = Player\nH = TrackHorizontal\nTV = TrackVertical\nC = TrackCorner\nT = Town\nX = Obstacle\n\n=======\nSOUNDS\n=======\n\n================\nCOLLISIONLAYERS\n================\nBackground\nPlayer\nTrackHorizontal, TrackVertical, TrackCorner\nTown, Obstacle\n\n======\nRULES\n======\n[right P | Background no T no X] -> [ > P | H ]\n[left P | Background no T no X] -> [ < P | H ]\n[up P | Background no T no X] -> [ ^ P | TV ]\n[down P | Background no T no X] -> [ v P | C ]\n\n[P T] -> [P T]\n\n==============\nWINCONDITIONS\n==============\nall P on T\n\n=======\nLEVELS\n=======\nmessage Connect the Towns!\nT..........\n....X......\n.....P.....\n....X......\n........T..\n\nmessage Navigate the obstacles!\nT...X......\n....X......\n..X.P......\n....X......\n.......T...\n\nmessage Another challenge awaits!\nT.....X....\n..X...X....\n..X...P..X.\n..X...X....\n......T..X.\n",
+            "fitness": 23,
+            "compiledIters": [
+                3,
+                4,
+                6
+            ],
+            "solvedIters": [
+                6
+            ],
+            "skipped": false,
+            "min_dist": 740
+        },
+        {
+            "code": "title Haunted Hues\nauthor PuzzleScriptUser\nhomepage www.puzzlescript.net\n\n========\nOBJECTS\n========\n\nBackground\nWHITE BLACK\n.....\n.....\n.....\n.....\n.....\n\nWall\nBLACK\n.....\n.....\n.....\n.....\n.....\n\nPlayer\nRed Yellow\n.....\n..0..\n.010.\n..0..\n.....\n\nColorTile\nGrey Black\n.....\n..0..\n.010.\n..0..\n.....\n\nActivatedTile\nGreen Black\n.....\n..0..\n.000.\n..0..\n.....\n\nTarget\nBlue Black\n.....\n..0..\n.....\n.....\n.....\n\n=======\nLEGEND\n=======\n\n. = Background\n# = Wall\nP = Player\nC = ColorTile\nA = ActivatedTile\nT = Target\n\n=======\nSOUNDS\n=======\n\nSFX0 14729600\n\n================\nCOLLISIONLAYERS\n================\n\nBackground\nActivatedTile\nWall\nColorTile\nPlayer\nTarget\n\n======\nRULES\n======\n\n[ > Player | ColorTile ] -> [ > Player | ActivatedTile ] SFX0\n\n==============\nWINCONDITIONS\n==============\n\nAll ActivatedTile\n\n=======\nLEVELS\n=======\n\n##########\n#........#\n#..P.....#\n#..C..C..#\n#........#\n#..T.....#\n##########\n\n",
+            "fitness": 0,
+            "compiledIters": [
+                3
+            ],
+            "solvedIters": [
+                3
+            ],
+            "skipped": false,
+            "min_dist": 399
+        },
+        {
+            "code": "title Dungeon Dimensions\nauthor A Game Designer\n\n========\nOBJECTS\n========\n\nBackground\nLightGray\n\nWall\nDarkGray\n00000\n00000\n00000\n00000\n00000\n\nPlayer\nBlue\n.....\n..0..\n.000.\n..0..\n.....\n\nEnemy\nRed\n.....\n..0..\n.000.\n..0..\n.....\n\nPortal\nPurple\n.0.0.\n0...0\n.....\n0...0\n.0.0.\n\nActiveDimension\nWhite\n\nInactiveDimension\nBlack\n\n=======\nLEGEND\n=======\n\n. = Background\n# = Wall\nP = Player\nE = Enemy\nO = Portal\n1 = ActiveDimension\n2 = InactiveDimension\n\n=======\nSOUNDS\n=======\n\nPlayer Create 87210004\n\n================\nCOLLISIONLAYERS\n================\n\nBackground\nInactiveDimension\nActiveDimension\nWall\nPortal\nPlayer, Enemy\n\n======\nRULES\n======\n\n# Player movement\n[ > Player | no Wall ] -> [ > Player ]\n\n# Dimension switching using portals\n\n# When in inactive dimension\n[ Player Portal | InactiveDimension ] -> [ Portal | ActiveDimension | Player ]\n# When in active dimension\n[ Player Portal | ActiveDimension ] -> [ Portal | InactiveDimension | Player ]\n\n# Player attacks enemy\n[ Player | Enemy ] -> [ Player ]\n\n==============\nWINCONDITIONS\n==============\n\nno Enemy\n\n=======\nLEVELS\n=======\n\n# Level 1\n11111111\n1P.....O1\n1...###.1\n1....E..1\n1O####..1\n11......1\n11111111\n\n22222222\n2.......2\n2.#...O.2\n2.#..E#.2\n2.#.....2\n2.O....2\n2.......2\n22222222\n",
+            "fitness": -6,
+            "compiledIters": [],
+            "solvedIters": [],
+            "skipped": false,
+            "min_dist": 745
+        },
+        {
+            "code": "title Mechanimal Demake\nauthor AI Assistant\n\n========\nOBJECTS\n========\n\nBackground\nwhite\n\nPlayer\nblue\n..0..\n.000.\n00.00\n.000.\n..0..\n\nBird\ngreen\n.....\n.....\n..0..\n.....\n.....\n\nRhino\ngray\n.....\n.000.\n00000\n.000.\n.....\n\nBridge\nbrown\n.....\n.....\n.....\n.....\n.....\n\nGap\nblack\n00000\n00000\n00000\n00000\n00000\n\nWall\nblack\n\nGoal\nyellow\n.000.\n0...0\n0...0\n0...0\n.000.\n\n=======\nLEGEND\n=======\n\n. = Background\nP = Player\nB = Bird\nR = Rhino\nH = Bridge\nG = Gap\n# = Wall\nX = Goal\n\n=======\nSOUNDS\n=======\n\nSFX0 66367200\nSFX1 47243307\n\n===============\nCOLLISIONLAYERS\n===============\n\nBackground\nPlayer, Bird, Rhino, Bridge, Wall, Goal\nGap\n\n=====\nRULES\n=====\n\n# Movement and transformation rules\n[ > Player | Bird ] -> [ Player | Player ] SFX0\n[ Player | Bird ] -> [ Player | Player ] SFX0\n\n[ Player | Gap ] -> [ Player ]\n\n[ > Player | Rhino ] -> [ > Player | > Rhino ] SFX0\n\n[ > Rhino | Gap ] -> [ > Bridge | ]\n\n# Goal achievement \n[ Player | Goal ] -> [ Goal ] SFX1\n\n=============\nWINCONDITIONS\n=============\n\nAll Player on Goal\n\n=======\nLEVELS\n=======\n\n# Basic Movement\n#######\n#P...X#\n#.....#\n#######\n\n# Bird Usage\n#######\n#P..B.#\n###G###\n#....X#\n#######\n\n# Rhino and Gap\n#########\n#P..R..X#\n##G.G.G##\n#########\n\n# Mixed\n#########\n#P.B.R.X#\n#.......#\n##G.G.G##\n#########\n",
+            "fitness": -6,
+            "compiledIters": [],
+            "solvedIters": [],
+            "skipped": false,
+            "min_dist": 702
+        },
+        {
+            "code": "title Olive Odyssey: Demake\nauthor Game Designer\n\n========\nOBJECTS\n========\n\nBackground\ngreen\n\nWall\ngrey\n\nPlayer\nblue\n.000.\n.000.\n.000.\n.0.0.\n.....\n\nOlive\nyellow\n.....\n..0..\n.000.\n..0..\n.....\n\nCauldron\npurple\n.....\n.....\n.....\n.....\n.....\n\nExit\nred\n.....\n.....\n.....\n.....\n.....\n\n=======\nLEGEND\n=======\n\n. = Background\n# = Wall\n@ = Player\nO = Olive\nC = Cauldron\nE = Exit\n\n======\nSOUNDS\n======\n\nsfx0 3295707\nsfx1 96434300\n\n================\nCOLLISIONLAYERS\n================\n\nBackground\nExit, Olive\nPlayer, Wall, Cauldron\n\n======\nRULES\n======\n\n// Collect Olive into Cauldron.\n[ Player | Olive | Cauldron ] -> [ Player | Cauldron ] sfx0  \n\n// Allow player to push Olives.\n[ > Player | Olive ] -> [ > Player | > Olive ]  \n\n=====\nWINCONDITIONS\n=====\n\nAll Cauldron on Exit\n\n=======\nLEVELS\n=======\n\n# Level 1\n#######\n#.....#\n#..O..#\n#..@..#\n#..C..#\n#.....#\n#..E..#\n#######\n\n# Level 2\n##########\n#...O....#\n#..O.....#\n##.......#\n#..@..O..#\n#.....C..#\n#...###..#\n#.......E#\n##########\n",
+            "fitness": -6,
+            "compiledIters": [],
+            "solvedIters": [],
+            "skipped": false,
+            "min_dist": 494
+        },
+        {
+            "code": "title Tile Tactics Demake\nauthor Your Name\n\n========\nOBJECTS\n========\n\nBackground\nDarkGreen LightGreen\n11111\n11111\n11111\n11111\n11111\n\nSoldier\nYellow Orange\n.....\n..0..\n.111.\n..0..\n.....\n\nObjective\nRed\n.....\n.0.0.\n.000.\n.0.0.\n.....\n\nWall\nGray\n00000\n00000\n00000\n00000\n00000\n\nWater\nBlue\n00000\n00000\n00000\n00000\n00000\n\n=======\nLEGEND\n=======\n\n. = Background\nP = Soldier\nO = Objective\n# = Wall\n~ = Water\nplayer = Soldier\n\n=======\nSOUNDS\n=======\n\n# Soldier MOVE (placeholder sound references)\n# Soldier WIN  (placeholder sound references)\n\n================\nCOLLISIONLAYERS\n================\n\nBackground\nObjective\nWall, Water\nSoldier\n\n======\nRULES\n======\n\n[ > Soldier | Objective ] -> [ > Soldier | > Objective ]\n[ Soldier | Water ] -> [ Soldier | Water ]\n\n==============\nWINCONDITIONS\n==============\n\nall Objective on Soldier\n\n=======\nLEVELS\n=======\n\nmessage Simple Positioning\n#######\n#.....#\n#..O..#\n#..P..#\n#.....#\n#######\n\nmessage Using Obstacles\n#######\n#.....#\n#O###.#\n#..P..#\n#.....#\n#######\n\nmessage Avoid Water\n#######\n#..O..#\n#~.~.~#\n#..P..#\n#~.~.~#\n#######\n\n",
+            "fitness": 55,
+            "compiledIters": [
+                6
+            ],
+            "solvedIters": [
+                6
+            ],
+            "skipped": false,
+            "min_dist": 550
+        },
+        {
+            "code": "title Crops & Knights\nauthor YourName\nhomepage www.puzzlescript.net\n\n========\nOBJECTS\n========\n\nBackground\nlightgreen\n\nPlayer\nblue\n..0..\n.000.\n00.00\n..0..\n.....\n\nSoil\nbrown\n.....\n.....\n..0..\n.....\n.....\n\nSeed\nyellow\n.....\n..0..\n.....\n.....\n.....\n\nSprout\nyellowgreen\n.....\n.....\n..0..\n.....\n.....\n\nCrop\ngreen\n.....\n..0..\n.....\n.....\n.....\n\nCastle\ndarkgray\n.000.\n0...0\n0...0\n0...0\n.000.\n\nWall\ndarkbrown lightbrown\n11111\n11111\n11111\n11111\n11111\n\n=======\nLEGEND\n=======\n\n. = Background\nP = Player\ns = Soil\nd = Seed\nr = Sprout\nc = Crop\n# = Wall\nH = Castle\n\n=========\nSOUNDS\n=========\n\n================\nCOLLISIONLAYERS\n================\n\nBackground\nCastle, Wall\nPlayer, Soil, Seed, Sprout, Crop\n\n======\nRULES\n======\n\n[ Player | Soil ] -> [ Player | Seed ] \n[ Player | Seed ] -> [ Player | Sprout ]\n[ Player | Sprout ] -> [ Player | Crop ]\n\n==============\nWINCONDITIONS\n==============\n\nAll Castle on Crop\n\n=======\nLEVELS\n=======\n\nmessage Level 0: Grow crops on the castle!\n\n#.##H..####\n##......d.#\n#d..P..c..H\n##........#\n#...###..##\n\nmessage Level 1: Continue your farming strategy!\n\n#.##...c####\n##...d.....#\n##.#r..#...#\n#H..d.c##.P#\n#####...####\n\nmessage Level 2: Protect the castle!\n\n######\n#d..H#\n#r.Pd#\n##...#\n######\n\nmessage Level 3: More crops, more power!\n\n#H#c##H##cH#\n##...r.d...#\n##...P.....#\n#rrrr.c#rrrr\n#####..#####\n\nmessage Level 4: Tactics and growth!\n\n#####\n#d..#\n#HPr#\n#...#\n#####\n\nmessage Level 5: Balance the growth!\n\n######\n#H.d.#\n#..P.#\n#..r.#\n######\n\nmessage Level 6: Defend with produce!\n\n######\n#P.dH#\n#..r.#\n#...d#\n######\n\nmessage Level 7: Strategy wins wars!\n\n######\n#Hd.P#\n##..r#\n#..d.#\n######\n\n",
+            "fitness": 12098,
+            "compiledIters": [
+                3,
+                4,
+                5,
+                6,
+                8,
+                9
+            ],
+            "solvedIters": [],
+            "skipped": false,
+            "min_dist": 994
+        },
+        {
+            "code": "title Puzzlot Demake\nauthor YourName\nhomepage http://yourhomepage.com\n\n========\nOBJECTS\n========\n\nBackground\nblack\n00000\n00000\n00000\n00000\n00000\n\nWall\ngrey lightgrey\n11111\n11111\n11111\n11111\n11111\n\nPlayer\nblue white\n..0..\n.000.\n.010.\n.000.\n..0..\n\nBox\norange darkred\n.....\n.111.\n.111.\n.111.\n.....\n\nTarget\nyellow grey\n.....\n.....\n..2..\n.....\n.....\n\nTreasure\nyellow lightgrey\n.....\n.....\n.....\n0.0.0\n.....\n\nTrap\ndarkred black\n.....\n..0..\n.000.\n..0..\n.....\n\n=======\nLEGEND\n=======\n\n. = Background\nP = Player\n# = Wall\nB = Box\nT = Target\nR = Treasure\nX = Trap\n\n=======\nSOUNDS\n=======\n\nPlayer MOVE 11429307\nBox MOVE 48059907\nEndLevel 85763108\nRestart 65287309\nUndo 84906107\n\n================\nCOLLISIONLAYERS\n================\n\nBackground\nTarget\nTreasure\nPlayer, Wall, Box\nTrap\n\n======\nRULES\n======\n\n[ > Player | Box ] -> [ > Player | > Box ]\n[ Player | Box | Wall ] -> [ Player | Box | Wall ]\n\n[ Box | Target ] -> [ Box Target ]\n[ Target | Box ] -> [ Box Target ]\n\n(Box on target unlocks traps)\n[ Box Target | Trap ] -> [ Box Target | Background ] \n\n==============\nWINCONDITIONS\n==============\n\nAll Box on Target\n\n=======\nLEVELS\n=======\n\nmessage Solve the puzzle to reveal the treasure!\n\n#######\n#.....#\n#.P.B.#\n#..T..#\n#.BRX.#\n#######\n\n#######\n#.....#\n#PB..T#\n#.##..#\n#XT.R.#\n#######\n\n\n",
+            "fitness": -3,
+            "compiledIters": [],
+            "solvedIters": [],
+            "skipped": false,
+            "min_dist": 675
+        },
+        {
+            "code": "title Pirate Plunge\nauthor You\n\n========\nOBJECTS\n========\n\nBackground\nblue\n.....\n.....\n.....\n.....\n.....\n\nPlayer\nwhite\n..0..\n.000.\n.0.0.\n.000.\n..0..\n\nTreasure\nyellow\n..0..\n.000.\n.000.\n.000.\n..0..\n\nBuccaneer\nred\n..0..\n.000.\n.000.\n.000.\n..0..\n\nSea\nlightblue\n.....\n.....\n.....\n.....\n.....\n\nIsland\ngreen\n.....\n.....\n.....\n.....\n.....\n\nShiftingSea\nlightblue\n.....\n.....\n.....\n.....\n.....\n\nWall\nblack\n#####\n#####\n#####\n#####\n#####\n\n=======\nLEGEND\n=======\n\n. = Sea\nP = Player\nT = Treasure\nB = Buccaneer\nS = ShiftingSea\nI = Island\n# = Wall\n\n=======\nSOUNDS\n=======\n# Sounds are commented out to avoid parsing errors\n# SFX0 00000000\n\n================\nCOLLISIONLAYERS\n================\n\nBackground\nSea, Island, ShiftingSea\nTreasure\nPlayer, Buccaneer\nWall\n\n======\nRULES\n======\n\n[> Player | Sea] -> [> Player | Sea]\n[< Player | Sea] -> [< Player | Sea]\n[^ Player | Sea] -> [^ Player | Sea]\n[v Player | Sea] -> [v Player | Sea]\n\nRANDOM [> Buccaneer | Sea] -> [> Buccaneer | Sea]\nRANDOM [< Buccaneer | Sea] -> [< Buccaneer | Sea]\n\n[Player | Treasure] -> [Player | Sea]\n\nRANDOM [ShiftingSea] -> [Island]\nRANDOM [Island] -> [Sea]\n\n==============\nWINCONDITIONS\n==============\n\nNo Treasure\n\n=======\nLEVELS\n=======\n\n#######\n#...T.#\n#..I..#\n#P.S.I#\n#..S..#\n#B...T#\n#######\n",
+            "fitness": 31,
+            "compiledIters": [
+                7
+            ],
+            "solvedIters": [
+                7
+            ],
+            "skipped": false,
+            "min_dist": 772
+        },
+        {
+            "code": "title Time Trinkle\nauthor Your Name\nhomepage www.example.com\n\n========\nOBJECTS\n========\n\nBackground\nLightBlue\n00000\n00000\n00000\n00000\n00000\n\nPastTile\nDarkGreen\n.....\n.....\n..0..\n.....\n.....\n\nFutureTile\nOrange\n.....\n.....\n..0..\n.....\n.....\n\nPlayer\nYellow\n.....\n..0..\n.000.\n..0..\n.....\n\n=======\nLEGEND\n=======\n. = Background\nP = Player\nT = PastTile\nF = FutureTile\n\n=======\nSOUNDS\n=======\nsfx0 20592508\nsfx1 51241523\n\n================\nCOLLISIONLAYERS\n================\n\nBackground\nPastTile, FutureTile\nPlayer\n\n======\nRULES\n======\n\n[ > Player | PastTile ] -> [ > Player | FutureTile ] sfx0\n[ > Player | FutureTile ] -> [ > Player | PastTile ] sfx0\n\n==============\nWINCONDITIONS\n==============\n\nAll FutureTile\n\n=======\nLEVELS\n=======\n\nmessage Welcome to Time Trinkle. Flip all tiles to their future state.\n\nTFTFT\nFTFTF\nTFTFT\nFTFTF\nTFTFT\n..P..\n\nmessage Another Level! Flip all tiles to their future state.\n\nFTTFT\nTTFTT\nFTFTF\nTFFTF\nTTTFT\nP....\n\n",
+            "fitness": 0,
+            "compiledIters": [
+                1
+            ],
+            "solvedIters": [
+                1
+            ],
+            "skipped": false,
+            "min_dist": 531
+        },
+        {
+            "code": "title Railway Riddle\nauthor Assistant\n\n========\nOBJECTS\n========\n\nBackground\nGREEN LIGHTGREEN\n00000\n00000\n00000\n00000\n00000\n\nStart\nBLUE DARKBLUE\n..0..\n..0..\n11111\n..0..\n..0..\n\nEnd\nRED DARKRED ORANGE\n..0..\n..0..\n22222\n..0..\n..0..\n\nStraightTrack\nLIGHTGREY GREY\n11111\n00000\n00000\n00000\n11111\n\nCornerTrack\nLIGHTGREY GREY\n00011\n00010\n00000\n01111\n11111\n\nCurrentTrack\nYELLOW\n.....\n.....\n.....\n.....\n.....\n\nWall\nDARKGRAY\n\nPath\nLIGHTGRAY\n\n=======\nLEGEND\n=======\n\n. = Background\nS = Start\nE = End\nT = StraightTrack\nC = CornerTrack\n@ = CurrentTrack\n# = Wall\n= = Path\n\n=========\nSOUNDS\n=========\n\n================\nCOLLISIONLAYERS\n================\n\nBackground\nCurrentTrack\nStraightTrack, CornerTrack, Start, End, Wall, Path\n\n======\nRULES\n======\n\n[ > CurrentTrack | Background ] -> [ > CurrentTrack | CurrentTrack ]\n\n[ Start | CurrentTrack ] -> [ Start | StraightTrack ]\n[ StraightTrack | CurrentTrack ] -> [ StraightTrack | StraightTrack ]\n[ CornerTrack | CurrentTrack ] -> [ CornerTrack | CornerTrack ]\n[ CurrentTrack | End ] -> [ StraightTrack | End ]\n\nlate [ CurrentTrack ] -> [ Background ]\n\n==============\nWINCONDITIONS\n==============\n\nAll Start on StraightTrack\nAll End on StraightTrack\n\n=======\nLEVELS\n=======\n\nmessage Use arrow keys to place track. Connect the start and end.\n\n####E####\n.....=...\n.....=...\n.....=...\n.....=...\n@....=...\n.....=...\n....S....\n\nmessage Level 1: Simple Connection\n\n############\n# E        #\n#          #\n#          #\n# @        #\n#          #\n#          #\n#          #\n#         S#\n############\n\n",
+            "fitness": -6,
+            "compiledIters": [],
+            "solvedIters": [],
+            "skipped": false,
+            "min_dist": 955
+        },
+        {
+            "code": "title Haunted Hues\nauthor YourName\nhomepage YourHomepage\n\n========\nOBJECTS\n========\n\nBackground\nlightgrey grey\n11111\n11111\n11111\n11111\n11111\n\nWall\nblack darkgrey\n00000\n00000\n00000\n00000\n00000\n\nPlayer\nred orange white\n.111.\n.100.\n.111.\n..1..\n.....\n\nColorTileLocked\ndarkgrey grey\n.....\n..0..\n.000.\n..0..\n.....\n\nColorTileUnlocked\nyellow yellow\n.....\n..0..\n.000.\n..0..\n.....\n\n=======\nLEGEND\n=======\n\n. = Background\n# = Wall\nP = Player\nL = ColorTileLocked\nU = ColorTileUnlocked\n\n=======\nSOUNDS\n=======\n\n================\nCOLLISIONLAYERS\n================\n\nBackground\nWall\nColorTileUnlocked, ColorTileLocked\nPlayer\n\n======\nRULES\n======\n\n[ P | L ] -> [ P | U ]\n\n==============\nWINCONDITIONS\n==============\n\nno L\n\n=======\nLEVELS\n=======\n\n##########\n#........#\n#..####..#\n#..#UL#..#\n#..#LUP..#\n#..####..#\n#........#\n##########\n\n",
+            "fitness": 46,
+            "compiledIters": [
+                1,
+                2,
+                5
+            ],
+            "solvedIters": [
+                5
+            ],
+            "skipped": false,
+            "min_dist": 338
+        },
+        {
+            "code": "title Dimension Flip: Dungeon Dimensions\nauthor Your Name\nhomepage Your Homepage\n\n========\nOBJECTS\n========\n\nBackground\nlightblue\n\nWall\ndarkgrey\n\nPlayer\nyellow\n.000.\n.000.\n00000\n.000.\n.0.0.\n\nPlayerInAlt\npink\n.000.\n.000.\n00000\n.000.\n.0.0.\n\nPortal\npurple white\n.....\n..0..\n.010.\n..0..\n.....\n\nEnemy\nred\n.....\n.0.0.\n.000.\n.0.0.\n.....\n\nEnemyInAlt\ndarkred\n.....\n.0.0.\n.000.\n.0.0.\n.....\n\nAltWall\ndarkgreen\n\n=======\nLEGEND\n=======\n\n. = Background\n# = Wall\n% = AltWall\n@ = Player\nA = PlayerInAlt\nP = Portal\nE = Enemy\nF = EnemyInAlt\n\n=======\nSOUNDS\n=======\n\nsfx0 50020005 (Portal Activate)\n\n================\nCOLLISIONLAYERS\n================\n\nBackground\nPortal, Wall, AltWall\nPlayer, PlayerInAlt, Enemy, EnemyInAlt\n\n======\nRULES\n======\n\n[ > Player | Portal ] -> [ PlayerInAlt | Portal ] sfx0\n[ > PlayerInAlt | Portal ] -> [ Player | Portal ] sfx0\n\n[ PlayerInAlt | AltWall ] -> [ PlayerInAlt | AltWall ] \n\n[ Player | Enemy ] -> restart\n[ PlayerInAlt | EnemyInAlt ] -> restart\n\n==============\nWINCONDITIONS\n==============\n\nAll Player on Portal\n\n=======\nLEVELS\n=======\n\nmessage Welcome to Dimension Flip! Use portals to switch dimensions.\n##########\n#....E...#\n#....#...#\n#P...@...P#\n#....#...#\n#....E...#\n##########\n\nmessage Guide the player to the portal.\n##########\n#...F....#\n#...%....#\n#P...A...#\n#...%....#\n#...F....#\n##########\n",
+            "fitness": 3,
+            "compiledIters": [
+                6
+            ],
+            "solvedIters": [
+                6
+            ],
+            "skipped": false,
+            "min_dist": 708
+        },
+        {
+            "code": "title Mechanimal: Assembly Adventure\nauthor YourName\nhomepage www.example.com\n\n========\nOBJECTS\n========\n\nBackground\nLIGHTBLUE LIGHTGREEN\n11111\n01111\n11101\n11111\n10111\n\nPlayer\nBLACK ORANGE WHITE BLUE\n.000.\n.111.\n22222\n.333.\n.3.3.\n\nPart\nDARKGRAY\n.....\n.000.\n..0..\n.000.\n.....\n\nMechanimal\nYELLOW\n..0..\n.000.\n.0.0.\n.000.\n..0..\n\nWater\nLIGHTBLUE\n.....\n.....\n.000.\n.....\n.....\n\nBlock\nORANGE\n00000\n0...0\n0...0\n0...0\n00000\n\nTarget\nRED PINK\n.....\n..1..\n.1.1.\n..1..\n.....\n\nWall\nGRAY\n00000\n00000\n00000\n00000\n00000\n\n=======\nLEGEND\n=======\n\nP = Player\nM = Mechanimal\nW = Water\nB = Block\n. = Background\nX = Target\no = Part\n# = Wall\n\n=======\nSOUNDS\n=======\n\nsfx0 12345678\nsfx1 87654321\n\n================\nCOLLISIONLAYERS\n================\n\nBackground\nWater, Target, Wall\nPlayer, Part, Mechanimal, Block\n\n======\nRULES\n======\n\n[ > Player | Part ] -> [ > Player | > Part ] sfx0\n\n[ Player | Part | Part ] -> [ Player | Mechanimal | ] sfx1\n\n[ > Player | Mechanimal ] -> [ > Player | > Mechanimal ]\n\n[ > Mechanimal | Block ] -> [ > Mechanimal | > Block ]\n\n[ Mechanimal | Water ] -> [ Mechanimal | Water ]\n\n==============\nWINCONDITIONS\n==============\n\nAll Target on Mechanimal\n\n=======\nLEVELS\n=======\n\n#########\n#.......#\n#..P....#\n#..o.o..#\n#..W....#\n#..B.X..#\n#########\n\n",
+            "fitness": 800,
+            "compiledIters": [
+                2
+            ],
+            "solvedIters": [
+                2
+            ],
+            "skipped": false,
+            "min_dist": 622
+        },
+        {
+            "code": "title Olive Odyssey\nauthor Assistant\nhomepage www.puzzlescript.net\n\n========\nOBJECTS\n========\n\nBackground\nlightgreen\n.....\n.....\n.....\n.....\n.....\n\nPlayer\ndarkgreen white\n.....\n..0..\n.111.\n..0..\n.....\n\nOlive\ndarkgreen\n.....\n..000\n..000\n.....\n.....\n\nHerb\ndarkblue blue\n.....\n..111\n..111\n.....\n.....\n\nGarlic\nyellow white\n.....\n..000\n..000\n.....\n.....\n\nCauldron\nbrown black\n.....\n..111\n.111.\n..111\n.....\n\nDish\ndarkred black\n.....\n.....\n..111\n.....\n.....\n\nWall\ngray\n.....\n.....\n.....\n.....\n.....\n\n=======\nLEGEND\n=======\n\n. = Background\n# = Wall\nP = Player\nO = Olive\nH = Herb\nG = Garlic\nC = Cauldron\nD = Dish\n\nIngredient = Olive or Herb or Garlic\nGoal = Cauldron\n\n=======\nSOUNDS\n=======\n\nIngredient CREATE 59039009\nDish CREATE 78340002\nEndlevel 12234100\n\n================\nCOLLISIONLAYERS\n================\n\nBackground\nIngredient\nPlayer, Cauldron, Dish, Wall\n\n======\nRULES\n======\n\n[ > Player | Ingredient | Cauldron ] -> [ > Player | | Dish ] sfx1 MESSAGE \"You cooked a dish!\"\n\n==============\nWINCONDITIONS\n==============\n\nSome Dish\n\n=======\nLEVELS\n=======\n\n######\n#....#\n#..P.#\n#O.HC#\n#.G..#\n#....#\n######\n\n######\n#....#\n#..P.#\n#.OHC#\n#.G..#\n#....#\n######\n",
+            "fitness": 38,
+            "compiledIters": [
+                7,
+                8,
+                9
+            ],
+            "solvedIters": [],
+            "skipped": false,
+            "min_dist": 560
+        },
+        {
+            "code": "title Tile Tactics Demake\nauthor YourName\n\n========\nOBJECTS\n========\n\nBackground\nBlack\n00000\n00000\n00000\n00000\n00000\n\nPlayerSoldier\nLightGreen Green\n.111.\n01110\n11111\n.111.\n.111.\n\nEnemySoldier\nLightRed Red\n.111.\n01110\n11111\n.111.\n.111.\n\nAdvTerrain\nYellow\n.....\n.000.\n00000\n.000.\n.....\n\nWall\nDarkGray Black\n11111\n11111\n11111\n11111\n11111\n\n=======\nLEGEND\n=======\n\n. = Background\nP = PlayerSoldier\nE = EnemySoldier\nA = AdvTerrain\n# = Wall\n@ = PlayerSoldier  // Mark PlayerSoldier as Player\n\n=========\nSOUNDS\n=========\n\n================\nCOLLISIONLAYERS\n================\n\nBackground\nAdvTerrain\nPlayerSoldier, EnemySoldier\nWall\n\n======\nRULES\n======\n\n[ > PlayerSoldier | Background ] -> [ > PlayerSoldier | Background ]\n[ > EnemySoldier | Background ] -> [ > EnemySoldier | Background ]\n\n[ PlayerSoldier | EnemySoldier ] -> [ PlayerSoldier | Background ]\n[ EnemySoldier | PlayerSoldier ] -> [ EnemySoldier | Background ]\n\n==============\nWINCONDITIONS\n==============\n\nall AdvTerrain on PlayerSoldier\n\n=======\nLEVELS\n=======\n\n##### \n#...#\n#@A@#\n#...#\n##### \n\n#######\n#.E.E.#\n#..@..#\n#.E.E.#\n#######\n",
+            "fitness": -2,
+            "compiledIters": [],
+            "solvedIters": [],
+            "skipped": false,
+            "min_dist": 617
+        }
+    ]
+}

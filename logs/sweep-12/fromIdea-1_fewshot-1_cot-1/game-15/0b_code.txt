@@ -1,0 +1,113 @@
+To create a simplified demake of the game "Haunted Hues," the goal will be to design a PuzzleScript game where the player restores color to a desaturated world. The key elements of this demake will include:
+
+1. **Player Character:** A controllable avatar that the player uses to interact with the game world.
+2. **Desaturated Tiles:** These represent the "haunted" parts of the world that need to be colorized.
+3. **Color Palettes:** Objects that, when collected, restore color to adjacent desaturated tiles.
+4. **Colorized Tiles:** Tiles that become vibrant when restored.
+
+Key mechanics will be:
+- Collecting color palettes unlocks or transforms adjacent desaturated tiles into colorized tiles.
+- The objective will be to transform all desaturated tiles into colorized ones to win the game.
+
+The game code will utilize the PuzzleScript framework, with defined objects, collision layers, rules for interactions, and win conditions. 
+
+Here's an example implementation using the PuzzleScript language:
+
+```plaintext
+title Haunted Hues: Demake
+author Game Designer
+homepage www.example.com
+
+========
+OBJECTS
+========
+
+Background
+GRAY
+
+ColoredBackground
+#84C1FF
+
+Player
+white lightblue
+..0..
+..0..
+00000
+.000.
+.0.0.
+
+DesaturatedTile
+#888888
+
+ColorPalette
+#FFD700
+.....
+..0..
+.000.
+..0..
+.....
+
+=======
+LEGEND
+=======
+
+. = Background
+P = Player
+X = DesaturatedTile
+C = ColorPalette
+O = ColoredBackground
+
+=======
+SOUNDS
+=======
+
+startgame 937173004
+endgame 74955903
+sfx0 98568902
+
+================
+COLLISIONLAYERS
+================
+
+Background
+ColoredBackground
+Player, DesaturatedTile, ColorPalette
+
+======
+RULES
+======
+
+[ > Player | ColorPalette ] -> [ > Player | Background ] sfx0
+[ > Player | DesaturatedTile | ColorPalette] -> [ Player | ColoredBackground | Background] sfx0
+UP [ Player | DesaturatedTile NO ColorPalette ] -> [ Player | DesaturatedTile ]
+
+==============
+WINCONDITIONS
+==============
+
+No DesaturatedTile
+
+=======
+LEVELS
+=======
+
+##########
+#........#
+#..XXXX..#
+#..XCXX..#
+#..XCXX..#
+#..XXXX..#
+#....P...#
+##########
+
+message "Restore all colors!"
+```
+
+### Explanation:
+- **Objects:** Defined the game objects: the player, desaturated tiles, color palettes, and the colored background.
+- **Legend:** Maps single-character representations to the defined objects.
+- **Rules:** Basic rules to handle collecting color palettes and restoring colors to tiles.
+- **Win Condition:** The game ends when no desaturated tiles remain.
+- **Levels:** Example level configuration with desaturated tiles and color palettes. **Message** provides an objective to the player. 
+
+This setup allows the player to move around and restore colors by interacting with the palettes, fulfilling the concept of "Haunted Hues" in a compact form.

@@ -1,0 +1,133 @@
+To repair the PuzzleScript game "Pirate Plunge", I need to address the errors related to the Island object's color definition. The errors indicate that there's an attempt to use colors from the color palette for the Island object that have not been defined. To resolve this, I'll make sure the Island object has the correct number of color channels and that they match what's expected by its design.
+
+The design for Island currently tries to use four different shading values (1 and 2), but only one color channel is defined, which causes the errors. I'll adjust the Island's design to use only one color, simplifying the pattern to match the palette.
+
+Once these changes are made, the game should resolve the compilation errors and work as intended.
+
+Here's the corrected version of the PuzzleScript game code:
+
+```plaintext
+title Pirate Plunge
+author You
+
+========
+OBJECTS
+========
+
+Background
+blue
+
+Player
+white
+..0..
+.000.
+.0.0.
+.000.
+..0..
+
+Treasure
+yellow
+..0..
+.000.
+.000.
+.000.
+..0..
+
+Buccaneer
+red
+..0..
+.000.
+.000.
+.000.
+..0..
+
+Sea
+lightblue
+
+Island
+green
+.....
+.....
+.....
+.....
+.....
+
+ShiftingSea
+lightblue
+.....
+.111.
+.....
+.111.
+.....
+
+=======
+LEGEND
+=======
+
+. = Sea
+P = Player
+T = Treasure
+B = Buccaneer
+S = ShiftingSea
+I = Island
+
+=======
+SOUNDS
+=======
+
+collect 66551203
+defeat 86465708
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Sea, Island, ShiftingSea
+Treasure
+Player, Buccaneer
+
+======
+RULES
+======
+
+RIGHT [> Player | Sea] -> [> Player | ]
+LEFT [< Player | Sea] -> [< Player | ]
+UP [^ Player | Sea] -> [^ Player | ]
+DOWN [v Player | Sea] -> [v Player | ]
+
+RANDOM [ > Buccaneer | Sea] -> [ > Buccaneer | ]
+RANDOM [ < Buccaneer | Sea] -> [ < Buccaneer | ]
+
+[Player | Treasure] -> [Player] sound collect
+
+[Player | Buccaneer] -> [Player] sound defeat
+[Buccaneer | Player] -> [Buccaneer] sound defeat
+
+RANDOM TURN [ShiftingSea] -> [Island]
+RANDOM TURN [Island] -> [ShiftingSea]
+
+==============
+WINCONDITIONS
+==============
+
+No Treasure
+
+=======
+LEVELS
+=======
+
+####### 
+#...T.#
+#..I..#
+#P.S.I#
+#..S..#
+#B...T#
+#######
+
+```
+### Explanation:
+- **Island Sprite Palette Fix**: Modified Island object to use a single color and a simple design, ensuring its color palette is consistent with one color channel.
+- **Adjusted Island Design**: Simplified the Island sprite design to match a single color usage, avoiding any color indexing errors. 
+
+These changes should allow the game to compile without errors and maintain the intended gameplay mechanics.

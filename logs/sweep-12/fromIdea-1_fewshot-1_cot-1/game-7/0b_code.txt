@@ -1,0 +1,182 @@
+To create a PuzzleScript game based on the concept of **Mechanimal**, I will follow these steps:
+
+1. **Simplify the Concept**: Reduce the complexity of the original idea to fit within the constraints of a PuzzleScript game. The main idea will focus on players befriending mechanical animals and using them strategically to navigate an environment.
+
+2. **Define Game Mechanics**:
+   - The player can control mechanical animals.
+   - Animals will have different abilities (e.g., flying, pushing, or bridging).
+   - The player can combine animals to solve puzzles (e.g., a bird can lift the player across gaps).
+
+3. **Design Objects and Environment**:
+   - Create a player character.
+   - Design different types of mechanical animals.
+   - Create environmental elements like gaps and obstacles.
+   - Design goals or exits the player must reach.
+
+4. **Rules and Interactions**:
+   - Define interactions between the player and animals.
+   - Create rules that allow animals to demonstrate their abilities.
+   - Establish win conditions and any possible loss conditions.
+
+5. **Write the PuzzleScript Code**:
+   - Include object definitions.
+   - Outline the game rules.
+   - Design levels using the defined objects and mechanics.
+
+Here's the complete PuzzleScript code for the simplified **Mechanimal** game:
+
+```plaintext
+title Mechanimal Demake
+author AI Assistant
+
+========
+OBJECTS
+========
+
+Background
+white
+
+Player
+blue
+..0..
+.000.
+00.00
+.000.
+..0..
+
+Bird
+green
+.....
+.....
+..0..
+.....
+.....
+
+Rhino
+gray
+.....
+.000.
+00000
+.000.
+.....
+
+Bridge
+brown
+.....
+.....
+.....
+.....
+.....
+
+Gap
+black
+00000
+00000
+00000
+00000
+00000
+
+Wall
+black
+
+Goal
+yellow
+.000.
+0...0
+0...0
+0...0
+.000.
+
+=======
+LEGEND
+=======
+
+. = Background
+P = Player
+B = Bird
+R = Rhino
+H = Bridge
+G = Gap
+# = Wall
+X = Goal
+
+=======
+SOUNDS
+=======
+
+construct 10089207
+move 66367200
+complete 47243307
+
+===============
+COLLISIONLAYERS
+===============
+
+Background
+Player, Bird, Rhino, Bridge, Wall, Gap, Goal
+
+=====
+RULES
+=====
+
+(Player moves onto a bird to control it)
+[ > Player | Bird ] -> [ | Player ] sfx move
+[ Player | Bird ] -> [ | Player ] sfx move
+
+(Player flies over gaps using a bird)
+[ Player Gap ] -> [ Player ]
+
+(Player moves rhinos to clear obstacles)
+[ > Player | Rhino ] -> [ > Player | > Rhino ] sfx move
+
+(Rhino can become a bridge over gaps)
+[ > Rhino | Gap ] -> [ > Bridge | ]
+
+(Player reaches goal)
+[ Player | Goal ] -> [ Player ] win
+
+=============
+WINCONDITIONS
+=============
+
+All Player on Goal
+
+=======
+LEVELS
+=======
+
+# Level 1: Basic Movement
+#######
+#P...X#
+#.....#
+#######
+
+# Level 2: Bird Usage
+#######
+#P..B.#
+###G###
+#....X#
+#######
+
+# Level 3: Rhino and Gap
+#########
+#P..R..X#
+##G.G.G##
+#########
+
+# Level 4: Mixed
+#########
+#P.B.R.X#
+#.......#
+##G.G.G##
+#########
+```
+
+### Breakdown of the Game:
+- **Objects**: Each object represents a player, mechanical animals (Bird and Rhino), environmental elements (Gap and Wall), and the objective (Goal).
+- **Mechanics**:
+  - The player can control birds to fly over gaps or ride rhinos to move them.
+  - Rhinos can transform into bridges when moved onto gaps.
+- **Objective**: Navigate the environment using the animals to reach the goal.
+  
+Through these simplified mechanics, the game illustrates the concept of befriending and using mechanical creatures to solve puzzles on a lost planet.

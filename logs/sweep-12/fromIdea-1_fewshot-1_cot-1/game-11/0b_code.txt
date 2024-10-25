@@ -1,0 +1,174 @@
+To create a simplified `demake` of **Puzzlot** in PuzzleScript, we need to translate the core mechanics into a minimalist form suitable for the PuzzleScript environment. Here is a plan to achieve this:
+
+1. **Design Concept**: Focus on logic puzzles in a labyrinth setting with treasures and traps. To achieve simplicity:
+    - Use a grid-based room representing the labyrinth.
+    - Incorporate simple puzzles involving moving boxes onto target spots to unlock treasures.
+    - Use traps that block the player's path to enforce puzzle solving.
+    - Room unlocks once the puzzle is solved.
+
+2. **Objects**:
+    - **Player**: The main character who navigates the labyrinth.
+    - **Wall**: Blocks that define the room boundaries.
+    - **Box**: Puzzle elements that need to be pushed onto targets.
+    - **Target**: The spots where boxes should be placed.
+    - **Treasure**: The reward for solving the puzzle.
+    - **Trap**: Blocks that are removed when puzzle is solved.
+
+3. **Win Conditions**:
+    - All boxes must be placed on the targets. This unlocks traps and reveals treasures.
+
+4. **Rules**:
+    - Player can push boxes into empty spaces or onto targets.
+    - When a box is placed on a target, it becomes stationary until moved off the target.
+    - Once all targets hold a box, traps are removed and treasures are accessible.
+
+5. **Levels**:
+    - Design a few starting levels manually to illustrate the game mechanics.
+    - Generate levels procedurally for added replayability using PuzzleScript's random behavior.
+
+Following this plan, here is the complete PuzzleScript code for the game:
+
+```plaintext
+title Puzzlot
+author YourName
+homepage http://yourhomepage.com
+
+========
+OBJECTS
+========
+
+Background
+black
+00000
+00000
+00000
+00000
+00000
+
+Wall
+grey
+11111
+11111
+11111
+11111
+11111
+
+Player
+blue
+..0..
+.000.
+.010.
+.000.
+..0..
+
+Box
+orange
+.....
+.111.
+.111.
+.111.
+.....
+
+Target
+yellow
+.....
+..1..
+.111.
+..1..
+.....
+
+Treasure
+gold
+.....
+.....
+.0.0.
+.....
+.....
+
+Trap
+darkred
+.....
+..0..
+.000.
+..0..
+.....
+
+=======
+LEGEND
+=======
+
+. = Background
+P = Player
+# = Wall
+B = Box
+T = Target
+R = Treasure
+X = Trap
+
+=======
+SOUNDS
+=======
+
+Player MOVE 11429307
+Box MOVE 48059907
+EndLevel 85763108
+Restart 65287309
+Undo 84906107
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Target
+Treasure
+Player, Wall, Box
+Trap
+
+======
+RULES
+======
+
+[Player | > Box | ] -> [ > Player | > Box | ] 
+[Player | Box | Wall] -> [ Player | Box | Wall] 
+
+[Box | Target] -> [Box Target]
+[Target | Box] -> [Box Target]
+
+(Box on target unlocks traps)
+[ Box Target | Trap ] -> [ Box Target | ]
+
+==============
+WINCONDITIONS
+==============
+
+All Box on Target
+
+=======
+LEVELS
+=======
+
+message Solve the puzzle to reveal the treasure!
+
+#######
+#.....#
+#.P.B.#
+#..T..#
+#.BRX.#
+#######
+
+#######
+#.....#
+#PB..T#
+#.##..#
+#XT.R.#
+#######
+```
+
+### Explanation:
+- **Objects**: The game includes background, walls for boundaries, a player, moveable boxes, targets for puzzles, treasures as rewards, and traps that block passage.
+- **Rules**: The player can push boxes. Boxes must be placed on targets to unlock traps (obstacles) and reveal treasures.
+- **Win Condition**: The level is completed once all boxes are correctly positioned on targets.
+- **Levels**: Two levels are provided as a demonstration, challenging the player to navigate and solve the puzzle to access treasures.
+
+This implementation directly translates the core aspects of **Puzzlot** into a compact, grid-based PuzzleScript game with a focus on simple logic and rewards.

@@ -14,10 +14,15 @@ Notes:
 
 TODO (feel free to claim a task---they're relatively standalone):
 - Submodule focused solely on adding new levels to functioning games
-- Ask for natural language descriptions of game semantics (e.g. "a game about a hungry caterpillar eating leaves while avoiding predatory birds"), then use these as prompts for generating games
 - Save gifs of solutions being played out (there is some existing functionality for saving gifs in the js codebase---use it)
 - Feed screenshots of generated levels to GPT-4o to iterate on sprites
-- Some kind of evolutionary loop that will generate a bunch of games for us, diverse/novel along some axis
+- Some kind of evolutionary loop that will generate a bunch of games for us, diverse/novel along some axis (implemented, need to debug)
+
+## Running experiments
+
+To sweep over fewshot and chain of thought prompting, uncomment `sweep()` in `src/js/ScriptDoctor.js`, launch the server with `python server.py` and open the webpage at `127.0.0.1:8000` (or whatever pops up in the terminal where you've launched the server). Then the javascript code, and the `sweep()` function, will be run. Once this is done, run `python compute_edit_distances.py` then `python eval_fewshot_cot_sweep.py` to generate tables of results.
+
+To generate game ideas, run `python brainstorm.py`, then uncomment `fromIdeaSweep()` in `src/js/ScriptDoctor.js`, launch the server and open the webpage, then run `python compute_from_idea_edit_distances.py` and `python eval_from_idea_sweep.py`.
 
 PuzzleScript
 ============

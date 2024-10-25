@@ -1,0 +1,336 @@
+SYSTEM PROMPT:
+You are a game designer, familiar with the PuzzleScript game description language. Here are some example games, for inspiration (do not reproduce these games exactly):
+
+title Octat
+author increpare
+homepage www.increpare.com
+
+noundo
+require_player_movement
+
+(
+    
+A port of a flash game I made.  The original's here:
+
+http://ded.increpare.com/~locus/octat/
+
+)
+
+========
+OBJECTS
+========
+
+Background
+purple
+.....
+.000.
+.000.
+.000.
+.....
+
+Activetile
+pink red
+00000
+0...0
+0...0
+0...0
+00000
+
+Target
+red
+0...0
+.0.0.
+..0..
+.0.0.
+0...0
+
+Player
+white
+.....
+.000.
+.000.
+.000.
+.....
+
+Void 0
+black
+
+Temp
+black
+
+=======
+LEGEND
+=======
+
+. = Background
+P = Player and Activetile
+a = Activetile
+x = Target
+y = target and Activetile
+
+=========
+SOUNDS
+=========
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Void
+Activetile
+Player
+Temp
+Target
+
+======
+RULES
+======
+
+[ > Player | no Activetile ] -> cancel
+
+late [ Activetile | Player ] -> [ Temp | Player ] 
+late [ no Temp | Player ] -> [ Activetile | Player ] 
+late [ Temp ] -> [ ] 
+
+late [ Activetile Void ] -> [ Void ] 
+
+==============
+WINCONDITIONS
+==============
+
+some Player on target
+
+=======
+LEVELS
+=======
+
+message level 1 of 8
+
+..........
+..........
+..........
+..........
+..........
+.x...ap...
+..........
+..........
+..........
+..........
+
+message level 2 of 8
+
+...........
+...........
+...........
+...........
+...........
+....xpa....
+...........
+...........
+...........
+...........
+
+message level 3 of 8
+
+...........
+...........
+...........
+...........
+..a........
+.axaaap....
+..a........
+...........
+...........
+...........
+
+message level 4 of 8
+
+...........
+...........
+...a.......
+..a.a......
+.a.a.a.....
+a.aya.a.ap.
+.a.a.a.....
+..a.a......
+...a.......
+...........
+
+message level 5 of 8
+
+...........
+...........
+...........
+...........
+aaaaaaaaaaa
+...y..ap...
+aaaaaaaaaaa
+...........
+...........
+...........
+
+message level 6 of 8
+
+000000....0
+000000..0.0
+000000..0..
+000000000..
+....A...0.0
+.AY.A...AAP
+....A...0.0
+000000000..
+000000..0..
+000000..0.0
+000000....0
+
+message level 7 of 8
+
+..AAA...000
+.AY.A...AP.
+..AAA...000
+
+message level 8 of 8
+
+0AAAA..00
+0AAAA..00
+YAAAA..AP
+0AAAA..00
+0AAAA..00
+
+message the end
+
+
+USER PROMPT:
+The following PuzzleScript game code:
+```plaintext
+title Tile Tactics Demake
+author Your Name
+
+========
+OBJECTS
+========
+
+Background
+DarkGreen LightGreen
+11111
+11111
+11111
+11111
+11111
+
+Soldier
+Yellow Orange
+.....
+..0..
+.111.
+..0..
+.....
+
+Objective
+Red
+.....
+.0.0.
+.000.
+.0.0.
+.....
+
+Wall
+Gray
+00000
+00000
+00000
+00000
+00000
+
+Water
+Blue
+00000
+00000
+00000
+00000
+00000
+
+=======
+LEGEND
+=======
+
+. = Background
+P = Soldier
+O = Objective
+# = Wall
+~ = Water
+
+=======
+SOUNDS
+=======
+
+Soldier MOVE 42798702
+Soldier WIN 73648232
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Objective
+Wall, Water
+Soldier
+
+======
+RULES
+======
+
+[ > Soldier | Objective ] -> [ > Soldier | > Objective ]
+[ Soldier | Water ] -> [ Soldier ]  # prevents movement over water
+
+==============
+WINCONDITIONS
+==============
+
+all Objective on Soldier
+
+=======
+LEVELS
+=======
+
+# Level 1: Simple Positioning
+message Simple Positioning
+#######
+#.....#
+#..O..#
+#..P..#
+#.....#
+#######
+
+# Level 2: Using Obstacles
+message Using Obstacles
+#######
+#.....#
+#O###.#
+#..P..#
+#.....#
+#######
+
+# Level 3: Avoid Water
+message Avoid Water
+#######
+#..O..#
+#~.~.~#
+#..P..#
+#~.~.~#
+#######
+
+
+```
+produced the following console output:
+=================================
+line 63 : Was expecting a soundverb here (MOVE, DESTROY, CANTMOVE, or the like), but found something else.
+line 79 : Name "prevents", referred to in a rule, does not exist.
+line 79 : Name "movement", referred to in a rule, does not exist.
+line 79 : Name "over", referred to in a rule, does not exist.
+line 91 : Key "L" not found. Do you need to add it to the legend, or define a new object?
+line 91 : Key "E" not found. Do you need to add it to the legend, or define a new object?
+too many errors, aborting compilation
+Errors detected during compilation; the game may not work correctly.
+Return a repaired version of the code that addresses these errors. First, reason about your task and determine the best plan of action. Then, write your code.  The game should be a simplified `demake` of the following game idea: **Tile Tactics:** Command armies by placing soldier tiles strategically on a grid, achieving victory through clever positioning and terrain advantage.. Return your code in full, inside a ```plaintext code block.

@@ -1,0 +1,150 @@
+To create a simplified `demake` of the game idea "Tile Tactics" using the PuzzleScript language, I will first break down the core elements of the game and then translate these into PuzzleScript components. 
+
+1. **Core Elements of Tile Tactics:**
+   - **Soldiers:** Units that can be placed on the grid by the player.
+   - **Grid/Terrain:** The game board where soldiers are positioned.
+   - **Objectives:** Acquire strategic points or defeat enemy tiling to win.
+   - **Player Commands:** Ability to place, move, and position soldiers.
+
+2. **Translation to PuzzleScript:**
+   - **Objects:** Create representations for soldiers, terrain, obstacles (like rocks or water), and objectives.
+   - **Player Movement/Action:** Allow the player to control soldiers to achieve objectives, resembling capturing strategic points.
+   - **Win Conditions:** Define what constitutes victory, such as occupying specific tiles on the map.
+   - **Game Levels:** Create varying terrain configurations and set starting positions.
+
+Given these components, I'll provide a simplified game setup using PuzzleScript.
+
+```plaintext
+title Tile Tactics Demake
+author Your Name
+
+========
+OBJECTS
+========
+
+Background
+DarkGreen DarkerGreen
+11111
+11111
+11111
+11111
+11111
+
+Soldier
+Yellow
+.....
+..0..
+.111.
+..0..
+.....
+
+Objective
+Red
+.....
+.0.0.
+.000.
+.0.0.
+.....
+
+Wall
+Gray
+000
+010
+000
+
+Water
+Blue
+.....
+.....
+.....
+.....
+.....
+
+=======
+LEGEND
+=======
+
+. = Background
+P = Soldier
+O = Objective
+# = Wall
+~ = Water
+
+=======
+SOUNDS
+=======
+
+[Soldier MOVE] 32948503
+[Soldier WIN] 32876490
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Objective
+Wall, Water
+Soldier
+
+======
+RULES
+======
+
+[ > Soldier | Target ] -> [ > Soldier | > Target ]
+[ Soldier | Water ] -> [ Soldier ] 
+
+==============
+WINCONDITIONS
+==============
+
+All Objective on Soldier
+
+=======
+LEVELS
+=======
+
+# Level 1: Simple Positioning
+message Simple Positioning
+#######
+#.....#
+#..O..#
+#..P..#
+#.....#
+#######
+
+# Level 2: Using Obstacles
+message Using Obstacles
+#######
+#..O..#
+#.###.#
+#..P..#
+#.....#
+#######
+
+# Level 3: Avoid Water
+message Avoid Water
+#######
+#..O..#
+#~.~.~#
+#..P..#
+#~.~.~#
+#######
+
+```
+
+### Explanation:
+- **Objects:**
+  - **Background:** Represents the grid on which players and other objects stand.
+  - **Soldier:** The unit controlled by the player.
+  - **Objective:** Tiles that the player needs to capture or reach with soldiers.
+  - **Wall/Water:** Impassable tiles that block or challenge movement.
+
+- **Legend:** Provides convenient shorthand for game objects.
+  
+- **Rules:** Define simple interaction where the player moves soldiers to occupy objective tiles, while water tiles block movement.
+  
+- **Win Conditions:** The player wins by moving soldiers onto all objective tiles.
+
+- **Levels:** Offer basic strategic scenarios using obstacles and special tiles.
+
+This setup provides a basic framework for players to engage in tactical positioning within a grid-based environment, directly translating the core mechanics of the given game idea into PuzzleScript.

@@ -1,0 +1,140 @@
+To address the issues in the provided PuzzleScript game code, let's analyze the errors and make the necessary adjustments:
+
+1. **Line 81 Error:** "Name 'on' referred to in a rule, does not exist."
+   - The use of `on` in `Dish on Exit` is incorrect syntax in PuzzleScript. The correct approach involves utilizing conditions and win conditions to manage interactions.
+
+2. **Line 93 Error:** "Key 'L', 'V', '1' not found. Do you need to add it to the legend, or define a new object?"
+   - These errors refer to level design lines where unrecognized characters are present. Ensure the levels are correctly defined with known objects.
+
+3. **Line 94-101 Error:** "Maps must be rectangular, yo."
+   - This error arises from inconsistent line lengths in level definitions. Levels in PuzzleScript must have uniform dimensions across all rows.
+
+4. **Line 103 Error:** Same as line 93.
+   - Again, the level definition includes invalid characters.
+
+Let's correct these issues and rewrite the code accordingly:
+
+```plaintext
+title Olive Odyssey: Demake
+author Game Designer
+
+========
+OBJECTS
+========
+
+Background
+green
+
+Wall
+grey
+
+Player
+blue
+.000.
+.000.
+.000.
+.0.0.
+.....
+
+Olive
+yellow
+.....
+..0..
+.000.
+..0..
+.....
+
+Cauldron
+purple
+.....
+.....
+.....
+.....
+.....
+
+Exit
+red
+.....
+.....
+.....
+.....
+.....
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+@ = Player
+O = Olive
+C = Cauldron
+E = Exit
+
+======
+SOUNDS
+======
+
+sfx0 3295707 (ingredient collected)
+sfx1 96434300 (level completed)
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Exit, Olive
+Player, Wall, Cauldron
+
+======
+RULES
+======
+
+[ @ | O | C ] -> [ @ | C ] sfx0  // When Player goes onto Olive at a Cauldron, collect Olive.
+
+[ > Player | O ] -> [ > Player | > O ]  // Allow player to push Olives.
+
+=====
+WINCONDITIONS
+=====
+
+All Cauldron on Exit // To win, move the Cauldron (with Olives in it) onto the Exit.
+
+=======
+LEVELS
+=======
+
+# Level 1
+#######
+#.....#
+#..O..#
+#..@..#
+#..C..#
+#.....#
+#..E..#
+#######
+
+# Level 2
+##########
+#...O....#
+#..O.....#
+##.......#
+#..@..O..#
+#.....C..#
+#...###..#
+#.......E#
+##########
+```
+
+### Explanation of Changes:
+
+1. **Fixed the Syntax Error:**
+   - Changed `Dish on Exit` to define an achievable goal: ensuring the `Cauldron` is on `Exit`, requiring the transporting task once the Olive is collected.
+
+2. **Level Characters Corrected:**
+   - Ensured only recognized symbols from the legend are used in levels.
+ 
+3. **Added Level Completeness:**
+   - Levels are made rectangular, meeting PuzzleScript's requirement for uniform row lengths.
+
+The corrected game reflects a simple objective: move the `Cauldron` to the `Exit` after collecting `Olives`, simulating the demake concept of cooking in a puzzling setup.

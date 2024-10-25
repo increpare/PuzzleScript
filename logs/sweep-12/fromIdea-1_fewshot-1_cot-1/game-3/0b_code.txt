@@ -1,0 +1,120 @@
+To create a simplified demake of "Time Trinkle," we need to focus on core mechanics that align with its concept: manipulating time by flipping tiles forward or backward to solve puzzles. The goal is to restore tiles to their correct state to win.
+
+### Plan:
+
+1. **Objective**: Create a PuzzleScript game where the player can flip tiles that represent time states (e.g., past or future). The objective is to return all tiles to a specific state considered "correct" (perhaps future).
+
+2. **Game Elements**:
+   - **Player**: An entity which moves around and interacts with tiles.
+   - **Tiles**: Objects with states (e.g., Past and Future).
+   - **Correct State**: Tiles flipped to Future to solve the puzzle.
+   - **Transition**: Player interacts with tiles to change their state.
+
+3. **Visual Design**: Utilize distinct colors to differentiate between tile states and the player.
+
+4. **Rules**:
+   - Player can move in four directions.
+   - Interacting with a tile flips its state.
+   - The game is won when all tiles are in the Future state.
+
+5. **Levels and Win Condition**: Create a basic level where all 'Past' tiles need to be flipped to 'Future' to win.
+
+Here is the code for the game:
+
+```plaintext
+title Time Trinkle
+author YourName
+homepage www.example.com
+
+========
+OBJECTS
+========
+
+Background
+DarkGray
+
+Player
+Pink
+.333.
+.323.
+.333.
+.....
+.....
+
+PastTile
+Orange
+.....
+.555.
+.555.
+.555.
+.....
+
+FutureTile
+Blue
+.....
+.444.
+.444.
+.444.
+.....
+
+=======
+LEGEND
+=======
+
+. = Background
+P = Player
+a = PastTile
+b = FutureTile
+
+=========
+SOUNDS
+=========
+
+FlipTile 60091703
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Player, PastTile, FutureTile
+
+======
+RULES
+======
+
+[ > Player | PastTile ] -> [ > Player | FutureTile ] sfx0
+[ > Player | FutureTile ] -> [ > Player | PastTile ] sfx0
+
+==============
+WINCONDITIONS
+==============
+
+All FutureTile
+
+=======
+LEVELS
+=======
+
+message Welcome to Time Trinkle!
+message Flip all tiles to restore their future state.
+
+#########
+#aa.....#
+#..P....#
+#.....aa#
+#########
+```
+
+### Explanation of the Code:
+
+- **Title Section**: Sets the title, author, and homepage of the game.
+- **Objects Section**: Defines different game elements: Background, Player, PastTile, FutureTile with specified colors.
+- **Legend Section**: Represents how various objects are simplified in the code, e.g., Background, Player.
+- **Sounds Section**: Placeholder with a flip sound for tile interaction.
+- **Collision Layers**: Sets object interaction layers, ensuring they overlap appropriately.
+- **Rules Section**: Defines how player interactions change tile states, toggling between PastTile and FutureTile.
+- **Win Conditions**: Establishes the game-winning condition as all tiles being in their Future state.
+- **Levels Section**: Composes a basic level layout with instructions.
+
+This demake captures the essence of manipulating time states on tiles within a puzzle framework, aligning with the game's concept.

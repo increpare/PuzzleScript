@@ -1,0 +1,171 @@
+To create a complete PuzzleScript game that represents a demake of "Dungeon Dimensions," we'll follow these steps:
+
+1. **Game Concept Simplification:**
+   - Players can switch between two dungeon dimensions. 
+   - Players move strategically on a grid to defeat enemies and avoid obstacles.
+   - Use portals to switch dimensions.
+   - Objective is to clear the dungeon by defeating all enemies.
+
+2. **Game Mechanics:**
+   - Use a grid-based movement system that allows players to move up, down, left, and right.
+   - Define two dimensions with different layouts.
+   - Use a simple attack mechanism to defeat enemies.
+   - Portals are placed on the level to switch between dimensions.
+
+3. **Design Elements:**
+   - Player (`P`): Moves around and interacts with the game elements.
+   - Wall (`#`): Impassable obstacles.
+   - Portal (`O`): Allows the player to switch between dimensions.
+   - Enemy (`E`): Occupies grid cells and can be defeated.
+   - Empty cells (`.`): Movable space.
+
+4. **Win Condition:**
+   - The game is won when all enemies in both dimensions are defeated.
+
+5. **PuzzleScript Implementation:**
+   - Implement objects, rules, and levels necessary to illustrate the gameplay mechanics.
+
+Here's the complete PuzzleScript implementation:
+
+```plaintext
+title Dungeon Dimensions
+author A Game Designer
+
+========
+OBJECTS
+========
+
+Background
+LightGray
+
+Wall
+DarkGray
+11111
+11111
+11111
+11111
+11111
+
+Player
+Blue
+.....
+..0..
+.000.
+..0..
+.....
+
+Enemy
+Red
+.....
+..0..
+.000.
+..0..
+.....
+
+Portal
+Purple
+.0.0.
+0...0
+.....
+0...0
+.0.0.
+
+Dimension1
+White
+.....
+.....
+.111.
+.....
+.....
+
+Dimension2
+Black
+.....
+.....
+.111.
+.....
+.....
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Player
+E = Enemy
+O = Portal
+1 = Dimension1
+2 = Dimension2
+
+=======
+SOUNDS
+=======
+
+0 Player Create 87210004
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Wall
+Portal
+Player, Enemy
+
+======
+RULES
+======
+
+# Player moves
+[ > Player | Player ] -> [ > Player | > Player ]
+[ Player | Portal ] [ no Dimension1 no Dimension2 ] -> [ | Player ] [ Dimension2 ] SFX0
+[ Player | Portal ] [ Dimension1 ] -> [ | Player ] [ Dimension2 ]
+[ Player | Portal ] [ Dimension2 ] -> [ | Player ] [ Dimension1 ]
+
+# Player attacks enemy
+[ Player | Enemy ] -> [ Player | ]
+
+==============
+WINCONDITIONS
+==============
+
+no Enemy
+
+=======
+LEVELS
+=======
+
+# Level 1
+11111111
+1P.....O1
+1...###.1
+1....E..1
+1O####..1
+11......1
+11111111
+
+2.......2
+2.#...O.2
+2.#..E#.2
+2.#....2
+2.O....2
+2......2
+22222222
+```
+
+### Explanation:
+
+- **Objects and Elements:**
+  - Player, Wall, Enemy, Portal, and Background are the key objects.
+  - Dimension tiles (`1` for Dimension1 and `2` for Dimension2) illustrate the two alternate dimensions.
+
+- **Rules:**
+  - The player can move around the grid.
+  - Interacting with a portal switches between dimensions.
+  - Players can defeat enemies by simply moving into the same tile.
+
+- **Levels:**
+  - A sample level is provided showing both dimensions with respective portals, obstacles, and enemies.
+
+This code reflects a simplified "Dungeon Dimensions" game where players use portals strategically to navigate through space, switch dimensions, and defeat enemies.

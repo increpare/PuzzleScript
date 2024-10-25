@@ -1,0 +1,117 @@
+To address the errors in your PuzzleScript game code and create a functioning version, let's first outline the identified issues and their solutions:
+
+1. **Color Definition Error**: The code mistakenly interprets "lightyellow" as a misplaced definition. Ensure "ColorTileUnlocked" has valid colors defined properly.
+
+2. **Missing SOUNDS Section**: PuzzleScript requires a SOUNDS section, even if it's empty, before the COLLISIONLAYERS section.
+
+3. **Invalid Object Names in Rules and Win Conditions**: Objects need to be named consistently across objects, rules, and win conditions. Check capitalization and spelling.
+
+4. **Errors in Rule Definitions**: Ensure objects in the rules match those defined in the game, with correct capitalization.
+
+With these points in mind, here's the corrected PuzzleScript game code:
+
+```plaintext
+title Haunted Hues
+author YourName
+homepage YourHomepage
+
+========
+OBJECTS
+========
+
+Background
+lightgrey grey
+11111
+11111
+11111
+11111
+11111
+
+Wall
+black darkgrey
+00000
+00000
+00000
+00000
+00000
+
+Player
+red orange white
+.111.
+.100.
+.111.
+..1..
+.....
+
+ColorTileLocked
+darkgrey grey
+.....
+..0..
+.000.
+..0..
+.....
+
+ColorTileUnlocked
+yellow yellow
+.....
+..0..
+.000.
+..0..
+.....
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Player
+L = ColorTileLocked
+U = ColorTileUnlocked
+
+=======
+SOUNDS
+=======
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Wall
+ColorTileUnlocked, ColorTileLocked
+Player
+
+======
+RULES
+======
+
+[ P | L ] -> [ P | U ]
+
+==============
+WINCONDITIONS
+==============
+
+no L
+
+=======
+LEVELS
+=======
+
+##########
+#........#
+#..####..#
+#..#UL#..#
+#..#LUP..#
+#..####..#
+#........#
+##########
+
+```
+
+### Explanation:
+
+- **Color Definitions**: The color for "ColorTileUnlocked" is now correctly specified as "yellow yellow" to avoid confusion.
+- **SOUNDS Section**: An empty SOUNDS section is added to comply with the PuzzleScript requirements.
+- **Consistent Object Names**: Adjustments were made to ensure consistency in object names, particularly in rule conditions and win conditions, matching the defined objects.
+- **Correct Rules and Win Conditions**: The rule and win conditions have been adjusted to use the correct capitalization and object naming from the OBJECTS and LEGEND sections.

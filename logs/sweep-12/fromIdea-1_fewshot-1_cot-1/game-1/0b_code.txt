@@ -1,0 +1,176 @@
+To create a simplified `demake` of the game idea **Puzzlot** in PuzzleScript, we need to distill the concept into basic components suitable for the language's capabilities. PuzzleScript is great for grid-based games with simple mechanics. Here's how we can translate the idea:
+
+1. **Puzzles**: We'll implement a simple puzzle mechanic—players need to push movable boulders onto target spaces to open the exit to a new room.
+
+2. **Rooms and Treasures**: Each level will represent a room. Completing a puzzle in a room will reveal a "treasure" (simply a visual element) and open the path to the next room.
+
+3. **Traps**: Traps can be static obstacles that reset the player’s position if touched.
+
+4. **Labyrinth**: The labyrinth will be simulated by multiple levels in PuzzleScript.
+
+**Game Design Elements:**
+- **Player**: Movable entity that pushes boulders.
+- **Boulder**: Movable block that can be moved onto targets.
+- **Target**: A space where boulders need to be placed.
+- **Wall**: Static objects that block movement.
+- **Trap**: Static objects that reset the player position.
+- **Exit**: Player reaches this after solving the puzzle to progress to the next "room" (level).
+
+**Implementation Plan:**
+- Create the necessary objects and their visual representations.
+- Define movement and pushing mechanics in the rules.
+- Develop simple levels that incorporate all elements.
+
+Here's the complete code:
+
+```plaintext
+title Puzzlot: Simplified Demake
+author You
+
+========
+OBJECTS
+========
+Background
+DarkGreen
+
+Player
+Yellow
+..0..
+.000.
+.000.
+.....
+.....
+
+Boulder
+Brown
+00000
+0...0
+0...0
+0...0
+00000
+
+Target
+LightBlue
+.....
+..0..
+.000.
+..0..
+.....
+
+Wall
+DarkGrey
+00000
+00000
+00000
+00000
+00000
+
+Trap
+Red
+.....
+..1..
+.....
+..1..
+.....
+
+Exit
+Gold
+.....
+..1..
+.111.
+..1..
+.....
+
+Treasure
+Gold
+.....
+..1..
+.111.
+..1..
+.....
+
+=======
+LEGEND
+=======
+. = Background
+P = Player
+* = Boulder
+O = Target
+# = Wall
+T = Trap
+E = Exit
+$ = Treasure
+
+=======
+SOUNDS
+=======
+
+================
+COLLISIONLAYERS
+================
+Background
+Target
+Exit
+Treasure
+Player, Wall, Boulder, Trap
+
+======
+RULES
+======
+[ > Player | Boulder ] -> [ > Player | > Boulder ]
+
+# If player steps on trap, reset position (level restart for simplicity)
+[ > Player | Trap ] -> restart
+
+# Open exit if all boulders are on targets
+All Target on Boulder -> win
+
+# Display a treasure level completion
+[ Player Exit ] -> [ Player Treasure ]
+
+==============
+WINCONDITIONS
+==============
+Player on Exit
+
+=======
+LEVELS
+=======
+
+# Level 1 - Introduction
+#######
+#.....#
+#..*..#
+#..O..#
+#..P..#
+#..E..#
+#######
+
+# Level 2 - A Bit Harder
+#######
+#.###.#
+#..*..#
+#.*O*.#
+#..P..#
+#..E..#
+#######
+
+# Level 3 - Introduction of a trap
+#######
+#.###.#
+#..T..#
+#.*O*.#
+#..P..#
+#..E..#
+#######
+
+message You found a treasure!
+```
+
+**Explanation:**
+- Each level is designed to incrementally introduce game elements such as traps.
+- The rules enforce the primary mechanics, such as pushing boulders and resetting on traps.
+- The win condition checks if all boulders are on targets, and reaching the exit with all targets covered signifies level completion.
+- Each level represents a new "room" in the labyrinth with simple logic problems to solve. 
+
+This design caters to a basic experience of **Puzzlot**'s core gameplay.

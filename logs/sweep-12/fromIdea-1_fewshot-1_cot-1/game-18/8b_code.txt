@@ -1,0 +1,139 @@
+```plaintext
+title Olive Odyssey
+author Assistant
+homepage www.puzzlescript.net
+
+========
+OBJECTS
+========
+
+Background
+lightgreen
+.....
+.....
+.....
+.....
+.....
+
+Player
+darkgreen white
+.....
+..0..
+.111.
+..0..
+.....
+
+Olive
+darkgreen
+.....
+..000
+..000
+.....
+.....
+
+Herb
+darkblue blue
+.....
+..111
+..111
+.....
+.....
+
+Garlic
+yellow white
+.....
+..000
+..000
+.....
+.....
+
+Cauldron
+brown black
+.....
+..111
+.111.
+..111
+.....
+
+Dish
+darkred black
+.....
+.....
+..111
+.....
+.....
+
+Wall
+gray
+.....
+.....
+.....
+.....
+.....
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Player
+O = Olive
+H = Herb
+G = Garlic
+C = Cauldron
+D = Dish
+
+Ingredient = Olive or Herb or Garlic
+Goal = Cauldron
+
+=======
+SOUNDS
+=======
+
+Ingredient CREATE 59039009
+Dish CREATE 78340002
+Endlevel 12234100
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Ingredient
+Player, Cauldron, Dish, Wall
+
+======
+RULES
+======
+
+[ > Player | Ingredient | Cauldron ] -> [ > Player | | Dish ] sfx1 MESSAGE "You cooked a dish!"
+
+==============
+WINCONDITIONS
+==============
+
+Some Dish
+
+=======
+LEVELS
+=======
+
+######
+#....#
+#..P.#
+#O.H.#
+#.G..#
+#C...#
+######
+
+######
+#....#
+#..P.#
+#O.H.#
+#C..G#
+#....#
+######
+
+```
+For the level to be solvable, the player must be able to push each ingredient into the cauldron. The second level is added as an example of solvability. In the first level, due to positioning, no ingredients can be moved to the cauldron, causing the unsolvable error. The second level rearranges ingredients to ensure the player can create a dish by moving them into the cauldron.

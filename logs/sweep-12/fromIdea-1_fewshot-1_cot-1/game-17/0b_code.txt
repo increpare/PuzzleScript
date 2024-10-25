@@ -1,0 +1,153 @@
+To create a simplified `demake` of the `Mechanimal` game idea using the PuzzleScript language, we'll follow these steps:
+
+1. Define the game concept:
+   - The main objective is to collect and assemble mechanical animals (Mechanimals) to solve environmental puzzles.
+   - Players can control both the player character and the assembled Mechanimals.
+   - Use the Mechanimal abilities to overcome obstacles.
+
+2. Simplify the design:
+   - The player character will be able to collect parts to assemble a Mechanimal.
+   - Each assembled Mechanimal can provide unique abilities like moving over water or pushing blocks.
+   - A winning condition could involve reaching a specified target or completing a task using the Mechanimal's abilities.
+
+3. Define key game elements:
+   - Player character
+   - Mechanimal parts
+   - Assembled Mechanimal
+   - Obstacles like water or blocks
+
+4. Develop simple game mechanics:
+   - Player can collect parts to assemble a Mechanimal.
+   - Mechanimal can overcome specific obstacles or perform special actions.
+   - Player and Mechanimal work together to solve puzzles.
+
+5. Implement basic levels to showcase these mechanics.
+
+Here is the PuzzleScript code:
+
+```plaintext
+title Mechanimal: Assembly Adventure
+author YourName
+homepage www.example.com
+
+========
+OBJECTS
+========
+
+Background
+LIGHTBLUE LIGHTGREEN
+11111
+01111
+11101
+11111
+10111
+
+Player
+BLACK ORANGE WHITE BLUE
+.000.
+.111.
+22222
+.333.
+.3.3.
+
+Part
+DARKGRAY
+.....
+.000.
+..0..
+.000.
+.....
+
+Mechanimal
+YELLOW
+..0..
+.000.
+.0.0.
+.000.
+..0..
+
+Water
+LIGHTBLUE
+.....
+.....
+.000.
+.....
+.....
+
+Block
+ORANGE
+00000
+0...0
+0...0
+0...0
+00000
+
+Target
+RED
+.....
+..1..
+.1.1.
+..1..
+.....
+
+=======
+LEGEND
+=======
+
+P = Player
+M = Mechanimal
+W = Water
+B = Block
+. = Background
+X = Target
+o = Part
+
+=======
+SOUNDS
+=======
+
+PartCollect DESTROY 12345678
+MechanimalAssemble CREATE 87654321
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Water, Target
+Player, Part, Mechanimal, Block
+
+======
+RULES
+======
+
+[ > Player | Part ] -> [ > Player ] sfx0
+
+[ Player Part Part ] -> [ Player Mechanimal ] sfx1
+
+[ > Player | Mechanimal ] -> [ > Player | > Mechanimal ]
+
+[ Mechanimal | Block ] -> [ > Mechanimal | > Block ]
+
+[ Mechanimal | Water ] -> [ Mechanimal Water ]
+
+==============
+WINCONDITIONS
+==============
+
+All Target on Mechanimal
+
+=======
+LEVELS
+=======
+
+#########
+#.......#
+#..P....#
+#..o.o..#
+#..W....#
+#..B.X..#
+#########
+```
+
+This code provides a basic framework for the game, where the player collects parts to assemble a Mechanimal, which is then used to reach the target. The player's abilities are limited initially but expanded by constructing the Mechanimal. As a prototype, this offers a starting point to explore more features or enhance the mechanics as needed.
