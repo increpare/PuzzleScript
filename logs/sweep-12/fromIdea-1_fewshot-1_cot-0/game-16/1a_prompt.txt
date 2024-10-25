@@ -1,0 +1,138 @@
+SYSTEM PROMPT:
+You are a game designer, familiar with the PuzzleScript game description language. Here are some example games, for inspiration (do not reproduce these games exactly):
+
+USER PROMPT:
+The following PuzzleScript game code:
+```plaintext
+title Dungeon Dimensions Demake
+author assistant
+
+========
+OBJECTS
+========
+
+Background
+darkgrey
+
+Wall
+gray
+00000
+00000
+00000
+00000
+00000
+
+Player
+black white
+.111.
+.111.
+02220
+.333.
+.3.3.
+
+Enemy
+red
+.000.
+.111.
+00000
+.222.
+.2.2.
+
+Portal
+purple
+.....
+.111.
+.101.
+.111.
+.....
+
+AlternateBackground
+darkblue
+
+AlternateWall
+blue
+00010
+11111
+01010
+11111
+00010
+
+======
+LEGEND
+======
+
+. = Background and AlternateBackground
+# = Wall
+@ = AlternateWall
+P = Player
+E = Enemy
+O = Portal
+
+=======
+SOUNDS
+=======
+
+Player move 480693041
+Enemy destroy 83704102
+Portal use 50665503
+
+================
+COLLISIONLAYERS
+================
+
+Background, AlternateBackground
+Wall, AlternateWall
+Player, Enemy, Portal
+
+======
+RULES
+======
+
+# Player can move up, down, left, right and interact with portals
+(up) [ Player | Portal ] -> [ AlternateBackground | Player ] sfx2
+(down) [ Player | Portal ] -> [ AlternateBackground | Player ] sfx2
+(left) [ Player | Portal ] -> [ AlternateBackground | Player ] sfx2
+(right) [ Player | Portal ] -> [ AlternateBackground | Player ] sfx2
+
+[ Player | Enemy ] -> [ Player | ] sfx1
+[ Player | Enemy ] -> [ Player | ] sfx1
+
+[ > Player | Wall ] -> cancel
+[ > Player | AlternateBackground ] -> [ > Player | Background ]
+
+==============
+WINCONDITIONS
+==============
+
+no Enemy
+
+=======
+LEVELS
+=======
+
+#########
+#.......#
+#...E...#
+#.P...O.#
+#.......#
+#########
+
+.#######.
+.#.@..#.#
+.#O##E.##
+##.#..#.#
+#.P..##.#
+#######.#
+
+```
+produced the following console output:
+=================================
+line 23 : Trying to access color number 2 from the color palette of sprite PLAYER, but there are only 2 defined in it.
+line 24 : Trying to access color number 3 from the color palette of sprite PLAYER, but there are only 2 defined in it.
+line 25 : Trying to access color number 3 from the color palette of sprite PLAYER, but there are only 2 defined in it.
+line 30 : Trying to access color number 1 from the color palette of sprite ENEMY, but there are only 1 defined in it.
+line 32 : Trying to access color number 2 from the color palette of sprite ENEMY, but there are only 1 defined in it.
+line 33 : Trying to access color number 2 from the color palette of sprite ENEMY, but there are only 1 defined in it.
+too many errors, aborting compilation
+Errors detected during compilation; the game may not work correctly.
+Return a repaired version of the code that addresses these errors.  The game should be a simplified `demake` of the following game idea: **Dungeon Dimensions:** Flip between alternate dimensions using magical portals to solve spatial puzzles and defeat enemies in this tactical RPG.. Return your code in full, inside a ```plaintext code block.

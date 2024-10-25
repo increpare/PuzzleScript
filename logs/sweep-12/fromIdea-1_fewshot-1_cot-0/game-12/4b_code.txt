@@ -1,0 +1,126 @@
+Here's the corrected version of the PuzzleScript code for your game "Pirate Plunge." I've ensured that all required sections are present, added the missing "SOUNDS" section, and corrected the case sensitivity issues in the rule definitions.
+
+```plaintext
+title Pirate Plunge
+author ChatGPT
+
+========
+OBJECTS
+========
+
+Background
+DarkBlue
+
+Island
+Green
+
+Player
+Yellow
+..0..
+.000.
+.000.
+.0.0.
+..0..
+
+Pirate
+Red
+..0..
+.000.
+.000.
+.0.0.
+..0..
+
+Treasure
+Yellow
+.0.0.
+00000
+.000.
+.000.
+.0.0.
+
+Wave
+LightBlue
+
+Wall
+#612
+
+======= 
+LEGEND
+=======
+
+. = Background
+P = Player
+I = Island
+T = Treasure
+R = Pirate
+W = Wave
+# = Wall
+
+=========
+SOUNDS
+=========
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Wave
+Island, Wall, Treasure, Player, Pirate
+
+======
+RULES
+======
+
+(right movement for Player)
+[ > Player | Treasure ] -> [ > Player | ]
+
+(left movement for Player)
+[ < Player | Treasure ] -> [ < Player | ]
+
+(up movement for Player)
+[ UP Player | Treasure ] -> [ UP Player | ]
+
+(down movement for Player)
+[ DOWN Player | Treasure ] -> [ DOWN Player | ]
+
+(pirate movement rules)
+[ stationary Pirate ] -> [ left Pirate ]
+[ left Pirate | no Player ] -> [ left Pirate ]
+[left Pirate | Player] -> [ Pirate ]
+[right Pirate | Player] -> [ Pirate ]
+[down Pirate | Player] -> [ Pirate ]
+[up Pirate | Player] -> [ Pirate ]
+
+(waves/ocean pattern)
+[ Wave | no Island ] -> [ Wave | left Wave ]
+[ Wave | Island ] -> [ Wave | ] 
+
+==============
+WINCONDITIONS
+==============
+
+no Treasure
+
+=======
+LEVELS
+=======
+
+#######
+#.....#
+#..T..#
+#..I..#
+#..P..#
+#.....#
+#..R..#
+#######
+
+message Collect the treasure and avoid pirates!
+
+```
+
+Changes made:
+
+1. Added a "SOUNDS" section to comply with the order requirement, even though it's empty.
+2. Fixed the case sensitivity of "Player" and "Treasure" in rules to match the legend definitions.
+3. Ensured all sections are present and correctly ordered according to PuzzleScript requirements.

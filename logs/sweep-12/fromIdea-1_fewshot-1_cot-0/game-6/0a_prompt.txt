@@ -1,0 +1,1683 @@
+SYSTEM PROMPT:
+You are a game designer, familiar with the PuzzleScript game description language. Here are some example games, for inspiration (do not reproduce these games exactly):
+
+title Tunnel Rat
+author James Noeckel
+noundo
+again_interval 0.07
+youtube SG1uBb104Is
+========
+OBJECTS
+========
+Background
+#4c352b #4e382f #533c30
+01010
+02211
+20010
+00012
+12102
+
+PlayerS
+#a65200 red #6f3c0a
+.0.0.
+.000.
+21012
+20002
+22022
+
+PlayerU
+#a65200 red #6f3c0a
+.0.0.
+.101.
+20002
+22022
+.2.2.
+
+inflow
+yellow orange white
+00000
+00000
+22222
+11111
+11111
+
+exit
+green
+.0.0.
+0.0.0
+.0.0.
+0.0.0
+.0.0.
+
+tempwall
+blue
+
+DirtM
+#82642b #876b35 #927538
+01010
+02211
+20010
+00012
+12102
+
+DirtU
+#82642b #876b35 #927538 #b19154
+22222
+33333
+00000
+01012
+12102
+
+
+Rock
+#e0e0e0 #a4a4a4 #8a8a8a #7c7c7c
+.000.
+01112
+11123
+11223
+.233.
+
+enemy
+white #ff7070 black #880000 red
+01414
+14343
+14343
+14443
+43232
+
+h_grav
+black
+.....
+.....
+..0..
+.....
+.....
+
+h_step
+red
+.....
+.....
+..0..
+.....
+.....
+
+(h_dead
+black
+)
+pickupoverlay
+pink
+
+enemyoverlay
+pink
+
+destroy
+red
+0...0
+.0.0.
+..0..
+.0.0.
+0...0
+scrolling
+blue
+.....
+.....
+..0..
+.....
+.....
+
+Shoes
+#ff11f7 #9711ff #641d9a
+...0.
+...10
+...01
+.1111
+.2222
+
+Eraser
+#00ff12 #99ffa0 #008509
+..10.
+.1000
+10000
+.2000
+..20.
+
+Unraser
+#00ff12 #99ffa0 #008509
+.01..
+0001.
+00001
+0002.
+.02..
+
+Shoesworn
+purple pink
+.....
+.....
+.....
+.....
+10.01
+
+
+=======
+LEGEND
+=======
+# = Dirtm
+. = Background
+P = playerS
+o = Rock
+s = shoes
+x = enemy
+@ = dirtm and destroy
+$ = dirtm and inflow
+e = exit and Dirtm
+% = unraser
+
+dirt = dirtm or dirtu
+Player = PlayerS or PlayerU
+Helpers = h_grav or scrolling or h_step
+Pickups = shoes or Eraser or Unraser
+Heldpickups = shoesworn
+Solid = Dirt or Player or Rock or Pickups or enemy
+Heavy = Rock or Pickups or enemy
+overlays = pickupoverlay or enemyoverlay
+Everything = Solid or tempwall or overlays
+
+=======
+SOUNDS
+=======
+SFX1 36137902
+SFX2 78903905
+SFX3 14420703
+SFX4 25525902
+SFX5 49701704
+SFX6 98046907
+SFX7 16284302
+SFX8 96668708
+SFX9 86449100
+================
+COLLISIONLAYERS
+================
+
+helpers
+Background
+tempwall, solid
+Heldpickups
+overlays
+destroy, inflow, exit
+
+
+======
+RULES
+======
+
+up [ > PlayerU ] -> cancel
+down [ > PlayerU ] -> [ PlayerS ]
+
+(digging/jumping up)
+up [ > PlayerS | no Solid | no Solid no inflow ] -> [ | | PlayerU scrolling ] SFX2
+up [ > PlayerS | no Solid | Dirt no inflow ] -> [ | | PlayerU scrolling ] SFX7
+up [ > PlayerS | no Solid no inflow ] -> [ | PlayerU scrolling ] SFX2
+up [ > PlayerS | Dirt no inflow ] -> [ | PlayerU scrolling ] SFX7
+
+(scrolling and terraingen)
+[ scrolling ] [ Everything destroy ] -> [ scrolling ] [ destroy ]
+[ scrolling ] [ inflow no Player ] -> [ scrolling ] [ inflow tempwall ]
+random [ scrolling ] [ inflow ] -> [ scrolling ] [ inflow random overlays ]
+random [ scrolling ] [ inflow ] -> [ scrolling ] [ inflow random overlays ]
+random [ scrolling ] [ inflow ] -> [ scrolling ] [ inflow random overlays ]
+random [ scrolling ] [ inflow ] -> [ scrolling ] [ inflow random overlays ]
+random [ scrolling ] [ inflow ] -> [ scrolling ] [ inflow enemyoverlay ]
+random [ scrolling ] [ inflow ] -> [ scrolling ] [ inflow enemyoverlay ]
+
+
+
+startloop
+random [ tempwall ] -> [ dirtm ]
+random [ tempwall ] -> [ dirtm ]
+random [ tempwall ] -> [ dirtm ]
+random [ tempwall ] -> [ dirtm ]
+random [ tempwall ] -> [ dirtm ]
+random [ tempwall ] -> [ dirtm ]
+random [ tempwall ] -> [ ]
+random [ tempwall ] -> [ ]
+random down [ tempwall | solid ] -> [ rock | Solid ]
+random down [ tempwall | solid ] -> [ rock | Solid ]
+endloop
+
+
+[ pickupoverlay rock ] -> [ random pickups]
+[ enemyoverlay rock ] -> [ enemy ]
+
+random down [ Solid inflow | rock | rock ] -> [ rock inflow | rock | rock ]
+[ no Solid | inflow Solid | no Solid ] -> [ | inflow | ]
+[ no Solid | inflow Solid | inflow Solid | no Solid ] -> [ | inflow | inflow | ]
+
+
+down [ scrolling ] [ Everything ] -> [ scrolling ] [ > Everything ]
+
+
+(gravity)
+down [ Heavy ] -> [ down Heavy ] again
+
+(up [ > PlayerS | no Solid ] [ Everything destroy ] -> [ > PlayerS scrolling | ] [ destroy ]
+up [ > PlayerS | Dirt ] [ Everything destroy ] -> [ > PlayerS scrolling | dirt ] [ destroy ]
+down [ Everything ] [ Player scrolling ] -> [ > Everything ] [ PlayerU scrolling ]
+)
+
+(movement in general)
+horizontal [ > PlayerU | Dirt ] -> [ | PlayerS ] SFX1
+horizontal [ > PlayerU ] -> [ > PlayerS ]
+
+[ action PlayerU ] -> [ PlayerS ]
+[ > Player | Dirt ] -> [ | Player ] SFX1
+
+
+(use pickup)
+
+up [ action PlayerS shoesworn | Solid | no inflow no exit ] -> [ | Solid | PlayerS ] SFX4
+up [ action PlayerS shoesworn | | Solid | no inflow no exit ] -> [ | | Solid | PlayerS ] SFX4
+up [ action PlayerS shoesworn | | | | no inflow no exit ] -> [ | | | | PlayerU ] SFX4
+
+(pushing)
+Horizontal [ > Player | Heavy ] -> [ > Player | > Heavy ] SFX6
+Horizontal [ > Heavy | Heavy ] -> [ > Heavy | > Heavy ]
+Horizontal [ > Enemy | Dirt ] -> [ > Enemy | ] SFX1
+Horizontal [ > Enemy | pickups | Solid ] -> [ > Enemy | | Solid ] SFX4
+([Enemy h_dead no h_grav] -> message flattened to death)
+(down [ Enemy h_dead | destroy ] -> [ Enemy | destroy ] message flattened to death)
+([ > Enemy | Player ] -> [ | Enemy h_dead ] SFX5)
+([ moving Enemy h_dead ] -> [ moving Enemy moving h_dead ])
+[ moving Enemy h_grav ] -> [ moving Enemy moving h_grav ]
+down [ > Enemy h_grav | Solid no Player no Enemy ] -> [ | Enemy ] SFX4
+down [ > Enemy | Player ] -> [ > Enemy | ] SFX4
+
+
+
+
+(pickup)
+
+[ > Player | shoes ] -> [ | stationary Player shoesworn ] SFX3
+
+[ > Player | Eraser ] [ Solid no Player no Pickups ] -> [ > Player | Eraser ] [ DirtM ]
+startloop
+random [ > Player | Unraser ] [ Solid no Player | no Solid ] -> [ > Player | Unraser ] [ Solid | Rock ]
+random [ > Player | Unraser ] [ Solid no Player | no Solid ] -> [ > Player | Unraser ] [ Solid | Dirtm ]
+random [ > Player | Unraser ] [ Solid no Player | no Solid ] -> [ > Player | Unraser ] [ Solid | Dirtm ]
+random [ > Player | Unraser ] [ Solid no Player | no Solid ] -> [ > Player | Unraser ] [ Solid | Dirtm ]
+endloop
+[ > Player | Pickups ] -> [ | stationary Player ] SFX8
+
+(steps)
+up [ PlayerS | no Solid ] -> [ PlayerS | h_step ]
+[ moving PlayerS ] [ h_step ] -> [ moving PlayerS ] [ moving h_step ]
+
+(late steps)
+late down [ h_step | Player ] -> [ | Player ]
+late [h_grav] [h_step] -> [h_grav] []
+late down [ h_step no Solid | no Player ] [ PlayerS ] -> [ PlayerS | ] [ ]
+late down [ h_step Dirt | no Player ] [ PlayerS ] -> [ PlayerS | ] [ ] SFX1
+
+(player gravity)
+late down [ PlayerS | h_grav ] -> [ | PlayerS ]
+late down [ PlayerS | no Solid ] -> [ PlayerS | h_grav ]
+
+late [ Player no shoesworn] [ shoesworn ] -> [ Player shoesworn ] [ ]
+
+(enemy gravity)
+late down [ enemy | no Solid ] -> [ enemy h_grav | ]
+late down [ enemy | Player ] -> [ enemy h_grav | ]
+
+
+(cleanup)
+late [scrolling] -> []
+late [overlays] -> []
+late [h_step] -> []
+
+(beautify)
+late up [ Dirtm | no Dirt ] -> [ DirtU | ]
+late up [ DirtU | Dirt ] -> [ Dirtm | Dirt ]
+
+(death)
+[ Player destroy ] -> [ destroy ] SFX4
+
+(life)
+late [ Player exit ] [ exit no Player ] -> [ Player exit ] [ ] SFX9
+==============
+WINCONDITIONS
+==============
+all exit on player
+=======
+LEVELS
+=======
+
+message Survive. x to use held item.
+$$$$$$$$$$$$$$$$$$$
+eeeeeeeeeeeeeeeeeee
+eeeeeeeeeeeeeeeeeee
+###################
+###################
+###################
+###################
+###################
+###################
+###################
+###################
+###################
+###################
+###################
+###################
+###################
+#########P#########
+###################
+###################
+###################
+###################
+###################
+###################
+@@@@@@@@@@@@@@@@@@@
+
+message Is that a light at the end of the tunnel?
+$$$$$$$$$$$$$$$$$$$$$$$$$
+eeeeeeeeeeeeeeeeeeeeeeeee
+eeeeeeeeeeeeeeeeeeeeeeeee
+o.......................o
+o.......................o
+o..x.x.x.x.xpx.x.x.x.x..o
+o#.#.#.#.#.#x#.#.#.#.#.#o
+o.#.#.#.#.#.#.#.#.#.#.#.o
+o#.#.#.#.#.#.#.#.#.#.#.#o
+o.#.#.#.#.#.#.#.#.#.#.#.o
+o#.#.#.#.#.#.#.#.#.#.#.#o
+o.#.#.#.#.#.#.#.#.#.#.#.o
+o#.#.#.#.#.#.#.#.#.#.#.#o
+o.......................o
+o.......................o
+o.......................o
+o.......................o
+o......#................o
+o.....##..............#.o
+o....###...%...#..#..##.o
+###..############.#######
+########.##.#############
+####.#####..#############
+########.....############
+#########################
+#########################
+@@@@@@@@@@@@@@@@@@@@@@@@@
+
+title Block Faker
+author Droqen
+homepage www.droqen.com
+
+require_player_movement
+key_repeat_interval 0.12
+
+background_color white
+text_color black
+
+color_palette c64
+
+(
+
+A port of first several levels of Droqen's beautiful game:
+
+https://droqen.itch.io/block-faker
+
+(His game has secrets that this one does not.)
+
+)
+
+========
+OBJECTS
+========
+
+Background
+white
+
+Grille
+gray
+0...0
+.0.0.
+..0..
+.0.0.
+0...0
+
+EndPoint
+green
+
+Player
+black
+00000
+00000
+0.0.0
+00000
+00000
+
+Wall
+gray
+
+WallBlock
+black grey
+01111
+01111
+01111
+01111
+00001
+
+BlueBlock
+blue
+00000
+00.00
+0.0.0
+00.00
+00000
+
+GreenBlock
+lightgreen
+00000
+00000
+00.00
+00000
+00000
+
+PinkBlock
+red
+00000
+00.00
+0...0
+00.00
+00000
+
+PurpleBlock
+purple
+00000
+0...0
+0.0.0
+0...0
+00000
+
+OrangeBlock
+orange
+00000
+0.0.0
+00000
+0.0.0
+00000
+
+=======
+LEGEND
+=======
+
+Block = PinkBlock or BlueBlock or PurpleBlock or OrangeBlock or GreenBlock
+Moveable = Player or Block
+PlayerObstacle = Block or Wall or WallBlock
+BlockObstacle = Player or Wall or WallBlock or Grille or Block or EndPoint
+. = Background
+# = Wall
+@ = WallBlock
+P = Player
+B = BlueBlock
+G = GreenBLock
+K = PinkBlock
+R = PurpleBlock
+O = OrangeBlock
+E = EndPoint
+x = Grille
+H = Grille and Player
+
+=========
+SOUNDS
+=========
+
+================
+COLLISIONLAYERS
+================
+
+Background
+EndPoint
+Grille
+Player, Wall, WallBlock, PinkBlock, BlueBlock, PurpleBlock, OrangeBlock, GreenBlock
+
+======
+RULES
+======
+
+[ > Moveable | Moveable ] -> [ > Moveable | > Moveable ] 
+
+[ > Block | Grille ] -> [ Block | Grille ] 
+
+late [ PinkBlock | PinkBlock | PinkBlock ] -> [ | | ] 
+late [ BlueBlock | BlueBlock | BlueBlock ] -> [ | | ] 
+late [ PurpleBlock | PurpleBlock | PurpleBlock ] -> [ | | ] 
+late [ OrangeBlock | OrangeBlock | OrangeBlock ] -> [ | | ] 
+late [ GreenBlock | GreenBlock | GreenBlock ] -> [ | | ] 
+
+==============
+WINCONDITIONS
+==============
+
+some Player on Endpoint
+
+=======
+LEVELS
+=======
+
+........########
+################
+########@@@@@###
+####@@@@@...@###
+###@..OO....@@##
+##@..@@@@@....@#
+##@.@..@@@..E@@#
+#@..@.O...@@@@##
+##@...@.P.######
+####@.@@@@######
+####@@##########
+########........
+
+message congrats: level 2!
+
+##########
+####R.R###
+#x....#x##
+#xO#O.OxE#
+#xx##.#xx#
+#####R####
+#####P####
+O#########
+
+message congrats: level 3!
+
+......#######...
+.....##P.#####..
+....###....####.
+..#####O...#B..#
+..#####.#.##BB.#
+##EBB..O.O.....#
+..#####.#.#....#
+..######..#G.###
+....####..#.OOx.
+.....###.GG.#x..
+......#######...
+
+message congrats: level 4!
+
+######xx######
+######GG######
+##xx#...#xEx##
+##..O...#x..##
+##..#...##O###
+#..##.......##
+xG....##....Gx
+xG....##....Gx
+##.......GG###
+###G##...#xx##
+##x..#...O.x##
+##.P.#...#xx##
+######GG######
+######xx######
+
+message congrats: level 5!
+
+......##......
+....######....
+..##########..
+..#.OG..kk.#..
+.##OPO..Gkk##.
+.##GOG..GGk##.
+###...##...###
+###...##...###
+.##kkG##ROR##.
+.##Gkk..OEO##.
+..#.Gk..RO.#..
+..##########..
+....######....
+......##......
+
+message now go play the real game
+
+
+
+title One player, unlimited rigidbodies
+author increpare
+homepage www.increpare.com
+
+(
+
+This is a sample of 
+
+- Unlimited rigid bodies
+- 1 Player (should be extendable)
+
+It's made as an example for the extended rigid body tutorial here:
+
+https://www.puzzlescript.net/Documentation/rigidbodies.html
+
+)
+
+========
+OBJECTS
+========
+
+Background
+green
+
+Wall
+BROWN DARKBROWN
+00010
+11111
+01000
+11111
+00010
+
+Player
+Black Orange White Blue
+.000.
+.111.
+22222
+.333.
+.3.3.
+
+ Crate
+Yellow orange
+00000
+01110
+01110
+01110
+00000
+
+
+(The directional overlays bellow establish connections between crates)
+
+ Crate_U
+orange
+.000.
+.....
+.....
+.....
+.....
+
+ Crate_D
+orange
+.....
+.....
+.....
+.....
+.000.
+
+ Crate_L
+orange
+.....
+0....
+0....
+0....
+.....
+
+ Crate_R
+orange
+.....
+....0
+....0
+....0
+.....
+
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Player
+
+w = Crate and Crate_U
+x = Crate and Crate_D
+a = Crate and Crate_L
+d = Crate and Crate_R
+
+e = Crate and Crate_U and Crate_L
+z = Crate and Crate_D and Crate_L
+q = Crate and Crate_U and Crate_R
+c = Crate and Crate_D and Crate_R
+
+r = Crate and Crate_L and Crate_R
+t = Crate and Crate_D and Crate_U
+
+1 = Crate and Crate_D and Crate_L and Crate_R
+2 = Crate and Crate_U and Crate_L and Crate_R
+3 = Crate and Crate_U and Crate_D and Crate_L
+4 = Crate and Crate_U and Crate_D and Crate_R
+
+0 = Crate and Crate_U and Crate_D and Crate_L and Crate_R
+
+5 = Crate
+
+ Crate_Connection = Crate_U or Crate_D or Crate_L or Crate_R
+
+Pusher = Player or Crate
+Pushable = Crate or Crate_connection
+
+=======
+SOUNDS
+=======
+
+ Crate MOVE 36772507
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Player, Wall, Crate
+ Crate_U
+ Crate_D
+ Crate_L
+ Crate_R
+
+======
+RULES
+======
+
+(For making maps easily: uncomment out the next few lines + press action to discard all boundaries and recreate them)
+
+( [ action player ] [ Crate_connection ] -> [ action player ] [ ] )
+( up [ action player ] [ Crate | Crate ] -> [ action player ] [ Crate Crate_u | Crate Crate_d ] )
+( right [ action player ] [ Crate | Crate ] -> [ action player ] [ Crate Crate_r | Crate Crate_l ] )
+
+(Propagate movements within and between extended bodies)
+[ > Pusher | Pushable ] -> [ > Pusher | > Pushable ]
++ up [ moving Crate Crate_U | Crate ] -> [ moving Crate Crate_U | moving Crate ]
++ down [ moving Crate Crate_D | Crate ] -> [ moving Crate Crate_D | moving Crate ]
++ left [ moving Crate Crate_L | Crate ] -> [ moving Crate Crate_L | moving Crate ]
++ right [ moving Crate Crate_R | Crate ] -> [ moving Crate Crate_R | moving Crate ]
+
+(Move connections along with the crates themselves)
+[ moving Crate stationary Crate_connection ] -> [ moving Crate moving Crate_connection ]
+
+(If any crate can't move, cancel the turn. This works because there's only one player.)
+[ > Crate | wall ] -> cancel
+
+==============
+WINCONDITIONS
+==============
+
+=======
+LEVELS
+=======
+
+###############
+#.............#
+#..ca...ca.dz.#
+#.ce..d1e...w.#
+#.t....w......#
+#.w.d1a..5.5..#
+#....w....5...#
+#......dz.....#
+#...p...t..dz.#
+#..x..cre...w.#
+#..w..w...5...#
+#.............#
+###############
+
+title Random Robots
+author increpare
+homepage www.puzzlescript.net
+
+========
+OBJECTS
+========
+
+Background (special, automatically placed in its own layer)
+green darkgreen
+11111
+01111
+11101
+11111
+10111
+
+Player (Required by game)
+pink
+..0..
+00000
+..0..
+.000.
+.0.0.
+
+Robot
+gray black red
+.000.
+.200.
+...0.
+00000
+01010
+
+=======
+LEGEND
+=======
+
+. = Background
+P = Player
+* = Robot
+
+=========
+SOUNDS
+=========
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Player, Robot
+
+======
+RULES
+======
+
+[ stationary Robot ] -> [ randomDir Robot ] 
+
+==============
+WINCONDITIONS
+==============
+
+=======
+LEVELS
+=======
+
+...........
+.....*.....
+...........
+.....*.....
+...........
+.....*.....
+..P........
+.....*.....
+...........
+
+
+title Cake Monsters
+author Matt Rix
+homepage www.magicule.com
+color_palette whitingjp
+text_color #FF5588
+background_color #050A0A
+noaction
+youtube Z6ih1aKeETk (tycho!)
+
+========
+OBJECTS
+========
+
+(-----------------------)
+(----MONSTER COLOURS----)
+(-----------------------)
+
+RedMon
+#D8144D #B00F3F BLACK WHITE
+00000
+020.3
+000..
+00000
+1..1.
+
+YellowMon
+#F3F333 #C7C829 BLACK WHITE
+00000
+020.3
+000..
+00000
+1..1.
+
+BlueMon
+#0366E3 #0A52BB BLACK WHITE
+00000
+020.3
+000..
+00000
+1..1.
+
+PurpleMon
+#9E14E2 #800FBA BLACK WHITE
+00000
+020.3
+000..
+00000
+1..1.
+
+OrangeMon
+#E68A25 #BB711E BLACK WHITE
+00000
+020.3
+000..
+00000
+1..1.
+
+GreenMon
+#1CED55 #15C346 BLACK WHITE
+00000
+020.3
+000..
+00000
+1..1.
+
+TrashMon
+#7C6953 #6D5239 BLACK WHITE
+00000
+020.3
+000..
+00000
+1..1.
+
+
+(------------------------)
+(------CAKE COLOURS------)
+(------------------------)
+
+RedCake
+#D8144D #B00F3F
+.000.
+00000
+00000
+10001
+.111.
+
+YellowCake
+#F3F333 #C7C829
+.000.
+00000
+00000
+10001
+.111.
+
+BlueCake
+#0366E3 #0A52BB
+.000.
+00000
+00000
+10001
+.111.
+
+
+PurpleCake
+#9E14E2 #800FBA
+.000.
+00000
+00000
+10001
+.111.
+
+OrangeCake
+#E68A25 #BB711E
+.000.
+00000
+00000
+10001
+.111.
+
+GreenCake
+#1CED55 #15C346
+.000.
+00000
+00000
+10001
+.111.
+
+TrashCake
+#7C6953 #6D5239
+.000.
+00000
+00000
+10001
+.111.
+
+(-----------------------)
+(------OTHER STUFF------)
+(-----------------------)
+
+Destroyer
+#001111 #223333 #384949
+.222.
+20202
+12021
+10101
+.111.
+
+Background
+#152020 #192525
+01101
+10110
+01101
+11010
+01010
+
+
+Wall
+#334444 #384949 #445555 #475959 #4A6B6B
+34443
+23332
+12221
+01110
+00000
+
+Blackness
+#050A0A
+
+
+=======
+LEGEND
+=======
+
+
+. = Background
+_ = Blackness
+# = Wall
+X = Destroyer
+
+R = RedMon
+Y = YellowMon
+B = BlueMon
+P = PurpleMon
+O = OrangeMon
+G = GreenMon
+T = TrashMon
+
+Monster = RedMon or YellowMon or BlueMon or PurpleMon or OrangeMon or GreenMon or TrashMon
+Player = Monster
+
+PrimaryMon = RedMon or YellowMon or BlueMon
+SecondaryMon = PurpleMon or OrangeMon or GreenMon
+
+(each cake char is the next letter in the alphabet after the monster char)
+(except for orange, sadly)
+S = RedCake
+Z = YellowCake
+C = BlueCake
+Q = PurpleCake
+A = OrangeCake
+H = GreenCake
+U = TrashCake
+
+Cake = RedCake or YellowCake or BlueCake or PurpleCake or OrangeCake or GreenCake or TrashCake
+
+=======
+SOUNDS
+=======
+
+sfx0 8478107 (move)
+sfx1 18590508 (eat other monster)
+sfx2 61437309 (eat cake)
+sfx3 89161102 (monster destroyed)
+startlevel 563108
+endlevel 76028308
+undo 82948709
+restart 22851101
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Blackness, Wall, Destroyer
+Monster,Cake
+
+
+
+======
+RULES
+======
+
+(------------------------)
+(----MONSTER MOVEMENT----)
+(------------------------)
+
+(movement sound)
+[ > Monster ] -> [ > Monster ] sfx0
+
+(stop the monster if it hits a wall)
+[ > Monster | Wall ] -> [ Monster | Wall]
+
+(if monster hits a destroyer, remove the monster)
+[ > Monster | Destroyer ] -> [ | Destroyer] sfx3
+
+(monster eats cakes of the same color)
+[ > RedMon | RedCake] -> [ | RedMon] sfx2
+[ > BlueMon | BlueCake] -> [ | BlueMon] sfx2
+[ > YellowMon | YellowCake] -> [ | YellowMon] sfx2
+[ > PurpleMon | PurpleCake] -> [ | PurpleMon] sfx2
+[ > OrangeMon | OrangeCake] -> [ | OrangeMon] sfx2
+[ > GreenMon | GreenCake] -> [ | GreenMon] sfx2
+[ > TrashMon | TrashCake] -> [ | TrashMon] sfx2
+
+(stop the monster if it hits a cake of a different color)
+(note: this is necessary to make sure the monster is marked as stationary)
+[ > RedMon | Cake no RedCake] -> [ RedMon | Cake no RedCake]
+[ > BlueMon | Cake no BlueCake] -> [ BlueMon | Cake no BlueCake]
+[ > YellowMon | Cake no YellowCake] -> [ YellowMon | Cake no YellowCake]
+[ > PurpleMon | Cake no PurpleCake] -> [ PurpleMon | Cake no PurpleCake]
+[ > OrangeMon | Cake no OrangeCake] -> [ OrangeMon | Cake no OrangeCake]
+[ > GreenMon | Cake no GreenCake] -> [ GreenMon | Cake no GreenCake]
+[ > TrashMon | Cake no TrashCake] -> [ TrashMon | Cake no TrashCake]
+
+(--------------------------)
+(---MONSTER COLOR MIXING---)
+(--------------------------)
+
+(red+blue = purple)
+[ > BlueMon | stationary RedMon] -> [ | PurpleMon] sfx1
+[ > RedMon | stationary BlueMon] -> [ | PurpleMon] sfx1
+
+(red+yellow = orange)
+[ > RedMon | stationary YellowMon] -> [ | OrangeMon] sfx1
+[ > YellowMon | stationary RedMon] -> [ | OrangeMon] sfx1
+
+(blue+yellow = green)
+[ > BlueMon | stationary YellowMon] -> [ | GreenMon] sfx1
+[ > YellowMon | stationary BlueMon] -> [ | GreenMon] sfx1
+
+(primary color + secondary color = brown aka trash)
+[ > PrimaryMon | stationary SecondaryMon] -> [ | TrashMon] sfx1
+[ > SecondaryMon | stationary PrimaryMon] -> [ | TrashMon] sfx1
+
+(green+orange = trash)
+[ > GreenMon | stationary OrangeMon] -> [ | TrashMon] sfx1
+[ > OrangeMon | stationary GreenMon] -> [ | TrashMon] sfx1
+
+(purple+orange = trash)
+[ > PurpleMon | stationary OrangeMon] -> [ | TrashMon] sfx1
+[ > OrangeMon | stationary PurpleMon] -> [ | TrashMon] sfx1
+
+(green+purple = trash)
+[ > GreenMon | stationary PurpleMon] -> [ | TrashMon] sfx1
+[ > PurpleMon | stationary GreenMon] -> [ | TrashMon] sfx1
+
+(trash+anything = trash)
+[ > TrashMon | stationary Monster] -> [ | TrashMon] sfx1
+[ > Monster | stationary TrashMon] -> [ | TrashMon] sfx1
+
+(monster + monster of the same color = monster of the same color)
+[ > Monster | stationary Monster] -> [ | Monster] sfx1
+
+
+==============
+WINCONDITIONS
+==============
+
+No Cake
+
+
+=======
+LEVELS
+=======
+
+
+message WELCOME TO CAKE MONSTERS!
+message MONSTERS LIKE EATING CAKE
+
+_______
+#######
+#.....#
+#.r...#
+#...s.#
+#.....#
+#######
+_______
+(diff 0)
+
+message YOU MOVE ALL OF THE MONSTERS
+
+######_######
+#....#_#z...#
+#.r..#_#....#
+#..s.#_#....#
+#....#_#...y#
+######_######
+_____________
+######_######
+#.c..#_#....#
+#....#_#...h#
+#..b.#_#g...#
+#....#_#....#
+######_######
+(diff 0)
+
+message MONSTERS ONLY LIKE THEIR OWN CAKE
+message REMEMBER: Z TO UNDO, R TO RESTART
+_________
+#########
+#r.z....#
+#######.#
+#.......#
+#.sy....#
+#########
+_________
+(diff 1)
+
+message MONSTERS MIX WHEN THEY GET EATEN
+_________
+#########
+#.......#
+#.#####.#
+#.r.q.b.#
+#.#####.#
+#.......#
+#########
+_________
+(diff 1)
+
+
+message BROWN + ANY COLOR = BROWN
+__________
+##########
+#........#
+#.rybpog.#
+#........#
+#........#
+#.szcqah.#
+#........#
+#........#
+#.uuuuuu.#
+#........#
+##########
+__________
+(diff 1)
+
+
+message HAVE FUN!
+############
+#y........c#
+#b........z#
+#####..#####
+____#..#____
+____#..#____
+____#hh#____
+____####____
+(diff 1)
+
+(----------------------------)
+
+
+_____
+#####
+#RCQ#
+#.CS#
+#Q.B#
+#####
+_____
+(diff 2)
+
+
+
+
+______
+######
+#R...#
+#B...#
+#Q.QQ#
+#CSCS#
+######
+______
+(diff 2)
+
+_______
+#######
+#R.H.B#
+#.....#
+#.....#
+#Y.Q.B#
+#######
+_______
+(diff 2)
+
+_______
+#######
+#CCHCB#
+#.....#
+#YZHZZ#
+#######
+_______
+(diff 2)
+
+
+______
+######
+#R..B#
+#S.C.#
+#.A.C#
+#Y.C.#
+######
+______
+(diff 2)
+
+
+message PIECE OF CAKE, RIGHT?
+
+
+#########
+#ccccccc#
+#bcccccc#
+######cc#
+_____#ch#
+######zz#
+#yzzzzzz#
+#yzzzzzz#
+######zz#
+_____#sa#
+######ss#
+#rssssss#
+#sssssss#
+#########
+(diff 3, fun)
+
+_______
+#######
+#R.B.Y#
+#Y.B.R#
+#R.B.Y#
+#Y.B.R#
+#AHQHA#
+#######
+_______
+(diff 3)
+
+
+_______
+#######
+#AR.BA#
+#.#.#.#
+#H...H#
+##.A.##
+#HY#YH#
+#######
+_______
+(diff 3)
+
+
+
+message X TILES DESTROY MONSTERS
+_________
+_###_###_
+#...#...#
+#.q.x.p.#
+#...x...#
+_#..x..#_
+__#...#__
+___#.#___
+____#____
+_________
+(diff 0, destroyerz)
+
+
+_____
+#####
+#RAR#
+#RXY#
+#YAY#
+#####
+_____
+(diff 1, destroyerz)
+
+______
+######
+#BHHB#
+#YXXY#
+#YXXY#
+#BHHB#
+######
+______
+(diff 1 destroyerz)
+
+_______
+#######
+#RQXQR#
+#SQXQS#
+#BQXQB#
+#######
+_______
+(diff 1 destroyerz)
+
+___________
+#####_#####
+#sss#_#qqq#
+#sss###qqq#
+#x.......x#
+##x.rxb.x##
+#x.......x#
+#qqq###ccc#
+#qqq#_#ccc#
+#####_#####
+___________
+(diff 2 destroyerz)
+
+___________
+###########
+#...#q#.b.#
+#sxr#.#xx.#
+#.x.....c.#
+###########
+___________
+(diff 3 destroyerz)
+
+
+
+message YOU'RE CAKING THIS LOOK EASY!
+
+______
+######
+#RZSZ#
+#YSZS#
+#..SZ#
+#..ZS#
+######
+______
+(diff 3)
+
+
+#######
+#Y#B#Y#
+#.#R#.#
+#.#.#.#
+#.....#
+#.###.#
+#HHAHH#
+#######
+(diff 3, fun!)
+
+
+
+####__####
+#qc####cb#
+#c......c#
+##.####.##
+_#.#xx#.#_
+_#.c.r#.#_
+##.####.##
+#c......c#
+#qc####cq#
+####__####
+(diff 3)
+
+
+
+
+_#########_
+_#rrr.sss#_
+_#.......#_
+_#yyy.zzz#_
+_#.......#_
+##bbb.ccc##
+#.........#
+#.q..a..h.#
+#.........#
+###########
+
+______
+######
+#RA.Y#
+#....#
+#HH..#
+#SBCY#
+######
+______
+(diff 4)
+
+message LET'S CAKE IT TO THE NEXT TIER!
+
+
+#############
+#...#.h.#...#
+#.r.#...#.y.#
+#...c#c#s...#
+###c.....s###
+#..#.#h#.#..#
+#z.h.z.c.s.c#
+#..#.#s#.#..#
+###......z###
+#....#z#z...#
+#.b.#...#.g.#
+#...#.s.#...#
+#############
+(diff 3, easy but fun)
+
+
+_____
+#####
+#B.B#
+#RRY#
+#.Q.#
+#S.S#
+#CHC#
+#####
+_____
+(diff 5 - fun!)
+
+
+______
+######
+#HYBH#
+#YBYB#
+#BBBB#
+#HHHH#
+######
+______
+(diff 4)
+
+
+
+
+______
+######
+#BR.Y#
+#..A.#
+#SCZA#
+#CSZA#
+######
+______
+(diff 4)
+
+
+
+
+______
+######
+#CZG.#
+#ZCR##
+###..#
+#SHY##
+#HSB.#
+######
+______
+(diff 5 - very fun!)
+
+
+message YOU'RE GETTING BATTER!
+
+______
+######
+#YYYY#
+#...R#
+#AAAA#
+#ZZZZ#
+######
+______
+(diff 5 - fun but surprisingly hard)
+
+
+_______
+#######
+#Y..YA#
+#.BB.H#
+#R..RQ#
+#Y..YH#
+#######
+_______
+(diff 4)
+
+
+message ICING ON THE CAKE!
+
+______
+######
+#ZBBZ#
+#YBYB#
+#....#
+#ZHCZ#
+######
+______
+(diff 5)
+
+
+
+
+_______
+#######
+#A.S.A#
+#.Z.Z.#
+#SYRYS#
+#.ZYZ.#
+#A.S.A#
+#######
+_______
+(diff 5 - not too hard)
+
+
+
+message WILL YOU CAKE IT OUT ALIVE?
+______
+######
+#ZZZZ#
+#SSSS#
+#CCCC#
+#YRB.#
+######
+______
+(diff 6 - fun but tricky)
+
+
+
+
+message THE FINAL CHALLENGE!
+message DOUGH YOU HAVE WHAT IT CAKES?
+_____
+#####
+#AYA#
+#...#
+#CBC#
+#SZY#
+#RZS#
+#CBC#
+#...#
+#HOH#
+#####
+_____
+(diff 8 - a pretty tough one)
+
+
+
+message WELL, YOU REALLY TOOK THE CAKE!
+message CONGRATS, YOU WIN! :)
+
+
+
+
+USER PROMPT:
+Output the code for a complete PuzzleScript game. The game should be a simplified `demake` of the following game idea: **Dungeon Dimensions:** Flip between alternate dimensions using magical portals to solve spatial puzzles and defeat enemies in this tactical RPG..  Return your code in full, inside a ```plaintext code block.

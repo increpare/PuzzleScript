@@ -1,0 +1,161 @@
+```plaintext
+title Puzzlot
+author Anonymous
+homepage www.puzzlescript.net
+
+========
+OBJECTS
+========
+
+Background
+#F0F0F0
+
+Wall
+#707070
+00000
+00000
+00000
+00000
+00000
+
+Player
+#2020FF
+.....
+.....
+..0..
+.....
+.....
+
+Crate
+#FF0000
+.....
+.000.
+.000.
+.000.
+.....
+
+Key
+Yellow
+.....
+..0..
+..0..
+.....
+.....
+
+Door
+#DDDD00 #202020 #FFBB00
+.....
+.0.0.
+00000
+.0.0.
+.....
+
+Trap
+#222222
+.....
+..0..
+.0.0.
+..0..
+.....
+
+Treasure
+#FDBE00
+.....
+.0.0.
+.....
+.....
+
+OpenDoor
+Grey
+.....
+.....
+.....
+.....
+.....
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Player
+C = Crate
+K = Key
+D = Door
+T = Trap
+R = Treasure
+O = OpenDoor
+
+Obstacle = Wall or Crate or Door or Trap
+
+=======
+SOUNDS
+=======
+
+UnlockDoor 90927111
+CollectTreasure 50503220
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Treasure
+Player, Obstacle, Key, OpenDoor
+Trap
+
+======
+RULES
+======
+
+[Player | Treasure] -> [Player | Background] Sfx2
+[Player | Key] -> [Player | Background]
+[Crate | Trap] -> [Background | Background]
+
+[Player Up] -> [ > Player]
+[Player Down] -> [ < Player]
+[Player Left] -> [ ^ Player]
+[Player Right] -> [ v Player]
+
+[ > Player | Crate | Player ] -> [ > Player | > Crate ]
+
+[ > Player | Door ] [ Background | Door] -> [> Player | OpenDoor] Sfx1
++ [ Player | OpenDoor ] -> [ Player | Background ]
+
+=========
+PROTECTION
+=========
+
+No Player on Trap
+
+==============
+WINCONDITIONS
+==============
+
+All Treasure on Background
+
+=======
+LEVELS
+=======
+
+#####  
+#...#  
+#T.K#   
+#P.CD 
+#####  
+
+########  
+#   T  #  
+# CRK #  
+#   D  #   
+########  
+
+#######  
+# P T #  
+# KCD #  
+#  R  #  
+####### 
+``` 
+
+This simplified demake of "Puzzlot" includes the fundamental elements: a player, keys, crates, traps, doors, and treasures. The goal is for the player to collect all treasures while unlocking doors and avoiding traps. Note that this is an illustrative demake and doesn’t feature procedural generation or advanced traps as described in the original game idea but serves as a basic foundation to build upon.

@@ -34,7 +34,11 @@ fewshow_examples_prompt = (
     "Here are some example games, for inspiration (do not reproduce these games exactly):"""
 )
 gen_game_prompt = (
-    """Output the code for a complete PuzzleScript game. {cot_prompt}"""
+    """Output the code for a complete PuzzleScript game. {from_idea_prompt} {cot_prompt}"""
+    + formatting_prompt
+)
+gen_game_from_idea_prompt = (
+    """Create a simplified `demake` of the following game idea in PuzzleScript: {game_idea}. {cot_prompt}"""
     + formatting_prompt
 )
 cot_prompt = (
@@ -53,12 +57,14 @@ game_crossover_prompt = (
 game_compile_repair_prompt = (
     """The following PuzzleScript game code:\n```plaintext\n{code}\n```\n"""
     """produced the following console output:\n{console_text}\n"""
-    """Return a repaired version of the code that addresses these errors. {cot_prompt}"""
+    """Return a repaired version of the code that addresses these errors. {cot_prompt} {from_idea_prompt}"""
     + formatting_prompt
 )
+from_idea_prompt = """The game should be a simplified `demake` of the following game idea: {game_idea}. """
 game_solvability_repair_prompt = (
     """The following PuzzleScript game code:\n```plaintext\n{code}\n```\n"""
     """compiled, but a solvability check returned the following error:\n{solver_text}\n"""
+    """{from_idea_prompt}"""
     + formatting_prompt
 )
 gen_game_plan_prompt = (
@@ -105,6 +111,16 @@ def save_sweep_stats():
     return jsonify({})
 
 
+@app.route('/load_ideas', methods=['POST'])
+def load_ideas():
+    data = request.json
+    brainstorm_seed = data['brainstorm_seed']
+    ideas_path = os.path.join('logs', f'brainstorm_s-{brainstorm_seed}.json')
+    with open(ideas_path, 'r') as f:
+        ideas = json.load(f)
+    return ideas
+
+
 @app.route('/save_sols', methods=['POST'])
 def save_sols():
     data = request.json
@@ -123,6 +139,8 @@ def gen_game():
     seed = data['seed']
     fewshot = data['fewshot']
     cot = data['cot']
+    from_idea = data['from_idea']
+    game_idea = data['game_idea']
     cot_prompt_text = cot_prompt if cot else ''
     log_dir = os.path.join(
         'logs',
@@ -156,18 +174,21 @@ def gen_game():
     if not os.path.isfile(gen_game_output_path):
         gen_game_prompt_output_path = os.path.join(save_dir, f'{n_iter}a_prompt.txt')
         system_prompt = game_gen_system_prompt
+        from_idea_prompt_i = from_idea_prompt.format(game_idea=game_idea) if from_idea else ''
         if n_iter == 0:
             parents_text = '/n/n'.join(parents)
             if gen_mode == 'init':
-                prompt = gen_game_prompt.format(cot_prompt=cot_prompt_text)
+                prompt = gen_game_prompt.format(cot_prompt=cot_prompt_text, from_idea_prompt=from_idea_prompt_i)
             elif gen_mode == 'mutate':
                 prompt = game_mutate_prompt.format(parents=parents_text)
             elif gen_mode == 'crossover':
                 prompt = game_crossover_prompt.format(parents=parents_text)    
         elif not compilation_success:
-            prompt = game_compile_repair_prompt.format(code=code, console_text=console_text, cot_prompt=cot_prompt_text)
+            prompt = game_compile_repair_prompt.format(code=code, console_text=console_text, cot_prompt=cot_prompt_text,
+                                                       from_idea_prompt=from_idea_prompt_i)
         else:
-            prompt = game_solvability_repair_prompt.format(code=code, solver_text=solver_text)
+            prompt = game_solvability_repair_prompt.format(code=code, solver_text=solver_text,
+                                                           from_idea_prompt=from_idea_prompt_i)
         # if not gen_mode == GenModes.ZERO_SHOT:
         if fewshot:
             # Randomly add fewshot examples to the system prompt (within our token limit)

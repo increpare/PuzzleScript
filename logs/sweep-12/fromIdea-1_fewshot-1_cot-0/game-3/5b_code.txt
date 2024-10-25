@@ -1,0 +1,116 @@
+```plaintext
+title Time Trinkle
+author YourName
+homepage www.example.com
+
+========
+OBJECTS
+========
+
+Background
+Black
+.....
+.....
+.....
+.....
+.....
+
+TilePlain
+Gray LightGray
+11111
+10001
+10001
+10001
+11111
+
+TileFuture
+Blue LightBlue
+11111
+10001
+10001
+10001
+11111
+
+TilePast
+Green LightGreen
+11111
+10001
+10001
+10001
+11111
+
+TimeMachine
+Yellow
+.....
+..0..
+..0..
+..0..
+.....
+
+Player
+Red
+.....
+..0..
+.000.
+.....
+.....
+
+=======
+LEGEND
+=======
+
+. = Background
+P = Player
+1 = TilePlain
+2 = TileFuture
+3 = TilePast
+! = TimeMachine
+
+======
+SOUNDS
+======
+
+flip 12345678
+
+================
+COLLISIONLAYERS
+================
+
+Background
+TilePlain, TileFuture, TilePast
+TimeMachine
+Player
+
+======
+RULES
+======
+
+[ > Player | TilePlain ] -> [ > Player | TileFuture ] playSound flip
+[ > Player | TileFuture ] -> [ > Player | TilePast ] playSound flip
+[ > Player | TilePast ] -> [ > Player | TilePlain ] playSound flip
+
+==============
+WINCONDITIONS
+==============
+
+All TimeMachine on TileFuture
+
+=======
+LEVELS
+=======
+
+#########
+#.......#
+#.......#
+#P.1.2.3#
+#...!...#
+#.......#
+#.......#
+#########
+
+message Welcome to Time Trinkle! Flip tiles to synchronize time and solve the puzzle.
+```
+
+### Corrections Made:
+1. **Sound Definition Error:** Corrected the line "sound token" to define a sound properly using the `sounds` keyword.
+2. **Sound Usage in Rules:** Changed `sfx flip` to `playSound flip` which is the correct syntax in PuzzleScript to play a sound during rule execution.

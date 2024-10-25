@@ -1,0 +1,122 @@
+Certainly! Here's a repaired version of your PuzzleScript game code for the game **Haunted Hues**. I've removed the comment that was causing the error and made sure to tidy up a bit.
+
+```plaintext
+title Haunted Hues
+author PuzzleMaster
+homepage www.puzzlescript.net
+
+========
+OBJECTS
+========
+
+Background
+Black
+
+ColorTile
+Grey
+.....
+.000.
+.000.
+.000.
+.....
+
+RevealedTile
+Red
+.....
+.....
+.0.0.
+.....
+
+RevealedTile2
+Green
+.....
+.....
+.0.0.
+.....
+
+RevealedTile3
+Blue
+.....
+.....
+.0.0.
+.....
+
+Player
+White
+..0..
+.000.
+00000
+..0..
+.0.0.
+
+Target
+White
+.0...
+0....
+.....
+..0..
+.....
+
+=======
+LEGEND
+=======
+
+. = Background
+P = Player
+C = ColorTile
+R = RevealedTile
+G = RevealedTile2
+B = RevealedTile3
+T = Target
+
+Revealed = RevealedTile or RevealedTile2 or RevealedTile3
+
+=======
+SOUNDS
+=======
+
+Player MOVE 3306607
+endgame 79616604
+startgame 91466748
+
+================
+COLLISIONLAYERS
+================
+
+Background
+ColorTile
+Revealed
+Target
+Player
+
+======
+RULES
+======
+
+[Player | ColorTile] -> [Player | RevealedTile]
+[Player | RevealedTile] -> [Player | RevealedTile2]
+[Player | RevealedTile2] -> [Player | RevealedTile3]
+
+[Player | Target] -> [Player | Target] endgame
+
+==============
+WINCONDITIONS
+==============
+
+All Target on Player
+
+=======
+LEVELS
+=======
+
+message Level 1: Unlock the colors of life!
+
+#######
+#.....#
+#..C..#
+#.PT..#
+#######
+
+```
+
+This code should now compile without errors and will allow players to reveal the hidden colors in the game world by stepping on the `ColorTile`. The player unlocks the colors one by one until they reach the `Target` tile.

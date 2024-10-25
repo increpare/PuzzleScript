@@ -1,0 +1,1553 @@
+SYSTEM PROMPT:
+You are a game designer, familiar with the PuzzleScript game description language. Here are some example games, for inspiration (do not reproduce these games exactly):
+
+title It Dies In The Light
+author Christopher Wells
+homepage www.tophwells.com
+
+noaction
+run_rules_on_level_start
+again_interval 0.05
+
+========
+OBJECTS
+========
+
+BackgroundNeutral
+LIGHTGray Gray
+11011
+10101
+01110
+10101
+11011
+
+BackgroundDark
+Black
+
+Wall
+Lightblue Blue
+00010
+11111
+01000
+11111
+00010
+
+LivePlayer
+Black LightRed White Blue
+.000.
+.111.
+12321
+.232.
+.222.
+
+Corpse
+LightGrey
+.000.
+.0.0.
+0.0.0
+..0..
+.0.0.
+
+Crate
+Orange LightBrown Brown
+.222.
+21012
+20102
+21012
+.222.
+
+GoldCrate
+White Yellow Orange
+.222.
+21012
+20002
+21012
+.222.
+
+GlassCrate
+White
+.000.
+0...0
+0...0
+0...0
+.000.
+
+Prism
+LightBlue White
+.000.
+00110
+00010
+00000
+.000.
+
+ActivePrism
+LightBlue White Yellow
+.000.
+02120
+01110
+02120
+.000.
+
+Glass
+White
+00000
+0...0
+0...0
+0...0
+00000
+
+BeamVert
+White Yellow
+.101.
+.101.
+.101.
+.101.
+.101.
+
+BeamHor
+White Yellow
+.....
+11111
+00000
+11111
+.....
+
+BeamCross
+White Yellow
+.101.
+11011
+00000
+11011
+.101.
+
+Shadow
+Purple
+0.0.0
+.0.0.
+0.0.0
+.0.0.
+0.0.0
+
+TempShadow
+Purple
+0.0.0
+.0.0.
+0.0.0
+.0.0.
+0.0.0
+
+=======
+LEGEND
+=======
+
+. = BackgroundNeutral
+# = Wall
+P = LivePlayer
+C = Crate
+G = GoldCrate
+S = Shadow
+X = Prism
+O = Glass
+
+Background = BackgroundNeutral or BackgroundDark
+Player = LivePlayer or Corpse
+Light = BeamVert or BeamHor or BeamCross
+Hlight = BeamHor or BeamCross
+Vlight = BeamVert or BeamCross
+Opaque = Player or Crate or Wall or GoldCrate
+Pushable = Crate or GoldCrate or Prism or GlassCrate
+
+
+=======
+SOUNDS
+=======
+
+SFX0 93002904
+
+================
+COLLISIONLAYERS
+================
+
+Background
+BeamVert, BeamHor, BeamCross, Shadow, TempShadow
+Player, Corpse, Wall, Crate, GoldCrate, GlassCrate, Prism, ActivePrism, Glass
+
+======
+RULES
+======
+
+[> Corpse] -> RESTART
+[Light] -> []
+[ActivePrism] -> [Prism]
+[ >  Player | Pushable ] -> [  >  Player | > Pushable  ]
+late HORIZONTAL [GoldCrate|no Opaque no Light] -> [GoldCrate | BeamHor]
+late VERTICAL [GoldCrate|no Opaque no Light] -> [GoldCrate | BeamVert]
+late VERTICAL [GoldCrate|no Opaque BeamHor] -> [GoldCrate | BeamCross]
+late HORIZONTAL [Hlight|no Opaque no Light] -> [Hlight|BeamHor]
++ late HORIZONTAL [Hlight|no Opaque BeamVert] -> [Hlight|BeamCross]
++ late VERTICAL [Vlight|no Opaque no Light] -> [Vlight|BeamVert]
++ late VERTICAL [Vlight|no Opaque BeamHor] -> [Vlight|BeamCross]
++ late [Light Prism] ->[BeamCross ActivePrism]
+late [Shadow Pushable] -> [Pushable]
+late [TempShadow] -> [Shadow]
+late [Shadow | no Light no Wall no Pushable no Glass no Shadow] -> [shadow | Tempshadow] again
+late [Shadow] -> [Shadow BackgroundDark]
+late [TempShadow] -> [TempShadow BackgroundDark]
+late [no Shadow no TempShadow] -> [no Shadow BackgroundNeutral]
+late [Shadow Player] -> [Shadow Corpse]
+
+==============
+WINCONDITIONS
+==============
+
+no Shadow
+
+=======
+LEVELS
+=======
+
+......####.
+..#####ss#.
+###ssssss#.
+#..ssscss##
+#..#s#s#ss#
+#.g#s#ssss#
+#p.#s#ssss#
+#..css#sss#
+###########
+
+........########.
+........#...#.C#.
+...######...GC.##
+...#..CsssssO.C.#
+...#P.Csss#sO.CC#
+...#..Csss#sO#..#
+########ss#s....#
+#ssssssOss#s#####
+#sssssssss###....
+#########s#......
+........###......
+
+##########
+###G#G#G##
+##P......#
+#G.......#
+##..C....#
+#G.......#
+##..C....#
+#G.......#
+##......S#
+##########
+
+........########
+........#......#
+#########..#o#.#
+#........gooxo.#
+#g#####c#.sso#s#
+#.ssssss#.ss.ss#
+##soooss#.ss##s#
+##c.p.c###ss#ss#
+##.....#ssss#ss#
+#...g.......#ss#
+#########.xx#ss#
+........##sssss#
+.........#######
+
+MESSAGE Earth is safe once again.
+
+
+title 2D Whale World
+author increpare
+homepage www.increpare.com
+
+background_color orange
+text_color darkblue
+
+color_palette mastersystem
+
+run_rules_on_level_start
+require_player_movement
+
+(
+    
+This game is a port of the Whale section of my puzzle game English Country Tune (www.englishcountrytune.com), in only 8 lines of code.
+
+)
+
+========
+OBJECTS
+========
+
+Background
+blue
+
+Void
+orange
+
+Player
+lightblue
+
+Whale
+brown
+00000
+00000
+00000
+00000
+00000
+
+Wall
+black
+00000
+0...0
+0...0
+0...0
+00000
+
+HBeam
+yellow
+.....
+.....
+0.0.0
+.....
+.....
+
+VBeam
+yellow
+..0..
+.....
+..0..
+.....
+..0..
+
+=======
+LEGEND
+=======
+
+Beam = HBeam or VBeam
+. = Background
+# = Wall
+P = Player
+W = Whale
+0 = Void
+
+=========
+SOUNDS
+=========
+
+whale destroy 62981708
+player move 69405107
+whale move 32823307
+endlevel 99636708
+restart 92555303
+startgame 60661308
+CloseMessage 123434
+ShowMessage 123434
+
+================
+COLLISIONLAYERS
+================
+
+Background
+void
+Player, Wall, Whale
+HBeam
+VBeam
+
+======
+RULES
+======
+
+(While we allow whales to move onto the void, player's aren't)
+[ > player | void ] -> [ player | void ] 
+
+(Beams detect motion)
+horizontal [ > Player | VBeam ] -> [ > Player | > VBeam ] 
+vertical [ > Player | HBeam ] -> [ > Player | > HBeam ] 
+
+(If beams detected motion, transfer that to the whales)
+[ Whale | ... | perpendicular Beam ] -> [ perpendicular Whale | ... | perpendicular Beam ] 
+
+(Remove whales, if necessary)
+late [ Whale Void ] -> [ Void ] 
+
+(Remove beams)
+[ Beam ] -> [ ] 
+
+(Place HVeams and VBeams)
+late horizontal [ Whale | ... | ] -> [ Whale | ... | HBeam ] 
+late vertical [ Whale | ... | ] -> [ Whale | ... | VBeam ] 
+
+==============
+WINCONDITIONS
+==============
+
+no Whale
+
+=======
+LEVELS
+=======
+
+message Push a whale off to free it.
+
+0000000000000000
+0########0000000
+0.......#0000000
+0###.W..###00000
+0.........#00000
+0#####.##.###000
+0000#...#...#000
+0000#...#...#000
+0000#...#...###0
+0000#.P.#.....#0
+0000#...#.....#0
+0000#####...W##0
+0000000000....#0
+0000000000#####0
+0000000000000000
+
+message level 2 of 8
+
+00000000000
+0000####000
+000##..##00
+0###....##0
+0#.......#0
+0###.W.###0
+000#P...000
+000#####000
+00000000000
+
+message level 3 of 8
+
+0000000000000000
+00###00000000000
+00#.#####0000000
+00#.#...##000000
+00#......#000000
+00#..##.#######0
+00#..#........#0
+00#..#........#0
+0##..######...#0
+0#........#.W.#0
+0##.......#..P#0
+00######..#####0
+00000000..000000
+0000000000000000
+
+message level 4 of 8
+
+0000000000000000
+000000#########0
+0######.......#0
+0.............#0
+0.....#.#####.#0
+0######.#.....#0
+00000##.#...P.#0
+00000#........#0
+00000##.#.W...#0
+000000#.......#0
+000000###.#...#0
+00000000#######0
+0000000000000000
+
+message level 5 of 8
+
+00000000000000000
+0000############0
+0000#.#........#0
+0000#..........#0
+0####..###.....#0
+0......#.#.....#0
+0####..#W#.#W#.#0
+0..........#.#.#0
+0####.....P###.#0
+0...#.#........#0
+0##...##########0
+00#####0000000000
+00000000000000000
+
+message level 6 of 8
+
+00000000000000000
+000000000#.#.#.#0
+000000000#.#.#.#0
+000000000#.#.#.#0
+000000000#.....#0
+0000000###...###0
+0000000#.#...#000
+0000000#.#.#.#000
+0#######.#.#.#000
+0#...........#000
+0#.#.W...W...#000
+0#...........#000
+0#.....P.....#000
+0#...........#000
+0#############000
+00000000000000000
+
+message level 7 of 8
+
+000000000#000000
+00000####.####00
+0####.........#0
+0........#....#0
+0####....W....#0
+0000#.........#0
+0000#.#W.P.W#..#
+0####.........#0
+0........W....#0
+0####....#....#0
+00000#........#0
+000000########00
+0000000000000000
+
+message level 8 of 8
+
+00000000000
+0########00
+0#...#..#00
+0##.....000
+0#......#00
+0#..WW..##0
+0#..WW...#0
+0##...P.##0
+0#...#.##00
+0#######000
+00000000000
+
+message all the 2d whales are freed
+
+
+title Sokobond: The Demake
+author Jonah Ostroff
+homepage www.sokobond.com
+text_color #202020
+background_color #FDFDFD
+key_repeat_interval 0.25
+run_rules_on_level_start
+noaction
+youtube 2R0sTlruOZc
+
+========
+OBJECTS
+========
+
+Background
+#FFFFFF #F8F8F8
+00000
+01010
+00000
+01010
+00000
+
+Player
+#FFBBEE
+00000
+0...0
+0...0
+0...0
+00000
+
+Wall
+Yellow White
+00000
+00000
+00000
+00000
+00000
+
+Hydrogen
+Red Black
+.....
+.111.
+.101.
+.111.
+.....
+
+Nitrogen
+Green Black
+.....
+.111.
+.101.
+.111.
+.....
+
+Oxygen
+Blue Black
+.....
+.111.
+.101.
+.111.
+.....
+
+Carbon
+Yellow Black
+.....
+.111.
+.101.
+.111.
+.....
+
+Helium
+White Black
+.....
+.111.
+.101.
+.111.
+.....
+
+1Electron
+LightGray
+.....
+.0...
+.....
+.....
+.....
+
+2Electron
+LightGray
+.....
+...0.
+.....
+.0...
+.....
+
+3Electron
+LightGray
+.....
+.0.0.
+.....
+.0...
+.....
+
+4Electron
+LightGray
+.....
+.0.0.
+.....
+.0.0.
+.....
+
+BondU
+Black
+..0..
+.....
+.....
+.....
+.....
+
+BondL
+Black
+.....
+.....
+0....
+.....
+.....
+
+BondR
+Black
+.....
+.....
+....0
+.....
+.....
+
+BondD
+Black
+.....
+.....
+.....
+.....
+..0..
+
+
+BondUL
+Black
+..0..
+.....
+0....
+.....
+.....
+
+BondUR
+Black
+..0..
+.....
+....0
+.....
+.....
+
+BondUD
+Black
+..0..
+.....
+.....
+.....
+..0..
+
+BondLR
+Black
+.....
+.....
+0...0
+.....
+.....
+
+BondLD
+Black
+.....
+.....
+0....
+.....
+..0..
+
+BondRD
+Black
+.....
+.....
+....0
+.....
+..0..
+
+BondULR
+Black
+..0..
+.....
+0...0
+.....
+.....
+
+BondULD
+Black
+..0..
+.....
+0....
+.....
+..0..
+
+BondURD
+Black
+..0..
+.....
+....0
+.....
+..0..
+
+BondLRD
+Black
+.....
+.....
+0...0
+.....
+..0..
+
+BondULRD
+Black
+..0..
+.....
+0...0
+.....
+..0..
+
+Temp1
+Red
+
+Temp2 (These are placeholders for various things.)
+Green
+
+Temp3
+Blue
+
+Temp4
+Yellow
+
+=======
+LEGEND
+=======
+
+Atom = Hydrogen or Oxygen or Nitrogen or Carbon or Helium
+Orbital = 1Electron or 2Electron or 3Electron or 4Electron
+UBond = BondU or BondUL or BondUR or BondUD or BondULR or BondULD or BondURD or BondULRD
+LBond = BondL or BondUL or BondLR or BondLD or BondULR or BondULD or BondLRD or BondULRD
+RBond = BondR or BondUR or BondLR or BondRD or BondULR or BondURD or BondLRD or BondULRD
+DBond = BondD or BondUD or BondLD or BondRD or BondULD or BondURD or BondLRD or BondULRD
+1Bond = BondU or BondL or BondR or BondD
+2Bond = BondUL or BondUR or BondUD or BondLR or BondLD or BondRD
+3Bond = BondULR or BondULD or BondURD or BondLRD
+Bond = 1Bond or 2Bond or 3Bond or BondULRD
+Temps = Temp1 or Temp2 or Temp3 or Temp4
+AtomStuff = Bond or Orbital
+
+. = Background
+# = Wall
+H = Hydrogen and 1Electron
+O = Oxygen and 2Electron
+N = Nitrogen and 3Electron
+C = Carbon and 4Electron
+E = Helium
+0 = Helium  and Player
+1 = Hydrogen and 1Electron and Player
+2 = Oxygen and 2Electron and Player
+3 = Nitrogen and 3Electron and Player
+4 = Carbon and 4Electron and Player
+P = Player
+
+=======
+SOUNDS
+=======
+
+Sfx1 64050702 (Bonding sound)
+EndLevel 96545300 (End level)
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Player
+Bond
+Wall, Atom
+Orbital
+Temps
+
+======
+RULES
+======
+
+(This is the old way I did movement, and it was super inefficient.)
+([> Player Atom] -> [> Player > Atom]
+
+Up [ Moving Atom UBond | Atom] -> [ Moving Atom UBond | Moving Atom]
++ Left [ Moving Atom LBond | Atom] -> [ Moving Atom LBond | Moving Atom]
++ Right [ Moving Atom RBond | Atom] -> [ Moving Atom RBond | Moving Atom]
++ Down [ Moving Atom DBond | Atom] -> [ Moving Atom DBond | Moving Atom]
++ [> Atom | Atom] -> [> Atom | > Atom])
+
+[Up Player] -> [Up Player Temp1]
+[Left Player] -> [Left Player Temp2]
+[Right Player] -> [Right Player Temp3]
+[Down Player] -> [Down Player Temp4]
+
+Up [Temps UBond | no Temps] -> [Temps Ubond | Temps]
++ Left [Temps LBond | no Temps] -> [Temps Lbond | Temps]
++ Right [Temps RBond | no Temps] -> [Temps Rbond | Temps]
++ DOwn [Temps DBond | no Temps] -> [Temps Dbond | Temps]
++ Up [Temp1 | Atom no Temp1] -> [Temp1 | Atom Temp1]
++ Left [Temp2 | Atom no Temp2] -> [Temp2 | Atom Temp2]
++ Right [Temp3 | Atom no Temp3] -> [Temp3 | Atom Temp3]
++ Down [Temp4 | Atom no Temp4] -> [Temp4 | Atom Temp4]
+
+[Temp1 Atom] -> [Up Atom]
+[Temp2 Atom] -> [Left Atom]
+[Temp3 Atom] -> [Right Atom]
+[Temp4 Atom] -> [Down Atom]
+
+[ > Atom | Wall] -> Cancel
+
+[ > Atom AtomStuff] -> [ > Atom > AtomStuff]
+
+Late Right [Orbital no Temps no RBond|Orbital no Temps no LBond] -> [Orbital Temp1|Orbital Temp2 Sfx1] (Bond horizontally.)
++ Late [Temp1 no Bond] -> [Temp3 BondR]
++ Late [Temp1 BondU] -> [Temp3 BondUR]
++ Late [Temp1 BondL] -> [Temp3 BondLR]
++ Late [Temp1 BondD] -> [Temp3 BondRD]
++ Late [Temp1 BondUL] -> [Temp3 BondULR]
++ Late [Temp1 BondUD] -> [Temp3 BondURD]
++ Late [Temp1 BondLD] -> [Temp3 BondLRD]
++ Late [Temp1 BondULD] -> [Temp3 BondULRD]
++ Late [Temp2 no Bond] -> [Temp3 BondL]
++ Late [Temp2 BondU] -> [Temp3 BondUL]
++ Late [Temp2 BondR] -> [Temp3 BondLR]
++ Late [Temp2 BondD] -> [Temp3 BondLD]
++ Late [Temp2 BondUR] -> [Temp3 BondULR]
++ Late [Temp2 BondUD] -> [Temp3 BondULD]
++ Late [Temp2 BondRD] -> [Temp3 BondLRD]
++ Late [Temp2 BondURD] -> [Temp3 BondULRD]
++ Late [Temp3 1Electron] -> []
++ Late [Temp3 2Electron] -> [1Electron]
++ Late [Temp3 3Electron] -> [2Electron]
++ Late [Temp3 4Electron] -> [3Electron]
+
+Late Down [Orbital no Temps no DBond|Orbital no Temps no UBond] -> [Orbital Temp1|Orbital Temp2 Sfx1] (Bond vertically.)
++ Late [Temp1 no Bond] -> [Temp3 BondD]
++ Late [Temp1 BondU] -> [Temp3 BondUD]
++ Late [Temp1 BondL] -> [Temp3 BondLD]
++ Late [Temp1 BondR] -> [Temp3 BondRD]
++ Late [Temp1 BondUL] -> [Temp3 BondULD]
++ Late [Temp1 BondUR] -> [Temp3 BondURD]
++ Late [Temp1 BondLR] -> [Temp3 BondLRD]
++ Late [Temp1 BondULR] -> [Temp3 BondULRD]
++ Late [Temp2 no Bond] -> [Temp3 BondU]
++ Late [Temp2 BondL] -> [Temp3 BondUL]
++ Late [Temp2 BondR] -> [Temp3 BondUR]
++ Late [Temp2 BondD] -> [Temp3 BondUD]
++ Late [Temp2 BondLR] -> [Temp3 BondULR]
++ Late [Temp2 BondLD] -> [Temp3 BondULD]
++ Late [Temp2 BondRD] -> [Temp3 BondURD]
++ Late [Temp2 BondLRD] -> [Temp3 BondULRD]
++ Late [Temp3 1Electron] -> []
++ Late [Temp3 2Electron] -> [1Electron]
++ Late [Temp3 3Electron] -> [2Electron]
++ Late [Temp3 4Electron] -> [3Electron]
+
+==============
+WINCONDITIONS
+==============
+
+No Orbital
+
+=======
+LEVELS
+=======
+
+Message This is a demake of Sokobond by Alan Hazelden and Harry Lee.
+
+Message Get the full version at www.sokobond.com!
+
+#########
+####....#
+####....#
+#....#H.#
+#...O#..#
+#.1.....#
+#....####
+#########
+
+Message Water atoms are icosahedral.
+
+######
+#H..O#
+#....#
+#1.###
+######
+
+Message The blue tint seen in large bodies of water comes from the pigment in the oxygen atoms.
+
+########
+###...##
+#2.H.H.#
+###...##
+########
+
+Message The Earth's surface and the human body are both 70% water. That CAN'T be a coincidence, right?
+
+#######
+#..O..#
+#..#..#
+#.1#H.#
+#..#..#
+#..O..#
+#######
+
+Message "One hydrogen per oxide" is defined as the speed at which atoms move.
+
+#######
+#.H.3.#
+#.....#
+#.H.H.#
+#######
+
+Message Ammonia is an inflammatory condition of the lungs.
+
+#######
+#.....#
+#.....#
+#H#H#H#
+#.....#
+#..3..#
+#######
+
+Message Hang on, I was thinking of "pneumonia".
+
+#########
+####4####
+###...###
+##.H.H.##
+#.......#
+##.H.H.##
+###...###
+####.####
+#########
+
+Message 90% of all the methane in the world is produced in Arizona.
+
+#########
+##H...H##
+#...4...#
+##H...H##
+#########
+
+Message Methane contains the name "Ethan". Do you think it was discovered by a guy named Ethan?
+
+########
+#......#
+#...H..#
+#O.H..3#
+#...H..#
+#......#
+########
+
+Message Hydroxylamine contains almost every vowel of the alphabet almost exactly once.
+
+#########
+#.......#
+#..H.H..#
+#.2...C.#
+#..H.H..#
+#.......#
+#########
+
+Message Methanol occurs naturally in peppermint oils.
+
+#########
+#.......#
+#.1...E.#
+###.H.###
+###...###
+###.O.###
+#########
+
+Message Helium is named after the Greek god Helios, who first discovered its existence.
+
+#########
+#.......#
+#.E.E.E.#
+###H.1###
+###.H.###
+###...###
+###.N.###
+#########
+
+Message Inhaling helium contracts the ear drum, causing pitches to sound higher. Your voice is perceived normally by everyone else.
+
+#######
+###..##
+##..H.#
+#..N..#
+#.H..H#
+##..0.#
+#######
+
+Message The first helium balloons were used at the wedding of Queen Victoria and Prince Albert, popularizing the term "noble gas".
+
+#######
+#.....#
+#..N..#
+#..0..#
+#H.H.H#
+#.#.#.#
+#.....#
+#######
+
+Message Helium does not form chemical bonds with other elements, but it's the bonds of friendship that really matter.
+
+########
+#......#
+#...H#N#
+#......#
+##H#H.0#
+##.....#
+####...#
+########
+
+Message Scientists have been searching for centuries to discover the missing elements between hydrogen and helium on the periodic table.
+
+Message Thanks for playing! Go get the full version, which has lots of cool stuff that I couldn't write in PuzzleScript: www.sokobond.com
+
+title Dungeon Janitor
+author Farbs
+homepage www.farbs.org
+noundo
+noaction
+key_repeat_interval 0.1
+
+========
+OBJECTS
+========
+
+Background
+DARKBLUE BLACK
+11111
+10000
+10000
+10000
+10000
+
+Entry
+LIGHTBROWN BROWN DARKBROWN GRAY
+30103
+10101
+10121
+10101
+10101
+
+ExitClosed
+LIGHTBROWN BROWN DARKBROWN GRAY
+30103
+10101
+10121
+10101
+10101
+
+ExitOpen
+GRAY BLACK DARKBLUE
+01110
+11111
+11111
+11111
+12221
+
+Slime
+LIGHTGREEN GREEN DARKGREEN
+.....
+.....
+.....
+.....
+.....
+
+Head
+LIGHTGREEN GREEN DARKGREEN BLACK
+.000.
+03130
+11111
+23332
+.222.
+
+SlimeU
+LIGHTGREEN GREEN DARKGREEN
+11111
+21112
+.222.
+.....
+.....
+
+SlimeD
+LIGHTGREEN GREEN DARKGREEN
+.....
+.....
+.000.
+01110
+11111
+
+SlimeUD
+LIGHTGREEN GREEN DARKGREEN
+11111
+11111
+11111
+11111
+11111
+
+SlimeL
+LIGHTGREEN GREEN DARKGREEN
+00...
+110..
+111..
+112..
+22...
+
+SlimeR
+LIGHTGREEN GREEN DARKGREEN
+...00
+..011
+..111
+..211
+...22
+
+SlimeLR
+LIGHTGREEN GREEN DARKGREEN
+00000
+11111
+11111
+11111
+22222
+
+SlimeUL
+LIGHTGREEN GREEN DARKGREEN
+11111
+11112
+1112.
+112..
+22...
+
+SlimeUR
+LIGHTGREEN GREEN DARKGREEN
+11111
+21111
+.2111
+..211
+...22
+
+SlimeULR
+LIGHTGREEN GREEN DARKGREEN
+11111
+11111
+11111
+11111
+22222
+
+SlimeDL
+LIGHTGREEN GREEN DARKGREEN
+00...
+110..
+1110.
+11110
+11111
+
+SlimeDR
+LIGHTGREEN GREEN DARKGREEN
+...00
+..011
+.0111
+01111
+11111
+
+SlimeDLR
+LIGHTGREEN GREEN DARKGREEN
+00000
+11111
+11111
+11111
+11111
+
+SlimeUDLR
+LIGHTGREEN GREEN DARKGREEN
+11111
+11111
+11111
+11111
+11111
+
+SlimeSolo
+LIGHTGREEN GREEN DARKGREEN
+.000.
+01110
+11111
+21112
+.222.
+
+Wall
+LIGHTGREY GREY
+11111
+01000
+01000
+11111
+00010
+
+PlayerA
+Black Orange White Blue Brown
+.....
+.11..
+2224.
+333.4
+3.322
+
+PlayerB
+Black Orange White Blue Brown
+.....
+.11..
+.4222
+4.333
+223.3
+
+Temp
+PINK
+00000
+00000
+00000
+00000
+00000
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+E = Wall AND Entry
+P = PlayerA
+O = Slime AND Head
+X = Wall AND ExitClosed
+
+SlimeDecal = SlimeU OR SlimeD OR SlimeUD OR SlimeL OR SlimeR OR SlimeLR OR SlimeUL OR SlimeUR OR SlimeULR OR SlimeDL OR SlimeDR OR SlimeDLR OR SlimeUDLR OR SlimeSolo
+Player = PlayerA OR PlayerB
+
+=======
+SOUNDS
+=======
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Slime
+SlimeU, SlimeD, SlimeUD, SlimeL, SlimeR, SlimeLR, SlimeUL, SlimeUR, SlimeULR, SlimeDL, SlimeDR, SlimeDLR, SlimeUDLR, SlimeSolo, ExitOpen
+Player, Wall, PlayerA, PlayerB, Temp
+Head, Entry, ExitClosed
+
+======
+RULES
+======
+
+(Stomp Heads)
+[ > Player | Head ] -> [ > Player | NO Head ]
+[ > Player | Slime ] -> [ > Player | NO Slime ]
+
+(New Head)
+[ Head ] -> []
+RANDOM [ Slime NO Player ] -> [ Slime Head ]
+
+(Grow Slime)
+[ Head | NO Slime NO Wall NO Player ] -> [ Head | Slime ]
+
+(Clear Slime from under player)
+[ > Player | Slime ] -> [ > Player | NO Slime ]
+LATE [ Player Slime ] -> [ Player NO Head ]
+
+(Make slime pretty)
+[ SlimeDecal ] ->[ ]
+VERTICAL [ Slime | Slime | Slime ] -> [ Slime | Slime SlimeUD | Slime ]
+UP [ Slime NO SlimeUD | Slime ] -> [ Slime SlimeU | Slime ]
+DOWN [ Slime NO SlimeUD | Slime ] -> [ Slime SlimeD | Slime ]
+HORIZONTAL [ Slime | Slime NO SlimeU NO SlimeD NO SlimeUD | Slime ] -> [ Slime | Slime SlimeLR | Slime ]
+LEFT [ Slime NO SlimeU NO SlimeD NO SlimeUD NO SlimeLR | Slime ] -> [ Slime SlimeL | Slime ]
+RIGHT [ Slime NO SlimeU NO SlimeD NO SlimeUD NO SlimeLR | Slime ] -> [ Slime SlimeR | Slime ]
+HORIZONTAL [ Slime | Slime SlimeU | Slime ] -> [ Slime | Slime SlimeULR | Slime ]
+LEFT [ Slime SlimeU | Slime ] -> [ Slime SlimeUL | Slime ]
+RIGHT [ Slime SlimeU | Slime ] -> [ Slime SlimeUR | Slime ]
+HORIZONTAL [ Slime | Slime SlimeD | Slime ] -> [ Slime | Slime SlimeDLR | Slime ]
+LEFT [ Slime SlimeD | Slime ] -> [ Slime SlimeDL | Slime ]
+RIGHT [ Slime SlimeD | Slime ] -> [ Slime SlimeDR | Slime ]
+[ Slime NO SlimeDecal ] -> [ Slime SlimeSolo ]
+
+( Shut the door if slime still around)
+( Have to open it first unfortunately )
+[ ExitClosed Wall ] -> [ ExitOpen ]
+[ ExitOpen ][ Slime ] -> [ ExitClosed Wall ][ Slime ]
+
+(Player Anim)
+[ LEFT PlayerB ] -> [ LEFT PlayerA ]
+[ RIGHT PlayerA ] -> [ RIGHT PlayerB ]
+LATE [ PlayerA ] -> [ Temp ]
+LATE [ PlayerB ] -> [ PlayerA ]
+LATE [ Temp ] -> [ PlayerB ]
+==============
+WINCONDITIONS
+==============
+
+ALL Player ON ExitOpen
+
+=======
+LEVELS
+=======
+
+MESSAGE It's Thursday.
+MESSAGE Today I mop the slime pit.
+
+
+##X##
+##.##
+##.##
+##O##
+##.##
+##P##
+##E##
+
+MESSAGE Damn slime sticking to my shoes.
+
+..####..
+..#O.#..
+###..###
+#......#
+#P#..#.#
+#E#..#X#
+..####..
+
+MESSAGE Goes SHLUCK SHCLUK when I walk.
+
+######X#############
+###......#...#...###
+###.##.#...#...#...#
+##.....###########.#
+#..#.#.....#.......#
+#.##.###.#.##.######
+#......#.#.#.O.....#
+#.####.#.#.#.#####.#
+#P.....#.#.........#
+#E##################
+
+MESSAGE Last room before home.
+MESSAGE This one can take a while.
+
+##########X#########
+#..................#
+#..................#
+#..#######.######..#
+#..#.#...#.#.#..#..#
+#..#...#.#.#.#..#..#
+#..#.....#.#.#..#..#
+#..##....#.#...##..#
+#..#............#..#
+#..#......O.....#..#
+#..#............#..#
+#..#............#..#
+#..##############..#
+#.........P........#
+##########E#########
+
+MESSAGE Done for the day. Back tomorrow.
+MESSAGE Fridays is rat scrubbing day.
+
+USER PROMPT:
+The following PuzzleScript game code:
+```plaintext
+Title Crops & Castles
+Author Your Name
+homepage www.yourwebsite.com
+
+========
+OBJECTS
+========
+
+Background
+LIGHTGREEN GREEN
+11111
+01111
+11101
+11111
+10111
+
+Castle
+DARKGRAY GRAY
+.....
+.111.
+.111.
+.111.
+.....
+
+Farm
+BROWN DARKBROWN
+.....
+.222.
+.222.
+.222.
+.....
+
+Player
+Black Orange White Blue
+.000.
+.111.
+22222
+.333.
+.3.3.
+
+Crop
+LightGreen White
+.....
+..0..
+..1..
+..0..
+.....
+
+Spell
+Purple Black
+..1..
+.111.
+11111
+.111.
+.....
+
+Enemy
+Red DarkRed
+.444.
+.444.
+44444
+.444.
+.4.4.
+
+=======
+LEGEND
+=======
+
+. = Background
+P = Player
+F = Farm
+C = Castle
+E = Enemy
+
+=======
+SOUNDS
+=======
+
+Crop Harvest 12122101
+Player Move 88351232
+Enemy Move 55123109
+Spell Cast 99321211
+EndLevel 36972112
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Crop, Spell, Enemy
+Player, Castle, Farm
+
+======
+RULES
+======
+
+[ Farm Crop ] -> [ Farm Spell ]
+[ >  Player | Spell ] -> [ > Player ]
+
+[ >  Enemy | Castle ] -> [ > Enemy | Castle  ]
+late [Farm no Crop] -> []
+
+[ > Player | Crop ] -> [ > Player | Farm] Sfx0
+[ > Player | Farm No Crop ] -> [ > Player | Farm ] Sfx3
+
+[ > Player | Enemy ] -> RESTART
+[ > Enemy ] -> [ > Enemy ]
+
+==============
+WINCONDITIONS
+==============
+
+No Enemy
+
+=======
+LEVELS
+=======
+
+#######
+#.....#
+#..P..#
+#..C..#
+#..F..#
+#..E..#
+#######
+
+#########
+#.......#
+#.C.E...#
+#.......#
+#..F.P..#
+#.......#
+#...E...#
+#########
+
+Message Congratulations! Your kingdom is saved!
+
+
+```
+produced the following console output:
+=================================
+line 28 : Trying to access color number 2 from the color palette of sprite FARM, but there are only 2 defined in it.
+line 29 : Trying to access color number 2 from the color palette of sprite FARM, but there are only 2 defined in it.
+line 30 : Trying to access color number 2 from the color palette of sprite FARM, but there are only 2 defined in it.
+line 59 : Trying to access color number 4 from the color palette of sprite ENEMY, but there are only 2 defined in it.
+line 60 : Trying to access color number 4 from the color palette of sprite ENEMY, but there are only 2 defined in it.
+line 61 : Trying to access color number 4 from the color palette of sprite ENEMY, but there are only 2 defined in it.
+too many errors, aborting compilation
+Errors detected during compilation; the game may not work correctly.
+Return a repaired version of the code that addresses these errors.  The game should be a simplified `demake` of the following game idea: **Crops & Castles:** Harvest enchanted produce to gain spells and power up your medieval kingdom in this strategic farming and tower defense hybrid.. Return your code in full, inside a ```plaintext code block.

@@ -1,0 +1,121 @@
+```plaintext
+title Dungeon Dimensions Demake
+author assistant
+
+========
+OBJECTS
+========
+
+Background
+darkgrey
+
+Wall
+gray
+00000
+00000
+00000
+00000
+00000
+
+Player
+black white
+.111.
+.111.
+02220
+.333.
+.3.3.
+
+Enemy
+red
+.000.
+.111.
+00000
+.222.
+.2.2.
+
+Portal
+purple
+.....
+.111.
+.101.
+.111.
+.....
+
+AlternateBackground
+darkblue
+
+AlternateWall
+blue
+00010
+11111
+01010
+11111
+00010
+
+======
+LEGEND
+======
+
+. = Background and AlternateBackground
+# = Wall
+@ = AlternateWall
+P = Player
+E = Enemy
+O = Portal
+
+=======
+SOUNDS
+=======
+
+Player move 480693041
+Enemy destroy 83704102
+Portal use 50665503
+
+================
+COLLISIONLAYERS
+================
+
+Background, AlternateBackground
+Wall, AlternateWall
+Player, Enemy, Portal
+
+======
+RULES
+======
+
+# Player can move up, down, left, right and interact with portals
+(up) [ Player | Portal ] -> [ AlternateBackground | Player ] sfx2
+(down) [ Player | Portal ] -> [ AlternateBackground | Player ] sfx2
+(left) [ Player | Portal ] -> [ AlternateBackground | Player ] sfx2
+(right) [ Player | Portal ] -> [ AlternateBackground | Player ] sfx2
+
+[ Player | Enemy ] -> [ Player | ] sfx1
+[ Player | Enemy ] -> [ Player | ] sfx1
+
+[ > Player | Wall ] -> cancel
+[ > Player | AlternateBackground ] -> [ > Player | Background ]
+
+==============
+WINCONDITIONS
+==============
+
+no Enemy
+
+=======
+LEVELS
+=======
+
+#########
+#.......#
+#...E...#
+#.P...O.#
+#.......#
+#########
+
+.#######.
+.#.@..#.#
+.#O##E.##
+##.#..#.#
+#.P..##.#
+#######.#
+```

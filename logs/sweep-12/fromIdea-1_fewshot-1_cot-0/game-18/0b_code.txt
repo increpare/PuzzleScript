@@ -1,0 +1,133 @@
+Here's a simplified version of the game "Olive Odyssey" made in PuzzleScript.
+
+```plaintext
+title Olive Odyssey
+author ChatGPT
+homepage www.example.com
+
+========
+OBJECTS
+========
+
+Background
+Green
+.....
+.....
+.....
+.....
+.....
+
+Player
+Yellow Green
+.....
+..0..
+.111.
+.0.0.
+.....
+
+Olive
+DarkGreen Yellow
+.....
+.....
+.111.
+.....
+.....
+
+MagicDish
+DarkBlue Cyan
+.....
+.111.
+.1.1.
+.111.
+.....
+
+Wall
+Brown
+00000
+00000
+00000
+00000
+00000
+
+RecipeBook
+Red
+.....
+..1..
+.....
+.....
+.....
+
+=======
+LEGEND
+=======
+
+. = Background
+P = Player
+O = Olive
+D = MagicDish
+W = Wall
+R = RecipeBook
+
+=======
+SOUNDS
+=======
+
+Olive PICKUP 44735502
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Player, Olive, MagicDish, RecipeBook, Wall
+
+======
+RULES
+======
+
+[ > Player | Olive ] -> [ > Player ] again sound Olive PICKUP
+
+[ RecipeBook | Player] -> [ MagicDish | Player ]
+
+[ > Player | MagicDish ] -> [ > Player ]
+
+==============
+WINCONDITIONS
+==============
+
+All MagicDish
+
+=======
+LEVELS
+=======
+
+# Level 1: Introduction
+message Welcome to Olive Odyssey! Gather olives and make a magic dish.
+...WWW...
+...W.W...
+P..WO.W..
+...W.W...
+...WWW...
+
+# Level 2: Challenge
+message Great job! Now find more olives and the recipe book.
+WWW...WWW
+W.O.O.O.W
+W...P...R
+W.O.D.O.W
+WWW...WWW
+
+# Level 3: Complex Paths
+message You're a master chef now! Solve the final puzzle.
+WWWWWWWWW
+W......OW
+W.WW.WW.W
+W.W.PW..R
+W.WW.WW.W
+W......OW
+WWWWWWWWW
+
+message Congratulations! You've completed Olive Odyssey!
+```
+
+This game involves collecting olives and using a recipe book to create magical dishes while navigating through the maze-like levels. The rules ensure that the player can pick up olives, and convert them into a magic dish using the recipe book, ultimately requiring the player to create all the dishes on the level to win.

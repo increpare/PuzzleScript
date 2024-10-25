@@ -1,0 +1,137 @@
+```plaintext
+title Mechanimal
+author Anonymous
+homepage www.puzzlescript.net
+
+========
+OBJECTS
+========
+
+Background
+DarkGrey
+
+Player
+Blue
+..0..
+.000.
+02220
+.000.
+..0..
+
+Mechanimal
+Cyan
+.000.
+01110
+01010
+01110
+.000.
+
+Constructed
+Magenta
+.111.
+12221
+12121
+12221
+.111.
+
+Wall
+DarkGreen
+00000
+02220
+02320
+02220
+00000
+
+Goal
+Yellow
+..0..
+.111.
+01210
+.111.
+..0..
+
+Switch
+Orange
+.....
+..0..
+.....
+..0..
+.....
+
+Bridge
+Brown
+.....
+.....
+.....
+.....
+.....
+
+=======
+LEGEND
+=======
+
+. = Background
+P = Player
+M = Mechanimal
+C = Constructed
+# = Wall
+G = Goal
+^ = Switch
+= = Bridge
+
+=======
+SOUNDS
+=======
+
+Constructed Transform 83866509
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Bridge
+Goal, Switch
+Player, Mechanimal, Constructed, Wall
+
+======
+RULES
+======
+
+[ > Player | Mechanimal ] -> [ > Player | > Constructed ] SFX1
+
+[ Player | Switch ] -> [ Player | = ]
+late [ == ] -> [ == ]
+late [ ^ | no Player ] -> [ ^ | ]
+
+==============
+WINCONDITIONS
+==============
+
+All Player on Goal
+
+=======
+LEVELS
+=======
+
+#..#..#
+#P.#.M#
+#..^..#
+#######
+
+#####
+#.P.#
+#.#.#
+#M#.#
+####G
+
+#####
+#.C.#
+#.#.#
+#.#M#
+####G
+
+Message Thank you for playing! Take care of the mechanimals!
+```
+
+In this simplified version of "Mechanimal," players control a character who can interact with mechanical wildlife (Mechanimals) and transform them into "Constructed" forms to solve puzzles. The puzzle elements include walls, switches, and bridges. The player's objective is to move the player onto the goal space to complete the level.

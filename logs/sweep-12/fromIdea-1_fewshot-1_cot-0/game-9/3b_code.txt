@@ -1,0 +1,117 @@
+The errors you're encountering are due to incorrect color palette definitions for the `Terrain` and `Enemy` objects. Here is a corrected version of the code:
+
+```plaintext
+title Tile Tactics Demake
+author YourName
+
+========
+OBJECTS
+========
+
+Empty
+LightGreen
+.....
+.....
+.....
+.....
+.....
+
+Terrain
+DarkGreen
+.....
+.....
+.....
+.....
+.....
+
+Player
+Red Yellow
+.....
+..0..
+.101.
+.111.
+.....
+
+Enemy
+Blue Grey
+.....
+..0..
+.1.1.
+.111.
+.....
+
+Flag
+Yellow White
+.....
+.333.
+.333.
+.333.
+.....
+
+=======
+LEGEND
+=======
+. = Empty
+T = Terrain
+P = Player
+E = Enemy
+F = Flag
+
+=======
+SOUNDS
+=======
+PlayerMove 12345605
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Terrain
+Player, Enemy, Flag
+
+======
+RULES
+======
+
+(Players can move onto empty tiles and control the player's move)
+[ > Player | Empty ] -> [ > Player | > Empty ] SFX0
+
+(Enemies can move randomly onto empty tiles, simulating movement)
+random [ > Enemy | Empty ] -> [ > Enemy | > Empty ]
+
+(Players can capture flags by moving onto them)
+[ > Player | Flag ] -> [ > Player | Empty ] win
+
+(Enemies block the player and cannot be moved onto)
+[ Player | Enemy ] -> [ Player | Enemy ]
+
+==============
+WINCONDITIONS
+==============
+
+All Flag on No Player
+
+=======
+LEVELS
+=======
+
+message Command your army! Capture the flags!
+
+TTTTTTTTTT
+T....P...T
+T........T
+T....E...T
+T........T
+T...F....T
+T........T
+T..E.....T
+TTTTTTTTTT
+
+```
+
+Changes made:
+1. The `Terrain` sprite changed to entirely use background color with all dots in its bitmap design, correcting the color number access errors.
+2. Fixed the `Enemy` sprite design to match the defined colors to prevent `color number` access errors. 
+
+Now the code should compile without errors, creating a simplified, tactical game where players can move across a grid to capture flags while avoiding enemies.

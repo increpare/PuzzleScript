@@ -1,0 +1,1750 @@
+SYSTEM PROMPT:
+You are a game designer, familiar with the PuzzleScript game description language. Here are some example games, for inspiration (do not reproduce these games exactly):
+
+title It Dies In The Light
+author Christopher Wells
+homepage www.tophwells.com
+
+noaction
+run_rules_on_level_start
+again_interval 0.05
+
+========
+OBJECTS
+========
+
+BackgroundNeutral
+LIGHTGray Gray
+11011
+10101
+01110
+10101
+11011
+
+BackgroundDark
+Black
+
+Wall
+Lightblue Blue
+00010
+11111
+01000
+11111
+00010
+
+LivePlayer
+Black LightRed White Blue
+.000.
+.111.
+12321
+.232.
+.222.
+
+Corpse
+LightGrey
+.000.
+.0.0.
+0.0.0
+..0..
+.0.0.
+
+Crate
+Orange LightBrown Brown
+.222.
+21012
+20102
+21012
+.222.
+
+GoldCrate
+White Yellow Orange
+.222.
+21012
+20002
+21012
+.222.
+
+GlassCrate
+White
+.000.
+0...0
+0...0
+0...0
+.000.
+
+Prism
+LightBlue White
+.000.
+00110
+00010
+00000
+.000.
+
+ActivePrism
+LightBlue White Yellow
+.000.
+02120
+01110
+02120
+.000.
+
+Glass
+White
+00000
+0...0
+0...0
+0...0
+00000
+
+BeamVert
+White Yellow
+.101.
+.101.
+.101.
+.101.
+.101.
+
+BeamHor
+White Yellow
+.....
+11111
+00000
+11111
+.....
+
+BeamCross
+White Yellow
+.101.
+11011
+00000
+11011
+.101.
+
+Shadow
+Purple
+0.0.0
+.0.0.
+0.0.0
+.0.0.
+0.0.0
+
+TempShadow
+Purple
+0.0.0
+.0.0.
+0.0.0
+.0.0.
+0.0.0
+
+=======
+LEGEND
+=======
+
+. = BackgroundNeutral
+# = Wall
+P = LivePlayer
+C = Crate
+G = GoldCrate
+S = Shadow
+X = Prism
+O = Glass
+
+Background = BackgroundNeutral or BackgroundDark
+Player = LivePlayer or Corpse
+Light = BeamVert or BeamHor or BeamCross
+Hlight = BeamHor or BeamCross
+Vlight = BeamVert or BeamCross
+Opaque = Player or Crate or Wall or GoldCrate
+Pushable = Crate or GoldCrate or Prism or GlassCrate
+
+
+=======
+SOUNDS
+=======
+
+SFX0 93002904
+
+================
+COLLISIONLAYERS
+================
+
+Background
+BeamVert, BeamHor, BeamCross, Shadow, TempShadow
+Player, Corpse, Wall, Crate, GoldCrate, GlassCrate, Prism, ActivePrism, Glass
+
+======
+RULES
+======
+
+[> Corpse] -> RESTART
+[Light] -> []
+[ActivePrism] -> [Prism]
+[ >  Player | Pushable ] -> [  >  Player | > Pushable  ]
+late HORIZONTAL [GoldCrate|no Opaque no Light] -> [GoldCrate | BeamHor]
+late VERTICAL [GoldCrate|no Opaque no Light] -> [GoldCrate | BeamVert]
+late VERTICAL [GoldCrate|no Opaque BeamHor] -> [GoldCrate | BeamCross]
+late HORIZONTAL [Hlight|no Opaque no Light] -> [Hlight|BeamHor]
++ late HORIZONTAL [Hlight|no Opaque BeamVert] -> [Hlight|BeamCross]
++ late VERTICAL [Vlight|no Opaque no Light] -> [Vlight|BeamVert]
++ late VERTICAL [Vlight|no Opaque BeamHor] -> [Vlight|BeamCross]
++ late [Light Prism] ->[BeamCross ActivePrism]
+late [Shadow Pushable] -> [Pushable]
+late [TempShadow] -> [Shadow]
+late [Shadow | no Light no Wall no Pushable no Glass no Shadow] -> [shadow | Tempshadow] again
+late [Shadow] -> [Shadow BackgroundDark]
+late [TempShadow] -> [TempShadow BackgroundDark]
+late [no Shadow no TempShadow] -> [no Shadow BackgroundNeutral]
+late [Shadow Player] -> [Shadow Corpse]
+
+==============
+WINCONDITIONS
+==============
+
+no Shadow
+
+=======
+LEVELS
+=======
+
+......####.
+..#####ss#.
+###ssssss#.
+#..ssscss##
+#..#s#s#ss#
+#.g#s#ssss#
+#p.#s#ssss#
+#..css#sss#
+###########
+
+........########.
+........#...#.C#.
+...######...GC.##
+...#..CsssssO.C.#
+...#P.Csss#sO.CC#
+...#..Csss#sO#..#
+########ss#s....#
+#ssssssOss#s#####
+#sssssssss###....
+#########s#......
+........###......
+
+##########
+###G#G#G##
+##P......#
+#G.......#
+##..C....#
+#G.......#
+##..C....#
+#G.......#
+##......S#
+##########
+
+........########
+........#......#
+#########..#o#.#
+#........gooxo.#
+#g#####c#.sso#s#
+#.ssssss#.ss.ss#
+##soooss#.ss##s#
+##c.p.c###ss#ss#
+##.....#ssss#ss#
+#...g.......#ss#
+#########.xx#ss#
+........##sssss#
+.........#######
+
+MESSAGE Earth is safe once again.
+
+title PUSH
+author lonebot - demake by rmmh
+homepage http://lonebot.net/games/push/
+
+youtube UXlXgFDgXow
+again_interval 0.1
+noaction
+
+========
+OBJECTS
+========
+
+Background .
+#756C5E
+
+Wall #
+#635854
+
+StrongPlayer P
+#E8D2AC #67453D Black #282D3C Red
+11111
+02020
+40004
+43334
+33.33
+
+WeakPlayer
+#E8D2AC #67453D Black #282D3C
+11111
+02020
+.000.
+.333.
+33.33
+
+GibbedPlayer
+Red
+...0.
+.0...
+0..0.
+.....
+..0.0
+
+Rock *
+#202020 #706249 #A6957B
+.000.
+02220
+02210
+01110
+.000.
+
+RockDust (destroyed by a projectile)
+#A6957B
+...0.
+.0...
+0..0.
+.....
+..0.0
+
+Idol G
+#945527 #C97536 #F4EF0B
+.000.
+01210
+.222.
+.010.
+01210
+
+Pit _
+Black #5A5349
+.1.1.
+1000.
+.000.
+.0001
+..11.
+
+PitFilled
+Black #5A5349 #706249
+.1.1.
+1222.
+.222.
+.2221
+..11.
+
+PitPlayer
+Black #5A5349 #E8D2AC #282D3C
+.1.1.
+1020.
+.222.
+.3331
+..11.
+
+WeakGround x
+#5A5349
+.0..0
+00..0
+..00.
+00..0
+0.0..
+
+GunUSingle U
+Black Grey Yellow
+..0..
+12021
+11011
+11111
+.111.
+
+GunDSingle D
+Black Grey Yellow
+.111.
+11111
+11011
+12021
+..0..
+
+GunRSingle R
+Black Grey Yellow
+.111.
+1112.
+11000
+1112.
+.111.
+
+GunLSingle L
+Black Grey Yellow
+.111.
+.2111
+00011
+.2111
+.111.
+
+GunUMulti M
+Black Grey Red
+..0..
+.202.
+12021
+12221
+.111.
+
+GunLMulti N
+Black Grey Red
+..11.
+.2221
+00021
+.2221
+..11.
+
+GunRMulti O
+Black Grey Red
+.11..
+1222.
+12000
+1222.
+.11..
+
+
+Button T
+#969283 #4A4A4A
+.000.
+01110
+01010
+01110
+.000.
+
+ButtonPressed
+#969283 #3A3A3A
+.000.
+01110
+01110
+01110
+.000.
+
+ArrowU
+Brown
+..0..
+.000.
+..0..
+.....
+.....
+
+ArrowR
+Brown
+.....
+...0.
+..000
+...0.
+.....
+
+ArrowL
+Brown
+.....
+.0...
+000..
+.0...
+.....
+
+ArrowD
+Brown DarkBrown
+.....
+.....
+..0..
+.000.
+..0..
+
+Firing
+Black
+
+Fired
+Brown
+
+(used for linking buttons to guns, and for generic flags)
+LinkA
+Red
+
+LinkB
+Green
+
+LinkC
+Blue
+
+LinkD
+White
+
+LinkE
+Black
+
+=======
+LEGEND
+=======
+
+Player = StrongPlayer or WeakPlayer or GibbedPlayer
+DeadPlayer = GibbedPlayer or PitPlayer
+GunU = GunUSingle or GunUMulti
+GunD = GunDSingle
+GunL = GunLSingle or GunLMulti
+GunR = GunRSingle or GunRMulti
+MultiGun = GunUMulti or GunLMulti or GunRMulti
+Gun = GunU or GunR or GunD or GunL
+Movable = Rock or Gun
+Q = StrongPlayer and WeakGround
+Heavy = Movable or Player
+Arrow = ArrowU or ArrowR or ArrowD or ArrowL
+Link = LinkA or LinkB or LinkC or LinkD or LinkE
+Blockers = Player or Wall or Idol or Movable
+
+1 = Wall and LinkA
+2 = Wall and LinkB
+3 = Wall and LinkC
+4 = Wall and LinkD
+5 = Wall and LinkE
+
+7 = GunRSingle and LinkE
+8 = Button and LinkE
+
+=======
+SOUNDS
+=======
+
+Idol destroy 47224903
+Pit create 4141702
+PitPlayer create 19700104
+PitFilled create 87604304
+ButtonPressed create 25424301
+(using sfxN here to deal with bug where 'again' triggers sounds twice)
+sfx0 36787702 (rock destroyed by arrow)
+sfx1 59184504 (player explodes)
+Arrow create 98842708 (arrow shot)
+
+================
+COLLISIONLAYERS
+================
+
+Link (move layer to top for debugging linkages)
+Firing, Fired
+Background
+Pit, PitFilled, WeakGround, Button, ButtonPressed, PitPlayer, RockDust
+Blockers
+Arrow
+
+======
+RULES
+======
+
+(player can move an object only once)
+[ > StrongPlayer | Movable | no Blockers ] -> [ > WeakPlayer | > Movable | ]
+[ > Movable Link ] -> [ > Movable > Link ]
+[ DeadPlayer ] -> cancel
+
+(pit behaviors)
+late [ Player Pit ] -> [ PitPlayer ] (falling into a pit kills you)
+late [ Pit Rock ] -> [ PitFilled ]  (they can be filled)
+[ Player WeakGround ] -> [ Player WeakGround LinkA ] (mark WeakGround as visited)
+late [ WeakGround LinkA no Player ] -> [ Pit ] (pits appear when you move off weakground)
+
+(initialize gun linkages -- try linking on a line first)
+[Wall Link] [Button no Link | ... | Gun no Link] -> [Wall] [Button Link | ... | Gun Link]
+[Wall Link] [Button no Link] [Gun no Link] -> [Wall] [Button Link] [Gun Link]
+
+(buttons cause linked gun to fire)
+late [ Button Heavy LinkA ] [ Gun LinkA ] -> [ ButtonPressed Heavy ] [ Gun Firing ] again
+late [ Button Heavy LinkB ] [ Gun LinkB ] -> [ ButtonPressed Heavy ] [ Gun Firing ] again
+late [ Button Heavy LinkC ] [ Gun LinkC ] -> [ ButtonPressed Heavy ] [ Gun Firing ] again
+late [ Button Heavy LinkD ] [ Gun LinkD ] -> [ ButtonPressed Heavy ] [ Gun Firing ] again
+late [ Button Heavy LinkE ] [ Gun LinkE ] -> [ ButtonPressed Heavy ] [ Gun Firing ] again
+
+( MultiGuns fire 3 shots. do this by cycling LinkB->LinkA->None )
+[ MultiGun Firing no Link ] -> [ MultiGun Firing LinkB ]
+[ MultiGun Fired LinkB ] -> [ MultiGun Firing LinkA ]
+[ MultiGun Fired LinkA ] -> [ MultiGun Firing ]
+
+( create arrows )
+[ GunU Firing ] -> [ GunU ArrowU Fired ]
+[ GunR Firing ] -> [ GunR ArrowR Fired ]
+[ GunL Firing ] -> [ GunL ArrowL Fired ]
+[ GunD Firing ] -> [ GunD ArrowD Fired ]
+( move )
+[ ArrowL ] -> [ left ArrowL ] again
+[ ArrowU ] -> [ up ArrowU ] again
+[ ArrowR ] -> [ right ArrowR ] again
+[ ArrowD ] -> [ down ArrowD ] again
+
+late [ Arrow Rock ] -> [ RockDust ] sfx0
+late [ Arrow Player ] -> [ GibbedPlayer ] sfx1
+late [ Arrow Blockers ] -> [ Blockers ] sfx0
+
+(grabbing an idol)
+[ DeadPlayer ] -> cancel
+[ > Player | Idol ] -> [ Player | Pit ]
+
+==============
+WINCONDITIONS
+==============
+
+no Idol
+
+=======
+LEVELS
+=======
+
+message 1/20: You only get one push!
+###########
+#.........#
+#......*..#
+#.*.....*.#
+#...***...#
+#..**g*...#
+#..*.*....#
+#.........#
+#...p...*.#
+#.........#
+###########
+
+message 2/20: Mind the gap
+###########
+#**.......#
+#*....*.*.#
+#.........#
+#...***...#
+#...*g*...#
+#...*_*...#
+#*........#
+#..*.p..*.#
+#.........#
+###########
+
+message 3/20: Shaky footing
+###########
+#****g****#
+#.*_..****#
+#x********#
+#.********#
+#.x.xx...*#
+#*******x*#
+#......x.*#
+#.********#
+#p*.......#
+###########
+
+message 4/20: Firepower
+1##########
+#*...g...*#
+#........*#
+#*********#
+#**.....*.#
+#**.......#
+#**_.p....#
+#*t*...**.#
+#**_...**.#
+#**..u...*#
+###########
+
+message 5/20: Artillery
+1##########
+#**.....*.#
+#*......**#
+#...*g*...#
+#.*.......#
+#.........#
+#*********#
+#..*.**...#
+#*......t.#
+#..*.u...p#
+###########
+
+message 6/20: Traps
+1##########
+#t**.****.#
+#.*...**g*#
+#.x.....**#
+#.**.*....#
+#..*.*....#
+#.**......#
+#**.......#
+#**p..*...#
+#**..**.u*#
+###########
+
+message 7/20: Sequencing
+12#########
+#*********#
+#*t****_..#
+#*x*.d**..#
+#.....**..#
+#.....*...#
+#t..._*...#
+#r...**.g.#
+#...***...#
+#p..****..#
+###########
+
+message 8/20: Hamiltonian Cycle
+(8/20 - 3 guns, order irrelevant)
+123########
+#*....**.*#
+#..***l**.#
+#g****l***#
+#*****l***#
+#tx**xxxxx#
+#xxxqxxx*t#
+#xx*_**x_x#
+#*x_xxxxx*#
+#*xtx*x**_#
+###########
+
+message 9/20: Barrage
+(9/20 -- 4 guns, all inline with triggers)
+1234#######
+#****x***_#
+#***.tt.**#
+#xg_.dd.**#
+#*__......#
+#_*__**.lt#
+#_*..*..lt#
+#.........#
+#*p.......#
+#**...*..*#
+###########
+
+message 10/20: Rotary
+(10/20 -- 4 guns, mostly inline with triggers)
+1234#######
+#**_*...t.#
+#*......d.#
+#r......**#
+#*.****..*#
+#t.*.g**.*#
+#..******x#
+#....**_xt#
+#.....p***#
+#_.u*t._.l#
+###########
+
+message 11/20: Shooting Gallery
+(11/20)
+1234#######
+#t..*..*_l#
+#_.****.__#
+#r.*x**.t*#
+#******.**#
+#**xtr_.*g#
+#__.__..**#
+#_......**#
+#....p.u.*#
+#**....t..#
+###########
+
+message 12/20: Co-op
+(12/20: 2 players!)
+1##########
+#*t.._____#
+#...._*g__#
+#.r.._.*..#
+#...._*.**#
+#**_._.*.*#
+#****_....#
+#*..*_..**#
+#*.**_..**#
+#*p**_..p*#
+###########
+
+message 13/20: Rescue
+12#########
+#**...._.g#
+#*.t..._*.#
+#*...d._.*#
+#*p..__*_*#
+#*...__.u*#
+#.*..._.t*#
+#*...**_**#
+#*..***.**#
+#*.**....p#
+###########
+
+message 14/20: Friendly Fire
+(14/20 -- corridor toggle triggers left-wall gun )
+12#########
+#*********#
+#*********#
+#g*8...pl*#
+#*********#
+#7********#
+#...***...#
+#......p.t#
+#....*.*..#
+#.ut......#
+###########
+
+message 15/20: Interference
+123########
+#**..*..**#
+#*.......*#
+#....p...*#
+#t......**#
+#r.**..**g#
+#...*...**#
+#..uup..**#
+#*.......*#
+#**tt...**#
+###########
+
+message 16/20: Machine guns
+1##########
+#*********#
+#p..*g****#
+#....*****#
+#..*******#
+#..**.*.**#
+#***......#
+#***.p....#
+#....t.m..#
+#_........#
+###########
+
+message 17/20: Trapped
+(17/20 -- top toggle triggers magma)
+123########
+#p**...n*g#
+#*****..*_#
+#******.**#
+#***..t*.*#
+#*7_*.....#
+#8.x*....l#
+#...xp...x#
+#...u*.._t#
+#*..t*...x#
+###########
+
+message 18/20: Crossfire
+(18/20 -- modified to be more difficult)
+12345######
+#_g.*_****#
+#____**...#
+#.....*...#
+#rx.***.x.#
+#t..*.*...#
+#.px..*.pl#
+#o.**.*x.*#
+#t...*.x.t#
+#.xtm*mtx.#
+###########
+
+message 19/20: Stylite
+(19/20)
+1##########
+#*********#
+#..*t***x*#
+#p...*****#
+#.r..*g***#
+#.*_____*_#
+#**_...___#
+#*__p..___#
+#*x_...__*#
+#_*_______#
+###########
+
+message 20/20: Spinal Cannon
+(20/20 -- inverted so I don't have to make an upwards magma gun)
+1##########
+#p.**g*_.p#
+#....**x..#
+#_*.._..**#
+#.*..*...*#
+#..*.x....#
+#_x__*.._.#
+#*.x_*x.._#
+#*x..***..#
+#*_.tm.*..#
+###########
+
+(finale -- pushes gold into pit, gold gets smashed, eyes bug out)
+###########
+#*.......*#
+#....p....#
+#._....._.#
+#_...*..._#
+#_..._..._#
+#__._g_.__#
+#_________#
+#_________#
+#*_______*#
+###########
+
+message Congratulations!
+
+(Credits
+Code: Yotam Frid
+Art: Mati & Itamar Ernst
+Music: Jason Lord
+
+www.lonebot.net
+Ludam Dare 28)
+
+(blank level template()
+###########
+#.........#
+#.........#
+#.........#
+#.........#
+#.........#
+#.........#
+#.........#
+#.........#
+#.........#
+###########
+()
+
+title horizontal Block Pushing Game
+author increpare
+homepage www.puzzlescript.net
+
+========
+OBJECTS
+========
+
+Background
+lightgreen green
+11111
+01111
+11101
+11111
+10111
+
+Target
+darkblue
+.....
+.000.
+.0.0.
+.000.
+.....
+
+Wall
+brown darkbrown
+00010
+11111
+01000
+11111
+00010
+
+Player
+black orange white blue
+.000.
+.111.
+22222
+.333.
+.3.3.
+
+Crate
+blue white
+00000
+00000
+01110
+00000
+00000
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Player
+* = Crate
+@ = Crate and Target
+O = Target
+
+=======
+SOUNDS
+=======
+
+Crate MOVE 36772507
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Target
+Player, Wall, Crate
+
+======
+RULES
+======
+
+horizontal [ > Player | Crate ] -> [ > Player | > Crate ] 
+
+==============
+WINCONDITIONS
+==============
+
+all Target on Crate
+
+=======
+LEVELS
+=======
+
+#########
+#.......#
+#.....@.#
+#.P.*.O.#
+#.......#
+#.......#
+#########
+
+.#######.
+.#.....#.
+.#O##..##
+##.##.*.#
+#.*..**.#
+#.OOO.#.#
+#.P.....#
+#########
+
+
+title Memories Of Castlemouse
+author Wayne Myers
+homepage www.conniptions.org
+
+text_color lightgreen
+again_interval 0
+youtube CnjtQbU0Gg8
+
+========
+OBJECTS
+========
+
+Background
+Black
+
+Wall
+Brown DarkBrown
+00010
+11111
+01000
+11111
+00010
+
+Floor
+#888855 #885588
+00100
+01110
+11011
+01110
+00100
+
+
+Hole
+Black #222222 Brown
+21112
+10000
+10000
+10000
+10000
+
+Marker
+Red
+00.00
+0...0
+.....
+0...0
+00.00
+
+MMarker
+Purple
+00.00
+0...0
+.....
+0...0
+00.00
+
+CMarker
+Purple
+00.00
+0...0
+.....
+0...0
+00.00
+
+DMarker
+Purple
+00.00
+0...0
+.....
+0...0
+00.00
+
+EMarker
+Purple
+00.00
+0...0
+.....
+0...0
+00.00
+
+Mouse
+LightGrey Black
+.....
+.1.1.
+.000.
+.010.
+..1..
+
+UpMovingMouse
+LightGrey Black
+.....
+.1.1.
+.000.
+.010.
+..1..
+
+LeftMovingMouse
+LightGrey Black
+.....
+.1.1.
+.000.
+.010.
+..1..
+
+RightMovingMouse
+LightGrey Black
+.....
+.1.1.
+.000.
+.010.
+..1..
+
+DownMovingMouse
+LightGrey Black
+.....
+.1.1.
+.000.
+.010.
+..1..
+
+Cat
+White Green Pink Grey
+0...0
+00000
+01010
+30203
+.000.
+
+RightMovingCat
+White Green Pink Grey
+0...0
+00000
+01010
+30203
+.000.
+
+LeftMovingCat
+White Green Pink Grey
+0...0
+00000
+01010
+30203
+.000.
+
+UpMovingCat
+White Green Pink Grey
+0...0
+00000
+01010
+30203
+.000.
+
+DownMovingCat
+White Green Pink Grey
+0...0
+00000
+01010
+30203
+.000.
+
+Dog
+DarkBrown Black
+.0.0.
+01010
+00000
+00100
+01110
+
+UpMovingDog
+DarkBrown Black
+.0.0.
+01010
+00000
+00100
+01110
+
+DownMovingDog
+DarkBrown Black
+.0.0.
+01010
+00000
+00100
+01110
+
+LeftMovingDog
+DarkBrown Black
+.0.0.
+01010
+00000
+00100
+01110
+
+RightMovingDog
+DarkBrown Black
+.0.0.
+01010
+00000
+00100
+01110
+
+Elephant
+LightGrey Black #eeeeee Grey
+.000.
+31300
+32330
+30000
+.0..0
+
+UpMovingElephant
+LightGrey Black #eeeeee Grey
+.000.
+31300
+32330
+30000
+.0..0
+
+DownMovingElephant
+LightGrey Black #eeeeee Grey
+.000.
+31300
+32330
+30000
+.0..0
+
+LeftMovingElephant
+LightGrey Black #eeeeee Grey
+.000.
+31300
+32330
+30000
+.0..0
+
+RightMovingElephant
+LightGrey Black #eeeeee Grey
+.000.
+31300
+32330
+30000
+.0..0
+
+=======
+LEGEND
+=======
+
+X = Background
+. = Floor
+# = Wall
+E = Elephant and Floor and Marker
+D = Dog and Floor and Marker
+C = Cat and Floor and Marker
+M = Mouse and Floor and Marker
+3 = Elephant and Floor
+2 = Dog and Floor
+1 = Cat and Floor
+0 = Mouse and Floor
+H = Hole and Floor
+
+Player = Marker
+
+Obstacle = Wall or Hole
+
+VerticalMovingElephant = UpMovingElephant or DownMovingElephant
+HorizontalMovingElephant = LeftMovingElephant or RightMovingElephant
+MovingElephant = VerticalMovingElephant or HorizontalMovingElephant
+
+VerticalMovingDog = UpMovingDog or DownMovingDog
+HorizontalMovingDog = LeftMovingDog or RightMovingDog
+MovingDog = VerticalMovingDog or HorizontalMovingDog
+
+VerticalMovingCat = UpMovingCat or DownMovingCat
+HorizontalMovingCat = LeftMovingCat or RightMovingCat
+MovingCat = VerticalMovingCat or HorizontalMovingCat
+
+VerticalMovingMouse = UpMovingMouse or DownMovingMouse
+HorizontalMovingMouse = LeftMovingMouse or RightMovingMouse
+MovingMouse = VerticalMovingMouse or HorizontalMovingMouse
+
+MoveMarker = MMarker or CMarker or DMarker or EMarker
+
+=======
+SOUNDS
+=======
+
+SFX0 40739509 (Mouse in hole)
+SFX1 65087301 (Scared mouse)
+SFX2 10901907 (Hit wall)
+SFX3 45415107 (Scared dog)
+SFX4 80636305 (Scared cat)
+SFX5 3673502  (Scared elephant)
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Floor
+Hole
+Mouse, MovingMouse, Cat, MovingCat, Dog, MovingDog, Elephant, MovingElephant, Wall
+Marker, MoveMarker
+
+======
+RULES
+======
+
+(Marker rules)
+[ > Marker Mouse ] -> [ MMarker > Mouse ]
+[ > Marker Cat ] -> [ CMarker > Cat ]
+[ > Marker Dog ] -> [ DMarker > Dog ]
+[ > Marker Elephant ] -> [ EMarker > Elephant ]
+
+startLoop
+
+(Elephant rules)
+[ UP Elephant ] -> [ UP UpMovingElephant ]
+[ DOWN Elephant ] -> [ DOWN DownMovingElephant ]
+[ LEFT Elephant ] -> [ LEFT LeftMovingElephant ]
+[ RIGHT Elephant ] -> [ RIGHT RightMovingElephant ]
+
+[ UpMovingElephant ] -> [ Up UpMovingElephant ] again
+[ LeftMovingElephant ] -> [ Left LeftMovingElephant ] again
+[ RightMovingElephant ] -> [ Right RightMovingElephant ] again
+[ DownMovingElephant ] -> [ Down DownMovingElephant ] again
+
+right [ Elephant | Stationary Dog | No Obstacle ] -> [ Elephant | right Dog | SFX3 ]
+left [ Elephant | Stationary Dog | No Obstacle ] -> [ Elephant | left Dog | SFX3 ]
+up [ Elephant | Stationary Dog | No Obstacle ] -> [ Elephant | up Dog | SFX3 ]
+down [ Elephant | Stationary Dog | No Obstacle ] -> [ Elephant | down Dog | SFX3]
+right [ VerticalMovingElephant | Stationary Dog | No Obstacle ] -> [ VerticalMovingElephant | right Dog | SFX3 ]
+left [ VerticalMovingElephant | Stationary Dog | No Obstacle ] -> [ VerticalMovingElephant | left Dog | SFX3 ]
+up [ HorizontalMovingElephant | Stationary Dog | No Obstacle ] -> [ HorizontalMovingElephant | up Dog | SFX3 ]
+down [ HorizontalMovingElephant | Stationary Dog | No Obstacle ] -> [ HorizontalMovingElephant | down Dog | SFX3]
+
+[ > MovingElephant | Cat | ] -> [ Elephant | Cat | SFX5 ]
+[ > MovingElephant | Mouse ] -> [ Elephant | Mouse ]
+[ > MovingElephant | Dog | Obstacle | ] -> [ Elephant | Dog | Obstacle | SFX3 ]
+[ > MovingElephant | Dog | No Obstacle ] -> [ Elephant | > Dog | SFX3 ]
+[ > MovingElephant | Obstacle | ] -> [ Elephant | Obstacle | SFX2 ]
+
+(Dog rules)
+[ UP Dog ] -> [ UP UpMovingDog ]
+[ DOWN Dog ] -> [ DOWN DownMovingDog ]
+[ LEFT Dog ] -> [ LEFT LeftMovingDog ]
+[ RIGHT Dog ] -> [ RIGHT RightMovingDog ]
+
+[ UpMovingDog ] -> [ Up UpMovingDog ] again
+[ LeftMovingDog ] -> [ Left LeftMovingDog ] again
+[ RightMovingDog ] -> [ Right RightMovingDog ] again
+[ DownMovingDog ] -> [ Down DownMovingDog ] again
+
+right [ Dog | Stationary Cat | No Obstacle ] -> [ Dog | right Cat | SFX4 ]
+left [ Dog | Stationary Cat | No Obstacle ] -> [ Dog | left Cat | SFX4 ]
+up [ Dog | Stationary Cat | No Obstacle ] -> [ Dog | up Cat | SFX4 ]
+down [ Dog | Stationary Cat | No Obstacle ] -> [ Dog | down Cat | SFX4]
+right [ VerticalMovingDog | Stationary Cat | No Obstacle ] -> [ VerticalMovingDog | right Cat | SFX4 ]
+left [ VerticalMovingDog | Stationary Cat | No Obstacle ] -> [ VerticalMovingDog | left Cat | SFX4 ]
+up [ HorizontalMovingDog | Stationary Cat | No Obstacle ] -> [ HorizontalMovingDog | up Cat | SFX4 ]
+down [ HorizontalMovingDog | Stationary Cat | No Obstacle ] -> [ HorizontalMovingDog | down Cat | SFX4]
+
+[ > MovingDog | Mouse | ] -> [ Dog | Mouse | SFX3 ]
+[ > MovingDog | Elephant ] -> [ Dog | Elephant ]
+[ > MovingDog | Cat | Obstacle | ] -> [ Dog | Cat | Obstacle | SFX4 ]
+[ > MovingDog | Cat | No Obstacle ] -> [ Dog | > Cat | SFX4 ]
+[ > MovingDog | Obstacle | ] -> [ Dog | Obstacle | SFX2 ]
+
+(Cat rules)
+[ UP Cat ] -> [ UP UpMovingCat ]
+[ DOWN Cat ] -> [ DOWN DownMovingCat ]
+[ LEFT Cat ] -> [ LEFT LeftMovingCat ]
+[ RIGHT Cat ] -> [ RIGHT RightMovingCat ]
+
+[ UpMovingCat ] -> [ Up UpMovingCat ] again
+[ LeftMovingCat ] -> [ Left LeftMovingCat ] again
+[ RightMovingCat ] -> [ Right RightMovingCat ] again
+[ DownMovingCat ] -> [ Down DownMovingCat ] again
+
+right [ Cat | Stationary Mouse | No Wall ] -> [ Cat | right Mouse | SFX1 ]
+left [ Cat | Stationary Mouse | No Wall ] -> [ Cat | left Mouse | SFX1 ]
+up [ Cat | Stationary Mouse | No Wall ] -> [ Cat | up Mouse | SFX1 ]
+down [ Cat | Stationary Mouse | No Wall ] -> [ Cat | down Mouse | SFX1]
+right [ VerticalMovingCat | Stationary Mouse | No Wall ] -> [ VerticalMovingCat | right Mouse | SFX1 ]
+left [ VerticalMovingCat | Stationary Mouse | No Wall ] -> [ VerticalMovingCat | left Mouse | SFX1 ]
+up [ HorizontalMovingCat | Stationary Mouse | No Wall ] -> [ HorizontalMovingCat | up Mouse | SFX1 ]
+down [ HorizontalMovingCat | Stationary Mouse | No Wall ] -> [ HorizontalMovingCat | down Mouse | SFX1]
+
+[ > MovingCat | Elephant | ] -> [ Cat | Elephant | SFX4 ]
+[ > MovingCat | Dog ] -> [ Cat | Dog ]
+[ > MovingCat | Mouse | Wall | ] -> [ Cat | Mouse | Wall | SFX1 ]
+[ > MovingCat | Mouse | No Wall ] -> [ Cat | > Mouse | SFX1 ]
+[ > MovingCat | Obstacle | ] -> [ Cat | Obstacle | SFX2 ]
+
+(Mouse rules)
+[ UP Mouse ] -> [ UP UpMovingMouse ]
+[ DOWN Mouse ] -> [ DOWN DownMovingMouse ]
+[ LEFT Mouse ] -> [ LEFT LeftMovingMouse ]
+[ RIGHT Mouse ] -> [ RIGHT RightMovingMouse ]
+
+[ UpMovingMouse ] -> [ Up UpMovingMouse ] again
+[ LeftMovingMouse ] -> [ Left LeftMovingMouse ] again
+[ RightMovingMouse ] -> [ Right RightMovingMouse ] again
+[ DownMovingMouse ] -> [ Down DownMovingMouse ] again
+
+right [ Mouse | Stationary Elephant | No Obstacle ] -> [ Mouse | right Elephant | SFX5 ]
+left [ Mouse | Stationary Elephant | No Obstacle ] -> [ Mouse | left Elephant | SFX5 ]
+up [ Mouse | Stationary Elephant | No Obstacle ] -> [ Mouse | up Elephant | SFX5 ]
+down [ Mouse | Stationary Elephant | No Obstacle ] -> [ Mouse | down Elephant | SFX5]
+right [ VerticalMovingMouse | Stationary Elephant | No Obstacle ] -> [ VerticalMovingMouse | right Elephant | SFX5 ]
+left [ VerticalMovingMouse | Stationary Elephant | No Obstacle ] -> [ VerticalMovingMouse | left Elephant | SFX5 ]
+up [ HorizontalMovingMouse | Stationary Elephant | No Obstacle ] -> [ HorizontalMovingMouse | up Elephant | SFX5 ]
+down [ HorizontalMovingMouse | Stationary Elephant | No Obstacle ] -> [ HorizontalMovingMouse | down Elephant | SFX5]
+
+[ > MovingMouse | Dog | ] -> [ Mouse | Dog | SFX1 ]
+[ > MovingMouse | Cat ] -> [ Mouse | Cat ]
+[ > MovingMouse | Elephant | Wall | ] -> [ Mouse | Elephant | Wall | SFX5 ]
+[ > MovingMouse | Elephant | No Obstacle ] -> [ Mouse | > Elephant | SFX5 ]
+[ > MovingMouse | Wall | ] -> [ Mouse | Wall | SFX2 ]
+[ > MovingMouse | Hole | ] -> [ No MovingMouse | Hole | SFX0 ]
+
+endloop
+
+
+(Late marker rules)
+
+late [ Mouse ] [ MMarker ] -> [ Mouse Marker ] []
+late [ Cat ] [ CMarker ] -> [ Cat Marker ] []
+late [ Dog ] [ DMarker ] -> [ Dog Marker ] []
+late [ Elephant ] [ EMarker ] -> [ Elephant Marker ] []
+
+==============
+WINCONDITIONS
+==============
+
+No MovingMouse
+No Mouse
+
+=======
+LEVELS
+=======
+
+Message In 2001 I was very lost.
+
+XXXXXXXXXXXXXXXXXXXXX
+X###################X
+X#...............###X
+X#..#........#...###X
+X#...............###X
+X###...M..#........#X
+X##H..........#....#X
+X###..#.....#......#X
+X#.............#...#X
+X#..#....#.........#X
+X#..............####X
+X###################X
+XXXXXXXXXXXXXXXXXXXXX
+
+Message I was just trying to hide from the world.
+
+XXXXXXXXXXXXXXXXXXXXXXXXXX
+X########################X
+X#...##....###.###....###X
+X#...##....#H#........###X
+X#.M.............#......#X
+X#....##..##.....##.....#X
+X#.....#......##........#X
+X#..##.......###........#X
+X#..##....#.......###...#X
+X#.......##........##...#X
+X#...##..##........##...#X
+X#...##.................#X
+X###.........###.....####X
+X###.........###....#####X
+X########################X
+XXXXXXXXXXXXXXXXXXXXXXXXXX
+
+Message I spent a lot of time playing a game called Castlemouse.
+
+XXXXXXXXXXXXXXXXXXXXX
+X###################X
+X#.................#X
+X#.........#.......#X
+X###...............#X
+X##H.....0.....#...#X
+X###...............#X
+X#.................#X
+X#....#..........###X
+X#.........0.....H##X
+X#C..............###X
+X###################X
+XXXXXXXXXXXXXXXXXXXXX
+
+Message Everything seemed to be slipping away from me.
+
+XXXXXXXXXXXXXXXXXXXXXXXXXX
+X########################X
+X#.......##.###.........#X
+X#......##..#H#.........#X
+X#.................#....#X
+X#..........0...0#......#X
+X###....#...............#X
+X##H..................###X
+X###......0...........H##X
+X#........#.....#.....###X
+X#................#.....#X
+X#......0...............#X
+X#.C.......#H#..........#X
+X#.........###..........#X
+X########################X
+XXXXXXXXXXXXXXXXXXXXXXXXXX
+
+Message The world seemed full of fear.
+
+XXXXXXXXXXXXXXXXXXX
+X#################X
+X#...............#X
+X#.......1#......#X
+X###.............#X
+X##H....0........#X
+X###.............#X
+X#.............###X
+X#.D......0....H##X
+X#.#...........###X
+X#...#...........#X
+X#################X
+XXXXXXXXXXXXXXXXXXX
+
+Message Everything was falling apart for me at once.
+
+XXXXXXXXXXXXXXXXXXXXXXXXXX
+X########################X
+X###..................###X
+X##H.......0.0........H##X
+X###..................###X
+X#......................#X
+X#..#...................#X
+X#.1.........#..........#X
+X#.........0............#X
+X##.........1...........#X
+X#.......D..............#X
+X###..................###X
+X##H.........0........H##X
+X###.......#..........###X
+X########################X
+XXXXXXXXXXXXXXXXXXXXXXXXXX
+
+Message I don't remember that time very well.
+
+XXXXXXXXXXXXXXXXXXX
+X#################X
+X#...............#X
+X#.......1#......#X
+X###.............#X
+X##H....0........#X
+X###.............#X
+X#.............###X
+X#.....2..0....H##X
+X#...#.......E.###X
+X#...#...........#X
+X#################X
+XXXXXXXXXXXXXXXXXXX
+
+Message I don't even remember exactly how Castlemouse went.
+
+XXXXXXXXXXXXXXXXXXXXXXXXXX
+X########################X
+X#....................#.#X
+X#....1..........#......#X
+X#...........0...#...2..#X
+X#......................#X
+X#..........#H#.........#X
+X#..........###.........#X
+X#..........###.........#X
+X#..........#H#.........#X
+X#...........0..........#X
+X#...2...........1......#X
+X#.E...................##X
+X#......................#X
+X########################X
+XXXXXXXXXXXXXXXXXXXXXXXXXX
+
+Message Many things were set in motion at that time.
+
+XXXXXXXXXXXXXXXXXXX
+X#################X
+X#......0.......H#X
+X##..........3..##X
+X#H...0..........#X
+X##..............#X
+X####..1.........#X
+X#............#..#X
+X#...#..###......#X
+X#..D#..#H#......#X
+X#.......0.......#X
+X#..........1....#X
+X#################X
+XXXXXXXXXXXXXXXXXXX
+
+Message Many unexpected chains of events, not all bad.
+
+XXXXXXXXXXXXXXXXXXXXXXXXXX
+X########################X
+X#.....#..............###X
+X#.....0..............H##X
+X#.......3............###X
+X#......................#X
+X###....................#X
+X##H.................0..#X
+X###....................#X
+X#......................#X
+X#.....................C#X
+X#...2.................##X
+X#....#...2............##X
+X#.....................##X
+X########################X
+XXXXXXXXXXXXXXXXXXXXXXXXXX
+
+Message I'm doing a lot better now.
+
+Message Also, Castlemouse is a much better game than this - you should track it down.
+
+Message Thank you for playing.
+
+Message Music: Broken - Fit and the Conniptions (music.conniptions.org)
+
+USER PROMPT:
+The following PuzzleScript game code:
+```plaintext
+title Olive Odyssey
+author PuzzleScript Fan
+homepage www.puzzlescript.net
+
+========
+OBJECTS
+========
+
+Background
+#556B2F
+
+Olive
+green
+..0..
+.000.
+.000.
+.000.
+..0..
+
+RecipeBook
+black brown
+..0..
+.0.0.
+.0.0.
+.0.0.
+..0..
+
+Player
+orange
+..0..
+.000.
+.0.0.
+.000.
+..0..
+
+Pot
+gray
+.....
+.000.
+0...0
+0...0
+.000.
+
+Dish
+#DAA520
+.....
+.....
+..0..
+.....
+.....
+
+=======
+LEGEND
+=======
+. = Background
+P = Player
+O = Olive
+R = RecipeBook
+T = Pot
+D = Dish
+
+======
+SOUNDS
+======
+
+================
+COLLISIONLAYERS
+================
+Background
+Player, Olive, RecipeBook, Pot, Dish
+
+======
+RULES
+======
+[> P | O] -> [> P | ]
+[right R | P] -> [R | > P]
+[ P | O | T ] -> [ P | D | T ]
+
+==============
+WINCONDITIONS
+==============
+
+some D
+
+=======
+LEVELS
+=======
+
+message Place the olive in the pot to create a dish!
+
+......
+..O..T
+.....
+..P...
+..R...
+
+message Level 2: Find, collect, and cook!
+
+....O..
+O..P...
+..T....
+R......
+....O..
+
+message Level 3: Use your recipe book wisely!
+
+..O.P..
+......
+..T.R..
+.......
+O......
+
+```
+compiled, but a solvability check returned the following error:
+ Level 1 is not solvable. Please repair it. Level 3 is not solvable. Please repair it. Level 5 is not solvable. Please repair it.
+The game should be a simplified `demake` of the following game idea: **Olive Odyssey:** Uncover ancient secrets and complex recipes by harvesting ingredients and cooking them into magical, story-altering dishes.. Return your code in full, inside a ```plaintext code block.

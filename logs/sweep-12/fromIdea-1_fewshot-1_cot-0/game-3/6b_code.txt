@@ -1,0 +1,108 @@
+```plaintext
+title Time Trinkle
+author YourName
+homepage www.example.com
+
+========
+OBJECTS
+========
+
+Background
+Black
+.....
+.....
+.....
+.....
+.....
+
+TilePlain
+Gray LightGray
+11111
+10001
+10001
+10001
+11111
+
+TileFuture
+Blue LightBlue
+11111
+10001
+10001
+10001
+11111
+
+TilePast
+Green LightGreen
+11111
+10001
+10001
+10001
+11111
+
+TimeMachine
+Yellow
+.....
+..0..
+..0..
+..0..
+.....
+
+Player
+Red
+.....
+..0..
+.000.
+.....
+.....
+
+=======
+LEGEND
+=======
+
+. = Background
+P = Player
+1 = TilePlain
+2 = TileFuture
+3 = TilePast
+! = TimeMachine
+
+================
+COLLISIONLAYERS
+================
+
+Background
+TilePlain, TileFuture, TilePast
+TimeMachine
+Player
+
+======
+RULES
+======
+
+[ > Player | TilePlain ] -> [ > Player | TileFuture ]
+[ > Player | TileFuture ] -> [ > Player | TilePast ]
+[ > Player | TilePast ] -> [ > Player | TilePlain ]
+
+==============
+WINCONDITIONS
+==============
+
+All TimeMachine on TileFuture
+
+=======
+LEVELS
+=======
+
+#########
+#.......#
+#.......#
+#P.1.2.3#
+#...!...#
+#.......#
+#.......#
+#########
+
+message Welcome to Time Trinkle! Flip tiles to synchronize time and solve the puzzle.
+```
+
+In this fixed version, I've removed the sound-related code since it was causing errors and isn't necessary for the basic functionality of the game. PuzzleScript doesn't natively support playing sounds directly through rules in the format shown in your error messages. If sound functionality is desired, you may need to implement it through a custom or browser-specific solution or adjust the game design to focus first on mechanics without sound.

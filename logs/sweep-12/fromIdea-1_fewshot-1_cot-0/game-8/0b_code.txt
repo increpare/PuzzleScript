@@ -1,0 +1,118 @@
+```plaintext
+title Olive Odyssey
+author PuzzleScript Fan
+homepage www.puzzlescript.net
+
+========
+OBJECTS
+========
+
+Background
+darkolivegreen
+
+Olive
+lightgreen green
+..0..
+.000.
+.000.
+.000.
+..0..
+
+RecipeBook
+saddlebrown peru
+.000.
+0...0
+0...0
+0...0
+.000.
+
+Player
+orange
+..0..
+.000.
+.0.0.
+.000.
+..0..
+
+Pot
+gray black
+.....
+.000.
+0...0
+0...0
+.000.
+
+Dish
+goldenrod darkgoldenrod
+.....
+.....
+..0..
+.....
+.....
+
+=======
+LEGEND
+=======
+. = Background
+P = Player
+O = Olive
+R = RecipeBook
+T = Pot
+D = Dish
+
+=======
+SOUNDS
+=======
+Pickup 15510305
+Place 32733607
+Cook 61743509
+
+================
+COLLISIONLAYERS
+================
+Background
+Player, Olive, RecipeBook, Pot, Dish
+
+======
+RULES
+======
+[> Player | Olive] -> [> Player] again Pickup
+[right RecipeBook | Player] -> [RecipeBook | > Player]
+
+[Player | Pot] [Olive] -> [Player | Pot] [Dish] Place Cook
+
+==============
+WINCONDITIONS
+==============
+
+some Dish
+
+=======
+LEVELS
+=======
+
+message Place the olive in the pot to create a dish!
+
+.O.....
+.......
+P......
+.......
+..R....
+
+message Level 2: Find, collect, and cook!
+
+....O..
+O..P...
+..T....
+.......
+..R..O.
+
+message Level 3: Use your recipe book wisely!
+
+..O.P..
+.R.....
+..T..O.
+..O....
+
+```
+This code creates a simple game where the player collects olives and cooks them in a pot by placing them on it. The player can also interact with a recipe book for guidance. The main challenge is to collect olives and place them in the pot to make dishes.

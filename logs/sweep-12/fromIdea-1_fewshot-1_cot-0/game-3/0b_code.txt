@@ -1,0 +1,118 @@
+```plaintext
+title Time Trinkle
+author YourName
+homepage www.example.com
+
+========
+OBJECTS
+========
+
+Background
+Black
+.....
+.....
+.....
+.....
+.....
+
+TilePlain
+Gray
+11111
+10001
+10001
+10001
+11111
+
+TileFuture
+Blue
+22222
+20002
+20002
+20002
+22222
+
+TilePast
+Green
+33333
+30003
+30003
+30003
+33333
+
+TimeMachine
+Yellow
+.....
+..0..
+..0..
+..0..
+.....
+
+Player
+Red
+..0..
+.000.
+00000
+.000.
+..0..
+
+=======
+LEGEND
+=======
+
+. = Background
+P = Player
+1 = TilePlain
+2 = TileFuture
+3 = TilePast
+! = TimeMachine
+
+=======
+SOUNDS
+=======
+
+Flip TILE 12345678
+
+================
+COLLISIONLAYERS
+================
+
+Background
+TilePlain, TileFuture, TilePast
+TimeMachine
+Player
+
+======
+RULES
+======
+
+[ Player ] MOVE [ TilePlain ] -> [ Player ] [ TileFuture ] sound Flip
+[ Player ] MOVE [ TileFuture ] -> [ Player ] [ TilePast ] sound Flip
+[ Player ] MOVE [ TilePast ] -> [ Player ] [ TilePlain ] sound Flip
+
+[ > Player | TilePlain ] -> [ > Player | TilePlain ]
+[ > Player | TileFuture ] -> [ > Player | TileFuture ]
+[ > Player | TilePast ] -> [ > Player | TilePast ]
+
+==============
+WINCONDITIONS
+==============
+
+All TimeMachine on TileFuture
+
+=======
+LEVELS
+=======
+
+#########
+#.......#
+#.......#
+#P.1.2.3#
+#...!...#
+#.......#
+#.......#
+#########
+
+message Welcome to Time Trinkle! Flip tiles to synchronize time and solve the puzzle.
+```
+
+This game features the main mechanic of flipping time tiles to change their states and aligning the timeline with the Time Machine to win. The player can move around a grid and must flip all tiles in front of the Time Machine to their future state to restore history.

@@ -1,0 +1,131 @@
+To address the errors indicated in your PuzzleScript game and refine the game mechanics:
+
+1. The rules for player movement when interacting with the Treasure need matching patterns on both sides of the rule.
+2. Simplify and ensure that every rule specifies the same number of cells on both sides for each object type involved.
+
+Here is the corrected version of your game code:
+
+```plaintext
+title Pirate Plunge
+author ChatGPT
+
+========
+OBJECTS
+========
+
+Background
+DarkBlue
+
+Island
+Green
+
+Player
+Yellow
+..0..
+.000.
+.000.
+.0.0.
+..0..
+
+Pirate
+Red
+..0..
+.000.
+.000.
+.0.0.
+..0..
+
+Treasure
+Yellow
+.0.0.
+00000
+.000.
+.000.
+.0.0.
+
+Wave
+LightBlue
+
+Wall
+grey
+
+=======
+LEGEND
+=======
+
+. = Background
+P = Player
+I = Island
+T = Treasure
+R = Pirate
+W = Wave
+# = Wall
+
+=========
+SOUNDS
+=========
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Wave
+Island, Wall, Treasure, Player, Pirate
+
+======
+RULES
+======
+
+(right movement for Player with Treasure)
+[ > Player | Treasure ] -> [ > Player | Background ]
+
+(left movement for Player with Treasure)
+[ < Player | Treasure ] -> [ < Player | Background ]
+
+(up movement for Player with Treasure)
+[ UP Player | Treasure ] -> [ UP Player | Background ]
+
+(down movement for Player with Treasure)
+[ DOWN Player | Treasure ] -> [ DOWN Player | Background ]
+
+(pirate movement rules)
+[ stationary Pirate ] -> [ left Pirate ]
+[ left Pirate | no Player ] -> [ left Pirate ]
+[ left Pirate | Player ] -> [ Pirate ]
+
+(waves/ocean pattern)
+[ Wave | no Island ] -> [ Wave | left Wave ]
+[ Wave | Island ] -> [ Wave | ]
+
+==============
+WINCONDITIONS
+==============
+
+no Treasure
+
+=======
+LEVELS
+=======
+
+#######
+#.....#
+#..T..#
+#..I..#
+#..P..#
+#.....#
+#..R..#
+#######
+
+message Collect the treasure and avoid pirates!
+```
+
+### Explanation:
+
+- Updated the player movement rules to correctly replace the "Treasure" with "Background" behind the player when collecting the treasure.
+- Changed the wave rule conditions slightly to match fixed rules of movement.
+- Simplified pirate movement rules, making sure pirates move only when adjacent to the player, but otherwise they are shifted to the left.
+- Confirmed collisions to stop pirates at players are correctly specified.
+- Ensured that game objects in the COLLISIONLAYERS are properly structured to prevent any unintended overlapping unless specified.
+
+This should solve the errors while keeping the focus on collecting treasures and avoiding pirates in your game.

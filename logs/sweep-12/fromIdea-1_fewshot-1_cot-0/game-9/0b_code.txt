@@ -1,0 +1,110 @@
+```plaintext
+title Tile Tactics Demake
+author YourName
+
+========
+OBJECTS
+========
+
+Empty
+LightGreen
+.....
+.....
+.....
+.....
+.....
+
+Terrain
+DarkGreen
+11111
+11111
+11111
+11111
+11111
+
+Player
+Red
+..0..
+.101.
+11111
+.101.
+..0..
+
+Enemy
+Blue
+..0..
+.202.
+22222
+.202.
+..0..
+
+Flag
+Yellow
+.....
+.333.
+.333.
+.333.
+.....
+
+=======
+LEGEND
+=======
+. = Empty
+T = Terrain
+P = Player
+E = Enemy
+F = Flag
+
+=======
+SOUNDS
+=======
+PlayerMove 12345605
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Terrain
+Player, Enemy, Flag
+
+======
+RULES
+======
+
+(Players can move onto empty tiles and control the player's move)
+[ > Player | Empty ] -> [ > Player | > Empty ] SFX0
+
+(Enemies can move randomly onto empty tiles, simulating movement)
+random [ > Enemy | Empty ] -> [ > Enemy | > Empty ]
+
+(Players can capture flags by moving onto them)
+[ > Player | Flag ] -> [ > Player | Empty ] win
+
+(Enemies block the player and cannot be moved onto)
+[ Player | Enemy ] -> [ Player | Enemy ]
+
+==============
+WINCONDITIONS
+==============
+
+All Flag on No Player
+
+=======
+LEVELS
+=======
+
+message Command your army! Capture the flags!
+
+TTTTTTTTT
+T....P...T
+T........T
+T....E...T
+T........T
+T...F....T
+T........T
+T..E.....T
+TTTTTTTTTT
+``` 
+
+This simplified `Tile Tactics Demake` gives the player control of a single unit that can move around to capture flags. The enemy is non-interactive but symbolically blocks passage to increase the complexity of reaching flags. The game is a basic representation of strategic movement and goal achievement in a tile-based format.

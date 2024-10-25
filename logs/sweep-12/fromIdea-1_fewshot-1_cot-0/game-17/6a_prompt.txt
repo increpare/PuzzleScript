@@ -1,0 +1,2009 @@
+SYSTEM PROMPT:
+You are a game designer, familiar with the PuzzleScript game description language. Here are some example games, for inspiration (do not reproduce these games exactly):
+
+title Simple Action Example
+author increpare
+homepage www.puzzlescript.net
+
+========
+OBJECTS
+========
+
+Background
+LIGHTGREEN GREEN
+11111
+01111
+11101
+11111
+10111
+
+Wall
+BROWN DARKBROWN
+00010
+11111
+01000
+11111
+00010
+
+Player
+Black Orange White Blue
+.000.
+.111.
+22222
+.333.
+.3.3.
+
+
+Blood
+DarkRed red white
+.01.0
+.1202
+2.0.1
+02.1.
+.1.0.
+
+Sheep O
+black white gray
+..11.
+01111
+01112
+.212.
+.0.0.
+
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Player
+
+
+=======
+SOUNDS
+=======
+
+Sheep MOVE 76935307
+SFx0 52519108
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Blood
+Player, Wall, Sheep
+
+======
+RULES
+======
+
+[ Action Player | Sheep ] -> [  Action  Player | > Sheep  ]
+
+[ > Sheep |  Sheep ] -> [ blood | > Sheep ] Sfx0
+
+==============
+WINCONDITIONS
+==============
+
+=======
+LEVELS
+=======
+
+#################
+#...............#
+#...............#
+#......ooo......#
+#########ooo....#
+#P.o...o..ooo...#
+#########oooo...#
+#...oooooooo....#
+#......oo.......#
+#...............#
+#################
+
+
+
+title BROKEN Naive Extended Bodies
+author increpare
+homepage www.puzzlescript.net
+
+(
+naive/broken implementation of rigid bodies
+see https://www.puzzlescript.net/Documentation/rigidbodies.html#Introduction
+)
+
+========
+OBJECTS
+========
+
+Background
+LIGHTGREEN GREEN
+11111
+01111
+11101
+11111
+10111
+
+
+Target
+DarkBlue
+.....
+.000.
+.0.0.
+.000.
+.....
+
+Wall
+BROWN DARKBROWN
+00010
+11111
+01000
+11111
+00010
+
+Player
+Black Orange White Blue
+.000.
+.111.
+22222
+.333.
+.3.3.
+
+BigBlock
+Orange Yellow
+00000
+0...0
+0...0
+0...0
+00000
+
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Player
+* = BigBlock
+@ = BigBlock and Target
+O = Target
+
+
+=======
+SOUNDS
+=======
+
+BigBlock MOVE 36772507
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Target
+Player, Wall, BigBlock
+
+======
+RULES
+======
+
+[ >  Player | BigBlock ] -> [  >  Player | > BigBlock  ]
+[ moving BigBlock | BigBlock ] -> [moving BigBlock|moving BigBlock]
+
+==============
+WINCONDITIONS
+==============
+
+=======
+LEVELS
+=======
+
+.#######.
+#.......#
+#..***..#
+#..p*...#
+#.......#
+.#######.
+
+
+title The Saga of the Candy Scroll
+author Jim Palmeri
+homepage www.puzzlescript.net
+again_interval .1
+
+========
+OBJECTS
+========
+
+Background
+#999999 #aaaaaa
+11111
+01111
+11101
+11111
+10111
+
+Wall
+Black #111111
+10001
+01010
+00100
+01010
+10001
+
+Player
+Black Orange Green Blue
+.000.
+.111.
+22222
+.333.
+.3.3.
+
+ScrollBG
+#d2a669 #e2bb82
+11111
+01111
+11101
+11111
+10111
+
+ScrollLeft
+#d2a669 #e2bb82 Brown Black
+33321
+33332
+33321
+33332
+33321
+
+ScrollRight
+#d2a669 #e2bb82 Brown Black
+12333
+23333
+12333
+23333
+12333
+
+ScrollTop
+#d2a669 #e2bb82 Brown Black
+33333
+33333
+33333
+23232
+12121
+
+ScrollBottom
+#d2a669 #e2bb82 Brown Black
+12121
+23232
+33333
+33333
+33333
+
+ArrowL
+Red Black
+11011
+10111
+00000
+10111
+11011
+
+ArrowU
+Blue Black
+11011
+10001
+01010
+11011
+11011
+
+ArrowD
+Green Black
+11011
+11011
+01010
+10001
+11011
+
+ArrowR
+Purple Black
+11011
+11101
+00000
+11101
+11011
+
+CandyR
+Red
+.000.
+00000
+00000
+00000
+.000.
+
+CandyG
+Green
+.000.
+00000
+00000
+00000
+.000.
+
+CandyB
+Blue
+.000.
+00000
+00000
+00000
+.000.
+
+CandyI
+Purple
+.000.
+00000
+00000
+00000
+.000.
+
+Drop1
+Red
+.....
+.....
+.....
+.....
+.....
+
+Drop2
+Red
+.....
+.....
+.....
+.....
+.....
+
+Drop3
+Red
+.....
+.....
+.....
+.....
+.....
+
+Drop4
+Red
+.....
+.....
+.....
+.....
+.....
+
+Candy0
+Gray
+.000.
+00000
+00000
+00000
+.000.
+
+Candy1
+White
+.000.
+00000
+00000
+00000
+.000.
+
+Candy2
+White
+..0..
+.000.
+00000
+.000.
+..0..
+
+Candy3
+White
+.....
+.000.
+.000.
+.000.
+.....
+
+Candy4
+White
+.....
+..0..
+.000.
+..0..
+.....
+
+Candy5
+White
+.....
+.....
+..0..
+.....
+.....
+
+ClearMarker
+White
+.....
+.....
+.....
+.....
+.....
+
+NinjaR
+Red YELLOW BLACK
+.222.
+.000.
+22222
+.222.
+.2.2.
+
+NinjaG
+Green YELLOW BLACK
+.222.
+.000.
+22222
+.222.
+.2.2.
+
+NinjaB
+Blue YELLOW BLACK
+.222.
+.000.
+22222
+.222.
+.2.2.
+
+NinjaI
+Purple YELLOW BLACK
+.222.
+.000.
+22222
+.222.
+.2.2.
+
+=======
+LEGEND
+=======
+
+. = Background
+P = Player
+# = Wall
+S = ScrollBG
+{ = ScrollLeft
+} = ScrollRight
+[ = ScrollTop
+] = ScrollBottom
+N = ScrollBG and Drop1
+M = ScrollBG and Drop2
+/ = ScrollBG and Drop3
+\ = ScrollBG and Drop4
+Q = ArrowL
+W = ArrowU
+E = ArrowD
+T = ArrowR
+R = CandyR
+G = CandyG
+B = CandyB
+I = CandyI
+1 = CandyR and ScrollBG
+2 = CandyG and ScrollBG
+3 = CandyB and ScrollBG
+4 = CandyI and ScrollBG
+H = NinjaR
+J = NinjaG
+K = NinjaB
+L = NinjaI
+
+Candy = CandyR or CandyG or CandyB or CandyI or Candy0 or Candy1 or Candy2 or Candy3 or Candy4 or Candy5
+
+CandyF = CandyR or CandyG or CandyB or CandyI
+
+Enemy = NinjaR or NinjaG or NinjaB or NinjaI
+
+=======
+SOUNDS
+=======
+
+================
+COLLISIONLAYERS
+================
+
+Background
+ClearMarker
+ScrollBG
+Drop1, Drop2, Drop3, Drop4
+ArrowL, ArrowU, ArrowD, ArrowR
+Player, Wall, CandyR, CandyG, CandyB, CandyI, ScrollLeft, ScrollRight, ScrollTop, ScrollBottom, Candy0, Candy1, Candy2, Candy3, Candy4, Candy5, NinjaR, NinjaG, NinjaB, NinjaI
+
+======
+RULES
+======
+
+(Candy clear animation)
+[ Candy5 ] -> [ ] again
+[ Candy4 ] -> [ Candy5 ] again
+[ Candy3 ] -> [ Candy4 ] again
+[ Candy2 ] -> [ Candy3 ] again
+[ Candy1 ] -> [ Candy2 ] again
+[ Candy0 ] -> [ Candy1 ] again
+
+(Mark 3 candies in a line for destruction)
+[ ScrollBG CandyR | ScrollBG CandyR | ScrollBG CandyR ] -> [ ScrollBG ClearMarker CandyR | ScrollBG ClearMarker CandyR | ScrollBG ClearMarker CandyR ]
+[ ScrollBG CandyG | ScrollBG CandyG | ScrollBG CandyG ] -> [ ScrollBG ClearMarker CandyG | ScrollBG ClearMarker CandyG | ScrollBG ClearMarker CandyG ]
+[ ScrollBG CandyB | ScrollBG CandyB | ScrollBG CandyB ] -> [ ScrollBG ClearMarker CandyB | ScrollBG ClearMarker CandyB | ScrollBG ClearMarker CandyB ]
+[ ScrollBG CandyI | ScrollBG CandyI | ScrollBG CandyI ] -> [ ScrollBG ClearMarker CandyI | ScrollBG ClearMarker CandyI | ScrollBG ClearMarker CandyI ]
+
+(Check to see if enemies can be destroyed)
+[ ScrollBG ClearMarker CandyR ] [ Player | ... | NinjaR ] -> [ ScrollBG ClearMarker CandyR ] [ Player | ... | NinjaR ClearMarker ]
+[ ScrollBG ClearMarker CandyB ] [ Player | ... | NinjaB ] -> [ ScrollBG ClearMarker CandyB ] [ Player | ... | NinjaB ClearMarker ]
+[ ScrollBG ClearMarker CandyG ] [ Player | ... | NinjaG ] -> [ ScrollBG ClearMarker CandyG ] [ Player | ... | NinjaG ClearMarker ]
+[ ScrollBG ClearMarker CandyI ] [ Player | ... | NinjaI ] -> [ ScrollBG ClearMarker CandyI ] [ Player | ... | NinjaI ClearMarker ]
+
+(Destroy marked candies)
+[ ScrollBG ClearMarker Candy ] -> [ ScrollBG Candy0 ] again
+
+(Destroy marked enemies)
+[ ClearMarker Enemy ] -> [ Candy0 ]
+
+(Make candies fall)
+down [ CandyF ScrollBG | no Candy ScrollBG ] -> [ ScrollBG | CandyF ScrollBG ] again
+
+(Add candies to candy scroll)
+left [ Action Player | Candy ] [ Drop1 no Candy ] -> [ Action Player | ] [ Candy Drop1 ] again
+up [ Action Player | Candy ] [ Drop2 no Candy ] -> [ Action Player | ] [ Candy Drop2 ] again
+down [ Action Player | Candy ] [ Drop3 no Candy ] -> [ Action Player | ] [ Candy Drop3 ] again
+right [ Action Player | Candy ] [ Drop4 no Candy ] -> [ Action Player | ] [ Candy Drop4 ] again
+
+
+==============
+WINCONDITIONS
+==============
+
+No Candy
+No Enemy
+
+=======
+LEVELS
+=======
+
+message This is a game made in two days for #candyjam. Enjoy!
+
+message Act 1: Candy World
+
+message Mr. Candy is stuck in the magical land of Candy World.
+message Help him escape by clearing all of the candies!
+message Walk up to a candy and press X to add it to your Candy Scroll.
+
+message Level 1
+
+###############
+#qwet#####r####
+#[[[[###.....##
+{nm/\}##.....##
+{ssss}#p.....r#
+{ssss}##.....##
+{ssss}##.....##
+{ssss}####r####
+#]]]]##########
+
+message "Wow, this Candy Scroll is cool! It can crus--I mean CLEAR three candies in a row!" said Mr. Candy.
+message Mr. Candy wonders what original game mechanics he will encounter next.
+
+message Level 2
+
+###############
+#qwet##.......#
+#[[[[##.......#
+{nm/\}##.....##
+{ssss}#r..p..b#
+{ssss}##.....##
+{1ss3}#.......#
+{1ss3}#.......#
+#]]]]##########
+
+message Mr. Candy wonders why the candies are being dropped into different columns of the Candy Scroll, and decides to investigate further.
+message Should he fail in his endeavors, he need only press R to restart the level.
+
+message Level 3
+
+###############
+#qwet##.......#
+#[[[[##.p.....#
+{nm/\}#.......#
+{ssss}#...r...#
+{ssss}#.......#
+{ssss}#.......#
+{11s1}#.......#
+#]]]]##########
+
+message It appears that approaching candies from different directions determines their placement on the Candy Scroll.
+message Enlightened, Mr. Candy continues his quest to clear ALL of the candies.  Not crush, obviously.  There is only one King when it comes to crushing candies, and Mr. Candy is clearly not him.
+
+message Level 4
+
+#################
+#######.........#
+#######..r.r.r..#
+#qwet##.........#
+#[[[[##.........#
+{nm/\}#..#.p.#..#
+{ssss}#.........#
+{ssss}#.........#
+{ssss}#..b.b.b..#
+{ssss}#.........#
+#]]]]############
+
+message Level 5
+
+#################
+#######r...p...r#
+#######.##...##.#
+#qwet##.#..#..#.#
+#[[[[##....r....#
+{nm/\}#..#r#b#..#
+{ssss}#....b....#
+{ssss}#.#..#..#.#
+{ssss}#.##...##.#
+{ssss}#b.......b#
+#]]]]############
+
+message Level 6
+
+#################
+#######.........#
+#########.....###
+#qwet####...p.###
+#[[[[##.........#
+{nm/\}#....b....#
+{ssss}#..r###r..#
+{ssss}#.b#...#b.#
+{3131}#..#...#..#
+{1131}#.........#
+#]]]]############
+
+message Mr. Candy continues through Candy World and notices something odd.
+message "Is that a green candy? I love those!"
+
+message Level 7
+
+#################
+#######.........#
+#######.p.......#
+#qwet##....#....#
+#[[[[##....r....#
+{nm/\}#..#b#g#..#
+{ssss}#....b....#
+{s11s}#....#....#
+{1323}#.........#
+{1323}#.........#
+#]]]]############
+
+message Level 8
+
+#################
+#######.........#
+#######.#r#g#b#.#
+#qwet##..#.#.#..#
+#[[[[##.........#
+{nm/\}#p..brg...#
+{ssss}#.........#
+{ssss}#..#.#.#..#
+{ssss}#.#g#b#r#.#
+{ssss}#.........#
+#]]]]############
+
+message Mr. Candy advances further and discovers yet another color of candies.  He must be getting close to the exit!
+
+message Level 9
+
+#################
+#######.........#
+#######...g#i...#
+#qwet##.........#
+#[[[[##.g.....i.#
+{nm/\}#.#..p..#.#
+{ssss}#.b.....r.#
+{ssss}#.........#
+{ssss}#...b#r...#
+{1324}#.........#
+#]]]]############
+
+message Mr. Candy notices something in the distance, and is ecstatic.
+message "Hey, look! It's the Super Candy Diamond! If I can clear it, I will certainly be able to escape Candy World!"
+
+message Level 10
+
+#################
+#######.........#
+#######.p..r..i.#
+#qwet##...rbr...#
+#[[[[##..rbgbr..#
+{nm/\}#.rbgigbr.#
+{ssss}#..rbgbr..#
+{ssss}#...rbr...#
+{ssss}#.i..r....#
+{ssss}#.........#
+#]]]]############
+
+message Mr. Candy escapes from Candy World! He is delighted to return to civilization...but this delight is fleeting.
+message He is assaulted by evil ninjas and dragged into an interrogation room!
+message "Mr. Candy, we regret to inform you that your name is trademarked.  By choosing to be known as Mr. Candy, you create brand confusion and must change your name immediately."
+message Mr. Candy replies, "This is complete nonsense!" He tries to escape, but is not fast enough to escape the ninjas!
+message He loses consciousness...
+
+message Act 2: The Prison
+
+message Mr. Candy finds himself locked in a prison. It looks a lot like Candy World, but there are ninjas blocking his escape!
+message He suspects that he must defeat all of the ninjas before he can escape, but he doesn't know how.
+message Sadly, he begins clearing candies...
+
+message Level 11
+
+#################
+#######.........#
+#######.........#
+#qwet##.........#
+#[[[[##....#....#
+{nm/\}#.p..r..h.#
+{ssss}#....#....#
+{ssss}#.........#
+{ssss}#.........#
+{s11s}#.........#
+#]]]]############
+
+message Incredible! The Candy Scroll can defeat ninjas!
+message Eager to test the Candy Scroll's limits, Mr. Candy proceeds through the prison.
+
+message Level 12
+
+#################
+#######.........#
+#######.p.r.....#
+#qwet##.........#
+#[[[[#####...####
+{nm/\}####...####
+{ssss}####...####
+{ssss}####...####
+{ssss}####.h.####
+{s11s}####...####
+#]]]]############
+
+message "Interesting," Mr. Candy says. "I can only kill ninjas with my Candy Scroll if I am vertically or horizontally aligned with them."
+
+message Level 13
+
+#################
+#######.........#
+#######....h..p.#
+#qwet##.........#
+#[[[[##.........#
+{nm/\}#...r...h.#
+{ssss}#....r....#
+{ssss}#.........#
+{ssss}#.r.......#
+{ssss}#.........#
+#]]]]############
+
+message Level 14
+
+#################
+##########...####
+########h#.r.#h##
+#qwet#####.r.####
+#[[[[##.........#
+{nm/\}#..r.p.r..#
+{ssss}#.........#
+{ssss}####.r.####
+{ssss}##h#.r.#h##
+{ssss}####...####
+#]]]]############
+
+message "Wow, the Candy Scroll's ninja-destroying powers even reach through walls! I'll be out of here in no time!"
+
+message Level 15
+
+#################
+########b##r##b##
+########h##h##h##
+#qwet##.........#
+#[[[[##.........#
+{nm/\}#..r.r.r..#
+{ssss}#.........#
+{ssss}#..r.p.r..#
+{ssss}#....h....#
+{s3ss}#.........#
+#]]]]############
+
+message As Mr. Candy makes his way through the prison, he encounters some blue ninjas. Might they bear some connection to the blue candies?
+
+message Level 16
+
+#################
+#######.r....####
+#######rbr....###
+#qwet##.r..k...##
+#[[[[##.........#
+{nm/\}#..p.b....#
+{ssss}#.........#
+{ssss}##...k..r.#
+{ssss}###....rbr#
+{ssss}####....r.#
+#]]]]############
+
+message Mr. Candy notes that blue ninjas can only be defeated by blue candies, and prepares the Candy Scroll for more battles.
+
+message Level 17
+
+#################
+#######r.......b#
+#######.###h###.#
+#qwet##.#b...r#.#
+#[[[[##.#.r.b.#.#
+{nm/\}#.k..p..k.#
+{ssss}#.#.b.r.#.#
+{ssss}#.#r...b#.#
+{ssss}#.###h###.#
+{ssss}#b.......r#
+#]]]]############
+
+message Level 18
+
+#################
+#######r.......b#
+#######..rhhhr..#
+#qwet##..hbbbh..#
+#[[[[##r.......b#
+{nm/\}#....p....#
+{ssss}#r.......b#
+{ssss}#..krrrk..#
+{ssss}#..bkkkb..#
+{ssss}#r.......b#
+#]]]]############
+
+message Level 19
+
+#################
+#######b.......b#
+#######.k..h..k.#
+#qwet##....b....#
+#[[[[##....r....#
+{nm/\}#.hbrprbh.#
+{ssss}#....r....#
+{ssss}#....b....#
+{ssss}#.k..h..k.#
+{ssss}#b.......b#
+#]]]]############
+
+message Level 20
+
+#################
+#######g...g...g#
+#######.p..b....#
+#qwet##...###...#
+#[[[[##..krrrk..#
+{nm/\}#.b#####b.#
+{ssss}#...###...#
+{ssss}#...#.#...#
+{ssss}#...b.b...#
+{ssss}#g...g...g#
+#]]]]############
+
+message Mr. Candy has successfully defeated the ninjas and escaped the prison!
+message However, his work is not yet finished. He must find those who tried to trademark his name and destroy them!
+message With his honor and life at stake, he journeys to his enemy's lair...
+
+message Act 3: The Palace
+
+message Mr. Candy arrives at the palace where his nemesis lives. Inside the palace, he spots some elite green and purple ninjas.
+message Sensing the battles ahead, the Candy Scroll powers up!  It can now hold even more candy!
+
+message Level 21
+
+###################
+#qwet##...........#
+#[[[[##...j.#.l...#
+{nm/\}#...#####...#
+{ssss}#.....#.....#
+{ssss}#...........#
+{ssss}#...........#
+{ssss}#...........#
+{ssss}#.g#g...i#i.#
+{ssss}#.###...###.#
+{ssss}#.g#g...i#i.#
+{ssss}#.....p.....#
+#]]]]##############
+
+message Level 22
+
+###################
+#qwet##....gig....#
+#[[[[##.....g.....#
+{nm/\}#...........#
+{ssss}#.###...###.#
+{ssss}#jrrrj.lbbbl#
+{ssss}######p######
+{ssss}#.###...###.#
+{ssss}#.#.#...#.#.#
+{ssss}#.....g.....#
+{ssss}#g...gig...g#
+{ssss}#ig.gigig.gi#
+#]]]]##############
+
+message Level 23
+
+###################
+#qwet##.........#.#
+#[[[[##.##k###g.#.#
+{nm/\}#.#b..#g#.#.#
+{ssss}#..##...j...#
+{ssss}#b.r#.#..#i##
+{ssss}#r.##r##.#.##
+{ssss}#g.#i#.#...##
+{ssss}#i..p#...#..#
+{ssss}####.#..##l##
+{ssss}#..#.h.#b...#
+{ssss}#....####.#.#
+#]]]]##############
+
+message Mr. Candy notices an increase in ninjas in the next room. Surely they must be guarding something!
+
+message Level 24
+
+###################
+#qwet##...........#
+#[[[[##.##rr.bb##.#
+{nm/\}#.#r.....b#.#
+{ssss}#.r...h...b.#
+{ssss}#.r..j#l..b.#
+{ssss}#p..k###k...#
+{ssss}#.g..l#j..i.#
+{ssss}#.g...h...i.#
+{ssss}#.#g.....i#.#
+{ssss}#.##gg.ii##.#
+{1324}#...........#
+#]]]]##############
+
+message After defeating the ninjas, Mr. Candy stumbles upon one of the most magnificent rooms he has ever seen...the Candy Vault!
+message If he can clear all of this candy, he might be able to defeat the ninjas once and for all!
+
+message Level 25
+
+###################
+#qwet##gb...p...br#
+#[[[[##gb.......br#
+{nm/\}####..g..####
+{ssss}#....r#r....#
+{ssss}#....bbb....#
+{ssss}#r..b#r#b..r#
+{ssss}#....bbb....#
+{ssss}#....r#r....#
+{ssss}####..g..####
+{ssss}#ri.......ig#
+{ssss}#ri.......ig#
+#]]]]##############
+
+message Mr. Candy basks in the glory of his achievement: he has cleared all of the candy!
+message But suddenly, the palace trembles...
+message "YOU! YOU CRUSH MY CANDY!" a voice booms.
+message Startled, Mr. Candy is speechless and looks around for the voice's source...but finds nothing.
+message "YOU CRUSH KING CRUSHER'S CANDY! NOW KING CRUSHER CRUSH YOU!"
+message "EAT NINJA!"
+message Mr. Candy is ambushed! He must defeat King Crusher to escape!
+
+message Level 26
+
+###################
+#qwet##...........#
+#[[[[##...r.r.r...#
+{nm/\}#...rrrrr...#
+{ssss}#...rrrrr...#
+{ssss}#..h#####h..#
+{ssss}#..##.#.##..#
+{ssss}#..#######..#
+{ssss}#..##...##..#
+{ssss}#..#.###.#..#
+{ssss}#..#######..#
+{ssss}#p..#####...#
+#]]]]##############
+
+message "WHAT? YOU DARE DESTROY MY CANDY CROWN?"
+message "NINJAS! DEFEND ME WHILE I CONSTRUCT A NEW CROWN!"
+
+message Level 27
+
+#####################
+#qwet##...g....i....#
+#[[[[##...g.........#
+{nm/\}#...g.........#
+{ssss}#...j...bgb...#
+{ssss}#.p.l.r#####r.#
+{ssss}#.r.k.###.#.#.#
+{ssss}#.r.hb###.#.#b#
+{ssss}#...ji#######i#
+{ssss}#...lb##...##b#
+{ssss}#...k.#######.#
+{ssss}#...h.r#####r.#
+#]]]]################
+
+message "YOU DEFEAT MY NINJAS...BUT TOO LATE!"
+message "CANDY CROWN MARK TWO...ACTIVATE!"
+
+message Level 28
+
+#####################
+#qwet##..ri.........#
+#[[[[##..ir..g.i.r..#
+{nm/\}#..ri..igbrb..#
+{ssss}#..ir..rbgir..#
+{ssss}#..ri..#####..#
+{ssss}#..ir.#.###.#.#
+{ssss}#..ri.##.#.##.#
+{ssss}#..ir.#######.#
+{ssss}#..ri.#.....#.#
+{ssss}#..ir.##...##.#
+{ssss}#p.ri..#####..#
+#]]]]################
+
+message "MY CANDY BARRIER IS BROKEN? IMPOSSIBLE!"
+message "NINJAS, DEFEND ME!"
+message "...NINJAS? YOU THERE?"
+message "NEVER MIND THEN...I'LL JUST FILL YOUR CANDY SCROLL SO YOU CAN'T DO ANYTHING! BWAHAHA!"
+
+message Level 29
+
+#####################
+#qwet##r....ggg....r#
+#[[[[##.....g.g.....#
+{nm/\}#..i#######i..#
+{1334}#..##.###.##..#
+{3114}#..###.#.###..#
+{1332}#i.#########.i#
+{3112}#..#########..#
+{1334}#..##.....##..#
+{3114}#..##.....##..#
+{1332}#..###...###..#
+{3112}#p.i#######i.r#
+#]]]]################
+
+message "NO...STRENGTH...FLAGGING... ACTIVATE TOTAL CANDY TRANSFORMATION!"
+message This is it! Take down King Crusher once and for all, and Mr. Candy can take back his name!
+
+message Level 30
+
+#####################
+#qwet##......p......#
+#[[[[##...rrrrrrr...#
+{nm/\}#..rr..r..rr..#
+{ssss}#..rr..r..rr..#
+{ssss}#..rrrrrrrrr..#
+{ssss}#..rrrrrrrrr..#
+{ssss}#..rrrrrrrrr..#
+{ssss}#..rrr...rrr..#
+{ssss}#..rr.rrr.rr..#
+{ssss}#...rrrrrrr...#
+{ssss}#.............#
+#]]]]################
+
+message Mr. Candy has defeated King Crusher and has taken back his name! Future generations of Candies can live in peace, all thanks to the valiant efforts of Mr. Candy...and you, you wonderful person.
+message Here ends the saga of Mr. Candy and the Candy Scroll.
+message Thanks for playing!
+
+title Several Rigid Bodies
+author increpare
+homepage www.puzzlescript.net
+
+========
+OBJECTS
+========
+
+Background
+darkgreen
+
+Target
+YELLOW
+
+Player
+PINK
+
+RedCrate q
+RED
+
+GreenCrate w
+Green
+
+BlueCrate e
+Blue
+
+SmallCrate r
+Purple
+.....
+.000.
+.000.
+.000.
+.....
+
+Wall
+DARKBROWN
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Player
+bigcrate = redcrate or greencrate or bluecrate
+Crate = smallcrate or bigcrate
+O = Target
+
+=========
+SOUNDS
+=========
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Target
+Player, Wall, Crate
+
+======
+RULES
+======
+
+startloop
+
+[ > Player | Smallcrate ] -> [ > Player | > SmallCrate ]
+
+[ >  Player | RedCrate ] -> [  >  Player | > RedCrate  ]
++ rigid [ moving RedCrate | RedCrate ] -> [ moving RedCrate | moving RedCrate ]
++ [ >  Crate | RedCrate ] -> [  >  Crate | > RedCrate  ]
+
+[ >  Player | GreenCrate ] -> [  >  Player | > GreenCrate  ]
++ rigid [ moving GreenCrate | GreenCrate ] -> [ moving GreenCrate | moving GreenCrate ]
++ [ >  Crate | GreenCrate ] -> [  >  Crate | > GreenCrate  ]
+
+
+[ >  Player | BlueCrate ] -> [  >  Player | > BlueCrate  ]
++ rigid [ moving BlueCrate | BlueCrate ] -> [ moving BlueCrate | moving BlueCrate ]
++ [ >  Crate | BlueCrate ] -> [  >  Crate | > BlueCrate  ]
+
+[ > Crate | SmallCrate ] -> [  > Crate | > SmallCrate ]
+
+endloop
+
+==============
+WINCONDITIONS
+==============
+
+=======
+LEVELS
+=======
+
+...............
+...............
+...............
+.....#.........
+...............
+...r.r.........
+..P....#.......
+..qq..w.eer....
+..q.wwweer.....
+..q.#..........
+...............
+...............
+...............
+
+
+
+title Modality
+author Sean Barrett
+homepage www.silverspaceship.com
+background_color #603060
+noaction
+
+========
+OBJECTS
+========
+
+White
+White
+
+Black
+#202020
+
+
+Grey
+#505050 #a0a0a0
+01010
+10101
+01010
+10101
+01010
+
+
+Background
+Red
+
+Target
+#3030a0
+.....
+.000.
+.0.0.
+.000.
+.....
+
+Player
+Black Orange #c0c0c0 Blue
+.000.
+.111.
+22222
+.333.
+.3.3.
+
+Crate
+Orange Yellow
+00000
+0...0
+0...0
+0...0
+00000
+
+
+=======
+LEGEND
+=======
+
+. = Black
++ = White
+g = Grey
+p = Player and Black
+Q = Player and White
+* = Crate and Black
+@ = Crate and White
+t = Target and Black
+U = Target and White
+
+Nonwhite = Black or Grey
+Nonblack = White or Grey
+
+=======
+SOUNDS
+=======
+
+================
+COLLISIONLAYERS
+================
+
+Background
+White, Black, Grey
+Target
+Player, Crate
+
+======
+RULES
+======
+
+[ >  Player Nonblack | Crate Nonblack ] -> [  > Player Nonblack | > Crate Nonblack ]
+[ >  Player Black | Crate Black ] -> [  > Player Black | > Crate Black ]
+[ > Player White | Black ] -> CANCEL
+[ > Player Black | White ] -> CANCEL
+
+==============
+WINCONDITIONS
+==============
+
+All Crate on Target
+
+=======
+LEVELS
+=======
+
+
+u+...
+@+g.p
++++..
+
+++++q
++.*.+
+u++.+
++g..+
++++++
+
+......
+.++.+.
+.+q++.
+..u.++
+g.*.++
+++++++
+
+...t.......
+...+.......
+.+.+.+...++
+.+.++++..++
+q@g++..++++
+.+.++...+++
+.+.+....+++
+.+......+++
+.++++++++++
+
+
+
+title Simple Block Pushing Game
+author David Skinner
+homepage www.puzzlescript.net
+zoomscreen 3x3
+========
+OBJECTS
+========
+
+Background
+LIGHTGREEN GREEN
+11111
+01111
+11101
+11111
+10111
+
+
+Target
+DarkBlue
+.....
+.000.
+.0.0.
+.000.
+.....
+
+Wall
+BROWN DARKBROWN
+00010
+11111
+01000
+11111
+00010
+
+Player
+Black Orange White Blue
+.000.
+.111.
+22222
+.333.
+.3.3.
+
+Crate
+Orange
+00000
+0...0
+0...0
+0...0
+00000
+
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Player
+* = Crate
+@ = Crate and Target
+O = Target
+
+
+=======
+SOUNDS
+=======
+
+Crate MOVE 36772507
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Target
+Player, Wall, Crate
+
+======
+RULES
+======
+
+[ >  Player | Crate ] -> [  >  Player | > Crate  ]
+
+==============
+WINCONDITIONS
+==============
+
+All Target on Crate
+
+=======
+LEVELS
+=======
+
+
+####..
+#.O#..
+#..###
+#@P..#
+#..*.#
+#..###
+####..
+
+
+######
+#....#
+#.#P.#
+#.*@.#
+#.O@.#
+#....#
+######
+
+
+title Simple Block Pushing Game
+author increpare
+homepage www.puzzlescript.net
+
+========
+OBJECTS
+========
+
+Background
+LIGHTGREEN GREEN
+11111
+01111
+11101
+11111
+10111
+
+
+Wall
+BROWN DARKBROWN
+00010
+11111
+01000
+11111
+00010
+
+Player
+Black Orange White Blue
+.000.
+.111.
+22222
+.333.
+.3.3.
+
+LeftPerson
+Orange Yellow
+...0.
+..0..
+.0...
+..0..
+...0.
+
+
+RightPerson
+Orange Yellow
+.0...
+..0..
+...0.
+..0..
+.0...
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Player
+L = LeftPerson
+R = RightPerson
+
+=======
+SOUNDS
+=======
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Player, Wall, LeftPerson, RightPerson
+
+======
+RULES
+======
+
+[ stationary LeftPerson ] -> [ left LeftPerson ]
+[ stationary RightPerson ] -> [ right RightPerson ]
+
+right [ wall |< LeftPerson ] -> [ wall | > RightPerson ]
+right [ > RightPerson | Wall ] -> [ < LeftPerson | Wall ]
+
+==============
+WINCONDITIONS
+==============
+
+
+=======
+LEVELS
+=======
+
+
+####..
+#.R#..
+#..###
+#LP..#
+#..R.#
+#..###
+####..
+
+
+
+title constellation z
+author increpare
+homepage www.increpare.com
+
+(
+
+A port of the first few levels of my game, the full version of which is
+http://ded.increpare.com/~locus/constellationz/
+
+)
+
+========
+OBJECTS
+========
+
+Background
+black
+
+BorderTile
+red
+
+Teleport
+white
+
+Target
+blue
+.....
+.000.
+.000.
+.000.
+.....
+
+Player
+pink
+.....
+.000.
+.000.
+.000.
+.....
+
+AltPlayer
+black
+
+=======
+LEGEND
+=======
+
+# = BorderTile
+. = Background
+P = Player
+O = Teleport
+t = Target
+
+=========
+SOUNDS
+=========
+
+sfx1 44641500 (Teleport)
+startgame 26858107
+startlevel 34443107
+endlevel 34292905
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Teleport,BorderTile, Target
+Player, AltPlayer
+
+======
+RULES
+======
+
+late [ Player Teleport ] -> [ AltPlayer Teleport ] sfx1
+
+late [ AltPlayer Teleport ] [ Teleport no AltPlayer ] -> [ AltPlayer Teleport ] [ Teleport Player ] 
+late [ AltPlayer ] -> [ ] 
+
+late [ Player BorderTile ] -> cancel
+
+==============
+WINCONDITIONS
+==============
+
+some Player
+all Player on Target
+all Target on Player
+
+=======
+LEVELS
+=======
+
+##############
+#............#
+#............#
+#............#
+#............#
+#............#
+#............#
+#..P....t....#
+#............#
+#............#
+#............#
+#............#
+#............#
+##############
+
+##############
+#............#
+#............#
+#............#
+#............#
+#............#
+#............#
+#..P.o..O..t.#
+#............#
+#............#
+#............#
+#............#
+#............#
+##############
+
+##############
+#............#
+#............#
+#............#
+#............#
+#.......O.t..#
+#............#
+#..P....O....#
+#............#
+#.......O.t..#
+#............#
+#............#
+#............#
+##############
+
+##############
+#............#
+#............#
+#............#
+#............#
+#............#
+#............#
+#..P...O...t.#
+#............#
+#............#
+#............#
+#............#
+#............#
+##############
+
+##############
+#............#
+#............#
+#.......O.t..#
+#............#
+#.......O.t..#
+#............#
+#..P....O.t..#
+#............#
+#.......O.t..#
+#............#
+#.......O....#
+#............#
+##############
+
+###################################
+#............O...O...O............#
+#............O...O...O............#
+#............O...O...O............#
+#............O...O...O............#
+#............O...O...O............#
+#............O...O...O............#
+#............O...O...O............#
+#............O...O...O............#
+#..P.P.......OOOOOOOOO............#
+#................O........T.T.....#
+#..P.P.......O.O.O.O.O............#
+#.........................T.T.....#
+#............O.O.O.O.O............#
+#............O.......O............#
+#............OOOOOOOOO............#
+#............O...O...O............#
+#............O...O...O............#
+#............O...O...O............#
+#............O...O...O............#
+#............O...O...O............#
+#............O...O...O............#
+#............O...O...O............#
+#............O...O...O............#
+###################################
+
+####################################
+#..................................#
+#...........p......................#
+#..................................#
+#.................o................#
+#..................................#
+#..................................#
+#..................................#
+#..................................#
+#............o....O....t.........t.#
+#..................................#
+#..................................#
+#..................................#
+#..................................#
+#..................................#
+#..................................#
+#..................................#
+####################################
+
+####################################
+#..................................#
+#..................................#
+#....p.............................#
+#..................................#
+#..................................#
+#.......o....o....t....t....t......#
+#..................................#
+#..................................#
+#..................................#
+#..................................#
+#.......o....o....t.........t......#
+#..................................#
+#..................................#
+#..................................#
+#..................................#
+#..................................#
+####################################
+
+##############
+#............#
+#............#
+#............#
+#......o.....#
+#............#
+#......o.....#
+#............#
+#....o...o...#
+#............#
+#............#
+#............#
+#............#
+#......P.....#
+#............#
+#............#
+#....t...t...#
+#............#
+#....t.t.t...#
+#............#
+#....t...t...#
+#............#
+#............#
+#............#
+##############
+
+####################################
+#..................................#
+#..............tt...tt...tt........#
+#..................................#
+#..................................#
+#..................................#
+#..................................#
+#..................................#
+#.............o....o..o............#
+#..................................#
+#..................................#
+#..................................#
+#..................................#
+#..................................#
+#................pppp..............#
+#..................................#
+#..................................#
+####################################
+
+##############
+#............#
+#............#
+#............#
+#............#
+#............#
+#.p..........#
+#.p..........#
+#.p..........#
+#.p..........#
+#.p....o.....#
+#.p..........#
+#.p....o..t..#
+#.p..........#
+#.p..........#
+#.p....o.....#
+#.p..........#
+#.p..........#
+#.p..........#
+#.p..........#
+#............#
+#............#
+#............#
+#............#
+#............#
+##############
+
+message congratulations!
+
+
+USER PROMPT:
+The following PuzzleScript game code:
+```plaintext
+title Mechanimal
+author Anonymous
+homepage www.puzzlescript.net
+
+========
+OBJECTS
+========
+
+Background
+DarkGrey
+.....
+.....
+.....
+.....
+.....
+
+Player
+Blue LightBlue
+.....
+..0..
+.111.
+..0..
+.....
+
+Mechanimal
+Cyan Blue
+.....
+..1..
+.111.
+..1..
+.....
+
+Constructed
+Magenta Pink
+.....
+..0..
+.020.
+..0..
+.....
+
+Wall
+DarkGreen
+00000
+02220
+02320
+02220
+00000
+
+Goal
+Yellow
+.....
+..0..
+.111.
+..0..
+.....
+
+Switch
+Orange
+.....
+.....
+..0..
+.....
+.....
+
+Bridge
+Brown
+.....
+.....
+.....
+.....
+.....
+
+=======
+LEGEND
+=======
+
+. = Background
+P = Player
+M = Mechanimal
+C = Constructed
+# = Wall
+G = Goal
+^ = Switch
+= = Bridge
+
+=======
+SOUNDS
+=======
+
+Constructed Transform 83866509
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Bridge
+Goal, Switch
+Player, Mechanimal, Constructed, Wall
+
+======
+RULES
+======
+
+[ > Player | Mechanimal ] -> [ > Player | > Constructed ] sfx0
+
+[ Player | Switch ] -> [ Player | = ]
+late no Player [ = ] -> [ ^ ]
+
+==============
+WINCONDITIONS
+==============
+
+All Player on Goal
+
+=======
+LEVELS
+=======
+
+#..#..#
+#P.#.M#
+#..^..#
+#######
+
+#####
+#.P.#
+#.#.#
+#M#.#
+####G
+
+#####
+#.C.#
+#.#.#
+#.#M#
+####G
+
+message Thank you for playing! Take care of the mechanimals!
+
+```
+produced the following console output:
+=================================
+line 26 : Was looking for color for object MECHANIMAL, got "cyan " instead.
+line 28 : Trying to access color number 1 from the color palette of sprite MECHANIMAL, but there are only 1 defined in it.
+line 29 : Trying to access color number 1 from the color palette of sprite MECHANIMAL, but there are only 1 defined in it.
+line 30 : Trying to access color number 1 from the color palette of sprite MECHANIMAL, but there are only 1 defined in it.
+line 34 : Was looking for color for object CONSTRUCTED, got "magenta " instead.
+line 37 : Trying to access color number 2 from the color palette of sprite CONSTRUCTED, but there are only 1 defined in it.
+too many errors, aborting compilation
+Errors detected during compilation; the game may not work correctly.
+Return a repaired version of the code that addresses these errors.  The game should be a simplified `demake` of the following game idea: **Mechanimal:** Befriend mechanical wildlife and construct them into powerful counterparts to solve environmental puzzles on a lost planet.. Return your code in full, inside a ```plaintext code block.

@@ -1,0 +1,103 @@
+```plaintext
+title Time Trinkle
+author YourName
+homepage www.example.com
+
+========
+OBJECTS
+========
+
+Background
+Black
+
+Tile_Future
+LightBlue
+.....
+..0..
+.....
+.....
+.....
+
+Tile_Present
+LightGreen
+.....
+..1..
+.....
+.....
+.....
+
+Tile_Past
+Yellow
+.....
+..2..
+.....
+.....
+.....
+
+Player
+Orange
+..0..
+.010.
+..0..
+.....
+.....
+
+=======
+LEGEND
+=======
+
+. = Background
+P = Player
+F = Tile_Future
+C = Tile_Present
+A = Tile_Past
+
+CurrentTile = Tile_Present or Tile_Future or Tile_Past
+
+=========
+SOUNDS
+=========
+
+Flip 60452708
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Player, CurrentTile
+
+======
+RULES
+======
+
+[ Player | Future ] -> [ Player | Present ] SFX0
+[ Player | Present ] -> [ Player | Past ] SFX0
+[ Player | Past ] -> [ Player | Future ] SFX0
+
+==============
+WINCONDITIONS
+==============
+
+all Present on Background
+
+=======
+LEVELS
+=======
+
+..FFF..
+..FPF..
+..FFF..
+
+..AAA..
+..ACP..
+..AAA..
+
+..FCA..
+..PAP..
+..CAF..
+
+message Welcome to Time Trinkle! Flip tiles to their proper place in time.
+```
+
+This game features a simple concept where the player is a character that can move around and interact with tiles representing different time periods: Future, Present, and Past. The objective is to manipulate these time tiles back to their present state to win the level. The player flips the tiles by stepping on them, and each flip is accompanied by a sound. The game assumes all time tiles should be in the Present state on Background to win. The initial levels are designed to introduce the mechanics of flipping tiles and reach the win condition.

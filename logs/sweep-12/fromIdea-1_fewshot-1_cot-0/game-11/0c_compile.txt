@@ -1,0 +1,36 @@
+=================================
+line 95 : unexpected sound token "unlockdoor".
+line 96 : unexpected sound token "collecttreasure".
+line 105 : Object "TRAP" included in multiple collision layers ( layers #3, #4 ). You should fix this!
+line 126 : Name "protection", referred to in a rule, does not exist.
+line 129 : Name "no", referred to in a rule, does not exist.
+line 129 : Name "on", referred to in a rule, does not exist.
+line 149 : Maps must be rectangular, yo (In a level, the length of each row must be the same).
+line 60 : Sprite graphics must be 5 wide and 5 high exactly.
+line 148 : Error, symbol " ", used in map, not found.
+line 154 : Error, symbol " ", used in map, not found.
+line 115 : In a rule, if you specify a movement, it has to act on an object.
+line 115 : Error, malformed cell rule - encountered a "["" before previous bracket was closed
+line 115 : In a rule, each pattern to match on the left must have a corresponding pattern on the right of equal length (number of cells).
+You have an totally empty pattern on the left-hand side.  This will match *everything*.  You certainly don't want this.
+line 116 : In a rule, if you specify a movement, it has to act on an object.
+line 116 : Error, malformed cell rule - encountered a "["" before previous bracket was closed
+line 116 : In a rule, each pattern to match on the left must have a corresponding pattern on the right of equal length (number of cells).
+line 117 : In a rule, if you specify a movement, it has to act on an object.
+line 117 : Error, malformed cell rule - encountered a "["" before previous bracket was closed
+line 117 : In a rule, each pattern to match on the left must have a corresponding pattern on the right of equal length (number of cells).
+line 118 : In a rule, if you specify a movement, it has to act on an object.
+line 118 : Error, malformed cell rule - encountered a "["" before previous bracket was closed
+line 118 : In a rule, each pattern to match on the left must have a corresponding pattern on the right of equal length (number of cells).
+line 120 : In a rule, each pattern to match on the left must have a corresponding pattern on the right of equal length (number of cells).
+line 122 : Error, when specifying a rule, the number of matches (square bracketed bits) on the left hand side of the arrow must equal the number on the right
+line 126 : A rule has to have an arrow in it.  There's no arrow here! Consider reading up about rules - you're clearly doing something weird
+line 126 : The start of a rule must consist of some number of directions (possibly 0), before the first bracket, specifying in what directions to look (with no direction specified, it applies in all four directions).  It seems you've just entered "PROTECTION".
+line 126 : This rule refers to nothing.  What the heck? :O
+line 129 : A rule has to have an arrow in it.  There's no arrow here! Consider reading up about rules - you're clearly doing something weird
+line 129 : The start of a rule must consist of some number of directions (possibly 0), before the first bracket, specifying in what directions to look (with no direction specified, it applies in all four directions).  It seems you've just entered "NO".
+line 129 : The start of a rule must consist of some number of directions (possibly 0), before the first bracket, specifying in what directions to look (with no direction specified, it applies in all four directions).  It seems you've just entered "PLAYER".
+line 129 : The start of a rule must consist of some number of directions (possibly 0), before the first bracket, specifying in what directions to look (with no direction specified, it applies in all four directions).  It seems you've just entered "ON".
+line 129 : The start of a rule must consist of some number of directions (possibly 0), before the first bracket, specifying in what directions to look (with no direction specified, it applies in all four directions).  It seems you've just entered "TRAP".
+line 129 : This rule refers to nothing.  What the heck? :O
+Errors detected during compilation; the game may not work correctly.

@@ -452,7 +452,7 @@ async function solveLevel(level) {
     // const action_seq = action_seqs.shift();
     for (const move of Array(5).keys()) {
       if (i > 1_000_000) {
-        console.log('Exceeded 2M iterations. Exiting.');
+        console.log('Exceeded 1M iterations. Exiting.');
         return [-1, i];
       }
       restoreLevel(level);
@@ -494,7 +494,8 @@ async function solveLevel(level) {
 }
 
 
-async function genGame(genMode, parents, saveDir, seed, fewshot, cot, maxGenAttempts=10) {
+async function genGame(genMode, parents, saveDir, seed, fewshot, cot,
+    fromIdea, idea='', maxGenAttempts=10) {
   consoleText = '';
   nGenAttempts = 0;
   code = '';
@@ -518,6 +519,8 @@ async function genGame(genMode, parents, saveDir, seed, fewshot, cot, maxGenAtte
         gen_mode: genMode,
         parents: parents,
         code: code,
+        from_idea: fromIdea,
+        game_idea: idea,
         console_text: consoleText,
         solver_text: solverText,
         compilation_success: compilationSuccess,
@@ -683,24 +686,7 @@ async function evolve() {
 
 const seed = 12;
 
-async function sweep() {
-  results = {};
-  for (var fewshot_i = 0; fewshot_i < 2; fewshot_i++) {
-    for (var cot_i = 0; cot_i < 2; cot_i++) {
-      results[`fewshot-${fewshot_i}_cot-${cot_i}`] = [];
-      for (var gameIdx = 0; gameIdx < 20; gameIdx++) {
-        saveDir = `sweep-${seed}`
-        gameStr = `${saveDir}/fewshot-${fewshot_i}_cot-${cot_i}/game-${gameIdx}`;
-        cot = cot_i == 1
-        fewshot = fewshot_i == 1
-        console.log(`Generating game ${gameStr}`);
-        gameInd = await genGame('init', [], gameStr,
-          gameIdx, fewshot, cot);
-        results[`fewshot-${fewshot_i}_cot-${cot_i}`].push(gameInd);
-      }
-    }
-  }
-  // Call `save_sweep_stats function in python
+async function saveStats(saveDir, results) {
   const response = await fetch('/save_sweep_stats', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
@@ -711,7 +697,61 @@ async function sweep() {
   });
 }
 
-sweep()
+async function sweep() {
+  results = {};
+    for (var fewshot_i = 0; fewshot_i < 2; fewshot_i++) {
+      for (var cot_i = 0; cot_i < 2; cot_i++) {
+        results[`fewshot-${fewshot_i}_cot-${cot_i}`] = [];
+        for (var gameIdx = 0; gameIdx < 20; gameIdx++) {
+          saveDir = `sweep-${seed}`
+          gameStr = `${saveDir}/fewshot-${fewshot_i}_cot-${cot_i}/game-${gameIdx}`;
+          cot = cot_i == 1
+          fewshot = fewshot_i == 1
+          console.log(`Generating game ${gameStr}`);
+          gameInd = await genGame('init', [], gameStr,
+            gameIdx, fewshot, cot, fromIdea=false, idea='');
+          results[`fewshot-${fewshot_i}_cot-${cot_i}`].push(gameInd);
+        }
+      }
+  }
+  saveStats(saveDir, results);
+}
+
+brainstormSeed = 0;
+
+async function fromIdeaSweep() {
+  // Open the ideas json
+  const response = await fetch('/load_ideas', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ brainstorm_seed: brainstormSeed }),
+  });
+  ideas = await response.json()
+  results = {};
+  fewshot_i = 1;
+  fromIdea_i = 1;
+  for (var cot_i = 0; cot_i < 2; cot_i++) {
+    results[`fewshot-${fewshot_i}_cot-${cot_i}`] = [];
+    for (var gameIdx = 0; gameIdx < 20; gameIdx++) {
+      saveDir = `sweep-${seed}`
+      gameStr = `${saveDir}/fromIdea-${fromIdea_i}_fewshot-${fewshot_i}_cot-${cot_i}/game-${gameIdx}`;
+      fewshot = fewshot_i == 1
+      cot = cot_i == 1
+      fromIdea = fromIdea_i == 1
+      console.log(`Generating game ${gameStr}`);
+      ideaIdx = gameIdx % ideas.length;
+      idea = ideas[ideaIdx];
+      gameInd = await genGame('init', [], gameStr,
+        gameIdx, fewshot, cot, fromIdea, idea);
+      results[`fewshot-${fewshot_i}_cot-${cot_i}`].push(gameInd);
+    }
+  }
+  saveStats(saveDir + '/fromIdea', results);
+}
+
+// sweep()
+fromIdeaSweep()
+
 // genGame('init', [], 'test_99', 99, fewshot=true, cot=true, maxGenAttempts=20);
 // evolve();
 // playTest();

@@ -1,0 +1,119 @@
+```plaintext
+title Haunted Hues
+author Generated with AI
+
+========
+OBJECTS
+========
+
+BackgroundNeutral
+LightGray Gray
+11011
+10101
+01110
+10101
+11011
+
+BackgroundVibrant
+Orange Yellow
+11011
+10101
+01110
+10101
+11011
+
+PaletteTile
+Transparent Gray
+.....
+.1.1.
+11111
+.1.1.
+.....
+
+ActivePaletteTile
+Transparent Orange
+.....
+.1.1.
+11111
+.1.1.
+.....
+
+Player
+Black LightBlue
+.000.
+.0.0.
+00000
+.0.0.
+.0.0.
+
+Wall
+DarkGray Black
+00010
+11111
+01000
+11111
+00010
+
+========
+LEGEND
+=======
+
+n = BackgroundNeutral
+v = BackgroundVibrant
+# = Wall
+P = Player
+t = PaletteTile
+a = ActivePaletteTile
+. = BackgroundNeutral
+
+=========
+SOUNDS
+=========
+
+SFX0 123413
+
+================
+COLLISIONLAYERS
+================
+
+BackgroundNeutral, BackgroundVibrant
+Player, Wall, PaletteTile, ActivePaletteTile
+
+======
+RULES
+======
+
+[ > Player | t ] -> [ > Player | a ] sfx0
+[ a n ] -> [ a v ]
+
+==============
+WINCONDITIONS
+==============
+
+all n -> v
+
+=======
+LEVELS
+=======
+
+#####
+#PtP#
+#.#.#
+#Pa.#
+#####
+
+#####n####
+#P....t..#
+#..####n##
+#......t##
+###n##n###
+###....###
+#n#####..#
+###....###
+
+``` 
+
+This fixed version addresses the following issues:
+1. Changed the object name from "T" to "t" and "A" to "a" to avoid using reserved keywords.
+2. Added a proper background definition for easier checking of win conditions. (Changed the win condition to work with all "n" transformed into "v".)
+3. Corrected the rule by ensuring the right side has a complete pattern to match the left side's object length and action pattern.

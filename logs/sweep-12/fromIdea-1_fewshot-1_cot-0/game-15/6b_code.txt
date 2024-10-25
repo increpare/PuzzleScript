@@ -1,0 +1,133 @@
+Certainly! Here is a repaired version of the code for the "Haunted Hues" game. The issue was that the "endlevel" should be part of the win condition rather than being placed inside the rule. The corrected version will have the "endlevel" trigger based on a win condition, which involves the player being on the specified target. Here's the revised code:
+
+```plaintext
+title Haunted Hues
+author PuzzleMaster
+homepage www.puzzlescript.net
+
+========
+OBJECTS
+========
+
+Background
+Black
+
+ColorTile
+Grey
+.....
+.000.
+.000.
+.000.
+.....
+
+RevealedTile
+Red
+.....
+.0.0.
+.....
+.0.0.
+.....
+
+RevealedTile2
+Green
+.....
+.0.0.
+.....
+.0.0.
+.....
+
+RevealedTile3
+Blue
+.....
+.0.0.
+.....
+.0.0.
+.....
+
+Player
+White
+..0..
+.000.
+00000
+..0..
+.0.0.
+
+Target
+White
+..0..
+.0.0.
+.....
+.0.0.
+..0..
+
+Wall
+#333333
+.....
+.....
+.....
+.....
+.....
+
+=======
+LEGEND
+=======
+
+. = Background
+P = Player
+C = ColorTile
+R = RevealedTile
+G = RevealedTile2
+B = RevealedTile3
+T = Target
+W = Wall
+
+Revealed = RevealedTile or RevealedTile2 or RevealedTile3
+
+=======
+SOUNDS
+=======
+
+player MOVE 3306607
+startlevel 91466748
+endlevel 79616604
+
+================
+COLLISIONLAYERS
+================
+
+Background
+ColorTile
+Revealed
+Target
+Player
+Wall
+
+======
+RULES
+======
+
+[Player | ColorTile] -> [Player | RevealedTile]
+[Player | RevealedTile] -> [Player | RevealedTile2]
+[Player | RevealedTile2] -> [Player | RevealedTile3]
+
+==============
+WINCONDITIONS
+==============
+
+All Target on Player
+
+=======
+LEVELS
+=======
+
+message Level 1: Unlock the colors of life!
+
+WWWWWWW
+W.....W
+W..C..W
+W.PT..W
+WWWWWWW
+
+```
+
+In this version, the rules still exist to change the `ColorTile` to different revealed tiles when the player steps on them. The win condition now correctly checks for all targets having a player on them, at which point the game will recognize the level as complete and execute `endlevel` correctly.

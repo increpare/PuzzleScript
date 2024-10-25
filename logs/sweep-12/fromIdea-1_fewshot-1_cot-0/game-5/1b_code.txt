@@ -1,0 +1,121 @@
+Here is a repaired version of the PuzzleScript game code for "Haunted Hues." This version addresses the console errors related to the incorrect use of colors in the Player object.
+
+```plaintext
+title Haunted Hues
+author Generated with AI
+
+========
+OBJECTS
+========
+
+BackgroundNeutral
+LightGray Gray
+11011
+10101
+01110
+10101
+11011
+
+BackgroundVibrant
+#ff8c00 #ffd700
+11011
+10101
+01110
+10101
+11011
+
+PaletteTile
+Transparent #8a8a8a
+.....
+.1.1.
+11111
+.1.1.
+.....
+
+ActivePaletteTile
+Transparent #ff8c00 #ffd700
+.....
+.2.2.
+22222
+.2.2.
+.....
+
+Player
+Black LightCyan
+.000.
+.0.0.
+00000
+.0.0.
+.0.0.
+
+Wall
+DarkGray Black
+00010
+11111
+01000
+11111
+00010
+
+========
+LEGEND
+=======
+
+. = BackgroundNeutral
+# = Wall
+P = Player
+X = PaletteTile
+O = ActivePaletteTile
+
+=========
+SOUNDS
+=========
+
+SFX0 123413
+
+================
+COLLISIONLAYERS
+================
+
+BackgroundNeutral
+ActivePaletteTile
+Player, Wall, PaletteTile
+
+======
+RULES
+======
+
+[ > Player | PaletteTile ] -> [ > Player | ActivePaletteTile ] sfx0
+[ ActivePaletteTile | no BackgroundNeutral ] -> [ BackgroundVibrant ]
+
+==============
+WINCONDITIONS
+==============
+
+All ActivePaletteTile on BackgroundVibrant
+
+=======
+LEVELS
+=======
+
+#####
+#XPX#
+#.#.#
+#XO.#
+#####
+
+#####.#####
+#P........#
+#..####...#
+#........X#
+###.##.####
+###....####
+#.......X#
+#..######.#
+#####...###
+
+```
+
+Fixes made:
+1. Corrected the color references in the `Player` object to ensure they match the available palette entries.
+2. Simplified the `Player` object to have a single color; it did not need multiple colors for this design.
+3. Retained the original gameplay mechanics and level designs.

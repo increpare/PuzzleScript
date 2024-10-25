@@ -1,0 +1,110 @@
+```plaintext
+title Pirate Plunge
+author Game Designer
+homepage www.puzzlescript.net
+
+========
+OBJECTS
+========
+
+Background
+blue cyan
+11111
+01111
+11101
+11111
+10111
+
+Pirate
+black orange
+..0..
+00000
+..0..
+.000.
+.0.0.
+
+Rival
+darkred white
+.000.
+.020.
+..0..
+00000
+.0.0.
+
+Treasure
+yellow
+.000.
+0...0
+0...0
+0...0
+.000.
+
+Sea
+darkblue
+.....
+.....
+.....
+.....
+.....
+
+=======
+LEGEND
+=======
+
+. = Background
+P = Pirate
+R = Rival
+T = Treasure
+~ = Sea
+
+=========
+SOUNDS
+=========
+
+Treasure collect 76935307
+Rival move 52519108
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Sea
+Treasure
+Player, Rival
+
+======
+RULES
+======
+
+[ > Player | No Sea | Treasure ] -> [ > Player | No Sea ]
+
+// Rivals move randomly
+[ stationary Rival ] -> [ randomDir Rival ]
+
+// Prevent players from moving onto rivals
+[ > Player | Rival ] -> [ Player | Rival ]
+
+// Prevent players from moving onto sea
+[ > Player | Sea ] -> [ Player | Sea ]
+
+==============
+WINCONDITIONS
+==============
+
+All Treasure
+
+=======
+LEVELS
+=======
+
+message Welcome to Pirate Plunge! Navigate carefully and collect the treasure!
+#########
+#.......#
+#.T...~.#
+#....~..#
+#...~.~T#
+#...~~~.#
+#..P~R..#
+#########
+```

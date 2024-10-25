@@ -1,0 +1,133 @@
+```plaintext
+title Railway Riddle
+author PuzzleScript Community
+homepage www.puzzlescript.net
+
+========
+OBJECTS
+========
+
+Background
+lightgreen green
+00000
+00110
+11001
+10100
+01010
+
+Town
+white red
+..0..
+.000.
+00000
+.000.
+..0..
+
+Mountain
+darkgrey darkgrey
+.....
+..0..
+.000.
+00000
+11000
+
+Train
+blue black
+.000.
+.0.0.
+.000.
+.....
+.....
+
+Track
+grey darkgrey
+.....
+..0..
+.000.
+..0..
+.....
+
+TrainTrack
+grey darkgrey
+.....
+..0..
+12321
+..0..
+.....
+
+Water
+blue white
+20010
+02002
+12020
+00220
+02002
+
+Switch
+red black
+.....
+..1..
+.....
+.1...
+.....
+
+=======
+LEGEND
+=======
+
+. = Background
+T = Town
+^ = Mountain
+| = Track
+# = TrainTrack
+~ = Water
+x = Switch
+
+=======
+SOUNDS
+=======
+
+Train move 91301709
+SFX1 46905909
+
+================
+COLLISIONLAYERS
+================
+
+Background, Water
+Mountain
+Town
+Track, Switch
+Train
+
+======
+RULES
+======
+
+[ > Train | Track ] -> [ | Train ] sfx0
+[ Train | Track ] -> [ Action Train ] sfx1
+[ Action Train | Town ] -> [ Action Train ] WIN
+
+# Switch flips track direction
+[ Player | Switch ] -> [ Player | Action Switch ]
+[ Action Switch | Track ] _ [ | Reverse Track ]
+
+==============
+WINCONDITIONS
+==============
+
+All Train on Track
+
+=======
+LEVELS
+=======
+
+######
+#.T^##
+#..|##
+#~~|##
+#.^|##
+#X|##x
+#T####
+```
+This game is a simplified rail puzzle where the player must direct the train to connect towns via track construction. Players use switches to change track directions, avoiding mountains and water obstacles, and must complete the connection before time runs out.

@@ -1,0 +1,141 @@
+```plaintext
+Title Crops & Castles
+Author Your Name
+homepage www.yourwebsite.com
+
+========
+OBJECTS
+========
+
+Background
+LIGHTGREEN GREEN
+11111
+01111
+11101
+11111
+10111
+
+Castle
+DARKGRAY GRAY
+.....
+.111.
+.111.
+.111.
+.....
+
+Farm
+BROWN DARKBROWN
+.....
+.111.
+.111.
+.111.
+.....
+
+Player
+Black Orange White Blue
+.000.
+.111.
+22222
+.333.
+.3.3.
+
+Crop
+LightGreen White
+.....
+..0..
+..1..
+..0..
+.....
+
+Spell
+Purple Black
+..1..
+.111.
+11111
+.111.
+.....
+
+Enemy
+Red DarkRed
+.111.
+.111.
+11111
+.111.
+.1.1.
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Castle
+C = Crop
+S = Spell
+E = Enemy
+F = Farm
+P = Player
+
+=======
+SOUNDS
+=======
+
+Crop Harvest 12122101
+Player MOVE 88351232
+Enemy MOVE 55123109
+Spell Create 99321211
+Win 36972112
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Crop, Spell, Enemy
+Player, Castle, Farm
+
+======
+RULES
+======
+
+[ > Player | Crop ] -> [ > Player | Farm ] Sfx0
+right [ > Player | Spell ] -> [ > Player ]
+
+[ > Enemy | # ] -> [ > Enemy | # ] 
+[ > Player | Enemy ] -> RESTART 
+[ > Enemy ] -> [ > Enemy ]
+
+==============
+WINCONDITIONS
+==============
+
+No Enemy
+
+=======
+LEVELS
+=======
+
+#######
+#.....#
+#..P..#
+#..#..#
+#..F..#
+#..E..#
+#######
+
+#########
+#.......#
+#.C.E...#
+#.......#
+#..F.P..#
+#.......#
+#...E...#
+#########
+
+message Win Congratulations! Your kingdom is saved!
+```
+
+Explanation of Changes:
+
+1. Updated sound effects with valid verbs such as "MOVE", "Create", and "Win".
+2. Eliminated the "#" lacking definitions by assigning '#' to 'Castle' in the legend.
+3. Simplified the rules to align with this new set-up, focusing on core interactions such as collecting crops, encountering enemies, and winning conditions.

@@ -1,0 +1,142 @@
+Here is the repaired version of the PuzzleScript game code for **Crops & Castles:**
+
+```plaintext
+Title Crops & Castles
+Author Your Name
+homepage www.yourwebsite.com
+
+========
+OBJECTS
+========
+
+Background
+LIGHTGREEN GREEN
+11111
+01111
+11101
+11111
+10111
+
+Castle
+DARKGRAY GRAY
+.....
+.111.
+.111.
+.111.
+.....
+
+Farm
+BROWN DARKBROWN
+.....
+.111.
+.111.
+.111.
+.....
+
+Player
+Black Orange White Blue
+.000.
+.111.
+22222
+.333.
+.3.3.
+
+Crop
+LightGreen White
+.....
+..0..
+..1..
+..0..
+.....
+
+Spell
+Purple Black
+..1..
+.111.
+11111
+.111.
+.....
+
+Enemy
+Red DarkRed
+.111.
+.111.
+11111
+.111.
+.1.1.
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Castle
+C = Crop
+S = Spell
+E = Enemy
+F = Farm
+P = Player
+
+=======
+SOUNDS
+=======
+
+Crop HARVEST 12122101
+Player MOVE 88351232
+Enemy MOVE 55123109
+Spell CREATE 99321211
+Player RESTART 36972112
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Crop, Spell, Enemy
+Player, Castle, Farm
+
+======
+RULES
+======
+
+[ > Player | Crop ] -> [ > Player | Farm ] SFX0
+[ > Player | Spell ] -> [ > Player ]
+
+[ > Enemy | # ] -> [ > Enemy | # ]
+[ > Player | Enemy ] -> [ Player ] SFX4
+[ > Enemy ] -> [ > Enemy ] SFX2
+
+==============
+WINCONDITIONS
+==============
+
+No Enemy
+
+=======
+LEVELS
+=======
+
+#######
+#.....#
+#..P..#
+#..#..#
+#..F..#
+#..E..#
+#######
+
+#########
+#.......#
+#.C.E...#
+#.......#
+#..F.P..#
+#.......#
+#...E...#
+#########
+
+message LevelComplete Congratulations! Your kingdom is saved!
+```
+
+Changes made:
+1. Changed the sound verb `"LevelComplete"` to `"Player"` in the `SOUNDS` section, as `LevelComplete` is not a valid sound verb.
+2. Changed the rule `[ > Player | Enemy ] -> RESTART` to `[ > Player | Enemy ] -> [ Player ] SFX4`, ensuring it matches the pattern length and triggers the custom restart sound.
+3. Removed an unnecessary space and added `SFX2` to the enemy movement rule for sound feedback.

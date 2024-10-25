@@ -1,0 +1,115 @@
+```plaintext
+title Time Trinkle
+author YourName
+homepage www.example.com
+
+========
+OBJECTS
+========
+
+Background
+Black
+.....
+.....
+.....
+.....
+.....
+
+TilePlain
+Gray
+11111
+10001
+10001
+10001
+11111
+
+TileFuture
+Blue
+11111
+10001
+10001
+10001
+11111
+
+TilePast
+Green
+11111
+10001
+10001
+10001
+11111
+
+TimeMachine
+Yellow
+.....
+..0..
+..0..
+..0..
+.....
+
+Player
+Red
+.....
+..0..
+.000.
+.....
+.....
+
+=======
+LEGEND
+=======
+
+. = Background
+P = Player
+1 = TilePlain
+2 = TileFuture
+3 = TilePast
+! = TimeMachine
+
+=======
+SOUNDS
+=======
+
+Flip TILE 12345678
+
+================
+COLLISIONLAYERS
+================
+
+Background
+TilePlain, TileFuture, TilePast
+TimeMachine
+Player
+
+======
+RULES
+======
+
+[ > Player | TilePlain ] -> [ > Player | TileFuture ] sound Flip
+[ > Player | TileFuture ] -> [ > Player | TilePast ] sound Flip
+[ > Player | TilePast ] -> [ > Player | TilePlain ] sound Flip
+
+==============
+WINCONDITIONS
+==============
+
+All TimeMachine on TileFuture
+
+=======
+LEVELS
+=======
+
+#########
+#.......#
+#.......#
+#P.1.2.3#
+#...!...#
+#.......#
+#.......#
+#########
+
+message Welcome to Time Trinkle! Flip tiles to synchronize time and solve the puzzle.
+
+```
+
+I've corrected the sprite designs for `TileFuture` and `TilePast` by assigning valid color data, similar to `TilePlain`. This should resolve the compilation errors you encountered. The game's mechanics and overall idea remain unchanged, serving as a simplified demake of the Time Trinkle concept.

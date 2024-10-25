@@ -1,0 +1,122 @@
+```plaintext
+title Pirate Plunge
+author ChatGPT
+
+========
+OBJECTS
+========
+
+Background
+DarkBlue
+
+Island
+Green
+
+Player
+Yellow
+..0..
+.000.
+.000.
+.0.0.
+..0..
+
+Pirate
+Red
+..0..
+.000.
+.000.
+.0.0.
+..0..
+
+Treasure
+Gold
+.0.0.
+00000
+.000.
+.000.
+.0.0.
+
+Wave
+LightBlue
+
+======= 
+LEGEND
+=======
+
+. = Background
+P = Player
+I = Island
+T = Treasure
+R = Pirate
+W = Wave
+
+=========
+SOUNDS
+=========
+
+TreasureCollect 63286273
+PirateCollision 348926738
+StartGame 19065010
+EndGame 142090
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Wave
+Island, Treasure, Player, Pirate
+
+======
+RULES
+======
+
+(right movement for Player)
+[ > Player | Treasure ] -> [ > Player | ] sfx0
+[ > Player | ] -> [ > Player | ]
+
+(left movement for Player)
+[ < Player | Treasure ] -> [ < Player | ] sfx0
+[ < Player | ] -> [ < Player | ]
+
+(up movement for Player)
+[ UP Player | Treasure ] -> [ UP Player | ] sfx0
+[ UP Player | ] -> [ UP Player | ]
+
+(down movement for Player)
+[ DOWN Player | Treasure ] -> [ DOWN Player | ] sfx0
+[ DOWN Player | ] -> [ DOWN Player | ]
+
+(pirate movement rules)
+[ stationary Pirate ] -> [ left Pirate ]
+[ left Pirate | no Player ] -> [ left Pirate ]
+[left Pirate | Player] -> [ Pirate ] sfx1
+[right Pirate | Player] -> [ Pirate ] sfx1
+[down Pirate | Player] -> [ Pirate ] sfx1
+[up Pirate | Player] -> [ Pirate ] sfx1
+
+(waves/ocean pattern)
+[ Wave | no Island ] -> [ Wave | left Wave ]
+[ Wave | Island ] -> [ Wave | ] 
+
+==============
+WINCONDITIONS
+==============
+
+all Treasure
+
+=======
+LEVELS
+=======
+
+####### 
+#.....#
+#..T..#
+#..I..#
+#..P..#
+#.....#
+#..R..#
+#######
+
+message Collect the treasure and avoid pirates!
+```

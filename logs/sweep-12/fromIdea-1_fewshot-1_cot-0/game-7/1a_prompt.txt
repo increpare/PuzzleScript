@@ -1,0 +1,1492 @@
+SYSTEM PROMPT:
+You are a game designer, familiar with the PuzzleScript game description language. Here are some example games, for inspiration (do not reproduce these games exactly):
+
+title Gobble Rush!
+author Mark Richardson
+again_interval 0.05
+noaction
+require_player_movement
+run_rules_on_level_start
+
+
+========
+OBJECTS
+========
+
+Background
+Black
+
+Exit
+White Black
+01010
+10101
+01010
+10101
+01010
+
+Wall
+Brown
+
+Hole
+Brown
+00000
+00.00
+0...0
+0...0
+0...0
+
+Player
+Pink Blue Brown Red DarkBlue
+.222.
+.101.
+33333
+.444.
+44.44
+
+Enemy
+LightBrown
+.....
+0..0.
+.00..
+0000.
+0..0.
+
+Alert
+Red
+....0
+....0
+.....
+....0
+.....
+
+Chicken
+#EA3 #FC9 #FEA
+.....
+2....
+.110.
+01100
+.000.
+
+Lettuce
+#6C3 #5A2 #482 #361 #240
+.2.2.
+24342
+12421
+01310
+.002.
+
+LoS
+White
+.....
+.....
+.....
+.....
+.....
+
+MoveU
+White
+.....
+.....
+.....
+.....
+.....
+
+MoveD
+White
+.....
+.....
+.....
+.....
+.....
+
+MoveL
+White
+.....
+.....
+.....
+.....
+.....
+
+MoveR
+White
+.....
+.....
+.....
+.....
+.....
+
+CanMove
+White
+.....
+.....
+.....
+.....
+.....
+
+Level0
+White #F00
+.....
+.....
+.111.
+.....
+.....
+
+Level1
+White #F00
+00000
+.....
+.111.
+.....
+.....
+
+Level2
+White #F00
+.....
+00000
+.111.
+.....
+.....
+
+Level3
+White #F88
+.....
+.....
+01110
+.....
+.....
+
+Level4
+White #F00
+.....
+.....
+.111.
+00000
+.....
+
+Level5
+White #F00
+.....
+.....
+.111.
+.....
+00000
+
+
+=======
+LEGEND
+=======
+
+. = Background
+X = Exit
+# = Wall
+H = Hole
+P = Player
+Q = Player and Exit
+E = Enemy
+F = Enemy and Exit
+C = Chicken
+D = Chicken and Exit
+L = Lettuce
+M = Lettuce and Exit
+0 = Level0
+1 = Level1
+2 = Level2
+3 = Level3
+4 = Level4
+5 = Level5
+
+Move = MoveU or MoveD or MoveL or MoveR
+Obstacle = Wall or Enemy
+Food = Player or Chicken
+
+
+=======
+SOUNDS
+=======
+
+SFX0            97542903 (enemy alerted)
+Player  Destroy 41368102 (player eaten)
+Chicken Destroy 74663702 (chicken eaten)
+Lettuce Destroy 74663702 (lettuce eaten)
+Enemy   Create  81259707 (enemy moving)
+EndLevel        22595303
+
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Exit, Hole, Level0, Level1, Level2, Level3, Level4, Level5
+Wall, Player, Enemy, Chicken, Lettuce
+LoS, Move
+Alert, CanMove
+
+
+======
+RULES
+======
+
+(Prevent illegal moves)
+[ > Player | Hole ] -> cancel
+
+(Tell alert enemies to move)
+[ Enemy Move ] -> [ Enemy CanMove Move ]
+
+(Stop enemies)
+late up    [ Enemy CanMove MoveU |    Obstacle no Move ] -> [ Enemy | Obstacle ]
+late down  [ Enemy CanMove MoveD |    Obstacle no Move ] -> [ Enemy | Obstacle ]
+late left  [ Enemy CanMove MoveL |    Obstacle no Move ] -> [ Enemy | Obstacle ]
+late right [ Enemy CanMove MoveR |    Obstacle no Move ] -> [ Enemy | Obstacle ]
+late down  [ Enemy CanMove MoveD | Enemy CanMove MoveU ] -> [ Enemy | Enemy    ]
+late right [ Enemy CanMove MoveR | Enemy CanMove MoveL ] -> [ Enemy | Enemy    ]
+late up    [ Enemy CanMove MoveU | Enemy      no Move  ] -> [ Enemy | Enemy    ]
+late down  [ Enemy CanMove MoveD | Enemy      no Move  ] -> [ Enemy | Enemy    ]
+late left  [ Enemy CanMove MoveL | Enemy      no Move  ] -> [ Enemy | Enemy    ]
+late right [ Enemy CanMove MoveR | Enemy      no Move  ] -> [ Enemy | Enemy    ]
+
+(Move enemies)
+late up    [ Enemy CanMove MoveU | no Obstacle         ] -> [       | Enemy MoveU ] again
+late down  [ Enemy CanMove MoveD | no Obstacle         ] -> [       | Enemy MoveD ] again
+late left  [ Enemy CanMove MoveL | no Obstacle         ] -> [       | Enemy MoveL ] again
+late right [ Enemy CanMove MoveR | no Obstacle         ] -> [       | Enemy MoveR ] again
+late       [ Enemy CanMove       ]                       -> [ Enemy ]
+
+(Remove alerts)
+late       [ Enemy Alert         ]                       -> [ Enemy ]
+
+(Create line of sight)
+late [ Food no CanMove ] -> [ Food CanMove ]
+late [ Move ] [ CanMove ] -> [ Move ] [ ]
+
+(Chase player)
+late [ Player CanMove ] -> [ Player LoS ]
+late [ Player LoS | no Wall no LoS ] -> [ Player LoS | LoS ]
+late [ Player Los | ... | LoS | no Wall no LoS ] -> [ Player LoS | ... | LoS | LoS ]
+late up    [ Enemy LoS no Move | ... | Player LoS ] -> [ Enemy MoveU Alert | ... | Player LoS ] SFX0
+late down  [ Enemy LoS no Move | ... | Player LoS ] -> [ Enemy MoveD Alert | ... | Player LoS ] SFX0
+late left  [ Enemy LoS no Move | ... | Player LoS ] -> [ Enemy MoveL Alert | ... | Player LoS ] SFX0
+late right [ Enemy LoS no Move | ... | Player LoS ] -> [ Enemy MoveR Alert | ... | Player LoS ] SFX0
+late [ LoS ] -> [ ]
+
+(Chase chickens)
+startloop
+late random [ Chicken CanMove ] -> [ Chicken LoS ]
+late [ Chicken LoS | no Wall no LoS ] -> [ Chicken LoS | LoS ]
+late [ Chicken Los | ... | LoS | no Wall no LoS ] -> [ Chicken LoS | ... | LoS | LoS ]
+late up    [ Enemy LoS no Move | ... | Chicken LoS ] -> [ Enemy MoveU Alert | ... | Chicken LoS ] SFX0
+late down  [ Enemy LoS no Move | ... | Chicken LoS ] -> [ Enemy MoveD Alert | ... | Chicken LoS ] SFX0
+late left  [ Enemy LoS no Move | ... | Chicken LoS ] -> [ Enemy MoveL Alert | ... | Chicken LoS ] SFX0
+late right [ Enemy LoS no Move | ... | Chicken LoS ] -> [ Enemy MoveR Alert | ... | Chicken LoS ] SFX0
+late [ LoS ] -> [ ]
+endloop
+
+
+==============
+WINCONDITIONS
+==============
+
+some Exit on Player
+no Alert
+no Move
+
+
+=======
+LEVELS
+=======
+
+..#####....
+..#X..#...3
+..#...###.0
+..#E....#.0
+..###...#.0
+....#..P#.0
+....#####..
+
+..#######..
+..#P....#.4
+..#.....#.0
+..#####.#.0
+..#EX...#.0
+..###...#.0
+....#####..
+
+..#######..
+..#.....#.5
+..#..#..#.0
+..#.....#.0
+..#.P##E#.0
+..#..#XE#.0
+..#######..
+
+..#######..
+..#.....#.0
+..#.E...#.1
+..#.E...#.0
+..#.E...#.0
+..#XE.P.#.0
+..#######..
+
+..#######..
+..#..#.X#.0
+..#..E..#.2
+..##.#E##.0
+..#.....#.0
+..#P.#..#.0
+..#######..
+
+..#######..
+..#X...P#.0
+..##.#..#.3
+..#...#.#.0
+..#.....#.0
+..#.E#.E#.0
+..#######..
+
+..######...
+..#P.#.##.0
+..#.X..E#.4
+..##.#..#.0
+..#.....#.0
+..##..E.#.0
+...######..
+
+...####....
+..##..##..0
+..#.P..##.5
+..#..X.E#.0
+..##...##.0
+...##E##..0
+....###....
+
+..#######..
+..#XE...#.0
+..#EE..##.0
+..#..P..#.1
+..#.....#.0
+..#.#...#.0
+..#######..
+
+..#######..
+..#P..#X#.0
+..#.....#.0
+..##....#.2
+..#.....#.0
+..#E..#E#.0
+..#######..
+
+..#######..
+..#X...P#.0
+..#.###.#.0
+..#.....#.3
+..#E###.#.0
+..#....C#.0
+..#######..
+
+..#######..
+..#P....#.0
+..#..#.E#.0
+..#.....#.4
+..##.C.##.0
+...##X##..0
+....###....
+
+..#######..
+..#....C#.0
+..##X#.##.0
+..#EH..#..5
+..##...#..0
+...#.PC#..0
+...#####...
+
+...######..
+...#.#..#.0
+..##Q..E#.0
+..#...#.#.0
+..#..#..#.1
+..#.E.C.#.0
+..#######..
+
+.....####..
+...###.E#.0
+...#P...#.0
+..##..L.#.0
+..#..LXL#.2
+..#E..L.#.0
+..#######..
+
+...######..
+..##LLCX#.0
+..#LLCLC#.0
+..#LCL.L#.0
+..#ELLPL#.3
+..#LLC#L#.0
+..#######..
+
+..#######..
+..#....P#.0
+..#E.#E.#.0
+..#.....#.0
+..##LLL##.4
+...##X##..0
+....###....
+
+..#######..
+..##LXL##.0
+..#..L..#.0
+..#..#..#.0
+..#E...E#.5
+..##.P.##.0
+..#######..
+
+..#######..
+..#H.P..#.0
+..#XH...#.0
+..#..H.E#.0
+..#...H.#.0
+..#.E...#.1
+..#######..
+
+..#######..
+..#.E.E.#.0
+..#P....#.0
+..#..X.E#.0
+..#L..L.#.0
+..#.E.EL#.2
+..#######..
+
+..#######..
+..#L.L.L#.0
+..#L.L.L#.0
+..#L.P.L#.0
+..#L.L.L#.0
+..#L.L.L#.3
+..##X#X##..
+
+
+title Kettle
+author increpare
+homepage www.increpare.com
+
+color_palette gameboycolour
+
+(
+
+A port of a flash game of mine, the original of which can be played here:
+http://ded.increpare.com/~locus/kettle
+
+)
+
+========
+OBJECTS
+========
+
+Background
+darkgray
+
+Target
+yellow
+00000
+0...0
+0...0
+0...0
+00000
+
+UPolice
+black
+.000.
+.000.
+00000
+.000.
+.0.0.
+
+DPolice
+black
+.000.
+.000.
+00000
+.000.
+.0.0.
+
+LPolice
+black
+.000.
+.000.
+0000.
+.000.
+.0.0.
+
+RPolice
+black
+.000.
+.000.
+.0000
+.000.
+.0.0.
+
+Crate
+blue
+..0..
+00000
+..0..
+.000.
+.0.0.
+
+Wall
+black
+
+=======
+LEGEND
+=======
+
+. = Background
+player = UPolice or DPolice or LPolice or RPolice
+i = UPolice
+k = DPolice
+j = LPolice
+l = RPolice
+c = Crate
+@ = Crate and Target
+t = Target
+# = Wall
+
+=========
+SOUNDS
+=========
+
+Target move 59810707
+Player move 86872107
+startlevel 63638302
+endlevel 86642102
+endgame 63929902
+showmessage 42200307
+closemessage 42200307
+startgame 94059902
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Target
+Player, Crate, Wall
+
+======
+RULES
+======
+
+(The idea is simple: lots of Players, each of which only responds to a particular input direction.)
+
+[ up RPolice ] -> [ RPolice ] 
+[ down RPolice ] -> [ RPolice ] 
+[ left RPolice ] -> [ RPolice ] 
+
+[ down UPolice ] -> [ UPolice ] 
+[ left UPolice ] -> [ UPolice ] 
+[ right UPolice ] -> [ UPolice ] 
+
+[ up LPolice ] -> [ LPolice ] 
+[ down LPolice ] -> [ LPolice ] 
+[ right LPolice ] -> [ LPolice ] 
+
+[ up DPolice ] -> [ DPolice ] 
+[ left DPolice ] -> [ DPolice ] 
+[ right DPolice ] -> [ DPolice ] 
+
+[ > Player | Crate ] -> [ > Player | > Crate ] 
+[ > Crate | Crate ] -> [ > Crate | > Crate ] 
+
+==============
+WINCONDITIONS
+==============
+
+all target on Crate
+
+=======
+LEVELS
+=======
+
+message Let's see your ID
+
+###############
+#.............#
+#.............#
+#.....kkkk....#
+#....l...cj...#
+#....l.tt.j...#
+#....lctt.j...#
+#....lc..cj...#
+#.....iiii....#
+#.............#
+#.............#
+#.............#
+###############
+
+message Area Secure
+message Gonna lock you up, sonny!
+
+###############
+#.............#
+#.............#
+#.....kkkk....#
+#....l@@t.j...#
+#....ltttcj...#
+#....l@t@cj...#
+#....lc.ccj...#
+#.....iiii....#
+#.............#
+#.............#
+#.............#
+###############
+
+message Area Secure
+message We didn't see nothing!
+
+###############
+#.............#
+#.............#
+#....kkkkk....#
+#...l@t@@cj...#
+#...l@@ttcj...#
+#...ltt@tcj...#
+#...lt@@@.j...#
+#...l.ccccj...#
+#....iiiii....#
+#.............#
+#.............#
+###############
+
+message Area Secure
+message You'll be late for class, eh!
+
+###############
+#.............#
+#.............#
+#....kkkkk....#
+#...lc.c.cj...#
+#...lc@tt.j...#
+#...l.tt@cj...#
+#...l.ttt.j...#
+#...lc...cj...#
+#....iiiii....#
+#.............#
+#.............#
+###############
+
+message Area Secure
+message Ha! You shat yourself!
+
+###############
+#.............#
+#.............#
+#....kkkkkk...#
+#...lc.c..cj..#
+#...lcttt..j..#
+#...l.t@@..j..#
+#...l.ttt..j..#
+#...lc...ccj..#
+#....iiiiii...#
+#.............#
+#.............#
+###############
+
+message Area Secure
+message Have to confiscate your camera!
+
+###############
+#.............#
+#.............#
+#....kkkkkk...#
+#...lcc..ccj..#
+#...l.tttt.j..#
+#...l.t@@t.j..#
+#...lcttt@cj..#
+#...lct@ttcj..#
+#...lcc..ccj..#
+#....iiiiii...#
+#.............#
+###############
+
+message Area Secure
+message Keeping the peace is hard work
+
+###############
+#.............#
+#...kkkkkkk...#
+#..l..cc..cj..#
+#..l.tttt..j..#
+#..lc@t@t..j..#
+#..lctttt.cj..#
+#..l.@@tt..j..#
+#..lc.....cj..#
+#..lcc.c..cj..#
+#...iiiiiii...#
+#.............#
+###############
+
+message Area Secure
+message You should've packed lunch!
+
+###############
+#.............#
+#..kkkkkkkk...#
+#.lccccc...j..#
+#.lct@@tt.cj..#
+#.l.t@t@t.cj..#
+#.lc@@ttt.cj..#
+#.lct@tttccj..#
+#.l.tt@@t..j..#
+#.l........j..#
+#.lc..cc...j..#
+#..iiiiiiii...#
+###############
+
+message Area Secure
+message I want to hit you
+
+###############
+#.............#
+#..kkkkkkkkk..#
+#.lc.cccc...j.#
+#.l.........j.#
+#.lccttttt..j.#
+#.lc.tt@tt.cj.#
+#.lc.tt@@t.cj.#
+#.l..@@tt@.cj.#
+#.l..t@t@t..j.#
+#.l.........j.#
+#.lc.c.c.c.cj.#
+#..iiiiiiiii..#
+###############
+
+message Area Secure
+message Don't be naughty!
+
+###############
+#.kkkkkkkkkk..#
+#lccc..c...cj.#
+#lc.........j.#
+#lc.@t@tt...j.#
+#lc.t@@@t...j.#
+#l..@ttt@..cj.#
+#lc.tt@@t..cj.#
+#l..ttttt...j.#
+#l..........j.#
+#l.........cj.#
+#l....c.c.ccj.#
+#.iiiiiiiiii..#
+###############
+
+message Area Secure
+message I'm upholding human rights!
+
+###############
+#.kkkkkkkkkkk.#
+#lccc.c.c...cj#
+#l....c......j#
+#lc.@ttttt...j#
+#l..@ttt@t...j#
+#l..t@@ttt..cj#
+#lc.@tt@@t..cj#
+#l..@@t@@t...j#
+#l..t@t@tt..cj#
+#lc..c.......j#
+#lc....c.....j#
+#lcc.c.c.c..cj#
+#.iiiiiiiiiii.#
+###############
+
+message Area Secure
+message I'm all out of lines, matey:
+message It's game over for you
+
+
+title Zen Puzzle Garden
+author lexaloffle
+homepage www.lexaloffle.com
+
+(
+
+A replication, with some really bad levels, of the rather superior Zen Puzzle Garden.  Made with permission of the unfailingly lovely Joseph White.
+
+http://www.lexaloffle.com/zen.htm
+
+)
+
+========
+OBJECTS
+========
+
+Background
+orange brown
+00100
+00000
+00010
+10000
+00000
+
+Player
+white black
+.0.0.
+01010
+00000
+.000.
+11.11
+
+Rock
+grey darkgrey yellow
+21002
+11000
+11000
+11000
+11101
+
+UnbrushedSand
+yellow orange
+00000
+01000
+00000
+00010
+00000
+
+HBrushedSand
+yellow orange
+00000
+01011
+00000
+11010
+00000
+
+VBrushedSand
+yellow orange
+01000
+01010
+00000
+01010
+00010
+
+=======
+LEGEND
+=======
+
+BrushedSand = HBrushedSand or VBrushedSand
+Sand = UnbrushedSand or BrushedSand
+Obstacle = BrushedSand or Rock
+; = Background
+O = Rock
+. = UnbrushedSand
+P = Player
+
+=========
+SOUNDS
+=========
+
+closemessage 52854909
+startgame 64192309
+endlevel 16398509
+endgame 62100709
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Sand
+Player, Rock
+
+======
+RULES
+======
+
+(The h and v sand effects are cosmetic - how could this be done in a single line if there was only one type of brushed sand?)
+
+horizontal [ UnbrushedSand > Player ] -> [ HBrushedSand > Player ] 
+vertical [ UnbrushedSand > Player ] -> [ VBrushedSand > Player ] 
+
+late [ Player BrushedSand ] -> cancel
+
+==============
+WINCONDITIONS
+==============
+
+no UnbrushedSand
+
+=======
+LEVELS
+=======
+
+message level 1 of 5
+
+;;;;;;;;;;;;
+;;;;;;;;;;;;
+;;;;;;;;;;;;
+;;;......;;;
+;;;......;;;
+;;;......;;;
+;P;..OO..;;;
+;;;......;;;
+;;;......;;;
+;;;;;;;;;;;;
+;;;;;;;;;;;;
+;;;;;;;;;;;;
+
+message level 2 of 5
+
+;;;;;;;;;;;;
+;;;;;;;;;;;;
+;;;;;;;;;;;;
+;;;......;;;
+;;;....O.;;;
+;;;......;;;
+;P;..O...;;;
+;;;......;;;
+;;;......;;;
+;;;;;;;;;;;;
+;;;;;;;;;;;;
+;;;;;;;;;;;;
+
+message level 3 of 5
+
+;;;;;;;;;;;;
+;;;;;;;;;;;;
+;;;;;;;;;;;;
+;;;......;;;
+;;;...O..;;;
+;;;......;;;
+;P;.O....;;;
+;;;....O.;;;
+;;;......;;;
+;;;;;;;;;;;;
+;;;;;;;;;;;;
+;;;;;;;;;;;;
+
+message level 4 of 5
+
+;;;;;;;;;;;;
+;;;;;;;;;;;;
+;;;;;;;;;;;;
+;;;..OO..;;;
+;;;O....O;;;
+;P;..OO..;;;
+;;;O....O;;;
+;;;..OO..;;;
+;;;;;;;;;;;;
+;;;;;;;;;;;;
+;;;;;;;;;;;;
+
+message level 5 of 5
+
+;;;;;;;;;;;;
+;;;;;;;;;;;;
+;;;;;;;;;;;;
+;;;O.....;;;
+;;;..O.O.;;;
+;;;O...O.;;;
+;P;..O...;;;
+;;;O...O.;;;
+;;;..O...;;;
+;;;;;;;;;;;;
+;;;;;;;;;;;;
+;;;;;;;;;;;;
+
+message congratulations!
+
+
+title Dungeon Janitor
+author Farbs
+homepage www.farbs.org
+noundo
+noaction
+key_repeat_interval 0.1
+
+========
+OBJECTS
+========
+
+Background
+DARKBLUE BLACK
+11111
+10000
+10000
+10000
+10000
+
+Entry
+LIGHTBROWN BROWN DARKBROWN GRAY
+30103
+10101
+10121
+10101
+10101
+
+ExitClosed
+LIGHTBROWN BROWN DARKBROWN GRAY
+30103
+10101
+10121
+10101
+10101
+
+ExitOpen
+GRAY BLACK DARKBLUE
+01110
+11111
+11111
+11111
+12221
+
+Slime
+LIGHTGREEN GREEN DARKGREEN
+.....
+.....
+.....
+.....
+.....
+
+Head
+LIGHTGREEN GREEN DARKGREEN BLACK
+.000.
+03130
+11111
+23332
+.222.
+
+SlimeU
+LIGHTGREEN GREEN DARKGREEN
+11111
+21112
+.222.
+.....
+.....
+
+SlimeD
+LIGHTGREEN GREEN DARKGREEN
+.....
+.....
+.000.
+01110
+11111
+
+SlimeUD
+LIGHTGREEN GREEN DARKGREEN
+11111
+11111
+11111
+11111
+11111
+
+SlimeL
+LIGHTGREEN GREEN DARKGREEN
+00...
+110..
+111..
+112..
+22...
+
+SlimeR
+LIGHTGREEN GREEN DARKGREEN
+...00
+..011
+..111
+..211
+...22
+
+SlimeLR
+LIGHTGREEN GREEN DARKGREEN
+00000
+11111
+11111
+11111
+22222
+
+SlimeUL
+LIGHTGREEN GREEN DARKGREEN
+11111
+11112
+1112.
+112..
+22...
+
+SlimeUR
+LIGHTGREEN GREEN DARKGREEN
+11111
+21111
+.2111
+..211
+...22
+
+SlimeULR
+LIGHTGREEN GREEN DARKGREEN
+11111
+11111
+11111
+11111
+22222
+
+SlimeDL
+LIGHTGREEN GREEN DARKGREEN
+00...
+110..
+1110.
+11110
+11111
+
+SlimeDR
+LIGHTGREEN GREEN DARKGREEN
+...00
+..011
+.0111
+01111
+11111
+
+SlimeDLR
+LIGHTGREEN GREEN DARKGREEN
+00000
+11111
+11111
+11111
+11111
+
+SlimeUDLR
+LIGHTGREEN GREEN DARKGREEN
+11111
+11111
+11111
+11111
+11111
+
+SlimeSolo
+LIGHTGREEN GREEN DARKGREEN
+.000.
+01110
+11111
+21112
+.222.
+
+Wall
+LIGHTGREY GREY
+11111
+01000
+01000
+11111
+00010
+
+PlayerA
+Black Orange White Blue Brown
+.....
+.11..
+2224.
+333.4
+3.322
+
+PlayerB
+Black Orange White Blue Brown
+.....
+.11..
+.4222
+4.333
+223.3
+
+Temp
+PINK
+00000
+00000
+00000
+00000
+00000
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+E = Wall AND Entry
+P = PlayerA
+O = Slime AND Head
+X = Wall AND ExitClosed
+
+SlimeDecal = SlimeU OR SlimeD OR SlimeUD OR SlimeL OR SlimeR OR SlimeLR OR SlimeUL OR SlimeUR OR SlimeULR OR SlimeDL OR SlimeDR OR SlimeDLR OR SlimeUDLR OR SlimeSolo
+Player = PlayerA OR PlayerB
+
+=======
+SOUNDS
+=======
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Slime
+SlimeU, SlimeD, SlimeUD, SlimeL, SlimeR, SlimeLR, SlimeUL, SlimeUR, SlimeULR, SlimeDL, SlimeDR, SlimeDLR, SlimeUDLR, SlimeSolo, ExitOpen
+Player, Wall, PlayerA, PlayerB, Temp
+Head, Entry, ExitClosed
+
+======
+RULES
+======
+
+(Stomp Heads)
+[ > Player | Head ] -> [ > Player | NO Head ]
+[ > Player | Slime ] -> [ > Player | NO Slime ]
+
+(New Head)
+[ Head ] -> []
+RANDOM [ Slime NO Player ] -> [ Slime Head ]
+
+(Grow Slime)
+[ Head | NO Slime NO Wall NO Player ] -> [ Head | Slime ]
+
+(Clear Slime from under player)
+[ > Player | Slime ] -> [ > Player | NO Slime ]
+LATE [ Player Slime ] -> [ Player NO Head ]
+
+(Make slime pretty)
+[ SlimeDecal ] ->[ ]
+VERTICAL [ Slime | Slime | Slime ] -> [ Slime | Slime SlimeUD | Slime ]
+UP [ Slime NO SlimeUD | Slime ] -> [ Slime SlimeU | Slime ]
+DOWN [ Slime NO SlimeUD | Slime ] -> [ Slime SlimeD | Slime ]
+HORIZONTAL [ Slime | Slime NO SlimeU NO SlimeD NO SlimeUD | Slime ] -> [ Slime | Slime SlimeLR | Slime ]
+LEFT [ Slime NO SlimeU NO SlimeD NO SlimeUD NO SlimeLR | Slime ] -> [ Slime SlimeL | Slime ]
+RIGHT [ Slime NO SlimeU NO SlimeD NO SlimeUD NO SlimeLR | Slime ] -> [ Slime SlimeR | Slime ]
+HORIZONTAL [ Slime | Slime SlimeU | Slime ] -> [ Slime | Slime SlimeULR | Slime ]
+LEFT [ Slime SlimeU | Slime ] -> [ Slime SlimeUL | Slime ]
+RIGHT [ Slime SlimeU | Slime ] -> [ Slime SlimeUR | Slime ]
+HORIZONTAL [ Slime | Slime SlimeD | Slime ] -> [ Slime | Slime SlimeDLR | Slime ]
+LEFT [ Slime SlimeD | Slime ] -> [ Slime SlimeDL | Slime ]
+RIGHT [ Slime SlimeD | Slime ] -> [ Slime SlimeDR | Slime ]
+[ Slime NO SlimeDecal ] -> [ Slime SlimeSolo ]
+
+( Shut the door if slime still around)
+( Have to open it first unfortunately )
+[ ExitClosed Wall ] -> [ ExitOpen ]
+[ ExitOpen ][ Slime ] -> [ ExitClosed Wall ][ Slime ]
+
+(Player Anim)
+[ LEFT PlayerB ] -> [ LEFT PlayerA ]
+[ RIGHT PlayerA ] -> [ RIGHT PlayerB ]
+LATE [ PlayerA ] -> [ Temp ]
+LATE [ PlayerB ] -> [ PlayerA ]
+LATE [ Temp ] -> [ PlayerB ]
+==============
+WINCONDITIONS
+==============
+
+ALL Player ON ExitOpen
+
+=======
+LEVELS
+=======
+
+MESSAGE It's Thursday.
+MESSAGE Today I mop the slime pit.
+
+
+##X##
+##.##
+##.##
+##O##
+##.##
+##P##
+##E##
+
+MESSAGE Damn slime sticking to my shoes.
+
+..####..
+..#O.#..
+###..###
+#......#
+#P#..#.#
+#E#..#X#
+..####..
+
+MESSAGE Goes SHLUCK SHCLUK when I walk.
+
+######X#############
+###......#...#...###
+###.##.#...#...#...#
+##.....###########.#
+#..#.#.....#.......#
+#.##.###.#.##.######
+#......#.#.#.O.....#
+#.####.#.#.#.#####.#
+#P.....#.#.........#
+#E##################
+
+MESSAGE Last room before home.
+MESSAGE This one can take a while.
+
+##########X#########
+#..................#
+#..................#
+#..#######.######..#
+#..#.#...#.#.#..#..#
+#..#...#.#.#.#..#..#
+#..#.....#.#.#..#..#
+#..##....#.#...##..#
+#..#............#..#
+#..#......O.....#..#
+#..#............#..#
+#..#............#..#
+#..##############..#
+#.........P........#
+##########E#########
+
+MESSAGE Done for the day. Back tomorrow.
+MESSAGE Fridays is rat scrubbing day.
+
+USER PROMPT:
+The following PuzzleScript game code:
+```plaintext
+title Mechanimal: Simplified Demake
+author OpenAI
+homepage www.puzzlescript.net
+
+========
+OBJECTS
+========
+
+Background
+#ddeeff #aabbcc
+11111
+10101
+11111
+10101
+11111
+
+Wall
+#223344 #112233
+11111
+09990
+09990
+09990
+11111
+
+Player
+#ffcc00 #ff8800 #cc4400
+.111.
+.1331
+13331
+.333.
+..3..
+
+Part
+#666666 #444444
+.111.
+.111.
+.111.
+.....
+.....
+
+Mechanimal
+#44ee44 #22cc22
+.....
+.222.
+.232.
+.222.
+.....
+
+Target
+#ff2200
+.....
+..0..
+.....
+.....
+
+BuiltMechanimal
+#2222ff #eeeeff
+.333.
+32223
+22222
+.333.
+.....
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Player
+a = Part
+b = Mechanimal
+O = Target
+M = BuiltMechanimal
+
+=======
+SOUNDS
+=======
+
+Part MOVE 36005880
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Target
+Player, Wall, Part, Mechanimal, BuiltMechanimal
+
+======
+RULES
+======
+
+[ > Player | Part ] -> [ > Player | > Part ] 
+
+[ > Mechanimal | Part ] -> [ BuiltMechanimal ]
+
+[ > Player | Mechanimal ] -> [ > Player | > Mechanimal ]
+
+==============
+WINCONDITIONS
+==============
+
+all Target on BuiltMechanimal
+
+=======
+LEVELS
+=======
+
+message Help the Mechanimal reach its destination!
+
+#########
+#.......#
+#.O.b...#
+##....a.#
+#..P....#
+#.......#
+#########
+
+message Combine parts to create a path!
+
+#########
+#.......#
+#..O....#
+#..a....#
+#..b....#
+#.P.....#
+#########
+
+message Use your creations wisely!
+
+#########
+#.......#
+#....b..#
+#.O.#.a.#
+#...#...#
+#P......#
+#########
+
+```
+produced the following console output:
+=================================
+line 20 : Trying to access color number 9 from the color palette of sprite WALL, but there are only 2 defined in it.
+line 21 : Trying to access color number 9 from the color palette of sprite WALL, but there are only 2 defined in it.
+line 22 : Trying to access color number 9 from the color palette of sprite WALL, but there are only 2 defined in it.
+line 28 : Trying to access color number 3 from the color palette of sprite PLAYER, but there are only 3 defined in it.
+line 29 : Trying to access color number 3 from the color palette of sprite PLAYER, but there are only 3 defined in it.
+line 30 : Trying to access color number 3 from the color palette of sprite PLAYER, but there are only 3 defined in it.
+too many errors, aborting compilation
+Errors detected during compilation; the game may not work correctly.
+Return a repaired version of the code that addresses these errors.  The game should be a simplified `demake` of the following game idea: **Mechanimal:** Befriend mechanical wildlife and construct them into powerful counterparts to solve environmental puzzles on a lost planet.. Return your code in full, inside a ```plaintext code block.

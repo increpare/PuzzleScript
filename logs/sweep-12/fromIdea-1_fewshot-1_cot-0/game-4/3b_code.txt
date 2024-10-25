@@ -1,0 +1,154 @@
+Here is a repaired version of your PuzzleScript game code. I've addressed the errors and made some necessary adjustments for the game to function correctly:
+
+```plaintext
+title Railway Riddle Demake
+author PuzzleScriptUser
+
+========
+OBJECTS
+========
+
+Background
+darkgreen green
+00000
+00000
+00100
+00000
+00000
+
+Town
+darkblue blue
+.....
+..0..
+.000.
+..0..
+.....
+
+TrackH
+darkgrey grey
+.....
+.....
+00000
+.....
+.....
+
+TrackV
+darkgrey grey
+..0..
+..0..
+..0..
+..0..
+..0..
+
+TrackL
+darkgrey grey
+.....
+..00.
+..0..
+..0..
+.....
+
+TrackR
+darkgrey grey
+.....
+.00..
+..0..
+..0..
+.....
+
+Train
+black red
+.....
+..1..
+.111.
+..1..
+.....
+
+Cursor
+lightblue blue
+.....
+.....
+.0.0.
+.....
+.....
+
+=======
+LEGEND
+=======
+
+. = Background
+T = Town
+H = TrackH
+V = TrackV
+L = TrackL
+R = TrackR
+@ = Train
+C = Cursor
+
+=======
+SOUNDS
+=======
+
+startgame 4284710
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Town, Train
+Cursor, TrackH, TrackV, TrackL, TrackR
+
+======
+RULES
+======
+
+# Cursor movement
+[right C] -> [> C]
+[left C] -> [< C]
+[up C] -> [^ C]
+[down C] -> [v C]
+
+# Placing horizontal track
+[action C | No TrackH] -> [C | TrackH]
+
+# Placing vertical track
+[action C | No TrackV] -> [C | TrackV]
+
+# Placing left curve track
+[Action C | No TrackL] -> [C | TrackL]
+
+# Placing right curve track
+[Action C | No TrackR] -> [C | TrackR]
+
+# Train moves through tracks
+[> Train | TrackH] -> [> Train | TrackH]
+[v Train | TrackV] -> [v Train | TrackV]
+[> Train | TrackL] -> [v Train | TrackL]
+[v Train | TrackR] -> [> Train | TrackR]
+
+==============
+WINCONDITIONS
+==============
+
+All Train on Town
+
+=======
+LEVELS
+=======
+message Let's build a track!
+
+..........
+.T......T.
+..........
+....C.....
+@.........
+
+```
+
+Key Changes Made:
+1. Changed the legend definition for `Cursor` from `P` to `C` to avoid the reserved keyword conflict and adjusted the rules accordingly.
+2. Each rule has been simplified to match this new setup, which includes how tracks are placed and the train's movement.
+3. Adjusted `TrackL` and `TrackR` patterns for visual clarity based on the specific curve definitions.
+
+This code should set you up with a basic "construct the track" type of game, with simplified mechanics. Adjust the mechanics as needed to expand on this foundation.

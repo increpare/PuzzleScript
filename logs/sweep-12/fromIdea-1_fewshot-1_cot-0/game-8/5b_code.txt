@@ -1,0 +1,115 @@
+```plaintext
+title Olive Odyssey
+author PuzzleScript Fan
+homepage www.puzzlescript.net
+
+========
+OBJECTS
+========
+
+Background
+#556B2F
+
+Olive
+green
+..0..
+.000.
+.000.
+.000.
+..0..
+
+RecipeBook
+black brown
+..0..
+.0.0.
+.0.0.
+.0.0.
+..0..
+
+Player
+orange
+..0..
+.000.
+.0.0.
+.000.
+..0..
+
+Pot
+gray
+.....
+.000.
+0...0
+0...0
+.000.
+
+Dish
+#DAA520
+.....
+.....
+..0..
+.....
+.....
+
+=======
+LEGEND
+=======
+. = Background
+P = Player
+O = Olive
+R = RecipeBook
+T = Pot
+D = Dish
+
+======
+SOUNDS
+======
+
+================
+COLLISIONLAYERS
+================
+Background
+Player, Olive, RecipeBook, Pot, Dish
+
+======
+RULES
+======
+[> P | O] -> [> P | ]
+[right R | P] -> [R | > P]
+[ P | O | T ] -> [ P | D | T ] 
+
+==============
+WINCONDITIONS
+==============
+
+some D
+
+=======
+LEVELS
+=======
+
+message Place the olive in the pot to create a dish!
+
+.O.....
+.......
+P......
+.......
+..R..T.
+
+message Level 2: Find, collect, and cook!
+
+....O..
+O..P...
+..T....
+.......
+..R..O.
+
+message Level 3: Use your recipe book wisely!
+
+..O.P..
+.R.....
+..T..O.
+.......
+
+```
+
+In Level 1, I added the Pot (T) to ensure it's possible to create a dish by placing an Olive in it. In Level 3, I removed the additional Olive from the same column as the Player, so that there's an accessible path to the pot.

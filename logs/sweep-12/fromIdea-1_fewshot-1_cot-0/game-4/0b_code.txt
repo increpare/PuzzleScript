@@ -1,0 +1,168 @@
+```plaintext
+title Railway Riddle
+author PuzzleScriptUser
+
+========
+OBJECTS
+========
+
+Background
+darkgreen green
+00000
+00000
+00100
+00000
+00000
+
+Town
+darkblue blue
+.....
+..0..
+.000.
+..0..
+.....
+
+TrackH
+darkgrey grey
+.....
+.....
+00000
+.....
+.....
+
+TrackV
+darkgrey grey
+..0..
+..0..
+..0..
+..0..
+..0..
+
+TrackL
+darkgrey grey
+..0..
+..0..
+000..
+.....
+.....
+
+TrackR
+darkgrey grey
+..0..
+..0..
+..000
+.....
+.....
+
+TrackT
+darkgrey grey
+.....
+.....
+..000
+..0..
+..0..
+
+TrackB
+darkgrey grey
+.....
+.....
+..000
+..0..
+..0..
+
+Train
+black red
+.....
+..1..
+.111.
+..1..
+.....
+
+Cursor
+lightblue
+.....
+..2..
+.222.
+..2..
+.....
+
+=======
+LEGEND
+=======
+
+. = Background
+T = Town
+- = TrackH
+| = TrackV
+/ = TrackL
+\ = TrackR
+^ = TrackT
+v = TrackB
+@ = Train
+P = Cursor
+
+=======
+SOUNDS
+=======
+
+startgame 4284710
+buildtrack 54676398
+trainmove 5748240
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Town
+Cursor, TrackH, TrackV, TrackL, TrackR, TrackT, TrackB
+Train
+
+======
+RULES
+======
+
+// Cursor movement
+[ up P | ] -> [ P | ]
+[ down P | ] -> [ P | ]
+
+// Placing horizontal track
+[right Action P | No TrackH | No Town] -> [ > TrackH | P | ] buildtrack
+
+// Placing vertical track
+[down Action P | No TrackV | No Town] -> [ > TrackV | P | ] buildtrack
+
+// Placing left curve track
+[Action P | No TrackL | No Town] -> [ > TrackL | P | ] buildtrack
+
+// Placing right curve track
+[Action P | No TrackR | No Town] -> [ > TrackR | P | ] buildtrack
+
+// Train moves through tracks
+[> Train | TrackH] -> [ > Train | > TrackH ] trainmove
+[v Train | TrackV] -> [ v Train | v TrackV ] trainmove
+[^ Train | TrackT] -> [ ^ Train | ^ TrackT ] trainmove
+[> Train | TrackL] -> [ v Train | > TrackL ] trainmove
+[v Train | TrackR] -> [ > Train | v TrackR ] trainmove
+
+// Convert between tracktypes for corners
+[> TrackH | TrackV] -> [> TrackB | TrackV]
+[> TrackH | TrackV] -> [> TrackT | TrackV]
+
+==============
+WINCONDITIONS
+==============
+
+All Train on Town
+
+=======
+LEVELS
+=======
+message Let's build a track!
+
+..........
+.T......T.
+..........
+....P.....
+TestLevel!@
+```

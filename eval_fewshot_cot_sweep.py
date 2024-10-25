@@ -116,6 +116,7 @@ df = df.sort_index()
 # latex_path = "/mnt/data/modified_hierarchical_dataframe.tex"
 latex_path = os.path.join(sweep_dir, 'agg_stats.tex')
 df.to_latex(latex_path, escape=False, multirow=True)
+# df.style.to_latex(latex_path, multirow_align='c', hrules=True, clines='all;data')
 
 
 print(json.dumps(agg_stats, indent=4))

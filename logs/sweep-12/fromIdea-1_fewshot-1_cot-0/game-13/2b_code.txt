@@ -1,0 +1,107 @@
+```plaintext
+title Time Trinkle
+author YourName
+homepage www.example.com
+
+========
+OBJECTS
+========
+
+Background
+Black
+
+Tile_Future
+LightBlue
+.....
+..0..
+.....
+.....
+.....
+
+Tile_Present
+LightGreen
+.....
+..0..
+.....
+.....
+.....
+
+Tile_Past
+Yellow
+.....
+..0..
+.....
+.....
+.....
+
+Player
+Orange
+.....
+..0..
+.....
+.....
+.....
+
+=======
+LEGEND
+=======
+
+. = Background
+P = Player
+F = Tile_Future
+C = Tile_Present
+A = Tile_Past
+
+CurrentTile = Tile_Present or Tile_Future or Tile_Past
+
+=========
+SOUNDS
+=========
+
+Flip 60452708
+
+================
+COLLISIONLAYERS
+================
+
+Background
+CurrentTile
+Player
+
+======
+RULES
+======
+
+[ Player | F ] -> [ Player | C ] Flip
+[ Player | C ] -> [ Player | A ] Flip
+[ Player | A ] -> [ Player | F ] Flip
+
+==============
+WINCONDITIONS
+==============
+
+all Tile_Present on Background
+
+=======
+LEVELS
+=======
+
+..FFF..
+..FPF..
+..FFF..
+
+..AAA..
+..ACP..
+..AAA..
+
+..FCA..
+..PAP..
+..CAF..
+
+message Welcome to Time Trinkle! Flip tiles to their proper place in time.
+```
+
+Changes made:
+1. Moved the `Player` layer above the `CurrentTile` in `COLLISIONLAYERS`.
+2. Fixed the sound command syntax by referencing the sound name directly in the rules instead of `SFX0`. 
+3. Fixed the win condition to use the object name `Tile_Present` instead of the descriptive name `Present`.

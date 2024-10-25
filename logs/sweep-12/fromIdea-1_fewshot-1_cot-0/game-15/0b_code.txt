@@ -1,0 +1,121 @@
+```plaintext
+title Haunted Hues
+author PuzzleMaster
+homepage www.puzzlescript.net
+
+========
+OBJECTS
+========
+
+Background
+Black
+
+ColorTile
+Grey
+.....
+.000.
+.000.
+.000.
+.....
+
+RevealedTile
+Red
+.....
+.....
+.0.0.
+.....
+
+RevealedTile2
+Green
+.....
+.....
+.0.0.
+.....
+
+RevealedTile3
+Blue
+.....
+.....
+.0.0.
+.....
+
+Player
+White
+..0..
+.000.
+00000
+..0..
+.0.0.
+
+Target
+White
+.111.
+.1.1.
+.111.
+.1.1.
+.111.
+
+=======
+LEGEND
+=======
+
+. = Background
+P = Player
+C = ColorTile
+R = RevealedTile
+G = RevealedTile2
+B = RevealedTile3
+T = Target
+
+Revealed = RevealedTile or RevealedTile2 or RevealedTile3
+
+=======
+SOUNDS
+=======
+
+reveal 3306607
+endgame 79616604
+startgame 91466748
+
+================
+COLLISIONLAYERS
+================
+
+Background
+ColorTile
+Revealed
+Target
+Player
+
+======
+RULES
+======
+
+[Player | ColorTile] -> [Player | RevealedTile] sfx0
+[Player | RevealedTile] -> [Player | RevealedTile2] sfx0
+[Player | RevealedTile2] -> [Player | RevealedTile3] sfx0
+
+(Allow player to pass through revealed tiles and reach the target)
+[Player | RevealedTile3] -> [Player | RevealedTile3]
+[Player | Target] -> [Player | Target] endgame
+
+==============
+WINCONDITIONS
+==============
+
+All Target on Player
+
+=======
+LEVELS
+=======
+
+message Level 1: Unlock the colors of life!
+
+#######
+#.....#
+#..C..#
+#.PT..#
+###.###
+```
+
+In this simplified game, the player must move onto the "ColorTile" to reveal different vibrant colors. Start as a black and white world, and by interacting with the tiles, unlock and reveal the hidden vibrant colors; once the final color is revealed, you can then reach the target to restore life to the haunted world. The game ends when the player reaches the target position.

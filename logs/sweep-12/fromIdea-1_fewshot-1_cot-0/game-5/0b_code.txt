@@ -1,0 +1,113 @@
+```plaintext
+title Haunted Hues
+author Generated with AI
+
+========
+OBJECTS
+========
+
+BackgroundNeutral
+LightGray Gray
+11011
+10101
+01110
+10101
+11011
+
+BackgroundVibrant
+#ff8c00 #ffd700
+11011
+10101
+01110
+10101
+11011
+
+PaletteTile
+Transparent #8a8a8a
+.....
+.1.1.
+11111
+.1.1.
+.....
+
+ActivePaletteTile
+Transparent #ff8c00 #ffd700
+.....
+.2.2.
+22222
+.2.2.
+.....
+
+Player
+Black LightCyan
+.000.
+.111.
+12321
+.212.
+.222.
+
+Wall
+DarkGray Black
+00010
+11111
+01000
+11111
+00010
+
+========
+LEGEND
+=======
+
+. = BackgroundNeutral
+# = Wall
+P = Player
+X = PaletteTile
+O = ActivePaletteTile
+
+=========
+SOUNDS
+=========
+
+SFX0 123413
+
+================
+COLLISIONLAYERS
+================
+
+BackgroundNeutral
+ActivePaletteTile
+Player, Wall, PaletteTile
+
+======
+RULES
+======
+
+[ > Player | PaletteTile ] -> [ > Player | ActivePaletteTile ] sfx0
+[ ActivePaletteTile | no BackgroundNeutral ] -> [ BackgroundVibrant ]
+
+==============
+WINCONDITIONS
+==============
+
+All ActivePaletteTile on BackgroundVibrant
+
+=======
+LEVELS
+=======
+
+#####
+#XPX#
+#.#.#
+#XO.#
+#####
+
+#####.#####
+#P........#
+#..####...#
+#........X#
+###.##.####
+###....####
+#.......X#
+#..######.#
+#####...###
+```

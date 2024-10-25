@@ -1,0 +1,143 @@
+Here is a corrected version of the code that addresses the errors and aligns with the game concept of "Mechanimal":
+
+```plaintext
+title Mechanimal
+author Anonymous
+homepage www.puzzlescript.net
+
+========
+OBJECTS
+========
+
+Background
+DarkGrey
+.....
+.....
+.....
+.....
+.....
+
+Player
+Blue LightBlue
+.....
+..0..
+.111.
+..0..
+.....
+
+Mechanimal
+Cyan LightCyan
+.....
+..0..
+.111.
+..0..
+.....
+
+Constructed
+Magenta LightMagenta
+.....
+..0..
+.111.
+..0..
+.....
+
+Wall
+DarkGreen
+00000
+02220
+02320
+02220
+00000
+
+Goal
+Yellow
+.....
+..0..
+.111.
+..0..
+.....
+
+Switch
+Orange
+.....
+.....
+..0..
+.....
+.....
+
+Bridge
+Brown
+.....
+.....
+.....
+.....
+.....
+
+=======
+LEGEND
+=======
+
+. = Background
+P = Player
+M = Mechanimal
+C = Constructed
+# = Wall
+G = Goal
+^ = Switch
+= = Bridge
+
+=======
+SOUNDS
+=======
+
+Constructed Transform 83866509
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Bridge
+Goal, Switch
+Player, Mechanimal, Constructed, Wall
+
+======
+RULES
+======
+
+[ > Player | Mechanimal ] -> [ > Player | > Constructed ] sfx0
+
+[ Player | Switch ] -> [ Player | = ]
+late no Player [ = ] -> [ ^ ]
+
+==============
+WINCONDITIONS
+==============
+
+All Player on Goal
+
+=======
+LEVELS
+=======
+
+#..#..#
+#P.#.M#
+#..^..#
+#######
+
+#####
+#.P.#
+#.#.#
+#M#.#
+####G
+
+#####
+#.C.#
+#.#.#
+#.#M#
+####G
+
+message Thank you for playing! Take care of the mechanimals!
+```
+
+This corrected version ensures that the color values are correctly specified and aligned in the defined objects. The rest of the code remains the same to match your intended mechanics and game concept.

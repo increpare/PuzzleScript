@@ -1,0 +1,1734 @@
+SYSTEM PROMPT:
+You are a game designer, familiar with the PuzzleScript game description language. Here are some example games, for inspiration (do not reproduce these games exactly):
+
+title Take Heart Lass
+author Kevin Zuhn
+homepage www.kevinzuhn.com
+
+========
+OBJECTS
+========
+
+Background
+LightGreen Green
+11111
+11011
+10101
+11011
+11111
+
+BackFlowers
+Green Purple Yellow
+10001
+00100
+01210
+00100
+10001
+
+Target
+RED LightRed
+.0.0.
+01010
+01110
+.010.
+..0..
+
+Wall
+Red DarkGreen
+00000
+00100
+01010
+00100
+00000
+
+DespairWall
+DarkBrown DarkBlue
+00000
+00100
+01010
+00100
+00000
+
+NewDespairWall
+DarkRed DarkBlue
+00000
+00100
+01010
+00100
+00000
+
+Player
+Blue LightRed Yellow DarkBlue
+.333.
+.323.
+20002
+.111.
+.000.
+
+OldHope
+White Pink
+11111
+11011
+10101
+11011
+11111
+
+NewHope
+White LightRed
+11111
+11011
+10101
+11011
+11111
+
+Crate
+Pink White
+.0.0.
+01010
+01110
+.010.
+..0..
+
+OldDespair
+Black DarkBlue
+01010
+10101
+01010
+10101
+01010
+
+AltOldDespair
+Black DarkBlue
+10101
+01010
+10101
+01010
+10101
+
+NewDespair
+DarkBlue DarkGray
+01010
+10101
+01010
+10101
+01010
+
+AltNewDespair
+DarkBlue DarkGray
+10101
+01010
+10101
+01010
+10101
+
+=======
+LEGEND
+=======
+
+. = Background
+f = BackFlowers
+# = Wall
+P = Player
+* = Crate
+@ = Crate and Target
+O = Target
+X = OldDespair
+Z = AltOldDespair
+H = OldHope
+
+Despair = OldDespair or NewDespair or AltOldDespair or AltNewDespair
+Hope = OldHope or NewHope
+Blocker = Despair or Crate or Target or Wall or Player or DespairWall or NewDespairWall or Hope
+HopeBlocker = Crate or Target or Wall or DespairWall or NewDespairWall or Hope
+
+
+=======
+SOUNDS
+=======
+
+Crate MOVE 36772507
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Target, BackFlowers, Hope
+Player, Wall, Crate, Despair, NewDespair, DespairWall, NewDespairWall
+
+======
+RULES
+======
+
+[NewDespair] -> [OldDespair]
+[AltNewDespair] -> [AltOldDespair]
+[NewDespairWall] -> [DespairWall]
+[NewHope] -> [OldHope]
+late [OldDespair | No Blocker] -> [OldDespair | AltNewDespair]
+late [AltOldDespair | No Blocker] -> [AltOldDespair | NewDespair]
+late [OldDespair | Wall] -> [OldDespair | NewDespairWall]
+late [DespairWall | Wall] -> [DespairWall | NewDespairWall]
+late [OldHope | No HopeBlocker] -> [ OldHope | NewHope]
+
+[> Player | Crate] -> [> Player | > Crate]
+[> Crate | Blocker] -> [ Crate | Blocker ]
+
+late [Target | Despair] -> [ Target |  ]
+late [Despair Target] -> [Target]
+late [Crate | Despair] -> [ Crate |  ]
+late [Hope Despair] -> [Hope]
+late [Hope | DespairWall] -> [Hope | Wall]
+late [Hope | NewDespairWall] -> [Hope | Wall]
+
+==============
+WINCONDITIONS
+==============
+
+Some Player on Target
+
+=======
+LEVELS
+=======
+
+message You have love in your heart, Lass.
+
+######
+#...x#
+#.ff.#
+#.ff.#
+#o..P#
+######
+
+message So your heart can weather Despair.
+
+#########
+#x.f...f#
+#.#.....#
+#.p.f#..#
+#.#..#f.#
+#xzf...o#
+#########
+
+message And you've others who love you.
+
+#########
+#x......#
+#...#...#
+#p..*..##
+#...#...#
+#x.....o#
+#########
+
+message The war can't last forever, Lass.
+
+########
+#.#zx#p#
+#....*.#
+#......#
+#o#*.#.#
+########
+
+message Think of the time we shared.
+
+###########
+#.........#
+#.*#.o.####
+#..*###...#
+#.......*.#
+#......#..#
+####...####
+#x.......p#
+###########
+
+message Then bottle your grief up tight.
+
+###########
+#o........#
+####.##.#.#
+#.....*.#.#
+#.#.###.#.#
+#.#....*..#
+#.#*.#.##.#
+#x#...p#z.#
+###########
+
+message I wish I could be there, Lass.
+
+###########
+#...o...zx#
+#.#.....#z#
+#...#.#...#
+#.........#
+#..**.**..#
+#z........#
+#xz......p#
+###########
+
+message You're loved. You'll find a way.
+
+###########
+#....o....#
+#..#####..#
+#.#.....#.#
+#...*p*...#
+#....*....#
+#...###...#
+#x.......x#
+###########
+
+message There is always Hope, Lass.
+
+###########
+#........H#
+#.......p.#
+#x........#
+#zx.......#
+#xzx......#
+#zxzx.....#
+#ozxzx....#
+###########
+
+message  It may waver, but it stays lit.
+
+###########
+#....p....#
+###.#*#.###
+#x.......x#
+###.*.*.###
+#HH*.....x#
+###.#.#.###
+#x.......o#
+###########
+
+message Temper your hope with wisdom.
+
+############
+#......zxzx#
+#.##.##.####
+#......*...#
+#.*p.#.#.#o#
+#...*.*.*#.#
+####.###...#
+#H.........#
+############
+
+message Save no Despair for me, Lass.
+
+##################
+#..*.#H#o........#
+#...*..#######.#.#
+#.##.#########.#*#
+#.#.....*....#.#.#
+#H#...#.p..#z.*H*#
+###...#.#*##...#.#
+#...##z.....#*.xz#
+#.*.......*...xzx#
+#x...#.*....#xzxz#
+##################
+
+message For I have hope as well.
+message Take Heart, Lass. Goodbye.
+
+title Wrapping Recipe
+author increpare
+homepage http://www.puzzlescript.net
+
+========
+OBJECTS
+========
+
+Wrap
+Black
+
+Background
+White
+
+Player
+Blue
+
+=======
+LEGEND
+=======
+
+. = Background
+~ = Wrap
+@ = Player
+
+=======
+SOUNDS
+=======
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Wrap
+Player
+
+======
+RULES
+======
+
+[ Wrap | < Player | ... | | Wrap ] -> [ Wrap | | ... | Player | Wrap ]
+
+==============
+WINCONDITIONS
+==============
+
+=======
+LEVELS
+=======
+
+~~~~~~~
+~.....~
+~.....~
+~..@..~
+~.....~
+~.....~
+~~~~~~~
+
+
+title One player, unlimited rigidbodies
+author increpare
+homepage www.increpare.com
+
+(
+
+This is a sample of 
+
+- Unlimited rigid bodies
+- 1 Player (should be extendable)
+
+It's made as an example for the extended rigid body tutorial here:
+
+https://www.puzzlescript.net/Documentation/rigidbodies.html
+
+)
+
+========
+OBJECTS
+========
+
+Background
+green
+
+Wall
+BROWN DARKBROWN
+00010
+11111
+01000
+11111
+00010
+
+Player
+Black Orange White Blue
+.000.
+.111.
+22222
+.333.
+.3.3.
+
+ Crate
+Yellow orange
+00000
+01110
+01110
+01110
+00000
+
+
+(The directional overlays bellow establish connections between crates)
+
+ Crate_U
+orange
+.000.
+.....
+.....
+.....
+.....
+
+ Crate_D
+orange
+.....
+.....
+.....
+.....
+.000.
+
+ Crate_L
+orange
+.....
+0....
+0....
+0....
+.....
+
+ Crate_R
+orange
+.....
+....0
+....0
+....0
+.....
+
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Player
+
+w = Crate and Crate_U
+x = Crate and Crate_D
+a = Crate and Crate_L
+d = Crate and Crate_R
+
+e = Crate and Crate_U and Crate_L
+z = Crate and Crate_D and Crate_L
+q = Crate and Crate_U and Crate_R
+c = Crate and Crate_D and Crate_R
+
+r = Crate and Crate_L and Crate_R
+t = Crate and Crate_D and Crate_U
+
+1 = Crate and Crate_D and Crate_L and Crate_R
+2 = Crate and Crate_U and Crate_L and Crate_R
+3 = Crate and Crate_U and Crate_D and Crate_L
+4 = Crate and Crate_U and Crate_D and Crate_R
+
+0 = Crate and Crate_U and Crate_D and Crate_L and Crate_R
+
+5 = Crate
+
+ Crate_Connection = Crate_U or Crate_D or Crate_L or Crate_R
+
+Pusher = Player or Crate
+Pushable = Crate or Crate_connection
+
+=======
+SOUNDS
+=======
+
+ Crate MOVE 36772507
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Player, Wall, Crate
+ Crate_U
+ Crate_D
+ Crate_L
+ Crate_R
+
+======
+RULES
+======
+
+(For making maps easily: uncomment out the next few lines + press action to discard all boundaries and recreate them)
+
+( [ action player ] [ Crate_connection ] -> [ action player ] [ ] )
+( up [ action player ] [ Crate | Crate ] -> [ action player ] [ Crate Crate_u | Crate Crate_d ] )
+( right [ action player ] [ Crate | Crate ] -> [ action player ] [ Crate Crate_r | Crate Crate_l ] )
+
+(Propagate movements within and between extended bodies)
+[ > Pusher | Pushable ] -> [ > Pusher | > Pushable ]
++ up [ moving Crate Crate_U | Crate ] -> [ moving Crate Crate_U | moving Crate ]
++ down [ moving Crate Crate_D | Crate ] -> [ moving Crate Crate_D | moving Crate ]
++ left [ moving Crate Crate_L | Crate ] -> [ moving Crate Crate_L | moving Crate ]
++ right [ moving Crate Crate_R | Crate ] -> [ moving Crate Crate_R | moving Crate ]
+
+(Move connections along with the crates themselves)
+[ moving Crate stationary Crate_connection ] -> [ moving Crate moving Crate_connection ]
+
+(If any crate can't move, cancel the turn. This works because there's only one player.)
+[ > Crate | wall ] -> cancel
+
+==============
+WINCONDITIONS
+==============
+
+=======
+LEVELS
+=======
+
+###############
+#.............#
+#..ca...ca.dz.#
+#.ce..d1e...w.#
+#.t....w......#
+#.w.d1a..5.5..#
+#....w....5...#
+#......dz.....#
+#...p...t..dz.#
+#..x..cre...w.#
+#..w..w...5...#
+#.............#
+###############
+
+title Ponies Jumping Synchronously
+author vytah
+
+background_color #990044
+text_color white
+
+========
+OBJECTS
+========
+
+
+Background  (special, automatically placed in its own layer)
+lightblue
+
+JumpVariableA
+lightblue
+0...0
+.000.
+.0.0.
+.000.
+0...0
+
+JumpVariableA1
+lightblue
+0...0
+..0..
+..0..
+..0..
+0...0
+
+JumpVariableA2
+lightblue
+0...0
+.0.0.
+.0.0.
+.0.0.
+0...0
+
+JumpVariableT
+lightblue
+..0..
+.000.
+.0.0.
+.000.
+.....
+
+JumpVariableT1
+lightblue
+..0..
+..0..
+..0..
+..0..
+.....
+
+JumpVariableT2
+lightblue
+..0..
+.0.0.
+.0.0.
+.0.0.
+.....
+
+JumpVariableB
+lightblue
+.....
+.000.
+.0.0.
+.000.
+..0..
+
+JumpVariableB1
+lightblue
+.....
+..0..
+..0..
+..0..
+..0..
+
+JumpVariableB2
+lightblue
+.....
+.0.0.
+.0.0.
+.0.0.
+..0..
+
+Dirt
+brown darkbrown
+00000
+01000
+00000
+00010
+00000
+
+Tunnel
+brown darkbrown
+00000
+01000
+.....
+.....
+.....
+
+
+Grass
+brown lightgreen green darkBrown
+11211
+21020
+00000
+00030
+00000
+
+Exit
+pink red
+.1.1.
+10101
+10001
+.101.
+..1..
+
+WoodenWall
+Brown orange
+.111.
+.001.
+.111.
+.100.
+.111.
+
+Teleport
+Brown darkBrown pink white
+23332
+02220
+00000
+00010
+00000
+
+Fire
+red orange yellow
+..0..
+.00..
+0110.
+01210
+.020.
+
+TwiLeft
+purple
+.0...
+00...
+.0000
+.0.0.
+.0.0.
+
+TwiRight
+purple
+...0.
+...00
+0000.
+.0.0.
+.0.0.
+
+TeleportingTwilight
+purple
+...0.
+...00
+0000.
+.0.0.
+.0.0.
+
+RdLeft
+#00dddd
+.0...
+00...
+.0000
+.0.0.
+.0.0.
+
+RdRight
+#00dddd
+...0.
+...00
+0000.
+.0.0.
+.0.0.
+
+AbLeft
+yellow red
+..1..
+.01..
+00...
+.0000
+.0.0.
+
+AbRight
+yellow red
+..1..
+..10.
+...00
+0000.
+.0.0.
+
+AjLeft
+orange
+.0...
+00...
+.0000
+.0.0.
+.0.0.
+
+AjRight
+orange
+...0.
+...00
+0000.
+.0.0.
+.0.0.
+
+DeadPony
+lightGray darkGray
+.111.
+10001
+10101
+10001
+10101
+
+Boulder
+lightGray darkGray
+.....
+.111.
+10001
+10001
+.111.
+
+=======
+LEGEND
+=======
+
+Applejack=AjLeft or AjRight
+RainbowDash=RdLeft or RdRight
+Twilight=TwiLeft or TwiRight
+AppleBloom=AbLeft or AbRight
+(NotPegasus=Twilight or Applejack or AppleBloom or TeleportingTwilight)
+Player=Twilight or Applejack or AppleBloom or RainbowDash
+Obstacle=Grass or Dirt or DeadPony or WoodenWall or Teleport or Boulder
+JumpObstacle=Obstacle or Player or Tunnel
+JumpObstacleForFillies=Obstacle or Player
+JumpVariablePositiveA=JumpVariableA1 or JumpVariableA2
+JumpVariablePositiveT=JumpVariableT1 or JumpVariableT2
+JumpVariablePositiveB=JumpVariableB1 or JumpVariableB2
+
+. = Background
+# = Dirt
+~ = Grass
+| = WoodenWall
+T = TwiRight
+A = AjRight
+D = RdRight
+B = AbRight
+J = JumpVariableA
+H = JumpVariableT
+L = JumpVariableB
+E = Exit
+^ = Teleport
+F = Fire
+O = Boulder
+- = Tunnel
+
+=========
+SOUNDS
+=========
+
+sfx0 47251907 (aj push)
+sfx1 13930501 (twi zap)
+sfx2 99083104 (death)
+sfx3 12667901 (twi teleport)
+sfx4 60310105 (jump)
+sfx5 58764102 (rd smash)
+sfx7 74120302 (aj buck)
+endlevel 64815700
+
+
+
+================
+COLLISIONLAYERS
+================
+
+Background
+JumpVariableA, JumpVariablePositiveA, JumpVariableT,JumpVariablePositiveT, JumpVariableB, JumpVariablePositiveB
+Exit, Fire, Tunnel
+Player, Obstacle, TeleportingTwilight
+
+======
+RULES
+======
+
+[> Player |Stationary Player] -> cancel
+[> Player |< Player] -> cancel
+
+[> Applejack| Tunnel] -> [Applejack|Tunnel]
+[> RainbowDash| Tunnel] -> [RainbowDash|Tunnel]
+[> Twilight| Tunnel] -> [Twilight|Tunnel]
+Vertical [> AppleBloom|Tunnel] -> [AppleBloom|Tunnel]
+
+[Left TwiRight] -> [Left TwiLeft]
+[Right TwiLeft] -> [Right TwiRight]
+[Left RdRight] -> [Left RdLeft]
+[Right RdLeft] -> [Right RdRight]
+[Left AjRight] -> [Left AjLeft]
+[Right AjLeft] -> [Right AjRight]
+[Left AbRight] -> [Left AbLeft]
+[Right AbLeft] -> [Right AbRight]
+
+Right[Action Applejack|WoodenWall] -> [AjLeft|]sfx7
+Left[Action Applejack|WoodenWall] -> [AjRight|]sfx7
+
+Down[Action Twilight|Teleport][no Player|Teleport]-> [|Teleport][TeleportingTwilight|Teleport] sfx3
+late[TeleportingTwilight]->[TwiRight]
+
+
+UP [ Up Applejack | No Obstacle No Player no tunnel] [JumpVariableA] -> [ Up Applejack | ] [JumpVariableA2] sfx4
+DOWN [ Up Applejack | no obstacle No Player no tunnel ][JumpVariablePositiveA] -> [ Applejack | ][JumpVariablePositiveA]
+DOWN [ Up Applejack | no obstacle No Player no tunnel][JumpVariableA2] -> [ Applejack | ][JumpVariableA2]
+HORIZONTAL [ > Applejack | NO obstacle No Player no tunnel][JumpVariableA1] -> [ | Applejack ][JumpVariableA]
+HORIZONTAL [ > Applejack | NO obstacle No Player no tunnel][JumpVariableA2] -> [ | Applejack ][JumpVariableA1]
+HORIZONTAL [ > Applejack | JumpObstacle][JumpVariableA1] -> [ Applejack|JumpObstacle ][JumpVariableA]
+HORIZONTAL [ > Applejack | JumpObstacle][JumpVariableA2] -> [ Applejack|JumpObstacle ][JumpVariableA1]
+LATE DOWN [ Applejack | NO obstacle No Player no tunnel][JumpVariableA] -> [ | Applejack ][JumpVariableA]
+LATE DOWN [ Applejack | Obstacle ][JumpVariablePositiveA] -> [ Applejack | Obstacle ][JumpVariableA]
+
+
+UP [ Up Twilight | No Obstacle No Player no tunnel] [JumpVariableT] -> [ Up Twilight | ] [JumpVariableT2] sfx4
+DOWN [ Up Twilight | no obstacle No Player no tunnel ][JumpVariablePositiveT] -> [ Twilight | ][JumpVariablePositiveT]
+DOWN [ Up Twilight | no obstacle No Player no tunnel][JumpVariableT2] -> [ Twilight | ][JumpVariableT2]
+HORIZONTAL [ > Twilight | NO obstacle No Player no tunnel][JumpVariableT1] -> [ | Twilight ][JumpVariableT]
+HORIZONTAL [ > Twilight | NO obstacle No Player no tunnel][JumpVariableT2] -> [ | Twilight ][JumpVariableT1]
+HORIZONTAL [ > Twilight | JumpObstacle][JumpVariableT1] -> [ Twilight|JumpObstacle ][JumpVariableT]
+HORIZONTAL [ > Twilight | JumpObstacle][JumpVariableT2] -> [ Twilight|JumpObstacle ][JumpVariableT1]
+LATE DOWN [ Twilight | NO obstacle No Player no tunnel][JumpVariableT] -> [ | Twilight ][JumpVariableT]
+LATE DOWN [ Twilight | Obstacle ][JumpVariablePositiveT] -> [ Twilight | Obstacle ][JumpVariableT]
+
+
+UP [ Up AppleBloom | No Obstacle No Player no tunnel] [JumpVariableB] -> [ Up AppleBloom | ] [JumpVariableB2] sfx4
+DOWN [ Up AppleBloom | no obstacle No Player no tunnel ][JumpVariablePositiveB] -> [ AppleBloom | ][JumpVariablePositiveB]
+DOWN [ Up AppleBloom | no obstacle No Player no tunnel][JumpVariableB2] -> [ AppleBloom | ][JumpVariableB2]
+HORIZONTAL [ > AppleBloom | NO obstacle No Player][JumpVariableB1] -> [ | AppleBloom ][JumpVariableB]
+HORIZONTAL [ > AppleBloom | NO obstacle No Player][JumpVariableB2] -> [ | AppleBloom ][JumpVariableB1]
+HORIZONTAL [ > AppleBloom | JumpObstacleForFillies][JumpVariableB1] -> [ AppleBloom|JumpObstacleForFillies ][JumpVariableB]
+HORIZONTAL [ > AppleBloom | JumpObstacleForFillies][JumpVariableB2] -> [ AppleBloom|JumpObstacleForFillies ][JumpVariableB1]
+LATE DOWN [ AppleBloom | NO obstacle No Player no tunnel][JumpVariableB] -> [ | AppleBloom ][JumpVariableB]
+LATE DOWN [ AppleBloom | Obstacle ][JumpVariablePositiveB] -> [ AppleBloom | Obstacle ][JumpVariableB]
+)
+
+late [Player Fire] -> [DeadPony Fire] sfx2
+
+[> Applejack|Boulder|no Obstacle No Player] -> [> Applejack| > Boulder |] sfx0
+[> RainbowDash|Boulder|no Obstacle No Player] -> [> RainbowDash||] sfx5
+Right [Action TwiRight|Boulder] -> [TwiRight|] sfx1
+Left [Action TwiLeft|Boulder] -> [TwiLeft|] sfx1
+
+[Boulder Fire] -> [Boulder]
+
+late down [Boulder|Player] -> [|DeadPony] sfx2
+late down [Boulder| no Obstacle no Tunnel] -> [|Boulder no Fire]
+late [Boulder Fire] -> [Boulder]
+
+==============
+WINCONDITIONS
+==============
+
+some Player
+all Exit on Player
+no DeadPony
+
+
+=======
+LEVELS
+=======
+
+(message #1. Grab the Crystal Heart.)
+
+..........H
+...........
+.........E.
+..T....~~~~
+~~~~~~#####
+###########
+
+
+message #2. Applejack bucks and pushes.
+
+..........J
+..~~~~~~~~~
+...########
+.A.|.o...E#
+######.####
+###########
+
+message #3. Twilight teleports and zaps.
+
+...........H
+............
+............
+.T....E.O...
+~^~FFF~~~~^~
+############
+
+message #4. Rainbow Dash flies and smashes.
+
+#########
+....#..E#
+....O..##
+....#..##
+.D..#..##
+#########
+
+message #5. Rocks fall, everyone dies.
+
+.........J
+..........
+...~~~~~.~
+~~O..O...#
+##|A.O..E#
+##########
+
+message #6. Cooperate with friends.
+
+J.....###
+......###
+...D..#.E
+....#..O#
+.A..O..|#
+~~~######
+#########
+
+message #7. Cooperate with family.
+
+##.......JL#####
+---..O.A.O.#...#
+###~.~~~~~.#..E#
+###.F..B..F-.###
+####.#####.#####
+################
+
+
+message #8. Help a filly get a cutie mark!
+~~~~~..........L
+#####.........D.
+###E-....O......
+######...O......
+#######.###...B.
+############~~~~
+
+message Aww... Still no cutie mark...
+
+message #9. Explore dangerous caves!
+
+.........##############
+.......###O############
+JHL..#####O############
+...#######O############
+..#####..-O------O-E###
+######..##O######O#####
+#####..###|...A..O.....
+####..####O###^.#######
+####.-----O-------...B.
+##########O############
+..........O..........T.
+############^##########
+
+message #10. Friendship is magic!
+
+JH.........###
+.......O.#.#OE
+DAT....|.#..O#
+~~~.~~~.~###O#
+.......F.#..O#
+########^#^###
+
+message #11. Evil enchantress.
+~~~~~...............JHL
+#####~~~~~~~~~~........
+################.......
+###......###...........
+###..O.O.F.....#.#..D..
+#E-..#B#.|O........A.T.
+#############.~~~~~~~~~
+#######################
+
+
+message #12. Equestrian Games.
+
+###############################
+#########O#####################
+#########O#####################
+###......O..................JHL
+###..O.#.O..............D......
+#E-..#B#.O.....................
+#########O#####################
+#........|.....................
+#########O#####..|.|.|.|.|.....
+#........O....##.#.#.#.#.#.A...
+############...################
+#############..................
+###############...F........T...
+###############################
+
+message Congratulations!
+
+message The Mushroom Kingdom is now safe!
+
+message I mean, the Crystal Empire.
+
+title Colour Chained
+author Dennis Au
+youtube _VzrmRkLfxM
+run_rules_on_level_start
+again_interval 0.015
+noundo
+
+(version 201310152126 - added some harder levels, added sfx for rotate and drop, decided to use noundo)
+(version 201310142256 - tweaked scoring, added pop animation and reworked code)
+
+========
+OBJECTS
+========
+Background
+Black
+
+P1 p
+Black
+0...0
+.....
+.....
+.....
+0...0
+
+P2 q
+Black
+0...0
+.....
+.....
+.....
+0...0
+
+hasN
+Orange
+0....
+.....
+.....
+.....
+....0
+
+Remove
+White
+.....
+.....
+.....
+.....
+.....
+
+
+NP1 n
+White
+.....
+.....
+.....
+.....
+.....
+
+NP2 m
+White
+.....
+.....
+.....
+.....
+.....
+
+LoseFlag
+Grey Black LightGrey
+.....
+10120
+.....
+02010
+.....
+
+PieceGen
+Black
+
+HBorder -
+DarkGrey
+.....
+.....
+0...0
+.....
+.....
+
+VBorder |
+DarkGrey
+..0..
+.....
+.....
+.....
+..0..
+
+(pieces)
+C1 R
+Red LightGrey Black
+.000.
+00010
+00000
+00000
+.000.
+
+C2 G
+Green LightGrey Black
+.000.
+00010
+00000
+00000
+.000.
+
+C3 B
+Blue LightGrey Black
+.000.
+00010
+00000
+00000
+.000.
+
+C4 Y
+Yellow LightGrey Black
+.000.
+00010
+00000
+00000
+.000.
+
+(Numbers)
+No1 1
+DarkGrey
+..0..
+.00..
+..0..
+..0..
+.000.
+
+No2 2
+DarkGrey
+.00..
+0..0.
+..0..
+.0...
+0000.
+
+No3 3
+DarkGrey
+000..
+...0.
+.00..
+...0.
+000..
+
+No4 4
+DarkGrey
+..0..
+.00..
+0.0..
+0000.
+..0..
+
+No5 5
+DarkGrey
+0000.
+0....
+000..
+...0.
+000..
+
+No6 6
+DarkGrey
+.00..
+0....
+000..
+0..0.
+.00..
+
+No7 7
+DarkGrey
+0000.
+...0.
+..0..
+.0...
+0....
+
+No8 8
+DarkGrey
+.00..
+0..0.
+.00..
+0..0.
+.00..
+
+No9 9
+DarkGrey
+.00..
+0..0.
+.000.
+...0.
+.00..
+
+No0 0
+DarkGrey
+.00..
+0..0.
+0..0.
+0..0.
+.00..
+
+Pop
+LightGrey White
+...1.
+..101
+...1.
+.....
+.....
+
+Inc
+Black
+
+PlayArea
+Green
+
+
+=======
+LEGEND
+=======
+. = Background
+u = PieceGen
++ = Inc
+
+Player = P1 or P2
+Piece = C1 or C2 or C3 or C4
+PieceB = Piece
+
+NP = NP1 or NP2
+Border = HBorder or VBorder
+Score = No1 or No2 or No3 or No4 or No5 or No6 or No7 or No8 or No9 or No0
+
+Obstacle = Piece or Score
+Match3Logic = hasN or Remove or Pop
+
+=======
+SOUNDS
+=======
+startlevel 17589703
+
+(death)
+sfx0 45317502
+
+(match3)
+sfx1 530500
+
+(piece drop)
+sfx2 75273507
+
+(piece rotate)
+sfx3 21774107
+
+================
+COLLISIONLAYERS
+================
+PlayArea
+Background
+Player, NP, PieceGen, Border
+Piece, Score, Inc,
+Match3Logic, LoseFlag
+
+======
+RULES
+======
+(set preview area)
+[] -> [PlayArea]
+Down [NP|PlayArea] -> [NP|]
+Vertical [No PlayArea| PlayArea] -> [|]
+
+(match 3 rules)
+Right [C1|C1] -> [C1 hasN|C1 hasN]
+Right [C2|C2] -> [C2 hasN|C2 hasN]
+Right [C3|C3] -> [C3 hasN|C3 hasN]
+Right [C4|C4] -> [C4 hasN|C4 hasN]
+
+Vertical [C1 hasN|C1] -> [Remove C1| Remove C1]
+Vertical [C2 hasN|C2] -> [Remove C2| Remove C2]
+Vertical [C3 hasN|C3] -> [Remove C3| Remove C3]
+Vertical [C4 hasN|C4] -> [Remove C4| Remove C4]
+
+[Remove C1| C1] -> [Remove C1| Remove C1]
+[Remove C2| C2] -> [Remove C2| Remove C2]
+[Remove C3| C3] -> [Remove C3| Remove C3]
+[Remove C4| C4] -> [Remove C4| Remove C4]
+
+[C1|C1|C1] -> [Remove C1|Remove C1|Remove C1]
+[C2|C2|C2] -> [Remove C2|Remove C2|Remove C2]
+[C3|C3|C3] -> [Remove C3|Remove C3|Remove C3]
+[C4|C4|C4] -> [Remove C4|Remove C4|Remove C4]
+
+[hasN] -> []
+
+[PlayArea Remove Piece][P1] -> [PlayArea Pop][P1] sfx1
+random [Pop][inc] -> [][left inc] again
+
+
+(down drops pieces)
+Down [> Player Piece|No Piece] -> [Player|> Piece] sfx2
+Down [> Player No Piece] -> Cancel
+
+
+(x rotates clockwise)
+[Up P1|P2] -> [> P1|v P2] sfx3
+[Action P1|P2] -> [> P1|v P2] sfx3
+[Moving Player Piece] -> [Moving Player Moving Piece]
+[> Player| Border] -> cancel
+
+
+(gravity)
+Down [PlayArea Piece No Player|No Obstacle][stationary inc] -> [PlayArea|> Piece][stationary inc] again
+
+
+(explicit loss if piece ends on border)
+[Piece Border][stationary inc][P1] -> [Piece Border LoseFlag][inc][] sfx0
+[LoseFlag|No LoseFlag] -> [LoseFlag|LoseFlag] again
+
+
+(scoring)
+
+left [> inc| score] -> [> inc| > score]
+left [> No9| score] -> [No0|> score]
+left [> No9| border] -> [No0| border]
+
+left [> No0] -> [No1]
+left [> No1] -> [No2]
+left [> No2] -> [No3]
+left [> No3] -> [No4]
+left [> No4] -> [No5]
+left [> No5] -> [No6]
+left [> No6] -> [No7]
+left [> No7] -> [No8]
+left [> No8] -> [No9]
+
+
+(preview area)
+
+startloop
+(for endless mode)
+[PieceGen No Piece] -> [PieceGen Random Piece]
+(antigrav)
+Up [Piece No PlayArea No NP| No Obstacle] -> [|> Piece]
+(get next piece)
+[P1 no Piece][P2 no Piece][NP1 Piece|NP2 PieceB]-> [P1 Piece][P2 PieceB][NP1|NP2]
+endloop
+
+
+==============
+WINCONDITIONS
+==============
+No Piece
+No Pop
+
+=======
+LEVELS
+=======
+(Empty Level Template
+
+nm|..pq..|
+..|......|
+..|------|
+..|......|
+..|......|
+..|......|
+..|......|
+..|......|
+..|......|
+..|000000+
+
+)
+
+nm|..pq..|
+RR|......|
+..|------|
+..|......|
+..|......|
+..|......|
+..|..Y...|
+..|..RR..|
+..|R.YY..|
+..|000000+
+
+nm|..pq..|
+GR|......|
+..|------|
+..|......|
+..|......|
+..|....B.|
+..|...BG.|
+..|...RG.|
+..|.R.RB.|
+..|000000+
+
+nm|..pq..|
+RR|......|
+BB|------|
+BR|......|
+..|......|
+..|......|
+..|......|
+..|....B.|
+..|..RRB.|
+..|000000+
+
+
+nm|..pq..|
+BG|......|
+RB|------|
+..|......|
+..|......|
+..|......|
+..|......|
+..|..GB..|
+..|RRGB..|
+..|000000+
+
+nm|..pq..|
+BG|......|
+GB|------|
+..|......|
+..|......|
+..|......|
+..|...G..|
+..|..BB..|
+..|..GG.B|
+..|000000+
+
+nm|..pq..|
+RG|......|
+GB|------|
+BR|......|
+..|......|
+..|......|
+..|...G..|
+..|...B..|
+..|..RRG.|
+..|000000+
+
+nm|..pq..|
+GR|......|
+RY|------|
+BG|......|
+YB|......|
+..|......|
+..|..B...|
+..|..RB..|
+..|.GYB..|
+..|000000+
+
+nm|..pq..|
+RG|......|
+YY|------|
+YG|......|
+BB|......|
+..|BY....|
+..|YB.G..|
+..|YRRG..|
+..|BGGBBY|
+..|000000+
+
+nm|..pq..|
+rb|......|
+bb|------|
+by|......|
+ry|......|
+..|....r.|
+..|...rb.|
+..|.bybyb|
+..|bybyrr|
+..|000000+
+
+nm|..pq..|
+br|......|
+ry|------|
+yy|......|
+..|....b.|
+..|...gb.|
+..|...yy.|
+..|.bygb.|
+..|byrgrr|
+..|000000+
+
+
+nm|..pq..|
+by|......|
+ry|------|
+ry|......|
+yg|....y.|
+..|..rgby|
+..|b.gbyg|
+..|rrgbyg|
+..|bbyyrr|
+..|000000+
+
+
+message Thank you for playing.
+message Music: Puzzle Pieces - Desert of Lost Endings by Nick Tanski (nicholastanski.bandcamp.com)
+
+(endless mode)
+message Endless Mode unlocked!
+
+nm|..pq..|
+..|......|
+..|------|
+..|......|
+..|......|
+..|......|
+..|......|
+..|......|
+..|......|
+uu|000000+
+
+(CC BY-NC-SA 3.0)
+
+USER PROMPT:
+The following PuzzleScript game code:
+```plaintext
+title Dungeon Dimensions Demake
+author assistant
+
+========
+OBJECTS
+========
+
+Background
+darkgrey
+
+Wall
+gray
+00000
+00000
+00000
+00000
+00000
+
+Player
+black white
+.111.
+.111.
+.000.
+.111.
+.1.1.
+
+Enemy
+red
+.000.
+.000.
+00000
+.000.
+.0.0.
+
+Portal
+purple
+.....
+.000.
+.010.
+.000.
+.....
+
+AlternateBackground
+darkblue
+
+AlternateWall
+blue
+00000
+11111
+01010
+11111
+00000
+
+======
+LEGEND
+======
+
+. = Background and AlternateBackground
+# = Wall
+@ = AlternateWall
+P = Player
+E = Enemy
+O = Portal
+
+=======
+SOUNDS
+=======
+
+Player move 480693041
+Enemy destroy 83704102
+Portal use 50665503
+
+================
+COLLISIONLAYERS
+================
+
+Background, AlternateBackground
+Wall, AlternateWall
+Player, Enemy, Portal
+
+======
+RULES
+======
+
+# Player can move up, down, left, right and interact with portals
+(up) [ Player | Portal ] -> [ AlternateBackground | Player ] sfx2
+(down) [ Player | Portal ] -> [ AlternateBackground | Player ] sfx2
+(left) [ Player | Portal ] -> [ AlternateBackground | Player ] sfx2
+(right) [ Player | Portal ] -> [ AlternateBackground | Player ] sfx2
+
+[ Player | Enemy ] -> [ Player | ] sfx1
+
+[ > Player | Wall ] -> cancel
+[ > Player | AlternateBackground ] -> [ > Player | Background ]
+
+==============
+WINCONDITIONS
+==============
+
+no Enemy
+
+=======
+LEVELS
+=======
+
+#########
+#.......#
+#...E...#
+#.P...O.#
+#.......#
+#########
+
+.#######.
+.#.@..#.#
+.#O##E.##
+##.#..#.#
+#.P..##.#
+#######.#
+
+
+```
+produced the following console output:
+=================================
+line 39 : Trying to access color number 1 from the color palette of sprite PORTAL, but there are only 1 defined in it.
+line 49 : Trying to access color number 1 from the color palette of sprite ALTERNATEWALL, but there are only 1 defined in it.
+line 50 : Trying to access color number 1 from the color palette of sprite ALTERNATEWALL, but there are only 1 defined in it.
+line 51 : Trying to access color number 1 from the color palette of sprite ALTERNATEWALL, but there are only 1 defined in it.
+line 71 : Was expecting a soundverb here (MOVE, DESTROY, CANTMOVE, or the like), but found something else.
+line 77 : Background must be in a layer by itself.
+too many errors, aborting compilation
+Errors detected during compilation; the game may not work correctly.
+Return a repaired version of the code that addresses these errors.  The game should be a simplified `demake` of the following game idea: **Dungeon Dimensions:** Flip between alternate dimensions using magical portals to solve spatial puzzles and defeat enemies in this tactical RPG.. Return your code in full, inside a ```plaintext code block.

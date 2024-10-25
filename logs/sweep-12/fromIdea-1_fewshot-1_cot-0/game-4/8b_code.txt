@@ -1,0 +1,160 @@
+```plaintext
+title Railway Riddle Demake
+author PuzzleScriptUser
+
+========
+OBJECTS
+========
+
+Background
+darkgreen green
+00000
+00000
+00100
+00000
+00000
+
+Town
+darkblue blue
+.....
+..0..
+.000.
+..0..
+.....
+
+TrackH
+darkgrey grey
+.....
+.....
+00000
+.....
+.....
+
+TrackV
+darkgrey grey
+..0..
+..0..
+..0..
+..0..
+..0..
+
+TrackL
+darkgrey grey
+.....
+..00.
+..0..
+..0..
+.....
+
+TrackR
+darkgrey grey
+.....
+.00..
+..0..
+..0..
+.....
+
+Train
+black red
+.....
+..1..
+.111.
+..1..
+.....
+
+Cursor
+lightblue blue
+.....
+.....
+.0.0.
+.....
+.....
+
+=======
+LEGEND
+=======
+
+. = Background
+T = Town
+- = TrackH
+| = TrackV
+L = TrackL
+R = TrackR
+@ = Train
+C = Cursor
+Track = TrackH or TrackV or TrackL or TrackR
+
+=======
+SOUNDS
+=======
+
+startgame 4284710
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Town
+Cursor, Track, Train
+
+======
+RULES
+======
+
+# Cursor movement
+
+[ > C ] -> [ > C ]
+[ < C ] -> [ < C ]
+[ ^ C ] -> [ ^ C ]
+[ v C ] -> [ v C ]
+
+# Placing horizontal track
+
+[action C | no Track] -> [C | TrackH]
+
+# Placing vertical track
+
+[action C | no Track] -> [C | TrackV]
+
+# Placing left curve track
+
+[action C | no Track] -> [C | TrackL]
+
+# Placing right curve track
+
+[action C | no Track] -> [C | TrackR]
+
+# Train moves through tracks
+
+[ > @ | - ] -> [ > @ | - ]
+[ v @ | | ] -> [ v @ | | ]
+[ > @ | L ] -> [ v @ | L ]
+[ v @ | R ] -> [ > @ | R ]
+
+==============
+WINCONDITIONS
+==============
+
+all @ on T
+
+=======
+LEVELS
+=======
+message Let's build a track!
+
+..........
+.T......T.
+..........
+....C.....
+@.........
+
+```
+
+Key changes made:
+1. Updated the placeholder `V` with `|` for vertical tracks to avoid the reserved keyword conflict.
+2. Removed incorrect referencing to nonexistent objects in rules (such as `movement` and `placing` keywords).
+3. Adjusted collision layers to combine Cursor, Track, and Train movement within the same layer. 
+4. Added proper syntax in rules to match the action (lowercase `action` keyword).
+5. Fixed casing consistency for all definitions.
+```

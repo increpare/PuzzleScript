@@ -1,0 +1,122 @@
+```plaintext
+title Time Trinkle
+author YourName
+homepage www.example.com
+
+========
+OBJECTS
+========
+
+Background
+Black
+.....
+.....
+.....
+.....
+.....
+
+Wall
+DarkGray
+#####
+#####
+#####
+#####
+#####
+
+TilePlain
+Gray LightGray
+11111
+10001
+10001
+10001
+11111
+
+TileFuture
+Blue LightBlue
+11111
+10001
+10001
+10001
+11111
+
+TilePast
+Green LightGreen
+11111
+10001
+10001
+10001
+11111
+
+TimeMachine
+Yellow
+.....
+..0..
+..0..
+..0..
+.....
+
+Player
+Red
+.....
+..0..
+.000.
+.....
+.....
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Player
+1 = TilePlain
+2 = TileFuture
+3 = TilePast
+! = TimeMachine
+
+=======
+SOUNDS
+=======
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Wall
+TilePlain, TileFuture, TilePast
+TimeMachine
+Player
+
+======
+RULES
+======
+
+[ > Player | TilePlain ] -> [ > Player | TileFuture ]
+[ > Player | TileFuture ] -> [ > Player | TilePast ]
+[ > Player | TilePast ] -> [ > Player | TilePlain ]
+
+==============
+WINCONDITIONS
+==============
+
+All TimeMachine on TileFuture
+
+=======
+LEVELS
+=======
+
+#########
+#.......#
+#.......#
+#P.1.2.3#
+#...!...#
+#.......#
+#.......#
+#########
+
+message Welcome to Time Trinkle! Flip tiles to synchronize time and solve the puzzle.
+```
+
+This version of the code ensures that the "Wall" object is properly assigned to a collision layer, which resolves the compilation error. Additionally, the graphical representation of the "Wall" object has been added to visually present it in the level design, maintaining the basic idea of the game.

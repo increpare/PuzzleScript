@@ -1,0 +1,1703 @@
+SYSTEM PROMPT:
+You are a game designer, familiar with the PuzzleScript game description language. Here are some example games, for inspiration (do not reproduce these games exactly):
+
+title Extended Body Example: 1 Player, Multiple Extended Objects
+author Scott Hughes
+
+(
+
+Usable in the case where there's only a single player that's pushing stuff around.
+
+Example for
+https://www.puzzlescript.net/Documentation/rigidbodies.html#one_many
+
+)
+
+=======
+OBJECTS
+=======
+
+Background
+white
+
+Player
+pink
+
+Box1
+red
+
+Box2
+green
+
+Box3
+blue
+
+Box4
+orange
+
+Wall
+grey
+
+======
+LEGEND
+======
+
+. = Background
+@ = Player
+1 = Box1
+2 = Box2
+3 = Box3
+4 = Box4
+# = Wall
+
+Box = Box1 or Box2 or Box3 or Box4
+
+======
+SOUNDS
+======
+
+===============
+COLLISIONLAYERS
+===============
+
+Background
+Player, Box, Wall
+
+=====
+RULES
+=====
+
+[ > Player | Box ] -> [ > Player | > Box ]
+
+startloop
+
+(Propagate movements through crates of different types.)
+[ moving Box1 | Box1 ] -> [ moving Box1 | moving Box1 ]
+[ moving Box2 | Box2 ] -> [ moving Box2 | moving Box2 ]
+[ moving Box3 | Box3 ] -> [ moving Box3 | moving Box3 ]
+[ moving Box4 | Box4 ] -> [ moving Box4 | moving Box4 ]
+
+(Extend the movements between crates of different types.)
+[ > Box | Box ] -> [ > Box | > Box ]
+
+endloop
+
+(Just cancel the whole turn if something can't move.)
+[ > Box | Wall ] -> cancel
+
+=============
+WINCONDITIONS
+=============
+
+======
+LEVELS
+======
+
+################
+#....###.......#
+#....#.....##..#
+#...........#..#
+#...@..222..#..#
+##.....2.......#
+#...3.....1....#
+#..33.....1....#
+#..3.....11....#
+#....4........##
+#...444...##...#
+#..#.....##....#
+################
+
+
+title chaos wizard
+author mark wonnacott
+homepage http://twitter.com/ragzouken
+
+youtube JDIj3zPwEvw
+
+(run_rules_on_level_start)
+
+realtime_interval 0.2
+
+========
+OBJECTS
+========
+
+Space
+black darkblue
+00010
+00000
+00000
+01000
+00000
+
+Background
+darkblue darkgreen
+00000
+01000
+00010
+00001
+00100
+
+Wall
+black darkbrown darkblue
+01112
+21212
+02121
+20021
+00010
+
+Indestructible
+darkgreen grey darkgrey
+01112
+21212
+02121
+20021
+00010
+
+Red
+red lightred darkred
+..0..
+.010.
+22110
+.220.
+..2..
+
+Blue
+blue lightblue purple
+..0..
+.010.
+22110
+.220.
+..2..
+
+Green
+green lightgreen darkgreen
+..0..
+.010.
+22110
+.220.
+..2..
+
+Stone
+grey lightgrey darkgrey
+..0..
+.010.
+22110
+.220.
+..2..
+
+Charge
+red darkred
+1.0.1
+..0..
+00000
+..0..
+1.0.1
+
+Prism
+white lightblue grey
+..0..
+.000.
+00000
+.000.
+..0..
+
+
+MoveUp
+white
+
+MoveDown
+white
+
+MoveLeft
+white
+
+MoveRight
+white
+
+Expand
+white
+
+Inhibit
+white
+
+Hold
+blue lightblue
+.1.1.
+1.0.1
+.0.0.
+1.0.1
+.1.1.
+
+Burn
+red orange yellow white
+.010.
+01210
+12321
+01210
+.010.
+
+Player
+black darkgrey yellow
+..1..
+.111.
+.212.
+00100
+00000
+
+Rival
+black darkgrey red
+..1..
+.111.
+.212.
+00100
+00000
+
+Goal
+black
+0.0.0
+.0.0.
+0.0.0
+.0.0.
+0.0.0
+
+=======
+LEGEND
+=======
+, = Space
+. = Background
++ = Prism
+# = Wall
+X = Indestructible
+@ = Player and Inhibit
+R = Red
+G = Green
+B = Blue
+S = Stone
+? = Goal
+$ = Charge
+% = Rival
+
+3 = Space and Blue
+£ = Space and Charge
+
+Wizard = Player or Rival
+
+Gem = Red or Blue or Green or Stone
+
+Movement = MoveUp or MoveDown or MoveLeft or MoveRight or Expand
+Mediator = Hold or Burn
+
+Moveable = Wizard or Gem
+Destructable = Wizard or Gem or Wall
+
+=======
+SOUNDS
+=======
+
+(sfx0 76693900 (prism))
+sfx1 68148303 (cast)
+sfx2 24680901 (fall)
+
+Burn destroy 17088108
+
+================
+COLLISIONLAYERS
+================
+
+MoveUp, MoveDown, MoveLeft, MoveRight, Expand, Inhibit
+Background
+Space
+Charge, Goal
+Wizard, Gem, Stone, Wall, Prism, Indestructible
+Hold, Burn
+
+======
+RULES
+======
+
+[ Inhibit ] [ moving Player ] -> [ ] [ Player ]
+[ Inhibit ] -> cancel
+
+[ moving Player Hold ] -> [ Player Hold ]
+
+(rival ai)
+[ Rival no Goal | Goal ] -> [ > Rival | Goal ]
+
+(objects fall into pits when not held)
+late [ Moveable no Hold Space ] -> [ Space ] sfx2
+
+[ parallel Wizard | Gem ] -> [ parallel Wizard | parallel Gem ]
+
+[ > Gem | Charge ] -> [ Gem | Charge ]
+[ > Gem | Gem ] -> [ > Gem | > Gem ]
+
+[ action Wizard Charge ] -> [ Wizard ]
+[ Charge ] [ action Wizard ] -> [ ] [ Wizard Charge ]
+
+[ action Wizard ] -> [ Wizard Charge ]
+
+
+(spells recipes)
+[ Blue | Charge no Wizard ] -> [ | > Hold ] sfx1
+[ Red  | Charge no Wizard ] -> [ | > Burn ] sfx1
+
+[ Blue | Green | Charge no Wizard ] -> [ Blue | Blue | Blue ] sfx1
+[ Red  | Green | Charge no Wizard ] -> [ Red  | Red  | Red  ] sfx1
+
+[ Green | Charge no Wizard ] -> [ Red | Blue ] sfx1
+
+[ Stone | Charge no Wizard ] -> [ Prism | ] sfx1
+[ Prism | Charge no Wizard ] -> [ Stone | ] sfx1
+
+(prism expands a spell)
+[ stationary Player ] [ Mediator Prism ] -> [ Player ] [ Expand Mediator Prism ] sfx0
+
+(shortcut to create directional mediators)
+[    up Mediator ] -> [ Mediator MoveUp    ]
+[  down Mediator ] -> [ Mediator MoveDown  ]
+[  left Mediator ] -> [ Mediator MoveLeft  ]
+[ right Mediator ] -> [ Mediator MoveRight ]
+
+(apply movement to mediators)
+[ stationary Player ] [ Mediator MoveUp    ] -> [ Player ] [    up Mediator    up MoveUp    ]
+[ stationary Player ] [ Mediator MoveDown  ] -> [ Player ] [  down Mediator  down MoveDown  ]
+[ stationary Player ] [ Mediator MoveLeft  ] -> [ Player ] [  left Mediator  left MoveLeft  ]
+[ stationary Player ] [ Mediator MoveRight ] -> [ Player ] [ right Mediator right MoveRight ]
+
+(expand multiplies the spell in all directions)
+     up [ Mediator Expand | no Movement no Wall ] -> [ Mediator Expand | Mediator MoveUp    ]
++  down [ Mediator Expand | no Movement no Wall ] -> [ Mediator Expand | Mediator MoveDown  ]
++  left [ Mediator Expand | no Movement no Wall ] -> [ Mediator Expand | Mediator MoveLeft  ]
++ right [ Mediator Expand | no Movement no Wall ] -> [ Mediator Expand | Mediator MoveRight ]
+
+[ stationary Player ] [ > Mediator > Movement | Prism ] -> [ Player ] [ > Mediator Movement | Prism ]
+[ stationary Player ] [ Mediator Expand ] -> [ Player ] [ ]
+
+(teleport fizzles on dirt and wall)
+[ Hold Wall ] -> [ Wall ]
+[ Hold Indestructible ] -> [ Indestructible ]
+
+(fireball destroys dirt, fizzles on wall)
+[ Burn Destructable   ] -> [ ]
+[ Burn Indestructible ] -> [ Indestructible ]
+
+(spells cancel out)
+[ stationary Player ] [ > Mediator Movement | Mediator Movement ] -> [ Player ] [ | ]
+
+(clean up spell-less move commands)
+[ stationary Player ] [ Movement no Mediator ] -> [ Player ] [ ]
+
+(teleport moves objects)
+[ > Hold Moveable ] -> [ > Hold > Moveable ]
+
+(spells end on goal)
+[ > Mediator Movement | Goal ] -> [ | Goal ]
+
+(rival leaves level)
+[ Rival Goal ] -> [ Goal ]
+
+==============
+WINCONDITIONS
+==============
+
+some Player on Goal
+no Rival
+
+=======
+LEVELS
+=======
+
+message you are a chaos wizard - heir of an ancient sigil - a sigil with the power to free magick from its mineral slumber
+
+message cast spells by placing your sigil next to mana ores. escape this tomb
+
+(rival wizard, introduce teleport, teach pulling)
+x##xxxxxxx##x
+xxxxxbbbxxxxx
+x,,xx...xx,,x
+,,,,#...#,,,,
+,,,,#...#,,,,
+,,,,#...#,,,,
+,,,,#...#,,,,
+,,,,#.@.#,,,,
+,,,,#...#,,,,
+,,,,#...#,,,,
+,,,,#...#,,,,
+,,,,#$$$#,,,,
+x,,xxbbbxx,,x
+xxxxx.%.xxxxx
+x##xx???xx##x
+
+(move demo, teach teleport)
+x,,xxxxxxx,,x
+xxxxx...xxxxx
+x##xx.@.xx##x
+####x...x####
+##xxx...xxx##
+##xb......x##
+##x.x...x.x##
+##x...b.b.x##
+##x...$...x##
+##x.x.%.x.x##
+##x,,.....x##
+##x,,,,,..x##
+##x,x,,,xbx##
+##x,,..,,,x##
+##xxx...xxx##
+####x???x####
+
+(teach that mana can be teleported)
+##xxxxxx#####
+##x.....x####
+##x.@...,x###
+##.....,,,x##
+##....,,...x#
+#.b##x,b...x#
+#.####x..b.x#
+#..###.$.$.x#
+##.....b.%.x#
+#######x.,,x#
+#######x,,,x#
+#######x,,,x#
+#######x,..x#
+#######x???x#
+
+(introduce fireball, teach fireball)
+###xxxxxxx###
+###xx...xx###
+###xx.@.xx###
+###xx...xx###
+###xx...xx###
+###xx...xx###
+#rr#x...xx###
+rrrr..$.xx###
+rr####R.xx###
+r#######xx###
+r#######xx###
+######..xx###
+###xx...xx###
+###xx.%.xx###
+###xx???xx###
+
+(puzzle: teleport, fireball, teleporting mana)
+###############
+#####xxxxx#####
+#xxxxxbrbxxxxx#
+#x,,,,...,,,,x#
+#x,....@....,x#
+#x,.,,...,,.,x#
+#x,.,,,,,,,.,x#
+#xr..,x#x,..bx#
+#xr..,#.#,..rx#
+#xr$.,x#x,.$bx#
+#x,,,,,,,,,,,x#
+#x,.,,rrr,,.,x#
+#x,.........,x#
+#x,,,,$$$,,,,x#
+#xxx#.bbbxxxxx#
+#####x.%.x#####
+#####x???x#####
+
+(introduce & teach pre-sigil)
+###xxxxxxx###
+###xx...xx###
+###x..@..x###
+##x.....##x##
+#x.r....###x#
+#x$#r#x..##x#
+#x###x.b.$bx#
+#x###x$x..,x#
+#x.##x%x..,x#
+#x..#,...,,x#
+#x...,,,,,,x#
+##x...,,,,x##
+###x....,x###
+###xx...xx###
+###xx???xx###
+
+(puzzle: fireball, pre-sigil)
+#################
+#####xxxxxxx#####
+#xxxxxx...xxxxxx#
+#xr...x.@.xr###x#
+#xr.....#...###x#
+#xrr..x...x..##x#
+#xxxx..,,,.#xxxx#
+####x.x,,,x.x####
+####x..,,,.#x####
+####x.x,,,x#x####
+####x..,,,.#x####
+####x.x,,,x.x####
+####x..,,,.#x####
+####xx#$.$.xx####
+#####xxr%rxx#####
+#####xx???xx#####
+
+(introduce split, teach split)
+###xxxxxxx###
+###xx...xx###
+###xx.@.xx###
+###xx...xx###
+###xx...xx###
+###xx.g.xx###
+####x...xx###
+#####...xx###
+#######.xx###
+########xx###
+######,,xx###
+#####,,,xx###
+####x,..xx###
+###xx.%.xx###
+###xx???xx###
+
+(puzzle: teleport, fireball, split)
+#######xxxxx#
+#xxxxxxx...x#
+#x###b...@.x#
+#x####r$...x#
+#x##r$...,.##
+#x#.gxx.,,,,#
+#x...x##,,,,#
+#x###x##,,,,#
+#xg##x##,,,,#
+#x...xxx,,,.#
+#x.......,,.#
+#x.....###,b#
+#x....###.#x#
+#xxxxxxx.%.x#
+#######x???x#
+
+(introduce multiply, teach multiply)
+x###xxxxx###x
+xx#xx...xx#xx
+,x#x.@...x#x,
+xxxxx...xxxxx
+xbg$x.$#x$grx
+xbg$x.r#x$grx
+xxxxx$##xxxxx
+,x#x.r...x#x,
+xxxxx##.xxxxx
+xbg$###...grx
+xbg$x..,x.,,x
+xxxxx.,,xxxxx
+,x#x.,,,.x#x,
+xx#xx,,%xx#xx
+x###x???x###x
+
+(puzzle: fireball, teleport mana, multiply)
+####xxxxxxx####
+####xx...xx####
+###xxx.@.xxx###
+###x.xr.rx.x###
+###x...r...x###
+xxxx.......xxxx
+x..x,.$$$.,x.rx
+x.g.,.rrr.,...x
+x.#...x#x.....x
+x...,#####,...x
+xb.x,##.##,x..x
+xxxx#...#..xxxx
+###x.##..##x###
+###x.x.%#x#x###
+###xxx???xxx###
+
+(puzzle: fireball, teleport, teleport mana, split, multiply)
+####xxxxxxx####
+####xx.@.xx####
+#####r...g#####
+####r.,,,.#####
+####r.,,,.#g###
+####..,,,..####
+###b.....$.#g##
+###....,,r..###
+###...,,,,..###
+####.$,,,,,,###
+####$r,,,#...##
+####r,,###....#
+###,,,####....#
+####xx#%#xx.r##
+####xx???xx####
+
+(introduce amplification, teach amplification)
+###xxxxxxx###
+#xxxx...xxxx#
+#xrxx.@.xx,x#
+#x.........x#
+#x,,.xxxxxgx#
+#x+,#x###x.x#
+#x,,.xxxxx.x#
+#x.r..#...rx#
+#xgxxxxx.,,x#
+#x#x###x#,+x#
+#x#xxxxx.,,x#
+#x.###....$x#
+#x,xx...xxbx#
+#xxxx.%.xxxx#
+###xx???xx###
+
+(amplified teleport)
+,,xxxxxxx,,
+,#xx...xx#,
+,#xx.@.xx#,
+#+.,$b.,.+#
+,..#...,..#
+,,,#,,###,#
+,..#...#..#
+#+.,.+r£.+#
+#..,##.,..,
+,,,,,,,,,,,
+,.#,##.,..#
+#x.,.x.,.+#
+##xx...xx##
+#,xx.%.xx,#
+,,xx???xx#,
+
+(puzzle: fireball, amplified fireball)
+###xxxxxxx###
+#xxxx...xxxx#
+#xrxx.@.xxrx#
+#xr.......rx#
+#x..##.#...x#
+#x..,,,,,##x#
+#x#.,,,,#.#x#
+#x###,+,###x#
+#x..#,,,##.x#
+#x..,,,,,##x#
+#x.######..x#
+#x.#####...x#
+#xrxx#.#xxrx#
+#xxxx.%.xxxx#
+###xx???xx###
+
+(puzzle: fireball, split, amplified teleport)
+###xxxxxxx###
+#xxxx...xxxx#
+#xbxx.@.xx.x#
+#x..x...x...#
+#x...,.,...,#
+#x...,.,...,#
+#x..,...,..,#
+#x.#...r.#.##
+#x.x,,,,,x.x#
+#xgx+,+,+x.x#
+#x#xxx,xxx.x#
+#x##..$...#x#
+#x#xx.r.xx#x#
+#xxxx.%.xxxx#
+###xx???xx###
+
+(puzzle: fireball, sigil-first, split, multiply, amplified teleport)
+###xxxxxxx###
+#xxxx...xxxx#
+#x#xx.@.xx.x#
+#x........gx#
+#xgx..x..x.x#
+#x.x.....x.x#
+#x,,x...x,,x#
+#x+,..,..,+x#
+#x,,x$.$x,,x#
+#x.x.r.r.x.x#
+#x.x.#x#.x.x#
+#x...###...x#
+#x.xx#.#xx.x#
+#xxxx.%.xxxx#
+###xx???xx###
+
+(introduce mobile amplify, teach mobile amplify)
+(puzzle: teleport, amplified teleport)
+###xxxxxxxx,,
+#xxxx...xxx,,
+#x.xx.@.xx,,,
+#xbbs...,,,,#
+#xx.,,.,,,+##
+#xx.,,.,,,,,#
+#xx,,x.x,,,,,
+#x,,,r$,,,+##
+#xx,,x,x,,,##
+#xx.,,,,,,,,#
+#xx.,##,,,,,,
+#x....##,,,,,
+#x.xx..#xx,,,
+#xxxx.%.xxx,,
+###xx???xxx,,
+
+(puzzle: teleport, fireball, mobile amplify)
+#################
+#####xxxxxxx#####
+#xxxxxx.@.xxxxxx#
+#x.bbx.+++.x+.+x#
+#x...x.....x.xrx#
+#x#.....b....x$x#
+#x..$x..$..x.x.x#
+#x..rx.....x+.+x#
+#xx$xx#.%..xxxxx#
+#x#r..##.....##x#
+#x#...#,,,.###.x#
+#x##...,,,.#.##x#
+#x##...,,,.##.bx#
+#xxxxxx...xxxxxx#
+#####xx...xx#####
+#####xx???xx#####
+
+message i cannot allow you to proceed
+
+(gauntlet i: fireball dodging)
+,,xxxxxxxxx,,
+,,xxx...xxx,,
+,,,xx.@.xx,,,
+x,,,,...,,,,,
++.,,,.b.,,,,x
+..x,,.$.,,,.+
++.+.,.%.,,x..
+...x,...,.+.+
++.+.,...,x...
+$.x,,...,.+.+
+rx,,,...,,x.$
+x,,,,...,,,xr
+,,,,,...,,,,x
+,,,xx...xx,,,
+,,xxx...xxx,,
+,,xxx???xxx,,
+
+message your power waxes and thus mine wanes
+
+(gauntlet ii: impending fireball doom)
+####xxxxx####
+#xxxxbbbxxxx#
+#x.,..@..,.x#
+#x.,.....,.x#
+#x.,.....,.x#
+#x.,#####,.x#
+#x,#######,x#
+#x,#######,x#
+#x,#######,x#
+#x,#######,x#
+#x,#######,x#
+#x,#######,x#
+#x,#######,x#
+#x,#######,x#
+#x,#######,x#
+#x,#######,x#
+#x,#######,x#
+#x,,#####,,x#
+#x,,,,,,,,,x#
+#x,x+++++x,x#
+#x.xxx$xxx.x#
+#x....r....x#
+#xxxx.%.xxxx#
+####x???x####
+
+(message it seems you cannot be stopped
+
+(gauntlet iii: interference pattern)
+#######xxxxx#######
+###xxxxx...xxxxx###
+###x...s.@.s...x###
+###x...s...s...x###
+#xxx,,,,sbs,,,,xxx#
+#x+,,,,,...,,,,,,x#
+#x+,,,,,$r.,,,,,,x#
+#x+,,,,,...,,,,,,x#
+#x+,,,,,$$$,,,,,,x#
+#xxx,,,,bbb,,,,xxx#
+###x...$...$...x###
+###x...r...r...x###
+###xxxxx.%.xxxxx###
+#######x???x#######)
+
+message there isn't enough mana in the cosmos to stop fate
+message ...but you shall not leave whilst i live
+
+(boss)
+,,x###xxxxx###x,,
+,,xrrrxb.bxrrrx,,
+,,,.....@.....,,,
+,,,,,,,...,,,,,,,
+,,,,,,,,,,,,,,,,,
+,+x,,,,,,,,,,,x+,
++x+,,,,,£3,,,,+x+
+x+%,,,,,,,,,,,.+x
+,,,,,,x,x,x,,,,,,
+,,,,,,,???,,,,,,,
+,,,,,,x???x,,,,,,
+,,,,,,,???,,,,,,,
+,,,,,,x,x,x,,,,,,
+x+.,,,,3£,,,,,.+x
++x+,,,,,,,,,,,+x+
+,+x,,,,,,,,,,,x+,
+,,,,,,,,,,,,,,,,,
+
+message all of this has happened before, and all of this will happen again, my son
+
+title Cliched River Puzzle
+author Weeble
+homepage www.puzzlescript.net
+
+========
+OBJECTS
+========
+
+Grass
+#559922 GREEN
+11111
+01111
+11101
+11111
+10111
+
+
+Player
+Yellow
+00.00
+0...0
+.....
+0...0
+00.00
+
+Water1
+#3333ff #5555ff #7777ff
+00121
+10100
+12001
+10010
+01000
+
+Water2
+#3333ff #5555ff #7777ff
+10000
+00010
+00121
+01100
+10001
+
+Carrot
+ORANGE #55cc00
+11111
+.000.
+.000.
+.000.
+..0..
+
+Fox
+ORANGE WHITE BLACK
+.2.2.
+00000
+12021
+.111.
+..2..
+
+Rabbit
+WHITE #ff88bb
+00.00
+.0.0.
+.000.
+.101.
+.000.
+
+EmptyBoat
+BROWN DARKBROWN
+.000.
+01110
+01110
+01110
+00000
+Platform
+GREY
+.....
+.....
+.....
+.....
+.....
+
+LeftB
+BLUE
+.....
+.....
+.....
+.....
+.....
+
+RightB
+RED
+.....
+.....
+.....
+.....
+.....
+
+Dude
+BLACK
+..0..
+00000
+..0..
+.0.0.
+0...0
+
+Dock
+YELLOW
+.....
+.....
+.....
+.....
+.....
+
+=======
+LEGEND
+=======
+
+. = Grass and LeftB
+, = Grass and RightB
+~ = Water1 and LeftB
+^ = Water1 and RightB
+P = Player and LeftB
+C = Carrot and Platform and LeftB
+F = Fox and Platform and LeftB
+R = Rabbit and Platform and LeftB
+_ = EmptyBoat and LeftB and Water1
+* = Platform and RightB
+[ = Dude and Dock and LeftB
+] = Dock and RightB
+Water = Water1 or Water2
+Background = Grass or Water1 or Water2
+Object = Rabbit or Fox or Carrot
+Bank = LeftB or RightB
+=======
+SOUNDS
+=======
+
+SFX0 81232704
+SFX1 47027309
+SFX2 92562507
+SFX3 11245308
+
+================
+COLLISIONLAYERS
+================
+
+Background
+EmptyBoat, Platform, Dock
+LeftB, RightB
+Carrot, Rabbit, Fox, Dude
+Player
+
+======
+RULES
+======
+
+(Loading the boat)
+[ action Player Object Platform ] [ EmptyBoat no Object ] -> [ Player Platform ] [ EmptyBoat Object ] sfx2
+
+(Emptying the boat)
+[ action Player Object EmptyBoat LeftB ] [ Platform no Object LeftB ] -> [ Player EmptyBoat LeftB ] [ Platform Object LeftB ] sfx2
+[ action Player Object EmptyBoat RightB ] [ Platform no Object RightB ] -> [ Player EmptyBoat RightB ] [ Platform Object RightB ] sfx2
+
+( Eating rules for stuff on the left bank )
+late [ RightB Dude ] [ LeftB Rabbit ] [ LeftB Fox ] -> [ RightB Dude ] [ LeftB ] [ LeftB Fox ] sfx0 message Fox eats rabbit! Chomp!
+late [ RightB Dude ] [ LeftB Carrot ] [ LeftB Rabbit ] -> [ RightB Dude ] [ LeftB ] [ LeftB Rabbit ] sfx1 message Rabbit eats carrot! Chomp!
+
+( Same rules for stuff on the right bank )
+late [ LeftB Dude ] [ RightB Rabbit ] [ RightB Fox ] -> [ LeftB Dude ] [ RightB ] [ RightB Fox ] sfx0 message Fox eats rabbit! Chomp!
+late [ LeftB Dude ] [ RightB Carrot ] [ RightB Rabbit ] -> [ LeftB Dude ] [ RightB ] [ RightB Rabbit ] sfx1 message Rabbit eats carrot! Chomp!
+
+( Animate the water )
+[ Water ] -> [ random Water ]
+
+( Row across the river with an object )
+[ action Player Dude | EmptyBoat Object | ... | | Dock ] -> [ | | ... | EmptyBoat Object | Player Dude Dock ] sfx3
+
+( Row across the river without an object )
+[ action Player Dude | EmptyBoat no Object | ... | | Dock ] -> [ | | ... | EmptyBoat | Player Dude Dock ] sfx3
+
+( Victory condition )
+[ RightB Platform Rabbit ] [ RightB Platform Fox ] [ RightB Platform Carrot] -> win
+
+==============
+WINCONDITIONS
+==============
+
+=======
+LEVELS
+=======
+
+.....~~~^^,,,,,
+.....~~~^^,,,,,
+...F.~~~^^,*,,,
+..RP[_~~^^],*,,
+...C.~~~~^,*,,,
+.....~~~^^,,,,,
+.....~~~^^,,,,,
+
+
+
+title Gobble Rush!
+author Mark Richardson
+again_interval 0.05
+noaction
+require_player_movement
+run_rules_on_level_start
+
+
+========
+OBJECTS
+========
+
+Background
+Black
+
+Exit
+White Black
+01010
+10101
+01010
+10101
+01010
+
+Wall
+Brown
+
+Hole
+Brown
+00000
+00.00
+0...0
+0...0
+0...0
+
+Player
+Pink Blue Brown Red DarkBlue
+.222.
+.101.
+33333
+.444.
+44.44
+
+Enemy
+LightBrown
+.....
+0..0.
+.00..
+0000.
+0..0.
+
+Alert
+Red
+....0
+....0
+.....
+....0
+.....
+
+Chicken
+#EA3 #FC9 #FEA
+.....
+2....
+.110.
+01100
+.000.
+
+Lettuce
+#6C3 #5A2 #482 #361 #240
+.2.2.
+24342
+12421
+01310
+.002.
+
+LoS
+White
+.....
+.....
+.....
+.....
+.....
+
+MoveU
+White
+.....
+.....
+.....
+.....
+.....
+
+MoveD
+White
+.....
+.....
+.....
+.....
+.....
+
+MoveL
+White
+.....
+.....
+.....
+.....
+.....
+
+MoveR
+White
+.....
+.....
+.....
+.....
+.....
+
+CanMove
+White
+.....
+.....
+.....
+.....
+.....
+
+Level0
+White #F00
+.....
+.....
+.111.
+.....
+.....
+
+Level1
+White #F00
+00000
+.....
+.111.
+.....
+.....
+
+Level2
+White #F00
+.....
+00000
+.111.
+.....
+.....
+
+Level3
+White #F88
+.....
+.....
+01110
+.....
+.....
+
+Level4
+White #F00
+.....
+.....
+.111.
+00000
+.....
+
+Level5
+White #F00
+.....
+.....
+.111.
+.....
+00000
+
+
+=======
+LEGEND
+=======
+
+. = Background
+X = Exit
+# = Wall
+H = Hole
+P = Player
+Q = Player and Exit
+E = Enemy
+F = Enemy and Exit
+C = Chicken
+D = Chicken and Exit
+L = Lettuce
+M = Lettuce and Exit
+0 = Level0
+1 = Level1
+2 = Level2
+3 = Level3
+4 = Level4
+5 = Level5
+
+Move = MoveU or MoveD or MoveL or MoveR
+Obstacle = Wall or Enemy
+Food = Player or Chicken
+
+
+=======
+SOUNDS
+=======
+
+SFX0            97542903 (enemy alerted)
+Player  Destroy 41368102 (player eaten)
+Chicken Destroy 74663702 (chicken eaten)
+Lettuce Destroy 74663702 (lettuce eaten)
+Enemy   Create  81259707 (enemy moving)
+EndLevel        22595303
+
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Exit, Hole, Level0, Level1, Level2, Level3, Level4, Level5
+Wall, Player, Enemy, Chicken, Lettuce
+LoS, Move
+Alert, CanMove
+
+
+======
+RULES
+======
+
+(Prevent illegal moves)
+[ > Player | Hole ] -> cancel
+
+(Tell alert enemies to move)
+[ Enemy Move ] -> [ Enemy CanMove Move ]
+
+(Stop enemies)
+late up    [ Enemy CanMove MoveU |    Obstacle no Move ] -> [ Enemy | Obstacle ]
+late down  [ Enemy CanMove MoveD |    Obstacle no Move ] -> [ Enemy | Obstacle ]
+late left  [ Enemy CanMove MoveL |    Obstacle no Move ] -> [ Enemy | Obstacle ]
+late right [ Enemy CanMove MoveR |    Obstacle no Move ] -> [ Enemy | Obstacle ]
+late down  [ Enemy CanMove MoveD | Enemy CanMove MoveU ] -> [ Enemy | Enemy    ]
+late right [ Enemy CanMove MoveR | Enemy CanMove MoveL ] -> [ Enemy | Enemy    ]
+late up    [ Enemy CanMove MoveU | Enemy      no Move  ] -> [ Enemy | Enemy    ]
+late down  [ Enemy CanMove MoveD | Enemy      no Move  ] -> [ Enemy | Enemy    ]
+late left  [ Enemy CanMove MoveL | Enemy      no Move  ] -> [ Enemy | Enemy    ]
+late right [ Enemy CanMove MoveR | Enemy      no Move  ] -> [ Enemy | Enemy    ]
+
+(Move enemies)
+late up    [ Enemy CanMove MoveU | no Obstacle         ] -> [       | Enemy MoveU ] again
+late down  [ Enemy CanMove MoveD | no Obstacle         ] -> [       | Enemy MoveD ] again
+late left  [ Enemy CanMove MoveL | no Obstacle         ] -> [       | Enemy MoveL ] again
+late right [ Enemy CanMove MoveR | no Obstacle         ] -> [       | Enemy MoveR ] again
+late       [ Enemy CanMove       ]                       -> [ Enemy ]
+
+(Remove alerts)
+late       [ Enemy Alert         ]                       -> [ Enemy ]
+
+(Create line of sight)
+late [ Food no CanMove ] -> [ Food CanMove ]
+late [ Move ] [ CanMove ] -> [ Move ] [ ]
+
+(Chase player)
+late [ Player CanMove ] -> [ Player LoS ]
+late [ Player LoS | no Wall no LoS ] -> [ Player LoS | LoS ]
+late [ Player Los | ... | LoS | no Wall no LoS ] -> [ Player LoS | ... | LoS | LoS ]
+late up    [ Enemy LoS no Move | ... | Player LoS ] -> [ Enemy MoveU Alert | ... | Player LoS ] SFX0
+late down  [ Enemy LoS no Move | ... | Player LoS ] -> [ Enemy MoveD Alert | ... | Player LoS ] SFX0
+late left  [ Enemy LoS no Move | ... | Player LoS ] -> [ Enemy MoveL Alert | ... | Player LoS ] SFX0
+late right [ Enemy LoS no Move | ... | Player LoS ] -> [ Enemy MoveR Alert | ... | Player LoS ] SFX0
+late [ LoS ] -> [ ]
+
+(Chase chickens)
+startloop
+late random [ Chicken CanMove ] -> [ Chicken LoS ]
+late [ Chicken LoS | no Wall no LoS ] -> [ Chicken LoS | LoS ]
+late [ Chicken Los | ... | LoS | no Wall no LoS ] -> [ Chicken LoS | ... | LoS | LoS ]
+late up    [ Enemy LoS no Move | ... | Chicken LoS ] -> [ Enemy MoveU Alert | ... | Chicken LoS ] SFX0
+late down  [ Enemy LoS no Move | ... | Chicken LoS ] -> [ Enemy MoveD Alert | ... | Chicken LoS ] SFX0
+late left  [ Enemy LoS no Move | ... | Chicken LoS ] -> [ Enemy MoveL Alert | ... | Chicken LoS ] SFX0
+late right [ Enemy LoS no Move | ... | Chicken LoS ] -> [ Enemy MoveR Alert | ... | Chicken LoS ] SFX0
+late [ LoS ] -> [ ]
+endloop
+
+
+==============
+WINCONDITIONS
+==============
+
+some Exit on Player
+no Alert
+no Move
+
+
+=======
+LEVELS
+=======
+
+..#####....
+..#X..#...3
+..#...###.0
+..#E....#.0
+..###...#.0
+....#..P#.0
+....#####..
+
+..#######..
+..#P....#.4
+..#.....#.0
+..#####.#.0
+..#EX...#.0
+..###...#.0
+....#####..
+
+..#######..
+..#.....#.5
+..#..#..#.0
+..#.....#.0
+..#.P##E#.0
+..#..#XE#.0
+..#######..
+
+..#######..
+..#.....#.0
+..#.E...#.1
+..#.E...#.0
+..#.E...#.0
+..#XE.P.#.0
+..#######..
+
+..#######..
+..#..#.X#.0
+..#..E..#.2
+..##.#E##.0
+..#.....#.0
+..#P.#..#.0
+..#######..
+
+..#######..
+..#X...P#.0
+..##.#..#.3
+..#...#.#.0
+..#.....#.0
+..#.E#.E#.0
+..#######..
+
+..######...
+..#P.#.##.0
+..#.X..E#.4
+..##.#..#.0
+..#.....#.0
+..##..E.#.0
+...######..
+
+...####....
+..##..##..0
+..#.P..##.5
+..#..X.E#.0
+..##...##.0
+...##E##..0
+....###....
+
+..#######..
+..#XE...#.0
+..#EE..##.0
+..#..P..#.1
+..#.....#.0
+..#.#...#.0
+..#######..
+
+..#######..
+..#P..#X#.0
+..#.....#.0
+..##....#.2
+..#.....#.0
+..#E..#E#.0
+..#######..
+
+..#######..
+..#X...P#.0
+..#.###.#.0
+..#.....#.3
+..#E###.#.0
+..#....C#.0
+..#######..
+
+..#######..
+..#P....#.0
+..#..#.E#.0
+..#.....#.4
+..##.C.##.0
+...##X##..0
+....###....
+
+..#######..
+..#....C#.0
+..##X#.##.0
+..#EH..#..5
+..##...#..0
+...#.PC#..0
+...#####...
+
+...######..
+...#.#..#.0
+..##Q..E#.0
+..#...#.#.0
+..#..#..#.1
+..#.E.C.#.0
+..#######..
+
+.....####..
+...###.E#.0
+...#P...#.0
+..##..L.#.0
+..#..LXL#.2
+..#E..L.#.0
+..#######..
+
+...######..
+..##LLCX#.0
+..#LLCLC#.0
+..#LCL.L#.0
+..#ELLPL#.3
+..#LLC#L#.0
+..#######..
+
+..#######..
+..#....P#.0
+..#E.#E.#.0
+..#.....#.0
+..##LLL##.4
+...##X##..0
+....###....
+
+..#######..
+..##LXL##.0
+..#..L..#.0
+..#..#..#.0
+..#E...E#.5
+..##.P.##.0
+..#######..
+
+..#######..
+..#H.P..#.0
+..#XH...#.0
+..#..H.E#.0
+..#...H.#.0
+..#.E...#.1
+..#######..
+
+..#######..
+..#.E.E.#.0
+..#P....#.0
+..#..X.E#.0
+..#L..L.#.0
+..#.E.EL#.2
+..#######..
+
+..#######..
+..#L.L.L#.0
+..#L.L.L#.0
+..#L.P.L#.0
+..#L.L.L#.0
+..#L.L.L#.3
+..##X#X##..
+
+
+title Wrapping Recipe
+author increpare
+homepage http://www.puzzlescript.net
+
+========
+OBJECTS
+========
+
+Wrap
+Black
+
+Background
+White
+
+Player
+Blue
+
+=======
+LEGEND
+=======
+
+. = Background
+~ = Wrap
+@ = Player
+
+=======
+SOUNDS
+=======
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Wrap
+Player
+
+======
+RULES
+======
+
+[ Wrap | < Player | ... | | Wrap ] -> [ Wrap | | ... | Player | Wrap ]
+
+==============
+WINCONDITIONS
+==============
+
+=======
+LEVELS
+=======
+
+~~~~~~~
+~.....~
+~.....~
+~..@..~
+~.....~
+~.....~
+~~~~~~~
+
+
+USER PROMPT:
+The following PuzzleScript game code:
+```plaintext
+title Railway Riddle
+author PuzzleScript Community
+homepage www.puzzlescript.net
+
+========
+OBJECTS
+========
+
+Background
+lightgreen green
+00000
+00110
+11001
+10100
+01010
+
+Town
+white red
+..0..
+.000.
+00000
+.000.
+..0..
+
+Mountain
+darkgrey darkgrey
+.....
+..0..
+.000.
+.....
+.....
+
+Train
+blue black
+.000.
+.0.0.
+.000.
+.....
+.....
+
+Track
+grey darkgrey
+.....
+..0..
+.000.
+..0..
+.....
+
+TrainTrack
+grey darkgrey
+.....
+.....
+12321
+.....
+.....
+
+Water
+blue white
+.00..
+0..0.
+.00..
+.....
+.....
+
+Switch
+red black
+.....
+.....
+..1..
+.....
+.....
+
+=======
+LEGEND
+=======
+
+. = Background
+T = Town
+^ = Mountain
+| = Track
+# = TrainTrack
+~ = Water
+x = Switch
+
+=======
+SOUNDS
+=======
+
+Train move 91301709
+SFX1 46905909
+
+================
+COLLISIONLAYERS
+================
+
+Background, Water
+Mountain
+Town
+Track, Switch
+Train
+
+======
+RULES
+======
+
+[ > Train | Track ] -> [ | Train ] sfx0
+[ Train | Track ] -> [ Action Train ] sfx1
+[ Action Train | Town ] -> [ Action Train ] WIN
+
+# Switch flips track direction
+[ Player | Switch ] -> [ Player | Action Switch ]
+[ Action Switch | Track ] -> [ | Reverse Track ]
+
+==============
+WINCONDITIONS
+==============
+
+All Train on Track
+
+=======
+LEVELS
+=======
+
+######
+#.T^##
+#..|##
+#~~|##
+#.^|##
+#X|##x
+#T####
+
+```
+produced the following console output:
+=================================
+line 53 : Trying to access color number 2 from the color palette of sprite TRAINTRACK, but there are only 2 defined in it.
+line 53 : Trying to access color number 3 from the color palette of sprite TRAINTRACK, but there are only 2 defined in it.
+line 79 : You named an object "^", but this is a keyword. Don't do that!
+line 80 : You named an object "|", but this is a keyword. Don't do that!
+line 96 : Background must be in a layer by itself.
+line 110 : Objects cannot appear outside of square brackets in rules, only directions can.
+line 110 : Name "flips", referred to in a rule, does not exist.
+line 110 : Name "direction", referred to in a rule, does not exist.
+too many errors, aborting compilation
+Errors detected during compilation; the game may not work correctly.
+Return a repaired version of the code that addresses these errors.  The game should be a simplified `demake` of the following game idea: **Railway Riddle:** Construct a seamless train track through challenging landscapes to connect distant towns before the clock runs out.. Return your code in full, inside a ```plaintext code block.

@@ -1,0 +1,142 @@
+```plaintext
+Title Crops & Castles
+Author Your Name
+homepage www.yourwebsite.com
+
+========
+OBJECTS
+========
+
+Background
+LIGHTGREEN GREEN
+11111
+01111
+11101
+11111
+10111
+
+Castle
+DARKGRAY GRAY
+.....
+.111.
+.111.
+.111.
+.....
+
+Farm
+BROWN DARKBROWN
+.....
+.111.
+.111.
+.111.
+.....
+
+Player
+Black Orange White Blue
+.000.
+.111.
+22222
+.333.
+.3.3.
+
+Crop
+LightGreen White
+.....
+..0..
+..1..
+..0..
+.....
+
+Spell
+Purple Black
+..1..
+.111.
+11111
+.111.
+.....
+
+Enemy
+Red DarkRed
+.111.
+.111.
+11111
+.111.
+.1.1.
+
+=======
+LEGEND
+=======
+
+. = Background
+P = Player
+F = Farm
+C = Castle
+E = Enemy
+
+=======
+SOUNDS
+=======
+
+Crop Harvest 12122101
+Player Move 88351232
+Enemy Move 55123109
+Spell Cast 99321211
+EndLevel 36972112
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Crop, Spell, Enemy
+Player, Castle, Farm
+
+======
+RULES
+======
+
+[ Farm Crop ] -> [ Farm Spell ]
+[ >  Player | Spell ] -> [ > Player ]
+
+[ >  Enemy | Castle ] -> [ > Enemy | Castle  ]
+late [Farm no Crop] -> []
+
+[ > Player | Crop ] -> [ > Player | Farm] Sfx0
+[ > Player | Farm No Crop ] -> [ > Player | Farm ] Sfx3
+
+[ > Player | Enemy ] -> RESTART
+[ > Enemy ] -> [ > Enemy ]
+
+==============
+WINCONDITIONS
+==============
+
+No Enemy
+
+=======
+LEVELS
+=======
+
+#######
+#.....#
+#..P..#
+#..C..#
+#..F..#
+#..E..#
+#######
+
+#########
+#.......#
+#.C.E...#
+#.......#
+#..F.P..#
+#.......#
+#...E...#
+#########
+
+Message Congratulations! Your kingdom is saved!
+```
+
+**Fixes:**
+- Updated the FARM object's design to use only two defined colors.
+- Corrected the ENEMY object's design to use only two defined colors.

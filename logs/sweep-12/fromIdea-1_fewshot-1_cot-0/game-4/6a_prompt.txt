@@ -1,0 +1,1768 @@
+SYSTEM PROMPT:
+You are a game designer, familiar with the PuzzleScript game description language. Here are some example games, for inspiration (do not reproduce these games exactly):
+
+title It Dies In The Light
+author Christopher Wells
+homepage www.tophwells.com
+
+noaction
+run_rules_on_level_start
+again_interval 0.05
+
+========
+OBJECTS
+========
+
+BackgroundNeutral
+LIGHTGray Gray
+11011
+10101
+01110
+10101
+11011
+
+BackgroundDark
+Black
+
+Wall
+Lightblue Blue
+00010
+11111
+01000
+11111
+00010
+
+LivePlayer
+Black LightRed White Blue
+.000.
+.111.
+12321
+.232.
+.222.
+
+Corpse
+LightGrey
+.000.
+.0.0.
+0.0.0
+..0..
+.0.0.
+
+Crate
+Orange LightBrown Brown
+.222.
+21012
+20102
+21012
+.222.
+
+GoldCrate
+White Yellow Orange
+.222.
+21012
+20002
+21012
+.222.
+
+GlassCrate
+White
+.000.
+0...0
+0...0
+0...0
+.000.
+
+Prism
+LightBlue White
+.000.
+00110
+00010
+00000
+.000.
+
+ActivePrism
+LightBlue White Yellow
+.000.
+02120
+01110
+02120
+.000.
+
+Glass
+White
+00000
+0...0
+0...0
+0...0
+00000
+
+BeamVert
+White Yellow
+.101.
+.101.
+.101.
+.101.
+.101.
+
+BeamHor
+White Yellow
+.....
+11111
+00000
+11111
+.....
+
+BeamCross
+White Yellow
+.101.
+11011
+00000
+11011
+.101.
+
+Shadow
+Purple
+0.0.0
+.0.0.
+0.0.0
+.0.0.
+0.0.0
+
+TempShadow
+Purple
+0.0.0
+.0.0.
+0.0.0
+.0.0.
+0.0.0
+
+=======
+LEGEND
+=======
+
+. = BackgroundNeutral
+# = Wall
+P = LivePlayer
+C = Crate
+G = GoldCrate
+S = Shadow
+X = Prism
+O = Glass
+
+Background = BackgroundNeutral or BackgroundDark
+Player = LivePlayer or Corpse
+Light = BeamVert or BeamHor or BeamCross
+Hlight = BeamHor or BeamCross
+Vlight = BeamVert or BeamCross
+Opaque = Player or Crate or Wall or GoldCrate
+Pushable = Crate or GoldCrate or Prism or GlassCrate
+
+
+=======
+SOUNDS
+=======
+
+SFX0 93002904
+
+================
+COLLISIONLAYERS
+================
+
+Background
+BeamVert, BeamHor, BeamCross, Shadow, TempShadow
+Player, Corpse, Wall, Crate, GoldCrate, GlassCrate, Prism, ActivePrism, Glass
+
+======
+RULES
+======
+
+[> Corpse] -> RESTART
+[Light] -> []
+[ActivePrism] -> [Prism]
+[ >  Player | Pushable ] -> [  >  Player | > Pushable  ]
+late HORIZONTAL [GoldCrate|no Opaque no Light] -> [GoldCrate | BeamHor]
+late VERTICAL [GoldCrate|no Opaque no Light] -> [GoldCrate | BeamVert]
+late VERTICAL [GoldCrate|no Opaque BeamHor] -> [GoldCrate | BeamCross]
+late HORIZONTAL [Hlight|no Opaque no Light] -> [Hlight|BeamHor]
++ late HORIZONTAL [Hlight|no Opaque BeamVert] -> [Hlight|BeamCross]
++ late VERTICAL [Vlight|no Opaque no Light] -> [Vlight|BeamVert]
++ late VERTICAL [Vlight|no Opaque BeamHor] -> [Vlight|BeamCross]
++ late [Light Prism] ->[BeamCross ActivePrism]
+late [Shadow Pushable] -> [Pushable]
+late [TempShadow] -> [Shadow]
+late [Shadow | no Light no Wall no Pushable no Glass no Shadow] -> [shadow | Tempshadow] again
+late [Shadow] -> [Shadow BackgroundDark]
+late [TempShadow] -> [TempShadow BackgroundDark]
+late [no Shadow no TempShadow] -> [no Shadow BackgroundNeutral]
+late [Shadow Player] -> [Shadow Corpse]
+
+==============
+WINCONDITIONS
+==============
+
+no Shadow
+
+=======
+LEVELS
+=======
+
+......####.
+..#####ss#.
+###ssssss#.
+#..ssscss##
+#..#s#s#ss#
+#.g#s#ssss#
+#p.#s#ssss#
+#..css#sss#
+###########
+
+........########.
+........#...#.C#.
+...######...GC.##
+...#..CsssssO.C.#
+...#P.Csss#sO.CC#
+...#..Csss#sO#..#
+########ss#s....#
+#ssssssOss#s#####
+#sssssssss###....
+#########s#......
+........###......
+
+##########
+###G#G#G##
+##P......#
+#G.......#
+##..C....#
+#G.......#
+##..C....#
+#G.......#
+##......S#
+##########
+
+........########
+........#......#
+#########..#o#.#
+#........gooxo.#
+#g#####c#.sso#s#
+#.ssssss#.ss.ss#
+##soooss#.ss##s#
+##c.p.c###ss#ss#
+##.....#ssss#ss#
+#...g.......#ss#
+#########.xx#ss#
+........##sssss#
+.........#######
+
+MESSAGE Earth is safe once again.
+
+title By Your Side
+author Alan Hazelden
+homepage www.draknek.org
+
+require_player_movement
+key_repeat_interval 0.12
+
+(
+
+A port of alan hazelden's game, By Your Side, in 6 lines of code, made with the permission of the author -
+
+the original is here
+http://www.draknek.org/games/by-your-side/
+
+)
+
+========
+OBJECTS
+========
+
+(Objects in all scenes)
+
+Grass .
+darkgreen green
+00000
+01000
+00000
+00010
+00000
+
+Player_Casual P
+black pink gray
+..0..
+..1..
+.222.
+..2..
+.2.2.
+
+TargetMain T
+yellow
+00000
+0...0
+0...0
+0...0
+00000
+
+(Initial Scenes)
+
+GirlFriend G
+pink red
+..0..
+.010.
+..1..
+.111.
+.0.0.
+
+Tree #
+darkbrown lightgreen
+.111.
+11111
+.111.
+..0..
+..0..
+
+(Wedding Scene)
+
+Player_Formal Q
+black pink white
+..0..
+..1..
+.020.
+..0..
+.0.0.
+
+WoodenFloor ,
+brown
+00000
+00000
+00000
+00000
+00000
+
+ChurchWall H
+darkbrown brown
+11101
+00000
+10111
+00000
+11101
+
+Chair C
+darkbrown brown
+11111
+11101
+11101
+00001
+01101
+
+Altar A
+gray
+.....
+00000
+.000.
+.000.
+.000.
+
+Spectator1 B
+black pink white
+..0..
+..1..
+.020.
+..0..
+.0.0.
+
+Spectator2 D
+purple pink white
+..0..
+..1..
+10001
+.000.
+00000
+
+Wife_Wedding W
+white pink
+..1..
+.000.
+.101.
+.000.
+00000
+
+(Post Wedding Scene)
+
+house @
+black grey red
+..0..
+.000.
+00000
+.111.
+.121.
+
+pavement `
+darkblue
+
+Road '
+gray white
+00000
+00000
+01110
+00000
+00000
+
+Wife_Repulsed X
+white pink
+..1..
+.000.
+.101.
+.000.
+00000
+
+(grave scene)
+
+gravedirt ~
+green brown
+01001
+10000
+00100
+00001
+01000
+
+grave R
+lightgray darkgray grey
+.111.
+10201
+12221
+10201
+10001
+
+coffin F
+darkbrown brown black
+.000.
+01210
+02220
+01210
+02220
+
+(final scene)
+
+Wife_Dying Y
+white pink
+..1..
+.000.
+.101.
+.000.
+00000
+
+Wife_Coffin
+darkbrown brown black
+.000.
+01210
+02220
+01210
+02220
+
+ColdFeet I
+black
+
+=======
+LEGEND
+=======
+
+Target = TargetMain or Road
+Player = Player_Casual or Player_Formal
+Background = Grass or WoodenFloor or Pavement or GraveDirt
+Spectator = Spectator1 or Spectator2
+Obstacle = House or Spectator or Chair or Tree or Altar or Grave or Coffin or Wife_Coffin or ChurchWall
+Wife_Attracted = Girlfriend or Wife_Wedding or Wife_Dying
+Wife = Wife_Attracted or Wife_Repulsed or Wife_Coffin
+Person = Player or Wife
+GrassyTarget = Grass and TargetMain
+E = GrassyTarget
+
+=========
+SOUNDS
+=========
+
+Player cantmove 82269707
+endlevel 54461500
+startgame 10582309
+endgame 66004102
+Wife_Repulsed move 44043907
+sfx0 16417502
+
+================
+COLLISIONLAYERS
+================
+
+ColdFeet
+Background
+Target
+Obstacle, Person
+
+======
+RULES
+======
+
+(game logic)
+
+[ > Player ] [ Wife_Attracted ] -> [ > Player ] [ > Wife_Attracted ] 
+[ > Player ] [ Wife_Repulsed ] -> [ > Player ] [ < Wife_Repulsed ] 
+
+late [ Wife_Dying ] -> [ Wife_Coffin ] 
+late [ Player | Wife_Coffin ] -> [ Player | Wife_Dying ] 
+
+(level-specific events)
+late [ ColdFeet Player ] -> [ Player ] message ...
+late [ Wife Road ] -> sfx0
+
+==============
+WINCONDITIONS
+==============
+
+all person on target
+
+=======
+LEVELS
+=======
+
+....#################
+...###...#....#######
+..##.........##.....#
+.##...#######.......#
+##....#....###......#
+#...###.............#
+#...#...#...#..######
+#...#...#..##.P.....#
+#....####.T##..######
+##......#...#.......#
+###..##..#...#...##.#
+#.##..#..##..#...#..#
+#..#..#....###...#..#
+#..##........#......#
+#...##...##...##....#
+#.......##.....######
+.##############......
+
+....#################
+...###...#....#######
+..##.........##.....#
+.##...#######.......#
+##....#....###......#
+#...###.............#
+#...#...#...#..######
+#...#...#..##..T...T#
+#....####.P##G.######
+##......#...#.......#
+###..##..#...#...##.#
+#.##..#..##..#...#..#
+#..#..#....###...#..#
+#..##........#......#
+#...##...##...##....#
+#.......##.....######
+.##############......
+
+....#################
+...###...#....#######
+..##.........##.....#
+.##...#######.......#
+##....#....###......#
+#...###.............#
+#...#T..#...#..######
+#...#T..#..##..P...G#
+#....####..##..######
+##......#...#.......#
+###..##..#...#...##.#
+#.##..#..##..#...#..#
+#..#..#....###...#..#
+#..##........#......#
+#...##...##...##....#
+#.......##.....######
+.##############......
+
+HHHHHHHHHHHHHHHHHHHHH
+,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,
+,CCCCCCCCCCCCCCCCCCCC
+,CCCCCCCCCCCCCCCCCCCC
+A,B,,D,B,D,,B,D,,,B,C
+A,T,,I,,,I,,,,I,Q,,,C
+A,T,,,,,,,,,,,,,W,,,C
+,CCCCCCCCCCCCCCCCCCCC
+,CCCCCCCCCCCCCCCCCCCC
+,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,
+HHHHHHHHHHHHHHHHHHHHH
+
+`````````@@@@````````
+`````````@TT@````````
+``@@@@@@`@`@@````````
+``@````@`@`@@@@``````
+``@`@@`@`@````@``````
+``@`@@`@`@`@@@@``````
+``@`@@`@@@P@`````````
+``@```````W@@@@@@````
+``@`@@@@@@``````@````
+``@`@````@`@@@@`@````
+``@`@````@`@``@`@````
+@@@@@@@@@@@@@@@@@@@@@
+'''''''''''''''''''''
+@@@@@@@@@@@@@@@@@@@@@
+`````````````````````
+
+`````````@@@@````````
+`````````@PX@````````
+``@@@@@@`@`@@````````
+``@````@`@`@@@@``````
+``@`@@`@`@````@``````
+``@`@@`@`@`@@@@``````
+``@`@@`@@@T@`````````
+``@```````T@@@@@@````
+``@`@@@@@@``````@````
+``@`@````@`@@@@`@````
+``@`@````@`@``@`@````
+@@@@@@@@@@@@@@@@@@@@@
+'''''''''''''''''''''
+@@@@@@@@@@@@@@@@@@@@@
+`````````````````````
+
+`````````@@@@````````
+`````````@TT@````````
+``@@@@@@`@`@@````````
+``@````@`@`@@@@``````
+``@`@@`@`@````@``````
+``@`@@`@`@`@@@@``````
+``@`@@`@@@P@`````````
+``@```````X@@@@@@````
+``@`@@@@@@``````@````
+``@`@````@`@@@@`@````
+``@`@````@`@``@`@````
+@@@`@@@@@@`@@@@`@@@@@
+'''''''''''''''''''''
+@@@@@@@@@@@@@@@@@@@@@
+`````````````````````
+
+RRRRRRR~RRRRRR~RRRRR
+R~~~~~R~R~~~~R~R~~~~
+R~~~~~~~R~~~~R~R~~~~
+R~~~~~R~R~~~~R~R~~~~
+RRRRRRR~RR~~RR~RRRRR
+R~~~~BDBDBDBDBD~~~~R
+RQ~~~~~i~i~~i~~~~EFR
+RRRRRRRRRRRRRRRRRRRR
+R~~R~~~~~~~~~~~R~~~~
+R~~R~~~~~~~~~~~R~~~~
+R~~RRR~~~RRRR~~R~~~~
+R~~~~~~~~R~~~~~R~~~R
+R~~R~~~~~R~~R~~~~~~R
+R~~R~~~~~R~~R~~~~~~R
+RRRRRRRRRR~~RRRRRRRR
+
+RRRRRR~~~~~~~~~~~~~~
+R~~~~R~~~~~RRRRRR~~~
+R~QY~R~~~~~R~~~~R~~~
+R~~~~R~~RRRRR~R~R~~~
+R~~~~RRRR~~R~~R~R~~~
+R~~~~~~~~~~R~~R~RRR~
+RRRRRRRRR~~R~~~~~~R~
+~~R~~~~~R~~R~RRR~~R~
+~~R~~R~~R~~RRR~R~~R~
+~~R~~R~~~~~~~~~~~~R~
+~~R~~R~~RR~~~~~RRRR~
+~~R~~R~~~RRRRRTTR~~~
+~~R~~R~~~R~~~~~~R~~~
+~~R~~R~~~~~RRR~~R~~~
+~~RRRRRRRRRR~RRRR~~~
+
+RRRRRR~~~~~~~~~~~~~~
+R~~~~R~~~~~RRRRRR~~~
+R~~~~R~~~~~R~~~~R~~~
+R~~~~R~~RRRRR~R~R~~~
+R~~~~RRRR~~R~~R~R~~~
+R~~~~~~~~~~RT~R~RRR~
+RRRRRRRRR~~RT~~~~~R~
+~~R~~~~~R~~R@RRR~~R~
+~~R~~R~~R~~RRR~R~~R~
+~~R~~R~~~~~~~~~~~~R~
+~~R~~R~~RR~~~~~RRRR~
+~~R~~R~~~RRRRRYQR~~~
+~~R~~R~~~R~~~~~~R~~~
+~~R~~R~~~~~RRR~~R~~~
+~~RRRRRRRRRR~RRRR~~~
+
+message Commiserations
+
+message It is over
+
+title Broken Rigid Body example
+author Anonymous
+homepage www.puzzlescript.net
+
+verbose_logging
+
+(
+
+Example for
+https://www.puzzlescript.net/Documentation/rigidbodies.html#many_many
+
+)
+
+========
+OBJECTS
+========
+
+Background 
+white  
+
+Target 
+DarkBlue    
+
+Wall 
+DarkGrey
+
+Player
+Blue
+..0..
+..0.0
+00000
+.000.
+.0.0.
+
+Shadow
+Black
+..0..
+0.0..
+00000
+.000.
+.0.0.
+
+( three multi-cells blocks )
+Crate 
+orange
+
+Chest
+green
+
+Box
+red
+
+( 1-cell small block )
+Small
+darkred
+.....
+.000.
+.000.
+.000.
+.....
+
+( sticky, multicellular block when in contact )
+Glue
+pink
+.000.
+00000
+00000
+00000
+.000.
+
+( a flag to know what is allowed move )
+Wanna_Move
+#ff00ff
+.....
+.....
+..0..
+.....
+.....
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Player
+S = Shadow
+* = Crate
++ = Box
+% = Chest
+o = Small
+g = Glue
+
+( blocks that can be moved by the player )
+Movable = Crate or Box or Chest or Small or Glue
+
+( all things that can move and push blocks )
+Mover = Player or Shadow or Movable 
+
+( things that can stop a movement if they are stationary )
+Obstacle = Wall or Mover
+
+=======
+SOUNDS
+=======
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Target
+Obstacle
+Wanna_Move
+
+======
+RULES     
+======     
+
+[ > player ] [ stationary shadow ] -> [ > player ] [ < shadow ]
+
+( 1. Propagate movements forward )
+[ > Mover | stationary Movable ] -> [ > Mover | > Movable  ]
++ [ > Box    ] [ stationary Box   ] -> [ > Box    ] [ > Box    ]
++ [ > Crate  ] [ stationary Crate ] -> [ > Crate  ] [ > Crate  ]
++ [ > Chest  ] [ stationary Chest ] -> [ > Chest  ] [ > Chest  ]
++ [ moving Glue | stationary Glue ] -> [ moving Glue | moving Glue ]
+
+( 2. Propagate obstructions backwards )
+[ > Mover  | stationary Obstacle ] -> [ stationary Mover | Obstacle ]
++ [ > Crate  ] [ stationary Crate ] -> [ stationary Crate ] [ Crate ]
++ [ > Box    ] [ stationary Box   ] -> [ stationary Box   ] [ Box   ]
++ [ > Chest  ] [ stationary Chest ] -> [ stationary Chest ] [ Chest ]
++ [ moving Glue | stationary Glue ] -> [ stationary Glue | Glue ]
+
+( 3. remove all movement, keep a flag )
+[ > Movable ] -> [ Movable wanna_move ]
+
+( 4. propagate movement only on wanna_move things )
+(    ie redo step 1 but with WANNA_MOVE added to the first line below )
+[ > Mover  | stationary Movable WANNA_MOVE ] -> [ > Mover | > Movable ]
++ [ > Box   ] [ stationary Box   ] -> [ > Box   ] [ > Box   ]
++ [ > Crate ] [ stationary Crate ] -> [ > Crate ] [ > Crate ]
++ [ > Chest ] [ stationary Chest ] -> [ > Chest ] [ > Chest ]
++ [ moving Glue | stationary Glue ] -> [ moving Glue | moving Glue ]
+
+( 5. cleanup, remove flag )
+[ wanna_move ] -> [ ]
+
+==============
+WINCONDITIONS
+==============
+
+=======     
+LEVELS
+=======
+
+###################
+#.................#
+#............s....#
+#...*..g.g.#......#
+#...*......#...g###
+#...*...o.%%%.....#
+#...+++.o.%.......#
+#....+....%%%.....#
+#....+.........g..#
+#....p.gg.........#
+###################
+
+#########
+#.......#
+#.p.+...#
+#...+...#
+#...+.s.#
+#.......#
+#########
+
+
+title Sokobond: The Demake
+author Jonah Ostroff
+homepage www.sokobond.com
+text_color #202020
+background_color #FDFDFD
+key_repeat_interval 0.25
+run_rules_on_level_start
+noaction
+youtube 2R0sTlruOZc
+
+========
+OBJECTS
+========
+
+Background
+#FFFFFF #F8F8F8
+00000
+01010
+00000
+01010
+00000
+
+Player
+#FFBBEE
+00000
+0...0
+0...0
+0...0
+00000
+
+Wall
+Yellow White
+00000
+00000
+00000
+00000
+00000
+
+Hydrogen
+Red Black
+.....
+.111.
+.101.
+.111.
+.....
+
+Nitrogen
+Green Black
+.....
+.111.
+.101.
+.111.
+.....
+
+Oxygen
+Blue Black
+.....
+.111.
+.101.
+.111.
+.....
+
+Carbon
+Yellow Black
+.....
+.111.
+.101.
+.111.
+.....
+
+Helium
+White Black
+.....
+.111.
+.101.
+.111.
+.....
+
+1Electron
+LightGray
+.....
+.0...
+.....
+.....
+.....
+
+2Electron
+LightGray
+.....
+...0.
+.....
+.0...
+.....
+
+3Electron
+LightGray
+.....
+.0.0.
+.....
+.0...
+.....
+
+4Electron
+LightGray
+.....
+.0.0.
+.....
+.0.0.
+.....
+
+BondU
+Black
+..0..
+.....
+.....
+.....
+.....
+
+BondL
+Black
+.....
+.....
+0....
+.....
+.....
+
+BondR
+Black
+.....
+.....
+....0
+.....
+.....
+
+BondD
+Black
+.....
+.....
+.....
+.....
+..0..
+
+
+BondUL
+Black
+..0..
+.....
+0....
+.....
+.....
+
+BondUR
+Black
+..0..
+.....
+....0
+.....
+.....
+
+BondUD
+Black
+..0..
+.....
+.....
+.....
+..0..
+
+BondLR
+Black
+.....
+.....
+0...0
+.....
+.....
+
+BondLD
+Black
+.....
+.....
+0....
+.....
+..0..
+
+BondRD
+Black
+.....
+.....
+....0
+.....
+..0..
+
+BondULR
+Black
+..0..
+.....
+0...0
+.....
+.....
+
+BondULD
+Black
+..0..
+.....
+0....
+.....
+..0..
+
+BondURD
+Black
+..0..
+.....
+....0
+.....
+..0..
+
+BondLRD
+Black
+.....
+.....
+0...0
+.....
+..0..
+
+BondULRD
+Black
+..0..
+.....
+0...0
+.....
+..0..
+
+Temp1
+Red
+
+Temp2 (These are placeholders for various things.)
+Green
+
+Temp3
+Blue
+
+Temp4
+Yellow
+
+=======
+LEGEND
+=======
+
+Atom = Hydrogen or Oxygen or Nitrogen or Carbon or Helium
+Orbital = 1Electron or 2Electron or 3Electron or 4Electron
+UBond = BondU or BondUL or BondUR or BondUD or BondULR or BondULD or BondURD or BondULRD
+LBond = BondL or BondUL or BondLR or BondLD or BondULR or BondULD or BondLRD or BondULRD
+RBond = BondR or BondUR or BondLR or BondRD or BondULR or BondURD or BondLRD or BondULRD
+DBond = BondD or BondUD or BondLD or BondRD or BondULD or BondURD or BondLRD or BondULRD
+1Bond = BondU or BondL or BondR or BondD
+2Bond = BondUL or BondUR or BondUD or BondLR or BondLD or BondRD
+3Bond = BondULR or BondULD or BondURD or BondLRD
+Bond = 1Bond or 2Bond or 3Bond or BondULRD
+Temps = Temp1 or Temp2 or Temp3 or Temp4
+AtomStuff = Bond or Orbital
+
+. = Background
+# = Wall
+H = Hydrogen and 1Electron
+O = Oxygen and 2Electron
+N = Nitrogen and 3Electron
+C = Carbon and 4Electron
+E = Helium
+0 = Helium  and Player
+1 = Hydrogen and 1Electron and Player
+2 = Oxygen and 2Electron and Player
+3 = Nitrogen and 3Electron and Player
+4 = Carbon and 4Electron and Player
+P = Player
+
+=======
+SOUNDS
+=======
+
+Sfx1 64050702 (Bonding sound)
+EndLevel 96545300 (End level)
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Player
+Bond
+Wall, Atom
+Orbital
+Temps
+
+======
+RULES
+======
+
+(This is the old way I did movement, and it was super inefficient.)
+([> Player Atom] -> [> Player > Atom]
+
+Up [ Moving Atom UBond | Atom] -> [ Moving Atom UBond | Moving Atom]
++ Left [ Moving Atom LBond | Atom] -> [ Moving Atom LBond | Moving Atom]
++ Right [ Moving Atom RBond | Atom] -> [ Moving Atom RBond | Moving Atom]
++ Down [ Moving Atom DBond | Atom] -> [ Moving Atom DBond | Moving Atom]
++ [> Atom | Atom] -> [> Atom | > Atom])
+
+[Up Player] -> [Up Player Temp1]
+[Left Player] -> [Left Player Temp2]
+[Right Player] -> [Right Player Temp3]
+[Down Player] -> [Down Player Temp4]
+
+Up [Temps UBond | no Temps] -> [Temps Ubond | Temps]
++ Left [Temps LBond | no Temps] -> [Temps Lbond | Temps]
++ Right [Temps RBond | no Temps] -> [Temps Rbond | Temps]
++ DOwn [Temps DBond | no Temps] -> [Temps Dbond | Temps]
++ Up [Temp1 | Atom no Temp1] -> [Temp1 | Atom Temp1]
++ Left [Temp2 | Atom no Temp2] -> [Temp2 | Atom Temp2]
++ Right [Temp3 | Atom no Temp3] -> [Temp3 | Atom Temp3]
++ Down [Temp4 | Atom no Temp4] -> [Temp4 | Atom Temp4]
+
+[Temp1 Atom] -> [Up Atom]
+[Temp2 Atom] -> [Left Atom]
+[Temp3 Atom] -> [Right Atom]
+[Temp4 Atom] -> [Down Atom]
+
+[ > Atom | Wall] -> Cancel
+
+[ > Atom AtomStuff] -> [ > Atom > AtomStuff]
+
+Late Right [Orbital no Temps no RBond|Orbital no Temps no LBond] -> [Orbital Temp1|Orbital Temp2 Sfx1] (Bond horizontally.)
++ Late [Temp1 no Bond] -> [Temp3 BondR]
++ Late [Temp1 BondU] -> [Temp3 BondUR]
++ Late [Temp1 BondL] -> [Temp3 BondLR]
++ Late [Temp1 BondD] -> [Temp3 BondRD]
++ Late [Temp1 BondUL] -> [Temp3 BondULR]
++ Late [Temp1 BondUD] -> [Temp3 BondURD]
++ Late [Temp1 BondLD] -> [Temp3 BondLRD]
++ Late [Temp1 BondULD] -> [Temp3 BondULRD]
++ Late [Temp2 no Bond] -> [Temp3 BondL]
++ Late [Temp2 BondU] -> [Temp3 BondUL]
++ Late [Temp2 BondR] -> [Temp3 BondLR]
++ Late [Temp2 BondD] -> [Temp3 BondLD]
++ Late [Temp2 BondUR] -> [Temp3 BondULR]
++ Late [Temp2 BondUD] -> [Temp3 BondULD]
++ Late [Temp2 BondRD] -> [Temp3 BondLRD]
++ Late [Temp2 BondURD] -> [Temp3 BondULRD]
++ Late [Temp3 1Electron] -> []
++ Late [Temp3 2Electron] -> [1Electron]
++ Late [Temp3 3Electron] -> [2Electron]
++ Late [Temp3 4Electron] -> [3Electron]
+
+Late Down [Orbital no Temps no DBond|Orbital no Temps no UBond] -> [Orbital Temp1|Orbital Temp2 Sfx1] (Bond vertically.)
++ Late [Temp1 no Bond] -> [Temp3 BondD]
++ Late [Temp1 BondU] -> [Temp3 BondUD]
++ Late [Temp1 BondL] -> [Temp3 BondLD]
++ Late [Temp1 BondR] -> [Temp3 BondRD]
++ Late [Temp1 BondUL] -> [Temp3 BondULD]
++ Late [Temp1 BondUR] -> [Temp3 BondURD]
++ Late [Temp1 BondLR] -> [Temp3 BondLRD]
++ Late [Temp1 BondULR] -> [Temp3 BondULRD]
++ Late [Temp2 no Bond] -> [Temp3 BondU]
++ Late [Temp2 BondL] -> [Temp3 BondUL]
++ Late [Temp2 BondR] -> [Temp3 BondUR]
++ Late [Temp2 BondD] -> [Temp3 BondUD]
++ Late [Temp2 BondLR] -> [Temp3 BondULR]
++ Late [Temp2 BondLD] -> [Temp3 BondULD]
++ Late [Temp2 BondRD] -> [Temp3 BondURD]
++ Late [Temp2 BondLRD] -> [Temp3 BondULRD]
++ Late [Temp3 1Electron] -> []
++ Late [Temp3 2Electron] -> [1Electron]
++ Late [Temp3 3Electron] -> [2Electron]
++ Late [Temp3 4Electron] -> [3Electron]
+
+==============
+WINCONDITIONS
+==============
+
+No Orbital
+
+=======
+LEVELS
+=======
+
+Message This is a demake of Sokobond by Alan Hazelden and Harry Lee.
+
+Message Get the full version at www.sokobond.com!
+
+#########
+####....#
+####....#
+#....#H.#
+#...O#..#
+#.1.....#
+#....####
+#########
+
+Message Water atoms are icosahedral.
+
+######
+#H..O#
+#....#
+#1.###
+######
+
+Message The blue tint seen in large bodies of water comes from the pigment in the oxygen atoms.
+
+########
+###...##
+#2.H.H.#
+###...##
+########
+
+Message The Earth's surface and the human body are both 70% water. That CAN'T be a coincidence, right?
+
+#######
+#..O..#
+#..#..#
+#.1#H.#
+#..#..#
+#..O..#
+#######
+
+Message "One hydrogen per oxide" is defined as the speed at which atoms move.
+
+#######
+#.H.3.#
+#.....#
+#.H.H.#
+#######
+
+Message Ammonia is an inflammatory condition of the lungs.
+
+#######
+#.....#
+#.....#
+#H#H#H#
+#.....#
+#..3..#
+#######
+
+Message Hang on, I was thinking of "pneumonia".
+
+#########
+####4####
+###...###
+##.H.H.##
+#.......#
+##.H.H.##
+###...###
+####.####
+#########
+
+Message 90% of all the methane in the world is produced in Arizona.
+
+#########
+##H...H##
+#...4...#
+##H...H##
+#########
+
+Message Methane contains the name "Ethan". Do you think it was discovered by a guy named Ethan?
+
+########
+#......#
+#...H..#
+#O.H..3#
+#...H..#
+#......#
+########
+
+Message Hydroxylamine contains almost every vowel of the alphabet almost exactly once.
+
+#########
+#.......#
+#..H.H..#
+#.2...C.#
+#..H.H..#
+#.......#
+#########
+
+Message Methanol occurs naturally in peppermint oils.
+
+#########
+#.......#
+#.1...E.#
+###.H.###
+###...###
+###.O.###
+#########
+
+Message Helium is named after the Greek god Helios, who first discovered its existence.
+
+#########
+#.......#
+#.E.E.E.#
+###H.1###
+###.H.###
+###...###
+###.N.###
+#########
+
+Message Inhaling helium contracts the ear drum, causing pitches to sound higher. Your voice is perceived normally by everyone else.
+
+#######
+###..##
+##..H.#
+#..N..#
+#.H..H#
+##..0.#
+#######
+
+Message The first helium balloons were used at the wedding of Queen Victoria and Prince Albert, popularizing the term "noble gas".
+
+#######
+#.....#
+#..N..#
+#..0..#
+#H.H.H#
+#.#.#.#
+#.....#
+#######
+
+Message Helium does not form chemical bonds with other elements, but it's the bonds of friendship that really matter.
+
+########
+#......#
+#...H#N#
+#......#
+##H#H.0#
+##.....#
+####...#
+########
+
+Message Scientists have been searching for centuries to discover the missing elements between hydrogen and helium on the periodic table.
+
+Message Thanks for playing! Go get the full version, which has lots of cool stuff that I couldn't write in PuzzleScript: www.sokobond.com
+
+title Love and Pieces
+author lexaloffle
+homepage www.lexaloffle.com
+
+========
+OBJECTS
+========
+
+Background
+White LightBlue
+00000
+01110
+01110
+01110
+00000
+
+
+Wall
+DarkBlue Black DarkGray LightGray White
+23330
+22300
+22100
+21110
+11111
+
+Player
+Yellow Orange Red White LightBrown
+20002
+01130
+01110
+04110
+20002
+
+GrayBlock
+Gray DarkGray Green
+10001
+01210
+02220
+01210
+10001
+
+LitBlock
+Green DarkGray
+00000
+01110
+01110
+01110
+00000
+
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Player
+o = GrayBlock
+Block = GrayBlock or Player
+
+=======
+SOUNDS
+=======
+
+GrayBlock MOVE 36772507
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Player, Wall, GrayBlock, LitBlock
+
+======
+RULES
+======
+
+[ > Player | Wall ] -> cancel
+late [ Player | GrayBlock ] -> [ Player | Player ]
+
+==============
+WINCONDITIONS
+==============
+
+No GrayBlock
+
+=======
+LEVELS
+=======
+
+
+
+############
+#...#......#
+#..........#
+#.p..o..o..#
+#..........#
+#..#.......#
+#..........#
+#......#...#
+#..........#
+############
+
+############
+#..........#
+#..........#
+#....#o....#
+#..#.o.#...#
+#....#.....#
+#....o.....#
+#.o......p.#
+#..........#
+############
+
+############
+#o...o.....#
+#.o...o....#
+#..o...o...#
+#...o...o..#
+#o...o...o.#
+#.o...o...o#
+#..o...o.p.#
+#...o...o..#
+############
+
+############
+#..........#
+#..o....o..#
+#.p#....#o.#
+#..........#
+#..........#
+#.o#....#o.#
+#..o....o..#
+#..........#
+############
+
+
+############
+#..o.......#
+#.....oo...#
+#...o......#
+#.o#..p..o.#
+#....o.....#
+#..o....o..#
+#o.o...#...#
+#...o...o..#
+############
+
+############
+#p.o.......#
+#..........#
+#.o..o...###
+#........###
+###.o......#
+###......o.#
+#o.....##..#
+#......##.o#
+############
+
+
+############
+#........o.#
+#..o.##....#
+#....o.o...#
+#.#......#.#
+#.#..p.o.#.#
+#..o.......#
+#....##....#
+#.o......o.#
+############
+
+
+############
+###........#
+##....o.o..#
+#....#.#...#
+#...o.o.o..#
+#....#.#...#
+#...o.o....#
+##........##
+###.p....###
+############
+
+
+###########o
+#....p....##
+#....p.....#
+#...ppp....#
+#ppppppppp.#
+#...ppp....#
+#..ppppp...#
+#.pp...pp..#
+#.p.....p..#
+############
+
+
+USER PROMPT:
+The following PuzzleScript game code:
+```plaintext
+title Railway Riddle Demake
+author PuzzleScriptUser
+
+========
+OBJECTS
+========
+
+Background
+darkgreen green
+00000
+00000
+00100
+00000
+00000
+
+Town
+darkblue blue
+.....
+..0..
+.000.
+..0..
+.....
+
+TrackH
+darkgrey grey
+.....
+.....
+00000
+.....
+.....
+
+TrackV
+darkgrey grey
+..0..
+..0..
+..0..
+..0..
+..0..
+
+TrackL
+darkgrey grey
+.....
+..00.
+..0..
+..0..
+.....
+
+TrackR
+darkgrey grey
+.....
+.00..
+..0..
+..0..
+.....
+
+Train
+black red
+.....
+..1..
+.111.
+..1..
+.....
+
+Cursor
+lightblue blue
+.....
+.....
+.0.0.
+.....
+.....
+
+=======
+LEGEND
+=======
+
+. = Background
+T = Town
+H = TrackH
+| = TrackV  # Changed from V to |
+L = TrackL
+R = TrackR
+@ = Train
+C = Cursor
+
+=======
+SOUNDS
+=======
+
+startgame 4284710
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Town, Train
+Cursor, TrackH, TrackV, TrackL, TrackR
+
+======
+RULES
+======
+
+# Cursor movement
+
+[right C] -> [> C]
+[left C] -> [< C]
+[up C] -> [^ C]
+[down C] -> [v C]
+
+# Placing horizontal track
+
+[Action C | No TrackH] -> [C | TrackH]
+
+# Placing vertical track
+
+[Action C | No |] -> [C | |]
+
+# Placing left curve track
+
+[Action C | No TrackL] -> [C | TrackL]
+
+# Placing right curve track
+
+[Action C | No TrackR] -> [C | TrackR]
+
+# Train moves through tracks
+
+[> Train | TrackH] -> [> Train | TrackH]
+[v Train | |] -> [v Train | |]
+[> Train | TrackL] -> [v Train | TrackL]
+[v Train | TrackR] -> [> Train | TrackR]
+
+==============
+WINCONDITIONS
+==============
+
+All Train on Town
+
+=======
+LEVELS
+=======
+message Let's build a track!
+
+..........
+.T......T.
+..........
+....C.....
+@.........
+
+
+```
+produced the following console output:
+=================================
+line 79 : Something bad's happening in the LEGEND
+line 79 : You named an object "|", but this is a keyword. Don't do that!
+line 103 : Name "#", referred to in a rule, does not exist.
+line 103 : Name "movement", referred to in a rule, does not exist.
+line 110 : Name "#", referred to in a rule, does not exist.
+line 110 : Name "placing", referred to in a rule, does not exist.
+line 110 : Name "track", referred to in a rule, does not exist.
+too many errors, aborting compilation
+Errors detected during compilation; the game may not work correctly.
+Return a repaired version of the code that addresses these errors.  The game should be a simplified `demake` of the following game idea: **Railway Riddle:** Construct a seamless train track through challenging landscapes to connect distant towns before the clock runs out.. Return your code in full, inside a ```plaintext code block.
