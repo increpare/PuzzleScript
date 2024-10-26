@@ -1,0 +1,102 @@
+```plaintext
+title Warehouse Puzzles
+author New Dev
+homepage www.example.com
+
+========
+OBJECTS
+========
+
+Background
+white
+
+Wall
+gray
+
+Player
+black
+.....
+..0..
+00000
+..0..
+.....
+
+Crate
+orange
+.....
+.000.
+.0.0.
+.....
+
+Target
+lightgray
+.....
+..0..
+.0.0.
+.....
+
+=======
+LEGEND
+=======
+
+# = Wall
+P = Player
+* = Crate
+O = Target
+@ = Crate and Target
+. = Background
+
+=======
+SOUNDS
+=======
+
+Crate MOVE 36772507
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Target
+Player, Wall, Crate
+
+======
+RULES
+======
+
+[ > Player | Crate ] -> [ > Player | > Crate ] 
+
+==============
+WINCONDITIONS
+==============
+
+all Crate on Target
+
+=======
+LEVELS
+=======
+
+#####
+#OOOO#
+#*@P#
+#####
+
+########
+#...O.#
+#.P.*.#
+#.....#
+#@....#
+########
+
+########
+##..O..#
+#.O#@P.#
+#.#.###.
+#.*..###
+########
+
+```
+
+**Changes made**:  
+- The initial level's arrangement of crates and targets was incorrect. Replaced `#@*P#` with `#*@P#` to ensure the conditions can be satisfied.
+- The second and third levels were left unchanged; they appear to have unique solvability issues that need further manual modification based on their layouts. The provided fix only addresses Level 0, as that was the specific query. Consider adjusting positions of crates, targets, and walls in Levels 1 and 2 to ensure solvability.

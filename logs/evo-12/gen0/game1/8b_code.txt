@@ -1,0 +1,114 @@
+The error messages indicate issues with the definition of the `CrateOnTarget` object. Specifically:
+1. The color "olivedrab " has an extra space, which should be corrected to "OliveDrab".
+2. The sprite only has one color defined, but the drawing is trying to use more than one color index (indices 1 and 2).
+   
+To resolve these issues:
+- Correct the color name by removing any trailing spaces.
+- Add enough color indices for the `CrateOnTarget` sprite to match what is used in its design, i.e., include both "OliveDrab" and "Brown".
+
+Here's the corrected code:
+
+```plaintext
+title Box Pusher
+author YourName
+
+========
+OBJECTS
+========
+
+Background
+LightGrey
+
+Player
+Red
+.....
+..0..
+.000.
+..0..
+.....
+
+Wall
+DarkGrey
+.....
+00000
+00000
+00000
+.....
+
+Crate
+Brown Yellow
+.....
+.111.
+.111.
+.111.
+.....
+
+Target
+Green
+.....
+..0..
+.....
+
+CrateOnTarget
+OliveDrab Brown
+.....
+.121.
+.121.
+.121.
+.....
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Player
+C = Crate
+T = Target
+O = CrateOnTarget
+
+===========
+SOUNDS
+===========
+
+SFX0 255 0
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Target
+CrateOnTarget, Crate
+Player, Wall
+
+======
+RULES
+======
+
+[ > Player | Crate ] -> [ > Player | > Crate ]
+[ Crate | Target ] -> [ CrateOnTarget | ]
+[ CrateOnTarget | no Target ] -> [ Crate | ]
+
+==============
+WINCONDITIONS
+==============
+
+All CrateOnTarget
+
+=======
+LEVELS
+=======
+
+#######
+#.....#
+#..T..#
+#..C..#
+#..P..#
+#..T..#
+#######
+
+```
+
+I've addressed the invalid color name and ensured the definition of `CrateOnTarget` uses both color indices as defined. This should resolve the compilation errors.

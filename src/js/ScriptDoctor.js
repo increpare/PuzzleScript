@@ -495,7 +495,7 @@ async function solveLevel(level) {
 
 
 async function genGame(genMode, parents, saveDir, seed, fewshot, cot,
-    fromIdea, idea='', maxGenAttempts=10) {
+    fromIdea=false, idea='', maxGenAttempts=10) {
   consoleText = '';
   nGenAttempts = 0;
   code = '';
@@ -652,34 +652,35 @@ const nGens = 20;
 async function evolve() {
   // Create an initial population of 10 games
   pop = [];
-  for (i = 0; i < popSize*2; i++) {
-    saveDir = `gen0/game${i}`;
-    game_i = await genGame('init', [], saveDir, seed=seed, fewshot=fewshot, cot=cot);
+  for (i = 0; i < (popSize*2); i++) {
+    saveDir = `evo-${seed}/gen0/game${i}`;
+    game_i = await genGame('init', [], saveDir, seed, fewshot=true, cot=true, fromIdea=false, idea='');
     pop.push(game_i);
   }
   for (gen = 0; gen < nGens; gen++) {
     // Sort the population by fitness
     pop.sort((a, b) => a.fitness - b.fitness);
     // Select the top half of the population as parents
-    parents = pop.slice(0, popSize);
+    ancestors = pop.slice(0, popSize);
     // Generate the next generation
     newPop = [];
-    for (i = 0; i < popSize * 2; i++) {
+    for (i = 0; i < popSize; i++) {
       doCrossOver = Math.random() < 0.5;
       if (doCrossOver) {
         genMode = 'crossover';
         // Get two random games from list without replacement
-        parent1 = parents[Math.floor(Math.random() * popSize)];
+        parent1 = ancestors[Math.floor(Math.random() * popSize)];
         // Create copy of array without parent1
-        remainingParents = parents.filter(parent => parent != parent1);
-        parent2 = remainingParents[Math.floor(Math.random() * (popSize - 1))];
+        remainingAncestors = ancestors.filter(parent => parent != parent1);
+        parent2 = remainingAncestors[Math.floor(Math.random() * (popSize - 1))];
         parents = [parent1, parent2];
       } else {
         genMode = 'mutate';
-        parents = [parents[Math.floor(Math.random() * popSize)]];
+        parents = [ancestors[Math.floor(Math.random() * popSize)]];
       }
-      saveDir = `gen${gen}/game${i}`;
-      newPop.push(genGame('mutate', parents, saveDir, seed=seed, fewshot=fewshot, cot=cot));
+      console.log(`Parents: ${parents}. genMode: ${genMode}`);
+      saveDir = `evo-${seed}/gen${gen}/game${i}`;
+      newPop.push(await genGame('mutate', parents, saveDir, seed, fewshot=fewshot, cot=cot));
     }
   }
 }
@@ -751,7 +752,8 @@ async function fromIdeaSweep() {
 }
 
 // sweep()
-fromIdeaSweep()
+// fromIdeaSweep()
+evolve();
 
 // genGame('init', [], 'test_99', 99, fewshot=true, cot=true, maxGenAttempts=20);
 // evolve();

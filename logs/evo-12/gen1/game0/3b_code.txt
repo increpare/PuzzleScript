@@ -1,0 +1,149 @@
+To resolve the errors in the provided PuzzleScript game code, I'll examine each error message and make the necessary corrections:
+
+1. **Error #1 (Line 42)**: The error indicates that "olivedrab " is not recognized, probably due to the trailing space. Ensure there are no typos or spaces.
+
+2. **Error #2 (Line 45)**: It appears that a color palette entry "OliveDrab Yellow" is recognized as one instead of two colors due to the typo or spacing, causing the game to see only one color. Ensure proper formatting.
+
+3. **Error #3-5 (Lines 59-61)**: Given "Purple Pink" for `CrateImmune`, this should be fixed due to wrong formatting or missed color slots.
+
+4. **Error #6 (Line 81)**: The sound format or declaration for `SFX0` could be incorrect, it appears to have extraneous input. PuzzleScript often uses `sfx0 255` without another number following it.
+
+Now that we know these issues, I'll write a corrected version of the code.
+
+```plaintext
+title Advanced Box Pusher
+author YourName
+
+========
+OBJECTS
+========
+
+Background
+LightGrey
+
+Player
+Red
+.....
+..0..
+.000.
+..0..
+.....
+
+Wall
+DarkGrey
+.....
+00000
+00000
+00000
+.....
+
+Crate
+Brown Yellow
+.....
+.111.
+.111.
+.111.
+.....
+
+Target
+Green
+.....
+..0..
+.....
+
+CrateOnTarget
+OliveDrab Yellow
+.....
+.000.
+.010.
+.000.
+.....
+
+Portal
+LightBlue
+.....
+..0..
+..0..
+.....
+
+CrateImmune
+Purple Pink
+.....
+.222.
+.222.
+.222.
+.....
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Player
+C = Crate
+T = Target
+O = CrateOnTarget
+X = Portal
+I = CrateImmune
+
+===========
+SOUNDS
+===========
+
+sfx0 255
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Target
+Portal
+CrateOnTarget, Crate, CrateImmune
+Player, Wall
+
+======
+RULES
+======
+
+[ > Player | Crate ] -> [ > Player | > Crate ]
+[ Crate | Target ] -> [ CrateOnTarget | ]
+[ CrateOnTarget | no Target ] -> [ Crate | ]
+[ Player | Portal ] -> [ Player Portal | Portal Player ] 
+
+==============
+WINCONDITIONS
+==============
+
+All CrateOnTarget
+
+=======
+LEVELS
+=======
+
+#########
+#.......#
+#..C....#
+#..T....#
+#..P....#
+#..T.X..#
+#....X..#
+#.......#
+#########
+
+#####
+#...#
+#.I.#
+#.CP#
+#.T.#
+#...#
+#####
+```
+
+**Changes Made:**
+- Removed extra spaces after "OliveDrab" in the `CrateOnTarget` object definition.
+- Ensured there are two color codes in `CrateImmune`.
+- Fixed the `sfx0 255` line to suit correct syntax by removing the extra number. 
+
+This should fix the errors and allow the game to compile correctly.

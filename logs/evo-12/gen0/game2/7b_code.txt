@@ -1,0 +1,111 @@
+```plaintext
+title Block Pusher
+author Your Name
+
+========
+OBJECTS
+========
+
+Background
+LightGrey DarkGrey
+11111
+11111
+11111
+11111
+11111
+
+Player
+Blue White Red
+..0..
+.000.
+.010.
+.000.
+..0..
+
+Block
+Orange
+.000.
+.0.0.
+.0.0.
+.0.0.
+.000.
+
+Target
+Green Yellow DarkGreen
+.....
+..2..
+.222.
+..2..
+.....
+
+Wall
+Brown DarkBrown
+11111
+11111
+11111
+11111
+11111
+
+=======
+LEGEND
+=======
+
+. = Background
+P = Player
+* = Block
+O = Target
+# = Wall
+
+=======
+SOUNDS
+=======
+
+startgame 20000
+endlevel 30000
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Target
+Player, Wall, Block
+
+======
+RULES
+======
+
+[ > Player | Block | ] -> [ > Player | > Block | ]
+[ Player | Target ] -> [ Player | Target ]
+
+==============
+WINCONDITIONS
+==============
+
+All Block on Target
+
+=======
+LEVELS
+=======
+
+###### 
+#....#
+#.*O.#
+#..P.#
+#.O*.#
+###### 
+
+###### 
+#....#
+#.*O.#
+#..P.#
+#.O*.#
+###### 
+
+###### 
+#...#P
+#.*O##
+#.O*.#
+###### 
+
+```

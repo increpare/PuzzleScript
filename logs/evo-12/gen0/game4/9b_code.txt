@@ -1,0 +1,111 @@
+```plaintext
+title Key Collector Maze
+author YourName
+
+========
+OBJECTS
+========
+
+Background
+lightblue
+
+Wall
+brown gray
+00000
+11111
+00000
+11111
+00000
+
+Player
+black green
+..0..
+.000.
+.011.
+..1..
+.0.0.
+
+Key
+yellow
+.0...
+..0..
+...0.
+.....
+.....
+
+Door
+blue gray
+11111
+10001
+10001
+10001
+11111
+
+Exit
+purple white
+.....
+.111.
+.101.
+.111.
+.....
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Player
+K = Key
+D = Door
+E = Exit
+
+=======
+SOUNDS
+=======
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Wall
+Key
+Door
+Player, Exit
+
+======
+RULES
+======
+
+[ Player | Key ] -> [ Player | Background ]
+[ Player | Door ] -> [ Player | Background ]
+
+==============
+WINCONDITIONS
+==============
+
+all E on Player
+
+=======
+LEVELS
+=======
+
+..#####
+..#D..#
+..#...#
+P.#.K.#
+.##.E##
+..#####
+
+#######
+#.....#
+#.#.#.#
+#K#.#.#
+#.#...#
+#D..E##
+P..####
+#######
+``` 
+
+Note: The levels were identified as not solvable because the doors (D) are currently passable even if the player hasn't collected a key (K). Adjust or add to the game rules to ensure the player must collect the key before passing through the door, or reposition elements as necessary to create a solvable path.

@@ -1,0 +1,1337 @@
+SYSTEM PROMPT:
+You are a game designer, familiar with the PuzzleScript game description language. Here are some example games, for inspiration (do not reproduce these games exactly):
+
+title Heroes of Sokoban II: Monsters
+author Jonah Ostroff
+text_color yellow
+key_repeat_interval 0.25
+
+========
+OBJECTS
+========
+
+Background
+#989898 #C8C8C8
+00000
+00100
+00000
+00010
+00000
+
+Goal
+Brown Yellow
+.000.
+00000
+00010
+00000
+00000
+
+Wall
+Darkgrey #222222
+01000
+11111
+00010
+00010
+11111
+
+Fighter (Warrior sounds better in-game, but I want different abbreviations for the classes in the editor.)
+#FF4444 Pink DarkBrown
+.000.
+.111.
+00000
+.000.
+.2.2.
+
+Wizard
+#2266FF Pink
+.000.
+.010.
+00000
+.000.
+00000
+
+Thief
+#66DD66 Pink DarkBrown
+.000.
+.010.
+00000
+.0.0.
+.0.0.
+
+Priest
+#FFFFAA Pink
+.000.
+.111.
+00000
+.000.
+00000
+
+SFighter
+#880000 Pink DarkBrown
+.000.
+.111.
+00000
+.000.
+.2.2.
+
+SWizard
+#000088 Pink
+.000.
+.010.
+00000
+.000.
+00000
+
+SThief
+#006600 Pink DarkBrown
+.000.
+.010.
+00000
+.0.0.
+.0.0.
+
+SPriest
+#B8B800 Pink
+.000.
+.111.
+00000
+.000.
+00000
+
+Crate
+Orange #552200
+.111.
+10001
+10001
+10001
+.111.
+
+YellowSwitch
+Yellow Black
+.....
+.111.
+.101.
+.111.
+.....
+
+YellowOpen
+Yellow
+0...0
+.....
+.....
+.....
+0...0
+
+YellowDoor
+Yellow #AA7722
+01010
+10001
+00000
+10001
+01010
+
+PurpleSwitch
+#6611CC Black
+.....
+.111.
+.101.
+.111.
+.....
+
+PurpleDoor
+#6611CC #220088
+01010
+10001
+00000
+10001
+01010
+
+PurpleOpen
+#6611CC
+0...0
+.....
+.....
+.....
+0...0
+
+MonsterDoor
+DarkGrey #222222 Red
+21002
+22122
+20212
+20012
+21112
+
+Warpball
+Blue
+
+ShadowDoor
+Purple
+
+DragonLeft
+Green Red Orange Yellow DarkGreen
+.....
+1100.
+3210.
+1100.
+...4.
+
+DragonRight
+Green Red Orange Yellow DarkGreen
+.....
+.0011
+.0123
+.0011
+.4...
+
+Goblin
+Green DarkBrown DarkGreen
+0.2.0
+00000
+..0..
+.111.
+.1.1.
+
+Dying
+White
+
+Saved
+#D8D800
+..0..
+.000.
+..0..
+..0..
+.....
+
+HasSaved
+Yellow
+.....
+.....
+.....
+.....
+.....
+
+Corpse
+#CCC
+.000.
+.000.
+00000
+.0.0.
+.0.0.
+
+LFireball
+Orange
+
+RFireball
+Orange
+
+DidNotMove
+Purple
+
+=======
+LEGEND
+=======
+
+Dragon = DragonLeft or DragonRight
+Player = Fighter or Wizard or Thief or Priest
+SPlayer = Swizard or Sthief or SFighter or SPriest
+Hero = Player or Splayer
+Healer = Priest or SPriest (Unlike the other heroes, priests must function even when inactive. "Healer" is the generic term for an active or inactive priest.)
+ClosedDoor = PurpleDoor or YellowDoor or MonsterDoor
+OpenDoor = YellowOpen or PurpleOpen
+Switch = PurpleSwitch or YellowSwitch
+Monster = Dragon or Goblin
+Moveable = Crate or SPlayer or Monster
+Static = Wall or ClosedDoor
+Weighing = Crate or Hero or Monster
+Vulnerable = Hero or Monster
+Invulnerable = Crate or Static
+Fireball = LFireball or RFireball
+. = Background
+# = Wall
+F = Fighter
+W = Wizard
+T = Thief
+P = Priest
+1 = SFighter
+2 = SThief
+3 = SWizard
+4 = SPriest
+* = Crate
+G = Goal
+[ = YellowDoor
+] = PurpleDoor
+{ = YellowSwitch
+} = PurpleSwitch
+L = DragonLeft
+R = DragonRight
+O = Goblin
+M = MonsterDoor
+
+=======
+SOUNDS
+=======
+
+Moveable move 82056307
+Sfx0 21221308 (teleport)
+Endlevel 36315908
+Sfx1 66399906 (switch player)
+Sfx2 92172900 (close door)
+Sfx3 15129100 (open door)
+Sfx4 69860105 (saved)
+Sfx5 63194902 (kill enemy)
+Sfx6 81996702 (dying player)
+EndGame 86793500
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Warpball, Dying
+Goal, Switch, OpenDoor, ShadowDoor
+ClosedDoor, Hero, Crate, Wall, Monster, Corpse
+RFireball, Saved, DidNotMove
+LFireball, HasSaved
+
+======
+RULES
+======
+[Saved] [Wall] -> [] [Wall HasSaved] (Remembering whether we saved someone last round by attaching a note to some wall.)
+
+[Corpse] -> Restart
+
+(Adds a DidNotMove to where the player currently is, to cancel moves where they bump into a wall.)
+
+[Player] -> [Player DidNotMove]
+
+[ >  Fighter | Moveable ] -> [  >  Fighter | > Moveable  ]
+[ > Moveable | Moveable ] [ Fighter] -> [ > Moveable | > Moveable ] [ Fighter] (Fighters push.)
+
+[ < Thief | Moveable ] -> [ < Thief | < Moveable ] (Thieves pull.)
+
+[ > Wizard ] -> [ Wizard > Warpball]
+[ > Warpball | no Moveable no Static] -> [ | > Warpball]
+[ > Warpball | Static] [Wizard] -> [ | Static ] [> Wizard]
+[ > Warpball | Moveable ] [Wizard] -> [ | Wizard Sfx0] [Moveable] (Wizards telexport. What they really do is shoot a "warpball", which causes them to move normally if it hits a wall and warp if it hits something they can warp with.)
+
+(The following mess is for changing characters.)
+[ Action Fighter] [SThief] -> [SFighter] [Thief Sfx1]
+[ Action Thief] [SWizard] -> [SThief] [Wizard Sfx1]
+[ Action Wizard] [SPriest] -> [SWizard] [Priest Sfx1]
+[ Action Priest] [SFighter] -> [SPriest] [Fighter Sfx1]
+
+[ Action Fighter] [no SThief] [SWizard] -> [SFighter] [no SThief] [Wizard Sfx1]
+[ Action Thief] [no Swizard] [SPriest] -> [SThief] [no SWizard] [Priest Sfx1]
+[ Action Wizard] [no SPriest] [SFighter] -> [SWizard] [no SPriest] [Fighter Sfx1]
+[ Action Priest] [no SFighter] [SThief] -> [SPriest] [no SFighter] [Thief Sfx1]
+
+[ Action Fighter] [no SThief] [no SWizard] [SPriest] -> [SFighter] [no SThief] [no SWizard] [Priest Sfx1]
+[ Action Thief] [no SWizard] [no SPriest] [SFighter] -> [SThief] [no SWizard] [no SPriest] [Fighter Sfx1]
+[ Action Wizard] [no SPriest] [no SFighter] [SThief] -> [SWizard] [no SPriest] [no SFighter] [Thief Sfx1]
+[ Action Priest] [no SFighter] [no SThief] [SWizard] -> [SPriest] [no SFighter] [no SThief] [Wizard Sfx1]
+
+(Cancels the move if the player is in the same place that they started. Notice that switching characters negates this. Only matters in levels where one dragon has multiple targets.)
+
+Late [Player DidNotMove] -> Cancel
+Late [DidNotMove] -> []
+
+(Now enemies attack.)
+
+Late [DragonLeft] -> [LFireball DragonLeft]
+Late [DragonRight] -> [RFireball DragonRight]
+
+Late RIGHT [RFireball | No Vulnerable no Invulnerable] -> [ | RFireball]
+Late LEFT [LFireball | No Vulnerable no Invulnerable] -> [ | LFireball]
+Late RIGHT [RFireball | Vulnerable] -> [ | Dying Vulnerable]
+Late Right [RFireball | Invulnerable] -> [ | Invulnerable]
+Late Left [LFireball | Vulnerable] -> [ | Dying Vulnerable]
+Late LEFT [LFireball | Invulnerable] -> [ | Invulnerable]
+
+Late [Goblin | Vulnerable] -> [Goblin | Dying Vulnerable]
+
+(Vulnerable objects that are attacked are designated as "Dying", but heroes can be saved by the Priest. Then the stuff that didn't get saved dies.)
+
+Late [Dying Healer] -> [Saved Healer]
+Late [Healer | Dying Hero] -> [Healer | Saved Hero]
+Late [Dying Monster] -> [Sfx5]
+Late [Dying Hero] -> [Corpse Sfx6]
+
+(Doors opening.)
+
+late [Weighing  YellowSwitch] [YellowDoor] -> [Weighing  YellowSwitch] [ShadowDoor]
+late [YellowSwitch no Weighing] [YellowOpen] -> [YellowSwitch] [YellowDoor sfx2]
+late [YellowSwitch no Weighing] [ShadowDoor] -> [YellowSwitch] [YellowDoor]
+late [ShadowDoor] -> [YellowOpen sfx3]
+
+late [Weighing PurpleSwitch] [PurpleDoor] -> [Weighing PurpleSwitch] [ShadowDoor]
+late [PurpleSwitch no Weighing] [PurpleOpen] -> [PurpleSwitch] [PurpleDoor sfx2]
+late [PurpleSwitch no Weighing] [ShadowDoor] -> [PurpleSwitch] [PurpleDoor]
+late [ShadowDoor] -> [PurpleOpen sfx3]
+
+late [MonsterDoor] -> [ShadowDoor]
+late [ShadowDoor] [Monster] -> [MonsterDoor] [Monster]
+late [ShadowDoor] -> [sfx3]
+
+(Looks for a HasSaved on a wall and moves it to the Priest. Then, if someone was saved this turn, plays the sound only if the Priest doesn't have the HasSaved note. Finally, cleans that up.)
+
+late [Wall HasSaved] [Healer] -> [Wall] [Healer HasSaved]
+late [Saved] [Healer no HasSaved] -> [Saved sfx4] [Healer]
+late [HasSaved] -> []
+
+==============
+WINCONDITIONS
+==============
+
+All Hero on Goal
+All Goal on Hero
+
+=======
+LEVELS
+=======
+
+Message Welcome back.
+
+Message [You've played the original, yes?]
+
+Message [If not, this might be confusing.]
+
+#############
+#.......[...#
+#.*.F.{.[.G.#
+#############
+#.......[...#
+#.*.2.{.[.G.#
+#############
+#.......[...#
+#.*.3.{.[.G.#
+#############
+
+Message Watch out for goblins.
+
+#############
+#F.O.......O#
+#...O.......#
+#.......O...#
+#O..........#
+#....O......#
+#O.......O..#
+#.O.....O.G.#
+#############
+
+#############
+###O###O#####
+#W.*****...O#
+#..*****....#
+#####O###O..#
+#O########..#
+#*G...O.O...#
+##..O..O.O..#
+#############
+
+Message Goblins attack each other too.
+
+#############
+#.......#...#
+#...*...#.G.#
+#.F...O.#...#
+#...*...##O##
+#...........#
+#############
+
+Message Dragons breath fire.
+
+###############
+#.............#
+#..T..###.....#
+#.....L.#.....#
+#.......#.....#
+#.............#
+#.....#.......#
+#.....#.R..G..#
+#.....###.....#
+#.............#
+###############
+
+Message Fire hurts enemies.
+
+##############
+#...#....O.RG#
+#.T.#......R.#
+#...#R*L...R.#
+#R*.#...#..R.#
+#...#...#..R.#
+#...O.*.#..R.#
+#.......#....#
+##############
+
+###########
+#3.O.O.O.T#
+#.#########
+#......G.G#
+#.#########
+#R.O.O.O.O#
+###########
+
+Message Think fast!
+
+#############
+#R.O.O.O.O.T#
+###########{#
+###########]#
+#G#3.[.}.G#G#
+#]###########
+#{###########
+#1..O...O..L#
+#############
+
+Message Sorry about that one.
+
+#######
+##G*G##
+##.G.##
+#R...##
+##...##
+##...##
+##...##
+##...L#
+##...##
+##F23##
+#######
+
+Message Kill monsters to open the M wall.
+
+###########
+#L...R#...#
+#.....#...#
+#.....M.G.#
+#.T.*.#...#
+#.....#...#
+###########
+
+#############
+#.......#...#
+#..O.O..#...#
+#R......M.G.#
+#.*.F.*.#...#
+#.......#...#
+#############
+
+#############
+#.......#...#
+#.{.*.{.#...#
+#..W.O..M.G.#
+#.{.*.[.#...#
+#.......#...#
+#############
+
+Message Yellow priest is protected.
+
+###########
+#...#O#O#O#
+#.P.......#
+#...**O**.#
+#********.#
+#R..G.....#
+###########
+
+###########
+#W#######G#
+#.#O#O#O#.#
+#.........#
+#.##O#O##.#
+#4#######G#
+###########
+
+Message Heroes next to a priest are safe.
+
+############
+#...#.O#O###
+#.F.#......#
+#...#.##O..#
+#.4...O#G.G#
+#...#.##.O.#
+############
+
+############
+#.#..T..#4##
+#.#.{.*...L#
+#.#.....#..#
+#G[.*.{...L#
+#.#.....#..#
+#.#.{.*...L#
+#.#.....#G##
+############
+
+###########
+#W...O#...#
+#.....#.G.#
+#..4..M...#
+#.....#.G.#
+#O...O#...#
+###########
+
+###########
+#.T.##O#O##
+#.........#
+#.4.#O#O..#
+########.##
+#G..####.O#
+#G#.O###.##
+###.###O..#
+#O..O#....#
+##...*....#
+###########
+
+###########
+#{*F#.4#.3#
+#{*.#..#..#
+###[#[###.#
+#R[.......#
+####O#.##.#
+######.##.#
+#G.G.G.#O*#
+###########
+
+###########
+#.T.####O##
+#.3......O#
+#.4.###O.##
+#####O##.##
+#.G..*.O.##
+#G.G#O##.##
+###########
+
+###########
+##O#O#O#O##
+#T[.[.[.[.#
+##{#{#{#{.#
+#.........#
+#.3G*G*G4.#
+#.........#
+###########
+
+Message The final challenge.
+
+#############
+#...#O.O#...#
+#.F.#G.G#.2.#
+#...#.O.#...#
+##.###*###.##
+#R*L.....R*L#
+#.#.......#.#
+#R*L.....R*L#
+##.###M###.##
+#...#...#...#
+#.3.#G.G#.4.#
+#...#...#...#
+#############
+
+Message Thanks for playing!
+
+title The Legend of Zokoban
+author Joshua Minor
+homepage pixelverse.org
+flickscreen 9x7
+
+========
+OBJECTS
+========
+
+Background
+yellow orange
+00000
+01000
+00001
+00100
+10000
+
+Water
+blue lightblue
+00000
+01000
+00001
+00100
+10000
+
+Cave
+DarkBlue
+00000
+00000
+00000
+00000
+00000
+
+Goal
+DarkBlue Red
+00000
+00000
+00100
+00000
+00000
+
+RockWall
+BROWN Orange
+01110
+10000
+10010
+10000
+00100
+
+StoneWall
+darkgrey grey
+01110
+10000
+10010
+10000
+00100
+
+PlayerWithoutSword
+GREEN lightgreen
+.00..
+00000
+.000.
+.111.
+00.00
+
+PlayerWithSword
+GREEN lightgreen white grey
+.002.
+00020
+.0222
+.110.
+00.00
+
+Sword
+grey white
+..1..
+..1..
+.111.
+..0..
+.....
+
+Block
+BROWN Orange darkgrey
+.111.
+10001
+10002
+10002
+.222.
+
+EasyBaddie
+white red
+.111.
+10101
+11111
+11111
+11.11
+
+Money
+white lightblue
+..1..
+.001.
+10111
+.111.
+..1..
+
+=======
+LEGEND
+=======
+
+Wall = StoneWall or RockWall
+Solid = Wall or Block or Water
+Player = PlayerWithoutSword or PlayerWithSword
+Obstacle = Wall or Block or Player or Water
+Baddie = EasyBaddie
+
+. = Background
+# = RockWall
+S = StoneWall
+P = PlayerWithoutSword
+* = Block
+@ = Block and Cave
+O = Cave
+w = Water
+1 = EasyBaddie
++ = Sword
+G = Goal
+
+=======
+SOUNDS
+=======
+
+StartLevel 40430108 (music-ish)
+SFX0 16358103 (power up)
+SFX1 84057304 (push)
+SFX2 74654508 (stairs)
+SFX3 21293301 (fight)
+SFX4 49521903 (hurt)
+SFX5 47598700 (money)
+ShowMessage 82693708 (you win!)
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Cave, Goal
+Player, Wall, Block, Water, EasyBaddie
+Sword, Money
+
+======
+RULES
+======
+
+(baddies move at random)
+[ Stationary Baddie ] -> [ RandomDir Baddie ]
+
+(player can push blocks)
+[ > Player | Block ] -> [ > Player | > Block ] SFX1
+
+(blocks pushed into water become land)
+[ > Block | Water ] -> [ | ]
+
+(baddies can attack the player w/o sword)
+[ > Baddie | Player No Sword ] -> SFX4
+
+(player can pick up sword)
+([ > Player | Sword ] -> [ | Player Sword ] SFX0)
+[ PlayerWithoutSword Sword ] -> [ PlayerWithSword ] SFX0
+
+(player with sword can kill baddies & leave money)
+[ > PlayerWithSword | Baddie ] -> [ PlayerWithSword | Money ] SFX3
+(sword moves with player)
+([ > Player Sword ] -> [ > Player > Sword ])
+(sword doesn't move into obstacles)
+([ > Sword | Stationary Obstacle ] -> [ Sword | Stationary Obstacle ])
+
+(player can pick up money)
+[ > Player | Money ] -> [ | Player ] SFX5
+
+(blocks pushed into caves, teleport to other end of cave)
+random [ Moving Block Cave | ... | Cave ] -> [ Cave | ... | Block Cave ]
+(blocks sitting on cave exits will roll aside to let player follow them)
+late random [ Block Cave | No Obstacle ] -> [ Cave | Block ]
+(players can enter caves - teleporting to orthogonally matching cave)
+late random [ Player Cave | ... | Cave ] -> [ Cave | ... | Player Cave ] SFX2
+(sword follows player through the cave)
+(late random [ Sword Cave | ... | Cave ] -> [ Cave | ... | Sword Cave ])
+
+
+==============
+WINCONDITIONS
+==============
+
+All Player on Goal
+
+=======
+LEVELS
+=======
+
+sssssssss#################wwwwwwwwww
+ss.s1s..s#1#####.##..1..1.wwwwww..ww
+s.......s#.#####.##.#.#.#.wwwww..*.w
+s..*....o#.##o##.............ww....w
+s.s....ss#..........#.*.#....ww..1.w
+sss.s.sss##...............wwwwww..ww
+sssssssss#####..#####.....wwwwwwwwww
+sssssssss#####..#####.....wwwwwwwwww
+ss1...sss#####..####.....wwww.....ww
+s......os##o#....##...#.1www..s.s..w
+s..+...ss#.......##*......ww...g...w
+ss.....ss#...p..........#.ww..s.s.1w
+ssss..sss##.....###..#.1..www..1..ww
+sssssssss#################wwwwwwwwww
+
+message Congratulations!
+
+
+
+title Zen Puzzle Garden
+author lexaloffle
+homepage www.lexaloffle.com
+
+(
+
+A replication, with some really bad levels, of the rather superior Zen Puzzle Garden.  Made with permission of the unfailingly lovely Joseph White.
+
+http://www.lexaloffle.com/zen.htm
+
+)
+
+========
+OBJECTS
+========
+
+Background
+orange brown
+00100
+00000
+00010
+10000
+00000
+
+Player
+white black
+.0.0.
+01010
+00000
+.000.
+11.11
+
+Rock
+grey darkgrey yellow
+21002
+11000
+11000
+11000
+11101
+
+UnbrushedSand
+yellow orange
+00000
+01000
+00000
+00010
+00000
+
+HBrushedSand
+yellow orange
+00000
+01011
+00000
+11010
+00000
+
+VBrushedSand
+yellow orange
+01000
+01010
+00000
+01010
+00010
+
+=======
+LEGEND
+=======
+
+BrushedSand = HBrushedSand or VBrushedSand
+Sand = UnbrushedSand or BrushedSand
+Obstacle = BrushedSand or Rock
+; = Background
+O = Rock
+. = UnbrushedSand
+P = Player
+
+=========
+SOUNDS
+=========
+
+closemessage 52854909
+startgame 64192309
+endlevel 16398509
+endgame 62100709
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Sand
+Player, Rock
+
+======
+RULES
+======
+
+(The h and v sand effects are cosmetic - how could this be done in a single line if there was only one type of brushed sand?)
+
+horizontal [ UnbrushedSand > Player ] -> [ HBrushedSand > Player ] 
+vertical [ UnbrushedSand > Player ] -> [ VBrushedSand > Player ] 
+
+late [ Player BrushedSand ] -> cancel
+
+==============
+WINCONDITIONS
+==============
+
+no UnbrushedSand
+
+=======
+LEVELS
+=======
+
+message level 1 of 5
+
+;;;;;;;;;;;;
+;;;;;;;;;;;;
+;;;;;;;;;;;;
+;;;......;;;
+;;;......;;;
+;;;......;;;
+;P;..OO..;;;
+;;;......;;;
+;;;......;;;
+;;;;;;;;;;;;
+;;;;;;;;;;;;
+;;;;;;;;;;;;
+
+message level 2 of 5
+
+;;;;;;;;;;;;
+;;;;;;;;;;;;
+;;;;;;;;;;;;
+;;;......;;;
+;;;....O.;;;
+;;;......;;;
+;P;..O...;;;
+;;;......;;;
+;;;......;;;
+;;;;;;;;;;;;
+;;;;;;;;;;;;
+;;;;;;;;;;;;
+
+message level 3 of 5
+
+;;;;;;;;;;;;
+;;;;;;;;;;;;
+;;;;;;;;;;;;
+;;;......;;;
+;;;...O..;;;
+;;;......;;;
+;P;.O....;;;
+;;;....O.;;;
+;;;......;;;
+;;;;;;;;;;;;
+;;;;;;;;;;;;
+;;;;;;;;;;;;
+
+message level 4 of 5
+
+;;;;;;;;;;;;
+;;;;;;;;;;;;
+;;;;;;;;;;;;
+;;;..OO..;;;
+;;;O....O;;;
+;P;..OO..;;;
+;;;O....O;;;
+;;;..OO..;;;
+;;;;;;;;;;;;
+;;;;;;;;;;;;
+;;;;;;;;;;;;
+
+message level 5 of 5
+
+;;;;;;;;;;;;
+;;;;;;;;;;;;
+;;;;;;;;;;;;
+;;;O.....;;;
+;;;..O.O.;;;
+;;;O...O.;;;
+;P;..O...;;;
+;;;O...O.;;;
+;;;..O...;;;
+;;;;;;;;;;;;
+;;;;;;;;;;;;
+;;;;;;;;;;;;
+
+message congratulations!
+
+
+title Octat
+author increpare
+homepage www.increpare.com
+
+noundo
+require_player_movement
+
+(
+    
+A port of a flash game I made.  The original's here:
+
+http://ded.increpare.com/~locus/octat/
+
+)
+
+========
+OBJECTS
+========
+
+Background
+purple
+.....
+.000.
+.000.
+.000.
+.....
+
+Activetile
+pink red
+00000
+0...0
+0...0
+0...0
+00000
+
+Target
+red
+0...0
+.0.0.
+..0..
+.0.0.
+0...0
+
+Player
+white
+.....
+.000.
+.000.
+.000.
+.....
+
+Void 0
+black
+
+Temp
+black
+
+=======
+LEGEND
+=======
+
+. = Background
+P = Player and Activetile
+a = Activetile
+x = Target
+y = target and Activetile
+
+=========
+SOUNDS
+=========
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Void
+Activetile
+Player
+Temp
+Target
+
+======
+RULES
+======
+
+[ > Player | no Activetile ] -> cancel
+
+late [ Activetile | Player ] -> [ Temp | Player ] 
+late [ no Temp | Player ] -> [ Activetile | Player ] 
+late [ Temp ] -> [ ] 
+
+late [ Activetile Void ] -> [ Void ] 
+
+==============
+WINCONDITIONS
+==============
+
+some Player on target
+
+=======
+LEVELS
+=======
+
+message level 1 of 8
+
+..........
+..........
+..........
+..........
+..........
+.x...ap...
+..........
+..........
+..........
+..........
+
+message level 2 of 8
+
+...........
+...........
+...........
+...........
+...........
+....xpa....
+...........
+...........
+...........
+...........
+
+message level 3 of 8
+
+...........
+...........
+...........
+...........
+..a........
+.axaaap....
+..a........
+...........
+...........
+...........
+
+message level 4 of 8
+
+...........
+...........
+...a.......
+..a.a......
+.a.a.a.....
+a.aya.a.ap.
+.a.a.a.....
+..a.a......
+...a.......
+...........
+
+message level 5 of 8
+
+...........
+...........
+...........
+...........
+aaaaaaaaaaa
+...y..ap...
+aaaaaaaaaaa
+...........
+...........
+...........
+
+message level 6 of 8
+
+000000....0
+000000..0.0
+000000..0..
+000000000..
+....A...0.0
+.AY.A...AAP
+....A...0.0
+000000000..
+000000..0..
+000000..0.0
+000000....0
+
+message level 7 of 8
+
+..AAA...000
+.AY.A...AP.
+..AAA...000
+
+message level 8 of 8
+
+0AAAA..00
+0AAAA..00
+YAAAA..AP
+0AAAA..00
+0AAAA..00
+
+message the end
+
+
+USER PROMPT:
+The following PuzzleScript game code:
+```plaintext
+title Simple Movement Game
+author YourName
+
+========
+OBJECTS
+========
+
+Background
+DarkGrey
+
+Wall
+Brown
+..... 
+.000. 
+.000. 
+.000. 
+..... 
+
+Player
+Pink
+.....
+.111.
+.1.1.
+.111.
+.....
+
+Target
+Yellow
+.....
+..0..
+.000.
+..0..
+.....
+
+Star
+Blue
+.....
+..0..
+.000.
+..0..
+.....
+
+=======
+LEGEND
+=======
+
+# = Wall
+. = Background
+P = Player
+T = Target
+* = Star
+
+=========
+SOUNDS
+=========
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Wall, Target, Star, Player
+
+======
+RULES
+======
+
+[ > Player | ] -> [ > Player | ]
+
+==============
+WINCONDITIONS
+==============
+
+All Player on Target
+
+=======
+LEVELS
+=======
+
+######
+#....#
+#..*.#
+#..T.#
+#..P.#
+######
+
+```
+produced the following console output:
+=================================
+line 22 : Trying to access color number 1 from the color palette of sprite PLAYER, but there are only 1 defined in it.
+line 23 : Trying to access color number 1 from the color palette of sprite PLAYER, but there are only 1 defined in it.
+line 24 : Trying to access color number 1 from the color palette of sprite PLAYER, but there are only 1 defined in it.
+Errors detected during compilation; the game may not work correctly.
+Return a repaired version of the code that addresses these errors. First, reason about your task and determine the best plan of action. Then, write your code.  Return your code in full, inside a ```plaintext code block.

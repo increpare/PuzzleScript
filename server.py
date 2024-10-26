@@ -46,12 +46,12 @@ cot_prompt = (
 )
 game_mutate_prompt = (
     """Consider the code for the following PuzzleScript game:\n\n{parents}\n\n"""
-    """Create a variation on this game, making it more complex. """
+    """Create a variation on this game, making it more complex. {cot_prompt}"""
     + formatting_prompt
 )
 game_crossover_prompt = (
     """Consider the code for the following PuzzleScript games:\n\n{parents}\n\n"""
-    """Create a new game by combining elements of these games. """
+    """Create a new, more complex game by combining elements of these games. {cot_prompt}"""
     + formatting_prompt
 )
 game_compile_repair_prompt = (
@@ -178,13 +178,13 @@ def gen_game():
         system_prompt = game_gen_system_prompt
         from_idea_prompt_i = from_idea_prompt.format(game_idea=game_idea) if from_idea else ''
         if n_iter == 0:
-            parents_text = '/n/n'.join(parents)
+            parents_text = '/n/n'.join([p['code'] for p in parents])
             if gen_mode == 'init':
                 prompt = gen_game_prompt.format(cot_prompt=cot_prompt_text, from_idea_prompt=from_idea_prompt_i)
             elif gen_mode == 'mutate':
-                prompt = game_mutate_prompt.format(parents=parents_text)
+                prompt = game_mutate_prompt.format(parents=parents_text, cot_prompt=cot_prompt_text)
             elif gen_mode == 'crossover':
-                prompt = game_crossover_prompt.format(parents=parents_text)    
+                prompt = game_crossover_prompt.format(parents=parents_text, cot_prompt=cot_prompt_text)    
         elif not compilation_success:
             prompt = game_compile_repair_prompt.format(code=code, console_text=console_text, cot_prompt=cot_prompt_text,
                                                        from_idea_prompt=from_idea_prompt_i)

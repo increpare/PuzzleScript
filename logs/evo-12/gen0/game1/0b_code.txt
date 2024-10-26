@@ -1,0 +1,136 @@
+To create a complete PuzzleScript game, I will follow these steps:
+
+1. **Conceptualize the Game**: Plan a simple puzzle game concept. Define a goal for the player, like reaching a destination, pushing boxes, etc.
+
+2. **Define Objects**: Identify the types of objects necessary for the game, such as players, walls, goals, crates, etc. Each object will have a visual representation.
+
+3. **Set Up Collision Layers**: These layers will manage how objects interact or overlap.
+
+4. **Create Rules**: Define how different objects interact with each other and how the player's interactions affect them.
+
+5. **Win Conditions**: Establish conditions for winning the game, like moving all crates to target spots.
+
+6. **Design Levels**: Create at least one level for the game to be playable.
+
+7. **Final Touches**: Include sounds or messages when necessary.
+
+Now, I will write the code following this plan.
+
+```plaintext
+title Box Pusher
+author YourName
+
+========
+OBJECTS
+========
+
+Background
+LightGrey
+
+Player
+Red
+.....
+..0..
+.000.
+..0..
+.....
+
+Wall
+DarkGrey
+.....
+00000
+00000
+00000
+.....
+
+Crate
+Brown
+.....
+.111.
+.111.
+.111.
+.....
+
+Target
+Green
+.....
+..2..
+..2..
+.....
+
+CrateOnTarget
+Olive
+.....
+.121.
+.121.
+.121.
+.....
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Player
+C = Crate
+T = Target
+O = CrateOnTarget
+
+===========
+SOUNDS
+===========
+
+SFX0 255 0
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Target
+CrateOnTarget, Crate
+Player, Wall
+
+======
+RULES
+======
+
+[ > Player | Crate ] -> [ > Player | > Crate ]
+[ Crate | Target ] -> [ CrateOnTarget | ]
+[ CrateOnTarget | no Target ] -> [ Crate | ]
+
+==============
+WINCONDITIONS
+==============
+
+All CrateOnTarget
+
+=======
+LEVELS
+=======
+
+#######
+#.....#
+#..T..#
+#..C..#
+#..P..#
+#..T..#
+#######
+```
+
+**Game Explanation**:
+
+- **Concept**: This is a classic box-pushing game where the player must push crates onto target spots. A crate changes its appearance when on a target.
+  
+- **Objects**: The main objects are the player, crates, walls, and targets. Walls are immovable, crates can be pushed, and targets are places where crates should be placed.
+
+- **Collision Layers**: This ensures the proper layering of objects, allowing crates to be pushed only by the player and occupying their own space.
+
+- **Rules**: Basic interactions include pushing crates and changing crate appearance when on targets. 
+
+- **Win Conditions**: The game is won when all crates are on targets.
+
+- **Level Design**: A small level is provided, ensuring the player has a puzzle to solve.
+
+This game presents a straightforward puzzle, encouraging logical thinking and strategic movement to win.

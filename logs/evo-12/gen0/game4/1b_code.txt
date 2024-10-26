@@ -1,0 +1,113 @@
+The console output indicates there are errors related to the color palettes defined for the `Player` and `Door` objects. For the `Player` object, you attempted to access color number 3 but only defined two colors. Similarly, for the `Door` object, color number 1 is accessed but only one color is defined.
+
+To fix these, we need to:
+1. Ensure that all the color indices used in the sprites of `Player` and `Door` objects match the number of colors defined in their respective color palettes.
+2. Correct these indices to ensure proper sprite representation without errors.
+
+Here's the updated code for the game:
+
+```plaintext
+title Key Collector Maze
+author YourName
+
+========
+OBJECTS
+========
+
+Background
+lightblue
+
+Wall
+brown gray
+00000
+11111
+00000
+11111
+00000
+
+Player
+black green
+..0..
+.000.
+.011.
+..1..
+.0.0.
+
+Key
+yellow
+.0...
+..0..
+...0.
+.....
+.....
+
+Door
+blue gray
+11111
+10001
+10001
+10001
+11111
+
+Exit
+magenta
+.....
+.111.
+.101.
+.111.
+.....
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Player
+K = Key
+D = Door
+E = Exit
+
+======
+RULES
+======
+
+[ P | K ] -> [ P ]
+[ P | D no K ] -> cancel
+[ P | D with K ] -> [ P ]
+
+==============
+WINCONDITIONS
+==============
+
+all E on Player
+
+=======
+LEVELS
+=======
+
+# Simple level to demonstrate mechanic
+..#####
+..#D..#
+..#...#
+P.#.K.#
+.##.E##
+..#####
+
+# Level with challenge
+#######
+#.....#
+#.#.#.#
+#K#.#.#
+#.#...#
+#D..E##
+P..####
+#######
+
+```
+
+**Changes Made:**
+1. Updated the `Player` object's color indices from 3 to 1, since `1` is the correct second color in the defined palette.
+2. Added `gray` as a second color for the `Door` object and corrected the indices to match the two defined colors. 
+
+This should resolve the errors encountered during compilation.

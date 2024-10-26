@@ -1,0 +1,1305 @@
+SYSTEM PROMPT:
+You are a game designer, familiar with the PuzzleScript game description language. Here are some example games, for inspiration (do not reproduce these games exactly):
+
+title Puzzles
+author increpare
+homepage www.puzzlescript.net
+
+(
+Unfortunately, just the first level - trying to emulate the later ones proved too complex :[
+
+You can play the original game here:
+http://www.increpare.com/2012/06/puzzles/
+)
+
+background_color white
+text_color blue
+
+run_rules_on_level_start
+
+
+========
+OBJECTS
+========
+
+DyingPlayer
+Black
+
+Void
+White
+
+OBackground
+Orange
+
+GBackground
+LightGrey
+
+BlueWall
+Blue
+
+
+GreyWall
+Grey
+
+RedCrate
+Red
+.....
+.000.
+.000.
+.000.
+.....
+GreyCrate
+DarkGrey
+.....
+.000.
+.000.
+.000.
+.....
+
+RedWhale
+Red White
+00100
+00000
+10001
+00000
+00100
+
+GreyWhale
+DarkGrey White
+00100
+00000
+10001
+00000
+00100
+
+RedEndPoint
+DarkRed
+.....
+.000.
+.0.0.
+.000.
+.....
+
+GreyEndPoint
+Darkgrey
+.....
+.....
+.....
+.....
+.....
+
+RedStartPoint
+darkRed
+.....
+.....
+.....
+.....
+.....
+
+GreyStartPoint
+darkRed
+.....
+.000.
+.0.0.
+.000.
+.....
+
+YellowPlayer
+yellow
+.....
+.000.
+.000.
+.000.
+.....
+
+GreyPlayer
+DarkGrey
+.....
+.000.
+.000.
+.000.
+.....
+
+LeftBeam
+white
+.....
+.....
+00000
+.....
+.....
+
+RightBeam
+white
+.....
+.....
+00000
+.....
+.....
+
+UpBeam
+white
+..0..
+..0..
+..0..
+..0..
+..0..
+
+DownBeam
+white
+..0..
+..0..
+..0..
+..0..
+..0..
+
+=======
+LEGEND
+=======
+
+Background = Void or OBackground or GBackground
+Player = YellowPlayer or GreyPlayer or DyingPlayer
+Wall = BlueWall or GreyWall
+Crate = RedCrate or GreyCrate
+Whale = RedWhale or GreyWhale
+StartPoint = RedStartPoint or GreyStartPoint
+EndPoint = RedEndPoint or GreyEndPoint
+. = OBackground
+, = Void
+# = BlueWall
+W = RedWhale
+C = RedCrate
+S = RedStartPoint and YellowPlayer
+E = RedEndPoint
+Obstacle = Player or Whale or Crate or Wall
+Beam = UPBeam or DownBeam or LeftBeam or RightBeam
+VBeam = UPBeam or DownBeam
+HBeam = LeftBeam or RightBeam
+HBeamSource = HBeam or Whale
+VBeamSource = VBeam or Whale
+Pushable = Player or Whale or Crate
+RedPushable = YellowPlayer or RedWhale or RedCrate
+GreyPushable = GreyPlayer or GreyWhale or GreyCrate
+
+=======
+SOUNDS
+=======
+
+================
+COLLISIONLAYERS
+================
+
+Background
+StartPoint, EndPoint
+Player, Wall, Crate, Whale
+UpBeam, DownBeam
+LeftBeam, RightBeam
+
+======
+RULES
+======
+
+
+left [ LeftBeam | < Player ] -> [ LeftBeam | Player ]
+right [ RightBeam | < Player ] -> [ RightBeam | Player ]
+up [ UpBeam | < Player ] -> [ UpBeam | Player ]
+down [ DownBeam | < Player ] -> [ DownBeam | Player ]
+
+right [ RightBeam | stationary Pushable ] -> [ RightBeam | > Pushable ]
+left [ LeftBeam | stationary Pushable ] -> [ LeftBeam | > Pushable ]
+up [ UpBeam | stationary Pushable ] -> [ UpBeam | > Pushable ]
+down [ DownBeam | stationary Pushable ] -> [ DownBeam | > Pushable ]
+
+[ Whale | stationary Pushable ] -> [ Whale | > Pushable ]
+
+
+[ Beam ] -> []
+
+
+[ >  Player | Crate ] -> [  >  Player | > Crate  ]
+[ > Crate | stationary Crate ] -> [ > Crate | > Crate ]
+
+( using red/greypushable is an optimization - cuts down on unecessary rules by quite a lot, beause red and grey things never coexist)
+[ > RedPushable | v RedPushable ] -> [ RedPushable | v RedPushable ]
+[ > RedPushable | ^ RedPushable ] -> [ RedPushable | ^ RedPushable ]
+[ > RedPushable | < RedPushable ] -> [ RedPushable | < RedPushable ]
+
+[ > GreyPushable | v GreyPushable ] -> [ GreyPushable | v GreyPushable ]
+[ > GreyPushable | ^ GreyPushable ] -> [ GreyPushable | ^ GreyPushable ]
+[ > GreyPushable | < GreyPushable ] -> [ GreyPushable | < GreyPushable ]
+
+late Up [ Whale | no Obstacle ] -> [ Whale | UpBeam ]
+late Down [ Whale | no Obstacle ] -> [ Whale | DownBeam ]
+late Left [ Whale | no Obstacle ] -> [ Whale | LeftBeam ]
+late Right [ Whale | no Obstacle ] -> [ Whale | RightBeam ]
+
+late horizontal [ HBeam | no obstacle ] -> [ HBeam | HBeam ]
+late vertical [ VBeam | no obstacle ] -> [ VBeam | VBeam ]
+
+
+(DEATH TRANSITION)
+late Horizontal [ HBeamSource | YellowPlayer ]  -> [ HBeamSource | DyingPlayer ]
+late Vertical [ VBeamSource | YellowPlayer ]  -> [ VBeamSource | DyingPlayer ]
+
+late [ DyingPlayer ] [ BlueWall ] -> [ DyingPlayer ] [ GreyWall ]
+late [ DyingPlayer ] [ RedWhale ] -> [ DyingPlayer ] [ GreyWhale ]
+late [ DyingPlayer ] [ RedCrate ] -> [ DyingPlayer ] [ GreyCrate ]
+late [ DyingPlayer ] [ RedStartPoint ] -> [ DyingPlayer ] [ GreyStartPoint ]
+late [ DyingPlayer ] [ RedEndPoint ] -> [ DyingPlayer ] [ GreyEndPoint ]
+late [ DyingPlayer ] [ OBackground ] -> [ DyingPlayer ] [ GBackground ]
+late [ DyingPlayer ] -> [ GreyPlayer ]
+
+late [DyingPlayer] -> [GreyPlayer]
+
+(LIFE TRANSITION)
+late [ GreyPlayer GreyStartPoint ] [ GreyWall ] -> [ GreyPlayer GreyStartPoint ] [ BlueWall ]
+late [ GreyPlayer GreyStartPoint ] [ GreyCrate ] -> [ GreyPlayer GreyStartPoint ] [ RedCrate ]
+late [ GreyPlayer GreyStartPoint ] [ GreyWhale ] -> [ GreyPlayer GreyStartPoint ] [ RedWhale ]
+late [ GreyPlayer GreyStartPoint ] [ GreyEndPoint ] -> [ GreyPlayer GreyStartPoint ] [ RedEndPoint ]
+late [ GreyPlayer GreyStartPoint ] [ GBackground ] -> [ GreyPlayer GreyStartPoint ] [ OBackground ]
+
+late [ GreyPlayer GreyStartPoint ] -> [ YellowPlayer RedStartPoint ]
+
+late [player]->again
+
+==============
+WINCONDITIONS
+==============
+
+All Player on RedEndPoint
+
+=======
+LEVELS
+=======
+
+
+#########
+#......E#
+#..CC..##
+#.....##,
+#.....W#,
+##.#####,
+#......#,
+#..CC..#,
+#..CC..#,
+##.....#,
+#W.....#,
+######.#,
+#......#,
+#......#,
+##S#####,
+########,
+
+
+
+title Heroes of Sokoban II: Monsters
+author Jonah Ostroff
+text_color yellow
+key_repeat_interval 0.25
+
+========
+OBJECTS
+========
+
+Background
+#989898 #C8C8C8
+00000
+00100
+00000
+00010
+00000
+
+Goal
+Brown Yellow
+.000.
+00000
+00010
+00000
+00000
+
+Wall
+Darkgrey #222222
+01000
+11111
+00010
+00010
+11111
+
+Fighter (Warrior sounds better in-game, but I want different abbreviations for the classes in the editor.)
+#FF4444 Pink DarkBrown
+.000.
+.111.
+00000
+.000.
+.2.2.
+
+Wizard
+#2266FF Pink
+.000.
+.010.
+00000
+.000.
+00000
+
+Thief
+#66DD66 Pink DarkBrown
+.000.
+.010.
+00000
+.0.0.
+.0.0.
+
+Priest
+#FFFFAA Pink
+.000.
+.111.
+00000
+.000.
+00000
+
+SFighter
+#880000 Pink DarkBrown
+.000.
+.111.
+00000
+.000.
+.2.2.
+
+SWizard
+#000088 Pink
+.000.
+.010.
+00000
+.000.
+00000
+
+SThief
+#006600 Pink DarkBrown
+.000.
+.010.
+00000
+.0.0.
+.0.0.
+
+SPriest
+#B8B800 Pink
+.000.
+.111.
+00000
+.000.
+00000
+
+Crate
+Orange #552200
+.111.
+10001
+10001
+10001
+.111.
+
+YellowSwitch
+Yellow Black
+.....
+.111.
+.101.
+.111.
+.....
+
+YellowOpen
+Yellow
+0...0
+.....
+.....
+.....
+0...0
+
+YellowDoor
+Yellow #AA7722
+01010
+10001
+00000
+10001
+01010
+
+PurpleSwitch
+#6611CC Black
+.....
+.111.
+.101.
+.111.
+.....
+
+PurpleDoor
+#6611CC #220088
+01010
+10001
+00000
+10001
+01010
+
+PurpleOpen
+#6611CC
+0...0
+.....
+.....
+.....
+0...0
+
+MonsterDoor
+DarkGrey #222222 Red
+21002
+22122
+20212
+20012
+21112
+
+Warpball
+Blue
+
+ShadowDoor
+Purple
+
+DragonLeft
+Green Red Orange Yellow DarkGreen
+.....
+1100.
+3210.
+1100.
+...4.
+
+DragonRight
+Green Red Orange Yellow DarkGreen
+.....
+.0011
+.0123
+.0011
+.4...
+
+Goblin
+Green DarkBrown DarkGreen
+0.2.0
+00000
+..0..
+.111.
+.1.1.
+
+Dying
+White
+
+Saved
+#D8D800
+..0..
+.000.
+..0..
+..0..
+.....
+
+HasSaved
+Yellow
+.....
+.....
+.....
+.....
+.....
+
+Corpse
+#CCC
+.000.
+.000.
+00000
+.0.0.
+.0.0.
+
+LFireball
+Orange
+
+RFireball
+Orange
+
+DidNotMove
+Purple
+
+=======
+LEGEND
+=======
+
+Dragon = DragonLeft or DragonRight
+Player = Fighter or Wizard or Thief or Priest
+SPlayer = Swizard or Sthief or SFighter or SPriest
+Hero = Player or Splayer
+Healer = Priest or SPriest (Unlike the other heroes, priests must function even when inactive. "Healer" is the generic term for an active or inactive priest.)
+ClosedDoor = PurpleDoor or YellowDoor or MonsterDoor
+OpenDoor = YellowOpen or PurpleOpen
+Switch = PurpleSwitch or YellowSwitch
+Monster = Dragon or Goblin
+Moveable = Crate or SPlayer or Monster
+Static = Wall or ClosedDoor
+Weighing = Crate or Hero or Monster
+Vulnerable = Hero or Monster
+Invulnerable = Crate or Static
+Fireball = LFireball or RFireball
+. = Background
+# = Wall
+F = Fighter
+W = Wizard
+T = Thief
+P = Priest
+1 = SFighter
+2 = SThief
+3 = SWizard
+4 = SPriest
+* = Crate
+G = Goal
+[ = YellowDoor
+] = PurpleDoor
+{ = YellowSwitch
+} = PurpleSwitch
+L = DragonLeft
+R = DragonRight
+O = Goblin
+M = MonsterDoor
+
+=======
+SOUNDS
+=======
+
+Moveable move 82056307
+Sfx0 21221308 (teleport)
+Endlevel 36315908
+Sfx1 66399906 (switch player)
+Sfx2 92172900 (close door)
+Sfx3 15129100 (open door)
+Sfx4 69860105 (saved)
+Sfx5 63194902 (kill enemy)
+Sfx6 81996702 (dying player)
+EndGame 86793500
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Warpball, Dying
+Goal, Switch, OpenDoor, ShadowDoor
+ClosedDoor, Hero, Crate, Wall, Monster, Corpse
+RFireball, Saved, DidNotMove
+LFireball, HasSaved
+
+======
+RULES
+======
+[Saved] [Wall] -> [] [Wall HasSaved] (Remembering whether we saved someone last round by attaching a note to some wall.)
+
+[Corpse] -> Restart
+
+(Adds a DidNotMove to where the player currently is, to cancel moves where they bump into a wall.)
+
+[Player] -> [Player DidNotMove]
+
+[ >  Fighter | Moveable ] -> [  >  Fighter | > Moveable  ]
+[ > Moveable | Moveable ] [ Fighter] -> [ > Moveable | > Moveable ] [ Fighter] (Fighters push.)
+
+[ < Thief | Moveable ] -> [ < Thief | < Moveable ] (Thieves pull.)
+
+[ > Wizard ] -> [ Wizard > Warpball]
+[ > Warpball | no Moveable no Static] -> [ | > Warpball]
+[ > Warpball | Static] [Wizard] -> [ | Static ] [> Wizard]
+[ > Warpball | Moveable ] [Wizard] -> [ | Wizard Sfx0] [Moveable] (Wizards telexport. What they really do is shoot a "warpball", which causes them to move normally if it hits a wall and warp if it hits something they can warp with.)
+
+(The following mess is for changing characters.)
+[ Action Fighter] [SThief] -> [SFighter] [Thief Sfx1]
+[ Action Thief] [SWizard] -> [SThief] [Wizard Sfx1]
+[ Action Wizard] [SPriest] -> [SWizard] [Priest Sfx1]
+[ Action Priest] [SFighter] -> [SPriest] [Fighter Sfx1]
+
+[ Action Fighter] [no SThief] [SWizard] -> [SFighter] [no SThief] [Wizard Sfx1]
+[ Action Thief] [no Swizard] [SPriest] -> [SThief] [no SWizard] [Priest Sfx1]
+[ Action Wizard] [no SPriest] [SFighter] -> [SWizard] [no SPriest] [Fighter Sfx1]
+[ Action Priest] [no SFighter] [SThief] -> [SPriest] [no SFighter] [Thief Sfx1]
+
+[ Action Fighter] [no SThief] [no SWizard] [SPriest] -> [SFighter] [no SThief] [no SWizard] [Priest Sfx1]
+[ Action Thief] [no SWizard] [no SPriest] [SFighter] -> [SThief] [no SWizard] [no SPriest] [Fighter Sfx1]
+[ Action Wizard] [no SPriest] [no SFighter] [SThief] -> [SWizard] [no SPriest] [no SFighter] [Thief Sfx1]
+[ Action Priest] [no SFighter] [no SThief] [SWizard] -> [SPriest] [no SFighter] [no SThief] [Wizard Sfx1]
+
+(Cancels the move if the player is in the same place that they started. Notice that switching characters negates this. Only matters in levels where one dragon has multiple targets.)
+
+Late [Player DidNotMove] -> Cancel
+Late [DidNotMove] -> []
+
+(Now enemies attack.)
+
+Late [DragonLeft] -> [LFireball DragonLeft]
+Late [DragonRight] -> [RFireball DragonRight]
+
+Late RIGHT [RFireball | No Vulnerable no Invulnerable] -> [ | RFireball]
+Late LEFT [LFireball | No Vulnerable no Invulnerable] -> [ | LFireball]
+Late RIGHT [RFireball | Vulnerable] -> [ | Dying Vulnerable]
+Late Right [RFireball | Invulnerable] -> [ | Invulnerable]
+Late Left [LFireball | Vulnerable] -> [ | Dying Vulnerable]
+Late LEFT [LFireball | Invulnerable] -> [ | Invulnerable]
+
+Late [Goblin | Vulnerable] -> [Goblin | Dying Vulnerable]
+
+(Vulnerable objects that are attacked are designated as "Dying", but heroes can be saved by the Priest. Then the stuff that didn't get saved dies.)
+
+Late [Dying Healer] -> [Saved Healer]
+Late [Healer | Dying Hero] -> [Healer | Saved Hero]
+Late [Dying Monster] -> [Sfx5]
+Late [Dying Hero] -> [Corpse Sfx6]
+
+(Doors opening.)
+
+late [Weighing  YellowSwitch] [YellowDoor] -> [Weighing  YellowSwitch] [ShadowDoor]
+late [YellowSwitch no Weighing] [YellowOpen] -> [YellowSwitch] [YellowDoor sfx2]
+late [YellowSwitch no Weighing] [ShadowDoor] -> [YellowSwitch] [YellowDoor]
+late [ShadowDoor] -> [YellowOpen sfx3]
+
+late [Weighing PurpleSwitch] [PurpleDoor] -> [Weighing PurpleSwitch] [ShadowDoor]
+late [PurpleSwitch no Weighing] [PurpleOpen] -> [PurpleSwitch] [PurpleDoor sfx2]
+late [PurpleSwitch no Weighing] [ShadowDoor] -> [PurpleSwitch] [PurpleDoor]
+late [ShadowDoor] -> [PurpleOpen sfx3]
+
+late [MonsterDoor] -> [ShadowDoor]
+late [ShadowDoor] [Monster] -> [MonsterDoor] [Monster]
+late [ShadowDoor] -> [sfx3]
+
+(Looks for a HasSaved on a wall and moves it to the Priest. Then, if someone was saved this turn, plays the sound only if the Priest doesn't have the HasSaved note. Finally, cleans that up.)
+
+late [Wall HasSaved] [Healer] -> [Wall] [Healer HasSaved]
+late [Saved] [Healer no HasSaved] -> [Saved sfx4] [Healer]
+late [HasSaved] -> []
+
+==============
+WINCONDITIONS
+==============
+
+All Hero on Goal
+All Goal on Hero
+
+=======
+LEVELS
+=======
+
+Message Welcome back.
+
+Message [You've played the original, yes?]
+
+Message [If not, this might be confusing.]
+
+#############
+#.......[...#
+#.*.F.{.[.G.#
+#############
+#.......[...#
+#.*.2.{.[.G.#
+#############
+#.......[...#
+#.*.3.{.[.G.#
+#############
+
+Message Watch out for goblins.
+
+#############
+#F.O.......O#
+#...O.......#
+#.......O...#
+#O..........#
+#....O......#
+#O.......O..#
+#.O.....O.G.#
+#############
+
+#############
+###O###O#####
+#W.*****...O#
+#..*****....#
+#####O###O..#
+#O########..#
+#*G...O.O...#
+##..O..O.O..#
+#############
+
+Message Goblins attack each other too.
+
+#############
+#.......#...#
+#...*...#.G.#
+#.F...O.#...#
+#...*...##O##
+#...........#
+#############
+
+Message Dragons breath fire.
+
+###############
+#.............#
+#..T..###.....#
+#.....L.#.....#
+#.......#.....#
+#.............#
+#.....#.......#
+#.....#.R..G..#
+#.....###.....#
+#.............#
+###############
+
+Message Fire hurts enemies.
+
+##############
+#...#....O.RG#
+#.T.#......R.#
+#...#R*L...R.#
+#R*.#...#..R.#
+#...#...#..R.#
+#...O.*.#..R.#
+#.......#....#
+##############
+
+###########
+#3.O.O.O.T#
+#.#########
+#......G.G#
+#.#########
+#R.O.O.O.O#
+###########
+
+Message Think fast!
+
+#############
+#R.O.O.O.O.T#
+###########{#
+###########]#
+#G#3.[.}.G#G#
+#]###########
+#{###########
+#1..O...O..L#
+#############
+
+Message Sorry about that one.
+
+#######
+##G*G##
+##.G.##
+#R...##
+##...##
+##...##
+##...##
+##...L#
+##...##
+##F23##
+#######
+
+Message Kill monsters to open the M wall.
+
+###########
+#L...R#...#
+#.....#...#
+#.....M.G.#
+#.T.*.#...#
+#.....#...#
+###########
+
+#############
+#.......#...#
+#..O.O..#...#
+#R......M.G.#
+#.*.F.*.#...#
+#.......#...#
+#############
+
+#############
+#.......#...#
+#.{.*.{.#...#
+#..W.O..M.G.#
+#.{.*.[.#...#
+#.......#...#
+#############
+
+Message Yellow priest is protected.
+
+###########
+#...#O#O#O#
+#.P.......#
+#...**O**.#
+#********.#
+#R..G.....#
+###########
+
+###########
+#W#######G#
+#.#O#O#O#.#
+#.........#
+#.##O#O##.#
+#4#######G#
+###########
+
+Message Heroes next to a priest are safe.
+
+############
+#...#.O#O###
+#.F.#......#
+#...#.##O..#
+#.4...O#G.G#
+#...#.##.O.#
+############
+
+############
+#.#..T..#4##
+#.#.{.*...L#
+#.#.....#..#
+#G[.*.{...L#
+#.#.....#..#
+#.#.{.*...L#
+#.#.....#G##
+############
+
+###########
+#W...O#...#
+#.....#.G.#
+#..4..M...#
+#.....#.G.#
+#O...O#...#
+###########
+
+###########
+#.T.##O#O##
+#.........#
+#.4.#O#O..#
+########.##
+#G..####.O#
+#G#.O###.##
+###.###O..#
+#O..O#....#
+##...*....#
+###########
+
+###########
+#{*F#.4#.3#
+#{*.#..#..#
+###[#[###.#
+#R[.......#
+####O#.##.#
+######.##.#
+#G.G.G.#O*#
+###########
+
+###########
+#.T.####O##
+#.3......O#
+#.4.###O.##
+#####O##.##
+#.G..*.O.##
+#G.G#O##.##
+###########
+
+###########
+##O#O#O#O##
+#T[.[.[.[.#
+##{#{#{#{.#
+#.........#
+#.3G*G*G4.#
+#.........#
+###########
+
+Message The final challenge.
+
+#############
+#...#O.O#...#
+#.F.#G.G#.2.#
+#...#.O.#...#
+##.###*###.##
+#R*L.....R*L#
+#.#.......#.#
+#R*L.....R*L#
+##.###M###.##
+#...#...#...#
+#.3.#G.G#.4.#
+#...#...#...#
+#############
+
+Message Thanks for playing!
+
+title Cliched River Puzzle
+author Weeble
+homepage www.puzzlescript.net
+
+========
+OBJECTS
+========
+
+Grass
+#559922 GREEN
+11111
+01111
+11101
+11111
+10111
+
+
+Player
+Yellow
+00.00
+0...0
+.....
+0...0
+00.00
+
+Water1
+#3333ff #5555ff #7777ff
+00121
+10100
+12001
+10010
+01000
+
+Water2
+#3333ff #5555ff #7777ff
+10000
+00010
+00121
+01100
+10001
+
+Carrot
+ORANGE #55cc00
+11111
+.000.
+.000.
+.000.
+..0..
+
+Fox
+ORANGE WHITE BLACK
+.2.2.
+00000
+12021
+.111.
+..2..
+
+Rabbit
+WHITE #ff88bb
+00.00
+.0.0.
+.000.
+.101.
+.000.
+
+EmptyBoat
+BROWN DARKBROWN
+.000.
+01110
+01110
+01110
+00000
+Platform
+GREY
+.....
+.....
+.....
+.....
+.....
+
+LeftB
+BLUE
+.....
+.....
+.....
+.....
+.....
+
+RightB
+RED
+.....
+.....
+.....
+.....
+.....
+
+Dude
+BLACK
+..0..
+00000
+..0..
+.0.0.
+0...0
+
+Dock
+YELLOW
+.....
+.....
+.....
+.....
+.....
+
+=======
+LEGEND
+=======
+
+. = Grass and LeftB
+, = Grass and RightB
+~ = Water1 and LeftB
+^ = Water1 and RightB
+P = Player and LeftB
+C = Carrot and Platform and LeftB
+F = Fox and Platform and LeftB
+R = Rabbit and Platform and LeftB
+_ = EmptyBoat and LeftB and Water1
+* = Platform and RightB
+[ = Dude and Dock and LeftB
+] = Dock and RightB
+Water = Water1 or Water2
+Background = Grass or Water1 or Water2
+Object = Rabbit or Fox or Carrot
+Bank = LeftB or RightB
+=======
+SOUNDS
+=======
+
+SFX0 81232704
+SFX1 47027309
+SFX2 92562507
+SFX3 11245308
+
+================
+COLLISIONLAYERS
+================
+
+Background
+EmptyBoat, Platform, Dock
+LeftB, RightB
+Carrot, Rabbit, Fox, Dude
+Player
+
+======
+RULES
+======
+
+(Loading the boat)
+[ action Player Object Platform ] [ EmptyBoat no Object ] -> [ Player Platform ] [ EmptyBoat Object ] sfx2
+
+(Emptying the boat)
+[ action Player Object EmptyBoat LeftB ] [ Platform no Object LeftB ] -> [ Player EmptyBoat LeftB ] [ Platform Object LeftB ] sfx2
+[ action Player Object EmptyBoat RightB ] [ Platform no Object RightB ] -> [ Player EmptyBoat RightB ] [ Platform Object RightB ] sfx2
+
+( Eating rules for stuff on the left bank )
+late [ RightB Dude ] [ LeftB Rabbit ] [ LeftB Fox ] -> [ RightB Dude ] [ LeftB ] [ LeftB Fox ] sfx0 message Fox eats rabbit! Chomp!
+late [ RightB Dude ] [ LeftB Carrot ] [ LeftB Rabbit ] -> [ RightB Dude ] [ LeftB ] [ LeftB Rabbit ] sfx1 message Rabbit eats carrot! Chomp!
+
+( Same rules for stuff on the right bank )
+late [ LeftB Dude ] [ RightB Rabbit ] [ RightB Fox ] -> [ LeftB Dude ] [ RightB ] [ RightB Fox ] sfx0 message Fox eats rabbit! Chomp!
+late [ LeftB Dude ] [ RightB Carrot ] [ RightB Rabbit ] -> [ LeftB Dude ] [ RightB ] [ RightB Rabbit ] sfx1 message Rabbit eats carrot! Chomp!
+
+( Animate the water )
+[ Water ] -> [ random Water ]
+
+( Row across the river with an object )
+[ action Player Dude | EmptyBoat Object | ... | | Dock ] -> [ | | ... | EmptyBoat Object | Player Dude Dock ] sfx3
+
+( Row across the river without an object )
+[ action Player Dude | EmptyBoat no Object | ... | | Dock ] -> [ | | ... | EmptyBoat | Player Dude Dock ] sfx3
+
+( Victory condition )
+[ RightB Platform Rabbit ] [ RightB Platform Fox ] [ RightB Platform Carrot] -> win
+
+==============
+WINCONDITIONS
+==============
+
+=======
+LEVELS
+=======
+
+.....~~~^^,,,,,
+.....~~~^^,,,,,
+...F.~~~^^,*,,,
+..RP[_~~^^],*,,
+...C.~~~~^,*,,,
+.....~~~^^,,,,,
+.....~~~^^,,,,,
+
+
+
+USER PROMPT:
+The following PuzzleScript game code:
+```plaintext
+title Complex Pushbox Puzzle
+author Advanced Developer
+homepage www.examplecomplex.com
+
+========
+OBJECTS
+========
+
+Background
+Black
+
+Wall
+DarkGrey
+11111
+11111
+11111
+11111
+11111
+
+Player
+Yellow
+.....
+..0..
+.000.
+..0..
+.....
+
+Box
+Brown
+.....
+.000.
+.0.0.
+.000.
+.....
+
+Obstacle
+Red
+.....
+.....
+.000.
+.....
+.....
+
+Target
+Green
+.....
+.....
+.00..
+.....
+.....
+
+ObstacleTarget
+LightGreen
+.....
+.....
+..0..
+.....
+.....
+
+BoxOnTarget
+Yellow
+.....
+.....
+.....
+..0..
+.....
+
+ObstacleOnTarget
+Orange
+.....
+.....
+.....
+..0..
+.....
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Player
+B = Box
+O = Obstacle
+T = Target
+* = ObstacleTarget
+X = BoxOnTarget
+@ = ObstacleOnTarget
+
+=========
+SOUNDS
+=========
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Target, ObstacleTarget
+BoxOnTarget, ObstacleOnTarget
+Player, Box, Obstacle, Wall
+
+======
+RULES
+======
+
+# Player can push Box or Obstacle
+[ > P | B ] -> [ > P | > B ]
+[ > P | O ] -> [ > P | > O ]
+
+# Interaction with Targets
+[ B | T ] -> [ X ]
+[ X | no T ] -> [ B | no T ]
+
+[ O | * ] -> [ @ ]
+[ @ | no * ] -> [ O | no * ]
+
+# Player on specific Targets
+[ P | T ] -> [ P | T ]
+[ P | * ] -> [ P | * ]
+
+======
+WINCONDITIONS
+======
+
+# Boxes and obstacles must be on their respective targets
+All BoxOnTarget
+All ObstacleOnTarget
+
+=======
+LEVELS
+=======
+
+message Level 1: Basic Strategy
+#####
+#...#
+#P..#
+#B..#
+#T..#
+#####
+
+message Level 2: Introducing Obstacles
+######
+#....#
+#..BO#
+#..P.#
+#..T*#
+######
+
+message Level 3: Dual Targets
+#######
+#..T..#
+#..B..#
+#..P..#
+#..O..#
+#..*..#
+#######
+
+message Level 4: Complex Navigation
+########
+#T..#..#
+#..B...#
+#..P...#
+#.######
+#..#T..#
+#..B.O.#
+#..*...#
+########
+
+```
+produced the following console output:
+=================================
+line 14 : Trying to access color number 1 from the color palette of sprite WALL, but there are only 1 defined in it.
+line 15 : Trying to access color number 1 from the color palette of sprite WALL, but there are only 1 defined in it.
+line 16 : Trying to access color number 1 from the color palette of sprite WALL, but there are only 1 defined in it.
+line 17 : Trying to access color number 1 from the color palette of sprite WALL, but there are only 1 defined in it.
+line 18 : Trying to access color number 1 from the color palette of sprite WALL, but there are only 1 defined in it.
+line 107 : Objects cannot appear outside of square brackets in rules, only directions can.
+too many errors, aborting compilation
+Errors detected during compilation; the game may not work correctly.
+Return a repaired version of the code that addresses these errors. First, reason about your task and determine the best plan of action. Then, write your code.  Return your code in full, inside a ```plaintext code block.

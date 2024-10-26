@@ -1,0 +1,1735 @@
+SYSTEM PROMPT:
+You are a game designer, familiar with the PuzzleScript game description language. Here are some example games, for inspiration (do not reproduce these games exactly):
+
+title One player, unlimited rigidbodies
+author increpare
+homepage www.increpare.com
+
+(
+
+This is a sample of 
+
+- Unlimited rigid bodies
+- 1 Player (should be extendable)
+
+It's made as an example for the extended rigid body tutorial here:
+
+https://www.puzzlescript.net/Documentation/rigidbodies.html
+
+)
+
+========
+OBJECTS
+========
+
+Background
+green
+
+Wall
+BROWN DARKBROWN
+00010
+11111
+01000
+11111
+00010
+
+Player
+Black Orange White Blue
+.000.
+.111.
+22222
+.333.
+.3.3.
+
+ Crate
+Yellow orange
+00000
+01110
+01110
+01110
+00000
+
+
+(The directional overlays bellow establish connections between crates)
+
+ Crate_U
+orange
+.000.
+.....
+.....
+.....
+.....
+
+ Crate_D
+orange
+.....
+.....
+.....
+.....
+.000.
+
+ Crate_L
+orange
+.....
+0....
+0....
+0....
+.....
+
+ Crate_R
+orange
+.....
+....0
+....0
+....0
+.....
+
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Player
+
+w = Crate and Crate_U
+x = Crate and Crate_D
+a = Crate and Crate_L
+d = Crate and Crate_R
+
+e = Crate and Crate_U and Crate_L
+z = Crate and Crate_D and Crate_L
+q = Crate and Crate_U and Crate_R
+c = Crate and Crate_D and Crate_R
+
+r = Crate and Crate_L and Crate_R
+t = Crate and Crate_D and Crate_U
+
+1 = Crate and Crate_D and Crate_L and Crate_R
+2 = Crate and Crate_U and Crate_L and Crate_R
+3 = Crate and Crate_U and Crate_D and Crate_L
+4 = Crate and Crate_U and Crate_D and Crate_R
+
+0 = Crate and Crate_U and Crate_D and Crate_L and Crate_R
+
+5 = Crate
+
+ Crate_Connection = Crate_U or Crate_D or Crate_L or Crate_R
+
+Pusher = Player or Crate
+Pushable = Crate or Crate_connection
+
+=======
+SOUNDS
+=======
+
+ Crate MOVE 36772507
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Player, Wall, Crate
+ Crate_U
+ Crate_D
+ Crate_L
+ Crate_R
+
+======
+RULES
+======
+
+(For making maps easily: uncomment out the next few lines + press action to discard all boundaries and recreate them)
+
+( [ action player ] [ Crate_connection ] -> [ action player ] [ ] )
+( up [ action player ] [ Crate | Crate ] -> [ action player ] [ Crate Crate_u | Crate Crate_d ] )
+( right [ action player ] [ Crate | Crate ] -> [ action player ] [ Crate Crate_r | Crate Crate_l ] )
+
+(Propagate movements within and between extended bodies)
+[ > Pusher | Pushable ] -> [ > Pusher | > Pushable ]
++ up [ moving Crate Crate_U | Crate ] -> [ moving Crate Crate_U | moving Crate ]
++ down [ moving Crate Crate_D | Crate ] -> [ moving Crate Crate_D | moving Crate ]
++ left [ moving Crate Crate_L | Crate ] -> [ moving Crate Crate_L | moving Crate ]
++ right [ moving Crate Crate_R | Crate ] -> [ moving Crate Crate_R | moving Crate ]
+
+(Move connections along with the crates themselves)
+[ moving Crate stationary Crate_connection ] -> [ moving Crate moving Crate_connection ]
+
+(If any crate can't move, cancel the turn. This works because there's only one player.)
+[ > Crate | wall ] -> cancel
+
+==============
+WINCONDITIONS
+==============
+
+=======
+LEVELS
+=======
+
+###############
+#.............#
+#..ca...ca.dz.#
+#.ce..d1e...w.#
+#.t....w......#
+#.w.d1a..5.5..#
+#....w....5...#
+#......dz.....#
+#...p...t..dz.#
+#..x..cre...w.#
+#..w..w...5...#
+#.............#
+###############
+
+title Puzzles
+author increpare
+homepage www.puzzlescript.net
+
+(
+Unfortunately, just the first level - trying to emulate the later ones proved too complex :[
+
+You can play the original game here:
+http://www.increpare.com/2012/06/puzzles/
+)
+
+background_color white
+text_color blue
+
+run_rules_on_level_start
+
+
+========
+OBJECTS
+========
+
+DyingPlayer
+Black
+
+Void
+White
+
+OBackground
+Orange
+
+GBackground
+LightGrey
+
+BlueWall
+Blue
+
+
+GreyWall
+Grey
+
+RedCrate
+Red
+.....
+.000.
+.000.
+.000.
+.....
+GreyCrate
+DarkGrey
+.....
+.000.
+.000.
+.000.
+.....
+
+RedWhale
+Red White
+00100
+00000
+10001
+00000
+00100
+
+GreyWhale
+DarkGrey White
+00100
+00000
+10001
+00000
+00100
+
+RedEndPoint
+DarkRed
+.....
+.000.
+.0.0.
+.000.
+.....
+
+GreyEndPoint
+Darkgrey
+.....
+.....
+.....
+.....
+.....
+
+RedStartPoint
+darkRed
+.....
+.....
+.....
+.....
+.....
+
+GreyStartPoint
+darkRed
+.....
+.000.
+.0.0.
+.000.
+.....
+
+YellowPlayer
+yellow
+.....
+.000.
+.000.
+.000.
+.....
+
+GreyPlayer
+DarkGrey
+.....
+.000.
+.000.
+.000.
+.....
+
+LeftBeam
+white
+.....
+.....
+00000
+.....
+.....
+
+RightBeam
+white
+.....
+.....
+00000
+.....
+.....
+
+UpBeam
+white
+..0..
+..0..
+..0..
+..0..
+..0..
+
+DownBeam
+white
+..0..
+..0..
+..0..
+..0..
+..0..
+
+=======
+LEGEND
+=======
+
+Background = Void or OBackground or GBackground
+Player = YellowPlayer or GreyPlayer or DyingPlayer
+Wall = BlueWall or GreyWall
+Crate = RedCrate or GreyCrate
+Whale = RedWhale or GreyWhale
+StartPoint = RedStartPoint or GreyStartPoint
+EndPoint = RedEndPoint or GreyEndPoint
+. = OBackground
+, = Void
+# = BlueWall
+W = RedWhale
+C = RedCrate
+S = RedStartPoint and YellowPlayer
+E = RedEndPoint
+Obstacle = Player or Whale or Crate or Wall
+Beam = UPBeam or DownBeam or LeftBeam or RightBeam
+VBeam = UPBeam or DownBeam
+HBeam = LeftBeam or RightBeam
+HBeamSource = HBeam or Whale
+VBeamSource = VBeam or Whale
+Pushable = Player or Whale or Crate
+RedPushable = YellowPlayer or RedWhale or RedCrate
+GreyPushable = GreyPlayer or GreyWhale or GreyCrate
+
+=======
+SOUNDS
+=======
+
+================
+COLLISIONLAYERS
+================
+
+Background
+StartPoint, EndPoint
+Player, Wall, Crate, Whale
+UpBeam, DownBeam
+LeftBeam, RightBeam
+
+======
+RULES
+======
+
+
+left [ LeftBeam | < Player ] -> [ LeftBeam | Player ]
+right [ RightBeam | < Player ] -> [ RightBeam | Player ]
+up [ UpBeam | < Player ] -> [ UpBeam | Player ]
+down [ DownBeam | < Player ] -> [ DownBeam | Player ]
+
+right [ RightBeam | stationary Pushable ] -> [ RightBeam | > Pushable ]
+left [ LeftBeam | stationary Pushable ] -> [ LeftBeam | > Pushable ]
+up [ UpBeam | stationary Pushable ] -> [ UpBeam | > Pushable ]
+down [ DownBeam | stationary Pushable ] -> [ DownBeam | > Pushable ]
+
+[ Whale | stationary Pushable ] -> [ Whale | > Pushable ]
+
+
+[ Beam ] -> []
+
+
+[ >  Player | Crate ] -> [  >  Player | > Crate  ]
+[ > Crate | stationary Crate ] -> [ > Crate | > Crate ]
+
+( using red/greypushable is an optimization - cuts down on unecessary rules by quite a lot, beause red and grey things never coexist)
+[ > RedPushable | v RedPushable ] -> [ RedPushable | v RedPushable ]
+[ > RedPushable | ^ RedPushable ] -> [ RedPushable | ^ RedPushable ]
+[ > RedPushable | < RedPushable ] -> [ RedPushable | < RedPushable ]
+
+[ > GreyPushable | v GreyPushable ] -> [ GreyPushable | v GreyPushable ]
+[ > GreyPushable | ^ GreyPushable ] -> [ GreyPushable | ^ GreyPushable ]
+[ > GreyPushable | < GreyPushable ] -> [ GreyPushable | < GreyPushable ]
+
+late Up [ Whale | no Obstacle ] -> [ Whale | UpBeam ]
+late Down [ Whale | no Obstacle ] -> [ Whale | DownBeam ]
+late Left [ Whale | no Obstacle ] -> [ Whale | LeftBeam ]
+late Right [ Whale | no Obstacle ] -> [ Whale | RightBeam ]
+
+late horizontal [ HBeam | no obstacle ] -> [ HBeam | HBeam ]
+late vertical [ VBeam | no obstacle ] -> [ VBeam | VBeam ]
+
+
+(DEATH TRANSITION)
+late Horizontal [ HBeamSource | YellowPlayer ]  -> [ HBeamSource | DyingPlayer ]
+late Vertical [ VBeamSource | YellowPlayer ]  -> [ VBeamSource | DyingPlayer ]
+
+late [ DyingPlayer ] [ BlueWall ] -> [ DyingPlayer ] [ GreyWall ]
+late [ DyingPlayer ] [ RedWhale ] -> [ DyingPlayer ] [ GreyWhale ]
+late [ DyingPlayer ] [ RedCrate ] -> [ DyingPlayer ] [ GreyCrate ]
+late [ DyingPlayer ] [ RedStartPoint ] -> [ DyingPlayer ] [ GreyStartPoint ]
+late [ DyingPlayer ] [ RedEndPoint ] -> [ DyingPlayer ] [ GreyEndPoint ]
+late [ DyingPlayer ] [ OBackground ] -> [ DyingPlayer ] [ GBackground ]
+late [ DyingPlayer ] -> [ GreyPlayer ]
+
+late [DyingPlayer] -> [GreyPlayer]
+
+(LIFE TRANSITION)
+late [ GreyPlayer GreyStartPoint ] [ GreyWall ] -> [ GreyPlayer GreyStartPoint ] [ BlueWall ]
+late [ GreyPlayer GreyStartPoint ] [ GreyCrate ] -> [ GreyPlayer GreyStartPoint ] [ RedCrate ]
+late [ GreyPlayer GreyStartPoint ] [ GreyWhale ] -> [ GreyPlayer GreyStartPoint ] [ RedWhale ]
+late [ GreyPlayer GreyStartPoint ] [ GreyEndPoint ] -> [ GreyPlayer GreyStartPoint ] [ RedEndPoint ]
+late [ GreyPlayer GreyStartPoint ] [ GBackground ] -> [ GreyPlayer GreyStartPoint ] [ OBackground ]
+
+late [ GreyPlayer GreyStartPoint ] -> [ YellowPlayer RedStartPoint ]
+
+late [player]->again
+
+==============
+WINCONDITIONS
+==============
+
+All Player on RedEndPoint
+
+=======
+LEVELS
+=======
+
+
+#########
+#......E#
+#..CC..##
+#.....##,
+#.....W#,
+##.#####,
+#......#,
+#..CC..#,
+#..CC..#,
+##.....#,
+#W.....#,
+######.#,
+#......#,
+#......#,
+##S#####,
+########,
+
+
+
+title Lunar Lockout
+homepage http://bit.ly/WMmQrq
+
+========
+OBJECTS
+========
+
+Background
+Black
+
+Square
+LightGray Gray
+11111
+10001
+10001
+10001
+11111
+
+Space
+Black
+
+Target
+Red
+.....
+.000.
+.0.0.
+.000.
+.....
+
+Soldier
+DarkBlue LightGray Gray
+11111
+10001
+10201
+10001
+11111
+
+Captain
+Green LightGray Gray
+11111
+10001
+10201
+10001
+11111
+
+Player
+Orange
+.....
+.....
+..0..
+.....
+.....
+
+
+=======
+LEGEND
+=======
+
+Pawn = Soldier or Captain
+Block = Pawn
+
+@ = Space
+_ = Square
+P = Square and Player
+* = Square and Target
+O = Soldier
+$ = Soldier and Target
+C = Captain
+
+=======
+SOUNDS
+=======
+
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Space, Square
+Target
+Pawn, Captain
+Player
+
+======
+RULES
+======
+
+[ > Player | Space ] -> [ Player | Space ]
+[ > Player Pawn ] -> [ Player > Pawn ]
+[ > Pawn | Block ] -> [ Pawn | Block ]
+[ > Pawn | Square ] -> [ Square | > Pawn ]
+[ > Pawn | Space ] -> [ Square | Space ]
+
+==============
+WINCONDITIONS
+==============
+
+some Captain on Target
+
+=======
+LEVELS
+=======
+
+message challenge 4
+@@@@@@@
+@O___O@
+@___O_@
+@_P*__@
+@__O__@
+@_C___@
+@@@@@@@
+
+message challenge 16
+@@@@@@@
+@O_C__@
+@_____@
+@_O*_O@
+@__P__@
+@_O___@
+@@@@@@@
+
+message challenge 21
+@@@@@@@
+@__C__@
+@__O__@
+@_P$_O@
+@O____@
+@___O_@
+@@@@@@@
+
+message challenge 37
+@@@@@@@
+@O__OO@
+@_____@
+@_P*__@
+@O__C_@
+@_____@
+@@@@@@@
+
+
+
+title The Legend of Zokoban
+author Joshua Minor
+homepage pixelverse.org
+flickscreen 9x7
+
+========
+OBJECTS
+========
+
+Background
+yellow orange
+00000
+01000
+00001
+00100
+10000
+
+Water
+blue lightblue
+00000
+01000
+00001
+00100
+10000
+
+Cave
+DarkBlue
+00000
+00000
+00000
+00000
+00000
+
+Goal
+DarkBlue Red
+00000
+00000
+00100
+00000
+00000
+
+RockWall
+BROWN Orange
+01110
+10000
+10010
+10000
+00100
+
+StoneWall
+darkgrey grey
+01110
+10000
+10010
+10000
+00100
+
+PlayerWithoutSword
+GREEN lightgreen
+.00..
+00000
+.000.
+.111.
+00.00
+
+PlayerWithSword
+GREEN lightgreen white grey
+.002.
+00020
+.0222
+.110.
+00.00
+
+Sword
+grey white
+..1..
+..1..
+.111.
+..0..
+.....
+
+Block
+BROWN Orange darkgrey
+.111.
+10001
+10002
+10002
+.222.
+
+EasyBaddie
+white red
+.111.
+10101
+11111
+11111
+11.11
+
+Money
+white lightblue
+..1..
+.001.
+10111
+.111.
+..1..
+
+=======
+LEGEND
+=======
+
+Wall = StoneWall or RockWall
+Solid = Wall or Block or Water
+Player = PlayerWithoutSword or PlayerWithSword
+Obstacle = Wall or Block or Player or Water
+Baddie = EasyBaddie
+
+. = Background
+# = RockWall
+S = StoneWall
+P = PlayerWithoutSword
+* = Block
+@ = Block and Cave
+O = Cave
+w = Water
+1 = EasyBaddie
++ = Sword
+G = Goal
+
+=======
+SOUNDS
+=======
+
+StartLevel 40430108 (music-ish)
+SFX0 16358103 (power up)
+SFX1 84057304 (push)
+SFX2 74654508 (stairs)
+SFX3 21293301 (fight)
+SFX4 49521903 (hurt)
+SFX5 47598700 (money)
+ShowMessage 82693708 (you win!)
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Cave, Goal
+Player, Wall, Block, Water, EasyBaddie
+Sword, Money
+
+======
+RULES
+======
+
+(baddies move at random)
+[ Stationary Baddie ] -> [ RandomDir Baddie ]
+
+(player can push blocks)
+[ > Player | Block ] -> [ > Player | > Block ] SFX1
+
+(blocks pushed into water become land)
+[ > Block | Water ] -> [ | ]
+
+(baddies can attack the player w/o sword)
+[ > Baddie | Player No Sword ] -> SFX4
+
+(player can pick up sword)
+([ > Player | Sword ] -> [ | Player Sword ] SFX0)
+[ PlayerWithoutSword Sword ] -> [ PlayerWithSword ] SFX0
+
+(player with sword can kill baddies & leave money)
+[ > PlayerWithSword | Baddie ] -> [ PlayerWithSword | Money ] SFX3
+(sword moves with player)
+([ > Player Sword ] -> [ > Player > Sword ])
+(sword doesn't move into obstacles)
+([ > Sword | Stationary Obstacle ] -> [ Sword | Stationary Obstacle ])
+
+(player can pick up money)
+[ > Player | Money ] -> [ | Player ] SFX5
+
+(blocks pushed into caves, teleport to other end of cave)
+random [ Moving Block Cave | ... | Cave ] -> [ Cave | ... | Block Cave ]
+(blocks sitting on cave exits will roll aside to let player follow them)
+late random [ Block Cave | No Obstacle ] -> [ Cave | Block ]
+(players can enter caves - teleporting to orthogonally matching cave)
+late random [ Player Cave | ... | Cave ] -> [ Cave | ... | Player Cave ] SFX2
+(sword follows player through the cave)
+(late random [ Sword Cave | ... | Cave ] -> [ Cave | ... | Sword Cave ])
+
+
+==============
+WINCONDITIONS
+==============
+
+All Player on Goal
+
+=======
+LEVELS
+=======
+
+sssssssss#################wwwwwwwwww
+ss.s1s..s#1#####.##..1..1.wwwwww..ww
+s.......s#.#####.##.#.#.#.wwwww..*.w
+s..*....o#.##o##.............ww....w
+s.s....ss#..........#.*.#....ww..1.w
+sss.s.sss##...............wwwwww..ww
+sssssssss#####..#####.....wwwwwwwwww
+sssssssss#####..#####.....wwwwwwwwww
+ss1...sss#####..####.....wwww.....ww
+s......os##o#....##...#.1www..s.s..w
+s..+...ss#.......##*......ww...g...w
+ss.....ss#...p..........#.ww..s.s.1w
+ssss..sss##.....###..#.1..www..1..ww
+sssssssss#################wwwwwwwwww
+
+message Congratulations!
+
+
+
+title Cratopia
+author CHz [v1]
+homepage quiteajolt.com
+
+again_interval 0.06
+run_rules_on_level_start
+
+========
+OBJECTS
+========
+
+BlueSky
+Blue
+
+CrateInfection
+#3F5AC2 #5063C5 Blue
+00000
+02120
+01110
+02120
+00000
+
+
+Space
+Black
+
+EditModeDrop
+Black
+.....
+.....
+.....
+.....
+.....
+
+EditModeArrow
+White Black
+11011
+11011
+11011
+10001
+11011
+
+EditModeCursor
+Red
+00.00
+0...0
+.....
+0...0
+00.00
+
+
+Goal
+DarkBlue #0D1319
+11111
+10001
+10001
+10001
+10001
+
+GoalLocked
+DarkBlue #0D1319 Gray
+12121
+22222
+12021
+22222
+12021
+
+Key
+Yellow
+.....
+.....
+...00
+00000
+0.0..
+
+Crate
+#765026 #C77629
+00000
+0.1.0
+01110
+0.1.0
+00000
+
+Ladder
+DarkBrown
+0...0
+00000
+0...0
+00000
+0...0
+
+
+Fire
+Brown #765026 Orange Red
+33232
+32222
+22220
+00000
+00100
+
+BurningCrate
+DarkRed Red
+00000
+0.1.0
+01110
+0.1.0
+00000
+
+BurntCrate
+DarkGray Gray
+00000
+0.1.0
+01110
+0.1.0
+00000
+
+
+PlayerRight
+Black Orange White Red
+.000.
+.111.
+.2222
+.333.
+.3.3.
+
+PlayerLeft
+Black Orange White Red
+.000.
+.111.
+2222.
+.333.
+.3.3.
+
+PlayerLadder
+Black Orange White Red
+.000.
+.111.
+22222
+.333.
+.3.3.
+
+PlayerRightDisabled
+Gray
+.000.
+.000.
+.0000
+.000.
+.0.0.
+
+PlayerLeftDisabled
+Gray
+.000.
+.000.
+0000.
+.000.
+.0.0.
+
+PlayerLadderDisabled
+Gray
+.000.
+.000.
+00000
+.000.
+.0.0.
+
+PlayerJumpLeft
+Black
+
+PlayerJumpRight
+Black
+
+
+Orb
+Red Purple DarkBlue
+.000.
+01110
+01210
+01110
+.000.
+
+CrateArtifact
+#765026 #C77629
+.....
+.000.
+.010.
+.000.
+.....
+
+CrateInfectionSeed
+White
+
+CrateInfectionComplete
+White
+.....
+.....
+.....
+.....
+.....
+
+CrateInfectionTemp
+White
+.....
+.....
+.....
+.....
+.....
+
+
+Grass
+Brown #765026 Green LightGreen
+23233
+02002
+10000
+00000
+00100
+
+Dirt
+Brown #765026
+00001
+00000
+10000
+00000
+00100
+
+Crumble
+Brown
+0.0.0
+00000
+.....
+.....
+.....
+
+
+=======
+LEGEND
+=======
+
+Background = BlueSky or CrateInfection
+. = BlueSky
++ = CrateInfection
+S = Space
+
+D = EditModeDrop and Space
+
+G = Goal
+@ = GoalLocked
+K = Key
+L = Ladder
+
+> = PlayerRight
+< = PlayerLeft
+^ = PlayerLadder
+Player = PlayerLeft or PlayerRight or PlayerLadder or EditModeCursor
+NonCursorPlayer = PlayerLeft or PlayerRight or PlayerLadder
+PlayerJump = PlayerJumpLeft or PlayerJumpRight
+PlayerDisabled = PlayerLeftDisabled or PlayerRightDisabled or PlayerLadderDisabled
+
+C = Crate
+
+O = Orb
+A = CrateArtifact and CrateInfection
+T = Dirt and EditModeDrop
+Y = Goal and CrateInfectionSeed
+U = Grass and EditModeDrop
+I = EditModeDrop
+
+* = Grass
+# = Dirt
+F = Fire
+- = Crumble
+Ground = Grass or Dirt or Fire or Crumble
+
+Solid = Crate or Ground or Space or Key or Fire or Crumble
+
+Thing = Orb or Player or PlayerDisabled or Crate or Ground or EditModeArrow or Key or Fire or Crumble
+
+Transformable = Key or Ladder or Fire or BurningCrate or BurntCrate or Grass or Dirt or Crumble
+
+
+=======
+SOUNDS
+=======
+
+ShowMessage 72692706
+
+Crate Move Horizontal 99804707
+EditModeCursor Move 44871706
+
+SFX0 97366302 (win; manually triggered because some levels are cutscenes)
+SFX1 41487108 (activate edit mode)
+SFX2 37184702 (bridge crumble)
+SFX3 79796108 (CRATE RAIN)
+SFX4 73912901 (leave edit mode)
+SFX5 26404105 (jump)
+SFX6 31560708 (get orb)
+SFX7 16509700 (get key)
+SFX8 38835508 (crate fire)
+SFX9 24561108 (crate infection)
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Goal, GoalLocked, Ladder, EditModeDrop
+Orb, Key, Player, PlayerJump, PlayerDisabled, Crate, Ground, Space, EditModeArrow, Fire, BurningCrate, BurntCrate, CrateArtifact
+EditModeCursor, CrateInfectionSeed, CrateInfectionComplete, CrateInfectionTemp
+
+======
+RULES
+======
+
+( ==================
+  ENDGAME ANIMATIONS
+  ================== )
+
+(play the sound effect when infection begins)
+[ NonCursorPlayer CrateInfectionSeed ] -> [ Crate CrateInfectionSeed ] SFX9
+[ Goal CrateInfectionSeed ] -> [ Goal CrateInfectionSeed ] SFX9
+
+(infection radiation)
+[ CrateInfectionSeed | no CrateInfectionComplete no Space ] -> [ CrateInfectionSeed | CrateInfectionTemp ] again
+[ CrateInfectionSeed ] -> [ CrateInfectionComplete ]
+
+(when the infection hits a specified trigger tile, move on to the next level; due to the object limit, I'm using EditModeDrop for this)
+[ CrateInfectionComplete EditModeDrop ] -> [ CrateInfectionComplete EditModeDrop ] win
+
+(infection tile transformations)
+late [ CrateInfectionTemp BlueSky ] -> [ CrateInfectionTemp CrateInfection ]
+late [ CrateInfectionTemp Transformable ] -> [ CrateInfectionTemp Crate ]
+late [ CrateInfectionTemp ] -> [ CrateInfectionSeed ]
+
+(when the player touches the artifact, start infection)
+[ > NonCursorPlayer | CrateArtifact ] -> [ | NonCursorPlayer CrateInfectionSeed ]
+
+
+( =========
+  EDIT MODE
+  ========= )
+
+(hitting the X key when in the normal game activates the edit mode)
+[ EditModeDrop Space ] UP [ ACTION NonCursorPlayer | ... | EditModeDrop ] -> [ EditModeDrop Space ] [ ACTION NonCursorPlayer | ... | EditModeDrop EditModeCursor ] SFX1
+[ EditModeDrop Space ] [ ACTION NonCursorPlayer ] -> [ EditModeDrop EditModeArrow ] [ ACTION NonCursorPlayer ]
+[ EditModeDrop EditModeArrow ] [ ACTION PlayerLeft ] -> [ EditModeDrop EditModeArrow ] [ PlayerLeftDisabled ]
+[ EditModeDrop EditModeArrow ] [ ACTION PlayerRight ] -> [ EditModeDrop EditModeArrow ] [ PlayerRightDisabled ]
+[ EditModeDrop EditModeArrow ] [ ACTION PlayerLadder ] -> [ EditModeDrop EditModeArrow ] [ PlayerLadderDisabled ]
+
+(hitting the X key while in edit mode returns to platform control)
+[ ACTION EditModeCursor ] [ EditModeDrop EditModeArrow ] -> [ ACTION EditModeCursor ] [ EditModeDrop Space ]
+[ ACTION EditModeCursor ] [ PlayerLeftDisabled ] -> [ ACTION EditModeCursor ] [ PlayerLeft ]
+[ ACTION EditModeCursor ] [ PlayerRightDisabled ] -> [ ACTION EditModeCursor ] [ PlayerRight ]
+[ ACTION EditModeCursor ] [ PlayerLadderDisabled ] -> [ ACTION EditModeCursor ] [ PlayerLadder ]
+[ ACTION EditModeCursor ] -> [ ] SFX4
+
+(restrict the cursor's movement)
+HORIZONTAL [ > EditModeCursor | no EditModeArrow ] -> [ EditModeCursor | no EditModeArrow ]
+[ UP EditModeCursor ] -> [ EditModeCursor ]
+
+( {1} )
+(Hitting the down arrow in edit mode drops a crate. The rule that does this is further down so that it happens after the normal gravity assertion; if it were here, the crate would fall one row before drawing and would appear to start on the second row from the top.
+
+Search for {2} to find the rule.)
+
+
+
+( ===============
+  NORMAL MOVEMENT
+  =============== )
+
+(forces another turn after player movement to assert gravity)
+[ MOVING NonCursorPlayer ] -> [ MOVING NonCursorPlayer ] again
+
+(Change the player's orientation based on movement.)
+[ LEFT NonCursorPlayer ] -> [ LEFT PlayerLeft ]
+[ RIGHT NonCursorPlayer ] -> [ RIGHT PlayerRight ]
+late [ NonCursorPlayer Ladder ] -> [ PlayerLadder Ladder ]
+
+(shove crates)
+HORIZONTAL [ > NonCursorPlayer | Crate ] -> [ > NonCursorPlayer | > Crate ]
+
+(level 2 ends when you grab the orb)
+[ > NonCursorPlayer | Orb ] -> [ > NonCursorPlayer | Orb ] SFX6 win
+
+(burn some crates)
+[ BurntCrate ] -> [ ]
+[ BurningCrate ] -> [ BurntCrate ] again
+[ BurntCrate | Crate ] -> [ BurntCrate | BurningCrate ]
+DOWN [ Crate no CrateInfection | Fire ] -> [ BurningCrate | Fire ] SFX8 again
+
+
+
+( ==================
+  CLIMBING & GRAVITY
+  ================== )
+
+(A player can climb on top of a crate by walking into it or pressing up while facing it, but only if there's something on the other side of the crate so the player can't push it, and also if there's nothing above the player or the crate. Done by using a temporary player object that moves up if there's no obstacle above and then moves on top of the crate if there's no obstacle there.)
+RIGHT [ > NonCursorPlayer | Crate | Solid ] -> [ PlayerJumpRight | Crate | Solid ]
+RIGHT [ ^ PlayerRight | Crate | Solid ] -> [ PlayerJumpRight | Crate | Solid ]
+UP [ PlayerJumpRight | no Solid ] -> [ PlayerJumpRight | v PlayerRight ]
+LEFT [ > NonCursorPlayer | Crate | Solid ] -> [ PlayerJumpLeft | Crate | Solid ]
+LEFT [ v PlayerLeft | Crate | Solid ] -> [ PlayerJumpLeft | Crate | Solid ]
+UP [ PlayerJumpLeft | no Solid ] -> [ PlayerJumpLeft | ^ PlayerLeft ]
+
+(don't let the player move up or down unless they're on a ladder)
+[ UP NonCursorPlayer no Ladder ] -> [ NonCursorPlayer no Ladder ]
+
+(assert gravity)
+DOWN [ STATIONARY Crate ] -> [ > Crate ] again
+DOWN [ STATIONARY NonCursorPlayer no Ladder | no Ladder ] -> [ > NonCursorPlayer no Ladder | no Ladder ] again
+
+(get keys and unlock goals; happens after gravity so you can fall on keys)
+HORIZONTAL DOWN [ > NonCursorPlayer | Key ] [ GoalLocked ] -> [ > NonCursorPlayer | ] [ Goal ] SFX7
+
+(Clean up after jumping.)
+(If the player is on top of a temporary jump token, then the player moved up but was blocked by an obstacle on top of the crate, so move the player back down.)
+late DOWN [ NonCursorPlayer | PlayerJump ] -> [ | NonCursorPlayer ]
+(If the player and the temporary jump token both exist here, then the player jumped successfully. Clear the token and destroy the crumbling floor if the player was standing on one.)
+late DOWN [ NonCursorPlayer ] [ PlayerJump | Crumble ] -> [ NonCursorPlayer ] [ | ] SFX5 SFX2
+late [ NonCursorPlayer ] [ PlayerJump ] -> [ NonCursorPlayer ] [ ] SFX5
+(If there's a temporary jump token remaining here, then the player tried jumping but was blocked from above. Turn the token back into the player.)
+late [ PlayerJumpLeft ] -> [ PlayerLeft ]
+late [ PlayerJumpRight ] -> [ PlayerRight ]
+
+
+
+( =============
+  MISCELLANEOUS
+  ============= )
+
+( {2} )
+(Hitting X over one of the arrows in edit mode drops a crate. Search for {1} for an explanation of why this rule is here after gravity.)
+DOWN [ DOWN EditModeCursor | no Thing ] -> [ EditModeCursor | Crate ] SFX3 again
+[ DOWN EditModeCursor ] -> [ EditModeCursor ]
+
+(win condition; player must be standing on solid ground to enter the goal)
+late DOWN [ NonCursorPlayer Goal | Solid ] -> [ NonCursorPlayer Goal | Solid ] SFX0 win
+
+(crumble breakable floors if the player is walking away after standing on one; happens after pushing, climbing, & gravity)
+DOWN [ PERPENDICULAR NonCursorPlayer no Ladder | Crumble ] -> [ PERPENDICULAR NonCursorPlayer no Ladder | ] SFX2
+
+
+
+==============
+WINCONDITIONS
+==============
+
+(win condition is a rule to enforce that the player must be stationary on the goal)
+
+=======
+LEVELS
+=======
+
+message I love crates.
+message I could push them or climb on them every day.
+
+(mechanics tutorial)
+SSSSSSSSS
+S.......S
+S.*..C..S
+S.#****LS
+SG.C..#LS
+S..C..#LS
+S*****#LS
+S......LS
+S>.C..C.S
+S*******S
+SSSSSSSSS
+
+(mechanics quiz)
+SSSSSSSSSSSSSSSSSSSSS
+S................C..S
+S..............****LS
+S................C.LS
+S.......C.CL...****LS
+S.......***L.......LS
+SG....>......***...LS
+S**...C....C......C*S
+S##*.**************#S
+S###*###############S
+SSSSSSSSSSSSSSSSSSSSS
+
+message I wish the world had more crates.
+
+(rain tutorial prelude)
+SSSSSSSSSSSSSSSSSSS
+SG..<.............S
+S*.*L.............S
+S...L.............S
+S.***.********....S
+S..C..............S
+SL***.****.****...S
+SL.........C...***S
+SL.......L***....OS
+S*......C.....C.**S
+S#*************.##S
+S##############*##S
+SSSSSSSSSSSSSSSSSSS
+
+message [Press X to rain crates. Use the arrow keys to drop crates and X to return.]
+message
+message Who said that?
+
+(rain tutorial)
+SDDDDDDDDDDDDDDDDDS
+SG................S
+S*.*L.............S
+S...L.............S
+S.***.********....S
+S.................S
+SL***.****.****...S
+SL.............***S
+SL.......L***....>S
+S*.....CC......C**S
+S#*************C##S
+S##############*##S
+SSSSSSSSSSSSSSSSSSS
+
+message This is... exhilarating.
+
+(rain 1)
+SDDDS
+SG..S
+S*..S
+S...S
+S...S
+S...S
+S>..S
+S***S
+SSSSS
+
+(rain 2)
+SDDDDDDDDDDDDS
+S.K.........<S
+S.**.**.**.**S
+S...........@S
+S..........**S
+S............S
+S............S
+S............S
+S************S
+SSSSSSSSSSSSSS
+
+(rain 3)
+SDDDDDDDS
+S......KS
+SL**.***S
+SL.C.C..S
+SL.C.C..S
+SL.C.C..S
+SL.C@C..S
+SL.C*C..S
+SL.C^C..S
+SL.C*C..S
+SL.C.C..S
+SL.C.C..S
+SL*****LS
+SL.....LS
+SSSSSSSSS
+
+(fire 1)
+SDDDDDDDDDDDS
+S...........S
+S@.......C<.S
+S******L***LS
+S..........LS
+SK..*......LS
+S*C...C.C..*S
+S#*****F***#S
+SSSSSSSSSSSSS
+
+(fire 2)
+SDDDDDDDDDDS
+S......C...S
+S..**L***..S
+S....L....KS
+S....L...**S
+S>.C..C...@S
+S****F*****S
+SSSSSSSSSSSS
+
+(fire 3)
+SDDDDDDDDDS
+S.........S
+S...^.....S
+S*.***....S
+S#.#......S
+S#.#K*....S
+S#.#......S
+S#.#**....S
+S#.....**LS
+S#.....@#LS
+S......*#LS
+S........LS
+S***F*****S
+SSSSSSSSSSS
+
+(crumble 1)
+SDDDDDDDDDDDS
+SK..........S
+S****...L...S
+S@.>........S
+S****-----**S
+S####*FFF*##S
+SSSSSSSSSSSSS
+
+(crumble 2)
+SDDDDDDDDDS
+S.......**S
+S.****..##S
+S.......C<S
+S*----****S
+S#..F*####S
+S#....G###S
+S#F.***###S
+S##*######S
+SSSSSSSSSSS
+
+(crumble 3)
+SDDDDDDDDDDDDDDDS
+S*******.*******S
+S...............S
+SL*.**.****L***LS
+SL.........L...LS
+SL**.***.****.*LS
+SL.............LS
+SL*.****.*.F*.*LS
+SL.............LS
+SL****-.*.-*F.*LS
+SL......G......LS
+S*C.....^.....C*S
+S#**FFF***FFF**#S
+SSSSSSSSSSSSSSSSS
+
+(endgame 1 [temple])
+SSSSSSSSSSSSSSSSSSSSS
+S................+++S
+S..............+++++S
+S............+++++A+S
+S>........+++++++CCCS
+S*******CCCCCCCCCCCCS
+ST##CCCCCCCCCCCCCCCCS
+SSSSSSSSSSSSSSSSSSSSS
+
+(endgame 2 [crumble 3 redux])
+SSSSSSSSSSSSSSSSS
+SU******.*******S
+S...............S
+SL*.**.****L***LS
+SL.........L...LS
+SL**.***.****.*LS
+SL.............LS
+SL*.****.*.F*.*LS
+SL.............LS
+SL****-.*.-*F.*LS
+SL......Y......LS
+S*C...........C*S
+S#**FFF***FFF**#S
+SSSSSSSSSSSSSSSSS
+
+(endgame 3 [mechanics tutorial redux])
+SSSSSSSSS
+S.......S
+S.*..C..S
+S.#****LS
+SY.C..#LS
+S..C..#LS
+S*****#LS
+S......LS
+S..C..C.S
+S******US
+SSSSSSSSS
+
+(endgame 4 [planet])
+SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS
+SSSSSSSSSSSS###.....SSSSSSSSSSSS
+SSSSSSSSS#####**#......SSSSSSSSS
+SSSSSSSS######****#.....SSSSSSSS
+SSSSSY##########***#.....*SSSSSS
+SSSSS#############.........SSSSS
+SSSS###FFFFF................SSSS
+SSSS................****###.SSSS
+SSS................****######SSS
+SSFF..............#****####**.SS
+SS##....*.........##########**SS
+SS#.....#..........##########.SS
+S#.................#######.....S
+S.................#######......S
+S...............FFF##..........S
+S............#FF...............S
+S........#######..........F....S
+S......#####****#..............S
+S.......#####***#..............S
+S..............................S
+SS............................SS
+SSFFF......................***SS
+SS.FFF.....................***SS
+SSS.##......................*SSS
+SSSS#.......................SSSS
+SSSS........................SSSS
+SSSSS#....................ISSSSS
+SSSSSS###.................SSSSSS
+SSSSSSSS####............SSSSSSSS
+SSSSSSSSS######........SSSSSSSSS
+SSSSSSSSSSSS######..SSSSSSSSSSSS
+SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS
+
+message
+message
+message Bliss.
+
+
+
+USER PROMPT:
+The following PuzzleScript game code:
+```plaintext
+title Pushbox Puzzle - Advanced Edition
+author Game Developer
+homepage www.example.com
+
+========
+OBJECTS
+========
+
+Background
+Black
+
+Wall
+LightGrey DarkGrey
+11111
+11111
+11111
+11111
+11111
+
+Player
+Yellow
+.....
+..0..
+.000.
+..0..
+.....
+
+Player2
+Red
+.....
+..0..
+.000.
+.....
+.....
+
+Box
+Brown
+.....
+.000.
+.0.0.
+.000.
+.....
+
+Target
+Green
+.....
+.....
+.00..
+.....
+.....
+
+BoxOnTarget
+LightGreen
+.....
+.....
+.0.0.
+.....
+.....
+
+Obstacle
+DarkRed
+.....
+.....
+.0.0.
+.....
+.....
+
+Trap
+DarkBlue
+.....
+..XX.
+..XX.
+.....
+.....
+
+TrapDisabled
+DarkGreen
+.....
+.....
+.00..
+.....
+.....
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Player
+Q = Player2
+B = Box
+T = Target
+X = BoxOnTarget
+O = Obstacle
+@ = Trap
+D = TrapDisabled
+
+=========
+SOUNDS
+=========
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Target
+Trap
+TrapDisabled
+BoxOnTarget
+Player, Player2, Box, Wall, Obstacle
+
+======
+RULES
+======
+
+[ > P | B ] -> [ > P | > B ]
+[ > Q | B ] -> [ > Q | > B ]
+
+[ B | O ] -> [ B | O ]
+
+[ > P | @ ] -> restart
+[ > Q | @ ] -> restart
+
+[ B | T ] -> [ X ]
+[ X no T ] -> [ B ]
+
+[ P | X ] -> [ P | X ]
+[ X | P ] -> [ X | P ]
+
+[ B | @ ] -> [ D ]
+
+==============
+WINCONDITIONS
+==============
+
+All BoxOnTarget
+
+=======
+LEVELS
+=======
+
+#####
+#..##
+#PQ.#
+#BX.#
+#T.O#
+#####
+
+#######
+#..T..#
+#..B..#
+#..P..#
+#..Q..#
+#..B..#
+#..T..#
+#######
+
+########
+#T@.#..#
+#..B...#
+#..PQ..#
+#.#.O.##
+#..#T..#
+#..B...#
+########
+
+##########
+#..T..#..#
+#OBQ...@.#
+#..#..P..#
+#..B@....#
+#...T.O..#
+##########
+
+```
+produced the following console output:
+=================================
+line 71 : Unknown junk in spritematrix for object TRAP.
+line 72 : Unknown junk in spritematrix for object TRAP.
+line 68 : Sprite graphics must be 5 wide and 5 high exactly.
+line 126 : In a rule, each pattern to match on the left must have a corresponding pattern on the right of equal length (number of cells).
+line 132 : In a rule, each pattern to match on the left must have a corresponding pattern on the right of equal length (number of cells).
+Errors detected during compilation; the game may not work correctly.
+Return a repaired version of the code that addresses these errors. First, reason about your task and determine the best plan of action. Then, write your code.  Return your code in full, inside a ```plaintext code block.

@@ -1,0 +1,1852 @@
+SYSTEM PROMPT:
+You are a game designer, familiar with the PuzzleScript game description language. Here are some example games, for inspiration (do not reproduce these games exactly):
+
+title Drop Swap
+author Aaron Steed
+homepage www.robotacid.com
+
+key_repeat_interval 0.23
+again_interval 0.05
+noaction
+noundo
+background_color Black
+text_color Grey
+run_rules_on_level_start
+
+========
+OBJECTS
+========
+
+Background
+Black
+
+Player
+#ffffff #000000 #626263 #3c3b3c
+.222.
+21112
+23132
+20102
+.222.
+
+DeadPlayer
+#ffffff #000000 #626263 #3c3b3c
+.222.
+21112
+21112
+23132
+.222.
+
+BaseWall
+#222222 #333333 #444444 #ffffff
+11110
+12220
+12200
+12000
+00000
+
+APill
+#ff0000 #ff7374 #ff0000 #ff0000
+.111.
+11110
+11010
+11100
+.000.
+
+BPill
+#00de00 #cffa92 #ff0000 #ff0000
+.111.
+10010
+10110
+11100
+.000.
+
+CPill
+#7a35fc #b56bfd #ff0000 #ff0000
+.111.
+10110
+11010
+11100
+.000.
+
+DPill
+#0094fc #79b5fd #ff0000 #ff0000
+.111.
+10100
+11010
+10100
+.000.
+
+EPill
+#d1c200 #fff919 #ffffff #ff0000
+.111.
+10010
+10010
+11110
+.000.
+
+FPill
+#ff33b1 #ff76d2 #ff0000 #ff0000
+.111.
+10100
+11110
+10110
+.000.
+
+AllPill
+#eeee66 #ffffff #ffffcc #ffffff
+.112.
+11112
+11012
+21120
+.220.
+
+NoPill
+#ffffff #000000 #ffde85 #ff0000
+.000.
+00000
+21012
+.000.
+..2..
+
+Bomb
+#6e6e6e #000000 #ff0000 #fcf26b
+.020.
+02320
+01210
+01110
+.000.
+
+GemPill
+#ffffff #000000 #626263 #3c3b3c
+..0..
+.002.
+00022
+.223.
+..2..
+
+Count
+#ffffff #000000 #5a595a #ff0000
+.....
+.000.
+.000.
+.000.
+.....
+
+Marked
+#ffffff #000000
+.....
+..1..
+.101.
+..1..
+.....
+
+CountTray
+#333333
+
+GemTray
+#333333
+
+StartGem
+red
+
+Collect
+White
+
+Debris1
+#ffffff #0739f5 #1f0f42 #ffffff
+.0.0.
+00.00
+..0..
+00.00
+.0.0.
+
+Debris2
+#ffffff #0739f5 #1f0f42 #ffffff
+.....
+.0.0.
+..0..
+.0.0.
+.....
+
+Empty
+Black
+
+OldPos
+Black
+
+StartCount
+Black
+
+DropWall1
+#222222 #333333 #444444 #ffffff
+11110
+12220
+12200
+12200
+12200
+
+DropWall2
+#222222 #333333 #444444 #ffffff
+11110
+12220
+12200
+12200
+12200
+
+DropWall3
+#222222 #333333 #444444 #ffffff
+11110
+12220
+12200
+12200
+12200
+
+DropWall4
+#222222 #333333 #444444 #ffffff
+11110
+12220
+12200
+12200
+12200
+
+DropMarker
+Blue
+
+Init
+Purple
+
+=======
+LEGEND
+=======
+
+. = Background
+@ = Player
+p = DeadPlayer
+# = BaseWall
+a = APill
+b = BPill
+c = CPill
+d = DPill
+e = EPill
+f = FPill
+n = NoPill
+x = AllPill
+u = Count and CountTray
+w = Count and CountTray and StartCount
+g = GemPill
+q = GemTray
+o = GemTray and StartGem
+p = Bomb
+i = Init
+j = DropWall1
+k = DropWall2
+l = DropWall3
+m = DropWall4
+
+
+MatchPill = APill or BPill or CPill or DPill or EPill or FPill or AllPill
+Pill = MatchPill or NoPill or GemPill or Bomb
+Debris = Debris1 or Debris2
+AMatch = APill or AllPill
+BMatch = BPill or AllPill
+CMatch = CPill or AllPill
+DMatch = DPill or AllPill
+EMatch = EPill or AllPill
+FMatch = FPill or AllPill
+Wall = BaseWall or DropWall1 or DropWall2 or DropWall3 or DropWall4
+Item = Pill or Debris or Wall or Player
+Heavy = Pill or Player
+Dropping = Marked or DropMarker
+DropMix1 = APill or BPill or CPill or DPill or EPill
+DropMix2 = APill or BPill or CPill or DPill or EPill or GemPill
+DropMix3 = APill or BPill or CPill or DPill or EPill or NoPill
+DropMix4 = APill or BPill or CPill or DPill or EPill or FPill or GemPill
+DropMix5 = APill or BPill or CPill or DPill or EPill or FPill
+DropWallMarked = DropWall1 or DropWall3
+
+=======
+SOUNDS
+=======
+
+sfx0 54236904 (illegal)
+sfx1 5160507 (swap)
+sfx2 19008103 (allpill)
+sfx3 50665503 (crush 3)
+sfx4 80820507 (land)
+sfx5 2030908 (blast)
+sfx6 3032303 (bomb)
+sfx7 83704102 (dead)
+sfx8 7194508 (gem collect)
+EndLevel 16709508 (win)
+
+================
+COLLISIONLAYERS
+================
+
+
+Collect, StartCount, StartGem
+Background
+OldPos, CountTray, GemTray
+Player, Wall, Pill, Empty, Count, DeadPlayer, Bomb, Init
+Debris, Marked, DropMarker
+
+======
+RULES
+======
+
+(init)
+[ DropWall1 ] [ Init ] -> [ DropWall1 ] [ random DropMix1 Marked ]
+[ DropWall2 ] [ Init ] -> [ DropWall2 ] [ random DropMix1 ]
+[ DropWall3 ] [ Init ] -> [ DropWall3 ] [ random DropMix1 Marked ]
+[ DropWall4 ] [ Init ] -> [ DropWall4 ] [ random DropMix5 ]
+
+(debris clean up)
+[ Debris2 ] -> [ Empty ] again
+[ Debris1 ] -> [ Debris2 ] again
+
+(player - pill swapping)
+[ > Player | Pill ] -> [ Pill OldPos | Player ] sfx1
+[ Player Marked | OldPos ] -> [ Player | OldPos Marked ]
+
+(blocked move)
+[ > Player | No Pill ] -> [ Player | ] sfx0
+
+(pill combos)
+[ AMatch | AMatch | AMatch ] -> [ AMatch Collect | AMatch Collect | AMatch Collect ]
+[ BMatch | BMatch | BMatch ] -> [ BMatch Collect | BMatch Collect | BMatch Collect ]
+[ CMatch | CMatch | CMatch ] -> [ CMatch Collect | CMatch Collect | CMatch Collect ]
+[ DMatch | DMatch | DMatch ] -> [ DMatch Collect | DMatch Collect | DMatch Collect ]
+[ EMatch | EMatch | EMatch ] -> [ EMatch Collect | EMatch Collect | EMatch Collect ]
+[ FMatch | FMatch | FMatch ] -> [ FMatch Collect | FMatch Collect | FMatch Collect ]
+[ NoPill | NoPill | NoPill ] -> [ NoPill Collect | NoPill Collect | NoPill Collect ]
+
+(bomb activate)
+[ OldPos Bomb ] -> sfx5
+up [ OldPos Bomb | Pill ] -> [ OldPos Bomb | Pill > Collect ]
+right [ OldPos Bomb | Pill ] -> [ OldPos Bomb | Pill > Collect ]
+down [ OldPos Bomb | Pill ] -> [ OldPos Bomb | Pill > Collect ]
+left [ OldPos Bomb | Pill ] -> [ OldPos Bomb | Pill > Collect ]
+[ OldPos Bomb ] -> [ OldPos Empty ]
+
+(blast)
+up [ Pill > Collect | Pill ] -> [ Pill Collect | Pill > Collect ]
+right [ Pill > Collect | Pill ] -> [ Pill Collect | Pill > Collect ]
+down [ Pill > Collect | Pill ] -> [ Pill Collect | Pill > Collect ]
+left [ Pill > Collect | Pill ] -> [ Pill Collect | Pill > Collect ]
+[ > Collect ] -> [ Collect ]
+[ GemPill Collect ] -> [ GemPill ]
+
+(reward matches)
+(junction)
+Right [ Collect | Collect ] -> [ > Collect | > Collect ]
+Down [ Collect | Collect ] -> [ > Collect | > Collect ]
+[ Down Collect | Right Collect ] [ Collect OldPos ] -> [ Collect | Collect ] [ Bomb OldPos ] sfx6
+(4: create AllPill)
+[ MatchPill Collect | MatchPill Collect | MatchPill Collect | MatchPill Collect ] [ Collect OldPos ] -> [ MatchPill Collect | MatchPill Collect | MatchPill Collect | MatchPill Collect ] [ AllPill OldPos ] sfx2
+
+(count moves)
+(subtract on move)
+random right [ OldPos ] [ Count | No Count ] -> [ OldPos ] [ | ]
+(fill on Debris)
+[ Collect ] [ CountTray ] -> [ Collect ] [ CountTray Count ]
+
+(dead?)
+[ DeadPlayer ] -> cancel
+[ No Count StartCount CountTray ] [ Player ] -> [ No Count StartCount CountTray ] [ DeadPlayer ] sfx7
+[ Player | NoPill Collect ] -> [ DeadPlayer | NoPill ]
+[ DeadPlayer ] [ CountTray Count ] -> [ DeadPlayer ] [ CountTray ] sfx7
+
+(destroy matched)
+[ APill Collect ] -> [ Debris1 ] sfx3 again
+[ BPill Collect ] -> [ Debris1 ] sfx3 again
+[ CPill Collect ] -> [ Debris1 ] sfx3 again
+[ DPill Collect ] -> [ Debris1 ] sfx3 again
+[ EPill Collect ] -> [ Debris1 ] sfx3 again
+[ FPill Collect ] -> [ Debris1 ] sfx3 again
+[ AllPill Collect ] -> [ Debris1 ] sfx3 again
+[ Player ] [ NoPill Collect ] -> [ Player ] [ Debris1 ] sfx3 again
+
+(destroy NoPills)
+down [ NoPill | Wall ] -> [ Debris1 | Wall ] again
+
+(collect gems)
+down [ GemPill | Wall ] -> [ GemPill Collect | Wall ]
+[ GemPill Collect ] [ StartGem No GemPill ] -> [ Debris1 ] [ StartGem GemPill ] again sfx8
+right [ GemPill Collect ] [ GemPill GemTray | No GemPill GemTray ] -> [ Debris1 ] [ GemPill GemTray | GemPill GemTray ] again sfx8
+
+(drop)
+[ Heavy No Dropping ] -> [ Heavy DropMarker ]
+down [ Heavy Dropping | Empty ] -> [ Empty | Heavy Dropping ]
+[ DropMarker ] -> [ ]
+down [ DropWall1 | Empty ] -> [ DropWall1 | random DropMix1 ] again
+down [ DropWall2 | Empty ] -> [ DropWall2 | random DropMix2 ] again
+down [ DropWall3 | Empty ] -> [ DropWall3 | random DropMix3 ] again
+down [ DropWall4 | Empty ] -> [ DropWall4 | random DropMix4 ] again
+
+(gem drop win)
+right [ GemPill GemTray | Wall ] -> win
+
+[ OldPos ] -> [ ]
+
+==============
+WINCONDITIONS
+==============
+
+No Marked
+Some DropWallMarked
+
+=======
+LEVELS
+=======
+
+message collect orbs by matching 3
+message match 3 to restore move-energy
+message level 1: collect all marked orbs
+
+wuuuuu#
+#jjjjj#
+#iiiii#
+#iiiii#
+#iiiii#
+#iiiii#
+#ii@ii#
+#######
+
+message level 2: collect all marked orbs
+
+wuuuuuu#
+#jjjjjj#
+#iiiiii#
+#iiiiii#
+#iiiiii#
+#iiiiii#
+#iiiiii#
+#iiiiii#
+#iii@ii#
+########
+
+message collect gray gems by getting them to the bottom
+message level 3: collect 8 gems
+
+oqqqqqqq#
+wuuuuuuu#
+#kkkkkkk#
+#iiiiiii#
+#iiiiiii#
+#iiiiiii#
+#iiiiiii#
+#iiiiiii#
+#iiiiiii#
+#iiiiiii#
+#iii@iii#
+#########
+
+message if you are next to 3 matching skulls you die
+message skulls can be destroyed by getting them to the bottom
+message level 4: collect all marked orbs
+
+wuuuuuu#
+#llllll#
+#iiiiii#
+#iiiiii#
+#iiiiii#
+#iiiiii#
+#iiiiii#
+#iiiiii#
+#iii@ii#
+########
+
+message level 5: collect 7 gems
+
+oqqqqqqq#
+wuuuuuuu#
+#mmmmmmm#
+#iiiiiii#
+#iiiiiii#
+#iiiiiii#
+#iiiiiii#
+#iiiiiii#
+#iiiiiii#
+#iiiiiii#
+#iii@iii#
+#########
+
+message thanks for playing
+
+
+
+title Sokobond: The Demake
+author Jonah Ostroff
+homepage www.sokobond.com
+text_color #202020
+background_color #FDFDFD
+key_repeat_interval 0.25
+run_rules_on_level_start
+noaction
+youtube 2R0sTlruOZc
+
+========
+OBJECTS
+========
+
+Background
+#FFFFFF #F8F8F8
+00000
+01010
+00000
+01010
+00000
+
+Player
+#FFBBEE
+00000
+0...0
+0...0
+0...0
+00000
+
+Wall
+Yellow White
+00000
+00000
+00000
+00000
+00000
+
+Hydrogen
+Red Black
+.....
+.111.
+.101.
+.111.
+.....
+
+Nitrogen
+Green Black
+.....
+.111.
+.101.
+.111.
+.....
+
+Oxygen
+Blue Black
+.....
+.111.
+.101.
+.111.
+.....
+
+Carbon
+Yellow Black
+.....
+.111.
+.101.
+.111.
+.....
+
+Helium
+White Black
+.....
+.111.
+.101.
+.111.
+.....
+
+1Electron
+LightGray
+.....
+.0...
+.....
+.....
+.....
+
+2Electron
+LightGray
+.....
+...0.
+.....
+.0...
+.....
+
+3Electron
+LightGray
+.....
+.0.0.
+.....
+.0...
+.....
+
+4Electron
+LightGray
+.....
+.0.0.
+.....
+.0.0.
+.....
+
+BondU
+Black
+..0..
+.....
+.....
+.....
+.....
+
+BondL
+Black
+.....
+.....
+0....
+.....
+.....
+
+BondR
+Black
+.....
+.....
+....0
+.....
+.....
+
+BondD
+Black
+.....
+.....
+.....
+.....
+..0..
+
+
+BondUL
+Black
+..0..
+.....
+0....
+.....
+.....
+
+BondUR
+Black
+..0..
+.....
+....0
+.....
+.....
+
+BondUD
+Black
+..0..
+.....
+.....
+.....
+..0..
+
+BondLR
+Black
+.....
+.....
+0...0
+.....
+.....
+
+BondLD
+Black
+.....
+.....
+0....
+.....
+..0..
+
+BondRD
+Black
+.....
+.....
+....0
+.....
+..0..
+
+BondULR
+Black
+..0..
+.....
+0...0
+.....
+.....
+
+BondULD
+Black
+..0..
+.....
+0....
+.....
+..0..
+
+BondURD
+Black
+..0..
+.....
+....0
+.....
+..0..
+
+BondLRD
+Black
+.....
+.....
+0...0
+.....
+..0..
+
+BondULRD
+Black
+..0..
+.....
+0...0
+.....
+..0..
+
+Temp1
+Red
+
+Temp2 (These are placeholders for various things.)
+Green
+
+Temp3
+Blue
+
+Temp4
+Yellow
+
+=======
+LEGEND
+=======
+
+Atom = Hydrogen or Oxygen or Nitrogen or Carbon or Helium
+Orbital = 1Electron or 2Electron or 3Electron or 4Electron
+UBond = BondU or BondUL or BondUR or BondUD or BondULR or BondULD or BondURD or BondULRD
+LBond = BondL or BondUL or BondLR or BondLD or BondULR or BondULD or BondLRD or BondULRD
+RBond = BondR or BondUR or BondLR or BondRD or BondULR or BondURD or BondLRD or BondULRD
+DBond = BondD or BondUD or BondLD or BondRD or BondULD or BondURD or BondLRD or BondULRD
+1Bond = BondU or BondL or BondR or BondD
+2Bond = BondUL or BondUR or BondUD or BondLR or BondLD or BondRD
+3Bond = BondULR or BondULD or BondURD or BondLRD
+Bond = 1Bond or 2Bond or 3Bond or BondULRD
+Temps = Temp1 or Temp2 or Temp3 or Temp4
+AtomStuff = Bond or Orbital
+
+. = Background
+# = Wall
+H = Hydrogen and 1Electron
+O = Oxygen and 2Electron
+N = Nitrogen and 3Electron
+C = Carbon and 4Electron
+E = Helium
+0 = Helium  and Player
+1 = Hydrogen and 1Electron and Player
+2 = Oxygen and 2Electron and Player
+3 = Nitrogen and 3Electron and Player
+4 = Carbon and 4Electron and Player
+P = Player
+
+=======
+SOUNDS
+=======
+
+Sfx1 64050702 (Bonding sound)
+EndLevel 96545300 (End level)
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Player
+Bond
+Wall, Atom
+Orbital
+Temps
+
+======
+RULES
+======
+
+(This is the old way I did movement, and it was super inefficient.)
+([> Player Atom] -> [> Player > Atom]
+
+Up [ Moving Atom UBond | Atom] -> [ Moving Atom UBond | Moving Atom]
++ Left [ Moving Atom LBond | Atom] -> [ Moving Atom LBond | Moving Atom]
++ Right [ Moving Atom RBond | Atom] -> [ Moving Atom RBond | Moving Atom]
++ Down [ Moving Atom DBond | Atom] -> [ Moving Atom DBond | Moving Atom]
++ [> Atom | Atom] -> [> Atom | > Atom])
+
+[Up Player] -> [Up Player Temp1]
+[Left Player] -> [Left Player Temp2]
+[Right Player] -> [Right Player Temp3]
+[Down Player] -> [Down Player Temp4]
+
+Up [Temps UBond | no Temps] -> [Temps Ubond | Temps]
++ Left [Temps LBond | no Temps] -> [Temps Lbond | Temps]
++ Right [Temps RBond | no Temps] -> [Temps Rbond | Temps]
++ DOwn [Temps DBond | no Temps] -> [Temps Dbond | Temps]
++ Up [Temp1 | Atom no Temp1] -> [Temp1 | Atom Temp1]
++ Left [Temp2 | Atom no Temp2] -> [Temp2 | Atom Temp2]
++ Right [Temp3 | Atom no Temp3] -> [Temp3 | Atom Temp3]
++ Down [Temp4 | Atom no Temp4] -> [Temp4 | Atom Temp4]
+
+[Temp1 Atom] -> [Up Atom]
+[Temp2 Atom] -> [Left Atom]
+[Temp3 Atom] -> [Right Atom]
+[Temp4 Atom] -> [Down Atom]
+
+[ > Atom | Wall] -> Cancel
+
+[ > Atom AtomStuff] -> [ > Atom > AtomStuff]
+
+Late Right [Orbital no Temps no RBond|Orbital no Temps no LBond] -> [Orbital Temp1|Orbital Temp2 Sfx1] (Bond horizontally.)
++ Late [Temp1 no Bond] -> [Temp3 BondR]
++ Late [Temp1 BondU] -> [Temp3 BondUR]
++ Late [Temp1 BondL] -> [Temp3 BondLR]
++ Late [Temp1 BondD] -> [Temp3 BondRD]
++ Late [Temp1 BondUL] -> [Temp3 BondULR]
++ Late [Temp1 BondUD] -> [Temp3 BondURD]
++ Late [Temp1 BondLD] -> [Temp3 BondLRD]
++ Late [Temp1 BondULD] -> [Temp3 BondULRD]
++ Late [Temp2 no Bond] -> [Temp3 BondL]
++ Late [Temp2 BondU] -> [Temp3 BondUL]
++ Late [Temp2 BondR] -> [Temp3 BondLR]
++ Late [Temp2 BondD] -> [Temp3 BondLD]
++ Late [Temp2 BondUR] -> [Temp3 BondULR]
++ Late [Temp2 BondUD] -> [Temp3 BondULD]
++ Late [Temp2 BondRD] -> [Temp3 BondLRD]
++ Late [Temp2 BondURD] -> [Temp3 BondULRD]
++ Late [Temp3 1Electron] -> []
++ Late [Temp3 2Electron] -> [1Electron]
++ Late [Temp3 3Electron] -> [2Electron]
++ Late [Temp3 4Electron] -> [3Electron]
+
+Late Down [Orbital no Temps no DBond|Orbital no Temps no UBond] -> [Orbital Temp1|Orbital Temp2 Sfx1] (Bond vertically.)
++ Late [Temp1 no Bond] -> [Temp3 BondD]
++ Late [Temp1 BondU] -> [Temp3 BondUD]
++ Late [Temp1 BondL] -> [Temp3 BondLD]
++ Late [Temp1 BondR] -> [Temp3 BondRD]
++ Late [Temp1 BondUL] -> [Temp3 BondULD]
++ Late [Temp1 BondUR] -> [Temp3 BondURD]
++ Late [Temp1 BondLR] -> [Temp3 BondLRD]
++ Late [Temp1 BondULR] -> [Temp3 BondULRD]
++ Late [Temp2 no Bond] -> [Temp3 BondU]
++ Late [Temp2 BondL] -> [Temp3 BondUL]
++ Late [Temp2 BondR] -> [Temp3 BondUR]
++ Late [Temp2 BondD] -> [Temp3 BondUD]
++ Late [Temp2 BondLR] -> [Temp3 BondULR]
++ Late [Temp2 BondLD] -> [Temp3 BondULD]
++ Late [Temp2 BondRD] -> [Temp3 BondURD]
++ Late [Temp2 BondLRD] -> [Temp3 BondULRD]
++ Late [Temp3 1Electron] -> []
++ Late [Temp3 2Electron] -> [1Electron]
++ Late [Temp3 3Electron] -> [2Electron]
++ Late [Temp3 4Electron] -> [3Electron]
+
+==============
+WINCONDITIONS
+==============
+
+No Orbital
+
+=======
+LEVELS
+=======
+
+Message This is a demake of Sokobond by Alan Hazelden and Harry Lee.
+
+Message Get the full version at www.sokobond.com!
+
+#########
+####....#
+####....#
+#....#H.#
+#...O#..#
+#.1.....#
+#....####
+#########
+
+Message Water atoms are icosahedral.
+
+######
+#H..O#
+#....#
+#1.###
+######
+
+Message The blue tint seen in large bodies of water comes from the pigment in the oxygen atoms.
+
+########
+###...##
+#2.H.H.#
+###...##
+########
+
+Message The Earth's surface and the human body are both 70% water. That CAN'T be a coincidence, right?
+
+#######
+#..O..#
+#..#..#
+#.1#H.#
+#..#..#
+#..O..#
+#######
+
+Message "One hydrogen per oxide" is defined as the speed at which atoms move.
+
+#######
+#.H.3.#
+#.....#
+#.H.H.#
+#######
+
+Message Ammonia is an inflammatory condition of the lungs.
+
+#######
+#.....#
+#.....#
+#H#H#H#
+#.....#
+#..3..#
+#######
+
+Message Hang on, I was thinking of "pneumonia".
+
+#########
+####4####
+###...###
+##.H.H.##
+#.......#
+##.H.H.##
+###...###
+####.####
+#########
+
+Message 90% of all the methane in the world is produced in Arizona.
+
+#########
+##H...H##
+#...4...#
+##H...H##
+#########
+
+Message Methane contains the name "Ethan". Do you think it was discovered by a guy named Ethan?
+
+########
+#......#
+#...H..#
+#O.H..3#
+#...H..#
+#......#
+########
+
+Message Hydroxylamine contains almost every vowel of the alphabet almost exactly once.
+
+#########
+#.......#
+#..H.H..#
+#.2...C.#
+#..H.H..#
+#.......#
+#########
+
+Message Methanol occurs naturally in peppermint oils.
+
+#########
+#.......#
+#.1...E.#
+###.H.###
+###...###
+###.O.###
+#########
+
+Message Helium is named after the Greek god Helios, who first discovered its existence.
+
+#########
+#.......#
+#.E.E.E.#
+###H.1###
+###.H.###
+###...###
+###.N.###
+#########
+
+Message Inhaling helium contracts the ear drum, causing pitches to sound higher. Your voice is perceived normally by everyone else.
+
+#######
+###..##
+##..H.#
+#..N..#
+#.H..H#
+##..0.#
+#######
+
+Message The first helium balloons were used at the wedding of Queen Victoria and Prince Albert, popularizing the term "noble gas".
+
+#######
+#.....#
+#..N..#
+#..0..#
+#H.H.H#
+#.#.#.#
+#.....#
+#######
+
+Message Helium does not form chemical bonds with other elements, but it's the bonds of friendship that really matter.
+
+########
+#......#
+#...H#N#
+#......#
+##H#H.0#
+##.....#
+####...#
+########
+
+Message Scientists have been searching for centuries to discover the missing elements between hydrogen and helium on the periodic table.
+
+Message Thanks for playing! Go get the full version, which has lots of cool stuff that I couldn't write in PuzzleScript: www.sokobond.com
+
+title IceCrates
+author Tyler Glaiel
+homepage twitter.com/tylerglaiel
+run_rules_on_level_start true
+noaction
+
+========
+OBJECTS
+========
+
+Background
+DarkBlue White LightBlue
+22112
+21122
+11222
+12221
+22211
+
+
+
+
+Wall_0000
+DarkBlue Gray DarkGray DarkGray Gray
+10001
+00000
+00000
+00000
+30003
+
+Wall_0001
+DarkBlue Gray DarkGray DarkGray Gray
+11111
+00000
+00000
+00000
+30003
+
+Wall_0010
+DarkBlue Gray DarkGray DarkGray Gray
+10002
+00002
+00002
+00002
+30002
+
+Wall_0011
+DarkBlue Gray DarkGray DarkGray Gray
+11111
+00002
+00002
+00002
+30002
+
+Wall_0100
+DarkBlue Gray DarkGray DarkGray Gray
+10001
+00000
+00000
+00000
+33333
+
+Wall_0101
+DarkBlue Gray DarkGray DarkGray Gray
+11111
+00000
+00000
+00000
+33333
+
+Wall_0110
+DarkBlue Gray DarkGray DarkGray Gray
+10002
+00002
+00002
+00002
+33333
+
+Wall_0111
+DarkBlue Gray DarkGray DarkGray Gray
+11111
+00002
+00002
+00002
+33333
+
+Wall_1000
+DarkBlue Gray DarkGray DarkGray Gray
+40001
+40000
+40000
+40000
+40003
+
+Wall_1001
+DarkBlue Gray DarkGray DarkGray Gray
+11111
+40000
+40000
+40000
+40003
+
+Wall_1010
+DarkBlue Gray DarkGray DarkGray Gray
+40002
+40002
+40002
+40002
+40002
+
+Wall_1011
+DarkBlue Gray DarkGray DarkGray Gray
+11111
+40002
+40002
+40002
+40002
+
+Wall_1100
+DarkBlue Gray DarkGray DarkGray Gray
+40001
+40000
+40000
+40000
+33333
+
+Wall_1101
+DarkBlue Gray DarkGray DarkGray Gray
+11111
+40000
+40000
+40000
+33333
+
+Wall_1110
+DarkBlue Gray DarkGray DarkGray Gray
+40002
+40002
+40002
+40002
+33333
+
+Wall_1111
+DarkBlue Gray DarkGray DarkGray Gray
+11111
+40002
+40002
+40002
+33333
+
+
+
+PlayerStill
+Red Orange DarkGrey Gray Black
+.000.
+01110
+04140
+01210
+.333.
+
+PlayerL
+Red Orange DarkGrey Gray Black
+.000.
+04110
+01410
+02110
+.333.
+
+PlayerR
+Red Orange DarkGrey Gray Black
+.000.
+01140
+01410
+01120
+.333.
+
+PlayerU
+Red Orange DarkGrey Gray Black
+.000.
+04140
+01110
+01210
+.333.
+
+PlayerD
+Red Orange DarkGrey Gray Black
+.000.
+01110
+01110
+04240
+.333.
+
+
+Crate
+Brown Yellow Orange
+11111
+10002
+10002
+10002
+22222
+
+
+Water1
+Blue LightBlue
+00000
+01100
+10011
+00000
+01100
+
+Water2
+Blue LightBlue
+00000
+00110
+11001
+00000
+00110
+
+Water3
+Blue LightBlue
+00000
+00011
+11100
+00000
+00011
+
+Water4
+Blue LightBlue
+00000
+10001
+01110
+00000
+10001
+
+Water5
+Blue LightBlue
+00000
+11000
+00111
+00000
+11000
+
+Water6
+Blue LightBlue
+00000
+01100
+10011
+00000
+01100
+
+FilledWater
+LightBrown LightBlue White
+11111
+10002
+10002
+10002
+22222
+
+Goal
+Black Green DarkGreen
+..12.
+.112.
+1112.
+...2.
+...2.
+
+
+
+StillCrate
+Orange
+
+
+
+=======
+LEGEND
+=======
+
+Wall = Wall_0000 or Wall_0001 or Wall_0010 or Wall_0011 or Wall_0100 or Wall_0101 or Wall_0110 or Wall_0111 or Wall_1000 or Wall_1001 or Wall_1010 or Wall_1011 or Wall_1100 or Wall_1101 or Wall_1110 or Wall_1111
+
+Water = Water1 or Water2 or Water3 or Water4 or Water5 or Water6
+
+. = Background
+# = Wall_1111
+P = PlayerStill
+* = Crate
+W = Water1
+G = Goal
+(@ = Crate and Target
+O = Target)
+
+Player = PlayerStill or PlayerL or PlayerR or PlayerU or PlayerD
+Obstacle = Wall or StillCrate or Water
+
+=======
+SOUNDS
+=======
+
+================
+COLLISIONLAYERS
+================
+
+Background
+FilledWater
+Goal
+(Target)
+Player, Wall, Crate, StillCrate, Water
+
+======
+RULES
+======
+
+(     0001
+
+1000         0010
+
+      0100
+)
+
+(make pretty walls)
+Right [Wall | Wall_1111 | Wall] -> [Wall | Wall_0101 | Wall]
+Right [Wall_1111 | Wall] -> [Wall_1101 | Wall]
+Right [Wall | Wall_1111] -> [Wall | Wall_0111]
+
+
+Down [Wall | Wall_1111 | Wall] -> [Wall | Wall_1010 | Wall]
+Down [Wall_1111 | Wall] -> [Wall_1011 | Wall]
+Down [Wall | Wall_1111] -> [Wall | Wall_1110]
+
+
+Down [Wall | Wall_0101 | Wall] -> [Wall | Wall_0000 | Wall]
+Down [Wall_0101 | Wall] -> [Wall_0001 | Wall]
+Down [Wall | Wall_0101] -> [Wall | Wall_0100]
+
+
+Down [Wall | Wall_1101 | Wall] -> [Wall | Wall_1000 | Wall]
+Down [Wall_1101 | Wall] -> [Wall_1001 | Wall]
+Down [Wall | Wall_1101] -> [Wall | Wall_1100]
+
+
+Down [Wall | Wall_0111 | Wall] -> [Wall | Wall_0010 | Wall]
+Down [Wall_0111 | Wall] -> [Wall_0011 | Wall]
+Down [Wall | Wall_0111] -> [Wall | Wall_0110]
+
+
+(animate water)
+[Water5]->[Water6]
+[Water4]->[Water5]
+[Water3]->[Water4]
+[Water2]->[Water3]
+[Water1]->[Water2]
+
+[Water6]->[Water1]
+
+
+(game logic)
+
+[ LEFT  PlayerStill ] -> [ PlayerL ]
+LEFT [ PlayerL | Crate ] -> [ PlayerL | LEFT Crate ] again
+LEFT [ > Crate | Crate ] -> [ > Crate | > Crate ] again
+LEFT [ > Crate | Water ] -> [ | FilledWater]
+LEFT [ > Crate | Obstacle ] -> [StillCrate | Obstacle]
+LEFT [ PlayerL | Obstacle ] -> [ PlayerStill | Obstacle ]
+[ PlayerL ] -> [ LEFT PlayerL ] again
+
+[ RIGHT  PlayerStill ] -> [ PlayerR ]
+RIGHT [ PlayerR | Crate ] -> [ PlayerR | RIGHT Crate ] again
+RIGHT [ > Crate | Crate ] -> [ > Crate | > Crate ] again
+RIGHT [ > Crate | Water ] -> [ | FilledWater]
+RIGHT[ > Crate | Obstacle ] -> [StillCrate | Obstacle]
+RIGHT [ PlayerR | Obstacle ] -> [ PlayerStill | Obstacle ]
+[ PlayerR ] -> [ RIGHT PlayerR ] again
+
+[ UP  PlayerStill ] -> [ PlayerU ]
+UP [ PlayerU | Crate ] -> [ PlayerU | UP Crate ] again
+UP [ > Crate | Crate ] -> [ > Crate | > Crate ] again
+UP [ > Crate | Water ] -> [ | FilledWater]
+UP [ > Crate | Obstacle ] -> [StillCrate | Obstacle]
+UP [ PlayerU | Obstacle ] -> [ PlayerStill | Obstacle ]
+[ PlayerU ] -> [ UP PlayerU ] again
+
+[ DOWN  PlayerStill ] -> [ PlayerD ]
+DOWN [ PlayerD | Crate ] -> [ PlayerD | DOWN Crate ] again
+DOWN [ > Crate | Crate ] -> [ > Crate | > Crate ] again
+DOWN [ > Crate | Water ] -> [ | FilledWater]
+DOWN [ > Crate | Obstacle ] -> [StillCrate | Obstacle]
+DOWN [ PlayerD | Obstacle ] -> [ PlayerStill | Obstacle ]
+[ PlayerD ] -> [ DOWN PlayerD ] again
+
+[StillCrate]->[Crate]
+
+
+==============
+WINCONDITIONS
+==============
+
+Some PlayerStill on Goal
+
+=======
+LEVELS
+=======
+
+
+
+message Level 1: Get to the Goal
+
+#######
+#g.#..#
+#.....#
+#.....#
+#.#.p.#
+###...#
+#######
+
+message Level 2: You must land ON the goal
+
+#########
+#########
+#...g...#
+#.......#
+#....#p.#
+#.......#
+#....#..#
+##....#.#
+#########
+
+message Level 3: Push Crates
+
+#########
+####.####
+#.......#
+#..#...g#
+##......#
+#...*.###
+#.....###
+###....p#
+..##....#
+...######
+
+
+message Level 4: Fill the Water Hole
+
+###########
+#.........#
+####......#
+#g..W..p..#
+####...#..#
+#..#***.#.#
+#..#......#
+#........##
+##...##..##
+###########
+
+message Level 5
+
+#############
+#......#....#
+#...........#
+#........p..#
+##....w.....#
+#..**wgw....#
+#.....w....##
+#.....*.....#
+#.....*.....#
+#...........#
+#....#......#
+#############
+
+message Level 6
+
+##############.
+#...###......#.
+#.#...#....####
+#.#...w..**...#
+#.....#.......#
+#####w#......##
+.##..........#.
+.##..........#.
+###.*........#.
+.###.g....p..#.
+.#.##........#.
+##..##.......#.
+.#############.
+
+message You are win congratulations
+
+
+title BROKEN Rigid Body example
+author Anonymous
+homepage www.puzzlescript.net
+
+verbose_logging
+
+(
+
+BROKEN Example Game FOR ILLUSTRATION PURPOSES ONLY. DO NOT USE.
+
+Example for
+https://www.puzzlescript.net/Documentation/rigidbodies.html#many_many
+
+)
+
+========
+OBJECTS
+========
+
+Background 
+white  
+
+Target 
+DarkBlue    
+
+Wall 
+DarkGrey
+
+Player
+Blue
+..0..
+..0.0
+00000
+.000.
+.0.0.
+
+Shadow
+Black
+..0..
+0.0..
+00000
+.000.
+.0.0.
+
+( three multi-cells blocks )
+Crate 
+orange
+
+Chest
+green
+
+Box
+red
+
+( 1-cell small block )
+Small
+darkred
+.....
+.000.
+.000.
+.000.
+.....
+
+( sticky, multicellular block when in contact )
+Glue
+pink
+.000.
+00000
+00000
+00000
+.000.
+
+( a flag to know what is allowed move )
+Wanna_Move
+#ff00ff
+.....
+.....
+..0..
+.....
+.....
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Player
+S = Shadow
+* = Crate
++ = Box
+% = Chest
+o = Small
+g = Glue
+
+( blocks that can be moved by the player )
+Movable = Crate or Box or Chest or Small or Glue
+
+( all things that can move and push blocks )
+Mover = Player or Shadow or Movable 
+
+( things that can stop a movement if they are stationary )
+Obstacle = Wall or Mover
+
+=======
+SOUNDS
+=======
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Target
+Obstacle
+Wanna_Move
+
+======
+RULES     
+======     
+
+[ > player ] [ stationary shadow ] -> [ > player ] [ < shadow ]
+
+( 1. Propagate movements forward )
+[ > Mover | stationary Movable ] -> [ > Mover | > Movable  ]
++ [ > Box    ] [ stationary Box   ] -> [ > Box    ] [ > Box    ]
++ [ > Crate  ] [ stationary Crate ] -> [ > Crate  ] [ > Crate  ]
++ [ > Chest  ] [ stationary Chest ] -> [ > Chest  ] [ > Chest  ]
++ [ moving Glue | stationary Glue ] -> [ moving Glue | moving Glue ]
+
+( 2. Propagate obstructions backwards )
+[ > Mover  | stationary Obstacle ] -> [ stationary Mover | Obstacle ]
+
+	(the next lines deal with directional conflicts)
++ [ ^ Crate | < Crate ] -> [ stationary Crate | stationary Crate ] 
++ [ ^ Crate | > Crate ] -> [ stationary Crate | stationary Crate ] 
++ [ ^ Crate | v Crate ] -> [ stationary Crate | stationary Crate ] 
+
++ [ v Crate | < Crate ] -> [ stationary Crate | stationary Crate ] 
++ [ v Crate | > Crate ] -> [ stationary Crate | stationary Crate ] 
++ [ v Crate | ^ Crate ] -> [ stationary Crate | stationary Crate ] 
+
++ [ < Crate | > Crate ] -> [ stationary Crate | stationary Crate ] 
++ [ < Crate | ^ Crate ] -> [ stationary Crate | stationary Crate ] 
++ [ < Crate | v Crate ] -> [ stationary Crate | stationary Crate ] 
+
++ [ > Crate | < Crate ] -> [ stationary Crate | stationary Crate ] 
++ [ > Crate | ^ Crate ] -> [ stationary Crate | stationary Crate ] 
++ [ > Crate | v Crate ] -> [ stationary Crate | stationary Crate ] 
+
+(also one space removed)
++ [ > Mover | |  < Mover ] -> [ stationary Mover | |  < Mover ] 
+
++ [ > Crate  ] [ stationary Crate ] -> [ stationary Crate ] [ Crate ]
++ [ > Box    ] [ stationary Box   ] -> [ stationary Box   ] [ Box   ]
++ [ > Chest  ] [ stationary Chest ] -> [ stationary Chest ] [ Chest ]
++ [ moving Glue | stationary Glue ] -> [ stationary Glue | Glue ]
+
+( 3. remove all movement, keep a flag )
+[ > Movable ] -> [ Movable wanna_move ]
+
+( 4. propagate movement only on wanna_move things )
+(    ie redo step 1 but with WANNA_MOVE added to the first line below )
+[ > Mover  | stationary Movable WANNA_MOVE ] -> [ > Mover | > Movable ]
++ [ > Box   ] [ stationary Box   ] -> [ > Box   ] [ > Box   ]
++ [ > Crate ] [ stationary Crate ] -> [ > Crate ] [ > Crate ]
++ [ > Chest ] [ stationary Chest ] -> [ > Chest ] [ > Chest ]
++ [ moving Glue | stationary Glue ] -> [ moving Glue | moving Glue ]
+
+( 5. cleanup, remove flag )
+[ wanna_move ] -> [ ]
+
+
+==============
+WINCONDITIONS
+==============
+
+=======     
+LEVELS
+=======
+
+#########
+#.......#
+#..p...p#
+#.......#
+#.......#
+#..***..#
+#.......#
+#s...S..#
+#.......#
+#########
+
+#########
+#.......#
+#.......#
+#.......#
+#...s...#
+#..+++..#
+#...p...#
+#.......#
+#.......#
+#########
+
+
+USER PROMPT:
+The following PuzzleScript game code:
+```plaintext
+title Advanced Box Pusher
+author YourName
+
+========
+OBJECTS
+========
+
+Background
+LightGrey
+.....
+.....
+.....
+.....
+.....
+
+Player
+Red
+.....
+..0..
+.000.
+..0..
+.....
+
+Wall
+DarkGrey
+.....
+00000
+00000
+00000
+.....
+
+Crate
+Brown Yellow
+.....
+.111.
+.111.
+.111.
+.....
+
+Target
+Green
+.....
+..0..
+..0..
+.....
+
+CrateOnTarget
+DarkOliveGreen Yellow
+.....
+.000.
+.010.
+.000.
+.....
+
+Portal
+LightBlue
+.....
+..0..
+..0..
+.....
+
+CrateImmune
+Purple Pink
+.....
+.222.
+.222.
+.222.
+.....
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Player
+C = Crate
+T = Target
+O = CrateOnTarget
+X = Portal
+I = CrateImmune
+
+===========
+SOUNDS
+===========
+
+sfx0 255
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Target
+Portal
+CrateOnTarget, Crate, CrateImmune
+Player, Wall
+
+======
+RULES
+======
+
+[ > Player | Crate ] -> [ > Player | > Crate ]
+[ Crate | Target ] -> [ CrateOnTarget | ]
+[ CrateOnTarget | no Target ] -> [ Crate | ]
+[ Player | Portal ] -> [ Player Portal | Portal Player ] 
+
+==============
+WINCONDITIONS
+==============
+
+All CrateOnTarget
+
+=======
+LEVELS
+=======
+
+#########
+#.......#
+#..C....#
+#..T....#
+#..P....#
+#..T.X..#
+#....X..#
+#.......#
+#########
+
+#####
+#...#
+#.I.#
+#.CP#
+#.T.#
+#...#
+#####
+
+```
+produced the following console output:
+=================================
+line 48 : Was looking for color for object CRATEONTARGET, got "darkolivegreen " instead.
+line 51 : Trying to access color number 1 from the color palette of sprite CRATEONTARGET, but there are only 1 defined in it.
+line 65 : Trying to access color number 2 from the color palette of sprite CRATEIMMUNE, but there are only 2 defined in it.
+line 66 : Trying to access color number 2 from the color palette of sprite CRATEIMMUNE, but there are only 2 defined in it.
+line 67 : Trying to access color number 2 from the color palette of sprite CRATEIMMUNE, but there are only 2 defined in it.
+line 40 : Sprite graphics must be 5 wide and 5 high exactly.
+line 55 : Sprite graphics must be 5 wide and 5 high exactly.
+Errors detected during compilation; the game may not work correctly.
+Return a repaired version of the code that addresses these errors. First, reason about your task and determine the best plan of action. Then, write your code.  Return your code in full, inside a ```plaintext code block.

@@ -1,0 +1,117 @@
+The error messages indicate there's an issue with the `CrateOnTarget` object definition, particularly concerning its color specification and usage. Specifically, the `CrateOnTarget` object color is mentioned as "Olive Brown", but only one color is recognized, which causes problems with how the colors are applied in the sprite matrix.
+
+Let's address these issues:
+
+1. **Color Specification**: Ensure that colors are specified correctly. PuzzleScript requires colors to be either predefined color names or hexadecimal/RGB values.
+2. **Sprite Definition**: Ensure the number of colors matches with the sprite definition.
+
+The `CrateOnTarget` object should have a clear color specification with the number of colors matching in the definition provided. Let's address this and any other parts that might potentially contain similar issues, and correct them accordingly.
+
+Here's the revised code:
+
+```plaintext
+title Box Pusher
+author YourName
+
+========
+OBJECTS
+========
+
+Background
+LightGrey
+
+Player
+Red
+.....
+..0..
+.000.
+..0..
+.....
+
+Wall
+DarkGrey
+.....
+00000
+00000
+00000
+.....
+
+Crate
+Brown Yellow
+.....
+.111.
+.111.
+.111.
+.....
+
+Target
+Green
+.....
+..0..
+.....
+
+CrateOnTarget
+Olive
+Brown
+.....
+.121.
+.121.
+.121.
+.....
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Player
+C = Crate
+T = Target
+O = CrateOnTarget
+
+===========
+SOUNDS
+===========
+
+SFX0 255 0
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Target
+CrateOnTarget, Crate
+Player, Wall
+
+======
+RULES
+======
+
+[ > Player | Crate ] -> [ > Player | > Crate ]
+[ Crate | Target ] -> [ CrateOnTarget | ]
+[ CrateOnTarget | no Target ] -> [ Crate | ]
+
+==============
+WINCONDITIONS
+==============
+
+All CrateOnTarget
+
+=======
+LEVELS
+=======
+
+#######
+#.....#
+#..T..#
+#..C..#
+#..P..#
+#..T..#
+#######
+```
+
+**Explanation**:
+- I've separated `Olive` and `Brown` in the `CrateOnTarget` object to match the style of color definition used elsewhere. Each line specifies one of the two colors used within the sprite.
+- This should allow the sprite to correctly use both colors in its artwork, addressing the color palette issue.

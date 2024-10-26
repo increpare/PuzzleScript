@@ -1,0 +1,1367 @@
+SYSTEM PROMPT:
+You are a game designer, familiar with the PuzzleScript game description language. Here are some example games, for inspiration (do not reproduce these games exactly):
+
+title cute train
+author Mark Wonnacott
+homepage http://twitter.com/ragzouken
+
+flickscreen 16x10
+color_palette pastel
+youtube pTgEXwzk7XU
+
+noundo
+norestart
+
+========
+OBJECTS
+========
+
+Background
+lightgreen green
+01000
+00110
+10010
+10100
+01001
+
+Water
+blue white lightblue
+20010
+02002
+12020
+00220
+02002
+
+Water2
+blue white lightblue
+02000
+20210
+00202
+01022
+20200
+
+Gerald
+blue black
+.000.
+01010
+10001
+01110
+.000.
+
+Mountain
+darkbrown darkbrown
+..0..
+.10..
+.000.
+0000.
+11001
+
+Forest
+darkgreen brown
+.000.
+00000
+00000
+00100
+.111.
+
+Beach
+yellow white
+00010
+01000
+00001
+00100
+10000
+
+Player
+yellow black
+.000.
+01010
+10001
+01110
+.000.
+
+GhostVTrack
+yellow
+GhostHTrack
+yellow
+GhostURTrack
+yellow
+GhostULTrack
+yellow
+GhostDLTrack
+yellow
+GhostDRTrack
+yellow
+
+VTrack
+grey darkbrown
+0...0
+0...0
+01110
+0...0
+0...0
+
+HTrack
+grey darkbrown
+00000
+..1..
+..1..
+..1..
+00000
+
+Structs
+black darkbrown
+11111
+10101
+11111
+10101
+11111
+
+URTrack
+grey darkbrown
+...00
+..0..
+.01..
+0..1.
+0...1
+
+ULTrack
+grey darkbrown
+00...
+..0..
+..10.
+.1..0
+1...0
+
+DLTrack
+grey darkbrown
+1...0
+.1..0
+..10.
+..0..
+00...
+
+DRTrack
+grey darkbrown
+0...1
+0..1.
+.01..
+..0..
+...00
+
+UTrain
+red black darkred
+.000.
+01110
+00000
+00100
+00000
+
+RTrain
+red black darkred
+0000.
+00010
+01010
+00010
+0000.
+
+LTrain
+red black darkred
+.0000
+01000
+01010
+01000
+.0000
+
+DTrain
+red black darkred
+00000
+00100
+00000
+01110
+.000.
+
+Cart
+red black darkred
+22222
+21112
+21112
+21112
+22222
+
+Smoke1
+white
+..0..
+.0.0.
+0.0.0
+.0.0.
+..0..
+
+Smoke2
+white
+.....
+.0.0.
+..0..
+.0.0.
+.....
+
+Smoke3
+white
+.....
+..0..
+.0.0.
+..0..
+.....
+
+Switch
+red black
+...0.
+..1..
+.1...
+.111.
+.....
+
+=======
+LEGEND
+=======
+
+. = Background
+^ = Mountain
+% = Forest
+~ = Water
+, = Beach
+
+| = VTrack
+- = HTrack
+r = URTrack
+¬ = ULTrack
+l = DRTrack
+j = DLTrack
+X = VTrack and Structs
+Z = HTrack and Structs
+Q = ULTrack and Structs
+
+P = Player
+
+T = VTrack and UTrain
+C = VTrack and Cart
+
+[ = HTrack and RTrain
+] = HTrack and Cart
+
+/ = Switch
+
+1 = GhostHTrack and URTrack
+! = HTrack and GhostURTrack
+2 = HTrack and GhostDRTrack
+3 = HTrack and GhostULTrack
+4 = GhostHTrack and DLTrack
+5 = GhostVTrack and URTrack
+6 = GhostVTrack and DRTrack
+7 = GhostVTrack and ULTrack
+8 = GhostVTrack and DLTrack
+
+_ = Beach and HTrack
+
+WaterR = Water or Water2
+
+Ghost = GhostHTrack or GhostVTrack or GhostULTrack or GhostURTrack or GhostDLTrack or GhostDRTrack
+Track = HTrack or VTrack or ULTrack or URTrack or DLTrack or DRTrack
+
+Train = UTrain or DTrain or LTrain or RTrain
+Vehicle = Train or Cart
+Mover = Vehicle or Player
+
+G = Gerald and Structs
+
+=======
+SOUNDS
+=======
+
+Train move 91301709
+SFX1 53409305
+SFX2 38557307
+SFX3 99431502
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Beach GhostVTrack GhostHTrack GhostURTrack GhostULTrack GhostDLTrack GhostDRTrack
+Structs
+VTrack HTrack URTrack ULTrack DLTrack DRTrack Switch
+Water Water2 Mountain Forest Player UTrain RTrain LTrain DTrain Cart Gerald
+Smoke1 Smoke2 Smoke3
+
+======
+RULES
+======
+
+(animate water)
+[        WaterR ] -> [ action WaterR ]
+[ action WaterR ] -> [ random WaterR ]
+
+[ action Player no Structs | Cart ] [ Train ] -> [ Player | Cart ] [ action Train ]
+
+(move the train if we're on the impassable structs)
+[ Structs Mover ] [ Train ] -> [ Structs Mover ] [ action Train ]
+
+[ action Train ] -> [ action Train Smoke1 ]
+
+[ action UTrain ] -> [    up UTrain ]
+[ action DTrain ] -> [  down DTrain ]
+[ action RTrain ] -> [ right RTrain ]
+[ action LTrain ] -> [  left LTrain ]
+
+late [ Mover Structs ] -> [ Mover Structs ] again (repeat if the train is still on structs)
+
+(cart follows train, player follows cart)
+[ Cart   | moving Train ] -> [ > Cart   | moving Train ]
+[ Player | moving Cart  ] -> [ > Player | moving Cart  ]
+
+[ > Player | Structs no Gerald no Cart ] -> [ Player | Structs ] message It's dangerous to walk along railway bridges!
+
+(endgame message)
+[ >      Player | Gerald ] -> [ Player | Gerald ] message you made it! thanks for playing.
+[ action Player | Gerald ] -> [ Player | Gerald ] message you made it! thanks for playing.
+
+(train turns when entering corners)
+up    [ > UTrain | URTrack ] -> [ > RTrain | URTrack ]
+up    [ > UTrain | ULTrack ] -> [ > LTrain | ULTrack ]
+
+right [ > RTrain | ULTrack ] -> [ > DTrain | ULTrack ]
+right [ > RTrain | DLTrack ] -> [ > UTrain | DLTrack ]
+
+down  [ > DTrain | DRTrack ] -> [ > RTrain | DRTrack ]
+down  [ > DTrain | DLTrack ] -> [ > LTrain | DLTrack ]
+
+left  [ > LTrain | URTrack ] -> [ > DTrain | URTrack ]
+left  [ > LTrain | DRTrack ] -> [ > UTrain | DRTrack ]
+
+(animate smoke)
+[ Smoke3 ] -> [ ]
+[ Smoke2 ] -> [ Smoke3 ]
+[ Smoke1 ] -> [ Smoke2 ]
+
+[ action Player Switch ] -> [ Player action Switch ]
+
+(switch all uncovered tracks at once)
+[ action Switch ] [ Ghost Vehicle ] -> [ action Switch ] [ Ghost Vehicle ] SFX3 (play blocking sound if switch tracks are covered while switching)
+[ action Switch ] [ Ghost no Vehicle ] -> [ action Switch ] [ action Ghost ] SFX2
+
+[ action GhostHTrack URTrack no Vehicle ] -> [ HTrack GhostURTrack ]
+[ HTrack action GhostURTrack no Vehicle ] -> [ GhostHTrack URTrack ]
+[ action GhostHTrack DRTrack no Vehicle ] -> [ HTrack GhostDRTrack ]
+[ HTrack action GhostDRTrack no Vehicle ] -> [ GhostHTrack DRTrack ]
+[ action GhostHTrack ULTrack no Vehicle ] -> [ HTrack GhostULTrack ]
+[ HTrack action GhostULTrack no Vehicle ] -> [ GhostHTrack ULTrack ]
+[ action GhostHTrack DLTrack no Vehicle ] -> [ HTrack GhostDLTrack ]
+[ HTrack action GhostDLTrack no Vehicle ] -> [ GhostHTrack DLTrack ]
+
+[ action GhostVTrack URTrack no Vehicle ] -> [ VTrack GhostURTrack ]
+[ VTrack action GhostURTrack no Vehicle ] -> [ GhostVTrack URTrack ]
+[ action GhostVTrack DRTrack no Vehicle ] -> [ VTrack GhostDRTrack ]
+[ VTrack action GhostDRTrack no Vehicle ] -> [ GhostVTrack DRTrack ]
+[ action GhostVTrack ULTrack no Vehicle ] -> [ VTrack GhostULTrack ]
+[ VTrack action GhostULTrack no Vehicle ] -> [ GhostVTrack ULTrack ]
+[ action GhostVTrack DLTrack no Vehicle ] -> [ VTrack GhostDLTrack ]
+[ VTrack action GhostDLTrack no Vehicle ] -> [ GhostVTrack DLTrack ]
+
+==============
+WINCONDITIONS
+==============
+
+=======
+LEVELS
+=======
+
+(feel free to try making more puzzles!
+
+editing tip: copy out a few rows of screens to edit in isolation
+
+* use bridges (structs) to force the train over junctions before there's a chance to switch them
+* use bridges to make switches unreachable until junctions have been crossed
+* use the train itself and narrow passages to make switches unreachable until junctions have been crossed)
+
+message welcome to the breezy isles!
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~,,,,~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~,,,,,,,~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~,,..,,,,,~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~,,,p.,,,,,~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~,,....,,,,,~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~,,,.....,,,,~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~,,,......,,,~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~,,.......,,,,,,~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~,,,........,,,,,,,~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~,,,..........,,,,,,,,~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~,,...............,,,,,,~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~,~~,...%.........%....,,,,~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~,,,,,~..%.................,,,,~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~,,,,,,,,..~~%%%%%.r-------¬.....,,,,~~~~~~~~~~~~~~~~~~~~
+,,,,,,,,,,,,,....%%~%%%%%%t.......l-¬.....,,,~~~~~~~~~~~~~~~~~~~
+,,,,,,..........%%%~~%%%%%c%%.......l-¬....,,~~~~~~~~~~~~~~~~~~~
+........%%%..%%%%%%%~%%%%%|%%%%%....|.l--¬..,,~~~~~~~~~~~~~~~~~~
+.%%%%.%%%%%%%%%%%%%%~%%%%%|%%%%%%%..|...%l¬.,,~~~~~~~~~~~~~~~~~~
+%%%%%%%%%%%%%%%%%%%%~%%%%%|%%%%%%%%.l¬..%%|.,,~~~~~~~~~~~~~~~~~~
+%%%%%%%%%%%%%%%%%%%%~%%%%%|%%%%%%%%..|.%%%|.,,~~~~~~~~~~~~~~~~~~
+%%%%r---------------z-¬%%%|%%%%%%....|%%%%|.,,~~~~~~~~~~~~~~~~~~
+%%.rj........%%%%%%%~%l¬%.|..........|%%%rj,,,~~~~~~~~~~~~~~~~~~
+%%rj.~~~~G~~~~%%%%%%~^%l--¬..........l---j.,,,~~~~~~~~~~~~~~~~~~
+%.|.~~~~~x~~~~~%%%%^~^....|.....^^^........,,~~~~~~~~~~~~~~~~~~~
+%.|.~~~~~~~~~~~%%^^^~^....l¬...^^^^^^......,,~~~~~~~~~~~~~~~~~~~
+%.|.~~~~~~~~~~%%%^^^~^^^..^l¬^^^^^^^^^^^^^.,^^~~~~~~~~~~~~~~~~~~
+%%l¬.~~~~~~~%%%^^^^^~^^^^^^^l¬^^^^^^^^^^^^^^^^~~~~~~~~~~~~~~~~~~
+%%.|..~~~~%%%%^^^^^~~^^^^^^^^x~^^^^^^^^^^^^^^^^~~~~~~~~~~~~~~~~~
+%%%|.%%%%%%%%^^^^^^~^^^^^^^^~x~^^^^^^^^^^^^^^^^~~~~~~~~~~~~~~~~~
+%%%x%%%%%%%%%^^^^^~~^^^^^^^^~x~^^^^^^^^^^^^^^^^^^^^^^~~~~~~~~~~~
+%%rj%%%%%%%%%^^^^^^~^^^^^^^~~x~%...%%^^%%^^^^^^^^^^^^^~~^~~~~~~~
+%%5z---¬%%%%%^^^^^^~^^^^^^^~^l¬..%r------¬%%^^^^^^^^^^^~~~~~~~~~
+%%|%%%%|%%%%^^^^^^^~~^^^^^~~^^l¬..|.%%%%%|%%%.^^^^^^^^^^^~~~~~~~
+%r4z---¬%%%%^^^^^^^^~~^^^^~^^^.l--l---3--j%%..^^^^^^^^^^^^~~~~~~
+%x./%r-¬%%%%^^^^^^^^^~~^^~~^^^........|%%%%%..^^^^^^^^^^^^^~~~~~
+%l--zj¬j%%%%^^^^^^^^^^~~~~^^^^%%..../.|.%%...^^^^^^^^^^^^^~~~~~~
+%%%%%%5z¬z¬%^^^^^^^^^^^^~~^^^^^%%%....|......^^^^^^^^^^^^^^~~~~~
+%%r--¬x%lzj%^^^^^^^^^^^^~^^^^^^%%%%..~x~~~~~~~^^^^^^^^^^^^^^~^~~
+%%|%%|x%%%%%%^^^^^^^^^^^~^^^^^^%%%%%~~x~~~~~~~~^^^^^^^^^^^^^~~~~
+%%|%%|x%%%%%%%%^^^^^^^^^~^^^^^^%%%%%~~x~~~~~~~~^^^^^^^^^^^^^~~~~
+%%r--47---¬¬---zzzzz1zzzzz¬^^^^^%%%..~x~~~~....%^^^^^^^^^^^~~~~~
+%%|%%%x%.%lj%%^^^^^^x^^^~^lz¬^^^^%%...|..%...%.%%%^^^^^^,,~~~~~~
+%%|%/.l¬.%%%^^^^^^^^x^^^~~^^lz¬^^%%...|.....%...........,,~~~^^~
+%%|%%%lj%%%^^^^^^^^^x^^^^~^~^^x^^^%%.rl-----------r-----__zzz¬^~
+%%l¬%%%%%^^^^^^^^^^^x^^^^~~^^^x^^^%%.|........%...|.....,,~~^x^~
+%%lj%%%%%^^^^^^^^^^r-¬^^^~~~~^x^^^^^%|...%^^^.....l¬../.,,~~~x~~
+%%%%%%%%^^^^^^^^^^^|l¬%^^~~~~~x~^^^^^|.^^^^^^^^^^..|....^^^~~x~~
+%%%%%%%^^^^^^^^^^%rj%|%^^^~~^^x^^^^^rj%%^^^^^^^%%.%l¬.^^^^^^~x~~
+%%%%%%^^^^^^^^^^^%|%%|%^^~^^~^x^^^%.|...%%..%.......|....,,~~x~~
+%%%%^^^^^^^^^^^^^%|/.|%^~^^^^^x^^^%.|.%.............|...,,,~^x^~
+%%^^^^^^^^^^^^^^^%l--8^^^^^^^rj%^^..|..r----!-------2--1___zzj^~
+^^^^^^^^^^^^^^^^^%|%^x^^^^^^^x^^^^%.|.%|%%..|....%..|%.|,,,~~^~~
+^^^^^^^^^^^^^^^^^^|.rlzz--3z-4¬^^^%.|.%l¬...|.......|..l¬,,~~~~~
+^^^^^^^^^^^^^^^^^^x^|^^^..|^..|%^^..l¬%%l-----------j...|,,,~~~~
+^^^^^^^^^^^^^^^^^^l-|---¬/|^.%|%^^%..|.%.%%.l¬%....%....|,,,,~~~
+^^^^^^^^^^^^^^^^^^^%|.%%l-j---j%^^^%.l¬.....%l¬.%.....%.|,,,,~~~
+^^^^^^^^^^^^^^^^^^^%|%%%%%%%%%%^^^^%%.|.%%%...l--¬......l¬,,,~~~
+^^^^^^^^^^^^^^^^^^^^x^^^^%%%^^^^^^^%%.|..%..%...%l-¬%....|,,,~~~
+^^^^^^^^^^^^^^^^^^^^x^^^^^^^^^^^^^^%%%|%%%%..%%....l¬....|,,,,~~
+^^^^^^^^^^^^^^^^^^^^x^^^^^^^^^^^^^^^%%|%^^%%......%.l¬...|.,,,~~
+^^^^^^^^^^^^^^^^^^^^x^%%%%%^^^^^^^^^^^|%%^^^^^^.%%...|...|^^^,~~
+^^^^^^^^^^^^^^^^^^^%|%%....%%^^^^^^^^%|%%%^^^^^^^^^%.|.^^|^^,,~~
+^^^^^^^^^^^^^^^^^^^%|%..%^..%%^^^^^%%rj%%^^^^^^^%....|...|^,,,~~
+^^^^^^^^^^^^^^^^^^^%|./.^%%..%%^^^%%.|.%..%......../.6---¬^,,,~~
+^^^^^^^^^^^^^^^^^^^%|..%^%....%^^^%..|%..%...%......rj...|.,,,~~
+^^^^^^^^^^^^^^^^^^^%l--!z1--¬--zzz----------------!-j..%.|,,,,~~
+^^^^^^^^^^^^^^^^^^^^%%%|^|..|.%^^^%..|.%.%..%..%..|...%..|,,,,~~
+^^^^^^^^^^^^^^^^^^^^^^^x^|%%|%^^^^%%.|%%%.........|......|,,,,~~
+^^^^^^^^^^^^^^^^^^^^^^^x^x^^x^^^^^^%%|%^^^^^^.....|...^^rj^,,~~~
+^^^^^^^^^^^^^^^^^^^^^^^x^x^^x^^^^^^^^|%.^^^^^^^^%.|.^^^^|^^^^~~~
+^^^^^^^^^^^^^^^^^^^^^^^x^x^^x^^^^^^^%|^^^^^^^^.%..|.....|,,^^~~~
+^^^^^^^^^^^^^^^^^^^^^^^x^x^^l¬^^^^^%%|%%^^^.%.....|...%.|,,,~~~~
+^^^^^^^^^^^^^^^^^^^^^^^x^lzzjx^^^^%%.|..%%........|.%...|,,,~~~~
+^^^^^^^^^^^^^^^^^^^^^^^l¬^^^^x^^^^%%.l¬%......%..rj..%..|,,,~~~~
+^^^^^^^^^^^^^^^^^^^^^^^^x^^^^x^^^^%%%.l¬.%......rj.....rj,,,~~~~
+^^^^^^^^^^^^^^^^^^^^^^^^x^^^^x^^^^^%%%%l--------j------j,,,,~~~~
+^^^^^^^^^^^^^^^^^^^^^^^^lzzzzj^^^^^^^%%%%%.%%%%...%%%%^^^,,,~~~~
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^%%%%%^^^^^^^^^^^^^^^^^~~
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^~~
+
+
+
+title Match 3 Block Push
+author increpare
+homepage www.puzzlescript.net
+
+========
+OBJECTS
+========
+
+Background
+lightgreen green
+11111
+01111
+11101
+11111
+10111
+
+
+Target
+darkblue
+.....
+.000.
+.0.0.
+.000.
+.....
+
+Wall
+brown darkbrown
+00010
+11111
+01000
+11111
+00010
+
+Player
+black orange white blue
+.000.
+.111.
+22222
+.333.
+.3.3.
+
+Crate
+orange yellow
+00000
+0...0
+0...0
+0...0
+00000
+
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Player
+* = Crate
+@ = Crate and Target
+O = Target
+
+
+=======
+SOUNDS
+=======
+
+Crate MOVE 36772507
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Target
+Player, Wall, Crate
+
+======
+RULES
+======
+
+[ >  Player | Crate ] -> [  >  Player | > Crate  ]
+
+late [ Crate | Crate | Crate ] -> [ | | ]
+
+==============
+WINCONDITIONS
+==============
+
+all Crate on Target
+
+=======
+LEVELS
+=======
+
+#########
+#.......#
+#.*.*.@.#
+#.P...O.#
+#...*.*.#
+#.......#
+#########
+
+.#######.
+.#.....#.
+.#O##..##
+##.##.*.#
+#.*..**.#
+#.OOO.#.#
+#.P.....#
+#########
+
+
+title horizontal Block Pushing Game
+author increpare
+homepage www.puzzlescript.net
+
+========
+OBJECTS
+========
+
+Background
+lightgreen green
+11111
+01111
+11101
+11111
+10111
+
+Target
+darkblue
+.....
+.000.
+.0.0.
+.000.
+.....
+
+Wall
+brown darkbrown
+00010
+11111
+01000
+11111
+00010
+
+Player
+black orange white blue
+.000.
+.111.
+22222
+.333.
+.3.3.
+
+Crate
+blue white
+00000
+00000
+01110
+00000
+00000
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Player
+* = Crate
+@ = Crate and Target
+O = Target
+
+=======
+SOUNDS
+=======
+
+Crate MOVE 36772507
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Target
+Player, Wall, Crate
+
+======
+RULES
+======
+
+horizontal [ > Player | Crate ] -> [ > Player | > Crate ] 
+
+==============
+WINCONDITIONS
+==============
+
+all Target on Crate
+
+=======
+LEVELS
+=======
+
+#########
+#.......#
+#.....@.#
+#.P.*.O.#
+#.......#
+#.......#
+#########
+
+.#######.
+.#.....#.
+.#O##..##
+##.##.*.#
+#.*..**.#
+#.OOO.#.#
+#.P.....#
+#########
+
+
+(
+level ideas
+push battery horizontally
+have to assemble and then disassemble a circuit, in order to complete it
+add a piece to a circut, then break the circuit from another point
+level that starts with a closed circuit
+level with very dangerous + block
+)
+title Robot Arm
+author increpare
+homepage www.increpare.com
+
+run_rules_on_level_start
+color_palette c64
+
+run_rules_on_level_start
+
+norepeat_action
+
+========
+OBJECTS
+========
+
+Background .
+darkblue
+
+Player P
+Black orange grey Blue
+.111.
+.111.
+22222
+13331
+.3.3.
+
+R0_Up 0
+grey lightgrey
+.111.
+10001
+10001
+10001
+.111.
+
+R0_Down
+grey lightgrey
+.111.
+10001
+10001
+10001
+.111.
+
+R0_Left
+grey lightgrey
+.111.
+10001
+10001
+10001
+.111.
+
+R0_Right
+grey lightgrey
+.111.
+10001
+10001
+10001
+.111.
+
+
+R1_Up 1
+grey lightgrey
+.111.
+10001
+10001
+10001
+.111.
+
+R1_Down
+grey lightgrey
+.111.
+10001
+10001
+10001
+.111.
+
+R1_Left
+grey lightgrey
+.111.
+10001
+10001
+10001
+.111.
+
+R1_Right
+grey lightgrey
+.111.
+10001
+10001
+10001
+.111.
+
+
+R2_Up 2
+grey lightgrey
+.111.
+10001
+10001
+10001
+.111.
+
+R2_Down
+grey lightgrey
+.111.
+10001
+10001
+10001
+.111.
+
+R2_Left
+grey lightgrey
+.111.
+10001
+10001
+10001
+.111.
+
+R2_Right
+grey lightgrey
+.111.
+10001
+10001
+10001
+.111.
+
+R3 3
+grey lightgrey
+.....
+..0..
+.010.
+..0..
+.....
+
+Connector_Up
+grey lightgrey
+.101.
+.111.
+.....
+.....
+.....
+
+Connector_Down
+grey lightgrey
+.....
+.....
+.....
+.111.
+.101.
+
+Connector_Left
+grey lightgrey
+.....
+11...
+01...
+11...
+.....
+
+Connector_Right
+grey lightgrey
+.....
+...11
+...10
+...11
+.....
+
+Moved
+transparent
+
+Parent
+transparent
+
+GrandParent
+transparent
+
+NewRot
+transparent
+
+NewRot2
+transparent
+
+force
+transparent
+
+explosion
+red yellow
+.101.
+10101
+01010
+10101
+.101.
+
+explosionb
+red yellow
+.101.
+10101
+01010
+10101
+.101.
+
+explosion2
+yellow red
+.101.
+10101
+01010
+10101
+.101.
+
+Wall #
+darkgrey grey lightgrey
+00000
+01110
+01010
+01110
+00000
+
+water ,
+blue lightblue
+00000
+00010
+00000
+00000
+01000
+
+Fruit F
+Red Green LightRed
+..1..
+.000.
+00020
+00000
+.000.
+
+
+FruitPicked G
+Red Green LightRed grey grey
+..4..
+.030.
+43334
+00300
+.040.
+
+DeadFruit
+black black black black black
+..4..
+.030.
+43334
+00300
+.040.
+
+EndPoint E
+darkgreen Yellow black green
+30003
+02220
+02220
+02220
+30003
+
+
+=======
+LEGEND
+=======
+R0 = R0_up or R0_down or R0_left or R0_right
+R1 = R1_up or R1_down or R1_left or R1_right
+R2 = R2_up or R2_down or R2_left or R2_right
+RobotPiece = R0 or R1 or R2 or R3
+* = RobotPiece or Player
+connector = connector_up or connector_down or connector_left or connector_right
+
+=======
+SOUNDS
+=======
+
+sfx0 43004308 (explosion)
+sfx1 69392707
+sfx2 57370907 (push machine)
+sfx3 62083508 (rotate machine)
+sfx4 90419908 (grab)
+sfx5 50782902 (drop in hole)
+sfx6 76878101 (empty grab)
+sfx7 13941101 (dead fruit)
+sfx8 42541302 (release)
+Player move 88476108
+startgame 30513908
+endlevel 5524308
+endgame 5524308
+showmessage 41852908
+closemessage 41852908
+
+================
+COLLISIONLAYERS
+================
+Background
+water
+EndPoint
+Player
+Moved
+Fruit
+FRUITPICKED
+deadfruit
+R0_up, R0_down, R0_left, R0_right
+R1_up, R1_down, R1_left, R1_right
+R2_up, R2_down, R2_left, R2_right
+connector_up
+connector_down
+connector_left
+connector_right
+R3
+parent
+GrandParent
+newrot
+newrot2
+force
+wall
+explosion, explosion2, explosionb
+
+======
+RULES
+======
+
+[ connector ] -> [ ]
+
+[ > player | fruit ] -> cancel
+
+[ > player | water ] -> cancel
+
+[ > player | ] -> [ > player | > force ]
+
+[ > player | robotpiece | wall ] -> cancel
+
+(place movement arrows)
+up [ R0_Up | ] -> [ up R0_Up | up Parent ]
+up [ R1_Up | ] -> [ up R1_Up | up Parent ]
+up [ R2_Up | ] -> [ up R2_Up | up Parent ]
+
+down [ R0_down | ] -> [ down R0_down | down Parent ]
+down [ R1_down | ] -> [ down R1_down | down Parent ]
+down [ R2_down | ] -> [ down R2_down | down Parent ]
+
+left [ R0_left | ] -> [ left R0_left | left Parent ]
+left [ R1_left | ] -> [ left R1_left | left Parent ]
+left [ R2_left | ] -> [ left R2_left | left Parent ]
+
+right [ R0_right | ] -> [ right R0_right | right Parent ]
+right [ R1_right | ] -> [ right R1_right | right Parent ]
+right [ R2_right | ] -> [ right R2_right | right Parent ]
+
+
+( force propagation like this isn't very nice )
+( [ > force < parent | ] -> [ < parent | > force ] )
+
+[ R3 > force < parent ] [ > R0 ] [ v R1 ] [ R2 ] -> [ R3 < parent ] [ > R0 ] [ v R1 ] [ r2 > force ]
+[ R3 > force < parent ] [ > R0 ] [ ^ R1 ] [ R2 ] -> [ R3 < parent ] [ > R0 ] [ ^ R1 ] [ r2 > force ]
+
+[ > force < parent no R0] [R0]-> [ < parent ] [ > force R0 ]
+[ > force R3 perpendicular parent ] [ R2 < parent ] [ R0 ] -> [ R3 perpendicular parent ] [ R2 < parent ] [ > force R0 ]
+
+[ > force R2 perpendicular parent ] [ R1 < parent ] [ R0 ] -> [ R2 perpendicular parent ] [ R1 < parent ] [ > force R0 ]
+
+
+[ > force moving R0 | ] -> [ | moving R0] sfx2
+
+[ > force moving R1 perpendicular parent ] [ R0 ] -> [ moving R1 perpendicular parent ] [ > R0 ] sfx3
+[ > force moving R2 perpendicular parent ] [ R1 ] -> [ moving R2 perpendicular parent ] [ > R1 ] sfx3
+[ > force 		R3 perpendicular parent ] [ R2 ] -> [ R3 perpendicular parent ] [ > R2 ] sfx3
+
+
+(rebuild arm)
+
+(add new parents)
+
+[ > R1 ] [ R2 ] -> [ > R1 ] [ R2 > NewRot ]
+[ > R0 ] [ R1 ] [ R2 ] -> [ > R0 ] [ R1 > NewRot ] [ R2 > NewRot2 ]
+
+[ > Parent R1 ] [ R2 ] -> [ > Parent R1 ] [ > GrandParent R2 ]
+
+[ ^ Parent > NewRot > RobotPiece ] -> [ V RobotPiece ]
+[ ^ Parent > NewRot v RobotPiece ] -> [ < RobotPiece ]
+[ ^ Parent > NewRot < RobotPiece ] -> [ ^ RobotPiece ]
+[ ^ Parent > NewRot ^ RobotPiece ] -> [ > RobotPiece ]
+
+[ ^ Parent < NewRot > RobotPiece ] -> [ ^ RobotPiece ]
+[ ^ Parent < NewRot v RobotPiece ] -> [ > RobotPiece ]
+[ ^ Parent < NewRot < RobotPiece ] -> [ V RobotPiece ]
+[ ^ Parent < NewRot ^ RobotPiece ] -> [ < RobotPiece ]
+
+
+[ ^ GrandParent > NewRot2 > R2 ] -> [ V R2 ]
+[ ^ GrandParent > NewRot2 v R2 ] -> [ < R2 ]
+[ ^ GrandParent > NewRot2 < R2 ] -> [ ^ R2 ]
+[ ^ GrandParent > NewRot2 ^ R2 ] -> [ > R2 ]
+
+[ ^ GrandParent < NewRot2 > R2 ] -> [ ^ R2 ]
+[ ^ GrandParent < NewRot2 v R2 ] -> [ > R2 ]
+[ ^ GrandParent < NewRot2 < R2 ] -> [ V R2 ]
+[ ^ GrandParent < NewRot2 ^ R2 ] -> [ < R2 ]
+
+[ NewRot ] -> [ ]
+[ NewRot2 ] -> [ ]
+[ Parent ] -> [ ]
+[ GrandParent ] -> [ ]
+
+
+(change sprites)
+[ up R0 ] -> [ up R0_Up ]
+[ up R1 ] -> [ up R1_Up ]
+[ up R2 ] -> [ up R2_Up ]
+
+[ down R0 ] -> [ down R0_down ]
+[ down R1 ] -> [ down R1_down ]
+[ down R2 ] -> [ down R2_down ]
+
+[ left R0 ] -> [ left R0_left ]
+[ left R1 ] -> [ left R1_left ]
+[ left R2 ] -> [ left R2_left ]
+
+[ right R0 ] -> [ right R0_Right ]
+[ right R1 ] -> [ right R1_Right ]
+[ right R2 ] -> [ right R2_Right ]
+
+(work from the base up when placing)
+up [ up R0 | no R1 ] [ moving R1 ] -> [ up R0 | moving R1 ] [ ]
+down [ down R0 | no R1 ] [ moving R1 ] -> [ down R0 | moving R1 ] [ ]
+left [ left R0 | no R1 ] [ moving R1 ] -> [ left R0 | moving R1 ] [ ]
+right [ right R0 | no R1 ] [ moving R1 ] -> [ right R0 | moving R1 ] [ ]
+
+up [ up R1 | no R2 ] [ moving R2 ] -> [ up R1 | moving R2 ] [ ]
+down [ down R1 | no R2 ] [ moving R2 ] -> [ down R1 | moving R2 ] [ ]
+left [ left R1 | no R2 ] [ moving R2 ] -> [ left R1 | moving R2 ] [ ]
+right [ right R1 | no R2 ] [ moving R2 ] -> [ right R1 | moving R2 ] [ ]
+
+
+up [ up R2 | no R3 ] [ R3 ] -> [ up R2 | R3 ] [ ]
+down [ down R2 | no R3 ] [ R3 ] -> [ down R2 | R3 ] [ ]
+left [ left R2 | no R3 ] [ R3 ] -> [ left R2 | R3 ] [ ]
+right [ right R2 | no R3 ] [ R3 ] -> [ right R2 | R3 ] [ ]
+
+
+
+
+up [ up R2 | no R3 ] [ R3 ] -> [ R2_up | R3 ] [ ]
+down [ down R2 | no R3 ] [ R3 ] -> [ R2_down | R3 ] [ ]
+left [ left R2 | no R3 ] [ R3 ] -> [ R2_left | R3 ] [ ]
+right [ right R2 | no R3 ] [ R3 ] -> [ R2_right | R3 ] [ ]
+
+
+[ > RobotPiece no moved ] -> [ RobotPiece ]
+
+
+up [ R0_Up | ] -> [ R0_Up connector_up | connector_down ]
+up [ R1_Up | ] -> [ R1_Up connector_up | connector_down ]
+up [ R2_Up | ] -> [ R2_Up connector_up | connector_down ]
+
+down [ R0_down | ] -> [ R0_down connector_down | connector_up ]
+down [ R1_down | ] -> [ R1_down connector_down | connector_up ]
+down [ R2_down | ] -> [ R2_down connector_down | connector_up ]
+
+left [ R0_left | ] -> [ R0_left connector_left | connector_right ]
+left [ R1_left | ] -> [ R1_left connector_left | connector_right ]
+left [ R2_left | ] -> [ R2_left connector_left | connector_right ]
+
+right [ R0_right | ] -> [ R0_right connector_right | connector_left ]
+right [ R1_right | ] -> [ R1_right connector_right | connector_left ]
+right [ R2_right | ] -> [ R2_right connector_right | connector_left ]
+
+[RobotPiece Wall no explosion no explosion2 ] -> [ RobotPiece Wall explosion ] sfx0
+
+[ R0 R2 no explosion no explosion2] -> [ R0 R2 explosion ] sfx0
+[ R0 R3 no explosion no explosion2 ] -> [ R0 r3 explosion ] sfx0
+[ R1 R3 no explosion no explosion2 ] -> [ R1 R3 explosion ] sfx0
+
+[ explosion2 ] -> [ explosionb ] again
+[ explosion ] -> [ explosion2] again
+[ explosionb ] -> [explosion] again
+
+[ > player  | wall ] -> cancel
+
+[FruitPicked ] [ R3 no FruitPicked ] -> [ ] [ R3 FruitPicked ]
+
+[ action player ] [ R3 Fruit no fruitpicked ] -> [ player ] [ R3 Fruitpicked] sfx4
+[ action player ] [ R3 fruitpicked no fruit ] -> [ player ] [ r3 fruit ] sfx8
+
+[action player ] [ r3 no fruit no fruitpicked ] -> sfx6
+
+
+[ fruit endpoint ] -> [endpoint] sfx5
+[ fruit water ] -> [ deadfruit water ] sfx7
+late [R0 water ] -> cancel
+[R0 fruit ] -> cancel
+
+==============
+WINCONDITIONS
+==============
+
+no fruit
+no fruitpicked
+no deadfruit
+
+=======
+LEVELS
+=======
+
+message press x to grip and ungrip the mechanical arm
+message put fruit in hole
+
+message Level 1 of 3
+
+###################
+###################
+###################
+###..,........,.###
+###..,...3....,.###
+###..,...2....,.###
+###.F,.E.1.,,,F,###
+###..,...0....,.###
+###..,..P.....,.###
+###..,........,.###
+###################
+###################
+###################
+
+message Level 2 of 3
+
+##############
+##############
+##############
+###..3.....###
+###..2.....###
+###..1.,,,,###
+###.E0.,...###
+###....,FF.###
+###.P..,...###
+##############
+##############
+##############
+
+message Level 3 of 3
+
+###################
+###################
+###################
+########........###
+###..3.#...##.f.###
+###..2..........###
+###..1...#....#.###
+###.e0..........###
+###..p..#...#.f.###
+#########.......###
+###################
+###################
+###################
+
+message congratulations
+
+
+USER PROMPT:
+The following PuzzleScript game code:
+```plaintext
+title Box Pusher
+author YourName
+
+========
+OBJECTS
+========
+
+Background
+LightGrey
+
+Player
+Red
+.....
+..0..
+.000.
+..0..
+.....
+
+Wall
+DarkGrey
+.....
+00000
+00000
+00000
+.....
+
+Crate
+Brown Yellow
+.....
+.111.
+.111.
+.111.
+.....
+
+Target
+Green DarkGreen
+.....
+..2..
+..2..
+.....
+
+CrateOnTarget
+Olive Brown Green
+.....
+.121.
+.121.
+.121.
+.....
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Player
+C = Crate
+T = Target
+O = CrateOnTarget
+
+===========
+SOUNDS
+===========
+
+SFX0 255 0
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Target
+CrateOnTarget, Crate
+Player, Wall
+
+======
+RULES
+======
+
+[ > Player | Crate ] -> [ > Player | > Crate ]
+[ Crate | Target ] -> [ CrateOnTarget | ]
+[ CrateOnTarget | no Target ] -> [ Crate | ]
+
+==============
+WINCONDITIONS
+==============
+
+All CrateOnTarget
+
+=======
+LEVELS
+=======
+
+#######
+#.....#
+#..T..#
+#..C..#
+#..P..#
+#..T..#
+#######
+
+
+```
+produced the following console output:
+=================================
+line 38 : Trying to access color number 2 from the color palette of sprite TARGET, but there are only 2 defined in it.
+line 39 : Trying to access color number 2 from the color palette of sprite TARGET, but there are only 2 defined in it.
+line 43 : Was looking for color for object CRATEONTARGET, got "olive " instead.
+line 45 : Trying to access color number 2 from the color palette of sprite CRATEONTARGET, but there are only 2 defined in it.
+line 46 : Trying to access color number 2 from the color palette of sprite CRATEONTARGET, but there are only 2 defined in it.
+line 47 : Trying to access color number 2 from the color palette of sprite CRATEONTARGET, but there are only 2 defined in it.
+too many errors, aborting compilation
+Errors detected during compilation; the game may not work correctly.
+Return a repaired version of the code that addresses these errors. First, reason about your task and determine the best plan of action. Then, write your code.  Return your code in full, inside a ```plaintext code block.

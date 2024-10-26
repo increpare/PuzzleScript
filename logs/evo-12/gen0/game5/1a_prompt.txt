@@ -1,0 +1,1403 @@
+SYSTEM PROMPT:
+You are a game designer, familiar with the PuzzleScript game description language. Here are some example games, for inspiration (do not reproduce these games exactly):
+
+title Match 3 Block Push
+author increpare
+homepage www.puzzlescript.net
+
+========
+OBJECTS
+========
+
+Background
+lightgreen green
+11111
+01111
+11101
+11111
+10111
+
+
+Target
+darkblue
+.....
+.000.
+.0.0.
+.000.
+.....
+
+Wall
+brown darkbrown
+00010
+11111
+01000
+11111
+00010
+
+Player
+black orange white blue
+.000.
+.111.
+22222
+.333.
+.3.3.
+
+Crate
+orange yellow
+00000
+0...0
+0...0
+0...0
+00000
+
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Player
+* = Crate
+@ = Crate and Target
+O = Target
+
+
+=======
+SOUNDS
+=======
+
+Crate MOVE 36772507
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Target
+Player, Wall, Crate
+
+======
+RULES
+======
+
+[ >  Player | Crate ] -> [  >  Player | > Crate  ]
+
+late [ Crate | Crate | Crate ] -> [ | | ]
+
+==============
+WINCONDITIONS
+==============
+
+all Crate on Target
+
+=======
+LEVELS
+=======
+
+#########
+#.......#
+#.*.*.@.#
+#.P...O.#
+#...*.*.#
+#.......#
+#########
+
+.#######.
+.#.....#.
+.#O##..##
+##.##.*.#
+#.*..**.#
+#.OOO.#.#
+#.P.....#
+#########
+
+
+(
+level ideas
+push battery horizontally
+have to assemble and then disassemble a circuit, in order to complete it
+add a piece to a circut, then break the circuit from another point
+level that starts with a closed circuit
+level with very dangerous + block
+)
+title Robot Arm
+author increpare
+homepage www.increpare.com
+
+run_rules_on_level_start
+color_palette c64
+
+run_rules_on_level_start
+
+norepeat_action
+
+========
+OBJECTS
+========
+
+Background .
+darkblue
+
+Player P
+Black orange grey Blue
+.111.
+.111.
+22222
+13331
+.3.3.
+
+R0_Up 0
+grey lightgrey
+.111.
+10001
+10001
+10001
+.111.
+
+R0_Down
+grey lightgrey
+.111.
+10001
+10001
+10001
+.111.
+
+R0_Left
+grey lightgrey
+.111.
+10001
+10001
+10001
+.111.
+
+R0_Right
+grey lightgrey
+.111.
+10001
+10001
+10001
+.111.
+
+
+R1_Up 1
+grey lightgrey
+.111.
+10001
+10001
+10001
+.111.
+
+R1_Down
+grey lightgrey
+.111.
+10001
+10001
+10001
+.111.
+
+R1_Left
+grey lightgrey
+.111.
+10001
+10001
+10001
+.111.
+
+R1_Right
+grey lightgrey
+.111.
+10001
+10001
+10001
+.111.
+
+
+R2_Up 2
+grey lightgrey
+.111.
+10001
+10001
+10001
+.111.
+
+R2_Down
+grey lightgrey
+.111.
+10001
+10001
+10001
+.111.
+
+R2_Left
+grey lightgrey
+.111.
+10001
+10001
+10001
+.111.
+
+R2_Right
+grey lightgrey
+.111.
+10001
+10001
+10001
+.111.
+
+R3 3
+grey lightgrey
+.....
+..0..
+.010.
+..0..
+.....
+
+Connector_Up
+grey lightgrey
+.101.
+.111.
+.....
+.....
+.....
+
+Connector_Down
+grey lightgrey
+.....
+.....
+.....
+.111.
+.101.
+
+Connector_Left
+grey lightgrey
+.....
+11...
+01...
+11...
+.....
+
+Connector_Right
+grey lightgrey
+.....
+...11
+...10
+...11
+.....
+
+Moved
+transparent
+
+Parent
+transparent
+
+GrandParent
+transparent
+
+NewRot
+transparent
+
+NewRot2
+transparent
+
+force
+transparent
+
+explosion
+red yellow
+.101.
+10101
+01010
+10101
+.101.
+
+explosionb
+red yellow
+.101.
+10101
+01010
+10101
+.101.
+
+explosion2
+yellow red
+.101.
+10101
+01010
+10101
+.101.
+
+Wall #
+darkgrey grey lightgrey
+00000
+01110
+01010
+01110
+00000
+
+water ,
+blue lightblue
+00000
+00010
+00000
+00000
+01000
+
+Fruit F
+Red Green LightRed
+..1..
+.000.
+00020
+00000
+.000.
+
+
+FruitPicked G
+Red Green LightRed grey grey
+..4..
+.030.
+43334
+00300
+.040.
+
+DeadFruit
+black black black black black
+..4..
+.030.
+43334
+00300
+.040.
+
+EndPoint E
+darkgreen Yellow black green
+30003
+02220
+02220
+02220
+30003
+
+
+=======
+LEGEND
+=======
+R0 = R0_up or R0_down or R0_left or R0_right
+R1 = R1_up or R1_down or R1_left or R1_right
+R2 = R2_up or R2_down or R2_left or R2_right
+RobotPiece = R0 or R1 or R2 or R3
+* = RobotPiece or Player
+connector = connector_up or connector_down or connector_left or connector_right
+
+=======
+SOUNDS
+=======
+
+sfx0 43004308 (explosion)
+sfx1 69392707
+sfx2 57370907 (push machine)
+sfx3 62083508 (rotate machine)
+sfx4 90419908 (grab)
+sfx5 50782902 (drop in hole)
+sfx6 76878101 (empty grab)
+sfx7 13941101 (dead fruit)
+sfx8 42541302 (release)
+Player move 88476108
+startgame 30513908
+endlevel 5524308
+endgame 5524308
+showmessage 41852908
+closemessage 41852908
+
+================
+COLLISIONLAYERS
+================
+Background
+water
+EndPoint
+Player
+Moved
+Fruit
+FRUITPICKED
+deadfruit
+R0_up, R0_down, R0_left, R0_right
+R1_up, R1_down, R1_left, R1_right
+R2_up, R2_down, R2_left, R2_right
+connector_up
+connector_down
+connector_left
+connector_right
+R3
+parent
+GrandParent
+newrot
+newrot2
+force
+wall
+explosion, explosion2, explosionb
+
+======
+RULES
+======
+
+[ connector ] -> [ ]
+
+[ > player | fruit ] -> cancel
+
+[ > player | water ] -> cancel
+
+[ > player | ] -> [ > player | > force ]
+
+[ > player | robotpiece | wall ] -> cancel
+
+(place movement arrows)
+up [ R0_Up | ] -> [ up R0_Up | up Parent ]
+up [ R1_Up | ] -> [ up R1_Up | up Parent ]
+up [ R2_Up | ] -> [ up R2_Up | up Parent ]
+
+down [ R0_down | ] -> [ down R0_down | down Parent ]
+down [ R1_down | ] -> [ down R1_down | down Parent ]
+down [ R2_down | ] -> [ down R2_down | down Parent ]
+
+left [ R0_left | ] -> [ left R0_left | left Parent ]
+left [ R1_left | ] -> [ left R1_left | left Parent ]
+left [ R2_left | ] -> [ left R2_left | left Parent ]
+
+right [ R0_right | ] -> [ right R0_right | right Parent ]
+right [ R1_right | ] -> [ right R1_right | right Parent ]
+right [ R2_right | ] -> [ right R2_right | right Parent ]
+
+
+( force propagation like this isn't very nice )
+( [ > force < parent | ] -> [ < parent | > force ] )
+
+[ R3 > force < parent ] [ > R0 ] [ v R1 ] [ R2 ] -> [ R3 < parent ] [ > R0 ] [ v R1 ] [ r2 > force ]
+[ R3 > force < parent ] [ > R0 ] [ ^ R1 ] [ R2 ] -> [ R3 < parent ] [ > R0 ] [ ^ R1 ] [ r2 > force ]
+
+[ > force < parent no R0] [R0]-> [ < parent ] [ > force R0 ]
+[ > force R3 perpendicular parent ] [ R2 < parent ] [ R0 ] -> [ R3 perpendicular parent ] [ R2 < parent ] [ > force R0 ]
+
+[ > force R2 perpendicular parent ] [ R1 < parent ] [ R0 ] -> [ R2 perpendicular parent ] [ R1 < parent ] [ > force R0 ]
+
+
+[ > force moving R0 | ] -> [ | moving R0] sfx2
+
+[ > force moving R1 perpendicular parent ] [ R0 ] -> [ moving R1 perpendicular parent ] [ > R0 ] sfx3
+[ > force moving R2 perpendicular parent ] [ R1 ] -> [ moving R2 perpendicular parent ] [ > R1 ] sfx3
+[ > force 		R3 perpendicular parent ] [ R2 ] -> [ R3 perpendicular parent ] [ > R2 ] sfx3
+
+
+(rebuild arm)
+
+(add new parents)
+
+[ > R1 ] [ R2 ] -> [ > R1 ] [ R2 > NewRot ]
+[ > R0 ] [ R1 ] [ R2 ] -> [ > R0 ] [ R1 > NewRot ] [ R2 > NewRot2 ]
+
+[ > Parent R1 ] [ R2 ] -> [ > Parent R1 ] [ > GrandParent R2 ]
+
+[ ^ Parent > NewRot > RobotPiece ] -> [ V RobotPiece ]
+[ ^ Parent > NewRot v RobotPiece ] -> [ < RobotPiece ]
+[ ^ Parent > NewRot < RobotPiece ] -> [ ^ RobotPiece ]
+[ ^ Parent > NewRot ^ RobotPiece ] -> [ > RobotPiece ]
+
+[ ^ Parent < NewRot > RobotPiece ] -> [ ^ RobotPiece ]
+[ ^ Parent < NewRot v RobotPiece ] -> [ > RobotPiece ]
+[ ^ Parent < NewRot < RobotPiece ] -> [ V RobotPiece ]
+[ ^ Parent < NewRot ^ RobotPiece ] -> [ < RobotPiece ]
+
+
+[ ^ GrandParent > NewRot2 > R2 ] -> [ V R2 ]
+[ ^ GrandParent > NewRot2 v R2 ] -> [ < R2 ]
+[ ^ GrandParent > NewRot2 < R2 ] -> [ ^ R2 ]
+[ ^ GrandParent > NewRot2 ^ R2 ] -> [ > R2 ]
+
+[ ^ GrandParent < NewRot2 > R2 ] -> [ ^ R2 ]
+[ ^ GrandParent < NewRot2 v R2 ] -> [ > R2 ]
+[ ^ GrandParent < NewRot2 < R2 ] -> [ V R2 ]
+[ ^ GrandParent < NewRot2 ^ R2 ] -> [ < R2 ]
+
+[ NewRot ] -> [ ]
+[ NewRot2 ] -> [ ]
+[ Parent ] -> [ ]
+[ GrandParent ] -> [ ]
+
+
+(change sprites)
+[ up R0 ] -> [ up R0_Up ]
+[ up R1 ] -> [ up R1_Up ]
+[ up R2 ] -> [ up R2_Up ]
+
+[ down R0 ] -> [ down R0_down ]
+[ down R1 ] -> [ down R1_down ]
+[ down R2 ] -> [ down R2_down ]
+
+[ left R0 ] -> [ left R0_left ]
+[ left R1 ] -> [ left R1_left ]
+[ left R2 ] -> [ left R2_left ]
+
+[ right R0 ] -> [ right R0_Right ]
+[ right R1 ] -> [ right R1_Right ]
+[ right R2 ] -> [ right R2_Right ]
+
+(work from the base up when placing)
+up [ up R0 | no R1 ] [ moving R1 ] -> [ up R0 | moving R1 ] [ ]
+down [ down R0 | no R1 ] [ moving R1 ] -> [ down R0 | moving R1 ] [ ]
+left [ left R0 | no R1 ] [ moving R1 ] -> [ left R0 | moving R1 ] [ ]
+right [ right R0 | no R1 ] [ moving R1 ] -> [ right R0 | moving R1 ] [ ]
+
+up [ up R1 | no R2 ] [ moving R2 ] -> [ up R1 | moving R2 ] [ ]
+down [ down R1 | no R2 ] [ moving R2 ] -> [ down R1 | moving R2 ] [ ]
+left [ left R1 | no R2 ] [ moving R2 ] -> [ left R1 | moving R2 ] [ ]
+right [ right R1 | no R2 ] [ moving R2 ] -> [ right R1 | moving R2 ] [ ]
+
+
+up [ up R2 | no R3 ] [ R3 ] -> [ up R2 | R3 ] [ ]
+down [ down R2 | no R3 ] [ R3 ] -> [ down R2 | R3 ] [ ]
+left [ left R2 | no R3 ] [ R3 ] -> [ left R2 | R3 ] [ ]
+right [ right R2 | no R3 ] [ R3 ] -> [ right R2 | R3 ] [ ]
+
+
+
+
+up [ up R2 | no R3 ] [ R3 ] -> [ R2_up | R3 ] [ ]
+down [ down R2 | no R3 ] [ R3 ] -> [ R2_down | R3 ] [ ]
+left [ left R2 | no R3 ] [ R3 ] -> [ R2_left | R3 ] [ ]
+right [ right R2 | no R3 ] [ R3 ] -> [ R2_right | R3 ] [ ]
+
+
+[ > RobotPiece no moved ] -> [ RobotPiece ]
+
+
+up [ R0_Up | ] -> [ R0_Up connector_up | connector_down ]
+up [ R1_Up | ] -> [ R1_Up connector_up | connector_down ]
+up [ R2_Up | ] -> [ R2_Up connector_up | connector_down ]
+
+down [ R0_down | ] -> [ R0_down connector_down | connector_up ]
+down [ R1_down | ] -> [ R1_down connector_down | connector_up ]
+down [ R2_down | ] -> [ R2_down connector_down | connector_up ]
+
+left [ R0_left | ] -> [ R0_left connector_left | connector_right ]
+left [ R1_left | ] -> [ R1_left connector_left | connector_right ]
+left [ R2_left | ] -> [ R2_left connector_left | connector_right ]
+
+right [ R0_right | ] -> [ R0_right connector_right | connector_left ]
+right [ R1_right | ] -> [ R1_right connector_right | connector_left ]
+right [ R2_right | ] -> [ R2_right connector_right | connector_left ]
+
+[RobotPiece Wall no explosion no explosion2 ] -> [ RobotPiece Wall explosion ] sfx0
+
+[ R0 R2 no explosion no explosion2] -> [ R0 R2 explosion ] sfx0
+[ R0 R3 no explosion no explosion2 ] -> [ R0 r3 explosion ] sfx0
+[ R1 R3 no explosion no explosion2 ] -> [ R1 R3 explosion ] sfx0
+
+[ explosion2 ] -> [ explosionb ] again
+[ explosion ] -> [ explosion2] again
+[ explosionb ] -> [explosion] again
+
+[ > player  | wall ] -> cancel
+
+[FruitPicked ] [ R3 no FruitPicked ] -> [ ] [ R3 FruitPicked ]
+
+[ action player ] [ R3 Fruit no fruitpicked ] -> [ player ] [ R3 Fruitpicked] sfx4
+[ action player ] [ R3 fruitpicked no fruit ] -> [ player ] [ r3 fruit ] sfx8
+
+[action player ] [ r3 no fruit no fruitpicked ] -> sfx6
+
+
+[ fruit endpoint ] -> [endpoint] sfx5
+[ fruit water ] -> [ deadfruit water ] sfx7
+late [R0 water ] -> cancel
+[R0 fruit ] -> cancel
+
+==============
+WINCONDITIONS
+==============
+
+no fruit
+no fruitpicked
+no deadfruit
+
+=======
+LEVELS
+=======
+
+message press x to grip and ungrip the mechanical arm
+message put fruit in hole
+
+message Level 1 of 3
+
+###################
+###################
+###################
+###..,........,.###
+###..,...3....,.###
+###..,...2....,.###
+###.F,.E.1.,,,F,###
+###..,...0....,.###
+###..,..P.....,.###
+###..,........,.###
+###################
+###################
+###################
+
+message Level 2 of 3
+
+##############
+##############
+##############
+###..3.....###
+###..2.....###
+###..1.,,,,###
+###.E0.,...###
+###....,FF.###
+###.P..,...###
+##############
+##############
+##############
+
+message Level 3 of 3
+
+###################
+###################
+###################
+########........###
+###..3.#...##.f.###
+###..2..........###
+###..1...#....#.###
+###.e0..........###
+###..p..#...#.f.###
+#########.......###
+###################
+###################
+###################
+
+message congratulations
+
+
+title maze generator
+run_rules_on_level_start
+again_interval 0
+
+========
+OBJECTS
+========
+
+Background .
+black white
+00000
+01110
+01110
+01110
+00000
+
+Player P
+transparent
+
+visited
+transparent
+
+filler
+transparent
+
+w_up
+white
+.000.
+.000.
+.000.
+.000.
+.....
+
+w_down
+white
+.....
+.000.
+.000.
+.000.
+.000.
+
+w_left
+white
+.....
+0000.
+0000.
+0000.
+.....
+
+w_right
+white
+.....
+.0000
+.0000
+.0000
+.....
+
+to_delete
+transparent
+
+temp
+transparent
+
+tempA
+transparent
+
+=======
+LEGEND
+=======
+
+
+=======
+SOUNDS
+=======
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Player
+filler
+visited
+w_up
+w_down
+w_left
+w_right
+to_delete
+temp
+tempA
+
+======
+RULES
+======
+
+(place player randomly on the first turn only)
+random [ no filler ] -> [player visited]
+[no filler] -> [filler]
+
+(propagate path until you can't move any more)
+random [ player |  no visited ] ->  [  visited > to_delete |  < to_delete player ] again
+
+(if you can't extend the current path, continue from some random other neighbouring point)
+[player | no visited ] -> [ player tempA | ]
+random [player no tempA] [ visited | no visited ] -> [ visited ] [ visited player |  ] again
+[tempA]->[]
+
+[ up to_delete ] -> [ w_up ]
+[ down to_delete ] -> [ w_down ]
+[ left to_delete ] -> [ w_left ]
+[ right to_delete ] -> [ w_right ]
+
+==============
+WINCONDITIONS
+==============
+
+
+=======
+LEVELS
+=======
+
+........................................
+........................................
+........................................
+........................................
+........................................
+........................................
+........................................
+........................................
+........................................
+........................................
+........................................
+........................................
+........................................
+........................................
+........................................
+........................................
+........................................
+........................................
+........................................
+........................................
+........................................
+........................................
+........................................
+........................................
+........................................
+........................................
+........................................
+........................................
+........................................
+........................................
+
+
+
+
+title The closet and the castle
+author HeskHwis and Holly Hatter
+homepage heskhwis.tumblr.com
+background_color white
+text_color black
+
+flickscreen 8x8
+
+noundo
+norestart
+
+========
+OBJECTS
+========
+Background
+white
+
+Wallv
+black
+.000.
+.000.
+.000.
+.000.
+.000.
+
+Wallh
+black
+.....
+00000
+00000
+00000
+.....
+
+Wallchl
+black
+.....
+.0000
+.0000
+.0000
+.000.
+
+Wallchr
+black
+.....
+0000.
+0000.
+0000.
+.000.
+
+Wallcdl
+black
+.000.
+.0000
+.0000
+.0000
+.....
+
+Wallcdr
+black
+.000.
+0000.
+0000.
+0000.
+.....
+
+Wallcdi
+black
+.000.
+0000.
+0000.
+0000.
+.....
+
+Walltd
+black
+.....
+00000
+00000
+00000
+.000.
+
+Wallth
+black
+.000.
+00000
+00000
+00000
+.....
+
+Walltr
+black
+.000.
+.0000
+.0000
+.0000
+.000.
+
+Walltl
+black
+.000.
+0000.
+0000.
+0000.
+.000.
+
+Wallendhl
+black
+.....
+.0000
+.0000
+.0000
+.....
+
+Wallendhr
+black
+.....
+0000.
+0000.
+0000.
+.....
+
+Wallendv
+black
+.000.
+.000.
+.000.
+.000.
+.....
+
+Wallwhite
+white
+
+
+Player
+black
+..0..
+00000
+.000.
+.000.
+.0.0.
+
+Pan
+black
+.....
+00000
+..000
+..000
+.....
+
+Cap
+black
+.....
+000..
+000..
+00000
+.....
+
+Bottle
+black
+..0..
+..0..
+.000.
+.000.
+.000.
+
+Sign
+black
+.000.
+.000.
+.000.
+..0..
+..0..
+
+Pot
+black
+00000
+.000.
+.000.
+.000.
+.000.
+
+Hat
+black
+.000.
+.000.
+.000.
+.000.
+00000
+
+Shirt
+black
+00.00
+.0.0.
+.000.
+.000.
+.000.
+
+Trousers
+black
+.000.
+.000.
+.000.
+.0.0.
+00.00
+
+Glass
+black
+.000.
+.000.
+.000.
+..0..
+.000.
+
+Flask
+black
+.000.
+..0..
+.000.
+.000.
+.000.
+
+Sink
+black
+.00..
+..0..
+..0..
+00000
+.000.
+
+Umbrella
+black
+.000.
+00000
+..0..
+..0..
+..00.
+
+Pants
+black
+.....
+00000
+0...0
+0.0.0
+00000
+
+Chest
+black
+.....
+00000
+0.0.0
+0...0
+00000
+
+TV
+black
+00000
+0...0
+0...0
+00000
+.000.
+
+Bagage
+black
+.000.
+00000
+0...0
+0...0
+00000
+
+Table
+black
+00000
+00000
+..0..
+.0.0.
+0...0
+
+Radio
+black
+0...0
+.0.0.
+..0..
+00000
+00000
+
+Closet
+black
+00000
+000.0
+000.0
+00000
+0.0.0
+
+Castle
+black
+0.0.0
+00000
+0.000
+0.000
+00000
+
+Plug
+black
+.....
+.0.0.
+00000
+00000
+.000.
+
+Car
+black
+.....
+.000.
+00000
+00000
+.0.0.
+
+=======
+LEGEND
+=======
+
+. = Background
+& = Wallv
+" = Wallh
+§ = Wallchl
+è = Wallchr
+! = Wallcdl
+ç = Wallcdr
+à = Wallcdi
+é = Walltd
+' = Walltr
+; = Wallth
+? = Walltl
+: = Wallendhl
++ = Wallendhr
+/ = Wallendv
+- = Wallwhite
+P = Player
+0 = Pan
+1 = Bottle
+2 = Pot
+3 = Shirt
+4 = Glass
+5 = Sink
+6 = Pants
+7 = TV
+8 = Table
+9 = Closet
+° = Plug
+
+Wall = Wallv or Wallh or Wallchl or Wallchr or Wallcdl or Wallcdr or Wallcdi or Wallwhite or Walltd or Wallth or Walltr or Walltl or Wallendhl or Wallendhr or Wallendv
+
+=======
+SOUNDS
+=======
+
+sfx1 93735300
+sfx2 41048100
+sfx3 72273500
+sfx4 42872102
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Wall, Player, Pan, Cap, Bottle, Sign, Pot, Hat, Shirt, Trousers, Glass, Flask, Sink, Umbrella, Pants, Chest, TV, Bagage, Table, Radio, Closet, Castle, Plug, Car
+
+======
+RULES
+======
+
+[ > Player | Pan ] -> [ Player | Cap ] sfx1
+[ Action Player | Pan ] -> [ Action Player | Pan ] sfx3 message She should begin to cook if she wants to have a supper.
+[ > Player | Cap ] -> [ Player | Pan ] sfx2
+[ Action Player | Cap ] -> [ Action Player | Cap ] sfx3 message It isn't very important to take a cap when yo are going to England, but it's always good to be provident.
+
+[ > Player | Bottle ] -> [ Player | Sign ] sfx1
+[ Action Player | Bottle ] -> [ Action Player | Bottle ] sfx3 message It is empty. Luckily she has two other bottles like this one in her basement.
+[ > Player | Sign ] -> [ Player | Bottle ] sfx2
+[ Action Player | Sign ] -> [ Action Player | Sign ] sfx3 message "London 512 miles" reads the sign.
+
+[ > Player | Pot ] -> [ Player | Hat ] sfx1
+[ Action Player | Pot ] -> [ Action Player | Pot ] sfx3 message She didn't take care of the flower and now, it's dead.
+[ > Player | Hat ] -> [ Player | Pot ] sfx2
+[ Action Player | Hat ] -> [ Action Player | Hat ] sfx3 message In London, everyone is a gentleman.
+
+[ > Player | Shirt ] -> [ Player | Trousers ] sfx1
+[ Action Player | Shirt ] -> [ Action Player | Shirt ] sfx3 message It isn't very clean, but nobody cares, it's just a black T-shirt.
+[ > Player | Trousers ] -> [ Player | Shirt ] sfx2
+[ Action Player | Trousers ] -> [ Action Player | Trousers ] sfx3 message Better take an appropriate outfit when you go exploring the Stonehenge.
+
+[ > Player | Glass ] -> [ Player | Flask ] sfx1
+[ Action Player | Glass ] -> [ Action Player | Glass ] sfx3 message At least she drinks in beautiful glasses.
+[ > Player | Flask ] -> [ Player | Glass ] sfx2
+[ Action Player | Flask ] -> [ Action Player | Flask ] sfx3 message She read about ancient flasks of amber-colored whisky in a magazine last week.
+
+[ > Player | Sink ] -> [ Player | Umbrella ] sfx1
+[ Action Player | Sink ] -> [ Action Player | Sink ] sfx3 message The sink is clogged up and filled with dirty water.
+[ > Player | Umbrella ] -> [ Player | Sink ] sfx2
+[ Action Player | Umbrella ] -> [ Action Player | Umbrella ] sfx3 message Well, it's said to be very rainy in Great Britain...
+
+[ > Player | Pants ] -> [ Player | Chest ] sfx1
+[ Action Player | Pants ] -> [ Action Player | Pants ] sfx3 message Just some pants.
+[ > Player | Chest ] -> [ Player | Pants ] sfx2
+[ Action Player | Chest ] -> [ Action Player | Chest ] sfx3 message There would be treasures in Glenanore and Slieve Anore, in Ireland... She HAS to go, find something wonderful and become rich.
+
+[ > Player | TV ] -> [ Player | Bagage ] sfx1
+[ Action Player | TV ] -> [ Action Player | TV ] sfx3 message There is nothing worth watching on the TV for now.
+[ > Player | Bagage ] -> [ Player | TV ] sfx2
+[ Action Player | Bagage ] -> [ Action Player | Bagage ] sfx3 message It's decided : one day, she will pack her suitcase and go away from this town.
+
+[ > Player | Table ] -> [ Player | Radio ] sfx1
+[ Action Player | Table ] -> [ Action Player | Table ] sfx3 message She bought this table at a flea market. It was in a bar before.
+[ > Player | Radio ] -> [ Player | Table ] sfx2
+[ Action Player | Radio ] -> [ Action Player | Radio ] sfx3 message She likes to listen to foreign songs. She has many CDs of celtic traditional music.
+
+[ > Player | Closet ] -> [ Player | Castle ] sfx1
+[ Action Player | Closet ] -> [ Action Player | Closet ] sfx3 message There are some books, a box of pills and a teddy bear in here.
+[ > Player | Castle ] -> [ Player | Closet ] sfx2
+[ Action Player | Castle ] -> [ Action Player | Castle ] sfx3 message Her dreams are filled with scottish castles and medieval towers.
+
+[ > Player | Plug ] -> [ Player | Car ] sfx1
+[ Action Player | Plug ] -> [ Action Player | Plug ] sfx3 message What is the point in putting a plug outside, anyways ?
+[ > Player | Car ] -> [ Player | Plug ] sfx2
+[ Action Player | Car ] -> sfx4 win
+
+==============
+WINCONDITIONS
+==============
+
+=======
+LEVELS
+=======
+
+
+§""""""è§""""""è.------.
+&...7..!ç41....&§"""""è.
+&..............!ç....3&.
+&......§è...8......6..&.
+&......&&......§è.....&.
+&...p..&&......&'"""é"ç.
+&9.....&&......&&...&--.
+!""""""ç!"è.§""ç&..5&-..
+:""""""è§"ç.!"""ç..0&-..
+.......&&...........&-..
+.......&&......§""""ç-..
+......./!"+.:""ç------..
+............2...-.......
+................-.......
+................-.......
+.........°......-.......
+
+message Enough talking !
+message She drives away to the airport and flies to Great Britain.
+message Castles, umbrellas, celtic music and pants... Here we are !
+message THE END
+
+USER PROMPT:
+The following PuzzleScript game code:
+```plaintext
+title Push & Match
+author Example Author
+
+========
+OBJECTS
+========
+
+Background
+blue lightblue
+00000
+00000
+00000
+00000
+00000
+
+Player
+green yellow
+.000.
+.111.
+.111.
+.111.
+.....
+
+Wall
+black grey
+11111
+11111
+11111
+11111
+11111
+
+Crate
+orange
+..... 
+.111.
+.111.
+.111.
+.....
+
+Target
+white red
+.....
+.....
+.....
+.111.
+.....
+
+=======
+LEGEND
+=======
+
+. = Background
+P = Player
+# = Wall
+* = Crate
+@ = Crate and Target
+T = Target
+
+=======
+SOUNDS
+=======
+
+Crate MOVE 669298
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Player, Wall, Crate, Target
+
+======
+RULES
+======
+
+[ > Player | Crate ] -> [ > Player | > Crate ]
+late [ Crate on Target ] -> [ Crate as Target ]
+
+==============
+WINCONDITIONS
+==============
+
+All Crate on Target
+
+=======
+LEVELS
+=======
+
+######
+#....#
+#..*.#
+#.*.T#
+#..P.#
+######
+
+message Congratulations! You've completed the game.
+
+
+```
+produced the following console output:
+=================================
+line 35 : Trying to access color number 1 from the color palette of sprite CRATE, but there are only 1 defined in it.
+line 36 : Trying to access color number 1 from the color palette of sprite CRATE, but there are only 1 defined in it.
+line 37 : Trying to access color number 1 from the color palette of sprite CRATE, but there are only 1 defined in it.
+line 77 : Name "on", referred to in a rule, does not exist.
+line 77 : Name "as", referred to in a rule, does not exist.
+line 56 : Trying to create an aggregate object (something defined in the LEGEND section using AND) with both "TARGET" and "CRATE", which are on the same layer and therefore can't coexist.
+line 77 : Error, malformed cell rule - was looking for cell contents, but found "on".  What am I supposed to do with this, eh, please tell me that.
+line 77 : Error, malformed cell rule - was looking for cell contents, but found "as".  What am I supposed to do with this, eh, please tell me that.
+line 77 : TARGET and CRATE can never overlap, but this rule requires that to happen, so it's being culled.
+Errors detected during compilation; the game may not work correctly.
+Return a repaired version of the code that addresses these errors. First, reason about your task and determine the best plan of action. Then, write your code.  Return your code in full, inside a ```plaintext code block.

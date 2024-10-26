@@ -1,0 +1,2049 @@
+SYSTEM PROMPT:
+You are a game designer, familiar with the PuzzleScript game description language. Here are some example games, for inspiration (do not reproduce these games exactly):
+
+title Multiple Patterns
+author increpare
+homepage www.puzzlescript.net
+
+========
+OBJECTS
+========
+
+Background
+lightgreen green
+11111
+01111
+11101
+11111
+10111
+
+Wall
+brown darkbrown
+00010
+11111
+01000
+11111
+00010
+
+Player
+black orange white blue
+.000.
+.111.
+22222
+.333.
+.3.3.
+
+Sumo
+pink white
+..0..
+00000
+.000.
+.111.
+.0.0.
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Player
+S = Sumo
+
+=======
+SOUNDS
+=======
+
+Sumo MOVE 48878907
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Player, Wall, Sumo
+
+======
+RULES
+======
+
+[ > Player ] [ Sumo ] -> [ > Player ] [ > Sumo ] 
+
+==============
+WINCONDITIONS
+==============
+
+=======
+LEVELS
+=======
+
+########
+#......#
+#......#
+#.P..S.#
+#......#
+#......#
+########
+
+
+title Bouncers
+author Tyler Glaiel
+homepage twitter.com/tylerglaiel
+
+========
+OBJECTS
+========
+
+Bg
+#111111 #222222
+00010
+11111
+01000
+01000
+11111
+
+Selection
+white gray
+..1..
+..1..
+11011
+..1..
+..1..
+
+Wall
+DarkBlue DarkGreen #333333
+20002
+22022
+22122
+21112
+11111
+
+Hole
+DarkGray Gray Black
+.111.
+12221
+10001
+10001
+.111.
+
+
+Arrow
+Red Red
+..1..
+..11.
+11111
+..11.
+..1..
+
+
+HudDivider
+white black
+00000
+11111
+11111
+11111
+11111
+
+IconGO
+green white
+10111
+10011
+10001
+10011
+10111
+
+Going
+green white
+10111
+10011
+10001
+10011
+10111
+
+LeftBouncer
+White White Blue
+.221.
+2.1.2
+21..2
+2.1.2
+.221.
+
+RightBouncer
+White White Blue
+.122.
+2.1.2
+2..12
+2.1.2
+.122.
+
+UpBouncer
+White White Blue
+.222.
+2.1.2
+21.12
+1...1
+.222.
+
+DownBouncer
+White White Blue
+.222.
+1...1
+21.12
+2.1.2
+.222.
+
+HudBG
+black
+
+Empty
+black
+
+PlayEmpty
+black
+.....
+.....
+.....
+.....
+.....
+
+
+Ball
+#003300 Green
+.000.
+01110
+01110
+01110
+.000.
+
+WinBall
+LightBlue LightGreen
+.000.
+01110
+01110
+01110
+.000.
+
+
+
+BallUp
+#003300 Green Black
+.000.
+01210
+01110
+01110
+.000.
+
+BallDown
+#003300 Green Black
+.000.
+01110
+01110
+01210
+.000.
+
+BallLeft
+#003300 Green Black
+.000.
+01110
+02110
+01110
+.000.
+
+BallRight
+#003300 Green Black
+.000.
+01110
+01120
+01110
+.000.
+
+
+
+
+=======
+LEGEND
+=======
+Background = Bg or HudBG
+. = bg and PlayEmpty
+S = Selection and PlayEmpty
+- = HudDivider and Wall
+H = HudBG and PlayEmpty
+A = Arrow and HudBG
+G = IconGO
+W = Wall
+O = Hole
+
+L = LeftBouncer and HudBG
+R = RightBouncer and HudBG
+U = UpBouncer and HudBG
+D = DownBouncer and HudBG
+
+B = BallLeft
+N = BallRight
+M = BallUp
+K = BallDown
+
+Player = Selection
+
+
+PlacedLeftbouncer = LeftBouncer and Selection
+PlacedRightbouncer = RightBouncer and Selection
+PlacedUpbouncer = UpBouncer and Selection
+PlacedDownbouncer = DownBouncer and Selection
+
+Bouncer = LeftBouncer or RightBouncer or UpBouncer or DownBouncer
+
+emptyPlayer = Selection and PlayEmpty
+
+
+ballSwitchLeft = Ball and LeftBouncer
+ballSwitchRight = Ball and RightBouncer
+ballSwitchUp = Ball and UpBouncer
+ballSwitchDown = Ball and DownBouncer
+
+ballSwitchedLeft = BallLeft and LeftBouncer
+ballSwitchedRight = BallRight and RightBouncer
+ballSwitchedUp = BallUp and UpBouncer
+ballSwitchedDown = BallDown and DownBouncer
+
+gameGo = Selection and IconGO
+gameGoing =  Going
+
+
+
+WinL = BallLeft and Hole
+WinR = BallRight and Hole
+WinU = BallUp and Hole
+WinD = BallDown and Hole
+
+Win = WinBall
+
+MovingBall = Ball or BallLeft or BallRight or BallUp or BallDown
+
+=======
+SOUNDS
+=======
+SFX0 41242705 (place bouncer)
+SFX1 73889302 (press go)
+MovingBall Move 68254307 (ball move)
+SFX2 68257500 (pocket ball)
+SFX3 82752503 (ball switch direction)
+
+================
+COLLISIONLAYERS
+================
+
+Background
+
+Arrow, Empty, LeftBouncer, RightBouncer, UpBouncer, DownBouncer, PlayEmpty, IconGO, Going, Hole
+WinBall
+Wall, Ball, BallUp, BallDown, BallLeft, BallRight
+Selection, HudDivider
+
+
+======
+RULES
+======
+
+(action button: take icon to the right of the arrow, place under selector)
+[action selection PlayEmpty][Arrow|LeftBouncer] -> [PlacedLeftbouncer][Arrow|Empty] SFX0
+[action selection PlayEmpty][Arrow|RightBouncer] -> [PlacedRightbouncer][Arrow|Empty] SFX0
+[action selection PlayEmpty][Arrow|UpBouncer] -> [PlacedUpbouncer][Arrow|Empty] SFX0
+[action selection PlayEmpty][Arrow|DownBouncer] -> [PlacedDownbouncer][Arrow|Empty] SFX0
+
+(win conditions)
+[WinL] -> [Win] again SFX2
+[WinR] -> [Win] again SFX2
+[WinU] -> [Win] again SFX2
+[WinD] -> [Win] again SFX2
+
+(slide unused icons over to the left if there's space between them and the arrow)
+right [Empty | Bouncer] -> [Bouncer | Empty]
+
+(selector on top of go button -> signals game to run)
+[action selection iconGO] -> [gameGoing] again SFX1
+
+(make genericball match the direction of the bouncer)
+[ballSwitchLeft]->[ballSwitchedLeft] again
+[ballSwitchRight]->[ballSwitchedRight] again
+[ballSwitchUp]->[ballSwitchedUp] again
+[ballSwitchDown]->[ballSwitchedDown] again
+
+(if ball is going to move on top of a bouncer, switch it to generic ball first)
+right [Going][Bouncer | BallLeft] -> [Going][Bouncer | Left Ball] again SFX3
+left  [Going][Bouncer | BallRight] -> [Going][Bouncer | Right Ball] again SFX3
+up    [Going][Bouncer | BallDown] -> [Going][Bouncer | Down Ball] again SFX3
+down  [Going][Bouncer | BallUp] -> [Going][Bouncer | Up Ball] again SFX3
+
+
+
+(move the ball if Going)
+[Going][BallLeft] -> [Going][LEFT BallLeft] again
+[Going][BallRight] -> [Going][RIGHT BallRight] again
+[Going][BallUp] -> [Going][UP BallUp] again
+[Going][BallDown] -> [Going][DOWN BallDown] again
+
+
+
+[Going] -> [Going] again
+
+==============
+WINCONDITIONS
+==============
+
+no MovingBall
+
+=======
+LEVELS
+=======
+
+message place bouncers, hit play
+
+......w.....
+..o...w.....
+......w.....
+......w.....
+......w..b..
+......s.....
+............
+g-----------
+-hhadluhhhhh
+
+message Level 2
+
+............
+......o.....
+..s.........
+......w.....
+...o.....b..
+......m.....
+............
+g-----------
+-hhalurhhhhh
+
+message Level 3
+
+............
+............
+..o.wwww....
+..s.n..b....
+....wwww.o..
+............
+............
+g-----------
+-hhaudrlhhhh
+
+message Level 4
+
+............
+............
+..o......o..
+............
+............
+.s..bbbb....
+............
+............
+..o......o..
+............
+g-----------
+-hhalrudu...
+
+message Level 5
+
+.....n......w...
+..wwww.k....o.w.
+......b..m......
+...o............
+.......w........
+.....b.w........
+......wwo.......
+w.ww.www........
+.o..............
+....s...........
+..........wwwo..
+g---------------
+-hhaddddddrrr...
+
+message I didn't feel like making more levels
+
+title Ebony & Ivory
+author Guilherme Töws
+homepage zarat.us
+
+========
+OBJECTS
+========
+
+Background
+Purple
+
+Gray
+GRAY
+
+White
+WHITE
+
+Black
+BLACK
+
+PlayerRed
+Red
+.....
+.000.
+.000.
+.000.
+.....
+
+PlayerGold
+Yellow
+.....
+.000.
+.000.
+.000.
+.....
+
+
+=======
+LEGEND
+=======
+
+. = White
+, = Black
+# = Gray
+: = PlayerRed and White
+; = PlayerRed and Black
+Player = PlayerRed or PlayerGold
+
+=======
+SOUNDS
+=======
+
+SFX0 72488907
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Black, White, Gray
+Player
+
+======
+RULES
+======
+
+[ PlayerGold ] -> [ PlayerRed ]
+[ >  Player White | Black ] -> [  > Player White | > Black ]
+[ >  Player Black | White ] -> [  > Player Black | > White ]
+[ > Black | White ] -> [ White | Black ] SFX0
+[ > White | Black ] -> [ Black | White ] SFX0
+[ >  Player White |  Black ] -> [  Player White |  Black ]
+[ >  Player Black |  White ] -> [  Player Black |  White ]
+[ >  Player |  Gray ] -> [  Player |  Gray ]
+late [ Player | PlayerRed ] -> [ Player | PlayerGold ]
+
+==============
+WINCONDITIONs
+==============
+
+No PlayerRed
+
+=======
+LEVELS
+=======
+
+########
+#..,,,,#
+#.:.,.,#
+#...,,,#
+#.,.,;,#
+#....,,#
+########
+
+title Manic Ammo
+author David Eastman
+homepage @eastmad
+
+========
+OBJECTS
+========
+
+Background
+gray
+
+Target
+darkgray gray lightgray white
+33333
+31112
+31002
+31002
+32222
+
+Wall
+BROWN
+
+Boom
+Red YELLOW orange
+.101.
+10001
+00200
+10001
+.101.
+
+
+Player
+PINK YELLOW BLACK
+.222.
+.000.
+22122
+.222.
+.2.2.
+
+
+CrateW
+Brown DarkBrown lightbrown
+11111
+12001
+11111
+12001
+11111
+
+CrateN
+Brown DarkBrown lightbrown
+11111
+12121
+10101
+10101
+11111
+
+CrateMineN
+Brown DarkBrown lightbrown darkblue
+11111
+12121
+10101
+10301
+11111
+
+CrateGunN
+Brown DarkBrown lightbrown darkred
+11111
+12121
+10101
+10301
+11111
+
+CrateGunS
+Brown DarkBrown lightbrown darkred
+11111
+12321
+10101
+10101
+11111
+
+
+CrateS
+Brown DarkBrown lightbrown
+11111
+10101
+10101
+12121
+11111
+
+CrateE
+Brown DarkBrown lightbrown
+11111
+10021
+11111
+10021
+11111
+
+
+Shell
+yellow orange
+..0..
+.000.
+.000.
+.000.
+.101.
+
+
+Bang
+Yellow LightRed
+.101.
+10001
+00000
+10001
+.101.
+
+GunN
+red lightred
+..0..
+..0..
+.101.
+00000
+.000.
+
+GunW
+red lightred
+...0.
+..100
+00000
+..100
+...0.
+
+GunS
+red lightred
+.000.
+00000
+.101.
+..0..
+..0..
+
+GunE
+red lightred
+.0...
+001..
+00000
+001..
+.0...
+
+InertMine
+darkblue blue lightblue
+.....
+.101.
+.020.
+.101.
+.....
+
+ActiveMine
+darkred red lightred
+.....
+.101.
+.020.
+.101.
+.....
+
+Squawk
+lightblue blue
+....0
+.0000
+.0000
+.11.0
+1111.
+
+SquawkBang
+orange lightblue
+....0
+.0000
+.0000
+.11.0
+1111.
+
+Droid
+black green
+..0..
+.000.
+00100
+.000.
+..0..
+
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Player
+N = CrateN
+E = CrateE
+W = CrateW
+S = CrateS
+O = Target
++ = Shell
+^ = GunN
+< = GunW
+> = GunE
+˅ = GunS
+M = InertMine
+A = ActiveMine
+B = Boom
+% = CrateGunN
+& = CrateMineN
+@ = CrateGunS
+X = Squawk
+D = Droid
+
+=======
+SOUNDS
+=======
+
+SFX1 55891909
+SFX2 5736502
+SFX4 6922102
+
+Shell move 61960307
+InertMine move 61960307
+Droid move 81713505
+EndLevel 8341708
+Shell create 91688700
+GunN create 91688700
+GunS create 91688700
+GunW create 91688700
+InertMine create 91688700
+ActiveMine create 93182703
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Target
+Player, Wall, CrateN, CrateE, CrateW, CrateS, Shell, GunN, GunW, GunE, GunS, Bang, InertMine, ActiveMine, Boom, CrateMineN, CrateGunN, CrateGunS, Squawk, Droid, SquawkBang
+
+======
+RULES
+======
+
+
+[Bang] -> [background]
+[boom] -> restart
+[> player][Droid] -> [> player][> Droid]
+[ >  Player | Shell ] -> [  >  Player | > Shell  ]
+[ >  Droid | Shell ] -> [  >  Droid | > Shell  ]
+[ >  Player | InertMine ] -> [  >  Player | > InertMine  ]
+[Action Player|InertMine] -> [Action Player|ActiveMine]
+[> Droid|InertMine] -> [Droid|ActiveMine]
+[> Player | ActiveMine] -> [Player | boom ]
+[> Droid | ActiveMine] -> [Droid | boom ]
+[> shell | ActiveMine] -> [boom | boom ]
+
+[Action Player|Squawk] -> [Action Player|SquawkBang]
+[> Droid|Squawk] -> [Droid |SquawkBang]
+
+[SquawkBang][CrateMineN] -> [SquawkBang][ActiveMine]
+[SquawkBang][CrateGunN] -> [SquawkBang][GunN]
+[SquawkBang][CrateGunS] -> [SquawkBang][GunS]
+[SquawkBang][CrateN] -> [SquawkBang][Shell]
+[SquawkBang][CrateS] -> [SquawkBang][Shell]
+[SquawkBang][CrateE] -> [SquawkBang][Shell]
+[SquawkBang][CrateW] -> [SquawkBang][Shell]
+[SquawkBang] -> [] SFX1
+
+DOWN [ Action Player |CrateN] -> [Action Player | Shell]
+UP [Action Player | CrateS] -> [Action Player | Shell]
+LEFT [Action Player | CrateE] -> [Action Player | Shell]
+RIGHT [Action Player | CrateW] -> [Action Player | Shell]
+DOWN [Action Player | CrateGunN] -> [Action Player | GunN]
+UP [Action Player | CrateGunS] -> [Action Player | GunS]
+DOWN [Action Player | CrateMineN] -> [Action Player | ActiveMine]
+
+UP [Action Player | GunN| No Bang ] -> [Player | GunN | Bang ] SFX4
+LEFT [Action Player | GunW | No Bang] -> [Player | GunW | Bang ] SFX4
+DOWN [Action Player | GunS| No Bang ] -> [Player | GunS | Bang ] SFX4
+RIGHT [Action Player | GunE | No Bang] -> [Player | GunE | Bang ] SFX4
+
+UP [ > Droid | GunN| No Bang ] -> [Droid | GunN | Bang ] SFX4
+LEFT [ > Droid | GunW | No Bang] -> [Droid | GunW | Bang ] SFX4
+DOWN [> Droid | GunS| No Bang ] -> [Droid | GunS | Bang ] SFX4
+RIGHT [> Droid | GunE | No Bang] -> [Droid | GunE | Bang ] SFX4
+[bang|shell] -> [bang|bang ]
+[boom|no player] -> [boom|boom] SFX2
+
+
+==============
+WINCONDITIONS
+==============
+
+All Player on Target
+
+=======
+LEVELS
+=======
+
+
+
+MESSAGE Due to a clerical error, You are trapped in a bunker
+
+########
+#.....P#
+#......#
+#......#
+#......#
+#O.....#
+########
+
+MESSAGE A bunker with several levels, full of crates and munitions
+
+########
+#.....O#
+#..+...#
+#......#
+#..N...#
+#P.....#
+########
+
+MESSAGE Crates open from one side
+
+########
+#...+.P#
+#....+.#
+#..++..#
+#++..++#
+#.ON...#
+########
+
+MESSAGE But shells are volatile
+MESSAGE Try firing the gun
+
+#########
+#..+.+.O#
+#..N+...#
+#....S..#
+#...^...#
+#.P.....#
+#########
+
+MESSAGE Chain reaction
+
+#########
+#+.+O+.P#
+#+.++...#
+#.+.+.N.#
+#+......#
+#E+++.<.#
+#########
+
+MESSAGE Inert mines, active mines
+
+#########
+#+.+P+..#
+#.......#
+#.......#
+#SSSSM..#
+#.O.E...#
+#########
+
+Message Crates can have any munitions in them
+
+#########
+#.......#
+#.&+..+.#
+#.+O&.+.#
+#.+++%..#
+#.P.S...#
+#########
+
+
+MESSAGE There seems to be another way to open crates
+
+#########
+#.X.....#
+#.......#
+#..P....#
+#....NNN#
+#.>..SON#
+#########
+
+
+MESSAGE Hey, it's a friendly worker droid!
+
+#########
+#.D...PN#
+#..+...N#
+#A.+....#
+#.NN.O..#
+#..+....#
+#########
+
+
+MESSAGE Now this is where the main bunker levels begin.
+
+###########
+#O+N..+.W.#
+#SN&..+.NX#
+#.DN.+.+..#
+#%.NWP.NS+#
+#...+N....#
+###########
+
+
+MESSAGE This doesn't look safe
+
+###########
+#P..&&&&&&#
+#DX.N....&#
+#...&&&&&&#
+#.N.N...O.#
+#&&&&&&&&&#
+###########
+
+
+MESSAGE Carefully packed
+
+###########
+#PESW.WDW.#
+#NW..&N@.N#
+#.N%NWN.X.#
+#N...NNNNN#
+#N.NNNNNON#
+###########
+
+MESSAGE Symbiosis
+
+###########
+#P.NNN.DN.#
+#MM>.+++N.#
+#..N.NN+..#
+#++N++....#
+#++...<.O.#
+###########
+
+MESSAGE Inert Mine field
+
+###########
+#.P..M.M..#
+#.MMM.M.MM#
+#..M..MNM.#
+#MM.MM.MOS#
+#.M..MD...#
+###########
+
+MESSAGE Last level
+
+###########
+#..+..P.+.#
+#.N..@.N..#
+#+.&..E.&.#
+#++..S.SSS#
+#.X+&..NO.#
+###########
+
+MESSAGE Congratulations! Now you can return to fighting on the front line.
+
+title Tunnel Rat
+author James Noeckel
+noundo
+again_interval 0.07
+youtube SG1uBb104Is
+========
+OBJECTS
+========
+Background
+#4c352b #4e382f #533c30
+01010
+02211
+20010
+00012
+12102
+
+PlayerS
+#a65200 red #6f3c0a
+.0.0.
+.000.
+21012
+20002
+22022
+
+PlayerU
+#a65200 red #6f3c0a
+.0.0.
+.101.
+20002
+22022
+.2.2.
+
+inflow
+yellow orange white
+00000
+00000
+22222
+11111
+11111
+
+exit
+green
+.0.0.
+0.0.0
+.0.0.
+0.0.0
+.0.0.
+
+tempwall
+blue
+
+DirtM
+#82642b #876b35 #927538
+01010
+02211
+20010
+00012
+12102
+
+DirtU
+#82642b #876b35 #927538 #b19154
+22222
+33333
+00000
+01012
+12102
+
+
+Rock
+#e0e0e0 #a4a4a4 #8a8a8a #7c7c7c
+.000.
+01112
+11123
+11223
+.233.
+
+enemy
+white #ff7070 black #880000 red
+01414
+14343
+14343
+14443
+43232
+
+h_grav
+black
+.....
+.....
+..0..
+.....
+.....
+
+h_step
+red
+.....
+.....
+..0..
+.....
+.....
+
+(h_dead
+black
+)
+pickupoverlay
+pink
+
+enemyoverlay
+pink
+
+destroy
+red
+0...0
+.0.0.
+..0..
+.0.0.
+0...0
+scrolling
+blue
+.....
+.....
+..0..
+.....
+.....
+
+Shoes
+#ff11f7 #9711ff #641d9a
+...0.
+...10
+...01
+.1111
+.2222
+
+Eraser
+#00ff12 #99ffa0 #008509
+..10.
+.1000
+10000
+.2000
+..20.
+
+Unraser
+#00ff12 #99ffa0 #008509
+.01..
+0001.
+00001
+0002.
+.02..
+
+Shoesworn
+purple pink
+.....
+.....
+.....
+.....
+10.01
+
+
+=======
+LEGEND
+=======
+# = Dirtm
+. = Background
+P = playerS
+o = Rock
+s = shoes
+x = enemy
+@ = dirtm and destroy
+$ = dirtm and inflow
+e = exit and Dirtm
+% = unraser
+
+dirt = dirtm or dirtu
+Player = PlayerS or PlayerU
+Helpers = h_grav or scrolling or h_step
+Pickups = shoes or Eraser or Unraser
+Heldpickups = shoesworn
+Solid = Dirt or Player or Rock or Pickups or enemy
+Heavy = Rock or Pickups or enemy
+overlays = pickupoverlay or enemyoverlay
+Everything = Solid or tempwall or overlays
+
+=======
+SOUNDS
+=======
+SFX1 36137902
+SFX2 78903905
+SFX3 14420703
+SFX4 25525902
+SFX5 49701704
+SFX6 98046907
+SFX7 16284302
+SFX8 96668708
+SFX9 86449100
+================
+COLLISIONLAYERS
+================
+
+helpers
+Background
+tempwall, solid
+Heldpickups
+overlays
+destroy, inflow, exit
+
+
+======
+RULES
+======
+
+up [ > PlayerU ] -> cancel
+down [ > PlayerU ] -> [ PlayerS ]
+
+(digging/jumping up)
+up [ > PlayerS | no Solid | no Solid no inflow ] -> [ | | PlayerU scrolling ] SFX2
+up [ > PlayerS | no Solid | Dirt no inflow ] -> [ | | PlayerU scrolling ] SFX7
+up [ > PlayerS | no Solid no inflow ] -> [ | PlayerU scrolling ] SFX2
+up [ > PlayerS | Dirt no inflow ] -> [ | PlayerU scrolling ] SFX7
+
+(scrolling and terraingen)
+[ scrolling ] [ Everything destroy ] -> [ scrolling ] [ destroy ]
+[ scrolling ] [ inflow no Player ] -> [ scrolling ] [ inflow tempwall ]
+random [ scrolling ] [ inflow ] -> [ scrolling ] [ inflow random overlays ]
+random [ scrolling ] [ inflow ] -> [ scrolling ] [ inflow random overlays ]
+random [ scrolling ] [ inflow ] -> [ scrolling ] [ inflow random overlays ]
+random [ scrolling ] [ inflow ] -> [ scrolling ] [ inflow random overlays ]
+random [ scrolling ] [ inflow ] -> [ scrolling ] [ inflow enemyoverlay ]
+random [ scrolling ] [ inflow ] -> [ scrolling ] [ inflow enemyoverlay ]
+
+
+
+startloop
+random [ tempwall ] -> [ dirtm ]
+random [ tempwall ] -> [ dirtm ]
+random [ tempwall ] -> [ dirtm ]
+random [ tempwall ] -> [ dirtm ]
+random [ tempwall ] -> [ dirtm ]
+random [ tempwall ] -> [ dirtm ]
+random [ tempwall ] -> [ ]
+random [ tempwall ] -> [ ]
+random down [ tempwall | solid ] -> [ rock | Solid ]
+random down [ tempwall | solid ] -> [ rock | Solid ]
+endloop
+
+
+[ pickupoverlay rock ] -> [ random pickups]
+[ enemyoverlay rock ] -> [ enemy ]
+
+random down [ Solid inflow | rock | rock ] -> [ rock inflow | rock | rock ]
+[ no Solid | inflow Solid | no Solid ] -> [ | inflow | ]
+[ no Solid | inflow Solid | inflow Solid | no Solid ] -> [ | inflow | inflow | ]
+
+
+down [ scrolling ] [ Everything ] -> [ scrolling ] [ > Everything ]
+
+
+(gravity)
+down [ Heavy ] -> [ down Heavy ] again
+
+(up [ > PlayerS | no Solid ] [ Everything destroy ] -> [ > PlayerS scrolling | ] [ destroy ]
+up [ > PlayerS | Dirt ] [ Everything destroy ] -> [ > PlayerS scrolling | dirt ] [ destroy ]
+down [ Everything ] [ Player scrolling ] -> [ > Everything ] [ PlayerU scrolling ]
+)
+
+(movement in general)
+horizontal [ > PlayerU | Dirt ] -> [ | PlayerS ] SFX1
+horizontal [ > PlayerU ] -> [ > PlayerS ]
+
+[ action PlayerU ] -> [ PlayerS ]
+[ > Player | Dirt ] -> [ | Player ] SFX1
+
+
+(use pickup)
+
+up [ action PlayerS shoesworn | Solid | no inflow no exit ] -> [ | Solid | PlayerS ] SFX4
+up [ action PlayerS shoesworn | | Solid | no inflow no exit ] -> [ | | Solid | PlayerS ] SFX4
+up [ action PlayerS shoesworn | | | | no inflow no exit ] -> [ | | | | PlayerU ] SFX4
+
+(pushing)
+Horizontal [ > Player | Heavy ] -> [ > Player | > Heavy ] SFX6
+Horizontal [ > Heavy | Heavy ] -> [ > Heavy | > Heavy ]
+Horizontal [ > Enemy | Dirt ] -> [ > Enemy | ] SFX1
+Horizontal [ > Enemy | pickups | Solid ] -> [ > Enemy | | Solid ] SFX4
+([Enemy h_dead no h_grav] -> message flattened to death)
+(down [ Enemy h_dead | destroy ] -> [ Enemy | destroy ] message flattened to death)
+([ > Enemy | Player ] -> [ | Enemy h_dead ] SFX5)
+([ moving Enemy h_dead ] -> [ moving Enemy moving h_dead ])
+[ moving Enemy h_grav ] -> [ moving Enemy moving h_grav ]
+down [ > Enemy h_grav | Solid no Player no Enemy ] -> [ | Enemy ] SFX4
+down [ > Enemy | Player ] -> [ > Enemy | ] SFX4
+
+
+
+
+(pickup)
+
+[ > Player | shoes ] -> [ | stationary Player shoesworn ] SFX3
+
+[ > Player | Eraser ] [ Solid no Player no Pickups ] -> [ > Player | Eraser ] [ DirtM ]
+startloop
+random [ > Player | Unraser ] [ Solid no Player | no Solid ] -> [ > Player | Unraser ] [ Solid | Rock ]
+random [ > Player | Unraser ] [ Solid no Player | no Solid ] -> [ > Player | Unraser ] [ Solid | Dirtm ]
+random [ > Player | Unraser ] [ Solid no Player | no Solid ] -> [ > Player | Unraser ] [ Solid | Dirtm ]
+random [ > Player | Unraser ] [ Solid no Player | no Solid ] -> [ > Player | Unraser ] [ Solid | Dirtm ]
+endloop
+[ > Player | Pickups ] -> [ | stationary Player ] SFX8
+
+(steps)
+up [ PlayerS | no Solid ] -> [ PlayerS | h_step ]
+[ moving PlayerS ] [ h_step ] -> [ moving PlayerS ] [ moving h_step ]
+
+(late steps)
+late down [ h_step | Player ] -> [ | Player ]
+late [h_grav] [h_step] -> [h_grav] []
+late down [ h_step no Solid | no Player ] [ PlayerS ] -> [ PlayerS | ] [ ]
+late down [ h_step Dirt | no Player ] [ PlayerS ] -> [ PlayerS | ] [ ] SFX1
+
+(player gravity)
+late down [ PlayerS | h_grav ] -> [ | PlayerS ]
+late down [ PlayerS | no Solid ] -> [ PlayerS | h_grav ]
+
+late [ Player no shoesworn] [ shoesworn ] -> [ Player shoesworn ] [ ]
+
+(enemy gravity)
+late down [ enemy | no Solid ] -> [ enemy h_grav | ]
+late down [ enemy | Player ] -> [ enemy h_grav | ]
+
+
+(cleanup)
+late [scrolling] -> []
+late [overlays] -> []
+late [h_step] -> []
+
+(beautify)
+late up [ Dirtm | no Dirt ] -> [ DirtU | ]
+late up [ DirtU | Dirt ] -> [ Dirtm | Dirt ]
+
+(death)
+[ Player destroy ] -> [ destroy ] SFX4
+
+(life)
+late [ Player exit ] [ exit no Player ] -> [ Player exit ] [ ] SFX9
+==============
+WINCONDITIONS
+==============
+all exit on player
+=======
+LEVELS
+=======
+
+message Survive. x to use held item.
+$$$$$$$$$$$$$$$$$$$
+eeeeeeeeeeeeeeeeeee
+eeeeeeeeeeeeeeeeeee
+###################
+###################
+###################
+###################
+###################
+###################
+###################
+###################
+###################
+###################
+###################
+###################
+###################
+#########P#########
+###################
+###################
+###################
+###################
+###################
+###################
+@@@@@@@@@@@@@@@@@@@
+
+message Is that a light at the end of the tunnel?
+$$$$$$$$$$$$$$$$$$$$$$$$$
+eeeeeeeeeeeeeeeeeeeeeeeee
+eeeeeeeeeeeeeeeeeeeeeeeee
+o.......................o
+o.......................o
+o..x.x.x.x.xpx.x.x.x.x..o
+o#.#.#.#.#.#x#.#.#.#.#.#o
+o.#.#.#.#.#.#.#.#.#.#.#.o
+o#.#.#.#.#.#.#.#.#.#.#.#o
+o.#.#.#.#.#.#.#.#.#.#.#.o
+o#.#.#.#.#.#.#.#.#.#.#.#o
+o.#.#.#.#.#.#.#.#.#.#.#.o
+o#.#.#.#.#.#.#.#.#.#.#.#o
+o.......................o
+o.......................o
+o.......................o
+o.......................o
+o......#................o
+o.....##..............#.o
+o....###...%...#..#..##.o
+###..############.#######
+########.##.#############
+####.#####..#############
+########.....############
+#########################
+#########################
+@@@@@@@@@@@@@@@@@@@@@@@@@
+
+title Colour Chained
+author Dennis Au
+youtube _VzrmRkLfxM
+run_rules_on_level_start
+again_interval 0.015
+noundo
+
+(version 201310152126 - added some harder levels, added sfx for rotate and drop, decided to use noundo)
+(version 201310142256 - tweaked scoring, added pop animation and reworked code)
+
+========
+OBJECTS
+========
+Background
+Black
+
+P1 p
+Black
+0...0
+.....
+.....
+.....
+0...0
+
+P2 q
+Black
+0...0
+.....
+.....
+.....
+0...0
+
+hasN
+Orange
+0....
+.....
+.....
+.....
+....0
+
+Remove
+White
+.....
+.....
+.....
+.....
+.....
+
+
+NP1 n
+White
+.....
+.....
+.....
+.....
+.....
+
+NP2 m
+White
+.....
+.....
+.....
+.....
+.....
+
+LoseFlag
+Grey Black LightGrey
+.....
+10120
+.....
+02010
+.....
+
+PieceGen
+Black
+
+HBorder -
+DarkGrey
+.....
+.....
+0...0
+.....
+.....
+
+VBorder |
+DarkGrey
+..0..
+.....
+.....
+.....
+..0..
+
+(pieces)
+C1 R
+Red LightGrey Black
+.000.
+00010
+00000
+00000
+.000.
+
+C2 G
+Green LightGrey Black
+.000.
+00010
+00000
+00000
+.000.
+
+C3 B
+Blue LightGrey Black
+.000.
+00010
+00000
+00000
+.000.
+
+C4 Y
+Yellow LightGrey Black
+.000.
+00010
+00000
+00000
+.000.
+
+(Numbers)
+No1 1
+DarkGrey
+..0..
+.00..
+..0..
+..0..
+.000.
+
+No2 2
+DarkGrey
+.00..
+0..0.
+..0..
+.0...
+0000.
+
+No3 3
+DarkGrey
+000..
+...0.
+.00..
+...0.
+000..
+
+No4 4
+DarkGrey
+..0..
+.00..
+0.0..
+0000.
+..0..
+
+No5 5
+DarkGrey
+0000.
+0....
+000..
+...0.
+000..
+
+No6 6
+DarkGrey
+.00..
+0....
+000..
+0..0.
+.00..
+
+No7 7
+DarkGrey
+0000.
+...0.
+..0..
+.0...
+0....
+
+No8 8
+DarkGrey
+.00..
+0..0.
+.00..
+0..0.
+.00..
+
+No9 9
+DarkGrey
+.00..
+0..0.
+.000.
+...0.
+.00..
+
+No0 0
+DarkGrey
+.00..
+0..0.
+0..0.
+0..0.
+.00..
+
+Pop
+LightGrey White
+...1.
+..101
+...1.
+.....
+.....
+
+Inc
+Black
+
+PlayArea
+Green
+
+
+=======
+LEGEND
+=======
+. = Background
+u = PieceGen
++ = Inc
+
+Player = P1 or P2
+Piece = C1 or C2 or C3 or C4
+PieceB = Piece
+
+NP = NP1 or NP2
+Border = HBorder or VBorder
+Score = No1 or No2 or No3 or No4 or No5 or No6 or No7 or No8 or No9 or No0
+
+Obstacle = Piece or Score
+Match3Logic = hasN or Remove or Pop
+
+=======
+SOUNDS
+=======
+startlevel 17589703
+
+(death)
+sfx0 45317502
+
+(match3)
+sfx1 530500
+
+(piece drop)
+sfx2 75273507
+
+(piece rotate)
+sfx3 21774107
+
+================
+COLLISIONLAYERS
+================
+PlayArea
+Background
+Player, NP, PieceGen, Border
+Piece, Score, Inc,
+Match3Logic, LoseFlag
+
+======
+RULES
+======
+(set preview area)
+[] -> [PlayArea]
+Down [NP|PlayArea] -> [NP|]
+Vertical [No PlayArea| PlayArea] -> [|]
+
+(match 3 rules)
+Right [C1|C1] -> [C1 hasN|C1 hasN]
+Right [C2|C2] -> [C2 hasN|C2 hasN]
+Right [C3|C3] -> [C3 hasN|C3 hasN]
+Right [C4|C4] -> [C4 hasN|C4 hasN]
+
+Vertical [C1 hasN|C1] -> [Remove C1| Remove C1]
+Vertical [C2 hasN|C2] -> [Remove C2| Remove C2]
+Vertical [C3 hasN|C3] -> [Remove C3| Remove C3]
+Vertical [C4 hasN|C4] -> [Remove C4| Remove C4]
+
+[Remove C1| C1] -> [Remove C1| Remove C1]
+[Remove C2| C2] -> [Remove C2| Remove C2]
+[Remove C3| C3] -> [Remove C3| Remove C3]
+[Remove C4| C4] -> [Remove C4| Remove C4]
+
+[C1|C1|C1] -> [Remove C1|Remove C1|Remove C1]
+[C2|C2|C2] -> [Remove C2|Remove C2|Remove C2]
+[C3|C3|C3] -> [Remove C3|Remove C3|Remove C3]
+[C4|C4|C4] -> [Remove C4|Remove C4|Remove C4]
+
+[hasN] -> []
+
+[PlayArea Remove Piece][P1] -> [PlayArea Pop][P1] sfx1
+random [Pop][inc] -> [][left inc] again
+
+
+(down drops pieces)
+Down [> Player Piece|No Piece] -> [Player|> Piece] sfx2
+Down [> Player No Piece] -> Cancel
+
+
+(x rotates clockwise)
+[Up P1|P2] -> [> P1|v P2] sfx3
+[Action P1|P2] -> [> P1|v P2] sfx3
+[Moving Player Piece] -> [Moving Player Moving Piece]
+[> Player| Border] -> cancel
+
+
+(gravity)
+Down [PlayArea Piece No Player|No Obstacle][stationary inc] -> [PlayArea|> Piece][stationary inc] again
+
+
+(explicit loss if piece ends on border)
+[Piece Border][stationary inc][P1] -> [Piece Border LoseFlag][inc][] sfx0
+[LoseFlag|No LoseFlag] -> [LoseFlag|LoseFlag] again
+
+
+(scoring)
+
+left [> inc| score] -> [> inc| > score]
+left [> No9| score] -> [No0|> score]
+left [> No9| border] -> [No0| border]
+
+left [> No0] -> [No1]
+left [> No1] -> [No2]
+left [> No2] -> [No3]
+left [> No3] -> [No4]
+left [> No4] -> [No5]
+left [> No5] -> [No6]
+left [> No6] -> [No7]
+left [> No7] -> [No8]
+left [> No8] -> [No9]
+
+
+(preview area)
+
+startloop
+(for endless mode)
+[PieceGen No Piece] -> [PieceGen Random Piece]
+(antigrav)
+Up [Piece No PlayArea No NP| No Obstacle] -> [|> Piece]
+(get next piece)
+[P1 no Piece][P2 no Piece][NP1 Piece|NP2 PieceB]-> [P1 Piece][P2 PieceB][NP1|NP2]
+endloop
+
+
+==============
+WINCONDITIONS
+==============
+No Piece
+No Pop
+
+=======
+LEVELS
+=======
+(Empty Level Template
+
+nm|..pq..|
+..|......|
+..|------|
+..|......|
+..|......|
+..|......|
+..|......|
+..|......|
+..|......|
+..|000000+
+
+)
+
+nm|..pq..|
+RR|......|
+..|------|
+..|......|
+..|......|
+..|......|
+..|..Y...|
+..|..RR..|
+..|R.YY..|
+..|000000+
+
+nm|..pq..|
+GR|......|
+..|------|
+..|......|
+..|......|
+..|....B.|
+..|...BG.|
+..|...RG.|
+..|.R.RB.|
+..|000000+
+
+nm|..pq..|
+RR|......|
+BB|------|
+BR|......|
+..|......|
+..|......|
+..|......|
+..|....B.|
+..|..RRB.|
+..|000000+
+
+
+nm|..pq..|
+BG|......|
+RB|------|
+..|......|
+..|......|
+..|......|
+..|......|
+..|..GB..|
+..|RRGB..|
+..|000000+
+
+nm|..pq..|
+BG|......|
+GB|------|
+..|......|
+..|......|
+..|......|
+..|...G..|
+..|..BB..|
+..|..GG.B|
+..|000000+
+
+nm|..pq..|
+RG|......|
+GB|------|
+BR|......|
+..|......|
+..|......|
+..|...G..|
+..|...B..|
+..|..RRG.|
+..|000000+
+
+nm|..pq..|
+GR|......|
+RY|------|
+BG|......|
+YB|......|
+..|......|
+..|..B...|
+..|..RB..|
+..|.GYB..|
+..|000000+
+
+nm|..pq..|
+RG|......|
+YY|------|
+YG|......|
+BB|......|
+..|BY....|
+..|YB.G..|
+..|YRRG..|
+..|BGGBBY|
+..|000000+
+
+nm|..pq..|
+rb|......|
+bb|------|
+by|......|
+ry|......|
+..|....r.|
+..|...rb.|
+..|.bybyb|
+..|bybyrr|
+..|000000+
+
+nm|..pq..|
+br|......|
+ry|------|
+yy|......|
+..|....b.|
+..|...gb.|
+..|...yy.|
+..|.bygb.|
+..|byrgrr|
+..|000000+
+
+
+nm|..pq..|
+by|......|
+ry|------|
+ry|......|
+yg|....y.|
+..|..rgby|
+..|b.gbyg|
+..|rrgbyg|
+..|bbyyrr|
+..|000000+
+
+
+message Thank you for playing.
+message Music: Puzzle Pieces - Desert of Lost Endings by Nick Tanski (nicholastanski.bandcamp.com)
+
+(endless mode)
+message Endless Mode unlocked!
+
+nm|..pq..|
+..|......|
+..|------|
+..|......|
+..|......|
+..|......|
+..|......|
+..|......|
+..|......|
+uu|000000+
+
+(CC BY-NC-SA 3.0)
+
+USER PROMPT:
+Consider the code for the following PuzzleScript game:
+
+title Box Pusher
+author YourName
+
+========
+OBJECTS
+========
+
+Background
+LightGrey
+
+Player
+Red
+.....
+..0..
+.000.
+..0..
+.....
+
+Wall
+DarkGrey
+.....
+00000
+00000
+00000
+.....
+
+Crate
+Brown Yellow
+.....
+.111.
+.111.
+.111.
+.....
+
+Target
+Green
+.....
+..0..
+.....
+
+CrateOnTarget
+OliveDrab
+.....
+.000.
+.010.
+.000.
+.....
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Player
+C = Crate
+T = Target
+O = CrateOnTarget
+
+===========
+SOUNDS
+===========
+
+SFX0 255 0
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Target
+CrateOnTarget, Crate
+Player, Wall
+
+======
+RULES
+======
+
+[ > Player | Crate ] -> [ > Player | > Crate ]
+[ Crate | Target ] -> [ CrateOnTarget | ]
+[ CrateOnTarget | no Target ] -> [ Crate | ]
+
+==============
+WINCONDITIONS
+==============
+
+All CrateOnTarget
+
+=======
+LEVELS
+=======
+
+#######
+#.....#
+#..T..#
+#..C..#
+#..P..#
+#..T..#
+#######
+
+
+Create a variation on this game, making it more complex. First, reason about your task and determine the best plan of action. Then, write your code. Return your code in full, inside a ```plaintext code block.

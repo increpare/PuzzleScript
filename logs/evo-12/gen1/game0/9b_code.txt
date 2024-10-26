@@ -1,0 +1,154 @@
+The errors in the PuzzleScript game code are related to the `CrateOnTarget` object definition. The console output indicates two specific issues:
+
+1. **Color Definition Issue**: The color `DarkOliveGreen` is not recognized without being properly registered in the game's color palette. PuzzleScript expects standard colors or colors defined in `color_palette` if custom.
+  
+2. **Palette Size Mismatch**: There seems to be an issue with the number of colors defined for the `CrateOnTarget`. PuzzleScript expects a set of colors used in a 5-character wide pattern. If there's only one color, it assumes the shape is not filled properly.
+
+Here is a step-by-step plan to fix this:
+
+- Replace the color `DarkOliveGreen Black` with colors that are within the default colors of PuzzleScript or within the game's `color_palette`.
+  
+- Ensure that there are enough colors for each pixel to be explained (at least the second and more colors) in the object's design.
+
+Here is the corrected code, using a commonly supported color `DarkGreen` and refining the color palette to avoid any unsupported colors:
+
+```plaintext
+title Advanced Box Pusher
+author YourName
+
+========
+OBJECTS
+========
+
+Background
+LightGrey
+.....
+.....
+.....
+.....
+.....
+
+Player
+Red
+.....
+..0..
+.000.
+..0..
+.....
+
+Wall
+DarkGrey
+.....
+00000
+00000
+00000
+.....
+
+Crate
+Brown Yellow
+.....
+.111.
+.111.
+.111.
+.....
+
+Target
+Green
+.....
+..0..
+.....
+..0..
+.....
+
+CrateOnTarget
+DarkGreen Black
+.....
+.000.
+.010.
+.000.
+.....
+
+Portal
+LightBlue
+.....
+..0..
+.....
+..0..
+.....
+
+CrateImmune
+Purple Pink Black
+.....
+.222.
+.222.
+.222.
+.....
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Player
+C = Crate
+T = Target
+O = CrateOnTarget
+X = Portal
+I = CrateImmune
+
+===========
+SOUNDS
+===========
+
+sfx0 255
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Target
+Portal
+CrateOnTarget, Crate, CrateImmune
+Player, Wall
+
+======
+RULES
+======
+
+[ > Player | Crate ] -> [ > Player | > Crate ]
+[ Crate | Target ] -> [ CrateOnTarget | ]
+[ CrateOnTarget | no Target ] -> [ Crate | ]
+[ Player | Portal ] -> [ Player Portal | Portal Player ] 
+
+==============
+WINCONDITIONS
+==============
+
+All CrateOnTarget
+
+=======
+LEVELS
+=======
+
+#########
+#.......#
+#..C....#
+#..T....#
+#..P....#
+#..T.X..#
+#....X..#
+#.......#
+#########
+
+#####
+#...#
+#.I.#
+#.CP#
+#.T.#
+#...#
+#####
+```
+
+This code should now compile without errors as it uses colors that are more likely to be recognized by PuzzleScript and provides at least two distinct colors for the `CrateOnTarget` object.
