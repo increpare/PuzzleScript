@@ -1,633 +1,526 @@
 SYSTEM PROMPT:
 You are a game designer, familiar with the PuzzleScript game description language. Here are some example games, for inspiration (do not reproduce these games exactly):
 
-title cute train
-author Mark Wonnacott
-homepage http://twitter.com/ragzouken
+title Des Poseidons Dreizack
+author Stephen Lavelle
+homepage www.increpare.com
 
-flickscreen 16x10
-color_palette pastel
-youtube pTgEXwzk7XU
+text_color #e7cf5c
+background_color #041646
 
-noundo
-norestart
+noaction
+
+run_rules_on_level_start
+
+again_interval 0.1
+(verbose_logging)
+
+
+(flickscreen 14x13)
 
 ========
 OBJECTS
 ========
 
 Background
-lightgreen green
+blue #204ec5
+00000
 01000
-00110
-10010
-10100
-01001
+00000
+00010
+00000
 
-Water
-blue white lightblue
-20010
-02002
-12020
-00220
-02002
+smrocks k
+brown darkbrown 
+.1.1.
+10101
+.1.1.
+10101
+.1.1.
 
-Water2
-blue white lightblue
-02000
-20210
-00202
-01022
-20200
+teleport T
+lightblue blue darkblue
+10101
+01210
+12221
+01210
+10101
 
-Gerald
-blue black
-.000.
-01010
-10001
+Target
+darkblue transparent 
 01110
-.000.
+1.0.1
+10001
+1.0.1
+01110
 
-Mountain
-darkbrown darkbrown
+Wall
+green lightgreen #2d6d0c
+00000
+00010
+00000
+01000
+00000
+
+wallalt "
+green lightgreen #2d6d0c
+00000
+00000
+00000
+01000
+00000
+
+
+wallalt2 '
+green lightgreen #2d6d0c
+00000
+00010
+00000
+00000
+00000
+
+coast_u
+lightblue
+.0.0.
+.....
+.....
+.....
+.....
+
+coast_d
+lightblue
+.....
+.....
+.....
+.....
+.0.0.
+
+coast_l
+lightblue
+.....
+0....
+.....
+0....
+.....
+
+coast_r
+lightblue
+.....
+....0
+.....
+....0
+.....
+
+endhand x
+pink
+0.0.0
+.....
+0...0
+.....
+0.0.0
+
+
+Player
+brown orange yellow lightblue
+2.2.2
+2.2.2
+22222
+..1..
+.313.
+
+underplayer
+lightblue
 ..0..
-.10..
-.000.
-0000.
-11001
+.....
+.....
+.....
+.....
 
-Forest
+magnet
+lightblue blue
+.0000
+0....
+0.000
+0...0
+.000.
+
+
+flowers 
 darkgreen brown
 .000.
 00000
-00000
-00100
-.111.
-
-Beach
-yellow white
-00010
-01000
-00001
-00100
-10000
-
-Player
-yellow black
 .000.
-01010
+..1..
+..1..
+
+hinge H
+orange green darkgray 
 10001
-01110
-.000.
+02220
+02220
+02220
+10001
 
-GhostVTrack
-yellow
-GhostHTrack
-yellow
-GhostURTrack
-yellow
-GhostULTrack
-yellow
-GhostDLTrack
-yellow
-GhostDRTrack
-yellow
-
-VTrack
-grey darkbrown
-0...0
-0...0
-01110
-0...0
-0...0
-
-HTrack
-grey darkbrown
-00000
-..1..
-..1..
-..1..
-00000
-
-Structs
-black darkbrown
-11111
-10101
-11111
-10101
-11111
-
-URTrack
-grey darkbrown
-...00
-..0..
-.01..
-0..1.
-0...1
-
-ULTrack
-grey darkbrown
-00...
-..0..
-..10.
-.1..0
-1...0
-
-DLTrack
-grey darkbrown
-1...0
-.1..0
-..10.
-..0..
-00...
-
-DRTrack
-grey darkbrown
-0...1
-0..1.
-.01..
-..0..
-...00
-
-UTrain
-red black darkred
-.000.
-01110
-00000
-00100
-00000
-
-RTrain
-red black darkred
+door_l L
+pink darkgray transparent
+.2.2.
 0000.
-00010
-01010
-00010
+11110
 0000.
+.2.2.
 
-LTrain
-red black darkred
+
+door_r R
+pink darkgray transparent
+.2.2.
 .0000
-01000
-01010
-01000
+01111
 .0000
+.2.2.
 
-DTrain
-red black darkred
-00000
-00100
-00000
-01110
-.000.
 
-Cart
-red black darkred
-22222
-21112
-21112
-21112
-22222
 
-Smoke1
-white
+door_u U
+pink darkgray transparent
+.010.
+20102
+.010.
+20102
 ..0..
+
+door_d D
+pink darkgray transparent
+..0..
+20102
+.010.
+20102
+.010.
+
+
+door_dl 1
+pink darkgray
+.....
+..00.
+.010.
+010..
+10...
+
+
+door_dr 2
+pink darkgray
+.....
+.00..
+.010.
+..010
+...01
+
+
+door_ul 3
+pink darkgray
+10...
+010..
+.010.
+..00.
+.....
+
+door_ur 4
+pink darkgray
+...01
+..010
+.010.
+.00..
+.....
+
+ul
+orange
+0....
+.....
+.....
+.....
+.....
+
+ur
+orange
+....0
+.....
+.....
+.....
+.....
+
+
+dl
+orange
+.....
+.....
+.....
+.....
+0....
+
+
+dr
+orange
+.....
+.....
+.....
+.....
+....0
+
+wu
+green lightgreen
+10101
+.....
+.....
+.....
+.....
+
+wd
+green lightgreen
+.....
+.....
+.....
+.....
+10101
+
+wl
+green lightgreen
+1....
+0....
+1....
+0....
+1....
+
+wr
+green lightgreen
+....1
+....0
+....1
+....0
+....1
+
+suck_d
+lightblue
+.....
+.....
+.0.0.
+..0..
+.....
+
+
+suck_u
+lightblue
+.....
+..0..
+.0.0.
+.....
+.....
+
+
+suck_r
+lightblue
+.....
+..0..
+...0.
+..0..
+.....
+
+
+suck_l
+lightblue
+.....
+..0..
+.0...
+..0..
+.....
+
+temp
+transparent
+
+A 
+transparent
+
+S
+lightblue
 .0.0.
 0.0.0
 .0.0.
-..0..
-
-Smoke2
-white
-.....
+0.0.0
 .0.0.
-..0..
-.0.0.
-.....
 
-Smoke3
-white
-.....
-..0..
-.0.0.
-..0..
-.....
+nopull
+transparent
 
-Switch
-red black
-...0.
+spawned 
+transparent
+
+
+ip1 §
+#ffff05 #ffa33b
+0.0.0
+0.0.0
+00000
 ..1..
-.1...
-.111.
+..1..
+
+ip2 ±
+#8e4833
 .....
-
-=======
-LEGEND
-=======
-
-. = Background
-^ = Mountain
-% = Forest
-~ = Water
-, = Beach
-
-| = VTrack
-- = HTrack
-r = URTrack
-¬ = ULTrack
-l = DRTrack
-j = DLTrack
-X = VTrack and Structs
-Z = HTrack and Structs
-Q = ULTrack and Structs
-
-P = Player
-
-T = VTrack and UTrain
-C = VTrack and Cart
-
-[ = HTrack and RTrain
-] = HTrack and Cart
-
-/ = Switch
-
-1 = GhostHTrack and URTrack
-! = HTrack and GhostURTrack
-2 = HTrack and GhostDRTrack
-3 = HTrack and GhostULTrack
-4 = GhostHTrack and DLTrack
-5 = GhostVTrack and URTrack
-6 = GhostVTrack and DRTrack
-7 = GhostVTrack and ULTrack
-8 = GhostVTrack and DLTrack
-
-_ = Beach and HTrack
-
-WaterR = Water or Water2
-
-Ghost = GhostHTrack or GhostVTrack or GhostULTrack or GhostURTrack or GhostDLTrack or GhostDRTrack
-Track = HTrack or VTrack or ULTrack or URTrack or DLTrack or DRTrack
-
-Train = UTrain or DTrain or LTrain or RTrain
-Vehicle = Train or Cart
-Mover = Vehicle or Player
-
-G = Gerald and Structs
-
-=======
-SOUNDS
-=======
-
-Train move 91301709
-SFX1 53409305
-SFX2 38557307
-SFX3 99431502
-
-================
-COLLISIONLAYERS
-================
-
-Background
-Beach GhostVTrack GhostHTrack GhostURTrack GhostULTrack GhostDLTrack GhostDRTrack
-Structs
-VTrack HTrack URTrack ULTrack DLTrack DRTrack Switch
-Water Water2 Mountain Forest Player UTrain RTrain LTrain DTrain Cart Gerald
-Smoke1 Smoke2 Smoke3
-
-======
-RULES
-======
-
-(animate water)
-[        WaterR ] -> [ action WaterR ]
-[ action WaterR ] -> [ random WaterR ]
-
-[ action Player no Structs | Cart ] [ Train ] -> [ Player | Cart ] [ action Train ]
-
-(move the train if we're on the impassable structs)
-[ Structs Mover ] [ Train ] -> [ Structs Mover ] [ action Train ]
-
-[ action Train ] -> [ action Train Smoke1 ]
-
-[ action UTrain ] -> [    up UTrain ]
-[ action DTrain ] -> [  down DTrain ]
-[ action RTrain ] -> [ right RTrain ]
-[ action LTrain ] -> [  left LTrain ]
-
-late [ Mover Structs ] -> [ Mover Structs ] again (repeat if the train is still on structs)
-
-(cart follows train, player follows cart)
-[ Cart   | moving Train ] -> [ > Cart   | moving Train ]
-[ Player | moving Cart  ] -> [ > Player | moving Cart  ]
-
-[ > Player | Structs no Gerald no Cart ] -> [ Player | Structs ] message It's dangerous to walk along railway bridges!
-
-(endgame message)
-[ >      Player | Gerald ] -> [ Player | Gerald ] message you made it! thanks for playing.
-[ action Player | Gerald ] -> [ Player | Gerald ] message you made it! thanks for playing.
-
-(train turns when entering corners)
-up    [ > UTrain | URTrack ] -> [ > RTrain | URTrack ]
-up    [ > UTrain | ULTrack ] -> [ > LTrain | ULTrack ]
-
-right [ > RTrain | ULTrack ] -> [ > DTrain | ULTrack ]
-right [ > RTrain | DLTrack ] -> [ > UTrain | DLTrack ]
-
-down  [ > DTrain | DRTrack ] -> [ > RTrain | DRTrack ]
-down  [ > DTrain | DLTrack ] -> [ > LTrain | DLTrack ]
-
-left  [ > LTrain | URTrack ] -> [ > DTrain | URTrack ]
-left  [ > LTrain | DRTrack ] -> [ > UTrain | DRTrack ]
-
-(animate smoke)
-[ Smoke3 ] -> [ ]
-[ Smoke2 ] -> [ Smoke3 ]
-[ Smoke1 ] -> [ Smoke2 ]
-
-[ action Player Switch ] -> [ Player action Switch ]
-
-(switch all uncovered tracks at once)
-[ action Switch ] [ Ghost Vehicle ] -> [ action Switch ] [ Ghost Vehicle ] SFX3 (play blocking sound if switch tracks are covered while switching)
-[ action Switch ] [ Ghost no Vehicle ] -> [ action Switch ] [ action Ghost ] SFX2
-
-[ action GhostHTrack URTrack no Vehicle ] -> [ HTrack GhostURTrack ]
-[ HTrack action GhostURTrack no Vehicle ] -> [ GhostHTrack URTrack ]
-[ action GhostHTrack DRTrack no Vehicle ] -> [ HTrack GhostDRTrack ]
-[ HTrack action GhostDRTrack no Vehicle ] -> [ GhostHTrack DRTrack ]
-[ action GhostHTrack ULTrack no Vehicle ] -> [ HTrack GhostULTrack ]
-[ HTrack action GhostULTrack no Vehicle ] -> [ GhostHTrack ULTrack ]
-[ action GhostHTrack DLTrack no Vehicle ] -> [ HTrack GhostDLTrack ]
-[ HTrack action GhostDLTrack no Vehicle ] -> [ GhostHTrack DLTrack ]
-
-[ action GhostVTrack URTrack no Vehicle ] -> [ VTrack GhostURTrack ]
-[ VTrack action GhostURTrack no Vehicle ] -> [ GhostVTrack URTrack ]
-[ action GhostVTrack DRTrack no Vehicle ] -> [ VTrack GhostDRTrack ]
-[ VTrack action GhostDRTrack no Vehicle ] -> [ GhostVTrack DRTrack ]
-[ action GhostVTrack ULTrack no Vehicle ] -> [ VTrack GhostULTrack ]
-[ VTrack action GhostULTrack no Vehicle ] -> [ GhostVTrack ULTrack ]
-[ action GhostVTrack DLTrack no Vehicle ] -> [ VTrack GhostDLTrack ]
-[ VTrack action GhostDLTrack no Vehicle ] -> [ GhostVTrack DLTrack ]
-
-==============
-WINCONDITIONS
-==============
-
-=======
-LEVELS
-=======
-
-(feel free to try making more puzzles!
-
-editing tip: copy out a few rows of screens to edit in isolation
-
-* use bridges (structs) to force the train over junctions before there's a chance to switch them
-* use bridges to make switches unreachable until junctions have been crossed
-* use the train itself and narrow passages to make switches unreachable until junctions have been crossed)
-
-message welcome to the breezy isles!
-
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-~~~~~~~~~~~~~~~~~~,,,,~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-~~~~~~~~~~~~~~~~~,,,,,,,~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-~~~~~~~~~~~~~~~~~,,..,,,,,~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-~~~~~~~~~~~~~~~~~,,,p.,,,,,~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-~~~~~~~~~~~~~~~~~~,,....,,,,,~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-~~~~~~~~~~~~~~~~~~,,,.....,,,,~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-~~~~~~~~~~~~~~~~~~~,,,......,,,~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-~~~~~~~~~~~~~~~~~~~~,,.......,,,,,,~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-~~~~~~~~~~~~~~~~~~~,,,........,,,,,,,~~~~~~~~~~~~~~~~~~~~~~~~~~~
-~~~~~~~~~~~~~~~~~~,,,..........,,,,,,,,~~~~~~~~~~~~~~~~~~~~~~~~~
-~~~~~~~~~~~~~~~~~~,,...............,,,,,,~~~~~~~~~~~~~~~~~~~~~~~
-~~~~~~~~~~~~~~~~,~~,...%.........%....,,,,~~~~~~~~~~~~~~~~~~~~~~
-~~~~~~~~~~~~~,,,,,~..%.................,,,,~~~~~~~~~~~~~~~~~~~~~
-~~~~~~~~,,,,,,,,..~~%%%%%.r-------¬.....,,,,~~~~~~~~~~~~~~~~~~~~
-,,,,,,,,,,,,,....%%~%%%%%%t.......l-¬.....,,,~~~~~~~~~~~~~~~~~~~
-,,,,,,..........%%%~~%%%%%c%%.......l-¬....,,~~~~~~~~~~~~~~~~~~~
-........%%%..%%%%%%%~%%%%%|%%%%%....|.l--¬..,,~~~~~~~~~~~~~~~~~~
-.%%%%.%%%%%%%%%%%%%%~%%%%%|%%%%%%%..|...%l¬.,,~~~~~~~~~~~~~~~~~~
-%%%%%%%%%%%%%%%%%%%%~%%%%%|%%%%%%%%.l¬..%%|.,,~~~~~~~~~~~~~~~~~~
-%%%%%%%%%%%%%%%%%%%%~%%%%%|%%%%%%%%..|.%%%|.,,~~~~~~~~~~~~~~~~~~
-%%%%r---------------z-¬%%%|%%%%%%....|%%%%|.,,~~~~~~~~~~~~~~~~~~
-%%.rj........%%%%%%%~%l¬%.|..........|%%%rj,,,~~~~~~~~~~~~~~~~~~
-%%rj.~~~~G~~~~%%%%%%~^%l--¬..........l---j.,,,~~~~~~~~~~~~~~~~~~
-%.|.~~~~~x~~~~~%%%%^~^....|.....^^^........,,~~~~~~~~~~~~~~~~~~~
-%.|.~~~~~~~~~~~%%^^^~^....l¬...^^^^^^......,,~~~~~~~~~~~~~~~~~~~
-%.|.~~~~~~~~~~%%%^^^~^^^..^l¬^^^^^^^^^^^^^.,^^~~~~~~~~~~~~~~~~~~
-%%l¬.~~~~~~~%%%^^^^^~^^^^^^^l¬^^^^^^^^^^^^^^^^~~~~~~~~~~~~~~~~~~
-%%.|..~~~~%%%%^^^^^~~^^^^^^^^x~^^^^^^^^^^^^^^^^~~~~~~~~~~~~~~~~~
-%%%|.%%%%%%%%^^^^^^~^^^^^^^^~x~^^^^^^^^^^^^^^^^~~~~~~~~~~~~~~~~~
-%%%x%%%%%%%%%^^^^^~~^^^^^^^^~x~^^^^^^^^^^^^^^^^^^^^^^~~~~~~~~~~~
-%%rj%%%%%%%%%^^^^^^~^^^^^^^~~x~%...%%^^%%^^^^^^^^^^^^^~~^~~~~~~~
-%%5z---¬%%%%%^^^^^^~^^^^^^^~^l¬..%r------¬%%^^^^^^^^^^^~~~~~~~~~
-%%|%%%%|%%%%^^^^^^^~~^^^^^~~^^l¬..|.%%%%%|%%%.^^^^^^^^^^^~~~~~~~
-%r4z---¬%%%%^^^^^^^^~~^^^^~^^^.l--l---3--j%%..^^^^^^^^^^^^~~~~~~
-%x./%r-¬%%%%^^^^^^^^^~~^^~~^^^........|%%%%%..^^^^^^^^^^^^^~~~~~
-%l--zj¬j%%%%^^^^^^^^^^~~~~^^^^%%..../.|.%%...^^^^^^^^^^^^^~~~~~~
-%%%%%%5z¬z¬%^^^^^^^^^^^^~~^^^^^%%%....|......^^^^^^^^^^^^^^~~~~~
-%%r--¬x%lzj%^^^^^^^^^^^^~^^^^^^%%%%..~x~~~~~~~^^^^^^^^^^^^^^~^~~
-%%|%%|x%%%%%%^^^^^^^^^^^~^^^^^^%%%%%~~x~~~~~~~~^^^^^^^^^^^^^~~~~
-%%|%%|x%%%%%%%%^^^^^^^^^~^^^^^^%%%%%~~x~~~~~~~~^^^^^^^^^^^^^~~~~
-%%r--47---¬¬---zzzzz1zzzzz¬^^^^^%%%..~x~~~~....%^^^^^^^^^^^~~~~~
-%%|%%%x%.%lj%%^^^^^^x^^^~^lz¬^^^^%%...|..%...%.%%%^^^^^^,,~~~~~~
-%%|%/.l¬.%%%^^^^^^^^x^^^~~^^lz¬^^%%...|.....%...........,,~~~^^~
-%%|%%%lj%%%^^^^^^^^^x^^^^~^~^^x^^^%%.rl-----------r-----__zzz¬^~
-%%l¬%%%%%^^^^^^^^^^^x^^^^~~^^^x^^^%%.|........%...|.....,,~~^x^~
-%%lj%%%%%^^^^^^^^^^r-¬^^^~~~~^x^^^^^%|...%^^^.....l¬../.,,~~~x~~
-%%%%%%%%^^^^^^^^^^^|l¬%^^~~~~~x~^^^^^|.^^^^^^^^^^..|....^^^~~x~~
-%%%%%%%^^^^^^^^^^%rj%|%^^^~~^^x^^^^^rj%%^^^^^^^%%.%l¬.^^^^^^~x~~
-%%%%%%^^^^^^^^^^^%|%%|%^^~^^~^x^^^%.|...%%..%.......|....,,~~x~~
-%%%%^^^^^^^^^^^^^%|/.|%^~^^^^^x^^^%.|.%.............|...,,,~^x^~
-%%^^^^^^^^^^^^^^^%l--8^^^^^^^rj%^^..|..r----!-------2--1___zzj^~
-^^^^^^^^^^^^^^^^^%|%^x^^^^^^^x^^^^%.|.%|%%..|....%..|%.|,,,~~^~~
-^^^^^^^^^^^^^^^^^^|.rlzz--3z-4¬^^^%.|.%l¬...|.......|..l¬,,~~~~~
-^^^^^^^^^^^^^^^^^^x^|^^^..|^..|%^^..l¬%%l-----------j...|,,,~~~~
-^^^^^^^^^^^^^^^^^^l-|---¬/|^.%|%^^%..|.%.%%.l¬%....%....|,,,,~~~
-^^^^^^^^^^^^^^^^^^^%|.%%l-j---j%^^^%.l¬.....%l¬.%.....%.|,,,,~~~
-^^^^^^^^^^^^^^^^^^^%|%%%%%%%%%%^^^^%%.|.%%%...l--¬......l¬,,,~~~
-^^^^^^^^^^^^^^^^^^^^x^^^^%%%^^^^^^^%%.|..%..%...%l-¬%....|,,,~~~
-^^^^^^^^^^^^^^^^^^^^x^^^^^^^^^^^^^^%%%|%%%%..%%....l¬....|,,,,~~
-^^^^^^^^^^^^^^^^^^^^x^^^^^^^^^^^^^^^%%|%^^%%......%.l¬...|.,,,~~
-^^^^^^^^^^^^^^^^^^^^x^%%%%%^^^^^^^^^^^|%%^^^^^^.%%...|...|^^^,~~
-^^^^^^^^^^^^^^^^^^^%|%%....%%^^^^^^^^%|%%%^^^^^^^^^%.|.^^|^^,,~~
-^^^^^^^^^^^^^^^^^^^%|%..%^..%%^^^^^%%rj%%^^^^^^^%....|...|^,,,~~
-^^^^^^^^^^^^^^^^^^^%|./.^%%..%%^^^%%.|.%..%......../.6---¬^,,,~~
-^^^^^^^^^^^^^^^^^^^%|..%^%....%^^^%..|%..%...%......rj...|.,,,~~
-^^^^^^^^^^^^^^^^^^^%l--!z1--¬--zzz----------------!-j..%.|,,,,~~
-^^^^^^^^^^^^^^^^^^^^%%%|^|..|.%^^^%..|.%.%..%..%..|...%..|,,,,~~
-^^^^^^^^^^^^^^^^^^^^^^^x^|%%|%^^^^%%.|%%%.........|......|,,,,~~
-^^^^^^^^^^^^^^^^^^^^^^^x^x^^x^^^^^^%%|%^^^^^^.....|...^^rj^,,~~~
-^^^^^^^^^^^^^^^^^^^^^^^x^x^^x^^^^^^^^|%.^^^^^^^^%.|.^^^^|^^^^~~~
-^^^^^^^^^^^^^^^^^^^^^^^x^x^^x^^^^^^^%|^^^^^^^^.%..|.....|,,^^~~~
-^^^^^^^^^^^^^^^^^^^^^^^x^x^^l¬^^^^^%%|%%^^^.%.....|...%.|,,,~~~~
-^^^^^^^^^^^^^^^^^^^^^^^x^lzzjx^^^^%%.|..%%........|.%...|,,,~~~~
-^^^^^^^^^^^^^^^^^^^^^^^l¬^^^^x^^^^%%.l¬%......%..rj..%..|,,,~~~~
-^^^^^^^^^^^^^^^^^^^^^^^^x^^^^x^^^^%%%.l¬.%......rj.....rj,,,~~~~
-^^^^^^^^^^^^^^^^^^^^^^^^x^^^^x^^^^^%%%%l--------j------j,,,,~~~~
-^^^^^^^^^^^^^^^^^^^^^^^^lzzzzj^^^^^^^%%%%%.%%%%...%%%%^^^,,,~~~~
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^%%%%%^^^^^^^^^^^^^^^^^~~
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^~~
-
-
-
-title Match 3 Block Push
-author increpare
-homepage www.puzzlescript.net
-
-========
-OBJECTS
-========
-
-Background
-lightgreen green
-11111
-01111
-11101
-11111
-10111
-
-
-Target
-darkblue
 .....
-.000.
-.0.0.
-.000.
+....0
+....0
+....0
+
+ip3 `
+#8e4833 #dbc297
 .....
-
-Wall
-brown darkbrown
-00010
-11111
-01000
-11111
-00010
-
-Player
-black orange white blue
-.000.
-.111.
-22222
-.333.
-.3.3.
-
-Crate
-orange yellow
 00000
-0...0
-0...0
-0...0
-00000
-
-
-=======
-LEGEND
-=======
-
-. = Background
-# = Wall
-P = Player
-* = Crate
-@ = Crate and Target
-O = Target
-
-
-=======
-SOUNDS
-=======
-
-Crate MOVE 36772507
-
-================
-COLLISIONLAYERS
-================
-
-Background
-Target
-Player, Wall, Crate
-
-======
-RULES
-======
-
-[ >  Player | Crate ] -> [  >  Player | > Crate  ]
-
-late [ Crate | Crate | Crate ] -> [ | | ]
-
-==============
-WINCONDITIONS
-==============
-
-all Crate on Target
-
-=======
-LEVELS
-=======
-
-#########
-#.......#
-#.*.*.@.#
-#.P...O.#
-#...*.*.#
-#.......#
-#########
-
-.#######.
-.#.....#.
-.#O##..##
-##.##.*.#
-#.*..**.#
-#.OOO.#.#
-#.P.....#
-#########
-
-
-title horizontal Block Pushing Game
-author increpare
-homepage www.puzzlescript.net
-
-========
-OBJECTS
-========
-
-Background
-lightgreen green
 11111
-01111
-11101
+1.1.1
 11111
-10111
 
-Target
-darkblue
+ip4 ~
+#8e4833
 .....
-.000.
-.0.0.
-.000.
 .....
+0....
+0....
+0....
 
-Wall
-brown darkbrown
-00010
-11111
-01000
-11111
-00010
-
-Player
-black orange white blue
-.000.
+5
+#ffa33b #dbc297
+..0..
 .111.
-22222
-.333.
-.3.3.
+.111.
+.111.
+..011
 
-Crate
-blue white
-00000
+6
+#8e4833 #dbc297
+....0
+....0
+.....
+.....
+....1
+
+7
+#8e4833 #dbc297
 00000
 01110
 00000
 00000
+10001
+
+8
+#8e4833 #dbc297
+0....
+.....
+.....
+.....
+1....
+
+9
+#ffa33b #dbc297
+..0.1
+.....
+.....
+.....
+.....
+
+0
+#dbc297 white
+0..00
+00000
+.00.0
+....1
+....1
+
+bla !
+#dbc297 white
+00000
+00000
+00000
+10000
+11100
+
+blo @
+#dbc297
+00...
+000..
+000..
+0.00.
+..00.
+
+
+(BLANK)
+
+ble £
+white
+....0
+....0
+....0
+...00
+...00
+
+ble1 $
+white #dbc297
+00000
+00000
+00000
+00001
+00011
+
+ble2 \
+#dbc297 white
+..00.
+1.00.
+1000.
+1000.
+100..
+
+(SKIP)
+
+ble3 Y
+white #dbc297
+...00
+...00
+....1
+....1
+....1
+
+ble4 &
+white #dbc297
+00111
+1.111
+1..11
+1..11
+1..11
+
+ble5 *
+white
+0....
+.....
+.....
+.....
+.....
+
+
+ble6 -
+#dbc297
+.....
+...00
+.....
+.....
+.....
+
+ble7 =
+#dbc297
+0..00
+0.000
+.....
+.....
+.....
+
+
+
 
 =======
 LEGEND
@@ -636,732 +529,1090 @@ LEGEND
 . = Background
 # = Wall
 P = Player
-* = Crate
-@ = Crate and Target
+M = magnet
 O = Target
+
+
+walls = wall or wallalt or wallalt2
+ortho = door_u or door_d or door_l or door_r
+diagonal = door_ul or door_ur or door_dl or door_dr
+Door = ortho or diagonal
+doorpart = door or hinge
+obstacle = walls or player or hinge or magnet or door or smrocks
+thick = wall or hinge or magnet or door or teleport
+
+
+fixture = wall or hinge 
+
+pixel = ul or ur or dl or dr
+walltype = wall or wallalt or wallalt2
+
+fillwalltype = wall  or hinge
+
+suck = suck_u or suck_d or suck_l or suck_r
+
+coast = coast_u or coast_d or coast_l or coast_r
+
+verge = wl or wr or wu or wd
+decoration = coast or verge 
+
+% = flowers and wall
+
+image = ip1 or ip2 or ip3 or ip4 or 5 or 6 or 7 or 8 or 9 or 0 or bla or blo or ble or ble1 or ble2 or ble3 or ble4 or ble5 or ble6 or ble7 
+
 
 =======
 SOUNDS
 =======
 
-Crate MOVE 36772507
+sfx0 1415300 (swing)
+sfx1 7555504 (cantmove)
+sfx2 16800907 (whirlpool move)
+sfx3 77044105 (teleport)
+sfx4 43993702 (whirlpool destroy)
+sfx5 43993702 (whirlpool create)
+endlevel 30657706
+
+player cantmove  7555504
 
 ================
 COLLISIONLAYERS
 ================
 
 Background
+coast_u
+coast_d
+coast_l
+coast_r
+A
 Target
-Player, Wall, Crate
+S
+underplayer
+teleport
+endhand 
+Player, Wall, wallalt, wallalt2, magnet, hinge, door, smrocks
+flowers
+ul
+ur
+dl
+dr
+wu
+wd
+wl
+wr
+temp
+suck_u
+suck_d
+suck_l
+suck_r
+nopull
+spawned
+image
 
 ======
 RULES
 ======
 
-horizontal [ > Player | Crate ] -> [ > Player | > Crate ] 
+[ player teleport no spawned | ... | teleport ] -> [ teleport | ... | player teleport spawned ] sfx3
+
+[ teleport magnet ] -> [ ] sfx4
+
+[decoration]->[]
+[underplayer]->[]
+[A]->[]
+[temp]->[]
+[suck]->[]
+[nopull]->[]
+
+right [ walls | ]->[walls | coast_l ]
+left  [ walls | ]->[walls | coast_r ]
+down  [ walls | ]->[walls | coast_u ]
+up    [ walls | ]->[walls | coast_d ]
+
+
+
+up [ walls | no walltype ] -> [ walls wu | ]
+down [ walls | no walltype ] -> [ walls wd | ]
+left [ walls | no walltype ] -> [ walls wl | ]
+right [ walls | no walltype ] -> [ walls wr | ]
+
+[pixel]->[]
+
+
+[ > magnet | door ] -> cancel
+
+
+
+[ > Player | magnet  ] -> [ > Player | > magnet  ]
+
+[ > magnet | no obstacle ] -> [ | magnet ]  sfx2
++ [ > player | no obstacle ] -> [ | player  ] 
++ [ > player | no obstacle ] -> [ | player  ] 
+
+
+[player no spawned] [ spawned] -> [player] []
+
+[ magnet ] -> [ magnet suck_u suck_d suck_l suck_r ]
+
+up [ suck_d | no thick ] -> [ suck_d | suck_d ]
+down [ suck_u | no thick ] -> [ suck_u | suck_u ]
+left [ suck_r | no thick ] -> [ suck_r | suck_r ]
+right [ suck_l | no thick ] -> [ suck_l | suck_l ]
+
+
+[S]->[]
+
+
+up [ suck_d | door | no suck_u ]    -> [ suck_d | down door S | ]
+
+
+down [ suck_u | door S | no suck_d ]  -> [ suck_u | stationary door S | ]
+down [ suck_u | door no S | no suck_d ]  -> [ suck_u | up door S | ]
+
+
+left [ suck_r | door S | no suck_l ]  -> [ suck_r | stationary door S | ]
+left [ suck_r | door no S | no suck_l ]  -> [ suck_r | right door S | ]
+
+
+right [ suck_l | door S | no suck_r ] -> [ suck_l | stationary door S | ]
+right [ suck_l | door no S | no suck_r ] -> [ suck_l | left door S | ]
+
+[ > player | door no S ] -> [ > player | > door ]
+
+[s]->[]
+
+up    [ suck_d | door ]    -> [ suck_d | door S ]
+down  [ suck_u | door ]    -> [ suck_u | door S ]
+left  [ suck_r | door ]    -> [ suck_r | door S ]
+right [ suck_l | door ]    -> [ suck_l | door S ]
+
+
+([ > player | > door S ] -> [ > player | > door ])
+
+
+(push ortho doors)
+
+up    [ up    door_l | no obstacle ] -> [ | door_dl ] sfx0
+up    [ up    door_r | no obstacle ] -> [ | door_dr ] sfx0
+down  [ down  door_l | no obstacle ] -> [ | door_ul ] sfx0
+down  [ down  door_r | no obstacle ] -> [ | door_ur ] sfx0
+left  [ left  door_u | no obstacle ] -> [ | door_ur ] sfx0
+left  [ left  door_d | no obstacle ] -> [ | door_dr ] sfx0
+right [ right door_u | no obstacle ] -> [ | door_ul ] sfx0
+right [ right door_d | no obstacle ] -> [ | door_dl ] sfx0
+
+(push diag doors)
+up [ up door_ul | no obstacle ] -> [ | door_l ] sfx0
+up [ up door_ur | no obstacle ] -> [ | door_r ] sfx0
+left [ up door_dl no S | no obstacle ] -> [ | door_d ] sfx0
+right [ up door_dr no S | no obstacle ] -> [ | door_d ] sfx0
+
+left [ down door_ul no S | no obstacle ] -> [ | door_u ] sfx0
+right [ down door_ur no S | no obstacle ] -> [ | door_u ] sfx0
+down [ down door_dl | no obstacle ] -> [ | door_l ] sfx0
+down [ down door_dr | no obstacle ] -> [ | door_r ] sfx0
+
+left [ left door_ul | no obstacle ] -> [ | door_u ] sfx0
+up [ left door_ur no S | no obstacle ] -> [ | door_r ] sfx0
+left [ left door_dl | no obstacle ] -> [ | door_d ] sfx0
+down [ left door_dr no S | no obstacle ] -> [ | door_r ] sfx0
+
+up [ right door_ul no S | no obstacle ] -> [ | door_l ] sfx0
+right [ right door_ur | no obstacle ] -> [ | door_u ] sfx0
+down [ right door_dl no S | no obstacle ] -> [ | door_l ] sfx0
+right [ right door_dr | no obstacle ] -> [ | door_d ] sfx0
+
+
+
+
+[ moving door ] -> [ door ] 
+
+
+late up   [ door_ul | ] -> [ door_ul | dl ]
+late left [ door_ul | ] -> [ door_ul | ur ]
+
+late down [ door_dl | ] -> [ door_dl | ul ]
+late left [ door_dl | ] -> [ door_dl | dr ]
+
+late up    [ door_ur | ] -> [ door_ur | dr ]
+late right [ door_ur | ] -> [ door_ur | ul ]
+
+late down  [ door_dr | ] -> [ door_dr | ur ]
+late right [ door_dr | ] -> [ door_dr | dl ]
+
+late [ thick suck ] -> [ thick ]
+
+[player] -> again
+
+late [magnet suck]->[]
+late down [ player | ] -> [ player  | underplayer]
+
+late [ magnet target ] -> [ teleport ] sfx5 
+
+
+
 
 ==============
 WINCONDITIONS
 ==============
 
-all Target on Crate
+all player on endhand
 
 =======
 LEVELS
 =======
 
-#########
-#.......#
-#.....@.#
-#.P.*.O.#
-#.......#
-#.......#
-#########
+message Level 1 von 3 : Ausbruch
 
-.#######.
-.#.....#.
-.#O##..##
-##.##.*.#
-#.*..**.#
-#.OOO.#.#
-#.P.....#
-#########
+##########%#%##
+#%##...####%##%
+####.m.######%#
+##.....##...###
+##...###.....##
+##....##.....##
+##.....##....##
+###hl..##....##
+###..........##
+###....#hl...##
+###.....#.#####
+#########.#####
+##....##......#
+#.t....#....o.#
+#...x..#..p...#
+##....##......#
+###############
+
+message Level 2 von 3 : Flucht
+
+##################
+##%#####.....#####
+#####%##.##.2...##
+########.##.1h#.##
+#....##..##h.##.##
+#.p..hh..###.##.##
+#....u.3####.#...#
+#hl##.######.#.x.#
+##.....#.....#...#
+#....o.#.t...#####
+#..m...#.....#####
+#......########%##
+##################
+
+message Level 3 von 3 : Fensterrose
+
+
+#######################
+#######.........#######
+######...........######
+##..##...kkkkk...##..##
+#....#...k...k...#....#
+#.t..#...k.t.k...#..x.#
+#....#...kk.kk...#....#
+#....#....2d1....#....#
+#..o.#...krhlk...#.t..#
+#....#...k...k...#....#
+#...##..m........#....#
+#.hl.............#....#
+#...##....p......#....#
+#######.........#######
+#######################
+
+............
+............
+....x.......
+............
+............
+............
+............
+........p...
+............
+
+............
+............
+....§±`~....
+....5678....
+....90!@....
+.....£$\....
+.....Y&*....
+.....-=.....
+............
+
+message ICH BIN DER POSEIDON
 
 
 (
-level ideas
-push battery horizontally
-have to assemble and then disassemble a circuit, in order to complete it
-add a piece to a circut, then break the circuit from another point
-level that starts with a closed circuit
-level with very dangerous + block
+
+#####################
+#######.......#######
+######.........######
+##..##..kkkkk..##..##
+#....#..k...k..#....#
+#.t..#..k.t.k..#..x.#
+#....#..kk.kk..#....#
+#....#...2d1...#....#
+#..o.#..krhlk..#.t..#
+#....#..k...k..#....#
+#...##.m.......#....#
+#.hl...........#....#
+#...##...p.....#....#
+#######.......#######
+#####################
+
+#############
+##.........##
+#...........#
+#...kkkkk...#
+#...k...k...#
+#...k.x.k...#
+#...kk.kk...#
+#....2d1....#
+#...krhlk...#
+#...k...k...#
+#...........#
+#..m........#
+#....p......#
+##.........##
+#############
+
+
+#############
+##.........##
+#...........#
+#...kkkkk...#
+#...k...k...#
+#...k.x.k...#
+#...kk.kk...#
+#....2d1....#
+#...krhlk...#
+#...k...k...#
+#...........#
+#.m.........#
+#...........#
+#......p....#
+##.........##
+#############
+
+
+
+###############
+##...........##
+#.............#
+#.............#
+#....kkkkk....#
+#....k...k....#
+#....k.x.k....#
+#....kk.kk....#
+#.....2d1.....#
+#....krhlk....#
+#....k...k....#
+#...m.........#
+#.............#
+#.....p.......#
+#.............#
+#.............#
+##...........##
+###############
+
+###############
+##...........##
+#.............#
+#.............#
+#....kkkkk....#
+#....k...k....#
+#....k.x.k....#
+#....kk.kk....#
+#.....2d1.....#
+#....krhlk....#
+#....k...k....#
+#.............#
+#..........m..#
+#.............#
+#......p......#
+#.............#
+##...........##
+###############
+
+###############
+##...........##
+#.............#
+#.............#
+#....kkkkk....#
+#....k...k....#
+#....k.x.k....#
+#....kk.kk....#
+#.....2d1.....#
+#....krhlk....#
+#....k...k....#
+#.............#
+#.............#
+#...m.....m...#
+#.............#
+#......p......#
+##...........##
+###############
+
+######"########
+##...........##
+#.............#
+#.............#
+#....kkkkk....#
+#....k...k....#
+#....k.x.k....#
+#....kk.kk....#
+#....k.d.k....#
+#....krhlk....#
+#...kk.u.k....#
+#...kt...k..o.#
+#...kkkkkk....#
+#..m......m...#
+#.............#
+#......p......#
+##...........##
+###############
+
+###############
+##...........##
+#.............#
+#.............#
+#....kkkkk....#
+#....k...k....#
+#....k.x.k....#
+#....k.kkk....#
+#....k.d.k....#
+#....krhlk....#
+#....k.u.k....#
+#....k...k....#
+#....k.t.k..o.#
+#....kkkkk....#
+#...m.........#
+#.............#
+##.....p.....##
+###############
+
+###############
+##...........##
+#.............#
+#.............#
+#....kkkkk....#
+#....k...k....#
+#....k.x.k....#
+#....kk.kk....#
+#....k2d1k....#
+#....krhlk....#
+#....k........#
+#.............#
+#.............#
+#...m.....m...#
+#.............#
+#......p......#
+##...........##
+###############
+
+###############
+##...........##
+#.............#
+#.............#
+#....kkkkk....#
+#....k...k....#
+#....k.x.k....#
+#....kk.kk....#
+#....k2d1k....#
+#....krhlk....#
+#.............#
+#.............#
+#.............#
+#...m.....m...#
+#.............#
+#......p......#
+##...........##
+###############
+
+###############
+##...........##
+#.............#
+#.............#
+#....kkkkk....#
+#....k...k....#
+#....k.x.k....#
+#....k.kkk....#
+#....k2d......#
+#....krh......#
+#.....4u......#
+#.............#
+#.............#
+#...m.....m...#
+#.............#
+#......p......#
+##...........##
+###############
+
+###############
+##...........##
+#.............#
+#.............#
+#....kkkkk....#
+#....k...k....#
+#....k.x.k....#
+#....k.kkk....#
+#....k2d......#
+#....krh......#
+#....k4u......#
+#.............#
+#.............#
+#...m.....m...#
+#.............#
+#......p......#
+##...........##
+###############
+
+###############
+##...........##
+#.............#
+#.............#
+#....kkkkk....#
+#....k...k....#
+#....k.x.k....#
+#....k.kkk....#
+#....k2d......#
+#....krh......#
+#....k4.......#
+#.............#
+#.............#
+#...m.....m...#
+#.............#
+#......p......#
+##...........##
+###############
+
+###############
+##...........##
+#.............#
+#.............#
+#....kkkkk....#
+#....k...k....#
+#....k.x.k....#
+#....k...k....#
+#....k2d.k....#
+#....krh.k....#
+#....k4..k....#
+#....k.k.k....#
+#....k.kkk....#
+#...m.....m...#
+#.............#
+#......p......#
+##...........##
+###############
+
+###############
+##...........##
+#.............#
+#.............#
+#....kkkkk....#
+#....k...k....#
+#....k.x.k....#
+#....k.kkk....#
+#....k2d......#
+#....krh......#
+#....k4.......#
+#....k........#
+#....k........#
+#...m.....m...#
+#.............#
+#......p......#
+##...........##
+###############
+
+###############
+##...........##
+#.............#
+#.............#
+#....kkkkk....#
+#....k...k....#
+#....k.x.k....#
+#....k...k....#
+#....k2d.k....#
+#....krh.k....#
+#....k4u.k....#
+#....k.k.k....#
+#....k.kkk....#
+#...m.....m...#
+#.............#
+#......p......#
+##...........##
+###############
+
+............
+............
+............
+...kkkkk....
+...k...k....
+...k.x.k....
+...k...k....
+...k2d.k....
+...krh.k....
+...k4..k....
+...k.k.k....
+...k.kkk....
+..m.....m...
+............
+......p.....
+............
+
+............
+............
+............
+...kkkkk....
+...k...k....
+...k.x.k....
+...k...k....
+...k2d.k....
+...krh.k....
+...k4u.k....
+...k.k.k....
+...k.kkk....
+..m.....m...
+............
+......p.....
+............
+
+
+............
+............
+............
+...kkkkk....
+...k...k....
+...k.x.k....
+...k...k....
+...k2..k....
+...krh.k....
+...k4..k....
+...k.k.k....
+...k.kkk....
+..m.....m...
+............
+.....p......
+............
+
+............
+............
+............
+...kkkkk....
+...k...k....
+...k.x.k....
+...k...k....
+...k.d.k....
+...krh.k....
+...k.u.k....
+...k.k.k....
+...k.kkk....
+..m.....m...
+............
+.....p......
+............
+
+............
+............
+..kkkkk.....
+..k...k.....
+..k.x.k.....
+..k...k.....
+..k.d.k.....
+..krh.k.....
+..k.u.k.....
+..k.k.k.....
+..k.kkk.....
+............
+........m...
+............
+..........p.
+............
+
+##################
+#####.......#....#
+#####.......#....#
+#####..##...#....#
+####hlrh#hl.#..rh#
+####....#.rh#hl..#
+####hlrh#hl.#..rh#
+####....#.rh#hl..#
+####hlrh#hl.#..rh#
+####....#.rh#hl..#
+####....#...#....#
+#.......#........#
+#.m..p..##########
+#.......#.........
+#########.........
+
+##################
+#####.........#..#
+#####...mp....#..#
+#####..##d....#..#
+####h..h#h2...#rh#
+####u..u#..h###..#
+####h..h#hl...#rh#
+####u..u#.rh###..#
+####h..h#hl...#rh#
+####u..u#.rh###..#
+####....#.....#..#
+#.......#.....#..#
+#.......#........#
+#.......#........#
+##################
+
+
+###################
+####....#.........#
+####hlrh#.........#
+####....#.........#
+####hlrh#.........#
+####....#.........#
+####hlrh#.........#
+####....#.........#
+####....#.........#
+#.................#
+#.m..p............#
+#.................#
+###################
+
+
+
+##################
+#................#
+#................#
+#................#
+#................#
+#................#
+#................#
+###.###..........#
+#.....#..........#
+#.p...#..........#
+#.....#..........#
+#...m.#..........#
+#.....#..........#
+##################
+
+##################
+#####.........#..#
+#####.....pmk.#..#
+#####..##d..k.#..#
+####h..h#h2.k.#rh#
+####u..u#..h###..#
+####h..h#hl...#rh#
+####u..u#.rh###..#
+####h..h#hl...#rh#
+####u..u#.rh###..#
+####....#.....#..#
+#.......#.....#..#
+#...kkkk#........#
+#.......#........#
+##################
+
+##################
+#................#
+#................#
+#................#
+#................#
+#................#
+#................#
+#................#
+#................#
+#................#
+#................#
+#................#
+#................#
+##################
+
 )
-title Robot Arm
-author increpare
-homepage www.increpare.com
 
-run_rules_on_level_start
-color_palette c64
+title BROKEN Rigid Body example
+author Anonymous
+homepage www.puzzlescript.net
 
-run_rules_on_level_start
+verbose_logging
 
-norepeat_action
+(
+
+BROKEN Example Game FOR ILLUSTRATION PURPOSES ONLY. DO NOT USE.
+
+Example for
+https://www.puzzlescript.net/Documentation/rigidbodies.html#many_many
+
+)
 
 ========
 OBJECTS
 ========
 
-Background .
-darkblue
+Background 
+white  
 
-Player P
-Black orange grey Blue
-.111.
-.111.
-22222
-13331
-.3.3.
+Target 
+DarkBlue    
 
-R0_Up 0
-grey lightgrey
-.111.
-10001
-10001
-10001
-.111.
+Wall 
+DarkGrey
 
-R0_Down
-grey lightgrey
-.111.
-10001
-10001
-10001
-.111.
-
-R0_Left
-grey lightgrey
-.111.
-10001
-10001
-10001
-.111.
-
-R0_Right
-grey lightgrey
-.111.
-10001
-10001
-10001
-.111.
-
-
-R1_Up 1
-grey lightgrey
-.111.
-10001
-10001
-10001
-.111.
-
-R1_Down
-grey lightgrey
-.111.
-10001
-10001
-10001
-.111.
-
-R1_Left
-grey lightgrey
-.111.
-10001
-10001
-10001
-.111.
-
-R1_Right
-grey lightgrey
-.111.
-10001
-10001
-10001
-.111.
-
-
-R2_Up 2
-grey lightgrey
-.111.
-10001
-10001
-10001
-.111.
-
-R2_Down
-grey lightgrey
-.111.
-10001
-10001
-10001
-.111.
-
-R2_Left
-grey lightgrey
-.111.
-10001
-10001
-10001
-.111.
-
-R2_Right
-grey lightgrey
-.111.
-10001
-10001
-10001
-.111.
-
-R3 3
-grey lightgrey
-.....
+Player
+Blue
 ..0..
-.010.
-..0..
-.....
-
-Connector_Up
-grey lightgrey
-.101.
-.111.
-.....
-.....
-.....
-
-Connector_Down
-grey lightgrey
-.....
-.....
-.....
-.111.
-.101.
-
-Connector_Left
-grey lightgrey
-.....
-11...
-01...
-11...
-.....
-
-Connector_Right
-grey lightgrey
-.....
-...11
-...10
-...11
-.....
-
-Moved
-transparent
-
-Parent
-transparent
-
-GrandParent
-transparent
-
-NewRot
-transparent
-
-NewRot2
-transparent
-
-force
-transparent
-
-explosion
-red yellow
-.101.
-10101
-01010
-10101
-.101.
-
-explosionb
-red yellow
-.101.
-10101
-01010
-10101
-.101.
-
-explosion2
-yellow red
-.101.
-10101
-01010
-10101
-.101.
-
-Wall #
-darkgrey grey lightgrey
+..0.0
 00000
-01110
-01010
-01110
-00000
-
-water ,
-blue lightblue
-00000
-00010
-00000
-00000
-01000
-
-Fruit F
-Red Green LightRed
-..1..
 .000.
-00020
+.0.0.
+
+Shadow
+Black
+..0..
+0.0..
+00000
+.000.
+.0.0.
+
+( three multi-cells blocks )
+Crate 
+orange
+
+Chest
+green
+
+Box
+red
+
+( 1-cell small block )
+Small
+darkred
+.....
+.000.
+.000.
+.000.
+.....
+
+( sticky, multicellular block when in contact )
+Glue
+pink
+.000.
+00000
+00000
 00000
 .000.
 
-
-FruitPicked G
-Red Green LightRed grey grey
-..4..
-.030.
-43334
-00300
-.040.
-
-DeadFruit
-black black black black black
-..4..
-.030.
-43334
-00300
-.040.
-
-EndPoint E
-darkgreen Yellow black green
-30003
-02220
-02220
-02220
-30003
-
+( a flag to know what is allowed move )
+Wanna_Move
+#ff00ff
+.....
+.....
+..0..
+.....
+.....
 
 =======
 LEGEND
 =======
-R0 = R0_up or R0_down or R0_left or R0_right
-R1 = R1_up or R1_down or R1_left or R1_right
-R2 = R2_up or R2_down or R2_left or R2_right
-RobotPiece = R0 or R1 or R2 or R3
-* = RobotPiece or Player
-connector = connector_up or connector_down or connector_left or connector_right
+
+. = Background
+# = Wall
+P = Player
+S = Shadow
+* = Crate
++ = Box
+% = Chest
+o = Small
+g = Glue
+
+( blocks that can be moved by the player )
+Movable = Crate or Box or Chest or Small or Glue
+
+( all things that can move and push blocks )
+Mover = Player or Shadow or Movable 
+
+( things that can stop a movement if they are stationary )
+Obstacle = Wall or Mover
 
 =======
 SOUNDS
 =======
 
-sfx0 43004308 (explosion)
-sfx1 69392707
-sfx2 57370907 (push machine)
-sfx3 62083508 (rotate machine)
-sfx4 90419908 (grab)
-sfx5 50782902 (drop in hole)
-sfx6 76878101 (empty grab)
-sfx7 13941101 (dead fruit)
-sfx8 42541302 (release)
-Player move 88476108
-startgame 30513908
-endlevel 5524308
-endgame 5524308
-showmessage 41852908
-closemessage 41852908
-
 ================
 COLLISIONLAYERS
 ================
+
 Background
-water
-EndPoint
-Player
-Moved
-Fruit
-FRUITPICKED
-deadfruit
-R0_up, R0_down, R0_left, R0_right
-R1_up, R1_down, R1_left, R1_right
-R2_up, R2_down, R2_left, R2_right
-connector_up
-connector_down
-connector_left
-connector_right
-R3
-parent
-GrandParent
-newrot
-newrot2
-force
-wall
-explosion, explosion2, explosionb
+Target
+Obstacle
+Wanna_Move
 
 ======
-RULES
-======
+RULES     
+======     
 
-[ connector ] -> [ ]
+[ > player ] [ stationary shadow ] -> [ > player ] [ < shadow ]
 
-[ > player | fruit ] -> cancel
+( 1. Propagate movements forward )
+[ > Mover | stationary Movable ] -> [ > Mover | > Movable  ]
++ [ > Box    ] [ stationary Box   ] -> [ > Box    ] [ > Box    ]
++ [ > Crate  ] [ stationary Crate ] -> [ > Crate  ] [ > Crate  ]
++ [ > Chest  ] [ stationary Chest ] -> [ > Chest  ] [ > Chest  ]
++ [ moving Glue | stationary Glue ] -> [ moving Glue | moving Glue ]
 
-[ > player | water ] -> cancel
+( 2. Propagate obstructions backwards )
+[ > Mover  | stationary Obstacle ] -> [ stationary Mover | Obstacle ]
 
-[ > player | ] -> [ > player | > force ]
+	(the next lines deal with directional conflicts)
++ [ ^ Crate | < Crate ] -> [ stationary Crate | stationary Crate ] 
++ [ ^ Crate | > Crate ] -> [ stationary Crate | stationary Crate ] 
++ [ ^ Crate | v Crate ] -> [ stationary Crate | stationary Crate ] 
 
-[ > player | robotpiece | wall ] -> cancel
++ [ v Crate | < Crate ] -> [ stationary Crate | stationary Crate ] 
++ [ v Crate | > Crate ] -> [ stationary Crate | stationary Crate ] 
++ [ v Crate | ^ Crate ] -> [ stationary Crate | stationary Crate ] 
 
-(place movement arrows)
-up [ R0_Up | ] -> [ up R0_Up | up Parent ]
-up [ R1_Up | ] -> [ up R1_Up | up Parent ]
-up [ R2_Up | ] -> [ up R2_Up | up Parent ]
++ [ < Crate | > Crate ] -> [ stationary Crate | stationary Crate ] 
++ [ < Crate | ^ Crate ] -> [ stationary Crate | stationary Crate ] 
++ [ < Crate | v Crate ] -> [ stationary Crate | stationary Crate ] 
 
-down [ R0_down | ] -> [ down R0_down | down Parent ]
-down [ R1_down | ] -> [ down R1_down | down Parent ]
-down [ R2_down | ] -> [ down R2_down | down Parent ]
++ [ > Crate | < Crate ] -> [ stationary Crate | stationary Crate ] 
++ [ > Crate | ^ Crate ] -> [ stationary Crate | stationary Crate ] 
++ [ > Crate | v Crate ] -> [ stationary Crate | stationary Crate ] 
 
-left [ R0_left | ] -> [ left R0_left | left Parent ]
-left [ R1_left | ] -> [ left R1_left | left Parent ]
-left [ R2_left | ] -> [ left R2_left | left Parent ]
+(also one space removed)
++ [ > Mover | |  < Mover ] -> [ stationary Mover | |  < Mover ] 
 
-right [ R0_right | ] -> [ right R0_right | right Parent ]
-right [ R1_right | ] -> [ right R1_right | right Parent ]
-right [ R2_right | ] -> [ right R2_right | right Parent ]
++ [ > Crate  ] [ stationary Crate ] -> [ stationary Crate ] [ Crate ]
++ [ > Box    ] [ stationary Box   ] -> [ stationary Box   ] [ Box   ]
++ [ > Chest  ] [ stationary Chest ] -> [ stationary Chest ] [ Chest ]
++ [ moving Glue | stationary Glue ] -> [ stationary Glue | Glue ]
 
+( 3. remove all movement, keep a flag )
+[ > Movable ] -> [ Movable wanna_move ]
 
-( force propagation like this isn't very nice )
-( [ > force < parent | ] -> [ < parent | > force ] )
+( 4. propagate movement only on wanna_move things )
+(    ie redo step 1 but with WANNA_MOVE added to the first line below )
+[ > Mover  | stationary Movable WANNA_MOVE ] -> [ > Mover | > Movable ]
++ [ > Box   ] [ stationary Box   ] -> [ > Box   ] [ > Box   ]
++ [ > Crate ] [ stationary Crate ] -> [ > Crate ] [ > Crate ]
++ [ > Chest ] [ stationary Chest ] -> [ > Chest ] [ > Chest ]
++ [ moving Glue | stationary Glue ] -> [ moving Glue | moving Glue ]
 
-[ R3 > force < parent ] [ > R0 ] [ v R1 ] [ R2 ] -> [ R3 < parent ] [ > R0 ] [ v R1 ] [ r2 > force ]
-[ R3 > force < parent ] [ > R0 ] [ ^ R1 ] [ R2 ] -> [ R3 < parent ] [ > R0 ] [ ^ R1 ] [ r2 > force ]
+( 5. cleanup, remove flag )
+[ wanna_move ] -> [ ]
 
-[ > force < parent no R0] [R0]-> [ < parent ] [ > force R0 ]
-[ > force R3 perpendicular parent ] [ R2 < parent ] [ R0 ] -> [ R3 perpendicular parent ] [ R2 < parent ] [ > force R0 ]
-
-[ > force R2 perpendicular parent ] [ R1 < parent ] [ R0 ] -> [ R2 perpendicular parent ] [ R1 < parent ] [ > force R0 ]
-
-
-[ > force moving R0 | ] -> [ | moving R0] sfx2
-
-[ > force moving R1 perpendicular parent ] [ R0 ] -> [ moving R1 perpendicular parent ] [ > R0 ] sfx3
-[ > force moving R2 perpendicular parent ] [ R1 ] -> [ moving R2 perpendicular parent ] [ > R1 ] sfx3
-[ > force 		R3 perpendicular parent ] [ R2 ] -> [ R3 perpendicular parent ] [ > R2 ] sfx3
-
-
-(rebuild arm)
-
-(add new parents)
-
-[ > R1 ] [ R2 ] -> [ > R1 ] [ R2 > NewRot ]
-[ > R0 ] [ R1 ] [ R2 ] -> [ > R0 ] [ R1 > NewRot ] [ R2 > NewRot2 ]
-
-[ > Parent R1 ] [ R2 ] -> [ > Parent R1 ] [ > GrandParent R2 ]
-
-[ ^ Parent > NewRot > RobotPiece ] -> [ V RobotPiece ]
-[ ^ Parent > NewRot v RobotPiece ] -> [ < RobotPiece ]
-[ ^ Parent > NewRot < RobotPiece ] -> [ ^ RobotPiece ]
-[ ^ Parent > NewRot ^ RobotPiece ] -> [ > RobotPiece ]
-
-[ ^ Parent < NewRot > RobotPiece ] -> [ ^ RobotPiece ]
-[ ^ Parent < NewRot v RobotPiece ] -> [ > RobotPiece ]
-[ ^ Parent < NewRot < RobotPiece ] -> [ V RobotPiece ]
-[ ^ Parent < NewRot ^ RobotPiece ] -> [ < RobotPiece ]
-
-
-[ ^ GrandParent > NewRot2 > R2 ] -> [ V R2 ]
-[ ^ GrandParent > NewRot2 v R2 ] -> [ < R2 ]
-[ ^ GrandParent > NewRot2 < R2 ] -> [ ^ R2 ]
-[ ^ GrandParent > NewRot2 ^ R2 ] -> [ > R2 ]
-
-[ ^ GrandParent < NewRot2 > R2 ] -> [ ^ R2 ]
-[ ^ GrandParent < NewRot2 v R2 ] -> [ > R2 ]
-[ ^ GrandParent < NewRot2 < R2 ] -> [ V R2 ]
-[ ^ GrandParent < NewRot2 ^ R2 ] -> [ < R2 ]
-
-[ NewRot ] -> [ ]
-[ NewRot2 ] -> [ ]
-[ Parent ] -> [ ]
-[ GrandParent ] -> [ ]
-
-
-(change sprites)
-[ up R0 ] -> [ up R0_Up ]
-[ up R1 ] -> [ up R1_Up ]
-[ up R2 ] -> [ up R2_Up ]
-
-[ down R0 ] -> [ down R0_down ]
-[ down R1 ] -> [ down R1_down ]
-[ down R2 ] -> [ down R2_down ]
-
-[ left R0 ] -> [ left R0_left ]
-[ left R1 ] -> [ left R1_left ]
-[ left R2 ] -> [ left R2_left ]
-
-[ right R0 ] -> [ right R0_Right ]
-[ right R1 ] -> [ right R1_Right ]
-[ right R2 ] -> [ right R2_Right ]
-
-(work from the base up when placing)
-up [ up R0 | no R1 ] [ moving R1 ] -> [ up R0 | moving R1 ] [ ]
-down [ down R0 | no R1 ] [ moving R1 ] -> [ down R0 | moving R1 ] [ ]
-left [ left R0 | no R1 ] [ moving R1 ] -> [ left R0 | moving R1 ] [ ]
-right [ right R0 | no R1 ] [ moving R1 ] -> [ right R0 | moving R1 ] [ ]
-
-up [ up R1 | no R2 ] [ moving R2 ] -> [ up R1 | moving R2 ] [ ]
-down [ down R1 | no R2 ] [ moving R2 ] -> [ down R1 | moving R2 ] [ ]
-left [ left R1 | no R2 ] [ moving R2 ] -> [ left R1 | moving R2 ] [ ]
-right [ right R1 | no R2 ] [ moving R2 ] -> [ right R1 | moving R2 ] [ ]
-
-
-up [ up R2 | no R3 ] [ R3 ] -> [ up R2 | R3 ] [ ]
-down [ down R2 | no R3 ] [ R3 ] -> [ down R2 | R3 ] [ ]
-left [ left R2 | no R3 ] [ R3 ] -> [ left R2 | R3 ] [ ]
-right [ right R2 | no R3 ] [ R3 ] -> [ right R2 | R3 ] [ ]
-
-
-
-
-up [ up R2 | no R3 ] [ R3 ] -> [ R2_up | R3 ] [ ]
-down [ down R2 | no R3 ] [ R3 ] -> [ R2_down | R3 ] [ ]
-left [ left R2 | no R3 ] [ R3 ] -> [ R2_left | R3 ] [ ]
-right [ right R2 | no R3 ] [ R3 ] -> [ R2_right | R3 ] [ ]
-
-
-[ > RobotPiece no moved ] -> [ RobotPiece ]
-
-
-up [ R0_Up | ] -> [ R0_Up connector_up | connector_down ]
-up [ R1_Up | ] -> [ R1_Up connector_up | connector_down ]
-up [ R2_Up | ] -> [ R2_Up connector_up | connector_down ]
-
-down [ R0_down | ] -> [ R0_down connector_down | connector_up ]
-down [ R1_down | ] -> [ R1_down connector_down | connector_up ]
-down [ R2_down | ] -> [ R2_down connector_down | connector_up ]
-
-left [ R0_left | ] -> [ R0_left connector_left | connector_right ]
-left [ R1_left | ] -> [ R1_left connector_left | connector_right ]
-left [ R2_left | ] -> [ R2_left connector_left | connector_right ]
-
-right [ R0_right | ] -> [ R0_right connector_right | connector_left ]
-right [ R1_right | ] -> [ R1_right connector_right | connector_left ]
-right [ R2_right | ] -> [ R2_right connector_right | connector_left ]
-
-[RobotPiece Wall no explosion no explosion2 ] -> [ RobotPiece Wall explosion ] sfx0
-
-[ R0 R2 no explosion no explosion2] -> [ R0 R2 explosion ] sfx0
-[ R0 R3 no explosion no explosion2 ] -> [ R0 r3 explosion ] sfx0
-[ R1 R3 no explosion no explosion2 ] -> [ R1 R3 explosion ] sfx0
-
-[ explosion2 ] -> [ explosionb ] again
-[ explosion ] -> [ explosion2] again
-[ explosionb ] -> [explosion] again
-
-[ > player  | wall ] -> cancel
-
-[FruitPicked ] [ R3 no FruitPicked ] -> [ ] [ R3 FruitPicked ]
-
-[ action player ] [ R3 Fruit no fruitpicked ] -> [ player ] [ R3 Fruitpicked] sfx4
-[ action player ] [ R3 fruitpicked no fruit ] -> [ player ] [ r3 fruit ] sfx8
-
-[action player ] [ r3 no fruit no fruitpicked ] -> sfx6
-
-
-[ fruit endpoint ] -> [endpoint] sfx5
-[ fruit water ] -> [ deadfruit water ] sfx7
-late [R0 water ] -> cancel
-[R0 fruit ] -> cancel
 
 ==============
 WINCONDITIONS
 ==============
 
-no fruit
-no fruitpicked
-no deadfruit
-
-=======
+=======     
 LEVELS
 =======
 
-message press x to grip and ungrip the mechanical arm
-message put fruit in hole
+#########
+#.......#
+#..p...p#
+#.......#
+#.......#
+#..***..#
+#.......#
+#s...S..#
+#.......#
+#########
 
-message Level 1 of 3
-
-###################
-###################
-###################
-###..,........,.###
-###..,...3....,.###
-###..,...2....,.###
-###.F,.E.1.,,,F,###
-###..,...0....,.###
-###..,..P.....,.###
-###..,........,.###
-###################
-###################
-###################
-
-message Level 2 of 3
-
-##############
-##############
-##############
-###..3.....###
-###..2.....###
-###..1.,,,,###
-###.E0.,...###
-###....,FF.###
-###.P..,...###
-##############
-##############
-##############
-
-message Level 3 of 3
-
-###################
-###################
-###################
-########........###
-###..3.#...##.f.###
-###..2..........###
-###..1...#....#.###
-###.e0..........###
-###..p..#...#.f.###
-#########.......###
-###################
-###################
-###################
-
-message congratulations
+#########
+#.......#
+#.......#
+#.......#
+#...s...#
+#..+++..#
+#...p...#
+#.......#
+#.......#
+#########
 
 
 USER PROMPT:
 The following PuzzleScript game code:
 ```plaintext
-title Box Pusher
-author YourName
+title Maze Runner
+author Your Name
+homepage www.example.com
 
 ========
 OBJECTS
 ========
 
 Background
-LightGrey
+black
 
 Player
-Red
-.....
-..0..
-.000.
-..0..
-.....
+yellow
 
 Wall
-DarkGrey
-.....
-00000
-00000
-00000
-.....
+grey
 
-Crate
-Brown Yellow
-.....
-.111.
-.111.
-.111.
-.....
+Key
+blue
 
-Target
-Green DarkGreen
-.....
-..2..
-..2..
-.....
-
-CrateOnTarget
-Olive Brown Green
-.....
-.121.
-.121.
-.121.
-.....
+Exit
+green
 
 =======
 LEGEND
 =======
 
 . = Background
-# = Wall
 P = Player
-C = Crate
-T = Target
-O = CrateOnTarget
-
-===========
-SOUNDS
-===========
-
-SFX0 255 0
+# = Wall
+K = Key
+E = Exit
 
 ================
 COLLISIONLAYERS
 ================
 
 Background
-Target
-CrateOnTarget, Crate
-Player, Wall
+Key
+Exit
+Player
+Wall
 
 ======
 RULES
 ======
 
-[ > Player | Crate ] -> [ > Player | > Crate ]
-[ Crate | Target ] -> [ CrateOnTarget | ]
-[ CrateOnTarget | no Target ] -> [ Crate | ]
+[ > Player | Key ] -> [ Player | Background ] 
+[ Player | Exit ] -> WIN
 
 ==============
 WINCONDITIONS
 ==============
 
-All CrateOnTarget
+All Key on Background
+Some Player on Exit
 
 =======
 LEVELS
 =======
 
-#######
-#.....#
-#..T..#
-#..C..#
-#..P..#
-#..T..#
-#######
+###########
+#.......#E#
+#.#######.#
+#.K.....#.#
+#.#.###.#.#
+#.#K#.#.#.#
+#.#.#.#.#.#
+#.#.#.#.#.#
+#...#KP...#
+###########
 
 
 ```
 produced the following console output:
 =================================
-line 38 : Trying to access color number 2 from the color palette of sprite TARGET, but there are only 2 defined in it.
-line 39 : Trying to access color number 2 from the color palette of sprite TARGET, but there are only 2 defined in it.
-line 43 : Was looking for color for object CRATEONTARGET, got "olive " instead.
-line 45 : Trying to access color number 2 from the color palette of sprite CRATEONTARGET, but there are only 2 defined in it.
-line 46 : Trying to access color number 2 from the color palette of sprite CRATEONTARGET, but there are only 2 defined in it.
-line 47 : Trying to access color number 2 from the color palette of sprite CRATEONTARGET, but there are only 2 defined in it.
+line 35 : section "COLLISIONLAYERS" is out of order, must follow  "SOUNDS" (or it could be that the section "SOUNDS"is just missing totally.  You have to include all section headings, even if the section itself is empty).
+line 48 : Name "player", referred to in a rule, does not exist.
+line 48 : Name "key", referred to in a rule, does not exist.
+line 48 : Name "background", referred to in a rule, does not exist.
+line 49 : Name "player", referred to in a rule, does not exist.
+line 49 : Name "exit", referred to in a rule, does not exist.
 too many errors, aborting compilation
 Errors detected during compilation; the game may not work correctly.
 Return a repaired version of the code that addresses these errors. First, reason about your task and determine the best plan of action. Then, write your code.  Return your code in full, inside a ```plaintext code block.

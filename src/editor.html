@@ -25,75 +25,849 @@
 
 <div id="leftpanel">
 <form id="form1" name="form1"  action="javascript:void(0);"><textarea id="code" class="codeform" name="code" rows="20" cols="20" style="display:none;">
-title My Game
-author My Name Here
-homepage www.puzzlescript.net
-
-========
-OBJECTS
-========
-
-Background
-green
-
-Target
-darkblue
-
-Wall
-brown
-
-Player
-blue
-
-Crate
-orange
-
-=======
-LEGEND
-=======
-
-. = Background
-# = Wall
-P = Player
-* = Crate
-@ = Crate and Target
-O = Target
-
-=======
-SOUNDS
-=======
-
-================
-COLLISIONLAYERS
-================
-
-Background
-Target
-Player, Wall, Crate
-
-======
-RULES
-======
-
-[ > Player | Crate ] -> [ > Player | > Crate ]
-
-==============
-WINCONDITIONS
-==============
-
-all Target on Crate
-
-=======
-LEVELS
-=======
-
-#########
-#.......#
-#.....@.#
-#.P.*.O.#
-#.......#
-#.......#
-#########
+	title Sokoban... in 3D!
+	author Beekie
+	homepage beekie.itch.io
+	
+	run_rules_on_level_start
+	
+	background_color #313638
+	
+	again_interval 0.07
+	
+	verbose_logging
+	
+	========
+	OBJECTS
+	========
+	
+	Background
+	#313638 
+	
+	tdplayer
+	#45293f #f79617 #ffffff #4d9be6 #4d65b4 #c7dcd0 
+	.000.
+	.111.
+	22222
+	.333.
+	.3.3.
+	
+	tdTargetL 
+	#323353 #484a77 #4d9be6 #fb6b1d
+	.....
+	.111.
+	.131.
+	.111.
+	.....
+	
+	tdTargetR
+	#323353 #484a77 #4d9be6 #fb6b1d
+	.....
+	.111.
+	.121.
+	.111.
+	.....
+	
+	tdCrateL
+	#fb6b1d
+	00000
+	0...0
+	0...0
+	0...0
+	00000
+	
+	tdCrateR
+	#4d9be6
+	00000
+	0...0
+	0...0
+	0...0
+	00000
+	
+	tdHole
+	#313638 #374e4a
+	11111
+	01111
+	11101
+	11111
+	10111
+	
+	Grass
+	#1ebc73 #239063 
+	11111
+	01111
+	11101
+	11111
+	10111
+	
+	Hole
+	#374e4a #239063 #313638 
+	00000
+	02020
+	22222
+	22222
+	22222
+	
+	TargetL2Top
+	#323353 #484a77 #4d9be6 #fb6b1d
+	.....
+	.....
+	.....
+	.111.
+	.131.
+	
+	TargetR2Top
+	#323353 #484a77 #4d9be6 #fb6b1d
+	.....
+	.....
+	.....
+	.111.
+	.121.
+	
+	TargetL2
+	#323353 #484a77 #4d9be6 #fb6b1d
+	.111.
+	.000.
+	.....
+	.....
+	.....
+	
+	
+	TargetR2
+	#323353 #484a77 #4d9be6 #fb6b1d
+	.111.
+	.000.
+	.....
+	.....
+	.....
+	
+	
+	TargetL1
+	#323353 #484a77 #4d9be6 #fb6b1d
+	.131.
+	.111.
+	.000.
+	.....
+	.....
+	
+	
+	TargetR1
+	#323353 #484a77 #4d9be6 #fb6b1d
+	.121.
+	.111.
+	.000.
+	.....
+	.....
+	
+	Target1Top
+	#323353 #484a77
+	.....
+	.....
+	.....
+	.....
+	.111.
+	
+	TargetL0
+	#323353 #484a77 #4d9be6 #fb6b1d
+	.111.
+	.131.
+	.111.
+	.000.
+	.....
+	
+	
+	TargetR0
+	#323353 #484a77 #4d9be6 #fb6b1d
+	.111.
+	.121.
+	.111.
+	.000.
+	.....
+	
+	TargetLn1
+	#323353 #484a77 #4d9be6 #fb6b1d
+	.....
+	.111.
+	.131.
+	.111.
+	.000.
+	
+	
+	
+	TargetRn1
+	#323353 #484a77 #4d9be6 #fb6b1d
+	.....
+	.111.
+	.121.
+	.111.
+	.000.
+	
+	TargetLn2
+	#323353 #484a77 #4d9be6 #fb6b1d
+	.....
+	.....
+	.111.
+	.131.
+	.111.
+	
+	
+	
+	TargetRn2
+	#323353 #484a77 #4d9be6 #fb6b1d
+	.....
+	.....
+	.111.
+	.121.
+	.111.
+	
+	TargetLn3
+	#323353 #484a77 #4d9be6 #fb6b1d
+	.....
+	.....
+	.....
+	.111.
+	.131.
+	
+	TargetRn3
+	#323353 #484a77 #4d9be6 #fb6b1d
+	.....
+	.....
+	.....
+	.111.
+	.121.
+	
+	TargetLn4
+	#323353 #484a77 
+	.....
+	.....
+	.....
+	.....
+	.111.
+	
+	TargetRn4
+	#323353 #484a77 
+	.....
+	.....
+	.....
+	.....
+	.111.
+	
+	tdWall
+	 #cd683d #9e4539 #7a3045 #9e4539 
+	00010
+	11111
+	01000
+	11111
+	00010
+	
+	Wall0
+	 #cd683d #9e4539 #7a3045 #9e4539 
+	11111
+	01000
+	11111
+	00010
+	11121
+	
+	Wall0Top
+	 #cd683d #9e4539 #7a3045 #9e4539 
+	.....
+	.....
+	.....
+	.....
+	00010
+	
+	Playern4
+	#45293f #f79617 #ffffff #4d9be6 #4d65b4 #c7dcd0 
+	.....
+	.....
+	.....
+	.000.
+	.111.
+	
+	Playern3
+	#45293f #f79617 #ffffff #4d9be6 #4d65b4 #c7dcd0 
+	.....
+	.....
+	.000.
+	.111.
+	22222
+	
+	
+	Playern2
+	#45293f #f79617 #ffffff #4d9be6 #4d65b4 #c7dcd0 
+	.....
+	.000.
+	.111.
+	22222
+	53335
+	
+	Playern1
+	#45293f #f79617 #ffffff #4d9be6 #4d65b4 #c7dcd0 
+	.000.
+	.111.
+	22222
+	53335
+	.343.
+	
+	Player0
+	#45293f #f79617 #ffffff #4d9be6 #4d65b4 #c7dcd0 
+	.111.
+	22222
+	53335
+	.343.
+	.4.4.
+	
+	Player0Top
+	#45293f 
+	.....
+	.....
+	.....
+	.....
+	.000.
+	
+	Player1
+	black #f79617 #ffffff #4d9be6 #4d65b4 #c7dcd0 
+	22222
+	53335
+	.343.
+	.4.4.
+	.....
+	
+	Player1Top 
+	#45293f #f79617
+	.....
+	.....
+	.....
+	.000.
+	.111.
+	
+	Player2
+	black #f79617 #ffffff #4d9be6 #4d65b4 #c7dcd0 
+	53335
+	.343.
+	.4.4.
+	.....
+	.....
+	
+	Player2Top 
+	#45293f #f79617 #ffffff
+	.....
+	.....
+	.000.
+	.111.
+	22222
+	
+	CrateL0
+	#fb6b1d #e83b3b 
+	01110
+	0...0
+	0...0
+	00000
+	11111
+	
+	CrateL0Top
+	#fb6b1d
+	.....
+	.....
+	.....
+	.....
+	00000
+	
+	CrateR0
+	#4d9be6 #4d65b4
+	01110
+	0...0
+	0...0
+	00000
+	11111
+	
+	CrateR0Top
+	#4d9be6 #4d65b4
+	.....
+	.....
+	.....
+	.....
+	00000
+	
+	CrateL1
+	#fb6b1d #e83b3b 
+	0...0
+	0...0
+	00000
+	11111
+	.....
+	
+	
+	CrateL1Extra
+	#fb6b1d #4d65b4
+	.....
+	.....
+	00000
+	.....
+	.....
+	
+	CrateL0Extra
+	#fb6b1d #4d65b4
+	.....
+	.....
+	.....
+	00000
+	.....
+	
+	CrateR1
+	#4d9be6 #4d65b4
+	0...0
+	0...0
+	00000
+	11111
+	.....
+	
+	CrateR1Extra
+	#4d9be6 #4d65b4
+	.....
+	.....
+	00000
+	.....
+	.....
+	
+	CrateR0Extra
+	#4d9be6 #4d65b4
+	.....
+	.....
+	.....
+	00000
+	.....
+	
+	CrateR1Top
+	#4d9be6 #4d65b4
+	.....
+	.....
+	.....
+	00000
+	01110
+	
+	CrateR2
+	#4d9be6 #4d65b4
+	0...0
+	00000
+	11111
+	.....
+	.....
+	
+	CrateR2Top
+	#4d9be6 #4d65b4
+	.....
+	.....
+	00000
+	01110
+	0...0
+	
+	CrateR2Extra
+	#4d9be6 #4d65b4
+	.....
+	00000
+	.....
+	.....
+	.....
+	
+	CrateL1Top
+	#fb6b1d #e83b3b 
+	.....
+	.....
+	.....
+	00000
+	01110
+	
+	CrateL2
+	#fb6b1d #e83b3b 
+	0...0
+	00000
+	11111
+	.....
+	.....
+	
+	CrateL2Top
+	#fb6b1d #e83b3b 
+	.....
+	.....
+	00000
+	01110
+	0...0
+	
+	CrateL2Extra
+	#fb6b1d #e83b3b 
+	.....
+	00000
+	.....
+	.....
+	.....
+	
+	CrateLn1
+	#fb6b1d #e83b3b 
+	00000
+	01110
+	0...0
+	0...0
+	00000
+	
+	CrateLn2
+	#fb6b1d #e83b3b 
+	.....
+	00000
+	01110
+	0...0
+	0...0
+	
+	CrateLn3
+	#fb6b1d #e83b3b 
+	.....
+	.....
+	00000
+	01110
+	0...0
+	
+	CrateLn4
+	#fb6b1d #e83b3b 
+	.....
+	.....
+	.....
+	.....
+	00000
+	
+	CrateRn1
+	#4d9be6 #4d65b4
+	00000
+	01110
+	0...0
+	0...0
+	00000
+	
+	CrateRn2
+	#4d9be6 #4d65b4
+	.....
+	00000
+	01110
+	0...0
+	0...0
+	
+	CrateRn3
+	#4d9be6 #4d65b4
+	.....
+	.....
+	00000
+	01110
+	0...0
+	
+	CrateRn4
+	#4d9be6 #4d65b4
+	.....
+	.....
+	.....
+	00000
+	01110
+	
+	CrateLSpawner
+	transparent
+	
+	CrateRSpawner
+	transparent
+	
+	TargetLSpawner
+	transparent
+	
+	TargetRSpawner
+	transparent
+	
+	PlayerSpawner
+	transparent
+	
+	TargetWall
+	transparent
+	
+	FramePause
+	transparent
+	
+	=======
+	LEGEND
+	=======
+	x = Background
+	. = Grass
+	# = Wall0 and Grass
+	P = Player2 and Grass and PlayerSpawner
+	R = CrateR2 and Grass and CrateRSpawner
+	Q = Grass and TargetL2 and TargetLSpawner
+	J = Grass and TargetR2 and TargetRSpawner and CrateL2 and CrateLSpawner
+	H = Hole
+	
+	A = tdPlayer and Grass
+	B = tdCrateL and tdTargetR and Grass
+	C = tdCrateR and Grass
+	D = tdTargetL and Grass
+	E = tdHole and Grass
+	$ = tdWall and Grass
+	
+	Player = Player0 or Player1 or Player2 or tdPlayer
+	Pushable0 = TargetL0 or TargetR0 or CrateL0 or CrateR0
+	Pushable1 = TargetL1 or TargetR1 or CrateL1 or CrateR1
+	
+	Top = CrateL0Top or CrateR0Top or Player0Top or Wall0Top or CrateL1Top or CrateR1Top or Target1Top or Player1Top or Player2Top or CrateL2top or CrateR2top or TargetL2Top or TargetR2Top
+	
+	Craten4 = CrateLn4 or CrateRn4
+	Targetn4 = TargetLn4 or TargetRn4
+	
+	Craten3 = CrateLn3 or CrateRn3
+	Targetn3 = TargetLn3 or TargetRn3
+	
+	Craten2 = CrateLn2 or CrateRn2
+	Targetn2 = TargetLn2 or TargetRn2
+	
+	Craten1 = CrateLn1 or CrateRn1
+	Targetn1 = TargetLn1 or TargetRn1
+	
+	Crate0 = CrateL0 or CrateR0
+	Target0 = TargetL0 or TargetR0
+	
+	Crate1 = CrateL1 or CrateR1
+	Target1 = TargetL1 or TargetR1
+	
+	Entity = Player or Crate0 or Target0
+	
+	Objn4s = TargetLn4 or TargetRn4
+	Objn3s = TargetLn3 or TargetRn3
+	Objn2s = TargetLn2 or TargetRn2
+	Objn1s = TargetLn1 or TargetRn1 or Grass
+	Obj0s = Player0 or CrateL0 or CrateR0 or TargetL0 or TargetR0 or Wall0
+	Obj1s = Player1 or CrateL1 or CrateR1 or TargetL1 or TargetR1
+	Obj2s = Player2 or CrateL2 or CrateR2 or TargetL2 or TargetR2
+	=======
+	SOUNDS
+	=======
+	
+	================
+	COLLISIONLAYERS
+	================
+	
+	Background
+	Hole
+	
+	Playern4
+	CrateLn4
+	CrateRn4
+	TargetLn4
+	TargetRn4
+	
+	CrateLn3
+	CrateRn3
+	TargetLn3
+	Playern3
+	TargetRn3
+	
+	CrateLn2
+	CrateRn2
+	TargetLn2
+	TargetRn2
+	Playern2
+	
+	CrateLn1
+	CrateRn1
+	TargetLn1
+	TargetRn1
+	Playern1
+	
+	
+	
+	Grass 
+	
+	
+	Player0, CrateL0, CrateR0, Wall0
+	TargetL0, TargetR0, TargetWall
+	CrateL0Extra
+	CrateR0Extra
+	
+	Player0Top
+	CrateL0Top
+	CrateR0Top
+	Wall0Top
+	
+	
+	Player1, CrateL1, CrateR1
+	TargetL1, TargetR1
+	CrateL1Extra
+	CrateR1Extra
+	
+	Player1Top
+	CrateL1Top
+	CrateR1Top
+	Target1Top
+	
+	
+	Player2, CrateL2, CrateR2
+	TargetL2, TargetR2
+	CrateL2Extra
+	CrateR2Extra
+	
+	Player2Top
+	CrateL2Top
+	CrateR2Top
+	TargetL2Top
+	TargetR2Top
+	
+	CrateLSpawner
+	CrateRSpawner
+	TargetLSpawner
+	TargetRSpawner
+	PlayerSpawner
+	
+	FramePause
+	
+	tdHole
+	tdTargetL, tdTargetR
+	tdplayer, tdCrateL, tdCrateR, tdWall
+	
+	======
+	RULES
+	======
+	[> Player] -> again
+	
+	[Wall0] -> [TargetWall Wall0]
+	
+	[TargetLn4][TargetLSpawner] -> [][TargetLSpawner TargetL2 FramePause] again
+	[TargetLn3] -> [TargetLn4] again
+	[TargetLn2] -> [TargetLn3] again
+	[TargetLn1] -> [TargetLn2] again
+	[TargetL0 no Grass] -> [TargetLn1] again
+	[TargetL1 no Player0 no Target0 no Wall0] -> [TargetL0] again
+	[TargetL2 no Player1 no Target1][TargetLSpawner no FramePause] -> [TargetL1][TargetLSpawner] again
+	
+	[TargetRn4][TargetRSpawner] -> [][TargetRSpawner TargetR2 FramePause] again
+	[TargetRn3] -> [TargetRn4] again
+	[TargetRn2] -> [TargetRn3] again
+	[TargetRn1] -> [TargetRn2] again
+	[TargetR0 no Grass] -> [TargetRn1] again
+	[TargetR1 no Player0 no Target0 no Wall0] -> [TargetR0] again
+	[TargetR2 no Player1 no Target1][TargetRSpawner no FramePause] -> [TargetR1][TargetRSpawner] again
+	
+	
+	[CrateLn4][CrateLSpawner] -> [][CrateLSpawner CrateL2 FramePause] again
+	[CrateLn3] -> [CrateLn4] again
+	[CrateLn2] -> [CrateLn3] again
+	[CrateLn1] -> [CrateLn2] again
+	[CrateL0 no Grass] -> [CrateLn1] again
+	[CrateL1 no Player0 no Crate0 no Wall0] -> [CrateL0]again
+	[CrateL2 no Player1 no Crate1][CrateLSpawner no FramePause] -> [CrateL1][CrateLSpawner] again
+	
+	[CrateRn4][CrateRSpawner] -> [][CrateRSpawner CrateR2 FramePause] again
+	[CrateRn3] -> [CrateRn4] again
+	[CrateRn2] -> [CrateRn3] again
+	[CrateRn1] -> [CrateRn2] again
+	[CrateR0 no Grass] -> [CrateRn1] again
+	[CrateR1 no Player0 no Crate0 no Wall0] -> [CrateR0]again
+	[CrateR2 no Player1 no Crate1][CrateRSpawner no FramePause] -> [CrateR1][CrateRSpawner] again
+	
+	
+	[Playern4][PlayerSpawner] -> [][PlayerSpawner Player2 FramePause] again
+	[Playern3 no Objn4s] -> [Playern4] again
+	[Playern2 no Objn3s] -> [Playern3] again
+	[Playern1 no Objn2s] -> [Playern2] again
+	[Player0 no Objn1s] -> [Playern1] again
+	[Player1 no Obj0s]-> [Player0] again
+	[Player2 no Obj1s][PlayerSpawner no FramePause] -> [Player1][PlayerSpawner] again
+	
+	
+	
+	[> Player0 | Pushable0 ] -> [> Player0 | > Pushable0]
+	[> Pushable0 | stationary Pushable0 ] -> [ Pushable0 | stationary Pushable0]
+	[> Pushable0 | Wall0 ] -> [ Pushable0 | Wall0]
+	[> Player0 | stationary Pushable0] -> [Player0 | Pushable0]
+	[> Player0 | Wall0] -> [Player0 | Wall0]
+	
+	[> Obj0s Obj1s] -> [> Obj0s > Obj1s]
+	
+	[> Player1 | Pushable1 ] -> [> Player1 | > Pushable1]
+	[> Pushable1 | stationary Pushable1 ] -> [ Pushable1 | stationary Pushable1]
+	[> Player1 | stationary Pushable1] -> [Player1 | Pushable1]
+	
+	[> tdPlayer | tdCrateL] -> [> tdPlayer | > tdCrateL]
+	[> tdPlayer | tdCrateR] -> [> tdPlayer | > tdCrateR]
+	
+	late [obj1s no Grass no Hole] -> cancel
+	late [obj0s no Grass no Hole] -> cancel
+	
+	late [top] -> []
+	
+	late [CrateR0Extra] -> []
+	late [CrateL0Extra] -> []
+	late [CrateR1Extra] -> []
+	late [CrateL1Extra] -> []
+	late [CrateR2Extra] -> []
+	late [CrateL2Extra] -> []
+	late [CrateR0] -> [CrateR0 CrateR0Extra]
+	late [CrateL0] -> [CrateL0 CrateL0Extra]
+	late [CrateR1] -> [CrateR1 CrateR1Extra]
+	late [CrateL1] -> [CrateL1 CrateL1Extra]
+	late [CrateR2] -> [CrateR2 CrateR2Extra]
+	late [CrateL2] -> [CrateL2 CrateL2Extra]
+	
+	late down [no Player0Top | Player0] -> [Player0Top | Player0]
+	late down [no CrateL0Top | CrateL0] -> [CrateL0Top | CrateL0]
+	late down [no CrateR0Top | CrateR0] -> [CrateR0Top | CrateR0]
+	late down [no Wall0Top | Wall0] -> [Wall0Top | Wall0]
+	
+	late down [no Player1Top | Player1] -> [Player1Top | Player1]
+	late down [no Target1Top | TargetL1] -> [Target1Top | TargetL1]
+	late down [no Target1Top | TargetR1] -> [Target1Top | TargetR1]
+	late down [no CrateL1Top | CrateL1] -> [CrateL1Top | CrateL1]
+	late down [no CrateR1Top | CrateR1] -> [CrateR1Top | CrateR1]
+	
+	late down [no Player2Top | Player2] -> [Player2Top | Player2] 
+	late down [no TargetL2Top | TargetL2] -> [TargetL2Top | TargetL2]
+	late down [no TargetR2Top | TargetR2] -> [TargetR2Top | TargetR2]
+	late down [no CrateL2Top | CrateL2] -> [CrateL2Top | CrateL2] 
+	late down [no CrateR2Top | CrateR2] -> [CrateR2Top | CrateR2] 
+	
+	late [FramePause] -> []
+	
+	[TargetL0 CrateL0][TargetR0 CrateR0] -> win
+	[tdTargetL tdCrateL][tdTargetR tdCrateR] -> win
+	==============
+	WINCONDITIONS
+	==============
+	
+	=======
+	LEVELS
+	=======
+	message Thanks for testing my Sokoban game!
+	message The goal is to get every crate on its matching target!
+	
+	xxxxxxxxx
+	$$$$$$$$$
+	$$$$....$
+	$$..$...$
+	$$..$.b.$
+	$$.c...$$
+	$$..$..$$
+	$..$$a..$
+	$.d.e...$
+	$$.$$...$
+	$$$$$$$$$
+	xxxxxxxxx
+	
+	message We've just upgraded to a 3D system, but that shouldn't change anything. 
+	
+	XXXXXXXXX
+	#########
+	####....#
+	##..#...#
+	##..#.j.#
+	##.r...##
+	##..#..##
+	#..##p..#
+	#.q.h...#
+	##.##...#
+	#########
+	xxxxxxxxx
+	
+	message Thanks for testing! I think it's production-ready!
 </textarea></form>
 </div>
 <div id="verticaldragbar"></div>

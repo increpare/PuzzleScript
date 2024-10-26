@@ -1,1066 +1,16 @@
 SYSTEM PROMPT:
 You are a game designer, familiar with the PuzzleScript game description language. Here are some example games, for inspiration (do not reproduce these games exactly):
 
-title It Dies In The Light
-author Christopher Wells
-homepage www.tophwells.com
-
-noaction
-run_rules_on_level_start
-again_interval 0.05
-
-========
-OBJECTS
-========
-
-BackgroundNeutral
-LIGHTGray Gray
-11011
-10101
-01110
-10101
-11011
-
-BackgroundDark
-Black
-
-Wall
-Lightblue Blue
-00010
-11111
-01000
-11111
-00010
-
-LivePlayer
-Black LightRed White Blue
-.000.
-.111.
-12321
-.232.
-.222.
-
-Corpse
-LightGrey
-.000.
-.0.0.
-0.0.0
-..0..
-.0.0.
-
-Crate
-Orange LightBrown Brown
-.222.
-21012
-20102
-21012
-.222.
-
-GoldCrate
-White Yellow Orange
-.222.
-21012
-20002
-21012
-.222.
-
-GlassCrate
-White
-.000.
-0...0
-0...0
-0...0
-.000.
-
-Prism
-LightBlue White
-.000.
-00110
-00010
-00000
-.000.
-
-ActivePrism
-LightBlue White Yellow
-.000.
-02120
-01110
-02120
-.000.
-
-Glass
-White
-00000
-0...0
-0...0
-0...0
-00000
-
-BeamVert
-White Yellow
-.101.
-.101.
-.101.
-.101.
-.101.
-
-BeamHor
-White Yellow
-.....
-11111
-00000
-11111
-.....
-
-BeamCross
-White Yellow
-.101.
-11011
-00000
-11011
-.101.
-
-Shadow
-Purple
-0.0.0
-.0.0.
-0.0.0
-.0.0.
-0.0.0
-
-TempShadow
-Purple
-0.0.0
-.0.0.
-0.0.0
-.0.0.
-0.0.0
-
-=======
-LEGEND
-=======
-
-. = BackgroundNeutral
-# = Wall
-P = LivePlayer
-C = Crate
-G = GoldCrate
-S = Shadow
-X = Prism
-O = Glass
-
-Background = BackgroundNeutral or BackgroundDark
-Player = LivePlayer or Corpse
-Light = BeamVert or BeamHor or BeamCross
-Hlight = BeamHor or BeamCross
-Vlight = BeamVert or BeamCross
-Opaque = Player or Crate or Wall or GoldCrate
-Pushable = Crate or GoldCrate or Prism or GlassCrate
-
-
-=======
-SOUNDS
-=======
-
-SFX0 93002904
-
-================
-COLLISIONLAYERS
-================
-
-Background
-BeamVert, BeamHor, BeamCross, Shadow, TempShadow
-Player, Corpse, Wall, Crate, GoldCrate, GlassCrate, Prism, ActivePrism, Glass
-
-======
-RULES
-======
-
-[> Corpse] -> RESTART
-[Light] -> []
-[ActivePrism] -> [Prism]
-[ >  Player | Pushable ] -> [  >  Player | > Pushable  ]
-late HORIZONTAL [GoldCrate|no Opaque no Light] -> [GoldCrate | BeamHor]
-late VERTICAL [GoldCrate|no Opaque no Light] -> [GoldCrate | BeamVert]
-late VERTICAL [GoldCrate|no Opaque BeamHor] -> [GoldCrate | BeamCross]
-late HORIZONTAL [Hlight|no Opaque no Light] -> [Hlight|BeamHor]
-+ late HORIZONTAL [Hlight|no Opaque BeamVert] -> [Hlight|BeamCross]
-+ late VERTICAL [Vlight|no Opaque no Light] -> [Vlight|BeamVert]
-+ late VERTICAL [Vlight|no Opaque BeamHor] -> [Vlight|BeamCross]
-+ late [Light Prism] ->[BeamCross ActivePrism]
-late [Shadow Pushable] -> [Pushable]
-late [TempShadow] -> [Shadow]
-late [Shadow | no Light no Wall no Pushable no Glass no Shadow] -> [shadow | Tempshadow] again
-late [Shadow] -> [Shadow BackgroundDark]
-late [TempShadow] -> [TempShadow BackgroundDark]
-late [no Shadow no TempShadow] -> [no Shadow BackgroundNeutral]
-late [Shadow Player] -> [Shadow Corpse]
-
-==============
-WINCONDITIONS
-==============
-
-no Shadow
-
-=======
-LEVELS
-=======
-
-......####.
-..#####ss#.
-###ssssss#.
-#..ssscss##
-#..#s#s#ss#
-#.g#s#ssss#
-#p.#s#ssss#
-#..css#sss#
-###########
-
-........########.
-........#...#.C#.
-...######...GC.##
-...#..CsssssO.C.#
-...#P.Csss#sO.CC#
-...#..Csss#sO#..#
-########ss#s....#
-#ssssssOss#s#####
-#sssssssss###....
-#########s#......
-........###......
-
-##########
-###G#G#G##
-##P......#
-#G.......#
-##..C....#
-#G.......#
-##..C....#
-#G.......#
-##......S#
-##########
-
-........########
-........#......#
-#########..#o#.#
-#........gooxo.#
-#g#####c#.sso#s#
-#.ssssss#.ss.ss#
-##soooss#.ss##s#
-##c.p.c###ss#ss#
-##.....#ssss#ss#
-#...g.......#ss#
-#########.xx#ss#
-........##sssss#
-.........#######
-
-MESSAGE Earth is safe once again.
-
-
-title neko puzzle
-author lexaloffle
-homepage www.lexaloffle.com
-
-(
-
-An inadequate but illustrative demake of one of my favourite puzzle games ever, by the extremely amicable Lexaloffle, and with his permission.
-
-www.lexaloffle.com/neko.htm
-
-The game proper has a lot of magic and love in it.
-
-)
-
-========
-OBJECTS
-========
-
-Background .
-darkblue
-
-Fruit F
-red green lightred
-..1..
-.000.
-00020
-00000
-.000.
-
-Player P
-gray white
-.1.1.
-10101
-11111
-.111.
-00.00
-
-=======
-LEGEND
-=======
-
-=========
-SOUNDS
-=========
-
-endlevel 97301508
-startgame 97301508
-endgame 97301508
-
-================
-COLLISIONLAYERS
-================
-
-Background
-Player, Fruit
-
-======
-RULES
-======
-
-[ > Player | ... | Fruit ] -> [ | ... | Player ] 
-
-(if you're not sure what this line does, try removing it, and see what happens)
-[ > Player ] -> [ Player ] 
-
-==============
-WINCONDITIONS
-==============
-
-no Fruit
-
-=======
-LEVELS
-=======
-
-message level 1 of 10
-
-......F.
-........
-F......F
-......FF
-........
-........
-P.......
-
-message level 2 of 10
-
-........
-....P...
-...F.F..
-........
-........
-..F.FF..
-........
-
-message level 3 of 10
-
-........
-.FF....F
-........
-........
-F...P...
-........
-........
-F.F.....
-
-message level 4 of 10
-
-....F..F
-........
-.......F
-F.......
-P.......
-........
-F...F...
-
-message level 5 of 10
-
-........
-....F.P.
-F.F.....
-........
-F...F...
-..F.F...
-........
-
-message level 6 of 10
-
-F.....F.
-........
-........
-FF..F...
-F.....F.
-........
-.P......
-
-message level 7 of 10
-
-...FP..F
-F.F.....
-F......F
-........
-........
-..F.....
-........
-
-message level 8 of 10
-
-..F..P..
-........
-........
-.FFF....
-F..F..F.
-........
-........
-
-message level 9 of 10
-
-....F..F
-........
-.F..F...
-........
-.F.P..F.
-.F......
-........
-
-message level 10 of 10
-
-....F.F.
-........
-.F..F..F
-...F..F.
-.......F
-...FP...
-........
-
-message congratulations!
-
-
-title Notsnake
-author Terry Cavanagh
-homepage www.distractionware.com
-
-color_palette c64
-require_player_movement
-
-========
-OBJECTS
-========
-
-Background
-blue
-
-Player
-lightblue
-
-Trail
-purple
-
-=======
-LEGEND
-=======
-
-. = Background
-P = Player
-O = Trail
-
-=======
-SOUNDS
-=======
-
-startgame 50287705
-sfx0 660507
-sfx1 41058704
-endgame 74955903
-
-================
-COLLISIONLAYERS
-================
-
-Background
-Trail
-Player
-
-======
-RULES
-======
-
-[ > Player | No Trail ] -> [ Trail | Player ] sfx0
-[ > Player | Trail ] -> [ | Player ] sfx1
-
-==============
-WINCONDITIONS
-==============
-
-no Trail
-
-=======
-LEVELS
-=======
-
-OOOOOOOO
-OOOOOOOO
-O..POO.O
-OOOOOOOO
-OOOOOOOO
-
-
-title The Legend of Zokoban
-author Joshua Minor
-homepage pixelverse.org
-flickscreen 9x7
-
-========
-OBJECTS
-========
-
-Background
-yellow orange
-00000
-01000
-00001
-00100
-10000
-
-Water
-blue lightblue
-00000
-01000
-00001
-00100
-10000
-
-Cave
-DarkBlue
-00000
-00000
-00000
-00000
-00000
-
-Goal
-DarkBlue Red
-00000
-00000
-00100
-00000
-00000
-
-RockWall
-BROWN Orange
-01110
-10000
-10010
-10000
-00100
-
-StoneWall
-darkgrey grey
-01110
-10000
-10010
-10000
-00100
-
-PlayerWithoutSword
-GREEN lightgreen
-.00..
-00000
-.000.
-.111.
-00.00
-
-PlayerWithSword
-GREEN lightgreen white grey
-.002.
-00020
-.0222
-.110.
-00.00
-
-Sword
-grey white
-..1..
-..1..
-.111.
-..0..
-.....
-
-Block
-BROWN Orange darkgrey
-.111.
-10001
-10002
-10002
-.222.
-
-EasyBaddie
-white red
-.111.
-10101
-11111
-11111
-11.11
-
-Money
-white lightblue
-..1..
-.001.
-10111
-.111.
-..1..
-
-=======
-LEGEND
-=======
-
-Wall = StoneWall or RockWall
-Solid = Wall or Block or Water
-Player = PlayerWithoutSword or PlayerWithSword
-Obstacle = Wall or Block or Player or Water
-Baddie = EasyBaddie
-
-. = Background
-# = RockWall
-S = StoneWall
-P = PlayerWithoutSword
-* = Block
-@ = Block and Cave
-O = Cave
-w = Water
-1 = EasyBaddie
-+ = Sword
-G = Goal
-
-=======
-SOUNDS
-=======
-
-StartLevel 40430108 (music-ish)
-SFX0 16358103 (power up)
-SFX1 84057304 (push)
-SFX2 74654508 (stairs)
-SFX3 21293301 (fight)
-SFX4 49521903 (hurt)
-SFX5 47598700 (money)
-ShowMessage 82693708 (you win!)
-
-================
-COLLISIONLAYERS
-================
-
-Background
-Cave, Goal
-Player, Wall, Block, Water, EasyBaddie
-Sword, Money
-
-======
-RULES
-======
-
-(baddies move at random)
-[ Stationary Baddie ] -> [ RandomDir Baddie ]
-
-(player can push blocks)
-[ > Player | Block ] -> [ > Player | > Block ] SFX1
-
-(blocks pushed into water become land)
-[ > Block | Water ] -> [ | ]
-
-(baddies can attack the player w/o sword)
-[ > Baddie | Player No Sword ] -> SFX4
-
-(player can pick up sword)
-([ > Player | Sword ] -> [ | Player Sword ] SFX0)
-[ PlayerWithoutSword Sword ] -> [ PlayerWithSword ] SFX0
-
-(player with sword can kill baddies & leave money)
-[ > PlayerWithSword | Baddie ] -> [ PlayerWithSword | Money ] SFX3
-(sword moves with player)
-([ > Player Sword ] -> [ > Player > Sword ])
-(sword doesn't move into obstacles)
-([ > Sword | Stationary Obstacle ] -> [ Sword | Stationary Obstacle ])
-
-(player can pick up money)
-[ > Player | Money ] -> [ | Player ] SFX5
-
-(blocks pushed into caves, teleport to other end of cave)
-random [ Moving Block Cave | ... | Cave ] -> [ Cave | ... | Block Cave ]
-(blocks sitting on cave exits will roll aside to let player follow them)
-late random [ Block Cave | No Obstacle ] -> [ Cave | Block ]
-(players can enter caves - teleporting to orthogonally matching cave)
-late random [ Player Cave | ... | Cave ] -> [ Cave | ... | Player Cave ] SFX2
-(sword follows player through the cave)
-(late random [ Sword Cave | ... | Cave ] -> [ Cave | ... | Sword Cave ])
-
-
-==============
-WINCONDITIONS
-==============
-
-All Player on Goal
-
-=======
-LEVELS
-=======
-
-sssssssss#################wwwwwwwwww
-ss.s1s..s#1#####.##..1..1.wwwwww..ww
-s.......s#.#####.##.#.#.#.wwwww..*.w
-s..*....o#.##o##.............ww....w
-s.s....ss#..........#.*.#....ww..1.w
-sss.s.sss##...............wwwwww..ww
-sssssssss#####..#####.....wwwwwwwwww
-sssssssss#####..#####.....wwwwwwwwww
-ss1...sss#####..####.....wwww.....ww
-s......os##o#....##...#.1www..s.s..w
-s..+...ss#.......##*......ww...g...w
-ss.....ss#...p..........#.ww..s.s.1w
-ssss..sss##.....###..#.1..www..1..ww
-sssssssss#################wwwwwwwwww
-
-message Congratulations!
-
-
-
-title Take Heart Lass
-author Kevin Zuhn
-homepage www.kevinzuhn.com
-
-========
-OBJECTS
-========
-
-Background
-LightGreen Green
-11111
-11011
-10101
-11011
-11111
-
-BackFlowers
-Green Purple Yellow
-10001
-00100
-01210
-00100
-10001
-
-Target
-RED LightRed
-.0.0.
-01010
-01110
-.010.
-..0..
-
-Wall
-Red DarkGreen
-00000
-00100
-01010
-00100
-00000
-
-DespairWall
-DarkBrown DarkBlue
-00000
-00100
-01010
-00100
-00000
-
-NewDespairWall
-DarkRed DarkBlue
-00000
-00100
-01010
-00100
-00000
-
-Player
-Blue LightRed Yellow DarkBlue
-.333.
-.323.
-20002
-.111.
-.000.
-
-OldHope
-White Pink
-11111
-11011
-10101
-11011
-11111
-
-NewHope
-White LightRed
-11111
-11011
-10101
-11011
-11111
-
-Crate
-Pink White
-.0.0.
-01010
-01110
-.010.
-..0..
-
-OldDespair
-Black DarkBlue
-01010
-10101
-01010
-10101
-01010
-
-AltOldDespair
-Black DarkBlue
-10101
-01010
-10101
-01010
-10101
-
-NewDespair
-DarkBlue DarkGray
-01010
-10101
-01010
-10101
-01010
-
-AltNewDespair
-DarkBlue DarkGray
-10101
-01010
-10101
-01010
-10101
-
-=======
-LEGEND
-=======
-
-. = Background
-f = BackFlowers
-# = Wall
-P = Player
-* = Crate
-@ = Crate and Target
-O = Target
-X = OldDespair
-Z = AltOldDespair
-H = OldHope
-
-Despair = OldDespair or NewDespair or AltOldDespair or AltNewDespair
-Hope = OldHope or NewHope
-Blocker = Despair or Crate or Target or Wall or Player or DespairWall or NewDespairWall or Hope
-HopeBlocker = Crate or Target or Wall or DespairWall or NewDespairWall or Hope
-
-
-=======
-SOUNDS
-=======
-
-Crate MOVE 36772507
-
-================
-COLLISIONLAYERS
-================
-
-Background
-Target, BackFlowers, Hope
-Player, Wall, Crate, Despair, NewDespair, DespairWall, NewDespairWall
-
-======
-RULES
-======
-
-[NewDespair] -> [OldDespair]
-[AltNewDespair] -> [AltOldDespair]
-[NewDespairWall] -> [DespairWall]
-[NewHope] -> [OldHope]
-late [OldDespair | No Blocker] -> [OldDespair | AltNewDespair]
-late [AltOldDespair | No Blocker] -> [AltOldDespair | NewDespair]
-late [OldDespair | Wall] -> [OldDespair | NewDespairWall]
-late [DespairWall | Wall] -> [DespairWall | NewDespairWall]
-late [OldHope | No HopeBlocker] -> [ OldHope | NewHope]
-
-[> Player | Crate] -> [> Player | > Crate]
-[> Crate | Blocker] -> [ Crate | Blocker ]
-
-late [Target | Despair] -> [ Target |  ]
-late [Despair Target] -> [Target]
-late [Crate | Despair] -> [ Crate |  ]
-late [Hope Despair] -> [Hope]
-late [Hope | DespairWall] -> [Hope | Wall]
-late [Hope | NewDespairWall] -> [Hope | Wall]
-
-==============
-WINCONDITIONS
-==============
-
-Some Player on Target
-
-=======
-LEVELS
-=======
-
-message You have love in your heart, Lass.
-
-######
-#...x#
-#.ff.#
-#.ff.#
-#o..P#
-######
-
-message So your heart can weather Despair.
-
-#########
-#x.f...f#
-#.#.....#
-#.p.f#..#
-#.#..#f.#
-#xzf...o#
-#########
-
-message And you've others who love you.
-
-#########
-#x......#
-#...#...#
-#p..*..##
-#...#...#
-#x.....o#
-#########
-
-message The war can't last forever, Lass.
-
-########
-#.#zx#p#
-#....*.#
-#......#
-#o#*.#.#
-########
-
-message Think of the time we shared.
-
-###########
-#.........#
-#.*#.o.####
-#..*###...#
-#.......*.#
-#......#..#
-####...####
-#x.......p#
-###########
-
-message Then bottle your grief up tight.
-
-###########
-#o........#
-####.##.#.#
-#.....*.#.#
-#.#.###.#.#
-#.#....*..#
-#.#*.#.##.#
-#x#...p#z.#
-###########
-
-message I wish I could be there, Lass.
-
-###########
-#...o...zx#
-#.#.....#z#
-#...#.#...#
-#.........#
-#..**.**..#
-#z........#
-#xz......p#
-###########
-
-message You're loved. You'll find a way.
-
-###########
-#....o....#
-#..#####..#
-#.#.....#.#
-#...*p*...#
-#....*....#
-#...###...#
-#x.......x#
-###########
-
-message There is always Hope, Lass.
-
-###########
-#........H#
-#.......p.#
-#x........#
-#zx.......#
-#xzx......#
-#zxzx.....#
-#ozxzx....#
-###########
-
-message  It may waver, but it stays lit.
-
-###########
-#....p....#
-###.#*#.###
-#x.......x#
-###.*.*.###
-#HH*.....x#
-###.#.#.###
-#x.......o#
-###########
-
-message Temper your hope with wisdom.
-
-############
-#......zxzx#
-#.##.##.####
-#......*...#
-#.*p.#.#.#o#
-#...*.*.*#.#
-####.###...#
-#H.........#
-############
-
-message Save no Despair for me, Lass.
-
-##################
-#..*.#H#o........#
-#...*..#######.#.#
-#.##.#########.#*#
-#.#.....*....#.#.#
-#H#...#.p..#z.*H*#
-###...#.#*##...#.#
-#...##z.....#*.xz#
-#.*.......*...xzx#
-#x...#.*....#xzxz#
-##################
-
-message For I have hope as well.
-message Take Heart, Lass. Goodbye.
-
-title MC Escher's Equestrian Armageddon
-author Anna Clarke
+title Simple Block Pushing Game
+author increpare
 homepage www.puzzlescript.net
-again_interval 0.2
 
 ========
 OBJECTS
 ========
 
 Background
-BLACK DARKBLUE
+LIGHTGREEN GREEN
 11111
 01111
 11101
@@ -1084,40 +34,7 @@ BROWN DARKBROWN
 11111
 00010
 
-Steps1
-BROWN DARKBROWN GREEN
-....0
-...11
-..000
-.1111
-00010
-
-Steps2
-BROWN DARKBROWN GREEN
-0....
-11...
-010..
-1111.
-00010
-
-
-Steps3
-BROWN DARKBROWN GREEN
-00010
-.1111
-..000
-...11
-....0
-
-Steps4
-BROWN DARKBROWN GREEN
-00010
-1111.
-010..
-11...
-0....
-
-Player1
+Player
 Black Orange White Blue
 .000.
 .111.
@@ -1125,48 +42,17 @@ Black Orange White Blue
 .333.
 .3.3.
 
-Player2
-Black Orange White Blue
-..2..
-01233
-0123.
-01233
-..2..
-
-Player3
-Black Orange White Blue
-..2..
-33210
-.3210
-33210
-..2..
-
-Player4
-Black Orange White Blue
-.3.3.
-.333.
-22222
-.111.
-.000.
-
-Horse
-Orange Brown
-...0.
-...00
-0110.
-0000.
-0..0.
-
-Blood
-Red
-.....
-.....
-.....
-.....
+BlueCrate B
+lightblue
+00000
+0...0
+0...0
+0...0
 00000
 
-Crate
-Orange Yellow
+
+OrangeCrate O
+Orange
 00000
 0...0
 0...0
@@ -1178,131 +64,52 @@ Orange Yellow
 LEGEND
 =======
 
+Crate = OrangeCrate or BlueCrate
 . = Background
-B = Blood
 # = Wall
-1 = Steps1
-2 = Steps2
-3 = Steps3
-4 = Steps4
-Steps = Steps1 or Steps2 or Steps3 or Steps4
-
-P = Player1
-Q = Player2
-
-Player = Player1 or Player2 or Player3 or Player4
-
-H = Horse
-
-Animated = Player or Horse
-* = Crate
-@ = Crate and Target
-O = Target
-
-Solid = Wall or Steps or Horse or Player
+P = Player
 
 =======
 SOUNDS
 =======
+
+Crate MOVE 36772507
 
 ================
 COLLISIONLAYERS
 ================
 
 Background
-Blood
 Target
-Player1, Player2, Player3, Player4, Wall, Crate, Steps, Horse
+Player, Wall, Crate
 
 ======
 RULES
 ======
 
+[ >  Player | Crate ] -> [  >  Player | > Crate  ]
 
-[ > Player1 ] -> [> Player1] again
-DOWN [ Player1 | No Solid ] -> [ | Player1 ] again
 
-[ > Player2 ] -> [> Player2] again
-right [ Player2 | No Solid ] -> [ | Player2 ] again
-
-[ > Player3 ] -> [> Player3] again
-left [ Player3 | No Solid ] -> [ | Player3 ] again
-
-[ > Player4 ] -> [> Player4] again
-up [ Player4 | No Solid ] -> [ | Player4 ] again
-
-right [ right  Player1 | Steps1 ] -> [ up Player2 | Steps1 ] again
-left [ left  Player1 | Steps2 ] -> [ up Player3 | Steps2 ] again
-
-down [ down  Player2 | Steps1 ] -> [ left Player1 | Steps1  ] again
-up [ up Player2 | Steps3 ] -> [ left Player4 | Steps3 ] again
-
-down [ down  Player3 | Steps2 ] -> [ right Player1 | Steps2  ] again
-up [ up Player3 | Steps4 ] -> [ right Player4 | Steps4 ] again
-
-left [ left Player4 | Steps4 ] -> [ down Player3 | Steps4 ] again
-right [ right Player4 | Steps3 ] -> [down Player2 | Steps3 ] again
-
-[ > Horse ] -> [> Horse] again
-DOWN [ Horse | No Solid ] -> [ | Horse ] again
-
-[ Action Player | Horse ] -> [  Action Player | Blood  ]
+[ > OrangeCrate | OrangeCrate ] -> [ > OrangeCrate | > OrangeCrate ]
++[ > OrangeCrate | BlueCrate ] -> [ > OrangeCrate | > BlueCrate ]
++[ > BlueCrate | OrangeCrate ] -> [ > BlueCrate | > OrangeCrate ]
++[ > BlueCrate | BlueCrate ] -> [ > BlueCrate | > BlueCrate ]
 
 ==============
 WINCONDITIONS
 ==============
 
-No Horse
-
 =======
 LEVELS
 =======
-#################
-#.....######....#
-#.....######....#
-#.P.............#
-####.........H..#
-#################
 
-#######
-#4...3#
-#.....#
-#....Q#
-#.....#
-#.....#
-#2.H.1#
-#######
-
-
-####################
-#4..3..3###4......3#
-#.......3#4........#
-#...H....#.....1...#
-#...P.........1#...#
-#2.1#2.H1##..1##.H.#
-####################
-
-
-###########################################
-#4........................3#
-#..........................#
-#.................####.....#
-#2P..............H####2....#
-#########################..#
-######4.....................#
-######.......................#
-######........................#
-######.........................#
-######.........................#
-######.....##..................#
-######2.H..##2.............2..1#
-###################........#####
-###################........4..3#
-###################............#
-#4.............................#
-#.................#............#
-#2......H........##H......H..1##
-##########################################
+################
+#..............#
+#..............#
+#.P.BOBOBOBOB..#
+#..............#
+#..............#
+################
 
 
 title Tunnel Rat
@@ -1708,6 +515,776 @@ o....###...%...#..#..##.o
 #########################
 #########################
 @@@@@@@@@@@@@@@@@@@@@@@@@
+
+title The Legend of Zokoban
+author Joshua Minor
+homepage pixelverse.org
+flickscreen 9x7
+
+========
+OBJECTS
+========
+
+Background 
+yellow orange
+00000
+01000
+00001
+00100
+10000
+
+Water 
+blue lightblue
+00000
+01000
+00001
+00100
+10000
+
+Cave 
+DarkBlue
+00000
+00000
+00000
+00000
+00000
+
+Goal 
+DarkBlue Red
+00000
+00000
+00100
+00000
+00000
+
+RockWall 
+BROWN Orange
+01110
+10000
+10010
+10000
+00100
+
+StoneWall 
+darkgrey grey
+01110
+10000
+10010
+10000
+00100
+
+PlayerWithoutSword
+GREEN lightgreen 
+.00..
+00000
+.000.
+.111.
+00.00
+
+PlayerWithSword
+GREEN lightgreen white grey
+.002.
+00020
+.0222
+.110.
+00.00
+
+Sword 
+grey white 
+..1..
+..1..
+.111.
+..0..
+.....
+
+Block  
+BROWN Orange darkgrey
+.111.
+10001
+10002
+10002
+.222.
+
+EasyBaddie
+white red 
+.111.
+10101
+11111
+11111
+11.11
+
+Money
+white lightblue
+..1..
+.001.
+10111
+.111.
+..1..
+
+=======
+LEGEND
+=======
+
+Wall = StoneWall or RockWall
+Solid = Wall or Block or Water
+Player = PlayerWithoutSword or PlayerWithSword
+Obstacle = Wall or Block or Player or Water
+Baddie = EasyBaddie
+
+. = Background
+# = RockWall
+S = StoneWall
+P = PlayerWithoutSword
+* = Block
+@ = Block and Cave
+O = Cave
+w = Water
+1 = EasyBaddie
++ = Sword
+G = Goal
+
+=======
+SOUNDS
+=======
+
+StartLevel 40430108 (music-ish)
+SFX0 16358103 (power up)
+SFX1 84057304 (push)
+SFX2 74654508 (stairs)
+SFX3 21293301 (fight)
+SFX4 49521903 (hurt)
+SFX5 47598700 (money)
+ShowMessage 82693708 (you win!)
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Cave, Goal
+Player, Wall, Block, Water, EasyBaddie
+Sword, Money
+
+======
+RULES     
+======     
+
+(baddies move at random)
+[ Stationary Baddie ] -> [ RandomDir Baddie ]
+
+(player can push blocks)
+[ > Player | Block ] -> [ > Player | > Block ] SFX1
+
+(blocks pushed into water become land)
+[ > Block | Water ] -> [ | ]
+
+(baddies can attack the player w/o sword)
+[ > Baddie | Player No Sword ] -> SFX4
+
+(player can pick up sword)
+([ > Player | Sword ] -> [ | Player Sword ] SFX0)
+[ PlayerWithoutSword Sword ] -> [ PlayerWithSword ] SFX0
+
+(player with sword can kill baddies & leave money)
+[ > PlayerWithSword | Baddie ] -> [ PlayerWithSword | Money ] SFX3
+(sword moves with player)
+([ > Player Sword ] -> [ > Player > Sword ])
+(sword doesn't move into obstacles)
+([ > Sword | Stationary Obstacle ] -> [ Sword | Stationary Obstacle ])
+
+(player can pick up money)
+[ > Player | Money ] -> [ | Player ] SFX5
+
+(blocks pushed into caves, teleport to other end of cave)
+random [ Moving Block Cave | ... | Cave ] -> [ Cave | ... | Block Cave ]
+(blocks sitting on cave exits will roll aside to let player follow them)
+late random [ Block Cave | No Obstacle ] -> [ Cave | Block ]
+(players can enter caves - teleporting to orthogonally matching cave)
+late random [ Player Cave | ... | Cave ] -> [ Cave | ... | Player Cave ] SFX2
+(sword follows player through the cave)
+(late random [ Sword Cave | ... | Cave ] -> [ Cave | ... | Sword Cave ])
+
+
+==============
+WINCONDITIONS
+==============
+
+All Player on Goal     
+
+=======     
+LEVELS
+=======
+
+sssssssss#################wwwwwwwwww
+ss.s1s..s#1#####.##..1..1.wwwwww..ww
+s.......s#.#####.##.#.#.#.wwwww..*.w
+s..*....o#.##o##.............ww....w
+s.s....ss#..........#.*.#....ww..1.w
+sss.s.sss##...............wwwwww..ww
+sssssssss#####..#####.....wwwwwwwwww
+sssssssss#####..#####.....wwwwwwwwww
+ss1...sss#####..####.....wwww.....ww
+s......os##o#....##...#.1www..s.s..w
+s..+...ss#.......##*......ww...g...w
+ss.....ss#...p..........#.ww..s.s.1w
+ssss..sss##.....###..#.1..www..1..ww
+sssssssss#################wwwwwwwwww
+
+message Congratulations!
+
+title It Dies In The Light
+author Christopher Wells
+homepage www.tophwells.com
+
+noaction
+run_rules_on_level_start
+again_interval 0.05
+
+========
+OBJECTS
+========
+
+BackgroundNeutral
+LIGHTGray Gray
+11011
+10101
+01110
+10101
+11011
+
+BackgroundDark
+Black
+
+Wall
+Lightblue Blue
+00010
+11111
+01000
+11111
+00010
+
+LivePlayer
+Black LightRed White Blue
+.000.
+.111.
+12321
+.232.
+.222.
+
+Corpse
+LightGrey
+.000.
+.0.0.
+0.0.0
+..0..
+.0.0.
+
+Crate
+Orange LightBrown Brown
+.222.
+21012
+20102
+21012
+.222.
+
+GoldCrate
+White Yellow Orange
+.222.
+21012
+20002
+21012
+.222.
+
+GlassCrate
+White
+.000.
+0...0
+0...0
+0...0
+.000.
+
+Prism
+LightBlue White
+.000.
+00110
+00010
+00000
+.000.
+
+ActivePrism
+LightBlue White Yellow
+.000.
+02120
+01110
+02120
+.000.
+
+Glass
+White
+00000
+0...0
+0...0
+0...0
+00000
+
+BeamVert
+White Yellow
+.101.
+.101.
+.101.
+.101.
+.101.
+
+BeamHor
+White Yellow
+.....
+11111
+00000
+11111
+.....
+
+BeamCross
+White Yellow
+.101.
+11011
+00000
+11011
+.101.
+
+Shadow
+Purple
+0.0.0
+.0.0.
+0.0.0
+.0.0.
+0.0.0
+
+TempShadow
+Purple
+0.0.0
+.0.0.
+0.0.0
+.0.0.
+0.0.0
+
+=======
+LEGEND
+=======
+
+. = BackgroundNeutral
+# = Wall
+P = LivePlayer
+C = Crate
+G = GoldCrate
+S = Shadow
+X = Prism
+O = Glass
+
+Background = BackgroundNeutral or BackgroundDark
+Player = LivePlayer or Corpse
+Light = BeamVert or BeamHor or BeamCross
+Hlight = BeamHor or BeamCross
+Vlight = BeamVert or BeamCross
+Opaque = Player or Crate or Wall or GoldCrate
+Pushable = Crate or GoldCrate or Prism or GlassCrate
+
+
+=======
+SOUNDS
+=======
+
+SFX0 93002904
+
+================
+COLLISIONLAYERS
+================
+
+Background
+BeamVert, BeamHor, BeamCross, Shadow, TempShadow
+Player, Corpse, Wall, Crate, GoldCrate, GlassCrate, Prism, ActivePrism, Glass
+
+======
+RULES
+======
+
+[> Corpse] -> RESTART
+[Light] -> []
+[ActivePrism] -> [Prism]
+[ >  Player | Pushable ] -> [  >  Player | > Pushable  ]
+late HORIZONTAL [GoldCrate|no Opaque no Light] -> [GoldCrate | BeamHor]
+late VERTICAL [GoldCrate|no Opaque no Light] -> [GoldCrate | BeamVert]
+late VERTICAL [GoldCrate|no Opaque BeamHor] -> [GoldCrate | BeamCross]
+late HORIZONTAL [Hlight|no Opaque no Light] -> [Hlight|BeamHor]
++ late HORIZONTAL [Hlight|no Opaque BeamVert] -> [Hlight|BeamCross]
++ late VERTICAL [Vlight|no Opaque no Light] -> [Vlight|BeamVert]
++ late VERTICAL [Vlight|no Opaque BeamHor] -> [Vlight|BeamCross]
++ late [Light Prism] ->[BeamCross ActivePrism]
+late [Shadow Pushable] -> [Pushable]
+late [TempShadow] -> [Shadow]
+late [Shadow | no Light no Wall no Pushable no Glass no Shadow] -> [shadow | Tempshadow] again
+late [Shadow] -> [Shadow BackgroundDark]
+late [TempShadow] -> [TempShadow BackgroundDark]
+late [no Shadow no TempShadow] -> [no Shadow BackgroundNeutral]
+late [Shadow Player] -> [Shadow Corpse]
+
+==============
+WINCONDITIONS
+==============
+
+no Shadow
+
+=======
+LEVELS
+=======
+
+......####.
+..#####ss#.
+###ssssss#.
+#..ssscss##
+#..#s#s#ss#
+#.g#s#ssss#
+#p.#s#ssss#
+#..css#sss#
+###########
+
+........########.
+........#...#.C#.
+...######...GC.##
+...#..CsssssO.C.#
+...#P.Csss#sO.CC#
+...#..Csss#sO#..#
+########ss#s....#
+#ssssssOss#s#####
+#sssssssss###....
+#########s#......
+........###......
+
+##########
+###G#G#G##
+##P......#
+#G.......#
+##..C....#
+#G.......#
+##..C....#
+#G.......#
+##......S#
+##########
+
+........########
+........#......#
+#########..#o#.#
+#........gooxo.#
+#g#####c#.sso#s#
+#.ssssss#.ss.ss#
+##soooss#.ss##s#
+##c.p.c###ss#ss#
+##.....#ssss#ss#
+#...g.......#ss#
+#########.xx#ss#
+........##sssss#
+.........#######
+
+MESSAGE Earth is safe once again.
+
+title Collapse
+author Terry Cavanagh
+homepage www.distractionware.com
+
+color_palette pastel
+youtube 4XglYW89WLQ
+
+background_color Black
+text_color LightRed
+
+noaction
+
+flickscreen 16x10
+
+========
+OBJECTS
+========
+
+Exit D
+Black
+.....
+.....
+.....
+.....
+.....
+
+OutdoorBackground
+lightred
+
+IndoorBackground
+white lightgray
+11011
+11011
+11011
+11011
+11011
+
+
+Wall W
+Yellow Orange
+00000
+00010
+00000
+01000
+00000
+
+SolidWall Q
+#FF0000 #992222
+00000
+00001
+00111
+01111
+11111
+
+Door X
+DarkBlue White Blue
+00200
+10201
+00200
+10201
+00200
+
+Jettrail1
+DarkGray
+..0..
+.000.
+00.00
+.000.
+..0..
+
+
+Jettrail2
+DarkGray
+.....
+..0..
+.0.0.
+..0..
+.....
+
+Key
+Blue
+.000.
+.0.0.
+.000.
+..0..
+.00..
+
+Flower F
+DarkBlue Green blue
+.22..
+2002.
+.22..
+..1..
+..1..
+
+Mine M
+Red #BB0000
+10001
+01110
+11011
+01110
+10001
+
+Blood
+#FF0000 #AA0000
+10101
+01110
+11011
+01110
+10101
+
+Blood2
+#FF0000 #AA0000
+01010
+10101
+01010
+10101
+01010
+
+
+PlayerDead
+Red Black
+10001
+10001
+00000
+10001
+10101
+
+PlayerGround P
+Black
+.000.
+.000.
+00000
+.000.
+.0.0.
+
+PlayerHover
+Black
+.000.
+00000
+.000.
+.000.
+0...0
+
+PlayerHoverLeft
+Black
+.000.
+0000.
+.000.
+.000.
+..0.0
+
+PlayerHoverRight
+Black
+.000.
+.0000
+.000.
+.000.
+0.0..
+
+Temp
+black
+
+=======
+LEGEND
+=======
+
+Background = OutdoorBackground or IndoorBackground
+Player = PlayerGround or PlayerHover or PlayerHoverLeft or PlayerHoverRight or PlayerDead
+InGamePlayer = PlayerGround or PlayerHover
+FlyingPlayer = PlayerHoverLeft or PlayerHoverRight
+Obstacle = Wall or Mine or SolidWall or Door
+ObstacleExMine = Wall or SolidWall or Door
+
+. = OutdoorBackground
+, = IndoorBackground
+# = Wall
+P = Player
+k = Key and IndoorBackground
+
+=======
+SOUNDS
+=======
+
+sfx0 53720504 (jump up)
+sfx1 14370308 (bomb)
+sfx2 41983504 (jetpack)
+sfx3 86827507 (fall)
+sfx4 56160703 (door)
+sfx5 98568902 (blockpush)
+sfx6 77665108 (collapse)
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Jettrail1, Jettrail2, Exit
+Player, Wall, Solidwall, temp, playerhoverleft, playerhoverright, mine, Key, Flower, Door
+blood, blood2
+
+======
+RULES
+======
+
+right [ moving Playerdead] -> [PlayerDead]
+
+[> IngamePlayer | mine ] -> [ > PlayerDead | blood ] sfx1
+Vertical [ PlayerGround | mine ] -> [ playerdead | blood2 ] sfx1
+Horizontal [flyingplayer | mine ] -> [ playerdead | blood2 ] sfx1
+
+Horizontal [> PlayerGround | Key] [Door] -> [> PlayerGround | Key] []
+Horizontal [> PlayerGround | Key]-> [> PlayerGround | ] sfx4
+
+Horizontal [> PlayerGround | Flower] [Door] -> [> PlayerGround | Flower] []
+Horizontal [> PlayerGround | Flower]-> [> PlayerGround | ] sfx6
+
+UP [Up PlayerGround | No Obstacle | No Obstacle] -> [ | | PlayerHover ] sfx0
+UP [Up PlayerGround | No Obstacle] -> [ | PlayerHover ] sfx0
+
+
+right [right PlayerHover] -> [PlayerHoverRight]
+left [left PlayerHover] -> [PlayerHoverLeft]
+up [up PlayerHover] -> [PlayerHover]
+down [down PlayerHover] -> [PlayerGround]
+
+down [JetTrail2] -> []
+down [JetTrail1] -> [JetTrail2]
+
+(random rule here is a hack workaround)
+random right [ PlayerHoverRight | No Obstacle] -> [ JetTrail1 | PlayerHoverRight] again sfx2
+horizontal [ PlayerHoverRight | ObstacleExMine] -> [ PlayerGround | ObstacleExMine]
+down [ PlayerHoverRight | ObstacleExMine] -> [ PlayerGround | ObstacleExMine]
+
+random left [ PlayerHoverLeft | No Obstacle] -> [JetTrail1 | PlayerHoverLeft] again sfx2
+horizontal [ PlayerHoverLeft | ObstacleExMine] -> [ PlayerGround | ObstacleExMine]
+down [ PlayerHoverLeft | ObstacleExMine] -> [ PlayerGround | ObstacleExMine]
+
+horizontal [> PlayerGround | Wall] -> [> PlayerGround | > wall] sfx5
+horizontal [> Wall | Wall] -> [> Wall | > wall]
+horizontal [> Wall | Mine] -> [> Wall | > Mine]
+
+down [stationary wall] -> [ down wall] again
+down [stationary mine] -> [ down mine] again
+
+[blood | no blood ] -> [blood | blood2] again
+[blood2 | no blood ] -> [blood2 | blood] again
+
+late down [  PlayerGround | No Obstacle ] -> [ JetTrail1 |  temp] again sfx3
+late down [temp] -> [playerground]
+
+==============
+WINCONDITIONS
+==============
+No Flower
+All Player on Exit
+
+=======
+LEVELS
+=======
+
+MESSAGE The last flower...
+MESSAGE Will I find it on this planet?
+
+qqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq
+q,,,,,,,,,,,,,,qqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq
+q,,,,,,,,,,,,,,,,,,,,,,,q,,,,,,,,,,,,qqqqqqqqqqq
+q,,,,,,,,qq,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,x,D
+q,,,,,,,,qqqqqqqqqqqqq,,K,,,,,,,,,,,,,,,,,,,,x,D
+qqq,,,,,,qqqqqqqqqqqqq,,qqqqqqqqqqq,,,,,,,,,,x,D
+qqq,p,,,,qqqqqqqqqqqqq,,,,,,,,,,,,,,,,,,qqq,,x,D
+qqqqq,,,,qqqqqqqqqqqqq,,,,,,,,,,,,,,,,,,qqqqqqqq
+qqqqqmmmmqqqqqqqqqqqqqmqqmmmmmmmmmmmmmqqqqqqqqqq
+qqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq
+
+qq................q........q..........w....qmmmmmmq.............q
+qq..................w.................w....qmmmmmmq.............q
+qq...............q..w.................wm....qmmmmmq.............q
+qqq..............q..w.................ww....qmmmmqq...........f.q
+qqq..............qwww.......w.........ww.....qmmmq...........wwwq
+q.........ww......wqwmmw....w.........ww..w..qwqqq...........wwwq
+DP........ww......q.mqwww...w........wwwwwwwwwwwww...........wwwq
+qww.......ww........qqqqq...w.wwwww..wwwwwwwwwqwww..........wwwwm
+qwwwwm..wwwwwwwwwwwww.qqqqmmw.wwwwww.wwwwwwwwwqqww...q...wwwmwwwq
+qwwwwwwqwwwwmwwwwwmww.wqqqwwwwwwwwwwmwwwwwwwwwqqqqwwwwwwwwqwwwwwq
+mxxxxxxxxxxxxxxxxxxxxxxqxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxq
+m....................q.q................................m.......q
+m......................q................................q.......q
+m......................q........................................q
+m......................q........................................q
+m......................q........................w...............q
+m...............w......q........w............w..w...............q
+mmm.....m..m....w.mmmm.mmm...m..w....mm..m...wmmw..m.mm.....m...q
+mwmmmmmmm.mmwmmmmmmmmmmmmwmmmmmmmwmmmmwmmmmmmmmmmmmmmmmm.mmmmmm.q
+mmwmmmmwmmmmmmmmmwmmmwmmmmmmmwmmmmmmmmmmwmmmmmmmmmmmmmmmmmmmmmmmq
+
+MESSAGE Collapse
+MESSAGE Music [Cryptobiosis by Sync24]
+MESSAGE Thanks for playing
 
 USER PROMPT:
 Output the code for a complete PuzzleScript game.  First, reason about your task and determine the best plan of action. Then, write your code. Return your code in full, inside a ```plaintext code block.

@@ -1,1070 +1,1887 @@
 SYSTEM PROMPT:
 You are a game designer, familiar with the PuzzleScript game description language. Here are some example games, for inspiration (do not reproduce these games exactly):
 
-title Smother
-author Team Borse
+title Notsnake
+author Terry Cavanagh
+homepage www.distractionware.com
 
-background_color #9CBD0F
-text_color #0F380F
-
-run_rules_on_level_start
+color_palette c64
+require_player_movement
 
 ========
 OBJECTS
 ========
 
 Background
-#9CBD0F
+blue
 
-LaserGV
-#9CBD0F #8CAD0F #306230 #0F380F
-22222
-.222.
-..3..
-..3..
-.....
+Player
+lightblue
 
-LaserGH
-#9CBD0F #8CAD0F #306230 #0F380F
-2....
-22...
-2233.
-22...
-2....
-
-LaserV
-#9CBD0F #8CAD0F #306230 #0F380F
-.....
-..3..
-..3..
-..3..
-.....
-
-LaserH
-#9CBD0F #8CAD0F #306230 #0F380F
-.....
-.....
-.333.
-.....
-.....
-
-LaserB
-#9CBD0F #8CAD0F #306230 #0F380F
-.....
-..3..
-.333.
-..3..
-.....
-
-Exit
-#9CBD0F #8CAD0F #306230 #0F380F
-2...2
-2...2
-2...2
-2...2
-2.2.2
-
-Wall
-#9CBD0F #8CAD0F #306230 #0F380F
-33333
-31223
-32123
-32223
-33333
-
-Heart
-#9CBD0F #8CAD0F #306230 #0F380F
-.2.2.
-22222
-.222.
-..2..
-.....
-
-
-PlayerFull
-#9CBD0F #8CAD0F #306230 #0F380F
-.222.
-.323.
-.222.
-.222.
-.2.2.
-
-Protector
-#9CBD0F #8CAD0F #306230 #0F380F
-.333.
-.232.
-.333.
-.333.
-.3.3.
-
-ProtectorSolo
-#9CBD0F #8CAD0F #306230 #0F380F
-.333.
-.232.
-.333.
-.333.
-.3.3.
-
-victimSolo
-#9CBD0F #8CAD0F #306230 #0F380F
-.222.
-.323.
-.222.
-.222.
-.2.2.
-
-
-PlayerDead
-#9CBD0F #8CAD0F #306230 #0F380F
-.222.
-22222
-2.2.2
-.222.
-.222.
-
-pushBlock
-#9CBD0F #8CAD0F #306230 #0F380F
-33333
-31113
-31113
-31113
-33333
+Trail
+purple
 
 =======
 LEGEND
 =======
 
-Player = PlayerFull or Protector or ProtectorSolo or victimSolo
-PlayerWin = PlayerFull or PlayerDead or Protector or victimSolo
-Laser = LaserV or LaserH or LaserB
-LaserBlock = Wall or Player or PlayerDead or Exit
 . = Background
-# = Wall
-g = LaserGV
-h = LaserGH
-P = PlayerFull
-n = Protector
-q = ProtectorSolo
-k = victimSolo
-O = Exit
-l = Heart
-b = pushBlock
+P = Player
+O = Trail
 
 =======
 SOUNDS
 =======
 
-startgame 83279102 (sound at start of game)
-CloseMessage 123434 (close message noise)
-ShowMessage 123434 (show message noise)
-sfx0 8545502 (death)
-sfx1 26 (heart)
-
-
-================
-COLLISIONLAYERS
-================
-Background
-Laser
-Exit
-ProtectorSolo, Heart, Wall
-Player, Wall, PlayerDead, LaserGV, LaserGH, Protector, victimSolo, pushBlock
-
-======
-RULES
-======
-
-(clear lasers)
-late [Laser] -> []
-
-(zip the lasers out of the guns and through the levels)
-late down [LaserGV | no Laser] -> [LaserGV | LaserV]
-late right [LaserGH | no Laser] -> [LaserGH | LaserH]
-
-late down [LaserV no LaserBlock | ] -> [LaserV | LaserV]
-late right [LaserH no LaserBlock | ] -> [LaserH | LaserH]
-
-(generate overlapping lasers)
-late down [LaserV no LaserBlock | LaserH] -> [LaserV | LaserB]
-late down [LaserGV no LaserBlock | LaserH] -> [LaserGV | LaserB]
-late right [LaserH no LaserBlock | LaserV] -> [LaserH | LaserB]
-late right [LaserGH no LaserBlock | LaserV] -> [LaserGH | LaserB]
-
-(deal with overlapping lasers)
-late right [LaserB no LaserBlock | no Laser] -> [LaserB | LaserH]
-late right [LaserH no LaserBlock | no Laser] -> [LaserH | LaserH]
-late down [LaserB no LaserBlock | no Laser] -> [LaserB | LaserV]
-late down [LaserV no LaserBlock | no Laser] -> [LaserV | LaserV]
-
-(solo Victim can push a block)
- [ > victimSolo | pushBlock ] -> [ > victimSolo| > pushBlock]
-
-(pushing block to switch breaks laser)
-[pushBlock  laser] -> [ wall]
-
-
-(if a player is over a laser, then cause them harm)
-late [ PlayerFull Laser ] -> [PlayerDead Laser] sfx0
-
-(victim solo dies in the laser)
-late [ victimSolo Laser ] -> [PlayerDead Laser] sfx0
-
-(protector levels)
-[ > ProtectorSolo | ... | Heart ] -> [ | ... | ProtectorSolo ] sfx1
-[ > ProtectorSolo ] -> [ ProtectorSolo]
-
-
-==============
-WINCONDITIONS
-==============
-All PlayerWin on Exit
-No Heart
-
-=======
-LEVELS
-=======
-
-message then...
-
-message I PROTECT YOU
-
-###g###g###
-#.........#
-#n.......o#
-#........o#
-#p...#....#
-#.........#
-###########
-
-message YOU SMOTHER ME
-
-###########
-#n........#
-#......#..#
-h..#h..#..#
-#p.....#..#
-#......#oo#
-###########
-
-message I DEFEND YOU
-
-#####g#####
-#.P.....n.#
-#.........#
-#..#...#..#
-#.........#
-#......oo.#
-###########
-
-message YOU SPEAK FOR ME
-
-#####g#####
-#n.......o#
-#....#h...#
-h....g....#
-#.....#..o#
-#p......#.#
-###########
-
-message WE ARE CARE FREE
-
-#P####g##g###
-#.#..#.#....#
-#..........o#
-h...........#
-#.#h..#..#.o#
-#.....#....n#
-#############
-
-message I CARRY OUR BURDENS
-
-message before...
-
-message I AM ALWAYS SEARCHING
-
-###########
-#l...l....#
-#....l....#
-#.........#
-#q..l.....#
-#l..l.....#
-###########
-
-
-message I NEVER SEE A FUTURE
-
-###########
-#.........#
-#..l..q.l.#
-#.l....l..#
-#.ll...l.l#
-#l.l...l..#
-###########
-
-message I NEVER FEEL COMFORTABLE
-
-###########
-#....l....#
-#lq..l..l.#
-#.l..l....#
-#.l.....l.#
-#....l....#
-###########
-
-
-message NO ONE GETS ME
-
-###########l##l#####
-#l.l...............#
-#.....ll...........#
-#l..l..............#
-#..q..l.......l....#
-#..ll..l......l....#
-###########........#
-###########l....l..#
-###########........#
-###########.l.l.l..#
-####################
-
-message I NEED CONTACT
-
-###################
-#.l...l############
-#......############
-#l.l..l##########l#
-#l.......l.....l#.#
-#....l............#
-#ll..q.........l.l#
-#..l.....l.......l#
-#.l..l............#
-###################
-
-message I NEED VALIDATION
-
-message before...
-
-message I AM INDEPENDENT
-
-###########
-#.k.g.....#
-#.......b.#
-#.b...###.#
-#.#.......#
-#...h.....#
-#...#...O.#
-###########
-
-
-message I AM STRONG
-
-
-###g##g##
-#.......#
-#kb.b...#
-#.......#
-h.....#.#
-#..#b#h.#
-#....#..#
-h....#o.#
-#.......#
-#########
-
-message I NEED NO ONE
-
-###g#######
-#.o.......#
-#...#.##..#
-#.#..bkb.##
-h...#.#.b.#
-#.......#.#
-#.....#...#
-###########
-
-message I ENJOY MY COMPANY
-
-#####g#####g#####g######
-#.k.....b...........o..#
-#..b....#.#.......##...#
-#.........b...#b..#g...#
-h..........#......#....#
-##.###.#######.####.#.##
-h..............#h......#
-####.#####.###.##.#.#.##
-###.b.#....#........#..#
-###.#....#b#.........b.#
-##.........#.......#...#
-########################
-
-message I AM FEARLESS
-
-##g##g#g####
-#o..#.#....#
-#...#.#.#..#
-#..........#
-#.....#..b.#
-#........b.#
-#..#.##.#b.#
-#..#......k#
-############
-
-message I AM ALONE
-
-
-message now...
-
-###########
-#...o.o...#
-#.........#
-#.........#
-#.........#
-#...n.p...#
-###########
-
-message WE DON'T SEE THINGS AS THEY ARE, WE SEE THEM AS WE ARE
-message Credits
-message Concept/Design/Programming/Graphics - Steven McStravog
-message Design/Programming/Graphics - Darragh McLernon
-message Porting/Design/Programming - Rachel Gawley
-message Artwork - Ricky Woodside
-
-
-title Ebony & Ivory
-author Guilherme Töws
-homepage zarat.us
-
-========
-OBJECTS
-========
-
-Background
-Purple
-
-Gray
-GRAY
-
-White
-WHITE
-
-Black
-BLACK
-
-PlayerRed
-Red
-.....
-.000.
-.000.
-.000.
-.....
-
-PlayerGold
-Yellow
-.....
-.000.
-.000.
-.000.
-.....
-
-
-=======
-LEGEND
-=======
-
-. = White
-, = Black
-# = Gray
-: = PlayerRed and White
-; = PlayerRed and Black
-Player = PlayerRed or PlayerGold
-
-=======
-SOUNDS
-=======
-
-SFX0 72488907
+startgame 50287705
+sfx0 660507
+sfx1 41058704
+endgame 74955903
 
 ================
 COLLISIONLAYERS
 ================
 
 Background
-Black, White, Gray
+Trail
 Player
 
 ======
 RULES
 ======
 
-[ PlayerGold ] -> [ PlayerRed ]
-[ >  Player White | Black ] -> [  > Player White | > Black ]
-[ >  Player Black | White ] -> [  > Player Black | > White ]
-[ > Black | White ] -> [ White | Black ] SFX0
-[ > White | Black ] -> [ Black | White ] SFX0
-[ >  Player White |  Black ] -> [  Player White |  Black ]
-[ >  Player Black |  White ] -> [  Player Black |  White ]
-[ >  Player |  Gray ] -> [  Player |  Gray ]
-late [ Player | PlayerRed ] -> [ Player | PlayerGold ]
+[ > Player | No Trail ] -> [ Trail | Player ] sfx0
+[ > Player | Trail ] -> [ | Player ] sfx1
 
 ==============
-WINCONDITIONs
+WINCONDITIONS
 ==============
 
-No PlayerRed
+no Trail
 
 =======
 LEVELS
 =======
 
-########
-#..,,,,#
-#.:.,.,#
-#...,,,#
-#.,.,;,#
-#....,,#
-########
+OOOOOOOO
+OOOOOOOO
+O..POO.O
+OOOOOOOO
+OOOOOOOO
 
-title Puzzles
-author increpare
-homepage www.puzzlescript.net
 
-(
-Unfortunately, just the first level - trying to emulate the later ones proved too complex :[
+title Drop Swap
+author Aaron Steed
+homepage www.robotacid.com
 
-You can play the original game here:
-http://www.increpare.com/2012/06/puzzles/
-)
-
-background_color white
-text_color blue
-
+key_repeat_interval 0.23
+again_interval 0.05
+noaction
+noundo
+background_color Black
+text_color Grey
 run_rules_on_level_start
-
 
 ========
 OBJECTS
 ========
 
-DyingPlayer
+Background
 Black
 
-Void
+Player
+#ffffff #000000 #626263 #3c3b3c
+.222.
+21112
+23132
+20102
+.222.
+
+DeadPlayer
+#ffffff #000000 #626263 #3c3b3c
+.222.
+21112
+21112
+23132
+.222.
+
+BaseWall
+#222222 #333333 #444444 #ffffff
+11110
+12220
+12200
+12000
+00000
+
+APill
+#ff0000 #ff7374 #ff0000 #ff0000
+.111.
+11110
+11010
+11100
+.000.
+
+BPill
+#00de00 #cffa92 #ff0000 #ff0000
+.111.
+10010
+10110
+11100
+.000.
+
+CPill
+#7a35fc #b56bfd #ff0000 #ff0000
+.111.
+10110
+11010
+11100
+.000.
+
+DPill
+#0094fc #79b5fd #ff0000 #ff0000
+.111.
+10100
+11010
+10100
+.000.
+
+EPill
+#d1c200 #fff919 #ffffff #ff0000
+.111.
+10010
+10010
+11110
+.000.
+
+FPill
+#ff33b1 #ff76d2 #ff0000 #ff0000
+.111.
+10100
+11110
+10110
+.000.
+
+AllPill
+#eeee66 #ffffff #ffffcc #ffffff
+.112.
+11112
+11012
+21120
+.220.
+
+NoPill
+#ffffff #000000 #ffde85 #ff0000
+.000.
+00000
+21012
+.000.
+..2..
+
+Bomb
+#6e6e6e #000000 #ff0000 #fcf26b
+.020.
+02320
+01210
+01110
+.000.
+
+GemPill
+#ffffff #000000 #626263 #3c3b3c
+..0..
+.002.
+00022
+.223.
+..2..
+
+Count
+#ffffff #000000 #5a595a #ff0000
+.....
+.000.
+.000.
+.000.
+.....
+
+Marked
+#ffffff #000000
+.....
+..1..
+.101.
+..1..
+.....
+
+CountTray
+#333333
+
+GemTray
+#333333
+
+StartGem
+red
+
+Collect
 White
 
-OBackground
-Orange
+Debris1
+#ffffff #0739f5 #1f0f42 #ffffff
+.0.0.
+00.00
+..0..
+00.00
+.0.0.
 
-GBackground
-LightGrey
+Debris2
+#ffffff #0739f5 #1f0f42 #ffffff
+.....
+.0.0.
+..0..
+.0.0.
+.....
 
-BlueWall
+Empty
+Black
+
+OldPos
+Black
+
+StartCount
+Black
+
+DropWall1
+#222222 #333333 #444444 #ffffff
+11110
+12220
+12200
+12200
+12200
+
+DropWall2
+#222222 #333333 #444444 #ffffff
+11110
+12220
+12200
+12200
+12200
+
+DropWall3
+#222222 #333333 #444444 #ffffff
+11110
+12220
+12200
+12200
+12200
+
+DropWall4
+#222222 #333333 #444444 #ffffff
+11110
+12220
+12200
+12200
+12200
+
+DropMarker
 Blue
 
-
-GreyWall
-Grey
-
-RedCrate
-Red
-.....
-.000.
-.000.
-.000.
-.....
-GreyCrate
-DarkGrey
-.....
-.000.
-.000.
-.000.
-.....
-
-RedWhale
-Red White
-00100
-00000
-10001
-00000
-00100
-
-GreyWhale
-DarkGrey White
-00100
-00000
-10001
-00000
-00100
-
-RedEndPoint
-DarkRed
-.....
-.000.
-.0.0.
-.000.
-.....
-
-GreyEndPoint
-Darkgrey
-.....
-.....
-.....
-.....
-.....
-
-RedStartPoint
-darkRed
-.....
-.....
-.....
-.....
-.....
-
-GreyStartPoint
-darkRed
-.....
-.000.
-.0.0.
-.000.
-.....
-
-YellowPlayer
-yellow
-.....
-.000.
-.000.
-.000.
-.....
-
-GreyPlayer
-DarkGrey
-.....
-.000.
-.000.
-.000.
-.....
-
-LeftBeam
-white
-.....
-.....
-00000
-.....
-.....
-
-RightBeam
-white
-.....
-.....
-00000
-.....
-.....
-
-UpBeam
-white
-..0..
-..0..
-..0..
-..0..
-..0..
-
-DownBeam
-white
-..0..
-..0..
-..0..
-..0..
-..0..
+Init
+Purple
 
 =======
 LEGEND
 =======
 
-Background = Void or OBackground or GBackground
-Player = YellowPlayer or GreyPlayer or DyingPlayer
-Wall = BlueWall or GreyWall
-Crate = RedCrate or GreyCrate
-Whale = RedWhale or GreyWhale
-StartPoint = RedStartPoint or GreyStartPoint
-EndPoint = RedEndPoint or GreyEndPoint
-. = OBackground
-, = Void
-# = BlueWall
-W = RedWhale
-C = RedCrate
-S = RedStartPoint and YellowPlayer
-E = RedEndPoint
-Obstacle = Player or Whale or Crate or Wall
-Beam = UPBeam or DownBeam or LeftBeam or RightBeam
-VBeam = UPBeam or DownBeam
-HBeam = LeftBeam or RightBeam
-HBeamSource = HBeam or Whale
-VBeamSource = VBeam or Whale
-Pushable = Player or Whale or Crate
-RedPushable = YellowPlayer or RedWhale or RedCrate
-GreyPushable = GreyPlayer or GreyWhale or GreyCrate
+. = Background
+@ = Player
+p = DeadPlayer
+# = BaseWall
+a = APill
+b = BPill
+c = CPill
+d = DPill
+e = EPill
+f = FPill
+n = NoPill
+x = AllPill
+u = Count and CountTray
+w = Count and CountTray and StartCount
+g = GemPill
+q = GemTray
+o = GemTray and StartGem
+p = Bomb
+i = Init
+j = DropWall1
+k = DropWall2
+l = DropWall3
+m = DropWall4
+
+
+MatchPill = APill or BPill or CPill or DPill or EPill or FPill or AllPill
+Pill = MatchPill or NoPill or GemPill or Bomb
+Debris = Debris1 or Debris2
+AMatch = APill or AllPill
+BMatch = BPill or AllPill
+CMatch = CPill or AllPill
+DMatch = DPill or AllPill
+EMatch = EPill or AllPill
+FMatch = FPill or AllPill
+Wall = BaseWall or DropWall1 or DropWall2 or DropWall3 or DropWall4
+Item = Pill or Debris or Wall or Player
+Heavy = Pill or Player
+Dropping = Marked or DropMarker
+DropMix1 = APill or BPill or CPill or DPill or EPill
+DropMix2 = APill or BPill or CPill or DPill or EPill or GemPill
+DropMix3 = APill or BPill or CPill or DPill or EPill or NoPill
+DropMix4 = APill or BPill or CPill or DPill or EPill or FPill or GemPill
+DropMix5 = APill or BPill or CPill or DPill or EPill or FPill
+DropWallMarked = DropWall1 or DropWall3
 
 =======
 SOUNDS
 =======
+
+sfx0 54236904 (illegal)
+sfx1 5160507 (swap)
+sfx2 19008103 (allpill)
+sfx3 50665503 (crush 3)
+sfx4 80820507 (land)
+sfx5 2030908 (blast)
+sfx6 3032303 (bomb)
+sfx7 83704102 (dead)
+sfx8 7194508 (gem collect)
+EndLevel 16709508 (win)
+
+================
+COLLISIONLAYERS
+================
+
+
+Collect, StartCount, StartGem
+Background
+OldPos, CountTray, GemTray
+Player, Wall, Pill, Empty, Count, DeadPlayer, Bomb, Init
+Debris, Marked, DropMarker
+
+======
+RULES
+======
+
+(init)
+[ DropWall1 ] [ Init ] -> [ DropWall1 ] [ random DropMix1 Marked ]
+[ DropWall2 ] [ Init ] -> [ DropWall2 ] [ random DropMix1 ]
+[ DropWall3 ] [ Init ] -> [ DropWall3 ] [ random DropMix1 Marked ]
+[ DropWall4 ] [ Init ] -> [ DropWall4 ] [ random DropMix5 ]
+
+(debris clean up)
+[ Debris2 ] -> [ Empty ] again
+[ Debris1 ] -> [ Debris2 ] again
+
+(player - pill swapping)
+[ > Player | Pill ] -> [ Pill OldPos | Player ] sfx1
+[ Player Marked | OldPos ] -> [ Player | OldPos Marked ]
+
+(blocked move)
+[ > Player | No Pill ] -> [ Player | ] sfx0
+
+(pill combos)
+[ AMatch | AMatch | AMatch ] -> [ AMatch Collect | AMatch Collect | AMatch Collect ]
+[ BMatch | BMatch | BMatch ] -> [ BMatch Collect | BMatch Collect | BMatch Collect ]
+[ CMatch | CMatch | CMatch ] -> [ CMatch Collect | CMatch Collect | CMatch Collect ]
+[ DMatch | DMatch | DMatch ] -> [ DMatch Collect | DMatch Collect | DMatch Collect ]
+[ EMatch | EMatch | EMatch ] -> [ EMatch Collect | EMatch Collect | EMatch Collect ]
+[ FMatch | FMatch | FMatch ] -> [ FMatch Collect | FMatch Collect | FMatch Collect ]
+[ NoPill | NoPill | NoPill ] -> [ NoPill Collect | NoPill Collect | NoPill Collect ]
+
+(bomb activate)
+[ OldPos Bomb ] -> sfx5
+up [ OldPos Bomb | Pill ] -> [ OldPos Bomb | Pill > Collect ]
+right [ OldPos Bomb | Pill ] -> [ OldPos Bomb | Pill > Collect ]
+down [ OldPos Bomb | Pill ] -> [ OldPos Bomb | Pill > Collect ]
+left [ OldPos Bomb | Pill ] -> [ OldPos Bomb | Pill > Collect ]
+[ OldPos Bomb ] -> [ OldPos Empty ]
+
+(blast)
+up [ Pill > Collect | Pill ] -> [ Pill Collect | Pill > Collect ]
+right [ Pill > Collect | Pill ] -> [ Pill Collect | Pill > Collect ]
+down [ Pill > Collect | Pill ] -> [ Pill Collect | Pill > Collect ]
+left [ Pill > Collect | Pill ] -> [ Pill Collect | Pill > Collect ]
+[ > Collect ] -> [ Collect ]
+[ GemPill Collect ] -> [ GemPill ]
+
+(reward matches)
+(junction)
+Right [ Collect | Collect ] -> [ > Collect | > Collect ]
+Down [ Collect | Collect ] -> [ > Collect | > Collect ]
+[ Down Collect | Right Collect ] [ Collect OldPos ] -> [ Collect | Collect ] [ Bomb OldPos ] sfx6
+(4: create AllPill)
+[ MatchPill Collect | MatchPill Collect | MatchPill Collect | MatchPill Collect ] [ Collect OldPos ] -> [ MatchPill Collect | MatchPill Collect | MatchPill Collect | MatchPill Collect ] [ AllPill OldPos ] sfx2
+
+(count moves)
+(subtract on move)
+random right [ OldPos ] [ Count | No Count ] -> [ OldPos ] [ | ]
+(fill on Debris)
+[ Collect ] [ CountTray ] -> [ Collect ] [ CountTray Count ]
+
+(dead?)
+[ DeadPlayer ] -> cancel
+[ No Count StartCount CountTray ] [ Player ] -> [ No Count StartCount CountTray ] [ DeadPlayer ] sfx7
+[ Player | NoPill Collect ] -> [ DeadPlayer | NoPill ]
+[ DeadPlayer ] [ CountTray Count ] -> [ DeadPlayer ] [ CountTray ] sfx7
+
+(destroy matched)
+[ APill Collect ] -> [ Debris1 ] sfx3 again
+[ BPill Collect ] -> [ Debris1 ] sfx3 again
+[ CPill Collect ] -> [ Debris1 ] sfx3 again
+[ DPill Collect ] -> [ Debris1 ] sfx3 again
+[ EPill Collect ] -> [ Debris1 ] sfx3 again
+[ FPill Collect ] -> [ Debris1 ] sfx3 again
+[ AllPill Collect ] -> [ Debris1 ] sfx3 again
+[ Player ] [ NoPill Collect ] -> [ Player ] [ Debris1 ] sfx3 again
+
+(destroy NoPills)
+down [ NoPill | Wall ] -> [ Debris1 | Wall ] again
+
+(collect gems)
+down [ GemPill | Wall ] -> [ GemPill Collect | Wall ]
+[ GemPill Collect ] [ StartGem No GemPill ] -> [ Debris1 ] [ StartGem GemPill ] again sfx8
+right [ GemPill Collect ] [ GemPill GemTray | No GemPill GemTray ] -> [ Debris1 ] [ GemPill GemTray | GemPill GemTray ] again sfx8
+
+(drop)
+[ Heavy No Dropping ] -> [ Heavy DropMarker ]
+down [ Heavy Dropping | Empty ] -> [ Empty | Heavy Dropping ]
+[ DropMarker ] -> [ ]
+down [ DropWall1 | Empty ] -> [ DropWall1 | random DropMix1 ] again
+down [ DropWall2 | Empty ] -> [ DropWall2 | random DropMix2 ] again
+down [ DropWall3 | Empty ] -> [ DropWall3 | random DropMix3 ] again
+down [ DropWall4 | Empty ] -> [ DropWall4 | random DropMix4 ] again
+
+(gem drop win)
+right [ GemPill GemTray | Wall ] -> win
+
+[ OldPos ] -> [ ]
+
+==============
+WINCONDITIONS
+==============
+
+No Marked
+Some DropWallMarked
+
+=======
+LEVELS
+=======
+
+message collect orbs by matching 3
+message match 3 to restore move-energy
+message level 1: collect all marked orbs
+
+wuuuuu#
+#jjjjj#
+#iiiii#
+#iiiii#
+#iiiii#
+#iiiii#
+#ii@ii#
+#######
+
+message level 2: collect all marked orbs
+
+wuuuuuu#
+#jjjjjj#
+#iiiiii#
+#iiiiii#
+#iiiiii#
+#iiiiii#
+#iiiiii#
+#iiiiii#
+#iii@ii#
+########
+
+message collect gray gems by getting them to the bottom
+message level 3: collect 8 gems
+
+oqqqqqqq#
+wuuuuuuu#
+#kkkkkkk#
+#iiiiiii#
+#iiiiiii#
+#iiiiiii#
+#iiiiiii#
+#iiiiiii#
+#iiiiiii#
+#iiiiiii#
+#iii@iii#
+#########
+
+message if you are next to 3 matching skulls you die
+message skulls can be destroyed by getting them to the bottom
+message level 4: collect all marked orbs
+
+wuuuuuu#
+#llllll#
+#iiiiii#
+#iiiiii#
+#iiiiii#
+#iiiiii#
+#iiiiii#
+#iiiiii#
+#iii@ii#
+########
+
+message level 5: collect 7 gems
+
+oqqqqqqq#
+wuuuuuuu#
+#mmmmmmm#
+#iiiiiii#
+#iiiiiii#
+#iiiiiii#
+#iiiiiii#
+#iiiiiii#
+#iiiiiii#
+#iiiiiii#
+#iii@iii#
+#########
+
+message thanks for playing
+
+
+
+title Love and Pieces
+author lexaloffle
+homepage www.lexaloffle.com
+
+========
+OBJECTS
+========
+
+Background
+White LightBlue
+00000
+01110
+01110
+01110
+00000
+
+
+Wall
+DarkBlue Black DarkGray LightGray White
+23330
+22300
+22100
+21110
+11111
+
+Player
+Yellow Orange Red White LightBrown
+20002
+01130
+01110
+04110
+20002
+
+GrayBlock
+Gray DarkGray Green
+10001
+01210
+02220
+01210
+10001
+
+LitBlock
+Green DarkGray
+00000
+01110
+01110
+01110
+00000
+
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Player
+o = GrayBlock
+Block = GrayBlock or Player
+
+=======
+SOUNDS
+=======
+
+GrayBlock MOVE 36772507
 
 ================
 COLLISIONLAYERS
 ================
 
 Background
-StartPoint, EndPoint
-Player, Wall, Crate, Whale
-UpBeam, DownBeam
-LeftBeam, RightBeam
+Player, Wall, GrayBlock, LitBlock
 
 ======
 RULES
 ======
 
-
-left [ LeftBeam | < Player ] -> [ LeftBeam | Player ]
-right [ RightBeam | < Player ] -> [ RightBeam | Player ]
-up [ UpBeam | < Player ] -> [ UpBeam | Player ]
-down [ DownBeam | < Player ] -> [ DownBeam | Player ]
-
-right [ RightBeam | stationary Pushable ] -> [ RightBeam | > Pushable ]
-left [ LeftBeam | stationary Pushable ] -> [ LeftBeam | > Pushable ]
-up [ UpBeam | stationary Pushable ] -> [ UpBeam | > Pushable ]
-down [ DownBeam | stationary Pushable ] -> [ DownBeam | > Pushable ]
-
-[ Whale | stationary Pushable ] -> [ Whale | > Pushable ]
-
-
-[ Beam ] -> []
-
-
-[ >  Player | Crate ] -> [  >  Player | > Crate  ]
-[ > Crate | stationary Crate ] -> [ > Crate | > Crate ]
-
-( using red/greypushable is an optimization - cuts down on unecessary rules by quite a lot, beause red and grey things never coexist)
-[ > RedPushable | v RedPushable ] -> [ RedPushable | v RedPushable ]
-[ > RedPushable | ^ RedPushable ] -> [ RedPushable | ^ RedPushable ]
-[ > RedPushable | < RedPushable ] -> [ RedPushable | < RedPushable ]
-
-[ > GreyPushable | v GreyPushable ] -> [ GreyPushable | v GreyPushable ]
-[ > GreyPushable | ^ GreyPushable ] -> [ GreyPushable | ^ GreyPushable ]
-[ > GreyPushable | < GreyPushable ] -> [ GreyPushable | < GreyPushable ]
-
-late Up [ Whale | no Obstacle ] -> [ Whale | UpBeam ]
-late Down [ Whale | no Obstacle ] -> [ Whale | DownBeam ]
-late Left [ Whale | no Obstacle ] -> [ Whale | LeftBeam ]
-late Right [ Whale | no Obstacle ] -> [ Whale | RightBeam ]
-
-late horizontal [ HBeam | no obstacle ] -> [ HBeam | HBeam ]
-late vertical [ VBeam | no obstacle ] -> [ VBeam | VBeam ]
-
-
-(DEATH TRANSITION)
-late Horizontal [ HBeamSource | YellowPlayer ]  -> [ HBeamSource | DyingPlayer ]
-late Vertical [ VBeamSource | YellowPlayer ]  -> [ VBeamSource | DyingPlayer ]
-
-late [ DyingPlayer ] [ BlueWall ] -> [ DyingPlayer ] [ GreyWall ]
-late [ DyingPlayer ] [ RedWhale ] -> [ DyingPlayer ] [ GreyWhale ]
-late [ DyingPlayer ] [ RedCrate ] -> [ DyingPlayer ] [ GreyCrate ]
-late [ DyingPlayer ] [ RedStartPoint ] -> [ DyingPlayer ] [ GreyStartPoint ]
-late [ DyingPlayer ] [ RedEndPoint ] -> [ DyingPlayer ] [ GreyEndPoint ]
-late [ DyingPlayer ] [ OBackground ] -> [ DyingPlayer ] [ GBackground ]
-late [ DyingPlayer ] -> [ GreyPlayer ]
-
-late [DyingPlayer] -> [GreyPlayer]
-
-(LIFE TRANSITION)
-late [ GreyPlayer GreyStartPoint ] [ GreyWall ] -> [ GreyPlayer GreyStartPoint ] [ BlueWall ]
-late [ GreyPlayer GreyStartPoint ] [ GreyCrate ] -> [ GreyPlayer GreyStartPoint ] [ RedCrate ]
-late [ GreyPlayer GreyStartPoint ] [ GreyWhale ] -> [ GreyPlayer GreyStartPoint ] [ RedWhale ]
-late [ GreyPlayer GreyStartPoint ] [ GreyEndPoint ] -> [ GreyPlayer GreyStartPoint ] [ RedEndPoint ]
-late [ GreyPlayer GreyStartPoint ] [ GBackground ] -> [ GreyPlayer GreyStartPoint ] [ OBackground ]
-
-late [ GreyPlayer GreyStartPoint ] -> [ YellowPlayer RedStartPoint ]
-
-late [player]->again
+[ > Player | Wall ] -> cancel
+late [ Player | GrayBlock ] -> [ Player | Player ]
 
 ==============
 WINCONDITIONS
 ==============
 
-All Player on RedEndPoint
+No GrayBlock
 
 =======
 LEVELS
 =======
 
 
-#########
-#......E#
-#..CC..##
-#.....##,
-#.....W#,
-##.#####,
-#......#,
-#..CC..#,
-#..CC..#,
-##.....#,
-#W.....#,
-######.#,
-#......#,
-#......#,
-##S#####,
-########,
+
+############
+#...#......#
+#..........#
+#.p..o..o..#
+#..........#
+#..#.......#
+#..........#
+#......#...#
+#..........#
+############
+
+############
+#..........#
+#..........#
+#....#o....#
+#..#.o.#...#
+#....#.....#
+#....o.....#
+#.o......p.#
+#..........#
+############
+
+############
+#o...o.....#
+#.o...o....#
+#..o...o...#
+#...o...o..#
+#o...o...o.#
+#.o...o...o#
+#..o...o.p.#
+#...o...o..#
+############
+
+############
+#..........#
+#..o....o..#
+#.p#....#o.#
+#..........#
+#..........#
+#.o#....#o.#
+#..o....o..#
+#..........#
+############
 
 
+############
+#..o.......#
+#.....oo...#
+#...o......#
+#.o#..p..o.#
+#....o.....#
+#..o....o..#
+#o.o...#...#
+#...o...o..#
+############
 
-title It Dies In The Light
-author Christopher Wells
-homepage www.tophwells.com
+############
+#p.o.......#
+#..........#
+#.o..o...###
+#........###
+###.o......#
+###......o.#
+#o.....##..#
+#......##.o#
+############
 
-noaction
-run_rules_on_level_start
-again_interval 0.05
+
+############
+#........o.#
+#..o.##....#
+#....o.o...#
+#.#......#.#
+#.#..p.o.#.#
+#..o.......#
+#....##....#
+#.o......o.#
+############
+
+
+############
+###........#
+##....o.o..#
+#....#.#...#
+#...o.o.o..#
+#....#.#...#
+#...o.o....#
+##........##
+###.p....###
+############
+
+
+###########o
+#....p....##
+#....p.....#
+#...ppp....#
+#ppppppppp.#
+#...ppp....#
+#..ppppp...#
+#.pp...pp..#
+#.p.....p..#
+############
+
+
+title EYE EYE EYE
+author increpare
+homepage www.puzzlescript.net
 
 ========
 OBJECTS
 ========
 
-BackgroundNeutral
-LIGHTGray Gray
-11011
-10101
-01110
-10101
-11011
+Background
+lightgreen green
+11111
+01111
+11101
+11111
+10111
 
-BackgroundDark
-Black
+Target
+darkblue
+.....
+.000.
+.0.0.
+.000.
+.....
 
 Wall
-Lightblue Blue
+brown darkbrown
 00010
 11111
 01000
 11111
 00010
 
-LivePlayer
-Black LightRed White Blue
+Player
+black orange white blue
 .000.
 .111.
-12321
-.232.
-.222.
+22222
+.333.
+.3.3.
 
-Corpse
-LightGrey
+EyeBall
+white blue red
 .000.
-.0.0.
-0.0.0
-..0..
-.0.0.
-
-Crate
-Orange LightBrown Brown
-.222.
-21012
-20102
-21012
-.222.
-
-GoldCrate
-White Yellow Orange
-.222.
-21012
-20002
-21012
-.222.
-
-GlassCrate
-White
-.000.
-0...0
-0...0
-0...0
-.000.
-
-Prism
-LightBlue White
-.000.
-00110
-00010
-00000
-.000.
-
-ActivePrism
-LightBlue White Yellow
-.000.
-02120
+00100
 01110
-02120
-.000.
-
-Glass
-White
-00000
-0...0
-0...0
-0...0
-00000
-
-BeamVert
-White Yellow
-.101.
-.101.
-.101.
-.101.
-.101.
-
-BeamHor
-White Yellow
-.....
-11111
-00000
-11111
-.....
-
-BeamCross
-White Yellow
-.101.
-11011
-00000
-11011
-.101.
-
-Shadow
-Purple
-0.0.0
-.0.0.
-0.0.0
-.0.0.
-0.0.0
-
-TempShadow
-Purple
-0.0.0
-.0.0.
-0.0.0
-.0.0.
-0.0.0
+20102
+.202.
 
 =======
 LEGEND
 =======
 
-. = BackgroundNeutral
+. = Background
 # = Wall
-P = LivePlayer
-C = Crate
-G = GoldCrate
-S = Shadow
-X = Prism
-O = Glass
-
-Background = BackgroundNeutral or BackgroundDark
-Player = LivePlayer or Corpse
-Light = BeamVert or BeamHor or BeamCross
-Hlight = BeamHor or BeamCross
-Vlight = BeamVert or BeamCross
-Opaque = Player or Crate or Wall or GoldCrate
-Pushable = Crate or GoldCrate or Prism or GlassCrate
-
+P = Player
+O = EyeBall
 
 =======
 SOUNDS
 =======
 
-SFX0 93002904
+sfx0 67117309
 
 ================
 COLLISIONLAYERS
 ================
 
 Background
-BeamVert, BeamHor, BeamCross, Shadow, TempShadow
-Player, Corpse, Wall, Crate, GoldCrate, GlassCrate, Prism, ActivePrism, Glass
+Target
+Player, Wall, EyeBall
 
 ======
 RULES
 ======
 
-[> Corpse] -> RESTART
-[Light] -> []
-[ActivePrism] -> [Prism]
-[ >  Player | Pushable ] -> [  >  Player | > Pushable  ]
-late HORIZONTAL [GoldCrate|no Opaque no Light] -> [GoldCrate | BeamHor]
-late VERTICAL [GoldCrate|no Opaque no Light] -> [GoldCrate | BeamVert]
-late VERTICAL [GoldCrate|no Opaque BeamHor] -> [GoldCrate | BeamCross]
-late HORIZONTAL [Hlight|no Opaque no Light] -> [Hlight|BeamHor]
-+ late HORIZONTAL [Hlight|no Opaque BeamVert] -> [Hlight|BeamCross]
-+ late VERTICAL [Vlight|no Opaque no Light] -> [Vlight|BeamVert]
-+ late VERTICAL [Vlight|no Opaque BeamHor] -> [Vlight|BeamCross]
-+ late [Light Prism] ->[BeamCross ActivePrism]
-late [Shadow Pushable] -> [Pushable]
-late [TempShadow] -> [Shadow]
-late [Shadow | no Light no Wall no Pushable no Glass no Shadow] -> [shadow | Tempshadow] again
-late [Shadow] -> [Shadow BackgroundDark]
-late [TempShadow] -> [TempShadow BackgroundDark]
-late [no Shadow no TempShadow] -> [no Shadow BackgroundNeutral]
-late [Shadow Player] -> [Shadow Corpse]
+[ Eyeball | ... | Player ] -> [ > Eyeball | ... | Player ] sfx0
 
 ==============
 WINCONDITIONS
 ==============
 
-no Shadow
+(There's no way to win against a floating eyeball :S )
 
 =======
 LEVELS
 =======
 
-......####.
-..#####ss#.
-###ssssss#.
-#..ssscss##
-#..#s#s#ss#
-#.g#s#ssss#
-#p.#s#ssss#
-#..css#sss#
-###########
+#########
+#.......#
+#....O..#
+#.P.....#
+#.......#
+#.......#
+#########
 
-........########.
-........#...#.C#.
-...######...GC.##
-...#..CsssssO.C.#
-...#P.Csss#sO.CC#
-...#..Csss#sO#..#
-########ss#s....#
-#ssssssOss#s#####
-#sssssssss###....
-#########s#......
-........###......
 
-##########
-###G#G#G##
-##P......#
-#G.......#
-##..C....#
-#G.......#
-##..C....#
-#G.......#
-##......S#
-##########
+title Sokobond: The Demake
+author Jonah Ostroff
+homepage www.sokobond.com
+text_color #202020
+background_color #FDFDFD
+key_repeat_interval 0.25
+run_rules_on_level_start
+noaction
+youtube 2R0sTlruOZc
 
-........########
-........#......#
-#########..#o#.#
-#........gooxo.#
-#g#####c#.sso#s#
-#.ssssss#.ss.ss#
-##soooss#.ss##s#
-##c.p.c###ss#ss#
-##.....#ssss#ss#
-#...g.......#ss#
-#########.xx#ss#
-........##sssss#
-.........#######
+========
+OBJECTS
+========
 
-MESSAGE Earth is safe once again.
+Background
+#FFFFFF #F8F8F8
+00000
+01010
+00000
+01010
+00000
+
+Player
+#FFBBEE
+00000
+0...0
+0...0
+0...0
+00000
+
+Wall
+Yellow White
+00000
+00000
+00000
+00000
+00000
+
+Hydrogen
+Red Black
+.....
+.111.
+.101.
+.111.
+.....
+
+Nitrogen
+Green Black
+.....
+.111.
+.101.
+.111.
+.....
+
+Oxygen
+Blue Black
+.....
+.111.
+.101.
+.111.
+.....
+
+Carbon
+Yellow Black
+.....
+.111.
+.101.
+.111.
+.....
+
+Helium
+White Black
+.....
+.111.
+.101.
+.111.
+.....
+
+1Electron
+LightGray
+.....
+.0...
+.....
+.....
+.....
+
+2Electron
+LightGray
+.....
+...0.
+.....
+.0...
+.....
+
+3Electron
+LightGray
+.....
+.0.0.
+.....
+.0...
+.....
+
+4Electron
+LightGray
+.....
+.0.0.
+.....
+.0.0.
+.....
+
+BondU
+Black
+..0..
+.....
+.....
+.....
+.....
+
+BondL
+Black
+.....
+.....
+0....
+.....
+.....
+
+BondR
+Black
+.....
+.....
+....0
+.....
+.....
+
+BondD
+Black
+.....
+.....
+.....
+.....
+..0..
+
+
+BondUL
+Black
+..0..
+.....
+0....
+.....
+.....
+
+BondUR
+Black
+..0..
+.....
+....0
+.....
+.....
+
+BondUD
+Black
+..0..
+.....
+.....
+.....
+..0..
+
+BondLR
+Black
+.....
+.....
+0...0
+.....
+.....
+
+BondLD
+Black
+.....
+.....
+0....
+.....
+..0..
+
+BondRD
+Black
+.....
+.....
+....0
+.....
+..0..
+
+BondULR
+Black
+..0..
+.....
+0...0
+.....
+.....
+
+BondULD
+Black
+..0..
+.....
+0....
+.....
+..0..
+
+BondURD
+Black
+..0..
+.....
+....0
+.....
+..0..
+
+BondLRD
+Black
+.....
+.....
+0...0
+.....
+..0..
+
+BondULRD
+Black
+..0..
+.....
+0...0
+.....
+..0..
+
+Temp1
+Red
+
+Temp2 (These are placeholders for various things.)
+Green
+
+Temp3
+Blue
+
+Temp4
+Yellow
+
+=======
+LEGEND
+=======
+
+Atom = Hydrogen or Oxygen or Nitrogen or Carbon or Helium
+Orbital = 1Electron or 2Electron or 3Electron or 4Electron
+UBond = BondU or BondUL or BondUR or BondUD or BondULR or BondULD or BondURD or BondULRD
+LBond = BondL or BondUL or BondLR or BondLD or BondULR or BondULD or BondLRD or BondULRD
+RBond = BondR or BondUR or BondLR or BondRD or BondULR or BondURD or BondLRD or BondULRD
+DBond = BondD or BondUD or BondLD or BondRD or BondULD or BondURD or BondLRD or BondULRD
+1Bond = BondU or BondL or BondR or BondD
+2Bond = BondUL or BondUR or BondUD or BondLR or BondLD or BondRD
+3Bond = BondULR or BondULD or BondURD or BondLRD
+Bond = 1Bond or 2Bond or 3Bond or BondULRD
+Temps = Temp1 or Temp2 or Temp3 or Temp4
+AtomStuff = Bond or Orbital
+
+. = Background
+# = Wall
+H = Hydrogen and 1Electron
+O = Oxygen and 2Electron
+N = Nitrogen and 3Electron
+C = Carbon and 4Electron
+E = Helium
+0 = Helium  and Player
+1 = Hydrogen and 1Electron and Player
+2 = Oxygen and 2Electron and Player
+3 = Nitrogen and 3Electron and Player
+4 = Carbon and 4Electron and Player
+P = Player
+
+=======
+SOUNDS
+=======
+
+Sfx1 64050702 (Bonding sound)
+EndLevel 96545300 (End level)
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Player
+Bond
+Wall, Atom
+Orbital
+Temps
+
+======
+RULES
+======
+
+(This is the old way I did movement, and it was super inefficient.)
+([> Player Atom] -> [> Player > Atom]
+
+Up [ Moving Atom UBond | Atom] -> [ Moving Atom UBond | Moving Atom]
++ Left [ Moving Atom LBond | Atom] -> [ Moving Atom LBond | Moving Atom]
++ Right [ Moving Atom RBond | Atom] -> [ Moving Atom RBond | Moving Atom]
++ Down [ Moving Atom DBond | Atom] -> [ Moving Atom DBond | Moving Atom]
++ [> Atom | Atom] -> [> Atom | > Atom])
+
+[Up Player] -> [Up Player Temp1]
+[Left Player] -> [Left Player Temp2]
+[Right Player] -> [Right Player Temp3]
+[Down Player] -> [Down Player Temp4]
+
+Up [Temps UBond | no Temps] -> [Temps Ubond | Temps]
++ Left [Temps LBond | no Temps] -> [Temps Lbond | Temps]
++ Right [Temps RBond | no Temps] -> [Temps Rbond | Temps]
++ DOwn [Temps DBond | no Temps] -> [Temps Dbond | Temps]
++ Up [Temp1 | Atom no Temp1] -> [Temp1 | Atom Temp1]
++ Left [Temp2 | Atom no Temp2] -> [Temp2 | Atom Temp2]
++ Right [Temp3 | Atom no Temp3] -> [Temp3 | Atom Temp3]
++ Down [Temp4 | Atom no Temp4] -> [Temp4 | Atom Temp4]
+
+[Temp1 Atom] -> [Up Atom]
+[Temp2 Atom] -> [Left Atom]
+[Temp3 Atom] -> [Right Atom]
+[Temp4 Atom] -> [Down Atom]
+
+[ > Atom | Wall] -> Cancel
+
+[ > Atom AtomStuff] -> [ > Atom > AtomStuff]
+
+Late Right [Orbital no Temps no RBond|Orbital no Temps no LBond] -> [Orbital Temp1|Orbital Temp2 Sfx1] (Bond horizontally.)
++ Late [Temp1 no Bond] -> [Temp3 BondR]
++ Late [Temp1 BondU] -> [Temp3 BondUR]
++ Late [Temp1 BondL] -> [Temp3 BondLR]
++ Late [Temp1 BondD] -> [Temp3 BondRD]
++ Late [Temp1 BondUL] -> [Temp3 BondULR]
++ Late [Temp1 BondUD] -> [Temp3 BondURD]
++ Late [Temp1 BondLD] -> [Temp3 BondLRD]
++ Late [Temp1 BondULD] -> [Temp3 BondULRD]
++ Late [Temp2 no Bond] -> [Temp3 BondL]
++ Late [Temp2 BondU] -> [Temp3 BondUL]
++ Late [Temp2 BondR] -> [Temp3 BondLR]
++ Late [Temp2 BondD] -> [Temp3 BondLD]
++ Late [Temp2 BondUR] -> [Temp3 BondULR]
++ Late [Temp2 BondUD] -> [Temp3 BondULD]
++ Late [Temp2 BondRD] -> [Temp3 BondLRD]
++ Late [Temp2 BondURD] -> [Temp3 BondULRD]
++ Late [Temp3 1Electron] -> []
++ Late [Temp3 2Electron] -> [1Electron]
++ Late [Temp3 3Electron] -> [2Electron]
++ Late [Temp3 4Electron] -> [3Electron]
+
+Late Down [Orbital no Temps no DBond|Orbital no Temps no UBond] -> [Orbital Temp1|Orbital Temp2 Sfx1] (Bond vertically.)
++ Late [Temp1 no Bond] -> [Temp3 BondD]
++ Late [Temp1 BondU] -> [Temp3 BondUD]
++ Late [Temp1 BondL] -> [Temp3 BondLD]
++ Late [Temp1 BondR] -> [Temp3 BondRD]
++ Late [Temp1 BondUL] -> [Temp3 BondULD]
++ Late [Temp1 BondUR] -> [Temp3 BondURD]
++ Late [Temp1 BondLR] -> [Temp3 BondLRD]
++ Late [Temp1 BondULR] -> [Temp3 BondULRD]
++ Late [Temp2 no Bond] -> [Temp3 BondU]
++ Late [Temp2 BondL] -> [Temp3 BondUL]
++ Late [Temp2 BondR] -> [Temp3 BondUR]
++ Late [Temp2 BondD] -> [Temp3 BondUD]
++ Late [Temp2 BondLR] -> [Temp3 BondULR]
++ Late [Temp2 BondLD] -> [Temp3 BondULD]
++ Late [Temp2 BondRD] -> [Temp3 BondURD]
++ Late [Temp2 BondLRD] -> [Temp3 BondULRD]
++ Late [Temp3 1Electron] -> []
++ Late [Temp3 2Electron] -> [1Electron]
++ Late [Temp3 3Electron] -> [2Electron]
++ Late [Temp3 4Electron] -> [3Electron]
+
+==============
+WINCONDITIONS
+==============
+
+No Orbital
+
+=======
+LEVELS
+=======
+
+Message This is a demake of Sokobond by Alan Hazelden and Harry Lee.
+
+Message Get the full version at www.sokobond.com!
+
+#########
+####....#
+####....#
+#....#H.#
+#...O#..#
+#.1.....#
+#....####
+#########
+
+Message Water atoms are icosahedral.
+
+######
+#H..O#
+#....#
+#1.###
+######
+
+Message The blue tint seen in large bodies of water comes from the pigment in the oxygen atoms.
+
+########
+###...##
+#2.H.H.#
+###...##
+########
+
+Message The Earth's surface and the human body are both 70% water. That CAN'T be a coincidence, right?
+
+#######
+#..O..#
+#..#..#
+#.1#H.#
+#..#..#
+#..O..#
+#######
+
+Message "One hydrogen per oxide" is defined as the speed at which atoms move.
+
+#######
+#.H.3.#
+#.....#
+#.H.H.#
+#######
+
+Message Ammonia is an inflammatory condition of the lungs.
+
+#######
+#.....#
+#.....#
+#H#H#H#
+#.....#
+#..3..#
+#######
+
+Message Hang on, I was thinking of "pneumonia".
+
+#########
+####4####
+###...###
+##.H.H.##
+#.......#
+##.H.H.##
+###...###
+####.####
+#########
+
+Message 90% of all the methane in the world is produced in Arizona.
+
+#########
+##H...H##
+#...4...#
+##H...H##
+#########
+
+Message Methane contains the name "Ethan". Do you think it was discovered by a guy named Ethan?
+
+########
+#......#
+#...H..#
+#O.H..3#
+#...H..#
+#......#
+########
+
+Message Hydroxylamine contains almost every vowel of the alphabet almost exactly once.
+
+#########
+#.......#
+#..H.H..#
+#.2...C.#
+#..H.H..#
+#.......#
+#########
+
+Message Methanol occurs naturally in peppermint oils.
+
+#########
+#.......#
+#.1...E.#
+###.H.###
+###...###
+###.O.###
+#########
+
+Message Helium is named after the Greek god Helios, who first discovered its existence.
+
+#########
+#.......#
+#.E.E.E.#
+###H.1###
+###.H.###
+###...###
+###.N.###
+#########
+
+Message Inhaling helium contracts the ear drum, causing pitches to sound higher. Your voice is perceived normally by everyone else.
+
+#######
+###..##
+##..H.#
+#..N..#
+#.H..H#
+##..0.#
+#######
+
+Message The first helium balloons were used at the wedding of Queen Victoria and Prince Albert, popularizing the term "noble gas".
+
+#######
+#.....#
+#..N..#
+#..0..#
+#H.H.H#
+#.#.#.#
+#.....#
+#######
+
+Message Helium does not form chemical bonds with other elements, but it's the bonds of friendship that really matter.
+
+########
+#......#
+#...H#N#
+#......#
+##H#H.0#
+##.....#
+####...#
+########
+
+Message Scientists have been searching for centuries to discover the missing elements between hydrogen and helium on the periodic table.
+
+Message Thanks for playing! Go get the full version, which has lots of cool stuff that I couldn't write in PuzzleScript: www.sokobond.com
+
+title Extended Bodies:Multiple Parallel Players, Multiple Extended Object
+author Anonymous
+homepage www.puzzlescript.net
+
+verbose_logging
+
+(
+    
+THIS IS A DELIBERATELY BROKEN GAME, JUST FOR ILLUSTRATION
+
+see https://www.puzzlescript.net/Documentation/rigidbodies.html#parallel_many
+)
+
+
+========
+OBJECTS
+========
+
+Background 
+white  
+
+Target 
+DarkBlue    
+
+Wall 
+DarkGrey
+
+Player
+Blue
+..0..
+..0.0
+00000
+.000.
+.0.0.
+
+( three multi-cells blocks )
+Crate 
+orange
+
+Chest
+green
+
+Box
+red
+
+( 1-cell small block )
+Small
+darkred
+.....
+.000.
+.000.
+.000.
+.....
+
+( sticky, multicellular block when in contact )
+Glue
+pink
+.000.
+00000
+00000
+00000
+.000.
+
+( a flag to know what is allowed move )
+Wanna_Move
+#ff00ff
+.....
+.....
+..0..
+.....
+.....
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Player
+* = Crate
++ = Box
+% = Chest
+o = Small
+g = Glue
+
+( blocks that can be moved by the player )
+Movable = Crate or Box or Chest or Small or Glue
+
+( all things that can move and push blocks )
+Mover = Player or Movable
+
+( things that can stop a movement if they are stationary )
+Obstacle = Wall or Mover
+
+=======
+SOUNDS
+=======
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Target
+Obstacle
+Wanna_Move
+
+======
+RULES     
+======     
+
+( 1. Propagate movements forward )
+[ > Mover | Movable ] -> [ > Mover | > Movable  ]
++ [ > Box    ] [ Box   ] -> [ > Box    ] [ > Box    ]
++ [ > Crate  ] [ Crate ] -> [ > Crate  ] [ > Crate  ]
++ [ > Chest  ] [ Chest ] -> [ > Chest  ] [ > Chest  ]
++ [ moving Glue | Glue ] -> [ moving Glue | moving Glue ]
+
+( 2. Propagate obstructions backwards )
+[ > Mover  | stationary Obstacle ] -> [ stationary Mover | Obstacle ]
++ [ > Crate  ] [ stationary Crate ] -> [ stationary Crate ] [ Crate ]
++ [ > Box    ] [ stationary Box   ] -> [ stationary Box   ] [ Box   ]
++ [ > Chest  ] [ stationary Chest ] -> [ stationary Chest ] [ Chest ]
++ [ moving Glue | stationary Glue ] -> [ stationary Glue | Glue ]
+
+( 3. remove all movement, keep a flag )
+[ > Movable ] -> [ Movable wanna_move ]
+
+( 4. propagate movement only on wanna_move things )
+(    ie redo step 1 but with WANNA_MOVE added to the first line below )
+[ > Mover  | Movable WANNA_MOVE ] -> [ > Mover | > Movable ]
++ [ > Box   ] [ Box   ] -> [ > Box   ] [ > Box   ]
++ [ > Crate ] [ Crate ] -> [ > Crate ] [ > Crate ]
++ [ > Chest ] [ Chest ] -> [ > Chest ] [ > Chest ]
++ [ moving Glue | Glue ] -> [ moving Glue | moving Glue ]
+
+( 5. cleanup, remove flag )
+[ wanna_move ] -> [ ]
+
+==============
+WINCONDITIONS
+==============
+
+=======     
+LEVELS
+=======
+
+###################
+#.................#
+#.................#
+#...*..g.g.#......#
+#...*......#...g###
+#...*...o.%%%.....#
+#...+++.o.%.......#
+#....+....%%%.....#
+#....+.....P...g..#
+#....p.gg.........#
+###################
+
+
+title The Legend of Zokoban
+author Joshua Minor
+homepage pixelverse.org
+flickscreen 9x7
+
+========
+OBJECTS
+========
+
+Background
+yellow orange
+00000
+01000
+00001
+00100
+10000
+
+Water
+blue lightblue
+00000
+01000
+00001
+00100
+10000
+
+Cave
+DarkBlue
+00000
+00000
+00000
+00000
+00000
+
+Goal
+DarkBlue Red
+00000
+00000
+00100
+00000
+00000
+
+RockWall
+BROWN Orange
+01110
+10000
+10010
+10000
+00100
+
+StoneWall
+darkgrey grey
+01110
+10000
+10010
+10000
+00100
+
+PlayerWithoutSword
+GREEN lightgreen
+.00..
+00000
+.000.
+.111.
+00.00
+
+PlayerWithSword
+GREEN lightgreen white grey
+.002.
+00020
+.0222
+.110.
+00.00
+
+Sword
+grey white
+..1..
+..1..
+.111.
+..0..
+.....
+
+Block
+BROWN Orange darkgrey
+.111.
+10001
+10002
+10002
+.222.
+
+EasyBaddie
+white red
+.111.
+10101
+11111
+11111
+11.11
+
+Money
+white lightblue
+..1..
+.001.
+10111
+.111.
+..1..
+
+=======
+LEGEND
+=======
+
+Wall = StoneWall or RockWall
+Solid = Wall or Block or Water
+Player = PlayerWithoutSword or PlayerWithSword
+Obstacle = Wall or Block or Player or Water
+Baddie = EasyBaddie
+
+. = Background
+# = RockWall
+S = StoneWall
+P = PlayerWithoutSword
+* = Block
+@ = Block and Cave
+O = Cave
+w = Water
+1 = EasyBaddie
++ = Sword
+G = Goal
+
+=======
+SOUNDS
+=======
+
+StartLevel 40430108 (music-ish)
+SFX0 16358103 (power up)
+SFX1 84057304 (push)
+SFX2 74654508 (stairs)
+SFX3 21293301 (fight)
+SFX4 49521903 (hurt)
+SFX5 47598700 (money)
+ShowMessage 82693708 (you win!)
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Cave, Goal
+Player, Wall, Block, Water, EasyBaddie
+Sword, Money
+
+======
+RULES
+======
+
+(baddies move at random)
+[ Stationary Baddie ] -> [ RandomDir Baddie ]
+
+(player can push blocks)
+[ > Player | Block ] -> [ > Player | > Block ] SFX1
+
+(blocks pushed into water become land)
+[ > Block | Water ] -> [ | ]
+
+(baddies can attack the player w/o sword)
+[ > Baddie | Player No Sword ] -> SFX4
+
+(player can pick up sword)
+([ > Player | Sword ] -> [ | Player Sword ] SFX0)
+[ PlayerWithoutSword Sword ] -> [ PlayerWithSword ] SFX0
+
+(player with sword can kill baddies & leave money)
+[ > PlayerWithSword | Baddie ] -> [ PlayerWithSword | Money ] SFX3
+(sword moves with player)
+([ > Player Sword ] -> [ > Player > Sword ])
+(sword doesn't move into obstacles)
+([ > Sword | Stationary Obstacle ] -> [ Sword | Stationary Obstacle ])
+
+(player can pick up money)
+[ > Player | Money ] -> [ | Player ] SFX5
+
+(blocks pushed into caves, teleport to other end of cave)
+random [ Moving Block Cave | ... | Cave ] -> [ Cave | ... | Block Cave ]
+(blocks sitting on cave exits will roll aside to let player follow them)
+late random [ Block Cave | No Obstacle ] -> [ Cave | Block ]
+(players can enter caves - teleporting to orthogonally matching cave)
+late random [ Player Cave | ... | Cave ] -> [ Cave | ... | Player Cave ] SFX2
+(sword follows player through the cave)
+(late random [ Sword Cave | ... | Cave ] -> [ Cave | ... | Sword Cave ])
+
+
+==============
+WINCONDITIONS
+==============
+
+All Player on Goal
+
+=======
+LEVELS
+=======
+
+sssssssss#################wwwwwwwwww
+ss.s1s..s#1#####.##..1..1.wwwwww..ww
+s.......s#.#####.##.#.#.#.wwwww..*.w
+s..*....o#.##o##.............ww....w
+s.s....ss#..........#.*.#....ww..1.w
+sss.s.sss##...............wwwwww..ww
+sssssssss#####..#####.....wwwwwwwwww
+sssssssss#####..#####.....wwwwwwwwww
+ss1...sss#####..####.....wwww.....ww
+s......os##o#....##...#.1www..s.s..w
+s..+...ss#.......##*......ww...g...w
+ss.....ss#...p..........#.ww..s.s.1w
+ssss..sss##.....###..#.1..www..1..ww
+sssssssss#################wwwwwwwwww
+
+message Congratulations!
+
+
+
+title Modality
+author Sean Barrett
+homepage www.silverspaceship.com
+background_color #603060
+noaction
+
+========
+OBJECTS
+========
+
+White
+White
+
+Black
+#202020
+
+
+Grey
+#505050 #a0a0a0
+01010
+10101
+01010
+10101
+01010
+
+
+Background
+Red
+
+Target
+#3030a0
+.....
+.000.
+.0.0.
+.000.
+.....
+
+Player
+Black Orange #c0c0c0 Blue
+.000.
+.111.
+22222
+.333.
+.3.3.
+
+Crate
+Orange Yellow
+00000
+0...0
+0...0
+0...0
+00000
+
+
+=======
+LEGEND
+=======
+
+. = Black
++ = White
+g = Grey
+p = Player and Black
+Q = Player and White
+* = Crate and Black
+@ = Crate and White
+t = Target and Black
+U = Target and White
+
+Nonwhite = Black or Grey
+Nonblack = White or Grey
+
+=======
+SOUNDS
+=======
+
+================
+COLLISIONLAYERS
+================
+
+Background
+White, Black, Grey
+Target
+Player, Crate
+
+======
+RULES
+======
+
+[ >  Player Nonblack | Crate Nonblack ] -> [  > Player Nonblack | > Crate Nonblack ]
+[ >  Player Black | Crate Black ] -> [  > Player Black | > Crate Black ]
+[ > Player White | Black ] -> CANCEL
+[ > Player Black | White ] -> CANCEL
+
+==============
+WINCONDITIONS
+==============
+
+All Crate on Target
+
+=======
+LEVELS
+=======
+
+
+u+...
+@+g.p
++++..
+
+++++q
++.*.+
+u++.+
++g..+
++++++
+
+......
+.++.+.
+.+q++.
+..u.++
+g.*.++
+++++++
+
+...t.......
+...+.......
+.+.+.+...++
+.+.++++..++
+q@g++..++++
+.+.++...+++
+.+.+....+++
+.+......+++
+.++++++++++
+
+
 
 USER PROMPT:
 Output the code for a complete PuzzleScript game.  First, reason about your task and determine the best plan of action. Then, write your code. Return your code in full, inside a ```plaintext code block.

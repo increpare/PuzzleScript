@@ -1,9 +1,8 @@
 =================================
-line 30 : Trying to access color number 1 from the color palette of sprite CRATE, but there are only 1 defined in it.
-line 31 : Trying to access color number 1 from the color palette of sprite CRATE, but there are only 1 defined in it.
-line 32 : Trying to access color number 1 from the color palette of sprite CRATE, but there are only 1 defined in it.
-line 38 : Trying to access color number 2 from the color palette of sprite TARGET, but there are only 1 defined in it.
-line 39 : Trying to access color number 2 from the color palette of sprite TARGET, but there are only 1 defined in it.
-line 43 : Was looking for color for object CRATEONTARGET, got "olive" instead.
-too many errors, aborting compilation
+line 38 : unexpected sound token "pickup".
+line 39 : unexpected sound token "victory".
+line 55 : Name "pickup", referred to in a rule, does not exist.
+line 56 : Name "victory", referred to in a rule, does not exist.
+line 55 : Error, malformed cell rule - was looking for cell contents, but found "pickup".  What am I supposed to do with this, eh, please tell me that.
+line 56 : Error, malformed cell rule - was looking for cell contents, but found "victory".  What am I supposed to do with this, eh, please tell me that.
 Errors detected during compilation; the game may not work correctly.

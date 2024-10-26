@@ -1,71 +1,59 @@
-To resolve the errors and ensure the game compiles and runs correctly, we need to address several issues:
+To repair the PuzzleScript game code, let's address each of the reported errors step by step.
 
-1. **Color Error in Wall Object**: The error message indicates there's an attempt to access a non-existent color index within the wall object's color palette. This means the Wall object should define multiple colors for the sprite design.
+1. **Collision Layer Order and Missing Sounds Section:** The error message indicates that the "COLLISIONLAYERS" section is out of order and that a "SOUNDS" section is missing. This can be fixed by including an empty "SOUNDS" section before "COLLISIONLAYERS."
 
-2. **Unexpected Syntax**: There are lines that expect a sound event or object name but didn't find either. Likely, these involve incorrect rules or designations.
+2. **Name Errors in Rules:** The error messages say that "player," "crate," and "goal" are not valid object names. These should be uppercase—consistent with the identifiers specified in the "LEGEND" section ("P" for Player, "C" for Crate, "G" for Goal).
 
-3. **Incorrect Rule Structure**: An error indicates that objects cannot appear outside of square brackets in rules. This suggests syntax errors in the rules section.
+3. **Win Condition Invalid Name:** The "ALL Goal on Crate" line contains the name of an object ("Goal") which is not recognized based on the legend. Using consistent identifiers ("G" for Goal and "C" for Crate) can fix this.
 
-Let's address these step-by-step:
-
-- **Wall Object**: Update the Wall object to include two different colors for the patterns (even if they are the same, as a workaround to satisfy the multi-color requirement).
-
-- **Simplifying Rules**: Ensure rules are syntactically correct by enclosing components of the game state change within appropriate brackets.
-
-- **Empty Sound Section Handling**: Make sure sound and rule sections start correctly.
-
-Here's the repaired code:
+By fixing these issues, the game should compile correctly. Here is the updated and corrected code:
 
 ```plaintext
-title Pushbox Puzzle
-author Game Developer
-homepage www.example.com
+title Block Pusher Adventure
+author YourName
 
 ========
 OBJECTS
 ========
 
 Background
-Black
-
-Wall
-LightGrey DarkGrey
-11111
-11111
-11111
-11111
-11111
+DarkGrey LightGrey
+.....
+.....
+.....
+.....
+.....
 
 Player
+Black Orange
+.000.
+.111.
+.111.
+.111.
+.0.0.
+
+Wall
+Brown DarkBrown
+00000
+00000
+00000
+00000
+00000
+
+Crate
 Yellow
+00000
+0...0
+0...0
+0...0
+00000
+
+Goal
+Blue LightBlue
 .....
 ..0..
 .000.
 ..0..
-.....
-
-Box
-Brown
-.....
-.000.
-.0.0.
-.000.
-.....
-
-Target
-Green
-.....
-.....
-.00..
-.....
-.....
-
-BoxOnTarget
-LightGreen
-.....
-.....
-.0.0.
-.....
 .....
 
 =======
@@ -73,78 +61,56 @@ LEGEND
 =======
 
 . = Background
-# = Wall
 P = Player
-B = Box
-T = Target
-X = BoxOnTarget
+# = Wall
+C = Crate
+G = Goal
 
-=========
+=======
 SOUNDS
-=========
-
-# No sounds defined for this simple game
+=======
 
 ================
 COLLISIONLAYERS
 ================
 
 Background
-Target
-BoxOnTarget
-Player, Box, Wall
+Player, Wall, Crate, Goal
 
 ======
 RULES
 ======
 
-# Player movement and box pushing
-[ > Player | Box ] -> [ > Player | > Box ]
-[ > Player | Target ] -> [ > Player ]
-[ Box | Target ] -> [ BoxOnTarget ]
-[ BoxOnTarget | Target ] -> [ Box | Target ]
-[ Player | BoxOnTarget ] -> [ Player | Box ]
-[ BoxOnTarget | Player ] -> [ Box | Player ]
+[ > P | C ] -> [ > P | > C ]
+[ C | G ] -> [ G | G ]
 
 ==============
 WINCONDITIONS
 ==============
 
-All BoxOnTarget
+All G on C
 
 =======
 LEVELS
 =======
 
-# Level 1
-####
-#..#
-#P.# 
-#BX#
-#T.#
-####
+######
+#P...#
+#..C.#
+#.C..#
+#..G.#
+######
 
-# Level 2
 #######
-#..T..#
-#..B..#
-#..P..#
-#..B..#
-#..T..#
+#P....#
+#.#####
+#..C..#
+#...G.#
 #######
 
-# Level 3
-########
-#T..#..#
-#..B...#
-#..P...#
-#.#...##
-#..#T..#
-#..B...#
-#...####
+#####
+#PCG#
+#####
 ```
 
-### Explanation:
-- **Wall Object**: Added a second color to the Wall definition to avoid accessing a non-existent color index.
-- **Rules Section**: Ensured each rule adheres to PuzzleScript syntax, specifying the changes using brackets for both current and result states of the grid.
-- **Maintaining empty sound section**: No changes were applied since there's no sound definition needed.
+This code now includes an empty "SOUNDS" section, uses uppercase identifiers consistent with the legend in the rules, and correctly specifies the win condition with the appropriate object identifiers.

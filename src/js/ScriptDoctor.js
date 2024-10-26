@@ -33,29 +33,32 @@ function sleep(ms) {
   return new Promise(resolve => setTimeout(resolve, ms));
 }
 
-// async function playTest() {
-//   editor.clearHistory();
-//   clearConsole();
-//   setEditorClean();
-//   unloadGame();
-//   compile(['restart'], editor.getValue());
-//   console.log('Playtesting...');
-//   // sol = await solveLevel(0);
+async function playTest() {
+  editor.clearHistory();
+  clearConsole();
+  setEditorClean();
+  unloadGame();
+  compile(['restart'], editor.getValue());
+  console.log('Playtesting...');
+  const [sol, n_search_iters] = await solveLevel(4);
+  // gameToLoad = '/demo/sokoban_match3.txt';
+  // gameToLoad = '/misc/3d_sokoban.txt';
+  // sol = await solveLevel(0);
 
-//   // Load the the text file demo/sokoban_match3.txt
-//   // tryLoadFile('sokoban_match3');
-//   var client = new XMLHttpRequest();
-//   client.open('GET', '/demo/sokoban_match3.txt');
-//   client.onreadystatechange = function() {
-//     console.log('Ready state:', client.readyState);
-//     console.log('Response', client.responseText);
-//     editor.setValue(client.responseText);
-//     sol = await solveLevel(0);
-//   }
-//   client.send();
-//   // console.log('Loaded level:', editor.getValue());
-//   console.log('Solution:', sol);
-// }
+  // Load the the text file demo/sokoban_match3.txt
+  // tryLoadFile('sokoban_match3');
+  // var client = new XMLHttpRequest();
+  // client.open('GET', gameToLoad);
+  // client.onreadystatechange = async function() {
+  //   console.log('Ready state:', client.readyState);
+  //   console.log('Response', client.responseText);
+  //   editor.setValue(client.responseText);
+  //   sol = await solveLevel(0);
+  //   console.log('Solution:', sol);
+  // }
+  // await client.send();
+  // console.log('Loaded level:', editor.getValue());
+}
 
 
 function serialize(val) {
@@ -428,6 +431,11 @@ function processInputSearch(dir,dontDoWin,dontModify) {
 
 
 async function solveLevel(level) {
+  function hashState(levelMap) {
+    return JSON.stringify(levelMap).split('').reduce((hash, char) => {
+      return (hash * 31 + char.charCodeAt(0)) % 1_000_003; // Simple hash
+    }, 0);
+  }
   // Load the level
   compile(['loadLevel', level], editor.getValue());
   // console.log('Solving level', level);
@@ -439,10 +447,11 @@ async function solveLevel(level) {
   // action_seqs = new Deque([[]]);
   sol = [];
   console.log(sol.length);
-  visited = new Set([serialize(init_level_map)]);
+  visited = new Set([hashState(init_level_map)]);
   i = 0;
   start_time = Date.now();
   while (frontier.length > 0) {
+    backups = [];
     const level = frontier.pop(0);
     const action_seq = action_seqs.pop(0);
     if (!action_seq) {
@@ -459,7 +468,7 @@ async function solveLevel(level) {
       new_action_seq = action_seq.slice();
       new_action_seq.push(move);
       // console.time(`processInput-${i}-${move}`); // Start profiling
-      changed = processInput(move);
+      changed = processInputSearch(move);
       // console.timeEnd(`processInput-${i}-${move}`); // End profiling
       if (winning) {
         console.log(`Winning! Solution:, ${new_action_seq}`);
@@ -468,7 +477,8 @@ async function solveLevel(level) {
       else if (changed) {
         new_level = backupLevel();
         new_level_map = new_level['dat'];
-        if (!visited.has(serialize(new_level_map))) {
+        const newHash = hashState(new_level_map);
+        if (!visited.has(newHash)) {
           
           // UNCOMMENT THESE LINES FOR VISUAL DEBUGGING
           // await new Promise(resolve => setTimeout(resolve, 1)); // Small delay for live feedback
@@ -479,14 +489,16 @@ async function solveLevel(level) {
             console.log(`New action sequence is undefined when pushing.`);
           }
           action_seqs.push(new_action_seq);
-          visited.add(serialize(new_level_map));
+          visited.add(newHash);
         } 
       }
     }
-    if (i % 1000 == 0) {
+    if (i % 10_000 == 0) {
       now = Date.now();
       console.log('Iteration:', i);
-      console.log('FPS:', i / (now - start_time) * 1000);
+      console.log('FPS:', (i / (now - start_time) * 1000).toFixed(2));
+      console.log(`Size of frontier: ${frontier.length}`);
+      console.log(`Visited states: ${visited.size}`);
     }
     i++;
   }
@@ -588,7 +600,7 @@ async function genGame(genMode, parents, saveDir, seed, fewshot, cot,
         try {
           // Check if level_i is in sols
           if (sols.hasOwnProperty(level_i)) {
-            console.log('Using cached solution.');
+            // console.log('Using cached solution.');
             [sol, n_search_iters] = sols[level_i];
           } else {
             console.log(`Solving level ${level_i}...`);
@@ -605,7 +617,7 @@ async function genGame(genMode, parents, saveDir, seed, fewshot, cot,
           console.log(`sol undefined`);
         }
         sols[level_i] = [sol, n_search_iters];
-        fitness = Math.max(fitness, n_search_iters)
+        fitness = n_search_iters
         // console.log('Solution:', sol);
         // check if sol is undefined
         if (sol.length > 0) {
@@ -662,6 +674,9 @@ async function evolve() {
     pop.sort((a, b) => a.fitness - b.fitness);
     // Select the top half of the population as parents
     ancestors = pop.slice(0, popSize);
+    // Get mean fitness of elites
+    eliteFitness = ancestors.reduce((acc, game) => acc + game.fitness, 0) / popSize;
+    console.log(`Generation ${gen}. Elite fitness: ${eliteFitness}`);
     // Generate the next generation
     newPop = [];
     for (i = 0; i < popSize; i++) {
@@ -678,10 +693,11 @@ async function evolve() {
         genMode = 'mutate';
         parents = [ancestors[Math.floor(Math.random() * popSize)]];
       }
-      console.log(`Parents: ${parents}. genMode: ${genMode}`);
+      // console.log(`Parents: ${parents}. genMode: ${genMode}`);
       saveDir = `evo-${seed}/gen${gen}/game${i}`;
       newPop.push(await genGame('mutate', parents, saveDir, seed, fewshot=fewshot, cot=cot));
     }
+    pop = newPop;
   }
 }
 

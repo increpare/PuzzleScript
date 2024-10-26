@@ -1,136 +1,116 @@
-To create a complete PuzzleScript game, I will follow these steps:
+To create a complete PuzzleScript game, it's essential to establish a coherent theme and design for the game. PuzzleScript is a simple engine for creating puzzle games, typically with grid-based movement and interactions. Here's a plan for creating a basic game:
 
-1. **Conceptualize the Game**: Plan a simple puzzle game concept. Define a goal for the player, like reaching a destination, pushing boxes, etc.
+1. **Concept and Theme**: Decide on a simple concept. Let's create a game called "Maze Runner," where the player navigates through a maze to collect keys and reach the exit.
 
-2. **Define Objects**: Identify the types of objects necessary for the game, such as players, walls, goals, crates, etc. Each object will have a visual representation.
+2. **Objects**: Define the necessary objects, such as the player, walls, keys, and the exit.
 
-3. **Set Up Collision Layers**: These layers will manage how objects interact or overlap.
+3. **Rules**: Establish rules for movement and interactions, like picking up keys or blocking movement with walls.
 
-4. **Create Rules**: Define how different objects interact with each other and how the player's interactions affect them.
+4. **Winning Conditions**: Define what constitutes winning the game — collecting all keys and reaching the exit.
 
-5. **Win Conditions**: Establish conditions for winning the game, like moving all crates to target spots.
+5. **Levels**: Create a few levels to demonstrate the game's mechanics and increasing difficulty.
 
-6. **Design Levels**: Create at least one level for the game to be playable.
+6. **Sounds and Visuals**: Implement simple sounds and visual feedback, although this might remain minimal due to the scope.
 
-7. **Final Touches**: Include sounds or messages when necessary.
-
-Now, I will write the code following this plan.
+With this in mind, let's design the game:
 
 ```plaintext
-title Box Pusher
-author YourName
+title Maze Runner
+author Your Name
+homepage www.example.com
 
 ========
 OBJECTS
 ========
 
 Background
-LightGrey
+black
 
 Player
-Red
-.....
-..0..
-.000.
-..0..
-.....
+yellow
 
 Wall
-DarkGrey
-.....
-00000
-00000
-00000
-.....
+grey
 
-Crate
-Brown
-.....
-.111.
-.111.
-.111.
-.....
+Key
+blue
 
-Target
-Green
-.....
-..2..
-..2..
-.....
-
-CrateOnTarget
-Olive
-.....
-.121.
-.121.
-.121.
-.....
+Exit
+green
 
 =======
 LEGEND
 =======
 
 . = Background
-# = Wall
 P = Player
-C = Crate
-T = Target
-O = CrateOnTarget
+# = Wall
+K = Key
+E = Exit
 
-===========
+=======
 SOUNDS
-===========
+=======
 
-SFX0 255 0
+pickup 39263901
+victory 19837296
 
 ================
 COLLISIONLAYERS
 ================
 
 Background
-Target
-CrateOnTarget, Crate
-Player, Wall
+Key
+Exit
+Player
+Wall
 
 ======
 RULES
 ======
 
-[ > Player | Crate ] -> [ > Player | > Crate ]
-[ Crate | Target ] -> [ CrateOnTarget | ]
-[ CrateOnTarget | no Target ] -> [ Crate | ]
+[ > Player | Key ] -> [ Player | Background ] pickup
+[ Player | Exit ] -> WIN victory
 
 ==============
 WINCONDITIONS
 ==============
 
-All CrateOnTarget
+All Key on Background
+Some Player on Exit
 
 =======
 LEVELS
 =======
 
-#######
-#.....#
-#..T..#
-#..C..#
-#..P..#
-#..T..#
-#######
+###########
+#.......#E#
+#.#######.#
+#.K.....#.#
+#.#.###.#.#
+#.#K#.#.#.#
+#.#.#.#.#.#
+#.#.#.#.#.#
+#...#KP...#
+###########
 ```
 
-**Game Explanation**:
+### Explanation:
 
-- **Concept**: This is a classic box-pushing game where the player must push crates onto target spots. A crate changes its appearance when on a target.
+- **Concept**: "Maze Runner" where the player collects keys and navigates to the exit.
+- **Objects**: 
+  - Background: Simple background.
+  - Player: Controls the main character.
+  - Wall: Blocks movement.
+  - Key: Collectible object needed to win.
+  - Exit: The goal of the game.
   
-- **Objects**: The main objects are the player, crates, walls, and targets. Walls are immovable, crates can be pushed, and targets are places where crates should be placed.
+- **Rules**: 
+  - Players can collect keys by replacing the key with a background.
+  - When the player reaches the exit and all keys are collected, the player wins.
+  
+- **Win Conditions**: The player wins when all keys are on the background (collected), and the player reaches the exit.
 
-- **Collision Layers**: This ensures the proper layering of objects, allowing crates to be pushed only by the player and occupying their own space.
+- **Levels**: A simple maze layout with a few keys and an exit, demonstrating the game's mechanics.
 
-- **Rules**: Basic interactions include pushing crates and changing crate appearance when on targets. 
-
-- **Win Conditions**: The game is won when all crates are on targets.
-
-- **Level Design**: A small level is provided, ensuring the player has a puzzle to solve.
-
-This game presents a straightforward puzzle, encouraging logical thinking and strategic movement to win.
+This setup provides a fun and straightforward game, showing PuzzleScript's capability to create engaging puzzle mechanics.
