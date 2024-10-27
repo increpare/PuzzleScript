@@ -1,0 +1,127 @@
+To fix the issues within the provided PuzzleScript game code, we need to make two distinct changes:
+
+1. The error on line 44 indicates there's an issue with the "SOunds" section because a section defining separator (multi equals signs) should not be followed by any non-section defining elements. We'll relocate the "SOunds" section to adhere to PuzzleScript syntax requirements. These are usually best placed earlier in the script, but definitely before sections that make use of them like Rules.
+
+2. The error on line 78 mentions a mismatch in the pattern between the left and right side of one of the rules. Specifically, the rule `[ Enemy | Player ] -> MESSAGE "Caught by an enemy!" RESTART sfx2` doesn't have a proper right-hand pattern to replace it, resulting in unequal lengths on both sides of the rule. Fixing this requires adjusting the rule to maintain equal lengths. 
+
+Here's the corrected version of your code:
+
+```plaintext
+title Complex Maze Runner
+author AI
+
+========
+OBJECTS
+========
+
+Background
+black
+
+Player
+yellow
+
+Wall
+grey
+
+Key
+blue
+
+Exit
+green
+
+LockedDoor
+red
+
+Switch
+orange
+
+Enemy
+white
+
+======
+LEGEND
+======
+
+. = Background
+P = Player
+# = Wall
+K = Key
+E = Exit
+D = LockedDoor
+S = Switch
+X = Enemy
+  = Background
+
+=======
+SOUNDS
+=======
+
+Key DESTROY 54076508
+Switch MOVE 21034506
+Enemy CANTMOVE 15067308
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Switch
+Key
+Exit
+Player, Enemy
+LockedDoor, Wall
+
+======
+RULES
+======
+
+[ > Player | Key ] -> [ Player | Background ] sfx0
+[ Player | Exit ] -> WIN
+[ > Player | Switch ] -> [ Player | Background ] sfx1
+[ Enemy | Player ] -> [ Enemy | Player ] MESSAGE "Caught by an enemy!" RESTART sfx2
+
+(late rules for opening doors)
+late [ Switch | LockedDoor ] -> [ Switch | Background ]
+
+(enemy movement patterns)
+[ > Enemy | no Player | no Wall ] -> [ > Enemy | no Wall ]
+
+==============
+WINCONDITIONS
+==============
+
+All Key on Background
+Some Player on Exit
+
+========
+LEVELS
+========
+
+###########
+#.......#E#
+#.#D#######
+#.#K.....S#
+#.#.#######
+#..XS#X.#P#
+#.#.....#K#
+#.#X#.#.#X#
+#.#.#.#.#D#
+#...#K...S#
+###########
+
+###########
+#.......#E#
+#.#D#####..
+#.#K...S.#.
+####.#.P.#.
+#.#.#####.#
+S.#...#.#K#
+#X#.#.#.#.#
+#.#.#.#.#D#
+#...X.##..#
+###########
+```
+
+Key Changes:
+- Relocated the "SOUNDS" section so that it precedes other sections, particularly before "RULES".
+- Ensured both sides of the problematic rule are symmetrical, keeping the length consistent and using placeholders for necessary actions or messages. The corrected rule format maintains two elements on both sides by retaining both the `Enemy` and `Player` objects even when a message triggers.

@@ -1,0 +1,127 @@
+To create a complete PuzzleScript game, we need to consider the following components:
+
+1. **Title and Author Information**: This includes the game's title and optionally the author's name or other related metadata.
+
+2. **Objects**: Define the various game pieces, including how they look and their properties.
+
+3. **Legend**: Create shorthand symbols for objects to simplify level design.
+
+4. **Sounds**: Optional. Define any sounds that will be part of the game.
+
+5. **Collision Layers**: Define which objects can exist in the same space at the same time.
+
+6. **Rules**: Establish the rules that govern how objects interact with each other and how they move.
+
+7. **Win Conditions**: Define the conditions to win a level.
+
+8. **Levels**: Design levels that use the objects, rules, and win conditions to create playable scenarios.
+
+For this game, I'll design a simple Sokoban-inspired game. The player will move crates onto target locations.
+
+```plaintext
+title Push the Box
+author Your Name
+
+========
+OBJECTS
+========
+
+Background
+lightgray
+
+Player
+blue
+..0..
+.000.
+..0..
+..0..
+.....
+
+Crate
+yellow
+.000.
+00000
+00000
+.000.
+.....
+
+Target
+red
+.....
+..0..
+.000.
+..0..
+.....
+
+Wall
+black
+.....
+00000
+00000
+00000
+.....
+
+=======
+LEGEND
+=======
+
+. = Background
+P = Player
+C = Crate
+T = Target
+W = Wall
+
+=======
+SOUNDS
+=======
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Target
+Crate
+Player, Wall
+
+======
+RULES
+======
+
+[ Player | Crate | No Crate No Wall ] -> [ > Player | > Crate ]
+[ > Player | No Crate No Wall ] -> [ > Player ]
+
+==============
+WINCONDITIONS
+==============
+
+All Crate on Target
+
+=======
+LEVELS
+=======
+
+message Welcome to Push the Box! Move all crates onto targets.
+
+#######
+#.....#
+#.P.C.#
+#..W..#
+#.C.T.#
+#..T..#
+#######
+```
+
+### Explanation:
+
+- **Objects**: We define a background, player, crates, targets, and walls, each with a distinct color for easy recognition.
+
+- **Legend**: Sets a single-character representation for each object for use in the levels.
+
+- **Collision Layers**: Ensure that the player and walls are on the same layer, preventing the player from walking through walls, while crates and targets are on separate layers for independent interactions.
+
+- **Rules**: Allow the player to push crates if there is not another crate or wall directly in front.
+
+- **Win Conditions**: The game is won when all crates are on target spaces.
+
+- **Levels**: Design a level using the legend's symbols to set up walls, targets, a player, and crates. The player must maneuver the crates onto the targets to win.

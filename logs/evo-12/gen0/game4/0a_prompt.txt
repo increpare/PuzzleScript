@@ -1,0 +1,1682 @@
+SYSTEM PROMPT:
+You are a game designer, familiar with the PuzzleScript game description language. Here are some example games, for inspiration (do not reproduce these games exactly):
+
+title Lunar Lockout
+homepage http://bit.ly/WMmQrq
+
+========
+OBJECTS
+========
+
+Background
+Black
+
+Square
+LightGray Gray
+11111
+10001
+10001
+10001
+11111
+
+Space
+Black
+
+Target
+Red
+.....
+.000.
+.0.0.
+.000.
+.....
+
+Soldier
+DarkBlue LightGray Gray
+11111
+10001
+10201
+10001
+11111
+
+Captain
+Green LightGray Gray
+11111
+10001
+10201
+10001
+11111
+
+Player
+Orange
+.....
+.....
+..0..
+.....
+.....
+
+
+=======
+LEGEND
+=======
+
+Pawn = Soldier or Captain
+Block = Pawn
+
+@ = Space
+_ = Square
+P = Square and Player
+* = Square and Target
+O = Soldier
+$ = Soldier and Target
+C = Captain
+
+=======
+SOUNDS
+=======
+
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Space, Square
+Target
+Pawn, Captain
+Player
+
+======
+RULES
+======
+
+[ > Player | Space ] -> [ Player | Space ]
+[ > Player Pawn ] -> [ Player > Pawn ]
+[ > Pawn | Block ] -> [ Pawn | Block ]
+[ > Pawn | Square ] -> [ Square | > Pawn ]
+[ > Pawn | Space ] -> [ Square | Space ]
+
+==============
+WINCONDITIONS
+==============
+
+some Captain on Target
+
+=======
+LEVELS
+=======
+
+message challenge 4
+@@@@@@@
+@O___O@
+@___O_@
+@_P*__@
+@__O__@
+@_C___@
+@@@@@@@
+
+message challenge 16
+@@@@@@@
+@O_C__@
+@_____@
+@_O*_O@
+@__P__@
+@_O___@
+@@@@@@@
+
+message challenge 21
+@@@@@@@
+@__C__@
+@__O__@
+@_P$_O@
+@O____@
+@___O_@
+@@@@@@@
+
+message challenge 37
+@@@@@@@
+@O__OO@
+@_____@
+@_P*__@
+@O__C_@
+@_____@
+@@@@@@@
+
+
+
+title Many parallel players, unlimited rigidbodies
+author increpare
+homepage www.increpare.com
+
+verbose_logging
+
+(
+
+This is a sample of 
+
+- Unlimited rigid bodies
+- Multiple players moving in parallel
+
+It's made as an example for the extended rigid body tutorial here:
+
+https://www.puzzlescript.net/Documentation/rigidbodies.html
+
+)
+
+========
+OBJECTS
+========
+
+Background
+green
+
+Wall
+BROWN DARKBROWN
+00010
+11111
+01000
+11111
+00010
+
+Player
+Black Orange White Blue
+.000.
+.111.
+22222
+.333.
+.3.3.
+
+ Crate
+Yellow orange
+00000
+01110
+01110
+01110
+00000
+
+
+(The directional overlays bellow establish connections between crates)
+
+ Crate_U
+orange
+.000.
+.....
+.....
+.....
+.....
+
+ Crate_D
+orange
+.....
+.....
+.....
+.....
+.000.
+
+ Crate_L
+orange
+.....
+0....
+0....
+0....
+.....
+
+ Crate_R
+orange
+.....
+....0
+....0
+....0
+.....
+
+CanMove
+red
+.....
+.....
+..0..
+.....
+.....
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Player
+
+w = Crate and Crate_U
+x = Crate and Crate_D
+a = Crate and Crate_L
+d = Crate and Crate_R
+
+e = Crate and Crate_U and Crate_L
+z = Crate and Crate_D and Crate_L
+q = Crate and Crate_U and Crate_R
+c = Crate and Crate_D and Crate_R
+
+r = Crate and Crate_L and Crate_R
+t = Crate and Crate_D and Crate_U
+
+1 = Crate and Crate_D and Crate_L and Crate_R
+2 = Crate and Crate_U and Crate_L and Crate_R
+3 = Crate and Crate_U and Crate_D and Crate_L
+4 = Crate and Crate_U and Crate_D and Crate_R
+
+0 = Crate and Crate_U and Crate_D and Crate_L and Crate_R
+
+5 = Crate
+
+ Crate_Connection = Crate_U or Crate_D or Crate_L or Crate_R
+
+Pusher = Player or Crate
+Pushable = Crate 
+Solid = Crate or Player
+
+=======
+SOUNDS
+=======
+
+ Crate MOVE 36772507
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Player, Wall, Crate
+ Crate_U
+ Crate_D
+ Crate_L
+ Crate_R
+CanMove
+
+======
+RULES
+======
+
+(For making maps easily: uncomment out the next few lines + press action to discard all boundaries and recreate them)
+
+( [ action player ] [ Crate_connection ] -> [ action player ] [ ] )
+( up [ action player ] [ Crate | Crate ] -> [ action player ] [ Crate Crate_u | Crate Crate_d ] )
+( right [ action player ] [ Crate | Crate ] -> [ action player ] [ Crate Crate_r | Crate Crate_l ] )
+
+
+(Step 1: propagate motions forward)
+[ > Pusher | Pushable ] -> [ > Pusher | > Pushable ]
++ up [ moving Crate Crate_U | Crate ] -> [ moving Crate Crate_U | moving Crate ]
++ down [ moving Crate Crate_D | Crate ] -> [ moving Crate Crate_D | moving Crate ]
++ left [ moving Crate Crate_L | Crate ] -> [ moving Crate Crate_L | moving Crate ]
++ right [ moving Crate Crate_R | Crate ] -> [ moving Crate Crate_R | moving Crate ]
+
+
+(Step 1: If a crate can't move, we have to back-propagate the can't-move-ness, including possibly through players)
+[ > Solid | wall ] -> [ Solid | wall ]
+
+[ > Solid | stationary Solid ] -> [ Solid | Solid ]
++ up [ moving Crate Crate_U | stationary Crate ] -> [ Crate Crate_U | Crate ]
++ down [ moving Crate Crate_D | stationary Crate ] -> [ Crate Crate_D | Crate ]
++ left [ moving Crate Crate_L | stationary Crate ] -> [ Crate Crate_L | Crate ]
++ right [ moving Crate Crate_R | stationary Crate ] -> [ Crate Crate_R | Crate ]
+
+
+(Step 3: Mark all crates that are still moving as possibly being able to move)
+[ moving Pushable ] -> [ Pushable CanMove ]
+
+(Step 4: redo Step 1, but only through things that are marked as being possibly able to move)
+[ > Pusher | CanMove Pushable ] -> [ > Pusher | CanMove > Pushable ]
++ up [ moving Crate Crate_U | CanMove Crate ] -> [ moving Crate Crate_U | CanMove moving Crate ]
++ down [ moving Crate Crate_D | CanMove Crate ] -> [ moving Crate Crate_D | CanMove moving Crate ]
++ left [ moving Crate Crate_L | CanMove Crate ] -> [ moving Crate Crate_L | CanMove moving Crate ]
++ right [ moving Crate Crate_R | CanMove Crate ] -> [ moving Crate Crate_R | CanMove moving Crate ]
+
+(Step 5: remove all the CanMove tags)
+[ CanMove ] -> [ ]
+
+(Step 6: move connections along with the crates themselves)
+[ moving Crate stationary Crate_connection ] -> [ moving Crate moving Crate_connection ]
+
+
+==============
+WINCONDITIONS
+==============
+
+=======
+LEVELS
+=======
+
+###############
+#..ca.........#
+#.ce....ca....#
+#.t...d1e.....#
+#.w....w......#
+#....d1ap5.dz.#
+#....pw...5.w5#
+#......dz.....#
+#.......t..dz.#
+#..x..cre...w.#
+#..w..w...5...#
+#.............#
+###############
+
+
+title MC Escher's Equestrian Armageddon
+author Anna Clarke
+homepage www.puzzlescript.net
+again_interval 0.2
+
+========
+OBJECTS
+========
+
+Background
+BLACK DARKBLUE
+11111
+01111
+11101
+11111
+10111
+
+
+Target
+DarkBlue
+.....
+.000.
+.0.0.
+.000.
+.....
+
+Wall
+BROWN DARKBROWN
+00010
+11111
+01000
+11111
+00010
+
+Steps1
+BROWN DARKBROWN GREEN
+....0
+...11
+..000
+.1111
+00010
+
+Steps2
+BROWN DARKBROWN GREEN
+0....
+11...
+010..
+1111.
+00010
+
+
+Steps3
+BROWN DARKBROWN GREEN
+00010
+.1111
+..000
+...11
+....0
+
+Steps4
+BROWN DARKBROWN GREEN
+00010
+1111.
+010..
+11...
+0....
+
+Player1
+Black Orange White Blue
+.000.
+.111.
+22222
+.333.
+.3.3.
+
+Player2
+Black Orange White Blue
+..2..
+01233
+0123.
+01233
+..2..
+
+Player3
+Black Orange White Blue
+..2..
+33210
+.3210
+33210
+..2..
+
+Player4
+Black Orange White Blue
+.3.3.
+.333.
+22222
+.111.
+.000.
+
+Horse
+Orange Brown
+...0.
+...00
+0110.
+0000.
+0..0.
+
+Blood
+Red
+.....
+.....
+.....
+.....
+00000
+
+Crate
+Orange Yellow
+00000
+0...0
+0...0
+0...0
+00000
+
+
+=======
+LEGEND
+=======
+
+. = Background
+B = Blood
+# = Wall
+1 = Steps1
+2 = Steps2
+3 = Steps3
+4 = Steps4
+Steps = Steps1 or Steps2 or Steps3 or Steps4
+
+P = Player1
+Q = Player2
+
+Player = Player1 or Player2 or Player3 or Player4
+
+H = Horse
+
+Animated = Player or Horse
+* = Crate
+@ = Crate and Target
+O = Target
+
+Solid = Wall or Steps or Horse or Player
+
+=======
+SOUNDS
+=======
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Blood
+Target
+Player1, Player2, Player3, Player4, Wall, Crate, Steps, Horse
+
+======
+RULES
+======
+
+
+[ > Player1 ] -> [> Player1] again
+DOWN [ Player1 | No Solid ] -> [ | Player1 ] again
+
+[ > Player2 ] -> [> Player2] again
+right [ Player2 | No Solid ] -> [ | Player2 ] again
+
+[ > Player3 ] -> [> Player3] again
+left [ Player3 | No Solid ] -> [ | Player3 ] again
+
+[ > Player4 ] -> [> Player4] again
+up [ Player4 | No Solid ] -> [ | Player4 ] again
+
+right [ right  Player1 | Steps1 ] -> [ up Player2 | Steps1 ] again
+left [ left  Player1 | Steps2 ] -> [ up Player3 | Steps2 ] again
+
+down [ down  Player2 | Steps1 ] -> [ left Player1 | Steps1  ] again
+up [ up Player2 | Steps3 ] -> [ left Player4 | Steps3 ] again
+
+down [ down  Player3 | Steps2 ] -> [ right Player1 | Steps2  ] again
+up [ up Player3 | Steps4 ] -> [ right Player4 | Steps4 ] again
+
+left [ left Player4 | Steps4 ] -> [ down Player3 | Steps4 ] again
+right [ right Player4 | Steps3 ] -> [down Player2 | Steps3 ] again
+
+[ > Horse ] -> [> Horse] again
+DOWN [ Horse | No Solid ] -> [ | Horse ] again
+
+[ Action Player | Horse ] -> [  Action Player | Blood  ]
+
+==============
+WINCONDITIONS
+==============
+
+No Horse
+
+=======
+LEVELS
+=======
+#################
+#.....######....#
+#.....######....#
+#.P.............#
+####.........H..#
+#################
+
+#######
+#4...3#
+#.....#
+#....Q#
+#.....#
+#.....#
+#2.H.1#
+#######
+
+
+####################
+#4..3..3###4......3#
+#.......3#4........#
+#...H....#.....1...#
+#...P.........1#...#
+#2.1#2.H1##..1##.H.#
+####################
+
+
+###########################################
+#4........................3#
+#..........................#
+#.................####.....#
+#2P..............H####2....#
+#########################..#
+######4.....................#
+######.......................#
+######........................#
+######.........................#
+######.........................#
+######.....##..................#
+######2.H..##2.............2..1#
+###################........#####
+###################........4..3#
+###################............#
+#4.............................#
+#.................#............#
+#2......H........##H......H..1##
+##########################################
+
+
+title A single rigid body
+author increpare
+homepage www.puzzlescript.net
+
+========
+OBJECTS
+========
+
+Background
+brown
+
+Target
+YELLOW
+
+Player
+PINK
+
+BigBlock
+darkblue
+
+Wall
+darkbrown
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Player
+* = BigBlock
+@ = BigBlock and Target
+O = Target
+
+=========
+SOUNDS
+=========
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Target
+Player, Wall, BigBlock
+
+======
+RULES
+======
+
+rigid [ >  Player | BigBlock ] -> [  >  Player | > BigBlock  ]
++ rigid [ moving BigBlock | BigBlock ] -> [ moving BigBlock | moving BigBlock ]
+
+==============
+WINCONDITIONS
+==============
+
+=======
+LEVELS
+=======
+
+...............
+..........#....
+...............
+..#............
+.....***.......
+.....*.....#...
+..P..**#.......
+.....*.........
+...............
+..#............
+.........#.....
+...............
+...............
+
+
+
+title One player, unlimited rigidbodies
+author increpare
+homepage www.increpare.com
+
+(
+
+This is a sample of 
+
+- Unlimited rigid bodies
+- 1 Player (should be extendable)
+
+It's made as an example for the extended rigid body tutorial here:
+
+https://www.puzzlescript.net/Documentation/rigidbodies.html
+
+)
+
+========
+OBJECTS
+========
+
+Background
+green
+
+Wall
+BROWN DARKBROWN
+00010
+11111
+01000
+11111
+00010
+
+Player
+Black Orange White Blue
+.000.
+.111.
+22222
+.333.
+.3.3.
+
+ Crate
+Yellow orange
+00000
+01110
+01110
+01110
+00000
+
+
+(The directional overlays bellow establish connections between crates)
+
+ Crate_U
+orange
+.000.
+.....
+.....
+.....
+.....
+
+ Crate_D
+orange
+.....
+.....
+.....
+.....
+.000.
+
+ Crate_L
+orange
+.....
+0....
+0....
+0....
+.....
+
+ Crate_R
+orange
+.....
+....0
+....0
+....0
+.....
+
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Player
+
+w = Crate and Crate_U
+x = Crate and Crate_D
+a = Crate and Crate_L
+d = Crate and Crate_R
+
+e = Crate and Crate_U and Crate_L
+z = Crate and Crate_D and Crate_L
+q = Crate and Crate_U and Crate_R
+c = Crate and Crate_D and Crate_R
+
+r = Crate and Crate_L and Crate_R
+t = Crate and Crate_D and Crate_U
+
+1 = Crate and Crate_D and Crate_L and Crate_R
+2 = Crate and Crate_U and Crate_L and Crate_R
+3 = Crate and Crate_U and Crate_D and Crate_L
+4 = Crate and Crate_U and Crate_D and Crate_R
+
+0 = Crate and Crate_U and Crate_D and Crate_L and Crate_R
+
+5 = Crate
+
+ Crate_Connection = Crate_U or Crate_D or Crate_L or Crate_R
+
+Pusher = Player or Crate
+Pushable = Crate or Crate_connection
+
+=======
+SOUNDS
+=======
+
+ Crate MOVE 36772507
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Player, Wall, Crate
+ Crate_U
+ Crate_D
+ Crate_L
+ Crate_R
+
+======
+RULES
+======
+
+(For making maps easily: uncomment out the next few lines + press action to discard all boundaries and recreate them)
+
+( [ action player ] [ Crate_connection ] -> [ action player ] [ ] )
+( up [ action player ] [ Crate | Crate ] -> [ action player ] [ Crate Crate_u | Crate Crate_d ] )
+( right [ action player ] [ Crate | Crate ] -> [ action player ] [ Crate Crate_r | Crate Crate_l ] )
+
+(Propagate movements within and between extended bodies)
+[ > Pusher | Pushable ] -> [ > Pusher | > Pushable ]
++ up [ moving Crate Crate_U | Crate ] -> [ moving Crate Crate_U | moving Crate ]
++ down [ moving Crate Crate_D | Crate ] -> [ moving Crate Crate_D | moving Crate ]
++ left [ moving Crate Crate_L | Crate ] -> [ moving Crate Crate_L | moving Crate ]
++ right [ moving Crate Crate_R | Crate ] -> [ moving Crate Crate_R | moving Crate ]
+
+(Move connections along with the crates themselves)
+[ moving Crate stationary Crate_connection ] -> [ moving Crate moving Crate_connection ]
+
+(If any crate can't move, cancel the turn. This works because there's only one player.)
+[ > Crate | wall ] -> cancel
+
+==============
+WINCONDITIONS
+==============
+
+=======
+LEVELS
+=======
+
+###############
+#.............#
+#..ca...ca.dz.#
+#.ce..d1e...w.#
+#.t....w......#
+#.w.d1a..5.5..#
+#....w....5...#
+#......dz.....#
+#...p...t..dz.#
+#..x..cre...w.#
+#..w..w...5...#
+#.............#
+###############
+
+title The closet and the castle
+author HeskHwis and Holly Hatter
+homepage heskhwis.tumblr.com
+background_color white
+text_color black
+
+flickscreen 8x8
+
+noundo
+norestart
+
+========
+OBJECTS
+========
+Background
+white
+
+Wallv
+black
+.000.
+.000.
+.000.
+.000.
+.000.
+
+Wallh
+black
+.....
+00000
+00000
+00000
+.....
+
+Wallchl
+black
+.....
+.0000
+.0000
+.0000
+.000.
+
+Wallchr
+black
+.....
+0000.
+0000.
+0000.
+.000.
+
+Wallcdl
+black
+.000.
+.0000
+.0000
+.0000
+.....
+
+Wallcdr
+black
+.000.
+0000.
+0000.
+0000.
+.....
+
+Wallcdi
+black
+.000.
+0000.
+0000.
+0000.
+.....
+
+Walltd
+black
+.....
+00000
+00000
+00000
+.000.
+
+Wallth
+black
+.000.
+00000
+00000
+00000
+.....
+
+Walltr
+black
+.000.
+.0000
+.0000
+.0000
+.000.
+
+Walltl
+black
+.000.
+0000.
+0000.
+0000.
+.000.
+
+Wallendhl
+black
+.....
+.0000
+.0000
+.0000
+.....
+
+Wallendhr
+black
+.....
+0000.
+0000.
+0000.
+.....
+
+Wallendv
+black
+.000.
+.000.
+.000.
+.000.
+.....
+
+Wallwhite
+white
+
+
+Player
+black
+..0..
+00000
+.000.
+.000.
+.0.0.
+
+Pan
+black
+.....
+00000
+..000
+..000
+.....
+
+Cap
+black
+.....
+000..
+000..
+00000
+.....
+
+Bottle
+black
+..0..
+..0..
+.000.
+.000.
+.000.
+
+Sign
+black
+.000.
+.000.
+.000.
+..0..
+..0..
+
+Pot
+black
+00000
+.000.
+.000.
+.000.
+.000.
+
+Hat
+black
+.000.
+.000.
+.000.
+.000.
+00000
+
+Shirt
+black
+00.00
+.0.0.
+.000.
+.000.
+.000.
+
+Trousers
+black
+.000.
+.000.
+.000.
+.0.0.
+00.00
+
+Glass
+black
+.000.
+.000.
+.000.
+..0..
+.000.
+
+Flask
+black
+.000.
+..0..
+.000.
+.000.
+.000.
+
+Sink
+black
+.00..
+..0..
+..0..
+00000
+.000.
+
+Umbrella
+black
+.000.
+00000
+..0..
+..0..
+..00.
+
+Pants
+black
+.....
+00000
+0...0
+0.0.0
+00000
+
+Chest
+black
+.....
+00000
+0.0.0
+0...0
+00000
+
+TV
+black
+00000
+0...0
+0...0
+00000
+.000.
+
+Bagage
+black
+.000.
+00000
+0...0
+0...0
+00000
+
+Table
+black
+00000
+00000
+..0..
+.0.0.
+0...0
+
+Radio
+black
+0...0
+.0.0.
+..0..
+00000
+00000
+
+Closet
+black
+00000
+000.0
+000.0
+00000
+0.0.0
+
+Castle
+black
+0.0.0
+00000
+0.000
+0.000
+00000
+
+Plug
+black
+.....
+.0.0.
+00000
+00000
+.000.
+
+Car
+black
+.....
+.000.
+00000
+00000
+.0.0.
+
+=======
+LEGEND
+=======
+
+. = Background
+& = Wallv
+" = Wallh
+§ = Wallchl
+è = Wallchr
+! = Wallcdl
+ç = Wallcdr
+à = Wallcdi
+é = Walltd
+' = Walltr
+; = Wallth
+? = Walltl
+: = Wallendhl
++ = Wallendhr
+/ = Wallendv
+- = Wallwhite
+P = Player
+0 = Pan
+1 = Bottle
+2 = Pot
+3 = Shirt
+4 = Glass
+5 = Sink
+6 = Pants
+7 = TV
+8 = Table
+9 = Closet
+° = Plug
+
+Wall = Wallv or Wallh or Wallchl or Wallchr or Wallcdl or Wallcdr or Wallcdi or Wallwhite or Walltd or Wallth or Walltr or Walltl or Wallendhl or Wallendhr or Wallendv
+
+=======
+SOUNDS
+=======
+
+sfx1 93735300
+sfx2 41048100
+sfx3 72273500
+sfx4 42872102
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Wall, Player, Pan, Cap, Bottle, Sign, Pot, Hat, Shirt, Trousers, Glass, Flask, Sink, Umbrella, Pants, Chest, TV, Bagage, Table, Radio, Closet, Castle, Plug, Car
+
+======
+RULES
+======
+
+[ > Player | Pan ] -> [ Player | Cap ] sfx1
+[ Action Player | Pan ] -> [ Action Player | Pan ] sfx3 message She should begin to cook if she wants to have a supper.
+[ > Player | Cap ] -> [ Player | Pan ] sfx2
+[ Action Player | Cap ] -> [ Action Player | Cap ] sfx3 message It isn't very important to take a cap when yo are going to England, but it's always good to be provident.
+
+[ > Player | Bottle ] -> [ Player | Sign ] sfx1
+[ Action Player | Bottle ] -> [ Action Player | Bottle ] sfx3 message It is empty. Luckily she has two other bottles like this one in her basement.
+[ > Player | Sign ] -> [ Player | Bottle ] sfx2
+[ Action Player | Sign ] -> [ Action Player | Sign ] sfx3 message "London 512 miles" reads the sign.
+
+[ > Player | Pot ] -> [ Player | Hat ] sfx1
+[ Action Player | Pot ] -> [ Action Player | Pot ] sfx3 message She didn't take care of the flower and now, it's dead.
+[ > Player | Hat ] -> [ Player | Pot ] sfx2
+[ Action Player | Hat ] -> [ Action Player | Hat ] sfx3 message In London, everyone is a gentleman.
+
+[ > Player | Shirt ] -> [ Player | Trousers ] sfx1
+[ Action Player | Shirt ] -> [ Action Player | Shirt ] sfx3 message It isn't very clean, but nobody cares, it's just a black T-shirt.
+[ > Player | Trousers ] -> [ Player | Shirt ] sfx2
+[ Action Player | Trousers ] -> [ Action Player | Trousers ] sfx3 message Better take an appropriate outfit when you go exploring the Stonehenge.
+
+[ > Player | Glass ] -> [ Player | Flask ] sfx1
+[ Action Player | Glass ] -> [ Action Player | Glass ] sfx3 message At least she drinks in beautiful glasses.
+[ > Player | Flask ] -> [ Player | Glass ] sfx2
+[ Action Player | Flask ] -> [ Action Player | Flask ] sfx3 message She read about ancient flasks of amber-colored whisky in a magazine last week.
+
+[ > Player | Sink ] -> [ Player | Umbrella ] sfx1
+[ Action Player | Sink ] -> [ Action Player | Sink ] sfx3 message The sink is clogged up and filled with dirty water.
+[ > Player | Umbrella ] -> [ Player | Sink ] sfx2
+[ Action Player | Umbrella ] -> [ Action Player | Umbrella ] sfx3 message Well, it's said to be very rainy in Great Britain...
+
+[ > Player | Pants ] -> [ Player | Chest ] sfx1
+[ Action Player | Pants ] -> [ Action Player | Pants ] sfx3 message Just some pants.
+[ > Player | Chest ] -> [ Player | Pants ] sfx2
+[ Action Player | Chest ] -> [ Action Player | Chest ] sfx3 message There would be treasures in Glenanore and Slieve Anore, in Ireland... She HAS to go, find something wonderful and become rich.
+
+[ > Player | TV ] -> [ Player | Bagage ] sfx1
+[ Action Player | TV ] -> [ Action Player | TV ] sfx3 message There is nothing worth watching on the TV for now.
+[ > Player | Bagage ] -> [ Player | TV ] sfx2
+[ Action Player | Bagage ] -> [ Action Player | Bagage ] sfx3 message It's decided : one day, she will pack her suitcase and go away from this town.
+
+[ > Player | Table ] -> [ Player | Radio ] sfx1
+[ Action Player | Table ] -> [ Action Player | Table ] sfx3 message She bought this table at a flea market. It was in a bar before.
+[ > Player | Radio ] -> [ Player | Table ] sfx2
+[ Action Player | Radio ] -> [ Action Player | Radio ] sfx3 message She likes to listen to foreign songs. She has many CDs of celtic traditional music.
+
+[ > Player | Closet ] -> [ Player | Castle ] sfx1
+[ Action Player | Closet ] -> [ Action Player | Closet ] sfx3 message There are some books, a box of pills and a teddy bear in here.
+[ > Player | Castle ] -> [ Player | Closet ] sfx2
+[ Action Player | Castle ] -> [ Action Player | Castle ] sfx3 message Her dreams are filled with scottish castles and medieval towers.
+
+[ > Player | Plug ] -> [ Player | Car ] sfx1
+[ Action Player | Plug ] -> [ Action Player | Plug ] sfx3 message What is the point in putting a plug outside, anyways ?
+[ > Player | Car ] -> [ Player | Plug ] sfx2
+[ Action Player | Car ] -> sfx4 win
+
+==============
+WINCONDITIONS
+==============
+
+=======
+LEVELS
+=======
+
+
+§""""""è§""""""è.------.
+&...7..!ç41....&§"""""è.
+&..............!ç....3&.
+&......§è...8......6..&.
+&......&&......§è.....&.
+&...p..&&......&'"""é"ç.
+&9.....&&......&&...&--.
+!""""""ç!"è.§""ç&..5&-..
+:""""""è§"ç.!"""ç..0&-..
+.......&&...........&-..
+.......&&......§""""ç-..
+......./!"+.:""ç------..
+............2...-.......
+................-.......
+................-.......
+.........°......-.......
+
+message Enough talking !
+message She drives away to the airport and flies to Great Britain.
+message Castles, umbrellas, celtic music and pants... Here we are !
+message THE END
+
+title Lime Rick
+author Tommi Tuovinen
+homepage http://www.kissmaj7.com/
+
+(
+
+Ported with the very gracious permission of Tommi Touvinen
+
+The first ten levels of a neato game - you can play the full version here
+
+http://www.kongregate.com/games/KissMaj7/lime-rick
+
+The full version includes some mechanics that aren't covered in the levels here, but they are supported.
+
+)
+
+========
+OBJECTS
+========
+
+Background
+black
+
+Exit
+red
+.000.
+00000
+00000
+00000
+.000.
+
+Apple
+blue
+.000.
+00000
+00000
+00000
+.000.
+
+PlayerBodyH
+green
+.000.
+00000
+0...0
+00000
+.000.
+
+PlayerBodyV
+green
+.000.
+00.00
+00.00
+00.00
+.000.
+
+Crate
+orange
+00000
+0...0
+0...0
+0...0
+00000
+
+PlayerHead1
+lightgreen
+.000.
+0.0.0
+00000
+00000
+.000.
+
+PlayerHead2
+yellow
+.000.
+0.0.0
+00000
+00000
+.000.
+
+PlayerHead3
+orange
+.000.
+0.0.0
+00000
+00000
+.000.
+
+PlayerHead4
+red
+.000.
+0.0.0
+00000
+00000
+.000.
+
+Wall
+brown
+
+=======
+LEGEND
+=======
+
+Player = PlayerHead1 or PlayerHead2 or PlayerHead3 or PlayerHead4
+Obstacle = PlayerBodyH or PlayerBodyV or Wall or Crate or Player
+PlayerBody = PlayerBodyH or PlayerBodyV
+. = Background
+P = PlayerHead1
+# = Wall
+E = Exit
+A = Apple
+C = Crate
+
+=========
+SOUNDS
+=========
+
+sfx0 3295707 (player jump)
+sfx1 3538707 (player jump to max)
+sfx2 42451307 (player move horizontally)
+endlevel 96434300
+startgame 49875902
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Exit, Apple
+PlayerBody
+Player, Wall, Crate
+
+======
+RULES
+======
+
+(this game handles all the movement stuff itself - it removes all movements before the movement phase has a chance to tick at all)
+
+UP [ UP PlayerHead4 ] -> [ PlayerHead4 ] 
+UP [ UP PlayerHead3 | No Obstacle ] -> [ PlayerBodyV | PlayerHead4 ] sfx1
+UP [ UP PlayerHead2 | No Obstacle ] -> [ PlayerBodyV | PlayerHead3 ] sfx0
+UP [ UP PlayerHead1 | No Obstacle ] -> [ PlayerBodyV | PlayerHead2 ] sfx0
+
+horizontal [ > Player | Crate | No Obstacle ] -> [ PlayerBodyH | PlayerHead1 | Crate ] sfx2
+
+horizontal [ > Player | No Obstacle ] -> [ PlayerBodyH | PlayerHead1 ] sfx2
+
+[ Player Apple ] [ PlayerBody ] -> [ Player Apple ] [ ] 
+[ Player Apple ] -> [ Player ] 
+
+[ > Player ] -> [ Player ] 
+
+DOWN [ Player | No Obstacle ] -> [ PlayerBodyV | PlayerHead1 ] 
+DOWN [ Crate | No Obstacle ] -> [ | Crate ] 
+
+==============
+WINCONDITIONS
+==============
+
+some player on exit
+
+=======
+LEVELS
+=======
+
+message level 1 of 10
+
+###################
+#.................#
+#.................#
+#............#....#
+#............#....#
+#.......#...##....#
+#..P....#...##..E.#
+###################
+###################
+..#...#...#...#...#
+#...#...#...#...#..
+###################
+###################
+###################
+###################
+
+message level 2 of 10
+
+###################
+#.................#
+#.................#
+#.................#
+#..P............E.#
+#####.........#####
+#####.............#
+#####.............#
+#####.............#
+#####.............#
+#####.....#########
+#####.............#
+#####.............#
+#####.............#
+###################
+###################
+###################
+
+message level 3 of 10
+
+###################
+#........#........#
+#........#........#
+###.............###
+#.................#
+#.....P.....E.....#
+#....###...###....#
+#..######.######..#
+#.......#.#.......#
+#.......###.......#
+###.............###
+#.................#
+#.................#
+######.......######
+###################
+
+message level 4 of 10
+
+###################
+#..#...........#..#
+#..#.....E.....#..#
+#..#....###....#..#
+#..#...........#..#
+#..#...........#..#
+#..#...........#..#
+#..#...........#..#
+#..#...........#..#
+#..#...........#..#
+#..#...........#..#
+#..#...........#..#
+#..#...........#..#
+#..#.....P.....#..#
+###################
+
+message level 5 of 10
+
+###################
+#.................#
+#.................#
+#.................#
+#...C........C....#
+#..###......###...#
+#.................#
+#...P........E....#
+#########.##.#.####
+###################
+#.................#
+#.................#
+#.................#
+###################
+
+message level 6 of 10
+
+###################
+#..#.#....#..#....#
+#..#.#.E..#..######
+#########.#..#....#
+#....#..#.####....#
+#....#..#....######
+#########....#.#..#
+#....#..#....#.#..#
+#########.#########
+#....#....#..#....#
+######....#..#....#
+#.#..#....#########
+#.#..####.#..#..#.#
+#.#..#..#P#..#..#.#
+###################
+
+message level 7 of 10
+
+###################
+#.................#
+#...............C.#
+#............####.#
+#.................#
+#.......#...#.#...#
+#..P....#...#.#E..#
+#.###############.#
+#.###############.#
+#.#...#...#...#...#
+#...#...#...#...#.#
+###################
+#.................#
+#.................#
+###################
+
+message level 8 of 10
+
+###################
+#.................#
+#......C...C......#
+#.....###.###.....#
+#.................#
+#......C...C......#
+#.....###.###.....#
+#.................#
+#..E...C...C...P..#
+#.#######.#######.#
+#.##...##.##...##.#
+#.##.#.##.##.#.##.#
+#.##.#.#####.#.##.#
+#.................#
+###################
+
+message level 9 of 10
+
+###################
+#.................#
+#...C.............#
+#...C.............#
+#...C.............#
+#...CCC...........#
+#...CCC.C.........#
+#..CCCC.CC.......E#
+#..CCCC.CC.......C#
+#..CCCCCCC.....C.C#
+#..CCCCCCC...C.C.C#
+#.CCCCCCCCC..C.C.C#
+#.CCCCCCCCC..C.C.C#
+#PCCCCCCCCCCCC.CCC#
+###################
+
+message level 10 of 10
+
+###################
+#.................#
+#.................#
+#.................#
+#.................#
+#.E..........C....#
+####.##.....###...#
+#######.....###...#
+#.................#
+#.................#
+#...P.............#
+#..#############..#
+###################
+#.................#
+###################
+
+message congratulations!
+
+
+USER PROMPT:
+Output the code for a complete PuzzleScript game.  First, reason about your task and determine the best plan of action. Then, write your code. Return your code in full, inside a ```plaintext code block.

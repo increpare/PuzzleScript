@@ -664,22 +664,25 @@ const nGens = 20;
 async function evolve() {
   // Create an initial population of 10 games
   pop = [];
-  for (i = 0; i < (popSize*2); i++) {
-    saveDir = `evo-${seed}/gen0/game${i}`;
+  gen = 0
+  for (indIdx = 0; indIdx < (popSize*2); indIdx++) {
+    saveDir = `evo-${seed}/gen${gen}/game${indIdx}`;
     game_i = await genGame('init', [], saveDir, seed, fewshot=true, cot=true, fromIdea=false, idea='');
     pop.push(game_i);
   }
-  for (gen = 0; gen < nGens; gen++) {
-    // Sort the population by fitness
-    pop.sort((a, b) => a.fitness - b.fitness);
+  for (gen = 1; gen < nGens; gen++) {
+    // Sort the population by fitness, in descending order
+    pop = pop.sort((a, b) => b.fitness - a.fitness);
+    meanFitness = pop.reduce((acc, game) => acc + game.fitness, 0) / popSize;
+    console.log(`Generation ${gen}. Mean fitness: ${meanFitness}`);
     // Select the top half of the population as parents
     ancestors = pop.slice(0, popSize);
     // Get mean fitness of elites
     eliteFitness = ancestors.reduce((acc, game) => acc + game.fitness, 0) / popSize;
-    console.log(`Generation ${gen}. Elite fitness: ${eliteFitness}`);
+    console.log(`Generation ${gen}. Mean elite fitness: ${eliteFitness}`);
     // Generate the next generation
     newPop = [];
-    for (i = 0; i < popSize; i++) {
+    for (indIdx = 0; indIdx < popSize; indIdx++) {
       doCrossOver = Math.random() < 0.5;
       if (doCrossOver) {
         genMode = 'crossover';
@@ -694,10 +697,10 @@ async function evolve() {
         parents = [ancestors[Math.floor(Math.random() * popSize)]];
       }
       // console.log(`Parents: ${parents}. genMode: ${genMode}`);
-      saveDir = `evo-${seed}/gen${gen}/game${i}`;
+      saveDir = `evo-${seed}/gen${gen}/game${indIdx}`;
       newPop.push(await genGame('mutate', parents, saveDir, seed, fewshot=fewshot, cot=cot));
     }
-    pop = newPop;
+    pop = pop + newPop;
   }
 }
 

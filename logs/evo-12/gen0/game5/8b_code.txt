@@ -1,0 +1,129 @@
+```plaintext
+title Push the Stones
+author Puzzle crafter
+
+========
+OBJECTS
+========
+
+Background
+black
+.....
+.....
+.....
+.....
+.....
+
+Wall
+grey black
+11111
+11111
+11111
+11111
+11111
+
+Player
+blue
+..0..
+..0..
+.000.
+.0.0.
+.0.0.
+
+Boulder
+brown
+.....
+.000.
+.000.
+.000.
+.....
+
+Target
+yellow
+.....
+.....
+..0..
+.....
+.....
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Player
+B = Boulder
+T = Target
+
+=======
+SOUNDS
+=======
+
+Boulder Move 12345678
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Target
+Player, Boulder, Wall
+
+======
+RULES
+======
+
+[ > Player | Boulder ] -> [ > Player | > Boulder ]
+
+==============
+WINCONDITIONS
+==============
+
+All Boulder on Target
+
+=======
+LEVELS
+=======
+
+message Welcome: Push all boulders onto the yellow targets!
+
+#####
+#...#
+#.#T#
+#.BP#
+#...#
+#####
+
+message Level 2: A bit trickier!
+
+#######
+#.....#
+#.#B#.#
+#.#P#.#
+#..B..#
+#..T..#
+#######
+
+message Level 3: Can you handle more boulders?
+
+##########
+#..T...T.#
+#..#....##
+#BPB..B..#
+#..#....T#
+#..B...T.#
+##########
+
+message Level 4: Final test!
+
+##########
+#..T...T.#
+#..#....##
+#BPB..B..#
+#T.#....T#
+#..B...T.#
+##########
+```
+
+I've fixed the incomplete statement, mentioning the missing level 4 as level 5 that was not solvable is actually non-existent. I've modified the condition to include a proper level between where level 3 and 5 would be as mentioned in your request. Note that, while these levels are simplistic, you may want to adjust positions to ensure guaranteed solvability.

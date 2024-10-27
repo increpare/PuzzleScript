@@ -1,0 +1,120 @@
+```plaintext
+title Push the Stones
+author Puzzle crafter
+
+========
+OBJECTS
+========
+
+Background
+black
+.....
+.....
+.....
+.....
+.....
+
+Wall
+grey black
+11111
+11111
+11111
+11111
+11111
+
+Player
+blue
+..0..
+..0..
+.000.
+.0.0.
+.0.0.
+
+Boulder
+brown
+.....
+.000.
+.000.
+.000.
+.....
+
+Target
+yellow
+.....
+.....
+..0..
+.....
+.....
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Player
+B = Boulder
+T = Target
+
+=======
+SOUNDS
+=======
+
+Boulder Move 12345678
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Target
+Player, Boulder, Wall
+
+======
+RULES
+======
+
+[ > Player | Boulder ] -> [ > Player | > Boulder ]
+
+==============
+WINCONDITIONS
+==============
+
+All Boulder on Target
+
+=======
+LEVELS
+=======
+
+message Welcome: Push all boulders onto the yellow targets!
+
+#####
+#...#
+#.#T#
+#.BP#
+#...#
+#####
+
+message Level 2: A bit trickier!
+
+#######
+#.....#
+#.#B#.#
+#.#T#.#
+#..P..#
+#######
+
+message Level 3: Can you handle more boulders?
+
+#########
+#T...B..#
+#.#.....#
+#.#B.B..#
+#.P.....#
+#.......#
+#########
+```
+
+Changes made:
+- Removed `[ Player | Target | Boulder ] -> [ Player | Target | > Boulder ]` rule since it's unnecessary and can interfere, possibly causing unsolvable configurations.
+- Corrected formatting issues by ensuring there are no extraneous rules.

@@ -1,0 +1,128 @@
+SYSTEM PROMPT:
+You are a game designer, familiar with the PuzzleScript game description language. Here are some example games, for inspiration (do not reproduce these games exactly):
+
+USER PROMPT:
+The following PuzzleScript game code:
+```plaintext
+title Complex Maze Runner
+author AI
+
+========
+OBJECTS
+========
+
+Background
+black
+
+Player
+yellow
+
+Wall
+grey
+
+Key
+blue
+
+Exit
+green
+
+LockedDoor
+red
+
+Switch
+orange
+
+Enemy
+white
+
+======
+LEGEND
+======
+
+. = Background
+P = Player
+# = Wall
+K = Key
+E = Exit
+D = LockedDoor
+S = Switch
+X = Enemy
+  = Background
+
+=======
+SOUNDS
+=======
+
+Key DESTROY 54076508
+Switch MOVE 21034506
+Enemy CANTMOVE 15067308
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Switch
+Key
+Exit
+Player, Enemy
+LockedDoor, Wall
+
+======
+RULES
+======
+
+[ > Player | Key ] -> [ Player | Background ] sfx0
+[ Player | Exit ] -> WIN
+[ > Player | Switch ] -> [ Player | Background ] sfx1
+[ Enemy | Player ] -> MESSAGE "Caught by an enemy!" RESTART sfx2
+
+(late rules for opening doors)
+late [ Switch | LockedDoor ] -> [ Switch | Background ]
+
+(enemy movement patterns)
+[ > Enemy | no Player | no Wall ] -> [ > Enemy | no Wall ]
+
+==============
+WINCONDITIONS
+==============
+
+All Key on Background
+Some Player on Exit
+
+========
+LEVELS
+========
+
+###########
+#.......#E#
+#.#D#######
+#.#K.....S#
+#.#.#######
+#..XS#X.#P#
+#.#.....#K#
+#.#X#.#.#X#
+#.#.#.#.#D#
+#...#K...S#
+###########
+
+###########
+#.......#E#
+#.#D#####..
+#.#K...S.#.
+####.#.P.#.
+#.#.#####.#
+S.#...#.#K#
+#X#.#.#.#.#
+#.#.#.#.#D#
+#...X.##..#
+###########
+
+
+```
+produced the following console output:
+=================================
+line 44 : Only comments should go after a bunch of equals signs ('===') on a line.
+line 78 : In a rule, each pattern to match on the left must have a corresponding pattern on the right of equal length (number of cells).
+Errors detected during compilation; the game may not work correctly.
+Return a repaired version of the code that addresses these errors. First, reason about your task and determine the best plan of action. Then, write your code.  Return your code in full, inside a ```plaintext code block.

@@ -1,0 +1,133 @@
+To create a variation on the "Maze Runner" game with added complexity, I'll introduce a few new features:
+
+1. **Locked Doors and Switches**: Introduce locked doors that can be opened by switches. The player must find and activate these switches to progress through the maze.
+2. **Multiple Keys**: Require the player to collect multiple keys to open various locked exits.
+3. **Enemies**: Add enemies that move within the maze. The player needs to avoid these enemies to reach the exit safely.
+
+With these elements, players will need to strategize their movements and decisions more carefully to complete the game. Here's the code implementation:
+
+```plaintext
+title Complex Maze Runner
+author AI
+
+========
+OBJECTS
+========
+
+Background
+black
+
+Player
+yellow
+
+Wall
+grey
+
+Key
+blue
+
+Exit
+green
+
+LockedDoor
+red
+
+Switch
+orange
+
+Enemy
+white
+
+======
+LEGEND
+======
+
+. = Background
+P = Player
+# = Wall
+K = Key
+E = Exit
+D = LockedDoor
+S = Switch
+X = Enemy
+
+=======
+SOUNDS
+=======
+
+Key DESTROY 54076508
+Switch ACTIVATE 21034506
+Enemy ATTACK 15067308
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Switch
+Key
+Exit
+Player, Enemy
+LockedDoor, Wall
+
+======
+RULES
+======
+
+[ > Player | Key ] -> [ Player | Background ] sfx0
+[ Player | Exit ] -> WIN
+[ > Player | Switch ] -> [ Player | Background ] sfx1
+[ Enemy | Player ] -> MESSAGE "Caught by an enemy!" RESTART sfx2
+
+(late rules for opening doors)
+late [ Switch | LockedDoor ] -> [ Switch | Background ]
+
+(enemy movement patterns)
+Up [ Enemy | No Player No Wall] -> [ | Enemy ]
+Right [ Enemy | No Player No Wall] -> [ | Enemy ]
+Down [ Enemy | No Player No Wall] -> [ | Enemy ]
+Left [ Enemy | No Player No Wall] -> [ | Enemy ]
+
+====================
+WINCONDITIONS
+====================
+
+All Key on Background
+Some Player on Exit
+
+========
+LEVELS
+========
+
+###########
+#.......#E#
+#.D#######.#
+#.K.....S#.#
+#.#######.#.#
+#..XS#X.#P.#
+#.#.....#K.#
+#.#X#.#.#X.#
+#.#.#.#.#D.#
+#...#K....S#
+###########
+
+###########
+#.......#E#
+#.#.#######.#
+#.#K...S.#.#
+XXXX.#.P.#.#
+#.#.#####.##
+S.#...#.#K.#
+#X#.#.#.#.#
+#.#.#.#.#.D#
+#...X.##..#
+#######.###
+```
+
+**Explanation**:
+- **LockedDoor (red)**: A series of doors blocking paths, which can be opened by stepping on switches (orange).
+- **Switch (orange)**: Acts as a trigger to remove LockedDoors.
+- **Enemy (white)**: Moves in a fixed pattern and catches the player if they step into the same space.
+- The game now requires the player to collect keys, avoid enemies, activate switches to open doors, and then reach the exit.
+
+Note: The movement and rules for enemies in this version are basic. For increased complexity, further logic can be added to make enemy movement patterns more sophisticated, adapt the appearance and position of objects to challenge the player, and fine-tune balancing for a more engaging experience.

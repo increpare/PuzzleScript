@@ -1,0 +1,135 @@
+The errors in the given code can be resolved by addressing the following issues:
+
+1. **Line 44 Error**: Generally, a commented text should not follow a separator line (`=======`). Nowhere in PuzzleScript documentation, after separators in `COLLISIONLAYERS`, should comments be present.
+
+2. **Line 78 Error**: This error suggests that there's a mismatch in the rule pattern, where the left and right sides of the rule pattern are not of the same length. Specifically, the rule `[ > Enemy | No Player | No Wall ] -> [ Enemy | > Enemy ]` should have mirror counterparts in length and structure on both sides.
+
+Let us rectify these issues one by one in the code:
+
+1. **Remove any comments next to a bunch of equals signs:** Ensure there are no comments after separator lines.
+2. **Correct the enemy movement pattern rule:** Supplement or rephrase the rule so that entities on the right replicate every dynamic of the left side pattern.
+
+Now, here's the corrected code:
+
+```plaintext
+title Complex Maze Runner
+author AI
+
+========
+OBJECTS
+========
+
+Background
+black
+
+Player
+yellow
+
+Wall
+grey
+
+Key
+blue
+
+Exit
+green
+
+LockedDoor
+red
+
+Switch
+orange
+
+Enemy
+white
+
+======
+LEGEND
+======
+
+. = Background
+P = Player
+# = Wall
+K = Key
+E = Exit
+D = LockedDoor
+S = Switch
+X = Enemy
+  = Background
+
+=======
+SOUNDS
+=======
+
+Key DESTROY 54076508
+Switch MOVE 21034506
+Enemy CANTMOVE 15067308
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Switch
+Key
+Exit
+Player, Enemy
+LockedDoor, Wall
+
+======
+RULES
+======
+
+[ > Player | Key ] -> [ Player | Background ] sfx0
+[ Player | Exit ] -> WIN
+[ > Player | Switch ] -> [ Player | Background ] sfx1
+[ Enemy | Player ] -> MESSAGE "Caught by an enemy!" RESTART sfx2
+
+(late rules for opening doors)
+late [ Switch | LockedDoor ] -> [ Switch | Background ]
+
+(enemy movement patterns)
+[ > Enemy | No Player | No Wall ] -> [ > Enemy | Enemy ]
+
+====================
+WINCONDITIONS
+====================
+
+All Key on Background
+Some Player on Exit
+
+========
+LEVELS
+========
+
+###########
+#.......#E#
+#.#D#######
+#.#K.....S#
+#.#.#######
+#..XS#X.#P#
+#.#.....#K#
+#.#X#.#.#X#
+#.#.#.#.#D#
+#...#K...S#
+###########
+
+###########
+#.......#E#
+#.#D#####..
+#.#K...S.#.
+####.#.P.#.
+#.#.#####.#
+S.#...#.#K#
+#X#.#.#.#.#
+#.#.#.#.#D#
+#...X.##..#
+###########
+```
+
+**Correction Explanation:**
+
+- Corrected the pattern length consistency for enemy movement rules by ensuring a mirror counterpart layout.
+- Ensured no comments are placed next to separator lines within `COLLISIONLAYERS`.
+  
+These modifications should resolve the errors reported during compilation.

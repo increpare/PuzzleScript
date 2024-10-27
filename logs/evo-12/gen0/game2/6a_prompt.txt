@@ -1,0 +1,2035 @@
+SYSTEM PROMPT:
+You are a game designer, familiar with the PuzzleScript game description language. Here are some example games, for inspiration (do not reproduce these games exactly):
+
+title Zen Puzzle Garden
+author lexaloffle
+homepage www.lexaloffle.com
+
+(
+
+A replication, with some really bad levels, of the rather superior Zen Puzzle Garden.  Made with permission of the unfailingly lovely Joseph White.
+
+http://www.lexaloffle.com/zen.htm
+
+)
+
+========
+OBJECTS
+========
+
+Background
+orange brown
+00100
+00000
+00010
+10000
+00000
+
+Player
+white black
+.0.0.
+01010
+00000
+.000.
+11.11
+
+Rock
+grey darkgrey yellow
+21002
+11000
+11000
+11000
+11101
+
+UnbrushedSand
+yellow orange
+00000
+01000
+00000
+00010
+00000
+
+HBrushedSand
+yellow orange
+00000
+01011
+00000
+11010
+00000
+
+VBrushedSand
+yellow orange
+01000
+01010
+00000
+01010
+00010
+
+=======
+LEGEND
+=======
+
+BrushedSand = HBrushedSand or VBrushedSand
+Sand = UnbrushedSand or BrushedSand
+Obstacle = BrushedSand or Rock
+; = Background
+O = Rock
+. = UnbrushedSand
+P = Player
+
+=========
+SOUNDS
+=========
+
+closemessage 52854909
+startgame 64192309
+endlevel 16398509
+endgame 62100709
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Sand
+Player, Rock
+
+======
+RULES
+======
+
+(The h and v sand effects are cosmetic - how could this be done in a single line if there was only one type of brushed sand?)
+
+horizontal [ UnbrushedSand > Player ] -> [ HBrushedSand > Player ] 
+vertical [ UnbrushedSand > Player ] -> [ VBrushedSand > Player ] 
+
+late [ Player BrushedSand ] -> cancel
+
+==============
+WINCONDITIONS
+==============
+
+no UnbrushedSand
+
+=======
+LEVELS
+=======
+
+message level 1 of 5
+
+;;;;;;;;;;;;
+;;;;;;;;;;;;
+;;;;;;;;;;;;
+;;;......;;;
+;;;......;;;
+;;;......;;;
+;P;..OO..;;;
+;;;......;;;
+;;;......;;;
+;;;;;;;;;;;;
+;;;;;;;;;;;;
+;;;;;;;;;;;;
+
+message level 2 of 5
+
+;;;;;;;;;;;;
+;;;;;;;;;;;;
+;;;;;;;;;;;;
+;;;......;;;
+;;;....O.;;;
+;;;......;;;
+;P;..O...;;;
+;;;......;;;
+;;;......;;;
+;;;;;;;;;;;;
+;;;;;;;;;;;;
+;;;;;;;;;;;;
+
+message level 3 of 5
+
+;;;;;;;;;;;;
+;;;;;;;;;;;;
+;;;;;;;;;;;;
+;;;......;;;
+;;;...O..;;;
+;;;......;;;
+;P;.O....;;;
+;;;....O.;;;
+;;;......;;;
+;;;;;;;;;;;;
+;;;;;;;;;;;;
+;;;;;;;;;;;;
+
+message level 4 of 5
+
+;;;;;;;;;;;;
+;;;;;;;;;;;;
+;;;;;;;;;;;;
+;;;..OO..;;;
+;;;O....O;;;
+;P;..OO..;;;
+;;;O....O;;;
+;;;..OO..;;;
+;;;;;;;;;;;;
+;;;;;;;;;;;;
+;;;;;;;;;;;;
+
+message level 5 of 5
+
+;;;;;;;;;;;;
+;;;;;;;;;;;;
+;;;;;;;;;;;;
+;;;O.....;;;
+;;;..O.O.;;;
+;;;O...O.;;;
+;P;..O...;;;
+;;;O...O.;;;
+;;;..O...;;;
+;;;;;;;;;;;;
+;;;;;;;;;;;;
+;;;;;;;;;;;;
+
+message congratulations!
+
+
+title Microban
+author David Skinner
+homepage www.sneezingtiger.com/sokoban/levels/microbanText.html
+
+(My favourite set of sokoban levels - here're the first ten of the Microban set.
+
+I tried contacting this guy, but he seems to have vanished from the net. The levels are in lots of places online, so I'm just chancing my arm by including them.  BUT BE WARNED.)
+
+========
+OBJECTS
+========
+
+Background
+lightgreen green
+11111
+01111
+11101
+11111
+10111
+
+Target
+darkblue
+.....
+.000.
+.0.0.
+.000.
+.....
+
+Wall
+brown darkbrown
+00010
+11111
+01000
+11111
+00010
+
+Player
+black orange white blue
+.000.
+.111.
+22222
+.333.
+.3.3.
+
+Crate
+orange
+00000
+0...0
+0...0
+0...0
+00000
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Player
+* = Crate
+@ = Crate and Target
+O = Target
+
+=======
+SOUNDS
+=======
+
+Crate MOVE 36772507
+endlevel 83744503
+startgame 92244503
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Target
+Player, Wall, Crate
+
+======
+RULES
+======
+
+[ > Player | Crate ] -> [ > Player | > Crate ] 
+
+==============
+WINCONDITIONS
+==============
+
+all Target on Crate
+
+=======
+LEVELS
+=======
+
+message level 1 of 10
+
+####..
+#.O#..
+#..###
+#@P..#
+#..*.#
+#..###
+####..
+
+message level 2 of 10
+
+######
+#....#
+#.#P.#
+#.*@.#
+#.O@.#
+#....#
+######
+
+message level 3 of 10
+
+..####...
+###..####
+#.....*.#
+#.#..#*.#
+#.O.O#P.#
+#########
+
+message level 4 of 10
+
+########
+#......#
+#.O@@*P#
+#......#
+#####..#
+....####
+
+message level 5 of 10
+
+.#######
+.#.....#
+.#.O*O.#
+##.*P*.#
+#..O*O.#
+#......#
+########
+
+message level 6 of 10
+
+######.#####
+#....###...#
+#.**.....#P#
+#.*.#OOO...#
+#...########
+#####.......
+
+message level 7 of 10
+
+#######
+#.....#
+#.O*O.#
+#.*O*.#
+#.O*O.#
+#.*O*.#
+#..P..#
+#######
+
+message level 8 of 10
+
+..######
+..#.OOP#
+..#.**.#
+..##.###
+...#.#..
+...#.#..
+####.#..
+#....##.
+#.#...#.
+#...#.#.
+###...#.
+..#####.
+
+message level 9 of 10
+
+#####.
+#O..##
+#P**.#
+##...#
+.##..#
+..##O#
+...###
+
+message level 10 of 10
+
+......#####
+......#O..#
+......#O#.#
+#######O#.#
+#.P.*.*.*.#
+#.#.#.#.###
+#.......#..
+#########..
+
+message congratulations!
+
+
+title Cake Monsters
+author Matt Rix
+homepage www.magicule.com
+color_palette whitingjp
+text_color #FF5588
+background_color #050A0A
+noaction
+youtube Z6ih1aKeETk (tycho!)
+
+========
+OBJECTS
+========
+
+(-----------------------)
+(----MONSTER COLOURS----)
+(-----------------------)
+
+RedMon
+#D8144D #B00F3F BLACK WHITE
+00000
+020.3
+000..
+00000
+1..1.
+
+YellowMon
+#F3F333 #C7C829 BLACK WHITE
+00000
+020.3
+000..
+00000
+1..1.
+
+BlueMon
+#0366E3 #0A52BB BLACK WHITE
+00000
+020.3
+000..
+00000
+1..1.
+
+PurpleMon
+#9E14E2 #800FBA BLACK WHITE
+00000
+020.3
+000..
+00000
+1..1.
+
+OrangeMon
+#E68A25 #BB711E BLACK WHITE
+00000
+020.3
+000..
+00000
+1..1.
+
+GreenMon
+#1CED55 #15C346 BLACK WHITE
+00000
+020.3
+000..
+00000
+1..1.
+
+TrashMon
+#7C6953 #6D5239 BLACK WHITE
+00000
+020.3
+000..
+00000
+1..1.
+
+
+(------------------------)
+(------CAKE COLOURS------)
+(------------------------)
+
+RedCake
+#D8144D #B00F3F
+.000.
+00000
+00000
+10001
+.111.
+
+YellowCake
+#F3F333 #C7C829
+.000.
+00000
+00000
+10001
+.111.
+
+BlueCake
+#0366E3 #0A52BB
+.000.
+00000
+00000
+10001
+.111.
+
+
+PurpleCake
+#9E14E2 #800FBA
+.000.
+00000
+00000
+10001
+.111.
+
+OrangeCake
+#E68A25 #BB711E
+.000.
+00000
+00000
+10001
+.111.
+
+GreenCake
+#1CED55 #15C346
+.000.
+00000
+00000
+10001
+.111.
+
+TrashCake
+#7C6953 #6D5239
+.000.
+00000
+00000
+10001
+.111.
+
+(-----------------------)
+(------OTHER STUFF------)
+(-----------------------)
+
+Destroyer
+#001111 #223333 #384949
+.222.
+20202
+12021
+10101
+.111.
+
+Background
+#152020 #192525
+01101
+10110
+01101
+11010
+01010
+
+
+Wall
+#334444 #384949 #445555 #475959 #4A6B6B
+34443
+23332
+12221
+01110
+00000
+
+Blackness
+#050A0A
+
+
+=======
+LEGEND
+=======
+
+
+. = Background
+_ = Blackness
+# = Wall
+X = Destroyer
+
+R = RedMon
+Y = YellowMon
+B = BlueMon
+P = PurpleMon
+O = OrangeMon
+G = GreenMon
+T = TrashMon
+
+Monster = RedMon or YellowMon or BlueMon or PurpleMon or OrangeMon or GreenMon or TrashMon
+Player = Monster
+
+PrimaryMon = RedMon or YellowMon or BlueMon
+SecondaryMon = PurpleMon or OrangeMon or GreenMon
+
+(each cake char is the next letter in the alphabet after the monster char)
+(except for orange, sadly)
+S = RedCake
+Z = YellowCake
+C = BlueCake
+Q = PurpleCake
+A = OrangeCake
+H = GreenCake
+U = TrashCake
+
+Cake = RedCake or YellowCake or BlueCake or PurpleCake or OrangeCake or GreenCake or TrashCake
+
+=======
+SOUNDS
+=======
+
+sfx0 8478107 (move)
+sfx1 18590508 (eat other monster)
+sfx2 61437309 (eat cake)
+sfx3 89161102 (monster destroyed)
+startlevel 563108
+endlevel 76028308
+undo 82948709
+restart 22851101
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Blackness, Wall, Destroyer
+Monster,Cake
+
+
+
+======
+RULES
+======
+
+(------------------------)
+(----MONSTER MOVEMENT----)
+(------------------------)
+
+(movement sound)
+[ > Monster ] -> [ > Monster ] sfx0
+
+(stop the monster if it hits a wall)
+[ > Monster | Wall ] -> [ Monster | Wall]
+
+(if monster hits a destroyer, remove the monster)
+[ > Monster | Destroyer ] -> [ | Destroyer] sfx3
+
+(monster eats cakes of the same color)
+[ > RedMon | RedCake] -> [ | RedMon] sfx2
+[ > BlueMon | BlueCake] -> [ | BlueMon] sfx2
+[ > YellowMon | YellowCake] -> [ | YellowMon] sfx2
+[ > PurpleMon | PurpleCake] -> [ | PurpleMon] sfx2
+[ > OrangeMon | OrangeCake] -> [ | OrangeMon] sfx2
+[ > GreenMon | GreenCake] -> [ | GreenMon] sfx2
+[ > TrashMon | TrashCake] -> [ | TrashMon] sfx2
+
+(stop the monster if it hits a cake of a different color)
+(note: this is necessary to make sure the monster is marked as stationary)
+[ > RedMon | Cake no RedCake] -> [ RedMon | Cake no RedCake]
+[ > BlueMon | Cake no BlueCake] -> [ BlueMon | Cake no BlueCake]
+[ > YellowMon | Cake no YellowCake] -> [ YellowMon | Cake no YellowCake]
+[ > PurpleMon | Cake no PurpleCake] -> [ PurpleMon | Cake no PurpleCake]
+[ > OrangeMon | Cake no OrangeCake] -> [ OrangeMon | Cake no OrangeCake]
+[ > GreenMon | Cake no GreenCake] -> [ GreenMon | Cake no GreenCake]
+[ > TrashMon | Cake no TrashCake] -> [ TrashMon | Cake no TrashCake]
+
+(--------------------------)
+(---MONSTER COLOR MIXING---)
+(--------------------------)
+
+(red+blue = purple)
+[ > BlueMon | stationary RedMon] -> [ | PurpleMon] sfx1
+[ > RedMon | stationary BlueMon] -> [ | PurpleMon] sfx1
+
+(red+yellow = orange)
+[ > RedMon | stationary YellowMon] -> [ | OrangeMon] sfx1
+[ > YellowMon | stationary RedMon] -> [ | OrangeMon] sfx1
+
+(blue+yellow = green)
+[ > BlueMon | stationary YellowMon] -> [ | GreenMon] sfx1
+[ > YellowMon | stationary BlueMon] -> [ | GreenMon] sfx1
+
+(primary color + secondary color = brown aka trash)
+[ > PrimaryMon | stationary SecondaryMon] -> [ | TrashMon] sfx1
+[ > SecondaryMon | stationary PrimaryMon] -> [ | TrashMon] sfx1
+
+(green+orange = trash)
+[ > GreenMon | stationary OrangeMon] -> [ | TrashMon] sfx1
+[ > OrangeMon | stationary GreenMon] -> [ | TrashMon] sfx1
+
+(purple+orange = trash)
+[ > PurpleMon | stationary OrangeMon] -> [ | TrashMon] sfx1
+[ > OrangeMon | stationary PurpleMon] -> [ | TrashMon] sfx1
+
+(green+purple = trash)
+[ > GreenMon | stationary PurpleMon] -> [ | TrashMon] sfx1
+[ > PurpleMon | stationary GreenMon] -> [ | TrashMon] sfx1
+
+(trash+anything = trash)
+[ > TrashMon | stationary Monster] -> [ | TrashMon] sfx1
+[ > Monster | stationary TrashMon] -> [ | TrashMon] sfx1
+
+(monster + monster of the same color = monster of the same color)
+[ > Monster | stationary Monster] -> [ | Monster] sfx1
+
+
+==============
+WINCONDITIONS
+==============
+
+No Cake
+
+
+=======
+LEVELS
+=======
+
+
+message WELCOME TO CAKE MONSTERS!
+message MONSTERS LIKE EATING CAKE
+
+_______
+#######
+#.....#
+#.r...#
+#...s.#
+#.....#
+#######
+_______
+(diff 0)
+
+message YOU MOVE ALL OF THE MONSTERS
+
+######_######
+#....#_#z...#
+#.r..#_#....#
+#..s.#_#....#
+#....#_#...y#
+######_######
+_____________
+######_######
+#.c..#_#....#
+#....#_#...h#
+#..b.#_#g...#
+#....#_#....#
+######_######
+(diff 0)
+
+message MONSTERS ONLY LIKE THEIR OWN CAKE
+message REMEMBER: Z TO UNDO, R TO RESTART
+_________
+#########
+#r.z....#
+#######.#
+#.......#
+#.sy....#
+#########
+_________
+(diff 1)
+
+message MONSTERS MIX WHEN THEY GET EATEN
+_________
+#########
+#.......#
+#.#####.#
+#.r.q.b.#
+#.#####.#
+#.......#
+#########
+_________
+(diff 1)
+
+
+message BROWN + ANY COLOR = BROWN
+__________
+##########
+#........#
+#.rybpog.#
+#........#
+#........#
+#.szcqah.#
+#........#
+#........#
+#.uuuuuu.#
+#........#
+##########
+__________
+(diff 1)
+
+
+message HAVE FUN!
+############
+#y........c#
+#b........z#
+#####..#####
+____#..#____
+____#..#____
+____#hh#____
+____####____
+(diff 1)
+
+(----------------------------)
+
+
+_____
+#####
+#RCQ#
+#.CS#
+#Q.B#
+#####
+_____
+(diff 2)
+
+
+
+
+______
+######
+#R...#
+#B...#
+#Q.QQ#
+#CSCS#
+######
+______
+(diff 2)
+
+_______
+#######
+#R.H.B#
+#.....#
+#.....#
+#Y.Q.B#
+#######
+_______
+(diff 2)
+
+_______
+#######
+#CCHCB#
+#.....#
+#YZHZZ#
+#######
+_______
+(diff 2)
+
+
+______
+######
+#R..B#
+#S.C.#
+#.A.C#
+#Y.C.#
+######
+______
+(diff 2)
+
+
+message PIECE OF CAKE, RIGHT?
+
+
+#########
+#ccccccc#
+#bcccccc#
+######cc#
+_____#ch#
+######zz#
+#yzzzzzz#
+#yzzzzzz#
+######zz#
+_____#sa#
+######ss#
+#rssssss#
+#sssssss#
+#########
+(diff 3, fun)
+
+_______
+#######
+#R.B.Y#
+#Y.B.R#
+#R.B.Y#
+#Y.B.R#
+#AHQHA#
+#######
+_______
+(diff 3)
+
+
+_______
+#######
+#AR.BA#
+#.#.#.#
+#H...H#
+##.A.##
+#HY#YH#
+#######
+_______
+(diff 3)
+
+
+
+message X TILES DESTROY MONSTERS
+_________
+_###_###_
+#...#...#
+#.q.x.p.#
+#...x...#
+_#..x..#_
+__#...#__
+___#.#___
+____#____
+_________
+(diff 0, destroyerz)
+
+
+_____
+#####
+#RAR#
+#RXY#
+#YAY#
+#####
+_____
+(diff 1, destroyerz)
+
+______
+######
+#BHHB#
+#YXXY#
+#YXXY#
+#BHHB#
+######
+______
+(diff 1 destroyerz)
+
+_______
+#######
+#RQXQR#
+#SQXQS#
+#BQXQB#
+#######
+_______
+(diff 1 destroyerz)
+
+___________
+#####_#####
+#sss#_#qqq#
+#sss###qqq#
+#x.......x#
+##x.rxb.x##
+#x.......x#
+#qqq###ccc#
+#qqq#_#ccc#
+#####_#####
+___________
+(diff 2 destroyerz)
+
+___________
+###########
+#...#q#.b.#
+#sxr#.#xx.#
+#.x.....c.#
+###########
+___________
+(diff 3 destroyerz)
+
+
+
+message YOU'RE CAKING THIS LOOK EASY!
+
+______
+######
+#RZSZ#
+#YSZS#
+#..SZ#
+#..ZS#
+######
+______
+(diff 3)
+
+
+#######
+#Y#B#Y#
+#.#R#.#
+#.#.#.#
+#.....#
+#.###.#
+#HHAHH#
+#######
+(diff 3, fun!)
+
+
+
+####__####
+#qc####cb#
+#c......c#
+##.####.##
+_#.#xx#.#_
+_#.c.r#.#_
+##.####.##
+#c......c#
+#qc####cq#
+####__####
+(diff 3)
+
+
+
+
+_#########_
+_#rrr.sss#_
+_#.......#_
+_#yyy.zzz#_
+_#.......#_
+##bbb.ccc##
+#.........#
+#.q..a..h.#
+#.........#
+###########
+
+______
+######
+#RA.Y#
+#....#
+#HH..#
+#SBCY#
+######
+______
+(diff 4)
+
+message LET'S CAKE IT TO THE NEXT TIER!
+
+
+#############
+#...#.h.#...#
+#.r.#...#.y.#
+#...c#c#s...#
+###c.....s###
+#..#.#h#.#..#
+#z.h.z.c.s.c#
+#..#.#s#.#..#
+###......z###
+#....#z#z...#
+#.b.#...#.g.#
+#...#.s.#...#
+#############
+(diff 3, easy but fun)
+
+
+_____
+#####
+#B.B#
+#RRY#
+#.Q.#
+#S.S#
+#CHC#
+#####
+_____
+(diff 5 - fun!)
+
+
+______
+######
+#HYBH#
+#YBYB#
+#BBBB#
+#HHHH#
+######
+______
+(diff 4)
+
+
+
+
+______
+######
+#BR.Y#
+#..A.#
+#SCZA#
+#CSZA#
+######
+______
+(diff 4)
+
+
+
+
+______
+######
+#CZG.#
+#ZCR##
+###..#
+#SHY##
+#HSB.#
+######
+______
+(diff 5 - very fun!)
+
+
+message YOU'RE GETTING BATTER!
+
+______
+######
+#YYYY#
+#...R#
+#AAAA#
+#ZZZZ#
+######
+______
+(diff 5 - fun but surprisingly hard)
+
+
+_______
+#######
+#Y..YA#
+#.BB.H#
+#R..RQ#
+#Y..YH#
+#######
+_______
+(diff 4)
+
+
+message ICING ON THE CAKE!
+
+______
+######
+#ZBBZ#
+#YBYB#
+#....#
+#ZHCZ#
+######
+______
+(diff 5)
+
+
+
+
+_______
+#######
+#A.S.A#
+#.Z.Z.#
+#SYRYS#
+#.ZYZ.#
+#A.S.A#
+#######
+_______
+(diff 5 - not too hard)
+
+
+
+message WILL YOU CAKE IT OUT ALIVE?
+______
+######
+#ZZZZ#
+#SSSS#
+#CCCC#
+#YRB.#
+######
+______
+(diff 6 - fun but tricky)
+
+
+
+
+message THE FINAL CHALLENGE!
+message DOUGH YOU HAVE WHAT IT CAKES?
+_____
+#####
+#AYA#
+#...#
+#CBC#
+#SZY#
+#RZS#
+#CBC#
+#...#
+#HOH#
+#####
+_____
+(diff 8 - a pretty tough one)
+
+
+
+message WELL, YOU REALLY TOOK THE CAKE!
+message CONGRATS, YOU WIN! :)
+
+
+
+
+title A single rigid body
+author increpare
+homepage www.puzzlescript.net
+
+========
+OBJECTS
+========
+
+Background
+brown
+
+Target
+YELLOW
+
+Player
+PINK
+
+BigBlock
+darkblue
+
+Wall
+darkbrown
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Player
+* = BigBlock
+@ = BigBlock and Target
+O = Target
+
+=========
+SOUNDS
+=========
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Target
+Player, Wall, BigBlock
+
+======
+RULES
+======
+
+rigid [ >  Player | BigBlock ] -> [  >  Player | > BigBlock  ]
++ rigid [ moving BigBlock | BigBlock ] -> [ moving BigBlock | moving BigBlock ]
+
+==============
+WINCONDITIONS
+==============
+
+=======
+LEVELS
+=======
+
+...............
+..........#....
+...............
+..#............
+.....***.......
+.....*.....#...
+..P..**#.......
+.....*.........
+...............
+..#............
+.........#.....
+...............
+...............
+
+
+
+title Heroes of Sokoban II: Monsters
+author Jonah Ostroff
+text_color yellow
+key_repeat_interval 0.25
+
+========
+OBJECTS
+========
+
+Background
+#989898 #C8C8C8
+00000
+00100
+00000
+00010
+00000
+
+Goal
+Brown Yellow
+.000.
+00000
+00010
+00000
+00000
+
+Wall
+Darkgrey #222222
+01000
+11111
+00010
+00010
+11111
+
+Fighter (Warrior sounds better in-game, but I want different abbreviations for the classes in the editor.)
+#FF4444 Pink DarkBrown
+.000.
+.111.
+00000
+.000.
+.2.2.
+
+Wizard
+#2266FF Pink
+.000.
+.010.
+00000
+.000.
+00000
+
+Thief
+#66DD66 Pink DarkBrown
+.000.
+.010.
+00000
+.0.0.
+.0.0.
+
+Priest
+#FFFFAA Pink
+.000.
+.111.
+00000
+.000.
+00000
+
+SFighter
+#880000 Pink DarkBrown
+.000.
+.111.
+00000
+.000.
+.2.2.
+
+SWizard
+#000088 Pink
+.000.
+.010.
+00000
+.000.
+00000
+
+SThief
+#006600 Pink DarkBrown
+.000.
+.010.
+00000
+.0.0.
+.0.0.
+
+SPriest
+#B8B800 Pink
+.000.
+.111.
+00000
+.000.
+00000
+
+Crate
+Orange #552200
+.111.
+10001
+10001
+10001
+.111.
+
+YellowSwitch
+Yellow Black
+.....
+.111.
+.101.
+.111.
+.....
+
+YellowOpen
+Yellow
+0...0
+.....
+.....
+.....
+0...0
+
+YellowDoor
+Yellow #AA7722
+01010
+10001
+00000
+10001
+01010
+
+PurpleSwitch
+#6611CC Black
+.....
+.111.
+.101.
+.111.
+.....
+
+PurpleDoor
+#6611CC #220088
+01010
+10001
+00000
+10001
+01010
+
+PurpleOpen
+#6611CC
+0...0
+.....
+.....
+.....
+0...0
+
+MonsterDoor
+DarkGrey #222222 Red
+21002
+22122
+20212
+20012
+21112
+
+Warpball
+Blue
+
+ShadowDoor
+Purple
+
+DragonLeft
+Green Red Orange Yellow DarkGreen
+.....
+1100.
+3210.
+1100.
+...4.
+
+DragonRight
+Green Red Orange Yellow DarkGreen
+.....
+.0011
+.0123
+.0011
+.4...
+
+Goblin
+Green DarkBrown DarkGreen
+0.2.0
+00000
+..0..
+.111.
+.1.1.
+
+Dying
+White
+
+Saved
+#D8D800
+..0..
+.000.
+..0..
+..0..
+.....
+
+HasSaved
+Yellow
+.....
+.....
+.....
+.....
+.....
+
+Corpse
+#CCC
+.000.
+.000.
+00000
+.0.0.
+.0.0.
+
+LFireball
+Orange
+
+RFireball
+Orange
+
+DidNotMove
+Purple
+
+=======
+LEGEND
+=======
+
+Dragon = DragonLeft or DragonRight
+Player = Fighter or Wizard or Thief or Priest
+SPlayer = Swizard or Sthief or SFighter or SPriest
+Hero = Player or Splayer
+Healer = Priest or SPriest (Unlike the other heroes, priests must function even when inactive. "Healer" is the generic term for an active or inactive priest.)
+ClosedDoor = PurpleDoor or YellowDoor or MonsterDoor
+OpenDoor = YellowOpen or PurpleOpen
+Switch = PurpleSwitch or YellowSwitch
+Monster = Dragon or Goblin
+Moveable = Crate or SPlayer or Monster
+Static = Wall or ClosedDoor
+Weighing = Crate or Hero or Monster
+Vulnerable = Hero or Monster
+Invulnerable = Crate or Static
+Fireball = LFireball or RFireball
+. = Background
+# = Wall
+F = Fighter
+W = Wizard
+T = Thief
+P = Priest
+1 = SFighter
+2 = SThief
+3 = SWizard
+4 = SPriest
+* = Crate
+G = Goal
+[ = YellowDoor
+] = PurpleDoor
+{ = YellowSwitch
+} = PurpleSwitch
+L = DragonLeft
+R = DragonRight
+O = Goblin
+M = MonsterDoor
+
+=======
+SOUNDS
+=======
+
+Moveable move 82056307
+Sfx0 21221308 (teleport)
+Endlevel 36315908
+Sfx1 66399906 (switch player)
+Sfx2 92172900 (close door)
+Sfx3 15129100 (open door)
+Sfx4 69860105 (saved)
+Sfx5 63194902 (kill enemy)
+Sfx6 81996702 (dying player)
+EndGame 86793500
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Warpball, Dying
+Goal, Switch, OpenDoor, ShadowDoor
+ClosedDoor, Hero, Crate, Wall, Monster, Corpse
+RFireball, Saved, DidNotMove
+LFireball, HasSaved
+
+======
+RULES
+======
+[Saved] [Wall] -> [] [Wall HasSaved] (Remembering whether we saved someone last round by attaching a note to some wall.)
+
+[Corpse] -> Restart
+
+(Adds a DidNotMove to where the player currently is, to cancel moves where they bump into a wall.)
+
+[Player] -> [Player DidNotMove]
+
+[ >  Fighter | Moveable ] -> [  >  Fighter | > Moveable  ]
+[ > Moveable | Moveable ] [ Fighter] -> [ > Moveable | > Moveable ] [ Fighter] (Fighters push.)
+
+[ < Thief | Moveable ] -> [ < Thief | < Moveable ] (Thieves pull.)
+
+[ > Wizard ] -> [ Wizard > Warpball]
+[ > Warpball | no Moveable no Static] -> [ | > Warpball]
+[ > Warpball | Static] [Wizard] -> [ | Static ] [> Wizard]
+[ > Warpball | Moveable ] [Wizard] -> [ | Wizard Sfx0] [Moveable] (Wizards telexport. What they really do is shoot a "warpball", which causes them to move normally if it hits a wall and warp if it hits something they can warp with.)
+
+(The following mess is for changing characters.)
+[ Action Fighter] [SThief] -> [SFighter] [Thief Sfx1]
+[ Action Thief] [SWizard] -> [SThief] [Wizard Sfx1]
+[ Action Wizard] [SPriest] -> [SWizard] [Priest Sfx1]
+[ Action Priest] [SFighter] -> [SPriest] [Fighter Sfx1]
+
+[ Action Fighter] [no SThief] [SWizard] -> [SFighter] [no SThief] [Wizard Sfx1]
+[ Action Thief] [no Swizard] [SPriest] -> [SThief] [no SWizard] [Priest Sfx1]
+[ Action Wizard] [no SPriest] [SFighter] -> [SWizard] [no SPriest] [Fighter Sfx1]
+[ Action Priest] [no SFighter] [SThief] -> [SPriest] [no SFighter] [Thief Sfx1]
+
+[ Action Fighter] [no SThief] [no SWizard] [SPriest] -> [SFighter] [no SThief] [no SWizard] [Priest Sfx1]
+[ Action Thief] [no SWizard] [no SPriest] [SFighter] -> [SThief] [no SWizard] [no SPriest] [Fighter Sfx1]
+[ Action Wizard] [no SPriest] [no SFighter] [SThief] -> [SWizard] [no SPriest] [no SFighter] [Thief Sfx1]
+[ Action Priest] [no SFighter] [no SThief] [SWizard] -> [SPriest] [no SFighter] [no SThief] [Wizard Sfx1]
+
+(Cancels the move if the player is in the same place that they started. Notice that switching characters negates this. Only matters in levels where one dragon has multiple targets.)
+
+Late [Player DidNotMove] -> Cancel
+Late [DidNotMove] -> []
+
+(Now enemies attack.)
+
+Late [DragonLeft] -> [LFireball DragonLeft]
+Late [DragonRight] -> [RFireball DragonRight]
+
+Late RIGHT [RFireball | No Vulnerable no Invulnerable] -> [ | RFireball]
+Late LEFT [LFireball | No Vulnerable no Invulnerable] -> [ | LFireball]
+Late RIGHT [RFireball | Vulnerable] -> [ | Dying Vulnerable]
+Late Right [RFireball | Invulnerable] -> [ | Invulnerable]
+Late Left [LFireball | Vulnerable] -> [ | Dying Vulnerable]
+Late LEFT [LFireball | Invulnerable] -> [ | Invulnerable]
+
+Late [Goblin | Vulnerable] -> [Goblin | Dying Vulnerable]
+
+(Vulnerable objects that are attacked are designated as "Dying", but heroes can be saved by the Priest. Then the stuff that didn't get saved dies.)
+
+Late [Dying Healer] -> [Saved Healer]
+Late [Healer | Dying Hero] -> [Healer | Saved Hero]
+Late [Dying Monster] -> [Sfx5]
+Late [Dying Hero] -> [Corpse Sfx6]
+
+(Doors opening.)
+
+late [Weighing  YellowSwitch] [YellowDoor] -> [Weighing  YellowSwitch] [ShadowDoor]
+late [YellowSwitch no Weighing] [YellowOpen] -> [YellowSwitch] [YellowDoor sfx2]
+late [YellowSwitch no Weighing] [ShadowDoor] -> [YellowSwitch] [YellowDoor]
+late [ShadowDoor] -> [YellowOpen sfx3]
+
+late [Weighing PurpleSwitch] [PurpleDoor] -> [Weighing PurpleSwitch] [ShadowDoor]
+late [PurpleSwitch no Weighing] [PurpleOpen] -> [PurpleSwitch] [PurpleDoor sfx2]
+late [PurpleSwitch no Weighing] [ShadowDoor] -> [PurpleSwitch] [PurpleDoor]
+late [ShadowDoor] -> [PurpleOpen sfx3]
+
+late [MonsterDoor] -> [ShadowDoor]
+late [ShadowDoor] [Monster] -> [MonsterDoor] [Monster]
+late [ShadowDoor] -> [sfx3]
+
+(Looks for a HasSaved on a wall and moves it to the Priest. Then, if someone was saved this turn, plays the sound only if the Priest doesn't have the HasSaved note. Finally, cleans that up.)
+
+late [Wall HasSaved] [Healer] -> [Wall] [Healer HasSaved]
+late [Saved] [Healer no HasSaved] -> [Saved sfx4] [Healer]
+late [HasSaved] -> []
+
+==============
+WINCONDITIONS
+==============
+
+All Hero on Goal
+All Goal on Hero
+
+=======
+LEVELS
+=======
+
+Message Welcome back.
+
+Message [You've played the original, yes?]
+
+Message [If not, this might be confusing.]
+
+#############
+#.......[...#
+#.*.F.{.[.G.#
+#############
+#.......[...#
+#.*.2.{.[.G.#
+#############
+#.......[...#
+#.*.3.{.[.G.#
+#############
+
+Message Watch out for goblins.
+
+#############
+#F.O.......O#
+#...O.......#
+#.......O...#
+#O..........#
+#....O......#
+#O.......O..#
+#.O.....O.G.#
+#############
+
+#############
+###O###O#####
+#W.*****...O#
+#..*****....#
+#####O###O..#
+#O########..#
+#*G...O.O...#
+##..O..O.O..#
+#############
+
+Message Goblins attack each other too.
+
+#############
+#.......#...#
+#...*...#.G.#
+#.F...O.#...#
+#...*...##O##
+#...........#
+#############
+
+Message Dragons breath fire.
+
+###############
+#.............#
+#..T..###.....#
+#.....L.#.....#
+#.......#.....#
+#.............#
+#.....#.......#
+#.....#.R..G..#
+#.....###.....#
+#.............#
+###############
+
+Message Fire hurts enemies.
+
+##############
+#...#....O.RG#
+#.T.#......R.#
+#...#R*L...R.#
+#R*.#...#..R.#
+#...#...#..R.#
+#...O.*.#..R.#
+#.......#....#
+##############
+
+###########
+#3.O.O.O.T#
+#.#########
+#......G.G#
+#.#########
+#R.O.O.O.O#
+###########
+
+Message Think fast!
+
+#############
+#R.O.O.O.O.T#
+###########{#
+###########]#
+#G#3.[.}.G#G#
+#]###########
+#{###########
+#1..O...O..L#
+#############
+
+Message Sorry about that one.
+
+#######
+##G*G##
+##.G.##
+#R...##
+##...##
+##...##
+##...##
+##...L#
+##...##
+##F23##
+#######
+
+Message Kill monsters to open the M wall.
+
+###########
+#L...R#...#
+#.....#...#
+#.....M.G.#
+#.T.*.#...#
+#.....#...#
+###########
+
+#############
+#.......#...#
+#..O.O..#...#
+#R......M.G.#
+#.*.F.*.#...#
+#.......#...#
+#############
+
+#############
+#.......#...#
+#.{.*.{.#...#
+#..W.O..M.G.#
+#.{.*.[.#...#
+#.......#...#
+#############
+
+Message Yellow priest is protected.
+
+###########
+#...#O#O#O#
+#.P.......#
+#...**O**.#
+#********.#
+#R..G.....#
+###########
+
+###########
+#W#######G#
+#.#O#O#O#.#
+#.........#
+#.##O#O##.#
+#4#######G#
+###########
+
+Message Heroes next to a priest are safe.
+
+############
+#...#.O#O###
+#.F.#......#
+#...#.##O..#
+#.4...O#G.G#
+#...#.##.O.#
+############
+
+############
+#.#..T..#4##
+#.#.{.*...L#
+#.#.....#..#
+#G[.*.{...L#
+#.#.....#..#
+#.#.{.*...L#
+#.#.....#G##
+############
+
+###########
+#W...O#...#
+#.....#.G.#
+#..4..M...#
+#.....#.G.#
+#O...O#...#
+###########
+
+###########
+#.T.##O#O##
+#.........#
+#.4.#O#O..#
+########.##
+#G..####.O#
+#G#.O###.##
+###.###O..#
+#O..O#....#
+##...*....#
+###########
+
+###########
+#{*F#.4#.3#
+#{*.#..#..#
+###[#[###.#
+#R[.......#
+####O#.##.#
+######.##.#
+#G.G.G.#O*#
+###########
+
+###########
+#.T.####O##
+#.3......O#
+#.4.###O.##
+#####O##.##
+#.G..*.O.##
+#G.G#O##.##
+###########
+
+###########
+##O#O#O#O##
+#T[.[.[.[.#
+##{#{#{#{.#
+#.........#
+#.3G*G*G4.#
+#.........#
+###########
+
+Message The final challenge.
+
+#############
+#...#O.O#...#
+#.F.#G.G#.2.#
+#...#.O.#...#
+##.###*###.##
+#R*L.....R*L#
+#.#.......#.#
+#R*L.....R*L#
+##.###M###.##
+#...#...#...#
+#.3.#G.G#.4.#
+#...#...#...#
+#############
+
+Message Thanks for playing!
+
+USER PROMPT:
+The following PuzzleScript game code:
+```plaintext
+title Key & Crate Challenge
+author Your Name
+
+========
+OBJECTS
+========
+Background
+DarkGrey LightGrey
+.....
+.....
+.....
+.....
+.....
+
+Player
+Black Orange
+.000.
+.111.
+.111.
+.111.
+.0.0.
+
+Wall
+Brown DarkBrown
+00000
+00000
+00000
+00000
+00000
+
+Crate
+Yellow
+00000
+0...0
+0...0
+0...0
+00000
+
+Goal
+Blue LightBlue
+.....
+..0..
+.000.
+..0..
+.....
+
+Key
+Cyan LightBlue
+.....
+..0..
+.....
+..0..
+.....
+
+Door
+Gray 
+.....
+.000.
+.....
+.000.
+.....
+
+Exit
+Green
+.....
+..0..
+.000.
+..0..
+.....
+
+=======
+LEGEND
+=======
+. = Background
+P = Player
+# = Wall
+C = Crate
+G = Goal
+K = Key
+D = Door
+E = Exit
+
+=======
+SOUNDS
+=======
+
+================
+COLLISIONLAYERS
+================
+Background
+Player, Wall, Crate, Key, Door, Goal, Exit
+
+======
+RULES
+======
+[ > P | C ] -> [ > P | > C ]
+[ C | G ] -> [ G | G ]
+[ C | > G ] -> [ C | > G ]
+
+[> P | K ] -> [ P | Background ] // player collects key
+[ P | D ] -> [ P | Background ]  // door disappears when touched
+[ P | E ] -> WIN 
+
+==============
+WINCONDITIONS
+==============
+All Crate on Goal
+Some Player on Exit
+No Door
+
+=======
+LEVELS
+=======
+
+# Level 1
+##########
+#P......E#
+#.######.#
+#...C...G#
+#.######.#
+#.....K..#
+#.######.#
+#....D...#
+##########
+
+# Level 2
+##########
+#P.....E.#
+#.##.###.#
+#..C..K.G#
+#.##.D##.#
+#........#
+#.######.#
+##########
+
+```
+produced the following console output:
+=================================
+line 48 : Was looking for color for object KEY, got "cyan " instead.
+line 100 : Name "//", referred to in a rule, does not exist.
+line 100 : Name "collects", referred to in a rule, does not exist.
+line 101 : Name "//", referred to in a rule, does not exist.
+line 101 : Name "disappears", referred to in a rule, does not exist.
+line 101 : Name "when", referred to in a rule, does not exist.
+too many errors, aborting compilation
+Errors detected during compilation; the game may not work correctly.
+Return a repaired version of the code that addresses these errors. First, reason about your task and determine the best plan of action. Then, write your code.  Return your code in full, inside a ```plaintext code block.

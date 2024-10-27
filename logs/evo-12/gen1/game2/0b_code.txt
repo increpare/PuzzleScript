@@ -1,0 +1,129 @@
+Creating a more complex variation of the game involves adding new mechanics, objects, or challenges. Here's a plan to enhance the game:
+
+1. **Introduce New Mechanics:**
+   - Add a new object called "LockedExit" that requires a "Key" to unlock.
+   - Incorporate "Moving Platforms" that allow the player to be transported across walls.
+
+2. **Add New Elements:**
+   - Introduce a "Key" object that the player must collect to unlock the "LockedExit".
+   - Additional "Platforms" that move automatically when the player steps on them.
+
+3. **Update Rules:**
+   - Allow moving platforms to carry the player across obstacles.
+   - Unlock the "LockedExit" when the player collects the "Key".
+
+Below is the full code implementing these ideas:
+
+```plaintext
+title Maze Runner Deluxe
+author Your Name
+homepage www.example.com
+
+========
+OBJECTS
+========
+
+Background
+black
+
+Player
+yellow
+
+Wall
+grey
+
+Key
+blue
+
+Exit
+green
+
+LockedExit
+darkgreen
+
+MovingPlatform
+purple
+
+=======
+LEGEND
+=======
+
+. = Background
+P = Player
+# = Wall
+K = Key
+E = Exit
+L = LockedExit
+M = MovingPlatform
+
+=======
+SOUNDS
+=======
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Key
+Exit, LockedExit
+MovingPlatform, Player
+Wall
+
+======
+RULES
+======
+
+[ > Player | Key ] -> [ Player | Background ] (Unlock Sound)
+
+[ Player | Exit ] -> WIN
+
+// Unlock the LockedExit
+[ Player | Key | LockedExit ] -> [ Player | Background | Exit ]
+
+// Make platforms move the player
+[ > Player | MovingPlatform | No Wall ] -> [ > Player | > MovingPlatform | No Wall ]
+
+// Let platforms ignore other platforms while moving
+[ > MovingPlatform | MovingPlatform | No Wall ] -> [ > MovingPlatform | > MovingPlatform | No Wall ]
+
+==============
+WINCONDITIONS
+==============
+
+All Key on Background
+Some Player on Exit
+
+=======
+LEVELS
+=======
+
+###########
+#.......#E#
+#.#######.#
+#.K.....#.#
+#.#.###.#.#
+#.#L#.#.#.#
+#.#.#.#.#.#
+#.#.#.#.#.#
+#...#KP...#
+###########
+
+###################
+#.......#L#......E#
+#.#######.#########
+#.K..M...#.K...M..#
+#.#..###.#.#######.#
+#.#..#.#.#.....#...#
+#.#..#.#######.#.#.#
+#.#....M.......#.#.#
+#.##.#####.#.##.#.#.#
+#...#KP.....#...#.#.#
+#####################
+```
+
+**Notes:**
+- The game now requires the player to collect a key to unlock a locked exit.
+- Moving platforms allow the player to move onto and carry over walls.
+- New rules ensure these elements interact meaningfully within the game.
+- This setup encourages a blend of puzzle-solving and strategic movement across dynamic elements.

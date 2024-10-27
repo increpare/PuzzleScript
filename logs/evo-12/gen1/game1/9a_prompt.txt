@@ -1,0 +1,1508 @@
+SYSTEM PROMPT:
+You are a game designer, familiar with the PuzzleScript game description language. Here are some example games, for inspiration (do not reproduce these games exactly):
+
+title Memories Of Castlemouse
+author Wayne Myers
+homepage www.conniptions.org
+
+text_color lightgreen
+again_interval 0
+youtube CnjtQbU0Gg8
+
+========
+OBJECTS
+========
+
+Background
+Black
+
+Wall
+Brown DarkBrown
+00010
+11111
+01000
+11111
+00010
+
+Floor
+#888855 #885588
+00100
+01110
+11011
+01110
+00100
+
+
+Hole
+Black #222222 Brown
+21112
+10000
+10000
+10000
+10000
+
+Marker
+Red
+00.00
+0...0
+.....
+0...0
+00.00
+
+MMarker
+Purple
+00.00
+0...0
+.....
+0...0
+00.00
+
+CMarker
+Purple
+00.00
+0...0
+.....
+0...0
+00.00
+
+DMarker
+Purple
+00.00
+0...0
+.....
+0...0
+00.00
+
+EMarker
+Purple
+00.00
+0...0
+.....
+0...0
+00.00
+
+Mouse
+LightGrey Black
+.....
+.1.1.
+.000.
+.010.
+..1..
+
+UpMovingMouse
+LightGrey Black
+.....
+.1.1.
+.000.
+.010.
+..1..
+
+LeftMovingMouse
+LightGrey Black
+.....
+.1.1.
+.000.
+.010.
+..1..
+
+RightMovingMouse
+LightGrey Black
+.....
+.1.1.
+.000.
+.010.
+..1..
+
+DownMovingMouse
+LightGrey Black
+.....
+.1.1.
+.000.
+.010.
+..1..
+
+Cat
+White Green Pink Grey
+0...0
+00000
+01010
+30203
+.000.
+
+RightMovingCat
+White Green Pink Grey
+0...0
+00000
+01010
+30203
+.000.
+
+LeftMovingCat
+White Green Pink Grey
+0...0
+00000
+01010
+30203
+.000.
+
+UpMovingCat
+White Green Pink Grey
+0...0
+00000
+01010
+30203
+.000.
+
+DownMovingCat
+White Green Pink Grey
+0...0
+00000
+01010
+30203
+.000.
+
+Dog
+DarkBrown Black
+.0.0.
+01010
+00000
+00100
+01110
+
+UpMovingDog
+DarkBrown Black
+.0.0.
+01010
+00000
+00100
+01110
+
+DownMovingDog
+DarkBrown Black
+.0.0.
+01010
+00000
+00100
+01110
+
+LeftMovingDog
+DarkBrown Black
+.0.0.
+01010
+00000
+00100
+01110
+
+RightMovingDog
+DarkBrown Black
+.0.0.
+01010
+00000
+00100
+01110
+
+Elephant
+LightGrey Black #eeeeee Grey
+.000.
+31300
+32330
+30000
+.0..0
+
+UpMovingElephant
+LightGrey Black #eeeeee Grey
+.000.
+31300
+32330
+30000
+.0..0
+
+DownMovingElephant
+LightGrey Black #eeeeee Grey
+.000.
+31300
+32330
+30000
+.0..0
+
+LeftMovingElephant
+LightGrey Black #eeeeee Grey
+.000.
+31300
+32330
+30000
+.0..0
+
+RightMovingElephant
+LightGrey Black #eeeeee Grey
+.000.
+31300
+32330
+30000
+.0..0
+
+=======
+LEGEND
+=======
+
+X = Background
+. = Floor
+# = Wall
+E = Elephant and Floor and Marker
+D = Dog and Floor and Marker
+C = Cat and Floor and Marker
+M = Mouse and Floor and Marker
+3 = Elephant and Floor
+2 = Dog and Floor
+1 = Cat and Floor
+0 = Mouse and Floor
+H = Hole and Floor
+
+Player = Marker
+
+Obstacle = Wall or Hole
+
+VerticalMovingElephant = UpMovingElephant or DownMovingElephant
+HorizontalMovingElephant = LeftMovingElephant or RightMovingElephant
+MovingElephant = VerticalMovingElephant or HorizontalMovingElephant
+
+VerticalMovingDog = UpMovingDog or DownMovingDog
+HorizontalMovingDog = LeftMovingDog or RightMovingDog
+MovingDog = VerticalMovingDog or HorizontalMovingDog
+
+VerticalMovingCat = UpMovingCat or DownMovingCat
+HorizontalMovingCat = LeftMovingCat or RightMovingCat
+MovingCat = VerticalMovingCat or HorizontalMovingCat
+
+VerticalMovingMouse = UpMovingMouse or DownMovingMouse
+HorizontalMovingMouse = LeftMovingMouse or RightMovingMouse
+MovingMouse = VerticalMovingMouse or HorizontalMovingMouse
+
+MoveMarker = MMarker or CMarker or DMarker or EMarker
+
+=======
+SOUNDS
+=======
+
+SFX0 40739509 (Mouse in hole)
+SFX1 65087301 (Scared mouse)
+SFX2 10901907 (Hit wall)
+SFX3 45415107 (Scared dog)
+SFX4 80636305 (Scared cat)
+SFX5 3673502  (Scared elephant)
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Floor
+Hole
+Mouse, MovingMouse, Cat, MovingCat, Dog, MovingDog, Elephant, MovingElephant, Wall
+Marker, MoveMarker
+
+======
+RULES
+======
+
+(Marker rules)
+[ > Marker Mouse ] -> [ MMarker > Mouse ]
+[ > Marker Cat ] -> [ CMarker > Cat ]
+[ > Marker Dog ] -> [ DMarker > Dog ]
+[ > Marker Elephant ] -> [ EMarker > Elephant ]
+
+startLoop
+
+(Elephant rules)
+[ UP Elephant ] -> [ UP UpMovingElephant ]
+[ DOWN Elephant ] -> [ DOWN DownMovingElephant ]
+[ LEFT Elephant ] -> [ LEFT LeftMovingElephant ]
+[ RIGHT Elephant ] -> [ RIGHT RightMovingElephant ]
+
+[ UpMovingElephant ] -> [ Up UpMovingElephant ] again
+[ LeftMovingElephant ] -> [ Left LeftMovingElephant ] again
+[ RightMovingElephant ] -> [ Right RightMovingElephant ] again
+[ DownMovingElephant ] -> [ Down DownMovingElephant ] again
+
+right [ Elephant | Stationary Dog | No Obstacle ] -> [ Elephant | right Dog | SFX3 ]
+left [ Elephant | Stationary Dog | No Obstacle ] -> [ Elephant | left Dog | SFX3 ]
+up [ Elephant | Stationary Dog | No Obstacle ] -> [ Elephant | up Dog | SFX3 ]
+down [ Elephant | Stationary Dog | No Obstacle ] -> [ Elephant | down Dog | SFX3]
+right [ VerticalMovingElephant | Stationary Dog | No Obstacle ] -> [ VerticalMovingElephant | right Dog | SFX3 ]
+left [ VerticalMovingElephant | Stationary Dog | No Obstacle ] -> [ VerticalMovingElephant | left Dog | SFX3 ]
+up [ HorizontalMovingElephant | Stationary Dog | No Obstacle ] -> [ HorizontalMovingElephant | up Dog | SFX3 ]
+down [ HorizontalMovingElephant | Stationary Dog | No Obstacle ] -> [ HorizontalMovingElephant | down Dog | SFX3]
+
+[ > MovingElephant | Cat | ] -> [ Elephant | Cat | SFX5 ]
+[ > MovingElephant | Mouse ] -> [ Elephant | Mouse ]
+[ > MovingElephant | Dog | Obstacle | ] -> [ Elephant | Dog | Obstacle | SFX3 ]
+[ > MovingElephant | Dog | No Obstacle ] -> [ Elephant | > Dog | SFX3 ]
+[ > MovingElephant | Obstacle | ] -> [ Elephant | Obstacle | SFX2 ]
+
+(Dog rules)
+[ UP Dog ] -> [ UP UpMovingDog ]
+[ DOWN Dog ] -> [ DOWN DownMovingDog ]
+[ LEFT Dog ] -> [ LEFT LeftMovingDog ]
+[ RIGHT Dog ] -> [ RIGHT RightMovingDog ]
+
+[ UpMovingDog ] -> [ Up UpMovingDog ] again
+[ LeftMovingDog ] -> [ Left LeftMovingDog ] again
+[ RightMovingDog ] -> [ Right RightMovingDog ] again
+[ DownMovingDog ] -> [ Down DownMovingDog ] again
+
+right [ Dog | Stationary Cat | No Obstacle ] -> [ Dog | right Cat | SFX4 ]
+left [ Dog | Stationary Cat | No Obstacle ] -> [ Dog | left Cat | SFX4 ]
+up [ Dog | Stationary Cat | No Obstacle ] -> [ Dog | up Cat | SFX4 ]
+down [ Dog | Stationary Cat | No Obstacle ] -> [ Dog | down Cat | SFX4]
+right [ VerticalMovingDog | Stationary Cat | No Obstacle ] -> [ VerticalMovingDog | right Cat | SFX4 ]
+left [ VerticalMovingDog | Stationary Cat | No Obstacle ] -> [ VerticalMovingDog | left Cat | SFX4 ]
+up [ HorizontalMovingDog | Stationary Cat | No Obstacle ] -> [ HorizontalMovingDog | up Cat | SFX4 ]
+down [ HorizontalMovingDog | Stationary Cat | No Obstacle ] -> [ HorizontalMovingDog | down Cat | SFX4]
+
+[ > MovingDog | Mouse | ] -> [ Dog | Mouse | SFX3 ]
+[ > MovingDog | Elephant ] -> [ Dog | Elephant ]
+[ > MovingDog | Cat | Obstacle | ] -> [ Dog | Cat | Obstacle | SFX4 ]
+[ > MovingDog | Cat | No Obstacle ] -> [ Dog | > Cat | SFX4 ]
+[ > MovingDog | Obstacle | ] -> [ Dog | Obstacle | SFX2 ]
+
+(Cat rules)
+[ UP Cat ] -> [ UP UpMovingCat ]
+[ DOWN Cat ] -> [ DOWN DownMovingCat ]
+[ LEFT Cat ] -> [ LEFT LeftMovingCat ]
+[ RIGHT Cat ] -> [ RIGHT RightMovingCat ]
+
+[ UpMovingCat ] -> [ Up UpMovingCat ] again
+[ LeftMovingCat ] -> [ Left LeftMovingCat ] again
+[ RightMovingCat ] -> [ Right RightMovingCat ] again
+[ DownMovingCat ] -> [ Down DownMovingCat ] again
+
+right [ Cat | Stationary Mouse | No Wall ] -> [ Cat | right Mouse | SFX1 ]
+left [ Cat | Stationary Mouse | No Wall ] -> [ Cat | left Mouse | SFX1 ]
+up [ Cat | Stationary Mouse | No Wall ] -> [ Cat | up Mouse | SFX1 ]
+down [ Cat | Stationary Mouse | No Wall ] -> [ Cat | down Mouse | SFX1]
+right [ VerticalMovingCat | Stationary Mouse | No Wall ] -> [ VerticalMovingCat | right Mouse | SFX1 ]
+left [ VerticalMovingCat | Stationary Mouse | No Wall ] -> [ VerticalMovingCat | left Mouse | SFX1 ]
+up [ HorizontalMovingCat | Stationary Mouse | No Wall ] -> [ HorizontalMovingCat | up Mouse | SFX1 ]
+down [ HorizontalMovingCat | Stationary Mouse | No Wall ] -> [ HorizontalMovingCat | down Mouse | SFX1]
+
+[ > MovingCat | Elephant | ] -> [ Cat | Elephant | SFX4 ]
+[ > MovingCat | Dog ] -> [ Cat | Dog ]
+[ > MovingCat | Mouse | Wall | ] -> [ Cat | Mouse | Wall | SFX1 ]
+[ > MovingCat | Mouse | No Wall ] -> [ Cat | > Mouse | SFX1 ]
+[ > MovingCat | Obstacle | ] -> [ Cat | Obstacle | SFX2 ]
+
+(Mouse rules)
+[ UP Mouse ] -> [ UP UpMovingMouse ]
+[ DOWN Mouse ] -> [ DOWN DownMovingMouse ]
+[ LEFT Mouse ] -> [ LEFT LeftMovingMouse ]
+[ RIGHT Mouse ] -> [ RIGHT RightMovingMouse ]
+
+[ UpMovingMouse ] -> [ Up UpMovingMouse ] again
+[ LeftMovingMouse ] -> [ Left LeftMovingMouse ] again
+[ RightMovingMouse ] -> [ Right RightMovingMouse ] again
+[ DownMovingMouse ] -> [ Down DownMovingMouse ] again
+
+right [ Mouse | Stationary Elephant | No Obstacle ] -> [ Mouse | right Elephant | SFX5 ]
+left [ Mouse | Stationary Elephant | No Obstacle ] -> [ Mouse | left Elephant | SFX5 ]
+up [ Mouse | Stationary Elephant | No Obstacle ] -> [ Mouse | up Elephant | SFX5 ]
+down [ Mouse | Stationary Elephant | No Obstacle ] -> [ Mouse | down Elephant | SFX5]
+right [ VerticalMovingMouse | Stationary Elephant | No Obstacle ] -> [ VerticalMovingMouse | right Elephant | SFX5 ]
+left [ VerticalMovingMouse | Stationary Elephant | No Obstacle ] -> [ VerticalMovingMouse | left Elephant | SFX5 ]
+up [ HorizontalMovingMouse | Stationary Elephant | No Obstacle ] -> [ HorizontalMovingMouse | up Elephant | SFX5 ]
+down [ HorizontalMovingMouse | Stationary Elephant | No Obstacle ] -> [ HorizontalMovingMouse | down Elephant | SFX5]
+
+[ > MovingMouse | Dog | ] -> [ Mouse | Dog | SFX1 ]
+[ > MovingMouse | Cat ] -> [ Mouse | Cat ]
+[ > MovingMouse | Elephant | Wall | ] -> [ Mouse | Elephant | Wall | SFX5 ]
+[ > MovingMouse | Elephant | No Obstacle ] -> [ Mouse | > Elephant | SFX5 ]
+[ > MovingMouse | Wall | ] -> [ Mouse | Wall | SFX2 ]
+[ > MovingMouse | Hole | ] -> [ No MovingMouse | Hole | SFX0 ]
+
+endloop
+
+
+(Late marker rules)
+
+late [ Mouse ] [ MMarker ] -> [ Mouse Marker ] []
+late [ Cat ] [ CMarker ] -> [ Cat Marker ] []
+late [ Dog ] [ DMarker ] -> [ Dog Marker ] []
+late [ Elephant ] [ EMarker ] -> [ Elephant Marker ] []
+
+==============
+WINCONDITIONS
+==============
+
+No MovingMouse
+No Mouse
+
+=======
+LEVELS
+=======
+
+Message In 2001 I was very lost.
+
+XXXXXXXXXXXXXXXXXXXXX
+X###################X
+X#...............###X
+X#..#........#...###X
+X#...............###X
+X###...M..#........#X
+X##H..........#....#X
+X###..#.....#......#X
+X#.............#...#X
+X#..#....#.........#X
+X#..............####X
+X###################X
+XXXXXXXXXXXXXXXXXXXXX
+
+Message I was just trying to hide from the world.
+
+XXXXXXXXXXXXXXXXXXXXXXXXXX
+X########################X
+X#...##....###.###....###X
+X#...##....#H#........###X
+X#.M.............#......#X
+X#....##..##.....##.....#X
+X#.....#......##........#X
+X#..##.......###........#X
+X#..##....#.......###...#X
+X#.......##........##...#X
+X#...##..##........##...#X
+X#...##.................#X
+X###.........###.....####X
+X###.........###....#####X
+X########################X
+XXXXXXXXXXXXXXXXXXXXXXXXXX
+
+Message I spent a lot of time playing a game called Castlemouse.
+
+XXXXXXXXXXXXXXXXXXXXX
+X###################X
+X#.................#X
+X#.........#.......#X
+X###...............#X
+X##H.....0.....#...#X
+X###...............#X
+X#.................#X
+X#....#..........###X
+X#.........0.....H##X
+X#C..............###X
+X###################X
+XXXXXXXXXXXXXXXXXXXXX
+
+Message Everything seemed to be slipping away from me.
+
+XXXXXXXXXXXXXXXXXXXXXXXXXX
+X########################X
+X#.......##.###.........#X
+X#......##..#H#.........#X
+X#.................#....#X
+X#..........0...0#......#X
+X###....#...............#X
+X##H..................###X
+X###......0...........H##X
+X#........#.....#.....###X
+X#................#.....#X
+X#......0...............#X
+X#.C.......#H#..........#X
+X#.........###..........#X
+X########################X
+XXXXXXXXXXXXXXXXXXXXXXXXXX
+
+Message The world seemed full of fear.
+
+XXXXXXXXXXXXXXXXXXX
+X#################X
+X#...............#X
+X#.......1#......#X
+X###.............#X
+X##H....0........#X
+X###.............#X
+X#.............###X
+X#.D......0....H##X
+X#.#...........###X
+X#...#...........#X
+X#################X
+XXXXXXXXXXXXXXXXXXX
+
+Message Everything was falling apart for me at once.
+
+XXXXXXXXXXXXXXXXXXXXXXXXXX
+X########################X
+X###..................###X
+X##H.......0.0........H##X
+X###..................###X
+X#......................#X
+X#..#...................#X
+X#.1.........#..........#X
+X#.........0............#X
+X##.........1...........#X
+X#.......D..............#X
+X###..................###X
+X##H.........0........H##X
+X###.......#..........###X
+X########################X
+XXXXXXXXXXXXXXXXXXXXXXXXXX
+
+Message I don't remember that time very well.
+
+XXXXXXXXXXXXXXXXXXX
+X#################X
+X#...............#X
+X#.......1#......#X
+X###.............#X
+X##H....0........#X
+X###.............#X
+X#.............###X
+X#.....2..0....H##X
+X#...#.......E.###X
+X#...#...........#X
+X#################X
+XXXXXXXXXXXXXXXXXXX
+
+Message I don't even remember exactly how Castlemouse went.
+
+XXXXXXXXXXXXXXXXXXXXXXXXXX
+X########################X
+X#....................#.#X
+X#....1..........#......#X
+X#...........0...#...2..#X
+X#......................#X
+X#..........#H#.........#X
+X#..........###.........#X
+X#..........###.........#X
+X#..........#H#.........#X
+X#...........0..........#X
+X#...2...........1......#X
+X#.E...................##X
+X#......................#X
+X########################X
+XXXXXXXXXXXXXXXXXXXXXXXXXX
+
+Message Many things were set in motion at that time.
+
+XXXXXXXXXXXXXXXXXXX
+X#################X
+X#......0.......H#X
+X##..........3..##X
+X#H...0..........#X
+X##..............#X
+X####..1.........#X
+X#............#..#X
+X#...#..###......#X
+X#..D#..#H#......#X
+X#.......0.......#X
+X#..........1....#X
+X#################X
+XXXXXXXXXXXXXXXXXXX
+
+Message Many unexpected chains of events, not all bad.
+
+XXXXXXXXXXXXXXXXXXXXXXXXXX
+X########################X
+X#.....#..............###X
+X#.....0..............H##X
+X#.......3............###X
+X#......................#X
+X###....................#X
+X##H.................0..#X
+X###....................#X
+X#......................#X
+X#.....................C#X
+X#...2.................##X
+X#....#...2............##X
+X#.....................##X
+X########################X
+XXXXXXXXXXXXXXXXXXXXXXXXXX
+
+Message I'm doing a lot better now.
+
+Message Also, Castlemouse is a much better game than this - you should track it down.
+
+Message Thank you for playing.
+
+Message Music: Broken - Fit and the Conniptions (music.conniptions.org)
+
+title Heroes of Sokoban II: Monsters
+author Jonah Ostroff
+text_color yellow
+key_repeat_interval 0.25
+
+========
+OBJECTS
+========
+
+Background
+#989898 #C8C8C8
+00000
+00100
+00000
+00010
+00000
+
+Goal
+Brown Yellow
+.000.
+00000
+00010
+00000
+00000
+
+Wall
+Darkgrey #222222
+01000
+11111
+00010
+00010
+11111
+
+Fighter (Warrior sounds better in-game, but I want different abbreviations for the classes in the editor.)
+#FF4444 Pink DarkBrown
+.000.
+.111.
+00000
+.000.
+.2.2.
+
+Wizard
+#2266FF Pink
+.000.
+.010.
+00000
+.000.
+00000
+
+Thief
+#66DD66 Pink DarkBrown
+.000.
+.010.
+00000
+.0.0.
+.0.0.
+
+Priest
+#FFFFAA Pink
+.000.
+.111.
+00000
+.000.
+00000
+
+SFighter
+#880000 Pink DarkBrown
+.000.
+.111.
+00000
+.000.
+.2.2.
+
+SWizard
+#000088 Pink
+.000.
+.010.
+00000
+.000.
+00000
+
+SThief
+#006600 Pink DarkBrown
+.000.
+.010.
+00000
+.0.0.
+.0.0.
+
+SPriest
+#B8B800 Pink
+.000.
+.111.
+00000
+.000.
+00000
+
+Crate
+Orange #552200
+.111.
+10001
+10001
+10001
+.111.
+
+YellowSwitch
+Yellow Black
+.....
+.111.
+.101.
+.111.
+.....
+
+YellowOpen
+Yellow
+0...0
+.....
+.....
+.....
+0...0
+
+YellowDoor
+Yellow #AA7722
+01010
+10001
+00000
+10001
+01010
+
+PurpleSwitch
+#6611CC Black
+.....
+.111.
+.101.
+.111.
+.....
+
+PurpleDoor
+#6611CC #220088
+01010
+10001
+00000
+10001
+01010
+
+PurpleOpen
+#6611CC
+0...0
+.....
+.....
+.....
+0...0
+
+MonsterDoor
+DarkGrey #222222 Red
+21002
+22122
+20212
+20012
+21112
+
+Warpball
+Blue
+
+ShadowDoor
+Purple
+
+DragonLeft
+Green Red Orange Yellow DarkGreen
+.....
+1100.
+3210.
+1100.
+...4.
+
+DragonRight
+Green Red Orange Yellow DarkGreen
+.....
+.0011
+.0123
+.0011
+.4...
+
+Goblin
+Green DarkBrown DarkGreen
+0.2.0
+00000
+..0..
+.111.
+.1.1.
+
+Dying
+White
+
+Saved
+#D8D800
+..0..
+.000.
+..0..
+..0..
+.....
+
+HasSaved
+Yellow
+.....
+.....
+.....
+.....
+.....
+
+Corpse
+#CCC
+.000.
+.000.
+00000
+.0.0.
+.0.0.
+
+LFireball
+Orange
+
+RFireball
+Orange
+
+DidNotMove
+Purple
+
+=======
+LEGEND
+=======
+
+Dragon = DragonLeft or DragonRight
+Player = Fighter or Wizard or Thief or Priest
+SPlayer = Swizard or Sthief or SFighter or SPriest
+Hero = Player or Splayer
+Healer = Priest or SPriest (Unlike the other heroes, priests must function even when inactive. "Healer" is the generic term for an active or inactive priest.)
+ClosedDoor = PurpleDoor or YellowDoor or MonsterDoor
+OpenDoor = YellowOpen or PurpleOpen
+Switch = PurpleSwitch or YellowSwitch
+Monster = Dragon or Goblin
+Moveable = Crate or SPlayer or Monster
+Static = Wall or ClosedDoor
+Weighing = Crate or Hero or Monster
+Vulnerable = Hero or Monster
+Invulnerable = Crate or Static
+Fireball = LFireball or RFireball
+. = Background
+# = Wall
+F = Fighter
+W = Wizard
+T = Thief
+P = Priest
+1 = SFighter
+2 = SThief
+3 = SWizard
+4 = SPriest
+* = Crate
+G = Goal
+[ = YellowDoor
+] = PurpleDoor
+{ = YellowSwitch
+} = PurpleSwitch
+L = DragonLeft
+R = DragonRight
+O = Goblin
+M = MonsterDoor
+
+=======
+SOUNDS
+=======
+
+Moveable move 82056307
+Sfx0 21221308 (teleport)
+Endlevel 36315908
+Sfx1 66399906 (switch player)
+Sfx2 92172900 (close door)
+Sfx3 15129100 (open door)
+Sfx4 69860105 (saved)
+Sfx5 63194902 (kill enemy)
+Sfx6 81996702 (dying player)
+EndGame 86793500
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Warpball, Dying
+Goal, Switch, OpenDoor, ShadowDoor
+ClosedDoor, Hero, Crate, Wall, Monster, Corpse
+RFireball, Saved, DidNotMove
+LFireball, HasSaved
+
+======
+RULES
+======
+[Saved] [Wall] -> [] [Wall HasSaved] (Remembering whether we saved someone last round by attaching a note to some wall.)
+
+[Corpse] -> Restart
+
+(Adds a DidNotMove to where the player currently is, to cancel moves where they bump into a wall.)
+
+[Player] -> [Player DidNotMove]
+
+[ >  Fighter | Moveable ] -> [  >  Fighter | > Moveable  ]
+[ > Moveable | Moveable ] [ Fighter] -> [ > Moveable | > Moveable ] [ Fighter] (Fighters push.)
+
+[ < Thief | Moveable ] -> [ < Thief | < Moveable ] (Thieves pull.)
+
+[ > Wizard ] -> [ Wizard > Warpball]
+[ > Warpball | no Moveable no Static] -> [ | > Warpball]
+[ > Warpball | Static] [Wizard] -> [ | Static ] [> Wizard]
+[ > Warpball | Moveable ] [Wizard] -> [ | Wizard Sfx0] [Moveable] (Wizards telexport. What they really do is shoot a "warpball", which causes them to move normally if it hits a wall and warp if it hits something they can warp with.)
+
+(The following mess is for changing characters.)
+[ Action Fighter] [SThief] -> [SFighter] [Thief Sfx1]
+[ Action Thief] [SWizard] -> [SThief] [Wizard Sfx1]
+[ Action Wizard] [SPriest] -> [SWizard] [Priest Sfx1]
+[ Action Priest] [SFighter] -> [SPriest] [Fighter Sfx1]
+
+[ Action Fighter] [no SThief] [SWizard] -> [SFighter] [no SThief] [Wizard Sfx1]
+[ Action Thief] [no Swizard] [SPriest] -> [SThief] [no SWizard] [Priest Sfx1]
+[ Action Wizard] [no SPriest] [SFighter] -> [SWizard] [no SPriest] [Fighter Sfx1]
+[ Action Priest] [no SFighter] [SThief] -> [SPriest] [no SFighter] [Thief Sfx1]
+
+[ Action Fighter] [no SThief] [no SWizard] [SPriest] -> [SFighter] [no SThief] [no SWizard] [Priest Sfx1]
+[ Action Thief] [no SWizard] [no SPriest] [SFighter] -> [SThief] [no SWizard] [no SPriest] [Fighter Sfx1]
+[ Action Wizard] [no SPriest] [no SFighter] [SThief] -> [SWizard] [no SPriest] [no SFighter] [Thief Sfx1]
+[ Action Priest] [no SFighter] [no SThief] [SWizard] -> [SPriest] [no SFighter] [no SThief] [Wizard Sfx1]
+
+(Cancels the move if the player is in the same place that they started. Notice that switching characters negates this. Only matters in levels where one dragon has multiple targets.)
+
+Late [Player DidNotMove] -> Cancel
+Late [DidNotMove] -> []
+
+(Now enemies attack.)
+
+Late [DragonLeft] -> [LFireball DragonLeft]
+Late [DragonRight] -> [RFireball DragonRight]
+
+Late RIGHT [RFireball | No Vulnerable no Invulnerable] -> [ | RFireball]
+Late LEFT [LFireball | No Vulnerable no Invulnerable] -> [ | LFireball]
+Late RIGHT [RFireball | Vulnerable] -> [ | Dying Vulnerable]
+Late Right [RFireball | Invulnerable] -> [ | Invulnerable]
+Late Left [LFireball | Vulnerable] -> [ | Dying Vulnerable]
+Late LEFT [LFireball | Invulnerable] -> [ | Invulnerable]
+
+Late [Goblin | Vulnerable] -> [Goblin | Dying Vulnerable]
+
+(Vulnerable objects that are attacked are designated as "Dying", but heroes can be saved by the Priest. Then the stuff that didn't get saved dies.)
+
+Late [Dying Healer] -> [Saved Healer]
+Late [Healer | Dying Hero] -> [Healer | Saved Hero]
+Late [Dying Monster] -> [Sfx5]
+Late [Dying Hero] -> [Corpse Sfx6]
+
+(Doors opening.)
+
+late [Weighing  YellowSwitch] [YellowDoor] -> [Weighing  YellowSwitch] [ShadowDoor]
+late [YellowSwitch no Weighing] [YellowOpen] -> [YellowSwitch] [YellowDoor sfx2]
+late [YellowSwitch no Weighing] [ShadowDoor] -> [YellowSwitch] [YellowDoor]
+late [ShadowDoor] -> [YellowOpen sfx3]
+
+late [Weighing PurpleSwitch] [PurpleDoor] -> [Weighing PurpleSwitch] [ShadowDoor]
+late [PurpleSwitch no Weighing] [PurpleOpen] -> [PurpleSwitch] [PurpleDoor sfx2]
+late [PurpleSwitch no Weighing] [ShadowDoor] -> [PurpleSwitch] [PurpleDoor]
+late [ShadowDoor] -> [PurpleOpen sfx3]
+
+late [MonsterDoor] -> [ShadowDoor]
+late [ShadowDoor] [Monster] -> [MonsterDoor] [Monster]
+late [ShadowDoor] -> [sfx3]
+
+(Looks for a HasSaved on a wall and moves it to the Priest. Then, if someone was saved this turn, plays the sound only if the Priest doesn't have the HasSaved note. Finally, cleans that up.)
+
+late [Wall HasSaved] [Healer] -> [Wall] [Healer HasSaved]
+late [Saved] [Healer no HasSaved] -> [Saved sfx4] [Healer]
+late [HasSaved] -> []
+
+==============
+WINCONDITIONS
+==============
+
+All Hero on Goal
+All Goal on Hero
+
+=======
+LEVELS
+=======
+
+Message Welcome back.
+
+Message [You've played the original, yes?]
+
+Message [If not, this might be confusing.]
+
+#############
+#.......[...#
+#.*.F.{.[.G.#
+#############
+#.......[...#
+#.*.2.{.[.G.#
+#############
+#.......[...#
+#.*.3.{.[.G.#
+#############
+
+Message Watch out for goblins.
+
+#############
+#F.O.......O#
+#...O.......#
+#.......O...#
+#O..........#
+#....O......#
+#O.......O..#
+#.O.....O.G.#
+#############
+
+#############
+###O###O#####
+#W.*****...O#
+#..*****....#
+#####O###O..#
+#O########..#
+#*G...O.O...#
+##..O..O.O..#
+#############
+
+Message Goblins attack each other too.
+
+#############
+#.......#...#
+#...*...#.G.#
+#.F...O.#...#
+#...*...##O##
+#...........#
+#############
+
+Message Dragons breath fire.
+
+###############
+#.............#
+#..T..###.....#
+#.....L.#.....#
+#.......#.....#
+#.............#
+#.....#.......#
+#.....#.R..G..#
+#.....###.....#
+#.............#
+###############
+
+Message Fire hurts enemies.
+
+##############
+#...#....O.RG#
+#.T.#......R.#
+#...#R*L...R.#
+#R*.#...#..R.#
+#...#...#..R.#
+#...O.*.#..R.#
+#.......#....#
+##############
+
+###########
+#3.O.O.O.T#
+#.#########
+#......G.G#
+#.#########
+#R.O.O.O.O#
+###########
+
+Message Think fast!
+
+#############
+#R.O.O.O.O.T#
+###########{#
+###########]#
+#G#3.[.}.G#G#
+#]###########
+#{###########
+#1..O...O..L#
+#############
+
+Message Sorry about that one.
+
+#######
+##G*G##
+##.G.##
+#R...##
+##...##
+##...##
+##...##
+##...L#
+##...##
+##F23##
+#######
+
+Message Kill monsters to open the M wall.
+
+###########
+#L...R#...#
+#.....#...#
+#.....M.G.#
+#.T.*.#...#
+#.....#...#
+###########
+
+#############
+#.......#...#
+#..O.O..#...#
+#R......M.G.#
+#.*.F.*.#...#
+#.......#...#
+#############
+
+#############
+#.......#...#
+#.{.*.{.#...#
+#..W.O..M.G.#
+#.{.*.[.#...#
+#.......#...#
+#############
+
+Message Yellow priest is protected.
+
+###########
+#...#O#O#O#
+#.P.......#
+#...**O**.#
+#********.#
+#R..G.....#
+###########
+
+###########
+#W#######G#
+#.#O#O#O#.#
+#.........#
+#.##O#O##.#
+#4#######G#
+###########
+
+Message Heroes next to a priest are safe.
+
+############
+#...#.O#O###
+#.F.#......#
+#...#.##O..#
+#.4...O#G.G#
+#...#.##.O.#
+############
+
+############
+#.#..T..#4##
+#.#.{.*...L#
+#.#.....#..#
+#G[.*.{...L#
+#.#.....#..#
+#.#.{.*...L#
+#.#.....#G##
+############
+
+###########
+#W...O#...#
+#.....#.G.#
+#..4..M...#
+#.....#.G.#
+#O...O#...#
+###########
+
+###########
+#.T.##O#O##
+#.........#
+#.4.#O#O..#
+########.##
+#G..####.O#
+#G#.O###.##
+###.###O..#
+#O..O#....#
+##...*....#
+###########
+
+###########
+#{*F#.4#.3#
+#{*.#..#..#
+###[#[###.#
+#R[.......#
+####O#.##.#
+######.##.#
+#G.G.G.#O*#
+###########
+
+###########
+#.T.####O##
+#.3......O#
+#.4.###O.##
+#####O##.##
+#.G..*.O.##
+#G.G#O##.##
+###########
+
+###########
+##O#O#O#O##
+#T[.[.[.[.#
+##{#{#{#{.#
+#.........#
+#.3G*G*G4.#
+#.........#
+###########
+
+Message The final challenge.
+
+#############
+#...#O.O#...#
+#.F.#G.G#.2.#
+#...#.O.#...#
+##.###*###.##
+#R*L.....R*L#
+#.#.......#.#
+#R*L.....R*L#
+##.###M###.##
+#...#...#...#
+#.3.#G.G#.4.#
+#...#...#...#
+#############
+
+Message Thanks for playing!
+
+title Spriteaporter
+author increpare
+homepage www.puzzlescript.net
+
+========
+OBJECTS
+========
+
+Temp
+black
+
+Background
+lightgreen green
+11111
+01111
+11101
+11111
+10111
+
+Target
+darkblue
+.....
+.000.
+.0.0.
+.000.
+.....
+
+Wall
+brown darkbrown
+00010
+11111
+01000
+11111
+00010
+
+Player
+black orange white blue
+.000.
+.111.
+22222
+.333.
+.3.3.
+
+Sprite
+pink blue red
+.....
+.000.
+00100
+01110
+.202.
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Player
+O = Sprite
+
+=======
+SOUNDS
+=======
+
+sfx0 67117309
+
+================
+COLLISIONLAYERS
+================
+
+Temp
+Background
+Target
+Player, Wall, Sprite
+
+======
+RULES
+======
+
+late [ Sprite | ... | Player ] -> [ Temp | ... | Sprite ] 
+late [ Temp ] -> [ Player ] 
+
+==============
+WINCONDITIONS
+==============
+
+=======
+LEVELS
+=======
+
+#########
+#.......#
+#....O..#
+#.P.....#
+#.......#
+#.......#
+#########
+
+
+USER PROMPT:
+The following PuzzleScript game code:
+```plaintext
+title Push the Stones Plus
+author Puzzle crafter
+
+========
+OBJECTS
+========
+
+Background
+black
+.....
+.....
+.....
+.....
+.....
+
+Wall
+grey black
+11111
+11111
+11111
+11111
+11111
+
+Player
+blue
+..0..
+..0..
+.000.
+.0.0.
+.0.0.
+
+Boulder
+brown
+.....
+.000.
+.000.
+.000.
+.....
+
+Target
+yellow
+.....
+.....
+..0..
+.....
+.....
+
+Ice
+lightblue
+.....
+.....
+.....
+.....
+.....
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Player
+B = Boulder
+T = Target
+I = Ice
+
+=======
+SOUNDS
+=======
+
+Boulder Move 12345678
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Target
+Player, Boulder, Wall, Ice
+
+======
+RULES
+======
+
+[ > Player | Boulder ] -> [ > Player | > Boulder ]
+
+[ > Boulder | Ice ] -> [ > Boulder | > Ice ]
+[ Boulder | Wall ] -> [ Boulder | Wall ]
+[ Boulder | Boulder ] -> [ Boulder | Boulder ]
+
+==============
+WINCONDITIONS
+==============
+
+All Boulder on Target
+
+=======
+LEVELS
+=======
+
+message Welcome to the ice challenge!
+
+#####
+#...#
+#I#T#
+#.BP#
+#...#
+#####
+
+message Level 2: Ice maze!
+
+#######
+#..I..#
+#.#B#.#
+#I#P#I#
+#..BI.#
+#..T..#
+#######
+
+message Level 3: Sliding strategy!
+
+##########
+#..T...T.#
+#.##....##
+#BP.I..B.#
+#..#I..T.#
+#..BI..T.#
+##########
+
+message Level 4: Final test with ice!
+
+##########
+#..T...T.#
+#.##.....#
+#BP.I.B..#
+#T.#I...T#
+#I.BI..T.#
+##########
+
+message Level 5: Bonus challenge with ice!
+
+##########
+#..T...T.#
+#.##.....#
+#BP.I.B..#
+#T.#I...T#
+#I.BI..T.#
+##########
+
+```
+compiled, but a solvability check returned the following error:
+Found solution for level 1 in 7 iterations: 2,1,1,0,3,2,3,0.  Level 3 is not solvable. Please repair it. Level 5 is not solvable. Please repair it.Found solution for level 7 in 474 iterations: 2,2,3,3,3,3,1,1,1,1,0,1,0,3,2,2,3,3,3,3,0,3,3,0,0,1,1,2,3,3,0,0,1,1,1,1,1,1,1,2,2,3,2,2,3,3,3,3,0,3,3,0,0,1,1,2,3,2,1,3,3,0,0,1,1,1,1,0,1,1,1,2,2,3,2,2,3,3,3,0,0,3,3,3,0,0,1,1,1,1,2,3,3,3,0,3,2,2. Found solution for level 9 in 474 iterations: 2,2,3,3,3,3,1,1,1,1,0,1,0,3,2,2,3,3,3,3,0,3,3,0,0,1,1,2,3,3,0,0,1,1,1,1,1,1,1,2,2,3,2,2,3,3,3,3,0,3,3,0,0,1,1,2,3,2,1,3,3,0,0,1,1,1,1,0,1,1,1,2,2,3,2,2,3,3,3,0,0,3,3,3,0,0,1,1,1,1,2,3,3,3,0,3,2,2. 
+Return your code in full, inside a ```plaintext code block.

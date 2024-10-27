@@ -1,0 +1,136 @@
+To design a complete PuzzleScript game, I need to create a game with the following components: title, objects, legend, sounds, collision layers, rules, win conditions, and levels. For inspiration, I will create a game where the player must push boulders into target spots on a grid, loosely similar to a simple sokoban-style game.
+
+### Plan of Action:
+1. **Title and Author**: Set the title of the game and the author name.
+2. **Objects**: Define the visual representation and colors for the game objects: Player, Boulder, Target, Wall, and Background.
+3. **Legend**: Create symbols representing each object in the code for easier reference.
+4. **Sounds**: Define any sounds that will play during the game (optional).
+5. **Collision Layers**: Specify which objects can or cannot coexist in the same space.
+6. **Rules**: Implement the rules governing the player and bolder interactions.
+7. **Win Conditions**: Set conditions required for winning the level.
+8. **Levels**: Design a few simple levels to demonstrate the game mechanics.
+
+Here's the complete code:
+
+```plaintext
+title Push the Stones
+author Puzzle crafter
+
+========
+OBJECTS
+========
+
+Background
+black
+.....
+
+Wall
+grey
+11111
+11111
+11111
+11111
+11111
+
+Player
+blue
+..0..
+..0..
+.000.
+.0.0.
+.0.0.
+
+Boulder
+brown
+.....
+.000.
+.000.
+.000.
+.....
+
+Target
+yellow
+.....
+.....
+..0..
+.....
+.....
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Player
+B = Boulder
+T = Target
+
+=======
+SOUNDS
+=======
+
+Boulder Move 12345678
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Target
+Player, Boulder, Wall
+
+======
+RULES
+======
+
+[ > Player | Boulder ] -> [ > Player | > Boulder ]
+[ Player | Target | Boulder ] -> [ Player | Target | > Boulder ]
+
+==============
+WINCONDITIONS
+==============
+
+All Boulder on Target
+
+=======
+LEVELS
+=======
+
+message Welcome: Push all boulders onto the yellow targets!
+
+#####
+#...#
+#.#T#
+#.BP#
+#...#
+#####
+
+message Level 2: A bit trickier!
+
+#######
+#.....#
+#.#B#.#
+#.#T#.#
+#..P..#
+#######
+
+message Level 3: Can you handle more boulders?
+
+#########
+#T...B..#
+#.#.....#
+#.#B.B..#
+#.P.....#
+#.......#
+#########
+
+```
+
+### Game Explanation:
+- **Objects**: The game consists of walls, a player, boulders, targets, and backgrounds.
+- **Rules**: The player can push boulders onto empty spaces or targets, but cannot move through walls.
+- **Win Conditions**: The player wins when all boulders are placed on targets.
+- **Levels**: Start with a simple level and gradually increase complexity by adding more boulders and targets.
+
+This design outlines a simple and engaging game with multiple levels to challenge users' puzzle-solving abilities.

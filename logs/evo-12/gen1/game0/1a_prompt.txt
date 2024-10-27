@@ -1,0 +1,1673 @@
+SYSTEM PROMPT:
+You are a game designer, familiar with the PuzzleScript game description language. Here are some example games, for inspiration (do not reproduce these games exactly):
+
+title Multi-word Dictionary Game
+author Sarah Northway
+homepage www.sarahnorthway.com
+
+(included with permission of Sarah Northway)
+
+========
+OBJECTS
+========
+
+Background
+pink
+
+Wall
+grey
+
+Player
+Blue
+
+Won
+yellow
+
+LetterC
+white black
+.111.
+1....
+1....
+1....
+.111.
+
+LetterA
+white black
+.111.
+1...1
+11111
+1...1
+1...1
+
+LetterT
+white black
+11111
+..1..
+..1..
+..1..
+..1..
+
+=======
+LEGEND
+=======
+
+Letter = LetterA or LetterC or LetterT
+. = Background
+# = Wall
+P = Player
+W = Won
+C = LetterC
+A = LetterA
+T = LetterT
+
+=======
+SOUNDS
+=======
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Won
+Player, Wall, Letter
+
+======
+RULES
+======
+
+[ >  Player | Letter ] -> [  >  Player | > Letter  ]
+[ <  Player | Letter ] -> [  <  Player | < Letter  ]
+
+late right [LetterC | LetterA | LetterT ] -> [ Won LetterC | Won LetterA | Won LetterT ] message You spelled CAT!
+late right [LetterA | LetterC | LetterT] -> [ Won LetterA | Won LetterC | Won LetterT ] message You spelled ACT!
+
+==============
+WINCONDITIONS
+==============
+
+Some Won
+
+=======
+LEVELS
+=======
+
+#########
+#.......#
+#.A..C..#
+#.......#
+#...P...#
+#.T.....#
+#########
+
+
+title Kettle
+author increpare
+homepage www.increpare.com
+
+color_palette gameboycolour
+
+(
+
+A port of a flash game of mine, the original of which can be played here:
+http://ded.increpare.com/~locus/kettle
+
+)
+
+========
+OBJECTS
+========
+
+Background
+darkgray
+
+Target
+yellow
+00000
+0...0
+0...0
+0...0
+00000
+
+UPolice
+black
+.000.
+.000.
+00000
+.000.
+.0.0.
+
+DPolice
+black
+.000.
+.000.
+00000
+.000.
+.0.0.
+
+LPolice
+black
+.000.
+.000.
+0000.
+.000.
+.0.0.
+
+RPolice
+black
+.000.
+.000.
+.0000
+.000.
+.0.0.
+
+Crate
+blue
+..0..
+00000
+..0..
+.000.
+.0.0.
+
+Wall
+black
+
+=======
+LEGEND
+=======
+
+. = Background
+player = UPolice or DPolice or LPolice or RPolice
+i = UPolice
+k = DPolice
+j = LPolice
+l = RPolice
+c = Crate
+@ = Crate and Target
+t = Target
+# = Wall
+
+=========
+SOUNDS
+=========
+
+Target move 59810707
+Player move 86872107
+startlevel 63638302
+endlevel 86642102
+endgame 63929902
+showmessage 42200307
+closemessage 42200307
+startgame 94059902
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Target
+Player, Crate, Wall
+
+======
+RULES
+======
+
+(The idea is simple: lots of Players, each of which only responds to a particular input direction.)
+
+[ up RPolice ] -> [ RPolice ] 
+[ down RPolice ] -> [ RPolice ] 
+[ left RPolice ] -> [ RPolice ] 
+
+[ down UPolice ] -> [ UPolice ] 
+[ left UPolice ] -> [ UPolice ] 
+[ right UPolice ] -> [ UPolice ] 
+
+[ up LPolice ] -> [ LPolice ] 
+[ down LPolice ] -> [ LPolice ] 
+[ right LPolice ] -> [ LPolice ] 
+
+[ up DPolice ] -> [ DPolice ] 
+[ left DPolice ] -> [ DPolice ] 
+[ right DPolice ] -> [ DPolice ] 
+
+[ > Player | Crate ] -> [ > Player | > Crate ] 
+[ > Crate | Crate ] -> [ > Crate | > Crate ] 
+
+==============
+WINCONDITIONS
+==============
+
+all target on Crate
+
+=======
+LEVELS
+=======
+
+message Let's see your ID
+
+###############
+#.............#
+#.............#
+#.....kkkk....#
+#....l...cj...#
+#....l.tt.j...#
+#....lctt.j...#
+#....lc..cj...#
+#.....iiii....#
+#.............#
+#.............#
+#.............#
+###############
+
+message Area Secure
+message Gonna lock you up, sonny!
+
+###############
+#.............#
+#.............#
+#.....kkkk....#
+#....l@@t.j...#
+#....ltttcj...#
+#....l@t@cj...#
+#....lc.ccj...#
+#.....iiii....#
+#.............#
+#.............#
+#.............#
+###############
+
+message Area Secure
+message We didn't see nothing!
+
+###############
+#.............#
+#.............#
+#....kkkkk....#
+#...l@t@@cj...#
+#...l@@ttcj...#
+#...ltt@tcj...#
+#...lt@@@.j...#
+#...l.ccccj...#
+#....iiiii....#
+#.............#
+#.............#
+###############
+
+message Area Secure
+message You'll be late for class, eh!
+
+###############
+#.............#
+#.............#
+#....kkkkk....#
+#...lc.c.cj...#
+#...lc@tt.j...#
+#...l.tt@cj...#
+#...l.ttt.j...#
+#...lc...cj...#
+#....iiiii....#
+#.............#
+#.............#
+###############
+
+message Area Secure
+message Ha! You shat yourself!
+
+###############
+#.............#
+#.............#
+#....kkkkkk...#
+#...lc.c..cj..#
+#...lcttt..j..#
+#...l.t@@..j..#
+#...l.ttt..j..#
+#...lc...ccj..#
+#....iiiiii...#
+#.............#
+#.............#
+###############
+
+message Area Secure
+message Have to confiscate your camera!
+
+###############
+#.............#
+#.............#
+#....kkkkkk...#
+#...lcc..ccj..#
+#...l.tttt.j..#
+#...l.t@@t.j..#
+#...lcttt@cj..#
+#...lct@ttcj..#
+#...lcc..ccj..#
+#....iiiiii...#
+#.............#
+###############
+
+message Area Secure
+message Keeping the peace is hard work
+
+###############
+#.............#
+#...kkkkkkk...#
+#..l..cc..cj..#
+#..l.tttt..j..#
+#..lc@t@t..j..#
+#..lctttt.cj..#
+#..l.@@tt..j..#
+#..lc.....cj..#
+#..lcc.c..cj..#
+#...iiiiiii...#
+#.............#
+###############
+
+message Area Secure
+message You should've packed lunch!
+
+###############
+#.............#
+#..kkkkkkkk...#
+#.lccccc...j..#
+#.lct@@tt.cj..#
+#.l.t@t@t.cj..#
+#.lc@@ttt.cj..#
+#.lct@tttccj..#
+#.l.tt@@t..j..#
+#.l........j..#
+#.lc..cc...j..#
+#..iiiiiiii...#
+###############
+
+message Area Secure
+message I want to hit you
+
+###############
+#.............#
+#..kkkkkkkkk..#
+#.lc.cccc...j.#
+#.l.........j.#
+#.lccttttt..j.#
+#.lc.tt@tt.cj.#
+#.lc.tt@@t.cj.#
+#.l..@@tt@.cj.#
+#.l..t@t@t..j.#
+#.l.........j.#
+#.lc.c.c.c.cj.#
+#..iiiiiiiii..#
+###############
+
+message Area Secure
+message Don't be naughty!
+
+###############
+#.kkkkkkkkkk..#
+#lccc..c...cj.#
+#lc.........j.#
+#lc.@t@tt...j.#
+#lc.t@@@t...j.#
+#l..@ttt@..cj.#
+#lc.tt@@t..cj.#
+#l..ttttt...j.#
+#l..........j.#
+#l.........cj.#
+#l....c.c.ccj.#
+#.iiiiiiiiii..#
+###############
+
+message Area Secure
+message I'm upholding human rights!
+
+###############
+#.kkkkkkkkkkk.#
+#lccc.c.c...cj#
+#l....c......j#
+#lc.@ttttt...j#
+#l..@ttt@t...j#
+#l..t@@ttt..cj#
+#lc.@tt@@t..cj#
+#l..@@t@@t...j#
+#l..t@t@tt..cj#
+#lc..c.......j#
+#lc....c.....j#
+#lcc.c.c.c..cj#
+#.iiiiiiiiiii.#
+###############
+
+message Area Secure
+message I'm all out of lines, matey:
+message It's game over for you
+
+
+title Simple Block Pushing Game
+author David Skinner
+homepage www.puzzlescript.net
+
+========
+OBJECTS
+========
+
+Background
+lightgreen green
+11111
+01111
+11101
+11111
+10111
+
+Target
+darkblue
+.....
+.000.
+.0.0.
+.000.
+.....
+
+Wall
+brown darkbrown
+00010
+11111
+01000
+11111
+00010
+
+Player
+black orange white blue
+.000.
+.111.
+22222
+.333.
+.3.3.
+
+Crate
+orange
+00000
+0...0
+0...0
+0...0
+00000
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Player
+* = Crate
+@ = Crate and Target
+O = Target
+
+=======
+SOUNDS
+=======
+
+Crate move 36772507
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Target
+Player, Wall, Crate
+
+======
+RULES
+======
+
+[ > Player | Crate ] -> [ > Player | > Crate ] 
+
+==============
+WINCONDITIONS
+==============
+
+all Target on Crate
+
+=======
+LEVELS
+=======
+
+####..
+#.O#..
+#..###
+#@P..#
+#..*.#
+#..###
+####..
+
+######
+#....#
+#.#P.#
+#.*@.#
+#.O@.#
+#....#
+######
+
+
+title Smother
+author Team Borse
+
+background_color #9CBD0F
+text_color #0F380F
+
+run_rules_on_level_start
+
+========
+OBJECTS
+========
+
+Background
+#9CBD0F
+
+LaserGV
+#9CBD0F #8CAD0F #306230 #0F380F
+22222
+.222.
+..3..
+..3..
+.....
+
+LaserGH
+#9CBD0F #8CAD0F #306230 #0F380F
+2....
+22...
+2233.
+22...
+2....
+
+LaserV
+#9CBD0F #8CAD0F #306230 #0F380F
+.....
+..3..
+..3..
+..3..
+.....
+
+LaserH
+#9CBD0F #8CAD0F #306230 #0F380F
+.....
+.....
+.333.
+.....
+.....
+
+LaserB
+#9CBD0F #8CAD0F #306230 #0F380F
+.....
+..3..
+.333.
+..3..
+.....
+
+Exit
+#9CBD0F #8CAD0F #306230 #0F380F
+2...2
+2...2
+2...2
+2...2
+2.2.2
+
+Wall
+#9CBD0F #8CAD0F #306230 #0F380F
+33333
+31223
+32123
+32223
+33333
+
+Heart
+#9CBD0F #8CAD0F #306230 #0F380F
+.2.2.
+22222
+.222.
+..2..
+.....
+
+
+PlayerFull
+#9CBD0F #8CAD0F #306230 #0F380F
+.222.
+.323.
+.222.
+.222.
+.2.2.
+
+Protector
+#9CBD0F #8CAD0F #306230 #0F380F
+.333.
+.232.
+.333.
+.333.
+.3.3.
+
+ProtectorSolo
+#9CBD0F #8CAD0F #306230 #0F380F
+.333.
+.232.
+.333.
+.333.
+.3.3.
+
+victimSolo
+#9CBD0F #8CAD0F #306230 #0F380F
+.222.
+.323.
+.222.
+.222.
+.2.2.
+
+
+PlayerDead
+#9CBD0F #8CAD0F #306230 #0F380F
+.222.
+22222
+2.2.2
+.222.
+.222.
+
+pushBlock
+#9CBD0F #8CAD0F #306230 #0F380F
+33333
+31113
+31113
+31113
+33333
+
+=======
+LEGEND
+=======
+
+Player = PlayerFull or Protector or ProtectorSolo or victimSolo
+PlayerWin = PlayerFull or PlayerDead or Protector or victimSolo
+Laser = LaserV or LaserH or LaserB
+LaserBlock = Wall or Player or PlayerDead or Exit
+. = Background
+# = Wall
+g = LaserGV
+h = LaserGH
+P = PlayerFull
+n = Protector
+q = ProtectorSolo
+k = victimSolo
+O = Exit
+l = Heart
+b = pushBlock
+
+=======
+SOUNDS
+=======
+
+startgame 83279102 (sound at start of game)
+CloseMessage 123434 (close message noise)
+ShowMessage 123434 (show message noise)
+sfx0 8545502 (death)
+sfx1 26 (heart)
+
+
+================
+COLLISIONLAYERS
+================
+Background
+Laser
+Exit
+ProtectorSolo, Heart, Wall
+Player, Wall, PlayerDead, LaserGV, LaserGH, Protector, victimSolo, pushBlock
+
+======
+RULES
+======
+
+(clear lasers)
+late [Laser] -> []
+
+(zip the lasers out of the guns and through the levels)
+late down [LaserGV | no Laser] -> [LaserGV | LaserV]
+late right [LaserGH | no Laser] -> [LaserGH | LaserH]
+
+late down [LaserV no LaserBlock | ] -> [LaserV | LaserV]
+late right [LaserH no LaserBlock | ] -> [LaserH | LaserH]
+
+(generate overlapping lasers)
+late down [LaserV no LaserBlock | LaserH] -> [LaserV | LaserB]
+late down [LaserGV no LaserBlock | LaserH] -> [LaserGV | LaserB]
+late right [LaserH no LaserBlock | LaserV] -> [LaserH | LaserB]
+late right [LaserGH no LaserBlock | LaserV] -> [LaserGH | LaserB]
+
+(deal with overlapping lasers)
+late right [LaserB no LaserBlock | no Laser] -> [LaserB | LaserH]
+late right [LaserH no LaserBlock | no Laser] -> [LaserH | LaserH]
+late down [LaserB no LaserBlock | no Laser] -> [LaserB | LaserV]
+late down [LaserV no LaserBlock | no Laser] -> [LaserV | LaserV]
+
+(solo Victim can push a block)
+ [ > victimSolo | pushBlock ] -> [ > victimSolo| > pushBlock]
+
+(pushing block to switch breaks laser)
+[pushBlock  laser] -> [ wall]
+
+
+(if a player is over a laser, then cause them harm)
+late [ PlayerFull Laser ] -> [PlayerDead Laser] sfx0
+
+(victim solo dies in the laser)
+late [ victimSolo Laser ] -> [PlayerDead Laser] sfx0
+
+(protector levels)
+[ > ProtectorSolo | ... | Heart ] -> [ | ... | ProtectorSolo ] sfx1
+[ > ProtectorSolo ] -> [ ProtectorSolo]
+
+
+==============
+WINCONDITIONS
+==============
+All PlayerWin on Exit
+No Heart
+
+=======
+LEVELS
+=======
+
+message then...
+
+message I PROTECT YOU
+
+###g###g###
+#.........#
+#n.......o#
+#........o#
+#p...#....#
+#.........#
+###########
+
+message YOU SMOTHER ME
+
+###########
+#n........#
+#......#..#
+h..#h..#..#
+#p.....#..#
+#......#oo#
+###########
+
+message I DEFEND YOU
+
+#####g#####
+#.P.....n.#
+#.........#
+#..#...#..#
+#.........#
+#......oo.#
+###########
+
+message YOU SPEAK FOR ME
+
+#####g#####
+#n.......o#
+#....#h...#
+h....g....#
+#.....#..o#
+#p......#.#
+###########
+
+message WE ARE CARE FREE
+
+#P####g##g###
+#.#..#.#....#
+#..........o#
+h...........#
+#.#h..#..#.o#
+#.....#....n#
+#############
+
+message I CARRY OUR BURDENS
+
+message before...
+
+message I AM ALWAYS SEARCHING
+
+###########
+#l...l....#
+#....l....#
+#.........#
+#q..l.....#
+#l..l.....#
+###########
+
+
+message I NEVER SEE A FUTURE
+
+###########
+#.........#
+#..l..q.l.#
+#.l....l..#
+#.ll...l.l#
+#l.l...l..#
+###########
+
+message I NEVER FEEL COMFORTABLE
+
+###########
+#....l....#
+#lq..l..l.#
+#.l..l....#
+#.l.....l.#
+#....l....#
+###########
+
+
+message NO ONE GETS ME
+
+###########l##l#####
+#l.l...............#
+#.....ll...........#
+#l..l..............#
+#..q..l.......l....#
+#..ll..l......l....#
+###########........#
+###########l....l..#
+###########........#
+###########.l.l.l..#
+####################
+
+message I NEED CONTACT
+
+###################
+#.l...l############
+#......############
+#l.l..l##########l#
+#l.......l.....l#.#
+#....l............#
+#ll..q.........l.l#
+#..l.....l.......l#
+#.l..l............#
+###################
+
+message I NEED VALIDATION
+
+message before...
+
+message I AM INDEPENDENT
+
+###########
+#.k.g.....#
+#.......b.#
+#.b...###.#
+#.#.......#
+#...h.....#
+#...#...O.#
+###########
+
+
+message I AM STRONG
+
+
+###g##g##
+#.......#
+#kb.b...#
+#.......#
+h.....#.#
+#..#b#h.#
+#....#..#
+h....#o.#
+#.......#
+#########
+
+message I NEED NO ONE
+
+###g#######
+#.o.......#
+#...#.##..#
+#.#..bkb.##
+h...#.#.b.#
+#.......#.#
+#.....#...#
+###########
+
+message I ENJOY MY COMPANY
+
+#####g#####g#####g######
+#.k.....b...........o..#
+#..b....#.#.......##...#
+#.........b...#b..#g...#
+h..........#......#....#
+##.###.#######.####.#.##
+h..............#h......#
+####.#####.###.##.#.#.##
+###.b.#....#........#..#
+###.#....#b#.........b.#
+##.........#.......#...#
+########################
+
+message I AM FEARLESS
+
+##g##g#g####
+#o..#.#....#
+#...#.#.#..#
+#..........#
+#.....#..b.#
+#........b.#
+#..#.##.#b.#
+#..#......k#
+############
+
+message I AM ALONE
+
+
+message now...
+
+###########
+#...o.o...#
+#.........#
+#.........#
+#.........#
+#...n.p...#
+###########
+
+message WE DON'T SEE THINGS AS THEY ARE, WE SEE THEM AS WE ARE
+message Credits
+message Concept/Design/Programming/Graphics - Steven McStravog
+message Design/Programming/Graphics - Darragh McLernon
+message Porting/Design/Programming - Rachel Gawley
+message Artwork - Ricky Woodside
+
+
+(
+level ideas
+push battery horizontally
+have to assemble and then disassemble a circuit, in order to complete it
+add a piece to a circut, then break the circuit from another point
+level that starts with a closed circuit
+level with very dangerous + block
+)
+title Robot Arm
+author increpare
+homepage www.increpare.com
+
+run_rules_on_level_start
+color_palette c64
+
+run_rules_on_level_start
+
+norepeat_action
+
+========
+OBJECTS
+========
+
+Background .
+darkblue
+
+Player P
+Black orange grey Blue
+.111.
+.111.
+22222
+13331
+.3.3.
+
+R0_Up 0
+grey lightgrey
+.111.
+10001
+10001
+10001
+.111.
+
+R0_Down
+grey lightgrey
+.111.
+10001
+10001
+10001
+.111.
+
+R0_Left
+grey lightgrey
+.111.
+10001
+10001
+10001
+.111.
+
+R0_Right
+grey lightgrey
+.111.
+10001
+10001
+10001
+.111.
+
+
+R1_Up 1
+grey lightgrey
+.111.
+10001
+10001
+10001
+.111.
+
+R1_Down
+grey lightgrey
+.111.
+10001
+10001
+10001
+.111.
+
+R1_Left
+grey lightgrey
+.111.
+10001
+10001
+10001
+.111.
+
+R1_Right
+grey lightgrey
+.111.
+10001
+10001
+10001
+.111.
+
+
+R2_Up 2
+grey lightgrey
+.111.
+10001
+10001
+10001
+.111.
+
+R2_Down
+grey lightgrey
+.111.
+10001
+10001
+10001
+.111.
+
+R2_Left
+grey lightgrey
+.111.
+10001
+10001
+10001
+.111.
+
+R2_Right
+grey lightgrey
+.111.
+10001
+10001
+10001
+.111.
+
+R3 3
+grey lightgrey
+.....
+..0..
+.010.
+..0..
+.....
+
+Connector_Up
+grey lightgrey
+.101.
+.111.
+.....
+.....
+.....
+
+Connector_Down
+grey lightgrey
+.....
+.....
+.....
+.111.
+.101.
+
+Connector_Left
+grey lightgrey
+.....
+11...
+01...
+11...
+.....
+
+Connector_Right
+grey lightgrey
+.....
+...11
+...10
+...11
+.....
+
+Moved
+transparent
+
+Parent
+transparent
+
+GrandParent
+transparent
+
+NewRot
+transparent
+
+NewRot2
+transparent
+
+force
+transparent
+
+explosion
+red yellow
+.101.
+10101
+01010
+10101
+.101.
+
+explosionb
+red yellow
+.101.
+10101
+01010
+10101
+.101.
+
+explosion2
+yellow red
+.101.
+10101
+01010
+10101
+.101.
+
+Wall #
+darkgrey grey lightgrey
+00000
+01110
+01010
+01110
+00000
+
+water ,
+blue lightblue
+00000
+00010
+00000
+00000
+01000
+
+Fruit F
+Red Green LightRed
+..1..
+.000.
+00020
+00000
+.000.
+
+
+FruitPicked G
+Red Green LightRed grey grey
+..4..
+.030.
+43334
+00300
+.040.
+
+DeadFruit
+black black black black black
+..4..
+.030.
+43334
+00300
+.040.
+
+EndPoint E
+darkgreen Yellow black green
+30003
+02220
+02220
+02220
+30003
+
+
+=======
+LEGEND
+=======
+R0 = R0_up or R0_down or R0_left or R0_right
+R1 = R1_up or R1_down or R1_left or R1_right
+R2 = R2_up or R2_down or R2_left or R2_right
+RobotPiece = R0 or R1 or R2 or R3
+* = RobotPiece or Player
+connector = connector_up or connector_down or connector_left or connector_right
+
+=======
+SOUNDS
+=======
+
+sfx0 43004308 (explosion)
+sfx1 69392707
+sfx2 57370907 (push machine)
+sfx3 62083508 (rotate machine)
+sfx4 90419908 (grab)
+sfx5 50782902 (drop in hole)
+sfx6 76878101 (empty grab)
+sfx7 13941101 (dead fruit)
+sfx8 42541302 (release)
+Player move 88476108
+startgame 30513908
+endlevel 5524308
+endgame 5524308
+showmessage 41852908
+closemessage 41852908
+
+================
+COLLISIONLAYERS
+================
+Background
+water
+EndPoint
+Player
+Moved
+Fruit
+FRUITPICKED
+deadfruit
+R0_up, R0_down, R0_left, R0_right
+R1_up, R1_down, R1_left, R1_right
+R2_up, R2_down, R2_left, R2_right
+connector_up
+connector_down
+connector_left
+connector_right
+R3
+parent
+GrandParent
+newrot
+newrot2
+force
+wall
+explosion, explosion2, explosionb
+
+======
+RULES
+======
+
+[ connector ] -> [ ]
+
+[ > player | fruit ] -> cancel
+
+[ > player | water ] -> cancel
+
+[ > player | ] -> [ > player | > force ]
+
+[ > player | robotpiece | wall ] -> cancel
+
+(place movement arrows)
+up [ R0_Up | ] -> [ up R0_Up | up Parent ]
+up [ R1_Up | ] -> [ up R1_Up | up Parent ]
+up [ R2_Up | ] -> [ up R2_Up | up Parent ]
+
+down [ R0_down | ] -> [ down R0_down | down Parent ]
+down [ R1_down | ] -> [ down R1_down | down Parent ]
+down [ R2_down | ] -> [ down R2_down | down Parent ]
+
+left [ R0_left | ] -> [ left R0_left | left Parent ]
+left [ R1_left | ] -> [ left R1_left | left Parent ]
+left [ R2_left | ] -> [ left R2_left | left Parent ]
+
+right [ R0_right | ] -> [ right R0_right | right Parent ]
+right [ R1_right | ] -> [ right R1_right | right Parent ]
+right [ R2_right | ] -> [ right R2_right | right Parent ]
+
+
+( force propagation like this isn't very nice )
+( [ > force < parent | ] -> [ < parent | > force ] )
+
+[ R3 > force < parent ] [ > R0 ] [ v R1 ] [ R2 ] -> [ R3 < parent ] [ > R0 ] [ v R1 ] [ r2 > force ]
+[ R3 > force < parent ] [ > R0 ] [ ^ R1 ] [ R2 ] -> [ R3 < parent ] [ > R0 ] [ ^ R1 ] [ r2 > force ]
+
+[ > force < parent no R0] [R0]-> [ < parent ] [ > force R0 ]
+[ > force R3 perpendicular parent ] [ R2 < parent ] [ R0 ] -> [ R3 perpendicular parent ] [ R2 < parent ] [ > force R0 ]
+
+[ > force R2 perpendicular parent ] [ R1 < parent ] [ R0 ] -> [ R2 perpendicular parent ] [ R1 < parent ] [ > force R0 ]
+
+
+[ > force moving R0 | ] -> [ | moving R0] sfx2
+
+[ > force moving R1 perpendicular parent ] [ R0 ] -> [ moving R1 perpendicular parent ] [ > R0 ] sfx3
+[ > force moving R2 perpendicular parent ] [ R1 ] -> [ moving R2 perpendicular parent ] [ > R1 ] sfx3
+[ > force 		R3 perpendicular parent ] [ R2 ] -> [ R3 perpendicular parent ] [ > R2 ] sfx3
+
+
+(rebuild arm)
+
+(add new parents)
+
+[ > R1 ] [ R2 ] -> [ > R1 ] [ R2 > NewRot ]
+[ > R0 ] [ R1 ] [ R2 ] -> [ > R0 ] [ R1 > NewRot ] [ R2 > NewRot2 ]
+
+[ > Parent R1 ] [ R2 ] -> [ > Parent R1 ] [ > GrandParent R2 ]
+
+[ ^ Parent > NewRot > RobotPiece ] -> [ V RobotPiece ]
+[ ^ Parent > NewRot v RobotPiece ] -> [ < RobotPiece ]
+[ ^ Parent > NewRot < RobotPiece ] -> [ ^ RobotPiece ]
+[ ^ Parent > NewRot ^ RobotPiece ] -> [ > RobotPiece ]
+
+[ ^ Parent < NewRot > RobotPiece ] -> [ ^ RobotPiece ]
+[ ^ Parent < NewRot v RobotPiece ] -> [ > RobotPiece ]
+[ ^ Parent < NewRot < RobotPiece ] -> [ V RobotPiece ]
+[ ^ Parent < NewRot ^ RobotPiece ] -> [ < RobotPiece ]
+
+
+[ ^ GrandParent > NewRot2 > R2 ] -> [ V R2 ]
+[ ^ GrandParent > NewRot2 v R2 ] -> [ < R2 ]
+[ ^ GrandParent > NewRot2 < R2 ] -> [ ^ R2 ]
+[ ^ GrandParent > NewRot2 ^ R2 ] -> [ > R2 ]
+
+[ ^ GrandParent < NewRot2 > R2 ] -> [ ^ R2 ]
+[ ^ GrandParent < NewRot2 v R2 ] -> [ > R2 ]
+[ ^ GrandParent < NewRot2 < R2 ] -> [ V R2 ]
+[ ^ GrandParent < NewRot2 ^ R2 ] -> [ < R2 ]
+
+[ NewRot ] -> [ ]
+[ NewRot2 ] -> [ ]
+[ Parent ] -> [ ]
+[ GrandParent ] -> [ ]
+
+
+(change sprites)
+[ up R0 ] -> [ up R0_Up ]
+[ up R1 ] -> [ up R1_Up ]
+[ up R2 ] -> [ up R2_Up ]
+
+[ down R0 ] -> [ down R0_down ]
+[ down R1 ] -> [ down R1_down ]
+[ down R2 ] -> [ down R2_down ]
+
+[ left R0 ] -> [ left R0_left ]
+[ left R1 ] -> [ left R1_left ]
+[ left R2 ] -> [ left R2_left ]
+
+[ right R0 ] -> [ right R0_Right ]
+[ right R1 ] -> [ right R1_Right ]
+[ right R2 ] -> [ right R2_Right ]
+
+(work from the base up when placing)
+up [ up R0 | no R1 ] [ moving R1 ] -> [ up R0 | moving R1 ] [ ]
+down [ down R0 | no R1 ] [ moving R1 ] -> [ down R0 | moving R1 ] [ ]
+left [ left R0 | no R1 ] [ moving R1 ] -> [ left R0 | moving R1 ] [ ]
+right [ right R0 | no R1 ] [ moving R1 ] -> [ right R0 | moving R1 ] [ ]
+
+up [ up R1 | no R2 ] [ moving R2 ] -> [ up R1 | moving R2 ] [ ]
+down [ down R1 | no R2 ] [ moving R2 ] -> [ down R1 | moving R2 ] [ ]
+left [ left R1 | no R2 ] [ moving R2 ] -> [ left R1 | moving R2 ] [ ]
+right [ right R1 | no R2 ] [ moving R2 ] -> [ right R1 | moving R2 ] [ ]
+
+
+up [ up R2 | no R3 ] [ R3 ] -> [ up R2 | R3 ] [ ]
+down [ down R2 | no R3 ] [ R3 ] -> [ down R2 | R3 ] [ ]
+left [ left R2 | no R3 ] [ R3 ] -> [ left R2 | R3 ] [ ]
+right [ right R2 | no R3 ] [ R3 ] -> [ right R2 | R3 ] [ ]
+
+
+
+
+up [ up R2 | no R3 ] [ R3 ] -> [ R2_up | R3 ] [ ]
+down [ down R2 | no R3 ] [ R3 ] -> [ R2_down | R3 ] [ ]
+left [ left R2 | no R3 ] [ R3 ] -> [ R2_left | R3 ] [ ]
+right [ right R2 | no R3 ] [ R3 ] -> [ R2_right | R3 ] [ ]
+
+
+[ > RobotPiece no moved ] -> [ RobotPiece ]
+
+
+up [ R0_Up | ] -> [ R0_Up connector_up | connector_down ]
+up [ R1_Up | ] -> [ R1_Up connector_up | connector_down ]
+up [ R2_Up | ] -> [ R2_Up connector_up | connector_down ]
+
+down [ R0_down | ] -> [ R0_down connector_down | connector_up ]
+down [ R1_down | ] -> [ R1_down connector_down | connector_up ]
+down [ R2_down | ] -> [ R2_down connector_down | connector_up ]
+
+left [ R0_left | ] -> [ R0_left connector_left | connector_right ]
+left [ R1_left | ] -> [ R1_left connector_left | connector_right ]
+left [ R2_left | ] -> [ R2_left connector_left | connector_right ]
+
+right [ R0_right | ] -> [ R0_right connector_right | connector_left ]
+right [ R1_right | ] -> [ R1_right connector_right | connector_left ]
+right [ R2_right | ] -> [ R2_right connector_right | connector_left ]
+
+[RobotPiece Wall no explosion no explosion2 ] -> [ RobotPiece Wall explosion ] sfx0
+
+[ R0 R2 no explosion no explosion2] -> [ R0 R2 explosion ] sfx0
+[ R0 R3 no explosion no explosion2 ] -> [ R0 r3 explosion ] sfx0
+[ R1 R3 no explosion no explosion2 ] -> [ R1 R3 explosion ] sfx0
+
+[ explosion2 ] -> [ explosionb ] again
+[ explosion ] -> [ explosion2] again
+[ explosionb ] -> [explosion] again
+
+[ > player  | wall ] -> cancel
+
+[FruitPicked ] [ R3 no FruitPicked ] -> [ ] [ R3 FruitPicked ]
+
+[ action player ] [ R3 Fruit no fruitpicked ] -> [ player ] [ R3 Fruitpicked] sfx4
+[ action player ] [ R3 fruitpicked no fruit ] -> [ player ] [ r3 fruit ] sfx8
+
+[action player ] [ r3 no fruit no fruitpicked ] -> sfx6
+
+
+[ fruit endpoint ] -> [endpoint] sfx5
+[ fruit water ] -> [ deadfruit water ] sfx7
+late [R0 water ] -> cancel
+[R0 fruit ] -> cancel
+
+==============
+WINCONDITIONS
+==============
+
+no fruit
+no fruitpicked
+no deadfruit
+
+=======
+LEVELS
+=======
+
+message press x to grip and ungrip the mechanical arm
+message put fruit in hole
+
+message Level 1 of 3
+
+###################
+###################
+###################
+###..,........,.###
+###..,...3....,.###
+###..,...2....,.###
+###.F,.E.1.,,,F,###
+###..,...0....,.###
+###..,..P.....,.###
+###..,........,.###
+###################
+###################
+###################
+
+message Level 2 of 3
+
+##############
+##############
+##############
+###..3.....###
+###..2.....###
+###..1.,,,,###
+###.E0.,...###
+###....,FF.###
+###.P..,...###
+##############
+##############
+##############
+
+message Level 3 of 3
+
+###################
+###################
+###################
+########........###
+###..3.#...##.f.###
+###..2..........###
+###..1...#....#.###
+###.e0..........###
+###..p..#...#.f.###
+#########.......###
+###################
+###################
+###################
+
+message congratulations
+
+
+USER PROMPT:
+The following PuzzleScript game code:
+```plaintext
+title Complex Maze Runner
+author AI
+
+========
+OBJECTS
+========
+
+Background
+black
+
+Player
+yellow
+
+Wall
+grey
+
+Key
+blue
+
+Exit
+green
+
+LockedDoor
+red
+
+Switch
+orange
+
+Enemy
+white
+
+======
+LEGEND
+======
+
+. = Background
+P = Player
+# = Wall
+K = Key
+E = Exit
+D = LockedDoor
+S = Switch
+X = Enemy
+
+=======
+SOUNDS
+=======
+
+Key DESTROY 54076508
+Switch ACTIVATE 21034506
+Enemy ATTACK 15067308
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Switch
+Key
+Exit
+Player, Enemy
+LockedDoor, Wall
+
+======
+RULES
+======
+
+[ > Player | Key ] -> [ Player | Background ] sfx0
+[ Player | Exit ] -> WIN
+[ > Player | Switch ] -> [ Player | Background ] sfx1
+[ Enemy | Player ] -> MESSAGE "Caught by an enemy!" RESTART sfx2
+
+(late rules for opening doors)
+late [ Switch | LockedDoor ] -> [ Switch | Background ]
+
+(enemy movement patterns)
+Up [ Enemy | No Player No Wall] -> [ | Enemy ]
+Right [ Enemy | No Player No Wall] -> [ | Enemy ]
+Down [ Enemy | No Player No Wall] -> [ | Enemy ]
+Left [ Enemy | No Player No Wall] -> [ | Enemy ]
+
+====================
+WINCONDITIONS
+====================
+
+All Key on Background
+Some Player on Exit
+
+========
+LEVELS
+========
+
+###########
+#.......#E#
+#.D#######.#
+#.K.....S#.#
+#.#######.#.#
+#..XS#X.#P.#
+#.#.....#K.#
+#.#X#.#.#X.#
+#.#.#.#.#D.#
+#...#K....S#
+###########
+
+###########
+#.......#E#
+#.#.#######.#
+#.#K...S.#.#
+XXXX.#.P.#.#
+#.#.#####.##
+S.#...#.#K.#
+#X#.#.#.#.#
+#.#.#.#.#.D#
+#...X.##..#
+#######.###
+
+```
+produced the following console output:
+=================================
+line 50 : Was expecting a soundverb here (MOVE, DESTROY, CANTMOVE, or the like), but found something else.
+line 51 : Was expecting a soundverb here (MOVE, DESTROY, CANTMOVE, or the like), but found something else.
+line 95 : Maps must be rectangular, yo (In a level, the length of each row must be the same).
+line 96 : Maps must be rectangular, yo (In a level, the length of each row must be the same).
+line 97 : Maps must be rectangular, yo (In a level, the length of each row must be the same).
+line 98 : Maps must be rectangular, yo (In a level, the length of each row must be the same).
+line 99 : Maps must be rectangular, yo (In a level, the length of each row must be the same).
+line 100 : Maps must be rectangular, yo (In a level, the length of each row must be the same).
+line 101 : Maps must be rectangular, yo (In a level, the length of each row must be the same).
+line 102 : Maps must be rectangular, yo (In a level, the length of each row must be the same).
+line 107 : Maps must be rectangular, yo (In a level, the length of each row must be the same).
+line 108 : Maps must be rectangular, yo (In a level, the length of each row must be the same).
+line 109 : Maps must be rectangular, yo (In a level, the length of each row must be the same).
+line 110 : Maps must be rectangular, yo (In a level, the length of each row must be the same).
+line 111 : Maps must be rectangular, yo (In a level, the length of each row must be the same).
+line 113 : Maps must be rectangular, yo (In a level, the length of each row must be the same).
+Errors detected during compilation; the game may not work correctly.
+Return a repaired version of the code that addresses these errors. First, reason about your task and determine the best plan of action. Then, write your code.  Return your code in full, inside a ```plaintext code block.

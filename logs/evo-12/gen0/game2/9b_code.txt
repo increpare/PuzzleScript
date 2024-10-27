@@ -1,0 +1,157 @@
+To address the issues reported in the console output, we'll need to fix several errors in the provided PuzzleScript game code.
+
+1. **Color Syntax Issue**:
+    - The error about the color specification for the `Key` object means that there is an extraneous space after "cyan". We'll remove that space to correct it.
+
+2. **Legend Syntax**:
+    - The messages regarding keys "L", "V", and "1" indicate there are potentially extra or missing definitions in the `LEGEND` section. Investigating further, these errors seem to be coming from the levels not matching expected symbols in the legend provided. No specific issues were found with parts of the legend.
+
+3. **Level Rectangle Errors**:
+    - Lines 115-126 reported maps not being rectangular. This seems to result from lines not having equal lengths among the symbols. We'll ensure that all rows in a level are the same length.
+
+After identifying these issues, we'll proceed with the corrections:
+
+- Remove the extraneous space in the `Key` color definition.
+- Normalize row lengths in both levels to ensure they are rectangular.
+- Due to the detailed feedback on incorrect keys (`L`, `V`, `1`), ensure no syntax discrepancies for all level elements, matching the legend provided.
+
+Here's the corrected version of the code:
+
+```plaintext
+title Key & Crate Challenge
+author Your Name
+
+========
+OBJECTS
+========
+Background
+DarkGrey LightGrey
+.....
+.....
+.....
+.....
+.....
+
+Player
+Black Orange
+.000.
+.111.
+.111.
+.111.
+.0.0.
+
+Wall
+Brown DarkBrown
+00000
+00000
+00000
+00000
+00000
+
+Crate
+Yellow
+00000
+0...0
+0...0
+0...0
+00000
+
+Goal
+Blue LightBlue
+.....
+..0..
+.000.
+..0..
+.....
+
+Key
+Cyan LightBlue
+.....
+..0..
+.....
+..0..
+.....
+
+Door
+Gray
+.....
+.000.
+.....
+.000.
+.....
+
+Exit
+Green
+.....
+..0..
+.000.
+..0..
+.....
+
+=======
+LEGEND
+=======
+. = Background
+P = Player
+# = Wall
+C = Crate
+G = Goal
+K = Key
+D = Door
+E = Exit
+
+=======
+SOUNDS
+=======
+
+================
+COLLISIONLAYERS
+================
+Background
+Player, Wall, Crate, Key, Door, Goal, Exit
+
+======
+RULES
+======
+[ > P | C ] -> [ > P | > C ]
+[ C | G ] -> [ G | G ]
+[ C | > G ] -> [ C | > G ]
+
+[ > P | K ] -> [ P | Background ] 
+[ > P | D ] -> [ P | Background ] 
+[ > P | E ] -> WIN 
+
+==============
+WINCONDITIONS
+==============
+All Crate on Goal
+Some Player on Exit
+No Door
+
+=======
+LEVELS
+=======
+
+# Level 1
+##########
+#P......E#
+#.######.#
+#...C...G#
+#.######.#
+#.....K..#
+#.######.#
+#....D...#
+##########
+
+# Level 2
+##########
+#P.....E.#
+#.##.###.#
+#..C..K.G#
+#.##.D##.#
+#........#
+#.######.#
+##########
+```
+
+With these revisions, the code should now be free of the errors reported, providing a functioning PuzzleScript game.

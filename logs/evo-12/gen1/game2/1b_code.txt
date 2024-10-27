@@ -1,0 +1,112 @@
+The issue here is with the comments inside the `RULES` section. PuzzleScript does not support comments in the form of double slashes (`//`). Instead of having comments, you can provide descriptive rule names or separate comments from the actual code to ensure clarity. Also, the `unlock` sound effect was specified but not defined within the `SOUNDS` block, so it should either be removed, or a definition should be added if the sound exists.
+
+Here's the corrected version of the code:
+
+```plaintext
+title Maze Runner Deluxe
+author Your Name
+homepage www.example.com
+
+========
+OBJECTS
+========
+
+Background
+black
+
+Player
+yellow
+
+Wall
+grey
+
+Key
+blue
+
+Exit
+green
+
+LockedExit
+darkgreen
+
+MovingPlatform
+purple
+
+=======
+LEGEND
+=======
+
+. = Background
+P = Player
+# = Wall
+K = Key
+E = Exit
+L = LockedExit
+M = MovingPlatform
+
+=======
+SOUNDS
+=======
+
+UnlockSound MOVE 36772507
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Key
+Exit, LockedExit
+MovingPlatform, Player
+Wall
+
+======
+RULES
+======
+
+[ > Player | Key ] -> [ Player | Background ] UnlockSound
+
+[ Player | Exit ] -> WIN
+
+[ Player | Key | LockedExit ] -> [ Player | Background | Exit ]
+
+[ > Player | MovingPlatform | No Wall ] -> [ > Player | > MovingPlatform | No Wall ]
+
+[ > MovingPlatform | MovingPlatform | No Wall ] -> [ > MovingPlatform | > MovingPlatform | No Wall ]
+
+==============
+WINCONDITIONS
+==============
+
+All Key on Background
+Some Player on Exit
+
+=======
+LEVELS
+=======
+
+###########
+#.......#E#
+#.#######.#
+#.K.....#.#
+#.#.###.#.#
+#.#L#.#.#.#
+#.#.#.#.#.#
+#.#.#.#.#.#
+#...#KP...#
+###########
+
+###################
+#.......#L#......E#
+#.#######.#########
+#.K..M...#.K...M..#
+#.#..###.#.#######.#
+#.#..#.#.#.....#...#
+#.#..#.#######.#.#.#
+#.#....M.......#.#.#
+#.##.#####.#.##.#.#.#
+#...#KP.....#...#.#.#
+#####################
+```
+
+In this repaired version, I've removed the comment markers and made sure the `UnlockSound` as specified in your rules actually has a definition in the `SOUNDS` section with a hypothetical sound ID. You should replace `36772507` with the actual sound ID you want to use for the unlock action.

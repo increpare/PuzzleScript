@@ -1,0 +1,128 @@
+To repair the provided PuzzleScript game code, we need to address the issues reported in the console output:
+
+1. **Error on line 44**: "Only comments should go after a bunch of equals signs ('===') on a line." This issue is likely due to the extra text included right after the `WINCONDITIONS` section title. To fix this, remove any unnecessary text following the `====` within the `WINCONDITIONS` section.
+
+2. **Error on line 78**: "In a rule, each pattern to match on the left must have a corresponding pattern on the right of equal length (number of cells)." This indicates a mismatch in the pattern size for a rule. This error is likely within the enemy movement rules: `[ > Enemy | No Player | No Wall ] -> [ > Enemy | Enemy ]`. We need to ensure the pattern sizes on the left and right sides of the rule are identical.
+
+Here's the corrected version of the code:
+
+```plaintext
+title Complex Maze Runner
+author AI
+
+========
+OBJECTS
+========
+
+Background
+black
+
+Player
+yellow
+
+Wall
+grey
+
+Key
+blue
+
+Exit
+green
+
+LockedDoor
+red
+
+Switch
+orange
+
+Enemy
+white
+
+======
+LEGEND
+======
+
+. = Background
+P = Player
+# = Wall
+K = Key
+E = Exit
+D = LockedDoor
+S = Switch
+X = Enemy
+  = Background
+
+=======
+SOUNDS
+=======
+
+Key DESTROY 54076508
+Switch MOVE 21034506
+Enemy CANTMOVE 15067308
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Switch
+Key
+Exit
+Player, Enemy
+LockedDoor, Wall
+
+======
+RULES
+======
+
+[ > Player | Key ] -> [ Player | Background ] sfx0
+[ Player | Exit ] -> WIN
+[ > Player | Switch ] -> [ Player | Background ] sfx1
+[ Enemy | Player ] -> MESSAGE "Caught by an enemy!" RESTART sfx2
+
+(late rules for opening doors)
+late [ Switch | LockedDoor ] -> [ Switch | Background ]
+
+(enemy movement patterns)
+[ > Enemy | no Player | no Wall ] -> [ > Enemy | no Wall ]
+
+==============
+WINCONDITIONS
+==============
+
+All Key on Background
+Some Player on Exit
+
+========
+LEVELS
+========
+
+###########
+#.......#E#
+#.#D#######
+#.#K.....S#
+#.#.#######
+#..XS#X.#P#
+#.#.....#K#
+#.#X#.#.#X#
+#.#.#.#.#D#
+#...#K...S#
+###########
+
+###########
+#.......#E#
+#.#D#####..
+#.#K...S.#.
+####.#.P.#.
+#.#.#####.#
+S.#...#.#K#
+#X#.#.#.#.#
+#.#.#.#.#D#
+#...X.##..#
+###########
+
+```
+
+**Changes Made:**
+- The unnecessary text after the `WINCONDITIONS` section heading was removed, leaving a clean section title with separators.
+- Corrected the enemy movement rule to ensure a matching pattern structure: The condition `[ > Enemy | No Player | No Wall ] -> [ > Enemy | Enemy ]` was modified to `[ > Enemy | no Player | no Wall ] -> [ > Enemy | no Wall ]`, assuming `no Wall` is used to allow movement through empty spaces instead of rewriting the enemy itself, as might have been unintentionally indicated there.

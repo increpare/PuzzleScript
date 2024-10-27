@@ -1,0 +1,156 @@
+To create a more complex variation of the "Push the Stones" game, I will introduce a new mechanic: slippery ice tiles. On these tiles, boulders will continue to slide in the direction they are pushed until they hit a wall or another boulder. Additionally, I'll incorporate a new object, "Ice". I'll also add some new levels that integrate these elements to increase complexity and challenge.
+
+### Plan:
+1. Add a new object called "Ice". It will be a collision layer that boulders will slide over until they hit a wall or another boulder.
+2. Update the rules to make boulders slide on the ice.
+3. Add new levels to exploit the ice mechanic, incorporating increasing difficulty.
+4. Modify the win condition if needed, but since the fundamental goal remains unchanged (all boulders on targets), the win condition stays the same.
+
+Here's the updated code:
+
+```plaintext
+title Push the Stones Plus
+author Puzzle crafter
+
+========
+OBJECTS
+========
+
+Background
+black
+.....
+.....
+.....
+.....
+.....
+
+Wall
+grey black
+11111
+11111
+11111
+11111
+11111
+
+Player
+blue
+..0..
+..0..
+.000.
+.0.0.
+.0.0.
+
+Boulder
+brown
+.....
+.000.
+.000.
+.000.
+.....
+
+Target
+yellow
+.....
+.....
+..0..
+.....
+.....
+
+Ice
+lightblue
+.....
+.....
+.....
+.....
+.....
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Player
+B = Boulder
+T = Target
+I = Ice
+
+=======
+SOUNDS
+=======
+
+Boulder Move 12345678
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Target
+Player, Boulder, Wall, Ice
+
+======
+RULES
+======
+
+[ > Player | Boulder ] -> [ > Player | > Boulder ]
+
+# Make boulders keep moving on ice until they hit a non-ice object
+[ > Boulder | Ice ] -> [ > Boulder | > Ice ]
+[ Boulder | Wall ] -> [ Boulder | Wall ]
+[ Boulder | Boulder ] -> [ Boulder | Boulder ]
+
+==============
+WINCONDITIONS
+==============
+
+All Boulder on Target
+
+=======
+LEVELS
+=======
+
+message Welcome to the ice challenge!
+
+#####
+#...#
+#I#T#
+#.BP#
+#...#
+#####
+
+message Level 2: Ice maze!
+
+#######
+#..I..#
+#.#B#.#
+#I#P#I#
+#..BI.#
+#..T..#
+#######
+
+message Level 3: Sliding strategy!
+
+##########
+#..T...T.#
+#.##....##
+#BP.I..B.#
+#..#IB..T#
+#..BI..T.#
+##########
+
+message Level 4: Final test with ice!
+
+##########
+#..T...T.#
+#..#I...##
+#BPBI.B..#
+#T.#.I..T#
+#..BI..T.#
+##########
+```
+
+**Explanation:**
+- I introduced the "Ice" object, which boulders can slide over.
+- The movement rules for boulders on ice are defined to continuously move until they encounter a non-ice object.
+- New levels incorporate these elements, offering a more challenging experience through the slipping feature of the boulders.

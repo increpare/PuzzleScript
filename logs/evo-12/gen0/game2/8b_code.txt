@@ -1,0 +1,152 @@
+To fix the errors mentioned in the compilation output, we need to address the following issues:
+
+1. **Color Definition Error:** The console output indicates an issue with the color definition for the "Key" object. The color definitions must be formatted correctly, without any trailing spaces.
+
+2. **Invalid Syntax in Rules:** The code includes commented explanations within the rules, which is causing errors. PuzzleScript does not support comments within rules using semicolons. We need to remove these comments to fix the rules.
+
+3. **Win Condition Clarification:** Ensure that the win condition makes sense for the game mechanics.
+
+With these observations in mind, here is a revised version of the game code:
+
+```plaintext
+title Key & Crate Challenge
+author Your Name
+
+========
+OBJECTS
+========
+Background
+DarkGrey LightGrey
+.....
+.....
+.....
+.....
+.....
+
+Player
+Black Orange
+.000.
+.111.
+.111.
+.111.
+.0.0.
+
+Wall
+Brown DarkBrown
+00000
+00000
+00000
+00000
+00000
+
+Crate
+Yellow
+00000
+0...0
+0...0
+0...0
+00000
+
+Goal
+Blue LightBlue
+.....
+..0..
+.000.
+..0..
+.....
+
+Key
+Cyan LightBlue
+.....
+..0..
+.....
+..0..
+.....
+
+Door
+Gray
+.....
+.000.
+.....
+.000.
+.....
+
+Exit
+Green
+.....
+..0..
+.000.
+..0..
+.....
+
+=======
+LEGEND
+=======
+. = Background
+P = Player
+# = Wall
+C = Crate
+G = Goal
+K = Key
+D = Door
+E = Exit
+
+=======
+SOUNDS
+=======
+
+================
+COLLISIONLAYERS
+================
+Background
+Player, Wall, Crate, Key, Door, Goal, Exit
+
+======
+RULES
+======
+[ > P | C ] -> [ > P | > C ]
+[ C | G ] -> [ G | G ]
+[ C | > G ] -> [ C | > G ]
+
+[> P | K ] -> [ P | Background ] 
+[ P | D ] -> [ P | Background ] 
+[ P | E ] -> WIN 
+
+==============
+WINCONDITIONS
+==============
+All Crate on Goal
+Some Player on Exit
+No Door
+
+=======
+LEVELS
+=======
+
+# Level 1
+##########
+#P......E#
+#.######.#
+#...C...G#
+#.######.#
+#.....K..#
+#.######.#
+#....D...#
+##########
+
+# Level 2
+##########
+#P.....E.#
+#.##.###.#
+#..C..K.G#
+#.##.D##.#
+#........#
+#.######.#
+##########
+```
+
+**Explanation of Changes:**
+
+- Fixed the color definition for the "Key" object by ensuring there are no trailing spaces.
+- Removed the comments within the rules which were causing invalid syntax errors.
+- Ensured that the win conditions are clear and align with the intended game mechanics.

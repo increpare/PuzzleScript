@@ -1,0 +1,123 @@
+To fix the error, it's important to ensure that the syntax of the PuzzleScript code is followed correctly. The line causing the error seems to be due to improper separation between different sections of the code. It is necessary to ensure that lines with equals signs are only followed by section headers or are used correctly to denote blocks of code.
+
+In the given code, the line with "======" should correctly separate sections, not follow rules. There was an attempt to declare a `SOUNDS` section but there was no done correctly. Moreover, in PuzzleScript, each rule line should use the correct syntax — distinct sounds should be attached to certain actions or events, and other rule statements should reflect that the logic is sequential.
+
+Let's go through the provided code and reorganize it so that the syntax errors are fixed:
+
+```plaintext
+title Complex Maze Runner
+author AI
+
+========
+OBJECTS
+========
+
+Background
+black
+
+Player
+yellow
+
+Wall
+grey
+
+Key
+blue
+
+Exit
+green
+
+LockedDoor
+red
+
+Switch
+orange
+
+Enemy
+white
+
+======
+LEGEND
+======
+
+. = Background
+P = Player
+# = Wall
+K = Key
+E = Exit
+D = LockedDoor
+S = Switch
+X = Enemy
+  = Background
+
+=======
+SOUNDS
+=======
+
+Key DESTROY 54076508
+Switch MOVE 21034506
+Enemy CANTMOVE 15067308
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Switch
+Key
+Exit
+Player, Enemy
+LockedDoor, Wall
+
+======
+RULES
+======
+
+[ > Player | Key ] -> [ Player | Background ] sfx0
+[ Player | Exit ] -> WIN
+[ > Player | Switch ] -> [ Player | Background ] sfx1
+[ Enemy | Player ] -> [ Enemy | Player ] MESSAGE "Caught by an enemy!" RESTART sfx2
+
+(late rules for opening doors)
+late [ Switch | LockedDoor ] -> [ Switch | Background ]
+
+(enemy movement patterns)
+[ > Enemy | no Player | no Wall ] -> [ > Enemy | no Player | no Wall ]
+
+==============
+WINCONDITIONS
+==============
+
+All Key on Background
+Some Player on Exit
+
+========
+LEVELS
+========
+
+###########
+#.......#E#
+#.#D#######
+#.#K.....S#
+#.#.#######
+#..XS#X.#P#
+#.#.....#K#
+#.#X#.#.#X#
+#.#.#.#.#D#
+#...#K...S#
+###########
+
+###########
+#.......#E#
+#.#D#####..
+#.#K...S.#.
+####.#.P.#.
+#.#.#####.#
+S.#...#.#K#
+#X#.#.#.#.#
+#.#.#.#.#D#
+#...X.##..#
+###########
+```
+
+This adjusted code should comply with PuzzleScript's syntax requirements by having the correct section separations and rule formatting.

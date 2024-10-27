@@ -1,0 +1,146 @@
+To address the errors in the provided PuzzleScript game code, we need to focus on the following issues:
+
+1. **Color Specification Error for Key**: There is an unwanted space in the color specification for the `Key` object. We need to remove the space from "cyan ".
+
+2. **Incorrect Comment Syntax**: Comments in PuzzleScript are indicated by using semicolons (`;`), but in the code, comments are written using `//`, which is invalid in this context. We need to replace `//` with `;`.
+
+Once we fix these errors, the code should compile correctly. Let's proceed with these corrections:
+
+```plaintext
+title Key & Crate Challenge
+author Your Name
+
+========
+OBJECTS
+========
+Background
+DarkGrey LightGrey
+.....
+.....
+.....
+.....
+.....
+
+Player
+Black Orange
+.000.
+.111.
+.111.
+.111.
+.0.0.
+
+Wall
+Brown DarkBrown
+00000
+00000
+00000
+00000
+00000
+
+Crate
+Yellow
+00000
+0...0
+0...0
+0...0
+00000
+
+Goal
+Blue LightBlue
+.....
+..0..
+.000.
+..0..
+.....
+
+Key
+Cyan LightBlue
+.....
+..0..
+.....
+..0..
+.....
+
+Door
+Gray
+.....
+.000.
+.....
+.000.
+.....
+
+Exit
+Green
+.....
+..0..
+.000.
+..0..
+.....
+
+=======
+LEGEND
+=======
+. = Background
+P = Player
+# = Wall
+C = Crate
+G = Goal
+K = Key
+D = Door
+E = Exit
+
+=======
+SOUNDS
+=======
+
+================
+COLLISIONLAYERS
+================
+Background
+Player, Wall, Crate, Key, Door, Goal, Exit
+
+======
+RULES
+======
+[ > P | C ] -> [ > P | > C ]
+[ C | G ] -> [ G | G ]
+[ C | > G ] -> [ C | > G ]
+
+[> P | K ] -> [ P | Background ] ; player collects key
+[ P | D ] -> [ P | Background ]  ; door disappears when touched
+[ P | E ] -> WIN 
+
+==============
+WINCONDITIONS
+==============
+All Crate on Goal
+Some Player on Exit
+No Door
+
+=======
+LEVELS
+=======
+
+# Level 1
+##########
+#P......E#
+#.######.#
+#...C...G#
+#.######.#
+#.....K..#
+#.######.#
+#....D...#
+##########
+
+# Level 2
+##########
+#P.....E.#
+#.##.###.#
+#..C..K.G#
+#.##.D##.#
+#........#
+#.######.#
+##########
+```
+
+Above, the color error for the `Key` object has been fixed by removing the extra space in "Cyan", and comments have been adjusted to use `;` for proper PuzzleScript comment syntax. This should resolve all previously mentioned issues.

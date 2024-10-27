@@ -1,0 +1,133 @@
+To repair the provided PuzzleScript game code, we need to address the errors:
+
+1. **Line 44 Error**: The error indicates that only comments are allowed after a bunch of equals signs ('==='), suggesting that there is a structure improperly formatted in the provided code.
+
+2. **Line 78 Rule Mismatch Error**: This error suggests that there's a mismatch in the number of patterns on the left and right sides of a rule on line 78. This implies that both sides of the rule must have patterns of equal length.
+
+Here's a detailed plan of action:
+
+- **Structure Correction**: The error in line 44 suggests a formatting issue. After a section header (like `SOUNDS`), the content should match the expected structure. `SOUNDS` may be empty, causing the confusion. Removing the equals signs following empty section headers, or properly commenting on them if needed.
+
+- **Rule Correction**: The rule at line 78 might incorrectly interpret movement patterns for `Enemy`. Ensure both sides of the rule have matched cell numbers around the Player and Enemy.
+
+Now, let's present the corrected code:
+
+```plaintext
+title Complex Maze Runner
+author AI
+
+========
+OBJECTS
+========
+
+Background
+black
+
+Player
+yellow
+
+Wall
+grey
+
+Key
+blue
+
+Exit
+green
+
+LockedDoor
+red
+
+Switch
+orange
+
+Enemy
+white
+
+======
+LEGEND
+======
+
+. = Background
+P = Player
+# = Wall
+K = Key
+E = Exit
+D = LockedDoor
+S = Switch
+X = Enemy
+  = Background
+
+=======
+SOUNDS
+=======
+
+Key DESTROY 54076508
+Switch MOVE 21034506
+Enemy CANTMOVE 15067308
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Switch
+Key
+Exit
+Player, Enemy
+LockedDoor, Wall
+
+======
+RULES
+======
+
+[ > Player | Key ] -> [ Player | Background ] sfx0
+[ Player | Exit ] -> WIN
+[ > Player | Switch ] -> [ Player | Background ] sfx1
+[ Enemy | Player ] -> [ Enemy | Player ] MESSAGE "Caught by an enemy!" RESTART sfx2
+
+(late rules for opening doors)
+late [ Switch | LockedDoor ] -> [ Switch | Background ]
+
+(enemy movement patterns)
+[ > Enemy | no Player | no Wall ] -> [ > Enemy | no Player | no Wall ]
+
+==============
+WINCONDITIONS
+==============
+
+All Key on Background
+Some Player on Exit
+
+========
+LEVELS
+========
+
+###########
+#.......#E#
+#.#D#######
+#.#K.....S#
+#.#.#######
+#..XS#X.#P#
+#.#.....#K#
+#.#X#.#.#X#
+#.#.#.#.#D#
+#...#K...S#
+###########
+
+###########
+#.......#E#
+#.#D#####..
+#.#K...S.#.
+####.#.P.#.
+#.#.#####.#
+S.#...#.#K#
+#X#.#.#.#.#
+#.#.#.#.#D#
+#...X.##..#
+###########
+```
+
+### Corrections Made:
+- The `enemy movement patterns` rule now accounts for not moving to existing Player positions, correcting to `no Player` in the right pattern of the rule, ensuring a symmetric pattern.
+- Kept each functional part of scripting where a malfunction was not indicated.

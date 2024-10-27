@@ -1,0 +1,1595 @@
+SYSTEM PROMPT:
+You are a game designer, familiar with the PuzzleScript game description language. Here are some example games, for inspiration (do not reproduce these games exactly):
+
+title maze generator
+run_rules_on_level_start
+again_interval 0
+
+========
+OBJECTS
+========
+
+Background .
+black white
+00000
+01110
+01110
+01110
+00000
+
+Player P
+transparent
+
+visited
+transparent
+
+filler
+transparent
+
+w_up
+white
+.000.
+.000.
+.000.
+.000.
+.....
+
+w_down
+white
+.....
+.000.
+.000.
+.000.
+.000.
+
+w_left
+white
+.....
+0000.
+0000.
+0000.
+.....
+
+w_right
+white
+.....
+.0000
+.0000
+.0000
+.....
+
+to_delete
+transparent
+
+temp
+transparent
+
+tempA
+transparent
+
+=======
+LEGEND
+=======
+
+
+=======
+SOUNDS
+=======
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Player
+filler
+visited
+w_up
+w_down
+w_left
+w_right
+to_delete
+temp
+tempA
+
+======
+RULES
+======
+
+(place player randomly on the first turn only)
+random [ no filler ] -> [player visited]
+[no filler] -> [filler]
+
+(propagate path until you can't move any more)
+random [ player |  no visited ] ->  [  visited > to_delete |  < to_delete player ] again
+
+(if you can't extend the current path, continue from some random other neighbouring point)
+[player | no visited ] -> [ player tempA | ]
+random [player no tempA] [ visited | no visited ] -> [ visited ] [ visited player |  ] again
+[tempA]->[]
+
+[ up to_delete ] -> [ w_up ]
+[ down to_delete ] -> [ w_down ]
+[ left to_delete ] -> [ w_left ]
+[ right to_delete ] -> [ w_right ]
+
+==============
+WINCONDITIONS
+==============
+
+
+=======
+LEVELS
+=======
+
+........................................
+........................................
+........................................
+........................................
+........................................
+........................................
+........................................
+........................................
+........................................
+........................................
+........................................
+........................................
+........................................
+........................................
+........................................
+........................................
+........................................
+........................................
+........................................
+........................................
+........................................
+........................................
+........................................
+........................................
+........................................
+........................................
+........................................
+........................................
+........................................
+........................................
+
+
+
+
+title Love and Pieces
+author lexaloffle
+homepage www.lexaloffle.com
+
+========
+OBJECTS
+========
+
+Background
+White LightBlue
+00000
+01110
+01110
+01110
+00000
+
+
+Wall
+DarkBlue Black DarkGray LightGray White
+23330
+22300
+22100
+21110
+11111
+
+Player
+Yellow Orange Red White LightBrown
+20002
+01130
+01110
+04110
+20002
+
+GrayBlock
+Gray DarkGray Green
+10001
+01210
+02220
+01210
+10001
+
+LitBlock
+Green DarkGray
+00000
+01110
+01110
+01110
+00000
+
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Player
+o = GrayBlock
+Block = GrayBlock or Player
+
+=======
+SOUNDS
+=======
+
+GrayBlock MOVE 36772507
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Player, Wall, GrayBlock, LitBlock
+
+======
+RULES
+======
+
+[ > Player | Wall ] -> cancel
+late [ Player | GrayBlock ] -> [ Player | Player ]
+
+==============
+WINCONDITIONS
+==============
+
+No GrayBlock
+
+=======
+LEVELS
+=======
+
+
+
+############
+#...#......#
+#..........#
+#.p..o..o..#
+#..........#
+#..#.......#
+#..........#
+#......#...#
+#..........#
+############
+
+############
+#..........#
+#..........#
+#....#o....#
+#..#.o.#...#
+#....#.....#
+#....o.....#
+#.o......p.#
+#..........#
+############
+
+############
+#o...o.....#
+#.o...o....#
+#..o...o...#
+#...o...o..#
+#o...o...o.#
+#.o...o...o#
+#..o...o.p.#
+#...o...o..#
+############
+
+############
+#..........#
+#..o....o..#
+#.p#....#o.#
+#..........#
+#..........#
+#.o#....#o.#
+#..o....o..#
+#..........#
+############
+
+
+############
+#..o.......#
+#.....oo...#
+#...o......#
+#.o#..p..o.#
+#....o.....#
+#..o....o..#
+#o.o...#...#
+#...o...o..#
+############
+
+############
+#p.o.......#
+#..........#
+#.o..o...###
+#........###
+###.o......#
+###......o.#
+#o.....##..#
+#......##.o#
+############
+
+
+############
+#........o.#
+#..o.##....#
+#....o.o...#
+#.#......#.#
+#.#..p.o.#.#
+#..o.......#
+#....##....#
+#.o......o.#
+############
+
+
+############
+###........#
+##....o.o..#
+#....#.#...#
+#...o.o.o..#
+#....#.#...#
+#...o.o....#
+##........##
+###.p....###
+############
+
+
+###########o
+#....p....##
+#....p.....#
+#...ppp....#
+#ppppppppp.#
+#...ppp....#
+#..ppppp...#
+#.pp...pp..#
+#.p.....p..#
+############
+
+
+title Sok7
+author Kevin Cancienne
+homepage https://twitter.com/potatojin
+
+color_palette whitingjp
+noaction
+
+========
+OBJECTS
+========
+
+
+Background  (special, automatically placed in its own layer)
+darkgray black
+10000
+10000
+10000
+10000
+11111
+
+Player
+RED PINK
+.1.1.
+.000.
+11111
+.111.
+.1.1.
+
+Garbage1
+lightgray black
+00000
+01110
+01010
+01110
+00000
+
+Garbage2
+lightgray darkgray darkgray
+00200
+01110
+21012
+01110
+00200
+
+
+One
+green white
+00100
+00100
+00100
+00100
+00100
+
+Two
+yellow white
+01110
+00010
+01110
+01000
+01110
+
+Three
+orange white
+01110
+00010
+00110
+00010
+01110
+
+Four
+red white
+01010
+01010
+01110
+00010
+00010
+
+Five
+purple white
+01110
+01000
+01110
+00010
+01110
+
+Six
+lightblue white
+01110
+01000
+01110
+01010
+01110
+
+Seven
+darkblue white
+01110
+00010
+00010
+00010
+00010
+
+Wall
+black
+00000
+00000
+00000
+00000
+00000
+
+O (unoccupied cell)
+white
+00000
+00000
+00000
+00000
+00000
+
+X (occupied cell)
+black
+00000
+00000
+00000
+00000
+00000
+
+E (explosion)
+black
+00000
+00000
+00000
+00000
+00000
+
+D (disappeared disc)
+black
+00000
+00000
+00000
+00000
+00000
+
+C (counter)
+black
+00000
+00000
+00000
+00000
+00000
+
+=======
+LEGEND
+=======
+
+. = Background
+P = Player
+1 = One
+2 = Two
+3 = Three
+4 = Four
+5 = Five
+6 = Six
+7 = Seven
+W = Wall
+Garbage = Garbage1 or Garbage2
+Garbage1_1 = Garbage1
+Garbage1_2 = Garbage1
+Garbage1_3 = Garbage1
+Disc = One or Two or Three or Four or Five or Six or Seven or Garbage
+RandomDisc = One or Two or Three or Four or Five or Six or Garbage1 or Garbage1_1 or Garbage1_2 or Garbage1_3
+NumberDisc = One or Two or Three or Four or Five or Six or Seven
+Object = Disc or Player
+
+
+
+=========
+SOUNDS
+=========
+Disc Move 53338707
+Disc Destroy 56624700
+Endlevel 34957309
+SFX0 67673302
+
+================
+COLLISIONLAYERS
+================
+
+C
+E, D
+O, X
+Background
+Wall, Player, One, Two, Three, Four, Five, Six, Seven, Garbage
+
+
+
+======
+RULES
+======
+
+
+[> Player | Disc] -> [> Player | > Disc]
+
+[D] -> [ ]
+[X] -> [O]
+[ ] -> [O]
+[One O] -> [One X]
+[Two O] -> [Two X]
+[Three O] -> [Three X]
+[Four O] -> [Four X]
+[Five O] -> [Five X]
+[Six O] -> [Six X]
+[Seven O] -> [Seven X]
+[Garbage O] -> [Garbage X]
+
+(1 rules)
+[O | One | O] -> [O | D X | O] again
+
+(2 rules)
+[O | Two | X | O] -> [O | D X | X | O] again
+
+(3 rules)
+[O | Three | X | X | O] -> [O | D X | X | X | O] again
+[O | X | Three | X | O] -> [O | X | D X | X | O] again
+[O | X | X | Three | O] -> [O | X | X | D X | O] again
+
+(4 rules)
+[O | Four | X | X | X | O] -> [O | D X | X | X | X | O] again
+[O | X | Four | X | X | O] -> [O | X | D X | X | X | O] again
+[O | X | X | Four | X | O] -> [O | X | X | D X | X | O] again
+[O | X | X | X | Four | O] -> [O | X | X | X | D X | O] again
+
+(5 rules)
+[O | Five | X | X | X | X | O] -> [O | D X | X | X | X | X | O] again
+[O | X | Five | X | X | X | O] -> [O | X | D X | X | X | X | O] again
+[O | X | X | Five | X | X | O] -> [O | X | X | D X | X | X | O] again
+[O | X | X | X | Five | X | O] -> [O | X | X | X | D X | X | O] again
+[O | X | X | X | X | Five | O] -> [O | X | X | X | X | D X | O] again
+
+(6 rules)
+[O | Six | X | X | X | X | X | O] -> [O | D X | X | X | X | X | X | O] again
+[O | X | Six | X | X | X | X | O] -> [O | X | D X | X | X | X | X | O] again
+[O | X | X | Six | X | X | X | O] -> [O | X | X | D X | X | X | X | O] again
+[O | X | X | X | Six | X | X | O] -> [O | X | X | X | D X | X | X | O] again
+[O | X | X | X | X | Six | X | O] -> [O | X | X | X | X | D X | X | O] again
+[O | X | X | X | X | X | Six | O] -> [O | X | X | X | X | X | D X | O] again
+
+(7 rules)
+[O | Seven | X | X | X | X | X | X | O] -> [O | D X | X | X | X | X | X | X | O] again
+[O | X | Seven | X | X | X | X | X | O] -> [O | X | D X | X | X | X | X | X | O] again
+[O | X | X | Seven | X | X | X | X | O] -> [O | X | X | D X | X | X | X | X | O] again
+[O | X | X | X | Seven | X | X | X | O] -> [O | X | X | X | D X | X | X | X | O] again
+[O | X | X | X | X | Seven | X | X | O] -> [O | X | X | X | X | D X | X | X | O] again
+[O | X | X | X | X | X | Seven | X | O] -> [O | X | X | X | X | X | D X | X | O] again
+[O | X | X | X | X | X | X | Seven | O] -> [O | X | X | X | X | X | X | D X | O] again
+
+
+(garbage rules)
+[C X] -> [ X]
+[> Player | ] -> [> Player | C]
+[C No Object | C No Object | C No Object | C No Object| C No Object | C No Object] -> [ |  | random RandomDisc | |  | ] SFX0
+[D | Garbage1] -> [ | Garbage2]
+[D | Garbage2] -> [ | random NumberDisc]
+
+
+
+==============
+WINCONDITIONS
+==============
+No Disc
+
+=======
+LEVELS
+=======
+
+
+WWWWWWWWWWWWWW
+W....13......W
+W.4..2..5....W
+W....2..3....W
+W.77....6....W
+W....3..5....W
+W.P........2.W
+W....2.......W
+WWWWWWWWWWWWWW
+
+message Board Clear: You Win
+
+
+title Heroes of Sokoban
+author Jonah Ostroff
+text_color yellow
+key_repeat_interval 0.25
+
+========
+OBJECTS
+========
+
+Background
+#AAAAAA #DDDDDD
+00000
+00100
+00000
+00010
+00000
+
+Goal
+Brown Yellow
+.000.
+00000
+00010
+00000
+00000
+
+Wall
+Darkgrey #222222
+01000
+11111
+00010
+00010
+11111
+
+Fighter
+#FF4444 Pink DarkBrown
+.000.
+.111.
+00000
+.000.
+.2.2.
+
+Wizard
+#2266FF Pink
+.000.
+.010.
+00000
+.000.
+00000
+
+Thief
+#00BB00 Pink DarkBrown
+.000.
+.010.
+00000
+.0.0.
+.0.0.
+
+SFighter
+#880000 Pink DarkBrown
+.000.
+.111.
+00000
+.000.
+.2.2.
+
+SWizard
+#000088 Pink
+.000.
+.010.
+00000
+.000.
+00000
+
+SThief
+#006600 Pink DarkBrown
+.000.
+.010.
+00000
+.0.0.
+.0.0.
+
+
+Crate
+Orange #552200
+.111.
+10001
+10001
+10001
+.111.
+
+YellowSwitch
+Yellow Black
+.....
+.111.
+.101.
+.111.
+.....
+
+YellowOpen
+Yellow
+0...0
+.....
+.....
+.....
+0...0
+
+YellowDoor
+Yellow #AA7722
+01010
+10001
+00000
+10001
+01010
+
+PurpleSwitch
+#6611CC Black
+.....
+.111.
+.101.
+.111.
+.....
+
+PurpleDoor
+#6611CC #220088
+01010
+10001
+00000
+10001
+01010
+
+PurpleOpen
+#6611CC
+0...0
+.....
+.....
+.....
+0...0
+
+Temp
+Pink
+
+ShadowDoor
+Purple
+
+=======
+LEGEND
+=======
+
+Player = Fighter or Wizard or Thief
+SPlayer = Swizard or Sthief or SFighter
+Hero = Player or Splayer
+ClosedDoor = PurpleDoor or YellowDoor
+OpenDoor = YellowOpen or PurpleOpen
+Switch = PurpleSwitch or YellowSwitch
+Moveable = Crate or SPlayer
+Static = Wall or ClosedDoor
+Weighing = Crate or Player or SPlayer
+. = Background
+# = Wall
+F = Fighter
+W = Wizard
+T = Thief
+1 = SFighter
+2 = SThief
+3 = SWizard
+* = Crate
+G = Goal
+[ = YellowDoor
+] = PurpleDoor
+{ = YellowSwitch
+} = PurpleSwitch
+
+=======
+SOUNDS
+=======
+
+Moveable move 82056307
+Sfx0 21221308
+Endlevel 36315908
+Sfx1 66399906
+Sfx2 92172900
+Sfx3 15129100
+EndGame 86793500
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Temp
+Goal, Switch, OpenDoor, ShadowDoor
+ClosedDoor, Hero, Crate, Wall
+
+======
+RULES
+======
+
+[ >  Fighter | Moveable ] -> [  >  Fighter | > Moveable  ]
+[ > Moveable | Moveable ] [ Fighter] -> [ > Moveable | > Moveable ] [ Fighter]
+
+[ < Thief | Moveable ] -> [ < Thief | < Moveable ]
+
+[ > Wizard ] -> [ Wizard > Temp]
+[ > Temp | no Moveable no Static] -> [ | > Temp]
+[ > Temp | Static] [Wizard] -> [ | Static ] [> Wizard]
+[ > Temp | Moveable ] [Wizard] -> [ | Wizard Sfx0] [Moveable]
+
+Late [Temp] -> []
+
+[ Action Fighter] [SThief] -> [SFighter] [Thief Sfx1]
+[ Action Thief] [SWizard] -> [SThief] [Wizard Sfx1]
+[ Action Wizard] [SFighter] -> [SWizard] [Fighter Sfx1]
+[ Action Fighter] [no SThief] [SWizard] -> [SFighter] [no SThief] [Wizard Sfx1]
+[ Action Thief] [no Swizard] [SFighter] -> [SThief] [no SWizard] [Fighter Sfx1]
+[ Action Wizard] [no SFighter] [SThief] -> [SWizard] [no SFighter] [Thief Sfx1]
+
+late [Weighing  YellowSwitch] [YellowDoor] -> [Weighing  YellowSwitch] [ShadowDoor]
+late [YellowSwitch no Weighing] [YellowOpen] -> [YellowSwitch] [YellowDoor sfx2]
+late [YellowSwitch no Weighing] [ShadowDoor] -> [YellowSwitch] [YellowDoor]
+late [ShadowDoor] -> [YellowOpen sfx3]
+
+late [Weighing PurpleSwitch] [PurpleDoor] -> [Weighing PurpleSwitch] [ShadowDoor]
+late [PurpleSwitch no Weighing] [PurpleOpen] -> [PurpleSwitch] [PurpleDoor sfx2]
+late [PurpleSwitch no Weighing] [ShadowDoor] -> [PurpleSwitch] [PurpleDoor]
+late [ShadowDoor] -> [PurpleOpen sfx3]
+
+==============
+WINCONDITIONS
+==============
+
+All Hero on Goal
+All Goal on Hero
+
+=======
+LEVELS
+=======
+
+Message Walk to the exit.
+
+#############
+#...........#
+#.F.......G.#
+#...........#
+#############
+
+Message Red warrior pushes blocks.
+
+#############
+#...#.*.#.*.#
+#.F...*.**G.#
+#...#.*.#.*.#
+#############
+
+Message Hold down switches to open doors.
+
+#############
+#...#...#...#
+#.F.*.{.#.G.#
+#...#...[...#
+#############
+
+Message Press multiple switches at once.
+
+#########
+#.....#G#
+#.#*..#[#
+#.**.F..#
+#.......#
+#.{.{.{.#
+#.......#
+#########
+
+Message Green thief pulls blocks.
+
+#############
+#...#..*#...#
+#.T.*.{.#.G.#
+#...#..*[...#
+#############
+
+#########
+#.....#G#
+#.#*..#[#
+#.**.T..#
+#.......#
+#.{.{.{.#
+#.......#
+#########
+
+#########
+#...##G.#
+#.#..##[#
+#....{..#
+#.#.#.#.#
+#..*.T..#
+#########
+
+Message Blue wizard teleports to blocks.
+
+#############
+#...*.{.#...#
+#.W.*.{.[.G.#
+#...#...#...#
+#############
+
+#########
+#.....#G#
+#.#*..#[#
+#.**.W..#
+#.......#
+#.{.{.{.#
+#.......#
+#########
+
+#######
+#W#G#*#
+#.#.#.#
+#*...*#
+#.###.#
+#*.*..#
+#######
+
+Message Press action to switch heroes.
+
+#############
+#...#...#...#
+#.F...}.[.G.#
+#...#...#...#
+#############
+#...#...#...#
+#.3.].{...G.#
+#...#...#...#
+#############
+
+Message Heroes can move each other.
+
+###########
+#*#..##G.G#
+#.#.2.#...#
+#.....#..##
+#W###.*..*#
+###########
+
+###########
+#F.*.#.*#{#
+#..#...*..#
+####...*.*#
+#..#.##[###
+#2...#*.GG#
+###########
+
+#############
+#.###########
+#*....{....3#
+#.####.######
+#.#..#.###..#
+#.#G....[].G#
+#.#..#.###..#
+#.####.######
+#.....}....T#
+#############
+
+#############
+##G.#F#*#...#
+#*..[.....{.#
+##G.#3###...#
+#############
+
+###########
+#W..{...[*#
+#######.#[#
+#G#G#G#.#2#
+#.......#1#
+###########
+
+#########
+#*......#
+#######.#
+#F23.]#.#
+#..##G#.#
+#..#GG#.#
+##.####.#
+#.......#
+##}####.#
+#########
+
+#############
+#...#G.G#...#
+#.*.#F23#.G.#
+#...#...#...#
+##[###.###[##
+#...#...#...#
+#.{...{...{.#
+#...#...#...#
+#############
+
+#######
+#G***F#
+#*****#
+#G***2#
+#*****#
+#G***3#
+#######
+
+########
+#3..G[*#
+########
+#F**G{{#
+########
+#2.[G..#
+########
+
+#############
+#...#...#...#
+#F#.*.#.*.#3#
+#...#...#...#
+######.######
+#...#...#####
+#2#.*.#...}*#
+#...#...#####
+######.######
+#G..#...#...#
+#G..].#...#.#
+#G..#...#...#
+#############
+
+#############
+#F.........G#
+#############
+#T.........G#
+#############
+#W.........G#
+#############
+Message Thanks for playing!
+
+
+title Smother
+author Team Borse
+
+background_color #9CBD0F
+text_color #0F380F
+
+run_rules_on_level_start
+
+========
+OBJECTS
+========
+
+Background
+#9CBD0F
+
+LaserGV
+#9CBD0F #8CAD0F #306230 #0F380F
+22222
+.222.
+..3..
+..3..
+.....
+
+LaserGH
+#9CBD0F #8CAD0F #306230 #0F380F
+2....
+22...
+2233.
+22...
+2....
+
+LaserV
+#9CBD0F #8CAD0F #306230 #0F380F
+.....
+..3..
+..3..
+..3..
+.....
+
+LaserH
+#9CBD0F #8CAD0F #306230 #0F380F
+.....
+.....
+.333.
+.....
+.....
+
+LaserB
+#9CBD0F #8CAD0F #306230 #0F380F
+.....
+..3..
+.333.
+..3..
+.....
+
+Exit
+#9CBD0F #8CAD0F #306230 #0F380F
+2...2
+2...2
+2...2
+2...2
+2.2.2
+
+Wall
+#9CBD0F #8CAD0F #306230 #0F380F
+33333
+31223
+32123
+32223
+33333
+
+Heart
+#9CBD0F #8CAD0F #306230 #0F380F
+.2.2.
+22222
+.222.
+..2..
+.....
+
+
+PlayerFull
+#9CBD0F #8CAD0F #306230 #0F380F
+.222.
+.323.
+.222.
+.222.
+.2.2.
+
+Protector
+#9CBD0F #8CAD0F #306230 #0F380F
+.333.
+.232.
+.333.
+.333.
+.3.3.
+
+ProtectorSolo
+#9CBD0F #8CAD0F #306230 #0F380F
+.333.
+.232.
+.333.
+.333.
+.3.3.
+
+victimSolo
+#9CBD0F #8CAD0F #306230 #0F380F
+.222.
+.323.
+.222.
+.222.
+.2.2.
+
+
+PlayerDead
+#9CBD0F #8CAD0F #306230 #0F380F
+.222.
+22222
+2.2.2
+.222.
+.222.
+
+pushBlock
+#9CBD0F #8CAD0F #306230 #0F380F
+33333
+31113
+31113
+31113
+33333
+
+=======
+LEGEND
+=======
+
+Player = PlayerFull or Protector or ProtectorSolo or victimSolo
+PlayerWin = PlayerFull or PlayerDead or Protector or victimSolo
+Laser = LaserV or LaserH or LaserB
+LaserBlock = Wall or Player or PlayerDead or Exit
+. = Background
+# = Wall
+g = LaserGV
+h = LaserGH
+P = PlayerFull
+n = Protector
+q = ProtectorSolo
+k = victimSolo
+O = Exit
+l = Heart
+b = pushBlock
+
+=======
+SOUNDS
+=======
+
+startgame 83279102 (sound at start of game)
+CloseMessage 123434 (close message noise)
+ShowMessage 123434 (show message noise)
+sfx0 8545502 (death)
+sfx1 26 (heart)
+
+
+================
+COLLISIONLAYERS
+================
+Background
+Laser
+Exit
+ProtectorSolo, Heart, Wall
+Player, Wall, PlayerDead, LaserGV, LaserGH, Protector, victimSolo, pushBlock
+
+======
+RULES
+======
+
+(clear lasers)
+late [Laser] -> []
+
+(zip the lasers out of the guns and through the levels)
+late down [LaserGV | no Laser] -> [LaserGV | LaserV]
+late right [LaserGH | no Laser] -> [LaserGH | LaserH]
+
+late down [LaserV no LaserBlock | ] -> [LaserV | LaserV]
+late right [LaserH no LaserBlock | ] -> [LaserH | LaserH]
+
+(generate overlapping lasers)
+late down [LaserV no LaserBlock | LaserH] -> [LaserV | LaserB]
+late down [LaserGV no LaserBlock | LaserH] -> [LaserGV | LaserB]
+late right [LaserH no LaserBlock | LaserV] -> [LaserH | LaserB]
+late right [LaserGH no LaserBlock | LaserV] -> [LaserGH | LaserB]
+
+(deal with overlapping lasers)
+late right [LaserB no LaserBlock | no Laser] -> [LaserB | LaserH]
+late right [LaserH no LaserBlock | no Laser] -> [LaserH | LaserH]
+late down [LaserB no LaserBlock | no Laser] -> [LaserB | LaserV]
+late down [LaserV no LaserBlock | no Laser] -> [LaserV | LaserV]
+
+(solo Victim can push a block)
+ [ > victimSolo | pushBlock ] -> [ > victimSolo| > pushBlock]
+
+(pushing block to switch breaks laser)
+[pushBlock  laser] -> [ wall]
+
+
+(if a player is over a laser, then cause them harm)
+late [ PlayerFull Laser ] -> [PlayerDead Laser] sfx0
+
+(victim solo dies in the laser)
+late [ victimSolo Laser ] -> [PlayerDead Laser] sfx0
+
+(protector levels)
+[ > ProtectorSolo | ... | Heart ] -> [ | ... | ProtectorSolo ] sfx1
+[ > ProtectorSolo ] -> [ ProtectorSolo]
+
+
+==============
+WINCONDITIONS
+==============
+All PlayerWin on Exit
+No Heart
+
+=======
+LEVELS
+=======
+
+message then...
+
+message I PROTECT YOU
+
+###g###g###
+#.........#
+#n.......o#
+#........o#
+#p...#....#
+#.........#
+###########
+
+message YOU SMOTHER ME
+
+###########
+#n........#
+#......#..#
+h..#h..#..#
+#p.....#..#
+#......#oo#
+###########
+
+message I DEFEND YOU
+
+#####g#####
+#.P.....n.#
+#.........#
+#..#...#..#
+#.........#
+#......oo.#
+###########
+
+message YOU SPEAK FOR ME
+
+#####g#####
+#n.......o#
+#....#h...#
+h....g....#
+#.....#..o#
+#p......#.#
+###########
+
+message WE ARE CARE FREE
+
+#P####g##g###
+#.#..#.#....#
+#..........o#
+h...........#
+#.#h..#..#.o#
+#.....#....n#
+#############
+
+message I CARRY OUR BURDENS
+
+message before...
+
+message I AM ALWAYS SEARCHING
+
+###########
+#l...l....#
+#....l....#
+#.........#
+#q..l.....#
+#l..l.....#
+###########
+
+
+message I NEVER SEE A FUTURE
+
+###########
+#.........#
+#..l..q.l.#
+#.l....l..#
+#.ll...l.l#
+#l.l...l..#
+###########
+
+message I NEVER FEEL COMFORTABLE
+
+###########
+#....l....#
+#lq..l..l.#
+#.l..l....#
+#.l.....l.#
+#....l....#
+###########
+
+
+message NO ONE GETS ME
+
+###########l##l#####
+#l.l...............#
+#.....ll...........#
+#l..l..............#
+#..q..l.......l....#
+#..ll..l......l....#
+###########........#
+###########l....l..#
+###########........#
+###########.l.l.l..#
+####################
+
+message I NEED CONTACT
+
+###################
+#.l...l############
+#......############
+#l.l..l##########l#
+#l.......l.....l#.#
+#....l............#
+#ll..q.........l.l#
+#..l.....l.......l#
+#.l..l............#
+###################
+
+message I NEED VALIDATION
+
+message before...
+
+message I AM INDEPENDENT
+
+###########
+#.k.g.....#
+#.......b.#
+#.b...###.#
+#.#.......#
+#...h.....#
+#...#...O.#
+###########
+
+
+message I AM STRONG
+
+
+###g##g##
+#.......#
+#kb.b...#
+#.......#
+h.....#.#
+#..#b#h.#
+#....#..#
+h....#o.#
+#.......#
+#########
+
+message I NEED NO ONE
+
+###g#######
+#.o.......#
+#...#.##..#
+#.#..bkb.##
+h...#.#.b.#
+#.......#.#
+#.....#...#
+###########
+
+message I ENJOY MY COMPANY
+
+#####g#####g#####g######
+#.k.....b...........o..#
+#..b....#.#.......##...#
+#.........b...#b..#g...#
+h..........#......#....#
+##.###.#######.####.#.##
+h..............#h......#
+####.#####.###.##.#.#.##
+###.b.#....#........#..#
+###.#....#b#.........b.#
+##.........#.......#...#
+########################
+
+message I AM FEARLESS
+
+##g##g#g####
+#o..#.#....#
+#...#.#.#..#
+#..........#
+#.....#..b.#
+#........b.#
+#..#.##.#b.#
+#..#......k#
+############
+
+message I AM ALONE
+
+
+message now...
+
+###########
+#...o.o...#
+#.........#
+#.........#
+#.........#
+#...n.p...#
+###########
+
+message WE DON'T SEE THINGS AS THEY ARE, WE SEE THEM AS WE ARE
+message Credits
+message Concept/Design/Programming/Graphics - Steven McStravog
+message Design/Programming/Graphics - Darragh McLernon
+message Porting/Design/Programming - Rachel Gawley
+message Artwork - Ricky Woodside
+
+
+USER PROMPT:
+The following PuzzleScript game code:
+```plaintext
+title Star Collector
+author AI
+
+========
+OBJECTS
+========
+
+Background
+DeepSkyBlue
+
+Wall
+Grey
+00000
+01110
+01110
+01110
+00000
+
+Player
+Black Orange
+..0..
+.000.
+0.0.0
+.000.
+..0..
+
+Star
+Yellow
+.....
+..0..
+.000.
+..0..
+.....
+
+=======
+LEGEND
+=======
+. = Background
+# = Wall
+P = Player
+* = Star
+
+=======
+SOUNDS
+=======
+Star REMOVE 54076508
+
+================
+COLLISIONLAYERS
+================
+Background
+Player, Wall, Star
+
+======
+RULES
+======
+[ > Player | Star ] -> [ Player | ] SFX0
+
+==============
+WINCONDITIONS
+==============
+no Star
+
+=======
+LEVELS
+=======
+
+### Level 1
+######
+#*..P#
+#.#..#
+#..*.#
+#.####
+#*....#
+######
+
+```
+produced the following console output:
+=================================
+line 9 : Was looking for color for object BACKGROUND, got "deepskyblue" instead.
+line 14 : Trying to access color number 1 from the color palette of sprite WALL, but there are only 1 defined in it.
+line 15 : Trying to access color number 1 from the color palette of sprite WALL, but there are only 1 defined in it.
+line 16 : Trying to access color number 1 from the color palette of sprite WALL, but there are only 1 defined in it.
+line 46 : Was expecting a soundverb here (MOVE, DESTROY, CANTMOVE, or the like), but found something else.
+line 68 : Key "L" not found. Do you need to add it to the legend, or define a new object?
+too many errors, aborting compilation
+Errors detected during compilation; the game may not work correctly.
+Return a repaired version of the code that addresses these errors. First, reason about your task and determine the best plan of action. Then, write your code.  Return your code in full, inside a ```plaintext code block.
