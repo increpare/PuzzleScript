@@ -1,125 +1,130 @@
-To create a complete PuzzleScript game, I'll design a simple puzzle where the player must navigate a maze-like environment to reach a goal while pushing blocks that can block or assist their path. This game will involve the player pushing blocks and avoiding obstacles to reach a designated goal area.
+To create a complete PuzzleScript game, we'll need to outline the various components necessary for the game to function. Here's an overview of what we'll include:
 
-Here's the plan of action for the game design:
+1. **Title and Author**: Every PuzzleScript game starts with these to provide context about the game and its creator.
+2. **Objects**: Define the visual elements we need in the game such as the player, goals, obstacles, and background. To keep it simple, let's consider a basic game with a player, targets, walls, and a collectible item.
+3. **Legend**: Assign shorthand symbols to the objects for use in defining levels.
+4. **Sounds**: Optionally include sound effects within the game. For simplicity, we may skip this or provide a default sound setting.
+5. **Collision Layers**: Define how objects will interact with each other, ensuring that logical layers are established.
+6. **Rules**: Define the rules for movement and interactions between objects.
+7. **Win Conditions**: Determine what needs to happen for the player to win the game.
+8. **Levels**: Set up the puzzles or scenarios the player must navigate to achieve the win condition.
 
-1. **Title and Author Information**: Define the game's title and author.
-2. **Objects**: Define the visual representation of each object in the game including the player, walls, blocks, and goals.
-3. **Legend**: Define shorthand symbols for each object to use in level design.
-4. **Collision Layers**: Define which objects can be on top of others.
-5. **Rules**: Define the interactions between objects, such as the player pushing blocks.
-6. **Win Conditions**: Define what constitutes a win for any level.
-7. **Levels**: Create the levels using the symbols defined in the legend.
+Plan:
+- Title the game "Gem Collector" to create a simple game where the player collects all gems to win.
+- Define a small set of objects: Player, Gem, Wall, Target (to mark where collected gems go), and Background.
+- Create a basic collision layer setup and rules for collecting gems.
+- Define a few simple levels to play through.
 
-This game will involve the player pushing crates to clear paths or block obstacles and reaching a specific goal. Let's implement these elements.
+Now, let's write the complete game code.
 
 ```plaintext
-title Block Pusher Adventure
-author YourName
+title Gem Collector
+author Your Name
 
 ========
 OBJECTS
 ========
 
 Background
-DarkGrey LightGrey
-.....
-.....
-.....
-.....
-.....
+white
 
 Player
-Black Orange
-.000.
-.111.
-.111.
-.111.
-.0.0.
+blue
+.00.
+0000
+0000
+.00.
 
 Wall
-Brown DarkBrown
-00000
-00000
-00000
-00000
-00000
+black
+1111
+1111
+1111
+1111
 
-Crate
-Yellow
-00000
-0...0
-0...0
-0...0
-00000
+Gem
+yellow
+.22.
+2222
+2222
+.22.
 
-Goal
-Blue LightBlue
-.....
-..0..
-.000.
-..0..
-.....
+Target
+green
+.33.
+3333
+3333
+.33.
 
 =======
 LEGEND
 =======
 
 . = Background
-P = Player
 # = Wall
-C = Crate
-G = Goal
+P = Player
+G = Gem
+T = Target
+
+=========
+SOUNDS
+=========
+
+Player move 20445000
+Gem collect 20680000
+Win 21000000
 
 ================
 COLLISIONLAYERS
 ================
 
 Background
-Player, Wall, Crate, Goal
+Target
+Gem
+Player, Wall
 
 ======
 RULES
 ======
 
-[ > Player | Crate ] -> [ > Player | > Crate ]
-[ Crate | Goal ] -> [ Goal | Goal ]
+[ > Player | Gem ] -> [ Player | ] 
+[ Player | Target ] -> [ Player | Gem ]
 
 ==============
 WINCONDITIONS
 ==============
 
-All Goal on Crate
+all Target on Gem
 
 =======
 LEVELS
 =======
 
-######
-#P...#
-#..C.#
-#.C..#
-#..G.#
-######
+#..#.......#
+#..#####..G#
+#......P..T#
+#..####...#
+#.G......G.#
+#..#.##..#T#
+####...#####
 
-#######
-#P....#
-#.#####
-#..C..#
-#...G.#
-#######
+#..G..##..#
+#.#..##..#.
+G...#..#..G
+##..P..###.
+#.#####..T#
+#.G....G..#
+#######...#
 
-#####
-#PCG#
-#####
+#..##..###
+#..P#...G#
+####..##.T
+TTTT..G###
+#.##..###.
+#...#...#
+#..#.#...#
+
+message Congratulations! You collected all the gems!
 ```
 
-### Explanation:
-
-- **Objects**: Defined visual styles for the background, player, walls, crates, and goal areas.
-- **Legend**: Created shorthand symbols for referencing objects in level design.
-- **Collision Layers**: Ensured that objects display correctly by defining their layer positions.
-- **Rules**: Implemented a rule to allow the player to push crates and aligned crates on goal areas.
-- **Win Conditions**: The player must push all crates to cover all goal tiles to win.
-- **Levels**: Three example levels are provided, increasing in complexity. The player must push crates to align them with the goals.
-
-This simple design allows players to practice spatial reasoning and strategic planning in navigating obstacles to achieve the goal.
+In this game, the player (`P`) moves around the map to collect gems (`G`) and return them to targets (`T`). The game is won when all targets are covered by gems. Each level presents a different maze-like challenge with walls (`#`) that the player must navigate around.

@@ -1,3 +1,4 @@
+import binascii as ba
 from enum import IntEnum
 import json
 import os
@@ -7,6 +8,7 @@ import re
 from dotenv import load_dotenv
 from flask import Flask, jsonify, request, send_from_directory
 import openai
+import requests
 
 from utils import num_tokens_from_string, truncate_str_to_token_len
 
@@ -132,6 +134,11 @@ def save_sols():
     sols_path = os.path.join(save_dir, f'{n_iter}e_sols.json')
     with open(sols_path, 'w') as f:
         json.dump(sols, f, indent=4)
+    gif_urls = data['gif_urls']
+    for gif_url, level_i in gif_urls:
+        # Download the gif from the url
+        with open(os.path.join(save_dir, f'sol_level-{level_i}.gif'), 'wb') as f:
+            f.write(ba.a2b_base64(gif_url.split(',')[1]))
     return jsonify({})
 
 

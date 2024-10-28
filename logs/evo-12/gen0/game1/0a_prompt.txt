@@ -1,748 +1,16 @@
 SYSTEM PROMPT:
 You are a game designer, familiar with the PuzzleScript game description language. Here are some example games, for inspiration (do not reproduce these games exactly):
 
-title Notsnake
-author Terry Cavanagh
-homepage www.distractionware.com
+title cute train
+author Mark Wonnacott
+homepage http://twitter.com/ragzouken
 
-color_palette c64
-require_player_movement
+flickscreen 16x10
+color_palette pastel
+youtube pTgEXwzk7XU
 
-========
-OBJECTS
-========
-
-Background
-blue
-
-Player
-lightblue
-
-Trail
-purple
-
-=======
-LEGEND
-=======
-
-. = Background
-P = Player
-O = Trail
-
-=======
-SOUNDS
-=======
-
-startgame 50287705
-sfx0 660507
-sfx1 41058704
-endgame 74955903
-
-================
-COLLISIONLAYERS
-================
-
-Background
-Trail
-Player
-
-======
-RULES
-======
-
-[ > Player | No Trail ] -> [ Trail | Player ] sfx0
-[ > Player | Trail ] -> [ | Player ] sfx1
-
-==============
-WINCONDITIONS
-==============
-
-no Trail
-
-=======
-LEVELS
-=======
-
-OOOOOOOO
-OOOOOOOO
-O..POO.O
-OOOOOOOO
-OOOOOOOO
-
-
-title Drop Swap
-author Aaron Steed
-homepage www.robotacid.com
-
-key_repeat_interval 0.23
-again_interval 0.05
-noaction
 noundo
-background_color Black
-text_color Grey
-run_rules_on_level_start
-
-========
-OBJECTS
-========
-
-Background
-Black
-
-Player
-#ffffff #000000 #626263 #3c3b3c
-.222.
-21112
-23132
-20102
-.222.
-
-DeadPlayer
-#ffffff #000000 #626263 #3c3b3c
-.222.
-21112
-21112
-23132
-.222.
-
-BaseWall
-#222222 #333333 #444444 #ffffff
-11110
-12220
-12200
-12000
-00000
-
-APill
-#ff0000 #ff7374 #ff0000 #ff0000
-.111.
-11110
-11010
-11100
-.000.
-
-BPill
-#00de00 #cffa92 #ff0000 #ff0000
-.111.
-10010
-10110
-11100
-.000.
-
-CPill
-#7a35fc #b56bfd #ff0000 #ff0000
-.111.
-10110
-11010
-11100
-.000.
-
-DPill
-#0094fc #79b5fd #ff0000 #ff0000
-.111.
-10100
-11010
-10100
-.000.
-
-EPill
-#d1c200 #fff919 #ffffff #ff0000
-.111.
-10010
-10010
-11110
-.000.
-
-FPill
-#ff33b1 #ff76d2 #ff0000 #ff0000
-.111.
-10100
-11110
-10110
-.000.
-
-AllPill
-#eeee66 #ffffff #ffffcc #ffffff
-.112.
-11112
-11012
-21120
-.220.
-
-NoPill
-#ffffff #000000 #ffde85 #ff0000
-.000.
-00000
-21012
-.000.
-..2..
-
-Bomb
-#6e6e6e #000000 #ff0000 #fcf26b
-.020.
-02320
-01210
-01110
-.000.
-
-GemPill
-#ffffff #000000 #626263 #3c3b3c
-..0..
-.002.
-00022
-.223.
-..2..
-
-Count
-#ffffff #000000 #5a595a #ff0000
-.....
-.000.
-.000.
-.000.
-.....
-
-Marked
-#ffffff #000000
-.....
-..1..
-.101.
-..1..
-.....
-
-CountTray
-#333333
-
-GemTray
-#333333
-
-StartGem
-red
-
-Collect
-White
-
-Debris1
-#ffffff #0739f5 #1f0f42 #ffffff
-.0.0.
-00.00
-..0..
-00.00
-.0.0.
-
-Debris2
-#ffffff #0739f5 #1f0f42 #ffffff
-.....
-.0.0.
-..0..
-.0.0.
-.....
-
-Empty
-Black
-
-OldPos
-Black
-
-StartCount
-Black
-
-DropWall1
-#222222 #333333 #444444 #ffffff
-11110
-12220
-12200
-12200
-12200
-
-DropWall2
-#222222 #333333 #444444 #ffffff
-11110
-12220
-12200
-12200
-12200
-
-DropWall3
-#222222 #333333 #444444 #ffffff
-11110
-12220
-12200
-12200
-12200
-
-DropWall4
-#222222 #333333 #444444 #ffffff
-11110
-12220
-12200
-12200
-12200
-
-DropMarker
-Blue
-
-Init
-Purple
-
-=======
-LEGEND
-=======
-
-. = Background
-@ = Player
-p = DeadPlayer
-# = BaseWall
-a = APill
-b = BPill
-c = CPill
-d = DPill
-e = EPill
-f = FPill
-n = NoPill
-x = AllPill
-u = Count and CountTray
-w = Count and CountTray and StartCount
-g = GemPill
-q = GemTray
-o = GemTray and StartGem
-p = Bomb
-i = Init
-j = DropWall1
-k = DropWall2
-l = DropWall3
-m = DropWall4
-
-
-MatchPill = APill or BPill or CPill or DPill or EPill or FPill or AllPill
-Pill = MatchPill or NoPill or GemPill or Bomb
-Debris = Debris1 or Debris2
-AMatch = APill or AllPill
-BMatch = BPill or AllPill
-CMatch = CPill or AllPill
-DMatch = DPill or AllPill
-EMatch = EPill or AllPill
-FMatch = FPill or AllPill
-Wall = BaseWall or DropWall1 or DropWall2 or DropWall3 or DropWall4
-Item = Pill or Debris or Wall or Player
-Heavy = Pill or Player
-Dropping = Marked or DropMarker
-DropMix1 = APill or BPill or CPill or DPill or EPill
-DropMix2 = APill or BPill or CPill or DPill or EPill or GemPill
-DropMix3 = APill or BPill or CPill or DPill or EPill or NoPill
-DropMix4 = APill or BPill or CPill or DPill or EPill or FPill or GemPill
-DropMix5 = APill or BPill or CPill or DPill or EPill or FPill
-DropWallMarked = DropWall1 or DropWall3
-
-=======
-SOUNDS
-=======
-
-sfx0 54236904 (illegal)
-sfx1 5160507 (swap)
-sfx2 19008103 (allpill)
-sfx3 50665503 (crush 3)
-sfx4 80820507 (land)
-sfx5 2030908 (blast)
-sfx6 3032303 (bomb)
-sfx7 83704102 (dead)
-sfx8 7194508 (gem collect)
-EndLevel 16709508 (win)
-
-================
-COLLISIONLAYERS
-================
-
-
-Collect, StartCount, StartGem
-Background
-OldPos, CountTray, GemTray
-Player, Wall, Pill, Empty, Count, DeadPlayer, Bomb, Init
-Debris, Marked, DropMarker
-
-======
-RULES
-======
-
-(init)
-[ DropWall1 ] [ Init ] -> [ DropWall1 ] [ random DropMix1 Marked ]
-[ DropWall2 ] [ Init ] -> [ DropWall2 ] [ random DropMix1 ]
-[ DropWall3 ] [ Init ] -> [ DropWall3 ] [ random DropMix1 Marked ]
-[ DropWall4 ] [ Init ] -> [ DropWall4 ] [ random DropMix5 ]
-
-(debris clean up)
-[ Debris2 ] -> [ Empty ] again
-[ Debris1 ] -> [ Debris2 ] again
-
-(player - pill swapping)
-[ > Player | Pill ] -> [ Pill OldPos | Player ] sfx1
-[ Player Marked | OldPos ] -> [ Player | OldPos Marked ]
-
-(blocked move)
-[ > Player | No Pill ] -> [ Player | ] sfx0
-
-(pill combos)
-[ AMatch | AMatch | AMatch ] -> [ AMatch Collect | AMatch Collect | AMatch Collect ]
-[ BMatch | BMatch | BMatch ] -> [ BMatch Collect | BMatch Collect | BMatch Collect ]
-[ CMatch | CMatch | CMatch ] -> [ CMatch Collect | CMatch Collect | CMatch Collect ]
-[ DMatch | DMatch | DMatch ] -> [ DMatch Collect | DMatch Collect | DMatch Collect ]
-[ EMatch | EMatch | EMatch ] -> [ EMatch Collect | EMatch Collect | EMatch Collect ]
-[ FMatch | FMatch | FMatch ] -> [ FMatch Collect | FMatch Collect | FMatch Collect ]
-[ NoPill | NoPill | NoPill ] -> [ NoPill Collect | NoPill Collect | NoPill Collect ]
-
-(bomb activate)
-[ OldPos Bomb ] -> sfx5
-up [ OldPos Bomb | Pill ] -> [ OldPos Bomb | Pill > Collect ]
-right [ OldPos Bomb | Pill ] -> [ OldPos Bomb | Pill > Collect ]
-down [ OldPos Bomb | Pill ] -> [ OldPos Bomb | Pill > Collect ]
-left [ OldPos Bomb | Pill ] -> [ OldPos Bomb | Pill > Collect ]
-[ OldPos Bomb ] -> [ OldPos Empty ]
-
-(blast)
-up [ Pill > Collect | Pill ] -> [ Pill Collect | Pill > Collect ]
-right [ Pill > Collect | Pill ] -> [ Pill Collect | Pill > Collect ]
-down [ Pill > Collect | Pill ] -> [ Pill Collect | Pill > Collect ]
-left [ Pill > Collect | Pill ] -> [ Pill Collect | Pill > Collect ]
-[ > Collect ] -> [ Collect ]
-[ GemPill Collect ] -> [ GemPill ]
-
-(reward matches)
-(junction)
-Right [ Collect | Collect ] -> [ > Collect | > Collect ]
-Down [ Collect | Collect ] -> [ > Collect | > Collect ]
-[ Down Collect | Right Collect ] [ Collect OldPos ] -> [ Collect | Collect ] [ Bomb OldPos ] sfx6
-(4: create AllPill)
-[ MatchPill Collect | MatchPill Collect | MatchPill Collect | MatchPill Collect ] [ Collect OldPos ] -> [ MatchPill Collect | MatchPill Collect | MatchPill Collect | MatchPill Collect ] [ AllPill OldPos ] sfx2
-
-(count moves)
-(subtract on move)
-random right [ OldPos ] [ Count | No Count ] -> [ OldPos ] [ | ]
-(fill on Debris)
-[ Collect ] [ CountTray ] -> [ Collect ] [ CountTray Count ]
-
-(dead?)
-[ DeadPlayer ] -> cancel
-[ No Count StartCount CountTray ] [ Player ] -> [ No Count StartCount CountTray ] [ DeadPlayer ] sfx7
-[ Player | NoPill Collect ] -> [ DeadPlayer | NoPill ]
-[ DeadPlayer ] [ CountTray Count ] -> [ DeadPlayer ] [ CountTray ] sfx7
-
-(destroy matched)
-[ APill Collect ] -> [ Debris1 ] sfx3 again
-[ BPill Collect ] -> [ Debris1 ] sfx3 again
-[ CPill Collect ] -> [ Debris1 ] sfx3 again
-[ DPill Collect ] -> [ Debris1 ] sfx3 again
-[ EPill Collect ] -> [ Debris1 ] sfx3 again
-[ FPill Collect ] -> [ Debris1 ] sfx3 again
-[ AllPill Collect ] -> [ Debris1 ] sfx3 again
-[ Player ] [ NoPill Collect ] -> [ Player ] [ Debris1 ] sfx3 again
-
-(destroy NoPills)
-down [ NoPill | Wall ] -> [ Debris1 | Wall ] again
-
-(collect gems)
-down [ GemPill | Wall ] -> [ GemPill Collect | Wall ]
-[ GemPill Collect ] [ StartGem No GemPill ] -> [ Debris1 ] [ StartGem GemPill ] again sfx8
-right [ GemPill Collect ] [ GemPill GemTray | No GemPill GemTray ] -> [ Debris1 ] [ GemPill GemTray | GemPill GemTray ] again sfx8
-
-(drop)
-[ Heavy No Dropping ] -> [ Heavy DropMarker ]
-down [ Heavy Dropping | Empty ] -> [ Empty | Heavy Dropping ]
-[ DropMarker ] -> [ ]
-down [ DropWall1 | Empty ] -> [ DropWall1 | random DropMix1 ] again
-down [ DropWall2 | Empty ] -> [ DropWall2 | random DropMix2 ] again
-down [ DropWall3 | Empty ] -> [ DropWall3 | random DropMix3 ] again
-down [ DropWall4 | Empty ] -> [ DropWall4 | random DropMix4 ] again
-
-(gem drop win)
-right [ GemPill GemTray | Wall ] -> win
-
-[ OldPos ] -> [ ]
-
-==============
-WINCONDITIONS
-==============
-
-No Marked
-Some DropWallMarked
-
-=======
-LEVELS
-=======
-
-message collect orbs by matching 3
-message match 3 to restore move-energy
-message level 1: collect all marked orbs
-
-wuuuuu#
-#jjjjj#
-#iiiii#
-#iiiii#
-#iiiii#
-#iiiii#
-#ii@ii#
-#######
-
-message level 2: collect all marked orbs
-
-wuuuuuu#
-#jjjjjj#
-#iiiiii#
-#iiiiii#
-#iiiiii#
-#iiiiii#
-#iiiiii#
-#iiiiii#
-#iii@ii#
-########
-
-message collect gray gems by getting them to the bottom
-message level 3: collect 8 gems
-
-oqqqqqqq#
-wuuuuuuu#
-#kkkkkkk#
-#iiiiiii#
-#iiiiiii#
-#iiiiiii#
-#iiiiiii#
-#iiiiiii#
-#iiiiiii#
-#iiiiiii#
-#iii@iii#
-#########
-
-message if you are next to 3 matching skulls you die
-message skulls can be destroyed by getting them to the bottom
-message level 4: collect all marked orbs
-
-wuuuuuu#
-#llllll#
-#iiiiii#
-#iiiiii#
-#iiiiii#
-#iiiiii#
-#iiiiii#
-#iiiiii#
-#iii@ii#
-########
-
-message level 5: collect 7 gems
-
-oqqqqqqq#
-wuuuuuuu#
-#mmmmmmm#
-#iiiiiii#
-#iiiiiii#
-#iiiiiii#
-#iiiiiii#
-#iiiiiii#
-#iiiiiii#
-#iiiiiii#
-#iii@iii#
-#########
-
-message thanks for playing
-
-
-
-title Love and Pieces
-author lexaloffle
-homepage www.lexaloffle.com
-
-========
-OBJECTS
-========
-
-Background
-White LightBlue
-00000
-01110
-01110
-01110
-00000
-
-
-Wall
-DarkBlue Black DarkGray LightGray White
-23330
-22300
-22100
-21110
-11111
-
-Player
-Yellow Orange Red White LightBrown
-20002
-01130
-01110
-04110
-20002
-
-GrayBlock
-Gray DarkGray Green
-10001
-01210
-02220
-01210
-10001
-
-LitBlock
-Green DarkGray
-00000
-01110
-01110
-01110
-00000
-
-
-=======
-LEGEND
-=======
-
-. = Background
-# = Wall
-P = Player
-o = GrayBlock
-Block = GrayBlock or Player
-
-=======
-SOUNDS
-=======
-
-GrayBlock MOVE 36772507
-
-================
-COLLISIONLAYERS
-================
-
-Background
-Player, Wall, GrayBlock, LitBlock
-
-======
-RULES
-======
-
-[ > Player | Wall ] -> cancel
-late [ Player | GrayBlock ] -> [ Player | Player ]
-
-==============
-WINCONDITIONS
-==============
-
-No GrayBlock
-
-=======
-LEVELS
-=======
-
-
-
-############
-#...#......#
-#..........#
-#.p..o..o..#
-#..........#
-#..#.......#
-#..........#
-#......#...#
-#..........#
-############
-
-############
-#..........#
-#..........#
-#....#o....#
-#..#.o.#...#
-#....#.....#
-#....o.....#
-#.o......p.#
-#..........#
-############
-
-############
-#o...o.....#
-#.o...o....#
-#..o...o...#
-#...o...o..#
-#o...o...o.#
-#.o...o...o#
-#..o...o.p.#
-#...o...o..#
-############
-
-############
-#..........#
-#..o....o..#
-#.p#....#o.#
-#..........#
-#..........#
-#.o#....#o.#
-#..o....o..#
-#..........#
-############
-
-
-############
-#..o.......#
-#.....oo...#
-#...o......#
-#.o#..p..o.#
-#....o.....#
-#..o....o..#
-#o.o...#...#
-#...o...o..#
-############
-
-############
-#p.o.......#
-#..........#
-#.o..o...###
-#........###
-###.o......#
-###......o.#
-#o.....##..#
-#......##.o#
-############
-
-
-############
-#........o.#
-#..o.##....#
-#....o.o...#
-#.#......#.#
-#.#..p.o.#.#
-#..o.......#
-#....##....#
-#.o......o.#
-############
-
-
-############
-###........#
-##....o.o..#
-#....#.#...#
-#...o.o.o..#
-#....#.#...#
-#...o.o....#
-##........##
-###.p....###
-############
-
-
-###########o
-#....p....##
-#....p.....#
-#...ppp....#
-#ppppppppp.#
-#...ppp....#
-#..ppppp...#
-#.pp...pp..#
-#.p.....p..#
-############
-
-
-title EYE EYE EYE
-author increpare
-homepage www.puzzlescript.net
+norestart
 
 ========
 OBJECTS
@@ -750,786 +18,455 @@ OBJECTS
 
 Background
 lightgreen green
-11111
-01111
-11101
-11111
-10111
-
-Target
-darkblue
-.....
-.000.
-.0.0.
-.000.
-.....
-
-Wall
-brown darkbrown
-00010
-11111
 01000
-11111
-00010
+00110
+10010
+10100
+01001
 
-Player
-black orange white blue
-.000.
-.111.
-22222
-.333.
-.3.3.
+Water
+blue white lightblue
+20010
+02002
+12020
+00220
+02002
 
-EyeBall
-white blue red
+Water2
+blue white lightblue
+02000
+20210
+00202
+01022
+20200
+
+Gerald
+blue black
 .000.
-00100
+01010
+10001
 01110
-20102
-.202.
+.000.
 
-=======
-LEGEND
-=======
+Mountain
+darkbrown darkbrown
+..0..
+.10..
+.000.
+0000.
+11001
 
-. = Background
-# = Wall
-P = Player
-O = EyeBall
-
-=======
-SOUNDS
-=======
-
-sfx0 67117309
-
-================
-COLLISIONLAYERS
-================
-
-Background
-Target
-Player, Wall, EyeBall
-
-======
-RULES
-======
-
-[ Eyeball | ... | Player ] -> [ > Eyeball | ... | Player ] sfx0
-
-==============
-WINCONDITIONS
-==============
-
-(There's no way to win against a floating eyeball :S )
-
-=======
-LEVELS
-=======
-
-#########
-#.......#
-#....O..#
-#.P.....#
-#.......#
-#.......#
-#########
-
-
-title Sokobond: The Demake
-author Jonah Ostroff
-homepage www.sokobond.com
-text_color #202020
-background_color #FDFDFD
-key_repeat_interval 0.25
-run_rules_on_level_start
-noaction
-youtube 2R0sTlruOZc
-
-========
-OBJECTS
-========
-
-Background
-#FFFFFF #F8F8F8
+Forest
+darkgreen brown
+.000.
 00000
-01010
 00000
-01010
-00000
+00100
+.111.
+
+Beach
+yellow white
+00010
+01000
+00001
+00100
+10000
 
 Player
-#FFBBEE
-00000
+yellow black
+.000.
+01010
+10001
+01110
+.000.
+
+GhostVTrack
+yellow
+GhostHTrack
+yellow
+GhostURTrack
+yellow
+GhostULTrack
+yellow
+GhostDLTrack
+yellow
+GhostDRTrack
+yellow
+
+VTrack
+grey darkbrown
 0...0
 0...0
+01110
 0...0
+0...0
+
+HTrack
+grey darkbrown
+00000
+..1..
+..1..
+..1..
 00000
 
-Wall
-Yellow White
+Structs
+black darkbrown
+11111
+10101
+11111
+10101
+11111
+
+URTrack
+grey darkbrown
+...00
+..0..
+.01..
+0..1.
+0...1
+
+ULTrack
+grey darkbrown
+00...
+..0..
+..10.
+.1..0
+1...0
+
+DLTrack
+grey darkbrown
+1...0
+.1..0
+..10.
+..0..
+00...
+
+DRTrack
+grey darkbrown
+0...1
+0..1.
+.01..
+..0..
+...00
+
+UTrain
+red black darkred
+.000.
+01110
 00000
-00000
-00000
-00000
+00100
 00000
 
-Hydrogen
-Red Black
+RTrain
+red black darkred
+0000.
+00010
+01010
+00010
+0000.
+
+LTrain
+red black darkred
+.0000
+01000
+01010
+01000
+.0000
+
+DTrain
+red black darkred
+00000
+00100
+00000
+01110
+.000.
+
+Cart
+red black darkred
+22222
+21112
+21112
+21112
+22222
+
+Smoke1
+white
+..0..
+.0.0.
+0.0.0
+.0.0.
+..0..
+
+Smoke2
+white
 .....
-.111.
-.101.
-.111.
+.0.0.
+..0..
+.0.0.
 .....
 
-Nitrogen
-Green Black
+Smoke3
+white
 .....
-.111.
-.101.
-.111.
-.....
-
-Oxygen
-Blue Black
-.....
-.111.
-.101.
-.111.
+..0..
+.0.0.
+..0..
 .....
 
-Carbon
-Yellow Black
-.....
-.111.
-.101.
-.111.
-.....
-
-Helium
-White Black
-.....
-.111.
-.101.
-.111.
-.....
-
-1Electron
-LightGray
-.....
-.0...
-.....
-.....
-.....
-
-2Electron
-LightGray
-.....
+Switch
+red black
 ...0.
+..1..
+.1...
+.111.
 .....
-.0...
-.....
-
-3Electron
-LightGray
-.....
-.0.0.
-.....
-.0...
-.....
-
-4Electron
-LightGray
-.....
-.0.0.
-.....
-.0.0.
-.....
-
-BondU
-Black
-..0..
-.....
-.....
-.....
-.....
-
-BondL
-Black
-.....
-.....
-0....
-.....
-.....
-
-BondR
-Black
-.....
-.....
-....0
-.....
-.....
-
-BondD
-Black
-.....
-.....
-.....
-.....
-..0..
-
-
-BondUL
-Black
-..0..
-.....
-0....
-.....
-.....
-
-BondUR
-Black
-..0..
-.....
-....0
-.....
-.....
-
-BondUD
-Black
-..0..
-.....
-.....
-.....
-..0..
-
-BondLR
-Black
-.....
-.....
-0...0
-.....
-.....
-
-BondLD
-Black
-.....
-.....
-0....
-.....
-..0..
-
-BondRD
-Black
-.....
-.....
-....0
-.....
-..0..
-
-BondULR
-Black
-..0..
-.....
-0...0
-.....
-.....
-
-BondULD
-Black
-..0..
-.....
-0....
-.....
-..0..
-
-BondURD
-Black
-..0..
-.....
-....0
-.....
-..0..
-
-BondLRD
-Black
-.....
-.....
-0...0
-.....
-..0..
-
-BondULRD
-Black
-..0..
-.....
-0...0
-.....
-..0..
-
-Temp1
-Red
-
-Temp2 (These are placeholders for various things.)
-Green
-
-Temp3
-Blue
-
-Temp4
-Yellow
 
 =======
 LEGEND
 =======
 
-Atom = Hydrogen or Oxygen or Nitrogen or Carbon or Helium
-Orbital = 1Electron or 2Electron or 3Electron or 4Electron
-UBond = BondU or BondUL or BondUR or BondUD or BondULR or BondULD or BondURD or BondULRD
-LBond = BondL or BondUL or BondLR or BondLD or BondULR or BondULD or BondLRD or BondULRD
-RBond = BondR or BondUR or BondLR or BondRD or BondULR or BondURD or BondLRD or BondULRD
-DBond = BondD or BondUD or BondLD or BondRD or BondULD or BondURD or BondLRD or BondULRD
-1Bond = BondU or BondL or BondR or BondD
-2Bond = BondUL or BondUR or BondUD or BondLR or BondLD or BondRD
-3Bond = BondULR or BondULD or BondURD or BondLRD
-Bond = 1Bond or 2Bond or 3Bond or BondULRD
-Temps = Temp1 or Temp2 or Temp3 or Temp4
-AtomStuff = Bond or Orbital
-
 . = Background
-# = Wall
-H = Hydrogen and 1Electron
-O = Oxygen and 2Electron
-N = Nitrogen and 3Electron
-C = Carbon and 4Electron
-E = Helium
-0 = Helium  and Player
-1 = Hydrogen and 1Electron and Player
-2 = Oxygen and 2Electron and Player
-3 = Nitrogen and 3Electron and Player
-4 = Carbon and 4Electron and Player
+^ = Mountain
+% = Forest
+~ = Water
+, = Beach
+
+| = VTrack
+- = HTrack
+r = URTrack
+¬ = ULTrack
+l = DRTrack
+j = DLTrack
+X = VTrack and Structs
+Z = HTrack and Structs
+Q = ULTrack and Structs
+
 P = Player
+
+T = VTrack and UTrain
+C = VTrack and Cart
+
+[ = HTrack and RTrain
+] = HTrack and Cart
+
+/ = Switch
+
+1 = GhostHTrack and URTrack
+! = HTrack and GhostURTrack
+2 = HTrack and GhostDRTrack
+3 = HTrack and GhostULTrack
+4 = GhostHTrack and DLTrack
+5 = GhostVTrack and URTrack
+6 = GhostVTrack and DRTrack
+7 = GhostVTrack and ULTrack
+8 = GhostVTrack and DLTrack
+
+_ = Beach and HTrack
+
+WaterR = Water or Water2
+
+Ghost = GhostHTrack or GhostVTrack or GhostULTrack or GhostURTrack or GhostDLTrack or GhostDRTrack
+Track = HTrack or VTrack or ULTrack or URTrack or DLTrack or DRTrack
+
+Train = UTrain or DTrain or LTrain or RTrain
+Vehicle = Train or Cart
+Mover = Vehicle or Player
+
+G = Gerald and Structs
 
 =======
 SOUNDS
 =======
 
-Sfx1 64050702 (Bonding sound)
-EndLevel 96545300 (End level)
+Train move 91301709
+SFX1 53409305
+SFX2 38557307
+SFX3 99431502
 
 ================
 COLLISIONLAYERS
 ================
 
 Background
-Player
-Bond
-Wall, Atom
-Orbital
-Temps
+Beach GhostVTrack GhostHTrack GhostURTrack GhostULTrack GhostDLTrack GhostDRTrack
+Structs
+VTrack HTrack URTrack ULTrack DLTrack DRTrack Switch
+Water Water2 Mountain Forest Player UTrain RTrain LTrain DTrain Cart Gerald
+Smoke1 Smoke2 Smoke3
 
 ======
 RULES
 ======
 
-(This is the old way I did movement, and it was super inefficient.)
-([> Player Atom] -> [> Player > Atom]
+(animate water)
+[        WaterR ] -> [ action WaterR ]
+[ action WaterR ] -> [ random WaterR ]
 
-Up [ Moving Atom UBond | Atom] -> [ Moving Atom UBond | Moving Atom]
-+ Left [ Moving Atom LBond | Atom] -> [ Moving Atom LBond | Moving Atom]
-+ Right [ Moving Atom RBond | Atom] -> [ Moving Atom RBond | Moving Atom]
-+ Down [ Moving Atom DBond | Atom] -> [ Moving Atom DBond | Moving Atom]
-+ [> Atom | Atom] -> [> Atom | > Atom])
+[ action Player no Structs | Cart ] [ Train ] -> [ Player | Cart ] [ action Train ]
 
-[Up Player] -> [Up Player Temp1]
-[Left Player] -> [Left Player Temp2]
-[Right Player] -> [Right Player Temp3]
-[Down Player] -> [Down Player Temp4]
+(move the train if we're on the impassable structs)
+[ Structs Mover ] [ Train ] -> [ Structs Mover ] [ action Train ]
 
-Up [Temps UBond | no Temps] -> [Temps Ubond | Temps]
-+ Left [Temps LBond | no Temps] -> [Temps Lbond | Temps]
-+ Right [Temps RBond | no Temps] -> [Temps Rbond | Temps]
-+ DOwn [Temps DBond | no Temps] -> [Temps Dbond | Temps]
-+ Up [Temp1 | Atom no Temp1] -> [Temp1 | Atom Temp1]
-+ Left [Temp2 | Atom no Temp2] -> [Temp2 | Atom Temp2]
-+ Right [Temp3 | Atom no Temp3] -> [Temp3 | Atom Temp3]
-+ Down [Temp4 | Atom no Temp4] -> [Temp4 | Atom Temp4]
+[ action Train ] -> [ action Train Smoke1 ]
 
-[Temp1 Atom] -> [Up Atom]
-[Temp2 Atom] -> [Left Atom]
-[Temp3 Atom] -> [Right Atom]
-[Temp4 Atom] -> [Down Atom]
+[ action UTrain ] -> [    up UTrain ]
+[ action DTrain ] -> [  down DTrain ]
+[ action RTrain ] -> [ right RTrain ]
+[ action LTrain ] -> [  left LTrain ]
 
-[ > Atom | Wall] -> Cancel
+late [ Mover Structs ] -> [ Mover Structs ] again (repeat if the train is still on structs)
 
-[ > Atom AtomStuff] -> [ > Atom > AtomStuff]
+(cart follows train, player follows cart)
+[ Cart   | moving Train ] -> [ > Cart   | moving Train ]
+[ Player | moving Cart  ] -> [ > Player | moving Cart  ]
 
-Late Right [Orbital no Temps no RBond|Orbital no Temps no LBond] -> [Orbital Temp1|Orbital Temp2 Sfx1] (Bond horizontally.)
-+ Late [Temp1 no Bond] -> [Temp3 BondR]
-+ Late [Temp1 BondU] -> [Temp3 BondUR]
-+ Late [Temp1 BondL] -> [Temp3 BondLR]
-+ Late [Temp1 BondD] -> [Temp3 BondRD]
-+ Late [Temp1 BondUL] -> [Temp3 BondULR]
-+ Late [Temp1 BondUD] -> [Temp3 BondURD]
-+ Late [Temp1 BondLD] -> [Temp3 BondLRD]
-+ Late [Temp1 BondULD] -> [Temp3 BondULRD]
-+ Late [Temp2 no Bond] -> [Temp3 BondL]
-+ Late [Temp2 BondU] -> [Temp3 BondUL]
-+ Late [Temp2 BondR] -> [Temp3 BondLR]
-+ Late [Temp2 BondD] -> [Temp3 BondLD]
-+ Late [Temp2 BondUR] -> [Temp3 BondULR]
-+ Late [Temp2 BondUD] -> [Temp3 BondULD]
-+ Late [Temp2 BondRD] -> [Temp3 BondLRD]
-+ Late [Temp2 BondURD] -> [Temp3 BondULRD]
-+ Late [Temp3 1Electron] -> []
-+ Late [Temp3 2Electron] -> [1Electron]
-+ Late [Temp3 3Electron] -> [2Electron]
-+ Late [Temp3 4Electron] -> [3Electron]
+[ > Player | Structs no Gerald no Cart ] -> [ Player | Structs ] message It's dangerous to walk along railway bridges!
 
-Late Down [Orbital no Temps no DBond|Orbital no Temps no UBond] -> [Orbital Temp1|Orbital Temp2 Sfx1] (Bond vertically.)
-+ Late [Temp1 no Bond] -> [Temp3 BondD]
-+ Late [Temp1 BondU] -> [Temp3 BondUD]
-+ Late [Temp1 BondL] -> [Temp3 BondLD]
-+ Late [Temp1 BondR] -> [Temp3 BondRD]
-+ Late [Temp1 BondUL] -> [Temp3 BondULD]
-+ Late [Temp1 BondUR] -> [Temp3 BondURD]
-+ Late [Temp1 BondLR] -> [Temp3 BondLRD]
-+ Late [Temp1 BondULR] -> [Temp3 BondULRD]
-+ Late [Temp2 no Bond] -> [Temp3 BondU]
-+ Late [Temp2 BondL] -> [Temp3 BondUL]
-+ Late [Temp2 BondR] -> [Temp3 BondUR]
-+ Late [Temp2 BondD] -> [Temp3 BondUD]
-+ Late [Temp2 BondLR] -> [Temp3 BondULR]
-+ Late [Temp2 BondLD] -> [Temp3 BondULD]
-+ Late [Temp2 BondRD] -> [Temp3 BondURD]
-+ Late [Temp2 BondLRD] -> [Temp3 BondULRD]
-+ Late [Temp3 1Electron] -> []
-+ Late [Temp3 2Electron] -> [1Electron]
-+ Late [Temp3 3Electron] -> [2Electron]
-+ Late [Temp3 4Electron] -> [3Electron]
+(endgame message)
+[ >      Player | Gerald ] -> [ Player | Gerald ] message you made it! thanks for playing.
+[ action Player | Gerald ] -> [ Player | Gerald ] message you made it! thanks for playing.
+
+(train turns when entering corners)
+up    [ > UTrain | URTrack ] -> [ > RTrain | URTrack ]
+up    [ > UTrain | ULTrack ] -> [ > LTrain | ULTrack ]
+
+right [ > RTrain | ULTrack ] -> [ > DTrain | ULTrack ]
+right [ > RTrain | DLTrack ] -> [ > UTrain | DLTrack ]
+
+down  [ > DTrain | DRTrack ] -> [ > RTrain | DRTrack ]
+down  [ > DTrain | DLTrack ] -> [ > LTrain | DLTrack ]
+
+left  [ > LTrain | URTrack ] -> [ > DTrain | URTrack ]
+left  [ > LTrain | DRTrack ] -> [ > UTrain | DRTrack ]
+
+(animate smoke)
+[ Smoke3 ] -> [ ]
+[ Smoke2 ] -> [ Smoke3 ]
+[ Smoke1 ] -> [ Smoke2 ]
+
+[ action Player Switch ] -> [ Player action Switch ]
+
+(switch all uncovered tracks at once)
+[ action Switch ] [ Ghost Vehicle ] -> [ action Switch ] [ Ghost Vehicle ] SFX3 (play blocking sound if switch tracks are covered while switching)
+[ action Switch ] [ Ghost no Vehicle ] -> [ action Switch ] [ action Ghost ] SFX2
+
+[ action GhostHTrack URTrack no Vehicle ] -> [ HTrack GhostURTrack ]
+[ HTrack action GhostURTrack no Vehicle ] -> [ GhostHTrack URTrack ]
+[ action GhostHTrack DRTrack no Vehicle ] -> [ HTrack GhostDRTrack ]
+[ HTrack action GhostDRTrack no Vehicle ] -> [ GhostHTrack DRTrack ]
+[ action GhostHTrack ULTrack no Vehicle ] -> [ HTrack GhostULTrack ]
+[ HTrack action GhostULTrack no Vehicle ] -> [ GhostHTrack ULTrack ]
+[ action GhostHTrack DLTrack no Vehicle ] -> [ HTrack GhostDLTrack ]
+[ HTrack action GhostDLTrack no Vehicle ] -> [ GhostHTrack DLTrack ]
+
+[ action GhostVTrack URTrack no Vehicle ] -> [ VTrack GhostURTrack ]
+[ VTrack action GhostURTrack no Vehicle ] -> [ GhostVTrack URTrack ]
+[ action GhostVTrack DRTrack no Vehicle ] -> [ VTrack GhostDRTrack ]
+[ VTrack action GhostDRTrack no Vehicle ] -> [ GhostVTrack DRTrack ]
+[ action GhostVTrack ULTrack no Vehicle ] -> [ VTrack GhostULTrack ]
+[ VTrack action GhostULTrack no Vehicle ] -> [ GhostVTrack ULTrack ]
+[ action GhostVTrack DLTrack no Vehicle ] -> [ VTrack GhostDLTrack ]
+[ VTrack action GhostDLTrack no Vehicle ] -> [ GhostVTrack DLTrack ]
 
 ==============
 WINCONDITIONS
 ==============
 
-No Orbital
-
 =======
 LEVELS
 =======
 
-Message This is a demake of Sokobond by Alan Hazelden and Harry Lee.
+(feel free to try making more puzzles!
+
+editing tip: copy out a few rows of screens to edit in isolation
+
+* use bridges (structs) to force the train over junctions before there's a chance to switch them
+* use bridges to make switches unreachable until junctions have been crossed
+* use the train itself and narrow passages to make switches unreachable until junctions have been crossed)
+
+message welcome to the breezy isles!
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~,,,,~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~,,,,,,,~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~,,..,,,,,~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~,,,p.,,,,,~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~,,....,,,,,~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~,,,.....,,,,~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~,,,......,,,~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~,,.......,,,,,,~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~,,,........,,,,,,,~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~,,,..........,,,,,,,,~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~,,...............,,,,,,~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~,~~,...%.........%....,,,,~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~,,,,,~..%.................,,,,~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~,,,,,,,,..~~%%%%%.r-------¬.....,,,,~~~~~~~~~~~~~~~~~~~~
+,,,,,,,,,,,,,....%%~%%%%%%t.......l-¬.....,,,~~~~~~~~~~~~~~~~~~~
+,,,,,,..........%%%~~%%%%%c%%.......l-¬....,,~~~~~~~~~~~~~~~~~~~
+........%%%..%%%%%%%~%%%%%|%%%%%....|.l--¬..,,~~~~~~~~~~~~~~~~~~
+.%%%%.%%%%%%%%%%%%%%~%%%%%|%%%%%%%..|...%l¬.,,~~~~~~~~~~~~~~~~~~
+%%%%%%%%%%%%%%%%%%%%~%%%%%|%%%%%%%%.l¬..%%|.,,~~~~~~~~~~~~~~~~~~
+%%%%%%%%%%%%%%%%%%%%~%%%%%|%%%%%%%%..|.%%%|.,,~~~~~~~~~~~~~~~~~~
+%%%%r---------------z-¬%%%|%%%%%%....|%%%%|.,,~~~~~~~~~~~~~~~~~~
+%%.rj........%%%%%%%~%l¬%.|..........|%%%rj,,,~~~~~~~~~~~~~~~~~~
+%%rj.~~~~G~~~~%%%%%%~^%l--¬..........l---j.,,,~~~~~~~~~~~~~~~~~~
+%.|.~~~~~x~~~~~%%%%^~^....|.....^^^........,,~~~~~~~~~~~~~~~~~~~
+%.|.~~~~~~~~~~~%%^^^~^....l¬...^^^^^^......,,~~~~~~~~~~~~~~~~~~~
+%.|.~~~~~~~~~~%%%^^^~^^^..^l¬^^^^^^^^^^^^^.,^^~~~~~~~~~~~~~~~~~~
+%%l¬.~~~~~~~%%%^^^^^~^^^^^^^l¬^^^^^^^^^^^^^^^^~~~~~~~~~~~~~~~~~~
+%%.|..~~~~%%%%^^^^^~~^^^^^^^^x~^^^^^^^^^^^^^^^^~~~~~~~~~~~~~~~~~
+%%%|.%%%%%%%%^^^^^^~^^^^^^^^~x~^^^^^^^^^^^^^^^^~~~~~~~~~~~~~~~~~
+%%%x%%%%%%%%%^^^^^~~^^^^^^^^~x~^^^^^^^^^^^^^^^^^^^^^^~~~~~~~~~~~
+%%rj%%%%%%%%%^^^^^^~^^^^^^^~~x~%...%%^^%%^^^^^^^^^^^^^~~^~~~~~~~
+%%5z---¬%%%%%^^^^^^~^^^^^^^~^l¬..%r------¬%%^^^^^^^^^^^~~~~~~~~~
+%%|%%%%|%%%%^^^^^^^~~^^^^^~~^^l¬..|.%%%%%|%%%.^^^^^^^^^^^~~~~~~~
+%r4z---¬%%%%^^^^^^^^~~^^^^~^^^.l--l---3--j%%..^^^^^^^^^^^^~~~~~~
+%x./%r-¬%%%%^^^^^^^^^~~^^~~^^^........|%%%%%..^^^^^^^^^^^^^~~~~~
+%l--zj¬j%%%%^^^^^^^^^^~~~~^^^^%%..../.|.%%...^^^^^^^^^^^^^~~~~~~
+%%%%%%5z¬z¬%^^^^^^^^^^^^~~^^^^^%%%....|......^^^^^^^^^^^^^^~~~~~
+%%r--¬x%lzj%^^^^^^^^^^^^~^^^^^^%%%%..~x~~~~~~~^^^^^^^^^^^^^^~^~~
+%%|%%|x%%%%%%^^^^^^^^^^^~^^^^^^%%%%%~~x~~~~~~~~^^^^^^^^^^^^^~~~~
+%%|%%|x%%%%%%%%^^^^^^^^^~^^^^^^%%%%%~~x~~~~~~~~^^^^^^^^^^^^^~~~~
+%%r--47---¬¬---zzzzz1zzzzz¬^^^^^%%%..~x~~~~....%^^^^^^^^^^^~~~~~
+%%|%%%x%.%lj%%^^^^^^x^^^~^lz¬^^^^%%...|..%...%.%%%^^^^^^,,~~~~~~
+%%|%/.l¬.%%%^^^^^^^^x^^^~~^^lz¬^^%%...|.....%...........,,~~~^^~
+%%|%%%lj%%%^^^^^^^^^x^^^^~^~^^x^^^%%.rl-----------r-----__zzz¬^~
+%%l¬%%%%%^^^^^^^^^^^x^^^^~~^^^x^^^%%.|........%...|.....,,~~^x^~
+%%lj%%%%%^^^^^^^^^^r-¬^^^~~~~^x^^^^^%|...%^^^.....l¬../.,,~~~x~~
+%%%%%%%%^^^^^^^^^^^|l¬%^^~~~~~x~^^^^^|.^^^^^^^^^^..|....^^^~~x~~
+%%%%%%%^^^^^^^^^^%rj%|%^^^~~^^x^^^^^rj%%^^^^^^^%%.%l¬.^^^^^^~x~~
+%%%%%%^^^^^^^^^^^%|%%|%^^~^^~^x^^^%.|...%%..%.......|....,,~~x~~
+%%%%^^^^^^^^^^^^^%|/.|%^~^^^^^x^^^%.|.%.............|...,,,~^x^~
+%%^^^^^^^^^^^^^^^%l--8^^^^^^^rj%^^..|..r----!-------2--1___zzj^~
+^^^^^^^^^^^^^^^^^%|%^x^^^^^^^x^^^^%.|.%|%%..|....%..|%.|,,,~~^~~
+^^^^^^^^^^^^^^^^^^|.rlzz--3z-4¬^^^%.|.%l¬...|.......|..l¬,,~~~~~
+^^^^^^^^^^^^^^^^^^x^|^^^..|^..|%^^..l¬%%l-----------j...|,,,~~~~
+^^^^^^^^^^^^^^^^^^l-|---¬/|^.%|%^^%..|.%.%%.l¬%....%....|,,,,~~~
+^^^^^^^^^^^^^^^^^^^%|.%%l-j---j%^^^%.l¬.....%l¬.%.....%.|,,,,~~~
+^^^^^^^^^^^^^^^^^^^%|%%%%%%%%%%^^^^%%.|.%%%...l--¬......l¬,,,~~~
+^^^^^^^^^^^^^^^^^^^^x^^^^%%%^^^^^^^%%.|..%..%...%l-¬%....|,,,~~~
+^^^^^^^^^^^^^^^^^^^^x^^^^^^^^^^^^^^%%%|%%%%..%%....l¬....|,,,,~~
+^^^^^^^^^^^^^^^^^^^^x^^^^^^^^^^^^^^^%%|%^^%%......%.l¬...|.,,,~~
+^^^^^^^^^^^^^^^^^^^^x^%%%%%^^^^^^^^^^^|%%^^^^^^.%%...|...|^^^,~~
+^^^^^^^^^^^^^^^^^^^%|%%....%%^^^^^^^^%|%%%^^^^^^^^^%.|.^^|^^,,~~
+^^^^^^^^^^^^^^^^^^^%|%..%^..%%^^^^^%%rj%%^^^^^^^%....|...|^,,,~~
+^^^^^^^^^^^^^^^^^^^%|./.^%%..%%^^^%%.|.%..%......../.6---¬^,,,~~
+^^^^^^^^^^^^^^^^^^^%|..%^%....%^^^%..|%..%...%......rj...|.,,,~~
+^^^^^^^^^^^^^^^^^^^%l--!z1--¬--zzz----------------!-j..%.|,,,,~~
+^^^^^^^^^^^^^^^^^^^^%%%|^|..|.%^^^%..|.%.%..%..%..|...%..|,,,,~~
+^^^^^^^^^^^^^^^^^^^^^^^x^|%%|%^^^^%%.|%%%.........|......|,,,,~~
+^^^^^^^^^^^^^^^^^^^^^^^x^x^^x^^^^^^%%|%^^^^^^.....|...^^rj^,,~~~
+^^^^^^^^^^^^^^^^^^^^^^^x^x^^x^^^^^^^^|%.^^^^^^^^%.|.^^^^|^^^^~~~
+^^^^^^^^^^^^^^^^^^^^^^^x^x^^x^^^^^^^%|^^^^^^^^.%..|.....|,,^^~~~
+^^^^^^^^^^^^^^^^^^^^^^^x^x^^l¬^^^^^%%|%%^^^.%.....|...%.|,,,~~~~
+^^^^^^^^^^^^^^^^^^^^^^^x^lzzjx^^^^%%.|..%%........|.%...|,,,~~~~
+^^^^^^^^^^^^^^^^^^^^^^^l¬^^^^x^^^^%%.l¬%......%..rj..%..|,,,~~~~
+^^^^^^^^^^^^^^^^^^^^^^^^x^^^^x^^^^%%%.l¬.%......rj.....rj,,,~~~~
+^^^^^^^^^^^^^^^^^^^^^^^^x^^^^x^^^^^%%%%l--------j------j,,,,~~~~
+^^^^^^^^^^^^^^^^^^^^^^^^lzzzzj^^^^^^^%%%%%.%%%%...%%%%^^^,,,~~~~
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^%%%%%^^^^^^^^^^^^^^^^^~~
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^~~
 
-Message Get the full version at www.sokobond.com!
-
-#########
-####....#
-####....#
-#....#H.#
-#...O#..#
-#.1.....#
-#....####
-#########
-
-Message Water atoms are icosahedral.
-
-######
-#H..O#
-#....#
-#1.###
-######
-
-Message The blue tint seen in large bodies of water comes from the pigment in the oxygen atoms.
-
-########
-###...##
-#2.H.H.#
-###...##
-########
-
-Message The Earth's surface and the human body are both 70% water. That CAN'T be a coincidence, right?
-
-#######
-#..O..#
-#..#..#
-#.1#H.#
-#..#..#
-#..O..#
-#######
-
-Message "One hydrogen per oxide" is defined as the speed at which atoms move.
-
-#######
-#.H.3.#
-#.....#
-#.H.H.#
-#######
-
-Message Ammonia is an inflammatory condition of the lungs.
-
-#######
-#.....#
-#.....#
-#H#H#H#
-#.....#
-#..3..#
-#######
-
-Message Hang on, I was thinking of "pneumonia".
-
-#########
-####4####
-###...###
-##.H.H.##
-#.......#
-##.H.H.##
-###...###
-####.####
-#########
-
-Message 90% of all the methane in the world is produced in Arizona.
-
-#########
-##H...H##
-#...4...#
-##H...H##
-#########
-
-Message Methane contains the name "Ethan". Do you think it was discovered by a guy named Ethan?
-
-########
-#......#
-#...H..#
-#O.H..3#
-#...H..#
-#......#
-########
-
-Message Hydroxylamine contains almost every vowel of the alphabet almost exactly once.
-
-#########
-#.......#
-#..H.H..#
-#.2...C.#
-#..H.H..#
-#.......#
-#########
-
-Message Methanol occurs naturally in peppermint oils.
-
-#########
-#.......#
-#.1...E.#
-###.H.###
-###...###
-###.O.###
-#########
-
-Message Helium is named after the Greek god Helios, who first discovered its existence.
-
-#########
-#.......#
-#.E.E.E.#
-###H.1###
-###.H.###
-###...###
-###.N.###
-#########
-
-Message Inhaling helium contracts the ear drum, causing pitches to sound higher. Your voice is perceived normally by everyone else.
-
-#######
-###..##
-##..H.#
-#..N..#
-#.H..H#
-##..0.#
-#######
-
-Message The first helium balloons were used at the wedding of Queen Victoria and Prince Albert, popularizing the term "noble gas".
-
-#######
-#.....#
-#..N..#
-#..0..#
-#H.H.H#
-#.#.#.#
-#.....#
-#######
-
-Message Helium does not form chemical bonds with other elements, but it's the bonds of friendship that really matter.
-
-########
-#......#
-#...H#N#
-#......#
-##H#H.0#
-##.....#
-####...#
-########
-
-Message Scientists have been searching for centuries to discover the missing elements between hydrogen and helium on the periodic table.
-
-Message Thanks for playing! Go get the full version, which has lots of cool stuff that I couldn't write in PuzzleScript: www.sokobond.com
-
-title Extended Bodies:Multiple Parallel Players, Multiple Extended Object
-author Anonymous
-homepage www.puzzlescript.net
-
-verbose_logging
-
-(
-    
-THIS IS A DELIBERATELY BROKEN GAME, JUST FOR ILLUSTRATION
-
-see https://www.puzzlescript.net/Documentation/rigidbodies.html#parallel_many
-)
-
-
-========
-OBJECTS
-========
-
-Background 
-white  
-
-Target 
-DarkBlue    
-
-Wall 
-DarkGrey
-
-Player
-Blue
-..0..
-..0.0
-00000
-.000.
-.0.0.
-
-( three multi-cells blocks )
-Crate 
-orange
-
-Chest
-green
-
-Box
-red
-
-( 1-cell small block )
-Small
-darkred
-.....
-.000.
-.000.
-.000.
-.....
-
-( sticky, multicellular block when in contact )
-Glue
-pink
-.000.
-00000
-00000
-00000
-.000.
-
-( a flag to know what is allowed move )
-Wanna_Move
-#ff00ff
-.....
-.....
-..0..
-.....
-.....
-
-=======
-LEGEND
-=======
-
-. = Background
-# = Wall
-P = Player
-* = Crate
-+ = Box
-% = Chest
-o = Small
-g = Glue
-
-( blocks that can be moved by the player )
-Movable = Crate or Box or Chest or Small or Glue
-
-( all things that can move and push blocks )
-Mover = Player or Movable
-
-( things that can stop a movement if they are stationary )
-Obstacle = Wall or Mover
-
-=======
-SOUNDS
-=======
-
-================
-COLLISIONLAYERS
-================
-
-Background
-Target
-Obstacle
-Wanna_Move
-
-======
-RULES     
-======     
-
-( 1. Propagate movements forward )
-[ > Mover | Movable ] -> [ > Mover | > Movable  ]
-+ [ > Box    ] [ Box   ] -> [ > Box    ] [ > Box    ]
-+ [ > Crate  ] [ Crate ] -> [ > Crate  ] [ > Crate  ]
-+ [ > Chest  ] [ Chest ] -> [ > Chest  ] [ > Chest  ]
-+ [ moving Glue | Glue ] -> [ moving Glue | moving Glue ]
-
-( 2. Propagate obstructions backwards )
-[ > Mover  | stationary Obstacle ] -> [ stationary Mover | Obstacle ]
-+ [ > Crate  ] [ stationary Crate ] -> [ stationary Crate ] [ Crate ]
-+ [ > Box    ] [ stationary Box   ] -> [ stationary Box   ] [ Box   ]
-+ [ > Chest  ] [ stationary Chest ] -> [ stationary Chest ] [ Chest ]
-+ [ moving Glue | stationary Glue ] -> [ stationary Glue | Glue ]
-
-( 3. remove all movement, keep a flag )
-[ > Movable ] -> [ Movable wanna_move ]
-
-( 4. propagate movement only on wanna_move things )
-(    ie redo step 1 but with WANNA_MOVE added to the first line below )
-[ > Mover  | Movable WANNA_MOVE ] -> [ > Mover | > Movable ]
-+ [ > Box   ] [ Box   ] -> [ > Box   ] [ > Box   ]
-+ [ > Crate ] [ Crate ] -> [ > Crate ] [ > Crate ]
-+ [ > Chest ] [ Chest ] -> [ > Chest ] [ > Chest ]
-+ [ moving Glue | Glue ] -> [ moving Glue | moving Glue ]
-
-( 5. cleanup, remove flag )
-[ wanna_move ] -> [ ]
-
-==============
-WINCONDITIONS
-==============
-
-=======     
-LEVELS
-=======
-
-###################
-#.................#
-#.................#
-#...*..g.g.#......#
-#...*......#...g###
-#...*...o.%%%.....#
-#...+++.o.%.......#
-#....+....%%%.....#
-#....+.....P...g..#
-#....p.gg.........#
-###################
 
 
 title The Legend of Zokoban
@@ -1541,7 +478,7 @@ flickscreen 9x7
 OBJECTS
 ========
 
-Background
+Background 
 yellow orange
 00000
 01000
@@ -1549,7 +486,7 @@ yellow orange
 00100
 10000
 
-Water
+Water 
 blue lightblue
 00000
 01000
@@ -1557,7 +494,7 @@ blue lightblue
 00100
 10000
 
-Cave
+Cave 
 DarkBlue
 00000
 00000
@@ -1565,7 +502,7 @@ DarkBlue
 00000
 00000
 
-Goal
+Goal 
 DarkBlue Red
 00000
 00000
@@ -1573,7 +510,7 @@ DarkBlue Red
 00000
 00000
 
-RockWall
+RockWall 
 BROWN Orange
 01110
 10000
@@ -1581,7 +518,7 @@ BROWN Orange
 10000
 00100
 
-StoneWall
+StoneWall 
 darkgrey grey
 01110
 10000
@@ -1590,7 +527,7 @@ darkgrey grey
 00100
 
 PlayerWithoutSword
-GREEN lightgreen
+GREEN lightgreen 
 .00..
 00000
 .000.
@@ -1605,15 +542,15 @@ GREEN lightgreen white grey
 .110.
 00.00
 
-Sword
-grey white
+Sword 
+grey white 
 ..1..
 ..1..
 .111.
 ..0..
 .....
 
-Block
+Block  
 BROWN Orange darkgrey
 .111.
 10001
@@ -1622,7 +559,7 @@ BROWN Orange darkgrey
 .222.
 
 EasyBaddie
-white red
+white red 
 .111.
 10101
 11111
@@ -1682,8 +619,8 @@ Player, Wall, Block, Water, EasyBaddie
 Sword, Money
 
 ======
-RULES
-======
+RULES     
+======     
 
 (baddies move at random)
 [ Stationary Baddie ] -> [ RandomDir Baddie ]
@@ -1725,9 +662,9 @@ late random [ Player Cave | ... | Cave ] -> [ Cave | ... | Player Cave ] SFX2
 WINCONDITIONS
 ==============
 
-All Player on Goal
+All Player on Goal     
 
-=======
+=======     
 LEVELS
 =======
 
@@ -1748,6 +685,170 @@ sssssssss#################wwwwwwwwww
 
 message Congratulations!
 
+title Simple Block Pushing Game
+author David Skinner
+homepage www.puzzlescript.net
+
+========
+OBJECTS
+========
+
+Background
+lightgreen green
+11111
+01111
+11101
+11111
+10111
+
+Target
+darkblue
+.....
+.000.
+.0.0.
+.000.
+.....
+
+Wall
+brown darkbrown
+00010
+11111
+01000
+11111
+00010
+
+Player
+black orange white blue
+.000.
+.111.
+22222
+.333.
+.3.3.
+
+Crate
+orange
+00000
+0...0
+0...0
+0...0
+00000
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Player
+* = Crate
+@ = Crate and Target
+O = Target
+
+=======
+SOUNDS
+=======
+
+Crate move 36772507
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Target
+Player, Wall, Crate
+
+======
+RULES
+======
+
+[ > Player | Crate ] -> [ > Player | > Crate ] 
+
+==============
+WINCONDITIONS
+==============
+
+all Target on Crate
+
+=======
+LEVELS
+=======
+
+####..
+#.O#..
+#..###
+#@P..#
+#..*.#
+#..###
+####..
+
+######
+#....#
+#.#P.#
+#.*@.#
+#.O@.#
+#....#
+######
+
+
+title Wrapping Recipe
+author increpare
+homepage http://www.puzzlescript.net
+
+========
+OBJECTS
+========
+
+Wrap
+Black
+
+Background
+White
+
+Player
+Blue
+
+=======
+LEGEND
+=======
+
+. = Background
+~ = Wrap
+@ = Player
+
+=======
+SOUNDS
+=======
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Wrap
+Player
+
+======
+RULES
+======
+
+[ Wrap | < Player | ... | | Wrap ] -> [ Wrap | | ... | Player | Wrap ]
+
+==============
+WINCONDITIONS
+==============
+
+=======
+LEVELS
+=======
+
+~~~~~~~
+~.....~
+~.....~
+~..@..~
+~.....~
+~.....~
+~~~~~~~
 
 
 title Modality

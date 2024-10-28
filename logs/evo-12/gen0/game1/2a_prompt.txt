@@ -1,526 +1,45 @@
 SYSTEM PROMPT:
 You are a game designer, familiar with the PuzzleScript game description language. Here are some example games, for inspiration (do not reproduce these games exactly):
 
-title Des Poseidons Dreizack
-author Stephen Lavelle
-homepage www.increpare.com
-
-text_color #e7cf5c
-background_color #041646
-
-noaction
-
-run_rules_on_level_start
-
-again_interval 0.1
-(verbose_logging)
-
-
-(flickscreen 14x13)
+title Multiple Patterns
+author increpare
+homepage www.puzzlescript.net
 
 ========
 OBJECTS
 ========
 
 Background
-blue #204ec5
-00000
-01000
-00000
-00010
-00000
-
-smrocks k
-brown darkbrown 
-.1.1.
-10101
-.1.1.
-10101
-.1.1.
-
-teleport T
-lightblue blue darkblue
-10101
-01210
-12221
-01210
-10101
-
-Target
-darkblue transparent 
-01110
-1.0.1
-10001
-1.0.1
-01110
+lightgreen green
+11111
+01111
+11101
+11111
+10111
 
 Wall
-green lightgreen #2d6d0c
-00000
+brown darkbrown
 00010
-00000
+11111
 01000
-00000
-
-wallalt "
-green lightgreen #2d6d0c
-00000
-00000
-00000
-01000
-00000
-
-
-wallalt2 '
-green lightgreen #2d6d0c
-00000
+11111
 00010
-00000
-00000
-00000
-
-coast_u
-lightblue
-.0.0.
-.....
-.....
-.....
-.....
-
-coast_d
-lightblue
-.....
-.....
-.....
-.....
-.0.0.
-
-coast_l
-lightblue
-.....
-0....
-.....
-0....
-.....
-
-coast_r
-lightblue
-.....
-....0
-.....
-....0
-.....
-
-endhand x
-pink
-0.0.0
-.....
-0...0
-.....
-0.0.0
-
 
 Player
-brown orange yellow lightblue
-2.2.2
-2.2.2
+black orange white blue
+.000.
+.111.
 22222
-..1..
-.313.
+.333.
+.3.3.
 
-underplayer
-lightblue
+Sumo
+pink white
 ..0..
-.....
-.....
-.....
-.....
-
-magnet
-lightblue blue
-.0000
-0....
-0.000
-0...0
-.000.
-
-
-flowers 
-darkgreen brown
-.000.
 00000
 .000.
-..1..
-..1..
-
-hinge H
-orange green darkgray 
-10001
-02220
-02220
-02220
-10001
-
-door_l L
-pink darkgray transparent
-.2.2.
-0000.
-11110
-0000.
-.2.2.
-
-
-door_r R
-pink darkgray transparent
-.2.2.
-.0000
-01111
-.0000
-.2.2.
-
-
-
-door_u U
-pink darkgray transparent
-.010.
-20102
-.010.
-20102
-..0..
-
-door_d D
-pink darkgray transparent
-..0..
-20102
-.010.
-20102
-.010.
-
-
-door_dl 1
-pink darkgray
-.....
-..00.
-.010.
-010..
-10...
-
-
-door_dr 2
-pink darkgray
-.....
-.00..
-.010.
-..010
-...01
-
-
-door_ul 3
-pink darkgray
-10...
-010..
-.010.
-..00.
-.....
-
-door_ur 4
-pink darkgray
-...01
-..010
-.010.
-.00..
-.....
-
-ul
-orange
-0....
-.....
-.....
-.....
-.....
-
-ur
-orange
-....0
-.....
-.....
-.....
-.....
-
-
-dl
-orange
-.....
-.....
-.....
-.....
-0....
-
-
-dr
-orange
-.....
-.....
-.....
-.....
-....0
-
-wu
-green lightgreen
-10101
-.....
-.....
-.....
-.....
-
-wd
-green lightgreen
-.....
-.....
-.....
-.....
-10101
-
-wl
-green lightgreen
-1....
-0....
-1....
-0....
-1....
-
-wr
-green lightgreen
-....1
-....0
-....1
-....0
-....1
-
-suck_d
-lightblue
-.....
-.....
-.0.0.
-..0..
-.....
-
-
-suck_u
-lightblue
-.....
-..0..
-.0.0.
-.....
-.....
-
-
-suck_r
-lightblue
-.....
-..0..
-...0.
-..0..
-.....
-
-
-suck_l
-lightblue
-.....
-..0..
-.0...
-..0..
-.....
-
-temp
-transparent
-
-A 
-transparent
-
-S
-lightblue
-.0.0.
-0.0.0
-.0.0.
-0.0.0
-.0.0.
-
-nopull
-transparent
-
-spawned 
-transparent
-
-
-ip1 §
-#ffff05 #ffa33b
-0.0.0
-0.0.0
-00000
-..1..
-..1..
-
-ip2 ±
-#8e4833
-.....
-.....
-....0
-....0
-....0
-
-ip3 `
-#8e4833 #dbc297
-.....
-00000
-11111
-1.1.1
-11111
-
-ip4 ~
-#8e4833
-.....
-.....
-0....
-0....
-0....
-
-5
-#ffa33b #dbc297
-..0..
 .111.
-.111.
-.111.
-..011
-
-6
-#8e4833 #dbc297
-....0
-....0
-.....
-.....
-....1
-
-7
-#8e4833 #dbc297
-00000
-01110
-00000
-00000
-10001
-
-8
-#8e4833 #dbc297
-0....
-.....
-.....
-.....
-1....
-
-9
-#ffa33b #dbc297
-..0.1
-.....
-.....
-.....
-.....
-
-0
-#dbc297 white
-0..00
-00000
-.00.0
-....1
-....1
-
-bla !
-#dbc297 white
-00000
-00000
-00000
-10000
-11100
-
-blo @
-#dbc297
-00...
-000..
-000..
-0.00.
-..00.
-
-
-(BLANK)
-
-ble £
-white
-....0
-....0
-....0
-...00
-...00
-
-ble1 $
-white #dbc297
-00000
-00000
-00000
-00001
-00011
-
-ble2 \
-#dbc297 white
-..00.
-1.00.
-1000.
-1000.
-100..
-
-(SKIP)
-
-ble3 Y
-white #dbc297
-...00
-...00
-....1
-....1
-....1
-
-ble4 &
-white #dbc297
-00111
-1.111
-1..11
-1..11
-1..11
-
-ble5 *
-white
-0....
-.....
-.....
-.....
-.....
-
-
-ble6 -
-#dbc297
-.....
-...00
-.....
-.....
-.....
-
-ble7 =
-#dbc297
-0..00
-0.000
-.....
-.....
-.....
-
-
-
+.0.0.
 
 =======
 LEGEND
@@ -529,813 +48,844 @@ LEGEND
 . = Background
 # = Wall
 P = Player
-M = magnet
-O = Target
-
-
-walls = wall or wallalt or wallalt2
-ortho = door_u or door_d or door_l or door_r
-diagonal = door_ul or door_ur or door_dl or door_dr
-Door = ortho or diagonal
-doorpart = door or hinge
-obstacle = walls or player or hinge or magnet or door or smrocks
-thick = wall or hinge or magnet or door or teleport
-
-
-fixture = wall or hinge 
-
-pixel = ul or ur or dl or dr
-walltype = wall or wallalt or wallalt2
-
-fillwalltype = wall  or hinge
-
-suck = suck_u or suck_d or suck_l or suck_r
-
-coast = coast_u or coast_d or coast_l or coast_r
-
-verge = wl or wr or wu or wd
-decoration = coast or verge 
-
-% = flowers and wall
-
-image = ip1 or ip2 or ip3 or ip4 or 5 or 6 or 7 or 8 or 9 or 0 or bla or blo or ble or ble1 or ble2 or ble3 or ble4 or ble5 or ble6 or ble7 
-
+S = Sumo
 
 =======
 SOUNDS
 =======
 
-sfx0 1415300 (swing)
-sfx1 7555504 (cantmove)
-sfx2 16800907 (whirlpool move)
-sfx3 77044105 (teleport)
-sfx4 43993702 (whirlpool destroy)
-sfx5 43993702 (whirlpool create)
-endlevel 30657706
-
-player cantmove  7555504
+Sumo MOVE 48878907
 
 ================
 COLLISIONLAYERS
 ================
 
 Background
-coast_u
-coast_d
-coast_l
-coast_r
-A
-Target
-S
-underplayer
-teleport
-endhand 
-Player, Wall, wallalt, wallalt2, magnet, hinge, door, smrocks
-flowers
-ul
-ur
-dl
-dr
-wu
-wd
-wl
-wr
-temp
-suck_u
-suck_d
-suck_l
-suck_r
-nopull
-spawned
-image
+Player, Wall, Sumo
 
 ======
 RULES
 ======
 
-[ player teleport no spawned | ... | teleport ] -> [ teleport | ... | player teleport spawned ] sfx3
+[ > Player ] [ Sumo ] -> [ > Player ] [ > Sumo ] 
 
-[ teleport magnet ] -> [ ] sfx4
+==============
+WINCONDITIONS
+==============
 
-[decoration]->[]
-[underplayer]->[]
-[A]->[]
-[temp]->[]
-[suck]->[]
-[nopull]->[]
+=======
+LEVELS
+=======
 
-right [ walls | ]->[walls | coast_l ]
-left  [ walls | ]->[walls | coast_r ]
-down  [ walls | ]->[walls | coast_u ]
-up    [ walls | ]->[walls | coast_d ]
-
-
-
-up [ walls | no walltype ] -> [ walls wu | ]
-down [ walls | no walltype ] -> [ walls wd | ]
-left [ walls | no walltype ] -> [ walls wl | ]
-right [ walls | no walltype ] -> [ walls wr | ]
-
-[pixel]->[]
+########
+#......#
+#......#
+#.P..S.#
+#......#
+#......#
+########
 
 
-[ > magnet | door ] -> cancel
+title Cake Monsters
+author Matt Rix
+homepage www.magicule.com
+color_palette whitingjp
+text_color #FF5588
+background_color #050A0A
+noaction
+youtube Z6ih1aKeETk (tycho!)
+
+========
+OBJECTS
+========
+
+(-----------------------)
+(----MONSTER COLOURS----)
+(-----------------------)
+
+RedMon
+#D8144D #B00F3F BLACK WHITE
+00000
+020.3
+000..
+00000
+1..1.
+
+YellowMon
+#F3F333 #C7C829 BLACK WHITE
+00000
+020.3
+000..
+00000
+1..1.
+
+BlueMon
+#0366E3 #0A52BB BLACK WHITE
+00000
+020.3
+000..
+00000
+1..1.
+
+PurpleMon
+#9E14E2 #800FBA BLACK WHITE
+00000
+020.3
+000..
+00000
+1..1.
+
+OrangeMon
+#E68A25 #BB711E BLACK WHITE
+00000
+020.3
+000..
+00000
+1..1.
+
+GreenMon
+#1CED55 #15C346 BLACK WHITE
+00000
+020.3
+000..
+00000
+1..1.
+
+TrashMon
+#7C6953 #6D5239 BLACK WHITE
+00000
+020.3
+000..
+00000
+1..1.
+
+
+(------------------------)
+(------CAKE COLOURS------)
+(------------------------)
+
+RedCake
+#D8144D #B00F3F
+.000.
+00000
+00000
+10001
+.111.
+
+YellowCake
+#F3F333 #C7C829
+.000.
+00000
+00000
+10001
+.111.
+
+BlueCake
+#0366E3 #0A52BB
+.000.
+00000
+00000
+10001
+.111.
+
+
+PurpleCake
+#9E14E2 #800FBA
+.000.
+00000
+00000
+10001
+.111.
+
+OrangeCake
+#E68A25 #BB711E
+.000.
+00000
+00000
+10001
+.111.
+
+GreenCake
+#1CED55 #15C346
+.000.
+00000
+00000
+10001
+.111.
+
+TrashCake
+#7C6953 #6D5239
+.000.
+00000
+00000
+10001
+.111.
+
+(-----------------------)
+(------OTHER STUFF------)
+(-----------------------)
+
+Destroyer
+#001111 #223333 #384949
+.222.
+20202
+12021
+10101
+.111.
+
+Background
+#152020 #192525
+01101
+10110
+01101
+11010
+01010
+
+
+Wall
+#334444 #384949 #445555 #475959 #4A6B6B
+34443
+23332
+12221
+01110
+00000
+
+Blackness
+#050A0A
+
+
+=======
+LEGEND
+=======
+
+
+. = Background
+_ = Blackness
+# = Wall
+X = Destroyer
+
+R = RedMon
+Y = YellowMon
+B = BlueMon
+P = PurpleMon
+O = OrangeMon
+G = GreenMon
+T = TrashMon
+
+Monster = RedMon or YellowMon or BlueMon or PurpleMon or OrangeMon or GreenMon or TrashMon
+Player = Monster
+
+PrimaryMon = RedMon or YellowMon or BlueMon
+SecondaryMon = PurpleMon or OrangeMon or GreenMon
+
+(each cake char is the next letter in the alphabet after the monster char)
+(except for orange, sadly)
+S = RedCake
+Z = YellowCake
+C = BlueCake
+Q = PurpleCake
+A = OrangeCake
+H = GreenCake
+U = TrashCake
+
+Cake = RedCake or YellowCake or BlueCake or PurpleCake or OrangeCake or GreenCake or TrashCake
+
+=======
+SOUNDS
+=======
+
+sfx0 8478107 (move)
+sfx1 18590508 (eat other monster)
+sfx2 61437309 (eat cake)
+sfx3 89161102 (monster destroyed)
+startlevel 563108
+endlevel 76028308
+undo 82948709
+restart 22851101
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Blackness, Wall, Destroyer
+Monster,Cake
 
 
 
-[ > Player | magnet  ] -> [ > Player | > magnet  ]
+======
+RULES
+======
 
-[ > magnet | no obstacle ] -> [ | magnet ]  sfx2
-+ [ > player | no obstacle ] -> [ | player  ] 
-+ [ > player | no obstacle ] -> [ | player  ] 
+(------------------------)
+(----MONSTER MOVEMENT----)
+(------------------------)
 
+(movement sound)
+[ > Monster ] -> [ > Monster ] sfx0
 
-[player no spawned] [ spawned] -> [player] []
+(stop the monster if it hits a wall)
+[ > Monster | Wall ] -> [ Monster | Wall]
 
-[ magnet ] -> [ magnet suck_u suck_d suck_l suck_r ]
+(if monster hits a destroyer, remove the monster)
+[ > Monster | Destroyer ] -> [ | Destroyer] sfx3
 
-up [ suck_d | no thick ] -> [ suck_d | suck_d ]
-down [ suck_u | no thick ] -> [ suck_u | suck_u ]
-left [ suck_r | no thick ] -> [ suck_r | suck_r ]
-right [ suck_l | no thick ] -> [ suck_l | suck_l ]
+(monster eats cakes of the same color)
+[ > RedMon | RedCake] -> [ | RedMon] sfx2
+[ > BlueMon | BlueCake] -> [ | BlueMon] sfx2
+[ > YellowMon | YellowCake] -> [ | YellowMon] sfx2
+[ > PurpleMon | PurpleCake] -> [ | PurpleMon] sfx2
+[ > OrangeMon | OrangeCake] -> [ | OrangeMon] sfx2
+[ > GreenMon | GreenCake] -> [ | GreenMon] sfx2
+[ > TrashMon | TrashCake] -> [ | TrashMon] sfx2
 
+(stop the monster if it hits a cake of a different color)
+(note: this is necessary to make sure the monster is marked as stationary)
+[ > RedMon | Cake no RedCake] -> [ RedMon | Cake no RedCake]
+[ > BlueMon | Cake no BlueCake] -> [ BlueMon | Cake no BlueCake]
+[ > YellowMon | Cake no YellowCake] -> [ YellowMon | Cake no YellowCake]
+[ > PurpleMon | Cake no PurpleCake] -> [ PurpleMon | Cake no PurpleCake]
+[ > OrangeMon | Cake no OrangeCake] -> [ OrangeMon | Cake no OrangeCake]
+[ > GreenMon | Cake no GreenCake] -> [ GreenMon | Cake no GreenCake]
+[ > TrashMon | Cake no TrashCake] -> [ TrashMon | Cake no TrashCake]
 
-[S]->[]
+(--------------------------)
+(---MONSTER COLOR MIXING---)
+(--------------------------)
 
+(red+blue = purple)
+[ > BlueMon | stationary RedMon] -> [ | PurpleMon] sfx1
+[ > RedMon | stationary BlueMon] -> [ | PurpleMon] sfx1
 
-up [ suck_d | door | no suck_u ]    -> [ suck_d | down door S | ]
+(red+yellow = orange)
+[ > RedMon | stationary YellowMon] -> [ | OrangeMon] sfx1
+[ > YellowMon | stationary RedMon] -> [ | OrangeMon] sfx1
 
+(blue+yellow = green)
+[ > BlueMon | stationary YellowMon] -> [ | GreenMon] sfx1
+[ > YellowMon | stationary BlueMon] -> [ | GreenMon] sfx1
 
-down [ suck_u | door S | no suck_d ]  -> [ suck_u | stationary door S | ]
-down [ suck_u | door no S | no suck_d ]  -> [ suck_u | up door S | ]
+(primary color + secondary color = brown aka trash)
+[ > PrimaryMon | stationary SecondaryMon] -> [ | TrashMon] sfx1
+[ > SecondaryMon | stationary PrimaryMon] -> [ | TrashMon] sfx1
 
+(green+orange = trash)
+[ > GreenMon | stationary OrangeMon] -> [ | TrashMon] sfx1
+[ > OrangeMon | stationary GreenMon] -> [ | TrashMon] sfx1
 
-left [ suck_r | door S | no suck_l ]  -> [ suck_r | stationary door S | ]
-left [ suck_r | door no S | no suck_l ]  -> [ suck_r | right door S | ]
+(purple+orange = trash)
+[ > PurpleMon | stationary OrangeMon] -> [ | TrashMon] sfx1
+[ > OrangeMon | stationary PurpleMon] -> [ | TrashMon] sfx1
 
+(green+purple = trash)
+[ > GreenMon | stationary PurpleMon] -> [ | TrashMon] sfx1
+[ > PurpleMon | stationary GreenMon] -> [ | TrashMon] sfx1
 
-right [ suck_l | door S | no suck_r ] -> [ suck_l | stationary door S | ]
-right [ suck_l | door no S | no suck_r ] -> [ suck_l | left door S | ]
+(trash+anything = trash)
+[ > TrashMon | stationary Monster] -> [ | TrashMon] sfx1
+[ > Monster | stationary TrashMon] -> [ | TrashMon] sfx1
 
-[ > player | door no S ] -> [ > player | > door ]
-
-[s]->[]
-
-up    [ suck_d | door ]    -> [ suck_d | door S ]
-down  [ suck_u | door ]    -> [ suck_u | door S ]
-left  [ suck_r | door ]    -> [ suck_r | door S ]
-right [ suck_l | door ]    -> [ suck_l | door S ]
-
-
-([ > player | > door S ] -> [ > player | > door ])
-
-
-(push ortho doors)
-
-up    [ up    door_l | no obstacle ] -> [ | door_dl ] sfx0
-up    [ up    door_r | no obstacle ] -> [ | door_dr ] sfx0
-down  [ down  door_l | no obstacle ] -> [ | door_ul ] sfx0
-down  [ down  door_r | no obstacle ] -> [ | door_ur ] sfx0
-left  [ left  door_u | no obstacle ] -> [ | door_ur ] sfx0
-left  [ left  door_d | no obstacle ] -> [ | door_dr ] sfx0
-right [ right door_u | no obstacle ] -> [ | door_ul ] sfx0
-right [ right door_d | no obstacle ] -> [ | door_dl ] sfx0
-
-(push diag doors)
-up [ up door_ul | no obstacle ] -> [ | door_l ] sfx0
-up [ up door_ur | no obstacle ] -> [ | door_r ] sfx0
-left [ up door_dl no S | no obstacle ] -> [ | door_d ] sfx0
-right [ up door_dr no S | no obstacle ] -> [ | door_d ] sfx0
-
-left [ down door_ul no S | no obstacle ] -> [ | door_u ] sfx0
-right [ down door_ur no S | no obstacle ] -> [ | door_u ] sfx0
-down [ down door_dl | no obstacle ] -> [ | door_l ] sfx0
-down [ down door_dr | no obstacle ] -> [ | door_r ] sfx0
-
-left [ left door_ul | no obstacle ] -> [ | door_u ] sfx0
-up [ left door_ur no S | no obstacle ] -> [ | door_r ] sfx0
-left [ left door_dl | no obstacle ] -> [ | door_d ] sfx0
-down [ left door_dr no S | no obstacle ] -> [ | door_r ] sfx0
-
-up [ right door_ul no S | no obstacle ] -> [ | door_l ] sfx0
-right [ right door_ur | no obstacle ] -> [ | door_u ] sfx0
-down [ right door_dl no S | no obstacle ] -> [ | door_l ] sfx0
-right [ right door_dr | no obstacle ] -> [ | door_d ] sfx0
-
-
-
-
-[ moving door ] -> [ door ] 
-
-
-late up   [ door_ul | ] -> [ door_ul | dl ]
-late left [ door_ul | ] -> [ door_ul | ur ]
-
-late down [ door_dl | ] -> [ door_dl | ul ]
-late left [ door_dl | ] -> [ door_dl | dr ]
-
-late up    [ door_ur | ] -> [ door_ur | dr ]
-late right [ door_ur | ] -> [ door_ur | ul ]
-
-late down  [ door_dr | ] -> [ door_dr | ur ]
-late right [ door_dr | ] -> [ door_dr | dl ]
-
-late [ thick suck ] -> [ thick ]
-
-[player] -> again
-
-late [magnet suck]->[]
-late down [ player | ] -> [ player  | underplayer]
-
-late [ magnet target ] -> [ teleport ] sfx5 
-
-
+(monster + monster of the same color = monster of the same color)
+[ > Monster | stationary Monster] -> [ | Monster] sfx1
 
 
 ==============
 WINCONDITIONS
 ==============
 
-all player on endhand
+No Cake
+
 
 =======
 LEVELS
 =======
 
-message Level 1 von 3 : Ausbruch
 
-##########%#%##
-#%##...####%##%
-####.m.######%#
-##.....##...###
-##...###.....##
-##....##.....##
-##.....##....##
-###hl..##....##
-###..........##
-###....#hl...##
-###.....#.#####
-#########.#####
-##....##......#
-#.t....#....o.#
-#...x..#..p...#
-##....##......#
-###############
+message WELCOME TO CAKE MONSTERS!
+message MONSTERS LIKE EATING CAKE
 
-message Level 2 von 3 : Flucht
+_______
+#######
+#.....#
+#.r...#
+#...s.#
+#.....#
+#######
+_______
+(diff 0)
 
-##################
-##%#####.....#####
-#####%##.##.2...##
-########.##.1h#.##
-#....##..##h.##.##
-#.p..hh..###.##.##
-#....u.3####.#...#
-#hl##.######.#.x.#
-##.....#.....#...#
-#....o.#.t...#####
-#..m...#.....#####
-#......########%##
-##################
+message YOU MOVE ALL OF THE MONSTERS
 
-message Level 3 von 3 : Fensterrose
+######_######
+#....#_#z...#
+#.r..#_#....#
+#..s.#_#....#
+#....#_#...y#
+######_######
+_____________
+######_######
+#.c..#_#....#
+#....#_#...h#
+#..b.#_#g...#
+#....#_#....#
+######_######
+(diff 0)
 
+message MONSTERS ONLY LIKE THEIR OWN CAKE
+message REMEMBER: Z TO UNDO, R TO RESTART
+_________
+#########
+#r.z....#
+#######.#
+#.......#
+#.sy....#
+#########
+_________
+(diff 1)
 
-#######################
-#######.........#######
-######...........######
-##..##...kkkkk...##..##
-#....#...k...k...#....#
-#.t..#...k.t.k...#..x.#
-#....#...kk.kk...#....#
-#....#....2d1....#....#
-#..o.#...krhlk...#.t..#
-#....#...k...k...#....#
-#...##..m........#....#
-#.hl.............#....#
-#...##....p......#....#
-#######.........#######
-#######################
-
-............
-............
-....x.......
-............
-............
-............
-............
-........p...
-............
-
-............
-............
-....§±`~....
-....5678....
-....90!@....
-.....£$\....
-.....Y&*....
-.....-=.....
-............
-
-message ICH BIN DER POSEIDON
+message MONSTERS MIX WHEN THEY GET EATEN
+_________
+#########
+#.......#
+#.#####.#
+#.r.q.b.#
+#.#####.#
+#.......#
+#########
+_________
+(diff 1)
 
 
-(
+message BROWN + ANY COLOR = BROWN
+__________
+##########
+#........#
+#.rybpog.#
+#........#
+#........#
+#.szcqah.#
+#........#
+#........#
+#.uuuuuu.#
+#........#
+##########
+__________
+(diff 1)
 
-#####################
-#######.......#######
-######.........######
-##..##..kkkkk..##..##
-#....#..k...k..#....#
-#.t..#..k.t.k..#..x.#
-#....#..kk.kk..#....#
-#....#...2d1...#....#
-#..o.#..krhlk..#.t..#
-#....#..k...k..#....#
-#...##.m.......#....#
-#.hl...........#....#
-#...##...p.....#....#
-#######.......#######
-#####################
+
+message HAVE FUN!
+############
+#y........c#
+#b........z#
+#####..#####
+____#..#____
+____#..#____
+____#hh#____
+____####____
+(diff 1)
+
+(----------------------------)
+
+
+_____
+#####
+#RCQ#
+#.CS#
+#Q.B#
+#####
+_____
+(diff 2)
+
+
+
+
+______
+######
+#R...#
+#B...#
+#Q.QQ#
+#CSCS#
+######
+______
+(diff 2)
+
+_______
+#######
+#R.H.B#
+#.....#
+#.....#
+#Y.Q.B#
+#######
+_______
+(diff 2)
+
+_______
+#######
+#CCHCB#
+#.....#
+#YZHZZ#
+#######
+_______
+(diff 2)
+
+
+______
+######
+#R..B#
+#S.C.#
+#.A.C#
+#Y.C.#
+######
+______
+(diff 2)
+
+
+message PIECE OF CAKE, RIGHT?
+
+
+#########
+#ccccccc#
+#bcccccc#
+######cc#
+_____#ch#
+######zz#
+#yzzzzzz#
+#yzzzzzz#
+######zz#
+_____#sa#
+######ss#
+#rssssss#
+#sssssss#
+#########
+(diff 3, fun)
+
+_______
+#######
+#R.B.Y#
+#Y.B.R#
+#R.B.Y#
+#Y.B.R#
+#AHQHA#
+#######
+_______
+(diff 3)
+
+
+_______
+#######
+#AR.BA#
+#.#.#.#
+#H...H#
+##.A.##
+#HY#YH#
+#######
+_______
+(diff 3)
+
+
+
+message X TILES DESTROY MONSTERS
+_________
+_###_###_
+#...#...#
+#.q.x.p.#
+#...x...#
+_#..x..#_
+__#...#__
+___#.#___
+____#____
+_________
+(diff 0, destroyerz)
+
+
+_____
+#####
+#RAR#
+#RXY#
+#YAY#
+#####
+_____
+(diff 1, destroyerz)
+
+______
+######
+#BHHB#
+#YXXY#
+#YXXY#
+#BHHB#
+######
+______
+(diff 1 destroyerz)
+
+_______
+#######
+#RQXQR#
+#SQXQS#
+#BQXQB#
+#######
+_______
+(diff 1 destroyerz)
+
+___________
+#####_#####
+#sss#_#qqq#
+#sss###qqq#
+#x.......x#
+##x.rxb.x##
+#x.......x#
+#qqq###ccc#
+#qqq#_#ccc#
+#####_#####
+___________
+(diff 2 destroyerz)
+
+___________
+###########
+#...#q#.b.#
+#sxr#.#xx.#
+#.x.....c.#
+###########
+___________
+(diff 3 destroyerz)
+
+
+
+message YOU'RE CAKING THIS LOOK EASY!
+
+______
+######
+#RZSZ#
+#YSZS#
+#..SZ#
+#..ZS#
+######
+______
+(diff 3)
+
+
+#######
+#Y#B#Y#
+#.#R#.#
+#.#.#.#
+#.....#
+#.###.#
+#HHAHH#
+#######
+(diff 3, fun!)
+
+
+
+####__####
+#qc####cb#
+#c......c#
+##.####.##
+_#.#xx#.#_
+_#.c.r#.#_
+##.####.##
+#c......c#
+#qc####cq#
+####__####
+(diff 3)
+
+
+
+
+_#########_
+_#rrr.sss#_
+_#.......#_
+_#yyy.zzz#_
+_#.......#_
+##bbb.ccc##
+#.........#
+#.q..a..h.#
+#.........#
+###########
+
+______
+######
+#RA.Y#
+#....#
+#HH..#
+#SBCY#
+######
+______
+(diff 4)
+
+message LET'S CAKE IT TO THE NEXT TIER!
+
 
 #############
-##.........##
-#...........#
-#...kkkkk...#
-#...k...k...#
-#...k.x.k...#
-#...kk.kk...#
-#....2d1....#
-#...krhlk...#
-#...k...k...#
-#...........#
-#..m........#
-#....p......#
-##.........##
+#...#.h.#...#
+#.r.#...#.y.#
+#...c#c#s...#
+###c.....s###
+#..#.#h#.#..#
+#z.h.z.c.s.c#
+#..#.#s#.#..#
+###......z###
+#....#z#z...#
+#.b.#...#.g.#
+#...#.s.#...#
 #############
+(diff 3, easy but fun)
 
 
-#############
-##.........##
-#...........#
-#...kkkkk...#
-#...k...k...#
-#...k.x.k...#
-#...kk.kk...#
-#....2d1....#
-#...krhlk...#
-#...k...k...#
-#...........#
-#.m.........#
-#...........#
-#......p....#
-##.........##
-#############
+_____
+#####
+#B.B#
+#RRY#
+#.Q.#
+#S.S#
+#CHC#
+#####
+_____
+(diff 5 - fun!)
 
 
-
-###############
-##...........##
-#.............#
-#.............#
-#....kkkkk....#
-#....k...k....#
-#....k.x.k....#
-#....kk.kk....#
-#.....2d1.....#
-#....krhlk....#
-#....k...k....#
-#...m.........#
-#.............#
-#.....p.......#
-#.............#
-#.............#
-##...........##
-###############
-
-###############
-##...........##
-#.............#
-#.............#
-#....kkkkk....#
-#....k...k....#
-#....k.x.k....#
-#....kk.kk....#
-#.....2d1.....#
-#....krhlk....#
-#....k...k....#
-#.............#
-#..........m..#
-#.............#
-#......p......#
-#.............#
-##...........##
-###############
-
-###############
-##...........##
-#.............#
-#.............#
-#....kkkkk....#
-#....k...k....#
-#....k.x.k....#
-#....kk.kk....#
-#.....2d1.....#
-#....krhlk....#
-#....k...k....#
-#.............#
-#.............#
-#...m.....m...#
-#.............#
-#......p......#
-##...........##
-###############
-
-######"########
-##...........##
-#.............#
-#.............#
-#....kkkkk....#
-#....k...k....#
-#....k.x.k....#
-#....kk.kk....#
-#....k.d.k....#
-#....krhlk....#
-#...kk.u.k....#
-#...kt...k..o.#
-#...kkkkkk....#
-#..m......m...#
-#.............#
-#......p......#
-##...........##
-###############
-
-###############
-##...........##
-#.............#
-#.............#
-#....kkkkk....#
-#....k...k....#
-#....k.x.k....#
-#....k.kkk....#
-#....k.d.k....#
-#....krhlk....#
-#....k.u.k....#
-#....k...k....#
-#....k.t.k..o.#
-#....kkkkk....#
-#...m.........#
-#.............#
-##.....p.....##
-###############
-
-###############
-##...........##
-#.............#
-#.............#
-#....kkkkk....#
-#....k...k....#
-#....k.x.k....#
-#....kk.kk....#
-#....k2d1k....#
-#....krhlk....#
-#....k........#
-#.............#
-#.............#
-#...m.....m...#
-#.............#
-#......p......#
-##...........##
-###############
-
-###############
-##...........##
-#.............#
-#.............#
-#....kkkkk....#
-#....k...k....#
-#....k.x.k....#
-#....kk.kk....#
-#....k2d1k....#
-#....krhlk....#
-#.............#
-#.............#
-#.............#
-#...m.....m...#
-#.............#
-#......p......#
-##...........##
-###############
-
-###############
-##...........##
-#.............#
-#.............#
-#....kkkkk....#
-#....k...k....#
-#....k.x.k....#
-#....k.kkk....#
-#....k2d......#
-#....krh......#
-#.....4u......#
-#.............#
-#.............#
-#...m.....m...#
-#.............#
-#......p......#
-##...........##
-###############
-
-###############
-##...........##
-#.............#
-#.............#
-#....kkkkk....#
-#....k...k....#
-#....k.x.k....#
-#....k.kkk....#
-#....k2d......#
-#....krh......#
-#....k4u......#
-#.............#
-#.............#
-#...m.....m...#
-#.............#
-#......p......#
-##...........##
-###############
-
-###############
-##...........##
-#.............#
-#.............#
-#....kkkkk....#
-#....k...k....#
-#....k.x.k....#
-#....k.kkk....#
-#....k2d......#
-#....krh......#
-#....k4.......#
-#.............#
-#.............#
-#...m.....m...#
-#.............#
-#......p......#
-##...........##
-###############
-
-###############
-##...........##
-#.............#
-#.............#
-#....kkkkk....#
-#....k...k....#
-#....k.x.k....#
-#....k...k....#
-#....k2d.k....#
-#....krh.k....#
-#....k4..k....#
-#....k.k.k....#
-#....k.kkk....#
-#...m.....m...#
-#.............#
-#......p......#
-##...........##
-###############
-
-###############
-##...........##
-#.............#
-#.............#
-#....kkkkk....#
-#....k...k....#
-#....k.x.k....#
-#....k.kkk....#
-#....k2d......#
-#....krh......#
-#....k4.......#
-#....k........#
-#....k........#
-#...m.....m...#
-#.............#
-#......p......#
-##...........##
-###############
-
-###############
-##...........##
-#.............#
-#.............#
-#....kkkkk....#
-#....k...k....#
-#....k.x.k....#
-#....k...k....#
-#....k2d.k....#
-#....krh.k....#
-#....k4u.k....#
-#....k.k.k....#
-#....k.kkk....#
-#...m.....m...#
-#.............#
-#......p......#
-##...........##
-###############
-
-............
-............
-............
-...kkkkk....
-...k...k....
-...k.x.k....
-...k...k....
-...k2d.k....
-...krh.k....
-...k4..k....
-...k.k.k....
-...k.kkk....
-..m.....m...
-............
-......p.....
-............
-
-............
-............
-............
-...kkkkk....
-...k...k....
-...k.x.k....
-...k...k....
-...k2d.k....
-...krh.k....
-...k4u.k....
-...k.k.k....
-...k.kkk....
-..m.....m...
-............
-......p.....
-............
-
-
-............
-............
-............
-...kkkkk....
-...k...k....
-...k.x.k....
-...k...k....
-...k2..k....
-...krh.k....
-...k4..k....
-...k.k.k....
-...k.kkk....
-..m.....m...
-............
-.....p......
-............
-
-............
-............
-............
-...kkkkk....
-...k...k....
-...k.x.k....
-...k...k....
-...k.d.k....
-...krh.k....
-...k.u.k....
-...k.k.k....
-...k.kkk....
-..m.....m...
-............
-.....p......
-............
-
-............
-............
-..kkkkk.....
-..k...k.....
-..k.x.k.....
-..k...k.....
-..k.d.k.....
-..krh.k.....
-..k.u.k.....
-..k.k.k.....
-..k.kkk.....
-............
-........m...
-............
-..........p.
-............
-
-##################
-#####.......#....#
-#####.......#....#
-#####..##...#....#
-####hlrh#hl.#..rh#
-####....#.rh#hl..#
-####hlrh#hl.#..rh#
-####....#.rh#hl..#
-####hlrh#hl.#..rh#
-####....#.rh#hl..#
-####....#...#....#
-#.......#........#
-#.m..p..##########
-#.......#.........
-#########.........
-
-##################
-#####.........#..#
-#####...mp....#..#
-#####..##d....#..#
-####h..h#h2...#rh#
-####u..u#..h###..#
-####h..h#hl...#rh#
-####u..u#.rh###..#
-####h..h#hl...#rh#
-####u..u#.rh###..#
-####....#.....#..#
-#.......#.....#..#
-#.......#........#
-#.......#........#
-##################
-
-
-###################
-####....#.........#
-####hlrh#.........#
-####....#.........#
-####hlrh#.........#
-####....#.........#
-####hlrh#.........#
-####....#.........#
-####....#.........#
-#.................#
-#.m..p............#
-#.................#
-###################
+______
+######
+#HYBH#
+#YBYB#
+#BBBB#
+#HHHH#
+######
+______
+(diff 4)
 
 
 
-##################
-#................#
-#................#
-#................#
-#................#
-#................#
-#................#
-###.###..........#
-#.....#..........#
-#.p...#..........#
-#.....#..........#
-#...m.#..........#
-#.....#..........#
-##################
 
-##################
-#####.........#..#
-#####.....pmk.#..#
-#####..##d..k.#..#
-####h..h#h2.k.#rh#
-####u..u#..h###..#
-####h..h#hl...#rh#
-####u..u#.rh###..#
-####h..h#hl...#rh#
-####u..u#.rh###..#
-####....#.....#..#
-#.......#.....#..#
-#...kkkk#........#
-#.......#........#
-##################
+______
+######
+#BR.Y#
+#..A.#
+#SCZA#
+#CSZA#
+######
+______
+(diff 4)
 
-##################
-#................#
-#................#
-#................#
-#................#
-#................#
-#................#
-#................#
-#................#
-#................#
-#................#
-#................#
-#................#
-##################
 
-)
 
-title BROKEN Rigid Body example
-author Anonymous
-homepage www.puzzlescript.net
+
+______
+######
+#CZG.#
+#ZCR##
+###..#
+#SHY##
+#HSB.#
+######
+______
+(diff 5 - very fun!)
+
+
+message YOU'RE GETTING BATTER!
+
+______
+######
+#YYYY#
+#...R#
+#AAAA#
+#ZZZZ#
+######
+______
+(diff 5 - fun but surprisingly hard)
+
+
+_______
+#######
+#Y..YA#
+#.BB.H#
+#R..RQ#
+#Y..YH#
+#######
+_______
+(diff 4)
+
+
+message ICING ON THE CAKE!
+
+______
+######
+#ZBBZ#
+#YBYB#
+#....#
+#ZHCZ#
+######
+______
+(diff 5)
+
+
+
+
+_______
+#######
+#A.S.A#
+#.Z.Z.#
+#SYRYS#
+#.ZYZ.#
+#A.S.A#
+#######
+_______
+(diff 5 - not too hard)
+
+
+
+message WILL YOU CAKE IT OUT ALIVE?
+______
+######
+#ZZZZ#
+#SSSS#
+#CCCC#
+#YRB.#
+######
+______
+(diff 6 - fun but tricky)
+
+
+
+
+message THE FINAL CHALLENGE!
+message DOUGH YOU HAVE WHAT IT CAKES?
+_____
+#####
+#AYA#
+#...#
+#CBC#
+#SZY#
+#RZS#
+#CBC#
+#...#
+#HOH#
+#####
+_____
+(diff 8 - a pretty tough one)
+
+
+
+message WELL, YOU REALLY TOOK THE CAKE!
+message CONGRATS, YOU WIN! :)
+
+
+
+
+title Many parallel players, unlimited rigidbodies
+author increpare
+homepage www.increpare.com
 
 verbose_logging
 
 (
 
-BROKEN Example Game FOR ILLUSTRATION PURPOSES ONLY. DO NOT USE.
+This is a sample of 
 
-Example for
-https://www.puzzlescript.net/Documentation/rigidbodies.html#many_many
+- Unlimited rigid bodies
+- Multiple players moving in parallel
+
+It's made as an example for the extended rigid body tutorial here:
+
+https://www.puzzlescript.net/Documentation/rigidbodies.html
 
 )
 
@@ -1343,62 +893,70 @@ https://www.puzzlescript.net/Documentation/rigidbodies.html#many_many
 OBJECTS
 ========
 
-Background 
-white  
-
-Target 
-DarkBlue    
-
-Wall 
-DarkGrey
-
-Player
-Blue
-..0..
-..0.0
-00000
-.000.
-.0.0.
-
-Shadow
-Black
-..0..
-0.0..
-00000
-.000.
-.0.0.
-
-( three multi-cells blocks )
-Crate 
-orange
-
-Chest
+Background
 green
 
-Box
+Wall
+BROWN DARKBROWN
+00010
+11111
+01000
+11111
+00010
+
+Player
+Black Orange White Blue
+.000.
+.111.
+22222
+.333.
+.3.3.
+
+ Crate
+Yellow orange
+00000
+01110
+01110
+01110
+00000
+
+
+(The directional overlays bellow establish connections between crates)
+
+ Crate_U
+orange
+.000.
+.....
+.....
+.....
+.....
+
+ Crate_D
+orange
+.....
+.....
+.....
+.....
+.000.
+
+ Crate_L
+orange
+.....
+0....
+0....
+0....
+.....
+
+ Crate_R
+orange
+.....
+....0
+....0
+....0
+.....
+
+CanMove
 red
-
-( 1-cell small block )
-Small
-darkred
-.....
-.000.
-.000.
-.000.
-.....
-
-( sticky, multicellular block when in contact )
-Glue
-pink
-.000.
-00000
-00000
-00000
-.000.
-
-( a flag to know what is allowed move )
-Wanna_Move
-#ff00ff
 .....
 .....
 ..0..
@@ -1412,25 +970,354 @@ LEGEND
 . = Background
 # = Wall
 P = Player
-S = Shadow
-* = Crate
-+ = Box
-% = Chest
-o = Small
-g = Glue
 
-( blocks that can be moved by the player )
-Movable = Crate or Box or Chest or Small or Glue
+w = Crate and Crate_U
+x = Crate and Crate_D
+a = Crate and Crate_L
+d = Crate and Crate_R
 
-( all things that can move and push blocks )
-Mover = Player or Shadow or Movable 
+e = Crate and Crate_U and Crate_L
+z = Crate and Crate_D and Crate_L
+q = Crate and Crate_U and Crate_R
+c = Crate and Crate_D and Crate_R
 
-( things that can stop a movement if they are stationary )
-Obstacle = Wall or Mover
+r = Crate and Crate_L and Crate_R
+t = Crate and Crate_D and Crate_U
+
+1 = Crate and Crate_D and Crate_L and Crate_R
+2 = Crate and Crate_U and Crate_L and Crate_R
+3 = Crate and Crate_U and Crate_D and Crate_L
+4 = Crate and Crate_U and Crate_D and Crate_R
+
+0 = Crate and Crate_U and Crate_D and Crate_L and Crate_R
+
+5 = Crate
+
+ Crate_Connection = Crate_U or Crate_D or Crate_L or Crate_R
+
+Pusher = Player or Crate
+Pushable = Crate 
+Solid = Crate or Player
 
 =======
 SOUNDS
 =======
+
+ Crate MOVE 36772507
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Player, Wall, Crate
+ Crate_U
+ Crate_D
+ Crate_L
+ Crate_R
+CanMove
+
+======
+RULES
+======
+
+(For making maps easily: uncomment out the next few lines + press action to discard all boundaries and recreate them)
+
+( [ action player ] [ Crate_connection ] -> [ action player ] [ ] )
+( up [ action player ] [ Crate | Crate ] -> [ action player ] [ Crate Crate_u | Crate Crate_d ] )
+( right [ action player ] [ Crate | Crate ] -> [ action player ] [ Crate Crate_r | Crate Crate_l ] )
+
+
+(Step 1: propagate motions forward)
+[ > Pusher | Pushable ] -> [ > Pusher | > Pushable ]
++ up [ moving Crate Crate_U | Crate ] -> [ moving Crate Crate_U | moving Crate ]
++ down [ moving Crate Crate_D | Crate ] -> [ moving Crate Crate_D | moving Crate ]
++ left [ moving Crate Crate_L | Crate ] -> [ moving Crate Crate_L | moving Crate ]
++ right [ moving Crate Crate_R | Crate ] -> [ moving Crate Crate_R | moving Crate ]
+
+
+(Step 1: If a crate can't move, we have to back-propagate the can't-move-ness, including possibly through players)
+[ > Solid | wall ] -> [ Solid | wall ]
+
+[ > Solid | stationary Solid ] -> [ Solid | Solid ]
++ up [ moving Crate Crate_U | stationary Crate ] -> [ Crate Crate_U | Crate ]
++ down [ moving Crate Crate_D | stationary Crate ] -> [ Crate Crate_D | Crate ]
++ left [ moving Crate Crate_L | stationary Crate ] -> [ Crate Crate_L | Crate ]
++ right [ moving Crate Crate_R | stationary Crate ] -> [ Crate Crate_R | Crate ]
+
+
+(Step 3: Mark all crates that are still moving as possibly being able to move)
+[ moving Pushable ] -> [ Pushable CanMove ]
+
+(Step 4: redo Step 1, but only through things that are marked as being possibly able to move)
+[ > Pusher | CanMove Pushable ] -> [ > Pusher | CanMove > Pushable ]
++ up [ moving Crate Crate_U | CanMove Crate ] -> [ moving Crate Crate_U | CanMove moving Crate ]
++ down [ moving Crate Crate_D | CanMove Crate ] -> [ moving Crate Crate_D | CanMove moving Crate ]
++ left [ moving Crate Crate_L | CanMove Crate ] -> [ moving Crate Crate_L | CanMove moving Crate ]
++ right [ moving Crate Crate_R | CanMove Crate ] -> [ moving Crate Crate_R | CanMove moving Crate ]
+
+(Step 5: remove all the CanMove tags)
+[ CanMove ] -> [ ]
+
+(Step 6: move connections along with the crates themselves)
+[ moving Crate stationary Crate_connection ] -> [ moving Crate moving Crate_connection ]
+
+
+==============
+WINCONDITIONS
+==============
+
+=======
+LEVELS
+=======
+
+###############
+#..ca.........#
+#.ce....ca....#
+#.t...d1e.....#
+#.w....w......#
+#....d1ap5.dz.#
+#....pw...5.w5#
+#......dz.....#
+#.......t..dz.#
+#..x..cre...w.#
+#..w..w...5...#
+#.............#
+###############
+
+
+title Manic Ammo
+author David Eastman
+homepage @eastmad
+
+========
+OBJECTS
+========
+
+Background
+gray
+
+Target
+darkgray gray lightgray white
+33333
+31112
+31002
+31002
+32222
+
+Wall
+BROWN
+
+Boom
+Red YELLOW orange
+.101.
+10001
+00200
+10001
+.101.
+
+
+Player
+PINK YELLOW BLACK
+.222.
+.000.
+22122
+.222.
+.2.2.
+
+
+CrateW
+Brown DarkBrown lightbrown
+11111
+12001
+11111
+12001
+11111
+
+CrateN
+Brown DarkBrown lightbrown
+11111
+12121
+10101
+10101
+11111
+
+CrateMineN
+Brown DarkBrown lightbrown darkblue
+11111
+12121
+10101
+10301
+11111
+
+CrateGunN
+Brown DarkBrown lightbrown darkred
+11111
+12121
+10101
+10301
+11111
+
+CrateGunS
+Brown DarkBrown lightbrown darkred
+11111
+12321
+10101
+10101
+11111
+
+
+CrateS
+Brown DarkBrown lightbrown
+11111
+10101
+10101
+12121
+11111
+
+CrateE
+Brown DarkBrown lightbrown
+11111
+10021
+11111
+10021
+11111
+
+
+Shell
+yellow orange
+..0..
+.000.
+.000.
+.000.
+.101.
+
+
+Bang
+Yellow LightRed
+.101.
+10001
+00000
+10001
+.101.
+
+GunN
+red lightred
+..0..
+..0..
+.101.
+00000
+.000.
+
+GunW
+red lightred
+...0.
+..100
+00000
+..100
+...0.
+
+GunS
+red lightred
+.000.
+00000
+.101.
+..0..
+..0..
+
+GunE
+red lightred
+.0...
+001..
+00000
+001..
+.0...
+
+InertMine
+darkblue blue lightblue
+.....
+.101.
+.020.
+.101.
+.....
+
+ActiveMine
+darkred red lightred
+.....
+.101.
+.020.
+.101.
+.....
+
+Squawk
+lightblue blue
+....0
+.0000
+.0000
+.11.0
+1111.
+
+SquawkBang
+orange lightblue
+....0
+.0000
+.0000
+.11.0
+1111.
+
+Droid
+black green
+..0..
+.000.
+00100
+.000.
+..0..
+
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Player
+N = CrateN
+E = CrateE
+W = CrateW
+S = CrateS
+O = Target
++ = Shell
+^ = GunN
+< = GunW
+> = GunE
+˅ = GunS
+M = InertMine
+A = ActiveMine
+B = Boom
+% = CrateGunN
+& = CrateMineN
+@ = CrateGunS
+X = Squawk
+D = Droid
+
+=======
+SOUNDS
+=======
+
+SFX1 55891909
+SFX2 5736502
+SFX4 6922102
+
+Shell move 61960307
+InertMine move 61960307
+Droid move 81713505
+EndLevel 8341708
+Shell create 91688700
+GunN create 91688700
+GunS create 91688700
+GunW create 91688700
+InertMine create 91688700
+ActiveMine create 93182703
 
 ================
 COLLISIONLAYERS
@@ -1438,181 +1325,524 @@ COLLISIONLAYERS
 
 Background
 Target
-Obstacle
-Wanna_Move
+Player, Wall, CrateN, CrateE, CrateW, CrateS, Shell, GunN, GunW, GunE, GunS, Bang, InertMine, ActiveMine, Boom, CrateMineN, CrateGunN, CrateGunS, Squawk, Droid, SquawkBang
 
 ======
-RULES     
-======     
+RULES
+======
 
-[ > player ] [ stationary shadow ] -> [ > player ] [ < shadow ]
 
-( 1. Propagate movements forward )
-[ > Mover | stationary Movable ] -> [ > Mover | > Movable  ]
-+ [ > Box    ] [ stationary Box   ] -> [ > Box    ] [ > Box    ]
-+ [ > Crate  ] [ stationary Crate ] -> [ > Crate  ] [ > Crate  ]
-+ [ > Chest  ] [ stationary Chest ] -> [ > Chest  ] [ > Chest  ]
-+ [ moving Glue | stationary Glue ] -> [ moving Glue | moving Glue ]
+[Bang] -> [background]
+[boom] -> restart
+[> player][Droid] -> [> player][> Droid]
+[ >  Player | Shell ] -> [  >  Player | > Shell  ]
+[ >  Droid | Shell ] -> [  >  Droid | > Shell  ]
+[ >  Player | InertMine ] -> [  >  Player | > InertMine  ]
+[Action Player|InertMine] -> [Action Player|ActiveMine]
+[> Droid|InertMine] -> [Droid|ActiveMine]
+[> Player | ActiveMine] -> [Player | boom ]
+[> Droid | ActiveMine] -> [Droid | boom ]
+[> shell | ActiveMine] -> [boom | boom ]
 
-( 2. Propagate obstructions backwards )
-[ > Mover  | stationary Obstacle ] -> [ stationary Mover | Obstacle ]
+[Action Player|Squawk] -> [Action Player|SquawkBang]
+[> Droid|Squawk] -> [Droid |SquawkBang]
 
-	(the next lines deal with directional conflicts)
-+ [ ^ Crate | < Crate ] -> [ stationary Crate | stationary Crate ] 
-+ [ ^ Crate | > Crate ] -> [ stationary Crate | stationary Crate ] 
-+ [ ^ Crate | v Crate ] -> [ stationary Crate | stationary Crate ] 
+[SquawkBang][CrateMineN] -> [SquawkBang][ActiveMine]
+[SquawkBang][CrateGunN] -> [SquawkBang][GunN]
+[SquawkBang][CrateGunS] -> [SquawkBang][GunS]
+[SquawkBang][CrateN] -> [SquawkBang][Shell]
+[SquawkBang][CrateS] -> [SquawkBang][Shell]
+[SquawkBang][CrateE] -> [SquawkBang][Shell]
+[SquawkBang][CrateW] -> [SquawkBang][Shell]
+[SquawkBang] -> [] SFX1
 
-+ [ v Crate | < Crate ] -> [ stationary Crate | stationary Crate ] 
-+ [ v Crate | > Crate ] -> [ stationary Crate | stationary Crate ] 
-+ [ v Crate | ^ Crate ] -> [ stationary Crate | stationary Crate ] 
+DOWN [ Action Player |CrateN] -> [Action Player | Shell]
+UP [Action Player | CrateS] -> [Action Player | Shell]
+LEFT [Action Player | CrateE] -> [Action Player | Shell]
+RIGHT [Action Player | CrateW] -> [Action Player | Shell]
+DOWN [Action Player | CrateGunN] -> [Action Player | GunN]
+UP [Action Player | CrateGunS] -> [Action Player | GunS]
+DOWN [Action Player | CrateMineN] -> [Action Player | ActiveMine]
 
-+ [ < Crate | > Crate ] -> [ stationary Crate | stationary Crate ] 
-+ [ < Crate | ^ Crate ] -> [ stationary Crate | stationary Crate ] 
-+ [ < Crate | v Crate ] -> [ stationary Crate | stationary Crate ] 
+UP [Action Player | GunN| No Bang ] -> [Player | GunN | Bang ] SFX4
+LEFT [Action Player | GunW | No Bang] -> [Player | GunW | Bang ] SFX4
+DOWN [Action Player | GunS| No Bang ] -> [Player | GunS | Bang ] SFX4
+RIGHT [Action Player | GunE | No Bang] -> [Player | GunE | Bang ] SFX4
 
-+ [ > Crate | < Crate ] -> [ stationary Crate | stationary Crate ] 
-+ [ > Crate | ^ Crate ] -> [ stationary Crate | stationary Crate ] 
-+ [ > Crate | v Crate ] -> [ stationary Crate | stationary Crate ] 
-
-(also one space removed)
-+ [ > Mover | |  < Mover ] -> [ stationary Mover | |  < Mover ] 
-
-+ [ > Crate  ] [ stationary Crate ] -> [ stationary Crate ] [ Crate ]
-+ [ > Box    ] [ stationary Box   ] -> [ stationary Box   ] [ Box   ]
-+ [ > Chest  ] [ stationary Chest ] -> [ stationary Chest ] [ Chest ]
-+ [ moving Glue | stationary Glue ] -> [ stationary Glue | Glue ]
-
-( 3. remove all movement, keep a flag )
-[ > Movable ] -> [ Movable wanna_move ]
-
-( 4. propagate movement only on wanna_move things )
-(    ie redo step 1 but with WANNA_MOVE added to the first line below )
-[ > Mover  | stationary Movable WANNA_MOVE ] -> [ > Mover | > Movable ]
-+ [ > Box   ] [ stationary Box   ] -> [ > Box   ] [ > Box   ]
-+ [ > Crate ] [ stationary Crate ] -> [ > Crate ] [ > Crate ]
-+ [ > Chest ] [ stationary Chest ] -> [ > Chest ] [ > Chest ]
-+ [ moving Glue | stationary Glue ] -> [ moving Glue | moving Glue ]
-
-( 5. cleanup, remove flag )
-[ wanna_move ] -> [ ]
+UP [ > Droid | GunN| No Bang ] -> [Droid | GunN | Bang ] SFX4
+LEFT [ > Droid | GunW | No Bang] -> [Droid | GunW | Bang ] SFX4
+DOWN [> Droid | GunS| No Bang ] -> [Droid | GunS | Bang ] SFX4
+RIGHT [> Droid | GunE | No Bang] -> [Droid | GunE | Bang ] SFX4
+[bang|shell] -> [bang|bang ]
+[boom|no player] -> [boom|boom] SFX2
 
 
 ==============
 WINCONDITIONS
 ==============
 
-=======     
+All Player on Target
+
+=======
 LEVELS
 =======
 
+
+
+MESSAGE Due to a clerical error, You are trapped in a bunker
+
+########
+#.....P#
+#......#
+#......#
+#......#
+#O.....#
+########
+
+MESSAGE A bunker with several levels, full of crates and munitions
+
+########
+#.....O#
+#..+...#
+#......#
+#..N...#
+#P.....#
+########
+
+MESSAGE Crates open from one side
+
+########
+#...+.P#
+#....+.#
+#..++..#
+#++..++#
+#.ON...#
+########
+
+MESSAGE But shells are volatile
+MESSAGE Try firing the gun
+
 #########
-#.......#
-#..p...p#
-#.......#
-#.......#
-#..***..#
-#.......#
-#s...S..#
-#.......#
+#..+.+.O#
+#..N+...#
+#....S..#
+#...^...#
+#.P.....#
 #########
+
+MESSAGE Chain reaction
+
+#########
+#+.+O+.P#
+#+.++...#
+#.+.+.N.#
+#+......#
+#E+++.<.#
+#########
+
+MESSAGE Inert mines, active mines
+
+#########
+#+.+P+..#
+#.......#
+#.......#
+#SSSSM..#
+#.O.E...#
+#########
+
+Message Crates can have any munitions in them
 
 #########
 #.......#
-#.......#
-#.......#
-#...s...#
-#..+++..#
-#...p...#
-#.......#
-#.......#
+#.&+..+.#
+#.+O&.+.#
+#.+++%..#
+#.P.S...#
 #########
 
 
-USER PROMPT:
-The following PuzzleScript game code:
-```plaintext
-title Maze Runner
-author Your Name
-homepage www.example.com
+MESSAGE There seems to be another way to open crates
+
+#########
+#.X.....#
+#.......#
+#..P....#
+#....NNN#
+#.>..SON#
+#########
+
+
+MESSAGE Hey, it's a friendly worker droid!
+
+#########
+#.D...PN#
+#..+...N#
+#A.+....#
+#.NN.O..#
+#..+....#
+#########
+
+
+MESSAGE Now this is where the main bunker levels begin.
+
+###########
+#O+N..+.W.#
+#SN&..+.NX#
+#.DN.+.+..#
+#%.NWP.NS+#
+#...+N....#
+###########
+
+
+MESSAGE This doesn't look safe
+
+###########
+#P..&&&&&&#
+#DX.N....&#
+#...&&&&&&#
+#.N.N...O.#
+#&&&&&&&&&#
+###########
+
+
+MESSAGE Carefully packed
+
+###########
+#PESW.WDW.#
+#NW..&N@.N#
+#.N%NWN.X.#
+#N...NNNNN#
+#N.NNNNNON#
+###########
+
+MESSAGE Symbiosis
+
+###########
+#P.NNN.DN.#
+#MM>.+++N.#
+#..N.NN+..#
+#++N++....#
+#++...<.O.#
+###########
+
+MESSAGE Inert Mine field
+
+###########
+#.P..M.M..#
+#.MMM.M.MM#
+#..M..MNM.#
+#MM.MM.MOS#
+#.M..MD...#
+###########
+
+MESSAGE Last level
+
+###########
+#..+..P.+.#
+#.N..@.N..#
+#+.&..E.&.#
+#++..S.SSS#
+#.X+&..NO.#
+###########
+
+MESSAGE Congratulations! Now you can return to fighting on the front line.
+
+title One player, unlimited rigidbodies
+author increpare
+homepage www.increpare.com
+
+(
+
+This is a sample of 
+
+- Unlimited rigid bodies
+- 1 Player (should be extendable)
+
+It's made as an example for the extended rigid body tutorial here:
+
+https://www.puzzlescript.net/Documentation/rigidbodies.html
+
+)
 
 ========
 OBJECTS
 ========
 
 Background
-black
-
-Player
-yellow
+green
 
 Wall
-grey
+BROWN DARKBROWN
+00010
+11111
+01000
+11111
+00010
 
-Key
-blue
+Player
+Black Orange White Blue
+.000.
+.111.
+22222
+.333.
+.3.3.
 
-Exit
-green
+ Crate
+Yellow orange
+00000
+01110
+01110
+01110
+00000
+
+
+(The directional overlays bellow establish connections between crates)
+
+ Crate_U
+orange
+.000.
+.....
+.....
+.....
+.....
+
+ Crate_D
+orange
+.....
+.....
+.....
+.....
+.000.
+
+ Crate_L
+orange
+.....
+0....
+0....
+0....
+.....
+
+ Crate_R
+orange
+.....
+....0
+....0
+....0
+.....
+
 
 =======
 LEGEND
 =======
 
 . = Background
-P = Player
 # = Wall
-K = Key
-E = Exit
+P = Player
+
+w = Crate and Crate_U
+x = Crate and Crate_D
+a = Crate and Crate_L
+d = Crate and Crate_R
+
+e = Crate and Crate_U and Crate_L
+z = Crate and Crate_D and Crate_L
+q = Crate and Crate_U and Crate_R
+c = Crate and Crate_D and Crate_R
+
+r = Crate and Crate_L and Crate_R
+t = Crate and Crate_D and Crate_U
+
+1 = Crate and Crate_D and Crate_L and Crate_R
+2 = Crate and Crate_U and Crate_L and Crate_R
+3 = Crate and Crate_U and Crate_D and Crate_L
+4 = Crate and Crate_U and Crate_D and Crate_R
+
+0 = Crate and Crate_U and Crate_D and Crate_L and Crate_R
+
+5 = Crate
+
+ Crate_Connection = Crate_U or Crate_D or Crate_L or Crate_R
+
+Pusher = Player or Crate
+Pushable = Crate or Crate_connection
+
+=======
+SOUNDS
+=======
+
+ Crate MOVE 36772507
 
 ================
 COLLISIONLAYERS
 ================
 
 Background
-Key
-Exit
-Player
-Wall
+Player, Wall, Crate
+ Crate_U
+ Crate_D
+ Crate_L
+ Crate_R
 
 ======
 RULES
 ======
 
-[ > Player | Key ] -> [ Player | Background ] 
-[ Player | Exit ] -> WIN
+(For making maps easily: uncomment out the next few lines + press action to discard all boundaries and recreate them)
+
+( [ action player ] [ Crate_connection ] -> [ action player ] [ ] )
+( up [ action player ] [ Crate | Crate ] -> [ action player ] [ Crate Crate_u | Crate Crate_d ] )
+( right [ action player ] [ Crate | Crate ] -> [ action player ] [ Crate Crate_r | Crate Crate_l ] )
+
+(Propagate movements within and between extended bodies)
+[ > Pusher | Pushable ] -> [ > Pusher | > Pushable ]
++ up [ moving Crate Crate_U | Crate ] -> [ moving Crate Crate_U | moving Crate ]
++ down [ moving Crate Crate_D | Crate ] -> [ moving Crate Crate_D | moving Crate ]
++ left [ moving Crate Crate_L | Crate ] -> [ moving Crate Crate_L | moving Crate ]
++ right [ moving Crate Crate_R | Crate ] -> [ moving Crate Crate_R | moving Crate ]
+
+(Move connections along with the crates themselves)
+[ moving Crate stationary Crate_connection ] -> [ moving Crate moving Crate_connection ]
+
+(If any crate can't move, cancel the turn. This works because there's only one player.)
+[ > Crate | wall ] -> cancel
 
 ==============
 WINCONDITIONS
 ==============
 
-All Key on Background
-Some Player on Exit
+=======
+LEVELS
+=======
+
+###############
+#.............#
+#..ca...ca.dz.#
+#.ce..d1e...w.#
+#.t....w......#
+#.w.d1a..5.5..#
+#....w....5...#
+#......dz.....#
+#...p...t..dz.#
+#..x..cre...w.#
+#..w..w...5...#
+#.............#
+###############
+
+USER PROMPT:
+The following PuzzleScript game code:
+```plaintext
+title Collect and Return
+author Assistant
+
+========
+OBJECTS
+========
+
+Background
+yellow
+.....
+.....
+.....
+.....
+.....
+
+Player
+blue white
+..0..
+.000.
+00000
+.0.0.
+..0..
+
+Item
+red
+.....
+..0..
+.000.
+..0..
+.....
+
+Wall
+black grey
+.....
+.111.
+.111.
+.111.
+.....
+
+Target
+green
+.....
+..0..
+.000.
+..0..
+.....
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Player
+I = Item
+T = Target
+
+=======
+SOUNDS
+=======
+
+CollectSFX 12345678
+WinSFX 87654321
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Wall
+Player, Item, Target
+
+======
+RULES
+======
+
+# Player moves
+[> Player | no Wall] -> [> Player | ]
+
+# Collect an item
+[> Player | Item] -> [> Player | ] sfx CollectSFX
+
+# Player returns to target with items
+[> Player | Target] -> win sfx WinSFX
+
+==============
+WINCONDITIONS
+==============
+
+no Item
 
 =======
 LEVELS
 =======
 
-###########
-#.......#E#
-#.#######.#
-#.K.....#.#
-#.#.###.#.#
-#.#K#.#.#.#
-#.#.#.#.#.#
-#.#.#.#.#.#
-#...#KP...#
-###########
-
+##########
+#........#
+#..PI....#
+#........#
+#........#
+#.....T..#
+##########
 
 ```
 produced the following console output:
 =================================
-line 35 : section "COLLISIONLAYERS" is out of order, must follow  "SOUNDS" (or it could be that the section "SOUNDS"is just missing totally.  You have to include all section headings, even if the section itself is empty).
-line 48 : Name "player", referred to in a rule, does not exist.
-line 48 : Name "key", referred to in a rule, does not exist.
-line 48 : Name "background", referred to in a rule, does not exist.
-line 49 : Name "player", referred to in a rule, does not exist.
-line 49 : Name "exit", referred to in a rule, does not exist.
+line 62 : unexpected sound token "collectsfx".
+line 63 : unexpected sound token "winsfx".
+line 77 : Objects cannot appear outside of square brackets in rules, only directions can.
+line 77 : Name "moves", referred to in a rule, does not exist.
+line 80 : Objects cannot appear outside of square brackets in rules, only directions can.
+line 80 : Name "collect", referred to in a rule, does not exist.
 too many errors, aborting compilation
 Errors detected during compilation; the game may not work correctly.
 Return a repaired version of the code that addresses these errors. First, reason about your task and determine the best plan of action. Then, write your code.  Return your code in full, inside a ```plaintext code block.

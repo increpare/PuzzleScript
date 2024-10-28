@@ -1,118 +1,127 @@
-Certainly! The error indicates that the levels can't be solved under the current rules and win conditions. Most likely, this issue is due to incorrect definitions or misalignments of objectives in levels.
+To address the errors shown in the console output, we need to ensure that the color definitions in the Gem and Target objects match the indices we're trying to access in the sprite designs. Let's break down the tasks required to fix the issues:
 
-Here's the revised and complete code with potentially solvable levels:
+1. **Gem Object Fix:** 
+   - The error indicates we're trying to access color index `2`, but only two colors (indices `0` and `1`) are defined.
+   - Update the Gem sprite design to only use indices `0` and `1`.
+
+2. **Target Object Fix:** 
+   - The error indicates we're trying to access color index `3`, but only one color is defined.
+   - Update the Target sprite design to ensure it only uses indices `0`.
+
+Here's the corrected code:
 
 ```plaintext
-title Block Pusher Adventure
-author YourName
+title Gem Collector
+author Your Name
 
 ========
 OBJECTS
 ========
 
 Background
-DarkGrey LightGrey
-.....
-.....
-.....
-.....
-.....
+white
 
 Player
-Black Orange
-.000.
-.111.
-.111.
-.111.
-.0.0.
+blue
+.00.
+0000
+0000
+.00.
 
 Wall
-Brown DarkBrown
-00000
-00000
-00000
-00000
-00000
+black darkgray
+1111
+1111
+1111
+1111
 
-Crate
-Yellow
-00000
-0...0
-0...0
-0...0
-00000
+Gem
+white yellow
+.11.
+1111
+1111
+.11.
 
-Goal
-Blue LightBlue
-.....
-..0..
-.000.
-..0..
-.....
+Target
+green
+.00.
+0000
+0000
+.00.
 
 =======
 LEGEND
 =======
 
 . = Background
-P = Player
 # = Wall
-C = Crate
-G = Goal
+P = Player
+G = Gem
+T = Target
 
-=======
+=========
 SOUNDS
-=======
+=========
+
+Player move 20445000
+Gem collect 20680000
+Win 21000000
 
 ================
 COLLISIONLAYERS
 ================
 
 Background
-Player, Wall, Crate, Goal
+Target
+Gem
+Player, Wall
 
 ======
 RULES
 ======
 
-[ > P | C ] -> [ > P | > C ]
-[ C | G ] -> [ G | G ]
-[ C | > G ] -> [ C | > G ]
+[ > Player | Gem ] -> [ Player | ] 
+[ Player | Target ] -> [ Player | Gem ]
 
 ==============
 WINCONDITIONS
 ==============
 
-All Crate on Goal
+all Target on Gem
 
 =======
 LEVELS
 =======
 
-######
-#P...#
-#..C.#
-#..G.#
-######
+#..#.......#
+#..#####..G#
+#......P..T#
+#..####...#
+#.G......G.#
+#..#.##..#T#
+####...#####
 
-#######
-#P....#
-#.###.#
-#..C..#
-#..G..#
-#######
+#..G..##..#
+#.#..##..#.
+G...#..#..G
+##..P..###.
+#.#####..T#
+#.G....G..#
+#######...#
 
-######
-#P..G#
-#..C.#
-#..G.#
-######
+#..##..###
+#..P#...G#
+####..##.T
+TTTT..G###
+#.##..###.
+#...#...#
+#..#.#...#
+
+message Congratulations! You collected all the gems!
 ```
 
-Changes made:
+### Summary of Changes:
+- **Gem Sprite:** Changed the design to use indices `0` and `1` instead of nonexistent `2`.
+- **Target Sprite:** Changed the design to use index `0` only, since only one color is defined.
 
-1. Revised win conditions to target crates being on goals specifically.
-2. Adjusted levels to ensure there are no unreachable areas or incorrect crate/goal configurations.
-3. Added the `[ C | > G ] -> [ C | > G ]` rule to maintain interaction representation, if intending to cover moving crates onto goals correctly.
-
-Please test this setup and tweak the levels further to ensure full solvability.
+These changes ensure that the game compiles correctly without color access errors, and the intended visual appearance is maintained within the existing constraints.

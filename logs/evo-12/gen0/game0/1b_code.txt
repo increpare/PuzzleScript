@@ -1,116 +1,126 @@
-To repair the PuzzleScript game code, let's address each of the reported errors step by step.
+In the provided PuzzleScript game code, there are errors related to defining the colors of the `Wall` and `Gem` objects. Each object's color palette needs as many colors as used in the sprite matrix. The errors indicate that the `Wall` and `Gem` definitions have fewer colors in their color palettes than are required by the sprite matrices.
 
-1. **Collision Layer Order and Missing Sounds Section:** The error message indicates that the "COLLISIONLAYERS" section is out of order and that a "SOUNDS" section is missing. This can be fixed by including an empty "SOUNDS" section before "COLLISIONLAYERS."
+To fix the code:
 
-2. **Name Errors in Rules:** The error messages say that "player," "crate," and "goal" are not valid object names. These should be uppercase—consistent with the identifiers specified in the "LEGEND" section ("P" for Player, "C" for Crate, "G" for Goal).
+1. **Wall Object**: The sprite matrix has four `1`s, suggesting that a second color needs to be defined for the `1`s in the sprite matrix.
 
-3. **Win Condition Invalid Name:** The "ALL Goal on Crate" line contains the name of an object ("Goal") which is not recognized based on the legend. Using consistent identifiers ("G" for Goal and "C" for Crate) can fix this.
+2. **Gem Object**: The sprite matrix has four `2`s, suggesting that a second color needs to be defined for the `2`s in the sprite matrix.
 
-By fixing these issues, the game should compile correctly. Here is the updated and corrected code:
+Here is the corrected version of the code:
 
 ```plaintext
-title Block Pusher Adventure
-author YourName
+title Gem Collector
+author Your Name
 
 ========
 OBJECTS
 ========
 
 Background
-DarkGrey LightGrey
-.....
-.....
-.....
-.....
-.....
+white
 
 Player
-Black Orange
-.000.
-.111.
-.111.
-.111.
-.0.0.
+blue
+.00.
+0000
+0000
+.00.
 
 Wall
-Brown DarkBrown
-00000
-00000
-00000
-00000
-00000
+black darkgray
+1111
+1111
+1111
+1111
 
-Crate
-Yellow
-00000
-0...0
-0...0
-0...0
-00000
+Gem
+white yellow
+.22.
+2222
+2222
+.22.
 
-Goal
-Blue LightBlue
-.....
-..0..
-.000.
-..0..
-.....
+Target
+green
+.33.
+3333
+3333
+.33.
 
 =======
 LEGEND
 =======
 
 . = Background
-P = Player
 # = Wall
-C = Crate
-G = Goal
+P = Player
+G = Gem
+T = Target
 
-=======
+=========
 SOUNDS
-=======
+=========
+
+Player move 20445000
+Gem collect 20680000
+Win 21000000
 
 ================
 COLLISIONLAYERS
 ================
 
 Background
-Player, Wall, Crate, Goal
+Target
+Gem
+Player, Wall
 
 ======
 RULES
 ======
 
-[ > P | C ] -> [ > P | > C ]
-[ C | G ] -> [ G | G ]
+[ > Player | Gem ] -> [ Player | ] 
+[ Player | Target ] -> [ Player | Gem ]
 
 ==============
 WINCONDITIONS
 ==============
 
-All G on C
+all Target on Gem
 
 =======
 LEVELS
 =======
 
-######
-#P...#
-#..C.#
-#.C..#
-#..G.#
-######
+#..#.......#
+#..#####..G#
+#......P..T#
+#..####...#
+#.G......G.#
+#..#.##..#T#
+####...#####
 
-#######
-#P....#
-#.#####
-#..C..#
-#...G.#
-#######
+#..G..##..#
+#.#..##..#.
+G...#..#..G
+##..P..###.
+#.#####..T#
+#.G....G..#
+#######...#
 
-#####
-#PCG#
-#####
+#..##..###
+#..P#...G#
+####..##.T
+TTTT..G###
+#.##..###.
+#...#...#
+#..#.#...#
+
+message Congratulations! You collected all the gems!
 ```
 
-This code now includes an empty "SOUNDS" section, uses uppercase identifiers consistent with the legend in the rules, and correctly specifies the win condition with the appropriate object identifiers.
+The changes I've made are:
+
+- Added `darkgray` to the `Wall` object's color palette.
+- Added `white` to the `Gem` object's color palette. 
+
+These corrections align the number of colors declared with the number of unique symbols used in each object's sprite definition.

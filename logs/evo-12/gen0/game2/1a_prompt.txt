@@ -1,13 +1,271 @@
 SYSTEM PROMPT:
 You are a game designer, familiar with the PuzzleScript game description language. Here are some example games, for inspiration (do not reproduce these games exactly):
 
-title Microban
+title 2D Whale World
+author increpare
+homepage www.increpare.com
+
+background_color orange
+text_color darkblue
+
+color_palette mastersystem
+
+run_rules_on_level_start
+require_player_movement
+
+(
+    
+This game is a port of the Whale section of my puzzle game English Country Tune (www.englishcountrytune.com), in only 8 lines of code.
+
+)
+
+========
+OBJECTS
+========
+
+Background
+blue
+
+Void
+orange
+
+Player
+lightblue
+
+Whale
+brown
+00000
+00000
+00000
+00000
+00000
+
+Wall
+black
+00000
+0...0
+0...0
+0...0
+00000
+
+HBeam
+yellow
+.....
+.....
+0.0.0
+.....
+.....
+
+VBeam
+yellow
+..0..
+.....
+..0..
+.....
+..0..
+
+=======
+LEGEND
+=======
+
+Beam = HBeam or VBeam
+. = Background
+# = Wall
+P = Player
+W = Whale
+0 = Void
+
+=========
+SOUNDS
+=========
+
+whale destroy 62981708
+player move 69405107
+whale move 32823307
+endlevel 99636708
+restart 92555303
+startgame 60661308
+CloseMessage 123434
+ShowMessage 123434
+
+================
+COLLISIONLAYERS
+================
+
+Background
+void
+Player, Wall, Whale
+HBeam
+VBeam
+
+======
+RULES
+======
+
+(While we allow whales to move onto the void, player's aren't)
+[ > player | void ] -> [ player | void ] 
+
+(Beams detect motion)
+horizontal [ > Player | VBeam ] -> [ > Player | > VBeam ] 
+vertical [ > Player | HBeam ] -> [ > Player | > HBeam ] 
+
+(If beams detected motion, transfer that to the whales)
+[ Whale | ... | perpendicular Beam ] -> [ perpendicular Whale | ... | perpendicular Beam ] 
+
+(Remove whales, if necessary)
+late [ Whale Void ] -> [ Void ] 
+
+(Remove beams)
+[ Beam ] -> [ ] 
+
+(Place HVeams and VBeams)
+late horizontal [ Whale | ... | ] -> [ Whale | ... | HBeam ] 
+late vertical [ Whale | ... | ] -> [ Whale | ... | VBeam ] 
+
+==============
+WINCONDITIONS
+==============
+
+no Whale
+
+=======
+LEVELS
+=======
+
+message Push a whale off to free it.
+
+0000000000000000
+0########0000000
+0.......#0000000
+0###.W..###00000
+0.........#00000
+0#####.##.###000
+0000#...#...#000
+0000#...#...#000
+0000#...#...###0
+0000#.P.#.....#0
+0000#...#.....#0
+0000#####...W##0
+0000000000....#0
+0000000000#####0
+0000000000000000
+
+message level 2 of 8
+
+00000000000
+0000####000
+000##..##00
+0###....##0
+0#.......#0
+0###.W.###0
+000#P...000
+000#####000
+00000000000
+
+message level 3 of 8
+
+0000000000000000
+00###00000000000
+00#.#####0000000
+00#.#...##000000
+00#......#000000
+00#..##.#######0
+00#..#........#0
+00#..#........#0
+0##..######...#0
+0#........#.W.#0
+0##.......#..P#0
+00######..#####0
+00000000..000000
+0000000000000000
+
+message level 4 of 8
+
+0000000000000000
+000000#########0
+0######.......#0
+0.............#0
+0.....#.#####.#0
+0######.#.....#0
+00000##.#...P.#0
+00000#........#0
+00000##.#.W...#0
+000000#.......#0
+000000###.#...#0
+00000000#######0
+0000000000000000
+
+message level 5 of 8
+
+00000000000000000
+0000############0
+0000#.#........#0
+0000#..........#0
+0####..###.....#0
+0......#.#.....#0
+0####..#W#.#W#.#0
+0..........#.#.#0
+0####.....P###.#0
+0...#.#........#0
+0##...##########0
+00#####0000000000
+00000000000000000
+
+message level 6 of 8
+
+00000000000000000
+000000000#.#.#.#0
+000000000#.#.#.#0
+000000000#.#.#.#0
+000000000#.....#0
+0000000###...###0
+0000000#.#...#000
+0000000#.#.#.#000
+0#######.#.#.#000
+0#...........#000
+0#.#.W...W...#000
+0#...........#000
+0#.....P.....#000
+0#...........#000
+0#############000
+00000000000000000
+
+message level 7 of 8
+
+000000000#000000
+00000####.####00
+0####.........#0
+0........#....#0
+0####....W....#0
+0000#.........#0
+0000#.#W.P.W#..#
+0####.........#0
+0........W....#0
+0####....#....#0
+00000#........#0
+000000########00
+0000000000000000
+
+message level 8 of 8
+
+00000000000
+0########00
+0#...#..#00
+0##.....000
+0#......#00
+0#..WW..##0
+0#..WW...#0
+0##...P.##0
+0#...#.##00
+0#######000
+00000000000
+
+message all the 2d whales are freed
+
+
+title Simple Block Pushing Game
 author David Skinner
-homepage www.sneezingtiger.com/sokoban/levels/microbanText.html
-
-(My favourite set of sokoban levels - here're the first ten of the Microban set.
-
-I tried contacting this guy, but he seems to have vanished from the net. The levels are in lots of places online, so I'm just chancing my arm by including them.  BUT BE WARNED.)
+homepage www.puzzlescript.net
 
 ========
 OBJECTS
@@ -68,9 +326,7 @@ O = Target
 SOUNDS
 =======
 
-Crate MOVE 36772507
-endlevel 83744503
-startgame 92244503
+Crate move 36772507
 
 ================
 COLLISIONLAYERS
@@ -96,8 +352,6 @@ all Target on Crate
 LEVELS
 =======
 
-message level 1 of 10
-
 ####..
 #.O#..
 #..###
@@ -105,8 +359,6 @@ message level 1 of 10
 #..*.#
 #..###
 ####..
-
-message level 2 of 10
 
 ######
 #....#
@@ -116,94 +368,495 @@ message level 2 of 10
 #....#
 ######
 
-message level 3 of 10
 
-..####...
-###..####
-#.....*.#
-#.#..#*.#
-#.O.O#P.#
-#########
+title Extended Body Example: 1 Player, Multiple Extended Objects
+author Scott Hughes
 
-message level 4 of 10
+(
 
-########
-#......#
-#.O@@*P#
-#......#
-#####..#
-....####
+Usable in the case where there's only a single player that's pushing stuff around.
 
-message level 5 of 10
+Example for
+https://www.puzzlescript.net/Documentation/rigidbodies.html#one_many
 
-.#######
-.#.....#
-.#.O*O.#
-##.*P*.#
-#..O*O.#
-#......#
-########
+)
 
-message level 6 of 10
+=======
+OBJECTS
+=======
 
-######.#####
-#....###...#
-#.**.....#P#
-#.*.#OOO...#
-#...########
-#####.......
+Background
+white
 
-message level 7 of 10
+Player
+pink
 
-#######
-#.....#
-#.O*O.#
-#.*O*.#
-#.O*O.#
-#.*O*.#
-#..P..#
-#######
+Box1
+red
 
-message level 8 of 10
+Box2
+green
 
-..######
-..#.OOP#
-..#.**.#
-..##.###
-...#.#..
-...#.#..
-####.#..
-#....##.
-#.#...#.
-#...#.#.
-###...#.
-..#####.
+Box3
+blue
 
-message level 9 of 10
+Box4
+orange
 
-#####.
-#O..##
-#P**.#
-##...#
-.##..#
-..##O#
-...###
+Wall
+grey
 
-message level 10 of 10
+======
+LEGEND
+======
 
-......#####
-......#O..#
-......#O#.#
-#######O#.#
-#.P.*.*.*.#
-#.#.#.#.###
-#.......#..
-#########..
+. = Background
+@ = Player
+1 = Box1
+2 = Box2
+3 = Box3
+4 = Box4
+# = Wall
 
-message congratulations!
+Box = Box1 or Box2 or Box3 or Box4
+
+======
+SOUNDS
+======
+
+===============
+COLLISIONLAYERS
+===============
+
+Background
+Player, Box, Wall
+
+=====
+RULES
+=====
+
+[ > Player | Box ] -> [ > Player | > Box ]
+
+startloop
+
+(Propagate movements through crates of different types.)
+[ moving Box1 | Box1 ] -> [ moving Box1 | moving Box1 ]
+[ moving Box2 | Box2 ] -> [ moving Box2 | moving Box2 ]
+[ moving Box3 | Box3 ] -> [ moving Box3 | moving Box3 ]
+[ moving Box4 | Box4 ] -> [ moving Box4 | moving Box4 ]
+
+(Extend the movements between crates of different types.)
+[ > Box | Box ] -> [ > Box | > Box ]
+
+endloop
+
+(Just cancel the whole turn if something can't move.)
+[ > Box | Wall ] -> cancel
+
+=============
+WINCONDITIONS
+=============
+
+======
+LEVELS
+======
+
+################
+#....###.......#
+#....#.....##..#
+#...........#..#
+#...@..222..#..#
+##.....2.......#
+#...3.....1....#
+#..33.....1....#
+#..3.....11....#
+#....4........##
+#...444...##...#
+#..#.....##....#
+################
 
 
-title A single rigid body
+title Bouncers
+author Tyler Glaiel
+homepage twitter.com/tylerglaiel
+
+========
+OBJECTS
+========
+
+Bg
+#111111 #222222
+00010
+11111
+01000
+01000
+11111
+
+Selection
+white gray
+..1..
+..1..
+11011
+..1..
+..1..
+
+Wall
+DarkBlue DarkGreen #333333
+20002
+22022
+22122
+21112
+11111
+
+Hole
+DarkGray Gray Black
+.111.
+12221
+10001
+10001
+.111.
+
+
+Arrow
+Red Red
+..1..
+..11.
+11111
+..11.
+..1..
+
+
+HudDivider
+white black
+00000
+11111
+11111
+11111
+11111
+
+IconGO
+green white
+10111
+10011
+10001
+10011
+10111
+
+Going
+green white
+10111
+10011
+10001
+10011
+10111
+
+LeftBouncer
+White White Blue
+.221.
+2.1.2
+21..2
+2.1.2
+.221.
+
+RightBouncer
+White White Blue
+.122.
+2.1.2
+2..12
+2.1.2
+.122.
+
+UpBouncer
+White White Blue
+.222.
+2.1.2
+21.12
+1...1
+.222.
+
+DownBouncer
+White White Blue
+.222.
+1...1
+21.12
+2.1.2
+.222.
+
+HudBG
+black
+
+Empty
+black
+
+PlayEmpty
+black
+.....
+.....
+.....
+.....
+.....
+
+
+Ball
+#003300 Green
+.000.
+01110
+01110
+01110
+.000.
+
+WinBall
+LightBlue LightGreen
+.000.
+01110
+01110
+01110
+.000.
+
+
+
+BallUp
+#003300 Green Black
+.000.
+01210
+01110
+01110
+.000.
+
+BallDown
+#003300 Green Black
+.000.
+01110
+01110
+01210
+.000.
+
+BallLeft
+#003300 Green Black
+.000.
+01110
+02110
+01110
+.000.
+
+BallRight
+#003300 Green Black
+.000.
+01110
+01120
+01110
+.000.
+
+
+
+
+=======
+LEGEND
+=======
+Background = Bg or HudBG
+. = bg and PlayEmpty
+S = Selection and PlayEmpty
+- = HudDivider and Wall
+H = HudBG and PlayEmpty
+A = Arrow and HudBG
+G = IconGO
+W = Wall
+O = Hole
+
+L = LeftBouncer and HudBG
+R = RightBouncer and HudBG
+U = UpBouncer and HudBG
+D = DownBouncer and HudBG
+
+B = BallLeft
+N = BallRight
+M = BallUp
+K = BallDown
+
+Player = Selection
+
+
+PlacedLeftbouncer = LeftBouncer and Selection
+PlacedRightbouncer = RightBouncer and Selection
+PlacedUpbouncer = UpBouncer and Selection
+PlacedDownbouncer = DownBouncer and Selection
+
+Bouncer = LeftBouncer or RightBouncer or UpBouncer or DownBouncer
+
+emptyPlayer = Selection and PlayEmpty
+
+
+ballSwitchLeft = Ball and LeftBouncer
+ballSwitchRight = Ball and RightBouncer
+ballSwitchUp = Ball and UpBouncer
+ballSwitchDown = Ball and DownBouncer
+
+ballSwitchedLeft = BallLeft and LeftBouncer
+ballSwitchedRight = BallRight and RightBouncer
+ballSwitchedUp = BallUp and UpBouncer
+ballSwitchedDown = BallDown and DownBouncer
+
+gameGo = Selection and IconGO
+gameGoing =  Going
+
+
+
+WinL = BallLeft and Hole
+WinR = BallRight and Hole
+WinU = BallUp and Hole
+WinD = BallDown and Hole
+
+Win = WinBall
+
+MovingBall = Ball or BallLeft or BallRight or BallUp or BallDown
+
+=======
+SOUNDS
+=======
+SFX0 41242705 (place bouncer)
+SFX1 73889302 (press go)
+MovingBall Move 68254307 (ball move)
+SFX2 68257500 (pocket ball)
+SFX3 82752503 (ball switch direction)
+
+================
+COLLISIONLAYERS
+================
+
+Background
+
+Arrow, Empty, LeftBouncer, RightBouncer, UpBouncer, DownBouncer, PlayEmpty, IconGO, Going, Hole
+WinBall
+Wall, Ball, BallUp, BallDown, BallLeft, BallRight
+Selection, HudDivider
+
+
+======
+RULES
+======
+
+(action button: take icon to the right of the arrow, place under selector)
+[action selection PlayEmpty][Arrow|LeftBouncer] -> [PlacedLeftbouncer][Arrow|Empty] SFX0
+[action selection PlayEmpty][Arrow|RightBouncer] -> [PlacedRightbouncer][Arrow|Empty] SFX0
+[action selection PlayEmpty][Arrow|UpBouncer] -> [PlacedUpbouncer][Arrow|Empty] SFX0
+[action selection PlayEmpty][Arrow|DownBouncer] -> [PlacedDownbouncer][Arrow|Empty] SFX0
+
+(win conditions)
+[WinL] -> [Win] again SFX2
+[WinR] -> [Win] again SFX2
+[WinU] -> [Win] again SFX2
+[WinD] -> [Win] again SFX2
+
+(slide unused icons over to the left if there's space between them and the arrow)
+right [Empty | Bouncer] -> [Bouncer | Empty]
+
+(selector on top of go button -> signals game to run)
+[action selection iconGO] -> [gameGoing] again SFX1
+
+(make genericball match the direction of the bouncer)
+[ballSwitchLeft]->[ballSwitchedLeft] again
+[ballSwitchRight]->[ballSwitchedRight] again
+[ballSwitchUp]->[ballSwitchedUp] again
+[ballSwitchDown]->[ballSwitchedDown] again
+
+(if ball is going to move on top of a bouncer, switch it to generic ball first)
+right [Going][Bouncer | BallLeft] -> [Going][Bouncer | Left Ball] again SFX3
+left  [Going][Bouncer | BallRight] -> [Going][Bouncer | Right Ball] again SFX3
+up    [Going][Bouncer | BallDown] -> [Going][Bouncer | Down Ball] again SFX3
+down  [Going][Bouncer | BallUp] -> [Going][Bouncer | Up Ball] again SFX3
+
+
+
+(move the ball if Going)
+[Going][BallLeft] -> [Going][LEFT BallLeft] again
+[Going][BallRight] -> [Going][RIGHT BallRight] again
+[Going][BallUp] -> [Going][UP BallUp] again
+[Going][BallDown] -> [Going][DOWN BallDown] again
+
+
+
+[Going] -> [Going] again
+
+==============
+WINCONDITIONS
+==============
+
+no MovingBall
+
+=======
+LEVELS
+=======
+
+message place bouncers, hit play
+
+......w.....
+..o...w.....
+......w.....
+......w.....
+......w..b..
+......s.....
+............
+g-----------
+-hhadluhhhhh
+
+message Level 2
+
+............
+......o.....
+..s.........
+......w.....
+...o.....b..
+......m.....
+............
+g-----------
+-hhalurhhhhh
+
+message Level 3
+
+............
+............
+..o.wwww....
+..s.n..b....
+....wwww.o..
+............
+............
+g-----------
+-hhaudrlhhhh
+
+message Level 4
+
+............
+............
+..o......o..
+............
+............
+.s..bbbb....
+............
+............
+..o......o..
+............
+g-----------
+-hhalrudu...
+
+message Level 5
+
+.....n......w...
+..wwww.k....o.w.
+......b..m......
+...o............
+.......w........
+.....b.w........
+......wwo.......
+w.ww.www........
+.o..............
+....s...........
+..........wwwo..
+g---------------
+-hhaddddddrrr...
+
+message I didn't feel like making more levels
+
+title horizontal Block Pushing Game
 author increpare
 homepage www.puzzlescript.net
 
@@ -212,19 +865,44 @@ OBJECTS
 ========
 
 Background
-brown
+lightgreen green
+11111
+01111
+11101
+11111
+10111
 
 Target
-YELLOW
-
-Player
-PINK
-
-BigBlock
 darkblue
+.....
+.000.
+.0.0.
+.000.
+.....
 
 Wall
-darkbrown
+brown darkbrown
+00010
+11111
+01000
+11111
+00010
+
+Player
+black orange white blue
+.000.
+.111.
+22222
+.333.
+.3.3.
+
+Crate
+blue white
+00000
+00000
+01110
+00000
+00000
 
 =======
 LEGEND
@@ -233,13 +911,15 @@ LEGEND
 . = Background
 # = Wall
 P = Player
-* = BigBlock
-@ = BigBlock and Target
+* = Crate
+@ = Crate and Target
 O = Target
 
-=========
+=======
 SOUNDS
-=========
+=======
+
+Crate MOVE 36772507
 
 ================
 COLLISIONLAYERS
@@ -247,1137 +927,296 @@ COLLISIONLAYERS
 
 Background
 Target
-Player, Wall, BigBlock
+Player, Wall, Crate
 
 ======
 RULES
 ======
 
-rigid [ >  Player | BigBlock ] -> [  >  Player | > BigBlock  ]
-+ rigid [ moving BigBlock | BigBlock ] -> [ moving BigBlock | moving BigBlock ]
+horizontal [ > Player | Crate ] -> [ > Player | > Crate ] 
 
 ==============
 WINCONDITIONS
 ==============
 
-=======
-LEVELS
-=======
-
-...............
-..........#....
-...............
-..#............
-.....***.......
-.....*.....#...
-..P..**#.......
-.....*.........
-...............
-..#............
-.........#.....
-...............
-...............
-
-
-
-title Ponies Jumping Synchronously
-author vytah
-
-background_color #990044
-text_color white
-
-========
-OBJECTS
-========
-
-
-Background  (special, automatically placed in its own layer)
-lightblue
-
-JumpVariableA
-lightblue
-0...0
-.000.
-.0.0.
-.000.
-0...0
-
-JumpVariableA1
-lightblue
-0...0
-..0..
-..0..
-..0..
-0...0
-
-JumpVariableA2
-lightblue
-0...0
-.0.0.
-.0.0.
-.0.0.
-0...0
-
-JumpVariableT
-lightblue
-..0..
-.000.
-.0.0.
-.000.
-.....
-
-JumpVariableT1
-lightblue
-..0..
-..0..
-..0..
-..0..
-.....
-
-JumpVariableT2
-lightblue
-..0..
-.0.0.
-.0.0.
-.0.0.
-.....
-
-JumpVariableB
-lightblue
-.....
-.000.
-.0.0.
-.000.
-..0..
-
-JumpVariableB1
-lightblue
-.....
-..0..
-..0..
-..0..
-..0..
-
-JumpVariableB2
-lightblue
-.....
-.0.0.
-.0.0.
-.0.0.
-..0..
-
-Dirt
-brown darkbrown
-00000
-01000
-00000
-00010
-00000
-
-Tunnel
-brown darkbrown
-00000
-01000
-.....
-.....
-.....
-
-
-Grass
-brown lightgreen green darkBrown
-11211
-21020
-00000
-00030
-00000
-
-Exit
-pink red
-.1.1.
-10101
-10001
-.101.
-..1..
-
-WoodenWall
-Brown orange
-.111.
-.001.
-.111.
-.100.
-.111.
-
-Teleport
-Brown darkBrown pink white
-23332
-02220
-00000
-00010
-00000
-
-Fire
-red orange yellow
-..0..
-.00..
-0110.
-01210
-.020.
-
-TwiLeft
-purple
-.0...
-00...
-.0000
-.0.0.
-.0.0.
-
-TwiRight
-purple
-...0.
-...00
-0000.
-.0.0.
-.0.0.
-
-TeleportingTwilight
-purple
-...0.
-...00
-0000.
-.0.0.
-.0.0.
-
-RdLeft
-#00dddd
-.0...
-00...
-.0000
-.0.0.
-.0.0.
-
-RdRight
-#00dddd
-...0.
-...00
-0000.
-.0.0.
-.0.0.
-
-AbLeft
-yellow red
-..1..
-.01..
-00...
-.0000
-.0.0.
-
-AbRight
-yellow red
-..1..
-..10.
-...00
-0000.
-.0.0.
-
-AjLeft
-orange
-.0...
-00...
-.0000
-.0.0.
-.0.0.
-
-AjRight
-orange
-...0.
-...00
-0000.
-.0.0.
-.0.0.
-
-DeadPony
-lightGray darkGray
-.111.
-10001
-10101
-10001
-10101
-
-Boulder
-lightGray darkGray
-.....
-.111.
-10001
-10001
-.111.
-
-=======
-LEGEND
-=======
-
-Applejack=AjLeft or AjRight
-RainbowDash=RdLeft or RdRight
-Twilight=TwiLeft or TwiRight
-AppleBloom=AbLeft or AbRight
-(NotPegasus=Twilight or Applejack or AppleBloom or TeleportingTwilight)
-Player=Twilight or Applejack or AppleBloom or RainbowDash
-Obstacle=Grass or Dirt or DeadPony or WoodenWall or Teleport or Boulder
-JumpObstacle=Obstacle or Player or Tunnel
-JumpObstacleForFillies=Obstacle or Player
-JumpVariablePositiveA=JumpVariableA1 or JumpVariableA2
-JumpVariablePositiveT=JumpVariableT1 or JumpVariableT2
-JumpVariablePositiveB=JumpVariableB1 or JumpVariableB2
-
-. = Background
-# = Dirt
-~ = Grass
-| = WoodenWall
-T = TwiRight
-A = AjRight
-D = RdRight
-B = AbRight
-J = JumpVariableA
-H = JumpVariableT
-L = JumpVariableB
-E = Exit
-^ = Teleport
-F = Fire
-O = Boulder
-- = Tunnel
-
-=========
-SOUNDS
-=========
-
-sfx0 47251907 (aj push)
-sfx1 13930501 (twi zap)
-sfx2 99083104 (death)
-sfx3 12667901 (twi teleport)
-sfx4 60310105 (jump)
-sfx5 58764102 (rd smash)
-sfx7 74120302 (aj buck)
-endlevel 64815700
-
-
-
-================
-COLLISIONLAYERS
-================
-
-Background
-JumpVariableA, JumpVariablePositiveA, JumpVariableT,JumpVariablePositiveT, JumpVariableB, JumpVariablePositiveB
-Exit, Fire, Tunnel
-Player, Obstacle, TeleportingTwilight
-
-======
-RULES
-======
-
-[> Player |Stationary Player] -> cancel
-[> Player |< Player] -> cancel
-
-[> Applejack| Tunnel] -> [Applejack|Tunnel]
-[> RainbowDash| Tunnel] -> [RainbowDash|Tunnel]
-[> Twilight| Tunnel] -> [Twilight|Tunnel]
-Vertical [> AppleBloom|Tunnel] -> [AppleBloom|Tunnel]
-
-[Left TwiRight] -> [Left TwiLeft]
-[Right TwiLeft] -> [Right TwiRight]
-[Left RdRight] -> [Left RdLeft]
-[Right RdLeft] -> [Right RdRight]
-[Left AjRight] -> [Left AjLeft]
-[Right AjLeft] -> [Right AjRight]
-[Left AbRight] -> [Left AbLeft]
-[Right AbLeft] -> [Right AbRight]
-
-Right[Action Applejack|WoodenWall] -> [AjLeft|]sfx7
-Left[Action Applejack|WoodenWall] -> [AjRight|]sfx7
-
-Down[Action Twilight|Teleport][no Player|Teleport]-> [|Teleport][TeleportingTwilight|Teleport] sfx3
-late[TeleportingTwilight]->[TwiRight]
-
-
-UP [ Up Applejack | No Obstacle No Player no tunnel] [JumpVariableA] -> [ Up Applejack | ] [JumpVariableA2] sfx4
-DOWN [ Up Applejack | no obstacle No Player no tunnel ][JumpVariablePositiveA] -> [ Applejack | ][JumpVariablePositiveA]
-DOWN [ Up Applejack | no obstacle No Player no tunnel][JumpVariableA2] -> [ Applejack | ][JumpVariableA2]
-HORIZONTAL [ > Applejack | NO obstacle No Player no tunnel][JumpVariableA1] -> [ | Applejack ][JumpVariableA]
-HORIZONTAL [ > Applejack | NO obstacle No Player no tunnel][JumpVariableA2] -> [ | Applejack ][JumpVariableA1]
-HORIZONTAL [ > Applejack | JumpObstacle][JumpVariableA1] -> [ Applejack|JumpObstacle ][JumpVariableA]
-HORIZONTAL [ > Applejack | JumpObstacle][JumpVariableA2] -> [ Applejack|JumpObstacle ][JumpVariableA1]
-LATE DOWN [ Applejack | NO obstacle No Player no tunnel][JumpVariableA] -> [ | Applejack ][JumpVariableA]
-LATE DOWN [ Applejack | Obstacle ][JumpVariablePositiveA] -> [ Applejack | Obstacle ][JumpVariableA]
-
-
-UP [ Up Twilight | No Obstacle No Player no tunnel] [JumpVariableT] -> [ Up Twilight | ] [JumpVariableT2] sfx4
-DOWN [ Up Twilight | no obstacle No Player no tunnel ][JumpVariablePositiveT] -> [ Twilight | ][JumpVariablePositiveT]
-DOWN [ Up Twilight | no obstacle No Player no tunnel][JumpVariableT2] -> [ Twilight | ][JumpVariableT2]
-HORIZONTAL [ > Twilight | NO obstacle No Player no tunnel][JumpVariableT1] -> [ | Twilight ][JumpVariableT]
-HORIZONTAL [ > Twilight | NO obstacle No Player no tunnel][JumpVariableT2] -> [ | Twilight ][JumpVariableT1]
-HORIZONTAL [ > Twilight | JumpObstacle][JumpVariableT1] -> [ Twilight|JumpObstacle ][JumpVariableT]
-HORIZONTAL [ > Twilight | JumpObstacle][JumpVariableT2] -> [ Twilight|JumpObstacle ][JumpVariableT1]
-LATE DOWN [ Twilight | NO obstacle No Player no tunnel][JumpVariableT] -> [ | Twilight ][JumpVariableT]
-LATE DOWN [ Twilight | Obstacle ][JumpVariablePositiveT] -> [ Twilight | Obstacle ][JumpVariableT]
-
-
-UP [ Up AppleBloom | No Obstacle No Player no tunnel] [JumpVariableB] -> [ Up AppleBloom | ] [JumpVariableB2] sfx4
-DOWN [ Up AppleBloom | no obstacle No Player no tunnel ][JumpVariablePositiveB] -> [ AppleBloom | ][JumpVariablePositiveB]
-DOWN [ Up AppleBloom | no obstacle No Player no tunnel][JumpVariableB2] -> [ AppleBloom | ][JumpVariableB2]
-HORIZONTAL [ > AppleBloom | NO obstacle No Player][JumpVariableB1] -> [ | AppleBloom ][JumpVariableB]
-HORIZONTAL [ > AppleBloom | NO obstacle No Player][JumpVariableB2] -> [ | AppleBloom ][JumpVariableB1]
-HORIZONTAL [ > AppleBloom | JumpObstacleForFillies][JumpVariableB1] -> [ AppleBloom|JumpObstacleForFillies ][JumpVariableB]
-HORIZONTAL [ > AppleBloom | JumpObstacleForFillies][JumpVariableB2] -> [ AppleBloom|JumpObstacleForFillies ][JumpVariableB1]
-LATE DOWN [ AppleBloom | NO obstacle No Player no tunnel][JumpVariableB] -> [ | AppleBloom ][JumpVariableB]
-LATE DOWN [ AppleBloom | Obstacle ][JumpVariablePositiveB] -> [ AppleBloom | Obstacle ][JumpVariableB]
-)
-
-late [Player Fire] -> [DeadPony Fire] sfx2
-
-[> Applejack|Boulder|no Obstacle No Player] -> [> Applejack| > Boulder |] sfx0
-[> RainbowDash|Boulder|no Obstacle No Player] -> [> RainbowDash||] sfx5
-Right [Action TwiRight|Boulder] -> [TwiRight|] sfx1
-Left [Action TwiLeft|Boulder] -> [TwiLeft|] sfx1
-
-[Boulder Fire] -> [Boulder]
-
-late down [Boulder|Player] -> [|DeadPony] sfx2
-late down [Boulder| no Obstacle no Tunnel] -> [|Boulder no Fire]
-late [Boulder Fire] -> [Boulder]
-
-==============
-WINCONDITIONS
-==============
-
-some Player
-all Exit on Player
-no DeadPony
-
+all Target on Crate
 
 =======
 LEVELS
 =======
 
-(message #1. Grab the Crystal Heart.)
-
-..........H
-...........
-.........E.
-..T....~~~~
-~~~~~~#####
-###########
-
-
-message #2. Applejack bucks and pushes.
-
-..........J
-..~~~~~~~~~
-...########
-.A.|.o...E#
-######.####
-###########
-
-message #3. Twilight teleports and zaps.
-
-...........H
-............
-............
-.T....E.O...
-~^~FFF~~~~^~
-############
-
-message #4. Rainbow Dash flies and smashes.
-
 #########
-....#..E#
-....O..##
-....#..##
-.D..#..##
+#.......#
+#.....@.#
+#.P.*.O.#
+#.......#
+#.......#
 #########
 
-message #5. Rocks fall, everyone dies.
-
-.........J
-..........
-...~~~~~.~
-~~O..O...#
-##|A.O..E#
-##########
-
-message #6. Cooperate with friends.
-
-J.....###
-......###
-...D..#.E
-....#..O#
-.A..O..|#
-~~~######
+.#######.
+.#.....#.
+.#O##..##
+##.##.*.#
+#.*..**.#
+#.OOO.#.#
+#.P.....#
 #########
 
-message #7. Cooperate with family.
 
-##.......JL#####
----..O.A.O.#...#
-###~.~~~~~.#..E#
-###.F..B..F-.###
-####.#####.#####
-################
-
-
-message #8. Help a filly get a cutie mark!
-~~~~~..........L
-#####.........D.
-###E-....O......
-######...O......
-#######.###...B.
-############~~~~
-
-message Aww... Still no cutie mark...
-
-message #9. Explore dangerous caves!
-
-.........##############
-.......###O############
-JHL..#####O############
-...#######O############
-..#####..-O------O-E###
-######..##O######O#####
-#####..###|...A..O.....
-####..####O###^.#######
-####.-----O-------...B.
-##########O############
-..........O..........T.
-############^##########
-
-message #10. Friendship is magic!
-
-JH.........###
-.......O.#.#OE
-DAT....|.#..O#
-~~~.~~~.~###O#
-.......F.#..O#
-########^#^###
-
-message #11. Evil enchantress.
-~~~~~...............JHL
-#####~~~~~~~~~~........
-################.......
-###......###...........
-###..O.O.F.....#.#..D..
-#E-..#B#.|O........A.T.
-#############.~~~~~~~~~
-#######################
-
-
-message #12. Equestrian Games.
-
-###############################
-#########O#####################
-#########O#####################
-###......O..................JHL
-###..O.#.O..............D......
-#E-..#B#.O.....................
-#########O#####################
-#........|.....................
-#########O#####..|.|.|.|.|.....
-#........O....##.#.#.#.#.#.A...
-############...################
-#############..................
-###############...F........T...
-###############################
-
-message Congratulations!
-
-message The Mushroom Kingdom is now safe!
-
-message I mean, the Crystal Empire.
-
-title Smother
-author Team Borse
-
-background_color #9CBD0F
-text_color #0F380F
-
-run_rules_on_level_start
+title Simple Block Pushing Game
+author increpare
+homepage www.puzzlescript.net
 
 ========
 OBJECTS
 ========
 
 Background
-#9CBD0F
+LIGHTGREEN GREEN
+11111
+01111
+11101
+11111
+10111
 
-LaserGV
-#9CBD0F #8CAD0F #306230 #0F380F
-22222
-.222.
-..3..
-..3..
-.....
 
-LaserGH
-#9CBD0F #8CAD0F #306230 #0F380F
-2....
-22...
-2233.
-22...
-2....
-
-LaserV
-#9CBD0F #8CAD0F #306230 #0F380F
+Target
+DarkBlue
 .....
-..3..
-..3..
-..3..
+.000.
+.0.0.
+.000.
 .....
-
-LaserH
-#9CBD0F #8CAD0F #306230 #0F380F
-.....
-.....
-.333.
-.....
-.....
-
-LaserB
-#9CBD0F #8CAD0F #306230 #0F380F
-.....
-..3..
-.333.
-..3..
-.....
-
-Exit
-#9CBD0F #8CAD0F #306230 #0F380F
-2...2
-2...2
-2...2
-2...2
-2.2.2
 
 Wall
-#9CBD0F #8CAD0F #306230 #0F380F
-33333
-31223
-32123
-32223
-33333
+BROWN DARKBROWN
+00010
+11111
+01000
+11111
+00010
 
-Heart
-#9CBD0F #8CAD0F #306230 #0F380F
-.2.2.
+Player
+Black Orange White Blue
+.000.
+.111.
 22222
-.222.
-..2..
-.....
-
-
-PlayerFull
-#9CBD0F #8CAD0F #306230 #0F380F
-.222.
-.323.
-.222.
-.222.
-.2.2.
-
-Protector
-#9CBD0F #8CAD0F #306230 #0F380F
-.333.
-.232.
-.333.
 .333.
 .3.3.
 
-ProtectorSolo
-#9CBD0F #8CAD0F #306230 #0F380F
-.333.
-.232.
-.333.
-.333.
-.3.3.
-
-victimSolo
-#9CBD0F #8CAD0F #306230 #0F380F
-.222.
-.323.
-.222.
-.222.
-.2.2.
+BlueCrate B
+lightblue
+00000
+0...0
+0...0
+0...0
+00000
 
 
-PlayerDead
-#9CBD0F #8CAD0F #306230 #0F380F
-.222.
-22222
-2.2.2
-.222.
-.222.
+OrangeCrate O
+Orange
+00000
+0...0
+0...0
+0...0
+00000
 
-pushBlock
-#9CBD0F #8CAD0F #306230 #0F380F
-33333
-31113
-31113
-31113
-33333
 
 =======
 LEGEND
 =======
 
-Player = PlayerFull or Protector or ProtectorSolo or victimSolo
-PlayerWin = PlayerFull or PlayerDead or Protector or victimSolo
-Laser = LaserV or LaserH or LaserB
-LaserBlock = Wall or Player or PlayerDead or Exit
+Crate = OrangeCrate or BlueCrate
 . = Background
 # = Wall
-g = LaserGV
-h = LaserGH
-P = PlayerFull
-n = Protector
-q = ProtectorSolo
-k = victimSolo
-O = Exit
-l = Heart
-b = pushBlock
+P = Player
+
 
 =======
 SOUNDS
 =======
 
-startgame 83279102 (sound at start of game)
-CloseMessage 123434 (close message noise)
-ShowMessage 123434 (show message noise)
-sfx0 8545502 (death)
-sfx1 26 (heart)
-
+Crate MOVE 36772507
 
 ================
 COLLISIONLAYERS
 ================
+
 Background
-Laser
-Exit
-ProtectorSolo, Heart, Wall
-Player, Wall, PlayerDead, LaserGV, LaserGH, Protector, victimSolo, pushBlock
+Target
+Player, Wall, Crate
 
 ======
 RULES
 ======
 
-(clear lasers)
-late [Laser] -> []
-
-(zip the lasers out of the guns and through the levels)
-late down [LaserGV | no Laser] -> [LaserGV | LaserV]
-late right [LaserGH | no Laser] -> [LaserGH | LaserH]
-
-late down [LaserV no LaserBlock | ] -> [LaserV | LaserV]
-late right [LaserH no LaserBlock | ] -> [LaserH | LaserH]
-
-(generate overlapping lasers)
-late down [LaserV no LaserBlock | LaserH] -> [LaserV | LaserB]
-late down [LaserGV no LaserBlock | LaserH] -> [LaserGV | LaserB]
-late right [LaserH no LaserBlock | LaserV] -> [LaserH | LaserB]
-late right [LaserGH no LaserBlock | LaserV] -> [LaserGH | LaserB]
-
-(deal with overlapping lasers)
-late right [LaserB no LaserBlock | no Laser] -> [LaserB | LaserH]
-late right [LaserH no LaserBlock | no Laser] -> [LaserH | LaserH]
-late down [LaserB no LaserBlock | no Laser] -> [LaserB | LaserV]
-late down [LaserV no LaserBlock | no Laser] -> [LaserV | LaserV]
-
-(solo Victim can push a block)
- [ > victimSolo | pushBlock ] -> [ > victimSolo| > pushBlock]
-
-(pushing block to switch breaks laser)
-[pushBlock  laser] -> [ wall]
+[ >  Player | Crate ] -> [  >  Player | > Crate  ]
 
 
-(if a player is over a laser, then cause them harm)
-late [ PlayerFull Laser ] -> [PlayerDead Laser] sfx0
-
-(victim solo dies in the laser)
-late [ victimSolo Laser ] -> [PlayerDead Laser] sfx0
-
-(protector levels)
-[ > ProtectorSolo | ... | Heart ] -> [ | ... | ProtectorSolo ] sfx1
-[ > ProtectorSolo ] -> [ ProtectorSolo]
-
+[ > OrangeCrate | OrangeCrate ] -> [ > OrangeCrate | > OrangeCrate ]
+[ > OrangeCrate | BlueCrate ] -> [ > OrangeCrate | > BlueCrate ]
+[ > BlueCrate | OrangeCrate ] -> [ > BlueCrate | > OrangeCrate ]
+[ > BlueCrate | BlueCrate ] -> [ > BlueCrate | > BlueCrate ]
 
 ==============
 WINCONDITIONS
 ==============
-All PlayerWin on Exit
-No Heart
 
 =======
 LEVELS
 =======
 
-message then...
+################
+#..............#
+#..............#
+#.P.BOBOBOBOB..#
+#..............#
+#..............#
+################
 
-message I PROTECT YOU
-
-###g###g###
-#.........#
-#n.......o#
-#........o#
-#p...#....#
-#.........#
-###########
-
-message YOU SMOTHER ME
-
-###########
-#n........#
-#......#..#
-h..#h..#..#
-#p.....#..#
-#......#oo#
-###########
-
-message I DEFEND YOU
-
-#####g#####
-#.P.....n.#
-#.........#
-#..#...#..#
-#.........#
-#......oo.#
-###########
-
-message YOU SPEAK FOR ME
-
-#####g#####
-#n.......o#
-#....#h...#
-h....g....#
-#.....#..o#
-#p......#.#
-###########
-
-message WE ARE CARE FREE
-
-#P####g##g###
-#.#..#.#....#
-#..........o#
-h...........#
-#.#h..#..#.o#
-#.....#....n#
-#############
-
-message I CARRY OUR BURDENS
-
-message before...
-
-message I AM ALWAYS SEARCHING
-
-###########
-#l...l....#
-#....l....#
-#.........#
-#q..l.....#
-#l..l.....#
-###########
-
-
-message I NEVER SEE A FUTURE
-
-###########
-#.........#
-#..l..q.l.#
-#.l....l..#
-#.ll...l.l#
-#l.l...l..#
-###########
-
-message I NEVER FEEL COMFORTABLE
-
-###########
-#....l....#
-#lq..l..l.#
-#.l..l....#
-#.l.....l.#
-#....l....#
-###########
-
-
-message NO ONE GETS ME
-
-###########l##l#####
-#l.l...............#
-#.....ll...........#
-#l..l..............#
-#..q..l.......l....#
-#..ll..l......l....#
-###########........#
-###########l....l..#
-###########........#
-###########.l.l.l..#
-####################
-
-message I NEED CONTACT
-
-###################
-#.l...l############
-#......############
-#l.l..l##########l#
-#l.......l.....l#.#
-#....l............#
-#ll..q.........l.l#
-#..l.....l.......l#
-#.l..l............#
-###################
-
-message I NEED VALIDATION
-
-message before...
-
-message I AM INDEPENDENT
-
-###########
-#.k.g.....#
-#.......b.#
-#.b...###.#
-#.#.......#
-#...h.....#
-#...#...O.#
-###########
-
-
-message I AM STRONG
-
-
-###g##g##
-#.......#
-#kb.b...#
-#.......#
-h.....#.#
-#..#b#h.#
-#....#..#
-h....#o.#
-#.......#
-#########
-
-message I NEED NO ONE
-
-###g#######
-#.o.......#
-#...#.##..#
-#.#..bkb.##
-h...#.#.b.#
-#.......#.#
-#.....#...#
-###########
-
-message I ENJOY MY COMPANY
-
-#####g#####g#####g######
-#.k.....b...........o..#
-#..b....#.#.......##...#
-#.........b...#b..#g...#
-h..........#......#....#
-##.###.#######.####.#.##
-h..............#h......#
-####.#####.###.##.#.#.##
-###.b.#....#........#..#
-###.#....#b#.........b.#
-##.........#.......#...#
-########################
-
-message I AM FEARLESS
-
-##g##g#g####
-#o..#.#....#
-#...#.#.#..#
-#..........#
-#.....#..b.#
-#........b.#
-#..#.##.#b.#
-#..#......k#
-############
-
-message I AM ALONE
-
-
-message now...
-
-###########
-#...o.o...#
-#.........#
-#.........#
-#.........#
-#...n.p...#
-###########
-
-message WE DON'T SEE THINGS AS THEY ARE, WE SEE THEM AS WE ARE
-message Credits
-message Concept/Design/Programming/Graphics - Steven McStravog
-message Design/Programming/Graphics - Darragh McLernon
-message Porting/Design/Programming - Rachel Gawley
-message Artwork - Ricky Woodside
 
 
 USER PROMPT:
 The following PuzzleScript game code:
 ```plaintext
-title Key & Crate Challenge
+title Simple Push Puzzle
 author Your Name
+homepage www.example.com
 
 ========
 OBJECTS
 ========
 
 Background
-DarkGrey LightGrey
-.....
-.....
-.....
-.....
-.....
-
-Player
-Black Orange
-.000.
-.111.
-.111.
-.111.
-.0.0.
+LightGray
+11111
+11111
+11111
+11111
+11111
 
 Wall
-Brown DarkBrown
+DarkGray
+11111
+11111
+11111
+11111
+11111
+
+Player
+Blue
+.000.
+.020.
 00000
-00000
-00000
-00000
-00000
+.000.
+.0.0.
 
 Crate
-Yellow
+Orange
+.000.
 00000
-0...0
-0...0
-0...0
 00000
-
-Goal
-Blue LightBlue
-.....
-..0..
+00000
 .000.
-..0..
-.....
 
-Key
-Cyan LightBlue
-.....
-..0..
-.....
-..0..
-.....
+Target
+Red
+.000.
+.0.0.
+00000
+.0.0.
+.000.
 
-Door
-Gray 
-.....
+CrateOnTarget
+Pink
 .000.
-.....
+.333.
+33333
+.333.
 .000.
-.....
-
-Exit
-Green
-.....
-..0..
-.000.
-..0..
-.....
 
 =======
 LEGEND
 =======
 
 . = Background
-P = Player
 # = Wall
-C = Crate
-G = Goal
-K = Key
-D = Door
-E = Exit
+P = Player
+* = Crate
+O = Target
+@ = CrateOnTarget
 
 =======
 SOUNDS
 =======
+
+Crate MOVE 36772507
 
 ================
 COLLISIONLAYERS
 ================
 
 Background
-Player, Wall, Crate, Key, Door, Goal, Exit
+Player, Wall, Crate, Target, CrateOnTarget
 
 ======
 RULES
 ======
 
-[ > P | C ] -> [ > P | > C ]
-[ C | G ] -> [ G | G ]
-[ C | > G ] -> [ C | > G ]
-
-[ > P | K ] -> [ P | Background ]
-[ P | D ] -> [ P | Background ]
-[ P | E ] -> WIN
+[ > Player | Crate ] -> [ > Player | > Crate ]
+[ Crate | Target ] -> [ CrateOnTarget ]
+[ CrateOnTarget | Player ] -> [ CrateOnTarget | Player ]
+[ > Player | Wall ] -> [ Player | Wall ]
+[ > Player | CrateOnTarget ] -> [ Player | CrateOnTarget ]
 
 ==============
 WINCONDITIONS
 ==============
 
-All Crate on Goal
-Some Player on Exit
-No Door
+All Target on CrateOnTarget
 
 =======
 LEVELS
 =======
 
-# Level 1
-##########
-#P......E#
-#.#######.#
-#...C....G#
-#.#######.#
-#.....K...#
-#.#######.#
-#....D....#
-###########
+####
+#..#
+#.PO#
+#.*.#
+####
 
-# Level 2
-##########
-#P......E#
-#.##.###.#
-#..C..K.G#
-#.##.D##.#
-#........#
-#.########
-##########
+####
+#..#
+#O*#
+#P.#
+####
+
+#######
+#.....#
+#.*.*O#
+#..O..#
+#P....#
+#######
+
+######
+#....#
+#O#*.#
+#O*P.#
+#....#
+######
+
+message Thanks for playing!
+
 
 ```
 produced the following console output:
 =================================
-line 49 : Was looking for color for object KEY, got "cyan " instead.
-line 120 : Key "L" not found. Do you need to add it to the legend, or define a new object?
-line 120 : Key "V" not found. Do you need to add it to the legend, or define a new object?
-line 120 : Key "1" not found. Do you need to add it to the legend, or define a new object?
-line 121 : Maps must be rectangular, yo (In a level, the length of each row must be the same).
-line 122 : Maps must be rectangular, yo (In a level, the length of each row must be the same).
-line 123 : Maps must be rectangular, yo (In a level, the length of each row must be the same).
-line 124 : Maps must be rectangular, yo (In a level, the length of each row must be the same).
-line 125 : Maps must be rectangular, yo (In a level, the length of each row must be the same).
-line 126 : Maps must be rectangular, yo (In a level, the length of each row must be the same).
-line 127 : Maps must be rectangular, yo (In a level, the length of each row must be the same).
-line 128 : Maps must be rectangular, yo (In a level, the length of each row must be the same).
-line 129 : Maps must be rectangular, yo (In a level, the length of each row must be the same).
-line 131 : Key "L" not found. Do you need to add it to the legend, or define a new object?
-line 131 : Key "V" not found. Do you need to add it to the legend, or define a new object?
+line 11 : Trying to access color number 1 from the color palette of sprite BACKGROUND, but there are only 1 defined in it.
+line 12 : Trying to access color number 1 from the color palette of sprite BACKGROUND, but there are only 1 defined in it.
+line 13 : Trying to access color number 1 from the color palette of sprite BACKGROUND, but there are only 1 defined in it.
+line 14 : Trying to access color number 1 from the color palette of sprite BACKGROUND, but there are only 1 defined in it.
+line 15 : Trying to access color number 1 from the color palette of sprite BACKGROUND, but there are only 1 defined in it.
+line 19 : Trying to access color number 1 from the color palette of sprite WALL, but there are only 1 defined in it.
 too many errors, aborting compilation
 Errors detected during compilation; the game may not work correctly.
 Return a repaired version of the code that addresses these errors. First, reason about your task and determine the best plan of action. Then, write your code.  Return your code in full, inside a ```plaintext code block.
