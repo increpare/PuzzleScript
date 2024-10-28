@@ -1,5 +1,7 @@
 // const { Deque } = import('./collections'); // Use a deque for efficient pop/push
 
+const expSeed = 12;
+
 function getConsoleText() {
   // This probably exists somewhere else already?
   var consoleOut = document.getElementById('consoletextarea');
@@ -65,368 +67,32 @@ function serialize(val) {
   return JSON.stringify(val);
 }
 
+class Queue {
+  constructor() {
+    this.inStack = [];
+    this.outStack = [];
+  }
 
-/* returns a bool indicating if anything changed */
-function processInputSearch(dir,dontDoWin,dontModify) {
-	againing = false;
-  
-	var bak = backupLevel();
-	var inputindex=dir;
+  enqueue(value) {
+    this.inStack.push(value);
+  }
 
-	var playerPositions=[];
-    if (dir<=4) {//when is dir>4???
-
-		if (verbose_logging) { 
-			debugger_turnIndex++;
-			addToDebugTimeline(level,-2);//pre-movement-applied debug state
-		}
-
-    	if (dir>=0) {
-	        switch(dir){
-	            case 0://up
-	            {
-	                dir=parseInt('00001', 2);;
-	                break;
-	            }
-	            case 1://left
-	            {
-	                dir=parseInt('00100', 2);;
-	                break;
-	            }
-	            case 2://down
-	            {
-	                dir=parseInt('00010', 2);;
-	                break;
-	            }
-	            case 3://right
-	            {
-	                dir=parseInt('01000', 2);;
-	                break;
-	            }
-	            case 4://action
-	            {
-	                dir=parseInt('10000', 2);;
-	                break;
-	            }
-	        }
-	        playerPositions = startMovement(dir);
-		}
-			
-		
-		if (verbose_logging) { 
-			consolePrint('Applying rules');
-
-			var inspect_ID = addToDebugTimeline(level,-1);
-				
-			 if (dir===-1) {
-				 consolePrint(`Turn starts with no input.`,false,null,inspect_ID)
-			 } else {
-				//  consolePrint('=======================');
-				consolePrint(`Turn starts with input of ${['up','left','down','right','action'][inputindex]}.`,false,null,inspect_ID);
-			 }
-		}
-
-		
-        var bannedGroup = [];
-
-        level.commandQueue=[];
-        level.commandQueueSourceRules=[];
-        var startRuleGroupIndex=0;
-        var rigidloop=false;
-		const startState = {
-			objects: new Int32Array(level.objects),
-			movements: new Int32Array(level.movements),
-			rigidGroupIndexMask: level.rigidGroupIndexMask.concat([]),
-			rigidMovementAppliedMask: level.rigidMovementAppliedMask.concat([]),
-			commandQueue: [],
-			commandQueueSourceRules: []
-		}
-	    sfxCreateMask.setZero();
-	    sfxDestroyMask.setZero();
-
-		seedsToPlay_CanMove=[];
-		seedsToPlay_CantMove=[];
-
-		calculateRowColMasks();
-
-		var alreadyResolved=[];
-
-        var i=0;
-        do {
-        //not particularly elegant, but it'll do for now - should copy the world state and check
-        //after each iteration
-        	rigidloop=false;
-        	i++;
-        	
-        	applyRules(state.rules, state.loopPoint, startRuleGroupIndex, bannedGroup);
-        	var shouldUndo = resolveMovements(level, bannedGroup);
-
-        	if (shouldUndo) {
-        		rigidloop=true;
-
-				{
-					// trackback
-					if (IDE){
-						// newBannedGroups is the list of keys of bannedGroup that aren't already in alreadyResolved
-						var newBannedGroups = [];
-						for (var key in bannedGroup) {
-							if (!alreadyResolved.includes(key)) {
-								newBannedGroups.push(key);
-								alreadyResolved.push(key);
-							}
-						}
-						var bannedLineNumbers = newBannedGroups.map( rgi => state.rules[rgi][0].lineNumber);
-						var ts = bannedLineNumbers.length>1 ? "lines " : "line ";
-						ts += bannedLineNumbers.map(ln => `<a onclick="jumpToLine(${ln});" href="javascript:void(0);">${ln}</a>`).join(", ");
-						consolePrint(`Rigid movement application failed in rule-Group starting from ${ts}, and will be disabled in resimulation. Rolling back...`)
-					}
-					//don't need to concat or anythign here, once something is restored it won't be used again.
-					level.objects = new Int32Array(startState.objects)
-					level.movements = new Int32Array(startState.movements)
-					level.rigidGroupIndexMask = startState.rigidGroupIndexMask.concat([])
-					level.rigidMovementAppliedMask = startState.rigidMovementAppliedMask.concat([])
-					// TODO: shouldn't we also save/restore the level data computed by level.calculateRowColMasks() ?
-					level.commandQueue = startState.commandQueue.concat([])
-					level.commandQueueSourceRules = startState.commandQueueSourceRules.concat([])
-					sfxCreateMask.setZero()
-					sfxDestroyMask.setZero()
-					// TODO: should
-
-				}
-
-				if (verbose_logging && rigidloop && i>0){				
-					consolePrint('Relooping through rules because of rigid.');
-						
-					debugger_turnIndex++;
-					addToDebugTimeline(level,-2);//pre-movement-applied debug state
-				}
-
-        		startRuleGroupIndex=0;//rigidGroupUndoDat.ruleGroupIndex+1;
-        	} else {
-        		if (verbose_logging){
-
-					var eof_idx = debug_visualisation_array[debugger_turnIndex].length+1;//just need some number greater than any rule group
-					var inspect_ID = addToDebugTimeline(level,eof_idx);
-
-					consolePrint(`Processed movements.`,false,null,inspect_ID);
-					
-					if (state.lateRules.length>0){
-											
-						debugger_turnIndex++;
-						addToDebugTimeline(level,-2);//pre-movement-applied debug state
-					
-						consolePrint('Applying late rules');
-					}
-				}
-        		applyRules(state.lateRules, state.lateLoopPoint, 0);
-        		startRuleGroupIndex=0;
-        	}
-        } while (i < 50 && rigidloop);
-
-        if (i>=50) {
-            consolePrint("Looped through 50 times, gave up.  too many loops!");
-        }
-
-
-        if (playerPositions.length>0 && state.metadata.require_player_movement!==undefined) {
-        	var somemoved=false;
-        	for (var i=0;i<playerPositions.length;i++) {
-        		var pos = playerPositions[i];
-        		var val = level.getCell(pos);
-        		if (state.playerMask.bitsClearInArray(val.data)) {
-        			somemoved=true;
-        			break;
-        		}
-        	}
-        	if (somemoved===false) {
-        		if (verbose_logging){
-	    			consolePrint('require_player_movement set, but no player movement detected, so cancelling turn.');
-	    			consoleCacheDump();
-				}
-        		addUndoState(bak);
-        		DoUndo(true,false);
-        		return false;
-        	}
-        	//play player cantmove sounds here
-        }
-
-
-
-	    if (level.commandQueue.indexOf('cancel')>=0) {
-	    	if (verbose_logging) { 
-	    		consoleCacheDump();
-	    		var r = level.commandQueueSourceRules[level.commandQueue.indexOf('cancel')];
-	    		consolePrintFromRule('CANCEL command executed, cancelling turn.',r,true);
-			}
-
-			if (!dontModify){
-				processOutputCommands(level.commandQueue);
-			}
-
-			var commandsleft = level.commandQueue.length>1;
-
-    		addUndoState(bak);
-    		DoUndo(true,false);
-    		tryPlayCancelSound();
-    		return commandsleft;
-	    } 
-
-	    if (level.commandQueue.indexOf('restart')>=0) {
-			
-    		if (verbose_logging && runrulesonlevelstart_phase){
-				var r = level.commandQueueSourceRules[level.commandQueue.indexOf('restart')];
-    			logWarning('A "restart" command is being triggered in the "run_rules_on_level_start" section of level creation, which would cause an infinite loop if it was actually triggered, but it\'s being ignored, so it\'s not.',r.lineNumber,true);
-    		}
-
-	    	if (verbose_logging) { 
-	    		var r = level.commandQueueSourceRules[level.commandQueue.indexOf('restart')];
-	    		consolePrintFromRule('RESTART command executed, reverting to restart state.',r.lineNumber);
-	    		consoleCacheDump();
-			}
-			if (!dontModify){
-				processOutputCommands(level.commandQueue);
-			}
-    		// addUndoState(bak);
-
-			if (!dontModify){
-	    		DoRestart(true);
-			}
-    		return true;
-		} 
-		
-		
-        var modified=false;
-	    for (var i=0;i<level.objects.length;i++) {
-	    	if (level.objects[i]!==bak.dat[i]) {
-				// if (dontModify) {
-	      //   		if (verbose_logging) {
-	      //   			consoleCacheDump();
-	      //   		}
-	      //   		addUndoState(bak);
-	      //   		DoUndo(true,false);
-				// 	return true;
-				// } else {
-					if (dir!==-1) {
-						// addUndoState(bak);
-					} else if (backups.length > 0) {
-						// This is for the case that diffs break the undo buffer for real-time games 
-						// ( c f https://github.com/increpare/PuzzleScript/pull/796 ),
-						// because realtime ticks are ignored when the user presses undo and the backup
-						// array reflects this structure.  
-						backups[backups.length - 1] = unconsolidateDiff(backups[backups.length - 1], bak);					
-	    			}
-	    			modified=true;
-	    		// }
-	    		break;
-	    	}
-	    }
-
-		if (dontModify && level.commandQueue.indexOf('win')>=0) {	
-	    	return true;	
-		}
-		
-		if (dontModify) {		
-    		if (verbose_logging) {
-    			consoleCacheDump();
-    		}
-			return false;
-		}
-
-        // for (var i=0;i<seedsToPlay_CantMove.length;i++) {			
-	      //   	playSound(seedsToPlay_CantMove[i]);
-        // }
-
-        // for (var i=0;i<seedsToPlay_CanMove.length;i++) {
-	      //   	playSound(seedsToPlay_CanMove[i]);
-        // }
-
-        // for (var i=0;i<state.sfx_CreationMasks.length;i++) {
-        // 	var entry = state.sfx_CreationMasks[i];
-        // 	if (sfxCreateMask.anyBitsInCommon(entry.objectMask)) {
-	      //   	playSound(entry.seed);
-        // 	}
-        // }
-
-        // for (var i=0;i<state.sfx_DestructionMasks.length;i++) {
-        // 	var entry = state.sfx_DestructionMasks[i];
-        // 	if (sfxDestroyMask.anyBitsInCommon(entry.objectMask)) {
-	      //   	playSound(entry.seed);
-        // 	}
-        // }
-
-		if (!dontModify){
-	    	processOutputCommands(level.commandQueue);
-		}
-
-	    if (textMode===false) {
-	    	if (verbose_logging) { 
-	    		consolePrint('Checking win conditions.');
-			}
-			if (dontDoWin===undefined){
-				dontDoWin = false;
-			}
-	    	checkWin( dontDoWin );
-	    }
-
-	    if (!winning) {
-			if (level.commandQueue.indexOf('checkpoint')>=0) {
-		    	if (verbose_logging) { 
-	    			var r = level.commandQueueSourceRules[level.commandQueue.indexOf('checkpoint')];
-		    		consolePrintFromRule('CHECKPOINT command executed, saving current state to the restart state.',r);
-				}
-				restartTarget=level4Serialization();
-				hasUsedCheckpoint=true;
-				var backupStr = JSON.stringify(restartTarget);
-				storage_set(document.URL+'_checkpoint',backupStr);
-				storage_set(document.URL,curlevel);				
-			}	 
-
-		    if (level.commandQueue.indexOf('again')>=0 && modified) {
-
-	    		var r = level.commandQueueSourceRules[level.commandQueue.indexOf('again')];
-
-		    	//first have to verify that something's changed
-		    	var old_verbose_logging=verbose_logging;
-		    	var oldmessagetext = messagetext;
-		    	verbose_logging=false;
-		    	if (processInput(-1,true,true)) {
-			    	verbose_logging=old_verbose_logging;
-
-			    	if (verbose_logging) { 
-			    		consolePrintFromRule('AGAIN command executed, with changes detected - will execute another turn.',r);
-					}
-
-			    	againing=true;
-			    	timer=0;
-			    } else {		    	
-			    	verbose_logging=old_verbose_logging;
-					if (verbose_logging) { 
-						consolePrintFromRule('AGAIN command not executed, it wouldn\'t make any changes.',r);
-					}
-			    }
-			    verbose_logging=old_verbose_logging;
-			    messagetext = oldmessagetext;
-		    }   
-		}
-		
-		if (verbose_logging) { 
-			consolePrint(`Turn complete`);    
-		}
-		
-	    level.commandQueue=[];
-	    level.commandQueueSourceRules=[];
-
+  dequeue() {
+    if (this.outStack.length === 0) {
+      while (this.inStack.length > 0) {
+        this.outStack.push(this.inStack.pop());
+      }
     }
+    return this.outStack.pop();
+  }
 
-	if (verbose_logging) {
-		consoleCacheDump();
-	}
+  isEmpty() {
+    return this.inStack.length === 0 && this.outStack.length === 0;
+  }
 
-	if (winning) {
-		againing=false;
-	}
-
-	return modified;
+  size() {
+    return this.inStack.length + this.outStack.length;
+  }
 }
 
 
@@ -438,27 +104,32 @@ async function solveLevel(level) {
   }
   // Load the level
   compile(['loadLevel', level], editor.getValue());
-  // console.log('Solving level', level);
   init_level = backupLevel();
   init_level_map = init_level['dat'];
-  frontier = [init_level];
-  action_seqs = [[]];
-  // frontier = new Deque([init_level]);
-  // action_seqs = new Deque([[]]);
+
+  // frontier = [init_level];
+  // action_seqs = [[]];
+  frontier = new Queue();
+  action_seqs = new Queue();
+  frontier.enqueue(init_level);
+  action_seqs.enqueue([]);
+
   sol = [];
   console.log(sol.length);
   visited = new Set([hashState(init_level_map)]);
   i = 0;
   start_time = Date.now();
-  while (frontier.length > 0) {
+  while (frontier.size() > 0) {
     backups = [];
-    const level = frontier.pop(0);
-    const action_seq = action_seqs.pop(0);
+
+    // const level = frontier.shift();
+    // const action_seq = action_seqs.shift();
+    const level = frontier.dequeue();
+    const action_seq = action_seqs.dequeue();
+
     if (!action_seq) {
       console.log(`Action sequence is empty. Length of frontier: ${frontier.length}`);
     }
-    // const level = frontier.shift();
-    // const action_seq = action_seqs.shift();
     for (const move of Array(5).keys()) {
       if (i > 1_000_000) {
         console.log('Exceeded 1M iterations. Exiting.');
@@ -467,9 +138,7 @@ async function solveLevel(level) {
       restoreLevel(level);
       new_action_seq = action_seq.slice();
       new_action_seq.push(move);
-      // console.time(`processInput-${i}-${move}`); // Start profiling
       changed = processInputSearch(move);
-      // console.timeEnd(`processInput-${i}-${move}`); // End profiling
       if (winning) {
         console.log(`Winning! Solution:, ${new_action_seq}`);
         return [new_action_seq, i];
@@ -484,11 +153,11 @@ async function solveLevel(level) {
           // await new Promise(resolve => setTimeout(resolve, 1)); // Small delay for live feedback
           // redraw();
 
-          frontier.push(new_level);
+          frontier.enqueue(new_level);
           if (!new_action_seq) {
             console.log(`New action sequence is undefined when pushing.`);
           }
-          action_seqs.push(new_action_seq);
+          action_seqs.enqueue(new_action_seq);
           visited.add(newHash);
         } 
       }
@@ -499,6 +168,8 @@ async function solveLevel(level) {
       console.log('FPS:', (i / (now - start_time) * 1000).toFixed(2));
       console.log(`Size of frontier: ${frontier.length}`);
       console.log(`Visited states: ${visited.size}`);
+      // await new Promise(resolve => setTimeout(resolve, 1)); // Small delay for live feedback
+      // redraw();
     }
     i++;
   }
@@ -506,8 +177,8 @@ async function solveLevel(level) {
 }
 
 
-async function genGame(genMode, parents, saveDir, seed, fewshot, cot,
-    fromIdea=false, idea='', maxGenAttempts=10) {
+async function genGame(genMode, parents, saveDir, expSeed, fewshot, cot,
+    fromIdea=false, idea='', fromPlan=false, maxGenAttempts=10) {
   consoleText = '';
   nGenAttempts = 0;
   code = '';
@@ -519,35 +190,50 @@ async function genGame(genMode, parents, saveDir, seed, fewshot, cot,
   while (nGenAttempts < maxGenAttempts & (nGenAttempts == 0 | !compilationSuccess | !solvable)) {
     console.log(`Game ${saveDir}, attempt ${nGenAttempts}.`);
 
-    // Get our GPT completion from python
-    const response = await fetch('/gen_game', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ 
-        seed: seed,
-        fewshot: fewshot,
-        cot: cot,
-        save_dir: saveDir,
-        gen_mode: genMode,
-        parents: parents,
-        code: code,
-        from_idea: fromIdea,
-        game_idea: idea,
-        console_text: consoleText,
-        solver_text: solverText,
-        compilation_success: compilationSuccess,
-        n_iter: nGenAttempts,
-      }),
-    });
+    var response;
+
+    if (fromPlan & nGenAttempts == 0) {
+      response = await fetch('/gen_game_from_plan', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ 
+          seed: expSeed,
+          save_dir: saveDir,
+          game_idea: idea,
+          n_iter: nGenAttempts,
+        }),
+      });
+    } else {
+      // Get our GPT completion from python
+      response = await fetch('/gen_game', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ 
+          seed: expSeed,
+          fewshot: fewshot,
+          cot: cot,
+          save_dir: saveDir,
+          gen_mode: genMode,
+          parents: parents,
+          code: code,
+          from_idea: fromIdea,
+          game_idea: idea,
+          console_text: consoleText,
+          solver_text: solverText,
+          compilation_success: compilationSuccess,
+          n_iter: nGenAttempts,
+        }),
+      });
+    }
   
     if (!response.ok) {
       throw new Error(`API error: ${response.statusText}`);
     }
   
     const data = await response.json();
-    for (const line of data.text.split('\n')) {
-      consolePrint(line);
-    }
+    // for (const line of data.text.split('\n')) {
+    //   consolePrint(line);
+    // }
     code = data.code;
     sols = data.sols;
     if (data.skip) {
@@ -581,6 +267,7 @@ async function genGame(genMode, parents, saveDir, seed, fewshot, cot,
         solverText = '';
       // console.log(`Errors: ${errorCount}. Iterating on the game code. Attempt ${nGenAttempts}.`);
       fitness = -errorCount;
+      dataURLs = [];
     } else {
       compiledIters.push(nGenAttempts);
       compilationSuccess = true;
@@ -634,22 +321,38 @@ async function genGame(genMode, parents, saveDir, seed, fewshot, cot,
           solverText += ` Level ${level_i} is not solvable. Please repair it.`
         }
       }
+      dataURLs = [];
       if (solvable) {
         solvedIters.push(nGenAttempts)
+        // Make a gif of each solution
+        for (let level_i in sols) {
+          const [sol, n_search_iters] = sols[level_i];
+          if (sol.length > 0) {
+            console.log(`Saving gif for level ${level_i}.`);
+            curlevel = level_i;
+            compile(['loadLevel', level_i], editor.getValue());
+            inputHistory = sol;
+            const [ data_url, filename ] = makeGIFDoctor();
+            dataURLs.push([data_url, level_i]);
+          }
+        }
       }
-      const newlySaved = await fetch('/save_sols', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ 
-          save_dir: saveDir,
-          sols: sols,
-          n_iter: nGenAttempts,
-        }),
-      });
+    }
+    response = await fetch('/log_gen_results', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ 
+        save_dir: saveDir,
+        sols: sols,
+        n_iter: nGenAttempts,
+        gif_urls: dataURLs,
+        console_text: consoleText,
+        solver_text: solverText,
+      }),
+    });
 
-      // if (newlySaved)
-      // Save a gif of each solution
-
+    if (!response.ok) {
+      throw new Error(`API error: ${response.statusText}`);
     }
 
     nGenAttempts++;
@@ -666,20 +369,25 @@ async function evolve() {
   pop = [];
   gen = 0
   for (indIdx = 0; indIdx < (popSize*2); indIdx++) {
-    saveDir = `evo-${seed}/gen${gen}/game${indIdx}`;
-    game_i = await genGame('init', [], saveDir, seed, fewshot=true, cot=true, fromIdea=false, idea='');
+    saveDir = `evo-${expSeed}/gen${gen}/game${indIdx}`;
+    game_i = await genGame('init', [], saveDir, expSeed, fewshot=true, cot=true, fromIdea=false, idea='');
     pop.push(game_i);
   }
   for (gen = 1; gen < nGens; gen++) {
     // Sort the population by fitness, in descending order
     pop = pop.sort((a, b) => b.fitness - a.fitness);
-    meanFitness = pop.reduce((acc, game) => acc + game.fitness, 0) / popSize;
-    console.log(`Generation ${gen}. Mean fitness: ${meanFitness}`);
+    // Print list of fitnesses
+    popFits = pop.map(game => game.fitness);
+    meanPopFit = popFits.reduce((acc, fit) => acc + fit, 0) / popFits.length;
+    console.log(`Generation ${gen}. Fitnesses: ${popFits}`);
+    console.log(`Generation ${gen}. Mean fitness: ${meanPopFit}`);
     // Select the top half of the population as parents
     ancestors = pop.slice(0, popSize);
     // Get mean fitness of elites
-    eliteFitness = ancestors.reduce((acc, game) => acc + game.fitness, 0) / popSize;
-    console.log(`Generation ${gen}. Mean elite fitness: ${eliteFitness}`);
+    eliteFits =  ancestors.map(game => game.fitness);
+    meanEliteFit = eliteFits.reduce((acc, fit) => acc + fit, 0) / eliteFits.length;
+    console.log(`Generation ${gen}. Elite fitnesses: ${eliteFits}`);
+    console.log(`Generation ${gen}. Mean elite fitness: ${meanEliteFit}`);
     // Generate the next generation
     newPop = [];
     for (indIdx = 0; indIdx < popSize; indIdx++) {
@@ -697,14 +405,12 @@ async function evolve() {
         parents = [ancestors[Math.floor(Math.random() * popSize)]];
       }
       // console.log(`Parents: ${parents}. genMode: ${genMode}`);
-      saveDir = `evo-${seed}/gen${gen}/game${indIdx}`;
-      newPop.push(await genGame('mutate', parents, saveDir, seed, fewshot=fewshot, cot=cot));
+      saveDir = `evo-${expSeed}/gen${gen}/game${indIdx}`;
+      newPop.push(await genGame('mutate', parents, saveDir, expSeed, fewshot=fewshot, cot=cot));
     }
-    pop = pop + newPop;
+    pop = pop.concat(newPop);
   }
 }
-
-const seed = 12;
 
 async function saveStats(saveDir, results) {
   const response = await fetch('/save_sweep_stats', {
@@ -723,7 +429,7 @@ async function sweep() {
       for (var cot_i = 0; cot_i < 2; cot_i++) {
         results[`fewshot-${fewshot_i}_cot-${cot_i}`] = [];
         for (var gameIdx = 0; gameIdx < 20; gameIdx++) {
-          saveDir = `sweep-${seed}`
+          saveDir = `sweep-${expSeed}`
           gameStr = `${saveDir}/fewshot-${fewshot_i}_cot-${cot_i}/game-${gameIdx}`;
           cot = cot_i == 1
           fewshot = fewshot_i == 1
@@ -754,7 +460,7 @@ async function fromIdeaSweep() {
     hypStr = `fromIdea-${fromIdea_i}_fewshot-${fewshot_i}_cot-${cot_i}`;
     results[hypStr] = [];
     for (var gameIdx = 0; gameIdx < 20; gameIdx++) {
-      saveDir = `sweep-${seed}`
+      saveDir = `sweep-${expSeed}`
       gameStr = `${saveDir}/${hypStr}/game-${gameIdx}`;
       fewshot = fewshot_i == 1
       cot = cot_i == 1
@@ -770,10 +476,72 @@ async function fromIdeaSweep() {
   saveStats(saveDir + '/fromIdea', results);
 }
 
-// sweep()
-// fromIdeaSweep()
-evolve();
+async function fromPlanSweep() {
+  // Open the ideas json
+  const response = await fetch('/load_ideas', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ brainstorm_seed: brainstormSeed }),
+  });
+  ideas = await response.json()
+  results = {};
+  cot_i = 1;
+  fewshot_i = 1;
+  fromIdea_i = 1;
+  fromPlan_i = 1;
+  hypStr = `fromPlan-${fromPlan_i}`;
+  results[hypStr] = [];
+  for (var gameIdx = 0; gameIdx < 20; gameIdx++) {
+    saveDir = `sweep-${expSeed}`
+    gameStr = `${saveDir}/${hypStr}/game-${gameIdx}`;
+    fewshot = fewshot_i == 1
+    cot = cot_i == 1
+    fromPlan = fromPlan_i == 1
+    fromIdea = fromIdea_i == 1
+    console.log(`Generating game ${gameStr}`);
+    ideaIdx = gameIdx % ideas.length;
+    idea = ideas[ideaIdx];
+    gameInd = await genGame('init', [], gameStr,
+      gameIdx, fewshot, cot, fromIdea, idea, fromPlan);
+    results[hypStr].push(gameInd);
+  }
+  saveStats(saveDir + '/fromPlan', results);
+}
+
+var experimentDropdown = document.getElementById("experimentDropdown");
+experimentDropdown.addEventListener("change", experimentDropdownChange, false);
+
+var generateClickLink = document.getElementById("generateClickLink");
+generateClickLink.addEventListener("click", generateClick, false);
+
+var expFn = evolve;
+
+function experimentDropdownChange() {
+  console.log('Experiment changed');
+  var experiment = experimentDropdown.value;
+  if (experiment == 'evolve') {
+    expFn = evolve;
+  } else if (experiment == 'fewshot_cot') {
+    expFn = sweep;
+  } else if (experiment == 'from_idea') {
+    expFn = fromIdeaSweep;
+  } else if (experiment == 'from_plan') {
+    expFn = fromPlanSweep;
+  }
+  else {
+    console.log('Unknown experiment:', experiment);
+  }
+}
+
+function generateClick() {
+  console.log('Generate clicked');
+  expFn();
+}
+
+// sweep();
+// fromIdeaSweep();
+fromPlanSweep();
+// evolve();
 
 // genGame('init', [], 'test_99', 99, fewshot=true, cot=true, maxGenAttempts=20);
-// evolve();
 // playTest();

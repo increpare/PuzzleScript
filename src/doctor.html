@@ -873,7 +873,20 @@
 <div id="verticaldragbar"></div>
 
 <div id="uppertoolbar">
-	&nbsp;&nbsp;&nbsp;<a href="index.html"><h2>PuzzleScript</h2></a> - <a id="saveClickLink" href="javascript:void(0);">SAVE</a> - 
+	&nbsp;&nbsp;&nbsp;<a href="index.html"><h2>ScriptDoctor</h2></a> - 
+
+	<form action="" style="display:inline;">
+        <select id="experimentDropdown" name="experiment" style="display:inline; width:150px">
+            <option value="fewshot_cot">Fewshot CoT</option>
+            <option value="from_idea">From Idea</option>
+            <option value="from_plan">From Plan</option>
+            <option value="evolve">Evolve</option>
+        </select>
+    </form> - 
+
+	<a id="generateClickLink" href="javascript:void(0);">GENERATE</a> -
+
+	<a id="saveClickLink" href="javascript:void(0);">SAVE</a> -
 
 	<form action="" style="display:inline;"><select id="loadDropDown" name="default" style="display:inline; width:100px"> -
 </select></form> - <form action="" style="display:inline;"> <select  id="exampleDropdown"  name="default" style="display:inline; width:150px">
