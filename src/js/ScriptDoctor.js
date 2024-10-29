@@ -540,7 +540,7 @@ function generateClick() {
 
 // sweep();
 // fromIdeaSweep();
-fromPlanSweep();
+// fromPlanSweep();
 // evolve();
 
 // genGame('init', [], 'test_99', 99, fewshot=true, cot=true, maxGenAttempts=20);

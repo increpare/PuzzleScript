@@ -85,11 +85,13 @@ plan_game_prompt = (
 )
 gen_sprites_prompt = (
     "Consider the following PuzzleScript game development plan:\n```\n{game_plan}\n```\n"
-    ". Select or generate the full set of sprites that will be needed to implement this plan. "
+    ". Select "
+    "or generate "
+    "the full set of sprites that will be needed to implement this plan. "
     "Here is the existing library of sprites which you may draw from: {sprites_library}.\n\n"
-    "Output your response as a list of sprites in a ```plaintext code block. "
-    "To generate a new sprite, define it like this:\n\n"
+    "Output your response as a list of sprites in a ```plaintext code block, beginning with a header of the form:\n\n"
     "========\nOBJECTS\n========\n\n"
+    "To generate a new sprite, define it like this:\n\n"
     "Player\n"
     "black orange white blue\n"
     ".000.\n"
@@ -101,9 +103,11 @@ gen_sprites_prompt = (
     "and the following lines are the sprite's pixels, in a 5x54 grid, with indices (starting at 0), "
     "referring to the colors in the second line. "
     "(Colors can also be defined as hex codes, like #FF0000.) "
-    "To select an existing sprite, simply list its name, like this:\n\n"
+    "Note that you should favor re-using existing sprites. "
+    "To select an existing sprite, simply list their names, like this:\n\n"
     "Player\n\n"
-    "After defining the sprites, define a legend that maps sprite names to single-character shorthands, like this:\n\n"
+    # "ONLY list sprites that exist in the library above! "
+    "After listing the sprites, create a legend that maps sprite names to single-character shorthands, like this:\n\n"
     "========\nLEGEND\n========\n\n"
     "P = Player\n\n"
 )
@@ -199,8 +203,9 @@ def log_gen_results():
     sols = data['sols']
     n_iter = data['n_iter']
     sols_path = os.path.join(save_dir, f'{n_iter}l_sols.json')
-    with open(sols_path, 'w') as f:
-        json.dump(sols, f, indent=4)
+    if sols:
+        with open(sols_path, 'w') as f:
+            json.dump(sols, f, indent=4)
     gif_urls = data['gif_urls']
     
     for gif_url, level_i in gif_urls:
@@ -380,13 +385,13 @@ def gen_game_from_plan():
 
     match = re.search(r'OBJECTS\s*=+\s*(.*?)\s*=+\s*LEGEND\s*=+\s*(.*)```', sprites, re.DOTALL)
     objects = match.group(1)
-    objects_list = objects.split('\n\n')
+    objects_list = objects.split('\n')
     # Find any objects that are just a name (a single line with a single word)
     for i, obj in enumerate(objects_list):
         if len(obj.split('\n')) == 1:
             obj = obj.strip()
             assert obj in sprites_library, f"Object {obj} not found in sprite library"
-            objects_list[i] = random.chice(sprites_library[obj])
+            objects_list[i] = random.choice(sprites_library[obj])
     object_legend = match.group(2)
 
     rules_system_prompt = game_gen_system_prompt
