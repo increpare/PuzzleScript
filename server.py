@@ -107,7 +107,7 @@ gen_sprites_prompt = (
     "To select an existing sprite, simply list their names, like this:\n\n"
     "Player\n\n"
     # "ONLY list sprites that exist in the library above! "
-    "After listing the sprites, create a legend that maps sprite names to single-character shorthands, like this:\n\n"
+    "After defining the sprites, create a legend that maps sprite names to single-character shorthands, like this:\n\n"
     "========\nLEGEND\n========\n\n"
     "P = Player\n\n"
 )
@@ -385,7 +385,7 @@ def gen_game_from_plan():
 
     match = re.search(r'OBJECTS\s*=+\s*(.*?)\s*=+\s*LEGEND\s*=+\s*(.*)```', sprites, re.DOTALL)
     objects = match.group(1)
-    objects_list = objects.split('\n')
+    objects_list = objects.split('\n\n')
     # Find any objects that are just a name (a single line with a single word)
     for i, obj in enumerate(objects_list):
         if len(obj.split('\n')) == 1:
