@@ -183,6 +183,15 @@ def load_ideas():
     return ideas
 
 
+@app.route('/load_game_from_file', methods=['POST'])
+def load_game_from_file():
+    data = request.json
+    game_path = os.path.join('misc', '3d_sokoban.txt')
+    with open(game_path, 'r') as f:
+        code = f.read()
+    return code
+
+
 @app.route('/log_gen_results', methods=['POST'])
 def log_gen_results():
     data = request.json

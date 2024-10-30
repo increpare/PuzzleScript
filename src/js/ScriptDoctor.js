@@ -36,13 +36,25 @@ function sleep(ms) {
 }
 
 async function playTest() {
+  response = await fetch('/load_game_from_file', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ 
+    }),
+  });
+  if (!response.ok) {
+    throw new Error(`API error: ${response.statusText}`);
+  }
+  code = await response.text();
+  editor.setValue(code);
+
   editor.clearHistory();
   clearConsole();
   setEditorClean();
   unloadGame();
   compile(['restart'], editor.getValue());
   console.log('Playtesting...');
-  const [sol, n_search_iters] = await solveLevel(4);
+  const [sol, n_search_iters] = await solveLevel(2);
   // gameToLoad = '/demo/sokoban_match3.txt';
   // gameToLoad = '/misc/3d_sokoban.txt';
   // sol = await solveLevel(0);
@@ -141,6 +153,7 @@ async function solveLevel(level) {
       changed = processInputSearch(move);
       if (winning) {
         console.log(`Winning! Solution:, ${new_action_seq}`);
+        console.log('FPS:', (i / (now - start_time) * 1000).toFixed(2));
         return [new_action_seq, i];
       }
       else if (changed) {
@@ -162,14 +175,14 @@ async function solveLevel(level) {
         } 
       }
     }
-    if (i % 10_000 == 0) {
+    if (i % 100 == 0) {
       now = Date.now();
       console.log('Iteration:', i);
       console.log('FPS:', (i / (now - start_time) * 1000).toFixed(2));
-      console.log(`Size of frontier: ${frontier.length}`);
+      console.log(`Size of frontier: ${frontier.size()}`);
       console.log(`Visited states: ${visited.size}`);
-      // await new Promise(resolve => setTimeout(resolve, 1)); // Small delay for live feedback
-      // redraw();
+      await new Promise(resolve => setTimeout(resolve, 1)); // Small delay for live feedback
+      redraw();
     }
     i++;
   }
@@ -544,4 +557,4 @@ function generateClick() {
 // evolve();
 
 // genGame('init', [], 'test_99', 99, fewshot=true, cot=true, maxGenAttempts=20);
-// playTest();
+playTest();
