@@ -36,17 +36,17 @@ function sleep(ms) {
 }
 
 async function playTest() {
-  response = await fetch('/load_game_from_file', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ 
-    }),
-  });
-  if (!response.ok) {
-    throw new Error(`API error: ${response.statusText}`);
-  }
-  code = await response.text();
-  editor.setValue(code);
+  // response = await fetch('/load_game_from_file', {
+  //   method: 'POST',
+  //   headers: { 'Content-Type': 'application/json' },
+  //   body: JSON.stringify({ 
+  //   }),
+  // });
+  // if (!response.ok) {
+  //   throw new Error(`API error: ${response.statusText}`);
+  // }
+  // code = await response.text();
+  // editor.setValue(code);
 
   editor.clearHistory();
   clearConsole();
@@ -54,7 +54,7 @@ async function playTest() {
   unloadGame();
   compile(['restart'], editor.getValue());
   console.log('Playtesting...');
-  const [sol, n_search_iters] = await solveLevel(2);
+  const [sol, n_search_iters] = await solveLevel(0);
   // gameToLoad = '/demo/sokoban_match3.txt';
   // gameToLoad = '/misc/3d_sokoban.txt';
   // sol = await solveLevel(0);
@@ -527,6 +527,9 @@ experimentDropdown.addEventListener("change", experimentDropdownChange, false);
 var generateClickLink = document.getElementById("generateClickLink");
 generateClickLink.addEventListener("click", generateClick, false);
 
+var solveClickLink = document.getElementById("solveClickLink");
+solveClickLink.addEventListener("click", playTest, false);
+
 var expFn = evolve;
 
 function experimentDropdownChange() {
@@ -557,4 +560,4 @@ function generateClick() {
 // evolve();
 
 // genGame('init', [], 'test_99', 99, fewshot=true, cot=true, maxGenAttempts=20);
-playTest();
+// playTest();

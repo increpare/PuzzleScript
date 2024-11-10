@@ -17,7 +17,7 @@ from utils import num_tokens_from_string, truncate_str_to_token_len
 
 
 load_dotenv()
-openai_client = openai.Client(api_key=os.getenv('OPENAI_API_KEY'))
+openai_client = None
 app = Flask(__name__)
 
 
@@ -260,6 +260,9 @@ def gen_fewshot_examples(system_prompt, prompt):
 
 
 def openai_text_query(system_prompt, prompt, seed):
+    global openai_client
+    if openai_client is None:
+        openai_client = openai.Client(api_key=os.getenv('OPENAI_API_KEY'))
     response = openai_client.chat.completions.create(
         model='gpt-4o',
         messages=[
