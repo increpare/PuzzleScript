@@ -1,0 +1,847 @@
+title Magnetized
+author Rosden Shadow [Mark Signorelli]
+homepage rosden.itch.io
+
+noaction
+run_rules_on_level_Start
+
+background_color #3B3942
+
+text_color #E0AAF2
+
+again_interval 0.1
+========
+OBJECTS
+========
+
+Background
+#46495B #3B3942 #423D39 (#E57ED5 #CC5285)
+11111
+10101
+11111
+10101
+11111
+(
+00101
+01110
+11011
+01111
+10110)
+(
+11101
+00101
+11111
+10100
+10111)
+
+
+nomove
+#FFEED9 #536673
+.....
+.000.
+.010.
+.000.
+.....
+
+Target
+#E0AAF2 #423D39
+.....
+.000.
+.0.0.
+.000.
+.....
+
+Wall
+#D9FFDC #AAE0F2  #7EA1E5 #52465B
+21110
+12110
+21221
+23232
+32323
+
+overwall
+#D9FFDC #AAE0F2  #7EA1E5 #52465B
+.....
+.....
+.....
+10010
+21101
+
+
+Playerright
+#F2F2AA #E5C17E #E57ED5 #CC5285
+.000.
+11202
+11313
+11110
+.1.1.
+
+playerleft
+#F2F2AA #E5C17E #E57ED5 #CC5285
+.000.
+20211
+31311
+01111
+.1.1.
+
+Crate
+#E0AAF2 #E57ED5 #CC5285 #845C7A
+21100
+21110
+22110
+32223
+.333.
+
+overcrate
+#E0AAF2 #E57ED5 #CC5285 #845C7A
+.....
+.....
+.....
+.....
+.000.
+
+Cratex
+#F2F2AA #E5C17E #CC7A52 #736053
+21100
+21110
+22110
+32223
+.333.
+
+overcratex
+#F2F2AA #E5C17E #CC7A52 #736053
+.....
+.....
+.....
+.....
+.000.
+
+end
+#E0AAF2 #E57ED5 #CC5285 #845C7A
+21100
+21110
+22110
+32223
+.333.
+endx
+#E0AAF2 #E57ED5 #CC5285 #845C7A
+21100
+21110
+22110
+32223
+.333.
+
+
+
+cloner
+#E5C17E #DB7F55 #B32D2D #73342E
+.100.
+.210.
+.221.
+.332.
+.....
+
+swapcrate
+Orange Yellow
+00000
+0...0
+0...0
+0...0
+00000
+
+swapwall
+black
+.....
+.....
+.....
+.....
+.....
+
+thefloor
+#3B3942
+00000
+00000
+00000
+00000
+00000
+
+thefloorx
+#3B3942
+00000
+00000
+00000
+00000
+00000
+
+eend
+#3B3942
+00000
+00000
+00000
+00000
+00000
+(
+checkempty
+black
+.....
+.....
+.....
+.....
+.....
+
+checkblock
+black
+.....
+.....
+.....
+.....
+.....
+)
+
+horzmov
+TRANSPARENT
+
+vertmov
+TRANSPARENT
+
+
+pmov
+black
+.....
+.....
+.....
+.....
+.....
+
+movr
+black
+.....
+.....
+.....
+.....
+.....
+
+movl
+black
+.....
+.....
+.....
+.....
+.....
+
+movu
+black
+.....
+.....
+.....
+.....
+.....
+
+movd
+black
+.....
+.....
+.....
+.....
+.....
+
+movr2
+black
+.....
+.....
+.....
+.....
+.....
+
+movl2
+black
+.....
+.....
+.....
+.....
+.....
+
+movu2
+black
+.....
+.....
+.....
+.....
+.....
+
+movd2
+black
+.....
+.....
+.....
+.....
+.....
+
+grabu
+white
+.....
+..0..
+..0..
+..0..
+.....
+
+grabd
+white
+.....
+..0..
+..0..
+..0..
+.....
+
+grabl
+white
+.....
+.....
+.000.
+.....
+.....
+
+grabr
+white
+.....
+.....
+.000.
+.....
+.....
+
+(grabu
+white
+.....
+..0..
+.000.
+.0.0.
+.....
+
+grabd
+white
+.....
+.0.0.
+.000.
+..0..
+.....
+
+grabl
+white
+.....
+..00.
+.00..
+..00.
+.....
+
+grabr
+white
+.....
+.00..
+..00.
+.00..
+.....)
+(grabu
+TRANSPARENT
+
+grabd
+TRANSPARENT
+grabl
+TRANSPARENT
+
+grabr
+TRANSPARENT)
+
+grabx
+white
+.....
+.....
+.....
+.....
+.....
+
+grabu2
+white
+.....
+..0..
+.000.
+.....
+.....
+
+grabd2
+white
+.....
+.....
+.000.
+..0..
+.....
+
+grabl2
+white
+.....
+..0..
+.00..
+..0..
+.....
+
+grabr2
+white
+.....
+..0..
+..00.
+..0..
+.....
+
+grabno
+white
+.....
+.....
+..0..
+.....
+.....
+
+
+switcrate
+black
+.....
+.....
+.....
+.....
+.....
+
+switcrate2
+black
+.....
+.....
+.....
+.....
+.....
+
+arrow
+black
+.....
+.....
+.0.0.
+.000.
+..0..
+
+arrow2
+black
+.....
+.0.0.
+.000.
+..0..
+.....
+
+arrowx
+black
+.....
+.....
+.....
+.....
+.....
+
+arrowx2
+black
+.....
+.....
+.....
+.....
+.....
+
+winend
+#F2F2AA #E5C17E #CC7A52
+1000.
+21100
+21110
+22110
+.2221
+
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Playerright
+* = Crate
+
+O = Target
+n = nomove
+a = arrow2 and wall
+e=end
+t = end and target and eend
+w=end and winend
+
+c=cloner
+-=thefloor
+x=thefloorx
+
+
+feel=overwall or overcrate 
+pushable=crate or cloner or swapcrate  or switcrate or switcrate2
+win=crate or wall
+
+
+
+(blcra=crate and grabu and grabd and grabl and grabr)
+theemx= crate 
+player=playerright or playerleft
+
+blocker = wall or crate  or nomove or player or arrow
+
+blocx= wall or player
+
+arrowk = arrow or arrow2 or arrowx or arrowx2
+
+mov= movr or movl or movu or movd or pmov
+mov2= movr2 or movl2 or movu2 or movd2
+
+nmov=horzmov or vertmov
+
+(horzmov=movr or movl
+vertmov=movd or movu)
+
+conmov=mov or mov2
+
+grab=grabu OR grabd or grabl or grabr
+grab2=grabu2 OR grabd2 or grabl2 or grabr2
+
+grabnl=grabu OR grabd  or grabr
+grabnr=grabu OR grabd or grabl 
+grabnu= grabd or grabl or grabr
+grabnd=grabu or grabl or grabr
+=======
+SOUNDS
+=======
+
+(pushable MOVE 36772507)
+sfx5 30435707
+
+EndLevel 74089700
+
+player MOVE 68988304
+sfx0 52836103
+sfx1 45427502
+
+sfx2 29503700
+sfx3 81951902
+
+sfx4 40987507
+
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Target
+nomove
+
+horzmov
+vertmov
+pmov
+movr
+movl
+movu
+movd
+
+movr2
+movl2
+movu2
+movd2
+
+
+grabu2
+grabd2
+grabl2
+grabr2
+
+grabu
+grabd
+grabl
+grabr
+grabno
+grabx
+
+Player, Wall, pushable,swapwall,thefloor,thefloorx
+cratex
+
+
+
+arrow, arrow2, arrowx, arrowx2
+winend
+eend
+end, endx
+feel
+overcratex
+
+
+======
+RULES
+======
+
+[feel]->[]
+[cratex]->[]
+[overcratex]->[]
+
+([mov]->[])
+
+[ >  Player | pushable ] -> [  >  Player | > pushable ] sfx5
+
+
+
+[> crate|Target]->[> crate|target] sfx2
+
+[ left Playerright] -> [ left playerleft]
+[ right Playerleft] -> [ right playerright]
+
+[endx] ->[thefloor] sfx2
+[end | thefloor]-> [endx |thefloor]
+
+
+
+right[pushable mov no movl vertmov| grabr]->[grabr right pushable|grabr] sfx4
+left[pushable mov no movr vertmov|grabl]->[grabl left pushable|grabl] sfx4
+up[pushable mov no movd vertmov|grabu]->[grabu up pushable|grabu] sfx4
+down[pushable mov no movu vertmov|grabd]->[grabd down pushable |grabd] sfx4
+
+
+up[pushable mov no movd horzmov|grabu]->[grabu up pushable|grabu] sfx4
+down[pushable mov no movu horzmov|grabd]->[grabd down pushable |grabd] sfx4
+right[pushable mov no movl horzmov| grabr]->[grabr right pushable|grabr] sfx4
+left[pushable mov no movr horzmov|grabl]->[grabl left pushable|grabl] sfx4
+(up[pushable mov no movd|grabu]->[grabu up pushable|grabu] sfx4
+down[pushable mov no movu|grabd]->[grabd down pushable |grabd] sfx4
+right[pushable mov no movl| grabr]->[grabr right pushable|grabr] sfx4
+left[pushable mov no movr |grabl]->[grabl left pushable|grabl] sfx4)
+
+[ >  pushable | pushable ] -> [  pushable   | > pushable ]sfx5
+
+[pushable movr]->[right pushable  ]  sfx5
+[pushable movl]->[left pushable ] sfx5
+[pushable movu]->[up pushable  ] sfx5
+[pushable movd]->[down pushable ] sfx5
+
+late[crate no mov]->[crate grabu grabd grabl grabr]
+(late right[crate no mov| ]->[crate |grabl ]
+late left[crate no mov| ]->[crate |grabr ]
+late up[crate no mov| ]->[crate |grabd ]
+late down[crate no mov| ]->[crate |grabu ])
+
+[nmov]->[]
+[pmov]->[]
+[mov]->[pmov]
+[grab]->[]
+[grabx]->[]
+
+[movr2]->[movr]
+[movl2]->[movl]
+[movu2]->[movu]
+[movd2]->[movd]
+
+right[right pushable|no blocx]->[right pushable| movr]
+left[left pushable|no blocx]->[left pushable| movl]
+up[up pushable|no blocx]->[up pushable| movu]
+down[down pushable|no blocx]->[down pushable| movd]
+
+
+[right pushable]->[right pushable right horzmov]
+[left pushable]->[left pushable left horzmov]
+[up pushable]->[up pushable up vertmov]
+[down pushable]->[down pushable down vertmov]
+
+
+(late left[grabr no blocker|]->[grabr|grabr]
+late right[grabl no blocker|]->[grabl|grabl]
+late up[grabd no blocker|]->[grabd|grabd]
+late down[grabu no blocker|]->[grabu|grabu])
+
+late left[grabr |no blocker]->[grabr|grabr]
+late right[grabl |no blocker]->[grabl|grabl]
+late up[grabd |no blocker]->[grabd|grabd]
+late down[grabu |no blocker]->[grabu|grabu]
+
+(late [grab grabno]->[grabno])
+(late[grabno]->[]
+
+late left[grabr| grabnr  grabr]->[grabr| grabx]
+late right[grabl|grabnl grabl]->[grabl| grabx]
+late up[grabd| grabnd grabd]->[grabd| grabx]
+late down[grabu| grabnu grabu]->[grabu| grabx]
+
+(late[grab grabx]->[grab grabx] )
+late[grabx]->[grabno] )
+
+ 
+late up [wall| ]-> [wall|overwall]
+late up [theemx| ]-> [theemx|overcrate]
+
+late [crate mov]->[crate cratex mov]
+late up[Cratex| ]->[cratex|overcratex]
+
+(late up [crate2| ]-> [crate2|overcrate2])
+
+late up [end| ]-> [end|overcrate]
+late up [endx| ]-> [endx|overcrate]
+
+[action player eend|]->[action player eend |crate Target]
+
+
+
+[]-> again 
+(
+[arrow]->[arrowx2]
+[arrow2]->[arrowx]
+
+[arrowx]->[arrow]
+[arrowx2]->[arrow2])
+==============
+WINCONDITIONS
+==============
+
+all Target on crate 
+
+no mov
+
+=======
+LEVELS
+=======
+
+message Have a cube on all targets
+
+message level 1 of 6
+---------
+-#######-
+###...###
+#..#O...#
+#..*....#
+#.......#
+#.......#
+#....*..#
+#....#..#
+###.P.###
+-#######-
+
+message level 2 of 6
+---------
+#########
+#.......#
+#...#...#
+#.......#
+#.....#.#
+#.*.....#
+#.....*.#
+#..#PO..#
+#.......#
+#########
+
+
+message if the cubes have the option to switch or continue on their path. They will always switch their path.
+message level 3 of 6
+---------
+---###---
+####O####
+#.......#
+#.......#
+#..###..#
+#.....*.#
+#.....*.#
+#.P...*.#
+#.......#
+#########
+
+message level 4 of 6
+---------
+#########
+#.......#
+#O*.O.#.#
+##......#
+#...#...#
+#.......#
+#.*...*.#
+#...P...#
+#.#..O#.#
+#########
+
+message level 5 of 6
+---------
+#########
+#..O.O..#
+#.#...#.#
+#.......#
+#.....*.#
+#.....*.#
+#.....*.#
+#.#.P.#.#
+#..O....#
+#########
+
+message level 6 of 6
+---------
+#########
+#.......#
+#.......#
+#..*.*..#
+#..O#O..#
+#..*O*..#
+#.......#
+#...P...#
+#.......#
+#########
+
+(---------
+#########
+#.......#
+#.*.....#
+#.......#
+#...#...#
+#...#...#
+#.*...*.#
+#...P...#
+#.#.O.#.#
+#########)
+(
+---------
+#########
+#.......#
+#...*...#
+#.......#
+#...O...#
+#.......#
+#..*.*..#
+#.......#
+#...P...#
+#########)
+
+
+(---------
+#########
+#.......#
+#.#.*.#.#
+#.......#
+##..O..##
+#.......#
+#...*...#
+#..#.#..#
+#...P...#
+#########)
+
+
+
+
+
+
+xxxxxxxxxxxxxx
+-eeeeeeeeeeee-
+eeeeeeeeeeeeee
+eeeeeeeeeeeeee
+wewewewwweweew
+wewewetweewwew
+weweweeweeweww
+eweweewwweweew
+eeeeeeeeeeeeee
+eeeeeeeeeeeeee
+-eeeeeeeeeeee-
+
+

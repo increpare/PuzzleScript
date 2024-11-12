@@ -1,0 +1,1472 @@
+title Cyber-Lasso
+author Alan Hazelden
+homepage www.draknek.org
+
+norepeat_action
+
+again_interval 0.5
+realtime_interval 0.05
+
+youtube w5pd9jzK3a0
+
+(verbose_logging)
+
+flickscreen 11x11
+
+run_rules_on_level_start
+
+========
+OBJECTS
+========
+
+Background
+#dddddd #ffffff
+11111
+10001
+10001
+10001
+11111
+
+ElectricFloor
+LightBlue White
+00001
+00010
+00100
+01000
+10000
+
+ElectricFloor1
+LightBlue White
+00001
+00010
+00100
+01000
+10000
+
+ElectricFloor2
+LightBlue
+
+Powered
+LightBlue
+
+Unpowered
+White
+
+Hole
+Black
+
+Button
+Red Grey
+10001
+00000
+00000
+00000
+10001
+
+Crate
+DarkGreen Green
+.....
+.111.
+.101.
+.111.
+.....
+
+ElectricCrate1
+Yellow
+.....
+.....
+..0..
+.....
+.....
+
+(ElectricCrate2
+Orange
+.....
+.....
+..0..
+.....
+.....)
+
+ElectrifyingL
+Yellow
+.....
+.....
+0....
+.....
+.....
+
+ElectrifyingR
+Yellow
+.....
+.....
+....0
+.....
+.....
+
+ElectrifyingU
+Yellow
+..0..
+.....
+.....
+.....
+.....
+
+ElectrifyingD
+Yellow
+.....
+.....
+.....
+.....
+..0..
+
+DisappearingCrate
+Green
+.....
+.....
+..0..
+.....
+.....
+
+DisappearingPlayer
+#a46422
+.....
+.....
+..0..
+.....
+.....
+
+SquashedPlayer
+#a46422 #493c2b #000000 red
+....3
+.30..
+01110
+.2.2.
+3..3.
+
+WallNormal
+DarkGrey
+
+DoorUp
+DarkGrey #5a7bb6
+11111
+10001
+10001
+10001
+11111
+
+DoorDown
+#ffffff #dddddd
+11111
+1...1
+1.0.1
+1...1
+11111
+
+UpWhenPowered
+transparent
+
+Walkway
+#dddddd #9d9e9e
+11111
+10001
+10001
+10001
+11111
+
+WalkwayStartL
+#9d9e9e
+....0
+....0
+....0
+....0
+....0
+
+WalkwayStartR
+#9d9e9e
+0....
+0....
+0....
+0....
+0....
+
+WalkwayStartU
+#9d9e9e
+.....
+.....
+.....
+.....
+00000
+
+WalkwayStartD
+#9d9e9e
+00000
+.....
+.....
+.....
+.....
+
+PlayerNormal
+#a46422 #493c2b #000000
+..0..
+.111.
+01110
+02220
+.2.2.
+
+PlayerHoldL
+#a46422 #493c2b #000000 orange
+..0..
+.111.
+3330.
+0222.
+.2.2.
+
+PlayerHoldR
+#a46422 #493c2b #000000 orange
+..0..
+.111.
+01110
+0222.
+.2.2.
+
+PlayerHoldU
+#a46422 #493c2b #000000 orange
+..00..
+.110.
+0111.
+0222.
+.2.2.
+
+PlayerHoldD
+#a46422 #493c2b #000000 orange
+..0..
+.111.
+0110.
+0232.
+.232.
+
+(RopeNextToPlayerR
+#a46422
+.....
+.....
+0....
+.....
+.....)
+
+PlayerAiming
+#a46422 #493c2b #000000
+..0.0
+.1110
+0111.
+0222.
+.2.2.
+
+PlayerDying
+yellow yellow yellow
+..0..
+.111.
+01110
+02220
+.2.2.
+
+LassoAboveHead1
+brown orange
+.....
+..00.
+.0..0
+..001
+....1
+
+LassoAboveHead2
+brown orange
+.....
+.000.
+0...0
+.0001
+....1
+
+LassoAboveHead3
+brown orange
+.....
+.00..
+0..0.
+.00..
+...1.
+
+LassoAboveHead4
+brown orange
+.00..
+0..0.
+0..0.
+.00..
+...1.
+
+LassoAboveHead5
+brown orange
+.00..
+0..0.
+.00..
+..1..
+...1.
+
+LassoAboveHead6
+brown orange
+.000.
+0...0
+.000.
+..1..
+...1.
+
+LassoAboveHead7
+brown orange
+..00.
+.0..0
+..00.
+...1.
+...1.
+
+LassoAboveHead8
+brown orange
+..00.
+.0..0
+.0..0
+..00.
+...1.
+
+LassoThrownL
+brown orange
+.00..
+0..0.
+0..01
+0..0.
+.00..
+
+LassoThrownR
+brown orange
+..00.
+.0..0
+10..0
+.0..0
+..00.
+
+LassoThrownU
+brown orange
+.000.
+0...0
+0...0
+.000.
+..1..
+
+LassoThrownD
+brown orange
+..1..
+.000.
+0...0
+0...0
+.000.
+
+LassoReturn
+brown orange
+.000.
+0...0
+0...0
+0...0
+.000.
+
+LassoCaught
+brown
+.000.
+0...0
+0...0
+0...0
+.000.
+
+RopeH
+orange
+.....
+.....
+00000
+.....
+.....
+
+RopeV
+orange
+..0..
+..0..
+..0..
+..0..
+..0..
+
+RopeUL
+orange
+..0..
+..0..
+000..
+.....
+.....
+
+RopeUR
+orange
+..0..
+..0..
+..000
+.....
+.....
+
+RopeDL
+orange
+.....
+.....
+000..
+..0..
+..0..
+
+RopeDR
+orange
+.....
+.....
+..000
+..0..
+..0..
+
+WireLR
+#ffffff #dddddd
+00000
+11111
+.....
+11111
+00000
+
+WireUD
+#ffffff #dddddd
+01.10
+01.10
+01.10
+01.10
+01.10
+
+WireUL
+#ffffff #dddddd
+01.10
+11.10
+...10
+11110
+00000
+
+WireUR
+#ffffff #dddddd
+01.10
+01.11
+01...
+01111
+00000
+
+WireDL
+#ffffff #dddddd
+00000
+11110
+...10
+11.10
+01.10
+
+WireDR
+#ffffff #dddddd
+00000
+01111
+01...
+01.11
+01.10
+
+WireULR
+#ffffff #dddddd
+01.10
+11.11
+.....
+11111
+00000
+
+WireDLR
+#ffffff #dddddd
+00000
+11111
+.....
+11.11
+01.10
+
+WireUDL
+#ffffff #dddddd
+01.10
+11.10
+...10
+11.10
+01.10
+
+WireUDR
+#ffffff #dddddd
+01.10
+01.11
+01...
+01.11
+01.10
+
+AndGate
+Grey Grey Red
+.000.
+00000
+02020
+00000
+.000.
+
+Power1
+Yellow
+.....
+.....
+.0...
+.....
+.....
+
+Power2
+Yellow
+.....
+.....
+.0.0.
+.....
+.....
+
+Done
+transparent
+
+Here
+transparent
+
+Claimed
+transparent
+
+Changed
+red
+
+Exit
+transparent
+
+CheckpointTrigger
+transparent
+
+ReactorTrigger
+transparent
+
+U
+red
+..0..
+.0.0.
+.....
+.....
+.....
+
+D
+red
+.....
+.....
+.....
+.0.0.
+..0..
+
+L
+red
+.....
+.0...
+0....
+.0...
+.....
+
+R
+red
+.....
+...0.
+....0
+...0.
+.....
+
+WallL
+DarkRed
+0....
+0....
+0....
+0....
+0....
+
+WallR
+DarkRed
+....0
+....0
+....0
+....0
+....0
+
+WallU
+DarkRed
+00000
+.....
+.....
+.....
+.....
+
+WallD
+DarkRed
+.....
+.....
+.....
+.....
+00000
+
+WallLR
+DarkRed
+0...0
+0...0
+0...0
+0...0
+0...0
+
+WallUD
+DarkRed
+00000
+.....
+.....
+.....
+00000
+
+WallUL
+DarkRed
+0....
+.....
+.....
+.....
+.....
+
+WallUR
+DarkRed
+....0
+.....
+.....
+.....
+.....
+
+WallDL
+DarkRed
+.....
+.....
+.....
+.....
+0....
+
+WallDR
+DarkRed
+.....
+.....
+.....
+.....
+....0
+
+WallDLR
+DarkRed
+.....
+.....
+.....
+.....
+0...0
+
+WallULR
+DarkRed
+0...0
+.....
+.....
+.....
+.....
+
+WallLUD
+DarkRed
+0....
+.....
+.....
+.....
+0....
+
+WallWireLR
+DarkGrey #61686c
+00000
+00000
+00000
+00000
+00000
+
+DangerL
+#be656d
+0....
+0....
+0....
+0....
+0....
+
+DangerR
+#be656d
+....0
+....0
+....0
+....0
+....0
+
+DangerU
+#be656d
+00000
+.....
+.....
+.....
+.....
+
+DangerD
+#be656d
+.....
+.....
+.....
+.....
+00000
+
+DangerLR
+#be656d
+0...0
+0...0
+0...0
+0...0
+0...0
+
+DangerUD
+#be656d
+00000
+.....
+.....
+.....
+00000
+
+Reactor
+#ffffff #dddddd
+01.10
+11.11
+.....
+11.11
+01.10
+
+Warning1
+White Black
+01100
+01010
+01100
+01010
+01010
+
+Warning2
+White Black
+11100
+10001
+11001
+10001
+11101
+
+Warning3
+White Black
+10001
+01010
+11010
+01010
+01001
+
+Warning4
+White Black
+10111
+00010
+00010
+00010
+10010
+
+Warning5
+White Black
+00110
+01001
+01001
+01001
+00110
+
+Warning6
+White Black
+01100
+01010
+01100
+01010
+01010
+
+
+=======
+LEGEND
+=======
+
+PlayerHold = PlayerHoldL or PlayerHoldR or PlayerHoldU or PlayerHoldD
+Player = PlayerNormal or PlayerAiming or PlayerHold or DisappearingPlayer or PlayerDying
+Direction = U or D or L or R
+Rope = RopeH or RopeV or RopeUL or RopeUR or RopeDL or RopeDR
+RopePullsL = RopeH or RopeUR or RopeDR
+RopePullsR = RopeH or RopeUL or RopeDL
+RopePullsU = RopeV or RopeDL or RopeDR
+RopePullsD = RopeV or RopeUL or RopeUR
+
+(RopeNextToPlayer = RopeNextToPlayerR)
+
+LassoAboveHead = LassoAboveHead1 or LassoAboveHead2 or LassoAboveHead3 or LassoAboveHead4 or LassoAboveHead5 or LassoAboveHead6 or LassoAboveHead7 or LassoAboveHead8
+
+WallWire = WallWireLR
+Wall = WallNormal or WallWire
+
+Solid = Wall or Crate or DoorUp
+SolidUncatchable = Wall or DoorUp
+Chain = Rope or LassoCaught or Player
+LassoThrown = LassoThrownL or LassoThrownR or LassoThrownU or LassoThrownD or LassoReturn
+
+WallCoverLR = WallL or WallR or WallLR
+WallCoverUD = WallU or WallD or WallUD
+WallCoverCorner = WallUL or WallUR or WallDL or WallDR or WallDLR or WallLUD or WallULR
+
+WallCover = WallCoverLR or WallCoverUD or WallCoverCorner
+
+DangerBorderLR = DangerL or DangerR or DangerLR
+DangerBorderUD = DangerU or DangerD or DangerUD
+DangerBorder = DangerBorderLR or DangerBorderUD
+
+WireL = WireLR or WireUL or WireDL or WireUDL or WireULR or WireDLR or WallWireLR
+WireR = WireLR or WireUR or WireDR or WireUDR or WireULR or WireDLR or WallWireLR
+WireU = WireUD or WireUL or WireUR or WireUDL or WireUDR or WireULR
+WireD = WireUD or WireDL or WireDR or WireUDL or WireUDR or WireDLR
+Wire = WireL or WireR or WireU or WireD
+
+Door = DoorUp or DoorDown
+
+WalkwayStart = WalkwayStartL or WalkwayStartR or WalkwayStartU or WalkwayStartD
+
+PowerTransfer = Button or ElectricFloor or Door or Walkway or WalkwayStart or Reactor
+
+Electrified = ElectricCrate1
+
+Electrifiable = Player or Crate
+
+ElectrifyingDir = ElectrifyingL or ElectrifyingR or ElectrifyingU or ElectrifyingD
+
+ChainUnder = Wire or PowerTransfer or AndGate
+ChainUnderOver = Button or ElectricFloor
+ChainOver = Electrifiable or ChainUnderOver
+
+Disappearing = DisappearingCrate or DisappearingPlayer
+Squashed = SquashedPlayer
+
+PowerLevel = Power1 or Power2
+
+ElectricFloorCover = ElectricFloor1 or ElectricFloor2
+
+Warning = Warning1 or Warning2 or Warning3 or Warning4 or Warning5 or Warning6
+
+. = Background
+# = WallNormal
+P = PlayerNormal and DoorUp
+* = Crate
+! = ElectricFloor
+o = Hole
+@ = Button
+_ = DoorDown
+n = DoorUp
+% = Button and Crate
+2 = AndGate
+& = Crate and ElectricFloor
+═ = WallWireLR
+$ = Reactor
+W = Warning1
+X = Exit and DoorUp
+z = ReactorTrigger and WireUD
+
+
+(ref http://unicode-search.net/unicode-namesearch.pl?term=box%20drawings)
+
+- = WireLR
+| = WireUD
+┐ = WireDL
+┤ = WireUDL
+┘ = WireUL
+┌ = WireDR
+├ = WireUDR
+└ = WireUR
+┬ = WireDLR
+┴ = WireULR
+
+← = WalkwayStartL and Hole
+→ = WalkwayStartR and Hole
+↑ = WalkwayStartU and Hole
+↓ = WalkwayStartD and Hole
+
+
+=======
+SOUNDS
+=======
+
+
+================
+COLLISIONLAYERS
+================
+
+CheckpointTrigger, ReactorTrigger
+Direction, Done, Here
+Claimed
+Background
+ElectricFloor, UpWhenPowered
+Powered, Unpowered
+ElectricFloorCover, Warning, Exit
+Hole, Button, Wire, Door, AndGate, Reactor
+DangerBorderLR, WalkwayStart, PowerLevel
+DangerBorderUD, Walkway
+Player, PlayerDying, Wall, Crate, Disappearing, Squashed
+WallCoverLR, Electrified
+WallCoverUD, WallCoverCorner
+LassoAboveHead
+LassoThrown, LassoCaught, Rope
+ElectrifyingL
+ElectrifyingR
+ElectrifyingU
+ElectrifyingD
+Changed
+
+======
+RULES
+======
+
+([ Changed ] -> [])
+
+([ RopeNextToPlayer ] -> [])
+
+(Lasso aiming animation)
+
+[ up Player Exit ] -> [ Player Exit ] win
+
+right [ Warning1 | | | | | ] -> [ Warning1 | Warning2 | Warning3 | Warning4 | Warning5 | Warning6 ]
+
+late up [ PlayerAiming | no LassoAboveHead ] -> [ PlayerAiming | LassoAboveHead1 ]
+late up [ no PlayerAiming | LassoAboveHead ] -> [ | ]
+
+up [ moving Player | LassoAboveHead ] -> [ moving Player | action LassoAboveHead ]
+
+[ stationary LassoAboveHead1 ] -> [ action LassoAboveHead2 ]
+[ stationary LassoAboveHead2 ] -> [ action LassoAboveHead3 ]
+[ stationary LassoAboveHead3 ] -> [ action LassoAboveHead4 ]
+[ stationary LassoAboveHead4 ] -> [ action LassoAboveHead5 ]
+[ stationary LassoAboveHead5 ] -> [ action LassoAboveHead6 ]
+[ stationary LassoAboveHead6 ] -> [ action LassoAboveHead7 ]
+[ stationary LassoAboveHead7 ] -> [ action LassoAboveHead8 ]
+[ stationary LassoAboveHead8 ] -> [ action LassoAboveHead1 ]
+
+(Pressing action)
+
+[ action PlayerHold ] [ LassoCaught Crate ] -> [ PlayerHold ] [ LassoReturn action Crate Changed ] again
+
+[ action PlayerAiming ] -> [ PlayerNormal ]
+[ action PlayerNormal ] -> [ PlayerAiming ]
+
+(Throwing lasso)
+
+left [ > PlayerAiming | no SolidUncatchable ] -> [ PlayerHoldL | L action LassoThrownL ] again
+right [ > PlayerAiming | no SolidUncatchable ] -> [ PlayerHoldR | R action LassoThrownR ] again
+up [ > PlayerAiming | no SolidUncatchable ] -> [ PlayerHoldU | U action LassoThrownU ] again
+down [ > PlayerAiming | no SolidUncatchable ] -> [ PlayerHoldD | D action LassoThrownD ] again
+
+left [ L stationary LassoThrownL | no SolidUncatchable ] -> [ RopeH | L action LassoThrownL ] again
+right [ R stationary LassoThrownR | no SolidUncatchable ] -> [ RopeH | R action LassoThrownR ] again
+up [ U stationary LassoThrownU | no SolidUncatchable ] -> [ RopeV | U action LassoThrownU ] again
+down [ D stationary LassoThrownD | no SolidUncatchable ] -> [ RopeV | D action LassoThrownD ] again
+
+[ LassoThrown stationary Crate no LassoReturn ] -> [ action LassoCaught Crate no Direction ]
+
+[ Player | | | | | LassoThrown Direction ] -> [ Player | | | | | action LassoThrown ]
+
+([ Player | | | | | | | | LassoThrown Direction ] -> [ Player | | | | | | | | action LassoThrown ])
+
+(Moving while attached)
+
+[ > Player | Hole no Walkway ] -> cancel
+
+[ > Player Hole no Walkway ] -> cancel
+
+[ moving Player ] [ LassoCaught Crate ] [ Rope ] -> [ moving Player action Done ] [ moving LassoCaught action Crate ] [ moving Rope ]
+
+[ moving Player | LassoCaught Crate ] -> [ moving Player action Done | moving LassoCaught action Crate ]
+
+[ > Player | stationary Solid ] -> cancel
+
+startloop
+
+(Start loop)
+
+left [ action Done | RopePullsL no Done ] -> [ < Done | RopePullsL Here ]
+right [ action Done | RopePullsR no Done ] -> [ < Done | RopePullsR Here ]
+up [ action Done | RopePullsU no Done ] -> [ < Done | RopePullsU Here ]
+down [ action Done | RopePullsD no Done ] -> [ < Done | RopePullsD Here ]
+[ action Done | LassoCaught no Done ] -> [ < Done | LassoCaught Here ]
+
+(Check for collisions)
+
+[ stationary Here > Chain | stationary Solid ] -> [ action Here > Chain | Solid ] (set 'action Here' on collision)
+
+[ < Done | action Here > Chain ] -> cancel
+
+[ action Here ] [ Done > Chain | moving Done ] -> cancel
+
+[ action Here ] [ moving Done ] [ Chain no Done ] -> [ action Here ] [ moving Done ] [ moving Chain ] (update movement of future parts of the chain)
+
+(Handle movement)
+
+left [ moving Done down RopeUL | action Here ] -> cancel
+left [ moving Done up RopeDL | action Here ] -> cancel
+
+left [ moving Done down RopeH | action Here ] -> [ moving Done down RopeUR | action Here ]
+left [ moving Done down RopeDL | action Here ] -> [ moving Done down RopeV | action Here ]
+left [ moving Done up RopeH | action Here ] -> [ moving Done up RopeDR | action Here ]
+left [ moving Done up RopeUL | action Here ] -> [ moving Done up RopeV | action Here ]
+
+left [ moving Done down Chain | action Here < RopeH ] -> [ moving Done down Chain | action Here < RopeDL ]
+left [ moving Done down Chain | action Here < RopeUR ] -> [ moving Done down Chain | action Here < RopeV ]
+left [ moving Done up Chain | action Here < RopeH ] -> [ moving Done up Chain | action Here < RopeUL ]
+left [ moving Done up Chain | action Here < RopeDR ] -> [ moving Done up Chain | action Here < RopeV ]
+
+right [ moving Done down RopeUR | action Here ] -> cancel
+right [ moving Done up RopeDR | action Here ] -> cancel
+
+right [ moving Done down RopeH | action Here ] -> [ moving Done down RopeUL | action Here ]
+right [ moving Done down RopeDR | action Here ] -> [ moving Done down RopeV | action Here ]
+right [ moving Done up RopeH | action Here ] -> [ moving Done up RopeDL | action Here ]
+right [ moving Done up RopeUR | action Here ] -> [ moving Done up RopeV | action Here ]
+
+right [ moving Done down Chain | action Here < RopeH ] -> [ moving Done down Chain | action Here < RopeDR ]
+right [ moving Done down Chain | action Here < RopeUL ] -> [ moving Done down Chain | action Here < RopeV ]
+right [ moving Done up Chain | action Here < RopeH ] -> [ moving Done up Chain | action Here < RopeUR ]
+right [ moving Done up Chain | action Here < RopeDL ] -> [ moving Done up Chain | action Here < RopeV ]
+
+up [ moving Done left RopeUR | action Here ] -> cancel
+up [ moving Done right RopeUL | action Here ] -> cancel
+
+up [ moving Done left RopeV | action Here ] -> [ moving Done left RopeDR | action Here ]
+up [ moving Done left RopeUL | action Here ] -> [ moving Done left RopeH | action Here ]
+up [ moving Done right RopeV | action Here ] -> [ moving Done right RopeDL | action Here ]
+up [ moving Done right RopeUR | action Here ] -> [ moving Done right RopeH | action Here ]
+
+up [ moving Done left Chain | action Here < RopeV ] -> [ moving Done left Chain | action Here < RopeUL ]
+up [ moving Done left Chain | action Here < RopeDR ] -> [ moving Done left Chain | action Here < RopeH ]
+up [ moving Done right Chain | action Here < RopeV ] -> [ moving Done right Chain | action Here < RopeUR ]
+up [ moving Done right Chain | action Here < RopeDL ] -> [ moving Done right Chain | action Here < RopeH ]
+
+down [ moving Done left RopeDR | action Here ] -> cancel
+down [ moving Done right RopeDL | action Here ] -> cancel
+
+down [ moving Done left RopeV | action Here ] -> [ moving Done left RopeUR | action Here ]
+down [ moving Done left RopeDL | action Here ] -> [ moving Done left RopeH | action Here ]
+down [ moving Done right RopeV | action Here ] -> [ moving Done right RopeUL | action Here ]
+down [ moving Done right RopeDR | action Here ] -> [ moving Done right RopeH | action Here ]
+
+down [ moving Done left Chain | action Here < RopeV ] -> [ moving Done left Chain | action Here < RopeDL ]
+down [ moving Done left Chain | action Here < RopeUR ] -> [ moving Done left Chain | action Here < RopeH ]
+down [ moving Done right Chain | action Here < RopeV ] -> [ moving Done right Chain | action Here < RopeDR ]
+down [ moving Done right Chain | action Here < RopeUL ] -> [ moving Done right Chain | action Here < RopeH ]
+
+[ Here > Chain | Claimed ] -> cancel
+[ Here > Chain | ] -> [ Here > Chain | Claimed ]
+
+[ moving Done ] -> [ Done ]
+
+[ Here ] -> [ action Done ]
+
+(End loop)
+
+endloop
+
+[ Claimed ] -> []
+[ Here ] -> []
+[ Done ] -> []
+
+late [ Player Rope ] -> cancel
+late [ Player LassoCaught ] -> cancel
+
+([ left Chain ] -> [ L action Chain ]
+[ right Chain ] -> [ R action Chain ]
+[ up Chain ] -> [ U action Chain ]
+[ down Chain ] -> [ D action Chain ]
+[ Direction moving Crate ] -> [ Direction Crate ])
+
+[ moving LassoCaught Crate ] -> [ moving LassoCaught moving Crate ]
+
+(Pull the end of the lasso towards the player by one tile)
+
+[ stationary LassoThrown Direction ] -> [ LassoThrown ] again
+
+left [ stationary LassoThrown | RopePullsL ] -> [ > LassoThrown | ] again
+right [ stationary LassoThrown | RopePullsR ] -> [ > LassoThrown | ] again
+up [ stationary LassoThrown | RopePullsU ] -> [ > LassoThrown | ] again
+down [ stationary LassoThrown | RopePullsD ] -> [ > LassoThrown | ] again
+
+[ stationary LassoThrown | Player ] -> [ | PlayerNormal no Direction ]
+
+[ LassoThrown Player ] -> [ PlayerNormal ]
+
+[ > Player | ] -> [ > Player Changed | Changed ]
+[ > LassoCaught | ] -> [ > LassoCaught Changed | Changed ]
+
+(Holes)
+
+late [ Disappearing ] -> [] again
+
+late [ Crate Hole no Walkway no LassoCaught ] -> [ DisappearingCrate Hole ] again
+late [ DisappearingCrate ] [ LassoReturn ] -> [ Crate ] [ LassoReturn ]
+
+late [ Player Hole no Walkway no PlayerHold ] -> [ DisappearingPlayer Hole ]
+
+(Squashing)
+
+late [ Player DoorUp Changed ] -> [ SquashedPlayer DoorUp ]
+
+(Add graphics)
+
+late left [ PlayerHold | RopePullsL ] -> [ Claimed PlayerHoldL | RopePullsL ]
+late right [ PlayerHold | RopePullsR ] -> [ Claimed PlayerHoldR | RopePullsR ]
+late up [ PlayerHold | RopePullsU ] -> [ Claimed PlayerHoldU | RopePullsU ]
+late down [ PlayerHold | RopePullsD ] -> [ Claimed PlayerHoldD | RopePullsD ]
+
+late left [ PlayerHold no Claimed | LassoCaught ] -> [ PlayerHoldL | LassoCaught ]
+late right [ PlayerHold no Claimed | LassoCaught ] -> [ PlayerHoldR | LassoCaught ]
+late up [ PlayerHold no Claimed | LassoCaught ] -> [ PlayerHoldU | LassoCaught ]
+late down [ PlayerHold no Claimed | LassoCaught ] -> [ PlayerHoldD | LassoCaught ]
+
+late [ Claimed ] -> []
+
+(Draw wall edges)
+
+left [ Wall no WallCoverLR | no Wall ] -> [ Wall WallL | ]
+right [ Wall no WallCoverLR | no Wall ] -> [ Wall WallR | ]
+right [ Wall WallL | no Wall ] -> [ Wall WallLR | ]
+
+up [ Wall no WallCoverUD | no Wall ] -> [ Wall WallU | ]
+down [ Wall no WallCoverUD | no Wall ] -> [ Wall WallD | ]
+down [ Wall WallU | no Wall ] -> [ Wall WallUD | ]
+
+left [ Wall no WallCoverCorner no WallUD | WallUD ] -> [ Wall WallLUD | WallUD ]
+up [ Wall no WallCoverCorner no WallLR | WallLR ] -> [ Wall WallULR | WallLR ]
+
+right [ WallD | Wall no WallCover ] -> [ WallD | Wall WallDL ]
+left [ WallD | Wall no WallCover ] -> [ WallD | Wall WallDR ]
+
+right [ WallU | Wall no WallCover ] -> [ WallU | Wall WallUL ]
+left [ WallU | Wall no WallCover ] -> [ WallU | Wall WallUR ]
+
+(Draw electric floor)
+
+left [ ElectricFloor no DangerBorderLR | no ElectricFloor ] -> [ ElectricFloor DangerL | ]
+right [ ElectricFloor no DangerBorderLR | no ElectricFloor ] -> [ ElectricFloor DangerR | ]
+right [ ElectricFloor DangerL | no ElectricFloor ] -> [ ElectricFloor DangerLR | ]
+
+up [ ElectricFloor no DangerBorderUD | no ElectricFloor ] -> [ ElectricFloor DangerU | ]
+down [ ElectricFloor no DangerBorderUD | no ElectricFloor ] -> [ ElectricFloor DangerD | ]
+down [ ElectricFloor DangerU | no ElectricFloor ] -> [ ElectricFloor DangerUD | ]
+
+[ ElectricFloor no Powered ] -> [ ElectricFloor no ElectricFloorCover ]
+
+[ Player no Changed ] [ ElectricFloor Powered no ElectricFloorCover no Claimed ] -> [ Player ] [ ElectricFloor Powered ElectricFloor1 Claimed ]
+[ Player no Changed ][ ElectricFloor Powered ElectricFloor1 no Claimed ] -> [ Player ] [ ElectricFloor Powered ElectricFloor2 Claimed ]
+[ Player no Changed ][ ElectricFloor Powered ElectricFloor2 no Claimed ] ->[ Player ] [ ElectricFloor Powered no ElectricFloor Claimed ]
+
+late [ Claimed ] -> []
+
+(Power flow)
+
+late [ Changed no ChainUnderOver ] -> []
+
+late [ Changed Electrifiable | no Changed Electrifiable ] -> [ Changed Electrifiable | Changed Electrifiable ]
++ late [ Changed ChainUnder | no Changed ChainUnder ] -> [ Changed ChainUnder | Changed ChainUnder ]
+
+late [ Changed Powered ] -> [ Changed ]
+late [ Changed Walkway ] -> [ Changed ]
+late [ PowerLevel ] -> []
+late [ Changed Electrified ] -> [ Changed ]
+late [ Changed ElectrifyingDir ] -> [ Changed ]
+
+late [ Button Crate ] -> [ Button Crate Powered ]
+late [ Button Player ] -> [ Button Player Powered ]
+
+startloop
+
+late left [ WireL no Powered | Powered ] -> [ WireL Powered | Powered ]
+late right [ WireR no Powered | Powered ] -> [ WireR Powered | Powered ]
+late up [ WireU no Powered | Powered ] -> [ WireU Powered | Powered ]
+late down [ WireD no Powered | Powered ] -> [ WireD Powered | Powered ]
+
+late left [ WireL Powered no Claimed | AndGate no Claimed ] -> [ WireL Powered Claimed | AndGate Claimed ]
+late right [ WireR Powered no Claimed | AndGate no Claimed ] -> [ WireR Powered Claimed | AndGate Claimed ]
+late up [ WireU Powered no Claimed | AndGate no Claimed ] -> [ WireU Powered Claimed | AndGate Claimed ]
+late down [ WireD Powered no Claimed | AndGate no Claimed ] -> [ WireD Powered Claimed | AndGate Claimed ]
+
+late left [ WireL Powered | no Powered no AndGate ] -> [ WireL Powered | Powered ]
+late right [ WireR Powered | no Powered no AndGate ] -> [ WireR Powered | Powered ]
+late up [ WireU Powered | no Powered no AndGate ] -> [ WireU Powered | Powered ]
+late down [ WireD Powered | no Powered no AndGate ] -> [ WireD Powered | Powered ]
+
+late [ AndGate Power1 Claimed ] -> [ AndGate Power2 Powered ]
+late [ AndGate no PowerLevel Claimed ] -> [ AndGate Power1 no Powered ]
+late [ AndGate Claimed ] -> [ AndGate no Powered ]
+
+late [ PowerTransfer Powered | PowerTransfer no Powered ] -> [ PowerTransfer Powered | PowerTransfer Powered ]
+
+late left [ WalkwayStartL Powered | Hole no WalkwayStart ] -> [ WalkwayStartL Powered | WalkwayStartL Hole ]
+late right [ WalkwayStartR Powered | Hole no WalkwayStart ] -> [ WalkwayStartR Powered | WalkwayStartR Hole ]
+late up [ WalkwayStartU Powered | Hole no WalkwayStart ] -> [ WalkwayStartU Powered | WalkwayStartU Hole ]
+late down [ WalkwayStartD Powered | Hole no WalkwayStart ] -> [ WalkwayStartD Powered | WalkwayStartD Hole ]
+
+late [ WalkwayStart Powered ] -> [ WalkwayStart Walkway Powered ]
+
+late [ Electrifiable no Electrified ElectricFloor Powered ] -> [ Electrifiable Electrified ElectricFloor Powered ]
+
+late [ Electrifiable Electrified | Electrifiable no Electrified ] -> [ Electrifiable Electrified | Electrifiable Electrified ]
+
+late [ Electrifiable Electrified ElectricFloor no Powered ] -> [ Electrifiable Electrified ElectricFloor Powered ]
+
+late [ Electrified LassoCaught ] [ Player ] -> [ Electrified LassoCaught ] [ Player Electrified ]
+late [ LassoCaught ] [ Electrified Player ] -> [ Electrified LassoCaught ] [ Player Electrified ]
+
+endloop
+
+late [ Claimed ] -> []
+
+late [ Door Powered no UpWhenPowered no CheckpointTrigger ] [ Player no Button no PlayerHold ] -> [ Door Powered CheckpointTrigger ] [ Player ] checkpoint
+
+late [ WalkwayStart Powered no CheckpointTrigger ] [ Player no Button no PlayerHold ] -> [ WalkwayStart Powered CheckpointTrigger ] [ Player ] checkpoint
+
+late left [ Hole | WalkwayStartL ] -> [ Hole | ]
+late right [ Hole | WalkwayStartR ] -> [ Hole | ]
+late up [ Hole | WalkwayStartU ] -> [ Hole | ]
+late down [ Hole | WalkwayStartD ] -> [ Hole | ]
+
+late [ Wire no Powered ] -> [ Wire Unpowered ]
+late [ PowerTransfer no Powered ] -> [ PowerTransfer Unpowered ]
+
+late [ Door Powered UpWhenPowered ] -> [ DoorUp Powered UpWhenPowered ]
+late [ Door no Powered UpWhenPowered ] -> [ DoorDown UpWhenPowered ]
+late [ Door Powered no UpWhenPowered ] -> [ DoorDown Powered ]
+late [ Door no Powered no UpWhenPowered ] -> [ DoorUp ]
+
+(Electrocute)
+
+late left [ Electrified | Electrified ] -> [ Electrified ElectrifyingL | Electrified ElectrifyingR ]
+late up [ Electrified | Electrified ] -> [ Electrified ElectrifyingU | Electrified ElectrifyingD ]
+
+late [ PlayerDying Electrified no Claimed ] -> [ PlayerNormal Electrified Claimed ]
+late [ Player Electrified no Claimed ] -> [ PlayerDying Electrified Claimed ]
+
+late [ Player Electrified ] -> [ Player ]
+
+late [ Player Claimed ] -> again
+
+late [ Claimed ] -> []
+
+late [ Player DoorUp no Changed no SquashedPlayer ] -> [ Player DoorDown ]
+
+late [ Changed ] -> []
+
+late [ Powered Reactor ] -> win
+
+late [ ReactorTrigger Player ] [ ReactorTrigger ] -> checkpoint
+late [ ReactorTrigger Player ] [ ReactorTrigger ] -> message The reactor core! I have to take it down by any means necessary.
+late [ ReactorTrigger Player ] [ ReactorTrigger no Player ] -> [ ReactorTrigger Player ] []
+
+late [ ReactorTrigger Player ] -> [ Player ]
+
+==============
+WINCONDITIONS
+==============
+
+(all button on Crate
+no LassoCaught
+no Rope
+no LassoReturn)
+
+=======
+LEVELS
+=======
+
+(############################################
+#.........##.........##..!......##.........#
+#...!!!!..##.......┌-----!......##.........#
+#....*|...##.......|.##..!......##.........#
+#.!.!!!!!!##!!!!!!!!!##.........##.........#
+#.!--┘.|..##.|..|....##.!!!.....##.........#
+#.&...!!!!##.!..|....##..|...!!!##.........#
+#.*.....└----!..├-@..##..|...!..##.........#
+#!&!......##.!..|....##..└-┐.!..##.........#
+#.........##....|....##....|.!..##.........#
+################n##########n#!..############
+################n##########n#!..############
+############....|....##....|.!......oo.....#
+############@---2---@##.@..|.!-----┐oo.....#
+############.........##.|..|.!.....└!!--%..#
+############@---┬---@##.2--┘.!!!##..oo..|..#
+############...o↓o...##.|.......##..oo..|..#
+############ooooooooooo.|.oo#...##..oooo↓oo#
+############oo.....oooo.|.oo#!!!##..ooooooo#
+############oo.....oooo.|.oo#.|.##.........#
+############oo.....ooooo↓ooo#.|.##.........#
+################.ooooooooooo##|##########.##
+################.ooooooooooo##|##########.##
+#....@----------┐oooooooooooo.|.##┌----!...#
+#.oooooooooooooo↓oooooo...ooo.├---┘...o!...#
+#.ooooooooooooooooooooo.@.ooo!&!##....o!┐..#
+#.oo...oooooooo...ooooo.|.ooo...####..oo|###
+#*oo.#.ooooooo←-@.oooooo|oooo...####..oo|###
+#.oo...oooooooo...ooo##o|o##########..oo|###
+#.oooooooooooooo.oooo##.|.......##....o!┘..#
+#.oooooooooooooo.....nn-┴-------nn┐...o!.*.#
+#.ooooooooooooooooooo##.........##└----!-┐.#
+###########################n#############n##
+###########################n#############n##
+#.........##.........##....|....##w........#
+#.......*.##.........##..@-2-@..##.........#
+#.........##......┌--nn-┐.......##o!!!o!!!o#
+#.........##...%..|..##.|.......##o!%ooo%!o#
+#p...┌--@.##...|..|..##!!!!#!!!!##o!!!!!!!o#
+#....|....##!!!!!!!!!##....#.|..##.........#
+#....|....##.........##.%--═-┘..##.!!!-!!!.#
+#....|....##.........##....#..*.##.!%!-!%!.#
+#....|....##.........##....#....##.!!!-!!!.#
+#####n########n##############..###.|||.|||.#
+#####n########n##############..###.|||.|||.#
+#.........##..|..oo..##...ooo...##.!!!-!!!.#
+#....*....##..|..oo..##...ooo...##.!%!-!%!.#
+#.........##..└@.oo..##...ooo...##.!!!-!!!.#
+#.........##.....oo..##...ooo.@.##.|||.|||.#
+#.........##.....oo..##...ooo.|.##.|||.|||.#
+#oooooooooooooooooo.......oo←-┘.##.!!!-!!!.#
+#oooooo↑oooooo↑oooo.......oo←...##.!%!-!%!.#
+#..@---┘......|..oo..##...ooo...##.!!!┬!!!.#
+#.............@..oo..##...ooo...##...|||...#
+#################oo##################|||####
+#####################################|||####
+#.........##.........##.........##@%!┴┴┘...#
+#.........##.........##.........##%@!......#
+#.........##.........##.........##@%!.*.*..#
+#.........##.........##.........##!!!......#
+#.........##.........##.........##ooooooooo#
+#.........##.........##.........##ooooooooo#
+#.........##.........##.........##oo!!!!!oo#
+#.........##.........##.........##oo!┴┬┴!oo#
+#.........##.........##.........##oo!┬$┬!oo#
+##################################oo!┤|├!oo#)
+
+###########################x#####
+#.........##.........##....|....#
+#.......*.##.........##..@-2-@..#
+#.........##......┌--nn-┐.......#
+#.........##...%..|..##.|.......#
+p....┌--@.##...|..|..##!!!!#!!!!#
+#....|....##!!!!!!!!!##....#.|..#
+#....|....##.........##.%--═-┘..#
+#....|....##.........##....#..*.#
+#....|....##.........##....#....#
+#####n########n##############..##
+#####n########n##############..##
+#.........##..|..oo..##...ooo...#
+#....*....##..|..oo..##...ooo...#
+#.........##..└@.oo..##...ooo...#
+#.........##.....oo..##...ooo.@.#
+#.........##.....oo..##...ooo.|.#
+#oooooooooooooooooo.......oo←-┘.#
+#oooooo↑oooooo↑oooo.......oo←...#
+#..@---┘......|..oo..##...ooo...#
+#.............@..oo..##...ooo...#
+#################oo##############
+
+#######################################################
+#.........##.........##..!......##.........##.........#
+#...!!!!!.##.......┌-----!......##.........##.........#
+#....*|...##.......|.##..!......##.........##.........#
+#.!.!!!!!!##!!!!!!!!!##.........##.........##.........#
+#.!--┘.|..##.|..|....##.!!!.....##.........##.........#
+#.&..!!!!!##.!..|....##..|...!!!##.........##.........#
+#.*.....├----!..├-@..##..|...!..##.........##.........#
+#!&!..!!!!##.!..|....##..└-┐.!..##.........##.........#
+#.........##....|....##....|.!..##.........##.........#
+################n##########n#!..#######################
+################n##########n#!..#######################
+############....|....##....|.!......oo.....##.........#
+############@---2---@##.@..|.!-----┐oo.....##.........#
+############.........##.|..|.!.....└!!--%..##.........#
+############@---┬---@##.2--┘.!!!##..oo..|..##.........#
+############...o↓o...##.|.......##..oo..|..##.........#
+############ooooooooooo.|.oo#...##..oooo↓oo#═.........#
+############oo.....oooo.|.oo#!!!##..ooooooo##.........#
+############oo.....oooo.|.oo#.|.##.........##.........#
+############oo.....ooooo↓ooo#.|.##.........##.........#
+################.ooooooooooo##|##########.#######n#####
+################.ooooooooooo##|##########.#######x#####
+#....@----------┐oooooooooooo.|.##┌----!...##%!--┘..!%#
+#.oooooooooooooo↓oooooo...ooo.├---┘...o!...##!!!!!..!!#
+#.ooooooooooooooooooooo.@.ooo!&!##....o!┐..##!.|.!..|.#
+#.oo...oooooooo...ooooo.|.ooo...####..oo|####!.!.!.!|.#
+#*oo.#.ooooooo←-@.oooooo|oooo...####..oo|####!.!.!-!!!#
+#.oo...oooooooo...ooo##o|o##########..oo|####!.!.!.!..#
+#.oooooooooooooo.oooo##.|.......##....o!┘..##!.!...|..#
+#.oooooooooooooo.....nn-┴-------nn┐...o!.*┌nn..!!!!!!!#
+#.ooooooooooooooooooo##.........##└----!--┘##!!!....!%#
+###########################p###########################
+
+######################
+#....................#
+#....................#
+#oooooooooooo!!!o!!!oo
+#ooo↑oooooooo!%ooo%!oo
+#oo.|.ooooooo!!!!!!!oo
+#oo.|.oooo##.........#
+#o!!!!!!!o##.!!!-!!!.#
+#o!....@!o##.!%!-!%!.#
+#o!!!!!!!o##.!!!-!!!.#
+#oooo...oo##.|||.|||.#
+#oooo...oo##.|||.|||.#
+#oo┌--┐...##.!!!-!!!.#
+#oo@..|...##.!%!-!%!.#
+#oo###n#####.!!!-!!!.#
+#oo.......##.|||.|||.#
+#oo.......##.|||.|||.#
+#oo..*.*..##.!!!-!!!.#
+#oo.......##.!%!-!%!.#
+#oo.......##.!!!┬!!!.#
+#oo.......##...|||...#
+######p########|||####
+######n########zzz####
+#%!---┘.!%##@%!┴┴┘...#
+#!!!!!..!!##%@!......#
+#!.|.!..|.##@%!.*.*..#
+#!.!.!.!|.##!!!......#
+#!.!.!-!!!##ooooooooo#
+#!.!.!.!..##ooooooooo#
+#!.!...|..##oo!!!!!oo#
+n..!!!!!!!##oo!┴┬┴!oo#
+#!!!....!%##oo!┬$┬!oo#
+############oo!┤|├!oo#
+
+(#######################################################
+#.........##.....!...##.........##...#.....##.........#
+#...!!!!!.##.....!-┬-nn.........##...#.....##.........#
+#....*|...##...┌-!.|.##.........##.*.#...@.##.........#
+#.!.!!!!!!##...|.##|.##.........##...#...|.##.........#
+#.!-┬┘.|..##...@.##|.##.!!!.....##.@-n-@.2.##.........#
+#.&.|!!!!!##.!...##|.##..|...!!!##...#...|.##.........#
+#.*.|...├----!...!.|.##..|...!..##.*.#...@.##.........#
+#!!!┘.!!!!##.!--┐!-┘.##..└┐..!..##...#.....##.........#
+#.........##....|!...##...|..!..##...#.....##.........#
+################n#########n##!..#######################)
+
+
+message BOOM
+message You will be remembered as a hero

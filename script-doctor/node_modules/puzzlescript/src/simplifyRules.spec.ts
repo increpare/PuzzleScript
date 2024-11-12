@@ -1,0 +1,494 @@
+/* eslint-env jasmine */
+import { LevelEngine } from './engine'
+import Parser from './parser/parser'
+
+const HORIZONTAL_GAME = `title check that Horizontal Expands
+
+========
+OBJECTS
+========
+
+Background
+blue
+
+Player
+green
+
+Sand
+yellow
+
+Water
+Blue
+
+=======
+LEGEND
+=======
+
+. = Background
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Player
+Sand
+Water
+
+======
+RULES
+======
+
+LEFT [ HORIZONTAL Player > Water ] -> [ UP Sand ]
+
+=======
+LEVELS
+=======
+
+.
+
+
+` // end game
+
+function parseEngine(code: string) {
+    const { data } = Parser.parse(code)
+
+    const engine = new LevelEngine(data)
+    engine.setLevel(0)
+    return { engine, data }
+}
+
+describe('Rule simplifier', () => {
+    it('expands horizontal rules', () => {
+        const { data } = parseEngine(HORIZONTAL_GAME)
+        const foo = data.rules
+        expect(foo.length).toBe(1)
+        expect(foo[0].getChildRules().length).toBe(2)
+    })
+
+    it('treats adjacent neighbors that are the same as distinct (e.g. [ Wall | Wall ]', () => {
+        const { engine, data } = parseEngine(`title check that Horizontal Expands
+
+    ========
+    OBJECTS
+    ========
+
+    Background
+    blue
+
+    Player
+    green
+
+    Wall
+    yellow
+
+    RightExtension
+    Blue
+
+    =======
+    LEGEND
+    =======
+
+    W = Wall
+
+    ================
+    COLLISIONLAYERS
+    ================
+
+    Background
+    Player
+    Wall
+    RightExtension
+
+    ======
+    RULES
+    ======
+
+    RIGHT [ Wall | Wall ] -> [ RightExtension | RightExtension ]
+
+    =======
+    LEVELS
+    =======
+
+    WW
+
+    `) // end game
+        const rightExtension = data.getSpriteByName('RightExtension')
+        engine.tick()
+
+        expect(engine.getCurrentLevel().getCells()[0][0].getSpritesAsSet().has(rightExtension)).toBe(true)
+    })
+
+    it('converts VERTICAL and HORIZONTAL at the beginning of a rule into 2 rules', () => {
+        const { engine, data } = parseEngine(`title check that Horizontal Expands
+
+        ========
+        OBJECTS
+        ========
+
+        Background
+        black
+
+        Player
+        green
+
+        SimpleWall
+        Yellow
+
+        PrettyHorizWall
+        Blue
+        .....
+        .....
+        00000
+        .....
+        .....
+
+        PrettyVertWall
+        Blue
+        ..0..
+        ..0..
+        ..0..
+        ..0..
+        ..0..
+
+
+        =======
+        LEGEND
+        =======
+
+        . = Background
+        W = SimpleWall
+        Wall = SimpleWall OR PrettyHorizWall OR PrettyVertWall
+
+        ===
+        SOUNDS
+        ===
+
+        ================
+        COLLISIONLAYERS
+        ================
+
+        Background
+        Player
+        Wall, PrettyHorizWall, PrettyVertWall
+
+        ======
+        RULES
+        ======
+
+        HORIZONTAL [ Wall | SimpleWall | Wall ] -> [ Wall | PrettyHorizWall | Wall ]
+        VERTICAL [ Wall | SimpleWall | Wall ] -> [ Wall | PrettyVertWall | Wall ]
+
+        ===
+        WINCONDITIONS
+        ===
+
+        =======
+        LEVELS
+        =======
+
+        WWWW
+        W..W
+        W..W
+        WWWW
+
+    `) // end game
+        const horiz = data.getSpriteByName('PrettyHorizWall')
+        const vert = data.getSpriteByName('PrettyVertWall')
+        engine.tick()
+        expect(engine.toSnapshot()).toMatchSnapshot()
+
+        expect(data.rules.length).toBe(2)
+        expect(data.rules[0].getChildRules().length).toBe(2) // just LEFT RIGHT
+        expect(data.rules[1].getChildRules().length).toBe(2) // just UP DOWN
+
+        expect(engine.getCurrentLevel().getCells()[0][1].getSpritesAsSet().has(horiz)).toBe(true)
+        expect(engine.getCurrentLevel().getCells()[0][2].getSpritesAsSet().has(horiz)).toBe(true)
+
+        expect(engine.getCurrentLevel().getCells()[3][1].getSpritesAsSet().has(horiz)).toBe(true)
+        expect(engine.getCurrentLevel().getCells()[3][2].getSpritesAsSet().has(horiz)).toBe(true)
+
+        expect(engine.getCurrentLevel().getCells()[1][0].getSpritesAsSet().has(vert)).toBe(true)
+        expect(engine.getCurrentLevel().getCells()[1][3].getSpritesAsSet().has(vert)).toBe(true)
+
+        expect(engine.getCurrentLevel().getCells()[2][0].getSpritesAsSet().has(vert)).toBe(true)
+        expect(engine.getCurrentLevel().getCells()[2][3].getSpritesAsSet().has(vert)).toBe(true)
+
+    })
+
+    it('expands MOVING into simple UP DOWN LEFT RIGHT ACTION rules', () => {
+        const { engine, data } = parseEngine(`title check that MOVING Expands
+
+    ========
+    OBJECTS
+    ========
+
+    Background
+    blue
+
+    Player
+    green
+
+    Shadow
+    black
+
+    =======
+    LEGEND
+    =======
+
+    . = Background
+    P = Player
+    S = Shadow
+
+    ================
+    COLLISIONLAYERS
+    ================
+
+    Background
+    Shadow
+    Player
+
+    ======
+    RULES
+    ======
+
+    RIGHT [ Player ] -> [ > Player ]
+    [ MOVING Player | Shadow ] -> [ MOVING Player | MOVING Shadow ]
+
+    =======
+    LEVELS
+    =======
+
+    P..
+    S..
+
+    `) // end game
+        const player = data.getSpriteByName('player')
+        const shadow = data.getSpriteByName('shadow')
+        engine.tick()
+
+        expect(data.rules.length).toBe(2)
+        expect(data.rules[0].getChildRules().length).toBe(1) // Not interesting
+        expect(data.rules[1].getChildRules().length).toBe(4 * 5) // UP DOWN LEFT RIGHT ACTION
+
+        expect(engine.toSnapshot()).toMatchSnapshot()
+
+        expect(engine.getCurrentLevel().getCells()[0][0].getSpritesAsSet().has(player)).toBe(false)
+        expect(engine.getCurrentLevel().getCells()[0][1].getSpritesAsSet().has(player)).toBe(true)
+
+        expect(engine.getCurrentLevel().getCells()[1][0].getSpritesAsSet().has(shadow)).toBe(false)
+        expect(engine.getCurrentLevel().getCells()[1][1].getSpritesAsSet().has(shadow)).toBe(true)
+    })
+
+    it('expands MOVING in multiple brackets into simple UP DOWN LEFT RIGHT ACTION rules', () => {
+        const { engine, data } = parseEngine(`title check that MOVING Expands
+
+    ========
+    OBJECTS
+    ========
+
+    Background
+    blue
+
+    Player
+    green
+
+    Shadow
+    black
+
+    =======
+    LEGEND
+    =======
+
+    . = Background
+    P = Player
+    S = Shadow
+
+    ================
+    COLLISIONLAYERS
+    ================
+
+    Background
+    Shadow
+    Player
+
+    ======
+    RULES
+    ======
+
+    RIGHT [ Player ] -> [ > Player ]
+    DOWN [ MOVING Player ] [ STATIONARY Shadow ] -> [ MOVING Player ] [ MOVING Shadow ]
+
+    =======
+    LEVELS
+    =======
+
+    P..
+    S..
+
+    `) // end game
+        const player = data.getSpriteByName('player')
+        const shadow = data.getSpriteByName('shadow')
+        engine.tick()
+
+        expect(data.rules.length).toBe(2)
+        expect(data.rules[0].getChildRules().length).toBe(1) // Not interesting
+        expect(data.rules[1].getChildRules().length).toBe(5) // UP DOWN LEFT RIGHT ACTION
+
+        expect(engine.toSnapshot()).toMatchSnapshot()
+
+        expect(engine.getCurrentLevel().getCells()[0][0].getSpritesAsSet().has(player)).toBe(false)
+        expect(engine.getCurrentLevel().getCells()[0][1].getSpritesAsSet().has(player)).toBe(true)
+
+        expect(engine.getCurrentLevel().getCells()[1][0].getSpritesAsSet().has(shadow)).toBe(false)
+        expect(engine.getCurrentLevel().getCells()[1][1].getSpritesAsSet().has(shadow)).toBe(true)
+    })
+
+    it('collapses rules when they do not depend on the direction (major performance speedup)', () => {
+        const { data } = parseEngine(`title foo
+
+    ========
+    OBJECTS
+    ========
+
+    Background
+    blue
+
+    Player
+    green
+
+    =======
+    LEGEND
+    =======
+
+    . = Background
+    P = Player
+
+    ================
+    COLLISIONLAYERS
+    ================
+
+    Background
+    Player
+
+    ======
+    RULES
+    ======
+
+    [ Player ] -> [ ]
+    [ ] -> [ Player ]
+
+    =======
+    LEVELS
+    =======
+
+    P
+
+    `) // end game
+
+        expect(data.rules.length).toBe(2)
+
+        // Ensure that both rules were collapsed because they do not depend on the direction
+        expect(data.rules[0].getChildRules().length).toBe(1)
+        expect(data.rules[1].getChildRules().length).toBe(1)
+    })
+
+    it('keeps rules expanded when they have neighbors', () => {
+        const { data } = parseEngine(`title foo
+
+    ========
+    OBJECTS
+    ========
+
+    Background
+    blue
+
+    Player
+    green
+
+    =======
+    LEGEND
+    =======
+
+    . = Background
+    P = Player
+
+    ================
+    COLLISIONLAYERS
+    ================
+
+    Background
+    Player
+
+    ======
+    RULES
+    ======
+
+    [ Player | Player ] -> [ | ]
+    [ | ] -> [ Player | Player]
+
+    =======
+    LEVELS
+    =======
+
+    P
+
+    `) // end game
+
+        expect(data.rules.length).toBe(2)
+
+        // Ensure that both rules were collapsed because they do not depend on the direction
+        expect(data.rules[0].getChildRules().length).toBe(4)
+        expect(data.rules[1].getChildRules().length).toBe(4)
+    })
+
+    it('keeps rules expanded when the action has a direction', () => {
+        const { data } = parseEngine(`title foo
+
+    ========
+    OBJECTS
+    ========
+
+    Background
+    blue
+
+    Player
+    green
+
+    =======
+    LEGEND
+    =======
+
+    . = Background
+    P = Player
+
+    ================
+    COLLISIONLAYERS
+    ================
+
+    Background
+    Player
+
+    ======
+    RULES
+    ======
+
+    [ ] -> [ > Player ]
+    [ > Player ] -> [ Player]
+
+    =======
+    LEVELS
+    =======
+
+    P
+
+    `) // end game
+
+        expect(data.rules.length).toBe(2)
+
+        // Ensure that both rules were collapsed because they do not depend on the direction
+        expect(data.rules[0].getChildRules().length).toBe(4)
+        expect(data.rules[1].getChildRules().length).toBe(4)
+    })
+
+})

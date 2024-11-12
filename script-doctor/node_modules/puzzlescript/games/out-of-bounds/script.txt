@@ -1,0 +1,1052 @@
+title out of bounds [lite demo]
+author cyathea tree studio
+homepage www.cyatheatree.com
+
+run_rules_on_level_start
+(verbose_logging)
+
+========
+OBJECTS
+========
+
+Background
+White
+00000000
+00000000
+00000000
+00000000
+00000000
+00000000
+00000000
+00000000
+
+PlayerWithoutKey
+#030303 #FA9005 #F89A20 #FFBB61 #FFFFFF
+........
+..11111.
+.23333..
+.23030..
+.233333.
+.234443.
+..3333..
+........
+
+PlayerWithKey
+#030303 #FA9005 #FACF0B #FFBB61 #FFFFFF
+........
+.11112..
+.333322.
+.30302..
+.333222.
+.344242.
+.333222.
+........
+
+PlayerBlood
+Red DarkRed
+........
+....0...
+..0.....
+......0.
+...0....
+.....0..
+.0......
+........
+
+Crate
+#C4962D #EFB83B
+........
+.000000.
+.010101.
+.010101.
+.010101.
+.010101.
+.000000.
+........
+
+Door
+#141414 #4D4D4D #D1D1D1
+........
+.111111.
+.122221.
+.111111.
+.111001.
+.122221.
+.111111.
+........
+
+Flag
+#FFA51C #FF3030
+........
+.011....
+.011111.
+.01111..
+.011....
+.0......
+.0......
+........
+
+StopSign
+Red
+........
+........
+..0..0..
+...00...
+...00...
+..0..0..
+........
+........
+
+Key
+#F5C904
+........
+...0....
+...000..
+...0....
+..0000..
+..0..0..
+..0000..
+........
+
+EnemyL
+#091016 #161616 #5BA645 #FFFFFF
+........
+...222..
+..2222..
+.121222.
+.222222.
+.030322.
+..2222..
+........
+
+EnemyR
+#091016 #161616 #5BA645 #FFFFFF
+........
+..222...
+..2222..
+.222121.
+.222222.
+.223030.
+..2222..
+........
+
+EnemyU
+#1F1F1F #272727 #0770C6 #FFFFFF
+........
+..2222..
+.223322.
+.223022.
+.222222.
+..1..1..
+..1..1..
+........
+
+EnemyD
+#1F1F1F #272727 #0770C6 #FFFFFF
+........
+..2222..
+.223322.
+.223022.
+.222222.
+..1..1..
+..1..1..
+........
+
+Bomb
+#000000 #0E0E0E #FF1010 #951B1E #FFFFFF
+........
+...1.1..
+..1.1.1.
+.232323.
+.244423.
+.240423.
+.232323.
+........
+
+Hole
+#111111 #272727 #585858 #959595
+........
+........
+..3333..
+.322223.
+.310013.
+..3333..
+........
+........
+
+InnerFilledHole
+#887777 #959595 #778383 #7A7777
+........
+........
+..1331..
+.133331.
+.133331.
+..1111..
+........
+........
+
+OuterFilledHole
+#887777 #959595 #778383 #7A7777
+........
+........
+..1331..
+.133331.
+.133331.
+..1111..
+........
+........
+
+BombStage1
+#000000 #FFEE02 #FF1010 #FAA21B #951B1E #FFFFFF
+........
+...1.1..
+..13131.
+.242424.
+.255524.
+.250524.
+.242424.
+........
+
+BombStage2
+#000000 #FFEE02 #FF1010 #FAA21B #951B1E #FFFFFF
+........
+...1.1..
+..13131.
+.242424.
+.255524.
+.250524.
+.242424.
+........
+
+BombStage3
+#FFEE02 #FAA21B #ED2224
+........
+........
+....0...
+..0..0..
+.0010.0.
+.011110.
+..0120..
+........
+
+Explosion
+Transparent
+
+Air
+Transparent
+
+MovablePlane
+DarkBrown White LightGrey
+00000000
+01221120
+02112210
+01221120
+02112210
+01221120
+02112210
+00000000
+
+FixedPlane
+#999999 White LightGrey
+00000000
+01221120
+02112210
+01221120
+02112210
+01221120
+02112210
+00000000
+
+MovableBrokenWallL
+White DarkBrown LightGrey
+1.......
+1.......
+2.......
+1.......
+1.......
+0.......
+1.......
+1.......
+
+MovableBrokenWallR
+White DarkBrown LightGrey
+.......1
+.......1
+.......0
+.......1
+.......1
+.......2
+.......1
+.......1
+
+MovableBrokenWallU
+White DarkBrown LightGrey
+11011211
+........
+........
+........
+........
+........
+........
+........
+
+MovableBrokenWallD
+White DarkBrown LightGrey
+........
+........
+........
+........
+........
+........
+........
+11211011
+
+FixedBrokenWallL
+White #999999 LightGrey
+1.......
+1.......
+2.......
+1.......
+1.......
+0.......
+1.......
+1.......
+
+FixedBrokenWallR
+White #999999 LightGrey
+.......1
+.......1
+.......0
+.......1
+.......1
+.......2
+.......1
+.......1
+
+FixedBrokenWallU
+White #999999 LightGrey
+11011211
+........
+........
+........
+........
+........
+........
+........
+
+FixedBrokenWallD
+White #999999 LightGrey
+........
+........
+........
+........
+........
+........
+........
+11211011
+
+DecorationL
+White LightGrey
+........
+0.......
+1.......
+0.......
+1.......
+0.......
+1.......
+........
+
+DecorationR
+White LightGrey
+........
+.......1
+.......0
+.......1
+.......0
+.......1
+.......0
+........
+
+DecorationU
+White LightGrey
+.100110.
+........
+........
+........
+........
+........
+........
+........
+
+DecorationD
+White LightGrey
+........
+........
+........
+........
+........
+........
+........
+.011001.
+
+DecorationLU
+White LightGrey
+1.......
+........
+........
+........
+........
+........
+........
+........
+
+DecorationRU
+White LightGrey
+.......0
+........
+........
+........
+........
+........
+........
+........
+
+DecorationLD
+White LightGrey
+........
+........
+........
+........
+........
+........
+........
+0.......
+
+DecorationRD
+White LightGrey
+........
+........
+........
+........
+........
+........
+........
+.......1
+
+BreakPlaceHolderL
+DarkGreen
+........
+..0.....
+.0......
+00000...
+00000...
+.0......
+..0.....
+........
+
+BreakPlaceHolderR
+DarkGreen
+........
+.....0..
+......0.
+...00000
+...00000
+......0.
+.....0..
+........
+
+BreakPlaceHolderU
+DarkGreen
+...00...
+..0000..
+.0.00.0.
+...00...
+...00...
+........
+........
+........
+
+BreakPlaceHolderD
+DarkGreen
+...00...
+...00...
+.0.00.0.
+..0000..
+...00...
+........
+........
+........
+
+SmallRigid
+Green
+
+PlaneRigid
+Blue
+
+ForecastL
+Transparent
+ForecastR
+Transparent
+ForecastU
+Transparent
+ForecastD
+Transparent
+MovingPlayerPH
+Transparent
+
+=======
+LEGEND
+=======
+
+InitMovablePlane = MovablePlane and Air
+InitFixedPlane = FixedPlane and Air
+. = Background
+O = InitMovablePlane
+Q = InitFixedPlane
+P = PlayerWithoutKey
+& = PlayerWithoutKey and InitMovablePlane
+7 = PlayerWithoutKey and InitFixedPlane
+* = Crate
+@ = Crate and InitMovablePlane
+2 = Crate and InitFixedPlane
+F = Flag
+$ = Flag and InitMovablePlane
+4 = Flag and InitFixedPlane
+B = Bomb
+! = Bomb and InitMovablePlane
+1 = Bomb and InitFixedPlane
+~ = OuterFilledHole
+H = Hole
+# = Hole and InitMovablePlane
+3 = Hole and InitFixedPlane
+x = StopSign
+% = StopSign and InitMovablePlane
+5 = StopSign and InitFixedPlane
+[ = EnemyR
+] = EnemyD
+{ = EnemyR and InitMovablePlane
+8 = EnemyR and InitFixedPlane
+} = EnemyD and InitMovablePlane
+9 = EnemyD and InitFixedPlane
+Y = Key
++ = Key and InitMovablePlane
+- = Key and InitFixedPlane
+D = Door
+: = Door and InitMovablePlane
+; = Door and InitFixedPlane
+< = BreakPlaceHolderL
+> = BreakPlaceHolderR
+^ = BreakPlaceHolderU
+v = BreakPlaceHolderD
+T = BreakPlaceHolderL and BreakPlaceHolderU
+k = BreakPlaceHolderL and StopSign
+g = BreakPlaceHolderR and StopSign
+
+Player = PlayerWithKey or PlayerWithoutKey
+Plane = FixedPlane or MovablePlane
+ExplosingBomb = BombStage1 or BombStage2 or BombStage3
+BreakPlaceHolder = BreakPlaceHolderL or BreakPlaceHolderR or BreakPlaceHolderU or BreakPlaceHolderD
+MovableBrokenWall = MovableBrokenWallL or MovableBrokenWallR or MovableBrokenWallU or MovableBrokenWallD
+FixedBrokenWall = FixedBrokenWallL or FixedBrokenWallR or FixedBrokenWallU or FixedBrokenWallD
+BrokenWall = MovableBrokenWall or FixedBrokenWall
+BrokenWallL = MovableBrokenWallL or FixedBrokenWallL
+BrokenWallR = MovableBrokenWallR or FixedBrokenWallR
+BrokenWallU = MovableBrokenWallU or FixedBrokenWallU
+BrokenWallD = MovableBrokenWallD or FixedBrokenWallD
+Decoration = DecorationL or DecorationR or DecorationU or DecorationD or DecorationLU or DecorationRU or DecorationLD or DecorationRD
+EnemyLR = EnemyL or EnemyR
+EnemyUD = EnemyU or EnemyD
+Enemy = EnemyL or EnemyR or EnemyU or EnemyD
+Pushable = Crate or Flag or Player or Bomb or ExplosingBomb
+EnemyStopper = Crate or Flag or Bomb or ExplosingBomb or Enemy or StopSign or Key or Door
+ObjectOnPlane = Crate or Flag or Player or BrokenWall or Air or StopSign or Bomb or ExplosingBomb or Hole or InnerFilledHole or Enemy or Key or Door
+DestroyableObjectOnPlane = Crate or Flag or Player or Bomb or Enemy or Key or Door
+TempRigid = SmallRigid or PlaneRigid
+Forecast = ForecastL or ForecastR or ForecastU or ForecastD
+
+=======
+SOUNDS
+=======
+
+================
+COLLISIONLAYERS
+================
+
+Background
+OuterFilledHole
+MovablePlane, FixedPlane
+MovableBrokenWallL, FixedBrokenWallL
+MovableBrokenWallR, FixedBrokenWallR
+MovableBrokenWallU, FixedBrokenWallU
+MovableBrokenWallD, FixedBrokenWallD
+DecorationL
+DecorationR
+DecorationU
+DecorationD
+DecorationLU
+DecorationRU
+DecorationLD
+DecorationRD
+Hole, InnerFilledHole
+Player
+Flag, Crate, StopSign, Bomb, BombStage1, BombStage2, BombStage3, Explosion, Enemy, Door, Key
+PlayerBlood
+Air
+SmallRigid, PlaneRigid
+MovingPlayerPH
+BreakPlaceHolderL, ForecastL
+BreakPlaceHolderR, ForecastR
+BreakPlaceHolderU, ForecastU
+BreakPlaceHolderD, ForecastD
+
+
+======
+RULES
+======
+
+(preprocess)
+Up [ BreakPlaceHolderU | FixedPlane ] -> [ | FixedPlane FixedBrokenWallD ]
+Up [ BreakPlaceHolderU | MovablePlane ] -> [ | MovablePlane MovableBrokenWallD ]
+Down [ BreakPlaceHolderD | FixedPlane ] -> [ | FixedPlane FixedBrokenWallU ]
+Down [ BreakPlaceHolderD | MovablePlane ] -> [ | MovablePlane MovableBrokenWallU ]
+Left [ BreakPlaceHolderL | FixedPlane ] -> [ | FixedPlane FixedBrokenWallR ]
+Left [ BreakPlaceHolderL | MovablePlane ] -> [ | MovablePlane MovableBrokenWallR ]
+Right [ BreakPlaceHolderR | FixedPlane ] -> [ | FixedPlane FixedBrokenWallL ]
+Right [ BreakPlaceHolderR | MovablePlane ] -> [ | MovablePlane MovableBrokenWallL ]
+
+(gameplay)
+[ moving Player ] -> [ moving Player MovingPlayerPH ]
+[ action Player MovingPlayerPH ] -> [ action Player ]
+
+(bomb waiting)
+[ MovingPlayerPH ] [ BombStage3 ] -> [ MovingPlayerPH ] [ Explosion ]
+[ MovingPlayerPH ] [ BombStage2 ] -> [ MovingPlayerPH ] [ BombStage3 ]
+[ MovingPlayerPH ] [ BombStage1 ] -> [ MovingPlayerPH ] [ BombStage2 ]
+[ action Player | Bomb ] -> [ Player | BombStage1 ]
+
+(winning part)
+[ > Player Plane | Flag Plane ] -> [ Plane | Player Flag Plane ]
+[ > Player no Plane | Flag no Plane ] -> [ | Player Flag ]
+Left [ Left Player Plane BrokenWallL | Flag no Plane ] -> [ Plane BrokenWallL | Player Flag ]
+Right [ Right Player Plane BrokenWallR | Flag no Plane ] -> [ Plane BrokenWallR | Player Flag ]
+Up [ Up Player Plane BrokenWallU | Flag no Plane ] -> [ Plane BrokenWallU | Player Flag ]
+Down [ Down Player Plane BrokenWallD | Flag no Plane ] -> [ Plane BrokenWallD | Player Flag ]
+Left [ Left Player no Plane | Flag Plane BrokenWallR ] -> [ | Player Flag Plane BrokenWallR ]
+Right [ Right Player no Plane | Flag Plane BrokenWallL ] -> [ | Player Flag Plane BrokenWallL ]
+Up [ Up Player no Plane | Flag Plane BrokenWallD ] -> [ | Player Flag Plane BrokenWallD ]
+Down [ Down Player no Plane | Flag Plane BrokenWallU ] -> [ | Player Flag Plane BrokenWallU ]
+
+(open door)
+[ > PlayerWithKey Plane | Door Plane ] -> [ PlayerWithoutKey Plane | Plane ]
+
+[ > PlayerWithKey no Plane | Door no Plane ] -> [ PlayerWithoutKey no Plane | Door no Plane ]
+
+[ > PlayerWithoutKey Plane | Door Plane ] -> Cancel
+[ > PlayerWithoutKey no Plane | Door no Plane ] -> Cancel
+
+(todo: add more rules about door opening)
+
+(pushing part)
+([ TempRigid ] -> [ ]) (uncomment this on debug)
+rigid [ > Player ] -> [ > Player > SmallRigid ] (again) (uncomment this on debug)
+
+(Cancel Case 1: inner box cannot get out)
++ Left [ Left SmallRigid Plane no BrokenWallL | no Plane ] -> Cancel
++ Right [ Right SmallRigid Plane no BrokenWallR | no Plane ] -> Cancel
++ Up [ Up SmallRigid Plane no BrokenWallU | no Plane ] -> Cancel
++ Down [ Down SmallRigid Plane no BrokenWallD | no Plane ] -> Cancel
+
+(Cancel Case 2: inner box encountered any stop sign)
++ rigid [ > SmallRigid Plane | StopSign ] -> Cancel
+
+(Cancel Case 3: outer box encountered outer stop sign)
++ rigid [ > SmallRigid no Plane | StopSign no Plane ] -> Cancel
+
+(Cancel Case 4: plane encountered outer stop sign)
++ rigid [ > PlaneRigid | StopSign no Plane ] -> Cancel
+
+(Cancel Case 5: the plane is not movable)
++ rigid [ > PlaneRigid FixedPlane ] -> Cancel
+
+(Cancel Case 6: plane push to an enemy)
++ Left [ Left PlaneRigid no BrokenWallL | Enemy no Plane ] -> Cancel
++ Right [ Right PlaneRigid no BrokenWallR | Enemy no Plane ] -> Cancel
++ Up [ Up PlaneRigid no BrokenWallU | Enemy no Plane ] -> Cancel
++ Down [ Down PlaneRigid no BrokenWallD | Enemy no Plane ] -> Cancel
+
+(Passing Case 1: outer box push plane)
++ rigid Left [ Left SmallRigid no Plane | Plane ObjectOnPlane no BrokenWallR ] -> [ Left SmallRigid | Left Plane Left ObjectOnPlane Left PlaneRigid ]
++ rigid Right [ Right SmallRigid no Plane | Plane ObjectOnPlane no BrokenWallL ] -> [ Right SmallRigid | Right Plane Right ObjectOnPlane Right PlaneRigid ]
++ rigid Up [ Up SmallRigid no Plane | Plane ObjectOnPlane no BrokenWallD ] -> [ Up SmallRigid | Up Plane Up ObjectOnPlane Up PlaneRigid ]
++ rigid Down [ Down SmallRigid no Plane | Plane ObjectOnPlane no BrokenWallU ] -> [ Down SmallRigid | Down Plane Down ObjectOnPlane Down PlaneRigid ]
+
+(Passing Case 2: outer box push outer box, no condition)
++ rigid [ > SmallRigid no Plane | Pushable no Plane ] -> [ > SmallRigid | > Pushable > SmallRigid ]
+
+(Passing Case 3: inner box push inner box, no condition)
++ rigid [ > SmallRigid Plane | Pushable Plane ] -> [ > SmallRigid Plane | > Pushable > SmallRigid Plane ]
+
+(Passing Case 4: inner box push outer box)
++ rigid Left [ Left SmallRigid no Plane | Plane Pushable BrokenWallR ] -> [ Left SmallRigid | Plane Left Pushable Left SmallRigid BrokenWallR ]
++ rigid Right [ Right SmallRigid no Plane | Plane Pushable BrokenWallL ] -> [ Right SmallRigid | Plane Right Pushable Right SmallRigid BrokenWallL ]
++ rigid Up [ Up SmallRigid no Plane | Plane Pushable BrokenWallD ] -> [ Up SmallRigid | Plane Up Pushable Up SmallRigid BrokenWallD ]
++ rigid Down [ Down SmallRigid no Plane | Plane Pushable BrokenWallU ] -> [ Down SmallRigid | Plane Down Pushable Down SmallRigid BrokenWallU ]
+
+(Passing Case 5: plane push plane, no condition)
++ rigid [ > PlaneRigid | Plane ObjectOnPlane ] -> [ > PlaneRigid | > Plane > ObjectOnPlane > PlaneRigid ]
+
+(Passing Case 6: plane push box)
++ rigid Left [ Left PlaneRigid no BrokenWallL | Pushable no Plane ] -> [ Left PlaneRigid | Left Pushable Left SmallRigid ]
++ rigid Right [ Right PlaneRigid no BrokenWallR | Pushable no Plane ] -> [ Right PlaneRigid | Right Pushable Right SmallRigid ]
++ rigid Up [ Up PlaneRigid no BrokenWallU | Pushable no Plane ] -> [ Up PlaneRigid | Up Pushable Up SmallRigid ]
++ rigid Down [ Down PlaneRigid no BrokenWallD | Pushable no Plane ] -> [ Down PlaneRigid | Down Pushable Down SmallRigid ]
+
+(Falling into hole)
+[ > SmallRigid > DestroyableObjectOnPlane no Plane | Hole no Plane ] -> [ > SmallRigid | OuterFilledHole ]
+[ > SmallRigid > DestroyableObjectOnPlane Plane | Hole no Plane ] -> [ > SmallRigid Plane | OuterFilledHole ]
+[ > SmallRigid > DestroyableObjectOnPlane Plane | Hole Plane ] -> [ > SmallRigid Plane | InnerFilledHole Plane ]
+[ > PlaneRigid > Plane > ObjectOnPlane | Hole no Plane ] -> [ > PlaneRigid > Plane | Hole ]
+[ > PlaneRigid > Plane | Hole no Plane ] -> [ > PlaneRigid | OuterFilledHole ]
+
+(All fail cases lead to rigid rollback)
+[ > Player no SmallRigid ] -> Cancel
+
+(enemies)
+
+(early kill)
+late [ Enemy Player ] -> [ Enemy PlayerBlood ]
+
+(Forecast 1: plane -> plane)
+late Right [MovingPlayerPH] [ Enemy Plane | Plane no EnemyStopper ] -> [MovingPlayerPH] [ Enemy ForecastR Plane | Plane ]
+late Left [MovingPlayerPH] [ Enemy Plane | Plane no EnemyStopper ] -> [MovingPlayerPH] [ Enemy ForecastL Plane | Plane ]
+late Up [MovingPlayerPH] [ Enemy Plane | Plane no EnemyStopper ] -> [MovingPlayerPH] [ Enemy ForecastU Plane | Plane ]
+late Down [MovingPlayerPH] [ Enemy Plane | Plane no EnemyStopper ] -> [MovingPlayerPH] [ Enemy ForecastD Plane | Plane ]
+
+(Forecast 2: no plane -> no plane)
+late Right [MovingPlayerPH] [ Enemy no Plane | no Plane no EnemyStopper ] -> [MovingPlayerPH] [ Enemy ForecastR | ]
+late Left [MovingPlayerPH] [ Enemy no Plane | no Plane no EnemyStopper ] -> [MovingPlayerPH] [ Enemy ForecastL | ]
+late Up [MovingPlayerPH] [ Enemy no Plane | no Plane no EnemyStopper ] -> [MovingPlayerPH] [ Enemy ForecastU | ]
+late Down [MovingPlayerPH] [ Enemy no Plane | no Plane no EnemyStopper ] -> [MovingPlayerPH] [ Enemy ForecastD | ]
+
+(Forecast 3: plane -> no plane)
+late Right [MovingPlayerPH] [ Enemy Plane BrokenWallR | no Plane no EnemyStopper ] -> [MovingPlayerPH] [ Enemy ForecastR Plane BrokenWallR | ]
+late Left [MovingPlayerPH] [ Enemy Plane BrokenWallL | no Plane no EnemyStopper ] -> [MovingPlayerPH] [ Enemy ForecastL Plane BrokenWallL | ]
+late Up [MovingPlayerPH] [ Enemy Plane BrokenWallU | no Plane no EnemyStopper ] -> [MovingPlayerPH] [ Enemy ForecastU Plane BrokenWallU | ]
+late Down [MovingPlayerPH] [ Enemy Plane BrokenWallD | no Plane no EnemyStopper ] -> [MovingPlayerPH] [ Enemy ForecastD Plane BrokenWallD | ]
+
+(Forecast 4: no plane -> plane)
+late Right [MovingPlayerPH] [ Enemy no Plane | BrokenWallL Plane no EnemyStopper ] -> [MovingPlayerPH] [ Enemy ForecastR | BrokenWallL Plane ]
+late Left [MovingPlayerPH] [ Enemy no Plane | BrokenWallR Plane no EnemyStopper ] -> [MovingPlayerPH] [ Enemy ForecastL | BrokenWallR Plane ]
+late Up [MovingPlayerPH] [ Enemy no Plane | BrokenWallD Plane no EnemyStopper ] -> [MovingPlayerPH] [ Enemy ForecastU | BrokenWallD Plane ]
+late Down [MovingPlayerPH] [ Enemy no Plane | BrokenWallU Plane no EnemyStopper ] -> [MovingPlayerPH] [ Enemy ForecastD | BrokenWallU Plane ]
+
+late [ Forecast PlayerBlood ] -> [ PlayerBlood ] (if player already dead, do not move)
+
+(late [ Forecast TempRigid ] -> [ TempRigid ]) (if being pushed, do not move)
+
+late Left [ EnemyLR ForecastL no ForecastR | no Enemy ] -> [ ForecastL | EnemyL ]
+late Right [ EnemyLR ForecastR no ForecastL | no Enemy ] -> [ ForecastR | EnemyR ]
+late Left [ EnemyL ForecastL ForecastR | no Enemy ] -> [ ForecastL ForecastR | EnemyL ]
+late Right [ EnemyR ForecastL ForecastR | no Enemy ] -> [ ForecastL ForecastR | EnemyR ]
+
+late Up [ EnemyUD ForecastU no ForecastD | no Enemy ] -> [ ForecastU | EnemyU ]
+late Down [ EnemyUD ForecastD no ForecastU | no Enemy ] -> [ ForecastD | EnemyD ]
+late Up [ EnemyU ForecastU ForecastD | no Enemy ] -> [ ForecastU ForecastD | EnemyU ]
+late Down [ EnemyD ForecastU ForecastD | no Enemy ] -> [ ForecastU ForecastD | EnemyD ]
+
+late [ Forecast ] -> [ ]
+
+(late kill)
+late [ Enemy Player ] -> [ Enemy PlayerBlood ]
+
+(enemy fall into hole initiative)
+late [ Enemy Hole no Plane ] -> [ OuterFilledHole ]
+late [ Enemy Hole Plane ] -> [ InnerFilledHole Plane ]
+
+(remove temp rigids)
+late [ TempRigid ] -> [ ] (comment this on debug)
+
+
+(bomb explosion)
+
+late [ Explosion Player ] -> [ Explosion PlayerBlood ]
+late [ Explosion Plane | Player Plane ] -> [ Explosion Plane | Plane PlayerBlood ]
+late [ Explosion no Plane | Player no Plane ] -> [ Explosion | PlayerBlood ]
+late [ Explosion Plane | DestroyableObjectOnPlane Plane ] -> [ Explosion Plane | Plane ]
+late [ Explosion no Plane | DestroyableObjectOnPlane no Plane ] -> [ Explosion | ]
+late Up [ Explosion no Plane | MovablePlane no MovableBrokenWallD ] -> [ Explosion | MovablePlane MovableBrokenWallD ]
+late Up [ Explosion no Plane | FixedPlane no FixedBrokenWallD ] -> [ Explosion | FixedPlane FixedBrokenWallD ]
+late Down [ Explosion no Plane | MovablePlane no MovableBrokenWallU ] -> [ Explosion | MovablePlane MovableBrokenWallU ]
+late Down [ Explosion no Plane | FixedPlane no FixedBrokenWallU ] -> [ Explosion | FixedPlane FixedBrokenWallU ]
+late Left [ Explosion no Plane | MovablePlane no MovableBrokenWallR ] -> [ Explosion | MovablePlane MovableBrokenWallR ]
+late Left [ Explosion no Plane | FixedPlane no FixedBrokenWallR ] -> [ Explosion | FixedPlane FixedBrokenWallR ]
+late Right [ Explosion no Plane | MovablePlane no MovableBrokenWallL ] -> [ Explosion | MovablePlane MovableBrokenWallL ]
+late Right [ Explosion no Plane | FixedPlane no FixedBrokenWallL ] -> [ Explosion | FixedPlane FixedBrokenWallL ]
+
+late [ Explosion ] -> [ ]
+
+(key aquire)
+late [ PlayerWithoutKey Key ] -> [ PlayerWithKey ]
+
+(end gameplay)
+late [ MovingPlayerPH ] -> [ ]
+
+(decoration)
+
+late [ Decoration ] -> [ ]
+
+late Right [ Plane | Plane ] -> [ Plane DecorationR | DecorationL Plane ]
+late Down [ Plane | Plane ] -> [ Plane DecorationD | DecorationU Plane ]
+late Right [ DecorationR DecorationD | DecorationL DecorationD ] -> [ DecorationR DecorationD DecorationRD | DecorationL DecorationD DecorationLD ]
+late Right [ DecorationR DecorationU | DecorationL DecorationU ] -> [ DecorationR DecorationU DecorationRU | DecorationL DecorationU DecorationLU ]
+
+
+==============
+WINCONDITIONS
+==============
+
+some Player
+all Player on Flag
+
+=======
+LEVELS
+=======
+
+message level 1 - capture the flag
+
+......
+&OOOO$
+......
+
+message level 2 - meet the crate
+
+&OO@OO
+....$.
+
+message level 3 - avoid broken tiles
+
+&%OOO%
+OOO%O$
+
+message level 4 - out of the tile
+
+.....v.
+.&O%OO$
+.^.....
+
+message level 5 - push that tile
+
+.......
+.&O%OO$
+.^.....
+
+message level 6 - more than one to push
+
+......
+&O@$@O
+^...^.
+
+message level 7 - detour
+
+vOOO...
+O&O@O$O
+.......
+
+message level 8 - grey means stationary
+
+.....x.v....
+....QQQO....
+...v.x......
+.7QO.x..QQ$.
+.....x......
+
+message level 9 - meet the little guy
+
+.OO}O.}OOO..
+&OOOOOO..O..
+.OOOO.O.OO{O
+......O..O..
+.........$..
+
+message level 10 - avoid the little guy
+
+...........
+...QQQQ4...
+.v..O......
+.QQ8QQ.....
+..Q.....QQQ
+QQQ8QQQQQ2Q
+........Q7Q
+
+message level 11 - asynchronous
+
+...........
+>7OQQ9Q9Q4.
+.....Q.Q...
+.....Q.Q...
+...........
+...........
+
+message level 12 - a non-picky hole
+
+&O@O#O
+.....O
+OOO#OO
+O#OOO#
+^.....
+..O.v.
+{O@OO#
+....xO
+....x$
+
+message level 13 - push everything into the hole
+
+&<O.H.$H.v
+..%.H.$H.O
+..O.H.$H..
+
+message level 14 - catch that guy
+
+.....9....
+.....Q....
+.....Q....
+.....^....
+OO<.......
+.......>7.
+........3.
+........4.
+
+message level 15 - key rusher
+
+{O+OOOOOOOO:{O$
+...O.O.........
+...O.O.........
+...O.O.........
+...OOO.....O@O.
+...O@O:OOOOO@O+
+...OOO..:..O@O.
+........O......
+...&OOOOOOO+...
+
+message challenge 1 - slow way
+
+OOO$
+O.@.
+HO..
+O.@.
+.@..
+O.O.
+O&<.
+
+message challenge 2 - push the hole
+
+43;QQQQ8QQ.
+...Q....Q..
+...2....Q..
+...Q....Q..
+...#....9..
+...QQ2Q#QQ#
+...Q....Q..
+#8QQQ......
+..Q....;3-.
+..7........
+..^........
+
+message challenge 3 - slime party
+
+.x..x
+.O$O.
+{^@^{
+.QO8.
+.O.O@
+.^&<.
+..x..
+
+message Thank you for playing the demo!
+
+message --legacy levels--
+
+message challenge ? - push the hole (extended version)
+
+43;QQQQ8QQ.
+...Q....Q..
+...2....Q..
+...#....9..
+...Q2Q#QQQ#
+...Q....Q..
+#8QQQ......
+..Q....;3-.
+..7........
+..^........
+
+message WOO!
+
+(
+message mechanism test level
+
+.....v.
+.&%@!O$
+.^.....
+...B*..
+.QOQO<.
+.^...].
+.~.v...
+.H.O#..
+..[....
+
+message level 15 - key rusher (origin)
+
+{O+OOOOOOOO:{O$
+...O.O.........
+...O.O.........
+...O.O.........
+...O{O.....O@O.
+...OOO:OOOOO@O+
+.+.OOO..O..O@O.
+.O......O...O..
+.OO&OOO:OOOOO..
+
+message failed level - the elevator
+
+...QQ.O&#$
+...xx..^..
+..OQQO....
+..OxxO....
+..OQQO....
+..OxxO....
+..OQ8O....
+..........
+
+message level 8
+
+...v..
+P..O..
+.xxO..
+.OOTO.
+$.....
+
+message level 9
+
+......
+P.O...
+..Ok..
+.O.*O.
+$..x^.
+
+message level 10
+
+vP...
+OgOx.
+O@@$O
+.^.O.
+..>O.
+
+message misc level
+
+.O$...
+.*O...
+.O$<*.
+*>O..P
+.OO<..
+......
+)

@@ -1,0 +1,598 @@
+title Flying Kick
+author Aaron Steed
+homepage www.robotacid.com
+
+key_repeat_interval 0.23
+again_interval 0.1
+noaction
+background_color Black
+text_color Yellow
+
+========
+OBJECTS
+========
+
+Background
+#e5b679
+
+WallTop 
+#d32112 #820e00 #d34900 #9da3c7 
+22220
+21110
+01111
+11111
+11111
+
+WallBase
+#820e00
+
+BreakWall
+#ffd600 #ffa30d #b76800 #979594 
+10101
+00002
+10101
+00002
+12121
+
+BreakDebris1
+#ffd600 #ffa30d #b76800 #979594 
+10101
+0.0.2
+10.01
+0.0.2
+12121
+
+BreakDebris2
+#ffd600 #ffa30d #b76800 #979594 
+.0.0.
+0.0.2
+.0.0.
+0.0.2
+.2.2.
+
+BreakDebris3
+#ffd600 #ffa30d #b76800 #979594 
+.0.0.
+0...2
+.....
+0...2
+.2.2.
+
+SpikeUp
+#d32112 #820e00 #ffffff #9da3c7 
+..3..
+..2..
+.223.
+.223.
+10201
+
+Mine
+#d32112 #878787 #ffffff #9da3c7 
+..2..
+.223.
+22231
+.331.
+..1..
+
+Blood1
+#d21d00 #ffe02c #ffc700 #c87700 
+0.0.0
+.000.
+00000
+.000.
+0.0.0
+
+Blood2
+#d21d00 #ffe02c #ffc700 #c87700 
+.....
+.0.0.
+..0..
+.0.0.
+.....
+
+Blood3
+#d21d00 #ffe02c #ffc700 #c87700 
+.....
+.....
+..0..
+.....
+.....
+
+Blood4
+#d21d00 #ffe02c #ffc700 #c87700 
+.....
+.....
+.....
+.....
+.....
+
+PlayerGround
+#000000 #e72119 #ffffff #ff0000 
+.000.
+.202.
+.000.
+.111.
+.0.0.
+
+PlayerFall
+#000000 #e72119 #ffffff #ff0000 
+.000.
+.202.
+.000.
+01110
+.....
+
+PlayerJumpStart
+#000000 #e72119 #ffffff #ff0000 
+.000.
+.202.
+.111.
+.0.0.
+.....
+
+PlayerJump
+#000000 #e72119 #ffffff #ff0000 
+.000.
+.202.
+.111.
+.0.0.
+.....
+
+PlayerKickRight
+#000000 #e72119 #ffffff #ff0000 
+000..
+002..
+11100
+.00..
+.....
+
+PlayerKickRightBack
+#000000 #e72119 #ffffff #ff0000  
+.000.
+.200.
+0111.
+.0...
+.....
+
+PlayerKickRightBackWait
+#000000 #e72119 #ffffff #ff0000  
+.000.
+.200.
+0111.
+.0...
+.....
+
+PlayerKickLeft
+ #000000 #e72119 #ffffff #ff0000 
+..000
+..200
+00111
+..00.
+.....
+
+PlayerKickLeftBack
+#000000 #e72119 #ffffff #ff0000 
+.000.
+.002.
+.1110
+...0.
+.....
+
+PlayerKickLeftBackWait
+#000000 #e72119 #ffffff #ff0000 
+.000.
+.002.
+.1110
+...0.
+.....
+
+CrateGround
+#d32112 #ffa30d #ff8126 #c93700 
+.223.
+21123
+21123
+32233
+.333.
+
+CrateFall
+#d32112 #ffa30d #ff8126 #c93700
+.223.
+21123
+21123
+32233
+.333.
+
+CrateLeft
+#d32112 #ffe02c #ffc700 #c87700 
+.223.
+21123
+21123
+32233
+.333.
+
+CrateRight
+#d32112 #ffe02c #ffc700 #c87700 
+.223.
+21123
+21123
+32233
+.333.
+
+Exit
+#000000 #ffe02c #ffc700 #c87700 
+.000.
+00000
+00010
+00000
+00000
+
+Switch
+#ffd600 #ffa30d #a62514 #c93700 
+.....
+.....
+.001.
+.001.
+20012
+
+GateClosed
+#ffd600 #ffa30d #a62514 #c93700 
+33333
+30012
+31.12
+21112
+22222
+
+GateOpen
+#ffd600 #ffa30d #a62514 #c93700 
+3.3.3
+.....
+3...2
+.....
+2.2.2
+
+GateClosing
+Pink
+
+
+
+=======
+LEGEND
+=======
+
+. = Background
+# = WallBase
+h = WallTop
+@ = PlayerGround
+o = CrateGround
+a = SpikeUp
+e = Exit
+f = Switch
+g = GateOpen
+j = Mine
+k = BreakWall
+
+Player = PlayerGround or PlayerJump or PlayerKickLeft or PlayerKickRight or PlayerKickLeftBack or PlayerKickRightBack or PlayerKickLeftBackWait or PlayerKickRightBackWait or PlayerFall or PlayerJumpStart
+Wall = WallTop or WallBase
+Gate = GateOpen or GateClosed
+Crate = CrateGround or CrateFall or CrateRight or CrateLeft
+Item = Player or Wall or Crate or GateClosed or BreakWall
+Spike = SpikeUp or Mine
+Blood = Blood1 or Blood2 or Blood3 or Blood4
+Debris = BreakDebris1 or BreakDebris2 or BreakDebris3
+
+=======
+SOUNDS
+=======
+
+sfx0 8545502 (kick crate)
+sfx1 25968909 (jump)
+sfx2 2437309 (kick)
+sfx3 31029704 (kick wall)
+sfx4 31651909 (death)
+sfx5 83279102 (gate)
+Crate MOVE 29447307
+sfx6 42954502 (break wall)
+
+
+================
+COLLISIONLAYERS
+================
+
+GateClosing
+Background
+Spike, Exit, Switch, GateOpen
+Player, Wall, Crate, GateClosed, BreakWall
+Blood, Debris
+
+======
+RULES
+======
+
+(AGAIN AGAIN AGAIN!!!)
+
+[Blood4] -> Restart
+
+[BreakDebris3] -> []
+[BreakDebris2] -> [BreakDebris3] again
+[BreakDebris1] -> [BreakDebris2] again
+
+(PLAYER)
+
+(input)
+right [right PlayerJump] -> [PlayerKickRightBackWait] sfx2
+left [left PlayerJump] -> [PlayerKickLeftBackWait] sfx2
+up [up PlayerJump] -> [PlayerJump]
+down [down PlayerJump] -> [PlayerFall] again
+
+(jump)
+up [PlayerJumpStart | No Item] -> [ | PlayerJump]
+[PlayerJumpStart] -> [PlayerJump]
+random up [Up PlayerGround | No Item] -> [ | PlayerJumpStart] again sfx1
+
+(falling)
+random down [PlayerFall | No Item] -> [ | PlayerFall] again
+random down [PlayerFall | Item] -> [PlayerGround | Item]
+late down [PlayerGround | No Item] -> [PlayerFall | ] again
+
+(flying kick)
+right [PlayerKickRight | CrateGround] -> [PlayerKickRight | CrateRight] sfx0
+right [PlayerKickRight | BreakWall] -> [PlayerFall | BreakDebris1] again sfx6
+right [PlayerKickRight | Item] -> [PlayerFall | Item] again sfx3
+random right [PlayerKickRight | No Item] -> [ | PlayerKickRight] again
+[PlayerKickRightBack] -> [PlayerKickRight] again
+[PlayerKickRightBackWait] -> [PlayerKickRightBack] again
+left [PlayerKickLeft | CrateGround] -> [PlayerKickLeft | CrateLeft] sfx0
+left [PlayerKickLeft | BreakWall] -> [PlayerFall | BreakDebris1] again sfx6
+left [PlayerKickLeft | Item] -> [PlayerFall | Item] again sfx3
+random left [PlayerKickLeft | No Item] -> [ | PlayerKickLeft] again
+[PlayerKickLeftBack] -> [PlayerKickLeft] again
+[PlayerKickLeftBackWait] -> [PlayerKickLeftBack] again
+
+(CRATES)
+
+(push)
+horizontal [> Player | Crate] -> [> Player | > Crate]
+
+(falling)
+random down[CrateFall | No Item] -> [ | CrateFall] again
+random down [CrateFall | Item] -> [CrateGround | Item]
+late down [CrateGround | No Item] -> [CrateFall | ] again
+
+(flying)
+right [CrateRight | CrateGround] -> [CrateFall | CrateRight] again
+right [CrateRight | BreakWall] -> [CrateFall | BreakDebris1] again sfx6
+right [CrateRight | Item] -> [CrateFall | Item] again
+random right [CrateRight | No Item] -> [ | CrateRight] again
+left [CrateLeft | CrateGround] -> [CrateFall | CrateLeft] again
+left [CrateLeft | BreakWall] -> [CrateFall | BreakDebris1] again sfx6
+left [CrateLeft | Item] -> [CrateFall | Item] again
+random left [CrateLeft | No Item] -> [ | CrateLeft] again
+
+(SPIKES + DEATH)
+[Blood3|] -> [Blood3 | Blood4]
+[Blood2|] -> [Blood2 | Blood3] again
+[Blood1|] -> [Blood1 | Blood2] again
+late [Player Spike] -> [Blood1 Spike] again sfx4
+
+(GATES)
+late [Item Switch] [GateOpen] -> [Item Switch] [GateOpen GateClosing]
+late [No Item Switch] [GateClosing] -> [Switch] []
+late [GateClosing GateOpen] -> [GateClosed] sfx5
+late [No Item Switch] [GateClosed] -> [Switch] [GateOpen] sfx5
+
+==============
+WINCONDITIONS
+==============
+
+Some Player on Exit  
+
+=======     
+LEVELS
+=======
+
+MESSAGE AIIIYYAAAARRGGHH!!
+
+#......#
+#.e....#
+#hhh...#
+#......#
+#....hh#
+#......#
+#hh....#
+#......#
+#....hh#
+#.@....#
+#hhhhhh#
+
+#............#
+#............#
+#............#
+#..........e.#
+#.......o.hhh#
+#.......o.####
+#.......o.####
+#.......o.####
+#......hhh####
+#......#######
+#..o.@.#######
+#hhhhhh#######
+
+#...........#
+#...........#
+#.........e.#
+#........hhh#
+#...........#
+#a.o........#
+#hhhh.......#
+#...........#
+#.......oaa.#
+#......hhhhh#
+#.@.aa.######
+#hhhhhh######
+
+#.......#
+#.......#
+#.e.....#
+#hhh....#
+#.......#
+#.....gg#
+#.......#
+#hh..o..#
+#....o..#
+#..hhhhh#
+#...f.@.#
+#hhhhhhh#
+
+#.......#
+#.......#
+#.e.....#
+#hhh....#
+#.......#
+#....kkk#
+#....kkk#
+#....kkk#
+#kkk....#
+#kkk....#
+#kkk..@.#
+#hhhhhhh#
+
+#............#
+#............#
+#.......e....#
+#.......h....#
+#....o.....o.#
+#....o.....o.#
+#....o.....o.#
+#...hhh...hhh#
+#aaa###.@.####
+#hhh###hhh####
+
+#.........#
+#.......e.#
+#......hhh#
+#.........#
+#hh.......#
+#.........#
+#h.ooo....#
+#..hhh..gg#
+#.......h.#
+#hhh.hhh#.#
+#.@.f.....#
+###########
+
+#..................#
+#..................#
+#..................#
+#.e................#
+#hhh.......o...o...#
+####.......o...o...#
+####.......o...o...#
+####gg.....o...o...#
+####.......o...o...#
+####hhh....o...o...#
+####....f..o.@.o...#
+####hhhhhhhhhhhhhhh#
+
+#.......#
+#...e...#
+#...h...#
+#...o...#
+#..ooo..#
+#..ooo..#
+#..hhh..#
+#.......#
+#hh.@.hh#
+###hhh###
+
+#...........#
+#...........#
+#.e.........#
+#hhh........#
+##..........#
+##.ooo..ooo.#
+##.kkk..kkk.#
+##..........#
+##.....@....#
+##hhhhhhhhhh#
+
+#...........#
+#..o..e..o..#
+#..o..h..o..#
+#..o.....o..#
+#..o.....o..#
+#..o.....o..#
+#.hhhhhhhhh.#
+#...........#
+#hh..o......#
+##...o...o..#
+##...o...o..#
+##...o...h..#
+##.@.o..aaa.#
+##hhhhhhhhhh#
+
+h.............h
+h.............h
+h...........e.h
+h..........hhhh
+h......g......h
+h.....ggg.....h
+h..ooo...ooo..h
+h..kkk...kkk..h
+h.............h
+h...f..@..f...h
+hhhhhhhhhhhhhhh
+
+#...............#
+#.............e.#
+#.....o...o..hhh#
+#.....o...o.....#
+#.....o...o.....#
+#gg...o...o....h#
+#.....o...o.....#
+#..@..o...o....f#
+#hhhhhhhhhhh..hh#
+###########aaaa##
+#################
+
+#...............#
+#...............#
+#...............#
+#.............e.#
+#............hhh#
+#.......g.......#
+#......ggg......#
+#...............#
+#..ooo.....ooo..#
+#..hhh.....hhh..#
+#...f...@...f...#
+#hhhhhhhhhhhhhhh#
+
+#...............#
+#............e..#
+#...........hhh.#
+#...............#
+#....o.o.o.o....#
+#....h.h.h.h....#
+#....ooo.ooo....#
+#h...hhh.hhh....#
+##............@.#
+##hh...aaa...hhh#
+#################
+
+#..........#
+#..........#
+#..........#
+#...o....e.#
+#...o...hhh#
+#...o......#
+#...o......#
+#kkkk.kkkkk#
+#...k.k....#
+#.@.k.k....#
+#hhhhhhhhhh#
+
+MESSAGE Right, that's my training done for the day...
+
+MESSAGE ...off to the pub I go.
+
+

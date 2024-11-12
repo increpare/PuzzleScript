@@ -1,0 +1,2497 @@
+title Entanglement - Chapter One
+author Richard Locke
+homepage www.richardlocke.co.uk
+background_color #9fd1ff
+text_color #0084ff
+again_interval 0.5
+realtime_interval 0.05
+key_repeat_interval 0.15
+norepeat_action
+run_rules_on_level_start
+flickscreen 24x14
+(throttle_movement)
+(verbose_logging)
+(debug)
+
+========
+OBJECTS
+========
+
+player
+#8484ff
+.....
+.000.
+.0.0.
+.000.
+.....
+
+(playerl
+#8484ff
+.....
+0000.
+.0.0.
+0000.
+.....
+
+playerr
+#8484ff
+.....
+.0000
+.0.0.
+.0000
+.....
+
+playeru
+#8484ff
+.0.0.
+.000.
+.0.0.
+.000.
+.....
+
+playerd
+#8484ff
+.....
+.000.
+.0.0.
+.000.
+.0.0.)
+
+void
+transparent
+
+(Somewhere to put logic-related objects)
+logic
+transparent
+
+(Indication that the player has pressed a button)
+go
+transparent
+
+(Propagates down fuses to activate them)
+fusego
+transparent
+
+(Propagates down wires to activate them)
+wirego
+transparent
+
+(Indication that this is a realtime move)
+rt
+transparent
+
+(Indication that this space has already animated this frame)
+an
+transparent
+
+(Can't push arrows through these)
+nopush
+transparent
+
+(End of level)
+end
+transparent
+
+(Split quarks)
+split
+transparent
+
+dosplit
+transparent
+
+(Entangled pairs)
+redirect
+transparent
+
+redirected
+transparent
+
+e0
+transparent
+
+e1
+transparent
+
+e2
+transparent
+
+e3
+transparent
+
+e4
+transparent
+
+(frame markers)
+f1
+transparent
+
+f2
+transparent
+
+f3
+transparent
+
+f4
+transparent
+
+f5
+transparent
+
+f6
+transparent
+
+f7
+transparent
+
+f8
+transparent
+
+f9
+transparent
+
+f10
+transparent
+
+floor
+#c0e1ff
+
+(Quark frames)
+quarkl
+#e70000
+.....
+.....
+..0..
+.....
+.....
+
+quarkr
+#e70000
+.....
+.....
+..0..
+.....
+.....
+
+quarku
+#e70000
+.....
+.....
+..0..
+.....
+.....
+
+quarkd
+#e70000
+.....
+.....
+..0..
+.....
+.....
+
+quarkr1
+#e70000
+.....
+.....
+...0.
+.....
+.....
+
+quarkr2
+#e70000
+.....
+.....
+....0
+.....
+.....
+
+quarkl1
+#e70000
+.....
+.....
+.0...
+.....
+.....
+
+quarkl2
+#e70000
+.....
+.....
+0....
+.....
+.....
+
+quarku1
+#e70000
+.....
+..0..
+.....
+.....
+.....
+
+quarku2
+#e70000
+..0..
+.....
+.....
+.....
+.....
+
+quarkd1
+#e70000
+.....
+.....
+.....
+..0..
+.....
+
+quarkd2
+#e70000
+.....
+.....
+.....
+.....
+..0..
+
+(First quark trail frames)
+qfade1
+#da6971
+.....
+.....
+..0..
+.....
+.....
+
+qfade1r1
+#da6971
+.....
+.....
+...0.
+.....
+.....
+
+qfade1r2
+#da6971
+.....
+.....
+....0
+.....
+.....
+
+qfade1l1
+#da6971
+.....
+.....
+.0...
+.....
+.....
+
+qfade1l2
+#da6971
+.....
+.....
+0....
+.....
+.....
+
+qfade1u1
+#da6971
+.....
+..0..
+.....
+.....
+.....
+
+qfade1u2
+#da6971
+..0..
+.....
+.....
+.....
+.....
+
+qfade1d1
+#da6971
+.....
+.....
+.....
+..0..
+.....
+
+qfade1d2
+#da6971
+.....
+.....
+.....
+.....
+..0..
+
+(Second quark trail frames)
+qfade2
+#daa9ad
+.....
+.....
+..0..
+.....
+.....
+
+qfade2r1
+#daa9ad
+.....
+.....
+...0.
+.....
+.....
+
+qfade2r2
+#daa9ad
+.....
+.....
+....0
+.....
+.....
+
+qfade2l1
+#daa9ad
+.....
+.....
+.0...
+.....
+.....
+
+qfade2l2
+#daa9ad
+.....
+.....
+0....
+.....
+.....
+
+qfade2u1
+#daa9ad
+.....
+..0..
+.....
+.....
+.....
+
+qfade2u2
+#daa9ad
+..0..
+.....
+.....
+.....
+.....
+
+qfade2d1
+#daa9ad
+.....
+.....
+.....
+..0..
+.....
+
+qfade2d2
+#daa9ad
+.....
+.....
+.....
+.....
+..0..
+
+(Quark movement)
+ql
+transparent
+
+qr
+transparent
+
+qu
+transparent
+
+qd
+transparent
+
+turnl
+transparent
+
+turnr
+transparent
+
+(Arrows)
+lstart
+transparent
+
+rstart
+transparent
+
+ustart
+transparent
+
+dstart
+transparent
+
+arrowmount
+#6cb8ff
+
+uarrow
+#0084ff
+..0..
+..0..
+.000.
+.....
+.....
+
+darrow
+#0084ff
+.....
+.....
+.000.
+..0..
+..0..
+
+larrow
+#0084ff
+.....
+..0..
+000..
+..0..
+.....
+
+rarrow
+#0084ff
+.....
+..0..
+..000
+..0..
+.....
+
+lwall
+#6cb8ff
+....0
+....0
+....0
+....0
+....0
+
+rwall
+#6cb8ff
+0....
+0....
+0....
+0....
+0....
+
+twall
+#6cb8ff
+.....
+.....
+.....
+.....
+00000
+
+bwall
+#6cb8ff
+00000
+.....
+.....
+.....
+.....
+
+tlwall
+#6cb8ff
+.....
+.....
+.....
+.....
+....0
+
+trwall
+#6cb8ff
+.....
+.....
+.....
+.....
+0....
+
+blwall
+#6cb8ff
+....0
+.....
+.....
+.....
+.....
+
+brwall
+#6cb8ff
+0....
+.....
+.....
+.....
+.....
+
+(Emitters)
+lfire
+#0084ff
+.....
+...00
+..000
+...00
+.....
+
+rfire
+#0084ff
+.....
+00...
+000..
+00...
+.....
+
+ufire
+#0084ff
+.....
+.....
+..0..
+.000.
+.000.
+
+dfire
+#0084ff
+.000.
+.000.
+..0..
+.....
+.....
+
+(Receivers)
+lsink
+#0084ff #6cb8ff
+11111
+10000
+10...
+10000
+11111
+
+rsink
+#0084ff #6cb8ff
+11111
+00001
+...01
+00001
+11111
+
+usink
+#0084ff #6cb8ff
+11111
+10001
+10.01
+10.01
+10.01
+
+dsink
+#0084ff #6cb8ff
+10.01
+10.01
+10.01
+10001
+11111
+
+(Activated sinks)
+lsinka
+#ffe8cf #6cb8ff
+11111
+10000
+10...
+10000
+11111
+
+rsinka
+#ffe8cf #6cb8ff
+11111
+00001
+...01
+00001
+11111
+
+usinka
+#ffe8cf #6cb8ff
+11111
+10001
+10.01
+10.01
+10.01
+
+dsinka
+#ffe8cf #6cb8ff
+10.01
+10.01
+10.01
+10001
+11111
+
+(Buttons)
+button
+#6cb8ff
+00000
+0...0
+0.0.0
+0...0
+00000
+
+reset
+#6cb8ff
+.....
+.000.
+.00..
+.0.0.
+.....
+
+cleanse
+transparent
+
+bounds
+#9fd1ff
+.....
+.0.0.
+..0..
+.0.0.
+.....
+
+(Fuses)
+hfuse
+#9fd1ff
+.....
+.....
+.000.
+.....
+.....
+
+vfuse
+#9fd1ff
+.....
+..0..
+..0..
+..0..
+.....
+
+rufuse
+#9fd1ff
+.....
+..0..
+.00..
+.....
+.....
+
+rdfuse
+#9fd1ff
+.....
+.....
+.00..
+..0..
+.....
+
+lufuse
+#9fd1ff
+.....
+..0..
+..00.
+.....
+.....
+
+ldfuse
+#9fd1ff
+.....
+.....
+..00.
+..0..
+.....
+
+(Lit fuses)
+hfusea
+#ffe8cf
+.....
+.....
+.000.
+.....
+.....
+
+vfusea
+#ffe8cf
+.....
+..0..
+..0..
+..0..
+.....
+
+rufusea
+#ffe8cf
+.....
+..0..
+.00..
+.....
+.....
+
+rdfusea
+#ffe8cf
+.....
+.....
+.00..
+..0..
+.....
+
+lufusea
+#ffe8cf
+.....
+..0..
+..00.
+.....
+.....
+
+ldfusea
+#ffe8cf
+.....
+.....
+..00.
+..0..
+.....
+
+(Doors)
+ldoor
+#0084ff
+.....
+00000
+0000.
+00000
+.....
+
+rdoor
+#0084ff
+.....
+00000
+.0000
+00000
+.....
+
+udoor
+#0084ff
+.000.
+.000.
+.000.
+.000.
+.0.0.
+
+ddoor
+#0084ff
+.0.0.
+.000.
+.000.
+.000.
+.000.
+
+(Door logic)
+solved
+transparent
+
+open
+transparent
+
+wedged
+transparent
+
+(Door wires)
+iwire
+transparent
+
+endwire
+transparent
+
+hwire
+#c0e1ff
+.....
+.....
+.000.
+.....
+.....
+
+vwire
+#c0e1ff
+.....
+..0..
+..0..
+..0..
+.....
+
+ruwire
+#c0e1ff
+.....
+..0..
+.00..
+.....
+.....
+
+rdwire
+#c0e1ff
+.....
+.....
+.00..
+..0..
+.....
+
+luwire
+#c0e1ff
+.....
+..0..
+..00.
+.....
+.....
+
+ldwire
+#c0e1ff
+.....
+.....
+..00.
+..0..
+.....
+
+(Active wires)
+iwirea
+transparent
+
+endwirea
+transparent
+
+hwirea
+#ffe8cf
+.....
+.....
+.000.
+.....
+.....
+
+vwirea
+#ffe8cf
+.....
+..0..
+..0..
+..0..
+.....
+
+ruwirea
+#ffe8cf
+.....
+..0..
+.00..
+.....
+.....
+
+rdwirea
+#ffe8cf
+.....
+.....
+.00..
+..0..
+.....
+
+luwirea
+#ffe8cf
+.....
+..0..
+..00.
+.....
+.....
+
+ldwirea
+#ffe8cf
+.....
+.....
+..00.
+..0..
+.....
+
+(Box blocker)
+ridge
+#6cb8ff
+.....
+.0.0.
+.....
+.0.0.
+.....
+
+(Timers)
+timer
+#c0e1ff
+.....
+.000.
+.000.
+.000.
+.....
+
+timera
+#ffe8cf
+.....
+.000.
+.000.
+.000.
+.....
+
+timergo
+transparent
+
+(Slots)
+hslot
+#6cb8ff #c0e1ff
+.....
+00000
+11111
+00000
+.....
+
+vslot
+#6cb8ff #c0e1ff
+.010.
+.010.
+.010.
+.010.
+.010.
+
+(Force-fields)
+lgen
+#0084ff
+000..
+00...
+00...
+00...
+000..
+
+rgen
+#0084ff
+..000
+...00
+...00
+...00
+..000
+
+ugen
+#0084ff
+00000
+00000
+0...0
+.....
+.....
+
+dgen
+#0084ff
+.....
+.....
+0...0
+00000
+00000
+
+hfield1
+#6cb8ff
+.....
+0.0.0
+.0.0.
+0.0.0
+.....
+
+hfield2
+#6cb8ff
+.....
+.0.0.
+0.0.0
+.0.0.
+.....
+
+vfield1
+#6cb8ff
+.0.0.
+..0..
+.0.0.
+..0..
+.0.0.
+
+vfield2
+#6cb8ff
+..0..
+.0.0.
+..0..
+.0.0.
+..0..
+
+off
+transparent
+
+(Dopplegangers)
+mimic
+#ff5287
+.....
+.000.
+.0.0.
+.000.
+.....
+
+oppos
+#ffff87
+.....
+.000.
+.0.0.
+.000.
+.....
+
+cloner
+#6cb8ff
+.....
+..0..
+.000.
+..0..
+.....
+
+mirror
+#6cb8ff
+000..
+0.0..
+00000
+..0.0
+..000
+
+(Vactubes)
+tube
+#6cb8ff
+
+vacprod
+transparent
+
+vacdest
+transparent
+
+spawn
+transparent
+
+lauto
+#0084ff
+.....
+..00.
+.000.
+..00.
+.....
+
+rauto
+#0084ff
+.....
+.00..
+.000.
+.00..
+.....
+
+uauto
+#0084ff
+.....
+..0..
+.000.
+.000.
+.....
+
+dauto
+#0084ff
+.....
+.000.
+.000.
+..0..
+.....
+
+al
+transparent
+
+ar
+transparent
+
+au
+transparent
+
+ad
+transparent
+
+autofire
+transparent
+
+(brain)
+brain00
+#ff447a #ff91a4 #ff7cce
+01101
+02100
+01111
+00121
+00000
+
+brain10
+#ff447a #ff91a4
+00111
+00000
+11100
+11110
+00011
+
+brain20
+#ff91a4 #ff7cce #ff447a
+00100
+00002
+20222
+22200
+22001
+
+brain30
+#ff91a4 #ff447a #ff7cce
+00000
+11110
+11111
+00011
+22201
+
+brain01
+#ff91a4 #ff447a
+01000
+00001
+00011
+11000
+11100
+
+brain11
+#ff91a4 #ff447a
+01100
+00100
+01100
+01100
+11001
+
+brain21
+#ff447a #ff91a4 #ff7cce
+00121
+01111
+01110
+01100
+01000
+
+brain31
+#ff91a4 #ff447a #ff7cce
+00000
+11111
+11110
+10000
+10002
+
+brain02
+#ff91a4 #ff447a #ff7cce
+00111
+22000
+00000
+11100
+01111
+
+brain12
+#ff447a #ff91a4
+01100
+11100
+11001
+00001
+00100
+
+brain22
+#ff447a #ff91a4 #ff7cce
+01000
+11000
+11100
+12100
+12210
+
+brain32
+#ff447a #ff91a4 #ff7cce
+01122
+11111
+01111
+00000
+00000
+
+brain03
+#ff91a4 #ff447a
+00000
+00000
+01100
+11111
+00001
+
+brain13
+#ff91a4 #ff447a #ff7cce
+00011
+22011
+02201
+10000
+11000
+
+brain23
+#ff447a #ff91a4 #ff7cce
+01221
+00111
+00001
+10000
+11100
+
+brain33
+#ff91a4 #ff447a
+00000
+00000
+00011
+10111
+11110
+
+lbrain1
+#ff447a #ff91a4
+....0
+...00
+..011
+00011
+01111
+
+rbrain1
+#ff447a #ff91a4
+00...
+100..
+1100.
+1110.
+11100
+
+lbrain2
+#ff447a #ff91a4
+.....
+...00
+..000
+.0001
+.0011
+
+rbrain2
+#ff447a #ff91a4
+.....
+0....
+00...
+100..
+1100.
+
+lbrain3
+#ff447a #ff91a4
+...00
+..000
+.0000
+00011
+00111
+
+rbrain3
+#ff447a #ff91a4
+0....
+0000.
+1000.
+11100
+11100
+
+tlbrain
+#ff447a #ff91a4
+.....
+.....
+...00
+.0000
+00011
+
+tbrain1
+#ff447a #ff91a4
+.....
+...00
+00000
+11000
+11111
+
+tbrain2
+#ff447a #ff91a4
+.....
+0000.
+00000
+11001
+11111
+
+trbrain
+#ff447a #ff91a4
+.....
+.....
+0000.
+10000
+11100
+
+(Mouth)
+mouth1
+#ff91a4 #ff447a #5e192d
+01111
+11222
+12222
+11222
+11111
+
+mouth2
+#ff447a #5e192d
+00000
+11111
+11111
+11111
+00000
+
+mouth3
+#ff447a #5e192d
+00000
+11111
+11111
+11111
+00000
+
+mouth4
+#ff447a #ff91a4 #5e192d
+00001
+22200
+22220
+22200
+00000
+
+(Eyes)
+leyeopen
+#d13864 #fefff2
+...00
+.0011
+01110
+.0011
+...00
+
+reyeopen
+#d13864 #fefff2
+00...
+1100.
+01110
+1100.
+00...
+
+leyeshut
+#d13864
+.....
+.....
+.0000
+.....
+.....
+
+reyeshut
+#d13864
+.....
+.....
+0000.
+.....
+.....
+
+eye1
+transparent
+
+eye2
+transparent
+
+eye3
+transparent
+
+(Messages)
+msg1
+transparent
+
+msg2
+transparent
+
+msg3
+transparent
+
+msg4
+transparent
+
+msg5
+transparent
+
+msg6
+transparent
+
+msg7
+transparent
+
+msg8
+transparent
+
+(Secret)
+reveal
+transparent
+
+secret
+#9fd1ff #6cb8ff
+.....
+.000.
+.010.
+.000.
+.....
+
+scr1
+transparent
+
+scr2
+transparent
+
+=======
+LEGEND
+=======
+
+, = void
+p = player and floor
+o = logic
+. = floor
+
+(Arrows)
+u = uarrow and arrowmount and ustart and floor
+d = darrow and arrowmount and dstart and floor
+l = larrow and arrowmount and lstart and floor
+r = rarrow and arrowmount and rstart and floor
+€ = larrow and arrowmount and lstart and rufuse and floor
+ʞ = larrow and rarrow and arrowmount and lstart and rstart and floor
+
+(Walls)
+: = lwall and nopush
+; = rwall and nopush
+- = twall and nopush
+_ = bwall and nopush
+' = tlwall and nopush
+" = trwall and nopush
+\ = blwall and nopush
+/ = brwall and nopush
+{ = bwall and rwall and nopush
+} = bwall and lwall and nopush
+~ = twall and rwall and nopush
+` = twall and lwall and nopush
+ē = bwall and rwall and twall and lwall and nopush
+ü = bwall and rwall and lwall and nopush
+ú = twall and rwall and lwall and nopush
+î = lwall and rwall and nopush
+ï = trwall and lwall and nopush
+í = blwall and rwall and nopush
+ī = brwall and lwall and nopush
+į = bwall and tlwall and nopush
+ħ = bwall and trwall and nopush
+ì = twall and blwall and nopush
+ô = trwall and lwall and nopush
+ö = tlwall and rwall and nopush
+ò = blwall and twall and rwall and nopush
+ó = brwall and blwall and twall and nopush
+đ = bwall and lwall and trwall and nopush
+ĝ = tlwall and trwall and nopush
+ğ = blwall and brwall and nopush
+ģ = twall and rwall and blwall and nopush
+ĩ = rwall and blwall and tlwall and nopush
+ĭ = twall and brwall and nopush
+ƨ = rwall and bwall and tlwall and nopush
+ɓ = blwall and tlwall and nopush
+ɖ = tlwall and logic and nopush
+ə = brwall and twall and lwall and nopush
+ɚ = lwall and brwall and trwall and nopush
+• = trwall and bwall and nopush
+ª = bwall and blwall and nopush
+º = blwall and trwall and nopush
+& = bwall and twall and nopush
+* = bwall and twall and rwall and nopush
+‚ = bwall and lwall and twall and nopush
+ʍ = brwall and trwall and nopush
+ʘ = blwall and tlwall and trwall and nopush
+ʙ = trwall and tlwall and bwall and nopush
+
+(Emitters)
+¬ = lfire and floor
+® = rfire and floor
+¨ = ufire and floor
+ß = dfire and floor
+
+(Receivers)
+c = lsink and nopush and floor
+y = dsink and nopush and floor
+n = usink and nopush and floor
+j = rsink and nopush and floor
+
+(Fuses)
+h = hfuse and floor
+w = vfuse and floor
+æ = lufuse and floor
+« = rufuse and floor
+“ = ldfuse and floor
+‘ = rdfuse and floor
+
+(Ridges)
+¶ = ridge and nopush and floor
+± = ridge and hfuse and floor and nopush
+⁄ = ridge and vfuse and floor and nopush
+ʝ = ridge and ldfuse and floor and nopush
+
+(Doors)
+å = ldoor and nopush and floor
+© = rdoor and nopush and floor
+œ = udoor and nopush and floor
+Ω = ddoor and nopush and floor
+
+(Bounds)
+e = end and bounds and floor
+f = bounds and floor
+
+(Wires)
+1 = vwire and lwall and nopush
+2 = vwire and rwall and nopush
+3 = hwire and twall and nopush
+4 = hwire and bwall and nopush
+5 = luwire and blwall and nopush
+6 = ruwire and brwall and nopush
+7 = ldwire and tlwall and nopush
+8 = rdwire and trwall and nopush
+9 = hwire and bwall and lwall and nopush
+0 = hwire and bwall and rwall and nopush
+¡ = hwire and twall and lwall and nopush
+™ = hwire and twall and rwall and nopush
+£ = vwire and twall and lwall and nopush
+¢ = vwire and bwall and lwall and nopush
+∞ = vwire and twall and rwall and nopush
+§ = vwire and bwall and rwall and nopush
+! = bwall and luwire and nopush
+@ = bwall and ruwire and nopush
+# = twall and ldwire and nopush
+$ = iwire and floor
+% = bwall and rwall and ldwire and nopush
+‹ = twall and lwall and ruwire and nopush
+› = twall and rwall and luwire and nopush
+ɝ = twall and rwall and ruwire and nopush
+ﬁ = twall and ruwire and nopush
+ﬂ = bwall and vwire and nopush
+‡ = endwire and floor
+ɜ = endwire and floor and ridge and nopush
+° = lwall and luwire and nopush
+· = bwall and lwall and rdwire and nopush
+¸ = twall and bwall and hwire and nopush
+˛ = bwall and rdwire and nopush
+Ç = twall and vwire and nopush
+◊ = bwall and tlwall and vwire and nopush
+Â = ridge and iwire and floor and nopush
+¯ = ridge and iwire and vfuse and floor and nopush
+˘ = twall and rwall and ldwire and nopush
+¿ = hfuse and iwire and floor
+ã = rwall and rdwire and nopush
+ā = bwall and rwall and rdwire and nopush
+ê = trwall and hwire and nopush
+ë = tlwall and hwire and nopush
+ń = brwall and hwire and nopush
+ė = twall and rdwire and nopush
+û = rwall and tlwall and ldwire and nopush
+ù = twall and rwall and lwall and ruwire and nopush
+ū = trwall and lwall and ruwire and nopush
+õ = brwall and trwall and vwire and nopush
+č = trwall and lwall and hwire and nopush
+‰ = rwall and ruwire and nopush
+¦ = brwall and hwire and nopush
+µ = bwall and ldwire and nopush
+¹ = trwall and lwall and rdwire and nopush
+² = lwall and ldwire and nopush
+³ = rwall and tlwall and luwire and nopush
+¼ = lwall and rwall and luwire and nopush
+½ = hwire
+ʏ = vwire
+ʑ = luwire
+ʒ = ruwire
+ʓ = ldwire
+ʔ = rdwire
+¾ = lwall and hwire and nopush
+ę = bwall and rwall and lwall and vwire and nopush
+ġ = blwall and brwall and ruwire and nopush
+ƽ = lwall and ruwire and nopush
+ɍ = rwall and rdwire and vwire and nopush
+ɑ = bwall and twall and rwall and hwire and nopush
+ɗ = brwall and lwall and ruwire and nopush
+ɘ = blwall and brwall and hwire and nopush
+ɛ = lwall and rwall and twall and vwire and nopush
+ʉ = bwall and hwire and vwire and nopush
+ʊ = bwall and lwall and ruwire and nopush
+ʋ = bwall and rwall and luwire and nopush
+ʌ = rwall and iwire and nopush
+ʎ = rwall and ldwire and nopush
+ʐ = brwall and vwire and nopush
+ʕ = blwall and hwire and nopush
+ʚ = twall and blwall and vwire and nopush
+ʛ = twall and bwall and luwire and nopush
+ʜ = bwall and trwall and hwire and nopush
+ʟ = bwall and trwall and hwire and luwire and nopush
+ʠ = bwall and hwire and luwire and nopush
+
+(Timers)
+è = timer
+é = timer and lwall and nopush
+ä = timer and tlwall and nopush
+ñ = timer and twall and nopush
+ɐ = timer and rwall and nopush
+ɒ = timer and lwall and twall and nopush
+
+(Slots)
+ø = hslot and nopush and lwall and rwall
+ō = vslot and nopush and twall and bwall
+ɔ = vslot and nopush and bwall
+ɕ = vslot and nopush and twall
+
+(Force-fields)
+ž = lgen and nopush and floor
+ź = rgen and nopush and floor and off
+ż = ugen and nopush and floor
+ć = dgen and nopush and floor and off
+
+(Buttons)
+b = button and nopush and floor
+q = cloner and nopush and floor
+× = mirror and nopush and floor
+ĥ = reset and nopush and floor
+
+(Vactubes)
+ð = tube and nopush
+þ = tube and nopush and vacprod
+ď = tube and nopush and vacdest
+
+(Auto-firing emitters)
+ĳ = lauto and lwall and nopush
+ı = rauto and rwall and nopush
+ĵ = uauto and twall and nopush
+ķ = dauto and bwall and nopush
+
+(Brain)
+ɞ = brain00 and leyeshut and eye1 and floor
+ɟ = brain01 and floor
+ɠ = brain02 and floor
+ɣ = brain03 and floor
+ɤ = brain10 and floor
+ɥ = brain11 and floor
+ɦ = brain12 and reyeshut and floor
+ɧ = brain13 and reyeshut and floor
+ɨ = brain20 and floor
+ɩ = brain21 and leyeshut and eye2 and floor
+ɫ = brain22 and floor
+ɬ = brain23 and floor
+ɮ = brain30 and floor
+ɯ = brain31 and floor
+ɰ = brain32 and leyeshut and eye3 and floor
+ɱ = brain33 and floor
+ɲ = lbrain1 and floor
+ɳ = lbrain2 and floor
+ɵ = lbrain3 and floor
+ɷ = rbrain1 and floor
+ɸ = rbrain2 and floor
+ɹ = rbrain3 and floor
+ɻ = tlbrain and floor
+ɼ = tbrain1 and floor
+ɽ = tbrain2 and floor
+ɾ = trbrain and floor
+
+(Messages)
+ɿ = msg1 and floor
+ʂ = msg2 and floor
+ʃ = msg3 and floor
+ʄ = msg4 and floor
+ʅ = msg5 and floor
+ʆ = msg6 and floor
+ʈ = msg8 and floor
+
+(Secret)
+ʖ = secret and floor and scr1
+ʗ = secret and floor and scr2
+
+(Groups)
+background = void
+(player = playerl or playerr or playeru or playerd)
+arrow = arrowmount or uarrow or darrow or larrow or rarrow
+arrowstart = lstart or rstart or ustart or dstart
+frame = f1 or f2 or f3 or f4 or f5 or f6 or f7 or f8 or f9 or f10
+hq = ql or qr
+vq = qu or qd
+qmove = hq or vq
+quark = quarkl or quarkr or quarku or quarkd
+qframe = quarkl or quarkr or quarku or quarkd or quarkr1 or quarkr2 or quarkl1 or quarkl2 or quarku1 or quarku2 or quarkd1 or quarkd2
+qlframe = quarkl1 or quarkl2
+qrframe = quarkr1 or quarkr2
+quframe = quarku1 or quarku2
+qdframe = quarkd1 or quarkd2
+qfade1frame = qfade1 or qfade1l1 or qfade1l2 or qfade1r1 or qfade1r2 or qfade1u1 or qfade1u2 or qfade1d1 or qfade1d2
+qfade2frame = qfade2 or qfade2l1 or qfade2l2 or qfade2r1 or qfade2r2 or qfade2u1 or qfade2u2 or qfade2d1 or qfade2d2
+wall = lwall or rwall or twall or bwall or tlwall or trwall or blwall or brwall or tube
+fire = lfire or rfire or ufire or dfire
+sink = lsink or rsink or usink or dsink
+sinka = lsinka or rsinka or usinka or dsinka
+door = ldoor or rdoor or udoor or ddoor
+slot = hslot or vslot
+hfield = hfield1 or hfield2
+vfield = vfield1 or vfield2
+field = hfield or vfield
+hgen = lgen or rgen
+vgen = ugen or dgen
+gen = hgen or vgen
+solid = sink or sinka or slot
+pad = button or cloner or mirror or reset
+fuse = hfuse or vfuse or rufuse or rdfuse or lufuse or ldfuse
+fusea = hfusea or vfusea or rufusea or rdfusea or lufusea or ldfusea
+wire = iwire or hwire or vwire or ruwire or rdwire or luwire or ldwire or endwire
+wirea = iwirea or hwirea or vwirea or ruwirea or rdwirea or luwirea or ldwirea or endwirea
+noquark = wall or door
+tick = timera or sinka
+timers = timer or timera
+power = sinka or wirea
+nopower = sink or wire
+dblock = player or arrow
+pair = e1 or e2 or e3 or e4
+state = e0 or pair
+person = player or mimic or oppos
+auto = lauto or rauto or uauto or dauto
+floory = floor or slot
+sidebrain = lbrain1 or lbrain2 or lbrain3 or rbrain1 or rbrain2 or rbrain3 or tlbrain or trbrain or tbrain1 or tbrain2
+brain = brain00 or brain01 or brain02 or brain03 or brain10 or brain11 or brain12 or brain13 or brain20 or brain21 or brain22 or brain23 or brain30 or brain31 or brain32 or brain33
+brains = brain or sidebrain
+eyeopen = leyeopen or reyeopen
+eye = leyeshut or reyeshut or eyeopen
+eyenum = eye1 or eye2 or eye3
+msg = msg1 or msg2 or msg3 or msg4 or msg5 or msg6 or msg7 or msg8
+va = au or ad
+ha = al or ar
+amove = va or ha
+mouth = mouth1 or mouth2 or mouth3 or mouth4
+turn = turnl or turnr
+
+=======
+SOUNDS
+=======
+
+arrowmount move 22825507 (56499307) (75064707)
+
+(Lasers firing)
+sfx1 6096108 (49522301) (69783509) (63988301)
+
+(Door opening?)
+(54600908)
+sfx3 90911708
+
+(Receiver activated)
+sfx4 96992100 (99112700)
+
+(Quarks colliding)
+sfx5 31856107
+
+(Brain speaking)
+sfx6 6087108
+sfx8 44816508
+
+(Receiver turning off)
+sfx7 11651907 (9302506)
+
+(Timer ticking)
+(timera destroy 87834507)
+
+(New memory)
+sfx9 38776508
+
+(Quark hitting wall)
+sfx10 92287307
+
+(Reset)
+sfx2 85594309
+
+================
+COLLISIONLAYERS
+================
+
+void
+floor
+cleanse bounds
+tube
+vacprod vacdest
+fuse fusea
+ruwire luwire rdwire ldwire ruwirea luwirea rdwirea ldwirea iwire iwirea endwire endwirea
+hwire hwirea
+vwire vwirea
+end timer timera auto autofire
+ridge
+logic split
+dosplit
+e0
+e1
+e2
+e3
+e4
+redirect redirected
+turnl
+turnr
+go fusego
+timergo
+rt
+an
+spawn
+solved reveal
+open secret
+frame wedged
+lstart
+rstart
+ustart
+dstart
+arrowmount pad wirego
+nopush
+larrow
+rarrow
+uarrow
+darrow
+person sink sinka brain
+sidebrain mouth
+field eye
+gen eyenum msg1
+off msg2
+lwall msg3
+rwall msg4
+twall msg5
+bwall msg6
+tlwall msg7
+trwall msg8
+blwall
+brwall scr1
+slot scr2
+door
+fire
+ql amove
+qr
+qu
+qd
+qfade2
+qfade2l1 qfade2l2
+qfade2r1 qfade2r2
+qfade2u1 qfade2u2
+qfade2d1 qfade2d2
+qfade1
+qfade1l1 qfade1l2
+qfade1r1 qfade1r2
+qfade1u1 qfade1u2
+qfade1d1 qfade1d2
+quark
+quarkr1 quarkr2
+quarkl1 quarkl2
+quarku1 quarku2
+quarkd1 quarkd2
+
+======
+RULES
+======
+
+(Realtime move?)
+[stationary player][logic] -> [stationary player][logic rt]
+
+(Checkpoints)
+[> player|bounds] -> checkpoint
+
+(Mimic and opposite movement)
+([> player][mimic] -> [> player][> mimic]
+[> player][oppos] -> [> player][< oppos])
+
+(Walking)
+[> player|nopush no ridge no pad] -> [player|nopush]
+([> player|person no player] -> [player|person]
+[> person no player|nopush no ridge no pad] -> [person|nopush]
+[> person no player|bounds] -> [person|bounds]
+[> person no player|reset ] -> [person|reset ])
+(right[> player] -> [> playerr]
+right[< player] -> [< playerl]
+right[^ player] -> [^ playeru]
+right[v player] -> [v playerd])
+
+(Stepping on cloners and mirrors)
+([> person no mimic|cloner][mimic no cloner] -> [> person|cloner][]
+[> person no mimic|cloner] -> [> person|go cloner]
+[go cloner][cloner no go] -> [go cloner][cloner mimic]
+[go cloner] -> [cloner]
+
+[> person no oppos|mirror][oppos no mirror] -> [> person|mirror][]
+[> person no oppos|mirror] -> [> person|go mirror]
+[go mirror][mirror no go] -> [go mirror][mirror oppos]
+[go mirror] -> [mirror])
+
+(Pushing blocks)
+[> player|arrow|nopush] -> [player|arrow|nopush]
+([> person no player|arrow|nopush] -> [person|arrow|nopush]
+[> person|arrow] -> [> person|> arrow])
+[> player|arrow] -> [> player|> arrow]
+[> larrow|larrow] -> [|larrow]
+[> rarrow|rarrow] -> [|rarrow]
+[> uarrow|uarrow] -> [|uarrow]
+[> darrow|darrow] -> [|darrow]
+[> arrowmount|arrowmount] -> [|arrowmount]
+
+(Stepping on buttons)
+[> player|button] -> [> player|button go]
+([> person|button] -> [> person|button go])
+
+(Light the fuse)
+[button go|hfuse ] -> [button go|hfusea  fusego]
+[button go|vfuse ] -> [button go|vfusea  fusego]
+[button go|rufuse] -> [button go|rufusea fusego]
+[button go|rdfuse] -> [button go|rdfusea fusego]
+[button go|lufuse] -> [button go|lufusea fusego]
+[button go|ldfuse] -> [button go|ldfusea fusego]
+
+(Propagate along the fuse)
+ [go][fusego|hfuse ] -> [go][|hfusea  fusego]
++[go][fusego|vfuse ] -> [go][|vfusea  fusego]
++[go][fusego|rufuse] -> [go][|rufusea fusego]
++[go][fusego|rdfuse] -> [go][|rdfusea fusego]
++[go][fusego|lufuse] -> [go][|lufusea fusego]
++[go][fusego|ldfuse] -> [go][|ldfusea fusego]
+
+[fusego] -> []
+
+(Wedge open doors temporarily)
+[button go|door] -> [button|door wedged]
+[button go|open] -> [button|open wedged]
+[wedged|door no wedged] -> [wedged|door wedged]
+[wedged|open] -> [wedged|wedged open]
+
+(Unwedge doors)
+[> player button][wedged] -> [> player button][]
+
+(Eyes)
+[player|leyeshut] -> [player|leyeopen] sfx9
+[player|reyeshut] -> [player|reyeopen] sfx9
+ right[leyeshut|reyeopen] -> [leyeopen|reyeopen]
++right[leyeopen|reyeshut] -> [leyeopen|reyeopen]
++[leyeopen eye1][leyeshut eye1] -> [leyeopen eye1][leyeopen eye1]
++[leyeopen eye2][leyeshut eye2] -> [leyeopen eye2][leyeopen eye2]
++[leyeopen eye3][leyeshut eye3] -> [leyeopen eye3][leyeopen eye3]
+
+(Open the mouth)
+right[leyeopen eye1][leyeopen eye2][leyeopen eye3][brain31|brain22|brain01|brain30] -> [leyeopen][leyeopen][leyeopen][mouth1 end|mouth2 end|mouth3 end|mouth4 end]
+
+(Messages)
+[player msg1][logic no msg1] -> [player][logic msg1] sfx6 message ...feed me your memories, Leonardo...
+[player msg2][logic no msg2] -> [player][logic msg2] sfx8 message ...your delicious memories, Leonardo! I must feast on them!...
+[player msg3][logic no msg3] -> [player][logic msg3] message ...come closer...
+down[leyeopen|msg5][logic no msg5] -> [leyeopen|msg5][logic msg5] message [Memory] I recall slaving over the commission for Santa Maria at the workshop. My exhaustion was such that I could scarcely focus on the canvas before me.
+down[leyeopen|msg4][logic no msg4] -> [leyeopen|msg4][logic msg4] message [Memory] I had awoken suddenly in my cot. The studio was as black as pitch but I'd become aware of the presence of an unknown person in the room with me.
+(Message 7 must be before message 6 so that it displays on the next tick)
+right[leyeopen eye1][leyeopen eye2][leyeopen eye3][logic msg6 no msg7][> player] -> [leyeopen eye1][leyeopen eye2][leyeopen eye3][logic msg7][player] sfx6 message ...return to me at once, Leonardo! You are fat with recollection!...
+left[leyeopen|msg6][logic no msg6] -> [leyeopen|msg6][logic msg6] message [Memory] I lay, terrified, my eyes straining in vain to penetrate the inky darkness and identify the intruder. Then, suddenly, I was being lifted against my will, but by no corporeal hand!
+[player msg8][logic msg7 no msg8] -> [player][logic msg7 msg8] sfx8 message ...I can practically taste those juicy memories, dripping as they are with such significance. Come to me! I promise there will be no pain. No, no physical pain at all...
+
+(Secrets)
+[> player|secret][logic] -> [> player|secret][logic reveal]
+late[player scr1][logic reveal] -> [player scr1][logic] sfx9 message [Transmission] ...my first is in nothing and also in nowhere...
+late[player scr2][logic reveal] -> [player scr2][logic] sfx9 message [Transmission] ...my second's in reserve but somehow it's in there...
+
+(Pressing the action button)
+[action player no bounds] -> [player cleanse]
+
+(Stepping on a boundary)
+([> player|bounds][person no player] -> [> player|bounds][])
+
+(Stepping on a reset button)
+[> player|reset] -> [> player|reset cleanse] sfx2
+
+(Propagate in all directions as far as possible until meeting a boundary)
+[cleanse|floory no bounds] -> [cleanse|floory cleanse]
+
+(Reset player)
+[rt][cleanse player no reset][cleanse reset] -> [rt][cleanse][cleanse reset player] sfx2
+
+(Cancel reset if player not on reset button i.e. there isn't one!)
+[rt][player no reset][cleanse] -> [rt][player][]
+
+(Reset persons - deliberately not real-time because it looks odd otherwise)
+([cleanse person no player] -> [cleanse])
+
+(Remove arrows and in-flight quarks)
+[rt][cleanse] -> [rt][cleanse no arrow no qframe no qmove no state]
+
+(Reset arrows)
+[rt][cleanse lstart no larrow] -> [rt][cleanse larrow arrowmount lstart]
+[rt][cleanse rstart no rarrow] -> [rt][cleanse rarrow arrowmount rstart]
+[rt][cleanse ustart no uarrow] -> [rt][cleanse uarrow arrowmount ustart]
+[rt][cleanse dstart no darrow] -> [rt][cleanse darrow arrowmount dstart]
+
+(Turn off active receivers)
+[rt][cleanse lsinka] -> [rt][cleanse lsink wirego no timergo no frame]
+[rt][cleanse rsinka] -> [rt][cleanse rsink wirego no timergo no frame]
+[rt][cleanse usinka] -> [rt][cleanse usink wirego no timergo no frame]
+[rt][cleanse dsinka] -> [rt][cleanse dsink wirego no timergo no frame]
+
+(Clean up after reset)
+[rt][cleanse an] -> [rt][]
+[rt][cleanse] -> [rt][]
+
+(Five-frame cycle)
+[rt][logic f4            ] -> [rt][logic no frame an]
+[rt][logic f3            ] -> [rt][logic f4         ]
+[rt][logic f2            ] -> [rt][logic f3         ]
+[rt][logic f1            ] -> [rt][logic f2         ]
+[rt][logic no frame no an] -> [rt][logic f1         ]
+
+(If emitters are about to fire, remove in-flight quarks)
+[rt][button go][logic f4][fusea|fire no go][qmove] -> [rt][button go][logic f4][fusea|fire][no qframe no qmove no state]
+
+(Fire the emitters!)
+[rt][button go][logic f4][fusea|rfire no go] -> [rt][button go][logic f4][fusea|rfire go quarkr qr e0] sfx1
+[rt][button go][logic f4][fusea|lfire no go] -> [rt][button go][logic f4][fusea|lfire go quarkl ql e0] sfx1
+[rt][button go][logic f4][fusea|ufire no go] -> [rt][button go][logic f4][fusea|ufire go quarku qu e0] sfx1
+[rt][button go][logic f4][fusea|dfire no go] -> [rt][button go][logic f4][fusea|dfire go quarkd qd e0] sfx1
+
+(Stop pressing the button)
+[rt][button go][logic f4] -> [rt][button][logic f4]
+
+(Quark trail)
+[rt][qfade2   ] -> [rt][        ]
+[rt][qfade1   ] -> [rt][qfade2  ]
+[rt][qfade2r1 ] -> [rt][        ]
+[rt][qfade1r1 ] -> [rt][qfade2r1]
+[rt][qfade2l1 ] -> [rt][        ]
+[rt][qfade1l1 ] -> [rt][qfade2l1]
+[rt][qfade2u1 ] -> [rt][        ]
+[rt][qfade1u1 ] -> [rt][qfade2u1]
+[rt][qfade2d1 ] -> [rt][        ]
+[rt][qfade1d1 ] -> [rt][qfade2d1]
+[rt][qfade2r2 ] -> [rt][        ]
+[rt][qfade1r2 ] -> [rt][qfade2r2]
+[rt][qfade2l2 ] -> [rt][        ]
+[rt][qfade1l2 ] -> [rt][qfade2l2]
+[rt][qfade2u2 ] -> [rt][        ]
+[rt][qfade1u2 ] -> [rt][qfade2u2]
+[rt][qfade2d2 ] -> [rt][        ]
+[rt][qfade1d2 ] -> [rt][qfade2d2]
+
+(Quark direction)
+[rt][quarkl uarrow] -> [rt][quarkl qu turnr uarrow split]
+[rt][quarkr uarrow] -> [rt][quarkr qu turnl uarrow split]
+[rt][quarku uarrow] -> [rt][quarku qu       uarrow split]
+[rt][quarkl darrow] -> [rt][quarkl qd turnl darrow split]
+[rt][quarkr darrow] -> [rt][quarkr qd turnr darrow split]
+[rt][quarkd darrow] -> [rt][quarkd qd       darrow split]
+[rt][quarku larrow] -> [rt][quarku ql turnl larrow split]
+[rt][quarkd larrow] -> [rt][quarkd ql turnr larrow split]
+[rt][quarkl larrow] -> [rt][quarkl ql       larrow split]
+[rt][quarku rarrow] -> [rt][quarku qr turnr rarrow split]
+[rt][quarkd rarrow] -> [rt][quarkd qr turnl rarrow split]
+[rt][quarkr rarrow] -> [rt][quarkr qr       rarrow split]
+
+(Remove no-longer-relevant qmoves)
+[rt][split ql no larrow] -> [rt][split]
+[rt][split qr no rarrow] -> [rt][split]
+[rt][split qu no uarrow] -> [rt][split]
+[rt][split qd no darrow] -> [rt][split]
+
+(Remove old quark frame)
+[rt][split quark] -> [rt][split]
+
+(Are we actually splitting?)
+[rt][split ql no qu no qr no qd] -> [rt][ql quarkl redirect]
+[rt][split qu no ql no qr no qd] -> [rt][qu quarku redirect]
+[rt][split qr no qu no ql no qd] -> [rt][qr quarkr redirect]
+[rt][split qd no qu no qr no ql] -> [rt][qd quarkd redirect]
+
+(If we're splitting quarks, work out what the pair # is)
+[rt][split pair no qframe] -> [rt][split]
+[rt][split no pair][logic no e1] -> [rt][split no e0 e1][logic e1]
+[rt][split no pair][logic no e2] -> [rt][split no e0 e2][logic e2]
+[rt][split no pair][logic no e3] -> [rt][split no e0 e3][logic e3]
+[rt][split no pair][logic no e4] -> [rt][split no e0 e4][logic e4]
+
+[rt][split ql quarkl1] -> [rt][split an ql quarkl2 qfade1l1]
+[rt][split qr quarkr1] -> [rt][split an qr quarkr2 qfade1r1]
+[rt][split qu quarku1] -> [rt][split an qu quarku2 qfade1u1]
+[rt][split qd quarkd1] -> [rt][split an qd quarkd2 qfade1d1]
+
+[rt][split ql no qlframe] -> [rt][split ql quarkl1 qfade1]
+[rt][split qr no qrframe] -> [rt][split qr quarkr1 qfade1]
+[rt][split qu no quframe] -> [rt][split qu quarku1 qfade1]
+[rt][split qd no qdframe] -> [rt][split qd quarkd1 qfade1]
+
+(Redirect entangled quarks)
+[rt][redirect e1 quark turn][e1 no redirect no logic] -> [rt][redirect e1 quark turn][e1 quark turn redirected]
+[rt][redirect e2 quark turn][e2 no redirect no logic] -> [rt][redirect e2 quark turn][e2 quark turn redirected]
+[rt][redirect e3 quark turn][e3 no redirect no logic] -> [rt][redirect e3 quark turn][e3 quark turn redirected]
+[rt][redirect e4 quark turn][e4 no redirect no logic] -> [rt][redirect e4 quark turn][e4 quark turn redirected]
+
+[rt][ql turnl redirected] -> [rt][quarkd no qmove qd]
+[rt][ql turnr redirected] -> [rt][quarku no qmove qu]
+[rt][qr turnl redirected] -> [rt][quarku no qmove qu]
+[rt][qr turnr redirected] -> [rt][quarkd no qmove qd]
+[rt][qu turnl redirected] -> [rt][quarkl no qmove ql]
+[rt][qu turnr redirected] -> [rt][quarkr no qmove qr]
+[rt][qd turnl redirected] -> [rt][quarkr no qmove qr]
+[rt][qd turnr redirected] -> [rt][quarkl no qmove ql]
+
+[rt][redirected] -> [rt][]
+[rt][redirect] -> [rt][]
+[rt][turn] -> [rt][]
+
+(Quark hitting (?) a force-field)
+[rt][quark ql e1 field][quark ql e1 no field] -> [rt][quark ql e1 field go][quark ql e1]
+[rt][quark ql e2 field][quark ql e2 no field] -> [rt][quark ql e2 field go][quark ql e2]
+[rt][quark ql e3 field][quark ql e3 no field] -> [rt][quark ql e3 field go][quark ql e3]
+[rt][quark ql e4 field][quark ql e4 no field] -> [rt][quark ql e4 field go][quark ql e4]
+
+[rt][quark qr e1 field][quark qr e1 no field] -> [rt][quark qr e1 field go][quark qr e1]
+[rt][quark qr e2 field][quark qr e2 no field] -> [rt][quark qr e2 field go][quark qr e2]
+[rt][quark qr e3 field][quark qr e3 no field] -> [rt][quark qr e3 field go][quark qr e3]
+[rt][quark qr e4 field][quark qr e4 no field] -> [rt][quark qr e4 field go][quark qr e4]
+
+[rt][quark qu e1 field][quark qu e1 no field] -> [rt][quark qu e1 field go][quark qu e1]
+[rt][quark qu e2 field][quark qu e2 no field] -> [rt][quark qu e2 field go][quark qu e2]
+[rt][quark qu e3 field][quark qu e3 no field] -> [rt][quark qu e3 field go][quark qu e3]
+[rt][quark qu e4 field][quark qu e4 no field] -> [rt][quark qu e4 field go][quark qu e4]
+
+[rt][quark qd e1 field][quark qd e1 no field] -> [rt][quark qd e1 field go][quark qd e1]
+[rt][quark qd e2 field][quark qd e2 no field] -> [rt][quark qd e2 field go][quark qd e2]
+[rt][quark qd e3 field][quark qd e3 no field] -> [rt][quark qd e3 field go][quark qd e3]
+[rt][quark qd e4 field][quark qd e4 no field] -> [rt][quark qd e4 field go][quark qd e4]
+
+[rt][quark field no go] -> [rt][qfade1 no state field] sfx5
+[rt][quark field go] -> [rt][quark field]
+
+(Quark in play area hitting a wall or door)
+right[rt][quarkr2 qr floor no an|noquark no slot] -> [rt][qfade1r2 floor an no state|noquark] sfx10
+left [rt][quarkl2 ql floor no an|noquark no slot] -> [rt][qfade1l2 floor an no state|noquark] sfx10
+up   [rt][quarku2 qu floor no an|noquark no slot] -> [rt][qfade1u2 floor an no state|noquark] sfx10
+down [rt][quarkd2 qd floor no an|noquark no slot] -> [rt][qfade1d2 floor an no state|noquark] sfx10
+[rt][quark noquark floor] -> [rt][noquark floor]
+
+(Quark out of play area hitting a wall or door)
+right[rt][quarkr1 qr no an lwall no rauto no slot] -> [rt][qfade1r1 an no state lwall]
+left [rt][quarkl1 ql no an rwall no lauto no slot] -> [rt][qfade1l1 an no state rwall]
+up   [rt][quarku1 qu no an bwall no uauto no slot] -> [rt][qfade1u1 an no state bwall]
+down [rt][quarkd1 qd no an twall no dauto no slot] -> [rt][qfade1d1 an no state twall]
+
+(Head-on collisions)
+[rt][ql qr no split] -> [rt][no qframe no qmove no state] sfx5
+[rt][qu qd no split] -> [rt][no qframe no qmove no state] sfx5
+right[rt][quarkr2 qr|quarkl2 ql] -> [rt][no qframe no qmove no state|no qframe no qmove no state] sfx5
+down [rt][quarkd2 qd|quarku2 qu] -> [rt][no qframe no qmove no state|no qframe no qmove no state] sfx5
+
+(Turn on force-fields)
+[rt][lgen no off no field] -> [rt][lgen hfield1 nopush]
+[rt][ugen no off no field] -> [rt][ugen vfield1 nopush]
+[rt][rgen no off no field] -> [rt][rgen hfield1 nopush]
+[rt][dgen no off no field] -> [rt][dgen vfield1 nopush]
+ right[rt][hfield1 no rgen|no hfield] -> [rt][hfield1|hfield2 nopush no off]
++right[rt][hfield2 no rgen|no hfield] -> [rt][hfield2|hfield1 nopush no off]
+  down[rt][vfield1 no dgen|no vfield] -> [rt][vfield1|vfield2 nopush no off]
++ down[rt][vfield2 no dgen|no vfield] -> [rt][vfield2|vfield1 nopush no off]
+  left[rt][hfield1 no lgen|no hfield] -> [rt][hfield1|hfield2 nopush no off]
++ left[rt][hfield2 no lgen|no hfield] -> [rt][hfield2|hfield1 nopush no off]
+    up[rt][vfield1 no ugen|no vfield] -> [rt][vfield1|vfield2 nopush no off]
++   up[rt][vfield2 no ugen|no vfield] -> [rt][vfield2|vfield1 nopush no off]
+
+(Count down timers)
+[rt][timera timergo f10|sink] -> [rt][timer|sink] (After we've reset)
+[rt][timera timergo f10|tick] -> [rt][timer|tick timergo]
+[rt][tick timergo f9 ] -> [rt][tick timergo f10]
+[rt][tick timergo f8 ] -> [rt][tick timergo f9 ]
+[rt][tick timergo f7 ] -> [rt][tick timergo f8 ]
+[rt][tick timergo f6 ] -> [rt][tick timergo f7 ]
+[rt][tick timergo f5 ] -> [rt][tick timergo f6 ]
+[rt][tick timergo f4 ] -> [rt][tick timergo f5 ]
+[rt][tick timergo f3 ] -> [rt][tick timergo f4 ]
+[rt][tick timergo f2 ] -> [rt][tick timergo f3 ]
+[rt][tick timergo f1 ] -> [rt][tick timergo f2 ]
+
+(Turn off receivers with no time left)
+[rt][lsinka timergo f10] -> [rt][lsink wirego] sfx7
+[rt][rsinka timergo f10] -> [rt][rsink wirego] sfx7
+[rt][usinka timergo f10] -> [rt][usink wirego] sfx7
+[rt][dsinka timergo f10] -> [rt][dsink wirego] sfx7
+
+(Turn off along the wire)
+ [rt][wirego|iwirea  ] -> [rt][wirego|iwire   wirego]
++[rt][wirego|hwirea  ] -> [rt][wirego|hwire   wirego]
++[rt][wirego|vwirea  ] -> [rt][wirego|vwire   wirego]
++[rt][wirego|ruwirea ] -> [rt][wirego|ruwire  wirego]
++[rt][wirego|rdwirea ] -> [rt][wirego|rdwire  wirego]
++[rt][wirego|luwirea ] -> [rt][wirego|luwire  wirego]
++[rt][wirego|ldwirea ] -> [rt][wirego|ldwire  wirego]
++[rt][wirego|endwirea] -> [rt][wirego|endwire       ]
++[rt][wirego|gen     ] -> [rt][wirego|gen no off    ]
+
+[rt][wirego] -> [rt][]
+
+(Entering a receiver)
+[rt][quark lsink] -> [rt][qfade1 lsinka wirego no qmove no state] sfx4
+[rt][quark rsink] -> [rt][qfade1 rsinka wirego no qmove no state] sfx4
+[rt][quark usink] -> [rt][qfade1 usinka wirego no qmove no state] sfx4
+[rt][quark dsink] -> [rt][qfade1 dsinka wirego no qmove no state] sfx4
+[rt][quark sinka] -> [rt][qfade1 sinka  wirego no qmove no state] sfx4
+
+(Activate timers)
+[rt][sinka wirego|timers] -> [rt][sinka f1 wirego|timera go timergo f1]
+
+(Propagate along the wire)
+ [rt][wirego|iwire  ] -> [rt][wirego|iwirea  wirego]
++[rt][wirego|hwire  ] -> [rt][wirego|hwirea  wirego]
++[rt][wirego|vwire  ] -> [rt][wirego|vwirea  wirego]
++[rt][wirego|ruwire ] -> [rt][wirego|ruwirea wirego]
++[rt][wirego|rdwire ] -> [rt][wirego|rdwirea wirego]
++[rt][wirego|luwire ] -> [rt][wirego|luwirea wirego]
++[rt][wirego|ldwire ] -> [rt][wirego|ldwirea wirego]
++[rt][wirego|endwire] -> [rt][wirego|endwirea      ]
+
+(Propagate timers)
+[rt][timera go timergo|timers no go] -> [rt][timera go|timera go timergo f1]
+
+(Remove go signals)
+[rt][sinka  go] -> [rt][sinka ]
+[rt][timera go] -> [rt][timera]
+[rt][wirego   ] -> [rt][      ]
+
+(Open door?)
+[rt][door no open] -> [rt][door solved]
+[rt][door solved no wedged|wire] -> [rt][door|wire]
+[rt][door solved|door no solved] -> [rt][door|door]
+
+left [rt][solved ldoor nopush|] -> [rt][open|ldoor open] sfx3
+right[rt][solved rdoor nopush|] -> [rt][open|rdoor open]
+up   [rt][solved udoor nopush|] -> [rt][open|udoor open] sfx3
+down [rt][solved ddoor nopush|] -> [rt][open|ddoor open]
+
+(Close door?)
+[rt][open no door|open door] -> [rt][open solved|open door]
+[rt][open solved no wedged|wire] -> [rt][open|wire]
+[rt][open solved|open no solved no door] -> [rt][open|open]
+
+left [rt][no dblock|open no solved no dblock|ldoor open] -> [rt][|ldoor nopush|]
+right[rt][no dblock|open no solved no dblock|rdoor open] -> [rt][|rdoor nopush|]
+up   [rt][no dblock|open no solved no dblock|udoor open] -> [rt][|udoor nopush|]
+down [rt][no dblock|open no solved no dblock|ddoor open] -> [rt][|ddoor nopush|]
+
+[rt][open solved] -> [rt][open]
+
+(Quark movement)
+right[rt][quarkl1 quark qr no split ] -> [rt][no qframe no qmove] sfx5
+right[rt][quarkl1 qr no ql no split ] -> [rt][quarkr  qfade1l1 qr an]
+right[rt][quarkl2 qr no ql no split ] -> [rt][quarkl1 qfade1l2 qr   ]
+right[rt][quarkr2 qr no ql no split state|no quarkr2] -> [rt][qfade1r2 state|quarkl2 qr state]
+right[rt][quarkr1 qr no ql no split ] -> [rt][quarkr2 qfade1r1 qr   ]
+right[rt][quarkr  qr no ql no split no an] -> [rt][quarkr1 qfade1 qr]
+
+left[rt][quarkr1 quark ql no split ] -> [rt][no qframe no qmove] sfx5
+left[rt][quarkr1 ql no qr no split ] -> [rt][quarkl  qfade1r1 ql an]
+left[rt][quarkr2 ql no qr no split ] -> [rt][quarkr1 qfade1r2 ql   ]
+left[rt][quarkl2 ql no qr no split state|no quarkl2] -> [rt][qfade1l2 state|quarkr2 ql state]
+left[rt][quarkl1 ql no qr no split ] -> [rt][quarkl2 qfade1l1 ql   ]
+left[rt][quarkl  ql no qr no split no an] -> [rt][quarkl1 qfade1 ql]
+
+down[rt][quarku1 quark qd no split ] -> [rt][no qframe no qmove] sfx5
+down[rt][quarku1 qd no qu no split ] -> [rt][quarkd  qfade1u1 qd an]
+down[rt][quarku2 qd no qu no split ] -> [rt][quarku1 qfade1u2 qd   ]
+down[rt][quarkd2 qd no qu no split state|no quarkd2] -> [rt][qfade1d2 state|quarku2 qd state]
+down[rt][quarkd1 qd no qu no split ] -> [rt][quarkd2 qfade1d1 qd   ]
+down[rt][quarkd  qd no qu no split no an] -> [rt][quarkd1 qfade1 qd]
+
+up[rt][quarkd1 quark qu no split ] -> [rt][no qframe no qmove] sfx5
+up[rt][quarkd1 qu no qd no split ] -> [rt][quarku  qfade1d1 qu an]
+up[rt][quarkd2 qu no qd no split ] -> [rt][quarkd1 qfade1d2 qu   ]
+up[rt][quarku2 qu no qd no split state|no quarku2] -> [rt][qfade1u2 state|quarkd2 qu state]
+up[rt][quarku1 qu no qd no split ] -> [rt][quarku2 qfade1u1 qu   ]
+up[rt][quarku  qu no qd no split no an] -> [rt][quarku1 qfade1 qu]
+
+(Clean up left-over state)
+[rt][state no qframe] -> [rt][]
+
+(Send newly split quarks on their way)
+left [rt][split no an ql quarkl2 pair|] -> [rt][split qfade1l2 pair|ql quarkr2 pair]
+right[rt][split no an qr quarkr2 pair|] -> [rt][split qfade1r2 pair|qr quarkl2 pair]
+up   [rt][split no an qu quarku2 pair|] -> [rt][split qfade1u2 pair|qu quarkd2 pair]
+down [rt][split no an qd quarkd2 pair|] -> [rt][split qfade1d2 pair|qd quarku2 pair]
+[rt][split pair no qmove] -> [rt][]
+[rt][split an] -> [rt][split]
+
+(Allow emitters to fire again after ten frames)
+[rt][fusea f10|fire go] -> [rt][fusea f10|fire]
+
+(Turn off lit fuses after ten frames)
+[rt][hfusea  f10] -> [rt][hfuse ]
+[rt][vfusea  f10] -> [rt][vfuse ]
+[rt][rufusea f10] -> [rt][rufuse]
+[rt][rdfusea f10] -> [rt][rdfuse]
+[rt][lufusea f10] -> [rt][lufuse]
+[rt][ldfusea f10] -> [rt][ldfuse]
+
+[rt][fusea       f9] -> [rt][fusea f10]
+[rt][fusea       f8] -> [rt][fusea f9 ]
+[rt][fusea       f7] -> [rt][fusea f8 ]
+[rt][fusea       f6] -> [rt][fusea f7 ]
+[rt][fusea       f5] -> [rt][fusea f6 ]
+[rt][fusea       f4] -> [rt][fusea f5 ]
+[rt][fusea       f3] -> [rt][fusea f4 ]
+[rt][fusea       f2] -> [rt][fusea f3 ]
+[rt][fusea       f1] -> [rt][fusea f2 ]
+[rt][fusea no frame] -> [rt][fusea f1 ]
+
+(Turn off force-fields)
+[rt][wirea|gen] -> [rt][wirea|gen off no field]
+left right[rt][off|field] -> [rt][off|off no nopush]
+up    down[rt][off|field] -> [rt][off|off no nopush]
+[rt][off no gen] -> [rt][]
+
+(Animate force-fields)
+[rt][logic f4][hfield1 no an] -> [rt][logic f4][hfield2 an]
+[rt][logic f4][hfield2 no an] -> [rt][logic f4][hfield1 an]
+[rt][logic f4][vfield1 no an] -> [rt][logic f4][vfield2 an]
+[rt][logic f4][vfield2 no an] -> [rt][logic f4][vfield1 an]
+
+(Destroying clones at the end of the level)
+([rt][player end][person no player] -> [rt][player end][])
+
+(Destroy things at the end of vactubes)
+[rt][logic f4][arrow amove vacdest] -> [rt][logic f4][vacdest]
+
+(Move things in vactubes)
+left [rt][logic f4][arrow tube al no an|tube] -> [rt][logic f4][tube|arrow tube al an]
+right[rt][logic f4][arrow tube ar no an|tube] -> [rt][logic f4][tube|arrow tube ar an]
+up   [rt][logic f4][arrow tube au no an|tube] -> [rt][logic f4][tube|arrow tube au an]
+down [rt][logic f4][arrow tube ad no an|tube] -> [rt][logic f4][tube|arrow tube ad an]
+
+left [rt][logic f4][arrow tube va no an|tube] -> [rt][logic f4][tube|arrow tube al an]
+right[rt][logic f4][arrow tube va no an|tube] -> [rt][logic f4][tube|arrow tube ar an]
+up   [rt][logic f4][arrow tube ha no an|tube] -> [rt][logic f4][tube|arrow tube au an]
+down [rt][logic f4][arrow tube ha no an|tube] -> [rt][logic f4][tube|arrow tube ad an]
+
+(Randomly spawn objects in vactubes)
+ random[rt][logic f4] -> [rt][logic f4 spawn]
++      [rt] -> [rt]
++      [rt] -> [rt]
++      [rt] -> [rt]
++      [rt] -> [rt]
++      [rt] -> [rt]
++      [rt] -> [rt]
++      [rt] -> [rt]
++      [rt] -> [rt]
++      [rt] -> [rt]
+
+ random[rt][spawn][vacprod no arrow|tube no arrow] -> [rt][spawn][vacprod larrow|tube]
++      [rt][spawn][vacprod no arrow|tube no arrow] -> [rt][spawn][vacprod rarrow|tube]
++      [rt][spawn][vacprod no arrow|tube no arrow] -> [rt][spawn][vacprod uarrow|tube]
++      [rt][spawn][vacprod no arrow|tube no arrow] -> [rt][spawn][vacprod darrow|tube]
+
+right[rt][vacprod arrow no amove|tube] -> [rt][vacprod arrow ar|tube]
+left [rt][vacprod arrow no amove|tube] -> [rt][vacprod arrow al|tube]
+down [rt][vacprod arrow no amove|tube] -> [rt][vacprod arrow ad|tube]
+up   [rt][vacprod arrow no amove|tube] -> [rt][vacprod arrow au|tube]
+
+(Clean up vactube stuff)
+[rt][tube an] -> [rt][tube]
+[rt][spawn] -> [rt][]
+
+(Randomly fire auto-firing emitters)
+( random[rt][logic f4] -> [rt][logic f4 autofire]
++      [rt] -> [rt]
++      [rt] -> [rt]
++      [rt] -> [rt]
++      [rt] -> [rt]
++      [rt] -> [rt]
++      [rt] -> [rt]
++      [rt] -> [rt]
++      [rt] -> [rt]
++      [rt] -> [rt]
+
+ random[rt][autofire][dauto no qframe] -> [rt][autofire][dauto quarkd1 qd e0]
++      [rt][autofire][uauto no qframe] -> [rt][autofire][uauto quarku1 qu e0]
++      [rt][autofire][lauto no qframe] -> [rt][autofire][lauto quarkl1 ql e0]
++      [rt][autofire][rauto no qframe] -> [rt][autofire][rauto quarkr1 qr e0]
+
+[rt][autofire] -> [rt][])
+
+(Check pair # indicator)
+[rt][logic pair] -> [rt][logic no pair]
+[rt][e1][logic] -> [rt][e1][logic e1]
+[rt][e2][logic] -> [rt][e2][logic e2]
+[rt][e3][logic] -> [rt][e3][logic e3]
+[rt][e4][logic] -> [rt][e4][logic e4]
+
+(Remove animation markers)
+[rt][an] -> [rt][]
+
+(Remove realtime marker)
+[rt] -> []
+
+==============
+WINCONDITIONS
+==============
+
+all player on end
+
+=======
+LEVELS
+=======
+
+(Each level needs one logic marker)
+
+message X = Reset current room
+message Chapter One
+message What is this treachery? Where am I? This is not Milan...
+
+ɖ-----------"73333333ė------------",,,,,,,,,,ð,,,'---------------------",,,,,,,,,:..;,,,,,,,þ,,,
+:d¶.......¶l;c.......œ¶ff...bhhß..;,,,,,,,,,,ð,,,c.œ...œ...œ...œ...œ..l;,,,,,,,,'`å©~",,,,,,ð,,,
+:¶.........¶;:.......ω¶ff.....¶¶¶.;,,,,,,,,,,ð,,,1.ω...ω...ω...ω...ω...;,,,,,,,'`.p$.;,,,,,,ð,,,
+:..r........;ɓ&&&&‚..{__į&&&&đ¶.r¶j,,'-------ð---ʚ&ʛ¸¸¸ʟ444ʉ444ʠ444@}..~---",,,:ĥ....;,,,,,,ð,,,
+:...*&&&‚...~`......¶;,,:....î¶¶%46,,:..ßhhb...ffœ¶....ö---nñ-------`..ff..;,,,\}“hb.;,,,,,,ð,,,
+:...........¶l.....¶u;,,:.ɵɹ.îå©‰,,,,:.¶¶......ffω¶....ú..¶¶¶..¶.......ff..;,,,,:w...;,,,,,,ð,,,
+:¶.........¶{}...{___/,,:ʆɩɦ.c¶.;,,,,c¶l.¶ƨ&&ð&&&&&&đ..¶.u¶u¶.ʞ¶.......{}..;,,,,:®...j,,,,,,ð,,,
+:r¶.......¶u;é...;,,,,,,:ɲɯɫɷɛ¶.;,,,,54·¶.îd...ff¶.lî..¶.......{__į&‚..;:..~----`....2,,,,,,ð,,,
+\į&ħ_ɔ}¶¶{__/é...;,,,,,,:...ʃœ¶l;,,,,,,°å©î.{ð____}.ĩ&&‚.....r.;,,:....;:..“hß.¶œ....2,,,,,,ð,,,
+'`ĥ~-ɕ`å©™3nñɒ...~-----":...ʃω¶¶~------`..î.;ð,,,,:.îd.¶.......;,,:.“h¨;:..b...¶ω....2,,,,,,ð,,,
+:........¶.........¶f..;\__ð_¢...bhß.¶¶¶¶¶î.;ð,,,,:.ú.ƨ‚.......~--`.w*&ʍ\____y44@}å©06,,,,,,ð,,,
+:......u.¶.......b.¶fb.;,,,ð,c.......¶l..¶îd;ð,,,,:u.lîĥ.u¶¶¶b±±hhhh«..;,,,,,,,,,:¶¶;,,,ððððð,,,
+:........¶.¨hhhhh«.{}å©ʌ,,,ð,\_}å©0y______ī.;ð,,,,\___ğ}..¶¨h«.¶.......;,,,,,,,,,:..;,,,ð,,,,,,,
+:f{________________/:ff;,,,ðð,,:ff;,,,,,,,:f;ð,,,,,,,,,\____________}ff;,,,,,,,,,:ff;,,,ð,,,,,,,
+:fʎ½½ë3nññññ--------`ff;,,'-ð--`ff~",,,,,,:f;ðððððððððððð,,,,,,'---":ff;,,,,,,,,,:ff;,,,ð,,,,,,,
+:.2,,é..¶..¶...¶.......;,'`.“hß....~-"'--":.;ð,,,,'--",,ðððððððð...ðð..ððððððððððð..ððððð,,,,,,,
+:.2,ʓc.d¶.r¶.d.¶.......;,:r¶w......¶d;:..;:d;ð,,,,:ß‘;'--------ï.d.;\}.;,,,,'-",,:..;,,,ð,,,,,,,
+:.∞-ç`..¶..¶...{____}ff;,:¶.w......¶.~`r.;:.;ðððððð.w~`r¶....¶dî...;è:.;,,,,:ĥ~--`..~",,ð,,,,,,,
+:.ɜœ‡.u.¶..¶.r.ɐè,,ʓ¾å©ã,:¶.b......¶.....;:.;ð,,,,:.w..¶......¶ò‚..;è:.;,,,,:........;,,ð,,,,,,,
+:.ɜω‡...¶l.¶...ɐ'--ç`..2,:u¶.......¶.....;:föð----`rw....ƨ&&đ...¶..;è:.;,,,,c......b.;,,ð,,,,,,,
+\_ﬂ_ﬂ}..¶.b¶.u.j:..$...2,\}..{_}...¶.*&ħ_/:¶î.......w{}..î“ßî...¶..jè:.;,,,,1......w.;,,ð,,,,,,,
+,,ʏ,ʏ:..¶¨«¶...2:..$...2,,:..~-`.l.¶...j,'`dú.......w~`.¶úw.î..r¶..∞-`.;,,,,1..l...w.;,,ð,,,,,,,
+,,ʏ,ʑʕ4y____}ĥ{ʐ:..§}å©ɍ,'`....œ...¶¶%46,:¶¶¶..{}ĥü.bhhhhh«¶î...¶¶¶œ¶f.;,,,,1....¨h«.;,,ð,,,,,,,
+,,ʏ,,,,èèèè,\_/ʏ:å©ɍ:®.j,c.....ω.....2'--`.....j\_ī...¶u¶.¶lĩ&&&‚..ω¶f.;,,,,549å©{___/,,ð,,,,,,,
+,,ʑ½½½½½½½½½½½½ʒ:..2:w.;,549å©{!9$$046:.....üå©‰,,\_ð_______ī..l...§_}.;,,,,,,:¶¶;,,,,,,ð,,,,,,,
+,,,,,,,,,,,,,,,,:®.j:æb~---`¶¶;,:..~",:.....î..;,,,,ð,,,,èèèc......2,:.;,,,,,,:..;,,,,,,ð,,,,,,,
+,,,,,,,,,,,,,,,,:æb;:..ff.....;,:..ĥ;,:..{__ī.ʗ;,,,,ð,,,,,,,54444446,:.;,,,,,,:..;,,,,,,ð,,,,,,,
+,,,,,,,,,,,,,,,,:ff;\_______ď_/,:ff{/,:ff;,,\ð_/,,,,ðððððððððððð,,,,,:f;,,,,,,:ff;,,,,,,ð,,,,,,,
+,,,,,,,,,,,,'---`ff;,,,,,,,,ð,,,:ff;,,:ff;,,,ð,,,,,,,,ð,,,,,,,,ð,,,,,:f~---",,:ff;,,,,,,ð,,,,,,,
+,,,,,,,,,,,,:......;,,,,,,,,ð,,,:..~--`..;,ðððððððððððð,,,,,,,,ð,,,,,:.ff..;,,:..ö-",,,,ðððððð,,
+,,,,,,,,,,,,:¶¶....;,,,,,,,,ð,,,:........;,ð,,,,,,'--"733338,,,ð,,,,,\___}.;,,:..úĥ~-----",,,ð,,
+'-------n333¡å©ƨ&&&ʍ,ðððððððððððď........;,ð,,,,'-`..;1....2,,,ððððððð,,,:.;,,:..........;,,,ð,,
+:........“ß....î...;,ð,,,,,,,,,,:¶¶{_____/,ð,,,,:.d..;c....2,,,,,,,,,ð,,,:.;,,:®.........;,,,ð,,
+:........b..*&&ə.b‘;,ð,,,,'---#3¡å©™333338,ððð,,:®...~º}...2,,,'-----ð---`.;,,:æhb.......;,,,ð,,
+:..{_}ĥü¶¶..œ.....w;,ð,,,,:d¶.$¶......¶..2,,,ð,,:æhb¶.;\}..2,,,:...ʃ...ff..;,,:......d...;,,,ð,,
+:..;,\_īu¶r.ω.....¬;,ð,,,,:¶..$¶......¶..2,,,ð,,\__}.r~-`..2'-":....{ð_____/,,\__}.......;,,,ð,,
+:..;,,,:¶¶¶¶§______/,ð,,,,:...$¶l.....¶d.2,,,ð,,'--`..¶.l..∞`ĥ~ï.ɳɹ.;ð,,,,,,,,,,,\y·..%y_/,,,ð,,
+:..;,,,:.r..2,,'-----þ-",,:...§____}¶¶¶¶¶2'-"ð,,:.¶œ..¶¶¶¶¶â...îɳɞɧɸ;ð,,,,,,,,,,,,,1..2,,,,,,ð,,
+:..;,,,:....2,,:...ɻɽ..;,,:...j,,,,:....¬∞`ĥ~ð--`.¶ω..¶u...â...î.ʅ..~ð---------",,,°å©‰,,,,,,ð,,
+:..;,,,:....jè,:..ɳɰɦɹ.;,,:.r.~----`...uw$.....ff..ʋ4444444@}..î.......ff......;,,,:..;,,,,,,ð,,
+:..;,,,:....;,,:ʃʃ.ʄ...;,,:.........bhhh«$.....ff..;,,,,,,,,:..í_____ð______}..;,,,:..;,,,,,,ð,,
+:ff;,,,\____/,,:ff{____/,,\_____________y@___ð_____/,,,,,,,,:ff;,,,,,ð,,,,,,:ff;,,,:..;,,,,,,ð,,
+:ff~-----------`ff;,,,,,,,,,,,èè,,,,,,'------ð----#333338,,,:ff~-----ð-",,,,:ff;,,,:..;,,,,,,ð,,
+:.................;,,,,,,,73333n-",,,è:.......¶ffbœ.....2è,,:..........;,,,,:“b;,,,:..;,,,,,,ð,,
+:.................;,,,,,,,1......;,,,èc.l.....¶ff¶ω.....jè,,:..........;,,,,:®.j,,,:..~---",,ð,,
+\___}ff{__________/,,,,,,,1.u....;,,,,1.......*ħ__¢.r...;,,,\_______}..;,,'-`å©ɝ---`ɿɿʈ...~-"ð,,
+,èè,:b¶;,,'---#3338,,,,,,,1....d.;'---£...u...ĥ;,,1¶¶¶¶¶;,,,,,,èè,,,:..;,,:.ʈ.ʈ.....ʈʈ......;ððď
+,'n3¡å©™38é..¶œ...j,'-",,,1..r...;:..bœ......¬{/,,1....¬;,,,,73n----`ff~--`..ʈ.....ɻɼɽɾ.....;,,,
+,:¶¶¶¶¶¶¶jé..¶ω...~-`ĥ~",,1...¬*&ʍ:..¶ω..d..b«;,,,1..u.w;,,,,1......¶..ff¶ʂʈ......ɲɣɯɤɥɷ....~",,
+,:¶....l.~`ff{}........~--£¶¶¶w¶¶~`ff{¢.......;,,,1...b«~ĝ---£...u..¶..ff¶ʂʈ.....ɵɬɣɩɧɤɬɹ....;,,
+,:u¶.....¶...;:...r....ffbœ.d.b..¶...;1.......;,,èc.d...ĥî..bœ.....¬{ð____į&&‚..ɳɨɰɦɬɫɞɦɥɷ...;,,
+,:¶....l.¶...;:.....l..ff¶ω......¶...;1.......;,,è:.....{ī..¶ω.d..b«;ð,,,,:..œ.ɲɮɬɤɬɯɫɟɮɠɣɹ..;,,
+,:.r....*ħ___/:.l......{__¢......{___/54y____ð/,,,\__}¶¶~`..{¢......;ð,,,,:ʖ.ω...............;,,
+,:..ub..ĥ;,,,,:..b..d..;,,5y__}ĥ{/,,,,,,èè,,,ð,,,,,,,:...f..;54y_}ĥ{/ð,,,,\__!y..............;,,
+,:...æ¨.{/,,,,:..æ¨....;,,,èè,\_/,,,,,,,,,,,,ð,,,,,,,:...f..;,èè,\_/,ð,,,,,,,,:.......{}....{/,,
+,\______/,,,,,\________/,,,,,,,,,,,,,,,,,,,,,ð,,,,,,,\______/,,,,,,,,ð,,,,,,,,\_______/\____/,,,
+
+message Argh!
+message Aaaaaaarrrrrrggggghhhhhh!!
+message To be continued...

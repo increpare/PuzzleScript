@@ -1,0 +1,609 @@
+title Element Walkers
+author Ove Ahlman
+homepage http://oveahlman.itch.io
+realtime_interval 1
+background_color darkred
+text_color #00ccff
+
+========
+OBJECTS
+========
+Background
+orange lightbrown
+01001
+10010
+00101
+01010
+10100
+
+PlayerRedGreen
+Green Black Red
+..0..
+00000
+01010
+22222
+2...2
+
+ActivePlayerRedGreen
+Green white Red
+..0..
+00000
+01010
+22222
+2...2
+
+PlayerGreenRed
+Red Black Green
+..0..
+00000
+01010
+22222
+2...2
+
+ActivePlayerGreenRed
+Red white Green
+..0..
+00000
+01010
+22222
+2...2
+
+PlayerRed
+Red Black Red
+..0..
+00000
+01010
+22222
+2...2
+
+ActivePlayerRed
+Red white Red
+..0..
+00000
+01010
+22222
+2...2
+
+PlayerBlueRed
+Red Black Blue
+..0..
+00000
+01010
+22222
+2...2
+
+ActivePlayerBlueRed
+Red White Blue
+..0..
+00000
+01010
+22222
+2...2
+
+PlayerRedBlue
+Blue Black Red
+..0..
+00000
+01010
+22222
+2...2
+
+ActivePlayerRedBlue
+Blue White Red
+..0..
+00000
+01010
+22222
+2...2
+
+PlayerBlue
+Blue Black Blue
+..0..
+00000
+01010
+22222
+2...2
+
+ActivePlayerBlue
+Blue White Blue
+..0..
+00000
+01010
+22222
+2...2
+
+PlayerGreenBlue
+Blue Black Green
+..0..
+00000
+01010
+22222
+2...2
+
+ActivePlayerGreenBlue
+Blue white Green
+..0..
+00000
+01010
+22222
+2...2
+
+PlayerBlueGreen
+Green Black Blue
+..0..
+00000
+01010
+22222
+2...2
+
+ActivePlayerBlueGreen
+Green white Blue
+..0..
+00000
+01010
+22222
+2...2
+
+PlayerGreen
+Green Black Green
+..0..
+00000
+01010
+22222
+2...2
+
+ActivePlayerGreen
+Green white Green
+..0..
+00000
+01010
+22222
+2...2
+
+
+wall
+grey darkgrey lightgrey
+01201
+10120
+01012
+20101
+12010
+
+(TileBlue
+blue)
+
+TileBlue0
+blue #003399
+00000
+00100
+01001
+10010
+00000
+
+TileBlue1
+blue #003399
+00000
+00010
+10100
+01001
+00000
+
+TileBlue2
+blue #003399
+00000
+00001
+01010
+10100
+00000
+
+TileBlue3
+Blue #003399
+00000
+10000
+00101
+01010
+00000
+
+TileBlue4
+Blue #003399
+00000
+01000
+10010
+00101
+00000
+
+
+tempTileBlue
+blue
+
+TileRed0
+red #e62e00 #800000 #e68a00
+00000
+03030
+32323
+12021
+00000
+
+TileRed1
+red #e62e00 #800000 #e68a00
+00000
+00000
+03030
+32023
+00000
+
+TileRed2
+red #e62e00 #800000 #e68a00
+03030
+31113
+12121
+12021
+00000
+
+tempTileRed
+red
+
+TileGreen0
+green lightgreen #b3b300
+00000
+01010
+01010
+01010
+22222
+
+TileGreen1
+green lightgreen #b3b300
+00000
+10100
+01010
+01010
+22222
+
+TileGreen2
+green lightgreen #b3b300
+00000
+01010
+01010
+01010
+22222
+
+TileGreen3
+green lightgreen #b3b300
+00000
+00101
+01010
+01010
+22222
+
+tempTileGreen
+green
+
+temptile
+black
+
+Goal
+Brown Orange
+01110
+10101
+11011
+10101
+01110
+
+
+=======
+LEGEND
+=======
+. = background
+1 = ActivePlayerRedGreen
+A = PlayerRedGreen
+6 = ActivePlayerGreen
+7 = ActivePlayerGreenRed
+2 = ActivePlayerGreenBlue
+B = PlayerGreenBlue
+3 = ActivePlayerBlueRed
+C = PlayerBlueRed
+h = PlayerBlue
+4 = ActivePlayerBlue
+i = PlayerRed
+5 = ActivePlayerRed
+j = PlayerGreen
+k = PlayerGreenRed
+8 = ActivePlayerRedBlue
+9 = ActivePlayerBlueGreen
+m = PlayerBlueGreen
+l = PlayerRedBlue
+e = TileBlue0
+w = TileRed0
+g = TileGreen0
+u = Goal
+x = wall
+
+TileRed = TileRed0 or TileRed1 or TileRed2 or tempTileRed
+TileGreen = TileGreen0 or TileGreen1 or TileGreen2 or TileGreen3 or tempTileGreen
+TileBlue = TileBlue0 or TileBlue1 or TileBlue2 or TileBlue3 or TileBlue4 or tempTileBlue
+Tiles = TileBlue or TileGreen or TileRed or temptile
+Player = ActivePlayerBlueRed or ActivePlayerGreenBlue or ActivePlayerRedGreen or ActivePlayerBlue or ActivePlayerRed or ActivePlayerGreen or ActivePlayerGreenRed or ActivePlayerRedBlue or ActivePlayerBlueGreen
+PlayerCharacter = Player or PlayerBlueRed or PlayerGreenBlue or PlayerRedGreen or PlayerBlue or PlayerRed or PlayerGreen or PlayerGreenRed or PlayerRedBlue or PlayerBlueGreen
+
+=======
+SOUNDS
+=======
+
+EndLevel 5419100
+undo 848707
+sfx0 61117309 (Green)
+sfx1 67437902 (red)
+sfx2 79485108 (Blue)
+
+================
+COLLISIONLAYERS
+================
+Background
+Tiles
+Goal
+PlayerCharacter Wall
+
+======
+RULES
+======
+[Tiles > ActivePlayerBlue] -> [TileBlue0 > ActivePlayerBlue] sfx2
+[Tiles > ActivePlayerRed] -> [TileRed0 > ActivePlayerRed] sfx1
+[Tiles > ActivePlayerGreen] -> [TileGreen0 > ActivePlayerGreen] sfx0
+[Tiles > ActivePlayerBlueRed] -> [TileBlue0 > ActivePlayerBlueRed] sfx2
+[Tiles > ActivePlayerBlueGreen] -> [TileBlue0 > ActivePlayerBlueGreen] sfx2
+[Tiles > ActivePlayerRedGreen] -> [TileRed0 > ActivePlayerRedGreen] sfx1
+[Tiles > ActivePlayerRedBlue] -> [TileRed0 > ActivePlayerRedBlue] sfx1
+[Tiles > ActivePlayerGreenBlue] -> [TileGreen0 > ActivePlayerGreenBlue] sfx0
+[Tiles > ActivePlayerGreenRed] -> [TileGreen0 > ActivePlayerGreenRed] sfx0
+
+(--------Player Switching-----
+-----------------------------)
+[action ActivePlayerRed][PlayerGreen] -> [PlayerRed][ActivePlayerGreen]
+[action ActivePlayerRed][PlayerBlue] -> [PlayerRed][ActivePlayerBlue]
+[action ActivePlayerRed][PlayerRedGreen] -> [PlayerRed][ActivePlayerRedGreen]
+[action ActivePlayerRed][PlayerBlueRed] -> [PlayerRed][ActivePlayerBlueRed]
+[action ActivePlayerRed][PlayerGreenBlue] -> [PlayerRed][ActivePlayerGreenBlue]
+[action ActivePlayerRed][PlayerGreenRed] -> [PlayerRed][ActivePlayerGreenRed]
+[action ActivePlayerRed][PlayerRedBlue] -> [PlayerRed][ActivePlayerRedBlue]
+[action ActivePlayerRed][PlayerBlueGreen] -> [PlayerRed][ActivePlayerBlueGreen]
+
+[action ActivePlayerGreen][PlayerBlue] -> [PlayerGreen][ActivePlayerBlue]
+[action ActivePlayerGreen][PlayerRedGreen] -> [PlayerGreen][ActivePlayerRedGreen]
+[action ActivePlayerGreen][PlayerBlueRed] -> [PlayerGreen][ActivePlayerBlueRed]
+[action ActivePlayerGreen][PlayerGreenBlue] -> [PlayerGreen][ActivePlayerGreenBlue]
+[action ActivePlayerGreen][PlayerGreenRed] -> [PlayerGreen][ActivePlayerGreenRed]
+[action ActivePlayerGreen][PlayerRedBlue] -> [PlayerGreen][ActivePlayerRedBlue]
+[action ActivePlayerGreen][PlayerBlueGreen] -> [PlayerGreen][ActivePlayerBlueGreen]
+[action ActivePlayerGreen][PlayerRed] -> [PlayerGreen][ActivePlayerRed]
+
+[action ActivePlayerBlue][PlayerRedGreen] -> [PlayerBlue][ActivePlayerRedGreen]
+[action ActivePlayerBlue][PlayerBlueRed] -> [PlayerBlue][ActivePlayerBlueRed]
+[action ActivePlayerBlue][PlayerGreenBlue] -> [PlayerBlue][ActivePlayerGreenBlue]
+[action ActivePlayerBlue][PlayerGreenRed] -> [PlayerBlue][ActivePlayerGreenRed]
+[action ActivePlayerBlue][PlayerRedBlue] -> [PlayerBlue][ActivePlayerRedBlue]
+[action ActivePlayerBlue][PlayerBlueGreen] -> [PlayerBlue][ActivePlayerBlueGreen]
+[action ActivePlayerBlue][PlayerRed] -> [PlayerBlue][ActivePlayerRed]
+[action ActivePlayerBlue][PlayerGreen] -> [PlayerBlue][ActivePlayerGreen]
+
+[action ActivePlayerRedGreen][PlayerBlueRed] -> [PlayerRedGreen][ActivePlayerBlueRed]
+[action ActivePlayerRedGreen][PlayerGreenBlue] -> [PlayerRedGreen][ActivePlayerGreenBlue]
+[action ActivePlayerRedGreen][PlayerGreenRed] -> [PlayerRedGreen][ActivePlayerGreenRed]
+[action ActivePlayerRedGreen][PlayerRedBlue] -> [PlayerRedGreen][ActivePlayerRedBlue]
+[action ActivePlayerRedGreen][PlayerBlueGreen] -> [PlayerRedGreen][ActivePlayerBlueGreen]
+[action ActivePlayerRedGreen][PlayerRed] -> [PlayerRedGreen][ActivePlayerRed]
+[action ActivePlayerRedGreen][PlayerGreen] -> [PlayerRedGreen][ActivePlayerGreen]
+[action ActivePlayerRedGreen][PlayerBlue] -> [PlayerRedGreen][ActivePlayerBlue]
+
+[action ActivePlayerBlueRed][PlayerGreenBlue] -> [PlayerBlueRed][ActivePlayerGreenBlue]
+[action ActivePlayerBlueRed][PlayerGreenRed] -> [PlayerBlueRed][ActivePlayerGreenRed]
+[action ActivePlayerBlueRed][PlayerRedBlue] -> [PlayerBlueRed][ActivePlayerRedBlue]
+[action ActivePlayerBlueRed][PlayerBlueGreen] -> [PlayerBlueRed][ActivePlayerBlueGreen]
+[action ActivePlayerBlueRed][PlayerRed] -> [PlayerBlueRed][ActivePlayerRed]
+[action ActivePlayerBlueRed][PlayerGreen] -> [PlayerBlueRed][ActivePlayerGreen]
+[action ActivePlayerBlueRed][PlayerBlue] -> [PlayerBlueRed][ActivePlayerBlue]
+[action ActivePlayerBlueRed][PlayerRedGreen] -> [PlayerBlueRed][ActivePlayerRedGreen]
+
+[action ActivePlayerGreenBlue][PlayerGreenRed] -> [PlayerGreenBlue][ActivePlayerGreenRed]
+[action ActivePlayerGreenBlue][PlayerRedBlue] -> [PlayerGreenBlue][ActivePlayerRedBlue]
+[action ActivePlayerGreenBlue][PlayerBlueGreen] -> [PlayerGreenBlue][ActivePlayerBlueGreen]
+[action ActivePlayerGreenBlue][PlayerRed] -> [PlayerGreenBlue][ActivePlayerRed]
+[action ActivePlayerGreenBlue][PlayerGreen] -> [PlayerGreenBlue][ActivePlayerGreen]
+[action ActivePlayerGreenBlue][PlayerBlue] -> [PlayerGreenBlue][ActivePlayerBlue]
+[action ActivePlayerGreenBlue][PlayerRedGreen] -> [PlayerGreenBlue][ActivePlayerRedGreen]
+[action ActivePlayerGreenBlue][PlayerBlueRed] -> [PlayerGreenBlue][ActivePlayerBlueRed]
+
+[action ActivePlayerGreenRed][PlayerRedBlue] -> [PlayerGreenRed][ActivePlayerRedBlue]
+[action ActivePlayerGreenRed][PlayerBlueGreen] -> [PlayerGreenRed][ActivePlayerBlueGreen]
+[action ActivePlayerGreenRed][PlayerRed] -> [PlayerGreenRed][ActivePlayerRed]
+[action ActivePlayerGreenRed][PlayerGreen] -> [PlayerGreenRed][ActivePlayerGreen]
+[action ActivePlayerGreenRed][PlayerBlue] -> [PlayerGreenRed][ActivePlayerBlue]
+[action ActivePlayerGreenRed][PlayerRedGreen] -> [PlayerGreenRed][ActivePlayerRedGreen]
+[action ActivePlayerGreenRed][PlayerBlueRed] -> [PlayerGreenRed][ActivePlayerBlueRed]
+[action ActivePlayerGreenRed][PlayerGreenBlue] -> [PlayerGreenRed][ActivePlayerGreenBlue]
+
+[action ActivePlayerRedBlue][PlayerBlueGreen] -> [PlayerRedBlue][ActivePlayerBlueGreen]
+[action ActivePlayerRedBlue][PlayerRed] -> [PlayerRedBlue][ActivePlayerRed]
+[action ActivePlayerRedBlue][PlayerGreen] -> [PlayerRedBlue][ActivePlayerGreen]
+[action ActivePlayerRedBlue][PlayerBlue] -> [PlayerRedblue][ActivePlayerBlue]
+[action ActivePlayerRedBlue][PlayerRedGreen] -> [PlayerRedBlue][ActivePlayerRedGreen]
+[action ActivePlayerRedBlue][PlayerBlueRed] -> [PlayerRedBlue][ActivePlayerBlueRed]
+[action ActivePlayerRedBlue][PlayerGreenBlue] -> [PlayerRedBlue][ActivePlayerGreenBlue]
+[action ActivePlayerRedBlue][PlayerGreenRed] -> [PlayerRedBlue][ActivePlayerGreenRed]
+
+[action ActivePlayerBlueGreen][PlayerRed] -> [PlayerBlueGreen][ActivePlayerRed]
+[action ActivePlayerBlueGreen][PlayerGreen] -> [PlayerBlueGreen][ActivePlayerGreen]
+[action ActivePlayerBlueGreen][PlayerBlue] -> [PlayerBlueGreen][ActivePlayerBlue]
+[action ActivePlayerBlueGreen][PlayerRedGreen] -> [PlayerBlueGreen][ActivePlayerRedGreen]
+[action ActivePlayerBlueGreen][PlayerBlueRed] -> [PlayerBlueGreen][ActivePlayerBlueRed]
+[action ActivePlayerBlueGreen][PlayerGreenBlue] -> [PlayerBlueGreen][ActivePlayerGreenBlue]
+[action ActivePlayerBlueGreen][PlayerGreenRed] -> [PlayerBlueGreen][ActivePlayerGreenRed]
+[action ActivePlayerBlueGreen][PlayerRedBlue] -> [PlayerBlueGreen][ActivePlayerRedBlue]
+(-------------------------
+--------------------------)
+
+late [ActivePlayerRedGreen TileRed] -> cancel
+late [ActivePlayerRedGreen TileGreen] -> cancel
+late [ActivePlayerGreenBlue TileGreen] -> cancel
+late [ActivePlayerGreenBlue TileBlue] -> cancel
+late [ActivePlayerBlueRed TileBlue] -> cancel
+late [ActivePlayerBlueRed TileRed] -> cancel
+late [ActivePlayerGreenRed TileRed] -> cancel
+late [ActivePlayerGreenRed TileGreen] -> cancel
+late [ActivePlayerBlueGreen TileGreen] -> cancel
+late [ActivePlayerBlueGreen TileBlue] -> cancel
+late [ActivePlayerRedBlue TileBlue] -> cancel
+late [ActivePlayerRedBlue TileRed] -> cancel
+late [ActivePlayerRed TileRed] -> cancel
+late [ActivePlayerGreen TileGreen] -> cancel
+late [ActivePlayerBlue TileBlue] -> cancel
+
+
+
+(:::Animations:::)
+late [TileBlue0] -> [tempTileBlue]
+late [TileBlue4] -> [TileBlue0]
+late [TileBlue3] -> [TileBlue4]
+late [TileBlue2] -> [TileBlue3]
+late [TileBlue1] -> [TileBlue2]
+late [tempTileBlue] -> [TileBlue1]
+
+late [TileGreen0] -> [tempTileGreen]
+late [TileGreen3] -> [TileGreen0]
+late [TileGreen2] -> [TileGreen3]
+late [TileGreen1] -> [TileGreen2]
+late [tempTileGreen] -> [TileGreen1]
+
+late [TileRed0] -> [tempTileRed]
+late [TileRed1] -> [TileRed0]
+late [TileRed2] -> [TileRed1]
+late [tempTileRed] -> [TileRed2]
+
+==============
+WINCONDITIONS
+==============
+
+All Goal on PlayerCharacter
+
+=======
+LEVELS
+=======
+message Press X to switch character
+message Level 1 out of 14
+xxxxxxxxx
+xb.eee.ux
+x..egg..x
+x3.egw.ux
+x..ggw..x
+xi.www.ux
+xxxxxxxxx
+
+message Level 2 out of 14
+
+xxxxxxxxx
+xe2ggg.ux
+xe.eeeaux
+xecwww.ux
+xxxxxxxxx
+
+message Level 3 out of 14
+
+xxxxxxxxxxxxxxx
+x..xxx2caxxx..x
+xu.eee.u.eee.ux
+xxxxxxxxxxxxxxx
+
+
+
+message Level 4 out of 14
+
+...xxxxx...
+xxxxh.1xxxx
+xuww...wwux
+xxxxxxxxxxx
+
+message Level 5 out of 14
+
+...xxxxx...
+...x.u.x...
+xxxxxgxxxxx
+x..x2cax..x
+xuee...eeux
+xxxxxxxxxxx
+
+message Level 6 out of 14
+
+xxxxxxxxxxxxx
+xb..xxx..xxxx
+x4..ggg..eexx
+xa..xxx..xexx
+xxxxxxxxxxexx
+xuuxxx.xxx..x
+xu.wee.ege..x
+xxxxxxxxxxxxx
+
+message Level 7 out of 14
+
+xxxxxxxxxxxxxxxxx
+xbc.uxxuxxuxu.wix
+x1...eeewwwg...wx
+xxxxxxxxxxxxxxxxx
+
+message Level 8 out of 14
+
+xxxxxxxxxxxxxxxxx
+xbcuuxx.xx.x..gjx
+x1.uueeewwwg...gx
+xxxxxxxxxxxxxxxxx
+
+message Level 9 out of 14
+
+xxxxxxxxxxxx
+xm.xxuuxx.1x
+x..ww..ww..x
+xl.xxuuxx.kx
+xxxxxxxxxxxx
+
+message Level 10 out of 14
+
+xxxxxxxxxxx
+xamxx.xk3ux
+x..ewge.uux
+xgxxxxxxxxx
+xux........
+xxx........
+
+message Level 11 out of 14
+
+xxxxxxxxxxxxxx
+xuuuxx...xlcax
+xu..xxx.xx...x
+xu..wgewge.m7x
+xxxxxxxxxxxxxx
+
+message Level 12 out of 14
+
+xxxxxxxxxxx
+x..egwegw.x
+xh.gwegweux
+x5.wegwegux
+x..gwegwe.x
+xxxxxxxxxxx
+
+message Level 13 out of 14
+
+xxxxxxxxxxx
+x..egwegw.x
+xa.gwegweux
+xb.wegwegux
+x3.gwegweux
+xxxxxxxxxxx
+
+message Level 14 out of 14
+
+xxxxxxxxxxxxxx
+xge.a.ewgwguux
+xwx.b.xgegx6ux
+xix.c.ewgwguux
+xxxxxxxxxxxxxx
+
+message Congratulations, You beat the game!

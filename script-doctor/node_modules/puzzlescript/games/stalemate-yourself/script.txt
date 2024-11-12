@@ -1,0 +1,786 @@
+title Stalemate yourself
+author Rosden Shadow [Mark Signorelli]
+homepage rosden.itch.io
+
+noaction
+run_rules_on_level_Start
+
+background_color #231F26
+
+text_color #F2F2AA
+
+again_interval 0.2
+========
+OBJECTS
+========
+
+Background
+#3B3942 #231F26 (#E57ED5 #CC5285)
+11110
+11111
+11111
+11111
+01111
+
+Background2
+#3B3942  #46495B   (#E57ED5 #CC5285)
+11110
+11111
+11111
+11111
+01111
+
+(
+00000
+01110
+01010
+01110
+00000
+)
+(
+00101
+01110
+11011
+01111
+10110)
+(
+11101
+00101
+11111
+10100
+10111)
+
+
+nomove
+#FFEED9 #536673
+.....
+.000.
+.010.
+.000.
+.....
+
+Target
+#FFD9E0 #423D39
+.....
+.010.
+.0.1.
+.000.
+.....
+
+Wall
+#D9FFDC #7EE58D  #5C8466 #4F5B46 #423D39
+21110
+02110
+20221
+23232
+32323
+
+overwall
+#D9FFDC #7EE58D  #5C8466 #4F5B46 #423D39
+.....
+.....
+.....
+10020
+21112
+
+
+Playerright
+#F2F2AA #E5C17E #7F7CA1 #705C84
+.000.
+11202
+11313
+11110
+.1.1.
+
+playerleft
+#F2F2AA #E5C17E #7F7CA1 #705C84
+.000.
+20211
+31311
+01111
+.1.1.
+
+Crate
+#D9FFF8 #AAE0F2 #7EA1E5 #5C6684
+21100
+21110
+22110
+32223
+.333.
+
+overcrate
+#D9FFF8 #AAE0F2 #7EA1E5 #5C6684
+.....
+.....
+.....
+.....
+.000.
+
+
+rook
+#FFD9E0 #F2AACE #E57ED5 #845C7A
+02220
+10201
+21111
+22111
+.222.
+
+overrook
+#FFD9E0 #F2AACE #E57ED5 #845C7A
+.....
+.....
+.0.0.
+01210
+12221
+
+bishop
+#E5C17E #CC7A52 #B32D2D #73342E
+21100
+21110
+22110
+32223
+.333.
+
+overbishop
+#E5C17E #CC7A52 #B32D2D #73342E
+.....
+.....
+.....
+.....
+.000.
+
+queen
+#E5C17E #CC7A52 #B32D2D #73342E #4D2E37
+22110
+32223
+23332
+32323
+.333.
+
+overqueen
+#E5C17E #CC7A52 #B32D2D #73342E
+.....
+.....
+.000.
+21100
+21110
+
+end
+#D9FFF8 #AAE0F2 #7EA1E5 #5C6684
+21100
+21110
+22110
+32223
+.333.
+endx
+#D9FFF8 #AAE0F2 #7EA1E5 #5C6684
+21100
+21110
+22110
+32223
+.333.
+
+
+
+cloner
+#E5C17E #DB7F55 #B32D2D #73342E
+.100.
+.210.
+.221.
+.332.
+.....
+
+swapcrate
+Orange Yellow
+00000
+0...0
+0...0
+0...0
+00000
+
+swapwall
+black
+.....
+.....
+.....
+.....
+.....
+
+thefloor
+#231F26
+00000
+00000
+00000
+00000
+00000
+
+thefloorx
+#231F26
+00000
+00000
+00000
+00000
+00000
+
+eend
+#231F26
+00000
+00000
+00000
+00000
+00000
+(
+checkempty
+black
+.....
+.....
+.....
+.....
+.....
+
+checkblock
+black
+.....
+.....
+.....
+.....
+.....
+)
+
+check
+#E5C17E #847A5C #5B5746
+11110
+11111
+11111
+11111
+01111
+
+switcrate
+black
+.....
+.....
+.....
+.....
+.....
+
+switcrate2
+black
+.....
+.....
+.....
+.....
+.....
+
+arrow
+black
+.....
+.....
+.0.0.
+.000.
+..0..
+
+arrow2
+black
+.....
+.0.0.
+.000.
+..0..
+.....
+
+arrowx
+black
+.....
+.....
+.....
+.....
+.....
+
+arrowx2
+black
+.....
+.....
+.....
+.....
+.....
+
+sleft
+black
+.....
+.....
+.....
+.....
+.....
+
+sright
+black
+.....
+.....
+.....
+.....
+.....
+
+sup
+black
+.....
+.....
+.....
+.....
+.....
+
+sdown
+black
+.....
+.....
+.....
+.....
+.....
+
+slu
+black
+.....
+.....
+.....
+.....
+.....
+
+sru
+black
+.....
+.....
+.....
+.....
+.....
+
+srd
+black
+.....
+.....
+.....
+.....
+.....
+
+sld
+black
+.....
+.....
+.....
+.....
+.....
+
+slu2
+black
+.....
+.....
+.....
+.....
+.....
+
+sru2
+black
+.....
+.....
+.....
+.....
+.....
+
+srd2
+black
+.....
+.....
+.....
+.....
+.....
+
+sld2
+black
+.....
+.....
+.....
+.....
+.....
+
+wstopu
+black
+.....
+.....
+.....
+.....
+.....
+wstopd
+black
+.....
+.....
+.....
+.....
+.....
+wstopl
+black
+.....
+.....
+.....
+.....
+.....
+wstopr
+black
+.....
+.....
+.....
+.....
+.....
+
+stopper
+black
+.....
+.....
+.....
+.....
+.....
+
+lose
+black
+.....
+.....
+.....
+.....
+.....
+
+backplace1
+black
+.....
+.....
+.....
+.....
+.....
+
+backplace2
+black
+.....
+.....
+.....
+.....
+.....
+
+winend
+#D9FFDC #7EE58D  #5C8466
+1000.
+21100
+21110
+22110
+.2221
+
+
+=======
+LEGEND
+=======
+
+. = Background
+' = Backplace1
+# = Wall
+P = Playerright
+* = Crate
+
+O = Target
+n = nomove
+a = arrow2 and wall
+e=end
+t = end and target and eend
+w=end and winend
+
+c=cloner
+-=thefloor
+x=thefloorx
+
+r=rook
+b=bishop
+q=queen
+
+feel=overwall or overcrate or overrook or overbishop or overqueen
+pushable=crate or cloner or swapcrate  or switcrate or switcrate2 or rook or bishop or queen
+win=crate or wall
+
+theemx= crate 
+player=playerright or playerleft
+
+blocker = wall or pushable  or nomove or arrow
+
+arrowk = arrow or arrow2 or arrowx or arrowx2
+
+sdirect =sleft or sright or sup or sdown or slu or sru or srd or sld
+
+sdirect2 = sru2 or srd2 or slu2 or sld2
+
+backplace = backplace1 or backplace2
+wstop = wstopu or wstopd or wstopl or wstopr
+
+blockerx= wall or check or stopper
+=======
+SOUNDS
+=======
+pushable MOVE 36772507
+
+EndLevel 74089700
+
+player MOVE 68988304
+sfx0 52836103
+sfx1 45427502
+
+sfx2 29503700
+sfx3 81951902
+
+sfx4 25571707
+
+sfx5 76999301
+
+================
+COLLISIONLAYERS
+================
+
+Background
+background2
+backplace
+Target
+nomove
+lose
+check
+Player, Wall, pushable,swapwall,thefloor,thefloorx,rook,bishop
+
+stopper
+
+wstopu
+wstopd
+wstopl
+wstopr
+sleft
+sright
+sup
+sdown
+slu
+sld
+slu2
+sld2
+sru
+srd
+sru2
+srd2
+
+arrow, arrow2, arrowx, arrowx2
+winend
+eend
+end, endx
+feel
+
+
+======
+RULES
+======
+
+[feel]->[]
+[lose]->[]
+[stopper]->[]
+
+
+[> player| check]->[player|check] sfx4
+
+
+[> player| pushable]->[ player |> pushable]
+[< player| pushable]->[< player |< pushable]
+[> pushable| pushable]->[> pushable |> pushable]
+
+[> pushable|check]-> [ > pushable|check] sfx5
+
+[check]->[]
+
+[> crate|Target]->[> crate|target] sfx2
+
+[ left Playerright] -> [ left playerleft]
+[ right Playerleft] -> [ right playerright]
+
+[endx] ->[thefloor] sfx2
+[end | thefloor]-> [endx |thefloor]
+
+(late[crate| ]->[crate| check])
+
+late[bishop]->[bishop slu sld sru srd]
+late[rook| ]->[rook sleft sright sup sdown| check]
+
+late[queen]->[queen slu sld sru srd sleft sright sup sdown]
+
+late left[sleft|no blocker]->[sleft| sleft]
+late right[sright|no blocker]->[sright| sright]
+late up[sup|no blocker]->[sup| sup]
+late down[sdown| no blocker]->[sdown| sdown]
+
+startloop
+late left[slu|]->[slu| slu2]
+late right[sru|]->[sru| sru2]
+late left[sld|]->[sld| sld2]
+late right[srd|]->[srd| srd2]
+late up[slu2|no blocker]->[slu2| slu]
+late up[sru2|no blocker]->[sru2| sru]
+late down[sld2|no blocker]->[sld2| sld]
+late down[srd2|no blocker]->[srd2| srd]
+endloop
+
+late [sdirect]->[check]
+late [sdirect2]->[]
+
+startloop
+late right[wall | pushable]-> [wall | pushable wstopr]
+late right[pushable wstopr | pushable]-> [pushable wstopr  | pushable wstopr]
+late left[wall | pushable]-> [wall | pushable wstopl]
+late left[pushable wstopl | pushable]-> [pushable wstopl  | pushable wstopl]
+late up[wall | pushable]-> [wall | pushable wstopu]
+late up[pushable wstopu | pushable]-> [pushable wstopu  | pushable wstopu]
+late down[wall | pushable]-> [wall | pushable wstopd]
+late down[pushable wstopd | pushable]-> [pushable wstopd  | pushable wstopd]
+endloop
+
+late up[player|wstopd]->[player |wstopd stopper] 
+late down[player|wstopu]->[player |wstopu stopper] 
+late right[player|wstopl]->[player |wstopl stopper] 
+late left[player|wstopr]->[player |wstopr stopper] 
+
+late[wstop]->[]
+
+late[pushable check]->[pushable]
+
+late up [wall| ]-> [wall|overwall]
+late up [theemx| ]-> [theemx|overcrate]
+
+(late up [crate2| ]-> [crate2|overcrate2])
+
+late up [end| ]-> [end|overcrate]
+late up [rook| ]-> [rook|overrook]
+late up [bishop| ]-> [bishop|overbishop]
+
+late up [queen| ]-> [queen|overqueen]
+late up [endx| ]-> [endx|overcrate]
+
+late [player|no blockerx]->[player lose| ]
+
+startloop
+late [backplace1|no backplace]->[backplace1|backplace2]
+late [backplace2|no backplace]->[backplace2|backplace1]
+endloop
+late [backplace2]->[Background2]
+
+late [backplace]->[]
+
+[]-> again 
+([arrow]->[arrowx2]
+[arrow2]->[arrowx]
+
+[arrowx]->[arrow]
+[arrowx2]->[arrow2])
+==============
+WINCONDITIONS
+==============
+
+no lose
+no winend
+
+=======
+LEVELS
+=======
+
+message GOAL: trap yourself. Get to a point where you cant make anymore moves.
+
+
+message level 1 of 6
+---------
+###---###
+#B##-##B#
+##.###.##
+#.......#
+#.......#
+#..#.#..#
+#.......#
+#..*.*..#
+#.......#
+###.P.###
+
+message level 2 of 6
+---------
+-#######-
+##.....##
+#.......#
+#..#.#..#
+#...b...#
+#..#.#..#
+#...*...#
+#...P...#
+##.....##
+-#######-
+
+message level 3 of 6
+---------
+-#######-
+##.....##
+#.......#
+#.......#
+#...q...#
+#.......#
+#...*...#
+#...*...#
+#..#P#..#
+####.####
+
+message level 4 of 6
+---------
+-#######-
+##..#..##
+##..b..##
+#.......#
+##.....##
+#.......#
+##..b..##
+#...P*..#
+##.....##
+-#######-
+
+
+message level 5 of 6
+---------
+-#######-
+##.....##
+#.......#
+##..##.##
+-#..Q..#-
+##.##..##
+#..*.*..#
+##..P..##
+-#.....#-
+-#######-
+
+message level 6 of 6
+---------
+#########
+#....##.#
+#.b.....#
+#.......#
+#####...#
+#...#...#
+#.P***..#
+#...#...#
+#########
+---------
+
+
+xxxxxxxxxxxxxx
+-eeeeeeeeeeee-
+eeeeeeeeeeeeee
+eeeeeeeeeeeeee
+wewewewwweweew
+wewewetweewwew
+weweweeweeweww
+eweweewwweweew
+eeeeeeeeeeeeee
+eeeeeeeeeeeeee
+-eeeeeeeeeeee-
+
+
+
+
+
+
+

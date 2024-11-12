@@ -1,0 +1,85 @@
+/* eslint-env jasmine */
+import parser from './parser/parser'
+import { spritesThatInteractWithPlayer } from './util'
+
+describe('util functions', () => {
+    it('filters out unrelated sprites', () => {
+        const { data: game } = parser.parse(`title test
+===
+OBJECTS
+===
+
+background .
+black
+
+player P
+yellow
+
+unrelated
+blue
+
+unseensingle
+transparent
+
+unseenpixels
+transparent
+00000
+0...0
+0...0
+0...0
+00000
+
+relatedbycollisionlayer
+red
+
+relatedbyrule
+green
+
+relatedbywincondition
+green
+
+===
+COLLISIONLAYERS
+===
+
+background
+player, relatedbycollisionlayer
+unrelated
+unseensingle
+unseenpixels
+relatedbyrule
+relatedbywincondition
+
+===
+RULES
+===
+
+[ player relatedbyrule unseensingle unseenpixels ] -> []
+
+===
+WINCONDITIONS
+===
+
+ALL relatedbywincondition ON background
+`)
+
+        const player = game.getSpriteByName('player')
+        const background = game.getSpriteByName('background')
+        const unrelated = game.getSpriteByName('unrelated')
+        const unseensingle = game.getSpriteByName('unseensingle')
+        const unseenpixels = game.getSpriteByName('unseenpixels')
+        const relatedbycollisionlayer = game.getSpriteByName('relatedbycollisionlayer')
+        const relatedbyrule = game.getSpriteByName('relatedbyrule')
+        const relatedbywincondition = game.getSpriteByName('relatedbywincondition')
+
+        const interactWithPlayer = spritesThatInteractWithPlayer(game)
+        expect(interactWithPlayer).toContain(player)
+        expect(interactWithPlayer).toContain(relatedbycollisionlayer)
+        expect(interactWithPlayer).toContain(relatedbyrule)
+        expect(interactWithPlayer).toContain(relatedbywincondition)
+        expect(interactWithPlayer).not.toContain(background)
+        expect(interactWithPlayer).not.toContain(unrelated)
+        expect(interactWithPlayer).not.toContain(unseensingle)
+        expect(interactWithPlayer).not.toContain(unseenpixels)
+    })
+})

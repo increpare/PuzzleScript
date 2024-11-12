@@ -1,0 +1,1713 @@
+title Easy Enigma
+
+run_rules_on_level_start
+realtime_interval 0.2
+
+norepeat_action
+
+background_color black
+
+flickscreen 42x19
+
+========
+OBJECTS
+========
+
+Background
+black
+
+fakeground
+LIGHTGREEN GREEN
+11111
+01111
+11101
+11111
+10111
+
+
+Target
+DarkBlue
+.....
+.000.
+.0.0.
+.000.
+.....
+
+
+fakeWall
+BROWN DARKBROWN
+00010
+11111
+01000
+11111
+00010
+
+Wall
+BROWN DARKBROWN
+00010
+11111
+01000
+11111
+00010
+
+Player
+Black Orange White Blue
+.000.
+.111.
+22222
+.333.
+.3.3.
+
+Crate
+Orange Yellow
+00000
+0...0
+0...0
+0...0
+00000
+
+capa あ
+black transparent
+01100
+10010
+11110
+10010
+10010
+
+capb い
+black transparent
+11100
+10010
+11100
+10010
+11100
+
+capc う
+black transparent
+01110
+10000
+10000
+10000
+01110
+
+capd え
+black transparent
+11100
+10010
+10010
+10010
+11100
+
+cape 1
+black transparent
+11110
+10000
+11100
+10000
+11110
+
+capf お
+black transparent
+11110
+10000
+11100
+10000
+10000
+
+capg か
+black transparent
+01110
+10000
+10110
+10010
+01100
+
+caph き
+black transparent
+10010
+10010
+11110
+10010
+10010
+
+capi く
+black transparent
+01110
+00100
+00100
+00100
+01110
+
+capj け
+black transparent
+11110
+00100
+00100
+10100
+01000
+
+capk こ
+black transparent
+10010
+10010
+11100
+10010
+10010
+
+capl そ
+black transparent
+10000
+10000
+10000
+10000
+11110
+
+capm し
+black transparent
+01010
+10101
+10101
+10101
+10101
+
+capn ゐ
+black transparent
+10010
+11010
+10110
+10010
+10010
+
+capo る
+black transparent
+01100
+10010
+10010
+10010
+01100
+
+capp ら
+black transparent
+11100
+10010
+11100
+10000
+10000
+
+capq み
+black transparent
+01100
+10010
+10010
+10110
+01110
+
+capr 5
+black transparent
+11100
+10010
+11100
+10010
+10010
+
+caps 2
+black transparent
+01110
+10000
+01100
+00010
+11100
+
+capt わ
+black transparent
+01110
+00100
+00100
+00100
+00100
+
+capu ゆ
+black transparent
+10010
+10010
+10010
+10010
+01100
+
+capv を
+black transparent
+10010
+10010
+10100
+11000
+10000
+
+capw む
+black transparent
+10001
+10101
+10101
+10101
+01010
+
+capx 3
+black transparent
+10010
+10010
+01100
+10010
+10010
+
+capy ふ
+black transparent
+10010
+10010
+01110
+00010
+11100
+
+capz 4
+black transparent
+11110
+00010
+00100
+01000
+11110
+
+lhash 6
+black transparent
+01010
+11111
+01010
+11111
+01010
+
+rhash 0
+black transparent
+01010
+11111
+01010
+11111
+01010
+
+
+a
+black transparent
+00000
+01110
+10010
+10010
+01110
+
+b
+black transparent
+10000
+10000
+11100
+10010
+01100
+
+c
+black transparent
+00000
+01110
+10000
+10000
+01110
+
+d
+black transparent
+00010
+00010
+01110
+10010
+01100
+
+e
+black transparent
+01100
+10010
+11100
+10000
+01100
+
+f
+black transparent
+00000
+00110
+01000
+11100
+01000
+
+g
+black transparent
+01100
+10010
+01110
+00010
+01100
+
+h
+black transparent
+10000
+10000
+11100
+10010
+10010
+
+i
+black transparent
+01000
+00000
+11000
+01000
+11100
+
+j
+black transparent
+00100
+00000
+00100
+10100
+01000
+
+k
+black transparent
+10000
+10010
+11100
+10010
+10010
+
+l
+black transparent
+10000
+10000
+10000
+10010
+01100
+
+m
+black transparent
+00000
+01010
+10101
+10101
+10101
+
+n
+black transparent
+00000
+01100
+10010
+10010
+10010
+
+o
+black transparent
+00000
+01100
+10010
+10010
+01100
+
+p
+black transparent
+00000
+01100
+10010
+11100
+10000
+
+q
+black transparent
+00000
+01100
+10010
+01110
+00010
+
+r
+black transparent
+00000
+01110
+10000
+10000
+10000
+
+s
+black transparent
+01110
+10000
+01100
+00010
+11100
+
+t
+black transparent
+10000
+11000
+10000
+10010
+01100
+
+u
+black transparent
+00000
+10010
+10010
+10010
+01100
+
+v
+black transparent
+00000
+10010
+10100
+11000
+10000
+
+w
+black transparent
+00000
+10001
+10101
+10101
+01010
+
+x
+black transparent
+00000
+10010
+01100
+01100
+10010
+
+y
+black transparent
+10010
+10010
+01110
+00010
+11100
+
+z
+black transparent
+00000
+11110
+00100
+01000
+11110
+
+glitch1
+transparent
+
+glitch2
+transparent
+
+white
+white
+
+black
+black
+
+mark
+transparent
+
+mark2
+transparent
+
+glitchright1
+#af1239 #2167ee
+00000
+11111
+...1.
+00000
+.....
+
+glitchright2
+#3fa257 #1878ff #ae2629
+.....
+012..
+...20
+22222
+11111
+
+glitchright3
+#c0ffee #3de312 #087a55
+00000
+..00.
+1111.
+....1
+22222
+
+
+
+glitchright4
+transparent
+
+glitchright5
+#e451b8 #cbff12
+.0...
+0.000
+.00..
+11111
+.....
+
+glitchright6
+#12baef #55efcb #f16743
+.....
+22222
+000.0
+.....
+.1111
+
+roulette1
+transparent
+
+roulette2
+transparent
+
+roulette3
+transparent
+
+roulette4
+transparent
+
+roulette5
+transparent
+
+roulette6
+transparent
+
+glitch3
+transparent
+
+glitch4
+transparent
+
+glitch6
+transparent
+
+back1
+ black
+.00.0
+.00.0
+.00.0
+.00.0
+.00.0
+
+back2
+ black
+00.0.
+00.0.
+00.0.
+00.0.
+00.0.
+
+back3
+ black
+0.0.0
+0.0.0
+0.0.0
+0.0.0
+0.0.0
+
+back4
+ black
+..0..
+..0..
+..0..
+..0..
+..0..
+
+timer9
+transparent
+
+timer8
+transparent
+
+timer7
+transparent
+
+timer6
+transparent
+
+timer5
+transparent
+
+timer4
+transparent
+
+timer3
+transparent
+
+timer2
+transparent
+
+timer1
+transparent
+
+timer0
+transparent
+
+pressaction
+transparent
+
+cover
+black
+
+play1
+transparent
+
+play2
+transparent
+
+glitch5
+transparent
+
+textgrass
+white black
+11111
+11111
+11111
+11011
+11111
+
+textwall
+white black
+11111
+10101
+11011
+10101
+11111
+
+textsecret
+white black
+10001
+11101
+11001
+11111
+11011
+
+textplayer
+white black
+11011
+11011
+11011
+11111
+11011
+
+textcrate
+white black
+11111
+10001
+01111
+01111
+10001
+
+texttarget
+white black
+10001
+01101
+10001
+11101
+10011
+
+play3
+transparent
+
+leftbracket ろ
+black transparent
+01100
+01000
+01000
+01000
+01100
+
+rightbracket ゑ
+black transparent
+00110
+00010
+00010
+00010
+00110
+
+
+colon
+black transparent
+00000
+01000
+00000
+01000
+00000
+
+arrow り
+black transparent
+00100
+00010
+11101
+00010
+00100
+
+vertica や
+black transparent
+00100
+00100
+00100
+00100
+00100
+
+equals ひ
+black transparent
+00000
+11110
+00000
+11110
+00000
+
+caret れ
+black transparent
+00000
+01000
+00100
+01000
+00000
+
+comma よ
+black transparent
+00000
+00000
+00000
+00100
+01000
+
+tmark
+transparent
+
+pmark
+transparent
+
+cmark
+transparent
+
+play4
+transparent
+
+nott
+transparent
+
+nota
+transparent
+
+notr
+transparent
+
+notg
+transparent
+
+note
+transparent
+
+play5
+transparent
+
+blackwall に
+black
+
+sgoal の
+transparent
+
+tgoal さ
+transparent
+
+agoal た
+transparent
+
+rgoal な
+transparent
+
+ggoal は
+transparent
+
+mgoal ぬ
+transparent
+
+egoal ま
+transparent
+
+ending  "
+transparent
+
+sf2 |
+transparent
+
+fakeTarget =
+DarkBlue
+.....
+.000.
+.0.0.
+.000.
+.....
+
+green
+#10ae1c
+
+purple
+#a055c0
+
+grey
+#888888
+
+red
+#c11d16
+
+sfa め
+transparent
+
+sfb へ
+transparent
+
+
+=======
+LEGEND
+=======
+
+7 = timer2 and cover
+8 = timer5 and cover
+9 = timer9 and cover
+. = Background
+, = fakeground
++ = Wall and fakeground
+? = player and fakeground
+- = Crate and fakeground
+~ = target and fakeground
+} = Crate and Target and fakeground
+glitchright = glitchright1 or glitchright2 or glitchright3 or glitchright4 or glitchright5 or glitchright6
+roulette = roulette1 or roulette2 or roulette3 or roulette4 or roulette5 or roulette6
+back = back1 or back2 or back3 or back4
+timer = timer0 or timer1 or timer2 or timer3 or timer4 or timer5 or timer6 or timer7 or timer8 or timer9
+$ = glitch1
+% = glitch2
+& = glitch3
+* = glitch4
+^ = mark
+` = pressaction
+\ = cover and player
+/ = play1
+> = play2
+{ = play3
+< = glitch5
+; = glitch6
+[ = textsecret and fakeground
+] = play4 and mark
+text = textplayer or textgrass or textwall or textcrate or texttarget
+' = play5
+せ = p and pmark
+す = t and tmark
+と = c and cmark
+# = colon
+xmark = pmark or tmark or cmark
+item = player or crate or wall
+capxx = capq or capw or cape or capr or capt or capy or capu or capi or capo or capp or capa or caps or capd or capf or capg or caph or capj or capk or capl or capz or capx or capc or capv or capv or capb or capn or capm
+letter = 1 or 2 or 3 or 4 or 5 or q or w or e or r or t or y or u or i or o or p or a or s or d or f or g or h or j or k or l or z or x or c or v or b or n or m or leftbracket or rightbracket or vertica or arrow or equals or comma or caret or capq or capw or cape or capr or capt or capy or capu or capi or capo or capp or capa or caps or capd or capf or capg or caph or capj or capk or capl or capz or capx or capc or capv or capv or capb or capn or capm or colon
+: = fakewall
+xgoal = sgoal or tgoal or agoal or rgoal or ggoal or mgoal or egoal
+cols = grey or purple or green or red
+=======
+SOUNDS
+=======
+
+SFX7 24019108
+SFX8 5183708
+SFX9 32607708
+SFX0 51652308
+SFX1 11432507
+SFX2 10961308
+================
+COLLISIONLAYERS
+================
+
+Background
+fakeground,
+black
+Target
+sfa
+sfb
+faketarget
+xgoal
+white
+back
+fakewall
+Player, Wall, Crate, blackwall
+red, green, purple, grey
+letter
+6, rhash
+ending
+glitch1, glitch2, glitch3, glitch4, glitch5, glitch6, play1, play2, play3, play4, play5
+glitchright
+roulette
+timer
+mark
+mark2
+pressaction
+tmark,
+cmark, pmark
+nott, nota,notr,notg,note
+text, textsecret
+cover
+sf2
+
+======
+RULES
+======
+
+[faketarget] -> [faketarget fakeground]
+
+[sf2] -> SFX2
+[action player][pressaction] -> [player][]
+
+
+[player cover no timer] -> [player cover mark2]
+[player cover mark2][pressaction] -> [player cover ][pressaction]
+
+
+left [player cover mark2][lhash|] -> [player cover mark2][lhash|lhash]
+right [player cover mark2][rhash|] -> [player cover mark2][rhash|rhash]
+[player cover mark2] -> [player cover]
+
+[timer0] -> []
+[timer1] -> [timer0]
+[timer2] -> [timer1]
+[timer3] -> [timer2]
+[timer4] -> [timer3]
+[timer5] -> [timer4]
+[timer6] -> [timer5]
+[timer7] -> [timer6]
+[timer8] -> [timer7]
+[timer9] -> [timer8]
+
+
+
+late [letter no white] -> [letter white]
+
+[6 no white] -> [6 white]
+[0 no white] -> [0 white]
+
+up [glitch1][letter ] -> [glitch1][random letter mark]
+left [glitch1][letter |...| no mark] -> [glitch1][letter mark | ... |letter]
+down [glitch1][letter |...| no mark] -> [glitch1][letter mark| ... |letter]
+
+
+
+[glitch2][glitchright no roulette] -> [glitch2][glitchright random roulette]
+[glitch2][roulette6 glitchright] -> [glitch2][]
+[glitch2][roulette] -> [glitch2][]
+down [glitch2][no glitchright|mark] -> [glitch2][random glitchright|mark]
+right [glitch2][glitchright|] -> [glitch2][glitchright|glitchright]
+
+
+left [glitch3][letter no mark| no letter] -> [glitch3][letter mark|letter ]
+left [glitch3][letter no mark| mark] -> [glitch3][letter mark|letter mark]
+up [glitch3][letter no mark| no letter] -> [glitch3][letter mark|letter ]
+up [glitch3][letter no mark| mark] -> [glitch3][letter mark|letter mark]
+[glitch3][letter mark] -> [glitch3][letter]
+
+[glitch5][mark] -> [glitch5][]
+right [glitch5][3 no mark | no 3 | ] -> [glitch5][3|3 mark | 3 mark]
+
+[glitch4][letter no mark] -> [glitch4][letter random back mark]
+[glitch4][mark] -> [glitch4][] SFX0
+
+[play1][moving player][wall no roulette] -> [play1][moving player][wall random roulette]
+[play1][moving player][wall roulette6 mark2] -> [play1][moving player][]
+[play1][moving player][wall roulette6 mark] -> [play1][moving player][wall mark2]
+[play1][moving player][wall roulette6] -> [play1][moving player][wall mark]
+[play1][moving player][roulette] -> [play1][moving player][]
+
+
+[play2][no fakeground no black] -> [play2][black]
+[play2][no fakeground] -> [play2][fakeground ]
+[play2][moving player][black] -> [play2][moving player][moving black]
+[play2][moving player][fakeground] -> [play2][moving player][moving fakeground]
+[play2][> fakeground no black no mark| black] -> [play2][> fakeground | mark]
+[play2][moving player] -> [play2][stationary player]
+[play2][> black | wall] -> [play2][> black | > wall]
+[play2][moving wall | wall] -> [play2][moving wall | moving wall]
+[play2][> wall | player] -> [play2][> wall | > player]
+[play2][> wall | crate] -> [play2][> wall | > crate]
+[play2][> player | wall] -> [play2][> player | > wall]
+[play2][> crate | wall] -> [play2][> crate | > wall]
+[play2][> crate | player] -> [play2][> crate | > player]
+[play2][> player | crate] -> [play2][> player | > crate]
+
+late [play3][text] -> [play3][]
+late [play3][crate] -> [play3][ textcrate crate]
+late [play3][player] -> [play3 ][textplayer player]
+[play3][> player | letter no c no g] -> [play3][stationary player | letter]
+
+late [play3][target no crate no player] -> [play3][ texttarget target]
+late [play3][fakeground no crate no wall no player no target no textsecret] -> [play3 ][textgrass fakeground]
+late [play3][wall] -> [play3 ][textwall wall]
+
+right [play4 mark][pmark | letter no comma no vertica] -> [play4 mark][pmark | pmark letter]
+right [play4 mark][tmark | letter] -> [play4 mark][tmark | tmark letter]
+right [play4 mark][cmark | letter no rightbracket no comma] -> [play4 mark][cmark | cmark letter]
+[play4 mark] -> [play4]
+
+[play4][t tmark no nott no nota no notr no notg no note] -> [play4][t tmark nott]
+[play4][a tmark no nott no nota no notr no notg no note] -> [play4][a tmark nota]
+[play4][r tmark no nott no nota no notr no notg no note] -> [play4][r tmark notr]
+[play4][g tmark no nott no nota no notr no notg no note] -> [play4][g tmark notg]
+[play4][e  tmark no nott no nota no notr no notg no note] -> [play4][e tmark note]
+
+late [play4][white no letter] -> [play4][]
+[play4][moving player][pmark letter] -> [play4][moving player][moving pmark moving letter]
+
+[play4][> pmark > letter| stationary letter no cmark no tmark no pmark] -> [play4][stationary pmark stationary letter | letter]
++ [play4][> cmark > letter| stationary letter no tmark no cmark] -> [play4][stationary cmark stationary letter | letter]
++ [play4][stationary letter stationary pmark | letter pmark] -> [play4][stationary letter stationary pmark |stationary letter stationary pmark]
++ [play4][stationary letter stationary cmark | letter cmark] -> [play4][stationary letter stationary cmark |stationary letter stationary cmark]
+
+[play4][> letter > pmark | letter cmark] -> [play4][> letter > pmark |> letter  > cmark]
++ [play4][> letter > cmark | letter cmark] -> [play4][> letter > cmark |> letter > cmark]
++ [play4][moving letter moving pmark | letter pmark] -> [play4][moving letter moving pmark |moving letter moving pmark]
++ [play4][moving letter moving cmark | letter cmark] -> [play4][moving letter moving cmark |moving letter moving cmark]
+
+
+[sfa] -> SFX1
+[sfb] -> SFX7
+[sfb] -> SFX9
+
+
+[> letter | letter tmark no pmark no cmark] -> [> letter | tmark]
+late [tmark no letter nott] -> [tmark t]
+late [tmark no letter nota] -> [tmark a]
+late [tmark no letter notg] -> [tmark g]
+late [tmark no letter note] -> [tmark e]
+late [tmark no letter notr] -> [tmark r]
+
+late [play4][letter no white] -> [play4][letter white]
+
+
+[play4][> pmark > letter| stationary letter] -> [play4][stationary pmark stationary letter | letter]
++ [play4][> cmark > letter| stationary letter] -> [play4][stationary cmark stationary letter | letter]
++ [play4][stationary letter stationary pmark | letter pmark] -> [play4][stationary letter stationary pmark |stationary letter stationary pmark]
++ [play4][stationary letter stationary cmark | letter cmark] -> [play4][stationary letter stationary cmark |stationary letter stationary cmark]
+
+
+[cover moving player] -> [cover stationary player]
+
+[> player | crate] -> [> player | > crate] SFX1
+
+
+[play3][> crate | letter] -> [play3][stationary crate |stationary letter]
+[play3][> player | stationary crate] -> [play3][stationary player |stationary crate]
+
+[play5][> player | wall] -> [play5][> player | > wall]
+
+[play5][> wall | letter] -> [play5][stationary wall | letter]
+[play5][> wall | blackwall] -> [play5][stationary wall | blackwall]
+[play5][> wall | lhash] -> [play5][stationary wall | lhash]
+[play5][> wall | rhash] -> [play5][stationary wall | rhash]
+[play5][> wall | wall] -> [play5][stationary wall | wall]
+[play5][> wall | crate] -> [play5][stationary wall | crate]
+
+[play5][> player | letter] -> [play5][> player | > letter]
+late [play5][white no letter no 6 no 0] -> [play5][]
+
+[play5][> letter | wall] -> [play5][stationary letter | wall]
+[play5][> letter | letter] -> [play5][stationary letter | letter]
+[play5][> letter | blackwall] -> [play5][stationary letter | blackwall]
+[play5][> letter | lhash] -> [play5][stationary letter | lhash]
+[play5][> letter | rhash] -> [play5][stationary letter | rhash]
+[play5][> letter | crate] -> [play5][stationary letter | crate]
+[play5][> player | stationary letter] -> [play5][stationary player | stationary letter]
+[play5][> player | stationary wall] -> [play5][stationary player | stationary wall]
+
+[play5] -> [play5 mark2]
+[play5 mark2][sgoal no s] -> [play5][sgoal]
+[play5 mark2][tgoal no t] -> [play5][tgoal]
+[play5 mark2][agoal no a] -> [play5][agoal]
+[play5 mark2][rgoal no r] -> [play5][rgoal]
+[play5 mark2][ggoal no g] -> [play5][ggoal]
+[play5 mark2][mgoal no m] -> [play5][mgoal]
+[play5 mark2][egoal no e] -> [play5][egoal]
+
+[action player][play5 no mark2] -> [player][play5]
+[play5][action player][pressaction] -> [play5][player][]
+[play5 mark2][pressaction] -> [play5][pressaction]
+
+
+
+left [play5 mark2][lhash| no target] -> [play5 mark2][lhash|lhash]
+[lhash | target] -> [lhash | target crate]
+[lhash crate] -> [lhash]
+right [play5 mark2][rhash|] -> [play5 mark2][rhash|rhash]
+
+[glitch1][mark] -> [glitch1][]
+
+[crate target][player ending][play5] -> [crate target][player ending][]
+
+[glitch6][item no roulette] -> [glitch6 ][ item random roulette]
+[glitch6][item roulette6] -> [glitch6][random item]
+[glitch6][roulette] -> [glitch6][]
+
+
+
+late [fakeground][player no fakeground] -> [fakeground][player fakeground]
+
+late [play4][xmark] -> [play4][xmark green]
+late [play4][equals] -> [play4][equals grey]
+late [play4][caret] -> [play4][caret red]
+late [play4][arrow] -> [play4][arrow red]
+late [play4][capxx] -> [play4][capxx purple]
+late right [play4][white a no grey no green no red | ... | green ] -> [play4][white a purple | ... | green ]
+late right [play4][white l no grey no green no red| ... | green ] -> [play4][white l purple | ... | green ]
+late right [play4][white o no grey no green no red| ... | green ] -> [play4][white o purple | ... | green ]
+late right [play4][white n no grey no green no red| ... | green ] -> [play4][white n purple | ... | green ]
+late [play4][letter no rightbracket no leftbracket no vertica no purple no grey no red] -> [play4][letter green]
+
+late [green no letter] -> []
+late [red no letter] -> []
+late [grey no letter] -> []
+late [purple no letter] -> []
+==============
+WINCONDITIONS
+==============
+no timer
+all target on crate
+no pressaction
+all notg on cmark
+no play5
+
+
+
+=======
+LEVELS
+=======
+
+
+
+(..........................................
+..........................................
+..........................................
+..........................................
+..........................................
+..........................................
+................,,,,,,,,,,................
+................,,,++++,,,................
+................,+++,,+++,................
+................,+?-,,-,+,................
+................,+,,~~,,+,................
+................,++++++++,................
+................,,,,,,,,,,................
+..........................................
+..........................................
+..........................................
+..........................................
+..........................................
+.........................................;)
+
+
+
+
+
+
+
+..........................................
+..........................................
+..........................................
+..........................................
+..........................................
+..........................................
+..........................................
+..............,,,,,,,,,,,,,...............
+..............,+++++++++++,...............
+..............,+,?-,,,,~,+,...............
+..............,+++++++++++,...............
+..............,,,,,,,,,,,,,...............
+..........................................
+..........................................
+..........................................
+..........................................
+..........................................
+..........................................
+..........................................
+
+..........................................
+..........................................
+..........................................
+..........................................
+..........................................
+..........................................
+..........................................
+..........................................
+..........................................
+...you.can.only.push.one.box.at.a.time....
+..........................................
+..........................................
+..........................................
+...........press.3.to.continue............
+..........................................
+..........................................
+..........................................
+.........................................`
+.........................................\
+
+..........................................
+..........................................
+..........................................
+..........................................
+..........................................
+..........................................
+................,,,,,,,,,,................
+................,,,++++,,,................
+................,+++,,+++,................
+................,+?-,,-,+,................
+................,+,,~~,,+,................
+................,++++++++,................
+................,,,,,,,,,,................
+..........................................
+..........................................
+..........................................
+..........................................
+..........................................
+..........................................
+
+..........................................
+..........................................
+..........................................
+..........................................
+..........................................
+..........................................
+..........................................
+..........................................
+..........................................
+..dont.forget.to.press.5.if.you.get.stuck.
+..........................................
+..........................................
+..........................................
+...........press.3.to.continue............
+..........................................
+..........................................
+.........................................`
+.........................................`
+.........................................\
+
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,dont7forget.to.press.5.if.you.get.stuck,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,press.3.to.continue,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+
+..........................................
+..........................................
+..........................................
+..........................................
+..........................................
+..........................................
+................,,,,,,,,,,................
+................,,,????,,,................
+................,???,,???,................
+................,?+~,,~,?,................
+................,?,,--,,?,................
+................,????????,................
+................,,,,,,,,,,................
+..........................................
+..........................................
+..........................................
+..........................................
+..........................................
+..........................................
+
+
+
+..........................................
+..........................................
+..........................................
+..........................................
+..........................................
+................,,,,,,,,,,................
+................,,,++++,,,................
+................,+++,,+++,................
+................,+,,,,,,+,................
+...you.can.only.push.one.box.at.a.time....
+...you.can.only.push.one.box.at.a.time...|
+...you.can.only.push.one.box.at.a.time....
+...you.can.only.push.one.box.at.a.time....
+...you.can.only.push.one.box.at.a.time....
+...you.can.only.push.one.box.at.a.time....
+...you.can.only.push.one.box.at.a.time....
+...you.can.only.push.one.box.at.a.time....
+...you.can.only.push.one.box.at.a.time...8
+...you.can.only.push.one.box.at.a.time....
+
+..........................................
+..........................................
+..........................................
+..........................................
+..........................................
+..........................................
+..........................................
+..............,,,,,,,,,,,,,...............
+..............,+++++++++++,...............
+..dont.forget.to?pr-ss.5~if.you.get.stuck.
+..............,+++++++++++,...............
+..............,,,,,,,,,,,,,...............
+..........................................
+...........press.3.to.continue............
+..........................................
+..........................................
+..........................................
+..........................................
+..........................................
+
+,,,+,,+,,==,,+,,+,,==,,+,,+,,==,,+,,+,,==,
+++++,,++++++++,,++++++++,,++++++++,,++++++
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+++,,,,,,++++,,,,,,++++,,,,,,++++,,,,,,++++
+,+++,,+++,,+++,,+++,,+++,,+++,,+++,,+++,,+
+,-,+,,+?-,,-,+,,+?-,,-,+,,+?-,,-,+,,+?-,,-
+,,,+,,+,,==,,+,,+,,==,,+,,+,,==,,+,,+,,==,
+++++,,++++++++,,++++++++,,++++++++,,++++++
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+++,,,,,,++++,,,,,,++++,,,,,,++++,,,,,,++++
+,+++,,+++,,+++,,+++,,+++,,+++,,+++,,+++,,+
+,-,+,,+?-,,-,+,,+?-,,-,+,,+?-,,-,+,,+?-,9-
+,,,+,,+,,==,,+,,+,,==,,+,,+,,==,,+,,+,,==,
+++++,,++++++++,,++++++++,,++++++++,,++++++
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+++,,,,,,++++,,,,,,++++,,,,,,++++,,,,,,++++
+,+++,,+++,,+++,,+++,,+++,,+++,,+++,,+++,,+
+,-,+,,+?-,,-,+,,+?-,,-,+,,+?-,,-,+,,+?-,へ-
+,,,+,,+,,==,,+,,+,,==,,+,,+,,==,,+,,+,,==,
+++++,,++++++++,,++++++++,,++++++++,,++++++
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+++,,,,,,++++,,,,,,++++,,,,,,++++,,,,,,++++
+,+++,,+++,,+++,,+++,,+++,,+++,,+++,,+++,,+
+,-,+,,+?-,,-,+,,+?-,,-,+,,+?-,,-,+,,+?-,,-
+,,,+,,+,,==,,+,,+,,==,,+,,+,,==,,+,,+,,==,
+
+..........................................
+..........................................
+...............1ゐかくゐ1.155る5...............
+..........................................
+..........................................
+..........................................
+..........................................
+..........................................
+..............6.2tart.game.0..............
+..........................................
+..........................................
+..........................................
+arrow.keys.to.move........................
+..........................................
+3.to.action...............................
+..........................................
+4.to.undo..5.to.restart...................
+.........................................`
+.........................................\
+
+&.........................................
+..........................................
+...............1ゐかくゐ1.155る5.........7.....
+..........................................
+..........................................
+..........................................
+..........................................
+..........................................
+..............6.2tart.game.0..............
+..........................................
+..........................................
+..........................................
+arrow.keys.to.move........................
+..........................................
+3.to.action...............................
+..........................................
+4.to.undo..5.to.restart...................
+..........................................
+..........................................
+
+(..........................................
+..........................................
+...............1ngine.1rror...............
+..........................................
+..........................................
+................,,,,,,,,,,................
+................,,,++++,,,................
+................,+++,,+++,................
+................,+?-,,-,+,................
+................,+,,~~,,+,................
+................,++++++++,................
+................,,,,,,,,,,................
+arrow.keys.to.move........................
+..........................................
+3.to.action...............................
+..........................................
+4.to.undo..5.to.restart...................
+..........................................
+.........................................>)
+
+
+
+
+
+..........................................
+..........................................
+..........................................
+..............2?+,~-}.....................
+..........................................
+..........................................
+................,,,,,,,,,,................
+................,,,++++,,,................
+................,+++,,+++,................
+................,+?-,,-,+,................
+................,+,,~~,,+,................
+................,++++++++,................
+................,,,,,,,,,,................
+..........................................
+..........................................
+..........................................
+..........................................
+..........................................
+..........................................
+
+
+%.....................................7...
+.....................^....................
+...............1ゐかくゐ1.155る5...............
+..........................................
+..........................................
+...........^..............................
+..........................................
+..........................................
+..............6.2tart.game.6..............
+.....................^....................
+..........................................
+..........................................
+arrow.keys.to.move........................
+...^......................................
+3.to.action...............................
+..................................^.......
+4.to.undo..5.to.restart...................
+..........................................
+..............^...........................
+
+ect.canmove.has.been.defined.but.not.assig
+..........................................
+ule.matches.object.types.that.cant.overlap
+..........................................
+.name.crtae.referred.to.in.a.rule.does.not
+..........................................
+o.indicate.in.which.direction.a.rule.appli
+..........................................
+ch.on.the.left.must.have.a.corresponding.p
+..........................................
+.was.looking.for.color.for.object.playerle
+..........................................
+ed.an.object.v.but.this.is.a.keyword.dont.
+................\`````````````............
+...........press.3.to.continue............
+.........................................<
+.arrow.here.consider.reading.up.about.rule
+..........................................
+rors.detected.during.compilation.the.game.
+
+..........................................
+..........................................
+...............1ゐかくゐ1.155る5...............
+..........................................
+..........................................
+..........................................
+..........................................
+..........................................
+..............6.2tart.game.0..............
+..........................................
+..........................................
+..........................................
+arrow.keys.to.move........................
+..........................................
+3.to.action...............................
+..........................................
+4.to.undoよ.5.to.restart...................
+.........................................`
+.........................................\
+
+*....................め....................
+..........................................
+...............1ゐかくゐ1.155る5..........8....
+..........................................
+..........................................
+..........................................
+..........................................
+..........................................
+..............6.2tart.game.0..............
+..........................................
+..........................................
+..........................................
+arrow.keys.to.move........................
+..........................................
+3.to.action...............................
+..........................................
+4.to.undo..5.to.restart...................
+..........................................
+..........................................
+
+
+
+
+
+..........................................
+..........................................
+らrintin~.level.-ontents#..................
+..........................................
+..........................................
+..........................................
+................,,,,,,,,,,................
+................,,,++++,,,................
+................,+++,,+++,................
+................,+?-,,-,+,................
+................,+,,~~,,+,................
+................,++++++[+,................
+................,,,,,,,,,,................
+..........................................
+..........................................
+..........................................
+..........................................
+..........................................
+.........................................{
+
+$.....................................7...
+.....................^....................
+...............1ゐかくゐ1.155る5...............
+..........................................
+..........................................
+...........^..............................
+..........................................
+..........................................
+..............6.2tart.game.6..............
+.....................^....................
+..........................................
+..........................................
+arrow.keys.to.move........................
+...^......................................
+3.to.action...............................
+..................................^.......
+4.to.undo..5.to.restart...................
+..........................................
+..............^...........................
+
+ひひひひひひひひひひひひひひひひひひひひひひひひひひひひひひひひひひひひひひひひひひ
+ひひひひひひひひひひひひひひひひひひひひひひひひひひひひひひひひひひひひひひひひひひ
+ひひひひひひひひひひひひひひひひひひひひひひひひひひひひひひひひひひひひひひひひひひ
+ひひひひひひひひひひひひひひひひひひひひひひひひひひひひひひひひひひひひひひひひひひ
+ひひひひひひひひひひひひひひひひひひひひひひひひひひひひひひひひひひひひひひひひひひ
+ひひひひひひひひひひひひひひひひひひひひひひひひひひひひひひひひひひひひひひひひひひ
+ひひひひひひひひひひひひひひひひひひひひひひひひひひひひひひひひひひひひひひひひひひ
+ひひひひひひひひひひひひひひひひひひひひひひひひひひひひひひひひひひひひひひひひひひ
+ひひひひひひひひひひひひひひひひひひひひひひひひひひひひひひひひひひひひひひひひひひ
+ひひひひひひひひひひひひひひひひひひひひひひひひひひひひひひひひひひひひひひひひひひ
+ひひひひひひひひひひひひひひひひひひひひひひひひひひひひひひひひひひひひひひひひひひ
+ひひひひひひひひひひひひひひひひひひひひひひひひひひひひひひひひひひひひひひひひひひ
+ひひひひひひひひひひひひひひひひひひひひひひひひひひひひひひひひひひひひひひひひひひ
+ひひひひひひひひひひひひひひひひひひひひひひひひひひひひひひひひひひひひひひひひひひ
+ひひひひひひひひひひひひひひひひひひひひひひひひひひひひひひひひひひひひひひひひひひ
+ひひひひひひひひひひひひひひひひひひひひひひひひひひひひひひひひひひひひひひひひひひ
+ひひひひひひひひひひひひひひひひひひひひひひひひひひひひひひひひひひひひひひひひひひ
+ひひひひひひひひひひひひひひひひひひひひひひひひひひひひひひひひひひひひひひひひひひ
+.........................................7
+
+ひひひひひひひひひひひひひひひひ..........................
+うるそそく2くるゐそあふ152...........................
+ひひひひひひひひひひひひひひひひ..........................
+background................................
+とrateよ.せlayer.............................
+すarget....................................
+..........................................
+ひひひひひひ....................................
+5ゆそ12.....................................
+ひひひひひひ....................................
+ろれ.せlayerやとrateゑりろれ.せlayerやれ.とrateゑ.......
+..........................................
+ひひひひひひひひひひひひひひ............................
+むくゐうるゐえくわくるゐ2.............................
+ひひひひひひひひひひひひひひ............................
+..........................................
+all.すarget.on.とrate.......................
+.........................................\
+ひひひひひひひひひ................................]
+
+
+
+......................................"............................................'
+......................................".............................................
+......................................".................1ngine.1rror................
+......................................".............................................
+......................................".............................................
+......................................".............................................
+................,,,,,,,,,,............".............................................
+................,++++++++,............".............................................
+................,+?,~,-,+,............"................6.のさたなさ.はたぬま.0...............
+................,++++++++,............".............................................
+................,,,,,,,,,,............".............................................
+......................................".............................................
+......................................"..arrow.keys.to.move.........................
+......................................".............................................
+......................................"..3.to.action................................
+......................................".............................................
+......................................"..4.to.undo..5.to.restart....................
+......................................"...にににににににににににににににににににににににににににににににににににににににににに
+......................................"...にににににににににににににににににににににににににににににににににににににににににに
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+(
+
+
+
+..........................................
+..........................................
+...............1ngine.1rror...............
+..........................................
+..........................................
+..........................................
+..........................................
+..........................................
+..............6.2tart.game.6..............
+..........................................
+..........................................
+..........................................
+arrow.keys.to.move........................
+..........................................
+3.to.action...............................
+..........................................
+4.to.undo..5.to.restart...................
+..........................................
+..........................................
+)

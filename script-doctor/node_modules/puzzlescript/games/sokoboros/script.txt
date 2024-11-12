@@ -1,0 +1,1153 @@
+title Sokoboros
+author Trevor Newton
+homepage https://twitter.com/trevnewt
+
+flickscreen 13x13
+noaction
+background_color #22170B
+text_color lightgreen
+(youtube wPqwxBnNxWU)
+
+========
+OBJECTS
+========
+
+Background 
+DarkBrown DarkGrey
+00000
+00000
+00000
+00000
+00000
+
+Metal
+#333333
+00000
+00000
+00000
+00000
+00000
+
+Egg
+White
+..0..
+.000.
+00000
+00000
+.000.
+
+EggBottom
+LightGrey
+.....
+0....
+000.0
+00000
+.000.
+
+EggShell_1
+LightGrey
+.....
+.0...
+...0.
+..00.
+.....
+
+EggShell_2
+LightGrey
+.....
+.....
+.0...
+.....
+..0..
+
+Button
+Red DarkRed LightGrey
+11111
+11111
+11011
+11111
+11111
+
+Pressed
+Red Grey
+00000
+00000
+00000
+00000
+00000
+
+YellowApple
+Yellow Green Blue
+..1..
+.000.
+00000
+00000
+.000.
+
+BlueApple
+LightBlue Green Blue
+..1..
+.000.
+00000
+00000
+.000.
+
+Not_Just_Pressed
+transparent
+
+Key
+transparent
+
+Checkpoint_Marker
+#333333 #232323
+00000
+01010
+00100
+01010
+00000
+
+Door1
+LightGrey #333333 LightRed
+00000
+00000
+00100
+00000
+00000
+
+Door2
+LightGrey #333333 LightRed
+00000
+00000
+01010
+00000
+00000
+
+Door2_1
+LightGrey #333333 LightRed
+00000
+00000
+02010
+00000
+00000
+
+Door3
+LightGrey #333333 LightRed
+00000
+01010
+00000
+00100
+00000
+
+Door3_1
+LightGrey #333333 LightRed
+00000
+02010
+00000
+00100
+00000
+
+Door3_2
+LightGrey #333333 LightRed
+00000
+02020
+00000
+00100
+00000
+
+Door4
+LightGrey #333333 LightRed
+00000
+01010
+00000
+01010
+00000
+
+Door4_1
+LightGrey #333333 LightRed
+00000
+02010
+00000
+01010
+00000
+
+Door4_2
+LightGrey #333333 LightRed
+00000
+02020
+00000
+01010
+00000
+
+Door4_3
+LightGrey #333333 LightRed
+00000
+02020
+00000
+02010
+00000
+
+
+DoorXL
+LightGrey #333333
+00000
+00010
+00000
+00010
+00000
+
+DoorXL_1
+LightGrey #333333 LightRed
+00000
+00020
+00000
+00010
+00000
+
+DoorXL_6
+LightGrey #333333 LightRed
+00000
+00020
+00000
+00020
+00000
+
+DoorXM
+LightGrey #333333
+00000
+10101
+00000
+10101
+00000
+
+DoorXM_1
+LightGrey #333333
+00000
+10101
+00000
+10101
+00000
+
+DoorXM_2
+LightGrey #333333 LightRed
+00000
+20101
+00000
+10101
+00000
+
+DoorXM_3
+LightGrey #333333 LightRed
+00000
+20201
+00000
+10101
+00000
+
+DoorXM_4
+LightGrey #333333 LightRed
+00000
+20202
+00000
+10101
+00000
+
+DoorXM_5
+LightGrey #333333 LightRed
+00000
+20202
+00000
+10101
+00000
+
+DoorXM_6
+LightGrey #333333 LightRed
+00000
+20202
+00000
+10101
+00000
+
+DoorXM_7
+LightGrey #333333 LightRed
+00000
+20202
+00000
+20101
+00000
+
+DoorXM_8
+LightGrey #333333 LightRed
+00000
+20202
+00000
+20201
+00000
+
+DoorXM_9
+LightGrey #333333 LightRed
+00000
+20202
+00000
+20202
+00000
+
+DoorXM_10
+transparent
+
+DoorXR
+LightGrey #333333
+00000
+01000
+00000
+01000
+00000
+
+DoorXR_5
+LightGrey #333333 LightRed
+00000
+02000
+00000
+01000
+00000
+
+
+
+Wall 
+Orange Brown
+1111.
+10111
+11111
+11101
+.1111
+
+Wall_Metal_R
+Grey DarkGrey
+00001
+00001
+00001
+00001
+00001
+
+Wall_Metal_L
+Grey DarkGrey
+10000
+10000
+10000
+10000
+10000
+
+Wall_metal_U
+Grey DarkGrey
+11111
+00000
+00000
+00000
+00000
+
+Wall_metal_D
+Grey DarkGrey
+00000
+00000
+00000
+00000
+11111
+
+Wall_metal_DRC
+Grey DarkGrey
+00001
+00001
+00001
+00001
+11111
+
+Wall_metal_DLC
+Grey DarkGrey
+10000
+10000
+10000
+10000
+11111
+
+Wall_metal_URC
+Grey DarkGrey
+11111
+00001
+00001
+00001
+00001
+
+Wall_metal_ULC
+Grey DarkGrey
+11111
+10000
+10000
+10000
+10000
+
+Wall_metal_DR
+Grey DarkGrey
+00000
+00000
+00000
+00000
+00001
+
+Wall_Metal_UR
+Grey DarkGrey
+00001
+00000
+00000
+00000
+00000
+
+Wall_metal_DL
+Grey DarkGrey
+00000
+00000
+00000
+00000
+10000
+
+Wall_metal_UL
+Grey DarkGrey
+10000
+00000
+00000
+00000
+00000
+
+PlayerLeft
+Green Red
+0000.
+.0100
+..000
+.0000
+0000.
+
+PlayerAteLeft
+Green Red LightGreen
+.000.
+00100
+20000
+00000
+.000.
+
+PlayerRight
+Green Red
+.0000
+0010.
+000..
+0000.
+.0000
+
+PlayerAteRight
+Green Red LightGreen
+.000.
+00100
+00002
+00000
+.000.
+
+PlayerUp
+Green Red
+0...0
+00.00
+01000
+00000
+.000.
+
+PlayerAteUp
+Green Red LightGreen
+.020.
+00000
+01000
+00000
+.000.
+
+PlayerDown
+Green Red
+.000.
+00000
+00010
+00.00
+0...0
+
+PlayerAteDown
+Green Red LightGreen
+.000.
+00000
+00010
+00000
+.020.
+
+BodyHorizontal
+Green LightGreen
+.....
+00100
+00100
+00100
+.....
+
+BodyVertical
+Green LightGreen
+.000.
+.000.
+.111.
+.000.
+.000.
+
+(BodyBend_1
+Green LightGreen
+.....
+..000
+.0111
+.0100
+.010.)
+
+BodyBend_1
+Green LightGreen
+.....
+..000
+.0100
+.0010
+.000.
+
+BodyBend_2
+Green LightGreen
+.....
+000..
+0010.
+0100.
+.000.
+
+BodyBend_3
+Green LightGreen
+.000.
+.0010
+.0100
+..000
+.....
+
+BodyBend_4
+Green LightGreen
+.000.
+0100.
+0010.
+000..
+.....
+
+Tail_1
+Green LightGreen
+.....
+000..
+0000.
+000..
+.....
+
+Tail_2
+Green LightGreen
+.....
+..000
+.0000
+..000
+.....
+
+Tail_3
+Green LightGreen
+.000.
+.000.
+.000.
+..0..
+.....
+
+Tail_4
+Green LightGreen
+.....
+..0..
+.000.
+.000.
+.000.
+
+TowardsUp
+RED
+..0..
+.000.
+0.0.0
+..0..
+..0..
+
+TowardsLeft
+RED
+..0..
+.0...
+00000
+.0...
+..0..
+
+TowardsRight
+RED
+..0..
+...0.
+00000
+...0.
+..0..
+
+TowardsDown
+RED
+..0..
+..0..
+0.0.0
+.000.
+..0..
+
+=======
+LEGEND
+=======
+
+< = BodyHorizontal and TowardsLeft
+> = BodyBend_1 and TowardsRight and EggShell_2
+^ = BodyVertical and TowardsUp
+v = BodyVertical and TowardsDown
+
+(L = Tail and TowardsLeft
+R = Tail and TowardsRight)
+U = Tail_3 and TowardsUp and EggBottom
+(D = Tail and TowardsDown)
+
+. = Background
+- = Metal
+
+# = Wall
+% = Wall_Metal_R
+| = Wall_Metal_L
+' = Wall_Metal_U
+" = Wall_Metal_D
+7 = Wall_Metal_UR
+6 = Wall_Metal_UL
+9 = Wall_Metal_DL
+8 = Wall_Metal_DR
+~ = Wall_Metal_URC
+@ = Wall_Metal_ULC
+_ = Wall_Metal_DRC
+! = Wall_Metal_DLC
+
+P = PlayerRight and TowardsRight
+1 = Door1 and Checkpoint_Marker
+2 = Door2 and Checkpoint_Marker
+3 = Door3 and Checkpoint_Marker
+4 = Door4 and Checkpoint_Marker
++ = DoorXL and Checkpoint_Marker
+X = DoorXM and Checkpoint_Marker
+? = DoorXR and Checkpoint_Marker
+O = Button and Not_Just_Pressed
+A = YellowApple
+H = BlueApple
+
+
+E = EggShell_1
+B = EggBottom
+W = Egg
+
+
+
+Marker = TowardsLeft or TowardsRight or TowardsUp or TowardsDown
+Player = PlayerLeft or PlayerRight or PlayerUp or PlayerDown or PlayerAteLeft or PlayerAteRight or PlayerAteUp or PlayerAteDown
+Tail = Tail_1 or Tail_2 or Tail_3 or Tail_4
+BodyBends = BodyBend_1 or BodyBend_2 or BodyBend_3 or BodyBend_4
+BodyPart = BodyHorizontal or BodyVertical or BodyBend_1 or BodyBend_2 or BodyBend_3 or BodyBend_4
+PlayerPart = Player or BodyPart or Tail
+
+DoorX = DoorXM or DoorXM_1 or DoorXM_2 or DoorXM_3 or DoorXM_4 or DoorXM_5 or DoorXM_6 or DoorXM_7 or DoorXM_8 or DoorXM_9 or DoorXM_10
+
+Door = Door1 or Door2 or Door2_1 or Door3 or Door3_1 or Door3_2 or Door4 or Door4_1 or Door4_2 or Door4_3 or DoorXL or DoorXL_1 or DoorXL_6 or DoorXR or DoorXR_5 or DoorX
+
+Walls = Wall or Wall_Metal_U or Wall_Metal_L or Wall_Metal_R or Wall_Metal_D or Wall_Metal_UR or Wall_Metal_DR or Wall_Metal_DL or Wall_Metal_UL or Wall_Metal_URC or Wall_Metal_ULC or Wall_Metal_DRC or Wall_Metal_DLC
+Obstacle = Walls or PlayerPart or Door
+Apple = YellowApple or BlueApple or Egg
+
+=======
+SOUNDS
+=======
+
+Undo 50721302
+
+TitleScreen 46639909
+SFX0 66467307 (Walk on metal)
+SFX1 41037702 (Eat food)
+SFX2 78277102 (Press Button)
+SFX3 47230702 (Unpress Button)
+SFX4 44928302 (Open Door)
+SFX5 6466307 (Walk on dirt)
+SFX6 72511108 (Forboding...)
+
+================
+COLLISIONLAYERS
+================
+
+Not_Just_Pressed
+Key
+Marker
+Background
+Metal, Checkpoint_Marker
+EggShell_1, EggShell_2, EggBottom
+Button
+Pressed
+Player, BodyPart, Door, Tail, Apple, Walls, Egg
+
+======
+RULES     
+======
+
+left [ > Player TowardsLeft | Apple ] -> [ BodyHorizontal TowardsLeft | PlayerAteLeft TowardsLeft ] SFX1
+left [ > Player TowardsUp | Apple ] -> [ BodyBend_2 TowardsLeft | PlayerAteLeft TowardsLeft ] SFX1
+left [ > Player TowardsDown | Apple ] -> [ BodyBend_4 TowardsLeft | PlayerAteLeft TowardsLeft ] SFX1
+
+right [ > Player TowardsRight | Apple ] -> [ BodyHorizontal TowardsRight | PlayerAteRight TowardsRight ] SFX1
+right [ > Player TowardsUp | Apple ] -> [ BodyBend_1 TowardsRight | PlayerAteRight TowardsRight ] SFX1
+right [ > Player TowardsDown | Apple ] -> [ BodyBend_3 TowardsRight | PlayerAteRight TowardsRight ] SFX1 
+
+up [ > Player TowardsUp | Apple ] -> [ BodyVertical TowardsUp | PlayerAteUp TowardsUp ] SFX1
+up [ > Player TowardsLeft | Apple ] -> [ BodyBend_3 TowardsUp | PlayerAteUp TowardsUp ] SFX1
+up [ > Player TowardsRight | Apple ] -> [ BodyBend_4 TowardsUp | PlayerAteUp TowardsUp ] SFX1
+
+down [ > Player TowardsDown | Apple ] -> [ BodyVertical TowardsDown | PlayerAteDown TowardsDown ] SFX1
+down [ > Player TowardsLeft | Apple ] -> [ BodyBend_1 TowardsDown | PlayerAteDown TowardsDown ] SFX1
+down [ > Player TowardsRight | Apple ] -> [ BodyBend_2 TowardsDown | PlayerAteDown TowardsDown ] SFX1
+
+(If the player is NOT about to move onto a button, move the player normally.
+This is actually somewhat complicated. When the snake head moves, we put a direction marker behind it, indicating which direction it went -- this gives the body parts directions to follow. But we ALSO put a direction marker, of the same direction, on the head's new space. This gets deleted on the next move and replaced with whatever move you make next. The purpose of the marker on top of the head is so that the game can keep in mind which direction you've come from. This is useful for creating new bodyparts when eating apples.)
+
+left [ > player Marker | No Obstacle No Metal | ] -> [ TowardsLeft | PlayerLeft TowardsLeft | SFX5]
+right [ > player Marker | No Obstacle No Metal | ] -> [ TowardsRight | PlayerRight TowardsRight | SFX5]
+up [ > player Marker | No Obstacle No Metal | ] -> [ TowardsUp | PlayerUp TowardsUp | SFX5]
+down [ > player Marker | No Obstacle No Metal | ] -> [ TowardsDown | PlayerDown TowardsDown | SFX5]
+
+(Moving on metal.)
+
+left [ > player Marker | No Obstacle Metal | ] -> [ TowardsLeft | PlayerLeft Metal TowardsLeft | SFX0]
+right [ > player Marker | No Obstacle Metal | ] -> [ TowardsRight | PlayerRight Metal TowardsRight | SFX0]
+up [ > player Marker | No Obstacle Metal | ] -> [ TowardsUp | PlayerUp Metal TowardsUp | SFX0]
+down [ > player Marker | No Obstacle Metal | ] -> [ TowardsDown | PlayerDown Metal TowardsDown | SFX0]
+
+
+startloop
+late left [ BodyPart TowardsLeft | No PlayerPart TowardsLeft ] -> [ TowardsLeft | BodyHorizontal TowardsLeft]
+late left [ BodyPart TowardsLeft | No PlayerPart TowardsUp ] -> [ TowardsLeft | BodyBend_3 TowardsUp]
+late left [ BodyPart TowardsLeft | No PlayerPart TowardsDown ] -> [ TowardsLeft | BodyBend_1 TowardsDown]
+
+late right [ BodyPart TowardsRight | No PlayerPart TowardsRight] -> [ TowardsRight | BodyHorizontal TowardsRight]
+late right [ BodyPart TowardsRight | No PlayerPart TowardsUp] -> [ TowardsRight | BodyBend_4 TowardsUp]
+late right [ BodyPart TowardsRight | No PlayerPart TowardsDown] -> [ TowardsRight | BodyBend_2 TowardsDown ]
+
+late up [ BodyPart TowardsUp | No PlayerPart TowardsUp] -> [ TowardsUp | BodyVertical TowardsUp]
+late up [ BodyPart TowardsUp | No PlayerPart TowardsLeft] -> [ TowardsUp | BodyBend_2 TowardsLeft]
+late up [ BodyPart TowardsUp | No PlayerPart TowardsRight] -> [ TowardsUp | BodyBend_1 TowardsRight]
+
+late down [ BodyPart TowardsDown | No PlayerPart TowardsDown] -> [ TowardsDown | BodyVertical TowardsDown]
+late down [ BodyPart TowardsDown | No PlayerPart TowardsLeft] -> [ TowardsDown | BodyBend_4 TowardsLeft]
+late down [ BodyPart TowardsDown | No PlayerPart TowardsRight] -> [ TowardsDown | BodyBend_3 TowardsRight]
+endloop
+
+(If Tail is on button, move it off and handle that.)
+
+late left [ Tail TowardsLeft Button Pressed | No PlayerPart ] -> [ Button Pressed | Tail_1 ] SFX3
+late right [ Tail TowardsRight Button Pressed | No PlayerPart ] -> [ Button Pressed | Tail_2 ] SFX3
+late up [ Tail TowardsUp Button Pressed | No PlayerPart ] -> [ Button Pressed | Tail_3 ] SFX3
+late down [ Tail TowardsDown Button Pressed| No PlayerPart ] -> [ Button Pressed | Tail_4 ] SFX3
+
+(If Tail is not on button, just move it.)
+
+late left [ Tail TowardsLeft No Button | No PlayerPart ] -> [ | Tail_1 ]
+late right [ Tail TowardsRight No Button| No PlayerPart ] -> [ | Tail_2 ]
+late up [ Tail TowardsUp No Button| No PlayerPart ] -> [ | Tail_3 ]
+late down [ Tail TowardsDown No Button| No PlayerPart ] -> [ | Tail_4 ]
+
+late [Tail TowardsRight] -> [Tail_2 TowardsRight]
+late [Tail TowardsDown] -> [Tail_4 TowardsDown]
+late [Tail TowardsUp] -> [Tail_3 TowardsUp]
+late [Tail TowardsLeft] -> [Tail_1 TowardsLeft]
+
+
+
+
+late [ Player Button No Pressed ] -> [ Player Button Pressed ] SFX2
+
+startloop
+late [ Player Button Not_Just_Pressed] [ Door No Key ] -> [ Player Button Not_Just_Pressed] [ Door Key ]
+endloop
+
+startloop
+late [ Player Button Not_Just_Pressed ] -> [ Player Button ]
+endloop
+
+
+late [ Button Pressed No PlayerPart ] [ Door2_1 ] -> [ Button Pressed ] [ Door2 ]
+
+late [ Button Pressed No PlayerPart ] [ Door3_1 ] -> [ Button Pressed ] [ Door3 ]
+late [ Button Pressed No PlayerPart ] [ Door3_2 ] -> [ Button Pressed ] [ Door3_1 ]
+
+late [ Button Pressed No PlayerPart ] [ Door4_1 ] -> [ Button Pressed ] [ Door4 ]
+late [ Button Pressed No PlayerPart ] [ Door4_2 ] -> [ Button Pressed ] [ Door4_1 ]
+late [ Button Pressed No PlayerPart ] [ Door4_3 ] -> [ Button Pressed ] [ Door4_2 ]
+
+late [ Button Pressed No PlayerPart ] [ DoorXM_1 ] -> [ Button Pressed ] [ DoorXM ]
+late [ Button Pressed No PlayerPart ] [ DoorXM_2 ] -> [ Button Pressed ] [ DoorXM_1 ]
+late [ Button Pressed No PlayerPart ] [ DoorXM_3 ] -> [ Button Pressed ] [ DoorXM_2 ]
+late [ Button Pressed No PlayerPart ] [ DoorXM_4 ] -> [ Button Pressed ] [ DoorXM_3 ]
+late [ Button Pressed No PlayerPart ] [ DoorXM_5 ] -> [ Button Pressed ] [ DoorXM_4 ]
+late [ Button Pressed No PlayerPart ] [ DoorXM_6 ] -> [ Button Pressed ] [ DoorXM_5 ]
+late [ Button Pressed No PlayerPart ] [ DoorXM_7 ] -> [ Button Pressed ] [ DoorXM_6 ]
+late [ Button Pressed No PlayerPart ] [ DoorXM_8 ] -> [ Button Pressed ] [ DoorXM_7 ]
+late [ Button Pressed No PlayerPart ] [ DoorXM_9 ] -> [ Button Pressed ] [ DoorXM_8 ]
+
+
+
+late [ DoorXM_9 Key ] -> [ DoorXM_10] SFX6 checkpoint
+late [ DoorXM_8 Key ] -> [ DoorXM_9 ]
+late [ DoorXM_7 Key ] -> [ DoorXM_8 ]
+late [ DoorXM_6 Key ] -> [ DoorXM_7 ]
+late [ DoorXM_5 Key ] -> [ DoorXM_6 ]
+late [ DoorXM_4 Key ] -> [ DoorXM_5 ]
+late [ DoorXM_3 Key ] -> [ DoorXM_4 ]
+late [ DoorXM_2 Key ] -> [ DoorXM_3 ]
+late [ DoorXM_1 Key ] -> [ DoorXM_2 ]
+late [ DoorXM Key ] -> [ DoorXM_1 ]
+
+late [ Door4_3 Key ] -> [ ] SFX4 checkpoint
+late [ Door4_2 Key ] -> [ Door4_3 ]
+late [ Door4_1 Key ] -> [ Door4_2 ]
+late [ Door4 Key ] -> [ Door4_1 ]
+
+late [ Door3_2 Key ] -> [ ] SFX4 checkpoint
+late [ Door3_1 Key ] -> [ Door3_2 ]
+late [ Door3 Key ] -> [ Door3_1 ]
+
+late [ Door2_1 Key ] -> [ ] SFX4 checkpoint
+late [ Door2 Key ] -> [ Door2_1 ]
+
+late [ Door1 Key ] -> [ ] SFX4 checkpoint
+
+late [ DoorXM_1] [ DoorXL ] -> [ DoorXM_1 ] [ DoorXL_1 ]
+late [ DoorXM] [ DoorXL_1 ] -> [ DoorXM ] [ DoorXL ]
+late [ DoorXM_6] [ DoorXL_1 ] -> [ DoorXM_6 ] [ DoorXL_6 ]
+late [ DoorXM_5] [ DoorXL_6 ] -> [ DoorXM ] [ DoorXL_1 ]
+
+late [ DoorXM_5] [ DoorXR ] -> [ DoorXM_5 ] [ DoorXR_5 ]
+late [ DoorXM_4] [ DoorXR_5 ] -> [ DoorXM ] [ DoorXR ]
+
+late [ DoorXM_10 ] [ DoorXL_6 ] [ DoorXR_5 ] -> [ ] [ ] [ ]
+
+
+late [ Button Pressed No PlayerPart ] -> [ Button Not_Just_Pressed ]
+
+(late [ Player Checkpoint_Marker ] -> [ Player Checkpoint_Marker] checkpoint)
+
+(Alternative solution: have a different key for each button, each on different layers. but unite them under a "key" word. Then do the multiple keys on doors method)
+
+==============
+WINCONDITIONS
+==============
+
+No Egg  
+
+=======     
+LEVELS
+=======
+
+Message Oh! A baby is born...
+
+#######################################.............
+#............#8"""""""""9########haaha#.............
+#............#%---------|########aa.aa#.............
+#............#%-o-----o-|########aaaha#.............
+#............#%---------|####...#hhhaa#.............
+#............#%---------!####....hhaaa#.............
+#............#%---------4.......#haaha#.............
+#............#%---------@####....aaa.h#.............
+#............#%---------|####...#aahah#.............
+#............#%---o---o-|########ha.aa#.............
+#............#%---------|########ahaha#.............
+#............#7'''~-@'''6########haaah#.............
+###################.###################.............
+###################.################################
+###################.################################
+##...##########8""_3!""9############################
+##.a.#....#####_-------|####8"""""""9###############
+###..#..#......--o-o---|####%-------|#####...#######
+####.##.#######~-------|####%-----o-!###......#..###
+###..#...######%-------!####_--------.......#...a###
+##..##.h.######_-o------....2-------@####..####..###
+##.########....--------@####~-----o-|###############
+##...#####..###~-------|####%-------|###############
+##.#........###7''~3@''6####7''~-@''6###############
+##...##############.############.###################
+###################.############.###################
+###################.############.######.......######
+#...................############.######.............
+#.###########################8"_1!"9###.............
+#.#######...######.....######%-----|###.............
+#.........h.#####..###.######%-----|###.............
+###########.####..####.######%-----|###.............
+#h..........####.##>p..######%--o--|###.............
+#.#a#.......####.##ue########_-----|###.............
+#a#.#h##########.######......------|###.............
+#....h.#...h####..####..#####~-----|###.............
+#.####....aa#####......######7~+x?@6###.............
+#......#...a##################%---|####.............
+##############################%---|####.............
+..........................####%---|####.............
+..........................#8""_---!""9#.............
+..........................#%---------|#.............
+..........................#%-@'''''~-|#.............
+..........................#%-|#####%-|#.............
+..........................#%-|#...#%-|#.............
+..........................#%-|#.w.#%-|#.............
+..........................#%-|#...#%-|#.............
+..........................#%-|#.-.#%-|#.............
+..........................#%-!_---!_-|#.............
+..........................#%---------|#.............
+..........................#7'''''''''6#.............
+..........................#############.............
+
+(#######################################.............
+#............#8"""""""""9#########aah##.............
+#............#%---------|########ahaaa#.............
+#............#%-o-----o-|########aaaha#.............
+#............#%---------|###....#hhhha#.............
+#............#%---------!###.....hhaaa#.............
+#............#%---------4.......#haaha#.............
+#............#%---------@###.....aaaah#.............
+#............#%---------|###....#aahah#.............
+#............#%--o----o-|########haaaa#.............
+#............#%---------|########ahaha#.............
+#............#7'''~-@'''6#########aaa##.............
+###################.###################.............
+###################.################################
+###################.################################
+##...##########8""_3!""9############################
+##.a.#....#####_-------|####8"""""""9###############
+###..#..#......---o----|####%-------|#####...#######
+####.##.#######~-------|####%-----o-!###......#..###
+###..#...######%-------!####_--------.......#...a###
+##..##.h.######_--o-o---....2-------@####..####..###
+##.########....--------@####~-----o-|###############
+##...#####..###~-------|####%-------|###############
+##.#........###7''~3@''6####7''~-@''6###############
+##...##############.############.###################
+###################.############.###################
+###################.############.######.......######
+#...................############.######.............
+#.###########################8"_1!"9###.............
+#.....a.....######.....######%-----|###.............
+#...a...h...#####..###.######%-----|###.............
+###########.####..####.######%-----|###.............
+#ha.........####.##>p..######%--o--|###.............
+#.#a#......a####.##uE########_-----|###.............
+#a#.#h##########.######......------|###.............
+#..h.ha.#..#####..####..#####~-----|###.............
+#.####....h.#####......######7~+X?@6###.............
+#......#....##################%---|####.............
+##############################%---|####.............
+..........................####%---|####.............
+..........................#8""_---!""9#.............
+..........................#%---------|#.............
+..........................#%-@'''''~-|#.............
+..........................#%-|#####%-|#.............
+..........................#%-|#...#%-|#.............
+..........................#%-|#.w.#%-|#.............
+..........................#%-|#...#%-|#.............
+..........................#%-|#.-.#%-|#.............
+..........................#%-!_---!_-|#.............
+..........................#%---------|#.............
+..........................#7'''''''''6#.............
+..........................#############.............)
+
+Message Thank you for playing.
+
+(#######################################.............
+#............#8"""""""""9#######aaaa###.............
+#............#%---------|#####...aaa###.............
+#............#%-o-----o-|####......####.............
+#............#%---------|####......####.............
+#............#%---------|#####.......##.............
+#............#%---------4........aaa.##.............
+#............#%---------|#####...aaa.##.............
+#............#%---------|#####...aaa.##.............
+#............#%--o---o--|#######.....##.............
+#............#%---------|#######....###.............
+#............#7''''-''''6########..####.............
+###################.###################.............
+###################.################################
+###################.################################
+##...##########8"""3"""9############################
+##.a.#....#####%-------|####8"""""""9###############
+###..#..#......---o----|####%-------|#####...#######
+####.##.#######%-------|####%-----o-|###......#..###
+###..#...######%-------|####%--------.......#...a###
+##..##.a.######%--o-o---....2-------|####..####..###
+##.########....--------|####%-----o-|###############
+##...#####..###%-------|####%-------|###############
+##.#........###7'''3'''6####7'''-'''6###############
+##...##############.############.###################
+###################.############.###################
+###################.############.######.......######
+###############.....############.######.............
+##..............#############8""-""9###.............
+##.###############.....######%-----|###.............
+##..a...a...#####..###.######%-----|###.............
+###...a...a.####..####.######%-----|###.............
+########a##.####.##>p..######%--o--|###.............
+##..a.......####.##u.########%-----|###.............
+##....a.########.######......------|###.............
+##.######...####..####..#####%-----|###.............
+##.........a#####......######7''4''6###.............
+#########...####################.######.............
+###############################...#####.............
+
+.............##########################.............
+.............#8"""""""""9#######aaaa###.............
+.............#%---------|#####...aaa###.............
+.............#%-o-----o-|####......####.............
+.............#%---------|####......####.............
+.............#%---------|#####.......##.............
+.............#%---------4........aaa.##.............
+.............#%---------|#####...aaa.##.............
+.............#%---------|#####...aaa.##.............
+.............#%-o-----o-|#######.....##.............
+.............#%---------|#######....###.............
+.............#7''''-''''6########..####.............
+.............######.###################.............
+###################.################################
+###################.################################
+##...##########8"""3"""9############################
+##.a.#....#####%-------|####8"""""""9###############
+###..#..#......---o----|####%-------|#####...#######
+####.##.#######%-------|####%-----o-|###......#..###
+###..#...######%-------|####%--------.......#...a###
+##..##.a.######%--o-o---....2-------|####..####..###
+##.########....--------|####%-----o-|###############
+##...#####..###%-------|####%-------|###############
+##.#........###7'''3'''6####7'''-'''6###############
+##...##############.############.###################
+###################.############.###################
+###################.############.######.......######
+###############.....############.######.............
+##..............#####..######8""-""9###.............
+##.##a###########......######%-----|###.............
+##.##.#########....###.######%-----|###.............
+##.##.....#####..####..######%-----|###.............
+##.##.a...#####.##>p..#######%--o--|###.............
+##....###.#####.##u.#########%-----|###.............
+#######....####.######.......------|###.............
+#######a.a.####...####.######%-----|###.............
+#######a.a.######......######7''4''6###.............
+################################.######.............
+###############################...#####.............
+
+####################################################
+#..........###...........###########################
+#...........##...........###8"""""""9###############
+#...........##...........###%-------|###############
+#..#####.##.##...........###%-----o-|######..#######
+#..##..###..##...........###%-------|###.....##..###
+#.....#####.##..............2--------....##.....a###
+#..#..########...........###%-------|##########..###
+#..###.####.##...........###%-----o-|###############
+#.##..#####.##...........###%-------|###############
+#.#########.##...........###7'''-'''6###############
+#...........##...........#######.###################
+################################.###################
+################################.######.......######
+#...........####################.######.............
+#..########.#####......######8""-""9###.............
+#..########.#####.####.######%-----|###.............
+#..########.###...####.######%-----|###.............
+#..#######..###.#####..######%-----|###.............
+#..#######..###.##.P..#######%--o--|###.............
+#.########..###.##..#########%-----|###.............
+#.########..###.######.......------|###.............
+#.########..###...####.######%-----|###.............
+#.########..#####......######7''4''6###.............
+#...........####################.######.............
+###############################...#####.............
+
+#######################################
+#..........###...........##...........#
+#...........##...........##...........#
+#...........##...........##...........#
+#..#####.##.##...........##...........#
+#..##..###..##...........##...........#
+#.....#####.##...........##...o...o...#
+#..#..########...........##...........#
+#..###.####.##...........##...........#
+#.##..#####.##...........##...........#
+#.#########.##...........##...........#
+#...........##...........##...........#
+################################.######
+################################.######
+#...........####################.######
+#..########.#####......######8""1""9###
+#..########.#####.####.######%-----|###
+#..########.###...####.######%-----|###
+#..#######..###.#####..######%-----|###
+#..#######..###.##.p..#######%--o--|###
+#.########..###.##..#########%-----|###
+#.########..###.######.......------|###
+#.########..###...####.######%-----|###
+#.########..#####......######7''4''6###
+#...........####################.######
+###############################...#####
+
+############################################
+############.........#8"""""""""##....##...#
+#.........###......o.#%---------...#..##.a.#
+#.........####.......#%-------o-####.###..##
+#.........##........##%---------###...##.###
+#..........3.o........2--o------###.aa##..##
+#.........##.........#%---------#########.##
+#.........####.....o.#%-------o-....###...##
+#.........#####......#%---------###.....#.##
+#.........#####..#####7'''---'''#######...##
+###############.###########.################
+###############.###########.################
+#############....######8"""."""9############
+#................######%-------|############
+#.#a###################%-------|############
+#.#......#####....#####%-------|############
+#.#.a....#####.....####%---o---|############
+#...####.#####...p.....--------|############
+######...#####.....####%-------|############
+######a.a.####b.e.#####%-------|############
+######a.a.#############7'''4'''6############
+##########################...###############
+
+#######################8"""""""""""#########
+############.........#8%----------....##...#
+#.........###......o.#%-------o---.#..##.a.#
+#.........####.......#%---------|'##.###..##
+#.........##........##%--------|6##...##.###
+#..........3.o........2--o-----####.aa##..##
+#.........##.........#%---------|"#######.##
+#.........####.....o.#%-------o---..###...##
+#.........#####......#7%-----------.....#.##
+#.........#####..######7''---''''''####...##
+###############.###########.################
+###############.###########.################
+#############....######8"""1"""9############
+#................######%-------|############
+#.#a###################%-------|############
+#.#......#####....#####%-------|############
+#.#.a....#####.....####%---o---|############
+#...####.#####...p.....--------|############
+######...#####.....####%-------|############
+######a.a.####b.e.#####%-------|############
+######a.a.#############7'''4'''6############
+##########################...###############
+
+#########
+#.......#
+#..1..O.#
+#.P.1.O.#
+#.......#
+#.......#
+#########)

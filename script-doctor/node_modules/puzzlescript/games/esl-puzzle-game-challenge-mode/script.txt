@@ -1,0 +1,281 @@
+title ESL Puzzle Game -- CHALLENGE MODE アダムのパズルゲーム
+author A.R.Nakama
+homepage www.puzzlescript.net
+ 
+========
+OBJECTS
+========
+ 
+Background
+LIGHTGREEN GREEN
+11111
+01111
+11101
+11111
+10111
+
+TargetB
+Blue
+.....
+.000.
+.0.0.
+.000.
+.....
+ 
+TargetBWall
+Blue
+.....
+.000.
+.000.
+.000.
+.....
+ 
+TargetR
+Red
+.....
+.000.
+.0.0.
+.000.
+.....
+ 
+TargetRWall
+Red
+.....
+.000.
+.000.
+.000.
+.....
+ 
+TargetP
+GRAY
+.....
+.000.
+.0.0.
+.000.
+.....
+
+TargetPWall
+GRAY
+.....
+.000.
+.000.
+.000.
+.....
+ 
+Wall
+BROWN DARKBROWN
+00010
+11111
+01000
+11111
+00010
+ 
+Player
+Black Orange White Blue
+.000.
+.111.
+22222
+.333.
+.3.3.
+ 
+CrateR
+Red Yellow
+00000
+0...0
+0...0
+0...0
+00000
+ 
+CrateB
+Blue Yellow
+00000
+0...0
+0...0
+0...0
+00000
+ 
+CrateP
+GRAY
+00000
+0...0
+0...0
+0...0
+00000
+ 
+ 
+=======
+LEGEND
+=======
+ 
+. = Background
+# = Wall
+1 = Player
+R = CrateR
+B = CrateB
+P = CrateP
+e = TargetR
+c = TargetB
+o = TargetP
+w = TargetRWall
+x = TargetBWall
+i = TargetPWall
+ 
+ 
+=======
+SOUNDS
+=======
+ 
+CrateR MOVE 36772507
+CrateB MOVE 36772507
+ 
+================
+COLLISIONLAYERS
+================
+ 
+Background
+TargetR, TargetB, TargetP, TargetBWall, TargetRWall, TargetPWall
+Player, Wall, CrateR, CrateB, CrateP
+ 
+======
+RULES
+======
+ 
+[ >  Player | CrateR ] -> [  >  Player | > CrateR  ]
+[ >  Player | CrateB ] -> [  >  Player | > CrateB  ]
+[ <  Player | CrateP ] -> [  <  Player | < CrateP  ]
+
+late [ CrateR | CrateR | CrateR | CrateR | CrateR ] -> win
+late [ CrateR | CrateR | CrateR ] -> [ | |]
+late [ CrateB | CrateB | CrateB ] -> [ | |]
+late [ CrateP | CrateP | CrateP ] -> [ | |]
+late [ CrateR TargetRWall ] -> [ Wall ]
+late [ CrateB TargetBWall ] -> [ Wall ]
+late [ CrateP TargetPWall ] -> [ Wall ]
+ 
+==============
+WINCONDITIONS
+==============
+ 
+All CrateR on TargetR
+All CrateB on TargetB
+All CrateP on TargetP
+ 
+=======
+LEVELS
+=======
+ 
+MESSAGE Stage 11: push the middle red down and then back up.
+ 
+#########
+#.c1..e.#
+#.R.....#
+####R####
+#.B...e.#
+#.......#
+###...###
+...###...
+ 
+MESSAGE Stage 12: you can only pull the gray blocks.
+ 
+########
+#..Peo.#
+#.#.#..#
+#.R1...#
+#.#.#..#
+#......#
+########
+
+MESSAGE Stage 13: finish red second
+
+#############
+#...#####...#
+#.BPBw1xR...#
+#...#####...#
+#....o.x....#
+#...#####...#
+#############
+ 
+MESSAGE Stage 14: the gray will move up and down
+ 
+##########
+#eP....###
+#...R....#
+##o##.##.#
+#.oP1..#.#
+##.##R##.#
+#e.......#
+##########
+
+MESSAGE Stage 15: Make 5 red in a row to win.  Blues first.
+ 
+#######
+#..B..#
+#.RR..#
+#.B1R.#
+#B.RR.#
+#.....#
+#######
+
+MESSAGE Stage 16: make a hallway
+ 
+#########
+#####.w.#
+#####...#
+#####R..#
+#...#.B.#
+#1R.x.Bx#
+#...#w..#
+#########
+
+MESSAGE Stage 17: the red is first
+
+#######
+#...Bx#
+#R#.#.#
+#xB1Rw#
+#.iiiP#
+#P#P#.#
+#w....#
+#######
+
+MESSAGE Stage 18: the gray is last
+
+#############
+#####...#####
+##..#.1.#..##
+##..wBiRx..##
+##.##...##.##
+##.##...##.##
+#..#######..#
+#.....P.....#
+#############
+
+MESSAGE Stage 19: you must move and then replace the blue block to move the others.
+ 
+########
+########
+#..P..##
+#...R..#
+#..#P#.#
+##B.1Pc#
+#..#R#.#
+#....R.#
+####.###
+########
+
+MESSAGE Stage 20: don't close doors until you have to
+
+############
+#....#######
+#...Px.R1###
+#...P#.RR###
+#..#####.###
+##w#w.#...##
+#..#.o.....#
+#..#.#.#.#.#
+#....Bi#.#.#
+#......w...#
+#..#########
+############
+ 
+MESSAGE OMG YOU DID IT!!

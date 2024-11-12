@@ -1,0 +1,870 @@
+title Movement Garden
+author Jack Kutilek
+homepage jackkutilek.itch.io
+
+
+(verbose_logging)
+again_interval 0.07
+key_repeat_interval 0.2
+run_rules_on_level_start
+
+========
+OBJECTS
+========
+
+
+Background
+#3a9072 #398369
+00000
+00010
+10000
+00000
+00100
+
+
+Target
+#4402d7
+.....
+.000.
+.0.0.
+.000.
+.....
+
+Wall
+#005032 #004329
+00000
+01000
+00001
+00000
+00100
+
+Walldown
+#523012
+.....
+.....
+.....
+.....
+00000
+
+wallcornerRD
+#523012
+.....
+.....
+.....
+.....
+....0
+
+wallcornerLD
+#523012
+.....
+.....
+.....
+.....
+0....
+
+wallcornerRU
+#523012
+....0
+.....
+.....
+.....
+.....
+
+wallcornerLU
+#523012
+0....
+.....
+.....
+.....
+.....
+
+Wallright
+#523012
+....0
+....0
+....0
+....0
+....0
+
+Wallleft
+#523012
+0....
+0....
+0....
+0....
+0....
+
+
+Wallup
+#523012
+00000
+.....
+.....
+.....
+.....
+
+
+Player
+#3f6cff #2f5cef
+00000
+01110
+01110
+01110
+00000
+
+Crate
+#3b0501 #2b0000
+00000
+01110
+01110
+01110
+00000
+
+uptoken
+#97dafe
+.....
+..0..
+.....
+.....
+.....
+
+lefttoken
+#ffc84c
+.....
+.....
+.0...
+.....
+.....
+
+righttoken
+#ff5b26
+.....
+.....
+...0.
+.....
+.....
+
+downtoken
+#dE81fF
+.....
+.....
+.....
+..0..
+.....
+
+
+upgroundtoken
+#97dafe
+.....
+..0..
+.....
+.....
+.....
+
+leftgroundtoken
+#ffc84c
+.....
+.....
+.0...
+.....
+.....
+
+rightgroundtoken
+#ff5b26
+.....
+.....
+...0.
+.....
+.....
+
+downgroundtoken
+#dE81fF
+.....
+.....
+.....
+..0..
+.....
+
+upshrine
+#72BFE5 #5396ba
+00000
+01110
+01110
+01110
+00000
+
+leftshrine
+#E5A82D #ba891a
+00000
+01110
+01110
+01110
+00000
+
+rightshrine
+#E53E0B #b63c15
+00000
+01110
+01110
+01110
+00000
+
+downshrine
+#C46aE8 #ae51ce
+00000
+01110
+01110
+01110
+00000
+
+upwall
+#97dafe #87caee
+10000
+00000
+00100
+00001
+01000
+
+upwallhidden
+transparent
+
+
+downwall
+#dE81fF #ce71ee
+10000
+00000
+00100
+00001
+01000
+
+downwallhidden
+transparent
+
+leftwall
+#ffc84c #efb83c
+10000
+00000
+00100
+00001
+01000
+
+leftwallhidden
+transparent
+
+rightwall
+#ff5b26 #ef4b16
+10000
+00000
+00100
+00001
+01000
+
+rightwallhidden
+transparent
+
+upgod1
+#97dafe
+00.00
+.0.0.
+.....
+0...0
+.000.
+
+upgod2
+#5396ba
+00.00
+.0.0.
+.....
+0...0
+.000.
+
+leftgod1
+#ffc84c
+00.00
+.0.0.
+.....
+0...0
+.000.
+
+leftgod2
+#ba891a
+00.00
+.0.0.
+.....
+0...0
+.000.
+
+downgod1
+#dE81fF
+00.00
+.0.0.
+.....
+0...0
+.000.
+
+downgod2
+#ce71ee
+00.00
+.0.0.
+.....
+0...0
+.000.
+
+rightgod1
+#ff5b26
+00.00
+.0.0.
+.....
+0...0
+.000.
+
+rightgod2
+#b63c15
+00.00
+.0.0.
+.....
+0...0
+.000.
+
+
+
+playermovetracker
+transparent
+
+cratemovetracker
+transparent
+
+turntracker
+transparent
+
+wallgodspreader
+transparent
+
+=======
+LEGEND
+=======
+
+. = Background
+
+# = Wall
+$ = upwall
+% = downwall
+& = leftwall
+* = rightwall
+
+P = Player and uptoken and lefttoken and righttoken and downtoken
+{ = Player and uptoken and lefttoken and righttoken and downtoken and target
+
+c = Crate and uptoken and lefttoken and righttoken and downtoken
+n = Crate
+b = Crate and uptoken and downtoken
+m = crate and lefttoken and righttoken
+, = crate and lefttoken
+" = crate and downtoken
+/ = crate and lefttoken and uptoken and downtoken
+? = crate and righttoken and uptoken and downtoken
+} = crate and lefttoken and uptoken and righttoken
++ = crate and righttoken and lefttoken and downtoken
+
+O = Target
+
+U = upshrine
+D = downshrine
+L = leftshrine
+R = rightshrine
+
+i = upgroundtoken
+f = downgroundtoken
+; = leftgroundtoken
+t = rightgroundtoken
+
+movetoken = uptoken or lefttoken or downtoken or righttoken
+shrine = upshrine or leftshrine or downshrine or rightshrine
+godwall = downwall or rightwall or leftwall or upwall
+hiddenwall = downwallhidden or rightwallhidden or leftwallhidden or upwallhidden
+
+playerBlocker = wall or godwall
+
+tokenholder = player or crate or shrine
+
+=======
+SOUNDS
+=======
+
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Target
+Player, Wall, Crate, shrine, godwall
+
+walldown
+wallright
+wallleft
+wallup
+wallcornerLD
+wallcornerRD
+wallcornerRU
+wallcornerLU
+
+playermovetracker
+cratemovetracker
+turntracker
+
+upgroundtoken
+downgroundtoken
+leftgroundtoken
+rightgroundtoken
+
+uptoken
+downtoken
+lefttoken
+righttoken
+
+hiddenwall
+
+upgod1, upgod2
+downgod1, downgod2
+leftgod1, leftgod2
+rightgod1, rightgod2
+
+wallgodspreader
+
+======
+RULES
+======
+
+down [wall no walldown | no wall]->[wall walldown | ]
+left [wall no wallleft | no wall]->[wall wallleft | ]
+right [wall no wallright | no wall]->[wall wallright | ]
+up [wall no wallup | no wall]->[wall wallup | ]
+right [wall no walldown | wall walldown] -> [wall wallcornerRD | wall Walldown]
+left [wall no walldown | wall walldown] -> [wall wallcornerLD | wall Walldown]
+right [wall no wallup | wall wallup] -> [wall wallcornerRU | wall Wallup]
+left [wall no wallup | wall wallup] -> [wall wallcornerLU | wall Wallup]
+
+
+
+[upgod2] -> []
+[upgod1] -> [upgod2] again
+[leftgod2] -> []
+[leftgod1] -> [leftgod2] again
+[downgod2] -> []
+[downgod1] -> [downgod2] again
+[rightgod2] -> []
+[rightgod1] -> [rightgod2] again
+
+[tokenholder no uptoken upgroundtoken] -> [tokenholder uptoken]
+[tokenholder no downtoken downgroundtoken] -> [tokenholder downtoken]
+[tokenholder no lefttoken leftgroundtoken] -> [tokenholder lefttoken]
+[tokenholder no righttoken rightgroundtoken] -> [tokenholder righttoken]
+
+(start with player input movement)
+
+startloop
+
+(can't move if a block doesn' have a move token)
+up [ up tokenholder no uptoken | ] -> [tokenholder | upgod1] again
+down [ down tokenholder no downtoken | ] -> [tokenholder | downgod1] again
+left [ left tokenholder no lefttoken | ] -> [tokenholder | leftgod1] again
+right [ right tokenholder no righttoken | ] -> [tokenholder | rightgod1] again
+
+(can't move if moving into a blocker)
+[ > tokenholder | playerBlocker] -> [tokenholder | playerBlocker]
+
+(transfer movement once, if possible)
+random [ >  tokenholder no turntracker | tokenholder ] -> [  >  tokenholder turntracker | > tokenholder > cratemovetracker  ]
+
+(
+random up [up tokenholder uptoken | stationary crate no uptoken] -> [stationary tokenholder | crate uptoken]
+random left [left tokenholder lefttoken | stationary crate no lefttoken] -> [stationary tokenholder | crate lefttoken]
+random right [right tokenholder righttoken | stationary crate no righttoken] -> [stationary tokenholder | crate righttoken]
+random down [down tokenholder downtoken | stationary crate no downtoken] -> [stationary tokenholder | crate downtoken]
+)
+
+
+
+endloop
+
+(check if moving into a shrine)
+[ > tokenholder uptoken | stationary upshrine no uptoken ] -> [stationary tokenholder | upshrine uptoken]
+[ > tokenholder lefttoken | stationary leftshrine no lefttoken] -> [stationary tokenholder | leftshrine lefttoken]
+[ > tokenholder righttoken | stationary rightshrine no righttoken] -> [stationary tokenholder | rightshrine righttoken]
+[ > tokenholder downtoken | stationary downshrine no downtoken] -> [stationary tokenholder | downshrine downtoken]
+
+(check if a shrine is moving into a holder - but a crate is in a wall's way)
+[ > downshrine downtoken | stationary tokenholder no downtoken][tokenholder downwallhidden] -> [stationary downshrine downtoken | tokenholder][tokenholder downwallhidden downgod1 wallgodspreader]
+[ > leftshrine lefttoken | stationary tokenholder no lefttoken][tokenholder leftwallhidden] -> [stationary leftshrine lefttoken | tokenholder][tokenholder leftwallhidden leftgod1 wallgodspreader]
+[ > rightshrine righttoken | stationary tokenholder no righttoken][tokenholder rightwallhidden] -> [stationary rightshrine righttoken | tokenholder][tokenholder rightwallhidden rightgod1 wallgodspreader]
+[ > upshrine uptoken | stationary tokenholder no uptoken][tokenholder upwallhidden] -> [stationary upshrine uptoken | tokenholder][tokenholder upwallhidden upgod1 wallgodspreader]
+
+(spread the god if we made one)
+[downwallhidden downgod1 wallgodspreader][downwallhidden no downgod1] -> [downwallhidden downgod1 wallgodspreader][downwallhidden downgod1]
+[leftwallhidden leftgod1 wallgodspreader][leftwallhidden no leftgod1] -> [leftwallhidden leftgod1 wallgodspreader][leftwallhidden leftgod1]
+[rightwallhidden rightgod1 wallgodspreader][rightwallhidden no rightgod1] -> [rightwallhidden rightgod1 wallgodspreader][rightwallhidden rightgod1]
+[upwallhidden upgod1 wallgodspreader][upwallhidden no upgod1] -> [upwallhidden upgod1 wallgodspreader][upwallhidden upgod1]
+
+(okay, check if a shrine is moving into a holder)
+[ > downshrine downtoken | stationary tokenholder no downtoken] -> [stationary downshrine | tokenholder downtoken]
+[ > leftshrine lefttoken | stationary tokenholder no lefttoken] -> [stationary leftshrine | tokenholder lefttoken]
+[ > rightshrine righttoken | stationary tokenholder no righttoken] -> [stationary rightshrine | tokenholder righttoken]
+[ > upshrine uptoken | stationary tokenholder no uptoken] -> [stationary upshrine | tokenholder uptoken]
+
+(cancel movement if moving into a stationary crate that was previously moving)
+[> tokenholder | stationary tokenholder cratemovetracker] -> [stationary tokenholder | tokenholder]
+
+
+
+[ moving tokenholder movetoken] -> [moving tokenholder moving movetoken]
+
+[ moving player] -> [moving player moving playermovetracker]
+[stationary player] -> [player playermovetracker]
+
+late [player no playermovetracker] -> cancel
+late [playermovetracker] -> []
+late [cratemovetracker] -> []
+late [turntracker] -> []
+late [wallgodspreader] -> []
+
+[uptoken upshrine][upwall] -> [uptoken upshrine][upwallhidden upgod1] again
+[downtoken downshrine][downwall] -> [downtoken downshrine][downwallhidden downgod1] again
+[lefttoken leftshrine][leftwall] -> [lefttoken leftshrine][leftwallhidden leftgod1] again
+[righttoken rightshrine][rightwall] -> [righttoken rightshrine][rightwallhidden rightgod1] again
+
+[no uptoken upshrine][upwallhidden] -> [ upshrine][upwall upgod1] again
+[no downtoken downshrine][downwallhidden] -> [ downshrine][downwall downgod1] again
+[no lefttoken leftshrine][leftwallhidden] -> [ leftshrine][leftwall leftgod1] again
+[no righttoken rightshrine][rightwallhidden] -> [ rightshrine][rightwall rightgod1] again
+
+==============
+WINCONDITIONS
+==============
+
+all target on tokenholder
+
+=======
+LEVELS
+=======
+
+message welcome to the garden
+
+message level 0 of 20
+
+(intro)
+###########
+#u.#.$.#..#
+#..c.$.coo#
+##...$...##
+#..p.$.o..#
+#....$....#
+###########
+
+message level 1 of 20
+
+(order matters)
+###########
+#....$%...#
+#....%$.o.#
+#.du.$%...#
+#....%$..##
+#....$%.###
+#.p.#######
+#...#######
+###########
+
+message level 2 of 20
+
+(pick up token)
+##########
+###u####o#
+##...###&#
+##....##%#
+#l......$#
+##....##.#
+##.p..#d.#
+##...###i#
+##########
+
+message level 3 of 20
+
+(crates can sacrifice too!)
+########
+#o&..&o#
+#&....&#
+#.#l...#
+#......#
+##.p.c.#
+##.....#
+########
+
+message level 4 of 20
+
+(4 color challenge)
+##########
+###......#
+#&*..;.p.#
+#%#..ru..#
+#$#..ldf.#
+#o#......#
+###......#
+##########
+
+message level 5 of 20
+
+(vertical lock)
+############
+##........##
+#..o...o...#
+##........##
+###*&%*&%###
+###%*&%*&###
+###&%*&%*###
+###......###
+##l..c...###
+##d.....r###
+###..p...###
+####....####
+############
+
+message level 6 of 20
+
+(recovery)
+##############
+########.....#
+########.o.o.#
+##lu#..#...$.#
+#......##.$f$#
+#......&$.#$.#
+#.p.c..$&.#%.#
+#......&$.%i%#
+#......$&..%##
+##.d...&$..###
+##############
+
+
+message level 7 of 20
+
+(push the shrine!)
+#######
+#...###
+#o#%###
+###.###
+##o..##
+###.d##
+#.....#
+#..c..#
+#.....#
+#..p..#
+##...##
+#######
+
+message level 8 of 20
+
+(make a pole from crates to trigger a shrine from afar)
+#############
+######o&&&&##
+####o&&****##
+###&&***%%%##
+##.&**%%..%##
+#..&*%.dc.%##
+#o#l*%.c.p%r#
+#..&*%..c.%##
+##.&**%%..%##
+###&&***%%%##
+####&o&****##
+######&&&&&##
+#############
+
+message level 9 of 20
+
+(locked push and backtrack)
+###########
+#........##
+#.p.c..l..#
+#......r..#
+#####....##
+#..u##.####
+#.....o..##
+#.........#
+##..$$$$$.#
+###..&&&..#
+####..*..##
+######o####
+###########
+
+message level 10 of 20
+
+(use shrines to make poles too)
+###########
+##.......##
+#.u.#d..%%#
+#.......%o#
+#.#.c.c.%%#
+#....p..**#
+#....c..*o#
+#$$.....**#
+#o$.$$$.$$#
+##$$#r#$$o#
+###########
+
+message level 11 of 20
+
+(undo a shrine - shrine transfer to crate!)
+#############
+########...##
+#######..&..#
+#####...&u&.#
+###...#..&..#
+##...p.c...##
+#..$..#..l.##
+#.$o$......##
+#..$...###.##
+##...#.$o$.##
+#############
+
+message level 12 of 20
+
+(parallel crates are stuck together)
+###########
+###%...%###
+##%o.d..%##
+#%...;...%#
+#..ommmo..#
+#....o....#
+#%...b...%#
+##%..o..%##
+###%.p.%###
+####...####
+###########
+
+message level 13 of 20
+
+(shrine is a crate, put it on a target!)
+###########
+#####....##
+#......*..#
+#.r.c.*o*.#
+#......*..#
+##..*.....#
+##.*o*.p..#
+##..*....##
+###...#####
+###########
+
+message level 14 of 20
+
+(empty crate)
+##############
+#**o***o****o#
+#.***.***..**#
+##&&&###....*#
+#.....&....**#
+#..r..&..n.*o#
+#.....&....**#
+##..c.l.c...##
+##..........##
+###...p....###
+#####...######
+##############
+
+message level 15 of 20
+
+(deadlock)
+#########
+##.o.####
+#..o..**#
+#oobm.#o#
+#..mb.**#
+##..o.r##
+##.uo.$$#
+#.....$i#
+#.p.c.$$#
+#......##
+##....###
+#########
+
+message level 16 of 20
+
+(fill a shrine with a single crate, then move it too - by pushing the single crate out of the way in a new direction )
+#############
+####&o&o&####
+###.&&&&&..##
+###.......%%#
+##...d.+..%o#
+#%%.......%%#
+#o%.l...,..##
+#%%.......###
+##...?.p..###
+###......####
+###.&&&.#####
+####&o&######
+#############
+
+message level 17 of 20
+
+(shrine picks up a token!)
+###########
+#&&..o..###
+#o&.."...##
+#&&.$$$..##
+#....;....#
+#...l&c...#
+##...u..$$#
+##...p..$o#
+###..o..$$#
+###########
+
+message level 18 of 20
+
+(shrine transfer!)
+##############
+######.....###
+#........c..##
+#.%&%..d..c.##
+#.&o&.......##
+#.%&%...p.l.##
+#...........##
+#..&%&.....###
+##.%o%.%&%.###
+##.&%&.&o&.###
+##.....%&%.###
+#####......###
+##############
+
+message level 19 of 20
+
+(fill a shrine with all directions)
+###############
+###########$$##
+##o*%###$....##
+###%...#$.##.$#
+###..d.##.#o.$#
+###.......#####
+###.r.c....####
+###....p....###
+####....c.l.###
+#####.......###
+#%.o#.##.u..###
+#%.##.%#...$###
+##....%###$&o##
+##%%###########
+###############
+
+message level 20 of 20
+
+(reverse shrine!)
+############
+####o##...##
+####o##.c..#
+###.d.#....#
+#oo*..c..l.#
+###........#
+##..p.u..c.#
+##....r....#
+###...#...##
+############
+
+message congratulations!
+

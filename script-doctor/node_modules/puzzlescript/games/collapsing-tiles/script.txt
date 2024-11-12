@@ -1,0 +1,703 @@
+title Collapsing tiles
+author Rosden Shadow [Mark Signorelli]
+homepage rosden.itch.io
+
+noaction
+run_rules_on_level_Start
+
+background_color #333333
+
+text_color #7EE58D 
+
+again_interval 0.2
+========
+OBJECTS
+========
+
+Background
+#666666 #333333(#E57ED5 #CC5285)
+11111
+11111
+11011
+11111
+11111
+(
+00101
+01110
+11011
+01111
+10110)
+(
+11101
+00101
+11111
+10100
+10111)
+
+back1
+#7EA1E5 #5C6684
+11111
+11011
+11011
+11011
+11111
+
+back2
+#E5C17E #847A5C
+11111
+11011
+10001
+11011
+11111
+
+back2_2
+#E5C17E #847A5C
+11111
+11111
+10001
+11111
+11111
+
+nomove
+#FFEED9 #536673
+.....
+.000.
+.010.
+.000.
+.....
+
+Target
+#FFD9E0 #423D39
+.....
+.010.
+.0.1.
+.000.
+.....
+
+Wall
+#D9FFDC #7EE58D  #5C8466 #4F5B46
+21110
+21110
+22221
+23232
+32323
+
+overwall
+#D9FFDC #7EE58D  #5C8466 #4F5B46
+.....
+.....
+.....
+10000
+21110
+
+
+Playerright
+#FFFFFF #CCCCCC #CC7A52 #B32D2D
+.000.
+11202
+11313
+11110
+.1.1.
+
+playerleft
+#FFFFFF #CCCCCC #CC7A52 #B32D2D
+.000.
+20211
+31311
+01111
+.1.1.
+
+Crate
+#FFEED9 #E0AAF2 #A87EE5 #705C84
+21100
+21110
+22110
+32223
+.333.
+
+overcrate
+#FFEED9 #E0AAF2 #A87EE5 #705C84
+.....
+.....
+.....
+.....
+.000.
+
+end
+#FFEED9 #E0AAF2 #A87EE5 #705C84
+21100
+21110
+22110
+32223
+.333.
+endx
+#FFEED9 #E0AAF2 #A87EE5 #705C84
+21100
+21110
+22110
+32223
+.333.
+
+begina
+#F2F2AA #E5C17E #CC7A52
+.000.
+2...0
+2...0
+2...0
+.222.
+
+beginb
+#F2F2AA #E5C17E #CC7A52
+.111.
+21001
+21101
+22111
+.222.
+
+
+
+
+cloner
+#E5C17E #DB7F55 #B32D2D #73342E
+.100.
+.210.
+.221.
+.332.
+.....
+
+swapcrate
+Orange Yellow
+00000
+0...0
+0...0
+0...0
+00000
+
+swapwall
+black
+.....
+.....
+.....
+.....
+.....
+
+thefloor
+#333333
+00000
+00000
+00000
+00000
+00000
+
+thefloorx
+#333333
+00000
+00000
+00000
+00000
+00000
+
+eend
+#333333
+00000
+00000
+00000
+00000
+00000
+(
+checkempty
+black
+.....
+.....
+.....
+.....
+.....
+
+checkblock
+black
+.....
+.....
+.....
+.....
+.....
+)
+
+pit
+black #231F26 (#E57ED5 #CC5285)
+11111
+10101
+01010
+00000
+00000
+
+pitfull
+black #231F26 (#E57ED5 #CC5285)
+00000
+00000
+00000
+00000
+00000
+
+pit1
+black #46495B (#E57ED5 #CC5285)
+11111
+10101
+01010
+00000
+00000
+
+pit2
+black #5B5746 (#E57ED5 #CC5285)
+11111
+10101
+01010
+00000
+00000
+
+pitc
+black #705C84 (#E57ED5 #CC5285)
+11111
+10101
+01010
+00000
+00000
+
+overpitc
+black #E0AAF2 #A87EE5 #705C84
+01210
+32121
+32212
+23221
+32332
+
+Presson
+TRANSPARENT
+
+Presson2
+TRANSPARENT
+
+startstop
+TRANSPARENT
+
+bend
+TRANSPARENT
+
+switcrate
+black
+.....
+.....
+.....
+.....
+.....
+
+switcrate2
+black
+.....
+.....
+.....
+.....
+.....
+
+arrow
+black
+.....
+.....
+.0.0.
+.000.
+..0..
+
+arrow2
+black
+.....
+.0.0.
+.000.
+..0..
+.....
+
+arrowx
+black
+.....
+.....
+.....
+.....
+.....
+
+arrowx2
+black
+.....
+.....
+.....
+.....
+.....
+
+winend
+#D9FFDC #7EE58D  #5C8466 #4F5B46
+1000.
+21100
+21110
+22110
+.2221
+
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Playerright and begina
+* = Crate
+' = pit
+O = Target
+n = nomove
+a = arrow2 and wall
+e=end
+t = end and target and eend
+w=end and winend
+
+c=cloner
+-=thefloor
+x=thefloorx
+
+1=back1
+2=back2
+
+feel=overwall or overcrate 
+pushable=crate or cloner or swapcrate  or switcrate or switcrate2
+win=crate or wall
+
+
+theemx= crate 
+player=playerright or playerleft
+
+blocker = wall or crate  or nomove or player or arrow
+
+arrowk = arrow or arrow2 or arrowx or arrowx2
+
+apit= pit or pitfull or pit1 or pit2 or pitc
+
+back2x=back2 or back2_2
+tiles = back1 or back2x
+
+begin=begina or beginb
+=======
+SOUNDS
+=======
+
+pushable MOVE 36772507
+
+EndLevel 74089700
+
+player MOVE 68988304
+sfx0 52836103
+sfx1 45427502
+
+sfx2 29503700
+sfx3 81951902
+
+sfx4 50057502
+
+sfx5 73986908
+sfx6 48806904
+================
+COLLISIONLAYERS
+================
+
+Background
+back1, back2 , back2_2
+Target
+nomove
+overpitc
+
+begina
+bend
+Player, Wall, pushable,swapwall,thefloor,thefloorx,apit ,beginb
+
+
+startstop
+Presson
+Presson2
+arrow, arrow2, arrowx, arrowx2
+winend
+eend
+end, endx
+feel
+
+
+======
+RULES
+======
+
+[feel]->[]
+[startstop]->[]
+[ >  Player | crate ] -> [  >  Player | > crate ]
+
+[ >  crate | apit ] -> [   | overpitc] sfx6
+
+[> player|beginb]->[> player|]
+
+[ left Playerright] -> [ left playerleft]
+[ right Playerleft] -> [ right playerright]
+
+[endx] ->[thefloor] sfx2
+[end | thefloor]-> [endx |thefloor]
+
+
+late[player no Presson]->[player presson]
+late[player no Presson2]->[player presson2]
+
+late[back1 no Presson|back1 Presson]->[back1 Presson|back1 Presson] sfx4
+
+late[back2 no Presson|back2 Presson]->[back2 Presson|back2 Presson] sfx4
+late[back2_2 no Presson|back2_2 Presson]->[back2_2 Presson|back2_2 Presson] sfx4
+
+late[back1 Presson no blocker]->[pit] sfx4
+late[back2 Presson no player]->[back2_2] sfx4
+late[back2_2 Presson no blocker]->[pit] sfx4
+
+late[Presson2 no player no begin]->[pit] 
+
+late[pit tiles]->[pit]
+late[pit overpitc]->[pit]
+
+
+late up [wall| ]-> [wall|overwall]
+late up [theemx| ]-> [theemx|overcrate]
+
+late [begina][tiles]->[begina startstop][tiles]
+late [ begina no startstop no blocker]->[beginb bend] sfx5
+
+(late up [crate2| ]-> [crate2|overcrate2])
+
+late up [end| ]-> [end|overcrate]
+late up [endx| ]-> [endx|overcrate]
+
+
+late up [apit|apit]->[pitfull|apit]
+
+late up [apit|no apit]->[pit|]
+late up [apit|overpitc]->[pitc|overpitc]
+late up [apit|back1]->[pit1|back1]
+late up [apit|back2x]->[pit2|back2x]
+
+
+
+[]-> again 
+(
+[arrow]->[arrowx2]
+[arrow2]->[arrowx]
+
+[arrowx]->[arrow]
+[arrowx2]->[arrow2])
+==============
+WINCONDITIONS
+==============
+
+all bend on player 
+
+some bend
+=======
+LEVELS
+=======
+
+message Collapse all the coloured tiles and make your way back to where you started
+
+message level 1 of 11
+---------
+-#######-
+##1...2##
+#.1...2.#
+#111.222#
+#.1...2.#
+#.......#
+#.......#
+#...P...#
+##.....##
+-#######-
+
+message level 2 of 11
+---------
+-#######-
+##.....##
+#...*...#
+#.......#
+#..111..#
+#1111111#
+#.......#
+#...P...#
+##.....##
+-#######-
+
+message level 3 of 11
+---------
+--#####--
+-##...##-
+-#.211.#-
+-#.212.#-
+-##122##-
+##.....##
+#.......#
+##..P..##
+-##...##-
+--#####--
+
+message level 4 of 11
+---------
+--#####--
+-##...##-
+##.211.##
+#.12122.#
+##12212##
+#.......#
+#.......#
+##..P..##
+-##...##-
+--#####--
+
+message level 5 of 11
+---------
+-#######-
+##.....##
+#.22112.#
+#.21212.#
+##11221##
+#.21211.#
+#.......#
+#...P...#
+##.....##
+-#######-
+
+message level 6 of 11
+---------
+-#######-
+##.....##
+#..111..#
+#..121..#
+##.111.##
+#...1...#
+#...1...#
+#...*...#
+##..P..##
+-#.....#-
+-#######-
+
+message level 7 of 11
+---------
+-#######-
+##..2..##
+#..121..#
+#.12221.#
+##1.2.1##
+#.......#
+#...*...#
+#.......#
+##..P..##
+-###.###-
+
+
+message level 8 of 11
+---------
+-#######-
+##..2..##
+#..111..#
+#..222..#
+###111###
+#.......#
+#...*...#
+#.......#
+##..P..##
+-###.###-
+
+message level 9 of 11
+---------
+--#####--
+###...###
+#.21212.#
+#.12212.#
+##11221##
+#.......#
+#...*...#
+#.......#
+##..P..##
+-###.###-
+
+message level 10 of 11
+---------
+-#######-
+##.....##
+#.21122.#
+#.21211.#
+##12*12##
+#.22122.#
+#.......#
+#.......#
+##.#P#.##
+-###.###-
+
+message level 11 of 11
+---------
+--#####--
+###121###
+#..212..#
+#.212'2.#
+##21212##
+#.......#
+#.#.*.#.#
+#.......#
+##..P..##
+-###.###-
+
+
+(---------
+-#######-
+##.....##
+#.11221.#
+#.11112.#
+##22112##
+#...1...#
+#.......#
+#...*...#
+##..P..##
+-###.###-)
+
+(---------
+-#######-
+-#.121.#-
+##22122##
+#..212..#
+#.#222#.#
+#.......#
+#...*...#
+#.......#
+##..P..##
+-#.....#-
+-#######-)
+
+(---------
+-#######-
+##.....##
+#...1...#
+#..121..#
+##12221##
+#..121..#
+#...1...#
+#...P...#
+##.....##
+-#######-)
+
+
+
+
+xxxxxxxxxxxxxx
+-eeeeeeeeeeee-
+eeeeeeeeeeeeee
+eeeeeeeeeeeeee
+wewewewwweweew
+wewewetweewwew
+weweweeweeweww
+eweweewwweweew
+eeeeeeeeeeeeee
+eeeeeeeeeeeeee
+-eeeeeeeeeeee-
+
+

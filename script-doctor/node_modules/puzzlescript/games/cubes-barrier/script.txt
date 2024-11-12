@@ -1,0 +1,605 @@
+title Cubes barrier
+author Rosden Shadow [Mark Signorelli]
+homepage rosden.itch.io
+
+noaction
+run_rules_on_level_Start
+
+background_color #222533
+
+text_color #A3C0E6 
+
+again_interval 0.2
+========
+OBJECTS
+========
+
+Background
+#36354D #222533 (#E57ED5 #CC5285)
+11111
+11011
+10101
+11011
+11111
+(
+00101
+01110
+11011
+01111
+10110)
+(
+11101
+00101
+11111
+10100
+10111)
+
+
+nomove
+#FFEED9 #536673
+.....
+.000.
+.010.
+.000.
+.....
+
+Target
+#A3C0E6 #222533
+.111.
+10001
+10101
+10001
+.111.
+
+Wall
+#FAFFFC #A3C0E6 #6275BA  #36354D #222533(#D9FFDC #AAE0F2 #7EA1E5 #5C6684 #46495B)
+21110
+21110
+22221
+23232
+32323
+
+overwall
+#FAFFFC #A3C0E6 #6275BA  #36354D #222533
+.....
+.....
+.....
+10000
+21110
+
+
+Playerright
+#A7F547 #2BDB72 #36354D #222533
+.000.
+11202
+11313
+11110
+.1.1.
+
+playerleft
+#A7F547 #2BDB72 #36354D #222533
+.000.
+20211
+31311
+01111
+.1.1.
+
+Cratex
+#FFEB33 #F58931 #DB4B3D #A63D57 (#FFEB33 #F58931 #DB4B3D #A63D57)
+21100
+21110
+22110
+32223
+.333.
+
+Cratex2
+#FFEB33 #F58931 #DB4B3D #A63D57
+21100
+21110
+22110
+32223
+.333.
+
+Cratel
+#FFEB33 #F58931 #DB4B3D #A63D57 black
+21440
+24410
+22440
+32223
+.333.
+
+Crater
+#FFEB33 #F58931 #DB4B3D #A63D57 black
+24400
+21440
+24410
+32223
+.333.
+
+Crateu
+#FFEB33 #F58931 #DB4B3D #A63D57 black
+21400
+24440
+24140
+32223
+.333.
+
+Crated
+#FFEB33 #F58931 #DB4B3D #A63D57 black
+24140
+24440
+22410
+32223
+.333.
+
+overcrate
+#FFEB33 #F58931 #DB4B3D #A63D57
+.....
+.....
+.....
+.....
+.000.
+
+end
+#FFEB33 #F58931 #DB4B3D #A63D57
+21100
+21110
+22110
+32223
+.333.
+endx
+#FFEB33 #F58931 #DB4B3D #A63D57
+21100
+21110
+22110
+32223
+.333.
+
+
+
+cloner
+#E5C17E #DB7F55 #B32D2D #73342E
+.100.
+.210.
+.221.
+.332.
+.....
+
+swapcrate
+Orange Yellow
+00000
+0...0
+0...0
+0...0
+00000
+
+craspa
+black
+.....
+.....
+.....
+.....
+.....
+
+swapwall
+black
+.....
+.....
+.....
+.....
+.....
+
+thefloor
+#222533
+00000
+00000
+00000
+00000
+00000
+
+thefloorx
+#222533
+00000
+00000
+00000
+00000
+00000
+
+eend
+#222533
+00000
+00000
+00000
+00000
+00000
+(
+checkempty
+black
+.....
+.....
+.....
+.....
+.....
+
+checkblock
+black
+.....
+.....
+.....
+.....
+.....
+)
+
+switcrate
+black
+.....
+.....
+.....
+.....
+.....
+
+switcrate2
+black
+.....
+.....
+.....
+.....
+.....
+
+arrow
+black
+.....
+.....
+.0.0.
+.000.
+..0..
+
+arrow2
+black
+.....
+.0.0.
+.000.
+..0..
+.....
+
+arrowx
+black
+.....
+.....
+.....
+.....
+.....
+
+arrowx2
+black
+.....
+.....
+.....
+.....
+.....
+
+stopl
+black black
+.....
+00000
+00000
+11111
+.....
+
+stopr
+black black
+.....
+00000
+00000
+11111
+.....
+
+stopu
+black black
+.100.
+.100.
+.100.
+.100.
+.100.
+
+stopd
+black black
+.100.
+.100.
+.100.
+.100.
+.100.
+
+hstop
+TRANSPARENT
+
+winend
+#FAFFFC #A3C0E6 #6275BA
+1000.
+21100
+21110
+22110
+.2221
+
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Playerright
+* = Cratex
+
+O = Target
+n = nomove
+a = arrow2 and wall
+e=end
+t = end and target and eend
+w=end and winend
+
+c=cloner
+-=thefloor
+x=thefloorx
+
+feel=overwall or overcrate 
+thestop=stopl or stopr or stopu or stopd or hstop
+
+crate= cratex or Crater or Cratel or Crateu or crated or cratex2
+pushable=crate or cloner or swapcrate  or switcrate or switcrate2
+win=crate or wall
+
+
+theemx= crate 
+player=playerright or playerleft
+
+blockerx=wall
+
+blocker = wall or crate  or nomove or player or arrow
+
+arrowk = arrow or arrow2 or arrowx or arrowx2
+
+
+=======
+SOUNDS
+=======
+
+pushable MOVE 36772507
+
+EndLevel 74089700
+
+player MOVE 68988304
+sfx0 52836103
+sfx1 45427502
+
+sfx2 29503700
+sfx3 81951902
+sfx4 97911709
+sfx5 72719101
+================
+COLLISIONLAYERS
+================
+
+Background
+Target
+nomove
+stopl
+stopr 
+stopu 
+stopd
+hstop
+
+Player, Wall, pushable,swapwall,thefloor,thefloorx
+
+craspa
+arrow, arrow2, arrowx, arrowx2
+winend
+eend
+end, endx
+feel
+
+
+======
+RULES
+======
+
+[feel]->[]
+[craspa]->[]
+[cratex2]->[cratex]
+[cratex]->[cratex craspa]
+
+[> player|thestop no crate]->[player |thestop] sfx4
+
+[thestop ]->[]
+
+[> player |cratex]->[ player |> cratex2 ]
+[> player |crate]->[ player |> crate ]
+
+(right[> player | crate no hstop| no blocker]->[ player | right crate right hstop right stopr right stopu right stopd|]
+left[> player | crate no hstop| no blocker]->[ player | left crate left hstop left stopl left stopu left stopd|]
+up[> player | crate no hstop| no blocker]->[ player | up crate up hstop up stopu up stopl up stopr|]
+down[> player | crate no hstop| no blocker]->[ player | down crate down hstop down stopd down stopl down stopr|])
+(right[> player | crate no hstop| no blocker]->[ player | right crate right hstop right stopr |]
+left[> player | crate no hstop| no blocker]->[ player | left crate left hstop left stopl |]
+up[> player | crate no hstop| no blocker]->[ player | up crate up hstop up stopu |]
+down[> player | crate no hstop| no blocker]->[ player | down crate down hstop down stopd |])
+
+
+[> crate |crate]->[> crate |> crate ]
+[> crate |crate thestop]->[> crate |> crate > thestop]
+
+late left[craspa no cratex|cratex2 ]->[|cratel] sfx5
+late right[craspa no cratex|cratex2 ]->[|crater] sfx5
+late up[craspa no cratex|cratex2 ]->[|crateu] sfx5
+late down[craspa no cratex|cratex2 ]->[|crated] sfx5
+
+late [ Cratel]->[cratel stopl]
+late [ Crater]->[crater stopr]
+late [ Crated]->[crated stopd]
+late [ Crateu]->[crateu stopu]
+
+late right[stopr|no blocker]->[stopr|stopr]
+late left[stopl|no blocker]->[stopl|stopl]
+late up[stopu|no blocker]->[stopu|stopu]
+late down[stopd|no blocker]->[stopd|stopd]
+
+
+[> crate|Target]->[> crate|target] sfx2
+
+[ left Playerright] -> [ left playerleft]
+[ right Playerleft] -> [ right playerright]
+
+[endx] ->[thefloor] sfx2
+[end | thefloor]-> [endx |thefloor]
+
+
+late up [wall| ]-> [wall|overwall]
+late up [theemx| ]-> [theemx|overcrate]
+
+(late up [crate2| ]-> [crate2|overcrate2])
+
+late up [end| ]-> [end|overcrate]
+late up [endx| ]-> [endx|overcrate]
+
+([action player eend|]->[action player eend |crate Target])
+
+
+
+[]-> again 
+(
+[arrow]->[arrowx2]
+[arrow2]->[arrowx]
+
+[arrowx]->[arrow]
+[arrowx2]->[arrow2])
+==============
+WINCONDITIONS
+==============
+
+all Target on crate
+
+some target
+=======
+LEVELS
+=======
+
+message Have a crate on all targets
+
+message level 1 of 6
+---------
+#########
+#.......#
+#...#...#
+#.*.#.O.#
+##..#...#
+#...#...#
+#.......#
+##..P..##
+-##...##-
+--#####--
+
+message level 2 of 6
+---------
+----####-
+--###..##
+###.O...#
+#.......#
+#...*##.#
+#.##*...#
+#...P...#
+#...O.###
+##..###--
+-####----
+
+message level 3 of 6
+---------
+#########
+#.......#
+#...*...#
+#.*.#.*.#
+#.......#
+###...###
+#...p...#
+#.O.O.O.#
+##.....##
+-#######-
+
+message level 4 of 6
+---------
+--#####--
+###...###
+#.......#
+#.......#
+#...*...#
+####*.###
+#....#..#
+#.......#
+#..OPO..#
+#.......#
+#########
+
+
+message level 5 of 6
+---------
+-#######-
+##.....##
+#.......#
+#...#...#
+#..***..#
+#..#.#..#
+#...P...#
+#.O.O.O.#
+##.....##
+-#######-
+
+message level 6 of 6
+---------
+-#######-
+##.....##
+#.......#
+#.......#
+#.......#
+###***###
+#...P...#
+#..OOO..#
+##.....##
+-#######-
+
+
+(---------
+#########
+#.......#
+#.......#
+#.......#
+#...*...#
+###*#*###
+#...P...#
+#.O.O.O.#
+##.....##
+-#######-)
+(---------
+-#######-
+##.....##
+#.......#
+#...##..#
+#..***..#
+#..##...#
+#...P...#
+#..OOO..#
+##.....##
+-#######-)
+
+
+xxxxxxxxxxxxxx
+-eeeeeeeeeeee-
+eeeeeeeeeeeeee
+eeeeeeeeeeeeee
+wewewewwweweew
+wewewetweewwew
+weweweeweeweww
+eweweewwweweew
+eeeeeeeeeeeeee
+eeeeeeeeeeeeee
+-eeeeeeeeeeee-
+
+

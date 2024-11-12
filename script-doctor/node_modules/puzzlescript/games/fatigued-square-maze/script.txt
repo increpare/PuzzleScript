@@ -1,0 +1,291 @@
+title Fatigued square maze
+author Ove Ahlman
+homepage http://oveahlman.itch.io
+background_color red
+text_color white
+
+========
+OBJECTS
+========
+background 
+white
+
+player4
+black black
+00000
+01110
+01110
+01110
+00000
+
+player3
+black #5a1e25
+00000
+01110
+01110
+01110
+00000
+
+player2
+black #a04752
+00000
+01110
+01110
+01110
+00000
+
+player1
+black #d5adb2
+00000
+01110
+01110
+01110
+00000
+
+player0
+black white
+00000
+01110
+01110
+01110
+00000
+
+playerright
+TRANSPARENT
+
+playerleft
+TRANSPARENT
+
+playerdown
+TRANSPARENT
+
+playerup
+TRANSPARENT
+
+decreaseplayer
+TRANSPARENT
+
+outerwall 
+darkgrey grey
+00000
+01110
+01110
+01110
+00000
+
+topwall 
+TRANSPARENT
+
+goal 
+yellow LIGHTGREEN
+00000
+01110
+01110
+01110
+00000
+
+smallpowerup
+lightblue pink
+.....
+.000.
+.010.
+.000.
+.....
+
+bigpowerup
+blue darkred
+.....
+.000.
+.010.
+.000.
+.....
+
+=======
+LEGEND
+=======
+. = background
+w = outerwall and topwall
+g = goal
+p = smallpowerup
+q = bigpowerup
+4 = player4
+3 = player3
+2 = player2
+1 = player1
+0 = player0
+
+player = player4 or player3 or player2 or player1 or player0
+playerdirections = playerright or playerleft or playerup or playerdown
+powerup = smallpowerup or bigpowerup
+wall = outerwall
+
+=======
+SOUNDS
+=======
+endlevel 43911900
+sfx0 96556303
+sfx1 35662504
+
+================
+COLLISIONLAYERS
+================
+background
+goal powerup
+wall player
+playerdirections topwall
+decreaseplayer
+
+======
+RULES
+======
+
+
+(movement)
+right [> player playerdirections no playerright] -> [> player]
+right [> player no playerright ] -> [> player > playerright > decreaseplayer]
+right [> player playerright ] -> [> player > playerright ]
+left [> player playerdirections no playerleft] -> [> player]
+left [> player no playerleft ] -> [> player > playerleft > decreaseplayer]
+left [> player playerleft ] -> [> player > playerleft]
+up [> player playerdirections no playerup] -> [> player]
+up [> player no playerup] -> [> player > playerup > decreaseplayer]
+up [> player playerup] -> [> player > playerup]
+down [> player playerdirections no playerdown] -> [> player]
+down [> player playerdown] -> [> player > playerdown]
+down [> player no playerdown] -> [> player > playerdown > decreaseplayer]
+
+
+[player0] -> cancel
+[decreaseplayer player1] -> [player0] 
+[decreaseplayer player2] -> [player1]
+[decreaseplayer player3] -> [player2]
+[decreaseplayer player4] -> [player3]
+
+(powerup handeling)
+late [bigpowerup player] -> [player4] sfx0
+late [smallpowerup player0] -> [player1] sfx0
+late [smallpowerup player1] -> [player2] sfx0
+late [smallpowerup player2] -> [player3] sfx0
+late [smallpowerup player3] -> [player4] sfx0
+late [smallpowerup player4] -> [player4] sfx0
+
+
+
+==============
+WINCONDITIONS
+==============
+all player on goal
+some goal on player
+
+
+=======
+LEVELS
+=======
+message Level 1 out of 8
+
+wwwwwww
+wg....w
+www.w.w
+w...w.w
+w.www.w
+w4....w
+wwwwwww
+
+message Level 2 out of 8
+
+wwwwwww
+w.q...w
+w..ww.w
+w..w..w
+ww4w..w
+wwwg.ww
+wwwwwww
+
+message Level 3 out of 8
+
+wwwwwwwwww
+w........w
+w.w.w.ww.w
+w.w.w.ww.w
+wgw.w..w.w
+www.ww.w.w
+w...w.q..w
+w.www.ww.w
+w4.......w
+wwwwwwwwww
+
+message Level 4 out of 8
+
+wwwwwwwwww
+w.......ww
+w.w.w.w..w
+w.w.w.ww.w
+wgw.w..w.w
+www.ww.w.w
+w.....q..w
+w.www.ww.w
+w4.......w
+wwwwwwwwww
+
+message Level 5 out of 8
+
+wwwwwwwwww
+w......www
+w.w.....qw
+wgwwwwqw.w
+ww.....w.w
+w..w.ww.qw
+w..q..w.ww
+w.w.w....w
+w4....wwqw
+wwwwwwwwww
+
+message Level 6 out of 8
+
+wwwwwwwwwwwww
+wq.wwq.qw.q.w
+ww....w..qw.w
+w...wwwwwww.w
+w.w......qw.w
+wgw.ww.ww.w.w
+ww...q.ww.w.w
+w..ww.w..q..w
+w..q..w.www.w
+w.w.w.......w
+w.....w.w.w.w
+wqw4wwq.wqwqw
+wwwwwwwwwwwww
+
+message Level 7 out of 8
+
+wwwwwwwwwwwww
+wq....q.w..qw
+w.ww.w..q..ww
+w.....wqw...w
+w.www..w.qw.w
+w.wg..w..w..w
+w.wwww..w...w
+wq...4...qwqw
+w.w.w.w.w.w.w
+wqw..q....w.w
+w..www.ww...w
+ww.........ww
+wwwwwwwwwwwww
+
+message Level 8 out of 8
+
+wwwwwwwwwwwww
+wq......w.qgw
+w.w..w....w.w
+w...w..w....w
+w.w.w.w.ww.ww
+w.w.q......ww
+w.wwwq4.w...w
+w.q..w.ww..qw
+w.ww.......ww
+w.....ww.q..w
+www.w.....wqw
+wg..wqw...q.w
+wwwwwwwwwwwww
+
+message Congratulations! You beat the game!

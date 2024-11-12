@@ -1,0 +1,444 @@
+title using pushers
+author Rosden Shadow [Mark Signorelli]
+homepage rosden.itch.io
+run_rules_on_level_Start
+
+background_color #5B4654
+
+text_color #FFEED9
+
+========
+OBJECTS
+========
+
+Background
+#845C7A #5B4654 (#E57ED5 #CC5285)
+11111
+11101
+10001
+10111
+11111
+(
+00101
+01110
+11011
+01111
+10110)
+(
+11101
+00101
+11111
+10100
+10111)
+
+
+nomove
+#FFEED9 #536673
+.....
+.000.
+.010.
+.000.
+.....
+
+Target
+#FFEED9 #5B4654
+.....
+.010.
+.101.
+.010.
+.....
+
+Wall
+ #E5C17E #F2F2AA #847A5C #5B5746
+10002
+21001
+22120
+32332
+33323
+
+overwall
+ #E5C17E  #F2F2AA #847A5C #5B5746
+.....
+.....
+.....
+01211
+20021
+
+
+Playerright
+#F2F2AA #E5C17E #DB7F55 #B32D2D
+.000.
+11202
+11313
+11110
+.1.1.
+
+playerleft
+#F2F2AA #E5C17E #DB7F55 #B32D2D
+.000.
+20211
+31311
+01111
+.1.1.
+
+Crate
+#E5C17E #CC7A52 #736053 #423D39
+21110
+21110
+21110
+22221
+33333
+
+overcrate
+#E5C17E #CC7A52 #736053 #423D39
+.....
+.....
+.....
+.....
+10000
+
+crateleft
+#D9FFF8 #AAE0F2 #7EA1E5 #536673 black
+24400
+44110
+24410
+32223
+.333.
+
+overcrateleft
+#D9FFF8 #AAE0F2 #7EA1E5 #536673 black
+.....
+.....
+.....
+.....
+.000.
+
+crateright
+#D9FFF8 #AAE0F2 #7EA1E5 #536673 black
+21440
+21144
+22440
+32223
+.333.
+
+overcrateright
+#D9FFF8 #AAE0F2 #7EA1E5 #536673 black
+.....
+.....
+.....
+.....
+.000.
+
+crateup
+#D9FFF8 #AAE0F2 #7EA1E5 #536673 black
+24440
+24140
+22110
+32223
+.333.
+
+overcrateup
+#D9FFF8 #AAE0F2 #7EA1E5 #536673 black
+.....
+.....
+.....
+.....
+.040.
+
+cratedown
+#D9FFF8 #AAE0F2 #7EA1E5 #536673 black
+21100
+24140
+24440
+32423
+.333.
+
+overcratedown
+#D9FFF8 #AAE0F2 #7EA1E5 #536673 black
+.....
+.....
+.....
+.....
+.000.
+
+cloner
+#E5C17E #DB7F55 #B32D2D #73342E
+.100.
+.210.
+.221.
+.332.
+.....
+
+swapcrate
+Orange Yellow
+00000
+0...0
+0...0
+0...0
+00000
+
+swapwall
+black
+.....
+.....
+.....
+.....
+.....
+
+thefloor
+#5B4654
+00000
+00000
+00000
+00000
+00000
+
+(
+checkempty
+black
+.....
+.....
+.....
+.....
+.....
+
+checkblock
+black
+.....
+.....
+.....
+.....
+.....
+)
+
+switcrate
+black
+.....
+.....
+.....
+.....
+.....
+
+switcrate2
+black
+.....
+.....
+.....
+.....
+.....
+
+shiftup
+black
+.....
+.....
+.....
+.....
+.....
+
+shiftdown
+black
+.....
+.....
+.....
+.....
+.....
+
+shiftleft
+black
+.....
+.....
+.....
+.....
+.....
+
+shiftright
+black
+.....
+.....
+.....
+.....
+.....
+
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Playerright
+* = Crate
+
+O = Target
+n = nomove
+
+c=cloner
+-=thefloor
+
+1=crateright
+2=crateup
+3=crateleft
+4=cratedown
+
+feel=overwall or overcrate or overcrateleft or overcrateright or overcrateup or overcratedown
+movecrate= crateleft or crateright or crateup or cratedown
+pushable=cloner or swapcrate or movecrate or switcrate or switcrate2
+win=crate or wall
+shift=shiftup or shiftdown or shiftleft or shiftright
+
+theemx= crate 
+player=playerright or playerleft
+
+blocker = wall or crate or nomove or player 
+=======
+SOUNDS
+=======
+
+pushable MOVE 36772507
+
+
+
+sfx0 52836103
+sfx1 45427502
+sfx2 27874902
+sfx3 28694504
+================
+COLLISIONLAYERS
+================
+
+Background
+Target
+shift
+nomove
+Player, Wall, pushable,swapwall,thefloor
+crate
+feel
+
+======
+RULES
+======
+
+[feel]->[]
+[ >  Player | movecrate ] -> [  >  Player | > movecrate ]
+[> player |crate] -> [ player |crate] sfx3
+
+
+[ > crateup | crate] -> [ | crate shiftup] sfx2
+[ > cratedown | crate] -> [ | crate shiftdown] sfx2
+[ > crateleft | crate] -> [ | crate shiftleft] sfx2
+[ > crateright | crate] -> [ | crate shiftright] sfx2
+(
+[ crate shiftup ] -> [  up crate] sfx2
+[  crate shiftdown ] -> [ down crate] sfx2
+[ crate shiftleft ] -> [  left crate] sfx2
+[ crate shiftright ] -> [  right crate] sfx2)
+
+(
+late up [ crate shiftup] -> [   crate] sfx2
+late down[  crate shiftdown] -> [  crate] sfx2
+late left[ crate shiftleft] -> [   crate] sfx2
+late right[ crate shiftright] -> [   crate] sfx2)
+
+late up [ crate shiftup|no blocker] -> [  | crate] sfx2
+late down[  crate shiftdown|no blocker] -> [ | crate] sfx2
+late left[ crate shiftleft|no blocker] -> [ |  crate] sfx2
+late right[ crate shiftright| no blocker] -> [  | crate] sfx2
+
+late  [ crate shiftup] -> [   crate] sfx2
+late [  crate shiftdown] -> [  crate] sfx2
+late [ crate shiftleft] -> [   crate] sfx2
+late [ crate shiftright] -> [   crate] sfx2
+
+([> crate |  crateup ] -> [  > crate|shiftup] 
+[> crate |  cratedown ] -> [  > crate|shiftdown] 
+[ > crate |  crateleft ] -> [  > crate|shiftleft] 
+[ > crate |  crateright ] -> [ > crate|shiftright] )
+
+[ crate  crateup ] -> [   crate shiftup] 
+[crate  cratedown ] -> [   crate shiftdown] 
+[crate  crateleft ] -> [   crate shiftleft] 
+[ crate  crateright ] -> [  crate shiftright]
+
+
+[ left Playerright] -> [ left playerleft]
+[ right Playerleft] -> [ right playerright]
+
+
+
+late up [wall| ]-> [wall|overwall]
+late up [theemx| ]-> [theemx|overcrate]
+
+late up [crateleft| ]-> [crateleft|overcrateleft]
+late up [crateright| ]-> [crateright|overcrateright]
+late up [cratedown| ]-> [cratedown|overcratedown]
+late up [crateup| ]-> [crateup|overcrateup]
+
+
+[] -> again
+==============
+WINCONDITIONS
+==============
+
+all Target on crate
+
+
+
+=======
+LEVELS
+=======
+
+message have a crate on all targets
+
+message level 1 of 4
+---------
+-#######-
+##.....##
+#..*....#
+#...O...#
+#...P...#
+#.......#
+#...2...#
+#..341..#
+##.....##
+-#######-
+
+message level 2 of 4
+---------
+-#######-
+##.....##
+#.O.....#
+#..221..#
+#..3*1..#
+#..344..#
+#.......#
+#...P...#
+##.....##
+-#######-
+
+message level 3 of 4
+---------
+-#######-
+##.....##
+#.42.24.#
+#...*...#
+#..412..#
+#..3.3..#
+#..214..#
+#...O...#
+##..P..##
+-#######-
+
+message level 4 of 4
+---------
+-#######-
+##.....##
+#...P...#
+#..*#*..#
+#.4###4.#
+#.4...4.#
+#.3O.O1.#
+#.34.41.#
+##.....##
+-#######-
+
+message perfect pushing with pushers!

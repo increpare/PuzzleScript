@@ -1,0 +1,557 @@
+(attrib)
+title Oskar's Maze
+author Whuk Games
+homepage www.whukgames.com
+
+(game vars)
+realtime_interval 0.05
+
+norepeat_action
+scanline
+noundo
+(norestart)
+
+========
+OBJECTS
+========
+(Variables)
+Background .
+Black
+ModeCheck
+Black
+Placeholder1 1
+Black
+Placeholder2 2
+Black
+Placeholder3 3
+Black
+Placeholder4 4
+Black
+Placeholder5 5
+Black
+Placeholder6 6
+Black
+Placeholder7 7
+Black
+Placeholder8 8
+Black
+Placeholder9 9
+Black
+Placeholder0 0
+Black
+
+(Graphics: Misc)
+Diagonal /
+Gray
+....0
+...0.
+..0..
+.0...
+0....
+
+(Graphics: Walls)
+WallV │
+White
+..0..
+..0..
+..0..
+..0..
+..0..
+
+WallH ─
+White
+.....
+.....
+00000
+.....
+.....
+
+WallTR ┐
+White
+.....
+.....
+00...
+..0..
+..0..
+
+WallTL ┌
+White
+.....
+.....
+...00
+..0..
+..0..
+
+WallBR ┘
+White
+..0..
+..0..
+00...
+.....
+.....
+
+WallBL └
+White
+..0..
+..0..
+...00
+.....
+.....
+
+WallT ┬
+White
+.....
+.....
+00000
+..0..
+..0..
+
+WallB ┴
+White
+..0..
+..0..
+00000
+.....
+.....
+
+WallL ├
+White
+..0..
+..0..
+..000
+..0..
+..0..
+
+WallR ┤
+White
+..0..
+..0..
+000..
+..0..
+..0..
+
+WallAliasV ┃
+White
+..0..
+..0..
+..0..
+..0..
+..0..
+
+WallAliasH ━
+White
+.....
+.....
+00000
+.....
+.....
+
+WallAliasTR ┓
+White
+.....
+.....
+00...
+..0..
+..0..
+
+WallAliasTL ┏
+White
+.....
+.....
+...00
+..0..
+..0..
+
+WallAliasBR ┛
+White
+..0..
+..0..
+00...
+.....
+.....
+
+WallAliasBL ┗
+White
+..0..
+..0..
+...00
+.....
+.....
+
+WallAliasT ┳
+White
+.....
+.....
+00000
+..0..
+..0..
+
+WallAliasB ┻
+White
+..0..
+..0..
+00000
+.....
+.....
+
+WallAliasL ┣
+White
+..0..
+..0..
+..000
+..0..
+..0..
+
+WallAliasR ┫
+White
+..0..
+..0..
+000..
+..0..
+..0..
+
+ThickWallV ║
+White
+.0.0.
+.0.0.
+.0.0.
+.0.0.
+.0.0.
+
+ThickWallH ═
+White
+.....
+00000
+.....
+00000
+.....
+
+ThickWallTR ╗
+White
+.....
+000..
+...0.
+0..0.
+.0.0.
+
+ThickWallTL ╔
+White
+.....
+..000
+.0...
+.0..0
+.0.0.
+
+ThickWallBR ╝
+White
+.0.0.
+0..0.
+...0.
+000..
+.....
+
+ThickWallBL ╚
+White
+.0.0.
+.0..0
+.0...
+..000
+.....
+
+ThickWallL ╟
+White
+.0.0.
+.0.0.
+.0.00
+.0.0.
+.0.0.
+
+ThickWallR ╢
+White
+.0.0.
+.0.0.
+00.0.
+.0.0.
+.0.0.
+
+ThickWallU ╤
+White
+.....
+00000
+.....
+00000
+..0..
+
+ThickWallD ╧
+White
+..0..
+00000
+.....
+00000
+.....
+
+Gate ┼
+White
+..0..
+..0..
+00000
+..0..
+..0..
+
+(Graphics: Actors)
+Player1 o
+Red
+.000.
+00000
+00000
+00000
+.000.
+Player2 @
+Yellow
+.000.
+00000
+00000
+00000
+.000.
+Player3 Q
+Blue
+.000.
+00000
+00000
+00000
+.000.
+Target x
+Green
+0...0
+.0.0.
+.....
+.0.0.
+0...0
+
+=======
+LEGEND
+=======
+(Stacked objects)
+Player = Player1 or Player2 or Player3
+~ = ThickWallTL and ModeCheck
+` = WallAliasTL and ModeCheck
+
+(System object classes)
+System = 1 or 2 or 3 or 4 or 5 or 6 or 7 or 8 or 9 or 0
+
+(Visible object classes)
+ThickWall = THICKWALLV or THICKWALLH or THICKWALLTR or THICKWALLTL or THICKWALLBR or THICKWALLBL or THICKWALLL or THICKWALLR or THICKWALLU or THICKWALLD
+
+ThinWall = WallH or WallV or WallTR or WallTL or WallBR or WallBL or WallT or WallB or WallR or WallL
+
+AliasWall = WallAliasH or WallAliasV or WallAliasTR or WallAliasTL or WallAliasBR or WallAliasBL or WallAliasT or WallAliasB or WallAliasR or WallAliasL
+
+Wall = ThinWall or ThickWall or AliasWall or Gate or Diagonal
+
+Actors = Player or Wall
+
+=======
+SOUNDS
+=======
+TitleScreen 123413
+StartGame 28026708
+Startlevel 22239508
+Player Move 78595307
+Player Action 67849900
+EndLevel 58664103
+EndGame 89897708
+
+================
+COLLISIONLAYERS
+================
+
+Background
+System
+Target, ModeCheck
+Actors
+
+======
+RULES    
+======    
+
+(Player can move UDLR)
+
+(Player can switch active grid instead of pause)
+[ACTION Player][┛ NO 9] -> [ACTION Player][╝ 9] again
+[ACTION Player][┻ NO 8] -> [ACTION Player][╧ 8] again
+[ACTION Player][┗ NO 7] -> [ACTION Player][╚ 7] again
+[ACTION Player][┫ NO 6] -> [ACTION Player][╢ 6] again
+[ACTION Player][┃ NO 5] -> [ACTION Player][║ 5] again
+[ACTION Player][┣ NO 4] -> [ACTION Player][╟ 4] again
+[ACTION Player][┓ NO 3] -> [ACTION Player][╗ 3] again
+[ACTION Player][┳ NO 2] -> [ACTION Player][╤ 2] again
+[ACTION Player][┏ NO 1] -> [ACTION Player][╔ 1] again
+[ACTION Player][━ NO 0] -> [ACTION Player][═ 0] again
+
+[ACTION Player][╝ NO 9] -> [ACTION Player][┛] again
+[ACTION Player][╧ NO 8] -> [ACTION Player][┻] again
+[ACTION Player][╚ NO 7] -> [ACTION Player][┗] again
+[ACTION Player][╢ NO 6] -> [ACTION Player][┫] again
+[ACTION Player][║ NO 5] -> [ACTION Player][┃] again
+[ACTION Player][╟ NO 4] -> [ACTION Player][┣] again
+[ACTION Player][╗ NO 3] -> [ACTION Player][┓] again
+[ACTION Player][╤ NO 2] -> [ACTION Player][┳] again
+[ACTION Player][╔ NO 1] -> [ACTION Player][┏] again
+[ACTION Player][═ NO 0] -> [ACTION Player][━] again
+
+[ACTION Player][╝ 9] -> [ACTION Player][╝] again
+[ACTION Player][╧ 8] -> [ACTION Player][╧] again
+[ACTION Player][╚ 7] -> [ACTION Player][╚] again
+[ACTION Player][╢ 6] -> [ACTION Player][╢] again
+[ACTION Player][║ 5] -> [ACTION Player][║] again
+[ACTION Player][╟ 4] -> [ACTION Player][╟] again
+[ACTION Player][╗ 3] -> [ACTION Player][╗] again
+[ACTION Player][╤ 2] -> [ACTION Player][╤] again
+[ACTION Player][╔ 1] -> [ACTION Player][╔] again
+[ACTION Player][═ 0] -> [ACTION Player][═] again
+
+(One grid is active, others are constrained to UD or LR)
+(Basic Constraints - All Modes)
+Vertical [> Player1|Wall][> Player2] -> [Player1|Wall][Player2]
+Vertical [> Player1][> Player2|Wall] -> [Player1][Player2|Wall]
+
+(Basic Constraints - Mode1)
+Horizontal [> Player1|Wall][> Player3][~] -> [Player1|Wall][Player3][~]
+Horizontal [> Player1][> Player3|Wall][~] -> [Player1][Player3|Wall][~]
+Vertical [> Player3][~] -> [Player3][~]
+Horizontal [> Player2][~] -> [Player2][~]
+
+(Basic Constraints - Mode2)
+Horizontal [> Player2|Wall][> Player3][`] -> [Player2|Wall][Player3][`]
+Horizontal [> Player1][`] -> [Player1][`]
+Vertical [> Player3][`] -> [Player3][`]
+[Left Player3][`] -> [Up Player3][`]
+[Right Player3][`] -> [Down Player3][`]
+Vertical [> Player3|Wall][Left Player2][`] -> [Player3|Wall][Player2][`]
+Vertical [> Player3|Wall][Right Player2][`] -> [Player3|Wall][Player2][`]
+
+==============
+WINCONDITIONS
+==============
+
+All Player on Target
+
+=======    
+LEVELS
+=======
+
+Message Make your way through the 3d grid.
+
+Message Culax Level
+(Based on the Culax)
+
+~═╤═╗┏━━━┓
+║o│.║┃@..┃
+║x│.║┃.│x┃
+║...║┃.│.┃
+╚═══╝┗━┻━┛
+┌───┐././.
+│Q..│/./..
+├──.│./...
+│x..│/....
+└───┘.....
+
+Message D. Bruce Level
+(A maze assembled by David Bruce)
+
+~═══╤═╗┏━┳━━━┓
+║...│.║┃.│...┃
+║.│.│.║┃.│.──┫
+║.│...║┃.│...┃
+║.├──.║┃.│.│.┃
+║o│..x║┃..x│@┃
+╚═╧═══╝┗━━━┻━┛
+┌─────┐./././.
+│.....│/././..
+│.──┐.│././...
+│...│x│/./....
+│.│.└─┤./.....
+│Q│...│/......
+└─┴───┘.......
+
+Message O. Deventer Level
+(A maze made by Oskar Deventer)
+
+~═╤═══════╗┏━┳━━━━━┳━┓
+║.│.......║┃.│.....│.┃
+║.│.┌──.│.║┃.└─┬──.│.┃
+║...│..o│.║┃...│..@│.┃
+║.┌─┤.┌─┘.║┃.│.│.│.│.┃
+║.│.│.│...║┃.│.│.│...┃
+║.│.│.└─┬─╢┣─┤.│.└───┫
+║.│.....│.║┃.│.│.....┃
+║.└───┐.│.║┃.│.└──.│.┃
+║....x│...║┃x......│.┃
+╚═════╧═══╝┗━━━━━━━┻━┛
+┌─────────┐........./.
+│....x....│......../..
+│.┌────.┌─┤......./...
+│.│.....│.│....../....
+├─┼───┐.│.│...../.....
+│.│...│...│..../......
+│.├─┐.├──.│.../.......
+│.│.│.│Q..│../........
+│.│.│.│.──┤./.........
+│.........│/..........
+└─────────┘...........
+
+Message A. Leung Level
+(A maze generated by Albert Leung's Amazing Cube Maze)
+
+~═════════════╤═╤═══════╗┏━━━━━┳━━━━━━━┳━━━━━━━┳━┓
+║o............│.│.......║┃.....│.......│.......│@┃
+╟────.──┐.┌──.│.│.┌────.║┃.│.┌─┘.──────┘.──┐.──┘.┃
+║.......│.│.......│.....║┃.│.│.............│.....┃
+╟─────┬─┼─┴───┬──.└─┐.┌─╢┃.├─┴─┬─┐.┌─┬───┐.├───┬─┫
+║.....│.│.....│.....│.│.║┃.│...│.│.│.│...│.│...│.┃
+║.│.│.│.│.│.│.│.──┐.│.│.║┃.│.──┤.│.│.│.│.│.│.│.│.┃
+║.│.│.│...│.│.│...│.│.│.║┃.│...│...│...│.│.│.│.│.┃
+╟─┘.│.│.┌─┴─┤.├───┘.│.│.║┃.├──.│.──┤.┌─┤.│.│.│.│.┃
+║...│.│.│...│.│.....│.│.║┃.│...│...│.│.│.│...│...┃
+║.──┤.│.│.│.│.├─────┘.│.║┃.│.──┴──.│.│.│.├───┴─┬─┫
+║...│.│.│.│...│.........║┃.│.......│.│...│.....│.┃
+╟──.│.├─┘.└─┬─┴───┬────.║┃.│.┌───┬─┘.├───┘.┌─┐.│.┃
+║...│.│.....│.....│.....║┃.│.│...│...│.....│.│.│.┃
+║.──┤.├────.│.│.──┘.┌─┐.║┃.│.│.│.│.──┤.────┤.│.│.┃
+║...│.│.....│.│.....│.│.║┃.│...│.....│.....│.....┃
+║.│.└─┘.────┘.├─────┘.└─╢┃.└─┬─┴──.│.│.──┐.└─┬───┫
+║.│...........│.........║┃...│.....│.│...│...│...┃
+╟─┴─────┐.──┬─┘.┌────.──╢┣─┐.│.│.┌─┴─┴──.└─┐.│.│.┃
+║.......│...│...│.......║┃.│.│.│.│.........│...│.┃
+║.┌───┐.└─┐.│.┌─┤.──┐.│.║┃.│.│.├─┴─┬───────┴─┬─┤.┃
+║.│...│...│...│.│...│.│.║┃.│...│...│.........│.│.┃
+║.│.│.│.──┴───┘.└──.│.│.║┃.│.──┘.│.└────.│.│.│.│.┃
+║...│.│.............│.│x║┃x......│.......│.│.....┃
+╚═══╧═╧═════════════╧═╧═╝┗━━━━━━━┻━━━━━━━┻━┻━━━━━┛
+┌───────────────────────┐.........................
+│......................x│.........................
+├─┐.│.│.──┬────────.│.┌─┤.........................
+│.│.│.│...│.........│.│.│.........................
+│.│.│.├───┘.┌───────┴─┘.│.........................
+│...│.│.....│...........│.........................
+│.┌─┘.│.────┘.──┬───┐.──┤.........................
+│.│...│.........│...│...│.........................
+├─┤.──┤.────┐.┌─┘.│.│.│.│.........................
+│.│...│.....│.│...│.│.│.│.........................
+│.│.┌─┤.────┴─┤.┌─┤.├─┘.│.........................
+│.│.│.│.......│.│.│.│...│.........................
+│.│.│.├─┬──.┌─┘.│.│.│.│.│.........................
+│.│.│.│.│...│...│.....│.│.........................
+│.│.│.│.│.┌─┘.│.└─┬───┤.│.........................
+│.....│...│...│...│...│.│.........................
+├────.├───┘.│.├──.└─┐.│.│.........................
+│.....│.....│.│.....│.│.│.........................
+├─┐.┌─┘.┌─┐.├─┼────.│.│.│.........................
+│.│.│...│.│.│.│.....│...│.........................
+│.│.└─┐.│.│.│.├─┐.──┤.──┤.........................
+│.....│.│.....│.│...│...│.........................
+├─────┘.├─────┘.└──.├──.│.........................
+│Q......│...........│...│.........................
+└───────┴───────────┴───┘.........................
+
+Message Humanity is safe... For now.

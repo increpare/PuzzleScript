@@ -1,0 +1,518 @@
+title cubes medusa
+author Rosden Shadow [Mark Signorelli]
+homepage rosden.itch.io
+
+noaction
+run_rules_on_level_Start
+
+background_color #1F2526
+
+text_color #F2AACE
+
+again_interval 0.2
+========
+OBJECTS
+========
+
+Background
+#2E3E4D #1F2526 (#E57ED5 #CC5285)
+11111
+10101
+11011
+10101
+11111
+(
+00101
+01110
+11011
+01111
+10110)
+(
+11101
+00101
+11111
+10100
+10111)
+
+
+nomove
+#FFEED9 #536673
+.....
+.000.
+.010.
+.000.
+.....
+
+Target
+#F2AACE
+.....
+.0.0.
+..0..
+.0.0.
+.....
+
+Wall
+#C1A2A5 #845C5C  #5B4846 #423D39
+21110
+21110
+22221
+23232
+32323
+
+overwall
+#C1A2A5 #845C5C  #5B4846 #423D39
+.....
+.....
+.....
+10000
+21110
+
+
+Playerright
+#FFD9E0 #F2AACE #7F7CA1 #705C84
+.000.
+11202
+11313
+11110
+.1.1.
+
+playerleft
+#FFD9E0 #F2AACE #7F7CA1 #705C84
+.000.
+20211
+31311
+01111
+.1.1.
+
+Crate
+#FFD9E0 #F2AACE #E57ED5 #845C7A
+21100
+21110
+22110
+32223
+.333.
+
+overcrate
+#FFD9E0 #F2AACE #E57ED5 #845C7A
+.....
+.....
+.....
+.....
+.000.
+
+overcrate2
+#A2C1BE #7C94A1  #7F7CA1 #705C84
+.....
+.....
+.....
+.....
+.000.
+
+Crate2
+#FFD9E0 #F2AACE #E57ED5 #845C7A #E5C17E #A2C1BE #7C94A1  #7F7CA1 #705C84
+26650
+21110
+22110
+32223
+.333.
+
+Crate3
+#FFD9E0 #F2AACE #E57ED5 #845C7A #E5C17E #A2C1BE #7C94A1  #7F7CA1 #705C84
+76655
+26660
+22110
+32223
+.333.
+
+Crate4
+#FFD9E0 #F2AACE #E57ED5 #845C7A  #E5C17E #A2C1BE #7C94A1  #7F7CA1 #705C84
+76655
+76665
+27660
+32223
+.333.
+
+Crate5
+#FFD9E0 #F2AACE #E57ED5 #845C7A #E5C17E #A2C1BE #7C94A1  #7F7CA1 #705C84
+76655
+76665
+77665
+87778
+.888.
+
+
+
+end
+#FFD9E0 #F2AACE #E57ED5 #845C7A
+21100
+21110
+22110
+32223
+.333.
+endx
+#FFD9E0 #F2AACE #E57ED5 #845C7A
+21100
+21110
+22110
+32223
+.333.
+
+
+
+cloner
+#E5C17E #DB7F55 #B32D2D #73342E
+.100.
+.210.
+.221.
+.332.
+.....
+
+swapcrate
+Orange Yellow
+00000
+0...0
+0...0
+0...0
+00000
+
+swapwall
+black
+.....
+.....
+.....
+.....
+.....
+
+thefloor
+#1F2526
+00000
+00000
+00000
+00000
+00000
+
+thefloorx
+#1F2526
+00000
+00000
+00000
+00000
+00000
+
+eend
+#1F2526
+00000
+00000
+00000
+00000
+00000
+(
+checkempty
+black
+.....
+.....
+.....
+.....
+.....
+
+checkblock
+black
+.....
+.....
+.....
+.....
+.....
+)
+
+switcrate
+black
+.....
+.....
+.....
+.....
+.....
+
+switcrate2
+black
+.....
+.....
+.....
+.....
+.....
+
+arrow
+black
+.....
+.....
+.0.0.
+.000.
+..0..
+
+arrow2
+black
+.....
+.0.0.
+.000.
+..0..
+.....
+
+arrowx
+black
+.....
+.....
+.....
+.....
+.....
+
+arrowx2
+black
+.....
+.....
+.....
+.....
+.....
+
+winend
+#FFD9E0
+0000.
+00000
+00000
+00000
+.0000
+
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Playerright
+* = Crate
+
+O = Target
+n = nomove
+a = arrow2 and wall
+e=end
+t = end and target and eend
+w=end and winend
+
+c=cloner
+-=thefloor
+x=thefloorx
+3 = crate2
+2= crate3
+1=crate4
+5=crate5
+
+feel=overwall or overcrate or overcrate2
+pushable=crate or cloner or swapcrate  or switcrate or switcrate2 or Crate2 or crate3 or crate4
+win=crate or wall
+
+
+theemx= crate 
+player=playerright or playerleft
+
+blocker = wall  or nomove or player or arrow
+
+arrowk = arrow or arrow2 or arrowx or arrowx2
+
+acrate = Crate or Crate2 or Crate3 or Crate4 or Crate5
+emptyer=Crate2 or Crate3 or Crate4 or Crate5
+=======
+SOUNDS
+=======
+
+pushable MOVE 36772507
+
+crate5 move 40412702
+
+EndLevel 74089700
+
+player MOVE 68988304
+sfx0 52836103
+sfx1 45427502
+
+sfx2 29503700
+sfx3 81951902
+
+sfx4 47594702
+
+sfx5 36772507
+
+sfx6 44480905
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Target
+nomove
+Player, Wall, pushable,swapwall,thefloor,thefloorx,crate5
+
+arrow, arrow2, arrowx, arrowx2
+winend
+eend
+end, endx
+feel
+
+
+======
+RULES
+======
+
+[feel]->[]
+
+[> player|crate5|no blocker]->[> player|crate5|]
+
+[> player|crate4|no blocker]->[> player|> crate5|]
+[> player|crate3|no blocker]->[> player|> crate4|]
+[> player|crate2|no blocker]->[> player|> crate3|]
+[> player|crate|no blocker]->[> player|> crate2|]
+
+
+[> acrate|acrate]->[|crate] sfx6
+
+[> acrate|Target]->[> acrate|target] sfx2
+
+[ left Playerright] -> [ left playerleft]
+[ right Playerleft] -> [ right playerright]
+
+[endx] ->[thefloor] sfx2
+[end | thefloor]-> [endx |thefloor]
+
+
+late up [wall| ]-> [wall|overwall]
+late up [theemx| ]-> [theemx|overcrate]
+
+late up [emptyer| ]-> [emptyer|overcrate2]
+
+late up [end| ]-> [end|overcrate]
+late up [endx| ]-> [endx|overcrate]
+
+[action player eend|]->[action player eend |crate Target]
+
+
+
+[]-> again 
+(
+[arrow]->[arrowx2]
+[arrow2]->[arrowx]
+
+[arrowx]->[arrow]
+[arrowx2]->[arrow2])
+==============
+WINCONDITIONS
+==============
+
+all Target on acrate 
+some target
+
+=======
+LEVELS
+=======
+
+
+message have a cube on all targets
+
+message level 1 of 5
+---------
+----#####
+----#...#
+----#*#.#
+----#.#.#
+#####...#
+#.*...P.#
+#.##....#
+#.....O.#
+#####...#
+----#####
+---------
+
+message level 2 of 5
+---------
+-#######-
+##.....##
+#...O...#
+#.......#
+#.......#
+#.....*.#
+#.*.....#
+#...P...#
+##.....##
+-#######-
+---------
+
+message level 3 of 5
+---------
+#########
+#..O....#
+#.#...#.#
+#..#.#..#
+#..#.#..#
+#.3.P.3.#
+#.......#
+#.5...5.#
+#.55.55.#
+#.......#
+#########
+
+message level 4 of 5
+---------
+#########
+#...#...#
+#**.P.**#
+#**#.#.*#
+#..#O#*.#
+#..#.#..#
+#..#.#..#
+#.......#
+#.......#
+#########
+---------
+
+message level 5 of 5
+---------
+#########
+#O.555.O#
+#5555555#
+#5555555#
+#5555555#
+#555*555#
+#..*P*55#
+##5*.*5##
+-#######-
+---------
+---------
+
+(---------
+-#######-
+##.....##
+#.1.....#
+#.......#
+#...#...#
+#.2.#.O.#
+#.*2#...#
+#...#.P.#
+##.....##
+-#######-)
+
+
+xxxxxxxxxxxxxx
+-eeeeeeeeeeee-
+eeeeeeeeeeeeee
+eeeeeeeeeeeeee
+wewewewwweweew
+wewewetweewwew
+weweweeweeweww
+eweweewwweweew
+eeeeeeeeeeeeee
+eeeeeeeeeeeeee
+-eeeeeeeeeeee-
+
+
+
+
+
+

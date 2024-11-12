@@ -1,0 +1,809 @@
+title the laser
+author Rosden Shadow [Mark Signorelli]
+homepage rosden.itch.io
+
+noaction
+run_rules_on_level_Start
+
+background_color #3B3942
+
+text_color #F2F2AA
+
+again_interval 0.07
+========
+OBJECTS
+========
+
+Background
+#46495B #3B3942 (#E57ED5 #CC5285)
+11111
+10001
+11101
+10101
+11111
+(
+00101
+01110
+11011
+01111
+10110)
+(
+11101
+00101
+11111
+10100
+10111)
+
+
+nomove
+#FFEED9 #536673
+.....
+.000.
+.010.
+.000.
+.....
+
+Target
+#FFD9E0 #423D39
+.....
+.....
+.....
+.....
+.....
+
+Wall
+#AAE0F2 #7EA1E5  #536673 #3B3942
+21110
+22110
+22221
+23232
+32323
+
+overwall
+#AAE0F2 #7EA1E5  #536673 #3B3942
+.....
+.....
+.....
+10000
+21100
+
+door
+#E5C17E #DB7F55 #B32D2D #73342E
+21110
+21110
+22221
+23232
+32323
+
+overdoor
+#E5C17E #DB7F55 #B32D2D #73342E
+.....
+.....
+.....
+10000
+21110
+
+
+doorclosed
+#E5C17E
+00.00
+0...0
+.....
+0...0
+00.00
+
+doorx
+#E5C17E #DB7F55 #B32D2D #73342E
+21110
+21110
+22221
+23232
+32323
+
+doorclosedx
+#E5C17E
+00.00
+0...0
+.....
+0...0
+00.00
+
+Playerright
+#D9FFDC #7EE58D #B32D2D #73342E
+.000.
+11202
+11313
+11110
+.1.1.
+
+playerleft
+#D9FFDC #7EE58D #B32D2D #73342E
+.000.
+20211
+31311
+01111
+.1.1.
+
+Crate
+#D9FFDC #7EE58D #5C8466 #4F5B46
+21100
+21110
+22110
+32223
+.333.
+
+overcrate
+#D9FFDC #7EE58D #5C8466 #4F5B46
+.....
+.....
+.....
+.....
+.000.
+
+
+Crateright
+#D9FFDC #7EE58D #5C8466 #4F5B46
+21100
+21110
+22110
+32223
+.333.
+
+Crateup
+#D9FFDC #7EE58D #5C8466 #4F5B46
+21100
+21110
+22110
+32223
+.333.
+
+
+end
+#D9FFDC #7EE58D #5C8466 #4F5B46
+21100
+21110
+22110
+32223
+.333.
+endx
+#D9FFDC #7EE58D #5C8466 #4F5B46
+21100
+21110
+22110
+32223
+.333.
+
+
+Crate2
+#E5C17E #DB7F55 #B32D2D #73342E
+21100
+21110
+22110
+32223
+.333.
+
+overcrate2
+#E5C17E #DB7F55 #B32D2D #73342E
+.....
+.....
+.....
+.....
+.000.
+
+orb
+#FFD9FC #E0AAF2 #705C84  #52465B #705C84
+.111.
+21001
+21101
+22111
+.222.
+
+orb2
+#F2F2AA #E5C17E #CC7A52
+.111.
+21001
+21101
+22111
+.222.
+
+laserleft
+#E5C17E
+.....
+.....
+00000
+.....
+.....
+
+laserright
+#E5C17E
+.....
+.....
+00000
+.....
+.....
+
+laserup
+#E5C17E
+..0..
+..0..
+..0..
+..0..
+..0..
+
+laserdown
+#E5C17E
+..0..
+..0..
+..0..
+..0..
+..0..
+
+swapcrate
+Orange Yellow
+00000
+0...0
+0...0
+0...0
+00000
+
+swapwall
+black
+.....
+.....
+.....
+.....
+.....
+
+thefloor
+#3B3942
+00000
+00000
+00000
+00000
+00000
+
+thefloorx
+#3B3942
+00000
+00000
+00000
+00000
+00000
+
+eend
+#3B3942
+00000
+00000
+00000
+00000
+00000
+(
+checkempty
+black
+.....
+.....
+.....
+.....
+.....
+
+checkblock
+black
+.....
+.....
+.....
+.....
+.....
+)
+
+
+movetileup
+#7EA1E5 #AAE0F2
+11111
+11011
+10001
+10101
+11111
+
+movetiledown
+#7EA1E5 #AAE0F2
+11111
+10101
+10001
+11011
+11111
+
+movetileleft
+#7EA1E5 #AAE0F2
+11111
+11001
+10011
+11001
+11111
+
+movetileright
+#7EA1E5 #AAE0F2
+11111
+10011
+11001
+10011
+11111
+
+downshift
+black
+.....
+.....
+.....
+.....
+.....
+
+upshift
+black
+.....
+.....
+.....
+.....
+.....
+
+leftshift
+black
+.....
+.....
+.....
+.....
+.....
+
+rightshift
+black
+.....
+.....
+.....
+.....
+.....
+
+noshift
+black
+.....
+.....
+.....
+.....
+.....
+
+open
+black
+.....
+.....
+.....
+.....
+.....
+
+cratex
+black
+.....
+.....
+.....
+.....
+.....
+
+craterightx
+black
+.....
+.....
+.....
+.....
+.....
+
+crateupx
+black
+.....
+.....
+.....
+.....
+.....
+
+crate2x
+black
+.....
+.....
+.....
+.....
+.....
+
+switcrate
+black
+.....
+.....
+.....
+.....
+.....
+
+switcrate2
+black
+.....
+.....
+.....
+.....
+.....
+
+arrow
+black
+.....
+.....
+.0.0.
+.000.
+..0..
+
+arrow2
+black
+.....
+.0.0.
+.000.
+..0..
+.....
+
+arrowx
+black
+.....
+.....
+.....
+.....
+.....
+
+arrowx2
+black
+.....
+.....
+.....
+.....
+.....
+
+winend
+#F2F2AA #E5C17E #CC7A52
+1111.
+21001
+21101
+22111
+.2221
+
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Playerright
+* = Crate
+@ = crate2
+r = crateright
+u= Crateup
+
+k=target
+O = orb
+n = nomove
+a = arrow2 and wall
+e=end
+t = end and target and eend
+w=end and winend
+
+
+d=door
+j = doorclosedx
+-=thefloor
+x=thefloorx
+1= movetileright
+2=movetileup
+3=movetileleft
+4=movetiledown
+
+feel=overwall or overcrate or overcrate2 or overdoor
+pushable=crate  or swapcrate  or switcrate or switcrate2 or crate2 or crateright or crateup
+win=crate or wall
+
+
+theemx= crate or crateright or crateup
+player=playerright or playerleft
+
+theorb= orb or orb2
+
+shift=downshift or rightshift or leftshift or upshift or noshift
+
+blocker = wall or crate  or nomove or player or arrow or crate2 or door or Crateright or thefloor or Crateup
+
+blockerx = wall or crate  or nomove or player or arrow or crate2 or door or Crateright or theorb or Crateup 
+
+arrowk = arrow or arrow2 or arrowx or arrowx2
+
+laser = laserleft or laserright or laserup or laserdown
+
+
+
+movetile=movetileup or movetiledown or movetileleft or movetileright
+=======
+SOUNDS
+=======
+
+pushable MOVE 36772507
+
+EndLevel 74089700
+
+player MOVE 68988304
+sfx0 52836103
+sfx1 45427502
+
+sfx2 29503700
+sfx3 81951902
+
+sfx4 75657309
+sfx5 49821704
+================
+COLLISIONLAYERS
+================
+
+Background
+Target
+nomove
+open
+shift
+movetile
+laserleft
+laserright
+laserup
+laserdown
+doorclosed,doorclosedx
+Player, Wall, pushable,swapwall,thefloor,thefloorx, theorb,door,cratex,craterightx,crate2x,Crateupx,doorx
+arrow, arrow2, arrowx, arrowx2
+winend
+eend
+end, endx
+feel
+
+
+======
+RULES
+======
+
+[feel]->[]
+
+[laser]->[]
+
+[open]->[]
+
+
+(start shift)
+[> player| movetileup ] -> [> player| movetileup upshift] sfx0
+
+[upshift | ] -> [upshift | upshift]
+
+[> player| movetiledown ] -> [> player| movetiledown downshift] sfx0
+
+[downshift | ] -> [downshift | downshift]
+
+[> player| movetileleft ] -> [> player| movetileleft leftshift] sfx0
+
+[leftshift | ] -> [leftshift | leftshift]
+
+[> player| movetileright ] -> [> player| movetileright rightshift] sfx0
+
+[rightshift | ] -> [rightshift | rightshift]
+
+
+late [player no movetile]-> [player noshift]
+late [noshift | ]->[noshift|noshift]
+
+late up [crate |upshift no blockerx ]->[|cratex]
+late down [crate |downshift no blockerx ]->[|cratex]
+late left [crate |leftshift no blockerx ]->[|cratex]
+late right [crate |rightshift no blockerx ]->[|cratex]
+
+late up [crateright |upshift no blockerx ]->[|craterightx]
+late down [crateright |downshift no blockerx ]->[|craterightx]
+late left [crateright |leftshift no blockerx ]->[|craterightx]
+late right [crateright |rightshift no blockerx ]->[|craterightx]
+
+late up [crateup |upshift no blockerx ]->[|crateupx]
+late down [crateup |downshift no blockerx ]->[|crateupx]
+late left [crateup |leftshift no blockerx ]->[|crateupx]
+late right [crateup |rightshift no blockerx ]->[|crateupx]
+
+late up [crate2 |upshift no blockerx ]->[|crate2x]
+late down [crate2 |downshift no blockerx ]->[|crate2x]
+late left [crate2|leftshift no blockerx ]->[|crate2x]
+late right [crate2 |rightshift no blockerx ]->[|crate2x]
+
+late [cratex]->[crate]
+late [craterightx]->[crateright]
+late [crate2x]->[crate2]
+
+late [crateupx]->[crateup]
+(end shift)
+
+[> player |pushable]->[ > player |> pushable]
+[ left Playerright] -> [ left playerleft]
+[ right Playerleft] -> [ right playerright]
+
+[> crate|Target]->[> crate|target] sfx2
+
+late [crate]->[crate laserleft]
+late left [laserleft|no blocker]->[laserleft|laserleft]
+
+late [crateright]->[crateright laserright]
+late right [laserright|no blocker]->[laserright|laserright]
+
+late [crateup]->[crateup laserup]
+late up [laserup|no blocker]->[laserup|laserup]
+
+
+late[orb laser]->[orb2 laser] sfx4
+late[orb2 no laser]->[orb] sfx5
+
+late[orb2]->[orb2 open]
+
+late[open| ]->[open| open]
+
+late [door| open]->[doorclosed|open]
+
+late [ doorclosed no blocker|no open]->[door|]
+
+late [doorclosedx| open]->[doorx|open]
+
+late [ doorx no blocker|no open]->[doorclosedx|]
+
+
+[endx] ->[thefloor] sfx2
+[end | thefloor]-> [endx |thefloor]
+
+
+late up [wall| ]-> [wall|overwall]
+late up [theemx| ]-> [theemx|overcrate]
+
+late up [crate2| ]-> [crate2|overcrate2]
+
+late up [door| ]-> [door|overdoor]
+late up [doorx| ]-> [doorx|overdoor]
+
+late up [end| ]-> [end|overcrate]
+late up [endx| ]-> [endx|overcrate]
+
+[action player eend|]->[action player eend |crate Target]
+
+
+
+[]-> again 
+(
+[arrow]->[arrowx2]
+[arrow2]->[arrowx]
+
+[arrowx]->[arrow]
+[arrowx2]->[arrow2])
+==============
+WINCONDITIONS
+==============
+
+some Target on player
+
+
+=======
+LEVELS
+=======
+
+message level 1 of 7
+---------
+---#k#---
+-###d###-
+##.....##
+#.......#
+#...#...#
+#O..#...#
+#...#.*.#
+#..P....#
+##.....##
+-#######-
+
+message level 2 of 7
+---------
+-#######-
+##.....##
+#.......#
+#...r...#
+#...O.@.#
+#########
+.P..2..dk
+#..341.##
+##....##-
+-######--
+
+
+message level 3 of 7
+---------
+---#k#---
+-###d####
+##..3...#
+#.......#
+#.O...@.#
+.P......#
+#.......#
+#...U..##
+###...##-
+--#####--
+
+message level 4 of 7
+---------
+---#k#---
+-###d###-
+##..4..##
+#.......#
+###O.#OO#
+.P..3...#
+#.......#
+#..@.U.##
+##....##-
+-######--
+
+
+message level 5 of 7
+---------
+--##k#---
+-##2d####
+##.3#...#
+#.......#
+#..O.O..#
+.P..*...#
+#..O.O..#
+#...U..##
+#.....##-
+#######--
+
+message level 6 of 7
+---------
+#k#------
+#d#######
+#2#..#..#
+#3#.....#
+#2#.#*#.#
+#4......#
+#O..@@@.#
+#.......#
+##..P..##
+-###.###-
+
+message level 7 of 7
+---------
+---#k#---
+####d###-
+#O.....##
+#...1...#
+#.2@@@..#
+#.4@*@..#
+#..@@@..#
+#.P...@.#
+##.....##
+-#######-
+
+(
+---------
+----#k#--
+----#d###
+#####...#
+#...#2@.#
+#...#...#
+#O..##j##
+#.......#
+#....*..#
+##..P..##
+-###.###-)
+
+
+
+xxxxxxxxxxxxxx
+-eeeeeeeeeeee-
+eeeeeeeeeeeeee
+eeeeeeeeeeeeee
+wewewewwweweew
+wewewetweewwew
+weweweeweeweww
+eweweewwweweew
+eeeeeeeeeeeeee
+eeeeeeeeeeeeee
+-eeeeeeeeeeee-
+
+

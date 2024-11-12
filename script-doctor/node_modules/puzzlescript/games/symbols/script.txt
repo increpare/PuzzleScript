@@ -1,0 +1,820 @@
+title Symbols
+author Rosden Shadow [Mark Signorelli]
+homepage rosden.itch.io
+
+noaction
+run_rules_on_level_Start
+
+background_color #423D39
+
+text_color #AAE0F2
+
+again_interval 0.1
+========
+OBJECTS
+========
+
+Background
+#736053 #423D39 (#E57ED5 #CC5285)
+11111
+10001
+11101
+10101
+11111
+(
+00101
+01110
+11011
+01111
+10110)
+(
+11101
+00101
+11111
+10100
+10111)
+
+Background1
+#736053 #423D39 (#E57ED5 #CC5285)
+11111
+10001
+11101
+10101
+11111
+
+Backgroundacti
+#E5C17E #847A5C (#E57ED5 #CC5285)
+11111
+10001
+11101
+10101
+11111
+
+Background2
+#736053 #423D39 (#E57ED5 #CC5285)
+11111
+11011
+10001
+11011
+11111
+
+Backgroundacti2
+#E5C17E #847A5C (#E57ED5 #CC5285)
+11111
+11011
+10001
+11011
+11111
+
+Background3
+#736053 #423D39 (#E57ED5 #CC5285)
+11111
+11101
+10011
+11001
+11111
+
+Backgroundacti3
+#E5C17E #847A5C (#E57ED5 #CC5285)
+11111
+11101
+10011
+11001
+11111
+
+Background4
+#736053 #423D39 (#E57ED5 #CC5285)
+11111
+10001
+11011
+10001
+11111
+
+Backgroundacti4
+#E5C17E #847A5C (#E57ED5 #CC5285)
+11111
+10001
+11011
+10001
+11111
+
+
+Background5
+#736053 #423D39 (#E57ED5 #CC5285)
+11111
+11011
+10101
+10001
+11111
+
+Backgroundacti5
+#E5C17E #847A5C (#E57ED5 #CC5285)
+11111
+11011
+10101
+10001
+11111
+
+
+
+Background6
+#736053 #423D39 (#E57ED5 #CC5285)
+11111
+10011
+10001
+11001
+11111
+
+Backgroundacti6
+#E5C17E #847A5C (#E57ED5 #CC5285)
+11111
+10011
+10001
+11001
+11111
+
+blockerx
+#E5C17E #DB7F55
+11111
+10001
+10101
+10001
+11111
+
+
+arrowgroundleft
+#736053 #423D39 (#E57ED5 #CC5285)
+11111
+11101
+10011
+11001
+11111
+
+arrowgrounddown
+#736053 #423D39 (#E57ED5 #CC5285)
+11111
+10101
+10001
+11011
+11111
+
+nomove
+#FFEED9 #536673
+.....
+.000.
+.010.
+.000.
+.....
+
+Target
+#FFD9E0 #423D39
+.....
+.....
+.....
+.....
+.....
+
+Wall
+#A2C1BE #7C94A1  #7F7CA1 #705C84
+21110
+21110
+22221
+23232
+32323
+
+overwall
+#A2C1BE #7C94A1  #7F7CA1 #705C84
+.....
+.....
+.....
+10000
+21110
+
+
+Playerright
+#D9FFF8 #AAE0F2 #7F7CA1 #705C84
+.000.
+11202
+11313
+11110
+.1.1.
+
+playerleft
+#D9FFF8 #AAE0F2 #7F7CA1 #705C84
+.000.
+20211
+31311
+01111
+.1.1.
+
+playerdie
+#D9FFF8 #AAE0F2 #7F7CA1 #705C84
+.0.0.
+1.1.1
+.1.1.
+1.1.1
+.1.1.
+
+playerdie2
+#D9FFF8 #AAE0F2 #7F7CA1 #705C84
+.....
+.1.1.
+..1..
+.1.1.
+.....
+
+playerdie3
+#D9FFF8 #AAE0F2 #7F7CA1 #705C84
+.....
+..1..
+.1.1.
+..1..
+.....
+
+playerdie4
+#D9FFF8 #AAE0F2 #7F7CA1 #705C84
+.....
+.....
+..1..
+.....
+.....
+
+
+Crate
+#D9FFF8 #AAE0F2 #7EA1E5 #52465B
+21100
+21110
+22110
+32223
+.333.
+
+overcrate
+#D9FFF8 #AAE0F2 #7EA1E5 #52465B
+.....
+.....
+.....
+.....
+.000.
+
+end
+#D9FFF8 #AAE0F2 #7EA1E5 #52465B
+21100
+21110
+22110
+32223
+.333.
+endx
+#D9FFF8 #AAE0F2 #7EA1E5 #52465B
+21100
+21110
+22110
+32223
+.333.
+
+
+
+cloner
+#E5C17E #DB7F55 #B32D2D #73342E
+.100.
+.210.
+.221.
+.332.
+.....
+
+swapcrate
+Orange Yellow
+00000
+0...0
+0...0
+0...0
+00000
+
+swapwall
+black
+.....
+.....
+.....
+.....
+.....
+
+thefloor
+#423D39
+00000
+00000
+00000
+00000
+00000
+
+thefloorx
+#423D39
+00000
+00000
+00000
+00000
+00000
+
+eend
+#423D39
+00000
+00000
+00000
+00000
+00000
+
+
+coudie
+#B32D2D
+.....
+.....
+.....
+.....
+.....
+
+cou1
+#B32D2D
+0....
+.....
+.....
+.....
+.....
+
+cou2
+#B32D2D
+00...
+.....
+.....
+.....
+.....
+
+cou3
+#B32D2D
+000..
+.....
+.....
+.....
+.....
+
+cou4
+#B32D2D
+0000.
+.....
+.....
+.....
+.....
+
+cou5
+#B32D2D
+00000
+.....
+.....
+.....
+.....
+
+coux
+black
+.....
+.....
+.....
+.....
+.....
+
+spa
+black
+.....
+.....
+.....
+.....
+.....
+
+step
+black
+.....
+.....
+.....
+.....
+.....
+
+stopper
+black
+.....
+.....
+.....
+.....
+.....
+
+switcrate
+black
+.....
+.....
+.....
+.....
+.....
+
+switcrate2
+black
+.....
+.....
+.....
+.....
+.....
+
+arrow
+black
+.....
+.....
+.0.0.
+.000.
+..0..
+
+arrow2
+black
+.....
+.0.0.
+.000.
+..0..
+.....
+
+arrowx
+black
+.....
+.....
+.....
+.....
+.....
+
+arrowx2
+black
+.....
+.....
+.....
+.....
+.....
+
+winend
+#E5C17E #CC7A52 #B32D2D
+1000.
+21100
+21110
+22110
+.2221
+
+
+=======
+LEGEND
+=======
+. = Background1
+# = Wall
+P = Playerright and stopper and Background1
+* = Crate
+
+h = target and Playerright and stopper
+O = Target and Background1
+
+
+a = arrow2 and wall
+e=end
+t = end and target and eend
+w=end and winend
+
+-=thefloor
+x=thefloorx
+2= Background2
+3=Background3
+4=Background4
+5=Background5
+6=Background6
+
+1=cou1
+7=cou2
+8=cou3
+9=cou4
+0=cou5
+
+($
+%
+@
+!
+&)
+
+b=blockerx
+c=blockerx and Target and Background1
+
+u=blockerx and cou5
+y=blockerx and cou5 and target and Background1
+
+r=Background4 and blockerx
+
+z = cou1 and Target and Background1
+n = cou2 and target and Background1
+m = cou3 and target and Background1
+l = cou4 and target and Background1
+j = cou5 and target and Background1
+
+
+
+feel=overwall or overcrate 
+pushable=crate or cloner or swapcrate  or switcrate or switcrate2
+win=crate or wall
+
+
+theemx= crate 
+player=playerright or playerleft
+
+blocker = wall or crate  or nomove or player or arrow
+
+arrowk = arrow or arrow2 or arrowx or arrowx2
+
+acti= Backgroundacti or Backgroundacti2 or Backgroundacti3 or Backgroundacti4 or Backgroundacti5 or Backgroundacti6
+
+ground= Background2 or Background3 or Background4 or Background5 or Background6
+
+cou = cou1 or cou2 or cou3 or cou4 or cou5
+
+died=playerdie or playerdie2 or playerdie3 or playerdie4
+
+spax= spa or blocker
+=======
+SOUNDS
+=======
+
+pushable MOVE 36772507
+
+EndLevel 74089700
+
+player MOVE 68988304
+sfx0 52836103
+sfx1 45427502
+
+sfx2 29503700
+sfx3 81951902
+
+sfx4 5644505
+sfx5 57928105
+
+sfx6 64475102
+
+sfx7 6920702
+================
+COLLISIONLAYERS
+================
+
+Background
+background1,ground
+
+acti
+arrowgroundleft
+arrowgrounddown
+
+stopper
+step
+
+spa
+Target
+nomove
+Player, Wall, pushable,swapwall,thefloor,thefloorx
+
+blockerx
+died
+arrow, arrow2, arrowx, arrowx2
+winend
+eend
+end, endx
+feel
+
+cou
+coux
+coudie
+======
+RULES
+======
+
+[feel]->[]
+[spa]->[]
+[step]->[]
+
+[playerdie4]->[]
+[playerdie3]->[playerdie4]
+[playerdie2]->[playerdie3]
+[playerdie]->[playerdie2]
+
+[player]->[player step]
+
+[> player |blockerx]->[> player| spa] sfx7
+
+[> player|Background2 no spax]->[> player |Backgroundacti2 spa] sfx4
+[> player|Backgroundacti2 no spax]->[> player |Background2 spa] sfx5
+
+[> player|Background3 no spax]->[> player |Backgroundacti3 spa] sfx4
+[> player|Backgroundacti3 no spax]->[> player |Background3 spa] sfx5
+
+[> player|Background4 no spax]->[> player |Backgroundacti4 spa] sfx4
+[> player|Backgroundacti4 no spax]->[> player |Background4 spa] sfx5
+
+[> player|Background5 no spax]->[> player |Backgroundacti5 spa] sfx4
+[> player|Backgroundacti5 no spax]->[> player |Background5 spa] sfx5
+
+[> player|Background6 no spax]->[> player |Backgroundacti6 spa] sfx4
+[> player|Backgroundacti6 no spax]->[> player |Background6 spa] sfx5
+
+[> player|Background1 no spax]->[> player |Backgroundacti spa] sfx4
+[> player|Backgroundacti no spax]->[> player |Background1 spa] sfx5
+
+[> crate|Target]->[> crate|target] sfx2
+
+late [cou]->[cou coux]
+late right[coux| ]->[|]
+late right[cou5|no cou][step no player] ->[cou4|][]
+late right[cou4|no cou][step no player] ->[cou3|][]
+late right[cou3|no cou][step no player] ->[cou2|][]
+late right[cou2|no cou][step no player] ->[cou1|][]
+late right[cou1|no cou][step no player] ->[coudie|][]
+
+late right[cou5 coux][step no player] ->[cou4][]
+late right[cou4 coux][step no player] ->[cou3][]
+late right[cou3 coux][step no player] ->[cou2][]
+late right[cou2 coux][step no player] ->[cou1][]
+late right[cou1 coux][step no player] ->[coudie][]
+
+[coudie][cou]->[][cou]
+[coudie][player]->[][playerdie] sfx6
+
+[ left Playerright] -> [ left playerleft]
+[ right Playerleft] -> [ right playerright]
+
+[endx] ->[thefloor] sfx2
+[end | thefloor]-> [endx |thefloor]
+
+
+late up [wall| ]-> [wall|overwall]
+late up [theemx| ]-> [theemx|overcrate]
+
+(late up [crate2| ]-> [crate2|overcrate2])
+
+late up [end| ]-> [end|overcrate]
+late up [endx| ]-> [endx|overcrate]
+
+([action player eend|]->[action player eend |crate Target])
+
+late[ground| no acti]-> [ground|ground]
+
+(late[ground Background]->[ground])
+
+late[stopper|]-> [stopper|stopper]
+late [stopper target]->[target]
+
+
+[]-> again 
+(
+[arrow]->[arrowx2]
+[arrow2]->[arrowx]
+
+[arrowx]->[arrow]
+[arrowx2]->[arrow2])
+==============
+WINCONDITIONS
+==============
+
+all Target on acti
+
+no acti on stopper
+
+=======
+LEVELS
+=======
+
+message recreate the symbols on the board
+
+message- - - - - -  act 1/3  - - - - - -                                                                        1 of 6
+.O.
+OOO
+.h2
+
+message- - - - - -  act 1/3  - - - - - -                                                                        2 of 6
+OOO
+.pO
+O.O
+
+
+message- - - - - -  act 1/3  - - - - - -                                                                        3 of 6
+..O
+Oh3
+.OO
+
+message- - - - - -  act 1/3  - - - - - -                                                                        4 of 6
+.O5
+O.O
+OhO
+
+
+
+message- - - - - -  act 1/3  - - - - - -                                                                        5 of 6
+OO6
+OOO
+.hO
+
+message- - - - - -  act 1/3  - - - - - -                                                                        6 of 6
+OOO
+.O4
+OhO
+
+(-------act2-----------)
+
+
+(1)
+message- - - - - -  act 2/3  - - - - - -                                                                        1 of 6
+0l.
+OOO
+.h2
+
+(2)
+message- - - - - -  act 2/3  - - - - - -                                                                        2 of 6
+jmO
+.pO
+O.O
+
+(3)
+message- - - - - -  act 2/3  - - - - - -                                                                        3 of 6
+07O
+Oh.
+3OO
+(jj.
+POO
+OO3)
+
+(4)
+message- - - - - -  act 2/3  - - - - - -                                                                        4 of 6
+0m5
+O.O
+OhO
+
+
+(5)
+message- - - - - -  act 2/3  - - - - - -                                                                        5 of 6
+jl6
+OOO
+.hO
+
+(hardest)
+message- - - - - -  act 2/3  - - - - - -                                                                        6 of 6
+jlO
+.O4
+OhO
+
+
+(-------act3-----------)
+
+
+(1)
+message- - - - - -  act 3/3  - - - - - -                                                                        1 of 6
+0j1
+Occ
+.h2
+
+
+(2)
+message- - - - - -  act 3/3  - - - - - -                                                                        2 of 6
+jmO
+bpc
+O.O
+
+(3)
+message- - - - - -  act 3/3  - - - - - -                                                                        3 of 6
+0uO
+ch.
+3cO
+(jj.
+POO
+OO3)
+
+(4)
+message- - - - - -  act 3/3  - - - - - -                                                                        4 of 6
+0y8
+O5c
+chO
+
+(5)
+message- - - - - -  act 3/3  - - - - - -                                                                        5 of 6
+jj.
+ccO
+6hc
+
+(hardest)
+message- - - - - -  act 3/3  - - - - - -                                                                        6 of 6
+yjm
+bOr
+OhC
+
+
+xxxxxxxxxxxxxx
+-eeeeeeeeeeee-
+eeeeeeeeeeeeee
+eeeeeeeeeeeeee
+wewewewwweweew
+wewewetweewwew
+weweweeweeweww
+eweweewwweweew
+eeeeeeeeeeeeee
+eeeeeeeeeeeeee
+-eeeeeeeeeeee-
+
+

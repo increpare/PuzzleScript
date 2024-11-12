@@ -1,0 +1,2777 @@
+title Rainbow Keys Plus
+author Zelveri
+homepage https://gamejolt.com/games/RKplus/379822
+
+text_color #8F4466
+
+realtime_interval 0.20
+
+
+
+========
+OBJECTS
+========
+temp1
+transparent
+temp2
+transparent
+temp3
+transparent
+temp4
+transparent
+temp5
+transparent
+temp6
+transparent
+
+marker
+transparent
+
+background1
+#463734 #584642 #4F3E3B
+20211
+20021
+20122
+22220
+11200
+
+background2
+#3C4634 #584642 #4F3E3B
+20211
+20021
+20122
+22220
+11200
+
+background3
+#3C4634 #4C5842 #4F3E3B
+20211
+20021
+20122
+22220
+11200
+
+background4
+#3C4634 #4C5842 #464F3B
+20211
+20021
+20122
+22220
+11200
+
+(Switchy Center)
+SwiFloor
+#4a2fa5 #8977c6 #8f7bd3 #5b3dc2
+33300
+32210
+32210
+01110
+00000
+
+holecenterSWI
+#272221 #1C1817 #2E2827 #352E2C #3A3230
+11111
+11111
+11111
+11111
+11111
+
+SwiFloor2
+#4a2fa5 #8977c6 #8f7bd3 #5b3dc2
+33300
+32210
+32210
+01110
+00000
+
+holecenterSWI2
+#272221 #1C1817 #2E2827 #352E2C #3A3230
+11111
+11111
+11111
+11111
+11111
+
+(Switchy Top)
+SwiFloorTop1
+#4a2fa5 #8977c6 #8f7bd3 #5b3dc2
+33300
+32210
+32210
+01110
+00000
+
+SwiFloorTop2
+#4a2fa5 #8977c6 #8f7bd3 #5b3dc2
+33300
+32210
+32210
+01110
+00000
+
+holetopSWI
+#1C1817 #272221 #2E2827 #352E2C #3A3230
+44444
+33333
+22222
+11111
+00000
+
+holetopSWI2
+#1C1817 #272221 #2E2827 #352E2C #3A3230
+44444
+33333
+22222
+11111
+00000
+
+(Switchy Bottom)
+SwiFloorBottom1
+#4a2fa5 #8977c6 #8f7bd3 #5b3dc2
+33300
+32210
+32210
+01110
+00000
+
+SwiFloorBottom2
+#4a2fa5 #8977c6 #8f7bd3 #5b3dc2
+33300
+32210
+32210
+01110
+00000
+
+holebottomSWI
+#1C1817 #272221 #2E2827 #352E2C #3A3230
+00000
+11111
+22222
+33333
+44444
+
+holebottomSWI2
+#1C1817 #272221 #2E2827 #352E2C #3A3230
+00000
+11111
+22222
+33333
+44444
+
+(Switchy Left)
+SwiFloorLeft1
+#4a2fa5 #8977c6 #8f7bd3 #5b3dc2
+33300
+32210
+32210
+01110
+00000
+
+SwiFloorLeft2
+#4a2fa5 #8977c6 #8f7bd3 #5b3dc2
+33300
+32210
+32210
+01110
+00000
+
+holeleftSWI
+#1C1817 #272221 #2E2827 #352E2C #3A3230
+01234
+01234
+01234
+01234
+01234
+
+holeleftSWI2
+#1C1817 #272221 #2E2827 #352E2C #3A3230
+01234
+01234
+01234
+01234
+01234
+
+(Switchy Right)
+SwiFloorRight1
+#4a2fa5 #8977c6 #8f7bd3 #5b3dc2
+33300
+32210
+32210
+01110
+00000
+
+SwiFloorRight2
+#4a2fa5 #8977c6 #8f7bd3 #5b3dc2
+33300
+32210
+32210
+01110
+00000
+
+holerightSWI
+#1C1817 #272221 #2E2827 #352E2C #3A3230
+43210
+43210
+43210
+43210
+43210
+
+holerightSWI2
+#1C1817 #272221 #2E2827 #352E2C #3A3230
+43210
+43210
+43210
+43210
+43210
+
+(falling hole center)
+
+f
+#CE99C1 #C190B5 #B486A8 #A27997 #926E88 #806177 #684F61 #564251 #3D2F3A #241C22
+00000
+00000
+00000
+00000
+00000
+
+f2
+#C190B5
+00000
+00000
+00000
+00000
+00000
+
+f3
+#B486A8
+00000
+00000
+00000
+00000
+00000
+
+f4
+#A27997
+00000
+00000
+00000
+00000
+00000
+
+f5
+#926E88
+00000
+00000
+00000
+00000
+00000
+
+f6
+#806177
+00000
+00000
+00000
+00000
+00000
+
+f7
+#684F61
+00000
+00000
+00000
+00000
+00000
+
+f8
+#564251
+00000
+00000
+00000
+00000
+00000
+
+f9
+#3D2F3A
+00000
+00000
+00000
+00000
+00000
+
+f10
+#352E2C
+00000
+00000
+00000
+00000
+00000
+
+(falling hole top)
+2f
+#CE99C1 #C190B5 #B486A8 #A27997 #926E88 #806177 #684F61 #564251 #3D2F3A #241C22
+00000
+00000
+00000
+00000
+00000
+
+2f2
+#C190B5
+00000
+00000
+00000
+00000
+00000
+
+2f3
+#B486A8
+00000
+00000
+00000
+00000
+00000
+
+2f4
+#A27997
+00000
+00000
+00000
+00000
+00000
+
+2f5
+#926E88
+00000
+00000
+00000
+00000
+00000
+
+2f6
+#806177
+00000
+00000
+00000
+00000
+00000
+
+2f7
+#684F61
+00000
+00000
+00000
+00000
+00000
+
+2f8
+#564251
+00000
+00000
+00000
+00000
+00000
+
+2f9
+#3D2F3A
+00000
+00000
+00000
+00000
+00000
+
+2f10
+#352E2C
+00000
+00000
+00000
+00000
+00000
+
+(falling hole bottom)
+3f
+#CE99C1 #C190B5 #B486A8 #A27997 #926E88 #806177 #684F61 #564251 #3D2F3A #241C22
+00000
+00000
+00000
+00000
+00000
+
+3f2
+#C190B5
+00000
+00000
+00000
+00000
+00000
+
+3f3
+#B486A8
+00000
+00000
+00000
+00000
+00000
+
+3f4
+#A27997
+00000
+00000
+00000
+00000
+00000
+
+3f5
+#926E88
+00000
+00000
+00000
+00000
+00000
+
+3f6
+#806177
+00000
+00000
+00000
+00000
+00000
+
+3f7
+#684F61
+00000
+00000
+00000
+00000
+00000
+
+3f8
+#564251
+00000
+00000
+00000
+00000
+00000
+
+3f9
+#3D2F3A
+00000
+00000
+00000
+00000
+00000
+
+3f10
+#352E2C
+00000
+00000
+00000
+00000
+00000
+
+(falling hole right)
+4f
+#CE99C1 #C190B5 #B486A8 #A27997 #926E88 #806177 #684F61 #564251 #3D2F3A #241C22
+00000
+00000
+00000
+00000
+00000
+
+4f2
+#C190B5
+00000
+00000
+00000
+00000
+00000
+
+4f3
+#B486A8
+00000
+00000
+00000
+00000
+00000
+
+4f4
+#A27997
+00000
+00000
+00000
+00000
+00000
+
+4f5
+#926E88
+00000
+00000
+00000
+00000
+00000
+
+4f6
+#806177
+00000
+00000
+00000
+00000
+00000
+
+4f7
+#684F61
+00000
+00000
+00000
+00000
+00000
+
+4f8
+#564251
+00000
+00000
+00000
+00000
+00000
+
+4f9
+#3D2F3A
+00000
+00000
+00000
+00000
+00000
+
+4f10
+#352E2C
+00000
+00000
+00000
+00000
+00000
+
+(falling hole left)
+5f
+#CE99C1 #C190B5 #B486A8 #A27997 #926E88 #806177 #684F61 #564251 #3D2F3A #241C22
+00000
+00000
+00000
+00000
+00000
+
+5f2
+#C190B5
+00000
+00000
+00000
+00000
+00000
+
+5f3
+#B486A8
+00000
+00000
+00000
+00000
+00000
+
+5f4
+#A27997
+00000
+00000
+00000
+00000
+00000
+
+5f5
+#926E88
+00000
+00000
+00000
+00000
+00000
+
+5f6
+#806177
+00000
+00000
+00000
+00000
+00000
+
+5f7
+#684F61
+00000
+00000
+00000
+00000
+00000
+
+5f8
+#564251
+00000
+00000
+00000
+00000
+00000
+
+5f9
+#3D2F3A
+00000
+00000
+00000
+00000
+00000
+
+5f10
+#352E2C
+00000
+00000
+00000
+00000
+00000
+
+laserup
+red orange yellow
+01210
+01210
+01210
+01210
+01210
+
+laserdown
+red orange yellow
+01210
+01210
+01210
+01210
+01210
+
+laserleft
+red orange yellow
+00000
+11111
+22222
+11111
+00000
+
+laserright
+red orange yellow
+00000
+11111
+22222
+11111
+00000
+
+
+lasergundown
+#C497AF #63505A black #937786
+00000
+00000
+31113
+31113
+31213
+
+lasergunup
+#C497AF #63505A black #937786
+31213
+31113
+31113
+00000
+00000
+
+
+lasergunright
+#C497AF #63505A black #937786
+00333
+00111
+00112
+00111
+00333
+
+lasergunleft
+#C497AF #63505A black #937786
+33300
+11100
+21100
+11100
+33300
+
+
+movegunright
+#C497AF #466373 black #937786 #41414C #FFA15B #83B6D2 #6A91A7
+46774
+66111
+66112
+66111
+46774
+
+movegunup
+#C497AF #734646 black #937786 #4c414c #FFA15B #d28383 #a76a6a
+41214
+71117
+71117
+66666
+46664
+
+freemove
+lightgreen darkgreen #74C104
+00000
+00100
+01112
+00122
+02222
+
+freemoveburn
+#D7EBEB #A6C6C6 #C8D8D8
+00000
+00100
+01112
+00122
+02222
+
+crate
+brown #AD710E #633F04 #815307 #3E2804 #523504
+35552
+51104
+53224
+51004
+34442
+
+crateinhole
+#513207 #684009 #382104 #482B05 #1A1002 #271702
+35552
+51104
+53224
+51004
+34442
+
+
+ironcrate
+#DBDBDB #EAEAEA #C2C2C2 #CBCBCB #616161 #969696
+35552
+51104
+53224
+51004
+34442
+
+ironcrateinhole
+#898C93 #9B9FA4 #787A7E #95979B #292A2C #4B4D50
+35552
+51104
+53224
+51004
+34442
+
+FireTrapDown
+#979797 #565656 #222222 #727272 
+00000
+00000
+31113
+31213
+31113
+
+FireTrapUp
+#979797 #565656 #222222 #727272 
+31113
+31213
+31113
+00000
+00000
+
+FireTrapRight
+#979797 #565656 #222222 #727272 
+00333
+00111
+00121
+00111
+00333
+
+FireTrapLeft
+#979797 #565656 #222222 #727272 
+33300
+11100
+21100
+11100
+33300
+
+fireUp
+red orange
+.000.
+01110
+01110
+.010.
+..0..
+
+fireDown
+red orange
+..0..
+.010.
+01110
+01110
+.000.
+
+fireLeft
+red orange
+.00..
+0110.
+01110
+0110.
+.00..
+
+fireRight
+red orange
+..00.
+.0110
+01110
+.0110
+..00.
+
+firehit
+red orange
+...10
+101..
+.110.
+01.10
+1..0.
+
+centralanchor
+#696978 #41414C
+.101.
+11011
+00000
+11011
+.101.
+
+horizontalbox
+#A15661 #8E4650 #612931
+00020
+00221
+02221
+00221
+01121
+
+horizontalanchor
+#696978 #41414C
+.....
+11111
+00000
+11111
+.....
+
+trackv
+darkgreen green
+00100
+00100
+00100
+00100
+00100
+
+trackh
+darkgreen green
+00000
+00000
+11111
+00000
+00000
+
+trackturn4
+darkgreen green
+00000
+00000
+00111
+00100
+00100
+
+trackturn1
+darkgreen green
+00000
+00000
+11100
+00100
+00100
+
+trackturn3
+darkgreen green
+00100
+00100
+00111
+00000
+00000
+
+trackturn2
+darkgreen green
+00100
+00100
+11100
+00000
+00000
+
+
+verticalbox
+#A2D3EE #83B6D2 #466373
+00000
+00201
+02221
+22222
+01111
+
+verticalanchor
+#696978 #41414C
+.101.
+.101.
+.101.
+.101.
+.101.
+
+antiplayer
+#a38e8e black #4e1414 #3d100d #D3D3D3
+.222.
+24242
+31313
+.111.
+21.12
+
+antiplayerDEAD
+#a38e8e black #4e1414 #3d100d #D3D3D3
+.223.
+4.232
+3131.
+..114
+3..12
+
+antidying
+#a38e8e black #4e1414 #3d100d #D3D3D3
+.223.
+4.232
+31314
+.111.
+21.12
+
+playernokey1
+#9E7171 black #D3D3D3
+..0..
+01110
+01110
+.222.
+.2.2.
+
+playernokey2
+#9E7171 black #D3D3D3
+..0..
+01110
+01110
+.222.
+.2.2.
+
+playerYkey1
+#9E7171 black #D3D3D3 yellow
+..0..
+01110
+01133
+.2233
+.2.2.
+
+playerYkey2
+#9E7171 black #D3D3D3 yellow
+..0..
+01110
+01133
+.2233
+.2.2.
+
+playerBkey1
+#9E7171 black #D3D3D3 #1199E7
+..0..
+01110
+01133
+.2233
+.2.2.
+
+playerBkey2
+#9E7171 black #D3D3D3 #1199E7
+..0..
+01110
+01133
+.2233
+.2.2.
+
+
+playerRkey1
+#9E7171 black #D3D3D3 red
+..0..
+01110
+01133
+.2233
+.2.2.
+
+playerRkey2
+#9E7171 black #D3D3D3 red
+..0..
+01110
+01133
+.2233
+.2.2.
+
+playerGkey1
+#9E7171 black #D3D3D3 green
+..0..
+01110
+01133
+.2233
+.2.2.
+
+playerGkey2
+#9E7171 black #D3D3D3 green
+..0..
+01110
+01133
+.2233
+.2.2.
+
+playerOkey1
+#9E7171 black #D3D3D3 #EC6400
+..0..
+01110
+01133
+.2233
+.2.2.
+
+playerOkey2
+#9E7171 black #D3D3D3 #EC6400
+..0..
+01110
+01133
+.2233
+.2.2.
+
+playerPkey1
+#9E7171 black #D3D3D3 #9013C3
+..0..
+01110
+01133
+.2233
+.2.2.
+
+playerPkey2
+#9E7171 black #D3D3D3 #9013C3
+..0..
+01110
+01133
+.2233
+.2.2.
+
+playerdead
+#9E7171 black #D3D3D3 #6D0505
+.000.
+01111
+31122
+00323
+33333
+
+playerfalling
+#9E7171 black #D3D3D3
+0...0
+0.0.0
+.111.
+.111.
+.2.2.
+
+playerfalling2
+#9E7171 black #D3D3D3 #373F38
+.....
+.0.0.
+.101.
+.111.
+.....
+
+block1
+#395726 #4D6F38 #7CA067 #53763D #3E5E2A #8A3f68
+31150
+51100
+31002
+30522
+40222
+
+block11
+#395726 #4D6F38 #7CA067 #53763D #3E5E2A #8A3f68
+31110
+31100
+31002
+30022
+40222
+
+block12
+#395726 #4D6F38 #7CA067 #53763D #3E5E2A #8A3f68 #5A6159 #6E756D #3F423F
+31150
+51100
+78667
+88888
+76687
+
+block13
+#395726 #4D6F38 #7CA067 #53763D #3E5E2A #8A3f68 #5A6159 #6E756D #3F423F
+31150
+51100
+31002
+88888
+76687
+
+block14
+#395726 #4D6F38 #7CA067 #53763D #3E5E2A #8A3f68 #5A6159 #6E756D #3F423F
+31150
+51100
+31002
+30522
+76687
+
+block15
+#5A6159 #6E756D #3F423F #395726 #4D6F38 #7CA067 #53763D #3E5E2A #8A3f68
+64483
+84433
+11222
+00022
+00002
+
+block16
+#5A6159 #6E756D #3F423F #395726 #4D6F38 #7CA067 #53763D #3E5E2A #8A3f68
+64483
+84433
+64333
+00022
+00002
+
+(for the halves textures
+
+#5A6159 #6E756D #3F423F
+76687
+88888
+78667
+88888
+76687)
+
+block2
+#5A6159 #6E756D #3F423F
+00002
+11122
+11222
+00022
+00002
+
+block3
+#5A6159 #6E756D #3F423F
+12021
+12021
+12021
+12021
+12021
+
+block4
+#5A6159 #6E756D #3F423F
+10021
+22222
+12001
+22222
+10021
+
+block5
+#3F423F #5A6159 #6E756D
+00002
+11122
+11222
+00022
+00002
+
+block6
+#5A6159 #6E756D #3F423F
+11222
+11110
+22200
+21222
+11002
+
+block7
+#5A6159 #6E756D #3F423F
+02120
+02120
+02120
+02120
+02120
+
+block8
+#5A6159 #6E756D #3F423F
+22220
+11100
+11000
+22200
+22220
+
+block9
+#5A6159 #6E756D #3F423F
+00000
+22222
+11111
+22222
+00000
+
+block10
+#5A6159 #6E756D #3F423F
+11111
+00000
+22222
+00000
+11111
+
+(00000
+00000
+00000
+00000
+00000
+
+11200
+12020
+20102
+02020
+00200)
+
+Gkey
+green
+000..
+000..
+.0...
+.00..
+.00..
+
+Gdoor
+green #289F36 darkgreen
+21111
+21001
+20000
+20002
+20002
+
+(Yellow Key)
+Ykey1
+yellow #FEEA85
+000..
+000..
+.0...
+.00..
+.00..
+
+Ykey2
+yellow #FEEA85
+110..
+100..
+.0...
+.00..
+.00..
+
+Ykey3
+yellow #FEEA85
+111..
+111..
+.0...
+.00..
+.00..
+
+Ykey4
+yellow #FEEA85
+111..
+111..
+.1...
+.10..
+.00..
+
+Ykey5
+yellow #FEEA85
+111..
+111..
+.1...
+.11..
+.11..
+
+Ykey6
+yellow #FEEA85
+001..
+011..
+.1...
+.11..
+.11..
+
+Ykey7
+yellow #FEEA85
+000..
+000..
+.1...
+.11..
+.11..
+
+Ykey8
+yellow #FEEA85
+000..
+000..
+.0...
+.01..
+.11..
+
+Ykey9
+yellow #FEEA85
+000..
+000..
+.0...
+.00..
+.00..
+
+Ykey10
+yellow #FEEA85
+000..
+000..
+.0...
+.00..
+.00..
+
+Ykey11
+yellow #FEEA85
+000..
+000..
+.0...
+.00..
+.00..
+
+Ykey12
+yellow #FEEA85
+000..
+000..
+.0...
+.00..
+.00..
+
+Ykey13
+yellow #FEEA85
+000..
+000..
+.0...
+.00..
+.00..
+
+Ydoor
+lightbrown yellow #786B02
+21111
+21001
+20000
+20002
+20002
+
+(Blue Key)
+Bkey1
+#1199E7 #179FED #25A9F4 #42BAFF
+000..
+000..
+.0...
+.00..
+.00..
+
+Bkey2
+#1199E7 #179FED #25A9F4 #42BAFF
+110..
+100..
+.0...
+.00..
+.00..
+
+Bkey3
+#1199E7 #179FED #25A9F4 #42BAFF
+111..
+111..
+.0...
+.00..
+.00..
+
+Bkey4
+#1199E7 #179FED #25A9F4 #42BAFF
+111..
+111..
+.1...
+.10..
+.00..
+
+Bkey5
+#1199E7 #179FED #25A9F4 #42BAFF
+111..
+111..
+.1...
+.11..
+.11..
+
+Bkey6
+#1199E7 #179FED #25A9F4 #42BAFF
+001..
+011..
+.1...
+.11..
+.11..
+
+Bkey7
+#1199E7 #179FED #25A9F4 #42BAFF
+000..
+000..
+.1...
+.11..
+.11..
+
+Bkey8
+#1199E7 #179FED #25A9F4 #42BAFF
+000..
+000..
+.0...
+.01..
+.11..
+
+Bkey9
+#1199E7 #179FED #25A9F4 #42BAFF
+000..
+000..
+.0...
+.00..
+.00..
+
+Bkey10
+#1199E7 #179FED #25A9F4 #42BAFF
+000..
+000..
+.0...
+.00..
+.00..
+
+Bkey11
+#1199E7 #179FED #25A9F4 #42BAFF
+000..
+000..
+.0...
+.00..
+.00..
+
+Bkey12
+#1199E7 #179FED #25A9F4 #42BAFF
+000..
+000..
+.0...
+.00..
+.00..
+
+Bkey13
+#1199E7 #179FED #25A9F4 #42BAFF
+000..
+000..
+.0...
+.00..
+.00..
+
+Bdoor
+#1199E7 #49BEFF #004C77
+21111
+21001
+20000
+20002
+20002
+
+(Red Key)
+Rkey1 
+red #C42F3D
+000..
+000..
+.0...
+.00..
+.00..
+
+Rkey2
+red #C42F3D
+110..
+100..
+.0...
+.00..
+.00..
+
+Rkey3
+red #C42F3D
+111..
+111..
+.0...
+.00..
+.00..
+
+Rkey4
+red #C42F3D
+111..
+111..
+.1...
+.10..
+.00..
+
+Rkey5
+red #C42F3D
+111..
+111..
+.1...
+.11..
+.11..
+
+Rkey6
+red #C42F3D
+001..
+011..
+.1...
+.11..
+.11..
+
+Rkey7
+red #C42F3D
+000..
+000..
+.1...
+.11..
+.11..
+
+Rkey8
+red #C42F3D
+000..
+000..
+.0...
+.01..
+.11..
+
+Rkey9
+red #C42F3D
+000..
+000..
+.0...
+.00..
+.00..
+
+Rkey10
+red #C42F3D
+000..
+000..
+.0...
+.00..
+.00..
+
+Rkey11
+red #C42F3D
+000..
+000..
+.0...
+.00..
+.00..
+
+Rkey12
+red #C42F3D
+000..
+000..
+.0...
+.00..
+.00..
+
+Rkey13
+red #C42F3D
+000..
+000..
+.0...
+.00..
+.00..
+
+Rdoor
+red #FF3737 #720000
+21111
+21001
+20000
+20002
+20002
+
+Okey
+#EC6400
+000..
+000..
+.0...
+.00..
+.00..
+
+Odoor
+#EC6400 #FFA15B #994300
+21111
+21001
+20000
+20002
+20002
+
+
+Pkey
+#9013C3
+000..
+000..
+.0...
+.00..
+.00..
+
+Pdoor
+#9013C3 #C15BFF #44006D
+21111
+21001
+20000
+20002
+20002
+
+holecenter
+#272221 #1C1817 #2E2827 #352E2C #3A3230
+11111
+11111
+11111
+11111
+11111
+
+holetop
+#1C1817 #272221 #2E2827 #352E2C #3A3230
+44444
+33333
+22222
+11111
+00000
+
+holebottom
+#1C1817 #272221 #2E2827 #352E2C #3A3230
+00000
+11111
+22222
+33333
+44444
+
+holeleft
+#1C1817 #272221 #2E2827 #352E2C #3A3230
+01234
+01234
+01234
+01234
+01234
+
+holeright
+#1C1817 #272221 #2E2827 #352E2C #3A3230
+43210
+43210
+43210
+43210
+43210
+
+puread
+#FFEAEA #FFF6EA #FFFFEA #EBFFEA #EAFAFF #F5EAFF
+01234
+50123
+45012
+34501
+23450
+
+pure
+#E2ADAD #E2CDAD #E0E2AD #AEE2AD #ADD0E2 #C9ADE2
+01234
+50123
+45012
+34501
+23450
+
+
+=======
+LEGEND
+=======
+. = background1
+≥ = background2
+≤ = background3
+÷ = background4
+
+* = holecenter
+& = holetop
+% = holebottom
+$ = holeleft
+@ = holeright
+
+
+# = block1
+£ = block2
+∑ = block3
+´ = block4
+® = block5
+† = block6
+¥ = block7
+¨ = block8
+ˆ = block9
+ø = block10
+π = block11
+“ = block12
+å = block13
+ß = block14
+© = block15
+√ = block16
+
+x = crate
++ = ironcrate
+¢ = crateinhole
+
+{ = freemove
+• = freemoveburn
+} = trackv
+, = trackh
+\ = trackturn1
+/ = trackturn2
+? = trackturn3
+! = trackturn4
+
+s = firetrapdown
+w = firetrapup
+d = firetrapright
+a = firetrapleft
+
+k = lasergundown
+i = lasergunup
+l = lasergunleft
+j = lasergunright 
+
+¶ = movegunright
+さ = movegunup
+
+n = playernokey1
+ф = playernokey2
+
+œ = playerBkey1
+
+
+y = Ykey1
+b = Bkey1
+r = Rkey1
+g = Gkey
+o = Okey
+p = Pkey
+
+
+1 = Ydoor
+2 = Rdoor
+3 = Bdoor
+4 = Gdoor
+5 = Odoor
+6 = Pdoor
+0 = playerdead
+
+~ = centralanchor
+' = horizontalanchor
+- = horizontalbox and horizontalanchor
+" = verticalanchor
+_ = verticalbox and verticalanchor 
+
+Ω = f
+˙ = 2f
+∆ = 3f
+˚ = 4f
+¬ = 5f
+
+∞ = pure
+§ = puread
+
+あ = SwiFloor
+た = SwiFloorTop1
+な = SwiFloorBottom1
+は = SwiFloorLeft1
+ま = SwiFloorRight1
+
+か = holecenterSWI2
+や = holetopSWI2
+ら = holebottomSWI2
+わ = holeleftSWI2
+が = holerightSWI2
+
+
+い = antiplayer
+
+background = background1 or background2 or background3 or background4
+
+TEMP = temp1 or temp2 or temp3 or temp4 or temp5 or temp6
+
+DELAY = firetrapup or firetrapdown or firetrapleft or firetrapright or lasergunup or lasergundown or lasergunleft or lasergunright
+
+playernokey = playernokey1 or playernokey2
+
+playerGkey = playergkey1 or playergkey2
+
+playerrkey = playerrkey1 or playerrkey2
+
+playerykey = playerykey1 or playerykey2
+
+playerbkey = playerbkey1 or playerbkey2
+
+playerokey = playerokey1 or playerokey2
+
+playerpkey = playerpkey1 or playerpkey2
+
+player = playernokey or playerGkey or playerykey or playerbkey or playerrkey or playerokey or playerpkey
+
+fireball = fireup or firedown or fireleft or fireright
+
+ykey = Ykey1 or Ykey2 or Ykey3 or Ykey4 or Ykey5 or Ykey6 or Ykey7 or Ykey8 or Ykey9 or Ykey10 or Ykey11 or Ykey12 or Ykey13
+
+bkey = Bkey1 or Bkey2 or Bkey3 or bkey4 or bkey5 or bkey6 or bkey7 or bkey8 or bkey9 or bkey10 or bkey11 or bkey12 or bkey13
+
+rkey = rkey1 or rkey2 or rkey3 or rkey4 or rkey5 or rkey6 or rkey7 or rkey8 or rkey9 or rkey10 or rkey11 or rkey12 or rkey13
+
+key = bkey or ykey or rkey or gkey or okey or pkey or gkey
+
+hole = holetop or holebottom or holeleft or holeright or holecenter or holecenterSWI or holecenterSWI2 or holetopSWI or holetopSWI2 or holebottomSWI or holebottomSWI2 or holeleftSWI or holeleftSWI2 or holerightSWI or holerightSWI2
+
+door = gdoor or ydoor or rdoor or bdoor or odoor or pdoor
+
+verticalgroup = verticalanchor or centralanchor
+
+horizontalgroup = horizontalanchor or centralanchor
+
+target= player
+
+lasershoot = lasergundown or lasergunup or lasergunright or lasergunleft or movegunright or movegunup
+
+alllaser = laserup or laserdown or laserleft or laserright
+
+fireproof = freemove or door or ironcrate
+
+block = block1 or block2 or block3 or block4 or block5 or block6 or block7 or block8 or block9 or block10 or block11 or block12 or block13 or block14 or block15 or block16
+
+laserproof = freemove or door or lasergunup or lasergundown or lasergunright or lasergunleft or movegunright or movegunup or horizontalbox or verticalbox or block
+
+freemovecrate = freemove or freemoveburn
+
+
+fall = f or f2 or f3 or f4 or f5 or f6 or f7 or f8 or f9 or f10 or 2f or 2f2 or 2f3 or 2f4 or 2f5 or 2f6 or 2f7 or 2f8 or 2f9 or 2f10 or 3f or 3f2 or 3f3 or 3f4 or 3f5 or 3f6 or 3f7 or 3f8 or 3f9 or 3f10 or 4f or 4f2 or 4f3 or 4f4 or 4f5 or 4f6 or 4f7 or 4f8 or 4f9 or 4f10 or 5f or 5f2 or 5f3 or 5f4 or 5f5 or 5f6 or 5f7 or 5f8 or 5f9 or 5f10
+
+swi = Swifloor or SwiFloor2 or holecenterSWI or holecenterSWI2 or SwiFloorTop1 or SwiFloorTop2 or SwiFloorBottom1 or SwiFloorBottom2 or SwiFloorLeft1 or SwiFloorLeft2 or SwiFloorRight1 or SwiFloorRight2 or holetopSWI or holetopSWI2 or holebottomSWI or holebottomSWI2 or holeleftSWI or holeleftSWI2 or holerightSWI or holerightSWI2
+
+swihole = holecenterSWI or holecenterSWI2 or holetopSWI or holetopSWI2 or holebottomSWI or holebottomSWI2 or holeleftSWI or holeleftSWI2 or holerightSWI or holerightSWI2
+
+swiground = SwiFloor or SwiFloor2 or SwiFloorTop1 or SwiFloorTop2 or SwiFloorBottom1 or SwiFloorBottom2 or SwiFloorLeft1 or SwiFloorLeft2 or SwiFloorRight1 or SwiFloorRight2
+
+=======
+SOUNDS
+=======
+sfx1 37516500
+door destroy 54520307
+sfx0 38129308
+(sfx1 96747707 iron crate sound)
+sfx2 66826707
+sfx3 96903707
+sfx4 45725908
+sfx5 8648101
+( 77799103
+47510708
+57543508
+48931900
+72317700)
+(showmessage 84239700)
+
+(41604303
+90020903)
+(sfx7 16917900)
+sfx8 75900307
+sfx9 64946107
+sfx10 1217907 (really quiet step)
+sfx7 12369704
+================
+COLLISIONLAYERS
+================
+
+background
+
+temp1, temp2, temp3, temp4, temp5, temp6, marker
+
+holecenter, holetop, holebottom, holeleft, holeright, hole, holecenterSWI, holecenterSWI2, swihole
+
+crateinhole, ironcrateinhole, horizontalanchor, verticalanchor, trackv, trackh, trackturn1, trackturn2, trackturn3, trackturn4
+centralanchor, pure, puread, fall, swiground
+
+Ykey, Bkey, Rkey, Gkey, Okey, Pkey, key
+
+
+playerdead, playerfalling, playerfalling2, antiplayerDEAD, antidying,
+
+laserup, laserdown, laserleft, laserright
+
+playernokey, playerYkey, playerBkey, playerRkey, playerGkey, playerOkey, playerPkey, block, Ydoor, Rdoor, Bdoor, Gdoor, Odoor, Pdoor, crate, ironcrate, freemovecrate, firetrapdown, firetrapup, firetrapright, firetrapleft, fireup, firedown, fireleft, fireright, firehit, horizontalbox, verticalbox, lasergundown, lasergunup, lasergunright, lasergunleft, movegunright, antiplayer, movegunup
+
+
+======
+RULES
+======
+(stop player from using X when alone and not over key)
+[action playernokey1 no key]-> cancel
+
+(key animation)
+[Bkey13]->[bkey1]
+[Bkey12]->[bkey13]
+[Bkey11]->[bkey12]
+[Bkey10]->[bkey11]
+[Bkey9]->[bkey10]
+[Bkey8]->[bkey9]
+[Bkey7]->[bkey8]
+[Bkey6]->[bkey7]
+[Bkey5]->[bkey6]
+[Bkey4]->[bkey5]
+[Bkey3]->[bkey4]
+[Bkey2]->[bkey3]
+[Bkey1]->[bkey2]
+
+[Bkey13]->[bkey1]
+[Bkey12]->[bkey13]
+[Bkey11]->[bkey12]
+[Bkey10]->[bkey11]
+[Bkey9]->[bkey10]
+[Bkey8]->[bkey9]
+[Bkey7]->[bkey8]
+[Bkey6]->[bkey7]
+[Bkey5]->[bkey6]
+[Bkey4]->[bkey5]
+[Bkey3]->[bkey4]
+[Bkey2]->[bkey3]
+[Bkey1]->[bkey2]
+
+[ykey13]->[ykey1]
+[ykey12]->[ykey13]
+[ykey11]->[ykey12]
+[ykey10]->[ykey11]
+[ykey9]->[ykey10]
+[ykey8]->[ykey9]
+[ykey7]->[ykey8]
+[ykey6]->[ykey7]
+[ykey5]->[ykey6]
+[ykey4]->[ykey5]
+[ykey3]->[ykey4]
+[ykey2]->[ykey3]
+[ykey1]->[ykey2]
+
+[rkey13]->[rkey1]
+[rkey12]->[rkey13]
+[rkey11]->[rkey12]
+[rkey10]->[rkey11]
+[rkey9]->[rkey10]
+[rkey8]->[rkey9]
+[rkey7]->[rkey8]
+[rkey6]->[rkey7]
+[rkey5]->[rkey6]
+[rkey4]->[rkey5]
+[rkey3]->[rkey4]
+[rkey2]->[rkey3]
+[rkey1]->[rkey2]
+
+(Player Falling)
+[playerfalling2 temp1]->[playerfalling2]
+[playerfalling2]->[ ]
+[playerfalling temp1]->[playerfalling]
+[playerfalling]->[playerfalling2 temp1]
+
+(falling floor)
+[player f]->[player f2] sfx9
+[f10]->[holecenter]
+[f9]->[f10]
+[f8]->[f9]
+[f7]->[f8]
+[f6]->[f7]
+[f5]->[f6]
+[f4]->[f5]
+[f3]->[f4]
+[f2]->[f3]
+
+
+[player 2f]->[player 2f2] sfx9
+[2f10]->[holetop]
+[2f9]->[2f10]
+[2f8]->[2f9]
+[2f7]->[2f8]
+[2f6]->[2f7] 
+[2f5]->[2f6]
+[2f4]->[2f5]
+[2f3]->[2f4]
+[2f2]->[2f3]
+
+[player 3f]->[player 3f2] sfx9
+[3f10]->[holebottom]
+[3f9]->[3f10]
+[3f8]->[3f9]
+[3f7]->[3f8]
+[3f6]->[3f7]
+[3f5]->[3f6]
+[3f4]->[3f5]
+[3f3]->[3f4]
+[3f2]->[3f3]
+
+[player 4f]->[player 4f2] sfx9
+[4f10]->[holeright]
+[4f9]->[4f10]
+[4f8]->[4f9]
+[4f7]->[4f8]
+[4f6]->[4f7]
+[4f5]->[4f6]
+[4f4]->[4f5]
+[4f3]->[4f4]
+[4f2]->[4f3]
+
+[player 5f]->[player 5f2] sfx9
+[5f10]->[holeleft]
+[5f9]->[5f10]
+[5f8]->[5f9]
+[5f7]->[5f8]
+[5f6]->[5f7]
+[5f5]->[5f6]
+[5f4]->[5f5]
+[5f3]->[5f4]
+[5f2]->[5f3]
+
+
+(fire hitting)
+[firehit temp1]->[firehit]
+[firehit]->[ ]
+
+
+(Picking Up Key)
+[action playernokey1 bkey]->[playerbkey1] sfx1
+[action playernokey1 ykey]->[playerykey1] sfx1
+[action playernokey1 rkey]->[playerrkey1] sfx1
+[action playernokey1 gkey]->[playergkey1] sfx1
+
+[action playernokey2 bkey]->[playerbkey2] sfx1
+[action playernokey2 ykey]->[playerykey2] sfx1
+[action playernokey2 rkey]->[playerrkey2] sfx1
+[action playernokey2 gkey]->[playergkey2] sfx1
+
+(Mixing Keys)
+[action playerbkey1 ykey]->[playergkey1] sfx1
+[action playerykey1 bkey]->[playergkey1] sfx1
+[action playerrkey1 ykey]->[playerokey1] sfx1
+[action playerykey1 rkey]->[playerokey1] sfx1
+[action playerbkey1 rkey]->[playerpkey1] sfx1
+[action playerrkey1 bkey]->[playerpkey1] sfx1
+
+[action playerbkey2 ykey]->[playergkey2] sfx1
+[action playerykey2 bkey]->[playergkey2] sfx1
+[action playerrkey2 ykey]->[playerokey2] sfx1
+[action playerykey2 rkey]->[playerokey2] sfx1
+[action playerbkey2 rkey]->[playerpkey2] sfx1
+[action playerrkey2 bkey]->[playerpkey2] sfx1
+
+(Opening Door)
+[> playergkey1|Gdoor]->[playernokey1| ]
+[> playerykey1|Ydoor]->[playernokey1| ]
+[> playerrkey1|Rdoor]->[playernokey1| ]
+[> playerbkey1|Bdoor]->[playernokey1| ]
+[> playerokey1|Odoor]->[playernokey1| ]
+[> playerpkey1|Pdoor]->[playernokey1| ]
+
+[> playergkey2|Gdoor]->[playernokey2| ]
+[> playerykey2|Ydoor]->[playernokey2| ]
+[> playerrkey2|Rdoor]->[playernokey2| ]
+[> playerbkey2|Bdoor]->[playernokey2| ]
+[> playerokey2|Odoor]->[playernokey2| ]
+[> playerpkey2|Pdoor]->[playernokey2| ]
+
+(Pushing)
+[> player|crate]->[> player|> crate] sfx2
+[> player|ironcrate]->[> player|> ironcrate] sfx1
+horizontal [> player|horizontalbox|horizontalgroup]->[> player|> horizontalbox|horizontalgroup] sfx3
+horizontal [< player horizontalgroup|horizontalbox]->[< player horizontalgroup|< horizontalbox] sfx3
+
+vertical [> player|verticalbox|verticalgroup]->[> player|> verticalbox|verticalgroup] sfx3
+vertical [< player verticalgroup|verticalbox]->[< player verticalgroup|< verticalbox] sfx3
+
+[ > Player | freemovecrate ] -> [ > Player | > freemovecrate ]
+
+[ > freemovecrate | freemovecrate ] -> [ > freemovecrate | > freemovecrate]
+
+vertical [> player | movegunright ]->[ > Player | > movegunright ] sfx8
+horizontal [> player | movegunup ]->[ > Player | > movegunup ] sfx8
+
+(FireBalls)
+down [firetrapdown no temp|player]->[firetrapdown temp6|playerdead firehit temp1] sfx0
+down [firetrapdown no temp| no fireproof]->[firetrapdown temp6|firedown]
+down [stationary firedown]->[down firedown]
+
+up [firetrapup no temp|player]->[firetrapup temp6|playerdead firehit temp1] sfx0
+up [firetrapup no temp| no fireproof]->[firetrapup temp6|fireup]
+up [stationary fireup]->[up fireup]
+
+
+left [firetrapleft no temp|player]->[firetrapleft temp6|playerdead firehit temp1] sfx0
+left [firetrapleft no temp| no fireproof]->[firetrapleft temp6|fireleft]
+left [stationary fireleft]->[left fireleft]
+
+
+right [firetrapright no temp|player]->[firetrapright temp6|playerdead firehit temp1] sfx0
+right [firetrapright no temp| no fireproof]->[firetrapright temp6|fireright]
+right [stationary fireright]->[right fireright]
+
+[> fireball|block]->[firehit temp1|block]
+[> fireball|ironcrate]->[firehit temp1|ironcrate]
+[> fireball|door]->[firehit temp1|door]
+[> fireball|crate]->[ |firehit temp1]
+[> fireball|freemovecrate]->[firehit temp1|freemovecrate]
+[> fireball|horizontalbox]->[firehit temp1|horizontalbox]
+[> fireball|verticalbox]->[firehit temp1|verticalbox]
+[> fireball|player]->[ |firehit temp1 playerdead] sfx0
+
+(lasers)
+
+right [lasergunright no temp|player]->[lasergunright|playerdead firehit temp1] sfx0
+
+[player laserright]->[playerdead firehit temp1 laserright] sfx0
+[laserright crate]->[laserright firehit temp1]
+[laserright ironcrate]->[laserright firehit temp1]
+
+[laserright]->[ ]
+
+late right [lasergunright no temp| no laserright no laserproof]->[lasergunright|laserright]
+
+late right [laserright|no laserproof]->[laserright|laserright]
+
+right [lasergunright no temp6|freemovecrate]->[lasergunright temp5|freemove]
+right [lasergunright no temp6|horizontalbox]->[lasergunright temp5|freemove]
+right [lasergunright no temp6|verticalbox]->[lasergunright temp5|freemove]
+
+
+
+
+left [lasergunleft no temp|player]->[lasergunleft|playerdead firehit temp1] sfx0
+
+[player laserleft]->[playerdead firehit temp1 laserleft] sfx0
+[laserleft crate]->[laserleft firehit temp1]
+[laserleft ironcrate]->[laserleft firehit temp1]
+
+[laserleft]->[ ]
+
+late left [lasergunleft no temp| no laserleft no laserproof]->[lasergunleft|laserleft]
+
+late left [laserleft|no laserproof]->[laserleft|laserleft]
+
+left [lasergunleft no temp6|freemove]->[lasergunleft temp5|freemove]
+left [lasergunleft no temp6|horizontalbox]->[lasergunleft temp5|horizontalbox]
+left [lasergunleft no temp6|verticalbox]->[lasergunleft temp5|verticalbox]
+
+
+
+up [lasergunup no temp|player]->[lasergunup|playerdead firehit temp1] sfx0
+
+[player laserup]->[playerdead firehit temp1 laserup] sfx0
+[laserup crate]->[laserup firehit temp1]
+[laserup ironcrate]->[laserup firehit temp1]
+
+[laserup]->[ ]
+
+late up [lasergunup no temp| no laserup no laserproof]->[lasergunup|laserup]
+
+late up [laserup|no laserproof]->[laserup|laserup]
+
+up [lasergunup no temp6|freemove]->[lasergunup temp5|freemove]
+up [lasergunup no temp6|horizontalbox]->[lasergunup temp5|horizontalbox]
+up [lasergunup no temp6|verticalbox]->[lasergunup temp5|verticalbox]
+
+
+
+
+down [lasergundown no temp|player]->[lasergundown|playerdead firehit temp1] sfx0
+
+
+[player laserdown]->[playerdead firehit temp1 laserdown] sfx0
+[laserdown crate]->[laserdown firehit temp1]
+[laserdown ironcrate]->[laserdown firehit temp1]
+
+[laserdown]->[ ]
+
+late down [lasergundown no temp| no laserdown no laserproof]->[lasergundown|laserdown]
+
+late down [laserdown|no laserproof]->[laserdown|laserdown]
+
+down [lasergundown no temp6|freemove]->[lasergundown temp5|freemove]
+down [lasergundown no temp6|horizontalbox]->[lasergundown temp5|horizontalbox]
+down [lasergundown no temp6|verticalbox]->[lasergundown temp5|verticalbox]
+
+(movable lasers)
+right [movegunright no temp|player]->[movegunright|playerdead firehit temp1] sfx0
+
+[player laserright]->[playerdead firehit temp1 laserright] sfx0
+[laserright crate]->[laserright firehit temp1]
+[laserright ironcrate]->[laserright firehit temp1]
+
+[laserright]->[ ]
+
+late right [movegunright no temp| no laserright no laserproof]->[movegunright|laserright]
+
+late right [laserright|no laserproof]->[laserright|laserright]
+
+right [movegunright no temp6|freemove]->[movegunright|freemove]
+right [movegunright no temp6|horizontalbox]->[movegunright |horizontalbox]
+right [movegunright no temp6|verticalbox]->[movegunright|verticalbox]
+
+
+
+up [movegunup no temp|player]->[movegunup|playerdead firehit temp1] sfx0
+
+[player laserup]->[playerdead firehit temp1 laserup] sfx0
+[antiplayer laserup]->[antiplayerDEAD firehit temp1 laserup] sfx0
+[laserup crate]->[laserup firehit temp1]
+[laserup ironcrate]->[laserup firehit temp1]
+
+[laserup]->[ ]
+
+late up [movegunup no temp| no laserup no laserproof]->[movegunup|laserup]
+
+late up [laserup|no laserproof]->[laserup|laserup]
+
+up [movegunup no temp6|freemove]->[movegunup|freemove]
+up [movegunup no temp6|horizontalbox]->[movegunup|horizontalbox]
+up [movegunup no temp6|verticalbox]->[movegunup|verticalbox]
+
+([laserleft no temp|ironcrate]->[laserleft|firehit temp1]
+[laserleft no temp|crate]->[laserleft|firehit temp1] 
+left [lasergunleft no temp|player]->[lasergunleft|playerdead firehit temp1] sfx0
+left [lasergunleft no temp| no laserproof]->[lasergunleft|laserleft]
+left [stationary laserleft]->[left laserleft]
+
+[laserright no temp|ironcrate]->[laserright|firehit temp1]
+[laserright no temp|crate]->[laserright|firehit temp1] 
+right [lasergunright no temp|player]->[lasergunright|playerdead firehit temp1] sfx0
+right [lasergunright no temp| no laserproof]->[lasergunright|laserright]
+right [stationary laserright]->[right laserright]
+
+([laserright no temp|ironcrate]->[laserright|firehit temp1]
+[laserright no temp|crate]->[laserright|firehit temp1] 
+right [lasergunright no temp|player]->[lasergunright|playerdead firehit temp1] sfx0
+right [lasergunright no temp| no laserproof]->[lasergunright|laserright]
+right [stationary laserright]->[right laserright])
+
+
+[laserdown no temp|ironcrate]->[laserdown|firehit temp1]
+[laserdown no temp|crate]->[laserdown|firehit temp1] 
+down [lasergundown no temp|player]->[lasergundown|playerdead firehit temp1] sfx0
+down [lasergundown no temp| no laserproof]->[lasergundown|laserdown]
+down [stationary laserdown]->[down laserdown]
+
+
+[laserup no temp|ironcrate]->[laserup|firehit temp1]
+[laserup no temp|crate]->[laserup|firehit temp1] 
+up [laserup no temp|player]->[lasergunup|playerdead firehit temp1] sfx0
+up [lasergunup no temp| no laserproof]->[lasergunup|laserup]
+up [stationary laserup]->[up laserup]
+
+[> alllaser|block]->[ |block]
+[> alllaser|freemovecrate]->[ |freemovecrate]
+[> alllaser|crate]->[alllaser| ]
+[> alllaser|ironcrate]->[alllaser| ]
+
+left [lasergunleft no temp6|freemovecrate]->[lasergunleft temp5|freemovecrate]
+
+right [lasergunright no temp6|freemovecrate]->[lasergunright temp5|freemovecrate]
+
+down [lasergundown no temp6|freemovecrate]->[lasergundown temp5|freemovecrate]
+
+up [lasergunup no temp6|freemovecrate]->[lasergunup temp5|freemovecrate]
+
+
+
+[> freemovecrate|alllaser]->[ freemovecrate | ]
+
+
+[player|alllaser]->[playerdead|alllaser] sfx0)
+
+
+(action delay)
+[DELAY temp1]->[DELAY]
+[DELAY temp2]->[DELAY temp1]
+[DELAY temp3]->[DELAY temp2]
+[DELAY temp4]->[DELAY temp3]
+[DELAY temp5]->[DELAY temp4]
+[DELAY temp6]->[DELAY temp5]
+
+(hole mechanics)
+late [player holeright]->[playerfalling temp1 holeright] sfx4
+late [player holeleft]->[playerfalling temp1 holeleft] sfx4
+late [player holetop]->[playerfalling temp1 holetop] sfx4
+late [player holebottom]->[playerfalling temp1 holebottom] sfx4
+late [player holecenter]->[playerfalling temp1 holecenter] sfx4
+
+late [player holecenterswi]->[playerfalling temp1 holecenterswi] sfx4
+late [player holetopswi]->[playerfalling temp1 holetopswi] sfx4
+late [player holebottomswi]->[playerfalling temp1 holebottomswi] sfx4
+late [player holeleftswi]->[playerfalling temp1 holeleftswi] sfx4
+late [player holerightswi]->[playerfalling temp1 holerightswi] sfx4
+late [player holecenterswi2]->[playerfalling temp1 holecenterswi2] sfx4
+late [player holetopswi2]->[playerfalling temp1 holetopswi2] sfx4
+late [player holebottomswi2]->[playerfalling temp1 holebottomswi2] sfx4
+late [player holeleftswi2]->[playerfalling temp1 holeleftswi2] sfx4
+late [player holerightswi2]->[playerfalling temp1 holerightswi2] sfx4
+
+
+late [crate hole]->[crateinhole]
+late [ironcrate hole]->[ironcrateinhole]
+
+(freemovecrate traveling on a path)
+(free move crate rules)
+
+[ >  Player | freemovecrate ] -> [  >  Player | > freemovecrate  ] sfx5
+[ > freemovecrate | freemovecrate ] -> [ > freemovecrate | > freemovecrate ] sfx5
+
+RIGHT [ RIGHT Player | freemovecrate TrackTurn1 ] -> [ Player | DOWN freemovecrate TrackTurn1 ]
+UP [ UP Player | freemovecrate TrackTurn1 ] -> [ Player | LEFT freemovecrate TrackTurn1 ]
+
+DOWN [ DOWN Player | freemovecrate TrackTurn2 ] -> [ Player | LEFT freemovecrate TrackTurn2 ]
+RIGHT [ RIGHT Player | freemovecrate TrackTurn2 ] -> [ Player | UP freemovecrate TrackTurn2 ]
+
+LEFT [ LEFT Player | freemovecrate TrackTurn3 ] -> [ Player | UP freemovecrate TrackTurn3 ]
+DOWN [ DOWN Player | freemovecrate TrackTurn3 ] -> [ Player | RIGHT freemovecrate TrackTurn3 ]
+
+UP [ UP Player | freemovecrate TrackTurn4 ] -> [ Player | RIGHT freemovecrate TrackTurn4 ]
+LEFT [ LEFT Player | freemovecrate TrackTurn4 ] -> [ Player | DOWN freemovecrate TrackTurn4 ]
+
+(Track 1 NE right-down)
+RIGHT [ RIGHT freemovecrate | freemovecrate TrackTurn1 ] -> [ RIGHT freemovecrate | DOWN freemovecrate TrackTurn1 ]
+DOWN [ DOWN freemovecrate TrackTurn1 | freemovecrate ] -> [ DOWN freemovecrate TrackTurn1 | DOWN freemovecrate ]
+DOWN [ DOWN freemovecrate TrackTurn1 | freemovecrate | freemovecrate ] -> [ DOWN freemovecrate TrackTurn1 | DOWN freemovecrate | DOWN freemovecrate ]
+DOWN [ DOWN freemovecrate TrackTurn1 | freemovecrate | freemovecrate | freemovecrate ] -> [ DOWN freemovecrate TrackTurn1 | DOWN freemovecrate | DOWN freemovecrate | DOWN freemovecrate ]
+
+(Track 1 NE up left)
+UP [ UP freemovecrate | freemovecrate TrackTurn1 ] -> [ UP freemovecrate | LEFT freemovecrate TrackTurn1 ]
+LEFT [ LEFT freemovecrate TrackTurn1 | freemovecrate ] -> [ LEFT freemovecrate TrackTurn1 | LEFT freemovecrate ]
+LEFT [ LEFT freemovecrate TrackTurn1 | freemovecrate | freemovecrate ] -> [ LEFT freemovecrate TrackTurn1 | LEFT freemovecrate | LEFT freemovecrate ]
+LEFT [ LEFT freemovecrate TrackTurn1 | freemovecrate | freemovecrate | freemovecrate ] -> [ LEFT freemovecrate TrackTurn1 | LEFT freemovecrate | LEFT freemovecrate | LEFT freemovecrate ]
+
+(Track 2 SE Down Left)
+DOWN [ DOWN freemovecrate | freemovecrate TrackTurn2 ] -> [ DOWN freemovecrate | LEFT freemovecrate TrackTurn2 ]
+LEFT [ LEFT freemovecrate TrackTurn2 | freemovecrate ] -> [ LEFT freemovecrate TrackTurn2 | LEFT freemovecrate ]
+LEFT [ LEFT freemovecrate TrackTurn2 | freemovecrate | freemovecrate ] -> [ LEFT freemovecrate TrackTurn2 | LEFT freemovecrate | LEFT freemovecrate ]
+LEFT [ LEFT freemovecrate TrackTurn2 | freemovecrate | freemovecrate | freemovecrate ] -> [ LEFT freemovecrate TrackTurn2 | LEFT freemovecrate | LEFT freemovecrate | LEFT freemovecrate ]
+
+(Track 2 SE Right Up)
+RIGHT [ RIGHT freemovecrate | freemovecrate TrackTurn2 ] -> [ RIGHT freemovecrate | UP freemovecrate TrackTurn2 ]
+UP [ UP freemovecrate TrackTurn2 | freemovecrate ] -> [ UP freemovecrate TrackTurn2 | UP freemovecrate ]
+UP [ UP freemovecrate TrackTurn2 | freemovecrate | freemovecrate ] -> [ UP freemovecrate TrackTurn2 | UP freemovecrate | UP freemovecrate ]
+UP [ UP freemovecrate TrackTurn2 | freemovecrate | freemovecrate | freemovecrate ] -> [ UP freemovecrate TrackTurn2 | UP freemovecrate | UP freemovecrate | UP freemovecrate ]
+
+(Track 3 SW Left Up)
+LEFT [ LEFT freemovecrate | freemovecrate TrackTurn3 ] -> [ LEFT freemovecrate | UP freemovecrate TrackTurn3 ]
+UP [ UP freemovecrate TrackTurn3 | freemovecrate ] -> [ UP freemovecrate TrackTurn3 | UP freemovecrate ]
+UP [ UP freemovecrate TrackTurn3 | freemovecrate | freemovecrate ] -> [ UP freemovecrate TrackTurn3 | UP freemovecrate | UP freemovecrate ]
+UP [ UP freemovecrate TrackTurn3 | freemovecrate | freemovecrate | freemovecrate ] -> [ UP freemovecrate TrackTurn3 | UP freemovecrate | UP freemovecrate | UP freemovecrate ]
+
+(Track 3 SW Down Right)
+DOWN [ DOWN freemovecrate | freemovecrate TrackTurn3 ] -> [ DOWN freemovecrate | RIGHT freemovecrate TrackTurn3 ]
+RIGHT [ RIGHT freemovecrate TrackTurn3 | freemovecrate ] -> [ RIGHT freemovecrate TrackTurn3 | RIGHT freemovecrate ]
+RIGHT [ RIGHT freemovecrate TrackTurn3 | freemovecrate | freemovecrate ] -> [ RIGHT freemovecrate TrackTurn3 | RIGHT freemovecrate | RIGHT freemovecrate ]
+RIGHT [ RIGHT freemovecrate TrackTurn3 | freemovecrate | freemovecrate | freemovecrate ] -> [ RIGHT freemovecrate TrackTurn3 | RIGHT freemovecrate | RIGHT freemovecrate | RIGHT freemovecrate ]
+
+(Track 4 NW Up Right)
+UP [ UP freemovecrate | freemovecrate TrackTurn4 ] -> [ UP freemovecrate | RIGHT freemovecrate TrackTurn4 ]
+RIGHT [ RIGHT freemovecrate TrackTurn4 | freemovecrate ] -> [ RIGHT freemovecrate TrackTurn4 | RIGHT freemovecrate ]
+RIGHT [ RIGHT freemovecrate TrackTurn4 | freemovecrate | freemovecrate ] -> [ RIGHT freemovecrate TrackTurn4 | RIGHT freemovecrate | RIGHT freemovecrate ]
+RIGHT [ RIGHT freemovecrate TrackTurn4 | freemovecrate | freemovecrate | freemovecrate ] -> [ RIGHT freemovecrate TrackTurn4 | RIGHT freemovecrate | RIGHT freemovecrate | RIGHT freemovecrate ]
+
+(Track 4 NW Left Down)
+LEFT [ LEFT freemovecrate | freemovecrate TrackTurn4 ] -> [ LEFT freemovecrate | DOWN freemovecrate TrackTurn4 ]
+DOWN [ DOWN freemovecrate TrackTurn4 | freemovecrate ] -> [ DOWN freemovecrate TrackTurn4 | DOWN freemovecrate ]
+DOWN [ DOWN freemovecrate TrackTurn4 | freemovecrate | freemovecrate ] -> [ DOWN freemovecrate TrackTurn4 | DOWN freemovecrate | DOWN freemovecrate ]
+DOWN [ DOWN freemovecrate TrackTurn4 | freemovecrate | freemovecrate | freemovecrate ] -> [ DOWN freemovecrate TrackTurn4 | DOWN freemovecrate | DOWN freemovecrate | DOWN freemovecrate ]
+
+(SWITCHING FLOOR ON AND OFF)
+
+[moving Player] [swi] -> [moving Player] [action swi]
+[action SwiFloor] -> [holecenterSWI]
+[action holecenterSWI] -> [SwiFloor]
+
+[action SwiFloor2] -> [holecenterSWI2]
+[action holecenterSWI2] -> [SwiFloor2]
+
+
+[action SwiFloorTop1] -> [holetopSWI]
+[action holetopSWI] -> [SwiFloorTop1]
+
+[action SwiFloorTop2] -> [holetopSWI2]
+[action holetopSWI2] -> [SwiFloorTop2]
+
+
+[action SwiFloorBottom1] -> [holebottomSWI]
+[action holebottomSWI] -> [SwiFloorBottom1]
+
+[action SwiFloorBottom2] -> [holeBottomSWI2]
+[action holeBottomSWI2] -> [SwiFloorBottom2]
+
+
+[action SwiFloorLeft1] -> [holeleftSWI]
+[action holeleftSWI] -> [SwiFloorLeft1]
+
+[action SwiFloorLeft2] -> [holeleftSWI2]
+[action holeleftSWI2] -> [SwiFloorLeft2]
+
+
+[action SwiFloorRight1] -> [holerightSWI]
+[action holerightSWI] -> [SwiFloorRight1]
+
+[action SwiFloorRight2] -> [holerightSWI2]
+[action holerightSWI2] -> [SwiFloorRight2]
+
+(ANTIPLAYER)
+
+late [antiplayer alllaser]->[antiplayerDEAD alllaser]
+
+[ antiplayer | ... | Player ] -> [ > antiplayer | ... | Player ]
+[stationary Player] [antiplayer] -> [stationary Player] [stationary antiplayer]
+
+[antiplayer | player ] -> [ antiplayer | playerdead ]
+
+[antidying]->[antiplayerDEAD] 
+
+
+(ending)
+[playernokey  pure]->[playernokey  puread] message Congratulations, you've reached the end! Thanks for playing!
+
+
+==============
+WINCONDITIONS
+==============
+no door
+
+=======
+LEVELS
+=======
+
+
+
+(################****
+#&&&&&....b&r.###***
+#y....&&&&.*&&####**
+#&&&&...**.*..££££££
+#...*&&&*..*&x£....£
+#..x*.**...*..£xxx.£
+#..ф*...x.&*.ф2....£
+######....####££££££
+&&&&&##4###&&&&&&&&&)
+
+
+(£££££££££££££££££££#####
+#**$....#....£..•.....##
+#*r$#...#...#.{.•.œ.•..#
+#**$#...#.x.#.{.•...•...
+#$..#...#.{.•.{.•...•**$
+#$..#.x.#.{.•.{.•...•*b$
+#$..#.{.•.{.•.{.•...•**$
+#$..#.{.•.{.•.{.•...•$x£
+#$..•.{.•.{.•.{.•...•$x6
+#$..•.{.•.{.•.{.•...•$x£
+#$..•.{.•.{.•.{.•...•**$
+#$..•.{.•.{.•.{.•...•...
+#$.¶•.{.•.x.#...•...•...
+#$..•.{.•.x.#...•...•...
+#$n.•...#.x.#...•...•..#
+#$..•.......#.......•.##
+££3££££££££££££££££#####
+
+###############
+#.............#
+#.............#
+#.............#
+#.............#
+#.............#
+#.............2
+###############
+
+xxxxx##########
+x¢¢¢¢¢#########
+x¢¢¢¢¢¢¢#######
+x¢¢¢¢¢¢¢¢¢¢####
+x¢¢¢¢¢¢¢¢¢¢¢###
+x¢¢¢¢¢¢¢¢¢¢¢¢¢x
+x¢¶¢¢¢¢¢¢¢¢¢¢¢x
+x¢¢¢¢¢¢¢¢¢¢¢¢¢x
+x¢¢¢¢¢¢¢¢¢¢¢¢¢x
+x¢¢¢¢¢¢¢¢###¢¢x
+xxxxxxxx#####xx
+xxxxxnx#######x
+)
+
+( laserShoot : 55611101 amazing sound)
+
+
+
+(completed levels)
+
+
+message Level 1
+message Press X to pick up keys.
+############
+.##..####..#
+..#n..##...3
+####.......#
+##.##..b..##
+#...########
+&&&&&&&&&&&&
+
+message Level 2
+£@**£££££££
+#@....@***£
+#..x...@**£
+#r......@*£
+xx...n...@£
+xxx......@2
+xxx########
+
+message Level 3
+####®k®®®®###
+##..........#
+#..n.....y..#
+1...........®
+#...{.......l
+#.........{.®
+##..........®
+###®®®®®®®®®®
+
+message Level 4
+¨k¨############
+¨.............#
+¨b......n..{..#
+¨..{..........#
+¨.............l
+¨..........{..#
+¨.............l
+3.....{.......#
+¨¨¨¨¨i¨¨####¨¨#
+
+message Level 5
+´´´´´k´´´´´
+´***%.%***´
+´r*%...%*y´
+#%%.x.x.%%#
+#.{.......#
+#.n.......#
+´´´´´5´´´´´
+
+message Level 6
+££#########kkk#££
+££...{....@****££
+#...{.{x..@****.#
+#.{{{{.x..@****.#
+#.{n{..x..@****.2
+#.{{{{.x..@****.#
+#...{r{x..@****.#
+££...{....@****££
+££#########iii#££
+
+message Level 7
+®################
+®##.........{{{.#
+®#.....y.x.{{n{{#
+®#&&&.......{{{.#
+j&***&.......{..#
+j...**..........4
+j...b*..........#
+®################
+
+message Level 8
+¨¨¨¨¨k¨¨¨¨¨
+####..••••¨
+###..•••n•¨
+##...y•{••¨
+1..•.••...¨
+##...•..##¨
+###....####
+
+message Level 9
+ˆˆˆˆˆˆkˆ######
+ˆ.%%****%####ˆ
+ˆ...%%*%.n##bˆ
+ˆ.x.{.%...**.ˆ
+#.....{..***.ˆ
+##.rx...%%*%%ˆ
+###øxx..ˆ.%..ˆ
+##ˆˆˆxxˆˆ.xxxˆ
+ˆˆˆˆˆˆxˆˆ..•.ˆ
+ˆˆˆˆˆˆ6ˆˆ....ˆ
+
+
+message Level 10
+################****
+#&&&&&....b&r.###***
+#y....&&&&.*&&####**
+#&&&&...**.*..££££££
+#...*&&&*..*&x£....£
+#..x*.**...*..£xxx.£
+#..ф*...x.&*.ф2....£
+######....####££££££
+&&&&&##4###&&&&&&&&&
+
+message Level 11
+###k############k###
+#!,&&&########&&&,\#
+#&&***&&####&&***&&#
+&*******&&&&*******&
+********************
+#?*y************.*\#
+#&*&************&*&#
+#...............{..#
+#.{.•.•.!,,\.•.•.x.#
+#....•{•}••}•••....#
+#n..•.•.?,,/.•.•...#
+#..................#
+###############¨x¨##
+&&&&&&&&&&&&&#¨¨1¨¨#
+
+message Level 12
+®®®®®®®®®®®#####
+®rxx,,{\•l®....#
+®xxx,,{}•l®.{•.#
+®xx,,\{}•l®.••.#
+#....}/?....••.#
+#.n..?......•{.#
+#..............2
+################
+
+message Level 13
+#####k#k#k###k###
+#@*************$#
+#@!,,,,,,,,,\**$#
+#@}x{..•{•x•}**$#
+#@}x.••.n{b{}**$#
+#@?,,,,,,,,,/**$#
+#@*************$#
+#############3###
+
+message Level 14
+$###############@
+$#.'''_-'r.__-'#@
+$#..-._'-'_"_..#@
+$#n.~-~'--___..#@
+$#.._._''-"""..#@
+$#.."-'-'-~-"..#@
+$#.............2@
+$###############@
+
+message Level 15
+´´´´k´´´k´´´´´´´´´
+´.'-'"''-~'......´
+´..."_b-'_.......´
+´."._"''-~-'.....´
+´.~-~'''-~''.....´
+xx_._-'-'_"....n.´
+3x_'~''.."_......l
+xx_.'-''-."...xxx´
+´.".......xxx.xxx´
+´´´´´´i´´´xxx´xxx´
+
+message Level 16
+%%#######££££££££££££££
+#######...."'-'-''~.n.£
+£££££."..""_-'-_'-~''.£
+£..£xx"-'"~~~'-~-'~'&&l
+£.{£xx_''_~_"".~''_''*l
+£...rx_'-"_""_._.._&&*l
+£.{££.".."'-~-'.&&"**%£
+£..££......""".&**"*%.£
+£££££&&&&&....&**%"%..£
+&###£%%%%*&..&**%."...£
+*&##£....%*&&**%.._.b.£
+**&&£.....%%%%%..."...£
+****££6££££££££££££££££
+
+message Level 17
+##k##k##########k##k##
+#.........@**........#
+#...".....@**.."_x.".#
+j'-'_"....@**.b"~'-~"l
+#._y"_....@**.."~''~_#
+#-~'-~....@**'-_~-'~"#
+j._-'~-...@**.."_.x_"l
+#."''~...####..''--~.#
+#."фx_......##....ф..1
+#......###@..##......#
+##########@*.3########
+
+message Level 18
+############®®®
+#n.!,\}?\,&&&&®
+#.{,!/!,}&**!,®
+#?,\/}\?,,*,,}®
+#}?}!}?!\!}\?,1
+#}\},&y&?!,/,}®
+#,?,&*&*&,?,,?®
+###®®®®®®®®®i®®
+
+message Level 19
+ø¥øøøøøøøøøøøøøøø¥ø
+¥ø###&∑x..xx∑&###ø¥
+ø¥###*∑bx...∑*###¥ø
+¥&&&&*∑.xnx.∑*&&&&¥
+¥##***∑.x.xx∑***##¥
+¥##***∑x.x..∑***##¥
+¥##***∑x.x.x∑***##¥
+¥&&***∑.x.x.∑***&&¥
+ø¥###*∑..x.x∑*###¥ø
+¥ø###*∑x..x.∑*###ø¥
+ø¥øøøøøøø3øøøøøøø¥ø
+&&&&&&&&&&&&&&&&&&&
+
+message Level 20
+∑ˆ∑ˆˆˆˆˆˆˆˆˆˆˆ∑ˆ∑ˆˆˆˆ
+ˆ#ˆ#.........#ˆ#ˆ@**¥
+∑ˆ∑..xxxxxx{..∑ˆ∑@**¥
+¥#..xx{xxx{y{..#¥@**¥
+¥...xxxxxxx{{...¥@**¥
+¥...xx{xx{xx{xxxx@*.¥
+¥.n.xx{xx{xx{xxxx@*.4
+¥...x{b{{{xxxxxxx@*.¥
+¥..¶..{xx{xxx...¥@**¥
+¥#..xx{xxxxxx..#¥@**¥
+∑ˆ∑..x{xxxx{..∑ˆ∑@**¥
+ˆ#ˆ#.........#ˆ#ˆ@**¥
+∑ˆ∑ˆˆˆˆˆˆˆˆˆˆˆ∑ˆ∑ˆˆˆˆ
+
+message Level 21
+£££££#.&&&&&&&&y#£££££
+£###£&&........&&£###£
+£££££#*.¶__"_"n*#£££££
+££#&##*."""¶__.*##&#££
+£&&*&&*._"_"_".*&&*&&£
+£.......""_"_"xxxxxxx1
+£&&&&&&""¶__"__&&&&&&£
+££#*##*"___""""*##*#££
+£££££#*_"""__""*#£££££
+£###£&*........*&£###£
+£££££#*&&&&&&&&*#£££££
+
+
+message Level 22
+¨¨¨¨¨¨¨k¨¨¨############¨¨
+¨&&&&&&&&&&&##########&&¨
+¨{{{{.******&########&**¨
+¨n.xx{***...r..#####&***¨
+¨{{{{.***.xxxx{.&&&&****¨
+¨&&&&&***.....x&*******##
+¨...*****&&&&&&******l###
+¨..x*....***********#####
+¨.x.*.x.x**##.{.....#####
+¨..x*....*#####&.xx.#####
+j...*&&&&*####&*....#####
+¨yxx******&##&**...l#####
+¨&&&*******&&***.x.######
+¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨...¨####&
+&&&&&&&&&&&&&&&¨¨5¨¨###&*
+
+message Level 23
+message Chamber's End
+#####152÷÷÷152#####
+####&&&&≤≤≤&&&&####
+4#&&****≥≥≥****&&#4
+3&******...*****##3
+6**§§§§§§§§§§§§###6
+2**§§§§§§§§§§§####2
+5**§§§§§§§§§§#####5
+1**##§§§§∞§§######1
+4*####§§§§§§§#####4
+3*####§§§§§§§§§###3
+6*&##§§§§§§§§§§§##6
+2**&&&&&...&&&&&&&2
+5*******...*******5
+15263415.n.51436251
+

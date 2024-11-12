@@ -1,0 +1,770 @@
+title Train Braining
+author Alan Hazelden
+homepage http://www.draknek.org
+
+color_palette pastel
+
+noaction
+
+again_interval 0.08
+key_repeat_interval 0.16
+
+(verbose_logging)
+
+run_rules_on_level_start
+
+========
+OBJECTS
+========
+
+Start
+transparent
+
+Delay
+transparent
+
+MoveTrigger
+transparent
+
+Tutorial
+transparent
+
+Background
+lightgreen green
+01000
+00110
+10010
+10100
+01001
+
+PickupBG
+lightgrey lightgreen
+00000
+01110
+01110
+01110
+00000
+
+Water1
+blue white lightblue
+20010
+02002
+12020
+00220
+02002
+
+Water2
+blue white lightblue
+02000
+20210
+00202
+01022
+20200
+
+Mountain
+darkbrown darkbrown
+..0..
+.10..
+.000.
+0000.
+11001
+
+Forest
+darkgreen brown
+.000.
+00000
+00000
+00100
+.111.
+
+Beach
+yellow white
+00010
+01000
+00001
+00100
+10000
+
+(Player
+yellow black
+.000.
+01010
+10001
+01110
+.000.)
+
+FromD
+grey darkbrown
+.....
+.....
+1...1
+0...0
+0...0
+
+FromU
+grey darkbrown
+0...0
+0...0
+1...1
+.....
+.....
+
+FromL
+grey darkbrown
+001..
+.....
+.....
+.....
+001..
+
+FromR
+grey darkbrown
+..100
+.....
+.....
+.....
+..100
+
+
+VTrack
+grey darkbrown
+0...0
+0...0
+01110
+0...0
+0...0
+
+HTrack
+grey darkbrown
+00000
+..1..
+..1..
+..1..
+00000
+
+Crossing
+grey grey
+01110
+1...1
+1...1
+1...1
+01110
+(01010
+1...1
+0...0
+1...1
+01010)
+
+DRTrack
+grey darkbrown
+...00
+..0..
+.01..
+0..1.
+0...1
+
+DLTrack
+grey darkbrown
+00...
+..0..
+..10.
+.1..0
+1...0
+
+ULTrack
+grey darkbrown
+1...0
+.1..0
+..10.
+..0..
+00...
+
+URTrack
+grey darkbrown
+0...1
+0..1.
+.01..
+..0..
+...00
+
+UTrain
+red black darkred
+.000.
+01110
+00000
+00100
+00000
+
+RTrain
+red black darkred
+0000.
+00010
+01010
+00010
+0000.
+
+LTrain
+red black darkred
+.0000
+01000
+01010
+01000
+.0000
+
+DTrain
+red black darkred
+00000
+00100
+00000
+01110
+.000.
+
+Cart
+red black darkred
+22222
+21112
+21112
+21112
+22222
+
+(Smoke1
+white
+..0..
+.0.0.
+0.0.0
+.0.0.
+..0..
+
+Smoke2
+white
+.....
+.0.0.
+..0..
+.0.0.
+.....
+
+Smoke3
+white
+.....
+..0..
+.0.0.
+..0..
+.....)
+
+BluePassengerWaiting
+DarkBrown Blue DarkBrown DarkBlue
+..0..
+.111.
+21112
+23332
+.3.3.
+
+BluePassengerOnCart
+DarkBrown Blue DarkBrown DarkBlue
+.....
+..0..
+.111.
+.111.
+.....
+
+BlueTarget
+lightblue darkbrown
+00000
+01110
+01110
+01110
+00000
+
+RedPassengerWaiting
+DarkBrown Red DarkBrown DarkRed
+..0..
+.111.
+21112
+23332
+.3.3.
+
+RedPassengerOnCart
+DarkBrown Red DarkBrown DarkRed
+.....
+..0..
+.111.
+.111.
+.....
+
+RedTarget
+lightRed darkbrown
+00000
+01110
+01110
+01110
+00000
+
+Zero 0
+White Black
+10011
+01101
+01101
+01101
+10011
+
+One 1
+White Black
+10011
+11011
+11011
+11011
+10001
+
+Two 2
+White Black
+10011
+11101
+11011
+10111
+10001
+
+Three 3
+White Black
+10011
+11101
+11011
+11101
+10011
+
+Four 4
+White Black
+10101
+10101
+10001
+11101
+11101
+
+Five 5
+White Black
+10001
+10111
+10011
+11101
+10011
+
+Six 6
+White Black
+11001
+10111
+10001
+10110
+11001
+
+Seven 7
+White Black
+10001
+11101
+11011
+11011
+11011
+
+Eight 8
+White Black
+11001
+10110
+11001
+10110
+11001
+
+Nine 9
+White Black
+11001
+10110
+11000
+11110
+11001
+
+Black
+black
+
+=======
+LEGEND
+=======
+
+. = Background
+M = Mountain
+% = Forest
+~ = Water1
+, = Beach
+? = Tutorial
+
+| = VTrack
+- = HTrack
++ = Crossing
+
+# = Black
+
+ConnectsL = DLTrack or ULTrack or HTrack
+ConnectsR = DRTrack or URTrack or HTrack
+ConnectsU = ULTrack or URTrack or VTrack
+ConnectsD = DLTrack or DRTrack or VTrack
+
+U = FromD and Start
+D = FromU and Start
+L = FromR and Start
+R = FromL and Start
+
+* = BluePassengerWaiting and PickupBG
+O = BlueTarget
+
+@ = RedPassengerWaiting and PickupBG
+! = RedTarget
+
+Player = FromD or FromU or FromL or FromR
+
+Water = Water1 or Water2
+
+Track = VTrack or HTrack or URTrack or ULTrack or DRTrack or DLTrack or Crossing
+
+Train = UTrain or DTrain or LTrain or RTrain
+
+Target = BlueTarget or RedTarget
+
+PassengerWaiting = BluePassengerWaiting or RedPassengerWaiting
+PassengerOnCart = BluePassengerOnCart or RedPassengerOnCart
+
+Passenger = PassengerWaiting or PassengerOnCart
+
+Number = 0 or 1 or 2 or 3 or 4 or 5 or 6 or 7 or 8 or 9
+
+Solid = Mountain or Forest or Water or Black or Number
+
+=======
+SOUNDS
+=======
+
+SFX0 91301709
+SFX1 53409305
+SFX2 38557307
+SFX3 99431502
+
+EndLevel 78709508
+
+Train Move 88405308
+
+Track Create 24611507
+
+Undo 77031907
+Track Destroy 77031907
+
+PassengerOnCart Create 77365107
+PassengerWaiting Create 18891907
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Player, Beach, Number, Black
+Track, Solid
+Train, Cart, PickupBG
+Start, Delay, MoveTrigger, Target
+Tutorial
+Passenger
+
+======
+RULES
+======
+
+(spawn train)
+
+left [ Track | Start Player ] -> [ LTrain Track Start | Player ]
+right [ Track | Start Player ] -> [ RTrain Track Start | Player ]
+up [ Track | Start Player ] -> [ UTrain Track Start | Player ]
+down [ Track | Start Player ] -> [ DTrain Track Start | Player ]
+
+[ Start | Track no Train no Cart ] -> [ Start | Track Cart Start ]
+
+[ Start ] -> []
+
+(lay track)
+
+[ > Player | Passenger ] -> cancel
+[ > Player | Target ] -> cancel
+[ > Player | Solid ] -> cancel
+[ > Player | Train ] -> cancel
+
+left [ left FromL | ConnectsL no Train ] -> [ | FromL ]
+left [ left FromL | ConnectsU no Train ] -> [ | FromU ]
+left [ left FromL | ConnectsD no Train ] -> [ | FromD ]
+
+right [ right FromR | ConnectsR no Train ] -> [ | FromR ]
+right [ right FromR | ConnectsU no Train ] -> [ | FromU ]
+right [ right FromR | ConnectsD no Train ] -> [ | FromD ]
+
+up [ up FromU | ConnectsL no Train ] -> [ | FromL ]
+up [ up FromU | ConnectsR no Train ] -> [ | FromR ]
+up [ up FromU | ConnectsU no Train ] -> [ | FromU ]
+
+down [ down FromD | ConnectsL no Train ] -> [ | FromL ]
+down [ down FromD | ConnectsR no Train ] -> [ | FromR ]
+down [ down FromD | ConnectsD no Train ] -> [ | FromD ]
+
+[ left FromU no Track ] -> [ left FromR ULTrack ]
+[ right FromU no Track ] -> [ right FromL URTrack ]
+[ down FromU no Track ] -> [ down FromU VTrack ]
+
+[ left FromD no Track ] -> [ left FromR DLTrack ]
+[ right FromD no Track ] -> [ right FromL DRTrack ]
+[ up FromD no Track ] -> [ up FromD VTrack ]
+
+[ up FromL no Track ] -> [ up FromD ULTrack ]
+[ down FromL no Track ] -> [ down FromU DLTrack ]
+[ right FromL no Track ] -> [ right FromL HTrack ]
+
+[ up FromR no Track ] -> [ up FromD URTrack ]
+[ down FromR no Track ] -> [ down FromU DRTrack ]
+[ left FromR no Track ] -> [ left FromR HTrack ]
+
+left [ ConnectsL | < Player ] -> [ ConnectsL MoveTrigger | ]
+right [ ConnectsR | < Player ] -> [ ConnectsR MoveTrigger | ]
+up [ ConnectsU | < Player ] -> [ ConnectsU MoveTrigger | ]
+down [ ConnectsD | < Player ] -> [ ConnectsD MoveTrigger | ]
+
+late [ Player Track ] -> cancel
+
+(start train)
+
+[ MoveTrigger ] [ UTrain ] -> [ MoveTrigger ] [ up UTrain ]
+[ MoveTrigger ] [ DTrain ] -> [ MoveTrigger ] [ down DTrain ]
+[ MoveTrigger ] [ LTrain ] -> [ MoveTrigger ] [ left LTrain ]
+[ MoveTrigger ] [ RTrain ] -> [ MoveTrigger ] [ right RTrain ]
+
+[ Delay ] [ moving Train ] -> [ Delay ] [ Train ]
+
+[ Delay ] [ MoveTrigger ] -> [ Delay ] [ action MoveTrigger ]
+
+[ > Train | Solid ] -> cancel
+[ > Train | Passenger ] -> cancel
+
+(cart follows train)
+
+left [ MoveTrigger Cart ConnectsL | Cart ] ->  [ MoveTrigger < Cart ConnectsL | Cart ]
+right [ MoveTrigger Cart ConnectsR | Cart ] ->  [ MoveTrigger < Cart ConnectsR | Cart ]
+up [ MoveTrigger Cart ConnectsU | Cart ] ->  [ MoveTrigger < Cart ConnectsU | Cart ]
+down [ MoveTrigger Cart ConnectsD | Cart ] ->  [ MoveTrigger < Cart ConnectsD | Cart ]
+
+[ stationary Cart | moving Train ] -> [ > Cart | moving Train ] again
+[ stationary Cart | moving Cart ] -> [ > Cart | moving Cart ]
+
+[ PassengerOnCart moving Cart ] -> [ moving PassengerOnCart moving Cart ]
+
+(train turns when entering corners)
+up    [ > UTrain | DRTrack ] -> [ > RTrain | DRTrack ]
+up    [ > UTrain | DLTrack ] -> [ > LTrain | DLTrack ]
+
+right [ > RTrain | DLTrack ] -> [ > DTrain | DLTrack ]
+right [ > RTrain | ULTrack ] -> [ > UTrain | ULTrack ]
+
+down  [ > DTrain | URTrack ] -> [ > RTrain | URTrack ]
+down  [ > DTrain | ULTrack ] -> [ > LTrain | ULTrack ]
+
+left  [ > LTrain | DRTrack ] -> [ > DTrain | DRTrack ]
+left  [ > LTrain | URTrack ] -> [ > UTrain | URTrack ]
+
+(Passengers get on/off)
+
+late [ Delay no PassengerWaiting no PassengerOnCart ] -> [] again
+
+late [ BluePassengerWaiting Delay no Cart no Target | Cart no PassengerOnCart ] -> [ Delay | Cart BluePassengerOnCart ] again
+late [ RedPassengerWaiting Delay no Cart no Target | Cart no PassengerOnCart ] -> [ Delay | Cart RedPassengerOnCart ] again
+
+late [ PassengerWaiting Delay no Cart no Target | Cart PassengerOnCart ] -> [ PassengerWaiting | Cart PassengerOnCart ] again
+late [ PassengerWaiting no Cart no Delay no Target | Cart no PassengerOnCart ] -> [ PassengerWaiting Delay | Cart ] again
+
+late [ BluePassengerOnCart Delay Cart | no PassengerWaiting BlueTarget ] -> [ Delay Cart | BluePassengerWaiting BlueTarget ] again
+late [ RedPassengerOnCart Delay Cart | no PassengerWaiting RedTarget ] -> [ Delay Cart | RedPassengerWaiting RedTarget ] again
+
+late [ BluePassengerOnCart Cart no Delay | no PassengerWaiting BlueTarget ] -> [ BluePassengerOnCart Cart Delay | BlueTarget ] again
+late [ RedPassengerOnCart Cart no Delay | no PassengerWaiting RedTarget ] -> [ RedPassengerOnCart Cart Delay | RedTarget ] again
+
+(Train leaves world)
+
+[ stationary MoveTrigger Train ] [ Tutorial ] [ Passenger no Target ] -> message You have to take all the passengers to the blue station
+
+[ stationary MoveTrigger Train ] -> [ MoveTrigger ] again
+[ MoveTrigger Cart ] -> [ MoveTrigger ] again
+[ MoveTrigger PassengerOnCart ] -> [ MoveTrigger ] again
+
+==============
+WINCONDITIONS
+==============
+
+No train
+No cart
+all target on passengerWaiting
+
+=======     
+LEVELS
+=======
+
+message Being a train route planner is very satisfying
+
+.......|.....
+.............
+.............
+....%........
+..........%..
+---r.........
+.............
+......%......
+.............
+.............
+
+message Until you have to deal with passengers
+
+.............
+.............
+..o......*...
+..o......*...
+..o......*..-
+..o......*...
+......U......
+......|......
+.?....|......
+......|......
+1############
+
+.............
+..o......*...
+..o......*...
+%.o......*...
+..o......*..-
+..o......*...
+..o.....%*...
+.............
+---r.........
+.............
+2############
+
+.....|....
+..%.......
+..oo...*..
+..oo%..*..
+..........
+...%...*..
+.......*..
+..........
+---r......
+..........
+3#########
+
+............
+.....%......
+....@..!....
+....@..!.%..
+...........-
+.u..*..o.%..
+.|..*..o....
+.|....%.....
+.|..........
+4###########
+
+(............
+-...........
+........**..
+........**..
+.!..........
+.!..........
+.!.....o....
+.!.....o....
+.......o..u.
+...@@..o..|.
+...@@.....|.
+..........|.)
+
+............
+............
+-......o..*.
+.......o.%*.
+.......o..*.
+..@@@.......
+............
+...%........
+............
+..!!!...l---
+............
+5###########
+
+..............
+..............
+....!!!.**....
+..............
+.....@........
+---r.........-
+.....*........
+..............
+....ooo.@@....
+..............
+..............
+6#############
+
+...........%........
+....................
+....*.*.*..%..ooo...
+....................
+...........%........
+---r...............-
+...........%........
+....................
+....@.@.@..%..!!!...
+....................
+...........%........
+7###################
+
+............
+............
+....@...!...
+....@...!...
+....@%.%!...
+...........-
+....*%.%o...
+.u..*...o...
+.|..*...o...
+.|..........
+.|..........
+8###########
+
+..............
+.............-
+...@.......*..
+......!.o.....
+...*..!.o..@..
+.u....!.o.....
+.|.@.......*..
+.|............
+.|............
+9#############
+
+...........
+...........
+.o.....*...
+.o...%.*...
+.o.....*..-
+.o.%...*...
+.o.....*...
+...........
+...........
+---r.......
+...........
+10#########
+
+................
+................
+...@@@..........
+........ooo.....
+................
+---r...........-
+................
+........!!!.....
+...***..........
+................
+................
+11##############
+
+message Thanks for playing!

@@ -1,0 +1,474 @@
+title Magik
+zoomscreen 15x15
+realtime_interval 0.5
+key_repeat_interval 0.25
+(throttle_movement)
+
+========
+OBJECTS
+========
+
+( ----------------------- Background ----------------------- )
+Grass
+GREEN
+
+Water
+Blue
+
+Ice
+LightBlue
+
+Earth
+Brown
+
+Sand
+yellow
+
+Target
+Black Yellow
+01100
+10010
+10110
+01000
+00100
+
+( ----------------------- Obstacles/Objects ----------------------- )
+Wall 
+DarkBrown
+
+Shrub
+Green LightGreen DarkBrown
+.....
+.111.
+.111.
+.121.
+..2..
+
+( ----------------------- Player ----------------------- )
+
+PlayerN 
+Red DarkGreen
+00000
+00100
+00100
+00000
+00000
+
+PlayerE 
+Red DarkGreen
+00000
+00000
+00110
+00000
+00000
+
+PlayerS 
+Red DarkGreen
+00000
+00000
+00100
+00100
+00000
+
+PlayerW
+Red DarkGreen
+00000
+00000
+01100
+00000
+00000
+
+( ----------------------- Magiks and Spells ----------------------- )
+
+FireMagik
+Orange
+...00
+....0
+.....
+.....
+.....
+
+FireSpell
+Orange Red
+.....
+..0..
+.010.
+..0..
+.....
+
+FireCircle
+DarkGrey Orange
+..0..
+.010.
+01010
+.010.
+..0..
+
+IceMagik
+White
+...00
+....0
+.....
+.....
+.....
+
+IceSpell
+LightBlue Blue
+.....
+..0..
+.010.
+..0..
+.....
+
+IceCircle
+DarkGrey White
+..0..
+.010.
+01010
+.010.
+..0..
+
+WindMagik
+LightBlue
+...00
+....0
+.....
+.....
+.....
+
+WindSpell
+White LightBlue
+.....
+..0..
+.010.
+..0..
+.....
+
+WindCircle
+DarkGrey LightBlue
+..0..
+.010.
+01010
+.010.
+..0..
+
+(directional tags)
+TagN
+transparent
+TagE
+transparent
+TagS
+transparent
+TagW
+transparent
+
+( ----------------------- Effects ----------------------- )
+Steam
+LightBlue White
+.....
+.010.
+01010
+.010.
+.....
+
+Fire1
+Red Orange Yellow
+.....
+.....
+..0..
+.010.
+.....
+
+Fire2
+Red Orange Yellow
+.....
+..0..
+.010.
+.020.
+.....
+
+Fire3
+Red Orange Yellow
+..0..
+.01..
+.010.
+.0200
+..0..
+
+PermFire1
+Red Orange Yellow
+..0..
+.01..
+.010.
+.020.
+..0..
+
+PermFire2
+Red Orange Yellow
+..0..
+..10.
+.020.
+.020.
+..0..
+
+TmpFire
+transparent
+
+WaterPuddle
+Blue
+...0.
+..000
+000..
+.0...
+..00.
+
+Ashes
+Grey DarkGrey
+.....
+.....
+.01..
+.110.
+..0..
+
+(
+.....
+.....
+.....
+.....
+.....
+
+00000
+00000
+00000
+00000
+00000
+)
+
+=======
+LEGEND
+=======
+
+Player = PlayerN or PlayerE or PlayerS or PlayerW
+
+Magik = Firemagik or Icemagik or Windmagik
+Spell = FireSpell or IceSpell or WindSpell
+Tag = TagN or TagE or TagS or TagW
+MagikCircle = FireCircle or IceCircle or WindCircle
+
+Background = Grass or Water or Ice or Earth or Sand or Target or MagikCircle
+
+PermFire = PermFire1 or PermFire2
+LargeFire = Fire2 or Fire3 or PermFire
+Fire = Fire1 or LargeFire
+Burnable = Shrub
+Blowable = Steam or Ashes
+
+, = Grass
+. = Earth
+~ = Water
+' = Sand
+# = Wall
+P = PlayerN and TagN
+F = FireCircle
+I = IceCircle
+W = WindCircle
+% = Shrub
+T = Target
+? = Target and Shrub
+x = PermFire1
+y = PermFire2
+
+=======
+SOUNDS
+=======
+Magik Create 43368103
+Spell Create 43368103
+EndLevel 69539900
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Waterpuddle
+Ashes
+
+Player, Wall, Shrub
+
+Magik
+Spell
+Tag
+
+Steam Fire TmpFire
+
+
+======
+RULES     
+======     
+(player orientation)
+[up Player no PlayerN] -> [PlayerN]
+[right Player no PlayerE] -> [PlayerE]
+[down Player no PlayerS] -> [PlayerS]
+[left Player no PlayerW] -> [PlayerW]
+
+(keep current magik ability on player)
+('rigid' keeps the magik from moving into tiles blocked for the player)
+rigid [> Player Magik] -> [> Player > Magik]
+
+(spell movement)
+[Spell TagN] -> [up Spell up TagN]
+[Spell TagE] -> [right Spell right TagE]
+[Spell TagS] -> [down Spell down TagS]
+[Spell TagW] -> [left Spell left TagW]
+
+(clear leftover tags)
+late [Tag no Spell] -> []
+
+( ----------------------- Directional spell casting ----------------------- )
+(
+up [action PlayerN TEMPLATEMagik | ] -> [PlayerN TEMPLATEMagik | TEMPLATEspell TagN]
+right [action PlayerE TEMPLATEMagik | ] -> [PlayerE TEMPLATEMagik | TEMPLATEspell TagE]
+down [action PlayerS TEMPLATEMagik | ] -> [PlayerS TEMPLATEMagik | TEMPLATEspell TagS]
+left [action PlayerW TEMPLATEMagik | ] -> [PlayerW TEMPLATEMagik | TEMPLATEspell TagW]
+)
+
+up [action PlayerN FireMagik | ] -> [PlayerN Firemagik | Firespell TagN]
+right [action PlayerE FireMagik | ] -> [PlayerE Firemagik | Firespell TagE]
+down [action PlayerS FireMagik | ] -> [PlayerS Firemagik | Firespell TagS]
+left [action PlayerW FireMagik | ] -> [PlayerW Firemagik | Firespell TagW]
+
+up [action PlayerN IceMagik | ] -> [PlayerN IceMagik | Icespell TagN]
+right [action PlayerE IceMagik | ] -> [PlayerE IceMagik | Icespell TagE]
+down [action PlayerS IceMagik | ] -> [PlayerS IceMagik | Icespell TagS]
+left [action PlayerW IceMagik | ] -> [PlayerW IceMagik | Icespell TagW]
+
+up [action PlayerN WindMagik | ] -> [PlayerN WindMagik | Windspell TagN]
+right [action PlayerE WindMagik | ] -> [PlayerE WindMagik | Windspell TagE]
+down [action PlayerS WindMagik | ] -> [PlayerS WindMagik | Windspell TagS]
+left [action PlayerW WindMagik | ] -> [PlayerW WindMagik | Windspell TagW]
+
+( ----------------------- Magik Circles ----------------------- )
+late [Player FireCircle] -> [Player FireCircle FireMagik]
+late [Player IceCircle] -> [Player IceCircle IceMagik]
+late [Player WindCircle] -> [Player WindCircle WindMagik]
+
+( ----------------------- Spell effects ----------------------- )
+([> Windspell | Blowable] -> [ | > Blowable])
+[> Windspell Blowable] -> [> Blowable]
+[> Blowable | Wall] ->  [Blowable | Wall]
+late [Windspell Fire] -> [Firespell]
+
+late [Firespell Water] -> [Steam Water]
+late [Firespell Ice] -> [Water]
+late [Firespell Burnable no Fire] -> [Fire1 Burnable]
+late [Firespell Fire] -> [Fire]
+
+late [Icespell Water] -> [Ice]
+late [Icespell Steam] -> [WaterPuddle]
+late [Icespell Fire] -> []
+
+late [Spell Wall] -> [Wall]
+
+( ----------------------- Elemental effects ----------------------- )
+[WaterPuddle Earth] -> [Grass]
+[WaterPuddle] -> []
+
+[Steam Ice] -> [WaterPuddle Ice]
+
+late [Ashes Water] -> [Water]
+late [Ashes Sand] -> [Earth]
+[> Ashes | Ashes] -> [ | Ashes]
+
+[LargeFire | no Fire Burnable] -> [LargeFire | TmpFire Burnable]
+[Fire3 Burnable] -> [Ashes]
+[Fire2 Burnable] -> [Fire3 Burnable]
+[Fire1 Burnable] -> [Fire2 Burnable]
+[TmpFire] -> [Fire1]
+[Fire no Permfire no Burnable] -> []
+[Fire > Burnable] -> [> Fire > Burnable]
+
+[PermFire1] -> [TmpFire] (reusing TmpFire to enable animation)
+[PermFire2] -> [PermFire1]
+[TmpFire] -> [PermFire2]
+
+( ----------------------- Death conditions ----------------------- )
+late [Player Water] -> restart
+late [Player LargeFire] -> restart
+
+==============
+WINCONDITIONS
+==============
+
+Some Target On Player
+
+=======     
+LEVELS
+=======
+
+(
+#############
+#,,,,,,,,,,,#
+#,,,,,,,,,,,#
+#,,,,,,,,,,,#
+#,,,,,,,,,,,#
+#,,,,,,,,,,,#
+#,,,,,,,,,,,#
+#,,,,,,,,,,,#
+#,,,,,,,,,,,#
+#############
+)
+
+message Step on a Magik circle to get a spell
+message Use the spells to reach the target
+message As cold as Ice
+#############
+#,%,,~,,%,,,#
+#,,,,~,,,,,,#
+#,P,,~~,,%,,#
+#,,,,,~,,,,,#
+#,,,,,~,,T,,#
+#,,I,,~~,,,,#
+#,,,,,~~,,,%#
+#,%,%,,~,,,,#
+#############
+
+message I'm the Lord of Hellfire
+#############
+#,,,,,,,%,~~#
+#,,F,,%,,,,~#
+#,,,,,,,,,,,#
+#,,,%,,%%%,,#
+#,,,,,,%?%,,#
+#,P,,,,%%%,,#
+#,,,,,,,,,,,#
+#,,,,%,,,%,,#
+#############
+
+
+message Blowing in the Wind
+#############
+#,,,,,,,%,,,#
+#,,P,,%,,,,,#
+#,,,,,,,,%,,#
+#,,,,,,yxy,,#
+#,,W,,,xTx,,#
+#,,,,%,yxy,%#
+#,%,,,,,,,,,#
+#,,,,%,,,,,,#
+#############
+
+message under construction
+#########
+#,'''',,#
+#,,,,,,,#
+#,%,,~,,#
+#,,,,,,,#
+#,P,,,,,#
+#,I,,F,W#
+#,,,,,,,#
+#,%?%%,,#
+#,,,,,,,#
+#,,,,,,,#
+#########
+
+message Whoo!

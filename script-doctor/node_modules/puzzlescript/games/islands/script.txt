@@ -1,0 +1,1474 @@
+title Islands
+author Rosden Shadow [Mark Signorelli]
+homepage rosden.itch.io
+
+run_rules_on_level_Start
+
+background_color #AAE0F2
+
+text_color #423D39
+
+again_interval 0.1
+
+flickscreen 10x12
+========
+OBJECTS
+========
+
+Background
+#845C5C #423D39(#E57ED5 #CC5285)
+.000.
+00000
+00000
+00000
+10001
+ (
+11111
+10001
+11101
+10101
+11111)
+(
+00101
+01110
+11011
+01111
+10110)
+(
+11101
+00101
+11111
+10100
+10111)
+
+swim
+#845C5C #423D39 #D9FFF8 #7EA1E5(#E57ED5 #CC5285)
+11111
+11111
+21112
+32223
+33333
+
+swimr
+#845C5C #423D39 #D9FFF8 #7EA1E5(#E57ED5 #CC5285)
+....1
+....1
+....1
+....2
+....3
+
+swiml
+#845C5C #423D39 #D9FFF8 #7EA1E5(#E57ED5 #CC5285)
+1....
+1....
+1....
+2....
+3....
+
+swiml2
+#845C5C #423D39 #D9FFF8 #7EA1E5(#E57ED5 #CC5285)
+1....
+1....
+1....
+1....
+2....
+
+swimr2
+#845C5C #423D39 #D9FFF8 #7EA1E5(#E57ED5 #CC5285)
+....1
+....1
+....1
+....1
+....2
+
+swimx2
+#845C5C #423D39 #D9FFF8 #7EA1E5(#E57ED5 #CC5285)
+33333
+.333.
+.....
+.....
+.....
+
+swimrx2
+#845C5C #423D39 #D9FFF8 #7EA1E5(#E57ED5 #CC5285)
+....3
+....3
+.....
+.....
+.....
+
+swimlx2
+#845C5C #423D39 #D9FFF8 #7EA1E5(#E57ED5 #CC5285)
+3....
+3....
+.....
+.....
+.....
+
+swimr2x2
+#845C5C #423D39 #D9FFF8 #7EA1E5(#E57ED5 #CC5285)
+....3
+....3
+....3
+.....
+.....
+
+swiml2x2
+#845C5C #423D39 #D9FFF8 #7EA1E5(#E57ED5 #CC5285)
+3....
+3....
+.....
+.....
+.....
+
+grounddl
+#845C5C #736053(#E57ED5 #CC5285)
+.....
+.....
+.....
+.....
+0....
+
+groundul
+#845C5C #736053(#E57ED5 #CC5285)
+0....
+.....
+.....
+.....
+.....
+
+groundur
+#845C5C #736053(#E57ED5 #CC5285)
+....0
+.....
+.....
+.....
+.....
+
+grounddr
+#845C5C #736053(#E57ED5 #CC5285)
+.....
+.....
+.....
+.....
+....0
+
+
+checkl
+#845C5C #736053(#E57ED5 #CC5285)
+.....
+.....
+.....
+.....
+.....
+
+checku
+#845C5C #736053(#E57ED5 #CC5285)
+.....
+.....
+.....
+.....
+.....
+
+checkd
+#845C5C #736053(#E57ED5 #CC5285)
+.....
+.....
+.....
+.....
+.....
+
+checkr
+#845C5C #736053(#E57ED5 #CC5285)
+.....
+.....
+.....
+.....
+.....
+
+
+bridgevert
+#F2F2AA #E5C17E #CC7A52 #736053 
+21110
+21110
+21110
+21110
+21110
+
+bridgehorz
+#F2F2AA #E5C17E #CC7A52 #736053 
+00000
+11111
+11111
+11111
+22222
+
+bridgedown
+#F2F2AA #E5C17E #CC7A52 #736053 
+22110
+.222.
+.....
+.....
+.....
+
+bridgeup
+#F2F2AA #E5C17E #CC7A52 #736053 
+.....
+.....
+.....
+.000.
+21100
+
+bridgeleft
+#F2F2AA #E5C17E #CC7A52 #736053 
+....0
+...21
+...21
+...22
+....2
+
+bridgeright
+#F2F2AA #E5C17E #CC7A52 #736053 
+0....
+00...
+10...
+10...
+2....
+
+(
+bridgepillar
+#F2F2AA #E5C17E #CC7A52 #736053 #D9FFF8 #7EA1E5
+.....
+.....
+.....
+.....
+.....
+
+bridgepillarx
+#D9FFF8 #7EA1E5
+.....
+11111
+.....
+.....
+.....
+)
+
+bridgepillar
+#D9FFF8 #7EA1E5 #F2F2AA #E5C17E #CC7A52 #736053
+.....
+.....
+.....
+11111
+11111
+
+bridgepillarx
+#D9FFF8 #7EA1E5
+11111
+11111
+.....
+.....
+.....
+
+
+minimap1
+#231F26 #999999 #666666
+00000
+01110
+02210
+02220
+00000
+
+minimap2
+#231F26 #F2F2AA #E5C17E
+00000
+01110
+02210
+02220
+00000
+
+minimapdown
+black #D9FFF8 #7EA1E5
+00000
+11111
+22222
+.....
+.....
+
+nomove
+#FFEED9 #536673
+.....
+.000.
+.010.
+.000.
+.....
+
+Target
+white #423D39
+.....
+.0.0.
+..0..
+.0.0.
+.....
+
+
+
+fakewall1
+#7EA1E5 #845C5C #5C6684 #845C5C  #3B3942 #46495B
+.030.
+21010
+32103
+21210
+.232.
+
+fakewall2
+#7EA1E5 #845C5C #5C6684  #845C5C #3B3942 #46495B
+.032.
+01012
+30103
+21010
+.230.
+
+fakewall3
+#7EA1E5 #845C5C #5C6684  #845C5C #3B3942 #46495B
+.232.
+01212
+30123
+01012
+.030.
+
+fakewall4
+#7EA1E5 #845C5C #5C6684 #845C5C  #3B3942 #46495B
+.230.
+21210
+32123
+01212
+.032.
+
+Wall
+#5C6684 #46495B  #3B3942 #231F26
+01111
+20110
+22021
+23232
+32323
+
+overwall
+#5C6684 #46495B  #3B3942 #231F26
+.....
+.....
+.....
+10100
+21110
+
+fakefloorx
+black
+.....
+.....
+.....
+.....
+.....
+
+
+fakeunlockwall
+#F2F2AA #E5C17E
+11111
+10001
+11011
+10001
+11111
+
+unlockwall
+#FFFFFF #CCCCCC #999999 #666666
+21110
+21110
+22221
+23232
+32323
+
+overunlockwall
+#FFFFFF #CCCCCC #999999 #666666
+.....
+.....
+.....
+10000
+21110
+
+Playerright
+#FFFFFF #CCCCCC  #CC7A52 #B32D2D
+.000.
+11202
+11313
+11110
+.1.1.
+
+playerleft
+#FFFFFF #CCCCCC #CC7A52 #B32D2D
+.000.
+20211
+31311
+01111
+.1.1.
+
+movecheck
+black
+.....
+.....
+.....
+.....
+.....
+
+Crate
+#FFD9E0 #F2AACE #E57ED5 #845C7A
+21100
+21110
+22110
+32223
+.333.
+
+overcrate
+#FFD9E0 #F2AACE #E57ED5 #845C7A
+.....
+.....
+.....
+.....
+.000.
+
+Crate2
+#D9FFDC #7EE58D #5C8466 #4F5B46
+21100
+21110
+22110
+32223
+.333.
+
+overcrate2
+#D9FFDC #7EE58D #5C8466 #4F5B46
+.....
+.....
+.....
+.....
+.000.
+
+fakeCrate2x
+black
+.....
+.....
+.....
+.....
+.....
+
+Crate3
+#FFD9FC #E0AAF2 #A87EE5 #705C84
+21100
+21110
+22110
+32223
+.333.
+
+overcrate3
+#FFD9FC #E0AAF2 #A87EE5 #705C84
+.....
+.....
+.....
+.....
+.000.
+
+fakeCrate3x
+black
+.....
+.....
+.....
+.....
+.....
+
+
+laservertdown
+#E0AAF2
+..0..
+..0..
+..0..
+..0..
+..0..
+laservertup
+#E0AAF2
+..0..
+..0..
+..0..
+..0..
+..0..
+
+laserhorzright
+#E0AAF2
+.....
+00000
+.....
+.....
+.....
+
+laserhorzleft
+#E0AAF2
+.....
+00000
+.....
+.....
+.....
+
+end
+#FFD9E0 #F2AACE #E57ED5 #845C7A #AAE0F2
+21100
+21110
+22110
+32223
+43334
+endx
+#FFD9E0 #F2AACE #E57ED5 #845C7A #AAE0F2
+21100
+21110
+22110
+32223
+43334
+
+
+button
+#F2F2AA #E5C17E #DB7F55 #736053
+.100.
+.210.
+.221.
+.332.
+.....
+
+
+
+overkeywall
+#F2F2AA #E5C17E #DB7F55 #736053
+.....
+.....
+.....
+10010
+21101
+
+keywall
+#F2F2AA #E5C17E #DB7F55 #736053
+21110
+12110
+21221
+23232
+32323
+
+fakekeywall
+#F2F2AA #E5C17E #DB7F55 #736053
+1..00
+1....
+.....
+....1
+22..1
+
+
+
+button2
+#AAE0F2 #7EA1E5 #52465B #3B3942
+.100.
+.210.
+.221.
+.332.
+.....
+
+overkeywall2
+#AAE0F2 #7EA1E5 #52465B #3B3942
+.....
+.....
+.....
+10010
+21101
+
+keywall2
+#AAE0F2 #7EA1E5 #52465B #3B3942
+21110
+12110
+21221
+23232
+32323
+
+fakekeywall2
+#AAE0F2 #7EA1E5 #52465B #3B3942
+1..00
+1....
+.....
+....1
+22..1
+
+
+cloner
+#E5C17E #DB7F55 #B32D2D #73342E
+.100.
+.210.
+.221.
+.332.
+.....
+
+swapcrate
+Orange Yellow
+00000
+0...0
+0...0
+0...0
+00000
+
+save
+black
+.....
+.....
+.....
+.....
+.....
+
+swapwall
+black
+.....
+.....
+.....
+.....
+.....
+
+killcrosshair
+black
+.....
+.....
+.....
+.....
+.....
+
+stopremove
+black
+.....
+.....
+.....
+.....
+.....
+
+thefake
+black
+.....
+.....
+.....
+.....
+.....
+
+fakedie
+black
+.....
+.....
+.....
+.....
+.....
+
+
+fakefloor
+black
+.....
+.....
+.....
+.....
+.....
+
+thefloor
+#AAE0F2
+00000
+00000
+00000
+00000
+00000
+
+thefloorx
+#AAE0F2
+00000
+00000
+00000
+00000
+00000
+
+eend
+#AAE0F2
+00000
+00000
+00000
+00000
+00000
+(
+checkempty
+black
+.....
+.....
+.....
+.....
+.....
+
+checkblock
+black
+.....
+.....
+.....
+.....
+.....
+)
+crosshair
+#F2AACE
+00.00
+0...0
+.....
+0...0
+00.00
+
+remov
+black
+.....
+.....
+.....
+.....
+.....
+
+switcrate
+black
+.....
+.....
+.....
+.....
+.....
+
+switcrate2
+black
+.....
+.....
+.....
+.....
+.....
+
+on
+black
+.....
+.....
+.....
+.....
+.....
+
+area1
+black
+.....
+.....
+.....
+.....
+.....
+
+area2
+black
+.....
+.....
+.....
+.....
+.....
+
+area3
+black
+.....
+.....
+.....
+.....
+.....
+
+
+
+area4
+black
+.....
+.....
+.....
+.....
+.....
+
+area5
+black
+.....
+.....
+.....
+.....
+.....
+
+area6
+black
+.....
+.....
+.....
+.....
+.....
+
+area7
+black
+.....
+.....
+.....
+.....
+.....
+
+area8
+black
+.....
+.....
+.....
+.....
+.....
+
+area9
+black
+.....
+.....
+.....
+.....
+.....
+
+theadd
+black
+.....
+.....
+.....
+.....
+.....
+thesub
+black
+.....
+.....
+.....
+.....
+.....
+
+
+crossno
+black
+.....
+.....
+.....
+.....
+.....
+
+xs
+black
+.....
+.....
+.....
+.....
+.....
+
+
+arrow
+black
+.....
+.....
+.0.0.
+.000.
+..0..
+
+arrow2
+black
+.....
+.0.0.
+.000.
+..0..
+.....
+
+arrowx
+black
+.....
+.....
+.....
+.....
+.....
+
+arrowx2
+black
+.....
+.....
+.....
+.....
+.....
+
+
+noswimx
+black
+.....
+.....
+.....
+.....
+.....
+winend
+#E0AAF2 #A87EE5 #705C84
+1000.
+21100
+21110
+22110
+.2221
+
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Playerright
+* = Crate
+@= crate2
+$=crate3
+
+(O = Target)
+n = nomove
+a = arrow2 and wall
+e=end
+t = end and target and eend
+w=end and winend
+
+c=cloner
+-=thefloor
+x=thefloorx
+
+h=bridgehorz
+b=bridgevert
+m=minimap1
+
+1=target and area1
+2=target and area2
+3=target and area3
+4=target and area4
+5=target and area5
+6=target and area6
+7=target and area7
+8=target and area8
+9=target and area9
+
+l=button
+k=keywall
+O=button2
+j=keywall2
+
+% = bridgehorz and noswimx
+
+s = save
+
+fakewall = fakewall1 or fakewall2 or fakewall3 or fakewall4
+feel=overwall or overcrate or overcrate2 or overcrate3 or overunlockwall or overkeywall or overkeywall2
+pushable=crate or cloner or swapcrate or switcrate2 or crate2 or crate3
+win=crate or wall
+
+
+theemx= crate 
+player=playerright or playerleft
+
+blocker = wall or crate  or nomove or player or arrow or Crate2 or crate3 or unlockwall or keywall or keywall2
+
+blofloor= blocker or crosshair or remov
+arrowk = arrow or arrow2 or arrowx or arrowx2
+bridge=bridgevert or bridgehorz
+
+thecra2=Crate2 or fakeCrate2x
+
+thecra3=Crate3 or fakeCrate3x
+
+fakers=fakeCrate2x or fakeCrate3x
+
+thecross= thecra2 or thecra3
+area =area1 or area2 or area3 or area4 or area5 or area6 or area7 or area8 or area9
+
+remover= wall or pushable or fakewall or unlockwall  or keywall or keywall2
+
+laser = laservertup or laserhorzleft or laservertdown or laserhorzright
+
+ground=checkl or checku or checkd or checkr or grounddl or groundul or groundur or grounddr
+
+stopg= thefloor or minimap1 or minimap2 or thefloorx
+
+bridgeparts=bridgedown or bridgeup or bridgeright or bridgeleft or bridgepillar or bridgepillarx
+
+mini = minimap1 or minimap2
+
+
+theswim = swim or swimr or swiml or swiml2 or swimr2 or swimx2 or swimrx2 or swimlx2 or swimr2x2 or swiml2x2
+=======
+SOUNDS
+=======
+
+pushable MOVE 36772507
+
+
+EndLevel 38182508
+
+player MOVE 68988304
+sfx0 52836103
+sfx1 45427502
+
+sfx2 29503700
+sfx3 81951902
+
+sfx4 25706703
+
+sfx5 59819103
+
+sfx6 8403106
+sfx7 88717906
+
+sfx8 61278703
+
+sfx9 3107102
+================
+COLLISIONLAYERS
+================
+
+
+Background
+
+thefloor,thefloorx
+bridgepillarx
+bridgepillar
+swimx2
+swimrx2
+swimlx2
+swiml2x2
+swimr2x2
+
+
+
+swim
+swimr
+swiml
+swiml2
+swimr2
+
+noswimx
+
+
+
+checkl 
+checku 
+checkd 
+checkr 
+grounddl 
+groundul
+groundur
+grounddr
+
+bridgedown
+bridgeup
+bridgeleft
+bridgeright
+bridge
+Target
+nomove
+fakefloor
+fakewall
+fakeunlockwall
+
+fakedie
+thefake
+killcrosshair
+
+stopremove
+fakecrate2x
+fakecrate3x
+switcrate
+movecheck
+
+remov
+theadd
+thesub
+area
+on
+xs
+
+button
+button2
+Player, Wall, pushable,swapwall,unlockwall,keywall,keywall2,fakefloorx
+
+save
+
+fakekeywall
+fakekeywall2
+
+laservertup
+laserhorzleft
+laservertdown
+laserhorzright
+
+arrow, arrow2, arrowx, arrowx2
+winend
+eend
+end, endx
+feel
+
+crossno
+crosshair
+
+minimapdown
+minimap1,minimap2
+
+
+
+======
+RULES
+======
+
+[thefloor no fakefloorx]->[thefloor fakefloorx]
+
+[fakefloorx no thefloor]->[]
+[feel]->[]
+
+[laser]->[]
+
+
+
+
+[> player|save]->[> player| save] sfx9 message press X at anypoint in time to save your progress 
+[ player save]->[ player ] message press R to load up your save while ingame
+
+[action player]->[player] again sfx8 checkpoint message Saved! 
+
+[area target| area target]-> [area minimap1|area minimap1]
+[area target|area minimap1]->[area minimap1|area minimap1]
+[area minimap1|wall]->[area unlockwall|wall]
+[area unlockwall|area minimap1]->[area unlockwall|area unlockwall]
+
+
+[> player | pushable]->[> player |> pushable]
+
+[> player| Background]->[> player movecheck|Background]
+
+[> pushable| bridge]->[pushable |bridge]
+
+[> pushable|Target]->[> pushable|target] sfx2
+
+[fakewall4][movecheck]->[fakewall1 xs][movecheck]
+[fakewall3][movecheck]->[fakewall4][movecheck]
+[fakewall2][movecheck]->[fakewall3][movecheck]
+[fakewall1 no xs][movecheck]->[fakewall2][movecheck]
+[xs]->[]
+
+[ left Playerright] -> [ left playerleft]
+[ right Playerleft] -> [ right playerright]
+
+[endx] ->[thefloor] sfx2
+[end | thefloor]-> [endx |thefloor]
+
+late[button blocker][keywall]->[button blocker][fakekeywall] sfx7
+late[button no blocker][fakekeywall no blocker]->[button][keywall] sfx6
+
+late[button2 blocker][keywall2]->[button2 blocker][fakekeywall2] sfx7
+late[button2 no blocker][fakekeywall2 no blocker]->[button2][keywall2] sfx6
+
+(laser)
+[fakewall no blofloor]->[wall]
+[remov]->[]
+late up [Crate3 no crosshair|no remover]->[Crate3|laservertup]
+late down [Crate3 no crosshair|no remover]->[Crate3|laservertdown]
+late right [Crate3 no crosshair|no remover]->[Crate3|laserhorzright]
+late left [Crate3 no crosshair|no remover]->[Crate3|laserhorzleft]
+
+late up [laservertup| no remover ]->[laservertup| laservertup]
+late down [laservertdown| no remover]->[laservertdown| laservertdown]
+late left [laserhorzleft|no remover ]->[laserhorzleft| laserhorzleft]
+late right [laserhorzright| no remover]->[laserhorzright| laserhorzright]
+
+late up[laservertup |remover]->[laservertup|remover remov]
+late down[laservertdown |remover]->[laservertdown|remover remov]
+late right[laserhorzright |remover]->[laserhorzright|remover remov]
+late left[laserhorzleft |remover]->[laserhorzleft|remover remov]
+late [Crate3|]->[Crate3|remov]
+
+late[wall remov]->[fakewall1 remov]
+
+
+
+(crosshair)
+
+late[crosshair]->[]
+(late right [Crate| | | | | | | | | | ]-> [Crate| | | | | | | | | |crosshair])
+[crossno]->[]
+late left [Crate| | | | | | | | | | ]-> [Crate| | | | | | | | |  |crosshair]
+
+late right [crosshair| | | | | | | | | | ]-> [crosshair| | | | | | | | | |crosshair]
+
+late up [crosshair| | | | | | | | | | | |]-> [crosshair| | | | | | | | | | | |crosshair]
+
+late down [crosshair| | | | | | | | | | | |]-> [crosshair| | | | | | | | | | | |crosshair]
+
+late down [Crate| | | | | | | | | | | |]-> [Crate| | | | | | | | | | | |crossno]
+
+late[crosshair crossno]->[crossno]
+
+late [crosshair Crate]->[crate]
+
+late[crosshair thefloor]->[crosshair fakefloor]
+late[fakefloor no blofloor ]->[ thefloor]
+
+late[crosshair wall]->[crosshair fakewall1]
+late[fakewall no blofloor ]->[wall]
+
+
+
+late [crosshair thecra2][crosshair no thecross no player]-> [crosshair thecra2][crosshair fakeCrate2x]
+
+late [crosshair thecra3][crosshair no thecross no player]-> [crosshair thecra3][crosshair fakeCrate3x]
+
+(theswitch)
+(late [movecheck][crate2 thefake no switcrate][crate3 crosshair]->[movecheck][fakecrate3x][crate3 crosshair switcrate]
+late [movecheck][crate3 thefake no switcrate][crate2 crosshair]->[movecheck][fakecrate2x][crate2 crosshair switcrate])
+(endswitch)
+
+late [ fakecrate2x no killcrosshair][crate2 thefake]->[killcrosshair fakecrate2x][]
+late [ fakecrate3x no killcrosshair][crate3 thefake]->[killcrosshair fakecrate3x][]
+
+late [ crate2 thefake no crosshair]->[]
+late [ crate3 thefake no crosshair]->[]
+(-----death once it comes-----)
+(late[killcrosshair thecross][crosshair thecross]->[killcrosshair thecross][crosshair killcrosshair thecross])
+
+late[killcrosshair fakecrate3x ][crosshair crate3 thefake]->[killcrosshair fakecrate3x ] [crosshair]
+late[killcrosshair fakecrate2x ][crosshair crate2 thefake]->[killcrosshair fakecrate2x ][crosshair ] 
+
+late[killcrosshair fakecrate3x no stopremove][crosshair crate3 on]->[killcrosshair fakecrate3x stopremove] [crosshair thefake]
+late[killcrosshair fakecrate2x no stopremove][crosshair crate2 on]->[killcrosshair fakecrate2x stopremove][crosshair thefake] 
+
+late[killcrosshair][fakers]->[killcrosshair][]
+late[killcrosshair][thefake no thecross]->[killcrosshair][]
+late[killcrosshair]->[] 
+
+late[fakedie thefake]->[] 
+late[fakedie]->[] 
+
+(fakex create)
+late[fakecrate2x]->[Crate2 thefake]
+late[fakecrate3x]->[Crate3 thefake]
+
+late[on]->[]
+late[crosshair]->[crosshair on]
+
+
+({{{{{{{{{{ THE  END THINGS }}}}}}}}}}}}})
+late up [wall| ]-> [wall|overwall]
+late up [keywall| ]-> [keywall|overkeywall]
+late up [keywall2| ]-> [keywall2|overkeywall2]
+late up [theemx| ]-> [theemx|overcrate]
+
+late up [crate2| ]-> [crate2|overcrate2]
+
+late up [crate3| ]-> [crate3|overcrate3]
+
+late up [end| ]-> [end|overcrate]
+late up [endx| ]-> [endx|overcrate]
+
+
+
+late [switcrate]->[]
+
+late [player movecheck] -> cancel
+
+late [movecheck]->[]
+late [ stopremove] ->[]
+
+
+
+(+++++++++the goal++++++++++)
+
+late[minimap1]->[minimap2 theadd]
+
+late[area1 minimap2][area1 Target no pushable]->[area1 minimap1][area1 Target ]
+late[area2 minimap2][area2 Target no pushable]->[area2 minimap1][area2 Target ]
+late[area3 minimap2][area3 Target no pushable]->[area3 minimap1][area3 Target ]
+late[area4 minimap2][area4 Target no pushable]->[area4 minimap1][area4 Target ]
+late[area5 minimap2][area5 Target no pushable]->[area5 minimap1][area5 Target ]
+late[area6 minimap2][area6 Target no pushable]->[area6 minimap1][area6 Target ]
+late[area7 minimap2][area7 Target no pushable]->[area7 minimap1][area7 Target ]
+late[area8 minimap2][area8 Target no pushable]->[area8 minimap1][area8 Target ]
+late[area9 minimap2][area9 Target no pushable]->[area9 minimap1][area9 Target ]
+
+late[fakeunlockwall no blocker]->[unlockwall]
+
+late[area1 minimap2][area1 unlockwall]->[area1 minimap2][area1 fakeunlockwall]
+late[area2 minimap2][area2 unlockwall]->[area2 minimap2][area2 fakeunlockwall]
+late[area3 minimap2][area3 unlockwall]->[area3 minimap2][area3 fakeunlockwall]
+late[area4 minimap2][area4 unlockwall]->[area4 minimap2][area4 fakeunlockwall]
+late[area5 minimap2][area5 unlockwall]->[area5 minimap2][area5 fakeunlockwall]
+late[area6 minimap2][area6 unlockwall]->[area6 minimap2][area6 fakeunlockwall]
+late[area7 minimap2][area7 unlockwall]->[area7 minimap2][area7 fakeunlockwall]
+late[area8 minimap2][area8 unlockwall]->[area8 minimap2][area8 fakeunlockwall]
+late[area9 minimap2][area9 unlockwall]->[area9 minimap2][area9 fakeunlockwall]
+
+
+(late[area1 minimap2][area1 fakeunlockwall]->[area1 minimap1][area1 fakeunlockwall]
+late[area2 minimap2][area2 fakeunlockwall]->[area2 minimap1][area2 fakeunlockwall]
+late[area3 minimap2][area3 fakeunlockwall]->[area3 minimap1][area3 fakeunlockwall]
+late[area4 minimap2][area4 fakeunlockwall]->[area4 minimap1][area4 fakeunlockwall]
+late[area5 minimap2][area5 fakeunlockwall]->[area5 minimap1][area5 fakeunlockwall]
+late[area6 minimap2][area6 fakeunlockwall]->[area6 minimap1][area6 fakeunlockwall]
+late[area7 minimap2][area7 fakeunlockwall]->[area7 minimap1][area7 fakeunlockwall]
+late[area8 minimap2][area8 fakeunlockwall]->[area8 minimap1][area8 fakeunlockwall]
+late[area9 minimap2][area9 fakeunlockwall]->[area9 minimap1][area9 fakeunlockwall])
+
+
+late[minimap2 theadd]->[minimap2 thesub]sfx4
+late[minimap1 thesub]->[minimap1 ]sfx5
+
+late up [unlockwall| ]-> [unlockwall|overunlockwall]
+
+
+(=========FLOOR===========)
+
+late [ground]->[]
+late up [Background no stopg|Background no stopg]->[Background no stopg checku|Background no stopg]
+late down [Background no stopg|Background no stopg]->[Background no stopg checkd|Background no stopg]
+late left [Background no stopg|Background no stopg]->[Background no stopg checkl|Background no stopg]
+late right [Background no stopg|Background no stopg]->[Background no stopg checkr|Background no stopg]
+
+
+late up [thefloor|Background no stopg]->[thefloor checku|Background no stopg]
+late down [thefloor|Background no stopg]->[thefloor checkd|Background no stopg]
+late left [thefloor|Background no stopg]->[thefloor checkl|Background no stopg]
+late right [thefloor|Background no stopg]->[thefloor checkr|Background no stopg]
+
+late[Background no stopg checku]->[background groundul groundur checku]
+late[Background  no stopg checkl]->[background grounddl groundul checkl]
+late[Background no stopg checkr]->[background grounddr groundur checkr]
+late[Background  no stopg checkd]->[background grounddl grounddr checkd]
+
+
+
+late [checkl noswimx]->[noswimx]
+(WATER :O)
+
+late[thefloor checku checkl]->[thefloor groundul checku checkl]
+late[thefloor checkd checkl]->[thefloor grounddl checkd checkl]
+late[thefloor checkd checkr]->[thefloor grounddr checkd checkr]
+late[thefloor checku checkr]->[thefloor groundur checku checkr]
+
+(removing parts)
+late down [grounddl thefloor| no checkl] -> [ thefloor| no checkl]
+late left [grounddl thefloor| no checkd] -> [ thefloor| no checkd]
+
+late up [groundul thefloor| no checkl] -> [ thefloor| ]
+late left [groundul thefloor| no checku] -> [ thefloor| ]
+
+late up [groundur thefloor| no checkr] -> [ thefloor| ]
+late right [groundur thefloor| no checku] -> [ thefloor| ]
+
+late down [grounddr thefloor| no checkr] -> [ thefloor| ]
+late right [grounddr thefloor| no checkd] -> [ thefloor| ]
+
+
+
+late[theswim]->[]
+
+late down[Background no stopg no bridge no checkd | ]-> [background |swim]
+late down[Background checkr no stopg no bridge no checkd |]-> [background |swimr]
+late down[Background checkl no stopg no bridge no checkd  |]-> [background |swiml]
+late [groundul thefloor]->[groundul thefloor swiml2]
+late [groundur thefloor]->[groundur thefloor swimr2]
+
+
+late down[swim| thefloor]->[swim|thefloor swimx2]
+late down[swimr| thefloor]->[swimr|thefloor swimrx2]
+late down[swiml| thefloor]->[swiml|thefloor swimlx2]
+late down[swimr2| thefloor]->[swimr2|thefloor swimr2x2]
+late down[swiml2| thefloor]->[swiml2|thefloor swiml2x2]
+
+
+late down[bridgevert| no bridge]->[bridgevert| bridgedown]
+late up[bridgevert| no bridge]->[bridgevert| bridgeup]
+
+late left[bridgehorz| no bridge]->[bridgehorz| bridgeleft]
+late right[bridgehorz| no bridge]->[bridgehorz| bridgeright]
+
+late down[bridgehorz| thefloor]->[bridgehorz| bridgepillar thefloor]
+
+late down[bridgepillar| thefloor]->[bridgepillar| bridgepillarx thefloor]
+
+late down [mini| ]->[mini|minimapdown]
+
+late [thefloorx][theswim][ground]->[thefloorx][][]
+
+
+[]-> again 
+(
+[arrow]->[arrowx2]
+[arrow2]->[arrowx]
+
+[arrowx]->[arrow]
+[arrowx2]->[arrow2])
+==============
+WINCONDITIONS
+==============
+
+(all Target on crate )
+no minimap1
+no thefloorx
+=======
+LEVELS
+=======
+
+message Solve all the islands
+
+message press Z to undo mistakes
+(message press X at anypoint in time to save your progress)
+
+
+123-------123-------123-------
+456-------456-------456--3----
+789-...---789-------789-.-.---
+----....--------@.------....--(4)
+---...#..------2...----...###-
+-....###.hhk....@.jhh..#..###-
+-.@.##1##--..P.....--.....#$--
+--...###----......----.@..#.--(8)
+---...#------..#.------.@...--
+---...-------...-------...-#--
+-----b---------b---------b----
+-----b---------b---------b----
+123--b----123--b----123--b----
+456--b----456--b----456--b----
+789-kk#---789-.s.---789-.j.---
+----...##-----#....-----....--
+----...##----.*#...----#.....-
+--.4.....hh...#....hh........-
+---..4...--.#.....---kk......-
+---....#----5#.##----j-.@...--
+---.@..#-----#..----.k--...---
+----..---------b----.j6-..----
+-----b---------b---------b----
+-----b---------b---------b----
+123--b----123--b----123--b----
+456--b----456--b----456--b----
+789-...---789-...---789--..---
+----...#-----.O#..#-----#...--
+---#.....---..123.8----##k..--
+-..#.....hh.l.456#.h%...k..#--
+-.......#--..#789j.#-#.$..##--
+--.7#..#----..@@#k#--#...##9--
+---...#-----.....-----.....---
+---..#-------....------...----
+------------------------------
+------------------------------
+
+
+
+
+
+
+-xxxxxxxx-
+-wweeeeee-
+eweeeeeeee
+ewweeeeeee(4)
+eweeeeeeee
+ewweeeeeee
+eeewwweeee
+eeeweweeee(8)
+eeeeeewwee
+eeeeeewewe
+eeeeeewewe
+-eeeeewwe-
+
+
+

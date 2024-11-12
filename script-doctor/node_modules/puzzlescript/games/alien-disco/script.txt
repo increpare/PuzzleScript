@@ -1,0 +1,347 @@
+title Alien Disco
+author Toph Wells
+again_interval 0.1
+========
+OBJECTS
+========
+
+Neutral
+#002040 #103060
+00000
+00000
+00100
+00000
+00000
+
+Target
+darkgrey
+.....
+.0.0.
+..0..
+.0.0.
+.....
+
+Wall
+Black
+
+Player
+White
+.....
+..0..
+.000.
+.0.0.
+.....
+
+Warpball
+Pink
+
+WarpL
+#a00080 #501060
+01...
+01...
+01...
+01...
+01...
+
+WarpR
+#a00080 #501060
+...10
+...10
+...10
+...10
+...10
+
+WarpU
+#a00080 #501060
+00000
+11111
+.....
+.....
+.....
+
+WarpD
+#a00080 #501060
+.....
+.....
+.....
+11111
+00000
+
+WarpCurrent
+#a00080
+
+
+Error
+#800000
+
+Flash
+#501060 #551565
+00000
+00000
+00100
+00000
+00000
+
+FlashWall
+#500040
+
+=======
+LEGEND
+=======
+
+. = Neutral
+# = Wall
+P = Player
+│ = WarpL and neutral
+┃ =WarpR and neutral
+─ = WarpU and neutral
+━ = WarpD and neutral
+
+┎= WarpU and WarpL and neutral
+┒ = WarpU and WarpR and neutral
+┖ = WarpD and WarpL and neutral
+┚ = WarpD and WarpR and neutral
+
+0 = Player and WarpU and neutral
+
+O = Target
+q = player and target
+
+Background = Neutral or Flash
+
+=======
+SOUNDS
+=======
+(
+(hit a wall)
+SFX0 75016504
+(teleport)
+SFX1 7510701)
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Target, Wall, Error, Flashwall
+WarpL
+WarpR
+WarpU
+WarpD
+WarpCurrent
+Player
+Warpball
+
+======
+RULES
+======
+(animations fade)
+[Flash] -> [Neutral]
+[Flashwall] ->[Wall]
+[Error] -> [Wall]
+(set current warp direction)
+[Left Player][WarpL] -> [Left Player][WarpL WarpCurrent]
+[Right Player][WarpR] -> [Right Player][WarpR WarpCurrent]
+[UP Player][WarpU] -> [Up Player][WarpU WarpCurrent]
+[Down Player][WarpD] -> [Down Player][WarpD WarpCurrent]
+
+
+(detect walls)
+
+[ > Player  no WarpCurrent | Wall] -> [Player | Error] again SFX0
+[Error][moving Player] -> [Error][stationary Player]
+
+(start warp)
+[ >  Player WarpCurrent ] -> [ < Warpball WarpCurrent ]
+
+(reverse current warp direction, to detect arrivals)
+[WarpCurrent] -> []
+[Left WarpBall][WarpL] -> [Left WarpBall][WarpL WarpCurrent]
+[Right WarpBall][WarpR] -> [Right WarpBall][WarpR WarpCurrent]
+[UP WarpBall][WarpU] -> [Up WarpBall][WarpU WarpCurrent]
+[Down WarpBall][WarpD] -> [Down WarpBall][WarpD WarpCurrent]
+
+(detect warp endpoint)
+[|no WarpCurrent < Warpball] -> [ < Warpball|Flash]
+[WarpCurrent < Warpball] -> [WarpCurrent Warpball Flash]
+[moving Warpball] -> cancel (should never happen, but a warp went off-screen without hitting anything)
+
+(rematerialise - incidentally telefragging any other dancers on that spot)
+late [Warpball] -> [Player] SFX1
+late [WarpCurrent] -> [] again
+late [Flash Wall] -> [Flashwall]
+==============
+WINCONDITIONS
+==============
+
+All Player on Target
+All Target on Player
+
+=======
+LEVELS
+=======
+
+(basic, obvious tutorial)
+(sandbox)
+(int: warps, walls, basic movement)
+┎──#──┒
+│p.#..┃
+│..#..┃
+#######
+│..#..┃
+│..#.o┃
+┖━━#━━┚
+
+(apparently complex, extremely constrained)
+(int: multiple dancers at once)
+(int: warps on only some exterior walls)
+(int: dancers that always maintain relative position)
+#########
+#─.─#─.─#
+#...#...#
+#....o#o#
+#########
+#p#p....#
+#...#...#
+#━.━#━.━#
+#########
+
+(apparently simple, low constrained)
+(int: interchangeable dancers)
+(int: dancers that change relative positions)
+#########
+#┎0────┒#
+#│....o┃#
+#│.....┃#
+#│.p.o.┃#
+#┖━━━━━┚#
+#########
+
+(i no longer know how hard levels look)
+(int: warps not on edge of screen (level is not a torus))
+(exp: flashes that pass over another dancer)
+#┎──┒#┎──┒#
+#│..┃#│..┃#
+#│..┃#│..┃#
+#│..┃#│..┃#
+###########
+#.........#
+#.o.p.p.o.#
+#....#....#
+#━━━━#━━━━#
+###########
+(maybe call back to this level some other time?)
+
+
+(--- LEVEL UP ---)
+
+(apparently complex, but bounded - playground to experiment)
+(int: gcd of two warps matters)
+(int: dancers are not freely interchangeable - can only be displaced relative to each other by multiples of 4)
+##########
+#┎──────┒#
+#│pp...o┃#
+#│pp...o┃#
+#┖━━━...┃#
+#####│..┃#
+#####│o.┃#
+#####│o.┃#
+#####┖━━┚#
+##########
+
+(: using two warps of different sizes to reposition dancers (relative positions are not just integers mod. the size of the screen))
+(: combination of dancers that maintain positions and dancers that break it)
+#####──#
+#──....#
+#..oo..#
+#..pp..#
+#..pp..#
+#..oo..#
+#━━....#
+#####━━#
+
+(int: multiple coprime warps let you reposition dancers freely)
+(too hard?)
+┎──┒
+│..┃
+┖..┃
+#│.┃
+┎..┃
+│p.┃
+│p.┃
+│oo┃
+┖━━┚
+
+(callback to other level)
+(hard?)
+##########
+#┎──────┒#
+#│o..p..┃#
+#│......┃#
+#┖━━━opp┃#
+#####│oo┃#
+#####│.o┃#
+#####│pp┃#
+#####┖━━┚#
+##########
+
+(this is mainly rehashing ideas we've already seen... but could be a setup for a three-dancer version later?)
+#########
+#┎──#──┒#
+#│#.─..┃#
+#│...#┃##
+#│#pop.┃#
+#│..#..┃#
+##│#o.━┃#
+#┖━━━━#┚#
+#########
+
+(callback to earlier level)
+┎──┒
+│oo┃
+┖..┃
+#│.┃
+┎..┃
+│po┃
+│pp┃
+│po┃
+┖━━┚
+
+(not sure what this teaches, it was just random doodling in the level editor)
+(something about getting two dancers on the same row requires columns of different lengths?)
+(well, it's interesting to have a space with warps on about one-quarter of the walls. other levels have them everywhere or barely at all)
+#########
+###│─┃###
+#│─p#..┃#
+#│..#oo┃#
+#│.p#..┃#
+#########
+#│━.━..┃#
+#########
+
+
+(I'm not even sure this one's beatable)
+(yes beatable, but very hard. all skills from previous world required. final boss level.)
+┎─┒##┎─┒
+│o┃##│p┃
+┖━..o.━┚
+##p##.##
+##.##p##
+┎─.o..─┒
+│p┃##│o┃
+┖━┚##┖━┚
+
+(
+(bigger version of previous level, but mechanically identical, so not interesting)
+┎─┒#####┎─┒
+│o┃#####│p┃
+┖━...o...━┚
+##.#####.##
+##.#┎─┒#.##
+##p#│q┃#p##
+##.#┖━┚#.##
+##.#####.##
+┎─...o...─┒
+│p┃#####│o┃
+┖━┚#####┖━┚
+)

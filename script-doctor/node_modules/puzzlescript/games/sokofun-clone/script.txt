@@ -1,0 +1,436 @@
+title Sokofun Clone
+author ncrecc
+homepage http://www.sokofun.de/
+noaction
+run_rules_on_level_start
+require_player_movement
+background_color darkblue
+
+========
+OBJECTS
+========
+
+Background
+Darkblue
+
+
+Target
+Black
+.....
+.000.
+.0.0.
+.000.
+.....
+
+Wall
+Lightblue Blue Purple
+00001
+01112
+01112
+01112
+12222
+
+Player
+Pink Red Lightgreen Green Darkgreen
+32223
+24042
+20.12
+24142
+32223
+
+Crate
+Orange Brown Lightbrown
+00001
+00011
+00111
+01111
+11111
+
+CrateSpot
+Brown Orange
+.....
+.001.
+.011.
+.111.
+.....
+
+Match
+Lightblue Blue Purple Lightgreen Green
+00301
+00312
+33344
+01422
+12422
+
+Blue
+Blue Purple Black
+00001
+02011
+02121
+01121
+11111
+
+Red
+Red Darkred Black
+00001
+00021
+02121
+02111
+11111
+
+Yellow
+Yellow Lightbrown Black
+00001
+00221
+00111
+02211
+11111
+
+Green
+Lightgreen Green Black
+00001
+02211
+00111
+01221
+11111
+
+Pin
+Pink
+.....
+.....
+..0..
+.....
+.....
+
+Flow
+Purple
+.000.
+0...0
+0...0
+0...0
+.000.
+
+LaserU
+White
+.0.0.
+..0..
+.....
+.....
+.....
+
+LaserL
+White
+.....
+0....
+.0...
+0....
+.....
+
+LaserD
+White
+.....
+.....
+.....
+..0..
+.0.0.
+
+LaserR
+White
+.....
+....0
+...0.
+....0
+.....
+
+RayU
+White
+.0.0.
+.0.0.
+.0.0.
+.0.0.
+.0.0.
+
+RayL
+White
+.....
+00000
+.....
+00000
+.....
+
+RayD
+White
+.0.0.
+.0.0.
+.0.0.
+.0.0.
+.0.0.
+
+RayR
+White
+.....
+00000
+.....
+00000
+.....
+
+Fragile (must be italian...)
+Grey Darkgrey Black
+00201
+01211
+22122
+01211
+11211
+Large
+Lightgrey Grey Black
+00001
+01211
+02221
+01211
+11111
+
+Hole
+Black
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Player
+* = Crate
+@ = Crate and Target
+O = Target
+1 = Blue
+2 = Red
+3 = Yellow
+4 = Green
+5 = Match
+A = Blue and Pin
+B = Red and Pin
+C = Yellow and Pin
+D = Green and Pin
+E = Match and Pin
+% = Fragile
++ = Large
+^ = LaserU and Fragile
+< = LaserL and Fragile
+v = LaserD and Fragile
+> = LaserR and Fragile
+_ = Hole
+
+Color = Blue or Red or Yellow or Green or Match
+Block = Crate or Color or Fragile or Large
+Midlayer = Block or Player or Wall
+Laserproof = Color or Crate or Large or Wall
+Laser = LaserU or LaserL or LaserD or LaserR
+Ray = RayU or RayL or RayD or RayR
+
+=======
+SOUNDS
+=======
+
+sfx0 59639908 (player enters ray)
+sfx1 44313301 (fragile falls into pit)
+sfx2 91484504 (fragile blasted by ray)
+Block move 96107307
+Large destroy 63980901
+Player move 87832307
+restart 74305702
+undo 16985906
+endlevel 36553908
+
+================
+COLLISIONLAYERS
+================
+
+Flow
+Background
+Hole
+Target
+Player, Wall, Block
+CrateSpot
+Laser
+Pin
+RayU
+RayL
+RayD
+RayR
+
+======
+RULES
+======
+
+(=========)
+(BMISC)
+(=========)
+
+[> Player|Block no Pin] -> [> Player|> Block] (standard sokobanning... pin is usually only used on ane specific color of block in sokofun, but this opens up more design opportunities. artistic license? you can always just restrict yourself to placing pins only on blue sokolor blocks)
+
+late [CrateSpot no Crate] -> []
+late [Crate Target] -> [Crate Target CrateSpot] (render the inverted part of the crate)
+
+(=========)
+(HOLES)
+(=========)
+
+[> Player|Hole] -> [Player|Hole] (you don't get to go down there)
+
+[> Crate|Hole] -> [Crate|Hole]
+[> Color|Hole] -> [Color|Hole] (some blocks simply cannot be pushed into a hole in the original sokofun)
+
+late [Fragile Hole] -> [Hole] sfx1 (cracked blocks fall into holes without filling them)
+late [Laser Hole] -> [Hole] (laser emitters also fall into holes. it's important that lasers are not allowed to fire the turn they fall into a hole)
+
+late [Large Hole] -> [] (large blocks turn holes into floor after falling in)
+
+(=========)
+(LASERS)
+(=========)
+
+[Laser > Midlayer] -> [> Laser > Midlayer] (lasers move with their mounts)
+
+[> Player|Ray] -> [Player|Ray] (you can't move into a ray, only the ray can move into you)
+[> Player Ray] -> [Player Ray] (once you're in a ray, you're trapped!)
+
+late [Ray] -> [] (rays are re-fired each turn)
+
+late up [LaserU|] -> [LaserU|RayU]
+late left [LaserL|] -> [LaserL|RayL]
+late down [LaserD|] -> [LaserD|RayD]
+late right [LaserR|] -> [LaserR|RayR] (fire rays from laser emitters)
+
+startloop
+late [Ray Fragile] -> [Ray] sfx2 (rays destroy fragile blocks)
+late [Ray Laserproof] -> [Laserproof] (rays cannot be on top of laserproof objects)
+late up [RayU|no Laserproof] -> [RayU|RayU]
+late left [RayL|no Laserproof] -> [RayL|RayL]
+late down [RayD|no Laserproof] -> [RayD|RayD]
+late right [RayR|no Laserproof] -> [RayR|RayR] (rays try to advance)
+endloop
+
+late [Laser no Midlayer] -> [] (laser emitters must be mounted on something. again, i am allowing for more freedom than was in the original game by letting the emitter be mounted on any midlayer object.)
+
+late up [no LaserU no RayU|RayU] -> [|]
+late left [no LaserL no RayL|RayL] -> [|]
+late down [no LaserD no RayD|RayD] -> [|]
+late right [no LaserR no RayR|RayR] -> [|] (clean up rays from destroyed laser emitters)
+
+late [Player Ray] -> [Player Ray] sfx0 (sound plays if player moved into a ray)
+
+(=========)
+(SOKOLOR)
+(=========)
+
+[Flow] -> [] ("flow" is recalculated each turn)
+
+random [> Block] [Blue] -> [> Block] [Blue Flow] 
+random [> Block] [Red] -> [> Block] [Red Flow]
+random [> Block] [Yellow] -> [> Block] [Yellow Flow]
+random [> Block] [Green] -> [> Block] [Green Flow]
+random [> Block] [Match] -> [> Block] [Match Flow] (flow is spawned on a random color block for each color in the level. this check is only started when a block is pushed, as to eliminate unneeded checks... still wonder if this could be reduced to 1 rule)
+
+[Flow > Block] -> [> Flow > Block] (flow moves with moving blocks, so that it can not be left behind and turn what should be a winning push into a mysterious "nothing is happening!" scenario)
+
+late [Flow Blue|Blue] -> [Flow Blue|Flow Blue]
+late [Flow Red|Red] -> [Flow Red|Flow Red]
+late [Flow Yellow|Yellow] -> [Flow Yellow|Flow Yellow]
+late [Flow Green|Green] -> [Flow Green|Flow Green]
+late [Flow Match|Match] -> [Flow Match|Flow Match] (flow "spreads" to adjacent blocks of same color. this repeats until it has no more blocks to spread to. game wins when all blocks on the map can be flowed to from an arbitrary flow placement, i.e. all blocks of the same color are touching)
+
+==============
+WINCONDITIONS
+==============
+
+All Target on Crate
+All Color on Flow
+No Player on Ray
+
+=======
+LEVELS
+=======
+
+message Every non-standard Sokoban mechanic from Sokofun is implemented in this clone. The following levels are recreations of levels that appear in the shareware version of Sokofun, arranged in a way that I hope will make for the best overview and tutorial covering all of the elements.
+
+message [1/7] sokolor-tutorial: 2) Tutorial #2
+
+..####..
+###.1###
+#3.1.2.#
+#.3p4.2#
+###4.###
+..####..
+
+message [2/7] FUNSHARE: 8) Sokolor (8x8)
+
+########
+##..p.##
+##.3..##
+###.#1##
+##.1#.##
+##..3.##
+#3....1#
+########
+
+message [3/7] Sokonex-TutoriaL 1) First
+.#####
+.#p#5#
+.#5#.#
+.#.#.#
+.#.#.#
+##.#.#
+#..#.#
+#....#
+###..#
+..####
+
+message [4/7] FUNSHARE: 15) Sokonex (9x9)
+
+#########
+#.......#
+#.55555.#
+#.5...5.#
+#..._...#
+##e#%#e##
+#...+...#
+#...p...#
+#########
+
+message [5/7] Sokonex-Tutorial: 6) Sixth
+
+#########
+#...p...#
+#.##5##.#
+#>......#
+##.....##
+#.......#
+#...5...#
+#...#...#
+#.......#
+#########
+
+message [6/7] Sokonex Tutorial: 8) Eighth
+
+....#####
+....#.5.#
+#####___#
+#...%%%%#
+#p>5%%%%#
+#...%%%%#
+#.#.%%+.#
+#.^...+.#
+#########
+
+message [7/7] Easy Soko: 3) Just Push?
+
+#########
+#...#...#
+#.*...*.#
+##.#.#.##
+#..#.#..#
+#..o@o..#
+###.p.###
+..#####..
+
+message If everything here is accurate, you can recreate the full, paid version of Sokofun by hacking this game to add different levels.

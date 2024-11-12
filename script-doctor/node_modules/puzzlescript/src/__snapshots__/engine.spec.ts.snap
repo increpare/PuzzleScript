@@ -1,0 +1,298 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`engine does not move the island when there is a bridge in the way (simulated RIGID keyword) 1`] = `
+Array [
+  Array [
+    Array [
+      "STATIONARY BgNW1",
+    ],
+    Array [
+      "STATIONARY BgNW1",
+      "STATIONARY Island",
+      "STATIONARY Player",
+      "STATIONARY PlayerIsland",
+    ],
+  ],
+  Array [
+    Array [
+      "STATIONARY BgNW1",
+      "STATIONARY Bridge",
+    ],
+    Array [
+      "STATIONARY BgNW1",
+      "STATIONARY Island",
+      "STATIONARY PlayerIsland",
+    ],
+  ],
+]
+`;
+
+exports[`engine draws corner sprites correctly (according to mirror isles) 1`] = `
+Array [
+  Array [
+    Array [
+      "STATIONARY Background",
+      "STATIONARY RemoveLandRUD",
+    ],
+    Array [
+      "STATIONARY Background",
+      "STATIONARY Hole",
+    ],
+  ],
+]
+`;
+
+exports[`engine draws corner sprites correctly (according to skipping stones) 1`] = `
+Array [
+  Array [
+    Array [
+      "STATIONARY Background",
+      "STATIONARY Sand",
+      "STATIONARY RemoveLandRUD",
+    ],
+    Array [
+      "STATIONARY Background",
+    ],
+    Array [
+      "STATIONARY Background",
+    ],
+  ],
+]
+`;
+
+exports[`engine draws corner sprites correctly (according to skipping stones) 2`] = `
+Array [
+  Array [
+    Array [
+      "STATIONARY Background",
+      "STATIONARY Sand",
+      "STATIONARY RemoveLandRUD",
+    ],
+    Array [
+      "STATIONARY Background",
+    ],
+    Array [
+      "STATIONARY Background",
+    ],
+  ],
+]
+`;
+
+exports[`engine evaluates a no-op game 1`] = `
+Array [
+  Array [
+    Array [
+      "STATIONARY background",
+    ],
+    Array [
+      "STATIONARY background",
+      "STATIONARY Player",
+    ],
+  ],
+]
+`;
+
+exports[`engine evaluates a simple game 1`] = `
+Array [
+  Array [
+    Array [
+      "STATIONARY background",
+      "STATIONARY one",
+    ],
+    Array [
+      "STATIONARY background",
+      "STATIONARY Player",
+    ],
+  ],
+]
+`;
+
+exports[`engine evaluates an empty game 1`] = `
+Array [
+  Array [
+    Array [
+      "STATIONARY background",
+    ],
+    Array [
+      "STATIONARY background",
+      "STATIONARY Player",
+    ],
+  ],
+]
+`;
+
+exports[`engine keeps running the rule even when only the direction changed 1`] = `
+Array [
+  Array [
+    Array [
+      "STATIONARY Background",
+      "STATIONARY Green",
+    ],
+    Array [
+      "STATIONARY Background",
+      "STATIONARY Green",
+    ],
+    Array [
+      "STATIONARY Background",
+      "STATIONARY Green",
+    ],
+  ],
+  Array [
+    Array [
+      "STATIONARY Background",
+      "STATIONARY Red",
+      "STATIONARY Blue",
+    ],
+    Array [
+      "STATIONARY Background",
+      "STATIONARY Red",
+      "STATIONARY Blue",
+    ],
+    Array [
+      "STATIONARY Background",
+      "STATIONARY Red",
+      "STATIONARY Blue",
+    ],
+  ],
+]
+`;
+
+exports[`engine moves a tile from one bracket to another (OR tile is in DIFFERENT collisionlayer 1`] = `
+Array [
+  Array [
+    Array [
+      "STATIONARY Background",
+      "STATIONARY Player",
+    ],
+    Array [
+      "STATIONARY Background",
+      "STATIONARY Hat",
+      "STATIONARY Clipboard",
+    ],
+  ],
+]
+`;
+
+exports[`engine moves a tile from one bracket to another (OR tile is in same collisionlayer 1`] = `
+Array [
+  Array [
+    Array [
+      "STATIONARY Background",
+      "STATIONARY Player",
+    ],
+    Array [
+      "STATIONARY Background",
+      "STATIONARY Hat",
+      "STATIONARY Clipboard",
+    ],
+  ],
+]
+`;
+
+exports[`engine removes a sprite when it has NO in the action side (an OR tile) 1`] = `
+Array [
+  Array [
+    Array [
+      "STATIONARY Background",
+      "STATIONARY Player",
+    ],
+  ],
+]
+`;
+
+exports[`engine removes a sprite when it has NO in the action side 1`] = `
+Array [
+  Array [
+    Array [
+      "STATIONARY Background",
+      "STATIONARY Player",
+    ],
+  ],
+]
+`;
+
+exports[`engine removes the wantsToMove when specified in the rule 1`] = `
+Array [
+  Array [
+    Array [
+      "STATIONARY Background",
+    ],
+    Array [
+      "STATIONARY Background",
+      "STATIONARY Player",
+    ],
+    Array [
+      "STATIONARY Background",
+    ],
+  ],
+]
+`;
+
+exports[`engine supports matching the same cells in multiple brackets and executes correctly if one of those brackets no longer matches 1`] = `
+Array [
+  Array [
+    Array [
+      "STATIONARY Background",
+      "STATIONARY Crate",
+    ],
+    Array [
+      "STATIONARY Background",
+    ],
+    Array [
+      "STATIONARY Background",
+    ],
+  ],
+]
+`;
+
+exports[`engine supports partially matching an OR tile (e.g. [ LEFT Movable ] when the cell says [ STATIONARY Player LEFT Island ] 1`] = `
+Array [
+  Array [
+    Array [
+      "STATIONARY BgNW1",
+    ],
+    Array [
+      "STATIONARY BgNW1",
+      "STATIONARY Island",
+      "STATIONARY Player",
+    ],
+  ],
+]
+`;
+
+exports[`engine supports trickling up a \`NO OrTile\` on load 1`] = `
+Array [
+  Array [
+    Array [
+      "STATIONARY Background",
+      "STATIONARY Correct",
+    ],
+    Array [
+      "STATIONARY Background",
+      "STATIONARY Player",
+      "STATIONARY Correct",
+    ],
+  ],
+]
+`;
+
+exports[`engine swaps 2 OR tiles (OR tile has sprites in DIFFERENT collisionlayer 1`] = `
+Array [
+  Array [
+    Array [
+      "STATIONARY Background",
+      "STATIONARY Player",
+      "STATIONARY Shirt",
+    ],
+    Array [
+      "STATIONARY Background",
+      "STATIONARY Hat",
+      "STATIONARY Target",
+    ],
+    Array [
+      "STATIONARY Background",
+      "STATIONARY Clipboard",
+    ],
+  ],
+]
+`;

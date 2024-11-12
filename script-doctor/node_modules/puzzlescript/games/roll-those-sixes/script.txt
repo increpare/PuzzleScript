@@ -1,0 +1,392 @@
+title Roll those Sixes
+author Marcos Donnantuoni
+homepage https://marcosd.itch.io
+
+text_color grey
+key_repeat_interval 0.17
+noaction
+
+========
+OBJECTS
+========
+
+Background
+grey grey
+11111
+11111
+11111
+11111
+11111
+
+Player
+black
+.....
+..0..
+.000.
+.0.0.
+.....
+
+Wall
+darkgrey
+00000
+00000
+00000
+00000
+00000
+
+Crate1
+lightgrey black
+.....
+.000.
+.010.
+.000.
+.....
+
+Crate2
+lightgrey black
+.....
+.001.
+.000.
+.100.
+.....
+
+Crate3
+lightgrey black
+.....
+.100.
+.010.
+.001.
+.....
+
+Crate4
+lightgrey black
+.....
+.101.
+.000.
+.101.
+.....
+
+Crate5
+lightgrey black
+.....
+.101.
+.010.
+.101.
+.....
+
+Crate6
+lightgrey black
+.....
+.111.
+.000.
+.111.
+.....
+
+digit0
+#444444
+.000.
+.0.0.
+.0.0.
+.0.0.
+.000.
+
+digit1
+#444444
+..0..
+.00..
+..0..
+..0..
+..0..
+
+digit2
+#444444
+.000.
+...0.
+.000.
+.0...
+.000.
+
+digit3
+#444444
+.000.
+...0.
+.000.
+...0.
+.000.
+
+digit4
+#444444
+.0.0.
+.0.0.
+.000.
+...0.
+...0.
+
+digit5
+#444444
+.000.
+.0...
+.000.
+...0.
+.000.
+
+digit6
+#444444
+.000.
+.0...
+.000.
+.0.0.
+.000.
+
+digit7
+#444444
+.000.
+...0.
+...0.
+...0.
+...0.
+
+digit8
+#444444
+.000.
+.0.0.
+.000.
+.0.0.
+.000.
+
+digit9
+#444444
+.000.
+.0.0.
+.000.
+...0.
+...0.
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+@ = Player
+1 = Crate1
+2 = Crate2
+3 = Crate3
+4 = Crate4
+5 = Crate5
+6 = Crate6
+Crate = Crate1 or Crate2 or Crate3 or Crate4 or Crate5 or Crate6
+０ = wall and digit0
+１ = wall and digit1
+２ = wall and digit2
+３ = wall and digit3
+４ = wall and digit4
+５ = wall and digit5
+６ = wall and digit6
+７ = wall and digit7
+８ = wall and digit8
+９ = wall and digit9
+
+=======
+SOUNDS
+=======
+
+crate move 36736507
+endlevel 30742508
+startgame 92244503
+crate create 85791109
+
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Player, Wall, crate1, crate2, crate3, crate4, crate5, crate6
+digit0
+digit1
+digit2
+digit3
+digit4
+digit5
+digit6
+digit7
+digit8
+digit9
+
+======
+RULES
+======
+
+[ >  Player | Crate ] -> [ > Player | > Crate ]
+[ >  Player | Crate1 | Crate1 ] -> [ > Player | > Crate2 | ]
+[ >  Player | Crate1 | Crate2 ] -> [ > Player | > Crate3 | ]
+[ >  Player | Crate1 | Crate3 ] -> [ > Player | > Crate4 | ]
+[ >  Player | Crate1 | Crate4 ] -> [ > Player | > Crate5 | ]
+[ >  Player | Crate1 | Crate5 ] -> [ > Player | > Crate6 | ]
+[ >  Player | Crate2 | Crate1 ] -> [ > Player | > Crate3 | ]
+[ >  Player | Crate2 | Crate2 ] -> [ > Player | > Crate4 | ]
+[ >  Player | Crate2 | Crate3 ] -> [ > Player | > Crate5 | ]
+[ >  Player | Crate2 | Crate4 ] -> [ > Player | > Crate6 | ]
+[ >  Player | Crate3 | Crate1 ] -> [ > Player | > Crate4 | ]
+[ >  Player | Crate3 | Crate2 ] -> [ > Player | > Crate5 | ]
+[ >  Player | Crate3 | Crate3 ] -> [ > Player | > Crate6 | ]
+[ >  Player | Crate4 | Crate1 ] -> [ > Player | > Crate5 | ]
+[ >  Player | Crate4 | Crate2 ] -> [ > Player | > Crate6 | ]
+[ >  Player | Crate5 | Crate1 ] -> [ > Player | > Crate6 | ]
+
+
+==============
+WINCONDITIONS
+==============
+
+no crate1
+no crate2
+no crate3
+no crate4
+no crate5
+
+=======
+LEVELS
+=======
+
+message Please make a six merging the dice
+
+########
+#......#
+#@.123.#
+#......#
+########
+
+message Thanks! I like sixes very much, make more please!
+
+
+message Level 1 of 11
+( size [4, 4] obj 15 kolS 13 kolT 48
+segs 5 steps 5 pushes 1 adds 2 )
+( vDld> )
+１#####
+#..@.#
+#..2.#
+#..2.#
+#...2#
+######
+
+message Level 2 of 11
+( size [4, 4] obj 15 kolS 20 kolT 66
+segs 11 steps 16 pushes 3 adds 5 )
+( DDuur vvRuu rvvld < )
+２#####
+#@...#
+#12.2#
+#.11.#
+#.2.3#
+######
+
+message Level 3 of 11
+( size [4, 4] obj 15 kolS 25 kolT 64
+segs 17 steps 20 pushes 7 adds 5 )
+( rRlvu lDvRR dr^^L LulDv )
+３#####
+#@.1.#
+#2121#
+#.3..#
+#2...#
+######
+
+message Level 4 of 11
+( size [4, 4] obj 14 kolS 32 kolT 60
+segs 23 steps 30 pushes 7 adds 3 )
+( vDRdr ruuul vDllu Rdrru ulDrd LLulv )
+４#####
+#@#..#
+#312.#
+#24..#
+#....#
+######
+
+message Level 5 of 11
+( size [4, 4] obj 14 kolS 40 kolT 61
+segs 30 steps 37 pushes 10 adds 3 )
+( llluR drruU <uLDr rddlU dlluR RdrU^ LdlUr u< )
+５#####
+#.4..#
+##411#
+#.2..#
+#...@#
+######
+
+message Level 6 of 11
+( size [5, 5] obj 22 kolS 40 kolT 70
+segs 30 steps 39 pushes 15 adds 3 )
+( rvldR RddlU UluRu rrdrd LLdlU UluRR >lDDD ldR> )
+６######
+#@...4#
+#.1...#
+#.1...#
+##4.#.#
+#....2#
+#######
+
+message Level 7 of 11
+( size [5, 5] obj 19 kolS 46 kolT 74
+segs 29 steps 43 pushes 17 adds 4 )
+( RDDDu uuR>v rddLL dLUUU luRR> dDrdL Lruuu llddD rd< )
+７######
+#@1..1#
+#.1#2.#
+##.#3.#
+##..4.#
+#...#.#
+#######
+
+message Level 8 of 11
+( size [6, 6] obj 26 kolS 44 kolT 78
+segs 31 steps 56 pushes 15 adds 3 )
+( uuuLu llDDD Duuuu rrdLu lDDDu urrrd dddll u<uul luRRu rrdLu lDDDv < )
+８#######
+#.#...##
+#.42.1.#
+#...##.#
+#.#.##.#
+#23..#@#
+#.#....#
+########
+
+message Level 9 of 11
+( size [5, 4] obj 17 kolS 56 kolT 66
+segs 40 steps 65 pushes 12 adds 3 )
+( drrrr u<dll luuru rrDrd dlllU Uddrr ruulu l<ddd rrUdl luRRl luurr DrDLL LdlU^ )
+９######
+#2...##
+#..#1.#
+#@324.#
+#.....#
+#######
+
+message Level 10 of 11
+( size [6, 6] obj 29 kolS 55 kolT 76
+segs 40 steps 67 pushes 19 adds 3 )
+( ruuR> llluu urrrd Rurvl dDlld drrUU UUruL LLLDD ldRRR lddrr uUUdl lluuu rrdRu rv )
+１#######
+０......#
+#.1#.3.#
+#..##.2#
+#..2.4##
+#...#..#
+#@....##
+########
+
+message Level 11 of 11
+( size [6, 5] obj 25 kolS 61 kolT 77
+segs 55 steps 79 pushes 16 adds 4 )
+( ruulD lullD Dlddr Ulu>d >Rdrr uLLLr rruul Dulul lddld drUUU ddrrd rruLL Lrruu lul<d dlddr Ulu> )
+１#######
+１1.....#
+##2#.2.#
+#..2#@.#
+#..32..#
+#..#...#
+########
+
+message Congratulations!

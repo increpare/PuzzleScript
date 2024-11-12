@@ -1,0 +1,647 @@
+title Directional
+author Rosden Shadow [Mark Signorelli]
+homepage rosden.itch.io
+
+noaction
+run_rules_on_level_Start
+
+background_color #1F2526
+
+text_color #E0AAF2
+
+again_interval 0.05
+========
+OBJECTS
+========
+
+Background
+#2E3E4D #1F2526 (#E57ED5 #CC5285)
+11111
+11011
+10101
+11011
+11111
+
+
+(
+00101
+01110
+11011
+01111
+10110)
+(
+11101
+00101
+11111
+10100
+10111)
+
+
+nomove
+#FFEED9 #536673
+.....
+.000.
+.010.
+.000.
+.....
+
+Target
+#FFD9FC
+.....
+.000.
+.0.0.
+.000.
+.....
+
+Wall
+#D9FFDC #AAE0F2 #7EA1E5 #52465B black
+21110
+02110
+20221
+23232
+32323
+
+overwall
+#D9FFDC #AAE0F2 #7EA1E5 #52465B black
+.....
+.....
+.....
+10020
+21102
+
+
+Playerright
+#D9FFDC #7EE58D #7EA1E5 #536673
+.000.
+11202
+11313
+11110
+.1.1.
+
+playerleft
+#D9FFDC #7EE58D #7EA1E5 #536673
+.000.
+20211
+31311
+01111
+.1.1.
+
+Crate
+#FFD9FC #E0AAF2 #705C84 #52465B black
+21100
+24140
+24440
+32423
+.333.
+
+overcrate
+#FFD9FC #E0AAF2 #705C84 #52465B
+.....
+.....
+.....
+.....
+.000.
+
+Crate2
+#FFD9FC #E0AAF2 #705C84 #52465B black
+24440
+24140
+22110
+32223
+.333.
+overcrate2
+#FFD9FC #E0AAF2 #705C84 #52465B black
+.....
+.....
+.....
+.....
+.040.
+
+Crate3
+#FFD9FC #E0AAF2 #705C84 #52465B black
+21440
+21144
+22440
+32223
+.333.
+
+
+Crate4
+#FFD9FC #E0AAF2 #705C84 #52465B black
+24400
+44110
+24410
+32223
+.333.
+
+end
+#FFD9FC #E0AAF2 #705C84 #52465B black
+21100
+21110
+22110
+32223
+.333.
+endx
+#FFD9FC #E0AAF2 #705C84 #52465B black
+21100
+21110
+22110
+32223
+.333.
+
+
+cloner
+#E5C17E #DB7F55 #B32D2D #73342E
+.100.
+.210.
+.221.
+.332.
+.....
+
+swapcrate
+Orange Yellow
+00000
+0...0
+0...0
+0...0
+00000
+
+swapwall
+black
+.....
+.....
+.....
+.....
+.....
+
+thefloor
+#1F2526
+00000
+00000
+00000
+00000
+00000
+
+thefloorx
+#1F2526
+00000
+00000
+00000
+00000
+00000
+
+eend
+#1F2526
+00000
+00000
+00000
+00000
+00000
+(
+checkempty
+black
+.....
+.....
+.....
+.....
+.....
+
+checkblock
+black
+.....
+.....
+.....
+.....
+.....
+)
+
+switcrate
+black
+.....
+.....
+.....
+.....
+.....
+
+switcrate2
+black
+.....
+.....
+.....
+.....
+.....
+
+shiftdown
+black
+.....
+.....
+.....
+.....
+.....
+
+shiftdown2
+black
+.....
+.....
+.....
+.....
+.....
+
+shiftup
+black
+.....
+.....
+.....
+.....
+.....
+
+shiftleft
+black
+.....
+.....
+.....
+.....
+.....
+
+shiftright
+black
+.....
+.....
+.....
+.....
+.....
+
+shiftup2
+black
+.....
+.....
+.....
+.....
+.....
+
+shiftleft2
+black
+.....
+.....
+.....
+.....
+.....
+
+shiftright2
+black
+.....
+.....
+.....
+.....
+.....
+
+
+arrow
+black
+.....
+.....
+.0.0.
+.000.
+..0..
+
+arrow2
+black
+.....
+.0.0.
+.000.
+..0..
+.....
+
+arrowx
+black
+.....
+.....
+.....
+.....
+.....
+
+arrowx2
+black
+.....
+.....
+.....
+.....
+.....
+
+winend
+#F2F2AA #E5C17E #CC7A52 #736053
+1000.
+21100
+21110
+22110
+.2221
+
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Playerright
+4 = Crate
+2=crate2
+1 = crate3
+3 = crate4
+O = Target
+n = nomove
+a = arrow2 and wall
+e=end
+t = end and target and eend
+w=end and winend
+
+c=cloner
+-=thefloor
+x=thefloorx
+
+feel=overwall or overcrate or overcrate2
+pushable=crate or cloner or swapcrate  or switcrate or switcrate2
+win=crate or wall
+
+
+theemx= crate or crate3 or crate4
+player=playerright or playerleft
+
+blocker = wall or crate or player  or nomove or arrow or crate2 or crate3 or crate4 or thefloor or thefloorx
+
+arrowk = arrow or arrow2 or arrowx or arrowx2
+
+cratex=crate or crate2 or crate3 or crate4
+shift = shiftdown or shiftup or shiftleft or shiftright
+
+shift2= shiftdown2 or shiftup2 or shiftleft2 or shiftright2
+
+=======
+SOUNDS
+=======
+
+pushable MOVE 36772507
+
+EndLevel 74089700
+
+player MOVE 68988304
+sfx0 52836103
+sfx1 45427502
+
+sfx2 29503700
+sfx3 81951902
+sfx4 1682101
+sfx5 64843902
+================
+COLLISIONLAYERS
+================
+
+Background
+Target
+nomove
+shift2
+shift
+Player, Wall, pushable,swapwall,thefloor,thefloorx,cratex
+
+arrow, arrow2, arrowx, arrowx2
+winend
+eend
+end, endx
+feel
+
+
+======
+RULES
+======
+
+[feel]->[]
+
+[shift]->[]
+
+[shift2]->[]
+
+[crate| ]->[crate|shiftdown2]
+down[shiftdown2|no blocker]->[|]
+
+[> player|crate|no blocker]->[> player|> shiftdown |] sfx5
+[> player|crate|no shiftdown2]->[> player |> shiftdown |] sfx5
+late down [shiftdown|no blocker]->[|crate]
+late [shiftdown]->[crate]
+
+
+[crate2| ]->[crate2|shiftup2]
+up[shiftup2|no blocker]->[|]
+
+[> player|crate2|no blocker]->[> player|> shiftup |] sfx5
+[> player|crate2|no shiftup2]->[> player |> shiftup |] sfx5
+late up [shiftup|no blocker]->[|crate2]
+late [shiftup]->[crate2]
+
+
+[crate3| ]->[crate3|shiftright2]
+right[shiftright2|no blocker]->[|]
+
+[> player|crate3|no blocker]->[> player|> shiftright |] sfx5
+[> player|crate3|no shiftright2]->[> player |> shiftright |] sfx5
+late right [shiftright|no blocker]->[|crate3] 
+late [shiftright]->[crate3]
+
+
+[crate4| ]->[crate4|shiftleft2]
+left[shiftleft2|no blocker]->[|]
+
+[> player|crate4|no blocker]->[> player|> shiftleft |] sfx5
+[> player|crate4|no shiftleft2]->[> player |> shiftleft |] sfx5
+late left [shiftleft|no blocker]->[|crate4] 
+late [shiftleft]->[crate4]
+
+
+[> cratex|Target]->[> cratex|target] sfx2
+
+
+[ left Playerright] -> [ left playerleft]
+[ right Playerleft] -> [ right playerright]
+
+[endx] ->[thefloor] sfx2
+[end | thefloor]-> [endx |]
+
+
+late up [wall| ]-> [wall|overwall]
+late up [theemx| ]-> [theemx|overcrate]
+
+late up [crate2| ]-> [crate2|overcrate2]
+
+late up [end| ]-> [end|overcrate]
+late up [endx| ]-> [endx|overcrate]
+
+[action player eend|]->[action player eend |crate Target]
+
+
+
+[]-> again 
+(
+[arrow]->[arrowx2]
+[arrow2]->[arrowx]
+
+[arrowx]->[arrow]
+[arrowx2]->[arrow2])
+==============
+WINCONDITIONS
+==============
+
+all Target on cratex
+some target
+
+=======
+LEVELS
+=======
+
+message have a cube on all targets
+
+message level 1 of 6
+---------
+-#######-
+##..O..##
+#.......#
+#...#...#
+#..###..#
+#.#.P.#.#
+#.......#
+#.......#
+##..2..##
+-#######-
+
+
+message level 2 of 6
+---------
+-#######-
+##..4..##
+#.......#
+#.......#
+#.......#
+#...P...#
+#..###..#
+#...O...#
+##.....##
+-#######-
+
+message level 3 of 6
+---------
+-#######-
+-#.....#-
+-#.OOO.#-
+-#.....#-
+-#.444.#-
+-#.222.#-
+-#..P..#-
+-#.OOO.#-
+-#.....#-
+-#######-
+
+message level 4 of 6
+---------
+---------
+-#######-
+-#..O..#-
+-#.OOO.#-
+-#.143.#-
+-#..4..#-
+-#..P..#-
+-#######-
+---------
+---------
+
+
+message fun break!
+---------
+#########
+#.O.#.O.#
+##.3#1..#
+#..3#1..#
+##.3#1..#
+#..3#1..#
+##.3#1..#
+###3.1###
+#...P...#
+#########
+
+message level 5 of 6
+---------
+---------
+---------
+-#######-
+##.O#..##
+#O..#.4.#
+#.2.#...#
+#.....P.#
+##......#
+-########
+---------
+
+
+message level 6 of 6
+---------
+---------
+###------
+#O######-
+##.#.4.#-
+-#..4.P#-
+#..214.#-
+#..223.#-
+##.....#-
+-#######-
+---------
+
+message level 7 of 6 (secret level)
+---------
+-#-----#-
+#O#####O#
+-#..#..#-
+-#..4..#-
+-#.1.3.#-
+-##.2.##-
+-#..P..#-
+-#..#..#-
+#O#####O#
+-#-----#-
+
+
+
+(---------
+########-
+#O#.P..#-
+##..4..#-
+-#..#..#-
+-#.....#-
+-#.###.#-
+-#..O..#-
+-#...2.#-
+-#.....#-
+-#######-)
+
+(---------
+---------
+---------
+-########
+-#.....##
+-#.43.P.#
+-#.12...#
+-#...OO.#
+-##..OO.#
+-########
+---------)
+
+
+xxxxxxxxxxxxxx
+-eeeeeeeeeeee-
+eeeeeeeeeeeeee
+weweweeeeeeeee
+wewewewwweeeee
+wewewetweeweew
+eweweeeweewwew
+eeeeeewwweweww
+eeeeeeeeeeweew
+eeeeeeeeeeeeee
+-eeeeeeeeeeee-
+
+

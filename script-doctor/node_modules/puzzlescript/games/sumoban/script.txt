@@ -1,0 +1,219 @@
+title SumoBan
+author Marcos Donnantuoni
+homepage https://marcosd.itch.io
+
+require_player_movement
+noaction
+again_interval 0.3
+
+========
+objects
+========
+
+background
+#a0a0a0 #aaaaaa 
+00100
+00100
+11111
+00100
+00100
+
+wall
+darkgray
+
+player
+#edb038 brown blue black
+..3..
+..0..
+01210
+.121.
+.0.0.
+
+sumotori
+black #eec147 #eebf3d #eebc31 #eeba23 #eeb70e
+..0..
+12345
+.000.
+12045
+1...5
+
+loser
+black #eec147 #eebf3d #eebc31 #eeba23 #eeb70e
+..0..
+.234.
+.000.
+.204.
+.2.4.
+
+winner1
+black #eec147 #eebf3d #eebc31 #eeba23 #eeb70e
+..04.
+1234.
+.000.
+12045
+1...5
+
+winner2
+black #eec147 #eebf3d #eebc31 #eeba23 #eeb70e
+.20..
+.2345
+.000.
+12045
+1...5
+
+winner3
+black #eec147 #eebf3d #eebc31 #eeba23 #eeb70e
+..04.
+1234.
+.000.
+12045
+1...5
+
+winner
+black #eec147 #eebf3d #eebc31 #eeba23 #eeb70e
+.204.
+.234.
+.000.
+12045
+1...5
+
+unique
+transparent
+
+=======
+legend
+=======
+
+. = background
+# = wall
+@ = player
+* = sumotori
+
+=======
+sounds
+=======
+
+sumotori move 39721707
+loser create 99111308
+winner create 30848102
+
+================
+collisionlayers
+================
+
+background
+player, wall, sumotori, winner, winner1, winner2, winner3
+loser
+unique
+
+======
+rules
+======
+
+[ loser ] -> []
+
+[ >  player | sumotori | sumotori ] -> [  >  player | > sumotori | > sumotori ]
+[ > sumotori | wall ] -> [ | wall loser ]
+
+late random [ sumotori ] -> [ sumotori unique ]
+late [ sumotori unique ] [ sumotori no unique ] -> [ sumotori ] [ sumotori ]
+late [ winner3 ] -> [ winner ]
+late [ winner2 ] -> [ winner3 ] again
+late [ winner1 ] -> [ winner2 ] again
+late [ unique ] -> [ winner1 ] again
+
+
+==============
+winconditions
+==============
+
+no sumotori
+some winner
+
+=======
+levels
+=======
+
+message The Sumo championship has begun
+message But you are a corrupt Gyoji
+message You must "help" some sumotoris
+
+######
+#.@..#
+#....#
+#.**.#
+#....#
+######
+
+
+message Level 1 of 8
+######
+#....#
+#*...#
+#***.#
+#@...#
+######
+
+message Level 2 of 8
+######
+#..**#
+#.***#
+#..*.#
+#@...#
+######
+
+message Level 3 of 8
+#######
+#.....#
+#***..#
+#..**.#
+#.....#
+#@*...#
+#######
+
+message Level 4 of 8
+#######
+#...*.#
+#.****#
+#..**.#
+#...*.#
+#@....#
+#######
+
+message Level 5 of 8
+#######
+#.....#
+#.***.#
+#..**.#
+#...**#
+#@*...#
+#######
+
+message Level 6 of 8
+########
+#....*.#
+#.*.*.*#
+#...*..#
+#....*.#
+#....*.#
+#@.....#
+########
+
+message Level 7 of 8
+########
+#...*..#
+#..*.*.#
+#...**.#
+#..**..#
+#@.....#
+########
+
+message Level 8 of 8
+########
+#..*...#
+#.*.*..#
+#...**.#
+#.*..*.#
+#@.....#
+########
+

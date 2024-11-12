@@ -1,0 +1,1 @@
+This directory stores solutions to game levels that you have played.

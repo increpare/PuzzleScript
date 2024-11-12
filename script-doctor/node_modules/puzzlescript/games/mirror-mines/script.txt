@@ -1,0 +1,704 @@
+title Mirror Mines
+author Marcos Donnantuoni
+homepage https://marcosd.itch.io
+
+noaction
+run_rules_on_level_start
+
+========
+OBJECTS
+========
+
+Background
+black
+
+player
+red yellow
+.....
+..0..
+01110
+.111.
+.0.0.
+
+wall
+brown
+
+target
+blue lightblue
+11111
+10001
+10001
+10001
+11111
+
+active
+lightgreen lightblue
+11111
+10001
+10001
+10001
+11111
+
+mirror
+#c8c8c8 #c4c4c4 #c0c0c0 
+00001
+01112
+01112
+01112
+12222
+
+door
+black brown
+01010
+01010
+01010
+01010
+01010
+
+openDoor
+black brown
+01010
+00000
+00000
+00000
+01010
+
+rayA1
+lightgreen
+0....
+.....
+.....
+.....
+.....
+
+rayA2
+lightgreen
+.0...
+0....
+.....
+.....
+.....
+
+rayA3
+lightgreen
+..0..
+.0...
+0....
+.....
+.....
+
+rayA4
+lightgreen
+...0.
+..0..
+.0...
+0....
+.....
+
+rayA5
+lightgreen
+....0
+...0.
+..0..
+.0...
+0....
+
+rayA6
+lightgreen
+.....
+....0
+...0.
+..0..
+.0...
+
+rayA7
+lightgreen
+.....
+.....
+....0
+...0.
+..0..
+
+rayA8
+lightgreen
+.....
+.....
+.....
+....0
+...0.
+
+rayA9
+lightgreen
+.....
+.....
+.....
+.....
+....0
+
+rayB1
+lightgreen
+....0
+.....
+.....
+.....
+.....
+
+rayB2
+lightgreen
+...0.
+....0
+.....
+.....
+.....
+
+rayB3
+lightgreen
+..0..
+...0.
+....0
+.....
+.....
+
+rayB4
+lightgreen
+.0...
+..0..
+...0.
+....0
+.....
+
+rayB5
+lightgreen
+0....
+.0...
+..0..
+...0.
+....0
+
+rayB6
+lightgreen
+.....
+0....
+.0...
+..0..
+...0.
+
+rayB7
+lightgreen
+.....
+.....
+0....
+.0...
+..0..
+
+rayB8
+lightgreen
+.....
+.....
+.....
+0....
+.0...
+
+rayB9
+lightgreen
+.....
+.....
+.....
+.....
+0....
+
+start
+transparent
+
+notyet
+transparent
+
+rm
+transparent
+
+markL1
+transparent
+markR1
+transparent
+markU1
+transparent
+markD1
+transparent
+markL2
+transparent
+markR2
+transparent
+markU2
+transparent
+markD2
+transparent
+
+tailA
+transparent
+tailB
+transparent
+newtailA
+transparent
+newtailB
+transparent
+
+triedA1
+transparent
+triedA2
+transparent
+triedA3
+transparent
+triedA4
+transparent
+triedB1
+transparent
+triedB2
+transparent
+triedB3
+transparent
+triedB4
+transparent
+
+=======
+LEGEND
+=======
+
+. = background
+# = wall
+@ = player
+m = mirror
+o = wall and rayA3 and start
+p = wall and rayB7 and start
+q = wall and rayB3 and start
+r = wall and rayA7 and start
+d = door
+t = target
+refl = mirror or target or active
+sensor = target or active
+obst = wall or door or refl
+rayA = rayA1 or rayA2 or rayA3 or rayA4 or rayA5 or rayA6 or rayA7 or rayA8 or rayA9
+rayB = rayB1 or rayB2 or rayB3 or rayB4 or rayB5 or rayB6 or rayB7 or rayB8 or rayB9
+ray = rayA or rayB
+mark = markL1 or markR1 or markU1 or markD1 or markL2 or markR2 or markU2 or markD2
+
+=======
+SOUNDS
+=======
+
+undo 5231508
+endlevel 21459103
+opendoor create 62215108
+door create 17087308
+mirror destroy 5552507
+sfx0 56928908
+sfx1 50171104
+sfx2 94662700
+sfx3 40525708
+sfx4 66422508
+
+================
+COLLISIONLAYERS
+================
+
+Background
+opendoor
+door
+wall, mirror, target, active
+start
+rayA1
+rayA2
+rayA3
+rayA4
+rayA5
+rayB5
+rayB4
+rayB3
+rayB2
+rayB1
+rayB9
+rayB8
+rayB7
+rayB6
+rayA6
+rayA7
+rayA8
+rayA9
+player
+rm
+notyet
+markL1
+markR1
+markU1
+markD1
+markL2
+markR2
+markU2
+markD2
+tailA
+tailB
+newtailA
+newtailB
+triedA1
+triedA2
+triedA3
+triedA4
+triedB1
+triedB2
+triedB3
+triedB4
+
+======
+RULES
+======
+
+[ no start ray ] -> [ no ray ]
+
+[ tailA ] -> [ ]
+[ newtailA ] -> [ ]
+[ tailB ] -> [ ]
+[ newtailB ] -> [ ]
+[ start rayA ] -> [ start rayA tailA ]
+[ start rayB ] -> [ start rayB tailB ]
+
+[ > player | mirror ] -> [ > player | ]
+[ > player | obst ] -> cancel
+
+late [ triedA1 ] -> [ ]
+late [ triedA2 ] -> [ ]
+late [ triedA3 ] -> [ ]
+late [ triedA4 ] -> [ ]
+late [ triedB1 ] -> [ ]
+late [ triedB2 ] -> [ ]
+late [ triedB3 ] -> [ ]
+late [ triedB4 ] -> [ ]
+
+late [ rm ] -> [ ]
+
+startloop
+
+(reflect rays)
+late right [ no wall rayB1 tailB no rayA5 | refl ] -> [ rayB1 no tailB rayA5 tailA | refl ]
+late right [ no wall rayB2 tailB no rayA6 | refl ] -> [ rayB2 no tailB rayA6 tailA | refl ]
+late right [ no wall rayB3 tailB no rayA7 | refl ] -> [ rayB3 no tailB rayA7 tailA | refl ]
+late right [ no wall rayB4 tailB no rayA8 | refl ] -> [ rayB4 no tailB rayA8 tailA | refl ]
+late right [ no wall rayB5 tailB no rayA9 | refl ] -> [ rayB5 no tailB rayA9 tailA | refl ]
+late right [ no wall rayA5 tailA no rayB1 | refl ] -> [ rayA5 no tailA rayB1 tailB | refl ]
+late right [ no wall rayA6 tailA no rayB2 | refl ] -> [ rayA6 no tailA rayB2 tailB | refl ]
+late right [ no wall rayA7 tailA no rayB3 | refl ] -> [ rayA7 no tailA rayB3 tailB | refl ]
+late right [ no wall rayA8 tailA no rayB4 | refl ] -> [ rayA8 no tailA rayB4 tailB | refl ]
+late right [ no wall rayA9 tailA no rayB5 | refl ] -> [ rayA9 no tailA rayB5 tailB | refl ]
+late left  [ no wall rayA1 tailA no rayB5 | refl ] -> [ rayA1 no tailA rayB5 tailB | refl ]
+late left  [ no wall rayA2 tailA no rayB6 | refl ] -> [ rayA2 no tailA rayB6 tailB | refl ]
+late left  [ no wall rayA3 tailA no rayB7 | refl ] -> [ rayA3 no tailA rayB7 tailB | refl ]
+late left  [ no wall rayA4 tailA no rayB8 | refl ] -> [ rayA4 no tailA rayB8 tailB | refl ]
+late left  [ no wall rayA5 tailA no rayB9 | refl ] -> [ rayA5 no tailA rayB9 tailB | refl ]
+late left  [ no wall rayB5 tailB no rayA1 | refl ] -> [ rayB5 no tailB rayA1 tailA | refl ]
+late left  [ no wall rayB6 tailB no rayA2 | refl ] -> [ rayB6 no tailB rayA2 tailA | refl ]
+late left  [ no wall rayB7 tailB no rayA3 | refl ] -> [ rayB7 no tailB rayA3 tailA | refl ]
+late left  [ no wall rayB8 tailB no rayA4 | refl ] -> [ rayB8 no tailB rayA4 tailA | refl ]
+late left  [ no wall rayB9 tailB no rayA5 | refl ] -> [ rayB9 no tailB rayA5 tailA | refl ]
+late down  [ no wall rayB5 tailB no rayA9 | refl ] -> [ rayB5 no tailB rayA9 tailA | refl ]
+late down  [ no wall rayB6 tailB no rayA8 | refl ] -> [ rayB6 no tailB rayA8 tailA | refl ]
+late down  [ no wall rayB7 tailB no rayA7 | refl ] -> [ rayB7 no tailB rayA7 tailA | refl ]
+late down  [ no wall rayB8 tailB no rayA6 | refl ] -> [ rayB8 no tailB rayA6 tailA | refl ]
+late down  [ no wall rayB9 tailB no rayA5 | refl ] -> [ rayB9 no tailB rayA5 tailA | refl ]
+late down  [ no wall rayA5 tailA no rayB9 | refl ] -> [ rayA5 no tailA rayB9 tailB | refl ]
+late down  [ no wall rayA6 tailA no rayB8 | refl ] -> [ rayA6 no tailA rayB8 tailB | refl ]
+late down  [ no wall rayA7 tailA no rayB7 | refl ] -> [ rayA7 no tailA rayB7 tailB | refl ]
+late down  [ no wall rayA8 tailA no rayB6 | refl ] -> [ rayA8 no tailA rayB6 tailB | refl ]
+late down  [ no wall rayA9 tailA no rayB5 | refl ] -> [ rayA9 no tailA rayB5 tailB | refl ]
+late up    [ no wall rayA1 tailA no rayB5 | refl ] -> [ rayA1 no tailA rayB5 tailB | refl ]
+late up    [ no wall rayA2 tailA no rayB4 | refl ] -> [ rayA2 no tailA rayB4 tailB | refl ]
+late up    [ no wall rayA3 tailA no rayB3 | refl ] -> [ rayA3 no tailA rayB3 tailB | refl ]
+late up    [ no wall rayA4 tailA no rayB2 | refl ] -> [ rayA4 no tailA rayB2 tailB | refl ]
+late up    [ no wall rayA5 tailA no rayB1 | refl ] -> [ rayA5 no tailA rayB1 tailB | refl ]
+late up    [ no wall rayB1 tailB no rayA5 | refl ] -> [ rayB1 no tailB rayA5 tailA | refl ]
+late up    [ no wall rayB2 tailB no rayA4 | refl ] -> [ rayB2 no tailB rayA4 tailA | refl ]
+late up    [ no wall rayB3 tailB no rayA3 | refl ] -> [ rayB3 no tailB rayA3 tailA | refl ]
+late up    [ no wall rayB4 tailB no rayA2 | refl ] -> [ rayB4 no tailB rayA2 tailA | refl ]
+late up    [ no wall rayB5 tailB no rayA1 | refl ] -> [ rayB5 no tailB rayA1 tailA | refl ]
+
+(extend rays)
+late up    [ rayA1 tailA | no obst no rayA6 ] -> [ rayA1 no tailA | rayA6 tailA ]
+late up    [ rayA2 tailA | no obst no rayA7 ] -> [ rayA2 no tailA | rayA7 tailA ]
+late up    [ rayA3 tailA | no obst no rayA8 ] -> [ rayA3 no tailA | rayA8 tailA ]
+late up    [ rayA4 tailA | no obst no rayA9 ] -> [ rayA4 no tailA | rayA9 tailA ]
+late down  [ rayA6 tailA | no obst no rayA1 ] -> [ rayA6 no tailA | rayA1 tailA ]
+late down  [ rayA7 tailA | no obst no rayA2 ] -> [ rayA7 no tailA | rayA2 tailA ]
+late down  [ rayA8 tailA | no obst no rayA3 ] -> [ rayA8 no tailA | rayA3 tailA ]
+late down  [ rayA9 tailA | no obst no rayA4 ] -> [ rayA9 no tailA | rayA4 tailA ]
+late left  [ rayA1 tailA | no obst no rayA6 ] -> [ rayA1 no tailA | rayA6 tailA ]
+late left  [ rayA2 tailA | no obst no rayA7 ] -> [ rayA2 no tailA | rayA7 tailA ]
+late left  [ rayA3 tailA | no obst no rayA8 ] -> [ rayA3 no tailA | rayA8 tailA ]
+late left  [ rayA4 tailA | no obst no rayA9 ] -> [ rayA4 no tailA | rayA9 tailA ]
+late right [ rayA6 tailA | no obst no rayA1 ] -> [ rayA6 no tailA | rayA1 tailA ]
+late right [ rayA7 tailA | no obst no rayA2 ] -> [ rayA7 no tailA | rayA2 tailA ]
+late right [ rayA8 tailA | no obst no rayA3 ] -> [ rayA8 no tailA | rayA3 tailA ]
+late right [ rayA9 tailA | no obst no rayA4 ] -> [ rayA9 no tailA | rayA4 tailA ]
+late up    [ rayB1 tailB | no obst no rayB6 ] -> [ rayB1 no tailB | rayB6 tailB ]
+late up    [ rayB2 tailB | no obst no rayB7 ] -> [ rayB2 no tailB | rayB7 tailB ]
+late up    [ rayB3 tailB | no obst no rayB8 ] -> [ rayB3 no tailB | rayB8 tailB ]
+late up    [ rayB4 tailB | no obst no rayB9 ] -> [ rayB4 no tailB | rayB9 tailB ]
+late down  [ rayB6 tailB | no obst no rayB1 ] -> [ rayB6 no tailB | rayB1 tailB ]
+late down  [ rayB7 tailB | no obst no rayB2 ] -> [ rayB7 no tailB | rayB2 tailB ]
+late down  [ rayB8 tailB | no obst no rayB3 ] -> [ rayB8 no tailB | rayB3 tailB ]
+late down  [ rayB9 tailB | no obst no rayB4 ] -> [ rayB9 no tailB | rayB4 tailB ]
+late left  [ rayB6 tailB | no obst no rayB1 ] -> [ rayB6 no tailB | rayB1 tailB ]
+late left  [ rayB7 tailB | no obst no rayB2 ] -> [ rayB7 no tailB | rayB2 tailB ]
+late left  [ rayB8 tailB | no obst no rayB3 ] -> [ rayB8 no tailB | rayB3 tailB ]
+late left  [ rayB9 tailB | no obst no rayB4 ] -> [ rayB9 no tailB | rayB4 tailB ]
+late right [ rayB1 tailB | no obst no rayB6 ] -> [ rayB1 no tailB | rayB6 tailB ]
+late right [ rayB2 tailB | no obst no rayB7 ] -> [ rayB2 no tailB | rayB7 tailB ]
+late right [ rayB3 tailB | no obst no rayB8 ] -> [ rayB3 no tailB | rayB8 tailB ]
+late right [ rayB4 tailB | no obst no rayB9 ] -> [ rayB4 no tailB | rayB9 tailB ]
+
+(diagonal rays)
+late [ mark ] -> [ ]
+late left  [ rayA5 tailA no triedA1 | no obst ] -> [ rayA5 tailA triedA1 | markL1 ]
+late right [ rayA5 tailA no triedA2 | no obst ] -> [ rayA5 tailA triedA2 | markR1 ]
+late up    [ rayA5 tailA no triedA3 | no obst ] -> [ rayA5 tailA triedA3 | markU1 ]
+late down  [ rayA5 tailA no triedA4 | no obst ] -> [ rayA5 tailA triedA4 | markD1 ]
+late right [ markU1 |  ] -> [ markU1 | markR2 ]
+late up    [ markR1 |  ] -> [ markU1 | markU2 ]
+late left  [ markD1 |  ] -> [ markD1 | markL2 ]
+late down  [ markL1 |  ] -> [ markL1 | markD2 ]
+late [ markR2 markU2 no rayA5 no obst ] -> [ markR2 markU2 rayA5 newtailA ]
+late [ markL2 markD2 no rayA5 no obst ] -> [ markL2 markD2 rayA5 newtailA ]
+late [ tailA ] [ newtailA ] -> [ ] [ tailA ]
+late [ markR2 markU2 sensor ] -> [ markR2 markU2 sensor rm ]
+late [ markL2 markD2 sensor ] -> [ markL2 markD2 sensor rm ]
+
+
+late [ mark ] -> [ ]
+late left  [ rayB5 tailB no triedB1 | no obst ] -> [ rayB5 tailB triedB1 | markL1 ]
+late right [ rayB5 tailB no triedB2 | no obst ] -> [ rayB5 tailB triedB2 | markR1 ]
+late up    [ rayB5 tailB no triedB3 | no obst ] -> [ rayB5 tailB triedB3 | markU1 ]
+late down  [ rayB5 tailB no triedB4 | no obst ] -> [ rayB5 tailB triedB4 | markD1 ]
+late right [ markD1 |  ] -> [ markD1 | markR2 ]
+late up    [ markL1 |  ] -> [ markL1 | markU2 ]
+late left  [ markU1 |  ] -> [ markU1 | markL2 ]
+late down  [ markR1 |  ] -> [ markR1 | markD2 ]
+late [ markR2 markD2 no rayB5 no obst ] -> [ markR2 markD2 rayB5 newtailB ]
+late [ markL2 markU2 no rayB5 no obst ] -> [ markL2 markU2 rayB5 newtailB ]
+late [ tailB ] [ newtailB ] -> [ ] [ tailB ]
+late [ markR2 markD2 sensor ] -> [ markR2 markD2 sensor rm ]
+late [ markL2 markU2 sensor ] -> [ markL2 markU2 sensor rm ]
+
+endloop
+
+(mark touched mirrors)
+late up    [ rayA1 | sensor ] -> [ rayA1 | sensor rm ]
+late left  [ rayA1 | sensor ] -> [ rayA1 | sensor rm ]
+late up    [ rayA2 | sensor ] -> [ rayA2 | sensor rm ]
+late left  [ rayA2 | sensor ] -> [ rayA2 | sensor rm ]
+late up    [ rayA3 | sensor ] -> [ rayA3 | sensor rm ]
+late left  [ rayA3 | sensor ] -> [ rayA3 | sensor rm ]
+late up    [ rayA4 | sensor ] -> [ rayA4 | sensor rm ]
+late left  [ rayA4 | sensor ] -> [ rayA4 | sensor rm ]
+late up    [ rayA5 | sensor ] -> [ rayA5 | sensor rm ]
+late left  [ rayA5 | sensor ] -> [ rayA5 | sensor rm ]
+late right [ rayA5 | sensor ] -> [ rayA5 | sensor rm ]
+late down  [ rayA5 | sensor ] -> [ rayA5 | sensor rm ]
+late right [ rayA6 | sensor ] -> [ rayA6 | sensor rm ]
+late down  [ rayA6 | sensor ] -> [ rayA6 | sensor rm ]
+late right [ rayA7 | sensor ] -> [ rayA7 | sensor rm ]
+late down  [ rayA7 | sensor ] -> [ rayA7 | sensor rm ]
+late right [ rayA8 | sensor ] -> [ rayA8 | sensor rm ]
+late down  [ rayA8 | sensor ] -> [ rayA8 | sensor rm ]
+late right [ rayA9 | sensor ] -> [ rayA9 | sensor rm ]
+late down  [ rayA9 | sensor ] -> [ rayA9 | sensor rm ]
+late up    [ rayB1 | sensor ] -> [ rayB1 | sensor rm ]
+late right [ rayB1 | sensor ] -> [ rayB1 | sensor rm ]
+late up    [ rayB2 | sensor ] -> [ rayB2 | sensor rm ]
+late right [ rayB2 | sensor ] -> [ rayB2 | sensor rm ]
+late up    [ rayB3 | sensor ] -> [ rayB3 | sensor rm ]
+late right [ rayB3 | sensor ] -> [ rayB3 | sensor rm ]
+late up    [ rayB4 | sensor ] -> [ rayB4 | sensor rm ]
+late right [ rayB4 | sensor ] -> [ rayB4 | sensor rm ]
+late up    [ rayB5 | sensor ] -> [ rayB5 | sensor rm ]
+late right [ rayB5 | sensor ] -> [ rayB5 | sensor rm ]
+late left  [ rayB5 | sensor ] -> [ rayB5 | sensor rm ]
+late down  [ rayB5 | sensor ] -> [ rayB5 | sensor rm ]
+late left  [ rayB6 | sensor ] -> [ rayB6 | sensor rm ]
+late down  [ rayB6 | sensor ] -> [ rayB6 | sensor rm ]
+late left  [ rayB7 | sensor ] -> [ rayB7 | sensor rm ]
+late down  [ rayB7 | sensor ] -> [ rayB7 | sensor rm ]
+late left  [ rayB8 | sensor ] -> [ rayB8 | sensor rm ]
+late down  [ rayB8 | sensor ] -> [ rayB8 | sensor rm ]
+late left  [ rayB9 | sensor ] -> [ rayB9 | sensor rm ]
+late down  [ rayB9 | sensor ] -> [ rayB9 | sensor rm ]
+
+
+late [ target rm ] -> [ active rm ] sfx0
+late [ active no rm] -> [ target ] sfx1
+
+late [ notyet ] -> [ ]
+late [ target ] -> [ target notyet ]
+late [ notyet | no notyet ] -> [ notyet | notyet ]
+late [ door no notyet ] -> [ opendoor ]
+late [ notyet opendoor ] -> [ door ]
+
+late [ player opendoor ] -> win
+
+==============
+WINCONDITIONS
+==============
+
+no target
+all player on openDoor
+
+=======
+LEVELS
+=======
+
+message Welcome to the Mirror Mines
+
+message Mine 1 of 14
+
+#p#####
+@mmmmmd
+##t####
+
+message Mine 2 of 14
+message The silver ore is highly reflective
+
+####t#
+qmmmm#
+@mmmmd
+#mmmm#
+######
+
+message Mine 3 of 14
+
+#######
+@mmmmm#
+#mtmtm#
+qmmmmm#
+#mtmtmd
+#mmmmm#
+#######
+
+message Mine 4 of 14
+
+###t###
+@mmmmm#
+#mmmmm#
+qmm#mmt
+#mmmmm#
+#mmmmmd
+###t###
+
+message Mine 5 of 14
+
+###t###
+@mmmmmd
+#mmtmm#
+#mmmmm#
+#mmtmm#
+#mmmmm#
+##ot###
+
+message Mine 6 of 14
+
+###t##
+@mmmt#
+#mmmmt
+qmmmm#
+#mmmmd
+######
+
+message Mine 7 of 14
+
+###t###
+@mmmmm#
+#mmmmm#
+qmmmmm#
+#mmmmmd
+##t#t##
+
+message Mine 8 of 14
+
+#########
+#mmmmmmm#
+#mmtmtmm#
+#mtmmmtm#
+@mmmmmmmo
+#mtmmmtm#
+dmmtmtmm#
+#mmmmmmm#
+#########
+
+message Mine 9 of 14
+
+#########
+qmmmmmmm#
+#mmmmmtm#
+@mmtmmmm#
+#mmmtmmm#
+#mmmmtmm#
+#mtmmmmm#
+dmmmmmmm#
+#########
+
+message Mine 10 of 14
+
+##t#p#t##
+#mmmmmmm#
+tmmmmmmmt
+@mmmmmmm#
+#mmmmmmm#
+dmmmmmmm#
+tmmmmmmmt
+#mmmmmmm#
+##t###t##
+
+message Mine 11 of 14
+
+#######
+@mmmmmd
+#mmmmmt
+qmmmmmt
+#mmmmmt
+#mmmmm#
+#######
+
+message Mine 12 of 14
+
+#######
+#mmmmm#
+@mmmmmt
+#mmmmmt
+rmmmmmt
+#mmmmmt
+dmmmmmt
+#mmmmm#
+#######
+
+message Mine 13 of 14
+
+#########
+#mmmmmmm#
+@m#mmmtm#
+#mmmmmmm#
+rmmm#mmm#
+#mmmmmmm#
+dmtmmm#m#
+#mmmmmmm#
+#########
+
+message Mine 14 of 14
+
+####t####
+#mmmmmmm#
+@mtmmmtm#
+#mmmmmmmo
+tmmmmmmmt
+#mmmmmmm#
+dmtmmmtm#
+#mmmmmmm#
+####t####
+
+message You are free now!
+
+
+

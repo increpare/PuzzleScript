@@ -1,0 +1,330 @@
+title Tidy the Cafe!
+author Sally Bridgwater
+homepage http://sallyanne.itch.io
+
+realtime_interval 0.1
+run_rules_on_level_start
+
+========
+OBJECTS
+========
+
+Background
+Grey DarkGrey
+00000
+01110
+01010
+01110
+00000
+
+Table
+Yellow Red White
+(12121
+21212
+12121
+21212
+0...0)
+.....
+.121.
+.212.
+.121.
+.0.0.
+
+ChairRightLoose
+Yellow Red
+.....
+...0.
+.110.
+.110.
+.0.0.
+
+ChairRightTuckedIn
+Yellow Red
+.....
+..0..
+110..
+110..
+0.0..
+
+ChairLeftLoose
+Yellow Red
+.....
+.0...
+.011.
+.011.
+.0.0.
+
+ChairLeftTuckedIn
+Yellow Red
+.....
+..0..
+..011
+..011
+..0.0
+
+ChairUpLoose
+Yellow Red
+.....
+.000.
+.111.
+.111.
+.0.0.
+
+ChairUpTuckedIn
+Yellow Red
+.....
+.....
+.000.
+.111.
+.111.
+
+ChairUpTuckedInOverlay
+Yellow Red
+.0.0.
+.....
+.....
+.....
+.....
+
+ChairDownLoose
+Yellow Red
+.....
+.000.
+.000.
+.000.
+.0.0.
+
+ChairDownTuckedIn
+Yellow Red
+.000.
+.000.
+.000.
+.0.0.
+.....
+
+Player
+Black White Brown Red
+..2..
+21312
+.111.
+.000.
+.0.0.
+
+Tidy
+Pink
+.....
+.....
+.....
+.....
+.....
+
+
+Plant
+Green Orange
+.000.
+.000.
+11111
+.111.
+.111.
+
+
+
+CandleStick1
+Black yellow  white orange
+3.1.1
+2.2.2
+00000
+..0..
+.000.
+
+CandleStick2
+Black yellow  white orange
+1.3.1
+2.2.2
+00000
+..0..
+.000.
+
+CandleStick3
+Black yellow  white orange
+1.1.3
+2.2.2
+00000
+..0..
+.000.
+
+CandleStick4
+Black yellow  white orange
+1.1.1
+2.2.2
+00000
+..0..
+.000.
+
+
+
+
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Table
+@ = Player
+P = Plant
+C = CandleStick1
+L = ChairLeftLoose
+R = ChairRightLoose
+U = ChairUpLoose
+D = ChairDownLoose
+
+ChairUp = ChairUpLoose or ChairUpTuckedIn
+ChairDown = ChairDownLoose or ChairDownTuckedIn
+ChairLeft = ChairLeftLoose or ChairLeftTuckedIn
+ChairRight = ChairRightLoose or ChairRightTuckedIn
+
+Chair = ChairUp or ChairDown or ChairLeft or ChairRight
+Pushable = Chair or Table
+Candle = CandleStick1 or CandleStick2 or CandleStick3 or CandleStick4
+
+Obstacle = Table or Candle or Plant
+
+TidyLeft = Obstacle or ChairLeft
+TidyRight = Obstacle or ChairRight
+TidyUp = Obstacle or ChairUp
+TidyDown = Obstacle or ChairDown
+
+
+=======
+SOUNDS
+=======
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Tidy
+Table,Chair,Player,Plant,Candle
+ChairUpTuckedInOverlay
+
+
+
+======
+RULES
+======
+
+[ >  Player | Pushable ] -> [  >  Player | > Pushable  ] again
+
+[ Candle ] -> [ action Candle ]
+[ action Candle ] -> [ random Candle ]
+
+[Tidy] -> [ ]
+[Table] ->[ Tidy Table]
+
+Left [ Tidy Table | No TidyLeft]  -> [ Table | ]
+Right[ Tidy Table | No TidyRight] -> [ Table | ]
+Up   [ Tidy Table | No TidyUp]    -> [Table | ]
+Down [ Tidy Table | No TidyDown]  -> [Table | ]
+
+Left [ Tidy Table | ChairLeft]  -> [ Tidy Table | ChairLeft Tidy]
+Right[ Tidy Table | ChairRight] -> [ Tidy Table | ChairRight Tidy]
+Up   [ Tidy Table | ChairUp]    -> [ Tidy Table | ChairUp Tidy]
+Down [ Tidy Table | ChairDown]  -> [ Tidy Table | ChairDown Tidy]
+
+[ ChairUp ] -> [ ChairUpLoose ]
+[ ChairDown ] -> [ ChairDownLoose ]
+[ ChairLeft ] -> [ ChairLeftLoose ]
+[ ChairRight ] -> [ ChairRightLoose ]
+
+[ Tidy ChairUp ] -> [ Tidy ChairUpTuckedIn ]
+[ Tidy ChairDown ] -> [ Tidy ChairDownTuckedIn ]
+[ Tidy ChairLeft ] -> [ Tidy ChairLeftTuckedIn ]
+[ Tidy ChairRight ] -> [ Tidy ChairRightTuckedIn ]
+
+Late [ ChairUpTuckedInOverlay ] -> [ ]
+Late Down [ ChairUpTuckedIn | ] -> [ ChairUpTuckedIn | ChairUpTuckedInOverlay ]
+
+
+==============
+WINCONDITIONS
+==============
+
+All Table on Tidy
+All Chair on Tidy
+some Table
+some Chair
+
+=======
+LEVELS
+=======
+
+(...u.
+...#r
+.l.d.
+....@)
+
+(....U.
+.#.D.R
+.L.@..
+......)
+
+c.up
+@l.r
+.d#.
+....
+
+(....
+@.ur
+..#.
+pl#.
+l.dr
+....)
+
+#...#
+.drd.
+.r@l.
+.ulu.
+#...#
+
+...c...
+.u.c.u.
+l#r.l.r
+.#.@.d.
+.d.c...
+...c...
+
+.......
+..u#u..
+.l#@#r.
+..d#d..
+.......
+
+(...@...
+..#u#..
+.l.c.r.
+..dud..
+.......)
+
+c..c..c
+...u...
+c@r#l.c
+...d...
+c..c..c
+
+..u..
+.l#r.
+..d..
+.l#r.
+..@..
+.....
+
+
+
+(........
+....D.R.
+.#.P....
+@.L..#.R
+.DUU.L..
+........)

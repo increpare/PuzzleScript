@@ -1,0 +1,3245 @@
+title Rose
+homepage www.puzzlescript.net
+norepeat_action
+verbose_logging
+flickscreen 11x11
+text_color #be2633
+
+again_interval 1
+
+run_rules_on_level_start
+
+========
+OBJECTS
+========
+
+
+Background
+grey
+
+PhysicalWall 
+#1a2d38
+00000
+00000
+00000
+00000
+00000
+
+Wall
+#d4ca8e 
+
+manleft
+#ff7245 #2f2f3c #3d2c29 #ff8058
+.100.
+.300.
+0222.
+.300.
+.300.
+
+manup
+#ff7245 #2f2f3c #3d2c29 #ff8058
+.300.
+.300.
+02220
+.300.
+.300.
+
+manright
+#ff7245 #2f2f3c #3d2c29 #ff8058
+.301.
+.300.
+.2220
+.300.
+.300.
+
+mandown
+#ff7245 #2f2f3c #3d2c29 #ff8058
+.101.
+.300.
+02220
+.300.
+.300.
+
+rosetilestart
+transparent
+
+rosetile1
+#88b32f #be2633 
+10000
+01000
+00010
+00101
+00010
+
+rosetile2
+#88b32f #be2633 
+00000
+01000
+10100
+01000
+00000
+
+rosetile3
+#88b32f #be2633 
+00000
+00100
+01010
+00100
+00000
+
+dirttile 
+#a46422 #83501b #be2633
+10100
+01010
+00101
+10010
+02021
+
+rose1
+#fce6ad #dfe989
+00000
+00000
+00000
+00001
+00001
+
+rose2
+#fce6ad #dfe989 #a3ce27
+00000
+00000
+00000
+00010
+22222
+
+rose3
+#fce6ad #dfe989 #a3ce27
+00000
+00000
+00000
+00000
+00012
+
+rose4
+#fce6ad #dfe989 #a3ce27 #be2633 #9f2436
+00000
+03334
+33343
+33433
+24333
+
+rose5
+#fce6ad #dfe989 #a3ce27 #be2633 #9f2436
+00000
+40000
+30300
+33300
+34300
+
+rose6
+#fce6ad #dfe989 #a3ce27 #88b32f
+00002
+00022
+02333
+03330
+00000
+
+rose7
+#fce6ad #dfe989 #a3ce27 #88b32f
+23332
+30003
+00000
+00000
+00000
+
+rose8
+#fce6ad #dfe989 #a3ce27 #88b32f
+20012
+22223
+13330
+10000
+00000
+
+rose9
+#fce6ad #dfe989 #a3ce27 #88b32f #be2633 #9f2436
+33445
+00554
+00000
+00000
+00000
+
+rose10
+#fce6ad #dfe989 #a3ce27 #88b32f #be2633 #9f2436
+54004
+40040
+00000
+00000
+00000
+
+(scenery - tower exterior)
+pathstart
+grey
+
+pathhoriz
+#d1ccb2 #dad6c3
+11111
+00000
+00000
+00000
+11111
+
+pathvert
+#d1ccb2 #dad6c3
+10001
+10001
+10001
+10001
+10001
+
+pathend
+#d1ccb2 #dad6c3
+..1..
+.111.
+.101.
+10001
+10001
+
+pathtri
+#d1ccb2 #dad6c3
+10001
+00000
+00000
+00000
+11111
+
+pathrightbend
+#d1ccb2 #dad6c3
+..111
+.1000
+10000
+10000
+10001
+
+pathupbend
+#d1ccb2 #dad6c3
+10001
+00001
+00001
+0001.
+111..
+
+groundstart
+#c5c4be #eaeae8
+00000
+00000
+00000
+00000
+00000
+
+ground1
+#c5c4be #eaeae8
+00000
+00000
+00000
+01000
+00000
+
+ground2
+#c5c4be #eaeae8
+00000
+00000
+00000
+00000
+00000
+
+ground3
+#c5c4be #eaeae8
+00100
+00000
+00000
+00000
+00000
+
+puddlecenter
+#b8d9e9 #d4e8f2 #c5c4be
+10101
+01010
+00000
+10101
+01010
+
+puddleleft
+#b8d9e9 #d4e8f2 #c5c4be
+.1101
+.1010
+.1000
+.1101
+.1010
+
+puddleright
+#b8d9e9 #d4e8f2 #c5c4be
+1011.
+0101.
+001..
+101..
+0101.
+
+puddletop
+#b8d9e9 #d4e8f2 #c5c4be
+.....
+11111
+00000
+10101
+01010
+
+puddlebottom
+#b8d9e9 #d4e8f2 #c5c4be
+10101
+01010
+00000
+11111
+.....
+
+puddlecornertr
+#b8d9e9 #d4e8f2 #c5c4be
+.....
+111..
+0011.
+1011.
+0101.
+
+puddlecornertl
+#b8d9e9 #d4e8f2 #c5c4be
+.....
+...11
+..100
+..101
+.1010
+
+puddlecornerbl
+#b8d9e9 #d4e8f2 #c5c4be
+..101
+...10
+...10
+....1
+.....
+
+puddlecornerbr
+#b8d9e9 #d4e8f2 #c5c4be
+1011.
+0101.
+0011.
+111..
+.....
+
+housewall
+#fbdf98
+
+housewallcrack
+#fbdf98 #e2d4b1
+01000
+00100
+01000
+00000
+00000
+
+housewallside
+#fbdf98 #fce6ad
+10000
+10000
+10000
+10000
+10000
+
+houseroof
+#b4865a #2d303f
+00100
+01000
+10000
+00001
+00010
+
+houseroofside
+#b4865a #bc926b #2d303f
+....1
+...10
+..110
+.1002
+11020
+
+houseentrance
+#41555f black
+00000
+01110
+01110
+01110
+01110
+
+housewindow
+#b7ab69 #41555f #5c7787 #4f6774
+11012
+11023
+00000
+12011
+23011
+
+towerwall1
+#1a2d38 #86858d
+01000
+01000
+01000
+11111
+00010
+
+towerwall2
+#1a2d38 #86858d
+00010
+00010
+00010
+11111
+01000
+
+towerbase 
+#1a2d38 #86858d 
+01010
+01010
+01010
+11111
+00100
+
+towerwall1left
+#1a2d38 #86858d #365e6b #9e9da4
+23000
+23000
+23000
+33111
+22010
+
+towerwall2left
+#1a2d38 #86858d #365e6b #9e9da4
+22010
+22010
+22010
+33111
+23000
+
+towerbaseleft
+#1a2d38 #86858d #365e6b #9e9da4
+23010
+23010
+23010
+33111
+22100
+
+towerwall1right
+#1a2d38 #86858d #15242d #6b6a71
+01022
+01022
+01022
+11133
+00032
+
+towerwall2right
+#1a2d38 #86858d #15242d #6b6a71
+00032
+00032
+00032
+11133
+01022
+
+towerbaseright
+#1a2d38 #86858d #15242d #6b6a71
+01032
+01032
+01032
+11133
+00122
+
+towerentrance
+black
+
+towerentrancefront
+black
+
+(scenery - house interior)
+
+housefloornorm
+#dfaa18 #c99916
+10001
+10001
+10001
+10001
+10001
+
+housefloor1
+#dfaa18 #c99916
+10001
+10001
+11111
+10001
+10001
+
+housefloor2
+#dfaa18 #c99916
+10001
+10001
+10001
+10001
+11111
+
+housewallinttop
+#fce6ad
+
+housewallintright
+#f9d371 #fce6ad
+00001
+00001
+00001
+00001
+00001
+
+housewallintleft
+#f9d371 #fce6ad
+10000
+10000
+10000
+10000
+10000
+
+housewallintdown
+#f9d371
+
+housefloorstart
+transparent
+
+hiddendoor
+#dfaa18 #c99916
+10001
+10001
+10001
+10001
+10001
+
+hiddendoortemp
+transparent
+
+(scenery - tower interior)
+
+towertile
+#587ba2 #4f6e92 #7895b6 #354961 #425a78
+21111
+20003
+20003
+20003
+44443
+
+towertilecrack
+#587ba2 #4f6e92 #7895b6 #354961 #425a78
+21111
+20003
+20003
+20003
+44443
+
+towertilecrack1
+#587ba2 #4f6e92 #7895b6 #354961 #425a78 #a6b0bc
+21111
+20003
+20553
+25003
+44443
+
+towertilecrack2
+#587ba2 #4f6e92 #7895b6 #354961 #425a78 #a6b0bc
+21111
+50005
+50003
+25003
+45443
+
+towertilecrack3
+#587ba2 #4f6e92 #7895b6 #354961 #425a78 #a6b0bc
+25111
+55003
+20005
+20053
+44453
+
+towerwallbottomleft
+#587ba2 #4f6e92 #7895b6 #354961 #425a78 #1a2d38
+51111
+55003
+55503
+55553
+55555
+
+towerwallbottomright
+#587ba2 #4f6e92 #7895b6 #354961 #425a78 #1a2d38 #354961
+21116
+20065
+20655
+26555
+65555
+
+towerwallinttop
+#354961 #0f1b2d
+11111
+11111
+00000
+00000
+00000
+
+towerwallinttoppermanent
+#354961 #0f1b2d
+11111
+11111
+00000
+00000
+00000
+
+towerwallintbottom
+#1a2d38 #354961
+11111
+00000
+00000
+00000
+00000
+
+towerwallintleft
+#587ba2 #4f6e92 #7895b6 #354961 #425a78 #354961 #0f1b2d
+65551
+55503
+55003
+50003
+44443
+
+towerwallintleftmid
+#354961 #0f1b2d
+00011
+00111
+01110
+11100
+11000
+
+towerwallintlefttop
+#354961 #0f1b2d
+....0
+...00
+..000
+.0000
+00001
+
+towerwallintright
+#587ba2 #4f6e92 #7895b6 #354961 #425a78 #354961 #0f1b2d
+25556
+20555
+20055
+20005
+44443
+
+towerwallintrightmid
+#354961 #0f1b2d
+11000
+11100
+01110
+00111
+00011
+
+towerwallintrighttop
+#354961 #0f1b2d
+0....
+00...
+000..
+0000.
+10000
+
+towerpillar1
+#1d304b #b7c5c4 #8da3a2 #7c9594 #28814b #be2633
+00230
+01530
+01240
+01230
+00000
+
+towerpillartop1
+#7c9594 
+.....
+.....
+.....
+.....
+...0.
+
+towerpillar2
+#1d304b #b7c5c4 #8da3a2 #7c9594 #28814b
+01230
+01240
+01430
+04230
+00000
+
+towerpillartop2
+#7baab2 #b7c5c4 #8da3a2 #7c9594 #28814b
+.....
+.1...
+.12..
+.143.
+.423.
+
+towerpillar2special
+#1d304b #b7c5c4 #2ff5d6 #7c9594 #28814b
+01230
+01230
+01230
+01230
+00000
+
+towerpillartop2special
+#7baab2 #b7c5c4 #2ff5d6 #7c9594 #28814b
+.....
+.1...
+.12..
+.123.
+.123.
+
+towerpillar3
+#1d304b #b7c5c4 #2ff5d6 #7c9594 #28814b
+01230
+01230
+01230
+01230
+00000
+
+towerpillarmid3
+#7baab2 #b7c5c4 #2ff5d6 #7c9594 #28814b
+.123.
+.123.
+.123.
+.123.
+.123.
+
+towerpillartop3
+#7baab2 #b7c5c4 #2ff5d6 #7c9594 #6f8c82 #6e98a1
+45554
+44444
+.123.
+.123.
+.123.
+
+towerstairsup
+#d4dcdc #a4b5b5 #b5c4c3
+....1
+...22
+..110
+.2200
+11000
+
+towerstairsdown1
+#4f6362 #415150 #586e6d #627a79 #6d8786 #7b9493
+11115
+11145
+11345
+12345
+02345
+
+towerstairsuptemp
+#d4dcdc #a4b5b5 #b5c4c3
+....1
+...22
+..110
+.2200
+11000
+
+towerstairsdowntemp
+#4f6362 #415150 #586e6d #627a79 #6d8786 #7b9493
+11115
+11145
+11345
+12345
+02345
+
+towerwallint
+transparent
+
+(tower balcony)
+
+towertilehalflight
+#829d97 #b6c6b0 #94aba6 #66827d #7693a4 #91a8b6 #526b7c #354961
+10000
+12223
+52226
+54446
+66667
+
+
+towertileoutside
+#94aba6 #829d97 #a9bcb8 #72908a #66827d
+21111
+20004
+20004
+20004
+33334
+
+towerbalconyleft
+#94aba6 #829d97 #72908a #66827d #deddd1 #617978 #415150
+45611
+45603
+45603
+45603
+45623
+
+towerbalconyright
+#94aba6 #829d97 #72908a #a9bcb8 #deddd1 #617978 #415150
+31654
+30654
+30654
+30654
+22654
+
+towerbalconytop
+#415150 #deddd1 #617978 #94aba6 #a9bcb8 #72908a #66827d
+00000
+00000
+12011
+43336
+55556
+
+towerbalconytopright
+#415150 #deddd1 #617978 #a9bcb8 #72908a
+21111
+02111
+00211
+30021
+44021
+
+towerbalconytopleft
+#415150 #deddd1 #617978 #66827d #72908a
+11112
+11120
+11200
+12003
+12043
+
+highgroundstart
+#deddd1
+
+highground1
+#deddd1 #b8d9e9
+00000
+00000
+00000
+01000
+00000
+
+highground2
+#deddd1 #d4e8f2 #b8d9e9
+00000
+01000
+00000
+00000
+00120
+
+highground3
+#deddd1 #d4e8f2
+00010
+00000
+10000
+00001
+00000
+
+highpuddletopleft1
+#deddd1 #d4e8f2 #b8d9e9
+00000
+00000
+00011
+00122
+00122
+
+highpuddletopleft2
+#deddd1 #d4e8f2 #b8d9e9
+00000
+00000
+01111
+01222
+01122
+
+highpuddletopright1
+#deddd1 #d4e8f2 #b8d9e9
+00000
+00000
+11000
+21000
+21000
+
+highpuddletopright2
+#deddd1 #d4e8f2 #b8d9e9
+00000
+01110
+12221
+22221
+21110
+
+highpuddlebottomleft1
+#deddd1 #d4e8f2 #b8d9e9
+00122
+01222
+01222
+00111
+00000
+
+highpuddlebottomleft2
+#deddd1 #d4e8f2 #b8d9e9
+00122
+00111
+00001
+00001
+00000
+
+highpuddlebottomright
+#deddd1 #d4e8f2 #b8d9e9
+21000
+21000
+10000
+10000
+00000
+
+(tower roof)
+
+roofpattern
+transparent
+
+roofleft
+#829d97 #99b0ab
+.....
+.....
+100..
+.....
+.....
+
+roofup
+#829d97 #72908a
+..1..
+..0..
+..0..
+.....
+.....
+
+roofright
+#829d97 #5c7571
+.....
+.....
+..001
+.....
+.....
+
+roofdown
+#829d97 #66827d
+.....
+.....
+..0..
+..0..
+..1..
+
+basementpattern
+transparent
+
+baseleft
+#2e5648 #376759
+.....
+.....
+100..
+.....
+.....
+
+baseup
+#2e5648 #294d41
+..1..
+..0..
+..0..
+.....
+.....
+
+baseright
+#2e5648 #1c332c
+.....
+.....
+..001
+.....
+.....
+
+basedown
+#2e5648 #233e37
+.....
+.....
+..0..
+..0..
+..1..
+
+halftilebottomright
+#94aba6 #829d97 #a9bcb8 #8aa47f #66827d
+21111
+2000.
+200..
+20...
+3....
+
+halftilebottomleft
+#94aba6 #829d97 #a9bcb8 #72908a #66827d
+21111
+.0004
+..004
+...04
+....4
+
+halftiletopright
+#94aba6 #829d97 #a9bcb8 #72908a #66827d
+211..
+2000.
+20004
+20004
+33334
+
+halftiletopleft
+#94aba6 #829d97 #a9bcb8 #72908a #66827d
+..111
+.0004
+20004
+20004
+33334
+
+towerbalconytoprightroof
+#415150 #deddd1 #617978 #a9bcb8 #72908a
+21111
+02111
+00211
+30021
+44002
+
+towerbalconytopleftroof
+#415150 #deddd1 #617978 #66827d #72908a
+11112
+11120
+11200
+12003
+20043
+
+towerbalconyrightroof
+#6f90bc #6388b7 #8da9cb #5077ab #466998 #415150
+21.55
+200.5
+2000.
+20004
+33334
+
+towerbalconyleftroof
+#6f90bc #6388b7 #8da9cb #5077ab #466998 #415150
+55.11
+5.004
+.0004
+20004
+33334
+
+(tower basement)
+
+basemententrance
+#4f6362 #415150 #586e6d #627a79 #6d8786 #7b9493
+11115
+11145
+11345
+12345
+02345
+
+basemententrance1
+#b7c5c4 #8da3a2 #98acab #335f50 #396959 #447f6c
+33331
+54422
+54110
+52200
+11000
+
+basemententrance2
+#a7c7c4 #91b9b5 #6ba093 #b8d2d0 #7daca8
+11112
+30002
+30002
+30002
+34444
+
+basementstairsdown
+#4f6362 #415150 #586e6d #627a79 #6d8786 #7b9493
+11115
+11145
+11345
+12345
+02345
+
+basementstairsdowntemp
+#4f6362 #415150 #586e6d #627a79 #6d8786 #7b9493
+11115
+11145
+11345
+12345
+02345
+
+basementtile
+#396959 #335f50 #223f36 #447f6c #2b4d43
+11112
+30002
+30002
+30002
+34444
+
+basementstairsdownblocked
+#396959 #335f50 #223f36 #447f6c #2b4d43
+11112
+30002
+30002
+30002
+34444
+
+towerstairsdown2
+#4f6362 #415150 #586e6d #627a79 #6d8786 #7b9493
+11115
+11145
+11345
+12345
+02345
+
+basementlinetile
+#a7c7c4 #91b9b5 #6ba093 #b8d2d0 #7daca8
+11112
+30002
+30002
+30002
+34444
+
+basementblocktile
+#396959 #335f50 #223f36 #447f6c #2b4d43
+11112
+30002
+30002
+30002
+34444
+
+basementlineblocktile
+#a7c7c4 #91b9b5 #6ba093 #b8d2d0 #7daca8
+11112
+30002
+30002
+30002
+34444
+
+basementwallright
+#396959 #335f50 #46826c #447f6c #2b4d43 #78b6a0
+12225
+30222
+30022
+30002
+34444
+
+basementwallrightmid
+#46826c #78b6a0
+11000
+11100
+01110
+00111
+00011
+
+basementwallrighttop
+#46826c #78b6a0 #12261b
+02222
+00222
+00022
+00002
+10000            
+
+basementwallleft
+#396959 #46826c #223f36 #447f6c #2b4d43 #78b6a0
+51112
+11102
+11002
+10002
+44444
+
+basementwallleftmid
+#46826c #78b6a0
+00011
+00111
+01110
+11100
+11000
+
+basementwalllefttop
+#46826c #78b6a0 #12261b
+22220
+22200
+22000
+20000
+00001
+
+basementwallbottomleft
+#396959 #335f50 #223f36 #12261b
+31112
+33002
+33302
+33332
+33333
+
+basementwallbottomright
+#396959 #335f50 #12261b #447f6c
+11112
+30022
+30222
+32222
+22222
+
+basementwall
+grey
+
+basementphysicalwall
+#12261b
+
+basementphysicalwallperm
+#12261b
+
+basementpillar1
+#6f8c82 #d77e57 #d16b3f #c55d2f
+.1...
+.1...
+.12..
+.123.
+00000
+
+basementpillar2
+#6f8c82 #d77e57 #d16b3f #c55d2f
+.123.
+.123.
+.123.
+.123.
+00000
+
+basementpillartop2
+#6f8c82 #d77e57 #d16b3f #c55d2f
+.....
+...3.
+..23.
+.123.
+.123.
+
+basementpillar3
+#6f8c82 #d77e57 #d16b3f #c55d2f
+.123.
+.123.
+.123.
+.123.
+00000
+
+basementpillarmid3
+#6f8c82 #d77e57 #d16b3f #c55d2f
+.123.
+.123.
+.123.
+.123.
+.123.
+
+basementpillartop3
+#6f8c82 #d77e57 #d16b3f #c55d2f
+.....
+.....
+.1.3.
+.123.
+.123.
+
+basementpillar4
+#6f8c82 #d77e57 #d16b3f #c55d2f
+.123.
+.123.
+.123.
+.123.
+00000
+
+basementpillartop4
+#6f8c82 #d77e57 #d16b3f #c55d2f
+.....
+.1...
+.12..
+.123.
+.123.
+
+basementpillar5
+#6f8c82 #d77e57 #d16b3f #c55d2f
+...3.
+...3.
+..23.
+.123.
+00000
+
+basementpillar6
+#6f8c82 #d77e57 #d16b3f #c55d2f
+.123.
+.123.
+.123.
+.123.
+00000
+
+basementpillarmid6
+#6f8c82 #d77e57 #d16b3f #c55d2f
+.123.
+.123.
+.123.
+.123.
+.123.
+
+basementpillartop6
+#6f8c82 #d77e57 #d16b3f #c55d2f #6f8c82 #6e98a1
+54445
+55555
+.123.
+.123.
+.123.
+
+end
+#123456
+000..
+.000.
+..000
+...00
+....0
+
+(Drawing)
+
+drawingboardcenter
+#ffffb3
+
+drawingboardleft
+#ffffb3 #f7f7bb
+10000
+10000
+10000
+10000
+10000
+
+drawingboardtop
+#ffffb3 #f7f7bb
+11111
+00000
+00000
+00000
+00000
+
+drawingboardright
+#ffffb3 #f7f7bb
+00001
+00001
+00001
+00001
+00001
+
+drawingboarddown
+#ffffb3 #f7f7bb
+00000
+00000
+00000
+00000
+11111
+
+drawingboardtopleft
+#ffffb3 #f7f7bb
+11111
+10000
+10000
+10000
+10000
+
+drawingboarddownleft
+#ffffb3 #f7f7bb
+10000
+10000
+10000
+10000
+11111
+
+drawingboardtopright
+#ffffb3 #f7f7bb
+11111
+00001
+00001
+00001
+00001
+
+drawingboarddownright
+#ffffb3 #f7f7bb
+00001
+00001
+00001
+00001
+11111
+
+drawleft
+#281904
+.....
+.....
+000..
+.....
+.....
+
+drawup
+#281904
+..0..
+..0..
+..0..
+.....
+.....
+
+drawright
+#281904
+.....
+.....
+..000
+.....
+.....
+
+drawdown
+#281904
+.....
+.....
+..0..
+..0..
+..0..
+
+drawgoal0
+transparent
+
+drawgoal1
+transparent
+
+drawgoal2
+transparent
+
+drawgoal3
+transparent
+
+drawgoal4
+transparent
+
+drawchange
+transparent
+
+drawgood
+transparent
+
+drawwrong
+transparent
+
+(Earth Puzzle)
+
+puzzletilewrongnorm
+#2ff5d6
+0...0
+.0.0.
+.....
+.0.0.
+0...0
+
+puzzletilewrongend
+#2ff5d6
+0...0
+.0.0.
+.....
+.0.0.
+0...0
+
+puzzletilegoodnorm
+#39f52f
+0...0
+.0.0.
+.....
+.0.0.
+0...0
+
+puzzletilewronghidden
+#3d7162 #3a6b5a #2b5146 #478572 #335c50
+31111
+30002
+30002
+30002
+44442
+
+puzzletilegoodhidden
+#386759 #3a6b5a #2b5146 #478572 #335c50
+31111
+30002
+30002
+30002
+44442
+
+puzzletilehidden
+transparent
+
+puzzlepanel
+#d4ca8e #e5dfbb #c0b25b #27a0fc
+.....
+10002
+10302
+10002
+.....
+
+puzzlestartbadnorm
+#2ff5d6
+
+puzzlestartbadend
+#2ff5d6
+
+puzzlestartgood
+#39f52f
+
+balancespace
+#c4cbc3
+00000
+00000
+00000
+00000
+00000
+
+nodrawspace
+#c4cbc3
+00000
+00000
+00000
+00000
+00000
+
+imbalancespace
+#c4cbc3
+00000
+00000
+00000
+00000
+00000
+
+imbalancespacerandom
+#c4cbc3
+00000
+00000
+00000
+00000
+00000
+
+clearspace
+#c4cbc3 #d11320
+10001
+01010
+00100
+01010
+10001
+
+clear
+transparent
+
+nodraw
+transparent
+
+imbalance
+transparent
+
+imbalancerandom
+transparent
+.....
+.....
+.....
+.....
+.....
+
+1left
+#71806f
+.....
+.....
+00...
+.....
+.....
+
+1up
+#71806f
+..0..
+..0..
+.....
+.....
+.....
+
+1right
+#71806f
+.....
+.....
+...00
+.....
+.....
+
+1down
+#71806f
+.....
+.....
+.....
+..0..
+..0..
+
+(Earth - selectors)
+
+selector
+#da7c7c
+00.00
+0...0
+.....
+0...0
+00.00
+
+redselector
+red
+00.00
+0...0
+.....
+0...0
+00.00
+
+number1
+#15ae85
+.....
+.0...
+.....
+.....
+.....
+
+number2
+#157bae
+.....
+.0.0.
+.....
+.....
+.....
+
+number3
+#1520ae
+.....
+.0.0.
+.....
+.0...
+.....
+
+number4
+#6615ae
+.....
+.0.0.
+.....
+.0.0.
+.....
+
+numberQ
+#fdfe10
+.....
+.....
+..0..
+.....
+.....
+
+numberE
+#0fb209
+.....
+.000.
+.0.0.
+.000.
+.....
+
+numberEwrong
+#a70f17
+.....
+.000.
+.0.0.
+.000.
+.....
+
+numberO
+#0fb209
+.....
+.000.
+.0.0.
+.000.
+.....
+
+numberOwrong
+#a70f17
+.....
+.000.
+.0.0.
+.000.
+.....
+
+number0
+transparent
+
+Good
+#39f52f
+.....
+.....
+..0..
+.....
+.....
+
+goodtemp
+transparent
+
+Wrong
+#d11320
+.....
+.....
+..0..
+.....
+.....
+
+blocker
+black
+.....
+.....
+..0..
+.....
+.....
+
+wrongtemp
+transparent
+
+change
+transparent
+
+(Earth - count)
+
+count0
+transparent
+
+count1
+transparent
+
+count2
+transparent
+
+count3
+transparent
+
+count4
+transparent
+
+countup
+transparent
+
+countdown
+transparent
+
+(Earth - goals)
+
+goal0
+transparent
+
+goal1
+transparent
+
+goal2
+transparent
+
+goal3
+transparent
+
+goal4
+transparent
+
+goale
+transparent
+
+goalo
+transparent
+
+chain
+transparent
+
+chainstart
+transparent
+
+chaingoal
+transparent
+
+chaingoaltemp
+transparent
+
+chainstarttemp
+transparent
+
+leftmark
+transparent
+
+rightmark
+transparent
+
+upmark
+transparent
+
+downmark
+transparent
+
+drawsetup1
+transparent
+
+drawsetup2
+transparent
+
+drawsetup3
+transparent
+
+drawsetup4
+transparent
+
+drawsetup5
+transparent
+
+housewallsecret
+transparent
+
+(Darkness)
+
+Dark
+#d4ca8e
+
+Light
+transparent
+
+Darkbarrier
+transparent
+
+lightout
+transparent
+
+mark
+transparent
+
+secret
+#f9d371 #fce6ad
+10000
+10000
+10000
+10000
+10000
+
+secret2
+#f9d371 #fce6ad
+10000
+10000
+10000
+10000
+10000
+
+secretsetup
+#f9d371 #fce6ad
+10000
+10000
+10000
+10000
+10000
+
+drawmark
+transparent
+
+drawmarknegative
+transparent
+
+basementprogressmark
+transparent
+
+towerprogressmark
+transparent
+
+towerstairsupblocked
+#587ba2 #4f6e92 #7895b6 #354961 #425a78
+21111
+20003
+20003
+20003
+44443
+
+(messages)
+
+floor0mesage
+transparent
+
+floor1mesage
+transparent
+
+floor2mesage
+transparent
+
+floor3mesage
+transparent
+
+floor4mesage
+transparent
+
+floor5mesage
+transparent
+
+floor6mesage
+transparent
+
+floor7mesage
+transparent
+
+floor8mesage
+transparent
+
+floor9mesage
+transparent
+
+bfloor1mesage
+transparent
+
+bfloor2mesage
+transparent
+
+bfloor3mesage
+transparent
+
+bfloor4mesage
+transparent
+
+bfloor5mesage
+transparent
+
+bfloor6mesage
+transparent
+
+bfloor7mesage
+transparent
+
+bfloor8mesage
+transparent
+
+bfloor9mesage
+transparent
+
+messagemarkup
+transparent
+
+messagemarkdown
+transparent
+
+entrancemesage
+transparent
+
+puzzle1mesage1
+transparent
+
+puzzle1mesage2
+transparent
+
+puzzle2mesage1
+transparent
+
+puzzle2mesage2
+transparent
+
+puzzle3mesage1
+transparent
+
+puzzle3mesage2
+transparent
+
+puzzle4mesage1
+transparent
+
+puzzle4mesage2
+transparent
+
+puzzle5mesage1
+transparent
+
+puzzle5mesage2
+transparent
+
+puzzle6mesage1
+transparent
+
+puzzle6mesage2
+transparent
+
+puzzle8mesage1
+transparent
+
+puzzle8mesage2
+transparent
+
+bpuzzle1mesage
+transparent
+
+bpuzzle2mesage
+transparent
+
+bpuzzle3mesage
+transparent
+
+bpuzzle4mesage
+transparent
+
+bpuzzle5mesage
+transparent
+
+bpuzzle6mesage
+transparent
+
+bpuzzle7mesage
+transparent
+
+bpuzzle8mesage
+transparent
+
+bpuzzle9mesage
+transparent
+
+imbalancemesage1
+transparent
+
+imbalancemesage2
+transparent
+
+balancemesagefinal
+transparent
+
+balancemesagefinal2
+transparent
+
+hiddenmesage
+transparent
+
+bloomstart
+transparent
+
+bloom1
+#d94148 #be2633 #96222d
+.....
+.....
+....1
+..012
+00222
+
+bloom2
+#d94148 #be2633 #96222d #ab222c
+.....
+.....
+1...3
+21332
+22122
+
+bloom3
+#be2633 #96222d #ab222c #d52c37
+.....
+2....
+2000.
+2220.
+13310
+
+bloom4
+#d94148 #b12833 #96222d
+....0
+....0
+....0
+..001
+..012
+
+bloom5
+#d94148 #b12833 #96222d #d52c37
+12233
+10323
+01223
+01232
+02322
+
+bloom6
+#96222d #d52c37 #be2633
+00200
+01102
+10010
+00010
+00001
+
+bloom7
+#96222d #d52c37 #be2633 #b5242a
+00100
+20101
+02001
+00111
+00131
+
+bloom8
+#871f27 #9a1f26 #be2633
+2....
+02...
+012..
+012..
+012..
+
+bloom9
+#d94148 #b12833 #96222d
+..010
+..012
+..012
+.0112
+..012
+
+bloom10
+#d94148 #b12833 #96222d #d52c37 #ac2322
+23234
+03234
+03234
+02232
+01232
+
+bloom11
+#d52c37 #5b1111 #7d1717 #ab222c
+00010
+02112
+01001
+31021
+32110
+
+bloom12
+#96222d #d52c37 #871f27 #b5242a
+00131
+01001
+01111
+11002
+00002
+
+bloom13
+#871f27 #9a1f26 #be2633 #d52c37
+0012.
+0012.
+013..
+013..
+03...
+
+bloom14
+#d94148 #b12833 #96222d
+..010
+..012
+.0012
+..000
+....0
+
+bloom15
+#d94148 #b12833 #96222d #d52c37
+01233
+02323
+02323
+32322
+32332
+
+bloom16
+#96222d #d52c37 #ab222c
+22222
+00000
+10001
+11111
+10000
+
+bloom17
+#96222d #d52c37 #b5242a #871f27 #9a1f26
+10001
+11113
+00213
+00113
+01134
+
+bloom18
+#d52c37 #9a1f26
+00...
+10...
+10...
+10...
+0....
+
+bloom19
+#96222d #d52c37
+11010
+.1110
+...10
+.....
+.....
+
+bloom20
+#96222d #d52c37
+11011
+01100
+10111
+.1...
+.....
+
+bloom21
+#96222d #d52c37
+11001
+0111.
+1....
+.....
+.....
+
+finalleft
+#71806f
+.....
+.....
+00...
+.....
+.....
+
+finalup
+#71806f
+..0..
+..0..
+.....
+.....
+.....
+
+finalright
+#71806f
+.....
+.....
+...00
+.....
+.....
+
+finaldown
+#71806f
+.....
+.....
+.....
+..0..
+..0..
+
+finalpattern
+transparent
+
+bloomend
+transparent
+
+bloomend1
+transparent
+
+target
+green
+
+=======
+LEGEND
+=======
+
+man = manup or mandown or manright or manleft
+Player = man or selector or redselector or bloomend1
+ground = ground1 or ground2 or ground3
+puddle = puddlecenter or puddleleft or puddleright or puddletop or puddlebottom or puddlecornertr or puddlecornertl or puddlecornerbr or puddlecornerbl
+highpuddletopleft = highpuddletopleft1 or highpuddletopleft2
+highpuddletopright = highpuddletopright1 or highpuddletopright2 
+highpuddlebottomleft = highpuddlebottomleft1 or highpuddlebottomleft2
+highpuddle = highpuddletopleft1 or highpuddletopleft2 or highpuddletopright1 or highpuddletopright2 or highpuddlebottomleft1 or highpuddlebottomleft2 or highpuddlebottomright
+highground = highground1 or highground2 or highground3
+puzzletilewrong = puzzletilewronghidden or puzzletilewrongnorm
+puzzletilegood = puzzletilegoodhidden or puzzletilegoodnorm
+puzzletile = puzzletilewrong or puzzletilegood or puzzletilehidden
+direction = leftmark or rightmark or upmark or downmark
+puzzlespace = balancespace or imbalancespace or imbalancespacerandom
+drawingboard = drawingboardcenter or drawingboardleft or drawingboardright or drawingboardtop or drawingboarddown or drawingboardtopleft or drawingboardtopright or drawingboarddownright or drawingboarddownleft
+housefloor = housefloornorm or housefloor1 or housefloor2
+housefloorcrease = housefloor1 or housefloor2
+rose = rose1 or rose2 or rose3 or rose4 or rose5 or rose6 or rose7 or rose8 or rose9 or rose10 
+towertilepick = towertilecrack1 or towertilecrack2 or towertilecrack3
+blocktile = basementblocktile or basementlineblocktile
+towerstairsdown = towerstairsdown1 or towerstairsdown2
+towerstairs = towerstairsdown1 or towerstairsdown2 or towerstairsup
+path = pathupbend or pathrightbend or pathhoriz or pathvert or pathend or pathtri or pathstart
+floormesage = floor1mesage or floor2mesage or floor3mesage or floor4mesage or floor5mesage or floor6mesage or floor7mesage or floor8mesage or floor9mesage or bfloor1mesage or bfloor2mesage or bfloor3mesage or bfloor4mesage or bfloor5mesage or bfloor6mesage or bfloor7mesage or bfloor8mesage or bfloor9mesage or floor0mesage
+rosetile = rosetile1 or rosetile2 or rosetile3
+puzzlestartbad = puzzlestartbadnorm or puzzlestartbadend
+puzzlestart = puzzlestartbad or puzzlestartgood
+
+# = Darkbarrier and Wall
+* = Wall and chainstarttemp
+@ = Wall and chaingoaltemp
+_ = PhysicalWall
+! = imbalance and wall
+: = imbalancerandom and wall
+⸝ = nodraw and wall
+£ = clearspace
+
+(outside)
+P = manright and pathvert and floor0mesage
+. = groundstart
+- = puddlecenter
+z = pathstart and groundstart
+` = housewall
+~ = houseroof
+h = houseentrance
+꠸ = housewindow
+q = towerwall1
+w = towerwall2
+$ = towerbase
+t = towerentrance
+(inside)
+, = towertile
+l = towertilecrack
+/ = towerpillar2 and towertile
+[ = towerpillar1 and towertile
+{ = towerpillar3 and towertile
+⥁ = towerpillar2special and towertile
+↥ = towerstairsup and towertile
+x = puzzletilewrongnorm and towertile
+ᵽ = puzzletilewrongend and housefloornorm and balancemesagefinal
+¥ = puzzletilewrongnorm and towertileoutside and imbalancemesage1
+ᵶ = puzzletilewrongnorm and towertile and imbalancemesage2
+ᶍ = puzzletilewrongnorm and towertileoutside
+☌ = puzzletilehidden and towertile
+y = puzzlestartbadnorm and dark
+ᵯ = puzzlestartbadend and dark and balancemesagefinal2 and end
+↓ = towerstairsdown1
+% = towerwallint
+c = towerwallinttoppermanent
+⏙ = towerstairsupblocked and towertile
+
+(balcony)
+& = highgroundstart
++ = highpuddlebottomright
+' = towertileoutside
+⤫ = towertileoutside and rosetilestart
+
+
+(roof)
+k = roofpattern and towertileoutside
+
+(basement)
+" = basementtile
+; = basementlinetile
+b = basemententrance1
+n = basemententrance2 and bpuzzle1mesage
+\ = basementpillar4 and basementtile
+] = basementpillar5 and basementtile
+} = basementpillar6 and basementtile
+| = basementblocktile
+⚎ = basementphysicalwallperm
+ᵹ = puzzletilewronghidden and basementtile
+
+
+(puzzle tiles/ messages)
+
+⅕ = puzzletilewrongnorm and towertile and puzzle2mesage1
+⅙ = puzzletilewrongnorm and towertileoutside and puzzle2mesage2
+⅛ = puzzletilewrongnorm and towertile and puzzle3mesage1
+⅔ = puzzletilewrongnorm and towertile and puzzle3mesage2
+⅖ = puzzletilewrongnorm and towertile and puzzle4mesage1
+⅗ = puzzletilewrongnorm and towertile and puzzle4mesage2
+⅘ = puzzletilewrongnorm and towertile and puzzle5mesage1
+⅜ = puzzletilewrongnorm and towertile and puzzle5mesage2
+⅚ = puzzletilewrongnorm and towertile and puzzle6mesage1
+⅐ = puzzletilewrongnorm and towertileoutside and puzzle6mesage2
+⅝ = puzzletilewrongnorm and towertile and puzzle8mesage1
+↉ = puzzletilewrongnorm and towertile and puzzle8mesage2
+⅑ = towerstairsdown1 and bpuzzle2mesage
+⅒ = towerstairsdown2 and bpuzzle3mesage
+⅞ = towerstairsdown2 and bpuzzle4mesage
+⥊ = towerstairsdown2 and bpuzzle5mesage
+⥋ = towerstairsdown2 and bpuzzle6mesage
+⥌ = towerstairsdown2 and bpuzzle7mesage
+⥍ = towerstairsdown2 and bpuzzle8mesage
+⥎ = towerstairsdown2 and bpuzzle9mesage
+⥏ = towerentrance and puzzle1mesage1
+¢ = puzzletilehidden and puzzle1mesage2 and towertile
+
+
+
+(earth)
+(s = selector and goal1 and count0 and number1 and wrongtemp and puzzlespace)
+0 = balancespace and goal0 and count0 and number0 and goodtemp and dark
+1 = balancespace and goal1 and count0 and number1 and wrongtemp and dark
+2 = balancespace and goal2 and count0 and number2 and wrongtemp and dark
+3 = balancespace and goal3 and count0 and number3 and wrongtemp and dark
+4 = balancespace and goal4 and count0 and number4 and wrongtemp and dark
+? = balancespace and count0 and numberQ and goodtemp and dark
+e = balancespace and goale and count0 and numbere and goodtemp and dark
+o = balancespace and goalo and count0 and numberowrong and wrongtemp and dark
+(goals with blocker and no number)
+5 = balancespace and goal0 and count0 and goodtemp and dark and blocker
+6 = balancespace and goal1 and count0 and wrongtemp and dark and blocker
+7 = balancespace and goal2 and count0 and wrongtemp and dark and blocker
+8 = balancespace and goal3 and count0 and wrongtemp and dark and blocker
+9 = balancespace and goal4 and count0 and wrongtemp and dark and blocker
+
+(drawing)
+a = secret
+s = drawingboardcenter and count0 and drawgoal0
+d = drawingboardcenter and count0 and drawgoal1
+f = drawingboardcenter and count0 and drawgoal2
+g = drawingboardcenter and count0 and drawgoal3
+j = drawingboardcenter and count0 and drawgoal4
+m = housewallintdown
+u = housefloornorm
+i = housefloorstart
+r = rose1
+Ð = housewallintleft and housewallsecret
+ᶃ = hiddendoor and hiddenmesage
+
+ᶊ = end
+
+► = bloomstart and balancespace and blocker
+◄ = target and balancespace and blocker
+¤ = balancespace and goal0 and count0 and goodtemp and blocker and finalpattern
+┰ = balancespace and goal0 and count0 and goodtemp and blocker
+
+
+=======
+SOUNDS
+=======
+
+sfx1 50548908
+sfx2 70091308
+sfx3 2038108
+sfx4 55009308
+sfx5 88082508
+sfx6 59276308
+sfx7 68756908
+sfx8 20891708
+sfx9 71493108
+sfx10 34050308
+
+
+
+================
+COLLISIONLAYERS
+================
+
+Background
+drawgood, drawwrong, target, bloomstart
+mark, drawmark, drawmarknegative, housefloorstart
+ground1, ground2, ground3, groundstart, towertile, towertilecrack1, towertilecrack2, towertilecrack,towertilehalflight,towertileoutside,towertilecrack3,end, balancespace, drawingboardcenter, drawingboardleft, drawingboardright, drawingboardtop, drawingboarddown, drawingboardtopleft, drawingboardtopright, drawingboarddownright, drawingboarddownleft, imbalancespace, imbalancespacerandom, housefloor, blocktile, nodrawspace, clearspace
+path, pathstart, messagemarkup, messagemarkdown
+basementtile, basementlinetile, puddlecenter, puddleleft, puddleright, puddletop, puddlebottom, puddlecornertr, puddlecornertl, puddlecornerbr, puddlecornerbl
+good, wrong, goodtemp, wrongtemp puzzletilewrong, puzzletilegood, puzzlestartbad, puzzlestartgood, puzzletilehidden, puzzletilewrongend
+Light, Darkbarrier, number1, number2, number3, number4, number0, numberQ, numbere, numbero, numberewrong, numberowrong, chainstart, chaingoal, chaingoaltemp, chainstarttemp, imbalance, imbalancerandom, nodraw, floormesage, balancemesagefinal2
+chain, leftmark, rightmark, upmark, downmark, countup, countdown, roofpattern,imbalancemesage1, imbalancemesage2, balancemesagefinal, basementpattern, finalpattern
+1Left, drawleft, roofleft, baseleft, finalleft,clear
+1right, drawright, roofright, baseright, finalright
+1up, drawup, roofup, baseup, finalup,towerwallint, Physicalwall, basementwall, basementphysicalwall, basementphysicalwallperm
+1down, drawdown, roofdown, basedown, finaldown
+count0, count1, count2, count3, count4, drawsetup1, drawsetup2, drawsetup3, drawsetup4, drawsetup5, highgroundstart,highground1, highground2, highground3, highpuddletopright1,highpuddletopright2,highpuddletopleft1,highpuddletopleft2, highpuddlebottomleft1,highpuddlebottomleft2, highpuddlebottomright, towerbalconytopleft, towerbalconytopright
+change, drawchange, houseentrance, towerentrance, towerentrancefront, towerstairsup, towerstairsdown1, towerstairsuptemp, towerstairsdowntemp,towerwallintleftmid, towerwallintlefttop,towerwallintrightmid, towerwallintrighttop, towerwallinttoppermanent, basementstairsdown, basementstairsdowntemp, secret, secret2, hiddendoortemp, hiddendoor,basementwallrightmid, basementwallrighttop, basementwallleftmid, basementwalllefttop, towerbalconytoprightroof, towerbalconytopleftroof, basemententrance, basemententrance1, basemententrance2, basementstairsdownblocked, towerstairsdown2, towerstairsupblocked, dirttile
+Player, Wall, housewall, housewallcrack, housewallside,houseroof, houseroofside, housewindow, towerbase, towerbaseleft, towerbaseright, towerpillar1, towerpillar2, towerpillar2special,  towerpillar3,towerwallintleft, towerwallintright, towerwallbottomleft, towerwallbottomright, towerwallinttop, towerwallintbottom,towerwallinttoppermanent, towerbalconyleft, towerbalconyright, towerbalconytop, housewallinttop, housewallintright, housewallintleft, housewallintdown, rose, basementwallbottomleft, basementwallbottomright, basementwallleft, basementwallright, towerwall1, towerwall2, towerbalconyrightroof, towerbalconyleftroof, basementpillar1, basementpillar2, basementpillar3, basementpillar4, basementpillar5, basementpillar6, bloomend, rosetile, rosetilestart, towerwall1right, towerwall1left, towerwall2right, towerwall2left
+goal0, goal1, goal2, goal3, goal4, goale, goalo, drawgoal0, drawgoal1, drawgoal2, drawgoal3, drawgoal4, puzzlepanel,towerpillartop2, towerpillartop2special, towerpillarmid3, towerpillartop3, basementpillartop2, basementpillarmid3, basementpillartop3, basementpillartop4, basementpillarmid6, basementpillartop6, towerpillartop1
+Dark, light, lightout, halftiletopright, halftiletopleft, halftilebottomright, halftilebottomleft
+blocker, basementprogressmark, towerprogressmark, bloom1, bloom2, bloom3, bloom4, bloom5, bloom6, bloom7, bloom8, bloom9, bloom10, bloom11, bloom12, bloom13,bloom14, bloom15, bloom16, bloom17, bloom18, bloom19, bloom20, bloom21
+puzzle1mesage1, puzzle1mesage2, puzzle2mesage1, puzzle2mesage2, puzzle3mesage1, puzzle3mesage2, puzzle4mesage1, puzzle4mesage2, puzzle5mesage1, puzzle5mesage2, puzzle6mesage1, puzzle6mesage2, puzzle8mesage1, puzzle8mesage2, bpuzzle1mesage, bpuzzle2mesage, bpuzzle3mesage, bpuzzle4mesage, bpuzzle5mesage, bpuzzle6mesage, bpuzzle7mesage, bpuzzle8mesage, bpuzzle9mesage, entrancemesage, hiddenmesage, housewallsecret,secretsetup
+
+======
+RULES     
+======     
+
+(World Creation)
+
+[groundstart] -> [random ground]
+
+[rosetilestart] -> [random rosetile]
+
+[basementtile| towertileoutside roofpattern] -> [basementtile| basementtile basementpattern]
+
+vertical[pathvert | pathstart] -> [pathvert|pathvert]
+horizontal[pathvert|pathstart] -> [pathrightbend|pathhoriz]
+horizontal[pathhoriz|pathstart] -> [pathhoriz|pathhoriz]
+up[pathhoriz|pathstart] -> [pathtri|pathvert]
+right[pathtri|no path] -> [pathupbend|no path]
+up[pathvert|no path] -> [pathend|no path]
+
+right [puddlecenter| no puddle] -> [puddlecenter| puddleright]
+left [puddlecenter| no puddle] -> [puddlecenter| puddleleft]
+up [puddlecenter| no puddle] -> [puddlecenter| puddletop]
+down [puddlecenter| no puddle] -> [puddlecenter| puddlebottom]
+
+up[puddleright| no puddle] -> [puddleright| puddlecornertr]
+down[puddleright| no puddle] -> [puddleright| puddlecornerbr]
+up[puddleleft| no puddle] -> [puddleleft| puddlecornertl]
+down[puddleleft| no puddle] -> [puddleleft| puddlecornerbl]
+
+left[houseroof| no houseroof] -> [houseroof| houseroofside]
+left[housewall|ground] -> [housewallside| ground]
+
+left[housewindow|]-> [housewindow|housewallcrack]
+
+down[towerentrance | ground] -> [towerentrance | towerentrancefront]
+
+left[towerwall1|ground] -> [towerwall1left|ground]
+left[towerwall2|ground] -> [towerwall2left|ground]
+left[towerbase|ground] -> [towerbaseleft|ground]
+
+right[towerwall1|ground] -> [towerwall1right|ground]
+right[towerwall2|ground] -> [towerwall2right|ground]
+right[towerbase|ground] -> [towerbaseright|ground]
+
+down[towertileoutside|towertile] -> [towertileoutside|towertilehalflight]
+
+[towerwallint|basementtile] -> [basementwall|basementtile]
+[basementwall|physicalwall] -> [basementwall|basementphysicalwall]
+[basementtile|physicalwall] -> [basementtile|basementphysicalwall]
+[basementphysicalwall|physicalwall] -> [basementphysicalwall|basementphysicalwall]
+
+[towertile|basementtile] -> [basementtile|basementtile]
+
+[towertile|basementlinetile] -> [basementlinetile|basementlinetile]
+
+[towerpillar1|basementtile] -> [basementpillar1|basementtile]
+[towerpillar2|basementtile] -> [basementpillar2|basementtile]
+[towerpillar3|basementtile] -> [basementpillar3|basementtile]
+
+up[towerpillar1|] -> [towerpillar1|towerpillartop1]
+up[towerpillar2|] -> [towerpillar2|towerpillartop2]
+up[towerpillar2special|] -> [towerpillar2special|towerpillartop2special]
+up[towerpillar3||] ->[towerpillar3|towerpillarmid3|towerpillartop3]
+up[basementpillar2|] -> [basementpillar2|basementpillartop2]
+up[basementpillar3||] -> [basementpillar3|basementpillarmid3|basementpillartop3]
+up[basementpillar4|] -> [basementpillar4|basementpillartop4]
+up[basementpillar6||] -> [basementpillar6|basementpillarmid6|basementpillartop6]
+
+down[towerwallint|towertile] -> [towerwallinttop|towertile]
+up[towerwallint|towertile] -> [towerwallintbottom|towertile]
+left[towerwallinttop|towertile] -> [towerwallintright|towertile]
+right[towerwallinttop|towertile] -> [towerwallintleft|towertile]
+left[towerwallintbottom|towertile] -> [towerwallbottomright|towertile]
+right[towerwallintbottom|towertile] -> [towerwallbottomleft|towertile]
+up[towerwallintleft|]-> [towerwallintleft|towerwallintleftmid]
+up[towerwallintright|]-> [towerwallintright|towerwallintrightmid]
+left[towerwallintleftmid|] -> [towerwallintleftmid|towerwallintlefttop]
+right[towerwallintrightmid|] -> [towerwallintrightmid|towerwallintrighttop]
+
+
+down[towertileoutside|towerwallint|towerwall1] -> [towertileoutside|halftilebottomleft towerwall2left|towerwall1]
+down[towertileoutside|towerwallint|towerwall2] -> [towertileoutside|halftilebottomleft towerwall1left|towerwall2]
+left[halftilebottomleft towerwall1left|towertileoutside] -> [halftilebottomright towerwall1right|towertileoutside]
+left[halftilebottomleft towerwall2left|towertileoutside] -> [halftilebottomright towerwall2right|towertileoutside]
+up[towerwallint|towertileoutside] -> [towerwall1|towertileoutside]
+
+up[towertileoutside|towerwallint|highgroundstart]->[towertileoutside|halftiletopleft highgroundstart|highgroundstart]
+left[halftiletopleft|towertileoutside]->[halftiletopright |towertileoutside]
+up[towertileoutside|towerwallint]->[towertileoutside|highgroundstart]
+
+up[towerbaseleft|towerwall1] -> [towerbaseleft|towerwall1left]
+up[towerbaseleft|towerwall2] -> [towerbaseleft|towerwall2left]
+up[towerbaseright|towerwall1] -> [towerbaseright|towerwall1right]
+up[towerbaseright|towerwall2] -> [towerbaseright|towerwall2right]
+vertical[towerwall1right|towerwall2] -> [towerwall1right|towerwall2right]
+vertical[towerwall2right|towerwall1] -> [towerwall2right|towerwall1right]
+vertical[towerwall1left|towerwall2] -> [towerwall1left|towerwall2left]
+vertical[towerwall2left|towerwall1] -> [towerwall2left|towerwall1left]
+
+up [towertileoutside | towertile] -> [towertileoutside| towertileoutside]
+
+[highgroundstart] -> [random highground]
+
+left [highpuddlebottomright| no highpuddle]  -> [highpuddlebottomright|random highpuddlebottomleft]
+up [highpuddlebottomright| no highpuddle ]  -> [highpuddlebottomright|random highpuddletopright]
+up [highpuddlebottomleft| no highpuddle ]  -> [highpuddlebottomleft|random highpuddletopleft]
+
+left[towertileoutside | no halftiletopleft highground] -> [towertileoutside|no halftiletopleft towerbalconyleft]
+right[towertileoutside |no halftiletopright highground] -> [towertileoutside|no halftiletopright towerbalconyright]
+up[towertileoutside | highground] -> [towertileoutside|towerbalconytop]
+up[towerbalconyleft | highground] -> [towerbalconyleft|towerbalconytopleft]
+up[towerbalconyright | highground] -> [towerbalconyright|towerbalconytopright]
+
+left[towerbalconytop | highground] -> [towerbalconytop|towerbalconytopleftroof]
+right[towerbalconytop | highground] -> [towerbalconytop|towerbalconytoprightroof]
+down[towerbalconytopleftroof|towerbalconytop] -> [towerbalconytopleftroof| towerbalconyleftroof]
+down[towerbalconytoprightroof|towerbalconytop] -> [towerbalconytoprightroof|towerbalconyrightroof]
+
+left[roofpattern|roofpattern] -> [roofpattern roofleft| roofpattern roofright]
+up[roofpattern|roofpattern] -> [roofpattern roofup| roofpattern roofdown]
+
+left[finalpattern|finalpattern] -> [finalpattern finalleft| finalpattern finalright]
+up[finalpattern|finalpattern] -> [finalpattern finalup| finalpattern finaldown]
+
+left[basementpattern|basementpattern] -> [basementpattern baseleft| basementpattern baseright]
+up[basementpattern|basementpattern] -> [basementpattern baseup| basementpattern basedown]
+
+up[puzzletilewrong no basementtile no basementlinetile | no puzzlepanel] -> [puzzletilewrong|puzzlepanel]
+
+[imbalance | balancespace] -> [imbalance | imbalancespace]
+[imbalancerandom | balancespace] -> [imbalancerandom | imbalancespacerandom]
+[imbalancespace | balancespace] -> [imbalancespace | imbalancespace]
+[imbalancespacerandom | balancespace] -> [imbalancespacerandom | imbalancespacerandom]
+[nodraw | balancespace] -> [nodraw|nodrawspace blocker]
+[nodrawspace|balancespace] -> [nodrawspace|nodrawspace blocker]
+
+left[drawingboardcenter|housefloor] -> [drawingboardleft|housefloor]
+right[drawingboardcenter|housefloor] -> [drawingboardright|housefloor]
+up[drawingboardcenter|housefloor] -> [drawingboardtop|housefloor]
+down[drawingboardcenter|housefloor] -> [drawingboarddown|housefloor]
+up[drawingboardleft|housefloor] -> [drawingboardtopleft|housefloor]
+up[drawingboardright|housefloor] -> [drawingboardtopright|housefloor]
+down[drawingboardleft|housefloor] -> [drawingboarddownleft|housefloor]
+down[drawingboardright|housefloor] -> [drawingboarddownright|housefloor]
+
+[housefloorstart] -> [random housefloorcrease]
+right [housewallintdown|housefloor] -> [housewallintright|housefloor]
+left[housewallintdown|housefloor]-> [housewallintleft|housefloor]
+down [housewallintdown|housewallintdown|housefloor] -> [housewallinttop|housewallinttop|housefloor]
+left [housewallinttop|housewallintdown] -> [housewallinttop|housewallintright]
+right [housewallinttop|housewallintdown] -> [housewallinttop|housewallintleft]
+
+right[rose1||||] -> [rose1|rose2|rose3|rose4|rose5]
+down[rose1|] -> [rose1|rose6]
+right[rose6||||] -> [rose6|rose7|rose8|rose9|rose10]
+
+up[basementtile|basementwall] -> [basementtile|basementwallleft]
+left[basementwallleft|basementtile] -> [basementwallright|basementtile]
+left[basementwallleft|basementblocktile] -> [basementwallright|basementblocktile]
+up[basementwallleft|basementphysicalwall]->[basementwallleft|basementwallleftmid]
+up[basementwallright|basementphysicalwall]->[basementwallright|basementwallrightmid]
+up[basementwallleftmid|no basementphysicalwallperm basementphysicalwall]->[basementwallleftmid|basementwalllefttop]
+up[basementwallrightmid|no basementphysicalwallperm basementphysicalwall]->[basementwallrightmid|basementwallrighttop]
+down[basementtile|basementwall] -> [basementtile|basementwallbottomleft]
+left[basementwallbottomleft|basementtile] -> [basementwallbottomright|basementtile]
+left[basementwallbottomleft|basementblocktile] -> [basementwallbottomright|basementblocktile]
+
+vertical [ basementlinetile|basementblocktile] -> [basementlinetile|basementlineblocktile]
+[basementlinetile|basementtile puzzletilewrong] -> [basementlinetile| basementlinetile puzzletilewrong]
+
+[basementtile|towerstairsdown1] -> [basementtile|basementstairsdownblocked]
+
+[towertilecrack] -> [random towertilepick]
+
+horizontal[towerentrance no puzzle1mesage1|puzzle1mesage1] -> [towerentrance no puzzle1mesage1| no puzzle1mesage1]
+
+up[rosetile| |rosetile] -> [rosetile| dirttile| rosetile]
+
+down [basemententrance|||||||housewallsecret] -> [basemententrance|||||||secretsetup]
+
+[secretsetup] up [houseentrance||drawgoal0||||] -> [secretsetup] up [houseentrance||drawsetup1|drawsetup2|drawsetup3|drawsetup4|drawsetup5]
+
+right[drawsetup1||||||] -> [drawgoal2 count0|drawgoal1|drawgoal0|drawgoal0|drawgoal0|drawgoal0|drawgoal0]
+right[drawsetup2||||||] -> [drawgoal1 count0|drawgoal0|drawgoal0|drawgoal0|drawgoal2|drawgoal2|drawgoal0]
+right[drawsetup3||||||] -> [drawgoal0 count2|drawgoal2|drawgoal2|drawgoal0|drawgoal2|drawgoal2|drawgoal0]
+right[drawsetup4||||||] -> [drawgoal0 count3|drawgoal2|drawgoal2|drawgoal0|drawgoal0|drawgoal0|drawgoal1]
+right[drawsetup5||||||] -> [drawgoal0 count2|drawgoal0|drawgoal0|drawgoal0|drawgoal0|drawgoal1|drawgoal2]
+
+[secretsetup housewallintleft] -> [secret2 no housewallintleft]
+
+
+(Transportation Messages)
+[action man puzzle2mesage1] -> [action man] sfx1 message I've been watching you
+[action man puzzle2mesage2] -> [action man] sfx4 message Every connection draws us closer
+[action man puzzle3mesage1] -> [action man] sfx7 message If you don't want to, its ok
+[action man puzzle3mesage2] -> [action man] sfx4 message All you need to do is be here 
+[action man puzzle4mesage1] -> [action man] sfx5 message I'll be waiting at the top
+[action man puzzle4mesage2] -> [action man] sfx6 message Take as much time as you need
+[action man puzzle5mesage1] -> [action man] sfx2 message My mind is above and heart below
+[action man puzzle5mesage2] -> [action man] sfx2 message Both parts equally important
+[action man puzzle6mesage1] -> [action man] sfx7 message I so enjoy you being here
+[action man puzzle6mesage2] -> [action man] sfx1 message Can you see it in my eyes?
+[action man puzzle8mesage1] -> [action man] sfx8 message I'd like it if you stay
+[action man puzzle8mesage2] -> [action man] sfx10 message I trust you feel the same
+[action man bpuzzle2mesage] -> [action man] sfx5 message I'll be waiting at the bottom
+[action man bpuzzle3mesage] -> [action man] sfx6 message I can't wait till you're here
+[action man bpuzzle4mesage] -> [action man] sfx10 message I know you feel the same
+[action man bpuzzle5mesage] -> [action man] sfx8 message I can't solve your problems
+[action man bpuzzle6mesage] -> [action man] sfx2 message But I will see them through with you
+[action man bpuzzle7mesage] -> [action man] sfx9 message I see you
+[action man bpuzzle8mesage] -> [action man] sfx9 message And you see me
+[action man bpuzzle9mesage] -> [action man] sfx3 message Where have you been?
+[action man puzzle1mesage2] -> [action man] sfx6 message Heart and mind together as one
+
+
+[action man imbalancemesage1] -> [action man imbalancemesage1] sfx9 message You can only do so much
+[action man imbalancemesage2] -> [action man imbalancemesage2] sfx9 message You can leave it if you want to
+[action man balancemesagefinal] -> [action man balancemesagefinal] sfx1 message I've been watching you... From thee empty floor
+[action selector balancemesagefinal2] -> [action selector balancemesagefinal2] sfx4 message Look me in the eyes
+
+(Transportation)
+
+[> man floormesage | puzzlepanel] -> [man floormesage| puzzlepanel]
+
+
+up [towerentrance  man floormesage puzzle1mesage1 | | | towerentrance | ] -> [towerentrance | | | towerentrance | man floormesage messagemarkup] sfx3 message Where have you been?
+up [towerentrance  man floormesage | | | towerentrance | ] -> [towerentrance | || towerentrance | man floormesage messagemarkup]
+down [towerentrance  man floormesage | | | towerentrance | ] -> [towerentrance | | | towerentrance | man floormesage messagemarkdown]
+
+ [action man puzzletilewrongend] [puzzlestartbadend] -> [puzzletilewrongend] [selector puzzlestartbadend light] checkpoint
+  [action selector puzzlestartbadend] [puzzletilewrongend] -> [puzzlestartbadend lightout] [mandown  puzzletilewrongend] checkpoint
+
+horizontal [action man puzzletile| ... | puzzlestart] -> [puzzletile|...| puzzlestart selector light] checkpoint
+
+horizontal [action selector puzzlestart|...| puzzletile] -> [puzzlestart lightout|...|puzzletile mandown] checkpoint
+
+ up [action man floormesage towerstairsup|...|towerstairsdown] -> [towerstairsup|...|towerstairsdown messagemarkup man floormesage ]
+down [action man floormesage towerstairsdown|...|towerstairsup] -> [towerstairsdown|...|towerstairsup messagemarkdown man floormesage]
+[towerstairsuptemp no man] -> [towerstairsup]
+[towerstairsdowntemp no man] -> [towerstairsdown2]
+
+[houseentrance man floormesage no mark] [houseentrance no man] -> [houseentrance] [ houseentrance man floormesage mark]
+
+[hiddendoor man floormesage no mark hiddenmesage] [hiddendoor no man] -> [hiddendoor] [ hiddendoor man floormesage mark] sfx6 message My heart is yours
+[hiddendoor man floormesage no mark] [hiddendoor no man] -> [hiddendoor] [ hiddendoor man floormesage mark]
+
+[basemententrance man floormesage no mark] [basemententrance1 no man] -> [basemententrance] [basemententrance1 man floormesage mark messagemarkdown]
+[basemententrance1 man floormesage no mark] [basemententrance no man] -> [basemententrance1] [basemententrance man floormesage mark messagemarkup]
+[basemententrance2 man floormesage no mark bpuzzle1mesage] [basemententrance2 no man bpuzzle1mesage] -> [basemententrance2] [basemententrance2 man floormesage mark] sfx6 message My mind is yours
+[basemententrance2 man floormesage no mark] [basemententrance2 no man] -> [basemententrance2] [basemententrance2 man floormesage mark]
+
+down [down man blocktile floormesage | blocktile] -> [man blocktile floormesage | blocktile]
+up [up man blocktile floormesage | blocktile] -> [man blocktile floormesage | blocktile]
+
+ [ > man floormesage] -> [> man > floormesage]
+ late [man] [floormesage no man] -> [man floormesage] []
+ 
+ 
+ [> bloomend1] -> [bloomend1]
+(darkness)
+
+[light | dark] -> [light|light]
+
+[lightout | light] -> [lightout | lightout]
+
+[lightout] -> [dark]
+
+(man movement)
+[left man] -> [left manleft]
+[right man] -> [right manright]
+[up man] -> [up manup]
+[down man] -> [down mandown]
+
+(drawing)
+
+left [left man drawingboard no drawleft | drawingboard] -> [drawingboard drawleft drawmark | drawingboard drawright man drawmark]
+right [right man drawingboard no drawright | drawingboard] -> [drawingboard drawright drawmark | drawingboard drawleft man drawmark]
+up [up man drawingboard no drawup | drawingboard] -> [drawingboard drawup drawmark| drawingboard drawdown man drawmark]
+down [down man drawingboard no drawdown | drawingboard] -> [drawingboard drawdown drawmark| drawingboard drawup man drawmark]
+
+left [left man drawingboard drawleft | drawingboard drawright] -> [drawingboard no drawleft drawmarknegative| drawingboard no drawright man drawmarknegative]
+right [right man drawingboard drawright | drawingboard drawleft] -> [drawingboard no drawright drawmarknegative| drawingboard no drawleft man drawmarknegative]
+up [up man drawingboard drawup | drawingboard drawdown] -> [drawingboard no drawup drawmarknegative| drawingboard no drawdown man drawmarknegative]
+down [down man drawingboard drawdown | drawingboard drawup] -> [drawingboard no drawdown drawmarknegative| drawingboard no drawup man drawmarknegative]
+
+[count0 drawmark] -> [count1 drawchange]
+[count1 drawmark] -> [count2 drawchange]
+[count2 drawmark] -> [count3 drawchange]
+[count3 drawmark] -> [count4 drawchange]
+
+[count4 drawmarknegative] -> [count3 drawchange]
+[count3 drawmarknegative] -> [count2 drawchange]
+[count2 drawmarknegative] -> [count1 drawchange]
+[count1 drawmarknegative] -> [count0 drawchange]
+
+[count4 drawgoal4] [drawchange] -> [count4 drawgoal4 drawgood] [drawchange]
+[count3 drawgoal3] [drawchange] -> [count3 drawgoal3 drawgood] [drawchange]
+[count2 drawgoal2] [drawchange] -> [count2 drawgoal2 drawgood] [drawchange]
+[count1 drawgoal1] [drawchange] -> [count1 drawgoal1 drawgood] [drawchange]
+[count0 drawgoal0] [drawchange] -> [count0 drawgoal0 drawgood] [drawchange]
+
+[drawingboard no drawgood] [drawchange] -> [drawingboard drawwrong] [drawchange]
+
+[secret] -> [basementstairsdowntemp]
+[secret2] -> [hiddendoortemp]
+
+[basementstairsdowntemp] [drawingboard drawwrong]-> [secret] [drawingboard drawwrong]
+[basementstairsdowntemp] [drawchange]-> [basemententrance] [drawchange]
+[basementstairsdowntemp] -> [secret]
+[hiddendoortemp] [drawingboard drawwrong]-> [secret2] [drawingboard drawwrong]
+[hiddendoortemp] [drawchange]-> [hiddendoor] [drawchange]
+[hiddendoortemp] -> [secret2]
+
+
+[drawingboard drawgood] -> [drawingboard]
+[ > man | secret] -> [ man | secret]
+[ > man | secret2] -> [ man | secret2]
+[ > man | basementphysicalwall] -> [man | basementphysicalwall]
+
+(Earth)
+
+(clearing)
+[action selector clearspace| balancespace] -> [selector clearspace | clear balancespace]
+
+startloop
+
+[clear 1right] -> [clear]
+[clear 1down] -> [clear]
+[clear 1up] -> [clear]
+[clear | balancespace] -> [clear |balancespace clear]
+
+endloop
+
+[clear] -> [count0 wrong change]
+
+(selector controls)
+
+[Action selector] -> [redselector]
+[Action redselector] -> [selector]
+
+[> redselector | puzzlestart] -> [redselector | puzzlestart]
+[> redselector nodrawspace] -> [redselector nodrawspace]
+[> redselector | clearspace] -> [redselector | clearspace]
+
+[wrongtemp light] -> [wrong light]
+[goodtemp light] -> [good light]
+[good dark] -> [goodtemp dark]
+[wrong dark] -> [wrongtemp dark]
+
+(marking for connection)
+right [right redselector balancespace | balancespace] -> right[redselector balancespace rightmark|balancespace leftmark]
+left [left redselector balancespace | balancespace] -> left[redselector balancespace leftmark|balancespace rightmark]
+up [up redselector balancespace | balancespace] -> up[redselector balancespace upmark|balancespace downmark]
+down [down redselector balancespace | balancespace] -> down[redselector balancespace downmark|balancespace upmark]
+
+(marking for connection in imbalance)
+right [right redselector imbalancespace | imbalancespace] -> right[redselector imbalancespace rightmark|imbalancespace rightmark]
+left [left redselector imbalancespace | imbalancespace] -> left[redselector imbalancespace leftmark|imbalancespace leftmark]
+up [up redselector imbalancespace | imbalancespace] -> up[redselector imbalancespace upmark|imbalancespace upmark]
+down [down redselector imbalancespace | imbalancespace] -> down[redselector imbalancespace downmark|imbalancespace downmark]
+
+(marking for connection in imbalance random)
+right [right redselector imbalancespacerandom | imbalancespacerandom] -> right[redselector imbalancespacerandom rightmark|imbalancespacerandom random direction]
+left [left redselector imbalancespacerandom | imbalancespacerandom] -> left[redselector imbalancespacerandom leftmark|imbalancespacerandom random direction]
+up [up redselector imbalancespacerandom | imbalancespacerandom] -> up[redselector imbalancespacerandom upmark|imbalancespacerandom random direction]
+down [down redselector imbalancespacerandom | imbalancespacerandom] -> down[redselector imbalancespacerandom downmark|imbalancespacerandom random direction]
+
+
+(making connection)
+[puzzlespace leftmark no 1left] -> [puzzlespace 1left countup]
+[puzzlespace leftmark 1left] -> [puzzlespace no 1left countdown]
+[puzzlespace rightmark no 1right] -> [puzzlespace 1right countup]
+[puzzlespace rightmark 1right] -> [puzzlespace no 1right countdown]
+[puzzlespace upmark no 1up] -> [puzzlespace 1up countup]
+[puzzlespace upmark 1up] -> [puzzlespace no 1up countdown]
+[puzzlespace downmark no 1down] -> [puzzlespace 1down countup]
+[puzzlespace downmark 1down] -> [puzzlespace no 1down countdown]
+
+(changing the count)
+[count0 countup] -> [count1 change]
+[count1 countup] -> [count2 change]
+[count2 countup] -> [count3 change]
+[count3 countup] -> [count4 change]
+[count4 countdown] -> [count3 change]
+[count3 countdown] -> [count2 change]
+[count2 countdown] -> [count1 change]
+[count1 countdown] -> [count0 change]
+
+(good and bad)
+
+[change numbere] -> [change numberewrong]
+[change numbero] -> [change numberowrong]
+[change good] -> [wrong]
+
+
+[count1 goal1 no goodtemp] -> [count1 goal1 good]
+[count2 goal2 no goodtemp] -> [count2 goal2 good]
+[count3 goal3 no goodtemp] -> [count3 goal3 good]
+[count4 goal4 no goodtemp] -> [count4 goal4 good]
+[count0 goal0 no goodtemp] -> [count0 goal0 good]
+[numberQ no goodtemp] -> [numberQ good]
+
+[count1 goalo no goodtemp numberowrong] -> [count1 goalo good numbero]
+[count2 goale no goodtemp numberewrong] -> [count2 goale good numbere]
+[count3 goalo no goodtemp numberowrong] -> [count3 goalo good numbero]
+[count4 goale no goodtemp numberewrong] -> [count4 goale good numbere]
+[count0 goale no goodtemp numberewrong] -> [count0 goale good numbere]
+
+
+(Chain)
+[chain] -> []
+
+[chainstarttemp | light] -> [chainstart | light]
+[chainstart | dark] -> [chainstarttemp | dark]
+[chaingoaltemp | light] -> [chaingoal | light]
+[chaingoal | dark] -> [chaingoaltemp | dark]
+
+[chainstart | puzzlespace] -> [chainstart | puzzlespace chain]
+[chainstart | imbalancespace] -> [chainstart | imbalancespace chain]
+[chainstart | imbalancespacerandom] -> [chainstart | imbalancespacerandom chain]
+
+startloop
+
+right [chain 1right | ] -> [chain 1right | chain]
+left [chain 1left | ] -> [chain 1left | chain]
+up [chain 1up | ] -> [chain 1up | chain]
+down [chain 1down | ] -> [chain 1down | chain]
+
+endloop
+
+[chain | chaingoal] -> [chain | chaingoal chain]
+
+[mark no man] -> []
+[drawmark] -> []
+[drawmarknegative] -> []
+[drawchange] -> []
+
+(chacking for solution)
+horizontal[puzzlestartbad|dark|...|puzzletilewrong] -> [puzzlestartbad|dark|...|puzzletilewrong mark]
+horizontal[puzzlestartbad|...|puzzletilewrong] [chaingoal no chain] -> [puzzlestartbad|...|puzzletilewrong mark] [chaingoal no chain] 
+horizontal[puzzlestartbad|...|puzzletilewrong] [wrong] -> [puzzlestartbad|...|puzzletilewrong mark] [wrong]
+
+horizontal[puzzletilewrongnorm no mark|...|puzzlestartbad] -> [puzzletilegoodnorm|...|puzzlestartgood]
+horizontal[puzzletilewronghidden no mark|...|puzzlestartbad] -> [puzzletilegoodhidden|...|puzzlestartgood]
+
+up [puzzletilegood||||] -> [puzzletilegood||||basementprogressmark]
+left [puzzletilegood||] -> [puzzletilegood||basementprogressmark]
+[basementprogressmark|basementstairsdownblocked] -> [basementprogressmark|towerstairsdown2]
+
+(messages)
+[man floor1mesage messagemarkup] -> [man floor2mesage] message Floor 2
+[man floor2mesage messagemarkup] -> [man floor3mesage] message Floor 3
+[man floor3mesage messagemarkup] -> [man floor4mesage] message Floor 4
+[man floor4mesage messagemarkup] -> [man floor5mesage] message Floor 5
+[man floor5mesage messagemarkup] -> [man floor6mesage] message Floor 6
+[man floor6mesage messagemarkup] -> [man floor7mesage] message Floor 7
+[man floor7mesage messagemarkup] -> [man floor8mesage] message Floor 8
+[man floor8mesage messagemarkup] -> [man floor9mesage] message Rooftop Garden
+[man floor9mesage messagemarkdown] -> [man floor8mesage] message Floor 8
+[man floor8mesage messagemarkdown] -> [man floor7mesage] message Floor 7
+[man floor7mesage messagemarkdown] -> [man floor6mesage] message Floor 6
+[man floor6mesage messagemarkdown] -> [man floor5mesage] message Floor 5
+[man floor5mesage messagemarkdown] -> [man floor4mesage] message Floor 4
+[man floor4mesage messagemarkdown] -> [man floor3mesage] message Floor 3
+[man floor3mesage messagemarkdown] -> [man floor2mesage] message Floor 2
+[man floor2mesage messagemarkdown] -> [man floor1mesage] message Floor 1
+[man floor1mesage messagemarkdown] -> [man floor0mesage]
+[man floor0mesage messagemarkdown] -> [man bfloor1mesage] message Basement Floor 1
+[man bfloor1mesage messagemarkdown] -> [man bfloor2mesage] message Basement Floor 2
+[man bfloor2mesage messagemarkdown] -> [man bfloor3mesage] message Basement Floor 3
+[man bfloor3mesage messagemarkdown] -> [man bfloor4mesage] message Basement Floor 4
+[man bfloor4mesage messagemarkdown] -> [man bfloor5mesage] message Basement Floor 5
+[man bfloor5mesage messagemarkdown] -> [man bfloor6mesage] message Basement Floor 6
+[man bfloor6mesage messagemarkdown] -> [man bfloor7mesage] message Basement Floor 7
+[man bfloor7mesage messagemarkdown] -> [man bfloor8mesage] message Basement Floor 8
+[man bfloor8mesage messagemarkdown] [drawingboard] -> [man bfloor9mesage] [drawingboard clear]
+[man bfloor9mesage messagemarkup] -> [man bfloor8mesage] message Basement Floor 8
+[man bfloor8mesage messagemarkup] -> [man bfloor7mesage] message Basement Floor 7
+[man bfloor7mesage messagemarkup] -> [man bfloor6mesage] message Basement Floor 6
+[man bfloor6mesage messagemarkup] -> [man bfloor5mesage] message Basement Floor 5
+[man bfloor5mesage messagemarkup] -> [man bfloor4mesage] message Basement Floor 4
+[man bfloor4mesage messagemarkup] -> [man bfloor3mesage] message Basement Floor 3
+[man bfloor3mesage messagemarkup] -> [man bfloor2mesage] message Basement Floor 2
+[man bfloor2mesage messagemarkup] -> [man bfloor1mesage] message Basement Floor 1
+[man bfloor1mesage messagemarkup] -> [man floor0mesage]
+[man floor0mesage messagemarkup] -> [man floor1mesage] message Floor 1
+
+[drawingboard clear| drawingboard] -> [drawingboard clear| drawingboard clear]
+
+[drawright clear] -> [clear]
+[drawup clear] -> [clear]
+[drawdown clear] -> [clear]
+[clear] -> [count0]
+
+(end)
+right[bloom21|] -> [bloom21|bloomend1]
+
+right[bloom17|] -> [bloom17|bloom18]
+right[bloom20|] -> [bloom20|bloom21] again
+
+right[bloom12|] -> [bloom12|bloom13]
+right[bloom16|] -> [bloom16|bloom17]
+right[bloom19|] -> [bloom19|bloom20] again
+
+right[bloom7|] -> [bloom7|bloom8]
+right[bloom11|] -> [bloom11|bloom12]
+right[bloom15|] -> [bloom15|bloom16]
+down[bloom15|] -> [bloom15|bloom19 again]
+
+right[bloom6|] -> [bloom6|bloom7]
+right[bloom10|] -> [bloom10|bloom11]
+right[bloom14|] -> [bloom14|bloom15] again
+
+right[bloom2|] -> [bloom2|bloom3]
+right[bloom5|] -> [bloom5|bloom6]
+right[bloom9|] -> [bloom9|bloom10]
+down[bloom9|] -> [bloom9|bloom14] again
+
+right[bloom1|] -> [bloom1|bloom2]
+right[bloom4|] -> [bloom4|bloom5]
+down[bloom4|] -> [bloom4|bloom9] again
+
+right[bloomstart|] -> [bloomstart|bloom1]
+down[bloomstart|] -> [bloomstart|bloom4] again
+
+[action bloomend1] -> [bloomend]
+
+
+==============
+WINCONDITIONS
+==============
+
+
+All end on puzzlestartgood
+
+All target on bloomend
+
+=======     
+LEVELS
+=======
+
+###########&&&%%%%%&&&###########
+###########&&%⤫⤫⤫⤫⤫%&&###########
+###########&%kk'''kk%&###########
+###########%⤫kkk'kkk⤫%###########
+###########'⤫kkk'kkk⤫'###########
+###########'⤫'k''/k'⤫'###########
+###########'⤫'kkkkk'⤫'###########
+###########%⤫'/'''''⤫%###########
+###########q%''''↓''%q###########
+###########ww%⤫⤫⤫⤫⤫%ww###########
+###########qqq%%%%%qqq###########
+###########___%%%%%___###########
+##@###@####__%,,,,,%__###@###@###
+##221222###_%,[,{,,[%_##1221122##
+#y222222@##%[⅝,,[,,,[%##2302221@#
+#£122132###,[,[[[l,,,,#*2323121##
+##221212###,{,,,[[↉,{,##1241222y#
+#*222222@##,[[[,[[[[,,##13202?3£#
+##222232###%,,[↓/,,,,%##12?3222##
+##233212###_%,{[[↥,,%_#@2202232@#
+######@####__%,[,,[%__##2??2321##
+###########___%%%%%___###@###@###
+###########___%%%%%___###########
+###########__%,,,,,%__###########
+###########_%,,,l,,,%_######⸝####
+###########%,,⥁,,,{,,%###02110###
+###########,,,,{,{,,l,###22032###
+###########,,,,,¢,,,,,###23140y##
+###########,,,,{,{,,,,###10211###
+###########%,,{↥,↓{,,%###02100###
+###########_%,,,l,,,%_###########
+###########__%,,,,,%__###########
+###########___%%%%%___###########
+###########&&&&&&&&&&&###########
+###########&&&&&&&&&&&#####@#####
+###########&&+&&+&&+&&##22?2212@#
+###########&&&&&&&&&&&#@2101222##
+###########&&&&&&&&&&&##2222222##
+###########&&&&&&&&&&&##2212422*#
+###########&&&'''''&&&#@2220202£#
+###########&&&''⅐''&&&##222?222y#
+###########&&&'''''&&&#######@###
+###########&&&'''''&&&###########
+###########___c'''c___###########
+###########___c'''c___###########
+###########__%,,,,,%__###########
+#####*#####_%,l,,,,,%_###########
+##y13121###%,,,,⅚,,,,%###0220:###
+##£23232@##[[[,,,,,[[[###2222####
+###o3?33###,l,,,,,,,,ᵶ##@2222y###
+###12222###///,,l,,///###0220####
+###12121@##%,,,↓[↥,,,%#####*#####
+###@#######_%,l,,,,,%_###########
+###########__%,,,,,%__###########
+###########___%%%%%___###########
+###########___%%%%%___#######@###
+###########__%,⅜,[,%__###21?22y##
+###########_%,,,/l,,%_##@21022£##
+#####@#####%,,,,,,,,,%###23?22###
+###y11?####,,,,[,⅘,,,,###23023@##
+###*223####,,,,,/,,,,,##*12?11###
+####?32####,l,,,,,,,,,###########
+###########%,,,↥,↓,,,%###########
+###########_%,,l/,,,%_###########
+###########__%,,,,,%__###########
+###########___%%%%%___###########
+###########&&&&&&&&&&&###########
+###########&+&&&&&&&&&###########
+###########&&&&&&&&&&&###########
+###########&&&&&+&&&&&###@#!#####
+###########&&&&&&&&&&&###2221@###
+###########&&&&&&&&&&&###3221####
+###########&&&'''''&&&###3221####
+###########+&&''¥''&&&##@2221y###
+###########&&&'''''&&&#####*#####
+###########&&&'''''&&&###########
+###########___c'''c___###########
+###########___c'''c___###########
+#######@###__%,,,,,%__###########
+###*e2o1###_%,,,/,,,%_####@######
+####2o3o###%,,/,,,/,,%###e1321*##
+###yo1e1###,,⅗,,,,,,,,###2e232###
+###£2e3o@##,l,,,,,,⅖,,###21oe1y##
+####o3e2###,,,,,,,,l,,###1e3oo£##
+####@######%,,,↓/↥,,,%##@2o112###
+###########_%,,,l,,,%_#######@###
+###########__%,,,,,%__###########
+###########___%%%%%___###########
+###########___%%%%%___###########
+###########__%/,,,,%__######@####
+###########_%/,,,,l,%_####e211@##
+######@####%,[⅔,,,/,,%####2432y##
+###@2oe####,,,[,,,,/,,###@133e£##
+###yee3####,,,,,l,⅛[,,####1212###
+####12o@###,l,,,,,[l,,#####*#####
+####*######%,,,↥,↓,,,%###########
+###########_%,,,,,,,%_###########
+###########__%,,,,,%__###########
+###########___%%%%%___###########
+###########&&&&&&&&&&&###########
+####@##@###&&&&&&&&+&&###########
+###122221##&&+&&&&&&&&###########
+###112132@#&&&&&&&&&&&###########
+##*222022##&&&&&&&&&&&###########
+###230232##&&&&&&&&&&&###########
+##£232331@#&&&'''''&&+###########
+##y222121##&&&''⅙''&&&###########
+####@##@###&&&'''''&&&###########
+###########&&&'''''&&&###########
+###########___c'''c___###########
+###########___c'''c___###########
+###########__%,,,,,%__###########
+####*######_%,,l,,,,%_###########
+##y22221@##%,⅕[,,,,,,%###1222####
+##£23232###,,,,,,l,,,,##@2331####
+###12212###,,l,,,,,,,,###2332£###
+###22421###,,,,,x,,,,,###1212y###
+###12221@##%,,,↓/↥,l,%####*######
+###@##@####_%,,,,,,,%_###########
+###########__%,,,,,%__###########
+###########___%%%%%___###########
+###########___%%%%%___###########
+###########__%,,,,,%__###########
+#####*#####_%,,l,,,,%_###########
+###12321###%x/,,,,,/,%##@22200y##
+##y12321###,,,,,,x,,l,###20201£##
+###@###@###,l,,,,,,,,,###22323###
+###########,,,,,,,,,,,###02101###
+###########%,,,↥/,,,,%###02100###
+###y121####_%xl,,,,,%_####*######
+###########__%,,,,,%__###########
+###########___%ttt%___###########
+.......$qqqqqqqqqqqqqqqqq$...~~~~
+..---...$$wwwwwwwwwwwww$$...~~~~~
+..-.......$$$qq⥏⥏⥏qq$$$....``````
+.............$$...$$.......```꠸``
+................z..........`h````
+................z...........z....
+............-...z...........z....
+...zzzzzzzzzzzzzzzzzzzzzzzzzz....
+...p....--............---........
+...z.........................--..
+...---...........................
+mmmmmmmmmmmmmmrmmmmmmm___________
+mmmmmmmmmmmmmmmmmmmmmm___________
+mmmmmmmmmmmmuiuuiuuuua___________
+mmmmmmmmmmmmuuiuuiuuum___________
+miuiuᵽmmmmmmiffsssffim_""""""____
+ᶃuiuuummmmmmugjfsfjgumn;;;;;;____
+mmmmmmmmmmmmifjfsfjfum_""""""____
+mmmmmmmmmmmmusfsssfsum____"""____
+mmmmmmmmmmmmusfffffsum____"""____
+mmmmmmmmmmmmuuuiuuiuiÐ____"""____
+mmmmmmmmmmmmmhmmmmmmmm____"b"____
+###########__%"";""%__###########
+###########_%"[⅑;"]"%_###@#######
+####@######%""""x""""%###2167y###
+###2167####"/""";"""\"###3278£###
+##@3388*###""""";"""""###1276@###
+##y8888####;;;;;x;;;;n#####*#####
+##£7667####""""";"""""###########
+#####@#####"/""";"""\"###########
+###########%"""";""""%###########
+###########_%"[";"]"%_###########
+###########_⚎%|||||%⚎_###########
+###########__%|||||%__###########
+###########_%""↥;⅒""%_###########
+###########%/""";"""{%######@####
+###########""""";"""""##@1232####
+###########"""]";"\"""###3232*###
+###########"""""x"""""###2332y###
+###########"""/";"["""##@7878£###
+###########""""";"""""###7876####
+###########%{""";"""\%######@####
+###########_%""";"""%_###########
+###########_⚎%|||||%⚎_###########
+###########__%|||||%__###########
+###########_%"[⅞"↥/"%_###########
+###########%"""""""""%###@###*###
+###########"/"""""""\"###28677###
+###########"""""""""""###33892###
+###########"""""x"""""##@20731y##
+###########"""""""""""###37533£##
+###########"["""""""]"###78782###
+###########%"""""""""%###@###@###
+###########_%"]"""\"%_###########
+###########_⚎%|||||%⚎_###########
+###########__%|||||%__###########
+###########_%""↥"⥊""%_###########
+###########%/"]"""/"/%###@#######
+###########"""""""""""###6866@###
+###########"/"""""""]"###6383####
+###########"""""x"""""##*8886y###
+###########"]"""""""/"###6181£###
+###########"""""""""""#####@#####
+###########%/"/"""]"/%###########
+###########_%"""""""%_###########
+###########_⚎%|||||%⚎_###########
+###########__%|||||%__###########
+###########_%""⥋"↥""%_###########
+###########%""/"""{""%###@#######
+###########"["""{"""/"###2332@###
+###########"""""""""""###2222####
+###########;;;;;x;;;;;###7777y###
+###########"""""""""""##*7667£###
+###########"{"""["""/"######@####
+###########%""/"""[""%###########
+###########_%"""""""%_###########
+###########_⚎%|||||%⚎_###########
+###########__%|||||%__###########
+###########_%""↥"⥌""%_#####@#####
+###########%"""""""""%##222777###
+###########""/["""{\""#@343656###
+###########""""{"]""""##222777###
+###########"""""x"""""##777777y##
+###########""""["{""""##656898£##
+###########""/{"""]\""##777777###
+###########%"""""""""%##*####@###
+###########_%"""""""%_###########
+###########_⚎%|||||%⚎_###########
+###########__%|||||%__###########
+###########_%""⥍"↥""%_###########
+###########%"""""""""%######⸝####
+###########"""}"""}"""###00220###
+###########""""}"}""""###14231###
+###########"""""¢"""""###11303y##
+###########""""}"}""""###02410###
+###########"""{"""}"""###00210###
+###########%"""""""""%###########
+###########_%"""""""%_###########
+###########_⚎%|||||%⚎_###########
+###########__%|||||%__###########
+###########_%"\↥"⥎]"%_###########
+##y6866*###%"""""""ᵹ"%###########
+##£7777####"/"""""""]"###########
+###8687####"""""""""""######⸝####
+##@8797####"""""""""""###12332###
+###7676####"""""""""""###32121###
+###########"["""""""\"###12342###
+###########%"x"""""""%###12221y##
+###########_%"["""/"%_###########
+###########_⚎%|||||%⚎_###########
+###########__%|||||%__###########
+###########_%""""↥""%_###########
+###########%{"""""""{%###########
+###########"""""""kk""###57875###
+###########"""kk"""k""###79997###
+########ᵹ##"""kk"kk"""###89998ᵯ##
+###########""k"""kk"""###79997£##
+###########""kk"""""""###57875###
+###########%{"""""""{%###########
+###########_%"""""""%_###########
+###########_⚎%|||||%⚎_###########
+
+
+###########
+###########
+###########
+###►¤¤¤┰###
+###¤¤¤¤¤###
+###¤¤¤¤¤###
+###¤¤¤¤¤###
+###┰¤¤¤◄###
+###########
+###########
+###########
+
+message Rose
+message By Jared Piers
+
+

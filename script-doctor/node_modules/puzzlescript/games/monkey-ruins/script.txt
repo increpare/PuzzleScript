@@ -1,0 +1,506 @@
+title Monkey Ruins 
+author Sky
+noaction
+run_rules_on_level_start
+
+========
+OBJECTS
+========
+
+Sky
+Blue
+
+Sand
+yellow orange
+00000
+01000
+00000
+00010
+00000
+
+SandTop
+yellow orange
+00000
+01000
+00000
+00010
+00000
+
+OutEmpty
+blue
+
+OutDownDrop1
+blue yellow
+11111
+00000
+00000
+00000
+00000
+
+OutDownDrop2
+blue yellow
+11111
+00000
+00000
+00000
+00000
+
+OutLeftCorner
+blue yellow
+00000
+00000
+00000
+00000
+00001
+
+OutRightCorner
+blue yellow
+00000
+00000
+00000
+00000
+10000
+
+OutDownLeftCorner
+blue yellow
+00001
+00000
+00000
+00000
+00000
+
+OutDownRightCorner
+blue yellow
+10000
+00000
+00000
+00000
+00000
+
+OutLeftLCorner
+blue yellow
+00001
+00001
+00001
+00001
+11111
+
+OutRightLCorner
+blue yellow
+10000
+10000
+10000
+10000
+11111
+
+OutDownLeftLCorner
+blue yellow
+11111
+00001
+00001
+00001
+00001
+
+OutDownRightLCorner
+blue yellow
+11111
+10000
+10000
+10000
+10000
+
+OutTop
+yellow blue
+11111
+11111
+11111
+11111
+00000
+
+OutLeft
+yellow blue
+11110
+11110
+11110
+11110
+11110
+
+OutRight
+yellow blue
+01111
+01111
+01111
+01111
+01111
+
+OutDown
+yellow blue
+00000
+11111
+11111
+11111
+11111
+
+Surface
+yellow darkgray
+00000
+01000
+00000
+00010
+00000
+
+Ruin
+grey darkgray
+00010
+11111
+01000
+11111
+00010
+
+StoneFront
+darkgrey grey
+.000.
+.111.
+10101
+.000.
+.1.1.
+
+StoneClimbTop
+darkgrey grey
+.000.
+.111.
+10101
+.000.
+.1.1.
+
+StoneClimbSurface
+darkgrey grey
+.000.
+.000.
+10001
+.010.
+.1.1.
+
+StoneClimbLeft
+darkgrey grey
+.000.
+.011.
+.0001
+0000.
+..1.1
+
+StoneClimbRight
+darkgrey grey
+.000.
+.110.
+1000.
+.0000
+1.1..
+
+StoneClimbDown
+darkgrey grey
+1000.
+.111.
+.0101
+.000.
+.1.01
+
+MonkeyFront
+brown lightred
+.000.
+.111.
+10101
+.000.
+.1.1.
+
+MonkeyBack
+brown lightred
+.000.
+.000.
+10001
+.010.
+.1.1.
+
+MonkeyClimbTop
+brown lightred
+.000.
+.111.
+10101
+.000.
+.1.1.
+
+MonkeyClimbSurface
+brown lightred
+.000.
+.000.
+10001
+.010.
+.1.1.
+
+MonkeyClimbRight
+brown lightred
+.000.
+.110.
+1000.
+.0000
+1.1..
+
+MonkeyClimbLeft
+brown lightred
+.000.
+.011.
+.0001
+0000.
+..1.1
+
+MonkeyClimbDown
+brown lightred
+1000.
+.111.
+.0101
+.000.
+.1.01
+
+=======
+LEGEND
+=======
+Background = Sand
+. = Sand
+# = Sky
++ = Surface
+- = SandTop
+* = ruin
+
+s = StoneFront
+
+player = MonkeyFront or MonkeyBack or MonkeyClimbLeft or MonkeyClimbRight or MonkeyClimbSurface or MonkeyClimbTop or MonkeyClimbDown
+
+p = MonkeyFront
+
+e = OutEmpty
+
+t = OutTop
+l = OutLeft
+r = OutRight
+d = OutDown
+
+1 = OutLeftCorner
+2 = OutRightCorner
+3 = OutDownLeftCorner
+4 = OutDownRightCorner
+
+6 = OutLeftLCorner
+7 = OutRightLCorner
+8 = OutDownLeftLCorner
+9 = OutDownRightLCorner
+
+LeftSides = OutLeft or OutDownLeftLCorner or OutLeftLCorner or OutLeftCorner or OutDownLeftCorner
+RightSides = OutRight or OutDownRightLCorner or OutRightLCorner or OutRightCorner or OutDownRightCorner
+
+Sides = OutDownLeftLCorner or OutDownRightLCorner
+
+AllSides = OutTop or OutLeft or OutRight or OutDown or OutLeftLCorner or OutRightLCorner or OutDownLeftLCorner or OutDownRightLCorner or OutRightCorner or OutLeftCorner or OutDownLeftCorner or OutDownRightCorner
+
+Sands = Sand or SandTop
+Stone = StoneFront or StoneClimbTop or StoneClimbSurface or StoneClimbLeft or StoneClimbRight or StoneClimbDown
+
+=======
+SOUNDS
+=======
+
+================
+COLLISIONLAYERS
+================
+Sand
+OutEmpty, OutTop, OutLeft, OutRight, OutDown, Surface, Ruin, SandTop, OutDownDrop1, OutDownDrop2, OutLeftCorner, OutRightCorner, OutDownLeftCorner, OutDownRightCorner, OutLeftLCorner, OutRightLCorner, OutDownLeftLCorner, OutDownRightLCorner
+MonkeyBack, MonkeyFront, Sky, MonkeyClimbRight, MonkeyClimbTop, MonkeyClimbSurface, MonkeyClimbLeft, MonkeyClimbDown, StoneFront, StoneClimbTop, StoneClimbSurface,StoneClimbLeft, StoneClimbRight,StoneClimbDown
+
+
+======
+RULES
+======
+( Climbing Animation )
+UP [ Sand > player] -> [ Sand > MonkeyBack ]
+DOWN [ Sand > player ] -> [ Sand > MonkeyFront ]
+
+LEFT [ Surface > player | OutLeft ] -> [ Ruin | OutLeft MonkeyClimbLeft ] 
+RIGHT [ Surface > player | OutRight ] -> [ Ruin | OutRight MonkeyClimbRight ] 
+
+LEFT [ OutDown > player | OutDownLeftCorner ] -> [ OutEmpty | OutDownLeftCorner MonkeyClimbRight ] 
+RIGHT [ OutDown > player | OutDownRightCorner ] -> [ OutEmpty | OutDownRightCorner MonkeyClimbRight ] 
+
+
+HORIZONTAL [ Sides > player ] -> [ OutDown > MonkeyClimbDown ]
+HORIZONTAL [ OutTop > player ] -> [ OutTop > MonkeyClimbTop ] 
+VERTICAL [ OutDown > player ] -> [ OutDown > MonkeyClimbDown  ]
+
+
+VERTICAL [ LeftSides > Player ] -> [ LeftSides > MonkeyClimbLeft ]
+VERTICAL [ RightSides > Player ] -> [ RightSides > MonkeyClimbRight ]
+horizontal [ OutLeft > player ] -> [ OutLeft > MonkeyClimbSurface ]
+horizontal [ OutRight > player ] -> [ OutRight > MonkeyClimbSurface ]
+
+
+horizontal [ OutLeftCorner > player ] -> [ OutLeftCorner > MonkeyFront ]
+horizontal [ OutRightCorner > player ] -> [ OutRightCorner > MonkeyFront ]
+
+VERTICAL [ Surface > player ] -> [ Surface > MonkeyClimbSurface ]
+
+LATE RIGHT [ OutLeftCorner | OutEmpty ] -> [ OutEmpty | OutEmpty ]
+LATE DOWN [ OutLeftCorner | OutEmpty ] -> [ OutEmpty | OutEmpty ]
+LATE LEFT [ OutRightCorner | OutEmpty ] -> [ OutEmpty | OutEmpty ]
+LATE DOWN [ OutRightCorner | OutEmpty ] -> [ OutEmpty | OutEmpty ]
+LATE RIGHT [ OutDownLeftCorner | OutEmpty ] -> [ OutEmpty | OutEmpty ]
+LATE UP [ OutDownLeftCorner | OutEmpty ] -> [ OutEmpty | OutEmpty ]
+LATE LEFT [ OutDownRightCorner | OutEmpty ] -> [ OutEmpty | OutEmpty ]
+LATE UP [ OutDownRightCorner | OutEmpty ] -> [ OutEmpty | OutEmpty ]
+
+( Collision Cancel )
+
+[ > player | Ruin ] -> cancel
+[ > player | OutEmpty ] -> cancel
+[ > player | Sky ] -> cancel
+
+( Clearing Mechanics )
+
+[ Surface > Player ] -> [ Ruin > Player ]
+[ OutLeft > Player ] -> [ OutEmpty > Player ]
+[ OutRight > Player ] -> [ OutEmpty > Player ]
+[ OutTop > Player ] -> [ OutEmpty > Player ]
+[ OutDown > Player ] -> [ OutEmpty > Player ]
+
+[ OutLeftLCorner > Player ] -> [ OutEmpty > Player ]
+[ OutRightLCorner > Player ] -> [ OutEmpty > Player ]
+[ OutDownLeftLCorner > Player ] -> [ OutEmpty > Player ]
+[ OutDownRightLCorner > Player ] -> [ OutEmpty > Player ]
+
+[ OutLeftCorner > Player ] -> [ OutEmpty > Player ]
+[ OutRightCorner > Player ] -> [ OutEmpty > Player ]
+[ OutDownLeftCorner > Player ] -> [ OutEmpty > Player ]
+[ OutDownRightCorner > Player ] -> [ OutEmpty > Player ]
+
+( Dropping Mechanics )
+
+[ > player OutDownDrop1 | OutDown ] -> [ OutDownDrop1 | player OutDownDrop2 ]
+[ > player | OutDown ] -> [ | player OutDownDrop1 ]
+
+late DOWN [ player OutDownDrop2 | ... | OutTop ] -> [ OutDownDrop2 | ... | MonkeyFront OutTop ]
+late DOWN [ player OutDownDrop2 | ... | Sides ] -> [ OutDownDrop2 | ... | MonkeyFront Sides ]
+late DOWN [ player OutDownDrop2 | ... | SandTop ] -> [ OutDownDrop2 | ... | MonkeyFront SandTop ]
+
+late [ NO player OutDownDrop1 ] -> [ NO player OutEmpty ]
+late [ NO player OutDownDrop2 ] -> [ NO player OutEmpty ]
+
+( Auto Level Completion )
+
+LATE LEFT [ Surface | Sky ] -> [ Surface | OutLeft ]
+LATE RIGHT [ Surface | Sky ] -> [ Surface | OutRight ]
+LATE UP [ Surface | Sky ] -> [ Surface | OutTop ]
+LATE DOWN [ Surface | Sky ] -> [ Surface | OutDown ]
+LATE UP [ Surface | OutLeft ] -> [ Surface | OutLeftLCorner ]
+LATE UP [ Surface | OutRight ] -> [ Surface | OutRightLCorner ]
+LATE DOWN [ Surface | OutLeft ] -> [ Surface | OutDownLeftLCorner ]
+LATE DOWN [ Surface | OutRight ] -> [ Surface | OutDownRightLCorner ]
+
+LATE UP [ OutLeft | Sky ] -> [ OutLeft | OutLeftCorner ]
+LATE UP [ OutRight | Sky ] -> [ OutRight | OutRightCorner ]
+LATE DOWN [ OutLeft | Sky ] -> [ OutLeft | OutDownLeftCorner ]
+LATE DOWN [ OutRight | Sky ] -> [ OutRight | OutDownRightCorner ]
+
+LATE UP [ OutLeftLCorner | Sky ] -> [ OutLeftLCorner | OutLeftCorner ]
+LATE UP [ OutRightLCorner | Sky ] -> [ OutRightLCorner | OutRightCorner ]
+LATE DOWN [ OutDownLeftLCorner | Sky ] -> [ OutDownLeftLCorner | OutDownLeftCorner ]
+LATE DOWN [ OutDownRightLCorner | Sky ] -> [ OutDownRightLCorner | OutDownRightCorner ]
+
+( Stone Movement )
+
+[ > player | Stone ] -> [ > player | > Stone ]  
+
+
+==============
+WINCONDITIONS
+==============
+All player on Sands
+No AllSides
+No Surface
+
+=======
+LEVELS
+=======
+
+##############
+##############
+##############
+######+++#####
+######+++#####
+#####+++++####
+--------------
+.p............
+..............
+
+##############
+##############
+##############
+##############
+###1t2###+####
+###l*r##l*r###
+--------------
+...p..........
+..............
+
+##############
+##############
+##############
+#####+++++####
+#########+####
+#########+####
+--------------
+.p............
+..............
+
+##############
+####++++######
+####+#########
+####+#########
+####++++######
+####+#########
+####+#########
+--------------
+...p..........
+..............
+
+##############
+##############
+#######+++++##
+###++++####+##
+###+#######+##
+###+#######+##
+--------------
+...p..........
+..............
+
+message Thanks for playing!
+
+(message Work in Process!
+
+##############
+##############
+##############
+##############
+##############
+##############
+--------------
+...p..........
+..............)
+
+
+
+
+
+
+
+
+
+
+
+

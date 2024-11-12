@@ -1,0 +1,167 @@
+title Sleepy players
+author Marcos Donnantuoni
+homepage https://marcosd.itch.io
+
+key_repeat_interval 0.17
+noaction
+text_color grey
+
+========
+OBJECTS
+========
+
+background
+lightgrey
+
+
+player
+#8e6733 #704e21 #60421a
+.....
+.000.
+.111.
+.222.
+.....
+
+wall
+#888888 #777777 #666666 #555555
+11112
+12223
+12223
+12223
+23333
+
+crate
+#993d00 #008080
+.0...
+.1110
+0111.
+.1110
+.0...
+
+target
+blue green black
+.....
+10000
+10000
+10000
+.....
+
+=======
+LEGEND
+=======
+
+. = Background
+# = wall
+c = Player
+t = target
+@ = crate
+
+=======
+SOUNDS
+=======
+
+crate move 36736507
+endlevel 30742508
+startgame 92244503
+player cantmove 29434104
+
+================
+COLLISIONLAYERS
+================
+
+background
+target
+player, wall, crate
+
+======
+RULES
+======
+
+[ > player | crate ] -> [ > player | > crate ]
+[ > player | target ] -> [ player | target ]
+
+==============
+WINCONDITIONS
+==============
+
+all crate on target
+
+=======
+LEVELS
+=======
+
+message The player got tired of pushing us!
+message We must push them carefully towards the bed!
+
+#######
+#.c...#
+#..c..#
+#.@..t#
+#..c..#
+#.....#
+#######
+
+message Perfect! But there are more tired players
+message We must help them rest!
+
+
+message Level 1 of 6
+( size [4, 4] obj 3 kol 22 segs 11 steps 14 frond 704 )
+( ullld urldd lrur )
+######
+##...#
+##@ct#
+#..cc#
+#...##
+######
+
+message Level 2 of 6
+( size [4, 4] obj 3 kol 27 segs 14 steps 19 frond 532 )
+( urddr uuulr dullu drrd )
+######
+#..###
+#c@..#
+#c...#
+##c#t#
+######
+
+message Level 3 of 6
+( size [4, 4] obj 3 kol 30 segs 16 steps 24 frond 833 )
+( lurdd dluru ullld urrld druu )
+######
+##..t#
+##..c#
+#..@c#
+#...c#
+######
+
+message Level 4 of 6
+( size [4, 4] obj 3 kol 32 segs 25 steps 28 frond 507 )
+( urrdr udlld rduru lrudl ddrdl ulu )
+######
+#t...#
+#ccc##
+#.@..#
+##.#.#
+######
+
+message Level 5 of 6
+( size [5, 4] obj 4 kol 33 segs 23 steps 30 frond 3260 )
+( lldru rrdlr uurld rdull uudrd rdlll )
+#######
+#.....#
+##c.@.#
+#.##c##
+#t..cc#
+#######
+
+message Level 6 of 6
+( size [5, 5] obj 4 kol 34 segs 30 steps 35 frond 4496 )
+( lrdrl uulrd uludl drldu ruulu rddrd rrdll )
+#######
+#c.#.##
+##.@..#
+###...#
+##.cc##
+#.t.c.#
+#######

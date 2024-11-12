@@ -1,0 +1,2982 @@
+/* eslint-env jasmine */
+import { LevelEngine } from './engine'
+import Parser from './parser/parser'
+import { INPUT_BUTTON } from './util'
+
+const EMPTY_GAME = `
+title foo
+
+===
+OBJECTS
+===
+
+background
+transparent
+
+Player
+yellow
+00000
+0...0
+0...0
+0...0
+00000
+
+===
+LEGEND
+===
+
+. = background
+P = Player
+
+====
+SOUNDS
+====
+
+====
+COLLISIONLAYERS
+====
+
+background
+player
+
+
+====
+RULES
+====
+
+
+===
+WINCONDITIONS
+===
+
+
+===
+LEVELS
+===
+
+P.
+
+` // End EMPTY_GAME
+
+const NOOP_GAME = `
+title foo
+
+===
+OBJECTS
+===
+
+background
+transparent
+
+Player
+yellow
+00000
+0...0
+0...0
+0...0
+00000
+
+===
+LEGEND
+===
+
+. = background
+P = Player
+
+====
+SOUNDS
+====
+
+====
+COLLISIONLAYERS
+====
+
+background
+player
+
+
+====
+RULES
+====
+
+[ player ] -> [ player ]
+
+===
+WINCONDITIONS
+===
+
+
+===
+LEVELS
+===
+
+P.
+
+` // End NOOP_GAME
+
+const SIMPLE_GAME = `
+title foo
+
+(verbose_logging)
+(debug)
+
+(run_rules_on_level_start)
+
+realtime_interval 0.1
+
+
+===
+OBJECTS
+===
+
+background
+transparent
+
+one
+Darkblue
+...0.
+..00.
+...0.
+...0.
+..000
+
+zero
+Darkblue
+..00.
+.0..0
+.0..0
+.0..0
+..00.
+
+Player
+yellow
+00000
+0...0
+0...0
+0...0
+00000
+
+===
+LEGEND
+===
+
+. = background
+0 = zero
+1 = one
+P = Player
+
+====
+SOUNDS
+====
+
+====
+COLLISIONLAYERS
+====
+
+background
+one
+player
+zero
+
+
+====
+RULES
+====
+
+(
+[ stationary Player ] [ stationary 0 ] -> [Player] [ action 1 ]
+[ stationary Player ] [ 0 ] -> [Player] [ 1 ]
+)
+[0] -> [1]
+
+
+
+===
+WINCONDITIONS
+===
+
+
+===
+LEVELS
+===
+
+0P
+
+` // End SIMPLE_GAME
+
+const MIRROR_ISLES_CORNERS = `title Mirror Isles corners
+
+========
+OBJECTS
+========
+
+Background
+yellow
+
+Hole
+blue
+
+Player
+DarkRed #493c2b #000000
+..0..
+.111.
+01110
+02220
+.2.2.
+
+RemoveLandRUD
+Blue
+....0
+.....
+.....
+.....
+....0
+
+CrateInHole
+Brown DarkBrown Blue
+20002
+01110
+01110
+01110
+20002
+
+=======
+LEGEND
+=======
+
+. = Background
+P = Player
+_ = Hole
+
+RemoveLandR = RemoveLandRUD
+WaterHere = Hole or CrateInHole
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Player
+Hole, CrateInHole
+RemoveLandR
+
+======
+RULES
+======
+
+RIGHT [ NO WaterHere NO RemoveLandR | WaterHere ] -> [ RemoveLandRUD | WaterHere ]
+
+=======
+LEVELS
+=======
+
+._
+
+
+` // end game
+
+const MIRROR_ISLES_CORNERS2 = `title Mirror Isles corners2
+
+========
+OBJECTS
+========
+
+Background
+yellow
+
+Hole
+blue
+
+Player
+DarkRed #493c2b #000000
+..0..
+.111.
+01110
+02220
+.2.2.
+
+RemoveLandRUD
+Blue
+....0
+.....
+.....
+.....
+....0
+
+RemoveLandRU
+Blue
+....0
+.....
+.....
+.....
+.....
+
+RemoveLandRD
+Blue
+.....
+.....
+.....
+.....
+....0
+
+CrateInHole
+Brown DarkBrown Blue
+20002
+01110
+01110
+01110
+20002
+
+=======
+LEGEND
+=======
+
+. = Background
+P = Player
+_ = Hole
+
+RemoveLandR = RemoveLandRUD OR RemoveLandRU OR RemoveLandRD
+
+WaterHere = Hole or CrateInHole
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Player
+Hole, CrateInHole
+RemoveLandR
+
+======
+RULES
+======
+
+RIGHT [ NO WaterHere NO RemoveLandR | WaterHere ] -> [ RemoveLandRUD | WaterHere ]
+UP [ RemoveLandRUD | NO WaterHere ] -> [ RemoveLandRD | ]
+DOWN [ RemoveLandRUD | NO WaterHere ] -> [ RemoveLandRU | ]
+
+=======
+LEVELS
+=======
+
+._
+._
+
+
+` // end game
+
+const SKIPPING_STONES_CORNERS = `title Skipping Stones corners
+
+========
+OBJECTS
+========
+
+Background
+blue
+
+Sand
+yellow
+
+Player
+DarkRed #493c2b #000000
+..0..
+.111.
+01110
+02220
+.2.2.
+
+RemoveLandRUD
+Blue
+....0
+.....
+.....
+.....
+....0
+
+=======
+LEGEND
+=======
+
+. = Sand
+P = Player
+_ = Background
+
+RemoveLandR = RemoveLandRUD
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Player
+Sand
+RemoveLandR
+
+======
+RULES
+======
+
+RIGHT [ Sand NO RemoveLandR | NO Sand ] -> [ Sand RemoveLandRUD | NO Sand ]
+
+=======
+LEVELS
+=======
+
+.__
+
+
+` // end game
+
+const HACK_THE_NET_NODES = `title Hack the net nodes disappearing
+
+========
+OBJECTS
+========
+
+Background
+blue
+
+Player
+green
+
+Sand
+yellow
+
+Water
+Blue
+
+=======
+LEGEND
+=======
+
+. = Background
+s = Sand
+P = Player
+w = Water
+thing = sand OR water
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Player
+Sand, Water
+
+======
+RULES
+======
+
+(no-op)
+
+[ thing ] -> [ thing Player ]
+
+=======
+LEVELS
+=======
+
+sw
+
+
+` // end game
+
+function parseEngine(code: string) {
+    const { data } = Parser.parse(code)
+
+    const engine = new LevelEngine(data)
+    engine.setLevel(0)
+    return { engine, data }
+}
+
+describe('engine', () => {
+    it('evaluates an empty game', () => {
+        const { engine, data } = parseEngine(EMPTY_GAME)
+        const player = data.getPlayer().getSprites()[0]
+        engine.tick()
+        expect(engine.getCurrentLevel().getCells()[0][0].getSpritesAsSet().has(player)).toBe(true)
+
+        engine.press(INPUT_BUTTON.RIGHT)
+        engine.tick()
+        expect(player.getCellsThatMatch().size).toBe(1)
+        expect(engine.getCurrentLevel().getCells()[0][1].getSpritesAsSet().has(player)).toBe(true)
+        expect(engine.toSnapshot()).toMatchSnapshot()
+    })
+    it('evaluates a no-op game', () => {
+        const { engine, data } = parseEngine(NOOP_GAME)
+        const player = data.getPlayer().getSprites()[0]
+        engine.tick()
+        expect(engine.getCurrentLevel().getCells()[0][0].getSpritesAsSet().has(player)).toBe(true)
+
+        engine.press(INPUT_BUTTON.RIGHT)
+        engine.tick()
+        expect(player.getCellsThatMatch().size).toBe(1)
+        expect(engine.getCurrentLevel().getCells()[0][1].getSpritesAsSet().has(player)).toBe(true)
+        expect(engine.toSnapshot()).toMatchSnapshot()
+    })
+
+    it('evaluates a simple game', () => {
+        const { engine, data } = parseEngine(SIMPLE_GAME)
+        const one = data.getSpriteByName('one')
+        // const zero = data.getSpriteByName('zero')
+        engine.tick()
+        expect(engine.toSnapshot()).toMatchSnapshot()
+        expect(engine.getCurrentLevel().getCells()[0][0].getSpritesAsSet()).toContain(one)
+    })
+
+    it('draws corner sprites correctly (according to mirror isles)', () => {
+        const { engine, data } = parseEngine(MIRROR_ISLES_CORNERS)
+        engine.tick()
+        expect(engine.toSnapshot()).toMatchSnapshot()
+        const expectedSprite = data.getSpriteByName('RemoveLandRUD')
+        const interestingCell = engine.getCurrentLevel().getCells()[0][0]
+        const sprites = interestingCell.getSpritesAsSet()
+        expect(sprites.has(expectedSprite)).toBe(true)
+
+        // Ensure that the CrateInHole does not exist anywhere
+        const crateInHole = data.getSpriteByName('CrateInHole')
+        expect(crateInHole.getCellsThatMatch().size).toBe(0)
+    })
+
+    it('draws corner sprites correctly (according to skipping stones)', () => {
+        const { engine, data } = parseEngine(SKIPPING_STONES_CORNERS)
+        engine.tick()
+        expect(engine.toSnapshot()).toMatchSnapshot()
+        const expectedSprite = data.getSpriteByName('RemoveLandRUD')
+        const interestingCell = engine.getCurrentLevel().getCells()[0][0]
+        const sprites = interestingCell.getSpritesAsSet()
+        expect(sprites.has(expectedSprite)).toBe(true)
+
+        engine.tick()
+        expect(engine.toSnapshot()).toMatchSnapshot()
+
+        expect(sprites.has(expectedSprite)).toBe(true)
+        const neighborCell = engine.getCurrentLevel().getCells()[0][1]
+        const neighborSprites = neighborCell.getSpritesAsSet()
+        expect(neighborSprites.has(expectedSprite)).toBe(false)
+    })
+
+    it('draws corner sprites correctly according to mirror isles (just the RightUp corner should be blue)', () => {
+        const { engine, data } = parseEngine(MIRROR_ISLES_CORNERS2)
+        engine.tick()
+        const expectedSprite = data.getSpriteByName('RemoveLandRU')
+        const expectedSprite2 = data.getSpriteByName('RemoveLandRD')
+        const interestingCell = engine.getCurrentLevel().getCells()[0][0]
+        const sprites = interestingCell.getSpritesAsSet()
+        expect(sprites.has(expectedSprite)).toBe(true)
+        expect(engine.getCurrentLevel().getCells()[1][0].getSpritesAsSet().has(expectedSprite2)).toBe(true)
+
+        // Ensure that the CrateInHole does not exist anywhere
+        const crateInHole = data.getSpriteByName('CrateInHole')
+        expect(crateInHole.getCellsThatMatch().size).toBe(0)
+    })
+
+    it('Respects when an OR LegendItem is on the right side of a Rule to preserve the sprite that was there', () => {
+        const { engine, data } = parseEngine(HACK_THE_NET_NODES)
+        const player = data.getSpriteByName('player')
+        const sand = data.getSpriteByName('sand')
+        const water = data.getSpriteByName('water')
+        engine.tick()
+
+        expect(sand.getCellsThatMatch().size).toBe(1)
+        expect(water.getCellsThatMatch().size).toBe(1)
+        expect(player.getCellsThatMatch().size).toBe(2)
+    })
+
+    it('Runs LATE rules after sprites have moved', () => {
+        const { engine, data } = parseEngine(`title Match 3 Block Push
+
+    ========
+    OBJECTS
+    ========
+
+    Background
+    LIGHTGREEN GREEN
+    11111
+    01111
+    11101
+    11111
+    10111
+
+
+    Player
+    Black Orange White Blue
+    .000.
+    .111.
+    22222
+    .333.
+    .3.3.
+
+    Crate
+    Orange Yellow
+    00000
+    0...0
+    0...0
+    0...0
+    00000
+
+
+    =======
+    LEGEND
+    =======
+
+    . = Background
+    P = Player
+    * = Crate
+
+
+    =======
+    SOUNDS
+    =======
+
+    ================
+    COLLISIONLAYERS
+    ================
+
+    Background
+    Player, Crate
+
+    ======
+    RULES
+    ======
+
+    ( Put this rule 1st so we know it gets executed AFTER the move occurs)
+    LATE [ Crate | Crate | Crate ] -> [ | | ]
+
+    RIGHT [ STATIONARY Player ] -> [ > Player ]
+
+    [ > Player | Crate ] -> [ > Player | > Crate ]
+
+
+    ==============
+    WINCONDITIONS
+    ==============
+
+    =======
+    LEVELS
+    =======
+
+    ..*
+    P*.
+    ..*
+
+    `)
+        const crate = data.getSpriteByName('crate')
+        engine.tick()
+
+        expect(crate.getCellsThatMatch().size).toBe(0)
+    })
+
+    it('Evaluates the rules as-if they were evaluated from top->bottom and left->right (e.g. beam islands waves)', () => {
+        const { engine, data } = parseEngine(`title Match 3 Block Push
+
+    ========
+    OBJECTS
+    ========
+
+    BgNW1 .
+    #6719ac #a13cb7
+    00000
+    00000
+    00000
+    00000
+    00000
+
+    BgNE1
+    #6719ac #a13cb7
+    00000
+    00000
+    00100
+    00000
+    00000
+
+    BgSW1
+    #6719ac #a13cb7
+    00000
+    00000
+    00000
+    01000
+    00000
+
+    BgSE1
+    #6719ac #a13cb7
+    00000
+    00000
+    00000
+    00000
+    00000
+
+
+    =======
+    LEGEND
+    =======
+
+    Background = BgNW1 OR BgNE1 OR BgSW1 OR BgSE1
+
+    ================
+    COLLISIONLAYERS
+    ================
+
+    Background
+
+    ======
+    RULES
+    ======
+
+    [ NO Background ] -> [ BgNW1 ]
+    DOWN  [ BgNW1 | BgNW1 ] -> [ BgNW1 | BgSW1 ]
+    RIGHT [ BgNW1 | BgNW1 ] -> [ BgNW1 | BgNE1 ]
+    RIGHT [ BgSW1 | BgSW1 ] -> [ BgSW1 | BgSE1 ]
+
+
+    =======
+    LEVELS
+    =======
+
+    ...........
+    ...........
+    ...........
+    ...........
+    ...........
+    ...........
+    ...........
+    ...........
+    ...........
+    ...........
+
+    `)
+        const bgnw1 = data.getSpriteByName('bgnw1')
+        const bgsw1 = data.getSpriteByName('bgsw1')
+        const bgne1 = data.getSpriteByName('bgne1')
+        const bgse1 = data.getSpriteByName('bgse1')
+        engine.tick()
+
+        // This mimics the 1st level of Beam Islands because picking a smaller size does not
+        // cause the problem to appear
+        expect(bgnw1.getCellsThatMatch().size).toBe(30) // fails if this is 18 (or any other number)
+        expect(bgsw1.getCellsThatMatch().size).toBe(30)
+        expect(bgne1.getCellsThatMatch().size).toBe(25)
+        expect(bgse1.getCellsThatMatch().size).toBe(25)
+    })
+
+    it('Removes sprites that were in the OR  tile of a condition but not present in the action side', () => {
+        const { engine, data } = parseEngine(`title Aaaah! I'm Being Attacked by a Giant Tentacle!
+        realtime_interval 0.6
+
+        ========
+        OBJECTS
+        ========
+
+        Background
+        #ccc #ddd #bee
+        10000
+        12220
+        12220
+        12220
+        11110
+
+        Player
+        Brown #fda Purple pink black
+        .000.
+        .111.
+        22222
+        22222
+        .434.
+
+
+        RNG1
+        transparent
+
+        RNG2
+        transparent
+
+        =======
+        LEGEND
+        =======
+        . = Background
+        P = Player AND RNG1
+
+        RNG = RNG1 OR RNG2
+
+        =======
+        SOUNDS
+        =======
+
+        ================
+        COLLISIONLAYERS
+        ================
+        Background
+        RNG1, RNG2
+        Player
+
+
+        ======
+        RULES
+        ======
+
+        (OR'd fields are not removed even though they should be)
+        ([ Player ] -> [ Player RANDOM RNG ])
+        [RNG] -> []
+
+
+        ==============
+        WINCONDITIONS
+        ==============
+
+        =======
+        LEVELS
+        =======
+
+        P
+
+    `) // end game definition
+        const rng1 = data.getSpriteByName('RNG1')
+        const rng2 = data.getSpriteByName('RNG2')
+        engine.tick()
+
+        // [RNG] -> [] should result in the sprites not appearing
+        expect(rng1.getCellsThatMatch().size).toBe(0)
+        expect(rng2.getCellsThatMatch().size).toBe(0)
+    })
+
+    it('Evaluates brackets when new cells match mid-evaluation', () => {
+        const { engine, data } = parseEngine(`title foo
+        realtime_interval 0.6
+
+        ========
+        OBJECTS
+        ========
+
+        Background .
+        gray
+
+        Player P
+        Brown
+
+        SpriteA A
+        green
+
+        SpriteB B
+        blue
+
+        =======
+        LEGEND
+        =======
+
+        =======
+        SOUNDS
+        =======
+
+        ================
+        COLLISIONLAYERS
+        ================
+        Background
+        Player
+        SpriteA
+        SpriteB
+
+
+        ======
+        RULES
+        ======
+
+        RIGHT [ A | B ] -> [ A | A ]
+
+
+        ==============
+        WINCONDITIONS
+        ==============
+
+        =======
+        LEVELS
+        =======
+
+        PABBB
+
+    `) // end game definition
+
+        const spriteA = data.getSpriteByName('spritea')
+        const spriteB = data.getSpriteByName('spriteb')
+        engine.tick()
+
+        expect(spriteA.getCellsThatMatch().size).toBe(4)
+        expect(spriteB.getCellsThatMatch().size).toBe(0)
+    })
+
+    it('preserves wantsToMove when a sprite is replaced but it is in the same collision layer', () => {
+        const { engine, data } = parseEngine(`title foo
+        realtime_interval 0.6
+
+        ========
+        OBJECTS
+        ========
+
+        Background .
+        gray
+
+        Player P
+        transparent
+
+        SpriteA A
+        green
+
+        SpriteB B
+        blue
+
+        =======
+        LEGEND
+        =======
+
+        =======
+        SOUNDS
+        =======
+
+        ================
+        COLLISIONLAYERS
+        ================
+        Background
+        Player
+        SpriteA, SpriteB
+
+
+        ======
+        RULES
+        ======
+
+        (just get A to move)
+        RIGHT [ STATIONARY A ] -> [ > A ]
+        (swap A with B and the wantsToMove should be preserved)
+        RIGHT [ A ] -> [ B ]
+
+
+        ==============
+        WINCONDITIONS
+        ==============
+
+        =======
+        LEVELS
+        =======
+
+        PA.
+
+    `) // end game definition
+
+        const spriteA = data.getSpriteByName('spritea')
+        const spriteB = data.getSpriteByName('spriteb')
+        engine.tick()
+
+        // Check that movement was transferred from A to B
+        expect(engine.getCurrentLevel().getCells()[0][2].getSpritesAsSet().has(spriteB)).toBe(true)
+        // The rest are just sanity-checks
+        expect(engine.getCurrentLevel().getCells()[0][2].getSpritesAsSet().has(spriteA)).toBe(false)
+        expect(spriteA.getCellsThatMatch().size).toBe(0)
+        expect(spriteB.getCellsThatMatch().size).toBe(1)
+    })
+
+    it('percolates wantsToMove up (Beam Islands PlayerIsland)', () => {
+        // This test ran indefinitely at one point
+        const { engine, data } = parseEngine(`title foo
+        realtime_interval 0.6
+
+        ========
+        OBJECTS
+        ========
+
+        Background
+        gray
+
+        Player
+        transparent
+
+        Island
+        green
+
+        PlayerIsland
+        blue
+
+        BlockIsland
+        Transparent
+
+
+        =======
+        LEGEND
+        =======
+
+        . = Background
+        P = Player AND Island AND PlayerIsland
+        I = Island and PlayerIsland
+        s = Island (for blocking movement)
+
+        MoveBlock = Island
+
+        =======
+        SOUNDS
+        =======
+
+        ================
+        COLLISIONLAYERS
+        ================
+        Background
+        Player
+        PlayerIsland, BlockIsland
+        Island
+
+
+        ======
+        RULES
+        ======
+
+        ( These Rules cause the engine to run indefinitely )
+
+        RIGHT [ STATIONARY Player ] -> [ > Player ]
+        [ Island NO PlayerIsland ] -> [ Island BlockIsland ]
+        [ > Player ][ PlayerIsland ] -> [ > Player ][ > PlayerIsland ]
+    (
+        [ > PlayerIsland Island | NO MoveBlock ] -> [ > PlayerIsland > Island | ]
+
+        [ < Island | Island NO BlockIsland ] -> [ < Island | < Island ]
+    )
+        [ STATIONARY Island PlayerIsland ][ MOVING Player ] -> [ Island PlayerIsland ][ STATIONARY Player ] (SFX2)
+
+
+        ==============
+        WINCONDITIONS
+        ==============
+
+        =======
+        LEVELS
+        =======
+
+        PIs..
+
+    `) // end game definition
+
+        const player = data.getSpriteByName('player')
+        engine.tickUpdateCells()
+
+        expect(player.getCellsThatMatch().size).toBe(1)
+        expect([...player.getCellsThatMatch()][0].getWantsToMove(player)).toBe('STATIONARY')
+    })
+
+    it('moves sprites to a new neighbor (simple)', () => {
+        const { engine, data } = parseEngine(`title foo
+
+        ========
+        OBJECTS
+        ========
+
+        Background
+        gray
+
+        Player
+        transparent
+
+        Red R
+        red
+
+        Green G
+        green
+
+        Blue B
+        blue
+
+        =======
+        LEGEND
+        =======
+
+        . = Background
+        P = Player
+
+        Color = Red OR Green OR Blue
+
+        =======
+        SOUNDS
+        =======
+
+        ================
+        COLLISIONLAYERS
+        ================
+        Background
+        Player
+        Color
+
+        ======
+        RULES
+        ======
+
+        (shift colors to the right)
+        RIGHT [ Color | NO Color ] -> [ NO Color | Color ]
+
+        ==============
+        WINCONDITIONS
+        ==============
+
+        =======
+        LEVELS
+        =======
+
+        B.
+
+    `) // end game definition
+
+        // Testing something like `left [ > Counter | MirrorUR ] -> [ | MirrorUR up Counter ]`
+        const red = data.getSpriteByName('red')
+        const green = data.getSpriteByName('green')
+        const blue = data.getSpriteByName('blue')
+        engine.tick()
+
+        expect(red.getCellsThatMatch().size).toBe(0)
+        expect(green.getCellsThatMatch().size).toBe(0)
+        expect(blue.getCellsThatMatch().size).toBe(1)
+        expect(engine.getCurrentLevel().getCells()[0][0].getSpritesAsSet().has(blue)).toBe(false)
+        expect(engine.getCurrentLevel().getCells()[0][1].getSpritesAsSet().has(blue)).toBe(true)
+    })
+
+    it('moves sprites to a new neighbor (intermediate)', () => {
+        const { engine, data } = parseEngine(`title foo
+
+        ========
+        OBJECTS
+        ========
+
+        Background
+        gray
+
+        Player
+        transparent
+
+        Red R
+        red
+
+        Green G
+        green
+
+        Blue B
+        blue
+
+        =======
+        LEGEND
+        =======
+
+        . = Background
+        P = Player
+
+        Color = Red OR Green OR Blue
+
+        =======
+        SOUNDS
+        =======
+
+        ================
+        COLLISIONLAYERS
+        ================
+        Background
+        Player
+        Color
+
+        ======
+        RULES
+        ======
+
+        (shift colors to the right)
+        RIGHT [ Color | NO Color ] -> [ NO Color | Color ]
+
+        ==============
+        WINCONDITIONS
+        ==============
+
+        =======
+        LEVELS
+        =======
+
+        RG.B..
+
+    `) // end game definition
+
+        // Testing something like `left [ > Counter | MirrorUR ] -> [ | MirrorUR up Counter ]`
+        const red = data.getSpriteByName('red')
+        const green = data.getSpriteByName('green')
+        const blue = data.getSpriteByName('blue')
+        engine.tick()
+
+        expect(red.getCellsThatMatch().size).toBe(1)
+        expect(green.getCellsThatMatch().size).toBe(1)
+        expect(blue.getCellsThatMatch().size).toBe(1)
+        expect(engine.getCurrentLevel().getCells()[0][3].getSpritesAsSet().has(red)).toBe(true)
+        expect(engine.getCurrentLevel().getCells()[0][4].getSpritesAsSet().has(green)).toBe(true)
+        expect(engine.getCurrentLevel().getCells()[0][5].getSpritesAsSet().has(blue)).toBe(true)
+    })
+
+    it('swaps an OR tile to a different bracket', () => {
+        const { engine, data } = parseEngine(`title foo
+
+        ========
+        OBJECTS
+        ========
+
+        Background
+        gray
+
+        Player
+        transparent
+
+        Red R
+        red
+
+        Green G
+        green
+
+        Blue B
+        blue
+
+        =======
+        LEGEND
+        =======
+
+        . = Background
+        P = Player
+
+        Color = Red OR Green OR Blue
+
+        =======
+        SOUNDS
+        =======
+
+        ================
+        COLLISIONLAYERS
+        ================
+        Background
+        Player
+        Color
+
+        ======
+        RULES
+        ======
+
+        (add the Color onto the Player)
+        RIGHT [ Color ] [ Player NO Color ] -> [ ] [ Player Color ]
+
+        ==============
+        WINCONDITIONS
+        ==============
+
+        =======
+        LEVELS
+        =======
+
+        PRGB
+
+    `) // end game definition
+
+        // Testing something like `left [ > Counter | MirrorUR ] -> [ | MirrorUR up Counter ]`
+        const red = data.getSpriteByName('red')
+        const green = data.getSpriteByName('green')
+        const blue = data.getSpriteByName('blue')
+        engine.tick()
+
+        // The original implementation expects the tick to end this way:
+        // RED BACKGROUND GREEN BLUE
+        expect(red.getCellsThatMatch().size).toBe(1)
+        expect(green.getCellsThatMatch().size).toBe(1)
+        expect(blue.getCellsThatMatch().size).toBe(1)
+        expect(engine.getCurrentLevel().getCells()[0][0].getSpritesAsSet().has(red)).toBe(true)
+        expect(engine.getCurrentLevel().getCells()[0][2].getSpritesAsSet().has(green)).toBe(true)
+        expect(engine.getCurrentLevel().getCells()[0][3].getSpritesAsSet().has(blue)).toBe(true)
+    })
+
+    it('keeps running the rule even when only the direction changed', () => {
+        const { engine, data } = parseEngine(`title foo
+
+        ========
+        OBJECTS
+        ========
+
+        Background
+        gray
+
+        Player
+        transparent
+
+        Red R
+        red
+
+        Green G
+        green
+
+        Blue B
+        blue
+
+        =======
+        LEGEND
+        =======
+
+        . = Background
+        P = Player
+
+        Color = Red OR Green OR Blue
+        A = Red AND Green AND Blue
+
+        =======
+        SOUNDS
+        =======
+
+        ================
+        COLLISIONLAYERS
+        ================
+        Background
+        Player
+        Red
+        Green
+        Blue
+
+        ======
+        RULES
+        ======
+
+        DOWN [ STATIONARY Red ] -> [ > Red ]
+        [ > Red Blue ] -> [ > Red > Blue ]
+
+        ==============
+        WINCONDITIONS
+        ==============
+
+        =======
+        LEVELS
+        =======
+
+        AAA
+        ...
+
+    `) // end game definition
+
+        const red = data.getSpriteByName('red')
+        const green = data.getSpriteByName('green')
+        const blue = data.getSpriteByName('blue')
+        engine.tick()
+        expect(engine.toSnapshot()).toMatchSnapshot()
+
+        expect(red.getCellsThatMatch().size).toBe(3)
+        expect(green.getCellsThatMatch().size).toBe(3)
+        expect(blue.getCellsThatMatch().size).toBe(3)
+        expect(engine.getCurrentLevel().getCells()[0][0].getSpritesAsSet().has(green)).toBe(true)
+        expect(engine.getCurrentLevel().getCells()[0][1].getSpritesAsSet().has(green)).toBe(true)
+        expect(engine.getCurrentLevel().getCells()[0][2].getSpritesAsSet().has(green)).toBe(true)
+        expect(engine.getCurrentLevel().getCells()[1][0].getSpritesAsSet().has(red)).toBe(true)
+        expect(engine.getCurrentLevel().getCells()[1][1].getSpritesAsSet().has(red)).toBe(true)
+        expect(engine.getCurrentLevel().getCells()[1][2].getSpritesAsSet().has(red)).toBe(true)
+        expect(engine.getCurrentLevel().getCells()[1][0].getSpritesAsSet().has(blue)).toBe(true)
+        expect(engine.getCurrentLevel().getCells()[1][1].getSpritesAsSet().has(blue)).toBe(true)
+        expect(engine.getCurrentLevel().getCells()[1][2].getSpritesAsSet().has(blue)).toBe(true)
+    })
+
+    it('does not move the island when there is a bridge in the way (simulated RIGID keyword)', () => {
+        const { engine, data } = parseEngine(`title BeamishIslands testing
+        author mjau
+        run_rules_on_level_start
+        realtime_interval 0.3
+
+        ( for ludum dare 29 )
+
+        =========
+         OBJECTS
+        =========
+
+        BgNW1 .
+        #6719ac #a13cb7
+        00000
+        00000
+        00000
+        00000
+        00000
+
+
+        Player
+        #f7e26b #000000
+        01010
+        .000.
+        .0.0.
+        .....
+        .....
+
+        Island #
+        #000000
+
+
+        PlayerIsland
+        #078ffd
+        .....
+        .....
+        ..0..
+        .....
+        .....
+
+        BlockIsland
+        #df2619
+        .....
+        .....
+        ..0..
+        .....
+        .....
+
+
+        Bridge -
+        #000000 #a27d5b
+        .....
+        .111.
+        .101.
+        .111.
+        .000.
+
+
+        ========
+         LEGEND
+        ========
+
+        @ = Player and Island
+
+        Background = BgNW1
+        Movable = Player or Island or PlayerIsland
+        MoveBlock = Island or Bridge
+
+
+        ========
+         SOUNDS
+        ========
+
+
+        =================
+         COLLISIONLAYERS
+        =================
+
+        Background
+        Island, Bridge
+        Player
+        PlayerIsland, BlockIsland
+
+        =======
+         RULES
+        =======
+
+
+        ( player island )
+        (use RIGHT in the rules only to reduce the number of rules that are updated)
+        RIGHT [ Player Island ] -> [ Player Island PlayerIsland ]
+        down  [ PlayerIsland | Island ] -> [ PlayerIsland | Island PlayerIsland ]
+
+        ( rigid movement )
+        LEFT [ > Player ][ PlayerIsland ] -> [ > Player ][ > PlayerIsland ]
+        LEFT [ > PlayerIsland Island  | no MoveBlock ] -> [ > PlayerIsland > Island | ]
+        RIGHT [ < Island  | Island no BlockIsland ] -> [ < Island | < Island ]
+        RIGHT [ stationary Island PlayerIsland ][ moving Player ] -> [ Island PlayerIsland ][ stationary Player ] (SFX2)
+        RIGHT [ stationary Island PlayerIsland ][ LEFT Movable ]  -> [ Island stationary PlayerIsland ][ stationary Movable ]
+
+        ===============
+         WINCONDITIONS
+        ===============
+
+        ========
+         LEVELS
+        ========
+
+        .@
+        -#
+
+    `) // end game definition
+
+        const player = data.getSpriteByName('player')
+        const island = data.getSpriteByName('island')
+        const playerIsland = data.getSpriteByName('PlayerIsland')
+        engine.press(INPUT_BUTTON.LEFT)
+        engine.tick()
+        expect(engine.toSnapshot()).toMatchSnapshot()
+
+        expect(island.getCellsThatMatch().size).toBe(2)
+        expect(playerIsland.getCellsThatMatch().size).toBe(2)
+        // Check that the Island did not move
+        expect(engine.getCurrentLevel().getCells()[0][0].getSpritesAsSet().has(island)).toBe(false)
+        expect(engine.getCurrentLevel().getCells()[0][1].getSpritesAsSet().has(island)).toBe(true)
+        expect(engine.getCurrentLevel().getCells()[1][1].getSpritesAsSet().has(island)).toBe(true)
+        // Check that the PlayerIsland didn't move either
+        expect(engine.getCurrentLevel().getCells()[0][0].getSpritesAsSet().has(playerIsland)).toBe(false)
+        expect(engine.getCurrentLevel().getCells()[0][1].getSpritesAsSet().has(playerIsland)).toBe(true)
+        expect(engine.getCurrentLevel().getCells()[1][1].getSpritesAsSet().has(playerIsland)).toBe(true)
+
+        // Check that the player did not move either
+        expect(engine.getCurrentLevel().getCells()[0][0].getSpritesAsSet().has(player)).toBe(false)
+        expect(engine.getCurrentLevel().getCells()[0][1].getSpritesAsSet().has(player)).toBe(true)
+    })
+
+    it('removes the wantsToMove when specified in the rule', () => {
+        const { engine, data } = parseEngine(`title foo
+
+        ========
+        OBJECTS
+        ========
+
+        Background
+        gray
+
+        Player
+        transparent
+
+        =======
+        LEGEND
+        =======
+
+        . = Background
+        P = Player
+
+        =======
+        SOUNDS
+        =======
+
+        ================
+        COLLISIONLAYERS
+        ================
+        Background
+        Player
+
+        ======
+        RULES
+        ======
+
+        [ > Player | ] -> [ | Player ]
+
+        ==============
+        WINCONDITIONS
+        ==============
+
+        =======
+        LEVELS
+        =======
+
+        P..
+
+    `) // end game definition
+
+        const player = data.getSpriteByName('player')
+        engine.press(INPUT_BUTTON.RIGHT)
+        engine.tick()
+        expect(engine.toSnapshot()).toMatchSnapshot()
+
+        expect(player.getCellsThatMatch().size).toBe(1)
+        // Don't double-move the Player (verify that we remove the wantsToMove)
+        expect(engine.getCurrentLevel().getCells()[0][0].getSpritesAsSet().has(player)).toBe(false)
+        expect(engine.getCurrentLevel().getCells()[0][2].getSpritesAsSet().has(player)).toBe(false)
+        expect(engine.getCurrentLevel().getCells()[0][1].getSpritesAsSet().has(player)).toBe(true)
+    })
+
+    it('removes a sprite when it has NO in the action side', () => {
+        const { engine, data } = parseEngine(`title foo
+
+        ========
+        OBJECTS
+        ========
+
+        Background
+        gray
+
+        Player
+        transparent
+
+        Hat
+        transparent
+
+        =======
+        LEGEND
+        =======
+
+        . = Background
+        P = Player AND Hat
+
+        =======
+        SOUNDS
+        =======
+
+        ================
+        COLLISIONLAYERS
+        ================
+        Background
+        Player
+        Hat
+
+        ======
+        RULES
+        ======
+
+        [ Player ] -> [ Player NO Hat ]
+
+        ==============
+        WINCONDITIONS
+        ==============
+
+        =======
+        LEVELS
+        =======
+
+        P
+
+    `) // end game definition
+
+        const hat = data.getSpriteByName('hat')
+        engine.tick()
+        expect(engine.toSnapshot()).toMatchSnapshot()
+
+        expect(hat.getCellsThatMatch().size).toBe(0)
+        expect(engine.getCurrentLevel().getCells()[0][0].getSpritesAsSet().has(hat)).toBe(false)
+    })
+
+    it('removes a sprite when it has NO in the action side (an OR tile)', () => {
+        const { engine, data } = parseEngine(`title foo
+
+        ========
+        OBJECTS
+        ========
+
+        Background
+        gray
+
+        Player
+        transparent
+
+        Hat
+        transparent
+
+        Shirt
+        transparent
+
+        =======
+        LEGEND
+        =======
+
+        . = Background
+        P = Player AND Hat
+        Clothing = Shirt OR Hat
+
+        =======
+        SOUNDS
+        =======
+
+        ================
+        COLLISIONLAYERS
+        ================
+        Background
+        Player
+        Hat
+        Shirt
+
+        ======
+        RULES
+        ======
+
+        [ Player ] -> [ Player NO Clothing ]
+
+        ==============
+        WINCONDITIONS
+        ==============
+
+        =======
+        LEVELS
+        =======
+
+        P
+
+    `) // end game definition
+
+        const hat = data.getSpriteByName('hat')
+        const shirt = data.getSpriteByName('shirt')
+        engine.tick()
+        expect(engine.toSnapshot()).toMatchSnapshot()
+
+        expect(hat.getCellsThatMatch().size).toBe(0)
+        expect(shirt.getCellsThatMatch().size).toBe(0)
+        expect(engine.getCurrentLevel().getCells()[0][0].getSpritesAsSet().has(hat)).toBe(false)
+        expect(engine.getCurrentLevel().getCells()[0][0].getSpritesAsSet().has(shirt)).toBe(false)
+    })
+
+    it('moves a tile from one bracket to another (OR tile is in same collisionlayer', () => {
+        const { engine, data } = parseEngine(`title foo
+
+        ========
+        OBJECTS
+        ========
+
+        Background
+        gray
+
+        Player
+        transparent
+
+        Hat
+        brown
+
+        Shirt
+        red
+
+        Clipboard
+        transparent
+
+        =======
+        LEGEND
+        =======
+
+        . = Background
+        P = Player AND Hat
+        C = Clipboard
+        Clothing = Hat OR Shirt
+
+        =======
+        SOUNDS
+        =======
+
+        ================
+        COLLISIONLAYERS
+        ================
+        Background
+        Player
+        Hat, Shirt
+        Clipboard
+
+        ======
+        RULES
+        ======
+
+        [ Player Clothing ] [ Clipboard ] -> [ Player ] [ Clipboard Clothing ]
+
+        ==============
+        WINCONDITIONS
+        ==============
+
+        =======
+        LEVELS
+        =======
+
+        PC
+
+    `) // end game definition
+
+        const hat = data.getSpriteByName('hat')
+        const shirt = data.getSpriteByName('shirt')
+        engine.tick()
+        expect(engine.toSnapshot()).toMatchSnapshot()
+
+        expect(hat.getCellsThatMatch().size).toBe(1)
+        expect(shirt.getCellsThatMatch().size).toBe(0)
+        expect(engine.getCurrentLevel().getCells()[0][0].getSpritesAsSet().has(hat)).toBe(false)
+        expect(engine.getCurrentLevel().getCells()[0][1].getSpritesAsSet().has(hat)).toBe(true)
+    })
+
+    it('moves a tile from one bracket to another (OR tile is in DIFFERENT collisionlayer', () => {
+        const { engine, data } = parseEngine(`title foo
+
+        ========
+        OBJECTS
+        ========
+
+        Background
+        gray
+
+        Player
+        transparent
+
+        Hat
+        brown
+
+        Shirt
+        red
+
+        Clipboard
+        transparent
+
+        =======
+        LEGEND
+        =======
+
+        . = Background
+        P = Player AND Hat
+        C = Clipboard
+        Clothing = Hat OR Shirt
+
+        =======
+        SOUNDS
+        =======
+
+        ================
+        COLLISIONLAYERS
+        ================
+        Background
+        Player
+        Hat
+        Shirt
+        Clipboard
+
+        ======
+        RULES
+        ======
+
+        [ Player Clothing ] [ Clipboard ] -> [ Player ] [ Clipboard Clothing ]
+
+        ==============
+        WINCONDITIONS
+        ==============
+
+        =======
+        LEVELS
+        =======
+
+        PC
+
+    `) // end game definition
+
+        const hat = data.getSpriteByName('hat')
+        const shirt = data.getSpriteByName('shirt')
+        engine.tick()
+        expect(engine.toSnapshot()).toMatchSnapshot()
+
+        expect(hat.getCellsThatMatch().size).toBe(1)
+        expect(shirt.getCellsThatMatch().size).toBe(0)
+        expect(engine.getCurrentLevel().getCells()[0][0].getSpritesAsSet().has(hat)).toBe(false)
+        expect(engine.getCurrentLevel().getCells()[0][1].getSpritesAsSet().has(hat)).toBe(true)
+    })
+
+    it('swaps 2 OR tiles (OR tile has sprites in DIFFERENT collisionlayer', () => {
+        const { engine, data } = parseEngine(`title foo
+
+        ========
+        OBJECTS
+        ========
+
+        Background
+        gray
+
+        Player
+        transparent
+
+        Hat
+        brown
+
+        Shirt
+        red
+
+        Clipboard
+        transparent
+
+        Target
+        transparent
+
+        =======
+        LEGEND
+        =======
+
+        . = Background
+        P = Player AND Hat
+        C = Clipboard
+        T = Target AND Shirt
+        Clothing = Hat OR Shirt
+
+        =======
+        SOUNDS
+        =======
+
+        ================
+        COLLISIONLAYERS
+        ================
+        Background
+        Player
+        Hat
+        Shirt
+        Clipboard
+        Target
+
+        ======
+        RULES
+        ======
+
+        [ Player Clothing ] [ Clipboard ] -> [ Player ] [ Clipboard Clothing ]
+        [ Target Clothing ] [ Player ] -> [ Target ] [ Player Clothing ]
+        [ Clipboard Clothing ] [ Target ] -> [ Clipboard ] [ Target Clothing ]
+
+        ==============
+        WINCONDITIONS
+        ==============
+
+        =======
+        LEVELS
+        =======
+
+        PTC
+
+    `) // end game definition
+
+        const hat = data.getSpriteByName('hat')
+        const shirt = data.getSpriteByName('shirt')
+        engine.tick()
+        expect(engine.toSnapshot()).toMatchSnapshot()
+
+        expect(hat.getCellsThatMatch().size).toBe(1)
+        expect(shirt.getCellsThatMatch().size).toBe(1)
+        expect(engine.getCurrentLevel().getCells()[0][0].getSpritesAsSet().has(hat)).toBe(false)
+        expect(engine.getCurrentLevel().getCells()[0][1].getSpritesAsSet().has(hat)).toBe(true)
+        expect(engine.getCurrentLevel().getCells()[0][0].getSpritesAsSet().has(shirt)).toBe(true)
+        expect(engine.getCurrentLevel().getCells()[0][1].getSpritesAsSet().has(shirt)).toBe(false)
+    })
+
+    it('ignores negated OR tiles in the condition', () => {
+        const { engine, data } = parseEngine(`title foo
+
+        ========
+        OBJECTS
+        ========
+
+        Background
+        gray
+
+        Player
+        transparent
+
+        Red R
+        red
+
+        Green G
+        green
+
+        Blue B
+        blue
+
+        Hat
+        transparent
+
+        Shirt
+        transparent
+
+        =======
+        LEGEND
+        =======
+
+        . = Background
+        P = Player AND Hat
+
+        Color = Red OR Green OR Blue
+        Clothing = Hat OR Shirt
+
+        =======
+        SOUNDS
+        =======
+
+        ================
+        COLLISIONLAYERS
+        ================
+        Background
+        Player
+        Red, Shirt
+        Green, Hat
+        Blue
+
+        ======
+        RULES
+        ======
+
+        (make sure we do not remove the hat which is in the same collision layer as a color)
+        RIGHT [ Player  NO Color ] -> [ ]
+
+        ==============
+        WINCONDITIONS
+        ==============
+
+        =======
+        LEVELS
+        =======
+
+        P.
+
+    `) // end game definition
+
+        const hat = data.getSpriteByName('hat')
+        engine.tick()
+
+        expect(hat.getCellsThatMatch().size).toBe(1)
+    })
+
+    it('supports AND tiles (in DIFFERENT collisionLayers) in the condition', () => {
+        const { engine, data } = parseEngine(`title foo
+
+        ========
+        OBJECTS
+        ========
+
+        Background
+        gray
+
+        Player
+        transparent
+
+        Red R
+        red
+
+        Green G
+        green
+
+        Blue B
+        blue
+
+        Hat
+        transparent
+
+        Shirt
+        transparent
+
+        =======
+        LEGEND
+        =======
+
+        . = Background
+        P = Player AND Hat AND Shirt
+
+        Color = Red OR Green OR Blue
+        Clothing = Hat OR Shirt
+
+        =======
+        SOUNDS
+        =======
+
+        ================
+        COLLISIONLAYERS
+        ================
+        Background
+        Player
+        Red, Shirt
+        Green, Hat
+        Blue
+
+        ======
+        RULES
+        ======
+
+        (make sure we do not remove the hat which is in the same collision layer as a color)
+        RIGHT [ Player Clothing ] -> [ ]
+
+        ==============
+        WINCONDITIONS
+        ==============
+
+        =======
+        LEVELS
+        =======
+
+        P.
+
+    `) // end game definition
+
+        const hat = data.getSpriteByName('hat')
+        const shirt = data.getSpriteByName('shirt')
+        engine.tick()
+
+        expect(hat.getCellsThatMatch().size).toBe(0)
+        expect(shirt.getCellsThatMatch().size).toBe(1) // reference implementation only removes the 1st tile
+    })
+
+    it('supports ellipsis rules', () => {
+        const { engine, data } = parseEngine(`title foo
+
+        ========
+        OBJECTS
+        ========
+
+        Background
+        gray
+
+        Player
+        transparent
+
+        Cat C
+        black
+
+        =======
+        LEGEND
+        =======
+
+        . = Background
+        P = Player
+
+        =======
+        SOUNDS
+        =======
+
+        ================
+        COLLISIONLAYERS
+        ================
+        Background
+        Player
+        Cat
+
+        ======
+        RULES
+        ======
+
+        RIGHT [ Player | ... | Cat ] -> [ Player | ... | > Cat ]
+
+        ==============
+        WINCONDITIONS
+        ==============
+
+        =======
+        LEVELS
+        =======
+
+        P.C..
+
+    `) // end game definition
+
+        const cat = data.getSpriteByName('cat')
+        engine.tick()
+
+        expect(cat.getCellsThatMatch().size).toBe(1)
+        expect(engine.getCurrentLevel().getCells()[0][2].getSpritesAsSet().has(cat)).toBe(false) // the Cat moved
+        expect(engine.getCurrentLevel().getCells()[0][3].getSpritesAsSet().has(cat)).toBe(true)
+
+        engine.tick()
+
+        expect(cat.getCellsThatMatch().size).toBe(1)
+        expect(engine.getCurrentLevel().getCells()[0][3].getSpritesAsSet().has(cat)).toBe(false) // the Cat moved
+        expect(engine.getCurrentLevel().getCells()[0][4].getSpritesAsSet().has(cat)).toBe(true)
+    })
+
+    it('supports ellipsis rules (all matches move, not just the 1st match)', () => {
+        const { engine, data } = parseEngine(`title foo
+
+        ========
+        OBJECTS
+        ========
+
+        Background
+        gray
+
+        Player
+        transparent
+
+        Cat C
+        black
+
+        =======
+        LEGEND
+        =======
+
+        . = Background
+        P = Player
+
+        =======
+        SOUNDS
+        =======
+
+        ================
+        COLLISIONLAYERS
+        ================
+        Background
+        Player
+        Cat
+
+        ======
+        RULES
+        ======
+
+        RIGHT [ Player | ... | Cat ] -> [ Player | ... | > Cat ]
+
+        ==============
+        WINCONDITIONS
+        ==============
+
+        =======
+        LEVELS
+        =======
+
+        P.C.C..
+
+    `) // end game definition
+
+        const cat = data.getSpriteByName('cat')
+        engine.tick()
+
+        expect(cat.getCellsThatMatch().size).toBe(2)
+        expect(engine.getCurrentLevel().getCells()[0][4].getSpritesAsSet().has(cat)).toBe(false) // the further cat moved
+        expect(engine.getCurrentLevel().getCells()[0][5].getSpritesAsSet().has(cat)).toBe(true)
+        expect(engine.getCurrentLevel().getCells()[0][2].getSpritesAsSet().has(cat)).toBe(false) // the closer Cat moved too
+        expect(engine.getCurrentLevel().getCells()[0][3].getSpritesAsSet().has(cat)).toBe(true)
+    })
+
+    it('undo correctly clears bracket matches (not really because of UNDO, that is just how it manifested)', () => {
+        const { engine, data } = parseEngine(`title MazezaM Test
+
+        ========
+        OBJECTS
+        ========
+
+        Background
+        DarkBlue Black
+        11111
+        01111
+        11101
+        11111
+        10111
+
+        Player
+        Red DarkGreen Green
+        ..0..
+        22222
+        02220
+        01110
+        .1.1.
+
+        Dot
+        blue
+        ..0..
+        .....
+        0.0.0
+        .....
+        ..0..
+
+        ACrate
+        Orange Brown DarkBrown
+        00001
+        01102
+        01012
+        00112
+        12222
+
+        =======
+        LEGEND
+        =======
+
+        . = Background
+        P = Player
+        C = ACrate
+
+        =======
+        SOUNDS
+        =======
+
+        ================
+        COLLISIONLAYERS
+        ================
+
+        Background
+        Player, ACrate
+        dot
+
+        ======
+        RULES
+        ======
+
+        RIGHT [ > Player | ACrate] -> [ > Player| > ACrate]
+        RIGHT [ > ACrate ] -> [ > ACrate Dot ]
+
+        ==============
+        WINCONDITIONS
+        ==============
+
+        =======
+        LEVELS
+        =======
+
+        .PCC
+
+    `) // end game definition
+
+        const dot = data.getSpriteByName('dot')
+        engine.press(INPUT_BUTTON.RIGHT)
+        engine.tick()
+
+        expect(dot.getCellsThatMatch().size).toBe(1)
+        expect(engine.getCurrentLevel().getCells()[0][2].getSpritesAsSet().has(dot)).toBe(true) // the dot appeared
+
+        // Verify that the bracket no longer has any matches (since things are no longer moving bc the tick is done)
+        expect((engine.gameData.rules[1].getChildRules()[0] as any).conditionBrackets[0].firstCells.size).toBe(0)
+
+        engine.press(INPUT_BUTTON.UNDO)
+        engine.tick()
+
+        expect(dot.getCellsThatMatch().size).toBe(0)
+        expect(engine.getCurrentLevel().getCells()[0][2].getSpritesAsSet().has(dot)).toBe(false) // the dot disappeared
+
+        engine.press(INPUT_BUTTON.LEFT)
+        engine.tick()
+
+        expect(dot.getCellsThatMatch().size).toBe(0)
+        expect(engine.getCurrentLevel().getCells()[0][2].getSpritesAsSet().has(dot)).toBe(false) // the dot did not appear
+
+    })
+
+    it('runs again tick only when sprites moved', () => {
+        const { engine, data } = parseEngine(`title Collapse Test
+
+        ========
+        OBJECTS
+        ========
+
+        Background .
+        Black
+
+        Player P
+        Red DarkGreen Green
+        ..0..
+        22222
+        02220
+        01110
+        .1.1.
+
+        Wall W
+        Gray
+
+        =======
+        LEGEND
+        =======
+
+        =======
+        SOUNDS
+        =======
+
+        ================
+        COLLISIONLAYERS
+        ================
+
+        Background
+        Player, Wall
+
+        ======
+        RULES
+        ======
+
+        RIGHT [ STATIONARY Player ] -> [ DOWN Player ] AGAIN
+
+        ==============
+        WINCONDITIONS
+        ==============
+
+        =======
+        LEVELS
+        =======
+
+        P
+        .
+        W
+
+    `) // end game definition
+
+        const player = data.getSpriteByName('player')
+        engine.tick()
+
+        expect(player.getCellsThatMatch().size).toBe(1)
+        expect(engine.getCurrentLevel().getCells()[1][0].getSpritesAsSet().has(player)).toBe(true) // the player fell down (gravity)
+        expect(engine.hasAgainThatNeedsToRun).toBe(true)
+
+        engine.tick()
+        expect(engine.hasAgainThatNeedsToRun).toBe(false) // the player is now standing on ground
+    })
+
+    it('runs again tick only when cells actually changed', () => {
+        const { engine, data } = parseEngine(`title Atlas Test
+
+        ========
+        OBJECTS
+        ========
+
+        Background .
+        Black
+
+        Player P
+        Red DarkGreen Green
+        ..0..
+        22222
+        02220
+        01110
+        .1.1.
+
+        Temp
+        Gray
+
+        =======
+        LEGEND
+        =======
+
+        =======
+        SOUNDS
+        =======
+
+        ================
+        COLLISIONLAYERS
+        ================
+
+        Background
+        Player, Temp
+
+        ======
+        RULES
+        ======
+
+        (remove and add Player so nothing changed)
+        RIGHT [ Player ] -> [ Temp ] AGAIN
+        RIGHT [ Temp ] -> [ Player ] AGAIN
+
+        ==============
+        WINCONDITIONS
+        ==============
+
+        =======
+        LEVELS
+        =======
+
+        P
+
+    `) // end game definition
+
+        const player = data.getSpriteByName('player')
+        engine.tick()
+
+        expect(player.getCellsThatMatch().size).toBe(1)
+        expect(engine.getCurrentLevel().getCells()[0][0].getSpritesAsSet().has(player)).toBe(true)
+        expect(engine.hasAgainThatNeedsToRun).toBe(false)
+    })
+
+    it('Only removes one OR tile per evaluation', () => {
+        const { engine, data } = parseEngine(`title OR test
+
+        ========
+        OBJECTS
+        ========
+
+        Background
+        BLACK
+
+        A
+        Red
+        0....
+        0....
+        0....
+        0....
+        0....
+
+        B
+        Yellow
+        .0...
+        .0...
+        .0...
+        .0...
+        .0...
+
+
+        Player
+        White
+        0...0
+        .0.0.
+        ..0..
+        .0.0.
+        0...0
+
+
+        C
+        Blue
+        ..0..
+        ..0..
+        ..0..
+        ..0..
+        ..0..
+
+
+
+        =======
+        LEGEND
+        =======
+
+        . = Background
+        P = Player
+        letter = A or B or C
+        X = B and C
+
+        =======
+        SOUNDS
+        =======
+
+        ================
+        COLLISIONLAYERS
+        ================
+
+        Background
+        Player
+        A
+        B
+        C
+
+        ======
+        RULES
+        ======
+
+        [ Letter NO Player ] -> [  Player  ]
+
+        ==============
+        WINCONDITIONS
+        ==============
+
+
+        =======
+        LEVELS
+        =======
+
+        X
+
+    `) // end game definition
+
+        const player = data.getSpriteByName('player')
+        const b = data.getSpriteByName('b')
+        const c = data.getSpriteByName('c')
+        engine.tick()
+
+        expect(player.getCellsThatMatch().size).toBe(1)
+        // remove the 1st OR tile, but not the second.
+        // The reference implementation removes "b" and keeps "c"
+        // but it the current implementation removes the githest collision layer first.
+        // It does not seem like any games rely directly on _which_ is removed
+        // so it does not matter. If a game _does_ rely, then getSprites() should sort
+        // them in the order they occured.
+        expect(b.getCellsThatMatch().size).toBe(1)
+        expect(c.getCellsThatMatch().size).toBe(0)
+    })
+
+    it('Supports Magic OR tiles in different neighbors', () => {
+        const { engine, data } = parseEngine(`title OR test
+
+        ========
+        OBJECTS
+        ========
+
+        Background
+        BLACK
+
+        A
+        Red
+        0....
+        0....
+        0....
+        0....
+        0....
+
+        B
+        Yellow
+        .0...
+        .0...
+        .0...
+        .0...
+        .0...
+
+
+        Player
+        White
+        0...0
+        .0.0.
+        ..0..
+        .0.0.
+        0...0
+
+
+        C
+        Blue
+        ..0..
+        ..0..
+        ..0..
+        ..0..
+        ..0..
+
+
+
+        =======
+        LEGEND
+        =======
+
+        . = Background
+        P = Player
+        letter = A or B or C
+
+        =======
+        SOUNDS
+        =======
+
+        ================
+        COLLISIONLAYERS
+        ================
+
+        Background
+        Player
+        A
+        B
+        C
+
+        ======
+        RULES
+        ======
+
+        RIGHT [ | Letter ] -> [ Letter | ]
+
+        ==============
+        WINCONDITIONS
+        ==============
+
+        =======
+        LEVELS
+        =======
+
+        .B
+
+    `) // end game definition
+
+        const a = data.getSpriteByName('a')
+        const b = data.getSpriteByName('b')
+        const c = data.getSpriteByName('c')
+        engine.tick()
+
+        expect(a.getCellsThatMatch().size).toBe(0)
+        expect(b.getCellsThatMatch().size).toBe(1)
+        expect(c.getCellsThatMatch().size).toBe(0)
+        // ensure that B was moved left
+        expect(engine.getCurrentLevel().getCells()[0][0].getSpritesAsSet().has(b)).toBe(true)
+        expect(engine.getCurrentLevel().getCells()[0][1].getSpritesAsSet().has(b)).toBe(false)
+    })
+
+    it('Supports Magic OR tiles in different brackets', () => {
+        const { engine, data } = parseEngine(`title OR test
+
+        ========
+        OBJECTS
+        ========
+
+        Background
+        BLACK
+
+        A
+        Red
+        0....
+        0....
+        0....
+        0....
+        0....
+
+        B
+        Yellow
+        .0...
+        .0...
+        .0...
+        .0...
+        .0...
+
+
+        Player
+        White
+        0...0
+        .0.0.
+        ..0..
+        .0.0.
+        0...0
+
+
+        C
+        Blue
+        ..0..
+        ..0..
+        ..0..
+        ..0..
+        ..0..
+
+
+
+        =======
+        LEGEND
+        =======
+
+        . = Background
+        P = Player
+        letter = A or B or C
+
+        =======
+        SOUNDS
+        =======
+
+        ================
+        COLLISIONLAYERS
+        ================
+
+        Background
+        Player
+        A
+        B
+        C
+
+        ======
+        RULES
+        ======
+
+        RIGHT [ Player ] [ Letter ] -> [ Letter ] [ ]
+
+        ==============
+        WINCONDITIONS
+        ==============
+
+        =======
+        LEVELS
+        =======
+
+        PB
+
+    `) // end game definition
+
+        const player = data.getSpriteByName('player')
+        const a = data.getSpriteByName('a')
+        const b = data.getSpriteByName('b')
+        const c = data.getSpriteByName('c')
+        engine.tick()
+
+        expect(player.getCellsThatMatch().size).toBe(0)
+        expect(a.getCellsThatMatch().size).toBe(0)
+        expect(b.getCellsThatMatch().size).toBe(1)
+        expect(c.getCellsThatMatch().size).toBe(0)
+        // ensure that B was moved left
+        expect(engine.getCurrentLevel().getCells()[0][0].getSpritesAsSet().has(b)).toBe(true)
+        expect(engine.getCurrentLevel().getCells()[0][1].getSpritesAsSet().has(b)).toBe(false)
+
+    })
+
+    it('supports partially matching an OR tile (e.g. [ LEFT Movable ] when the cell says [ STATIONARY Player LEFT Island ]', () => {
+        const { engine, data } = parseEngine(`title BeamishIslands testing
+        author mjau
+        run_rules_on_level_start
+        realtime_interval 0.3
+
+        ( for ludum dare 29 )
+
+        =========
+         OBJECTS
+        =========
+
+        BgNW1 .
+        #6719ac #a13cb7
+        00000
+        00000
+        00000
+        00000
+        00000
+
+
+        Player
+        #f7e26b #000000
+        01010
+        .000.
+        .0.0.
+        .....
+        .....
+
+        Island #
+        #000000
+
+        ========
+         LEGEND
+        ========
+
+        @ = Player AND Island
+
+        Background = BgNW1
+        Movable = Player OR Island
+
+        ========
+         SOUNDS
+        ========
+
+        =================
+         COLLISIONLAYERS
+        =================
+
+        Background
+        Island
+        Player
+
+        =======
+         RULES
+        =======
+
+        (Cause the Island to be moving but the Player to be stationary)
+        RIGHT [ Island ] -> [ > Island ]
+        RIGHT [ LEFT Movable ]  -> [ STATIONARY Movable ]
+
+        ===============
+         WINCONDITIONS
+        ===============
+
+        ========
+         LEVELS
+        ========
+
+        .@
+
+    `) // end game definition
+
+        const island = data.getSpriteByName('island')
+        engine.tick()
+        expect(engine.toSnapshot()).toMatchSnapshot()
+
+        expect(island.getCellsThatMatch().size).toBe(1)
+        // Check that the Island did not move
+        expect(engine.getCurrentLevel().getCells()[0][0].getSpritesAsSet().has(island)).toBe(false)
+        expect(engine.getCurrentLevel().getCells()[0][1].getSpritesAsSet().has(island)).toBe(true)
+    })
+
+    it('supports trickling up a `NO OrTile` on load', () => {
+        const { engine, data } = parseEngine(`title NO OrTile
+
+        =========
+         OBJECTS
+        =========
+
+        Background .
+        white
+
+        Player P
+        yellow
+
+        Correct
+        green
+
+        Count0
+        transparent
+
+        Count1
+        transparent
+
+        ========
+         LEGEND
+        ========
+
+        Count = Count0 OR Count1
+
+        ========
+         SOUNDS
+        ========
+
+        =================
+         COLLISIONLAYERS
+        =================
+
+        Background
+        Player
+        Count
+        Correct
+
+        =======
+         RULES
+        =======
+
+        RIGHT [ NO Count ] -> [ Correct ]
+
+        ===============
+         WINCONDITIONS
+        ===============
+
+        ========
+         LEVELS
+        ========
+
+        .P
+
+    `) // end game definition
+
+        const correct = data.getSpriteByName('correct')
+        engine.tick()
+        expect(engine.toSnapshot()).toMatchSnapshot()
+
+        expect(correct.getCellsThatMatch().size).toBe(2)
+        // Check that the rule executed
+        expect(engine.getCurrentLevel().getCells()[0][0].getSpritesAsSet().has(correct)).toBe(true)
+    })
+
+    it('supports matching the same cells in multiple brackets and executes correctly if one of those brackets no longer matches', () => {
+        const { engine, data } = parseEngine(`title Test multimatch
+
+        ========
+        OBJECTS
+        ========
+
+        Background
+        LIGHTGREEN GREEN
+        11111
+        01111
+        11101
+        11111
+        10111
+
+
+        Wall
+        BROWN DARKBROWN
+        00010
+        11111
+        01000
+        11111
+        00010
+
+        Player
+        Black Orange White Blue
+        .000.
+        .111.
+        22222
+        .333.
+        .3.3.
+
+        Crate
+        Orange Yellow
+        00000
+        0...0
+        0...0
+        0...0
+        00000
+
+
+        =======
+        LEGEND
+        =======
+
+        . = Background
+        P = Player
+
+
+        =======
+        SOUNDS
+        =======
+
+        ================
+        COLLISIONLAYERS
+        ================
+
+        Background
+        Player, Wall, Crate
+
+        ======
+        RULES
+        ======
+
+        [ Player ] [ Player ] [ ] -> [ ] [ Wall ] [ Crate ]
+
+        ==============
+        WINCONDITIONS
+        ==============
+
+        =======
+        LEVELS
+        =======
+
+
+        ..P
+    `) // end game definition
+
+        const player = data.getSpriteByName('player')
+        const crate = data.getSpriteByName('crate')
+        engine.tick()
+        expect(engine.toSnapshot()).toMatchSnapshot()
+
+        expect(player.getCellsThatMatch().size).toBe(0)
+        expect(crate.getCellsThatMatch().size).toBe(1)
+        // expect(wall.getCellsThatMatch().size).toBe(1)
+    })
+})

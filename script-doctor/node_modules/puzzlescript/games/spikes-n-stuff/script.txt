@@ -1,0 +1,1111 @@
+title Spikes 'n' Stuff
+
+author Alan Hazelden
+
+(verbose_logging)
+
+again_interval 0.05
+realtime_interval 0.05
+
+flickscreen 11x11
+
+noaction
+
+run_rules_on_level_start
+
+========
+OBJECTS
+========
+
+
+Background
+DARKBLUE BLACK
+11111
+01111
+11101
+11111
+10111
+
+Wall
+#767d80 #697175
+00111
+11101
+01001
+11110
+10011
+
+Target
+transparent
+(DarkBlue
+.....
+.000.
+.0.0.
+.000.
+.....)
+
+Exit
+transparent
+
+ArrowTrapUpReady
+DarkBrown DarkBrown DarkBrown DarkBrown DarkBrown white
+..2..
+.123.
+0.2.4
+..2..
+..2..
+
+ArrowTrapUpArmed
+DarkBrown DarkBrown DarkBrown DarkBrown DarkBrown white
+..2..
+.153.
+0.5.4
+..5..
+..2..
+
+ArrowTrapUpFired
+DarkBrown DarkBrown DarkBrown DarkBrown DarkBrown white
+..2..
+01234
+..2..
+..2..
+..2..
+
+ArrowTrapUpFired2
+DarkBrown DarkBrown DarkBrown DarkBrown DarkBrown white
+..2..
+.123.
+0.2.4
+..2..
+..2..
+
+ArrowTrapUpFired3
+DarkBrown DarkBrown DarkBrown DarkBrown DarkBrown white
+.....
+..2..
+.123.
+0.2.4
+..2..
+
+ArrowTrapUpRearming
+DarkBrown DarkBrown DarkBrown DarkBrown DarkBrown white
+.....
+.....
+..2..
+.123.
+0.2.4
+
+ArrowTrapUpRearming2
+DarkBrown DarkBrown DarkBrown DarkBrown DarkBrown white
+.....
+..2..
+.123.
+0.2.4
+..2..
+
+ArrowTrapDownReady
+DarkBrown DarkBrown DarkBrown DarkBrown DarkBrown white
+..2..
+..2..
+0.2.4
+.123.
+..2..
+
+ArrowTrapDownArmed
+DarkBrown DarkBrown DarkBrown DarkBrown DarkBrown white
+..2..
+..5..
+0.5.4
+.153.
+..2..
+
+ArrowTrapDownFired
+DarkBrown DarkBrown DarkBrown DarkBrown DarkBrown white
+..2..
+..2..
+..2..
+01234
+..2..
+
+ArrowTrapDownFired2
+DarkBrown DarkBrown DarkBrown DarkBrown DarkBrown white
+..2..
+..2..
+0.2.4
+.123.
+..2..
+
+ArrowTrapDownFired3
+DarkBrown DarkBrown DarkBrown DarkBrown DarkBrown white
+..2..
+0.2.4
+.123.
+..2..
+.....
+
+ArrowTrapDownRearming
+DarkBrown DarkBrown DarkBrown DarkBrown DarkBrown white
+0.2.4
+.123.
+..2..
+.....
+.....
+
+ArrowTrapDownRearming2
+DarkBrown DarkBrown DarkBrown DarkBrown DarkBrown white
+..2..
+0.2.4
+.123.
+..2..
+.....
+
+ArrowTrapLeftReady
+DarkBrown DarkBrown DarkBrown DarkBrown DarkBrown white
+..0..
+.1...
+22222
+.3...
+..4..
+
+ArrowTrapLeftArmed
+DarkBrown DarkBrown DarkBrown DarkBrown DarkBrown white
+..0..
+.1...
+25552
+.3...
+..4..
+
+ArrowTrapLeftFired
+DarkBrown DarkBrown DarkBrown DarkBrown DarkBrown white
+.0...
+.1...
+22222
+.3...
+.4...
+
+ArrowTrapLeftFired2
+DarkBrown DarkBrown DarkBrown DarkBrown DarkBrown white
+..0..
+.1...
+22222
+.3...
+..4..
+
+ArrowTrapLeftFired3
+DarkBrown DarkBrown DarkBrown DarkBrown DarkBrown white
+...0.
+..1..
+.2222
+..3..
+...4.
+
+ArrowTrapLeftRearming
+DarkBrown DarkBrown DarkBrown DarkBrown DarkBrown white
+....0
+...1.
+..222
+...3.
+....4
+
+ArrowTrapLeftRearming2
+DarkBrown DarkBrown DarkBrown DarkBrown DarkBrown white
+...0.
+..1..
+.2222
+..3..
+...4.
+
+ArrowTrapRightReady
+DarkBrown DarkBrown DarkBrown DarkBrown DarkBrown white
+..0..
+...1.
+22222
+...3.
+..4..
+
+ArrowTrapRightArmed
+DarkBrown DarkBrown DarkBrown DarkBrown DarkBrown white
+..0..
+...1.
+25552
+...3.
+..4..
+
+ArrowTrapRightFired
+DarkBrown DarkBrown DarkBrown DarkBrown DarkBrown white
+...0.
+...1.
+22222
+...3.
+...4.
+
+ArrowTrapRightFired2
+DarkBrown DarkBrown DarkBrown DarkBrown DarkBrown white
+..0..
+...1.
+22222
+...3.
+..4..
+
+ArrowTrapRightFired3
+DarkBrown DarkBrown DarkBrown DarkBrown DarkBrown white
+.0...
+..1..
+2220.
+..3..
+.4...
+
+ArrowTrapRightRearming
+DarkBrown DarkBrown DarkBrown DarkBrown DarkBrown white
+0....
+.1...
+222..
+.3...
+4....
+
+ArrowTrapRightRearming2
+DarkBrown DarkBrown DarkBrown DarkBrown DarkBrown white
+.0...
+..1..
+2220.
+..3..
+.4...
+
+(#524432 #4d4030 #4a3c2c #443929 #403527)
+
+Player
+#a46422 #495e2b #493c2b #000000
+..0..
+.111.
+01110
+02220
+.2.2.
+
+PlayerDead
+#a46422 #495e2b #493c2b black white
+..00.
+.1122
+0112.
+.1122
+..00.
+
+Crate
+Orange Yellow
+00000
+0...0
+0...0
+0...0
+00000
+
+Gem
+Yellow White Orange
+.000.
+01100
+01000
+00002
+.022.
+
+GemBroken
+Yellow White Orange black
+.000.
+.313.
+01.0.
+03002
+..22.
+
+NoPattern
+black
+
+SpikeTrap
+transparent darkgreen black
+00000
+01210
+02220
+01210
+00000
+
+SpikeTrapArmed
+transparent white transparent grey
+00000
+01210
+02220
+01210
+00000
+
+SpikeTrapDeadly
+transparent white transparent grey
+01010
+03230
+01210
+03230
+00000
+
+ArrowUp
+white
+.....
+..0..
+..0..
+..0..
+.....
+
+ArrowDown
+white
+.....
+..0..
+..0..
+..0..
+.....
+
+ArrowLeft
+white
+.....
+.....
+.000.
+.....
+.....
+
+ArrowRight
+white
+.....
+.....
+.000.
+.....
+.....
+
+ArrowCollision
+white
+.....
+..0..
+.000.
+..0..
+.....
+
+ArrowCollision2
+white
+...0.
+.....
+.0...
+....0
+.....
+
+LOS
+white
+
+WallL
+#373c3f
+0....
+0....
+0....
+0....
+0....
+
+WallR
+#373c3f
+....0
+....0
+....0
+....0
+....0
+
+WallU
+#373c3f
+00000
+.....
+.....
+.....
+.....
+
+WallD
+#373c3f
+.....
+.....
+.....
+.....
+00000
+
+WallLR
+#373c3f
+0...0
+0...0
+0...0
+0...0
+0...0
+
+WallUD
+#373c3f
+00000
+.....
+.....
+.....
+00000
+
+WallUL
+#373c3f
+0....
+.....
+.....
+.....
+.....
+
+WallUR
+#373c3f
+....0
+.....
+.....
+.....
+.....
+
+WallDL
+#373c3f
+.....
+.....
+.....
+.....
+0....
+
+WallDR
+#373c3f
+.....
+.....
+.....
+.....
+....0
+
+WallDLR
+#373c3f
+.....
+.....
+.....
+.....
+0...0
+
+WallULR
+#373c3f
+0...0
+.....
+.....
+.....
+.....
+
+WallLUD
+#373c3f
+0....
+.....
+.....
+.....
+0....
+
+WallRUD
+#373c3f
+....0
+.....
+.....
+.....
+....0
+
+BloodL1
+red
+.....
+.....
+....0
+.....
+.....
+
+BloodL2
+red
+.....
+....0
+....0
+....0
+.....
+
+BloodL3
+red
+....0
+....0
+....0
+....0
+....0
+
+BloodL4_1
+red
+....0
+....0
+...00
+...00
+....0
+
+BloodL4_2
+red
+....0
+...00
+...00
+....0
+....0
+
+BloodR1
+red
+.....
+.....
+0....
+.....
+.....
+
+BloodR2
+red
+.....
+0....
+0....
+0....
+.....
+
+BloodR3
+red
+0....
+0....
+0....
+0....
+0....
+
+BloodR4_1
+red
+0....
+0....
+00...
+00...
+0....
+
+BloodR4_2
+red
+0....
+0....
+00...
+00...
+0....
+
+BloodU1
+red
+.....
+.....
+.....
+.....
+..0..
+
+BloodU2
+red
+.....
+.....
+.....
+.....
+.000.
+
+BloodU3
+red
+.....
+.....
+.....
+.....
+00000
+
+BloodU4_1
+red
+.....
+.....
+.....
+.00..
+00000
+
+BloodU4_2
+red
+.....
+.....
+.....
+..00.
+00000
+
+BloodD1
+red
+..0..
+.....
+.....
+.....
+.....
+
+BloodD2
+red
+.000.
+.....
+.....
+.....
+.....
+
+BloodD3
+red
+00000
+.....
+.....
+.....
+.....
+
+BloodD4_1
+red
+00000
+..00.
+.....
+.....
+.....
+
+BloodD4_2
+red
+00000
+.00..
+.....
+.....
+.....
+
+BloodD4_3
+red
+00000
+.....
+.....
+.....
+.....
+
+GemMarker
+transparent
+
+
+=======
+LEGEND
+=======
+
+
+
+Arrow = ArrowLeft or ArrowRight or ArrowUp or ArrowDown
+SpikeTrapAny = SpikeTrap or SpikeTrapArmed or SpikeTrapDeadly
+
+ArrowTrapReady = ArrowTrapUpReady or ArrowTrapDownReady or ArrowTrapLeftReady or ArrowTrapRightReady
+ArrowTrapArmed = ArrowTrapLeftArmed or ArrowTrapRightArmed or ArrowTrapUpArmed or ArrowTrapDownArmed
+ArrowTrapRearming = ArrowTrapLeftRearming or ArrowTrapRightRearming or ArrowTrapUpRearming or ArrowTrapDownRearming
+ArrowTrapRearming2 = ArrowTrapLeftRearming2 or ArrowTrapRightRearming2 or ArrowTrapUpRearming2 or ArrowTrapDownRearming2
+
+ArrowTrapLeftFiredAny = ArrowTrapLeftFired or ArrowTrapLeftFired2 or ArrowTrapLeftFired3
+ArrowTrapRightFiredAny = ArrowTrapRightFired or ArrowTrapRightFired2 or ArrowTrapRightFired3
+ArrowTrapUpFiredAny = ArrowTrapUpFired or ArrowTrapUpFired2 or ArrowTrapUpFired3
+ArrowTrapDownFiredAny = ArrowTrapDownFired or ArrowTrapDownFired2 or ArrowTrapDownFired3
+
+ArrowTrapFiredAnim = ArrowTrapLeftFired or ArrowTrapLeftFired2 or ArrowTrapLeftFired3 or ArrowTrapRightFired or ArrowTrapRightFired2 or ArrowTrapRightFired3 or ArrowTrapUpFired or ArrowTrapUpFired2 or ArrowTrapUpFired3 or ArrowTrapDownFired or ArrowTrapDownFired2 or ArrowTrapDownFired3
+
+ArrowTrapAny = ArrowTrapReady or ArrowTrapArmed or ArrowTrapRearming or ArrowTrapRearming2 or ArrowTrapFiredAnim
+
+TriggersSpikes = Crate or Gem or Player
+TriggersArrow = Player
+Killable = Player
+NeedsTick = SpikeTrap or SpikeTrapArmed or SpikeTrapDeadly or ArrowTrapAny
+
+
+Solid = Wall or Crate or Gem or ArrowTrapAny
+
+. = Background
+# = Wall
+P = Player and exit
+q = exit
+* = Crate
+(@ = SwitchOff)
+O = Target
+% = SpikeTrap and NoPattern
+~ = Gem and GemMarker
+
+i = ArrowTrapUpReady and NoPattern
+! = ArrowTrapDownReady and NoPattern
+{ = ArrowTrapLeftReady and NoPattern
+} = ArrowTrapRightReady and NoPattern
+
+BloodLeft = BloodL1 or BloodL2 or BloodL3 or BloodL4_1 or BloodL4_2
+BloodRight = BloodR1 or BloodR2 or BloodR3 or BloodR4_1 or BloodR4_2
+BloodUp = BloodU1 or BloodU2 or BloodU3 or BloodU4_1 or BloodU4_2
+BloodDown = BloodD1 or BloodD2 or BloodD3 or BloodD4_1 or BloodD4_2 or BloodD4_3
+
+BloodL4 = BloodL4_1 or BloodL4_2
+BloodR4 = BloodR4_1 or BloodR4_2
+BloodU4 = BloodU4_1 or BloodU4_2
+BloodD4 = BloodD4_1 or BloodD4_2 or BloodD4_3
+
+BloodFinal = BloodL4 or BloodR4 or BloodU4 or BloodD4
+
+Blood = BloodLeft or BloodRight or BloodUp or BloodDown
+
+WallCoverLR = WallL or WallR or WallLR
+WallCoverUD = WallU or WallD or WallUD
+WallCoverCorner = WallUL or WallUR or WallDL or WallDR or WallDLR or WallLUD or WallRUD or WallULR
+WallCover = WallCoverLR or WallCoverUD or WallCoverCorner
+
+CoverLR = WallCoverLR
+CoverUD = WallCoverUD
+
+
+=======
+SOUNDS
+=======
+
+(Player Create 1326707)
+
+SpikeTrapDeadly Create 85964907
+ArrowTrapArmed Create 9956307
+ArrowTrapRearming Create 95334907
+
+(Arrow Create 3367509)
+
+ArrowCollision Create 3790700
+PlayerDead Create 97930904
+GemBroken Create 48343102
+
+(sfx1 76483702) (arrow hits wall)
+sfx2 13478508 (pick up gem for first time)
+
+Undo 8748307
+(Cancel 1326707)
+Restart 28758302
+
+EndLevel 73821303
+StartGame 47020108
+
+================
+COLLISIONLAYERS
+================
+
+Background
+NoPattern
+BloodLeft
+BloodRight
+BloodUp
+BloodDown
+Target, SpikeTrap, SpikeTrapArmed, SpikeTrapDeadly, Exit, GemMarker
+GemBroken
+Player, Wall, Crate, Gem, PlayerDead
+WallCoverUD
+WallCoverCorner
+WallCoverLR, LOS
+ArrowTrapAny
+Arrow, ArrowCollision, ArrowCollision2
+
+======
+RULES
+======
+
+(Wall borders)
+
+left [ Wall no WallCoverLR | no Wall ] -> [ Wall WallL | ]
+right [ Wall no WallCoverLR | no Wall ] -> [ Wall WallR | ]
+right [ Wall WallL | no Wall ] -> [ Wall WallLR | ]
+
+up [ Wall no WallCoverUD | no Wall ] -> [ Wall WallU | ]
+down [ Wall no WallCoverUD | no Wall ] -> [ Wall WallD | ]
+down [ Wall WallU | no Wall ] -> [ Wall WallUD | ]
+
+left [ Wall no WallCoverCorner no WallUD | WallUD ] -> [ Wall WallLUD | WallUD ]
+right [ Wall no WallCoverCorner no WallUD | WallUD ] -> [ Wall WallRUD | WallUD ]
+up [ Wall no WallCoverCorner no WallLR | WallLR ] -> [ Wall WallULR | WallLR ]
+down [ Wall no WallCoverCorner no WallLR | WallLR ] -> [ Wall WallDLR | WallLR ]
+
+right [ WallD | Wall no WallCoverCorner no WallCoverUD ] -> [ WallD | Wall WallDL ]
+left [ WallD | Wall no WallCoverCorner no WallCoverUD ] -> [ WallD | Wall WallDR ]
+
+right [ WallU | Wall no WallCoverCorner no WallCoverUD ] -> [ WallU | Wall WallUL ]
+left [ WallU | Wall no WallCoverCorner no WallCoverUD ] -> [ WallU | Wall WallUR ]
+
+(Blood)
+
+[ PlayerDead Blood ] -> [ PlayerDead action Blood ] again
+
+random [ PlayerDead | no Blood ] -> [ > PlayerDead no SpikeTrapAny | ]
+
+[ left PlayerDead no BloodRight ] -> [ PlayerDead BloodR1 ] again
+[ right PlayerDead no BloodLeft ] -> [ PlayerDead BloodL1 ] again
+[ up PlayerDead no BloodDown ] -> [ PlayerDead BloodD1 ] again
+[ down PlayerDead no BloodUp ] -> [ PlayerDead BloodU1 ] again
+
+random [ PlayerDead | no Blood ] -> [ > PlayerDead no SpikeTrapDeadly | ]
+
+[ left PlayerDead no BloodRight ] -> [ PlayerDead BloodR1 ] again
+[ right PlayerDead no BloodLeft ] -> [ PlayerDead BloodL1 ] again
+[ up PlayerDead no BloodDown ] -> [ PlayerDead BloodD1 ] again
+[ down PlayerDead no BloodUp ] -> [ PlayerDead BloodU1 ] again
+
+[ PlayerDead ] -> [ stationary PlayerDead ]
+
+[ action BloodL3 ] -> [ random BloodL4 ] again
+[ action BloodL2 ] -> [ BloodL3 ] again
+[ action BloodL1 ] -> [ BloodL2 ] again
+
+[ action BloodR3 ] -> [ random BloodR4 ] again
+[ action BloodR2 ] -> [ BloodR3 ] again
+[ action BloodR1 ] -> [ BloodR2 ] again
+
+[ action BloodU3 ] -> [ random BloodU4 ] again
+[ action BloodU2 ] -> [ BloodU3 ] again
+[ action BloodU1 ] -> [ BloodU2 ] again
+
+[ action BloodD3 ] -> [ random BloodD4 ] again
+[ action BloodD2 ] -> [ BloodD3 ] again
+[ action BloodD1 ] -> [ BloodD2 ] again
+
+[ BloodL3 no PlayerDead ] -> [ random BloodL4 ] again
+[ BloodL2 no PlayerDead ] -> [ BloodL3 ] again
+[ BloodL1 no PlayerDead ] -> [ BloodL2 ] again
+
+[ BloodR3 no PlayerDead ] -> [ random BloodR4 ] again
+[ BloodR2 no PlayerDead ] -> [ BloodR3 ] again
+[ BloodR1 no PlayerDead ] -> [ BloodR2 ] again
+
+[ BloodU3 no PlayerDead ] -> [ random BloodU4 ] again
+[ BloodU2 no PlayerDead ] -> [ BloodU3 ] again
+[ BloodU1 no PlayerDead ] -> [ BloodU2 ] again
+
+[ BloodD3 no PlayerDead ] -> [ random BloodD4 ] again
+[ BloodD2 no PlayerDead ] -> [ BloodD3 ] again
+[ BloodD1 no PlayerDead ] -> [ BloodD2 ] again
+
+left [ action BloodR4 | no Blood ] -> [ BloodR4 | BloodL1 ] again
+right [ action BloodL4 | no Blood ] -> [ BloodL4 | BloodR1 ] again
+up [ action BloodD4 | no Blood ] -> [ BloodD4 | BloodU1 ] again
+down [ action BloodU4 | no Blood ] -> [ BloodU4 | BloodD1 ] again
+
+[ Blood no BloodFinal ] -> again
+
+(arrow firing anim)
+
+[ stationary Player ] [ ArrowTrapFiredAnim ] -> [ Player ] [ action ArrowTrapFiredAnim ]
+[ PlayerDead ] [ ArrowTrapFiredAnim ] -> [ PlayerDead ] [ action ArrowTrapFiredAnim ]
+
+[ ArrowTrapAny no ArrowTrapFiredAnim Target ] -> [ ArrowTrapAny ]
+
+[ action ArrowTrapUpFired3 ] -> [ ArrowTrapUpRearming ]
+[ action ArrowTrapUpFired2 Target ] -> [ ArrowTrapUpFired3 ]
+[ action ArrowTrapUpFired2 no Target ] -> [ ArrowTrapUpFired2 Target ]
+[ action ArrowTrapUpFired Target ] -> [ ArrowTrapUpFired2 ]
+[ action ArrowTrapUpFired no Target ] -> [ ArrowTrapUpFired Target ]
+
+[ action ArrowTrapDownFired3 ] -> [ ArrowTrapDownRearming ]
+[ action ArrowTrapDownFired2 Target ] -> [ ArrowTrapDownFired3 ]
+[ action ArrowTrapDownFired2 no Target ] -> [ ArrowTrapDownFired2 Target ]
+[ action ArrowTrapDownFired Target ] -> [ ArrowTrapDownFired2 ]
+[ action ArrowTrapDownFired no Target ] -> [ ArrowTrapDownFired Target ]
+
+[ action ArrowTrapLeftFired3 ] -> [ ArrowTrapLeftRearming ]
+[ action ArrowTrapLeftFired2 Target ] -> [ ArrowTrapLeftFired3 ]
+[ action ArrowTrapLeftFired2 no Target ] -> [ ArrowTrapLeftFired2 Target ]
+[ action ArrowTrapLeftFired Target ] -> [ ArrowTrapLeftFired2 ]
+[ action ArrowTrapLeftFired no Target ] -> [ ArrowTrapLeftFired Target ]
+
+[ action ArrowTrapRightFired3 ] -> [ ArrowTrapRightRearming ]
+[ action ArrowTrapRightFired2 Target ] -> [ ArrowTrapRightFired3 ]
+[ action ArrowTrapRightFired2 no Target ] -> [ ArrowTrapRightFired2 Target ]
+[ action ArrowTrapRightFired Target ] -> [ ArrowTrapRightFired2 ]
+[ action ArrowTrapRightFired no Target ] -> [ ArrowTrapRightFired Target ]
+
+(Start of turn)
+
+[ Gem | moving Player ] -> [ > Gem | moving Player ]
+
+[ ArrowCollision2 ] -> []
+[ ArrowCollision ] -> [ ArrowCollision2 ] again
+
+[ moving Player ] [ NeedsTick ] -> [ moving Player ] [ action NeedsTick ]
+
+[ TriggersSpikes action SpikeTrapArmed ] -> [ TriggersSpikes SpikeTrapArmed ]
+
+[ action SpikeTrapDeadly ] -> [ SpikeTrap ]
+
+[ action SpikeTrapArmed ] -> [ SpikeTrapDeadly ]
+
+[ TriggersSpikes action SpikeTrap ] -> [ TriggersSpikes SpikeTrapArmed ]
+
+(prevent player moving out of path of arrow)
+left [ ArrowLeft | ... | moving Player ] -> cancel
+right [ ArrowRight | ... | moving Player ] -> cancel
+up [ ArrowUp | ... | moving Player ] -> cancel
+down [ ArrowDown | ... | moving Player ] -> cancel
+
+left [ ArrowLeft | ... | moving Gem ] -> cancel
+right [ ArrowRight | ... | moving Gem ] -> cancel
+up [ ArrowUp | ... | moving Gem ] -> cancel
+down [ ArrowDown | ... | moving Gem ] -> cancel
+
+[ moving Player ] [ Arrow ] -> [ moving Player ] [ action Arrow ]
+
+(movement)
+
+[ > Player | Crate ] -> [  >  Player | > Crate  ]
+[ > Player | Gem ] -> [  >  Player | > Gem  ]
+
+[ > Gem | Solid ] -> cancel
+[ > Crate | Solid ] -> cancel
+[ > Player | stationary Solid ] -> cancel
+[ > Player | ArrowTrapAny ] -> cancel
+
+[ > Player | no Solid ] -> [ | Player ]
+[ > Crate | no Solid ] -> [ | Crate ]
+[ > Gem | no Solid ] -> [ | Gem ]
+[ > Player | no Solid ] -> [ | Player ]
+
+( death )
+
+[ Player SpikeTrapDeadly ] -> [ PlayerDead SpikeTrapDeadly ] again
+
+
+( end of turn )
+
+[ action ArrowTrapUpReady ] -> [ ArrowTrapUpReady up LOS ]
+[ action ArrowTrapDownReady ] -> [ ArrowTrapDownReady down LOS ]
+[ action ArrowTrapLeftReady ] -> [ ArrowTrapLeftReady left LOS ]
+[ action ArrowTrapRightReady ] -> [ ArrowTrapRightReady right LOS ]
+
+[ > LOS | Solid ] -> [ | Solid ]
++ [ > LOS | no Solid no LOS no TriggersArrow ] -> [ | > LOS ]
+
+[ > LOS | TriggersArrow ] -> [ < LOS | TriggersArrow ]
+
+[ > LOS no ArrowTrapReady | no Solid no LOS ] -> [ | > LOS ]
+[ > LOS no ArrowTrapReady | ArrowTrapReady ] -> [ | LOS ArrowTrapReady ]
+
+[ LOS ArrowTrapUpReady ] -> [ ArrowTrapUpArmed ]
+[ LOS ArrowTrapDownReady ] -> [ ArrowTrapDownArmed ]
+[ LOS ArrowTrapLeftReady ] -> [ ArrowTrapLeftArmed ]
+[ LOS ArrowTrapRightReady ] -> [ ArrowTrapRightArmed ]
+
+[ LOS ] -> []
+
+[ action ArrowTrapUpArmed ] -> [ ArrowTrapUpFired ArrowUp ]
+[ action ArrowTrapDownArmed ] -> [ ArrowTrapDownFired ArrowDown ]
+[ action ArrowTrapLeftArmed ] -> [ ArrowTrapLeftFired ArrowLeft ]
+[ action ArrowTrapRightArmed ] -> [ ArrowTrapRightFired ArrowRight ]
+
+[ action ArrowTrapUpFiredAny ] -> [ ArrowTrapUpRearming2 ]
+[ action ArrowTrapDownFiredAny ] -> [ ArrowTrapDownRearming2 ]
+[ action ArrowTrapLeftFiredAny ] -> [ ArrowTrapLeftRearming2 ]
+[ action ArrowTrapRightFiredAny ] -> [ ArrowTrapRightRearming2 ]
+
+[ action ArrowTrapUpRearming ] -> [ ArrowTrapUpRearming2 ]
+[ action ArrowTrapDownRearming ] -> [ ArrowTrapDownRearming2 ]
+[ action ArrowTrapLeftRearming ] -> [ ArrowTrapLeftRearming2 ]
+[ action ArrowTrapRightRearming ] -> [ ArrowTrapRightRearming2 ]
+
+[ action ArrowTrapUpRearming2 ] -> [ ArrowTrapUpReady ]
+[ action ArrowTrapDownRearming2 ] -> [ ArrowTrapDownReady ]
+[ action ArrowTrapLeftRearming2 ] -> [ ArrowTrapLeftReady ]
+[ action ArrowTrapRightRearming2 ] -> [ ArrowTrapRightReady ]
+
+(arrows)
+
+[ stationary ArrowUp ] -> [ up ArrowUp ]
+[ stationary ArrowDown ] -> [ down ArrowDown ]
+[ stationary ArrowLeft ] -> [ left ArrowLeft ]
+[ stationary ArrowRight ] -> [ right ArrowRight ]
+
+[ > Arrow | Player ] -> [ | PlayerDead ] again
+[ > Arrow | no Solid no Arrow ] -> [ | Arrow ] (again)
+[ > Arrow | Gem ] -> [ | GemBroken no SpikeTrapAny ]
+[ > Arrow | Solid ] -> [ | Solid ] sfx1
+[ > Arrow | no Solid no Arrow ] -> [ | Arrow ] (again)
++ [ > Arrow | stationary Arrow ] -> [ | ArrowCollision ] (again)
+[ > Arrow | Gem ] -> [ | GemBroken no SpikeTrapAny ]
+[ > Arrow | Solid ] -> [ | Solid ] sfx1
+
+([ Arrow SpikeTrapArmed ] -> [ SpikeTrapArmed ]
+[ Arrow SpikeTrapDeadly ] -> [ SpikeTrapDeadly ])
+
+(checkpoints)
+
+[ Player Target ] -> [ Player action Target ]
+[ Gem Target ] -> [ Gem action Target ]
+
+[ Gem ] [ action Target ] -> checkpoint
+
+[ Player | GemMarker ] -> [ Player | ] sfx2
+
+
+==============
+WINCONDITIONS
+==============
+
+all player on exit
+all gem on exit
+some player
+some gem
+
+=======
+LEVELS
+=======
+
+(###p##################
+###q##############!###
+##...############...o.
+##....###########...##
+##...%.#!########..###
+###.%..%..##........##
+####..~%.o..o.......##
+#####..%..##........##
+##############i#######
+######################
+
+#####!!!!##
+#####%%%.##
+#....%.%.##
+#o###%%%###
+..#..%%%###
+###.....###
+###..#...##
+###..##...o
+##}......##
+###########)
+
+(###p###################################################
+###q##############!####################################
+###.#############...#############################!#####
+##...############...o..o...%%########....o..o.#!#%#!###
+##....###########...######%%%########.%%##..o...%.%.###
+##...%.###########.#####}%%%%#########%%#######.#%#.###
+###.%..%..##........#####%%%%######}%%%%#####...#.%.###
+####...%.o..o.......######%....#####.%#######....%#..##
+#####..%..##........######....o....o..###########.....o
+##############i########################################
+#######################################################
+
+#######################################################
+################!!!!#############################!#####
+####!!##########%%%.#########...o.o.############...####
+##.......###....%.%.#########...o.o.######...o.....####
+##......o###o###%%%#####}.....#####....###o#####....{##
+####..##.....#..%%%######.....#####..%.##..#####...####
+####%%########.....#####}.....####}.%......######.#####
+####..########..#...#####.....#####..%.##..##}......###
+.o....########..##...o.o..#i#i#####....########......o.
+#############}......#################i#########.....###
+#######################################################
+
+#######################################################
+###########################!########!###!##############
+######..o....o..!#!#######%.%#####...%.%...###.......##
+######...#####.....#######%.%#####...%.%...###.......##
+##}..%%#######}..%%#####..%.%..{###..###..####.......##
+##}.%%.%#######..%%#####..%.%%%{##}..###..####...~...##
+####..%%######}....#####..###%%###}..###..####.......##
+##..%.%%##########...o.o..###..####..###...o.o.......##
+..o##ii###########...o.o..###..o..o..###...o.o.......##
+#############################........##################
+#######################################################)
+
+###p#################################################################################################################################################################
+###q##############!####################################################!!!!#############################!################################!########!###!##############
+###.#############...#############################!#########!!##########%%%.#########...o.o.############...##########..o....o..!#!#######%.%#####...%.%...###.......##
+##...############...o..o...%%########....o..o.#!#%#!#####.......###....%.%.#########...o.o.######...o.....##########...#####.....#######%.%#####...%.%...###.......##
+##....###########...######%%%########.%%##..o...%.%.#####......o###o###%%%#####}.....#####....###o#####....{####}..%%#######}..%%#####..%.%..{###..###..####.......##
+##...%.###########.#####}%%%%#########%%#######.#%#.#######..##.....#..%%%######.....#####..%.##..#####...######}.%%.%#######..%%#####..%.%%%{##}..###..####...~...##
+###.%..%..##........#####%%%%######}%%%%#####...#.%.#######%%########.....#####}.....####}.%......######.#########..%%######}....#####..###%%###}..###..####.......##
+####...%.o..o.......######%....#####.%#######....%#..######..########..#...#####.....#####..%.##..##}......#####..%.%%##########...o.o..###..####..###...o.o.......##
+#####..%..##........######....o....o..###########.....o.o....########..##...o.o..#i#i#####....########......o...o##ii###########...o.o..###..o..o..###...o.o.......##
+##############i#####################################################}......#################i#########.....################################........##################
+#####################################################################################################################################################################
+
+
+message Thanks for playing :)

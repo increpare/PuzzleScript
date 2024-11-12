@@ -1,0 +1,265 @@
+title Separation
+author Marcos Donnantuoni
+homepage https://marcosd.itch.io
+
+key_repeat_interval 0.17
+noaction
+
+========
+OBJECTS
+========
+
+background
+lightgrey
+
+wall
+#888888 #777777 #666666 #555555
+11112
+12223
+12223
+12223
+23333
+
+dice1
+#dd4444 #cc0000 #ff0000 #990000 black
+00001
+02223
+02423
+02223
+13333
+
+dice2
+#00dd00 #00cc00 black #00aa00 #006000
+00001
+03324
+03334
+02334
+14444
+
+dice3
+#4444ff #0000ee black #0000ff #0000aa
+00001
+03324
+03234
+02334
+14444
+
+dice4
+#ffff00 #ffbb00 black #ffd240 #ff9600
+00001
+02324
+03334
+02324
+14444
+
+happy
+transparent
+
+=======
+LEGEND
+=======
+
+. = Background
+# = wall
+1 = dice1
+2 = dice2
+3 = dice3
+4 = dice4
+player = dice1 or dice2 or dice3 or dice4
+
+=======
+SOUNDS
+=======
+
+player move 34146307
+player cantmove 34146307
+endlevel 30742508
+startgame 92244503
+
+================
+COLLISIONLAYERS
+================
+
+background
+wall, dice1, dice2, dice3, dice4
+happy
+
+======
+RULES
+======
+
+[ happy ] -> [ ]
+
+late [ dice1 | dice1 ] -> [ dice1 happy | dice1 happy ]
+late [ dice2 | dice2 ] -> [ dice2 happy | dice2 happy ]
+late [ dice3 | dice3 ] -> [ dice3 happy | dice3 happy ]
+late [ dice4 | dice4 ] -> [ dice4 happy | dice4 happy ]
+
+==============
+WINCONDITIONS
+==============
+
+no player on happy
+
+=======
+LEVELS
+=======
+
+message Groups of the same color must be separated
+
+#######
+#.....#
+#.1...#
+#.1.#.#
+#.....#
+#.....#
+#######
+
+message Level 1 of 12
+( size [6, 4] obj 4 kol 20
+segs 4 steps 10 frond 51 )
+( rrdll lluuu )
+########
+##....##
+#..11..#
+#..11..#
+#..##..#
+########
+
+message Level 2 of 12
+( size [6, 6] obj 4 kol 25
+segs 6 steps 12 frond 150 )
+( rrull drrdd dd )
+########
+#..22..#
+#......#
+#......#
+#......#
+#......#
+#.#22#.#
+########
+
+message Level 3 of 12
+( size [6, 6] obj 4 kol 25
+segs 9 steps 11 frond 89 )
+( rdrul luldd l )
+########
+#......#
+#......#
+##.33.##
+##.33.##
+#......#
+#......#
+########
+
+message Level 4 of 12
+( size [5, 5] obj 3 kol 23
+segs 10 steps 10 frond 9 )
+( rurlu rldlu )
+#######
+##...##
+#..4..#
+#..4..#
+#..4..#
+#.....#
+#######
+
+message Level 5 of 12
+( size [6, 6] obj 4 kol 32
+segs 13 steps 15 frond 56 )
+( rdrul drddr lluld )
+########
+##....##
+##....##
+##.11.##
+##.11.##
+#......#
+##....##
+########
+
+message Level 6 of 12
+( size [6, 6] obj 4 kol 34
+segs 15 steps 20 frond 42 )
+( rrddu rddlu urlur lldlu )
+########
+##....##
+#......#
+#..22..#
+#..22..#
+#......#
+##....##
+########
+
+message Level 7 of 12
+( size [6, 6] obj 6 kol 37
+segs 18 steps 21 frond 1817 )
+( urdru llurr urdld rllul d )
+########
+#......#
+#..33..#
+##....##
+##....##
+#3.33.3#
+#......#
+########
+
+message Level 8 of 12
+( size [6, 6] obj 6 kol 43
+segs 24 steps 34 frond 911 )
+( rlurd lllur rdluu rrdlu urdlu rdddl uuur )
+########
+##.##.##
+#.4..4.#
+#......#
+#......#
+#.4..4.#
+##4..4##
+########
+
+message Level 9 of 12
+( size [5, 5] obj 7 kol 42
+segs 25 steps 29 frond 631 )
+( rrlur drull lrurd lurdd rldur ldlu )
+#######
+##.1.##
+#.1.1.#
+#.121.#
+#.....#
+#..1..#
+#######
+
+message Level 10 of 12
+( size [5, 4] obj 8 kol 39
+segs 28 steps 29 frond 13 )
+( ruuld lulur druru ldrur uldlu lurd )
+#####
+#2.2#
+#2#2#
+#3.3#
+#2#2#
+#####
+
+message Level 11 of 12
+( size [6, 6] obj 8 kol 47
+segs 31 steps 37 frond 1159 )
+( drdru ldruu rlurd ddduu lurdd ruldr duldr ul )
+########
+##.33.##
+##....##
+#.3..3.#
+#.3..3.#
+##....##
+###44###
+########
+
+message Level 12 of 12
+( size [5, 5] obj 8 kol 41
+segs 46 steps 46 frond 9 )
+( rulul dldru ldldr uldld rurdr dlurd rdlur drdlu ldldr u )
+#####
+##.##
+#4#4#
+#4.4#
+#4#4#
+#1.1#
+#####

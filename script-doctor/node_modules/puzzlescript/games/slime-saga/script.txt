@@ -1,0 +1,682 @@
+title Slime Saga
+author Alan Hazelden
+homepage www.draknek.org
+
+(realtime_interval 0.15)
+
+run_rules_on_level_start
+
+noaction
+
+========
+OBJECTS
+========
+
+Background
+DARKBLUE BLACK
+11111
+01111
+11101
+11111
+10111
+
+Wall
+DarkGrey
+(GREY DarkGrey
+00111
+11101
+01001
+11110
+10011)
+
+Player
+#de88e1 #e59ce8
+00000
+00010
+01000
+00100
+00000
+
+Yellow
+Yellow #f7e687
+00000
+00010
+01000
+00100
+00000
+
+Red
+Orange #eb9f5b
+00000
+00010
+01000
+00100
+00000
+
+Green
+#44891a #50a01e
+00000
+00010
+01000
+00100
+00000
+
+White
+#cccccc #dddddd
+00000
+00010
+01000
+00100
+00000
+
+WallL
+DarkRed
+0....
+0....
+0....
+0....
+0....
+
+WallR
+DarkRed
+....0
+....0
+....0
+....0
+....0
+
+WallU
+DarkRed
+00000
+.....
+.....
+.....
+.....
+
+WallD
+DarkRed
+.....
+.....
+.....
+.....
+00000
+
+WallLR
+DarkRed
+0...0
+0...0
+0...0
+0...0
+0...0
+
+WallUD
+DarkRed
+00000
+.....
+.....
+.....
+00000
+
+WallUL
+DarkRed
+0....
+.....
+.....
+.....
+.....
+
+WallUR
+DarkRed
+....0
+.....
+.....
+.....
+.....
+
+WallDL
+DarkRed
+.....
+.....
+.....
+.....
+0....
+
+WallDR
+DarkRed
+.....
+.....
+.....
+.....
+....0
+
+WallDLR
+DarkRed
+.....
+.....
+.....
+.....
+0...0
+
+WallULR
+DarkRed
+0...0
+.....
+.....
+.....
+.....
+
+WallLUD
+DarkRed
+0....
+.....
+.....
+.....
+0....
+
+WallRUD
+DarkRed
+....0
+.....
+.....
+.....
+....0
+
+WallCornersNotDL
+DarkRed
+0...0
+.....
+.....
+.....
+....0
+
+WallCornersNotDR
+DarkRed
+0...0
+.....
+.....
+.....
+0....
+
+(PlayerTrail
+#552556
+.....
+..0..
+.....
+.0...
+....0
+
+GreenTrail
+#264d0f
+.....
+..0..
+.....
+.0...
+....0
+
+RedTrail
+#44280e
+.....
+..0..
+.....
+.0...
+....0
+
+PlayerTrail2
+#331634
+.....
+..0..
+.....
+.0...
+....0
+
+GreenTrail2
+#152a08
+.....
+..0..
+.....
+.0...
+....0
+
+RedTrail2
+#2a1809
+.....
+..0..
+.....
+.0...
+....0)
+
+
+
+Zero
+White
+.000.
+.0.0.
+.0.0.
+.0.0.
+.000.
+
+One
+White
+.00..
+..0..
+..0..
+..0..
+.000.
+
+Two
+White
+.000.
+...0.
+.000.
+.0...
+.000.
+
+Three
+White
+.000.
+...0.
+.000.
+...0.
+.000.
+
+Four
+White
+.0.0.
+.0.0.
+.000.
+...0.
+...0.
+
+Five
+White
+.000.
+.0...
+.000.
+...0.
+.000.
+
+Six
+White
+.000.
+.0...
+.000.
+.0.0.
+.000.
+
+Seven
+White
+.000.
+...0.
+...0.
+...0.
+...0.
+
+Eight
+White
+.000.
+.0.0.
+.000.
+.0.0.
+.000.
+
+Nine
+White
+.000.
+.0.0.
+.000.
+...0.
+.000.
+
+MaybeMove
+transparent
+
+NoMove
+transparent
+
+Connected
+red
+
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Player and Connected
+A = Red
+B = Yellow
+C = Green
+W = White
+
+WallCoverLR = WallL or WallR or WallLR
+WallCoverUD = WallU or WallD or WallUD
+WallCoverCorner = WallUL or WallUR or WallDL or WallDR or WallDLR or WallLUD or WallRUD or WallULR or WallCornersNotDL or WallCornersNotDR
+WallCover = WallCoverLR or WallCoverUD or WallCoverCorner
+
+CoverLR = WallCoverLR
+CoverUD = WallCoverUD
+
+Slime = Player or White or Yellow or Red or Green
+
+Tag = MaybeMove or NoMove
+
+(Trail = PlayerTrail or GreenTrail or RedTrail or PlayerTrail2 or GreenTrail2 or RedTrail2
+Trail2 = PlayerTrail2 or GreenTrail2 or RedTrail2)
+
+0 = Zero and Wall
+1 = One and Wall
+2 = Two and Wall
+3 = Three and Wall
+4 = Four and Wall
+5 = Five and Wall
+6 = Six and Wall
+7 = Seven and Wall
+8 = Eight and Wall
+9 = Nine and Wall
+
+Number = Zero or One or Two or Three or Four or Five or Six or Seven or Eight or Nine
+
+
+=======
+SOUNDS
+=======
+
+Player MOVE 5376107
+
+Connected CREATE 11689308
+Connected DESTROY 43000908
+
+sfx0 74480307 (can't move)
+
+Undo 36701708
+Restart 64093508
+
+EndLevel 86898108
+
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Connected
+Player, Wall, Slime
+Tag, Number
+WallCoverUD, WallCoverCorner
+WallCoverLR
+
+======
+RULES
+======
+
+([ stationary Player ] [ Trail2 ] -> [ Player ] []
+
+[ stationary Player ] [ PlayerTrail ] -> [ Player ] [ PlayerTrail2 ]
+[ stationary Player ] [ GreenTrail ] -> [ Player ] [ GreenTrail2 ]
+[ stationary Player ] [ RedTrail ] -> [ Player ] [ RedTrail2 ])
+
+(movement)
+
+[ moving Slime | no NoMove Slime ] -> [ moving Slime | moving Slime ]
+
+startloop
+
+[ > Slime | Wall ] -> [ NoMove Slime | Wall ]
+[ > Slime | NoMove ] -> [ NoMove Slime | NoMove ]
+
+[ NoMove Player ] [ Slime no NoMove ] -> [ NoMove Player ] [ NoMove Slime ]
+
+[ NoMove A | A ] -> [ NoMove A | NoMove A ]
+[ NoMove B | B ] -> [ NoMove B | NoMove B ]
+[ NoMove C | C ] -> [ NoMove C | NoMove C ]
+
+[ Player no NoMove ] -> [ Player MaybeMove ]
+[ Slime MaybeMove | Slime no NoMove ] -> [ Slime MaybeMove | Slime MaybeMove ]
+[ Slime no MaybeMove ] -> [ Slime NoMove ]
+
+endloop
+
+[ NoMove Player ] -> sfx0
+
+[ NoMove Slime ] -> [ stationary Slime ]
+
+[ Tag ] -> []
+
+(merge into white)
+
+late [ Slime no White | White ] -> [ Slime | Slime ]
+
+(Test win condition)
+
+late random [ Player ] -> [ Player MaybeMove ]
+
+late [ Player | Slime no Player ] [ MaybeMove ] -> [ Player | Slime ] []
+
+late [ A | Slime no A ] [ MaybeMove ] -> [ A | Slime ] []
+late [ B | Slime no B ] [ MaybeMove ] -> [ B | Slime ] []
+late [ C | Slime no C ] [ MaybeMove ] -> [ C | Slime ] []
+
+late [ White ] [ MaybeMove ] -> [ White ] []
+
+late random [ A ] -> [ A NoMove ]
+late random [ B ] -> [ B NoMove ]
+late random [ C ] -> [ C NoMove ]
+
+late [ NoMove A | A ] -> [ NoMove A | NoMove A ]
+late [ NoMove B | B ] -> [ NoMove B | NoMove B ]
+late [ NoMove C | C ] -> [ NoMove C | NoMove C ]
+
+late [ A no NoMove ] [ MaybeMove ] -> [ A ] []
+late [ B no NoMove ] [ MaybeMove ] -> [ B ] []
+late [ C no NoMove ] [ MaybeMove ] -> [ C ] []
+
+late [ MaybeMove ] -> win
+
+late [ Tag ] -> []
+
+(Wall borders)
+
+left [ Wall no WallCoverLR | no Wall ] -> [ Wall WallL | ]
+right [ Wall no WallCoverLR | no Wall ] -> [ Wall WallR | ]
+right [ Wall WallL | no Wall ] -> [ Wall WallLR | ]
+
+up [ Wall no WallCoverUD | no Wall ] -> [ Wall WallU | ]
+down [ Wall no WallCoverUD | no Wall ] -> [ Wall WallD | ]
+down [ Wall WallU | no Wall ] -> [ Wall WallUD | ]
+
+left [ Wall no WallCoverCorner no WallUD | WallUD ] -> [ Wall WallLUD | WallUD ]
+right [ Wall no WallCoverCorner no WallUD | WallUD ] -> [ Wall WallRUD | WallUD ]
+up [ Wall no WallCoverCorner no WallLR | WallLR ] -> [ Wall WallULR | WallLR ]
+
+right [ WallD | Wall no WallCoverUD ] -> [ WallD | Wall WallDL ]
+left [ WallD | Wall no WallCoverUD ] -> [ WallD | Wall WallDR ]
+
+right [ WallU | Wall no WallCoverUD ] -> [ WallU | Wall WallUL ]
+left [ WallU | Wall no WallCoverUD ] -> [ WallU | Wall WallUR ]
+
+right [ Wall WallUL | Wall WallUD ] -> [ Wall WallCornersNotDL | Wall WallUD ]
+left [ Wall WallUR | Wall WallUD ] -> [ Wall WallCornersNotDR | Wall WallUD ]
+
+(Trail)
+
+([ > Player ] -> [ > Player PlayerTrail ]
+[ > Green ] -> [ > Green GreenTrail ]
+[ > Red ] -> [ > Red RedTrail ])
+
+(sfx)
+
+[ > Slime Connected ] -> [ > Slime > Connected ]
+
+late [ Player Connected ] -> [ Player Connected MaybeMove ]
+late [ Connected MaybeMove | Slime no MaybeMove ] -> [ Connected MaybeMove | Slime Connected MaybeMove ]
+
+late [ Connected no MaybeMove ] -> []
+
+late [ MaybeMove ] -> []
+
+
+
+==============
+WINCONDITIONS
+==============
+
+
+
+=======
+LEVELS
+=======
+
+#######
+##.c.##
+#.....#
+#c.p.c#
+#.....#
+##.c.##
+1######
+(bonus: 2x2 square)
+
+########
+##a...a#
+##.....#
+#p..a..#
+##.....#
+##a...a#
+2#######
+(bonus: 4x2 L)
+
+#########
+###.c.###
+#.......#
+##a.p.a##
+#.......#
+###.c.###
+3########
+(bonus: 2 vertical 1x2)
+
+#######
+#.a.a.#
+#b...b#
+#..#..#
+#b...b#
+#..p..#
+4######
+(bonus: horizontal 4x1)
+
+#######
+##...##
+#.cbc.#
+#..#..#
+#.b.b.#
+##.p.##
+5######
+(maybe kill this level?)
+
+#########
+#.c.c.c.#
+#.......#
+#..w.w..#
+#.......#
+###.p.###
+6########
+
+#########
+###.p.###
+#b.....b#
+#..w.w..#
+#b.....b#
+###...###
+7########
+
+###########
+##.c....###
+#....w..#c#
+#c.....p..#
+#....w..#c#
+##.c....###
+8##########
+(bonus: vertical 1x2)
+
+############
+#..........#
+#..w.pp.w..#
+#.c#....#c.#
+#####..#####
+####w..w####
+9###########
+
+##########
+#p....####
+##.w.w.#w#
+##.......#
+##.w.w.#w#
+##....####
+10########
+
+###############
+#w#.........#w#
+#...a.ppp.c...#
+###.........###
+###..c...a..###
+###.#.....#.###
+11#############
+
+###############
+###...###...###
+#a#.ww...ww.#b#
+#...w.....w...#
+##.....p.....##
+###b.......a###
+12#############
+(bonus: 2x2 square)
+
+#############
+###.....#####
+#...c.c...###
+#..##.##..###
+#..#w.w#..#b#
+#.p.....b...#
+#..#w.w#..#b#
+#..##.##..###
+#...c.c...###
+###.....#####
+13###########
+
+( this is the commented out version but it's the better one!
+#############
+###.....#####
+##..a.c..####
+#..##.##..###
+#..#w.w#..#b#
+#.p.....b...#
+#..#w.w#..#b#
+#..##.##..###
+##..a.c..####
+###.....#####
+13###########)
+(bonus: 3x3 L)
+
+##########
+###....###
+#...pp...#
+#b......a#
+#..w..w..#
+####..####
+##.w..w.##
+####..####
+##......##
+##a....b##
+##......##
+14########
+(bonus: 2x2 L)
+
+
+
+(##########
+###....###
+#.w....w.#
+#...pp...#
+#a#....#a#
+##########)
+
+message Thanks for playing! :)

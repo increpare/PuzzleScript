@@ -1,0 +1,113 @@
+title Alternatey
+author Stephen Lavelle
+homepage www.increpare.com
+
+background_color darkgray
+
+noaction
+
+require_player_movement
+
+========
+OBJECTS
+========
+
+Background
+black
+
+wall 
+darkgray
+
+
+Player
+white
+
+t
+TRANSPARENT
+
+goal g
+orange
+.....
+.....
+..0..
+.....
+.....
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Player
+h = goal and player
+
+
+=======
+SOUNDS
+=======
+
+endlevel 6300906 
+startgame 6300906 
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Player, Wall
+t
+g
+
+======
+RULES
+======
+
+
+[moving player ] -> again
+
+[stationary player ] [ no player no wall ] -> [stationary player ]  [ player t ]
+[stationary player ] [ player no t no wall ] ->[stationary player ]   [ ]
+[stationary player ] [t]->[stationary player ]  []
+
+==============
+WINCONDITIONS
+==============
+all player on goal
+all goal on player
+
+=======
+LEVELS
+=======
+
+message you control the white squares
+
+message level 1 of 3
+
+
+....
+..P.
+.gg.
+P...
+....
+
+
+message level 2 of 3
+
+......
+.g..g.
+..pp..
+..pp..
+.g..g.
+......
+
+
+message level 3 of 3
+
+#...#
+.gpg.
+.p.p.
+.gpg.
+#...#
+
+message Victory!

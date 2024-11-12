@@ -1,0 +1,854 @@
+title The fire calls
+author Rosden Shadow [Mark Signorelli]
+homepage rosden.itch.io
+
+noaction
+run_rules_on_level_Start
+
+background_color #231F26
+
+text_color #7EE58D
+
+again_interval 0.1
+========
+OBJECTS
+========
+
+Background
+#333333 #231F26 (#E57ED5 #CC5285)
+11111
+10111
+10001
+11101
+11111
+(
+00101
+01110
+11011
+01111
+10110)
+(
+11101
+00101
+11111
+10100
+10111)
+
+
+nomove
+#FFEED9 #536673
+.....
+.000.
+.010.
+.000.
+.....
+
+Target
+#FFD9E0 #423D39
+.....
+.010.
+.0.1.
+.000.
+.....
+
+Wall
+#D9FFDC #7EE58D  #5C8466 #4F5B46
+21110
+12110
+21221
+23232
+32323
+
+overwall
+#D9FFDC #7EE58D  #5C8466 #4F5B46
+.....
+.....
+.....
+10010
+21101
+
+
+Playerright
+white #CCCCCC #7F7CA1 #705C84
+.000.
+11202
+11313
+11110
+.1.1.
+
+playerleft
+white #CCCCCC #7F7CA1 #705C84
+.000.
+20211
+31311
+01111
+.1.1.
+
+Crate
+#FFD9E0 #F2AACE #E57ED5 #845C7A
+21100
+21110
+22110
+32223
+.333.
+
+overcrate
+#FFD9E0 #F2AACE #E57ED5 #845C7A
+.....
+.....
+.....
+.....
+.000.
+
+Crate2
+#D9FFF8 #AAE0F2 #7EA1E5 #5C6684
+21100
+21110
+22110
+32223
+.333.
+
+overcrate2
+#D9FFF8 #AAE0F2 #7EA1E5 #5C6684
+.....
+.....
+.....
+.....
+.000.
+
+Crate3
+#F2F2AA #E5C17E #CC7A52 #736053
+21100
+21110
+22110
+32223
+.333.
+
+overcrate3
+#F2F2AA #E5C17E #CC7A52 #736053
+.....
+.....
+.....
+.....
+.000.
+
+Cratestop
+#A2C1BE #7C94A1  #7F7CA1 #705C84
+21100
+21110
+22110
+32223
+.333.
+
+overcratestop
+#A2C1BE #7C94A1  #7F7CA1 #705C84
+.....
+.....
+.....
+.....
+.000.
+
+
+end
+#FFD9E0 #F2AACE #E57ED5 #845C7A
+21100
+21110
+22110
+32223
+.333.
+endx
+#FFD9E0 #F2AACE #E57ED5 #845C7A
+21100
+21110
+22110
+32223
+.333.
+
+
+furnace1
+#F2F2AA #B32D2D #4D2E37 #73535E
+..1..
+.101.
+10101
+.101.
+22332
+furnace2
+#B32D2D #F2F2AA  #4D2E37 #73535E
+.....
+..1..
+.101.
+10101
+22332
+
+
+normalhud
+#FFD9E0 #F2AACE #E57ED5 #845C7A
+.100.
+.210.
+.221.
+.....
+.....
+
+icehud
+#D9FFF8 #AAE0F2 #7EA1E5 #5C6684
+.100.
+.210.
+.221.
+.....
+.....
+
+jumphud
+#F2F2AA #E5C17E #CC7A52 #736053
+.100.
+.210.
+.221.
+.....
+.....
+
+nohud
+black
+..0..
+.000.
+..0..
+.....
+.....
+
+start
+TRANSPARENT
+
+acti
+TRANSPARENT
+
+cloner
+#E5C17E #DB7F55 #B32D2D #73342E
+.100.
+.210.
+.221.
+.332.
+.....
+
+swapcrate
+Orange Yellow
+00000
+0...0
+0...0
+0...0
+00000
+
+swapwall
+black
+.....
+.....
+.....
+.....
+.....
+
+thefloor
+#231F26
+00000
+00000
+00000
+00000
+00000
+
+thefloorx
+#231F26
+00000
+00000
+00000
+00000
+00000
+
+eend
+#231F26
+00000
+00000
+00000
+00000
+00000
+(
+checkempty
+black
+.....
+.....
+.....
+.....
+.....
+
+checkblock
+black
+.....
+.....
+.....
+.....
+.....
+)
+
+spa
+black
+.....
+.....
+.....
+.....
+.....
+
+oncon
+black
+.....
+.....
+.....
+.....
+.....
+
+movr
+black
+.....
+.....
+.....
+.....
+.....
+
+movl
+black
+.....
+.....
+.....
+.....
+.....
+
+movu
+black
+.....
+.....
+.....
+.....
+.....
+
+movd
+black
+.....
+.....
+.....
+.....
+.....
+
+bacx
+black
+.....
+.....
+.....
+.....
+.....
+
+bacr
+black
+.....
+.....
+.....
+.....
+.....
+
+bacl
+black
+.....
+.....
+.....
+.....
+.....
+
+bacu
+black
+.....
+.....
+.....
+.....
+.....
+
+bacd
+black
+.....
+.....
+.....
+.....
+.....
+
+switcrate
+black
+.....
+.....
+.....
+.....
+.....
+
+switcrate2
+black
+.....
+.....
+.....
+.....
+.....
+
+arrow
+black
+.....
+.....
+.0.0.
+.000.
+..0..
+
+arrow2
+black
+.....
+.0.0.
+.000.
+..0..
+.....
+
+arrowx
+black
+.....
+.....
+.....
+.....
+.....
+
+arrowx2
+black
+.....
+.....
+.....
+.....
+.....
+
+winend
+#D9FFDC #7EE58D  #5C8466
+1000.
+21100
+21110
+22110
+.2221
+
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Playerright
+* = Crate
+
+O = Target
+n = nomove
+a = arrow2 and wall
+e=end
+t = end and target and eend
+w=end and winend
+
+f = furnace1
+
+c=cloner
+-=thefloor
+x=thefloorx
+
+1=normalhud and thefloor
+2=icehud and thefloor
+3=jumphud and thefloor
+
+s=start and thefloor
+
+
+furnance=furnace1 or furnace2
+feel=overwall or overcrate or overcrate2 or overcrate3 or overcratestop
+pushable=crate or cloner or swapcrate  or switcrate or switcrate2 or Crate2 
+win=crate or wall
+
+fus=nohud or start
+
+hud = normalhud or jumphud or icehud
+
+blocks=crate or Crate2 or crate3 
+
+theemx= crate 
+player=playerright or playerleft
+
+blocker = wall or crate  or nomove or arrow or blocks or Cratestop
+
+blockerx = blocker or player
+
+arrowk = arrow or arrow2 or arrowx or arrowx2
+
+con=player or crate
+
+bac= bacr or bacl or bacd or bacu
+=======
+SOUNDS
+=======
+
+pushable MOVE 36772507
+
+EndLevel 74089700
+
+player MOVE 68988304
+sfx0 52836103
+sfx1 45427502
+
+sfx2 29503700
+sfx3 81951902
+
+sfx4 71535702
+sfx5 28575902
+sfx6 86666507
+================
+COLLISIONLAYERS
+================
+
+Background
+Target
+nomove
+start
+Player, Wall, pushable,swapwall,thefloor,thefloorx ,Crate3,Cratestop
+
+furnance
+
+spa
+nohud
+jumphud
+normalhud
+icehud
+
+movr
+movl
+movu
+movd
+
+bacr
+bacl
+bacu
+bacd
+bacx
+
+acti
+oncon
+
+arrow, arrow2, arrowx, arrowx2
+winend
+eend
+end, endx
+feel
+
+
+======
+RULES
+======
+
+[feel]->[]
+
+([ >  Player no eend | crate | no blocker ] -> [  >  Player | > crate |  > crate])
+
+late [acti][hud|fus]->[][nohud|fus]
+
+late [normalhud|fus][blocks]->[normalhud|fus][crate]
+late [icehud|fus][blocks]->[icehud|fus][crate2]
+late [jumphud|fus][blocks]->[jumphud|fus][crate3]
+
+([acti]->[])
+
+(rigid [ >  con | con ] -> [  >  con | > con  ] 
++ rigid [ <  con | con ] -> [  <  con | < con  ] 
++ rigid [ Moving con | con ] -> [ Moving con | MOVING con ])
+
+
+late[player no spa]->[player spa]
+
+late [spa no player][furnace1]->[][furnace2]
+late [spa no player][furnace2]->[][furnace1]
+(late [spa no player][furnace1]->[][furnace2]
+late [spa no player][furnace2]->[][furnace1])
+
+[> player| furnance]->[player|furnance]
+
+[ >  Player | pushable ] -> [  >  Player | > pushable ]
+
+[ >  Player | crate3 |no blocker] -> [   Player | Cratestop |Crate3] sfx6
+
+
+
+[crate2 movr]->[right crate2  ]
+[crate2 movl]->[left crate2  ]
+[crate2 movu]->[up crate2  ]
+[crate2 movd]->[down crate2 ]
+
+
+right[right crate2|no blocker]->[right crate2| movr]
+left[left crate2|no blocker]->[left crate2| movl]
+up[up crate2|no blocker]->[up crate2| movu]
+down[down crate2|no blocker]->[down crate2| movd]
+
+[ crate3 furnance]->[acti furnance] sfx4
+[> pushable| furnance]->[acti|furnance] sfx4
+[ pushable furnance]->[acti furnance] sfx4
+
+
+
+
+
+(rigid [ >  Player | crate ] -> [  >  Player | > crate  ] 
++ rigid [ <  Player | crate ] -> [  <  Player | < crate  ] )
+
+[crate|player]->[crate oncon|player]
+
+left[crate oncon|blocker][left player]->[crate|blocker][player] 
++up[crate oncon|blocker][up player]->[crate|blocker][player] 
++down[crate oncon|blocker][down player]->[crate|blocker][player] 
++right[crate oncon|blocker][right player]->[crate|blocker][player] 
+
+late [oncon]->[]
+rigid [ Moving crate | player ] -> [ Moving crate | MOVING player ]
++rigid [ Moving player | crate ] -> [ Moving player | MOVING crate ]
+
+([crate]->[crate bacx]
+[> crate]->[ > crate  > bacd]
+
+[bacd |player]->[|player]
+
+late [ crate bacd|bac no player]->[|crate])
+
+[down crate]->[down crate down bacd]
+[up crate]->[up crate up bacu]
+[left crate]->[left crate left bacl]
+[right crate]->[right crate right bacr]
+
+late[crate bac|player]->[crate bacx bac|player]
+
+late left [crate  bacr no bacx| no blockerx]->[| crate]
+late right [crate bacl no bacx | no blockerx]->[| crate]
+late down [crate bacu no bacx | no blockerx]->[| crate]
+late up [crate bacd no bacx | no blockerx]->[| crate]
+
+
+([> player| crate|blocker]->cancel)
+
+[> crate|Target]->[> crate|target] sfx2
+
+[ left Playerright] -> [ left playerleft]
+[ right Playerleft] -> [ right playerright]
+
+[endx] ->[thefloor] sfx2
+[end | thefloor]-> [endx |thefloor]
+
+late up [wall| ]-> [wall|overwall]
+late up [theemx| ]-> [theemx|overcrate]
+
+late up [crate2| ]-> [crate2|overcrate2]
+
+late up [crate3| ]-> [crate3|overcrate3]
+late up [cratestop| ]-> [cratestop|overcratestop]
+
+late up [end| ]-> [end|overcrate]
+late up [endx| ]-> [endx|overcrate]
+
+late [bac]->[]
+late[bacx]->[]
+
+[]-> again 
+(
+[arrow]->[arrowx2]
+[arrow2]->[arrowx]
+
+[arrowx]->[arrow]
+[arrowx2]->[arrow2])
+==============
+WINCONDITIONS
+==============
+
+
+no blocks
+some player
+=======
+LEVELS
+=======
+
+message Burn all the blocks in the fire
+
+message level 1 of 6
+-----1211
+--#####-s
+###.f.###
+#.......#
+#...P...#
+#.......#
+#..*.*..#
+#..*.*..#
+#.......#
+##.....##
+-#######-
+
+message level 2 of 6
+------223
+-#######s
+##.....##
+#...f...#
+#.......#
+#.*...*.#
+#...P...#
+#.......#
+#..*....#
+##.....##
+-#######-
+
+message level 3 of 6
+-----2112
+--#####-s
+###.*.###
+#.*.P.*.#
+#.......#
+#..#f#..#
+#.......#
+#...*...#
+#.......#
+##.....##
+-#######-
+
+message level 4 of 6
+-----2321
+-#######s
+##.....##
+#.....*.#
+#..*....#
+#..#.*..#
+#.*.P...#
+#.......#
+#...f#..#
+##.....##
+-#######-
+
+message level 5 of 6
+
+----31232
+########s
+#.......#
+#.......#
+#...f...#
+#.......#
+#...*.P.#
+#..*.*..#
+#..*.*..#
+##.....##
+-#######-
+
+message level 6 of 6
+----22132
+-#######s
+##.....##
+#...*...#
+#.*.....#
+#....*..#
+#.P....F#
+#...#..##
+#.*..*.#-
+##.....#-
+-#######-
+
+(---322322
+-#######s
+##.....##
+#.......#
+#.*...*.#
+#...#*..#
+#.*.f...#
+#...#.*.#
+#.*.P...#
+##.....##
+-#######-)
+
+(----32321
+-#######s
+##.....##
+#...*.*.#
+#.*.#...#
+#...f...#
+#...#...#
+#.....*.#
+#.*.P...#
+##.....##
+-#######-)
+
+(----31321
+-#######s
+##.....##
+#...*.*.#
+#.......#
+#...#.*.#
+#.*.....#
+#....*..#
+#.Pf....#
+##.....##
+-#######-)
+
+
+(----31123
+-#######s
+##.....##
+#.*..#..#
+#...*.*.#
+#.......#
+#.*.....#
+#...#F..#
+#.P.*...#
+##.....##
+-#######-)
+
+
+(-----2232
+-#######s
+##.....##
+#.#...#.#
+#..*.*..#
+#.......#
+#...F.P.#
+##.....##
+-#.*.*.#-
+-#.....#-
+-#######-
+)
+
+(----11221
+########s
+#...P..##
+#.......#
+#.*.*.*.#
+#.......#
+#..*.*..#
+#..#f#..#
+#.......#
+#.......#
+#########)
+
+
+(-----2131
+-#######s
+##.....##
+#...#...#
+#...f.p.#
+#...#...#
+##.....##
+#...*...#
+#..***..#
+#.......#
+#########)
+
+
+xxxxxxxxxxxxxx
+-eeeeeeeeeeee-
+eeeeeeeeeeeeee
+eeeeeeeeeeeeee
+wewewewwweweew
+wewewetweewwew
+weweweeweeweww
+eweweewwweweew
+eeeeeeeeeeeeee
+eeeeeeeeeeeeee
+-eeeeeeeeeeee-
+
+

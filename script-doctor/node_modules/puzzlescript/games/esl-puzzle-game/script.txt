@@ -1,0 +1,366 @@
+title ESL Puzzle Game -- アダムのパズルゲーム
+author A.R.Nakama
+homepage www.puzzlescript.net
+ 
+========
+OBJECTS
+========
+ 
+Background
+LIGHTGREEN GREEN
+11111
+01111
+11101
+11111
+10111
+ 
+Trigger
+BLACK
+..0..
+..0..
+00000
+..0..
+..0..
+ 
+TargetB
+DarkBlue
+.....
+.000.
+.0.0.
+.000.
+.....
+ 
+TargetBWall
+DarkBlue
+.....
+.000.
+.000.
+.000.
+.....
+ 
+TargetR
+DarkRed
+.....
+.000.
+.0.0.
+.000.
+.....
+ 
+TargetRWall
+DarkRed
+.....
+.000.
+.000.
+.000.
+.....
+ 
+TargetP
+GRAY
+.....
+.000.
+.0.0.
+.000.
+.....
+ 
+TargetS
+WHITE
+.....
+.000.
+.0.0.
+.000.
+.....
+ 
+Wall
+BROWN DARKBROWN
+00010
+11111
+01000
+11111
+00010
+ 
+WallB
+BROWN BLACK
+00010
+11111
+01000
+11111
+00010
+ 
+Player
+Black Orange White Blue
+.000.
+.111.
+22222
+.333.
+.3.3.
+ 
+CrateR
+Red Yellow
+00000
+0...0
+0...0
+0...0
+00000
+ 
+CrateB
+Blue Yellow
+00000
+0...0
+0...0
+0...0
+00000
+ 
+CrateP
+GRAY
+00000
+0...0
+0...0
+0...0
+00000
+ 
+CrateS
+WHITE
+00000
+0...0
+0...0
+0...0
+00000
+ 
+ 
+=======
+LEGEND
+=======
+ 
+. = Background
+# = Wall
+1 = Player
+R = CrateR
+B = CrateB
+P = CrateP
+e = TargetR
+c = TargetB
+o = TargetP
+Q = WallB
+Z = Trigger
+S = CrateS
+a = TargetS
+w = TargetRWall
+x = TargetBWall
+ 
+ 
+=======
+SOUNDS
+=======
+ 
+CrateR MOVE 36772507
+CrateB MOVE 36772507
+ 
+================
+COLLISIONLAYERS
+================
+ 
+Background
+TargetR, TargetB, TargetP, TargetS, Trigger, TargetBWall, TargetRWall
+Player, Wall, CrateR, CrateB, CrateP, CrateS, WallB
+ 
+======
+RULES
+======
+ 
+[ >  Player | CrateR ] -> [  >  Player | > CrateR  ]
+[ >  Player | CrateB ] -> [  >  Player | > CrateB  ]
+[ <  Player | CrateP ] -> [  <  Player | < CrateP  ]
+[ MOVING Player | STATIONARY CrateS ] -> [ MOVING Player | MOVING CrateS ]
+[ Action Player Trigger ] -> Win
+ 
+late [ CrateR | CrateR | CrateR | CrateR | CrateR ] -> win
+late [ CrateR | CrateR | CrateR ] -> [ | |]
+late [ CrateB | CrateB | CrateB ] -> [ | |]
+late [ CrateP | CrateP | CrateP ] -> [ | |]
+late [ CrateR TargetRWall ] -> [ Wall ]
+late [ CrateB TargetBWall ] -> [ Wall ]
+ 
+==============
+WINCONDITIONS
+==============
+ 
+All CrateR on TargetR
+All CrateB on TargetB
+All CrateP on TargetP
+All CrateS on TargetS
+ 
+=======
+LEVELS
+=======
+ 
+MESSAGE Level 1: push all the blocks tO the target.
+ 
+#########
+#.......#
+#.R...R.#
+#.1.....#
+#...ee..#
+#.......#
+#########
+ 
+MESSAGE Level 2: go left or right at the 4 way intErsection.
+ 
+#######
+#.....#
+#.#R#.#
+#..1..#
+#.#R#.#
+#e...e#
+#######
+ 
+MESSAGE Level 3: push the colored block to the saMe color tile
+ 
+#########
+#.......#
+#.R...c.#
+#.1###..#
+#.B...e.#
+#.......#
+#########
+ 
+MESSAGE Level 4: push one blue out of the way so reD can pass through.
+ 
+###########
+#..c.e.c..#
+#.#.###.#.#
+#....1....#
+#.#.#.#.#.#
+#.#.#.#.#.#
+#.#.#.#.#.#
+#.#B.R.B#.#
+#.........#
+###########
+ 
+MESSAGE Level 5: press start on the cross to win.
+ 
+###########
+#.....#.#1#
+#.###...#.#
+#..##.#R#.#
+##e#..#...#
+####.##.###
+####......#
+##Z#.####.#
+##........#
+###########
+ 
+MESSAGE Level 6: push the middle red down and then back up.
+ 
+#########
+#.c1..e.#
+#.R.....#
+####R####
+#.B...e.#
+#.......#
+###...###
+...###...
+ 
+MESSAGE Level 7: push 3 blocks together, and they Will disappear.
+ 
+#########
+#.......#
+#.R.RRe.#
+#.1...e.#
+#...R.R.#
+#.......#
+#########
+ 
+MESSAGE Level 8: push blue to the right And down.
+ 
+#############
+#...........#
+#..RR.B...1.#
+#..#RB#B....#
+#.R..RB...c.#
+#...R.......#
+#############
+ 
+MESSAGE Level 9: you can only pull the grAy blocks.
+ 
+########
+#..Peo.#
+#.#.#..#
+#.R1...#
+#.#.#..#
+#......#
+########
+ 
+MESSAGE Level 10: the gray will oscillatE on the right side, then the left side.
+ 
+##########
+#eP....###
+#...R....#
+##o##R##.#
+#.oP1..#.#
+##.##.##.#
+#e.......#
+##########
+ 
+MESSAGE Level 11: you must moVe and then replace the blue block to move the others.
+ 
+########
+########
+#..P..##
+#...R..#
+#..#P#.#
+##B.1Pc#
+#..#R#.#
+#....R.#
+####.###
+########
+ 
+MESSAGE Level 12: the only way to lose the sticky block is with a wall.
+ 
+###########
+#..########
+#.........#
+##.#####..#
+##.#...#..#
+##.#...#..#
+##...#....#
+##a.###.1.#
+###.###...#
+###.......#
+###.###.S.#
+###.......#
+###########
+ 
+MESSAGE Level 13: Make 5 red in a row to win
+ 
+#######
+#e.B..#
+#.RRe.#
+#.B1R.#
+#BeRR.#
+#....e#
+#######
+ 
+ 
+ 
+MESSAGE Level 15: the order is blue, red, blue, gray.
+ 
+#############
+#...#####...#
+#.BPBw1xR...#
+#...#####...#
+#....o.x....#
+#...#####...#
+#############
+ 
+MESSAGE Level 16: ahhhh crazy
+ 
+#########
+#####.w.#
+#####...#
+#####R..#
+#...#.B.#
+#1R.x.Bx#
+#...#w..#
+#########
+ 
+MESSAGE you win!  you are so cool!  did you find the secret message? write it on the back of your worksheet!

@@ -1,0 +1,4028 @@
+(version 1.1.2 - high brightness)
+title Out There
+author CHz
+homepage quiteajolt.com
+
+noaction
+background_color #303030
+again_interval 0.1
+realtime_interval 0.1 (used to count down timers, see TIMERS for more)
+run_rules_on_level_start
+
+
+(NOTE: If you want to *play* this game, you should go here:
+    http://quiteajolt.com/projects/puzzlescript/outthere/
+instead of playing it here in the editor or in the puzzlescript.net player. The game code is exactly the same, but I've made a slight modification to the engine in the version on my site. Specifically, there are a couple of points in the game that I want to disable the undo button, which was only possible by modifying the JavaScript engine itself.
+
+Technical deets:
+
+I disable the undo button at the same time I disable the reset button, because it would be confusing if one worked and the other didn't. Situationally disabling resets is actually simple to do in PuzzleScript code: just have a rule that saves a checkpoint every turn. :J
+
+The fact that I want to disable both undoing and resetting simultaneously makes the JS modification really easy: all we have to do is clear the undo stack every time a checkpoint is saved. We just need to add one line to the checkpoint saving section of the processInput() function in engine.js (https://github.com/increpare/PuzzleScript/blob/master/js/engine.js):
+
++ backups=[];
+restartTarget=backupLevel();
+curlevelTarget=restartTarget;
+hasUsedCheckpoint=true;
+…
+
+The downside to this modification is that the player can no longer undo past checkpoints, so we have to be careful about using checkpoints and make sure there'd never be a reason to.
+
+)
+
+
+========
+OBJECTS
+========
+
+
+(=======
+ SETTING
+ =======)
+
+Background
+Black
+
+
+OuterBackground
+#303030
+
+GradientUp1
+Black #303030
+11111
+11111
+11111
+01111
+11001
+
+GradientUp2
+Black #303030
+10111
+00110
+11000
+01011
+00100
+
+GradientUp3
+Black #303030
+10000
+10010
+00000
+00000
+00000
+
+GradientUpRightCorner1
+Black #303030
+11111
+11111
+11111
+10111
+01111
+
+GradientUpRightCorner2
+Black #303030
+11011
+01001
+00110
+11001
+00101
+
+GradientUpRightCorner3
+Black #303030
+11000
+00100
+00001
+00010
+00000
+
+GradientRight1
+Black #303030
+10111
+11111
+01111
+01111
+11111
+
+GradientRight2
+Black #303030
+00101
+01100
+10011
+01011
+01001
+
+GradientRight3
+Black #303030
+00011
+00000
+00000
+00010
+00000
+
+GradientRightDownCorner1
+Black #303030
+01111
+10111
+11111
+11111
+11111
+
+GradientRightDownCorner2
+Black #303030
+01001
+01011
+10100
+00101
+11011
+
+GradientRightDownCorner3
+Black #303030
+00001
+00001
+00010
+01000
+00100
+
+GradientDown1
+Black #303030
+10011
+11110
+11111
+11111
+11111
+
+GradientDown2
+Black #303030
+00100
+11010
+00011
+01100
+11101
+
+GradientDown3
+Black #303030
+00000
+00000
+00000
+01001
+00001
+
+GradientDownLeftCorner1
+Black #303030
+11110
+11101
+11111
+11111
+11111
+
+GradientDownLeftCorner2
+Black #303030
+10100
+10011
+01100
+10010
+11011
+
+GradientDownLeftCorner3
+Black #303030
+00000
+01000
+10000
+00100
+00011
+
+GradientLeft1
+Black #303030
+11111
+11110
+11110
+11111
+11101
+
+GradientLeft2
+Black #303030
+10010
+11010
+11001
+00110
+10100
+
+GradientLeft3
+Black #303030
+00000
+01000
+00000
+00000
+11000
+
+GradientLeftUpCorner1
+Black #303030
+11111
+11111
+11111
+11101
+11110
+
+GradientLeftUpCorner2
+Black #303030
+11011
+10100
+00101
+11010
+10010
+
+GradientLeftUpCorner3
+Black #303030
+00100
+00010
+01000
+10000
+10000
+
+
+Wall1
+#606060 #303030
+00000
+11111
+00000
+11111
+00000
+
+Wall2
+#606060 #303030
+11111
+00000
+11111
+00000
+11111
+
+(Token used in level generation to alternate wall & window types by row)
+Wall2Token
+Transparent
+
+
+WindowHoriz1
+#606060
+.....
+.....
+00000
+.....
+.....
+
+WindowHoriz2
+#303030
+.....
+.....
+00000
+.....
+.....
+
+WindowVert1
+#606060 #303030
+..0..
+..1..
+..0..
+..1..
+..0..
+
+WindowVert2
+#606060 #303030
+..1..
+..0..
+..1..
+..0..
+..1..
+
+
+(Borders; hands generate under these)
+CoverRight
+#303030 #606060
+00001
+00001
+00001
+00001
+00001
+
+CoverLeft
+#303030 #606060
+10000
+10000
+10000
+10000
+10000
+
+CoverUp
+#303030 #606060
+11111
+00000
+00000
+00000
+00000
+
+CoverDown
+#303030 #606060
+00000
+00000
+00000
+00000
+11111
+
+
+(======
+ PLAYER
+ ======)
+
+NormalPlayer
+#3030FF
+..0..
+.000.
+00000
+.000.
+..0..
+
+(Special player state used for the final cutscene-y levels)
+TrekkingPlayer
+#3030FF
+..0..
+.000.
+00000
+.000.
+..0..
+
+
+(Intermediate and extra tiredness values are used in cutscenes)
+TiredPlayer1
+#3737E8
+..0..
+.000.
+00000
+.000.
+..0..
+
+(Player after one chop)
+TiredPlayer2
+#3E3ED2
+..0..
+.000.
+00000
+.000.
+..0..
+
+TiredPlayer3
+#4545BB
+..0..
+.000.
+00000
+.000.
+..0..
+
+(Player after two chops)
+TiredPlayer4
+#4B4BA4
+..0..
+.000.
+00000
+.000.
+..0..
+
+TiredPlayer5
+#52528D
+..0..
+.000.
+00000
+.000.
+..0..
+
+TiredPlayer6
+#595977
+..0..
+.000.
+00000
+.000.
+..0..
+
+TiredPlayer7
+#606060
+..0..
+.000.
+00000
+.000.
+..0..
+
+
+(=============
+ INTERACTABLES
+ =============)
+
+Box
+#606060
+.000.
+0...0
+0...0
+0...0
+.000.
+
+
+Axe
+#C08050 #C0C0C0
+1....
+110..
+110..
+1.0..
+..0..
+
+UsedAxeToken
+#FF0000
+0...0
+.0.0.
+..0..
+.0.0.
+0...0
+
+
+(=====
+ HANDS
+ =====)
+
+HandUp
+#00A000
+0.0.0
+0.0.0
+0.0.0
+00000
+.000.
+
+HandDown
+#00A000
+.000.
+00000
+0.0.0
+0.0.0
+0.0.0
+
+ArmVert
+#00A000
+.000.
+.000.
+.000.
+.000.
+.000.
+
+HandLeft
+#00A000
+0000.
+...00
+00000
+...00
+0000.
+
+HandRight
+#00A000
+.0000
+00...
+00000
+00...
+.0000
+
+ArmHoriz
+#00A000
+.....
+00000
+00000
+00000
+.....
+
+(Sight detection tokens for hands)
+HandUpSniffer
+Transparent
+
+HandDownSniffer
+Transparent
+
+HandLeftSniffer
+Transparent
+
+HandRightSniffer
+Transparent
+
+
+(=====
+ BLOOD
+ =====)
+
+Blood1
+#600000 #400000
+.1.11
+10101
+.1001
+1001.
+1111.
+
+Blood2
+#600000 #400000
+11.1.
+10101
+1001.
+11001
+..111
+
+Blood3
+#600000 #400000
+.1111
+.1001
+1001.
+10101
+11.1.
+
+Blood4
+#600000 #400000
+111..
+10011
+.1001
+10101
+.1.11
+
+(Token to generate a random blood pool after chopping)
+BloodToken
+Transparent
+
+
+FootprintVert1
+#500000
+.....
+...0.
+.0.0.
+.0...
+.....
+
+FootprintVert2
+#300000
+.....
+...0.
+.0.0.
+.0...
+.....
+
+FootprintHoriz1
+#500000
+.....
+.00..
+.....
+..00.
+.....
+
+FootprintHoriz2
+#300000
+.....
+.00..
+.....
+..00.
+.....
+
+(Tokens to track what level of footprint to drop)
+BloodyPlayerToken1
+Transparent
+
+BloodyPlayerToken2
+Transparent
+
+(Tokens to track what direction of footprint to drop)
+VerticalMovementCheckToken
+Transparent
+
+HorizontalMovementCheckToken
+Transparent
+
+
+(==========
+ SOUND TEST
+ ==========)
+
+SoundTestTrigger
+White
+0...0
+.0.0.
+..0..
+.0.0.
+0...0
+
+SoundTestTriggerDisabled
+White
+0...0
+.0.0.
+..0..
+.0.0.
+0...0
+
+
+(=====================
+ INTRO LEVEL - SETTING
+ =====================)
+
+BedroomDoorClosedLeft
+#606060 #303030
+.....
+.....
+.....
+....1
+.....
+
+BedroomDoorClosedRight
+#606060 #303030
+0....
+1....
+0....
+11...
+0....
+
+BedroomDoorOpenTop
+#606060 #303030
+.....
+.....
+.....
+.0...
+11111
+
+BedroomDoorOpenBottom
+#606060 #303030
+.0...
+.....
+.....
+.....
+.....
+
+BathroomDoorOpen
+#606060
+.....
+....0
+.....
+.....
+.....
+
+LivingRoomLeftDoorTop
+#606060 #303030
+.....
+.....
+.....
+.....
+...1.
+
+LivingRoomLeftDoorBottom
+#606060 #303030
+00000
+...1.
+.....
+.....
+.....
+
+LivingRoomRightDoorTop
+#606060 #303030
+.....
+.....
+.....
+.....
+.1...
+
+LivingRoomRightDoorBottom
+#606060 #303030
+00000
+.1...
+.....
+.....
+.....
+
+OutsideDoorClosedLeft
+#606060 #303030
+.....
+.....
+.....
+....0
+.....
+
+OutsideDoorClosedRight
+#606060 #303030
+1....
+0....
+1....
+00...
+1....
+
+OutsideDoorOpen
+#606060 #303030
+...1.
+.....
+.....
+.....
+.....
+
+(Solid object that blocks the player's movement through unopenable doors)
+DoorBlocker
+Transparent
+
+
+BedUpperLeftOccupied
+#606060 #303030 #9090FF
+.....
+11111
+00000
+11211
+02200
+
+BedLowerLeftOccupied
+#606060 #303030 #9090FF
+22211
+02200
+11211
+00000
+11111
+
+BedUpperLeft
+#606060 #303030
+.....
+11111
+00000
+11111
+00000
+
+BedLowerLeft
+#606060 #303030
+11111
+00000
+11111
+00000
+11111
+
+BedUpperFoot
+#606060 #303030
+.....
+11111
+00000
+11111
+00000
+
+BedLowerFoot
+#606060 #303030
+11111
+00000
+11111
+00000
+11111
+
+
+(======================
+ INTRO LEVEL - CUTSCENE
+ ======================)
+
+(Gray background for the cutscene)
+IntroCutsceneCover
+#303030
+
+
+(Animation state tracking tokens)
+IntroCutscenePhase1
+Transparent
+
+IntroCutscenePhase2
+Transparent
+
+IntroCutscenePhase3
+Transparent
+
+IntroCutscenePhase4
+Transparent
+
+IntroCutscenePhase5
+Transparent
+
+IntroCutscenePhase6
+Transparent
+
+IntroCutscenePhase7
+Transparent
+
+IntroCutscenePhase8
+Transparent
+
+IntroCutscenePhase9
+Transparent
+
+IntroCutscenePhase10
+Transparent
+
+
+RealBedUpperLeft
+#700000 #500000 #FFFFFF #504030 #A06030
+.....
+11100
+22100
+23400
+33400
+
+RealBedLowerLeft
+#700000 #500000 #FFFFFF #504030 #A06030
+33400
+33400
+23400
+22100
+11100
+
+RealBedUpperFoot
+#700000
+.....
+00000
+00000
+00000
+00000
+
+RealBedLowerFoot
+#700000
+
+
+(Cutscene controllable hands)
+IntroHandUp
+#00A000
+0.0.0
+0.0.0
+0.0.0
+00000
+.000.
+
+IntroHandDown
+#00A000
+.000.
+00000
+0.0.0
+0.0.0
+0.0.0
+
+IntroArmVert
+#00A000
+.000.
+.000.
+.000.
+.000.
+.000.
+
+IntroHandLeft
+#00A000
+0000.
+...00
+00000
+...00
+0000.
+
+IntroHandRight
+#00A000
+.0000
+00...
+00000
+00...
+.0000
+
+IntroArmHoriz
+#00A000
+.....
+00000
+00000
+00000
+.....
+
+
+(=====================
+ AXE ACQUISITION LEVEL
+ =====================)
+
+(Token that disables chopping until the player picks the axe up)
+AxeDeactivator
+Transparent
+
+(Hides the axe counter until after the cutscene)
+AxeCover
+#303030
+
+
+(Progressively chopped cutscene hands)
+ChoppedHand1
+#00A000 #206B00 #200000
+.000.
+00010
+0.1.0
+020.0
+0.0.0
+
+ChoppedHand2
+#00A000 #206B00 #400000 #150000
+.000.
+00010
+0.1.0
+02130
+0.0.0
+
+ChoppedHand3
+#00A000 #206B00 #403500 #200000 #156B00 #400000 #150000
+.000.
+00010
+0.234
+05160
+0.0.0
+
+ChoppedHand4
+#00A000 #206B00 #156B00 #403500 #400000 #150000
+.000.
+00012
+0.342
+04350
+0.0.0
+
+ChoppedHand5
+#00A000 #206B00 #156B00 #006B00 #150000 #600000 #400000 #403500
+.000.
+00012
+34562
+06740
+0.0.0
+
+ChoppedHand6
+#00A000 #006B00 #403500 #156B00 #150000 #600000 #400000 #2B3500
+.010.
+00023
+14567
+06240
+0.0.0
+
+ChoppedHand7
+#00A000 #006B00 #156B00 #403500 #150000 #600000 #2B3500 #400000
+.010.
+00232
+14556
+07341
+0.0.0
+
+ChoppedHand8
+#00A000 #006B00 #156B00 #403500 #150000 #600000 #2B3500 #400000
+.010.
+00232
+14556
+07341
+242.0
+
+ChoppedHand9
+#00A000 #006B00 #156B00 #206B00 #2B3500 #403500 #150000 #600000 #400000
+.010.
+23452
+16774
+08561
+262.0
+
+ChoppedHand10
+#00A000 #006B00 #156B00 #403500 #2B3500 #150000 #600000 #400000 #2B0000
+.010.
+23432
+15664
+07381
+252.0
+
+ChoppedHand11
+#00A000 #006B00 #156B00 #403500 #2B3500 #150000 #600000 #400000 #2B0000
+.010.
+23432
+15664
+07381
+28450
+
+ChoppedHand12
+#00A000 #006B00 #156B00 #403500 #2B3500 #2B0000 #600000 #400000 #150000
+.010.
+23432
+15664
+06351
+27480
+
+ChoppedHand13
+#00A000 #003500 #156B00 #600000 #2B3500 #403500 #2B0000 #006B00 #400000 #150000
+.010.
+23452
+16334
+03567
+28490
+
+ChoppedHand14
+#00A000 #156B00 #150000 #600000 #2B3500 #403500 #003500 #2B0000 #006B00 #400000
+.0.12
+13451
+67334
+03578
+19420
+
+ChoppedHand15
+#00A000 #156B00 #150000 #600000 #2B3500 #403500 #003500 #2B0000 #400000 #006B00
+.0.12
+13451
+67334
+03389
+18420
+
+ChoppedHand16
+#00A000 #156B00 #150000 #600000 #400000 #2B3500 #003500 #2B0000 #006B00
+.0.12
+13435
+67335
+03348
+14520
+
+ChoppedHand17
+#00A000 #2B3500 #2B0000 #156B00 #600000 #400000 #003500 #006B00 #150000
+.0.12
+34541
+62441
+04457
+35180
+
+ChoppedHand18
+#00A000 #2B3500 #2B0000 #156B00 #600000 #400000 #003500 #006B00
+.0.12
+34541
+62441
+04457
+35527
+
+ChoppedHand19
+#00A000 #2B3500 #2B0000 #156B00 #600000 #400000 #003500 #006B00
+.0.12
+34541
+62441
+04456
+35527
+
+ChoppedHand20
+#00A000 #2B3500 #2B0000 #156B00 #600000 #400000 #003500 #006B00
+.0.12
+34541
+65441
+34456
+35527
+
+ChoppedHand21
+#00A000 #2B3500 #2B0000 #156B00 #600000 #400000 #003500
+.0.12
+34541
+65445
+3445.
+35526
+
+ChoppedHand22
+#00A000 #400000 #2B0000 #156B00 #600000 #2B3500 #003500
+.0.12
+34145
+61441
+3441.
+31126
+
+ChoppedHand23
+#00A000 #400000 #2B0000 #2B3500 #600000 #003500 #156B00
+.0.12
+34143
+51441
+6441.
+61125
+
+ChoppedHand24
+#00A000 #400000 #2B3500 #600000 #003500 #156B00 #2B0000
+.0.11
+23131
+41331
+5331.
+51164
+
+ChoppedHand25
+#00A000 #400000 #2B3500 #600000 #003500 #156B00
+.0.11
+23131
+41331
+5331.
+5111.
+
+ChoppedHand26
+#00A000 #400000 #2B3500 #600000
+.0.11
+23131
+.1331
+2331.
+2111.
+
+ChoppedHand27
+#156B00 #400000 #2B3500 #600000
+.0.11
+23131
+.1331
+2331.
+2111.
+
+ChoppedHand28
+#156B00 #400000 #2B3500 #600000
+.0.11
+23131
+.1331
+1331.
+1111.
+
+ChoppedHand29
+#2B3500 #400000 #600000
+.0.11
+02121
+.1221
+1221.
+1111.
+
+ChoppedHand30
+#2B3500 #400000 #600000
+.0.11
+12121
+.1221
+1221.
+1111.
+
+
+(Special final state that the player can chop indefinitely)
+ChoppedBlood
+#600000 #400000
+.1.11
+10101
+.1001
+1001.
+1111.
+
+(Tokens to check that the player stopped mashing up for ten ticks)
+OverkillCheck1Token
+Transparent
+
+OverkillCheck2Token
+Transparent
+
+OverkillCheck3Token
+Transparent
+
+OverkillCheck4Token
+Transparent
+
+OverkillCheck5Token
+Transparent
+
+OverkillCheck6Token
+Transparent
+
+OverkillCheck7Token
+Transparent
+
+OverkillCheck8Token
+Transparent
+
+OverkillCheck9Token
+Transparent
+
+OverkillCheck10Token
+Transparent
+
+
+(Breathing animation state tokens)
+Breath1Token
+Transparent
+
+Breath2Token
+Transparent
+
+Breath3Token
+Transparent
+
+Breath4Token
+Transparent
+
+Breath5Token
+Transparent
+
+Breath6Token
+Transparent
+
+Breath7Token
+Transparent
+
+BreathStep1Token
+Transparent
+
+BreathStep2Token
+Transparent
+
+BreathStep3Token
+Transparent
+
+BreathStep4Token
+Transparent
+
+BreathStep5Token
+Transparent
+
+BreathStep6Token
+Transparent
+
+
+(==============
+ TRAPPED LEVELS
+ ==============)
+
+(Flag to signify that this is a trapping level)
+TrappedToken
+Transparent
+
+(Flag to signify if fading out to gray ends the level or not)
+TrappedProceedAfterFade
+Transparent
+
+(Flag to signify if the player is instantly killed after exhausting chops or if they can fumble around for a bit)
+TrappedInstantKill
+Transparent
+
+(Token to check if the player has used all axe swings)
+TrappedCheckToken
+Transparent
+
+(Tokens to check if all the hands have moved to their final positions)
+TrappedHandMovementCheck
+Transparent
+
+TrappedHandsHaveFinishedMovingCheck
+Transparent
+
+(Animation phase tokens)
+TrappedPhase1Token
+Transparent
+
+TrappedPhase2Token
+Transparent
+
+TrappedPhase3Token
+Transparent
+
+TrappedPhase4Token
+Transparent
+
+TrappedPhase5Token
+Transparent
+
+TrappedPhase6Token
+Transparent
+
+TrappedPhase7Token
+Transparent
+
+TrappedPhase8Token
+Transparent
+
+TrappedPhase9Token
+Transparent
+
+
+(================
+ LIBERATION LEVEL
+ ================)
+
+(Various covers to "randomly" undissolve from gray)
+OpenEyesCover11
+#303030
+00.00
+0.000
+0000.
+0.000
+00.00
+
+OpenEyesCover12
+#303030
+00.00
+...00
+.0.0.
+0.000
+0..00
+
+OpenEyesCover13
+#303030
+00...
+...0.
+.0.0.
+...00
+0..00
+
+OpenEyesCover14
+#303030
+0....
+...0.
+.0...
+....0
+...0.
+
+OpenEyesCover21
+#303030
+.0000
+00000
+0.00.
+00..0
+00000
+
+OpenEyesCover22
+#303030
+.000.
+00000
+0..0.
+.0...
+000.0
+
+OpenEyesCover23
+#303030
+..00.
+..00.
+0..0.
+.0...
+000..
+
+OpenEyesCover24
+#303030
+...0.
+.....
+0..0.
+.0...
+.0...
+
+OpenEyesCover31
+#303030
+000..
+.0000
+000.0
+.0000
+00000
+
+OpenEyesCover32
+#303030
+000..
+.000.
+0...0
+.00..
+00000
+
+OpenEyesCover33
+#303030
+.0...
+.000.
+0....
+.0...
+000.0
+
+OpenEyesCover34
+#303030
+.....
+..00.
+0....
+.....
+..0.0
+
+OpenEyesCover41
+#303030
+0.0.0
+0.000
+00000
+0000.
+.0000
+
+OpenEyesCover42
+#303030
+0.0.0
+0..00
+.0.00
+0.00.
+.000.
+
+OpenEyesCover43
+#303030
+0....
+0..0.
+.0.0.
+..00.
+.000.
+
+OpenEyesCover44
+#303030
+.....
+0....
+.0.0.
+..0..
+.0...
+
+(Tokens to track which undissolve step to use next)
+OpenEyesPhase1Token
+Transparent
+
+OpenEyesPhase2Token
+Transparent
+
+OpenEyesPhase3Token
+Transparent
+
+OpenEyesPhase4Token
+Transparent
+
+
+(Tokens to track and activate the player's ability to chop freely)
+SuperAxeToken
+Transparent
+
+SuperAxeChoppingToken
+Transparent
+
+SuperAxeBump1Token
+Transparent
+
+SuperAxeBump2Token
+Transparent
+
+SuperAxeBump3Token
+Transparent
+
+SuperAxeBump4Token
+Transparent
+
+SuperAxeActiveToken
+Transparent
+
+
+(Shattering the border)
+BrokenCoverLeft1
+#303030 #484848
+10000
+10000
+10000
+10000
+10000
+
+BrokenCoverLeft2
+#303030 #3C3C3C #181818
+10000
+20000
+10000
+20000
+10000
+
+BrokenCoverRight1
+#303030 #484848
+00001
+00001
+00001
+00001
+00001
+
+BrokenCoverRight2
+#303030 #3C3C3C #181818
+00001
+00002
+00001
+00002
+00001
+
+BrokenCoverDown1
+#303030 #484848
+00000
+00000
+00000
+00000
+11111
+
+BrokenCoverDown2
+#303030 #3C3C3C #181818
+00000
+00000
+00000
+00000
+12121
+
+BrokenCoverUp1
+#303030 #484848
+11111
+00000
+00000
+00000
+00000
+
+BrokenCoverUp2
+#303030 #3C3C3C #181818
+12121
+00000
+00000
+00000
+00000
+
+(Tokens to cascade shatter the border)
+ShatterToken
+Transparent
+
+QueueShatterToken
+Transparent
+
+
+(Token to check if the border has been shattered completely)
+BeginKillingHandsToken
+Transparent
+
+(Animation phase tokens)
+KillHandsPhase1
+Transparent
+
+KillHandsPhase2
+Transparent
+
+KillHandsPhase3
+Transparent
+
+DyingHandUp
+#608810
+0.0.0
+0.0.0
+0.0.0
+00000
+.000.
+
+DeadHandUp
+#807020
+0.0.0
+0.0.0
+0.0.0
+00000
+.000.
+
+DyingHandDown
+#608810
+.000.
+00000
+0.0.0
+0.0.0
+0.0.0
+
+DeadHandDown
+#807020
+.000.
+00000
+0.0.0
+0.0.0
+0.0.0
+
+DyingArmVert
+#608810
+.000.
+.000.
+.000.
+.000.
+.000.
+
+DeadArmVert
+#807020
+.000.
+.000.
+.000.
+.000.
+.000.
+
+DyingHandLeft
+#608810
+0000.
+...00
+00000
+...00
+0000.
+
+DeadHandLeft
+#807020
+0000.
+...00
+00000
+...00
+0000.
+
+DyingHandRight
+#608810
+.0000
+00...
+00000
+00...
+.0000
+
+DeadHandRight
+#807020
+.0000
+00...
+00000
+00...
+.0000
+
+DyingArmHoriz
+#608810
+.....
+00000
+00000
+00000
+.....
+
+DeadArmHoriz
+#807020
+.....
+00000
+00000
+00000
+.....
+
+
+(==============
+ RETURNING HOME
+ ==============)
+
+(Special token to randomly generate blood in these levels)
+TrekRandomBlood
+Transparent
+
+(Tokens to make sure all the scheduled shattering happens at the proper times)
+TrekShatterTrigger
+Transparent
+
+TrekShatterSeed
+Transparent
+
+TrekShatterPlaceholder
+Transparent
+
+TrekShatterFuse
+Transparent
+
+TrekKillingHandsToken
+Transparent
+
+TrekKillHandsTrigger
+Transparent
+
+(Generates the goal zone at the bottom of each level)
+TrekWinBar
+Transparent
+
+
+(======================
+ ENDING LEVEL - SETTING
+ ======================)
+
+(Token to transform bits and pieces of the final level so that I could just copy large chunks of the map from the intro)
+EndingGenerationToken
+Transparent
+
+EndingOuterBackground
+#303030
+
+EndingGradientUp1
+Black #303030
+11111
+11111
+11111
+01111
+11001
+
+EndingGradientRight1
+Black #303030
+10111
+11111
+01111
+01111
+11111
+
+EndingGradientDown1
+Black #303030
+10011
+11110
+11111
+11111
+11111
+
+EndingGradientLeft1
+Black #303030
+11111
+11110
+11110
+11111
+11101
+
+EndingBedroomDoorClosedLeft
+#606060 #303030
+.....
+.....
+.....
+....1
+.....
+
+EndingBedroomDoorClosedRight
+#606060 #303030
+0....
+1....
+0....
+11...
+0....
+
+EndingBedroomDoorOpenTop
+#606060 #303030
+.....
+.....
+.....
+.0...
+11111
+
+EndingBedroomDoorOpenBottom
+#606060 #303030
+.0...
+.....
+.....
+.....
+.....
+
+EndingOutsideDoorClosedLeft
+#606060 #303030
+.....
+.....
+.....
+....0
+.....
+
+EndingOutsideDoorClosedRight
+#606060 #303030
+1....
+0....
+1....
+00...
+1....
+
+EndingOutsideDoorOpen
+#606060 #303030
+...1.
+.....
+.....
+.....
+.....
+
+
+(================================
+ ENDING LEVEL - OUTSIDE CROSSFADE
+ ================================)
+
+(Animation state tokens)
+EndingOutsideRenewalToken1
+Transparent
+
+EndingOutsideRenewalToken2
+Transparent
+
+
+(Object state tokens)
+PathToken
+Transparent
+
+PathSpawner
+Transparent
+
+WallToken
+Transparent
+
+Tile1Token
+Transparent
+
+Tile2Token
+Transparent
+
+CarpetToken
+Transparent
+
+
+(Real objects)
+Grass
+#005000 #006000
+01000
+00001
+00000
+00100
+00000
+
+Path
+#503000 #402000
+00000
+00100
+00000
+10000
+00010
+
+RealWall
+#502000 #482000
+00110
+11001
+00000
+00110
+11001
+
+Carpet
+#100020 #080020
+00100
+00010
+00001
+10000
+01000
+
+Tile1
+#C8A870 #C0A070 #B89870
+00211
+00211
+22222
+11200
+11200
+
+Tile2
+#C0A070 #C8A870 #B89870
+00211
+00211
+22222
+11200
+11200
+
+
+(Crossfades)
+HalfGrass
+#002800 #003000
+01000
+00001
+00000
+00100
+00000
+
+HalfPath
+#281800 #201000
+00000
+00100
+00000
+10000
+00010
+
+HalfWall1
+#584030 #544030 #3C2818 #402818 
+00110
+22332
+00000
+33223
+11001
+
+HalfWall2
+#402818 #3C2818 #544030 #584030 
+00110
+22332
+00000
+33223
+11001
+
+HalfOuterBackground
+#184018 #184818
+01000
+00001
+00000
+00100
+00000
+
+HalfGradientUp1Grass
+#184018 #184818 #002800 
+01000
+00001
+00000
+20100
+00220
+
+HalfGradientUp1Path
+#403018 #382818 #201000 #281800 
+00000
+00100
+00000
+20000
+00320
+
+HalfGradientUp2Grass
+#184018 #003000 #002800 
+01000
+22001
+00222
+20100
+22022
+
+HalfGradientUp2Path
+#403018 #281800 #382818 #201000 
+01000
+11201
+00111
+30100
+11031
+
+HalfGradientUp3
+#403018 #281800 #201000 
+01111
+01201
+11111
+21111
+11121
+
+HalfGradientRight1
+#184018 #003000 #184818 #002800 
+01000
+00002
+30000
+30200
+00000
+
+HalfGradientDown1Grass
+#184018 #003000 #002800 #184818 
+01200
+00001
+00000
+00300
+00000
+
+HalfGradientDown1Path
+#403018 #281800 #382818 
+01100
+00201
+00000
+20000
+00020
+
+HalfGradientDown1Wall
+#402818 #281000 #241000 #3C2818 
+01230
+33002
+00000
+00330
+33003
+
+HalfGradientDown1Carpet
+#201828 #080010 #040010 #1C1828 
+01200
+00031
+00003
+30000
+03000
+
+HalfGradientDown1Tile1
+#7C6C50 #645438 #5C4C38 #786850 #746450 #605038 
+01233
+00435
+44444
+33400
+33400
+
+HalfGradientDown1Tile2
+#786850 #605038 #5C4C38 #7C6C50 #746450 #645438 
+01233
+00435
+44444
+33400
+33400
+
+HalfGradientLeft1
+#184018 #184818 #003000 #002800 
+01000
+00002
+00003
+00100
+00030
+
+HalfGradientLeft2
+#184018 #003000 #002800 #184818 
+01202
+00201
+00220
+22302
+02022
+
+HalfGradientLeft3
+#002800 #003000 #184018 
+01000
+02001
+00000
+00100
+22000
+
+HalfGradientLeftUpCorner1
+#184018 #184818 #002800 
+01000
+00001
+00000
+00120
+00002
+
+HalfGradientLeftUpCorner2
+#184018 #184818 #002800 #003000 
+01200
+02023
+22020
+00302
+02202
+
+HalfGradientLeftUpCorner3
+#002800 #003000 #184018 
+01200
+00021
+02000
+20100
+20000
+
+HalfHandDown
+#285800 #285000
+.011.
+11110
+1.1.1
+1.0.1
+1.1.1
+
+HalfHandLeft
+#285000 #285800
+0100.
+...01
+00000
+...00
+0000.
+
+HalfHandUpGrass
+#285000 #285800
+0.0.0
+0.0.1
+0.0.0
+00100
+.000.
+
+HalfHandUpPath
+#504000 #483800
+0.0.0
+0.1.0
+0.0.0
+10000
+.001.
+
+HalfArmVertGrass
+#285800 #285000
+.011.
+.111.
+.111.
+.101.
+.111.
+
+HalfArmVertPath
+#504000 #483800
+.000.
+.010.
+.000.
+.000.
+.001.
+
+
+(===============================
+ ENDING LEVEL - INSIDE CROSSFADE
+ ===============================)
+
+AxeDropoff
+Transparent
+
+
+(Animation state tokens)
+EndingHouseRenewalToken1
+Transparent
+
+EndingHouseRenewalToken2
+Transparent
+
+
+(Object state tokens)
+BottomWindowToken
+Transparent
+
+TopWindowToken
+Transparent
+
+
+(Real objects)
+RealWindowVert
+#100020 #080020 #C0C0FF #005000 #006000
+00233
+00234
+00233
+10233
+01233
+
+RealBottomWindow
+#100020 #080020 #C0C0FF #005000 #006000
+00100
+00010
+22222
+33433
+33333
+
+RealTopWindow
+#005000 #006000 #C0C0FF #C8A870 #C0A070 #B89870
+01000
+00001
+22222
+44533
+44533
+
+RealLivingRoomLeftDoorTop
+#D0D0D0
+.....
+.....
+.....
+.....
+...0.
+
+RealLivingRoomLeftDoorBottom
+#301000 #D0D0D0
+00000
+...1.
+.....
+.....
+.....
+
+RealLivingRoomRightDoorTop
+#D0D0D0
+.....
+.....
+.....
+.....
+.0...
+
+RealLivingRoomRightDoorBottom
+#301000 #D0D0D0
+00000
+.1...
+.....
+.....
+.....
+
+RealOutsideDoorClosedLeft
+#D0D0D0
+.....
+.....
+.....
+....0
+.....
+
+RealOutsideDoorClosedRight
+#301000 #D0D0D0
+0....
+0....
+0....
+01...
+0....
+
+RealBathroomDoorOpen
+#D0D0D0
+.....
+....0
+.....
+.....
+.....
+
+
+(Crossfades)
+HalfCarpet
+#080010 #040010
+00100
+00010
+00001
+10000
+01000
+
+HalfTile1
+#645438 #605038 #5C4C38
+00211
+00211
+22222
+11200
+11200
+
+HalfTile2
+#605038 #645438 #5C4C38
+00211
+00211
+22222
+11200
+11200
+
+HalfWindowVert
+#080010 #787897 #002800 #9090AF #003000 #040010
+00122
+00324
+00122
+50322
+05122
+
+HalfBottomWindow
+#080010 #040010 #787897 #002800 #003000
+00100
+00010
+22222
+33433
+33333
+
+HalfTopWindow
+#002800 #003000 #787897 #605038 #5C4C38 #645438
+01000
+00001
+22222
+33455
+33455
+
+HalfLivingRoomLeftDoorTop
+#707070
+.....
+.....
+.....
+.....
+...0.
+
+HalfLivingRoomLeftDoorBottom
+#281810 #707070
+00000
+...1.
+.....
+.....
+.....
+
+HalfLivingRoomRightDoorTop
+#707070
+.....
+.....
+.....
+.....
+.0...
+
+HalfLivingRoomRightDoorBottom
+#281810 #707070
+00000
+.1...
+.....
+.....
+.....
+
+HalfOutsideDoorClosedLeft
+#787878
+.....
+.....
+.....
+....0
+.....
+
+HalfOutsideDoorClosedRight
+#201008 #281810 #787878
+0....
+1....
+0....
+12...
+0....
+
+HalfBathroomDoorOpen
+#787878
+.....
+....0
+.....
+.....
+.....
+
+HalfAxe
+#585060 #583028 #545060
+0....
+001..
+001..
+2.1..
+..1..
+
+
+(=================================
+ ENDING LEVEL - BEDROOM CROSSFADES
+ =================================)
+
+(Blocks off the flood fills of the previous renewal tokens to isolate the bedroom)
+EndingHouseRenewalBedroomToken
+Transparent
+
+
+(Animation state tokens)
+EndingBedroomRenewalStartToken
+Transparent
+
+EndingBedroomRenewalToken
+Transparent
+
+SleepPhase1Token
+Transparent
+
+SleepPhase2Token
+Transparent
+
+SleepPhase3Token
+Transparent
+
+SleepPhase4Token
+Transparent
+
+SleepPhase5Token
+Transparent
+
+SleepPhase6Token
+Transparent
+
+SleepPhase7Token
+Transparent
+
+SleepPhase8Token
+Transparent
+
+SleepPhase9Token
+Transparent
+
+SleepPhase10Token
+Transparent
+
+SleepPhase11Token
+Transparent
+
+SleepPhase12Token
+Transparent
+
+SleepPhase13Token
+Transparent
+
+SleepPhase14Token
+Transparent
+
+SleepPhase15Token
+Transparent
+
+SleepPhase16Token
+Transparent
+
+SleepPhase17Token
+Transparent
+
+SleepPhase18Token
+Transparent
+
+SleepPhase19Token
+Transparent
+
+SleepPhase20Token
+Transparent
+
+
+(Crossfades)
+HalfBedUpperFoot
+#501818 #683030
+.....
+00000
+11111
+00000
+11111
+
+HalfBedLowerFoot
+#501818 #683030
+00000
+11111
+00000
+11111
+00000
+
+RealBedUpperLeftUnrealOccupied
+#700000 #500000 #FFFFFF #2050F0
+.....
+11100
+22100
+22300
+23300
+
+RealBedLowerLeftUnrealOccupied
+#700000 #500000 #FFFFFF #2050F0
+33300
+23300
+22300
+22100
+11100
+
+HalfRealBedUpperLeftUnrealOccupied
+#401818 #501818 #AFAFAF #583030 #683030 #979797 #5870F7 
+.....
+00011
+22344
+55611
+26644
+
+HalfRealBedLowerLeftUnrealOccupied
+#5870F7 #501818 #AFAFAF #683030 #979797 #583030 #401818 
+00011
+20033
+44011
+22533
+66611
+
+HalfRealBedUpperLeft
+#500000 #700000 #FFFFFF #A79F97 #605890 #384890
+.....
+00011
+22011
+23411
+35411
+
+HalfRealBedLowerLeft
+#384890 #605890 #700000 #A79F97 #FFFFFF #500000
+00122
+30122
+43122
+44522
+55522
+
+
+(Fade to gray - used in the trapped levels too)
+EndingCover1
+#303030
+..0..
+...0.
+....0
+0....
+.0...
+
+EndingCover2
+#303030
+..00.
+...00
+0...0
+00...
+.00..
+
+EndingCover3
+#303030
+..000
+0..00
+00..0
+000..
+.000.
+
+EndingCover4
+#303030
+0.000
+00.00
+000.0
+0000.
+.0000
+
+EndingCover5
+#303030
+
+
+(======
+ TIMERS
+ ======)
+
+Timer20
+Transparent
+
+Timer19
+Transparent
+
+Timer18
+Transparent
+
+Timer17
+Transparent
+
+Timer16
+Transparent
+
+Timer15
+Transparent
+
+Timer14
+Transparent
+
+Timer13
+Transparent
+
+Timer12
+Transparent
+
+Timer11
+Transparent
+
+Timer10
+Transparent
+
+Timer9
+Transparent
+
+Timer8
+Transparent
+
+Timer7
+Transparent
+
+Timer6
+Transparent
+
+Timer5
+Transparent
+
+Timer4
+Transparent
+
+Timer3
+Transparent
+
+Timer2
+Transparent
+
+Timer1
+Transparent
+
+(When present with a timer, prevents the player from moving)
+InteractionDisabled
+Transparent
+
+(Used to prevent the player from using the reset button, see the comment in the prelude)
+ResetDisabled
+Transparent
+
+
+=======
+LEGEND
+=======
+
+(Generic)
+
+. = Background
+
+# = Wall1
+Wall = Wall1 or Wall2
+• = Box
+
+— = WindowHoriz1
+| = WindowVert1
+Window = WindowHoriz1 or WindowHoriz2 or WindowVert1 or WindowVert2
+
+P = NormalPlayer and Wall2Token
+TiredPlayer = TiredPlayer1 or TiredPlayer2 or TiredPlayer3 or TiredPlayer4 or TiredPlayer5 or TiredPlayer6 or TiredPlayer7
+NoncutscenePlayer = NormalPlayer or TiredPlayer
+Player = NormalPlayer or BedUpperLeftOccupied or TiredPlayer or TrekkingPlayer
+
+Goal = OuterBackground or GradientUp1 or GradientDown1 or GradientRight1 or GradientLeft1
+
+Blood = Blood1 or Blood2 or Blood3 or Blood4
+BloodyPlayerToken = BloodyPlayerToken1 or BloodyPlayerToken2
+Footprint = FootprintVert1 or FootprintVert2 or FootprintHoriz1 or FootprintHoriz2
+MovementCheckToken = HorizontalMovementCheckToken or VerticalMovementCheckToken
+
+: = OuterBackground
+A = Axe and OuterBackground
+
+1 = GradientUp1
+2 = GradientUp2
+3 = GradientUp3
+! = GradientUpRightCorner1
+@ = GradientUpRightCorner2
+‹ = GradientUpRightCorner3
+4 = GradientRight1
+5 = GradientRight2
+6 = GradientRight3
+$ = GradientRightDownCorner1
+% = GradientRightDownCorner2
+ﬂ = GradientRightDownCorner3
+7 = GradientDown1
+8 = GradientDown2
+9 = GradientDown3
+& = GradientDownLeftCorner1
+* = GradientDownLeftCorner2
+{ = GradientDownLeftCorner3
+0 = GradientLeft1
+- = GradientLeft2
+≠ = GradientLeft3
+} = GradientLeftUpCorner1
+_ = GradientLeftUpCorner2
++ = GradientLeftUpCorner3
+Gradient = GradientUp1 or GradientUp2 or GradientUp3 or GradientUpRightCorner1 or GradientUpRightCorner2 or GradientUpRightCorner3 or GradientRight1 or GradientRight2 or GradientRight3 or GradientRightDownCorner1 or GradientRightDownCorner2 or GradientRightDownCorner3 or GradientDown1 or GradientDown2 or GradientDown3 or GradientDownLeftCorner1 or GradientDownLeftCorner2 or GradientDownLeftCorner3 or GradientLeft1 or GradientLeft2 or GradientLeft3 or GradientLeftUpCorner1 or GradientLeftUpCorner2 or GradientLeftUpCorner3
+
+v = HandDown and CoverDown and OuterBackground
+^ = HandUp and CoverUp and OuterBackground
+> = HandRight and CoverRight and OuterBackground
+< = HandLeft and CoverLeft and OuterBackground
+
+Hand = HandUp or HandDown or HandLeft or HandRight
+Arm = ArmVert or ArmHoriz
+ChoppablePart = Hand or Arm
+HandSniffer = HandUpSniffer or HandDownSniffer or HandLeftSniffer or HandRightSniffer
+
+SightBlocker = Wall or Hand or Arm or Box
+
+CoverVert = CoverDown or CoverUp
+CoverHoriz = CoverRight or CoverLeft
+Cover = CoverHoriz or CoverVert
+
+Timer = Timer20 or Timer19 or Timer18 or Timer17 or Timer16 or Timer15 or Timer14 or Timer13 or Timer12 or Timer11 or Timer10 or Timer9 or Timer8 or Timer7 or Timer6 or Timer5 or Timer4 or Timer3 or Timer2 or Timer1
+
+
+(Sound test)
+
+S = SoundTestTrigger
+
+
+(Intro level)
+
+IntroDoor = BedroomDoorClosedLeft or BedroomDoorClosedRight or BedroomDoorOpenTop or BedroomDoorOpenBottom or BathroomDoorOpen or LivingRoomLeftDoorBottom or LivingRoomLeftDoorTop or LivingRoomRightDoorBottom or LivingRoomRightDoorTop or OutsideDoorClosedLeft or OutsideDoorClosedRight or OutsideDoorOpen
+ɑ = BedroomDoorClosedRight
+Y = BathroomDoorOpen
+β = LivingRoomLeftDoorBottom and DoorBlocker
+ɣ = LivingRoomRightDoorBottom and DoorBlocker
+δ = OutsideDoorClosedRight
+
+Bed = BedUpperLeftOccupied or BedLowerLeftOccupied or BedUpperLeft or BedLowerLeft or BedUpperFoot or BedLowerFoot
+
+RealBed = RealBedUpperLeft or RealBedLowerLeft or RealBedUpperFoot or RealBedLowerFoot
+ε = RealBedUpperLeft and Wall2Token and IntroCutscenePhase1 and Timer20 and InteractionDisabled
+
+IntroCutscenePhaseToken = IntroCutscenePhase1 or IntroCutscenePhase2 or IntroCutscenePhase3 or IntroCutscenePhase4 or IntroCutscenePhase5 or IntroCutscenePhase6 or IntroCutscenePhase7 or IntroCutscenePhase8 or IntroCutscenePhase9 or IntroCutscenePhase10
+
+IntroChoppablePart = IntroHandUp or IntroHandDown or IntroHandRight or IntroHandLeft or IntroArmVert or IntroArmHoriz
+
+
+(Axe intro level)
+
+B = AxeDeactivator and Axe and OuterBackground and AxeCover
+C = Axe
+
+ChoppedHand = ChoppedHand1 or ChoppedHand2 or ChoppedHand3 or ChoppedHand4 or ChoppedHand5 or ChoppedHand6 or ChoppedHand7 or ChoppedHand8 or ChoppedHand9 or ChoppedHand10 or ChoppedHand11 or ChoppedHand12 or ChoppedHand13 or ChoppedHand14 or ChoppedHand15 or ChoppedHand16 or ChoppedHand17 or ChoppedHand18 or ChoppedHand19 or ChoppedHand20 or ChoppedHand21 or ChoppedHand22 or ChoppedHand23 or ChoppedHand24 or ChoppedHand25 or ChoppedHand26 or ChoppedHand27 or ChoppedHand28 or ChoppedHand29 or ChoppedHand30
+OverkillCheckToken = OverkillCheck1Token or OverkillCheck2Token or OverkillCheck3Token or OverkillCheck4Token or OverkillCheck5Token or OverkillCheck6Token or OverkillCheck7Token or OverkillCheck8Token or OverkillCheck9Token or OverkillCheck10Token
+
+ShortBreathToken = Breath1Token or Breath2Token or Breath3Token or Breath4Token
+LongBreathToken = Breath5Token or Breath6Token
+BreathToken = ShortBreathToken or LongBreathToken or Breath7Token
+BreathStepToken = BreathStep1Token or BreathStep2Token or BreathStep3Token or BreathStep4Token or BreathStep5Token or BreathStep6Token
+
+
+(Trapped levels)
+
+E = Axe and OuterBackground and TrappedToken and TrappedProceedAfterFade and ResetDisabled
+F = Axe and OuterBackground and TrappedToken and TrappedInstantKill and TrappedProceedAfterFade and ResetDisabled
+
+TrappedPhaseToken = TrappedPhase1Token or TrappedPhase2Token or TrappedPhase3Token or TrappedPhase4Token or TrappedPhase5Token or TrappedPhase6Token or TrappedPhase7Token or TrappedPhase8Token or TrappedPhase9Token
+
+
+(Liberation level)
+
+OpenEyesCover = OpenEyesCover11 or OpenEyesCover12 or OpenEyesCover13 or OpenEyesCover14 or OpenEyesCover21 or OpenEyesCover22 or OpenEyesCover23 or OpenEyesCover24 or OpenEyesCover31 or OpenEyesCover32 or OpenEyesCover33 or OpenEyesCover34 or OpenEyesCover41 or OpenEyesCover42 or OpenEyesCover43 or OpenEyesCover44
+OpenEyesPhaseToken = OpenEyesPhase1Token or OpenEyesPhase2Token or OpenEyesPhase3Token or OpenEyesPhase4Token
+
+SuperAxePhaseToken = SuperAxeToken or SuperAxeBump1Token or SuperAxeBump2Token or SuperAxeBump3Token or SuperAxeBump4Token or SuperAxeActiveToken
+
+D = Axe and OuterBackground and TrappedToken and TrappedInstantKill and SuperAxeToken and ResetDisabled
+
+BrokenCover = BrokenCoverLeft1 or BrokenCoverLeft2 or BrokenCoverRight1 or BrokenCoverRight2 or BrokenCoverDown1 or BrokenCoverDown2 or BrokenCoverUp1 or BrokenCoverUp2
+
+LeftBorder = CoverRight or BrokenCoverRight1 or BrokenCoverRight2
+RightBorder = CoverLeft or BrokenCoverLeft1 or BrokenCoverLeft2
+UpBorder = CoverDown or BrokenCoverDown1 or BrokenCoverDown2
+DownBorder = CoverUp or BrokenCoverUp1 or BrokenCoverup2
+
+KillHandsToken = KillHandsPhase1 or KillHandsPhase2 or KillHandsPhase3
+
+DeadHand = DyingHandUp or DyingHandDown or DyingHandLeft or DyingHandRight or DeadHandUp or DeadHandDown or DeadHandLeft or DeadHandRight
+DeadArm = DyingArmVert or DyingArmHoriz or DeadArmVert or DeadArmHoriz
+DeadChoppablePart = DeadHand or DeadArm
+
+
+(The way home)
+
+T = TrekkingPlayer and OuterBackground
+W = TrekWinBar and OuterBackground
+
+(generic components)
+下 = HandDown
+左 = HandLeft
+右 = HandRight
+上 = HandUp
+横 = ArmHoriz
+縦 = ArmVert
+血 = TrekRandomBlood
+═ = FootprintHoriz1
+━ = FootprintHoriz2
+║ = FootprintVert1
+┃ = FootprintVert2
+
+Å = BrokenCoverRight2
+Á = BrokenCoverUp2
+À = BrokenCoverLeft2
+Ã = BrokenCoverDown2
+
+⁄ = OuterBackground and TrekShatterTrigger
+€ = GradientUp1 and TrekShatterPlaceholder
+› = GradientRight1 and TrekShatterPlaceholder
+‡ = GradientDown1 and TrekShatterPlaceholder
+
+~ = OuterBackground and TrekShatterFuse
+° = OuterBackground and TrekShatterPlaceholder
+` = OuterBackground and TrekKillHandsTrigger
+ª = GradientRightDownCorner1 and TrekKillHandsTrigger
+
+(level-specific layered components)
+É = FootprintHoriz2 and HandDown (2)
+È = FootprintHoriz1 and HandDown (2)
+箱 = Box and GradientUp2 (1)
+
+┉ = FootprintHoriz1 and GradientRight3 (old 1, unused)
+┅ = FootprintHoriz2 and GradientRight2 (6)
+™ = FootprintVert1 and GradientRight3 (6)
+£ = ArmHoriz and Blood1 (6, 9)
+¡ = FootprintVert2 and ArmHoriz (5)
+
+¢ = FootprintHoriz1 and ArmHoriz (9)
+∞ = FootprintHoriz2 and ArmHoriz (9)
+¿ = GradientRight2 and HandRight (9)
+§ = GradientRight2 and ArmHoriz (old 9, unused)
+¶ = GradientRight3 and HandRight (old 9, unused)
+
+
+(Final level)
+
+Q = NormalPlayer and Wall2Token and GradientLeftUpCorner1 and EndingGenerationToken
+
+EndingGradient = EndingGradientUp1 or EndingGradientDown1 or EndingGradientLeft1 or EndingGradientRight1 or GradientLeftUpCorner1 or GradientLeftUpCorner2 or GradientLeftUpCorner3 or GradientUp2 or GradientUp3 or GradientLeft2 or GradientLeft3
+
+ω = BedUpperLeft and EndingBedroomRenewalStartToken
+
+EndingDoor = EndingBedroomDoorOpenBottom or EndingBedroomDoorOpenTop or EndingBedroomDoorClosedLeft or EndingBedroomDoorClosedRight or EndingOutsideDoorOpen or EndingOutsideDoorClosedLeft or EndingOutsideDoorClosedRight
+ψ = EndingBedroomDoorOpenBottom and EndingHouseRenewalBedroomToken
+ι = LivingRoomRightDoorBottom and DoorBlocker and Tile1Token
+χ = EndingOutsideDoorOpen
+
+Door = IntroDoor or EndingDoor
+
+φ = DeadHandDown
+υ = DeadHandLeft
+τ = DeadHandUp
+σ = DeadArmVert
+
+RenewalToken = EndingOutsideRenewalToken1 or EndingOutsideRenewalToken2 or EndingHouseRenewalBedroomToken or EndingHouseRenewalToken1 or EndingHouseRenewalToken2 or EndingBedroomRenewalToken
+
+ρ = PathToken
+π = PathSpawner
+ο = EndingGradientDown1 and WallToken
+ξ = EndingGradientDown1 and Tile1Token
+ν = EndingGradientDown1 and Tile2Token
+μ = EndingGradientDown1 and CarpetToken
+TileToken = Tile1Token or Tile2Token
+
+λ = AxeDropoff
+
+κ = Wall1 and EndingHouseRenewalBedroomToken
+θ = Tile1Token
+η = Tile2Token
+ζ = WindowHoriz1 and BottomWindowToken
+Z = WindowHoriz1 and TopWindowToken
+X = BathroomDoorOpen and Tile1Token
+
+SleepPhaseToken = SleepPhase1Token or SleepPhase2Token or SleepPhase3Token or SleepPhase4Token or SleepPhase5Token or SleepPhase6Token or SleepPhase7Token or SleepPhase8Token or SleepPhase9Token or SleepPhase10Token or SleepPhase11Token or SleepPhase12Token or SleepPhase13Token or SleepPhase14Token or SleepPhase15Token or SleepPhase16Token or SleepPhase17Token or SleepPhase18Token or SleepPhase19Token or SleepPhase20Token
+
+TransitionBackground = HalfGrass or HalfPath or HalfOuterBackground or HalfGradientUp1Grass or HalfGradientUp1Path or HalfGradientUp2Grass or HalfGradientUp2Path or HalfGradientUp3 or HalfGradientRight1 or HalfGradientDown1Grass or HalfGradientDown1Path or HalfGradientDown1Carpet or HalfGradientDown1Tile1 or HalfGradientDown1Tile2 or HalfGradientLeft1 or HalfGradientLeft2 or HalfGradientLeft3 or HalfGradientLeftUpCorner1 or HalfGradientLeftUpCorner2 or HalfGradientLeftUpCorner3 or HalfCarpet or HalfTile1 or HalfTile2
+HalfChoppablePart = HalfHandDown or HalfHandLeft or HalfHandUpGrass or HalfHandUpPath or HalfArmVertGrass or HalfArmVertPath
+TransitionSolid = HalfGradientDown1Wall or HalfWall1 or HalfWall2 or HalfChoppablePart or HalfWindowVert or HalfTopWindow or HalfBottomWindow or HalfBedUpperFoot or HalfBedLowerFoot or RealBedUpperLeftUnrealOccupied or RealBedLowerLeftUnrealOccupied or HalfRealBedUpperLeftUnrealOccupied or HalfRealBedLowerLeftUnrealOccupied or HalfRealBedUpperLeft or HalfRealBedLowerLeft
+TransitionDoor = HalfLivingRoomLeftDoorTop or HalfLivingRoomLeftDoorBottom or HalfLivingRoomRightDoorTop or HalfLivingRoomRightDoorBottom or HalfOutsideDoorClosedLeft or HalfOutsideDoorClosedRight or HalfBathroomDoorOpen
+
+RealBackground = Grass or Path or Carpet or Tile1 or Tile2
+RealSolid = RealWall or RealWindowVert or RealTopWindow or RealBottomWindow
+RealDoor = RealLivingRoomLeftDoorTop or RealLivingRoomLeftDoorBottom or RealLivingRoomRightDoorTop or RealLivingRoomRightDoorBottom or RealOutsideDoorClosedLeft or RealOutsideDoorClosedRight or RealBathroomDoorOpen
+
+EndingCover = EndingCover1 or EndingCover2 or EndingCover3 or EndingCover4 or EndingCover5
+
+
+=======
+SOUNDS
+=======
+
+sfx0 99804907 (walking on blood)
+sfx1 35001908 (chopping parts; invoked manually because we don't want it to play a few times)
+
+sfx3 11004302 (same as Hand Move; invoked manually in the intro cutscene)
+sfx4 17344302 (final level - border swing)
+sfx5 27875502 (dead hand crumble; invoked manually so it doesn't trigger in the final level)
+sfx6 25337907 (pick up axe)
+sfx7 38200107 (get out of bed; invoked manually so it doesn't trigger in the final level)
+
+Player CantMove 17402904
+
+Hand Move 11004302
+
+SoundTestTrigger Destroy 43550102
+
+BedUpperLeftOccupied Create 38200107 (get in bed; same as sfx7 get out of bed)
+BedroomDoorClosedRight Destroy 56950107 (open door)
+OutsideDoorClosedLeft Destroy 56950107
+IntroChoppablePart Create 11004302 (same as Hand Move)
+
+ChoppedHand Destroy 35001908 (same as sfx1 chopping parts)
+BreathStep1Token Destroy 594902 (inhale)
+BreathStep5Token Destroy 87865702 (exhale)
+
+SuperAxeToken Destroy 17402904 (rage intensifies)
+SuperAxeBump1Token Destroy 24993704
+SuperAxeBump2Token Destroy 90333504
+SuperAxeBump3Token Destroy 49335504
+SuperAxeBump4Token Destroy 99720704
+
+BrokenCoverLeft2 Destroy 88982108 (border shatter)
+BrokenCoverRight2 Destroy 88982108
+BrokenCoverUp2 Destroy 88982108
+BrokenCoverDown2 Destroy 88982108
+
+EndingOutsideDoorOpen Destroy 73601104 (close door)
+EndingBedroomDoorOpenBottom Destroy 73601104
+
+Axe Create 38200107 (drop off the axe in the final level)
+SleepPhase5Token Create 74801509 (chirp chirp)
+SleepPhase6Token Create 787109
+SleepPhase7Token Create 25857509
+SleepPhase10Token Create 32489709
+SleepPhase17Token Create 37159509
+
+(93160508)
+(17699502)
+
+
+================
+COLLISIONLAYERS
+================
+
+(This hierarchy is a complete mess, sorry)
+
+Background
+OuterBackground, Gradient, EndingOuterBackground, EndingGradient, TransitionBackground, RealBackground, SoundTestTrigger, SoundTestTriggerDisabled
+TrekWinBar
+Blood, Footprint, TrekRandomBlood, PathToken, PathSpawner, WallToken, CarpetToken, TileToken, BottomWindowToken, TopWindowToken
+Axe, Door, TransitionDoor, RealDoor, HalfAxe
+UsedAxeToken, AxeDeactivator, AxeDropoff
+Player, Wall, Box, Window, ChoppablePart, Bed, DoorBlocker, ChoppedHand, ChoppedBlood, DeadChoppablePart, TrekShatterTrigger, TrekShatterSeed, TrekShatterPlaceholder, TrekKillHandsTrigger, TransitionSolid, RealSolid
+TrekShatterFuse
+HandSniffer
+Wall2Token, BloodToken, MovementCheckToken, ShatterToken, QueueShatterToken
+BeginKillingHandsToken
+KillHandsToken
+TrekKillingHandsToken
+Cover, AxeCover, OverkillCheckToken, BreathToken, IntroCutscenePhaseToken, BrokenCover, SleepPhaseToken
+BreathStepToken
+IntroCutsceneCover, BloodyPlayerToken
+RealBed, IntroChoppablePart
+TrappedToken, TrappedCheckToken, TrappedPhaseToken, OpenEyesPhaseToken
+SuperAxePhaseToken, SuperAxeChoppingToken, TrappedProceedAfterFade
+EndingGenerationToken, EndingBedroomRenewalStartToken, RenewalToken, EndingCover, OpenEyesCover
+TrappedInstantKill, TrappedHandMovementCheck, TrappedHandsHaveFinishedMovingCheck
+InteractionDisabled
+ResetDisabled
+Timer
+
+
+======
+RULES
+======
+
+[> Player | Box] -> [> Player | > Box]
+
+[ResetDisabled] -> checkpoint
+
+
+(======
+ TIMERS
+ ======)
+
+(Here are implemented timers that count down, letting you wait for some amount of time before doing something.)
+
+(These timers are by default *non-blocking*, meaning they use realtime mode to count down and the player can do whatever they want during them. This is behavior I want for a few cutscenes.)
+
+(To stop a player from moving while a timer is going, instantiate one with an InteractionDisabled token on top of it, and the player's inputs will be eaten with again turns until the timer goes away.)
+
+(Count down)
+[Timer1] -> []
+[Timer2] -> [Timer1]
+[Timer3] -> [Timer2]
+[Timer4] -> [Timer3]
+[Timer5] -> [Timer4]
+[Timer6] -> [Timer5]
+[Timer7] -> [Timer6]
+[Timer8] -> [Timer7]
+[Timer9] -> [Timer8]
+[Timer10] -> [Timer9]
+[Timer11] -> [Timer10]
+[Timer12] -> [Timer11]
+[Timer13] -> [Timer12]
+[Timer14] -> [Timer13]
+[Timer15] -> [Timer14]
+[Timer16] -> [Timer15]
+[Timer17] -> [Timer16]
+[Timer18] -> [Timer17]
+[Timer19] -> [Timer18]
+[Timer20] -> [Timer19]
+
+(Kill movement while a timer is active, if that's what we want to do.)
+[InteractionDisabled no Timer] -> []
+late [InteractionDisabled] -> [InteractionDisabled] again
+
+
+(================
+ LEVEL GENERATION
+ ================)
+
+(Alternate wall and window types by row.)
+VERTICAL [Wall2Token | | ] -> [Wall2Token | | Wall2Token]
+HORIZONTAL [Wall2Token | ] -> [Wall2Token | Wall2Token]
+[Wall2Token Wall1] -> [Wall2Token Wall2]
+[Wall2Token WindowHoriz1] -> [Wall2Token WindowHoriz2]
+[Wall2Token WindowVert1] -> [Wall2Token WindowVert2]
+[Wall2Token] -> []
+
+
+(=============
+ HAND REACHING
+ =============)
+
+(Used to kick off hand reaching on the next turn after the player moves.)
+[Moving NoncutscenePlayer] -> [Moving NoncutscenePlayer] again
+
+(Scan down from the player and see if there's a hand with a line of sight on them. If so, move that hand and any arm pieces attached to it one space toward the player, repeating the turn until it can't move.)
+DOWN [NoncutscenePlayer | no SightBlocker] -> [NoncutscenePlayer | HandUpSniffer]
+DOWN [HandUpSniffer | no SightBlocker] -> [HandUpSniffer | HandUpSniffer]
+DOWN [HandUpSniffer | HandUp] -> [HandUpSniffer | < HandUp] again
+DOWN [< HandUp | ArmVert] -> [< HandUp | < ArmVert]
+
+(Same as above, except upward)
+UP [NoncutscenePlayer | no SightBlocker] -> [NoncutscenePlayer | HandDownSniffer]
+UP [HandDownSniffer | no SightBlocker] -> [HandDownSniffer | HandDownSniffer]
+UP [HandDownSniffer | HandDown] -> [HandDownSniffer | < HandDown] again
+UP [< HandDown | ArmVert] -> [< HandDown | < ArmVert]
+
+(Arm stretching & movement propagation for vertical arms)
+VERTICAL [< ArmVert | ArmVert] -> [< ArmVert | < ArmVert]
+late [CoverVert no Hand no Arm] -> [CoverVert ArmVert]
+
+(Same as above, except rightward)
+RIGHT [NoncutscenePlayer | no SightBlocker] -> [NoncutscenePlayer | HandLeftSniffer]
+RIGHT [HandLeftSniffer | no SightBlocker] -> [HandLeftSniffer | HandLeftSniffer]
+RIGHT [HandLeftSniffer | HandLeft] -> [HandLeftSniffer | < HandLeft] again
+RIGHT [< HandLeft | ArmHoriz] -> [< HandLeft | < ArmHoriz]
+
+(Same as above, except leftward)
+LEFT [NoncutscenePlayer | no SightBlocker] -> [NoncutscenePlayer | HandRightSniffer]
+LEFT [HandRightSniffer | no SightBlocker] -> [HandRightSniffer | HandRightSniffer]
+LEFT [HandRightSniffer | HandRight] -> [HandRightSniffer | < HandRight] again
+LEFT [< HandRight | ArmHoriz] -> [< HandRight | < ArmHoriz]
+
+(Arm stretching & movement propagation for horizontal arms)
+HORIZONTAL [< ArmHoriz | ArmHoriz] -> [< ArmHoriz | < ArmHoriz]
+late [CoverHoriz no Hand no Arm] -> [CoverHoriz ArmHoriz]
+
+(Clean up)
+[HandSniffer] -> []
+
+
+(========
+ CHOPPIN'
+ ========)
+
+(Kill that hand or arm dead.)
+[Axe OuterBackground no UsedAxeToken no AxeCover no AxeDeactivator] [ChoppablePart no Cover | < Player] -> [Axe OuterBackground UsedAxeToken] [BloodToken no ChoppablePart | Player] sfx1
+
+(Tire out the player.)
+[BloodToken] [TiredPlayer2] -> [BloodToken] [TiredPlayer4]
+[BloodToken] [NormalPlayer] -> [BloodToken] [TiredPlayer2]
+
+(Leave a random puddle of blood in its place. If there was already blood there, don't overwrite it.)
+late [BloodToken Blood] -> [Blood]
+late [BloodToken] -> [random Blood1 random Blood2 random Blood3 random Blood4]
+
+(Dead parts crumble to the touch.)
+[> Player | DeadChoppablePart] -> [Player | ] sfx5
+
+
+(=====
+ BLOOD
+ =====)
+
+(Before the player moves, leave a token on their location that records whether they were trying to move horizontally or vertically.)
+VERTICAL [> Player] -> [VerticalMovementCheckToken > Player]
+HORIZONTAL [> Player] -> [HorizontalMovementCheckToken > Player]
+
+(Check if the player walked onto some blood: that is, their current position is on top of blood, and their position is different than the one they started the turn on. If so, play the sound effect.)
+late [MovementCheckToken no Player] [Player Blood] -> sfx0
+
+(Move any extant blood token back onto the player, if they moved.)
+late [BloodyPlayerToken no Player] [Player] -> [] [Player BloodyPlayerToken]
+
+(Get bloody.)
+late [Player Blood] -> [Player BloodyPlayerToken1 Blood]
+
+(If the player is bloody and moved, leave footprints at their current location based on the direction they moved.)
+late [VerticalMovementCheckToken no Player] [BloodyPlayerToken1 no Blood] -> [] [BloodyPlayerToken2 FootprintVert1]
+late [VerticalMovementCheckToken no Player] [BloodyPlayerToken2] -> [] [FootprintVert2]
+
+(Copy/paste for horizontal)
+late [HorizontalMovementCheckToken no Player] [BloodyPlayerToken1 no Blood] -> [] [BloodyPlayerToken2 FootprintHoriz1]
+late [HorizontalMovementCheckToken no Player] [BloodyPlayerToken2] -> [] [FootprintHoriz2]
+
+(Clean up)
+late [MovementCheckToken] -> []
+
+
+(==========
+ SOUND TEST
+ ==========)
+
+(Play a sound when the player steps on the X. The entity swapping here is necessariy because this is a realtime game, so if we just did a [Player SoundTestTrigger] -> sfx then it would play every tick.)
+late [Player SoundTestTrigger] -> [Player SoundTestTriggerDisabled]
+late [SoundTestTriggerDisabled no Player] -> [SoundTestTrigger]
+
+
+(===========
+ FIRST LEVEL
+ ===========)
+
+(Part 1: Cutscene)
+
+(Generate the bed and cover up the background.)
+RIGHT [RealBedUpperLeft | | ] -> [RealBedUpperLeft BedUpperLeft | RealBedUpperFoot BedUpperFoot | RealBedUpperFoot BedUpperFoot]
+DOWN [RealBedUpperLeft | ] -> [RealBedUpperLeft | RealBedLowerLeft BedLowerLeft]
+RIGHT [RealBedLowerLeft | | ] -> [RealBedLowerLeft | RealBedLowerFoot BedLowerFoot | RealBedLowerFoot BedLowerFoot]
+[RealBedUpperLeft no SleepPhaseToken] [] -> [RealBedUpperLeft] [IntroCutsceneCover]
+
+(Move the opening cutscene hands.)
+DOWN [IntroHandUp] -> [< IntroHandUp]
+late DOWN [IntroHandUp | ] -> [IntroHandUp | IntroArmVert]
+DOWN [IntroHandDown] -> [> IntroHandDown]
+late DOWN [ | IntroHandDown] -> [IntroArmVert | IntroHandDown]
+RIGHT [IntroHandLeft] -> [< IntroHandLeft]
+late RIGHT [IntroHandLeft | ] -> [IntroHandLeft | IntroArmHoriz]
+RIGHT [IntroHandRight] -> [> IntroHandRight]
+late RIGHT [ | IntroHandRight] -> [IntroArmHoriz | IntroHandRight]
+
+(Timed sound effect deployment)
+[IntroCutscenePhase1 no Timer] -> [IntroCutscenePhase2 Timer17 InteractionDisabled] sfx3
+[IntroCutscenePhase2 no Timer] -> [IntroCutscenePhase3 Timer1 InteractionDisabled] sfx3
+[IntroCutscenePhase3 no Timer] -> [IntroCutscenePhase4 Timer1 InteractionDisabled] sfx3
+[IntroCutscenePhase4 no Timer] -> [IntroCutscenePhase5 Timer12 InteractionDisabled] sfx3
+[IntroCutscenePhase5 no Timer] -> [IntroCutscenePhase6 Timer20 InteractionDisabled] sfx3
+[IntroCutscenePhase6 no Timer] -> [IntroCutscenePhase7 Timer10 InteractionDisabled]
+
+(Spawn hands from each direction so they all reach the bed at the same time.)
+DOWN [IntroCutscenePhase7 no Timer] [RealBed | | | | | | | | | | ] -> [IntroCutscenePhase7 no Timer] [RealBed | | | | | | | | | | IntroHandUp]
+RIGHT [IntroCutscenePhase7 no Timer] [RealBed | | | | | | | | | | | ] -> [IntroCutscenePhase7 no Timer] [RealBed | | | | | | | | | | | IntroHandLeft]
+[IntroCutscenePhase7 no Timer] -> [IntroCutscenePhase8 Timer2 InteractionDisabled]
+
+RIGHT [IntroCutscenePhase8 no Timer] [ | | | | | | | | | RealBed] -> [IntroCutscenePhase8 no Timer] [IntroHandRight | | | | | | | | | RealBed]
+[IntroCutscenePhase8 no Timer] -> [IntroCutscenePhase9 Timer3 InteractionDisabled]
+
+DOWN [IntroCutscenePhase9 no Timer] [ | | | | | RealBed] -> [IntroCutscenePhase9 no Timer] [IntroHandDown | | | | | RealBed]
+[IntroCutscenePhase9 no Timer] -> [IntroCutscenePhase10 Timer4 InteractionDisabled]
+
+(When the hands reach the bed, clear the cutscene and activate the player.)
+[IntroCutscenePhase10 no Timer] [IntroChoppablePart] -> [IntroCutscenePhase10] []
+[IntroCutscenePhase10 no Timer] [IntroCutsceneCover] -> [IntroCutscenePhase10] []
+DOWN [IntroCutscenePhase10 no Timer] [RealBedUpperLeft | RealBedLowerLeft] -> [IntroCutscenePhase10] [BedUpperLeftOccupied | BedLowerLeftOccupied]
+[IntroCutscenePhase10 no Timer] [RealBed] -> [IntroCutscenePhase10] []
+[IntroCutscenePhase10 no Timer] -> []
+
+(Part 2: the actual level)
+
+(Finish up the doors.)
+RIGHT [ | BedroomDoorClosedRight] -> [BedroomDoorClosedLeft | BedroomDoorClosedRight]
+DOWN [ | LivingRoomLeftDoorBottom] -> [LivingRoomLeftDoorTop | LivingRoomLeftDoorBottom]
+DOWN [ | LivingRoomRightDoorBottom] -> [LivingRoomRightDoorTop | LivingRoomRightDoorBottom]
+RIGHT [ | OutsideDoorClosedRight] -> [OutsideDoorClosedLeft | OutsideDoorClosedRight]
+
+(Open the bedroom door when the player walks into it.)
+RIGHT [> Player | BedroomDoorClosedRight] -> [Player BedroomDoorOpenBottom | ]
+DOWN [ | BedroomDoorOpenBottom] -> [BedroomDoorOpenTop | BedroomDoorOpenBottom]
+
+(Open the outside door when the player walks into it.)
+RIGHT [OutsideDoorClosedLeft | OutsideDoorClosedRight | < Player] -> [ | OutsideDoorOpen | Player]
+
+(Get out of bed.)
+late DOWN [no BedUpperLeftOccupied | BedLowerLeftOccupied] -> [ | BedLowerLeft] sfx7
+DOWN [ | < BedUpperLeftOccupied] -> [NormalPlayer | BedUpperLeft]
+DOWN [> BedUpperLeftOccupied | | ] -> [BedUpperLeft | | NormalPlayer]
+RIGHT [> BedUpperLeftOccupied | | | ] -> [BedUpperLeft | | | NormalPlayer]
+
+(Get back into bed?)
+[Bed | < Player] [BedLowerLeft] -> [Bed | < Player ] [BedLowerLeftOccupied]
+[Bed | < Player] [BedUpperLeft] -> [Bed | ] [BedUpperLeftOccupied]
+
+
+(===================
+ AXE INTRO CUTSCENES
+ ===================)
+
+(When the player picks up the axe, activate the axe swings.)
+late [Player Axe] [AxeDeactivator] -> [Player Axe] []
+late [Player Axe no OuterBackground no Gradient no AxeDropoff] -> [Player ResetDisabled] sfx6 checkpoint (additional entity checks here are so you can step on the axe in the last levels)
+
+(This is the part where the player has to chop the hand apart piece by piece.)
+DOWN [AxeCover Axe no AxeDeactivator] [HandDown | < Player] -> [AxeCover Axe] [ChoppedHand1 | Player] sfx1
+DOWN [ChoppedHand1 | UP Player] -> [ChoppedHand2 | Player]
+DOWN [ChoppedHand2 | UP Player] -> [ChoppedHand3 | Player]
+DOWN [ChoppedHand3 | UP Player] -> [ChoppedHand4 | Player]
+DOWN [ChoppedHand4 | UP Player] -> [ChoppedHand5 | Player]
+DOWN [ChoppedHand5 | UP Player] -> [ChoppedHand6 | TiredPlayer1]
+DOWN [ChoppedHand6 | UP Player] -> [ChoppedHand7 | Player]
+DOWN [ChoppedHand7 | UP Player] -> [ChoppedHand8 | Player]
+DOWN [ChoppedHand8 | UP Player] -> [ChoppedHand9 | Player]
+DOWN [ChoppedHand9 | UP Player] -> [ChoppedHand10 | Player]
+DOWN [ChoppedHand10 | UP Player] -> [ChoppedHand11 | Player]
+DOWN [ChoppedHand11 | UP Player] -> [ChoppedHand12 | TiredPlayer2]
+DOWN [ChoppedHand12 | UP Player] -> [ChoppedHand13 | Player]
+DOWN [ChoppedHand13 | UP Player] -> [ChoppedHand14 | Player]
+DOWN [ChoppedHand14 | UP Player] -> [ChoppedHand15 | Player]
+DOWN [ChoppedHand15 | UP Player] -> [ChoppedHand16 | Player]
+DOWN [ChoppedHand16 | UP Player] -> [ChoppedHand17 | Player]
+DOWN [ChoppedHand17 | UP Player] -> [ChoppedHand18 | Player]
+DOWN [ChoppedHand18 | UP Player] -> [ChoppedHand19 | TiredPlayer3]
+DOWN [ChoppedHand19 | UP Player] -> [ChoppedHand20 | Player]
+DOWN [ChoppedHand20 | UP Player] -> [ChoppedHand21 | Player]
+DOWN [ChoppedHand21 | UP Player] -> [ChoppedHand22 | Player]
+DOWN [ChoppedHand22 | UP Player] -> [ChoppedHand23 | Player]
+DOWN [ChoppedHand23 | UP Player] -> [ChoppedHand24 | Player]
+DOWN [ChoppedHand24 | UP Player] -> [ChoppedHand25 | TiredPlayer4]
+DOWN [ChoppedHand25 | UP Player] -> [ChoppedHand26 | Player]
+DOWN [ChoppedHand26 | UP Player] -> [ChoppedHand27 | Player]
+DOWN [ChoppedHand27 | UP Player] -> [ChoppedHand28 | Player]
+DOWN [ChoppedHand28 | UP Player] -> [ChoppedHand29 | Player]
+DOWN [ChoppedHand29 | UP Player] -> [ChoppedHand30 | Player]
+(Cancel movement besides up.)
+DOWN [ChoppedHand | DOWN Player] -> [ChoppedHand | Player]
+DOWN [ChoppedHand | LEFT Player] -> [ChoppedHand | Player]
+DOWN [ChoppedHand | RIGHT Player] -> [ChoppedHand | Player]
+
+(Overkill: let the player keep mashing up and making sounds happen until they get tired and don't push anything for 10 ticks.)
+[UP TiredPlayer OverkillCheckToken] -> [TiredPlayer OverkillCheck1Token] sfx0
+[Moving TiredPlayer OverkillCheckToken] -> [TiredPlayer OverkillCheckToken]
+[TiredPlayer OverkillCheck10Token] -> [TiredPlayer Breath1Token BreathStep1Token Timer1]
+[TiredPlayer OverkillCheck9Token] -> [TiredPlayer OverkillCheck10Token]
+[TiredPlayer OverkillCheck8Token] -> [TiredPlayer OverkillCheck9Token]
+[TiredPlayer OverkillCheck7Token] -> [TiredPlayer OverkillCheck8Token]
+[TiredPlayer OverkillCheck6Token] -> [TiredPlayer OverkillCheck7Token]
+[TiredPlayer OverkillCheck5Token] -> [TiredPlayer OverkillCheck6Token]
+[TiredPlayer OverkillCheck4Token] -> [TiredPlayer OverkillCheck5Token]
+[TiredPlayer OverkillCheck3Token] -> [TiredPlayer OverkillCheck4Token]
+[TiredPlayer OverkillCheck2Token] -> [TiredPlayer OverkillCheck3Token]
+[TiredPlayer OverkillCheck1Token] -> [TiredPlayer OverkillCheck2Token]
+DOWN [ChoppedHand30 | UP Player] -> [ChoppedBlood | TiredPlayer5 OverkillCheck1Token]
+
+(Breathe in)
+[Moving TiredPlayer BreathToken] -> [TiredPlayer BreathToken]
+[TiredPlayer5 BreathToken BreathStep1Token no Timer] -> [TiredPlayer4 BreathToken BreathStep2Token Timer1 InteractionDisabled]
+
+(Short breath - hold)
+[TiredPlayer4 Breath1Token BreathStep2Token no Timer] -> [TiredPlayer3 Breath1Token BreathStep5Token Timer4 InteractionDisabled]
+[TiredPlayer4 Breath2Token BreathStep2Token no Timer] -> [TiredPlayer3 Breath2Token BreathStep5Token Timer5 InteractionDisabled]
+[TiredPlayer4 Breath3Token BreathStep2Token no Timer] -> [TiredPlayer3 Breath3Token BreathStep5Token Timer6 InteractionDisabled]
+[TiredPlayer4 Breath4Token BreathStep2Token no Timer] -> [TiredPlayer3 Breath4Token BreathStep5Token Timer8 InteractionDisabled]
+
+(Long breath)
+[TiredPlayer4 LongBreathToken BreathStep2Token no Timer] -> [TiredPlayer3 LongBreathToken BreathStep3Token Timer1 InteractionDisabled]
+(hold)
+[TiredPlayer3 Breath5Token BreathStep3Token no Timer] -> [TiredPlayer2 Breath5Token BreathStep4Token Timer10 InteractionDisabled]
+[TiredPlayer3 Breath6Token BreathStep3Token no Timer] -> [TiredPlayer2 Breath6Token BreathStep4Token Timer12 InteractionDisabled]
+
+(Breathe out)
+[TiredPlayer2 LongBreathToken BreathStep4Token no Timer] -> [TiredPlayer3 LongBreathToken BreathStep5Token Timer1 InteractionDisabled]
+[TiredPlayer3 BreathToken BreathStep5Token no Timer] -> [TiredPlayer4 BreathToken BreathStep6Token Timer1 InteractionDisabled]
+(restart)
+[TiredPlayer4 Breath1Token BreathStep6Token no Timer] -> [TiredPlayer5 Breath2Token BreathStep1Token Timer4 InteractionDisabled]
+[TiredPlayer4 Breath2Token BreathStep6Token no Timer] -> [TiredPlayer5 Breath3Token BreathStep1Token Timer5 InteractionDisabled]
+[TiredPlayer4 Breath3Token BreathStep6Token no Timer] -> [TiredPlayer5 Breath4Token BreathStep1Token Timer6 InteractionDisabled]
+[TiredPlayer4 Breath4Token BreathStep6Token no Timer] -> [TiredPlayer5 Breath5Token BreathStep1Token Timer8 InteractionDisabled]
+[TiredPlayer4 Breath5Token BreathStep6Token no Timer] -> [TiredPlayer5 Breath6Token BreathStep1Token Timer10 InteractionDisabled]
+[TiredPlayer4 Breath6Token BreathStep6Token no Timer] -> [TiredPlayer5 Breath7Token BreathStep1Token Timer18 InteractionDisabled]
+
+(Resume)
+[TiredPlayer4 Breath7Token BreathStep2Token no Timer] -> [TiredPlayer3 Breath7Token BreathStep3Token Timer1 InteractionDisabled]
+[TiredPlayer3 Breath7Token BreathStep3Token no Timer] -> [TiredPlayer2 Breath7Token BreathStep4Token]
+[Breath7Token BreathStep4Token no Timer] [ChoppedBlood] -> [Breath7Token BreathStep4Token] [Blood1]
+[Breath7Token BreathStep4Token no Timer] [AxeCover] -> [Breath7Token BreathStep4Token] []
+[Breath7Token BreathStep4Token no Timer] [Axe] [ResetDisabled] -> [] [Axe UsedAxeToken] [] checkpoint
+
+
+(=======
+ TRAPPED
+ =======)
+
+(Check if the player has exhausted all their axe swings. If so, the player will have a TrappedCheckToken on them after this block.)
+[TrappedToken] [Player] -> [TrappedToken] [Player TrappedCheckToken]
+[Axe no UsedAxeToken] [TrappedCheckToken] -> [Axe] []
+[TrappedCheckToken] [TrappedToken] -> [TrappedCheckToken] []
+
+(If the player is trapped, first pause)
+[TrappedCheckToken] -> [TrappedPhase1Token Timer5 InteractionDisabled]
+[TrappedPhase1Token no Timer] -> [TrappedPhase2Token]
+
+(Then extend every hand from the border.)
+[TrappedPhase2Token] [Hand] -> [TrappedPhase2Token] [Hand TrappedHandMovementCheck]
+[TrappedPhase2Token] [HandLeft] -> [TrappedPhase2Token] [LEFT HandLeft]
+[TrappedPhase2Token] [HandRight] -> [TrappedPhase2Token] [RIGHT HandRight]
+[TrappedPhase2Token] [HandUp] -> [TrappedPhase2Token] [UP HandUp]
+[TrappedPhase2Token] [HandDown] -> [TrappedPhase2Token] [DOWN HandDown]
+(Copy paste of the arm extension code from HAND REACHING above; could be removed by moving that code somewhere after this block, but I don't want to)
+DOWN [< HandUp | ArmVert] -> [< HandUp | < ArmVert]
+UP [< HandDown | ArmVert] -> [< HandDown | < ArmVert]
+VERTICAL [< ArmVert | ArmVert] -> [< ArmVert | < ArmVert]
+late [CoverVert no Hand no Arm] -> [CoverVert ArmVert]
+RIGHT [< HandLeft | ArmHoriz] -> [< HandLeft | < ArmHoriz]
+LEFT [< HandRight | ArmHoriz] -> [< HandRight | < ArmHoriz]
+HORIZONTAL [< ArmHoriz | ArmHoriz] -> [< ArmHoriz | < ArmHoriz]
+late [CoverHoriz no Hand no Arm] -> [CoverHoriz ArmHoriz]
+
+(Clean up and check if any hands moved in the last turn)
+late [TrappedPhase2Token] [Player] -> [TrappedPhase2Token] [Player TrappedHandsHaveFinishedMovingCheck]
+late [TrappedHandMovementCheck no Hand] [TrappedHandsHaveFinishedMovingCheck] -> [TrappedHandMovementCheck] [] again
+late [TrappedHandMovementCheck] -> []
+
+(If no hands moved, then kill the player. If the instant kill token is present, then do it immediately without interaction.)
+late [TrappedInstantKill] [Player TrappedPhase2Token TrappedHandsHaveFinishedMovingCheck] -> [TrappedInstantKill] [Player TrappedPhase3Token Timer3 InteractionDisabled] again (this is a late rule, so we need an again here to lock the controls or else the player will have one frame where they can move before the timer activates)
+[TrappedInstantKill] [TiredPlayer4 TrappedPhase3Token no Timer] -> [TrappedInstantKill] [TiredPlayer5 TrappedPhase3Token Timer3 InteractionDisabled]
+[TrappedInstantKill] [TiredPlayer5 TrappedPhase3Token no Timer] -> [TrappedInstantKill] [TiredPlayer6 TrappedPhase3Token Timer3 InteractionDisabled]
+[TrappedInstantKill] [TiredPlayer6 TrappedPhase3Token no Timer] -> [TrappedInstantKill] [TiredPlayer7 TrappedPhase3Token Timer3 InteractionDisabled]
+
+(If there's no instant kill token, then let the player flail around a bit while they die slowly.)
+late [Player TrappedPhase2Token TrappedHandsHaveFinishedMovingCheck] -> [Player TrappedPhase3Token Timer20]
+[TiredPlayer4] [TrappedPhase3Token no Timer] -> [TiredPlayer5] [TrappedPhase3Token Timer20]
+[TiredPlayer5] [TrappedPhase3Token no Timer] -> [TiredPlayer6] [TrappedPhase3Token Timer20]
+[TiredPlayer6] [TrappedPhase3Token no Timer] -> [TiredPlayer7] [TrappedPhase3Token Timer20 InteractionDisabled]
+
+(Pause and fade out)
+[TrappedPhase3Token no Timer] -> [TrappedPhase4Token Timer10 InteractionDisabled]
+[TrappedPhase4Token no Timer] [] -> [TrappedPhase4Token] [EndingCover1]
+[TrappedPhase4Token no Timer] -> [TrappedPhase5Token Timer2 InteractionDisabled]
+[TrappedPhase5Token no Timer] [EndingCover1] -> [TrappedPhase5Token] [EndingCover2]
+[TrappedPhase5Token no Timer] -> [TrappedPhase6Token Timer2 InteractionDisabled]
+[TrappedPhase6Token no Timer] [EndingCover2] -> [TrappedPhase6Token] [EndingCover3]
+[TrappedPhase6Token no Timer] -> [TrappedPhase7Token Timer2 InteractionDisabled]
+[TrappedPhase7Token no Timer] [EndingCover3] -> [TrappedPhase7Token] [EndingCover4]
+[TrappedPhase7Token no Timer] -> [TrappedPhase8Token Timer2 InteractionDisabled]
+[TrappedPhase8Token no Timer] [EndingCover4] -> [TrappedPhase8Token] [EndingCover5]
+[TrappedPhase8Token no Timer] -> [TrappedPhase9Token Timer10 InteractionDisabled]
+
+(If we're on one of the first two trapped levels, then proceed after fading out. Otherwise, move on to the next ruleset...)
+[TrappedProceedAfterFade] [TrappedPhase9Token no Timer] -> win
+
+
+(======================
+ LIBERATION SHENANIGANS
+ ======================)
+
+(Part 1: open your eyes)
+
+(Randomly assign one of four undissolve sequences to every tile.)
+[TrappedPhase9Token no Timer MOVING Player] [EndingCover] -> [TrappedPhase9Token MOVING Player] [random OpenEyesCover11 random OpenEyesCover21 random OpenEyesCover31 random OpenEyesCover41]
+[TrappedPhase9Token MOVING Player] -> [OpenEyesPhase1Token TiredPlayer5]
+
+(Undissolve 1 -> 2)
+[OpenEyesPhase1Token MOVING Player] [OpenEyesCover11] -> [OpenEyesPhase1Token MOVING Player] [OpenEyesCover12]
+[OpenEyesPhase1Token MOVING Player] [OpenEyesCover21] -> [OpenEyesPhase1Token MOVING Player] [OpenEyesCover22]
+[OpenEyesPhase1Token MOVING Player] [OpenEyesCover31] -> [OpenEyesPhase1Token MOVING Player] [OpenEyesCover32]
+[OpenEyesPhase1Token MOVING Player] [OpenEyesCover41] -> [OpenEyesPhase1Token MOVING Player] [OpenEyesCover42]
+[OpenEyesPhase1Token MOVING Player] -> [OpenEyesPhase2Token Player]
+
+(Undissolve 2 -> 3)
+[OpenEyesPhase2Token MOVING Player] [OpenEyesCover12] -> [OpenEyesPhase2Token MOVING Player] [OpenEyesCover13]
+[OpenEyesPhase2Token MOVING Player] [OpenEyesCover22] -> [OpenEyesPhase2Token MOVING Player] [OpenEyesCover23]
+[OpenEyesPhase2Token MOVING Player] [OpenEyesCover32] -> [OpenEyesPhase2Token MOVING Player] [OpenEyesCover33]
+[OpenEyesPhase2Token MOVING Player] [OpenEyesCover42] -> [OpenEyesPhase2Token MOVING Player] [OpenEyesCover43]
+[OpenEyesPhase2Token MOVING Player] -> [OpenEyesPhase3Token Player]
+
+(Undissolve 3 -> 4)
+[OpenEyesPhase3Token MOVING Player] [OpenEyesCover13] -> [OpenEyesPhase3Token MOVING Player] [OpenEyesCover14]
+[OpenEyesPhase3Token MOVING Player] [OpenEyesCover23] -> [OpenEyesPhase3Token MOVING Player] [OpenEyesCover24]
+[OpenEyesPhase3Token MOVING Player] [OpenEyesCover33] -> [OpenEyesPhase3Token MOVING Player] [OpenEyesCover34]
+[OpenEyesPhase3Token MOVING Player] [OpenEyesCover43] -> [OpenEyesPhase3Token MOVING Player] [OpenEyesCover44]
+[OpenEyesPhase3Token MOVING Player] -> [OpenEyesPhase4Token Player]
+
+(Undissolve 4 -> 5 and return control to the player)
+[OpenEyesPhase4Token MOVING Player] [OpenEyesCover] -> [OpenEyesPhase4Token MOVING Player] []
+[OpenEyesPhase4Token MOVING Player] -> [Player]
+
+(Part 2: getting mad)
+
+(If this activates, the player has attempted a chop past the allotted two, so drop a token.)
+[SuperAxePhaseToken] [ChoppablePart no Cover | < Player] -> [SuperAxePhaseToken] [ChoppablePart SuperAxeChoppingToken | Player]
+
+(The player has to bump into a part five times before they snap and the super axe activates.)
+[SuperAxeBump4Token] [SuperAxeChoppingToken] [TiredPlayer2] -> [SuperAxeActiveToken] [] [TiredPlayer1]
+[SuperAxeBump3Token] [SuperAxeChoppingToken] [TiredPlayer3] -> [SuperAxeBump4Token] [] [TiredPlayer2]
+[SuperAxeBump2Token] [SuperAxeChoppingToken] [TiredPlayer4] -> [SuperAxeBump3Token] [] [TiredPlayer3]
+[SuperAxeBump1Token] [SuperAxeChoppingToken] [TiredPlayer5] -> [SuperAxeBump2Token] [] [TiredPlayer4]
+[SuperAxeToken] [SuperAxeChoppingToken] -> [SuperAxeBump1Token] []
+
+(Turn the player back to normal before they start chopping again.)
+[SuperAxeChoppingToken] [TiredPlayer1] -> [SuperAxeChoppingToken] [NormalPlayer]
+
+(Part 3: unlimited chopping)
+
+(Try to add one more X to the bottom of the stack, if there's room.)
+random DOWN [SuperAxeChoppingToken] [UsedAxeToken | no UsedAxeToken] -> [SuperAxeChoppingToken] [UsedAxeToken | UsedAxeToken]
+
+(Chop the heck out of that part.)
+[ChoppablePart SuperAxeChoppingToken no Cover] -> [BloodToken] sfx1
+
+(Part 4: shattering the border)
+
+(Well now, they're trying to chop the border.)
+RIGHT [SuperAxeActiveToken] [> Player | CoverLeft ChoppablePart] -> [SuperAxeActiveToken] [Player | BrokenCoverLeft1] sfx4
+RIGHT [> Player | BrokenCoverLeft1] -> [Player | BrokenCoverLeft2] sfx4
+RIGHT [> Player | BrokenCoverLeft2 | ] -> [Player | BrokenCoverLeft2 ShatterToken GradientRight2 | GradientRight1] sfx4
+LEFT [SuperAxeActiveToken] [> Player | CoverRight ChoppablePart] -> [SuperAxeActiveToken] [Player | BrokenCoverRight1] sfx4
+LEFT [> Player | BrokenCoverRight1] -> [Player | BrokenCoverRight2] sfx4
+LEFT [> Player | BrokenCoverRight2 | ] -> [Player | BrokenCoverRight2 ShatterToken GradientLeft2 | GradientLeft1] sfx4
+UP [SuperAxeActiveToken] [> Player | CoverDown ChoppablePart] -> [SuperAxeActiveToken] [Player | BrokenCoverDown1] sfx4
+UP [> Player | BrokenCoverDown1] -> [Player | BrokenCoverDown2] sfx4
+UP [> Player | BrokenCoverDown2 | ] -> [Player | BrokenCoverDown2 ShatterToken GradientUp2 | GradientUp1] sfx4
+DOWN [SuperAxeActiveToken] [> Player | CoverUp ChoppablePart] -> [SuperAxeActiveToken] [Player | BrokenCoverUp1] sfx4
+DOWN [> Player | BrokenCoverUp1] -> [Player | BrokenCoverUp2] sfx4
+DOWN [> Player | BrokenCoverUp2 | ] -> [Player | BrokenCoverUp2 ShatterToken GradientDown2 | GradientDown1] sfx4
+
+(Shatter the border segment and cascade.)
+DOWN [ | BrokenCoverLeft2 ShatterToken no Gradient | ] -> [QueueShatterToken | GradientRight1 | QueueShatterToken] sfx2
+DOWN [ | BrokenCoverLeft2 ShatterToken Gradient | ] -> [QueueShatterToken | Gradient | QueueShatterToken] sfx2
+DOWN [ | BrokenCoverRight2 ShatterToken no Gradient | ] -> [QueueShatterToken | GradientLeft1 | QueueShatterToken] sfx2
+DOWN [ | BrokenCoverRight2 ShatterToken Gradient | ] -> [QueueShatterToken | Gradient | QueueShatterToken] sfx2
+RIGHT [ | BrokenCoverDown2 ShatterToken no Gradient | ] -> [QueueShatterToken | GradientUp1 | QueueShatterToken] sfx2
+RIGHT [ | BrokenCoverDown2 ShatterToken Gradient | ] -> [QueueShatterToken | Gradient | QueueShatterToken] sfx2
+RIGHT [ | BrokenCoverUp2 ShatterToken no Gradient | ] -> [QueueShatterToken | GradientDown1 | QueueShatterToken] sfx2
+RIGHT [ | BrokenCoverUp2 ShatterToken Gradient | ] -> [QueueShatterToken | Gradient | QueueShatterToken] sfx2
+[UsedAxeToken no Axe] [QueueShatterToken] -> [UsedAxeToken] [QueueShatterToken] again (lock input on the liberation stage)
+
+(Wrap around the corners.)
+late VERTICAL [RightBorder | QueueShatterToken no Cover no BrokenCover no TrekShatterPlaceholder] -> [RightBorder QueueShatterToken | ]
+late VERTICAL [LeftBorder | QueueShatterToken no Cover no BrokenCover no TrekShatterPlaceholder] -> [LeftBorder QueueShatterToken | ]
+late HORIZONTAL [UpBorder | QueueShatterToken no Cover no BrokenCover no TrekShatterPlaceholder] -> [UpBorder QueueShatterToken | ]
+late HORIZONTAL [DownBorder | QueueShatterToken no Cover no BrokenCover no TrekShatterPlaceholder] -> [DownBorder QueueShatterToken | ]
+
+(Finalize the cascade for the next turn.)
+late [QueueShatterToken RightBorder ChoppablePart] -> [ShatterToken BrokenCoverLeft2]
+late [QueueShatterToken RightBorder] -> [ShatterToken BrokenCoverLeft2]
+late [QueueShatterToken LeftBorder ChoppablePart] -> [ShatterToken BrokenCoverRight2]
+late [QueueShatterToken LeftBorder] -> [ShatterToken BrokenCoverRight2]
+late [QueueShatterToken UpBorder ChoppablePart] -> [ShatterToken BrokenCoverDown2]
+late [QueueShatterToken UpBorder] -> [ShatterToken BrokenCoverDown2]
+late [QueueShatterToken DownBorder ChoppablePart] -> [ShatterToken BrokenCoverUp2]
+late [QueueShatterToken DownBorder] -> [ShatterToken BrokenCoverUp2]
+
+(Clean up)
+late [QueueShatterToken no TrekShatterPlaceholder no TrekKillHandsTrigger] -> []
+
+(Part 5: killing the hands)
+
+(Check if the border is gone.)
+[SuperAxeActiveToken] -> [SuperAxeActiveToken BeginKillingHandsToken]
+[BeginKillingHandsToken] [Cover] -> [] [Cover]
+[BeginKillingHandsToken] [BrokenCover] -> [] [BrokenCover]
+
+(If so, start killing the hands.)
+[UsedAxeToken no Axe] [BeginKillingHandsToken] [Player] -> [UsedAxeToken] [BeginKillingHandsToken] [Player KillHandsPhase1 Timer3 InteractionDisabled]
+[BeginKillingHandsToken SuperAxeActiveToken] -> []
+
+(Phase 1)
+[KillHandsPhase1 no Timer] [HandUp] -> [KillHandsPhase1 no Timer] [DyingHandUp]
+[KillHandsPhase1 no Timer] [HandDown] -> [KillHandsPhase1 no Timer] [DyingHandDown]
+[KillHandsPhase1 no Timer] [ArmVert] -> [KillHandsPhase1 no Timer] [DyingArmVert]
+[KillHandsPhase1 no Timer] [HandLeft] -> [KillHandsPhase1 no Timer] [DyingHandLeft]
+[KillHandsPhase1 no Timer] [HandRight] -> [KillHandsPhase1 no Timer] [DyingHandRight]
+[KillHandsPhase1 no Timer] [ArmHoriz] -> [KillHandsPhase1 no Timer] [DyingArmHoriz]
+[UsedAxeToken no Axe] [KillHandsPhase1 no Timer] -> [UsedAxeToken] [KillHandsPhase2 Timer3 InteractionDisabled]
+
+(Phase 2)
+[KillHandsPhase2 no Timer] [DyingHandUp] -> [KillHandsPhase2 no Timer] [DeadHandUp]
+[KillHandsPhase2 no Timer] [DyingHandDown] -> [KillHandsPhase2 no Timer] [DeadHandDown]
+[KillHandsPhase2 no Timer] [DyingArmVert] -> [KillHandsPhase2 no Timer] [DeadArmVert]
+[KillHandsPhase2 no Timer] [DyingHandLeft] -> [KillHandsPhase2 no Timer] [DeadHandLeft]
+[KillHandsPhase2 no Timer] [DyingHandRight] -> [KillHandsPhase2 no Timer] [DeadHandRight]
+[KillHandsPhase2 no Timer] [DyingArmHoriz] -> [KillHandsPhase2 no Timer] [DeadArmHoriz]
+[KillHandsPhase2 no Timer] -> []
+
+
+(===============
+ TREK SHATTERING
+ ===============)
+
+(Randomly change up the blood puddles. The checkpointing here ensures that, should the player restart for some reason, they'll remain the same random blood puddles and not reroll.)
+[TrekRandomBlood] -> [random Blood1 random Blood2 random Blood3 random Blood4] checkpoint
+
+(Generate the win zone at the bottom row and check for wins.)
+HORIZONTAL [TrekWinBar | ] -> [TrekWinBar | TrekWinBar]
+late [TrekkingPlayer TrekWinBar] -> win
+
+(Here we run the exact same border shattering and hand killing rules from the last section, except in realtime so the player has control. Because of the way the rules are defined back there, this mostly just works as long as the player is a TrekkingPlayer and no super chopping has been done.)
+
+(When the player is in line with any of the shatter triggers, activate them all.)
+late [Player | ... | TrekShatterTrigger] -> [Player | ... | TrekShatterSeed]
+late [TrekShatterSeed] [TrekShatterTrigger] -> [TrekShatterSeed][TrekShatterSeed]
+
+(Kick off shattering with a seed token that starts shattering all cover tiles next to it. We'll put one of these at the closest corner of each grid to the player.)
+late [TrekShatterSeed | Cover] -> [TrekShatterSeed | Cover QueueShatterToken]
+late [TrekShatterSeed | BrokenCover] -> [TrekShatterSeed | BrokenCover ShatterToken]
+late [TrekShatterSeed | TrekShatterPlaceholder] -> [TrekShatterSeed | TrekShatterPlaceholder QueueShatterToken]
+late [TrekShatterSeed] -> []
+
+(All of the submaps here have openings in the borders that are filled with placeholder tokens for shatter continuity. Here we duplicate some of the shatter rules from the last section and make them apply to the placeholders too.)
+
+(Shatter the border segment and cascade.)
+[TrekShatterPlaceholder ShatterToken | ] -> [TrekShatterPlaceholder ShatterToken | QueueShatterToken]
+[TrekShatterPlaceholder ShatterToken] -> []
+(This fuse thing is just a timing hack to make sure some shattering happens at the same time on two different sides of one of the map.)
+[TrekShatterFuse QueueShatterToken | ] -> [TrekShatterFuse QueueShatterToken | QueueShatterToken]
+[TrekShatterFuse QueueShatterToken] -> []
+
+(Wrap around the corners.)
+[TrekShatterPlaceholder | QueueShatterToken no Cover no BrokenCover no TrekShatterPlaceholder] -> [TrekShatterPlaceholder QueueShatterToken | ]
+
+(Finalize the cascade for the next turn.)
+late [TrekShatterPlaceholder QueueShatterToken] -> [TrekShatterPlaceholder ShatterToken]
+
+(Clean up)
+late [QueueShatterToken no Cover no TrekKillHandsTrigger] -> []
+
+(Now we start killing the hands. Again, mostly just duplicating the rules we need and the previous code will take care of the rest.)
+
+(We can't just check if all the borders are gone because each of these maps has extra borders at the very bottom. Instead, we have a special trigger positioned next to the last border we care about, and once a shatter token hits it it goes away. So all we do is check for the presence of that token and start killing the hands once it's gone.)
+late [TrekKillHandsTrigger QueueShatterToken] -> []
+[TrekkingPlayer] [ChoppablePart] -> [TrekkingPlayer BeginKillingHandsToken] [ChoppablePart]
+[BeginKillingHandsToken] [TrekKillingHandsToken] -> [] [TrekKillingHandsToken] (If we've already started killing hands, we don't need another one of these)
+[BeginKillingHandsToken] [TrekKillHandsTrigger] -> [] [TrekKillHandsTrigger]
+
+(Kick off the first timer.)
+[BeginKillingHandsToken] [TrekkingPlayer] -> [TrekKillingHandsToken] [TrekkingPlayer KillHandsPhase1 Timer3]
+
+(Kick off the second timer.)
+[TrekkingPlayer] [KillHandsPhase1 no Timer] -> [TrekkingPlayer] [KillHandsPhase2 Timer3]
+
+
+(===========
+ FINAL LEVEL
+ ===========)
+
+(Part 1: level generation)
+
+(Make the bed.)
+RIGHT [EndingGenerationToken] [BedUpperLeft | | ] -> [EndingGenerationToken] [BedUpperLeft | BedUpperFoot | BedUpperFoot]
+DOWN [EndingGenerationToken] [BedUpperLeft | ] -> [EndingGenerationToken] [BedUpperLeft | BedLowerLeft]
+RIGHT [EndingGenerationToken] [BedLowerLeft | | ] -> [EndingGenerationToken] [BedLowerLeft | BedLowerFoot | BedLowerFoot]
+
+(Finish up the doors.)
+DOWN [ | EndingBedroomDoorOpenBottom] -> [EndingBedroomDoorOpenTop | EndingBedroomDoorOpenBottom]
+
+(Erase the barrier.)
+[EndingGenerationToken] [CoverDown Hand] -> [EndingGenerationToken] [EndingGradientUp1]
+[EndingGenerationToken] [CoverUp Hand] -> [EndingGenerationToken] [EndingGradientDown1]
+[EndingGenerationToken] [CoverLeft Hand] -> [EndingGenerationToken] [EndingGradientRight1]
+[EndingGenerationToken] [CoverRight Hand] -> [EndingGenerationToken] [EndingGradientLeft1]
+
+[EndingGenerationToken] [OuterBackground] -> [EndingGenerationToken] [EndingOuterBackground]
+
+(Extend the footpath vertically instead of tiling it out by hand.)
+VERTICAL [PathSpawner | ... | ] -> [PathSpawner | ... | PathToken]
+[PathSpawner] -> [PathToken]
+
+(Clean up)
+[EndingGenerationToken] -> []
+
+(Part 2: outside door & renewal)
+
+(Close the outside door after the player walks through the doorway.)
+late RIGHT [ | EndingOutsideDoorOpen | Player] -> [EndingOutsideRenewalToken1 EndingOutsideDoorClosedLeft | EndingOutsideDoorClosedRight DoorBlocker | Player Timer5 InteractionDisabled]
+
+(Expand the renewal area to the entire outside.)
+late [EndingOutsideRenewalToken1 | no Wall no Door no Window] -> [EndingOutsideRenewalToken1 | EndingOutsideRenewalToken1] again
+late HORIZONTAL [EndingOutsideRenewalToken1 | Wall | EndingOutsideRenewalToken1] -> [EndingOutsideRenewalToken1 | Wall EndingOutsideRenewalToken1 | EndingOutsideRenewalToken1]
+
+(Phase 1 transformations)
+[Player no Timer] [EndingOutsideRenewalToken1 no EndingGradient no EndingOuterBackground no PathToken] -> [Player] [EndingOutsideRenewalToken1 HalfGrass]
+[Player no Timer] [EndingOutsideRenewalToken1 PathToken no EndingGradient no EndingOuterBackground] -> [Player] [EndingOutsideRenewalToken1 PathToken HalfPath]
+[Player no Timer] [EndingOutsideRenewalToken1 Wall1] -> [Player] [EndingOutsideRenewalToken1 HalfWall1]
+[Player no Timer] [EndingOutsideRenewalToken1 Wall2] -> [Player] [EndingOutsideRenewalToken1 HalfWall2]
+[Player no Timer] [EndingOutsideRenewalToken1 EndingOuterBackground] -> [Player] [EndingOutsideRenewalToken1 HalfOuterBackground]
+[Player no Timer] [EndingOutsideRenewalToken1 EndingGradientUp1 no PathToken] -> [Player] [EndingOutsideRenewalToken1 HalfGradientUp1Grass]
+[Player no Timer] [EndingOutsideRenewalToken1 EndingGradientUp1 PathToken] -> [Player] [EndingOutsideRenewalToken1 HalfGradientUp1Path PathToken]
+[Player no Timer] [EndingOutsideRenewalToken1 GradientUp2 no PathToken] -> [Player] [EndingOutsideRenewalToken1 HalfGradientUp2Grass]
+[Player no Timer] [EndingOutsideRenewalToken1 GradientUp2 PathToken] -> [Player] [EndingOutsideRenewalToken1 HalfGradientUp2Path PathToken]
+[Player no Timer] [EndingOutsideRenewalToken1 GradientUp3] -> [Player] [EndingOutsideRenewalToken1 HalfGradientUp3]
+[Player no Timer] [EndingOutsideRenewalToken1 EndingGradientRight1] -> [Player] [EndingOutsideRenewalToken1 HalfGradientRight1]
+[Player no Timer] [EndingOutsideRenewalToken1 EndingGradientDown1 no PathToken no WallToken no CarpetToken no Tile1Token no Tile2Token] -> [Player] [EndingOutsideRenewalToken1 HalfGradientDown1Grass]
+[Player no Timer] [EndingOutsideRenewalToken1 EndingGradientDown1 PathToken] -> [Player] [EndingOutsideRenewalToken1 HalfGradientDown1Path PathToken]
+[Player no Timer] [EndingOutsideRenewalToken1 EndingGradientDown1 WallToken] -> [Player] [EndingOutsideRenewalToken1 HalfGradientDown1Wall]
+[Player no Timer] [EndingOutsideRenewalToken1 EndingGradientDown1 CarpetToken] -> [Player] [EndingOutsideRenewalToken1 HalfGradientDown1Carpet]
+[Player no Timer] [EndingOutsideRenewalToken1 EndingGradientDown1 Tile1Token] -> [Player] [EndingOutsideRenewalToken1 HalfGradientDown1Tile1]
+[Player no Timer] [EndingOutsideRenewalToken1 EndingGradientDown1 Tile2Token] -> [Player] [EndingOutsideRenewalToken1 HalfGradientDown1Tile2]
+[Player no Timer] [EndingOutsideRenewalToken1 EndingGradientLeft1] -> [Player] [EndingOutsideRenewalToken1 HalfGradientLeft1]
+[Player no Timer] [EndingOutsideRenewalToken1 GradientLeft2] -> [Player] [EndingOutsideRenewalToken1 HalfGradientLeft2]
+[Player no Timer] [EndingOutsideRenewalToken1 GradientLeft3] -> [Player] [EndingOutsideRenewalToken1 HalfGradientLeft3]
+[Player no Timer] [EndingOutsideRenewalToken1 GradientLeftUpCorner1] -> [Player] [EndingOutsideRenewalToken1 HalfGradientLeftUpCorner1]
+[Player no Timer] [EndingOutsideRenewalToken1 GradientLeftUpCorner2] -> [Player] [EndingOutsideRenewalToken1 HalfGradientLeftUpCorner2]
+[Player no Timer] [EndingOutsideRenewalToken1 GradientLeftUpCorner3] -> [Player] [EndingOutsideRenewalToken1 HalfGradientLeftUpCorner3]
+[Player no Timer] [EndingOutsideRenewalToken1 DeadHandDown] -> [Player] [EndingOutsideRenewalToken1 HalfHandDown]
+[Player no Timer] [EndingOutsideRenewalToken1 DeadHandLeft] -> [Player] [EndingOutsideRenewalToken1 HalfHandLeft]
+[Player no Timer] [EndingOutsideRenewalToken1 DeadHandUp no PathToken] -> [Player] [EndingOutsideRenewalToken1 HalfHandUpGrass]
+[Player no Timer] [EndingOutsideRenewalToken1 DeadHandUp PathToken] -> [Player] [EndingOutsideRenewalToken1 HalfHandUpPath PathToken]
+[Player no Timer] [EndingOutsideRenewalToken1 DeadArmVert no PathToken] -> [Player] [EndingOutsideRenewalToken1 HalfArmVertGrass]
+[Player no Timer] [EndingOutsideRenewalToken1 DeadArmVert PathToken] -> [Player] [EndingOutsideRenewalToken1 HalfArmVertPath PathToken]
+
+(Move on to phase 2.)
+[Player no Timer] [EndingOutsideRenewalToken1] -> [Player EndingOutsideRenewalToken1] [EndingOutsideRenewalToken1]
+[Player EndingOutsideRenewalToken1] [EndingOutsideRenewalToken1 no Player] -> [Player EndingOutsideRenewalToken1] [EndingOutsideRenewalToken2]
+[Player EndingOutsideRenewalToken1] -> [Player Timer5 InteractionDisabled]
+
+(Phase 2 transformations)
+[Player no Timer] [EndingOutsideRenewalToken2 HalfGrass] -> [Player] [EndingOutsideRenewalToken2 Grass]
+[Player no Timer] [EndingOutsideRenewalToken2 HalfPath] -> [Player] [EndingOutsideRenewalToken2 Path]
+[Player no Timer] [EndingOutsideRenewalToken2 HalfWall1] -> [Player] [EndingOutsideRenewalToken2 RealWall]
+[Player no Timer] [EndingOutsideRenewalToken2 HalfWall2] -> [Player] [EndingOutsideRenewalToken2 RealWall]
+[Player no Timer] [EndingOutsideRenewalToken2 HalfOuterBackground] -> [Player] [EndingOutsideRenewalToken2 Grass]
+[Player no Timer] [EndingOutsideRenewalToken2 HalfGradientUp1Grass] -> [Player] [EndingOutsideRenewalToken2 Grass]
+[Player no Timer] [EndingOutsideRenewalToken2 HalfGradientUp1Path] -> [Player] [EndingOutsideRenewalToken2 Path]
+[Player no Timer] [EndingOutsideRenewalToken2 HalfGradientUp2Grass] -> [Player] [EndingOutsideRenewalToken2 Grass]
+[Player no Timer] [EndingOutsideRenewalToken2 HalfGradientUp2Path] -> [Player] [EndingOutsideRenewalToken2 Path]
+[Player no Timer] [EndingOutsideRenewalToken2 HalfGradientUp3] -> [Player] [EndingOutsideRenewalToken2 Path]
+[Player no Timer] [EndingOutsideRenewalToken2 HalfGradientRight1] -> [Player] [EndingOutsideRenewalToken2 Grass]
+[Player no Timer] [EndingOutsideRenewalToken2 HalfGradientDown1Grass] -> [Player] [EndingOutsideRenewalToken2 Grass]
+[Player no Timer] [EndingOutsideRenewalToken2 HalfGradientDown1Path] -> [Player] [EndingOutsideRenewalToken2 Path]
+[Player no Timer] [EndingOutsideRenewalToken2 HalfGradientDown1Wall] -> [Player] [EndingOutsideRenewalToken2 RealWall]
+[Player no Timer] [EndingOutsideRenewalToken2 HalfGradientDown1Carpet] -> [Player] [EndingOutsideRenewalToken2 Carpet]
+[Player no Timer] [EndingOutsideRenewalToken2 HalfGradientDown1Tile1] -> [Player] [EndingOutsideRenewalToken2 Tile1]
+[Player no Timer] [EndingOutsideRenewalToken2 HalfGradientDown1Tile2] -> [Player] [EndingOutsideRenewalToken2 Tile2]
+[Player no Timer] [EndingOutsideRenewalToken2 HalfGradientLeft1] -> [Player] [EndingOutsideRenewalToken2 Grass]
+[Player no Timer] [EndingOutsideRenewalToken2 HalfGradientLeft2] -> [Player] [EndingOutsideRenewalToken2 Grass]
+[Player no Timer] [EndingOutsideRenewalToken2 HalfGradientLeft3] -> [Player] [EndingOutsideRenewalToken2 Grass]
+[Player no Timer] [EndingOutsideRenewalToken2 HalfGradientLeftUpCorner1] -> [Player] [EndingOutsideRenewalToken2 Grass]
+[Player no Timer] [EndingOutsideRenewalToken2 HalfGradientLeftUpCorner2] -> [Player] [EndingOutsideRenewalToken2 Grass]
+[Player no Timer] [EndingOutsideRenewalToken2 HalfGradientLeftUpCorner3] -> [Player] [EndingOutsideRenewalToken2 Grass]
+[Player no Timer] [EndingOutsideRenewalToken2 HalfHandDown] -> [Player] [EndingOutsideRenewalToken2]
+[Player no Timer] [EndingOutsideRenewalToken2 HalfHandLeft] -> [Player] [EndingOutsideRenewalToken2]
+[Player no Timer] [EndingOutsideRenewalToken2 HalfHandUpGrass] -> [Player] [EndingOutsideRenewalToken2]
+[Player no Timer] [EndingOutsideRenewalToken2 HalfHandUpPath] -> [Player] [EndingOutsideRenewalToken2]
+[Player no Timer] [EndingOutsideRenewalToken2 HalfArmVertGrass] -> [Player] [EndingOutsideRenewalToken2]
+[Player no Timer] [EndingOutsideRenewalToken2 HalfArmVertPath] -> [Player] [EndingOutsideRenewalToken2]
+
+(Clean up)
+[Player no Timer] [EndingOutsideRenewalToken2] -> [Player] []
+
+(Part 3: drop off the axe)
+
+late [Player AxeDropoff] -> [Player Axe AxeDropoff]
+late DOWN [Player | AxeDropoff] -> [Player | Axe AxeDropoff]
+
+(Part 4: bedroom door & house renewal)
+
+(Close the bedroom door after the player walks through the doorway.)
+late RIGHT [Player EndingBedroomDoorOpenBottom | ] -> [Player EndingBedroomDoorClosedLeft Timer5 InteractionDisabled | EndingBedroomDoorClosedRight DoorBlocker EndingHouseRenewalToken1]
+late DOWN [EndingBedroomDoorOpenTop | Player EndingBedroomDoorClosedLeft] -> [ | Player EndingBedroomDoorClosedLeft]
+
+(Expand the renewal area to everywhere but the bedroom.)
+late [EndingHouseRenewalToken1 | no EndingHouseRenewalBedroomToken] -> [EndingHouseRenewalToken1 | EndingHouseRenewalToken1] again
+
+(Phase 1 transformations)
+[Player no Timer] [EndingHouseRenewalToken1 Wall1] -> [Player] [EndingHouseRenewalToken1 HalfWall1]
+[Player no Timer] [EndingHouseRenewalToken1 Wall2] -> [Player] [EndingHouseRenewalToken1 HalfWall2]
+[Player no Timer] [EndingHouseRenewalToken1 no TileToken no RealBackground no Window] -> [Player] [EndingHouseRenewalToken1 HalfCarpet]
+[Player no Timer] [EndingHouseRenewalToken1 Tile1Token] -> [Player] [EndingHouseRenewalToken1 HalfTile1]
+[Player no Timer] [EndingHouseRenewalToken1 Tile2Token] -> [Player] [EndingHouseRenewalToken1 HalfTile2]
+[Player no Timer] [EndingHouseRenewalToken1 WindowVert2] -> [Player] [EndingHouseRenewalToken1 HalfWindowVert]
+[Player no Timer] [EndingHouseRenewalToken1 BottomWindowToken] -> [Player] [EndingHouseRenewalToken1 HalfBottomWindow]
+[Player no Timer] [EndingHouseRenewalToken1 TopWindowToken] -> [Player] [EndingHouseRenewalToken1 HalfTopWindow]
+[Player no Timer] [EndingHouseRenewalToken1 LivingRoomLeftDoorTop] -> [Player] [EndingHouseRenewalToken1 HalfLivingRoomLeftDoorTop]
+[Player no Timer] [EndingHouseRenewalToken1 LivingRoomLeftDoorBottom] -> [Player] [EndingHouseRenewalToken1 HalfLivingRoomLeftDoorBottom]
+[Player no Timer] [EndingHouseRenewalToken1 LivingRoomRightDoorTop] -> [Player] [EndingHouseRenewalToken1 HalfLivingRoomRightDoorTop]
+[Player no Timer] [EndingHouseRenewalToken1 LivingRoomRightDoorBottom] -> [Player] [EndingHouseRenewalToken1 HalfLivingRoomRightDoorBottom]
+[Player no Timer] [EndingHouseRenewalToken1 EndingOutsideDoorClosedLeft] -> [Player] [EndingHouseRenewalToken1 HalfOutsideDoorClosedLeft]
+[Player no Timer] [EndingHouseRenewalToken1 EndingOutsideDoorClosedRight] -> [Player] [EndingHouseRenewalToken1 HalfOutsideDoorClosedRight]
+[Player no Timer] [EndingHouseRenewalToken1 BathroomDoorOpen] -> [Player] [EndingHouseRenewalToken1 HalfBathroomDoorOpen]
+[Player no Timer] [EndingHouseRenewalToken1 Axe] -> [Player] [EndingHouseRenewalToken1 HalfAxe]
+
+(Move on to phase 2.)
+[Player no Timer] [EndingHouseRenewalToken1] -> [Player EndingHouseRenewalToken1] [EndingHouseRenewalToken1]
+[Player EndingHouseRenewalToken1] [EndingHouseRenewalToken1 no Player] -> [Player EndingHouseRenewalToken1] [EndingHouseRenewalToken2]
+[Player EndingHouseRenewalToken1] -> [Player Timer5 InteractionDisabled]
+
+(Phase 2 transformations)
+[Player no Timer] [EndingHouseRenewalToken2 HalfWall1] -> [Player] [EndingHouseRenewalToken2 RealWall]
+[Player no Timer] [EndingHouseRenewalToken2 HalfWall2] -> [Player] [EndingHouseRenewalToken2 RealWall]
+[Player no Timer] [EndingHouseRenewalToken2 HalfCarpet] -> [Player] [EndingHouseRenewalToken2 Carpet]
+[Player no Timer] [EndingHouseRenewalToken2 HalfTile1] -> [Player] [EndingHouseRenewalToken2 Tile1]
+[Player no Timer] [EndingHouseRenewalToken2 HalfTile2] -> [Player] [EndingHouseRenewalToken2 Tile2]
+[Player no Timer] [EndingHouseRenewalToken2 HalfWindowVert] -> [Player] [EndingHouseRenewalToken2 RealWindowVert]
+[Player no Timer] [EndingHouseRenewalToken2 HalfBottomWindow] -> [Player] [EndingHouseRenewalToken2 RealBottomWindow]
+[Player no Timer] [EndingHouseRenewalToken2 HalfTopWindow] -> [Player] [EndingHouseRenewalToken2 RealTopWindow]
+[Player no Timer] [EndingHouseRenewalToken2 HalfLivingRoomLeftDoorTop] -> [Player] [EndingHouseRenewalToken2 RealLivingRoomLeftDoorTop]
+[Player no Timer] [EndingHouseRenewalToken2 HalfLivingRoomLeftDoorBottom] -> [Player] [EndingHouseRenewalToken2 RealLivingRoomLeftDoorBottom]
+[Player no Timer] [EndingHouseRenewalToken2 HalfLivingRoomRightDoorTop] -> [Player] [EndingHouseRenewalToken2 RealLivingRoomRightDoorTop]
+[Player no Timer] [EndingHouseRenewalToken2 HalfLivingRoomRightDoorBottom] -> [Player] [EndingHouseRenewalToken2 RealLivingRoomRightDoorBottom]
+[Player no Timer] [EndingHouseRenewalToken2 HalfOutsideDoorClosedLeft] -> [Player] [EndingHouseRenewalToken2 RealOutsideDoorClosedLeft]
+[Player no Timer] [EndingHouseRenewalToken2 HalfOutsideDoorClosedRight] -> [Player] [EndingHouseRenewalToken2 RealOutsideDoorClosedRight]
+[Player no Timer] [EndingHouseRenewalToken2 HalfBathroomDoorOpen] -> [Player] [EndingHouseRenewalToken2 RealBathroomDoorOpen]
+[Player no Timer] [EndingHouseRenewalToken2 HalfAxe] -> [Player] [EndingHouseRenewalToken2]
+
+(Clean up)
+[Player no Timer] [EndingHouseRenewalToken2] -> [Player] []
+
+(Part 5: sleep time :] )
+
+(Create the renewal area.)
+late [Player EndingBedroomRenewalStartToken] -> [Player EndingBedroomRenewalToken SleepPhase1Token Timer5 InteractionDisabled]
+late [EndingBedroomRenewalToken | ] -> [EndingBedroomRenewalToken | EndingBedroomRenewalToken] again
+
+(Phase 1 transformations)
+[SleepPhase1Token no Timer] [EndingBedroomRenewalToken no RealBackground no Window] -> [SleepPhase1Token] [EndingBedroomRenewalToken HalfCarpet]
+[SleepPhase1Token no Timer] [EndingBedroomRenewalToken Wall1] -> [SleepPhase1Token] [EndingBedroomRenewalToken HalfWall1]
+[SleepPhase1Token no Timer] [EndingBedroomRenewalToken Wall2] -> [SleepPhase1Token] [EndingBedroomRenewalToken HalfWall2]
+[SleepPhase1Token no Timer] [EndingBedroomRenewalToken EndingBedroomDoorClosedLeft] -> [SleepPhase1Token] [EndingBedroomRenewalToken HalfOutsideDoorClosedLeft]
+[SleepPhase1Token no Timer] [EndingBedroomRenewalToken EndingBedroomDoorClosedRight] -> [SleepPhase1Token] [EndingBedroomRenewalToken HalfOutsideDoorClosedRight]
+[SleepPhase1Token no Timer] [EndingBedroomRenewalToken BedUpperFoot] -> [SleepPhase1Token] [EndingBedroomRenewalToken HalfBedUpperFoot]
+[SleepPhase1Token no Timer] [EndingBedroomRenewalToken BedLowerFoot] -> [SleepPhase1Token] [EndingBedroomRenewalToken HalfBedLowerFoot]
+[SleepPhase1Token no Timer] [EndingBedroomRenewalToken BedUpperLeftOccupied] -> [SleepPhase1Token] [EndingBedroomRenewalToken HalfRealBedUpperLeftUnrealOccupied]
+[SleepPhase1Token no Timer] [EndingBedroomRenewalToken BedLowerLeftOccupied] -> [SleepPhase1Token] [EndingBedroomRenewalToken HalfRealBedLowerLeftUnrealOccupied]
+
+(Move on to phase 2.)
+[SleepPhase1Token no Timer] -> [SleepPhase2Token Timer5 InteractionDisabled]
+
+(Phrase 2 transformations)
+[SleepPhase2Token no Timer] [EndingBedroomRenewalToken HalfCarpet] -> [SleepPhase2Token] [EndingBedroomRenewalToken Carpet]
+[SleepPhase2Token no Timer] [EndingBedroomRenewalToken HalfWall1] -> [SleepPhase2Token] [EndingBedroomRenewalToken RealWall]
+[SleepPhase2Token no Timer] [EndingBedroomRenewalToken HalfWall2] -> [SleepPhase2Token] [EndingBedroomRenewalToken RealWall]
+[SleepPhase2Token no Timer] [EndingBedroomRenewalToken HalfOutsideDoorClosedLeft] -> [SleepPhase2Token] [EndingBedroomRenewalToken RealOutsideDoorClosedLeft]
+[SleepPhase2Token no Timer] [EndingBedroomRenewalToken HalfOutsideDoorClosedRight] -> [SleepPhase2Token] [EndingBedroomRenewalToken RealOutsideDoorClosedRight]
+[SleepPhase2Token no Timer] [EndingBedroomRenewalToken HalfBedUpperFoot] -> [SleepPhase2Token] [EndingBedroomRenewalToken RealBedUpperFoot]
+[SleepPhase2Token no Timer] [EndingBedroomRenewalToken HalfBedLowerFoot] -> [SleepPhase2Token] [EndingBedroomRenewalToken RealBedLowerFoot]
+[SleepPhase2Token no Timer] [EndingBedroomRenewalToken HalfRealBedUpperLeftUnrealOccupied] -> [SleepPhase2Token] [EndingBedroomRenewalToken RealBedUpperLeftUnrealOccupied]
+[SleepPhase2Token no Timer] [EndingBedroomRenewalToken HalfRealBedLowerLeftUnrealOccupied] -> [SleepPhase2Token] [EndingBedroomRenewalToken RealBedLowerLeftUnrealOccupied]
+
+(Clean up)
+[SleepPhase2Token no Timer] [EndingBedroomRenewalToken] -> [SleepPhase2Token] []
+
+(Play some sound effects and do the last crossfade of the player.)
+[SleepPhase2Token no Timer] -> [SleepPhase3Token Timer20 InteractionDisabled]
+[SleepPhase3Token no Timer] -> [SleepPhase4Token Timer10 InteractionDisabled]
+[SleepPhase4Token no Timer] -> [SleepPhase5Token Timer20 InteractionDisabled]
+[SleepPhase5Token no Timer] -> [SleepPhase6Token Timer7 InteractionDisabled]
+[SleepPhase6Token no Timer] -> [SleepPhase7Token Timer20 InteractionDisabled]
+[SleepPhase7Token no Timer] [RealBedUpperLeftUnrealOccupied] -> [SleepPhase7Token] [HalfRealBedUpperLeft]
+[SleepPhase7Token no Timer] [RealBedLowerLeftUnrealOccupied] -> [SleepPhase7Token] [HalfRealBedLowerLeft]
+[SleepPhase7Token no Timer] -> [SleepPhase8Token Timer5 InteractionDisabled]
+[SleepPhase8Token no Timer] [HalfRealBedUpperLeft] -> [SleepPhase8Token] [RealBedUpperLeft]
+[SleepPhase8Token no Timer] [HalfRealBedLowerLeft] -> [SleepPhase8Token] [RealBedLowerLeft]
+[SleepPhase8Token no Timer] -> [SleepPhase9Token Timer20 InteractionDisabled]
+[SleepPhase9Token no Timer] -> [SleepPhase10Token Timer20 InteractionDisabled]
+[SleepPhase10Token no Timer] -> [SleepPhase11Token Timer10 InteractionDisabled]
+
+(Fade out.)
+[SleepPhase11Token no Timer] [] -> [SleepPhase11Token] [EndingCover1]
+[SleepPhase11Token no Timer] -> [SleepPhase12Token Timer2 InteractionDisabled]
+[SleepPhase12Token no Timer] [EndingCover1] -> [SleepPhase12Token] [EndingCover2]
+[SleepPhase12Token no Timer] -> [SleepPhase13Token Timer2 InteractionDisabled]
+[SleepPhase13Token no Timer] [EndingCover2] -> [SleepPhase13Token] [EndingCover3]
+[SleepPhase13Token no Timer] -> [SleepPhase14Token Timer2 InteractionDisabled]
+[SleepPhase14Token no Timer] [EndingCover3] -> [SleepPhase14Token] [EndingCover4]
+[SleepPhase14Token no Timer] -> [SleepPhase15Token Timer2 InteractionDisabled]
+[SleepPhase15Token no Timer] [EndingCover4] -> [SleepPhase15Token] [EndingCover5]
+[SleepPhase15Token no Timer] -> [SleepPhase16Token Timer10 InteractionDisabled]
+
+(You win :] )
+[SleepPhase16Token no Timer] -> [SleepPhase17Token Timer20 InteractionDisabled]
+[SleepPhase17Token no Timer] -> win
+
+
+==============
+WINCONDITIONS
+==============
+
+some NoncutscenePlayer on Goal
+
+
+=======
+LEVELS
+=======
+
+message This game has a few very loud moments, so if you're playing with sound, I'm giving you a chance to adjust your volume before starting.
+message Step on the X in the next room to play a test sound and turn your system volume down if it's too loud for you. Walk out of the room to start the game.
+
+(sound test)
+:vvvvvvv:
+>#######<
+>#...###<
+>#.S.P654
+>#...###<
+>#######<
+:^^^^^^^:
+
+(opening)
+(11)
+}1111vvvvvvvvvvvvv:
+0_222.............<
+0-+33.#######—###.<
+0-≠...#....#....#.<
+0-≠...#ε...##Y###.<
+0-≠...#....ɑ....#.<
+0-≠...#....####.|.<
+0-≠...#########.#.<
+0-≠...#......##.##<
+>#....#......#...#<
+>#....δ..........|<
+>#....#......#...#<
+>#....#......##—##<
+>#....#β####ɣ#....<
+:^^^^^^^^^^^^^^^^^:
+
+(10)
+:vvvvvvvvvvv:
+>#.#####.###<
+>#.......#.#<
+>#..##.#.#.#<
+>....#......<
+>#.#.##..#.#<
+>#...###...#<
+>###P#####.#<
+>...........<
+>######.##.#<
+0-{9999999.#<
+0*88888888.#<
+&777777777^^:
+
+(9)
+::vvvvvvvvvvvvvv::
+B>.........#....<:
+B>......#.......<:
+:>...#.#.....#654:
+:>##—#...#..##654:
+:>#....#.#...#654:
+:>|.C.#..#..P#654:
+:>#...#..#...#654:
+:>##—##..#..##654:
+:>............ﬂ54:
+:>........#...8%4:
+::^^^^^^^^^^^^77$:
+
+(8)
+::vvvvvvvvvv::
+A>###.#.....<:
+A>##.......#<:
+:0-#........<:
+:0-#........<:
+:0-#........<:
+:0-#P..#....<:
+:0-##.##....<:
+:0-#...#....<:
+:0-#———#....<:
+:0-≠........<:
+:>######..##<:
+::^^^^^^^^^^::
+
+(7)
+::vv1111111vv::
+A>.#2222222#.<:
+A>.####3####.<:
+:>...........<:
+:>.#.#####.#.<:
+:>.#...P...#.<:
+:>...........<:
+:>.##.###.##.<:
+::^^^^^^^^^^^::
+
+(6)
+::vvvvvvvvv11!:
+A>##..##..#2@4:
+A>#.......#‹54:
+:>#...P...#654:
+:>........#654:
+:>...##...#654:
+:>...........<:
+:>...#.#....#<:
+:>...........<:
+:>..#........<:
+::^^^^^^^^^^^::
+
+(5)
+::vvvvvvvvv::
+A>.........<:
+A>.........<:
+:>..•••••..<:
+:>..#.P.#..<:
+:>#.#———#.#<:
+:>.........<:
+:>####9####<:
+:>##88888##<:
+::^^77777^^::
+
+(4)
+:::vvvvvvv:::
+A:}-≠.#.65!::
+A>2_.....@2<:
+:>3.......3<:
+:>....•....<:
+:>#..•P•..#<:
+:>....•....<:
+:>9.......9<:
+:>8*.....%8<:
+::&-≠.#.65$::
+:::^^^^^^^:::
+
+(3)
+::vvvvvvvvvvvvvvv::
+A>##...##......##<:
+A>.....##.......#<:
+:>.....##.......#<:
+:>..#..##.......#<:
+:0-≠#...#.......#<:
+:0-≠#......•••.P#<:
+:0-≠#...#.......#<:
+:>..#..##.......#<:
+:>.....##.......#<:
+:>.....##.......#<:
+:>##...##......##<:
+::^^^^^^^^^^^^^^^::
+
+(2)
+::vvvvvvvvvvvvvv::
+A>..#.....######<:
+A>...........|654:
+:>#.....•....|654:
+:>#..........|.#<:
+:>#...##.#.#.|.#<:
+:>...........|.#<:
+:>#.•.##.#.#.|.#<:
+:>#...#P.#.#.|.#<:
+:>########.#.|.#<:
+:>..............<:
+:>..............<:
+::^^^^^^^^^^^^^^::
+
+(1)
+::vvvvvv1vvvvvvvv::
+A>######222######<:
+A>#....#333#....#<:
+:>#.•..##.##..P.#<:
+:>..............#<:
+:>#.##.##.##.##.#<:
+:>#..............<:
+:>#.##.##.##.##.#<:
+:>#.............#<:
+:>######...######<:
+:>#######.#######<:
+::^^^^^^^^^^^^^^^::
+
+(0)
+::vvvvvvvvv::
+E>.........<:
+E>.........<:
+:>....#....<:
+:>.........<:
+:>..#.P.#..<:
+:>.........<:
+:>....#....<:
+:>.........<:
+:>.........<:
+::^^^^^^^^^::
+
+(0)
+:::::::::::::::::::
+:::::::::::::::::::
+:::::::::::::::::::
+:::::vvvvvvvvv:::::
+:::F>.........<::::
+:::F>.........<::::
+::::>....#....<::::
+::::>.........<::::
+::::>..#.P.#..<::::
+::::>.........<::::
+::::>....#....<::::
+::::>.........<::::
+::::>.........<::::
+:::::^^^^^^^^^:::::
+:::::::::::::::::::
+:::::::::::::::::::
+:::::::::::::::::::
+
+(liberation)
+:::::::::::::::::::::::::
+:::::::::::::::::::::::::
+:::::::::::::::::::::::::
+:::::::::::::::::::::::::
+:::::::::::::::::::::::::
+:::::::::::::::::::::::::
+::::::::vvvvvvvvv::::::::
+::::::D>.........<:::::::
+::::::A>.........<:::::::
+:::::::>....#....<:::::::
+:::::::>.........<:::::::
+:::::::>..#.P.#..<:::::::
+:::::::>.........<:::::::
+:::::::>....#....<:::::::
+:::::::>.........<:::::::
+:::::::>.........<:::::::
+::::::::^^^^^^^^^::::::::
+:::::::::::::::::::::::::
+:::::::::::::::::::::::::
+:::::::::::::::::::::::::
+:::::::::::::::::::::::::
+:::::::::::::::::::::::::
+:::::::::::::::::::::::::
+
+(The way home)
+(2 - 1)
+::::::::::::::::777777777:::::::::::::::::
+::::::::::::::::::::T:::::::::::::::::::::
+::::::::::::::::::::::::::::::::::::::::::
+::::::::::::::::::::::::::::::::::::::::::
+::vvvvvvvvvvvvvv⁄:::::::⁄vvvvvv€vvvvvvvv::
+:>..#縦縦縦縦縦######<:::::::>######2箱2######<:
+:>横横右縦縦縦縦縦...|65›:::::::>#...┃#333#....#<:
+:>#..下下ÉÈ血═..|65›:::::::>#...║##上##....#<:
+:>#.......┃..|上#<:::::::>横横横横血..縦横横横横右┃#<:
+:>#.━║##.#.#.|縦#<:::::::>#.##║##縦##.##║#<:
+:>横横横血.....横右|縦#<:::::::>#.左横┃..縦.....血横<:
+:>#..║##.#.#.|縦#<:::::::>#.##.##縦##.##║#<:
+:>#..┃#..#.#.|縦#<:::::::>#......縦.....┃#<:
+:>########.#.|縦#<:::::::>######.縦.######<:
+:>横横横横横横横横横横横右縦•<:::::::>#######縦#######<:
+:>........•上上上縦.<::::::::^^^^^^^^^^^^^^^::
+:`^^^^^^^^^^^^^^:::::::::°::::::::::::::::
+:::::::::::::::::::::::::°::::::::::::::::
+::::::::::::::::::::::::::::::::::::::::::
+::::::::::°~~~~~~~~~~~~~~°::::::::::::::::
+:::vvvvvvv:::::::::::W:::vvvvvvvvvvvvvvv::
+
+(Still going home)
+(6 - 5)
+::::::::::::::::::::T::::777777777777777::
+::::::::::::::::::::⁄:::::::::::::::::::::
+::::::::::::::::::::::::::::::::::::::::::
+::::::::::::::::::::::::::::::::::::::::::
+::11111111111!:::::::::::111111111::::::::
+⁄Å##縦縦##縦縦#2@4::::::::::0.血縦縦•.縦縦.4:::::::
+:>#.縦縦..縦縦#‹54::::::::::0•═血下.•下縦.À⁄::::::
+:>#.縦下..下縦#654::::::::::0横¡横横横横右縦•<:::::::
+:>.上縦....縦#654::::::::::0右.#...#縦左<:::::::
+:>.縦縦##.上縦#™┅4::::::::::0#.#———#下#<:::::::
+:>.縦縦...縦下左血横4::::::::::0.•...左横横横<:::::::
+:>.縦下#上#縦...#4::::::::::0####9####<:::::::
+:>.縦..縦左£横横横横4::::::::::0##88888##<:::::::
+:>.縦#上縦上縦....4:::::::::::77‡‡‡‡‡^^::::::::
+:`^^^^^^^^Á77::::::::::::::⁄::::::::::::::
+::::::::::⁄::::::::::::⁄°:::::::::::::::::
+::::::::::::::::::::::::°:::::::::::::::::
+::::::::::::°°°⁄:::::::::°::::::::::::::::
+::vvvvvvvvvv::::::::W::::vv€€€€€€€vv::::::
+
+(https://www.youtube.com/watch?v=F4HwR1jKjEs)
+(10 - 9)
+::7777777777::::::::T:::::::::::::::::::::
+::::::::::::::::::::⁄:::::::::::::::::::::
+::::::::::::::::::::::::::::::::::::::::::
+::::::::::::::::::::::::::::::::::::::::::
+::11111111111::::::::::::11111111111111:::
+:0#縦#####縦###4::::::::::0..縦.縦..縦下#....4::
+:0#縦.....縦#.#4::::::::::0..縦.縦.#下左横横横横横4::
+:0#縦.##.#下#.#4::::::::::0..下#縦#...上.#654::
+:0.縦..#.左横横横横4::::::::::0##—#血═━#.縦##654::
+:0#下#.##..#.#4::::::::::0#....#.#.縦.#654::
+:0#...###...#4::::::::::0|...#..#.縦.#654::
+:0###.#####上#4::::::::::0#...#..#.縦.#654::
+:0横横横横横右...縦.4::::::::::0##—##..#.縦##654::
+:0######.##縦#4::::::::::0横横横横横横横横横£¢∞¿54::
+:0-{9999999縦#4::::::::::0........#縦上上8%4::
+:0*88888888縦#4:::::::::::77777777777Á‡‡ª::
+:&77777777777:::::::::::::::::::::::⁄:::::
+::::::::::::::::::::::::::::::::::::::::::
+::::::::::::::::::::::::::::::::::::::::::
+:::::::::::::::::⁄:::::⁄::::::::::::::::::
+W::::::::::}1111vÃ11111Ãvvvvv:::::::::::::
+
+(ending)
+Qvvvvvvvvvvvvvvvvv:
+>_222σ.......φ....<
+>-+33σκκκκκκ#Z###.<
+>-≠..σκ....κθηθη#.<
+>-≠..σκω...κ#X###.<
+>-≠..σκ...ψ.....#.<
+>-≠..σκ....κ###.|υ<
+>-≠..σκκκκκκ###.#.<
+>-≠..σ#......##.##<
+>#τ..φ#......#...#<
+>#σππρχ........λ.|<
+>#στττ#......#...#<
+>#σσσσ#......##ζ##<
+>#σσσσ#β####ι#.τ..<
+:ο^^^^ομοξνξνο^^^^:
+
+message END
+message Mechanically inspired by those jerk vines from Blobbo by Glenn Andreas.

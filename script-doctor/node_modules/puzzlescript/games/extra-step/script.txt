@@ -1,0 +1,1201 @@
+title Extra step
+author Rosden Shadow [Mark Signorelli]
+homepage rosden.itch.io
+
+( sorry about all the junk code from me trying to make a game with multiple power ups)
+
+noaction
+run_rules_on_level_Start
+
+background_color #3B3942
+
+text_color #E0AAF2
+
+again_interval 0.14
+========
+OBJECTS
+========
+
+Background
+#46495B #3B3942 (#E57ED5 #CC5285)
+11111
+11101
+11111
+10111
+11111
+(
+00101
+01110
+11011
+01111
+10110)
+(
+11101
+00101
+11111
+10100
+10111)
+
+
+nomove
+#FFEED9 #536673
+.....
+.000.
+.010.
+.000.
+.....
+
+burner1
+#FFEED9 #F2F2AA #E5C17E
+.....
+.100.
+.2.0.
+.221.
+.....
+
+burner2
+#FFEED9 #F2F2AA #E5C17E
+.....
+.001.
+.0.2.
+.122.
+.....
+
+burner3
+#FFEED9 #F2F2AA #E5C17E
+.....
+.122.
+.0.2.
+.001.
+.....
+
+burner4
+#FFEED9 #F2F2AA #E5C17E
+.....
+.221.
+.2.0.
+.100.
+.....
+
+Target
+white #423D39
+.....
+.000.
+.0.0.
+.000.
+.....
+
+Wall
+#FFD9E0 #E0AAF2  #A87EE5 #705C84
+21110
+21110
+22221
+23232
+32323
+
+overwall
+#FFD9E0 #E0AAF2  #A87EE5 #705C84
+.....
+.....
+.....
+10000
+21110
+
+
+Playerright
+white #CCCCCC  #7EE58D #5C8466
+.000.
+11202
+11313
+11110
+.1.1.
+
+playerleft
+white #CCCCCC  #7EE58D #5C8466
+.000.
+20211
+31311
+01111
+.1.1.
+
+Crate
+#D9FFDC #7EE58D #5C8466 #4F5B46
+21100
+21110
+22110
+32223
+.333.
+
+overcrate
+#D9FFDC #7EE58D #5C8466 #4F5B46
+.....
+.....
+.....
+.....
+.000.
+
+Crate2
+#FFD9E0 #E0AAF2 #A87EE5 #705C84
+21100
+21110
+22110
+32223
+.333.
+
+overcrate2
+#FFD9E0 #E0AAF2 #A87EE5 #705C84
+.....
+.....
+.....
+.....
+.000.
+
+Cratefail
+#CCCCCC #999999 #666666 #333333 #231F26
+21100
+21110
+22110
+32223
+.333.
+
+overcratefail
+#CCCCCC #999999 #666666 #333333 #231F26
+.....
+.....
+.....
+.....
+.000.
+
+power1
+#AAE0F2 #7EA1E5
+..0..
+.000.
+.101.
+.111.
+..1..
+
+power2
+#CC7A52 #B32D2D
+..0..
+.000.
+.101.
+.111.
+..1..
+
+power3
+#7EE58D #5C8466
+..0..
+.000.
+.101.
+.111.
+..1..
+
+powhud1
+#AAE0F2 #7EA1E5 #5C6684
+.100.
+.210.
+.220.
+.....
+.....
+
+powhud1acti
+#F2F2AA #E5C17E #CC7A52 #736053
+.100.
+.210.
+.220.
+.....
+.....
+
+powhud2
+#CC7A52 #B32D2D #73342E
+.100.
+.210.
+.220.
+.....
+.....
+
+powhud3
+#7EE58D #5C8466 #4F5B46
+.100.
+.210.
+.220.
+.....
+.....
+
+end
+#D9FFDC #7EE58D #5C8466 #4F5B46
+21100
+21110
+22110
+32223
+.333.
+endx
+#D9FFDC #7EE58D #5C8466 #4F5B46
+21100
+21110
+22110
+32223
+.333.
+
+
+1up
+#D9FFDC #7EE58D #5C8466 #4F5B46
+.....
+.....
+.....
+.....
+21110
+1up2
+#D9FFDC #7EE58D #5C8466 #4F5B46
+21110
+.....
+.....
+.....
+.....
+
+1down
+#D9FFDC #7EE58D #5C8466 #4F5B46
+.....
+.....
+21110
+21110
+.....
+
+1left
+#D9FFDC #7EE58D #5C8466 #4F5B46
+1....
+1....
+11...
+2....
+3....
+1left2
+#D9FFDC #7EE58D #5C8466 #4F5B46
+.....
+.....
+.....
+.....
+0....
+1right
+#D9FFDC #7EE58D #5C8466 #4F5B46
+...11
+....1
+....1
+....2
+....3
+1right2
+#D9FFDC #7EE58D #5C8466 #4F5B46
+.....
+.....
+.....
+.....
+....0
+
+1leftremoval
+#D9FFDC #7EE58D #5C8466 #4F5B46
+1....
+1....
+1....
+.....
+.....
+1rightremoval
+#D9FFDC #7EE58D #5C8466 #4F5B46
+....1
+....1
+....1
+.....
+.....
+
+1leftremovalx
+#D9FFDC #7EE58D #5C8466 #4F5B46
+1....
+1....
+1....
+1....
+1....
+1rightremovalx
+#D9FFDC #7EE58D #5C8466 #4F5B46
+....1
+....1
+....1
+....1
+....1
+
+2up
+#FFD9E0 #E0AAF2 #A87EE5 #705C84
+.....
+.....
+.....
+.....
+21110
+2up2
+#FFD9E0 #E0AAF2 #A87EE5 #705C84
+21110
+.....
+.....
+.....
+.....
+
+2down
+#FFD9E0 #E0AAF2 #A87EE5 #705C84
+.....
+.....
+21110
+21110
+.....
+
+2left
+#FFD9E0 #E0AAF2 #A87EE5 #705C84
+1....
+1....
+11...
+2....
+3....
+2left2
+#FFD9E0 #E0AAF2 #A87EE5 #705C84
+.....
+.....
+.....
+.....
+0....
+2right
+#FFD9E0 #E0AAF2 #A87EE5 #705C84
+...11
+....1
+....1
+....2
+....3
+2right2
+#FFD9E0 #E0AAF2 #A87EE5 #705C84
+.....
+.....
+.....
+.....
+....0
+
+2leftremoval
+#FFD9E0 #E0AAF2 #A87EE5 #705C84
+1....
+1....
+1....
+.....
+.....
+2rightremoval
+#FFD9E0 #E0AAF2 #A87EE5 #705C84
+....1
+....1
+....1
+.....
+.....
+
+2leftremovalx
+#FFD9E0 #E0AAF2 #A87EE5 #705C84
+1....
+1....
+1....
+1....
+1....
+2rightremovalx
+#FFD9E0 #E0AAF2 #A87EE5 #705C84
+....1
+....1
+....1
+....1
+....1
+
+
+cloner
+#E5C17E #DB7F55 #B32D2D #73342E
+.100.
+.210.
+.221.
+.332.
+.....
+
+swapcrate
+Orange Yellow
+00000
+0...0
+0...0
+0...0
+00000
+
+swapwall
+black
+.....
+.....
+.....
+.....
+.....
+
+thefloor
+#3B3942
+00000
+00000
+00000
+00000
+00000
+
+thefloorx
+#3B3942
+00000
+00000
+00000
+00000
+00000
+
+eend
+#3B3942
+00000
+00000
+00000
+00000
+00000
+
+pitani
+black white #CCCCCC
+.1.1.
+2.1.1
+.2.1.
+2.2.1
+.2.2.
+
+pitani2
+black white #CCCCCC
+..1..
+.2.1.
+2.2.1
+.2.2.
+..2..
+
+pitani3
+black white #CCCCCC
+.....
+..1..
+.2.1.
+..2..
+.....
+
+pitani4
+black white #CCCCCC
+.....
+.....
+..1..
+.....
+.....
+
+
+blockani
+black #D9FFDC #7EE58D #5C8466 #4F5B46
+.1.1.
+2.1.1
+.2.1.
+2.2.1
+.2.2.
+
+blockani2
+black #D9FFDC #7EE58D #5C8466 #4F5B46
+..1..
+.2.1.
+2.2.1
+.2.2.
+..2..
+
+blockani3
+black #D9FFDC #7EE58D #5C8466 #4F5B46
+.....
+..1..
+.2.1.
+..2..
+.....
+
+blockani4
+black #D9FFDC #7EE58D #5C8466 #4F5B46
+.....
+.....
+..1..
+.....
+.....
+
+(
+checkempty
+black
+.....
+.....
+.....
+.....
+.....
+
+checkblock
+black
+.....
+.....
+.....
+.....
+.....
+)
+stopcha
+transparent
+
+resetacti
+transparent
+
+nopow
+transparent
+nostep
+transparent
+
+hudwork
+transparent
+
+hudstart
+transparent
+
+con
+transparent
+
+hudadd
+transparent
+
+spa
+transparent
+
+ani
+transparent
+noburn
+transparent
+
+
+stepup
+transparent
+stepdown
+transparent
+stepleft
+transparent
+stepright
+transparent
+
+
+pit
+black #231F26 (#E57ED5 #CC5285)
+11111
+10101
+01010
+00000
+00000
+
+pitfull
+black #231F26 (#E57ED5 #CC5285)
+00000
+00000
+00000
+00000
+00000
+
+
+switcrate
+black
+.....
+.....
+.....
+.....
+.....
+
+switcrate2
+black
+.....
+.....
+.....
+.....
+.....
+
+arrow
+black
+.....
+.....
+.0.0.
+.000.
+..0..
+
+arrow2
+black
+.....
+.0.0.
+.000.
+..0..
+.....
+
+arrowx
+black
+.....
+.....
+.....
+.....
+.....
+
+arrowx2
+black
+.....
+.....
+.....
+.....
+.....
+
+winend
+#FFD9E0 #E0AAF2 #A87EE5 #705C84
+1000.
+21100
+21110
+22110
+.2221
+
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Playerright
+* = Crate
+
+O = target
+n = nomove
+a = arrow2 and wall
+e=end
+t = end and target and eend
+w=end and winend
+
+c=cloner
+-=thefloor
+x=thefloorx
+
+;=pit
+
+1= power1
+2= power2
+3= power3
+
+0=hudadd and thefloor and hudstart
+
+hud=powhud1 or powhud2 or powhud3 or powhud1acti
+
+feelx= overcrate or overcrate2 or overcratefail
+
+feel = overwall
+pushable=crate or cloner or swapcrate  or switcrate or switcrate2 or crate2 
+win=crate or wall
+
+power=power1 or power2 or power3
+
+theemx= crate 
+player=playerright or playerleft
+
+apit= pit or pitfull
+
+cubes=Crate or crate2
+blocker = wall or crate  or nomove or player or arrow or apit
+
+blockerx= wall
+
+step=stepup or stepdown or stepleft or stepright
+
+arrowk = arrow or arrow2 or arrowx or arrowx2
+burner=burner1 or burner2 or burner3 or burner4
+
+theconfeel2=2up or 2up2 or 2down or 2left or 2left2 or 2right or 2right2 or 2leftremoval or 2rightremoval or 2leftremovalx or 2rightremovalx
+
+theconfeel=1up or 1up2 or 1down or 1left or 1left2 or 1right or 1right2 or 1leftremoval or 1rightremoval or 1leftremovalx or 1rightremovalx
+
+pitanix=pitani or pitani2 or pitani3 or pitani4
+
+blockanix=blockani or blockani2 or blockani3 or blockani4
+
+=======
+SOUNDS
+=======
+
+pushable MOVE 36772507
+
+EndLevel 74089700
+
+player MOVE 68988304
+sfx0 52836103
+sfx1 45427502
+
+sfx2 29503700
+sfx3 81951902
+
+
+sfx4 58584302
+
+sfx5 49778503
+
+sfx6 72843303
+
+sfx7 55064703
+
+sfx8 86999103
+
+sfx9 41950102
+
+sfx10 54020101 
+
+================
+COLLISIONLAYERS
+================
+
+Background
+burner
+Target
+nomove
+Player, Wall, pushable,swapwall,thefloor,thefloorx,cratefail,power
+apit
+
+pitanix
+blockanix
+
+stopcha
+resetacti
+nopow
+nostep
+hudwork
+hudstart
+step
+con
+noburn
+spa
+ani
+arrow, arrow2, arrowx, arrowx2
+winend
+eend
+end, endx
+
+hudadd
+hud
+
+
+
+feelx
+
+2left
+2left2
+2right
+2right2
+
+1left
+1left2
+1right
+1right2
+
+2up2
+2up
+
+1up2
+1up
+
+2down
+1down
+
+2leftremoval
+2rightremoval
+2leftremovalx
+2rightremovalx
+1leftremoval
+1rightremoval
+1leftremovalx
+1rightremovalx
+
+feel
+
+
+======
+RULES
+======
+
+
+
+[feel]->[]
+[feelx]->[]
+[theconfeel]->[]
+[theconfeel2]->[]
+
+[pitani4]->[]
+[pitani3]->[pitani4]
+[pitani2]->[pitani3]
+[pitani]->[pitani2]
+
+[blockani4]->[]
+[blockani3]->[blockani4]
+[blockani2]->[blockani3]
+[blockani]->[blockani2]
+
+
+
+[player stepright]->[right player]
+[player stepleft]->[left player]
+[player stepup]->[up player]
+[player stepdown]->[down player]
+
+
+
+[> crate2 noburn]->[> crate2 > noburn]
+
+[> player |power1][hudadd]->[> player |] [hudadd powhud1] sfx6
+
+[> player |power2][hudadd]->[> player |] [hudadd powhud2] sfx7
+
+[> player |power3][hudadd]->[> player |] [hudadd powhud3] sfx8
+
+[ >  Player | pushable  ] -> [  >  Player | > pushable ]
+
+[> pushable | pushable]->[> pushable |> pushable]
+
+rigid [ Moving cubes | cubes ] [con] -> [ Moving cubes | MOVING cubes ] [con]
+ 
+([powhud1] [left player|no blocker] ->[powhud1][left player left stepleft stepleft]
+
+[powhud1] [right player] ->[powhud1][right player right stepright stepright])
+
+late left[hud hudadd|]->[hud|hudadd]
+
+
+[hudwork]->[]
+
+[powhud1|powhud1acti]->[powhud1 hudwork|powhud1acti]
+[powhud1 hudstart]->[powhud1 hudwork hudstart]
+([Moving player][powhud1|powhud1acti]->[Moving player][powhud1 hudwork|powhud1acti]
+[Moving player][powhud1 hudstart]->[Moving player][powhud1 hudwork hudstart])
+
+
+
+
+[> player|wall]->[ player resetacti|wall]
+[> player|pushable|wall]->[ player resetacti|pushable|wall]
+[> player|pushable|pushable|wall]->[ player resetacti|pushable|pushable|wall]
+[> player|pushable|pushable|pushable|wall]->[ player resetacti|pushable|pushable|pushable|wall]
+ 
+[> player|apit no step]->[| pitani apit] sfx9
+[> player apit no step ]->[ pitani apit] sfx9
+
+[> cubes|apit]->[| blockani apit] sfx10
+
+[> power1|apit]->[power1 | apit]
+  
+ 
+ ([powhud1 hudwork]->[powhud1acti])
+[step]->[]
+ 
+right[right player|][powhud1 hudwork]->[right player| stepright] [powhud1acti]
+left[left player|][powhud1 hudwork]->[left player| stepleft] [powhud1acti]
+up[up player|][powhud1 hudwork]->[up player| stepup] [powhud1acti]
+down[down player|][powhud1 hudwork]->[down player| stepdown] [powhud1acti]
+
+[Moving player][powhud1|powhud1acti]->[Moving player][powhud1 hudwork|powhud1acti]
+[Moving player][powhud1 hudstart]->[Moving player][powhud1 hudwork hudstart]
+
+
+
+
+late [stopcha]->[]
+late[power1] [target]->[power1][stopcha target] 
+
+late[target no stopcha]->[burner1] sfx0
+
+late[nopow]->[]
+late[nostep]->[]
+
+late[powhud1acti][resetacti]->[powhud1][resetacti]
+
+late [powhud1][powhud1acti]->[powhud1][powhud1acti nopow]
+
+late [step][powhud1acti]->[step][powhud1acti nostep]
+
+late[resetacti]->[]
+
+late [powhud1acti no nostep no nopow]->[powhud1]
+
+late[powhud2 no con]->[powhud2 con]
+ 
+late left[hudadd hud|]->[hud|hudadd]
+
+late[player no spa]->[player spa]
+
+late[spa no player][burner1 no ani ]->[ spa][burner2 ani]
+late[spa no player][burner2 no ani]->[ spa][burner3 ani]
+late[spa no player][burner3 no ani]->[spa][burner4 ani]
+late[spa no player][burner4 no ani]->[spa][burner1 ani]
+
+late[spa no player]->[]
+
+late[ani]->[]
+late[noburn no burner]->[]
+late[noburn no crate2]->[]
+
+(late[crate burner ]->[ crate2 burner noburn] sfx5
+
+late [crate2 burner  no noburn]->[cratefail burner ] sfx4)
+
+
+
+[ left Playerright] -> [ left playerleft]
+[ right Playerleft] -> [ right playerright]
+
+[endx] ->[thefloor] sfx2
+[end | thefloor]-> [endx |thefloor]
+
+
+late up [wall| ]-> [wall|overwall]
+late up [crate2| ]-> [crate2|overcrate2]
+
+late up [crate2|cubes][con]->[Crate2 2up2|2up cubes][con]
+late down [crate2|cubes][con]->[Crate2 2down| cubes][con]
+late right [crate2|cubes][con]->[Crate2 2right| cubes][con]
+late up [crate2 2right|][con]->[Crate2 2right| 2right2][con]
+late left [crate2|cubes][con]->[Crate2 2left| cubes][con]
+late up [crate2 2left|][con]->[Crate2 2left| 2left2][con]
+late left [ crate2 2up2|cubes][con]->[Crate2 2up2 2leftremovalx|cubes ][con]
+late left [ crate2 2down|cubes][con]->[Crate2 2down 2leftremovalx|cubes ][con]
+late right [ crate2 2up2 |cubes ][con]->[Crate2 2up2 2rightremovalx |cubes  ][con]
+late right [ crate2  2down|cubes ][con]->[Crate2 2down 2rightremovalx|cubes ][con]
+(late left [ crate2 2up2|cubes]->[Crate2 2up2 2leftremovalx|cubes 2rightremovalx]
+late left [ crate2 2down|cubes]->[Crate2 2down 2leftremovalx|cubes 2rightremovalx]
+late right [ crate2 2up2 |cubes ]->[Crate2 2up2 2rightremovalx |cubes  2leftremovalx]
+late right [ crate2  2down|cubes ]->[Crate2 2down 2rightremovalx|cubes  2leftremovalx])
+late down [2leftremovalx| no 2left][con]->[2leftremoval|][con]
+late down [2rightremovalx| no 2right][con]->[2rightremoval|][con]
+
+late up [theemx| ]-> [theemx|overcrate]
+
+late up [crate|cubes][con]->[Crate 1up2|1up cubes][con]
+late down [crate|cubes][con]->[Crate 1down| cubes][con]
+late right [crate|cubes][con]->[Crate 1right| cubes][con]
+late up [crate 1right|][con]->[Crate 1right| 1right2][con]
+late left [crate|cubes][con]->[Crate 1left| cubes][con]
+late up [crate 1left|][con]->[Crate 1left| 1left2][con]
+late left [ crate 1up2|cubes][con]->[Crate 1up2 1leftremovalx|cubes ][con]
+late left [ crate 1down|cubes][con]->[Crate 1down 1leftremovalx|cubes ][con]
+late right [ crate 1up2 |cubes ][con]->[Crate 1up2 1rightremovalx |cubes  ][con]
+late right [ crate  1down|cubes ][con]->[Crate 1down 1rightremovalx|cubes  ][con]
+(late left [ crate 1up2|cubes]->[Crate 1up2 1leftremovalx|cubes 1rightremovalx]
+late left [ crate 1down|cubes]->[Crate 1down 1leftremovalx|cubes 1rightremovalx]
+late right [ crate 1up2 |cubes ]->[Crate 1up2 1rightremovalx |cubes  1leftremovalx]
+late right [ crate  1down|cubes ]->[Crate 1down 1rightremovalx|cubes  1leftremovalx])
+late down [1leftremovalx| no 1left][con]->[1leftremoval|][con]
+late down [1rightremovalx| no 1right][con]->[1rightremoval|][con]
+
+late up [cratefail| ]-> [cratefail|overcratefail]
+
+late up [end| ]-> [end|overcrate]
+late up [endx| ]-> [endx|overcrate]
+
+late up [apit|apit]->[pitfull|apit]
+
+late up [apit|no apit]->[pit|]
+
+
+
+[]-> again 
+(
+[arrow]->[arrowx2]
+[arrow2]->[arrowx]
+
+[arrowx]->[arrow]
+[arrowx2]->[arrow2])
+==============
+WINCONDITIONS
+==============
+
+(no power1)
+all player on burner
+
+some player
+no powhud1acti
+
+=======
+LEVELS
+=======
+
+message Eat all the pellets AND end on the target
+(Remove all green blocks)
+
+
+message level 1 of 7
+--------0
+-;;;;;;;-
+;;;;;;;;;
+;;;...;;;
+;;..O..;;
+;;..P..;;
+;;.....;;
+;;#...#;;
+;;;#1#;;;
+;;;;.;;;;
+-;;;;;;;-
+
+message level 2 of 7
+--------0
+-;;;;;;;-
+;;;;;;;;;
+;;;###;;;
+;;#.P.#;;
+;;.O...;;
+;;.1.1.;;
+;;.....;;
+;;;...;;;
+;;;;;;;;;
+-;;;;;;;-
+
+message level 3 of 7
+--------0
+-;;;;;;;-
+;;;;;;;;;
+;;..P..;;
+;;..O..;;
+;;..1..;;
+;;.....;;
+;;..1..;;
+;;.....;;
+;;;;;;;;;
+-;;;;;;;-
+
+message level 4 of 7
+--------0
+-;;;;;;;-
+;;;;;;;;;
+;;.....;;
+;;..P..;;
+;;.1O1.;;
+;;..1..;;
+;#.....#;
+;#..*..#;
+;;#...#;;
+-;;;;;;;-
+
+message level 5 of 7
+--------0
+--#####--
+###P1.###
+#..*....#
+#..1....#
+#.O.....#
+#.......#
+#.1.....#
+#.......#
+###...###
+--#####--
+
+message level 6 of 7
+--------0
+-;######-
+;;1.P..#-
+;......##
+;.....1.#
+;.;.....#
+;.1...*.#
+;....O..#
+;##....##
+;;;....#-
+--;#####-
+
+message level 7 of 7
+--------0
+-######;-
+;#....#;-
+;#1.P.##;
+;......1;
+;.......;
+;..;..*.;
+;..1....;
+;;;..O..;
+;;;;...;;
+-;;;;;;;-
+
+
+
+(--------0
+-#######-
+##1.P..##
+#.*.....#
+;.....1.#
+;.......#
+;.;.....#
+;.1.O...#
+;.......#
+;########
+---------)
+
+(--------0
+-#######-
+##.;P;.##
+#..;1;..#
+#.......#
+#..1O1..#
+#.......#
+#..;.;..#
+#..*.*..#
+#...;...#
+#########)
+
+(--------0
+-;;;;;;;-
+;;#####;;
+;##...##;
+;#..P..#;
+;#..O..#;
+;#.1.1.#;
+;#.....#;
+;#..#..#;
+;;#####;;
+-;;;;;;;-)
+
+(--------0
+-;;;;;;;-
+;;;;;;;;;
+;;;###;;;
+;;#.P.#;;
+;#.O...#;
+;#.111.#;
+;;.....;;
+;;.....;;
+;;..#..;;
+-;;;;;;;-)
+
+(--------0
+-#######-
+##.....##
+#.1...1.#
+#.......#
+#...1...#
+#.......#
+#...O...#
+#...P...#
+##.....##
+-#######-)
+
+(--------0
+-;;;;;;;-
+;;;;;;;;;
+;;;;;;;;;
+;;;...;;;
+;;..1..;;
+;;.1.1.;;
+;;..P..;;
+;;;..O#;;
+;;;;;;;;;
+-;;;;;;;-)
+
+
+
+xxxxxxxxxxxxxx
+-eeeeeeeeeeee-
+eeeeeeeeeeeeee
+eeeeeeeeeeeeee
+wewewewwweweew
+wewewetweewwew
+weweweeweeweww
+eweweewwweweew
+eeeeeeeeeeeeee
+eeeeeeeeeeeeee
+-eeeeeeeeeeee-
+
+

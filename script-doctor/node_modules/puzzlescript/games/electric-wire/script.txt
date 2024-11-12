@@ -1,0 +1,1016 @@
+title Electric wire
+author Rosden Shadow [Mark Signorelli]
+homepage rosden.itch.io
+
+noaction
+run_rules_on_level_Start
+
+background_color #231F26
+
+text_color #E0AAF2
+
+again_interval 0.1
+========
+OBJECTS
+========
+
+Background
+#3B3942 #231F26 (#E57ED5 #CC5285)
+11111
+10001
+10101
+10001
+11111
+
+(
+00101
+01110
+11011
+01111
+10110)
+(
+11101
+00101
+11111
+10100
+10111)
+
+
+nomove
+#FFEED9 #536673
+.....
+.000.
+.010.
+.000.
+.....
+
+Target
+white #231F26
+.....
+.010.
+.101.
+.010.
+.....
+
+Wall
+#FFD9FC #E0AAF2  #A87EE5 #705C84
+21110
+21110
+22221
+23232
+32323
+
+overwall
+#FFD9FC #E0AAF2  #A87EE5 #705C84
+.....
+.....
+.....
+10000
+21110
+
+
+Playerright
+#F2F2AA #E5C17E #5C8466 #4F5B46
+.000.
+11202
+11313
+11110
+.1.1.
+
+playerleft
+#F2F2AA #E5C17E #5C8466 #4F5B46
+.000.
+20211
+31311
+01111
+.1.1.
+
+Crate
+#D9FFDC #7EE58D #5C8466 #4F5B46
+21100
+21110
+22110
+32223
+.333.
+
+overcrate
+#D9FFDC #7EE58D #5C8466 #4F5B46
+.....
+.....
+.....
+.....
+.000.
+
+Crated
+#F2F2AA #E5C17E #CC7A52 #736053 black
+21100
+21110
+22110
+32223
+.333.
+
+overcrate2
+#F2F2AA #E5C17E #CC7A52 #736053
+.....
+.....
+.....
+.....
+.000.
+
+end
+#D9FFDC #7EE58D #5C8466 #4F5B46
+21100
+21110
+22110
+32223
+.333.
+endx
+#D9FFDC #7EE58D #5C8466 #4F5B46
+21100
+21110
+22110
+32223
+.333.
+
+
+
+cloner
+#E5C17E #DB7F55 #B32D2D #73342E
+.100.
+.210.
+.221.
+.332.
+.....
+
+swapcrate
+Orange Yellow
+00000
+0...0
+0...0
+0...0
+00000
+
+swapwall
+black
+.....
+.....
+.....
+.....
+.....
+
+thefloor
+#231F26
+00000
+00000
+00000
+00000
+00000
+
+thefloorx
+#231F26
+00000
+00000
+00000
+00000
+00000
+
+eend
+#231F26
+00000
+00000
+00000
+00000
+00000
+(
+checkempty
+black
+.....
+.....
+.....
+.....
+.....
+
+checkblock
+black
+.....
+.....
+.....
+.....
+.....
+)
+
+spa
+TRANSPARENT
+
+wire
+#845C5C (#5B4846)
+.....
+..0..
+.000.
+..0..
+.....
+
+zeact
+TRANSPARENT
+
+actd
+#F2F2AA
+.....
+..0..
+.000.
+..0..
+.....
+
+actdead
+TRANSPARENT
+
+wd
+#845C5C #5B4846
+.....
+..0..
+.100.
+.100.
+.100.
+
+wu
+#845C5C #5B4846
+.100.
+.100.
+.100.
+..0..
+.....
+
+wl
+#845C5C #5B4846
+.....
+000..
+0000.
+111..
+.....
+
+wr
+#845C5C #5B4846
+.....
+..000
+.0000
+..111
+.....
+
+che1
+TRANSPARENT
+che2
+TRANSPARENT
+
+nocon
+TRANSPARENT
+
+nodie
+TRANSPARENT
+
+begin
+TRANSPARENT
+
+test
+white
+.....
+.....
+..0..
+.....
+.....
+
+movr
+black
+.....
+.....
+.....
+.....
+.....
+
+movl
+black
+.....
+.....
+.....
+.....
+.....
+
+movu
+black
+.....
+.....
+.....
+.....
+.....
+
+movd
+black
+.....
+.....
+.....
+.....
+.....
+
+movr2
+black
+.....
+.....
+.....
+.....
+.....
+
+movl2
+black
+.....
+.....
+.....
+.....
+.....
+
+movu2
+black
+.....
+.....
+.....
+.....
+.....
+
+movd2
+black
+.....
+.....
+.....
+.....
+.....
+
+electr
+#F2F2AA
+.....
+.....
+00...
+.....
+.....
+
+electl
+#F2F2AA
+.....
+.....
+...00
+.....
+.....
+
+electd
+#F2F2AA
+..0..
+..0..
+.....
+.....
+.....
+
+electu
+#F2F2AA
+.....
+.....
+.....
+..0..
+..0..
+
+electu2
+#F2F2AA
+..0..
+..0..
+.0.0.
+..0..
+.....
+
+electd2
+#F2F2AA
+.....
+..0..
+.0.0.
+..0..
+..0..
+
+electl2
+#F2F2AA
+.....
+..0..
+00.0.
+..0..
+.....
+
+electr2
+#F2F2AA
+.....
+..0..
+.0.00
+..0..
+.....
+
+elecf
+TRANSPARENT
+
+
+movdie2
+black
+.....
+.....
+.....
+.....
+.....
+movdie
+black
+.....
+.....
+.....
+.....
+.....
+
+switcrate
+black
+.....
+.....
+.....
+.....
+.....
+
+switcrate2
+black
+.....
+.....
+.....
+.....
+.....
+
+arrow
+black
+.....
+.....
+.0.0.
+.000.
+..0..
+
+arrow2
+black
+.....
+.0.0.
+.000.
+..0..
+.....
+
+arrowx
+black
+.....
+.....
+.....
+.....
+.....
+
+
+arrowx2
+black
+.....
+.....
+.....
+.....
+.....
+
+winend
+#F2F2AA #E5C17E #CC7A52
+1000.
+21100
+21110
+22110
+.2221
+
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Playerright and begin
+* = Crate
+
+O = Target
+n = nomove
+a = arrow2 and wall
+e=end
+t = end and target and eend
+w=end and winend
+
+c=cloner
+-=thefloor
+x=thefloorx
+
+@ = crated
+
+feel=overwall or overcrate or overcrate2
+pushable=crate or cloner or swapcrate  or switcrate or switcrate2 or crate
+win=crate or wall
+
+
+theemx= crate 
+player=playerright or playerleft
+
+blocker = wall or crate  or nomove or player or arrow or wire
+
+arrowk = arrow or arrow2 or arrowx or arrowx2
+
+wirefeel=wd or wu or wr or wl
+
+dircrate=crated
+
+act=actd
+
+mov= movr or movl or movu or movd
+
+movx= mov or movr2 or movl2 or movu2 or movd2
+
+elect=electr or electl or electd or electu
+
+elect2=electr2 or electl2 or electd2 or electu2
+=======
+SOUNDS
+=======
+
+pushable MOVE 36772507
+
+EndLevel 74089700
+
+player MOVE 68988304
+sfx0 52836103
+sfx1 45427502
+
+sfx2 29503700
+sfx3 81951902
+
+sfx4 29145307
+
+sfx5 20059101
+
+sfx6 16247301
+
+sfx7 11079304
+================
+COLLISIONLAYERS
+================
+
+Background
+Target
+nomove
+Player, Wall, pushable,swapwall,thefloor,thefloorx,wire, crated
+
+
+elecf
+begin
+actdead
+movdie
+movdie2
+nodie
+nocon
+che1
+che2
+spa
+arrow, arrow2, arrowx, arrowx2
+winend
+eend
+end, endx
+
+movr
+movl
+movu
+movd
+
+movr2
+movl2
+movu2
+movd2
+wu
+wl
+wr
+wd
+
+act
+zeact
+feel
+
+electr
+electl
+electd
+electu
+
+electu2
+electd2
+electl2
+electr2
+
+test
+
+======
+RULES
+======
+
+[feel]->[]
+[test]->[]
+[ >  Player| crate ] -> [  >  Player |  crate ] sfx4
+
+
+([> player|spa]->[)
+
+down[act|pushable]->[act|down pushable electd elecf] sfx6
+left[act|pushable]->[act|left pushable electl elecf] sfx6
+right[act|pushable]->[act|right pushable electr elecf] sfx6
+up[act|pushable]->[act|up pushable electu elecf] sfx6
+
+[pushable movr no elecf]->[right pushable]
+[pushable movl no elecf]->[left pushable]
+[pushable movu no elecf]->[up pushable]
+[pushable movd no elecf]->[down pushable]
+
+[elecf no pushable]->[]
+
+[movr2]->[movr]
+[movl2]->[movl]
+[movu2]->[movu]
+[movd2]->[movd]
+
+right[right pushable|no blocker]->[right pushable| movr2]
+left[left pushable|no blocker]->[left pushable| movl2]
+up[up pushable|no blocker]->[up pushable| movu2]
+down[down pushable|no blocker]->[down pushable| movd2]
+
+[> crate|Target]->[> crate|target] sfx2
+
+[ left Playerright] -> [ left playerleft]
+[ right Playerleft] -> [ right playerright]
+
+[endx] ->[thefloor] sfx2
+[end | thefloor]-> [endx |thefloor]
+
+late [spa no player]->[wire che1]
+late [player no spa]->[player spa]
+
+late left[wire che1|wire che2]->[wire che2 wl|wire wr]
+late right[wire che1|wire che2]->[wire che2 wr|wire wl]
+late up[wire che1|wire che2]->[wire che2 wu|wire wd]
+late down[wire che1|wire che2]->[wire che2 wd|wire wu]
+
+late [che1]->[che2]
+
+[> player|Crated]->[> player actd|] sfx5
+
+[> player|wire]->[> player|wire]sfx7
+[zeact|act]->[zeact nodie|act]
+
+[> pushable movx|blocker]->[ pushable|blocker]
+
+[zeact no nodie]->[]
+
+
+[act begin]->[begin]
+([act no nocon|wire no zeact]->[zeact |wire act nocon])
+([act actdead]->[]
+[actdead]->[]
+[act]->[act actdead])
+right[act no nocon|wl no zeact]->[zeact |wl act nocon]
+down[act no nocon|wu no zeact]->[zeact |wu act nocon]
+up[act no nocon|wd no zeact]->[zeact |wd act nocon]
+left[act no nocon|wr no zeact]->[zeact |wr act nocon]
+
+late up[electd|]->[electd|electd2]
+late down[electu|]->[electu|electu2]
+late left[electr|]->[electr|electr2]
+late right[electl|]->[electl|electl2]
+
+late up [wall| ]-> [wall|overwall]
+late up [theemx| ]-> [theemx|overcrate]
+late up [dircrate| ]-> [dircrate|overcrate2]
+
+late up [end| ]-> [end|overcrate]
+late up [endx| ]-> [endx|overcrate]
+
+late [movx no pushable]->[]
+
+late[movdie no pushable]->[]
+late[movdie2 no pushable]->[]
+
+late [movx pushable movdie2]->[pushable]
+late [movx pushable movdie]->[movx pushable movdie2]
+late [movx pushable no movdie]->[movx pushable movdie]
+
+
+late[nodie]->[]
+late[nocon]->[]
+
+(late[movx]->[movx test]
+late[wire]->[wire test])
+
+
+[]-> again 
+(
+[arrow]->[arrowx2]
+[arrow2]->[arrowx]
+
+[arrowx]->[arrow]
+[arrowx2]->[arrow2])
+==============
+WINCONDITIONS
+==============
+
+all Target on crate 
+
+no act
+no movx
+
+=======
+LEVELS
+=======
+
+message Have the green crates end on a target
+
+message level 0 of 8
+---------
+---------
+-#######-
+##..O..##
+#.....P.#
+#.......#
+#...*...#
+#.......#
+##.#@#.##
+-#######-
+---------
+---------
+
+message level 1 of 8
+---------
+---------
+-#######-
+##..P..##
+#......O#
+#...*...#
+#..#....#
+#...@...#
+##.....##
+-#######-
+---------
+---------
+
+message level 2 of 8
+---------
+---------
+-#######-
+##..@..##
+#.......#
+#.......#
+#..*.O..#
+#.......#
+#...P...#
+##.....##
+-#######-
+---------
+
+message level 3 of 8
+---------
+---------
+#########
+#......@#
+#...*...#
+#.......#
+#...P...#
+#.......#
+#...O...#
+##.....##
+-#######-
+---------
+
+message level 4 of 8
+---------
+---------
+#########
+#.......#
+#...*...#
+#.@...#.#
+#.......#
+#.......#
+#...O...#
+#...P...#
+#.......#
+#########
+
+
+message level 5 of 8
+---------
+-#######-
+##..@..##
+#....*..#
+#.......#
+#.......#
+#.......#
+#.......#
+#....O..#
+#....P..#
+#.......#
+#########
+
+
+message level 6 of 8
+---------
+---------
+#########
+#...P...#
+#.......#
+#...*...#
+#.......#
+#...*...#
+#.O...O.#
+#...@...#
+##.....##
+-#######-
+
+message level 7 of 8
+---------
+---------
+#########
+#...p...#
+#.......#
+#...O...#
+#..*O*..#
+#.......#
+#...@...#
+#.......#
+#########
+---------
+
+message level 8 of 8
+---------
+---------
+#########
+#...@...#
+#.......#
+#..*.*..#
+#..O.O..#
+#.......#
+#.......#
+##..P..##
+-#######-
+---------
+
+(!!!!!!!!!!!!!
+sorry I tried to make more levels but I should of just made a new mechnic 
+to do it instead of spending 2 and half hours trying to make another good level with current mechanics I have
+!!!!!!!!!!!!!!!)
+
+(
+message level 9 of 9
+---------
+#########
+#...@...#
+#.......#
+#...O...#
+#.......#
+#.*O.O*.#
+#.......#
+#...*...#
+#...P...#
+#.......#
+#########)
+
+
+(---------
+#########
+#.....@.#
+#.......#
+#....*..#
+#...O...#
+#O...*..#
+#.......#
+#....P..#
+#..*....#
+#.....O.#
+#########)
+
+(---------
+#########
+#...@...#
+#.......#
+#..O.O..#
+#...O...#
+#...*...#
+#..*.*..#
+#.......#
+#...P...#
+#.......#
+#########)
+
+(---------
+-#######-
+-#..@..#-
+-#.....#-
+-#..*..#-
+-#..O..#-
+-#.*O..#-
+-#..O..#-
+-#..*..#-
+-#.....#-
+-#..P..#-
+-#######-)
+
+(---------
+#########
+#...@...#
+#.......#
+#.O.O.O.#
+#.......#
+#.*.*.*.#
+#.......#
+#.......#
+#...P...#
+#.......#
+#########)
+
+(---------
+---------
+#########
+#...@...#
+#.......#
+#...O...#
+#..*#O..#
+#...*...#
+#.......#
+#.......#
+#...P...#
+#########)
+
+(---------
+---------
+########-
+#......#-
+#@.....#-
+#...*..##
+#.....P.#
+#.......#
+#...O...#
+#.......#
+#########
+---------)
+
+
+(---------
+---------
+#########
+#.......#
+#.@...@.#
+#...*...#
+#.......#
+#...O...#
+#...P...#
+#.......#
+#########
+---------)
+
+
+
+(----------
+-#######--
+##.....##-
+#.......#-
+#@..*..@#-
+#.......##
+#...P....#
+#........#
+#...O....#
+#........#
+#........#
+##########)
+
+
+(---------
+---------
+-#######-
+##.....##
+#...*...#
+#.......#
+#.......#
+#...P...#
+#...*...#
+##.....##
+-#######-
+---------)
+
+
+
+xxxxxxxxxxxxxx
+-eeeeeeeeeeee-
+eeeeeeeeeeeeee
+eeeeeeeeeeeeee
+wewewewwweweew
+wewewetweewwew
+weweweeweeweww
+eweweewwweweew
+eeeeeeeeeeeeee
+eeeeeeeeeeeeee
+-eeeeeeeeeeee-
+
+

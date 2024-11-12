@@ -1,0 +1,689 @@
+title Crate Cables
+author Jack Kutilek
+homepage jackkutilek.com
+
+(verbose_logging)
+flickscreen 11x11
+run_rules_on_level_start
+
+========
+OBJECTS
+========
+
+Background
+#88aa88 #99bb99
+11111
+01111
+11101
+11111
+10111
+
+Wall
+darkgreen #557244  #88aa88
+20000
+01110
+01010
+01110
+00002
+
+
+wallI
+darkgreen #557244  #eeccee  #88aa88
+30000
+01210
+01210
+01210
+00003
+
+wallV
+darkgreen #557244  #eeccee  #88aa88
+30000
+02120
+02120
+01210
+00003
+
+wallX
+darkgreen #557244  #eeccee  #88aa88
+30000
+02120
+01210
+02120
+00003
+
+nonsignalling_Target
+DarkBlue
+.....
+.000.
+.0.0.
+.000.
+.....
+
+
+Signalling_Target
+DarkBlue
+.....
+.000.
+.0.0.
+.000.
+.....
+
+
+activeTarget
+#ddcc11
+.....
+.000.
+.0.0.
+.000.
+.....
+
+LeftLine
+#ddcc11
+.....
+.....
+000..
+.....
+.....
+
+RightLine
+#ddcc11
+.....
+.....
+..000
+.....
+.....
+
+UpLine
+#ddcc11
+..0..
+..0..
+..0..
+.....
+.....
+
+DownLine
+#ddcc11
+.....
+.....
+..0..
+..0..
+..0..
+
+activeTargeterror
+#dd4444
+.....
+.000.
+.0.0.
+.000.
+.....
+
+AntiTarget
+#bb4444
+.....
+.0.0.
+..0..
+.0.0.
+.....
+
+crateerror
+#bb4444
+.....
+.0.0.
+..0..
+.0.0.
+.....
+
+
+LeftLineCover
+#dd4444
+.....
+.....
+000..
+.....
+.....
+
+RightLineCover
+#dd4444
+.....
+.....
+..000
+.....
+.....
+
+UpLineCover
+#dd4444
+..0..
+..0..
+..0..
+.....
+.....
+
+DownLineCover
+#dd4444
+.....
+.....
+..0..
+..0..
+..0..
+
+
+Player
+Black Orange White Blue
+.000.
+.111.
+22222
+.333.
+.3.3.
+
+Crate
+Orange lightbrown
+00000
+01110
+01110
+01110
+00000
+
+ActiveCrate
+#3344ee #6677ff
+00000
+01110
+01110
+01110
+00000
+
+
+goodTarget
+#66bb22
+.....
+.000.
+.0.0.
+.000.
+.....
+
+
+LeftLineGood
+#66bb22
+.....
+.....
+000..
+.....
+.....
+
+RightLineGood
+#66bb22
+.....
+.....
+..000
+.....
+.....
+
+UpLineGood
+#66bb22
+..0..
+..0..
+..0..
+.....
+.....
+
+DownLineGood
+#66bb22
+.....
+.....
+..0..
+..0..
+..0..
+
+
+v_gate
+darkred
+.....
+00000
+00000
+00000
+.....
+
+h_gate
+darkred
+.000.
+.000.
+.000.
+.000.
+.000.
+
+v_gate_floor
+transparent
+
+h_gate_floor
+transparent
+
+gate_wire
+transparent
+.....
+.....
+..0..
+.....
+.....
+
+
+gate_signal
+darkbrown
+.....
+.....
+..0..
+.....
+.....
+
+player_start
+transparent
+
+wintracker
+transparent
+
+endgame
+#f2fff2
+..0..
+...0.
+00000
+...0.
+..0..
+
+checkpoint_tile
+transparent
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Player
+* = Crate
+@ = Crate and nonsignalling_Target
+$ = Crate and signalling_Target
+O = nonsignalling_Target
+D = Signalling_Target
+X = AntiTarget
+G = v_gate and v_gate_floor
+H = h_gate and h_gate_floor
++ = gate_wire and wall
+- = gate_wire
+E = endgame
+c = checkpoint_tile
+1 = wallI
+2 = wallv
+3 = wallx
+
+line = LeftLine or RightLine or upline or downline
+linegood = leftlinegood or rightlinegood or uplinegood or downlinegood
+linecover = LeftLinecover or RightLineCover or UpLineCover or DownLineCover
+anycrate = crate or activecrate
+
+target = nonsignalling_Target or Signalling_Target
+
+gate = h_gate or v_gate
+gate_floor = h_gate_floor or v_gate_floor
+
+=======
+SOUNDS
+=======
+
+
+================
+COLLISIONLAYERS
+================
+
+Background
+
+Target, AntiTarget, endgame, checkpoint_tile
+
+
+player_start
+
+Player, Wall, anyCrate, gate, walli, wallv, wallx
+
+activeTarget
+goodTarget
+activeTargeterror
+
+
+crateerror
+
+leftline
+RightLine
+UpLine
+DownLine
+
+LeftLineGood
+RightLineGood
+UpLineGood
+DownLineGood
+
+LeftLineCover
+RightLineCover
+UpLineCover
+DownLineCover
+
+gate_wire, gate_floor
+gate_signal
+
+wintracker
+
+======
+RULES
+======
+
+(track player movement)
+[player]->[player player_start]
+
+(check for checkpoint, forward to gate for backward movement after success)
+late [player checkpoint_tile] -> checkpoint
+late [player checkpoint_tile] -> [Player]
+
+(push crates)
+[ >  Player | anyCrate ] -> [  >  Player | > anyCrate  ]
+
+(activate crates on targets)
+late [crate target]->[ActiveCrate target]
+
+(player leaves a trail of active crates when moving away from them)
+late [player | no ActiveCrate player_start | ActiveCrate] -> [player | ActiveCrate player_start | ActiveCrate]
+
+(crates are only active when on a target or touching another active crate)
+late [ActiveCrate no target | no ActiveCrate] -> [crate |]
+late [crate no target | ActiveCrate] -> [ActiveCrate | ActiveCrate]
+
+(redraw wire lines)
+[line] -> []
+late right [ActiveCrate | ActiveCrate] -> [ActiveCrate RightLine | ActiveCrate LeftLine]
+late up [ActiveCrate | ActiveCrate] -> [ActiveCrate upline | ActiveCrate downline]
+
+[activeTarget]->[]
+late [Target ActiveCrate no activeTarget] -> [Target ActiveCrate activeTarget]
+
+(recheck winstate, send wintracker along activecrates from a single random active target)
+[wintracker] -> []
+late [Signalling_Target ActiveCrate no wintracker] -> [Signalling_Target ActiveCrate wintracker]
+late [ActiveCrate wintracker | ActiveCrate no wintracker] -> [ActiveCrate wintracker | ActiveCrate wintracker]
+
+
+(TODO fix this - draw wire in red when it crosses an antitarget)
+[linecover] -> []
+late [ActiveCrate AntiTarget][LeftLine no LeftLineCover] -> [ActiveCrate AntiTarget][LeftLine LeftLineCover]
+late [ActiveCrate AntiTarget][RightLine no rightLineCover] -> [ActiveCrate AntiTarget][rightLine rightLineCover]
+late [ActiveCrate AntiTarget][upLine no upLineCover] -> [ActiveCrate AntiTarget][upLine upLineCover]
+late [ActiveCrate AntiTarget][downLine no downLineCover] -> [ActiveCrate AntiTarget][downLine downLineCover]
+
+[crateerror]->[]
+late [anycrate AntiTarget] -> [anycrate crateerror AntiTarget]
+
+(TODO fix this - clear wintrackers on wires that cross antitargets)
+[activeTargeterror]->[]
+late [linecover][activeTarget no activeTargeterror] -> [linecover][activeTarget activeTargeterror]
+late [linecover][wintracker] -> [linecover][no wintracker]
+
+
+
+(open the gate, send the signal out)
+late [gate]->[]
+late [gate_floor | gate_wire] -> [ gate_floor | gate_wire gate_signal]
+late [gate_wire gate_signal | gate_wire no gate_signal] -> [gate_wire gate_signal | gate_wire gate_signal]
+
+(check for wintracker at targets, and cancel the signal if not found)
+late [gate_signal | target no wintracker] -> [ | target]
+late [gate_wire gate_signal | gate_wire no gate_signal] -> [gate_wire no gate_signal | gate_wire]
+
+(re-add gate if signal was lost)
+late [h_gate_floor | gate_wire no gate_signal] -> [h_gate h_gate_floor | gate_wire]
+late [v_gate_floor | gate_wire no gate_signal] -> [v_gate v_gate_floor | gate_wire]
+
+(also cancel the wintrackers if not ready yet)
+late [target wintracker | gate_wire no gate_signal] -> [ target no wintracker | gate_wire]
+late [ActiveCrate wintracker | activecrate no wintracker] -> [ActiveCrate no wintracker | ActiveCrate]
+
+(paint lines green if we are good)
+[linegood] -> []
+[goodTarget]->[]
+late [leftline wintracker] -> [leftLine LeftLineGood wintracker]
+late [rightline wintracker] -> [rightLine rightLineGood wintracker]
+late [upline wintracker] -> [upLine upLineGood wintracker]
+late [downline wintracker] -> [downLine downLineGood wintracker]
+late [target wintracker] -> [target goodTarget]
+
+late [gate_signal] -> []
+late [player_start] -> []
+
+
+
+==============
+WINCONDITIONS
+==============
+
+all player on endgame
+
+=======
+LEVELS
+=======
+
+###########
+#oxoxoxoox#
+#oooxoxoxo#
+#oooxoxoxo#
+#.........#
+#.........#
+#....*....#
+#.......###
+#.........#
+#.......#.e
+###c#####33
+###g+######
+#...+++++++
+#.###@#...+
+#.#.x...d-+
+#.....#...+
+#....#####+
+##...##...+
+##......o-+
+##...##...#
+##.########
+##c#####313
+##g#+######
+##x.#..###+
+##x.xx.#..+
+##..#.....+
+####..##.#+
+####...o..+
+####.x....+
+###..###d#+
+###...@####
+#......####
+#c####32111
++g#########
++.....#####
++#.......##
++...#.**.##
++-+--++#..#
++.#.x.d...#
++.#..######
++...#....##
++......*.##
++..o.....##
+++++#c#3211
+####+g#####
+####+....##
+####++++.##
+####+x.-.##
+####dx.o.##
+##...x.####
+##.*.x.####
+##...x.####
+##.....####
+#..########
+#c######321
+#g+++++++++
+#...x....o+
+##..x...##+
+#...x.....+
+#...x..#..+
+#.######.#+
+#...x..#..+
+#...x.....+
+#...x.*.##+
+##..x....d+
+##c######32
+##g++++++##
+#..+..d#+##
+#.#+...++##
+#..+#.#+..#
+#.o++.#+..#
+#...+.#+..#
+##..o..@..#
+##..#..#..#
+#####.##..#
+#.........#
+#c######312
+#g+++++++++
+#..#.d.###+
+##.......#+
+##..#x#...+
+##........+
+#....*....+
+#......#x.+
+##....##--+
+##....x.ox#
+#.......xx#
+#c#####3111
+#g+########
+#.++++++++#
+#...+#o##+#
+##..-....d#
+##.#+#...##
+#..#+#....#
+#...+...*.#
+#.o.+.....#
+##+++#.####
+#####..####
+#####c##311
+#####g++++#
+###...###+#
+###.#####+#
+###..x..o+#
+#...*xxx.+#
+#.#xxxx#.+#
+#.#..x##.+#
+#.#..##..+#
+#.#o....d+#
+#.#+++++++#
+#c#######31
+#g+++++####
+#.....+--.#
+##..**$.-.#
+#..##...-.#
+#..###.#+.#
+#..##**@+.#
+#..##...-.#
+#.......+##
+##.####.-.#
+#..####o-.#
+#c########3
+#g++++#####
+#..##++++++
+##...d####+
+##...#...#+
+##.....#.#+
+##...#...#+
+##xxx##.#o+
+##...x....+
+##.*.x....+
+##...x....+
+#####c###13
+#####g#####
+##++--+++##
+##-..#..-##
+#.+.....+.#
+#.-x...x-.#
+#.-ox.xd-.#
+#..x...x..#
+#....*....#
+##.......##
+#..########
+#c#####2111
+#g+++++++##
+#.....o#+##
+##.....#+##
+##.....$+##
+##c###.#++#
+##.###..o+#
+##.##....+#
+##.##..#.+#
+##..##...+#
+###.##o--+#
+###c####211
+###g+######
+###.-...###
+####++#.###
+###.o+..###
+##...+...##
+##.*.-...##
+##...+...##
+###..+..###
+###.d+o..##
+########.##
+21######c##
+######++g##
+######+..##
+####+++.###
+##..+...###
+##..+-o.###
+##..-...###
+##.*+#.####
+##..+#.####
+##.d+#...##
+########.##
+########c#2
+#+++++++g##
+#+####...##
+#+####.####
+#+.......##
+#+o......##
+#+###.#####
+#+d......##
+##...*...##
+##.......##
+#####.#####
+#####c###12
+#####g+####
+##....+####
+##.###+####
+##...d+o###
+##....#.###
+##....#.###
+##....#.###
+##..*...###
+##.###..###
+##...######
+####c###111
+####g######
+####-.#####
+#++++-++++#
+#+##.....+#
+#+#......+#
+#+o....d-+#
+##..#....##
+##.########
+##.....####
+##..#..####
+#####c###11
+#####g+++##
+##......-##
+#..#.*.#-.#
+#.##...#+.#
+#.#++++++.#
+#.#@*.*$#.#
+#.###.###.#
+#.........#
+#.p..*....#
+#.........#
+##########1
+
+
+message Thanks for playing!

@@ -1,0 +1,624 @@
+title monster mess
+author Rosden Shadow [Mark Signorelli]
+homepage rosden.itch.io
+
+
+run_rules_on_level_Start
+
+background_color black
+
+text_color white
+
+again_interval 0.2
+========
+OBJECTS
+========
+
+Background
+black (#E57ED5 #CC5285)
+00000
+00000
+00000
+00000
+00000
+(
+11111
+10001
+11101
+10101
+11111)
+(
+00101
+01110
+11011
+01111
+10110)
+(
+11101
+00101
+11111
+10100
+10111)
+
+
+nomove
+#FFEED9 #536673
+.....
+.000.
+.010.
+.000.
+.....
+
+Target
+#FFD9E0 #423D39
+.....
+.010.
+.0.1.
+.000.
+.....
+
+Wall
+white white black black #ff0000
+21110
+21110
+22221
+11313
+11313
+
+overwall
+white white black black
+.....
+.....
+.....
+10000
+21110
+
+
+Playerright
+white white #ff0000
+.000.
+11202
+11212
+11110
+.1.1.
+
+playerleft
+white white #ff0000
+.000.
+20211
+21211
+01111
+.1.1.
+
+
+enemyleft
+white #ff0000 black
+.111.
+..111
+11.11
+..111
+.111.
+
+enemyup
+white #ff0000 black
+..1..
+1.1.1
+11.11
+11111
+.111.
+
+enemyright
+white #ff0000 black
+.111.
+111..
+11.11
+111..
+.111.
+
+enemydown
+white #ff0000 black
+.111.
+11111
+11.11
+1.1.1
+..1..
+
+mess1
+white #ff0000
+.....
+.000.
+.0.0.
+..00.
+.....
+
+mess2
+white #ff0000
+.....
+.00..
+.0.0.
+.000.
+.....
+(
+.0.0.
+0.0.0
+.0.0.
+0.0.0
+.0.0.
+)
+
+Crate
+white white #ff0000
+.000.
+21100
+21110
+22110
+.222.
+
+(21100
+21110
+22110
+32223
+.333.)
+
+overcrate
+#FFD9E0 #F2AACE #E57ED5 #845C7A
+.....
+.....
+.....
+.....
+.....
+
+end
+white white #ff0000
+.000.
+21100
+21110
+22110
+.222.
+
+endx
+white white #ff0000
+.000.
+21100
+21110
+22110
+.222.
+
+
+
+cloner
+#E5C17E #DB7F55 #B32D2D #73342E
+.100.
+.210.
+.221.
+.332.
+.....
+
+swapcrate
+Orange Yellow
+00000
+0...0
+0...0
+0...0
+00000
+
+swapwall
+black
+.....
+.....
+.....
+.....
+.....
+
+thefloor
+black black
+00000
+00000
+00000
+00000
+00000
+
+thefloorx
+black black
+00000
+00000
+00000
+00000
+00000
+
+eend
+black black
+00000
+00000
+00000
+00000
+00000
+(
+checkempty
+black
+.....
+.....
+.....
+.....
+.....
+
+checkblock
+black
+.....
+.....
+.....
+.....
+.....
+)
+
+leftx
+black
+.....
+.....
+.....
+.....
+.....
+
+rightx
+black
+.....
+.....
+.....
+.....
+.....
+
+upx
+black
+.....
+.....
+.....
+.....
+.....
+
+downx
+black
+.....
+.....
+.....
+.....
+.....
+
+switmess1
+black
+.....
+.....
+.....
+.....
+.....
+
+switmess2
+black
+.....
+.....
+.....
+.....
+.....
+
+switcrate
+black
+.....
+.....
+.....
+.....
+.....
+
+switcrate2
+black
+.....
+.....
+.....
+.....
+.....
+
+arrow
+black
+.....
+.....
+.0.0.
+.000.
+..0..
+
+arrow2
+black
+.....
+.0.0.
+.000.
+..0..
+.....
+
+arrowx
+black
+.....
+.....
+.....
+.....
+.....
+
+arrowx2
+black
+.....
+.....
+.....
+.....
+.....
+
+winend
+white #ff0000
+0000.
+10000
+10000
+11000
+.1110
+
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Playerright
+* = Crate
+
+O = Target
+(n = nomove)
+a = arrow2 and wall
+e=Background
+t = target and eend
+w=end and winend
+
+n= mess1
+
+c=cloner
+-=thefloor
+x=thefloorx
+
+1=enemyright
+2=enemyup
+3=enemyleft
+4=enemydown
+
+feel=overwall or overcrate 
+pushable=crate or cloner or swapcrate  or switcrate or switcrate2
+win=crate or wall
+
+
+theemx= crate 
+player=playerright or playerleft
+
+enemy = enemyleft or enemyright or enemydown or enemyup
+enemyx = leftx or rightx or upx or  downx
+
+blocker = wall or crate  or nomove or player or arrow or enemy or enemyx
+
+blockerx = crate or player
+
+arrowk = arrow or arrow2 or arrowx or arrowx2
+
+mess=mess1 or mess2
+
+=======
+SOUNDS
+=======
+
+pushable MOVE 36772507
+
+EndLevel 74089700
+
+player MOVE 68988304
+sfx0 52836103
+sfx1 45427502
+
+sfx2 29503700
+sfx3 81951902
+
+sfx4 47942304
+================
+COLLISIONLAYERS
+================
+
+Background
+Target
+nomove
+mess,switmess1,switmess2
+Player, Wall, pushable,swapwall,thefloor,thefloorx,enemy,enemyx
+
+arrow, arrow2, arrowx, arrowx2
+winend
+eend
+end, endx
+feel
+
+
+======
+RULES
+======
+
+[feel]->[]
+[> player |crate]->[> player | > crate]
+
+late left[enemyleft|blocker]->[enemyup|blocker]
+
+late up[ enemyup|blocker]->[enemyright|blocker]
+
+late right[ enemyright|blocker]->[enemydown|blocker]
+
+late down[ enemydown|blocker]->[enemyleft|blocker]
+
+late left[enemyleft|no blocker]->[mess1| leftx]
+late up[enemyup|no blocker]->[mess1|upx]
+late right[enemyright|no blocker]->[mess1|rightx]
+late down[enemydown|no blocker]->[mess1|downx]
+
+late [leftx]->[enemyleft]
+late [rightx]->[enemyright]
+late [upx]->[enemyup]
+late [downx]->[enemydown]
+
+late [mess blockerx]->[blockerx] sfx4
+late [mess blocker]->[blocker] 
+
+[> crate|Target]->[> crate|target] sfx2
+
+[ left Playerright] -> [ left playerleft]
+[ right Playerleft] -> [ right playerright]
+
+[endx] ->[thefloor] sfx2
+[end | thefloor]-> [endx |thefloor]
+
+
+late up [wall| ]-> [wall|overwall]
+late up [theemx| ]-> [theemx|overcrate]
+
+(late up [crate2| ]-> [crate2|overcrate2])
+
+late up [end| ]-> [end|overcrate]
+late up [endx| ]-> [endx|overcrate]
+
+[action player eend|]->[action player eend |crate Target]
+
+
+
+([]-> again )
+
+[mess1]->[switmess2]
+[mess2]->[switmess1]
+
+[switmess2]->[mess2]
+[switmess1]->[mess1]
+(
+[arrow]->[arrowx2]
+[arrow2]->[arrowx]
+
+[arrowx]->[arrow]
+[arrowx2]->[arrow2])
+==============
+WINCONDITIONS
+==============
+
+no mess
+some player
+
+=======
+LEVELS
+=======
+message press X to wait and not move
+
+message Clean up the mess
+
+message level 1 of 7
+---------
+-#######-
+##.....##
+#...n...#
+#..n#n..#
+#.nn#nn.#
+#..n#n..#
+#...n...#
+#..P....#
+##.....##
+-#######-
+
+message level 2 of 7
+---------
+---------
+#########
+#.......#
+#.##*##.#
+#...1...#
+#.##.##.#
+#...P...#
+###...###
+--##.##--
+---###---
+
+message level 3 of 7
+---------
+-#######-
+##.....##
+#.......#
+#.......#
+#...3...#
+#...*...#
+#.......#
+#...P...#
+##.....##
+-#######-
+
+
+message level 4 of 7
+---------
+-#######-
+##.....##
+#.......#
+#.......#
+#..33...#
+#..***..#
+#.......#
+#...P...#
+##.....##
+-#######-
+
+message level 5 of 7
+---------
+-#######-
+-#.....##
+-#.#.#..#
+-###.#..#
+##..3#..#
+#.......#
+#.......#
+#...P...#
+##.....##
+-#######-
+
+
+message level 6 of 7
+---------
+-#######-
+##....###
+#...*...#
+####....#
+###.1...#
+#.......#
+#.......#
+#...P...#
+#...3..##
+########-
+
+message level 7 of 7
+---------
+-#######-
+##.....##
+#.......#
+#.......#
+#...3...#
+#.......#
+#.......#
+#...P...#
+##.....##
+-#######-
+
+
+xxxxxxxxxxxxxx
+-eeeeeeeeeeee-
+eeeeeeeeeeeeee
+eeeeeeeeeeeeee
+wewewewwweweew
+wewewetweewwew
+weweweeweeweww
+eweweewwweweew
+eeeeeeeeeeeeee
+eeeeeeeeeeeeee
+-eeeeeeeeeeee-
+
+
+
+
+
+

@@ -1,0 +1,818 @@
+title guiding blocks
+author Rosden Shadow [Mark Signorelli]
+homepage rosden.itch.io
+
+noaction
+run_rules_on_level_Start
+
+background_color #393E42
+
+text_color #FFD9E0
+
+again_interval 0.15
+========
+OBJECTS
+========
+
+Background
+#536673 #393E42 (#E57ED5 #CC5285)
+11111
+11001
+10101
+10011
+11111
+(
+00101
+01110
+11011
+01111
+10110)
+(
+11101
+00101
+11111
+10100
+10111)
+
+
+nomove
+#FFEED9 #536673
+.....
+.000.
+.010.
+.000.
+.....
+
+Target
+#D9FFDC #393E42
+11111
+10101
+11011
+10101
+11111
+
+Wall
+#E5C17E #DB7F55 #B32D2D #73342E
+21110
+12110
+21221
+32332
+23323
+
+overwall
+#E5C17E #DB7F55 #B32D2D #73342E
+.....
+.....
+.....
+10010
+21101
+
+
+Playerright
+#FFD9E0 #F2AACE #7F7CA1 #705C84
+.000.
+11202
+11313
+11110
+.1.1.
+
+playerleft
+#FFD9E0 #F2AACE #7F7CA1 #705C84
+.000.
+20211
+31311
+01111
+.1.1.
+
+Crate
+#D9FFDC #7EE58D #5C8466 #4F5B46
+21100
+21110
+22110
+32223
+.333.
+
+overcrate
+#D9FFDC #7EE58D #5C8466 #4F5B46
+.....
+.....
+.....
+.....
+.000.
+
+
+Cratex
+#D9FFDC #7EE58D #5C8466 #4F5B46
+21100
+21110
+22110
+32223
+.333.
+
+overcratex
+#D9FFDC #7EE58D #5C8466 #4F5B46
+.....
+.....
+.....
+.....
+.000.
+
+
+cratex2
+black
+.....
+.....
+.....
+.....
+.....
+
+end
+#D9FFDC #7EE58D #5C8466 #4F5B46
+21100
+21110
+22110
+32223
+.333.
+endx
+#D9FFDC #7EE58D #5C8466 #4F5B46
+21100
+21110
+22110
+32223
+.333.
+
+Crate2
+#D9FFDC #7EE58D #5C8466 #4F5B46
+21100
+21110
+22110
+32223
+.333.
+
+overcrate2
+#D9FFDC #7EE58D #5C8466 #4F5B46
+.....
+.....
+.....
+.....
+.000.
+
+
+cloner
+#E5C17E #DB7F55 #B32D2D #73342E
+.100.
+.210.
+.221.
+.332.
+.....
+
+swapcrate
+Orange Yellow
+00000
+0...0
+0...0
+0...0
+00000
+
+swapwall
+black
+.....
+.....
+.....
+.....
+.....
+
+spawnact
+#E57ED5 #FFD9E0 (#E5C17E #F2F2AA)
+.11..
+.1111
+.1111
+.1100
+.00..
+
+spawnactx
+#E57ED5 #FFD9E0(#E5C17E #F2F2AA)
+.11..
+.1111
+.1111
+.1100
+.00..
+
+actx
+black
+.....
+.....
+.....
+.....
+.....
+
+spawn
+white #D9FFDC
+..1..
+.111.
+.1.1.
+.111.
+..1..
+
+spawnx
+white #D9FFDC
+..1..
+.111.
+.1.1.
+.111.
+..1..
+
+personleft
+#FFD9E0 #F2AACE
+.000.
+.000.
+11111
+.111.
+.1.1.
+
+personright
+#FFD9E0 #F2AACE
+.000.
+.000.
+11111
+.111.
+.1.1.
+
+personup
+#FFD9E0 #F2AACE
+.000.
+.000.
+11111
+.111.
+.1.1.
+
+persondown
+#FFD9E0 #F2AACE
+.000.
+.000.
+11111
+.111.
+.1.1.
+
+person2
+#FFD9E0 #F2AACE
+.000.
+.000.
+11111
+.111.
+.1.1.
+
+dead
+black
+.....
+.....
+.....
+.....
+.....
+
+respawn
+black
+.....
+.....
+.....
+.....
+.....
+
+leftx
+black
+.....
+.....
+.....
+.....
+.....
+
+rightx
+black
+.....
+.....
+.....
+.....
+.....
+
+upx
+black
+.....
+.....
+.....
+.....
+.....
+
+downx
+black
+.....
+.....
+.....
+.....
+.....
+
+thefloor
+#393E42
+00000
+00000
+00000
+00000
+00000
+
+thefloorx
+#393E42
+00000
+00000
+00000
+00000
+00000
+
+eend
+#393E42
+00000
+00000
+00000
+00000
+00000
+(
+checkempty
+black
+.....
+.....
+.....
+.....
+.....
+
+checkblock
+black
+.....
+.....
+.....
+.....
+.....
+)
+
+switcrate
+black
+.....
+.....
+.....
+.....
+.....
+
+switcrate2
+black
+.....
+.....
+.....
+.....
+.....
+
+arrow
+black
+.....
+.....
+.0.0.
+.000.
+..0..
+
+arrow2
+black
+.....
+.0.0.
+.000.
+..0..
+.....
+
+arrowx
+black
+.....
+.....
+.....
+.....
+.....
+
+arrowx2
+black
+.....
+.....
+.....
+.....
+.....
+
+winend
+#E5C17E #DB7F55 #B32D2D #73342E
+1000.
+21100
+21110
+22110
+.2221
+
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Playerright
+* = Crate
+
+O = Target
+n = nomove
+(a = arrow2 and wall)
+e=end
+t = end and target and eend
+w=end and winend
+
+s=spawn
+a=spawnact
+
+c=cloner
+-=thefloor
+x=thefloorx
+
+feel=overwall or overcrate or overcrate2 or overcratex
+pushable=crate or cloner or swapcrate  or switcrate or switcrate2 or crate2 or cratex or cratex2
+win=crate or wall
+
+
+theemx= crate 
+player=playerright or playerleft
+
+person=personleft or personright or personup or persondown or person2
+
+personx=leftx or rightx or upx or downx
+
+blocker = wall or crate  or nomove or player or arrow or crate2 or cratex or spawnactx or spawnact or spawn or person or spawnx
+
+arrowk = arrow or arrow2 or arrowx or arrowx2
+
+
+=======
+SOUNDS
+=======
+
+pushable MOVE 36772507
+
+EndLevel 74089700
+
+player MOVE 68988304
+sfx0 52836103
+sfx1 45427502
+
+sfx2 29503700
+sfx3 81951902
+
+sfx4 44402701
+
+sfx5 68916902
+
+sfx6 61537900
+================
+COLLISIONLAYERS
+================
+
+Background
+Target
+nomove
+actx
+spawn, spawnact, spawnx, spawnactx
+respawn
+Player, Wall, pushable,swapwall,thefloor,thefloorx, person,personx,dead
+
+arrow, arrow2, arrowx, arrowx2
+winend
+eend
+end, endx
+feel
+
+
+======
+RULES
+======
+
+[feel]->[]
+
+[actx]->[]
+
+
+
+[> player | pushable]->[> player|> pushable]
+
+
+
+
+late [cratex]->[cratex2]
+late [cratex2|...| person]->[cratex|...|person]
+
+late [cratex2]->[crate]
+
+(
+ left[personleft| cratex| blocker]->[dead|cratex| blocker]
+right[personright| cratex| blocker]->[dead|cratex| blocker]
+ up[personup| cratex| blocker]->[dead|cratex| blocker]
+down[persondown| cratex| blocker]->[dead|cratex| blocker])
+
+
+right[personright| wall]->[person2|wall]
+left[personleft| wall]->[person2|wall]
+up[personup| wall]->[person2|wall]
+down[persondown| wall]->[person2|wall]
+
+
+left[person| crate| blocker]->[person2|cratex| blocker]
+right[person| crate| blocker]->[person2|cratex| blocker]
+up[person| crate| blocker]->[person2|cratex| blocker]
+down[person| crate| blocker]->[person2|cratex| blocker]
+
+
+down[person| crate|no blocker]->[downx|crate|no blocker]
+up[person| crate|no blocker]->[upx|crate|no blocker]
+left[person| crate|no blocker]->[leftx|crate|no blocker]
+right[person| crate|no blocker]->[rightx|crate|no blocker]
+
+left[person| no blocker|crate]->[leftx|no blocker|crate]
+up[person| no blocker|crate]->[upx|no blocker|crate]
+right[person| no blocker|crate]->[rightx|no blocker|crate]
+down[person| no blocker|crate]->[downx|no blocker|crate]
+
+left[person| no blocker|no blocker|crate]->[leftx|no blocker|no blocker|crate]
+up[person| no blocker|no blocker|crate]->[upx|no blocker|no blocker|crate]
+right[person| no blocker|no blocker|crate]->[rightx|no blocker|no blocker|crate]
+down[person| no blocker|no blocker|crate]->[downx|no blocker|no blocker|crate]
+
+left[person| no blocker|no blocker|no blocker|crate]->[leftx|no blocker|no blocker|no blocker|crate]
+right[person| no blocker|no blocker|no blocker|crate]->[rightx|no blocker|no blocker|no blocker|crate]
+up[person| no blocker|no blocker|no blocker|crate]->[upx|no blocker|no blocker|no blocker|crate]
+down[person| no blocker|no blocker|no blocker|crate]->[downx|no blocker|no blocker|no blocker|crate]
+
+left[person|no blocker| no blocker|no blocker|no blocker|crate]->[leftx|no blocker|no blocker|no blocker|no blocker|crate]
+right[person|no blocker| no blocker|no blocker|no blocker|crate]->[rightx|no blocker|no blocker|no blocker|no blocker|crate]
+up[person|no blocker| no blocker|no blocker|no blocker|crate]->[upx|no blocker|no blocker|no blocker|no blocker|crate]
+down[person|no blocker| no blocker|no blocker|no blocker|crate]->[downx|no blocker|no blocker|no blocker|no blocker|crate]
+
+left[person|no blocker |no blocker| no blocker|no blocker|no blocker|crate]->[leftx|no blocker|no blocker|no blocker|no blocker|no blocker|crate]
+right[person|no blocker|no blocker| no blocker|no blocker|no blocker|crate]->[rightx|no blocker|no blocker|no blocker|no blocker|no blocker|crate]
+up[person|no blocker|no blocker| no blocker|no blocker|no blocker|crate]->[upx|no blocker|no blocker|no blocker|no blocker|no blocker|crate]
+down[person|no blocker|no blocker| no blocker|no blocker|no blocker|crate]->[downx|no blocker|no blocker|no blocker|no blocker|no blocker|crate]
+
+left[person|no blocker|no blocker |no blocker| no blocker|no blocker|no blocker|crate]->[leftx|no blocker|no blocker|no blocker|no blocker|no blocker|no blocker|crate]
+right[person|no blocker|no blocker|no blocker| no blocker|no blocker|no blocker|crate]->[rightx|no blocker|no blocker|no blocker|no blocker|no blocker|no blocker|crate]
+up[person|no blocker|no blocker|no blocker| no blocker|no blocker|no blocker|crate]->[upx|no blocker|no blocker|no blocker|no blocker|no blocker|no blocker|crate]
+down[person|no blocker|no blocker|no blocker| no blocker|no blocker|no blocker|crate]->[downx|no blocker|no blocker|no blocker|no blocker|no blocker|no blocker|crate]
+
+left[person|no blocker|no blocker|no blocker |no blocker| no blocker|no blocker|no blocker|crate]->[leftx|no blocker|no blocker|no blocker|no blocker|no blocker|no blocker|no blocker|crate]
+right[person|no blocker|no blocker|no blocker|no blocker| no blocker|no blocker|no blocker|crate]->[rightx|no blocker|no blocker|no blocker|no blocker|no blocker|no blocker|no blocker|crate]
+up[person|no blocker|no blocker|no blocker|no blocker| no blocker|no blocker|no blocker|crate]->[upx|no blocker|no blocker|no blocker|no blocker|no blocker|no blocker|no blocker|crate]
+down[person|no blocker|no blocker|no blocker|no blocker| no blocker|no blocker|no blocker|crate]->[downx|no blocker|no blocker|no blocker|no blocker|no blocker|no blocker|no blocker|crate]
+
+left[person|no blocker|no blocker|no blocker|no blocker |no blocker| no blocker|no blocker|no blocker|crate]->[leftx|no blocker|no blocker|no blocker|no blocker|no blocker|no blocker|no blocker|no blocker|crate]
+right[person|no blocker|no blocker|no blocker|no blocker|no blocker| no blocker|no blocker|no blocker|crate]->[rightx|no blocker|no blocker|no blocker|no blocker|no blocker|no blocker|no blocker|no blocker|crate]
+up[person|no blocker|no blocker|no blocker|no blocker|no blocker| no blocker|no blocker|no blocker|crate]->[upx|no blocker|no blocker|no blocker|no blocker|no blocker|no blocker|no blocker|no blocker|crate]
+down[person|no blocker|no blocker|no blocker|no blocker|no blocker| no blocker|no blocker|no blocker|crate]->[downx|no blocker|no blocker|no blocker|no blocker|no blocker|no blocker|no blocker|no blocker|crate]
+
+
+
+[rightx]->[personright]
+[leftx]->[personleft]
+[upx]->[personup]
+[downx]->[persondown]
+
+[person2]->[dead]
+
+[personright]->[right personright]
+[personleft]->[left personleft]
+[personup]->[up personup]
+[persondown]->[down persondown]
+
+[> person| pushable]->[> person | > pushable]
+[> pushable|spawn]->[pushable|spawn]
+
+[> pushable|spawnactx]->[pushable|spawnactx]
+[> pushable|spawnact]->[pushable|spawnact]
+
+[> person | target]->[> person | target] sfx6
+
+late[dead]->[respawn] sfx5
+
+late[respawn| ] -> [respawn| respawn ]
+
+late[respawn spawnact]->[playerright spawnactx]
+
+late[respawn spawnx]->[spawn]
+
+late[spawnactx no player]->[spawnact]
+
+[player spawnact]->[ spawnactx actx] sfx4
+
+
+late [actx | ]->[actx|actx]
+late [actx spawn]->[personright spawnx]
+
+[> crate|Target]->[> crate|target] sfx2
+
+[ left Playerright] -> [ left playerleft]
+[ right Playerleft] -> [ right playerright]
+
+[endx] ->[thefloor] sfx2
+[end | thefloor]-> [endx |thefloor]
+
+
+late [respawn]->[]
+late [dead]->[]
+late up [wall| ]-> [wall|overwall]
+late up [theemx| ]-> [theemx|overcrate]
+
+late up [crate2| ]-> [crate2|overcrate2]
+
+late up [cratex| ]-> [cratex|overcratex]
+
+late up [end| ]-> [end|overcrate]
+late up [endx| ]-> [endx|overcrate]
+
+[action player eend|]->[action player eend |crate Target]
+
+
+
+[]-> again 
+(
+[arrow]->[arrowx2]
+[arrow2]->[arrowx]
+
+[arrowx]->[arrow]
+[arrowx2]->[arrow2])
+==============
+WINCONDITIONS
+==============
+
+all target on person
+
+
+=======
+LEVELS
+=======
+
+
+
+message Guide them
+
+message level 1 of 6
+---------
+-#######-
+##.....#-
+###....##
+#s...P.O#
+#.......#
+#..*....#
+#....####
+#....a..#
+##.....##
+-#######-
+
+message level 2 of 6
+---------
+-#######-
+##.....##
+#.O.....#
+#....*..#
+#.##....#
+#.P..*..#
+#..s....#
+#.....a.#
+##.....##
+-#######-
+
+message level 3 of 6
+
+---------
+--######-
+###....#-
+#....O.#-
+#.***..#-
+#..**..##
+#.......#
+#.s..*..#
+#..P..a.#
+##.....##
+-#######-
+
+message level 4 of 6
+---------
+#########
+#s#.....#
+#*...P..#
+#.#.O.###
+#.#.*.#.#
+#.#.#.#a#
+#.*.....#
+#.#...###
+###...#--
+--#####--
+
+
+message level 5 of 6
+---------
+#######--
+#....*#--
+#....O##-
+#******#-
+#.....##-
+#..P..###
+#.s...a.#
+#...##..#
+#########
+---------
+
+
+
+message level 6 of 6
+
+---------
+-#######-
+###*#####
+##....O*#
+#...*..##
+##..*..*#
+#......##
+##s....*#
+##.P..a##
+####*####
+-#######-
+
+
+xxxxxxxxxxxxxx
+-eeeeeeeeeeee-
+eeeeeeeeeeeeee
+eeeeeeeeeeeeee
+wewewewwweweew
+wewewetweewwew
+weweweeweeweww
+eweweewwweweew
+eeeeeeeeeeeeee
+eeeeeeeeeeeeee
+-eeeeeeeeeeee-
+
+
+(
+---------
+#########
+#*******#
+#*.....*#
+#*s....*#
+#*..*..*#
+#*.....*#
+#*.P...*#
+#*a...O*#
+#*******#
+#########)
+
+
+(---------
+---#####-
+####...##
+#.s*....#
+#...#...#
+#...#...#
+##.###.##
+#.......#
+#.O.P.#a#
+##....#.#
+-########)
+
+(---------
+-#######-
+##.....##
+#...*...#
+#.O....s#
+#...*...#
+#s....O.#
+#.......#
+#..P.a..#
+##.....##
+-#######-)
+
+(---------
+-#######-
+##a....##
+#*#.O...#
+#.#.#...#
+#.*.....#
+#.*.....#
+#.*.....#
+#s#...P.#
+#.#.....#
+#########)
+
+(
+---------
+-######--
+##....###
+#.P.....#
+#..#O#..#
+#..#.#..#
+#..###..#
+#...s...#
+#..***a.#
+##.....##
+-#######-)
+

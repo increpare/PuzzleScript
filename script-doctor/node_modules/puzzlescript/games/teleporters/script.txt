@@ -1,0 +1,587 @@
+title Teleporters
+author Rosden Shadow [Mark Signorelli]
+homepage rosden.itch.io
+run_rules_on_level_Start
+
+background_color #2E3E4D
+
+text_color #E5C17E
+========
+OBJECTS
+========
+
+Background
+#2E3E4D #1F2026
+11000
+01010
+00000
+01010
+00011
+
+
+Target
+#F2F2AA
+.....
+.0.0.
+..0..
+.0.0.
+.....
+
+Wall
+#E5C17E #CC7A52 #736053 #423D39
+21110
+02110
+20221
+31332
+33323
+
+Wallfeel
+#E5C17E #CC7A52 #736053 #423D39
+.....
+.....
+.....
+10020
+21102
+
+
+Playerright
+#E5C17E #CC7A52 (#E0AAF2 #E57ED5) #845C5C #5B4846
+.000.
+11202
+11313
+11110
+.1.1.
+
+playerleft
+#E5C17E #CC7A52 (#E0AAF2 #E57ED5) #845C5C #5B4846
+.000.
+20211
+31311
+01111
+.1.1.
+
+Crate
+#E5C17E #CC7A52 #736053 #423D39
+21110
+21110
+21110
+22221
+33333
+
+cratefeel
+#E5C17E #CC7A52 #736053 #423D39
+.....
+.....
+.....
+.....
+10000
+
+tele
+#E0AAF2 #A87EE5
+.....
+.101.
+.0.0.
+.101.
+.....
+
+
+
+telestop
+#E0AAF2 #A87EE5
+.....
+.101.
+.0.0.
+.101.
+.....
+
+
+teleblock
+#FFD9FC #E0AAF2 #A87EE5 #705C84
+21100
+21110
+22110
+32223
+.333.
+teleblofeel
+#FFD9FC #E0AAF2 #A87EE5 #705C84
+.....
+.....
+.....
+.....
+.000.
+
+tele2
+#7EE58D  #82A17C
+.....
+.101.
+.0.0.
+.101.
+.....
+telestop2
+#7EE58D  #82A17C
+.....
+.101.
+.0.0.
+.101.
+.....
+
+
+teleblock2
+#D9FFDC #7EE58D  #82A17C #394239
+21100
+21110
+22110
+32223
+.333.
+teleblofeel2
+#D9FFDC #7EE58D  #82A17C #394239
+.....
+.....
+.....
+.....
+.000.
+
+
+furnace1
+#F2F2AA #B32D2D #4D2E37 #73535E
+..1..
+.101.
+10101
+.101.
+22332
+furnace2
+#B32D2D #F2F2AA   #4D2E37 #73535E
+.....
+..1..
+.101.
+10101
+22332
+
+
+ash
+#4D2E37 #73535E
+.....
+.....
+.....
+..0..
+.100.
+
+baash
+black
+.....
+.....
+..0..
+.000.
+.....
+
+telepl
+PURPLE
+.....
+.....
+.....
+.....
+.....
+
+telecra
+PURPLE
+.....
+.....
+.....
+.....
+.....
+
+telecrax
+PURPLE
+.....
+.....
+.....
+.....
+.....
+
+ttpl
+black
+.....
+.....
+.....
+.....
+.....
+
+ttcr
+black
+.....
+.....
+.....
+.....
+.....
+
+telepl2
+PURPLE
+.....
+.....
+.....
+.....
+.....
+
+telecra2
+PURPLE
+.....
+.....
+.....
+.....
+.....
+
+telecra2x
+PURPLE
+.....
+.....
+.....
+.....
+.....
+
+thecrax
+PURPLE
+.....
+.....
+.....
+.....
+.....
+
+ttpl2
+black
+.....
+.....
+.....
+.....
+.....
+
+ttcr2
+black
+.....
+.....
+.....
+.....
+.....
+
+furnswi1
+black
+.....
+.....
+.....
+.....
+.....
+
+furnswi2
+black
+.....
+.....
+.....
+.....
+.....
+
+downshift
+black
+.....
+.....
+.....
+.....
+.....
+
+upshift
+black
+.....
+.....
+.....
+.....
+.....
+
+leftshift
+black
+.....
+.....
+.....
+.....
+.....
+
+rightshift
+black
+.....
+.....
+.....
+.....
+.....
+
+noshift
+black
+.....
+.....
+.....
+.....
+.....
+
+thefloor
+#2E3E4D
+00000
+00000
+00000
+00000
+00000
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Playerright
+* = Crate
+@ = Crate and Target
+O = Target
+t = teleblock
+& = tele
+
+1 = teleblock2
+2 = tele2
+f=furnace1
+-=thefloor
+
+feel = teleblofeel or wallfeel or cratefeel or teleblofeel2
+furnace = furnace1 or furnace2 or furnswi1 or furnswi2
+player=playerright or playerleft
+pushable=teleblock or crate or teleblock2
+telex=tele or telepl or telecra or telestop or tele2  or tele2 or telepl2 or telecra2 or telestop2
+exposure = ttpl or ttcr or ttpl2 or ttcr2
+telsto=player or crate or teleblock2
+
+telsto2=player or crate or teleblock
+
+crax=telecrax or telecra2x or thecrax
+
+mover = teleblock or teleblock2
+
+thefire = teleblock or teleblock2
+
+firex =teleblock or teleblock2 or tele
+
+firex2 =teleblock or teleblock2 or tele2
+
+shift=downshift or rightshift or leftshift or upshift or noshift
+=======
+SOUNDS
+=======
+
+sfx0 36772507
+
+sfx1 17669903
+
+sfx2 14764102
+
+sfx3 68781305
+================
+COLLISIONLAYERS
+================
+
+Background
+exposure
+thefloor
+ash,baash
+Target
+shift
+crax
+telex
+Player, Wall, pushable,furnace
+feel
+
+
+======
+RULES
+======
+
+[feel]->[]
+[telestop no telsto]->[tele]
+[telestop2 no telsto2]->[tele2]
+[thecrax]->[ ]
+
+[telecrax] -> [thecrax]
+[telecra2x] -> [thecrax]
+
+[ >  Player | pushable ] -> [  >  Player | > pushable  ] sfx0
+
+[> crate | furnace] -> [ baash | furnace] sfx2
+
+[> player |baash] ->[player|baash]
+
+[baash]->[ash]
+
+[ left Playerright] -> [ left playerleft]
+[ right Playerleft] -> [ right playerright]
+
+
+[furnace1]->[furnswi1]
+[furnace2]->[furnswi2]
+
+[furnswi1]->[furnace2]
+[furnswi2]->[furnace1] 
+
+
+(teleblock)
+[> teleblock|tele] ->[teleblock|tele]
+
+[> player | tele] -> [ |telepl] sfx1
+[teleblock2 tele] -> [telecra noshift] sfx1
+
+
+
+[teleblock2 telestop|]-> [teleblock2 telestop| telecra2x]
+[telecra2x | ] ->[telecra2x | telecra2x]
+
+
+
+[telepl | no ttpl ]->[telepl|ttpl]
+[ttpl | no ttpl] -> [ttpl |ttpl]
+
+[telecra | no ttcr ]->[telecra|ttcr]
+[ttcr | no ttcr] -> [ttcr |ttcr]
+
+[ttpl | teleblock] -> [ttpl |telestop Playerright]
+([telepl]->[teleblock])
+[telepl| crax]->[teleblock telestop2|]
+[telepl no crax]->[teleblock]
+
+[ttcr | teleblock] -> [ttcr |telestop teleblock2]
+[telecra| telecra2x]->[teleblock telestop2|]
+[telecra no telecra2x]->[teleblock]
+
+
+[ttpl]->[]
+[ttcr]->[]
+(end teleblock)
+
+
+(teleblock2)
+[> teleblock2|tele2] ->[teleblock2|tele2]
+
+[> player | tele2] -> [ |telepl2] sfx1
+[ teleblock tele2] -> [telecra2 noshift] sfx1
+
+[teleblock telestop2|]-> [teleblock telestop2 |telecrax]
+[telecrax | ] ->[telecrax | telecrax]
+
+[telepl2 | no ttpl2 ]->[telepl2|ttpl2]
+[ttpl2 | no ttpl2] -> [ttpl2 |ttpl2]
+
+[telecra2 | no ttcr2 ]->[telecra2|ttcr2]
+[ttcr2 | no ttcr2] -> [ttcr2 |ttcr2]
+
+[ttpl2 | teleblock2] -> [ttpl2 |telestop2 Playerright]
+([telepl2]->[teleblock2])
+
+[telepl2| telecrax]->[teleblock2 telestop|]
+[telepl2 no telecrax]->[teleblock2]
+
+[ttcr2 | teleblock2] -> [ttcr2 |telestop2  teleblock]
+[telecra2| crax]->[teleblock2 telestop|]
+[telecra2 no crax]->[teleblock2]
+
+
+[ttpl2]->[]
+[ttcr2]->[]
+(end teleblock)
+
+[Up mover]->[up mover upshift]
+[down mover]->[down mover downshift]
+[right mover]->[right mover rightshift]
+[left mover]->[left mover leftshift]
+[mover upshift|no thefire]->[up mover  up upshift|]
+
+
+[mover downshift|no thefire]->[down mover  down downshift|]
+
+
+
+[mover rightshift|no thefire]->[right mover right rightshift|]
+
+
+[mover leftshift|no thefire]->[left mover left leftshift|]
+
+[> teleblock | firex] -> [teleblock  noshift | firex]
+
+[> teleblock2 | firex2] -> [teleblock2 noshift | firex2]
+
+
+late up [wall| ]-> [wall|wallfeel]
+late up [crate| ]-> [crate|cratefeel]
+late up [teleblock| ]-> [teleblock|teleblofeel]
+late up [teleblock2| ]-> [teleblock2|teleblofeel2]
+
+[]->again
+==============
+WINCONDITIONS
+==============
+
+all target on mover
+
+=======
+LEVELS
+=======
+
+
+message have all crosses have a block on them
+
+message level 1 of 3
+---------
+--#####--
+####.####
+#..#.#..#
+#..#O#..#
+#.......#
+#.2...t.#
+#.1...&.#
+#...P...#
+###...###
+--#####--
+
+(
+message level 2 of 4
+---------
+--#####--
+###...###
+#.2...t.#
+#.......#
+#...O...#
+#.......#
+#.&...1.#
+#...P...#
+###...###
+--#####--
+)
+
+message level 2 of 3
+---------
+-#######-
+##..#..##
+#.1...t.#
+#.......#
+####.####
+#.&...2.#
+#...P...#
+#...O...#
+##.....##
+-#######-
+
+message level 3 of 3
+---------
+-#######-
+##.....##
+#.1.#.t.#
+#...P...#
+###.O.###
+#.......#
+#.....2.#
+#.&.#...#
+##..#####
+-####----
+
+
+message great successful teleporting!
+
+
+

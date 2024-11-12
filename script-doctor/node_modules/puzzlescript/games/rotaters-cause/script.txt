@@ -1,0 +1,1074 @@
+title Rotaters cause 
+author Rosden Shadow [Mark Signorelli]
+homepage rosden.itch.io
+
+noaction
+run_rules_on_level_Start
+
+background_color #3B3942
+
+text_color #AAE0F2
+
+again_interval 0.1
+========
+OBJECTS
+========
+
+Background
+#52465B #3B3942 (#E57ED5 #CC5285)
+11111
+11001
+10101
+10011
+11111
+(
+00101
+01110
+11011
+01111
+10110)
+(
+11101
+00101
+11111
+10100
+10111)
+
+
+nomove
+#FFEED9 #536673
+.....
+.000.
+.010.
+.000.
+.....
+
+Target
+white #423D39
+.....
+.000.
+.0.0.
+.000.
+.....
+
+Wall
+#D9FFDC #AAE0F2  #7EA1E5 #52465B
+21110
+12110
+21221
+23232
+32323
+
+overwall
+#D9FFDC #AAE0F2  #7EA1E5 #52465B
+.....
+.....
+.....
+10010
+21101
+
+playerright
+#D9FFDC #7EE58D #5C8466
+.222.
+.200.
+.1110
+.111.
+.1.1.
+
+playerleft
+#D9FFDC #7EE58D #5C8466
+.222.
+.002.
+0111.
+.111.
+.1.1.
+
+playerdown
+#D9FFDC #7EE58D #5C8466
+.222.
+.000.
+.010.
+.111.
+.1.1.
+
+playerup
+#D9FFDC #7EE58D #5C8466
+.222.
+.222.
+.111.
+.111.
+.1.1.
+
+playerdead
+#D9FFDC #7EE58D #5C8466
+.2.2.
+..0..
+.1.1.
+..1..
+.1.1.
+
+playerdead1
+#D9FFDC #7EE58D #5C8466
+..2..
+.0.0.
+..1..
+.1.1.
+..1..
+
+playerdead2
+#D9FFDC #7EE58D #5C8466
+.....
+..0..
+.1.1.
+..1..
+.....
+
+aup
+TRANSPARENT
+adown
+TRANSPARENT
+aleft
+TRANSPARENT
+aright
+TRANSPARENT
+itsago
+TRANSPARENT
+stopmov
+TRANSPARENT
+
+clo
+TRANSPARENT
+c_clo
+TRANSPARENT
+
+Crate
+#FFD9E0 #F2AACE #E57ED5 #845C7A
+21100
+21110
+22110
+32223
+.333.
+
+overcrate
+#FFD9E0 #F2AACE #E57ED5 #845C7A
+.....
+.....
+.....
+.....
+.000.
+
+Crateup
+#FFD9E0 #F2AACE #E57ED5 #845C7A black
+21400
+24440
+24140
+32223
+.333.
+
+Cratedown
+#FFD9E0 #F2AACE #E57ED5 #845C7A black
+24140
+24440
+22410
+32223
+.333.
+
+Crateright
+#FFD9E0 #F2AACE #E57ED5 #845C7A black
+24400
+21440
+24410
+32223
+.333.
+
+Crateleft
+#FFD9E0 #F2AACE #E57ED5 #845C7A black
+21440
+24410
+22440
+32223
+.333.
+
+
+Cratedead
+#FFD9E0 #F2AACE #E57ED5
+.0.0.
+2.1.0
+.1.1.
+2.1.0
+.2.2.
+
+Cratedead1
+#FFD9E0 #F2AACE #E57ED5
+..0..
+.1.0.
+2.1.0
+.2.1.
+..2..
+
+Cratedead2
+#FFD9E0 #F2AACE #E57ED5
+.....
+..0..
+.1.0.
+..1..
+.....
+
+cpush1
+white
+.....
+00000
+.....
+.....
+.....
+
+cpush2
+white
+.....
+00.00
+.....
+.....
+.....
+
+cpush3
+white
+.....
+.0.0.
+.....
+.....
+.....
+
+cpush1v
+white
+..0..
+..0..
+..0..
+..0..
+..0..
+
+cpush2v
+white
+..0..
+..0..
+.....
+..0..
+..0..
+
+cpush3v
+white
+.....
+..0..
+.....
+..0..
+.....
+
+
+cpup
+TRANSPARENT
+cpdown
+TRANSPARENT
+cpleft
+TRANSPARENT
+cpright
+TRANSPARENT
+
+rpush
+TRANSPARENT
+lpush
+TRANSPARENT
+upush
+TRANSPARENT
+dpush
+TRANSPARENT
+
+end
+#FFD9E0 #F2AACE #E57ED5 #845C7A
+21100
+21110
+22110
+32223
+.333.
+endx
+#FFD9E0 #F2AACE #E57ED5 #845C7A
+21100
+21110
+22110
+32223
+.333.
+
+
+cloner
+#E5C17E #DB7F55 #B32D2D #73342E
+.100.
+.210.
+.221.
+.332.
+.....
+
+swapcrate
+Orange Yellow
+00000
+0...0
+0...0
+0...0
+00000
+
+swapwall
+black
+.....
+.....
+.....
+.....
+.....
+
+thefloor
+#3B3942
+00000
+00000
+00000
+00000
+00000
+
+thefloorx
+#3B3942
+00000
+00000
+00000
+00000
+00000
+
+eend
+#3B3942
+00000
+00000
+00000
+00000
+00000
+
+pit
+black #231F26 (#E57ED5 #CC5285)
+11111
+10101
+01010
+00000
+00000
+
+pitfull
+black #231F26 (#E57ED5 #CC5285)
+00000
+00000
+00000
+00000
+00000
+
+(checkempty
+black
+.....
+.....
+.....
+.....
+.....
+
+checkblock
+black
+.....
+.....
+.....
+.....
+.....)
+
+plover
+TRANSPARENT
+
+
+nowin
+TRANSPARENT
+
+drop1
+TRANSPARENT
+drop2
+TRANSPARENT
+drop3
+TRANSPARENT
+
+bou1
+TRANSPARENT
+
+bou2
+TRANSPARENT
+
+switcrate
+black
+.....
+.....
+.....
+.....
+.....
+
+switcrate2
+black
+.....
+.....
+.....
+.....
+.....
+
+arrow
+black
+.....
+.....
+.0.0.
+.000.
+..0..
+
+arrow2
+black
+.....
+.0.0.
+.000.
+..0..
+.....
+
+arrowx
+black
+.....
+.....
+.....
+.....
+.....
+
+arrowx2
+black
+.....
+.....
+.....
+.....
+.....
+
+winend
+#D9FFDC #AAE0F2  #7EA1E5
+1000.
+21100
+21110
+22110
+.2221
+
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+'=pit
+P = Playerright
+* = Crate
+
+O = Target
+n = nomove
+a = arrow2 and wall
+e=end
+t = end and target and eend
+w=end and winend
+
+c=cloner
+-=thefloor
+x=thefloorx
+
+1=Crateright
+2=Crateup
+3=crateleft
+4=cratedown
+
+feel=overwall or overcrate 
+
+cratep= crateup or crateleft or crateright or cratedown
+
+cratex= cratep or crate
+
+player = playerright or playerleft or playerdown or playerup
+
+cp= cpup or cpdown or cpleft or cpright
+
+cprightx=cpright or Crateright
+cpleftx=cpleft or Crateleft
+cpupx=cpup or Crateup
+cpdownx=cpdown or Cratedown
+
+wallpush= rpush or lpush or upush or dpush
+thecpush=cpush1 or cpush2 or cpush3 or cpush1v or cpush2v or cpush3v
+
+pushable=crate or cloner or swapcrate  or switcrate or switcrate2 or cratep
+
+pushablex=cratex or player
+
+win=crate or wall
+
+
+push=crate or cratep
+
+theemx= crate or cratep
+
+apit = pit or pitfull
+
+blocker = wall or cratex  or nomove or player or arrow
+
+rotblocker = wall or cratex or player
+playblo=apit or wall
+
+arrowk = arrow or arrow2 or arrowx or arrowx2
+
+attach = aup or adown or aleft or aright
+
+drop= drop3 or drop2 or drop1
+
+3cpus=cpush3 or cpush3v
+2cpus=cpush2 or cpush2v
+1cpus=cpush1 or cpush1v
+
+=======
+SOUNDS
+=======
+
+pushable MOVE 36772507
+
+cratep move 67451107
+
+EndLevel 74089700
+
+player MOVE 68988304
+sfx0 52836103
+sfx1 45427502
+
+sfx2 29503700
+sfx3 81951902
+
+sfx4 81303907
+sfx5 41950102
+
+sfx6 54365904
+
+sfx7 83343701
+
+
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Target
+nomove
+
+apit
+Player, Wall, pushable,swapwall,thefloor,thefloorx
+
+Cratedead,Cratedead1,Cratedead2,playerdead,playerdead1,playerdead2
+
+cpush1
+cpush2
+cpush3
+cpush1v
+cpush2v
+cpush3v
+
+cpup
+cpdown
+cpleft
+cpright
+
+rpush
+lpush
+upush
+dpush
+
+(player rotation)
+attach
+itsago
+stopmov
+clo
+c_clo
+(------)
+
+
+bou1,bou2
+
+drop1
+drop2
+drop3
+
+
+nowin
+plover
+arrow, arrow2, arrowx, arrowx2
+winend
+eend
+end, endx
+feel
+
+
+======
+RULES
+======
+
+[feel]->[]
+[plover]->[]
+[nowin]->[]
+[cratedead2]->[]
+[cratedead1]->[Cratedead2]
+[cratedead]->[Cratedead1]
+
+[playerdead2]->[]
+[playerdead1]->[playerdead2]
+[playerdead]->[playerdead1]
+
+
+[drop no cratex]->[]
+[drop2 cratex apit ]->[Cratedead apit] sfx5
+[drop1 cratex]->[drop2 cratex]
+
+
+(the push)
+
+[wallpush]->[]
+[bou1 no plover]->[]
+[bou2 no plover]->[]
+right[cprightx no 1cpus no 2cpus|pushablex|no blocker]->[cprightx||pushablex plover] sfx7
+left[cpleftx no 1cpus no 2cpus| pushablex|no blocker]->[cpleftx||pushablex plover] sfx7
+up[cpupx no 1cpus no 2cpus|pushablex|no blocker]->[cpupx||pushablex plover] sfx7
+down[cpdownx no 1cpus no 2cpus|pushablex|no blocker]->[cpdownx||pushablex plover] sfx7
+
+
+right[cprightx 1cpus |pushablex no plover|no blocker]->[cprightx||pushablex plover ] sfx7
+left[cpleftx 1cpus| pushablex no plover|no blocker]->[cpleftx||pushablex plover ] sfx7
+up[cpupx 1cpus |pushablex no plover|no blocker]->[cpupx||pushablex plover ] sfx7
+down[cpdownx 1cpus |pushablex no plover|no blocker]->[cpdownx||pushablex plover ] sfx7
+
+down[cpdownx 2cpus|pushablex no plover|no blocker]->[cpdownx||pushablex plover ] sfx7
+left[cpleftx 2cpus| pushablex no plover|no blocker]->[cpleftx||pushablex plover ] sfx7
+up[cpupx 2cpus|pushablex no plover|no blocker]->[cpupx||pushablex plover ] sfx7
+right[cprightx 2cpus|pushablex no plover|no blocker]->[cprightx||pushablex plover ] sfx7
+
+
+
+right[cprightx |pushablex no plover| blocker]->[cprightx rpush|pushablex|blocker] 
+left[cpleftx |pushablex no plover| blocker]->[cpleftx lpush|pushablex|blocker] 
+up[cpupx |pushablex no plover| blocker]->[cpupx upush|pushablex|blocker] 
+down[cpdownx |pushablex no plover| blocker]->[cpdownx dpush|pushablex|blocker] 
+
+right[cprightx |wall]->[cprightx rpush|wall] 
+left[cpleftx |wall]->[cpleftx lpush|wall] 
+up[cpupx |wall]->[cpupx upush|wall] 
+down[cpdownx | wall]->[cpdownx dpush|wall] 
+
+left[cprightx rpush| cpright no rpush]->[cprightx rpush|cpright rpush] 
+right[cpleftx lpush| cpleft no lpush]->[cpleftx lpush|cpleft lpush] 
+up[cpdownx dpush| cpdown no dpush]->[cpdownx dpush|cpdown dpush] 
+down[cpupx upush| cpup no upush]->[cpupx upush|cpup upush] 
+
+up[crateup upush no plover]->[down crateup upush down plover] 
+down[cratedown dpush no plover]->[up cratedown dpush up plover] 
+left[crateleft lpush no plover]->[right crateleft lpush right plover] 
+right[crateright rpush no plover]->[left crateright rpush left plover] 
+
+
+( ------PLAYER ROTATION-------)
+
+[attach]->[]
+[itsago]->[]
+[stopmov]->[]
+[clo]->[]
+[c_clo]->[]
+
+(======Block rotation======)
+
+(where the blocks moving)
+(right)
+right[ up Playerright  | push ] -> [ up  Playerright c_clo|  push aup]
+right[ down Playerright  | push ] -> [ down  Playerright clo|  push adown]
+(up)
+up[ right  Playerup  | push ] -> [ right Playerup clo|  push aright]
+up[ left  Playerup  | push ] -> [ left Playerup c_clo|  push aleft]
+(left)
+left[ up Playerleft  | push ] -> [ up Playerleft clo|  push aup]
+left[ down Playerleft  | push ] -> [ down Playerleft c_clo|  push adown]
+(down)
+down[ right  Playerdown  | push ] -> [ right Playerdown c_clo|  push aright]
+down[ left  Playerdown  | push ] -> [ left Playerdown clo|  push aleft]
+
+(block movement rejection)
+(right)
+right[push aright|no rotblocker]->[push aright itsago | itsago]
+right[player|no rotblocker][push aright]->[player itsago|itsago][push aright]
+(up)
+up[push aup|no rotblocker]->[push aup itsago | itsago]
+up[player|no rotblocker][push aup]->[player itsago|itsago][push aup]
+(left)
+left[push aleft|no rotblocker]->[push aleft itsago | itsago]
+left[player|no rotblocker][push aleft]->[player itsago|itsago][push aleft]
+(down)
+down[push adown|no rotblocker]->[push adown itsago | itsago]
+down[player|no rotblocker][push adown]->[player itsago|itsago][push adown]
+
+
+(blocks rotation movement)
+[itsago player][push attach itsago|itsago no player]->[itsago player stopmov][|push attach itsago] sfx4
+
+(.....movement rotation.....)
+(right)
+[up playerright]->[up playerup]
+[down playerright]->[down playerdown]
+(up)
+[right playerup]->[right playerright]
+[left playerup]->[left playerleft]
+(left)
+[up playerleft]->[up playerup]
+[down playerleft]->[down playerdown]
+(down)
+[right playerdown]->[right playerright]
+[left playerdown]->[left playerleft]
+
+[> player stopmov]->[player stopmov]
+
+up[up player no stopmov|playblo]->cancel
+down[down player no stopmov|playblo]->cancel
+left[left player no stopmov |playblo]->cancel
+right[right player no stopmov |playblo]->cancel
+
+(+++++ grab/push front +++++)
+
+(right)
+right[ right Playerright  | push ] -> [  >  Playerright | > push ]
+right[ left  Playerright  | push ] -> [  <  Playerright | < push ]
+(up)
+up[ up  Playerup  | push ] -> [  >  Playerup | > push ]
+up[ down  Playerup  | push ] -> [  <  Playerup | < push ]
+(left)
+left[ left Playerleft  | push ] -> [  >  Playerleft | > push ]
+left[ right  Playerleft  | push ] -> [  <  Playerleft | < push ]
+(down)
+down[ down Playerdown  | push ] -> [  >  Playerdown | > push ]
+down[ up  Playerdown  | push ] -> [  <  Playerdown | < push ]
+
+(+++++ push back +++++)
+
+(right)
+left[ left Playerright  | push ] -> [  >  Playerright | > push ]
+(up)
+down[ down Playerup  | push ] -> [  >  Playerup | > push ]
+(left)
+right[ right Playerleft  | push ] -> [  >  Playerleft | > push ]
+(down)
+up[ up  Playerdown  | push ] -> [  >  Playerdown | > push ]
+(------END PLAYER ROTATION-------)
+
+
+(BLOCK ROTATION)
+
+(clockwise)
+[player stopmov clo][Crateup itsago]->[player stopmov clo][Crateright]
+[player stopmov clo][Crateright itsago]->[player stopmov clo][Cratedown]
+[player stopmov clo][Cratedown itsago]->[player stopmov clo][Crateleft]
+[player stopmov clo][Crateleft itsago]->[player stopmov clo][Crateup]
+(counter-clockwise)
+
+[player stopmov c_clo][Crateup itsago]->[player stopmov c_clo][Crateleft]
+[player stopmov c_clo][Crateleft itsago]->[player stopmov c_clo][Cratedown]
+[player stopmov c_clo][Cratedown itsago]->[player stopmov c_clo][Crateright]
+[player stopmov c_clo][Crateright itsago]->[player stopmov c_clo][Crateup]
+(------End block rotation------)
+
+(being pushed)
+
+
+
+(set up)
+late [cp]->[]
+late [thecpush]->[]
+late [wallpush]->[]
+
+late [Crateup]->[Crateup cpup]
+late [Crateright]->[Crateright cpright]
+late [Crateleft]->[Crateleft cpleft]
+late [Cratedown]->[Cratedown cpdown]
+
+late up[crateup|no blocker]->[crateup |cpush1v cpup]
+late down[cratedown|no blocker]->[cratedown |cpush1v cpdown]
+late left[crateleft|no blocker]->[crateleft |cpush1 cpleft]
+late right[crateright|no blocker]->[crateright |cpush1 cpright]
+
+late up[cpush1v cpup| no blocker]->[cpush1v cpup| cpush2v cpup]
+late up[cpush2v cpup| no blocker]->[cpush2v cpup| cpush3v ]
+
+late down[cpush1v cpdown| no blocker]->[cpush1v cpdown| cpush2v cpdown]
+late down[cpush2v cpdown| no blocker]->[cpush2v cpdown| cpush3v ]
+
+late left[cpush1 cpleft| no blocker]->[cpush1 cpleft| cpush2 cpleft]
+late left[cpush2 cpleft| no blocker]->[cpush2 cpleft| cpush3  ]
+
+late right[cpush1 cpright| no blocker]->[cpush1 cpright| cpush2 cpright]
+late right[cpush2 cpright| no blocker]->[cpush2 cpright| cpush3 ]
+
+(end being pushed)
+
+[> cratex |player ]->[> cratex > plover | > player > plover]
+
+[> plover|blocker]->[> plover|blocker plover]
+
+[> player no plover| apit]->[player |apit]
+
+
+[> cratex|no blocker]->[> cratex nowin| no blocker]
+
+[> player plover|wall]->[player |wall]
+[> player plover|blocker|wall]->[player |blocker|wall]
+[> player plover|blocker|blocker|wall]->[player |blocker|blocker|wall]
+[> player plover|blocker|blocker|blocker|wall]->[player |blocker|blocker|blocker|wall]
+
+[> cratex plover|wall]->[cratex |wall]
+[> cratex plover|blocker|wall]->[cratex |blocker|wall]
+[> cratex plover|blocker|blocker|wall]->[cratex |blocker|blocker|wall]
+[> cratex plover|blocker|blocker|blocker|wall]->[cratex |blocker|blocker|blocker|wall]
+
+[player plover cpup cpdown]->[player cpup cpdown]
+[player plover cpleft cpright]->[player cpleft cpright]
+
+late[cratex apit]->[cratex apit drop1]
+late[cratex apit no plover]->[Cratedead apit] sfx5
+late[player apit no plover]->[playerdead apit ] sfx5
+
+[> crate|Target]->[> crate|target] sfx2
+
+
+[endx] ->[thefloor] sfx2
+[end | thefloor]-> [endx |thefloor]
+
+late up [wall| ]-> [wall|overwall]
+late up [theemx| ]-> [theemx|overcrate]
+
+(late up [crate2| ]-> [crate2|overcrate2])
+
+late up [end| ]-> [end|overcrate]
+late up [endx| ]-> [endx|overcrate]
+
+late up [apit|apit]->[pitfull|apit]
+
+late up [apit|no apit]->[pit|]
+
+
+
+
+[]-> again 
+
+
+
+(--old rotation--)
+([right player]->[right playerright]
+[left player]->[left playerleft]
+[up player]->[up playerup]
+[down player]->[down playerdown])
+==============
+WINCONDITIONS
+==============
+
+all Target on cratex
+
+no nowin
+=======
+LEVELS
+=======
+
+message Have a crate on all targets
+
+message level 1 of 8
+---------
+-#######-
+-#.....#-
+-#.O...#-
+##.....##
+#''''.''#
+#.....'.#
+#.*.....#
+#....P..#
+##.....##
+-#######-
+
+message level 2 of 8
+---------
+#########
+#.......#
+#...1...#
+#.......#
+#''...''#
+#...P...#
+#..'''..#
+#...O...#
+#.......#
+#########
+
+message level 3 of 8
+---------
+#########
+#.......#
+#.P.2...#
+#'..#..'#
+#...#...#
+#..'''..#
+#'..O..'#
+#'''''''#
+#'''''''#
+#########
+
+message level 4 of 8
+---------
+#########
+#'''''''#
+#'...'''#
+#..'.'''#
+#..#O#''#
+#..'''''#
+#..'''''#
+#.1...P'#
+#......'#
+#########
+
+
+message level 5 of 8
+---------
+#########
+#...O.#.#
+#.......#
+#.......#
+#'''''''#
+#...3...#
+#.......#
+#..#.P..#
+#.......#
+#########
+
+message level 6 of 8
+---------
+#########
+#.'.O.'.#
+#'..P..'#
+#..'''..#
+#.'.'.'.#
+#...4...#
+#.*.O...#
+#.......#
+#.......#
+#########
+
+message level 7 of 8
+---------
+#########
+#...O...#
+#.''O''.#
+#.'''''.#
+#...#...#
+#.......#
+#..2.2..#
+#...P...#
+#.......#
+#########
+
+message level 8 of 8
+---------
+#########
+#''''.O.#
+#'''#.'.#
+#''''...#
+#'...''.#
+#..#1''.#
+#.2...'.#
+#..P....#
+#.....''#
+#########
+
+(---------
+#########
+#.......#
+#.......#
+#..'''..#
+#..#O'..#
+#..'O#..#
+#..'''..#
+#.2.P.2.#
+#.......#
+#########)
+
+(---------
+#########
+#...O...#
+#.......#
+#.......#
+#'''''''#
+#'''''''#
+##.....##
+#...P...#
+#.2...2.#
+#########)
+
+(---------
+#########
+#...O...#
+#.......#
+#'''''''#
+#'''''''#
+#.......#
+##.2.2.##
+#..PO...#
+#.......#
+#########)
+
+(---------
+#########
+#'''''''#
+#'...'O'#
+#'.'.'.'#
+#'.'...'#
+#...###.#
+#.......#
+#.2..P..#
+#.......#
+#########)
+
+
+(---------
+#########
+#...4.P.#
+#...#...#
+##.....##
+#..'''..#
+#.'.O.'.#
+#.''.''.#
+#.......#
+#'''''''#
+#########)
+(
+---------
+#########
+#.......#
+#...2...#
+#.*.O...#
+#.......#
+#...'...#
+#..'''..#
+#'..P..'#
+#.'.O.'.#
+#########)
+
+
+xxxxxxxxxxxxxx
+-eeeeeeeeeeee-
+eeeeeeeeeeeeee
+eeeeeeeeeeeeee
+wewewewwweweew
+wewewetweewwew
+weweweeweeweww
+eweweewwweweew
+eeeeeeeeeeeeee
+eeeeeeeeeeeeee
+-eeeeeeeeeeee-
+
+

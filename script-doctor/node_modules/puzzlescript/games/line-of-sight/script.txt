@@ -1,0 +1,1032 @@
+title Line of Sight
+author Joel Fox and Mike Gelbart
+homepage www.puzzlescript.net
+
+again_interval 2
+
+(key_repeat_interval 0.25)
+norepeat_action
+
+run_rules_on_level_start
+
+(verbose_logging)
+
+========
+OBJECTS
+========
+
+
+Background
+LIGHTGREEN GREEN
+11111
+01111
+11101
+11111
+10111
+
+Wall
+BROWN DARKBROWN
+00010
+11111
+01000
+11111
+00010
+
+Player
+Black Orange White Purple
+.000.
+.111.
+22222
+.333.
+.3.3.
+
+Crate
+Orange Yellow
+00000
+01110
+01110
+01110
+00000
+
+Glass
+LightGray
+00000
+0...0
+0...0
+0...0
+00000
+
+MirrorForwardSlashFixed
+DarkGray Lightgray
+...01
+..010
+.010.
+010..
+10...
+
+MirrorBackSlashFixed
+DarkGray Lightgray
+10...
+010..
+.010.
+..010
+...01
+
+MirrorHorizontalFixed
+DarkGray Lightgray
+.....
+00000
+11111
+00000
+.....
+
+MirrorVerticalFixed
+DarkGray Lightgray
+.010.
+.010.
+.010.
+.010.
+.010.
+
+
+MirrorForwardSlashCanRotate
+DarkGray Pink
+...01
+..010
+.010.
+010..
+10...
+
+MirrorBackSlashCanRotate
+DarkGray Pink
+10...
+010..
+.010.
+..010
+...01
+
+MirrorHorizontalCanRotate
+DarkGray Pink
+.....
+00000
+11111
+00000
+.....
+
+MirrorVerticalCanRotate
+DarkGray Pink
+.010.
+.010.
+.010.
+.010.
+.010.
+
+(Below: there are more of these invisible objects than
+ needed, but I prefer to have more of them, with relevant names,
+ for code clarity. I think the Tower one could be deleted entirely,
+ since a Tower always has a Satisfied or Unsatisfied marker on it.
+ But it's no big deal.)
+Tower
+Transparent
+
+Checking
+Transparent
+
+Checked
+Transparent
+
+RayTracerUp
+Transparent
+
+RayTracerDown
+Transparent
+
+RayTracerLeft
+Transparent
+
+RayTracerRight
+Transparent
+
+GameNotOver
+Transparent
+
+Temp
+Transparent
+
+Gray
+Gray
+00000
+0...0
+0...0
+0...0
+00000
+
+SeeLeftFixed
+Black
+.....
+.....
+000..
+.....
+.....
+
+
+SeeRightFixed
+Black
+.....
+.....
+..000
+.....
+.....
+
+SeeUpFixed
+Black
+..0..
+..0..
+..0..
+.....
+.....
+
+SeeDownFixed
+Black
+.....
+.....
+..0..
+..0..
+..0..
+
+(Below: we ended up not using rotatable Towers)
+(
+SeeLeftCanRotate
+Pink
+.....
+.....
+000..
+.....
+.....
+
+
+SeeRightCanRotate
+Pink
+.....
+.....
+..000
+.....
+.....
+
+SeeUpCanRotate
+Pink
+..0..
+..0..
+..0..
+.....
+.....
+
+SeeDownCanRotate
+Pink
+.....
+.....
+..0..
+..0..
+..0..
+)
+
+Satisfied
+Blue
+.....
+.000.
+.000.
+.000.
+.....
+
+Unsatisfied
+Red
+.....
+.000.
+.000.
+.000.
+.....
+
+Activating
+Purple
+.....
+.000.
+.000.
+.000.
+.....
+
+
+=======
+LEGEND
+=======
+
+
+. = Background
+# = Wall
+P = Player
+* = Crate
+G = Glass
+
+SatisfiedTower = Tower and Satisfied
+UnsatisfiedTower = Tower and Unsatisfied
+
+Horiz = SeeLeftFixed and SeeRightFixed
+Verti = SeeUpFixed and SeeDownFixed
+
+Omni = Horiz and Verti
+
+U = UnsatisfiedTower and Omni  (OmniTowerUnsatisfied)
+S =   SatisfiedTower and Omni  (OmniTowerSatisfied)
+H = UnsatisfiedTower and Horiz (HorizontalTowerUnsatisfied)
+O =   SatisfiedTower and Horiz (HorizontalTowerSatisfied)
+W = UnsatisfiedTower and Verti (VerticalTowerUnsatisfied)
+E =   SatisfiedTower and Verti (VerticalTowerSatisfied)
+
+1 = Gray and U (GrayOmniTowerUnsatisfied)
+2 = Gray and S (GrayOmniTowerSatisfied)
+3 = Gray and H (GrayHorizontalTowerUnsatisfied)
+4 = Gray and O (GrayHorizontalTowerSatisfied)
+5 = Gray and W (GrayVerticalTowerUnsatisfied)
+6 = Gray and E (GrayVerticalTowerSatisfied)
+
+r = UnsatisfiedTower and SeeRightFixed
+i = satisfiedTower   and SeeRightFixed
+z = UnsatisfiedTower and SeeUpFixed
+x = satisfiedTower   and SeeUpFixed
+d = UnsatisfiedTower and SeeDownFixed
+n = satisfiedTower   and SeeDownFixed
+l = UnsatisfiedTower and SeeLeftFixed
+f = satisfiedTower   and SeeLeftFixed
+
+a = UnsatisfiedTower and SeeRightFixed and Gray
+b = satisfiedTower   and SeeRightFixed and Gray
+c = UnsatisfiedTower and SeeUpFixed    and Gray
+j = satisfiedTower   and SeeUpFixed    and Gray
+k = UnsatisfiedTower and SeeDownFixed  and Gray
+m = satisfiedTower   and SeeDownFixed  and Gray
+q = UnsatisfiedTower and SeeLeftFixed  and Gray
+t = satisfiedTower   and SeeLeftFixed  and Gray
+
+(Below: we ended up not using rotatable towers.)
+(
+HorizCanRotate = SeeLeftCanRotate and SeeRightCanRotate
+VertiCanRotate = SeeUpCanRotate and SeeDownCanRotate
+$ = UnsatisfiedTower and HorizCanRotate (CanRotateHorizontalTowerUnsatisfied)
+% = Satisfied and HorizCanRotate (CanRotateHorizontalTowerSatisfied)
+& = UnsatisfiedTower and VertiCanRotate (CanRotateVerticalTowerUnsatisfied)
++ = SatisfiedTower and VertiCanRotate (CanRotateVerticalTowerSatisfied)
+
+0 = UnsatisfiedTower and SeeRightCanRotate
+7 = satisfiedTower and SeeRightCanRotate
+8 = UnsatisfiedTower and SeeUpCanRotate
+9 = satisfiedTower and SeeUpCanRotate
+£ = UnsatisfiedTower and SeeDownCanRotate
+@ = satisfiedTower and SeeDownCanRotate
+_ = UnsatisfiedTower and SeeLeftCanRotate
+¢ = satisfiedTower and SeeLeftCanRotate
+)
+(
+Ù = UnsatisfiedTower and SeeRightFixed and SeeUpFixed and SeeLeftFixed and Gray
+Ý = UnsatisfiedTower and SeeRightFixed and SeeDownFixed and SeeLeftFixed and Gray
+Ô = UnsatisfiedTower and SeeUpFixed and SeeDownFixed and SeeLeftFixed and Gray
+Ñ = UnsatisfiedTower and SeeRightFixed and SeeDownFixed and SeeUpFixed and Gray
+)
+(
+y = unsatisfiedTower and SeeUpCanRotate and SeeDownCanRotate and gray
+¡ = UnsatisfiedTower and SeeUpCanRotate and SeeDownCanRotate and SeeLeftCanRotate and gray
+)
+
+/ = MirrorForwardSlashFixed
+\ = MirrorBackSlashFixed
+- = MirrorHorizontalFixed
+! = MirrorVerticalFixed
+
+MirrorFixed = MirrorForwardSlashFixed or MirrorBackSlashFixed or MirrorHorizontalFixed or MirrorVerticalFixed
+MirrorCanRotate = MirrorForwardSlashCanRotate or MirrorBackSlashCanRotate or MirrorHorizontalCanRotate or MirrorVerticalCanRotate
+
+MirrorForwardSlash = MirrorForwardSlashFixed or MirrorForwardSlashCanRotate
+MirrorBackSlash    = MirrorBackSlashFixed    or MirrorBackSlashCanRotate
+MirrorHorizontal   = MirrorHorizontalFixed   or MirrorHorizontalCanRotate
+MirrorVertical     = MirrorVerticalFixed     or MirrorVerticalCanRotate
+
+Mirror = MirrorFixed or MirrorCanRotate
+
+¤ = MirrorForwardSlashCanRotate
+¥ = MirrorBackSlashCanRotate
+¦ = MirrorHorizontalCanRotate
+§ = MirrorVerticalCanRotate
+
+Movable = Crate or Tower or Glass  or Mirror
+Opaque  = Crate or Tower or Player or Wall
+
+RayTracer = RayTracerUp or RayTracerDown or RayTracerLeft or RayTracerRight
+
+SeeUp    = SeeUpFixed    (or SeeUpCanRotate)
+SeeDown  = SeeDownFixed  (or SeeDownCanRotate)
+SeeLeft  = SeeLeftFixed  (or SeeLeftCanRotate)
+SeeRight = SeeRightFixed (or SeeRightCanRotate)
+
+SeeSomeDirection = SeeUp or SeeDown or SeeRight or SeeLeft
+Marker = SeeSomeDirection or Unsatisfied or Satisfied or Gray
+
+TowerCollision = Player or Wall or Crate or Glass or Tower or Mirror
+
+
+=======
+SOUNDS
+=======
+
+
+startgame 26858107
+startlevel 34443107
+
+glass move 89482506
+crate move 92869307
+Tower move 38810307
+mirror move 96061307
+Sfx0 8609109
+Sfx1 81906308
+
+
+================
+COLLISIONLAYERS
+================
+
+
+Background
+Player, Wall, Crate, Tower, Glass, Mirror
+
+Checking
+Checked
+Temp
+GameNotOver
+
+Satisfied, Unsatisfied, Activating
+Gray
+SeeLeft
+SeeRight
+SeeUp
+SeeDown
+RayTracerUp
+RayTracerDown
+RayTracerLeft
+RayTracerRight
+
+
+======
+RULES
+======
+
+[ > Player | Movable ] -> [ > Player | > Movable ]
+
+(Cannot have Marker just move as part of Movable, 
+ because Markers need to be on their own collision layers)
+[> Movable Marker | no TowerCollision] -> [> Movable > Marker | no TowerCollision]
+
+(Satisfied grey Towers cannot be moved) 
+[> Gray > Satisfied > Tower > SeeSomeDirection] -> [> Gray > Satisfied > Tower SeeSomeDirection]
+[> Gray > Satisfied > Tower SeeSomeDirection] -> [Gray Satisfied Tower SeeSomeDirection]
+
+(We did not end up using rotatable towers)
+(
+[action Player | Tower SeeUpCanRotate] -> [action Player | Tower Temp] Sfx0
+[action Player | Tower SeeLeftCanRotate] -> [action Player | Tower SeeUpCanRotate] Sfx0
+[action Player | Tower SeeDownCanRotate] -> [action Player | Tower SeeLeftCanRotate] Sfx0
+[action Player | Tower SeeRightCanRotate] -> [action Player | Tower SeeDownCanRotate] Sfx0
+[action Player | Tower Temp] -> [action Player | Tower SeeRightCanRotate] Sfx0
+)
+
+(Rotatable mirrors)
+[action Player | MirrorHorizontalCanRotate]   -> [action Player | Temp] 
+[action Player | MirrorForwardSlashCanRotate] -> [action Player | MirrorHorizontalCanRotate]   Sfx0
+[action Player | MirrorVerticalCanRotate]     -> [action Player | MirrorForwardSlashCanRotate] Sfx0
+[action Player | MirrorBackSlashCanRotate]    -> [action Player | MirrorVerticalCanRotate]     Sfx0
+[action Player | Temp]                        -> [action Player | MirrorBackSlashCanRotate]    Sfx0
+
+
+(This is not the intended use of `again`. Here, I'm using it where one would normally 
+ use `late`. The advantage of doing it this way is that I can use movement markers to 
+ keep track of what direction the Ray Tracers are traveling, which would not be allowed
+ in the `late` phase. However, making everything below here `late` would be fine too.
+ One would just need to keep track of each RayTracer's direction of travel explicitly
+ by assigning it to one of the 4 RayTracer sub-types, instead of using the movement
+ marker for this purpose.)
+([moving Player] -> again (do another turn))
+
+late [Activating] -> win (this is done after `again`)
+
+(The use of `startloop` and then `random` emulates a foreach loop iterating
+ through each Tower. It doesn't work to check all Towers at once, because their
+ RayTracers collide and obliterate each other due to being in the same Collision Layer.)
+late [Satisfied] -> [Unsatisfied]
+
+startloop 
+late random [Tower no Checked] -> [Tower Checking]
+
+(A Tower emits one RayTracer per direction that it can see in.
+ These RayTracers are different sub-types so that they can be in different
+ collision layers. Without mirrors, that would be unecessary. However, with mirrors
+ in play it's possible for two RayTracers - initially moving in different directions -
+ to collide, which would cause one of them to get deleted.)
+late left  [SeeLeft  Tower Checking | ] -> [SeeLeft  Tower Checking | RayTracerLeft]
+late right [SeeRight Tower Checking | ] -> [SeeRight Tower Checking | RayTracerRight]
+late up    [SeeUp    Tower Checking | ] -> [SeeUp    Tower Checking | RayTracerUp]
+late down  [SeeDown  Tower Checking | ] -> [SeeDown  Tower Checking | RayTracerDown]
+
+(The next 4 code blocks below: the mirror code.)
+
+(ForwardSlash mirrors)
+late  [RayTracerUp    MirrorForwardSlash] -> [MirrorForwardSlash Temp]
++late [RayTracerRight MirrorForwardSlash] -> [MirrorForwardSlash RayTracerUp]
++late [Temp           MirrorForwardSlash] -> [MirrorForwardSlash RayTracerRight]
++late [RayTracerDown  MirrorForwardSlash] -> [MirrorForwardSlash Temp ]
++late [RayTracerLeft  MirrorForwardSlash] -> [MirrorForwardSlash RayTracerDown]
++late [Temp           MirrorForwardSlash] -> [MirrorForwardSlash RayTracerLeft]
+(BackSlash mirrors)
++late [RayTracerUp    MirrorBackSlash] -> [MirrorBackSlash Temp]
++late [RayTracerLeft  MirrorBackSlash] -> [MirrorBackSlash RayTracerUp]
++late [Temp           MirrorBackSlash] -> [MirrorBackSlash RayTracerLeft]
++late [RayTracerDown  MirrorBackSlash] -> [MirrorBackSlash Temp]
++late [RayTracerRight MirrorBackSlash] -> [MirrorBackSlash RayTracerDown ]
++late [Temp           MirrorBackSlash] -> [MirrorBackSlash RayTracerRight]
+(Horizontal mirrors)
++late [RayTracerUp   MirrorHorizontal] -> [MirrorHorizontal Temp]
++late [RayTracerDown MirrorHorizontal] -> [MirrorHorizontal RayTracerUp]
++late [Temp          MirrorHorizontal] -> [MirrorHorizontal RayTracerDown]
+(Vertical mirrors)
++late [RayTracerLeft  MirrorVertical] -> [MirrorVertical Temp]
++late [RayTracerRight MirrorVertical] -> [MirrorVertical RayTracerLeft]
++late [Temp           MirrorVertical] -> [MirrorVertical RayTracerRight]
+(RayTracer movement)
++late up    [RayTracerUp    no Opaque | ] -> [ | RayTracerUp]
++late down  [RayTracerDown  no Opaque | ] -> [ | RayTracerDown]
++late left  [RayTracerLeft  no Opaque | ] -> [ | RayTracerLeft]
++late right [RayTracerRight no Opaque | ] -> [ | RayTracerRight]
+
+(Note on the code above:
+ It can fail if the level is not enclosed in walls. For example
+ 
+ ##z
+ .p/
+ ..x
+ 
+Is a problem case.)
+
+(If any RayTracer hit any Tower, set to Satisfied)
+late [Tower Unsatisfied Checking][RayTracer Tower] -> [Tower Satisfied Checked][Tower]
+
+(Done checking this Tower)
+late [Tower Checking] -> [Tower Checked]
+
+(Reset RayTracers before checking the next Tower)
+late [RayTracer] -> []
+endloop 
+late [Checked] -> []
+
+(A hacky way of emulating the "All Tower on Satisfied" win condition in the Rules section)
+late [GameNotOver] -> []
+late [Unsatisfied][no GameNotOver] -> [Unsatisfied][GameNotOver]
+(late [no GameNotOver] -> Sfx1 again)
+late [no GameNotOver][Satisfied] -> [no GameNotOver][Activating] Sfx1 again
+
+==============
+WINCONDITIONS
+==============
+
+(All Tower on Satisfied)
+All Tower on Player (somethat that will never happen)
+
+
+======= 
+LEVELS
+=======
+
+ 
+message A Tower turns blue if it has at least one other Tower in its line of sight either vertical or horizontal. Goal: turn all red Towers blue.
+
+message Level 1 of 30
+ 
+######
+#U...#
+#..P.#
+#..U.#
+#.U..#
+######
+(difficulty: 1/5)
+
+
+message Crates break the line of sight. Luckily they can be moved out of the way.
+
+message Level 2 of 30
+
+######
+##U..#
+U.*P.U
+#....#
+#.U..#
+#U...#
+######
+(difficulty: 1/5)
+
+
+message Level 3 of 30
+
+######
+#.U..#
+#.*..#
+#.PU.#
+#.**.#
+#.U###
+######
+(difficulty: 1/5)
+
+
+message Level 4 of 20
+
+#######
+#.U..##
+#..UP.#
+#..##.#
+#.*U#.#
+#.....#
+#######
+(difficulty: 2/5)
+
+
+message Some Towers can only see horizontally, or only vertically.
+
+message Level 5 of 30
+
+#######
+#.H#H.#
+#..*P.#
+#..*W.#
+#.E...#
+#.E..O#
+#######
+(difficulty: 2/5)
+
+
+message Level 6 of 30
+
+#######
+#..*..#
+#.W#.W#
+#.*P..#
+#.W#W.#
+#..#..#
+#######
+(difficulty: 2/5)
+
+message Level 7 of 30
+
+#######
+#.*...#
+#.up#u#
+#*#*..#
+#.u.#.#
+#.....#
+#######
+(difficulty: 2.5/5)
+
+
+message Level 8 of 30
+
+#######
+#..*P.#
+#.E.S.#
+U..#*.H
+#.E...#
+#..#H.#
+#######
+(difficulty: 2.5/5)
+
+
+message Level 9 of 30
+
+#.#####O..O#
+#..#S##O..O#
+#.##.#O.W.O#
+#.#U...P..##
+#S##S####.U#
+...S.S#.W.##
+#S##.##...##
+############
+(difficulty: 2/5)
+
+
+message Level 10 of 30
+
+#######
+#..*.W#
+#.H*..#
+#.*P*.#
+#..*H.#
+#W.*..#
+#######
+(difficulty: 2.5/5)
+
+
+message Level 11 of 30
+
+#######
+#..*..#
+#.H#.W#
+#*....#
+#.E#H.#
+#..*P.#
+#######
+(difficulty: 3/5)
+
+
+message Glass can be moved and does not break line of sight.
+
+message Level 12 of 30
+
+########
+#.....H#
+#.#.#P##
+O.W.WGO#
+#.#G#.##
+#.....H#
+########
+(difficulty: 2/5)
+
+
+message Some Towers only see in one direction.
+
+message Level 13 of 30
+
+#######
+#..*..#
+#.z#z.#
+#..p..#
+#.d#d.#
+#..*..#
+#######
+
+
+message Mirrors work how you expect them to.
+
+message Level 14 of 30
+
+########
+##..L###
+#../...#
+#D.\\/P#
+#......#
+###.R.##
+########
+(difficulty: 2)
+
+
+message Horizontal mirrors reflect vertically and do not block horizontal line of sight.
+
+message Level 15 of 30
+
+#######
+#..-..#
+#r###n#
+r./...#
+#./...#
+#..p.l#
+#r#####
+#...!##
+#######
+(difficulty: 1)
+
+
+message Gray Towers become immobile when they are blue.
+
+message Level 16 of 30
+
+#####---##
+#........#
+#..*.....#
+#........#
+#..#a....#
+#..##2...!
+#........!
+#....p...#
+##########
+
+
+message Level 17 of 30
+
+########
+#......#
+#.mkm..#
+#a.pa.##
+#.jcj..#
+#......#
+########
+(difficulty 2.5?)
+
+
+message Level 18 of 30
+#####d##
+!..r...#
+!.*r.#.#
+!...#..#
+!..2...#
+!....p##
+########
+(difficulty 3)
+
+
+message Level 19 of 30
+
+##m####
+#1....#
+#.2.*.#
+b..2..#
+#...1.#
+#p...1#
+#######
+(difficulty: 3.5/5)
+
+
+message Pink mirrors can be rotated by pressing the action (X) button when you are on an adjacent square.
+
+message Level 20 of 30
+
+############
+###......###
+##.l.gg.z.##
+#..§.gg.¤..#
+#....gg....#
+#.gggggggg.#
+#.ggggggggp#
+#....gg....#
+#..d.gg....#
+##...ggr..##
+###......###
+############
+(difficulty: 2)
+
+
+message Level 21 of 30
+
+######p..l
+#/\..../\#
+#\....../#
+#.\..../.#
+#..\../..#
+#¥..\/../#
+##########
+
+
+message Level 22 of 30
+
+######...
+#....#r..
+#.r#.\...
+#..#.ir.#
+##.r..#.#
+#r.#\ir.#
+##.r....#
+##..PGG.!
+#######-#
+(difficulty: 4
+Joel thinks not as difficult)
+
+
+message Level 23 of 30
+
+########
+#......#
+#u#.##w#
+#...##.#
+#.#/.\.#
+#.p.g..#
+########
+(difficulty: 4? varied opinions. Has red herring)
+
+
+message Level 24 of 30
+
+#########d#
+r.......#.#
+#.........#
+r.¥gg.gg..#
+#..gg1gg..#
+##..1p1..##
+#..gg1gg..#
+#..gg.gg..#
+#.........#
+#....#....l
+#z#########
+(difficulty: 3)
+
+
+message Level 25 of 30
+
+##########
+#..gr..\.#
+#....../.#
+##\.gg.\.#
+##.#gggg.#
+#.\./.lg.#
+#.......p#
+##########
+(diffculty: 4?)
+
+
+message Level 26 of 30
+
+#########
+#.......#
+#.#g#gg.#
+#.g..\g.#
+###.p...#
+##.45#..#
+#..#....#
+#.......#
+#########
+(difficulty 4?)
+
+
+message Level 27 of 30
+
+/gggggggg\##
+g.#.#.#.#g##
+g..z.p.....#
+g..j..2./..#
+g......#...#
+g..x#..##gg#
+\ggggg¥gg/g#
+######x###z#
+(difficulty 3)
+
+
+message Level 28 of 30
+
+#############
+#....#d#....#
+#.g/.*p*.!g.#
+#.g\..*..\g.#
+#../.*.*./..#
+##gz.....\g##
+##giggggg/g##
+######z######
+(only solution is the traditional one, but it's tricky)
+
+
+message Level 29 of 30
+
+#############
+#....#d#....#
+#.g/.*p*.!g.#
+#.g\..*..\g.#
+#../.*.*./..#
+##g\..g..\g##
+##grggggg/g##
+######z######
+(this level has only one type of solution, the unexpected one)
+
+
+message Level 30 of 30
+
+d###n###d
+.........
+#...2.*.#
+#.......#
+i.2.¥g2.f
+#...gg..#
+#.*.2.p.#
+.........
+z###x###z
+(diffuclty 3.5)
+
+
+
+message Congratulations!                 You completed all the levels.                                                                           Reward: Bonus Levels
+
+message Bonus Level 1 of 5
+
+##############
+i.....gg.....f
+#.#z#p...#*#*#
+r*..*.gg.z.d.f
+#.#x#...g#.#.#
+i.....gg.....f
+##############
+
+
+message Bonus Level 2 of 5
+
+#######
+#...*.#
+!.*.!.f
+!.***.l
+!.*.*.l
+!.*.pgl
+#..!..f
+#####.l
+
+
+message Bonus Level 3 of 5
+
+#####-#####
+#.........#
+!../.../..!
+!./.\//.\.!
+#zxzx.xxxz#
+#####.#####
+/--n-.----\
+!.........!
+!....p....!
+!..\...2..!
+!.........!
+!.........!
+\--.------/
+(difficulty: 4/5 ?)
+
+(alternate bonus 3)
+(
+#####-#####
+#.........#
+!../.../..!
+!././//.\.!
+!.zzx.xxx.!
+#z###.###z#
+/--n-.----\
+!.........!
+!....p....!
+!..\...2..!
+!.........!
+!.........!
+\--.------/
+)
+
+message Bonus Level 4 of 5
+
+#########
+#.......#
+#.2..*..#
+#...4...f
+#.2.#...#
+#p.1#...l
+#...#...#
+#...#...l
+#####...#
+######..l
+#########
+(difficulty: 5/5)
+
+
+message Bonus Level 5 of 5
+
+#####n#n#####
+#d#.......#d#
+#..*...../..#
+##...2.2...##
+##..gg.gg..##
+##.2g¥.§g2.##
+##..gg.gg..##
+##...2.2...##
+#....#p#....#
+#z#..###..#z#
+###.l###r.###
+
+
+message You've activated all the towers!  They don't seem to do anything though...

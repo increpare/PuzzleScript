@@ -1,0 +1,936 @@
+/* eslint-env jasmine */
+import { LevelEngine } from './engine'
+import Parser from './parser/parser'
+import { INPUT_BUTTON } from './util'
+
+function parseEngine(code: string) {
+    const { data } = Parser.parse(code)
+
+    const engine = new LevelEngine(data)
+    engine.setLevel(0)
+    return { engine, data }
+}
+
+describe('engine', () => {
+
+    it('runs RANDOM in groups properly (e.g. Mirror Isles)', () => {
+        const { engine, data } = parseEngine(`title Mirror Isles (test level)
+        author Alan Hazelden
+        homepage www.draknek.org
+
+        norepeat_action
+        run_rules_on_level_start
+
+        youtube tI8IarSxiLk
+
+        (realtime_interval 0.5)
+
+        (verbose_logging)
+
+        ========
+        OBJECTS
+        ========
+
+        Background
+        #dfcc4f yellow
+        11111
+        01111
+        11101
+        11111
+        10111
+
+
+        Target
+        DarkBlue Yellow Yellow
+        .111.
+        10201
+        12021
+        10201
+        .111.
+
+        Wall
+        Grey DarkGrey LightGrey
+        .....
+        ..00.
+        .0001
+        .0111
+        ...1.
+
+        (..1..
+        .0..1
+        ...1.
+        ..00.
+        ....1)
+
+        Hole
+        blue
+
+        WaterAnim1
+        lightblue transparent
+        11111
+        11101
+        11111
+        10111
+        11111
+
+        WaterAnim2
+        lightblue transparent
+        11111
+        10111
+        11111
+        11101
+        11111
+
+        Player
+        DarkRed #493c2b #000000
+        ..0..
+        .111.
+        01110
+        02220
+        .2.2.
+
+        Reflection
+        LightGrey Grey DarkGrey
+        ..0..
+        .111.
+        01110
+        02220
+        .2.2.
+
+        CrateReflection
+        Grey DarkGrey LightGrey
+        .000.
+        01110
+        01110
+        01110
+        .000.
+        (.....
+        .1122
+        0112.
+        .1122
+        .....)
+
+        FloatingBody
+        DarkBrown #282828 #101010 Blue
+        33333
+        33333
+        31122
+        01123
+        31122
+
+        CantMove
+        LightRed Red DarkRed
+        ..0..
+        .111.
+        01110
+        02220
+        .2.2.
+
+        NormalCrate
+        Orange Brown White
+        .000.
+        01110
+        01110
+        01110
+        .000.
+
+        ReflectableCrate
+        Orange Brown Brown
+        .000.
+        01210
+        02220
+        01210
+        .000.
+        (brown green darkgreen Red
+        .....
+        .1122
+        0112.
+        .1122
+        .....)
+
+        CrateInHole
+        Brown DarkBrown Blue
+        20002
+        01110
+        01110
+        01110
+        20002
+
+        MirrorUL
+        #909090 #4e5159 #4e5159
+        ....0
+        ...01
+        ..011
+        .0111
+        01112
+
+        MirrorUR
+        #909090 #4e5159 #4e5159
+        0....
+        10...
+        110..
+        1110.
+        21110
+
+        MirrorDL
+        #909090 #4e5159 #4e5159
+        01112
+        .0111
+        ..011
+        ...01
+        ....0
+
+        MirrorDR
+        #909090 #4e5159 #4e5159
+        21110
+        1110.
+        110..
+        10...
+        0....
+
+        LOS
+        Orange
+        .....
+        .....
+        ..0..
+        .....
+        .....
+
+        00
+        transparent
+
+        01
+        transparent
+
+        02
+        transparent
+
+        03
+        transparent
+
+        04
+        transparent
+
+        05
+        transparent
+
+        06
+        transparent
+
+        07
+        transparent
+
+        08
+        transparent
+
+        09
+        transparent
+
+        HasReflection
+        transparent
+
+        West
+        transparent
+
+        East
+        transparent
+
+        North
+        transparent
+
+        South
+        transparent
+
+
+        Zero
+        White
+        .000.
+        .0.0.
+        .0.0.
+        .0.0.
+        .000.
+
+        One
+        White
+        ..0..
+        .00..
+        ..0..
+        ..0..
+        .000.
+
+        Two
+        White
+        .000.
+        ...0.
+        .000.
+        .0...
+        .000.
+
+        Three
+        White
+        .000.
+        ...0.
+        .000.
+        ...0.
+        .000.
+
+        Four
+        White
+        .0.0.
+        .0.0.
+        .000.
+        ...0.
+        ...0.
+
+        Five
+        White
+        .000.
+        .0...
+        .000.
+        ...0.
+        .000.
+
+        Six
+        White
+        .000.
+        .0...
+        .000.
+        .0.0.
+        .000.
+
+        Seven
+        White
+        .000.
+        ...0.
+        ...0.
+        ...0.
+        ...0.
+
+        Eight
+        White
+        .000.
+        .0.0.
+        .000.
+        .0.0.
+        .000.
+
+        Nine
+        White
+        .000.
+        .0.0.
+        .000.
+        ...0.
+        .000.
+
+        AddLandLUD
+        Yellow
+        0....
+        .....
+        .....
+        .....
+        0....
+
+        AddLandLU
+        Yellow
+        0....
+        .....
+        .....
+        .....
+        .....
+
+        AddLandLD
+        Yellow
+        .....
+        .....
+        .....
+        .....
+        0....
+
+        AddLandRUD
+        Yellow
+        ....0
+        .....
+        .....
+        .....
+        ....0
+
+        AddLandRU
+        Yellow
+        ....0
+        .....
+        .....
+        .....
+        .....
+
+        AddLandRD
+        Yellow
+        .....
+        .....
+        .....
+        .....
+        ....0
+
+        RemoveLandLUD
+        Blue
+        0....
+        .....
+        .....
+        .....
+        0....
+
+        RemoveLandLU
+        Blue
+        0....
+        .....
+        .....
+        .....
+        .....
+
+        RemoveLandLD
+        Blue
+        .....
+        .....
+        .....
+        .....
+        0....
+
+        RemoveLandRUD
+        Blue
+        ....0
+        .....
+        .....
+        .....
+        ....0
+
+        RemoveLandRU
+        Blue
+        ....0
+        .....
+        .....
+        .....
+        .....
+
+        RemoveLandRD
+        Blue
+        .....
+        .....
+        .....
+        .....
+        ....0
+
+        Hint
+        transparent
+
+
+
+
+        =======
+        LEGEND
+        =======
+
+        WaterAnim = WaterAnim1 or WaterAnim2
+
+        . = Background
+        # = Wall
+        P = Player
+        ~ = NormalCrate
+        * = ReflectableCrate
+        O = Target
+        _ = Hole and WaterAnim1
+        Mirror = MirrorUL or MirrorUR or MirrorDL or MirrorDR
+        Counter = 00 or 01 or 02 or 03 or 04 or 05 or 06 or 07 or 08 or 09
+        DirectionCounter = North or South or East or West
+        LevelNumber = Zero or One or Two or Three or Four or Five or Six or Seven or Eight or Nine
+
+        Crate = NormalCrate or ReflectableCrate
+
+        Pushable = Mirror or Crate
+
+        Solid = Player or Wall or Crate or Mirror
+
+        Reflectable = Player or ReflectableCrate
+
+        / = MirrorUL
+        \\ = MirrorUR
+        " = MirrorDL
+        ' = MirrorDR
+
+
+        0 = Zero and Hole
+        1 = One and Hole
+        2 = Two and Hole
+        3 = Three and Hole
+        4 = Four and Hole
+        5 = Five and Hole and Hint
+        6 = Six and Hole
+        7 = Seven and Hole
+        8 = Eight and Hole
+        9 = Nine and Hole
+
+        AddLandL = AddLandLUD or AddLandLU or AddLandLD
+        AddLandR = AddLandRUD or AddLandRU or AddLandRD
+
+        RemoveLandL = RemoveLandLUD or RemoveLandLU or RemoveLandLD
+        RemoveLandR = RemoveLandRUD or RemoveLandRU or RemoveLandRD
+
+        WaterHere = Hole or CrateInHole or FloatingBody
+
+        =======
+        SOUNDS
+        =======
+
+        sfx0 72252907 (player move)
+        sfx1 22154307 (push)
+        sfx2 99784702 (swap)
+        sfx3 55205302 (crate in water)
+        sfx4 71749307 (can't go into water)
+
+        CantMove Create 24357902
+        EndLevel 31191508
+
+        Undo 1263307
+        Restart 65079302
+
+        ================
+        COLLISIONLAYERS
+        ================
+
+        Background
+        Target, Hole, CrateInHole, FloatingBody
+        HasReflection, Hint
+        AddLandL, RemoveLandL
+        AddLandR, RemoveLandR
+        Solid, LOS
+        Counter
+        DirectionCounter, LevelNumber, WaterAnim
+        Reflection, CantMove, CrateReflection
+
+        ======
+        RULES
+        ======
+
+        [ > Player ] [ Hint ] -> [ > Player ] [ action Hint ]
+
+        [ CantMove ] -> []
+
+        late [ Hole no WaterAnim no LevelNumber ] -> [ Hole WaterAnim1 ]
+
+        late [ WaterAnim no Hole ] -> []
+
+        (Water anim)
+
+        ([ stationary Player ] [ stationary WaterAnim1 ] -> [ Player] [ action WaterAnim2 ]
+        [ stationary Player ] [ stationary WaterAnim2 ] -> [ Player] [ action WaterAnim1 ])
+
+        (Island border)
+
+        left [ WaterHere no AddLandL | no WaterHere ] -> [ WaterHere AddLandLUD | ]
+        right [ WaterHere no AddLandR | no WaterHere ] -> [ WaterHere AddLandRUD | ]
+
+        up [ AddLandLUD | WaterHere ] -> [ AddLandLD | WaterHere ]
+        up [ AddLandRUD | WaterHere ] -> [ AddLandRD | WaterHere ]
+
+        down [ AddLandLUD | WaterHere ] -> [ AddLandLU | WaterHere ]
+        down [ AddLandRUD | WaterHere ] -> [ AddLandRU | WaterHere ]
+
+        down [ AddLandLD | WaterHere ] -> [ | WaterHere ]
+        down [ AddLandRD | WaterHere ] -> [ | WaterHere ]
+
+        left [ no WaterHere no RemoveLandL | WaterHere ] -> [ RemoveLandLUD | WaterHere ]
+        right [ no WaterHere no RemoveLandR | WaterHere ] -> [ RemoveLandRUD | WaterHere ]
+
+        up [ RemoveLandLUD | no WaterHere ] -> [ RemoveLandLD | ]
+        up [ RemoveLandRUD | no WaterHere ] -> [ RemoveLandRD | ]
+
+        down [ RemoveLandLUD | no WaterHere ] -> [ RemoveLandLU | ]
+        down [ RemoveLandRUD | no WaterHere ] -> [ RemoveLandRU | ]
+
+        down [ RemoveLandLD | no WaterHere ] -> [ | ]
+        down [ RemoveLandRD | no WaterHere ] -> [ | ]
+
+        (Prevent teleport)
+
+        [ action Player ] [ Reflection Hole ] -> [ action Player ] [ CantMove Hole ]
+
+        [ CantMove ] [ action Player ] -> [ CantMove ] [ Player ] again
+
+        (Swap places)
+        [ action Player HasReflection ] [ Reflection ] -> [ action Player HasReflection ] [ Reflection Player ]
+
+        [ Reflection Player ] -> [ Player ] sfx2
+
+        [ action Player ] [ CrateReflection ] -> [ action Player ] [ ReflectableCrate ] sfx2
+
+        [ action Player ] [ ReflectableCrate HasReflection ] -> [ action Player ] []
+
+        [ action Player HasReflection ] -> [ Reflection ]
+
+        (Clear state)
+
+        [ LOS ] -> []
+        [ HasReflection ] -> []
+        [ Reflection ] -> []
+        [ CrateReflection ] -> []
+
+        [ action Player ] -> [ Player ]
+
+        [ moving Player ] -> [ moving Player HasReflection ] (testing killing)
+
+        (Push things)
+
+        [ > Player | Hole ] -> [ Player | Hole ] sfx4
+
+        [ >  Player | Crate | no Solid ] -> [  >  Player | > Crate | ] sfx1
+        [ >  Player | Mirror | no Hole no Solid ] -> [  >  Player | > Mirror | ] sfx1
+
+        [ > Player | stationary Mirror | Hole ] -> [ Player | Mirror | Hole ] sfx4
+
+        [ >  Player | Crate | > Player ] -> [  >  Player | > Crate | > Player ] sfx1
+        [ >  Player | Mirror | > Player ] -> [  >  Player | > Mirror | > Player ] sfx1
+
+        [ > Mirror | Hole ] -> [ Mirror | Hole ] sfx4
+
+        [ > Pushable | no Solid ] -> [ | Pushable ]
+        + [ > Player | no Solid ] -> [ | Player ] sfx0
+
+        [ > Player ] -> [ Player ] sfx4
+
+        [ Player Hole ] -> [ Hole ]
+        [ Mirror Hole ] -> cancel
+        [ NormalCrate Hole ] -> [ CrateInHole ] sfx3
+        [ ReflectableCrate Hole ] -> [ CrateInHole ] sfx3
+
+        [ Player ] [ HasReflection ] -> [ Player ] []
+
+        [ HasReflection ] -> cancel (all players dead)
+
+        (Make reflections)
+
+        startloop
+        random [ Reflectable no DirectionCounter ] -> [ action Reflectable North left 00 ]
+        + [ Reflectable North ] -> [ action Reflectable East right 00 ] (comment this and lines to the left work)
+        + [ Reflectable East ] -> [ action Reflectable South up 00 ] (comment this out and lines to the right work)
+        + [ Reflectable South ] -> [ action Reflectable West down 00 ] (comment this and lines up work)
+        (only keep the 1st line and lines left work)
+
+        [ > 00 | no Solid ] -> [ | > 01 LOS ]
+        [ > 01 | no Solid ] -> [ | > 02 LOS ]
+        [ > 02 | no Solid ] -> [ | > 03 LOS ]
+        [ > 03 | no Solid ] -> [ | > 04 LOS ]
+        [ > 04 | no Solid ] -> [ | > 05 LOS ]
+        [ > 05 | no Solid ] -> [ | > 06 LOS ]
+        [ > 06 | no Solid ] -> [ | > 07 LOS ]
+        [ > 07 | no Solid ] -> [ | > 08 LOS ]
+        [ > 08 | no Solid ] -> [ | > 09 LOS ]
+
+        [ > Counter | Solid no Mirror ] -> [ | Solid ]
+
+        left [ > Counter | MirrorUR ] -> [ | MirrorUR up Counter ]
+        + left [ > Counter | MirrorDR ] -> [ | MirrorDR down Counter ]
+        + right [ > Counter | MirrorUL ] -> [ | MirrorUL up Counter ]
+        + right [ > Counter | MirrorDL ] -> [ | MirrorDL down Counter ]
+        + up [ > Counter | MirrorDL ] -> [ | MirrorDL left Counter ]
+        + up [ > Counter | MirrorDR ] -> [ | MirrorDR right Counter ]
+        + down [ > Counter | MirrorUL ] -> [ | MirrorUL left Counter ]
+        + down [ > Counter | MirrorUR ] -> [ | MirrorUR right Counter ]
+
+        + [ > 09 | no Solid ] -> [ | > 08 LOS ]
+        + [ > 08 | no Solid ] -> [ | > 07 LOS ]
+        + [ > 07 | no Solid ] -> [ | > 06 LOS ]
+        + [ > 06 | no Solid ] -> [ | > 05 LOS ]
+        + [ > 05 | no Solid ] -> [ | > 04 LOS ]
+        + [ > 04 | no Solid ] -> [ | > 03 LOS ]
+        + [ > 03 | no Solid ] -> [ | > 02 LOS ]
+        + [ > 02 | no Solid ] -> [ | > 01 LOS ]
+        + [ > 01 | no Solid ] -> [ | > 00 LOS ]
+
+        [ > 00 | no Solid no CantMove ] [ action Player ] -> [ | Reflection ] [ Player HasReflection ]
+        [ > 00 | no Solid no CantMove ] [ action ReflectableCrate ] -> [ | CrateReflection ] [ ReflectableCrate HasReflection ]
+
+        [ Counter ] -> [ ]
+
+        [ action Reflectable ] [ stationary LOS ] -> [ action Reflectable ] [ ]
+
+        [ LOS ] -> [ action LOS ]
+
+        [ action Reflectable ] -> [ Reflectable ]
+        endloop
+
+        [ DirectionCounter ] -> []
+
+        [ stationary Hint ] [ ReflectableCrate HasReflection ] -> [] [ ReflectableCrate HasReflection ] message Oh the crates can reflect now. That is cool and totally not arbitrary
+
+        ==============
+        WINCONDITIONS
+        ==============
+
+        All Target on Player
+        All Player on Target
+
+        =======
+        LEVELS
+        =======
+
+        ..'..
+        .....
+        \\.p."
+        .....
+        ../..
+
+    `) // end game definition
+
+        const player = data.getPlayer().getSprites()[0]
+        const playerReflection = data.getSpriteByName('Reflection')
+        const hasReflection = data.getSpriteByName('HasReflection')
+        engine.tick() // To get the reflections to render
+        expect(playerReflection.getCellsThatMatch().size).toBe(4)
+        expect(hasReflection.getCellsThatMatch().size).toBe(1)
+
+        // press action to get the player to reflect into 4 players
+        engine.press(INPUT_BUTTON.ACTION)
+        engine.tick()
+        expect(engine.toSnapshot()).toMatchSnapshot()
+
+        expect(player.getCellsThatMatch().size).toBe(4)
+        // Player should now be in every corner of the level (because of the mirrors)
+        expect(engine.getCurrentLevel().getCells()[0][0].getSpritesAsSet().has(player)).toBe(true)
+        expect(engine.getCurrentLevel().getCells()[0][4].getSpritesAsSet().has(player)).toBe(true)
+        expect(engine.getCurrentLevel().getCells()[4][0].getSpritesAsSet().has(player)).toBe(true)
+        expect(engine.getCurrentLevel().getCells()[4][4].getSpritesAsSet().has(player)).toBe(true)
+
+        expect(engine.getCurrentLevel().getCells()[0][0].getSpritesAsSet().has(hasReflection)).toBe(true)
+        expect(engine.getCurrentLevel().getCells()[0][4].getSpritesAsSet().has(hasReflection)).toBe(true)
+        expect(engine.getCurrentLevel().getCells()[4][0].getSpritesAsSet().has(hasReflection)).toBe(true)
+        expect(engine.getCurrentLevel().getCells()[4][4].getSpritesAsSet().has(hasReflection)).toBe(true)
+
+        // press action again to combing all the players back to one
+        engine.press(INPUT_BUTTON.ACTION)
+        engine.tick()
+        expect(player.getCellsThatMatch().size).toBe(1)
+
+        expect(engine.getCurrentLevel().getCells()[2][2].getSpritesAsSet().has(player)).toBe(true)
+
+    })
+
+    it('runs RANDOM exactly once when condition is [ ]', () => {
+        const { engine, data } = parseEngine(`title Random tile
+
+        ========
+        OBJECTS
+        ========
+
+        Background
+        black
+
+        Player
+        White
+
+        RandomTile
+        blue
+
+        =======
+        LEGEND
+        =======
+
+        . = Background
+        P = Player
+
+        =======
+        SOUNDS
+        =======
+
+        ================
+        COLLISIONLAYERS
+        ================
+
+        Background
+        Player
+        RandomTile
+
+        ======
+        RULES
+        ======
+
+        RANDOM [ ] -> [ RandomTile ]
+
+        ==============
+        WINCONDITIONS
+        ==============
+
+        =======
+        LEVELS
+        =======
+
+        P..
+
+    `) // end game definition
+
+        const randomTile = data.getSpriteByName('RandomTile')
+        engine.tick()
+
+        expect(engine.toSnapshot()).toMatchSnapshot()
+
+        expect(randomTile.getCellsThatMatch().size).toBe(1)
+        // Player should now be in every corner of the level (because of the mirrors)
+        expect(engine.getCurrentLevel().getCells()[0][0].getSpritesAsSet().has(randomTile)).toBe(true)
+
+    })
+
+    it('runs exactly one rule when group is RANDOM', () => {
+        const { engine, data } = parseEngine(`title Random
+
+        ========
+        OBJECTS
+        ========
+
+        Background
+        black
+
+        Player
+        White
+
+        Zero
+        #030303
+
+        One
+        #ff0000
+
+        Two
+        #00ff00
+
+        Three
+        #0000ff
+
+        =======
+        LEGEND
+        =======
+
+        . = Background
+        P = Player
+        Number = Zero OR One OR Two OR Three
+
+        =======
+        SOUNDS
+        =======
+
+        ================
+        COLLISIONLAYERS
+        ================
+
+        Background
+        Player
+        Number
+
+        ======
+        RULES
+        ======
+
+        RANDOM [ Player | ] -> [ | Zero ]
+        + [ Player | ] -> [ | One ]
+        + [ Player | ] -> [ | Two ]
+        + [ Player | ] -> [ | Three ]
+
+        ==============
+        WINCONDITIONS
+        ==============
+
+        =======
+        LEVELS
+        =======
+
+        ......
+        .P..P.
+        ......
+
+    `) // end game definition
+
+        const num = data.getTileByName('Number')
+        engine.tick()
+        expect(engine.toSnapshot()).toMatchSnapshot()
+
+        expect(num.getCellsThatMatch().size).toBe(1)
+
+        engine.tick()
+        expect(engine.toSnapshot()).toMatchSnapshot()
+
+        expect(num.getCellsThatMatch().size).toBe(2)
+    })
+
+    it('runs exactly one rule when group is RANDOM2', () => {
+        const { engine, data } = parseEngine(`title Random
+
+        ========
+        OBJECTS
+        ========
+
+        Background
+        black
+
+        Player
+        White
+
+        Zero
+        #030303
+
+        One
+        #ff0000
+
+        Two
+        #00ff00
+
+        Three
+        #0000ff
+
+        =======
+        LEGEND
+        =======
+
+        . = Background
+        P = Player
+        Number = Zero OR One OR Two OR Three
+
+        =======
+        SOUNDS
+        =======
+
+        ================
+        COLLISIONLAYERS
+        ================
+
+        Background
+        Player
+        Number
+
+        ======
+        RULES
+        ======
+
+        STARTLOOP
+
+        RANDOM [ Player | ] -> [ | Zero ]
+        + [ Player | ] -> [ | One ]
+        + [ Player | ] -> [ | Two ]
+        + [ Player | ] -> [ | Three ]
+
+        ENDLOOP
+
+        ==============
+        WINCONDITIONS
+        ==============
+
+        =======
+        LEVELS
+        =======
+
+        ......
+        .P..P.
+        ......
+
+    `) // end game definition
+
+        const num = data.getTileByName('Number')
+        engine.tick()
+
+        expect(num.getCellsThatMatch().size).toBe(2)
+    })
+})

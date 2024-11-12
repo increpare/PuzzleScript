@@ -1,0 +1,560 @@
+title World Generation in PuzzleScript
+author 8-bit Llama
+homepage 8bitllama.itch.io
+
+again_interval 05
+norepeat_action
+
+zoomscreen 15x15
+
+run_rules_on_level_start
+
+
+========
+OBJECTS
+========
+
+Background
+black
+
+Wall
+DARKGRAY #636363
+00010
+11111
+01000
+11111
+00010
+
+Initial
+Transparent
+
+Secondary
+Transparent
+
+Final
+Transparent
+
+Plat
+lightgrey Grey
+01111
+10001
+10001
+10001
+11110
+
+HeightSpawn
+Transparent
+
+InBetween
+Transparent
+
+Lowest
+Transparent
+
+Low
+Transparent
+
+Mid
+Transparent
+
+High
+Transparent
+
+Highest
+Transparent
+
+Water
+#00ccff #1ad1ff #33d6ff
+11111
+01100
+11222
+00011
+22111
+
+Sand
+Yellow #ffeb77 #ffe866
+02000
+10020
+00000
+02001
+00020
+
+Grass
+#a3ce27 #9ac125 #9ad926
+00200
+01202
+01012
+20010
+20000
+
+Hill
+#76B221 #72AD20 #6CBC21
+00200
+01202
+01012
+20010
+20000
+
+Mountain
+#707070 #767676 #7c7c7c #898989
+10301
+00330
+03323
+32212
+22111
+
+HalfMountain
+#707070 #767676 #7c7c7c #898989
+...0.
+.0.30
+0....
+..2.2
+.2.1.
+
+NoMountain
+#76B221 #72AD20 #6CBC21
+00200
+01202
+01012
+20010
+20000
+
+Pup
+Black
+..0..
+.000.
+.0.0.
+.000.
+.....
+
+
+Pdown
+Black
+.....
+.000.
+.0.0.
+.000.
+..0..
+
+
+Pleft
+Black
+.....
+.000.
+00.0.
+.000.
+.....
+
+
+Pright
+Black
+.....
+.000.
+.0.00
+.000.
+.....
+
+Tree
+#663300 #3d7800 #306000 #234500
+.122.
+12223
+12023
+.203.
+..0..
+
+Shrub
+#663300 #4d9900 #408000 #336600
+.....
+.12..
+.122.
+12223
+12023
+
+Notree
+Transparent
+
+
+Noshrub
+Transparent
+
+noOre
+transparent
+
+isOre
+transparent
+
+HalfTree
+#663300 #4d9900 #408000 #336600
+.1...
+1.22.
+.20.3
+..03.
+..0..
+
+HalfShrub
+#663300 #4d9900 #408000 #336600
+.....
+.....
+..22.
+.2023
+.....
+
+Gem
+#AF0F0F #C61111 #E81E1E
+.....
+.020.
+.201.
+..1..
+.....
+
+Coal
+black #050505 #111111
+.....
+.120.
+.201.
+.012.
+.....
+
+stone
+#707070 #767676 #7c7c7c #898989
+.....
+.130.
+.323.
+.212.
+.....
+
+GemOre
+#707070 #767676 #7c7c7c #898989 #AF0F0F #C61111 #E81E1E
+10301
+04530
+06363
+32412
+22111
+
+CoalOre
+#707070 #767676 #7c7c7c #898989 black #050505 #111111
+10301
+00630
+06323
+34262
+22111
+
+HalfGemOre
+#707070 #767676 #7c7c7c #898989 #AF0F0F #C61111 #E81E1E
+...0.
+.4540
+0616.
+.34.2
+.2.1.
+
+HalfCoalOre
+#707070 #767676 #7c7c7c #898989 black #050505 #111111
+...0.
+.0630
+0642.
+.4262
+.2.1.
+
+Wood
+#663300 #8C4600
+.....
+.100.
+.001.
+.110.
+.....
+
+Leaf
+#4d9900 #408000 #336600
+.....
+.010.
+.121.
+.210.
+2....
+
+Sunken
+#663300 #8C4600
+00000
+01110
+01110
+01110
+00000
+
+=======
+LEGEND
+=======
+
+. = background
+# = plat
+% = plat and Initial
+@ = Pdown and Plat
+H = HeightSpawn and background
+I = InBetween and background
+E = wall
+w = water
+S = sand
+G = Grass
+M = mountain
+
+Ore = gemore or coalore or halfgemore or halfcoalore
+
+Height = Lowest or Low or Mid or High or Highest
+Land = Water or Sand or Grass or Hill or Mountain or nomountain or Wood
+
+Beach = Water or Sand
+Grand = Sand or Grass
+Green = Grass or Hill
+Alpine = Hill or Mountain or Mountain
+
+Impassable = Mountain or Water
+Pushable = wood or gem or coal or leaf or stone
+BlocksOutput = pushable or tree or halftree or shrub or halfshrub or water or mountain or ore
+
+Tree? = tree or notree or notree or notree or notree or notree or notree or notree or notree
+Shrub? = Shrub or noshrub or noshrub or noshrub or noshrub or noshrub or noshrub or noshrub or noshrub
+
+ore? = gemore or coalore or mountain or noOre
+IsOrNoOre = isore or noore
+
+stone? = stone or nomountain or hill
+
+Player = pup or pdown or pleft or pright
+
+=======
+SOUNDS
+=======
+
+================
+COLLISIONLAYERS
+================
+Background
+HeightSpawn, Inbetween, Lowest, Low, Mid, High, Highest
+Notree, noshrub, noOre, isore
+Sand, Grass, Hill, plat, sunken, nomountain
+Player, Tree, HalfTree, Shrub, halfshrub, pushable, Water, Mountain, HalfMountain, Ore, Wall
+
+Initial, Secondary, final
+
+======
+RULES
+======
+
+[no background ] -> [ background ]
+
+(Movement)
+[ up player ] -> [up pup]
+[ down player ] -> [down pdown]
+[ right player ] -> [right pright]
+[ left player ] -> [left pleft]
+
+
+(pushin)
+[ > Player | Pushable ] -> [ > Player | > Pushable ]
+[ > Pushable | Pushable]  -> [ > Pushable | > Pushable ]
+[ > wood | water] -> [ | Sunken no water ]
+
+(Action - - - - - - - - - - - - - )
+(up)
+up[ Action Pup | HalfTree ] -> [ Pup | Wood ]
+up[ Action Pup | Tree ] -> [ Pup | HalfTree ]
+up[ Action Pup | HalfShrub ] -> [ Pup | Leaf ]
+up[ Action Pup | Shrub | no blocksoutput] -> [ Pup | Halfshrub | leaf]
+up[ Action Pup | Shrub | blocksoutput] -> [ Pup | Halfshrub | blocksoutput]
+up[ Action Pup | HalfgemORe ] -> [ Pup | Gem nomountain ]
+up[ Action Pup | HalfMountain ] -> [ Pup | random stone? ]
+up[ Action Pup | GemOre ] -> [ Pup | HalfGemOre Nomountain]
+up[ Action Pup | Mountain ] -> [ Pup | HalfMountain Nomountain]
+up[ Action Pup | CoalOre ] -> [ Pup | HalfCoalOre Nomountain]
+up[ Action Pup | HalfcoalORe ] -> [ Pup | coal nomountain ]
+(down)
+down[ Action Pdown | HalfTree ] -> [ Pdown | Wood ]
+down[ Action Pdown | Tree ] -> [ Pdown | HalfTree ]
+down[ Action Pdown | HalfShrub ] -> [ Pdown | Leaf ]
+down[ Action Pdown | Shrub | no blocksoutput] -> [ Pdown | Halfshrub | leaf]
+down[ Action Pdown | Shrub | blocksoutput] -> [ Pdown | Halfshrub | blocksoutput]
+down[ Action Pdown | HalfgemORe ] -> [ Pdown | Gem nomountain ]
+down[ Action Pdown | HalfMountain ] -> [ Pdown | random stone?  ]
+down[ Action Pdown | GemOre ] -> [ Pdown | HalfGemOre Nomountain]
+down[ Action Pdown | Mountain ] -> [ Pdown | HalfMountain Nomountain]
+down[ Action Pdown | CoalOre ] -> [ Pdown | HalfCoalOre Nomountain]
+down[ Action Pdown | HalfcoalORe ] -> [ Pdown | coal nomountain ]
+(left)
+left[ Action Pleft | HalfTree ] -> [ Pleft | Wood ]
+left[ Action Pleft | Tree ] -> [ Pleft | HalfTree ]
+left[ Action Pleft | HalfShrub ] -> [ Pleft | Leaf ]
+left[ Action Pleft | Shrub | no blocksoutput] -> [ Pleft | Halfshrub | leaf]
+left[ Action Pleft | Shrub | blocksoutput] -> [ Pleft | Halfshrub | blocksoutput]
+left[ Action Pleft | HalfgemORe ] -> [ Pleft | Gem nomountain ]
+left[ Action Pleft | HalfMountain ] -> [ Pleft | random stone?  ]
+left[ Action Pleft | GemOre ] -> [ Pleft | HalfGemOre Nomountain]
+left[ Action Pleft | Mountain ] -> [ Pleft | HalfMountain Nomountain]
+left[ Action Pleft | CoalOre ] -> [ Pleft | HalfCoalOre Nomountain]
+left[ Action Pleft | HalfcoalORe ] -> [ Pleft | coal nomountain ]
+(right)
+right[ Action Pright | HalfTree ] -> [ Pright | Wood ]
+right[ Action Pright | Tree ] -> [ Pright | HalfTree ]
+right[ Action Pright | HalfShrub ] -> [ Pright | Leaf ]
+right[ Action Pright | Shrub | no blocksoutput] -> [ Pright | Halfshrub | leaf]
+right[ Action Pright | Shrub | blocksoutput] -> [ Pright | Halfshrub | blocksoutput]
+right[ Action Pright | HalfgemORe ] -> [ Pright | Gem nomountain ]
+right[ Action Pright | HalfMountain ] -> [ Pright | random stone? ]
+right[ Action Pright | GemOre ] -> [ Pright | HalfGemOre Nomountain]
+right[ Action Pright | Mountain ] -> [ Pright | HalfMountain Nomountain]
+right[ Action Pright | CoalOre ] -> [ Pright | HalfCoalOre Nomountain]
+right[ Action Pright | HalfcoalORe ] -> [ Pright | coal nomountain ]
+
+
+(Spawn Rules ----------------------)
+
+(Map Gen)
+
+StartLoop
+[ HeightSpawn no Height ] -> [ Random Height]
+[ Lowest ] -> [ Water ]
+[ Low ] -> [ Sand ]
+[ Mid ] -> [ Grass ]
+[ High ] -> [ Hill ]
+[ Highest ] -> [ Mountain ]
+
+(No Slope)
+[initial][Water||||I no land||||Water] -> [initial][Water||||Random Beach||||Water]
+[initial][Water||I no land||Water] -> [initial][Water||Water||Water]
+[initial][Water|. no land|Water] -> [initial][Water|Water|Water]
+[initial][ Perpendicular Water|. no land|Water] -> [initial][ Perpendicular Water|Water|Water]
+[initial][Sand||||I no land||||Sand] -> [initial][Sand||||Sand||||Sand]
+[initial][Sand||I no land||Sand] -> [initial][Sand||Sand||Sand]
+[initial][Sand|. no land|Sand] -> [initial][Sand|Sand|Sand]
+[initial][ Perpendicular Sand|. no land|Sand] -> [initial][ Perpendicular Sand|Sand|Sand]
+[initial][Grass||||I no land||||Grass] -> [initial][Grass||||Grass||||Grass]
+[initial][Grass||I no land||Grass] -> [initial][Grass||Grass||Grass]
+[initial][Grass|. no land|Grass] -> [initial][Grass|Grass|Grass]
+[initial][ Perpendicular Grass|. no land|Grass] -> [initial][ Perpendicular Grass|Grass|Grass]
+[initial][Hill||||I no land||||Hill] -> [initial][Hill||||Hill||||Hill]
+[initial][Hill||I no land||Hill] -> [initial][Hill||Hill||Hill]
+[initial][Hill|. no land|Hill] -> [initial][Hill|Hill|Hill]
+[initial][ Perpendicular Hill|. no land|Hill] -> [initial][ Perpendicular Hill|Hill|Hill]
+[initial][Mountain||||I no land||||Mountain] -> [initial][Mountain||||Random Alpine||||Mountain]
+[initial][Mountain||I no land||Mountain] -> [initial][Mountain||Mountain||Mountain]
+[initial][Mountain|. no land|Mountain] -> [initial][Mountain|Mountain|Mountain]
+[initial][ Perpendicular Mountain|. no land|Mountain] -> [initial][ Perpendicular Mountain|Mountain|Mountain]
+
+(Barely Slope)
+[initial][Water||||I no land||||Sand] -> [initial][Water||||Random Beach||||Sand]
+[initial][Water||I no land||Sand] -> [initial][Water||Random Beach||Sand]
+[initial][Water|. no land|Sand] -> [initial][Water|Random Beach|Sand]
+[initial][ Perpendicular Water|. no land|Sand] -> [initial][ Perpendicular Water|Random Beach|Sand]
+[initial][Grass||||I no land||||Sand] -> [initial][Grass||||Random Grand||||Sand]
+[initial][Grass||I no land||Sand] -> [initial][Grass||Random Grand||Sand]
+[initial][Grass|. no land|Sand] -> [initial][Grass|Random Grand|Sand]
+[initial][ Perpendicular Grass|. no land|Sand] -> [initial][ Perpendicular Grass|Random Grand|Sand]
+[initial][Grass||||I no land||||Hill] -> [initial][Grass||||Random Green||||Hill]
+[initial][Grass||I no land||Hill] -> [initial][Grass||Random Green||Hill]
+[initial][Grass|. no land|Hill] -> [initial][Grass|Random Green|Hill]
+[initial][ Perpendicular Grass|. no land|Hill] -> [initial][ Perpendicular Grass|Random Green|Hill]
+[initial][Mountain||||I no land||||Hill] -> [initial][Mountain||||Random Alpine||||Hill]
+[initial][Mountain||I no land||Hill] -> [initial][Mountain||Random Alpine||Hill]
+[initial][Mountain|. no land|Hill] -> [initial][Mountain|Random Alpine|Hill]
+[initial][ Perpendicular Grass|. no land|Hill] -> [initial][ Perpendicular Mountain|Random Alpine|Hill]
+
+(Slightly Steep Slope)
+[initial][Water||||I no land||||Grass] -> [initial][Water||||Sand||||Grass]
+[initial][Water||I no land||Grass] -> [initial][Water||Sand||Grass]
+[initial][Water|. no land|Grass] -> [initial][Water|Sand|Grass]
+[initial][ Perpendicular Water|. no land|Grass] -> [initial][ Perpendicular Water|Sand|Grass]
+[initial][Sand||||I no land||||Hill] -> [initial][Sand||||Grass||||Hill]
+[initial][Sand||I no land||Hill] -> [initial][Sand||Grass||Hill]
+[initial][Sand|. no land|Hill] -> [initial][Sand|Grass|Hill]
+[initial][ Perpendicular Sand|. no land|Hill] -> [initial][ Perpendicular Sand|Grass|Hill]
+[initial][Mountain||||I no land||||Grass] -> [initial][Mountain||||Hill||||Grass]
+[initial][Mountain||I no land||Grass] -> [initial][Mountain||Hill||Grass]
+[initial][Mountain|. no land|Grass] -> [initial][Mountain|Hill|Grass]
+[initial][ Perpendicular Mountain|. no land|Grass] -> [initial][ Perpendicular Mountain|Hill|Grass]
+
+(Steep Slope)
+[initial][Water||||I no land||||Hill] -> [initial][Water||||Random Grand||||Hill]
+[initial][Water||I no land||Hill] -> [initial][Water||Random Grand||Hill]
+[initial][Water|. no land|Hill] -> [initial][Water|Random Grand|Hill]
+[initial][ Perpendicular Water|. no land|Hill] -> [initial][ Perpendicular Water|Random Grand|Hill]
+[initial][Sand||||I no land||||Mountain] -> [initial][Sand||||Random Green||||Mountain]
+[initial][Sand||I no land||Mountain] -> [initial][Sand||Random Green||Mountain]
+[initial][Sand|. no land|Mountain] -> [initial][Sand|Random Green|Mountain]
+[initial][ Perpendicular Sand|. no land|Mountain] -> [initial][ Perpendicular Sand|Random Green|Mountain]
+
+(Very Steep Slope)
+[initial][Water||||I no land||||Mountain] -> [initial][Water||||Grass||||Mountain]
+[initial][Water||I no land||Mountain] -> [initial][Water||Grass||Mountain]
+[initial][Water|. no land|Mountain] -> [initial][Water|Grass|Mountain]
+[initial][ Perpendicular Water|. no land|Mountain] -> [initial][ Perpendicular Water|Grass|Mountain]
+
+
+EndLoop
+
+(stages)
+[initial] -> [secondary]
+
+(Spawns trees + shrubs)
+[secondary][hill no tree?||hill no tree?|hill no tree?|hill no tree?||hill no tree?] -> [secondary][hill||hill|hill random tree?|hill||hill]
+
+[secondary][grass no shrub?||grass no shrub?|grass no shrub?|grass no shrub?||grass no shrub?] -> [secondary][grass||grass|grass random shrub?|grass||grass]
+
+
+
+(Spawns Ores)
+[Secondary][Mountain no IsorNoOre] -> [Secondary][random IsorNoOre]
+[isOre]->[random Ore?]
+[noOre]->[Mountain]
+
+
+[secondary] -> [no secondary]
+
+==============
+WINCONDITIONS
+==============
+
+=======
+LEVELS
+=======
+WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW
+WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW
+WWW.I.W.I.H.I.I.I.H.I.I.I.H.I.I.I.H.I.W.I.WWW
+WW.........................................WW
+WWI.I.I.I.I.I.I.I.I.I.I.I.I.I.I.I.I.I.I.I.IWW
+WW.........................................WW
+WWW.I.I.I.I.I.I.I.I.I.I.I.I.I.I.I.I.I.I.I.WWW
+WW.........................................WW
+WWI.I.I.I.I.I.I.I.I.I.I.I.I.I.I.I.I.I.I.I.IWW
+WW.........................................WW
+WWH.I.I.I.H.I.I.I.H.I.I.I.H.I.I.I.H.I.I.I.HWW
+WW.........................................WW
+WWI.I.I.I.I.I.I.I.I.I.I.I.I.I.I.I.I.I.I.I.IWW
+WW.........................................WW
+WWI.I.I.I.I.I.I.I.I.I.I.I.I.I.I.I.I.I.I.I.IWW
+WW.........................................WW
+WWI.I.I.I.I.I.I.I.I.I.I.I.I.I.I.I.I.I.I.I.IWW
+WW.........................................WW
+WWH.I.I.I.H.I.I.I.H.I.I.I.H.I.I.I.H.I.I.I.HWW
+WW.........................................WW
+WWI.I.I.I.I.I.I.I.I.I.I.I.I.I.I.I.I.I.I.I.IWW
+WW...................%%%...................WW
+WWI.I.I.I.I.I.I.I.I.I%@%I.I.I.I.I.I.I.I.I.IWW
+WW...................%%%...................WW
+WWI.I.I.I.I.I.I.I.I.I.I.I.I.I.I.I.I.I.I.I.IWW
+WW.........................................WW
+WWH.I.I.I.H.I.I.I.H.I.I.I.H.I.I.I.H.I.I.I.HWW
+WW.........................................WW
+WWI.I.I.I.I.I.I.I.I.I.I.I.I.I.I.I.I.I.I.I.IWW
+WW.........................................WW
+WWI.I.I.I.I.I.I.I.I.I.I.I.I.I.I.I.I.I.I.I.IWW
+WW.........................................WW
+WWI.I.I.I.I.I.I.I.I.I.I.I.I.I.I.I.I.I.I.I.IWW
+WW.........................................WW
+WWH.I.I.I.H.I.I.I.M.I.M.I.M.I.I.I.H.I.I.I.HWW
+WW.........................................WW
+WWI.I.I.I.I.I.I.I.I.I.I.I.I.I.I.I.I.I.I.I.IWW
+WW.........................................WW
+WWW.I.I.I.I.I.I.I.M.I.M.I.M.I.I.I.I.I.I.I.WWW
+WW.........................................WW
+WWI.I.I.I.I.I.I.I.I.I.I.I.I.I.I.I.I.I.I.I.IWW
+WW.........................................WW
+WWW.I.I.W.H.I.I.I.H.I.I.I.H.I.I.I.H.I.W.I.WWW
+WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW
+WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW

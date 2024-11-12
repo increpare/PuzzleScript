@@ -1,0 +1,534 @@
+import { CellSaveState } from '../engine'
+import { hexToRgb, IColor } from '../models/colors'
+import { GameData } from '../models/game'
+import { A11Y_MESSAGE, A11Y_MESSAGE_TYPE } from '../models/rule'
+import { GameSprite } from '../models/tile'
+import { Soundish } from '../parser/astTypes'
+// import { playSound } from '../sound/sfxr'
+import {
+    _flatten,
+    Cellish,
+    EmptyGameEngineHandler,
+    GameEngineHandler,
+    GameEngineHandlerOptional,
+    INPUT_BUTTON,
+    Optional,
+    RULE_DIRECTION,
+    setIntersection,
+    spritesThatInteractWithPlayer
+} from '../util'
+import BaseUI from './base'
+
+interface ITableCell {
+    td: HTMLTableCellElement,
+    label: HTMLSpanElement,
+    pixels: HTMLSpanElement[][]
+}
+
+function mapIncrement<T>(map: Map<T, number>, item: T) {
+    const num = map.get(item)
+    map.set(item, num ? num + 1 : 1)
+}
+
+class TableUI extends BaseUI implements GameEngineHandler {
+    private readonly table: HTMLElement
+    private readonly liveLog: Element
+    private inputsProcessed: number
+    private tableCells: ITableCell[][]
+    private handler: EmptyGameEngineHandler
+    private interactsWithPlayer: Set<GameSprite>
+    private usedInMessages: Set<GameSprite>
+    private didPressCauseTick: boolean
+    private silencedOutput: boolean
+    private messagesSincePress: number
+    private isCollecting: boolean
+    private collectedSprites: Map<GameSprite, number>
+    private collectingTickCount: number
+
+    constructor(table: HTMLElement, handler?: GameEngineHandlerOptional) {
+        super()
+        this.table = table
+        this.tableCells = []
+        this.inputsProcessed = 0
+        this.interactsWithPlayer = new Set()
+        this.usedInMessages = new Set()
+        table.classList.add('ps-table')
+        this.markAcceptingInput(false)
+
+        // To use this as a handler, the functions need to be bound to `this`
+        this.onPress = this.onPress.bind(this)
+        this.onLevelChange = this.onLevelChange.bind(this)
+
+        this.handler = new EmptyGameEngineHandler(handler ? [handler] : [])
+
+        const liveLog = table.querySelector('[aria-live]') || document.querySelector('[aria-live]')
+        if (!liveLog) {
+            throw new Error(`Error: For screenreaders to work, an element inside the table (for now) with an aria-live attribute needs to exist in the initial page. See https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/ARIA_Live_Regions`) // tslint:disable-line:max-line-length
+        }
+        this.liveLog = liveLog
+
+        this.didPressCauseTick = false
+        this.silencedOutput = false
+        this.messagesSincePress = 0
+        this.isCollecting = false
+        this.collectedSprites = new Map()
+        this.collectingTickCount = 0
+    }
+
+    public onPause() {
+        this.table.setAttribute('data-ps-state', 'paused')
+        this.handler.onPause()
+    }
+    public onResume() {
+        this.table.setAttribute('data-ps-state', 'running')
+        this.handler.onResume()
+    }
+    public onGameChange(gameData: GameData) {
+        super.onGameChange(gameData)
+        this.silencedOutput = false
+        this.didPressCauseTick = false
+        this.interactsWithPlayer = spritesThatInteractWithPlayer(this.getGameData())
+        this.usedInMessages = new Set(this.interactsWithPlayer)
+        this.collectedSprites.clear()
+        this.handler.onGameChange(gameData)
+    }
+
+    public onPress(dir: INPUT_BUTTON) {
+        this.didPressCauseTick = true
+        this.liveLog.innerHTML = '' // clear out the log
+        this.markAcceptingInput(false)
+        switch (dir) {
+            case INPUT_BUTTON.UNDO:
+            case INPUT_BUTTON.RESTART:
+                this.renderScreen(false)
+        }
+        this.handler.onPress(dir)
+    }
+
+    public onLevelLoad(level: number, newLevelSize: Optional<{rows: number, cols: number}>) {
+        this.handler.onLevelLoad(level, newLevelSize)
+    }
+    public onLevelChange(levelNum: number, cells: Optional<Cellish[][]>, message: Optional<string>) {
+        this.clearScreen()
+        this.table.setAttribute('data-ps-current-level', `${levelNum}`)
+
+        if (cells) {
+            super.onLevelChange(levelNum, cells, message)
+            // Draw the level
+            // Draw the empty table
+            this.tableCells = []
+            const gameData = this.getGameData()
+            const { width, height } = gameData.metadata.flickscreen || gameData.metadata.zoomscreen || { width: cells[0].length, height: cells.length }
+
+            this.table.setAttribute('tabindex', '0')
+            const tbody = document.createElement('tbody')
+            for (let currentY = 0; currentY < height; currentY++) {
+                const tr = document.createElement('tr')
+                const tableRow = []
+
+                // Add the row header with a summary of which sprites are in the row
+                // const th = document.createElement('th')
+                // th.classList.add('ps-row-summary')
+                // th.textContent = 'Sprites in Row:'
+                // tr.appendChild(th)
+
+                for (let currentX = 0; currentX < width; currentX++) {
+                    const td = document.createElement('td')
+                    const tableCellPixels = []
+                    td.classList.add('ps-cell')
+
+                    const cellLabel = document.createElement('span')
+                    cellLabel.classList.add('ps-cell-label')
+                    td.appendChild(cellLabel)
+
+                    const sprite = document.createElement('div')
+                    sprite.classList.add('ps-sprite-whole')
+                    sprite.setAttribute('aria-hidden', 'true')
+
+                    for (let row = 0; row < this.SPRITE_HEIGHT; row++) {
+                        const spriteRow = document.createElement('div')
+                        spriteRow.classList.add('ps-sprite-row')
+                        const pixelRow = []
+
+                        for (let col = 0; col < this.SPRITE_WIDTH; col++) {
+                            const spritePixel = document.createElement('span')
+                            spritePixel.classList.add('ps-sprite-pixel')
+                            spriteRow.appendChild(spritePixel)
+                            pixelRow.push(spritePixel)
+                        }
+                        sprite.appendChild(spriteRow)
+                        tableCellPixels.push(pixelRow)
+                    }
+                    td.appendChild(sprite)
+                    tr.appendChild(td)
+                    tableRow.push({ td, label: cellLabel, pixels: tableCellPixels })
+                }
+                tbody.appendChild(tr)
+                this.tableCells.push(tableRow)
+            }
+            this.table.prepend(tbody)
+
+            for (const row of cells) {
+                this.drawCells(row, false)
+            }
+        }
+        this.markAcceptingInput(true)
+        this.handler.onLevelChange(levelNum, cells, message)
+    }
+
+    public async onMessage(msg: string) {
+        await this.handler.onMessage(msg)
+    }
+    public onWin() {
+        this.handler.onWin()
+    }
+    public async onSound(sound: Soundish) {
+        // playSound(sound.soundCode) // tslint:disable-line:no-floating-promises
+        await this.handler.onSound(sound)
+    }
+    public onTick(changedCells: Set<Cellish>, checkpoint: Optional<CellSaveState>, hasAgain: boolean, a11yMessages: Array<A11Y_MESSAGE<Cellish, GameSprite>>) {
+        this.collectingTickCount++
+        this.printMessageLog(a11yMessages, hasAgain)
+        this.drawCells(changedCells, false)
+        this.markAcceptingInput(!hasAgain)
+        this.didPressCauseTick = false
+        this.handler.onTick(changedCells, checkpoint, hasAgain, a11yMessages)
+    }
+
+    public willAllLevelsFitOnScreen(gameData: GameData) {
+        return true
+    }
+
+    public _drawPixel(x: number, y: number, fgHex: string, bgHex: Optional<string>, chars: string) {
+        const rowIndex = Math.floor(y / this.SPRITE_HEIGHT)
+        const colIndex = Math.floor(x / this.SPRITE_WIDTH)
+        const pixelY = y % this.SPRITE_HEIGHT
+        const pixelX = x % this.SPRITE_WIDTH
+
+        const pixel = this.tableCells[rowIndex][colIndex].pixels[pixelY][pixelX]
+        if (!pixel) {
+            throw new Error(`BUG: Could not set pixel because table is too small`)
+        }
+        let style = `color: ${fgHex};`
+        if (bgHex) {
+            style += ` background-color: ${bgHex};`
+        }
+        pixel.setAttribute('style', style)
+        // pixel.textContent = chars
+    }
+
+    public clearScreen() {
+        super.clearScreen()
+        // clear all the rows
+        const tbody = this.table.querySelector('tbody')
+        tbody && tbody.remove()
+        this.liveLog.innerHTML = ''
+        this.tableCells = []
+    }
+
+    protected renderLevelScreen(levelRows: Cellish[][], renderScreenDepth: number) {
+        this.drawCells(_flatten(levelRows), false, renderScreenDepth)
+    }
+
+    protected setPixel(x: number, y: number, hex: string, fgHex: Optional<string>, chars: string) {
+        const rowIndex = Math.floor(y / this.SPRITE_HEIGHT)
+        const colIndex = Math.floor(x / this.SPRITE_WIDTH)
+        const pixelY = y % this.SPRITE_HEIGHT
+        const pixelX = x % this.SPRITE_WIDTH
+
+        const pixel = this.tableCells[rowIndex][colIndex].pixels[pixelY][pixelX]
+        if (!pixel) {
+            throw new Error(`BUG: Could not set pixel because table is too small`)
+        }
+        if (!chars || chars.trim().length === 0) {
+            chars = ''
+        }
+
+        if (!this.renderedPixels[y]) {
+            this.renderedPixels[y] = []
+        }
+        const onScreenPixel = this.renderedPixels[y][x]
+        if (!onScreenPixel || onScreenPixel.hex !== hex || onScreenPixel.chars !== chars) {
+            this.renderedPixels[y][x] = { hex, chars }
+
+            const { r, g, b, a } = hexToRgb(hex)
+            if (a !== null) {
+                pixel.setAttribute('style', `background-color: rgba(${r},${g},${b},${a})`)
+            } else {
+                pixel.setAttribute('style', `background-color: ${hex}`)
+                // pixel.textContent = chars
+            }
+        }
+    }
+
+    protected drawCellsAfterRecentering(cells: Iterable<Cellish>, renderScreenDepth: number) {
+        for (const cell of cells) {
+            this._drawCell(cell, renderScreenDepth)
+        }
+    }
+
+    protected checkIfCellCanBeDrawnOnScreen(cellStartX: number, cellStartY: number) {
+        return true
+    }
+
+    protected getMaxSize() {
+        // just pick something big for now
+        return {
+            columns: 1000,
+            rows: 1000
+        }
+    }
+
+    private printMessageLog(a11yMessages: Array<A11Y_MESSAGE<Cellish, GameSprite>>, hasAgain: boolean) {
+        if (this.silencedOutput && !this.didPressCauseTick) {
+            return
+        }
+        const GAME_TICK = 'game tick'
+
+        let pendingMessages: string[] = []
+        const addMessage = (msg: string, sprites: GameSprite[]) => {
+            pendingMessages.push(msg)
+
+            if (this.isCollecting) {
+                for (const sprite of sprites) {
+                    mapIncrement(this.collectedSprites, sprite)
+                }
+            }
+        }
+        const printPendingMessages = () => {
+            for (const msg of pendingMessages) {
+                const p = document.createElement('p')
+                p.textContent = msg
+                this.liveLog.append(p)
+                if (!this.didPressCauseTick) {
+                    this.messagesSincePress++
+                }
+            }
+        }
+
+        if (hasAgain) {
+            addMessage(GAME_TICK, [])
+        }
+
+        for (const message of a11yMessages) {
+            switch (message.type) {
+                case A11Y_MESSAGE_TYPE.ADD:
+                    for (const sprite of setIntersection(this.usedInMessages, message.sprites)) {
+                        addMessage(`Added ${sprite.getName()} @ ${message.cell.rowIndex},${message.cell.colIndex}`, [sprite])
+                    }
+                    break
+                case A11Y_MESSAGE_TYPE.REPLACE:
+                    for (const { oldSprite, newSprite } of message.replacements) {
+                        if (this.usedInMessages.has(oldSprite)) {
+                            if (this.usedInMessages.has(newSprite)) {
+                                addMessage(`Replaced ${oldSprite.getName()} with ${newSprite.getName()} @ ${message.cell.rowIndex},${message.cell.colIndex}`, [oldSprite, newSprite])
+                            } else {
+                                addMessage(`Removed* ${oldSprite.getName()} @ ${message.cell.rowIndex},${message.cell.colIndex}`, [oldSprite])
+                            }
+                        } else if (this.usedInMessages.has(newSprite)) {
+                            addMessage(`Added* ${newSprite.getName()} @ ${message.cell.rowIndex},${message.cell.colIndex}`, [newSprite])
+                        }
+                    }
+                    break
+                case A11Y_MESSAGE_TYPE.REMOVE:
+                    for (const sprite of setIntersection(this.usedInMessages, message.sprites)) {
+                        addMessage(`Removed ${sprite.getName()} @ ${message.cell.rowIndex},${message.cell.colIndex}`, [sprite])
+                    }
+                    break
+                case A11Y_MESSAGE_TYPE.MOVE:
+                    addMessage(`Moved ${message.sprite.getName()} ${message.direction} to ${message.newCell.rowIndex},${message.newCell.colIndex}`, [message.sprite])
+                    break
+                default:
+                    throw new Error(`BUG: unsupported a11y message type ${message}`)
+            }
+        }
+
+        if (this.didPressCauseTick) {
+            if (pendingMessages.length > 10) {
+                pendingMessages = [...pendingMessages.slice(0, 4), '(truncated messages)', ...pendingMessages.slice(pendingMessages.length - 4, pendingMessages.length)]
+            }
+
+        } else if (this.silencedOutput) {
+            pendingMessages = []
+        } else if (!this.isCollecting && (this.messagesSincePress > 10 || pendingMessages.length > 10)) {
+            if (this.collectedSprites.size > 0) {
+                // We tried collecting before but it did not seem to work so just go silent
+                this.silencedOutput = true
+                pendingMessages = [`Things keep changing so switching to a quieter mode`]
+            } else {
+                // start collecting
+                this.isCollecting = true
+                this.collectingTickCount = 0
+                pendingMessages = [`Many things changed (probably animations). Collecting data for a few ticks to see what to ignore`]
+            }
+        } else if (this.isCollecting && this.collectingTickCount < 20) {
+            pendingMessages = [] // stay silent while collecting
+        } else if (this.isCollecting) {
+            this.isCollecting = false
+            pendingMessages = [`Done collecting. Found ${this.collectedSprites.size} sprites to ignore: ${[...this.collectedSprites.keys()].map((sprite) => sprite.getName()).join(', ')}`]
+            this.messagesSincePress = 0
+            for (const [sprite, count] of this.collectedSprites) {
+                if (count > 4) {
+                    this.usedInMessages.delete(sprite)
+                }
+            }
+        }
+
+        printPendingMessages()
+
+        if (this.didPressCauseTick) {
+            this.messagesSincePress = 0
+        }
+    }
+
+    private markAcceptingInput(flag: boolean) {
+        if (flag) {
+            this.table.setAttribute('data-ps-accepting-input', 'true')
+        } else {
+            this.inputsProcessed++
+            this.table.setAttribute('data-ps-accepting-input', 'false')
+        }
+        this.table.setAttribute('data-ps-last-input-processed', `${this.inputsProcessed}`)
+    }
+
+    private _drawCell(cell: Cellish, renderScreenDepth: number = 0) {
+        if (!this.gameData) {
+            throw new Error(`BUG: gameData was not set yet`)
+        }
+        if (!this.hasVisualUi) {
+            throw new Error(`BUG: Should not get to this point`)
+        }
+
+        // Remove any sprites that do not impact (transitively) the player
+        const sprites = cell.getSprites()
+        const spritesForDebugging = sprites.filter((s) => this.interactsWithPlayer.has(s))
+
+        const { isOnScreen, cellStartX, cellStartY } = this.cellPosToXY(cell)
+
+        if (!isOnScreen) {
+            return // no need to render because it is off-screen
+        }
+
+        // Inject the set of sprites for a11y
+        const tableRow = this.tableCells[cell.rowIndex - this.windowOffsetRowStart]
+        if (!tableRow) {
+            throw new Error(`BUG: Should not be trying to draw when there are no table cells`)
+        }
+        const tableCell = tableRow[cell.colIndex - this.windowOffsetColStart]
+        if (!tableCell) {
+            throw new Error(`BUG: Should not be trying to draw when there is not a matching table cell`)
+        }
+        const cellLabel = tableCell.label
+        if (!cellLabel) {
+            throw new Error(`BUG: Could not find cell in the table: [${cell.rowIndex} - ${this.windowOffsetRowStart}][${cell.colIndex} - ${this.windowOffsetColStart}]`)
+        }
+
+        if (process.env.NODE_ENV !== 'production') {
+            cellLabel.setAttribute('data-debug-sprites', sprites.map((s) => s.getName()).join(' '))
+        }
+
+        if (spritesForDebugging.length > 0) {
+            cellLabel.classList.remove('ps-cell-empty')
+            const player = this.gameData.getPlayer()
+            if (player.getSpritesThatMatch(cell).size > 0) {
+                cellLabel.classList.add('ps-player')
+            } else {
+                cellLabel.classList.remove('ps-player')
+            }
+            cellLabel.textContent = spritesForDebugging.map((s) => s.getName()).join(', ')
+        } else {
+            cellLabel.classList.remove('ps-player')
+            cellLabel.classList.add('ps-cell-empty')
+            cellLabel.textContent = '(empty)' // (empty)
+        }
+
+        const pixels: IColor[][] = this.getPixelsForCell(cell)
+        pixels.forEach((spriteRow, spriteRowIndex) => {
+            spriteRow.forEach((spriteColor: IColor, spriteColIndex) => {
+                if (!this.gameData) {
+                    throw new Error(`BUG: gameData was not set yet`)
+                }
+                const x = cellStartX + spriteColIndex
+                const y = cellStartY + spriteRowIndex
+
+                let color: Optional<IColor> = null
+
+                if (spriteColor) {
+                    if (!spriteColor.isTransparent()) {
+                        color = spriteColor
+                    } else if (this.gameData.metadata.backgroundColor) {
+                        color = this.gameData.metadata.backgroundColor
+                    } else {
+                        color = null
+                    }
+                }
+
+                if (color) {
+                    const { r, g, b /*,a*/ } = color.toRgb()
+                    const hex = color.toHex()
+                    let fgHex = null
+
+                    let chars = ' '
+
+                    // Print a debug number which contains the number of sprites in this cell
+                    // Change the foreground color to be black if the color is light
+                    if (process.env.NODE_ENV === 'development') {
+                        if (r > 192 && g > 192 && b > 192) {
+                            fgHex = '#000000'
+                        } else {
+                            fgHex = '#ffffff'
+                        }
+                        const sprite = spritesForDebugging[spriteRowIndex]
+                        if (sprite) {
+                            let spriteName = sprite.getName()
+                            let wantsToMove
+
+                            switch (cell.getWantsToMove(sprite)) {
+                                case RULE_DIRECTION.STATIONARY:
+                                    wantsToMove = ''
+                                    break
+                                case RULE_DIRECTION.UP:
+                                    wantsToMove = '^'
+                                    break
+                                case RULE_DIRECTION.DOWN:
+                                    wantsToMove = 'v'
+                                    break
+                                case RULE_DIRECTION.LEFT:
+                                    wantsToMove = '<'
+                                    break
+                                case RULE_DIRECTION.RIGHT:
+                                    wantsToMove = '>'
+                                    break
+                                case RULE_DIRECTION.ACTION:
+                                    wantsToMove = 'X'
+                                    break
+                                default:
+                                    throw new Error(`BUG: Invalid wantsToMove "${cell.getWantsToMove(sprite)}"`)
+                            }
+                            spriteName = `${wantsToMove}${spriteName}`
+                            if (spriteName.length > 10) {
+                                const beforeEllipsis = spriteName.substring(0, this.SPRITE_WIDTH)
+                                const afterEllipsis = spriteName.substring(spriteName.length - this.SPRITE_WIDTH + 1)
+                                spriteName = `${beforeEllipsis}.${afterEllipsis}`
+                            }
+                            const msg = `${spriteName.substring(spriteColIndex * 2, spriteColIndex * 2 + 2)}`
+                            chars = msg.substring(0, 2)
+                        }
+                        if (spriteRowIndex === this.SPRITE_HEIGHT - 1 && spriteColIndex === this.SPRITE_WIDTH - 1) {
+                            if (spritesForDebugging.length > this.SPRITE_WIDTH * 2 - 1) {
+                                chars = `${spritesForDebugging.length}`
+                            } else {
+                                chars = ` ${spritesForDebugging.length}`
+                            }
+                        }
+                    }
+
+                    this.setPixel(x, y, hex, fgHex, chars)
+
+                }
+            })
+        })
+    }
+}
+
+export default TableUI

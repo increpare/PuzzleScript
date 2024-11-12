@@ -1,0 +1,763 @@
+title Overstep
+author Rosden Shadow [Mark Signorelli]
+homepage rosden.itch.io
+
+noaction
+run_rules_on_level_Start
+
+background_color #191919
+
+text_color #E0AAF2
+
+again_interval 0.01
+========
+OBJECTS
+========
+
+Background
+#333333 #191919(#E57ED5 #CC5285)
+11111
+10111
+11011
+11101
+11111
+(
+00101
+01110
+11011
+01111
+10110)
+(
+11101
+00101
+11111
+10100
+10111)
+
+Background1
+#191919 #333333 #666666 #999999 (#E57ED5 #CC5285)
+11111
+10111
+11011
+11101
+11111
+
+nomove
+#FFEED9 #536673
+.....
+.000.
+.010.
+.000.
+.....
+
+Target
+#F2F2AA #423D39
+.....
+.0.0.
+..0..
+.0.0.
+.....
+
+Wall
+#FFD9FC #E0AAF2 #705C84 #52465B
+21110
+21110
+22221
+23232
+32323
+
+overwall
+#FFD9FC #E0AAF2 #705C84 #52465B
+.....
+.....
+.....
+10000
+21110
+
+
+Playerright
+#D9FFDC #7EE58D #736053 #423D39
+.000.
+11202
+11313
+11110
+.1.1.
+
+Playerright1
+#C3C3D9 #AFA2C1 #7F7CA1 #705C84
+....0
+...11
+...11
+...11
+....1
+
+Playerright2
+#C3C3D9 #AFA2C1 #7F7CA1 #705C84
+00...
+202..
+313..
+110..
+.1...
+
+playerleft
+#D9FFDC #7EE58D #736053 #423D39
+.000.
+20211
+31311
+01111
+.1.1.
+
+Crate
+#F2F2AA #E5C17E #CC7A52 #736053
+21100
+21110
+22110
+32223
+.333.
+
+overcrate
+#F2F2AA #E5C17E #CC7A52 #736053
+.....
+.....
+.....
+.....
+.000.
+
+end
+#F2F2AA #E5C17E #CC7A52 #736053
+21100
+21110
+22110
+32223
+.333.
+endx
+#F2F2AA #E5C17E #CC7A52 #736053
+21100
+21110
+22110
+32223
+.333.
+
+
+
+cloner
+#E5C17E #DB7F55 #B32D2D #73342E
+.100.
+.210.
+.221.
+.332.
+.....
+
+swapcrate
+Orange Yellow
+00000
+0...0
+0...0
+0...0
+00000
+
+swapwall
+black
+.....
+.....
+.....
+.....
+.....
+
+thefloor
+#191919
+00000
+00000
+00000
+00000
+00000
+
+thefloorx
+#191919
+00000
+00000
+00000
+00000
+00000
+
+eend
+#191919
+00000
+00000
+00000
+00000
+00000
+(
+checkempty
+black
+.....
+.....
+.....
+.....
+.....
+
+checkblock
+black
+.....
+.....
+.....
+.....
+.....
+)
+cskip
+black
+.....
+.....
+.....
+.....
+.....
+
+skipr
+black
+.....
+.....
+.....
+.....
+.....
+
+skipl
+black
+.....
+.....
+.....
+.....
+.....
+
+skipu
+black
+.....
+.....
+.....
+.....
+.....
+
+skipd
+black
+.....
+.....
+.....
+.....
+.....
+
+colr
+black
+.....
+.....
+.....
+.....
+.....
+
+coll
+black
+.....
+.....
+.....
+.....
+.....
+
+colu
+black
+.....
+.....
+..0..
+.....
+.....
+
+cold
+black
+.....
+.....
+..0..
+.....
+.....
+
+nocolr
+black
+.....
+.....
+.....
+.....
+.....
+
+nocoll
+black
+.....
+.....
+.....
+.....
+.....
+
+nocolu
+black
+.....
+.....
+.....
+.....
+.....
+
+nocold
+black
+.....
+.....
+.....
+.....
+.....
+
+
+sskip
+black
+.....
+.....
+.....
+.....
+.....
+
+playe
+black
+.....
+.....
+.....
+.....
+.....
+pright
+black
+.....
+.....
+.....
+.....
+.....
+pleft
+black
+.....
+.....
+.....
+.....
+.....
+switcrate
+black
+.....
+.....
+.....
+.....
+.....
+
+switcrate2
+black
+.....
+.....
+.....
+.....
+.....
+
+checker
+black
+.....
+.....
+.....
+.....
+.....
+checker1
+black
+.....
+.....
+.....
+.....
+.....
+arrow
+black
+.....
+.....
+.0.0.
+.000.
+..0..
+
+arrow2
+black
+.....
+.0.0.
+.000.
+..0..
+.....
+
+arrowx
+black
+.....
+.....
+.....
+.....
+.....
+
+arrowx2
+black
+.....
+.....
+.....
+.....
+.....
+
+winend
+#FFD9FC #E0AAF2 #705C84
+1000.
+21100
+21110
+22110
+.2221
+
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Playerright
+* = Crate
+
+O = Target and checker
+n = nomove
+a = arrow2 and wall
+e=background
+t =  target and eend
+w=winend
+
+c=cloner
+-=thefloor
+x=thefloorx
+
+feel=overwall or overcrate 
+pushable=crate or cloner or swapcrate  or switcrate or switcrate2
+win=crate or wall
+
+theemx= crate 
+player=playerright or playerleft
+
+bl = wall or crate  or nomove or player or arrow or thefloor
+blx = wall or crate  or nomove or player or arrow 
+arrowk = arrow or arrow2 or arrowx or arrowx2
+skip=skipr or skipl or skipu or skipd
+pdir=pright or pleft
+
+plinbet=Playerright1 or Playerright2
+col= colr or coll or colu or cold
+nocol = nocolr or nocoll or nocolu or nocold
+check=checker or checker1
+=======
+SOUNDS
+=======
+
+pushable MOVE 36772507
+
+EndLevel 74089700
+
+player MOVE 68988304
+sfx0 52836103
+sfx1 45427502
+
+sfx2 29503700
+sfx3 81951902
+
+sfx4 5012103
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Background1
+checker,checker1
+Target
+nomove
+skip
+sskip
+cskip
+pdir
+
+playe
+Player, Wall, pushable,swapwall,thefloor,thefloorx
+plinbet
+
+arrow, arrow2, arrowx, arrowx2
+winend
+eend
+end, endx
+feel
+col
+nocolr
+nocoll
+nocolu
+nocold
+======
+RULES
+======
+
+[feel]->[]
+
+[nocol]->[]
+
+[ >  Player | crate]  -> [  >  Player | > crate]
+
+[ >  crate | crate]  -> [  >  crate | > crate]
+
+[ left Playerright] -> [ left playerleft]
+[ right Playerleft] -> [ right playerright]
+
+[Playerright]->[Playerright pright]
+[Playerleft]->[Playerleft pleft]
+
+left [crate|Background]->[crate nocoll|background]
+right [crate|Background]->[crate nocolr|background]
+up [crate|Background]->[crate nocolu|background]
+down [crate|Background]->[crate nocold|background]
+
+[player|right crate|crate|blx]->[player|cskip|skipr crate|blx]
+[player|left crate|crate|blx]->[player|cskip|skipl crate|blx]
+[player|up crate|crate|blx]->[player|cskip|skipu crate|blx]
+[player|down crate|crate|blx]->[player|cskip|skipd crate|blx]
+
+([player|right crate|crate no nocolr]->[|crate|skipr crate]
+[player|left crate|crate no nocoll]->[|crate|skipl crate]
+[player|up crate|crate no nocolu]->[|crate|skipu crate]
+[player|down crate|crate no nocold]->[|crate|skipd crate])
+
+[player |right crate|blx]->[|skipr crate|blx]
+[player|left crate|blx]->[|skipl crate|blx]
+[player|up crate|blx]->[|skipu crate|blx]
+[player|down crate|blx]->[|skipd crate|blx]
+
+
+right [skipr |bl]->[|skipr bl]
+left [skipl |bl]->[|skipl bl]
+up [skipu |bl]->[|skipu bl]
+down [skipd |bl]->[|skipd bl]
+
+
+right [skipr bl |no bl]->[bl|playe] sfx4
+left [skipl bl|no bl]->[bl|playe] sfx4
+up [skipu bl|no bl]->[bl|playe] sfx4
+down [skipd bl|no bl]->[bl|Playe] sfx4
+
+
+down [skipu bl|...|]->[skipu bl|...|cold]
+up [skipd bl|...|]->[skipd bl|...|colu]
+right [skipl bl|...|]->[skipl bl|...|colr]
+left [skipr bl|...|]->[skipr bl|...|coll]
+
+down[cold|background]->[|Background]
+up[colu|background]->[|Background]
+right[colr|background]->[|Background]
+left[coll|background]->[|Background]
+
+[cold]->[skipu]
+[colu]->[skipd]
+[colr]->[skipl]
+[coll]->[skipr]
+
+right [skipr |bl]->[|skipr bl]
+left [skipl |bl]->[|skipl bl]
+up [skipu |bl]->[|skipu bl]
+down [skipd |bl]->[|skipd bl]
+
+
+right [skipr bl |no bl]->[bl|playe] sfx4
+left [skipl bl|no bl]->[bl|playe] sfx4
+up [skipu bl|no bl]->[bl|playe] sfx4
+down [skipd bl|no bl]->[bl|Playe] sfx4
+
+[skip no bl]->[Playe] sfx4
+
+late [skip]->[]
+
+late[pdir]->[]
+
+([skip bl][sskip]->[bl][Playe])
+
+([Playerright2]->[Playerright]
+right[right player|no bl]->[Playerright1|Playerright2])
+
+[playe][cskip]->[crate][]
+[playe][pright]->[Playerright][pright]
+[playe][pleft]->[Playerleft][pleft]
+
+([skip no bl]->[Playerright])
+
+[> crate|Target]->[> crate|target] sfx2
+
+[endx] ->[thefloor] sfx2
+[end | thefloor]-> [endx |thefloor]
+
+
+late up [wall| ]-> [wall|overwall]
+late up [theemx| ]-> [theemx|overcrate]
+
+(late up [crate2| ]-> [crate2|overcrate2])
+
+late up [end| ]-> [end|overcrate]
+late up [endx| ]-> [endx|overcrate]
+
+startloop
+[checker|no check]->[checker|checker1]
+[checker1|no check]->[checker1|checker]
+endloop
+[checker]->[Background]
+[checker1]->[Background1]
+
+([]-> again )
+(
+[arrow]->[arrowx2]
+[arrow2]->[arrowx]
+
+[arrowx]->[arrow]
+[arrowx2]->[arrow2])
+==============
+WINCONDITIONS
+==============
+
+all player on target
+all target on player
+
+some target
+some player
+=======
+LEVELS
+=======
+
+(message get to the targetx)
+
+(message level 0 of 0
+---------
+-##...##-
+.........
+#.......#
+#.......#
+....O....
+#.......#
+#.......#
+..P...*..
+.........
+-##...##-
+)
+
+message level 1 of 6
+---------
+-.......-
+.........
+..#####..
+#.##O##.#
+..#.#.#..
+..#####..
+..#...#..
+...###...
+..P...*..
+-.......-
+
+message level 2 of 6
+---------
+-##...##-
+....O....
+#.......#
+#########
+.........
+#########
+#..###..#
+..P......
+#...*...#
+-##...##-
+
+message level 3 of 6
+---------
+-#..#..#-
+##..#..##
+##.#O#.##
+#...#...#
+....#....
+.#.....#.
+..##.##..
+....#....
+..*.P.*..
+-#.....#-
+(---------
+-..#O#..-
+...###...
+.........
+.#######.
+.#.....#.
+.........
+#..*.*..#
+#.......#
+##..P..##
+-##...##-)
+message level 4 of 6
+---------
+-.......-
+....#....
+.#.#O#.#.
+.#.###.#.
+.#.....#.
+...#.#...
+#...#...#
+#..*.*..#
+##..P..##
+-#######-
+
+message level 5 of 6
+---------
+-...-...-
+...#-#...
+..#---#..
+.#--O--#.
+..#---#..
+...#-#...
+#...-...#
+.........
+..*.P.*..
+-.......-
+
+message level 6 of 6
+---------
+-.--.--.-
+...-.-...
+##--O--##
+.##.-.##.
+...#.#...
+....#....
+..*#.#*..
+....#....
+..P...*..
+..-...-..
+
+(---------
+-#.....#-
+##.###.##
+#..#O#..#
+#..###..#
+#.......#
+###...###
+..#####..
+...*.*...
+..P......
+-..###..-)
+
+xxxxxxxxxxxxxx
+-eeeeeeeeeeee-
+eeeeeeeeeeeeee
+eeeeeeeeeeeeee
+wewewewwweweew
+wewewetweewwew
+weweweeweeweww
+eweweewwweweew
+eeeeeeeeeeeeee
+eeeeeeeeeeeeee
+-eeeeeeeeeeee-
+
+
+
+
+
+
+
+

@@ -1,0 +1,649 @@
+title Pit trails
+author Rosden Shadow [Mark Signorelli]
+homepage rosden.itch.io
+
+noaction
+run_rules_on_level_Start
+
+background_color #423D39
+
+text_color #E5C17E
+
+again_interval 0.2
+========
+OBJECTS
+========
+
+Background
+#736053 #423D39 (#E57ED5 #CC5285)
+11111
+10111
+11011
+11101
+11111
+(
+00101
+01110
+11011
+01111
+10110)
+(
+11101
+00101
+11111
+10100
+10111)
+
+
+nomove
+#FFEED9 #536673
+.....
+.000.
+.0.0.
+.000.
+.....
+
+Target
+white
+.....
+..0..
+.000.
+.0.0.
+.....
+
+Wall
+#E5C17E #CC7A52 #B32D2D #73342E
+21110
+21110
+22221
+23232
+32323
+
+overwall
+#E5C17E #CC7A52 #B32D2D #73342E
+.....
+.....
+.....
+10000
+21110
+
+Wall2
+#FFFFFF #CCCCCC #999999 #666666
+21110
+21110
+22221
+23232
+32323
+
+overwall2
+#FFFFFF #CCCCCC #999999 #666666
+.....
+.....
+.....
+10000
+21110
+
+
+Playerright
+#FFD9FC #E0AAF2 #999999 #666666
+.000.
+11202
+11313
+11110
+.1.1.
+
+playerleft
+#FFD9FC #E0AAF2 #999999 #666666
+.000.
+20211
+31311
+01111
+.1.1.
+
+Crate
+#D9FFDC #7EE58D #5C8466 #4F5B46
+21100
+21110
+22110
+32223
+.333.
+overcrate
+#D9FFDC #7EE58D #5C8466 #4F5B46
+.....
+.....
+.....
+.....
+.000.
+
+end
+#D9FFDC #7EE58D #5C8466 #4F5B46
+21100
+21110
+22110
+32223
+.333.
+
+endx
+#D9FFDC #7EE58D #5C8466 #4F5B46
+21100
+21110
+22110
+32223
+.333.
+
+
+
+cloner
+#E5C17E #DB7F55 #B32D2D #73342E
+.100.
+.210.
+.221.
+.332.
+.....
+
+swapcrate
+Orange Yellow
+00000
+0...0
+0...0
+0...0
+00000
+
+swapwall
+black
+.....
+.....
+.....
+.....
+.....
+
+thefloor
+#423D39
+00000
+00000
+00000
+00000
+00000
+
+thefloorx
+#423D39
+00000
+00000
+00000
+00000
+00000
+
+eend
+#423D39
+00000
+00000
+00000
+00000
+00000
+(
+checkempty
+black
+.....
+.....
+.....
+.....
+.....
+
+checkblock
+black
+.....
+.....
+.....
+.....
+.....
+)
+start
+white
+.....
+.000.
+.0.0.
+.000.
+.....
+
+tile
+#423D39 #231F26 
+11111
+11111
+10001
+11111
+11111
+
+pit
+black #423D39 (#E57ED5 #CC5285)
+10101
+01010
+00000
+00000
+00000
+
+pitfull
+black #423D39 (#E57ED5 #CC5285)
+00000
+00000
+00000
+00000
+00000
+
+pit1
+black #4F5B46 (#E57ED5 #CC5285)
+10101
+01010
+00000
+00000
+00000
+
+overpit1
+black #7EE58D #5C8466 #4F5B46
+01210
+32121
+32212
+23221
+32332
+
+switcrate
+black
+.....
+.....
+.....
+.....
+.....
+
+switcrate2
+black
+.....
+.....
+.....
+.....
+.....
+
+arrow
+black
+.....
+.....
+.0.0.
+.000.
+..0..
+
+arrow2
+black
+.....
+.0.0.
+.000.
+..0..
+.....
+
+arrowx
+black
+.....
+.....
+.....
+.....
+.....
+
+arrowx2
+black
+.....
+.....
+.....
+.....
+.....
+
+winend
+#E5C17E #CC7A52 #B32D2D #73342E
+1000.
+21100
+21110
+22110
+.2221
+
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Playerright
+* = Crate
+
+O = Target and wall2
+n = nomove
+a = arrow2 and wall
+e=end
+t = end and target and eend
+w=end and winend
+
+c=cloner
+-=thefloor
+x=thefloorx
+
+%=wall2
+s= start
+$=tile
+
+
+feel=overwall or overcrate or overwall2
+pushable=crate or cloner or swapcrate  or switcrate or switcrate2
+win=crate or wall
+
+
+theemx= crate 
+player=playerright or playerleft
+
+blocker = wall or crate  or nomove or player or arrow or wall2
+
+arrowk = arrow or arrow2 or arrowx or arrowx2
+
+apit= pit or pitfull or pit1
+=======
+SOUNDS
+=======
+
+pushable MOVE 36772507
+
+EndLevel 74089700
+
+player MOVE 68988304
+sfx0 52836103
+sfx1 45427502
+
+sfx2 29503700
+sfx3 81951902
+
+sfx4 8026902
+
+sfx5 29191501
+
+sfx6 10116307
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Target
+nomove
+tile
+start
+overpit1
+Player, Wall, pushable,swapwall,thefloor,thefloorx, wall2,apit
+
+arrow, arrow2, arrowx, arrowx2
+winend
+eend
+end, endx
+feel
+
+
+======
+RULES
+======
+
+[feel]->[]
+[ >  Player | crate ] -> [  >  Player | > crate ]
+
+([> crate|Target]->[> crate|target] sfx2)
+
+[> player| crate]->[> player| crate]
+
+[> player|tile]->[player|tile] sfx6
+
+[> crate|apit]->[|overpit1] sfx5
+
+[ left Playerright] -> [ left playerleft]
+[ right Playerleft] -> [ right playerright]
+
+[endx] ->[thefloor] sfx2
+[end | thefloor]-> [endx |thefloor]
+
+
+late[start player][tile blocker]->[start player][blocker]
+late[start player][tile no blocker]->[start player][pit]
+
+late[start player][wall2]->[start player][]
+
+
+late[start player]->[player] sfx4
+late[start][player]->[start][player tile]
+
+
+
+
+late up [wall| ]-> [wall|overwall]
+
+late up [wall2| ]-> [wall2|overwall2]
+late up [theemx| ]-> [theemx|overcrate]
+
+(late up [crate2| ]-> [crate2|overcrate2])
+
+late up [end| ]-> [end|overcrate]
+late up [endx| ]-> [endx|overcrate]
+
+[action player eend|]->[action player eend |crate Target]
+
+late up [apit|apit]->[pitfull|apit]
+
+late up [apit|no apit]->[pit|]
+late up [apit|overpit1]->[pit1|overpit1]
+
+
+
+[]-> again 
+(
+[arrow]->[arrowx2]
+[arrow2]->[arrowx]
+
+[arrowx]->[arrow]
+[arrowx2]->[arrow2])
+==============
+WINCONDITIONS
+==============
+
+some Target on player
+
+some target
+=======
+LEVELS
+=======
+
+message Reach the end
+
+message level 1 of 9
+---------
+-###O###-
+##.....##
+#.....P.#
+#.......#
+#.%%%%%%#
+#.......#
+#.s..*..#
+#.......#
+##.....##
+-#######-
+
+message level 2 of 9
+---------
+-###O###-
+##..P..##
+#.$...$.#
+#.......#
+#...*...#
+#...$...#
+#.$...$.#
+#...s...#
+#.......#
+#########
+
+message level 3 of 9
+---------
+-###O###-
+-#..$..#-
+-#.....#-
+-#..$..#-
+-#...#.#-
+-#..*#.#-
+-#..P..#-
+-#s....#-
+-#...###-
+-#####---
+
+message level 4 of 9
+---------
+-###O###-
+##..$..##
+#..#.#..#
+#.......#
+#.$.$.$.#
+#.......#
+#.s..*..#
+#.......#
+##..P..##
+-###.###-
+
+message level 5 of 9
+---------
+####O####
+#.......#
+#.$$$$$.#
+#$$$$$$$#
+#$.....$#
+#...p...#
+#...*...#
+#.s.....#
+##.....##
+-#######-
+
+message level 6 of 9
+---------
+-###O###-
+##..$..##
+#..$$$..#
+#..$.$..#
+#..$$$..#
+#.......#
+#..*.*..#
+#...P...#
+#...s...#
+#########
+
+message level 7 of 9
+---------
+####O###-
+#..P$$.##
+#...$...#
+#.......#
+#...*...#
+#.......#
+#.......#
+#...s...#
+##......#
+-########
+
+message level 8 of 9
+---------
+-###O###-
+##.$$$.##
+#..$$$..#
+#..$$$..#
+#.......#
+#..**...#
+#.......#
+#...P...#
+#.......#
+#...s...#
+#########
+
+message level 9 of 9
+---------
+####O####
+##$$$$$##
+#..$p$..#
+#.......#
+#...$...#
+#...*...#
+#.......#
+#..*.*..#
+#.......#
+#...s...#
+#########
+
+
+(---------
+-###O###-
+-#..$..#-
+##..$..##
+#.......#
+#..$.$..#
+#.......#
+#.s..*..#
+#.......#
+##..p..##
+-#######-)
+(---------
+--##O##--
+###.$.###
+#...$...#
+#...$...#
+#...$...#
+#..*.*..#
+#...P...#
+#.......#
+#...s...#
+#########)
+
+
+(---------
+-###O###-
+##..$..##
+#..$$$..#
+#..$.$..#
+#..$$$..#
+#.......#
+#..*.*..#
+#...P...#
+#...s...#
+#########)
+
+
+
+(---------
+-###O###-
+##.$P$.##
+#...$...#
+#.......#
+###.#.###
+#...*...#
+#.......#
+#...s...#
+##.....##
+-#######-)
+(---------
+-###O###-
+##.....##
+#...P...#
+#.$...$.#
+##.###.##
+#.$.%.$.#
+#...*...#
+#.s.....#
+##.....##
+-#######-)
+
+xxxxxxxxxxxxxx
+-eeeeeeeeeeee-
+eeeeeeeeeeeeee
+eeeeeeeeeeeeee
+wewewewwweweew
+wewewetweewwew
+weweweeweeweww
+eweweewwweweew
+eeeeeeeeeeeeee
+eeeeeeeeeeeeee
+-eeeeeeeeeeee-
+
+

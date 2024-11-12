@@ -1,0 +1,712 @@
+title Net
+
+(
+An implementation of Simon Tatham's "Net" [0]
+
+Simon says [1] "I originally saw this in the form of a Flash game called
+FreeNet [2], written by Pavils Jurjans; there are several other
+implementations under the name NetWalk."
+
+This PuzzleScript port is by Adam Gashlin.
+
+[0] http://www.chiark.greenend.org.uk/~sgtatham/puzzles/js/net.html
+[1] http://www.chiark.greenend.org.uk/~sgtatham/puzzles/doc/net.html
+[2] http://www.jurjans.lv/stuff/net/FreeNet.htm
+
+Missing features:
+- Probably impossible
+ * ensure unique solution (levels are thus harder than usual)
+ * clicking on stuff!
+ * clockwise rotation (input limitation)
+ * locking
+ * saving random seed
+
+- Maybe Possible:
+ * barriers
+ * solving
+ * checking for cycles (not sure if this is essential)
+)
+
+
+run_rules_on_level_start
+key_repeat_interval 0.25
+
+flickscreen 13x11
+noundo
+
+========
+OBJECTS
+========
+
+Space
+Black
+
+PreBoard
+Transparent
+
+Board
+Grey
+
+BorderT
+DarkGrey
+00000
+.....
+.....
+.....
+.....
+
+BorderB
+DarkGrey
+.....
+.....
+.....
+.....
+00000
+
+BorderL
+DarkGrey
+0....
+0....
+0....
+0....
+0....
+
+BorderR
+DarkGrey
+....0
+....0
+....0
+....0
+....0
+
+WrapBorderL
+Transparent
+
+WrapBorderR
+Transparent
+
+WrapBorderT
+Transparent
+
+WrapBorderB
+Transparent
+
+BoardFlash
+Black
+
+Off
+Transparent
+
+On
+Transparent
+
+OffBlock
+Blue
+.....
+.000.
+.000.
+.000.
+.....
+
+OnBlock
+LightBlue
+.....
+.000.
+.000.
+.000.
+.....
+
+OriginFlash
+LightBlue
+.....
+.000.
+.000.
+.000.
+.....
+
+Cursor
+Red
+.....
+.....
+..0..
+.....
+.....
+
+ChoiceCursor
+Yellow
+..0..
+..00.
+..000
+..00.
+..0..
+
+WonCursor
+Transparent
+
+Seed3
+Transparent
+Seed2
+Transparent
+Seed1
+Transparent
+SeedC
+Transparent
+
+GoU
+Transparent
+GoD
+Transparent
+GoL
+Transparent
+GoR
+Transparent
+
+OnU
+LightBlue
+..0..
+..0..
+..0..
+.....
+.....
+
+OnD
+LightBlue
+.....
+.....
+..0..
+..0..
+..0..
+
+OnL
+LightBlue
+.....
+.....
+000..
+.....
+.....
+
+OnR
+LightBlue
+.....
+.....
+..000
+.....
+.....
+
+OffU
+Black
+..0..
+..0..
+..0..
+.....
+.....
+
+OffD
+Black
+.....
+.....
+..0..
+..0..
+..0..
+
+OffL
+Black
+.....
+.....
+000..
+.....
+.....
+
+OffR
+Black
+.....
+.....
+..000
+.....
+.....
+
+Origin
+Black
+.....
+.000.
+.000.
+.000.
+.....
+
+WonFlag
+Transparent
+
+Rand
+Transparent
+Rot
+Transparent
+Rot0
+Transparent
+Rot90
+Transparent
+Rot180
+Transparent
+Rot270
+Transparent
+
+
+No11
+Black White
+10001
+10001
+10001
+10001
+10001
+
+No13
+Black White
+10111
+10001
+10111
+10001
+10111
+
+No5
+Black White
+01110
+01000
+01110
+00010
+01110
+
+No7
+Black White
+01110
+00010
+00010
+00010
+00010
+
+No9
+Black White
+01110
+01010
+01110
+00010
+01110
+
+NoX
+Black White
+00000
+01010
+00100
+01010
+00000
+
+HE
+Black White
+10101
+10101
+11101
+10101
+10101
+
+EL
+Black White
+11010
+00010
+11010
+00010
+11011
+
+LP
+Black White
+00111
+00101
+00111
+00100
+10100
+
+wl
+Black White
+10001
+10101
+10101
+01010
+00000
+
+ra
+Black White
+01100
+01001
+01001
+01000
+00000
+
+ap
+Black White
+11011
+01010
+01011
+11010
+00010
+
+pp
+Black White
+10000
+10000
+10000
+00000
+00000
+
+Help
+Transparent
+Board5x5
+Transparent
+Board7x7
+Transparent
+Board9x9
+Transparent
+Board11x11
+Transparent
+Board13x11
+Transparent
+
+=======
+LEGEND
+=======
+
+Background = Space
+Choice = Help or Board5x5 or Board7x7 or Board9x9 or Board11x11 or Board13x11
+WrapBorder = WrapBorderT or WrapBorderB or WrapBorderL or WrapBorderR
+
+Player = Cursor or ChoiceCursor or WonCursor
+Block = OnBlock or OffBlock
+Dir = GoU or GoD or GoL or GoR
+Seed = Seed1 or Seed2 or Seed3 or SeedC
+Filled = OnU or OffU or OnD or OffD or OnL or OffL or OnR or OffR
+
+# = Space
+. = PreBoard
+~ = BorderT and PreBoard
+_ = BorderB and PreBoard
+{ = BorderL and PreBoard
+} = BorderR and PreBoard
++ = BorderL and BorderT and PreBoard
+* = BorderL and BorderB and PreBoard
+\ = BorderR and BorderT and PreBoard
+/ = BorderR and BorderB and PreBoard
+
+1 = No11
+3 = No13
+5 = No5
+7 = No7
+9 = No9
+X = NoX
+] = ChoiceCursor
+
+0 = Help
+A = Board5x5
+B = Board7x7
+C = Board9x9
+D = Board11x11
+E = Board13x11
+
+h = HE
+l = EL
+p = LP
+
+w = wl
+r = ra
+& = ap
+% = pp
+
+=======
+SOUNDS
+=======
+
+================
+COLLISIONLAYERS
+================
+
+Background
+PreBoard, Board
+WrapBorderT, WrapBorderB, BorderT, BorderB
+WrapBorderL, WrapBorderR, BorderL, BorderR
+BoardFlash
+
+No11, No13, No5, No7, No9, NoX, HE, EL, LP, wl, ra, ap, pp, Help, Board5x5, Board7x7, Board9x9, Board11x11, Board13x11
+
+WonFlag
+
+Rand, Rot0, Rot90, Rot180, Rot270
+
+GoU
+GoD
+GoL
+GoR
+
+Seed3, Seed2, Seed1
+SeedC, Rot
+
+
+OnU, OffU
+OnD, OffD
+OnL, OffL
+OnR, OffR
+OnBlock, OffBlock
+Origin
+OriginFlash
+
+
+On, Off
+
+Cursor, ChoiceCursor, WonCursor
+
+======
+RULES
+======
+
+( *** WINNING *** )
+( win immediately if we do anything with WonCursor active )
+[ moving WonCursor ] -> win
+
+( *** MENU *** )
+
+( init ChoiceCursor )
+right [ ChoiceCursor no Choice | Choice ] -> [ | ChoiceCursor Choice ]
+
+( move menu cursor only to a choice )
+[ > ChoiceCursor | ... | Choice ] -> [ | ... | ChoiceCursor Choice ]
+
+( switch to wrap mode )
+[ action ChoiceCursor Choice | | wl ] [ BorderT ] -> [ action ChoiceCursor Choice | | wl ] [ WrapBorderT ]
+[ action ChoiceCursor Choice | | wl ] [ BorderB ] -> [ action ChoiceCursor Choice | | wl ] [ WrapBorderB ]
+[ action ChoiceCursor Choice | | wl ] [ BorderL ] -> [ action ChoiceCursor Choice | | wl ] [ WrapBorderL ]
+[ action ChoiceCursor Choice | | wl ] [ BorderR ] -> [ action ChoiceCursor Choice | | wl ] [ WrapBorderR ]
+
+
+( help screen)
+[ action ChoiceCursor Help ] -> message Rotate tiles to reassemble the network. Arrows to move selection cursor. Action to rotate selected tile.
+
+( switch to game Cursor on the appropriate board )
+down [ action ChoiceCursor Board5x5   ] [ Board5x5   | PreBoard ] -> [ ] [ Cursor Board Board5x5   | PreBoard ]
+down [ action ChoiceCursor Board7x7   ] [ Board7x7   | PreBoard ] -> [ ] [ Cursor Board Board7x7   | PreBoard ]
+down [ action ChoiceCursor Board9x9   ] [ Board9x9   | PreBoard ] -> [ ] [ Cursor Board Board9x9   | PreBoard ]
+down [ action ChoiceCursor Board11x11 ] [ Board11x11 | PreBoard ] -> [ ] [ Cursor Board Board11x11 | PreBoard ]
+down [ action ChoiceCursor Board13x11 ] [ Board13x11 | PreBoard ] -> [ ] [ Cursor Board Board13x11 | PreBoard ]
+
+( any remaining ChoiceCursor movement isn't wanted )
+[ moving ChoiceCursor ] -> [ stationary ChoiceCursor ]
+
+( *** CURSOR *** )
+
+( wrap cursor in wrap mode )
+up    [ Board WrapBorderB |...| Board WrapBorderT > Cursor ] -> [ Board WrapBorderB Cursor |...| Board WrapBorderT ]
+down  [ Board WrapBorderT |...| Board WrapBorderB > Cursor ] -> [ Board WrapBorderT Cursor |...| Board WrapBorderB ]
+left  [ Board WrapBorderR |...| Board WrapBorderL > Cursor ] -> [ Board WrapBorderR Cursor |...| Board WrapBorderL ]
+right [ Board WrapBorderL |...| Board WrapBorderR > Cursor ] -> [ Board WrapBorderL Cursor |...| Board WrapBorderR ]
+
+( normal cursor stays on board (though this could be used in the future for
+  more options) )
+[ > Cursor | no Board ] -> cancel
+
+
+( *** SETUP BOARD *** )
+
+( init chosen board )
+[ Board | PreBoard ] -> [ Board | Board ]
+[ Cursor Choice ] -> [ Cursor Seed3 Origin Rand ] checkpoint
+[ Board Rand | Board no Rand ] -> [ Board Rand | Board Rand ]
+
+
+( initial traversal )
+( see Net source for Simon's explanation of why this visits all tiles )
+startloop
+
+( cash in a connection )
+[ Seed3 no SeedC ] -> [ SeedC Seed2 ]
+[ Seed2 no SeedC ] -> [ SeedC Seed1 ]
+[ Seed1 no SeedC ] -> [ SeedC ]
+
+( at random, visit an adjacent unvisited tile )
+random up    [ SeedC no GoU | Board no Dir ] -> [ GoU | GoD Seed2 Board ]
+     + down  [ SeedC no GoD | Board no Dir ] -> [ GoD | GoU Seed2 Board ]
+     + left  [ SeedC no GoL | Board no Dir ] -> [ GoL | GoR Seed2 Board ]
+     + right [ SeedC no GoR | Board no Dir ] -> [ GoR | GoL Seed2 Board ]
++ up    [ Board WrapBorderB no Dir |...| SeedC no GoU WrapBorderT ] -> [ Board WrapBorderB GoD Seed2 |...| GoU WrapBorderT ]
++ down  [ Board WrapBorderT no Dir |...| SeedC no GoD WrapBorderB ] -> [ Board WrapBorderT GoU Seed2 |...| GoD WrapBorderB ]
++ left  [ Board WrapBorderR no Dir |...| SeedC no GoL WrapBorderL ] -> [ Board WrapBorderR GoR Seed2 |...| GoL WrapBorderL ]
++ right [ Board WrapBorderL no Dir |...| SeedC no GoU WrapBorderR ] -> [ Board WrapBorderL GoL Seed2 |...| GoR WrapBorderR ]
+endloop
+
+[ Seed ] -> []
+
+( randomized rotation for initial setup )
+[ Rand ] -> [ random Rot0 random Rot90 random Rot180 random Rot270 ]
+
+( *** ROTATION *** )
+
+( player-driven rotation )
+[ action Cursor ] -> [ Cursor Rot ]
+
+( rotation loop is only needed for the initial setup, in order to
+  rotate a given tile several times in one turn )
+startloop
+[ Rot0 ] -> []
+[ Rot90  ] -> [ Rot ]
+[ Rot180 ] -> [ Rot Rot90 ]
+[ Rot270 ] -> [ Rot Rot180 ]
+
+( 90 degree counter-clockwise rotation )
+([ Rot    GoU    GoR    GoD    GoL ] -> [    GoL    GoU    GoR    GoD ])
+[ Rot    GoU    GoR    GoD no GoL ] -> [    GoL    GoU    GoR no GoD ]
+[ Rot    GoU    GoR no GoD    GoL ] -> [    GoL    GoU no GoR    GoD ]
+[ Rot    GoU    GoR no GoD no GoL ] -> [    GoL    GoU no GoR no GoD ]
+[ Rot    GoU no GoR    GoD    GoL ] -> [    GoL no GoU    GoR    GoD ]
+[ Rot    GoU no GoR    GoD no GoL ] -> [    GoL no GoU    GoR no GoD ]
+[ Rot    GoU no GoR no GoD    GoL ] -> [    GoL no GoU no GoR    GoD ]
+[ Rot    GoU no GoR no GoD no GoL ] -> [    GoL no GoU no GoR no GoD ]
+[ Rot no GoU    GoR    GoD    GoL ] -> [ no GoL    GoU    GoR    GoD ]
+[ Rot no GoU    GoR    GoD no GoL ] -> [ no GoL    GoU    GoR no GoD ]
+[ Rot no GoU    GoR no GoD    GoL ] -> [ no GoL    GoU no GoR    GoD ]
+[ Rot no GoU    GoR no GoD no GoL ] -> [ no GoL    GoU no GoR no GoD ]
+[ Rot no GoU no GoR    GoD    GoL ] -> [ no GoL no GoU    GoR    GoD ]
+[ Rot no GoU no GoR    GoD no GoL ] -> [ no GoL no GoU    GoR no GoD ]
+[ Rot no GoU no GoR no GoD    GoL ] -> [ no GoL no GoU no GoR    GoD ]
+([ Rot no GoU no GoR no GoD no GoL ] -> [ no GoL no GoU no GoR no GoD ])
+
+endloop
+
+( *** FLOW *** )
+
+[ Dir ] -> [ Dir Off ]
+[ Origin ] -> [ Origin On ]
+
+  up    [ On GoU | GoD Off ] -> [ On GoU | GoD On ]
++ down  [ On GoD | GoU Off ] -> [ On GoD | GoU On ]
++ left  [ On GoL | GoR Off ] -> [ On GoL | GoR On ]
++ right [ On GoR | GoL Off ] -> [ On GoR | GoL On ]
++ up    [ WrapBorderB GoD Off |...| GoU On WrapBorderT ] -> [ WrapBorderB GoD On |...| GoU On WrapBorderT ]
++ down  [ WrapBorderT GoU Off |...| GoD On WrapBorderB ] -> [ WrapBorderT GoU On |...| GoD On WrapBorderB ]
++ left  [ WrapBorderR GoR Off |...| GoL On WrapBorderL ] -> [ WrapBorderR GoR On |...| GoL On WrapBorderL ]
++ right [ WrapBorderL GoL Off |...| GoR On WrapBorderR ] -> [ WrapBorderL GoL On |...| GoR On WrapBorderR ]
+
+( *** RENDER *** )
+
+
+( render network )
+[ Filled ] -> []
+
+
+[ GoU Off ] -> [ GoU Off OffU ]
+[ GoD Off ] -> [ GoD Off OffD ]
+[ GoL Off ] -> [ GoL Off OffL ]
+[ GoR Off ] -> [ GoR Off OffR ]
+
+[ GoU On  ] -> [ GoU On  OnU ]
+[ GoD On  ] -> [ GoD On  OnD ]
+[ GoL On  ] -> [ GoL On  OnL ]
+[ GoR On  ] -> [ GoR On  OnR ]
+
+( render leaf blocks )
+[ Block ] -> []
+
+[    GoU no GoD no GoL no GoR Off ] -> [ GoU OffBlock Off ]
+[ no GoU    GoD no GoL no GoR Off ] -> [ GoD OffBlock Off ]
+[ no GoU no GoD    GoL no GoR Off ] -> [ GoL OffBlock Off ]
+[ no GoU no GoD no GoL    GoR Off ] -> [ GoR OffBlock Off ]
+
+[    GoU no GoD no GoL no GoR On ]  -> [ GoU OnBlock On ]
+[ no GoU    GoD no GoL no GoR On ]  -> [ GoD OnBlock On ]
+[ no GoU no GoD    GoL no GoR On ]  -> [ GoL OnBlock On ]
+[ no GoU no GoD no GoL    GoR On ]  -> [ GoR OnBlock On ]
+
+( *** WINNING *** )
+late [ Origin ] -> [ Origin WonFlag ]
+late [ Off ] [ WonFlag ] -> [ Off ] []
+late [ ChoiceCursor ] [ WonFlag ] ->  [ ChoiceCursor ] []
+late [ WonFlag ] [ Board ] -> [ WonFlag ] [ BoardFlash ]
+late [ WonFlag ] [ Origin ] -> [ WonFlag ] [ Origin OriginFlash ]
+late [ WonFlag ] [ Cursor ] -> [ WonFlag ] [ WonCursor ]
+
+==============
+WINCONDITIONS
+==============
+
+=======
+LEVELS
+=======
+
+]A#5X5#A#wr&%
+#############
+#B#7X7#B#wr&%
+#############
+#C#9X9#C#wr&%
+#############
+#D#1X1#D#wr&%
+#############
+#E#3X1#E#wr&%
+#############
+#0#hlp#######
+#############(5x5)
+#############
+#############
+####+~~~\####
+####{...}####
+####{.A.}####
+####{...}####
+####*___/####
+#############
+#############
+#############
+#############(7x7)
+#############
+###+~~~~~\###
+###{.....}###
+###{.....}###
+###{..B..}###
+###{.....}###
+###{.....}###
+###*_____/###
+#############
+#############
+#############(9x9)
+##+~~~~~~~\##
+##{.......}##
+##{.......}##
+##{.......}##
+##{...C...}##
+##{.......}##
+##{.......}##
+##{.......}##
+##*_______/##
+#############
+#+~~~~~~~~~\#(11x11)
+#{.........}#
+#{.........}#
+#{.........}#
+#{.........}#
+#{....D....}#
+#{.........}#
+#{.........}#
+#{.........}#
+#{.........}#
+#*_________/#
+#############(Padding)
+#############
+#############
+#############
+#############
+#############
+#############
+#############
+#############
+#############
+#############
++~~~~~~~~~~~\(13x11)
+{...........}
+{...........}
+{...........}
+{...........}
+{.....E.....}
+{...........}
+{...........}
+{...........}
+{...........}
+*___________/

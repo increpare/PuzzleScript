@@ -1,0 +1,3673 @@
+title Entanglement - Chapter Two
+author Rich Locke
+homepage www.richardlocke.co.uk
+background_color #4a6277
+text_color #c0e1ff
+again_interval 0.5
+realtime_interval 0.05
+key_repeat_interval 0.15
+norepeat_action
+run_rules_on_level_start
+flickscreen 24x14
+(verbose_logging)
+(debug)
+
+========
+OBJECTS
+========
+
+player
+#8484ff
+.....
+.000.
+.0.0.
+.000.
+.....
+
+einstein
+#20d060
+.....
+.000.
+.0.0.
+.000.
+.....
+
+void
+#4a6277
+
+(Somewhere to put logic-related objects)
+logic
+transparent
+
+(Indication that the player has pressed a button)
+go
+transparent
+
+(Propagates down fuses to activate them)
+fusego
+transparent
+
+(Propagates down fuses to deactivate them)
+fusestop
+transparent
+
+(Propagates down wires to activate them)
+wirego
+transparent
+
+(Propagates down wires to deactivate them)
+wirestop
+transparent
+
+(Indication that this is a realtime move)
+rt
+transparent
+
+(Indication that this space has already animated this frame)
+an
+transparent
+
+(Can't push arrows through these)
+nopush
+transparent
+
+(End of level)
+end
+transparent
+
+(Split quarks)
+split
+transparent
+
+dosplit
+transparent
+
+(Entangled pairs)
+redirect
+transparent
+
+redirected
+transparent
+
+e0
+transparent
+
+e1
+transparent
+
+e2
+transparent
+
+e3
+transparent
+
+e4
+transparent
+
+(frame markers)
+f1
+transparent
+
+f2
+transparent
+
+f3
+transparent
+
+f4
+transparent
+
+f5
+transparent
+
+f6
+transparent
+
+f7
+transparent
+
+f8
+transparent
+
+f9
+transparent
+
+f10
+transparent
+
+goal
+transparent
+
+pgoal
+transparent
+
+(Indicates an emitter has already fired)
+fired
+transparent
+
+(Areas to spread to when working out level bounds)
+spread
+transparent
+
+floor
+#c0e1ff
+
+done
+#0af2
+
+overlayblock
+transparent
+
+noquark
+transparent
+
+(Floor decals)
+turn1done
+transparent
+
+nodecal1
+transparent
+
+nodecal2
+transparent
+
+nodecal3
+transparent
+
+nodecal4
+transparent
+
+nodecal5
+transparent
+
+nodecal6
+transparent
+
+nodecal7
+transparent
+
+nodecal8
+transparent
+
+decal1
+#00000002 #00000004 #00000006 #00000008 #0000000a
+12344
+.1234
+..123
+...12
+....1
+
+decal2
+#00000002 #00000004 #00000006 #00000008 #0000000a
+1....
+21...
+321..
+4321.
+44321
+
+decal3
+#00000002 #00000004 #00000006 #00000008 #0000000a
+....1
+...12
+..123
+.1234
+12344
+
+decal4
+#00000002 #00000004 #00000006 #00000008 #0000000a
+44321
+4321.
+321..
+21...
+1....
+
+(Quark frames)
+quarkl
+#e70000e0
+.....
+.....
+..0..
+.....
+.....
+
+quarkr
+#e70000e0
+.....
+.....
+..0..
+.....
+.....
+
+quarku
+#e70000e0
+.....
+.....
+..0..
+.....
+.....
+
+quarkd
+#e70000e0
+.....
+.....
+..0..
+.....
+.....
+
+quarkr1
+#e70000e0
+.....
+.....
+...0.
+.....
+.....
+
+quarkr2
+#e70000e0
+.....
+.....
+....0
+.....
+.....
+
+quarkl1
+#e70000e0
+.....
+.....
+.0...
+.....
+.....
+
+quarkl2
+#e70000e0
+.....
+.....
+0....
+.....
+.....
+
+quarku1
+#e70000e0
+.....
+..0..
+.....
+.....
+.....
+
+quarku2
+#e70000e0
+..0..
+.....
+.....
+.....
+.....
+
+quarkd1
+#e70000e0
+.....
+.....
+.....
+..0..
+.....
+
+quarkd2
+#e70000e0
+.....
+.....
+.....
+.....
+..0..
+
+(First quark trail frames)
+qfade1
+#e7000090
+.....
+.....
+..0..
+.....
+.....
+
+qfade1r1
+#e7000090
+.....
+.....
+...0.
+.....
+.....
+
+qfade1r2
+#e7000090
+.....
+.....
+....0
+.....
+.....
+
+qfade1l1
+#e7000090
+.....
+.....
+.0...
+.....
+.....
+
+qfade1l2
+#e7000090
+.....
+.....
+0....
+.....
+.....
+
+qfade1u1
+#e7000090
+.....
+..0..
+.....
+.....
+.....
+
+qfade1u2
+#e7000090
+..0..
+.....
+.....
+.....
+.....
+
+qfade1d1
+#e7000090
+.....
+.....
+.....
+..0..
+.....
+
+qfade1d2
+#e7000090
+.....
+.....
+.....
+.....
+..0..
+
+(Second quark trail frames)
+qfade2
+#e7000040
+.....
+.....
+..0..
+.....
+.....
+
+qfade2r1
+#e7000040
+.....
+.....
+...0.
+.....
+.....
+
+qfade2r2
+#e7000040
+.....
+.....
+....0
+.....
+.....
+
+qfade2l1
+#e7000040
+.....
+.....
+.0...
+.....
+.....
+
+qfade2l2
+#e7000040
+.....
+.....
+0....
+.....
+.....
+
+qfade2u1
+#e7000040
+.....
+..0..
+.....
+.....
+.....
+
+qfade2u2
+#e7000040
+..0..
+.....
+.....
+.....
+.....
+
+qfade2d1
+#e7000040
+.....
+.....
+.....
+..0..
+.....
+
+qfade2d2
+#e7000040
+.....
+.....
+.....
+.....
+..0..
+
+(Quark movement)
+ql
+transparent
+
+qr
+transparent
+
+qu
+transparent
+
+qd
+transparent
+
+turnl
+transparent
+
+turnr
+transparent
+
+turnb
+transparent
+
+(Arrows)
+lstart
+transparent
+
+rstart
+transparent
+
+ustart
+transparent
+
+dstart
+transparent
+
+mstart
+transparent
+
+arrowmount
+#6cb8ff80 #0084ff
+00000
+00000
+00100
+00000
+00000
+
+uarrow
+#0084ff
+..0..
+..0..
+.000.
+.....
+.....
+
+darrow
+#0084ff
+.....
+.....
+.000.
+..0..
+..0..
+
+larrow
+#0084ff
+.....
+..0..
+000..
+..0..
+.....
+
+rarrow
+#0084ff
+.....
+..0..
+..000
+..0..
+.....
+
+lwall
+#6cb8ff
+....0
+....0
+....0
+....0
+....0
+
+rwall
+#6cb8ff
+0....
+0....
+0....
+0....
+0....
+
+twall
+#6cb8ff
+.....
+.....
+.....
+.....
+00000
+
+bwall
+#6cb8ff
+00000
+.....
+.....
+.....
+.....
+
+tlwall
+#6cb8ff
+.....
+.....
+.....
+.....
+....0
+
+trwall
+#6cb8ff
+.....
+.....
+.....
+.....
+0....
+
+blwall
+#6cb8ff
+....0
+.....
+.....
+.....
+.....
+
+brwall
+#6cb8ff
+0....
+.....
+.....
+.....
+.....
+
+(Emitters)
+fire
+transparent
+
+lfire
+#0084ff
+.....
+...00
+..000
+...00
+.....
+
+rfire
+#0084ff
+.....
+00...
+000..
+00...
+.....
+
+ufire
+#0084ff
+.....
+.....
+..0..
+.000.
+.000.
+
+dfire
+#0084ff
+.000.
+.000.
+..0..
+.....
+.....
+
+(Receivers)
+lsink
+#0084ff #6cb8ff
+11111
+10000
+10...
+10000
+11111
+
+rsink
+#0084ff #6cb8ff
+11111
+00001
+...01
+00001
+11111
+
+usink
+#0084ff #6cb8ff
+11111
+10001
+10.01
+10.01
+10.01
+
+dsink
+#0084ff #6cb8ff
+10.01
+10.01
+10.01
+10001
+11111
+
+(Activated sinks)
+lsinka
+#ffe8cf #6cb8ff
+11111
+10000
+10...
+10000
+11111
+
+rsinka
+#ffe8cf #6cb8ff
+11111
+00001
+...01
+00001
+11111
+
+usinka
+#ffe8cf #6cb8ff
+11111
+10001
+10.01
+10.01
+10.01
+
+dsinka
+#ffe8cf #6cb8ff
+10.01
+10.01
+10.01
+10001
+11111
+
+(Buttons)
+button
+#0084ff #9fd1ff
+00000
+01110
+01110
+01110
+00000
+
+reset
+#6cb8ff
+.....
+.000.
+.00..
+.0.0.
+.....
+
+cleanse
+transparent
+
+bounds
+#9fd1ff
+.....
+.0.0.
+..0..
+.0.0.
+.....
+
+(Fuses)
+fuse
+transparent
+
+fusea
+transparent
+
+transformer
+transparent
+
+hfuse
+#9fd1ff
+.....
+.....
+.000.
+.....
+.....
+
+vfuse
+#9fd1ff
+.....
+..0..
+..0..
+..0..
+.....
+
+rufuse
+#9fd1ff
+.....
+..0..
+.00..
+.....
+.....
+
+rdfuse
+#9fd1ff
+.....
+.....
+.00..
+..0..
+.....
+
+lufuse
+#9fd1ff
+.....
+..0..
+..00.
+.....
+.....
+
+ldfuse
+#9fd1ff
+.....
+.....
+..00.
+..0..
+.....
+
+(Lit fuses)
+hfusea
+#ffe8cf
+.....
+.....
+.000.
+.....
+.....
+
+vfusea
+#ffe8cf
+.....
+..0..
+..0..
+..0..
+.....
+
+rufusea
+#ffe8cf
+.....
+..0..
+.00..
+.....
+.....
+
+rdfusea
+#ffe8cf
+.....
+.....
+.00..
+..0..
+.....
+
+lufusea
+#ffe8cf
+.....
+..0..
+..00.
+.....
+.....
+
+ldfusea
+#ffe8cf
+.....
+.....
+..00.
+..0..
+.....
+
+(Doors)
+ldoor
+#0084ff
+.....
+00000
+0000.
+00000
+.....
+
+rdoor
+#0084ff
+.....
+00000
+.0000
+00000
+.....
+
+udoor
+#0084ff
+.000.
+.000.
+.000.
+.000.
+.0.0.
+
+ddoor
+#0084ff
+.0.0.
+.000.
+.000.
+.000.
+.000.
+
+(Door logic)
+solved
+transparent
+
+open
+transparent
+
+wedged
+transparent
+
+(Door wires)
+wire
+transparent
+
+iwire
+transparent
+
+endwire
+transparent
+
+hwire
+#c0e1ff
+.....
+.....
+.000.
+.....
+.....
+
+vwire
+#c0e1ff
+.....
+..0..
+..0..
+..0..
+.....
+
+ruwire
+#c0e1ff
+.....
+..0..
+.00..
+.....
+.....
+
+rdwire
+#c0e1ff
+.....
+.....
+.00..
+..0..
+.....
+
+luwire
+#c0e1ff
+.....
+..0..
+..00.
+.....
+.....
+
+ldwire
+#c0e1ff
+.....
+.....
+..00.
+..0..
+.....
+
+(Active wires)
+wirea
+transparent
+
+iwirea
+transparent
+
+endwirea
+transparent
+
+hwirea
+#ffe8cf
+.....
+.....
+.000.
+.....
+.....
+
+vwirea
+#ffe8cf
+.....
+..0..
+..0..
+..0..
+.....
+
+ruwirea
+#ffe8cf
+.....
+..0..
+.00..
+.....
+.....
+
+rdwirea
+#ffe8cf
+.....
+.....
+.00..
+..0..
+.....
+
+luwirea
+#ffe8cf
+.....
+..0..
+..00.
+.....
+.....
+
+ldwirea
+#ffe8cf
+.....
+.....
+..00.
+..0..
+.....
+
+(Box blocker)
+ridge
+#6cb8ff
+.....
+.0.0.
+.....
+.0.0.
+.....
+
+(Timers)
+timer
+#c0e1ff #c0e1ffd0
+.....
+.010.
+.101.
+.010.
+.....
+
+timera
+#ffe8cf #ffe8cfd0
+.....
+.010.
+.101.
+.010.
+.....
+
+timergo
+transparent
+
+(Slots)
+hslot
+#6cb8ff #c0e1ff
+.....
+00000
+11111
+00000
+.....
+
+vslot
+#6cb8ff #c0e1ff
+.010.
+.010.
+.010.
+.010.
+.010.
+
+(Force-fields)
+lgen
+#0084ff
+000..
+00...
+00...
+00...
+000..
+
+rgen
+#0084ff
+..000
+...00
+...00
+...00
+..000
+
+ugen
+#0084ff
+00000
+00000
+0...0
+.....
+.....
+
+dgen
+#0084ff
+.....
+.....
+0...0
+00000
+00000
+
+hfield1
+#ff620060
+.....
+0.0.0
+.0.0.
+0.0.0
+.....
+
+hfield2
+#ff620060
+.....
+.0.0.
+0.0.0
+.0.0.
+.....
+
+vfield1
+#ff620060
+.0.0.
+..0..
+.0.0.
+..0..
+.0.0.
+
+vfield2
+#ff620060
+..0..
+.0.0.
+..0..
+.0.0.
+..0..
+
+off
+transparent
+
+(Dopplegangers)
+mimic
+#ff5287
+.....
+.000.
+.0.0.
+.000.
+.....
+
+oppos
+#ffff87
+.....
+.000.
+.0.0.
+.000.
+.....
+
+cloner
+#6cb8ff
+.....
+..0..
+.000.
+..0..
+.....
+
+mirror
+#6cb8ff
+000..
+0.0..
+00000
+..0.0
+..000
+
+(Vactubes)
+tube
+#6cb8ff60
+
+utubeback
+#6cb8ff60 #ff9600b0
+00100
+01010
+00000
+00.00
+.....
+
+dtubeback
+#6cb8ff60 #ff9600b0
+.....
+00.00
+00000
+01010
+00100
+
+ltubeback
+#6cb8ff60 #ff9600b0
+0000.
+0100.
+100..
+0100.
+0000.
+
+rtubeback
+#6cb8ff60 #ff9600b0
+.0000
+.0010
+..001
+.0010
+.0000
+
+utube
+#6cb8ff60 #a613eab0
+00100
+01010
+00000
+00.00
+.....
+
+dtube
+#6cb8ff60 #a613eab0
+.....
+00.00
+00000
+01010
+00100
+
+ltube
+#6cb8ff60 #a613eab0
+0000.
+0100.
+100..
+0100.
+0000.
+
+rtube
+#6cb8ff60 #a613eab0
+.0000
+.0010
+..001
+.0010
+.0000
+
+utubeout
+#6cb8ff60
+.....
+.....
+.000.
+00000
+00000
+
+dtubeout
+#6cb8ff60
+00000
+00000
+.000.
+.....
+.....
+
+ltubeout
+#6cb8ff60
+...00
+..000
+..000
+..000
+...00
+
+rtubeout
+#6cb8ff60
+00...
+000..
+000..
+000..
+00...
+
+rtubew
+transparent red
+.....
+0....
+00000
+0....
+.....
+
+ltubew
+transparent red
+.....
+....0
+00000
+....0
+.....
+
+utubew
+transparent red
+..0..
+..0..
+..0..
+..0..
+00000
+
+dtubew
+transparent red
+00000
+..0..
+..0..
+..0..
+..0..
+
+trtubewh
+transparent #6cb8ff #6cb8ffbf #6cb8ff7f #6cb8ff3f
+00000
+00000
+00000
+00000
+12340
+
+tltubewh
+transparent #6cb8ff #6cb8ffbf #6cb8ff7f #6cb8ff3f
+00000
+00000
+00000
+00000
+04321
+
+brtubewh
+transparent #6cb8ff #6cb8ffbf #6cb8ff7f #6cb8ff3f
+12340
+00000
+00000
+00000
+00000
+
+bltubewh
+transparent #6cb8ff #6cb8ffbf #6cb8ff7f #6cb8ff3f
+04321
+00000
+00000
+00000
+00000
+
+trtubewv
+transparent #6cb8ff #6cb8ffbf #6cb8ff7f #6cb8ff3f
+00000
+40000
+30000
+20000
+10000
+
+tltubewv
+transparent #6cb8ff #6cb8ffbf #6cb8ff7f #6cb8ff3f
+00000
+00004
+00003
+00002
+00001
+
+brtubewv
+transparent #6cb8ff #6cb8ffbf #6cb8ff7f #6cb8ff3f
+10000
+20000
+30000
+40000
+00000
+
+bltubewv
+transparent #6cb8ff #6cb8ffbf #6cb8ff7f #6cb8ff3f
+00001
+00002
+00003
+00004
+00000
+
+tubepart
+transparent
+
+tubein
+transparent
+
+tubeout
+transparent
+
+tubeback
+transparent
+
+chgtubedir
+transparent red
+.....
+.000.
+.000.
+.000.
+.....
+
+vacprod
+transparent
+
+vacdest
+transparent
+
+spawn
+transparent
+
+movestack
+transparent
+
+inorange
+transparent
+
+orangerev
+transparent
+
+orangeact
+#ff9600b0
+.....
+.....
+..0..
+.....
+.....
+
+al
+transparent
+
+ar
+transparent
+
+au
+transparent
+
+ad
+transparent
+
+autofire
+transparent
+
+(brain)
+brain00
+#ff447a #ff91a4 #ff7cce
+01101
+02100
+01111
+00121
+00000
+
+brain10
+#ff447a #ff91a4
+00111
+00000
+11100
+11110
+00011
+
+brain20
+#ff91a4 #ff7cce #ff447a
+00100
+00002
+20222
+22200
+22001
+
+brain30
+#ff91a4 #ff447a #ff7cce
+00000
+11110
+11111
+00011
+22201
+
+brain01
+#ff91a4 #ff447a
+01000
+00001
+00011
+11000
+11100
+
+brain11
+#ff91a4 #ff447a
+01100
+00100
+01100
+01100
+11001
+
+brain21
+#ff447a #ff91a4 #ff7cce
+00121
+01111
+01110
+01100
+01000
+
+brain31
+#ff91a4 #ff447a #ff7cce
+00000
+11111
+11110
+10000
+10002
+
+brain02
+#ff91a4 #ff447a #ff7cce
+00111
+22000
+00000
+11100
+01111
+
+brain12
+#ff447a #ff91a4
+01100
+11100
+11001
+00001
+00100
+
+brain22
+#ff447a #ff91a4 #ff7cce
+01000
+11000
+11100
+12100
+12210
+
+brain32
+#ff447a #ff91a4 #ff7cce
+01122
+11111
+01111
+00000
+00000
+
+brain03
+#ff91a4 #ff447a
+00000
+00000
+01100
+11111
+00001
+
+brain13
+#ff91a4 #ff447a #ff7cce
+00011
+22011
+02201
+10000
+11000
+
+brain23
+#ff447a #ff91a4 #ff7cce
+01221
+00111
+00001
+10000
+11100
+
+brain33
+#ff91a4 #ff447a
+00000
+00000
+00011
+10111
+11110
+
+lbrain1
+#ff447a #ff91a4
+....0
+...00
+..011
+00011
+01111
+
+rbrain1
+#ff447a #ff91a4
+00...
+100..
+1100.
+1110.
+11100
+
+lbrain2
+#ff447a #ff91a4
+.....
+...00
+..000
+.0001
+.0011
+
+rbrain2
+#ff447a #ff91a4
+.....
+0....
+00...
+100..
+1100.
+
+lbrain3
+#ff447a #ff91a4
+...00
+..000
+.0000
+00011
+00111
+
+rbrain3
+#ff447a #ff91a4
+0....
+0000.
+1000.
+11100
+11100
+
+tlbrain
+#ff447a #ff91a4
+.....
+.....
+...00
+.0000
+00011
+
+tbrain1
+#ff447a #ff91a4
+.....
+...00
+00000
+11000
+11111
+
+tbrain2
+#ff447a #ff91a4
+.....
+0000.
+00000
+11001
+11111
+
+trbrain
+#ff447a #ff91a4
+.....
+.....
+0000.
+10000
+11100
+
+(Mouth)
+mouth1
+#ff91a4 #ff447a #5e192d
+01111
+11222
+12222
+11222
+11111
+
+mouth2
+#ff447a #5e192d
+00000
+11111
+11111
+11111
+00000
+
+mouth3
+#ff447a #5e192d
+00000
+11111
+11111
+11111
+00000
+
+mouth4
+#ff447a #ff91a4 #5e192d
+00001
+22200
+22220
+22200
+00000
+
+(Eyes)
+leyeopen
+#d13864 #fefff2
+...00
+.0011
+01110
+.0011
+...00
+
+reyeopen
+#d13864 #fefff2
+00...
+1100.
+01110
+1100.
+00...
+
+leyeshut
+#d13864
+.....
+.....
+.0000
+.....
+.....
+
+reyeshut
+#d13864
+.....
+.....
+0000.
+.....
+.....
+
+eye1
+transparent
+
+eye2
+transparent
+
+eye3
+transparent
+
+(Messages)
+msg1
+transparent
+
+msg2
+transparent
+
+msg3
+transparent
+
+msg4
+transparent
+
+msg5
+transparent
+
+msg6
+transparent
+
+msg7
+transparent
+
+msg8
+transparent
+
+msg9
+transparent
+
+msg10
+transparent
+
+msg11
+transparent
+
+(Secret)
+reveal
+transparent
+
+secret
+#9fd1ff #6cb8ff
+.....
+.000.
+.010.
+.000.
+.....
+
+scr1
+transparent
+
+scr2
+transparent
+
+(Portals)
+ptlstart
+transparent
+
+range
+transparent
+
+ptlblock
+transparent
+
+portal
+#a0f5 #a0fa #a0f
+00000
+01110
+01210
+01110
+00000
+
+ptlbounds
+#a0f9 #a0f1
+.....
+.111.
+.101.
+.111.
+.....
+
+(Factories)
+factory
+#a0fa
+..0..
+..0..
+00.00
+..0..
+..0..
+
+factorya
+#ffe8cf
+..0..
+..0..
+00.00
+..0..
+..0..
+
+(NAND gate)
+nand
+transparent
+
+nanda
+transparent
+
+nandout
+transparent
+
+nandr
+#0084ff
+..0..
+0000.
+0..00
+0000.
+..0..
+
+nandra
+#ffe8cf
+..0..
+0000.
+0..00
+0000.
+..0..
+
+nandl
+#0084ff
+..0..
+.0000
+00..0
+.0000
+..0..
+
+nandla
+#ffe8cf
+..0..
+.0000
+00..0
+.0000
+..0..
+
+nandu
+#0084ff
+..0..
+.000.
+00.00
+.0.0.
+.000.
+
+nandua
+#ffe8cf
+..0..
+.000.
+00.00
+.0.0.
+.000.
+
+nandd
+#0084ff
+.000.
+.0.0.
+00.00
+.000.
+..0..
+
+nandda
+#ffe8cf
+.000.
+.0.0.
+00.00
+.000.
+..0..
+
+(Pod)
+pod
+#0a83 #0a89
+10001
+00000
+00000
+00000
+10001
+
+podstart
+transparent
+
+=======
+LEGEND
+=======
+
+(Basic)
+, = void and nopush and noquark
+p = player and floor and spread
+o = logic
+. = floor and spread
+ю = floor and pgoal and spread
+϶ = floor and einstein and nopush and spread
+
+(Arrows)
+u = uarrow and arrowmount and ustart and floor and spread
+d = darrow and arrowmount and dstart and floor and spread
+l = larrow and arrowmount and lstart and floor and spread
+r = rarrow and arrowmount and rstart and floor and spread
+€ = larrow and arrowmount and lstart and rufuse and floor and fuse and spread
+ʞ = larrow and rarrow and arrowmount and lstart and rstart and floor and spread
+ϑ = arrowmount and mstart and floor and spread
+
+(Walls)
+: = lwall and nopush and noquark
+; = rwall and nopush and noquark
+- = twall and nopush and noquark
+_ = bwall and nopush and noquark
+' = tlwall and nopush and noquark
+" = trwall and nopush and noquark
+\ = blwall and nopush and noquark
+/ = brwall and nopush and noquark
+{ = bwall and rwall and nopush and noquark
+} = bwall and lwall and nopush and noquark
+~ = twall and rwall and nopush and noquark
+` = twall and lwall and nopush and noquark
+ē = bwall and rwall and twall and lwall and nopush and noquark
+ü = bwall and rwall and lwall and nopush and noquark
+ú = twall and rwall and lwall and nopush and noquark
+î = lwall and rwall and nopush and noquark
+ï = trwall and lwall and nopush and noquark
+í = blwall and rwall and nopush and noquark
+ī = brwall and lwall and nopush and noquark
+į = bwall and tlwall and nopush and noquark
+ħ = bwall and trwall and nopush and noquark
+ì = twall and blwall and nopush and noquark
+ô = trwall and lwall and nopush and noquark
+ö = tlwall and rwall and nopush and noquark
+ò = blwall and twall and rwall and nopush and noquark
+ó = brwall and blwall and twall and nopush and noquark
+đ = bwall and lwall and trwall and nopush and noquark
+ĝ = tlwall and trwall and nopush and noquark
+ğ = blwall and brwall and nopush and noquark
+ģ = twall and rwall and blwall and nopush and noquark
+ĩ = rwall and blwall and tlwall and nopush and noquark
+ĭ = twall and brwall and nopush and noquark
+ƨ = rwall and bwall and tlwall and nopush and noquark
+ɓ = blwall and tlwall and nopush and noquark
+ɖ = tlwall and logic and nopush and noquark
+ə = brwall and twall and lwall and nopush and noquark
+ɚ = lwall and brwall and trwall and nopush and noquark
+• = trwall and bwall and nopush and noquark
+ª = bwall and blwall and nopush and noquark
+º = blwall and trwall and nopush and noquark
+& = bwall and twall and nopush and noquark
+* = bwall and twall and rwall and nopush and noquark
+‚ = bwall and lwall and twall and nopush and noquark
+ʍ = brwall and trwall and nopush and noquark
+ʘ = blwall and tlwall and trwall and nopush and noquark
+ʙ = trwall and tlwall and bwall and nopush and noquark
+
+(Emitters)
+¬ = lfire and fire and floor and spread
+® = rfire and fire and floor and spread
+¨ = ufire and fire and floor and spread
+ß = dfire and fire and floor and spread
+
+(Receivers)
+c = lsink and nopush and floor and spread
+y = dsink and nopush and floor and spread
+n = usink and nopush and floor and spread
+j = rsink and nopush and floor and spread
+
+(Fuses)
+h = hfuse and floor and fuse and spread
+w = vfuse and floor and fuse and spread
+æ = lufuse and floor and fuse and spread
+« = rufuse and floor and fuse and spread
+“ = ldfuse and floor and fuse and spread
+‘ = rdfuse and floor and fuse and spread
+ϰ = hfuse and floor and fuse and transformer and spread
+ϱ = vfuse and floor and fuse and transformer and spread
+σ = void and fuse and nopush (for crossing chasms)
+
+(Ridges)
+¶ = ridge and nopush and floor and spread
+± = ridge and hfuse and floor and nopush and fuse and spread
+⁄ = ridge and vfuse and floor and nopush and fuse and spread
+ʝ = ridge and ldfuse and floor and nopush and fuse and spread
+
+(Doors)
+å = ldoor and nopush and floor and spread and noquark
+© = rdoor and nopush and floor and spread and noquark
+œ = udoor and nopush and floor and spread and noquark
+Ω = ddoor and nopush and floor and spread and noquark
+ф = ldoor and nopush and floor and goal and spread and noquark
+ш = udoor and nopush and floor and goal and spread and noquark
+
+(Bounds)
+e = end and bounds and floor and ptlblock and spread
+f = bounds and floor and ptlblock and spread
+
+(Wires)
+1 = vwire and lwall and nopush and noquark and wire
+2 = vwire and rwall and nopush and noquark and wire
+3 = hwire and twall and nopush and noquark and wire
+4 = hwire and bwall and nopush and noquark and wire
+5 = luwire and blwall and nopush and noquark and wire
+6 = ruwire and brwall and nopush and noquark and wire
+7 = ldwire and tlwall and nopush and noquark and wire
+8 = rdwire and trwall and nopush and noquark and wire
+9 = hwire and bwall and lwall and nopush and noquark and wire
+0 = hwire and bwall and rwall and nopush and noquark and wire
+¡ = hwire and twall and lwall and nopush and noquark and wire
+™ = hwire and twall and rwall and nopush and noquark and wire
+£ = vwire and twall and lwall and nopush and noquark and wire
+¢ = vwire and bwall and lwall and nopush and noquark and wire
+∞ = vwire and twall and rwall and nopush and noquark and wire
+§ = vwire and bwall and rwall and nopush and noquark and wire
+! = bwall and luwire and nopush and noquark and wire
+@ = bwall and ruwire and nopush and noquark and wire
+# = twall and ldwire and nopush and noquark and wire
+$ = iwire and floor and wire and spread
+% = bwall and rwall and ldwire and nopush and noquark and wire
+‹ = twall and lwall and ruwire and nopush and noquark and wire
+› = twall and rwall and luwire and nopush and noquark and wire
+ɝ = twall and rwall and ruwire and nopush and noquark and wire
+ﬁ = twall and ruwire and nopush and noquark and wire
+ﬂ = bwall and vwire and nopush and noquark and wire
+‡ = endwire and floor and wire and spread
+ɜ = endwire and floor and ridge and nopush and wire and spread
+° = lwall and luwire and nopush and noquark and wire
+· = bwall and lwall and rdwire and nopush and noquark and wire
+¸ = twall and bwall and hwire and nopush and noquark and wire
+˛ = bwall and rdwire and nopush and wire and noquark
+Ç = twall and vwire and nopush and noquark and wire
+◊ = bwall and tlwall and vwire and nopush and noquark and wire
+Â = ridge and iwire and floor and nopush and wire and spread
+¯ = ridge and iwire and vfuse and floor and nopush and wire and fuse and spread
+˘ = twall and rwall and ldwire and nopush and noquark and wire
+¿ = hfuse and iwire and floor and wire and fuse and spread
+ã = rwall and rdwire and nopush and noquark and wire
+μ = lwall and rdwire and nopush and noquark and wire
+ā = bwall and rwall and rdwire and nopush and noquark and wire
+ê = trwall and hwire and nopush and noquark and wire
+ë = tlwall and hwire and nopush and noquark and wire
+ń = brwall and hwire and nopush and noquark and wire
+ė = twall and rdwire and nopush and noquark and wire
+û = rwall and tlwall and ldwire and nopush and noquark and wire
+ù = twall and rwall and lwall and ruwire and nopush and noquark and wire
+ū = trwall and lwall and ruwire and nopush and noquark and wire
+õ = brwall and trwall and vwire and nopush and noquark and wire
+č = trwall and lwall and hwire and nopush and noquark and wire
+‰ = rwall and ruwire and nopush and noquark and wire
+¦ = brwall and hwire and nopush and noquark and wire
+µ = bwall and ldwire and nopush and noquark and wire
+¹ = trwall and lwall and rdwire and nopush and noquark and wire
+² = lwall and ldwire and nopush and noquark and wire
+³ = rwall and tlwall and luwire and nopush and noquark and wire
+¼ = lwall and rwall and luwire and nopush and noquark and wire
+υ = rwall and luwire and nopush and noquark and wire
+½ = hwire and wire
+ʏ = vwire and wire
+ʑ = luwire and wire
+ʒ = ruwire and wire
+ʓ = ldwire and wire
+ʔ = rdwire and wire
+¾ = lwall and hwire and nopush and noquark and wire
+τ = rwall and hwire and nopush and noquark and wire
+ę = bwall and rwall and lwall and vwire and nopush and noquark and wire
+ġ = blwall and brwall and ruwire and nopush and noquark and wire
+ƽ = lwall and ruwire and nopush and noquark and wire
+ɍ = rwall and rdwire and vwire and nopush and noquark and wire
+ɑ = bwall and twall and rwall and hwire and nopush and noquark and wire
+ɗ = brwall and lwall and ruwire and nopush and noquark and wire
+ɘ = blwall and brwall and hwire and nopush and noquark and wire
+ɛ = lwall and rwall and twall and vwire and nopush and noquark and wire
+ʉ = bwall and hwire and vwire and nopush and noquark and wire
+ʊ = bwall and lwall and ruwire and nopush and noquark and wire
+ʋ = bwall and rwall and luwire and nopush and noquark and wire
+ʌ = rwall and iwire and nopush and noquark and wire
+ʎ = rwall and ldwire and nopush and noquark and wire
+ʐ = brwall and vwire and nopush and noquark and wire
+ν = tlwall and vwire and nopush and noquark and wire
+ʕ = blwall and hwire and nopush and noquark and wire
+ʚ = twall and blwall and vwire and nopush and noquark and wire
+ʛ = twall and bwall and luwire and nopush and noquark and wire
+ʜ = bwall and trwall and hwire and nopush and noquark and wire
+ʟ = bwall and trwall and hwire and luwire and nopush and noquark and wire
+ʠ = bwall and hwire and luwire and nopush and noquark and wire
+б = lwall and rwall and hwire and nopush and noquark and wire
+в = twall and lwall and ldwire and nopush and noquark and wire
+э = lwall and bwall and ldwire and nopush and noquark and wire
+₩ = rwall and blwall and ldwire and nopush and noquark and wire
+₪ = twall and blwall and hwire and nopush and noquark and wire
+℗ = bwall and trwall and rdwire and nopush and noquark and wire
+δ = hwire and nandout and wire
+η = vwire and nandout and wire
+
+(Timers)
+è = timer
+é = timer and lwall and nopush and noquark
+ä = timer and tlwall and nopush and noquark
+ñ = timer and twall and nopush and noquark
+ɐ = timer and rwall and nopush and noquark
+ɒ = timer and lwall and twall and nopush and noquark
+₫ = timer and bwall and nopush and noquark
+
+(Slots)
+ø = hslot and nopush and lwall and rwall and spread
+ō = vslot and nopush and twall and bwall and spread
+ɔ = vslot and nopush and bwall and spread
+ɕ = vslot and nopush and twall and spread
+
+(Force-fields)
+ž = lgen and floor and spread
+ź = rgen and floor and off and spread
+ż = ugen and floor and spread
+ć = dgen and floor and off and spread
+щ = lgen and floor and goal and spread
+ы = ugen and floor and goal and spread
+
+(Buttons)
+b = button and floor and spread
+q = cloner and nopush and floor and spread
+× = mirror and nopush and floor and spread
+ĥ = reset and nopush and floor and spread
+
+(Vactubes)
+ð = tube and tubepart and nopush and noquark
+þ = tube and tubepart and nopush and noquark and vacprod
+ď = tube and tubepart and nopush and noquark and vacdest
+ƴ = tube and tubepart and nopush and noquark and lwall and vacdest
+Ƶ = tube and tubepart and nopush and noquark and rwall and vacdest
+ƻ = tube and tubepart and nopush and noquark and twall
+Ƹ = tube and tubepart and nopush and noquark and bwall
+t = tube and tubepart and nopush and noquark and twall and bwall
+i = tube and tubepart and nopush and noquark and vacdest and bwall
+a = tube and tubepart and nopush and noquark and vacdest and lwall
+s = tube and tubepart and nopush and noquark and vacprod and twall
+℠ = tube and tubepart and rtubew and nopush and noquark
+ψ = tube and tubepart and ltubew and nopush and noquark
+χ = tube and tubepart and utubew and nopush and noquark
+φ = tube and tubepart and dtubew and nopush and noquark
+ϝ = utubeback and tubeback and tubepart and floor and spread and tubein
+Ϟ = dtubeback and tubeback and tubepart and floor and spread and tubein
+ϧ = ltubeback and tubeback and tubepart and floor and spread and tubein
+Ϡ = rtubeback and tubeback and tubepart and floor and spread and tubein
+ϥ = utube and tubepart and floor and spread and tubein
+Ϣ = dtube and tubepart and floor and spread and tubein
+ϩ = ltube and tubepart and floor and spread and tubein
+ϫ = rtube and tubepart and floor and spread and tubein
+ϭ = utubeout and tubepart and floor and spread and tubeout
+ϯ = dtubeout and tubepart and floor and spread and tubeout
+ϛ = ltubeout and tubepart and floor and spread and tubeout
+ϙ = rtubeout and tubepart and floor and spread and tubeout
+ϲ = tube and tubepart and player and ad and nopush and noquark
+ϵ = tube and tubepart and end and nopush and noquark
+
+(Brain)
+ɞ = brain00 and leyeshut and eye1 and floor and spread
+ɟ = brain01 and floor and spread
+ɠ = brain02 and floor and spread
+ɣ = brain03 and floor and spread
+ɤ = brain10 and floor and spread
+ɥ = brain11 and floor and spread
+ɦ = brain12 and reyeshut and floor and spread
+ɧ = brain13 and reyeshut and floor and spread
+ɨ = brain20 and floor and spread
+ɩ = brain21 and leyeshut and eye2 and floor and spread
+ɫ = brain22 and floor and spread
+ɬ = brain23 and floor and spread
+ɮ = brain30 and floor and spread
+ɯ = brain31 and floor and spread
+ɰ = brain32 and leyeshut and eye3 and floor and spread
+ɱ = brain33 and floor and spread
+ɲ = lbrain1 and floor and spread
+ɳ = lbrain2 and floor and spread
+ɵ = lbrain3 and floor and spread
+ɷ = rbrain1 and floor and spread
+ɸ = rbrain2 and floor and spread
+ɹ = rbrain3 and floor and spread
+ɻ = tlbrain and floor and spread
+ɼ = tbrain1 and floor and spread
+ɽ = tbrain2 and floor and spread
+ɾ = trbrain and floor and spread
+
+(Messages)
+ɿ = msg1 and floor and spread
+ʂ = msg2 and floor and spread
+ʃ = msg3 and floor and spread
+ʄ = msg4 and floor and spread
+ʅ = msg5 and floor and spread
+ʆ = msg6 and floor and spread
+ʈ = msg8 and floor and spread
+
+(Secret)
+ʖ = secret and floor and scr1 and spread
+ʗ = secret and floor and scr2 and spread
+
+(Portals)
+α = portal and ptlstart and floor and spread
+ϒ = ptlbounds and ptlblock and floor and spread
+
+(Factories)
+ϐ = factory and floor and spread
+
+(NAND gates)
+ζ = nandr and nand and wirego
+θ = nandl and nand and wirego
+κ = nandu and nand and wirego
+λ = nandd and nand and wirego
+
+(Pods)
+ϓ = pod and podstart and floor and spread
+
+(Chasms)
+ϔ = void and nopush and spread
+₱ = void and nopush and overlayblock and spread
+
+(Groups)
+background = void
+(player = playerl or playerr or playeru or playerd)
+arr = uarrow or darrow or larrow or rarrow
+arrow = arrowmount or uarrow or darrow or larrow or rarrow
+pushable = arrow or portal
+arrowstart = lstart or rstart or ustart or dstart
+frame = f1 or f2 or f3 or f4 or f5 or f6 or f7 or f8 or f9 or f10
+hq = ql or qr
+vq = qu or qd
+qmove = hq or vq
+quark = quarkl or quarkr or quarku or quarkd
+qframe = quarkl or quarkr or quarku or quarkd or quarkr1 or quarkr2 or quarkl1 or quarkl2 or quarku1 or quarku2 or quarkd1 or quarkd2
+qlframe = quarkl1 or quarkl2
+qrframe = quarkr1 or quarkr2
+quframe = quarku1 or quarku2
+qdframe = quarkd1 or quarkd2
+qfade1frame = qfade1 or qfade1l1 or qfade1l2 or qfade1r1 or qfade1r2 or qfade1u1 or qfade1u2 or qfade1d1 or qfade1d2
+qfade2frame = qfade2 or qfade2l1 or qfade2l2 or qfade2r1 or qfade2r2 or qfade2u1 or qfade2u2 or qfade2d1 or qfade2d2
+wall = lwall or rwall or twall or bwall or tlwall or trwall or blwall or brwall or tube
+fireg = lfire or rfire or ufire or dfire
+sink = lsink or rsink or usink or dsink
+sinka = lsinka or rsinka or usinka or dsinka
+door = ldoor or rdoor or udoor or ddoor
+slot = hslot or vslot
+hfield = hfield1 or hfield2
+vfield = vfield1 or vfield2
+field = hfield or vfield
+hgen = lgen or rgen
+vgen = ugen or dgen
+gen = hgen or vgen
+solid = sink or sinka or slot
+pad = button or cloner or mirror or reset
+fuseg = hfuse or vfuse or rufuse or rdfuse or lufuse or ldfuse
+fuseag = hfusea or vfusea or rufusea or rdfusea or lufusea or ldfusea
+wireg = iwire or hwire or vwire or ruwire or rdwire or luwire or ldwire or endwire
+wireag = iwirea or hwirea or vwirea or ruwirea or rdwirea or luwirea or ldwirea or endwirea
+tick = timera or sinka
+timers = timer or timera
+power = sinka or wireag
+nopower = sink or wireg
+dblock = player or pushable
+pair = e1 or e2 or e3 or e4
+state = e0 or pair
+person = player or mimic or oppos or einstein
+sidebrain = lbrain1 or lbrain2 or lbrain3 or rbrain1 or rbrain2 or rbrain3 or tlbrain or trbrain or tbrain1 or tbrain2
+brain = brain00 or brain01 or brain02 or brain03 or brain10 or brain11 or brain12 or brain13 or brain20 or brain21 or brain22 or brain23 or brain30 or brain31 or brain32 or brain33
+brains = brain or sidebrain
+eyeopen = leyeopen or reyeopen
+eye = leyeshut or reyeshut or eyeopen
+eyenum = eye1 or eye2 or eye3
+msg = msg1 or msg2 or msg3 or msg4 or msg5 or msg6 or msg7 or msg8
+va = au or ad
+ha = al or ar
+amove = va or ha
+mouth = mouth1 or mouth2 or mouth3 or mouth4
+turn = turnl or turnr or turnb
+nands = nandr or nandra or nandl or nandla or nandu or nandua or nandd or nandda or nandout
+decal = decal1 or decal2 or decal3 or decal4 or nodecal1 or nodecal2 or nodecal3 or nodecal4 or nodecal5 or nodecal6 or nodecal7 or nodecal8
+changeable = arrowmount or portal
+passenger = pushable or player
+heavy = player or arrowmount or portal
+tubeend = tubein or tubeout
+
+=======
+SOUNDS
+=======
+
+(Lasers firing)
+sfx_fire 6096108 (49522301) (69783509) (63988301)
+
+(Door opening?)
+(54600908)
+sfx_door 90911708
+
+(Quarks colliding)
+sfx_collide 31856107
+
+(Brain speaking)
+sfx_brain1 6087108
+sfx_brain2 44816508
+sfx_brain3 54991908 (49301108)(46407708)
+
+(Timer ticking)
+(timera destroy 87834507)
+
+(New memory)
+sfx_memory 38776508
+
+(Quark hitting wall)
+sfx_hitwall 92287307
+
+(Reset)
+sfx_reset 85594309
+
+(Activating a factory)
+sfx_factory 13145109 (89685903)
+
+(Receiver turning on)
+sfx_activate 96992100
+(Receiver turning off)
+sfx_deactivate 11651907 (9302506)
+
+(Vactubes)
+sfx_entertube 13515708
+
+changeable move 22825507 (56499307) (75064707)
+goal destroy 30316700 (13654300)
+
+(Conversation)
+sfx_einstein 17739700
+sfx_leonardo 41330103 (71486106)
+
+================
+COLLISIONLAYERS
+================
+
+background
+floor
+spread
+cleanse bounds
+range
+ptlblock
+fuseg fuseag factory factorya
+transformer
+ruwire luwire rdwire ldwire ruwirea luwirea rdwirea ldwirea iwire iwirea endwire nands endwirea turn1done ptlbounds
+decal
+hwire hwirea goal pgoal nand nanda
+vwire vwirea fired
+end timer timera autofire wire wirea
+fuse fusea
+ridge
+logic split
+dosplit
+e0
+e1
+e2
+e3
+e4
+redirect redirected
+turnl
+turnr
+turnb
+go fusego fusestop
+timergo
+rt
+an
+spawn
+solved reveal
+open secret
+frame wedged
+done overlayblock
+lstart
+rstart
+ustart
+dstart
+button
+arrowmount cloner mirror reset
+wirego wirestop
+nopush ptlstart mstart
+noquark
+larrow
+rarrow
+uarrow
+darrow
+tube
+vacprod vacdest inorange orangerev tubeback
+person sink sinka brain
+sidebrain mouth
+field eye
+gen eyenum msg1
+off msg2
+lwall msg3
+rwall msg4
+twall msg5
+bwall msg6
+tlwall msg7
+trwall msg8
+blwall msg9
+brwall scr1 msg10
+slot scr2 msg11
+door fire
+fireg
+ql amove
+qr
+qu
+qd
+qfade2
+qfade2l1 qfade2l2
+qfade2r1 qfade2r2
+qfade2u1 qfade2u2
+qfade2d1 qfade2d2
+qfade1
+qfade1l1 qfade1l2
+qfade1r1 qfade1r2
+qfade1u1 qfade1u2
+qfade1d1 qfade1d2
+quark
+quarkr1 quarkr2
+quarkl1 quarkl2
+quarku1 quarku2
+quarkd1 quarkd2
+portal
+podstart
+pod
+tubein
+tubeout
+utube dtube rtube ltube utubeback dtubeback ltubeback rtubeback utubeout dtubeout ltubeout rtubeout rtubew ltubew utubew dtubew trtubewh
+movestack
+orangeact
+chgtubedir
+tltubewh
+brtubewh
+bltubewh
+trtubewv
+tltubewv
+brtubewv
+bltubewv
+tubepart
+
+======
+RULES
+======
+
+(Realtime move?)
+[stationary player][logic] -> [stationary player][logic rt]
+
+(Apply random decals to floor tiles)
+[rt no turn1done][floor no decal] -> [rt][floor random decal]
+
+(Add tube wall ends)
+down [rt no turn1done][no trtubewh|rtubew|] -> [rt][trtubewh|rtubew|brtubewh]
+down [rt no turn1done][no tltubewh|ltubew|] -> [rt][tltubewh|ltubew|bltubewh]
+right[rt no turn1done][no bltubewv|dtubew|] -> [rt][bltubewv|dtubew|brtubewv]
+right[rt no turn1done][no tltubewv|utubew|] -> [rt][tltubewv|utubew|trtubewv]
+
+(Checkpoints)
+[> player|bounds] -> checkpoint
+
+(Walking)
+[> player tubeback|tube no pushable][logic] -> [> player tubeback|tube][logic inorange]
+[> player orangeact|tube no pushable][logic] -> [> player orangeact|tube][logic orangerev]
+right[> player tubein|tube no pushable] -> [tubein|tube player ar] sfx_entertube checkpoint
+left [> player tubein|tube no pushable] -> [tubein|tube player al] sfx_entertube checkpoint
+up   [> player tubein|tube no pushable] -> [tubein|tube player au] sfx_entertube checkpoint
+down [> player tubein|tube no pushable] -> [tubein|tube player ad] sfx_entertube checkpoint
+[> player|nopush no ridge no pad] -> [player|nopush]
+[> player|field] -> [player|field]
+
+(Pushing blocks)
+(Can push blocks into vactubes but they can't go in reverse like the player can)
+right[> player|pushable tubein no orangeact|tube no pushable] -> [> player|> pushable tubein|tube ar] sfx_entertube
+left [> player|pushable tubein no orangeact|tube no pushable] -> [> player|> pushable tubein|tube al] sfx_entertube
+up   [> player|pushable tubein no orangeact|tube no pushable] -> [> player|> pushable tubein|tube au] sfx_entertube
+down [> player|pushable tubein no orangeact|tube no pushable] -> [> player|> pushable tubein|tube ad] sfx_entertube
+[> player|stationary pushable|nopush] -> [player|pushable|nopush]
+[> player|pushable no qmove|no portal no qmove] -> [> player|> pushable|]
+[> player|stationary pushable] -> [player|pushable]
+[> player|> portal|arrowmount] -> [player|portal|arrowmount]
+[> player|arrowmount|portal] -> [player|arrowmount|portal]
+[> player|portal|portal] -> [player|portal|portal]
+[> larrow|larrow] -> [|larrow]
+[> rarrow|rarrow] -> [|rarrow]
+[> uarrow|uarrow] -> [|uarrow]
+[> darrow|darrow] -> [|darrow]
+
+(Pushing onto a factory)
+[> changeable|factory changeable] -> [no arrow|factorya f1 portal no arrow no arrowmount] sfx_factory
+right [> changeable|factory] -> [> changeable|factory f1 rstart] sfx_factory
+left  [> changeable|factory] -> [> changeable|factory f1 lstart] sfx_factory
+up    [> changeable|factory] -> [> changeable|factory f1 ustart] sfx_factory
+down  [> changeable|factory] -> [> changeable|factory f1 dstart] sfx_factory
+late[factory larrow uarrow] -> [factorya f1 portal no arrow no arrowstart] sfx_factory
+late[factory larrow rarrow] -> [factorya f1 portal no arrow no arrowstart] sfx_factory
+late[factory larrow darrow] -> [factorya f1 portal no arrow no arrowstart] sfx_factory
+late[factory uarrow rarrow] -> [factorya f1 portal no arrow no arrowstart] sfx_factory
+late[factory uarrow darrow] -> [factorya f1 portal no arrow no arrowstart] sfx_factory
+late[factory rarrow darrow] -> [factorya f1 portal no arrow no arrowstart] sfx_factory
+late[factory rstart] -> [factorya f1 no portal no arrow no arrowstart arrowmount rarrow]
+late[factory lstart] -> [factorya f1 no portal no arrow no arrowstart arrowmount larrow]
+late[factory ustart] -> [factorya f1 no portal no arrow no arrowstart arrowmount uarrow]
+late[factory dstart] -> [factorya f1 no portal no arrow no arrowstart arrowmount darrow]
+[rt][factorya f10] -> [rt][factory]
+
+[> arrowmount|arrowmount] -> [|arrowmount]
+
+(Stepping on buttons)
+[> heavy|button no arrowmount] -> [> heavy|button fusego]
+
+(Propagate along the fuse)
+ [fusego|fuse] -> [fusego|fuse fusego]
++[fusego|fire no fusego] -> [fusego|fire fusego    ]
++[fusego|button no fusego] -> [fusego|button fusego]
++[fusego|transformer no wirestop] -> [fusego|transformer wirego]
+
+[fusego hfuse  fuse] -> [fusego hfusea  fusea]
+[fusego vfuse  fuse] -> [fusego vfusea  fusea]
+[fusego rufuse fuse] -> [fusego rufusea fusea]
+[fusego rdfuse fuse] -> [fusego rdfusea fusea]
+[fusego lufuse fuse] -> [fusego lufusea fusea]
+[fusego ldfuse fuse] -> [fusego ldfusea fusea]
+[fusego fuse]        -> [fusego fusea]
+
+(Wedge open doors temporarily)
+[button fusego|door] -> [button fusego|door wedged]
+[button fusego|open] -> [button fusego|open wedged]
+[wedged|door no wedged] -> [wedged|door wedged]
+[wedged|open] -> [wedged|wedged open]
+
+(Unwedge doors)
+[> player button] -> [> player button cleanse]
+[button cleanse][cleanse|wedged no cleanse] -> [button cleanse][cleanse|wedged cleanse]
+[> player][wedged cleanse] -> [> player][]
+[> player][cleanse] -> [> player][]
+
+(Eyes)
+[player|msg8][leyeshut] -> [player|msg8][leyeopen]
+[player|msg8][reyeshut] -> [player|msg8][reyeopen]
+
+(Open the mouth)
+right[leyeopen eye1][leyeopen eye2][leyeopen eye3][brain31|brain22|brain01|brain30] -> [leyeopen][leyeopen][leyeopen][mouth1 end|mouth2 end|mouth3 end|mouth4 end] sfx_brain2
+late[player mouth] -> sfx_brain3
+
+(Messages)
+[logic msg10 no msg11][player] -> [logic msg10 msg11][stationary player] sfx_brain1 again message ...delicious hope...I must taste it! Come to me...
+[logic msg9 no msg10][player] -> [logic msg9 msg10][stationary player] sfx_brain1 again message ...oh, did you...hope...to escape? Don't try to deny it. I can smell the belief on you like a pungent cheese...
+[logic msg8 no msg9][player] -> [logic msg8 msg9][stationary player] sfx_brain1 again message ...how very cunning you've been, finding your way here...
+[player msg8][logic] -> [player][logic msg8] sfx_brain1 again message ...ah, Leonardo! I've been expecting you...
+
+[logic msg6 no msg7][player] -> [logic msg6 msg7][stationary player] sfx_einstein again message AE: No further questions, please. Go now! My cats' lives depend on you. Go!
+[logic msg5 no msg6][player] -> [logic msg5 msg6][stationary player] sfx_leonardo again message LDV: What calculations? How could you know that?
+[logic msg4 no msg5][player] -> [logic msg4 msg5][stationary player] sfx_einstein again message AE: You see all these vacuum tubes? Orange openings lead back towards this room. Purple ones lead...elsewhere. My calculations reveal that one leads...to THE EXIT, because reasons.
+[logic msg3 no msg4][player] -> [logic msg3 msg4][stationary player] sfx_leonardo again message LDV: Do you know how to escape? Please! I must return to my inventions!
+[logic msg2 no msg3][player] -> [logic msg2 msg3][stationary player] sfx_einstein again message AE: No further questions, please! Now, onto the burning issue. How to get out of here? My poor cats will be desperate to be fed, after all...
+[logic msg1 no msg2][player] -> [logic msg1 msg2][stationary player] sfx_leonardo again message LDV: General wha...?
+[player msg1][logic no msg1] -> [player][logic msg1] sfx_einstein again message AE: Hello! My name is ALBERT EINSTEIN and unless my eyes decieve me, you are LEONARDO DA VINCI. Your very being here proves my theory of General Relativity!
+
+(Secrets)
+[> player|secret][logic] -> [> player|secret][logic reveal]
+late[player scr1][logic reveal] -> [player scr1][logic] sfx_memory message [Transmission] ...i'm a nursery of sorts, for the brightest of clients...
+late[player scr2][logic reveal] -> [player scr2][logic] sfx_memory message [Transmission] ...and a funeral pyre for ancient giants...
+
+(Pressing the action button)
+[action player no bounds] -> [player cleanse]
+
+(Stepping on a reset button)
+[> player|reset] -> [> player|reset cleanse] sfx_reset
+
+(Propagate in all directions as far as possible until meeting a boundary)
+[cleanse|spread no bounds] -> [cleanse|spread cleanse]
+
+(Reset player)
+[rt][cleanse player no reset][cleanse reset] -> [rt][cleanse][cleanse reset player] sfx_reset
+
+(Cancel reset if player not on reset button i.e. there isn't one!)
+[rt][player no reset][cleanse] -> [rt][player][]
+
+(Remove arrows, portals and in-flight quarks)
+[rt][cleanse] -> [rt][cleanse no pushable no qframe no qmove no state no pod]
+
+(Reset arrows)
+[rt][cleanse lstart no larrow] -> [rt][cleanse larrow arrowmount lstart]
+[rt][cleanse rstart no rarrow] -> [rt][cleanse rarrow arrowmount rstart]
+[rt][cleanse ustart no uarrow] -> [rt][cleanse uarrow arrowmount ustart]
+[rt][cleanse dstart no darrow] -> [rt][cleanse darrow arrowmount dstart]
+[rt][cleanse mstart no arrowmount] -> [rt][cleanse arrowmount mstart]
+
+(Reset portals)
+[rt][cleanse ptlstart no portal] -> [rt][cleanse portal ptlstart]
+
+(Reset pods)
+[rt][cleanse podstart no pod] -> [rt][cleanse pod podstart]
+
+(Turn off active receivers)
+[rt][cleanse lsinka] -> [rt][cleanse lsink wirestop no timergo no frame]
+[rt][cleanse rsinka] -> [rt][cleanse rsink wirestop no timergo no frame]
+[rt][cleanse usinka] -> [rt][cleanse usink wirestop no timergo no frame]
+[rt][cleanse dsinka] -> [rt][cleanse dsink wirestop no timergo no frame]
+
+(Kick off button deactivation)
+[rt][cleanse fusea|button no heavy] -> [rt][cleanse fusea|button fusestop]
+
+(Unwedge doors)
+[rt][wedged cleanse] -> [rt][]
+
+(Clean up after reset)
+[rt][cleanse an] -> [rt][]
+[rt][cleanse] -> [rt][]
+
+(Turn off lit fuses after button is released)
+[> player button] -> [> player button fusestop]
+ [fusestop|fusea] -> [fusestop|fusea fusestop]
++[fusestop|button] -> [fusestop|button fusestop]
++[fusestop|transformer no wirego] -> [fusestop|transformer wirestop]
+
+[fusestop hfusea  fusea] -> [fusestop hfuse  fuse]
+[fusestop vfusea  fusea] -> [fusestop vfuse  fuse]
+[fusestop rufusea fusea] -> [fusestop rufuse fuse]
+[fusestop rdfusea fusea] -> [fusestop rdfuse fuse]
+[fusestop lufusea fusea] -> [fusestop lufuse fuse]
+[fusestop ldfusea fusea] -> [fusestop ldfuse fuse]
+[fusestop fusea]         -> [fusestop fuse]
+
+[fusestop] -> []
+
+(Five-frame cycle)
+[rt][logic f4            ] -> [rt][logic no frame an]
+[rt][logic f3            ] -> [rt][logic f4         ]
+[rt][logic f2            ] -> [rt][logic f3         ]
+[rt][logic f1            ] -> [rt][logic f2         ]
+[rt][logic no frame no an] -> [rt][logic f1         ]
+
+(Remove in-flight quarks if the emitter is about to fire but has already fired)
+[fusego|fire fired][qmove] -> [fusego|fire fired][no qframe no qmove no state]
+
+(Fire the emitters!)
+[fusego rfire] -> [fusego rfire quarkr qr e0 fired] sfx_fire
+[fusego lfire] -> [fusego lfire quarkl ql e0 fired] sfx_fire
+[fusego ufire] -> [fusego ufire quarku qu e0 fired] sfx_fire
+[fusego dfire] -> [fusego dfire quarkd qd e0 fired] sfx_fire
+
+[fusego] -> []
+
+(Quark trail)
+[rt][qfade2   ] -> [rt][        ]
+[rt][qfade1   ] -> [rt][qfade2  ]
+[rt][qfade2r1 ] -> [rt][        ]
+[rt][qfade1r1 ] -> [rt][qfade2r1]
+[rt][qfade2l1 ] -> [rt][        ]
+[rt][qfade1l1 ] -> [rt][qfade2l1]
+[rt][qfade2u1 ] -> [rt][        ]
+[rt][qfade1u1 ] -> [rt][qfade2u1]
+[rt][qfade2d1 ] -> [rt][        ]
+[rt][qfade1d1 ] -> [rt][qfade2d1]
+[rt][qfade2r2 ] -> [rt][        ]
+[rt][qfade1r2 ] -> [rt][qfade2r2]
+[rt][qfade2l2 ] -> [rt][        ]
+[rt][qfade1l2 ] -> [rt][qfade2l2]
+[rt][qfade2u2 ] -> [rt][        ]
+[rt][qfade1u2 ] -> [rt][qfade2u2]
+[rt][qfade2d2 ] -> [rt][        ]
+[rt][qfade1d2 ] -> [rt][qfade2d2]
+
+(Quark hitting (?) a force-field)
+[rt][quarkl larrow field] -> [rt][quarkl larrow field go]
+[rt][quarku uarrow field] -> [rt][quarku uarrow field go]
+[rt][quarkd darrow field] -> [rt][quarkd darrow field go]
+[rt][quarkr rarrow field] -> [rt][quarkr rarrow field go]
+
+[rt][e1 field no arrow][e1 quarkl larrow no field] -> [rt][e1 field go][quarkl e1 larrow]
+[rt][e2 field no arrow][e2 quarkl larrow no field] -> [rt][e2 field go][quarkl e2 larrow]
+[rt][e3 field no arrow][e3 quarkl larrow no field] -> [rt][e3 field go][quarkl e3 larrow]
+[rt][e4 field no arrow][e4 quarkl larrow no field] -> [rt][e4 field go][quarkl e4 larrow]
+
+[rt][e1 field no arrow][e1 quarku uarrow no field] -> [rt][e1 field go][quarku e1 uarrow]
+[rt][e2 field no arrow][e2 quarku uarrow no field] -> [rt][e2 field go][quarku e2 uarrow]
+[rt][e3 field no arrow][e3 quarku uarrow no field] -> [rt][e3 field go][quarku e3 uarrow]
+[rt][e4 field no arrow][e4 quarku uarrow no field] -> [rt][e4 field go][quarku e4 uarrow]
+
+[rt][e1 field no arrow][e1 quarkr rarrow no field] -> [rt][e1 field go][quarkr e1 rarrow]
+[rt][e2 field no arrow][e2 quarkr rarrow no field] -> [rt][e2 field go][quarkr e2 rarrow]
+[rt][e3 field no arrow][e3 quarkr rarrow no field] -> [rt][e3 field go][quarkr e3 rarrow]
+[rt][e4 field no arrow][e4 quarkr rarrow no field] -> [rt][e4 field go][quarkr e4 rarrow]
+
+[rt][e1 field no arrow][e1 quarkd darrow no field] -> [rt][e1 field go][quarkd e1 darrow]
+[rt][e2 field no arrow][e2 quarkd darrow no field] -> [rt][e2 field go][quarkd e2 darrow]
+[rt][e3 field no arrow][e3 quarkd darrow no field] -> [rt][e3 field go][quarkd e3 darrow]
+[rt][e4 field no arrow][e4 quarkd darrow no field] -> [rt][e4 field go][quarkd e4 darrow]
+
+[rt][quarkl ql field no go] -> [rt][quarkr qr field turnb redirect go]
+[rt][quarku qu field no go] -> [rt][quarkd qd field turnb redirect go]
+[rt][quarkr qr field no go] -> [rt][quarkl ql field turnb redirect go]
+[rt][quarkd qd field no go] -> [rt][quarku qu field turnb redirect go]
+
+[rt][quark field go] -> [rt][quark field]
+
+(Quarks pushing pods)
+(Player)
+left [rt][quarkl ql pod player|spread no slot no pod no ridge] -> [rt][quarkl ql pod|spread player]
+right[rt][quarkr qr pod player|spread no slot no pod no ridge] -> [rt][quarkr qr pod|spread player]
+up   [rt][quarku qu pod player|spread no slot no pod no ridge] -> [rt][quarku qu pod|spread player]
+down [rt][quarkd qd pod player|spread no slot no pod no ridge] -> [rt][quarkd qd pod|spread player]
+(Arrows)
+left [rt][quarkl ql pod arrow|spread no slot no pod no ridge] -> [rt][quarkl ql pod|spread arrow]
+right[rt][quarkr qr pod arrow|spread no slot no pod no ridge] -> [rt][quarkr qr pod|spread arrow]
+up   [rt][quarku qu pod arrow|spread no slot no pod no ridge] -> [rt][quarku qu pod|spread arrow]
+down [rt][quarkd qd pod arrow|spread no slot no pod no ridge] -> [rt][quarkd qd pod|spread arrow]
+(Portals)
+left [rt][quarkl ql pod portal|spread no slot no pod no ridge] -> [rt][quarkl ql pod|spread portal]
+right[rt][quarkr qr pod portal|spread no slot no pod no ridge] -> [rt][quarkr qr pod|spread portal]
+up   [rt][quarku qu pod portal|spread no slot no pod no ridge] -> [rt][quarku qu pod|spread portal]
+down [rt][quarkd qd pod portal|spread no slot no pod no ridge] -> [rt][quarkd qd pod|spread portal]
+(Pods)
+left [rt][quarkl ql pod|spread no slot no pod no ridge] -> [rt][quarkl ql|spread pod]
+right[rt][quarkr qr pod|spread no slot no pod no ridge] -> [rt][quarkr qr|spread pod]
+up   [rt][quarku qu pod|spread no slot no pod no ridge] -> [rt][quarku qu|spread pod]
+down [rt][quarkd qd pod|spread no slot no pod no ridge] -> [rt][quarkd qd|spread pod]
+
+(Quark direction)
+[rt][quarkl uarrow no field] -> [rt][quarkl qu turnr uarrow split]
+[rt][quarkr uarrow no field] -> [rt][quarkr qu turnl uarrow split]
+[rt][quarku uarrow no field] -> [rt][quarku qu       uarrow split]
+[rt][quarkl darrow no field] -> [rt][quarkl qd turnl darrow split]
+[rt][quarkr darrow no field] -> [rt][quarkr qd turnr darrow split]
+[rt][quarkd darrow no field] -> [rt][quarkd qd       darrow split]
+[rt][quarku larrow no field] -> [rt][quarku ql turnl larrow split]
+[rt][quarkd larrow no field] -> [rt][quarkd ql turnr larrow split]
+[rt][quarkl larrow no field] -> [rt][quarkl ql       larrow split]
+[rt][quarku rarrow no field] -> [rt][quarku qr turnr rarrow split]
+[rt][quarkd rarrow no field] -> [rt][quarkd qr turnl rarrow split]
+[rt][quarkr rarrow no field] -> [rt][quarkr qr       rarrow split]
+
+(Remove no-longer-relevant qmoves)
+[rt][split ql no larrow] -> [rt][split]
+[rt][split qr no rarrow] -> [rt][split]
+[rt][split qu no uarrow] -> [rt][split]
+[rt][split qd no darrow] -> [rt][split]
+
+(Remove old quark frame)
+[rt][split quark] -> [rt][split]
+
+(Are we actually splitting?)
+[rt][split ql no qu no qr no qd] -> [rt][ql quarkl redirect]
+[rt][split qu no ql no qr no qd] -> [rt][qu quarku redirect]
+[rt][split qr no qu no ql no qd] -> [rt][qr quarkr redirect]
+[rt][split qd no qu no qr no ql] -> [rt][qd quarkd redirect]
+
+(Portal collisions)
+random[rt][quark portal] -> [rt][quark portal an]
+[rt][portal an][quark portal no an] -> [rt][portal an redirected][quark portal an redirected]
+[rt][portal an redirected] -> [rt][portal no qframe no qmove no state] sfx_collide
+[rt][portal an] -> [rt][portal]
+
+(Quark entering a portal)
+(Flood area with range markers)
+[rt][quark portal no range] -> [rt][quark portal range]
+[rt][range|spread no range no ptlblock] -> [rt][range|spread range]
++[rt][range|arrowmount no range] -> [rt][range|arrowmount range]
+
+(Split quarks on portals)
+[rt][quark portal range no pair no split][portal no quark range] -> [rt][quark portal range split][portal range]
+
+(If we're splitting quarks, work out what the pair # is)
+[rt][split no pair][logic no e1] -> [rt][split no e0 e1][logic e1]
+[rt][split no pair][logic no e2] -> [rt][split no e0 e2][logic e2]
+[rt][split no pair][logic no e3] -> [rt][split no e0 e3][logic e3]
+[rt][split no pair][logic no e4] -> [rt][split no e0 e4][logic e4]
+
+(Copy quarks and state to other portals in range)
+[rt][quarkr qr state portal no redirected][portal range no quark] -> [rt][quarkr qr state portal][quarku qu state portal range redirected]
+[rt][quarkl ql state portal no redirected][portal range no quark] -> [rt][quarkl ql state portal][quarkd qd state portal range redirected]
+[rt][quarku qu state portal no redirected][portal range no quark] -> [rt][quarku qu state portal][quarkl ql state portal range redirected]
+[rt][quarkd qd state portal no redirected][portal range no quark] -> [rt][quarkd qd state portal][quarkr qr state portal range redirected]
+
+(Remove source particles and state if the particle went through a portal)
+[rt][redirected portal range][portal range no redirected] -> [rt][redirected portal range][portal range no split no quark no qmove no state]
+
+(Remove range markers)
+[rt][range] -> [rt][]
+
+[rt][split ql quarkl1] -> [rt][split an ql quarkl2 qfade1l1]
+[rt][split qr quarkr1] -> [rt][split an qr quarkr2 qfade1r1]
+[rt][split qu quarku1] -> [rt][split an qu quarku2 qfade1u1]
+[rt][split qd quarkd1] -> [rt][split an qd quarkd2 qfade1d1]
+
+[rt][split ql no qlframe] -> [rt][split ql quarkl1 qfade1]
+[rt][split qr no qrframe] -> [rt][split qr quarkr1 qfade1]
+[rt][split qu no quframe] -> [rt][split qu quarku1 qfade1]
+[rt][split qd no qdframe] -> [rt][split qd quarkd1 qfade1]
+
+(Redirect entangled quarks)
+[rt][redirect e1 quark turn][e1 no redirect no logic no field] -> [rt][redirect e1 quark turn][e1 quark turn redirected]
+[rt][redirect e2 quark turn][e2 no redirect no logic no field] -> [rt][redirect e2 quark turn][e2 quark turn redirected]
+[rt][redirect e3 quark turn][e3 no redirect no logic no field] -> [rt][redirect e3 quark turn][e3 quark turn redirected]
+[rt][redirect e4 quark turn][e4 no redirect no logic no field] -> [rt][redirect e4 quark turn][e4 quark turn redirected]
+
+[rt][ql turnl redirected] -> [rt][quarkd no qmove qd]
+[rt][ql turnr redirected] -> [rt][quarku no qmove qu]
+[rt][ql turnb redirected] -> [rt][quarkr no qmove qr]
+[rt][qr turnl redirected] -> [rt][quarku no qmove qu]
+[rt][qr turnr redirected] -> [rt][quarkd no qmove qd]
+[rt][qr turnb redirected] -> [rt][quarkl no qmove ql]
+[rt][qu turnl redirected] -> [rt][quarkl no qmove ql]
+[rt][qu turnr redirected] -> [rt][quarkr no qmove qr]
+[rt][qu turnb redirected] -> [rt][quarkd no qmove qd]
+[rt][qd turnl redirected] -> [rt][quarkr no qmove qr]
+[rt][qd turnr redirected] -> [rt][quarkl no qmove ql]
+[rt][qd turnb redirected] -> [rt][quarku no qmove qu]
+
+[rt][redirected] -> [rt][]
+[rt][redirect] -> [rt][]
+[rt][turn] -> [rt][]
+
+(Quark in play area hitting a wall or door)
+right[rt][quarkr2 qr no an|noquark] -> [rt][qfade1r2 an no state|noquark] sfx_hitwall
+left [rt][quarkl2 ql no an|noquark] -> [rt][qfade1l2 an no state|noquark] sfx_hitwall
+up   [rt][quarku2 qu no an|noquark] -> [rt][qfade1u2 an no state|noquark] sfx_hitwall
+down [rt][quarkd2 qd no an|noquark] -> [rt][qfade1d2 an no state|noquark] sfx_hitwall
+[rt][quark nopush no spread] -> [rt][nopush no spread]
+
+(Head-on collisions)
+[rt][ql qr no split] -> [rt][no qframe no qmove no state] sfx_collide
+[rt][qu qd no split] -> [rt][no qframe no qmove no state] sfx_collide
+right[rt][quarkr2 qr|quarkl2 ql] -> [rt][no qframe no qmove no state|no qframe no qmove no state] sfx_collide
+down [rt][quarkd2 qd|quarku2 qu] -> [rt][no qframe no qmove no state|no qframe no qmove no state] sfx_collide
+
+(Turn on force-fields)
+[rt][lgen no off no field] -> [rt][lgen hfield1]
+[rt][ugen no off no field] -> [rt][ugen vfield1]
+[rt][rgen no off no field] -> [rt][rgen hfield1]
+[rt][dgen no off no field] -> [rt][dgen vfield1]
+ right[rt][hfield1 no rgen|no hfield] -> [rt][hfield1|hfield2 no off]
++right[rt][hfield2 no rgen|no hfield] -> [rt][hfield2|hfield1 no off]
+  down[rt][vfield1 no dgen|no vfield] -> [rt][vfield1|vfield2 no off]
++ down[rt][vfield2 no dgen|no vfield] -> [rt][vfield2|vfield1 no off]
+  left[rt][hfield1 no lgen|no hfield] -> [rt][hfield1|hfield2 no off]
++ left[rt][hfield2 no lgen|no hfield] -> [rt][hfield2|hfield1 no off]
+    up[rt][vfield1 no ugen|no vfield] -> [rt][vfield1|vfield2 no off]
++   up[rt][vfield2 no ugen|no vfield] -> [rt][vfield2|vfield1 no off]
+
+(Count down timers)
+[rt][timera timergo f10|sink] -> [rt][timer|sink] (After we've reset)
+[rt][timera timergo f10|tick] -> [rt][timer|tick timergo f1]
+
+(Turn off receivers with no time left)
+[rt][lsinka timergo f10] -> [rt][lsink wirestop] sfx_deactivate
+[rt][rsinka timergo f10] -> [rt][rsink wirestop] sfx_deactivate
+[rt][usinka timergo f10] -> [rt][usink wirestop] sfx_deactivate
+[rt][dsinka timergo f10] -> [rt][dsink wirestop] sfx_deactivate
+
+(Turn NAND gates OFF)
+[rt][wirea no nandout|nanda] -> [rt][wirea|nanda wirestop]
+[rt][wire  no nandout|nanda] -> [rt][wire |nanda no wirestop] (Cancel if any wire not on)
+
+right[rt][nandra wirestop|] -> [rt][nandr nand|wirestop]
+left [rt][nandla wirestop|] -> [rt][nandl nand|wirestop]
+up   [rt][nandua wirestop|] -> [rt][nandu nand|wirestop]
+down [rt][nandda wirestop|] -> [rt][nandd nand|wirestop]
+
+(Turn off along the wire)
+ [wirestop|wirea] -> [wirestop|wirea wirestop]
++[wirestop|gen  ] -> [wirestop|gen no off    ]
+
+[wirestop iwirea   wirea] -> [wirestop iwire  wire]
+[wirestop hwirea   wirea] -> [wirestop hwire  wire]
+[wirestop vwirea   wirea] -> [wirestop vwire  wire]
+[wirestop ruwirea  wirea] -> [wirestop ruwire wire]
+[wirestop rdwirea  wirea] -> [wirestop rdwire wire]
+[wirestop luwirea  wirea] -> [wirestop luwire wire]
+[wirestop ldwirea  wirea] -> [wirestop ldwire wire]
+[wirestop endwirea wirea] -> [endwire         wire]
+
+(Entering a receiver)
+[rt][quark lsink] -> [rt][qfade1 lsinka wirego no qmove no state] sfx_activate
+[rt][quark rsink] -> [rt][qfade1 rsinka wirego no qmove no state] sfx_activate
+[rt][quark usink] -> [rt][qfade1 usinka wirego no qmove no state] sfx_activate
+[rt][quark dsink] -> [rt][qfade1 dsinka wirego no qmove no state] sfx_activate
+[rt][quark sinka] -> [rt][qfade1 sinka  wirego no qmove no state] sfx_activate
+
+(Activate timers)
+[rt][sinka wirego|timers] -> [rt][sinka f1 wirego|timera go timergo f1]
+
+(Turn NAND gates ON)
+[rt][wirestop no nandout|nand] -> [rt][wirestop|nand wirego]
+
+right[rt][nandr wirego|] -> [rt][nandra nanda|wirego]
+left [rt][nandl wirego|] -> [rt][nandla nanda|wirego]
+up   [rt][nandu wirego|] -> [rt][nandua nanda|wirego]
+down [rt][nandd wirego|] -> [rt][nandda nanda|wirego]
+
+(Propagate along the wire)
+[wirego|wire] -> [wirego|wire wirego]
+
+[wirego iwire   wire] -> [wirego iwirea  wirea]
+[wirego hwire   wire] -> [wirego hwirea  wirea]
+[wirego vwire   wire] -> [wirego vwirea  wirea]
+[wirego ruwire  wire] -> [wirego ruwirea wirea]
+[wirego rdwire  wire] -> [wirego rdwirea wirea]
+[wirego luwire  wire] -> [wirego luwirea wirea]
+[wirego ldwire  wire] -> [wirego ldwirea wirea]
+[wirego endwire wire] -> [endwirea       wirea]
+
+(Propagate timers)
+[rt][timera go timergo f1|timers no go] -> [rt][timera go|timera go timergo f1]
+
+(Remove go signals)
+[rt][sinka  go] -> [rt][sinka ]
+[rt][timera go] -> [rt][timera]
+[wirego   ] -> [      ]
+[wirestop ] -> [      ]
+
+(Open door?)
+[door no open] -> [door solved]
+[door solved no wedged|wire] -> [door|wire]
+[door solved|door no solved] -> [door|door]
+
+left [solved ldoor nopush noquark|] -> [open|ldoor open] sfx_door
+right[solved rdoor nopush noquark|] -> [open|rdoor open] sfx_door
+up   [solved udoor nopush noquark|] -> [open|udoor open] sfx_door
+down [solved ddoor nopush noquark|] -> [open|ddoor open] sfx_door
+
+(Close door?)
+[open no door|open door] -> [open solved|open door]
+[open solved no wedged|wire] -> [open|wire]
+[open solved|open no solved no door] -> [open|open]
+
+late left [no dblock|open no solved no dblock|ldoor open] -> [|ldoor nopush noquark|]
+late right[no dblock|open no solved no dblock|rdoor open] -> [|rdoor nopush noquark|]
+late up   [no dblock|open no solved no dblock|udoor open] -> [|udoor nopush noquark|]
+late down [no dblock|open no solved no dblock|ddoor open] -> [|ddoor nopush noquark|]
+
+late[open solved] -> [open]
+
+(Quark movement)
+right[rt][quarkl1 quark qr no split ] -> [rt][no qframe no qmove] sfx_collide
+right[rt][quarkl1 qr no ql no split ] -> [rt][quarkr  qfade1l1 qr an]
+right[rt][quarkl2 qr no ql no split ] -> [rt][quarkl1 qfade1l2 qr   ]
+right[rt][quarkr2 qr no ql no split state|no quarkr2] -> [rt][qfade1r2 state|quarkl2 qr state]
+right[rt][quarkr1 qr no ql no split ] -> [rt][quarkr2 qfade1r1 qr   ]
+right[rt][quarkr  qr no ql no split no an] -> [rt][quarkr1 qfade1 qr]
+
+left[rt][quarkr1 quark ql no split ] -> [rt][no qframe no qmove] sfx_collide
+left[rt][quarkr1 ql no qr no split ] -> [rt][quarkl  qfade1r1 ql an]
+left[rt][quarkr2 ql no qr no split ] -> [rt][quarkr1 qfade1r2 ql   ]
+left[rt][quarkl2 ql no qr no split state|no quarkl2] -> [rt][qfade1l2 state|quarkr2 ql state]
+left[rt][quarkl1 ql no qr no split ] -> [rt][quarkl2 qfade1l1 ql   ]
+left[rt][quarkl  ql no qr no split no an] -> [rt][quarkl1 qfade1 ql]
+
+down[rt][quarku1 quark qd no split ] -> [rt][no qframe no qmove] sfx_collide
+down[rt][quarku1 qd no qu no split ] -> [rt][quarkd  qfade1u1 qd an]
+down[rt][quarku2 qd no qu no split ] -> [rt][quarku1 qfade1u2 qd   ]
+down[rt][quarkd2 qd no qu no split state|no quarkd2] -> [rt][qfade1d2 state|quarku2 qd state]
+down[rt][quarkd1 qd no qu no split ] -> [rt][quarkd2 qfade1d1 qd   ]
+down[rt][quarkd  qd no qu no split no an] -> [rt][quarkd1 qfade1 qd]
+
+up[rt][quarkd1 quark qu no split ] -> [rt][no qframe no qmove] sfx_collide
+up[rt][quarkd1 qu no qd no split ] -> [rt][quarku  qfade1d1 qu an]
+up[rt][quarkd2 qu no qd no split ] -> [rt][quarkd1 qfade1d2 qu   ]
+up[rt][quarku2 qu no qd no split state|no quarku2] -> [rt][qfade1u2 state|quarkd2 qu state]
+up[rt][quarku1 qu no qd no split ] -> [rt][quarku2 qfade1u1 qu   ]
+up[rt][quarku  qu no qd no split no an] -> [rt][quarku1 qfade1 qu]
+
+(Clean up left-over state)
+[rt][state no qframe] -> [rt][]
+[rt][an] -> [rt][]
+
+(Send newly split quarks on their way)
+left [rt][split no an ql quarkl2 pair|] -> [rt][split qfade1l2 pair|ql quarkr2 pair]
+right[rt][split no an qr quarkr2 pair|] -> [rt][split qfade1r2 pair|qr quarkl2 pair]
+up   [rt][split no an qu quarku2 pair|] -> [rt][split qfade1u2 pair|qu quarkd2 pair]
+down [rt][split no an qd quarkd2 pair|] -> [rt][split qfade1d2 pair|qd quarku2 pair]
+[rt][split pair no qmove] -> [rt][]
+[rt][split an] -> [rt][split]
+
+(Turn off force-fields)
+[rt][wirea|gen] -> [rt][wirea|gen off no field]
+[rt][off|field] -> [rt][off|off]
+[rt][off no ridge no pad no void] -> [rt][off no nopush]
+[rt][off no gen] -> [rt][]
+
+(Animate force-fields)
+[rt][logic f4][hfield1 no an] -> [rt][logic f4][hfield2 an]
+[rt][logic f4][hfield2 no an] -> [rt][logic f4][hfield1 an]
+[rt][logic f4][vfield1 no an] -> [rt][logic f4][vfield2 an]
+[rt][logic f4][vfield2 no an] -> [rt][logic f4][vfield1 an]
+
+(Level solved?)
+[rt][player pgoal] -> [rt][player goal]
+[rt][goal no door no field] -> [rt][goal done]
+[rt][goal no door no field][done|spread no bounds no overlayblock] -> [rt][goal][done|spread done]
+[rt][goal no door no field] -> [rt][done]
+[rt][done pgoal] -> [rt][done]
+
+(Activate orange tubes for reverse journey when specifically the player leaves them)
+[rt inorange][player tubeout] -> [rt][player tubeout orangeact tubein]
+
+(Remove the orange-reverse marker when the player leaves the tube)
+[orangerev][player tubein] -> [][player tubein]
+
+(Move things reversing through orange vactubes)
+left [rt turn1done orangerev][player va chgtubedir no movestack no an|tubepart no passenger] -> [rt turn1done orangerev][player al chgtubedir movestack|tubepart]
+right[rt turn1done orangerev][player va chgtubedir no movestack no an|tubepart no passenger] -> [rt turn1done orangerev][player ar chgtubedir movestack|tubepart]
+up   [rt turn1done orangerev][player ha chgtubedir no movestack no an|tubepart no passenger] -> [rt turn1done orangerev][player au chgtubedir movestack|tubepart]
+down [rt turn1done orangerev][player ha chgtubedir no movestack no an|tubepart no passenger] -> [rt turn1done orangerev][player ad chgtubedir movestack|tubepart]
+
+(Move things in vactubes normally)
+ left [rt turn1done][passenger tubepart al no tubeend no movestack no an|tubepart no passenger] -> [rt turn1done][passenger tubepart al movestack no chgtubedir|tubepart]
++right[rt turn1done][passenger tubepart ar no tubeend no movestack no an|tubepart no passenger] -> [rt turn1done][passenger tubepart ar movestack no chgtubedir|tubepart]
++up   [rt turn1done][passenger tubepart au no tubeend no movestack no an|tubepart no passenger] -> [rt turn1done][passenger tubepart au movestack no chgtubedir|tubepart]
++down [rt turn1done][passenger tubepart ad no tubeend no movestack no an|tubepart no passenger] -> [rt turn1done][passenger tubepart ad movestack no chgtubedir|tubepart]
++left [rt turn1done][passenger tubepart va no tubeend no movestack no an|tubepart no passenger] -> [rt turn1done][passenger tubepart al movestack chgtubedir|tubepart]
++right[rt turn1done][passenger tubepart va no tubeend no movestack no an|tubepart no passenger] -> [rt turn1done][passenger tubepart ar movestack chgtubedir|tubepart]
++up   [rt turn1done][passenger tubepart ha no tubeend no movestack no an|tubepart no passenger] -> [rt turn1done][passenger tubepart au movestack chgtubedir|tubepart]
++down [rt turn1done][passenger tubepart ha no tubeend no movestack no an|tubepart no passenger] -> [rt turn1done][passenger tubepart ad movestack chgtubedir|tubepart]
++left [rt turn1done][movestack passenger al|] -> [rt turn1done][movestack al|passenger al an]
++right[rt turn1done][movestack passenger ar|] -> [rt turn1done][movestack ar|passenger ar an]
++up   [rt turn1done][movestack passenger au|] -> [rt turn1done][movestack au|passenger au an]
++down [rt turn1done][movestack passenger ad|] -> [rt turn1done][movestack ad|passenger ad an]
++[rt turn1done][movestack] -> [rt turn1done][]
+
+(Clean up vactube stuff)
+[rt turn1done][tubepart an] -> [rt turn1done][tubepart]
+
+(Trail spread behind pushables in vactubes so they can be reset)
+late[pushable tubepart no tubein] -> [pushable tubepart spread overlayblock]
+
+(Increment frames)
+[rt][f9 no logic] -> [rt][f10]
+[rt][f8 no logic] -> [rt][f9]
+[rt][f7 no logic] -> [rt][f8]
+[rt][f6 no logic] -> [rt][f7]
+[rt][f5 no logic] -> [rt][f6]
+[rt][f4 no logic] -> [rt][f5]
+[rt][f3 no logic] -> [rt][f4]
+[rt][f2 no logic] -> [rt][f3]
+[rt][f1 no logic] -> [rt][f2]
+
+(Check pair # indicator)
+[rt][logic pair] -> [rt][logic no pair]
+[rt][e1][logic] -> [rt][e1][logic e1]
+[rt][e2][logic] -> [rt][e2][logic e2]
+[rt][e3][logic] -> [rt][e3][logic e3]
+[rt][e4][logic] -> [rt][e4][logic e4]
+
+(Remove fired markers if no quarks are in flight)
+[rt][logic][qmove] -> [rt][logic fired][qmove]
+[rt][logic no fired][fired] -> [rt][logic][]
+[rt][logic fired] -> [rt][logic]
+
+(Remove animation markers)
+[rt][an] -> [rt][]
+
+(Don't do first turn setup stuff again e.g. decal generation)
+[rt no turn1done] -> [rt turn1done]
+
+(Remove realtime marker)
+[rt] -> []
+
+==============
+WINCONDITIONS
+==============
+
+all player on end
+
+=======
+LEVELS
+=======
+
+(Each level needs one logic marker)
+
+message X = Reset current room
+message I'm...I'm still alive!
+message But something doesn't feel right...
+
+o,,,,,,ϲ,,,,,,,,,,,,,,,,
+,,,,,,,ð,,,,,,,,,,,,,,,,
+,,,,,,,ð,,,,ððððððððð,,,
+,,,,,,,ð,,,,ð,,,,,,,ð,,,
+,,ðððððð,,,,ð,,,,,,,ð,,,
+,,ð,,,,,,ðððððððððððð,,,
+,,ð,,,,,,ð,,ð,,,,,,,,,,,
+,,ððððððððððð,,,,,,,,,,,
+,,,,,,,,,ð,,,,,,,,,,,,,,
+,,,,,,,,,ð,,,,,,,,,,,,,,
+,,,,,,,,,ððððððððð,,,,,,
+,,,,,,,,,,,,,,,,,ð,,,,,,
+,,,,,,,,,,,,,,,,,ð,,,,,,
+,,,,,,,,,,,,,,,,,ϵ,,,,,,
+
+o,,,,,,,,'--",,,,,'-",,,,,,,,,,,,,,,,,,,,ϲ,,,,ððððððððððððð'--------",,,,,,,,
+,,,,,,,,,:¶¶~-----`ĥ~-",,,,,,,,,'-",,,,,,ð,,,,ð,,,'-",,,,,ð:....œ...;,,,'---"
+,,,,,,,,,:r.¶..¶......~---------`ĥ~-",ððððððððð,,'`ĥ~n338,ð:.ʖ..ω...;,,,:...;
+,'----n8,:..{__}“b..α.¶ffœ..........;,ð,,,,,,,,,,:......2,ð:...{¢..ϛ℠ð,,:...;
+,:.....›3¡å©ã,,:®......{_!9ϰhhb.....;,ð,,,,'-----`..bhh‘2,ð\___/c...;ð,,:ϐ..;
+,:¶...¶.....2,,:.......;,,:.........~-χ----`..œff¶.....¬2,ð,,,,,:¶¶¶;ð,,:...;
+,:d¶.¶α¶....j--ì&&&‚..¬;,ðψϙ....ϑ.....ϯ.“hhhϰ0@__}......2,ððððððψϧb.;ðððψϧ..;
+,:¶...¶...ü¶.¶.“ß....b«;,ð:..b.....ϑ....b.{__/,,,ɓ&‚ϐ*&&õ,,,,,,,:.æ¨;,,,:.ϭ.;
+,:........í__}.b.......;,ð:..ϱ.ɿ..........;,,,,,,:......2,,,,,,,\___/,,,\_φ_/
+,:..ü.....j,,:.........;,ð\}.§}϶ɿ.....¶¶..;,,,,,,:.ϑ...¬∞--",ðððððððððððððð,,
+,:..₩4·..%6,,:....b....;,ð,:.2\__į&&&‚å©*&ĭ-",,,,:....b«ш..;,ð,,,,,,,,,,,,,,,
+,:..j,°ф©‰,,,:....æ¨...;,ð,:.2,,,:..¶ϑ$b¶..ϫ℠ðð,,:......ω..;,ð,,,,,,,,,,,,,,,
+,\__/,:¶¶;,,,\_________/,ð,:©‰,,,:..{}¶¶¶.ϭ.;,ð,,\_y4444ʊ¶¶;,ðððððððððð,,,,,,
+,,,,,,:ff;,ððððððððððððððð,:f;,,,:ff;\____φ_/,ð,,,,,,,,,:ff;,,,,,,,,,,ð,,,,,,
+,,,,,,:ff;,ð,,,,,,,,,,,,,,,:f;,,,:ff;,èèè,ð,ððð,,,,'----`ff~-----",,,,ð,,,,,,
+,,,,ððψϩ.;,ð,,,,,,,,,,,,,73¡â™333¡ф©™3n-",ð,ð,,,,,,:d.¶.l¶......l;,,ððð,,,,,,
+,,,,ð,\__/,ð,,,,,,,,,,,,,1......ßh±±‘...;,ð,ð,,,,,,:..*‚¶*‚.*&‚..;,,ð,,,,,,,,
+,,,,ð,,,,,,ð,,,,,,,,,,,,,1..d.......b...;,ððððð,,,,:.ür¶.¶ßhb.dē¶;,,ð,,,,,,,,
+,,,,ðððððð,ð,,,,,,,,,,,,,1..............;,,,ð,ð,,,,:.ú.¶.¶¶¶¶¶.¶ϡ℠ððð,,,,,,,,
+,,,,,,,'-χ-χ-",,ððð,,,,,,5y}ĥüž.....źā__/,ððððð,,,'`...¶.....¶.ü.;,,ð,,,,,,,,
+,,,,,,,:.ϯ.ϝ.;,,ð,ð,,,,,,,è\_ī.......2,,,,ð,ð,,,,,:ĥ.üu¶..ϐ..¶¶ú.j,,ððððððð,,
+,,ðððððψϩ....;,,ð,ð,,,,,,,è,,:..r....j,ðððððð,,,,,\}.î.¶ϑ........2,,,,ð,,,ð,,
+,,ð,,,,:.ϭ..ϣ;,,ð,ðððð,,,,è,,:.......;,ð,,ð,,,,,,,,:.î.¶.¶¶¶¶¶¶ü¶2,,,,ð,,,ð,,
+,,ð,,,,\_φ__φ/,,ð,,,,ð,,,'--"²ž...ź{_/,ð,,ð,'--",,,:.îu¶.¶....lú.2,,,,ð,,,ð,,
+,,ð,ðððð,ð,,ððððð,,,,ððððψϙ.;1.....;,,,ð,,ððψϧ.;,,,:.ò&‚¶*&‚.*‚..2,,,,ð,,,ð,,
+,,ð,ð,,ð,ð,,,,,,,,,,,,,,,:..;c..l..;,,,ð,,,,:..;,,,:r...........u2,,,,ð,,,ð,,
+,,ððð,,ð,ððððððððððððððððψϧ.;:.....;,,,ðððððψϙ.;,,,\____y9ф©044446,,,,ð,,,ð,,
+,,,,,,,ð,ð,,,,,,,,,,,,,,,:f{/\_____/,,,,,,,,\}f;,,,,,,,,,:ff;,,,,,ððððð,,,ð,,
+,,,,,,,ð,ð,,,,,,,,,,,,,,,:f;,,,,,,,,,,,,,,,,,:f~-----",,,:ff;,,,,,ð,,,,,,,ð,,
+,,,'---χ-χ",,,,,,,,,,,,,,:¶~n333ė---",,,,,,,,:.ff....;,,,:.ϫ℠ðððððððð,,,,,ð,,
+,,,:bhßϯ¶ϝʎ½½ë338,,,,,,,'`.....¶шf..;,,,73333₪℗____}.;,,'ìħ_/,,,,'--χ-",,,ð,,
+,'-`.....¶2,,:rd›333ė--":ĥ“b...¶ωf..~--"1.....2,,,,:.ö--`ĥ~---",,:..ϯ.;,,,ð,,
+,:“b..¶“hb2,,:......œю.;\}w....%@}.¶...;c.....∞---":¶ú.......¬;,,:...ϡ℠ðððð,,
+,:®..¶α⁄.%6,,:......ωю.;,:w...¬2,:.¶...~`....¶шff.;:“hhb....b«;,,:¶*&&ĭ",,ð,,
+,:....¶w.2,,,:¶¶{___¢..;,:®...w2,\_į‚.....α..¶ωff.;:®..w......j,,:d¶ʝß¶~--χ-"
+,:.....w.2,73¡å©™38,1..;,:.α..w›338:ĥ..α......§_}.;\}..w...{__ʐ,,:.¶⁄¶¶ff.ϝ.;
+,:.....æ¨2,1......j,1..;,:...αw...2\}.........2,:.;ʓ¾ž.w..ź~-#ﬁ",:.¶w.¶{}...;
+,:ĥü.{y446,c......~"1..;,:..bh«...2,:..b.{_y446,:.;η:..w....¶œю~-`¶¶æb¶;:.ϭ.;
+,\_ī.~-----`.....α.;1..;,:¶¶.ϭ....2,:..w.;'-----`.;κ:..b..d.¶ωюf¶l...¶¶;\_φ_/
+,,,:.l.............;1..~-`å©{φ}...2,:.¨«.;:.....f.;ʏ:..æh¨.{_____}¶¶¶¶¶;,,ð,,
+,,,:..{____}..{___yńƽ¶âffϑ$b;ð\_y46,\____/:.{_____/ʑʕ4y____/,,,,,\y9å©{/,,ð,,
+,,,\__/,,,,\__/,,,,,:ff{____/ð,,,,,,,,,,,,:f;,,,,,,,,,,,,,,,,,,,,,,:ff;,,,ð,,
+,'----------",'--#3n`ff;,'---χ------------`f;,,,'------------------`ff;,,,ð,,
+,:..........;,:..œ.....;,:$..ϝ..............;,,,:....................ϟ;,,,ð,,
+,:¶{______}.;,:..ω.....;,:..{_______________/,,,:.{__į&ħ_}f{_________φ/,,,ð,,
+'`f;è73338:.;,:.{__ɔ___/,:..;'----------------",:.ö--`ĥ~-`¶~n333ė---"ð,,,,ð,,
+:ĥ.;èc...2:.~-`.;'-ɕ-----`..;:....“hß.........~-`.î...........¶.ż...;ð,,,,ð,,
+\}.~-`...2:.....;:b....ff.ϭ.;:....b...........¶ffϭî.......ϑ...¶.....;ð,,,,ð,,
+è:....α..2\_____/:æ¨.{____φ_/:.........ʞ......{__φī..........ϐ¶.....;ð,,,,ð,,
+èc.......∞--",,,,\___/,,,,ð,'`.............u..~",ð:.ϑ..b‘.....¶.....;ð,,,,ð,,
+,1“hhb...ш¶ю;,,,,,,,,,,,,,ð,:........u........ĥ;,ð:.....w.....¶.ć...;ð,,,,ð,,
+,1wα...α.ω¶ю;,,,,,,,,,,,,,ð,:.................{/,ð:...{}w..{_____}..;ðððððð,,
+,1®..l...§}.;,,,,ðððððððððð,²ž....ź{_}........;,,ð:...;:æ¨.;,,,,,:..;,,,,,ð,,
+,1.......2:.;,,,,ð,,,,,,,,,,1......~-ì&&ħ_____/,,ð\_y4ńʕ444ń½½½ë3¡å©;,,,,,ð,,
+,544444446:.;,,,,ð,,,,,,,,,,1.....ю¶....;,,,,,ðððð,,,,,,,,,,,,,:..юю;,,,,,ð,,
+,,,,,,,,,,:f;,,,,ð,,,,,,,,,,544y______}f;,,,,,ð,,,,,,,,,,,,,,,,:ff{_/,,,,,ð,,
+,,,,'-----`f~----χ-----"è,,,,,,,,,,,,,:f;'-",,ð,,,,,,,,,,,,,,,'`ff;,,,,,,,ð,,
+,,,,:...........¶ϝ¶ßh‘.;èʓ½½½ζδë33333ė`.~`ĥ~-"ð,,'----#333333n`ĥ¶¶~--#ė---χ-"
+,,,,:..........α.¶...w.;èʏ,,,,,:®....ż.....¶d;ð,,:....ż...........ż.¶ϱœff.ϝ.;
+,,,,:.......l.....α..b.;èν-----`æhhhh‘.....¶.;ð,,:..“hhhb.r..........⁄*ħ}..ϭ;
+,,,,:..................;è1.....₱...₱₱σ₱₱...¶ϡ℠ð,,:¶rw................b.;\__φ/
+,,,,\___y4444449$$$ā___/èc..ϑ..₱...₱.w.₱...¶¬;ðððψϧ¶w..........d.......;,,,ð,
+,'---nė-------":...2,,,,,:.....₱...ϐ.bhσhhh±«;,,,:¶¨«.ć...........ć....;,,ðð,
+,:....$.“hhhß.;c...2,,,,,:.....₱...₱.w.₱...¶¶;,,,\______y49ž...ź*&‚....;,,ð,,
+,c....$.w.u...;5·¶¶2,,,,,:.ϑ...₱₱₱₱₱.w.₱.....j,,,,,,,,,,,,:............;,,ðð,
+,1...α$.w.....;,°ф©‰,,,,,c....“hhhhhh«.₱.....2,,,,,,,,,,,,:............;,,,ð,
+,1....$.b.α...~-`ff;,,,,,1...¨«......ć.₱.....2,,,,,,,,,,,,:............;,,,ð,
+,1....$.......¶....;,,,,,1¶¶{________________ʐ,,,,,,,,,,,,\_y9ф©044y}f.;,,ðð,
+,°ф©04@____}..¶....;,,,,,°ф©τ½½½½½½½½½½½½½½½½ʒ,,,,,,,,,,,,,,,:¶¶;,,,\₱f;,,ð,,
+,:ff;,,,,,,\_______/,,,,,:ff;,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,:ff;,,,,₱₱/,,ð,,
+,:ff;,,,,,,,,,,,,,,,,,,,,:ff~--"ððððððððððððð,,,,,,,,,,'-----`ff;,,,,₱₱,,,ð,,
+,:¶¶;ððððððððððððððððð,,,:.¶ϑ.b~χ#3ė-------"ððððððððððð:¶.......;,,,,₱₱,,,ð,,
+,\}ϑ;ð,,,,,,,,,,,,,,,ð,,,\__}.w.ϝϱfœ¶.....¶;,,,,,,,,,,ð:ϑ*ħ_____/,,,,₱₱,,,ð,,
+,'`ϡ℠ð,,,,,,,,,,,,,,,ðððððððψϙæhh«fω¶ϣ..r.¶;,,,,,,,,,,ðψϙ.;,,,,,,,,,'₱₱,,,ð,,
+,:..;,,ðððððððð,,,,,,,,,,,,,\_į&&&&ħ_φį&ħį&ĭ-",,,,ðððð,:.ϡ℠ðððð,,,'-ïf₱",,ð,,
+,:.ϛ℠ð,ð,,,,,,ð,,,,,ððððððððððψϧß‘.~-χ`ĥ;:¶¶¶;,,,,ð,,ð,:bϰã,,,ð,,,:ĥú.f;,,ðð,
+,²ϰb;ð,ð,,ððððððððð,ð,,,,'----ï¶¶⁄¶¶¶ϯ¶¶;:.d¶;,,,,ð,,ð,:¶¶2,,,ð,,,:....;,,,ð,
+,1¶¶;ð,ð,,ð,,,ð,,,ð,ð,,,'`¶¶¶.î¶.w.....ϛ℠ψϩ.¶;ðððððððððψϙ.2,,,ððððψϙ..ϡ℠ðððð,
+,°å©;ð,ð,,ð,,,ð,,,ð,ð,ððψϙ¶r¶.ú¶.æhb...¶;:¶¶¶;ð,,,ð,,ð,:å©‰'---",,:¶¶¶¶;,,,,,
+,:..;ð,ð,,ððððð,,,ð,ð,ð,:.¶.¶ü.¶.ü.....¶j:.ϭϡ℠ð,,,ð,,ð,:..;:...~--`..ϐ.;,,,,,
+,:.ϫ℠ððð,,,,,,,,,,ððððð,:ϟ¶ϣ¶î.¶ϭî¶¶¶%446\_φ_/,,,,ð,,ððψϩ.;:.ʗ..œ.¶.ϑ..;'--",
+,\__/ð,,,,,,,,,,,,,,ð,,,\φ_φ_ğ__φğ}ф©‰,,,,,ðððððððð,,,,\__/:....ω.¶...f₱₱f.j,
+,,,,,ððððððððððððððððððððð,ðððððð,:.ϫ℠ððð,,,,,,,,,,,,,,,,,,\____!444444ńʕ446,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,\__/,,ϵ,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+
+o,,,,,,,,,,,,,,,ϲ,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,ððððððððððððððððððððððððððððððððððð,,,,
+,,,,,,,,,ð,,,,,,ð,,,,,,,,,,'---",,,,,,'----χ",,,
+,,,,,,,,,ð,,,,,,ððððððð,ðððψϙ..;,,,,,,:....ϯ~",,
+,,,,,,,,,ð,,,,,'----",ð,ð,,:.ϣϫ℠ð,ððððψϩ.....;,,
+,,,,,,,,,ð,,,,ðψϩ..ϫ℠ðððð,,\_φ_/ð,ð,,,\}ϣ...ϭ;,,
+,,,'--",,ð,,,,ð:ϭ.ϭ.;,ð,,,ðððð,,ð,ð,,,,\φ___φ/,,
+,,,:..~",ð,,,,ð\φ_φ_/,ð,,,ð,,,,,ððððððððððð,ð,,,
+,ððψϩ..;,ð,,,,ð,ð,ð,,,ð,,,ð,,,,,'-χ--",,ð,ð,ð,,,
+,ð,:ϣ.ϛ℠ððððð,ð,ð,ð,,,ððððððððð,:.ϯ.ϫ℠ððððððððð,
+,ð,\φ}.;,ð,,ð,ð,ð,ð,,,,,,,ð,,,ð,:ϣ..{/,,ð,ð,ð,ð,
+,ð,,ð\_/,ð,,ððððððððððððððð,,,ð,\φ__/,,,ð,ð,ð,ð,
+,ð,,ð,ðððð,,,,ð,ð,ð,,,,,,,,,ððððððððððððð,ð,ð,ð,
+,ð,,ð,ð,,ð,,,,ð,ð,ð,,,,,,,,,ð,ð,,ð,,,,,,,,ð,ð,ð,
+,ð,,ð,ð,,ð,,,,ð,ð,ð,,,,,,,,,ð,ð,,ð,,,,,,'-χ-χ"ð,
+,ðððððððððððððððððððððððððððððððððððð,,ðψϩϯ.ϥ;ð,
+,,,,ð,ð,,ð,,,,ð,ð,ð,,,,,,,,,ð,ð,,ð,,ð,,ð:....;ð,
+,,,,ð,ð,,ðððððð,ð,ð,,,,,,,,,ð,ð,,ð,,ð,,ð\}..ϭ;ð,
+,,,,ð,ð'-χ-",,,,ð,ððððððððð,ð,ð,,ð,,ð,,ð,:ϭ{φ/ð,
+,,,,ð,ð:.ϥ.~"ðððð,,,,,,,,,ð,ð,ð,,ð,,ð,,ð,\φ/ð,ð,
+,,,,ðððψϙē..;ð,,,,,ððððððððððððððððððððð,,ð,ð,ð,
+,,,,,,ð:...ϛ℠ððð,'-χ-",,,,ð,ð'χ--χ",ð,,,,,ð,ð,ð,
+,,,,,,ð\}.ϣ{/ð,ð,:.ϯ.;,,,,ð,ð:ϯ..ϯ;,ð,,,,,ð,ððð,
+,,,,,,ð,\_φ/,ð,ððψϩ.ϛ℠ðð,,ðððψϩ..ϫ℠ðððððððð,,,,,
+,,,,,,ð,,,ðððð,,,:.ϣ.;,ð,,,,ð\}...;,ð,,,,,,,,,,,
+,,,,,,ð,,,,,,,,,,\_φ_/,ðððððð,\}..;,ð,,,,,,,,,,,
+,,,,,,ðððððððððððððð,,,,,,,,,,,\__/,ð,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,ϵ,,,,,,,,,,,
+
+o,,,,,,,,,,,ϲ,,,,,,,,,,,
+,,,,,,,,,,,,ð,,,,,,,,,,,
+,,,,,,,,,,,,ð,,,,,,,,,,,
+,,,,,,,ðððððð,,,,,,,,ððϵ
+ðððððððð,,,,,,,,,,,,,ð,,
+,,,,,,,ð,,,ðððððð,,,,ð,,
+,,,,,,,ððððð,,,,ð,,,,ð,,
+,,,,,'------",,,ðð,,,ð,,
+,,,,,:......~--",ððð,ð,,
+,,,,,c.........;,,,ð,ð,,
+---#3‹..l......;,,,ððð,,
+e..ш¶.......b..;,,,,,,,,
+_____}.....¶æ¨.;,,,,,,,,
+,,,,,\____}e{__/,,,,,,,,
+
+o,,,ð,,,,,,,,ð,,,,,,,,,,
+,,,,ð,,,,,,,,ð,,,,,,,,,,
+,,,,ð,,,,,,,,ð,,,,,,,,,,
+ϲððððððððð,,,ð,,,,,,,,,,
+,'--χ---"ð,,,ð,,,,,,,,,,
+,:..ϥ...;ð,,,ð,,,,ðððððϵ
+,:......;ð,,,ð,,,,ð'---"
+,:..ɵɷ..;ð,,,ð,,,,ð:...;
+,:.ɲɞɦɸ.;ðððððððððð:...~
+,:......;,,,,ð,,'--`..¶e
+,:......;,,,,ð,,:...ɲɹ.{
+,\__}.{_/,,,,ðððψϙ.ɵɩɧɷ;
+,,,,:¶;,,,,,,,,,:......;
+,,,,:e;,,,,,,,,,\______/
+
+o,,,,,,,,,,,,,'-`ee~---"
+,,,,,,,,,,,,,,:..¶¶....;
+,,,,ððððððððððψϙ.ɻɽɾ...;
+,,,,ð,,,,,,,,,:.ɵɰɧɣɷ..;
+,,,,ð,,,,,,,,,:........;
+ϲðððððððððððð,:........;
+,'--χ-----",ð,\____}...~
+,:..ϥ.....;,ð,,,,,,:..¶e
+,`........;,ððððððð:..¶e
+e¶...ɲɽ...;,,,,,,,ð:...{
+,}..ɲɩɧɷ.ϛ℠ððð,,,,ð:...;
+,:........;,,ð,ððððψϩ..;
+,:..¶¶....;,,ððð,,ð\___/
+,\_}ee{___/,,,,,,,ϵ,,,,,
+
+o,,,,,,,,,,,,,,,,,ϲ,,,,,
+,,,,,,,,,,,,,,,,,,ð,,,,,
+,,,,,,,,,,,,,,,,,,ð,,,,,
+,,,,,,,,,,,,,,,,,,ð,,,,,
+,,,,,,,,,,,,,,,,,,ð,,,,,
+,,,,,,,,,,,ðððððððð,,,,,
+,,,,,,,,,,,ð,,,,,,,,,,,,
+ðððððððððððð,,,,,,,,,,,,
+,,,,,,,,,,,ð,,,,,ððððððð
+,,,,,,,,,,,ð,,,,,ð,,,,,,
+,,,,,,,,,,,ð,,,,,ð,,,,,,
+,,,,,,,,,,,ððððððð,,,,,,
+,,,,,,,,,,,ð,,,,,,,,,,,,
+,,,,,,,,,,,ϵ,,,,,,,,,,,,
+
+o,,,,,,,,,,ϲ,,,,,,,,,,,,
+,,,,,,,,,,,ð,,,,,,,,,,,,
+,,,,,,,,,,,ð'-----------
+,,,,,,,,,,,ð:..........e
+,,,,,,,,,,,ð:.{_________
+,,,,,,,,,,,ð:.;,,,,,,,,,
+,,,,,,,,,,,ð:.;,,,,,,,,,
+,,,,,,,,,,,ð:.;,,,,,,,,,
+,,,,,,,,,,,ð:.;,,,,,,,,,
+,,,,,,,,,,,ð:.;,,,,,,,,,
+,,,,,,,,,,,ð:.;,,,,,,,,,
+,,,,,,,,,,,ð:.;,,,,,,,,,
+,,,,,,,,,,,ð:.;,,,,,,,,,
+,,,,,,,,,,,ϵ:e;,,,,,,,,,
+
+o,,,,,,,,,,ϲ:e;,,,,,,,,,
+,,,,,'-----χ`ф~----",,,,
+,,,,,:...ʈ.ϯ.$ʈ....;,,,,
+,,,,,:....ʈ.ʈʈ.....;,,,,
+,,,,,:.....ʈ.......;,,,,
+,,,,,:.....ɻɼɽɾ....;,,,,
+,,'--`....ɲɣɯɤɥɷ...~--",
+,,:......ɵɬɣɩɧɤɬɹ.....;,
+,,:.....ɳɨɰɦɬɫɞɦɥɷ....;,
+,,:....ɲɮɬɤɬɯɫɟɮɠɣɹ...;,
+,,:...................;,
+,,:...................;,
+,,\___________________/,
+,,,,,,,,,,,,,,,,,,,,,,,,
+
+message Yep, just as unpleasant as last time.
+message I really need to get out of here.
+
+(
+======
+TESTS
+======
+
+(Firing particles)
+test buttons activate fuses
+pw.“h‘...“hhhh
+hbh«.w...w....
+.w...æhhh«....
+when right down tick
+expect right [floor|player button]
+expect down [vfusea|button|vfusea]
+expect right [hfusea|hfusea|hfusea|hfusea]
+
+test only touching fuses activate
+pw.“h‘...“hhhh
+hbh«.w...w....
+.w...æh.h«....
+when right down tick
+expect 0 right [hfusea|hfusea|hfusea|hfusea]
+
+test active fuses fire emitters
+opbh®.....
+when right tick
+expect [rfire qframe]
+
+test pressing a button removes any in-flight particles
+opbh®.....
+when right tick tick tick tick tick tick left right tick
+expect 1 [qframe]
+
+(Portals)
+test portal transports particle right to up
+o......n
+pbh®α..α
+when right tick tick tick tick tick tick tick tick tick tick tick tick tick tick
+expect [usinka]
+
+test portal transports particle down to right
+ohß.....
+pbα...αj
+when right tick tick tick tick tick tick tick tick tick tick tick tick tick tick
+expect [rsinka]
+
+test portal is cleared after particle passes through
+o......n
+pbh®α..α
+when right tick tick tick tick tick tick tick tick tick tick tick tick tick tick
+expect 2 [portal no redirect no split no range no qframe no qmove]
+
+test portal bounds limit range
+o.....ϒ.n
+.pbh®αϒ.α
+when right tick tick tick tick tick tick tick tick tick tick tick
+expect [usink]
+
+test arrow mounts bridge portal bounds
+o....ϑϒ.n
+.pbh®αϒ.α
+when up right right right right left left left down tick tick tick tick tick tick tick tick tick tick tick
+expect [usinka]
+
+test can't push portals onto arrowmounts
+opαϑ
+when right right right
+expect [player|portal|arrowmount]
+
+test can't push arrowmounts onto portals
+opϑα
+when right right right
+expect [player|arrowmount|portal]
+
+(Doors)
+test doors open when activated
+opbh®jêф©.
+when right tick tick tick tick tick tick
+expect right[ldoor|open|open|rdoor]
+
+test doors opened directly with adjacent button allowing player through
+o,,
+,,œ
+pbω
+,,ʏ
+when right tick right
+expect down [udoor|open|open player|ddoor]
+
+test doors can be wedged open with pushables
+opbhß,
+,.u.yè
+.å©½ʒ,
+when right tick tick tick tick tick tick down tick tick tick tick tick tick tick tick tick tick tick tick tick tick tick tick tick tick tick tick
+expect right[dsink|timer]
+expect right[ldoor|open|uarrow open|rdoor]
+
+test doors block particles
+opbh®œ$....
+....®ω.....
+when right tick tick tick tick tick tick tick tick tick tick
+expect 0 [quark]
+
+(Receivers)
+test receivers can be activated twice
+opbh®j
+when right tick tick tick tick tick tick tick tick tick tick tick
+expect [rsinka]
+when left right tick tick tick tick tick tick tick tick tick tick
+expect [rsinka]
+
+(Force fields)
+test open force fields are correctly reset
+,ohhhhhh®j
+ĥpbž.ź½δθʒ
+when right tick tick tick tick tick tick left left tick tick
+expect [lgen no field|no field|rgen no field|hwirea]
+
+test player can't walk through force fields
+op.
+ž.ź
+when tick down down down
+expect [lgen|no player|rgen]
+
+(Factories)
+test factories can produce arrows in all directions
+o....
+.....
+plϐ..
+.....
+.....
+when right tick tick tick tick tick tick tick tick tick tick
+expect 0 [larrow]
+expect [rarrow arrowmount factory]
+when right up right right down left tick tick tick tick tick tick tick tick tick tick
+expect 0 [rarrow]
+expect [larrow arrowmount factory]
+when left down left up left up right up right down tick tick tick tick tick
+expect 0 [larrow]
+expect [darrow arrowmount factorya]
+when tick tick tick tick tick down left down down right up tick
+expect 0 [darrow]
+expect [uarrow arrowmount factorya]
+
+test pushing two different arrows onto a factory produces a portal
+o....
+plϐu.
+when right tick tick tick tick tick tick tick tick tick tick up right right right down left tick
+expect 0 [arrow]
+expect [portal factorya]
+
+test pushing two arrows the same onto a factory produces a portal
+o..
+..r
+plϐ
+when right tick tick tick tick tick tick tick tick tick tick up up right down tick
+expect 0 [rarrow]
+expect 0 [larrow]
+expect [portal factorya]
+
+test pushing combined arrows onto a factory produces a portal
+opʞϐ
+when right tick
+expect 0 [arrow]
+expect [portal factorya]
+
+test pushing a portal onto a factory produces an arrow
+opαϐ
+when right tick
+expect 0 [portal]
+expect [rarrow arrowmount factorya]
+
+(Vactubes)
+test player can travel through a vactube
+opϡðð
+,,,,ð
+,,ððð
+,,ð,,
+,,ððϙ
+when right right tick tick tick tick tick tick tick tick tick tick
+expect 0 [player tubeback]
+expect [player tubeout]
+
+test arrow can travel through a vactube
+opdϡððϙ
+when right right tick tick tick
+expect 0 [arrowmount tubein]
+expect [arrowmount darrow tubeout]
+
+test portal can travel through a vactube
+opαϡððϙ
+when right right tick tick tick
+expect 0 [portal tubein]
+expect [portal tubeout]
+
+test items back up inside vactubes
+.........
+.........
+o.αpdϡððϙ
+.........
+when right right tick tick down left left left left up right right right right tick right tick tick
+expect right[player tube|portal tube|darrow tubeout]
+when left down right right right up up tick
+expect down[darrow|player|portal tubeout]
+
+test pushables extend reset range via vactubes
+oĥpϑϫððððððϙ...
+when right right tick tick tick action
+expect 4 [floor cleanse]
+when tick
+expect 1 [arrowmount]
+when right right right tick tick tick tick tick tick action
+expect 8 [floor cleanse]
+expect 1 [arrowmount]
+
+test can't reverse through vactubes initially
+ϫðϙpϛðϧ
+when left left
+expect [player tubeout]
+when right right right
+expect [player tubeout]
+
+test purple tubes don't become reversible
+opϫðϙ
+when right right tick tick tick
+expect [player tubeout]
+expect 0 [player tubein]
+
+test orange tubes become reversible
+opϡðϙ
+when right right tick tick tick
+expect [player tubein orangeact]
+expect [tubein no player]
+
+test pushables don't make tubes reversible
+oϛðϩdplϡðϙ
+when left left right right right right tick tick tick
+expect 0 [tubein tubeout]
+expect [darrow tubeout]
+expect [larrow tubeout]
+
+test can reverse through orange tubes
+opϡðϙ
+when right right tick tick tick left tick tick tick
+expect [player tubein|...|tubeout orangeact]
+
+test reverse back to last orange entrance, diverting from straight if necessary
+o...ϭ
+....ð
+lpϡðð
+....ð
+..ϡðð
+when right right tick tick tick tick down tick tick tick tick left
+expect right[larrow|player]
+
+test reverse back to last orange entrance, overwriting previous route
+o...ϭ
+....ð
+lpϡðð
+....ð
+r.ϡðð
+when right right tick tick tick tick left left down down down down right tick tick tick tick tick tick down tick tick tick tick tick tick left
+expect right[rarrow|player]
+
+test pushables can't reverse through tubes
+opϡðϙl.
+,,,,...
+when right right tick tick tick down right right up left left left tick tick tick
+expect right[tubeout larrow|player]
+
+test tubes don't feed into one another
+opϡðϙϡðϙ
+when right right tick tick tick tick tick tick
+expect right[tubeout player|...|tubeout no player]
+
+test tubes don't feed into one another in reverse
+opϡðϙϡðϙ
+when right right tick tick tick right right tick tick tick left tick tick tick tick tick tick
+expect right[tubeout|tubein player|...|tubeout no player]
+
+test tubes don't feed into one another around corners
+opϡðϙϟ
+when right right tick tick tick tick tick tick
+expect right[tubeout player|tubein]
+
+test reverse tubes don't feed into one another around corners
+opϟϡðϙ
+when right right right tick tick tick left tick tick tick
+expect right[tubein|tubein player]
+
+(Defect resolutions)
+test touching a player goal removes all others
+юююю
+opюю
+ю.ю.
+when right tick
+expect 0 [pgoal]
+
+test Einstein can only be spoken to once
+ɿpo
+϶ɿ.
+when left action action action action action action action action action action action action action right down action up action
+expect 0 [einstein|player]
+
+test reset via action button
+opl.
+..ĥ.
+when right action tick
+expect down [larrow|reset player]
+
+test reset via standing on reset button
+opl.
+..ĥ.
+when right down tick
+expect down [larrow|reset player]
+
+test firing particle through open door
+,,,,,,,
+opbϰδœ,
+...æ®ωj
+,,,,,,,
+when right tick tick tick tick tick tick tick tick tick tick tick tick
+expect [rsinka]
+
+test door buttons work multiple times
+opbϰδå©,
+when right
+expect right [ldoor|floor|floor|rdoor]
+when left right
+expect right [ldoor|floor|floor|rdoor]
+
+test door wedge buttons don't open doors permanently
+,,,,,
+opbœ$
+...ω.
+,,,,,
+when right left
+expect down [udoor|ddoor]
+
+test reset closes wedged doors
+,,,,,
+opbœ$
+.ĥ.ω.
+,,,,,
+when right action tick
+expect down[udoor|ddoor]
+
+test reset closes doors wedged with pushables
+,,,,,,
+oplbœ$
+.ĥ..ω.
+,,,,,,
+when right action tick
+expect down[udoor|ddoor]
+
+test reset closes doors properly wedged with pushables
+,,,,,,
+oplbœ$
+.ĥ..ω.
+,,,,,,
+when right right left action tick
+expect down[udoor|ddoor]
+
+test overlayblock blocks overlay propagation
+opю.₱₱₱.
+when right tick
+expect 3 [floor done]
+expect 1 [floor no done]
+
+test chasm with spread does not block overlay propagation
+opю.ϔϔϔ.
+when right tick
+expect 4 [floor done]
+expect 0 [floor no done]
+
+test buttons deactivate on reset
+oĥ,,,,
+pϑbϰ½œ
+......
+when right
+expect down[open door|open]
+expect [fusea]
+when action tick
+expect 0 down[door|solved]
+expect [fuse|wire|udoor]
+
+test pushables on transformers don't disappear when stepping on and off buttons
+oĥ,,,,
+pϑbϰ½œ
+......
+when right right left right left right left
+expect right[player|button|arrowmount]
+
+test arrows aren't duplicated when passing quickly over factories
+oprϐ..
+when right right tick tick
+expect 1 [arrowmount]
+)

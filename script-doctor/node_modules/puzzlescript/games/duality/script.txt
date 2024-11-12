@@ -1,0 +1,381 @@
+title duality
+author Rosden Shadow [Mark Signorelli]
+homepage rosden.itch.io
+run_rules_on_level_Start
+
+background_color #3B3942
+
+text_color #A17C8B
+
+========
+OBJECTS
+========
+
+Background
+#46495B #3B3942
+10111
+11010
+10101
+01011
+11101
+(
+00101
+01110
+11011
+01111
+10110)
+(
+11101
+00101
+11111
+10100
+10111)
+
+
+Targetice
+#536673 #7EA1E5
+.....
+.010.
+.1.1.
+.010.
+.....
+
+Targetfire
+ #B32D2D #DB7F55
+.....
+.010.
+.1.1.
+.010.
+.....
+
+Wall
+#A17C8B #845C5C #5B4846 #423D39
+21110
+22110
+22220
+32323
+23232
+
+overwall
+#A17C8B #845C5C #5B4846 #423D39
+.....
+.....
+.....
+20000
+21100
+
+
+Playerright
+#F2AACE #E57E88 #DB7F55 #B32D2D  #536673 #7EA1E5
+.000.
+11505
+11414
+11110
+.1.1.
+
+playerleft
+#F2AACE #E57E88 #DB7F55 #B32D2D  #536673 #7EA1E5
+.000.
+50511
+41411
+01111
+.1.1.
+
+Crate
+#7EA1E5 #AAE0F2 #536673 #46495B
+20011
+20001
+22001
+32223
+.333.
+
+overcrate
+#7EA1E5 #AAE0F2 #536673
+.....
+.....
+.....
+.....
+.111.
+
+Crate2
+#DB7F55 #E5C17E #B32D2D #73342E
+20011
+20001
+22001
+32223
+.333.
+
+overcrate2
+ #DB7F55 #E5C17E #B32D2D #73342E
+.....
+.....
+.....
+.....
+.111.
+
+
+cloner
+#E5C17E #DB7F55 #B32D2D #73342E
+.100.
+.210.
+.221.
+.332.
+.....
+
+swapcrate
+Orange Yellow
+00000
+0...0
+0...0
+0...0
+00000
+
+swapwall
+black
+.....
+.....
+.....
+.....
+.....
+
+thefloor
+#3B3942
+00000
+00000
+00000
+00000
+00000
+
+ice
+#D9FFF8 #AAE0F2
+10111
+11010
+10101
+01011
+11101
+
+fire
+#F2F2AA #E5C17E
+10111
+11010
+10101
+01011
+11101
+
+icex
+black
+.....
+.....
+.....
+.....
+.....
+
+firex
+black
+.....
+.....
+.....
+.....
+.....
+downshift
+black
+.....
+.....
+.....
+.....
+.....
+
+upshift
+black
+.....
+.....
+.....
+.....
+.....
+
+leftshift
+black
+.....
+.....
+.....
+.....
+.....
+
+rightshift
+black
+.....
+.....
+.....
+.....
+.....
+
+noshift
+black
+.....
+.....
+.....
+.....
+.....
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Playerright
+* = Crate
+@= crate2
+i = Targetice
+f = targetfire
+c=cloner
+-=thefloor
+
+feel=overwall or overcrate or overcrate2
+pushable=crate or cloner or swapcrate or Crate2
+win=crate or wall
+
+player=playerright or playerleft
+
+shift=downshift or rightshift or leftshift or upshift or noshift
+
+mover= crate
+
+thefire = fire or Crate2
+=======
+SOUNDS
+=======
+
+pushable MOVE 36772507
+
+
+sfx0 52836103
+================
+COLLISIONLAYERS
+================
+
+Background
+ice,icex,fire
+Targetice, targetfire
+shift
+Player, Wall, pushable,swapwall,thefloor,firex
+feel
+
+======
+RULES
+======
+
+[feel]->[]
+
+
+[ >  Player | pushable ] -> [  >  Player| > pushable  ]
+
+[ left Playerright] -> [ left playerleft]
+[ right Playerleft] -> [ right playerright]
+
+[Up mover]->[up mover upshift]
+[mover upshift|no thefire]->[up mover  up upshift|]
+
+[down mover]->[down mover downshift]
+[mover downshift|no thefire]->[down mover  down downshift|]
+
+
+[right mover]->[right mover rightshift]
+[mover rightshift|no thefire]->[right mover right rightshift|]
+
+[left mover]->[left mover leftshift]
+[mover leftshift|no thefire]->[left mover left leftshift|]
+
+[> crate | fire] -> [crate noshift |fire]
+
+[> crate2 | ice] -> [crate2 noshift|ice]
+
+[> crate  |crate]-> [crate noshift |crate noshift]
+([shift no ice]-> [no ice])
+
+late [crate]->[crate ice]
+late [crate2]->[crate2 fire]
+(
+[ left Playerright] -> [ left playerleft]
+[ right Playerleft] -> [ right playerright]
+
+down [player| ]->[player | upshift]
+down [upshift | ]->[upshift | upshift]
+
+up [player| ]->[player | downshift]
+up [downshift | ]->[downshift | downshift]
+
+left [player| ]->[player | rightshift]
+left [rightshift | ]->[rightshift | rightshift]
+
+right [player| ]->[player | leftshift]
+right [leftshift | ]->[leftshift |leftshift]
+
+[player]->[player noshift]
+
+[mover upshift]->[up mover upshift]
+
+[mover downshift]->[down mover downshift]
+
+[mover rightshift]->[right mover  rightshift]
+
+[mover leftshift]->[left mover  leftshift])
+
+late up [wall| ]-> [wall|overwall]
+late up [crate| ]-> [crate|overcrate]
+late up [crate2| ]-> [crate2|overcrate2]
+
+[]->again
+==============
+WINCONDITIONS
+==============
+
+All Targetfire on crate2 
+All Targetice on crate
+
+=======
+LEVELS
+=======
+
+message cover up the square with its corresponding block
+
+message level 1 of 3
+---------
+-#######-
+##.f#i.##
+#...#...#
+#..*#...#
+#...#...#
+#.......#
+#.@.P...#
+#.......#
+##.....##
+-#######-
+
+message level 2 of 3
+---------
+-#######-
+##.....##
+#..i....#
+#.......#
+#..@....#
+#.......#
+#...f*..#
+#.P.....#
+##.....##
+-#######-
+
+message level 3 of 3
+---------
+-#######-
+##.....##
+#.......#
+#...*.@.#
+#.#.....#
+#.i.....#
+#.#.*...#
+#.P..i..#
+#f....###
+########-
+
+
+message together they glow

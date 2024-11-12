@@ -1,0 +1,4108 @@
+title Herding Hero
+author Joel Fox and Mike Gelbart
+homepage https://joel-fox.itch.io/
+again_interval 0
+
+norepeat_action
+
+run_rules_on_level_start
+
+========
+OBJECTS
+========
+
+
+BackgroundDay
+LIGHTGREEN GREEN
+11111
+11111
+10111
+11111
+11111
+
+BackgroundNight
+#BDBDBD Gray
+11111
+11111
+10111
+11111
+11111
+
+
+(background initialization experiment
+Grass1day
+green
+00000
+00000
+00000
+00000
+00000
+
+Grass1night
+#888888
+00000
+00000
+00000
+00000
+00000
+
+Grass2day
+green #333366 #88bb88
+00000
+00101
+00020
+00000
+00000
+
+Grass2night
+#888888 #111133 #555555
+00000
+00101
+00020
+00000
+00000
+
+Grass3day
+green lightgreen
+00000
+00000
+01000
+00000
+00000
+
+Grass3night
+#888888 #666666
+00000
+00000
+01000
+00000
+00000
+)
+
+Clear
+transparent
+
+Temp
+transparent
+
+Temp1
+transparent
+
+Temp2
+transparent
+
+Temp3
+transparent
+
+Temp4
+transparent
+
+Temp5
+transparent
+
+Temp6
+transparent
+
+Temp7
+transparent
+
+CannotMoveMarker
+transparent
+
+WallDay
+#053005 #004400 #105610 green
+30003
+02120
+02210
+01210
+30003
+
+WallNight
+#2a362a(#506750) #273627 #344434 gray
+30003
+02120
+02210
+01210
+30003
+
+PlayerDay
+#996633 #de853c #0000a0 black #b00000 #6a4623
+5...5
+00100
+02120
+11311
+.545.
+
+PlayerNight
+#705025 #8e6025 #000080 black #900000 #553318
+5...5
+00100
+02120
+11311
+.545.
+
+FenceDay
+White
+.....
+0.0.0
+00000
+0.0.0
+00000
+
+FenceNight
+#433D3D
+.....
+0.0.0
+00000
+0.0.0
+00000
+
+MountainDay
+#60b030 #74492a darkbrown
+00000
+01110
+01210
+01110
+00000
+
+MountainNight
+darkgray Darkgreen Black
+00000
+01110
+01210
+01110
+00000
+
+GoatDayWithHair
+#dac239 #939395 #898989 #442915 lightgray
+...0.
+...13
+11111
+111.4
+2.2..
+
+GoatDayShorn
+#dac239 #939395 #898989 #442915 lightgray
+...0.
+...13
+11111
+111..
+2.2..
+
+GoatNightWithHair
+#b69f45 #636365 #595959 #444444 lightgray
+...0.
+...13
+11111
+111.4
+2.2..
+
+GoatNightShorn
+#b69f45 #636365 #595959 #444444
+...0.
+...13
+11111
+111..
+2.2..
+
+SheepDayWithHair
+#ece9e8 #e7cddd #e077b6 black white gray
+.444.
+13131
+41214
+40004
+.5.5.
+
+SheepDayShorn
+#ece9e8 #e7cddd #e077b6 black white gray
+.444.
+13131
+.121.
+.000.
+.5.5.
+
+
+SheepNightWithHair
+#bcb9b8 #c7adbd #905090 darkgray lightgray
+.444.
+13131
+41214
+40004
+.3.3.
+
+SheepNightShorn
+#bcb9b8 #c7adbd #905090 darkgray lightgray
+.444.
+13131
+.121.
+.000.
+.3.3.
+
+SwitchOn
+Darkred Red Gray
+22122
+20002
+20202
+22222
+22222
+
+SwitchOff
+Darkred Red Gray
+22222
+22222
+20202
+20002
+22122
+
+SwitchOnBlue
+Purple Blue Gray
+22122
+20002
+20202
+22222
+22222
+
+SwitchOffBlue
+Purple Blue Gray
+22222
+22222
+20202
+20002
+22122
+
+SwitchOnYellow
+orange yellow Gray
+22122
+20002
+20202
+22222
+22222
+
+SwitchOffYellow
+orange yellow Gray
+22222
+22222
+20202
+20002
+22122
+
+ScissorsDown
+Black lightgray
+.0.0.
+0.0.0
+.010.
+.1.1.
+1...1
+
+ScissorsUp
+Black lightgray
+1...1
+.1.1.
+.010.
+0.0.0
+.0.0.
+
+ScissorsRight
+Black lightgray
+.0..1
+0.01.
+.01..
+0.01.
+.0..1
+
+ScissorsLeft
+Black lightgray
+1..0.
+.10.0
+..10.
+.10.0
+1..0.
+
+BasketEmpty
+#403020 #604020 lightbrown
+.222.
+2...2
+1...1
+01010
+.010.
+
+BasketFull
+#403020 #604020 white lightbrown
+.333.
+3...3
+12221
+01010
+.010.
+
+BasketEmptyNight
+#202020 #101010 #405070
+.222.
+2...2
+1...1
+01010
+.010.
+
+BasketFullNight
+#202020 #101010 white #405070
+.333.
+3...3
+12221
+01010
+.010.
+
+UnsatMarker
+transparent
+
+=======
+LEGEND
+=======
+
+
+. = BackgroundDay
+# = WallDay
+P = PlayerDay
+* = FenceDay
+G = GoatDayWithHair
+M = MountainDay
+S = SheepDayWithHair
+
+A = SwitchOn
+U = SwitchOff
+
+B = SwitchOnBlue
+Y = SwitchOnYellow
+
+(note: this is the key to the left of the daytime symbol)
+, = BackgroundNight
+@ = WallNight
+O = PlayerNight
+& = FenceNight
+F = GoatNightWithHair
+N = MountainNight
+H = SheepNightWithHair
+
+$ = BasketEmpty
+
+X = ScissorsDown
+R = ScissorsRight
+Z = ScissorsLeft
+
+SheepDay = SheepDayWithHair or SheepDayShorn
+SheepNight = SheepNightWithHair or SheepNightShorn
+GoatDay = GoatDayWithHair or GoatDayShorn
+GoatNight = GoatNightWithHair or GoatNightShorn
+
+L = GoatDayWithHair and MountainDay
+D = PlayerDay and MountainDay
+E = PlayerNight and MountainNight
+% = SheepDayWithHair and MountainDay
+
+Background = BackgroundDay or BackgroundNight
+Goat = GoatDay or GoatNight or GoatDayShorn
+Player = PlayerDay or PlayerNight
+Fence = FenceDay or FenceNight
+Mountain = MountainDay or MountainNight
+Wall = WallDay or WallNight
+Sheep = SheepDay or SheepNight
+
+Scissors = ScissorsDown or ScissorsUp or ScissorsRight or ScissorsLeft
+
+DayTile = BackgroundDay or GoatDay or PlayerDay or FenceDay or MountainDay or WallDay or SheepDay
+
+Basket = BasketEmpty or BasketFull or BasketEmptyNight or BasketFullNight
+
+SwitchRed = SwitchOff or SwitchOn
+SwitchBlue = SwitchOnBlue or SwitchOffBlue
+SwitchYellow = SwitchOnYellow or SwitchOffYellow
+Switch = SwitchRed or SwitchBlue or SwitchYellow
+
+Animal = Goat or Sheep
+Enclosure = Fence or Wall
+FenceCannotWalk = Fence or Wall or Switch or Goat or Sheep or Mountain or Scissors
+SheepCannotWalk = Fence or Wall or Switch or Goat or Mountain or Scissors
+GoatCannotWalk  = Fence or Wall or Player or Switch or Goat or Sheep or Scissors
+PlayerCannotWalk = Fence or Wall or Switch or Goat or Sheep
+
+Movable = Fence or Switch
+
+VerticalExtendedPlayer = Player or ScissorsDown or ScissorsUp
+HorizontalExtendedPlayer = Player or ScissorsLeft or ScissorsRight
+ExtendedPlayer = Player or Scissors (things that can push fences or switches)
+ScaresAnimals = Player or Scissors (things that can move animals)
+
+(background initialization experiment
+GrassDay = Grass1day or Grass2day or Grass3day)
+
+=======
+SOUNDS
+=======
+
+
+startgame 26858107
+startlevel 34443107
+endlevel 34292905
+
+Fence move 2869307
+Goat move 56841703
+Sheep move 73334303 
+(88454307
+923107
+57193107
+29051507
+16191107
+18236703
+91094903
+74018305
+73304705
+45628505)
+
+
+Switch move 45898501
+
+Sfx0 13788103 (switch on)
+Sfx1 26462701 (switch off)
+Sfx2 56841703 (goat move)
+Sfx3 73334303 (sheep move)
+Sfx4 38594901 (animal shear)
+(90682304
+99045504
+83330704
+58407104
+28970904
+25214104
+34797901
+13847101
+11323501)
+
+Sfx5 1152305 (shear rotation)
+
+================
+COLLISIONLAYERS
+================
+
+
+Background
+(background initialization experiment
+GrassDay)
+Mountain
+Goat, Sheep, Player, Wall, Fence, Switch, Scissors, Basket
+Clear
+Temp
+UnsatMarker
+CannotMoveMarker
+Temp1
+Temp2
+Temp3
+Temp4
+Temp5
+Temp6
+Temp7
+(fence cannot go on mountain --> should be same layer)
+(fence cannot go on player --> should be same layer)
+(player can go on mountain --> should be different layer )
+( this is an apparent contradiction. we resolve it by
+handling fence/mountain collisions manually in the Rules)
+
+
+======
+RULES
+======
+
+
+(background initialization experiment
+[. no GrassDay] -> [. random GrassDay]
+)
+
+(Scissor movement)
+[ moving Player | Scissors] -> [moving Player | moving Scissors]
+
+(Hack for now - needs fixing!!)	
+
+(Fence, switch movement)
+[ > ExtendedPlayer | Movable ] -> [ > ExtendedPlayer | > Movable ]
+[ > Movable | Mountain ] -> [ Movable | Mountain ]
+
+
+(===================
+BEGIN SHEEP MOVEMENT
+===================)
+(Move sheep with player)
+[ > ScaresAnimals | SheepDay no Mountain ] -> [ > ScaresAnimals | > SheepDay no Mountain]
+[ > SheepDay | SheepCannotWalk ] -> [ SheepDay | SheepCannotWalk ]
+
+(All connected sheep get moving in same direction)
+[moving Sheep | stationary Sheep] -> [moving Sheep | moving Sheep]
+
+(Flag sheep that cannot actually move)
+[CannotMoveMarker] -> []
+(Have to deal with the edge of the level, which is super annoying)
+(To do so, give all moving sheep a marker, then remove for those who are NOT at the edge of the level)
+[> Sheep] -> [> Sheep CannotMoveMarker]
+[> Sheep CannotMoveMarker | ] -> [> Sheep | ]
+(Then, add the markers for those cases of normal collisions with objects)
+[> Sheep | SheepCannotWalk] -> [> Sheep CannotMoveMarker | SheepCannotWalk]
+[< Sheep CannotMoveMarker | Sheep] -> [< Sheep CannotMoveMarker | Sheep CannotMoveMarker]
+(Sheep on mountains cannot move)
+[Sheep Mountain] -> [Sheep Mountain CannotMoveMarker]
+
+(Cancel sheep movement)
+[moving Sheep] -> [stationary Sheep]
+
+(Apply player movement AGAIN)
+[ > ScaresAnimals | SheepDay no Mountain ] -> [ > ScaresAnimals | > SheepDay no Mountain]
+[ > SheepDay | SheepCannotWalk ] -> [ SheepDay | SheepCannotWalk ] (needed for mountains)
+
+(All connected sheep moving in same direction - only passes through sheep that will end up moving!)
+[moving Sheep no CannotMoveMarker | stationary Sheep no CannotMoveMarker] -> [moving Sheep no CannotMoveMarker | moving Sheep no CannotMoveMarker]
+
+(Just for convenience, so I don't need to test for both stationary OR CannotMoveMarker in some later steps)
+[stationary Sheep no CannotMoveMarker] -> [stationary Sheep CannotMoveMarker]
+(=================
+END SHEEP MOVEMENT
+=================)
+
+
+(=================
+CANCEL TURN IF PLAYER OR SCISSORS CANNOT MOVE
+=================)
+horizontal [> VerticalExtendedPlayer | Wall ] -> cancel
+vertical [> HorizontalExtendedPlayer | Wall ] -> cancel
+
+horizontal [> VerticalExtendedPlayer | Goat ] -> cancel (assume a goat is stuck if you're next to it)
+vertical [> HorizontalExtendedPlayer | Goat ] -> cancel (assume a goat is stuck if you're next to it)
+
+horizontal [> VerticalExtendedPlayer | Sheep  CannotMoveMarker ] -> cancel
+vertical [> HorizontalExtendedPlayer | Sheep  CannotMoveMarker ] -> cancel
+
+
+horizontal [> VerticalExtendedPlayer | Fence  | FenceCannotWalk] -> cancel
+vertical [> HorizontalExtendedPlayer | Fence  | FenceCannotWalk] -> cancel
+
+horizontal [> VerticalExtendedPlayer | Switch | FenceCannotWalk] -> cancel
+vertical [> HorizontalExtendedPlayer | Switch | FenceCannotWalk] -> cancel
+
+
+
+(=================
+BEGIN DAYTIME SHEARING
+=================)
+(Shearing - only if sheep doesn't end up moving / can't move)
+random [BasketEmpty][ > Player | Scissors | SheepDayWithHair CannotMoveMarker no mountain] -> [BasketFull][Player | Scissors | SheepDayShorn CannotMoveMarker no mountain] Sfx4
+random [BasketEmpty][ > Player | Scissors | stationary SheepDayWithHair no mountain] -> [BasketFull][Player | Scissors | stationary SheepDayShorn no mountain] Sfx4
+
+(Shearing goats - will not work against edge of map)
+random [BasketEmpty][ > Player | Scissors | GoatDayWithHair no mountain| GoatCannotWalk ] -> [BasketFull][Player | Scissors | GoatDayShorn no mountain | GoatCannotWalk] Sfx4
+
+(=================
+BEGIN NIGHTTIME SHEARING
+=================)
+(Shearing sheep - don't need to check whether sheep can move since it's night)
+random [BasketEmptyNight][ > Player | Scissors | SheepNightWithHair no mountain] -> [BasketFullNight][Player | Scissors | SheepNightShorn no mountain] Sfx4
+
+(Shearing goats - don't need to check whether goat can move since it's night)
+random [BasketEmptyNight][ > Player | Scissors | GoatNightWithHair no mountain] -> [BasketFullNight][Player | Scissors | GoatNightShorn no mountain] Sfx4
+
+
+
+
+(===================
+BEGIN DAY/NIGHT SWITCHING
+===================)
+[action Player | SwitchOn] -> [action Player | Temp] Sfx1
+[action Player | SwitchOff] -> [action Player | SwitchOn] Sfx0
+[SwitchOn][SwitchOff] -> [SwitchOn][SwitchOn]
+[Temp][SwitchOn] -> [Temp][SwitchOff] 
+[action Player | Temp] -> [action Player | SwitchOff] 
+
+
+(turns daytime objects into nighttime objects)
+late [SwitchOff][BackgroundDay] -> [SwitchOff][BackgroundNight]
+late [SwitchOff][GoatDayWithHair] -> [SwitchOff][GoatNightWithHair]
+late [SwitchOff][GoatDayShorn] -> [SwitchOff][GoatNightShorn]
+late [SwitchOff][SheepDayWithHair] -> [SwitchOff][SheepNightWithHair]
+late [SwitchOff][SheepDayShorn] -> [SwitchOff][SheepNightShorn]
+late [SwitchOff][PlayerDay] -> [SwitchOff][PlayerNight]
+late [SwitchOff][FenceDay] -> [SwitchOff][FenceNight]
+late [SwitchOff][WallDay] -> [SwitchOff][WallNight]
+late [SwitchOff][MountainDay] -> [SwitchOff][MountainNight]
+late [SwitchOff][BasketEmpty] -> [SwitchOff][BasketEmptyNight]
+late [SwitchOff][BasketFull] -> [SwitchOff][BasketFullNight]
+
+(turns nighttime objects into daytime objects)
+late [SwitchOn][BackgroundNight] -> [SwitchOn][BackgroundDay]
+late [SwitchOn][GoatNightWithHair] -> [SwitchOn][GoatDayWithHair]
+late [SwitchOn][GoatNightShorn] -> [SwitchOn][GoatDayShorn]
+late [SwitchOn][SheepNightWithHair] -> [SwitchOn][SheepDayWithHair]
+late [SwitchOn][SheepNightShorn] -> [SwitchOn][SheepDayShorn]
+late [SwitchOn][PlayerNight] -> [SwitchOn][PlayerDay]
+late [SwitchOn][FenceNight] -> [SwitchOn][FenceDay]
+late [SwitchOn][WallNight] -> [SwitchOn][WallDay]
+late [SwitchOn][MountainNight] -> [SwitchOn][MountainDay]
+late [SwitchOn][BasketEmptyNight] -> [SwitchOn][BasketEmpty]
+late [SwitchOn][BasketFullNight] -> [SwitchOn][BasketFull]
+(===================
+END DAY/NIGHT SWITCHING
+===================)
+
+(===================
+BEGIN BLUE SWITCH
+===================)
+[action Player | SwitchOnBlue]  -> [action Player | SwitchOnBlue Temp1] Sfx1
+[action Player | SwitchOffBlue] -> [action Player | SwitchOffBlue Temp1] Sfx0
+[Temp1][GoatDayWithHair] -> [Temp1][Temp2]
+[Temp1][SheepDayWithHair] -> [Temp1][GoatDayWithHair]
+[Temp1][Temp2] -> [Temp1][SheepDayWithHair]
+
+[Temp1][GoatDayShorn] -> [Temp1][Temp2]
+[Temp1][SheepDayShorn] -> [Temp1][GoatDayShorn]
+[Temp1][Temp2] -> [Temp1][SheepDayShorn]
+
+[Temp1][GoatNightWithHair] -> [Temp1][Temp2]
+[Temp1][SheepNightWithHair] -> [Temp1][GoatNightWithHair]
+[Temp1][Temp2] -> [Temp1][SheepNightWithHair]
+
+[Temp1][GoatNightShorn] -> [Temp1][Temp2]
+[Temp1][SheepNightShorn] -> [Temp1][GoatNightShorn]
+[Temp1][Temp2] -> [Temp1][SheepNightShorn]
+
+
+[Temp1 SwitchOnBlue][SwitchOnBlue no Temp1] -> [Temp1 SwitchOnBlue][SwitchOffBlue no Temp1] 
+[Temp1 SwitchOnBlue] -> [SwitchOffBlue]
+
+[Temp1 SwitchOffBlue][SwitchOffBlue no Temp1] -> [Temp1 SwitchOffBlue][SwitchOnBlue no Temp1] 
+[Temp1 SwitchOffBlue] -> [SwitchOnBlue]
+
+(===================
+END BLUE SWITCH
+===================)
+
+
+(===================
+BEGIN YELLOW SWITCHING
+===================)
+(switch blue and red switches)
+(
+[action Player | SwitchOnYellow]  -> [action Player | SwitchOnYellow Temp5] Sfx1
+[action Player | SwitchOffYellow] -> [action Player | SwitchOffYellow Temp5] Sfx0
+[Temp5][SwitchOn] -> [Temp5][Temp6]
+[Temp5][SwitchOff] -> [Temp5][Temp7]
+[Temp5][SwitchOnBlue][FenceDay] -> [Temp5][SwitchOn][FenceDay]
+[Temp5][SwitchOnBlue][FenceNight] -> [Temp5][SwitchOff][FenceNight]
+[Temp5][SwitchOffBlue][FenceDay] -> [Temp5][SwitchOn][FenceDay]
+[Temp5][SwitchOffBlue][FenceNight] -> [Temp5][SwitchOff][FenceNight]
+[Temp5][Temp6] -> [Temp5][SwitchOnBlue]
+[Temp5][Temp7] -> [Temp5][SwitchOffBlue]
+
+[Temp5 SwitchOnYellow] -> [SwitchOffYellow]
+[Temp5 SwitchOffYellow] -> [SwitchOnYellow]
+)
+
+(switch player and goat)
+[action Player | SwitchOnYellow]  -> [action Player | SwitchOnYellow Temp5] Sfx1
+[action Player | SwitchOffYellow] -> [action Player | SwitchOffYellow Temp5] Sfx0
+
+[temp5][PlayerDay] -> [temp5][temp6]
+[temp5][GoatDayWithHair] -> [Temp5][PlayerDay]
+[temp5][temp6] -> [temp5][GoatDayWithHair]
+
+[Temp5 SwitchOnYellow] -> [SwitchOffYellow]
+[Temp5 SwitchOffYellow] -> [SwitchOnYellow]
+(===================
+END YELLOW SWITCHING
+===================)
+
+(===================
+BEGIN SCISSOR ROTATION
+===================)
+[Temp] -> []
+right [action Player | no PlayerCannotWalk][ScissorsDown] -> [action Player | Temp][] 
+down  [action Player | no PlayerCannotWalk ][ScissorsLeft] -> [action Player | ScissorsDown][] Sfx5
+left  [action Player | no PlayerCannotWalk ][ScissorsUp]   -> [action Player | ScissorsLeft][] Sfx5
+up    [action Player | no PlayerCannotWalk ][ScissorsRight]-> [action Player | ScissorsUp][]   Sfx5
+[Temp] -> [ScissorsRight] Sfx5
+
+(===================
+END SCISSOR ROTATION
+===================)
+
+
+(Goats run away)
+late [ ScaresAnimals | GoatDay | no GoatCannotWalk ] -> [ ScaresAnimals | | GoatDay ] Sfx2
+
+
+(Check win condition - first part)
+late [Animal UnsatMarker] -> [Animal]
+late [Clear] -> []
+late [Player] -> [Player Clear]
+late [Clear | Background no Enclosure] -> [Clear | Background Clear]
+late [Clear | Animal] -> [Clear | Animal UnsatMarker]
+late [Clear] -> []
+
+
+==============
+WINCONDITIONS
+==============
+
+no UnsatMarker on Animal
+no BasketEmpty
+
+=======	
+LEVELS
+=======
+
+
+
+(message Tutorial Level 1
+(message Push the fence to separate yourself from the goat.)
+
+
+#####
+#G#.#
+#.*.#
+#.P.#
+#...#
+#####)
+
+
+message You are a herding dog and your mission is to herd.  Scare goats and push fences to fulfill your duty.
+
+#####
+#.#.#
+#.*.#
+#GP.#
+#...#
+#####
+
+
+(message Tutorial Level 3
+message Sometimes there are multiple goats. They need to all be separated from you.
+#######
+#.###.#
+#.*.*.#
+#G.P.G#
+#.....#
+#######
+
+
+message Tutorial Level 4
+message The goats can be together, as long as they are separated from you.
+#######
+#.#...#
+#.#.*.#
+#GP.G.#
+#.....#
+#######)
+
+message If you find yourself stuck, you can attempt a different challenge and return later.
+
+#########
+#.#...#.#
+#.#*..*.#
+#g.g...g#
+#...p...#
+#########
+
+
+(message You cannot put fences on mountains, but you and the goats can still traverse them. )
+message Some farms have mountainous regions.
+
+########
+###.m.p#
+###..*.#
+#mmgm*.#
+#mg..m.#
+########
+
+(
+########
+###.M.P#
+###...M#
+#MMGM*.#
+#MG.*M.#
+########
+)
+
+message Whoops, one goat got away!
+(message Whoops, you forgot one goat.)
+
+###########
+#...MM#M..#
+#.G..*.PM.#
+#.G.##MMGM#
+#.G.#.....#
+###########
+
+
+message Let the herding begin
+
+(This level is solvable without moving the bottom fence, which I think is a detriment. I made a version where it's just a wall, called "simple level" a few levels down. I also made a version where you do need both mobile fences called "Level 1, Revisited" near the end (it's hard!). There is a section of levels with difficulty between those two, somewhere in the comments at the bottom)
+(#########
+##....P.#
+##.G.*G.#
+##.##...#
+#...#G..#
+#...*...#
+#G..#...#
+#########)
+
+#########
+##....p.#
+##.g.*..#
+##.##.g.#
+#...#g..#
+#...#...#
+#########
+
+
+message Deja Vu
+
+(same issue as above. we can make this a variation of "simple level" if we want to do that switch)
+(#########
+##....P.#
+##.G.*.G#
+##.##...#
+#...#G..#
+#...*...#
+#...#...#
+#########)
+
+#########
+##....p.#
+##.g.*..#
+##.##..g#
+#...#g..#
+#...#...#
+#...#...#
+#########
+
+
+message Playground
+(
+(this could be an easy level 1 if we needed? I think maybe too easy...)
+#########
+#...g...#
+#.*.*.*.#
+#.g.p.g.#
+#.......#
+#########
+
+(still easy)
+#########
+#.......#
+#.*.*.*.#
+#.g.p.g.#
+#...g...#
+#########)
+
+(this one is interesting, but now too hard for level 1. Has unintended solution where the goats are put in bottom right.... not easy to fix. Could put wall in top right but I don't like that aesthetically. Put a mountain in lower right does the job. makes it a bit harder... does it need to move? Ah, you can move the bottom fence one to the right instead!)
+#########
+#.......#
+#.*.*.g.#
+#.g.p.g.#
+#....*..#
+#########
+
+
+message Free Range Goats
+
+###########
+#.........#
+#.....M*.M#
+#..##.M*GM#
+###MGM.P.M#
+#..M#..G*M#
+#.M.#..*M.#
+#.......M.#
+###########
+
+
+(message Simple Level
+
+(smaller, same solution)
+#########
+##....p.#
+##.g.*..#
+##.##.g.#
+#...#g..#
+#...#...#
+#########
+
+(I modified the above level slightly to make it more interesting. Meh, not that interesting. can probably go in garbage bin. the middle goat on the left is nice but this puzzle isn't good)
+##########
+##....p..#
+##.g.*...#
+##.##.g..#
+#...#...##
+#.g.#.g.##
+#...#...##
+##########
+)
+
+(
+message Smile
+
+(is this level necessary? We have the fence sacrifice later too, in "Big Field")
+#################
+#...mm.....mm...#
+#.*...g...g.*.*.#
+###m#.......#m###
+###.#########.###
+###.#########.###
+###.....p.....###
+########g########
+)
+
+(message Sheep are less skittish than goats.)
+(
+message Sheep are less skittish than goats - they only move when pushed.
+
+#######
+#.###.#
+#.*.*.#
+#G.P.S#
+#.....#
+#######)
+
+(message Sheep and goats can be enclosed together.)
+
+(
+#######
+#.#...#
+#.#*..#
+#GP.S.#
+#.....#
+#######
+)
+
+(message Sheep are also less adventurous.)
+(message Unlike goats, sheep cannot go on mountains. 
+)
+
+message Sheep are more sedentary than goats are.
+
+#########
+###.##M##
+#..*.*..#
+#.G.P.S.#
+#.......#
+#########
+
+
+(message Sheep move together in a flock when possible.)
+(alternate text: "There's another difference with sheep...")
+
+message Sheep like to conform.
+
+#g#####
+#.#...#
+#.#...#
+#.#...#
+#.S#P.#
+#.SS*.#
+#.....#
+#######
+
+
+message Sheep in a Box
+
+#########
+#......p#
+#.s*s*s.#
+##s#..#.#
+#s.S.s#.#
+#S..#.s.#
+#s..#...#
+#########
+
+
+message Family of Goats
+
+############
+#.....P....#
+#...#.G..*.#
+#.#MMMGG.*.#
+#.....G..*.#
+#..#.......#
+############
+
+
+message Eight Goats
+
+###########
+#..G...G..#
+#.#.#.#.#.#
+#..G.G.G..#
+#.#.#.#.#.#
+#.*G.G.G*.#
+#.#.#*#.#.#
+#....P....#
+###########
+
+
+message Nine Goats!
+
+###########
+#..G.G.G..#
+#.#.#.#.#.#
+#..G.G.G..#
+#.#.#.#.#.#
+#.*G.G.G*.#
+#.#.#*#.#.#
+#....P....#
+###########
+
+
+message Goats sleep at night
+(message Goats sleep at night and can't be moved.)
+
+(original level - note you can trap yourself in this level with even fewer fences than provided)
+(
+@@@@@@@@@
+@@,,,,O,@
+@@&,&&&,@
+@@,,,,,,@
+@,F,F,,,@
+@,,,&,,,@
+@@@@@@@@@
+)
+
+@@@@@@@@@
+@,,,,,o,@
+@,,@,,,,@
+@@&&&,,,@
+@,,,,,,,@
+@&f,,f&,@
+@@,@@,@@@
+@@@@@@@@@
+
+(
+@@@@@@@@@
+@@,,o,,@@
+@@&,@&&,@
+@@,,,,@,@
+@,f&f,,,@
+@,,,,,&,@
+@@@@@@@@@
+
+(funny)
+@@@@@@@@@
+@,,,,o,@@
+@,&,@&&,@
+@@,,,,@,@
+@,f&f,,,@
+@,,,,,&,@
+@@@@@@@@@
+
+@@@@@@@@@
+@,,,,,,@@
+@,,,,,,@@
+@,&&@&&,@
+@,,,,o@,@
+@,f&f,,,@
+@,,,,,&,@
+@@@@@@@@@
+)
+
+
+(message You can toggle day/night by pressing the action button (X) while adjacent to the light switch.)
+
+message Toggle the red switch by pressing Action (X) while adjacent to it.
+
+#######
+###...#
+#p....#
+#.*.g.#
+#.##..a
+#######
+
+(
+########
+##..####
+#a.....#
+##p....#
+##.*.g.#
+##.##..#
+#...#g.#
+#...#..#
+#g..####
+########
+(difficulty 1.5)
+
+(it's okay but red switch only used once, rest is just pushing goats in exactly the right way...)
+########
+##..####
+#a.....#
+##p.g..#
+##.*.g.#
+##.##..#
+#...#g.#
+#...#..#
+#g..####
+########
+)
+
+
+(
+message Divided
+(is this level interesting enough? goat in left needs to be pushed down first. a bit of a dick move)
+########
+#a..m..#
+##p.l..#
+##.*mg.#
+#..*#..#
+#g..#g.#
+#...#..#
+########
+)
+
+
+message Two Rooms
+
+#########
+#..###..#
+#.*...*p#
+#.g.#.g.#
+#.g.#.g.#
+#...#...#
+##a###a##
+
+
+message Odd One Out
+
+#######...#
+#.....#m#m#
+#.........#
+#...s..#.s#
+#..ps.*####
+#.M.s....g.
+####sss.*..
+#..........
+###########
+
+
+message Big Field
+
+#############
+#mmmmmmmmmmm#
+#.*.*...g.g.#
+#.g**.p.gg*.#
+#...........#
+#mm.mm.mmmmm#
+#...........#
+#..#..#..#..#
+#############
+
+(broken
+#############
+#mmmmmmmmmmm#
+#.*.*...g.g.#
+#.g**.p.gg*.#
+#...........#
+#mm.mmmmmmmm#
+#...........#
+#.#...#..#..#
+#############
+)
+(modified to work and be less obvious)
+(
+#############
+#mmmmmmmmmmm#
+#.*.*...g.g.#
+#.g**.p.gg*.#
+#...........#
+#mm.mm.mmmmm#
+#...........#
+#..#..#..#..#
+#############
+
+#############
+#mmmmmmmmmmm#
+#.*.*...g.g.#
+#.g**.p.gg*.#
+#...........#
+#mm.mm..mmmm#
+#...........#
+#.#....#.#..#
+#############
+)
+
+(main alternative
+#############
+#mmmmmmmmmmm#
+#.*.*...g.g.#
+#mg**.p.gg*.#
+#m..........#
+#m......mmmm#
+#..mm.m.....#
+#.#..#...#..#
+#############
+)
+
+message Lonely Sheep
+
+###########
+#...m.....#
+#pms.m.#*s#
+#.s.sm....#
+#mmm...#*.#
+#.ss...#..#
+###########
+
+
+message Animal Train
+
+##############
+#.........#..#
+#...sgs*s..p.#
+#...#.....#..#
+#....###..####
+##############
+(there's an uninteded solution. can be solved with less room, don't need to move fence all the way left. could remove space as in below)
+(
+##############
+#.........#..#
+#...sgs*s..p.#
+#...#.....#..#
+########..####
+##############
+)
+
+(this one is solvable but I don't like the start. uses 3 sheep on left side to bring down and split, which I think is cooler?)
+(
+##############
+#.......s.#..#
+#....sgs...p.#
+#...##..*.#..#
+#....###..####
+##############
+)
+
+message Blue switches behave exactly as you would expect them to.
+
+#########
+##.###M##
+B..*.*..#
+#.G.P.S.#
+#.......#
+#########
+
+
+message These sheep somehow ended up on mountains.  They are too scared to move.
+
+###########
+#m.p...mm.#
+#m*mm*m**.#
+#m*.....m%#
+#mm.mssm%%#
+#mmmm..mmm#
+###########
+
+
+message Small Pasture
+
+########
+#..#.p.#
+#.M..*.#
+#.#..s.B
+#.#..s.#
+#.##.s.#
+########
+
+
+message Journey
+
+(This level still could use improvement... right now too simple/not interesting? blue switch goes bottom necessarily)
+#############
+#.p...#######
+#.b.gg.######
+####....#####
+#####.....###
+######....###
+#######.....#
+########...m#
+########.*..#
+###########.#
+###########.#
+
+(
+(solvable by using blue switch as a block in the middle-right. Don't need it to be anywhere in particular after that)
+############
+#.p...######
+#.b.gg.#####
+####....####
+#####....###
+######...###
+######.....#
+#######...m#
+########.*.#
+##########.#
+##########.#
+
+(also use blue switch as a block somewhere around middle, don't need it anywhere in particular after that)
+############
+#.p...######
+#.b.gg.#####
+####.....###
+#####....###
+######....##
+#######....#
+########..m#
+########.*.#
+##########.#
+##########.#
+)
+
+
+message Sticky Situation
+
+#############
+#.......#####
+#.......#..m#
+#..sss..#..m#
+#..sps...*.m#
+#..sss..#..m#
+#.......#s.m#
+#.......#####
+#############
+
+(
+(works but not as nice I think)
+#############
+#.......#####
+#.......#bl##
+#..sss..#mm##
+#..sps...*..#
+#..sss..#...#
+#.......##.##
+#.......#####
+#############
+
+(not possible)
+#############
+#.......#####
+#.......#####
+#..sss..#...#
+#..sps...*..#
+#..sss..#.g.#
+#.......##.b#
+#.......#####
+#############
+
+(possible, easy)
+#############
+#.......#####
+#.......#####
+#..sss..#...#
+#..sps...*..#
+#..sss..#..##
+#.......#s..#
+#.......#####
+#############
+
+(doesn't seem possible)
+#############
+#.......#####
+#.......#s.m#
+#..sss..#..m#
+#..sps...*.m#
+#..sss..#..m#
+#.......#s.m#
+#.......#####
+#############
+
+(also doesn't seem possible)
+#############
+#.......#####
+#.......#.sm#
+#..sss..#..m#
+#..sps...*.m#
+#..sss..#..m#
+#.......#s.m#
+#.......#####
+#############
+)
+
+
+message Twilight
+(
+#########
+#...mp..#
+#.am.m..#
+#.gm.####
+#..#..g.#
+#.g**...#
+#.g.ggg.#
+#.......#
+#########
+)
+
+(another version, almost the same but prevents one type of solution. I still don't feel particularly strongly about which to use.)
+(
+#########
+#...m.p.#
+#...am..#
+#.gmm####
+#..#..g.#
+#.g**...#
+#.g.ggg.#
+#.......#
+#########
+)
+
+#########
+#.m.m.p.#
+#...am..#
+#..lm####
+#..#..g.#
+#.g**...#
+#.g.ggg.#
+#.......#
+#########
+
+
+
+(message Press Action (X) to rotate the shears and push them into an animal to shear it. Additional goal: shear enough animals to fill up all the baskets with wool. )
+
+message Press Action (X) to rotate the shears.  In addition to herding, fill your baskets with wool by shearing all the animals.
+
+(suggested alternate text: "Press Action (X) to rotate the shears." I think it should still be clear enough what to do, but will take a few extra moments of analysis)
+
+#$$$$$##
+########
+#..#...#
+...#P..#
+#.*.X.G#
+##..S..#
+#..SS..#
+#..S...#
+########
+
+(
+(alternate of intro shearing level)
+#########
+#g..#...#
+#...#p..#
+$#.*.x..#
+$##..s..#
+$#..ss..#
+$#..s...#
+$########
+)
+
+
+message Due to insurance regulations, animals cannot be sheared while on a mountain.
+(
+#########$
+#m...mm.m#
+#p.*....m#
+#x###.g#.#
+#..*....m#
+#m...mm.m#
+##########
+)
+
+#########$
+#mm......#
+#..*...m.#
+#p###.l#.#
+#x.*...m.#
+#m...m...#
+##########
+
+
+message Labyrinth
+
+(is this level actually worth it? It's a bit funny, and not hard)
+##################
+###$##$#####.....#
+############.###.#
+############.#.#.#
+#............#.#.#
+#......p.........#
+#..#..#x.###.#g###
+#.g#..#..##....###
+#..#..#..###.#.###
+#..#..#..#####*###
+#######........###
+##############.###
+##################
+
+
+message Self Portrait
+
+###$$###
+#.#$$#.#
+#.####.#
+#.*..*.#
+#p.....#
+#x.ss..#
+#..ss..#
+#......#
+########
+
+
+message Inefficiency
+
+(should go later?)
+##########
+#mmmmmmmm#
+#m.s.s.pm#
+#m.s.s.*m#
+#m*s.s.*m#
+#m******m#
+#mmmmmmmm#
+##########
+
+
+message Wrangling
+
+(this version makes it a bit harder to shear the top goat. Mike probably still won't like it)
+##$#$#$#
+########
+#....p.#
+#m.g.xm#
+#..gg..#
+#m*..*m#
+#mm##mm#
+########
+
+(
+(Mike does not like this level)
+##$#$#$#
+########
+#.....p#
+#..g..x#
+#..gg..#
+#.*..*.#
+#..##..#
+########
+
+(basic shearing level. easier than above versions)
+##$#$#$#
+########
+#......#
+#..g..p#
+#..g*.x#
+#*...g.#
+#..##..#
+########
+)
+
+
+Message Tunnel
+
+#############
+##s........s#
+##.*######*.#
+##..........#
+##....##....#
+##.s..##..s.#
+#..s..##..s.#
+#...p.......#
+##########..#
+#############
+
+
+message Yin and Yang
+
+(can go earlier)
+###m#m###
+#..*.*..#
+#.......#
+.*.sss.*m
+#..g.s..#
+.*.ggg.*m
+#.p.....#
+#..*.*..#
+###.#.###
+
+
+message Herding is Hard Work
+
+(No blue switch was needed! It is very similar to "Level I Don't Remember" above. I think this should probably replace "Level I don't remember" since this one is more interesting and all the good parts of the former are still present in this one. Wait, except that the bottom 3 sheep in this one can be saved by pushing them into the mountain, which is easier than in the other one. What if we added a 3rd mountain?... [added 3rd mountain below and it works]   One other thing though, Mike said before that he could maybe modify it to require the blue switch again)
+(
+##M..####
+#..#....#
+#..#..g.#
+##..*.g.#
+#..#..p.#
+##.#*.s.#
+#..#..s.#
+#..MM.s.#
+#########
+)
+
+
+(hunkydory thought you needed to weave sheep between goats. this could be forced if we wanted... for example this makes it a bit harder. Don't want it to be TOO tedious though...
+##M..####
+#..#...##
+#..#..g.#
+##..*.g.#
+#..#..p.#
+##.#*.s.#
+#..#M.s.#
+#..MM.s.#
+#########
+)
+
+(added 3rd mountain to address problem above. This is still solvable. Joel's favourite version)
+##M..####
+#..#....#
+#..#..g.#
+##..*.g.#
+#..#..p.#
+##.#*.s.#
+#..#M.s.#
+#..MM.s.#
+#########
+
+(
+("level I don't remember" reprinted here for convenience)
+#...####
+#.#....#
+#.#..g.#
+#.#*.g.#
+#....p.#
+#.#*.s.#
+#.#..s.#
+#.#..s.#
+########
+
+(level with unnecessary blue switch reprinted here for convenience)
+##M..####
+#..#....#
+#..#..g.#
+##..*.g.#
+##.#..p.B
+##.#*.s.#
+#..#..s.#
+#..MM.s.#
+#########
+)
+
+message Dilemma
+
+###########b#
+#.........#.#
+#.sgsgsg*...#
+#.......*...#
+#.p...#...#.#
+###########a#
+
+
+message Tight Corridor
+(
+(good version)
+##########
+#........#
+#.g.#p*..#
+#.g.#..#.#
+#.g..*.#.#
+#.g.#..#.#
+....#..#g#
+##########
+
+(impossible version)
+##########
+#........#
+#.g.#*p..#
+#.g.#..#.#
+#.g..*.#.#
+#.g.#..#.#
+....#..#g#
+##########
+)
+(this one is possible. Is it better than the top option? I think if there are no unintended solutions then it might be more interesting. needed mountains to prevent unintended solution. The above levels would too.)
+###########
+#...m.mm..#
+#..g.#*p..#
+##.g.#..#.#
+##.g..*.#.#
+##.g.#..#.#
+#....#..#g#
+###########
+
+
+message Lineup
+
+(move later?)
+#########
+#g..#####
+#.......#
+#...#.g.#
+#####.g.#
+#####.g.#
+#...#.g.#
+#.a.#.g.#
+#.p.*.g.#
+#.......#
+#########
+
+
+message Four in Hand
+
+##########
+#..p.#####
+#..*s.####
+#..s.s.###
+####s...##
+#####...##
+######m..#
+#######..#
+#######.##
+##########
+
+
+message Cramped
+
+############
+$#Zp......##
+##.*a.g.g.mm
+$#........##
+############
+
+
+message Spread Out
+
+(
+(I think this works but it could be more interesting)
+############
+#...s..#####
+#.gm......s#
+##.m......s#
+##.#....####
+##.....#####
+#####..###s#
+#...#.p....#
+#.*........#
+#...#.s.s..#
+#s#b#......#
+#####.....s#
+############
+
+############
+#...s..#####
+#.gm......##
+##.m......ss
+##.#......##
+##.....#####
+#####..###s#
+#...#.p....#
+#.*........#
+#...#.s.s..#
+#s#b#......#
+#####.....s#
+############
+)
+
+(this works and is good!)
+############
+#...s..#####
+#.gm......##
+##.m......ss
+##........##
+#####..#####
+#####..###s#
+#...#.p....#
+#.*........#
+#...#.s.s..#
+#s#b#.....s#
+############
+
+
+message Sheep Shearing Charade
+
+##########
+#...p..###
+###*x..###
+#$#.ss.#$#
+###.ss.###
+#$#....#$#
+###...*###
+###......#
+##########
+
+
+message Inseparable
+
+######## 
+#......#
+#..ss..#
+#..ss.*#
+#......#
+#..###.#
+#..###.#
+######.#
+######p#
+
+
+message Long Day
+
+
+#############
+#mmmmmmmmmmm#
+#..g.*.*.l..#
+#.g.g.p.gmg.#
+#.*gg.*.*lgm#
+#.m.m.*mmm..#
+#..mm.*.....#
+##..#...##..#
+#############
+(
+(can trap self in bottom middle)
+#############
+#mmmmmmmmmmm#
+#..g..*..l..#
+#.g.g.p.gmg.#
+#.*gg.*.*lgm#
+#.mmm*.*mm..#
+#.....*.....#
+##..#...##..#
+#############
+
+#############
+#mmmmmmmmmmm#
+#..g..*..l..#
+#.g.g.p.gmg.#
+#.*gg.*.*lgm#
+#.m.m*.mmm..#
+#..mm.**....#
+##..#...##..#
+#############
+
+(this one works)
+#############
+#mmmmmmmmmmm#
+#..g.*.*.l..#
+#.g.g.p.gmg.#
+#.*gg.*.*lgm#
+#.m.m.*mmm..#
+#..mm.*.....#
+##..#...##..#
+#############
+
+#############
+#mmmmmmmmmmm#
+#....*...m..#
+#.g.g.p.gmg.#
+#.*gg.*.*lgm#
+#.m.m*.mmm..#
+#.gmm.**..g.#
+##..#...##..#
+#############
+)
+
+(small variation, above looks better though)
+(
+#############
+#mmmmmmmmmmm#
+#..g..*..m..#
+#.g.g.p.gmg.#
+#.*gg.*.*lgm#
+#.mmm*.*mm..#
+#.....*...g.#
+##..#...##..#
+#############
+)
+
+
+message Sisyphus Herds Goats
+
+(latest change, I flipped the g and * to make it harder)
+#$#$#$##m##
+########m##
+#.....##m##
+#p.g..mm..#
+#x.*.g.g.m#
+#.........#
+###########
+
+
+message Sheep Sausage
+
+(just changed start position. better? this is good)
+############
+#s........##
+#..psss**...
+#...m.....##
+#..#####.###
+########.###
+
+(
+############
+#s........##
+#..sss**p...
+#...m.....##
+#..#####.###
+########.###
+
+(what about this???? does not work, easy way to finish)
+############
+#.........##
+#.**ssssp...
+#...m.....##
+#..#####.###
+########.###
+
+(not better)
+############
+#s........##
+#.**sssp....
+#...m.....##
+#..#####.###
+########.###
+
+(the mid state for ref)
+############
+#ss.......##
+#...s.p.....
+#.s*m*....##
+#..#####.###
+########.###
+)
+
+
+message What a Mess
+
+########
+#p.....#
+#.*.g*g#
+#.g##..#
+#..##g.#
+#.gg.*.#
+#.*.g..#
+#......#
+########
+
+
+message Odyssey
+
+###b#########
+#..*g.m.....#
+#..g..#######
+#..g..#p..###
+##....#.gg.##
+###...##....#
+####..###...#
+###...#.....#
+##...#....#b#
+#..g##...####
+#....#....###
+##....#...###
+###......####
+#####...#####
+#############
+
+(
+(older version)
+###b#########
+#..*g.m.....#
+#.g...#######
+#.g...#p..###
+#.....#.gg.##
+#.....##....#
+####..###...#
+###...#.....#
+##...#....#b#
+#..g##...####
+#....#....###
+##....#...###
+###......####
+#####...#####
+#############
+
+(works from here)
+###b#########
+#..*s.m.....#
+#.s...#######
+#..s..#...###
+##p...#....##
+###.s.##....#
+####s.###...#
+###s..#.....#
+##...#....#b#
+#...##...####
+#....#....###
+##....#...###
+###......####
+#####...#####
+#############
+)
+
+message Sisyphus is Still Herding
+
+##########
+#$##...###
+####...zp#
+#$##*gl#.#
+####..m#.#
+#mmm.....#
+####.....#
+#$###.g#.#
+#####....#
+##########
+
+
+message Level 1, Revisited
+
+#########
+#......p#
+#.gg..g.#
+#.......#
+##*##...#
+#...#.g.#
+#...*.g.#
+#g..#...#
+#########
+
+
+message Goatherd Licensing Examination
+
+(this works. Probably good)
+###########
+#.......###
+##.*mg..###
+##*.#gs%.##
+#..###.ms.#
+#...m.m...#
+#b%#......#
+##g.......#
+##....p.*.#
+###*....*.#
+###.......#
+###########
+
+(
+(I think best version so far, might tinker but this one is good. can there be a better spot for right goat?)
+###########
+##......###
+##.*mg..###
+##*.#.s%.##
+#..###mms.#
+#...m.m.g.#
+#b%#......#
+##g.......#
+##....p.*.#
+###*....*.#
+###.......#
+###########
+
+(almost works..... but then can't rescue animals on left if you put fence in the little indent. also you can't rescue top right because can't make the z shape and push down any more)
+###########
+##......###
+##.*mg..###
+##*.##s%.##
+#..###.ms.#
+#...m.m.g.#
+#b%#......#
+##g.......#
+##....p.*.#
+###*....*.#
+###.......#
+###########
+
+(eliminates one problem - the top right sheep can escape)
+###########
+##......###
+##.*mg..###
+##*.#gs%.##
+#..###.ms.#
+#...m.m...#
+#b%#......#
+##g.......#
+##....p.*.#
+###*....*.#
+###.......#
+###########
+
+(should be solvable, but I'm not happy with the concession)
+###########
+#.......###
+#..*mg..###
+##*.#gs%.##
+#..###.ms.#
+#...m.m...#
+#b%#......#
+##g.......#
+##....p.*.#
+###*....*.#
+###.......#
+###########
+
+(this works. Probably good)
+###########
+#.......###
+##.*mg..###
+##*.#gs%.##
+#..###.ms.#
+#...m.m...#
+#b%#......#
+##g.......#
+##....p.*.#
+###*....*.#
+###.......#
+###########
+)
+
+(
+(note, I liked that one time I had to move the left sheep up and to the right corner, but that doesn't seem necessary actually....)
+
+###########
+#.......###
+##.*mg..###
+##*.#.ss.##
+#..###mms.#
+#...m...g.#
+#b%#..mmm.#
+##g.......#
+##....p.*.#
+###*....*.#
+###......g#
+###########
+
+(version with the above suggested changes. problem is too easy to rescue vertical sheep. can we add a wall? This one works though)
+###########
+##......###
+##.*mg..###
+##*.#.ss.##
+#..###mms.#
+#...m...g.#
+#b%#..mmm.#
+##g.......#
+##....p.*.#
+###*....*.#
+###.......#
+###########
+
+(this DOESN'T work because of the mountains on the middle right. want to improve the location of blue switch to make end harder. also want to make beginning harder. or consider wall under middle mountain, take away a fence and add a goat. Can also add a cave for 1 more in the top 2 rows)
+###########
+##......###
+##.*.l..###
+#b*.##ss###
+#..##g.s..#
+#...m.m...#
+##%#..mmm.#
+##g.......#
+##....p.*.#
+###*....*.#
+###.......#
+###########
+
+
+###########
+##......###
+##.*mg..###
+##*.##ss.##
+#..###..s.#
+#...m.m.g.#
+#b%#..mmm.#
+##g.......#
+##....p.*.#
+###*....*.#
+###.......#
+###########
+
+(still easy to get the two vertical sheep out of the top right. In this one you actually can't rescue single top right sheep. wait, you can! this level works)
+###########
+##......###
+##.*mg..###
+##*.#.s%.##
+#..###mms.#
+#...m...g.#
+#b%#..mmm.#
+##g.......#
+##....p.*.#
+###*....*.#
+###.......#
+###########
+)
+
+
+message Congratulations!  All the animals are safely in their pens, and your new diploma hangs framed in the doghouse.  You are truly a Herding Hero.
+
+
+message Afterparty
+
+(
+############
+#..........#
+#.p...###..#
+#.....#....#
+#.y.g.#.*..#
+#.....###.##
+############
+)
+
+#############
+#..........##
+#.p...##...##
+#.....#.....#
+#.y.g.#.*.*.#
+#.....#ss.###
+#############
+
+(
+###########
+#.........#
+#.gg...*..#
+#.mm......#
+####......#
+#.........#
+#.a.#.#.p.#
+#...#y#...#
+###########
+
+###########
+#.........#
+#.gg...*..#
+#.mm......#
+#.##...p..#
+#.........#
+#.a.m.m.#.#
+#...#y#.#.#
+###########
+
+(can solve with only blue)
+###########
+#.........#
+#.gggmm.m.#
+#.mmmm....#
+#.###...*.#
+#.m.....#.#
+#.a.m.m.#.#
+#...#y#p#.#
+###########
+
+###########
+#.........#
+#.gsgmm.m.#
+#.mmmm....#
+#.###...*.#
+#.m.....#.#
+#.a.m.m.#.#
+#...#y#p#.#
+###########
+
+###########
+#.........#
+#.gsgmm.m.#
+#.mmmm....#
+#.###...*.#
+#.m.....#.#
+#.a.m.m.#.#
+#...#y#p#.#
+###########
+
+###a#######
+#.........#
+b.gsgmm.m.#
+#.mmmm....#
+#.###...*.#
+#.m...p.#.#
+#...m.m.#.#
+#...#.#.#.#
+###########
+
+###a#######
+#.........#
+b.gggmm.m.#
+#.mmmm....#
+#.###...*.#
+#.m...p.#.#
+#...m.m.#.#
+#...#y#.#.#
+###########
+)
+
+
+(here make an Afterparty level with yellow switch - blue/red transformer)
+
+(
+message WIP level
+
+(layout has some interesting things but I'm not sure where to go with this)
+############
+##mm.......#
+lmm.*..*.g.#
+######g#.g.#
+#..##..#.g.#
+#.g.#.##.g.#
+#....g...g.#
+#.*g*.ps...#
+#..........#
+############
+
+
+message WIP level 2
+(don't think there is anything really interesting here, but leaving it just in case)
+
+###############
+#$#m#m#m#m#m#$#
+##mpr.......m##
+#m...*.......m#
+$#.g#sg#sg#..##
+#m...*..*....m#
+##m.........m##
+#$#m#m#m#m#m#$#
+###############
+
+message WIP level 3 - "two worlds"
+
+(can either design this so you must solve 1 and plug the other side, or must solve both)
+
+(idea - fences cannot be moved to block the middle area - can use mountains, but animals can be moved between the two worlds. Need to find right combination of goats and sheep in each area, or even switches)
+############
+#..........#
+#..........#
+#..........#
+#..........#
+######.#...#
+#...#..#...#
+#...#.######
+#..........#
+#.....p....#
+#..........#
+#..........#
+############
+
+
+message four worlds????
+############
+#.....#....#
+#.....#....#
+#..p.......#
+#.....#....#
+#.....#....#
+###.#####.##
+#.....#....#
+#.....#....#
+#..........#
+#.....#....#
+#.....#....#
+############
+
+(at the moment too easy and not focused)
+############
+#g....#....#
+#.....#*...#
+#.*p..m..g.b
+#.....#....#
+#.....#..g.#
+###.#####.##
+#.*...#....#
+#.....#....#
+#..s..m..*.#
+#.....#.ss.#
+#g....#....#
+############
+
+(make something so you have to plug rooms one by one and then you can't re-enter? I guess need to use the fence to stop a goat that's in the way)
+
+###########
+#....#....#
+#.p.......#
+#....#....#
+#....#....#
+##.#####.##
+#....#....#
+#..ss#....#
+#.ss......#
+#....#....#
+###########
+
+###########
+###########
+########..#
+###.......#
+###g..g.*.#
+#########.#
+######....#
+######..p.#
+######..*.#
+######....#
+###########
+)
+
+
+
+
+
+(message Congratulations!  If you liked Dr. Goatcabin II: Return of the Goats, you may also enjoy the prequel, Dr. Goatcabin I: The Original Game (coming soon).)
+
+
+(=====OTHER LEVEL IDEAS=====)
+
+(level idea - can't shear all of them; decide which.     - note, should maybe make level name hint that you don't need to shear all of them, since they might not notice otherwise)
+
+(level idea - shearing level with both sheep and goats)
+
+(level idea - level with shearing and blue switch)
+
+(Level idea - level has 1 sheep and N goats  [hmm... I don't see how to make the lone sheep different enough from a fence]. This level could also have >1 sheep but you need to separate off 1 of them to use to block goats in some way, and then be penned in a different place from the other sheep)
+
+(Level idea - level with both red and blue switches [I tried, with mixed success. "Dilemma" is the result. I think it's an okay level, but not spectacular])
+
+
+
+(trying to force shearing at the precipice of pen. Try to make different level with this pattern on left. Not achieved by "I dont even remember making this level" but players might do it there
+##########
+####m..###
+#$##m.m###
+####m..zp#
+#$##mgl#.#
+####m.m#.#
+#mmm.....#
+####*....#
+#$##..g#.#
+####.....#
+##########
+)
+
+(not 100% satisfied with this. just example of shearing with both animals)
+(
+##########
+#.pr..####
+#.#ss*##$#
+#.#...####
+#.......m#
+#.....####
+#.#g.#$#$#
+#....#####
+##########
+)
+
+(========END OTHER LEVEL IDEAS==========)
+
+
+(Lineup 2
+nevermind having two players doesn't work with the code, and makes endless loops with goats
+
+#########
+#g..#####
+#.......#
+#...#.g.#
+#####.g.#
+#####.g.#
+#...#.g.#
+#.p.#.g.#
+#.p.....#
+#.......#
+#.......#
+####....#
+#########
+)
+
+(sheep sausage variations
+(UH OH unintended solution. can put two on bottom right row, don't put any sheep on top. Or put one sheep on top, sink a sheep, and then use 3 sheep on left to bring down and move right.)
+
+############
+#.........##
+#.ssss**p...
+#...m.....##
+#..#####.###
+########.###
+
+(something like this fixes the unwanted drop sheep first solution. uh, but not possible)
+############
+#.........##
+#..sss**p...
+#...m.....##
+#.s#####.###
+########.###
+
+(this? I believe this works to force standard solution)
+############
+#s........##
+#..sss**p...
+#...m.....##
+#..#####.###
+########.###
+
+(I wonder about this. definitely nonstandard solution. bring down one at a time on left? no doesn't work. to bring down on left need one already sunk i think)
+############
+#......ss.##
+#.pss..**...
+#...mm....##
+#..#####.###
+########.###
+
+(the mid state for ref)
+############
+#ss.......##
+#...s.p.....
+#.s*m*....##
+#..#####.###
+########.###
+
+(You make a Z and then shuffle around to get the fence all the way to the left. Don't need to separate Z)
+############
+#.........##
+#.ssss**p...
+#...m.....##
+#...####.###
+########.###
+
+(even harder! Oh this is the same with an extra wall. Makes first one obsolete.)
+############
+#.........##
+#.ssss**p...
+#...m.....##
+#..#####.###
+########.###
+
+(just makes first move less obvious. favourite current version. note ability to split 1 sheep off on left at a time might make it easier than I originally thought)
+############
+#.........##
+#.pssss**...
+#...m.....##
+#..#####.###
+########.###
+
+(I think not possible? hard to say.... can't do 4 all at once because no good late configuration. WOW it is possible! Sink a sheep before moving the fence down)
+############
+#.........##
+#.pssss**...
+#...mm....##
+#..#####.###
+########.###
+
+(doable with L. pretty good I guess)
+############
+#.........##
+#.pssss**...
+#....m....##
+#..#####.###
+########.###
+
+(nope...)
+############
+#.........##
+#.pssss**...
+#....#....##
+#..#####.###
+########.###
+
+(doesn't work but interesting in that you need to keep fences together at first!!)
+############
+#.........##
+#.ssss**p...
+#..m......##
+#..#####.###
+########.###
+
+(not great, easy solution)
+############
+#.........##
+#.ps*sss*...
+#.........##
+#####.######
+#####.######
+
+(variation with all 4 sides. meh. needs 4 fences. this one not possible anyway)
+##.#########
+#.....p....#
+..**ssss**..
+#..........#
+#########.##
+
+(try above with pen to right. this is not bad. uses L rotated ccw 90 deg)
+
+############
+#.........##
+#.ps*sss*...
+#.........##
+########.###
+########.###
+
+
+(this one works. 2nd best using Z formation. best is below. Or can also use flipped L)
+############
+#.........##
+#.*sss*sp...
+#.........##
+#####.######
+#####.######
+
+(can just place lower pen to the right, only adds slight maneuvering. But with it two from edge as in this level, you do need to reverse the Z. maybe the other variations would be cooler with the pen on the right? Actually this puzzle can still use rotated L, not too hard)
+############
+#.........##
+#.*sss*sp...
+#.........##
+########.###
+########.###
+
+(not hard with Z, but masks it better?)
+############
+#.........##
+#.**ssssp...
+#.........##
+########.###
+########.###
+
+(try above with pen moved. similar to 2 above i think 3rd best?)
+############
+#.........##
+#.pss*ss*...
+#.........##
+########.###
+########.###
+
+(possible? don't think so)
+############
+#.........##
+#.psss*s*...
+#.........##
+#####.######
+#####.######
+)
+
+
+(Level 1 variations
+(works, is pretty good already.)
+#########
+##....p.#
+##.*.g..#
+##.##g..#
+#...#.g.#
+#...*...#
+#g..#...#
+#########
+
+(don't see a way)
+#########
+##.....p#
+##.g.gg.#
+##*##...#
+#...#.g.#
+#...*...#
+#g..#...#
+#########
+
+(still don't see a way)
+#########
+##.....p#
+##.g.gg.#
+##*##...#
+#...#.g.#
+#...*...#
+g...#...#
+#########
+
+(still don't see a way)
+#########
+#......p#
+#..g.gg.#
+##*##...#
+#...#.g.#
+#...*...#
+g...#...#
+#########
+
+#########
+#......p#
+#..g.gg.#
+##*##...#
+#...#...#
+#...*.g.#
+g...#...#
+#########
+
+#########
+#......p#
+#.g..gg.#
+##*##...#
+#...#...#
+#...*g..#
+g...#...#
+#########
+
+#########
+#......p#
+#.g..g..#
+##*##...#
+#...#.g.#
+#...*g..#
+g...#...#
+#########
+
+#########
+#...p...#
+#.g...g.#
+##*##.g.#
+#...#...#
+#...*g..#
+g...#...#
+#########
+
+#########
+#...p...#
+#.g...g.#
+##*##.g.#
+#...#.g.#
+#...*...#
+g...#...#
+#########
+
+#########
+#...p...#
+#.g.....#
+##*##.g.#
+#...#.g.#
+#...*.g.#
+g...#...#
+#########
+
+#########
+#...p...#
+#.......#
+#.g.....#
+##*##.g.#
+#...#.g.#
+#...*.g.#
+g...#...#
+#########
+
+(solvable but I don't think it's that interesting)
+#########
+#...p...#
+#.......#
+#.g..gg.#
+##*##...#
+#...#...#
+#...*.g.#
+g...#...#
+#########
+
+(can't see soln)
+#########
+#......p#
+#.g..g..#
+#....gg.#
+##*##...#
+#...#...#
+#...*.g.#
+g...#...#
+#########
+
+#########
+#......p#
+#.gg....#
+#....g..#
+##*##...#
+#...#.g.#
+#...*.g.#
+g...#...#
+#########
+
+(solvable!!!)
+#########
+#......p#
+#.gg..g.#
+#.......#
+##*##...#
+#...#.g.#
+#...*.g.#
+g...#...#
+#########
+
+(looks nicer)
+#########
+#......p#
+#.gg..g.#
+#.......#
+##*##...#
+#...#.g.#
+#...*.g.#
+#g..#...#
+#########
+)
+
+
+
+(Journey variations
+(I like this version. put blue switch up-right to lone wall. except oops it's broken)
+#############
+#.p...#######
+#.b.gg.######
+####.....####
+#####....####
+######....###
+######..#...#
+######....m.#
+#######..*.##
+##########.##
+##########.##
+
+#############
+#.p...#######
+#.b.gg.######
+####.....####
+#####....####
+######....###
+######..#...#
+######....m.#
+########.*.##
+##########.##
+##########.##
+
+(ugh doesn't work you can just move youself through the top)r
+#############
+#.p...#######
+#.b.gg.######
+####.....####
+#####....####
+#######...###
+######..#...#
+######....m.#
+########.*.##
+##########.##
+##########.##
+
+#############
+#.p...#######
+#.b.gg.######
+####.....####
+#####....####
+######..#.###
+######..#...#
+######....m.#
+######...*.##
+##########.##
+##########.##
+
+
+(too easy, don't need to actually move blue switch)
+############
+#.p...######
+#.b.gg.#####
+####....####
+#####....###
+######....##
+#######....#
+#######...m#
+########.*.#
+##########.#
+##########.#
+
+(is this solvable?)
+############
+#.p...######
+#.b.gg.#####
+####....####
+#####....###
+######...###
+#######....#
+#######...m#
+########.*.#
+##########.#
+##########.#
+
+(solvable by using blue switch as a block)
+############
+#.p...######
+#.b.gg.#####
+####....####
+#####....###
+######...###
+######.....#
+#######...m#
+########.*.#
+##########.#
+##########.#
+
+(solvable)
+############
+#.p...######
+#.b.gg.#####
+####....####
+#####....###
+######...###
+#######....#
+#######...m#
+#######.*..#
+##########.#
+##########.#
+
+(?)
+############
+#.p...######
+#.b.gg.#####
+####...#####
+#####....###
+######...###
+######.....#
+#######...m#
+########.*.#
+##########.#
+##########.#
+
+(here can reorder blue and animals, but actually can solve without doing that just by separating the goats)
+############
+#.p...######
+#.b.gg.#####
+####.....###
+#####....###
+######...###
+#######....#
+#######...m#
+########.*.#
+##########.#
+##########.#
+
+(keeps the spirit of the original, but looks impossible)
+#############
+#.p...#######
+#.b.gg.######
+####....#####
+#####....####
+######....###
+#######.....#
+########...m#
+########.*..#
+###########.#
+###########.#
+
+(keeps the spirit of the original, looks possible)
+#############
+#.p...#######
+#.b.gg.######
+####....#####
+#####.....###
+######....###
+#######.....#
+########...m#
+########.*..#
+###########.#
+###########.#
+
+(don't need to put fence in front, just separate and then pen the two goats. also can't actually place fence at the end)
+############
+#.p...######
+#.*.ss.#####
+####.....###
+#####....###
+######...###
+#######....#
+#######...m#
+#########..#
+##########.#
+#########b.#
+
+
+(still WIP. this one too easy?)
+############
+#.p...######
+#.b.gg.#####
+####....####
+#####...m###
+######....##
+#######....#
+########...#
+########.*.#
+##########.#
+##########.#
+
+(impossible)
+############
+#.p...######
+#.b.gg.#####
+####....####
+#####....###
+######....##
+#######....#
+########..m#
+########.*.#
+##########.#
+##########.#
+
+(still impossible)
+####..######
+#.p...######
+#.b.gg.#####
+####....####
+#####....###
+######....##
+#######....#
+########..m#
+########.*.#
+##########.#
+##########.#
+
+(I think impossible)
+############
+#.p...######
+#.gg...#####
+####....####
+#####.b..###
+######....##
+#######....#
+########..m#
+########.*.#
+##########.#
+##########.#
+
+(this version too easy)
+############
+#.p...######
+#.b.gg.#####
+####.....###
+#####....###
+######....##
+#######....#
+########..m#
+########.*.#
+##########.#
+##########.#
+)
+
+(WIP sticky situation
+#############
+#...........#
+#.......#...#
+#.sss..*#...#
+#.sps...#...#
+#.sss..*#...#
+#.......#...#
+#...........#
+#############
+
+############
+#.......#..#
+#.......#..#
+#.sss...#..#
+#.sps..*...#
+#.sss...#..#
+#.......#..#
+#.......#..#
+############
+
+#############
+#.......#..g#
+#.......#...#
+#.sss...#...#
+#.sps....*.##
+#.sss...#...#
+#.......#...#
+#.......#...#
+#############
+
+#############
+#.......#ll##
+#.......#ll##
+#.sss...#mm##
+#.sps....*.m#
+#.sss...#...#
+#.......#...#
+#.......#####
+#############
+
+#############
+#.......#ll##
+#.......#ll##
+#.sss...#mm##
+#.sps....*..#
+#.sss...#...#
+#.......#..##
+#.......#####
+#############
+
+#############
+#.......#ll##
+#.......#ll##
+#.sss...#mmm#
+#.sps....*..#
+#.sss...#.m.#
+#.......#...#
+#.......#####
+#############
+
+#############
+#.......#ll##
+#.......#ll##
+#.sss...#mmm#
+#.sps....*.m#
+#.sss...#...#
+#.......#..##
+#.......#####
+#############
+
+#############
+#.......#ll##
+#.......#ll##
+#.sss...#mmm#
+#.sps...s*..#
+#.sss...#...#
+#.......#..##
+#.......#####
+#############
+
+#############
+#.......#ll##
+#.......#ll##
+#.sss...#...#
+#.sps....*m.b
+#.sss...#...#
+#.......#####
+#.......#####
+#############
+
+#############
+#.......#ll##
+#.......#ll##
+#.sss...#mmm#
+#.sps....*.mb
+#.sss...#...#
+#.......#..##
+#.......#####
+#############
+
+#############
+#.......#####
+#.......##l##
+#.sss...#mmb#
+#.sps....*..#
+#.sss...#...#
+#.......##.##
+#.......#####
+#############
+)
+
+(WIP FOR TUNNEL
+############
+#..........#
+#..######..#
+#...*..*...#
+#..........#
+#.p.ssss...#
+#.x..ss....#
+#..........#
+############
+
+############
+#s........s#
+#.*######*.#
+#..........#
+#..........#
+#.s.p....s.#
+#.s......s.#
+#..........#
+############
+
+############
+#s........s#
+#.*######*.#
+#..........#
+#....mm....#
+#.s.pmm..s.#
+#.s..mm..s.#
+#....mm....#
+############
+
+##############
+##s........s##
+##.*######*.##
+##..........##
+##....##....##
+##.s.p##..s.##
+#..s..##..s..#
+#.....##.....#
+##############
+
+##############
+######.....s##
+##s....###*.##
+##.*###.....##
+##..........##
+##....##....##
+##.s.p##..s.##
+#..s..##..s..#
+#.....##.....#
+##############
+
+#############
+######....s##
+##s....##*.##
+##.*###....##
+##.........##
+##....#....##
+##.s.p#..s.##
+#..s..#..s..#
+#.....#.....#
+#############
+
+##############
+##s........s##
+#..*######*..#
+#............#
+#.....##.....#
+##.s.p##..s.##
+#..s..##..s..#
+#.....##.....#
+##############
+
+#############
+#####....####
+##s........s#
+##.*######*.#
+##..........#
+##....##....#
+##.s..##..s.#
+#..s..##..s.#
+#...p.##....#
+#############
+
+(shoot can trap self above)
+#############
+#####....####
+##s........s#
+##.*######*.#
+##..........#
+##....##....#
+##.s..##..s.#
+#..s..##..s.#
+#...p.mm....#
+#############
+
+#############
+##s........s#
+##.*######*.#
+##..........#
+##....##....#
+##.s..##..s.#
+#..s..##..s.#
+#...p.......#
+#############
+
+##############
+##s........s##
+##.*######*.##
+##..........##
+##....##....##
+##.s..##..s.##
+#..s..##..s..#
+#...p........#
+##########s..#
+##############
+)
+
+
+
+( earlier versions of yin and yang
+###m#m###
+#..*.*..#
+#.......#
+m*.sss.*m
+#..sbs..#
+m*.sss.*m
+#.p.....#
+#..*.*..#
+###m#m###
+
+(need to test)
+###m#m###
+#..*.*..#
+#.......#
+m*.sss.*m
+#..sbs..#
+m*.sss.*m
+#.p.....#
+#..*.*..#
+###m#m###
+
+(alternate. solutions very similar. other one looks nicer I think)
+##m###m##
+#..*.*..#
+m.......m
+#*.sss.*#
+#..sbs..#
+#*.sss.*#
+m.p.....m
+#..*.*..#
+##m###m##
+
+(easier version)
+###m#m###
+#..*.*..#
+#.......#
+m*.sss.*m
+#..gbs..#
+m*.ggg.*m
+#.p.....#
+#..*.*..#
+###m#m###
+)
+
+
+(Variants of Big Field
+(best standard variant)
+#############
+#mmmmmmmmmmm#
+#.*.*...g.g.#
+#mg**.p.gg*.#
+#m..........#
+#m......mmmm#
+#..mm.m.....#
+#.#..#...#..#
+
+(4 fence version)
+#############
+#mmmmmmmmmmm#
+#.gg........#
+#m....p.g.g.#
+#m*.*...*L*.#
+#m.......mmm#
+#..mm.mm....#
+#.#..#...#..#
+(has only alternate solution. maybe just sucks)
+#############
+#mmmmmmmmmmm#
+#.g.*...gmg.#
+#m....p.*Lg.#
+#m*.*.*..m.m#
+#m.....m.m..#
+#..mm.mm....#
+#.#..#...#..#
+
+#############
+#mmmmmmmmmmm#
+#.....*..m..#
+#.g.g.p.gmg.#
+#.*g*.*.*lgm#
+#........m..#
+#.....*.....#
+#.#..#...#..#
+
+#############
+#mmmmmmmmmmm#
+#m....*..m..#
+#.g.g.p.gmg.#
+#.*gg.*.*lgm#
+#..mmm.*.m..#
+#.....*.*...#
+#.#..#...#..#
+
+#############
+#mmmmmmmmmmm#
+#m....*..m..#
+#.g.g.p.gmg.#
+#.*gg.*.*lgm#
+#..mm..*mm..#
+#.....*.*...#
+##...#..##..#
+#############
+
+#############
+#mmmmmmmmmmm#
+#.....*..m..#
+#.g.g.p.gmg.#
+#.*gg.*.*lgm#
+#.mmm..*mm..#
+#.....*.*...#
+##..#...##..#
+#############
+)
+
+
+(unintended solution just putting yourself in corner, applies to both
+#################
+#...........*...#
+#...*.g...g.*...#
+###m#.......#m###
+###.#########.###
+###.#########p###
+###...........###
+########g########
+
+#################
+#...............#
+#.*...g...g.*.*.#
+###m#mmmmmmm#m###
+###.#########.###
+###.#########p###
+###...........###
+########g########
+)
+
+
+(
+###########
+#...MM#.P.#
+#....*.MM.#
+#...#MGGGM#
+#...#.....#
+###########
+)
+
+(
+#################
+#.#.............#
+#.#...g.....p...#
+#.#.##......X...#
+#.....#....g..*.#
+#.###...........#
+#...............#
+###########$$####
+)
+
+(
+#a#########b#
+#.........#.#
+#.sgsgsg*...#
+#.......*...#
+#.p...#...#.#
+#############
+
+#ab##########
+#.........#.#
+#.gsgsgs*...#
+#.......*...#
+#.p...#...#.#
+#############
+)
+
+(
+##M..####
+#..#....#
+#..#..g.#
+##..*.g.#
+##.#..p.B
+##.#*.s.#
+#..#..s.#
+#..MM.s.#
+#########
+)
+
+(WIP)
+(
+####b#####
+.p...#####
+..gg..####
+.##.m..###
+..##..m###
+..##...#.#
+.##.m.m..#
+......####
+
+####b#####
+.p...#####
+..gg..####
+.##.m..###
+..##.*m###
+..##.*.#.#
+.##.m.m..#
+......####
+)
+
+(
+(still WIP. this one too easy?)
+############
+#.p...######
+#.b.gg.#####
+####....####
+#####...m###
+######....##
+#######....#
+########...#
+########.*.#
+##########.#
+##########.#
+
+(impossible)
+############
+#.p...######
+#.b.gg.#####
+####....####
+#####....###
+######....##
+#######....#
+########..m#
+########.*.#
+##########.#
+##########.#
+
+(still impossible)
+####..######
+#.p...######
+#.b.gg.#####
+####....####
+#####....###
+######....##
+#######....#
+########..m#
+########.*.#
+##########.#
+##########.#
+
+(I think impossible)
+############
+#.p...######
+#.gg...#####
+####....####
+#####.b..###
+######....##
+#######....#
+########..m#
+########.*.#
+##########.#
+##########.#
+
+(this version too easy)
+############
+#.p...######
+#.b.gg.#####
+####.....###
+#####....###
+######....##
+#######....#
+########..m#
+########.*.#
+##########.#
+##########.#
+)
+
+(
+#########
+#.p.....#
+#.x..*###
+#.ss..#$$
+#.ss..#$$
+#....*###
+#.......#
+#########
+)
+
+(graveyard below)
+(
+##########
+##$$$#..##
+######..##
+#......*##
+#.g......#
+#..#..#g.b
+#....g...#
+#.p.....##
+#.x#..#*##
+#........#
+#######.##
+
+##########
+##$$$#..##
+######..##
+#......*##
+#.g......#
+#..#..#g.b
+#....g..##
+#.p.....##
+#.x#..#*##
+#........#
+#####...##
+##########
+
+##########
+##$$$#..##
+######..##
+#......*##
+#.g......#
+#..#..#g.b
+#....g..##
+#.p.....##
+#.x#..#*##
+#........#
+#######.##
+
+##########
+##..#$$$##
+##..######
+##*......#
+#.....g..#
+b.g#..#p.#
+##.....x.#
+##.......#
+##*#.g#..#
+#........#
+##.#######
+
+##########
+##...#$$$#
+##*.######
+##.......#
+#........#
+b..#..#..#
+#.sss....#
+##.......#
+##g#.p#..#
+#....x...#
+##*#..####
+#.....####
+##.#######
+
+##########
+##...#$$$#
+##..######
+##*......#
+#.....g..#
+b.g#..#..#
+#........#
+##.....g.#
+##s#.p#..#
+#....x...#
+##*#..####
+#.....####
+##.#######
+
+##..######
+##...#$$$#
+##..######
+##*.#..###
+##....g..#
+b.g#..#..#
+#........#
+##.....g.#
+##*#.p#..#
+#....x...#
+##.#######
+##########
+
+##########
+##...#####
+##...#$$$#
+##...#####
+##*.######
+##....#..#
+b.g##.#g.#
+#....p...#
+##.g.x...#
+##*##.#..#
+#........#
+##.#######
+##########
+
+##########
+##...#####
+##...#$$$#
+##...#####
+##*.######
+##....#..#
+b.g#.##g.#
+#.....p..#
+##..g.x..#
+##*#.##..#
+#........#
+##.#######
+##########
+
+##########
+#####...##
+#$$$#...##
+#####...##
+######.*##
+#..#....##
+#.g##.#g.b
+#..p.....#
+#..x.g..##
+#..##.#*##
+#........#
+#######.##
+##########
+
+
+##########
+##..######
+##..######
+##*..#####
+##.#...*.#
+b.....s..#
+#.s#...g.#
+##g..s...#
+##.......#
+##*.g.p..#
+##.......#
+##########
+
+##########
+##..######
+##..######
+##*..#####
+#..#...*.#
+b.....s..#
+##%#...g.#
+##g..s...#
+##.......#
+##*.g.p..#
+##.......#
+##########
+
+##########
+##.....###
+##..*..###
+##*##ss###
+#..#.....#
+b........#
+##%#...g.#
+##g...s..#
+##.......#
+##*.g.p..#
+##.......#
+##########
+
+##########
+##.....###
+##.*.s.###
+##*##ss###
+#..#g....#
+b........#
+##%#.....#
+##g......#
+##.......#
+##*.g.p..#
+##.......#
+##########
+
+(this one works. could be better?)
+##########
+##.....###
+##.s...###
+##*##ss###
+#..#g.g..#
+b........#
+##%#.....#
+##g......#
+##.......#
+##**..p..#
+##.......#
+##########
+
+###########
+##......###
+##.*....###
+##*###ss###
+#..##gs.g.#
+b.........#
+##%#......#
+##g.......#
+##........#
+###*..p...#
+###.......#
+###########
+
+###########
+##......###
+##.*.g..###
+##*###ss###
+#..#.g.s..#
+b...m.....#
+##%#......#
+##g.......#
+##....p...#
+###*......#
+###.......#
+###########
+
+###########
+#.......###
+#..*.g..###
+##*###ss###
+#..#.g.s..#
+b...m.....#
+##%#......#
+##g.......#
+##....p...#
+###*......#
+###.......#
+###########
+
+###########
+##......###
+##.*.g..###
+##*##mss###
+#..#.g.s..#
+b...m.....#
+##%#......#
+##g.......#
+##....p...#
+###*......#
+###.......#
+###########
+
+###########
+##......###
+##.*.m..###
+#.*###ss###
+#..#.g.s..#
+b...m.....#
+##%#..p...#
+##g.......#
+##.....g..#
+###*......#
+###.......#
+###########
+
+###########
+##......###
+##.*....###
+##*###ss###
+#..#.l.s..#
+b....m....#
+##%#.mp...#
+##g.......#
+##.....g..#
+###*......#
+###.......#
+###########
+
+###########
+##......###
+##.*.g..###
+##*###ss###
+#..#ml.s..#
+b....m....#
+##%#mm....#
+##g.......#
+##....p...#
+###*......#
+###.......#
+###########
+
+###########
+##......###
+##.*....###
+##*###ss###
+#..#ml.sm.#
+b....mmmm.#
+##%#mm....#
+##g.......#
+##....p.g.#
+###*......#
+###.......#
+###########
+
+###########
+##......###
+##.*....###
+##*##mss###
+#..##g.s..#
+b...m.....#
+##%##.....#
+##g.....g.#
+##....p...#
+###*......#
+###.......#
+###########
+
+###########
+##......###
+##.*.g..###
+##*.##ss###
+#..##g.s..#
+b...m.....#
+##%##.....#
+##g.......#
+##....p...#
+###*......#
+###.......#
+###########
+
+###########
+#.......###
+#..*.g..###
+##*.##ss###
+#..##g.s..#
+b...m.....#
+##%#......#
+##g.......#
+##....p...#
+###*....*.#
+###.......#
+###########
+
+###########
+##......###
+##.*.g..###
+##*.##ss###
+#..##g.s..#
+b...m.....#
+##%#......#
+##g.......#
+##....p.*.#
+###*....*.#
+###.......#
+###########
+
+###########
+##......###
+##.*.g..###
+##*.##ss###
+#..##g.s..#
+b...m.mmm.#
+##%#......#
+##g.......#
+##....p.*.#
+###*....*.#
+###.......#
+###########
+
+(this DOESN'T work because of the mountains on the middle right. want to improve the location of blue switch to make end harder. also want to make beginning harder. or consider wall under middle mountain, take away a fence and add a goat. Can also add a cave for 1 more in the top 2 rows)
+###########
+##......###
+##.*.l..###
+#b*.##ss###
+#..##g.s..#
+#...m.m...#
+##%#..mmm.#
+##g.......#
+##....p.*.#
+###*....*.#
+###.......#
+###########
+
+###########
+##......###
+##.*.l..###
+#b*.##ss###
+#..###..s.#
+#...m.m.g.#
+##%#..mmm.#
+##g.......#
+##....p.*.#
+###*....*.#
+###.......#
+###########
+
+(this works)
+###########
+##......###
+##.*mg..###
+##*.#.ss.##
+#..###mms.#
+#...m...g.#
+#b%#..mmm.#
+##g.......#
+##....p.*.#
+###*....*.#
+###.......#
+###########
+)
+
+
+
+(broken
+#########
+#mmmdmmm#
+#m.g.g.m#
+#m.s.s.m#
+#m*s.s*m#
+#m*...*m#
+#m*****m#
+#mmmmmmm#
+#########
+)
+
+(WIP
+########
+#p.....#
+#.*.g*g#
+#.ga#..#
+#..##g.#
+#.gg.*.#
+#.*....#
+########)
+
+
+(
+#########
+#.......#
+#p***S#.#
+#.G.GS#.#
+#.SS.G..#
+#..G....#
+#########
+)
+(this level not done)
+
+
+(OLD SHEEP STUFF)
+(
+message Sheep follow you around. Like goats, they need to be enclosed. They can't walk on mountains though - too steep.
+
+###########
+#.....P...#
+#.####..*.#
+#.#.....*.#
+#.####..S.#
+#....M.M..#
+###########
+
+message Sheep and goats can be enclosed together, or separately.
+
+###########
+#S#.#.P...#
+#.#..*..G.#
+#....G.*..#
+#MMMM.....#
+###########
+
+message If two sheep across from each other want to follow into the same spot, neither moves.
+
+(
+###########
+#MSMSS#...#
+#P.MS...*.#
+#MSMMM#...#
+###########
+)
+##########
+#MSMS#...#
+#P.....*.#
+#MSMS#...#
+##########
+
+message If two sheep at right angles want to follow into the same spot, the one behind you moves.
+
+###########
+#MS#SM#...#
+#S.M.S#...#
+##P#MM*...#
+###########
+
+
+MESSAGE Sheep also follow each other around...
+
+###########
+#.P.......#
+#.#..SSS*.#
+#.M.....*.#
+#..##.S.*.#
+#...M.M...#
+###########
+
+
+message Level 99
+
+###########
+#.....P.#.#
+#.#..GGG*.#
+#.##..G.*.#
+#.###.S.*.#
+#...M.M...#
+###########
+
+message Level 999
+
+###########
+#.P.......#
+#.#..SSS*.#
+#.#.......#
+#..##.S.*.#
+#...M.M...#
+###########
+
+
+
+###########
+#.P..SSS..#
+#..##...*.#
+#..#SSS.*.#
+#.....S.*.#
+#.....S...#
+###########
+)

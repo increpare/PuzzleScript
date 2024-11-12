@@ -1,0 +1,172 @@
+title Oh Shit!
+author Orsetto
+homepage www.limulo.net
+debug
+========
+OBJECTS
+========
+
+Background 
+#ffc000 #eeb300 #ffd44f
+01000
+00000
+00000
+00200
+00000
+
+Target 
+DarkBlue transparent
+10001
+00000
+00000
+00000
+10001
+
+
+Stone
+grey darkgrey
+01000
+00000
+00010
+00000
+01000
+
+PlayerUp
+transparent black darkblue
+10101
+11111
+01120
+10001
+10001
+
+
+PlayerDown
+transparent black darkblue
+10001
+10001
+02110
+11111
+10101
+
+PlayerRight
+transparent black darkblue
+11011
+00110
+00111
+00210
+11011
+
+PlayerLeft
+transparent black darkblue
+11011
+01200
+11100
+01100
+11011
+
+Poo1 
+DarkBrown transparent brown
+10001
+00200
+00000
+02000
+10021
+
+Poo2
+DarkBrown transparent brown
+12001
+00020
+00000
+00000
+10021
+
+
+=======
+LEGEND
+=======
+
+Player = PlayerUp or PlayerDown or PlayerRight or PlayerLeft
+Poo = Poo1 or Poo2
+
+. = Background
+# = Stone
+P = PlayerUp
+@ = Poo1
+O = Target
+
+=======
+SOUNDS
+=======
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Target
+Player, Stone, Poo
+
+======
+RULES     
+======  
+
+RIGHT[ > Player ] -> [ > PlayerRight ]
+LEFT[ > Player ] -> [ > PlayerLeft ]
+UP[ > Player ] -> [ > PlayerUp ]
+DOWN[ > Player ] -> [ > PlayerDown ]
+
+(
+----- Poo Animation ----- 
+
+RIGHT[ > Player | Poo] -> [ > PlayerLeft | > Poo ]
+[> PlayerLeft| > Poo1] -> [> PlayerLeft | > Poo2]
+
+)
+
+RIGHT[ > Player | Poo ] -> [ > PlayerLeft | > Poo ]
+LEFT[ > Player | Poo ] -> [ > PlayerRight | > Poo ]
+UP[ > Player | Poo ] -> [ > PlayerDown | > Poo ]
+DOWN[ > Player | Poo ] -> [ > PlayerUp | > Poo ]
+
+
+
+late [ Target Poo ] -> [ Target ]
+
+
+([ >  Player | Poo ] -> [  >  Player | > Poo  ])     
+
+==============
+WINCONDITIONS
+==============
+
+no Poo     
+
+=======     
+LEVELS
+=======
+
+........#........#....
+...#...##.....@.......
+####...##...#.........
+...@........##......p.
+.#####......###.......
+.#........@.#.#.....o.
+............#.........
+
+
+.........
+.@.......
+...#.....
+..###..P.
+.###.....
+...#...o.
+.........
+
+
+.......#.
+....@....
+.........
+..P......
+.........
+...#...O.
+.........

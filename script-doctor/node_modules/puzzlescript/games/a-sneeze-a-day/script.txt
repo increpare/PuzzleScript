@@ -1,0 +1,551 @@
+title A Sneeze A Day Keeps The Crates Away
+author Alan Hazelden
+homepage www.draknek.org
+
+(verbose_logging)
+
+(again_interval 1)
+
+norepeat_action
+
+again_interval 0.2
+
+realtime_interval 0.0666
+
+run_rules_on_level_start
+
+========
+OBJECTS
+========
+
+Background
+#dddddd #dddddd
+00000
+00000
+01110
+01110
+01110
+
+Target
+#202020 Yellow
+.....
+00000
+01110
+01110
+01110
+
+BelowTarget
+#202020
+00000
+.....
+.....
+.....
+.....
+
+Wall
+#c4c692
+
+BelowWall
+#acad80
+00000
+.....
+.....
+.....
+.....
+
+AboveWall
+#93815f
+.....
+.....
+.....
+.....
+00000
+
+WallD
+#93815f #acad80
+.....
+.....
+.....
+00000
+11111
+
+WallL
+#93815f
+0....
+0....
+0....
+0....
+0....
+
+WallR
+#93815f
+....0
+....0
+....0
+....0
+....0
+
+WallLR
+#93815f
+0...0
+0...0
+0...0
+0...0
+0...0
+
+AboveWallL
+#93815f
+.....
+.....
+.....
+0....
+0....
+
+AboveWallR
+#93815f
+.....
+.....
+.....
+....0
+....0
+
+PlayerU
+#a46422 #495e2b #493c2b #000000
+..0..
+.111.
+01110
+02220
+.2.2.
+
+PlayerD
+#a46422 #495e2b #493c2b #000000
+..0..
+.111.
+01110
+02220
+.2.2.
+
+PlayerL
+#a46422 #495e2b #493c2b #000000
+..0..
+.111.
+.110.
+.220.
+.2.2.
+
+PlayerR
+#a46422 #495e2b #493c2b #000000
+..0..
+.111.
+.011.
+.022.
+.2.2.
+
+PlayerSneezing
+#a46422 #495e2b #493c2b #000000
+..0..
+.010.
+.111.
+.222.
+.2.2.
+
+PlayerSweepingU
+#a46422 #495e2b #493c2b #000000
+..0..
+3111.
+.1110
+.2220
+.2.2.
+
+PlayerSweepingD
+#a46422 #495e2b #493c2b #000000
+..0..
+.111.
+0110.
+0220.
+.2333
+
+PlayerSweepingL
+#a46422 #495e2b #493c2b #000000
+...0.
+..111
+.0111
+0.222
+332.2
+
+PlayerSweepingR
+#a46422 #495e2b #493c2b #000000
+.0...
+111..
+1110.
+222.0
+2.233
+
+Crate
+#eb9141 #eb8931 #732930 #69262c
+.001.
+.011.
+.111.
+.223.
+.233.
+
+Dust
+Grey
+.....
+..0..
+.0...
+....0
+..0..
+
+DustFromUL
+Grey
+.0...
+0....
+.....
+.....
+.....
+
+DustFromDL
+Grey
+.....
+.....
+.....
+0....
+.0...
+
+DustFromUR
+Grey
+...0.
+....0
+.....
+.....
+.....
+
+DustFromDR
+Grey
+.....
+.....
+.....
+....0
+...0.
+
+DustOnTarget
+#a19861 #000000
+.....
+..1..
+.0...
+...01
+..0..
+
+WindU
+#cccccc
+.....
+.000.
+0...0
+.....
+.....
+
+WindD
+#cccccc
+.....
+.....
+0...0
+.000.
+.....
+
+WindL
+#cccccc
+.....
+..0..
+.0...
+.0...
+..0..
+
+WindR
+#cccccc
+.....
+..0..
+...0.
+...0.
+..0..
+
+Sneezing
+transparent
+
+Msg
+transparent
+
+Msg2
+transparent
+
+ResetPrompt
+transparent
+
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = PlayerD
+* = Crate
+@ = Crate and Target
+O = Target
+! = Dust
+1 = Dust and Msg
+2 = Dust and Msg2
+
+Wind = WindU or WindD or WindL or WindR
+
+Solid = Wall or Crate
+
+PlayerNormal = PlayerU or PlayerD or PlayerL or PlayerR
+PlayerSweeping = PlayerSweepingL or PlayerSweepingR or PlayerSweepingU or PlayerSweepingD
+
+Player = PlayerNormal or PlayerSweeping or PlayerSneezing
+
+AboveDecoration = AboveWall or AboveWallL or AboveWallR or WallL or WallR or WallLR
+BelowDecoration = BelowWall or BelowTarget
+
+DustAppear = DustFromDL or DustFromDR or DustFromUL or DustFromUR
+
+=======
+SOUNDS
+=======
+
+(Crate MOVE 36772507)
+Undo 39917707
+Restart 70281108
+Player Move 90515707
+PlayerSneezing Create 52887507
+Sneezing Create 34489702 (637902)
+DustAppear Create 99521304 (55470102)
+EndLevel 45758908
+CloseMessage 88964107
+sfx0 821707 (toggle)
+sfx1 62700107 (sweeping)
+sfx2 96281704 (can't move)
+
+================
+COLLISIONLAYERS
+================
+
+Background
+BelowDecoration
+Wind, Msg, Msg2
+ResetPrompt
+Target
+Dust, Sneezing, DustAppear
+DustOnTarget
+Player, Wall, Crate
+AboveDecoration
+WallD
+
+======
+RULES
+======
+
+(3D)
+
+([ AboveDecoration ] -> []
+[ BelowDecoration ] -> [])
+
+down [ Wall | no Wall ] -> [ Wall WallD | BelowWall ]
+up [ Wall | no Wall ] -> [ Wall | AboveWall ]
+left [ Wall | no Wall ] -> [ Wall WallL | ]
+right [ Wall WallL | no Wall ] -> [ Wall WallLR | ]
+right [ Wall no AboveDecoration | no Wall ] -> [ Wall WallR | ]
+
+up [ WallL | Wall no AboveDecoration ] -> [ WallL | Wall AboveWallL ]
+up [ WallR | Wall no AboveDecoration ] -> [ WallR | Wall AboveWallR ]
+
+down [ Target | no Wall ] -> [ Target | BelowTarget ]
+
+(Wind)
+
+[ stationary Player ] [ WindU ] -> [ stationary Player ] [ up WindU ]
+[ stationary Player ] [ WindD ] -> [ stationary Player ] [ down WindD ]
+[ stationary Player ] [ WindL ] -> [ stationary Player ] [ left WindL ]
+[ stationary Player ] [ WindR ] -> [ stationary Player ] [ right WindR ]
+
+[ > Wind | no Solid | Crate | Solid ] -> [ | | Crate | Solid ]
+
+[ > Wind | Crate ] -> [ > Wind | > Crate ]
+
+[ > Wind | Wall ] -> [ | Wall ]
+
+[ > Crate | Solid ] -> [ action Crate | Solid ]
+
+[ DustAppear ] -> [ Dust ]
+
+[ action Crate | no Wall no Wind ] -> [ action Crate | action Dust no Wind ]
+[ action Crate | no Wall moving Wind ] -> [ action Crate moving Wind | ]
+
+late [ Crate Dust ] -> [ ResetPrompt Crate ]
+
+(Animated dust appearing)
+
+down [ action Dust | action Crate left Wind ] -> [ DustFromDL | action Crate left Wind ]
+down [ action Dust | action Crate right Wind ] -> [ DustFromDR | action Crate right Wind ]
+
+up [ action Dust | action Crate left Wind ] -> [ DustFromUL | action Crate left Wind ]
+up [ action Dust | action Crate right Wind ] -> [ DustFromUR | action Crate right Wind ]
+
+left [ action Dust | action Crate up Wind ] -> [ DustFromUL | action Crate up Wind ]
+left [ action Dust | action Crate down Wind ] -> [ DustFromDL | action Crate down Wind ]
+
+right [ action Dust | action Crate up Wind ] -> [ DustFromUR | action Crate up Wind ]
+right [ action Dust | action Crate down Wind ] -> [ DustFromDR | action Crate down Wind ]
+
+[ ResetPrompt ] [ moving Crate ] -> [ action ResetPrompt ] [ moving Crate ] (doesn't belong here but has to be here)
+
+[ action Crate Wind ] -> [ Crate ]
+
+(Change player)
+
+[ action PlayerL ] -> [ PlayerSweepingL ] sfx0
+[ action PlayerR ] -> [ PlayerSweepingR ] sfx0
+[ action PlayerU ] -> [ PlayerSweepingU ] sfx0
+[ action PlayerD ] -> [ PlayerSweepingD ] sfx0
+
+[ action PlayerSweepingL ] -> [ PlayerL ] sfx0
+[ action PlayerSweepingR ] -> [ PlayerR ] sfx0
+[ action PlayerSweepingU ] -> [ PlayerU ] sfx0
+[ action PlayerSweepingD ] -> [ PlayerD ] sfx0
+
+[ left PlayerNormal ] -> [ left PlayerL ]
+[ right PlayerNormal ] -> [ right PlayerR ]
+[ up PlayerNormal ] -> [ up PlayerU ]
+[ down PlayerNormal ] -> [ down PlayerD ]
+
+[ left PlayerSweeping ] -> [ left PlayerSweepingL ]
+[ right PlayerSweeping ] -> [ right PlayerSweepingR ]
+[ up PlayerSweeping ] -> [ up PlayerSweepingU ]
+[ down PlayerSweeping ] -> [ down PlayerSweepingD ]
+
+(Sweeping)
+
+[ > PlayerSweeping | Dust ] -> [ > PlayerSweeping | > Dust ] sfx1
+
+[ > Dust | Solid ] -> [ action ResetPrompt | Solid ]
+[ > Dust | Dust ] -> [ | Dust ]
+
+(Reset prompt)
+
+late [ Player Dust ] -> [ Player Dust ResetPrompt ]
+late [ ResetPrompt ] [ Dust no Player ] -> [] [ Dust ]
+late [ ResetPrompt ] [ DustAppear ] -> [] [ DustAppear ]
+
+[ ResetPrompt ] [ Wind ] -> [ action ResetPrompt ] [ Wind ]
+[ ResetPrompt ] [ Sneezing ] -> [ action ResetPrompt ] [ Sneezing ]
+[ ResetPrompt ] [ PlayerSneezing ] -> [ action ResetPrompt ] [ PlayerSneezing ]
+
+[ stationary ResetPrompt ] -> [] message R to reset
+
+(Sneezing)
+
+([ PlayerSneezing Msg ] -> message Ahhhh-choo!)
+
+late [ PlayerSneezing ] -> [ Sneezing PlayerD ]
+
+late [ Player Dust ] -> [ PlayerSneezing ] again
+
+late [ Sneezing Player | | Crate | Solid ] -> [ Sneezing Player | Sneezing | Crate | Solid ]
+
+late [ Sneezing Player | Crate | no Solid ] -> [ Sneezing Player | | Crate no Dust ]
+
+late up [ Sneezing Player | no Solid ] -> [ Sneezing Player | WindU ]
+late down [ Sneezing Player | no Solid ] -> [ Sneezing Player | WindD ]
+late left [ Sneezing Player | no Solid ] -> [ Sneezing Player | WindL ]
+late right [ Sneezing Player | no Solid ] -> [ Sneezing Player | WindR ]
+
+late [ Sneezing ] -> [ no Wind ]
+
+late [ Wind Dust ] -> [ Wind ]
+
+(Update graphics)
+
+late [ Dust Target no DustOnTarget ] -> [ Dust Target DustOnTarget ]
+late [ no Dust Target DustOnTarget ] -> [ Target ]
+
+(Can't move sfx)
+
+[ > Player | Solid ] -> sfx2
+
+[ PlayerSweeping ] [ Msg2 ] -> [ PlayerSweeping ] []
+
+late [ Player | Msg2 ] -> [ Player | Msg2 ] again
+[ Player | Msg2 ] -> [ Player | ] message Press space to toggle broom
+
+==============
+WINCONDITIONS
+==============
+
+All Target on Crate
+No Wind
+
+=======
+LEVELS
+=======
+
+message "I wish I had some way of moving these heavy crates"
+message "You know you only get one wish, right?"
+
+##########
+#.......o#
+#....*...#
+#.p.#1...#
+#....*...#
+#.......o#
+##########
+
+#########
+#o.....o#
+#..*!*..#
+#..!!!.p#
+#..*!*..#
+#o.....o#
+#########
+
+##########
+##o......#
+#....*...#
+#..2....p#
+#....*...#
+##o......#
+##########
+
+#######
+#o....#
+#.....#
+#.*!*p#
+#.....#
+#o....#
+#######
+
+#######
+#p...o#
+#...*.#
+#..!..#
+#.*...#
+#o....#
+#######
+
+#########
+#.o.p.o.#
+##.*!*.##
+##.....##
+##..#..##
+###...###
+#########
+
+#######
+#p...o#
+#.*.*!#
+#..o..#
+#.*.*!#
+#o!.!o#
+#######
+
+message Thanks for playing :)

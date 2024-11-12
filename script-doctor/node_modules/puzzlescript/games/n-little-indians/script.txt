@@ -1,0 +1,280 @@
+title N little indians
+homepage blalala
+youtube ScPDVA3KbSo
+ 
+========
+OBJECTS
+========
+Background
+Brown
+ 
+Terrain
+Blue
+ 
+TerrainAlt
+Blue
+ 
+Wall
+Black
+ 
+PinkIndian
+Orange Pink White
+...2.
+..0..
+.000.
+..1..
+.0.0.
+ 
+BlueIndian
+Orange Blue White
+...2.
+..0..
+.000.
+..1..
+.0.0.
+ 
+GreenIndian
+Orange Green White
+...2.
+..0..
+.000.
+..1..
+.0.0.
+ 
+InactivePinkIndian
+Orange Pink White
+.....
+..0..
+.000.
+..1..
+.0.0.
+ 
+InactiveBlueIndian
+Orange Blue White
+.....
+..0..
+.000.
+..1..
+.0.0.
+ 
+InactiveGreenIndian
+Orange Green White
+.....
+..0..
+.000.
+..1..
+.0.0.
+ 
+TempDeadIndian
+Transparent
+.000.
+..0..
+..0..
+..0..
+.000.
+ 
+TempDeadPlayer
+Transparent
+..000
+..0.0
+..000
+..0..
+..0..
+ 
+ 
+PlayerDiedHere
+Transparent
+..000
+..0.0
+..000
+..0..
+..0..
+ 
+IndianSpawner
+#F300CE
+..0..
+.000.
+00.00
+.000.
+00.00
+(..000
+..0.0
+00000
+0.0..
+000..)
+ 
+ 
+(0000.
+0.0..
+000..
+.0..0
+.0000)
+ 
+(
+BloodSplat1
+#EB132D
+....0
+.00..
+00000
+.000.
+.00..
+)
+ 
+BloodSplat1
+#EB132D
+....0
+.00..
+000..
+.00..
+.....
+ 
+BloodSplat2
+#EB132D
+.00..
+.000.
+..000
+.....
+.....
+ 
+BloodSplat3
+#EB132D
+.....
+.00..
+.000.
+.000.
+.....
+ 
+CrocodileL
+Black LightGreen Red White
+.30..
+133..
+.211.
+11111
+.1..1
+ 
+CrocodileR
+Black LightGreen Red White
+..03.
+..331
+.112.
+11111
+1..1.
+ 
+Rock
+#695040 #856551 #705544
+.000.
+01100
+01000
+00002
+.022.
+ 
+=======
+LEGEND
+=======
+Crocodile = CrocodileL or CrocodileR
+Player = PinkIndian or BlueIndian or GreenIndian
+InactiveIndian = InactivePinkIndian or InactiveBlueIndian or InactiveGreenIndian
+Indian = Player or InactiveIndian
+Obstacle = Indian or Crocodile
+BloodSplat = BloodSplat1 or BloodSplat2 or BloodSplat3
+ 
+. = Background
+t = Terrain
+y = TerrainAlt
+# = Wall
+P = PinkIndian
+B = BlueIndian
+G = GreenIndian
+1 = InactivePinkIndian
+2 = InactiveBlueIndian
+3 = InactiveGreenIndian
++ = CrocodileR
+- = CrocodileL
+§ = IndianSpawner
+* = IndianSpawner and PinkIndian
+O = Rock
+ 
+ 
+ 
+=======
+SOUNDS
+=======
+ 
+================
+COLLISIONLAYERS
+================
+ 
+Background
+Terrain, TerrainAlt, IndianSpawner
+BloodSplat1
+BloodSplat2
+BloodSplat3
+TempDeadIndian, TempDeadPlayer, PlayerDiedHere
+Wall, Crocodile, Player, InactiveIndian, Rock
+ 
+======
+RULES
+======
+ 
+[ action PinkIndian ] [ IndianSpawner no Obstacle ] -> [ InactivePinkIndian ] [ IndianSpawner random Player ]
+[ action BlueIndian ] [ IndianSpawner no Obstacle ] -> [ InactiveBlueIndian ] [ IndianSpawner random Player ]
+[ action GreenIndian ] [ IndianSpawner no Obstacle ] -> [ InactiveGreenIndian ] [ IndianSpawner random Player ]
+ 
+[ action IndianSpawner no Obstacle ] -> [ IndianSpawner random Player ]
+ 
+(crocodile follows indians, still ones preferrably, and kills them after one turn)
+[ TempDeadIndian no Indian ] -> [ no Indian ]
+[ TempDeadPLayer no Player ] -> [ no Player ]
+left  [ stationary Crocodile | InactiveIndian ] -> [ > CrocodileL | InactiveIndian TempDeadIndian ]
+right [ stationary Crocodile | InactiveIndian ] -> [ > CrocodileR | InactiveIndian TempDeadIndian ]
+vertical [ stationary Crocodile | InactiveIndian ] -> [ > Crocodile | InactiveIndian TempDeadIndian ]
+ 
+left  [ stationary Crocodile | Player ] -> [ > CrocodileL | Player TempDeadPlayer ]
+right [ stationary Crocodile | Player ] -> [ > CrocodileR | Player TempDeadPlayer ]
+vertical [ stationary Crocodile | Player ] -> [ > Crocodile | Player TempDeadPlayer ]
+ 
+left  [ stationary CrocodileL | ... | Indian ] -> [ > CrocodileL | ... | Indian ]
+right [ stationary CrocodileR | ... | Indian ] -> [ > CrocodileR | ... | Indian ]
+vertical [ stationary Crocodile | ... | Indian ] -> [ > Crocodile | ... | Indian ]
+ 
+late [ InactiveIndian TempDeadIndian ] -> [ random BloodSplat ]
+late [ Player TempDeadPlayer ] -> [ PlayerDiedHere ]
+ 
+(fix of player > crocodile movement bug)
+right [ > Player | | < Crocodile ] -> [ Player | | < Crocodile ]
+down [ > Player | | < Crocodile ] -> [ Player | | < Crocodile ]
+ 
+(player respawns when dead)
+late [ PlayerDiedHere ] -> [ PlayerDiedHere random Bloodsplat ]
+late [ PlayerDiedHere ] [ IndianSpawner no Obstacle ] -> [ ] [ IndianSpawner random Player ]
+late [ PlayerDiedHere ] -> [ ]
+ 
+(player can push other indians)
+[ > Player | InactiveIndian ] -> [ > Player | > InactiveIndian ]
+[ > InactiveIndian | InactiveIndian ] -> [ > InactiveIndian | > InactiveIndian ]
+ 
+ 
+==============
+WINCONDITIONS
+==============
+ 
+ 
+=======
+LEVELS
+=======
+..........
+.o........
+o.ooo.....
+*....+....
+oo.oo.....
+.o.o......
+.ooo......
+ 
+..........
+.o........
+o.ooo.....
++.*.......
+oo.oo.....
+.o.o......
+.ooo......
+ 

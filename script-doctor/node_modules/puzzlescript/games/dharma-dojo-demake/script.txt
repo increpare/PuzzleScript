@@ -1,0 +1,435 @@
+(version 1.2.1)
+title Dharma Dojo demake
+author Metro [cloned by CHz]
+homepage quiteajolt.com
+
+again_interval 0.03
+run_rules_on_level_start
+
+
+========
+OBJECTS
+========
+
+Background 
+Green  
+
+Wall 
+Brown
+
+Ceiling
+Brown
+
+
+Player
+Black
+...00
+..000
+..000
+..0..
+.0...
+
+DeadPlayer
+Black
+...00
+..000
+..000
+..0..
+.0...
+
+PlayerSmacking
+Black
+000..
+0000.
+000..
+.0...
+.0...
+
+
+Block1
+Red
+.000.
+00000
+00000
+00000
+.000.
+
+Block2
+Blue
+..0..
+.000.
+00000
+.000.
+..0..
+
+Block3
+Yellow
+..0..
+.000.
+.000.
+00000
+00000
+
+Block4
+White
+0...0
+.0.0.
+..0..
+.0.0.
+0...0
+
+Block5
+DarkBrown
+..0..
+..0..
+00000
+..0..
+..0..
+
+Block6
+LightBlue
+00000
+00000
+.....
+00000
+00000
+
+Block7
+Orange
+00.00
+00.00
+00.00
+00.00
+00.00
+
+
+Chute
+Gray Black
+01110
+01110
+01110
+01110
+01110
+
+Feeder
+Gray Black
+01110
+01111
+01111
+01111
+00000
+
+Hopper
+Gray Black
+00000
+11111
+11111
+11111
+00000
+
+
+SetsToken1
+Transparent
+
+SetsToken2
+Transparent
+
+SetsToken3
+Transparent
+
+SetsToken4
+Transparent
+
+SetsToken5
+Transparent
+
+SetsToken6
+Transparent
+
+SetsToken7
+Transparent
+
+BlockToken
+Transparent
+
+Field
+Transparent
+
+
+AssertGravityToken
+Transparent
+
+MatchTokenPositive
+Transparent
+
+MatchTokenNegative
+Transparent
+
+CheckMatchToken
+Transparent
+
+
+DeathCoverSeed1
+Transparent
+
+DeathCoverSeed2
+Transparent
+
+DeathCover1
+Red
+0.0.0
+.0.0.
+0.0.0
+.0.0.
+0.0.0
+
+DeathCover1Token
+Transparent
+
+DeathCover2
+Red
+.0.0.
+0.0.0
+.0.0.
+0.0.0
+.0.0.
+
+DeathCover2Token
+Transparent
+
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+x = Ceiling
+
+P = Player
+
+| = Chute
+- = Hopper
+1 = Feeder and SetsToken1
+2 = Feeder and SetsToken1 and SetsToken2
+3 = Feeder and SetsToken1 and SetsToken2 and SetsToken3
+4 = Feeder and SetsToken1 and SetsToken2 and SetsToken3 and SetsToken4
+5 = Feeder and SetsToken1 and SetsToken2 and SetsToken3 and SetsToken4 and SetsToken5
+6 = Feeder and SetsToken1 and SetsToken2 and SetsToken3 and SetsToken4 and SetsToken5 and SetsToken6
+7 = Feeder and SetsToken1 and SetsToken2 and SetsToken3 and SetsToken4 and SetsToken5 and SetsToken6 and SetsToken7
+SetsToken = SetsToken1 or SetsToken2 or SetsToken3 or SetsToken4 or SetsToken5 or SetsToken6 or SetsToken7
+
+F = Field
+
+Block = Block1 or Block2 or Block3 or Block4 or Block5 or Block6 or Block7
+
+MatchToken = MatchTokenPositive or MatchTokenNegative
+
+DeathCover = DeathCoverSeed1 or DeathCoverSeed2 or DeathCover1 or DeathCover2
+DeathCoverToken = DeathCover1Token or DeathCover2Token
+
+
+=======
+SOUNDS
+=======
+
+sfx0 23301902 (death)
+sfx1 79689507 (smack)
+sfx2 69201902 (clear)
+
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Ceiling Chute Feeder Hopper
+Wall Block Field
+Player DeadPlayer PlayerSmacking
+BlockToken AssertGravityToken MatchToken CheckMatchToken DeathCover DeathCoverToken
+SetsToken1
+SetsToken2
+SetsToken3
+SetsToken4
+SetsToken5
+SetsToken6
+SetsToken7
+
+
+======
+RULES     
+======    
+
+(================
+ LEVEL GENERATION
+ ================)
+
+(Randomly splat down N blocks for each requested color, where N is the length of the hopper.)
+[SetsToken1] [Hopper] -> [SetsToken1] [Hopper BlockToken]
+startloop
+random [Field] [BlockToken] [SetsToken1] -> [Block1] [BlockToken] [SetsToken1]
+random [Field] [BlockToken] [SetsToken2] -> [Block2] [BlockToken] [SetsToken2]
+random [Field] [BlockToken] [SetsToken3] -> [Block3] [BlockToken] [SetsToken3]
+random [Field] [BlockToken] [SetsToken4] -> [Block4] [BlockToken] [SetsToken4]
+random [Field] [BlockToken] [SetsToken5] -> [Block5] [BlockToken] [SetsToken5]
+random [Field] [BlockToken] [SetsToken6] -> [Block6] [BlockToken] [SetsToken6]
+random [Field] [BlockToken] [SetsToken7] -> [Block7] [BlockToken] [SetsToken7]
+random [BlockToken] -> []
+endloop
+[SetsToken] -> [no SetsToken]
+
+(Shove all the blocks down and then to the left.)
+DOWN [Block | Field] -> [Field | Block]
+RIGHT [Field | Block] -> [Block | Field]
+[Field] -> []
+
+
+(===============
+ PLAYER MOVEMENT
+ ===============)
+
+(Player can only move up and down, and they'll automatically snap to the end of the row. If the player tries to move into the frame, then cancel the move.)
+[Left Player] -> [Action Player]
+late RIGHT [no Block no Chute | Player] -> [Player | ]
+late RIGHT [Player Block | ] -> [Block | Player]
+late [Player Feeder] -> cancel
+late [Player Wall] -> cancel
+late [Player Ceiling] -> cancel
+
+
+(============
+ ROW SMACKING
+ ============)
+
+(These rules are listed in reverse order so that they can happen sequentially with again statements for animation.)
+
+(4. When the receptacle is full, clear it if it's all the same color or push the stack up if it's mixed.)
+RIGHT [Feeder | MatchToken] [PlayerSmacking] -> [Feeder | MatchToken] [PlayerSmacking CheckMatchToken]
+[MatchTokenNegative] [PlayerSmacking CheckMatchToken] -> [MatchTokenNegative] [PlayerSmacking]
+[PlayerSmacking CheckMatchToken] [Block MatchToken] -> [PlayerSmacking CheckMatchToken] [] sfx2
+[PlayerSmacking CheckMatchToken] -> [Player]
+RIGHT [Feeder | Block MatchToken] -> [Feeder | ^ Block MatchToken]
+RIGHT [^ Block Hopper | Block] -> [^ Block Hopper | ^ Block]
+DOWN [Block | < Block] -> [< Block | < Block]
+DOWN [PlayerSmacking | < Block] -> [< PlayerSmacking | < Block]
+late [MatchToken no Block] [PlayerSmacking] -> [] [Player] again
+late [MatchToken no Block] -> [] 
+
+(3. Pull the block in the chute to the right when it's at the bottom and check if its color matches the block it's next to.)
+RIGHT [Block no MatchToken | Hopper] -> [> Block no MatchToken | Hopper] again
+late RIGHT [PlayerSmacking] [Block no MatchToken | Wall] -> [Player] [Block MatchTokenPositive | Wall]
+late RIGHT [PlayerSmacking] [Block1 no MatchToken | Block1 MatchTokenPositive] -> [Player] [Block1 MatchTokenPositive | Block1 MatchTokenPositive]
+late RIGHT [PlayerSmacking] [Block2 no MatchToken | Block2 MatchTokenPositive] -> [Player] [Block2 MatchTokenPositive | Block2 MatchTokenPositive]
+late RIGHT [PlayerSmacking] [Block3 no MatchToken | Block3 MatchTokenPositive] -> [Player] [Block3 MatchTokenPositive | Block3 MatchTokenPositive]
+late RIGHT [PlayerSmacking] [Block4 no MatchToken | Block4 MatchTokenPositive] -> [Player] [Block4 MatchTokenPositive | Block4 MatchTokenPositive]
+late RIGHT [PlayerSmacking] [Block5 no MatchToken | Block5 MatchTokenPositive] -> [Player] [Block5 MatchTokenPositive | Block5 MatchTokenPositive]
+late RIGHT [PlayerSmacking] [Block6 no MatchToken | Block6 MatchTokenPositive] -> [Player] [Block6 MatchTokenPositive | Block6 MatchTokenPositive]
+late RIGHT [PlayerSmacking] [Block7 no MatchToken | Block7 MatchTokenPositive] -> [Player] [Block7 MatchTokenPositive | Block7 MatchTokenPositive]
+late RIGHT [PlayerSmacking] [Block no MatchToken | Block MatchToken] -> [Player] [Block MatchTokenNegative | Block MatchToken]
+(When the block is moved into position, control is returned to the player above. But when the hopper is full, we still have stuff to do, so we'll cancel that.)
+late RIGHT [Player] [Feeder | Block] -> [PlayerSmacking] [Feeder | Block]
+
+(2. Assert gravity: pull the stack and the block in the chute down.)
+DOWN [AssertGravityToken] [Block | no Wall no Hopper] -> [AssertGravityToken] [> Block | ] again
+[AssertGravityToken] -> []
+(The AssertGravityToken rule in the step 1 block below will continue to trigger until the block reaches the bottom left corner, repeating this block.)
+
+(1. Push the row to the left.)
+RIGHT [Block | Action Player] -> [Block | Action PlayerSmacking] sfx1
+RIGHT [Block | Action PlayerSmacking] -> [< Block | Action PlayerSmacking]
+RIGHT [Block | < Block] -> [< Block | < Block]
+late [Block Chute] [PlayerSmacking] -> [Block Chute] [PlayerSmacking AssertGravityToken] again
+
+
+(=========
+ GAME OVER
+ =========)
+
+(If a block hits the kill zone at the top, cover the screen with the death overlay and kill the player.)
+random [Block Ceiling no DeathCover] -> [Block Ceiling DeathCoverSeed1]
+startloop
+[Block Ceiling DeathCoverSeed1 | Block Ceiling no DeathCover] -> [Block Ceiling DeathCoverSeed1 | Block Ceiling DeathCoverSeed2]
+[Block Ceiling DeathCoverSeed2 | Block Ceiling no DeathCover] -> [Block Ceiling DeathCoverSeed2 | Block Ceiling DeathCoverSeed1]
+endloop
+[DeathCoverSeed1 | no DeathCover] -> [DeathCoverSeed1 | DeathCover1Token]
+[DeathCoverSeed2 | no DeathCover] -> [DeathCoverSeed2 | DeathCover2Token]
+
+[Player] [DeathCoverToken] -> [DeadPlayer] [DeathCoverToken] sfx0
+[DeathCover1 | no DeathCover] -> [DeathCover1 | DeathCover2Token]
+[DeathCover2 | no DeathCover] -> [DeathCover2 | DeathCover1Token]
+late [DeathCover1Token] -> [DeathCover1 no DeathCover1Token] again
+late [DeathCover2Token] -> [DeathCover2 no DeathCover2Token] again
+  
+
+==============
+WINCONDITIONS
+==============
+
+No Block
+
+
+=======     
+LEVELS
+=======
+
+message Move up and down with the arrows and hammer a row with X.
+message Fill the hopper with blocks of the same color to clear them. A mismatched row will be pushed back up into the stack.
+message Clear all the blocks to proceed.
+
+xxxxxxx
+|.....#
+|.....#
+|.....#
+|.....#
+|.....#
+|.....#
+|FFFF.#
+|FFFF.#
+|FFFF.#
+|FFFFP#
+4---###
+
+message Don't let blocks hit the ceiling!
+message Z undoes moves. R will reset with a new puzzle.
+
+xxxxxxxx
+|......#
+|......#
+|FFFFF.#
+|FFFFF.#
+|FFFFF.#
+|FFFFF.#
+|FFFFFP#
+5----###
+
+xxxxxxxxx
+|.......#
+|.......#
+|FFFFFF.#
+|FFFFFF.#
+|FFFFFF.#
+|FFFFFF.#
+|FFFFFF.#
+|FFFFFFP#
+6-----###
+
+xxxxxxxxxx
+|........#
+|FFFFFFF.#
+|FFFFFFF.#
+|FFFFFFF.#
+|FFFFFFF.#
+|FFFFFFF.#
+|FFFFFFF.#
+|FFFFFFFP#
+7------###
+
+xxxxxxxxx
+|FFFFFF.#
+|FFFFFF.#
+|FFFFFF.#
+|FFFFFF.#
+|FFFFFFP#
+4------##
+
+message :)

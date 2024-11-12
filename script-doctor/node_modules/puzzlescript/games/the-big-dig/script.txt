@@ -1,0 +1,324 @@
+title the big dig
+author Rosden Shadow [Mark Signorelli]
+homepage rosden.itch.io
+run_rules_on_level_Start
+
+background_color #52465B
+
+text_color #F2F2AA
+
+========
+OBJECTS
+========
+
+Background
+#705C84 #52465B (#E57ED5 #CC5285)
+11111
+10001
+10101
+10001
+11111
+(
+00101
+01110
+11011
+01111
+10110)
+(
+11101
+00101
+11111
+10100
+10111)
+
+
+Target
+#F2F2AA#82A17C #7EE58D #D9FFDC 
+.....
+.000.
+.0.0.
+.000.
+.....
+
+Wall
+#DB7F55 #E5C17E #B32D2D #73342E
+20001
+20001
+22220
+33333
+33333
+
+overwall
+#DB7F55 #E5C17E #B32D2D #73342E
+.....
+.....
+.....
+01111
+20001
+
+digWall
+#845C5C #A17C8B #5B4846 #423D39
+20002
+12001
+21220
+32332
+33233
+
+overdigwall
+#845C5C #A17C8B #5B4846 #423D39
+.....
+.....
+.....
+01211
+20021
+
+
+Playerright
+#E0AAF2 #A87EE5  #F3FFD9 #E5C17E
+.000.
+11202
+11313
+11110
+.1.1.
+
+playerleft
+#E0AAF2 #A87EE5  #F3FFD9 #E5C17E
+.000.
+20211
+31311
+01111
+.1.1.
+
+Crate
+#F2F2AA #FFEED9 #E5C17E #847A5C
+20011
+20001
+22001
+32223
+.333.
+
+overcrate
+#F2F2AA #FFEED9 #E5C17E #847A5C
+.....
+.....
+.....
+.....
+.111.
+
+crate2
+#FFD9FC #E0AAF2 #A87EE5 #705C84
+21100
+21110
+22110
+32223
+.333.
+
+overcrate2
+#FFD9FC #E0AAF2 #A87EE5 #705C84
+.....
+.....
+.....
+.....
+.000.
+
+cloner
+#E5C17E #DB7F55 #B32D2D #73342E
+.100.
+.210.
+.221.
+.332.
+.....
+
+swapcrate
+Orange Yellow
+00000
+0...0
+0...0
+0...0
+00000
+
+swapwall
+black
+.....
+.....
+.....
+.....
+.....
+
+thefloor
+#52465B
+00000
+00000
+00000
+00000
+00000
+
+(
+checkempty
+black
+.....
+.....
+.....
+.....
+.....
+
+checkblock
+black
+.....
+.....
+.....
+.....
+.....
+)
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Playerright
+K = playerright and target
+* = Crate
+@ = Crate and Target
+O = Target
+d= digWall
+
+c=cloner
+-=thefloor
+
+feel=overwall or overcrate or overcrate2 or overdigwall
+pushable=crate or cloner or swapcrate  or crate2
+win=crate or wall
+
+
+theemx= crate 
+player=playerright or playerleft
+=======
+SOUNDS
+=======
+
+pushable MOVE 36772507
+
+
+sfx0 52836103
+sfx1 45427502
+sfx2 40712702
+================
+COLLISIONLAYERS
+================
+
+Background
+Target
+Player, Wall, pushable,swapwall,thefloor, digwall
+feel
+
+======
+RULES
+======
+
+[feel]->[]
+
+
+[ left Playerright] -> [ left playerleft]
+[ right Playerleft] -> [ right playerright]
+
+[> player | digwall] ->[ player| crate] sfx2
+
+[> player | crate] ->[> player| > crate]
+
+[> crate | digwall] ->[> crate | ] sfx2
+
+
+
+late up [wall| ]-> [wall|overwall]
+late up [digwall| ]-> [digwall|overdigwall]
+late up [theemx| ]-> [theemx|overcrate]
+
+
+
+==============
+WINCONDITIONS
+==============
+
+all Target on crate
+
+
+
+=======
+LEVELS
+=======
+
+message Get all targets to have gold on them
+
+message level 1 of 4
+---------
+-#######-
+##.....##
+#...P...#
+#.#d#d#.#
+#.#d#d#.#
+#.#d#d#.#
+#.......#
+#.O...O.#
+##.....##
+-#######-
+
+message level 2 of 4
+---------
+-#######-
+##.....##
+#.......#
+#.ddddd.#
+#.ddddd.#
+#.ddddd.#
+#...P...#
+#.O...O.#
+##OOOOO##
+-#######-
+
+message level 3 of 4
+---------
+#########
+#.......#
+#.ddddd.#
+#.dOOOd.#
+#.dOOOd.#
+#.dOKOd.#
+#.dOOOd.#
+#.ddddd.#
+#.......#
+#########
+
+message level 4 of 4
+---------
+-#######-
+##..#..##
+#.......#
+#.d#ddd.#
+#.ddd#d.#
+#.d#ddd.#
+#.ddd#d.#
+#.OOPOO.#
+##OOOOO##
+-#######-
+
+
+
+message level 5 of 4 SECRET LEVEL
+---------
+-#######-
+##.....##
+#...O...#
+#.ddddd.#
+#.ddddd.#
+#.ddddd.#
+#...P...#
+#.OOOOO.#
+##OOOOO##
+-#######-
+
+
+
+
+message you made a fortune!

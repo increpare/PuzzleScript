@@ -1,0 +1,248 @@
+title 1-2-3-Ban
+author Alan Hazelden
+homepage www.draknek.org
+
+run_rules_on_level_start
+
+(verbose_logging)
+
+background_color DARKGREY
+
+========
+OBJECTS
+========
+
+Background
+WHITE
+
+Wall
+BLUE
+
+1
+Black
+.....
+.....
+..0..
+.....
+.....
+
+2
+Black
+.....
+.....
+.0.0.
+.....
+.....
+
+3
+Black
+.....
+..0..
+.....
+.0.0.
+.....
+
+4
+Black
+.....
+.0.0.
+.....
+.0.0.
+.....
+
+5
+Black
+.....
+.0.0.
+..0..
+.0.0.
+.....
+
+Active
+RED RED
+.111.
+11111
+11111
+11111
+.111.
+
+Inactive
+GREY GREY
+.111.
+11111
+11111
+11111
+.111.
+
+Test
+BLACK
+
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+
+Block = Active or Inactive
+
+Obstacle = Wall or Inactive
+
+Number = 1 or 2 or 3 or 4 or 5
+
+Player = 1
+
+
+=======
+SOUNDS
+=======
+
+1 MOVE 15738107
+
+ENDLEVEL 67716509
+
+sfx0 14662307 (join)
+sfx1 56825907 (push)
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Block
+Number, Wall
+Test
+
+======
+RULES
+======
+
+[ Active stationary Number | Inactive stationary Number ] -> [ Active Number | Inactive > Number ] sfx1
+
+[ Active moving Number | Active stationary Number ] -> [ Active moving Number | Active moving Number ]
+
+([ > Player | no Test ] -> [ > Player | Test ]
+
+[ Player | ... | Active Test | no Test ] -> [ Player | ... | Active Test | Test ]
+
+[ Test Wall ] -> cancel
+[ Test Inactive ] -> cancel
+
+[ Test ] -> [])
+
+[ Active > Number | Obstacle ] -> cancel
+
+[ moving Number stationary Block ] -> [ moving Number moving Block ]
+
+late [ Active 1 | Inactive 2 ] -> sfx0
+late [ Active 2 | Inactive 3 ] -> sfx0
+late [ Active 3 | Inactive 4 ] -> sfx0
+late [ Active 4 | Inactive 5 ] -> sfx0
+
+late [ Block ] -> []
+
+late [ 1 ] -> [ 1 Active ]
+
+late [ Active 1 | 2 no Block ] -> [ Active 1 | Active 2 ]
+late [ Active 2 | 3 no Block ] -> [ Active 2 | Active 3 ]
+late [ Active 3 | 4 no Block ] -> [ Active 3 | Active 4 ]
+late [ Active 4 | 5 no Block ] -> [ Active 4 | Active 5 ]
+
+late [ Number no Block ] -> [ Number Inactive ]
+
+late [ Active | Inactive ] -> again
+
+==============
+WINCONDITIONS
+==============
+
+no Inactive
+
+=======
+LEVELS
+=======
+
+
+#######
+#.....#
+#..1..#
+#.....#
+#2###3#
+#######
+
+(#######
+#..1..#
+#.....#
+#..#..#
+#2###2#
+#######)
+
+#########
+##.....##
+##..1..##
+##3...3##
+###2#2###
+###...###
+###...###
+#########
+
+#######
+###.###
+#..3..#
+#1...2#
+#..3..#
+###.###
+#######
+
+#########
+#.......#
+#.##4##.#
+#.#...#.#
+#.1...2.#
+#.#...#.#
+#.##3##.#
+#.......#
+#########
+
+#########
+####.####
+###.2.###
+##.....##
+#.1.#.2.#
+##.....##
+###.2.###
+####.####
+#########
+
+#########
+#..3....#
+#...#...#
+#...#2..#
+#......1#
+#...#2..#
+#...#...#
+#..3....#
+#########
+
+###########
+#....#....#
+#.2..3..2.#
+#.........#
+#.........#
+##3..1..3##
+#.........#
+#.........#
+#.2..3..2.#
+#....#....#
+###########
+
+(########
+#..3...#
+#..#2..#
+#..#..1#
+#..#2..#
+#..3...#
+########)
+
+message Thanks for playing! :)

@@ -1,0 +1,1688 @@
+title The Flames
+author Rosden Shadow [Mark Signorelli]
+homepage rosden.itch.io
+
+========
+OBJECTS
+========
+
+Background
+#5BB205 #34960A  #18820A
+11010
+20101
+02010
+20201
+02022
+
+filledground
+#AD6A06 #7F370B #59160A 
+11010
+20101
+02010
+20201
+02022
+
+Target
+DarkBlue
+(
+.....
+.000.
+.0.0.
+.000.
+.....
+)
+.....
+.....
+.....
+.....
+.....
+
+Wall
+#787878 #444444 #a7a6a6
+02222
+10002
+10002
+10002
+11110
+
+woodWall
+#7F370B #59160A #C67B09
+02222
+10002
+10002
+10002
+11110
+
+woodWallx
+#7F370B #59160A #C67B09
+02222
+10002
+10002
+10002
+11110
+
+Player
+#EE1C24 white blue
+.011.
+.012.
+.011.
+.000.
+.0.0.
+(
+#62199E #A91ABF
+.011.
+01111
+01111
+01.01
+...01)
+
+Player1
+#62199E #A91ABF
+.011.
+01111
+01111
+01.01
+01...
+Playerx1
+#62199E #A91ABF
+.011.
+01111
+01111
+01.01
+01...
+
+Playerx2
+#62199E #A91ABF
+.011.
+01111
+01111
+01.01
+01...
+
+
+
+Crate
+#BA4D0E #91290D #F99807
+.222.
+10022
+10002
+11002
+.111.
+
+fireCrate1
+#BA4D0E #91290D #F99807 red yellow
+.3.3.
+10022
+10002
+11002
+.111.
+
+fireCrate2
+#BA4D0E #91290D #F99807 red yellow
+..3..
+.343.
+10002
+11002
+.111.
+
+fireCrate3
+#BA4D0E #91290D #F99807 red yellow
+.3.3.
+34343
+43434
+11002
+.111.
+
+fireCrate4
+#BA4D0E #91290D #F99807 red yellow
+..3..
+.343.
+34343
+43434
+.111.
+
+
+(
+fireper1
+red yellow
+.0.0.
+01010
+10101
+01010
+.010.
+
+fireper2
+red yellow
+..0..
+.010.
+01010
+10101
+.101.
+)
+
+fireper1
+red yellow
+00000
+01110
+01010
+01110
+00000
+
+fireper2
+red yellow
+00000
+00000
+00100
+00000
+00000
+
+fireper1x
+red yellow
+00000
+01110
+01010
+01110
+00000
+
+fireper2x
+red yellow
+00000
+00000
+00100
+00000
+00000
+
+fireper1xx
+red yellow
+00000
+01110
+01010
+01110
+00000
+
+fireper2xx
+red yellow
+00000
+00000
+00100
+00000
+00000
+
+firex1
+red 
+
+
+firex2
+red
+
+firex3
+red 
+
+
+firex4
+red
+
+firex5
+red 
+
+firex6
+red
+
+ash
+black #333333
+.....
+.....
+..1..
+.011.
+00001
+
+pit
+black #7F370B
+11111
+11111
+00000
+00000
+00000
+
+
+barrel
+red  #444444 black yellow
+.0.0.
+.303.
+.211.
+.211.
+.222.
+
+barrel1
+red #444444 black yellow
+..0..
+.030.
+.211.
+.211.
+.222.
+
+barrelx1
+red 
+
+
+barrelx2
+red 
+
+endflame
+black 
+.....
+.....
+.....
+.....
+.....
+
+flametrigger
+black 
+.....
+.....
+.....
+.....
+.....
+
+end1
+black 
+.....
+.....
+.....
+.....
+.....
+
+end2
+black 
+.....
+.....
+.....
+.....
+.....
+
+end3
+black 
+.....
+.....
+.....
+.....
+.....
+
+srs
+black 
+.....
+.....
+.....
+.....
+.....
+
+bedup
+white #D7D7D7 #99122D #EE1C24 
+00000
+00000
+11111
+23333
+23333
+
+beddown
+white #D7D7D7 #99122D #EE1C24 
+23333
+23333
+23333
+23333
+22222
+
+table 
+#FFC300 #BA6803 #FFF465
+22222
+00000
+0...0
+0...0
+0...0
+
+chair
+ #BA6803 #FFC300 #FFF465
+.2...
+.2...
+.2...
+.211.
+.2.1.
+
+chair2
+ #BA6803 #FFC300 #FFF465
+...2.
+...2.
+...2.
+.112.
+.1.2.
+
+cupboard
+#FFC300 #BA6803 black #FFF465
+.333.
+10003
+10003
+11110
+0...0
+=======
+LEGEND
+=======
+
+(Player = Player1 or fireper1x)
+
+. = Background
+# = Wall
+P = Player
+* = Crate
+@ = Crate and Target
+(O = endarea)
+e = Target
+
+f = fireper1
+k = fireper2
+
+w = woodwall
+r=woodwallx
+d = pit
+j= filledground
+l = filledground and player
+g = pit and Target
+b=barrel
+x=barrel1
+t=barrel1 and target
+a=ash
+o=ash and player
+
+y=endflame and filledground
+%=endflame and filledground and end1 and flametrigger and srs
+i=endflame and filledground and flametrigger
+q=filledground and endflame and player
+u=filledground and target
+
+n=bedup
+m=beddown
+z=table and filledground
+c=chair and filledground
+h=chair2 and filledground
+&=cupboard and filledground
+
+
+=======
+SOUNDS
+=======
+
+player MOVE 35431509(97509308)
+barrel MOVE 61477902
+barrel1 MOVE 61477902
+
+
+Crate MOVE 36772507
+
+sfx1 2322302 (flame)
+sfx2 78713302(5964902) (woodwall flame)
+sfx3 47353904 (pit fill)
+
+sfx4 77411903 (test sound)
+
+showmessage 42200307
+closemessage 42200307
+
+startgame 9611309
+
+
+================
+COLLISIONLAYERS
+================
+
+Background
+filledground
+Target(, endarea)
+flametrigger
+ash,endflame
+Player,player1, Wall, woodwall,woodwallx, Crate, fireper1,fireper2,firex3,firex4,firex1,firex2,playerx1,playerx2,pit,barrel,barrel1,barrelx1,barrelx2,firecrate1,firecrate2,firecrate3,firecrate4,bedup,beddown,table,chair,chair2,cupboard
+end1,end2,end3
+fireper1x,fireper2x,fireper1xx,fireper2xx,firex5,firex6
+srs
+
+======
+RULES
+======
+
+
+([> player][ player1] -> [> player] [> player1])
+
+(Horizontal [< player] -> [< player1])
+
+[flametrigger|player] [ woodwallx] ->[flametrigger|player] [fireper1x]
+
+[ >  Player | Crate ] -> [  >  Player | > Crate  ]
+([ >  Player1 | Crate ] -> [  >  Player1 | > Crate  ])
+
+[ >  Player | barrel ] -> [  >  Player | > barrel  ]
+[ >  Player | barrel1 ] -> [  >  Player | > barrel1  ]
+
+[ >  Player | firecrate1 ] -> [  >  Player | > firecrate1 ] 
+[ >  Player | firecrate2 ] -> [  >  Player | > firecrate2 ] 
+[ >  Player | firecrate3 ] -> [  >  Player | > firecrate3 ] 
+[ >  Player | firecrate4 ] -> [  >  Player | > firecrate4 ]
+
+[> crate | pit]-> [|filledground] sfx3
+[> firecrate1 | pit]-> [|filledground]sfx3
+[> firecrate2 | pit]-> [|filledground]sfx3
+[> firecrate3 | pit]-> [|filledground]sfx3
+[> firecrate4 | pit]-> [|filledground]sfx3
+
+(ee
+[> crate | pitx]-> [|filledground] sfx3
+[> firecrate1 | pitx]-> [|filledground]sfx3
+[> firecrate2 | pitx]-> [|filledground]sfx3
+[> firecrate3 | pitx]-> [|filledground]sfx3
+[> firecrate4 | pitx]-> [|filledground]sfx3
+)
+[player|fireper1x]->[|fireper1x]
+[player|fireper2x]->[|fireper2x]
+
+
+[barrel | woodwall] ->[barrel|fireper1]
+[barrel1 | woodwall] ->[barrel1|fireper1]
+
+
+
+[fireper2 | woodwall] ->[fireper2|fireper1]
+[fireper2x | woodwall] ->[fireper2x|fireper1x]
+
+[fireper2x | endflame] ->[fireper2x|fireper1x]
+
+([firecrate1 | woodwall] ->[firecrate1|fireper1])
+([firecrate1 |crate] -> [firecrate1|firecrate1])
+
+[firecrate2 | woodwall] ->[firecrate2|fireper1]
+[firecrate2 |crate] -> [firecrate2|firecrate1]
+
+[firecrate3 | woodwall] ->[firecrate3|fireper1]
+[firecrate3 |crate] -> [firecrate3|firecrate1]
+
+[firecrate4 | woodwall] ->[firecrate4|fireper1]
+[firecrate4 |crate] -> [firecrate4|firecrate1]
+
+(
+[Action Player | crate] -> [Action Player |fire]
+[Action Player1 | crate] -> [Action Player1 |fire])
+
+
+
+late [end3|fireper1x]-> [target|player]
+late [srs|target] -> [fireper1xx|target]
+
+late [end2] -> [end3]
+late [end1|fireper2x]->[end2|fireper2x]
+
+late [firecrate4] -> [ash] sfx1
+late [firecrate3] -> [firecrate4] sfx1
+late [firecrate2] -> [firecrate3] sfx1
+late [firecrate1] -> [firecrate2] sfx1
+
+late [barrel|crate] -> [barrel|firecrate1] sfx1
+late [barrel1|crate] -> [barrel1|firecrate1] sfx1
+
+late [fireper2 |crate] -> [fireper2|firecrate1] sfx1
+late [fireper1 |crate] -> [fireper1|firecrate1] sfx1
+
+late [fireper1] -> [firex1]
+late [fireper2] -> [firex2]
+late [firex1] -> [fireper2] 
+late [firex2] -> [fireper1] 
+
+late [fireper1x] -> [firex3]
+late [fireper2x] -> [firex4]
+late [firex3] -> [fireper2x] 
+late [firex4] -> [fireper1x] 
+
+late [fireper1xx] -> [firex5]
+late [fireper2xx] -> [firex6]
+late [firex5] -> [fireper2xx] 
+late [firex6] -> [fireper1xx] 
+
+late [barrel] -> [barrelx1]
+late [barrel1] -> [barrelx2]
+late [barrelx1] -> [barrel1]
+late [barrelx2] -> [barrel]
+(
+late [player] -> [playerx1]
+late [player1] -> [playerx2]
+late [playerx1] -> [player1]
+late [playerx2] -> [player])
+
+==============
+WINCONDITIONS
+==============
+
+some Player on target
+
+(some Player1 on target)
+(All Player on endarea)
+
+=======
+LEVELS
+=======
+
+message zzz..z.zz
+
+message z.zzzz.z.z
+
+message zz.zz..z.z
+
+message z....(blink) (blink)
+
+..........
+.wwwwwwww.
+.wnjjj&jw.
+.wmljjjjw#
+.wjjjjjjje
+.wjczhjjw#
+.wjjjjjjw.
+.wwwwwwww.
+..........
+
+..........
+wwwwwww...
+njjj&jw..e
+mjjjjjw###
+jjjjjjle..
+jczhjjw###
+jjjjjjw...
+wwwwwww...
+..........
+
+..........
+wwwww.....
+jj&jw..e..
+jjjjw#####
+jjjjjpe...
+zhjjw#####
+jjjjw.....
+wwwww.....
+..........
+
+........##
+www.....#.
+&jw.....#.
+jjw######.
+jjj.pe....
+jjw######b
+jjw.....#.
+www.....#.
+........##
+
+......####
+w.....#...
+w.....#...
+w######...
+j..pee....
+w######x.*
+w.....#...
+w.....#.##
+......####
+
+message so I am on a journey to ignite the flames
+
+....######
+....#...##
+....#....#
+#####....*
+..pe.....#
+#####b.*.#
+....#...##
+....#.####
+....######
+
+..########
+..#...####
+..#....###
+###....**#
+.pe....#..
+###x.*.#..
+..#...##..
+..#.####..
+..########
+
+##########
+#...######
+#....#####
+#....**###
+pe...#...#
+#b.*.#...#
+#...##...e
+#.####...#
+##########
+
+message 1 of 10
+
+##########
+#...######
+#....#####
+#....**###
+.p...#...#
+#b.*.#...#
+#...##...e
+#.####...#
+##########
+
+(move)
+########..
+..######..
+...#####..
+..aaa###..
+...#...#..
+...#...###
+..##...pe.
+####...##.
+##########
+
+######....
+######....
+.#####....
+aaa###....
+.#...#....
+.#...####.
+##....pe##
+##...##...
+##########
+
+####......
+####......
+####......
+a###......
+...#......
+...####...
+.....p####
+...##.e...
+##########
+
+##......##
+##......#w
+##......#w
+##......#.
+.#......#.
+.####...#.
+....######
+.##.pe....
+##########
+
+message even though the fire fills me with terror
+
+......####
+......#www
+......#www
+......#...
+......#..*
+###...#...
+..######..
+#..pe....#
+##########
+
+....######
+....#www##
+....#wwwww
+....#.....
+....#..*..
+#...#...x.
+######..##
+..pe...###
+##########
+
+..########
+..#www##.*
+..#wwwwwdw
+..#.....b.
+..#..*....
+..#...b..#
+####..####
+.pe..#####
+##########
+
+##########
+#www##.*d.
+#wwwwwdw##
+#.....x.##
+#..*....##
+#...x..###
+##..######
+pe.#######
+##########
+
+message 2 of 10
+##########
+#www##.*de
+#wwwwwdw##
+#.....b.##
+#..*....##
+#...b..###
+##..######
+.p.#######
+##########
+
+(move)
+
+##########
+kf##..jpe.
+fkfkjw####
+......##..
+......##..
+.....###..
+.x######..
+.#######..
+########..
+
+##########
+##..j.pe..
+kfjw#####.
+....##..#.
+....##..#.
+...###..#.
+######..#.
+######..#.
+######..##
+
+#########.
+..j..pe.#.
+jw#####.#.
+..##..#.#.
+..##..#.#.
+.###..#.#.
+####..#.##
+####..#...
+####..####
+
+#######.#w
+j...pe#.#w
+#####.#.ww
+##..#.#.ww
+##..#.#.ww
+##..#.#.ww
+##..#.##w.
+##..#.....
+##..######
+
+
+message I was scared by what the fire could seem to claim
+
+#####.#www
+...p#.#w..
+###.#.ww.w
+..#.#.ww..
+..#.#.ww.w
+..#.#.ww.w
+..#.##w.*w
+..#.e.....
+..########
+
+
+###.#wwwww
+..#.#w....
+#.#.ww.www
+#.#.ww....
+#.#.ww.www
+#.#.ww.w..
+#.##w.*www
+#.pee.....
+##########
+
+
+#.#wwwwwww
+#.#w....*.
+#.ww.wwww.
+#.ww....w.
+#.ww.wwww.
+#.ww.w....
+##w.*www..
+.pe.......
+##########
+
+#wwwwwww##
+#w....*..g
+ww.wwww..#
+ww....w..#
+ww.wwww..#
+ww.w.....#
+w.*www.b.#
+pe.......#
+##########
+
+message 3 of 10
+#wwwwwww##
+#w....*..g
+ww.wwww..#
+ww....w..#
+ww.wwww..#
+ww.w.....#
+w.*www.b.#
+.p.......#
+##########
+
+(move)
+fkfkfk####
+.......le.
+.kfkf..###
+a...k..#..
+.kfkf..#..
+.f.....#..
+.kfk...#..
+.......#..
+########..
+
+kfkf######
+.....jpe..
+kfk..#####
+..f..#...#
+kfk..#....
+.....#....
+kf...#....
+.....#....
+######....
+
+fk########
+...j.pe..#
+f..#####..
+k..#...###
+f..#......
+...#......
+...#......
+...#......
+####......
+
+##########
+.j..pe.##.
+.#####....
+.#...####.
+.#......#.
+.#......#.
+.#......#.
+.#......#.
+##......##
+
+message all my excuses made the fire seem scarier
+
+##########
+...pe##...
+####.....w
+...####...
+......#..w
+......#.**
+......#..w
+......#..w
+......####
+
+##########
+..p##.....
+##.e...www
+.####.....
+....#..w.#
+....#.**..
+....#..w..
+....#..ww.
+....######
+
+##########
+.##.......
+.pe..wwww.
+###.......
+..#..w.###
+..#.**..##
+..#..w..b.
+..#..ww...
+..########
+
+##########
+#.......##
+pe.wwww.*e
+#........#
+#..w.###.#
+#.**..##.#
+#..w..b..#
+#..ww....#
+##########
+
+message 4 of 10
+##########
+#.......##
+.p.wwww.*e
+#........#
+#..w.###.#
+#.**..##.#
+#..w..b..#
+#..ww...##
+##########
+
+(move)
+########..
+......####
+.kfkf..pe.
+..a...a###
+.k.###.#..
+...b##.#..
+.w.....#..
+.ww...##..
+########..
+
+
+######....
+....######
+kfk..ape..
+a...a#####
+.###.#...#
+.x##.#...#
+.....#...#
+w...##....
+######....
+
+
+####......
+..########
+f..a.pe..#
+..a#####.#
+##.#...#.#
+##.#...#..
+...#...###
+..##......
+####......
+
+
+##......##
+##########
+.a..pe.###
+a#####.##.
+.#...#.##.
+.#...#....
+.#...#####
+##......##
+##......##
+
+message I avoided the flames until it was too much to bear
+
+......###w
+########*.
+...pe###..
+####.##...
+...#.##.*.
+...#......
+...######.
+......###.
+......####
+
+....###www
+######*...
+..p###..ww
+##.##....w
+.#.##.*.*w
+.#.e......
+.######.*.
+....###...
+....######
+
+..###wwwww
+####*...d.
+.###..wwww
+.##....www
+.##.*.*www
+.pe......w
+#####.*.b.
+..###.....
+..########
+
+###wwwwww#
+##*...d..g
+##..wwwwww
+#....wwww#
+#.*.*wwww#
+pe.....ww#
+###.*.x.w#
+###.....w#
+##########
+
+message 5 of 10
+###wwwwww#
+##*...d..g
+##..wwwwww
+#....wwww#
+#.*.*wwww#
+.P.....ww#
+###.*.b.w#
+###.....w#
+##########
+(move)
+
+#wwwwww###
+a...j..le.
+a.wwwwww##
+...wwww#..
+...wwww#..
+.....ww#..
+#.....w#..
+#.....w#..
+########..
+
+wwwww#####
+..j..jpe..
+wwwwww####
+.wwww#...#
+.wwww#...#
+...ww#...#
+....w#...#
+....w#...#
+######....
+
+www#######
+j..j.pe..#
+wwww####.#
+www#...#.#
+www#...#.#
+.ww#...#.#
+..w#...#..
+..w#...###
+####......
+
+w#########
+.j..pe.###
+ww####.##.
+w#...#.##.
+w#...#.##.
+w#...#.##.
+w#...#....
+w#...####.
+##......##
+
+message now its time to start controlling the fire
+
+##########
+...pe###..
+####.##...
+...#.##...
+...#.##...
+...#.##...
+...#......
+...####.b.
+......####
+
+##########
+..p###....
+##.##.....
+.#.##.....
+.#.##...##
+.#.##...##
+.#.e.....#
+.####.x..#
+....######
+
+##########
+.###......
+.##.....*.
+.##......*
+.##...##*.
+.##...##.*
+.pe....#*.
+###.b..#..
+..########
+
+##########
+##......##
+#.....*..#
+#......*.#
+#...##*..#
+#...##.*.#
+pe...#*..#
+#.x..#..*e
+##########
+
+message 6 of 10
+##########
+##......##
+#.....*..#
+#......*.#
+#...##*..#
+#...##.*.#
+.p...#*..#
+#.b..#..*e
+##########
+
+(move)
+########..
+.a....##..
+.....a.#..
+.......#..
+a.##...#..
+..##a..#..
+...#...###
+...#.a.oe.
+##########
+
+######....
+....##....
+...a.#....
+.....#....
+##...#...#
+##a..#...#
+.#...#####
+.#.a.ape..
+##########
+
+####......
+..##......
+.a.#......
+...#......
+...#...###
+a..#...#..
+...#####.#
+.a.a.pe..#
+##########
+
+##......##
+##......##
+.#......##
+.#......##
+.#...####.
+.#...#....
+.#####.##.
+.a..pe.###
+##########
+
+message now its time to get ready and prepare
+
+......####
+......####
+......####
+......##..
+...####...
+...#....b.
+####.##...
+...pe###..
+##########
+
+....######
+....#####*
+....####..
+....##..*.
+.####...w.
+.#.e..x.*.
+##.##...w.
+..p###....
+##########
+
+..########
+..#####*.d
+..####...#
+..##..*...
+###...w...
+.pe.b.*.*.
+.##...w...
+.###.....#
+##########
+
+##########
+#####*.ddg
+####...###
+##..*...##
+#...w...##
+pex.*.*.##
+#...w...##
+##.....###
+##########
+
+message 7 of 10
+##########
+#####*.ddg
+####...###
+##..*...##
+#...w...##
+.pb.*.*.##
+#...w...##
+##.....###
+##########
+(move)
+
+##########
+###a.jjle.
+##b..#####
+......##..
+..f...##..
+......##..
+..w...##..
+.....###..
+########..
+
+##########
+#a.jjjpe..
+x..#######
+....##...#
+k...##...#
+....##...#
+w...##...#
+...###....
+######....
+
+##########
+.jjj.pee.#
+.#######.#
+..##...#.#
+..##...#.#
+..##...#..
+..##...###
+.###......
+####......
+
+########ww
+jj..pe.#w#
+######.#w#
+##...#.#ww
+##...#.###
+##...#....
+##...####.
+##......##
+##......##
+
+message the time is gone to just aspire
+
+######wwww
+...pe#w##.
+####.#w##.
+...#.#www.
+...#.###w.
+...#...b..
+...####...
+......##..
+......####
+
+####wwwwww
+..p#w##...
+##.#w##...
+.#.#www.*.
+.#.###w...
+.#.e.x....
+.####.....
+....##....
+....######
+
+##wwwwwwww
+.#w##.....
+.#w##.....
+.#www.*.*.
+.###w.....
+.peb......
+###......d
+..##....dd
+..########
+
+wwwwwwwwww
+w##......w
+w##......w
+www.*.*..w
+##w......w
+pt.......w
+#......dww
+##....dd*g
+##########
+
+message 8 of 10
+wwwwwwwwww
+w##......w
+w##......w
+www.*.*..w
+##w......w
+.pb......w
+#......dww
+##....dd*g
+##########
+
+(move)
+
+fkfkfkfk..
+#......f..
+#......k..
+k......f..
+f......k..
+.b.....f..
+.....jfk##
+....dj.le.
+##########
+
+kfkfkf....
+.....k....
+.....f....
+.....k...#
+.....f...#
+.....k...#
+...jkf####
+..dj.jpe..
+##########
+
+fkfk......
+...f......
+...k......
+...f...###
+...k...#..
+...f...#.#
+.jfk####.#
+dj.j.pe..#
+##########
+
+kf......##
+.k......##
+.f......##
+.k...####.
+.f...#....
+.k...#.##.
+kf####.###
+.j..pe.###
+##########
+
+message no more excuses for playing unnecessary games
+
+......####
+......###b
+......###.
+...####...
+...#......
+...#.##...
+####.####.
+...pe####.
+##########
+
+....######
+....###b#.
+....###...
+.####.....
+.#.e.....*
+.#.##...**
+##.####..*
+..p####...
+##########
+
+..########
+..###b#..#
+..###.....
+###.......
+.pe....***
+.##...**.*
+.####..***
+.####...wd
+########ww
+
+##########
+###b#..###
+###.....##
+#........#
+pe...***.#
+#...**.*.#
+###..***w#
+###...wd*e
+######www#
+
+message 9 of 10
+##########
+###b#..###
+###.....##
+#........#
+.p...***.#
+#...**.*.#
+###..***w#
+###...wd*e
+######www#
+
+(move)
+
+########..
+#b#..###..
+#aa...##..
+.....a.#..
+....aa.#..
+....a..#..
+#...a.f###
+#...kj.oe.
+####fkf###
+
+######....
+#..###....
+a...##....
+...a.#....
+..aa.#....
+..a..#...#
+..a.k#####
+..fj.ape..
+##kfk#####
+
+####......
+.###......
+..##......
+.a.#......
+aa.#......
+a..#...###
+a.f#####..
+kj.a.pe..#
+fkf#######
+
+##......##
+##......##
+##......##
+.#......##
+.#......#.
+.#...####.
+k#####....
+.a..pe.###
+k#########
+
+message I will avoid my fears
+
+......####
+......####
+......####
+......###.
+......#...
+...####...
+####....*.
+...pe###..
+##########
+
+....######
+....####bb
+....####bb
+....###.bb
+....#....b
+.####...b.
+##.e..*..b
+..p###..bb
+##########
+
+..########
+..####xx..
+..####xx.x
+..###.xx.x
+..#....x..
+###...x.xx
+.pe.*..x..
+.###..xx##
+##########
+
+##########
+####bb..de
+####bb.b.w
+###.bb.b.w
+#....b...w
+#...b.bb.w
+pe*..b...w
+##..bb####
+##########
+
+message 10 of 10
+##########
+####bb..de
+####bb.b.w
+###.bb.b.w
+#....b...w
+#...b.bb.w
+.p*..b...w
+##..bb####
+##########
+
+(move)
+##########
+##xx..jpe.
+##xx..xk##
+#xxx...f.#
+x......k.#
+......xf.#
+.....xxk.#
+..xx####.#
+########.#
+
+##########
+bb..j.pe.#
+bb..bf##.#
+bb...k.#.#
+.....f.#.#
+....bk.#.#
+...bbf.#.#
+bb####.#.#
+######.#.#
+
+########..
+..j..pe#..
+..xk##.#..
+...f.#.#..
+...k.#.#..
+..xf.#.#..
+.xxk.#.#..
+####.#.#..
+####.#.#..
+
+
+######....
+j...p#....
+bf##e#....
+.k.#.#....
+.f.#.#....
+bk.#.#....
+bf.#.#....
+##.#.#....
+##.#.#....
+
+xk##p#....
+.f.#e#....
+.k.#.#....
+xf.#.#....
+xk.#.#....
+##.#.#....
+##.#.#....
+...#.#....
+wwwwywwwww
+
+.k.#p#....
+.f.#e#....
+bk.#.#....
+bf.#.#....
+##.#.#....
+##.#.#....
+...#.#....
+wwwwywwwww
+wyyyyyyyyw
+ 
+ message I will be consumed by these flames
+ 
+.k.#p#....
+xf.#e#....
+xk.#.#....
+##.#.#....
+##.#.#....
+...#.#....
+wwwwywwwww
+wyyyyyyyyw
+wyyyyyyyyw
+
+
+bk.#p#....
+bf.#e#....
+##.#.#....
+##.#.#....
+...#.#....
+wwwwywwwww
+wyyyyyyyyw
+wyyyyyyyyw
+wyyyyyyyyw
+
+
+xk.#p#....
+##.#e#....
+##.#.#....
+...#.#....
+wwwwywwwww
+wyyyyyyyyw
+wyyyyyyyyw
+wyyyyyyyyw
+wyyyyyyyyw
+
+
+##.#p#....
+##.#e#....
+...#.#....
+wwwwywwwww
+wyyyyyyyyw
+wyyyyyyyyw
+wyyyyyyyyw
+wyyyyyyyyw
+wyyyyyyyyw
+
+##.#p#....
+...#e#....
+wwwwywwwww
+wyyyyyyyyw
+wyyyyyyyyw
+wyyyyyyyyw
+wyyyyyyyyw
+wyyyyyyyyw
+wyyyyyyyyw
+
+...#p#....
+wwwwuwwwww
+wyyyyyyyyw
+wyyyyyyyyw
+wyyyyyyyyw
+wyyyyyyyyw
+wyyyyyyyyw
+wyyyyyyyyw
+wyyyyyyyyw
+
+rwwwqwwwwr
+wyyyyyyyyw
+wyyyyyyyyw
+wyyyyyyyyw
+wiii%%iiiw
+wyyyyyyyyw
+wyyyyyyyyw
+wyyyyyyyyw
+rwwwwwwwwr
+
+
+ message I will become more than I am
+message THE END
+(
+#www######
+#*.wwwwww#
+#.d...d.de
+#p.###b.b#
+#...##...#
+#.b....*.#
+##..*.*..#
+#####...##
+##########)
+(
+##########
+##.*.....@
+#..wwww.##
+#p.ww...##
+#.....*.##
+#.*.www.##
+#...###w##
+##.b.www##
+####www###)
+
+
+
+

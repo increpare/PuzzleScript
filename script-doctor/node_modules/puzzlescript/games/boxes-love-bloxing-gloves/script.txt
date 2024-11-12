@@ -1,0 +1,1143 @@
+title Boxes Love Bloxing Gloves
+author Alan Hazelden
+homepage www.draknek.org
+
+key_repeat_interval 0.16
+again_interval 0.16
+realtime_interval 0.16
+
+(verbose_logging)
+
+noaction
+
+run_rules_on_level_start
+
+========
+OBJECTS
+========
+
+Background
+Black DarkBlue
+00000
+01110
+01110
+01110
+00000
+
+
+Target
+White
+.....
+.000.
+.0.0.
+.000.
+.....
+
+Wall
+Grey
+
+Player
+#a46422 #495e2b #493c2b #000000
+..0..
+.111.
+01110
+02220
+.2.2.
+
+BoxL L
+#eb8931 #e8872f #e5842d #e1812b #de7e28 #d67823 #d37521 #cf721e #ce711e #d9c554
+01234
+92345
+93456
+94567
+45678
+
+BoxR R
+#eb8931 #e8872f #e5842d #e1812b #de7e28 #d67823 #d37521 #cf721e #ce711e #edd964
+01234
+12349
+23459
+34569
+45678
+
+BoxU U
+#eb8931 #e8872f #e5842d #e1812b #de7e28 #d67823 #d37521 #cf721e #ce711e #d9c554
+09994
+12345
+23456
+34567
+45678
+
+BoxD D
+#eb8931 #e8872f #e5842d #e1812b #de7e28 #d67823 #d37521 #cf721e #ce711e #edd964
+01234
+12345
+23456
+34567
+49998
+
+SplatL
+red
+0....
+0....
+0....
+0....
+0....
+
+SplatR
+red
+....0
+....0
+....0
+....0
+....0
+
+SplatU
+red
+00000
+.....
+.....
+.....
+.....
+
+SplatD
+red
+.....
+.....
+.....
+.....
+00000
+
+SplatL2
+red
+0....
+0.0..
+00...
+0.0..
+0....
+
+SplatR2
+red
+....0
+..0.0
+...00
+..0.0
+....0
+
+SplatU2
+red
+00000
+..0..
+.0.0.
+.....
+.....
+
+SplatD2
+red
+.....
+.....
+.0.0.
+..0..
+00000
+
+GloveL
+#f2de68 #edd964 #e9d460 #e4cf5b #dfca57 #d9c554 #d5c14f #e5842d
+.012.
+01734
+12777
+23756
+.456.
+
+GloveR
+#f2de68 #edd964 #e9d460 #e4cf5b #dfca57 #d9c554 #d5c14f #d37521
+.012.
+01734
+77745
+23756
+.456.
+
+GloveU
+#f2de68 #edd964 #e9d460 #e4cf5b #dfca57 #d9c554 #d5c14f #e5842d
+.012.
+01234
+17775
+23756
+.476.
+
+GloveD
+#f2de68 #edd964 #e9d460 #e4cf5b #dfca57 #d9c554 #d5c14f #d37521
+.072.
+01734
+17775
+23456
+.456.
+
+CantTrigger
+transparent
+
+TriggeredTemp
+#eb8931 #e8872f #e5842d #e1812b #de7e28 #d67823 #d37521 #cf721e #ce711e #d9c554
+..2..
+.234.
+23456
+.456.
+..6..
+
+TriggeredFinal
+#eb8931 #e8872f #e5842d #e1812b #de7e28 #d67823 #d37521 Brown White
+..2..
+.777.
+27876
+.777.
+..6..
+
+Priority0
+transparent
+
+Priority1
+transparent
+
+Priority2
+transparent
+
+Priority3
+transparent
+
+Priority4
+transparent
+
+TriggerCheck
+transparent
+
+MoveHere
+transparent
+
+PreventMove
+transparent
+
+WallL
+DarkGrey
+0....
+0....
+0....
+0....
+0....
+
+WallR
+DarkGrey
+....0
+....0
+....0
+....0
+....0
+
+WallU
+DarkGrey
+00000
+.....
+.....
+.....
+.....
+
+WallD
+DarkGrey
+.....
+.....
+.....
+.....
+00000
+
+WallLR
+DarkGrey
+0...0
+0...0
+0...0
+0...0
+0...0
+
+WallUD
+DarkGrey
+00000
+.....
+.....
+.....
+00000
+
+WallUL
+DarkGrey
+0....
+.....
+.....
+.....
+.....
+
+WallUR
+DarkGrey
+....0
+.....
+.....
+.....
+.....
+
+WallDL
+DarkGrey
+.....
+.....
+.....
+.....
+0....
+
+WallDR
+DarkGrey
+.....
+.....
+.....
+.....
+....0
+
+WallDLR
+DarkGrey
+.....
+.....
+.....
+.....
+0...0
+
+WallULR
+DarkGrey
+0...0
+.....
+.....
+.....
+.....
+
+WallLUD
+DarkGrey
+0....
+.....
+.....
+.....
+0....
+
+WallRUD
+DarkGrey
+....0
+.....
+.....
+.....
+....0
+
+Zero
+DarkGreen
+.000.
+.0.0.
+.0.0.
+.0.0.
+.000.
+
+One
+DarkGreen
+.00..
+..0..
+..0..
+..0..
+.000.
+
+Two
+DarkGreen
+.000.
+...0.
+.000.
+.0...
+.000.
+
+Three
+DarkGreen
+.000.
+...0.
+.000.
+...0.
+.000.
+
+Four
+DarkGreen
+.0.0.
+.0.0.
+.000.
+...0.
+...0.
+
+Five
+DarkGreen
+.000.
+.0...
+.000.
+...0.
+.000.
+
+Six
+DarkGreen
+.000.
+.0...
+.000.
+.0.0.
+.000.
+
+Seven
+DarkGreen
+.000.
+...0.
+...0.
+...0.
+...0.
+
+Eight
+DarkGreen
+.000.
+.0.0.
+.000.
+.0.0.
+.000.
+
+Nine
+DarkGreen
+.000.
+.0.0.
+.000.
+...0.
+.000.
+
+Once
+Brown #dddddd
+.....
+.000.
+.010.
+.000.
+.....
+
+
+=======
+LEGEND
+=======
+
+Counter = Once
+
+Crate = BoxL or BoxR or BoxU or BoxD
+
+Glove = GloveL or GloveR or GloveU or GloveD
+
+Hittable = Crate or Player or Glove
+
+Pushable = Crate or Glove
+
+Solid = Crate or Wall or Glove
+
+Splat1 = SplatL or SplatR or SplatU or SplatD
+Splat2 = SplatL2 or SplatR2 or SplatU2 or SplatD2
+
+Priority = Priority1 or Priority2 or Priority3 or Priority4
+
+Triggered = TriggeredTemp or TriggeredFinal
+
+. = Background
+# = Wall
+P = Player
+* = Target
+! = Priority0
+? = Priority0 and BoxD
+$ = Priority0 and BoxU
+
+A = BoxL and Once
+B = BoxR and Once
+C = BoxU and Once
+E = BoxD and Once
+
+WallCoverLR = WallL or WallR or WallLR
+WallCoverUD = WallU or WallD or WallUD
+WallCoverCorner = WallUL or WallUR or WallDL or WallDR or WallDLR or WallLUD or WallRUD or WallULR
+WallCover = WallCoverLR or WallCoverUD or WallCoverCorner
+
+CoverLR = WallCoverLR
+CoverUD = WallCoverUD
+
+
+0 = Zero and Wall
+1 = One and Wall
+2 = Two and Wall
+3 = Three and Wall
+4 = Four and Wall
+5 = Five and Wall
+6 = Six and Wall
+7 = Seven and Wall
+8 = Eight and Wall
+9 = Nine and Wall
+
+Number = Zero or One or Two or Three or Four or Five or Six or Seven or Eight or Nine
+
+
+=======
+SOUNDS
+=======
+
+restart 26040109
+undo 54997907
+
+endlevel 7293908
+
+Player move 88095307
+Crate move 5814507
+
+Glove create 55998304
+Splat1 create 2968302
+(67932504)
+
+sfx1 32201704 ( can't move )
+sfx2 5814507 ( crate move )
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Target, Priority0
+Player, Wall, Crate, Glove
+Triggered, CantTrigger, Priority
+TriggerCheck, MoveHere
+WallCoverUD, Number, PreventMove
+WallCoverCorner, Counter
+WallCoverLR
+Splat1, Splat2
+
+
+======
+RULES
+======
+
+( Splat )
+
+[ SplatL ] -> [ SplatL2 ]
+[ SplatR ] -> [ SplatR2 ]
+[ SplatU ] -> [ SplatU2 ]
+[ SplatD ] -> [ SplatD2 ]
+
+( Set up temporary info we use for choosing a box )
+
+[ BoxL ] -> [ left BoxL ]
+[ BoxR ] -> [ right BoxR ]
+[ BoxU ] -> [ up BoxU ]
+[ BoxD ] -> [ down BoxD ]
+
+[ stationary Player ] -> [ action Player ]
+
+[ action Player Priority1 ] [ BoxL no Triggered no CantTrigger ] -> [ action Player Priority1 ] [ BoxL Priority1 ]
+[ action Player Priority1 ] [ BoxR no Triggered no CantTrigger ] -> [ action Player Priority1 ] [ BoxR Priority2 ]
+[ action Player Priority1 ] [ BoxU no Triggered no CantTrigger ] -> [ action Player Priority1 ] [ BoxU Priority4 ]
+[ action Player Priority1 ] [ BoxD no Triggered no CantTrigger ] -> [ action Player Priority1 ] [ BoxD Priority3 ]
+
+[ action Player Priority2 ] [ BoxL no Triggered no CantTrigger ] -> [ action Player Priority2 ] [ BoxL Priority2 ]
+[ action Player Priority2 ] [ BoxR no Triggered no CantTrigger ] -> [ action Player Priority2 ] [ BoxR Priority1 ]
+[ action Player Priority2 ] [ BoxU no Triggered no CantTrigger ] -> [ action Player Priority2 ] [ BoxU Priority4 ]
+[ action Player Priority2 ] [ BoxD no Triggered no CantTrigger ] -> [ action Player Priority2 ] [ BoxD Priority3 ]
+
+[ action Player Priority3 ] [ BoxL no Triggered no CantTrigger ] -> [ action Player Priority3 ] [ BoxL Priority3 ]
+[ action Player Priority3 ] [ BoxR no Triggered no CantTrigger ] -> [ action Player Priority3 ] [ BoxR Priority4 ]
+[ action Player Priority3 ] [ BoxU no Triggered no CantTrigger ] -> [ action Player Priority3 ] [ BoxU Priority1 ]
+[ action Player Priority3 ] [ BoxD no Triggered no CantTrigger ] -> [ action Player Priority3 ] [ BoxD Priority2 ]
+
+[ action Player Priority4 ] [ BoxL no Triggered no CantTrigger ] -> [ action Player Priority4 ] [ BoxL Priority3 ]
+[ action Player Priority4 ] [ BoxR no Triggered no CantTrigger ] -> [ action Player Priority4 ] [ BoxR Priority4 ]
+[ action Player Priority4 ] [ BoxU no Triggered no CantTrigger ] -> [ action Player Priority4 ] [ BoxU Priority2 ]
+[ action Player Priority4 ] [ BoxD no Triggered no CantTrigger ] -> [ action Player Priority4 ] [ BoxD Priority1 ]
+
+( Loop until we've chosen a box to trigger )
+
+startloop
+
+( Choose a box )
+
+random [ action Player ] [ > Crate Priority0 Priority no Counter | Hittable ] -> [ Player ] [ > Crate Priority0 action TriggeredTemp | Hittable ]
+
+random [ action Player ] [ > Crate Priority1 no Counter | Hittable ] -> [ Player ] [ > Crate action TriggeredTemp | Hittable ]
+random [ action Player ] [ > Crate Priority2 no Counter | Hittable ] -> [ Player ] [ > Crate action TriggeredTemp | Hittable ]
+random [ action Player ] [ > Crate Priority3 no Counter | Hittable ] -> [ Player ] [ > Crate action TriggeredTemp | Hittable ]
+random [ action Player ] [ > Crate Priority4 no Counter | Hittable ] -> [ Player ] [ > Crate action TriggeredTemp | Hittable ]
+
+random [ action Player ] [ > Crate Priority1 | Hittable ] -> [ Player ] [ > Crate action TriggeredTemp | Hittable ]
+random [ action Player ] [ > Crate Priority2 | Hittable ] -> [ Player ] [ > Crate action TriggeredTemp | Hittable ]
+random [ action Player ] [ > Crate Priority3 | Hittable ] -> [ Player ] [ > Crate action TriggeredTemp | Hittable ]
+random [ action Player ] [ > Crate Priority4 | Hittable ] -> [ Player ] [ > Crate action TriggeredTemp | Hittable ]
+
+( Once we've chosen a box, choose the box behind it if that can also trigger )
+
+[ > Crate Priority | > Crate action Triggered ] -> [ > Crate action Triggered | > Crate Priority ]
+
+( Check if this box has space to push things forwards )
+( N.B. we use stationary TriggerCheck on the active box to prevent this loop thinking things are always going on )
+
+[ > Crate action Triggered no TriggerCheck | ] -> [ > Crate action Triggered TriggerCheck | > TriggerCheck ]
+
+[ > TriggerCheck Pushable | no MoveHere ] -> [ > TriggerCheck Pushable | > TriggerCheck ]
++ [ perpendicular TriggerCheck Glove | no TriggerCheck < Crate Triggered ] -> [ perpendicular TriggerCheck Glove | perpendicular TriggerCheck < Crate Triggered ]
++ [ perpendicular TriggerCheck > Crate Triggered | no TriggerCheck Glove ] -> [ perpendicular TriggerCheck > Crate Triggered | perpendicular TriggerCheck Glove ]
+
+( If can't move forwards )
+
+[ TriggerCheck Wall ] [ > TriggerCheck no Wall ] -> [ TriggerCheck Wall ] []
+[ TriggerCheck Wall ] -> [ action Wall ]
+
+( If can move forwards )
+
+[ > TriggerCheck no Solid ] -> [ > MoveHere ]
+
+( If can't move forwards, check if this box has space to push things backwards )
+
+random [ action Wall ] [ | > Crate action Triggered ] -> [ Wall ] [ < TriggerCheck | > Crate action Triggered ]
+
+[ action Wall ] -> [ Wall ]
+
+[ > TriggerCheck Pushable | no MoveHere ] -> [ > TriggerCheck Pushable | > TriggerCheck ]
++ [ perpendicular TriggerCheck Glove | no TriggerCheck < Crate Triggered ] -> [ perpendicular TriggerCheck Glove | perpendicular TriggerCheck < Crate Triggered ]
++ [ perpendicular TriggerCheck > Crate Triggered | no TriggerCheck Glove ] -> [ perpendicular TriggerCheck > Crate Triggered | perpendicular TriggerCheck Glove ]
+
+( If can't move backwards )
+
+[ TriggerCheck Wall ] [ Crate action Triggered ] -> [ TriggerCheck Wall ] [ Crate CantTrigger ]
+
+[ TriggerCheck Wall ] [ TriggerCheck no Wall ] -> [ TriggerCheck Wall ] []
+
+[ TriggerCheck Wall ] [ stationary Player ] -> [ Wall ] [ action Player ]
+
+[ TriggerCheck Wall ] -> [ Wall ]
+
+( If can move backwards )
+
+[ > TriggerCheck no Solid ] [ Crate action Triggered ] -> [ > MoveHere ] [ Crate > Triggered ]
+
+[ > TriggerCheck no Solid ] -> [ > MoveHere ]
+
+endloop
+
+[ moving TriggeredTemp Once ] -> [ moving TriggeredFinal ]
+
+[ > Crate TriggeredFinal | Glove ] -> [ > Crate TriggeredFinal | action Glove ]
+
+( now we've chosen a box or there's no suitable boxes )
+
+[ Priority no Player ] -> []
+
+[ moving Crate ] -> [ Crate ]
+
+( If all boxes triggered, remove all boxing gloves )
+
+[ action Player ] [ stationary Glove ] -> [ action Player ] []
+[ action Player ] [ TriggeredTemp ] -> [ action Player ] []
+[ action Player ] [ PreventMove ] -> [ action Player ] []
+[ CantTrigger ] -> []
+
+[ action Glove ] -> [ Glove ]
+
+( Push player - push untriggered boxes )
+
+[ MoveHere Player ] -> [ MoveHere Player PreventMove ]
+
+[ > MoveHere Player | BoxL Counter | no Solid ] -> [ > MoveHere no Priority | Player Priority1 | BoxL Counter ]
+[ > MoveHere Player | BoxR Counter | no Solid ] -> [ > MoveHere no Priority | Player Priority2 | BoxR Counter ]
+[ > MoveHere Player | BoxU Counter | no Solid ] -> [ > MoveHere no Priority | Player Priority3 | BoxU Counter ]
+[ > MoveHere Player | BoxD Counter | no Solid ] -> [ > MoveHere no Priority | Player Priority4 | BoxD Counter ]
+
+[ > MoveHere Player | BoxL no Triggered | no Solid ] -> [ > MoveHere no Priority | Player Priority1 | BoxL ]
+[ > MoveHere Player | BoxR no Triggered | no Solid ] -> [ > MoveHere no Priority | Player Priority2 | BoxR ]
+[ > MoveHere Player | BoxU no Triggered | no Solid ] -> [ > MoveHere no Priority | Player Priority3 | BoxU ]
+[ > MoveHere Player | BoxD no Triggered | no Solid ] -> [ > MoveHere no Priority | Player Priority4 | BoxD ]
+
+( Push player - push triggered boxes )
+
+[ > MoveHere Player | Crate Triggered ] -> [ > MoveHere Player | > Crate Triggered ]
+
+[ > MoveHere Player | Glove ] -> [ > MoveHere Player | > Glove ]
+
+left [ GloveR | moving Crate Triggered ] -> [ moving GloveR | moving Crate Triggered ]
+right [ GloveL | moving Crate Triggered ] -> [ moving GloveL | moving Crate Triggered ]
+up [ GloveD | moving Crate Triggered ] -> [ moving GloveD | moving Crate Triggered ]
+down [ GloveU | moving Crate Triggered ] -> [ moving GloveU | moving Crate Triggered ]
+
+left [ moving GloveR | Crate Triggered ] -> [ moving GloveR | moving Crate Triggered ]
+right [ moving GloveL | Crate Triggered ] -> [ moving GloveL | moving Crate Triggered ]
+up [ moving GloveD | Crate Triggered ] -> [ moving GloveD | moving Crate Triggered ]
+down [ moving GloveU | Crate Triggered ] -> [ moving GloveU | moving Crate Triggered ]
+
+[ > Crate | stationary Solid ] [ > Glove ] -> [ Crate | Solid ] [ Glove ]
+[ > Glove | stationary Solid ] [ > Crate ] -> [ Glove | Solid ] [ Crate ]
+
+[ > Crate Triggered | no Solid ] -> [ | Crate Triggered ]
++ [ > Glove | no Solid ] -> [ | Glove ]
+
+[ > Pushable ] -> [ Pushable ]
+
+( Push player - push triggered box backwards )
+
+[ no Solid | Crate action Triggered | > MoveHere Player | Solid ] -> [ action Crate action Triggered | | Player | Solid ]
+
+left [ action BoxL action Triggered | no Solid ] -> [ BoxL Triggered | GloveL ]
+right [ action BoxR action Triggered | no Solid ] -> [ BoxR Triggered | GloveR ]
+up [ action BoxU action Triggered | no Solid ] -> [ BoxU Triggered | GloveU ]
+down [ action BoxD action Triggered | no Solid ] -> [ BoxD Triggered | GloveD ]
+
+( Push player - splat )
+
+left [ > MoveHere Player | Solid ] -> [ > MoveHere SplatL | Solid SplatR ]
+right [ > MoveHere Player | Solid ] -> [ > MoveHere SplatR | Solid SplatL ]
+up [ > MoveHere Player | Solid ] -> [ > MoveHere SplatU | Solid SplatD ]
+down [ > MoveHere Player | Solid ] -> [ > MoveHere SplatD | Solid SplatU ]
+
+( Push player - move safely )
+
+right [ > MoveHere Player | no Solid ] -> [ > MoveHere no Priority | Player Priority1 ]
+left [ > MoveHere Player | no Solid ] -> [ > MoveHere no Priority | Player Priority2 ]
+up [ > MoveHere Player | no Solid ] -> [ > MoveHere no Priority | Player Priority3 ]
+down [ > MoveHere Player | no Solid ] -> [ > MoveHere no Priority | Player Priority4 ]
+
+( Push boxes )
+
+[ > TriggerCheck Counter ] -> [ > TriggerCheck > Counter ]
+
+[ < MoveHere | < TriggerCheck Pushable no Triggered ] -> [ Pushable | < MoveHere ]
++ [ < MoveHere | < TriggerCheck Pushable stationary Triggered ] -> [ Pushable Triggered | < MoveHere ]
+
+left [ < MoveHere | Pushable < Triggered ] -> [ Pushable Triggered | GloveL ]
+right [ < MoveHere | Pushable < Triggered ] -> [ Pushable Triggered | GloveR ]
+up [ < MoveHere | Pushable < Triggered ] -> [ Pushable Triggered | GloveU ]
+down [ < MoveHere | Pushable < Triggered ] -> [ Pushable Triggered | GloveD ]
+
+left [ < MoveHere | Pushable action Triggered ] -> [ GloveR | Pushable Triggered ]
+right [ < MoveHere | Pushable action Triggered ] -> [ GloveL | Pushable Triggered ]
+up [ < MoveHere | Pushable action Triggered ] -> [ GloveD | Pushable Triggered ]
+down [ < MoveHere | Pushable action Triggered ] -> [ GloveU | Pushable Triggered ]
+
+( Player movement - set trigger priority and mark which things to push )
+
+[ > Player | BoxL no Triggered ] -> [ > Player Priority1 | > BoxL ]
+[ > Player | BoxR no Triggered ] -> [ > Player Priority2 | > BoxR ]
+[ > Player | BoxU no Triggered ] -> [ > Player Priority3 | > BoxU ]
+[ > Player | BoxD no Triggered ] -> [ > Player Priority4 | > BoxD ]
+
+[ > Player | Glove ] -> [ > Player | > Glove ]
+[ > Player | Crate ] -> [ > Player | > Crate ]
+
+right [ > Player | no Crate ] -> [ > Player Priority1 | ]
+left [ > Player | no Crate ] -> [ > Player Priority2 | ]
+down [ > Player | no Crate ] -> [ > Player Priority3 | ]
+up [ > Player | no Crate ] -> [ > Player Priority4 | ]
+
+right [ > Player | Crate Triggered ] -> [ > Player Priority1 | Crate Triggered ]
+left [ > Player | Crate Triggered ] -> [ > Player Priority2 | Crate Triggered ]
+down [ > Player | Crate Triggered ] -> [ > Player Priority3 | Crate Triggered ]
+up [ > Player | Crate Triggered ] -> [ > Player Priority4 | Crate Triggered ]
+
+( Player movement - if part of a 2x1 box is moving, set the other part too )
+
+left [ GloveR | moving Crate Triggered ] -> [ moving GloveR | moving Crate moving Triggered ]
+right [ GloveL | moving Crate Triggered ] -> [ moving GloveL | moving Crate moving Triggered ]
+up [ GloveD | moving Crate Triggered ] -> [ moving GloveD | moving Crate moving Triggered ]
+down [ GloveU | moving Crate Triggered ] -> [ moving GloveU | moving Crate moving Triggered ]
+
+left [ moving GloveR | Crate Triggered ] -> [ moving GloveR | moving Crate moving Triggered ]
+right [ moving GloveL | Crate Triggered ] -> [ moving GloveL | moving Crate moving Triggered ]
+up [ moving GloveD | Crate Triggered ] -> [ moving GloveD | moving Crate moving Triggered ]
+down [ moving GloveU | Crate Triggered ] -> [ moving GloveU | moving Crate moving Triggered ]
+
+( Player movement - mark boxes which can't move )
+
+[ > Pushable | stationary Solid ] -> [ action Pushable | Solid ]
+
+[ action Crate | moving Glove ] -> [ Crate | Glove ]
+[ moving Crate | action Glove ] -> [ Crate | Glove ]
+
+[ action Pushable ] -> [ Pushable ]
+
+[ > Player | stationary Solid ] -> [ Player | Solid ] sfx1 ( can't move )
+
+[ stationary Crate moving Triggered ] -> [ Crate Triggered ]
+
+( Player movement - actually move )
+
+[ > Player Priority ] -> [ > Player > Priority ]
+[ > Crate Counter ] -> [ > Crate > Counter ]
+
+[ > Crate > Triggered | no Solid ] -> [ | action Crate Triggered ] sfx2
++ [ > Crate | no Solid ] -> [ | action Crate ] sfx2
++ [ > Glove | no Solid ] -> [ | action Glove ]
+
+( Cleanup and prevent player movement sometimes )
+
+[ > Glove ] -> cancel
+[ > Crate ] -> cancel
+
+[ TriggerCheck ] -> []
+[ MoveHere ] -> []
+
+left [ stationary BoxL | action Pushable ] -> [ BoxL | Pushable PreventMove ]
+right [ stationary BoxR | action Pushable ] -> [ BoxR | Pushable PreventMove ]
+up [ stationary BoxU | action Pushable ] -> [ BoxU | Pushable PreventMove ]
+down [ stationary BoxD | action Pushable ] -> [ BoxD | Pushable PreventMove ]
+
+left [ action BoxL | stationary Pushable ] -> [ BoxL | Pushable PreventMove ]
+right [ action BoxR | stationary Pushable ] -> [ BoxR | Pushable PreventMove ]
+up [ action BoxU | stationary Pushable ] -> [ BoxU | Pushable PreventMove ]
+down [ action BoxD | stationary Pushable ] -> [ BoxD | Pushable PreventMove ]
+
+late left [ BoxL | Player ] -> [ BoxL | Player PreventMove ]
+late right [ BoxR | Player ] -> [ BoxR | Player PreventMove ]
+late up [ BoxU | Player ] -> [ BoxU | Player PreventMove ]
+late down [ BoxD | Player ] -> [ BoxD | Player PreventMove ]
+
+late [ PreventMove ] -> again
+
+(Wall borders)
+
+left [ Wall no WallCoverLR | no Wall ] -> [ Wall WallL | ]
+right [ Wall no WallCoverLR | no Wall ] -> [ Wall WallR | ]
+right [ Wall WallL | no Wall ] -> [ Wall WallLR | ]
+
+up [ Wall no WallCoverUD | no Wall ] -> [ Wall WallU | ]
+down [ Wall no WallCoverUD | no Wall ] -> [ Wall WallD | ]
+down [ Wall WallU | no Wall ] -> [ Wall WallUD | ]
+
+left [ Wall no WallCoverCorner no WallUD | WallUD ] -> [ Wall WallLUD | WallUD ]
+right [ Wall no WallCoverCorner no WallUD | WallUD ] -> [ Wall WallRUD | WallUD ]
+up [ Wall no WallCoverCorner no WallLR | WallLR ] -> [ Wall WallULR | WallLR ]
+down [ Wall no WallCoverCorner no WallLR | WallLR ] -> [ Wall WallDLR | WallLR ]
+
+right [ WallD | Wall no WallCoverCorner no WallCoverUD ] -> [ WallD | Wall WallDL ]
+left [ WallD | Wall no WallCoverCorner no WallCoverUD ] -> [ WallD | Wall WallDR ]
+
+right [ WallU | Wall no WallCoverCorner no WallCoverUD ] -> [ WallU | Wall WallUL ]
+left [ WallU | Wall no WallCoverCorner no WallCoverUD ] -> [ WallU | Wall WallUR ]
+
+
+==============
+WINCONDITIONS
+==============
+
+All target on player
+All player on target
+
+=======
+LEVELS
+=======
+
+##########
+#....d...#
+#..u.....#
+#.###.##.#
+#.....##.*
+###p######
+
+#####*##
+#.....##
+#.#.####
+#d..l..#
+#...#..#
+#r.....#
+#.!.u..#
+##p#####
+
+############
+#..r......##
+#..d..#uu.l#
+p.....#...##
+#..u..#...##
+#r...l#....*
+############
+
+###########
+#r..#.....#
+*...#..u..#
+##?##..#..#
+#...#..#..#
+#.r....l..#
+#...#..#..#
+##p########
+
+##########p########
+######.........####
+######r#######.####
+#..dd...#####...l.#
+*........d......#.#
+#..........u....#.#
+#..uu...#####.....#
+###################
+
+############*##
+#.....#.#..#.##
+#.r.d......#.##
+p.....#u#r....#
+#.r.u.###.lu..#
+#..........####
+###############
+
+###########
+#.....#####
+#.r.l..d.##
+#.........*
+#..u..u..##
+#.....#..l#
+###p#######
+
+####p######
+#......####
+#.u.#..####
+#.d.#..####
+#......####
+#.##...#..#
+#....l.#..*
+#......#r.#
+#....l.#d.#
+#.........#
+###########
+
+#############
+#....##d#.###
+#.r.........*
+p.....a.u...#
+#.r..####.###
+#....####.###
+#############
+
+################
+#...####......##
+#.eu#......#..##
+#..........#..##
+#.......####.u.*
+##...#######..l#
+##p#############
+
+##############
+###..........#
+###....e.....#
+#.#..r...l..##
+#.#...###..u##
+*d#...###...a#
+#.....###...##
+#.#######...##
+##########p###
+
+##################
+#..............###
+#.e.......l.#..###
+p.....#u#......###
+#.r.#########r.###
+#.b.#########r...#
+#...#########....#
+###############*##
+
+###############
+#............##
+#.r#......#...#
+#..#......!...#
+#..#......#u.##
+#..#...e..#r.##
+#..u......#..##
+#.........#...*
+#######p#######
+
+###########
+#####.....#
+###.......#
+*.#.e.r...#
+#.........#
+#!!$$.l...#
+#####.....#
+#######p###
+
+##############
+#########...##
+#########.u.##
+*.....##b...##
+#..u#........#
+#..d#.r.#..l.p
+#.......#....#
+##############
+
+#####*#########
+#####..####.d.#
+#...#.........#
+#.r.#.uu..#...#
+#.r.####..#.#.#
+p.r.#.....#.#.#
+#.d.#.........#
+#...........a##
+#########uu####
+###############
+
+############
+#####...#..*
+#####.u.#..#
+#####.l.#d.#
+p.#........#
+#.r.#.....l#
+#........###
+#####u######
+############
+
+#####p####
+#b.e....##
+#......a.#
+#..#..c..#
+*..#....##
+##########
+
+#################
+#.....###########
+#.e.e......a#####
+p.....####.######
+#.b.b.d###.######
+#......d##.######
+####r...d#.######
+#####r.......#..*
+######r......#..#
+#######.........#
+#######....uu...#
+#################
+
+####################
+##...###.###########
+#..c.............###
+#..e........l.#..###
+#.....#u#u#.a....###
+#..b..#####...#r.###
+#..r..#####.c.#r...#
+#.............#....#
+########p########*##
+
+###*#########
+##..#..#..###
+##.lr..l..###
+##d##.##..###
+#..#........#
+p..r..#.u...#
+#..#..#.d...#
+#..#........#
+#..r..u.#...#
+#..##########
+#############
+
+
+(alt levels)
+
+(###*######12#
+##..#..#..###
+##.lr..l..###
+##d##.##..###
+#..#........#
+p..d..#.u...#
+#..#..#.d...#
+#..#........#
+#..r.u.###..#
+#..##########
+#############)
+
+
+(trashed levels)
+
+(############
+#####d######
+#.dd.......p
+#......r...#
+#..#.......#
+*..#...lu###
+####...#####
+####...#####
+############
+
+############
+####.......#
+####....#u##
+#.......#..*
+#.a#d#b.#d##
+#..........#
+###...######
+####p#######)
+
+
+(wip levels)
+
+(
+
+########
+####r..#
+####...*
+###d...#
+#....###
+#...u###
+#..#.###
+#......#
+#.r..l.p
+#......#
+########
+
+)
+
+message Thanks for playing :)
+
+( debug levels
+
+##############
+#.........##*#
+#....dr.r.####
+#...d.....####
+#........d...#
+#pr.r.r.u....#
+#........#####
+##############
+
+##############
+#...#.....##*#
+#....dr.r.####
+#...u.....####
+#........d...#
+#pr.r.r.u....#
+#........#####
+##############
+
+###########
+#.....#####
+#.p......##
+#........#*
+#.r......##
+#r.l#######
+###########
+
+############
+############
+####..######
+####..##d.##
+####..#...r#
+#.....#r..r#
+#...*.##ur##
+#.....###.##
+#########p##
+############
+
+
+###########
+#.....###*#
+#.p.r.d####
+#......d###
+####r...d##
+#####r....#
+######r...#
+#######...#
+###########
+
+)
+
+(11x7 screenshot)
+
+(###########
+####d###d##
+#r...r...##
+##.#.p.#.##
+##...l...l#
+##u###u####
+###########)

@@ -1,0 +1,355 @@
+title fire in winter
+author Rosden Shadow [Mark Signorelli]
+homepage rosden.itch.io
+run_rules_on_level_Start
+
+background_color #C3D3D9
+
+text_color #845C5C
+========
+OBJECTS
+========
+
+Background
+#7C94A1 #C3D3D9 
+11111
+11011
+10101
+11011
+11111
+
+
+Target
+DarkBlue
+.....
+.000.
+.0.0.
+.000.
+.....
+
+Wall
+#A17C8B #845C5C #5B4846 #423D39
+21110
+02110
+20221
+31332
+33323
+
+Wallfeel
+#A17C8B #845C5C #5B4846 #423D39
+.....
+.....
+.....
+10020
+21102
+
+
+Playerright
+#E5C17E #CC7A52 (#E0AAF2 #E57ED5) #845C5C #5B4846
+.000.
+11202
+11313
+11110
+.1.1.
+
+playerleft
+#E5C17E #CC7A52 (#E0AAF2 #E57ED5) #845C5C #5B4846
+.000.
+20211
+31311
+01111
+.1.1.
+
+Crate
+#E5C17E #CC7A52 #736053 #423D39
+21110
+21110
+21110
+22221
+33333
+
+cratefeel
+#E5C17E #CC7A52 #736053 #423D39
+.....
+.....
+.....
+.....
+10000
+
+tele
+#E0AAF2 #A87EE5
+.....
+.101.
+.0.0.
+.101.
+.....
+
+tele2
+#A87EE5 #E0AAF2
+.....
+.101.
+.0.0.
+.101.
+.....
+
+telestop
+#E0AAF2 #A87EE5
+.....
+.101.
+.0.0.
+.101.
+.....
+
+
+teleblock
+#FFD9FC #E0AAF2 #A87EE5 #705C84
+21100
+21110
+22110
+32223
+.333.
+teleblofeel
+#FFD9FC #E0AAF2 #A87EE5 #705C84
+.....
+.....
+.....
+.....
+.000.
+
+
+furnace1
+#F2F2AA #B32D2D #4D2E37 #73535E
+..1..
+.101.
+10101
+.101.
+22332
+furnace2
+#B32D2D #F2F2AA   #4D2E37 #73535E
+.....
+..1..
+.101.
+10101
+22332
+
+
+ash
+#4D2E37 #73535E
+.....
+.....
+.....
+..0..
+.100.
+
+baash
+black
+.....
+.....
+..0..
+.000.
+.....
+
+telepl
+PURPLE
+.....
+.....
+.....
+.....
+.....
+
+telecra
+PURPLE
+.....
+.....
+.....
+.....
+.....
+
+ttpl
+black
+.....
+.....
+.....
+.....
+.....
+
+ttcr
+black
+.....
+.....
+.....
+.....
+.....
+
+furnswi1
+black
+.....
+.....
+.....
+.....
+.....
+
+furnswi2
+black
+.....
+.....
+.....
+.....
+.....
+
+thefloor
+#C3D3D9
+00000
+00000
+00000
+00000
+00000
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Playerright
+* = Crate
+@ = Crate and Target
+O = Target
+t = teleblock
+& = tele
+f=furnace1
+-=thefloor
+
+feel = teleblofeel or wallfeel or cratefeel
+furnace = furnace1 or furnace2 or furnswi1 or furnswi2
+player=playerright or playerleft
+pushable=teleblock or crate
+telex=tele or telepl or telecra or telestop or tele2
+exposure = ttpl or ttcr
+telsto=player or crate
+=======
+SOUNDS
+=======
+
+sfx0 36772507
+
+sfx1 17669903
+
+sfx2 14764102
+================
+COLLISIONLAYERS
+================
+
+Background
+exposure
+thefloor
+ash,baash
+Target
+telex
+Player, Wall, pushable,furnace
+feel
+
+
+======
+RULES
+======
+
+[feel]->[]
+[telestop no telsto]->[tele]
+[ >  Player | pushable ] -> [  >  Player | > pushable  ] sfx0
+
+[> crate | furnace] -> [ baash | furnace] sfx2
+
+[> player |baash] ->[player|baash]
+
+[baash]->[ash]
+
+[ left Playerright] -> [ left playerleft]
+[ right Playerleft] -> [ right playerright]
+
+
+[furnace1]->[furnswi1]
+[furnace2]->[furnswi2]
+
+[furnswi1]->[furnace2]
+[furnswi2]->[furnace1] 
+(teleblock)
+[> teleblock|tele] ->[teleblock|tele]
+
+[> player | tele] -> [ |telepl] sfx1
+[> crate| tele] -> [|telecra] sfx1
+
+[telepl | no ttpl ]->[telepl|ttpl]
+[ttpl | no ttpl] -> [ttpl |ttpl]
+
+[telecra | no ttcr ]->[telecra|ttcr]
+[ttcr | no ttcr] -> [ttcr |ttcr]
+
+[ttpl | teleblock] -> [ttpl |telestop Playerright]
+[telepl]->[teleblock]
+
+[ttcr | teleblock] -> [ttcr |telestop  crate]
+[telecra]->[teleblock]
+
+[ttpl]->[]
+[ttcr]->[]
+(end teleblock)
+
+late up [wall| ]-> [wall|wallfeel]
+late up [crate| ]-> [crate|cratefeel]
+late up [teleblock| ]-> [teleblock|teleblofeel]
+==============
+WINCONDITIONS
+==============
+
+no crate
+
+=======
+LEVELS
+=======
+
+
+message burn all the crates in the fire
+message level 1 of 3
+---------
+-#######-
+##..f..##
+#...*.&.#
+#...p...#
+#.#######
+#.......#
+#...t.#*#
+#..*....#
+##....###
+-######--
+
+message level 2 of 3
+---------
+--#####--
+-##.f.##-
+-#..&..#-
+-#..p..#-
+######.##
+#...*...#
+#*..t...#
+#.......#
+#...*...#
+#########
+
+message level 3 of 3
+
+---------
+########-
+#...&..#-
+#.tp*..#-
+######.#-
+#..f.#.##
+#.......#
+#....#..#
+##...####
+-#####---
+---------
+
+message the cold is no match for you
+
+
+

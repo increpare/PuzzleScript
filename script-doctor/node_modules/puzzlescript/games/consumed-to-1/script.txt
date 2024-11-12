@@ -1,0 +1,317 @@
+title consumed to 1
+author Rosden Shadow [Mark Signorelli]
+homepage rosden.itch.io
+run_rules_on_level_Start
+
+background_color #705373
+
+text_color #AAE0F2
+
+========
+OBJECTS
+========
+
+Background
+#9B7CA1 #705373 (#E57ED5 #CC5285)
+11111
+10011
+10101
+11001
+11111
+(
+00101
+01110
+11011
+01111
+10110)
+(
+11101
+00101
+11111
+10100
+10111)
+
+
+Target
+#82A17C #7EE58D #D9FFDC 
+.....
+.010.
+.1.1.
+.010.
+.....
+
+Wall
+#7EA1E5 #AAE0F2 #536673 #46495B
+20012
+12001
+21220
+32332
+33233
+
+overwall
+#7EA1E5 #AAE0F2 #536673 #46495B
+.....
+.....
+.....
+01211
+20101
+
+
+Playerright
+#D9E9FF #AAAAF2  #E5C17E #DB7F55
+.000.
+11202
+11313
+11110
+.1.1.
+
+playerleft
+#D9E9FF #AAAAF2  #E5C17E #DB7F55
+.000.
+20211
+31311
+01111
+.1.1.
+
+Crate
+#DB7F55 #E5C17E  #B32D2D #73342E
+20011
+20001
+22001
+32223
+.333.
+
+overcrate
+#DB7F55 #E5C17E  #B32D2D #73342E
+.....
+.....
+.....
+.....
+.111.
+
+
+Crateempty3
+#7EE58D #D9FFDC #82A17C #394239 #DB7F55 #E5C17E  #B32D2D #73342E
+64011
+64401
+66441
+76667
+.777.
+
+
+Crateempty2
+#7EE58D #D9FFDC #82A17C #394239 #DB7F55 #E5C17E  #B32D2D #73342E
+20011
+60001
+66401
+76667
+.777.
+(50415
+24041
+62405
+36263
+.373.)
+(
+20011
+20001
+62005
+76667
+.777.
+)
+Crateempty
+#7EE58D #D9FFDC #82A17C #394239#DB7F55 #E5C17E #B32D2D #73342E
+20011
+20001
+22001
+32223
+.333.
+
+overcrateempty
+#7EE58D #D9FFDC #82A17C #394239 #DB7F55 #E5C17E  #B32D2D #73342E
+.....
+.....
+.....
+.....
+.111.
+cloner
+#E5C17E #DB7F55 #B32D2D #73342E
+.100.
+.210.
+.221.
+.332.
+.....
+
+swapcrate
+Orange Yellow
+00000
+0...0
+0...0
+0...0
+00000
+
+swapwall
+black
+.....
+.....
+.....
+.....
+.....
+
+thefloor
+#705373
+00000
+00000
+00000
+00000
+00000
+
+(
+checkempty
+black
+.....
+.....
+.....
+.....
+.....
+
+checkblock
+black
+.....
+.....
+.....
+.....
+.....
+)
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Playerright
+* = Crate
+@ = Crate and Target
+O = Target
+e= Crateempty
+c=cloner
+-=thefloor
+
+feel=overwall or overcrate or overcrateempty
+pushable=crate or cloner or swapcrate or Crateempty or Crateempty2 or Crateempty3
+win=crate or wall
+
+empty = Crateempty or Crateempty2 or Crateempty3
+emptyx =Crateempty or Crateempty2 or crateempty3
+theemx= crate or Crateempty3
+player=playerright or playerleft
+=======
+SOUNDS
+=======
+
+pushable MOVE 36772507
+
+
+sfx0 52836103
+sfx1 45427502
+================
+COLLISIONLAYERS
+================
+
+Background
+Target
+Player, Wall, pushable,swapwall,thefloor
+feel
+
+======
+RULES
+======
+
+[feel]->[]
+[ >  Player | pushable ] -> [  >  Player | > pushable  ]
+
+[ left Playerright] -> [ left playerleft]
+[ right Playerleft] -> [ right playerright]
+
+[> Crateempty | Crate]->[> Crateempty2 | ] sfx1
+[> Crateempty2 | Crate]->[> Crateempty3 | ] sfx1
+[> Crateempty3 | Crate]->[> crate | ] sfx1
+
+[> crate | Crateempty ]->[ |Crateempty2 ] sfx1
+[> crate | Crateempty2 ]->[| Crateempty3 ] sfx1
+[> crate | Crateempty3]->[| crate] sfx1
+
+late up [wall| ]-> [wall|overwall]
+late up [theemx| ]-> [theemx|overcrate]
+late up [emptyx| ]-> [emptyx|overcrateempty]
+
+
+==============
+WINCONDITIONS
+==============
+
+no empty
+
+
+
+=======
+LEVELS
+=======
+
+message only have 1 crate remaining
+
+message level 1 of 4
+--------
+-######-
+##....##
+#......#
+#.*..*.#
+#......#
+#......#
+#.e..*.#
+#..P...#
+##....##
+-######-
+
+message level 2 of 4
+--------
+-######-
+##....##
+#e*..*.#
+#e..*..#
+#e.*e*.#
+#*..*P.#
+#*.....#
+#*.....#
+#.....##
+#######-
+
+message level 3 of 4
+--------
+-######-
+##.P..##
+#......#
+#..**..#
+#.e##e.#
+#.e#*..#
+#..**..#
+#..*.*.#
+##....##
+-######-
+
+message level 4 of 4
+--------
+-######-
+##.ee.##
+#.eeee.#
+#.**.*.#
+#.****.#
+#.*..*.#
+#.****.#
+#..p...#
+##....##
+-######-
+
+
+
+message all for one

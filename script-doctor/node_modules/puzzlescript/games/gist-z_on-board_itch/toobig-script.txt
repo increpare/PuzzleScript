@@ -1,0 +1,4364 @@
+title On Board
+author PuzzleScript
+flickscreen 16x12
+again_interval 0.1
+noundo
+
+========
+OBJECTS
+========
+
+(..............................)
+(............common............)
+(..............................)
+battery
+lightgrey red blue white
+.3.3.
+33333
+01000
+11122
+01000
+
+underwater_battery
+lightgrey red blue white
+.3.3.
+33333
+01000
+11122
+01000
+
+tree_battery
+lightgrey red blue white
+.3.3.
+33333
+01000
+11122
+01000
+
+water_cave_battery
+lightgrey red blue white
+.3.3.
+33333
+01000
+11122
+01000
+
+lava_battery
+lightgrey red blue white
+.3.3.
+33333
+01000
+11122
+01000
+
+house_battery
+lightgrey red blue white
+.3.3.
+33333
+01000
+11122
+01000
+
+pickup
+yellow lightblue white
+0.1.0
+.101.
+10201
+.101.
+0.1.0
+
+save_point
+transparent
+
+(..............................)
+(............players...........)
+(..............................)
+
+(earth suit)
+player_map_earth
+lightblue white blue
+.000.
+.010.
+00000
+.222.
+.2.2.
+
+player_platform_earth_ground
+lightblue white blue
+.000.
+.010.
+00000
+.222.
+.2.2.
+
+player_platform_earth_jump_start
+lightblue white blue
+.000.
+.010.
+00000
+.222.
+.2.2.
+
+player_platform_earth_jump
+lightblue white blue
+.000.
+.010.
+00000
+.222.
+.2.2.
+
+player_platform_earth_fall
+lightblue white blue
+.000.
+.010.
+00000
+22222
+.....
+
+(..............................)
+(water suit)
+(..............................)
+player_map_water
+lightred blue red
+.000.
+.010.
+00000
+.222.
+.2.2.
+
+player_platform_water_ground
+lightred blue red
+.000.
+.010.
+00000
+.222.
+.2.2.
+
+player_platform_water_jump_start
+lightred blue red
+.000.
+.010.
+00000
+.222.
+.2.2.
+
+player_platform_water_jump
+lightred blue red
+.000.
+.010.
+00000
+.222.
+.2.2.
+
+player_platform_water_fall
+lightred blue red
+.000.
+.010.
+00000
+22222
+.....
+
+player_water_right
+lightred blue red
+...0.
+22000
+.2010
+22000
+...0.
+
+player_water_left
+lightred blue red
+.0...
+00022
+0102.
+00022
+.0...
+
+player_water_up
+lightred blue red
+.000.
+00100
+.000.
+.222.
+.2.2.
+
+player_water_down
+lightred blue red
+.2.2.
+.222.
+.000.
+00100
+.000.
+
+(..............................)
+(fire suit)
+(..............................)
+player_map_fire
+white red lightblue
+.000.
+.010.
+00000
+.222.
+.2.2.
+
+player_platform_fire_ground
+white red lightblue
+.000.
+.010.
+00000
+.222.
+.2.2.
+
+player_platform_fire_jump_start
+white red lightblue
+.000.
+.010.
+00000
+.222.
+.2.2.
+
+player_platform_fire_jump
+white red lightblue
+.000.
+.010.
+00000
+.222.
+.2.2.
+
+player_platform_fire_fall
+white red lightblue
+.000.
+.010.
+00000
+22222
+.....
+
+player_fire_right
+white red lightblue
+...0.
+22000
+.2010
+22000
+...0.
+
+player_fire_left
+white red lightblue
+.0...
+00022
+0102.
+00022
+.0...
+
+player_fire_up
+white red lightblue
+.000.
+00100
+.000.
+.222.
+.2.2.
+
+player_fire_down
+white red lightblue
+.2.2.
+.222.
+.000.
+00100
+.000.
+
+(..............................)
+(..............................)
+(..........map_objects.........)
+(..............................)
+(..............................)
+
+map_background
+darkgreen green
+00000
+00010
+00100
+00000
+10000
+
+map_flower
+green red lightblue darkgreen
+32333
+21233
+32333
+00333
+30333
+
+map_flower2
+lightgreen orange red blue darkblue
+34234
+32123
+43243
+30003
+43034
+
+map_direction_stone1
+darkgrey lightblue
+...00
+..001
+.0111
+00011
+00001
+
+map_direction_stone2
+darkgrey lightblue
+00...
+100..
+1110.
+11000
+10000
+
+map_rock
+darkbrown brown
+..0..
+.01..
+.010.
+.0001
+00001
+
+map_stone
+darkgrey lightblue
+.....
+.....
+.000.
+00010
+00000
+
+map_stone_crush
+darkgrey yellow red
+0.0.0
+.1.1.
+0.2.0
+.1.1.
+0.0.0
+
+map_fir
+green darkbrown
+..0..
+.000.
+00000
+.010.
+..1..
+
+map_log1
+brown lightgreen
+.....
+...01
+...0.
+00000
+00000
+
+map_log2
+brown lightgreen
+.....
+...01
+...0.
+00000
+00000
+
+map_log3
+brown lightgreen
+.....
+...01
+...0.
+00000
+00000
+
+map_fire
+yellow orange red
+..0..
+0.00.
+.010.
+01110
+01210
+
+map_water
+blue darkblue
+01010
+10001
+00100
+01010
+10101
+
+map_lava
+darkred red red
+02020
+20002
+00100
+01010
+10201
+
+(tree)
+tree_bark_left
+darkbrown brown
+..010
+..010
+..010
+..000
+..000
+
+tree_bark_right
+darkbrown brown
+010..
+010..
+010..
+000..
+000..
+
+
+tree_bark_centre
+darkbrown brown
+00000
+00000
+00000
+00000
+00000
+
+tree_left_root
+darkbrown brown
+.0000
+0000.
+0000.
+0001.
+001..
+
+tree_right_root
+darkbrown brown
+0000.
+.000.
+..000
+.1000
+..100
+
+map_tree_entrance
+darkbrown black brown
+02120
+21112
+11111
+11111
+11111
+
+map_tree_hole1_closed
+brown green lightgreen black
+.12..
+1112.
+11112
+.01..
+.0...
+
+map_tree_hole1_entrance
+brown green lightgreen black
+31233
+11123
+11112
+30133
+.0...
+
+map_tree_hole2_closed
+brown green lightgreen black
+.12..
+1112.
+11112
+.01..
+.0...
+
+map_tree_hole2_entrance
+brown green lightgreen black
+31233
+11123
+11112
+30133
+.0...
+
+map_tree_hole3_closed
+brown green lightgreen black
+.12..
+1112.
+11112
+.01..
+.0...
+
+map_tree_hole3_entrance
+brown green lightgreen black
+31233
+11123
+11112
+30133
+.0...
+
+tree_hollow
+darkbrown brown
+00100
+01110
+11111
+01110
+00100
+
+tree_lb_bough
+lightgreen green
+00100
+10010
+.0010
+..001
+...00
+
+tree_lt_bough
+lightgreen green
+...00
+..001
+.0010
+01001
+00100
+
+tree_rb_bough
+lightgreen green
+00100
+01001
+0100.
+100..
+00...
+
+tree_rt_bough
+lightgreen green
+00...
+100..
+0100.
+10010
+00100
+
+tree_centre_bough
+lightgreen green
+00100
+00010
+00100
+01000
+00100
+
+tree_top
+lightgreen green
+.....
+.....
+.000.
+01010
+10101
+
+map_pine
+brown green lightgreen
+.12..
+1112.
+11112
+.01..
+.0...
+
+map_bridge_horizontal
+brown darkbrown green blue darkblue
+00010
+40330
+30430
+30340
+01000
+
+map_bridge_vertical
+brown darkbrown green blue darkblue
+03430
+10000
+04330
+00001
+03340
+
+map_dive_point
+brown darkbrown blue darkblue
+00012
+30203
+20302
+20212
+01003
+
+vulcano_left
+darkblue black blue darkred
+....0
+...03
+.0102
+01321
+01011
+
+vulcano_right
+darkblue black blue
+0....
+00...
+2010.
+12010
+11010
+
+vulcano_center
+darkblue blue
+00000
+00100
+00000
+00000
+01000
+
+vulcano_steps
+darkblue blue
+00000
+01110
+00000
+01110
+00000
+
+map_vulcano_entrance
+darkblue black
+01110
+11111
+11111
+11111
+11111
+
+house_p1
+transparent
+
+house_p2
+darkred red
+.....
+.....
+...00
+.0011
+01111
+
+house_p3
+darkred red
+...00
+.0001
+01011
+10111
+01111
+
+house_p4
+darkred red grey orange
+23...
+330..
+32100
+33111
+11111
+
+house_p5
+darkred red
+.....
+.....
+0....
+100..
+11100
+
+house_p6
+darkred red brown darkbrown
+....0
+...01
+..010
+.0002
+00223
+
+house_p7
+darkred red brown blue lightblue darkbrown
+11110
+11005
+00223
+25234
+22223
+
+house_p8
+darkred red brown blue lightblue darkbrown
+01111
+20011
+32200
+43225
+32522
+
+house_p9
+darkred red brown darkbrown
+11111
+11111
+01111
+20011
+23200
+
+house_p10
+darkred red darkbrown
+11110
+11102
+11022
+10222
+02222
+
+house_p11
+brown darkbrown lightblue
+01000
+10000
+00010
+00100
+00000
+
+house_p12
+brown darkbrown lightblue
+00000
+01000
+10000
+00010
+00100
+
+house_p13
+brown darkbrown lightblue blue
+00010
+00000
+01333
+10322
+00322
+
+house_p14
+brown darkbrown lightblue blue
+00010
+00100
+33000
+23010
+23000
+
+house_p15
+darkbrown
+00000
+00000
+00000
+00000
+00000
+
+house_p16
+brown darkbrown lightblue
+01000
+10000
+00010
+00100
+00000
+
+map_house_entrance
+brown darkbrown black yellow grey
+02420
+24242
+24433
+24242
+24442
+
+house_p18
+brown darkbrown lightblue blue
+00322
+00333
+01000
+10000
+00001
+
+house_p19
+brown darkbrown lightblue blue
+23010
+33000
+00000
+00100
+01000
+
+house_p20
+darkbrown
+00000
+0000.
+000..
+00...
+0....
+
+house_smoke
+white
+.....
+.....
+0.0..
+.0...
+0....
+
+map_underwater_exit
+blue darkblue lightblue
+10001
+01010
+10201
+01010
+10001
+
+map_water_passage1_entrance_left
+blue darkblue lightblue
+10001
+01010
+10201
+01010
+10001
+
+map_water_passage1_entrance_right
+blue darkblue lightblue
+10001
+01010
+10201
+01010
+10001
+
+map_water_hole1_entrance
+blue darkblue lightblue
+10001
+01010
+10201
+01010
+10001
+
+map_water_hole2_entrance
+blue darkblue lightblue
+10001
+01010
+10201
+01010
+10001
+
+map_water_cave_entrance
+blue darkblue lightblue
+10001
+01010
+10201
+01010
+10001
+
+map_water_cave_exit
+red darkred lightred
+10001
+01010
+10201
+01010
+10001
+
+map_lava_hole_closed
+red darkred grey
+10001
+01010
+10201
+01010
+10001
+
+map_lava_hole_entrance
+red darkred lightred
+10001
+01010
+10201
+01010
+10001
+
+map_water_passage2_entrance_left
+blue darkblue lightblue
+10001
+01010
+10201
+01010
+10001
+
+map_water_passage2_entrance_right
+blue darkblue lightblue
+10001
+01010
+10201
+01010
+10001
+
+map_lava_passage_entrance_left
+red darkred lightred
+10001
+01010
+10201
+01010
+10001
+
+map_lava_passage_entrance_right
+red darkred lightred
+10001
+01010
+10201
+01010
+10001
+
+map_escape_lava_exit_sealed
+red darkred grey
+10001
+01010
+10201
+01010
+10001
+
+map_escape_lava_exit
+red darkred lightred
+10001
+01010
+10201
+01010
+10001
+
+(..............................)
+(..............................)
+(.......Inside Tree............)
+(..............................)
+(..............................)
+
+tree_player_drown
+lightblue blue white darkgreen darkbrown
+33343
+23332
+02020
+01010
+11111
+
+tree_background
+darkgreen darkbrown
+00010
+00001
+00000
+00000
+00000
+
+tree_bark
+brown darkbrown
+01100
+11000
+00011
+11000
+01100
+
+tree_platform
+darkgreen lightgreen brown darkbrown
+31313
+13313
+10010
+00100
+00000
+
+tree_platform_moving
+green darkbrown darkgreen
+00000
+00011
+20202
+20222
+22222
+
+tree_lever_off
+green brown darkbrown darkgreen
+33323
+33332
+00333
+31333
+33133
+
+tree_lever_on
+green brown darkbrown darkgreen
+33323
+33332
+33300
+33313
+33133
+
+tree_log
+brown lightgreen darkbrown darkgreen
+33323
+33301
+33303
+00000
+00000
+
+tree_moss_floor
+darkgreen green brown darkbrown
+10100
+31313
+32223
+33222
+22332
+
+tree_moss_top
+green darkgreen darkbrown
+00000
+00012
+10101
+10111
+11111
+
+tree_vine
+green darkgreen darkbrown
+11101
+11012
+11101
+11011
+11111
+
+tree_water
+darkblue blue blue
+02020
+20002
+00100
+01010
+10201
+
+tree_entrance
+black darkgreen
+10001
+00000
+00000
+00000
+00000
+
+tree_move_cancel
+darkgreen darkbrown
+00010
+00001
+00000
+00000
+00000
+
+tree_bark_move_cancel
+brown darkbrown
+01100
+11000
+00011
+11000
+01100
+
+tree_s1
+blue lightblue white grey red
+.1331
+00000
+.0000
+..22.
+.2...
+
+tree_s2
+blue lightblue white yellow red
+14441
+00400
+00000
+.22..
+.2...
+
+tree_s3
+blue lightblue white grey red
+1331.
+00000
+0000.
+.22..
+...2.
+
+tree_exit
+darkblue blue blue
+02020
+20002
+00100
+01010
+10201
+
+(..............................)
+(.......Tree Hole 1............)
+(..............................)
+tree_flower
+green red yellow darkgreen
+32333
+21233
+32333
+00333
+30333
+
+tree_mushroom
+red white darkgreen
+21002
+10010
+00000
+21112
+21112
+
+tree_mushroom_hidden
+darkgreen darkbrown
+00010
+00001
+00000
+00000
+00000
+
+tree_mushroom_top
+darkgreen darkbrown
+00010
+00001
+00000
+00000
+00000
+
+tree_mushroom_jump
+lightgreen darkgreen darkbrown
+00000
+00012
+10101
+10111
+11111
+
+tree_spike
+grey white darkgreen darkbrown
+22132
+22013
+21002
+10000
+00000
+
+tree_hole1_entrance
+darkgreen darkbrown
+00010
+00001
+00000
+00000
+00000
+
+tree_hole1_exit
+green darkgreen darkbrown
+11101
+11012
+11101
+11011
+11111
+
+(..............................)
+(....Tree Hole 2 (near lake)...)
+(..............................)
+tree_flower2
+green red yellow darkgreen
+32333
+21233
+32333
+00333
+30333
+
+tree_mushroom_hidden2
+darkgreen darkbrown
+00010
+00001
+00000
+00000
+00000
+
+tree_moss
+lightblue  green lightgreen
+.1.1.
+1....
+...2.
+.2...
+2....
+
+tree_hole_water
+blue white
+00000
+00000
+00100
+01000
+00000
+
+tree_hole_water_top
+blue white darkgreen darkbrown
+12131
+01010
+00000
+01000
+10000
+
+tree_hole2_entrance
+darkgreen darkbrown
+00010
+00001
+00000
+00000
+00000
+
+tree_hole2_exit
+green darkgreen darkbrown
+11101
+11012
+11101
+11011
+11111
+
+(....................................)
+(....Tree Hole 3 (down the bridge)...)
+(....................................)
+
+tree_hole_bark_crushing
+lightbrown darkbrown
+01100
+11000
+00011
+11000
+01100
+
+tree_hole_flower3
+green red yellow darkgreen
+32333
+21233
+32333
+00333
+30333
+
+tree_hole_flower_on_hidden
+transparent
+
+tree_hole_log
+brown lightgreen darkbrown darkgreen
+.....
+...01
+...0.
+00000
+00000
+
+tree_hole_log_water
+brown lightgreen
+.....
+...01
+...0.
+00000
+00000
+
+tree_hole_can_drown
+transparent
+
+tree_hole3_entrance
+darkgreen darkbrown
+00010
+00001
+00000
+00000
+00000
+
+tree_hole3_exit
+green darkgreen darkbrown
+11101
+11012
+11101
+11011
+11111
+
+(..............................)
+(..............................)
+(.......Underwater.............)
+(..............................)
+(..............................)
+water_background
+darkblue blue
+00010
+00000
+00100
+00000
+00000
+
+water_top
+darkblue lightblue blue
+00210
+02221
+22022
+20002
+00000
+
+water_bed
+darkblue lightgreen  green
+01010
+10000
+00020
+02000
+20000
+
+water_bed_return
+lightblue  green lightgreen
+.1.1.
+1....
+...2.
+.2...
+2....
+
+water_grotto
+darkgreen green darkblue
+01010
+12221
+22122
+12221
+01010
+
+water_depth
+darkgreen darkblue
+11011
+10001
+00100
+01110
+11011
+
+water_vegetation
+white lightgrey lightblue
+.2...
+20...
+.2.1.
+...01
+...1.
+
+water_stars
+lightblue white yellow lightgrey
+.0...
+000..
+.0.2.
+..222
+...2.
+
+underwater_entrance
+darkblue blue
+00010
+00000
+00100
+00000
+00000
+
+underwater_entrance2
+darkblue blue
+00010
+00000
+00100
+00000
+00000
+
+underwater_exit
+darkblue blue
+11010
+01100
+00110
+01100
+11010
+
+(..........water passage 1.................)
+
+water_passage1_left_entrance
+darkblue blue
+00010
+00000
+00100
+00000
+00000
+
+water_passage1_right_entrance
+darkblue blue
+00010
+00000
+00100
+00000
+00000
+
+water_passage1_left_exit
+darkblue lightblue blue
+01000
+10120
+00202
+01000
+10100
+
+water_passage1_right_exit
+darkblue lightblue blue
+01000
+10120
+00202
+01000
+10100
+
+(..........water hole 1.................)
+water_hole1_entrance
+darkblue blue
+00010
+00000
+00100
+00000
+00000
+
+water_hole1_exit
+darkblue lightblue blue
+01000
+10120
+00202
+01000
+10100
+
+(..............................)
+(..............................)
+(.......Water Cave.............)
+(..............................)
+(..............................)
+
+(...........Path...............)
+
+water_fish_placeholder
+darkblue blue
+00010
+00000
+00100
+00000
+00000
+
+water_fish
+lightblue yellow red
+.....
+0.11.
+01121
+0.11.
+.....
+
+fish_splash
+darkred red
+0.0.0
+.010.
+.101.
+.010.
+0.0.0
+
+water_block_placeholder
+darkblue blue
+00010
+00000
+00100
+00000
+00000
+
+water_block
+lightblue
+00000
+0...0
+0...0
+0...0
+00000
+
+water_current_horizontal
+white lightblue darkblue
+22222
+00222
+22222
+21122
+22222
+
+water_current_vertical
+white lightblue darkblue
+20222
+20212
+22212
+22222
+22222
+
+water_fountain
+blue white lightblue darkblue blue
+31343
+13133
+31423
+33232
+33323
+
+water_bomb_placeholder
+darkblue blue
+00010
+00000
+00100
+00000
+00000
+
+water_bomb
+black white red
+...2.
+..1..
+.00..
+0000.
+.00..
+
+water_bam
+red orange yellow darkblue blue
+13241
+30103
+21012
+30103
+13231
+
+water_cave_path_entrance
+darkblue blue
+00010
+00000
+00100
+00000
+00000
+
+water_cave_path_exit
+darkblue lightblue blue
+01000
+10120
+00202
+01000
+10100
+
+water_cave_entrance
+black darkblue
+10001
+00000
+00000
+00000
+00000
+
+(...........Inside...............)
+water_cave_background
+darkblue grey
+00000
+00000
+00100
+01000
+00000
+
+water_cave_gate
+black darkblue
+.000.
+00000
+00000
+00000
+00000
+
+water_cave_vine
+green
+...0.
+..0..
+...0.
+..0..
+.....
+
+water_cave_stalagmite
+darkblue grey lightblue white
+20102
+01030
+10300
+00000
+00000
+
+water_cave_stalactite
+darkblue yellow lightblue white
+00100
+01310
+00100
+23200
+02000
+
+water_cave_vent1
+grey white darkblue
+22122
+20002
+10101
+20002
+22122
+
+water_cave_vent1_turn
+grey white darkblue
+12221
+20002
+20102
+20002
+12221
+
+water_cave_vent2
+brown grey red darkblue
+33133
+30003
+10201
+30003
+33133
+
+water_cave_vent2_turn
+brown grey red darkblue
+13331
+30003
+30203
+30003
+13331
+
+water_cave_platform
+darkblue blue
+10001
+00010
+00100
+01001
+10010
+
+water_cave_water
+blue white
+00000
+00000
+00100
+01000
+00000
+
+water_cave_water_top
+blue white
+1.1.1
+01010
+00000
+01000
+10000
+
+water_cave_fish_hidden
+darkblue grey
+00000
+00000
+00100
+01000
+00000
+
+water_cave_fish
+lightblue yellow red
+.....
+0.11.
+01121
+0.11.
+.....
+
+water_cave_spike
+grey white
+..1..
+..01.
+.100.
+10000
+00000
+
+water_cave_spike_right
+grey white
+01...
+001..
+00001
+0001.
+00...
+
+water_cave_spike_left
+grey white
+...10
+..100
+10000
+.1000
+...00
+
+water_cave_fountain
+blue white lightblue
+.1...
+1.1..
+.1.2.
+..2.2
+...2.
+
+water_cave_lava
+red orange orange
+02020
+20002
+00100
+01010
+10201
+
+water_cave_burnt
+black red
+....0
+..00.
+.00..
+.100.
+..101
+
+water_cave_water_hidden
+darkblue grey
+00000
+00000
+00100
+01000
+00000
+
+water_cave_water_top_hidden
+darkblue grey
+00000
+00000
+00100
+01000
+00000
+
+water_cave_block
+lightblue
+00000
+0...0
+0...0
+0...0
+00000
+
+water_cave_s1
+lightblue white
+.....
+....1
+...10
+..100
+..100
+
+water_cave_s2
+lightblue white
+.111.
+10001
+00000
+00000
+00000
+
+water_cave_s3
+lightblue white
+.....
+1....
+01...
+001..
+001..
+
+water_cave_exit
+red orange orange
+02020
+20002
+00100
+01010
+10201
+
+(............................)
+(....Water Cave Out..........)
+(............................)
+
+lava_background
+darkred orange
+00000
+00000
+00100
+01000
+00000
+
+lava
+red orange yellow
+20102
+01110
+11011
+10201
+02020
+
+lava_boulder
+red orange yellow white
+20103
+01110
+11011
+10201
+02020
+
+lava_boulder_cold
+red darkblue grey
+20102
+01110
+11011
+10201
+02020
+
+water_cave_lava_entrance
+darkred orange
+00000
+00000
+00100
+01000
+00000
+
+water_cave_lava_entrance2
+darkred orange
+00000
+00000
+00100
+01000
+00000
+
+water_cave_lava_exit
+darkred orange
+00000
+00000
+00100
+01000
+00000
+
+lava_hole_entrance
+darkred orange
+00000
+00000
+00100
+01000
+00000
+
+lava_hole_exit
+darkred orange
+00100
+01110
+11011
+10001
+00000
+
+(..........................................)
+(..........water passage 2.................)
+(..........................................)
+
+water_passage2_left_entrance
+darkblue blue
+00010
+00000
+00100
+00000
+00000
+
+water_passage2_right_entrance
+darkblue blue
+00010
+00000
+00100
+00000
+00000
+
+water_passage2_left_exit
+darkblue lightblue blue
+01000
+10120
+00202
+01000
+10100
+
+water_passage2_right_exit
+darkblue lightblue blue
+01000
+10120
+00202
+01000
+10100
+
+(..........lava passage....................)
+
+lava_passage_left_entrance
+darkred orange
+00000
+00000
+00100
+01000
+00000
+
+lava_passage_right_entrance
+darkred orange
+00000
+00000
+00100
+01000
+00000
+
+lava_passage_left_exit
+darkred orange
+00100
+01110
+11011
+10001
+00000
+
+lava_passage_right_exit
+darkred orange
+00100
+01110
+11011
+10001
+00000
+
+lava_rolling_stone
+grey red black darkred
+32023
+20102
+00010
+21002
+32023
+
+lava_rock_reset
+red darkred
+10111
+11010
+01010
+10001
+10011
+
+lava_rock_placeholder
+darkred orange
+00000
+00000
+00100
+01000
+00000
+
+(..........................)
+(.........Vulcano..........)
+(..........................)
+vulcano_hidden_lava
+darkred orange
+00000
+00000
+00100
+01000
+00000
+
+vulcano_ladder
+darkblue darkred orange
+01110
+00000
+01210
+00000
+01110
+
+vulcano_entrance
+darkred orange
+00000
+00000
+00100
+01000
+00000
+
+vulcano_exit
+black darkred
+10001
+00000
+00000
+00000
+00000
+
+vulcano_platform
+darkblue blue lightblue darkred orange
+02010
+00001
+00000
+34333
+33333
+
+vulcano_wall
+darkblue blue
+00000
+01000
+00010
+00000
+10000
+
+vulcano_wall_secret
+darkblue blue darkgreen
+00.01
+010.0
+.0010
+0.000
+200.0
+
+vulcano_wall_secret_background
+darkblue blue darkgreen
+00000
+00000
+00000
+00000
+00000
+
+vulcano_lever
+lightblue blue darkred
+22222
+22222
+11222
+20222
+22022
+
+vulcano_lever_off
+lightblue blue darkred
+22222
+22222
+22211
+22202
+22022
+
+vulcano_barrier
+black lightblue
+00000
+01010
+00000
+01010
+00000
+
+vulcano_s1
+lightblue grey
+.....
+..11.
+..11.
+...0.
+....0
+
+vulcano_s2
+lightblue grey
+...11
+...11
+..0..
+.0...
+0....
+
+vulcano_escape
+darkred orange
+00000
+00000
+00100
+01000
+00000
+
+vulcano_return
+darkred orange
+00000
+00000
+00100
+01000
+00000
+
+(.............................)
+(.........Lava Escape.........)
+(.............................)
+escape_lava_hidden
+transparent
+
+escape_lava
+red orange yellow
+20102
+01110
+11011
+10201
+02020
+
+escape_lava_boulder_cold
+red darkblue grey
+20102
+01110
+11011
+10201
+02020
+
+escape_lava_entrance_left
+darkred orange
+00000
+00000
+00100
+01000
+00000
+
+escape_lava_exit_left
+darkblue darkred
+10001
+00000
+00000
+00000
+00000
+
+escape_lava_entrance_right
+darkred orange
+00000
+00000
+00100
+01000
+00000
+
+escape_lava_exit_right
+darkred orange
+01000
+00100
+01010
+00001
+00010
+
+(...................................)
+(.........Water Hole 2 (lake).......)
+(...................................)
+
+water_hole_door1
+black yellow red green
+.0.0.
+00000
+.0.0.
+00000
+.123.
+
+water_hole_door2
+black yellow red green
+.123.
+00000
+.0.0.
+00000
+.0.0.
+
+water_hole_lever_red
+lightblue red darkblue blue
+22232
+22222
+11222
+20222
+22022
+
+water_hole_lever_green
+lightblue green darkblue blue
+22232
+22222
+11222
+20222
+22022
+
+water_hole_lever_red_off
+lightblue red darkblue blue
+22232
+22222
+22211
+22202
+22022
+
+water_hole_lever_green_off
+lightblue green darkblue blue
+22232
+22222
+22211
+22202
+22022
+
+(... darkness ...)
+
+water_hole_darkness
+black
+
+water_dark_background
+darkblue blue
+00010
+00000
+00100
+00000
+00000
+
+water_dark_depth
+darkgreen darkblue
+11011
+10001
+00100
+01110
+11011
+
+water_dark_vegetation
+white lightgrey lightblue
+.2...
+20...
+.2.1.
+...01
+...1.
+
+water_dark_lever_yellow
+lightblue yellow darkblue blue
+22232
+22222
+11222
+20222
+22022
+
+water_dark_lever_yellow_off
+lightblue yellow darkblue blue
+22232
+22222
+22211
+22202
+22022
+
+water_hole2_entrance
+darkblue blue
+00010
+00000
+00100
+00000
+00000
+
+water_hole2_exit
+darkblue lightblue blue
+01000
+10120
+00202
+01000
+10100
+
+(.........................)
+(.........House...........)
+(.........................)
+house_background
+brown darkbrown
+11111
+00000
+00000
+00000
+00000
+
+house_floor
+red black
+00010
+11111
+01000
+11111
+00010
+
+house_platform
+grey black
+00010
+11111
+01000
+11111
+00010
+
+house_barrel
+lightbrown black brown
+.111.
+10201
+02020
+10201
+.111.
+
+house_ceiling
+darkbrown green
+10100
+01010
+00101
+01010
+00101
+
+house_ladder
+orange brown darkbrown
+02220
+00000
+01110
+00000
+01110
+
+house_ghost
+white red
+.00..
+1010.
+0000.
+.00.0
+.....
+
+house_vault_background
+darkblue blue
+00000
+00000
+00001
+00010
+00000
+
+house_vault_floor
+darkbrown black
+00010
+11111
+01000
+11111
+00010
+
+house_vault_platform
+lightblue black
+00010
+11111
+01000
+11111
+00010
+
+house_vault_ladder
+darkbrown darkblue blue
+01110
+00000
+01120
+00000
+01110
+
+house_vault_ghost
+white red
+.00..
+1010.
+0000.
+.00.0
+.....
+
+house_entrance
+grey yellow black darkbrown
+30003
+00200
+00011
+00200
+00000
+
+house_spike
+grey white
+..1..
+..01.
+.000.
+00001
+00000
+
+house_door1
+black yellow red
+.0.0.
+00000
+.0.0.
+00000
+.010.
+
+house_door2
+black yellow red
+.010.
+00000
+.0.0.
+00000
+.0.0.
+
+house_key
+yellow darkblue
+11111
+00111
+01000
+00110
+11111
+
+house_lever_on
+darkblue lightblue red
+00000
+00000
+22000
+01000
+00100
+
+house_lever_off
+darkblue lightblue red
+00000
+00000
+00022
+00010
+00100
+
+house_barrier
+darkblue black
+11111
+10101
+11111
+10101
+11111
+
+house_hidden_key
+transparent
+
+(..........................................)
+(..................Mountain Top............)
+(..........................................)
+sky
+black yellow white
+00000
+00010
+00000
+00200
+00000
+
+high_sky
+black lightblue
+00000
+00010
+00000
+00000
+00000
+
+hyperspace
+black white lightblue
+20000
+02000
+00200
+00000
+00000
+
+moon
+black yellow white
+01110
+11200
+12000
+11100
+01110
+
+cord_no_light
+darkblue blue grey red
+01230
+02230
+01230
+01220
+01230
+
+cord_light
+darkblue blue yellow red
+01230
+02230
+01230
+01220
+01230
+
+mountain_platform
+grey darkgreen green
+01000
+00001
+00000
+10000
+21001
+
+s1
+lightblue grey
+.....
+....1
+....1
+.....
+.....
+
+s1_light
+lightblue yellow
+.....
+....1
+....1
+.....
+.....
+
+s2
+lightblue grey
+.....
+1....
+1...0
+0..0.
+.00..
+
+s2_light
+lightblue yellow
+.....
+1....
+1...0
+0..0.
+.00..
+
+
+s3
+lightblue grey
+11...
+11...
+.....
+.....
+.....
+
+s3_light
+lightblue yellow
+11...
+11...
+.....
+.....
+.....
+
+s4
+lightblue white
+.....
+....1
+...10
+..100
+..100
+
+s5
+lightblue white
+.111.
+10001
+00000
+00000
+00000
+
+s6
+lightblue white
+.....
+1....
+01...
+001..
+001..
+
+s7
+blue lightblue white grey red
+.1331
+00000
+.0000
+..22.
+.2...
+
+s7_light
+blue lightblue white yellow red
+.1331
+00000
+.0000
+..22.
+.2...
+
+
+s8
+blue lightblue white yellow red
+14441
+00400
+00000
+.22..
+.2...
+
+spaceship_closed
+transparent
+
+s9
+blue lightblue white grey red
+1331.
+00000
+0000.
+.22..
+...2.
+
+s9_light
+blue lightblue white yellow red
+1331.
+00000
+0000.
+.22..
+...2.
+
+player_spaceship
+lightblue white lightgreen yellow
+.111.
+12221
+02120
+02220
+22222
+
+spaceship_holder1
+black yellow white
+00000
+00010
+00000
+00200
+00000
+
+spaceship_holder2
+black yellow white
+00000
+00010
+00000
+00200
+00000
+
+spaceship_holder3
+black yellow white
+00000
+00010
+00000
+00200
+00000
+
+spaceship_holder4
+darkblue blue
+00000
+00100
+00000
+00000
+01000
+
+spaceship_holder5
+darkblue blue
+00000
+00100
+00000
+00000
+01000
+
+spaceship_holder6
+darkblue blue
+00000
+00100
+00000
+00000
+01000
+
+spaceship_holder7
+grey  darkgreen green
+01000
+00001
+00000
+10000
+21000
+
+spaceship_holder8
+grey  darkgreen green
+01000
+00001
+00000
+10000
+21000
+
+spaceship_holder9
+grey  darkgreen green
+01000
+00001
+00000
+10000
+21000
+
+battery_placeholder
+grey darkgreen green
+01000
+00001
+00000
+10000
+21001
+
+battery_installed
+lightgrey red blue white grey
+.3.3.
+33333
+01000
+11122
+01000
+
+star1
+black yellow white
+10001
+00000
+00200
+00000
+10001
+
+star2
+black yellow white
+10001
+00200
+02220
+00200
+10001
+
+star3
+black yellow white
+10201
+02220
+22222
+02220
+10201
+
+flash1
+black yellow white
+10000
+01000
+00100
+00010
+00000
+
+flash2
+black yellow white
+00200
+00200
+00200
+00200
+00200
+
+flash3
+black yellow white
+00001
+00010
+00100
+01000
+00000
+
+flash4
+black yellow white
+00000
+00000
+22222
+00000
+00000
+
+flash5
+black yellow white
+01210
+12221
+22222
+12221
+01210
+
+flash6
+black yellow white
+00000
+00000
+22222
+00000
+00000
+
+flash7
+black yellow white
+00000
+00010
+00100
+01000
+10000
+
+flash8
+black yellow white
+00200
+00200
+00200
+00200
+00200
+
+flash9
+black yellow white
+00000
+01000
+00100
+00010
+00001
+
+(.....................)
+(........Bonus........)
+(.....................)
+
+no_fly
+transparent
+
+no_fly_water_top
+darkblue lightblue blue
+00210
+02221
+22022
+20002
+00000
+
+no_fly_water_grotto
+darkgreen green darkblue
+01010
+12221
+22122
+12221
+01010
+
+no_fly_water_depth
+darkgreen darkblue
+11011
+10001
+00100
+01110
+11011
+
+no_fly_lava_boulder
+red orange yellow white
+20103
+01110
+11011
+10201
+02020
+
+no_fly_tree_bark
+brown darkbrown
+01100
+11000
+00011
+11000
+01100
+
+no_fly_vulcano_wall
+darkblue blue
+00000
+01000
+00010
+00000
+10000
+
+navigation_fir
+green darkbrown
+..0..
+.000.
+00000
+.010.
+..1..
+
+navigation_background
+darkgreen green
+00000
+00010
+00100
+00000
+10000
+
+mountain_enter
+transparent
+
+mountain_exit
+transparent
+
+mountain_leave
+transparent
+
+map_mountain_enter
+transparent
+
+map_mountain_exit
+transparent
+
+(=========================)
+(=========Markers=========)
+(=========================)
+(...level markers...)
+inside_tree_marker
+transparent
+
+tree_hole1_marker
+transparent
+
+tree_hole2_marker
+transparent
+
+tree_hole3_marker
+transparent
+
+underwater_marker
+transparent
+
+water_cave_path_marker
+transparent
+
+water_cave_path_init_marker
+transparent
+
+water_cave_path_reset_marker
+transparent
+
+water_cave_marker
+transparent
+
+water_cave_lava_marker
+transparent
+
+water_hole1_marker
+transparent
+
+water_hole2_marker
+transparent
+
+water_passage1_marker
+transparent
+
+water_passage2_marker
+transparent
+
+vulcano_marker
+transparent
+
+escape_lava_marker
+transparent
+
+escape_lava_reset_marker
+transparent
+
+lava_hole_marker
+transparent
+
+lava_passage_marker
+transparent
+
+house_marker
+transparent
+
+mountain_marker
+transparent
+
+(...action markers...)
+
+map_marker
+transparent
+
+platform_marker
+transparent
+
+swim_marker
+transparent
+
+lava_marker
+transparent
+
+fly_marker
+transparent
+
+(... suit markers ...)
+
+earth_suit_marker
+transparent
+
+fire_suit_marker
+transparent
+
+water_suit_marker
+transparent
+
+(....holders...)
+
+action_marker_holder
+transparent
+
+level_marker_holder
+transparent
+
+suit_marker_holder
+transparent
+
+(run these rules once!)
+fix_backgrounds_marker
+transparent
+
+(................)
+(.....death......)
+(................)
+map_water_splash
+darkblue white lightblue
+.0.0.
+0.2.0
+.212.
+0.2.0
+.0.0.
+
+map_fire_splash
+darkred white yellow
+.0.0.
+0.2.0
+.212.
+0.2.0
+.0.0.
+
+tree_splash
+darkred red darkgreen darkbrown
+02030
+20103
+21012
+20102
+02020
+
+water_splash
+darkred red
+0.0.0
+.010.
+.101.
+.010.
+0.0.0
+
+house_splash
+darkred red
+0.0.0
+.010.
+.101.
+.010.
+0.0.0
+
+lava_splash
+darkred red
+0.0.0
+.010.
+.101.
+.010.
+0.0.0
+
+========
+LEGEND
+========
+(............)
+(...common...)
+(............)
+(... batteries! ...)
+α = battery
+β = pickup
+γ = save_point
+δ = underwater_battery (10)
+ε = tree_battery       (3)
+ζ = lava_battery       (5)
+η = house_battery      (1)
+θ = water_cave_battery (1)
+
+(.........)
+(...map...)
+(.........)
+p = player_map_earth
+. = map_background
+* = map_flower
+♡ = map_flower2
+s = map_direction_stone1
+t = map_direction_stone2
+r = map_rock
+o = map_stone
+f = map_fir
+ι = map_log1
+κ = map_log2
+λ = map_log3
+& = map_fire
+~ = map_water
+q = tree_bark_left
+d = tree_bark_right
+w = tree_bark_centre
+e = tree_left_root
+a = tree_right_root
+h = tree_hollow
+b = tree_lb_bough
+n = tree_lt_bough
+m = tree_rb_bough
+x = tree_rt_bough
+j = tree_centre_bough
+k = tree_top
+y = map_tree_entrance
+u = map_lava
+! = map_pine
+# = map_dive_point
+- = map_bridge_horizontal
+{ = map_bridge_vertical
+$ = vulcano_left
+% = vulcano_right
+? = vulcano_center
+" = vulcano_steps
+а = house_p1
+б = house_p2
+в = house_p3
+г = house_p4
+д = house_p5
+е = house_p6
+ё = house_p7
+ж = house_p8
+з = house_p9
+и = house_p10
+й = house_p11
+к = house_p12
+л = house_p13
+м = house_p14
+н = house_p15
+о = house_p16
+п = map_house_entrance
+р = house_p18
+с = house_p19
+т = house_p20
+у = house_smoke
+⊗ = map_underwater_exit
+⊰ = map_tree_hole1_entrance
+⊲ = map_tree_hole2_entrance
+⊴ = map_tree_hole3_entrance
+⊱ = map_water_passage1_entrance_left
+⊳ = map_water_passage1_entrance_right
+⊵ = map_water_hole1_entrance
+⋳ = map_water_hole2_entrance
+⋂ = map_water_cave_entrance
+⋃ = map_water_cave_exit
+⊎ = map_lava_hole_entrance
+⊂ = map_water_passage2_entrance_left
+⊃ = map_water_passage2_entrance_right
+⊄ = map_lava_passage_entrance_left
+⊅ = map_lava_passage_entrance_right
+⊏ = map_vulcano_entrance
+⊐ = map_escape_lava_exit_sealed
+◰ = map_mountain_enter
+◱ = map_mountain_exit
+♳ = action_marker_holder
+♴ = level_marker_holder
+♵ = suit_marker_holder
+♶ = fix_backgrounds_marker
+
+(.................)
+(...Inside Tree...)
+(.................)
+˳ = tree_background
+ˍ = tree_moss_floor
+ˉ = tree_moss_top
+ˤ = tree_vine
+˦ = tree_bark
+˘ = tree_entrance
+˧ = tree_platform
+˥ = tree_platform_moving
+˩ = tree_log
+˨ = tree_lever_off
+˼ = tree_move_cancel
+˻ = tree_bark_move_cancel
+˷ = tree_water
+˱ = tree_s1
+˯ = tree_s2
+˲ = tree_s3
+ˇ = tree_exit
+(.......tree hole 1........)
+☼ = tree_flower
+☇ = tree_mushroom_hidden
+☝ = tree_mushroom_jump
+☈ = tree_mushroom_top
+∧ = tree_spike
+♩ = tree_hole1_entrance
+♪	= tree_hole1_exit
+(.......tree hole 2........)
+♠ = tree_flower2
+♣ = tree_mushroom_hidden2
+⌃ = tree_moss
+≍ = tree_hole_water
+≋ = tree_hole_water_top
+♫ = tree_hole2_entrance
+♬	= tree_hole2_exit
+(.......tree hole 3........)
+˾ = tree_hole_log
+♘ = tree_hole_bark_crushing
+♝ = tree_mushroom
+⚘ = tree_hole_flower3
+♭ = tree_hole3_entrance
+♯ = tree_hole3_exit
+
+(.................)
+(...Underwater....)
+(.................)
+∽ = water_background
+≈ = water_top
+≃ = water_bed
+≄ = water_bed_return
+∺ = water_grotto
+∻ = water_depth
+∴ = water_vegetation
+∷ = water_stars
+⊙ = underwater_entrance
+⊠ = underwater_entrance2
+⊘ = underwater_exit
+(.....Water Passage 1...........)
+⊕ = water_passage1_left_entrance
+⊖ = water_passage1_left_exit
+⊚ = water_passage1_right_entrance
+⊛ = water_passage1_right_exit
+(.....Water Hole 1...........)
+⊜ = water_hole1_entrance
+⊝ = water_hole1_exit
+
+(.................)
+(...Water Cave....)
+(.................)
+
+(......path.......)
+∝ = water_fish_placeholder
+⊡ = water_block_placeholder
+∀ = water_current_horizontal
+∁ = water_current_vertical
+∅ = water_fountain
+∌ = water_bomb_placeholder
+∩ = water_cave_entrance
+∪ = water_cave_path_entrance
+∄ = water_cave_path_exit
+
+(......inside.......)
+⍘ = water_cave_background
+⌕ = water_cave_gate
+⍛ = water_cave_s1
+⍜ = water_cave_s2
+⍚ = water_cave_s3
+⍓ = water_cave_stalagmite
+⍔ = water_cave_stalactite
+⍒ = water_cave_vine
+⎕ = water_cave_block
+⌠ = water_cave_vent1
+⌡ = water_cave_vent2
+⎼ = water_cave_platform
+⍨ = water_cave_water_top_hidden
+⌑ = water_cave_water_hidden
+⌅ = water_cave_fish_hidden
+⍏ = water_cave_spike
+⍆ = water_cave_spike_right
+⍅ = water_cave_spike_left
+⌾ = water_cave_fountain
+⍦ = water_cave_lava
+⌽ = water_cave_exit
+
+(..........................)
+(..........Lava............)
+(..........................)
+
+(........lava out..........)
+⋅ = lava_background
+⌓ = lava
+⊟ = lava_boulder
+⋜ = water_cave_lava_entrance
+⋦ = water_cave_lava_entrance2
+⋝ = water_cave_lava_exit
+
+(...................)
+(....Lava Hole......)
+(...................)
+⋞ = lava_hole_entrance
+⋟ = lava_hole_exit
+
+(.........................)
+(....Water Passage 2......)
+(.........................)
+⊆ = water_passage2_left_entrance
+⊊ = water_passage2_left_exit
+⊇ = water_passage2_right_entrance
+⊋ = water_passage2_right_exit
+
+(.........................)
+(......Lava Passage.......)
+(.........................)
+≗ = lava_rolling_stone
+≕ = lava_rock_reset
+≔ = lava_rock_placeholder
+≦ = lava_passage_left_entrance
+≨ = lava_passage_left_exit
+≧ = lava_passage_right_entrance
+≩ = lava_passage_right_exit
+
+(.........................)
+(........Vulcano..........)
+(.........................)
+▕ = vulcano_hidden_lava
+░ = vulcano_ladder
+▔ = vulcano_platform
+▍ = vulcano_wall
+▓ = vulcano_wall_secret
+▚ = vulcano_lever
+▜ = vulcano_barrier
+▖ = vulcano_s1
+▗ = vulcano_s2
+▊ = vulcano_exit
+▀ = vulcano_entrance
+▇ = vulcano_escape
+▆ = vulcano_return
+
+(.........................)
+(......Escape Lava........)
+(.........................)
+█ = escape_lava_boulder_cold
+▌ = escape_lava_hidden
+▎ = escape_lava_entrance_left
+▙ = escape_lava_exit_left
+▐ = escape_lava_entrance_right
+▝ = escape_lava_exit_right
+
+(..........................)
+(......Water Hole 2........)
+(..........................)
+⎉ = water_hole_door1
+⎊ = water_hole_door2
+⍃ = water_hole_lever_red
+⍇ = water_hole_lever_green
+⋢ = water_hole2_entrance
+⋣ = water_hole2_exit
+(....dark....)
+≁ = water_dark_background
+⌘ = water_dark_depth
+≠ = water_dark_vegetation
+⍍ = water_dark_lever_yellow
+
+(..........................)
+(.........House............)
+(..........................)
+(......ground floor.......)
+▫ = house_background
+▭ = house_floor
+▱ = house_platform
+◙ = house_barrel
+▥ = house_ceiling
+▿ = house_ladder
+◐ = house_ghost
+(......vault.......)
+▪ = house_vault_background
+▬ = house_vault_floor
+▰ = house_vault_platform
+▾ = house_vault_ladder
+◑ = house_vault_ghost
+(......)
+▦ = house_entrance
+△ = house_spike
+◓ = house_door1
+◒ = house_door2
+☥ = house_key
+⚚ = house_lever_on
+◘ = house_barrier
+
+(........Mountain Top...........)
+★ = sky
+⋆ = high_sky
+☾ = moon
+⚕ = cord_no_light
+☆ = mountain_platform
+1 = spaceship_holder1
+2 = spaceship_holder2
+3 = spaceship_holder3
+4 = spaceship_holder4
+5 = spaceship_holder5
+6 = spaceship_holder6
+7 = spaceship_holder7
+8 = spaceship_holder8
+9 = spaceship_holder9
+⌁ = battery_placeholder
+࿋ = star1
+☸ = star2
+ॐ = star3
+
+(........................)
+(.........Bonus..........)
+(........................)
+☁ = no_fly
+≉ = no_fly_water_top
+∹ = no_fly_water_grotto
+≒ = no_fly_water_depth
+⊞ = no_fly_lava_boulder
+☓ = no_fly_tree_bark
+▏ = no_fly_vulcano_wall
+◮ = mountain_enter
+◭ = mountain_exit
+(4 player)
+◬ = mountain_leave
+
+(exits
+▇ = vulcano_escape
+⊕ = water_passage1_left_entrance
+⊖ = water_passage1_left_exit
+)
+○ = navigation_background
+● = navigation_fir
+
+(...................)
+(.....common........)
+(...................)
+(earth suit)
+player_platform_earth = player_platform_earth_ground or player_platform_earth_jump_start or player_platform_earth_jump or player_platform_earth_fall
+(water suit)
+player_platform_water = player_platform_water_ground or player_platform_water_jump_start or player_platform_water_jump or player_platform_water_fall
+player_water = player_water_right or player_water_down or player_water_left or player_water_up
+(fire suit)
+player_platform_fire = player_platform_fire_ground or player_platform_fire_jump_start or player_platform_fire_jump or player_platform_fire_fall
+player_fire = player_fire_right or player_fire_down or player_fire_left or player_fire_up
+(platform)
+player_platform = player_platform_earth or player_platform_water or player_platform_fire
+(map)
+player_swim = player_water or player_fire
+player_map = player_map_earth or player_map_water or player_map_fire
+player_game = player_map or player_platform or player_water or player_fire
+player = player_game or player_spaceship
+
+batteries = underwater_battery or tree_battery or lava_battery or house_battery or water_cave_battery or battery
+
+background = map_background or tree_background or water_background or water_cave_background or lava_background or house_background or house_vault_background or water_dark_background or navigation_background
+no_again_splash = map_water_splash or map_fire_splash or lava_splash
+splash = no_again_splash or tree_splash or water_splash or house_splash or tree_player_drown
+
+action_markers = map_marker or platform_marker or swim_marker or lava_marker or fly_marker
+level_markers = inside_tree_marker or tree_hole1_marker or tree_hole2_marker or tree_hole3_marker or underwater_marker or water_cave_path_marker or water_cave_marker or water_cave_lava_marker or water_hole1_marker or water_hole2_marker or water_passage1_marker or water_passage2_marker or vulcano_marker or escape_lava_marker or lava_hole_marker or lava_passage_marker or house_marker or mountain_marker
+reset_markers = water_cave_path_reset_marker or water_cave_path_init_marker or escape_lava_reset_marker
+suit_markers = earth_suit_marker or fire_suit_marker or water_suit_marker
+marker_holders = action_marker_holder or level_marker_holder or suit_marker_holder
+
+(...................)
+(........map........)
+(...................)
+map_log = map_log1 or map_log2 or map_log3
+map_bridge = map_bridge_horizontal or map_bridge_vertical
+
+(........................)
+(.....Inside Tree........)
+(........................)
+tree_spaceship = tree_s1 or tree_s2 or tree_s3
+tree_levers = tree_lever_off or tree_lever_on
+tree_transportable = tree_levers or player_platform
+tree_obstacle = tree_moss_floor or tree_platform or tree_platform_moving or tree_log or tree_bark or player_platform or tree_spaceship or tree_spike or tree_battery or tree_mushroom or tree_hole_bark_crushing or tree_hole_log_water or tree_hole_log or no_fly_tree_bark
+
+(.......................)
+(.....Water Cave........)
+(.......................)
+(........path........)
+water_current = water_current_horizontal or water_current_vertical
+water_placeholders = water_fish_placeholder or water_block_placeholder or water_bomb_placeholder
+(........cave........)
+water_cave_spikes = water_cave_spike or water_cave_spike_right or water_cave_spike_left
+water_cave_vents = water_cave_vent1 or water_cave_vent2
+water_cave_vents_turned = water_cave_vent1_turn or water_cave_vent2_turn
+water_cave_waters_on = water_cave_water or water_cave_water_top
+water_cave_waters_off = water_cave_water_hidden or water_cave_water_top_hidden
+water_cave_waters = water_cave_waters_on or water_cave_waters_off
+water_cave_obstacle = player_platform or player_water or water_cave_stalactite or water_cave_stalagmite or water_cave_platform or water_cave_s1 or water_cave_s2 or water_cave_s3 or water_cave_battery or water_cave_fish or water_cave_vents or water_cave_vents_turned
+water_cave_spaceship = water_cave_s1 or water_cave_s2 or water_cave_s3
+(...........out..........)
+lava_obstacle = player_fire or lava_battery or lava_boulder or lava or lava_boulder_cold or escape_lava_boulder_cold or lava_rolling_stone or no_fly_lava_boulder
+
+(.......................)
+(.......Vulcano.........)
+(.......................)
+vulcano_spaceship = vulcano_s1 or vulcano_s2
+vulcano_obstacle = vulcano_spaceship or vulcano_wall or vulcano_platform or vulcano_barrier or no_fly_vulcano_wall
+vulcano_swim = vulcano_hidden_lava or vulcano_entrance or vulcano_exit
+
+(...........................)
+(.......Lava Escape.........)
+(...........................)
+burnable = player or escape_lava_boulder_cold
+
+(.....................)
+(.......House.........)
+(.....................)
+house_obstacle = house_floor or house_ceiling or house_platform or house_barrel or player_platform or house_battery or house_ghost or house_vault_ghost or house_door1 or house_door2 or house_vault_floor or house_vault_platform or house_barrier
+
+(...........................)
+(.......Moutain Top.........)
+(...........................)
+mountain_spaceship = s4 or s5 or s6 or s8 or s1_light or s2_light or s3_light or s7_light or s9_light
+mountain_spaceship_no_player = s1 or s2 or s3 or s4 or s5 or s6 or s7 or s9 or s7_light or s9_light
+spaceship_holders = spaceship_holder1 or spaceship_holder2 or spaceship_holder3 or spaceship_holder4 or spaceship_holder5 or spaceship_holder6 or spaceship_holder7 or spaceship_holder8 or spaceship_holder9
+flash = flash1 or flash2 or flash3 or flash4 or flash5 or flash6 or flash7 or flash8 or flash9
+
+(.....................)
+(.......Bonus.........)
+(.....................)
+no_fly_backgrounds = no_fly_water_top or no_fly_water_grotto or no_fly_water_depth or no_fly_lava_boulder or no_fly_tree_bark or no_fly_vulcano_wall or vulcano_escape or water_passage1_left_entrance or water_passage1_left_exit
+
+(map entrances)
+map_tree_hole_closed = map_tree_hole1_closed or map_tree_hole2_closed or map_tree_hole3_closed
+map_tree_hole_entrances = map_tree_hole1_entrance or map_tree_hole2_entrance or map_tree_hole3_entrance
+map_water_entrances = map_water_passage1_entrance_left or map_water_passage1_entrance_right or map_water_hole1_entrance or map_water_hole2_entrance or map_water_cave_entrance or map_water_passage2_entrance_left or map_water_passage2_entrance_right or map_underwater_exit
+map_lava_entrances = map_lava_hole_entrance or map_lava_passage_entrance_left or map_lava_passage_entrance_right or map_water_cave_exit or map_escape_lava_exit
+
+(tree entrances)
+tree_hole_entrances = tree_hole1_entrance or tree_hole2_entrance or tree_hole3_entrance
+tree_hole_exits = tree_hole1_exit or tree_hole2_exit or tree_hole3_exit
+
+(water entrances)
+water_entrances = water_passage1_left_entrance or water_passage1_right_entrance or water_hole1_entrance or water_hole2_entrance or water_cave_path_entrance or water_cave_entrance or water_passage2_left_entrance or water_passage2_right_entrance or underwater_entrance2
+water_exits = water_passage1_left_exit or water_passage1_right_exit or water_hole1_exit or water_hole2_exit or water_cave_path_exit or water_passage2_left_exit or water_passage2_right_exit
+
+(lava entrances)
+lava_entrances = lava_hole_entrance or lava_passage_left_entrance or lava_passage_right_entrance or escape_lava_entrance_left or escape_lava_entrance_right or water_cave_lava_entrance2
+lava_exits = lava_hole_exit or lava_passage_left_exit or lava_passage_right_exit or escape_lava_exit_left or escape_lava_exit_right
+
+(save points)
+save_points = map_tree_entrance or map_underwater_exit or map_water_passage1_entrance_left or map_water_passage1_entrance_right or map_water_hole1_entrance or map_dive_point or map_water_cave_exit or map_water_passage2_entrance_right or map_water_passage2_entrance_left or map_lava_passage_entrance_right or map_lava_passage_entrance_left or map_vulcano_entrance or map_escape_lava_exit or map_water_hole2_entrance or map_house_entrance or tree_entrance or underwater_entrance or water_cave_entrance or water_cave_gate or water_cave_lava_entrance or vulcano_entrance or vulcano_return or house_entrance or map_tree_hole1_entrance or map_tree_hole2_entrance or map_tree_hole3_entrance or map_lava_hole_entrance
+
+(bonus)
+navigation = navigation_fir or navigation_background
+
+(...................)
+(.....common........)
+(...................)
+obstacle = tree_obstacle or water_cave_obstacle or lava_obstacle or vulcano_obstacle or house_obstacle or water_top or water_grotto or lava_boulder
+vine = tree_vine or water_cave_vine or vulcano_ladder or vulcano_wall_secret_background or house_ladder or house_vault_ladder
+
+========
+SOUNDS
+========
+
+================
+COLLISIONLAYERS
+================
+
+background
+save_point, water_fish_placeholder, water_block_placeholder, water_bomb_placeholder, water_cave_water_hidden, water_cave_water_top_hidden, water_cave_water, water_cave_water_top, escape_lava_hidden, tree_hole_flower_on_hidden, tree_hole_can_drown, sky, moon, spaceship_holders, mountain_enter, mountain_exit, mountain_leave, map_mountain_enter, map_mountain_exit
+map_flower, map_flower2, map_tree_entrance, map_water_entrances, map_lava_hole_closed, map_escape_lava_exit_sealed, map_lava_entrances, map_water_cave_entrance, map_water_cave_exit, map_underwater_exit, tree_hole_entrances, tree_hole_exits, water_entrances, water_exits, lava_entrances, lava_exits, water_cave_lava_entrance, water_cave_lava_exit, map_vulcano_entrance, map_bridge, map_dive_point, vulcano_steps, map_house_entrance, (tree) tree_moss_top, tree_vine, tree_entrance, tree_lever_off, tree_lever_on, tree_move_cancel, tree_bark_move_cancel, tree_water, tree_exit, tree_hole_water, tree_hole_water_top, (water) underwater_exit, underwater_entrance, (tree_hole) tree_splash, tree_flower, tree_mushroom_hidden, tree_flower2, tree_mushroom_hidden2, tree_mushroom_jump, tree_mushroom_top, tree_hole_flower3, (water cave path) water_fountain, water_bam, (water cave) water_cave_vine, water_cave_gate, water_cave_fish_hidden, water_cave_spikes, water_cave_fountain, water_cave_lava, water_cave_burnt, water_cave_exit, (lava passage) lava_rock_placeholder, lava_rock_reset, (vulcano) vulcano_ladder, vulcano_hidden_lava, vulcano_entrance, vulcano_exit, vulcano_escape, vulcano_return, vulcano_lever, vulcano_lever_off, vulcano_wall_secret_background, (water hole 2) water_hole_lever_red, water_hole_lever_green, water_dark_lever_yellow, water_hole_lever_red_off, water_hole_lever_green_off, water_dark_lever_yellow_off, (house) house_ladder, house_vault_ladder, house_entrance, house_spike, house_key, house_hidden_key, house_lever_on, house_lever_off (mountain) mountain_platform, battery_placeholder, high_sky, hyperspace, star1, star2, star3
+player_game, batteries, map_direction_stone1, map_direction_stone2, map_rock, map_stone, map_fir, navigation_fir, map_log, map_water, map_lava, tree_bark_left, tree_bark_right,  tree_bark_centre, tree_left_root, tree_right_root, tree_hollow, tree_lb_bough, tree_lt_bough, tree_rb_bough, tree_rt_bough, tree_centre_bough, tree_top, vulcano_left, vulcano_right, vulcano_center, house_p1, house_p2, house_p3, house_p4, house_p5, house_p6, house_p7, house_p8, house_p9, house_p10, house_p11, house_p12, house_p13, house_p14, house_p15, house_p16, house_p18, house_p19, house_p20, (tree) tree_moss_floor, tree_bark, no_fly_tree_bark, tree_platform, tree_platform_moving, tree_log, tree_player_drown, tree_spaceship, (water) water_top, no_fly_water_top, water_bed, water_grotto, no_fly_water_grotto, water_depth, no_fly_water_depth, (tree_hole) tree_spike, tree_mushroom, tree_hole_bark_crushing, tree_hole_log_water, tree_hole_log, (water cave path) water_bomb, water_fish, (water cave) water_cave_stalactite, water_cave_stalagmite, water_cave_vents, water_cave_vents_turned, water_cave_fish, water_cave_spaceship, water_cave_platform, (cave) lava_boulder, no_fly_lava_boulder, lava_boulder_cold, escape_lava_boulder_cold, lava, escape_lava, lava_rolling_stone, (vulcano) vulcano_spaceship, vulcano_wall, no_fly_vulcano_wall, vulcano_platform, vulcano_barrier, (water hole 2) water_hole_door1, water_hole_door2, water_dark_depth, (house) house_floor, house_ceiling, house_barrel, house_platform, house_ghost, house_door1, house_door2, house_barrier, house_vault_floor, house_vault_platform, house_vault_ghost, (mountain) cord_no_light, cord_light, battery_installed, spaceship_closed
+map_fire, map_pine, map_tree_hole_closed, map_tree_hole_entrances, house_smoke, (water) water_bed_return, water_vegetation, water_dark_vegetation, water_stars, pickup, (tree) tree_moss, (water cave path) water_block, water_current, fish_splash, water_splash, (vulcano) vulcano_wall_secret, (house) house_splash
+water_cave_block, map_fire_splash, map_water_splash, map_stone_crush, lava_splash
+marker_holders
+fix_backgrounds_marker, action_markers, level_markers, suit_markers
+reset_markers
+water_hole_darkness
+no_fly, mountain_spaceship, mountain_spaceship_no_player, player_spaceship, flash
+
+======
+RULES
+======
+(oops!)
+[no_again_splash] -> restart
+
+[flash] -> win
+
+(.........................)
+(.....player common.......)
+(.........................)
+(earth platform)
+(player platform jump)
+up [earth_suit_marker][platform_marker][up player_platform_earth_ground  | no obstacle] -> [earth_suit_marker][platform_marker][ | player_platform_earth_jump_start]
+up [earth_suit_marker][platform_marker][ player_platform_earth_jump_start | no obstacle] -> [earth_suit_marker][platform_marker][| player_platform_earth_jump]
+[earth_suit_marker][platform_marker][player_platform_earth_jump_start] -> [earth_suit_marker][platform_marker][player_platform_earth_jump]
+(player fall after jump)
+vertical [earth_suit_marker][platform_marker][> player_platform_earth_jump no vine] -> [earth_suit_marker][platform_marker][> player_platform_earth_ground]
+vertical [earth_suit_marker][platform_marker][> player_platform_earth_fall] -> [earth_suit_marker][platform_marker][> player_platform_earth_ground]
+horizontal [earth_suit_marker][platform_marker][> player_platform_earth_jump | no obstacle no vine] -> [earth_suit_marker][platform_marker][ | player_platform_earth_fall]
+horizontal [earth_suit_marker][platform_marker][> player_platform_earth_fall | no obstacle] -> [earth_suit_marker][platform_marker][ | player_platform_earth_ground]
+random down [earth_suit_marker][platform_marker][player_platform_earth_ground | no obstacle no vine] -> [earth_suit_marker][platform_marker][| player_platform_earth_ground] again
+(..................)
+(water)
+(.....platform.....)
+(player platform jump)
+up [water_suit_marker][platform_marker][up player_platform_water_ground  | no obstacle] -> [water_suit_marker][platform_marker][ | player_platform_water_jump_start]
+up [water_suit_marker][platform_marker][ player_platform_water_jump_start | no obstacle] -> [water_suit_marker][platform_marker][| player_platform_water_jump]
+[water_suit_marker][platform_marker][player_platform_water_jump_start] -> [water_suit_marker][platform_marker][player_platform_water_jump]
+(player fall after jump)
+vertical [water_suit_marker][platform_marker][> player_platform_water_jump no vine] -> [water_suit_marker][platform_marker][> player_platform_water_ground]
+vertical [water_suit_marker][platform_marker][> player_platform_water_fall] -> [water_suit_marker][platform_marker][> player_platform_water_ground]
+horizontal [water_suit_marker][platform_marker][> player_platform_water_jump | no obstacle no vine] -> [water_suit_marker][platform_marker][ | player_platform_water_fall]
+horizontal [water_suit_marker][platform_marker][> player_platform_water_fall | no obstacle] -> [water_suit_marker][platform_marker][ | player_platform_water_ground]
+random down [water_suit_marker][platform_marker][player_platform_water_ground | no obstacle no vine] -> [water_suit_marker][platform_marker][| player_platform_water_ground] again
+(.......swim.......)
+[water_suit_marker][swim_marker][right player_water] -> [water_suit_marker][swim_marker][right player_water_right]
+[water_suit_marker][swim_marker][left player_water] -> [water_suit_marker][swim_marker][left player_water_left]
+[water_suit_marker][swim_marker][up player_water] -> [water_suit_marker][swim_marker][up player_water_up]
+[water_suit_marker][swim_marker][down player_water] -> [water_suit_marker][swim_marker][down player_water_down]
+
+(..................)
+(fire)
+(..................)
+(player platform jump)
+up [fire_suit_marker][platform_marker][up player_platform_fire_ground  | no obstacle] -> [fire_suit_marker][platform_marker][ | player_platform_fire_jump_start]
+up [fire_suit_marker][platform_marker][ player_platform_fire_jump_start | no obstacle] -> [fire_suit_marker][platform_marker][| player_platform_fire_jump]
+[fire_suit_marker][platform_marker][player_platform_fire_jump_start] -> [fire_suit_marker][platform_marker][player_platform_fire_jump]
+(player fall after jump)
+vertical [fire_suit_marker][platform_marker][> player_platform_fire_jump no vine] -> [fire_suit_marker][platform_marker][> player_platform_fire_ground]
+vertical [fire_suit_marker][platform_marker][> player_platform_fire_fall] -> [fire_suit_marker][platform_marker][> player_platform_fire_ground]
+horizontal [fire_suit_marker][platform_marker][> player_platform_fire_jump | no obstacle no vine] -> [fire_suit_marker][platform_marker][ | player_platform_fire_fall]
+horizontal [fire_suit_marker][platform_marker][> player_platform_fire_fall | no obstacle] -> [fire_suit_marker][platform_marker][ | player_platform_fire_ground]
+random down [fire_suit_marker][platform_marker][player_platform_fire_ground | no obstacle no vine] -> [fire_suit_marker][platform_marker][| player_platform_fire_ground] again
+(......swim........)
+[fire_suit_marker][swim_marker][right player_fire] -> [fire_suit_marker][swim_marker][right player_fire_right]
+[fire_suit_marker][swim_marker][left player_fire] -> [fire_suit_marker][swim_marker][left player_fire_left]
+[fire_suit_marker][swim_marker][up player_fire] -> [fire_suit_marker][swim_marker][up player_fire_up]
+[fire_suit_marker][swim_marker][down player_fire] -> [fire_suit_marker][swim_marker][down player_fire_down]
+(......lava........)
+[fire_suit_marker][lava_marker][right player_fire] -> [fire_suit_marker][lava_marker][right player_fire_right]
+[fire_suit_marker][lava_marker][left player_fire] -> [fire_suit_marker][lava_marker][left player_fire_left]
+[fire_suit_marker][lava_marker][up player_fire] -> [fire_suit_marker][lava_marker][up player_fire_up]
+[fire_suit_marker][lava_marker][down player_fire] -> [fire_suit_marker][lava_marker][down player_fire_down]
+
+(..................)
+(.......map........)
+(..................)
+(close holes)
+[map_marker][map_log1][map_tree_hole2_entrance save_point] -> [map_marker][map_log1][map_tree_hole2_closed]
+[map_marker][map_log2][map_tree_hole1_entrance save_point] -> [map_marker][map_log2][map_tree_hole1_closed]
+[map_marker][map_log3][map_tree_hole3_entrance save_point] -> [map_marker][map_log3][map_tree_hole3_closed]
+late [map_marker][map_stone][map_lava_hole_entrance save_point] -> [map_marker][map_stone][map_lava_hole_closed]
+
+[map_marker][< player_map | map_log ] -> [map_marker][< player_map | < map_log]
+[map_marker][> player_map | map_log] -> [map_marker][> player_map | > map_log]
+[map_marker][map_fire map_log1][map_tree_hole2_closed] -> [map_marker][map_fire][map_tree_hole2_entrance save_point]
+[map_marker][map_fire map_log2][map_tree_hole1_closed] -> [map_marker][map_fire][map_tree_hole1_entrance save_point]
+[map_marker][map_fire map_log3][map_tree_hole3_closed] -> [map_marker][map_fire][map_tree_hole3_entrance save_point]
+(fire burns logs but not player)
+[map_marker][> player_map | map_fire] -> [map_marker][< player_map | map_fire]
+
+(crush stones in lava suit)
+[map_marker][> player_map | map_stone] -> [map_marker][> player_map | > map_stone]
+[map_marker][action player_map_fire | map_stone][map_lava_hole_closed] -> [map_marker][player_map_fire | map_stone_crush][map_lava_hole_entrance save_point]
+[map_marker][> player_map_fire][map_stone_crush] -> [map_marker][> player_map_fire][]
+
+(earth suit can neither swim nor lava)
+late [player_map_earth map_water_entrances] -> [map_water_splash map_water_entrances]
+late [player_map_earth map_lava_entrances] -> [map_fire_splash map_lava_entrances]
+late [player_map_earth map_lava_hole_closed] -> [map_fire_splash map_lava_hole_closed]
+(water suit cannot lava)
+late [player_map_water map_lava_entrances] -> [map_fire_splash map_lava_entrances]
+late [player_map_water map_lava_hole_closed] -> [map_fire_splash map_lava_hole_closed]
+
+
+(...................................)
+(......Common platform rules........)
+(...................................)
+(tree)
+[platform_marker][action player_platform_earth_ground tree_mushroom_top | ...| tree_mushroom_jump] -> [platform_marker][ tree_mushroom_top|...|tree_mushroom_jump player_platform_earth_jump_start]
+[platform_marker][action player_platform_water_ground tree_mushroom_top | ...| tree_mushroom_jump] -> [platform_marker][ tree_mushroom_top|...|tree_mushroom_jump player_platform_water_jump_start]
+[platform_marker][action player_platform_fire_ground tree_mushroom_top | ...| tree_mushroom_jump] -> [platform_marker][ tree_mushroom_top|...|tree_mushroom_jump player_platform_fire_jump_start]
+
+(.........................)
+(......Inside Tree........)
+(.........................)
+[inside_tree_marker][platform_marker][moving player_platform] -> [inside_tree_marker][platform_marker][moving player_platform] again
+(drown)
+[inside_tree_marker][platform_marker][player_platform_earth | tree_water] -> [inside_tree_marker][platform_marker][tree_player_drown | tree_water]
+[> tree_player_drown] -> cancel
+(levers & platform movement)
+[inside_tree_marker][platform_marker][action player_platform tree_lever_off] -> [inside_tree_marker][platform_marker][player_platform tree_lever_on]
+[inside_tree_marker][platform_marker][player_platform tree_lever_on][tree_lever_off] -> [inside_tree_marker][platform_marker][player_platform tree_lever_on][tree_lever_on]
+[inside_tree_marker][platform_marker][player_platform tree_lever_on][tree_lever_on][tree_platform_moving|tree_platform_moving] -> [inside_tree_marker][platform_marker][player_platform tree_lever_on][tree_lever_on][left tree_platform_moving| left tree_platform_moving] again
+[inside_tree_marker][platform_marker][action player_platform tree_lever_on] -> [inside_tree_marker][platform_marker][player_platform tree_lever_off]
+[inside_tree_marker][platform_marker][player_platform tree_lever_off][tree_lever_on] -> [inside_tree_marker][platform_marker][player_platform tree_lever_off][tree_lever_off]
+[inside_tree_marker][platform_marker][player_platform tree_lever_off][tree_lever_off][tree_platform_moving|tree_platform_moving] -> [inside_tree_marker][platform_marker][player_platform tree_lever_off][tree_lever_off][right tree_platform_moving| right tree_platform_moving] again
+(stick player & lever)
+up [inside_tree_marker][platform_marker][moving tree_platform_moving|tree_transportable] -> [inside_tree_marker][platform_marker][moving tree_platform_moving|moving tree_transportable]
+
+(logs)
+[inside_tree_marker][platform_marker][> player_platform | tree_log ] -> [inside_tree_marker][platform_marker][ > player_platform | > tree_log ]
+vertical [inside_tree_marker][platform_marker][moving tree_log | tree_log] -> [inside_tree_marker][platform_marker][moving tree_log | moving tree_log]
+(fall)
+random down [inside_tree_marker][platform_marker][tree_log | no tree_obstacle no tree_vine] -> [inside_tree_marker][platform_marker][| tree_log] again
+
+(.......................)
+(......Tree Hole 1......)
+(.......................)
+[tree_hole1_marker][platform_marker][moving player_platform] -> [tree_hole1_marker][platform_marker][moving player_platform] again
+
+[tree_hole1_marker][platform_marker][action player_platform tree_flower][tree_mushroom_hidden] -> [tree_hole1_marker][platform_marker][player_platform tree_flower][tree_mushroom]
+[tree_hole1_marker][platform_marker][player | tree_spike] -> [tree_hole1_marker][platform_marker][tree_splash | tree_spike]
+
+(.......................)
+(......Tree Hole 2......)
+(.......................)
+[tree_hole2_marker][platform_marker][moving player_platform] -> [tree_hole2_marker][platform_marker][moving player_platform] again
+
+(water edge)
+[tree_hole2_marker][action_marker_holder platform_marker][player_platform_earth tree_hole_water_top] -> [tree_hole2_marker][action_marker_holder platform_marker][tree_hole_water_top map_water_splash]
+[tree_hole2_marker][action_marker_holder platform_marker][player_platform_water tree_hole_water_top] -> [tree_hole2_marker][action_marker_holder swim_marker][player_water_down tree_hole_water_top]
+[tree_hole2_marker][action_marker_holder platform_marker][player_platform_fire tree_hole_water_top] -> [tree_hole2_marker][action_marker_holder swim_marker][player_fire_down tree_hole_water_top]
+up [tree_hole2_marker][action_marker_holder swim_marker][> player_swim tree_hole_water_top] -> [tree_hole2_marker][action_marker_holder swim_marker][player_swim tree_hole_water_top]
+up [tree_hole2_marker][action_marker_holder swim_marker][action player_water tree_hole_water_top] -> [tree_hole2_marker][action_marker_holder platform_marker][ up player_platform_water_jump_start tree_hole_water_top]
+up [tree_hole2_marker][action_marker_holder swim_marker][action player_fire tree_hole_water_top] -> [tree_hole2_marker][action_marker_holder platform_marker][ up player_platform_fire_jump_start tree_hole_water_top]
+
+[tree_hole2_marker][action player_platform tree_flower2][tree_mushroom_hidden2] -> [tree_hole2_marker][player_platform tree_flower2][tree_mushroom]
+
+(.......................)
+(......Tree Hole 3......)
+(.......................)
+[tree_hole3_marker][platform_marker][moving player_platform] -> [tree_hole3_marker][platform_marker][moving player_platform] again
+
+(water edge)
+[tree_hole3_marker][action_marker_holder platform_marker][player_platform_earth tree_hole_water_top] -> [tree_hole3_marker][action_marker_holder platform_marker][tree_hole_water_top map_water_splash]
+[tree_hole3_marker][action_marker_holder platform_marker][player_platform_water tree_hole_water_top] -> [tree_hole3_marker][action_marker_holder swim_marker][player_water_down tree_hole_water_top]
+[tree_hole3_marker][action_marker_holder platform_marker][player_platform_fire tree_hole_water_top] -> [tree_hole3_marker][action_marker_holder swim_marker][player_fire_down tree_hole_water_top]
+up [tree_hole3_marker][action_marker_holder swim_marker][> player_swim tree_hole_water_top] -> [tree_hole3_marker][action_marker_holder swim_marker][player_swim tree_hole_water_top]
+up [tree_hole3_marker][action_marker_holder swim_marker][action player_water tree_hole_water_top] -> [tree_hole3_marker][action_marker_holder platform_marker][ up player_platform_water_jump_start tree_hole_water_top]
+up [tree_hole3_marker][action_marker_holder swim_marker][action player_fire tree_hole_water_top] -> [tree_hole3_marker][action_marker_holder platform_marker][ up player_platform_fire_jump_start tree_hole_water_top]
+
+(logs)
+[tree_hole3_marker][platform_marker][> player_platform | tree_hole_log ] -> [tree_hole3_marker][platform_marker][ > player_platform | > tree_hole_log ]
+vertical [tree_hole3_marker][platform_marker][moving tree_hole_log | tree_hole_log] -> [tree_hole3_marker][platform_marker][moving tree_hole_log | moving tree_hole_log]
+(fall)
+random down [tree_hole3_marker][platform_marker][tree_hole_log | no tree_obstacle no tree_vine] -> [tree_hole3_marker][platform_marker][| tree_hole_log] again
+
+(water logs)
+late [tree_hole3_marker][platform_marker][tree_hole_log | tree_hole_water_top] -> [tree_hole3_marker][platform_marker][tree_hole_log_water tree_hole_can_drown | tree_hole_water_top]
+up [tree_hole3_marker][swim_marker][left player_swim | tree_hole_log_water] -> [tree_hole3_marker][swim_marker][left player_swim | left tree_hole_log_water ]
+up [tree_hole3_marker][swim_marker][right player_swim | tree_hole_log_water] -> [tree_hole3_marker][swim_marker][right player_swim | right tree_hole_log_water]
+down [tree_hole3_marker][action_marker_holder platform_marker][player_platform_water | tree_hole_log_water tree_hole_can_drown | tree_hole_water_top] -> [tree_hole3_marker][action_marker_holder swim_marker][| tree_hole_log_water tree_hole_can_drown | tree_hole_water_top  player_water_down]
+down [tree_hole3_marker][action_marker_holder platform_marker][player_platform_fire | tree_hole_log_water tree_hole_can_drown | tree_hole_water_top] -> [tree_hole3_marker][action_marker_holder swim_marker][| tree_hole_log_water tree_hole_can_drown | tree_hole_water_top  player_fire_down]
+[tree_hole3_marker][swim_marker][player_swim][tree_hole_log_water] -> [tree_hole3_marker][swim_marker][player_swim][tree_hole_log_water tree_hole_can_drown]
+down [tree_hole3_marker][platform_marker][player_platform | tree_moss_floor][tree_hole_can_drown] -> [tree_hole3_marker][platform_marker][player_platform | tree_moss_floor][]
+(crush floor)
+[tree_hole3_marker][platform_marker][action player_platform tree_hole_flower3][tree_hole_bark_crushing] -> [tree_hole3_marker][platform_marker][player_platform tree_hole_flower3 tree_hole_flower_on_hidden][]
+[tree_hole3_marker][platform_marker][tree_hole_flower_on_hidden][tree_hole_bark_crushing] -> [tree_hole3_marker][platform_marker][tree_hole_flower_on_hidden][]
+
+(.............................)
+(......Common swim rules......)
+(.............................)
+(fountain)
+[swim_marker][> player_swim water_fountain | ...| water_fountain] -> [swim_marker][water_fountain|...|water_fountain player_swim]
+[swim_marker][> player_swim | water_current] -> [swim_marker][player_swim | water_current]
+
+(...........................)
+(......Water Cave Path......)
+(...........................)
+(block)
+[water_cave_path_marker][swim_marker][moving player_swim] -> [water_cave_path_marker][swim_marker][moving player_swim] again
+
+[water_cave_path_marker][swim_marker][> player_swim water_block] -> [water_cave_path_marker][swim_marker][> player_swim > water_block]
+[water_cave_path_marker][swim_marker][> water_block | water_bed_return] -> [water_cave_path_marker][swim_marker][water_block | water_bed_return]
+[water_cave_path_marker][swim_marker][player_swim |...| water_fish] -> [water_cave_path_marker][swim_marker][player_swim |...| < water_fish]
+[water_cave_path_marker][swim_marker][water_fish|player_swim no water_block] -> [water_cave_path_marker][swim_marker][water_fish|water_splash]
+[water_cave_path_marker][swim_marker][water_bomb | water_fish] -> [water_cave_path_marker][swim_marker][water_bam | fish_splash]
+[water_cave_path_marker][swim_marker][> player_swim | water_bomb] -> [water_cave_path_marker][swim_marker][> player_swim | > water_bomb]
+[water_cave_path_marker][swim_marker][< player_swim | water_bomb] -> [water_cave_path_marker][swim_marker][< player_swim | < water_bomb]
+
+(...........................)
+(.........Water Cave........)
+(...........................)
+[platform_marker][water_cave_marker][moving player_platform] -> [platform_marker][water_cave_marker][moving player_platform] again
+
+(water on/off and transitions)
+(vent 1)
+[action player_platform | water_cave_vent1 | water_cave_water_top_hidden] -> [player_platform | water_cave_vent1_turn | water_cave_water_top]
+[platform_marker][water_cave_marker][water_cave_vent1_turn][water_cave_water_top | water_cave_water_top_hidden] -> [platform_marker][water_cave_marker][water_cave_vent1_turn][water_cave_water_top | water_cave_water_top]
+[platform_marker][water_cave_marker][water_cave_vent1_turn][water_cave_water_top | water_cave_water_hidden] -> [platform_marker][water_cave_marker][water_cave_vent1_turn][water_cave_water_top | water_cave_water]
+[platform_marker][water_cave_marker][water_cave_vent1_turn][water_cave_water | water_cave_water_top_hidden] -> [platform_marker][water_cave_marker][water_cave_vent1_turn][water_cave_water | water_cave_water_top]
+[platform_marker][water_cave_marker][water_cave_vent1_turn][water_cave_water | water_cave_water_hidden] -> [platform_marker][water_cave_marker][water_cave_vent1_turn][water_cave_water | water_cave_water]
+[action player_platform | water_cave_vent1_turn | water_cave_water_top ] -> [player_platform | water_cave_vent1 | water_cave_water_top_hidden ]
+[platform_marker][water_cave_marker][water_cave_vent1][water_cave_water_top_hidden | water_cave_water_top] -> [platform_marker][water_cave_marker][water_cave_vent1][water_cave_water_top_hidden | water_cave_water_top_hidden]
+[platform_marker][water_cave_marker][water_cave_vent1][water_cave_water_top_hidden | water_cave_water] -> [platform_marker][water_cave_marker][water_cave_vent1][water_cave_water_top_hidden | water_cave_water_hidden]
+[platform_marker][water_cave_marker][water_cave_vent1][water_cave_water_hidden | water_cave_water_top] -> [platform_marker][water_cave_marker][water_cave_vent1][water_cave_water_hidden | water_cave_water_top_hidden]
+[platform_marker][water_cave_marker][water_cave_vent1][water_cave_water_hidden | water_cave_water] -> [platform_marker][water_cave_marker][water_cave_vent1][water_cave_water_hidden|water_cave_water_hidden]
+(vent 2)
+[action player_platform | water_cave_vent2] -> [player_platform | water_cave_vent2_turn]
+[platform_marker][water_cave_marker][water_cave_vent2_turn][water_cave_water_top_hidden] -> [platform_marker][water_cave_marker][water_cave_vent2_turn][water_cave_water_top]
+[platform_marker][water_cave_marker][water_cave_vent2_turn][water_cave_fish_hidden] -> [platform_marker][water_cave_marker][water_cave_vent2_turn][water_cave_water water_cave_fish]
+[platform_marker][water_cave_marker][water_cave_vent2_turn][no water_cave_water no water_cave_water_top water_cave_block] -> [platform_marker][water_cave_marker][water_cave_vent2_turn][water_cave_water water_cave_block]
+[platform_marker][water_cave_marker][water_cave_vent2_turn][no water_cave_water water_cave_fountain] -> [platform_marker][water_cave_marker][water_cave_vent2_turn][water_cave_water water_cave_fountain]
+[platform_marker][water_cave_marker][water_cave_vent2_turn][no water_cave_water water_cave_battery] -> [platform_marker][water_cave_marker][water_cave_vent2_turn][water_cave_water water_cave_battery]
+[platform_marker][water_cave_marker][water_cave_vent2_turn][no water_cave_water water_current_horizontal] -> [platform_marker][water_cave_marker][water_cave_vent2_turn][water_cave_water water_current_horizontal]
+[platform_marker][water_cave_marker][water_cave_vent2_turn][no water_cave_water water_cave_water_hidden] -> [platform_marker][water_cave_marker][water_cave_vent2_turn][water_cave_water]
+[platform_marker][water_cave_marker][water_cave_vent2_turn][no water_cave_water water_cave_spikes] -> [platform_marker][water_cave_marker][water_cave_vent2_turn][water_cave_water water_cave_spikes]
+[platform_marker][water_cave_marker][water_cave_vent2_turn][no water_cave_water water_cave_vine] -> [platform_marker][water_cave_marker][water_cave_vent2_turn][water_cave_water water_cave_vine]
+[platform_marker][water_cave_marker][water_cave_vent2_turn][no water_cave_water_top water_cave_vine | no water_cave_waters_on] -> [platform_marker][water_cave_marker][water_cave_vent2_turn][water_cave_water_top water_cave_vine | no water_cave_waters_on]
+
+[swim_marker][water_cave_marker][moving player_swim] -> [swim_marker][water_cave_marker][moving player_swim] again
+[swim_marker][water_cave_marker][water_cave_fish no water_cave_waters] -> [swim_marker][water_cave_marker][fish_splash no water_cave_waters]
+late [swim_marker][water_cave_marker][water_cave_fish water_cave_spikes ] -> [swim_marker][water_cave_marker][fish_splash water_cave_spikes]
+
+(player at the edge of water)
+[action_marker_holder platform_marker][water_cave_marker][player_platform_water water_cave_water_top] -> [action_marker_holder swim_marker][water_cave_marker][player_water_down water_cave_water_top]
+[action_marker_holder platform_marker][water_cave_marker][player_platform_fire water_cave_water_top] -> [action_marker_holder swim_marker][water_cave_marker][player_fire_down water_cave_water_top]
+[swim_marker][water_cave_marker][> player_swim water_cave_waters_on | no water_cave_waters_on] -> [swim_marker][water_cave_marker][player_swim water_cave_waters_on | no water_cave_waters_on]
+up [action_marker_holder swim_marker][action player_water water_cave_water_top] -> [action_marker_holder platform_marker][ up player_platform_water_jump_start water_cave_water_top]
+up [action_marker_holder swim_marker][action player_fire water_cave_water_top] -> [action_marker_holder platform_marker][ up player_platform_fire_jump_start water_cave_water_top]
+
+[water_cave_marker][player water_cave_spikes no water_cave_block] -> [water_cave_marker][water_splash water_cave_spikes]
+[swim_marker][water_cave_marker][> player_swim > water_cave_block | water_cave_spikes] -> [swim_marker][water_cave_marker][> player_swim > water_cave_block water_cave_spikes |]
+[swim_marker][water_cave_marker][> player_swim water_cave_block] -> [swim_marker][water_cave_marker][> player_swim > water_cave_block]
+
+[action player_swim water_cave_fountain | ...| water_cave_fountain] -> [water_cave_fountain|...|water_cave_fountain player_swim]
+[swim_marker][> player_swim | water_current] -> [swim_marker][< player_swim | water_current]
+
+down [action player_swim water_cave_block | water_cave_water] -> [player_swim | water_cave_water water_cave_block]
+
+[swim_marker][water_cave_marker][player_swim |...| water_cave_fish] -> [swim_marker][water_cave_marker][player_swim |...| < water_cave_fish]
+[swim_marker][water_cave_marker][water_cave_fish|player_swim no water_cave_block] -> [swim_marker][water_cave_marker][water_cave_fish|water_splash]
+
+late [platform_marker][water_cave_marker][player_platform_water | water_cave_lava] -> [platform_marker][water_cave_marker][water_cave_burnt | water_cave_lava]
+[> water_cave_burnt] -> cancel
+
+(.................................................)
+(...........Vulcano (order for vulcano)...........)
+(.................................................)
+(
+[vulcano_marker][lava_marker][moving player_platform_fire] -> [vulcano_marker][lava_marker][moving player_platform_fire] again
+)
+left [lava_marker][vulcano_marker][action player_fire_left | lava] -> [lava_marker][vulcano_marker][player_fire_left | vulcano_hidden_lava]
+left [lava_marker][vulcano_marker][action player_fire_left | lava_boulder] -> [lava_marker][vulcano_marker][player_fire_left | lava_boulder_cold]
+right [lava_marker][vulcano_marker][action player_fire_right | lava] -> [lava_marker][vulcano_marker][player_fire_right | vulcano_hidden_lava]
+right [lava_marker][vulcano_marker][action player_fire_right | lava_boulder] -> [lava_marker][vulcano_marker][player_fire_right | lava_boulder_cold]
+up [lava_marker][vulcano_marker][action player_fire_up | lava] -> [lava_marker][vulcano_marker][player_fire_up | vulcano_hidden_lava]
+up [lava_marker][vulcano_marker][action player_fire_up | lava_boulder] -> [lava_marker][vulcano_marker][player_fire_up | lava_boulder_cold]
+down [lava_marker][vulcano_marker][action player_fire_down | lava] -> [lava_marker][vulcano_marker][player_fire_down | vulcano_hidden_lava]
+down [lava_marker][vulcano_marker][action player_fire_down | lava_boulder] -> [lava_marker][vulcano_marker][player_fire_down | lava_boulder_cold]
+(.............................)
+(......Common lava rules......)
+(.............................)
+left [lava_marker][action player_fire_left | lava] -> [lava_marker][player_fire_left |]
+left [lava_marker][action player_fire_left | lava_boulder] -> [lava_marker][player_fire_left | lava_boulder_cold]
+right [lava_marker][action player_fire_right | lava] -> [lava_marker][player_fire_right |]
+right [lava_marker][action player_fire_right | lava_boulder] -> [lava_marker][player_fire_right | lava_boulder_cold]
+up [lava_marker][action player_fire_up | lava] -> [lava_marker][player_fire_up |]
+up [lava_marker][action player_fire_up | lava_boulder] -> [lava_marker][player_fire_up | lava_boulder_cold]
+down [lava_marker][action player_fire_down | lava] -> [lava_marker][player_fire_down |]
+down [lava_marker][action player_fire_down | lava_boulder] -> [lava_marker][player_fire_down | lava_boulder_cold]
+
+(.............................)
+(.........Lava Passage........)
+(.............................)
+random down [lava_passage_marker][lava_marker][lava_rolling_stone | player_fire] -> [lava_passage_marker][lava_marker][lava_splash | lava_background lava_rolling_stone] again
+random down [lava_passage_marker][lava_marker][lava_rolling_stone | no lava no lava_rolling_stone no lava_battery] -> [lava_passage_marker][lava_marker][| lava_background lava_rolling_stone] again
+[lava_passage_marker][lava_marker][> player_fire | lava_rolling_stone] -> [lava_passage_marker][lava_marker][> player_fire | > lava_rolling_stone]
+[lava_passage_marker][lava_marker][player_fire lava_rock_reset][lava_rock_placeholder no lava_rolling_stone] -> [lava_passage_marker][lava_marker][player_fire lava_rock_reset][lava_rock_placeholder lava_rolling_stone]
+
+(.............................)
+(...........Vulcano...........)
+(.............................)
+(vulcano transitions)
+[action_marker_holder lava_marker][vulcano_marker][> player_fire no vulcano_swim] -> [action_marker_holder platform_marker][vulcano_marker][player_platform_fire_ground]
+late [action_marker_holder lava_marker][vulcano_marker][player_fire no vulcano_swim] -> [action_marker_holder platform_marker][vulcano_marker][player_platform_fire_ground]
+[action_marker_holder platform_marker][vulcano_marker][> player_platform_fire vulcano_hidden_lava] -> [action_marker_holder lava_marker][vulcano_marker][vulcano_hidden_lava player_fire_down]
+late [action_marker_holder platform_marker][vulcano_marker][player_platform_fire vulcano_hidden_lava] -> [action_marker_holder lava_marker][vulcano_marker][vulcano_hidden_lava player_fire_down]
+[action player vulcano_lever][vulcano_barrier|vulcano_barrier] -> [player vulcano_lever_off][|]
+
+(.............................)
+(.........Escape Lava ........)
+(.............................)
+[lava_marker][escape_lava_marker][escape_lava] -> [lava_marker][escape_lava_marker][right escape_lava]
+right [lava_marker][escape_lava_marker][|escape_lava] -> [lava_marker][escape_lava_marker][escape_lava | escape_lava]
+[lava_marker][escape_lava_marker][escape_lava|player_fire] -> [lava_marker][escape_lava_marker][escape_lava|lava_splash]
+[lava_marker][escape_lava_marker][escape_lava|burnable] -> [lava_marker][escape_lava_marker][left escape_lava|]
+
+(.............................)
+(.........Water Hole 2........)
+(.............................)
+(darkness)
+[swim_marker][water_hole2_marker][water_dark_background no water_hole_darkness] -> [swim_marker][water_hole2_marker][water_dark_background water_hole_darkness]
+[swim_marker][water_hole2_marker][water_dark_depth no water_hole_darkness] -> [swim_marker][water_hole2_marker][water_dark_depth water_hole_darkness]
+[swim_marker][water_hole2_marker][water_dark_vegetation no water_hole_darkness] -> [swim_marker][water_hole2_marker][water_dark_vegetation water_hole_darkness]
+[swim_marker][water_hole2_marker][water_dark_lever_yellow no water_hole_darkness] -> [swim_marker][water_hole2_marker][water_dark_lever_yellow water_hole_darkness]
+[swim_marker][water_hole2_marker][water_dark_lever_yellow_off no water_hole_darkness] -> [swim_marker][water_hole2_marker][water_dark_lever_yellow_off water_hole_darkness]
+(light)
+late [swim_marker][water_hole2_marker][player_fire | water_hole_darkness] -> [swim_marker][water_hole2_marker][player_fire | ]
+late [swim_marker][water_hole2_marker][player_fire water_hole_darkness] -> [swim_marker][water_hole2_marker][player_fire ]
+
+[action player_fire water_hole_lever_red] -> [player_fire water_hole_lever_red_off]
+[action player_fire water_hole_lever_green] -> [player_fire water_hole_lever_green_off]
+[action player_fire water_dark_lever_yellow] -> [player_fire water_dark_lever_yellow_off]
+
+[swim_marker][water_hole2_marker][water_hole_lever_red_off][water_hole_lever_green_off][water_dark_lever_yellow_off][water_hole_door1 | water_hole_door2] -> [swim_marker][water_hole2_marker][water_hole_lever_red_off][water_hole_lever_green_off][water_dark_lever_yellow_off][|]
+
+(.............................)
+(........Haunted House........)
+(.............................)
+[platform_marker][house_marker][moving player_platform_fire] -> [platform_marker][house_marker][moving player_platform_fire] again
+[platform_marker][house_marker][> player_platform_fire | house_barrel ] -> [platform_marker][house_marker][ > player_platform_fire | > house_barrel]
+up [platform_marker][house_marker][left player_platform_fire | house_barrel] -> [platform_marker][house_marker][left player_platform_fire | left house_barrel]
+up [platform_marker][house_marker][right player_platform_fire | house_barrel] -> [platform_marker][house_marker][right player_platform_fire | right house_barrel]
+random down [platform_marker][house_marker][house_barrel | no house_obstacle] -> [platform_marker][house_marker][| house_barrel] again
+[platform_marker][house_marker][player_platform_fire house_spike] -> [platform_marker][house_marker][house_spike house_splash]
+[platform_marker][house_marker][house_ghost | ... | player_platform_fire] -> [platform_marker][house_marker][> house_ghost | ... | player_platform_fire]
+late [platform_marker][house_marker][player_platform_fire | house_ghost] -> [platform_marker][house_marker][house_splash | house_ghost ]
+[platform_marker][house_marker][house_vault_ghost | ... | player_platform_fire] -> [platform_marker][house_marker][> house_vault_ghost | ... | player_platform_fire]
+late [platform_marker][house_marker][player_platform_fire | house_vault_ghost] -> [platform_marker][house_marker][house_splash | house_vault_ghost ]
+
+[action player_platform_fire | house_key] -> [player_platform_fire | house_hidden_key pickup]
+[action player_platform_fire | house_door2][house_door1][house_hidden_key] -> [player_platform_fire | ][][]
+[action player_platform_fire house_lever_on] -> [player_platform_fire house_lever_off]
+[platform_marker][house_marker][house_lever_off][house_barrier] -> [platform_marker][house_marker][house_lever_off][]
+
+
+(.............................)
+(.........Mountain Top........)
+(.............................)
+(not enough batteries)
+[map_marker][mountain_marker][> player_map_fire | mountain_spaceship_no_player] -> [map_marker][mountain_marker][player_map_fire | mountain_spaceship_no_player]
+
+(install batteries)
+[map_marker][mountain_marker][battery_placeholder battery_installed][cord_no_light] -> [map_marker][mountain_marker][battery_placeholder battery_installed][cord_light]
+[map_marker][mountain_marker][battery_placeholder no battery_installed][cord_light] -> [map_marker][mountain_marker][battery_placeholder no battery_installed][cord_no_light]
+
+(energy tank full, open doors!)
+[map_marker][mountain_marker][cord_light][spaceship_closed][s1 | s2 | s3][s7][s9] -> [map_marker][mountain_marker][cord_light][][s1_light | s2_light | s3_light][s7_light][s9_light]
+
+(on board!)
+[action player_map_fire s8 | s5][action_marker_holder map_marker] -> [  s8 | player_spaceship][action_marker_holder fly_marker]
+(fly! no break at corners)
+rigid [fly_marker][> player_spaceship | mountain_spaceship] -> [fly_marker][> player_spaceship | > mountain_spaceship]
++ rigid [fly_marker][moving mountain_spaceship | mountain_spaceship] -> [fly_marker][moving mountain_spaceship | moving mountain_spaceship]
+
+(enter hyperspace)
+[fly_marker][mountain_marker][action player_spaceship star3][s1_light | s2_light | s3_light][s7_light | s8 | s9_light][s4][s6][high_sky][moon] -> [fly_marker][mountain_marker][flash5][flash1| flash2 | flash3][flash7| flash8| flash9 ][flash4][flash6][hyperspace][hyperspace]
+late [fly_marker][mountain_marker][flash1][hyperspace | high_sky] -> [fly_marker][mountain_marker][flash1][hyperspace | hyperspace]
+
+(...............................)
+(......background fixes.........)
+(...............................)
+(set major markers)
+[fix_backgrounds_marker][action_marker_holder] -> [fix_backgrounds_marker][action_marker_holder map_marker]
+[fix_backgrounds_marker][suit_marker_holder] -> [fix_backgrounds_marker][suit_marker_holder earth_suit_marker]
+[fix_backgrounds_marker][save_points no save_point] -> [fix_backgrounds_marker][save_points save_point]
+
+(tree)
+[fix_backgrounds_marker][tree_platform_moving no tree_background] -> [fix_backgrounds_marker][tree_background tree_platform_moving]
+[fix_backgrounds_marker][tree_lever_off no tree_background] -> [fix_backgrounds_marker][tree_background tree_lever_off]
+[fix_backgrounds_marker][tree_log no tree_background] -> [fix_backgrounds_marker][tree_background tree_log]
+[fix_backgrounds_marker][tree_hole_log no tree_background] -> [fix_backgrounds_marker][tree_background tree_hole_log]
+[fix_backgrounds_marker][tree_s1 no tree_background] -> [fix_backgrounds_marker][tree_background tree_s1]
+[fix_backgrounds_marker][tree_s2 no tree_background] -> [fix_backgrounds_marker][tree_background tree_s2]
+[fix_backgrounds_marker][tree_s3 no tree_background] -> [fix_backgrounds_marker][tree_background tree_s3]
+[fix_backgrounds_marker][tree_bark_move_cancel no tree_bark] -> [fix_backgrounds_marker][tree_bark_move_cancel tree_bark]
+[fix_backgrounds_marker][tree_battery no tree_background] -> [fix_backgrounds_marker][tree_background tree_battery]
+[fix_backgrounds_marker][tree_moss no tree_background] -> [fix_backgrounds_marker][tree_background tree_moss]
+[fix_backgrounds_marker][tree_hole_bark_crushing no tree_background] -> [fix_backgrounds_marker][tree_background tree_hole_bark_crushing]
+
+(underwater)
+[fix_backgrounds_marker][underwater_battery no water_background] -> [fix_backgrounds_marker][water_background underwater_battery]
+[fix_backgrounds_marker][water_bed_return no water_background] -> [fix_backgrounds_marker][water_background water_bed_return]
+[fix_backgrounds_marker][water_vegetation no water_background] -> [fix_backgrounds_marker][water_background water_vegetation]
+[fix_backgrounds_marker][water_stars no water_background] -> [fix_backgrounds_marker][water_background water_stars]
+
+(water cave)
+[fix_backgrounds_marker][water_cave_vine no water_cave_background] -> [fix_backgrounds_marker][water_cave_background water_cave_vine]
+[fix_backgrounds_marker][water_cave_fountain no water_cave_background] -> [fix_backgrounds_marker][water_cave_background water_cave_fountain]
+[fix_backgrounds_marker][water_cave_spikes no water_cave_background] -> [fix_backgrounds_marker][water_cave_background water_cave_spikes]
+[fix_backgrounds_marker][water_cave_s1 no water_cave_background] -> [fix_backgrounds_marker][water_cave_background water_cave_s1]
+[fix_backgrounds_marker][water_cave_s2 no water_cave_background] -> [fix_backgrounds_marker][water_cave_background water_cave_s2]
+[fix_backgrounds_marker][water_cave_s3 no water_cave_background] -> [fix_backgrounds_marker][water_cave_background water_cave_s3]
+[fix_backgrounds_marker][water_cave_battery no water_cave_background] -> [fix_backgrounds_marker][water_cave_background water_cave_battery]
+
+(water cave lava)
+[fix_backgrounds_marker][lava_battery no lava_background] -> [fix_backgrounds_marker][lava_background lava_battery]
+[fix_backgrounds_marker][lava no lava_background] -> [fix_backgrounds_marker][lava_background lava]
+
+(vulcano)
+[fix_backgrounds_marker][vulcano_wall_secret no vulcano_wall_secret_background] -> [fix_backgrounds_marker][vulcano_wall_secret_background vulcano_wall_secret]
+[fix_backgrounds_marker][vulcano_s1 no lava_background] -> [fix_backgrounds_marker][lava_background vulcano_s1]
+[fix_backgrounds_marker][vulcano_s2 no lava_background] -> [fix_backgrounds_marker][lava_background vulcano_s2]
+[fix_backgrounds_marker][vulcano_barrier no lava_background] -> [fix_backgrounds_marker][lava_background vulcano_barrier]
+
+(escape lava)
+[fix_backgrounds_marker][escape_lava_boulder_cold no lava_background] -> [fix_backgrounds_marker][lava_background escape_lava_boulder_cold]
+[fix_backgrounds_marker][escape_lava_hidden no lava_background] -> [fix_backgrounds_marker][lava_background escape_lava]
+
+(water hole 2)
+[fix_backgrounds_marker][water_hole_door1 no water_background] -> [fix_backgrounds_marker][water_background water_hole_door1]
+[fix_backgrounds_marker][water_hole_door2 no water_background] -> [fix_backgrounds_marker][water_background water_hole_door2]
+[fix_backgrounds_marker][water_dark_vegetation no water_background] -> [fix_backgrounds_marker][water_background water_dark_vegetation]
+
+(house)
+[fix_backgrounds_marker][house_barrel no house_background] -> [fix_backgrounds_marker][house_background house_barrel]
+[fix_backgrounds_marker][house_spike no house_background] -> [fix_backgrounds_marker][house_background house_spike]
+[fix_backgrounds_marker][house_ghost no house_background] -> [fix_backgrounds_marker][house_background house_ghost]
+[fix_backgrounds_marker][house_door1 no house_background] -> [fix_backgrounds_marker][house_background house_door1]
+[fix_backgrounds_marker][house_door2 no house_background] -> [fix_backgrounds_marker][house_background house_door2]
+[fix_backgrounds_marker][house_barrier no house_vault_background] -> [fix_backgrounds_marker][house_vault_background house_barrier]
+[fix_backgrounds_marker][house_vault_ghost no house_vault_background] -> [fix_backgrounds_marker][house_vault_background house_vault_ghost]
+[fix_backgrounds_marker][house_key no house_vault_background] -> [fix_backgrounds_marker][house_vault_background house_key]
+[fix_backgrounds_marker][house_battery no house_background] -> [fix_backgrounds_marker][house_background house_battery]
+
+(bonus)
+[fix_backgrounds_marker][no_fly_backgrounds no no_fly] -> [fix_backgrounds_marker][no_fly_backgrounds no_fly]
+
+[fix_backgrounds_marker] -> []
+
+(......................)
+(......pickups.........)
+(......................)
+[action player | batteries][battery_placeholder no battery_installed] -> [player | pickup][battery_placeholder battery_installed]
+
+(tree spaceship)
+[platform_marker][action player_platform_earth | tree_spaceship][suit_marker_holder earth_suit_marker][spaceship_holder7][spaceship_holder8][spaceship_holder9] -> [platform_marker][player_platform_water_ground | pickup][suit_marker_holder water_suit_marker][spaceship_holder7 s7][spaceship_holder8 s8 spaceship_closed][spaceship_holder9 s9]
+[inside_tree_marker][platform_marker][pickup][pickup | tree_s2 | tree_s3 ] -> [inside_tree_marker][platform_marker][pickup][pickup | pickup | pickup]
+[inside_tree_marker][platform_marker][pickup][tree_s1 | pickup | tree_s3 ] -> [inside_tree_marker][platform_marker][pickup][pickup | pickup | pickup]
+[inside_tree_marker][platform_marker][pickup][tree_s1 | tree_s2 | pickup ] -> [inside_tree_marker][platform_marker][pickup][pickup | pickup | pickup]
+
+(water cave spaceship)
+[platform_marker][action player_platform_water | water_cave_spaceship][suit_marker_holder water_suit_marker][spaceship_holder4][spaceship_holder5][spaceship_holder6] -> [platform_marker][player_platform_fire_ground | pickup][suit_marker_holder fire_suit_marker][spaceship_holder4 s4][spaceship_holder5 s5][spaceship_holder6 s6]
+[water_cave_marker][platform_marker][pickup][pickup | water_cave_s2 | water_cave_s3 ] -> [water_cave_marker][platform_marker][pickup][pickup | pickup | pickup]
+[water_cave_marker][platform_marker][pickup][water_cave_s1 | pickup | water_cave_s3 ] -> [water_cave_marker][platform_marker][pickup][pickup | pickup | pickup]
+[water_cave_marker][platform_marker][pickup][water_cave_s1 | water_cave_s2 | pickup ] -> [water_cave_marker][platform_marker][pickup][pickup | pickup | pickup]
+
+(vulcano spaceship)
+[platform_marker][action player_platform_fire | vulcano_spaceship][spaceship_holder1][spaceship_holder2][spaceship_holder3] -> [platform_marker][player_platform_fire | pickup][spaceship_holder1 s1][spaceship_holder2 s2][spaceship_holder3 s3]
+[vulcano_marker][platform_marker][pickup][pickup | vulcano_s2] -> [vulcano_marker][platform_marker][pickup][pickup | pickup]
+[vulcano_marker][platform_marker][pickup][vulcano_s1 | pickup] -> [vulcano_marker][platform_marker][pickup][pickup | pickup]
+
+[> player][pickup] -> [> player][]
+
+(......................)
+(......teleports.......)
+(......................)
+(tree)
+[action player_map_earth map_tree_entrance][tree_entrance][action_marker_holder map_marker][level_marker_holder] -> [map_tree_entrance][player_platform_earth_ground tree_entrance][action_marker_holder platform_marker][level_marker_holder inside_tree_marker]
+[action player_map_water map_tree_entrance][tree_entrance][action_marker_holder map_marker][level_marker_holder] -> [map_tree_entrance][player_platform_water_ground tree_entrance][action_marker_holder platform_marker][level_marker_holder inside_tree_marker]
+[action player_map_fire map_tree_entrance][tree_entrance][action_marker_holder map_marker][level_marker_holder] -> [map_tree_entrance][player_platform_fire_ground tree_entrance][action_marker_holder platform_marker][level_marker_holder inside_tree_marker]
+[action player_platform_earth tree_entrance][map_tree_entrance][action_marker_holder platform_marker][level_marker_holder inside_tree_marker] -> [tree_entrance][player_map_earth map_tree_entrance][action_marker_holder map_marker][level_marker_holder]
+[action player_platform_water tree_entrance][map_tree_entrance][action_marker_holder platform_marker][level_marker_holder inside_tree_marker] -> [tree_entrance][player_map_water map_tree_entrance][action_marker_holder map_marker][level_marker_holder]
+[action player_platform_fire tree_entrance][map_tree_entrance][action_marker_holder platform_marker][level_marker_holder inside_tree_marker] -> [tree_entrance][player_map_fire map_tree_entrance][action_marker_holder map_marker][level_marker_holder]
+(underwater)
+late [player_platform_water tree_exit][underwater_entrance][action_marker_holder platform_marker][level_marker_holder inside_tree_marker] -> [tree_exit][underwater_entrance player_water_right][action_marker_holder swim_marker][level_marker_holder underwater_marker]
+late [player_platform_fire tree_exit][underwater_entrance][action_marker_holder platform_marker][level_marker_holder inside_tree_marker] -> [tree_exit][underwater_entrance player_fire_right][action_marker_holder swim_marker][level_marker_holder underwater_marker]
+late [player_water underwater_exit][map_underwater_exit][action_marker_holder swim_marker][level_marker_holder underwater_marker] -> [underwater_exit][player_map_water map_underwater_exit][action_marker_holder map_marker][level_marker_holder]
+late [player_fire underwater_exit][map_underwater_exit][action_marker_holder swim_marker][level_marker_holder underwater_marker] -> [underwater_exit][player_map_fire map_underwater_exit][action_marker_holder map_marker][level_marker_holder]
+[action player_map_water map_underwater_exit][underwater_entrance2][action_marker_holder map_marker][level_marker_holder] -> [map_underwater_exit][player_water_left underwater_entrance2][action_marker_holder swim_marker][level_marker_holder underwater_marker]
+[action player_map_fire map_underwater_exit][underwater_entrance2][action_marker_holder map_marker][level_marker_holder] -> [map_underwater_exit][player_fire_left underwater_entrance2][action_marker_holder swim_marker][level_marker_holder underwater_marker]
+(tree_hole 1)
+[action player_map_earth map_tree_hole1_entrance][tree_hole1_entrance][action_marker_holder map_marker][level_marker_holder] -> [map_tree_hole1_entrance][tree_hole1_entrance player_platform_earth_ground][action_marker_holder platform_marker][level_marker_holder tree_hole1_marker]
+[action player_map_water map_tree_hole1_entrance][tree_hole1_entrance][action_marker_holder map_marker][level_marker_holder] -> [map_tree_hole1_entrance][tree_hole1_entrance player_platform_water_ground][action_marker_holder platform_marker][level_marker_holder tree_hole1_marker]
+[action player_map_fire map_tree_hole1_entrance][tree_hole1_entrance][action_marker_holder map_marker][level_marker_holder] -> [map_tree_hole1_entrance][tree_hole1_entrance player_platform_fire_ground][action_marker_holder platform_marker][level_marker_holder tree_hole1_marker]
+late [player_platform_earth tree_hole1_exit][map_tree_hole1_entrance][action_marker_holder platform_marker][level_marker_holder tree_hole1_marker] -> [tree_hole1_exit][map_tree_hole1_entrance player_map_earth][action_marker_holder map_marker][level_marker_holder]
+late [player_platform_water tree_hole1_exit][map_tree_hole1_entrance][action_marker_holder platform_marker][level_marker_holder tree_hole1_marker] -> [tree_hole1_exit][map_tree_hole1_entrance player_map_water][action_marker_holder map_marker][level_marker_holder]
+late [player_platform_fire tree_hole1_exit][map_tree_hole1_entrance][action_marker_holder platform_marker][level_marker_holder tree_hole1_marker] -> [tree_hole1_exit][map_tree_hole1_entrance player_map_fire][action_marker_holder map_marker][level_marker_holder]
+(tree_hole 2)
+[action player_map_earth map_tree_hole2_entrance][tree_hole2_entrance][action_marker_holder map_marker][level_marker_holder] -> [map_tree_hole2_entrance][tree_hole2_entrance player_platform_earth_ground][action_marker_holder platform_marker][level_marker_holder tree_hole2_marker]
+[action player_map_water map_tree_hole2_entrance][tree_hole2_entrance][action_marker_holder map_marker][level_marker_holder] -> [map_tree_hole2_entrance][tree_hole2_entrance player_platform_water_ground][action_marker_holder platform_marker][level_marker_holder tree_hole2_marker]
+[action player_map_fire map_tree_hole2_entrance][tree_hole2_entrance][action_marker_holder map_marker][level_marker_holder] -> [map_tree_hole2_entrance][tree_hole2_entrance player_platform_fire_ground][action_marker_holder platform_marker][level_marker_holder tree_hole2_marker]
+late [player_platform_earth tree_hole2_exit][map_tree_hole2_entrance][action_marker_holder platform_marker][level_marker_holder tree_hole2_marker] -> [tree_hole2_exit][map_tree_hole2_entrance player_map_earth][action_marker_holder map_marker][level_marker_holder]
+late [player_platform_water tree_hole2_exit][map_tree_hole2_entrance][action_marker_holder platform_marker][level_marker_holder tree_hole2_marker] -> [tree_hole2_exit][map_tree_hole2_entrance player_map_water][action_marker_holder map_marker][level_marker_holder]
+late [player_platform_fire tree_hole2_exit][map_tree_hole2_entrance][action_marker_holder platform_marker][level_marker_holder tree_hole2_marker] -> [tree_hole2_exit][map_tree_hole2_entrance player_map_fire][action_marker_holder map_marker][level_marker_holder]
+(tree_hole 3)
+[action player_map_earth map_tree_hole3_entrance][tree_hole3_entrance][action_marker_holder map_marker][level_marker_holder] -> [map_tree_hole3_entrance][tree_hole3_entrance player_platform_earth_ground][action_marker_holder platform_marker][level_marker_holder tree_hole3_marker]
+[action player_map_water map_tree_hole3_entrance][tree_hole3_entrance][action_marker_holder map_marker][level_marker_holder] -> [map_tree_hole3_entrance][tree_hole3_entrance player_platform_water_ground][action_marker_holder platform_marker][level_marker_holder tree_hole3_marker]
+[action player_map_fire map_tree_hole3_entrance][tree_hole3_entrance][action_marker_holder map_marker][level_marker_holder] -> [map_tree_hole3_entrance][tree_hole3_entrance player_platform_fire_ground][action_marker_holder platform_marker][level_marker_holder tree_hole3_marker]
+late [player_platform_earth tree_hole3_exit][map_tree_hole3_entrance][action_marker_holder platform_marker][level_marker_holder tree_hole3_marker] -> [tree_hole3_exit][map_tree_hole3_entrance player_map_earth][action_marker_holder map_marker][level_marker_holder]
+late [player_platform_water tree_hole3_exit][map_tree_hole3_entrance][action_marker_holder platform_marker][level_marker_holder tree_hole3_marker] -> [tree_hole3_exit][map_tree_hole3_entrance player_map_water][action_marker_holder map_marker][level_marker_holder]
+late [player_platform_fire tree_hole3_exit][map_tree_hole3_entrance][action_marker_holder platform_marker][level_marker_holder tree_hole3_marker] -> [tree_hole3_exit][map_tree_hole3_entrance player_map_fire][action_marker_holder map_marker][level_marker_holder]
+(water cave path)
+late [player_map_water map_water_cave_entrance][water_cave_path_entrance][action_marker_holder map_marker][level_marker_holder] -> [map_water_cave_entrance][water_cave_path_entrance player_water_right][action_marker_holder swim_marker][level_marker_holder water_cave_path_marker water_cave_path_init_marker]
+late [player_map_fire map_water_cave_entrance][water_cave_path_entrance][action_marker_holder map_marker][level_marker_holder] -> [map_water_cave_entrance][water_cave_path_entrance player_fire_right][action_marker_holder swim_marker][level_marker_holder water_cave_path_marker water_cave_path_init_marker]
+late [player_water water_cave_path_exit][map_dive_point][action_marker_holder swim_marker][level_marker_holder water_cave_path_marker] -> [water_cave_path_exit][map_dive_point player_map_water][action_marker_holder map_marker][level_marker_holder water_cave_path_reset_marker]
+late [player_fire water_cave_path_exit][map_dive_point][action_marker_holder swim_marker][level_marker_holder water_cave_path_marker] -> [water_cave_path_exit][map_dive_point player_map_fire][action_marker_holder map_marker][level_marker_holder water_cave_path_reset_marker]
+(water cave)
+[action player_water water_cave_entrance][water_cave_gate][action_marker_holder swim_marker][level_marker_holder water_cave_path_marker] -> [water_cave_entrance][water_cave_gate player_platform_water_ground][action_marker_holder platform_marker][level_marker_holder water_cave_marker]
+[action player_fire water_cave_entrance][water_cave_gate][action_marker_holder swim_marker][level_marker_holder water_cave_path_marker] -> [water_cave_entrance][water_cave_gate player_platform_fire_ground][action_marker_holder platform_marker][level_marker_holder water_cave_marker]
+[action player_platform_water water_cave_gate][water_cave_entrance][action_marker_holder platform_marker][level_marker_holder water_cave_marker] -> [water_cave_gate][water_cave_entrance player_water_down][action_marker_holder swim_marker][level_marker_holder water_cave_path_marker]
+[action player_platform_fire water_cave_gate][water_cave_entrance][action_marker_holder platform_marker][level_marker_holder water_cave_marker] -> [water_cave_gate][water_cave_entrance player_fire_down][action_marker_holder swim_marker][level_marker_holder water_cave_path_marker]
+(water cave lava)
+late [player_platform_fire water_cave_exit][water_cave_lava_entrance][action_marker_holder platform_marker][level_marker_holder water_cave_marker] -> [water_cave_exit][water_cave_lava_entrance player_fire_right][action_marker_holder lava_marker][level_marker_holder water_cave_lava_marker water_cave_path_reset_marker]
+late [player_fire water_cave_lava_exit][map_water_cave_exit][action_marker_holder lava_marker][level_marker_holder water_cave_lava_marker] -> [water_cave_lava_exit][map_water_cave_exit player_map_fire][action_marker_holder map_marker][level_marker_holder]
+[action player_map_fire map_water_cave_exit][water_cave_lava_entrance2][action_marker_holder map_marker][level_marker_holder] -> [map_water_cave_exit][player_fire_down water_cave_lava_entrance2][action_marker_holder lava_marker][level_marker_holder water_cave_lava_marker]
+(water hole 1)
+[action player_map_water map_water_hole1_entrance][water_hole1_entrance][action_marker_holder map_marker][level_marker_holder] -> [map_water_hole1_entrance][water_hole1_entrance player_water_right][action_marker_holder swim_marker][level_marker_holder water_hole1_marker]
+[action player_map_fire map_water_hole1_entrance][water_hole1_entrance][action_marker_holder map_marker][level_marker_holder] -> [map_water_hole1_entrance][water_hole1_entrance player_fire_right][action_marker_holder swim_marker][level_marker_holder water_hole1_marker]
+late [player_water water_hole1_exit][map_water_hole1_entrance][action_marker_holder swim_marker][level_marker_holder water_hole1_marker] -> [water_hole1_exit][map_water_hole1_entrance player_map_water][action_marker_holder map_marker][level_marker_holder]
+late [player_fire water_hole1_exit][map_water_hole1_entrance][action_marker_holder swim_marker][level_marker_holder water_hole1_marker] -> [water_hole1_exit][map_water_hole1_entrance player_map_fire][action_marker_holder map_marker][level_marker_holder]
+(water hole 2)
+[action player_map_water map_water_hole2_entrance][water_hole2_entrance][action_marker_holder map_marker][level_marker_holder] -> [map_water_hole2_entrance][water_hole2_entrance player_water_right][action_marker_holder swim_marker][level_marker_holder water_hole2_marker]
+[action player_map_fire map_water_hole2_entrance][water_hole2_entrance][action_marker_holder map_marker][level_marker_holder] -> [map_water_hole2_entrance][water_hole2_entrance player_fire_right][action_marker_holder swim_marker][level_marker_holder water_hole2_marker]
+late [player_water water_hole2_exit][map_water_hole2_entrance][action_marker_holder swim_marker][level_marker_holder water_hole2_marker] -> [water_hole2_exit][map_water_hole2_entrance player_map_water][action_marker_holder map_marker][level_marker_holder]
+late [player_fire water_hole2_exit][map_water_hole2_entrance][action_marker_holder swim_marker][level_marker_holder water_hole2_marker] -> [water_hole2_exit][map_water_hole2_entrance player_map_fire][action_marker_holder map_marker][level_marker_holder]
+(water passage 1)
+[action player_map_water map_water_passage1_entrance_left][water_passage1_left_entrance][action_marker_holder map_marker][level_marker_holder] -> [map_water_passage1_entrance_left][water_passage1_left_entrance player_water_right][action_marker_holder swim_marker][level_marker_holder water_passage1_marker]
+[action player_map_fire map_water_passage1_entrance_left][water_passage1_left_entrance][action_marker_holder map_marker][level_marker_holder] -> [map_water_passage1_entrance_left][water_passage1_left_entrance player_fire_right][action_marker_holder swim_marker][level_marker_holder water_passage1_marker]
+late [player_water water_passage1_left_exit][map_water_passage1_entrance_left][action_marker_holder swim_marker][level_marker_holder water_passage1_marker] -> [water_passage1_left_exit][map_water_passage1_entrance_left player_map_water][action_marker_holder map_marker][level_marker_holder]
+late [player_fire water_passage1_left_exit][map_water_passage1_entrance_left][action_marker_holder swim_marker][level_marker_holder water_passage1_marker] -> [water_passage1_left_exit][map_water_passage1_entrance_left player_map_fire][action_marker_holder map_marker][level_marker_holder]
+[action player_map_water map_water_passage1_entrance_right][water_passage1_right_entrance][action_marker_holder map_marker][level_marker_holder] -> [map_water_passage1_entrance_right][water_passage1_right_entrance player_water_left][action_marker_holder swim_marker][level_marker_holder water_passage1_marker]
+[action player_map_fire map_water_passage1_entrance_right][water_passage1_right_entrance][action_marker_holder map_marker][level_marker_holder] -> [map_water_passage1_entrance_right][water_passage1_right_entrance player_fire_left][action_marker_holder swim_marker][level_marker_holder water_passage1_marker]
+late [player_water water_passage1_right_exit][map_water_passage1_entrance_right][action_marker_holder swim_marker][level_marker_holder water_passage1_marker] -> [water_passage1_right_exit][map_water_passage1_entrance_right player_map_water][action_marker_holder map_marker][level_marker_holder]
+late [player_fire water_passage1_right_exit][map_water_passage1_entrance_right][action_marker_holder swim_marker][level_marker_holder water_passage1_marker] -> [water_passage1_right_exit][map_water_passage1_entrance_right player_map_fire][action_marker_holder map_marker][level_marker_holder]
+(water passage 2)
+[action player_map_water map_water_passage2_entrance_left][water_passage2_left_entrance][action_marker_holder map_marker][level_marker_holder] -> [map_water_passage2_entrance_left][water_passage2_left_entrance player_water_right][action_marker_holder swim_marker][level_marker_holder water_passage1_marker]
+[action player_map_fire map_water_passage2_entrance_left][water_passage2_left_entrance][action_marker_holder map_marker][level_marker_holder] -> [map_water_passage2_entrance_left][water_passage2_left_entrance player_fire_right][action_marker_holder swim_marker][level_marker_holder water_passage1_marker]
+late [player_water water_passage2_left_exit][map_water_passage2_entrance_left][action_marker_holder swim_marker][level_marker_holder water_passage1_marker] -> [water_passage2_left_exit][map_water_passage2_entrance_left player_map_water][action_marker_holder map_marker][level_marker_holder]
+late [player_fire water_passage2_left_exit][map_water_passage2_entrance_left][action_marker_holder swim_marker][level_marker_holder water_passage1_marker] -> [water_passage2_left_exit][map_water_passage2_entrance_left player_map_fire][action_marker_holder map_marker][level_marker_holder]
+[action player_map_water map_water_passage2_entrance_right][water_passage2_right_entrance][action_marker_holder map_marker][level_marker_holder] -> [map_water_passage2_entrance_right][water_passage2_right_entrance player_water_left][action_marker_holder swim_marker][level_marker_holder water_passage1_marker]
+[action player_map_fire map_water_passage2_entrance_right][water_passage2_right_entrance][action_marker_holder map_marker][level_marker_holder] -> [map_water_passage2_entrance_right][water_passage2_right_entrance player_fire_left][action_marker_holder swim_marker][level_marker_holder water_passage1_marker]
+late [player_water water_passage2_right_exit][map_water_passage2_entrance_right][action_marker_holder swim_marker][level_marker_holder water_passage1_marker] -> [water_passage2_right_exit][map_water_passage2_entrance_right player_map_water][action_marker_holder map_marker][level_marker_holder]
+late [player_fire water_passage2_right_exit][map_water_passage2_entrance_right][action_marker_holder swim_marker][level_marker_holder water_passage1_marker] -> [water_passage2_right_exit][map_water_passage2_entrance_right player_map_fire][action_marker_holder map_marker][level_marker_holder]
+(lava hole)
+[action player_map_fire map_lava_hole_entrance][lava_hole_entrance][action_marker_holder map_marker][level_marker_holder] -> [map_lava_hole_entrance][lava_hole_entrance player_fire_right][action_marker_holder lava_marker][level_marker_holder lava_hole_marker]
+late [player_fire lava_hole_exit][map_lava_hole_entrance][action_marker_holder lava_marker][level_marker_holder lava_hole_marker] -> [lava_hole_exit][map_lava_hole_entrance player_map_fire][action_marker_holder map_marker][level_marker_holder]
+(lava passage)
+[action player_map_fire map_lava_passage_entrance_left][lava_passage_left_entrance][action_marker_holder map_marker][level_marker_holder] -> [map_lava_passage_entrance_left][lava_passage_left_entrance player_fire_right][action_marker_holder lava_marker][level_marker_holder lava_passage_marker]
+late [player_fire lava_passage_left_exit][map_lava_passage_entrance_left][action_marker_holder lava_marker][level_marker_holder lava_passage_marker] -> [lava_passage_left_exit][map_lava_passage_entrance_left player_map_fire][action_marker_holder map_marker][level_marker_holder]
+[action player_map_fire map_lava_passage_entrance_right][lava_passage_right_entrance][action_marker_holder map_marker][level_marker_holder] -> [map_lava_passage_entrance_right][lava_passage_right_entrance player_fire_left][action_marker_holder lava_marker][level_marker_holder lava_passage_marker]
+late [player_fire lava_passage_right_exit][map_lava_passage_entrance_right][action_marker_holder lava_marker][level_marker_holder lava_passage_marker] -> [lava_passage_right_exit][map_lava_passage_entrance_right player_map_fire][action_marker_holder map_marker][level_marker_holder]
+(vulcano)
+[action player_map_fire map_vulcano_entrance][vulcano_entrance][action_marker_holder map_marker][level_marker_holder] -> [map_vulcano_entrance][vulcano_entrance player_fire_down][action_marker_holder lava_marker][level_marker_holder vulcano_marker]
+[action player_fire vulcano_exit][map_vulcano_entrance][action_marker_holder lava_marker][level_marker_holder vulcano_marker] -> [vulcano_exit][map_vulcano_entrance player_map_fire][action_marker_holder map_marker][level_marker_holder]
+(escape lava)
+late [player_platform_fire vulcano_escape][escape_lava_entrance_left][action_marker_holder platform_marker][level_marker_holder vulcano_marker] -> [vulcano_escape][escape_lava_entrance_left player_fire_right][action_marker_holder lava_marker][level_marker_holder escape_lava_marker]
+late [player_fire escape_lava_exit_right][map_escape_lava_exit_sealed][action_marker_holder lava_marker][level_marker_holder escape_lava_marker] -> [escape_lava_exit_right][map_escape_lava_exit save_point player_map_fire][action_marker_holder map_marker][level_marker_holder escape_lava_reset_marker]
+late [player_fire escape_lava_exit_right][map_escape_lava_exit][action_marker_holder lava_marker][level_marker_holder escape_lava_marker] -> [escape_lava_exit_right][map_escape_lava_exit player_map_fire][action_marker_holder map_marker][level_marker_holder escape_lava_reset_marker]
+[action player_map_fire map_escape_lava_exit][escape_lava_entrance_right][action_marker_holder map_marker][level_marker_holder] -> [map_escape_lava_exit][escape_lava_entrance_right player_fire_left][action_marker_holder lava_marker][level_marker_holder escape_lava_marker]
+late [player_fire escape_lava_exit_left][vulcano_return][action_marker_holder lava_marker][level_marker_holder escape_lava_marker] -> [escape_lava_exit_left][vulcano_return player_platform_fire_ground][action_marker_holder platform_marker][level_marker_holder vulcano_marker]
+(house)
+[action player_map_fire map_house_entrance][house_entrance][action_marker_holder map_marker][level_marker_holder] -> [map_house_entrance][player_platform_fire_ground house_entrance][action_marker_holder platform_marker][level_marker_holder house_marker]
+[action player_platform_fire house_entrance][map_house_entrance][action_marker_holder platform_marker][level_marker_holder house_marker] -> [house_entrance][map_house_entrance player_map_fire][action_marker_holder map_marker][level_marker_holder]
+(mountain)
+late [player_map_fire map_mountain_enter][mountain_enter][level_marker_holder] -> [map_mountain_enter][mountain_enter player_map_fire][level_marker_holder mountain_marker]
+late [player_map_fire mountain_leave][map_mountain_exit][level_marker_holder mountain_marker] -> [mountain_leave][map_mountain_exit player_map_fire][level_marker_holder]
+(bonus)
+(clear in)
+late horizontal [fly_marker][level_marker_holder no mountain_marker][player_spaceship navigation|...|map_mountain_enter][s1_light|s2_light|s3_light][s4|player_spaceship|s6][s7_light|s8|s9_light] -> [fly_marker][level_marker_holder no mountain_marker][player_spaceship navigation|...|map_mountain_enter][||][|player_spaceship|][||]
+late horizontal [fly_marker][level_marker_holder no mountain_marker][map_mountain_enter|...|player_spaceship navigation][s1_light|s2_light|s3_light][s4|player_spaceship|s6][s7_light|s8|s9_light] -> [fly_marker][level_marker_holder no mountain_marker][map_mountain_enter|...|player_spaceship navigation][||][|player_spaceship|][||]
+late horizontal [fly_marker][level_marker_holder no mountain_marker][player_spaceship map_mountain_enter][s1_light|s2_light|s3_light][s4|player_spaceship|s6][s7_light|s8|s9_light] -> [fly_marker][level_marker_holder no mountain_marker][player_spaceship map_mountain_enter][||][|player_spaceship|][||]
+(clear out)
+late horizontal [fly_marker][level_marker_holder mountain_marker][player_spaceship navigation|...|mountain_enter][s1_light|s2_light|s3_light][s4|player_spaceship|s6][s7_light|s8|s9_light] -> [fly_marker][level_marker_holder mountain_marker][player_spaceship navigation|...|mountain_enter][||][|player_spaceship|][||]
+late horizontal [fly_marker][level_marker_holder mountain_marker][mountain_enter|...|player_spaceship navigation][s1_light|s2_light|s3_light][s4|player_spaceship|s6][s7_light|s8|s9_light] -> [fly_marker][level_marker_holder mountain_marker][mountain_enter|...|player_spaceship navigation][||][|player_spaceship|][||]
+late horizontal [fly_marker][level_marker_holder mountain_marker][player_spaceship mountain_enter][s1_light|s2_light|s3_light][s4|player_spaceship|s6][s7_light|s8|s9_light] -> [fly_marker][level_marker_holder mountain_marker][player_spaceship mountain_enter][||][|player_spaceship|][||]
+
+(1 in)
+late [fly_marker][level_marker_holder no mountain_marker][player_spaceship ●|○|●|○|●|○|●|●|map_mountain_enter][●|○|●|○|●|○|○|○|mountain_exit] -> [fly_marker][level_marker_holder no mountain_marker][●|○|●|○|●|○|●|●|map_mountain_enter][● player_spaceship|○|●|○|●|○|○|○|mountain_exit]
+late [fly_marker][level_marker_holder no mountain_marker][player_spaceship ●|○|●|○|●|○|○|○|mountain_exit][☁|☁|☁|☁|f|.|f][☁|☁|☁|.|●|○][☁|☁|f|○|●] -> [fly_marker][level_marker_holder mountain_marker][player_spaceship ●|○|●|○|●|○|○|○|mountain_exit][☁|☁|☁|☁|f s1_light|. s2_light|f s3_light][☁|☁|☁|. s4|● player_spaceship|○ s6][☁|☁|f s7_light|○ s8|● s9_light]
+(1 out)
+late [fly_marker][level_marker_holder mountain_marker][player_spaceship ○|●|○|●|○|●|●|●|mountain_enter][○|●|○|●|○|●|○|●|map_mountain_exit] -> [fly_marker][level_marker_holder mountain_marker][○|●|○|●|○|●|●|●|mountain_enter][player_spaceship ○|●|○|●|○|●|○|●|map_mountain_exit]
+late [fly_marker][level_marker_holder mountain_marker][player_spaceship ○|●|○|●|○|●|○|●|map_mountain_exit][☁|r|●|○][☁|☁|r|○|●][☁|☁|☁|r|r|.] -> [fly_marker][level_marker_holder no mountain_marker][player_spaceship ○|●|○|●|○|●|○|●|map_mountain_exit][☁|r s1_light|● s2_light|○ s3_light][☁|☁|r s4|○ player_spaceship|● s6][☁|☁|☁|r s7_light|r s8|. s9_light]
+
+(2 in)
+late [fly_marker][level_marker_holder no mountain_marker][●|○ player_spaceship|●|○|●|○|●|●|map_mountain_enter][●|○|●|○|●|○|○|○|mountain_exit] -> [fly_marker][level_marker_holder no mountain_marker][●|○|●|○|●|○|●|●|map_mountain_enter][●|○ player_spaceship|●|○|●|○|○|○|mountain_exit]
+late [fly_marker][level_marker_holder no mountain_marker][●|○ player_spaceship|●|○|●|○|○|○|mountain_exit][☁|☁|☁|☁|f|.|f|.][☁|☁|☁|.|●|○|●][☁|☁|f|○|●|○] -> [fly_marker][level_marker_holder mountain_marker][●|○ player_spaceship|●|○|●|○|○|○|mountain_exit][☁|☁|☁|☁|f|. s1_light|f s2_light|. s3_light][☁|☁|☁|.|● s4|○ player_spaceship|● s6][☁|☁|f|○ s7_light|● s8|○ s9_light]
+(2 out)
+late [fly_marker][level_marker_holder mountain_marker][○|● player_spaceship|○|●|○|●|●|●|mountain_enter][○|●|○|●|○|●|○|●|map_mountain_exit] -> [fly_marker][level_marker_holder mountain_marker][○|●|○|●|○|●|●|●|mountain_enter][○|● player_spaceship|○|●|○|●|○|●|map_mountain_exit]
+late [fly_marker][level_marker_holder mountain_marker][○|● player_spaceship|○|●|○|●|○|●|map_mountain_exit][☁|r|●|○|●][☁|☁|r|○|●|○][☁|☁|☁|r|r|.|f] -> [fly_marker][level_marker_holder no mountain_marker][○|● player_spaceship|○|●|○|●|○|●|map_mountain_exit][☁|r|● s1_light|○ s2_light|● s3_light][☁|☁|r|○ s4|● player_spaceship|○ s6][☁|☁|☁|r|r s7_light|. s8|f s9_light]
+
+(3 in)
+late [fly_marker][level_marker_holder no mountain_marker][●|○|● player_spaceship|○|●|○|●|●|map_mountain_enter][●|○|●|○|●|○|○|○|mountain_exit] -> [fly_marker][level_marker_holder no mountain_marker][●|○|●|○|●|○|●|●|map_mountain_enter][●|○|● player_spaceship|○|●|○|○|○|mountain_exit]
+late [fly_marker][level_marker_holder no mountain_marker][●|○|● player_spaceship|○|●|○|○|○|mountain_exit][☁|☁|☁|☁|f|.|f|.|f][☁|☁|☁|.|●|○|●|○][☁|☁|f|○|●|○|●] -> [fly_marker][level_marker_holder mountain_marker][●|○|● player_spaceship|○|●|○|○|○|mountain_exit][☁|☁|☁|☁|f|.|f s1_light|. s2_light|f s3_light][☁|☁|☁|.|●|○ s4|● player_spaceship|○ s6][☁|☁|f|○|● s7_light|○ s8|● s9_light]
+(3 out)
+late [fly_marker][level_marker_holder mountain_marker][○|●|○ player_spaceship|●|○|●|●|●|mountain_enter][○|●|○|●|○|●|○|●|map_mountain_exit] -> [fly_marker][level_marker_holder mountain_marker][○|●|○|●|○|●|●|●|mountain_enter][○|●|○ player_spaceship|●|○|●|○|●|map_mountain_exit]
+late [fly_marker][level_marker_holder mountain_marker][○|●|○ player_spaceship|●|○|●|○|●|map_mountain_exit][☁|r|●|○|●|○][☁|☁|r|○|●|○|●][☁|☁|☁|r|r|.|f|.] -> [fly_marker][level_marker_holder no mountain_marker][○|●|○ player_spaceship|●|○|●|○|●|map_mountain_exit][☁|r|●|○ s1_light|● s2_light|○ s3_light][☁|☁|r|○|● s4|○ player_spaceship|● s6][☁|☁|☁|r|r|. s7_light|f s8|. s9_light]
+
+(4 in)
+late [fly_marker][level_marker_holder no mountain_marker][●|○|●|○ player_spaceship|●|○|●|●|map_mountain_enter][●|○|●|○|●|○|○|○|mountain_exit] -> [fly_marker][level_marker_holder no mountain_marker][●|○|●|○|●|○|●|●|map_mountain_enter][●|○|●|○ player_spaceship|●|○|○|○|mountain_exit]
+late [fly_marker][level_marker_holder no mountain_marker][●|○|●|○ player_spaceship|●|○|○|○|mountain_exit][☁|☁|☁|☁|f|.|f|.|f|.][☁|☁|☁|.|●|○|●|○|●][☁|☁|f|○|●|○|●|○] -> [fly_marker][level_marker_holder mountain_marker][●|○|●|○ player_spaceship|●|○|○|○|mountain_exit][☁|☁|☁|☁|f|.|f|. s1_light|f s2_light|. s3_light][☁|☁|☁|.|●|○|● s4|○ player_spaceship|● s6][☁|☁|f|○|●|○ s7_light|● s8|○ s9_light]
+(4 out)
+late [fly_marker][level_marker_holder mountain_marker][○|●|○|● player_spaceship|○|●|●|●|mountain_enter][○|●|○|●|○|●|○|●|map_mountain_exit] -> [fly_marker][level_marker_holder mountain_marker][○|●|○|●|○|●|●|●|mountain_enter][○|●|○|● player_spaceship|○|●|○|●|map_mountain_exit]
+late [fly_marker][level_marker_holder mountain_marker][○|●|○|● player_spaceship|○|●|○|●|map_mountain_exit][☁|r|●|○|●|○|●][☁|☁|r|○|●|○|●|○][☁|☁|☁|r|r|.|f|.|f] -> [fly_marker][level_marker_holder no mountain_marker][○|●|○|● player_spaceship|○|●|○|●|map_mountain_exit][☁|r|●|○|● s1_light|○ s2_light|● s3_light][☁|☁|r|○|●|○ s4|● player_spaceship|○ s6][☁|☁|☁|r|r|.|f s7_light|. s8|f s9_light]
+
+(5 in)
+late [fly_marker][level_marker_holder no mountain_marker][●|○|●|○|● player_spaceship|○|●|●|map_mountain_enter][●|○|●|○|●|○|○|○|mountain_exit] -> [fly_marker][level_marker_holder no mountain_marker][●|○|●|○|●|○|●|●|map_mountain_enter][●|○|●|○|● player_spaceship|○|○|○|mountain_exit]
+late [fly_marker][level_marker_holder no mountain_marker][●|○|●|○|● player_spaceship|○|○|○|mountain_exit][☁|☁|☁|☁|f|.|f|.|f|.|.][☁|☁|☁|.|●|○|●|○|●|○][☁|☁|f|○|●|○|●|○|●] -> [fly_marker][level_marker_holder mountain_marker][●|○|●|○|● player_spaceship|○|○|○|mountain_exit][☁|☁|☁|☁|f|.|f|.|f s1_light|. s2_light|. s3_light][☁|☁|☁|.|●|○|●|○ s4|● player_spaceship|○ s6][☁|☁|f|○|●|○|● s7_light|○ s8|● s9_light]
+(5 out)
+late [fly_marker][level_marker_holder mountain_marker][○|●|○|●|○ player_spaceship|●|●|●|mountain_enter][○|●|○|●|○|●|○|●|map_mountain_exit] -> [fly_marker][level_marker_holder mountain_marker][○|●|○|●|○|●|●|●|mountain_enter][○|●|○|●|○ player_spaceship|●|○|●|map_mountain_exit]
+late [fly_marker][level_marker_holder mountain_marker][○|●|○|●|○ player_spaceship|●|○|●|map_mountain_exit][☁|r|●|○|●|○|●|○][☁|☁|r|○|●|○|●|○|●][☁|☁|☁|r|r|.|f|.|f|.] -> [fly_marker][level_marker_holder no mountain_marker][○|●|○|●|○ player_spaceship|●|○|●|map_mountain_exit][☁|r|●|○|●|○ s1_light|● s2_light|○ s3_light][☁|☁|r|○|●|○|● s4|○ player_spaceship|● s6][☁|☁|☁|r|r|.|f|. s7_light|f s8|. s9_light]
+
+(6 in)
+late [fly_marker][level_marker_holder no mountain_marker][●|○|●|○|●|○ player_spaceship|●|●|map_mountain_enter][●|○|●|○|●|○|○|○|mountain_exit] -> [fly_marker][level_marker_holder no mountain_marker][●|○|●|○|●|○|●|●|map_mountain_enter][●|○|●|○|●|○ player_spaceship|○|○|mountain_exit]
+late [fly_marker][level_marker_holder no mountain_marker][●|○|●|○|●|○ player_spaceship|○|○|mountain_exit][☁|☁|☁|☁|f|.|f|.|f|.|.|.][☁|☁|☁|.|●|○|●|○|●|○|○][☁|☁|f|○|●|○|●|○|●|●] -> [fly_marker][level_marker_holder mountain_marker][●|○|●|○|●|○ player_spaceship|○|○|mountain_exit][☁|☁|☁|☁|f|.|f|.|f|. s1_light|. s2_light|. s3_light][☁|☁|☁|.|●|○|●|○|● s4|○ player_spaceship|○ s6][☁|☁|f|○|●|○|●|○ s7_light|● s8|● s9_light]
+(6 out)
+late [fly_marker][level_marker_holder mountain_marker][○|●|○|●|○|● player_spaceship|●|●|mountain_enter][○|●|○|●|○|●|○|●|map_mountain_exit] -> [fly_marker][level_marker_holder mountain_marker][○|●|○|●|○|●|●|●|mountain_enter][○|●|○|●|○|● player_spaceship|○|●|map_mountain_exit]
+late [fly_marker][level_marker_holder mountain_marker][○|●|○|●|○|● player_spaceship|○|●|map_mountain_exit][☁|r|●|○|●|○|●|○|●][☁|☁|r|○|●|○|●|○|●|○][☁|☁|☁|r|r|.|f|.|f|.|f] -> [fly_marker][level_marker_holder no mountain_marker][○|●|○|●|○|● player_spaceship|○|●|map_mountain_exit][☁|r|●|○|●|○|● s1_light|○ s2_light|● s3_light][☁|☁|r|○|●|○|●|○ s4|● player_spaceship|○ s6][☁|☁|☁|r|r|.|f|.|f s7_light|. s8|f s9_light]
+
+(7 in)
+late [fly_marker][level_marker_holder no mountain_marker][●|○|●|○|●|○|● player_spaceship|●|map_mountain_enter][●|○|●|○|●|○|○|○|mountain_exit] -> [fly_marker][level_marker_holder no mountain_marker][●|○|●|○|●|○|●|●|map_mountain_enter][●|○|●|○|●|○|○ player_spaceship|○|mountain_exit]
+late [fly_marker][level_marker_holder no mountain_marker][●|○|●|○|●|○|○ player_spaceship|○|mountain_exit][☁|☁|☁|☁|f|.|f|.|f|.|.|.|.][☁|☁|☁|.|●|○|●|○|●|○|○|○][☁|☁|f|○|●|○|●|○|●|●|●] -> [fly_marker][level_marker_holder mountain_marker][●|○|●|○|●|○|○ player_spaceship|○|mountain_exit][☁|☁|☁|☁|f|.|f|.|f|.|. s1_light|. s2_light|. s3_light][☁|☁|☁|.|●|○|●|○|●|○ s4|○ player_spaceship|○ s6][☁|☁|f|○|●|○|●|○|● s7_light|● s8|● s9_light]
+(7 out)
+late [fly_marker][level_marker_holder mountain_marker][○|●|○|●|○|●|● player_spaceship|●|mountain_enter][○|●|○|●|○|●|○|●|map_mountain_exit] -> [fly_marker][level_marker_holder mountain_marker][○|●|○|●|○|●|●|●|mountain_enter][○|●|○|●|○|●|○ player_spaceship|●|map_mountain_exit]
+late [fly_marker][level_marker_holder mountain_marker][○|●|○|●|○|●|○ player_spaceship|●|map_mountain_exit][☁|r|●|○|●|○|●|○|●|●][☁|☁|r|○|●|○|●|○|●|○|●][☁|☁|☁|r|r|.|f|.|f|.|f|.] -> [fly_marker][level_marker_holder no mountain_marker][○|●|○|●|○|●|○ player_spaceship|●|map_mountain_exit][☁|r|●|○|●|○|●|○ s1_light|● s2_light|● s3_light][☁|☁|r|○|●|○|●|○|● s4|○ player_spaceship|● s6][☁|☁|☁|r|r|.|f|.|f|. s7_light|f s8|. s9_light]
+
+(8 in)
+late [fly_marker][level_marker_holder no mountain_marker][●|○|●|○|●|○|●|● player_spaceship|map_mountain_enter][●|○|●|○|●|○|○|○|mountain_exit] -> [fly_marker][level_marker_holder no mountain_marker][●|○|●|○|●|○|●|●|map_mountain_enter][●|○|●|○|●|○|○|○ player_spaceship|mountain_exit]
+late [fly_marker][level_marker_holder no mountain_marker][●|○|●|○|●|○|○|○ player_spaceship|mountain_exit][☁|☁|☁|☁|f|.|f|.|f|.|.|.|.|f][☁|☁|☁|.|●|○|●|○|●|○|○|○|mountain_exit][☁|☁|f|○|●|○|●|○|●|●|●|mountain_enter] -> [fly_marker][level_marker_holder mountain_marker][●|○|●|○|●|○|○|○ player_spaceship|mountain_exit][☁|☁|☁|☁|f|.|f|.|f|.|.|. s1_light|. s2_light|f s3_light][☁|☁|☁|.|●|○|●|○|●|○|○ s4|○ player_spaceship|mountain_exit s6][☁|☁|f|○|●|○|●|○|●|● s7_light|● s8|mountain_enter s9_light]
+(8 out)
+late [fly_marker][level_marker_holder mountain_marker][○|●|○|●|○|●|●|● player_spaceship|mountain_enter][○|●|○|●|○|●|○|●|map_mountain_exit] -> [fly_marker][level_marker_holder mountain_marker][○|●|○|●|○|●|●|●|mountain_enter][○|●|○|●|○|●|○|● player_spaceship|map_mountain_exit]
+late [fly_marker][level_marker_holder mountain_marker][○|●|○|●|○|●|○|● player_spaceship|map_mountain_exit][☁|r|●|○|●|○|●|○|●|●|map_mountain_enter][☁|☁|r|○|●|○|●|○|●|○|●|map_mountain_exit][☁|☁|☁|r|r|.|f|.|f|.|f|.|.] -> [fly_marker][level_marker_holder no mountain_marker][○|●|○|●|○|●|○|● player_spaceship|map_mountain_exit][☁|r|●|○|●|○|●|○|● s1_light|● s2_light|map_mountain_enter s3_light][☁|☁|r|○|●|○|●|○|●|○ s4|● player_spaceship|map_mountain_exit s6][☁|☁|☁|r|r|.|f|.|f|.|f s7_light|. s8|. s9_light]
+
+(9 in)
+late [fly_marker][level_marker_holder no mountain_marker][●|○|●|○|●|○|●|●|map_mountain_enter player_spaceship][●|○|●|○|●|○|○|○|mountain_exit] -> [fly_marker][level_marker_holder no mountain_marker][●|○|●|○|●|○|●|●|map_mountain_enter][●|○|●|○|●|○|○|○|mountain_exit player_spaceship]
+late [fly_marker][level_marker_holder no mountain_marker][●|○|●|○|●|○|○|○|mountain_exit player_spaceship][☁|☁|☁|☁|f|.|f|.|f|.|.|.|.|f|.][☁|☁|☁|.|●|○|●|○|●|○|○|○|mountain_exit|○][☁|☁|f|○|●|○|●|○|●|●|●|mountain_enter|●] -> [fly_marker][level_marker_holder mountain_marker][●|○|●|○|●|○|○|○|mountain_exit player_spaceship][☁|☁|☁|☁|f|.|f|.|f|.|.|.|. s1_light|f s2_light|. s3_light][☁|☁|☁|.|●|○|●|○|●|○|○|○ s4|mountain_exit player_spaceship|○ s6][☁|☁|f|○|●|○|●|○|●|●|● s7_light|mountain_enter s8|● s9_light]
+(9 out)
+late [fly_marker][level_marker_holder mountain_marker][○|●|○|●|○|●|●|●|mountain_enter player_spaceship][○|●|○|●|○|●|○|●|map_mountain_exit] -> [fly_marker][level_marker_holder mountain_marker][○|●|○|●|○|●|●|●|mountain_enter][○|●|○|●|○|●|○|●|map_mountain_exit player_spaceship]
+late [fly_marker][level_marker_holder mountain_marker][○|●|○|●|○|●|○|●|map_mountain_exit player_spaceship][☁|r|●|○|●|○|●|○|●|●|map_mountain_enter|●][☁|☁|r|○|●|○|●|○|●|○|●|map_mountain_exit|●][☁|☁|☁|r|r|.|f|.|f|.|f|.|.|f] -> [fly_marker][level_marker_holder no mountain_marker][○|●|○|●|○|●|○|●|map_mountain_exit player_spaceship][☁|r|●|○|●|○|●|○|●|● s1_light|map_mountain_enter s2_light|● s3_light][☁|☁|r|○|●|○|●|○|●|○|● s4|map_mountain_exit player_spaceship|● s6][☁|☁|☁|r|r|.|f|.|f|.|f|. s7_light|. s8|f s9_light]
+
+(a in)
+late [fly_marker][level_marker_holder no mountain_marker][●|○|●|○|●|○|●|●|map_mountain_enter|● player_spaceship][●|○|●|○|●|○|○|○|mountain_exit|○] -> [fly_marker][level_marker_holder no mountain_marker][●|○|●|○|●|○|●|●|map_mountain_enter|●][●|○|●|○|●|○|○|○|mountain_exit|○ player_spaceship]
+late [fly_marker][level_marker_holder no mountain_marker][●|○|●|○|●|○|○|○|mountain_exit|○ player_spaceship][☁|☁|☁|☁|f|.|f|.|f|.|.|.|.|f|.|f][☁|☁|☁|.|●|○|●|○|●|○|○|○|mountain_exit|○|●][☁|☁|f|○|●|○|●|○|●|●|●|mountain_enter|●|○] -> [fly_marker][level_marker_holder mountain_marker][●|○|●|○|●|○|○|○|mountain_exit|○ player_spaceship][☁|☁|☁|☁|f|.|f|.|f|.|.|.|.|f s1_light|. s2_light|f s3_light][☁|☁|☁|.|●|○|●|○|●|○|○|○|mountain_exit s4|○ player_spaceship|● s6][☁|☁|f|○|●|○|●|○|●|●|●|mountain_enter s7_light|● s8|○ s9_light]
+(a out)
+late [fly_marker][level_marker_holder mountain_marker][○|●|○|●|○|●|●|●|mountain_enter|● player_spaceship][○|●|○|●|○|●|○|●|map_mountain_exit|●] -> [fly_marker][level_marker_holder mountain_marker][○|●|○|●|○|●|●|●|mountain_enter|●][○|●|○|●|○|●|○|●|map_mountain_exit|● player_spaceship]
+late [fly_marker][level_marker_holder mountain_marker][○|●|○|●|○|●|○|●|map_mountain_exit|● player_spaceship][☁|r|●|○|●|○|●|○|●|●|map_mountain_enter|●|●][☁|☁|r|○|●|○|●|○|●|○|●|map_mountain_exit|●|○][☁|☁|☁|r|r|.|f|.|f|.|f|.|.|f|.] -> [fly_marker][level_marker_holder no mountain_marker][○|●|○|●|○|●|○|●|map_mountain_exit|● player_spaceship][☁|r|●|○|●|○|●|○|●|●|map_mountain_enter s1_light|● s2_light|● s3_light][☁|☁|r|○|●|○|●|○|●|○|●|map_mountain_exit s4|● player_spaceship|○ s6][☁|☁|☁|r|r|.|f|.|f|.|f|.|. s7_light|f s8|. s9_light]
+
+(b in)
+late [fly_marker][level_marker_holder no mountain_marker][●|○|●|○|●|○|●|●|map_mountain_enter|●|● player_spaceship][●|○|●|○|●|○|○|○|mountain_exit|○|●] -> [fly_marker][level_marker_holder no mountain_marker][●|○|●|○|●|○|●|●|map_mountain_enter|●|●][●|○|●|○|●|○|○|○|mountain_exit|○|● player_spaceship]
+late [fly_marker][level_marker_holder no mountain_marker][●|○|●|○|●|○|○|○|mountain_exit|○|● player_spaceship][☁|☁|☁|☁|f|.|f|.|f|.|.|.|.|f|.|f|.][☁|☁|☁|.|●|○|●|○|●|○|○|○|mountain_exit|○|●|○][☁|☁|f|○|●|○|●|○|●|●|●|mountain_enter|●|○|●] -> [fly_marker][level_marker_holder mountain_marker][●|○|●|○|●|○|○|○|mountain_exit|○|● player_spaceship][☁|☁|☁|☁|f|.|f|.|f|.|.|.|.|f|. s1_light|f s2_light|. s3_light][☁|☁|☁|.|●|○|●|○|●|○|○|○|mountain_exit|○ s4|● player_spaceship|○ s6][☁|☁|f|○|●|○|●|○|●|●|●|mountain_enter|● s7_light|○ s8|● s9_light]
+(b out)
+late [fly_marker][level_marker_holder mountain_marker][○|●|○|●|○|●|●|●|mountain_enter|●|○ player_spaceship][○|●|○|●|○|●|○|●|map_mountain_exit|●|○] -> [fly_marker][level_marker_holder mountain_marker][○|●|○|●|○|●|●|●|mountain_enter|●|○][○|●|○|●|○|●|○|●|map_mountain_exit|●|○ player_spaceship]
+late [fly_marker][level_marker_holder mountain_marker][○|●|○|●|○|●|○|●|map_mountain_exit|●|○ player_spaceship][☁|r|●|○|●|○|●|○|●|●|map_mountain_enter|●|●|○][☁|☁|r|○|●|○|●|○|●|○|●|map_mountain_exit|●|○|●][☁|☁|☁|r|r|.|f|.|f|.|f|.|.|f|.|у] -> [fly_marker][level_marker_holder no mountain_marker][○|●|○|●|○|●|○|●|map_mountain_exit|●|○ player_spaceship][☁|r|●|○|●|○|●|○|●|●|map_mountain_enter|● s1_light|● s2_light|○ s3_light][☁|☁|r|○|●|○|●|○|●|○|●|map_mountain_exit|● s4|○ player_spaceship|● s6][☁|☁|☁|r|r|.|f|.|f|.|f|.|.|f s7_light|. s8|у s9_light]
+
+(c in)
+late [fly_marker][level_marker_holder no mountain_marker][●|○|●|○|●|○|●|●|map_mountain_enter|●|●|○ player_spaceship][●|○|●|○|●|○|○|○|mountain_exit|○|●|○] -> [fly_marker][level_marker_holder no mountain_marker][●|○|●|○|●|○|●|●|map_mountain_enter|●|●|○][●|○|●|○|●|○|○|○|mountain_exit|○|●|○ player_spaceship]
+late [fly_marker][level_marker_holder no mountain_marker][●|○|●|○|●|○|○|○|mountain_exit|○|●|○ player_spaceship][☁|☁|☁|☁|f|.|f|.|f|.|.|.|.|f|.|f|.|f][☁|☁|☁|.|●|○|●|○|●|○|○|○|mountain_exit|○|●|○|●][☁|☁|f|○|●|○|●|○|●|●|●|mountain_enter|●|○|●|○] -> [fly_marker][level_marker_holder mountain_marker][●|○|●|○|●|○|○|○|mountain_exit|○|●|○ player_spaceship][☁|☁|☁|☁|f|.|f|.|f|.|.|.|.|f|.|f s1_light|. s2_light|f s3_light][☁|☁|☁|.|●|○|●|○|●|○|○|○|mountain_exit|○|● s4|○ player_spaceship|● s6][☁|☁|f|○|●|○|●|○|●|●|●|mountain_enter|●|○ s7_light|● s8|○ s9_light]
+(c out)
+late [fly_marker][level_marker_holder mountain_marker][○|●|○|●|○|●|●|●|mountain_enter|●|○|● player_spaceship][○|●|○|●|○|●|○|●|map_mountain_exit|●|○|●] -> [fly_marker][level_marker_holder mountain_marker][○|●|○|●|○|●|●|●|mountain_enter|●|○|●][○|●|○|●|○|●|○|●|map_mountain_exit|●|○|● player_spaceship]
+late [fly_marker][level_marker_holder mountain_marker][○|●|○|●|○|●|○|●|map_mountain_exit|●|○|● player_spaceship][☁|r|●|○|●|○|●|○|●|●|map_mountain_enter|●|●|○|●][☁|☁|r|○|●|○|●|○|●|○|●|map_mountain_exit|●|○|●|○][☁|☁|☁|r|r|.|f|.|f|.|f|.|.|f|.|у|.] -> [fly_marker][level_marker_holder no mountain_marker][○|●|○|●|○|●|○|●|map_mountain_exit|●|○|● player_spaceship][☁|r|●|○|●|○|●|○|●|●|map_mountain_enter|●|● s1_light|○ s2_light|● s3_light][☁|☁|r|○|●|○|●|○|●|○|●|map_mountain_exit|●|○ s4|● player_spaceship|○ s6][☁|☁|☁|r|r|.|f|.|f|.|f|.|.|f|. s7_light|у s8|. s9_light]
+
+(d in)
+late [fly_marker][level_marker_holder no mountain_marker][●|○|●|○|●|○|●|●|map_mountain_enter|●|●|○|● player_spaceship][●|○|●|○|●|○|○|○|mountain_exit|○|●|○|●] -> [fly_marker][level_marker_holder no mountain_marker][●|○|●|○|●|○|●|●|map_mountain_enter|●|●|○|●][●|○|●|○|●|○|○|○|mountain_exit|○|●|○|● player_spaceship]
+late [fly_marker][level_marker_holder no mountain_marker][●|○|●|○|●|○|○|○|mountain_exit|○|●|○|● player_spaceship][☁|☁|☁|☁|f|.|f|.|f|.|.|.|.|f|.|f|.|f|.][☁|☁|☁|.|●|○|●|○|●|○|○|○|mountain_exit|○|●|○|●|○][☁|☁|f|○|●|○|●|○|●|●|●|mountain_enter|●|○|●|○|●] -> [fly_marker][level_marker_holder mountain_marker][●|○|●|○|●|○|○|○|mountain_exit|○|●|○|● player_spaceship][☁|☁|☁|☁|f|.|f|.|f|.|.|.|.|f|.|f|. s1_light|f s2_light|. s3_light][☁|☁|☁|.|●|○|●|○|●|○|○|○|mountain_exit|○|●|○ s4|● player_spaceship|○ s6][☁|☁|f|○|●|○|●|○|●|●|●|mountain_enter|●|○|● s7_light|○ s8|● s9_light]
+(d out)
+late [fly_marker][level_marker_holder mountain_marker][○|●|○|●|○|●|●|●|mountain_enter|●|○|●|○ player_spaceship][○|●|○|●|○|●|○|●|map_mountain_exit|●|○|●|○] -> [fly_marker][level_marker_holder mountain_marker][○|●|○|●|○|●|●|●|mountain_enter|●|○|●|○][○|●|○|●|○|●|○|●|map_mountain_exit|●|○|●|○ player_spaceship]
+late [fly_marker][level_marker_holder mountain_marker][○|●|○|●|○|●|○|●|map_mountain_exit|●|○|●|○ player_spaceship][☁|r|●|○|●|○|●|○|●|●|map_mountain_enter|●|●|○|●|○][☁|☁|r|○|●|○|●|○|●|○|●|map_mountain_exit|●|○|●|○|●][☁|☁|☁|r|r|.|f|.|f|.|f|.|.|f|.|у|.|f] -> [fly_marker][level_marker_holder no mountain_marker][○|●|○|●|○|●|○|●|map_mountain_exit|●|○|●|○ player_spaceship][☁|r|●|○|●|○|●|○|●|●|map_mountain_enter|●|●|○ s1_light|● s2_light|○ s3_light][☁|☁|r|○|●|○|●|○|●|○|●|map_mountain_exit|●|○|● s4|○ player_spaceship|● s6][☁|☁|☁|r|r|.|f|.|f|.|f|.|.|f|.|у s7_light|. s8|f s9_light]
+
+(e in)
+late [fly_marker][level_marker_holder no mountain_marker][●|○|●|○|●|○|●|●|map_mountain_enter|●|●|○|●|○ player_spaceship][●|○|●|○|●|○|○|○|mountain_exit|○|●|○|●|○] -> [fly_marker][level_marker_holder no mountain_marker][●|○|●|○|●|○|●|●|map_mountain_enter|●|●|○|●|○][●|○|●|○|●|○|○|○|mountain_exit|○|●|○|●|○ player_spaceship]
+late [fly_marker][level_marker_holder no mountain_marker][●|○|●|○|●|○|○|○|mountain_exit|○|●|○|●|○ player_spaceship][☁|☁|☁|☁|f|.|f|.|f|.|.|.|.|f|.|f|.|f|.|f][☁|☁|☁|.|●|○|●|○|●|○|○|○|mountain_exit|○|●|○|●|○|f][☁|☁|f|○|●|○|●|○|●|●|●|mountain_enter|●|○|●|○|●|.] -> [fly_marker][level_marker_holder mountain_marker][●|○|●|○|●|○|○|○|mountain_exit|○|●|○|●|○ player_spaceship][☁|☁|☁|☁|f|.|f|.|f|.|.|.|.|f|.|f|.|f s1_light|. s2_light|f s3_light][☁|☁|☁|.|●|○|●|○|●|○|○|○|mountain_exit|○|●|○|● s4|○ player_spaceship|f s6][☁|☁|f|○|●|○|●|○|●|●|●|mountain_enter|●|○|●|○ s7_light|● s8|. s9_light]
+(e out)
+late [fly_marker][level_marker_holder mountain_marker][○|●|○|●|○|●|●|●|mountain_enter|●|○|●|○|● player_spaceship][○|●|○|●|○|●|○|●|map_mountain_exit|●|○|●|○|●] -> [fly_marker][level_marker_holder mountain_marker][○|●|○|●|○|●|●|●|mountain_enter|●|○|●|○|●][○|●|○|●|○|●|○|●|map_mountain_exit|●|○|●|○|● player_spaceship]
+late [fly_marker][level_marker_holder mountain_marker][○|●|○|●|○|●|○|●|map_mountain_exit|●|○|●|○|● player_spaceship][☁|r|●|○|●|○|●|○|●|●|map_mountain_enter|●|●|○|●|○|f][☁|☁|r|○|●|○|●|○|●|○|●|map_mountain_exit|●|○|●|○|●|.][☁|☁|☁|r|r|.|f|.|f|.|f|.|.|f|.|у|.|f|f] -> [fly_marker][level_marker_holder no mountain_marker][○|●|○|●|○|●|○|●|map_mountain_exit|●|○|●|○|● player_spaceship][☁|r|●|○|●|○|●|○|●|●|map_mountain_enter|●|●|○|● s1_light|○ s2_light|f s3_light][☁|☁|r|○|●|○|●|○|●|○|●|map_mountain_exit|●|○|●|○ s4|● player_spaceship|. s6][☁|☁|☁|r|r|.|f|.|f|.|f|.|.|f|.|у|. s7_light|f s8|f s9_light]
+
+
+(............................)
+(........reset areas.........)
+(............................)
+late [water_cave_path_init_marker][water_fish_placeholder no water_fish] -> [water_cave_path_init_marker][water_fish_placeholder water_fish]
+late [water_cave_path_init_marker][water_block_placeholder no water_block] -> [water_cave_path_init_marker][water_block_placeholder water_block]
+late [water_cave_path_init_marker][water_bomb_placeholder no water_bomb] -> [water_cave_path_init_marker][water_bomb_placeholder water_bomb]
+late [water_cave_path_init_marker] -> []
+
+late [water_cave_path_reset_marker][water_fish] -> [water_cave_path_reset_marker][]
+late [water_cave_path_reset_marker][water_block] -> [water_cave_path_reset_marker][]
+late [water_cave_path_reset_marker][water_bomb] -> [water_cave_path_reset_marker][]
+late [water_cave_path_reset_marker] -> []
+
+[escape_lava_reset_marker][escape_lava] -> [escape_lava_reset_marker][]
+[escape_lava_reset_marker] -> []
+
+(......................)
+(........saves.........)
+(......................)
+late [player save_point] -> checkpoint
+
+==============
+WINCONDITIONS
+==============
+
+=======
+LEVELS
+=======
+message Whence am I?
+▍▍▍▍▍▍▍▍▍▍▍▍▍▍▍▍▍▍▍▍▍▍▍▍▍▍▍▍▍▍▍▍⊟⊟⊟⊟⊟⊟⊟▊⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟▍▍▍▍▍▍▍▍▍▍▍▍▍▍▍▍...............................................................................................................................................☁⋆⋆⋆⋆⋆⋆⋆⋆⋆⋆⋆⋆⋆⋆⋆⋆
+▍⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅▓⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅▕⌓⌓⌓⌓⌓⊟▀⊟⌓⌓⌓⌓⌓⌓⊟⊟⌓⌓⌓⌓⊟⌓⌓⌓⌓⌓⌓⌓⌓⌓⊟▍▍▍▍▍▍▍▍▍▍▍▍▍▍▍▍...............................................................................................................................................☁⋆⋆☾⋆⋆⋆⋆⋆⋆⋆⋆⋆⋆⋆⋆⋆
+▍⋅⋅⋅▍▍▍▍▍▍▍▍▍▍▍▍▍░▔▔▔▔▔▔▔▔▔▔▔▔▔▍⊟⌓⌓⌓⌓⌓⊟▕⊟⌓⌓⌓⌓⌓⌓⊟⊟⌓⌓⊟⌓⌓⊟⌓⌓⌓⊟⌓⌓⌓⌓⊟▍▍▍▍▍▍▍▍▍▍▍▍▍▍▍▍...............................................................................................................................................☁⋆⋆⋆⋆⋆⋆⋆⋆⋆⋆⋆⋆⋆⋆⋆⋆
+▍⋅⋅⋅▍▍▍▍▍▍▍▍▍▍▍▍▍░⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅▍⊟⌓⌓⌓⌓⌓⊟⌓⊟⌓⌓⌓⌓⌓⌓⊟⊟⌓⌓⌓⊟⌓⌓⊟⌓⌓⌓⊟⌓⌓⌓⊟▍▍▍▍▍▍▍▍▍▍▍▍▍▍▍▍...............................................................................................................................................☁⋆⋆⋆⋆⋆⋆⋆ॐ⋆⋆⋆⋆⋆⋆⋆⋆
+▍⋅⋅▍▍▍▍▍▍▍▍▍▍▍▍▍▍▔▔▔▔▔▔▔▔▔▔▔▔▔░▍⊟⌓⌓⌓⌓⌓⊟⌓⊟⌓⌓⌓⌓⌓⌓⊟⊟⌓⌓⌓⌓⊟⌓⌓⊟⌓⌓⌓⊟⌓⌓⊟▍▍▍▍▍▍▍▍▍▍▍▍▍▍▍▍...............................................................................................................................................☁⋆⋆⋆⋆⋆⋆⋆⋆⋆⋆⋆⋆⋆⋆⋆⋆
+▍⋅⋅⋅▍▍▍▍▍▍▍▍▍▍▍▍▍⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅░▍⊟⌓⌓⊟⊟⊟⊟⌓⊟⊟⊟⊟⊟⌓⌓⊟⊟⌓⌓⌓⌓⌓⊟⌓⌓⊟⌓⌓⌓⊟⌓⊟▍▍▍▍▍▍▍▍▍▍▍▍▍▍▍▍...............................................................................................................................................☁⋆⋆⋆⋆⋆⋆⋆⋆⋆⋆⋆⋆⋆⋆⋆⋆
+▍▍⋅⋅▍▍▍▍▍▍▍▍▍▍▍▍▍░▔▔▔▔▔▔▔▔▔▔▔▔▔▍⊟⌓⌓⌓⌓⌓⌓⌓⌓⌓⌓⌓⌓⌓⌓⊟⊟⌓⌓⌓⌓⌓⌓⊟⌓⌓⊟⌓⌓⌓⊟⊟▍▍▍▍▍▍⋅▍▍▍▍▍▍▍▍▍...............................................................................................................................................☁⋆⋆⋆⋆⋆⋆⋆⋆⋆⋆⋆⋆⋆⋆⋆⋆
+▍⋅⋅⋅▍▍▍▍▍▍▍▍▍▍▍▍▍░⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅▍⊟⌓⌓⊟⊟⊟⊟⌓⊟⊟⊟⊟⊟⌓⌓⊟⊟⌓⌓⌓⌓⌓⊟⌓⌓⊟⌓⌓⌓⊟⌓⊟▍▍▍▍▍⋅⋅⋅▍▍▍▍▍▍▍▍...............................................................................................................................................☁⋆⋆⋆⋆⋆⋆⋆⋆⋆⋆⋆⋆⋆⋆⋆⋆
+▍⋅⋅▍▍▍▍▍▍▍▍▍▍▍▍▍▍▔▔▔▔▔▔▔▔▔▔▔▔▔░▍⊟⌓⌓⌓⌓⌓⊟⌓⊟⌓⌓⌓⌓⌓⌓⊟⊟⌓⌓⌓⌓⊟⌓⌓⊟⌓⌓⌓⊟⌓⌓⊟▍▍▍▍⋅⋅⋅⋅⋅▍▍▍⋅⋅▍▍...............................................................................................................................................☁⋆⋆⋆⋆⋆⋆⋆⋆⋆⋆⋆⋆⋆⋆⋆⋆
+▍▍⋅⋅▍▍▍▍▍▍▍▍▍▍▍▍▍⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅░▍⊟⌓⌓⌓⌓⌓⊟⌓⊟⌓⌓⌓⌓⌓⌓⊟⊟⌓⌓⌓⊟⌓⌓⊟⌓⌓⌓⊟⌓⌓⌓⊟▍⋅▜⋅⋅⋅⋅⋅⋅⋅▍⋅⋅⋅⋅▍...............................................................................................................................................☁⋆⋆⋆⋆⋆⋆⋆⋆⋆⋆⋆⋆⋆⋆⋆⋆
+▍⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅▍⊟⌓⌓⌓⌓⌓⊟⌓⊟⌓⌓⌓⌓⌓⌓⌓⌓⌓⌓⊟⌓⌓⌓⌓⌓⌓⊟⌓⌓⌓⌓⌓⋅⋅▜⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅▍........................ffff...................................................................................................................☁⋆⋆⋆⋆⋆⋆⋆⋆⋆⋆⋆⋆⋆⋆⋆⋆
+▍▍▍▍▍▍▍▍▍▍▍▍▍▍▍▍▍▍▍▍▍▍▍▍▍▍▍▍▍▍▍▍⊟⊟⊟⊟⊟⊟⊟⌓⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⌓⊟▍▍▍▍▍▍▍▍▍▍▍▍▍▍░▏...............☁r●○●○●○●●◰●●○●○f☁..............................................................................................................☁⋆⋆⋆⋆⋆⋆⋆⋆⋆⋆⋆⋆⋆⋆⋆⋆
+▍▍▍▍▍▍▍▍▍▍▍▍▍▍▍▍⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⌓⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⌓⊟▍▍▍▍▍▍▍▍▍▍▍▍▍▍░▏..............☁☁r○●○●○●○●◱●○●○●.☁..............................................................................................................☁⋆⋆⋆⋆⋆⋆⋆⋆⋆⋆⋆⋆⋆⋆⋆⋆(vulcano)
+▍⋅⋅⋅⋅▓▓▓▓▓▓⋅⋅⋅⋅▍⊟⌓⌓⌓⌓⌓⌓⌓⌓⌓⌓⌓⌓⌓⌓⊟⊟⌓⌓⌓⌓⌓⌓⌓⌓⌓⌓⌓⌓⌓⌓⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⌓⌓⌓⊟▍⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅▏.............☁☁☁rr.f.f.foof.у.ff☁..............................................................................................................☁⋆⋆☾⋆⋆⋆⋆⋆⋆⋆⋆⋆⋆⋆⋆⋆
+▍⋅⋅⋅⋅▓▓▓▓▓▓⋅⋅⋅⋅▍⊟⌓⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⌓⊟⊟⌓⌓⌓⌓⌓⌓⊟⌓⌓⌓⌓⌓⌓⌓⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⌓⊟⌓⊟▍░▍▍▍▍▍▍▍▍▍▍▍▍▍▏............☁☁☁☁rrf.f.f..абвгд.f☁..............................................................................................................☁⋆⋆⋆⋆⋆⋆⋆⋆⋆⋆⋆⋆⋆⋆⋆⋆
+▍⋅⋅▍▍▍▍▍▍▍▍▍▍⋅⋅▍⊟⌓⌓⊟⌓⌓⌓⌓⌓⌓⌓⌓⊟⌓⌓⊟⊟⌓⌓⌓⌓⌓⌓⊟⌓⌓⌓⌓⌓⌓⌓⊟⊟⊟⊟⌓⌓⌓⌓⌓⌓⌓⌓⌓⌓⊟⌓⊟▍░⋅▍▍▍⋅⋅⋅⋅▍▍▍▍▍▏...............☁rf*f.f...еёжзи.f☁..............................................................................................................☁⋆⋆⋆⋆⋆⋆⋆☸⋆⋆⋆⋆⋆⋆⋆⋆
+▍⋅⋅▍▍▍▍▍▍▍▍▍▍⋅⋅▍⊟⌓⌓⌓⊟⌓⌓⌓⌓⌓⌓⊟⌓⌓⌓⊟⊟⌓⌓⌓⊟⊟⊟⊟⌓⌓⌓⌓⌓⌓⌓⊟⊟⊟⊟⌓⊟⊟⊟⊟⊟⊟⊟⊟⌓⊟⌓⊟▍⋅⋅⋅▍⋅⋅▍▍⋅⋅▍▍▍⋅▏...............☁r.!.f....йклмн.f☁..............................................................................................................☁⋆⋆⋆⋆⋆⋆⋆⋆⋆⋆⋆⋆⋆⋆⋆⋆
+▍▍⋅⋅⋅▍▍▍▍▍▍⋅⋅⋅▍▍⊟⌓⌓⌓⌓⊟⌓⌓⌓⌓⊟⌓⌓⌓⌓⊟⊟⌓⌓⌓⌓⌓⌓⌓⌓⌓⌓⌓⌓⌓⌓⊟⊟⊟⊟⌓⊟⊟⊟⊟⌓⊟⊟⊟⌓⊟⌓⊟▍⋅⋅⋅⋅⋅▍▓▓⋅⋅⋅⋅⋅⋅▏...............☁rf.f.....опрст.f☁..............................................................................................................☁⋆⋆⋆⋆⋆⋆⋆⋆⋆⋆⋆⋆⋆⋆⋆⋆
+▍⋅⋅⋅⋅▍▍▍▍▍▍⋅⋅⋅⋅▍⊟⌓⌓⌓⌓⌓⊟⌓⌓⊟⌓⌓⌓⌓⌓⊟⊟⌓⌓⌓⌓⌓⌓⌓⊟⊟⊟⊟⌓⌓⌓⊟⊟⊟⊟⌓⊟⊟⊟⌓⌓⌓⊟⊟⌓⊟⌓⊟▍▍▍▍▍▍▍▓▍▍▍▍▍░⋅▏...............☁r*f............f☁..............................................................................................................☁⋆⋆⋆⋆⋆⋆⋆⋆⋆⋆⋆⋆⋆⋆⋆⋆
+▍⋅▍⋅⋅▍▍⋅⋅▍▍⋅⋅▍⋅▍⊟⌓⌓⌓⌓⊟⌓⌓⌓⌓⊟⌓⌓⌓⌓⊟⊟⌓⌓⌓⌓⌓⌓⌓⊟⌓⌓⌓⌓⌓⌓⊟⊟⊟⊟⌓⊟⊟⌓⌓⌓⌓⌓⊟⌓⊟⌓⊟▍▓▓▓▓▓▓▓▍▍▍▍⋅░⋅▏...............☁rf.............f☁..............................................................................................................☁⋆⋆⋆⋆⋆⋆⋆⋆⋆⋆⋆⋆⋆⋆⋆⋆
+▍⋅⋅⋅⋅▍▍⋅⋅▍▍⋅⋅⋅⋅▍⊟⌓⌓⌓⊟⌓⌓⌓⌓⌓⌓⊟⌓⌓⌓⊟⊟⌓⌓⌓⌓⌓⌓⌓⊟⌓⌓⌓⌓⌓⌓⊟⊟⊟⊟⌓⊟⊟⊟⊟⌓⊟⊟⊟⌓⊟⌓⊟▍▓▍▍▍▍▍▍▍▍▍▍⋅░⋅▏...............☁f.....*....*..ff☁..............................................................................................................☁⋆⋆⋆⋆⋆⋆⋆⋆⋆⋆⋆⋆⋆⋆⋆⋆
+▍▍▍⋅⋅▍▍⋅⋅▍▍⋅⋅▍▍▍⊟⌓⌓⊟⌓⌓⌓⌓⌓⌓⌓⌓⊟⌓⌓⊟⊟⌓⌓⌓⌓⌓⌓⌓⌓⌓⌓⌓⌓⌓⌓⊟⊟⊟⊟⌓⊟⌓⌓⌓⌓⌓⌓⌓⌓⊟⌓⊟▍▓▍▍⋅⋅⋅▍⋅⋅▍⋅⋅⋅⋅▏...............☁ff...........f!f☁..............................................................................................................☁⋆⋆⋆⋆⋆⋆⋆⋆⋆⋆⋆⋆⋆⋆⋆⋆
+▍⋅⋅⋅⋅▍▍⋅⋅▍▍⋅⋅⋅⋅⋅⌓⌓⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⌓⌓⌓⌓⌓⌓⌓⌓⌓⌓⌓⌓⌓⌓⌓⌓⌓⌓⌓⌓⌓⌓⊟⊟⊟⊟⌓⊟⊟⊟⊟⊟⌓⊟▍▓▍⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅▏...............☁ff..........f!ff☁..............................................................................................................☁⋆⋆⋆⋆⋆⋆⋆⋆⋆⋆⋆⋆⋆⋆⋆⋆
+▍▓▓▍▍▍▍▍▍▍▍▍▍▍▍▍⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⌓⊟⊟⊟⊟⊟⊟⊟▍▓▍▍▍▍▍▍▍▍▍▍▍▍▍▏☁☁☁☁☁☁☁☁☁☁☁☁☁☁☁☁f.........ffffff☁☁☁☁☁☁☁☁☁☁☁☁☁☁☁☁☁☁☁☁☁☁☁☁☁☁☁☁☁☁☁☁☁............................................˦˦˦˦...............≈≈≈............☁⋆⋆⋆⋆⋆⋆⋆⋆⋆⋆⋆⋆⋆⋆⋆⋆
+▍⋅⋅▍▍▍▍▍▍▍▍▍▍▍▍▍▍▍▍▍▍▍▍▍▍▍▍▍▍▍▍▍▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓⊟⊟⊟⊟⊟⊟⊟⊟⌓⊟⊟⊟⊟⊟⊟⊟▍⋅▍▍▍▍▍▍▍▍▍▍▍▍▍▏rrrrrrrrrrrrrrrrr.........ffffffffffffffffffffffffffffffffffffff☓˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦♫♬≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈∄≈≈≈≈≈≈≈≈≈≈≈≈≈≉⋆⋆⋆⋆⋆⋆⋆⋆⋆⋆⋆⋆⋆⋆⋆⋆(tree hole 2/vine fix | water cave path)
+▍⋅⋅⋅▍⋅⋅⋅⋅⋅▍⋅⋅⋅⋅▍▍⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅▓▍▍▍▍▍▍▍▍▍▍▍▍▍▍▓⊟⌓⌓⌓⌓⌓⌓⌓⌓⌓⌓⌓⌓⌓⌓⊟▍⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅▏r..............rr..........ffffffffffffffffffff.!f!f!f!f!f!f!fff☓⌃⌃⌃⌃⌃⌃☝⌃⌃⌃⌃⌃⌃⌃⌃⌃⌃⌃⌃⌃⌃⌃⌃⌃⌃⌃⌃⌃⌃⌃˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˳ˤ∺∽∽∽∽∽∽∽∽∽∽∽∽∽∽∺∺∪∽∽∽∝∽∽∽∽∽∽∽∽∽∹⋆⋆☾⋆⋆⋆⋆⋆⋆⋆⋆⋆⋆⋆⋆⋆
+▍⋅⋅⋅▍⋅⋅▍⋅⋅▍⋅⋅⋅⋅▍▍⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅▓▍⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅▓▓⊟⌓⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⌓⊟▍▍▍▍▍⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅▏r....$u%......rrrrrrrr......ffffffffffffffffff.*.λ..λ.........ff☓˦˦˦˦˦˦˳˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦⌃˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˳ˤ∺∽∽∽∽∽∽∽∽∽∽∽∽∽∽∺∺∽∽∽∽∽∽∽∽∽∽∽∽∽∝∹⋆⋆⋆⋆⋆⋆⋆⋆⋆⋆⋆⋆⋆⋆⋆⋆
+▍⋅⋅⋅▍▍⋅▍⋅⋅▍⋅▍▍⋅▍▍⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅▍▍▍▍▍⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅▍▍▍⊟⌓⌓⌓⌓⌓⌓⊟⌓⌓⌓⌓⌓⌓⌓⊟▍⋅⋅⋅⋅⋅⋅▖▗⋅⋅⋅⋅⋅⋅▏r...$?⊏?%....rruuuuuu⊐.......ffffffffffffffffλ.λλ.&.λλ.......*.⋳☓ˉˉˉˉˉˉ˳ˉˉˉˉˉˉˉˉ˦⌃⌃⌃⌃⌃⌃⌃⌃⌃⌃⌃⌃⌃⌃˦˦˦ˉˉˉˉˉˉˉˉˉˉˉˉ˳ˤ∺∽∽∽∽∽∽∽∽∽∽∽∽∽∽∺∺∽∽∽∽∽∽∽∽∽∽∽∽∝∽∹⋆⋆⋆⋆⋆⋆⋆࿋⋆⋆⋆⋆⋆⋆⋆⋆
+▍⋅ζ⋅▍⋅⋅▍⋅⋅▍⋅⋅▍⋅▍▍⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅▍▍▍⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅▍▍⊟⊟⊟⊟⊟⌓⊟⊟⊟⊟⌓⊟⊟⊟⊟⊟▍⋅⋅⋅▍▍▍▍▍▍▍▍░⋅⋅▏r..$??"??%.rruuuuuuuur........................λ..λ..λ.........~~☓˳˳˳˳˳˳˳˳˳˳˳˳˳˳˦˦⌃˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˳˳˳˳˳˳˳˳˳˳˳˳˳ˤ∺∽∽∽∽∽∽δ∽∽∽∽∽∽∽∺∺∽∽∽∽∽∽∽∽∽∽∽∽∽∝∹⋆⋆⋆⋆⋆⋆⋆⋆⋆⋆⋆⋆⋆⋆⋆⋆
+▍⋅▍▍▍⋅▍▍⋅⋅▍▍⋅▍⋅▍▍⋅⋅⋅⋅⋅⋅⋅▚⋅⋅⋅▍▍⋅▍▍▍⋅▍▍⋅⋅⋅⋅⋅⋅▍▍⋅▍▍⊟⌓⌓⌓⌓⌓⌓⊟⌓⌓⌓⌓⌓⌓⌓⊟▍▍⋅⋅⋅▍▍▍▍▍▍⋅░⋅⋅▏r.$???"???%ruuurrrrrrr.....*.................................~~~☓˳˳˳˳˳˳˳˳˳˳˳˳˳˳˦˦⌃⌃⌃⌃⌃⌃⌃⌃⌃⌃⌃⌃⌃⌃˦˦˦˳˳˳˳˳˳˳♠˳˳˳˳˳˳∺∽∽∽∽≃∺∺∺≃∽∽∽∽∽∺∺∽∽∽∽∽∽⊡∽∽∽∽∽∽∽∹⋆⋆⋆⋆⋆⋆⋆⋆⋆⋆⋆⋆⋆⋆⋆⋆
+▍⋅⋅⋅▍⋅⋅▍⋅⋅▍⋅⋅▍⋅▍▍⋅⋅⋅⋅░▍▍▍▍░⋅⋅⋅⋅▍▍▍⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅▍▍⊟⊟⊟⌓⊟⊟⊟⊟⊟⊟⊟⊟⌓⊟⊟⊟▍▍▍⋅⋅⋅▍▍▍▍⋅⋅░⋅⋅▏r$????"????%uuur.....~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~{~~~~~~~☓˳˳˳˳˳˳☈˳˳˳˳˳˳˳˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˳˦˦˦˳˳˳˳˳˳ˤˍˍˍˍˍˍˍ∺≄∽∽∽∽≃≃≃∽∽∽∽∽∽≃∺∽∽∽∽∽∽∽∽∽∽∽∽∽∽∹⋆⋆⋆⋆⋆⋆⋆⋆⋆⋆⋆⋆⋆⋆⋆⋆
+▍⋅⋅⋅▍▍⋅▍⋅⋅▍⋅▍▍⋅▍▍⋅⋅⋅⋅░⋅⋅⋅⋅░⋅⋅⋅⋅▍▍▍⋅⋅⋅▍▍⋅⋅▍▍⋅⋅⋅▍▍⊟⌓⌓⌓⌓⌓⌓⊟⌓⌓⌓⌓⌓⌓⌓⊟▍▍▍▍⋅⋅⋅▍▍⋅⋅⋅░⋅⋅▏uu..........urrr....~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~{~~~~~~~☓˳ε˳˳˳˳♣˳˳˳˳˳˳˳˦˦ˉˉˉˉˉ˳˳˳˳˳˳˳˳˳˦˦˦˳˳˳˳˳˳ˤ˦˦˦˦˦˦˦∺≄≄∽∽∽∽≃∽∽∽∺∽∽∽∺∺∽∽∽∽∽∽∽∽∽∽∽∽∝∽∹⋆⋆⋆⋆⋆⋆⋆⋆⋆⋆⋆⋆⋆⋆⋆⋆
+▍⋅⋅⋅▍⋅⋅▍⋅⋅▍⋅⋅▍⋅▍▍⋅⋅⋅⋅░⋅⋅⋅⋅░⋅⋅⋅⋅▍▍▍⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅▍▍⊟⌓⌓⌓⌓⌓⌓⊟⌓⌓⌓⌓⌓⌓⌓⊟▍▍▍▍▍⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅▏uu....⊄uuuuuur.~~~~~~........*fffff.f.f.f.f.f.f.f.f.f.f..*~~~~~~☓ˍˍˍˍˍˍˍˍˍˍˍˍˍˍ˦˦˳˳˳˳˳˳ˍˍˍˍˍˍˍˍ˦˦˦˳˳˳˳˳˳ˤ˦˦˦˦˦˦˦∺≄∽∽∽∽∽∽∽∽≄≄≄∽∽∺∺∽∽∽∽∽∝∽∽∽∽∽∽∽∽∹⋆⋆⋆⋆⋆⋆⋆⋆⋆⋆⋆⋆⋆⋆⋆⋆
+▍⋅⋅⋅▍⋅▍▍⋅⋅▍▍⋅▍⋅▍▍⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅▍▍▍⋅▍▍⋅⋅⋅⋅⋅⋅▍▍⋅▍▍⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⌓⊟▍▍▍▍▍▍▍▍▍▍▍▍▍⋅⋅▏uuuuuuuu⊅....r~~~~~*.........fff⊴!!........................~~~~~☓˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦≋≋≋≋≋≋˦˦˦˦˦˦˦˦˦˦˦≋≋≋≋≋≋≋˦˦˦˦˦˦˦∺∽∽∽∽∽∽∽∽∽∽≄∽∽∽∺∺∽∝∽∝∽∽∽∽∽∽∽∽∽∽∹⋆⋆⋆⋆⋆⋆⋆⋆⋆⋆⋆⋆⋆⋆⋆⋆
+▍⋅⋅⋅⋅⋅⋅▍⋅⋅⋅⋅⋅▍⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅▍▍▍⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅▕⌓⌓⌓⌓⌓⌓⌓⌓⌓⌓⌓⌓⌓⌓⊟▍▍▍▍▍▍▍▍▍▍▍▍▍▍▆▇r............~~fff..........ffff!ff.......................~~~~~~☓≍≍≍≍≍≍≍≍≍≍≍≍≍˦˦˦≍≍≍≍≍≍≍≍≍≍≍≍˦˦˦˦˦≍≍≍≍≍≍≍≍˦˦˦˦˦˦∺∽∽∅∽∽∽∽∽∽∽∽∽∽∽∺∺∝∽∝∽∽∽∽∝∽∽∝∽∽∽∹⋆⋆⋆⋆⋆⋆⋆⋆⋆⋆⋆⋆⋆⋆⋆⋆
+▍▍▍▍▍▍▍▍▍▍▍▍▍▍▍▍▍▍▍▍▍▍▍▍▍▍▍▍▍▍▍▍▍▍▍▍▍▍▍▍▍▍▍▍▍▍▍▍⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟▍▍▍▍▍▍▍▍▍▍▍▍▍▍▍▏rrrrr..rrrrr~~rrrf....rrrrrrrrrroffffffffffffffffffffffff~~~~~~~☓≍≍≍≍≍≍≍≍≍≍≍≍≍≍˦˦≍≍≍≍≍≍≍≍≍≍≍≍˦˦˦˦≍≍≍≍≍≍≍≍≍≍˦˦˦˦˦∺∺∺∁∺∺≃≃≃∺∺∺∺≄∺∺∺∺∺∺∺∺≃∽≃∺∺∺∺≃∺∹⋆⋆⋆⋆⋆⋆⋆⋆⋆⋆⋆⋆⋆⋆⋆⋆
+≨⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟≩⊟..............................................☁rrrrr..ffff~~ffrrf....rrrrrrrrrrofffffffffffffffrrrfffff~~~~~~~~☓≍≍≍≍≍≍≍≍≍≍≍≍≍≍≍˦≍≍≍≍≍≍≍≍≍≍≍˦˦˦˦˦≍≍≍≍≍≍≍≍≍≍≍˦˦˦˦∺∺∺∁∺∺∺∺∺∺∺∺∺≄∺∺∺∺∺∺∺∺∺∽∺∺∺∺∺∺∺∹⋆★⋆★⋆★⋆★⋆★⋆★⋆★⋆★
+≦⌓⌓⌓⌓⌓⌓⌓⌓⌓⊟⌓⌓⌓⌓⊟⊟⌓⌓⌓⌓⌓⌓⌓⌓⌓⌓⌓≕⌓⌓≧⊟..............................................☁rrr......!~~.ffrr.....♳♴♵♶....rr!!ff......*.f!f!rurf!f~~~~~~~~~~☓≍≍≍≍≍≍≍≍≍≍≍≍≍≍≍˦≍≍≍≍≍≍≍≍≍≍˦˦˦˦˦˦≍≍≍≍≍≍≍≍≍≍≍≍˦˦˦∺∺∺∁∺∺∺∺∺∺∺∺∽∽∺∺∺∽∽∽∽∽∽∽≃∽∽∅∽∽∽∹★⋆☾⋆★⋆★⋆★⋆★⋆★⋆★⋆
+⊟⊟⊟⊟⊟⌓⌓⌓⌓⊟⌓⌓⌓⌓⌓⊟⊟⌓⌓⌓⌓⌓⌓≔≔≔⌓⌓⌓⌓⌓⊟⊟..............................................☁rr.......~~f...rr.............rrr!....fffff...ffr⋃rfff~~~~~~~~~~☓≍≍≍≍≍≍≍≍≍≍≍≍≍≍≍˦≍≍≍≍≍≍˦˦˦˦˦˦˦˦˦˦≍≍≍≍≍≍≍≍≍≍≍≍≍˦˦∺∺∺∁∺∺∺∺∺∺∺∽∽∺∺∺∺∅∽∽∽∽∽∽≃∌∽∁∽∽∽∹⋆★⋆★⋆★⋆★⋆★⋆★⋆★⋆★
+⊟⌓⌓⊟⌓⌓⌓⌓⊟⌓⌓⌓⌓⌓⌓⊟⊟⌓⌓⌓⌓⌓⌓⌓⌓⌓⌓⌓⌓⌓⌓⊟...............................................☁r......*~~*....................rr...ff!!!!!ff..fr..ff~~~~~~~~~~~☓≍≍≍≍≍≍≍≍≍≍≍≍≍≍≍˦≍≍˦˦˦˦˦≍≍≍˦≍≍≍˦˦≍≍≍≍≍≍≍≍≍≍≍≍≍˦˦∺∺∺∁∺∺∺∺∺∺∽∽∺∺∺∺∺≃≃≃≃≃≃≃≃∽∽∁∽∽∽∹★⋆★⋆★⋆★⋆★⋆★⋆★⋆★⋆
+⊟⌓⊟⌓⌓⌓⌓⊟⌓⌓⌓⌓⌓⌓⌓⊟⊟⌓⌓⌓⌓⌓⌓⌓⌓⌓⌓⌓⌓⌓⌓⊟...............................................☁r......!~~f....rr.*...*...........fff!!!!!!!ff.......------#⋂~~~☓≍≍≍≍≍≍≍≍≍≍≍≍≍≍≍˦≍≍˦≍≍≍˦≍˦≍˦≍˦≍˦˦≍≍≍≍≍≍≍≍≍≍≍≍≍˦˦∺∺∺∁∺∺∺∺∺∽∽∺∺∺∺∺∺∁∽∅∝∽∽∽∽∽∽∁∽∽∽∹⋆★⋆★⋆★⋆★⋆★⋆★⋆★⋆★
+⊟⊟⌓⌓⌓⌓⊟⌓⌓⌓⌓⌓⌓⌓⌓⊟⊟⌓⌓⌓⌓⌓⌓⌓⌓⌓⌓⌓⌓⌓⌓⊟...............................................☁f......*~⊃.....rr..............rr..fffffff!ff..ff....~~~~~~~~~~~☓≍≍≍≍≍≍≍≍≍≍≍≍≍≍≍˦≍≍˦≍˦≍˦≍˦≍˦≍˦≍˦˦≍≍≍≍≍≍≍≍≍≍≍≍≍˦˦∺∺∺∁∺∺∺∺∽∽∽∺∺∺∺∺∺∁≃∁≃≃≃≃≃≃≃∁≃≃≃∹★⋆★⋆★⋆★⋆★⋆★⋆★⋆★⋆
+⊟⌓⊟⌓⌓⊟⌓⌓⌓⌓⌓⊟⌓⌓⌓⊟⊟⌓⌓⌓⌓⌓⌓⌓⌓⌓⌓⌓⌓⌓⌓⊟...............................................☁f.......~~f....rr.p.*.........rrr...f....fff..f!ff...~~~~~~~~~~~☓≍≍≍≍≍≍≍≍≍≍≍≍≍≍≍˦≍≍˦≍˦≍˦≍˦≍˦≍˦≍˦˦≍≍≍≍≍≍≍≍≍≍≍≍≍˦˦∺∺∺∁∺∺∽∽∽∽∽∽∺∺∺≃∺∁≃∁≃∽∽∽∽∽∽∁∽∽∅∹⋆★⋆★⋆★⋆★⋆★⋆★⋆★⋆★
+⊟⌓⌓⊟⌓⌓⊟⌓⌓⌓⊟⌓⊟⌓⌓⊟⊟⌓⌓⌓⌓⌓⌓⌓⌓⌓⌓⌓⌓⌓⌓⊟...............................................☁f......!~~.....rr.......st..rrrur......f..f..ffr!ff..~~~~~~~~~~~☓≍≍≍≍≍≍≍≍≍≍≍≍≍≍≍˦≍≍˦≍˦≍˦≍˦≍˦≍˦≍˦˦≍≍≍≍≍≍≍≍≍≍≍≍≍˦˦∺∺∺∁∺∺∽∽∽δ∽∽∽∺∺∺∺∁∽∁≃∝∽∽∌∽∽∅∽∽∁∹★⋆★⋆★⋆★⋆★⋆★⋆★⋆★⋆
+⊟⌓⌓⌓⊟⌓⌓⊟⌓⊟⌓⌓⌓⊟⌓⊟⊟⌓⌓⌓⌓⌓⌓⌓⌓⌓⌓⌓⌓⌓⌓⊟...............................................☁ff......⊂~f....rr*.........rrruurf....fff...f!frf!ff.~~~~~~~~~~~☓≍≍≍≍≍≍≍≍≍≍≍≍≍≍≍˦≍≍˦≍˦≍˦≍˦≍˦≍˦≍˦˦≍≍≍≍≍≍≍≍≍≍≍≍≍˦˦∺∺∺∁∺∺∽≃∺∺∺≃∽∽∺∺∺∁∽∅≃≃≃≃≃∽∽∽∽∽∁∹⋆★⋆★⋆★⋆★⋆★⋆★⋆★⋆★
+⊟⌓⌓⌓⌓⊟⌓⌓⊟⌓⌓⊟⌓⌓⊟⊟⊟⌓⌓⌓⊟⌓⌓⌓⊟⌓⌓⌓⊟⌓⌓⊟...............................................☁fff....!~~.....rr.......rrrrruuurff**f!!ff.fffrrfff!!.~~~~~~~~~~☓≍≍≍≍≍≍≍≍≍≍≍≍≍≍≍˦≍≍˦≍˦≍˦≍˦≍˦≍˦≍˦˦≍≍≍≍≍≍≍≍≍≍≍≍≍˦˦∺∺∺∁∺∺≃∽∽≃∽∽∽≃≃∺∺∁∽∽∽∽∽∅≃∽∽∽∽∽∁∹★⋆★⋆★⋆★⋆★⋆★⋆★⋆★⋆
+⊟⌓⌓⌓⌓⌓⊟⌓⌓⌓⊟⌓⊟⌓⌓⊟⊟⌓⌓⊟⊟⊟⌓⊟⊟⊟⌓⊟⊟⊟⌓⊟...............................................☁f!f!f!f!~~f!f!frrr....rrrrrruuuur⊰!!fffrrr.fffrrff!!ff~~~~~~~~~~☓≍≍≍≍≍≍≍≍≍≍≍≍≍≍≍˦≍≍≍≍˦≍≍≍˦≍≍≍˦≍≍≍≍≍≍≍≍≍≍≍≍≍≍≍≍˦˦∺≃≃∁∺∺≃≃≃≃≃≃≃≃≃∺∺∅∀∀∀∀∀∁∀∀∀∀∀∀∅∹⋆★⋆★⋆★⋆★⋆★⋆★⋆★⋆★
+⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⌓⌓⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟...............................................☁rrrrrrrr~~rrrrrrrrr.rrrrrrrrruuurrrrrrrrrr.rrrrrff⊲ffff~~~~~~~~~☓˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦∺∺∺∺∺∺∺∺∺∺∺∺∺≃∺∺∺∺∺∺∺∺≃∁≃∺∺∺∺≃∺∹★⋆★⋆★⋆★⋆★⋆★⋆★⋆★⋆
+⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⌓⌓⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟...............................................☁rrrrrff!~~rrrrrrrrr.rrrrrrrrruuurrrrrrrrrr.rrrrr⊖≉≉≉≉≉≉≉≉≉≉≉≉≉≉≉≉≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈⊛∺fffffffffffffff∺≃∺∺∺∺∺∺∺∺∺∺∺∺∺∺∺∺∺∺∺∺∺∁∺∺∺∺∺∺∺∹★★★★★★★★★★★★★★★★(Water Passage 1, Lava Passage 1)
+⊟⌓⌓⌓⌓⌓⌓⌓⌓⌓⌓⌓⌓⌓⌓⊟⊟⌓⌓≗⊟≗⌓≗⊟≗⌓≗⊟≗⌓⊟...............................................☁rrrrf!f.~~rrrrrrr.oor...o...ruurrrrrrrrrrr.rrrrr⊕∽≄≄≄≄≄≄∽≄≄≄≄≄≄∽∽≄≄≄≄≄≄≄∽≄≄≄≄≄≄∽∽≄≄≄≄≄≄∽≄≄≄≄≄≄∽⊚∺...............≃≃≃∺∽∽∽∅∀∀∀∀∀∀∀∀∀∀∀∀∀∀∀∅≃≄≄≃∝∝∝∹★★☾★★★★★★★★★★★★★
+⊟⌓⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⌓⌓≗⊟≗⌓≗⊟≗⌓≗⊟≗⌓⊟...............................................☁rrrf!f..~~.....rr...r...roo.ruurrffffffff....~~~∹∽∽≄≄≄≄∽∽∽∽∽∽∽∽∽∽∽∽∽∽∽∽∽∽∽∽∽∽∽∽∽∽∽∽∽∽∽∽∽∽≄≄≄≄∽∽∺∺...............∺≃∅∀∀∀∀∀∀∀∀∅∺∺∺∺∺≄∽∽∽∽∽∽∽∽≄≃∽∽∽∹★★★★★★★★★★★★★★★★
+⊟⌓⌓⌓⌓⌓⌓⌓⌓⌓⌓⌓⌓⌓⌓⊟⊟⌓⌓≗⊟≗⌓≗⊟≗⌓≗⊟≗⌓⊟...............................................☁rrf!f...~~..*..rr.rrr..r....rr⊎rrffffff....~~~~~∹∽∽∽≄≄∽∽∽∺∺∺∺∺∺∺∺∺∺∺∺∺∺∺∺∺∺∺∺∺∺∺∺∺∺∺∺∺∺∺∽∽≄≄∽∽∽∺................∺≃∁∁∅∀∀∁∀∀∅∁∽∺∺∺≃≄≄∽∽∽∽∽∽≄≄≃∽∽∽∹★★★★★★★★★★★★★★★★
+⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⌓⊟⊟⌓⌓≗⊟≗⌓≗⊟≗⌓≗⊟≗⌓⊟...............................................☁rf!f....~~.***.rr.....r.o.r....rrfffff...~~~*!ff∹∽∽∽≄∽∽∽∺∺∺∺∺∺∺∺∺∺∺∺∺∺∺∺∺∺∺∺∺∺∺∺∺∺∺∺∺∺∺∺∺∽∽≄∽∽∽∺................∺∽∁∁∁∅∀∁∀∅∁∁∽∽∺∺∺≃≃≃≃≃≃≃≃≃≃≃⊡∽∽∹★★★★★★★★★★★★★★★★
+⊟⌓⌓⌓⌓⌓⌓⌓⌓⌓⌓⌓⌓⌓⌓⊟⊟⌓⌓≗⊟≗⌓≗⊟≗⌓≗⊟≗⌓⊟...............................................☁r!f.....~~..*.rrrrrrrr.o.rrrrr.rr......~~~*!ffff∹∽∽∽∽∽∽∺∺≄≄≄≄≄≄≄≄≄≄≄≄≄≄≄∺≄≄≄≄≄≄≄≄≄≄≄≄≄≄∺∺∺∽∽∽∽∽∺................∺≃∁∁∁∁∽∁∽∁∁∁∽≃∽∺∺∽∽∽∽∽∽∽∽∽∽∽∽∽≄∹★★★★★★★★★★★★★★★★
+⊟⌓⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⌓⌓≗⊟≗⌓≗⊟≗⌓≗⊟≗⌓⊟...............................................☁rf......~~...rrrr.o.o.o.rrrrrrrrr..&..~~~~~.!fff∹∽∽∽∽∽∺∺∺≄∺∺∺∺∺∺∺∺∺∺∺∺∺≄∺≄∺∺∺∺∺∺∺∺∺∺∺∺≄∺∺∺∺∽∽∽∽∺................≃≃∁∅∁∁∽∁∽∁∁∅≃≃≃∺∺≄∺∺∺∺∺∺∺∺∺∺∺∽∌∹★★★★★★★★★★★★★★★★
+⊟⌓⌓⌓⌓⌓⌓⌓⌓⌓⌓⌓⌓⌓⌓⊟⊟⌓⌓≗⊟≗⌓≗⊟≗⌓≗⊟≗⌓⊟...............................................☁r!...f..~~....rrro.o.o.oorrrrr.rr..κκ~~.*~~~.!ff∹∽∽∽∽∺∺∺∺≄∺≄≄≄≄≄≄≄≄≄≄≄∺≄∺≄∺∺≄≄≄≄≄≄≄≄≄∺≄∺∺∺∺∽∽∽∽∺................∺≃∁∁∁∁∽∅∀∅∁∁∽∺∽∺∺≄∺≄≄≄≄≄≄≄≄≄∺∽∽∹★★★★★★★★★★★★★★★★
+⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⌓⊟⊟⌓⌓≗⊟≗⌓≗⊟≗⌓≗⊟≗⌓⊟...............................................☁rf..frf.~~.!.!.rr.o.o.oo..rrr..rr.κκ~~.!..~~~.!f∹∽∽∽∽∺∺∺∺≄∺≄∺∺∺∺∺∺∺∺∺≄∺≄∺≄∺∺≄∺∺∺∺∺∺∺≄∺≄∺∺∺∺∽∽∽∽∺................∺≃∁∁∁∅∀∀∀∀∅∁∽∺∽∺∺≄≄≄≄≄≄≄≄≄∺≄∺≄∌∹★★★★★★★★★★★★★★★★
+⊟⌓⌓⌓⌓⌓⊟⌓⌓⌓⌓⌓⌓⌓⌓⊟⊟⌓⌓≗⊟≗⌓≗⊟≗⌓≗⊟≗⌓⊟...............................................☁rf...f..~~..!.!rro.o.oo.o.o*...rrκκ~~.!f!.*~~~.f∹∽∽∽∽∺∺∺∺≄∺≄∺≄≄≄≄≄≄≄∺≄∺≄∺≄∺∺≄∺≄≄≄≄≄≄≄∺≄∺∺∺∺∽∽∽∽∺................∺∽∁∁∅∀∀∀∀∀∀∅∽∽∺∺∺∺∺∺∺∺∺∺∺∺∺≄∺∽∽∹★★★★★★★★★★★★★★★★
+⊟⌓⌓⌓⌓⌓⊟⌓⌓⌓⌓⌓⌓⌓⌓⊟⊟⌓⌓≗⊟≗⌓≗≗≗⌓≗⊟≗⌓⊟...............................................☁r!.....f~~.!.!.rr.o.o....oo....rr*~~.fffff..~~~f∹∽∽∽∽∺∺∺∺≄∺≄∺≄∺∺∺∺∺≄∺≄∺≄∺≄∺∺≄∺≄∺∺∺∺∺∺∺≄∺∺∺∺∽∽∽∽∺................∺∺∅∀∀∀∀∀∀∀∀∀∀∀∀∀∀∀∀∀∀∅∽∽∽∽∽∽∺∌∽∹★★★★★★★★★★★★★★★★
+⊟⊟⊟⊟⊟⊟⊟⌓⌓⊟⊟⊟⊟⊟⊟⊟≗≗≗≗⊟≗≗≗≗≗≗≗⊟≗≗≗...............................☁☁☁☁☁☁☁☁☁☁☁☁☁☁☁☁☁rf.....*~~..!.!rrrrrrrrrrrrrrr.rf⊳~ffffffffff~~~∹∽∽∽∽∺∺∺∺≄∺≄∺≄∺∺≃≃∺≄∺≄∺≄∺≄∺∺≄∺≄≄≄≄≄≄≄∺≄∺∺∺∺∽∽∽∽∺................∺∺∺∺∺∺∺∺∺∺∺∺∺∺∺∺∺∺∺∺∺∺∺∺∺∺∺∺∺∺∽∹★★★★★★★★★★★★★★★★
+⊟⊟⊟⊟⊟⊟⊟⌓⌓⊟⊟⊟⊟⊟⊟⊟≗≗≗≗⊟≗≗≗≗≗≗≗⊟≗≗≗≗..............................☁.r*.r..rr..r*.r.f..***..~~.*.!.fffffffffffffff.ff~ffffffffffff~~∹∽∽∽∽∺∺∺∺≄∺≄∺≄∺∺δ∽≄≄∺≄∺≄∺≄∺∺≄∺∺∺∺∺∺∺≄∺≄∺∺∺∺∽∽∽∽∺................∻∻∻∻∻∻∻∻∻∻∻∻∻∻∻∻∻∻∻∻∻∻∻∻∻∻∻∻∻∻∴≒★★★★★★★★★★★★★★★★
+⊟⌓⌓⊟⌓⌓⌓⌓⌓⊟⌓⌓⌓⌓⌓⊟⌓⌓⌓⌓⊟≗≗⌓⌓⌓⌓≗⊟≗⌓≗≗..............................☁.rr.r.r*.r.rr.r....****..~~.!.!fffffffffff..f..ff~⊱*.........*~f∹∽∽∽∽∺∺∺∺≄∺≄∺≄∺∺∺∺∺∺∺≄∺≄∺≄∺∺≄∺≄≄≄≄≄≄≄∺≄∺∺∺∺∽∽∽∽∺................∻∽∽∽∽∽∽∽∽∽∽∽∽∽∽∻∻∻∻∻∻∻∻∻∻∻∻∻∻∻∽≒★★☾★★★★★★★★★★★★★
+⊟⌓⊟⌓⌓⌓⌓⊟⊟⊟⌓⌓⌓⊟⊟⊟⊟⌓⌓⌓⊟≗≗⌓⌓⌓⌓≗⊟≗⌓≗≗..............................☁.r.rr.rrrr.r.rr.f..****..~~..!.ff.ι.ι.ι.......fff*...k..k....~~f∹∽∽∽∽∺∺∺∺≄∺≄∺≄∺∺∺∺∺∺∺≄∺≄∺≄∺∺≄∺≄∺∺∺∺∺∺∺≄∺∺∺∺∽∽∽∽∺................∻∽∽∽∽∽∷∷∽∽∽∽∽∽∽∻∻∻∻∻∻∻∻∻∻∻∻∻∻∽∽≒★★★★★★★★★★★★★★★★
+⊟⊟⌓⌓⌓⌓⊟⌓⌓⌓⌓⌓⊟⌓⌓⌓⌓⌓⌓≗⊟≗⌓⌓⌓⌓⌓≗⊟≗⌓≗≗..............................☁.r..r.r..r.r..r.ff.****..~~.!.!ff.fffffff..&.ffff...njxnjx..~~~f∹∽∽∽∽∺∺∺∺≄∺≄∺≄≄≄≄≄≄≄≄≄∺≄∺≄∺∺≄∺≄≄≄≄≄≄≄∺≄∺∺∺∺∽∽∽∽∺................∻∽∽∽∽∴∻∻∷∽∷∽∽∽∽∻∻∻∻∻∻∻∻∻∻∻∻∽∽∽∽≒★★★★★★★★★★★★★★★★
+⊟⌓⌓⌓⌓⊟⌓⌓⌓⌓⌓⊟⌓⌓⌓⌓⌓⌓⌓≗≗≗⌓⋅⋅⋅⌓≗⊟≗⌓≗≗..............................☁!...!..!!..!!!..ff..***..~~..!.ff.fffffffffffffff...jjjbjm..~~~f∹∽∽∽∽∺∺∺∺≄∺≄∺∺∺∺∺∺∺∺∺∺∺≄∺≄∺∺≄∺∺∺∺∺∺∺≄∺≄∺∺∺∺∽∽∽∽∺................∻∽∽∽∷∻∻∻∻∴∻∴∽∽∽∻∻∻∻∻∻∻∻∻∻∽∽∽∽∽∽≒★★★★★★★★★★★★★★★★
+⊟⌓⌓⌓⌓⊟⌓⌓⌓⌓⊟⌓⌓⌓⊟⊟⊟⌓⌓≗≗≗⌓⋅ζ⋅⌓≗⊟≗⌓≗≗..............................☁.!!!..!..!.!..!.f....**..~~*..!ff.............fff...bjjqjm...⊗~f∹∽∽∽∽∺∺∺∺≄∺≄≄≄≄≄≄≄≄≄≄≄≄≄∺≄∺∺≄∺≄≄≄≄≄≄≄∺≄∺∺∺∺∽∽∽∽∺................∻∽∽∴∻∻∻∻∻∻∻∻∴∽∽∻∻∻∻∻∻∻∻∽∽∽∽∽∽∽∽≒★★★★★★★★★123★★★★
+⊟⊟⌓⌓⌓⊟⌓⌓⌓⊟⌓⌓⌓⊟⌓⊟≗⌓⌓≗≗≗⌓⌓⌓⌓⌓≗⊟≗⌓≗≗..............................☁..!...!!!!.!!!....f.f..*..~~...ff*~~~........ffff....jhw.....*~f∹≃∽∽∽∺∺∺∺≄∺∺∺∺∺∺∺∺∺∺∺∺∺∺∺≄∺∺≄∺≄∺∺∺∺∺∺∺≄∺∺∺∽∽∽∽≃∺................∻∽∷∻∻∻∩∻∻∻∻∻∷∽∽∻∻∻∻∻∽∽∽∽∽∽∽∽∽∽∽≒★★???????456??★★
+⊟⌓⊟⌓⌓⌓⊟⌓⊟⌓⌓⌓⊟⌓⌓⊟≗⌓⌓≗≗≗⌓⌓⌓⌓⌓⌓⊟⌓⌓≗≗..............................☁..!...!..!.!..!..f.f.f.....~~..ff⊵~~~..&.ιιιfffff*...qwd.......f∹∺≃∽∽∺∺∺∺≄≄≄≄≄≄≄≄≄≄≄≄≄≄≄≄≄∺∺≄∺≄≄≄≄≄≄≄≄≄∺∺∽∽∽∽≃∺∺................∻∽∽∽∽∽∽∽∽∽∽∽∽∽∽∽∽∽∽∽∽∽∽∽∽∽∽∽∽∽∽≒..?.....☆789☆?.~
+⊟⌓⌓⊟⌓⌓⌓⊟⌓⌓⌓⊟⌓⌓⌓⊟≗⌓⌓≗≗≗⌓⌓⌓⌓⌓⌓⊟⌓⌓≗≗..............................☁....~♡♡~♡♡~.....f.f.f.f.....~~*ff~~~~.ιιιιιιιffff....eya.......f∹∺∺≃∽∽∺∺∺∺∺∺∺∺∺∺∺∺∺∺∺∺∺∺∺∺∺∺≄∺∺∺∺∺∺∺∺∺∺∺∽∽∽∽≃∺≃∺................∻∽∽∽∽∽∽∽∽∽∽∽∽∽∽∽∽∽∽∽∽∽∽∽∽∽∽∽∽∽∽≒..?.....☆☆☆☆☆?.~
+⊟⌓⌓⌓⊟⌓⌓⌓⌓⌓⊟⌓⌓⌓⌓⊟≗⌓⌓≗≗≗⌓⌓⌓⌓⌓⌓⊟⌓⌓≗≗..............................☁f..~♡♡♡♡♡♡♡~.......f.....*~~~~~~~~~~.ιιιιιιιιιfff............*.f∹∺∺∺≃∽∽∺∺∺∺∺∺∺∺∺∺∺∺∺∺∺∺∺∺∺∺∺≄≄≄≄∺∺∺∺∺∺∺∽∽∽∽≃∺∺∺∺................∻∽∽∽∽∽∽∽∽∽∽∽∽∽∽∽∽∽∽∽∽∴∽∽∷∽∽∴∽∽∷≒..????"????⚕??.~
+⊟⌓⌓⌓⌓⊟⌓⌓⌓⊟⌓⌓⌓⌓⌓⊟≗⌓⌓≗≗≗⌓⌓⌓⌓⌓⌓⊟⌓⌓≗≗..............................☁f*~~~♡♡♡♡♡~~~~~~~~~~~~~~~~~.!.~~~~~.ιιιιιιιιιιιι...............f∹∺∺∺∺≃∽∽∽∽∽∽∽∽∽∺∺∺∺∺∺∺∺∺∺∺∺∺∺∺∺≄∽∽∽∽∽∽∽∽∽∽≃∺≃∺∺∺................∻∴∷∴∷∴∷∴∷∴∷∴∷∴∷∴∴∴∷∷∴∴∴∷∷∷∴∴∴∷∷≒.f????"????⚕??.f
+⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟≗≗≗≗≗≗≗≗≗≗≗≗≗≗≗≗≗..............................☁~~~~~~~♡~~~~~~~~~~~~~~~~~~ffffffffffffffffffffffffffffffffffffff∹∺∺≃∺∺∺∺∺≃∺∺∺∺∺∺∺∺∺≃∺∺∺∺∺≃∺∺∺∺∺∺∺∺∺≃∺∺∺∺∺≃∺∺∺∺∺∺................∻∻∻∻∻∻∻∻∻∻∻∻∻∻∻∻∻∻∻∻∻∻∻∻∻∻∻∻∻∻∻≒.f????"????⚕??ff
+⌓⌓⌓⌓⌓⌓⌓⌓⌓⌓⌓⌓⌓⌓⌓⌓⌓⌓⌓⌓⌓⌓⌓⌓⌓⌓⌓⌓⌓⌓⌓⌓⌓⌓.............................☁☁☁☁☁☁☁☁☁☁☁☁☁☁☁☁☁☓☓☓☓☓☓☓☓☓☓☓☓☓☓☓☓☓☓☓☓☓☓☓☓☓☓☓☓☓☓☓☓☓☓☓☓☓☓☓☓☓☓☓☓☓☓☓☓☓˦˦˦˦˦˦˦˦˦˦˦˦˦♩♪˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦...............☁★★????"????⚕??★★(Inside Tree | Tree Hole 1)
+................................................................................˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦ˉˉˉ˳ˤ˦ˉˉˉˉˉˉˉˉˉˉˉˉˉˉˉˉˉˉˉˉˉˉˉˉˉˉˉˉˉˉˉˉˉˉˉˉˉˉˉˉˉˉˉˉˉˉˉˉˉˉ˦˦˦˦˦˦˦˦˦˦˦˦˦...............☁★★????.⌁⌁⌁⌁⌁.?★★
+................................................................................˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦ˉ˳˳˳˳ˤ˻˳˳˳˳˳˳˳˳˳˳˳˳˨˼˳˳˳˳˳˳˳˳˳˩˳˦˳˳˳˳˳˦˳˳˳˳˳˳˳˳˳˳˳˳˳˳˳˳ˤˤˉˉˉˉˉˉˉˉˉ˦˦˦˦...............☁★★????.⌁⌁⌁⌁⌁.?★★
+................................................................................˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦ˉˉ˳˳˳ˤˍˍ˦˳˳˳˳˳˳˳˳˳˳˳˳˥˥ˍ˳˳˳˳˩˳˳˧˧˧˦˳˳˳˳˳˦˳˳˳˳˳˳˳˳˳˳˳˳˳˳ˍˍ˳ˤˤˤ˳˳˳˳˳˳˳ˉ˦˦˦...............☁★★????.⌁⌁⌁⌁⌁.?★★
+................................................................................˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦ˉˉ˳˳˳˳˳ˤ˦˦˦˳˳˳˨˳˳˳˳˳˳˳˳˳˳˦ˍˍ˳˩˩˳˳˳˳˳˳˳˳˳˳˳˦˳˳˳˳˳˳˳˳˩˳˩˳˳˧˦˦˳˳˳ˤ˳˳˱˯˲˳˳˳ˉ˦˦...............☁★★????.⌁⌁⌁⌁⌁.?★★
+................................................................................˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦ˉˉ˳˳˳˳˳˳˳ˤ˦˦˦˳˧˧˧˳˳˳˳˳˳˳˳˳˳˦˦˦ˍˍˍ˳˳˳ˍ˳˳˳˳˳˳˳˦˳˳˩˳˩˳˳ˤ˧˧˧˳˳˳˦˦ˍ˳˳˧˧˧˧˧˧˧˳˳˳ˉ˦˦..............☁★★????.......?★★
+................................................................................˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦ˉ˳˳˳˳˳ˤˍˍˍˍ˦˦˦˳˳˳˳˳˳˳˳˳˳˳˳˳˳˦˦˦˦˦˦˳˳˳˦ˍ˳˳˳˳˳˳˦˳ˤ˧˧˧˳˳ˤ˳˳˳˳˳˳˦˦˦˳˳˳˳˳˳˳˳˳˳˳˳˳ˉ˦..............☁★★?????"??????★★
+................................................................................˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦ˉ˳˳˳˳˳˳ˤ˦˦˦˦˦˦˦˳˳˳˳˧˧˧˳˳˳˳˳˳˳˦˦˦˦˦˦˳˳˳˦˦ˍ˳˳˳˳˳˳˳ˤ˳˳˳˳˳ˤ˳˳˳˳˳˳˦˦˦ˍ˳˳˳˳˳˳˳ˍˍˍˍˍ˦˦..............☁..?????"??????.~
+................................................................................˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦ˉ˳˳˳˳˳˳˳ˤ˦˦˦˦˦˦˦˧˧˧˳˳˳˳˳˳˳˳˳˳˳˦˦˦˦˦˦ˍˍˍ˦˦˦ˍˍˍˍˍ˳˳ˤ˳˳˳˳˳ˤ˳˳˳˳˳˳˦˦˦˦˷˷˷˷˷˷˷˦˦˦˦˦˦...............☁..?????"??????.~
+................................................................................˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦ˉˉˉ˳˳˳˳˳˳˳˳ˤ˦˦˦˦˦˦˦˳˘˳˳˳˳˳˳˳˳˳˳˳˳˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦ˍˍ˳˳˳˳˳˳˳˳˳˳˳˳˳˦˦˦˷˷˷˷˷˷˷˷˦˦˦˦˦˦˦..............☁..?????"??????.~
+................................................................................˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˳˳˳˳ˍˍˍˍˍˍˍˍˍˍˍˍˍˍ˦ˍˍˍˍˍˍˍˍˍˍˍˍˍˍˍˍˍˍˍˍ˦˦˦˦˦˦˦˦˦˦˦˦˦ˍˍˍˍˍˍˍˍˍˍˍˍˍˍ˦˦˷˷˷˷˷˷˷˷˷˷˷˷˷˷˦..............☁.f?????"??????.f
+∺∺............................................∺∺∺...............................˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦ˍˤˍˍ˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦ˇˇˇˇˇˇˇˇˇˇˇˇˇˇ˦.....⊟⊟⊟......☁.f?????"??????ff
+⊊≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈⊋∺...............................˦˦˦˦˦˦˦˦˦˦˦˦˦˦ˤˤˤ☝ˉˉ˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦ˤ˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⋝⊟⊟⊟⊟⊟⊟⊟⊞★★?????"??????★★(underwater, water cave lava)
+⊆∽∽∽∽∽∽∽∽∽∽∽∽∽∽∽∽∽∽∽∽∽∽∽∽∽∽∽≃∽∽∽∽∽∽∽∽∽∽∽∽≃∽∽∽∽∽⊇∺...............................˦ˤˤˤˤˤˤˤˤˤˤˤˤˤˤˤ˦ˉ˳˳ˉ˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦ˉˉ˳ˤ˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦∺∽∽∽∽∽∽∽∽∽∽∽∽∽∽∽≄∽⊙∽∽∽∽∽∽∽∽∽∽∽∽∽∽∽∽∽∽∽∽∽∽∽∽∽∽∽⊠⊘⊟⌓⌓⌓⌓⌓⌓⌓⊟⌓⊟⌓⊟⌓⌓⊟⊟⌓⌓⌓⌓⌓⌓⋦⌓⌓⌓⌓⌓⌓⌓⊞★★?????"??????★★
+≃∽∽∅∀∀∀∀∀∀∀∀∀∀∀∀∀∀∀∀∀∀∀∀∀∅∽≃∺≃∽∽∽∽∽∽∽∽∽∽≃∺≃∽∽∽∽≃∺...............................˦ˤˤˤˤˤˤˤˤˤˤˤˤˤˤ˳˦˳˳˳˳ˉ˦˦˦˦˦ˉˉ˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˳˳˳ˤ˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦∺∽∽∽∽≄≄∽∽∽∽≄∽∽∽∺∺∽∽∽∽∽∽∽∽∽∽∽∽∽∽∽∽∽∽∽∽∽∽∽∽∽∽∽∽≃≃≃⊟⌓⊟⊟⊟⊟⊟⌓⊟⌓⊟⌓⊟⌓⌓⊟⊟⌓⊟⊟⊟⌓⊟⊟⊟⊟⊟⊟⊟⊟⌓⊞★★?????"??????★★
+∺∽∽∽∽∽∽∽≃∽∽∽∽≃∽∽≃≃∽∽∽∽∽∽∽∁∽∽≃∽∽∽∽∽∽∽∽∽∽∽∽≃∽∽∽∽∽∺................................˦˳ˤˤ˳˳ˤ˳˳ˤˤ˳˳ˤ˳˳˦˳˳˳˳˳ˉ˦˦˦ˉ˳˳ˉˉ˦˦˦˦ˍˍˍ˦˦˦ˉˉˉ˳ˤˍˍ˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦∺∽∽∽≄≄≄≄∽∽≄≄≄∽∽∺∺∽∽∽∽∽∽∽∽∽∽∽∽∽∽∽∽∽∽∽∽∽∽∽∽∽∽∽≃∺∺∺⊟⌓⊟⌓⌓⌓⌓⌓⊟⌓⌓⌓⌓⌓⊟⊟⊟⌓⊟⌓⊟⌓⊟⌓⌓⌓⌓⌓⌓⌓⌓⊞★★?????"??????★★
+∺≃≃∽∽∽∽≃∺≃∽∽≃∺≃∽≃∅∀∀∀∀∀∀∀∀∀∀∀∀∀∀∀∀∀∀∅∽∽∽∽∽∽∽∽≃≃∺................................˦˳ˤ˳˳˳˳ε˳˳˳˳˳˳˳˳˦˳˳˳˳˳˳ˉˉˉ˳˳˳˳˳˦˦˦˦˦˦˦˦˦ˉ˳˳˳˳ˤ˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦∺∽∽≄≄≄≄≄≄∽∽≄∽∽∽∺∺∽∽∽∽∽∽∽∽∽∽∽∽∽∽∽∽∽∽∽∽∽∽∽∽∽∽≃∺∺∺∺⊟⌓⊟⌓⊟⊟⊟⊟⊟⊟⊟⊟⊟⌓⌓⊟⊟⌓⊟⌓⊟⌓⊟⌓⌓⌓⌓⌓⌓⌓⌓⊞★★?????"??????★★
+∺∺∺≃≃∽∽∽≃∽∽≃∺∺∺≃≃∁∽≃≃≃≃≃∽∁∽∽∽∽∽∽∽∽∽≃∽∽∽∽∽∽∽≃≃∺∺∺................................˦˳˳˳˳˧˧˧˧˧˳˳˳˳˳˳˦˳˳˳˳˳˳˳˳˳˳˳˳˳˳˦˦˦˦˦˦˦ˉˉ˳˳˳ˍˍˍ˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦∺∽≄≄≄≄≄≄≄≄∽∽∽∽∽∺∺≃∽∽∽∽∽∽∽∽∽∽∽∽∽∽∽∽∽∽∽∽∽∽∽∽≃∺≃∺∺∺⊟⌓⊟⌓⌓⌓⌓⌓⌓⌓⌓⊟⌓⌓⊟⊟⊟⌓⊟⌓⊟⌓⊟⌓⌓⌓⊟⌓⌓⌓⌓⊞★★?????"??????★★
+≃∺∺∺∺≃≃∽∽∽∽∽≃∺≃∽≃∅∁∅≃≃≃∅∁∅∽∽∽∽∽∽∽∽≃∺≃∽∽∽∽≃≃∺∺∺∺∺................................˦˳˳˳˳ˤˤˤˤˤ˳˳˳˳˳˳˦☈˳˳˳˳˳˳ˍˍˍˍ˳˳˳˦˦˦˦˦ˉˉ˳˳˳ˍˍ˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦∺∽∽≄≄≄≄≄≄∽∽≄≄∽∽≄∺∺≃∽∽∽∽∽∽∽∽∽≃≃≃≃≃≃≃∽∽∽∽∽∽≃∺∺∺∺∺∺⊟⌓⌓⊟⊟⊟⊟⊟⌓⌓⌓⊟⊟⌓⌓⊟⊟⌓⊟⌓⊟⌓⊟⌓⌓⊟⊟⊟⊟⊟⌓⊞★★?????"??????★★
+∺∺∺∺∺∺∺≃≃∽∽∽∽≃∽≃≃≃∽∁∽≃∽∁∽∽≃∽∽∽∽∽∽∽∽≃∽∽∽≃≃∺∺∺∺∺≃∺................................˦˳˳˳˳˳ˤˤˤ˳˳˳˳˳˳˳˦☇˳˳˳˳☼ˍ˦˦˦˦ˍˤ˳˦˦˦˦˦˳˳˳ˍˍ˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦∺∽∽∽≄≄≄≄∽∽≄≄∽∽≄≄∺∺∺≃∽∽∽∽∽∽∽≃∺∺∺∺∺∺∺≃∽∽∽∽≃∺∺≃∺∺≃∺⊟⌓⌓⊟⌓⌓⌓⊟⌓⌓⌓⊟⌓⌓⊟⊟⊟⌓⊟⌓⊟⌓⊟⌓⊟⊟⊟⊟⊟⊟⌓⊞..?????"??????.~
+∺∺∺≃∺∺∺∺∺≃≃∽∽∽≃∺≃≃∽∅∀∀∀∅∽≃∺≃∽∽∽∽∽∽∽∽∽≃≃∺∺∺∺≃∺∺∺∺................................˦˳˳˳˳˳˳ˤ˳˳˳˳˳˳˳˳˦˦ˍˍˍˍˍ˦˦˦˦˦˦ˤ˳ˉˉˉˉˉ˳ˤˍ˦˦˦˦ˍˍˍˍˍ˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦∺∽≄∽∽≄≄∽∽≄≄∽∽∺∺≄∺∺∺∺≃∽∽∽∽∽≃∺∺≃∺∺∺∺∺∺≃≄≄≃∺∺∺∺≃∺∺∺⊟⌓⌓⊟⌓⊟⌓⊟⊟⊟⌓⊟⊟⌓⌓⊟⊟⌓⊟⌓⊟⌓⊟⌓⌓⊟⊟⊟⊟⊟⌓⊞..?????"??????.~
+∺∺∺∺∺∺∺∺≃∺∺≃≃∽∽≃≄≄∽∽∽∽∽∽≃∺∺∺≃∽∽∽∽∽∽≃≃∺∺∺∺∺∺∺∺∺≃∺...............................˦˦˳˳˳˳˳˳˳˳˳˳˳˳˳˳˳˦˦˦˦˦˦˦˦˦˦˦˦˦ˤ˳˳˳˳˳˳˳ˤ˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦∺∽∽≄∽∽∽∽≄≄∽∽∺≄∺∺∺≃∺∺∺≃∽∽∽≃∺∺∺∺∺∺∺≃∺∺∺≄∺∺∺≃∺∺∺∺∺∺⊟⌓⌓⊟⌓⊟⌓⌓⌓⌓⌓⌓⌓⌓⌓⊟⊟⌓⊟⌓⊟⌓⊟⌓⌓⌓⊟⌓⌓⌓⌓⊞..?????"??????.~
+∺∺∺∺∺∺∺∺≃∺∺∺≃≃≃≃≄≃∽∽∽∽∽∽∽≃∺≃∽∽∽∽∽∽≃≃∺∺∺∺∺∺∺∺∺∺≃∺...............................˦ˍ∧∧∧∧∧∧∧∧∧∧∧∧∧∧∧˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦ˍˍˍˍˍ˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦∺∺∽∽≄≄≄≄≄∽∽∺∺∺∺∺∺∺∺≃∺∺≃∽≃∺∺∺≃∺∺∺∺∺∺≃∺≄≄∺∺∺≃∺∺∺∺∺⊟⌓⊟⌓⌓⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⌓⊟⌓⊟⊟⊟⌓⌓⌓⌓⌓⌓⌓⌓⊞.f?????"??????.f
+∺∺∺≃∺∺≃∺∺∺∺∺≃∺∺≃∅≃∺≃∺∺≃∺∺∺∺∺≃∺∺∺∺∺∺≃∺∺≃∺∺∺∺∺≃∺∺∺...............................˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦∺∺≄∽∽≄≄∽∽∽≄∺∺∺≄∺∺∺∺∺∺∺≃∽≃∺∺∺∺≃∺∺∺∺≃∺∺∺≄∺≃∺∺∺∺≃∺∺⊟ζ⊟⌓⌓⌓⌓⌓⌓⌓⌓⌓⌓⌓⌓⌓⌓⌓⊟⌓⌓⌓⌓⌓⌓⌓⌓⌓⌓⌓⌓⊞.f?????"??????ff
+∻∻∻∻∻∻∻∻∻∻∻∻∻∻∻∻∴∻∻∻∻∻∻∻∻∻∻∻∻∻∻∻∻∻∻∻∻∻∻∻∻∻∻∻∻∻∻∻...............................∺⊝≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈................∺≄∺∺∽∽∽∽∽∺∺∺≃∺∺∺∺∺≃∺∺∺∺∽∺∺≃∺∺∺∺∺∺∺∺∺∺∺≄∺∺∺∺∺∺∺∺∺⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⌓⊟⊟⊟⊟⊟⊟⊟⊞★★?????"??????★★(water hole 1, water passage 1)
+∻∻∻∻∻∻∻∻∻∻∻∻∻∴∻∻∅∴∴∴∴∴∴∴∴∴∴∴∴∴∴∻∽∽∽∴∻∽∽∻∴∽∽∽∽∽∻∴...............................∺⊜∽∽∽∽∽∽∽∽∽∽∽∽∽∽∽∽∽∽∽∽∽∽∽∽∽∽∽∽∽∽∽∽∽∽∽∽∽∽∽∽∽∽∽∽∽∽∺................∺∺≄∺≄∽∽∽≄∺≄∺∺∺≄∺∺∺∺∺∺∺∺∽∺∺∺∺∺∺∺∺∺≄∺∺∺∺∽∽∺∺∺∺≄∺∺∺⊟⌓⌓⌓⌓⌓⌓⌓⌓⌓⌓⌓⌓⌓⌓⊟⊟⌓⊟⌓⊟⌓⊟⌓⊟⌓⊟⌓⊟⌓⊟⊞★★?????"??????★★
+∻∻∻∻∽∽∽∽∽∽∽∽∽∻∻∴∻∻∻∻∻∻∻∻∻∻∻∻∻∴∻∻∅∀∀∀∀∀∀∀∀∀∀∀∅∽∻∻...............................∺∺∽≄∺∺∺∺∽∽∽∺∽∽∽∽∺∽∺∺∺∺∺≄≄≄≄≄≄≄≄≄≄≄≄∺∺∺∺∽∽∽∽∽∺∽∺∽∺................∺∺∺∺∺∺∽∽∽∺∺∺∺∺∺∺∺∺∺∺≃∺∺∽∺∺∺∺∺∺∺∺∺∺∺≄∺∺∽∽∽∺∺∺∺∺∺∺⊟⌓⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⌓⊟⊟⌓⌓⌓⌓⌓⌓⌓⌓⌓⌓⌓⌓⌓⌓⊞★★?????"??????★★
+∻∻∴∽∽∽∽∽∽∽∽∽∽∽∻∻∻∴∴∴∴∴∴∴∴∴∴∴∻∴∻∻∁∽∽∻∴∽∽∴∻∽∽∽∁∽∻∻................................∺∽∽≄≄≄∺≄≄≄≄∺≄≄≄∺≄≄≄≄≄∺∺∺∺∺∺∺∺∺∺∺∺∺∺≄≄≄≄∺∺∺∺≄≄∺∽∺................∺≄∺∺≄∽∽∽∽∽≄∺∺≃∺∺∺∺∺∺∺∺∺∽∺∺∺≃∺∺∺∺∺∺∺∺∺∺∺∽∽∽∺∺∺∺∺∺⊟⌓⊟⌓⌓⌓⌓⌓⌓⌓⌓⌓⌓⊟⌓⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⌓⌓⊟⊟⊞★★?????"??????★★
+∻∻∽∽∽∽∽δ∽∽∽∽∽∅∀∻∻∴∻∻∻∻∻∻∻∻∻∴∻∴∻∻∁∀∀∀∀∀∀∀∀∀∅∽∁∽∴∻................................∺∽≄∺∺≄∺≄≄≄≄≄∺≄≄≄∺∺∺∺≄≄≄≄≄≄≄≄≄≄≄≄≄≄≄≄≄≄∺≄≄≄∺≄≄∺∽∺................∺∺∺≄∽∽∽∽∽∽∽∺≄∺∺∺∺∺∺∺≃∺∺∽∺∺∺∺∺∺∺∺∺∺∺∺∺∺∺∺∽∽∽∺≄∺∺∺⊟⌓⊟⌓⊟⊟⊟⊟⊟⊟⊟⊟⌓⊟⌓⊟⊟⌓⌓⌓⌓⌓⌓⌓⌓⊟⌓⊟⌓⌓⊟⊞★★?????"??????★★
+∴∻∽∽∷∻∻∻∻∻∷∽∽∽∽∻∴∴∻∴∴∴∴∴∅∷∻∴∻∴∻∻∁∀∀∀∀∷∀∀∀∀∁∀∅∽∻∻................................∺∽≄≄∺≄∺∺∺∺∺∺∺∺≄≄≄≄≄≄∺∺∺∺∺∺∺∺≄≄≄≄≄≄≄≄≄≄∺≄∺≄∺≄≄∺∽∺................∺∺∺∽∽∽∽∽∽≄∽∽≄∺∺∺∺∺≃∺∺∺∺∽≃∺∺∺∺≃∺∺∺≄∺∺∺∺∺∺∺∽∽∽∺≄∺∺⊟⌓⊟⌓⊟⋜⌓⊟⊟⊟⊟⊟⌓⊟⌓⊟⊟⊟⊟⊟⊟⊟⊟⊟⌓⊟⌓⌓⊟⌓⌓⊞★★?????"??????★★
+∻∻∽∽∽∴∻∻∻∴∽∽∽∽∽∻∻∴∻∴∻∻∻∻∻∻∻∴∻∴∴∻∁∽∽∽∴∻∴∽∽∽∁∽∻∽∻∻................................∺∽≄≄∺≄≄≄≄≄≄≄≄∺≄≄≄≄≄≄≄≄≄≄≄≄≄≄∺∺∺∺∺∺∺∺∺∺∺≄∺≄∺≄≄∺∽∺................∺≄∽∽∽∽∽∽≄∺≄∽∽∺∺∺∺∺∺∺∺∺∺∽∺∺∺∺≃∺∺∺∺∺∺∺≄∺∺∺∺∺∽∽∽∺∺∺⊟⌓⊟⌓⊟⊟⌓⌓⌓⌓⌓⌓⌓⊟⌓⊟⊟⌓⌓⌓⌓⌓⌓⊟⌓⊟⌓⌓⌓⊟⌓⊞★★?????"??????★★
+∻∻∻∽∽∽∽∴∽∽∽∽∽∽∻∴∻∴∻∴∴∴∴∴∴∴∴∴∻∴∻∻∁∽∽∽∴∻∴∽∽∽∁∻∻∻∻∴................................∺∽∺∺∺∺∺∺∺∺∺≄≄∺≄≄≄≄≄≄∺∺∺∺∺∺≄∺≄≄≄≄≄≄≄≄≄≄∺≄∺≄∺≄≄∺∽∺................∺∽∽∽∽∽≄≄∺∺≄≄≄∽≄≃∺∺∺∺∺∺∺∽∺≃∺∺∺∺∺∺≄∺∺≄∺∺∺∺∺∺∺∽∽∽∺∺⊟⌓⊟⌓⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⌓⊟⊟⌓⌓⌓⌓⌓⌓⌓⌓⊟⌓⌓⌓⊟⌓⊞..?????"??????.~
+∻∻∻∴∽∽∽∽∽∽∽∽∽∻∻∻∻∴∻∻∻∻∻∻∻∻∻∻∻∴∻∻∁∽∽∽∽∷∽∽∽∽∁∽∻∽∻∻................................∺∽∽≄≄≄≄≄≄≄≄∺≄∺∺∺∺∺∺∺∺≄≄≄≄∺∺≄≄≄≄∺∺∺∺∺∺≄∺≄∺≄∺≄≄∺∽∺................∺∽∽∽∽∽∽≄≄∺≄≄∽∽∽∺∺∺∺∺≃∺∺∽∺∺∺∺∺≃∺∺≄∺∺∺∺∺∺≄≄≄≄≄∽∽∽∺⊟⌓⊟⌓⌓⌓⌓⌓⌓⌓⌓⌓⌓⌓⌓⊟⊟⌓⌓⌓⌓⌓⌓⊟⌓⊟⌓⌓⌓⊟⌓⊞..?????"??????.~
+∻∴∻∻∻∻∻∻∻∻∻∻∻∴∻∻∴∴∴∴∴∴∴∴∴∴∴∴∴∴∻∻∅∀∀∀∀∀∀∀∀∀∅∽∽∽∻∻................................∺∽∺∺∺∺∺∺∺∺≄∺≄≄≄≄≄≄≄≄≄≄∺∺∺∺∺≄∺∺∺∺≄≄≄≄∺≄∺≄∺≄∺≄≄∺∽∺................∺∽∽∽∽∽≄∽∽∽∽∽≄∽∽∺≃≃∺∺∺∺∺∽∺∺∺∺∺∺∺∺∺∺≄∺∺∺≄≄∺∺∺∽∽∽∺∺⊟⌓⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⌓⊟⊟⊟⊟⊟⌓⊞.??????"??????.~
+∻∻∻∻∻∻∻∻∻∻∴∻∻∻∻∻∻∻∻∻∻∴∻∻∻∻∻∻∻∻∴∻∻∻∻∻∻∴∻∻∻∻∻∻∻∻∴∻................................∺∽∽≄≄≄≄≄≄∺≄≄∺∺∺∺∺∺∺∺∺∺∺≄≄≄≄≄∺≄≄≄≄≄≄≄∺≄∺≄∺≄∺≄≄∺∽∺................∺∽∽∽∽∽∽∽∽∽∽∽∽∽∽∺∺∺∺∺∺∺∺∽∺∺≃∺∺∺∺≄∺∺∺∺∺≄≄∺∺∺≃∽∽∺≄∺⊟⌓⌓⌓⌓⌓⌓⌓⌓⌓⌓⌓⌓⌓⌓⌓⌓⌓⌓⌓⌓⌓⌓⌓⌓⌓⌓⌓⌓⌓⌓⊞.??????"??????.f
+∻∻∴∻∻∻∻∴∻∻∻∻∻∻∴∻∻∴∻∻∻∻∻∻∻∻∴∻∻∻∻∻∻∻∻∻∻∻∻∻∻∻∴∻∻∻∻∻................................∺∽∺∺∺∺∺∺≄∺≄≄≄≄≄≄≄≄≄≄≄≄∺∽δ∽∺∺∺≄≄≄≄≄≄≄∺≄∺≄∺≄∺≄≄∺∽∺................∺∽≄∽∽∽∽∽∽∽∽∽∽∽∽∺∺∺∺∺∺∺∺∽∺∺∺∺∺∺∺∺∺∺∺≄≄≄∺∺∺∽∽∽∽∺∺∺⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊞.??????"??????ff
+⋟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟................∺∽∺≄≄≄≄∺∺∺∺∺∺∺∺∺∺∺∺∺∺∺∺∺∺∺≄≄≄≄≄≄≄≄≄∺∺≄∺≄∺≄∺≄≄∺∽∺................∺≄∺≄∽∽∽∽∽∽∽∽∽∽∽∺∺∺≃∺∺∺∽∽∺∺≃∺∺≄∺∺∺≄≄≄∺∺∺∺∽∽∽∽∺∺∺∺................˦˦˦˦˦˦˦˦˦˦˦˦˦♭♯☓★??????"??????★★(tree hole 3)
+⋞⌓⌓⊟⌓⌓⊟⌓⌓⌓⌓⌓⌓⌓⌓⊟⊟⌓⌓⌓⌓⌓⌓⌓⌓⌓⌓⌓⌓⌓⌓⊟⊟⌓⌓⌓⌓⌓⌓⌓⌓⌓⌓⌓⌓⌓⌓⌓⌓⌓⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟................∺∽∺≄∺∺≄≄≄≄≄≄≄≄≄≄≄≄≄≄≄≄≄≄≄≄≄≄≄≄≄≄≄≄∺∺∺≄∺≄∺≄∺≄≄∺∽∺................∺∽≄∽∽∽∽∽∽∽∽∽∽∽∽∺∺∺∺∺∺∽∽∺∺∺∺∺≃∺∺∺∺≄∺∺∺∺∺≄∽∽∽≄∺∺∺∺................˦ˉˉˤˤˤˤˉˉˉˉˉˉ˳ˤ☓★??????"??????★★
+⊟⊟⌓⌓⊟⌓⌓⊟⌓⌓⊟⌓⌓⌓⌓⊟⊟⌓⌓⌓⌓⌓⌓⌓⌓⌓⌓⌓⌓⌓⌓⌓⌓⌓⌓⌓⌓⊟⊟⌓⌓⊟⊟⌓⌓⊟⊟⊟⊟⌓⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟................∺∽∺≄∺∺∺∺∺∺∺∺∺∺∺∺∺∺∺∺∺∺∺∺∺∺∺∺∺∺∺∺∺∺∺∺∺≄∺≄∺≄∺≄≄∺∽∺................∺∽∽∽∽∽∽∽∽≄≄≄∽∽∽∺∺∺≃∺∺∽∺∺∺∺∺≃∺∺∺∺∺≄∺∺≄∺∺≄∽∽∽∽≄≄≄∺................˦˳˳ˤˤˤˤ˳˳˳˳˳˳˳ˤ☓★??????"??????★★
+⊟⌓⊟⌓⌓⊟⌓⌓⊟⌓⌓⊟⌓⌓⌓⊟⊟⌓⌓⌓⌓⌓⋅⋅⋅⌓⌓⌓⌓⌓⌓⊟⊟⊟⊟⊟⊟⌓⌓⊟⊟⌓⌓⊟⊟⌓⌓⊟⊟⌓⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟................∺∽∺≄∺≄∺≄≄≄≄≄≄≄≄≄≄≄≄≄≄≄≄≄≄≄≄≄≄≄≄≄≄≄≄≄≄≄∺≄∺≄∺≄≄∺∽∺................∺∽∽∽∽∽∽∽≄∺∺∺≄∽∽∺∺∽∽∽∽∽∽∽∽∽∺≃∺∺∺∺∺≄≄∺∺∺∺≄≄≄≄∽∽≄≄∺................˦˳˳ˤ˳˳ˤ˳˳˳˳˳˳˳ˤ☓★??????"??????★★
+⊟⌓⌓⊟⌓⌓⊟⌓⌓⊟⌓⊟⌓⌓⌓⊟⊟⌓⌓⌓⌓⌓⋅ζ⋅⌓⌓⌓⌓⌓⌓⊟⊟⌓⌓⌓⌓⌓⌓⌓⌓⌓⌓⌓⌓⌓⌓⊟⊟⌓⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟................∺∽∺≄∺≄∺≄∺∺∺∺∺∺∺∺∺∺∺∺∺∺∺∺∺∺∺∺∺∺∺∺∺∺∺∺∺∺∺≄∺≄∺≄≄∺∽∺................∺∽∽∽∽∽∽∽∽≄≄≄∽∽∽∺∺∽∺∺≃∺∺∺∺∽∺∺∺∺∺∺∺∺≄∺∺∺∺≄∺∺∺∺∺∺≄∺................˦⚘˳˳˳˳˳˳˳˳˳˳˳˳˳☓★??????"??????★★
+⊟⌓⌓⌓⊟⌓⌓⊟⊟⌓⌓⊟⌓⌓⌓⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⌓⊟⊟⌓⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟................∺∽∺≄∺≄∺≄≄≄≄≄≄≄≄≄≄≄≄≄≄≄≄≄≄≄≄≄≄≄≄≄≄≄≄≄≄≄≄≄∺≄∺≄≄∺∽∺................∺∽∽∽∽∽∽∽∽∽∽∽∽∽∽∺∺∽≃∺∺∺∺∽∽∽∽∺∺≃∺∺∺∺≄≄≄∺∺∺∺∺∺≄∺≄≄∺................˦ˍˍ♘♘♘♘♘♘♘ˍˍˍˍˍ☓★??????"??????★★
+⊟⌓⌓⌓⌓⊟⌓⌓⌓⌓⊟⌓⌓⌓⌓⊟⊟⌓⌓⌓⌓⌓⌓⌓⌓⌓⌓⌓⌓⌓⌓⊟⊟⌓⌓⌓⌓⌓⌓⌓⌓⌓⌓⌓⌓⌓⌓⊟⊟⌓⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟................∺∽∺≄∺≄∺∺∺∺∺∺∺∺∺∺∺∺∺∺∺∺∺∺∺∺∺∺∺∺∺∺∺∺∺∺∺∺∺∺∺≄∺≄≄∺∽∺................∺∽∽∽∽∽∽∽∽∽∽∽∽∽∽∺∺∽∺∺∺∺∺∽∺∺∽∽∽∽∽∺∺∺∺∺≄∺∺∺∺≄∺∺∺≄∺∺................˦˦˦♘♘♘♘♘♘♘˦˦˦˦˦☓★??????"??????★★
+⊟⌓⌓⌓⌓⌓⊟⌓⌓⌓⌓⊟⌓⌓⌓⊟⊟⌓⌓⌓⌓⌓⌓⌓⌓⌓⌓⌓⌓⌓⌓⊟⊟⌓⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⌓⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟................∺∽∺≄∺≄≄≄≄≄≄≄≄≄≄≄≄≄≄≄≄≄≄≄≄≄≄≄≄≄≄≄≄≄≄≄≄≄≄≄≄≄∺≄≄∺∽∺................∺∽∽∽∽≄≄∽∽∽∽∽∽∽∽∺∺∽∽∺∺∺∺∽∺≃∺∺∺∺∽∺∺∺∺∺≄≄≄∺∺∺≄∺∺≄∺∺................˦˦˦♘♘♘♘♘♘ˍ˦˦˦˦˦☓.??????"??????.~
+⊟⌓⌓⌓⌓⌓⊟⌓⌓⊟⌓⌓⊟⊟⌓⊟⊟⌓⌓⌓⌓⌓⌓⌓⌓⌓⌓⌓⌓⌓⌓⊟⊟⌓⌓⌓⌓⌓⌓⌓⌓⌓⌓⌓⌓⌓⌓⊟⊟⌓⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟................∺∽∺≄∺∺∺∺∺∺∺∺∺∺∺∺∺∺∺∺∺∺∺∺∺∺∺∺∺∺≄∺∺∺∺∺∺∺∺∺∺∺∺≄≄∺∽∺................∺∽∽∽≄∺∺≄∽∽∽∽∽∽∽∺∺∺∽∽≃∺∺∽∺∺∺∺∺∽∽∺∺∺≄∺∺∺≄∺∺≄∺∺∺≄∺∺................˦˦˦♘♘♘♘♘ˍ˦˦˦˦˦˦☓.??????"??????.~
+⊟⌓⌓⌓⌓⊟⌓⌓⌓⌓⊟⌓⌓⊟⌓⊟⊟⌓⌓⌓⌓⌓⌓⌓⌓⌓⌓⌓⌓⌓⌓⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⌓⊟⊟⌓⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟................∺∽∺∽≄≄≄≄≄≄≄≄≄≄≄≄≄≄≄≄≄≄≄≄≄≄≄≄≄∺∽∺≄≄≄≄≄≄≄≄≄≄≄∽∽∺∽∺................∺∽∽≄∺∺∺∺≄∽∽∽∽∽∽∺∺≃∺∽∽∺∺∽∺∺∺∺∽∽∺∺∺∺∺∺∺∺≄∺∺∺∺∺∺≄∺∺................˦˦˦♘♘♘♘ˍ˦˦˦˦˦˦˦☓.??????"???????~
+⊟⌓⌓⌓⊟⌓⌓⌓⌓⌓⊟⊟⊟⊟⌓⌓⋅⌓⌓⌓⌓⌓⌓⌓⌓⌓⌓⌓⌓⌓⌓⌓⋅⌓⌓⌓⌓⌓⌓⌓⌓⌓⌓⌓⌓⌓⌓⊟⌓⌓⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟................∺∽∽∽∽∽∽∽∽∽∽∽∽∽∽∽∽∽∽∽∽∽∽∽∽∽∽∽∽∽∽∽∽∽∽∽∽∽∽∽∽∽∽∽∽∽∽∺................∺∽≄∺∺∺∺∺∺≄∽∽∽∽∽∺∺∽∽∽∽∺∺∽∺∺≃∺∽∺∺∺∺∺∺≄∺∺≄≄≄∺∺≄∺≄∺∺................˦˦˦♘♘♘ˤ˦˦˦˦˦˦˦˦☓.??????"???????f
+⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⌓⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⌓⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟................∺∺∺∺∺∺∺∺∺∺∺∺∺∺∺∺∺∺∺∺∺∺∺∺∺∺∺∺∺∺∺∺∺∺∺∺∺∺∺∺∺∺∺∺∺∺∺∺................∺≄∺∺∺∺∺∺∺∺≄∽∽∽∽∺∺∽∺∺∺∺∺∽∺∺∺∺∽∺∺∺∺≄∺∺∺∺∺∺≄∺∺∺∺≄∺∺................˦˦˦♘♘♘ˤ˦˦˦˦˦˦˦˦☓.??????"???????f
+⊟⊟⌓⌓⌓⌓⌓⌓⌓⌓⌓⌓⌓⌓⊟⊟⋅⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⌓⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟................⍔⍔⍔⍔⍔⍔⍔⍔⍔⍔⍔⌾⍔⍔⍔⍔⍔⍔⍔⍔⍔⍔⍔⍔⍔⍔⍔⍔⍔⍔⎼⌾⌑⌑⍔⍔⍔⍔⍔⍔⍔⍔⍔⍔⍔⍔⍔⎼⍔⍔⍔⍔⍔⍔⍔⍔⍔⍔⍔⍔⍔⍔⍔⍔∺∽≄∺∺∺∺∺∺≄∽∽∽∽∽∺∺∽∽∺∺∺∺∽∺∽∽∽∽∺∺∺∺∺∺∺∺∺∺∺≄∺≄∺∺≄∺∺................˦˦˦♘♘♘ˤ˦˦˦˦˦˦˦˦☓★??????"???????★(water cave)
+⊟⊟⌓⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⌓⊟⊟⌓⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⌓⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟................⍆⌑⌑⌑⌑⌑⌑⌑⌑⌑⌑⌑⌑⌑⌑⍅⍆⍘⍘⍘⍘⍘⍘⍘⍘⍘⍘⍘⍘⍘⎼⎼⎼⌑⌅⌑⌑⌑⌑⌑⌑⌑⌑⌑⌑⌑⌅⎼⍘⍘⍘⍘⍘⍘⍘⍘⍘⍘⍘⍘⍘⍘⍘⍘∺∽∽≄∺∺∺∺≄∽∽∽∽∽∽∺∺∺∽∽∽∺∺∽∺∽∺∺≃∺∺∺∺∺∺∺∺∺∺∺≄∺∺∺∺≄∺∺................˦˦˦ˍ♘♘ˤ˦˦˦˦˦˦˦˦☓★??????"???????★
+⊟⊟⌓⊟⊟⊟⋅⋅⋅⊟⊟⊟⊟⌓⊟⊟⌓⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⌓⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟................⍆⌑⌑⌑⌑⌑⌑⌑⌑⌑⌑⌑⌑⌑⌑⍅⍆⍘⍘⍘⍘⍘⍘⍘⌡⍨⍘⍘⍘⍘⍘⍅⎼⌑⌑⌑⌑⌅⌑⌑⌑⌑⌑⌑⌅⌑⌑⎼⍘⍘⍘⍘⍘⍘⍘⍘⍘⍘⍘⍘⍘⍘⍘⍘∺∽∽∽≄∺∺≄∽∽∽∽∽∽∽∺∺∺≃∺∽∽∺∽∺∽∽∽∽∽∽∺∺∺∺∺∺∺∺∺≄∺∺∺∺≄∺∺................˦˦˦˦♘♘ˤˉ˦˦˦˦˦˦˦☓★??????"???????★
+⊟⊟⌓⊟⊟⊟⋅ζ⋅⊟⊟⊟⊟⌓⊟⊟⌓⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⌓⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟................⍆⌑⌑⌑⌑⌑⌑⌑⌑⌑⌑⌑⌑⌑⌑⍅⍆⍘⍘⍘⍘⍘⎼⎼⎼⍨⍘⍘⍘⍘⍘⍅⎼⌑⌑⌑⌑⌑⌑⌑⌑⌅⌑⌑⌑⌑⌑⎼⍘⍘⍘⍘⍘⍘⍘⍘⍘⍘⍘⍘⍘⍘⍘⍘∺∽∽∽∽≄≄∽∽∽∽∽∽∽∽∺∺∺∺∺∺∽∺∽∺∺∺≃∺∺∽∺∺∽∽≄∽∽∽≄≄≄∺∺∺≄∺∺................˦˦˦˦♘♘ˤˤ˦˦˦˦˦˦˦☓★??????"???????★
+⊟⊟⌓⊟⊟⊟⊟⌓⊟⊟⊟⊟⊟⌓⊟⊟⌓⌓⌓⌓⌓⌓⌓⌓⌓⌓⌓⌓⌓⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⌓⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟................⍆⌑⌑⌑⌑⌑⌑θ⌑⌑⌑⌑⌑⌑⌑⍅⍆⍨⍒⎼⎼⎼⍨⍨⍨⍨⍨⍨⍨⍨⍨⍅⎼⌑⌑⌑⌑⌑⌑⌑⌑⌑⍏⍏⌑⌑⌑⎼⍘⍘⍘⍘⍘⍘⍘⍘⍘⍘⍘⍘⍘⍘⍘⍘∺∺∽∽∽∽∽∽∽∽∽∽∽∽∽∺∺∺∺∺∽∽∺∽∺∽∽∽∽∽∽∺∺∽≄∺≄∽∽∽≄≄∺≄≄≄∺∺................˦˦˦˦♘♘♘ˤ˦˦˦˦˦˦˦☓★??????"???????★
+⊟⊟⌓⊟⊟⊟⊟⌓⊟⌓⌓⌓⌓⌓⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⌓⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⌓⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟................⍆⌑⌑⌑⌑⌑⎼⎼⎼⌑⌑⌑⌑⌑⌑⍅⍆⌑⍒⌑⌑⌑⌑⌅⌑⌑⌑⌑⌑⌑⌅⍅⎼⌑⌑⌑⌑⌑⌑⌑⌅⌑⎼⎼⌑⌑⌑⎼⍘⍘⍘⍘⍘⍘⍘⍘⍘⍘⍘⍘⍘⍘⍘⍘∺∺∺∽∽∽∽∽∽∽≄∽∽∽∽∺∺∺≃∽∽∺∺∽∺∽∺∺∺≃∺∺∺≄∺∺∺≄∽∽∽≄∺≄∺∺∺∺................˦˦˦˦♘♘♘ˤ˦˦˦˦˦˦˦☓★??????"???????★
+⊟⊟⌓⊟⊟⊟⊟⌓⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⌓⌓⌓⌓⌓⌓⌓⌓⌓⌓⌓⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⌓⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟................⍆⌑⌑⌑⌑⌑⌑⎼⌑⌑⌑⌑⌑⌑⌑⍅⍆⌑⍒⌑⌑⌑⌑⌑⌑⌑⌑⌑⌑⌑⌑⍅⎼⌑⌑⌑⌑⌑⌑⌑⌑⌑⌑⌑⌑⌑⌑⎼⍘⍘⍘⍘⍘⍘⍘⍘⍘⍘⍘⍘⍘⍘⍘⍘∺∺∺∺∽∽∽∽∽≄∺≄∽∽∽∺∺∺∺∽∺∺∺∽∺∽∽∽∽∽∽∺∺∽≄∺≄∽≄∽∽∽∺≄≄≄∺∺................˦˦˦˦♘♘♘ˤ˦˦˦˦˦˦˦☓★??????"???????★
+⊟⊟⌓⊟⊟⊟⊟⌓⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⌓⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⌓⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟................⍆⌑⌑⌑⌑⌑⌑⌑⌑⌑⌑⌑⌑⌑⌑⍅⍆⌑⌅⌑⌑⌑⌑⌑⌑⌑⌑⌑⌑⌅⌑⍅⎼⌑⌑⌑⌑⌑⌑⌑⌅⌑⌑⌑⌑⌑⌑⎼⍘⍘⍘⍘⍘⍘⍘⍘⍘⍘⍘⍘⍘⍘⍘⍘∺∺∺∺∺∽∽∽∽∽≄∽∽∽∽∺∺∺∽∽∺∺∺∽∺≃∺∺∺∺∽∺∺∽∽≄∽≄∺≄∽∽∺∺∺≄∺∺................˦˦˦˦♘♘♘ˤ˦˦˦˦˦˦˦☓.??????"???????~
+⊟⊟⌓⊟⊟⊟⊟⌓⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⌓⌓⌓⌓⌓⌓⌓⌓⌓⌓⌓⌓⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟................⍆⌑⌑⌑⌑⌑⌑⌑⌑⌑⌑⌑⌑⌑⌑⍅⍆⌑⌑⌑⌑⌑⌑⌑⌑⌑⌑⍏⍏⌑⌑⍅⎼⌑⌑⌑⌑⌑⌑⌑⌑⌑⌑⌑⌑⌑⌑⎼⍘⍘⍘⍘⍘⍘⍘⍘⍘⍘⍘⍘⍘⍘⍘⍘∺∺∺∺∺∺∽∽∽∽∽∽∽∽∽∺∺∽∽∺≃∺∺∽∺∺∽∽∽∺∽∺∺∽∽∽≄∺∺∺≄∽∺≄≄≄∺∺................˦˦˦˦♘♘♘ˤ˦˦˦˦˦˦˦☓.??????"???????~
+⊟⊟⌓⊟⊟⊟⊟⌓⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⌓⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟................⍆⌑⌑⌑⌑⌑⌑⌑⌑⌑⌑⌑⌑⌑⌑⍅⍆⌑⍅⎼⎼⍆⍒⌑⌑⌑⌑⎼⎼⌑⌑⍅⎼⌑⌑⌑⌑⌑⌑⌑⌑⌑⌑⌑⌑⌑⌑⎼⍘⍘⍘⍘⍘⍘⍘⍘⍘⍘⍘⍘⍘⍘⍘⍘∺∽∽∽∽∽∽∽∽∽∽∽∽∽∽∺∺∽∺∺∺∺∺∽∺∺∽∺∽∺∽∺∺∽≄∽∽≄∺≄∽∽∺≄∺∺∺∺................˦˦˦˦♘♘♘ˤ˦˦˦˦˦˦˦☓.??????"???????~
+⊟⊟⌓⌓⌓⌓⌓⌓⌓⌓⌓⌓⌓⌓⌓⌓⌓⌓⌓⌓⌓⌓⌓⌓⌓⌓⌓⌓⌓⌓⌓⌓⌓⌓⌓⌓⌓⌓⌓⌓⌓⌓⌓⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟................⍆⌑⌑⌑⌑⌑⌑⌑⌑⌑⌑⌑⌑⌑⌑⍅⍆⌑⌑⌑⌑⌑⍒⌑⌑⌑⌑⌑⌑⌑⌑⍅⎼⌑⌑⌑⌑⌑⌑⌑⌑⌑⌑⌑⌑⌑⌑⎼⍘⍘⍘⍘⍘⍘⍘⍘⍘⍘⍘⍘⍘⍘⍘⍘∺∽∽∽≄∽∽∽∽∽∽∽∽∽∽∺∺∽∽∺≃∺∺∽∺∺∽∺∽∽∽∺∺≄∺≄∽∽≄∽∽∽∺≄≄≄∺∺................˦˦˦˦♘♘♘ˤ˦˦˦˦˦˦˦☓.??????"???????f
+⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟...............⍏⍏⍏⍏⍏⍏⍏⍏⍏⍏⍏⍏⍏⍏⍏⍏⍆⌑⌑⌑⌑⌑⍒⌑⌑⌑⎼⎼⎼⎼⎼⍅⎼⎼⎼⎼⎼⌑⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⍘⍘⍘⍘⍘⍘⍘⍘⍘⍘⍘⍘⍘⍘⍘⍘∺∽∽≄∺≄∽∽∽∽∽∽∽∽∽∺∺≃∽∺≃∺∺∺∺∺∽∺≃≃≃∺∺∽≄∽∽∽≄∽∽∽∺∺∺≄∺∺................˦˦˦˦♘♘♘ˤ˦˦˦˦˦˦˦☓.??????"???????f
+▌▌▙⋅█⋅⋅⋅█⋅⋅⋅⋅⋅⋅⋅███████████████⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅███████████████████████⊟...............⍔⍔⍔⍔⍔⍔⍔⍔⍔⍔⍔⍔⍔⍔⍔⍔⍔⌑⌑⌑⌑⌑⍒⌑⌑⌑⍅⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⌑⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⍔⍔⍔⍔⍔⍔⍔⍔⍔⍔⍔⍔⍔⍔⍔⍔∺∽∽≄∺≄∽∽∽∽∽∽∽∽∽∺∺∺∽∺≃∺∺∺∺∺∽∺≃≃≃∺∺∽∽∽∽≄∺≄∽∽∺∺∺≄∺∺................˦˦˦˦♘♘♘ˤ˦˦˦˦˦˦˦☓★??????"???????★
+▌▌⋅███⋅⋅█⋅⋅⋅⋅⋅⋅⋅███████████████⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅██████████████████████▝⊟...............⌕⍘⍘⍘⍘⍘⍘⍘⍘⍘⍘⍘⍘⍘⍘⎼⌑⌑⌑⍅⎼⍆⌑⌑⌑⌑⍅⎼⍆⌑⌑⌑⌑⎕⍅⎼⍆⌑⍅⎼⍘⍘⍘⍘⍘⍘⍘⍘⍘⍘⍘⍘⍘⍘⍘⍘⍘⍘⍘⍘⍘⍘⍘⎼∺∽∽∽≄∽∽∽∽∽∽≄∽∽∽∺∺∺∽∺∺∺∺∺∺∺∽∽∺∺∺∺∺∽≄∽∽∽≄∽∽∽∺≄≄≄∺∺................˦˦˦˦ˍ♘♘ˤ˦˦˦˦˦˦˦☓★??????"???????★
+▌▌⋅⋅█⋅⋅⋅█⋅⋅⋅⋅⋅⋅⋅██████████████⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅█████████████████████▐▝⊟...............⎼⎼⍘⍨⌠⍘⍘⍘⍘⍘⍘⍘⍘⍘⍘⎼⌑⌑⌑⌑⌑⌑⌑⌑⌑⌑⍅⎼⍆⌑⍅⎼⎼⍆⍅⎼⍆⌑⍅⎼⍘⍘⍘⍘⍘⍘⍘⎼⎼⍘⍘⍘⍘⍘⍘⍘⍘⍘⍘⍘⍘⍘⍘⎼∺∽∽∽∽∽∽∽∽∽≄∺≄∽∽∺∺∺∽∺∺∺∺∺∺∺∽∽∽∺∺∺∺≄∺≄∽∽∽∽∽∺≄≄∺∺∺∺................˦˦˦˦˦♘♘♘˦˦˦˦˦˦˦☓★??????"???????★
+▌▌⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅█⋅⋅⋅⋅⋅⋅█████⋅⋅⋅⋅⋅⋅██████⋅⋅⋅⋅████████████████████⋅⋅▝⊟...............⎼⍘⍘⍨⎼⎼⎼⍘⍘⍘⍘⍘⍘⍘⍘⎼⌑⍅⎼⎼⍆⌑⌑⌑⌑⌑⍅⎼⍆⌑⍅⎼⎼⍆⍅⎼⍆⌑⍅⎼⍨⍨⍨⍨⍨⍨⍨⎼⎼⍘⍘⍘⍘⍛⍜⍚⍘⍘⍘⍘⍘⍘⍘⎼∺∽∽∽∽∽∽∽∽≄∺∺∺≄∽∺∺∺∽≃∺∺∺∺∺∺∽∽∽∺∺∺∺∺∺∺≄∽∽∽∺≄≄≄≄∺∺∺................˦˦˦˦˦♘♘♘˦˦˦˦˦˦˦☓★??????"???????★
+▌▌⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅█⋅⋅⋅⋅⋅█████████⋅⋅⋅██████⋅⋅⋅⋅███████████████████⋅⋅⋅█⊟...............⎼⍘⍘⍨⍘⍘⍘⍘⍘⍘⍘⍘⍘⍘⍘⍘⌑⌑⌑⌑⌑⌅⌑⌑⌑⌑⍅⎼⍆⌑⍅⎼⎼⍆⍅⎼⍆⌑⍅⎼⌑⌑⌑⌑⌑⌑⌑⎼⎼⍘⍘⎼⎼⎼⎼⎼⎼⎼⍘⍘⍘⍘⍘⎼∺∽∽∽∽∽∽∽≄∺∺∺∺∺≄∺∺∺∽∽∽∽∽∽∽∺∺∺≃∺∺∺∺∺∺∺∺≄∽∺∺∺≄≄∺∺∺∺................˦˦˦˦˦♘ˤˍ˦˦˦˦˦˦˦☓★??????"???????★
+▌▌⋅⋅⋅⋅⋅▎⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅████████⋅⋅⋅⋅████████⋅⋅⋅█████████████████⋅⋅⋅██⊟...............⎼⍘⍘⍨⍘⍘⍘⍘⎼⎼⎼⍘⍘⍘⎼⎼⎼⍆⌑⌑⌑⌑⌑⌑⌑⌑⍅⎼⍆⌑⍅⎼⎼⍆⍅⎼⍆⌑⍅⎼⌑⌑⌑⌑⌑⌑⌑⎼⎼⍘⍘⍘⍓⍓⍓⍓⍓⍘⍘⍘⍘⍘⍘⎼∺∽∽∽∽≄∽∽∽≄∺∺∺≄∽∺∺∺≃∺∺∺∺∺∽∽∺∺∺∺∺∺∺∺∺∺≄∽∺∺≄∺∺≄∺∺∺∺................˦˦˦˦˦♘ˤ˦˦˦˦˦˦˦˦☓★??????"???????★
+▌▌⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅█⋅⋅⋅⋅⋅⋅██████⋅⋅⋅⋅⋅█████████⋅⋅⋅███████████████⋅⋅⋅███⊟...............⎼⍨⍨⍨⍨⍨⍨⍨⍨⍨⍨⍨⍨⍨⍨⎼⎼⍆⌑⌑⌑⌑⌑⌑⌑⌑⍅⎼⍆⌑⍅⎼⎼⍆⍅⎼⍆⌑⍅⎼⌑⌑⌑⌑⌑⌑⌑⎼⎼⎼⍘⍘⍘⍘⍘⍘⍘⍘⍘⍘⍘⍘⍘⎼∺∽∽∽≄∺≄∽∽∽≄∺≄∽∽∺∺∺∺∺∺∺∺∺∺∽∽≃∺∺∺∺∺≄∺≄∽∽∽∺∺∺≄≄≄∺∺∺................˦˦˦˦˦♘ˤ˦˦˦˦˦˦˦˦☓★??????"???????★
+▌▌⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅█⋅⋅⋅⋅⋅⋅⋅█████⋅⋅⋅⋅███████████⋅⋅⋅⋅⋅⋅⋅⋅⋅███████⋅⋅⋅████⊟...............⎼⌑⌑⌑⎼⎼⎼⌑⌑⌑⌑⌑⌑⌑⌑⎼⎼⍆⌑⌑⌑⌑⌑⌑⌑⌑⍅⎼⍆⌑⍅⎼⎼⍆⍅⎼⍆⌑⍅⎼⌑⌑⌑⌑⌑⌑⌑⎼⎼⎼⎼⍦⍦⍦⍦⍦⍦⍦⍦⍦⍦⍦⍦⎼∺∽∽≄∺∺∺≄∽∽∽≄∽∽∽∺∺∺∺∺∺∺∺∺∺∺∽∽∺∺∺∺∺∽≄∽∽≄∽∽∺∺∺≄∺∺∺∺................˦˦˦˦˦♘ˤ˦˦˦˦˦˦˦˦☓.??????"???????~
+▌▌⋅⋅⋅⋅⋅█⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅████⋅⋅⋅⋅█████████████⋅⋅⋅⋅⋅⋅⋅⋅██████⋅⋅⋅█████⊟...............⎼⌑⌑⌑⌑⌑⌑⌑⌑⌑⌑⌑⌑⌑⌑⎼⎼⍆⌑⌑⌑⌑⌑⌑⌑⌑⍅⎼⍆⌑⍅⎼⎼⍆⍅⎼⍆⌑⍅⎼⌑⌑⌑⌑⌑⌑⌑⎼⎼⎼⎼⎼⍦⍦⍦⍦⍦⍦⍦⍦⍦⍦⍦⎼∺∽∽∽≄∺≄∽∽∽∽∽∽∽∽∺∺∺≃∺∺∺∺∺∺∺∺∽∽≃∺∺∺∽∽∽≄∺≄∽∽∺∺≄∺∺∺∺................˦˦˦˦˦♘ˤ˦˦˦˦˦˦˦˦☓.??????"???????~
+▌▌⋅⋅⋅⋅███⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅███⋅⋅⋅⋅██████████████████████⋅⋅████⋅⋅⋅██████⊟...............⎼⌑⌑⌑⌑⌑⌑⌑⎼⎼⎼⌑⌑⌑⌑⎼⎼⍆⌑⌅⌑⌑⌑⌑⌑⌑⌑⌑⌑⌑⍅⎼⎼⍆⌑⌑⌑⌑⌑⌑⌑⌑⌑⌑⌑⌑⌑⎼⎼⎼⎼⎼⍦⍦⍦⍦⍦⍦⍦⍦⍦⍦⍦⎼∺∽∽∽∽≄∽∽∽∽∽∽∽∽∽∺∺∺∺∺∺∺∺∺∺∺∺∺∽∽∺∺∺≄∺≄∽≄∽∽∺∺∺≄≄≄≄∺................˦˦˦˦˦♘ˤ˦˦˦˦˦˦˦˦☓???????"???????~
+▌▌⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅█⋅⋅⋅⋅█⋅⋅⋅⋅⋅███████████████████████⋅⋅██⋅⋅⋅███████⊟...............⎼⌑⌑⌑⌑⌑⌑⌑⌑⌑⌑⌑⌑⌑⌑⎼⎼⍏⍏⍏⍏⍏⍏⍏⍏⍏⍏⍏⍏⍏⍏⎼⎼⍏⍏⍏⌑⌑⌑⌑⌑⌑⌑⌑⌑⌑⌑⎼⎼⎼⎼⎼⍦⍦⍦⍦⍦⍦⍦⍦⍦⍦⍦⎼∺∽∽∽∽∽∽∽∽∽∽∽∽∽∽∺∺∺∺∺∺∺∺∺∺≃∺∺∺∽∽∺∺∺∺∺∽∽∽∺∺≄∺∺≄≄≄∺................˦˦˦˦˦♘ˤ˦˦˦˦˦˦˦˦☓???????"???????f
+▌▌⋅⋅⋅█⋅⋅█⋅⋅⋅█⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅████████████████████████⋅⋅⋅⋅⋅████████⊟...............⍓⍓⍓⍓⍓⍓⍓⍓⍓⍓⍓⍓⍓⍓⍓⍓⍓⍓⍓⍓⍓⍓⍓⍓⍓⍓⍓⍓⍓⍓⍓⍓⍓⍓⍓⍓⍓⍓⍓⍓⍓⍓⍓⍓⍓⍓⍓⎼⎼⎼⎼⎼⌽⌽⌽⌽⌽⌽⌽⌽⌽⌽⌽⎼∺∽∽∽∽∽∽∽∽∽∽∽∽∽∽∺∺∺∺∺≃∺∺∺∺∺∺∺∺∺∽∺∺≄∺≄∽≃∺∺≄∺≄∺∺∺≄∺................˦˦˦˦˦♘ˤ˦˦˦˦˦˦˦˦☓???????"???????f
+⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟⊟...............▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥⍓⍓⍓⍓⍓⍓⍓⍓⍓⍓⍓⍓⍓⍓⍓⍓∻∻∻∻∻∴∻∽∽∽∽∽∷∻∻∴∻∻∻∻∻∻∻∻∻∻∻∻∻∻∽∻∻∻∻∽∽∻∻∻∻∻∻∻∻∻∽∻................˦☝ˉˉˉ♘ˤˉˉˉˉˉˉˉˉ☓???????"???????★
+................................................................................▱▫▫◙▫▫▫▫▫▫▫▫▫▫▫▫▫▫▫▫▫▫▫▫▫▫▫▫▫▫▫▱▱▫▫▫▫▫▫▫▫▫▫▫▫▫▫▱................∻∷∻∻∻∻∻∽∽∽∽∽∽∻∻∻∻∻∴∻∻∽∽∽∽∻∻∻∻∻∽∻∻∻∻∽∽∻∴∻∻∽∽δ∽∽∽∻................˦˳˳˳˳˳˳˳˳˾˳˾˳˾˳☓???????"???????★
+................................................................................▱▫▫▱▱▱▱▱▱▱▱▱▱▿▫▱▱▱▫◙▫▫▫▫▫▫▫▫▫▫▫▱▱▫▫▫▫▫▫▫▫▫▫▫▫▫▫▱................∻∻∻∻∻∷∽∽∽∽∽∽∽∽∻∴∻∴∻∻∽∽∴∻∽∽∻∴∻∻∽∻∴∻∻∻∽∽∻∻∻∽∷∻∷∽∻∻................˦˳˳˳ˤ˧˧˧˧˧˧˧˧˧˧☓???????"???????★
+................................................................................▱▫▫◙▫▫▫▫▫▫▫▫▫▿▫▱▱▫▫▱▱▱▱▱▱▱▱▱▱▱▿▱▱▫▫▫▫▱▱▱▱▱▱▱▫▫▫▱................∻∴∻∻∻∽∽∽∽∽∽∽∽∽∽∻∻∻∻∽∽∻∻∻∻∽∽∻∻∽∽∻∻∷∻∽∽∽∽∻∻∻∽∴∽∻∻∻................˦˳˳˳ˤ˳˳˳˳˳˳˳˳ε˳☓???????"???????★
+................................................................................▱▫▫▱▱▱▱▱▱▱▱▱▱▿▫▱▱▫▫◙▫▫▫▫▫▫▫▫▫▫▿▱▱▫▫▫▫▱▫▫▫▫▫◓▫▫▫▱................∻∻∻∻∽∽∽∽∽∽∽∽∽∽∽∽∽∽∽∽∻∴∻∻∻∻∽∽∻∽∻∴∻∻∽∽∽∽∽∽∷∻∻∻∻∻∻∻................˦˳˳˳ˤ˳˳˳˳˳˳˳˧˧˧☓???????"???????★
+................................................................................▱▫▫▫▫▫▫▫▫▫▫▫▫▿▫▱▱▫▫▱▿▱▱▱▱▱▱▱▱▱▱▱▱▫▫▫▫▱▫▫η▫▫◒▫▫▫▱................∻∻∷∽∽∷∽∽δ∽∽∷∽∽∽∻∻∻∻∻∻∻∴∻∻∻∽∽∽∽∴∻∴∽∽∽∽∽∽∽∽∻∻∴∻∻∴∻................˦☈˳˳˳˳˳˳˳˳˳˳˳ˉˉ☓???????"???????★
+................................................................................▱▫▫▫▫▫▫▫▫▫▫▫▫▿▫▱▱▫▫◙▿▫▫▫▫▫▫▫▫▫▫▱▱▫▫▫▫▱▱▱▱▱▱▱▿▫▫▱................∻∻∽∽∽∽∴∻∻∻∴∽∽∽∽∽∽∽∽∽∻∻∻∻∻∻∽∽∽∽∻∻∻∽∽∽∽∽∽∽∽∽∻∻∻∻∻∻................˦♝˳˳˳˳˳˳˳˳˳˳˳˳˳☓???????"???????★
+................................................................................▱▫▫▿▱▱▱▱▱▱▱▱▱▱▱▱▱▫▫▱▱▱▱▱▱▱▱▱▱▱▿▱▱▫▫▫▫▱▱▱▱▱▱▱▿▫▫▱................∻∻∻∽∽∽∽∽∻∽∽∽∽∻∻∻∴∻∴∽∽∻∻∻∻∽∽∻∽∽∻∴∻∽∽∽δ∽∽∽∽∽∽∻∻∻∴∻................˦ˍˍˍˍ≋≋≋≋≋≋≋≋≋≋☓???????"???????~
+................................................................................▱▫▫▿▫▫▫◐▫▫▫▫▫▫▫▱▱▫▫◙▫▫▫▫▫▫▫▫▫▫▿▱▱▫▫▫▫▫▫▫▫▫▫▫▿▫▫▱................∴∻∻∻∽∽∽∽∽∽∽∽∷∻∻∻∻∻∻∻∽∽∻∴∽∽∴∻∽∽∻∻∻∽∽∷∻∷∽∽∽∻∽∽∻∻∻∻................˦˦˦˦˦≍≍≍≍≍≍≍≍≍≍☓???????"???????~
+................................................................................▱▫▫▿▫▫▫▫▫▫▫▫▫▫▫▱▱▫▫▱▿▱▱▱▱▱▱▱▱▱▱▱▱▫▫▫▫▫▫▫▫▫▫▫▫▫▫▱................∻∻∻∻∷∽∽∽∽∽∽∻∻∻∻∻∻∻∴∻∻∽∽∽∽∻∴∻∻∴∴∻∻∽∽∽∻∽∽∽∻∷∻∽∽∷∻∻................˦˦˦˦˦≍≍≍≍≍≍≍≍≍≍☓???????"????????
+................................................................................▱▦▫▫▫▫▫▫▫▫▫▫▫▫▫▫▫▫▫▫▿▫▫▫▫▫▫▫▫▫▫▫▫▫▫▫▫▫▫▫▫▫▫▫▫▫▫▱................∷∻∻∻∻∻∽∽∽∽∻∴∻∻∻∻∻∴∻∻∻∻∻∻∻∴∻∻∻∻∴∴∴∽∽∽∽∽∽∽∽∻∽∽∽∽∻∻................˦˦˦˦˦≍≍≍≍≍≍≍≍≍≍☓???????"????????
+...............................≈≈≈..............................................▭▭▭▭△▭▭▭▭▭▭▭▭▭▭▭▭▭▭▭▭▭△△△△▭▭▭▭▭▭▭▭▭▭▭▭▭▭▭▭▭▭▭▭▿▭................∻∻∻∻∻∻∻∻∻∻∻∻∻∻∻∻∻∻∻∴∻∻∴∻∻∻∻∻∻∻∻∻∻∻∻∻∻∻∻∻∻∻∻∻∻∻∻∻................˦˦˦˦˦≍≍≍≍≍≍≍≍≍≍☓???????"????????
+≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈⋣≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▾▰................................................................................˦˦˦˦˦˦˦˦˦˦˦˦˦˦˦☓???????"????????(water hole 2)
+∺∽∽∽∽∽∽∽∽∽≄≄≄≄≄∺∺∽≃≃≃∽≃≃∺∺≃≃∽≃≃∺∽∽⋢∽∽∽∽∽∽∽∽∽≄≄≄∺∺∽≄≄≄≄≄≄≄≄≄≄≄≄∽∺≄≄∽∽∽∽∽∽∽∽∽∽∽∽≄∺▰▪▪▪▪▪▪▪▪◘▪☥▪▪▪▪▪▪▪▪▪▪▪▪▪▪▪▪▪▪▪▪▪▪▪▪▪▪▪▪▪▪▪▪▪◘▾▰...............................................................................................☁???????"????????
+∺∽∽≄≄∽∽∽∽∽∽≄≄≄≄∺∺≃∽≃∽≃≃∺∺∺∺≃≃≃∺∺∺∽∽∽∽∽∽∽∽∽∽∽∽≄≄∺∺∽∽≄≄≄≄≄≄≄≄≄≄∽∽∺∺≄∽∽≄≄≄≄≄≄≄≄∽∽≄∺▰▪▪▪▪▪▪▪▪▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▪▪▪▪▪▪▪▪▪▪▪▪◘▾▰...............................................................................................☁???????"????????
+∺≄≄∺∺≄≄∽∽∽∽∽≄≄≄∺∺≃≃∽≃≃∺∺∺∺∺∺≃∺∺∺∺∽∽∽∽∽∽∽∽∽≄∽∽∽≄∺∺∽∽∽≄≄≄≄≄≄≄≄∽∽∽∽≄≄∽∽∽≄∺∺∺∺≄∽∽∽≄∺▰▪▪▪▪▪▪▪▪▪▪▪▪◑▪▰▰▰▰▰▰▰▰▰▪◑▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▪▰...............................................................................................☁???????"????????
+∺≄≄∺∺≄≄∽∽∽∽∽∽≄≄∺∺∺≃≃≃∺∺∺∽∽∺∺∺∺∺∺∺∽∽≄∽∽∽∽∽≄∺≄∽∽∽∺∺≄≄∽∽≄≄≄≄≄≄∽∽≄≄∺∺≄∽∽∽∽≄∺∺≄∽∽∽∽≄∺▰▾▰▰▰▰▰▰▪▪▪▪▪▪▪▰▰▪◑▰▰▪◑▰▪▪▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▪▪▰...............................................................................................☁???????"????????
+∺∽∽≄≄∽∽∽∽≄≄∽∽∽≄∺∺∺∺≃∺∺∺∽∽∽∽∺∺∺∺∺∺∽≄∺≄∽∽∽≄∺∺∺≄∽∽∺∺≄≄≄∽∽∽∽∽∽∽∽≄≄≄∺≄≄∽∽∽∽∽≄≄∽∽∽∽∽≄∺▰▾▪▰▰▰▰▰▰▪▪▪▪▪▪▰▰▪▪▪▪▪▪▪▪▪▰▰▪◑▰▰▰▰▰▰▰▰▰▰▰▰▰▰▪▪▪▰...............................................................................................☁???????"????????
+∺∽∽∽∽∽∽≄≄∺∺≄≄∽∽∽∽∽∺∺∺∺∽∽∺∺∽∽∺∺∺∺∺∽∽≄∽∽∽∽∽≄∺≄∽∽∽∺∺≄≄≄≄∽∽≄≄∽∽≄≄≄≄∺∺≄∽∽∽∽≄∺∺≄∽∽∽∽≄∺▰▾▪▪▰▰▰▰▰▰▰▪▪▪▪▪▰▪▪▪▪▪▪▪▪▪▰▰▪▪▰▰▰▰▰▰▰▰▰▰▰▰▰▪▪▪▪▰...............................................................................................☁???????"????????
+∺∽∽≄≄∽∽≄≄∺∺≄≄∽∽∺∺∽∽∺∺∽∽∺∺∺∺∽∽∺∺∺∺≄∽∽∽∽≄∽∽∽≄∽∽∽≄∺∺≄≄≄∽∽∺∺∺∺∽∽≄≄≄∺≄≄∽∽∽≄∺∺∺∺≄∽∽∽≄∺▰▾▪▪▪▰▰▰▰▰▰▰▰▰▪▪▪▪▪▪▰▪▪▪▪▪▪▪▪▪▰▰▰▪▪▪◑▪▪▪▪◑▪▪▪▪▪▰...............................................................................................☁???????"????????
+∺≄∽∽≄≄∽∽∽≄≄∽∽∽≄∺∺∺∽∽∺∽∺∺∺∺∺∺∽∽⍇∺∺≄≄∽∽≄∺≄∽∽∽∽∽≄≄∺∺∽∽∽∽∺∺∺∺∺∺∽∽≄≄∺∺≄∽∽≄≄≄≄≄≄≄≄∽∽≄∺▰▾▪▪▪▪▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▪▪▪▪▪▪▪▰▰▪▪▪▪▪▪▪▪▪▪▪▪▪▪▰...............................................................................................☁???????"????????
+∺≄≄∽∽≄≄∽∽∽∽∽∽≄∺∺∺∺∺∽∽∽∺∺∺∺∺∺∺∺∺∺∺≄≄≄∽∽≄∽∽∽∽∽≄≄≄∺∺∽δ∽∽∺∺∺∺∺∺∺∽∽≄∺≄≄≄∽∽∽∽∽∽∽∽∽∺∺∺∺▰▾▪▪▪▪▪▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▪▪▪▪▪▪▪▰▰▪▪▪▪▪▪▪▪▪▪▪▪▪▪▰...............................................................................................☁???????"????????
+∺≄≄≄∽∽≄≄∽∽∽∽≄≄≄≄∺∺∺∺∺∺∺∺∺∺∺∺∺∺∺∺∺≄≄≄≄∽∽∽∽∽∽≄≄≄≄∺∺∺∺∺∽∺∺∺∺∺∺∺∺∽∽∺∺≄≄≄≄≄≄≄≄≄≄≄∺≄∺∺▰▾▪▪▪▪▪▪▪▪▪▪▪▪▪▪▪▪▪▪⚚▪▰▰▰▰▰▰▰▪▪▪▪▪▪▪▪▪▪▪▪▪▪▪▪▪▪▰...............................................................................................☁???????"????????
+∺∺∺∺≄∺∺∺∺∺∺∺∺∺∺≄∺∺∺∺∺∺∺∺∺∺∺∺∺∺∺∺∺∺∺∺∺∺∺∺∽∺∺∺∺∺∺∺∺∺∺∺∺∺∺∺∺∺∺∺∺∺∺∺∺∽∺∺∺∺∺∺∺∺∺∺∺∽∺∺▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬...............................................................................................☁???????"????????
+∻∴∻∴∻∴∻∴∻∻∻∻∴∻∻∴∴∴∴∻∻∻∻∻∻∻∻∻∻∻∻∻∻∻∻∻∻∻∻∻∽∻∻∻∻∻∻∻∻∻∻∻∻∻∻∻∻∻∻∻∻∻∻∻∻∽∻∻∻∻∻∻∻∻∻∻∻∽∻∻...............................................................................................................................................☁???????"????????
+∻∻∴∻∴∻∴∻∻∻∴∻∻∻∻∻∻∻∴∴∻∻∴∴∴∻∻∻∻∻∽∻∻∻∻∻∻∻∻∻∽∽∻∻∻∻∻∻∻∻∴∽∽∽∽∽∽∽∽∽∽∴∻∻∻∽∻∻∻∻∻∻∻∻∻∻∻∽∻∻...............................................................................................................................................☁???????"????????
+∻∴∻∴∻∴∻∻∴∻∻∴∻∴∻∻∻∻∻∴∴∻∴∻∴∻∻∴∴∷∽∻∻∻∻∻∻∻∻∽∽∽∽∻∻∻∻∻∻∴∽∽∽∽∷∻∻∻∷∽∽∽∴∻∻∽∻∻∻∻∻∻∻∻∻∻∻∽∻∻...............................................................................................................................................☁???????"????????
+∻∻∴∻∴∻∴∻∴∻∴∻∴∻∽∽∷∴∴∻∴∴∴∻∴∻∻∴∻∻∽∻∻∻∻∻∻∻∽∽∽∽∽∽∻∻∻∻∻∽∽∽∽∽⎉∽∽∻∻∽∽∽∽∻∻∽∻∻∻∻∻∻∻∻∻∻∻∽∻∻...............................................................................................................................................☁???????"????????
+∻∴∴∻∻∴∻∻∻∴∻∻∽∽∽∻∻∻∴∻∻∻∻∻∴∴∴∴∻∻∽∻∻∻∻∻∻∽∽∽∽∽∽∽∽∻∻∻∻∽∽∽∽∽⎊∽δ∻∻∽∽∽∽∻∻∽∻∻∻∻∻∻∻∻∻∻∻∽∻∻...............................................................................................................................................☁???????"????????
+∻⍃∽∽∻∻∻∻∴∻∻∽∽∽∻∻∻∻∴∻∴∴∴∴∻∻∻∻∻∻∽∻∻∻∻∻∽∽∽∽∽∽∽∽∽∽∽∽∽∽∽∽∽∽∷∻∻∻∷∽∽∽∽∻∻∽∻∻∻∽∽∽∽∽∽∽∽∽∻∻...............................................................................................................................................☁???????"????????
+∻∻∻∽∽∻∴∻∻∻∽∽∽∻∻∻∻∻∴∻∴∻∻∴∻∻∴∴∴∷∽∽∽∽∽∽∽∽∽∽∽∽∽∽∻∻∻∻∻∽∽∽∽∽∻∻∽∽∽∽∽∽∽∻∻∽∻∻∻∽∻∻∻∻∻∻∻∻∻∻...............................................................................................................................................☁???????"????????
+∻∻∽∽∽∽∻∻∽∽∽∻∻∻∻∻∻∻∴∻∴∻∻∴∴∴∴∻∻∻∽∻∻∻∻∻∽∽∽∽∽∽∽∻∻∻∻∻∻∽∽∽∽∽∻∻∽∽∽∽∽∽∽∻∻∽∻∻∻∽∻∻∻∻∻∻∻∻∻∻...............................................................................................................................................☁???????"????????
+∻∻∻∽∽∽∽∽∽∽∽∻∻∻∻∻∻∻∴∻∴∻∻∻∻∻∻∴∴∷∽∻∻∻∻∻∻∽∽∽∽∽∻∻∻∻∻∻∻∴∽∽∽∽∷∻∻∻∷∽∽∽∴∻∻∽∻∻∻∽∽∽∽∽∽∽∽∽∽∻...............................................................................................................................................☁???????"????????
+∻∻∻∻∽∽∽∽∽∽∻∻∻∻∻∻∻∻∴∻∻∴∴∴∴∴∻∴∻∻∽∻∻∻∻∻∻∻∽∽∽∻∻∻∻∻∻∻∻∻∴∽∽∽∽∽∽∽∽∽∽∴∻∻∻∽∻∻∻∻∻∻∻∻∻∻∻∻∽∻...............................................................................................................................................☁???????"????????
+∻∻∻∻∻∻∻∻∻∻∻∻∻∻∻∻∻∻∴∴∴∴∻∻∻∴∴∴∻∻∽∻∻∻∻∻∻∻∻∽∻∻∻∻∻∻∻∻∻∻∻∻∻∻∻∻∻∻∻∻∻∻∻∻∻∽∽∽∽∽∽∽∽∽∽∽∽∽∽∻...............................................................................................................................................☁???????"????????
+∻∻∻∻∻∻∻∻∻∻∻∻∻∻∻∻∻∻∻∻∻∻∻∻∻∻∻∻∻∻∻∻∻∻∻∻∻∻∻∽∻∻∻∻∻∻∻∻∻∻∻∻∻∻∻∻∻∻∻∻∻∻∻∻∻∻∻∻∻∻∻∻∻∻∻∻∻∻∽∻...............................................................................................................................................☁???????"????????
+⌘⌘⌘⌘⌘⌘⌘⌘⌘⌘⌘⌘⌘⌘⌘⌘⌘⌘⌘⌘⌘⌘⌘⌘⌘⌘⌘⌘⌘⌘⌘⌘⌘⌘⌘⌘⌘⌘⌘≁⌘⌘⌘⌘⌘⌘⌘⌘⌘⌘⌘⌘⌘⌘⌘⌘⌘⌘⌘⌘⌘⌘⌘⌘⌘⌘⌘⌘⌘⌘⌘⌘⌘⌘⌘⌘⌘⌘≠⌘...............................................................................................................................................☁???????"????????
+⌘⌘⌘⌘⌘⌘⌘⌘⌘⌘⌘⌘⌘⌘⌘⌘⌘⌘⌘⌘⌘⌘⌘⌘⌘⌘⌘≠⌘⌘⌘⌘⌘⌘⌘⌘⌘⌘≁≁≁⌘⌘⌘⌘⌘⌘⌘⌘≁≁≁≁≁⌘≁≁≁≁⌘⌘≁≁≁≁≁≁≁≁≠≁≁≁⌘⌘⌘≁≠≠⌘...............................................................................................................................................☁???????"????????
+⌘⌘≁≁≁≁≁≁≁≁≁≁≁≁⌘⌘⌘⌘⌘⌘≁≁≁≁≁≁≁≠⌘⌘⌘⌘⌘⌘⌘⌘⌘≁≁≁≁≁⌘⌘⌘⌘⌘⌘⌘≁⌘⌘⌘≁⌘≁⌘⌘⌘⌘≁≁≁⌘⌘≁≁≁≠⌘≠≁≁≁⌘⌘≁≁≠⌘...............................................................................................................................................☁???????"????????
+⌘⌘≁⌘⌘⌘⌘⌘⌘⌘⌘⌘⌘≁⌘⌘⌘⌘≠≁≁⌘⌘⌘⌘≁≁≁⌘⌘⌘⌘⌘⌘⌘⌘≁≁≁≁≁≁≁⌘⌘⌘⌘⌘⌘≁⌘⌘⌘≁⌘≁⌘⌘⌘≁≁⌘⌘⌘⌘≁≁≁≁≠≁≁≁≁≁⌘⌘≁⌘⌘...............................................................................................................................................☁???????"????????
+⌘⌘≁⌘≁≁≁≁≁≁≁≁⌘≁⌘⌘⌘⌘≁≁⌘≁≁≁≁⌘≁≁≁⌘⌘⌘⌘⌘⌘≁≁≁≁≁≁≁≁⌘⌘⌘⌘⌘⌘≁⌘⌘⌘≁⌘≁⌘⌘⌘≁≁≁≁⌘⌘≁≁⌘≁≁≁≁≠≁≁≁≁≁⌘⌘...............................................................................................................................................☁???????"????????
+⌘⌘≁⌘≁⌘⌘⌘⌘⌘≁≁⌘≁⌘⌘⌘≁≁⌘≁≁⌘⌘≁≁⌘⌘≁≁⌘⌘⌘⌘≁≁≁≁≁≁≁≁≁⌘⌘⌘⌘⌘⌘≁⌘⌘⌘⌘⌘≁⌘⌘⌘⌘⌘⌘≁⌘⌘≁⌘⌘⌘≁≁≠⌘≠≁≁≁⌘⌘⌘...............................................................................................................................................☁???????"????????
+⌘⌘≁⌘≁⌘≁⍍≁≁≁≁⌘≁⌘⌘⌘≁⌘≁≁≠≠≠⌘≁≁≁≁≁≁≁≁≁≁≁≁≁≁≁≁≁⌘⌘⌘⌘⌘⌘⌘≁≁≁≁≁≁≁⌘≁≁≁≁≁≁⌘⌘≁≁≁≁≁≁≁≠≁≁≁≁≁≠⌘...............................................................................................................................................☁???????"????????
+⌘⌘≁⌘≁⌘⌘⌘⌘⌘⌘⌘⌘≁⌘⌘⌘≁≁⌘≁≁⌘≠⌘≁≁⌘≁≁≁⌘⌘≁≁≁≁≁≁≁≁⌘⌘≠≠≠≠≠≁≁⌘⌘⌘⌘⌘⌘⌘≁⌘⌘⌘⌘⌘⌘⌘≠≁≁⌘⌘⌘≁≁≁⌘⌘≁≠≠⌘...............................................................................................................................................☁???????"????????
+⌘⌘≁⌘≁≁≁≁≁≁≁≁≁≁⌘⌘⌘≠≁≁⌘≁⌘≠⌘≁⌘⌘≁≁≁⌘⌘⌘≁≁≁≁≁≁⌘⌘⌘≠⌘⌘⌘⌘⌘≁⌘⌘⌘⌘⌘⌘⌘≁≁≁≁≁≁⌘⌘≠≠≁≁⌘⌘⌘⌘⌘⌘≁≠≠≠⌘............................................................................................................................................☁☁☁☁f.f.f....f.f.f.f
+⌘⌘≁⌘⌘⌘⌘⌘⌘⌘⌘⌘⌘⌘⌘⌘⌘⌘⌘⌘⌘⌘⌘≠⌘⌘⌘⌘≁≁≁⌘⌘⌘⌘⌘⌘⌘⌘⌘⌘⌘⌘≠⌘⌘⌘⌘⌘≁⌘⌘⌘⌘⌘⌘⌘⌘⌘⌘⌘⌘≁⌘⌘≠≠≠≁≁≁≁≁≁≁≠≠≠≠⌘.............................................................................................................................................☁☁☁.●○●○●○○○◭○●○●○f
+⌘⌘≁≁≁≁≁≁≁≁≁≁≁≁≁≁≠≠≠≠≠≠≠≠⌘⌘⌘⌘≁≁≁≠≠≠≠≠≠≠≠≠≠≠≠≠⌘⌘⌘⌘⌘≁≁≁≁≁≁≁≁≁≁≁≁≁≁⌘⌘≠≠≠≠≠≠≠≠≠≠≠≠≠≠⌘..............................................................................................................................................☁☁f○●○●○●●●◮●○●○●.
+⌘⌘⌘⌘⌘⌘⌘⌘⌘⌘⌘⌘⌘⌘⌘⌘⌘⌘⌘⌘⌘⌘⌘⌘⌘⌘⌘⌘⌘⌘⌘⌘⌘⌘⌘⌘⌘⌘⌘⌘⌘⌘⌘⌘⌘⌘⌘⌘⌘⌘⌘⌘⌘⌘⌘⌘⌘⌘⌘⌘⌘⌘⌘⌘⌘⌘⌘⌘⌘⌘⌘⌘⌘⌘⌘⌘⌘⌘⌘⌘...............................................................................................................................................☁fffffffff◬ffffff
+
+message Thanks for playing!

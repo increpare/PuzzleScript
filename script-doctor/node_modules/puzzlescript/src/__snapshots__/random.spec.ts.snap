@@ -1,0 +1,264 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`engine runs RANDOM exactly once when condition is [ ] 1`] = `
+Array [
+  Array [
+    Array [
+      "STATIONARY Background",
+      "STATIONARY Player",
+      "STATIONARY RandomTile",
+    ],
+    Array [
+      "STATIONARY Background",
+    ],
+    Array [
+      "STATIONARY Background",
+    ],
+  ],
+]
+`;
+
+exports[`engine runs RANDOM in groups properly (e.g. Mirror Isles) 1`] = `
+Array [
+  Array [
+    Array [
+      "STATIONARY Background",
+      "STATIONARY HasReflection",
+      "STATIONARY Player",
+    ],
+    Array [
+      "STATIONARY Background",
+    ],
+    Array [
+      "STATIONARY Background",
+      "STATIONARY MirrorDR",
+    ],
+    Array [
+      "STATIONARY Background",
+      "STATIONARY LOS",
+    ],
+    Array [
+      "STATIONARY Background",
+      "STATIONARY HasReflection",
+      "STATIONARY Player",
+    ],
+  ],
+  Array [
+    Array [
+      "STATIONARY Background",
+      "STATIONARY LOS",
+    ],
+    Array [
+      "STATIONARY Background",
+    ],
+    Array [
+      "STATIONARY Background",
+      "STATIONARY LOS",
+    ],
+    Array [
+      "STATIONARY Background",
+    ],
+    Array [
+      "STATIONARY Background",
+    ],
+  ],
+  Array [
+    Array [
+      "STATIONARY Background",
+      "STATIONARY MirrorUR",
+    ],
+    Array [
+      "STATIONARY Background",
+      "STATIONARY LOS",
+    ],
+    Array [
+      "STATIONARY Background",
+      "STATIONARY Reflection",
+    ],
+    Array [
+      "STATIONARY Background",
+      "STATIONARY LOS",
+    ],
+    Array [
+      "STATIONARY Background",
+      "STATIONARY MirrorDL",
+    ],
+  ],
+  Array [
+    Array [
+      "STATIONARY Background",
+    ],
+    Array [
+      "STATIONARY Background",
+    ],
+    Array [
+      "STATIONARY Background",
+      "STATIONARY LOS",
+    ],
+    Array [
+      "STATIONARY Background",
+    ],
+    Array [
+      "STATIONARY Background",
+      "STATIONARY LOS",
+    ],
+  ],
+  Array [
+    Array [
+      "STATIONARY Background",
+      "STATIONARY HasReflection",
+      "STATIONARY Player",
+    ],
+    Array [
+      "STATIONARY Background",
+      "STATIONARY LOS",
+    ],
+    Array [
+      "STATIONARY Background",
+      "STATIONARY MirrorUL",
+    ],
+    Array [
+      "STATIONARY Background",
+    ],
+    Array [
+      "STATIONARY Background",
+      "STATIONARY HasReflection",
+      "STATIONARY Player",
+    ],
+  ],
+]
+`;
+
+exports[`engine runs exactly one rule when group is RANDOM 1`] = `
+Array [
+  Array [
+    Array [
+      "STATIONARY Background",
+    ],
+    Array [
+      "STATIONARY Background",
+      "STATIONARY Two",
+    ],
+    Array [
+      "STATIONARY Background",
+    ],
+    Array [
+      "STATIONARY Background",
+    ],
+    Array [
+      "STATIONARY Background",
+    ],
+    Array [
+      "STATIONARY Background",
+    ],
+  ],
+  Array [
+    Array [
+      "STATIONARY Background",
+    ],
+    Array [
+      "STATIONARY Background",
+    ],
+    Array [
+      "STATIONARY Background",
+    ],
+    Array [
+      "STATIONARY Background",
+    ],
+    Array [
+      "STATIONARY Background",
+      "STATIONARY Player",
+    ],
+    Array [
+      "STATIONARY Background",
+    ],
+  ],
+  Array [
+    Array [
+      "STATIONARY Background",
+    ],
+    Array [
+      "STATIONARY Background",
+    ],
+    Array [
+      "STATIONARY Background",
+    ],
+    Array [
+      "STATIONARY Background",
+    ],
+    Array [
+      "STATIONARY Background",
+    ],
+    Array [
+      "STATIONARY Background",
+    ],
+  ],
+]
+`;
+
+exports[`engine runs exactly one rule when group is RANDOM 2`] = `
+Array [
+  Array [
+    Array [
+      "STATIONARY Background",
+    ],
+    Array [
+      "STATIONARY Background",
+      "STATIONARY Two",
+    ],
+    Array [
+      "STATIONARY Background",
+    ],
+    Array [
+      "STATIONARY Background",
+    ],
+    Array [
+      "STATIONARY Background",
+      "STATIONARY Three",
+    ],
+    Array [
+      "STATIONARY Background",
+    ],
+  ],
+  Array [
+    Array [
+      "STATIONARY Background",
+    ],
+    Array [
+      "STATIONARY Background",
+    ],
+    Array [
+      "STATIONARY Background",
+    ],
+    Array [
+      "STATIONARY Background",
+    ],
+    Array [
+      "STATIONARY Background",
+    ],
+    Array [
+      "STATIONARY Background",
+    ],
+  ],
+  Array [
+    Array [
+      "STATIONARY Background",
+    ],
+    Array [
+      "STATIONARY Background",
+    ],
+    Array [
+      "STATIONARY Background",
+    ],
+    Array [
+      "STATIONARY Background",
+    ],
+    Array [
+      "STATIONARY Background",
+    ],
+    Array [
+      "STATIONARY Background",
+    ],
+  ],
+]
+`;

@@ -1,0 +1,739 @@
+title Ghost Hunters
+author Adam Stox
+run_rules_on_level_start
+verbose_logging
+
+========
+OBJECTS
+========
+
+Sun
+Yellow white
+.000.
+01110
+01110
+01110
+.000.
+
+Sunup
+transparent
+
+Sundown
+transparent
+
+Sunleft
+transparent
+
+Sunright
+transparent
+
+Black
+Black
+
+Background 
+brown darkbrown
+10000
+01111
+00000
+11011
+00100
+
+Lightup
+lightbrown brown
+10000
+01111
+00000
+11011
+00100
+
+Lightdown
+lightbrown brown
+10000
+01111
+00000
+11011
+00100
+
+Lightleft
+lightbrown brown
+10000
+01111
+00000
+11011
+00100
+
+Lightright
+lightbrown brown
+10000
+01111
+00000
+11011
+00100
+
+Stairs
+gray darkgray black
+02222
+01222
+01022
+01012
+01010
+
+lightStairs
+lightgray gray darkgray
+02222
+01222
+01022
+01012
+01010
+
+
+Wall 
+black darkgray gray
+22220
+21110
+21110
+21110
+20000
+
+
+Glass
+lightblue white
+11100
+10000
+10000
+00000
+00000
+
+Player
+white black lightgray
+.000.
+.010.
+00000
+.000.
+000..
+
+
+DeadPlayer
+black darkgray
+.000.
+.010.
+00000
+.000.
+000..
+
+crate
+lightgray brown gray
+02220
+21212
+21212
+21212
+02220
+
+mirror1
+lightblue lightblue white
+12...
+212..
+.212.
+..212
+...21
+
+mirror2
+lightblue lightblue white
+...21
+..212
+.212.
+212..
+12...
+
+Eye
+white lightblue black blue darkblue
+.333.
+30103
+01210
+40104
+.444.
+
+EyeClosed
+lightblue blue darkblue
+.....
+.000.
+01110
+.222.
+.....
+
+GateClosedvert
+darkgray black yellow
+.101.
+.101.
+.121.
+.101.
+.101.
+
+GateOpenvert
+darkgray black
+11011
+.....
+.....
+.....
+.....
+
+GateClosedhor
+darkgray black yellow
+.....
+11111
+00200
+11111
+.....
+
+GateOpenhor
+darkgray black
+1....
+1....
+0....
+1....
+1....
+
+PlayerUp
+transparent
+
+PlayerDown
+transparent
+
+PlayerLeft
+transparent
+
+PlayerRight
+transparent
+
+Player1
+transparent
+
+Player2
+transparent
+
+Player3
+transparent
+
+Player4
+transparent
+
+DirectionUp
+Red
+.....
+..0..
+.0.0.
+0...0
+.0.0.
+
+DirectionDown
+Red
+.0.0.
+0...0
+.0.0.
+..0..
+.....
+
+DirectionLeft
+Red
+...0.
+..0.0
+.0...
+..0.0
+...0.
+
+DirectionRight
+Red
+.0...
+0.0..
+...0.
+0.0..
+.0...
+
+Hunter
+yellow Black gray white
+.111.
+.131.
+11110
+.111.
+.2.2.
+
+Exclamation
+white
+.00..
+.00..
+.00..
+.....
+.00..
+
+
+
+hunterTarget
+transparent
+
+pendingUp
+transparent
+
+pendingdown
+transparent
+
+pendingleft
+transparent
+
+pendingright
+transparent
+
+hunterUp
+transparent
+
+hunterDown
+transparent
+
+hunterLeft
+transparent
+
+hunterRight
+transparent
+
+
+=======
+LEGEND
+=======
+gateopen = gateopenvert or gateopenhor
+gateclosed = gateclosedvert or gateclosedhor
+Opaque = Wall or crate or mirror1 or mirror2 or gateclosed
+PlayerDirection = playerup or playerdown or playerleft or playerright
+moveable = crate or mirror1 or mirror2
+light = lightup or lightdown or lightleft or lightright
+pending = pendingup or pendingdown or pendingleft or pendingright
+. = Background
+# = Wall
+P = Player
+O = stairs
+@ = glass
+* = sun
+s = Sunup and black
+w = sundown and black
+d = sunleft and black
+a = sunright and black
+- = black
++ = crate
+t = playerup and black
+g = playerdown and black
+f = playerleft and black
+h = playerright and black
+Q = eye
+X = mirror1
+c = mirror2
+I = gateclosedvert
+_ = gateclosedhor
+z = hunter
+
+=======
+SOUNDS
+=======
+
+================
+COLLISIONLAYERS
+================
+
+Background
+lightup
+lightdown
+lightleft
+lightright
+stairs
+lightstairs
+gateopen, gateclosed
+Player, Wall, glass, eye, eyeclosed, moveable, hunter
+DeadPlayer
+huntertarget
+hunterup,hunterdown,hunterleft,hunterright
+pendingup, pendingdown, pendingleft, pendingright
+Player1, DirectionUp
+Player2, DirectionDown
+Player3, DirectionLeft
+Player4, DirectionRight
+black
+playerup, playerdown, playerleft, playerright
+sunup,sundown,sunleft,sunright
+sun
+exclamation
+
+
+
+======
+RULES     
+======
+
+[> player DeadPlayer] -> [> Player no DeadPlayer]
+
+down[ > Player | directionDown][PlayerDirection] -> [ Player | directiondown][playerDown]
+up[ > player | directionup][PlayerDirection] -> [ player | directionup][playerUp]
+left[ > player | directionleft][PlayerDirection] -> [ player | directionleft][playerLeft]
+right[ > player | directionright][PlayerDirection] -> [ player | directionright][playerRight]
+
+(Cosmetic sun movement)
+late down[sun][playerdown] -> [no sun][playerdown]
+late down[sundown][playerdown] -> [sundown sun][playerdown]
+
+late up[sun][playerup] -> [no sun][playerup]
+late up[sunup][playerup] -> [sunup sun][playerup]
+
+late left[sun][playerleft] -> [no sun][playerleft]
+late left[sunleft][playerleft] -> [sunleft sun][playerleft]
+
+late right[sun][playerright] -> [no sun][playerright]
+late right[sunright][playerright] -> [sunright sun][playerright]
+
+
+(Reset light)
+[light] -> [no light]
+
+down[no wall no crate][playerdown] -> [lightdown][playerdown]
+up[no wall no crate][playerup] -> [lightup][playerup]
+left[no wall no crate][playerleft] -> [lightleft][playerleft]
+right[no wall no crate][playerright] -> [lightright][playerright]
+
+up[opaque|...|lightup] -> [opaque|...|no lightup]
+down[opaque|...|lightdown] -> [opaque|...|no lightdown]
+left[opaque|...|lightleft] -> [opaque|...|no lightleft]
+right[opaque|...|lightright] -> [opaque|...|no lightright]
+
+
+(Hunter logic)
+up[hunterup|...|huntertarget][hunterup|...|] -> [hunterup|...|huntertarget][hunterup|...|lightup]
+
+down[hunterdown|...|huntertarget][hunterdown|...|] -> [hunterdown|...|huntertarget][hunterdown|...|lightdown]
+
+left[hunterleft|...|huntertarget][hunterleft|...|] -> [hunterleft|...|huntertarget][hunterleft|...|lightleft]
+
+right[hunterright|...|huntertarget][hunterright|...|] -> [hunterright|...|huntertarget][hunterright|...|lightright]
+
+
+
+(Mirror1 logic)
+left[mirror1 lightup|...|] -> [mirror1 lightup|...|lightleft]
++right[mirror1 lightdown|...|] -> [mirror1 lightdown|...|lightright]
++up[mirror1 lightleft|...|] -> [mirror1 lightleft|...|lightup]
++down[mirror1 lightright|...|] -> [mirror1 lightright|...|lightdown]
+
+up[mirror1 lightup|...|lightup] -> [mirror1 lightup|...|no Lightup]
+right[mirror1 lightup|...|lightright] -> [mirror1 lightup|...|no Lightright]
+
+down[mirror1 lightdown|...|lightdown] -> [mirror1 lightdown|...|no Lightdown]
+left[mirror1 lightdown|...|lightleft] -> [mirror1 lightdown|...|no Lightleft]
+
+down[mirror1 lightleft|...|lightdown] -> [mirror1 lightleft|...|no Lightdown]
+left[mirror1 lightleft|...|lightleft] -> [mirror1 lightleft|...|no Lightleft]
+
+right[mirror1 lightright|...|lightright] -> [mirror1 lightright|...|no Lightright]
+up[mirror1 lightright|...|lightup] -> [mirror1 lightright|...|no Lightup]
+
+(Mirror2 logic)
+left[mirror2 lightdown|...|] -> [mirror2 lightdown|...|lightleft]
++up[mirror2 lightright|...|] -> [mirror2 lightright|...|lightup]
++right[mirror2 lightup|...|] -> [mirror2 lightup|...|lightright]
++down[mirror2 lightright|...|] -> [mirror2 lightright|...|lightdown]
+
+up[mirror2 lightup|...|lightup] -> [mirror2 lightup|...|no Lightup]
+left[mirror2 lightup|...|lightleft] -> [mirror2 lightup|...|no Lightleft]
+
+down[mirror2 lightdown|...|lightdown] -> [mirror2 lightdown|...|no Lightdown]
+right[mirror2 lightdown|...|lightright] -> [mirror2 lightdown|...|no Lightright]
+
+up[mirror2 lightleft|...|lightup] -> [mirror2 lightleft|...|no Lightup]
+left[mirror2 lightleft|...|lightleft] -> [mirror2 lightleft|...|no Lightleft]
+
+right[mirror2 lightright|...|lightright] -> [mirror2 lightright|...|no Lightright]
+down[mirror2 lightright|...|lightdown] -> [mirror2 lightright|...|no Lightdown]
+
+(Shadows)
+up[opaque lightup|...|lightup] -> [opaque lightup|...|no lightup]
+down[opaque lightdown|...|lightdown] -> [opaque lightdown|...|no lightdown]
+left[opaque lightleft|...|lightleft] -> [opaque lightleft|...|no lightleft]
+right[opaque lightright|...|lightright] -> [opaque lightright|...|no lightright]
+
+(Movement)
+[> player| moveable] -> [> player| > moveable]
+[> player light| moveable] -> cancel
+[> player| wall] -> cancel
+[> player| gateclosed] -> cancel
+[> moveable| stairs] -> [moveable| stairs]
+
+[> Player|light] -> [Player|light]
+[> Player light] -> [Player light]
+[> Player light huntertarget] -> [> Player light huntertarget]
+
+
+(Light direction mechanisms)
+[Player1] -> [no Player1]
+[Player2] -> [no Player2]
+[Player3] -> [no Player3]
+[Player4] -> [no Player4]
+[Player] -> [Player Player1 Player2 Player3 Player4]
+[DirectionUp] -> [no DirectionUp]
+[DirectionLeft] -> [no DirectionLeft]
+[DirectionRight] -> [no DirectionRight]
+[DirectionDown] -> [no DirectionDown]
+
+[action player player1 player2 player3 player4] -> [player > directionUp < directionDown ^ directionLeft V directionRight]
+
+late[Player1] -> [no Player1]
+late[Player2] -> [no Player2]
+late[Player3] -> [no Player3]
+late[Player4] -> [no Player4]
+late[Player] -> [Player Player1 Player2 Player3 Player4]
+
+
+
+
+(Late light rules)
+late[light] -> [no light]
+
+(light)
+late down[no wall no crate][playerdown] -> [lightdown][playerdown]
+late up[no wall no crate][playerup] -> [lightup][playerup]
+late left[no wall no crate][playerleft] -> [lightleft][playerleft]
+late right[no wall no crate][playerright] -> [lightright][playerright]
+
+(shadows)
+late up[opaque|...|lightup] -> [opaque|...|no lightup]
+late down[opaque|...|lightdown] -> [opaque|...|no lightdown]
+late left[opaque|...|lightleft] -> [opaque|...|no lightleft]
+late right[opaque|...|lightright] -> [opaque|...|no lightright]
+
+(Hunter logic)
+[exclamation] -> []
+
+late [pendingup] -> [hunterup]
+late [pendingdown] -> [hunterdown]
+late [pendingleft] -> [hunterleft]
+late [pendingright] -> [hunterright]
+
+late up[hunter|no opaque ...|player] -> [hunter pendingup|...|player huntertarget]
+late down[hunter|no opaque ...|player] -> [hunter pendingdown|...|player huntertarget]
+late left[hunter|no opaque ...|player] -> [hunter pendingleft|...|player huntertarget]
+late right[hunter|no opaque ...|player] -> [hunter pendingright|...|player huntertarget]
+
+late up[pending|] -> [pending|exclamation]
+
+late up[hunterup|...|huntertarget][hunterup|...|] -> [hunterup|...|huntertarget][hunterup|...|lightup]
+
+late down[hunterdown|...|huntertarget][hunterdown|...|] -> [hunterdown|...|huntertarget][hunterdown|...|lightdown]
+
+late left[hunterleft|...|huntertarget][hunterleft|...|] -> [hunterleft|...|huntertarget][hunterleft|...|lightleft]
+
+late right[hunterright|...|huntertarget][hunterright|...|] -> [hunterright|...|huntertarget][hunterright|...|lightright]
+
+
+(Mirror1 logic)
+late left[mirror1 lightup|...|] -> [mirror1 lightup|...|lightleft]
++late up[mirror1 lightleft|...|] -> [mirror1 lightleft|...|lightup]
++late right[mirror1 lightdown|...|] -> [mirror1 lightdown|...|lightright]
++late down[mirror1 lightright|...|] -> [mirror1 lightright|...|lightdown]
+
+late up[mirror1 lightup|...|lightup] -> [mirror1 lightup|...|no Lightup]
+late right[mirror1 lightup|...|lightright] -> [mirror1 lightup|...|no Lightright]
+
+late down[mirror1 lightdown|...|lightdown] -> [mirror1 lightdown|...|no Lightdown]
+late left[mirror1 lightdown|...|lightleft] -> [mirror1 lightdown|...|no Lightleft]
+
+late down[mirror1 lightleft|...|lightdown] -> [mirror1 lightleft|...|no Lightdown]
+late left[mirror1 lightleft|...|lightleft] -> [mirror1 lightleft|...|no Lightleft]
+
+late right[mirror1 lightright|...|lightright] -> [mirror1 lightright|...|no Lightright]
+late up[mirror1 lightright|...|lightup] -> [mirror1 lightright|...|no Lightup]
+
+(Mirror2 logic)
+late left[mirror2 lightdown|...|] -> [mirror2 lightdown|...|lightleft]
++late up[mirror2 lightright|...|] -> [mirror2 lightright|...|lightup]
++late right[mirror2 lightup|...|] -> [mirror2 lightup|...|lightright]
++late down[mirror2 lightleft|...|] -> [mirror2 lightleft|...|lightdown]
+
+late up[mirror2 lightup|...|lightup] -> [mirror2 lightup|...|no Lightup]
+late left[mirror2 lightup|...|lightleft] -> [mirror2 lightup|...|no Lightleft]
+
+late down[mirror2 lightdown|...|lightdown] -> [mirror2 lightdown|...|no Lightdown]
+late right[mirror2 lightdown|...|lightright] -> [mirror2 lightdown|...|no Lightright]
+
+late up[mirror2 lightleft|...|lightup] -> [mirror2 lightleft|...|no Lightup]
+late left[mirror2 lightleft|...|lightleft] -> [mirror2 lightleft|...|no Lightleft]
+
+late right[mirror2 lightright|...|lightright] -> [mirror2 lightright|...|no Lightright]
+late down[mirror2 lightright|...|lightdown] -> [mirror2 lightright|...|no Lightdown]
+
+(Shadows)
+startloop
+late up[opaque lightup|...|lightup] -> [opaque lightup|...|no lightup]
+late down[opaque lightdown|...|lightdown] -> [opaque lightdown|...|no lightdown]
+late left[opaque lightleft|...|lightleft] -> [opaque lightleft|...|no lightleft]
+late right[opaque lightright|...|lightright] -> [opaque lightright|...|no lightright]
+
+(gates)
+late[eye light][gateclosedvert] -> [eyeclosed light][gateopenvert]
+late[eyeclosed no light][gateopenvert] -> [eye no light][gateclosedvert]
+late[eye light][gateclosedhor] -> [eyeclosed light][gateopenhor]
+late[eyeclosed no light][gateopenhor] -> [eye no light][gateclosedhor]
+endloop
+
+(removing hunter targets)
+late [huntertarget no light no player] -> [no huntertarget]
+
+(jumping through a closing gate)
+late[no glass no wall|player gateclosed] -> [player|gateclosed]
+
+(stair and dead player cosmetics)
+late [stairs light] -> [stairs light lightstairs]
+late [stairs no light] -> [stairs no light no lightstairs]
+late[Player light] -> [Player light DeadPlayer]
+(late up [player no light|] -> [player no light| no scared]
+late up [player light|] -> [player light|scared])
+
+==============
+WINCONDITIONS
+==============
+
+some Player on stairs
+
+=======     
+LEVELS
+=======
+
+MESSAGE Level 1
+
+t-------w--------
+-----------------
+--##@@#####@@##--
+--#...........#--
+--@...........@--
+a-@P.........O@-d
+--@...........@--
+--#...........#--
+--#####@@@#####--
+-----------------
+--------s--------
+
+MESSAGE Level 2
+
+f----w-----
+-----------
+--##@#@@#--
+--#....p#--
+--@..@@@@--
+a-@...#o#-d
+--@@..@.@--
+--#.....#--
+--##@@@##--
+-----------
+-----s-----
+
+MESSAGE Level 3
+
+t-------w--------
+-----------------
+--####@@@@@####--
+--@..#.....#.p@--
+a-@o.......+..@-d
+--@..#.....#..@--
+--####@@@@@####--
+-----------------
+--------s--------
+
+Message Level 4
+
+t-------w---------
+------------------
+---###@#@#@###@---
+---@.......+.p@---
+--@@.......+..@---
+--@...@#@#@###@---
+a-@...........@--d
+--####@@@@@##.##--
+-----------#...#--
+-----------#.O.#--
+-----------#####--
+------------------
+---------s--------
+
+MESSAGE Level 5
+
+f-------w-------
+----------------
+--######@#####--
+--#...#......#--
+--#...Ip...X.@--
+--#.o.#.x....#--
+a-#...#......#-d
+--########@###--
+-------#.....#--
+-------#..x.q#--
+-------#######--
+----------------
+---------s------
+
+MESSAGE Level 6
+
+f-------w-------
+----------------
+---#@###@######-
+---@.......i.o@-
+---#..##+######-
+---@p.....q#----
+a--##.##+###---d
+---@.x.....@----
+---@.......@----
+---#@@@@@@@#----
+----------------
+----------------
+---------s------
+
+MESSAGE Level 7
+
+f---------w------------------
+-----------------------------
+---------########------------
+------#####.....#------------
+----###......##.#-###--------
+----#z.......##.###q##-------
+a-###.##.###....#....#------d
+--#...##.#-#.z....#..#-------
+--#p.....#-#......#..######--
+--########-########z.i...o#--
+------------------#########--
+-----------------------------
+----------s------------------
+
+Message Level 8
+
+g------------w-----------
+-------------------------
+---------#@@@@@@@####----
+--########.......@..##---
+--#q.@..x..@###.@#...#---
+--@@@@...@@@....z##..##--
+a-@p.i...........@q#.o#-d
+--@..@...@...z...##..##--
+--@..#...###@@@###...#---
+--#####z.i..........##---
+------##@@@@@@@@@####----
+-------------------------
+-------------s-----------
+
+Message Level 9
+
+g---#####----w-----------
+----#...#----------------
+----#.#.###@######-------
+----#..c........q#-------
+----###.###.###.###------
+a-----#.#...+.#.#.#-----d
+------@....x......@------
+------#.#p....#.#_#------
+------#.###.###.#.#------
+------#........z#o#------
+------#####@#######------
+-------------------------
+-------------s-----------
+
+Message That's it! You did it! You helped the ghost get out of that creepy house. Good for you.
+

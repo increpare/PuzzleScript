@@ -1,0 +1,680 @@
+title Rock, Paper, Scissors (v0.90 = v1.alpha)
+author chaotic_iak
+homepage chaosatthesky.wordpress.com
+
+again_interval 0.15
+key_repeat_interval 0.2
+run_rules_on_level_start
+verbose_logging
+
+(
+"Rock, Paper, Scissors" by chaotic_iak
+The popular game can't be that hard, right?
+
+Changelog:
+09-Jul-2015 v0.10: Original mechanics
+10-Jul-2015      : Gems, sticky paper
+10-Jul-2015 v0.20: Add 1-8
+11-Jul-2015      : Skip level
+11-Jul-2015 v0.50: Add 9,10
+12-Jul-2015 v0.51: Change 3,5,6
+13-Jul-2015 v0.52: Change 7,8,9
+14-Jul-2015 v0.60: Move 10>12, add 10,11
+15-Jul-2015 v0.61: Change 9,11
+17-Jul-2015 v0.70: Move 11>12, add 11,13,14
+01-Aug-2015 v1.00: Move a lot, change 14, add 10,13,17
+)
+
+=======
+OBJECTS
+=======
+background
+lightgreen yellow
+00000
+00010
+00000
+01000
+00000
+
+wall
+darkgreen green
+01110
+10001
+01110
+10001
+00000
+
+level0
+darkgreen green
+01100
+10010
+10010
+10010
+01100
+
+level1
+darkgreen green
+00100
+01100
+00100
+00100
+01110
+
+level2
+darkgreen green
+01100
+10010
+00100
+01000
+11110
+
+level3
+darkgreen green
+11100
+00010
+01100
+00010
+11100
+
+level4
+darkgreen green
+00100
+01100
+10100
+11110
+00100
+
+level5
+darkgreen green
+11110
+10000
+11100
+00010
+11100
+
+level6
+darkgreen green
+01100
+10000
+11100
+10010
+01100
+
+level7
+darkgreen green
+11110
+00010
+00100
+01000
+01000
+
+level8
+darkgreen green
+01100
+10010
+01100
+10010
+01100
+
+level9
+darkgreen green
+01100
+10010
+01110
+00010
+11100
+
+player
+black orange red blue
+.000.
+.111.
+22222
+.333.
+.3.3.
+
+rock
+darkbrown brown orange
+.112.
+01112
+01112
+01111
+.000.
+
+paper
+lightgray gray
+0001.
+00001
+00000
+00000
+00000
+
+paperborderl
+white
+0....
+0....
+0....
+0....
+0....
+
+paperborderd
+white
+.....
+.....
+.....
+.....
+00000
+
+paperborderld
+white
+.....
+.....
+.....
+.....
+0....
+
+papernexttoborderl
+transparent
+
+papernexttoborderd
+transparent
+
+papernofold
+lightgray
+...00
+....0
+.....
+.....
+.....
+
+scissorsu
+darkgray gray red darkred
+1...1
+01.10
+.010.
+22.22
+23.23
+
+scissorsl
+darkgray gray red darkred
+10.22
+.1023
+..1..
+.1022
+10.23
+
+scissorsd
+darkgray gray red darkred
+22.22
+23.23
+.010.
+01.10
+1...1
+
+scissorsr
+darkgray gray red darkred
+22.01
+2301.
+..1..
+2201.
+23.01
+
+gem
+blue lightblue
+.....
+.011.
+00001
+.000.
+..0..
+
+star
+darkred red
+.....
+.011.
+00001
+.000.
+..0..
+
+nostar
+darkgreen green
+00000
+01110
+11111
+01110
+00100
+
+starcover
+darkred red
+.....
+.011.
+00001
+.000.
+..0..
+
+exit
+blue lightblue
+.001.
+01011
+00011
+00101
+.011.
+
+exitholder
+transparent
+
+startlevel
+transparent
+
+skipcheck
+transparent
+
+nextstar
+transparent
+
+processedstar
+transparent
+
+======
+LEGEND
+======
+. = background
+# = wall
+o = player and startlevel
+g = gem
+e = exit and exitholder
+r = rock
+p = paper
+w = scissorsu
+a = scissorsl
+s = scissorsd
+d = scissorsr
+0 = wall and level0
+1 = wall and level1
+2 = wall and level2
+3 = wall and level3
+4 = wall and level4
+5 = wall and level5
+6 = wall and level6
+7 = wall and level7
+8 = wall and level8
+9 = wall and level9
+* = star
+
+scissors = scissorsu or scissorsl or scissorsd or scissorsr
+object = wall or player or rock or paper or scissors or gem or star or exitholder
+lvnum = level0 or level1 or level2 or level3 or level4 or level5 or level6 or level7 or level8 or level9
+paperborder = paperborderl or paperborderd or paperborderld or papernofold or papernexttoborderl or papernexttoborderd
+sprites = lvnum or paperborder
+
+======
+SOUNDS
+======
+player cantmove 88720304
+
+rock move 12612307
+paper move 96873507
+scissors move 93218507
+
+rock destroy 98086501
+paper destroy 41726709
+scissors destroy 5523702
+gem destroy 73128500
+star destroy 64247508
+
+undo 28911504
+sfx0 13629103
+sfx9 31899108 (skip check)
+endlevel 18800703
+
+===============
+COLLISIONLAYERS
+===============
+processedstar, nextstar, startlevel, skipcheck
+papernexttoborderd
+papernexttoborderl
+background
+exit
+object
+lvnum, nostar
+starcover
+paperborderl
+paperborderd
+paperborderld
+papernofold
+
+=====
+RULES
+=====
+(LEVEL START)
+right [startlevel][lvnum|no lvnum] -> [startlevel][lvnum|nextstar]
+right [startlevel][star no processedstar][nextstar|] -> [startlevel][star processedstar][nostar|nextstar]
+[startlevel][nextstar] -> [startlevel][]
+[startlevel][processedstar] -> [startlevel][]
+right [startlevel][lvnum|nostar] -> [startlevel][lvnum|nostar nextstar]
+[startlevel] -> []
+
+(STUFF)
+[action player skipcheck] -> [player] win
+[orthogonal player skipcheck] -> [orthogonal player]
+[action player no skipcheck] -> [player skipcheck] sfx9
+[skipcheck] -> message ********** SKIP LEVEL? *********** * - ACTION TWICE     to CONFIRM  * * - ACTION then MOVE to CANCEL   *
+
+(MOVEMENT)
+startloop
+(rock)
+[> player|rock] -> [> player|> rock]
+(scissors)
+down  [> object|scissors no scissorsu] -> [> object|> scissors]
+down  [> scissors|scissorsu] -> [> scissors|> scissorsu]
+down  [> gem|scissorsu] -> [> gem|> scissorsu]
+right [> object|scissors no scissorsl] -> [> object|> scissors]
+right [> scissors|scissorsl] -> [> scissors|> scissorsl]
+right [> gem|scissorsl] -> [> gem|> scissorsl]
+up    [> object|scissors no scissorsd] -> [> object|> scissors]
+up    [> scissors|scissorsd] -> [> scissors|> scissorsd]
+up    [> gem|scissorsd] -> [> gem|> scissorsd]
+left  [> object|scissors no scissorsr] -> [> object|> scissors]
+left  [> scissors|scissorsr] -> [> scissors|> scissorsr]
+left  [> gem|scissorsr] -> [> gem|> scissorsr]
+(paper)
+  rigid down  [> object no rock no scissorsd|paper] -> [> object|> paper]
++ rigid right [> object no rock no scissorsr|paper] -> [> object|> paper]
++ rigid up    [> object no rock no scissorsu|paper] -> [> object|> paper]
++ rigid left  [> object no rock no scissorsl|paper] -> [> object|> paper]
++ rigid       [orthogonal paper|paper] -> [orthogonal paper|orthogonal paper]
+(gem/star)
+[> player|gem] -> [> player|]
+[> player|star] -> [> player|processedstar]
+[> object|gem] -> [> object|> gem]
+[> object|star] -> [> object|> star]
+endloop
+(exit)
+[> player|exitholder] -> [> player|]
+
+(INTERACTION)
+(rock/paper)
+[> rock|stationary paper] -> [|paper]
+[> paper|stationary rock] -> [> paper|]
+(paper/scissors)
+down  [> paper|stationary scissorsu] -> [|scissorsu]
+down  [> scissorsd|stationary paper] -> [> scissorsd|]
+right [> paper|stationary scissorsl] -> [|scissorsl]
+right [> scissorsr|stationary paper] -> [> scissorsr|]
+up    [> paper|stationary scissorsd] -> [|scissorsd]
+up    [> scissorsu|stationary paper] -> [> scissorsu|]
+left  [> paper|stationary scissorsr] -> [|scissorsr]
+left  [> scissorsl|stationary paper] -> [> scissorsl|]
+(scissors/rock)
+down  [> scissorsd|stationary rock] -> [|rock]
+down  [> rock|stationary scissorsu] -> [> rock|]
+right [> scissorsr|stationary rock] -> [|rock]
+right [> rock|stationary scissorsl] -> [> rock|]
+up    [> scissorsu|stationary rock] -> [|rock]
+up    [> rock|stationary scissorsd] -> [> rock|]
+left  [> scissorsl|stationary rock] -> [|rock]
+left  [> rock|stationary scissorsr] -> [> rock|]
+
+(FINISH)
+(paper border)
+late [paperborder] -> []
+late left  [paper|no paper] -> [paper paperborderl|]
+late down  [paper|no paper] -> [paper paperborderd|]
+late up    [paperborderl|paper] -> [paperborderl|paper papernexttoborderl]
+late right [paperborderd|paper] -> [paperborderd|paper papernexttoborderd]
+late [papernexttoborderl papernexttoborderd] -> [paperborderld]
+late up    [paper|paper] -> [paper papernofold|paper]
+late right [paper|paper] -> [paper papernofold|paper]
+(star check)
+late right [processedstar][nextstar|] -> [][starcover|nextstar]
+(exit check)
+late [player exit][gem] -> sfx0
+late [exit no player] -> [exit exitholder]
+
+=============
+WINCONDITIONS
+=============
+no gem
+all player on exit
+
+======
+LEVELS
+======
+(and unofficial titles!)
+
+message ROCKS are HEAVY
+
+(Rockfall)
+############
+#......#...#
+#.....rr...#
+##r##..#r.r#
+#...####rr.#
+#...##.r..r#
+#.o.#e..rr.#
+#...##..r..#
+01##########
+
+message BLUE GEMS are IMPORTANT
+
+message RED GEMS are DIFFICULT
+
+(Excavation)
+############
+#..........#
+#.g...r.rr.#
+##.##.rr.r.#
+#.e.##..rr.#
+#...#grr..##
+#.o.##.r.rg#
+#...##.*r.##
+02##########
+
+message GEMS are LIGHT
+
+(Gems in a Rock Pile)
+############
+#...#......#
+#.g..ergr..#
+#...##.#####
+##r##.grgr.#
+#...#.rgr*.#
+#.o.#.grgr.#
+#...#.rgrg.#
+03##########
+
+message PAPER is STICKY
+
+(Think Before You Stick)
+############
+#......*#e##
+#......#pp.#
+#ppp#..p..p#
+#p.p#.p.p.p#
+#...#.p..p.#
+#.o.#..pp..#
+#...#......#
+04##########
+
+message SCISSORS have SHARP BLADES
+
+(Ouch)
+############
+#..a.....###
+#..ag....###
+##d##...we.#
+#...#.a.s#.#
+#...#.s..#*#
+#.o.#....w.#
+#...#...#..#
+05##########
+
+message ROCK crushes SCISSORS
+
+(Demolition Derby)
+############
+#...#..#..##
+#.r.ad....##
+#...#..#.w*#
+##w##....w##
+#...##...w##
+#.o.#ew....#
+#...##w....#
+06##########
+
+message PAPER covers ROCK
+
+(One Versus Twenty-Two)
+############
+#.p.prrre#*#
+#...prr.r#r#
+##r##r.r.r.#
+#...#.r.r.r#
+#...#r.r.r.#
+#.o.#.rpr.r#
+#...#r.r.r.#
+07##########
+
+message SCISSORS cut PAPER
+
+(Big Paper is Useless)
+############
+#...p..e##*#
+#.p.p.a###p#
+#...p......#
+##w##...pp.#
+#...#.d.pp.#
+#.o.#...pp.#
+#...#......#
+08##########
+
+message ROCK must be PUSHED DIRECTLY
+
+message EVERYTHING ELSE can PUSH EACH OTHER
+
+(Light and Heavy)
+############
+#....r*..r.#
+#...g#r.#.e#
+#.dpp#g.ppp#
+##p###w.#..#
+#...#...#..#
+#.o.#......#
+#...#......#
+09##########
+
+message DISCOVER other SECRETS
+
+message GOOD LUCK
+
+(More Gems, More Rock Piles)
+#############
+#o...e#.....#
+#rgrgr#*rgrg#
+#grgrg#rgrgr#
+#ggrgrggrgrg#
+#rggrg#rgrgr#
+#grggr#gggrg#
+#.....#.....#
+10###########
+
+(Scissors Field)
+################
+#....#.....#e..#
+#.*.#.s..#a.#..#
+#...#.#.....#..#
+#s#s#...#...#..#
+#.........#.#s##
+#......#.....o.#
+#..............#
+11##############
+
+(Littered Boulders)
+############
+#...#...a..#
+#..g..#.#.e#
+#.rrr.rr##s#
+#..r.#....o#
+#.#r..rr##w#
+#..r..#.#..#
+#..r....a*.#
+12##########
+
+(Cleaning Job)
+###########
+#.....o#e.#
+#......#..#
+#..######s#
+#grggrgggr#
+#grrggrrrg#
+#rrgrrrggr#
+#.prrggrr*#
+#.rggrggrr#
+13#########
+
+(Clearing the Path)
+##############
+#p.........rr#
+#p...ss.aa.rr#
+#p...ss.aa.#r#
+#ppp...r...#*#
+#pop.dd.ww.###
+#p...dd.ww##e#
+#ppppp...rrrr#
+14############
+
+(A-maze-ing Paper)
+#################
+#..............r#
+#.ppppppppp.###.#
+#.p.....prp.#...#
+#.p.ppp...p.#.*.#
+#.p...pp..p.#...#
+#.ppp.ppppp.#####
+#.p...p...p.#...#
+#.pp.pp.p.p.#.e.#
+#.p.....p.o.a...#
+#.ppppppppp.#.w.#
+#...........#...#
+15###############
+
+(Exercising Into Shape)
+#############
+###.......#e#
+#....ppp..#r#
+#....ppp..o.#
+#....ppp....#
+#.#.........#
+#r#..w.a..###
+#*#.......###
+16###########
+
+(Surrounded)
+#######################
+#ppp....p....ppp......#
+#p.............p......#
+#p.............p......#
+#...p...p...p.........#
+#.....................#
+#...............#.....#
+#...............#.....#
+#p..p...p...p..p#.....#
+#...............#.....#
+#...............#..w..#
+#...............#..e..#
+#...p...p...p...#######
+#ppp...........p...ppp#
+#pop...........p...p*p#
+#ppp....p....ppp...ppp#
+17#####################
+
+(The Killer)
+##########
+#........#
+#.ppp....#
+#.prp.g..#
+#.ppp....#
+#....a...#
+###....aa#
+#ero.##*##
+18########
+
+message CONGRATULATIONS

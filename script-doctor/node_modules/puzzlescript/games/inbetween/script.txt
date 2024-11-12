@@ -1,0 +1,381 @@
+title inbetween
+author Rosden Shadow [Mark Signorelli]
+homepage rosden.itch.io
+run_rules_on_level_Start
+
+background_color #E5C17E
+
+text_color #B32D2D
+
+========
+OBJECTS
+========
+
+Background
+#E5C17E #BF9269
+00000
+01010
+00100
+01010
+00000
+(
+00101
+01110
+11011
+01111
+10110)
+(
+11101
+00101
+11111
+10100
+10111)
+
+
+pathline
+#E0AAF2 #FFD9FC
+00000
+01010
+00100
+01010
+00000
+
+Target
+#B32D2D #E5C17E
+.....
+.000.
+.010.
+.000.
+.....
+
+Wall
+#B32D2D #CC7A52 #73342E #423D39
+20001
+22001
+22220
+23232
+32323
+
+overwall
+#B32D2D #CC7A52 #73342E #423D39
+.....
+.....
+.....
+01111
+20011
+
+
+Playerright
+#E5D9FF  #A87EE5 #CC7A52 #73342E #42393C
+.000.
+11202
+11313
+11110
+.1.1.
+
+playerleft
+#E5D9FF  #A87EE5 #CC7A52 #73342E #42393C
+.000.
+20211
+31311
+01111
+.1.1.
+
+Crate2
+#82A17C #7EE58D  #4F5B46 #394239 
+20011
+20001
+22001
+32223
+.333.
+
+overcrate2
+#82A17C #7EE58D  #4F5B46 #394239
+.....
+.....
+.....
+.....
+.111.
+
+Crate
+#7EE58D #D9FFDC #82A17C #394239
+20011
+20001
+22001
+32223
+.333.
+
+overcrate
+#7EE58D #D9FFDC #82A17C #394239
+.....
+.....
+.....
+.....
+.111.
+
+cloner
+#E5C17E #DB7F55 #B32D2D #73342E
+.100.
+.210.
+.221.
+.332.
+.....
+
+swapcrate
+Orange Yellow
+00000
+0...0
+0...0
+0...0
+00000
+
+swapwall
+black
+.....
+.....
+.....
+.....
+.....
+
+thefloor
+#E5C17E
+00000
+00000
+00000
+00000
+00000
+
+stopper
+black
+.....
+.....
+.....
+.....
+.....
+
+shiftright
+black
+.....
+.....
+.....
+.....
+.....
+
+shiftup
+black
+.....
+.....
+.....
+.....
+.....
+
+shiftdown
+black
+.....
+.....
+.....
+.....
+.....
+
+shiftleft
+black
+.....
+.....
+.....
+.....
+.....
+
+
+=======
+LEGEND
+=======
+
+. = Background and stopper
+# = Wall
+P = Playerright
+* = Crate
+@ = Crate and Target
+O = Target
+c=cloner
+-=thefloor
+
+feel=overwall or overcrate or overcrate2
+pushable=crate or cloner or swapcrate or crate2
+win=crate or wall
+
+player=playerright or playerleft
+
+shift=shiftright or shiftup or shiftdown or shiftleft
+mainlayer=player or wall or pushable or swapwall or thefloor
+=======
+SOUNDS
+=======
+
+pushable MOVE 36772507
+
+
+sfx0 52836103
+sfx1 6257504
+================
+COLLISIONLAYERS
+================
+
+Background
+pathline
+Target
+shiftright
+shiftleft
+shiftup
+shiftdown
+Player, Wall, pushable,swapwall,thefloor
+stopper
+feel
+
+======
+RULES
+======
+
+[feel]->[]
+[shift]->[]
+[stopper]->[]
+
+[ >  Player | pushable ] -> [  >  Player | > pushable  ]
+
+[ left Playerright] -> [ left playerleft]
+[ right Playerleft] -> [ right playerright]
+
+([Background no mainlayer] -> [background stopper])
+
+([crate]->[crate shiftright shiftleft shiftup shiftdown])
+
+late right [crate| ]->[crate | shiftright]
+
+late up [crate| ]->[crate | shiftup]
+
+late down [crate| ]->[crate | shiftdown]
+
+late left [crate| ]->[crate | shiftleft]
+
+late [shiftdown shiftup no mainlayer]-> [crate]
+
+late [shiftright shiftleft no mainlayer]-> [crate]
+
+
+
+
+(
+
+late [shift]->[]
+late [stopper]->[]
+late [pathline]->[]
+late [crate]->[crate shiftright shiftleft shiftup shiftdown]
+
+late right [shiftright| ]->[shiftright | shiftright]
+
+late up [shiftup| ]->[shiftup | shiftup]
+
+late down [shiftdown| ]->[shiftdown | shiftdown]
+
+late left [shiftleft| ]->[shiftleft | shiftleft]
+
+late [shift]->[shift pathline]
+late [pathline stopper] -> [pathline])
+
+
+late up [wall| ]-> [wall|overwall]
+late up [crate| ]-> [crate|overcrate]
+late up [crate2| ]-> [crate2|overcrate2]
+==============
+WINCONDITIONS
+==============
+
+All Target on win
+
+=======
+LEVELS
+=======
+
+message cover up all targets with blocks 
+
+message level 1 of 4
+---------
+-#######-
+##.....##
+#...P...#
+#.......#
+#.*O.O*.#
+#.......#
+#.......#
+#..O.O..#
+##..O..##
+-#######-
+
+message level 2 of 4
+---------
+-#######-
+##.....##
+#...P...#
+#.O.O*O.#
+#.......#
+#.O...O.#
+#.*..*..#
+#.O*O.O.#
+##.....##
+-#######-
+
+message level 3 of 4
+---------
+-#######-
+##OOOOO##
+#*..*..*#
+#..*..*.#
+#.*..*..#
+#*..*..*#
+#..*..*P#
+#.*..*..#
+##..*..##
+-#######-
+
+message level 4 of 4
+---------
+#########
+#*******#
+#*..P..*#
+#*.....*#
+#*..O..*#
+#*.O*O.*#
+#*..O..*#
+#*.....*#
+#*******#
+#########
+
+(
+--------
+#######-
+##...O#-
+#.....#-
+#.*...#-
+#..*..#-
+#...*.#-
+#..p..#-
+#O....#-
+#....O#-
+#######-
+)
+
+
+
+message thats enough blocks for one day :)
+
+
+(--------
+-######-
+##....##
+#......#
+#.*....#
+#....*.#
+#.O....#
+#.OO.*.#
+#.P....#
+##....##
+-######-)

@@ -1,0 +1,1510 @@
+title Hack the Net
+author Alan Hazelden
+homepage www.draknek.org
+
+run_rules_on_level_start
+
+(verbose_logging)
+
+again_interval 0.06
+
+key_repeat_interval 0.5
+
+(realtime_interval 0.5)
+
+(noaction)
+
+========
+OBJECTS
+========
+
+Background
+black
+
+failure
+red
+
+Node
+white
+.000.
+00000
+00000
+00000
+.000.
+
+Line
+green
+.....
+.....
+..0..
+.....
+.....
+
+LineL
+green
+.....
+.....
+00...
+.....
+.....
+
+LineR
+green
+.....
+.....
+...00
+.....
+.....
+
+LineU
+green
+..0..
+..0..
+.....
+.....
+.....
+
+LineD
+green
+.....
+.....
+.....
+..0..
+..0..
+
+OneWayL
+green transparent
+...0.
+..00.
+10000
+..00.
+...0.
+
+OneWayR
+green transparent
+.0...
+.00..
+00001
+.00..
+.0...
+
+OneWayU
+green transparent
+..1..
+..0..
+.000.
+00000
+..0..
+
+OneWayD
+green transparent
+..0..
+00000
+.000.
+..0..
+..1..
+
+InboundL
+green
+.....
+.....
+.0...
+.....
+.....
+
+InboundR
+green
+.....
+.....
+...0.
+.....
+.....
+
+InboundU
+green
+.....
+..0..
+.....
+.....
+.....
+
+InboundD
+green
+.....
+.....
+.....
+..0..
+.....
+
+Player1
+Blue
+.....
+.000.
+.000.
+.000.
+.....
+
+Player2
+Blue
+.....
+.....
+..0..
+.....
+.....
+
+Collision1
+Blue
+.....
+.....
+..0..
+.....
+.....
+
+
+Collision2
+Blue
+.....
+.000.
+.000.
+.000.
+.....
+
+
+Collision3
+Blue
+.000.
+00000
+00000
+00000
+.000.
+
+Collision4
+Blue
+.....
+.000.
+.000.
+.000.
+.....
+
+Collision5
+Blue
+.....
+.....
+..0..
+.....
+.....
+
+
+
+Target
+lightgreen
+00000
+0...0
+0...0
+0...0
+00000
+
+Firewall
+red
+..0..
+..0..
+00000
+..0..
+..0..
+
+OpenFirewall
+darkred
+..0..
+..0..
+00000
+..0..
+..0..
+
+FailureFirewall
+darkred
+..0..
+..0..
+00000
+..0..
+..0..
+
+InvertedFirewall
+transparent
+
+
+Key
+darkred
+.....
+.....
+..0..
+.....
+.....
+
+SleepingAntiVirus
+red
+.000.
+0...0
+0...0
+0...0
+.000.
+
+AntiVirusNode
+orange
+.000.
+00000
+00000
+00000
+.000.
+
+AntiVirusTarget
+orange
+
+AntiVirusMoving
+transparent
+
+
+AntiVirusL
+darkred
+.....
+.....
+000..
+.....
+.....
+
+AntiVirusR
+darkred
+.....
+.....
+..000
+.....
+.....
+
+AntiVirusU
+darkred
+..0..
+..0..
+..0..
+.....
+.....
+
+AntiVirusD
+darkred
+.....
+.....
+..0..
+..0..
+..0..
+
+AntiVirusOneWayL
+darkred transparent
+...0.
+..00.
+10000
+..00.
+...0.
+
+AntiVirusOneWayR
+darkred transparent
+.0...
+.00..
+00001
+.00..
+.0...
+
+AntiVirusOneWayU
+darkred transparent
+..1..
+..0..
+.000.
+00000
+..0..
+
+AntiVirusOneWayD
+darkred transparent
+..0..
+00000
+.000.
+..0..
+..1..
+
+SleepingKiller
+orange
+.....
+.000.
+.000.
+.000.
+.....
+
+Killer
+red
+.....
+.000.
+.000.
+.000.
+.....
+
+
+PlayerL
+Blue
+.....
+.000.
+0000.
+.000.
+.....
+
+PlayerR
+Blue
+.....
+.000.
+.0000
+.000.
+.....
+
+PlayerU
+Blue
+..0..
+.000.
+.000.
+.000.
+.....
+
+PlayerD
+Blue
+.....
+.000.
+.000.
+.000.
+..0..
+
+
+PlayerTrailL
+blue
+.....
+.....
+000..
+.....
+.....
+
+PlayerTrailR
+blue
+.....
+.....
+..000
+.....
+.....
+
+PlayerTrailU
+blue
+..0..
+..0..
+..0..
+.....
+.....
+
+PlayerTrailD
+blue
+.....
+.....
+..0..
+..0..
+..0..
+
+
+
+=======
+LEGEND
+=======
+
+. = Background
+@ = Player1 and Node
+* = Node
+- = Line
+L = OneWayL and Line
+R = OneWayR and Line
+U = OneWayU and Line
+D = OneWayD and Line
+! = Firewall and Line
+~ = OpenFirewall and InvertedFirewall and Line
+$ = Target and Node
+% = Target and Player1 and Node
+? = Key and Node
+& = Key and Target and Node
+# = SleepingAntiVirus and Node
+S = SleepingKiller and Node
+K = Killer and Node
+
+Player = Player1 or Player2 or Killer or PlayerL or PlayerR or PlayerU or PlayerD
+PlayerMoving = PlayerL or PlayerR or PlayerU or PlayerD
+
+LineDir = LineL or LineR or LineU or LineD
+Inbound = InboundL or InboundR or InboundU or InboundD
+
+Collision = Collision1 or Collision2 or Collision3 or Collision4 or Collision5
+
+ConnectableTo = Line or Node
+
+ConnectsL = LineL or OneWayL or PlayerTrailL
+ConnectsR = LineR or OneWayR or PlayerTrailR
+ConnectsU = LineU or OneWayU or PlayerTrailU
+ConnectsD = LineD or OneWayD or PlayerTrailD
+
+AntiVirusConnectsL = AntiVirusL or AntiVirusOneWayL
+AntiVirusConnectsR = AntiVirusR or AntiVirusOneWayR
+AntiVirusConnectsU = AntiVirusU or AntiVirusOneWayU
+AntiVirusConnectsD = AntiVirusD or AntiVirusOneWayD
+
+AntiVirus = AntiVirusNode or AntiVirusTarget or AntiVirusMoving
+
+OneWay = OneWayL or OneWayR or OneWayU or OneWayD
+
+AntiVirusOneWay = AntiVirusOneWayL or AntiVirusOneWayR or AntiVirusOneWayU or AntiVirusOneWayD
+
+PlayerTrail = PlayerTrailL or PlayerTrailR or PlayerTrailU or PlayerTrailD
+
+=======
+SOUNDS
+=======
+
+EndLevel 42257908
+
+Collision2 Create 83110908
+sfx1 84184909 (player move)
+sfx2 61306309 (player split)
+sfx3 40267308 (fail)
+
+restart 87593308
+undo 56438707
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Failure
+OpenFirewall
+Node, Line
+Firewall, FailureFirewall, Target
+LineL, InboundL, AntiVirusL, PlayerTrailL
+LineR, InboundR, AntiVirusR, PlayerTrailR
+LineU, InboundU, AntiVirusU, PlayerTrailU
+LineD, InboundD, AntiVirusD, PlayerTrailD
+Oneway, InvertedFirewall, AntiVirusOneWay
+Collision
+Player
+Key, AntiVirusMoving, AntiVirusNode, AntiVirusTarget, SleepingAntiVirus, SleepingKiller
+
+======
+RULES
+======
+
+[ PlayerTrail OneWay ] -> [ OneWay ]
+[ PlayerTrailL ] -> [ LineL ]
+[ PlayerTrailR ] -> [ LineR ]
+[ PlayerTrailU ] -> [ LineU ]
+[ PlayerTrailD ] -> [ LineD ]
+
+[ action Player ] -> [ Player ]
+
+(animate player)
+
+([ stationary Player1 Node ] -> [ action Player1 Node ]
+[ stationary Player2 Node ] -> [ action Player2 Node ]
+
+[ Player Line ] [ action Player ] -> [ Player Line ] [ Player1 ]
+
+[ action Player1 ] -> [ Player2 ]
+[ action Player2 ] -> [ Player1 ]
+
+[ action Player ] -> [ Player ])
+
+
+(antivirus)
+
+[ Player SleepingAntiVirus ] -> [ AntiVirusNode ]
+
+[ moving Player ] [ AntiVirus ] -> [ moving Player ] [ action AntiVirus ]
+[ AntiVirus no Node ] -> [ action AntiVirus ]
+
+left [ action AntiVirusMoving AntiVirusConnectsL | Node ] -> [ action AntiVirusMoving AntiVirusConnectsL | AntiVirusNode Node ]
+right [ action AntiVirusMoving AntiVirusConnectsR | Node ] -> [ action AntiVirusMoving AntiVirusConnectsR | AntiVirusNode Node ]
+up [ action AntiVirusMoving AntiVirusConnectsU | Node ] -> [ action AntiVirusMoving AntiVirusConnectsU | AntiVirusNode Node ]
+down [ action AntiVirusMoving AntiVirusConnectsD | Node ] -> [ action AntiVirusMoving AntiVirusConnectsD | AntiVirusNode Node ]
+
+left [ action AntiVirus | ConnectsR no OneWayR ] -> [ action AntiVirus | ConnectsR AntiVirusMoving ]
+right [ action AntiVirus | ConnectsL no OneWayL ] -> [ action AntiVirus | ConnectsL AntiVirusMoving ]
+up [ action AntiVirus | ConnectsD no OneWayD ] -> [ action AntiVirus | ConnectsD AntiVirusMoving ]
+down [ action AntiVirus | ConnectsU no OneWayU ] -> [ action AntiVirus | ConnectsU AntiVirusMoving ]
+
+[ AntiVirusMoving LineL ] -> [ AntiVirusMoving AntiVirusL ] again
+[ AntiVirusMoving LineR ] -> [ AntiVirusMoving AntiVirusR ] again
+[ AntiVirusMoving LineU ] -> [ AntiVirusMoving AntiVirusU ] again
+[ AntiVirusMoving LineD ] -> [ AntiVirusMoving AntiVirusD ] again
+[ AntiVirusMoving OneWayL ] -> [ AntiVirusMoving AntiVirusOneWayL ] again
+[ AntiVirusMoving OneWayR ] -> [ AntiVirusMoving AntiVirusOneWayR ] again
+[ AntiVirusMoving OneWayU ] -> [ AntiVirusMoving AntiVirusOneWayU ] again
+[ AntiVirusMoving OneWayD ] -> [ AntiVirusMoving AntiVirusOneWayD ] again
+
+[ AntiVirusNode Target ] -> [ AntiVirusTarget Target ]
+
+[ AntiVirus Line ] -> [ AntiVirus ]
+[ AntiVirus Inbound ] -> [ AntiVirus ]
+[ AntiVirus Firewall ] -> [ AntiVirus ]
+
+[ Player AntiVirus ] -> [ AntiVirus ]
+
+
+(detect failure)
+
+[ failure ] -> restart
+
+[ background ] -> [ background failure ]
+
+[ Player no Killer ] [ failure ] -> [ Player ] []
+[ PlayerTrail ] [ failure ] -> [ PlayerTrail ] []
+[ stationary AntiVirusMoving ] [ failure ] -> [ AntiVirusMoving ] []
+[ Collision ] [ failure ] -> [ Collision ] []
+[ Killer Line ] [ failure ] -> [ Killer Line ] []
+
+[failure ] -> sfx3
+
+
+
+(clean up collisions)
+
+[ Collision5 ] -> [] again
+[ Collision4 ] -> [ Collision5 ] again
+[ Collision3 ] -> [ Collision4 ] again
+[ Collision2 ] -> [ Collision3 ] again
+[ Collision1 ] -> [ Collision2 ] again
+
+(open firewalls)
+
+[ OpenFirewall no Player no InvertedFirewall ] -> [ Firewall ]
+[ Firewall no Player InvertedFirewall ] -> [ OpenFirewall InvertedFirewall ]
+
+[ Failure Firewall ] -> [ Failure FailureFirewall ]
+
+[ Player Key ] -> [ Player action Key ]
+
+[ stationary Key ] [ action Key ] -> [ Key ] [ Key ]
+
+[ action Key ] [ Firewall no InvertedFirewall ] -> [ action Key ] [ OpenFirewall ]
+[ action Key ] [ OpenFirewall InvertedFirewall ] -> [ action Key ] [ Firewall InvertedFirewall ]
+
+
+(auto movement)
+
+[ Player Firewall ] -> [ Firewall ] again
+
+[ stationary Player Line ] -> [ action Player Collision1 Line ] again
+
+
+left [ action Player OneWayL | ] -> [ OneWayL PlayerTrailL no Collision | PlayerR no ConnectsR ]
+right [ action Player OneWayR | ] -> [ OneWayR PlayerTrailR no Collision | PlayerL no ConnectsL ]
+up [ action Player OneWayU | ] -> [ OneWayU PlayerTrailU no Collision | PlayerD no ConnectsD ]
+down [ action Player OneWayD | ] -> [ OneWayD PlayerTrailD no Collision | PlayerU no ConnectsU ]
+
+left [ action Player ConnectsL | ] -> [ action Player PlayerTrailL no Collision | PlayerR no ConnectsR ]
+right [ action Player ConnectsR | ] -> [ action Player PlayerTrailR no Collision | PlayerL no ConnectsL ]
+up [ action Player ConnectsU | ] -> [ action Player PlayerTrailU no Collision | PlayerD no ConnectsD ]
+down [ action Player ConnectsD | ] -> [ action Player PlayerTrailD no Collision | PlayerU no ConnectsU ]
+
+[ Node PlayerTrail ] -> [ Node ]
+[ Node Player no Killer ] -> [ Node Player1 ]
+
+(left [ action Player ConnectsL Collision1 | ] -> [ action Player ConnectsL no Collision | Player1 no ConnectsR ]
+right [ action Player ConnectsR Collision1 | ] -> [ action Player ConnectsR no Collision | Player1 no ConnectsL ]
+up [ action Player ConnectsU Collision1 | ] -> [ action Player ConnectsU no Collision | Player1 no ConnectsD ]
+down [ action Player ConnectsD Collision1 | ] -> [ action Player ConnectsD no Collision | Player1 no ConnectsU ]
+
+left [ action Player ConnectsL no Collision1 | no Player ] -> [ action Player ConnectsL no Collision | Player1 no ConnectsR ] sfx2
+right [ action Player ConnectsR no Collision1 | no Player  ] -> [ action Player ConnectsR no Collision | Player1 no ConnectsL ] sfx2
+up [ action Player ConnectsU no Collision1 | no Player  ] -> [ action Player ConnectsU no Collision | Player1 no ConnectsD ] sfx2
+down [ action Player ConnectsD no Collision1 | no Player  ] -> [ action Player ConnectsD no Collision | Player1 no ConnectsU ] sfx2)
+
+[ action Player ] -> []
+
+(player input)
+
+[ > Player | no ConnectableTo ] -> [ Player | ]
+
+left [ > Player | OneWayR ] -> [ Player | OneWayR ]
+right [ > Player | OneWayL ] -> [ Player | OneWayL ]
+up [ > Player | OneWayD ] -> [ Player | OneWayD ]
+down [ > Player | OneWayU ] -> [ Player | OneWayU ]
+
+left [ > Player Node | ConnectsR ] -> [ Node | PlayerR ] again sfx1
+right [ > Player Node | ConnectsL ] -> [ Node | PlayerL ] again sfx1
+up [ > Player Node | ConnectsD ] -> [ Node | PlayerD ] again sfx1
+down [ > Player Node | ConnectsU ] -> [ Node | PlayerU ] again sfx1
+
+(fix up lines)
+
+[ Line no LineDir no PlayerTrail ] -> [ action Line ]
+
+left [ action Line no Player no OneWayL no LineL | ConnectableTo no OneWayR ] -> [ action Line LineL | ConnectableTo ]
+right [ action Line no Player no OneWayR no LineR | ConnectableTo no OneWayL ] -> [ action Line LineR | ConnectableTo ]
+up [ action Line no Player no OneWayU no LineU | ConnectableTo no OneWayD ] -> [ action Line LineU | ConnectableTo ]
+down [ action Line no Player no OneWayD no LineD | ConnectableTo no OneWayU ] -> [ action Line LineD | ConnectableTo ]
+
+left [ Line no Player no OneWayL no LineL | ConnectableTo no OneWayR ] -> [ Line PlayerTrailL | ConnectableTo ]
+right [ Line no Player no OneWayR no LineR | ConnectableTo no OneWayL ] -> [ Line PlayerTrailR | ConnectableTo ]
+up [ Line no Player no OneWayU no LineU | ConnectableTo no OneWayD ] -> [ Line PlayerTrailU | ConnectableTo ]
+down [ Line no Player no OneWayD no LineD | ConnectableTo no OneWayU ] -> [ Line PlayerTrailD | ConnectableTo ]
+
+left [ OneWayL | no Node no AntiVirus ] -> [ OneWayL | InboundR ]
+right [ OneWayR | no Node no AntiVirus ] -> [ OneWayR | InboundL ]
+up [ OneWayU | no Node no AntiVirus ] -> [ OneWayU | InboundD ]
+down [ OneWayD | no Node no AntiVirus ] -> [ OneWayD | InboundU ]
+
+[ Firewall LineL no Player ] -> [ Firewall LineL LineR ]
+[ Firewall LineR no Player ] -> [ Firewall LineL LineR ]
+[ Firewall LineU no Player ] -> [ Firewall LineU LineD ]
+[ Firewall LineD no Player ] -> [ Firewall LineU LineD ]
+
+([ PlayerTrail ] -> [ action PlayerTrail ]
+[ Player Line ] [ action PlayerTrail ] -> [ Player Line ] [ PlayerTrail ]
+[ action PlayerTrailL ] -> [ LineL ]
+[ action PlayerTrailR ] -> [ LineR ]
+[ action PlayerTrailU ] -> [ LineU ]
+[ action PlayerTrailD ] -> [ LineD ])
+
+(Change collision graphic for lines leaving network)
+
+[ Collision1 LineL no LineR no LineU no LineD ] -> [ Collision4 LineL ]
+[ Collision1 LineR no LineL no LineU no LineD ] -> [ Collision4 LineR ]
+[ Collision1 LineU no LineL no LineR no LineD ] -> [ Collision4 LineU ]
+[ Collision1 LineD no LineL no LineR no LineU ] -> [ Collision4 LineD ]
+
+(wake killer)
+
+[ Player SleepingKiller ] -> [ Killer ]
+
+==============
+WINCONDITIONS
+==============
+
+all target on player1
+all player1 on target
+some target
+no Collision
+no PlayerTrail
+no PlayerMoving
+
+=======
+LEVELS
+=======
+
+
+
+..........
+...-*----.
+...-..-.-.
+.@--..*.*.
+......-.-.
+......---.
+....$..-..
+....---*..
+..........
+
+
+
+
+
+.........
+....@....
+....-....
+..*---$..
+..-...-..
+..-...-..
+..*---*..
+.........
+
+
+
+
+
+
+...........
+.....@.....
+.....-.....
+...*---*...
+.---...---.
+.-.......-.
+.$--...--$.
+.-.--$--.-.
+.-.......-.
+.---------.
+...........
+
+
+
+
+
+.............
+......@......
+......-......
+.--*-----*--.
+.-.-.....-.-.
+.-.-.....-.-.
+.-.-.-$-.-.-.
+.--*--.--*--.
+.............
+
+
+
+
+...........
+...$...$...
+...-...-...
+.--*-@-*--.
+.-.-.-.-.-.
+.$.-----.$.
+...........
+
+
+
+
+
+...........
+.---------.
+.-...-...-.
+.*-*-%-*-*.
+.-.-...-.-.
+.$.-----.$.
+...........
+
+
+
+
+
+
+
+...........
+.....@.....
+.....-.....
+...$---$...
+...-.-.-...
+.*-*-*-*-*.
+...-...-...
+...-----...
+...........
+
+
+
+
+
+.........
+.-----...
+.-.-.-...
+.%-*-*-$.
+...-.-.-.
+...-----.
+.........
+
+
+
+
+.............
+...-------...
+...-.-.-.-...
+...@-*.*-*...
+...-.-.-.-...
+.--*-$-$-*--.
+.-.-.-.-.-.-.
+.-----------.
+.............
+
+
+
+.......
+.-----.
+.-.-.-.
+.*-@.*.
+.-.-...
+.$-*-$.
+.......
+
+
+
+
+(one way gates)
+
+
+
+...................
+...................
+............--*--..
+.*l-$l-$l-$l-.-.-%.
+............--*--..
+...................
+...................
+
+
+
+
+...........
+...--*--...
+...-.-.-...
+...-.d.-...
+.--$---$--.
+.-.-...-.-.
+.-.--@--.-.
+.-...-...-.
+.----$----.
+.....-.....
+.....$.....
+...........
+
+
+
+
+..............
+........*l---.
+..--$--.u...-.
+..-.-.-.-...-.
+.%--*---*-r$-.
+..-.-.-.-...-.
+..--$--.d...-.
+........*l---.
+..............
+
+
+
+
+
+...................
+...................
+.-$-*-.-*-$-...--*.
+.-...-$-...-l-@-.-.
+.-$-*-.-*-$-...--*.
+...................
+...................
+
+
+
+
+.........
+.--*.*--.
+.-.---.-.
+.-..-..-.
+.---@---.
+....-....
+.-$.-.$-.
+.-..d..-.
+.-*-$-*-.
+.........
+
+
+
+.............
+.--$--@--$--.
+.-....-....-.
+.-l-*-$-*-r-.
+.-.........-.
+.-----------.
+.............
+
+
+
+
+..........
+.-----....
+.-...-l-..
+.-*-$-.-..
+....-..-..
+....@-*-..
+....-.-...
+...-$-*-..
+...-...-..
+...-----..
+..........
+
+
+
+
+
+..........
+.--$---$-.
+.@.-....-.
+.---.*l--.
+..-..u.-..
+..-$---$..
+...-...-..
+...-----..
+..........
+
+
+
+
+...........
+.....--%...
+.....-.....
+...--$--...
+..--.-.-...
+..-..d.-...
+..*----*-..
+..-.....-..
+..---$---..
+.....-.....
+...$--.....
+...........
+
+
+
+
+
+.........
+..-*-*...
+..-..-...
+.---.--*.
+.-.d.-.-.
+.----@-*.
+.....-...
+.$-*-$...
+.........
+
+
+
+
+
+
+(void connections)
+
+
+
+
+...........
+.-@.-*--$..
+..-.-...-..
+..---......
+....-......
+....-*--*..
+...........
+
+
+
+
+.........
+....-....
+.-$.$.$-.
+..u.u.u..
+..-.-.-..
+..*-*-*..
+..-...-..
+..-----..
+....@....
+.........
+
+
+
+...........
+.....%.....
+.$-.---.-$.
+..--*.*--..
+.*-.-.-.-*.
+.-.......-.
+...........
+
+
+
+
+
+............
+........-...
+...@----*--.
+.---.-..-.-.
+.-...-r--.$.
+.-..*..-..-.
+.--.-.--....
+..-----.....
+............
+
+
+
+
+.............
+......$......
+.$.-------.$.
+.-.-..-..-.-.
+.---.-%-.---.
+...-..-..-...
+...-------...
+......-......
+...---$---...
+...$.....$...
+.............
+
+
+
+
+(firewalls)
+
+
+
+............
+.....---....
+.....-.?....
+...-.-.!....
+.$!*-*---@-.
+...-......-.
+...--------.
+............
+
+
+
+
+..........
+.....*....
+.....-....
+...@.--?-.
+...-...-..
+.--*-!-$-.
+.-.-...-..
+.-.*----..
+.-...-....
+.-----....
+..........
+
+
+
+.............
+.----........
+.-..-.&l-....
+.*.-*-..-....
+.-!-.---@-r&.
+...---..-....
+......&l-....
+.............
+
+
+...........
+..---@---..
+..-.....-..
+..-..$..-..
+..-..!..-..
+.-*-----*-.
+.....-.....
+...*-?-*...
+.....-.....
+...........
+
+
+
+............
+....-------.
+..--*.-...-.
+..-.-.!...-.
+.@--*-&!*.-.
+..-.-.....-.
+..--*.....-.
+....-------.
+............
+
+
+
+
+
+
+.........
+...---...
+...-.-...
+.%-&!$-*.
+...-.-.-.
+...-----.
+.........
+
+
+
+
+
+...........
+.....---...
+.-...d.-...
+.$.?---*--.
+.-.-...-.-.
+.!.-...-.-.
+.-.-...-.-.
+.--@---*--.
+...........
+
+
+
+
+.............
+.$...........
+.-.....--*--.
+.--!-%--...-.
+.....-.--*--.
+.....d...-...
+.....&.......
+.............
+
+
+
+
+
+.........
+.*----&-.
+.-...-.-.
+.$.-!-.-.
+...-...-.
+...@--$-.
+.........
+
+
+
+...........
+..*-----*..
+..-.....-..
+.---...---.
+.-.-.-.-.-.
+.*-?-@-?-*.
+...!...!...
+...-...-...
+...$...$...
+...........
+
+
+
+.........
+.....-!-.
+.-...-.-.
+.*-?--.$.
+.-.-...-.
+.-.@----.
+.-.-...-.
+.*-*---*.
+.........
+
+
+
+.............
+....*---*....
+....-.-.-....
+....--@--....
+......-......
+....--*--....
+....-.!.-....
+....-.$.-....
+....-...-....
+..--*---*--..
+..-.-...-.-..
+.-?--...--?-.
+.............
+
+
+
+
+
+(harder levels)
+
+
+
+........
+..-----.
+.*-...-.
+..-$-*-.
+...-.-..
+.--$-@..
+.-.-.-..
+.--$-*..
+.-.-....
+.---....
+........
+
+
+
+
+.............
+...*...-----.
+...-...-.d.d.
+.*-*-*!?-@-*.
+...-...-.-.-.
+...*...$-$-$.
+.............
+
+
+
+
+...............
+.......*.......
+.......u.......
+...---------...
+.$.-.-.@.-.-.$.
+.-.*-*---*-*.-.
+.-.-.-...-.-.-.
+.*----...----*.
+...............
+
+
+................
+.........------.
+.........-....-.
+.......--?--..-.
+.......-.-.-..-.
+.*-$-$!*-*--%.-.
+.......-.-.-..-.
+.......--?--..-.
+.........-....-.
+.........------.
+................
+
+
+...........
+...--$--...
+.$--...--$.
+...-----...
+.....-.....
+.----%----.
+.-.......-.
+.-.-----.-.
+.-.*.-.*.-.
+.-.-.-.-.-.
+.--*-$-*--.
+...........
+
+
+
+.........
+.-----...
+.-.?.-.$.
+.-.!.-.-.
+.-----.$.
+.-...-.-.
+.*---*.@.
+...-...-.
+...----?.
+.........
+
+
+
+...........
+...---*---.
+...-.....-.
+...-$---$-.
+......u....
+..--*---*..
+..-.-...-..
+..@.-----..
+..-........
+.---.......
+.-.-.......
+.*-*.......
+...........
+
+
+
+.............
+.--$.*-?-*--.
+.!...-...-.-.
+.----*.@-*--.
+.....-...-.-.
+.....*-?-*--.
+.............
+
+
+
+message Thanks for playing :)
+
+
+
+
+(...........
+.*-------*.
+.-...-...-.
+.--..@..--.
+..-.....-..
+..*-----*..
+...........
+)
+
+
+
+(........
+....---.
+..--$.-.
+.%-.-.$-
+..--$-..
+...-.-..
+...---..
+........
+
+
+
+...........
+.-$.....$-.
+..--*-*--..
+....-.-....
+....-@-....
+....-.-....
+..--*-*--..
+..$.....$..
+..-.....-..
+...........
+
+
+...........
+.....-.....
+....-@.....
+....--.....
+.....d.....
+...-----...
+...-...-...
+..-*---*-..
+..-.....-..
+..*-----?..
+.....-.....
+.....!.....
+.....-.....
+....$-$....
+...........
+
+
+
+...............
+.....--%--.....
+.$...-...-...$.
+.--$--...--$--.
+.....-----.....
+.......-.......
+.....--$--.....
+.*...-...-...*.
+.--*-$...$-*--.
+...............
+
+
+
+...................
+.----.........----.
+.-..-....%....-..-.
+.-.-*--.---.--*-.-.
+.-..-.--*.*--.-..-.
+.-..$--.-.-.--$..-.
+.-..-.........-..-.
+.----.........----.
+...................
+
+
+
+
+...........
+.....-.....
+.....@.....
+..$.---.$..
+..-.-.-.-..
+.-*-*-*-*-.
+.-.......-.
+.$.......$.
+...........
+
+
+
+
+..........
+....--*-..
+....-.-...
+..@--.$-..
+....-.....
+....*-$...
+....-.....
+..........
+
+
+
+
+.........
+.-$---$-.
+.-..-..-.
+.-..@..-.
+.-.....-.
+.-$...$-.
+..-----..
+.........
+
+
+
+...........
+.--*---*...
+.-.-.-.-...
+.$.--*.--@.
+...-...-...
+...----*...
+...........
+
+
+
+.......
+.$-$-$.
+.-.-.-.
+.-.@.-.
+.-----.
+.......
+
+
+
+........
+..--!--.
+..-...-.
+..-$-$-.
+...-.-..
+.--@-?..
+.-.-.-..
+.--*-*..
+.-.-....
+.---....
+........
+
+
+...........
+.---!---...
+.-.....---.
+.-$-*-*-.-.
+..-...-..-.
+.-$-?-*--@.
+..-.-.-....
+..-----....
+...........
+
+
+
+..........
+..*---*-..
+..-....-..
+..@---?-..
+....-.....
+....-.-.-.
+....*!*-$.
+..........
+
+
+
+
+...................
+.......-----------.
+.*----.-.........-.
+.....-.-...*----.-.
+.--*.--*--.....-.-.
+.-.-...-.-.----*--.
+.-.-----.-.-.......
+.--......-.-.*---..
+..----*..*.---..-..
+......-.........-..
+......---$.@-----..
+...................
+
+
+
+...........
+.....@.....
+...-----...
+...-...-...
+.*-*-*-*-*.
+.-.-.-.-.-.
+.-.*.-.*.-.
+.$...$...$.
+...........
+
+
+
+)

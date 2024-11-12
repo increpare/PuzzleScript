@@ -1,0 +1,270 @@
+title 9x9 Go
+author Dennis Au
+background_color DarkGreen
+run_rules_on_level_start
+
+(v0.2 added ko rules)
+
+========
+OBJECTS
+========
+
+Wood .
+Orange
+
+
+Intersection1100 1
+Black
+..0..
+..0..
+..000
+.....
+.....
+
+Intersection0110 2
+Black
+.....
+.....
+..000
+..0..
+..0..
+
+Intersection0011 3
+Black
+.....
+.....
+000..
+..0..
+..0..
+
+Intersection1001 4
+Black
+..0..
+..0..
+000..
+.....
+.....
+
+Intersection0111 _
+Black
+.....
+.....
+00000
+..0..
+..0..
+
+Intersection1011 \
+Black
+..0..
+..0..
+000..
+..0..
+..0..
+
+Intersection1101 -
+Black
+..0..
+..0..
+00000
+.....
+.....
+
+Intersection1110 /
+Black
+..0..
+..0..
+..000
+..0..
+..0..
+
+Intersection1111 +
+Black
+..0..
+..0..
+00000
+..0..
+..0..
+
+Hoshi *
+Black DarkGrey
+..0..
+..0..
+00.00
+..0..
+..0..
+
+
+Black b
+Black DarkGrey
+.000.
+00010
+00000
+00000
+.000.
+
+White w
+LightGrey White
+.000.
+00010
+00000
+00000
+.000.
+
+PlayerB
+DarkGrey Grey
+.000.
+00010
+00000
+00000
+.000.
+
+
+PlayerW
+LightGrey White Green
+.000.
+00010
+00000
+00000
+.000.
+
+Dead
+Red
+
+OldDead
+Purple
+.....
+.....
+.....
+.....
+.....
+
+VGuide
+DarkBrown
+..0..
+.....
+.....
+.....
+..0..
+
+HGuide
+DarkBrown
+.....
+.....
+0...0
+.....
+.....
+
+=======
+LEGEND
+=======
+P = PlayerB and Hoshi
+
+Background = Wood
+
+Intersection = Intersection0011 or Intersection0110 or Intersection1001 or Intersection1100 or Intersection0111 or Intersection1011 or Intersection1101 or Intersection1110 or Intersection1111 or Hoshi
+
+Player = PlayerB or PlayerW
+Stone = White or Black
+Guide = HGuide or VGuide
+
+=======
+SOUNDS
+=======
+
+================
+COLLISIONLAYERS
+================
+Background
+OldDead, Dead
+Player, Guide
+Intersection
+Stone
+
+======
+RULES
+======
+
+( ==================
+   ko checking code
+  ==================)
+
+(only check kos if only one stone captured on last move)
+[Action Player][OldDead | OldDead] -> [Action Player][Dead|Dead]
+[Action Player][Dead|OldDead] -> [Action Player][Dead|Dead]
+[Action Player][Dead] -> [Action Player][]
+
+
+( ================
+   move, capture,
+   validity check
+  ================)
+
+(cannot play on an existing stone)
+[Action Player Stone] -> cancel
+
+(try to play a stone of the right colour)
+[Action PlayerW No Stone] -> [Action PlayerW White]
+[Action PlayerB No Stone] -> [Action PlayerB Black]
+
+(cannot play straight away if it's a ko)
+[Action Player][OldDead Player] -> cancel
+[Action Player][OldDead] -> [Action Player][]
+
+(assume all stones dead then check for liberties)
+[Stone] -> [Dead Stone]
+[Dead White| Intersection No Stone] -> [White| Intersection]
+[Dead Black| Intersection No Stone] -> [Black| Intersection]
+
+[Dead White| White No Dead] -> [White No Dead| White No Dead]
+[Dead Black| Black No Dead] -> [Black No Dead| Black No Dead]
+
+(processing capturing of opponent's stones then check liberties again to allow for throw-ins) 
+[PlayerW][Dead Black] -> [PlayerW][OldDead]
+[PlayerB][Dead White] -> [PlayerB][OldDead]
+
+[Dead White| Intersection No Stone] -> [White| Intersection]
+[Dead Black| Intersection No Stone] -> [Black| Intersection]
+
+[Dead White| White No Dead] -> [White No Dead| White No Dead]
+[Dead Black| Black No Dead] -> [Black No Dead| Black No Dead]
+
+(cannot suicide)
+[PlayerW Dead] -> cancel
+[PlayerB Dead] -> cancel
+
+(switch player)
+[Action PlayerW] -> [PlayerB]
+[Action PlayerB] -> [PlayerW]
+
+
+( ===========
+   movement,
+   guides
+  ===========)
+
+[Guide] -> []
+[> Player| No Intersection] -> [Player|]
+
+late horizontal [Player| No Guide] -> [Player| HGuide]
+late horizontal [HGuide | No Player] -> [HGuide| HGuide]
+late vertical [Player| No Guide] -> [Player| VGuide]
+late vertical [VGuide| No Player] -> [Vguide| Vguide]
+
+==============
+WINCONDITIONS
+==============
+
+=======
+LEVELS
+=======
+...........
+.2_______3.
+./+++++++\.
+./+*+++*+\.
+./+++++++\.
+./+++p+++\.
+./+++++++\.
+./+*+++*+\.
+./+++++++\.
+.1-------4.
+...........

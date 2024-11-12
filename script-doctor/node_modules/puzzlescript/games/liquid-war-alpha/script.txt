@@ -1,0 +1,154 @@
+title Liquid War Alpha
+author Ryan Hitchman
+
+realtime_interval .1
+
+========
+OBJECTS
+========
+
+Bg
+Black
+
+Bgy
+#660066
+
+Wall
+Brown
+
+Player
+green
+
+Enemy
+red
+.....
+.000.
+.000.
+.000.
+.....
+
+PEmpty
+black
+
+PFound
+white
+
+SlimeRed 0
+Red
+
+SlimeBlue 2
+Blue
+
+=======
+LEGEND
+=======
+
+Background = Bg or Bgy
+
+. = Bg
+W = Wall
+
+E = enemy
+P = player
+
+Object = Enemy or Player or Wall
+
+Slime = SlimeRed or SlimeBlue
+
+=======
+SOUNDS
+=======
+
+
+================
+COLLISIONLAYERS
+================
+
+PEmpty, PFound
+Background
+Wall, Slime
+Player, Enemy
+
+
+======
+RULES
+======
+
+
+[no Player no Wall] -> [PEmpty]
+[Player]->[Player PFound]
+  left  [PFound | PEmpty] -> [PFound | right PFound ]
++ right [PFound | PEmpty] -> [PFound | left  PFound ]
++ up    [PFound | PEmpty] -> [PFound | down  PFound ]
++ down  [PFound | PEmpty] -> [PFound | up    PFound ]
+
+[bgy] -> [bg]
+[Enemy] -> [Enemy bgy]
+  left  [bgy Left  PFound | bg] -> [bgy Left  PFound | bgy]
++ right [bgy Right PFound | bg] -> [bgy Right PFound | bgy]
++ up    [bgy Up    PFound | bg] -> [bgy UP    PFound | bgy]
++ down  [bgy Down  PFound | bg] -> [bgy Down  PFound | bgy]
+
+startloop
+random [stationary SlimeRed Moving PFound] -> [Moving SlimeRed Moving PFound]
++	   [stationary SlimeRed Moving PFound] -> [Moving SlimeRed Moving PFound]
++	   [stationary SlimeRed Moving PFound] -> [Moving SlimeRed Moving PFound]
++	   [stationary SlimeRed Moving PFound] -> [Moving SlimeRed Moving PFound]
++	   [stationary SlimeRed Moving PFound] -> [Moving SlimeRed Moving PFound]
++	   [stationary SlimeRed Moving PFound] -> [randomdir SlimeRed Moving PFound]
+endloop
+[PFound] -> []
+[PEmpty] -> []
+
+[no Enemy no Wall] -> [PEmpty]
+[Enemy] -> [Enemy PFound]
+  left  [PFound | PEmpty] -> [PFound | right PFound ]
++ right [PFound | PEmpty] -> [PFound | left  PFound ]
+
++ down  [PFound | PEmpty] -> [PFound | up    PFound ]
+
+startloop
+random [stationary SlimeBlue Moving PFound] -> [Moving SlimeBlue Moving PFound]
++	   [stationary SlimeBlue Moving PFound] -> [Moving SlimeBlue Moving PFound]
++	   [stationary SlimeBlue Moving PFound] -> [Moving SlimeBlue Moving PFound]
++	   [stationary SlimeBlue Moving PFound] -> [Moving SlimeBlue Moving PFound]
++	   [stationary SlimeBlue Moving PFound] -> [Moving SlimeBlue Moving PFound]
++	   [stationary SlimeBlue Moving PFound] -> [randomdir SlimeBlue Moving PFound]
+endloop
+
+[> SlimeRed | < SlimeBlue] -> [SlimeRed | SlimeBlue]
+
+startloop
+random [> SlimeRed | SlimeBlue] -> [SlimeRed | SlimeRed]
++ 	   [> SlimeRed | SlimeBlue] -> [SlimeRed | SlimeBlue]
+random [> SlimeBlue | SlimeRed] -> [SlimeBlue | SlimeBlue]
++ 	   [> SlimeBlue | SlimeRed] -> [SlimeBlue | SlimeRed]
+endloop
+
+==============
+WINCONDITIONS
+==============
+
+
+=======
+LEVELS
+=======
+
+...w.w.0000.0000....
+...w.w.0000.0000p...
+...w.w.0000.0000....
+...w.w.0000.0000w...
+.e.w..wwww....ww....
+...ww.....wwwww.....
+2222.........w......
+2222..wwww...ww.....
+2222..w..ww...w..www
+2222..w..ww..ww.....
+....ww...w...w......
+2222w..www..wwwwww..
+2222..ww....w.......
+2222.ww.....w.......
+2222ww...w..ww......
+..www....ww..ww.....
+..........ww..w.....
+...........w........

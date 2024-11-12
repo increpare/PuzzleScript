@@ -1,0 +1,233 @@
+title the copying
+author Rosden Shadow [Mark Signorelli]
+homepage rosden.itch.io
+run_rules_on_level_Start
+
+background_color #5B4846
+
+text_color #AAAAF2
+
+========
+OBJECTS
+========
+
+Background
+#845C5C #5B4846
+10111
+11010
+10101
+01011
+11101
+(
+00101
+01110
+11011
+01111
+10110)
+(
+11101
+00101
+11111
+10100
+10111)
+
+
+Target
+#82A17C #7EE58D #D9FFDC 
+.....
+.010.
+.1.1.
+.010.
+.....
+
+Wall
+#A87EE5 #AAAAF2 #705C84 #352E4D
+20012
+12001
+21220
+32332
+33233
+
+overwall
+#A87EE5 #AAAAF2 #705C84
+.....
+.....
+.....
+01211
+20101
+
+
+Playerright
+#F2F2AA #C2CC52 #AAAAF2 #A87EE5
+.000.
+11202
+11313
+11110
+.1.1.
+
+playerleft
+#F2F2AA #C2CC52 #AAAAF2 #A87EE5
+.000.
+20211
+31311
+01111
+.1.1.
+
+Crate
+#7EE58D #D9FFDC #82A17C #394239
+20011
+20001
+22001
+32223
+.333.
+
+overcrate
+#7EE58D #D9FFDC #82A17C
+.....
+.....
+.....
+.....
+.111.
+
+cloner
+#E5C17E #DB7F55 #B32D2D #73342E
+.100.
+.210.
+.221.
+.332.
+.....
+
+swapcrate
+Orange Yellow
+00000
+0...0
+0...0
+0...0
+00000
+
+swapwall
+black
+.....
+.....
+.....
+.....
+.....
+
+thefloor
+#5B4846
+00000
+00000
+00000
+00000
+00000
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Playerright
+* = Crate
+@ = Crate and Target
+O = Target
+c=cloner
+-=thefloor
+
+feel=overwall or overcrate
+pushable=crate or cloner or swapcrate
+win=crate or wall
+
+player=playerright or playerleft
+=======
+SOUNDS
+=======
+
+pushable MOVE 36772507
+
+
+sfx0 52836103
+================
+COLLISIONLAYERS
+================
+
+Background
+Target
+Player, Wall, pushable,swapwall,thefloor
+feel
+
+======
+RULES
+======
+
+[feel]->[]
+[ >  Player | pushable ] -> [  >  Player | > pushable  ]
+
+[ left Playerright] -> [ left playerleft]
+[ right Playerleft] -> [ right playerright]
+
+[> crate |cloner] ->[> swapcrate| ] sfx0
+[> cloner |crate] ->[| swapcrate] sfx0
+
+([> cloner |wall] ->[| swapwall])
+
+[swapcrate|no player]->[swapcrate|crate]
+[swapwall|no player]->[swapwall|wall]
+
+late [swapcrate]->[Crate]
+late [swapwall] ->[wall]
+
+late up [wall| ]-> [wall|overwall]
+late up [crate| ]-> [crate|overcrate]
+==============
+WINCONDITIONS
+==============
+
+All Target on win
+
+=======
+LEVELS
+=======
+
+message cover up all squares to win
+
+message level 1 of 3
+--------
+-######-
+##....##
+#.O..O.#
+#......#
+##.#.#.#
+#.#.#.##
+#......#
+#.cP.*.#
+##....##
+-######-
+
+message level 2 of 3
+--------
+#######-
+#.....#-
+#.#.P.##
+#O....O#
+##.###.#
+##.#.#.#
+#O....O#
+#.#c*.##
+#.....#-
+#######-
+
+message level 3 of 3
+--------
+-######-
+##....##
+#..P...#
+#.c....#
+#.c.*..#
+#......#
+###.####
+-#OOOO#-
+-#OOOO#-
+-######-
+
+message well done! copying complete

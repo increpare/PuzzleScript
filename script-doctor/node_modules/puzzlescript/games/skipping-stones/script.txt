@@ -1,0 +1,1346 @@
+title Skipping Stones to Lonely Homes
+author Alan Hazelden
+homepage www.draknek.org
+
+(verbose_logging)
+
+run_rules_on_level_start
+
+realtime_interval 0.1
+again_interval 0.1
+(key_repeat_interval 0.2)
+
+flickscreen 19x14
+
+noaction
+
+youtube UuKbLbC1zw0
+
+========
+OBJECTS
+========
+
+Background
+LightBlue Blue
+11111
+11101
+11111
+10111
+11111
+
+Sand .
+#dfcc4f yellow
+11111
+01111
+11101
+11111
+10111
+
+Tree
+Brown Green
+..11.
+111..
+1.011
+..0.1
+..0..
+
+(Hole
+#c5b446 #dfcc4f
+11111
+01111
+11101
+11111
+10111
+
+Crate
+Brown Orange
+00000
+01110
+01110
+01110
+00000)
+
+Lily
+Green LightGreen
+.111.
+10001
+10001
+10001
+.111.
+
+
+Ripple1
+Blue LightBlue
+00000
+01110
+01010
+01110
+00000
+
+Ripple2
+Blue LightBlue
+01110
+10001
+10001
+10001
+01110
+
+RippleH
+Blue LightBlue
+00000
+00000
+01110
+00000
+00000
+
+RippleH2
+Blue LightBlue
+00000
+01110
+01010
+01110
+00000
+
+RippleH3
+transparent
+
+RippleH4
+transparent
+
+RippleH5
+transparent
+
+RippleV
+Blue LightBlue
+00000
+00100
+00100
+00100
+00000
+
+RippleV2
+Blue LightBlue
+00000
+01110
+01010
+01110
+00000
+
+RippleV3
+transparent
+
+RippleV4
+transparent
+
+RippleV5
+transparent
+
+(WaterNew
+white LightBlue
+11111
+01111
+11101
+11111
+10111)
+
+
+Treasure
+#d0be4a Yellow Yellow
+.111.
+10201
+12021
+10201
+.111.
+
+Treasure2
+#dfcc4f yellow
+1111.
+01111
+11101
+11111
+10111
+
+Treasure3
+#dfcc4f yellow #d0be4a orange white
+1111.
+11111
+12211
+10011
+11111
+
+Treasure4
+#dfcc4f yellow #d0be4a orange white
+1111.
+12221
+10001
+10001
+11111
+
+Treasure5
+#dfcc4f yellow #d0be4a orange white
+1111.
+22222
+00000
+00000
+11111
+
+Treasure6
+#dfcc4f yellow #d0be4a orange white
+1222.
+20002
+00300
+00000
+10001
+
+Treasure7
+#dfcc4f yellow #d0be4a orange white
+1222.
+20002
+03430
+03330
+10001
+
+TreasureTaken
+#dfcc4f yellow #d0be4a
+1222.
+20002
+00000
+00000
+10001
+
+
+
+Target
+transparent
+
+Target2
+transparent
+
+RemoveTarget
+transparent
+
+(
+Target
+DarkBlue
+.....
+.000.
+.0.0.
+.000.
+.....
+
+Target2
+Red
+.....
+.000.
+.0.0.
+.000.
+.....
+
+RemoveTarget
+Red
+.....
+.....
+..0..
+.....
+.....
+)
+
+PlayerNormal
+DarkRed #493c2b #000000
+..0..
+.111.
+01110
+02220
+.2.2.
+
+PlayerInWater
+DarkRed #493c2b #000000
+..0..
+.111.
+01110
+02220
+.....
+
+Pebble
+Grey DarkGrey LightGrey
+.....
+..00.
+.0001
+.0111
+...1.
+
+SubmergedPebble
+DarkGrey #263546 Blue LightBlue
+22222
+22232
+20022
+00012
+01112
+
+U
+transparent
+
+D
+transparent
+
+L
+transparent
+
+R
+transparent
+
+
+AddLandLUD
+Yellow
+0....
+.....
+.....
+.....
+0....
+
+AddLandLU
+Yellow
+0....
+.....
+.....
+.....
+.....
+
+AddLandLD
+Yellow
+.....
+.....
+.....
+.....
+0....
+
+AddLandRUD
+Yellow
+....0
+.....
+.....
+.....
+....0
+
+AddLandRU
+Yellow
+....0
+.....
+.....
+.....
+.....
+
+AddLandRD
+Yellow
+.....
+.....
+.....
+.....
+....0
+
+RemoveLandLUD
+Blue
+0....
+.....
+.....
+.....
+0....
+
+RemoveLandLU
+Blue
+0....
+.....
+.....
+.....
+.....
+
+RemoveLandLD
+Blue
+.....
+.....
+.....
+.....
+0....
+
+RemoveLandRUD
+Blue
+....0
+.....
+.....
+.....
+....0
+
+RemoveLandRU
+Blue
+....0
+.....
+.....
+.....
+.....
+
+RemoveLandRD
+Blue
+.....
+.....
+.....
+.....
+....0
+
+
+FlowL1 ←
+#3166f7 #cbe4ef
+00100
+00000
+00001
+00000
+01000
+
+FlowL2
+#3166f7 #cbe4ef
+01000
+00000
+00010
+00000
+10000
+
+FlowL3
+#3166f7 #cbe4ef
+10000
+00000
+00100
+00000
+00001
+
+FlowL4
+#3166f7 #cbe4ef
+00001
+00000
+01000
+00000
+00010
+
+FlowL5
+#3166f7 #cbe4ef
+00010
+00000
+10000
+00000
+00100
+
+FlowR1 →
+#3166f7 #cbe4ef
+10000
+00000
+00100
+00000
+00001
+
+FlowR2
+#3166f7 #cbe4ef
+01000
+00000
+00010
+00000
+10000
+
+FlowR3
+#3166f7 #cbe4ef
+00100
+00000
+00001
+00000
+01000
+
+FlowR4
+#3166f7 #cbe4ef
+00010
+00000
+10000
+00000
+00100
+
+FlowR5
+#3166f7 #cbe4ef
+00001
+00000
+01000
+00000
+00010
+
+FlowU1 ↑
+#3166f7 #cbe4ef
+10000
+00001
+00000
+00100
+00000
+
+FlowU2
+#3166f7 #cbe4ef
+00001
+00000
+00100
+00000
+10000
+
+FlowU3
+#3166f7 #cbe4ef
+00000
+00100
+00000
+10000
+00001
+
+FlowU4
+#3166f7 #cbe4ef
+00100
+00000
+10000
+00001
+00000
+
+FlowU5
+#3166f7 #cbe4ef
+00000
+10000
+00001
+00000
+00100
+
+FlowD1 ↓
+#3166f7 #cbe4ef
+10000
+00001
+00000
+00100
+00000
+
+FlowD2
+#3166f7 #cbe4ef
+00000
+10000
+00001
+00000
+00100
+
+FlowD3
+#3166f7 #cbe4ef
+00100
+00000
+10000
+00001
+00000
+
+FlowD4
+#3166f7 #cbe4ef
+00000
+00100
+00000
+10000
+00001
+
+FlowD5
+#3166f7 #cbe4ef
+00001
+00000
+00100
+00000
+10000
+
+StopFlow
+transparent
+
+Ship_Left
+#eb8931 #732930 #2f2416 #ffffff
+..030
+.0331
+01121
+.0111
+..000
+
+Ship_Right1
+#eb8931 #732930 #2f2416 #ffffff
+3330.
+12110
+12110
+11110
+0000.
+
+Ship_Right2
+#eb8931 #732930 #2f2416 #ffffff
+3330.
+12110
+12110
+11110
+0000.
+
+Ship_Sails
+#ffffff
+.....
+.....
+.....
+.00..
+00...
+
+Darkness
+black
+
+Death
+LightBlue Blue
+11111
+11101
+11111
+10111
+11111
+
+Speedup
+transparent
+
+Light_trigger
+transparent
+
+Light
+white
+
+MyMistake
+transparent
+
+=======
+LEGEND
+=======
+
+w = Background
+
+Direction = U or D or L or R
+
+Player = PlayerNormal or PlayerInWater
+
+Ripple = Ripple1 or Ripple2 or RippleH or RippleV or RippleH2 or RippleV2 or RippleH3 or RippleV3 or RippleH4 or RippleV4 or RippleH5 or RippleV5
+
+Floor = Lily or Sand or SubmergedPebble or Ship_Left or Ship_Right1 or Ship_Right2
+
+FlowL = FlowL1 or FlowL2 or FlowL3 or FlowL4 or FlowL5
+FlowR = FlowR1 or FlowR2 or FlowR3 or FlowR4 or FlowR5
+FlowU = FlowU1 or FlowU2 or FlowU3 or FlowU4 or FlowU5
+FlowD = FlowD1 or FlowD2 or FlowD3 or FlowD4 or FlowD5
+
+Flow = FlowL or FlowR or FlowU or FlowD
+
+Flow5 = FlowL5 or FlowR5 or FlowU5 or FlowD5
+
+P = PlayerNormal and Sand
+* = Pebble and Sand
+O = Lily
+@ = Target and Sand and Light_trigger
+x = Target2 and Sand and Light_trigger
+% = RemoveTarget and Sand
+! = Target and Light_trigger
+? = RemoveTarget
+n = SubmergedPebble
+T = Treasure and Sand
+S = Ship_Left
+1 = Ship_Right1 and TreasureTaken
+2 = Ship_Right2
+/ = Ship_Sails
+$ = Tree and Sand
+[ = FlowR1 and Speedup
+] = FlowD1 and Speedup
+{ = FlowU1 and Speedup
+} = FlowL1 and Speedup
+Y = Death
+
+AddLandL = AddLandLUD or AddLandLU or AddLandLD
+AddLandR = AddLandRUD or AddLandRU or AddLandRD
+
+RemoveLandL = RemoveLandLUD or RemoveLandLU or RemoveLandLD
+RemoveLandR = RemoveLandRUD or RemoveLandRU or RemoveLandRD
+
+Ship = Ship_Left or Ship_Right1 or Ship_Right2
+
+
+=======
+SOUNDS
+=======
+
+sfx1 60997509 ( 13158309) (bounce pebble)
+sfx2 53480307 (push pebble)
+sfx3 45570309 (rock submerging)
+sfx4 73166102 (rock landing on ground)
+sfx5 56148307 (player move)
+sfx6 14433907 (player can't move)
+sfx7 58358104 (rock hits rock)
+sfx8 97863107 (dig 1)
+sfx9 75661907 (dig 2)
+sfx0 23172308 (whirlpool death)
+
+(63191902)
+
+EndLevel 32481708
+
+Undo 8098307
+Restart 7235102
+
+(Treasure3 Create 97863107
+Treasure6 Create 75661907)
+
+(Treasure2 Create 55366107)
+(Treasure3 Create 47174507)
+(Treasure4 Create 71981107)
+(Treasure5 Create 40321302)
+(Treasure6 Create 33433507)
+(Treasure7 Create 97863107)
+
+TreasureTaken Create 2479500
+Light Create 71916703
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Sand, FlowL, FlowR, FlowU, FlowD
+SubmergedPebble, StopFlow
+AddLandL, RemoveLandL
+AddLandR, RemoveLandR
+Ripple, Tree
+Lily
+Target, Target2, RemoveTarget, Treasure, Treasure2, Treasure3, Treasure4, Treasure5, Treasure6, Treasure7, TreasureTaken
+Player, Pebble
+Direction
+Ship_Left, Ship_Right1, Ship_Right2, Ship_Sails, Light_trigger
+MyMistake
+Speedup, Death, Darkness, Light
+
+
+======
+RULES
+======
+
+(oops)
+
+[ MyMistake ] -> [ MyMistake Death ]
+
+down [ MyMistake ] [ no Sand | . no Target|.|.|.|.|.|.|.|. no Target|.|.|no Sand|.|.|.|no Sand|no Sand|no Sand|.|.|no Sand ] -> [] [no Sand | . no Target|.|.|.|.|.|.|.|. no Target|.|.|no Sand|.|.|.|no Sand|no Sand|no Sand|.|.|no Sand] message Sorry but I screwed up and this puzzle might not be possible. Please start over? My fault not yours :( :( :(
+
+(Island border)
+
+left [ no Sand no AddLandL | Sand ] -> [ no Sand AddLandLUD | Sand ]
+right [ no Sand no AddLandR | Sand ] -> [ no Sand AddLandRUD | Sand ]
+
+up [ AddLandLUD | no Sand ] -> [ AddLandLD | no Sand ]
+up [ AddLandRUD | no Sand ] -> [ AddLandRD | no Sand ]
+
+down [ AddLandLUD | no Sand ] -> [ AddLandLU | no Sand ]
+down [ AddLandRUD | no Sand ] -> [ AddLandRU | no Sand ]
+
+down [ AddLandLD | no Sand ] -> [ | no Sand ]
+down [ AddLandRD | no Sand ] -> [ | no Sand ]
+
+left [ Sand no RemoveLandL | no Sand ] -> [ Sand RemoveLandLUD | no Sand ]
+right [ Sand no RemoveLandR | no Sand ] -> [ Sand RemoveLandRUD | no Sand ]
+
+up [ RemoveLandLUD | Sand ] -> [ RemoveLandLD | Sand ]
+up [ RemoveLandRUD | Sand ] -> [ RemoveLandRD | Sand ]
+
+down [ RemoveLandLUD | Sand ] -> [ RemoveLandLU | Sand ]
+down [ RemoveLandRUD | Sand ] -> [ RemoveLandRU | Sand ]
+
+down [ RemoveLandLD | Sand ] -> [ | Sand ]
+down [ RemoveLandRD | Sand ] -> [ | Sand ]
+
+right [ RemoveLandRU | AddLandLU ] -> [ RemoveLandRU | ]
+right [ RemoveLandRD | AddLandLD ] -> [ RemoveLandRD | ]
+
+right [ RemoveLandRUD | AddLandLU ] -> [ RemoveLandRUD | ]
+right [ RemoveLandRUD | AddLandLD ] -> [ RemoveLandRUD | ]
+
+left [ RemoveLandLU | AddLandRU ] -> [ RemoveLandLU | ]
+left [ RemoveLandLD | AddLandRD ] -> [ RemoveLandLD | ]
+
+left [ RemoveLandLUD | AddLandRU ] -> [ RemoveLandLUD | ]
+left [ RemoveLandLUD | AddLandRD ] -> [ RemoveLandLUD | ]
+
+(water redirection)
+
+left [ stationary FlowL5 | no Flow no Sand no SubmergedPebble ] -> [ FlowL5 | action FlowL5 ]
+right [ stationary FlowR5 | no Flow no Sand no SubmergedPebble ] -> [ FlowR5 | action FlowR5 ]
+up [ stationary FlowU5 | no Flow no Sand no SubmergedPebble ] -> [ FlowU5 | action FlowU5 ]
+down [ stationary FlowD5 | no Flow no Sand no SubmergedPebble ] -> [ FlowD5 | action FlowD5 ]
+
+[ action Flow ] -> [ Flow ]
+
+left [ FlowL | Flow SubmergedPebble no Ripple ] -> [ action FlowL | Flow action SubmergedPebble ]
+right [ FlowR | Flow SubmergedPebble no Ripple ] -> [ action FlowR | Flow action SubmergedPebble ]
+up [ FlowU | Flow SubmergedPebble no Ripple ] -> [ action FlowU | Flow action SubmergedPebble ]
+down [ FlowD | Flow SubmergedPebble no Ripple ] -> [ action FlowD | Flow action SubmergedPebble ]
+
+[ Flow5 StopFlow ] -> [ Flow5 action StopFlow ]
+
+left [ action StopFlow FlowL | Flow ] -> [ | Flow StopFlow ]
+right [ action StopFlow FlowR | Flow ] -> [ | Flow StopFlow ]
+up [ action StopFlow FlowU | Flow ] -> [ | Flow StopFlow ]
+down [ action StopFlow FlowD | Flow ] -> [ | Flow StopFlow ]
+
+[ action StopFlow Flow ] -> []
+
+[ StopFlow RemoveTarget Flow ] -> [ RemoveTarget ]
+
+left [ action SubmergedPebble FlowL | Flow ] -> [ action SubmergedPebble FlowL | Flow StopFlow ]
+right [ action SubmergedPebble FlowR | Flow ] -> [ action SubmergedPebble FlowR | Flow StopFlow ]
+up [ action SubmergedPebble FlowU | Flow ] -> [ action SubmergedPebble FlowU | Flow StopFlow ]
+down [ action SubmergedPebble FlowD | Flow ] -> [ action SubmergedPebble FlowD | Flow StopFlow ]
+
+down [ FlowD action SubmergedPebble ] [ action FlowL | no Floor ] -> [ FlowD action SubmergedPebble ] [ FlowD1 | FlowD ]
+up [ Flow action SubmergedPebble ] [ action FlowL | no Floor ] -> [ Flow action SubmergedPebble ] [ FlowU1 | Flow ]
+down [ Flow action SubmergedPebble ] [ action FlowL | no Floor ] -> [ Flow action SubmergedPebble ] [ FlowD1 | Flow ]
+
+up [ FlowU action SubmergedPebble ] [ action FlowR | no Floor ] -> [ FlowU action SubmergedPebble ] [ FlowU1 | FlowU ]
+down [ Flow action SubmergedPebble ] [ action FlowR | no Floor ] -> [ Flow action SubmergedPebble ] [ FlowD1 | Flow ]
+up [ Flow action SubmergedPebble ] [ action FlowR | no Floor ] -> [ Flow action SubmergedPebble ] [ FlowU1 | Flow ]
+
+right [ FlowR action SubmergedPebble ] [ action FlowD | no Floor ] -> [ FlowR action SubmergedPebble ] [ FlowR1 | FlowR ]
+left [ Flow action SubmergedPebble ] [ action FlowD | no Floor ] -> [ Flow action SubmergedPebble ] [ FlowL1 | Flow ]
+right [ Flow action SubmergedPebble ] [ action FlowD | no Floor ] -> [ Flow action SubmergedPebble ] [ FlowR1 | Flow ]
+
+left [ FlowL action SubmergedPebble ] [ action FlowU | no Floor ] -> [ FlowL action SubmergedPebble ] [ FlowL1 | FlowL ]
+right [ Flow action SubmergedPebble ] [ action FlowU | no Floor ] -> [ Flow action SubmergedPebble ] [ FlowR1 | Flow ]
+left [ Flow action SubmergedPebble ] [ action FlowU | no Floor ] -> [ Flow action SubmergedPebble ] [ FlowL1 | Flow ]
+
+[ action SubmergedPebble Flow ] -> [ SubmergedPebble ]
+
+(Currents anim)
+
+[ stationary Player ] [ stationary FlowL5 ] -> [Player] [ action FlowL1 ]
+[ stationary Player ] [ stationary FlowL4 ] -> [Player] [ action FlowL5 ]
+[ stationary Player ] [ stationary FlowL3 ] -> [Player] [ action FlowL4 ]
+[ stationary Player ] [ stationary FlowL2 ] -> [Player] [ action FlowL3 ]
+[ stationary Player ] [ stationary FlowL1 ] -> [Player] [ action FlowL2 ]
+
+[ stationary Player ] [ stationary FlowR5 ] -> [Player] [ action FlowR1 ]
+[ stationary Player ] [ stationary FlowR4 ] -> [Player] [ action FlowR5 ]
+[ stationary Player ] [ stationary FlowR3 ] -> [Player] [ action FlowR4 ]
+[ stationary Player ] [ stationary FlowR2 ] -> [Player] [ action FlowR3 ]
+[ stationary Player ] [ stationary FlowR1 ] -> [Player] [ action FlowR2 ]
+
+[ stationary Player ] [ stationary FlowU5 ] -> [Player] [ action FlowU1 ]
+[ stationary Player ] [ stationary FlowU4 ] -> [Player] [ action FlowU5 ]
+[ stationary Player ] [ stationary FlowU3 ] -> [Player] [ action FlowU4 ]
+[ stationary Player ] [ stationary FlowU2 ] -> [Player] [ action FlowU3 ]
+[ stationary Player ] [ stationary FlowU1 ] -> [Player] [ action FlowU2 ]
+
+[ stationary Player ] [ stationary FlowD5 ] -> [Player] [ action FlowD1 ]
+[ stationary Player ] [ stationary FlowD4 ] -> [Player] [ action FlowD5 ]
+[ stationary Player ] [ stationary FlowD3 ] -> [Player] [ action FlowD4 ]
+[ stationary Player ] [ stationary FlowD2 ] -> [Player] [ action FlowD3 ]
+[ stationary Player ] [ stationary FlowD1 ] -> [Player] [ action FlowD2 ]
+
+[ stationary Player Speedup action FlowL4 ] -> [ Player Speedup stationary FlowL5 ]
+[ stationary Player Speedup action FlowL3 ] -> [ Player Speedup stationary FlowL4 ]
+[ stationary Player Speedup action FlowL2 ] -> [ Player Speedup stationary FlowL3 ]
+[ stationary Player Speedup action FlowL1 ] -> [ Player Speedup stationary FlowL2 ]
+
+[ stationary Player Speedup action FlowR4 ] -> [ Player Speedup stationary FlowR5 ]
+[ stationary Player Speedup action FlowR3 ] -> [ Player Speedup stationary FlowR4 ]
+[ stationary Player Speedup action FlowR2 ] -> [ Player Speedup stationary FlowR3 ]
+[ stationary Player Speedup action FlowR1 ] -> [ Player Speedup stationary FlowR2 ]
+
+[ stationary Player Speedup action FlowU4 ] -> [ Player Speedup stationary FlowU5 ]
+[ stationary Player Speedup action FlowU3 ] -> [ Player Speedup stationary FlowU4 ]
+[ stationary Player Speedup action FlowU2 ] -> [ Player Speedup stationary FlowU3 ]
+[ stationary Player Speedup action FlowU1 ] -> [ Player Speedup stationary FlowU2 ]
+
+[ stationary Player Speedup action FlowD4 ] -> [ Player Speedup stationary FlowD5 ]
+[ stationary Player Speedup action FlowD3 ] -> [ Player Speedup stationary FlowD4 ]
+[ stationary Player Speedup action FlowD2 ] -> [ Player Speedup stationary FlowD3 ]
+[ stationary Player Speedup action FlowD1 ] -> [ Player Speedup stationary FlowD2 ]
+
+[ stationary Player Speedup FlowD5 ] [ stationary Death ] -> [ Player Speedup FlowD5 ] [ right Death ]
+
+[ > Death | ] -> [ | Death ]
+
+[ moving Death ] [ Player ] -> [ Death Player ] [ no Lily ] sfx0
+
+[ Lily no Player Speedup FlowD5 ] -> [ Speedup FlowD5 no Pebble ]
+
+(Gameplay)
+
+[ stationary Player ] [ FlowL5 Lily ] -> [Player] [ FlowL5 left Lily ]
+[ stationary Player ] [ FlowR5 Lily ] -> [Player] [ FlowR5 right Lily ]
+[ stationary Player ] [ FlowU5 Lily ] -> [Player] [ FlowU5 up Lily ]
+[ stationary Player ] [ FlowD5 Lily ] -> [Player] [ FlowD5 down Lily ]
+
+[ Ripple1 | moving Lily ] -> [ Ripple1 | Lily ] (makes sure that we don't miss any when skimming past a current)
+
+[ Ripple2 no SubmergedPebble | Lily | no Floor ] -> [ Ripple2 | > Lily | ]
+horizontal [ RippleH4 | stationary Lily no Flow ] -> [ RippleH4 | > Lily ]
+vertical [ RippleV4 | stationary Lily no Flow ] -> [ RippleV4 | > Lily ]
+
+[ Ripple1 | moving Lily | no Floor ] -> [ Ripple1 | Lily | ] (makes sure that we don't miss any when skimming past an already moving lily)
+
+([ > Lily | stationary Lily ] -> [ > Lily | > Lily ])
+
+[ stationary Player ] [ RippleH4 ] -> [Player] []
+[ stationary Player ] [ RippleV4 ] -> [Player] []
+[ stationary Player ] [ RippleH3 ] -> [Player] [ RippleH4 ]
+[ stationary Player ] [ RippleV3 ] -> [Player] [ RippleV4 ]
+[ stationary Player ] [ RippleH2 ] -> [Player] [ RippleH3 ]
+[ stationary Player ] [ RippleV2 ] -> [Player] [ RippleV3 ]
+[ stationary Player ] [ RippleH ] -> [Player] [ RippleH2 ]
+[ stationary Player ] [ RippleV ] -> [Player] [ RippleV2 ]
+
+(horizontal [ Lily | RippleH | no Ripple2 ] -> [ Lily | | ]
+vertical [ Lily | RippleV | no Ripple2 ] -> [ Lily | | ])
+
+[ stationary Player ] [ Ripple2 ] -> [Player] []
+[ stationary Player ] [ Ripple1 ] -> [Player] [ Ripple2 ]
+
+horizontal [ > Lily Pebble | no Floor no Flow ] -> [ RippleH | Lily Pebble ]
+horizontal [ > Lily Player | no Floor no Flow ] -> [ RippleH | Lily Player ]
+horizontal [ > Lily | no Floor no Flow ] -> [ RippleH | Lily ]
+vertical [ > Lily Pebble | no Floor no Flow ] -> [ RippleV | Lily Pebble ]
+vertical [ > Lily Player | no Floor no Flow ] -> [ RippleV | Lily Player ]
+vertical [ > Lily | no Floor no Flow ] -> [ RippleV | Lily ]
+
+[ > Lily Pebble | no Floor no Pebble ] -> [  | Lily Pebble ]
++ [ > Lily Player | no Floor no Pebble ] -> [  | Lily Player ]
++ [ > Lily no Pebble no Player | no Floor ] -> [  | Lily ]
+
+[ > Lily Pebble | no Floor Pebble ] -> [ Lily Pebble | Pebble ]
+[ > Lily Player | no Floor Pebble ] -> [ Lily Player | Pebble ]
+
+[ > Lily | no Floor ] -> [  | Lily ]
+
+[ > Lily | Floor ] -> [ Lily | Floor ]
+
+[ stationary Player ] [ U Pebble ] -> [Player] [ U up Pebble ]
+[ stationary Player ] [ D Pebble ] -> [Player] [ D down Pebble ]
+[ stationary Player ] [ L Pebble ] -> [Player] [ L left Pebble ]
+[ stationary Player ] [ R Pebble ] -> [Player] [ R right Pebble ]
+
+[ Pebble Direction Floor ] -> [ stationary Pebble Floor ] sfx4 (pebble moves onto moving lily)
+
+[ > Player | no Floor ] -> [ Player | ] (sfx6)
+
+[ stationary Pebble no Floor no Direction ] -> [ SubmergedPebble Ripple1  ] sfx3
+
+[ > Pebble Floor | stationary Pebble ] -> [ Pebble Floor | Pebble ]
+[ > Pebble | stationary Pebble ] -> [ stationary Pebble no Direction | Pebble ] sfx7
+
+[ >  Player | Pebble Treasure | Floor no Pebble ] -> [ | Treasure Player | Pebble Floor ] sfx2
+[ >  Player | Pebble | Floor no Pebble no Treasure7 no Ship no Tree ] -> [  >  Player | | Pebble Floor ] sfx2
+[ >  Player | Pebble | no Floor no Pebble ] -> [  >  Player | > Pebble | ]
+
+[ > Pebble | Ship ] -> [ Pebble no Direction | Ship ]
+
+[ left Pebble ] -> [ L left Pebble ]
+[ right Pebble ] -> [ R right Pebble ]
+[ up Pebble ] -> [ U up Pebble ]
+[ down Pebble ] -> [ D down Pebble ]
+
+[ moving Pebble no Floor ] -> [ moving Pebble Ripple1 ] sfx1
+
+[ > Pebble Direction | ] -> [ | Pebble Direction ]
+
+[ stationary Pebble Direction Floor ] -> [ Pebble Floor ] sfx4 (landing on floor)
+
+[ moving Pebble ] -> []
+
+[ moving Lily Pebble ] -> []
+[ moving Lily ] -> []
+
+(late [ Player Water ] -> [ PlayerInWater Water ]
+late [ Player no Water ] -> [ PlayerNormal no Water ])
+
+(victory)
+
+[ > Player | Tree no Ship ] [ Ship_Right1 ] -> [ Player | TreasureTaken ] [ Ship_Right1 Tree ] message A palm tree! You can repair your ship with this.
+
+[ > Player | Ship_Right1 no Tree ] -> [ Player | Ship_Right1 ] message Your ship is damaged. You need to find some WOOD to repair it.
+
+[ Lily Ship_Right1 ] -> win
+[ Lily Ship_Right2 ] -> win
+
+[ > Player | Ship_Right1 Tree ] -> [ | Player action Ship_Right1 Tree Darkness ]
+[ > Player | Ship_Right2 ] -> [ | Player action Ship_Right2 Darkness ]
+
+[ Player Ship_Right1 ] -> again
+[ Player Ship_Right2 ] -> again
+
+[ Darkness | no Darkness ] -> [ Darkness | Darkness ]
+
+[ action Ship_Right1 TreasureTaken ] -> [ Ship_Right1 Lily TreasureTaken ] message You repair your ship and sail away to your next adventure!
+
+[ Ship_Right1 StopFlow Treasure ] -> [ Ship_Right1 Lily ] message Treasures found: 1/7, Kept: 0/7
+[ Ship_Right1 StopFlow Treasure2 ] -> [ Ship_Right1 Lily ] message Treasures found: 2/7, Kept: 0/7
+[ Ship_Right1 StopFlow Treasure3 ] -> [ Ship_Right1 Lily ] message Treasures found: 3/7, Kept: 0/7
+[ Ship_Right1 StopFlow Treasure4 ] -> [ Ship_Right1 Lily ] message Treasures found: 4/7, Kept: 0/7
+[ Ship_Right1 StopFlow Treasure5 ] -> [ Ship_Right1 Lily ] message Treasures found: 5/7, Kept: 0/7
+[ Ship_Right1 StopFlow Treasure6 ] -> [ Ship_Right1 Lily ] message Treasures found: 6/7, Kept: 0/7
+[ Ship_Right1 StopFlow Treasure7 ] -> [ Ship_Right1 Lily ] message Treasures found: 7/7, Kept: 0/7
+
+[ Ship_Right1 SubmergedPebble ] -> [ Ship_Right1 StopFlow ] message You reluctantly leave your spoils behind. Later you try to return, but you never manage to find the mysterious islands again.
+
+[ action Ship_Right1 no TreasureTaken ] -> [ Ship_Right1 SubmergedPebble ] message You repair it as best you can, but your battered ship isn't seaworthy enough to carry heavy treasure!
+
+[ Ship_Right2 StopFlow ] [ Ship_right1 TreasureTaken ] -> [ Ship_Right2 Lily ] [ Ship_right1 ] message Treasures found: 0/7
+[ Ship_Right2 StopFlow ] [ Ship_right1 Treasure ] -> [ Ship_Right2 Lily ] [ Ship_right1 ] message Treasures found: 1/7
+[ Ship_Right2 StopFlow ] [ Ship_right1 Treasure2 ] -> [ Ship_Right2 Lily ] [ Ship_right1 ] message Treasures found: 2/7
+[ Ship_Right2 StopFlow ] [ Ship_right1 Treasure3 ] -> [ Ship_Right2 Lily ] [ Ship_right1 ] message Treasures found: 3/7
+[ Ship_Right2 StopFlow ] [ Ship_right1 Treasure4 ] -> [ Ship_Right2 Lily ] [ Ship_right1 ] message Treasures found: 4/7
+[ Ship_Right2 StopFlow ] [ Ship_right1 Treasure5 ] -> [ Ship_Right2 Lily ] [ Ship_right1 ] message Treasures found: 5/7
+[ Ship_Right2 StopFlow ] [ Ship_right1 Treasure6 ] -> [ Ship_Right2 Lily ] [ Ship_right1 ] message Treasures found: 6/7
+[ Ship_Right2 StopFlow ] [ Ship_right1 Treasure7 ] -> [ Ship_Right2 Lily ] [ Ship_right1 ] message Treasures found: 7/7
+
+[ Ship_Right2 SubmergedPebble ] -> [ Ship_Right2 StopFlow ] message You sail away on your new ship, onwards to your next adventure!
+
+[ action Ship_Right2 ] -> [ Ship_Right2 SubmergedPebble ] message You find a strange ship, conveniently unguarded. It's probably haunted, but it seems seaworthy enough to carry you and your treasure.
+
+(treasure)
+
+[ TreasureTaken Lily | RemoveTarget ] -> message But are you stuck here with it?
+
+[ TreasureTaken Lily no Ship ] -> [ TreasureTaken ]
+
+[ > Player | Treasure no Pebble ] -> [ Player | action Treasure ]
+
+[ Treasure6 Sand ] -> [ Treasure7 Sand ] sfx8 again
+[ Treasure5 Sand ] -> [ Treasure6 Sand ] again
+[ Treasure4 Sand ] -> [ Treasure5 Sand ] again
+[ Treasure3 Sand ] -> [ Treasure4 Sand ] again
+[ Treasure2 Sand ] -> [ Treasure3 Sand ] sfx9 again
+
+[ action Treasure Sand ] -> [ Treasure2 Sand ] again
+
+[ > Player | Treasure7 ] -> [ Player | action TreasureTaken Lily ]
+
+[ action TreasureTaken ] [ no Sand TreasureTaken ] -> [ TreasureTaken ] [ Treasure ] message Found treasure! (1/7)
+[ action TreasureTaken ] [ no Sand Treasure ] -> [ TreasureTaken ] [ Treasure2 ] message Found treasure! (2/7)
+[ action TreasureTaken ] [ no Sand Treasure2 ] -> [ TreasureTaken ] [ Treasure3 ] message Found treasure! (3/7)
+[ action TreasureTaken ] [ no Sand Treasure3 ] -> [ TreasureTaken ] [ Treasure4 ] message Found treasure! (4/7)
+[ action TreasureTaken ] [ no Sand Treasure4 ] -> [ TreasureTaken ] [ Treasure5 ] message Found treasure! (5/7)
+[ action TreasureTaken ] [ no Sand Treasure5 ] -> [ TreasureTaken ] [ Treasure6 ] message Found treasure! (6/7)
+[ action TreasureTaken ] [ no Sand Treasure6 ] -> [ TreasureTaken ] [ Treasure7 ] message Found treasure! (7/7)
+([ action TreasureTaken ] [ no Sand Treasure7 ] -> [ TreasureTaken ] [ SubmergedPebble Lily ] message Found treasure! (8/8))
+
+(checkpoints)
+
+[ > Player | no Pebble ] -> [ | Player ] sfx5
+
+([ > Player | Pebble ] -> sfx6) (can't move)
+
+
+[ Player Target ] -> [ Player action Target ]
+[ action Target | stationary Target ] -> [ action Target | action Target ]
+[ action Target | RemoveTarget ] -> [ action Target | action RemoveTarget ]
+[ action Target Light_trigger ] -> [ action Target action Light_trigger ]
+[ action Target ] -> [] checkpoint
+
+
+[ Pebble Target2 ] -> [ Pebble action Target2 ]
+[ action Target2 | stationary Target2 ] -> [ action Target2 | action Target2 ]
+[ Player stationary Target2 ] -> [ Player Target2 StopFlow ]
+[ Target2 StopFlow | Target2 ] -> [ Target2 StopFlow | Target2 StopFlow ]
+[ Target2 StopFlow ] -> [ no Light_trigger ]
+[ action Target2 | RemoveTarget ] -> [ action Target2 | action RemoveTarget ]
+[ action Target2 Light_trigger ] -> [ action Target2 action Light_trigger ]
+[ action Target2 ] -> [] checkpoint
+
+
+[ action RemoveTarget | stationary RemoveTarget ] -> [ action RemoveTarget | action RemoveTarget ]
+[ action RemoveTarget ] -> []
+
+
+[ Pebble RemoveTarget ] -> [ Pebble action RemoveTarget ]
+[ action RemoveTarget | stationary RemoveTarget ] -> [ action RemoveTarget | action RemoveTarget ]
+[ action RemoveTarget | Target ] -> [ action RemoveTarget | no Light_trigger ]
+[ action RemoveTarget | Target2 ] -> [ action RemoveTarget | no Light_trigger ]
+
+
+[ Light ] -> [] checkpoint
+
+
+[ Player Light_trigger ] -> [ Player action Light_trigger ]
+
+[ action Light_trigger | Sand ] -> [ action Light_trigger | action Light_trigger Sand ]
+
+[ Player action Light_trigger | Sand ] -> [ Player action Light_trigger | action Sand Light ]
+
+[ action Sand Light | stationary Sand ] -> [ action Sand Light | action Sand Light no Light_trigger ]
+
+[ Light | no Light no Death no Speedup ] -> [ Light | Light ] again
+
+[ Light action Light_trigger ] -> [ Light ]
+
+
+
+
+
+==============
+WINCONDITIONS
+==============
+
+
+=======
+LEVELS
+=======
+
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww↓wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+www/wwwwwwwwwwwwwwwwwwwwwwwwwwww↓wwwwwwwwwww...wwwwwwwn@wwwwwwwwwwwwwwwwwwww
+wws2w..wwwwwwwwwwwww...wwwwwwwwo↓wwwwwwwwww.....w..ww.w%%%.wwwwww.wwwwwwwwww
+www......wwwwwwwwwwww....wwwowww↓wwwwwww.ww....↑wx....ww.%@.www...wwwwwwwwww
+www......wwww.wwwwwww....wwwwwww↓ww..ww..www.ww↑xx...wwww?..........wwwwowww
+ww....@@wwwww...wwww....ww/wwwww↓....ww..w...ww↑....wwwoww.......*...wwwwwww
+ww....@wwwww.....www....ws1..www↓@@w...@....www↑www.wowwwwww...t...wwwwwwwww
+www..wwwww...t%...www..www.pww.w↓www...@.*.wwww↑w.*.wwwwwwwww....wwwwwwwwwww
+wwwwwwwwww....%%.wwwww.www...*....www..@....www↑w..←←←←←←←←←←←←←←←←←←←←←←←←←
+wwwwwwww.....w.%%w..ww..www....w*..ww..@.wwwwow↑wwww@wwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwww..wwwww%%%x*w....ww..ww...wwww.wwwowww↑www..wwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwww.....ww..wwwwwwww..wwwwwwwwwwww↑www...wwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwww...wwwwwwwwwwwww.→→→→→→→→→→→→→↑nwww...wwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwww..wwwwwwwwwwwwwwwwwwwwwwwwwww...wwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwww.x?wwwwwwwwwwwwwwwwwwwwwwwwww...wwwwwwwwwwwwwwwwwwwwww
+www..w.wwwwwwwwwwwwwwww%wwwwwwwwwwwwwwwnwwwwwwwww..@..wwwwwwwwwwwww...wwwwww
+ww....@wwwwwwwwwwwwwwww..wwwwwwwwwwwwwwwwwwww.....*.wwww..wwwwwwwww....wwwww
+ww.*..wwwwwww..wwwwww....wwwwwwww...wwwwwwwww...wwwwwww....?wwwwwwww....wwww
+www...wwwwww...wwwwwww...wwwwwww..*..wwwwwwww.*.wwwwwww....x.wwwwowwn...wwww
+wwww.wwwwwww..wwowwwwww...wwwww......wwwwwww...wowwwwwww...x*.wwwwwww.....ww
+wwwwwwwwwwww..wwwwwwww....wwwww..t.....wnwww..wwwowwwwww...x..wwwwwwww....ww
+wwwwwwwwwwwww..wwwwww.....wwwwww.......!owww↑wwwwww.ww.....x..wwwwwoww...www
+wwwwwwwwwwwww.....ww....wwwwwwwww.w....??wwn↑←←←←←........wx.wwww.www...wwww
+wwwwwwwwwwwwww.........wwwwwwwwwwwww...w?www@..www........w...w...ww@.....ww
+wwwwwwwwwwwwwwww.....wwwwwwwwwwwowwwwwww?ww!..ww....ww..wwww...*...www...www
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww?????...@..www..wwwwww......ww..wwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww.....wwwww.wwwwwwwww..wwwww!wwww
+wwwwwwwwwwwwwwwwnwwwwwwwwwwwwwwwwwwwwwwwwnwwwwwwwwwwwwwwwwwwwwwwwwwwwww...ww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww@@@ww
+ww...wwwwwwwwwwwwwwwww.wwwwwwwwwwwwwwwwwwwww....w..wwwwwwwwwwwwwwwwwww..*.ww
+w...*.wwwwowwwwwwwwwnr...wwwwww..wwwwwwwwww.*.....*.w??...wwwwwwwwwwwww..www
+w.*...wwwwwww....nwwww..@wwwwwww...wwwwwww....w.*.%x.%x....wwwww.....ww..www
+w..w.→→→→→→→*....wwnwww.@wwwwowww....wwwww..wwwww.%x.%x.....www..*....wwnwww
+ww.w→↑.*w.ww....wwnwww..@@wwwwwww.*..wwwwww.wwwwww%x.wwwww..www.wwww..wwnwww
+wwww↑....@@www..wnwwn...@@wwwwww...*xwwwwwwwwowwwww.wwwwww....wwwwwww.w.wwww
+wwww↑..*.@←←←←←←←←!←←.w@@ww..www....xwwwwwwwwwwwwwwww..www.....!wwoww..@wwww
+wwow↑w...wwnw....www↑nw@@ww.....*.xxx...wwwwwwwwwwww...www.......wwww....www
+wwww↑wwwwwww.xxx.wnw↑wwwwwwwwww...xw...%%%ww...wwwwwww..www......wwww....www
+wwww↑wwowwwww...wwwn↑wwowwwwwww.w..wwww%xx.w....ww.@ww.wwwww.w...wwwww..wwww
+wwww↑wwwwwwww..wwwww↑wnwwwwwwwwww.wwwww%x.w..........wwwwwwwww...wwwwwwwwwww
+wwww↑wwwwwwww..→→→→→↑nwwwwwwwwwww.wwwwww..www..www...wwwwwwww...wwwwwwwwwnww
+wwww↑wwwwwww...wwwwwwwwwwwwwnwwwwwwnwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwnwwwwwwww
+wwww↑wwwwwww...wwnwwwwwwwwwwwwwwwwwnwwwwwwwwwwwwwwwwwwwnwwwwwwwwwwwwwwnwwwww
+wwww↑..wwwwww.x.wwwwww...wwww*.w...@.wwnwwwwww..wwwwwwwwwwwwwwwnwwwnwwwwnwww
+wwww...wwwwwww...wwww....wwww..*.t...wwwnwwww....w..wwwwwnwwnnwwwnwwwwwnwwww
+www...wwwwowww....www.t..wwwww.....wwwnwwwwwww......wwwwnwnwwwnww↓↓↓↓wwwwwnw
+www.....wwwwww....ww...wwwwwwwwwwwwwwwwwwwwwwww....wnwwwwwwwwwww→→→→→↓wwnwww
+wwww....@↓←?←.....ww..wwwnwwwwwwwwwwwwwww→→→→→→→→→→→→→→→→→→→→→?→↑↓←←←↓←wwwww
+www.*..ww?ww↑w....ww@@wwn→→→→→→→→→→→→→→→→↑n@@wwwwwwwwwwwwwwwww?→↑↓[]↑←←wwnww
+wwww..wwn↓ww?ww..wwwwwwww↑wwwwwwwwwwwwwwwww.*%wwwwww@@wnwwnwwwn→↑↓{}←↓←wwwwn
+wwwww.wow→?→↑wwwwwww...ww!wwwnwwwwwwwwwwww.*x%...ww...wwwnwwwww→↑→→→↑↓←wnwwn
+wwwww↑wwwwowww@wwwww.....↑wwwwnww.w.wwwwww.xx%*.www....wwwwwwnww↑←←←←←wnwwww
+wwwww↑wwwwwwww@@@w....*.w↑wwwwww.....wwwwww%%%..www....wwwwnwwwww↑↑↑↑nwwwwnw
+wwwww↑wwwwwww@@.......www↑wwwwww.....wwwowwww..wwwww..wwwwwwnwwnw↑nwwwwwywww
+wwwww↑wwowwww...ww...wwow↑wwww......wwwwwwww..wwww...wwwnwnwwwwww↑wwnwwwnwww
+wwwww↑wwwwwwwwwwwwwwwwnww↑www.......wwwwwnwwwwwww.....wwwwwwwwwwn↑wwwwwwwwww
+wwwww↑wwwnwwwwwwwwwwwwwww↑www.......wnwwwwwwwwwww.....wwwwwwwwwww↑wwwwwwwwww
+wwwww↑wwwwwwnwww..wwww...↑ww..$....wwwwwwww......@@@@@.wwwwwwwwww↑wwwwwwwwww
+wwwww↑wwww..www.x.nnww...↑w......wwwwwwww...*..wwww.....wwwwwwwww↑www...wwww
+wwwww↑wnww..*.....wwn...w↑w....wwwww.www..*.wwwwnwwww.*.www..wwww↑ww...wwwww
+wwwww↑www.....*..www...ww↑www..www...www..wwwwowwnwww..www.....ww↑ww.t.wwwww
+nwwww↑www.t.ww..wwww...ww↑wwwwwww....wwww.wwwwwwwwww...wwwww.*...↑w.....wwww
+wwwww↑ww...*wwwwwwwww....↑wwwwwww..←←←←←←←←←←←←←←←←←..wwwww...*..↑.*...wwwww
+wwwww↑www....wwwwwww.....↑wwwwwwww.wwwwwwww......www...wnn@.....w↑ww.wwwwwww
+wwwnw↑wwwww..wwwwwwww....↑wwwwwwwwwww..www.x%%%*.wwww..wwww....ww↑wwwwwwwwww
+wwwww↑wwwwwwwwwwwwwwwwn.w↑wwww..w*...%x.ww.%w...wwoww..wwwwww...w↑wwwwwwwwww
+wwwww↑wwnwwwwwwwwowwwwwww↑wwow..*..*.%x..w..ww..wwwww..wwwwwwwwww↑wwwwwwwwww
+wwwww↑wwwwwwwwwwwwwwwwwww↑wwwww...w....wwwwwwwwwwww....wwwwwowwww↑wwwwwwwwww
+wwnww↑wwwwwwwwwwwwwwnwwww↑wwwwwwwwwwwwwwwwwwwowwww....wwwwwwwwwow↑wwwwwwwwww
+wwwww↑wwwwwwwwwwwwwwwwwww↑wwwwwwwwwwwwwwwwwwwwwwwwwwwwwnwwwwwwwww↑wwwwwwwwww
+
+
+(
+wwwwwwwwwwwwwwwwwwww
+wwwwwwwww..ww.wwwwww
+wwwww.......w..wwwww
+wwww...........wwwww
+www..*.www....wwwwww
+ww....wwwwwwwwwww..w
+w..*wwwwowwwwwww...w
+w..p.wwwwwwwww.w.t.w
+w.*..wwwwwwwww.....w
+ww..wwwwwwwwww....ww
+www.wwwwwwwwwwww.www
+wwwwwwwwwwwwwwwwwwww
+
+wwwwwwwwwwwwwwwwwww
+www...ww.....wwwwww
+wwww....w.....wwwww
+wwwww..wwww*.wwwwow
+wwwww.wwoww..wwwwww
+www...wwwww..wwwoww
+w...*.wwww..←←←←←←←
+w.p..wwwwwwww.wwwww
+ww..wwwwwwww..wwwww
+wwwwwwwwwww..@..www
+wwwwwwwwwwww...wwww
+wwwwwwwwwwwwwwwwwww
+
+wwwwwwwwwwww
+wwwwwww...ww
+www.....*.ww
+www.*.wwwwww
+www.p.wwwwww
+ww...wowwwww
+ww..wwwowwww
+ww↑wwwwww..w
+ww↑←←←←←.@.w
+ww...www...w
+w...ww....ww
+w........www
+www....wwwww
+wwwwwwwwwwww
+
+wwwwwwwwwwwwwwww
+wwwwwwwwww...www
+wwwwwwwwwww...ww
+w...wwwwwww....w
+w.*.wwwwoww....w
+w..*.wwwwwww.@.w
+ww..wwwwwwww...w
+w...wwwwwwoww..w
+ww..wwww.www..ww
+ww.p.w...ww...ww
+www...*...www.ww
+wwwww......wwwww
+wwwwwww..wwwwwww
+wwwwwwwwwwwwwwww
+
+wwwwwwwwwwwwwwwwww
+wwwwwww.....wwwwww
+wwww.w....*..wwwww
+wwww....wwww.wwwww
+www....wwwwwwwwwww
+www....wwowww..www
+www....wwww......w
+www....wwww..@..ww
+wwww.*wwwww....www
+wwwwwwwwwww...wwww
+www.....wwww..wwww
+www...*.wwwwwwwwww
+ww...p..wwwwwwwwww
+wwwww...wwwwwwwwww
+wwwwwwwwwwwwwwwwww
+
+wwwwwwwwwwwwwwww
+wwwwww..w....www
+wwwww.*.....*.ww
+wwww....*.w....w
+wwww..p.wwwww..w
+wwww.*.wwwwww.ww
+wwww...wwwwwwwww
+wwwww.wwwwwowwww
+w...wwwwwwwwwwww
+ww...wwwwwwwwwww
+ww.wwwwwww..wwww
+wwwww.www.@.wwww
+wwww.........www
+wwww...www.wwwww
+wwwwwwwwwwwwwwww
+
+wwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwww
+wwwww..wwwwww..wrw
+www...wwwwwww...ww
+w...pwwwowww...wrw
+w..*.wwwwwww.@..ww
+w.*...wwwwww.....w
+ww..*.www..ww..w.w
+www..*.....www.www
+wwww...wwwwwwwwwww
+wwwwww.wwwwwwwwwww
+wwwwwwwwwwwwwwwwww
+
+wwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwww...ww
+wwwwwwwwowwww.*...w
+ww....wwwwwww...*.w
+ww....*←←←←←←←.w..w
+ww.....ww.w*.↑←w.ww
+www..wwww..p..↑wwww
+wwwwwwwww..*..↑wwww
+ww....wwww...w↑woww
+ww.@...wwwwwww↑wwww
+www...wwwwwoww↑wwww
+wwwwwwwwwwwwww↑wwww
+
+wwwwwwwwwwwwwwwww
+wwwwwwwwwwww..www
+www..wwwwwww...ww
+ww...wwwwowww...w
+w.p.*wwwwww.*...w
+w.....→→→↓.....ww
+w.*..w↑ww↓ww....w
+ww..ww↑ww↓www..ww
+wwwwww↑←←←wow.www
+wwww.wwwowwww↑www
+ww...wwwwwwww↑www
+ww.@..wwwwwww↑www
+wwww..wwwwoww↑www
+wwwwwwwwwwwww↑www
+
+wwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwww..wwww
+www...wwwwww..wwrow
+ww....wwwww.....www
+ww..@.wwwww.*.p..ww
+www...wwww.....*.ww
+www..wwwwwwww.*.www
+wwwwwwwwwwwwww..www
+←←←←←←←←←←←←←←←←←←←
+wwwwwwww....wwwwwww
+wwwwwww......wwwwww
+wwwwwww..w...wwwwww
+wwwwwwwwwwwwwwwwwww
+
+wwwwwwwwwwwwwwwwwww
+wwwww...ww.ww.wwwww
+www........w...wwww
+www...*.........www
+ww..*.wwww.......ww
+w...w.wwowwww.*...w
+ww..wwwwwwwwww..p.w
+←←←←←←←←←←←←←←....w
+wwwww.ww...www....←
+wwww.......wwww...w
+www...w.@.wwoww...w
+wwww.www..wwwww..ww
+wwwwwwwwwwwwww...ww
+wwwwwwwwwwwwwwwwwww
+)
+
+(wwwwwwwwwwwwwwwwwww
+w...wwwwwwwwwwwwwww
+w.*..wwwwwwwwwwwwww
+w...wwwwowwwwwwwwww
+wp*.wwwwwwwwwwwwwww
+w.*.wwwoooooooooooo
+w..←←←←←←←←←←←←←←←←
+wwww.wwwwwwwwwwwwww
+www..wwwwwwwwwwwwww
+ww..@..wwwwwwwwwwww
+www...wwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwww)
+
+(wwwwwwwwwww
+w....ww..ww
+w...*.....w
+ww..ww.p..w
+wwwwww...ww
+wwwowww.www
+wwwwwwwwwww
+
+wwwwwww
+ww...ww
+ww.p..w
+www.*.w
+wow..ww
+ww...ww
+wwwwwww)

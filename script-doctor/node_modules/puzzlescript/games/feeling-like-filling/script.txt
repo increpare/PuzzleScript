@@ -1,0 +1,126 @@
+title Feeling like Filling
+author Marcos Donnantuoni
+homepage https://marcosd.itch.io
+
+noaction
+
+========
+OBJECTS
+========
+
+background
+darkgray
+
+target
+#ffff88 #ffff44 #ffff00 
+00001
+0...2
+0...2
+0...2
+12222
+
+player
+#00ff00 #006000 #00aa00 #004000 
+.....
+..0..
+12221
+.222.
+.3.3.
+
+crate
+#ff6666 #ff4444 #ff2222 
+.....
+.001.
+.012.
+.122.
+.....
+
+cr
+transparent
+
+=======
+LEGEND
+=======
+
+. = Background
+@ = Player
+* = Crate
+o = Target
+
+=======
+SOUNDS
+=======
+
+================
+COLLISIONLAYERS
+================
+
+background
+target
+player, crate
+cr
+
+======
+RULES     
+======
+
+[ cr ] -> [ ]
+[ > Player | Crate ] -> [ > Player | > Crate ]
+[ < player | crate ] -> [ < player cr | crate ]
+late [ cr no player ] -> [ crate ]
+
+==============
+WINCONDITIONS
+==============
+
+all target on crate
+all crate on target
+
+=======     
+LEVELS
+=======
+
+message Pull crates from other crates.
+message Put all crates in holes.
+message Fill all holes with crates.
+message Good luck!
+
+
+message Level 1 of 6
+@.....
+.*oo..
+..oo..
+......
+
+message Level 2 of 6
+@......
+.*o.o..
+.oo.oo.
+...o...
+
+message Level 3 of 6
+@......
+o*....o
+oo...oo
+.......
+
+message Level 4 of 6
+@ooo.
+o*o.o
+o.o.o
+o.o.o
+
+message Level 5 of 6
+@ooo.
+o*..o
+oo.oo
+oo.oo
+
+message Level 6 of 6
+@ooo.
+o*o.o
+o.o.o
+.o.o.
+
+message Feeling filled. Thanks.
+

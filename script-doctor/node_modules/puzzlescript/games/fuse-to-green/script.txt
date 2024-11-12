@@ -1,0 +1,444 @@
+title fuse to green
+author Rosden Shadow [Mark Signorelli]
+homepage rosden.itch.io
+run_rules_on_level_Start
+
+background_color #5B4846
+
+text_color #7EE58D
+
+========
+OBJECTS
+========
+
+Background
+#5B4846 #845C5C
+00000
+01010
+00100
+01010
+00000
+(
+00101
+01110
+11011
+01111
+10110)
+(
+11101
+00101
+11111
+10100
+10111)
+
+
+Target
+#7EE58D #D9FFDC
+.....
+.000.
+.0.0.
+.000.
+.....
+
+Targetfire
+ #B32D2D #DB7F55
+.....
+.010.
+.1.1.
+.010.
+.....
+
+Wall
+#7F7CA1 #C1A2BC #705373  #52465B #3B3942
+(#DB7F55 #E5C17E  #B32D2D #73342E)
+20002
+12001
+21220
+32332
+33233
+
+overwall
+#7F7CA1 #C1A2BC #705373  #52465B #3B3942
+.....
+.....
+.....
+01211
+20021
+
+
+Playerright
+#F2F2AA #E5C17E  #DB7F55 #B32D2D  #536673 #7EA1E5
+.000.
+11505
+11414
+11110
+.1.1.
+
+playerleft
+#F2F2AA #E5C17E #DB7F55 #B32D2D  #536673 #7EA1E5
+.000.
+50511
+41411
+01111
+.1.1.
+
+Crate
+#7EA1E5 #AAE0F2 #536673 #46495B
+20011
+20001
+22001
+32223
+.333.
+
+overcrate
+#7EA1E5 #AAE0F2 #536673
+.....
+.....
+.....
+.....
+.111.
+
+Crate2
+#E5C17E #F2F2AA #847A5C #5B5746
+20011
+20001
+22001
+32223
+.333.
+
+overcrate2
+ #DB7F55 #F2F2AA #B32D2D #73342E
+.....
+.....
+.....
+.....
+.111.
+
+Crate3
+#7EE58D #D9FFDC #82A17C #394239
+20011
+20001
+22001
+32223
+.333.
+
+overcrate3
+#7EE58D #D9FFDC #82A17C
+.....
+.....
+.....
+.....
+.111.
+
+greenwall
+#D9FFDC
+.....
+.0.0.
+..0..
+.0.0.
+.....
+
+cloner
+#E5C17E #DB7F55 #B32D2D #73342E
+.100.
+.210.
+.221.
+.332.
+.....
+
+swapcrate
+Orange Yellow
+00000
+0...0
+0...0
+0...0
+00000
+
+swapwall
+black
+.....
+.....
+.....
+.....
+.....
+
+thefloor
+#5B4846
+00000
+00000
+00000
+00000
+00000
+
+ice
+#D9FFF8 #AAE0F2
+10111
+11010
+10101
+01011
+11101
+
+fire
+#F2F2AA #E5C17E
+10111
+11010
+10101
+01011
+11101
+
+icex
+black
+.....
+.....
+.....
+.....
+.....
+
+firex
+black
+.....
+.....
+.....
+.....
+.....
+downshift
+black
+.....
+.....
+.....
+.....
+.....
+
+upshift
+black
+.....
+.....
+.....
+.....
+.....
+
+leftshift
+black
+.....
+.....
+.....
+.....
+.....
+
+rightshift
+black
+.....
+.....
+.....
+.....
+.....
+
+noshift
+black
+.....
+.....
+.....
+.....
+.....
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Playerright
+* = Crate
+@= crate2
+t = Target
+f = targetfire
+c=cloner
+-=thefloor
+g=greenwall
+
+feel=overwall or overcrate or overcrate2 or overcrate3
+pushable=crate or cloner or swapcrate or Crate2 or crate3
+win=crate or wall
+
+player=playerright or playerleft
+
+shift=downshift or rightshift or leftshift or upshift or noshift
+
+mover= crate or crate2
+
+thefire = fire or Crate2 or crate or Crate3
+
+=======
+SOUNDS
+=======
+
+pushable MOVE 36772507
+
+
+sfx0 52836103
+================
+COLLISIONLAYERS
+================
+
+Background
+ice,icex,fire
+Target, targetfire
+shift
+greenwall
+Player, Wall, pushable,swapwall,thefloor,firex
+feel
+
+======
+RULES
+======
+
+[feel]->[]
+
+[ > Player | pushable ] -> [  > player | > pushable  ]
+
+[> Crate3 | greenwall] -> [Crate3 |greenwall]
+
+([> pushable | greenwall] -> [pushable |greenwall])
+
+[> crate |crate2] -> [> crate3 | ]
+[> crate2 |crate] -> [> crate3 | ]
+
+
+[ left Playerright] -> [ left playerleft]
+[ right Playerleft] -> [ right playerright]
+
+[Up mover]->[up mover upshift]
+[down mover]->[down mover downshift]
+[right mover]->[right mover rightshift]
+[left mover]->[left mover leftshift]
+[mover upshift|no thefire]->[up mover  up upshift|]
+
+
+[mover downshift|no thefire]->[down mover  down downshift|]
+
+
+
+[mover rightshift|no thefire]->[right mover right rightshift|]
+
+
+[mover leftshift|no thefire]->[left mover left leftshift|]
+
+[> crate | thefire] -> [crate noshift | thefire]
+
+[> crate2 | thefire] -> [crate2 noshift | thefire]
+
+
+late [ crate greenwall] -> [crate noshift greenwall]
+
+late [ crate2 greenwall] -> [crate2 noshift greenwall]
+(
+([shift no ice]-> [no ice])
+
+late [crate]->[crate ice]
+late [crate2]->[crate2 fire])
+
+(
+[ left Playerright] -> [ left playerleft]
+[ right Playerleft] -> [ right playerright]
+
+down [player| ]->[player | upshift]
+down [upshift | ]->[upshift | upshift]
+
+up [player| ]->[player | downshift]
+up [downshift | ]->[downshift | downshift]
+
+left [player| ]->[player | rightshift]
+left [rightshift | ]->[rightshift | rightshift]
+
+right [player| ]->[player | leftshift]
+right [leftshift | ]->[leftshift |leftshift]
+
+[player]->[player noshift]
+
+[mover upshift]->[up mover upshift]
+
+[mover downshift]->[down mover downshift]
+
+[mover rightshift]->[right mover  rightshift]
+
+[mover leftshift]->[left mover  leftshift])
+
+late up [wall| ]-> [wall|overwall]
+late up [crate| ]-> [crate|overcrate]
+late up [crate2| ]-> [crate2|overcrate2]
+late up [crate3| ]-> [crate3|overcrate3]
+
+
+[]->again
+==============
+WINCONDITIONS
+==============
+
+
+All Target on crate3
+
+=======
+LEVELS
+=======
+
+message cover up the squares with green blocks
+
+
+message level 1 of 4
+---------
+---###---
+--##.##--
+-##...##-
+##..t..##
+#.......#
+#.*...@.#
+#.......#
+##..P..##
+-##...##-
+--##.##--
+---###---
+
+message level 2 of 4
+---------
+-#######-
+##.....##
+#.*.t...#
+#.....@.#
+#.......#
+#.......#
+#.......#
+#.*.p...#
+#...t.@.#
+##.....##
+-#######-
+
+message level 3 of 4
+---------
+-#######-
+##.....##
+#.*.#.@.#
+#.......#
+#..##...#
+#.gttgg.#
+#..##...#
+#.......#
+#.*p#.@.#
+##.....##
+-#######-
+
+message level 4 of 4
+---------
+-#######-
+##.....##
+#.g...@.#
+#.*#g...#
+#..#t#..#
+#.*gtg@.#
+#..#t#..#
+#...g#@.#
+#.*.p.g.#
+##.....##
+-#######-
+
+
+
+message United to the end

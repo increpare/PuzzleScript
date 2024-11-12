@@ -1,0 +1,434 @@
+title The Lil' Purple Marble
+author Hoboken Pudding
+homepage hobokenpudding.itch.io
+
+require_player_movement
+key_repeat_interval 0.12
+
+run_rules_on_level_start
+
+background_color #bbbbbb
+text_color #65298F
+
+========
+OBJECTS
+========
+Cursor
+transparent
+
+CursorIce
+transparent
+
+PlayerBall
+#FFFFFF #c555ff #923fbd
+.112.
+10112
+11112
+21122
+.222.
+
+Background
+#222222
+
+Target
+#FCD320 #ffffff
+.110.
+0...0
+0...0
+0...0
+.000.
+
+Wall
+#bbbbbb
+
+
+Crate
+#faa46c #f9923d #f9800f
+.....
+.001.
+.012.
+.122.
+.....
+
+CrateIce
+#71D7EA #3CC5CD #04B4B1
+.....
+.001.
+.012.
+.122.
+.....
+
+
+BgL
+#363636 #3c3c3c #454545
+22222
+11112
+00012
+11112
+22222
+
+BgR
+#363636 #3c3c3c #454545
+22222
+21111
+21000
+21111
+22222
+
+BgU
+#363636 #3c3c3c #454545
+21012
+21012
+21012
+21112
+22222
+
+BgD
+#363636 #3c3c3c #454545
+22222
+21112
+21012
+21012
+21012
+
+BgLR
+#363636 #3c3c3c #454545
+22222
+11111
+00000
+11111
+22222
+
+BgUD
+#363636 #3c3c3c #454545
+21012
+21012
+21012
+21012
+21012
+
+BgLURD
+#363636 #3c3c3c #454545
+21012
+11011
+00000
+11011
+21012
+
+BgLUR
+#363636 #3c3c3c #454545
+21012
+11011
+00000
+11111
+22222
+
+BgURD
+#363636 #3c3c3c #454545
+21012
+21011
+21000
+21011
+21012
+
+BgRDL
+#363636 #3c3c3c #454545
+22222
+11111
+00000
+11011
+21012
+
+BgDLU
+#363636 #3c3c3c #454545
+21012
+11012
+00012
+11012
+21012
+
+BgLU
+#363636 #3c3c3c #454545
+21012
+11012
+00012
+11112
+22222
+
+BgUR
+#363636 #3c3c3c #454545
+21012
+21011
+21000
+21111
+22222
+
+BgRD
+#363636 #3c3c3c #454545
+22222
+21111
+21000
+21011
+21012
+
+BgDL
+#363636 #3c3c3c #454545
+22222
+11112
+00012
+11012
+21012
+
+Hole
+#000000 #363636 #454545
+21112
+10001
+10001
+10001
+21112
+
+
+HoleCrate
+#513d2f #363636 #454545
+21112
+10001
+10001
+10001
+21112
+
+HoleIce
+#303d3d #363636 #454545
+21112
+10001
+10001
+10001
+21112
+
+PlayerHole
+#574263 #61496e #454545
+21102
+11110
+11110
+01100
+20002
+
+
+=======
+LEGEND
+=======
+P = PlayerBall
+O = Target
+. = Background
+# = Wall
+C = Crate
+I = CrateIce
+H = Hole
+
+Item = wall or crate or CrateIce
+Player = PlayerBall or PlayerHole
+
+BgCover = BgL or BgR or BgU or BgD or BgLR or BgUD or BgLU or BgUR or BgRD or BgDL or BgLUR or BgURD or BgRDL or BgDLU or BgLURD
+
+
+=========
+SOUNDS
+=========
+endlevel 24176708
+startgame 32454302
+endgame 23366308
+Sfx0 16417502
+Sfx1 32619107
+Sfx2 41385707
+
+================
+COLLISIONLAYERS
+================
+
+Background
+BgCover
+Target
+Hole, HoleCrate, HoleIce
+Player, Wall, Crate, CrateIce, PlayerHole
+Cursor, CursorIce
+
+=====
+RULES
+=====
+
+(Roll the Marble)
+[ Player | Cursor ] -> [ > Player | ]
+[ > Player | no Item | ] -> [ > Player | | Cursor ] again
+[ Cursor Item ] -> [ Item ]
+
+(Move the Crates)
+[ > Player | Crate ] -> [  > Player | > Crate ] Sfx2
+[ > Crate | Crate ] -> [  > Crate | > Crate ]
+[ > Player | CrateIce ] -> [  > Player | > CrateIce ] Sfx1
+[ > CrateIce | Crate ] -> [  > CrateIce | > Crate ]
+[ > Crate | CrateIce ] -> [  > Crate | > CrateIce ]
+
+
+(Ice Crates)
+[ CrateIce | CursorIce ] -> [ > CrateIce | ]
+[ > CrateIce | no Item | ] -> [ > CrateIce | | CursorIce ] again
+
+(Holes)
+late [ CrateIce Hole ] -> [ HoleIce ]
+late [ Crate Hole ] -> [ HoleCrate ]
+[ > Player Hole ] -> [ PlayerHole ] Sfx0
+[ > PlayerHole] -> restart
+
+
+(Build the Background)
+right [no Wall | Background | no Wall ] -> [ no Wall | BgLR | no Wall ]
+down [no Wall | Background | no Wall ] -> [ no Wall | BgUD | no Wall ]
+down [no Wall | BgLR | no Wall ] -> [ no Wall | BgLURD | no Wall ]
+down [Wall | BgLR | no Wall ] -> [ Wall | BgRDL | no Wall ]
+down [no Wall | BgLR | Wall ] -> [ no Wall | BgLUR | Wall ]
+right [Wall | BgUD | no Wall ] -> [ Wall | BgURD | no Wall ]
+right [no Wall | BgUD | Wall ] -> [ no Wall | BgDLU | Wall ]
+right [ Wall | Background | Wall ] -> [ Wall | BgU | Wall ]
+down [ Wall | Background | Wall ] -> [ Wall | BgR | Wall ]
+down [ Wall | BgU | no Wall ] -> [ Wall | BgD | no Wall ]
+right [ no Wall | BgR | Wall ] -> [ no Wall | BgL | Wall ]
+right [ Wall | Background | no Wall ] -> [ Wall | BgUR | no Wall ]
+down [ Wall | BgUR | no Wall ] -> [ Wall | BgRD | no Wall ]
+right [ no Wall | Background | Wall ] -> [ no Wall | BgLU | Wall ]
+down [ Wall | BgLU | no Wall ] -> [ Wall | BgDL | no Wall ]
+
+
+==============
+WINCONDITIONS
+==============
+
+all player on target
+
+=======
+LEVELS
+=======
+
+message Collect the 10 Golden Rings
+
+
+message 1
+
+#########
+#p......#
+#######.#
+#######.#
+###..o..#
+###.###.#
+#.......#
+#...#####
+#########
+
+message 2
+
+########
+#....###
+#...c..#
+##.##.##
+##.##.##
+##.##.##
+##.##.##
+##p##o##
+########
+
+message 3
+
+#########
+#p.###o##
+##.#.#.##
+##.#.c..#
+##c#.####
+#.......#
+#....##.#
+####.##.#
+####....#
+#########
+
+message 4
+
+##########
+#...#p...#
+#.#...ci.#
+#.######.#
+#..i.....#
+#.######.#
+#....###.#
+#.#...o###
+##########
+
+message 5
+message If you get stuck, Press "Z" to undo, "R" to restart level
+
+##########
+#.#..#####
+#.c.....##
+#....##.##
+#.#p.#o.##
+#.#..###.#
+#..i.....#
+#..#.#.#i#
+#.#......#
+##########
+
+message 6
+
+#########
+#.......#
+#cci#.###
+#...#.###
+##p.#c.##
+####...##
+#####.###
+##o...###
+#########
+
+message 7
+
+#########
+##..#...#
+#..c.icc#
+##.##.p.#
+##.#.####
+##.ci...#
+#..#.#o##
+#.....###
+#########
+
+message 8
+
+#######
+#.....#
+#...#.#
+#.ip#.#
+#...c.#
+###h###
+###.###
+###o###
+#######
+
+message 9
+
+#######
+#..c..#
+#.i.pc#
+#.....#
+####h##
+####.##
+####o##
+#######
+
+message 10
+
+########
+#.c..c.#
+#.cp.i.#
+#......#
+#.#h####
+#c#..o##
+#...####
+########
+
+message Congratulations, you got all 10 rings!

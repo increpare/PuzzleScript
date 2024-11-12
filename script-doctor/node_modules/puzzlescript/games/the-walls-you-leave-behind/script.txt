@@ -1,0 +1,388 @@
+title the walls you leave behind
+author Rosden Shadow [Mark Signorelli]
+homepage rosden.itch.io
+run_rules_on_level_Start
+
+background_color #2E3973
+
+text_color #F2F2AA
+
+========
+OBJECTS
+========
+
+Background
+#2E6D99 #2E3973 (#E57ED5 #CC5285)
+11111
+11011
+10101
+11011
+11111
+(
+00101
+01110
+11011
+01111
+10110)
+(
+11101
+00101
+11111
+10100
+10111)
+
+
+nomove
+#FFEED9 #536673
+.....
+.000.
+.010.
+.000.
+.....
+
+Target
+#F2F2AA #2E3973
+.....
+.010.
+.101.
+.010.
+.....
+
+Target2
+#F2F2AA #FFEED9 #E5C17E #847A5C
+20011
+20001
+22001
+32223
+.333.
+
+overtarget2
+#F2F2AA #FFEED9 #E5C17E #847A5C
+.....
+.....
+.....
+.....
+.111.
+
+Wall
+#E5C17E #F2F2AA #847A5C #5B5746
+20002
+22001
+22220
+23232
+32323
+
+overwall
+#E5C17E #F2F2AA #847A5C #5B5746
+.....
+.....
+.....
+01211
+20021
+
+wall2
+#BCF2AA #66CC52 #2DB34E
+11011
+10101
+11011
+21112
+.222.
+
+overwall2
+#66CC52
+.....
+.....
+.....
+.....
+.000.
+
+wall3
+#F2F2AA #E5C17E  #847A5C #5B5746
+11011
+10101
+11011
+21112
+.222.
+
+overwall3
+#E5C17E  #847A5C #5B5746
+.....
+.....
+.....
+.....
+.000.
+
+Playerright
+#FFD9FC #E0AAF2 #39992E #2E7345
+.000.
+11202
+11313
+11110
+.1.1.
+
+playerleft
+#FFD9FC #E0AAF2 #39992E #2E7345
+.000.
+20211
+31311
+01111
+.1.1.
+
+Crate2
+#DB7F55 #E5C17E  #B32D2D #73342E
+20011
+20001
+22001
+32223
+.333.
+
+overcrate2
+#DB7F55 #E5C17E  #B32D2D #73342E
+.....
+.....
+.....
+.....
+.111.
+
+crate
+#FFD9FC #E0AAF2 #A87EE5 #705C84
+21100
+21110
+22110
+32223
+.333.
+
+overcrate
+#FFD9FC #E0AAF2 #A87EE5 #705C84
+.....
+.....
+.....
+.....
+.000.
+
+cloner
+#E5C17E #DB7F55 #B32D2D #73342E
+.100.
+.210.
+.221.
+.332.
+.....
+
+swapcrate
+Orange Yellow
+00000
+0...0
+0...0
+0...0
+00000
+
+swapwall
+black
+.....
+.....
+.....
+.....
+.....
+
+thefloor
+#2E3973
+00000
+00000
+00000
+00000
+00000
+
+(
+checkempty
+black
+.....
+.....
+.....
+.....
+.....
+
+checkblock
+black
+.....
+.....
+.....
+.....
+.....
+)
+
+switcrate
+black
+.....
+.....
+.....
+.....
+.....
+
+switcrate2
+black
+.....
+.....
+.....
+.....
+.....
+
+wallx
+black
+.....
+.....
+.....
+.....
+.....
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Playerright
+* = Crate
+@ = Crate2
+O = Target
+n = nomove
+
+c=cloner
+-=thefloor
+
+feel=overwall or overcrate or overcrate2 or overwall2 or overwall3 or overtarget2
+pushable=crate or cloner or swapcrate or crate2 or switcrate or switcrate2
+win=crate or wall
+
+
+theemx= crate 
+player=playerright or playerleft
+
+blocker = wall or crate or crate2 or nomove
+targetx = target or Target2
+des = wall2 or wall3
+=======
+SOUNDS
+=======
+
+pushable MOVE 36772507
+
+
+sfx0 52836103
+sfx1 45427502
+================
+COLLISIONLAYERS
+================
+
+Background
+nomove
+target
+wallx
+Player, Wall, pushable,swapwall,thefloor,wall2,wall3
+Target2
+feel
+
+
+======
+RULES
+======
+
+[feel]->[]
+[ >  Player | pushable ] -> [  >  Player | > pushable ]
+
+[> crate | des] -> [> crate | ]
+[player]-> [player wallx]
+
+late [wall2 Target] -> [wall3 target]
+
+(late[Target crate]->[target2 crate])
+
+late[target2 no crate]->[target]
+
+[ left Playerright] -> [ left playerleft]
+[ right Playerleft] -> [ right playerright]
+
+
+late [wallx no player]->[wall2]
+
+late up [wall| ]-> [wall|overwall]
+late up [wall2| ]-> [wall2|overwall2]
+
+late up [wall3| ]-> [wall3|overwall3]
+late up [theemx| ]-> [theemx|overcrate]
+
+late up [crate2| ]-> [crate2|overcrate2]
+
+late up [Target2| ]-> [target2|overtarget2]
+
+
+
+==============
+WINCONDITIONS
+==============
+
+all targetx on crate
+
+
+
+=======
+LEVELS
+=======
+
+message have all the targets get a block on them
+
+message level 1 of 4
+---------
+-#######-
+##..O..##
+#...P...#
+#.##.##.#
+#.##.##.#
+#.##.##.#
+#.......#
+#...*...#
+##.....##
+-#######-
+
+message level 2 of 4
+---------
+-#######-
+##.....##
+#...*...#
+#.*...*.#
+#.......#
+#.......#
+#...O...#
+#..O.O..#
+##..P..##
+-#######-
+
+message level 3 of 4
+---------
+-#######-
+##.....##
+#..#*#..#
+#.......#
+#.......#
+#..#*#..#
+#.......#
+#..O.O..#
+#...P...#
+#########
+
+message level 4 of 4
+---------
+#########
+#O.....O#
+#.......#
+#.......#
+#.**.**.#
+#.......#
+#...p...#
+#.......#
+#..O.O..#
+#########
+
+
+
+
+message you have overcome the greatest obstacle...yourself

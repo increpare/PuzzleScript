@@ -1,0 +1,104 @@
+title Test Gist Script
+author diN0bot, copied from Stephen Lavelle
+homepage www.puzzlescript.net
+
+========
+OBJECTS
+========
+
+Background 
+LIGHTGREEN GREEN
+11111
+11111
+10111
+11101
+11111
+
+Target 
+DarkBlue
+.....
+.000.
+.0.0.
+.000.
+.....
+
+Wall 
+DARKBROWN BROWN
+11110
+00000
+10111
+00000
+11110
+
+Player 
+Pink Blue DarkBlue Red
+.11..
+.1111
+.000.
+33333
+.2.2.
+
+Crate 
+Orange
+00000
+0...0
+0...0
+0...0
+00000
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Player
+* = Crate
+@ = Crate and Target
+O = Target
+
+=======
+SOUNDS
+=======
+
+Crate MOVE 66950707
+endlevel 83744503
+startgame 92244503
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Target
+Player, Wall, Crate
+
+======
+RULES     
+======     
+
+[ >  Player | Crate ] -> [  >  Player | > Crate  ] sfx0
+
+==============
+WINCONDITIONS
+==============
+
+All Target on Crate     
+
+=======     
+LEVELS
+=======
+
+message Welcome
+
+#########..
+#..#....#..
+#p....#.#..
+#..#....#..
+#..####.##.
+#..#.....#.
+#.*#..o..#.
+#..#...###.
+#########..
+
+message Congratulations

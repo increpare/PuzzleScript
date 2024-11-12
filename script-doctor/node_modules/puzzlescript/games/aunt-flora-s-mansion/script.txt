@@ -1,0 +1,623 @@
+title Aunt Flora's Mansion
+author anna anthropy
+homepage auntiepixelante.com
+run_rules_on_level_start
+flickscreen 17x12
+text_color pink
+
+(https://gist.github.com/anonymous/dca39858ca7ca7fcbe20)
+
+========
+OBJECTS
+========
+
+Background
+#9A00C2 #5200C2
+11011
+10101
+01110
+10101
+11011
+
+Grass
+Green Lightgreen
+00000
+01000
+00010
+00000
+10000
+
+Fence
+Green Grey Lightgrey White
+00200
+00300
+12321
+00200
+00100
+
+Gargoyle (actually a tree now)
+Green Brown Lightgreen White
+00200
+02320
+23222
+02220
+00100
+
+Cornerwall
+#FFB591 #FF5501 #A83700
+00001
+01212
+02022
+01212
+12222
+
+Horiwall
+#FFB591 #FF5501 #A83700
+00000
+10122
+21012
+22101
+22222
+
+Vertwall
+#FFB591 #FF5501 #A83700
+01222
+00122
+01012
+02102
+02212
+
+Start
+Pink
+..0..
+.000.
+00000
+.000.
+..0..
+
+Player
+Brown Pink White
+.111.
+.0011
+.0011
+.222.
+02220
+
+Flora
+Brown Pink White LightBlue
+.333.
+.000.
+.202.
+.0003
+03133
+
+Cat
+Black Brown Yellow Pink
+.....
+0.0..
+202..
+00000
+.0000
+
+Everyslider
+#BCF818 #58D858 #006800 Black
+00201
+01312
+23333
+01312
+12322
+
+Horislider
+#38C0FC #0088FC #0000FC Black
+00001
+01112
+23333
+01112
+12222
+
+Vertslider
+#FCFF00 #FCB800 #503000 Black
+00201
+01312
+01312
+01312
+12322
+
+Block
+#FCA048 #FC3800 #AC1000
+00001
+01112
+01212
+01112
+12222
+
+Righteleport
+White #FC78FC #94008C Black
+03001
+03312
+01332
+03312
+13222
+
+Downteleport
+White #FC78FC #94008C Black
+00001
+33133
+03332
+01312
+12222
+
+Lefteleport
+White #FC78FC #94008C Black
+00131
+01332
+03312
+01332
+12232
+
+Upteleport
+White #FC78FC #94008C Black
+00001
+01312
+03332
+33133
+12222
+
+Rightpusher
+White #00E8E4 #0088FC Black
+03001
+03312
+03332
+03312
+13222
+
+Downpusher
+White #00E8E4 #0088FC Black
+00001
+33333
+03332
+01312
+12222
+
+Leftpusher
+White #00E8E4 #0088FC Black
+00131
+01332
+03332
+01332
+12232
+
+Uppusher
+White #00E8E4 #0088FC Black
+00001
+01312
+03332
+33333
+12222
+
+Selector
+White
+00.00
+0...0
+.....
+0...0
+00.00
+
+Fakeselector
+White
+00.00
+0...0
+.....
+0...0
+00.00
+
+Xselector
+White
+00.00
+0...0
+..0..
+0...0
+00.00
+
+SelectorGrass
+White Green
+00100
+01110
+11111
+01110
+00100
+
+HorisliderGrass
+#38C0FC #0088FC #0000FC Green
+00001
+01112
+23333
+01112
+12222
+
+VertsliderGrass
+#FCFF00 #FCB800 #503000 Green
+00201
+01312
+01312
+01312
+12322
+
+EverysliderGrass
+#BCF818 #58D858 #006800 Green
+00201
+01312
+23333
+01312
+12322
+
+DownpusherGrass
+White #00E8E4 #0088FC Green
+00001
+33333
+03332
+01312
+12222
+
+Water
+Blue Lightblue
+00000
+00000
+00000
+00000
+00000
+
+WaterEdge
+Blue Lightblue
+11111
+01110
+00000
+00000
+00000
+
+Fountain
+Blue Lightblue Lightgrey White
+01010
+10101
+13131
+30103
+13331
+
+FenceWater
+Blue Grey Lightgrey White Lightblue
+40204
+00300
+12321
+00200
+00100
+
+Savepoint
+Red Yellow White
+.1.1.
+10101
+10001
+.101.
+..1..
+
+SavepointGrass
+Red Yellow White Green
+31313
+10101
+10001
+31013
+33133
+
+Marker
+Transparent
+
+EntranceHall
+Transparent
+
+Kitchen
+Transparent
+
+BackStairway
+Transparent
+
+BackPorch
+Transparent
+
+SideGate
+Transparent
+
+StorageRoom
+Transparent
+
+Ballroom
+Transparent
+
+Annex
+Transparent
+
+Cellar
+Transparent
+
+Parlor
+Transparent
+
+Terrace
+Transparent
+
+Study
+Transparent
+
+Library
+Transparent
+
+SecretPassage
+Transparent
+
+WineCellar
+Transparent
+
+Conservatory
+Transparent
+
+Attic
+Transparent
+
+DiningRoom
+Transparent
+
+Ending
+Transparent
+
+=======
+LEGEND
+=======
+
+. = Background
+" = Grass
+/ = Fence
+[ = FenceWater
+G = Gargoyle
+# = Cornerwall
+H = Horiwall
+I = Vertwall
+* = Block
+p = Start
++ = Everyslider
+- = Horislider
+| = Vertslider
+6 = Righteleport
+8 = Upteleport
+4 = Lefteleport
+5 = Downteleport
+d = Rightpusher
+w = Uppusher
+a = Leftpusher
+s = Downpusher
+O = Selector
+X = Xselector
+
+C = SelectorGrass
+\ = HorisliderGrass
+z = DownpusherGrass
+1 = VertsliderGrass
+: = EverysliderGrass
+
+~ = Water
+M = WaterEdge
+
+@ = Savepoint
+& = SavepointGrass
+
+! = EntranceHall
+K = Kitchen
+B = BackStairway
+R = BackPorch
+F = Fountain
+% = SideGate
+T = StorageRoom
+L = Ballroom
+E = Cellar
+N = Annex
+] = Parlor
+_ = Terrace
+Y = Study
+J = Library
+? = SecretPassage
+7 = WineCellar
+9 = Conservatory
+3 = Attic
+2 = DiningRoom
+Q = Flora
+' = Cat
+` = Ending
+
+Wall = Cornerwall or Horiwall or Vertwall
+Horipushable = Horislider or Everyslider or Selector or Xselector
+Vertpushable = Vertslider or Everyslider or Selector or Xselector
+Anypushable = Horislider or Vertslider or Everyslider or Selector or Xselector
+Anypusher = Uppusher or Leftpusher or Rightpusher or Downpusher
+Anyteleport = Upteleport or Lefteleport or Righteleport or Downteleport
+Obstacle = Wall or Anyteleport or Anypushable or Player
+Pusher = Anypusher or Player or Anypushable
+Anyotherpusher = Anypusher or Anypushable
+Wet = Water or WaterEdge
+
+=======
+SOUNDS
+=======
+
+Anypushable Move 89849307
+Player CantMove 71349904
+Endlevel 46867308
+Sfx0 85238901 (teleport)
+Sfx1 71349904 (player tries to push an Xselector)
+Sfx2 21193109 (splash)
+Sfx3 45025500 (save)
+
+================
+COLLISIONLAYERS
+================
+
+Marker
+Background
+Grass, Water, WaterEdge
+Savepoint, SavepointGrass
+EntranceHall, Kitchen, BackStairway, BackPorch, SideGate, StorageRoom, Ballroom, Annex, Cellar, Parlor, Terrace, Study, Library, SecretPassage, WineCellar, Conservatory, Attic, Diningroom, Ending, Flora, Cat
+Start, Player, Fence, FenceWater, Gargoyle, Fountain, Cornerwall, Horiwall, Vertwall, Everyslider, Horislider, Vertslider, Block, Righteleport, Upteleport, Lefteleport, Downteleport, Rightpusher, Uppusher, Leftpusher, Downpusher, Selector, Xselector, SelectorGrass, HorisliderGrass, VertsliderGrass, EverysliderGrass, DownpusherGrass
+Fakeselector
+
+======
+RULES
+======
+
+(thanks to alan hazelden, jonah ostroff and jamie perconti for help with weird rules issues)
+
+(selectors)
+[ > Player | Xselector ] -> [ Stationary Player | Stationary Xselector ] Sfx1
+[ > Player | Selector ] -> [ | Stationary Player Fakeselector]
+[ Fakeselector no Player ] -> [ Selector ]
+
+[Stationary Player][Rightpusher] -> [Player][Right Rightpusher]
+[Stationary Player][Downpusher] -> [Player][Down Downpusher]
+[Stationary Player][Leftpusher] -> [Player][Left Leftpusher]
+[Stationary Player][Uppusher] -> [Player][Up Uppusher]
+
+[ moving Pusher ] -> [ moving Pusher Marker ]
+
+startloop
+
+Horizontal [Marker > Pusher|stationary Horipushable] -> [Marker > Pusher|> HoriPushable]
+Vertical [Marker > Pusher|stationary VertPushable] -> [Marker > Pusher|> VertPushable]
+
+[Marker > Pusher|no Marker > Anypushable] -> [> Pusher|Marker > Anypushable]
+
+Horizontal [Marker > Pusher|Vertical Pusher] -> [Pusher|Vertical Pusher]
+Vertical [Marker > Pusher|Horizontal Pusher] -> [Pusher|Horizontal Pusher]
+
+endloop
+
+(teleporters)
+Right [> Player|Righteleport|No Obstacle] -> [ |Righteleport|Player] Sfx0
+Down [> Player|Downteleport|No Obstacle] -> [ |Downteleport|Player] Sfx0
+Left [> Player|Lefteleport|No Obstacle] -> [ |Lefteleport|Player] Sfx0
+Up [> Player|Upteleport|No Obstacle] -> [ |Upteleport|Player] Sfx0
+
+[Player] -> [Player] again
+
+(put grass under things)
+[ Start ] -> [ Player Grass ]
+[ SelectorGrass ] -> [ Selector Grass ]
+[ HorisliderGrass ] -> [ Horislider Grass ]
+[ VertsliderGrass ] -> [ Vertslider Grass ]
+[ EverysliderGrass ] -> [ Everyslider Grass ]
+[ DownpusherGrass ] -> [ Downpusher Grass ]
+[ SavepointGrass ] -> [ Savepoint Grass ]
+
+[ Marker ] -> []
+
+(messages)
+[ > Player | EntranceHall ] -> [ > Player | ] Message The Main Hall
+
+[ Player Kitchen | Kitchen ] -> [ Player | ] Message The Kitchen
+[ > Player | BackStairway ] -> [ > Player | ] Message The Back Stairway
+[ > Player | BackPorch ] -> [ > Player | ] Message The Back Porch
+[ > Player | SideGate ] -> [ > Player | ] Message The Side Gate
+[ Player StorageRoom ] -> [ Player ] Message The Storage Room
+[ > Player | Ballroom ] -> [ > Player | ] Message The Colonnade Ballroom
+[ > Player | Annex ] -> [ > Player | ] Message The Annex
+[ > Player | Cellar ] -> [ > Player | ] Message The Cellar
+
+[ Player Parlor | Parlor ] -> [ Player | ] Message The Parlor
+[ > Player | Terrace ] -> [ > Player | ] Message The Terrace
+[ Player Study ] -> [ Player ] Message The Study
+[ Player Library ] -> [ Player ] Message The Library
+[ > Player | SecretPassage ] -> [ > Player | ] Message The Secret Passage
+[ > Player | WineCellar ] -> [ > Player | ] Message The Wine Cellar
+[ > Player | Conservatory ] -> [ > Player | ] Message The Conservatory
+[ > Player | Attic ] -> [ > Player | ] Message The Attic
+[ > Player | DiningRoom ] -> [ > Player | ] Message The Dining Room
+
+(splashing around in the water)
+[ > Player | Wet ] -> [ > Player | Wet ] Sfx2
+
+(save points)
+[ Action Player Savepoint ] -> [ Player Savepoint ] Checkpoint Sfx3
+
+==============
+WINCONDITIONS
+==============
+
+All Player on Ending
+
+=======
+LEVELS
+=======
+
+MESSAGE A letter from Great-Aunt Flora! She wants me to join her for tea.
+MESSAGE Auntie Flora's mansion is full of so much junk, though! How does she manage it all at her age?
+MESSAGE Aunt Flora's Mansion
+MESSAGE Step into a Heart and press X to save your game! Press R to return to your last save! It's possible, but hopefully not easy, to get stuck - be careful saving!
+
+/////////////////////////////////////////////////////////////////////////////////////
+/g"ggg"gggg"gggg"""""""""""""""""""""""""""&g""g""""""""""""""""""""""""""""""""""""/
+/g"gg"""""4"""""""""g"#hhhhhhhhhhhhh5h8h#""ggg"#h#""""""#hhhhhhhh#"""""g"g#h#g""""g"/
+/g"zg"gg"gg"gzgg""g&g"i..+.+...i..e.-...i|#hhhhh.i"""""gi.o.o.o+.@g"""g"g#...#g""m""/
+/""\c\"g"g"\c\"g""""""i+++.+.+x..ih#@#.#ioi@.....i""g"ggi.....#h.hhhhhhh#.|.-.#"m~m"/
+/g"gg"gg"gg"gg"g""mmm"i.++..+o.#hhhhh.-..|a#|||#.6""""ggi+o+o+i.-o-......|.-..i"~f~"/
+/g""4""g""""g""g""~f~"i+.+.+..+io....h.h#.#.oooi|4"""gggio+o+oih.ihhhhhh#.-.|.#"~m~"/
+/g"ggg"ggg5gg"gg""~m~"in++..+..i.hh..x.+.#i||||i.ihhh#@#i+o+o+ii.i""""g&g#.|.#g""~""/
+/g5ggg8ggg"\"""g"""~""#.#hhhhhh#+ii..x.+..io.o.i..3.....io+o+oii.i1"""""""#.#g""""""/
+/g"ggg"ggg5#hhhh##"~""6:""g&g""""ii..x.+..i||||#|hhhhh..i+o+o+i#.hoh#"""g"""""""""g"/
+/""""""""""i....@i"~mm[mmmmmmmmm"ii..x.+..i.o.o.o....i........i@...ii"g"""""""""""""/
+/""""""""""i.hh.##hhh"4"hhhhh"~~"i#..x.+..i....#hhhi.#hhhhhhhhh#9ihhhhhhhhhhhhh#""""/
+/""""""""""i.ii.##h@hhhhhhhhh"~~"ihhhhhhhhhhhhhhhhhi2#h#@#i#hhhi.ihh#i.4.6.4.4.i""""/
+/"##hh##hhh#.i#..l+...ooox..i"~~"ii~~~~~~~~~~~~~~~ii......ii.#h#.#@#h#5#8#5#8#.#"""g/
+/"i....i.h...#.#h#.#.#.#.#.#i"~~"ii~#h#h#h#h#h#h#~ii..hh..ii+---.-.7.4.6.6.6.4.ig""g/
+/"id|...h#.---|aii.i|..+++x.i"~~mii~i...........i~ii..hh..ii.-.-..##h#5#8#8#58.#"g""/
+/"i..i...x...h+hii.i.#|#.#.#ig"~~ii~i.g.......g.i~ii.|..|.ii8.-.-.ii.6.4.4.s.6.i""g"/
+/"i.h#h|#.#h#.|.ii.i..+.+...i&"""ii~i.#...q...#.i~ii|ohho|ii.-.-.-ii8i5#5#5|8#.#g"g"/
+/"i...+..+..|.+|ii.i.#|#|#.#ig"""ii~i.g.'.....g.i~iio.hh.oii..-.-.ii.4.6.6.-.4.i""""/
+/"i..-.---....|.ii.i...-....i#.#xii~i.#.......#.i~ii.|..|.ii.+.-.-ii8i8#8#5#5#.#"g""/
+/"i..w.w.wd---|.h#.#5#h#.#|#i..i.ii~i....`......i~ii|ohho|ii..-.-.ii.6.4.4.4.4.i""gg/
+/"##hh#hh#.........i.i........#i.ii~#h#h#.#h#h#h#~iio.hh.oii.-.-.-ii8#8#8#5#8#.#"""g/
+/"""""""ii...T..h#..|i8#hhhhhhii.ii~~~~~i.i~~~~~~~ii.|..|.i#hhhhhhhi...6.4.6.6.i"g""/
+/"""""""#h#5i8#@#hhi.i.ihhhhhhhi.ihhhhhhh.hhhhhhhhhi|ohho|iihhhhhhhi?#@#hhhhhhhh""""/
+/"""""""#hi.i.ihhhii.#.i#hhhhhhi.ii#.#hh#.#i.ihhhhhio.hh.oiihhhhhhi#.h#hhhhhhhh#""""/
+/"""""""i.#5#8#.#h#i...i..-.4.|i.id-|....-.#h#....#i.|..|.ii..|...ii..i....s...i"g""/
+/"""""""i....x.....i...i.|-.4+.i.#h#o#h#.-....||||ai|ohho|h#.-+--.#h..i.hh.+hh|ig"g"/
+/""#hh#"#......#hhhhhhhh#|.#..|i...#|..h#.#hh#o+++#io.hh.oi....|...i..i..+.|...ig"""/
+/""ids.\-------.........i.|i.+.i.....i.6.....i||||ii......i....|-..i..i+hh.+|||i&"gg/
+/""..|i"#......#hhhhhhhh#.|i#+|#.h#hhh#.#...|i||||ii......i....+|..i..#....|...ig""g/
+/""i.o-ci......i.i..+..i...i....4k.|..-....|.i||||hhhh.hhhi.....|..i..i.hh.+hh.h#g""/
+/""#hh#"#h#h#x#hh#.#|.+i...#||..6k..|.|.---|.i.........-..i.----+..i.|i.++.+.+..i"g"/
+/""""""""gi.i.......|.o#.--.++#h@k..|.|.+..|.#hhhhhhhhh85h#.----.|.i.|ihhh.+h...ig""/
+/""""""""&i.#..#h#.#.-o.#.6..|..#h#.|.|.+..|.......].6.......#.#||#h.|#....+..#.6""g/
+/""g""g""gi.%..@ii......i.6.|...@ii...|.+..|.......].4.......i.i|...d--|.#hhh#@|4"g"/
+/"""""""#h#.#hhh#i#@#hhhihhhhh#.##h#@#hhh#!#h#@#h#hhhh#@#hhhh#.hh#.h#|i.#ihhhh#Ji"""/
+/"""""""ihi.ih#h#hhhhhhhhhhhhhibii#hhhhhh#.#hhhhhh#hhhhhhhhhhi_ihi.ii|i#hhhhhh#8i"""/
+/"""""""ih#x#h#.#hh#.....--s-.i.iii#hh#.#...#.#hh#ii............@i.ii|i.....-.-.i"""/
+/""""hhh#...i...ihhhhh#.#o.o-o6|iii....|----a|....ii..----.|.....i.ii|i..-......i"g"/
+/""""..#.+|.i.+.i#...o-oi.+o..ioiii#hh#+#...#|#hh#ii.--.|..|---..i.ii|i+-.|-|--ai"""/
+/""g"..x-.|.i..x6..#.##.ioo-o-i|#i#....|d----|....#i...|+....|...i.ii|i..-+.+...i"""/
+/""""..#.--.#h#|ih#.-o-|a..|o|i.oii#hh#|#...#+#hh#ii.---|..-----.i.#h|hd-||-|---i"g"/
+/""""hhh#....x..##@#.##.#.#hhh#.oii....|----a|....ii...||----|...i...w...|......i"""/
+/"mmm"""i.-..x..r....i....---.4.o##hhh#+#...#|#hhh#hhhh|.....|hhhhhhhhi.y.......i"g"/
+/"~f~"""hhhhhhhh#hhhh#hhhh5h8h#.#"""&"g"g"""g"g"&"""g""""""""1""""ggg&#h8h5hhhhh#"""/
+/"~m~""""g&g""""""""""g&g"""""#h#""""""""""""""""""""1"gg"""""""g"""""""""""""""""""/
+/"""""""""""""""""""""""""""""""""""""""""p"""""""""g""""""""""g""g"""""""""""""""""/
+/////////////////////////////////////////////////////////////////////////////////////
+
+MESSAGE "Oh hello, Sweetheart. Won't you join your Auntie for a cup of tea?"
+
+MESSAGE "Auntie, I don't know how you can live in this huge place all by yourself."
+
+MESSAGE "I'm not alone, I have Catsup here. Now drink your tea before it gets cold."
+
+MESSAGE "Okay, Auntie. I missed you."
+
+MESSAGE created by anna anthropy
+
+MESSAGE with help from Alan Hazelden, Jonah Ostroff and Jamie Perconti
+
+MESSAGE playtested by Jen Ada, John H., Chris Harris, and Kelsey Higham
+
+

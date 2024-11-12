@@ -107,6 +107,20 @@ class Queue {
   }
 }
 
+function byScoreAndLength2(a, b) {
+	// if (a[2] != b[2]) {
+	// 	return a[2] < b[2];
+	// } else {
+	// 	return a[0] < b[0];
+	// }
+	
+	if (a[0] != b[0]) {
+		return a[0] < b[0];
+	} else {
+		return a[2].length < b[2].length;
+	}
+}
+
 
 async function solveLevel(level) {
   function hashState(levelMap) {
@@ -114,6 +128,9 @@ async function solveLevel(level) {
       return (hash * 31 + char.charCodeAt(0)) % 1_000_003; // Simple hash
     }, 0);
   }
+
+  precalcDistances();
+
   // Load the level
   compile(['loadLevel', level], editor.getValue());
   init_level = backupLevel();
@@ -121,23 +138,26 @@ async function solveLevel(level) {
 
   // frontier = [init_level];
   // action_seqs = [[]];
-  frontier = new Queue();
-  action_seqs = new Queue();
-  frontier.enqueue(init_level);
-  action_seqs.enqueue([]);
+  // frontier = new Queue();
+  // action_seqs = new Queue();
+
+  frontier = FastPriorityQueue(byScoreAndLength);
+
+  frontier.add([init_level, 0, []]);
+  // action_seqs.enqueue([]);
 
   sol = [];
   console.log(sol.length);
   visited = new Set([hashState(init_level_map)]);
   i = 0;
   start_time = Date.now();
-  while (frontier.size() > 0) {
+  while (frontier.size > 0) {
     backups = [];
 
     // const level = frontier.shift();
     // const action_seq = action_seqs.shift();
-    const level = frontier.dequeue();
-    const action_seq = action_seqs.dequeue();
+    const [level, score, action_seq] = frontier.poll();
+    // const action_seq = action_seqs.dequeue();
 
     if (!action_seq) {
       console.log(`Action sequence is empty. Length of frontier: ${frontier.length}`);
@@ -148,6 +168,10 @@ async function solveLevel(level) {
         return [-1, i];
       }
       restoreLevel(level);
+
+      score = getScore();
+      console.log('score:', score);
+
       new_action_seq = action_seq.slice();
       new_action_seq.push(move);
       changed = processInputSearch(move);
@@ -163,26 +187,27 @@ async function solveLevel(level) {
         if (!visited.has(newHash)) {
           
           // UNCOMMENT THESE LINES FOR VISUAL DEBUGGING
-          // await new Promise(resolve => setTimeout(resolve, 1)); // Small delay for live feedback
-          // redraw();
+          await new Promise(resolve => setTimeout(resolve, 1)); // Small delay for live feedback
+          redraw();
 
-          frontier.enqueue(new_level);
+          frontier.add([score, new_level, new_action_seq]);
+          // frontier.enqueue(new_level);
           if (!new_action_seq) {
             console.log(`New action sequence is undefined when pushing.`);
           }
-          action_seqs.enqueue(new_action_seq);
+          // action_seqs.enqueue(new_action_seq);
           visited.add(newHash);
         } 
       }
     }
-    if (i % 100 == 0) {
+    if (i % 10000 == 0) {
       now = Date.now();
       console.log('Iteration:', i);
       console.log('FPS:', (i / (now - start_time) * 1000).toFixed(2));
       console.log(`Size of frontier: ${frontier.size()}`);
       console.log(`Visited states: ${visited.size}`);
-      await new Promise(resolve => setTimeout(resolve, 1)); // Small delay for live feedback
-      redraw();
+      // await new Promise(resolve => setTimeout(resolve, 1)); // Small delay for live feedback
+      // redraw();
     }
     i++;
   }

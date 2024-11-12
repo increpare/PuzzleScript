@@ -1,0 +1,768 @@
+title Enclosed
+author Rosden Shadow [Mark Signorelli]
+homepage rosden.itch.io
+
+background_color #231F26
+
+text_color #FFD9E0
+
+again_interval 0.1
+
+run_rules_on_level_start
+========
+OBJECTS
+========
+
+Background
+#231F26 #3B3942
+00000
+00100
+01010
+00100
+00000
+
+Target
+DarkBlue
+.....
+.000.
+.0.0.
+.000.
+.....
+
+Wall
+#E5C17E #CC7A52 #B32D2D #73342E #3B3942
+21110
+11111
+21110
+22121
+33332
+
+overWall
+#E5C17E #CC7A52 #B32D2D #73342E #3B3942
+.....
+.....
+.....
+.....
+10100
+
+beforeWall2
+#D9FFDC #7EE58D #5C8466 #4F5B46 #423D39
+.....
+..1..
+.1.1.
+..1..
+.....
+
+Wall2
+#D9FFDC #7EE58D #5C8466 #4F5B46 #423D39
+21101
+21110
+12110
+21221
+33332
+
+overWall2
+#D9FFDC #7EE58D #5C8466 #4F5B46 #3B3942
+.....
+.....
+.....
+.....
+10010
+
+playerright
+#FFD9E0 #C1A2A5 #845C5C
+.222.
+.200.
+.1110
+.111.
+.1.1.
+
+playerleft
+#FFD9E0 #C1A2A5 #845C5C
+.222.
+.002.
+0111.
+.111.
+.1.1.
+
+playerdown
+#FFD9E0 #C1A2A5 #845C5C
+.222.
+.000.
+01110
+.111.
+.1.1.
+
+playerup
+#FFD9E0 #C1A2A5 #845C5C
+.222.
+.222.
+01110
+.111.
+.1.1.
+(
+Player
+#CC7A52 #73342E #E5C17E
+.222.
+.000.
+01110
+.111.
+.1.1.
+)
+
+Crate
+#FFD9FC #E0AAF2  #A87EE5 #705C84 #E5C17E #CC7A52 #736053
+21100
+21110
+22110
+32223
+.333.
+
+(cratem
+#D9FFF8 #AAE0F2  #7EA1E5 #394239
+.0.0.
+2.1.0
+.1.1.
+2.1.0
+.2.2.
+cratem3
+#D9FFF8 #AAE0F2  #7EA1E5 #394239
+..0..
+.1.0.
+2.1.0
+.2.1.
+..2..
+
+
+cratem2
+#D9FFF8 #AAE0F2  #7EA1E5 #394239
+.....
+..0..
+.2.0.
+..2..
+.....
+cratem1
+#D9FFF8 #AAE0F2  #7EA1E5 #394239
+.....
+.....
+..0..
+.....
+.....)
+
+cratem
+#D9FFF8 #AAE0F2  #7EA1E5 #394239
+2.1.0
+.1.1.
+2.1.0
+.2.2.
+.....
+cratem3
+#D9FFF8 #AAE0F2  #7EA1E5 #394239
+.1.0.
+2.1.0
+.2.1.
+..2..
+.....
+cratem2
+#D9FFF8 #AAE0F2  #7EA1E5 #394239
+..0..
+.2.0.
+..2..
+.....
+.....
+cratem1
+#D9FFF8 #AAE0F2  #7EA1E5 #394239
+.....
+..0..
+.....
+.....
+.....
+overcratem
+#D9FFF8 #AAE0F2  #7EA1E5 #394239
+.....
+.....
+.....
+.....
+.0.0.
+
+overcratem3
+#D9FFF8 #AAE0F2  #7EA1E5 #394239
+.....
+.....
+.....
+.....
+..0..
+
+(Crate
+#D9FFF8 #AAE0F2  #7EA1E5 #394239 #E5C17E #CC7A52 #736053
+21100
+54110
+55440
+65556
+.666.)
+
+crate2
+#F2F2AA #E5C17E #CC7A52 #736053
+21100
+21110
+22110
+32223
+.333.
+(
+crate2m
+#F2F2AA #E5C17E #CC7A52 #736053
+.0.0.
+2.1.0
+.1.1.
+2.1.0
+.2.2.
+crate2m3
+#F2F2AA #E5C17E #CC7A52 #736053
+..0..
+.1.0.
+2.1.0
+.2.1.
+..2..
+crate2m2
+#F2F2AA #E5C17E #CC7A52 #736053
+.....
+..0..
+.2.0.
+..2..
+.....
+crate2m1
+#F2F2AA #E5C17E #CC7A52 #736053
+.....
+.....
+..0..
+.....
+.....)
+
+crate2m
+#F2F2AA #E5C17E #CC7A52 #736053
+2.1.0
+.1.1.
+2.1.0
+.2.2.
+.....
+crate2m3
+#F2F2AA #E5C17E #CC7A52 #736053
+.1.0.
+2.1.0
+.2.1.
+..2..
+.....
+crate2m2
+#F2F2AA #E5C17E #CC7A52 #736053
+..0..
+.2.0.
+..2..
+.....
+.....
+crate2m1
+#F2F2AA #E5C17E #CC7A52 #736053
+.....
+..0..
+.....
+.....
+.....
+overcrate2m
+#F2F2AA #E5C17E #CC7A52 #736053
+.....
+.....
+.....
+.....
+.0.0.
+
+overcrate2m3
+#F2F2AA #E5C17E #CC7A52 #736053
+.....
+.....
+.....
+.....
+..0..
+
+overcrate
+#FFD9FC
+.....
+.....
+.....
+.....
+.000.
+
+overcrate2
+#F2F2AA #E5C17E #CC7A52 #736053
+.....
+.....
+.....
+.....
+.000.
+
+
+thefloor
+#231F26
+00000
+00000
+00000
+00000
+00000
+
+(------------Start score----------)
+
+a1
+#FFD9E0
+..0..
+.00..
+..0..
+..0..
+.000.
+
+a2
+#FFD9E0
+.00..
+...0.
+..0..
+.0...
+.000.
+
+a3
+#FFD9E0
+.00..
+...0.
+.00..
+...0.
+.00..
+
+a4
+#FFD9E0
+.0...
+.0.0.
+.000.
+...0.
+...0.
+
+a5
+#FFD9E0
+.000.
+.0...
+.00..
+...0.
+.00..
+
+a6
+#FFD9E0
+..00.
+.0...
+.000.
+.0.0.
+.000.
+
+a7
+#FFD9E0
+.000.
+...0.
+...0.
+...0.
+...0.
+
+a8
+#FFD9E0
+.000.
+.0.0.
+.000.
+.0.0.
+.000.
+
+a9
+#FFD9E0
+..00.
+.0.0.
+.000.
+...0.
+...0.
+
+a0
+#FFD9E0
+..00.
+.0.0.
+.0.0.
+.0.0.
+.00..
+
+as
+#FFD9E0
+.000.
+.0...
+.000.
+...0.
+.000.
+
+ac
+#FFD9E0
+.000.
+.0...
+.0...
+.0...
+.000.
+
+ao
+#FFD9E0
+.000.
+.0.0.
+.0.0.
+.0.0.
+.000.
+
+ar
+#FFD9E0
+.000.
+.0.0.
+.000.
+.00..
+.0.0.
+
+ae
+#FFD9E0
+.000.
+.0...
+.000.
+.0...
+.000.
+
+an
+#FFD9E0
+.....
+..0..
+.....
+..0..
+.....
+
+sscore
+black
+.....
+.....
+.....
+.....
+.....
+
+nscore
+black
+.....
+.....
+.....
+.....
+.....
+
+
+addscore
+black
+.....
+.....
+.....
+.....
+.....
+
+nextscore
+black
+.....
+.....
+.....
+.....
+.....
+nummove
+black
+.....
+.....
+.....
+.....
+.....
+nummax
+black
+.....
+.....
+.....
+.....
+.....
+
+scoreendpoint
+black
+.....
+.....
+.....
+.....
+.....
+
+(------------End score----------)
+
+onthep
+black
+.....
+.....
+.....
+.....
+.....
+
+wait
+black
+.....
+.....
+.....
+.....
+.....
+
+wait1
+black
+.....
+.....
+.....
+.....
+.....
+
+wait2
+black
+.....
+.....
+.....
+.....
+.....
+
+wait3
+black
+.....
+.....
+.....
+.....
+.....
+
+spawner1
+black
+.....
+.....
+.....
+.....
+.....
+
+spawner2
+black
+.....
+.....
+.....
+.....
+.....
+
+asco
+black
+.....
+.....
+.....
+.....
+.....
+blackdot
+black
+.....
+..0..
+.....
+.....
+.....
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Playerdown
+O = Target
+- = thefloor
+1= as and thefloor
+2=ac and thefloor
+3 = ao and thefloor
+4=ar and thefloor
+5=ae and thefloor
+6=an and thefloor
+7=sscore and thefloor and a0
+z=scoreendpoint and thefloor
+j=spawner1 and Crate and asco and blackdot
+k=spawner2 and crate2 and asco and blackdot
+
+player = playerright or playerleft or playerdown or playerup
+w =wait and thefloor
+numbers = a1 or a2 or a3 or a4 or a5 or a6 or a7 or a8 or a9 or a0
+letters = as or ac or ao or ar or ae or an 
+
+blocker = player or wall or Crate or crate2 or wall
+waitx = wait1 or wait or wait2 or wait3
+
+push = Crate or crate2
+feel=overcrate or overcrate2 or overWall or overWall2
+
+them=cratem or cratem3 or cratem2 or cratem1 or crate2m or crate2m3 or crate2m2 or crate2m1
+themover = overcratem or overcratem3 or overcrate2m or overcrate2m3
+=======
+SOUNDS
+=======
+
+Crate MOVE 36772507
+
+sfx0 97777702
+
+player move 48296904
+
+sfx1 53886700
+================
+COLLISIONLAYERS
+================
+
+Background
+Target
+onthep
+asco
+thefloor
+spawner1
+spawner2
+
+beforeWall2
+Player, Wall, Crate,crate2,wall2
+waitx
+
+(score)
+numbers
+letters
+sscore
+nscore
+addscore
+nextscore
+nummove
+nummax
+scoreendpoint
+(endscore)
+
+blackdot
+them
+feel
+themover
+
+
+======
+RULES
+======
+
+[feel]->[]
+[themover]->[]
+
+[cratem]->[Crate]
+[cratem3]->[cratem]
+[cratem2]->[cratem3]
+[cratem1]->[cratem2]
+
+[crate2m]->[Crate2]
+[crate2m3]->[crate2m]
+[crate2m2]->[crate2m3]
+[crate2m1]->[crate2m2]
+
+[player]->[player onthep]
+[> player|push]->[> player | > push]
+
+[> push|push]->[> push| > push]
+[> crate | beforeWall2]->[> crate | ]
+
+[> crate | Wall2]->[> crate | ]
+
+
+([> Crate|crate]->[|crate2] sfx0)
+
+([ Crate |no blocker no them |crate]->[crate crate2m1|cratem1 | crate crate2m1] sfx0)
+([ Crate2|no blocker no them |crate2]->[crate2 cratem1|crate2m1 | crate2 cratem1] sfx0)
+(
+[ Crate|crate2|crate]->[crate2| |crate2] sfx0
+[ Crate2|crate|crate2]->[crate| |crate] sfx0)
+
+
+(---score---)
+(late [onthep no player] [sscore]->[onthep] [addscore sscore])
+late [player asco] [sscore]->[player] [addscore sscore] sfx1
+(numbers up)
+late [addscore a0]->[a1]
+late [addscore a1]->[a2]
+late[addscore a2]->[a3]
+late[addscore a3]->[a4]
+late[addscore a4]->[a5]
+late[addscore a5]->[a6]
+late[addscore a6]->[a7]
+late[addscore a7]->[a8]
+late[addscore a8]->[a9]
+late[addscore a9]->[a0 nextscore]
+left[ nextscore | nscore]->[ | addscore nscore]
+(moving numbers across)
+late left[ nextscore | no nscore]->[ a1 | nummove]
+late[nummove] [sscore]->[nummove] [nummove sscore]
+late right [nummove sscore| thefloor]->[ nscore | sscore thefloor a0]
+late right [nummove sscore scoreendpoint]->[nummax] 
+late [nummax][numbers]->[nummax][a9]
+late [nummove]->[]
+[]->again
+(---score done---)
+
+late [spawner1 no blocker]->[spawner1 Crate asco]
+late [spawner2 no blocker]->[spawner2 Crate2 asco]
+
+(late [ left Playerright] -> [ left playerleft]
+late [ right Playerleft] -> [ right playerright])
+
+(late [onthep no player][wait3]->[onthep crate][wait]
+late [onthep no player][wait2]->[onthep ][wait3])
+
+(
+late [onthep no player][wait2]->[onthep crate][wait]
+late [onthep no player][wait1]->[onthep][wait2]
+late [onthep no player][wait]->[onthep][wait1])
+
+late [onthep no blocker beforeWall2]->[Wall2]
+late [onthep no player]->[beforeWall2]
+late [onthep]->[]
+
+
+
+late up[crate|]->[crate|overcrate]
+late up[crate2|]->[crate2|overcrate2]
+late up[wall|]->[wall|overwall]
+late up[wall2|]->[wall2|overwall2]
+late up[cratem|]->[cratem|overcratem]
+late up[cratem3|]->[cratem3|overcratem3]
+late up[crate2m|]->[crate2m|overcrate2m]
+late up[crate2m3|]->[crate2m3|overcrate2m3]
+
+[right player]->[right playerright]
+[left player]->[left playerleft]
+[up player]->[up playerup]
+[down player]->[down playerdown]
+==============
+WINCONDITIONS
+==============
+
+All player on target
+
+=======
+LEVELS
+=======
+
+message THE RULES: running over spaces twice creates a wall. Walls and proto-walls can be destroyed with cubes. Cubes can push other cubes
+message GOAL: create as many cubes as possible and get the highest score you can
+message My best is 20 see if you can reach it or beat it
+
+1234567-z
+w--------
+#########
+#.......#
+#.......#
+#.......#
+#...j...#
+#...p...#
+#.......#
+#.......#
+#########
+
+(The most I can make is 20)
+
+
+

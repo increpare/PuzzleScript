@@ -1,0 +1,3498 @@
+title Snakehole
+author Jack Kutilek
+homepage jackkutilek.com
+
+background_color #90908E
+text_color #EACC8F
+
+(verbose_logging)
+run_rules_on_level_start
+key_repeat_interval .15
+again_interval 0.03  (.03)
+noaction
+
+========
+OBJECTS
+========
+
+Background
+#CEB37B #E2BA7C #EACC8F
+11111
+01111
+11101
+11111
+10112
+
+
+
+Target
+#4A3700
+.....
+.000.
+.000.
+..00.
+.....
+
+hole
+#5F3128
+.....
+.000.
+.000.
+.000.
+.....
+
+nothing
+#90908e
+
+
+Outer_wall
+#AA997B #90908E #80807E
+11111
+11111
+11111
+11111
+11111
+
+Outer_wall_r_1
+#B9A88C #90908E #80807E
+00011
+00111
+11111
+11101
+11111
+
+Outer_wall_r_1_l
+#B9A88C #90908E #80807E
+....1
+....0
+.....
+.....
+.....
+
+Outer_wall_r_2
+#BDB4A3 #90908E #80807E
+01111
+11001
+11111
+11101
+11111
+
+Outer_wall_r_2_l
+#BDB4A3 #90908E #80807E
+....0
+....1
+.....
+.....
+.....
+
+Outer_wall_r_3
+#C1BDAA #90908E #80807E
+00110
+01111
+11011
+11111
+11111
+
+Outer_wall_r_3_l
+#C1BDAA #90908E #80807E
+....0
+....0
+.....
+.....
+.....
+
+Outer_wall_r_4
+#CCBA8E #90908E #80807E
+11011
+01111
+11110
+11011
+11111
+
+Outer_wall_r_4_l
+#CCBA8E #90908E #80807E
+....0
+....0
+.....
+.....
+.....
+
+Outer_wall_r_5
+#C4AC75 #90908E #80807E
+10011
+11001
+11111
+11110
+11111
+
+Outer_wall_r_5_l
+#C4AC75 #90908E #80807E
+....1
+....0
+....1
+....1
+.....
+
+Outer_wall_u_1
+#B9A88C #90908E #80807E
+11011
+01111
+11111
+11100
+11111
+
+Outer_wall_u_1_l
+#B9A88C #90908E #80807E
+....1
+....1
+.....
+.....
+.....
+
+Outer_wall_u_1_r
+#B9A88C #90908E #80807E
+.....
+.....
+.....
+0....
+.....
+
+Outer_wall_u_2
+#BDB4A3 #90908E #80807E
+11011
+10011
+11111
+11100
+11111
+
+Outer_wall_u_2_l
+#BDB4A3 #90908E #80807E
+....1
+....0
+.....
+.....
+.....
+
+Outer_wall_u_2_r
+#BDB4A3 #90908E #80807E
+.....
+.....
+.....
+0....
+.....
+
+Outer_wall_u_3
+#C1BDAA #90908E #80807E
+11111
+10111
+11111
+11100
+11111
+
+Outer_wall_u_3_l
+#C1BDAA #90908E #80807E
+....0
+....1
+.....
+.....
+.....
+
+Outer_wall_u_3_r
+#C1BDAA #90908E #80807E
+.....
+.....
+.....
+001..
+.....
+
+Outer_wall_u_4
+#CCBA8E #90908E #80807E
+10111
+10111
+11111
+11000
+11111
+
+Outer_wall_u_4_l
+#CCBA8E #90908E #80807E
+....1
+....0
+.....
+.....
+.....
+
+Outer_wall_u_4_r
+#CCBA8E #90908E #80807E
+.....
+.....
+.....
+0....
+.....
+
+Outer_wall_u_5
+#C4AC75 #90908E #80807E
+10011
+11111
+11111
+11000
+11111
+
+Outer_wall_u_5_l
+#C4AC75 #90908E #80807E
+.....
+....0
+.....
+.....
+.....
+
+Outer_wall_u_5_r
+#C4AC75 #90908E #80807E
+.....
+.....
+.....
+0....
+.....
+
+
+Outer_wall_d_1
+#B9A88C #90908E #80807E
+00011
+01111
+11111
+11011
+11111
+
+Outer_wall_d_1_l
+#B9A88C #90908E #80807E
+....0
+....0
+.....
+.....
+.....
+
+Outer_wall_d_1_r
+#B9A88C #90908E #80807E
+.....
+.....
+.....
+1....
+0....
+
+Outer_wall_d_2
+#BDB4A3 #90908E #80807E
+01111
+00011
+11111
+11011
+01111
+
+Outer_wall_d_2_l
+#BDB4A3 #90908E #80807E
+....1
+....0
+.....
+.....
+.....
+
+Outer_wall_d_2_r
+#BDB4A3 #90908E #80807E
+.....
+.....
+.....
+1....
+01...
+
+Outer_wall_d_3
+#C1BDAA #90908E #80807E
+10011
+10111
+11111
+11011
+11111
+
+Outer_wall_d_3_l
+#C1BDAA #90908E #80807E
+....0
+....0
+.....
+.....
+.....
+
+Outer_wall_d_3_r
+#C1BDAA #90908E #80807E
+.....
+.....
+.....
+1....
+.....
+
+Outer_wall_d_4
+#CCBA8E #90908E #80807E
+00011
+01111
+11011
+11111
+11111
+
+Outer_wall_d_4_l
+#CCBA8E #90908E #80807E
+.....
+....0
+.....
+.....
+.....
+
+Outer_wall_d_4_r
+#CCBA8E #90908E #80807E
+.....
+.....
+.....
+1....
+1....
+
+Outer_wall_d_5
+#C4AC75 #90908E #80807E
+10011
+00111
+11111
+11011
+11111
+
+Outer_wall_d_5_l
+#C4AC75 #90908E #80807E
+....0
+....0
+.....
+.....
+.....
+
+Outer_wall_d_5_r
+#C4AC75 #90908E #80807E
+.....
+.....
+.....
+1....
+0....
+
+
+Outer_wall_l_1
+#B9A88C #90908E #80807E
+01011
+11011
+11111
+10100
+11111
+
+Outer_wall_l_1_r
+#B9A88C #90908E #80807E
+.....
+.....
+.....
+0....
+.....
+
+Outer_wall_l_2
+#BDB4A3 #90908E #80807E
+00111
+11111
+10111
+11100
+11111
+
+Outer_wall_l_2_r
+#BDB4A3 #90908E #80807E
+.....
+.....
+.....
+1....
+.....
+
+Outer_wall_l_3
+#C1BDAA #90908E #80807E
+11011
+10011
+11111
+01100
+11111
+
+Outer_wall_l_3_r
+#C1BDAA #90908E #80807E
+.....
+.....
+.....
+0....
+.....
+
+Outer_wall_l_4
+#CCBA8E #90908E #80807E
+10011
+00111
+11111
+11011
+11111
+
+Outer_wall_l_4_r
+#CCBA8E #90908E #80807E
+.....
+.....
+.....
+.....
+.....
+
+Outer_wall_l_5
+#C4AC75 #90908E #80807E
+01011
+11011
+11111
+10111
+11111
+
+Outer_wall_l_5_r
+#C4AC75 #90908E #80807E
+.....
+.....
+.....
+0....
+.....
+
+
+
+
+Wall
+#AA997B #90908E
+00010
+00010
+11111
+01000
+11111
+
+
+WallA
+#B9A88C #90908E
+00010
+00010
+11111
+01000
+11111
+
+walla_r
+#B9A88C
+.....
+.....
+.....
+0....
+.....
+
+walla_l
+#B9A88C
+....0
+....0
+.....
+.....
+.....
+
+
+WallB
+#BDB4A3 #90908E
+00010
+00010
+11111
+01000
+11111
+
+wallb_r
+#BDB4A3
+.....
+.....
+.....
+0....
+.....
+
+wallb_l
+#BDB4A3
+....0
+....0
+.....
+.....
+.....
+
+WallC
+#C1BDAA #90908E
+00010
+00010
+11111
+01000
+11111
+
+wallc_r
+#C1BDAA
+.....
+.....
+.....
+0....
+.....
+
+wallc_l
+#C1BDAA
+....0
+....0
+.....
+.....
+.....
+
+WallD
+#CCBA8E #90908E
+00010
+00010
+11111
+01000
+11111
+
+walld_r
+#CCBA8E
+.....
+.....
+.....
+0....
+.....
+
+walld_l
+#CCBA8E
+....0
+....0
+.....
+.....
+.....
+
+WallE
+#C4AC75 #90908E
+00010
+00010
+11111
+01000
+11111
+
+walle_r
+#C4AC75
+.....
+.....
+.....
+0....
+.....
+
+walle_l
+#C4AC75
+....0
+....0
+.....
+.....
+.....
+
+wallborderl
+#80807E
+0....
+0....
+0....
+0....
+0....
+
+wallborderr
+#888887
+....0
+....0
+....0
+....0
+....0
+
+wallborderd
+#80807E
+.....
+.....
+.....
+.....
+00000
+
+wallborderu
+#888887
+00000
+.....
+.....
+.....
+.....
+
+
+HeadU
+#FF9138 #617CA3 #E2461F #FcA019 #F88330
+.2.2.
+..2..
+.400.
+.101.
+.430.
+
+HeadU_shakeleft
+#FF9138 #617CA3 #E2461F #FcA019 #F88330
+.2...
+220..
+.401.
+.100.
+.430.
+
+HeadU_shakestraight
+#FF9138 #617CA3 #E2461F #FcA019 #F88330
+.2.2.
+..2..
+.400.
+.101.
+.430.
+
+HeadU_shakeright
+#FF9138 #617CA3 #E2461F #FcA019 #F88330
+...2.
+..022
+.100.
+.401.
+.430.
+
+HeadD
+#FF9138 #617CA3 #E2461F #FcA019 #F88330
+.430.
+.101.
+.400.
+..2..
+.2.2.
+
+HeadD_shakeleft
+#FF9138 #617CA3 #E2461F #FcA019 #F88330
+.430.
+.401.
+.100.
+..422
+...2.
+
+HeadD_shakestraight
+#FF9138 #617CA3 #E2461F #FcA019 #F88330
+.430.
+.101.
+.400.
+..2..
+.2.2.
+
+HeadD_shakeright
+#FF9138 #617CA3 #E2461F #FcA019 #F88330
+.430.
+.100.
+.401.
+220..
+.2...
+
+HeadR
+#FF9138 #617CA3 #E2461F #FcA019 #F88330
+.....
+010.2
+3002.
+414.2
+.....
+
+HeadR_shakeleft
+#FF9138 #617CA3 #E2461F #FcA019 #F88330
+...2.
+01022
+3000.
+441..
+.....
+
+HeadR_shakestraight
+#FF9138 #617CA3 #E2461F #FcA019 #F88330
+.....
+010.2
+3002.
+414.2
+.....
+
+HeadR_shakeright
+#FF9138 #617CA3 #E2461F #FcA019 #F88330
+.....
+001..
+3000.
+41422
+...2.
+
+HeadL
+#FF9138 #617CA3 #E2461F #FcA019 #F88330
+.....
+2.010
+.2003
+2.414
+.....
+
+HeadL_shakeleft
+#FF9138 #617CA3 #E2461F #FcA019 #F88330
+.....
+..100
+.0003
+22414
+.2...
+
+HeadL_shakestraight
+#FF9138 #617CA3 #E2461F #FcA019 #F88330
+.....
+2.010
+.2003
+2.414
+.....
+
+HeadL_shakeright
+#FF9138 #617CA3 #E2461F #FcA019 #F88330
+.2...
+22010
+.0003
+..144
+.....
+
+
+
+snakehead_in_hole_1
+#FF9138 #617CA3 #E2461F #FcA019 #F88330  #d86310
+.....
+.2.2.
+.....
+.....
+.....
+
+snakehead_in_hole_2
+#FF9138 #617CA3 #E2461F #FcA019 #F88330  #d86310
+.....
+..2..
+.2.2.
+.....
+.....
+
+snakehead_in_hole_3
+#FF9138 #617CA3 #E2461F #FcA019 #F88330  #d86310
+.....
+.555.
+..2..
+.2.2.
+.....
+
+snakehead_in_hole_4
+#FF9138 #617CA3 #E2461F #FcA019 #F88330  #d86310
+.....
+.151.
+.400.
+..2..
+.2.2.
+
+snakehead_in_hole_5
+#FF9138 #617CA3 #E2461F #FcA019 #F88330  #d86310
+.....
+.555.
+.101.
+.400.
+..2..
+
+
+
+bodyskinU
+#F9AE00 #FFD987 #FcA019 #FF9138 #F1A700 #F59811 #F88330
+.532.
+.603.
+.410.
+.....
+.....
+
+bodyskind
+#F9AE00 #FFD987 #FcA019 #FF9138 #F1A700 #F59811 #F88330
+.....
+.....
+.410.
+.603.
+.532.
+
+bodyskinr
+#F9AE00 #FFD987 #FcA019 #FF9138 #F1A700 #F59811 #F88330
+.....
+..032
+..103
+..465
+.....
+
+bodyskinl
+#F9AE00 #FFD987 #FcA019 #FF9138 #F1A700 #F59811 #F88330
+.....
+230..
+301..
+564..
+.....
+
+bodyskin_backU
+#F9AE00 #FFD987 #FcA019 #FF9138 #F1A700 #F59811 #F88330
+.....
+.....
+.410.
+.502.
+.623.
+
+bodyskin_Backd
+#F9AE00 #FFD987 #FcA019 #FF9138 #F1A700 #F59811 #F88330
+.623.
+.502.
+.410.
+.....
+.....
+
+bodyskin_backr
+#F9AE00 #FFD987 #FcA019 #FF9138 #F1A700 #F59811 #F88330
+.....
+320..
+201..
+654..
+.....
+
+bodyskin_backl
+#F9AE00 #FFD987 #FcA019 #FF9138 #F1A700 #F59811 #F88330
+.....
+..023
+..102
+..456
+.....
+
+taild
+#FF9138 #FcA019 #F88330 #F59811
+.210.
+.210.
+.20..
+..0..
+.....
+
+tailu
+#FF9138 #FcA019 #F88330 #F59811
+.....
+..0..
+..00.
+.210.
+.210.
+
+tailr
+#FF9138 #FcA019 #F88330 #F59811
+.....
+00...
+1100.
+222..
+.....
+
+taill
+#FF9138 #FcA019 #F88330 #F59811
+.....
+..000
+.0011
+...22
+.....
+
+snakeskin_going_home_r
+#FF9138 #FcA019 #F88330 #c56801
+.....
+023..
+213..
+023..
+.....
+
+snakeskin_going_home_l
+#FF9138 #FcA019 #F88330 #c56801
+.....
+..320
+..312
+..320
+.....
+
+snakeskin_going_home_u
+#FF9138 #FcA019 #F88330 #c56801
+.....
+.....
+.333.
+.212.
+.020.
+
+snakeskin_going_home_d
+#FF9138 #FcA019 #F88330 #c56801
+.020.
+.212.
+.333.
+.....
+.....
+
+
+tail_going_home_r
+#FF9138 #FcA019 #F88330 #c56801
+.....
+..3..
+.23..
+.....
+.....
+
+tail_going_home_l
+#FF9138 #FcA019 #F88330 #c56801
+.....
+.....
+..32.
+..3..
+.....
+
+tail_going_home_u
+#FF9138 #FcA019 #F88330 #c56801
+.....
+.....
+.33..
+..2..
+.....
+
+tail_going_home_d
+#FF9138 #FcA019 #F88330 #c56801
+.....
+..2..
+..33.
+.....
+.....
+
+placeholder_snake
+transparent
+
+Playersnake
+transparent
+.....
+.....
+..0..
+.....
+.....
+
+
+bodyR
+green
+.....
+.....
+..0..
+.....
+.....
+
+
+bodyU
+green
+.....
+.....
+..0..
+.....
+.....
+
+
+bodyD
+green
+.....
+.....
+..0..
+.....
+.....
+
+
+bodyL
+green
+.....
+.....
+..0..
+.....
+.....
+
+
+snake_food
+#eF9158 #e08249 #d87c41 #e88950
+...30
+..13.
+.231.
+.02..
+.....
+
+
+Crateu
+transparent Yellow
+.....
+.....
+..0..
+.....
+.....
+
+Crated
+transparent Yellow
+.....
+.....
+..0..
+.....
+.....
+
+Cratel
+transparent Yellow
+.....
+.....
+..0..
+.....
+.....
+
+Crater
+transparent Yellow
+.....
+.....
+..0..
+.....
+.....
+
+Crateh
+transparent Yellow
+.....
+.....
+..0..
+.....
+.....
+
+
+crateshadow_l
+#117711
+.....
+..000
+.....
+.....
+.....
+
+crateshadow_r
+#117711
+.....
+.....
+.....
+000..
+.....
+
+crateshadow_u
+#117711
+.....
+.....
+...0.
+...0.
+...0.
+
+crateshadow_d
+#117711
+.0...
+.0...
+.0...
+.....
+.....
+
+crateshadow_head_l_tail_l
+#117711 darkblue
+.....
+..010
+.....
+.....
+.....
+
+crateshadow_head_l_tail_back_l
+#117711 #E2461F
+.....
+1.0..
+.....
+.....
+.....
+
+crateskin_tail_l
+#B27D52 #A26f48
+...00
+...11
+.....
+.....
+.....
+
+crateskin_tail_r
+#B27D52 #A26f48
+.....
+.....
+.....
+00...
+11...
+
+crateskin_tail_u
+#B27D52 #A26f48
+.....
+.....
+.....
+...10
+...10
+
+crateskin_tail_d
+#B27D52 #A26f48
+10...
+10...
+.....
+.....
+.....
+
+
+crateskin_tail_back_l
+#B27D52 #A26f48
+00...
+11...
+.....
+.....
+.....
+
+crateskin_tail_back_r
+#B27D52 #A26f48
+.....
+.....
+.....
+...00
+...11
+
+crateskin_tail_back_u
+#B27D52 #A26f48
+...10
+...10
+.....
+.....
+.....
+
+crateskin_tail_back_d
+#B27D52 #A26f48
+.....
+.....
+.....
+10...
+10...
+
+
+skincrate_dd_join
+#B27D52 #A26f48
+.....
+.....
+10...
+.....
+.....
+
+
+skincrate_uu_join
+#B27D52 #A26f48
+.....
+.....
+...10
+.....
+.....
+
+skincrate_ll_join
+#B27D52 #A26f48
+..0..
+..1..
+.....
+.....
+.....
+
+skincrate_rr_join
+#B27D52 #A26f48
+.....
+.....
+.....
+..0..
+..1..
+
+skincrate_dr_join
+#B27D52 #A26f48
+.....
+..0..
+.100.
+..1..
+.....
+
+skincrate_ru_join
+#B27D52 #A26f48
+.....
+..10.
+.000.
+..1..
+.....
+
+skincrate_ul_join
+#B27D52 #A26f48
+..0..
+..00.
+..100
+.....
+.....
+
+skincrate_ld_join
+#B27D52 #A26f48
+..0..
+.10..
+100..
+.....
+.....
+
+skincrate_rd_join
+#B27D52 #A26f48
+.....
+.....
+.....
+0....
+.....
+
+skincrate_dl_join
+#B27D52 #A26f48
+.....
+.....
+.....
+.....
+.....
+
+skincrate_lu_join
+#B27D52 #A26f48
+.....
+....1
+.....
+.....
+.....
+
+skincrate_ur_join
+#B27D52 #A26f48
+.....
+.....
+.....
+...1.
+....0
+
+skincrate_tail_l
+#B27D52 #A26f48
+..0..
+.....
+.....
+.....
+.....
+
+skincrate_tail_r
+#B27D52 #A26f48
+.....
+.....
+.....
+.....
+..1..
+
+skincrate_tail_u
+#B27D52 #A26f48
+.....
+.....
+....0
+.....
+.....
+
+skincrate_tail_d
+#B27D52 #A26f48
+.....
+.....
+1....
+.....
+.....
+
+crateskin_head_l
+#B27D52 darkbrown #E2461F #A26f48
+....0
+2.100
+.2003
+2.10.
+.....
+
+crateskin_head_l_shakeleft
+#B27D52 darkbrown #E2461F #A26f48
+....0
+..100
+..003
+22.1.
+.2...
+
+crateskin_head_l_shakestraight
+#B27D52 darkbrown #E2461F #A26f48
+....0
+2.100
+.2003
+2.10.
+.....
+
+crateskin_head_l_shakeright
+#B27D52 darkbrown #E2461F #A26f48
+.2..0
+22.10
+..003
+..13.
+.....
+
+crateskin_head_r
+#B27D52 darkbrown #E2461F #A26f48
+.....
+.01.2
+0002.
+001.2
+3....
+
+crateskin_head_r_shakeleft
+#B27D52 darkbrown #E2461F #A26f48
+...2.
+.1.22
+000..
+031..
+3....
+
+crateskin_head_r_shakestraight
+#B27D52 darkbrown #E2461F #A26f48
+.....
+.01.2
+0002.
+001.2
+3....
+
+crateskin_head_r_shakeright
+#B27D52 darkbrown #E2461F #A26f48
+.....
+.01..
+000..
+01.22
+3..2.
+
+crateskin_head_u
+#B27D52 darkbrown #E2461F #A26f48
+.2.2.
+..2..
+.101.
+.000.
+..300
+
+crateskin_head_u_shakeleft
+#B27D52 darkbrown #E2461F #A26f48
+.2...
+22...
+..01.
+.100.
+..300
+
+crateskin_head_u_shakestraight
+#B27D52 darkbrown #E2461F #A26f48
+.2.2.
+..2..
+.101.
+.000.
+..300
+
+crateskin_head_u_shakeright
+#B27D52 darkbrown #E2461F #A26f48
+...2.
+...22
+.10..
+.301.
+..300
+
+crateskin_head_d
+#B27D52 darkbrown #E2461F #A26f48
+300..
+.000.
+.101.
+..2..
+.2.2.
+
+crateskin_head_d_shakeleft
+#B27D52 darkbrown #E2461F #A26f48
+300..
+.301.
+.10..
+...22
+...2.
+
+crateskin_head_d_shakestraight
+#B27D52 darkbrown #E2461F #A26f48
+300..
+.000.
+.101.
+..2..
+.2.2.
+
+crateskin_head_d_shakeright
+#B27D52 darkbrown #E2461F #A26f48
+300..
+.100.
+..01.
+22...
+.2...
+
+
+crateskin_head_l_alone
+#B27D52 darkbrown #E2461F #A26f48
+....0
+2.100
+.2003
+2.10.
+.....
+
+crateskin_head_r_alone
+#B27D52 darkbrown #E2461F #A26f48
+.....
+.01.2
+0002.
+001.2
+3....
+
+crateskin_head_u_alone
+#B27D52 darkbrown #E2461F #A26f48
+.2.2.
+..2..
+.101.
+.000.
+..300
+
+crateskin_head_d_alone
+#B27D52 darkbrown #E2461F #A26f48
+300..
+.000.
+.101.
+..2..
+.2.2.
+
+crateskin_head_in_hole1
+#B27D52 darkbrown #E2461F #A26f48
+.....
+.....
+.....
+.....
+.....
+
+crateskin_head_in_hole2
+#B27D52 darkbrown #E2461F #9b6840
+.....
+.2.2.
+.....
+.....
+.....
+
+crateskin_head_in_hole3
+#B27D52 darkbrown #E2461F #9b6840
+.....
+..2..
+.2.2.
+.....
+.....
+
+crateskin_head_in_hole4
+#B27D52 darkbrown #E2461F #9b6840
+.....
+.101.
+..2..
+.2.2.
+.....
+
+crateskin_head_in_hole5
+#B27D52 darkbrown #E2461F #9b6840
+.....
+.000.
+.101.
+..2..
+.2.2.
+
+crateskin_head_in_hole_u
+#B27D52 darkbrown #E2461F #9b6840
+.....
+.33..
+.000.
+.101.
+..2..
+
+crateskin_head_in_hole_u_shakeleft
+#B27D52 darkbrown #E2461F #9b6840
+.....
+.330.
+.001.
+.100.
+...22
+
+crateskin_head_in_hole_u_shakestraight
+#B27D52 darkbrown #E2461F #9b6840
+.....
+.33..
+.000.
+.101.
+..2..
+
+crateskin_head_in_hole_u_shakeright
+#B27D52 darkbrown #E2461F #9b6840
+.....
+.03..
+.100.
+..01.
+22...
+
+
+crateskin_head_in_hole_d
+#B27D52 darkbrown #E2461F #9b6840
+..2..
+.101.
+.000.
+..33.
+.....
+
+crateskin_head_in_hole_d_shakeleft
+#B27D52 darkbrown #E2461F #9b6840
+22...
+..01.
+.100.
+..03.
+.....
+
+crateskin_head_in_hole_d_shakestraight
+#B27D52 darkbrown #E2461F #9b6840
+..2..
+.101.
+.000.
+..33.
+.....
+
+crateskin_head_in_hole_d_shakeright
+#B27D52 darkbrown #E2461F #9b6840
+...22
+.10..
+.001.
+..30.
+.....
+
+
+crateskin_head_in_hole_r
+#B27D52 darkbrown #E2461F #9b6840
+.....
+.103.
+2003.
+.10..
+.....
+
+crateskin_head_in_hole_r_shakeleft
+#B27D52 darkbrown #E2461F #9b6840
+.....
+.103.
+.000.
+2.1..
+2....
+
+crateskin_head_in_hole_r_shakestraight
+#B27D52 darkbrown #E2461F #9b6840
+.....
+.103.
+2003.
+.10..
+.....
+
+crateskin_head_in_hole_r_shakeright
+#B27D52 darkbrown #E2461F #9b6840
+2....
+2.10.
+.003.
+.10..
+.....
+
+
+crateskin_head_in_hole_l
+#B27D52 darkbrown #E2461F #9b6840
+.....
+..01.
+.3002
+.301.
+.....
+
+crateskin_head_in_hole_l_shakeleft
+#B27D52 darkbrown #E2461F #9b6840
+....2
+..1.2
+.000.
+.301.
+.....
+
+crateskin_head_in_hole_l_shakestraight
+#B27D52 darkbrown #E2461F #9b6840
+.....
+..01.
+.3002
+.301.
+.....
+
+crateskin_head_in_hole_l_shakeright
+#B27D52 darkbrown #E2461F #9b6840
+.....
+..01.
+.300.
+.01.2
+....2
+
+
+crateskin_going_home_r
+#B27D52 darkbrown #E2461F #9b6840
+.....
+.....
+.03..
+003..
+0....
+
+crateskin_going_home_l
+#B27D52 darkbrown #E2461F #9b6840
+....0
+..300
+..30.
+.....
+.....
+
+crateskin_going_home_u
+#B27D52 darkbrown #E2461F #9b6840
+.....
+.....
+..33.
+..00.
+...00
+
+crateskin_going_home_d
+#B27D52 darkbrown #E2461F #9b6840
+00...
+.00..
+.33..
+.....
+.....
+
+
+
+crateskin_tongue_l
+#E2461F
+.....
+....0
+.....
+....0
+.....
+
+crateskin_tongue_l_shakeleft
+#E2461F
+.....
+.....
+.....
+....0
+.....
+
+crateskin_tongue_l_shakeright
+#E2461F
+.....
+....0
+.....
+.....
+.....
+
+crateskin_tongue_r
+#E2461F
+.....
+0....
+.....
+0....
+.....
+
+crateskin_tongue_r_shakeleft
+#E2461F
+.....
+0....
+.....
+.....
+.....
+
+crateskin_tongue_r_shakeright
+#E2461F
+.....
+.....
+.....
+0....
+.....
+
+crateskin_tongue_d
+#E2461F
+.0.0.
+.....
+.....
+.....
+.....
+
+crateskin_tongue_d_shakeleft
+#E2461F
+...0.
+.....
+.....
+.....
+.....
+
+crateskin_tongue_d_shakeright
+#E2461F
+.0...
+.....
+.....
+.....
+.....
+
+
+crateskin_tongue_u
+#E2461F
+.....
+.....
+.....
+.....
+.0.0.
+
+crateskin_tongue_u_shakeleft
+#E2461F
+.....
+.....
+.....
+.....
+.0...
+
+crateskin_tongue_u_shakeright
+#E2461F
+.....
+.....
+.....
+.....
+...0.
+
+crate_food
+#b26D42 #aA6740 #a26038 #ba7850
+.....
+.31..
+.201.
+..20.
+...11
+
+CrateTailD
+transparent
+.....
+.....
+..0..
+..0..
+.....
+
+CrateTailU
+transparent
+.....
+..0..
+..0..
+.....
+.....
+
+CrateTailR
+transparent
+.....
+.....
+..00.
+.....
+.....
+
+CrateTailL
+transparent
+.....
+.....
+.00..
+.....
+.....
+
+CrateTailH
+transparent
+.....
+.....
+..0..
+.....
+.....
+
+grow_crate_l
+transparent
+.....
+.....
+..0..
+.....
+.....
+
+grow_crate_r
+transparent
+.....
+.....
+..0..
+.....
+.....
+
+grow_crate_d
+transparent
+.....
+.....
+..0..
+.....
+.....
+
+grow_crate_u
+transparent
+.....
+.....
+..0..
+.....
+.....
+
+grow_crate_h
+transparent
+.....
+.....
+..0..
+.....
+.....
+
+
+movement_tracker
+transparent
+
+neck
+transparent
+
+tail_end
+transparent
+
+
+crate_movement_trackerl
+transparent
+
+crate_movement_trackerr
+transparent
+
+crate_movement_trackeru
+transparent
+
+crate_movement_trackerd
+transparent
+
+crate_movement_tracker_start
+transparent
+
+crate_tail_removal
+transparent
+
+going_home
+transparent
+
+gone_home
+transparent
+
+going_home_removal
+transparent
+
+bodyblock
+green
+
+snake_counter
+transparent
+.....
+..0..
+..0..
+..0..
+.....
+
+snake_decounter
+transparent
+
+snake_is_alone
+transparent
+
+
+holesnake1
+transparent
+0....
+.....
+.....
+.....
+.....
+
+holesnake2
+transparent
+00...
+.....
+.....
+.....
+.....
+
+holesnake3
+transparent
+000..
+.....
+.....
+.....
+.....
+
+holesnake4
+transparent
+0000.
+.....
+.....
+.....
+.....
+
+holesnake5
+transparent
+00000
+.....
+.....
+.....
+.....
+
+holesnake6
+transparent
+00000
+....0
+.....
+.....
+.....
+
+holesnake7
+transparent
+00000
+....0
+....0
+.....
+.....
+
+holesnake8
+transparent
+00000
+....0
+....0
+....0
+.....
+
+holesnake9
+transparent
+00000
+....0
+....0
+....0
+....0
+
+holesnake10
+transparent
+
+holesnake11
+transparent
+
+holesnake12
+transparent
+
+holesnake13
+transparent
+
+holesnake14
+transparent
+
+holesnake15
+transparent
+
+holesnake16
+transparent
+
+holesnake17
+transparent
+
+holesnake18
+transparent
+
+holesnake19
+transparent
+
+holesnake20
+transparent
+
+holesnake21
+transparent
+
+holesnake22
+transparent
+
+holesnake23
+transparent
+
+holesnake24
+transparent
+
+holesnake25
+transparent
+
+holesnake26
+transparent
+
+holesnake27
+transparent
+
+holesnake28
+transparent
+
+holesnake29
+transparent
+
+holesnake30
+transparent
+
+holesnake31
+transparent
+
+holesnake32
+transparent
+
+holesnake33
+transparent
+
+holesnake34
+transparent
+
+holesnake35
+transparent
+
+holesnake36
+transparent
+
+holesnake37
+transparent
+
+holesnake38
+transparent
+
+holesnake39
+transparent
+
+holesnake40
+transparent
+
+holesnake41
+transparent
+
+holesnake42
+transparent
+
+holesnake43
+transparent
+
+holesnake44
+transparent
+
+holesnake45
+transparent
+
+holesnake46
+transparent
+
+holesnake47
+transparent
+
+holesnake48
+transparent
+
+holesnake49
+transparent
+
+holesnake50
+transparent
+
+holesnake51
+transparent
+
+holesnake52
+transparent
+
+holesnake53
+transparent
+
+holesnake54
+transparent
+
+holesnake55
+transparent
+
+holesnake56
+transparent
+
+holesnake57
+transparent
+
+holesnake58
+transparent
+
+holesnake59
+transparent
+
+holesnake60
+transparent
+
+
+snake_try_retreat
+transparent
+
+
+crateh_appear_l
+transparent
+
+crateh_appear_r
+transparent
+
+crateh_appear_d
+transparent
+
+crateh_appear_u
+transparent
+
+crate_Counter
+transparent
+.....
+..0..
+..0..
+..0..
+.....
+
+crate_decounter
+transparent
+
+crate_try_retract
+transparent
+
+crate_do_retract
+transparent
+
+crate_going_home
+transparent
+.....
+.....
+..0..
+.....
+.....
+
+crate_going_home_removal
+transparent
+
+holecrate1
+transparent
+0....
+.....
+.....
+.....
+.....
+
+holecrate2
+transparent
+00...
+.....
+.....
+.....
+.....
+
+holecrate3
+transparent
+000..
+.....
+.....
+.....
+.....
+
+holecrate4
+transparent
+0000.
+.....
+.....
+.....
+.....
+
+holecrate5
+transparent
+00000
+.....
+.....
+.....
+.....
+
+holecrate6
+transparent
+
+holecrate7
+transparent
+
+holecrate8
+transparent
+
+holecrate9
+transparent
+
+holecrate10
+transparent
+
+holecrate11
+transparent
+
+holecrate12
+transparent
+
+holecrate13
+transparent
+
+holecrate14
+transparent
+
+crate_retracted_l
+transparent
+
+crate_retracted_r
+transparent
+
+crate_retracted_u
+transparent
+
+crate_retracted_d
+transparent
+
+animate_1
+transparent
+
+animate_2
+transparent
+
+animate_3
+transparent
+
+animate_4
+transparent
+
+animate_5
+transparent
+
+crate_tail_end
+transparent
+.....
+..0..
+..0..
+..0..
+..0..
+
+=======
+LEGEND
+=======
+
+wallcover = walla or wallb or wallc or walld or walle
+wallcoverl = walla_l or wallb_l or wallc_l or walld_l or walle_l
+wallcoverr = walla_r or wallb_r or wallc_r or walld_r or walle_r
+
+anywall = wall or outer_wall
+
+outer_wall_u = Outer_wall_u_1 or Outer_wall_u_2 or Outer_wall_u_3 or Outer_wall_u_4 or Outer_wall_u_5
+outer_wall_d = Outer_wall_d_1 or Outer_wall_d_2 or Outer_wall_d_3 or Outer_wall_d_4 or Outer_wall_d_5
+outer_wall_r = Outer_wall_r_1 or Outer_wall_r_2 or Outer_wall_r_3 or Outer_wall_r_4 or Outer_wall_r_5
+outer_wall_l = Outer_wall_l_1 or Outer_wall_l_2 or Outer_wall_l_3 or Outer_wall_l_4 or Outer_wall_l_5
+outer_wall_cover = Outer_wall_u or Outer_wall_d or Outer_wall_l or Outer_wall_r
+outer_wall_cover_l = Outer_wall_r_1_l or Outer_wall_r_2_l or Outer_wall_r_3_l or Outer_wall_r_4_l or Outer_wall_r_5_l or outer_wall_u_1_l or outer_wall_u_2_l or outer_wall_u_3_l or outer_wall_u_4_l or outer_wall_u_5_l or outer_wall_d_1_l or outer_wall_d_2_l or Outer_wall_d_3_l or Outer_wall_d_4_l or Outer_wall_d_5_l
+outer_wall_cover_r = Outer_wall_u_1_r or Outer_wall_u_2_r or Outer_wall_u_3_r or Outer_wall_u_4_r or Outer_wall_u_5_r or Outer_wall_d_1_r or Outer_wall_d_2_r or Outer_wall_d_3_r or Outer_wall_d_4_r or Outer_wall_d_5_r or outer_wall_l_1_r or Outer_wall_l_2_r or Outer_wall_l_3_r or Outer_wall_l_4_r or Outer_wall_l_5_r
+
+body = bodyr or bodyL or bodyD or bodyU
+head = headu or headd or headl or headr
+tail = tailu or taild or taill or tailr
+bodyskin =  bodyskind or bodyskinu or bodyskinl or bodyskinr
+bodyskinback = bodyskin_backU or bodyskin_Backd or bodyskin_backr or bodyskin_backl
+snakeskin_going_home = snakeskin_going_home_r or snakeskin_going_home_l or snakeskin_going_home_u or snakeskin_going_home_d
+tail_going_home = tail_going_home_r or tail_going_home_l or tail_going_home_u or tail_going_home_d
+snakehead_in_hole = snakehead_in_hole_1 or snakehead_in_hole_2 or snakehead_in_hole_3 or snakehead_in_hole_4 or snakehead_in_hole_5
+snakehead_shake = HeadR_shakeleft or HeadR_shakestraight or HeadR_shakeright or HeadL_shakeleft or HeadL_shakestraight or HeadL_shakeright or HeadU_shakeleft or HeadU_shakestraight or HeadU_shakeright or HeadD_shakeleft or HeadD_shakestraight or HeadD_shakeright
+
+cratehead_shake = crateskin_head_l_shakeleft or crateskin_head_l_shakestraight or crateskin_head_l_shakeright or crateskin_head_r_shakeleft or crateskin_head_r_shakestraight or crateskin_head_r_shakeright or crateskin_head_u_shakeleft or crateskin_head_u_shakestraight or crateskin_head_u_shakeright or crateskin_head_d_shakeleft or crateskin_head_d_shakestraight or crateskin_head_d_shakeright or crateskin_head_in_hole_u_shakeleft or crateskin_head_in_hole_u_shakestraight or crateskin_head_in_hole_u_shakeright or crateskin_head_in_hole_d_shakeleft or crateskin_head_in_hole_d_shakestraight or crateskin_head_in_hole_d_shakeright or crateskin_head_in_hole_l_shakeleft or crateskin_head_in_hole_l_shakestraight or crateskin_head_in_hole_l_shakeright or crateskin_head_in_hole_r_shakeleft or crateskin_head_in_hole_r_shakestraight or crateskin_head_in_hole_r_shakeright
+cratetongue_shake = crateskin_tongue_l_shakeleft or crateskin_tongue_l_shakeright or crateskin_tongue_r_shakeleft or crateskin_tongue_r_shakeright or crateskin_tongue_d_shakeleft or crateskin_tongue_d_shakeright or crateskin_tongue_u_shakeleft or crateskin_tongue_u_shakeright
+
+crateh_appear = crateh_appear_l or crateh_appear_r or crateh_appear_d or crateh_appear_u
+
+cratetail = CrateTailD or CrateTailU or CrateTailR or CrateTailL or cratetailH
+
+holesnake = holesnake1 or holesnake2 or holesnake3 or holesnake4 or holesnake5 or holesnake6 or holesnake7 or holesnake8 or holesnake9 or holesnake10 or holesnake11 or holesnake12 or holesnake13 or holesnake14 or holesnake15 or holesnake16 or holesnake17 or holesnake18 or holesnake19 or holesnake20 or holesnake21 or holesnake22 or holesnake23 or holesnake24 or holesnake25 or holesnake26 or holesnake27 or holesnake28 or holesnake29 or holesnake30 or holesnake31 or holesnake32 or holesnake33 or holesnake34 or holesnake35 or holesnake36 or holesnake37 or holesnake38 or holesnake39 or holesnake40 or holesnake41 or holesnake42 or holesnake43 or holesnake44 or holesnake45 or holesnake46 or holesnake47 or holesnake48 or holesnake49 or holesnake50 or holesnake51 or holesnake52 or holesnake53 or holesnake54 or holesnake55 or holesnake56 or holesnake57 or holesnake58 or holesnake59 or holesnake60
+
+holecrate = holecrate1 or holecrate2 or holecrate3 or holecrate4 or holecrate5 or holecrate6 or holecrate7 or holecrate8 or holecrate9 or holecrate10 or holecrate11 or holecrate12 or holecrate13 or holecrate14
+
+crate = crateu or crated or cratel or crater or crateh
+crate_movement_tracker = crate_movement_trackerl or crate_movement_trackerr or crate_movement_trackeru or crate_movement_trackerd
+
+grow_crate = grow_crate_l or grow_crate_r or grow_crate_d or grow_crate_u or grow_crate_h
+
+player = Playersnake
+
+
+animate = animate_1 or animate_2 or animate_3 or animate_4 or animate_5
+
+crateskin_head = crateskin_head_l or crateskin_head_r or crateskin_head_u or crateskin_head_d or crateskin_head_l_alone or crateskin_head_r_alone or crateskin_head_u_alone or crateskin_head_d_alone 
+crateskin_tail = crateskin_tail_l or crateskin_tail_r or crateskin_tail_d or crateskin_tail_u
+crateskin = crateskin_head or crateskin_tail
+crateskinback = crateskin_tail_back_l or crateskin_tail_back_r or crateskin_tail_back_u or crateskin_tail_back_d
+crateskin_tongue = crateskin_tongue_l or crateskin_tongue_r or crateskin_tongue_u or crateskin_tongue_d
+crateskinjoin = skincrate_dd_join or skincrate_uu_join or skincrate_ll_join or skincrate_rr_join or skincrate_dr_join or skincrate_ru_join or skincrate_ul_join or skincrate_ld_join or skincrate_rd_join or skincrate_dl_join or skincrate_lu_join or skincrate_ur_join
+crateskin_realtail = skincrate_tail_l or skincrate_tail_r or skincrate_tail_u or skincrate_tail_d
+
+crateshadow = crateshadow_l or crateshadow_r or crateshadow_u or crateshadow_d
+crateskin_head_in_hole = crateskin_head_in_hole1 or crateskin_head_in_hole2 or crateskin_head_in_hole3 or crateskin_head_in_hole4 or crateskin_head_in_hole5 or crateskin_head_in_hole_u or crateskin_head_in_hole_d or crateskin_head_in_hole_r or crateskin_head_in_hole_l
+crateskin_going_home = crateskin_going_home_r or crateskin_going_home_l or crateskin_going_home_u or crateskin_going_home_d
+
+crate_retracted = crate_retracted_l or crate_retracted_r or crate_retracted_u or crate_retracted_d
+
+. = Background
+# = Wall
+p = playersnake
+* = Crateh
+@ = Crateh and Target
+% = crateh and target and holecrate3
+& = crateh and target and holecrate9
+O = Target
+$ = hole
+
+1 = bodyu
+2 = bodyr
+3 = bodyd
+4 = bodyl
+
+5 = bodyu and neck
+6 = bodyr and neck
+7 = bodyd and neck
+8 = bodyl and neck
+
+a = snake_food
+b = crate_food
+
+g = Outer_wall
+n = nothing
+
+
+crate_blocker = cratetail or snake_food or wall or body or crate
+player_blocker = wall or crate_food or body
+
+
+=======
+SOUNDS
+=======
+
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Target, hole
+
+crate_food, snake_food
+
+outer_wall, nothing
+Playersnake, Wall, Crate, body
+placeholder_snake
+
+outer_Wall_cover
+wallcover
+wallcoverl
+wallcoverr
+wallborderl
+wallborderr
+wallborderd
+wallborderu
+
+outer_wall_cover_l
+outer_wall_cover_r
+
+neck
+tail_end
+movement_tracker
+
+crate_movement_tracker
+crate_movement_tracker_start
+
+
+CrateTail
+crateskin_head
+crateskin_tail
+crateskinback
+crateskin_tongue_l
+crateskin_tongue_r
+crateskin_tongue_u
+crateskin_tongue_d
+crateskin_head_in_hole
+crateskin_going_home
+crateskinjoin
+crateskin_realtail
+cratehead_shake
+cratetongue_shake
+
+going_home, gone_home
+going_home_removal
+snake_counter
+snake_decounter
+
+crate_going_home
+crate_going_home_removal
+crate_counter
+crate_decounter
+crate_tail_removal
+crate_try_retract
+crate_do_retract
+grow_crate
+holecrate
+crateh_appear
+crate_retracted
+
+
+
+bodyskinu
+bodyskind
+bodyskinr
+bodyskinl
+
+bodyskinback
+
+head, tail
+
+snakeskin_going_home
+tail_going_home
+snakehead_in_hole
+snakehead_shake
+
+crateshadow
+crateshadow_head_l_tail_l
+crateshadow_head_l_tail_back_l
+
+bodyblock
+
+
+holesnake
+snake_is_alone
+snake_try_retreat
+
+animate 
+
+crate_tail_end
+
+======
+RULES
+======
+
+(--------------- WALLS -----------)
+[wall no wallcover]->[wall random wallcover]
+
+ left [wall no wallborderl | no wall no outer_Wall] -> [wall wallborderl | ]
+right [wall no wallborderr | no wall no outer_Wall] -> [wall wallborderr | ]
+   up [wall no wallborderu | no wall no outer_Wall] -> [wall wallborderu | ]
+ down [wall no wallborderd | no wall no outer_Wall] -> [wall wallborderd | ]
+
+ 
+ left [wall | outer_wall no outer_wall_cover] -> [wall | outer_wall random outer_wall_l ] checkpoint
+right [wall | outer_wall no outer_wall_cover] -> [wall | outer_wall random outer_wall_r ] checkpoint
+   up [wall | outer_wall no outer_wall_cover] -> [wall | outer_wall random outer_wall_u ] checkpoint
+ down [wall | outer_wall no outer_wall_cover] -> [wall | outer_wall random outer_wall_d ] checkpoint
+
+
+right [anywall | walla]->[anywall walla_l | walla]
+right [anywall | wallb]->[anywall wallb_l | wallb]
+right [anywall | wallc]->[anywall wallc_l | wallc]
+right [anywall | walld]->[anywall walld_l | walld]
+right [anywall | walle]->[anywall walle_l | walle]
+
+left [anywall | walla]->[anywall walla_r | walla]
+left [anywall | wallb]->[anywall wallb_r | wallb]
+left [anywall | wallc]->[anywall wallc_r | wallc]
+left [anywall | walld]->[anywall walld_r | walld]
+left [anywall | walle]->[anywall walle_r | walle]
+
+left [anywall | Outer_wall_l_1]->[anywall Outer_wall_l_1_r | Outer_wall_l_1]
+left [anywall | Outer_wall_l_2]->[anywall Outer_wall_l_2_r | Outer_wall_l_2]
+left [anywall | Outer_wall_l_3]->[anywall Outer_wall_l_3_r | Outer_wall_l_3]
+left [anywall | Outer_wall_l_4]->[anywall Outer_wall_l_4_r | Outer_wall_l_4]
+left [anywall | Outer_wall_l_5]->[anywall Outer_wall_l_5_r | Outer_wall_l_5]
+
+right [anywall | Outer_wall_r_1]->[anywall Outer_wall_r_1_l | Outer_wall_r_1]
+right [anywall | Outer_wall_r_2]->[anywall Outer_wall_r_2_l | Outer_wall_r_2]
+right [anywall | Outer_wall_r_3]->[anywall Outer_wall_r_3_l | Outer_wall_r_3]
+right [anywall | Outer_wall_r_4]->[anywall Outer_wall_r_4_l | Outer_wall_r_4]
+right [anywall | Outer_wall_r_5]->[anywall Outer_wall_r_5_l | Outer_wall_r_5]
+
+left [anywall | Outer_wall_u_1]->[anywall Outer_wall_u_1_r | Outer_wall_u_1]
+left [anywall | Outer_wall_u_2]->[anywall Outer_wall_u_2_r | Outer_wall_u_2]
+left [anywall | Outer_wall_u_3]->[anywall Outer_wall_u_3_r | Outer_wall_u_3]
+left [anywall | Outer_wall_u_4]->[anywall Outer_wall_u_4_r | Outer_wall_u_4]
+left [anywall | Outer_wall_u_5]->[anywall Outer_wall_u_5_r | Outer_wall_u_5]
+
+right [anywall | Outer_wall_u_1]->[anywall Outer_wall_u_1_l | Outer_wall_u_1]
+right [anywall | Outer_wall_u_2]->[anywall Outer_wall_u_2_l | Outer_wall_u_2]
+right [anywall | Outer_wall_u_3]->[anywall Outer_wall_u_3_l | Outer_wall_u_3]
+right [anywall | Outer_wall_u_4]->[anywall Outer_wall_u_4_l | Outer_wall_u_4]
+right [anywall | Outer_wall_u_5]->[anywall Outer_wall_u_5_l | Outer_wall_u_5]
+
+left [anywall | Outer_wall_d_1]->[anywall Outer_wall_d_1_r | Outer_wall_d_1]
+left [anywall | Outer_wall_d_2]->[anywall Outer_wall_d_2_r | Outer_wall_d_2]
+left [anywall | Outer_wall_d_3]->[anywall Outer_wall_d_3_r | Outer_wall_d_3]
+left [anywall | Outer_wall_d_4]->[anywall Outer_wall_d_4_r | Outer_wall_d_4]
+left [anywall | Outer_wall_d_5]->[anywall Outer_wall_d_5_r | Outer_wall_d_5]
+
+right [anywall | Outer_wall_d_1]->[anywall Outer_wall_d_1_l | Outer_wall_d_1]
+right [anywall | Outer_wall_d_2]->[anywall Outer_wall_d_2_l | Outer_wall_d_2]
+right [anywall | Outer_wall_d_3]->[anywall Outer_wall_d_3_l | Outer_wall_d_3]
+right [anywall | Outer_wall_d_4]->[anywall Outer_wall_d_4_l | Outer_wall_d_4]
+right [anywall | Outer_wall_d_5]->[anywall Outer_wall_d_5_l | Outer_wall_d_5]
+
+
+[animate_5]->[]
+[animate_4]->[animate_5] again
+[animate_3]->[animate_4] again
+[animate_2]->[animate_3] again
+[animate_1]->[animate_2] again
+
+(--------------------head shakes ---------------)
+
+[HeadR_shakeright animate_4]->[headr]
+[HeadR_shakestraight animate_4]->[HeadR_shakeright animate_1] again
+[HeadR_shakeleft animate_4]->[HeadR_shakestraight animate_1] again
+[> player headr | crate_food] -> [> player HeadR_shakeleft animate_1 | crate_food] again 
+
+[HeadL_shakeright animate_4]->[headl]
+[HeadL_shakestraight animate_4]->[HeadL_shakeright animate_1] again
+[HeadL_shakeleft animate_4]->[HeadL_shakestraight animate_1] again
+[> player headl | crate_food] -> [> player HeadL_shakeleft animate_1 | crate_food] again 
+
+[Headu_shakeright animate_4]->[headu]
+[Headu_shakestraight animate_4]->[Headu_shakeright animate_1] again
+[Headu_shakeleft animate_4]->[Headu_shakestraight animate_1] again
+[> player headu | crate_food] -> [> player Headu_shakeleft animate_1 | crate_food] again 
+
+[Headd_shakeright animate_4]->[headd]
+[Headd_shakestraight animate_4]->[Headd_shakeright animate_1] again
+[Headd_shakeleft animate_4]->[Headd_shakestraight animate_1] again
+[> player headd | crate_food] -> [> player Headd_shakeleft animate_1 | crate_food] again 
+
+
+
+
+(--------- movement ---------------)
+
+[> player no snakehead_shake  | player_blocker no neck] -> cancel
+[> player | player_blocker no neck] -> [player | player_blocker]
+
+[ >  Player | Crate ] -> [  >  Player | > Crate  ]
+
+
+[crateskin_head_L_shakeright animate_4]->[crateskin_head_l]
+[crateskin_head_L_shakestraight animate_4]->[crateskin_head_L_shakeright animate_1] again
+[crateskin_head_l_shakeleft animate_4]->[crateskin_head_L_shakestraight animate_1] again
+[> crate crateskin_head_l | snake_food] -> [> crate crateskin_head_l_shakeleft animate_1 | snake_food] again 
+
+[crateskin_head_R_shakeright animate_4]->[crateskin_head_R]
+[crateskin_head_R_shakestraight animate_4]->[crateskin_head_R_shakeright animate_1] again
+[crateskin_head_R_shakeleft animate_4]->[crateskin_head_R_shakestraight animate_1] again
+[> crate crateskin_head_R | snake_food] -> [> crate crateskin_head_R_shakeleft animate_1 | snake_food] again 
+
+[crateskin_head_u_shakeright animate_4]->[crateskin_head_u]
+[crateskin_head_u_shakestraight animate_4]->[crateskin_head_u_shakeright animate_1] again
+[crateskin_head_u_shakeleft animate_4]->[crateskin_head_u_shakestraight animate_1] again
+[> crate crateskin_head_u | snake_food] -> [> crate crateskin_head_u_shakeleft animate_1 | snake_food] again 
+
+[crateskin_head_d_shakeright animate_4]->[crateskin_head_d]
+[crateskin_head_d_shakestraight animate_4]->[crateskin_head_d_shakeright animate_1] again
+[crateskin_head_d_shakeleft animate_4]->[crateskin_head_d_shakestraight animate_1] again
+[> crate crateskin_head_d | snake_food] -> [> crate crateskin_head_d_shakeleft animate_1 | snake_food] again 
+
+[crateskin_head_in_hole_L_shakeright animate_4]   ->[crateskin_head_in_hole_l]
+[crateskin_head_in_hole_L_shakestraight animate_4]->[crateskin_head_in_hole_L_shakeright animate_1] again
+[crateskin_head_in_hole_l_shakeleft animate_4]    ->[crateskin_head_in_hole_L_shakestraight animate_1] again
+[> crate crateskin_head_in_hole_l | snake_food] -> [> crate crateskin_head_in_hole_l_shakeleft animate_1 | snake_food] again 
+
+[crateskin_head_in_hole_R_shakeright animate_4]->[crateskin_head_in_hole_R]
+[crateskin_head_in_hole_R_shakestraight animate_4]->[crateskin_head_in_hole_R_shakeright animate_1] again
+[crateskin_head_in_hole_R_shakeleft animate_4]->[crateskin_head_in_hole_R_shakestraight animate_1] again
+[> crate crateskin_head_in_hole_R | snake_food] -> [> crate crateskin_head_in_hole_R_shakeleft animate_1 | snake_food] again 
+
+[crateskin_head_in_hole_u_shakeright animate_4]->[crateskin_head_in_hole_u]
+[crateskin_head_in_hole_u_shakestraight animate_4]->[crateskin_head_in_hole_u_shakeright animate_1] again
+[crateskin_head_in_hole_u_shakeleft animate_4]->[crateskin_head_in_hole_u_shakestraight animate_1] again
+[> crate crateskin_head_in_hole_u | snake_food] -> [> crate crateskin_head_in_hole_u_shakeleft animate_1 | snake_food] again 
+
+[crateskin_head_in_hole_d_shakeright animate_4]->[crateskin_head_in_hole_d]
+[crateskin_head_in_hole_d_shakestraight animate_4]->[crateskin_head_in_hole_d_shakeright animate_1] again
+[crateskin_head_in_hole_d_shakeleft animate_4]->[crateskin_head_in_hole_d_shakestraight animate_1] again
+[> crate crateskin_head_in_hole_d | snake_food] -> [> crate crateskin_head_in_hole_d_shakeleft animate_1 | snake_food] again 
+
+[> crate no cratehead_shake | crate_blocker] -> cancel
+[> crate | crate_blocker] -> [crate| crate_blocker]
+
+[> player | stationary crate no cratehead_shake ]-> cancel
+[> player | stationary crate ]-> [player | crate]
+
+[ > player | neck body] -> [> player snake_try_retreat | neck body]
+
+(track player movement for late stage)
+[movement_tracker]->[]
+[Player]->[player movement_tracker]
+
+
+[crate_movement_tracker_start]->[]
+[crate] -> [crate crate_movement_tracker_start]
+
+[crate_movement_tracker]->[]
+[left crate]->[left crate left crate_movement_trackerl ]
+[right crate]->[right crate right crate_movement_trackerr ]
+[down crate]->[down crate down crate_movement_trackerd ]
+[up crate]->[up crate up crate_movement_trackeru ]
+
+
+(----------------UPDATE SNAKE-----------)
+
+
+(add segment behind player)
+late left [movement_tracker no player | neck body] -> [movement_tracker bodyl neck | snake_decounter body]
+late right [movement_tracker no player | neck body] -> [movement_tracker bodyr neck | snake_decounter body]
+late up [movement_tracker no player | neck body] -> [movement_tracker bodyu neck | snake_decounter body]
+late down [movement_tracker no player | neck body] -> [movement_tracker bodyd neck | snake_decounter body] 
+
+late [snake_food player][snake_decounter]->[snake_food player][]
+
+(emerge from hole)
+[> Playersnake hole gone_home] -> [> Playersnake hole neck no gone_home ]
+
+late left [neck no body holesnake | Playersnake] -> [neck bodyr holesnake snake_decounter | playersnake]
+late right [neck no body holesnake | Playersnake] -> [neck bodyl holesnake snake_decounter | playersnake]
+late up [neck no body holesnake | Playersnake] -> [neck bodyd holesnake snake_decounter | playersnake]
+late down [neck no body holesnake | Playersnake] -> [neck bodyu holesnake snake_decounter | playersnake]
+
+(send decounter to the tail)
+  late left [body | bodyr snake_decounter] -> [body snake_decounter | bodyr]
++ late right [body | bodyl snake_decounter] -> [body snake_decounter | bodyl]
++ late up [body | bodyd snake_decounter] -> [body snake_decounter | bodyd]
++ late down [body | bodyu snake_decounter] -> [body snake_decounter | bodyu]
+
+late [player snake_food][snake_decounter] -> [player snake_food][]
+
+(remove segment at the tail)
+late down [bodyd snake_decounter no holesnake| no body] -> [|]
+late right [bodyr snake_decounter no holesnake | no body] -> [|]
+late left [bodyl snake_decounter no holesnake | no body] -> [|]
+late up [bodyu snake_decounter no holesnake | no body] -> [|]
+
+late [player snake_food] -> [player]
+
+(decrement holesnake counter)
+late [snake_decounter holesnake60 no going_home] -> [holesnake59]
+late [snake_decounter holesnake59 no going_home] -> [holesnake58]
+late [snake_decounter holesnake58 no going_home] -> [holesnake57]
+late [snake_decounter holesnake57 no going_home] -> [holesnake56]
+late [snake_decounter holesnake56 no going_home] -> [holesnake55]
+late [snake_decounter holesnake55 no going_home] -> [holesnake54]
+late [snake_decounter holesnake54 no going_home] -> [holesnake53]
+late [snake_decounter holesnake53 no going_home] -> [holesnake52]
+late [snake_decounter holesnake52 no going_home] -> [holesnake51]
+late [snake_decounter holesnake51 no going_home] -> [holesnake50]
+late [snake_decounter holesnake50 no going_home] -> [holesnake49]
+late [snake_decounter holesnake49 no going_home] -> [holesnake48]
+late [snake_decounter holesnake48 no going_home] -> [holesnake47]
+late [snake_decounter holesnake47 no going_home] -> [holesnake46]
+late [snake_decounter holesnake46 no going_home] -> [holesnake45]
+late [snake_decounter holesnake45 no going_home] -> [holesnake44]
+late [snake_decounter holesnake44 no going_home] -> [holesnake43]
+late [snake_decounter holesnake43 no going_home] -> [holesnake42]
+late [snake_decounter holesnake42 no going_home] -> [holesnake41]
+late [snake_decounter holesnake41 no going_home] -> [holesnake40]
+late [snake_decounter holesnake40 no going_home] -> [holesnake39]
+late [snake_decounter holesnake39 no going_home] -> [holesnake38]
+late [snake_decounter holesnake38 no going_home] -> [holesnake37]
+late [snake_decounter holesnake37 no going_home] -> [holesnake36]
+late [snake_decounter holesnake36 no going_home] -> [holesnake35]
+late [snake_decounter holesnake35 no going_home] -> [holesnake34]
+late [snake_decounter holesnake34 no going_home] -> [holesnake33]
+late [snake_decounter holesnake33 no going_home] -> [holesnake32]
+late [snake_decounter holesnake32 no going_home] -> [holesnake31]
+late [snake_decounter holesnake31 no going_home] -> [holesnake30]
+late [snake_decounter holesnake30 no going_home] -> [holesnake29]
+late [snake_decounter holesnake29 no going_home] -> [holesnake28]
+late [snake_decounter holesnake28 no going_home] -> [holesnake27]
+late [snake_decounter holesnake27 no going_home] -> [holesnake26]
+late [snake_decounter holesnake26 no going_home] -> [holesnake25]
+late [snake_decounter holesnake25 no going_home] -> [holesnake24]
+late [snake_decounter holesnake24 no going_home] -> [holesnake23]
+late [snake_decounter holesnake23 no going_home] -> [holesnake22]
+late [snake_decounter holesnake22 no going_home] -> [holesnake21]
+late [snake_decounter holesnake21 no going_home] -> [holesnake20]
+late [snake_decounter holesnake20 no going_home] -> [holesnake19]
+late [snake_decounter holesnake19 no going_home] -> [holesnake18]
+late [snake_decounter holesnake18 no going_home] -> [holesnake17]
+late [snake_decounter holesnake17 no going_home] -> [holesnake16]
+late [snake_decounter holesnake16 no going_home] -> [holesnake15]
+late [snake_decounter holesnake15 no going_home] -> [holesnake14]
+late [snake_decounter holesnake14 no going_home] -> [holesnake13]
+late [snake_decounter holesnake13 no going_home] -> [holesnake12]
+late [snake_decounter holesnake12 no going_home] -> [holesnake11]
+late [snake_decounter holesnake11 no going_home] -> [holesnake10]
+late [snake_decounter holesnake10 no going_home] -> [holesnake9]
+late [snake_decounter holesnake9 no going_home] -> [holesnake8]
+late [snake_decounter holesnake8 no going_home] -> [holesnake7]
+late [snake_decounter holesnake7 no going_home] -> [holesnake6]
+late [snake_decounter holesnake6 no going_home] -> [holesnake5]
+late [snake_decounter holesnake5 no going_home] -> [holesnake4]
+late [snake_decounter holesnake4 no going_home] -> [holesnake3]
+late [snake_decounter holesnake3 no going_home] -> [holesnake2]
+late [snake_decounter holesnake2 no going_home] -> [holesnake1]
+late [snake_decounter holesnake1 no going_home] -> []
+late [snake_decounter] -> []
+
+(remove segment when going home)
+late [going_home] -> [going_home going_home_removal ]
+late down [bodyd | no body][going_home_removal] -> [|][snake_counter] again
+late right [bodyr | no body][going_home_removal] -> [|][snake_counter]  again
+late left [bodyl | no body][going_home_removal] -> [|][snake_counter]  again
+late up [bodyu | no body][going_home_removal] -> [|][snake_counter]  again
+
+late [placeholder_snake hole gone_home no crate] -> [Playersnake hole gone_home]
+late [player going_home going_home_removal hole] -> [placeholder_snake gone_home hole] again
+
+late [going_home_removal]->[]
+
+(try to retreat by input)
+late [Playersnake snake_try_retreat | body neck] -> [Playersnake | body neck snake_try_retreat]
+
+late right [neck bodyr snake_try_retreat | body no hole][Playersnake][body hole] -> [Playersnake | neck body][][body hole snake_counter]
+late left [neck bodyl snake_try_retreat | body no hole][Playersnake][body hole] -> [Playersnake | neck body][][body hole snake_counter] 
+late up [neck bodyu snake_try_retreat | body no hole][Playersnake][body hole] -> [Playersnake | neck body][][body hole snake_counter] 
+late down [neck bodyd snake_try_retreat | body no hole][Playersnake][body hole] -> [Playersnake | neck body][][body hole snake_counter] 
+
+late left [neck bodyl snake_try_retreat | body hole][Playersnake]-> [Playersnake | neck body hole snake_counter][] 
+late right [neck bodyr snake_try_retreat | body hole][Playersnake]-> [Playersnake | neck body hole snake_counter][] 
+late up [neck bodyu snake_try_retreat | body hole][Playersnake]-> [Playersnake | neck body hole snake_counter][] 
+late down [neck bodyd snake_try_retreat | body hole][Playersnake]-> [Playersnake | neck body hole snake_counter][] 
+
+late [neck body snake_try_retreat hole | Playersnake]-> [Playersnake hole snake_counter gone_home snakehead_in_hole_5 | ] 
+
+late [snake_try_retreat]->cancel
+
+(do the counter)
+late [ snake_counter holesnake59 ]->[ holesnake60]
+late [ snake_counter holesnake58 ]->[ holesnake59]
+late [ snake_counter holesnake57 ]->[ holesnake58]
+late [ snake_counter holesnake56 ]->[ holesnake57]
+late [ snake_counter holesnake55 ]->[ holesnake56]
+late [ snake_counter holesnake54 ]->[ holesnake55]
+late [ snake_counter holesnake53 ]->[ holesnake54]
+late [ snake_counter holesnake52 ]->[ holesnake53]
+late [ snake_counter holesnake51 ]->[ holesnake52]
+late [ snake_counter holesnake50 ]->[ holesnake51]
+late [ snake_counter holesnake49 ]->[ holesnake50]
+late [ snake_counter holesnake48 ]->[ holesnake49]
+late [ snake_counter holesnake47 ]->[ holesnake48]
+late [ snake_counter holesnake46 ]->[ holesnake47]
+late [ snake_counter holesnake45 ]->[ holesnake46]
+late [ snake_counter holesnake44 ]->[ holesnake45]
+late [ snake_counter holesnake43 ]->[ holesnake44]
+late [ snake_counter holesnake42 ]->[ holesnake43]
+late [ snake_counter holesnake41 ]->[ holesnake42]
+late [ snake_counter holesnake40 ]->[ holesnake41]
+late [ snake_counter holesnake39 ]->[ holesnake40]
+late [ snake_counter holesnake38 ]->[ holesnake39]
+late [ snake_counter holesnake37 ]->[ holesnake38]
+late [ snake_counter holesnake36 ]->[ holesnake37]
+late [ snake_counter holesnake35 ]->[ holesnake36]
+late [ snake_counter holesnake34 ]->[ holesnake35]
+late [ snake_counter holesnake33 ]->[ holesnake34]
+late [ snake_counter holesnake32 ]->[ holesnake33]
+late [ snake_counter holesnake31 ]->[ holesnake32]
+late [ snake_counter holesnake30 ]->[ holesnake31]
+late [ snake_counter holesnake29 ]->[ holesnake30]
+late [ snake_counter holesnake28 ]->[ holesnake29]
+late [ snake_counter holesnake27 ]->[ holesnake28]
+late [ snake_counter holesnake26 ]->[ holesnake27]
+late [ snake_counter holesnake25 ]->[ holesnake26]
+late [ snake_counter holesnake24 ]->[ holesnake25]
+late [ snake_counter holesnake23 ]->[ holesnake24]
+late [ snake_counter holesnake22 ]->[ holesnake23]
+late [ snake_counter holesnake21 ]->[ holesnake22]
+late [ snake_counter holesnake20 ]->[ holesnake21]
+late [ snake_counter holesnake19 ]->[ holesnake20]
+late [ snake_counter holesnake18 ]->[ holesnake19]
+late [ snake_counter holesnake17 ]->[ holesnake18]
+late [ snake_counter holesnake16 ]->[ holesnake17]
+late [ snake_counter holesnake15 ]->[ holesnake16]
+late [ snake_counter holesnake14 ]->[ holesnake15]
+late [ snake_counter holesnake13 ]->[ holesnake14]
+late [ snake_counter holesnake12 ]->[ holesnake13]
+late [ snake_counter holesnake11 ]->[ holesnake12]
+late [ snake_counter holesnake10 ]->[ holesnake11]
+late [ snake_counter holesnake9 ]->[ holesnake10]
+late [ snake_counter holesnake8 ]->[ holesnake9]
+late [ snake_counter holesnake7 ]->[ holesnake8]
+late [ snake_counter holesnake6 ]->[ holesnake7]
+late [ snake_counter holesnake5 ]->[ holesnake6]
+late [ snake_counter holesnake4 ]->[ holesnake5]
+late [ snake_counter holesnake3 ]->[ holesnake4]
+late [ snake_counter holesnake2 ]->[ holesnake3]
+late [ snake_counter holesnake1 ]->[ holesnake2]
+late [ snake_counter no holesnake]->[ holesnake1]
+
+(start going home)
+late [player hole no going_home no gone_home] -> [ player hole going_home] again
+
+
+late [Playersnake] -> [Playersnake snake_is_alone]
+late [Playersnake snake_is_alone | body] -> [Playersnake | body]
+
+
+(----------------UPDATE CRATE-----------)
+
+(mark the tail)
+[crateh]->[crateh crate_tail_end]
+right [CrateTailR | no cratetail]->[CrateTailR crate_tail_end | ]
+ left [CrateTaill | no cratetail]->[CrateTaill crate_tail_end | ]
+ down [CrateTaild | no cratetail]->[CrateTaild crate_tail_end | ]
+   up [CrateTailu | no cratetail]->[CrateTailu crate_tail_end | ]
+
+(track movement)
+late  down [crate_movement_tracker_start | crate crate_movement_trackerd] -> [crate_movement_tracker_start | crateu crate_movement_trackerd]
+late    up [crate_movement_tracker_start | crate crate_movement_trackeru] -> [crate_movement_tracker_start | crated crate_movement_trackeru]
+late  left [crate_movement_tracker_start | crate crate_movement_trackerl] -> [crate_movement_tracker_start | crater crate_movement_trackerl]
+late right [crate_movement_tracker_start | crate crate_movement_trackerr] -> [crate_movement_tracker_start | cratel crate_movement_trackerr]
+
+late right [grow_crate_r | cratel] -> [grow_crate_l | cratel]
+late  left [grow_crate_l | crater] -> [grow_crate_r | crater]
+late    up [grow_crate_u | crated] -> [grow_crate_d | crated]
+late  down [grow_crate_d | crateu] -> [grow_crate_u | crateu]
+
+late  down [crate_movement_tracker_start grow_crate_h no target | crate crate_movement_trackerd] -> [crate_movement_tracker_start grow_crate_u | crateu crate_movement_trackerd]
+late    up [crate_movement_tracker_start grow_crate_h no target | crate crate_movement_trackeru] -> [crate_movement_tracker_start grow_crate_d | crated crate_movement_trackeru]
+late  left [crate_movement_tracker_start grow_crate_h no target | crate crate_movement_trackerl] -> [crate_movement_tracker_start grow_crate_r | crater crate_movement_trackerl]
+late right [crate_movement_tracker_start grow_crate_h no target | crate crate_movement_trackerr] -> [crate_movement_tracker_start grow_crate_l | cratel crate_movement_trackerr]
+
+late [crate_movement_tracker_start no crate crate_going_home]->[crate_movement_tracker_start]
+
+(add segment behind crate)
+[grow_crate] -> []
+[crated no target] -> [crated grow_crate_d]
+[crateu no target] -> [crateu grow_crate_u]
+[cratel no target] -> [cratel grow_crate_l]
+[crater no target] -> [crater grow_crate_r]
+[crateh ]->[crateh  grow_crate_h]
+
+late [grow_crate_l no crate] -> [cratetaill crate_decounter]
+late [grow_crate_r no crate] -> [cratetailr crate_decounter]
+late [grow_crate_u no crate] -> [cratetailu crate_decounter]
+late [grow_crate_d no crate] -> [cratetaild crate_decounter]
+late [grow_crate_h no crate] -> [cratetailh crate_decounter]
+
+(don't remove tail when eating food!)
+late  left [cratel crate_food | crate_decounter] -> [cratel crate_food|]
+late right [crater crate_food | crate_decounter] -> [crater crate_food|]
+late  down [crated crate_food | crate_decounter] -> [crated crate_food|]
+late    up [crateu crate_food | crate_decounter] -> [crateu crate_food|]
+
+(send decounter to the tail)
+  late  left [cratetail | crateTailr crate_decounter no crate_tail_end] -> [cratetail crate_decounter | cratetailr]
++ late right [cratetail | cratetaill crate_decounter no crate_tail_end] -> [cratetail crate_decounter | cratetaill]
++ late    up [cratetail | cratetaild crate_decounter no crate_tail_end] -> [cratetail crate_decounter | cratetaild]
++ late  down [cratetail | cratetailu crate_decounter no crate_tail_end] -> [cratetail crate_decounter | cratetailu]
+
+(decrement holecrate counter)
+late [crate_decounter holecrate14 ] -> [holecrate13]
+late [crate_decounter holecrate13 ] -> [holecrate12]
+late [crate_decounter holecrate12 ] -> [holecrate11]
+late [crate_decounter holecrate11 ] -> [holecrate10]
+late [crate_decounter holecrate10 ] -> [holecrate9]
+late [crate_decounter holecrate9 ] -> [holecrate8]
+late [crate_decounter holecrate8 ] -> [holecrate7]
+late [crate_decounter holecrate7 ] -> [holecrate6]
+late [crate_decounter holecrate6 ] -> [holecrate5]
+late [crate_decounter holecrate5 ] -> [holecrate4]
+late [crate_decounter holecrate4 ] -> [holecrate3]
+late [crate_decounter holecrate3 ] -> [holecrate2]
+late [crate_decounter holecrate2 ] -> [holecrate1]
+late [crate_decounter holecrate1 ] -> []
+
+(remove segment at the crate tail)
+late  down [cratetaild crate_decounter |] -> [|]
+late right [cratetailr crate_decounter |] -> [|]
+late  left [cratetaill crate_decounter |] -> [|]
+late    up [cratetailu crate_decounter |] -> [|]
+
+(update tail end)
+late  down [cratetaild  | no cratetail crate_tail_end] -> [cratetaild crate_tail_end | ]
+late right [cratetailr  | no cratetail crate_tail_end] -> [cratetailr crate_tail_end | ]
+late  left [cratetaill  | no cratetail crate_tail_end] -> [cratetaill crate_tail_end | ]
+late    up [cratetailu  | no cratetail crate_tail_end] -> [cratetailu crate_tail_end | ]
+
+late  down [crated  | no cratetail crate_tail_end] -> [crated crate_tail_end | ]
+late right [crater  | no cratetail crate_tail_end] -> [crater crate_tail_end | ]
+late  left [cratel  | no cratetail crate_tail_end] -> [cratel crate_tail_end | ]
+late    up [crateu  | no cratetail crate_tail_end] -> [crateu crate_tail_end | ]
+
+
+()
+late left [cratel target | no cratetail] -> [crateh target|]
+late right [crater target | no cratetail] -> [crateh target|]
+late down [crated target | no cratetail] -> [crateh target|]
+late up [crateu target | no cratetail] -> [crateh target|]
+
+late left [cratetaill | cratetailh no holecrate] -> [cratetaill | cratetaill]
+late right [cratetailr | cratetailh no holecrate] -> [cratetailr | cratetailr]
+late down [cratetaild | cratetailh no holecrate] -> [cratetaild | cratetaild]
+late up [cratetailu | cratetailh no holecrate] -> [cratetailu | cratetailu]
+
+
+late  left [cratel | cratetailh crate_decounter] -> [cratel | ]
+late right [crater | cratetailh crate_decounter] -> [crater | ]
+late  down [crated | cratetailh crate_decounter] -> [crated | ]
+late    up [crateu | cratetailh crate_decounter] -> [crateu | ]
+
+late left [cratel | cratetailh no holecrate] -> [cratel | cratetaill]
+late right [crater | cratetailh no holecrate] -> [crater | cratetailr]
+late down [crated | cratetailh no holecrate] -> [crated | cratetaild]
+late up [crateu | cratetailh no holecrate] -> [crateu | cratetailu]
+
+late [crate_decounter] -> []
+late [crate crate_food] -> [crate]
+
+(remove segment when going home)
+late [crate target crate_going_home] -> [crate target crate_going_home crate_going_home_removal ]
+
+(send removal to the tail)
+  late left [cratetail | crater crate_going_home_removal] -> [cratetail crate_going_home_removal | crater]
++ late right [cratetail | cratel crate_going_home_removal] -> [cratetail crate_going_home_removal | cratel]
++ late up [cratetail | crated crate_going_home_removal] -> [cratetail crate_going_home_removal | crated]
++ late down [cratetail | crateu crate_going_home_removal] -> [cratetail crate_going_home_removal | crateu]
+
+  late left [cratetail | crateTailr crate_going_home_removal] -> [cratetail crate_going_home_removal | cratetailr]
++ late right [cratetail | cratetaill crate_going_home_removal] -> [cratetail crate_going_home_removal | cratetaill]
++ late up [cratetail | cratetaild crate_going_home_removal] -> [cratetail crate_going_home_removal | cratetaild]
++ late down [cratetail | cratetailu crate_going_home_removal] -> [cratetail crate_going_home_removal | cratetailu]
+
+late down [cratetaild crate_going_home_removal | no cratetail] -> [crate_Counter|] again
+late right [cratetailr crate_going_home_removal | no cratetail] -> [crate_Counter|]  again
+late left [cratetaill crate_going_home_removal | no cratetail] -> [crate_Counter|]  again
+late up [cratetailu crate_going_home_removal | no cratetail] -> [crate_Counter|]  again
+late [crate_going_home_removal]->[]
+
+(update tail end)
+late  down [cratetaild  | no cratetail crate_tail_end] -> [cratetaild crate_tail_end | ]
+late right [cratetailr  | no cratetail crate_tail_end] -> [cratetailr crate_tail_end | ]
+late  left [cratetaill  | no cratetail crate_tail_end] -> [cratetaill crate_tail_end | ]
+late    up [cratetailu  | no cratetail crate_tail_end] -> [cratetailu crate_tail_end | ]
+
+late  down [crated  | no cratetail crate_tail_end] -> [crated crate_tail_end | ]
+late right [crater  | no cratetail crate_tail_end] -> [crater crate_tail_end | ]
+late  left [cratel  | no cratetail crate_tail_end] -> [cratel crate_tail_end | ]
+late    up [crateu  | no cratetail crate_tail_end] -> [crateu crate_tail_end | ]
+
+(send counter to the hole)
+  late left [crate_Counter | crateTailr ] -> [  | cratetailr crate_Counter]
++ late right [crate_Counter | cratetaill ] -> [  | cratetaill crate_Counter]
++ late up [crate_Counter | cratetaild ] -> [  | cratetaild crate_Counter]
++ late down [crate_Counter | cratetailu ] -> [ | cratetailu crate_Counter]
+
+  late left [crate_Counter | crater ] -> [  | crater crate_Counter]
++ late right [crate_Counter | cratel ] -> [  | cratel crate_Counter]
++ late up [crate_Counter | crated ] -> [  | crated crate_Counter]
++ late down [crate_Counter | crateu ] -> [ | crateu crate_Counter]
+
+
+(send try retract out from hole, to the head)
+late [crate_try_retract] -> []
+late [cratetail target] -> [cratetail target crate_try_retract]
+  late  left [crate_try_retract | cratetailr no crate_tail_end] -> [ | cratetailr crate_try_retract]
++ late right [crate_try_retract | cratetaill no crate_tail_end] -> [ | cratetaill crate_try_retract]
++ late    up [crate_try_retract | cratetaild no crate_tail_end] -> [ | cratetaild crate_try_retract]
++ late  down [crate_try_retract | cratetailu no crate_tail_end] -> [ | cratetailu crate_try_retract]
+
+(head falls back as long as there is no snake blocking the way)
+late right [cratetailr crate_do_retract  | cratetail] -> [cratetailr crate_do_retract | cratetail crate_try_retract  crate_counter]
+late left [cratetaill crate_do_retract  | cratetail] -> [cratetaill crate_do_retract | cratetail crate_try_retract  crate_counter]
+late up [cratetailu crate_do_retract  | cratetail] -> [cratetailu crate_do_retract | cratetail crate_try_retract  crate_counter]
+late down [cratetaild crate_do_retract  | cratetail] -> [cratetaild crate_do_retract | cratetail crate_try_retract  crate_Counter]
+
+late [cratel | cratetailh crate_do_retract] -> [| crateh crate_Counter crate_retracted_l]
+late [crater | cratetailh crate_do_retract] -> [| crateh crate_Counter crate_retracted_r]
+late [crateu | cratetailh crate_do_retract] -> [| crateh crate_Counter crate_retracted_u]
+late [crated | cratetailh crate_do_retract] -> [| crateh crate_Counter crate_retracted_d]
+
+late right [crater | cratetaill crate_do_retract] -> [| cratel crate_Counter crate_retracted_l]
+late right [crater | cratetailr crate_do_retract] -> [| crater crate_Counter crate_retracted_r]
+late right [crater | cratetaild crate_do_retract] -> [| crated crate_Counter crate_retracted_d]
+late right [crater | cratetailu crate_do_retract] -> [| crateu crate_Counter crate_retracted_u]
+
+late left [cratel | cratetaill crate_do_retract] -> [| cratel crate_Counter crate_retracted_l]
+late left [cratel | cratetailr crate_do_retract] -> [| crater crate_Counter crate_retracted_r]
+late left [cratel | cratetaild crate_do_retract] -> [| crated crate_Counter crate_retracted_d]
+late left [cratel | cratetailu crate_do_retract] -> [| crateu crate_Counter crate_retracted_u]
+
+late up [crateu | cratetaill crate_do_retract] -> [| cratel crate_Counter crate_retracted_l]
+late up [crateu | cratetailr crate_do_retract] -> [| crater crate_Counter crate_retracted_r]
+late up [crateu | cratetaild crate_do_retract] -> [| crated crate_Counter crate_retracted_d]
+late up [crateu | cratetailu crate_do_retract] -> [| crateu crate_Counter crate_retracted_u]
+
+late down [crated | cratetaill crate_do_retract] -> [| cratel crate_Counter crate_retracted_l]
+late down [crated | cratetailr crate_do_retract] -> [| crater crate_Counter crate_retracted_r]
+late down [crated | cratetaild crate_do_retract] -> [| crated crate_Counter crate_retracted_d]
+late down [crated | cratetailu crate_do_retract] -> [| crateu crate_Counter crate_retracted_u]
+
+late [crate_retracted no target]->[]
+
+late left [cratel target | no cratetail] -> again
+late right [crater target | no cratetail] -> again
+late down [crated target | no cratetail] -> again
+late up [crateu target | no cratetail] -> again
+
+(send the counter back to the hole)
+  late left [ | crater no target crate_Counter ] -> [crate_Counter  | crater ]
++ late right [ | cratel no target crate_Counter ] -> [crate_Counter  | cratel ]
++ late up [ | crated no target crate_Counter ] -> [crate_Counter  | crated ]
++ late down [ | crateu no target crate_Counter ] -> [crate_Counter| crateu ]
+
+  late right [crate_Counter cratetailr | crateTail ] -> [ cratetailr | cratetail crate_Counter]
++ late left [crate_Counter cratetaill | cratetail ] -> [ cratetaill  | cratetail crate_Counter]
++ late up [crate_Counter cratetailu | cratetail ] -> [ cratetailu | cratetail crate_Counter]
++ late down [crate_Counter cratetaild | cratetail ] -> [ cratetaild | cratetail crate_Counter]
+
+(do the crate retract again)
+late left [cratel | cratetail crate_try_retract no body no Playersnake] -> [cratel | cratetail crate_do_retract no body no playersnake] again
+late right [crater | cratetail crate_try_retract no body no Playersnake] -> [crater | cratetail crate_do_retract no body no playersnake] again
+late up [crateu | cratetail crate_try_retract no body no Playersnake] -> [crateu | cratetail crate_do_retract no body no playersnake] again
+late down [crated | cratetail crate_try_retract no body no Playersnake] -> [crated | cratetail crate_do_retract no body no playersnake] again
+
+late left  [cratel | cratetail crate_try_retract no body Playersnake snake_is_alone] -> [cratel | cratetail crate_do_retract no body playersnake snake_is_alone] again
+late right [crater | cratetail crate_try_retract no body Playersnake snake_is_alone] -> [crater | cratetail crate_do_retract no body playersnake snake_is_alone] again
+late up    [crateu | cratetail crate_try_retract no body Playersnake snake_is_alone] -> [crateu | cratetail crate_do_retract no body playersnake snake_is_alone] again
+late down  [crated | cratetail crate_try_retract no body Playersnake snake_is_alone] -> [crated | cratetail crate_do_retract no body playersnake snake_is_alone] again
+
+(return single crates to h form after movement)
+late  left [cratel  | no cratetail] -> [crateh crateh_appear_r|]
+late right [crater  | no cratetail] -> [crateh crateh_appear_l|]
+late  down [crated  | no cratetail] -> [crateh crateh_appear_u|]
+late    up [crateu  | no cratetail] -> [crateh crateh_appear_d|]
+
+
+(increment cratehole)
+late [ crate_counter holecrate13 ]->[ holecrate14]
+late [ crate_counter holecrate12 ]->[ holecrate13]
+late [ crate_counter holecrate11 ]->[ holecrate12]
+late [ crate_counter holecrate10 ]->[ holecrate11]
+late [ crate_counter holecrate9 ]->[ holecrate10]
+late [ crate_counter holecrate8 ]->[ holecrate9]
+late [ crate_counter holecrate7 ]->[ holecrate8]
+late [ crate_counter holecrate6 ]->[ holecrate7]
+late [ crate_counter holecrate5 ]->[ holecrate6]
+late [ crate_counter holecrate4 ]->[ holecrate5]
+late [ crate_counter holecrate3 ]->[ holecrate4]
+late [ crate_counter holecrate2 ]->[ holecrate3]
+late [ crate_counter holecrate1 ]->[ holecrate2]
+late [ crate_counter target no holecrate]->[ target holecrate1]
+
+(start going home)
+late [crate crate_movement_tracker target] -> [crate crate_movement_tracker target crate_going_home] again
+
+
+(----------------UPDATE SNAKE APPEARANCES-----------)
+
+
+(update head appearance)
+late [head]->[]
+late    up [neck body | Player no head no holesnake no snakehead_shake] -> [neck body | player headu]
+late  down [neck body | Player no head no holesnake no snakehead_shake] -> [neck body | player headd]
+late right [neck body | Player no head no holesnake no snakehead_shake] -> [neck body | player headr]
+late  left [neck body | Player no head no holesnake no snakehead_shake] -> [neck body | player headl]
+
+
+late [snakeskin_going_home]->[]
+late   up [player hole going_home | neck]->[player hole going_home snakeskin_going_home_d no head | neck]
+late down [player hole going_home | neck]->[player hole going_home snakeskin_going_home_u no head | neck]
+late left [player hole going_home | neck]->[player hole going_home snakeskin_going_home_r no head | neck]
+late right[player hole going_home | neck]->[player hole going_home snakeskin_going_home_l no head | neck]
+
+
+(update neck appearance)
+late [bodyskin]->[]
+late [bodyskinback]->[]
+
+late left [neck body | player] -> [neck body bodyskin_backr | player]
+late right [neck body | player] -> [neck body bodyskin_backl | player]
+late up [neck body | player] -> [neck body bodyskin_backd | player]
+late down [neck body | player] -> [neck body bodyskin_backu | player]
+
+(update body appearance)
+late [bodyd no bodyskind] -> [bodyd bodyskind]
+late [bodyu no bodyskinu] -> [bodyu bodyskinu]
+late [bodyl no bodyskinl] -> [bodyl bodyskinl]
+late [bodyr no bodyskinr] -> [bodyr bodyskinr]
+
+late left [bodyl | bodyd no bodyskin_Backl] -> [bodyl | bodyd bodyskin_Backl]
+late left [bodyl | bodyu no bodyskin_Backl] -> [bodyl | bodyu bodyskin_Backl]
+late left [bodyl | bodyl no bodyskin_Backl] -> [bodyl | bodyl bodyskin_Backl]
+
+late down [bodyd | bodyd no bodyskin_backd] -> [bodyd | bodyd bodyskin_Backd]
+late down [bodyd | bodyl no bodyskin_backd] -> [bodyd | bodyl bodyskin_Backd]
+late down [bodyd | bodyr no bodyskin_backd] -> [bodyd | bodyr bodyskin_Backd]
+
+late right [bodyr | bodyd no bodyskin_backr] -> [bodyr | bodyd bodyskin_backr]
+late right [bodyr | bodyu no bodyskin_backr] -> [bodyr | bodyu bodyskin_backr]
+late right [bodyr | bodyr no bodyskin_backr] -> [bodyr | bodyr bodyskin_backr]
+
+late up [bodyu | bodyu no bodyskin_backu] -> [bodyu | bodyu bodyskin_Backu]
+late up [bodyu | bodyl no bodyskin_backu] -> [bodyu | bodyl bodyskin_Backu]
+late up [bodyu | bodyr no bodyskin_backu] -> [bodyu | bodyr bodyskin_Backu]
+
+(update tail appearance)
+late [tail]->[]
+late [tail_end] -> []
+late [tail_going_home]->[]
+
+late down [bodyd bodyskind | no body] -> [bodyd tail_end no bodyskind|]
+late right [bodyr bodyskinr | no body] -> [bodyr tail_end no bodyskinr|]
+late left [bodyl bodyskinl | no body] -> [bodyl tail_end no bodyskinl|]
+late up [bodyu bodyskinu | no body] -> [bodyu tail_end no bodyskinu|]
+
+late [bodyskin_Backd tail_end no hole] -> [taild]
+late [bodyskin_Backl tail_end no hole] -> [taill]
+late [bodyskin_Backr tail_end no hole] -> [tailr]
+late [bodyskin_Backu tail_end no hole] -> [tailu]
+
+late [bodyskin_Backd tail_end hole ] -> [hole  snakeskin_going_home_d]
+late [bodyskin_Backl tail_end hole ] -> [hole  snakeskin_going_home_l]
+late [bodyskin_Backr tail_end hole ] -> [hole  snakeskin_going_home_r]
+late [bodyskin_Backu tail_end hole ] -> [hole  snakeskin_going_home_u]
+
+
+(remove neck when drawing last tail when going home)
+late  left [neck no body | hole] -> [| hole tail_going_home_l no snakeskin_going_home]
+late right [neck no body | hole] -> [| hole tail_going_home_r no snakeskin_going_home]
+late    up [neck no body | hole] -> [| hole tail_going_home_u no snakeskin_going_home]
+late  down [neck no body | hole] -> [| hole tail_going_home_d no snakeskin_going_home]
+
+late [snakehead_in_hole no player]->[]
+late [snakehead_in_hole_4] -> [snakehead_in_hole_5]
+late [snakehead_in_hole_3] -> [snakehead_in_hole_4] again
+late [snakehead_in_hole_2] -> [snakehead_in_hole_3] again
+late [snakehead_in_hole_1] -> [snakehead_in_hole_2] again
+late [player hole gone_home snake_is_alone no tail_going_home no snakehead_in_hole] -> [player hole gone_home snake_is_alone snakehead_in_hole_1] again
+
+(----------------UPDATE CRATE APPEARANCES-----------)
+
+late [crateskin]->[]
+late [crateskinback]->[]
+late [crateskin_tongue]->[]
+late [cratetongue_shake]->[]
+late [crateskinjoin]->[]
+
+(head)
+late [crateh no target no crateskin no crateh_appear]->[crateh random crateh_appear] checkpoint
+
+
+late [crater no target no cratehead_shake]->[crater crateskin_head_l]
+late [cratel no target no cratehead_shake]->[cratel crateskin_head_r]
+late [crateu no target no cratehead_shake]->[crateu crateskin_head_d]
+late [crated no target no cratehead_shake]->[crated crateskin_head_u]
+
+late [crateh crateh_appear_l no target no cratehead_shake]->[crateh crateh_appear_l crateskin_head_l]
+late [crateh crateh_appear_r no target no cratehead_shake]->[crateh crateh_appear_r crateskin_head_r]
+late [crateh crateh_appear_d no target no cratehead_shake]->[crateh crateh_appear_d crateskin_head_d]
+late [crateh crateh_appear_u no target no cratehead_shake]->[crateh crateh_appear_u crateskin_head_u]
+
+
+late [crate target crate_retracted_r]->[crate crateh_appear_r target crateskin_head_in_hole_r]
+late [crate target crate_retracted_l]->[crate crateh_appear_l target crateskin_head_in_hole_l]
+late [crate target crate_retracted_u]->[crate crateh_appear_u target crateskin_head_in_hole_u]
+late [crate target crate_retracted_d]->[crate crateh_appear_d target crateskin_head_in_hole_d]
+
+
+
+late [crateskin_going_home]->[]
+late [cratel target crate_going_home no crateskin]->[cratel target crate_going_home crateskin_going_home_r]
+late [crater target crate_going_home no crateskin]->[crater target crate_going_home crateskin_going_home_l]
+late [crateu target crate_going_home no crateskin]->[crateu target crate_going_home crateskin_going_home_d]
+late [crated target crate_going_home no crateskin]->[crated target crate_going_home crateskin_going_home_u]
+
+
+late [crateskin_head_in_hole5] -> [crateskin_head_in_hole_u] 
+late [crateskin_head_in_hole4] -> [crateskin_head_in_hole5] again
+late [crateskin_head_in_hole3] -> [crateskin_head_in_hole4] again
+late [crateskin_head_in_hole2] -> [crateskin_head_in_hole3] again
+late [crateskin_head_in_hole1] -> [crateskin_head_in_hole2] again
+late [crateh target no crateskin_head_in_hole no cratehead_shake] -> [crateh target crateskin_head_in_hole1]  again
+late [target no crate crateskin_head_in_hole]->[target]
+
+
+(body)
+late  left [cratel | cratetail] -> [cratel | cratetail crateskin_tail_back_r]
+late right [crater | cratetail] -> [crater | cratetail crateskin_Tail_back_l]
+late  down [crated | cratetail] -> [crated | cratetail crateskin_Tail_back_u]
+late   up  [crateu | cratetail] -> [crateu | cratetail crateskin_Tail_back_d]
+
+late  left [cratetaill no crate_tail_end | cratetail] -> [cratetaill crateskin_tail_r | cratetail crateskin_tail_back_r]
+late right [cratetailr no crate_tail_end | cratetail] -> [cratetailr crateskin_tail_l | cratetail crateskin_Tail_back_l]
+late  down [cratetaild no crate_tail_end | cratetail] -> [cratetaild crateskin_tail_u | cratetail crateskin_Tail_back_u]
+late   up  [cratetailu no crate_tail_end | cratetail] -> [cratetailu crateskin_tail_d | cratetail crateskin_Tail_back_d]
+
+late right [cratetailr no crate_tail_end | cratetail no crateskin] -> [cratetailr | cratetail crateskin_tail_back_l  ]
+late left  [cratetaill no crate_tail_end | cratetail no crateskin] -> [cratetaill | cratetail crateskin_tail_back_r  ]
+late up    [cratetailu no crate_tail_end | cratetail no crateskin] -> [cratetailu | cratetail crateskin_tail_back_d  ]
+late down  [cratetaild no crate_tail_end | cratetail no crateskin] -> [cratetaild | cratetail crateskin_tail_back_u  ]
+
+late  [crateskin_tail_d crateskin_tail_back_d ] -> [crateskin_Tail_d crateskin_tail_back_d skincrate_dd_join ] 
+late  [crateskin_tail_u crateskin_tail_back_u ] -> [crateskin_Tail_u crateskin_tail_back_u skincrate_uu_join ] 
+late  [crateskin_tail_r crateskin_tail_back_r ] -> [crateskin_Tail_r crateskin_tail_back_r skincrate_rr_join ] 
+late  [crateskin_tail_l crateskin_tail_back_l ] -> [crateskin_Tail_l crateskin_tail_back_l skincrate_ll_join ] 
+
+late  [crateskin_tail_d crateskin_tail_back_r ] -> [crateskin_Tail_d crateskin_tail_back_r skincrate_dr_join ] 
+late  [crateskin_tail_r crateskin_tail_back_u ] -> [crateskin_Tail_r crateskin_tail_back_u skincrate_ru_join ] 
+late  [crateskin_tail_u crateskin_tail_back_l ] -> [crateskin_Tail_u crateskin_tail_back_l skincrate_ul_join ] 
+late  [crateskin_tail_l crateskin_tail_back_d ] -> [crateskin_Tail_l crateskin_tail_back_d skincrate_ld_join ] 
+
+late  [crateskin_tail_r crateskin_tail_back_d ] -> [crateskin_Tail_r crateskin_tail_back_d skincrate_rd_join ] 
+late  [crateskin_tail_d crateskin_tail_back_l ] -> [crateskin_Tail_d crateskin_tail_back_l skincrate_dl_join ] 
+late  [crateskin_tail_l crateskin_tail_back_u ] -> [crateskin_Tail_l crateskin_tail_back_u skincrate_lu_join ] 
+late  [crateskin_tail_u crateskin_tail_back_r ] -> [crateskin_Tail_u crateskin_tail_back_r skincrate_ur_join ] 
+
+(tail)
+late [crateskin_realtail]->[]
+late [crateskin_tail_back_l no crateskin]->[crateskin_Tail_back_l skincrate_tail_l]
+late [crateskin_tail_back_r no crateskin]->[crateskin_Tail_back_r skincrate_tail_r]
+late [crateskin_tail_back_u no crateskin]->[crateskin_Tail_back_u skincrate_tail_u]
+late [crateskin_tail_back_d no crateskin]->[crateskin_Tail_back_d skincrate_tail_d]
+
+(tongue)
+late  left [crateskin_head_in_hole_r_shakeleft | ]     -> [crateskin_head_in_hole_r_shakeleft | crateskin_tongue_l_shakeleft]
+late  left [crateskin_head_in_hole_r_shakestraight | ] -> [crateskin_head_in_hole_r_shakestraight | crateskin_tongue_l]
+late  left [crateskin_head_in_hole_r_shakeright | ]    -> [crateskin_head_in_hole_r_shakeright | crateskin_tongue_l_shakeright]
+
+late  right [crateskin_head_in_hole_l_shakeleft | ]     -> [crateskin_head_in_hole_l_shakeleft | crateskin_tongue_r_shakeleft]
+late  right [crateskin_head_in_hole_l_shakestraight | ] -> [crateskin_head_in_hole_l_shakestraight | crateskin_tongue_r]
+late  right [crateskin_head_in_hole_l_shakeright | ]    -> [crateskin_head_in_hole_l_shakeright | crateskin_tongue_r_shakeright]
+
+late  down [crateskin_head_in_hole_u_shakeleft | ]     -> [crateskin_head_in_hole_u_shakeleft | crateskin_tongue_d_shakeleft]
+late  down [crateskin_head_in_hole_u_shakestraight | ] -> [crateskin_head_in_hole_u_shakestraight | crateskin_tongue_d]
+late  down [crateskin_head_in_hole_u_shakeright | ]    -> [crateskin_head_in_hole_u_shakeright | crateskin_tongue_d_shakeright]
+
+late  up [crateskin_head_in_hole_d_shakeleft | ]     -> [crateskin_head_in_hole_d_shakeleft | crateskin_tongue_u_shakeleft]
+late  up [crateskin_head_in_hole_d_shakestraight | ] -> [crateskin_head_in_hole_d_shakestraight | crateskin_tongue_u]
+late  up [crateskin_head_in_hole_d_shakeright | ]    -> [crateskin_head_in_hole_d_shakeright | crateskin_tongue_u_shakeright]
+
+
+late  left [crateskin_head_in_hole_r | ] -> [crateskin_head_in_hole_r | crateskin_tongue_l]
+late right [crateskin_head_in_hole_l | ] -> [crateskin_head_in_hole_l | crateskin_tongue_r]
+late   up  [crateskin_head_in_hole_d | ] -> [crateskin_head_in_hole_d | crateskin_tongue_u]
+late  down [crateskin_head_in_hole_u | ] -> [crateskin_head_in_hole_u | crateskin_tongue_d]
+
+
+late down [snakehead_in_hole_5 | no crateskin_tongue_d]->[snakehead_in_hole_5 | crateskin_tongue_d]
+
+==============
+WINCONDITIONS
+==============
+
+All Target on Crate
+no body
+no bodyskin
+no placeholder_snake 
+no snakehead_in_hole_1
+no snakehead_in_hole_2
+no snakehead_in_hole_3
+no snakehead_in_hole_4
+no tail_going_home
+no tail
+no snake_food
+no crate_food
+
+=======
+LEVELS
+=======
+
+message O ++++++++ >*=-    -=*< ++++++++ O                                 Help the little snakes get to their little holes, then get to your own hole. Don't let any lizards get away!
+
+message O +++++++>*==-   1  -==*<+++++++ O
+(even 2-snake can't go backwards - needs room to turn around)
+(crates can't go through snake food)
+(have to move the crate before eating all the food, and which food you eat first matters)
+(can't get out of a room because tail blocks entrance when you are too long)
+nnnnnnggggggggnnn
+gggggg########gnn
+g#######....###gn
+g#o...#......###g
+g#....#..##...##g
+g###.##.ao..*..#g
+g#....##.##....#g
+g#.a...#.###.p.#g
+g#a*a....###.7.#g
+g#.a....##$#...#g
+g#....#....#####g
+g############gggg
+gggggggggggggnnnn
+
+message O ++++++>*===-   2  -===*<++++++ O
+(crates are snakes too - you can't turn them around so easily after they become a snake)
+(crate turnaround issues)
+(long snake issues)
+ngggggggggggggn
+ng###########gg
+g###$.###aao##g
+g####.#...aa##g
+g#...bb...a..#g
+g#5p....bb...#g
+g#...#.a##...#g
+g#####.####b##g
+g###....#..b.#g
+g#.aa...#....#g
+g#.*a#..#....#g
+g#...#..#....#g
+g#############g
+ggggggggggggggg
+
+message O +++++>*====-   3  -====*<+++++ O
+(use your hole as a place to hide your body to turn around in tight spaces)
+(use crate hole as a place to hide crate tail so you can turn around in tight space)
+(you still have to hide your body in tunnels and such to push a crate to the correct location)
+nnnnnnnggggggggggggg
+nnggggg############g
+ngg######....#.5.##g
+ng#######....#.p.##g
+ng##...##...##...##g
+g##..#.###a####a###g
+g##..*.###a####a###g
+g##.#a###...##...#gn
+g#..#.a...*.aa.o.#gn
+g#..b..$#...##..##gn
+g#..##a###########gn
+g##.#..a#..##..###gn
+g##.#.b....b.....##g
+g##.####b...#..o.##g
+ng#.........#....##g
+ng#############...#g
+nggggg#######...#.#g
+nnnnnnggggg##.....#g
+nnnnnnnnnng########g
+nnnnnnnnnnnggggggggg
+
+message O ++++>*=====-   4  -=====*<++++ O
+(crates retract on targets)
+(crates can be detached from targets)
+(you can move a snake through a crate tail, duh, push that other crate blocked by a different crate's tail)
+(push a block to do a task while sliding into a hole)
+(crate can retract back onto target after it eats something AND you go in your hole)
+ggggggggnngggggggnn
+g#######gg#######gg
+g##...############g
+g##...#####......#g
+g###..ob.##.*.p6.#g
+ng##.##b.bb......#g
+ng##.##.....######g
+g###.###########b#g
+g#...bb*.#######$#g
+g#.......##...o..#g
+g####....##.*.b..#g
+g####.o####.....##g
+g##.....a.a....###g
+g##.bb..###...####g
+ng#....##########gn
+ng#######g######gnn
+nngggggggnggggggnnn
+
+message O +++>*======-   5  -======*<+++ O
+(can't go back in a hole until you've brought all the snake back out)
+(you can retreat back into your hole)
+(push a block onto a target while sliding into a hole)
+(then continue pushing that crate down a dead end tunnel and retract to escape)
+nnnnnnngggggggggggg
+nnngggg###########g
+nng#########.bbb.#g
+ng###########.#b.#g
+ng##...##$..#.#b##g
+ng##......a.#..ob#g
+ng##..o##.*.#..b##g
+ng#######..##...##g
+g########.##....##g
+g##o#####.#..##*##g
+g##.aa###.#.###.##g
+g##.#a###...#5p.##g
+g#...$bbb.*.#aaa##g
+g#...####...#aaa#gn
+g################gn
+ggggggggggggggggggn
+
+message O ++>*=======-   6  -=======*<++ O
+(intro to one way doors - preloaded cratesnakes on targets)
+(detaching isn't always recoverable)
+(juggling retractions - partial retractions)
+(advanced cratesnake juggling)
+nnggggggggggggnngggggggggnn
+ng############gg########gnn
+g##.##..*bo.######.....##gn
+g##oaa.###.#######....a##gn
+g##b##a###..###.%aaa..a##gn
+g##*#....#...###a##..aa##gn
+g##.#aa#.##...##aa##.#####g
+g##.#....###...##a.....###g
+g##.###*#####...##.*.o.###g
+g#....#b######.*#..#.#..a#g
+g#.p5.#b#...###b#........#g
+g#....#b#.o.#$#b#.#...#..#g
+g######o....#.#b#.......a#g
+g#####....*.#.#b####o#####g
+ggg###......#..b####b#####g
+nnng###....##..bbbbbb####gn
+nnng###############.%.###gn
+nnnngg#####g############gnn
+nnnnnngggggnggggggggggggnnn
+
+message O +>*========-   7  -========*<+ O
+(make your own tunnels by only eating some of the food until later)
+(dig out another crate)
+(long snake can only push crate two squares at a time so there is enough room to get behind it and turn the crate the next direction)
+nngggggggggggggggnn
+gg###############gn
+g###..........####g
+g#...bbbbbbb....##g
+g#...b*...ob....##g
+g#...bbbbbbb....##g
+g#.............b$#g
+g###..........#o##g
+ng###.*.##########g
+ng##....###.5.###gn
+g##..######.p.####g
+g##.##aaaaaaaa..##g
+g##.#aaaaaaaaa*.##g
+g##.#aaaaaaaaa..##g
+g##.#aaaaaaaaa####g
+g#.obaaaaaaaaa###gn
+g####aaaaaaaaa###gn
+g#####aaaaaaaa##gnn
+ggg#############gnn
+nnngggggggggggggnnn
+
+message O >*=========-   8  -=========*< O
+(intentionallly stunt a cratesnake's growth so you can detach it from a target you have to place it on temporarily)
+(retreat into hole after poking cratesnake out from between two walls)
+(some pre-targeted crates can be detached from their hole - maybe you have to hold it out to reach it from another angle - need a long snake so eat up)
+nngggggggggggggggggggggggggggg
+ng###########################g
+g####.....###....#####.....##g
+g###...#a..##.a...##........#g
+g#.*........#.....o#a*bbbbb.#g
+g#.#.a..#...&.#a#a##........#g
+g#.#o#....#.#.#....#....a.p.#g
+g#.#...#a.###....#.####.*.7.#g
+g#.#.......##..#...ob.#.b..##g
+g#.#.#...#a.#....#.#..#.b.###g
+g#.#...a....#.#....#.##.b.###g
+g#.#...#.#..#.#a#a##.##.b.##gn
+g#.#.#a....##.....$#.##.b.##gn
+g#..b*....o##.a...##......##gn
+g###...###b#.....###......##gn
+g#########.&..#######....###gn
+ng########.#################gn
+nngggggg########gggg########gn
+nnnnnnnnggggggggnnnnggggggggnn
+
+message O>*=========-        -=========*<O
+message O========-              -========O
+message O=====-                    -=====O
+message O==-                          -==O
+message O                                O
+message The snakes are all full of lizard and happily resting in their holes. 
+message Thanks for playing!
+
+
+

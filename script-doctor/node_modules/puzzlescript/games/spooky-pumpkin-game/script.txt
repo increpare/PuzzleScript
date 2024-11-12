@@ -1,0 +1,499 @@
+title Spooky Pumpkin Game
+author Alan Hazelden
+homepage www.draknek.org
+
+realtime_interval 0.15
+
+key_repeat_interval 0.25
+
+again_interval 0.1
+
+noaction
+
+run_rules_on_level_start
+
+========
+OBJECTS
+========
+
+Background
+DARKBLUE BLACK
+11111
+01111
+11101
+11111
+10111
+
+Wall
+GREY DarkGrey
+00111
+11101
+01001
+11110
+10011
+
+Player
+#f2a342 #eb8931 #e46f20 brown lightgreen
+..4..
+30113
+31123
+.122.
+.3.3.
+
+EmptyPumpkin
+#f2a342 #eb8931 #e46f20 #5e3714
+.001.
+03132
+01122
+13332
+.222.
+
+UnlitPumpkinAndCandle
+#f2a342 #eb8931 #e46f20 #5e3714 white
+.001.
+03132
+01122
+13432
+.222.
+
+LitPumpkin
+#f2a342 #eb8931 #e46f20 yellow
+.001.
+03132
+01122
+13332
+.222.
+
+UnlitWeb
+White
+0...0
+.00.0
+.0.0.
+.0..0
+0.00.
+
+LitWeb
+Yellow
+0...0
+.00.0
+.0.0.
+.0..0
+0.00.
+
+LitCandle1
+White Black Red Yellow
+.333.
+.323.
+.303.
+..0..
+.111.
+
+LitCandle2
+White Black Orange Yellow
+.333.
+.323.
+.303.
+..0..
+.111.
+
+LitCandle3
+White Black DarkRed Yellow
+.333.
+.323.
+.303.
+..0..
+.111.
+
+UnlitCandle
+White DarkBrown Grey
+.....
+..2..
+..0..
+..0..
+.111.
+
+LightHere
+#50533f #3c361a
+11111
+01111
+11101
+11111
+10111
+
+LightL1
+#50533f #3c361a
+....1
+...11
+...01
+....1
+....1
+
+LightL2
+#50533f #3c361a
+....1
+....1
+...01
+...11
+....1
+
+LightR1
+#50533f #3c361a
+1....
+0....
+11...
+11...
+1....
+
+LightR2
+#50533f #3c361a
+1....
+01...
+11...
+1....
+1....
+
+LightLR1
+#50533f #3c361a
+1...1
+01.11
+11.01
+1..11
+1...1
+
+LightLR2
+#50533f #3c361a
+1...1
+01..1
+11.01
+11.11
+1...1
+
+LightU1
+#50533f #3c361a
+.....
+.....
+.....
+..11.
+10111
+
+LightU2
+#50533f #3c361a
+.....
+.....
+.....
+.11..
+10111
+
+LightD1
+#50533f #3c361a
+11111
+.11..
+.....
+.....
+.....
+
+LightD2
+#50533f #3c361a
+11111
+..11.
+.....
+.....
+.....
+
+LightUD1
+#50533f #3c361a
+11111
+.11..
+.....
+.111.
+10111
+
+LightUD2
+#50533f #3c361a
+11111
+.111.
+.....
+..11.
+10111
+
+
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Player
+* = LitCandle1
+| = UnlitCandle
+O = EmptyPumpkin
+@ = LitPumpkin
+W = UnlitWeb
+X = UnlitWeb and Wall
+
+(LitPumpkin = LitPumpkin1 or LitPumpkin2 or LitPumpkin3)
+LitCandle = LitCandle1 or LitCandle2 or LitCandle3
+
+Candle = UnlitCandle or LitCandle
+Pumpkin = EmptyPumpkin or LitPumpkin or UnlitPumpkinAndCandle
+Web = UnlitWeb or LitWeb
+
+LitCandleOrWeb = LitCandle or LitWeb
+
+Solid = Candle or Pumpkin or Wall
+
+LightL = LightL1 or LightL2
+LightR = LightR1 or LightR2
+LightLR = LightLR1 or LightLR2
+
+LightU = LightU1 or LightU2
+LightD = LightD1 or LightD2
+LightUD = LightUD1 or LightUD2
+
+LightLayer1 = LightHere or LightL or LightR or LightLR
+LightLayer2 = LightU or LightD or LightUD
+Lighting = LightLayer1 or LightLayer2
+
+
+=======
+SOUNDS
+=======
+
+Player MOVE 67518907
+
+Pumpkin MOVE 71614907
+
+LitWeb CREATE 46154308
+sfx0 46154308
+
+Candle MOVE 93617507
+sfx1 93617507 (candle moved)
+
+sfx2 68280908 (pumpkin lit)
+
+EndLevel 67922308
+
+
+(ghost? 17935308)
+
+================
+COLLISIONLAYERS
+================
+
+Background
+LightLayer1
+LightLayer2
+Player, Wall, Pumpkin, Candle
+Web
+
+======
+RULES
+======
+
+[ > Player | EmptyPumpkin ] -> [ > Player | > EmptyPumpkin ]
+[ > Player | Candle ] -> [ > Player | > Candle ]
+
+[ > LitCandle | EmptyPumpkin ] -> [ | LitPumpkin ] sfx2
+[ > UnlitCandle | EmptyPumpkin ] -> [ | UnlitPumpkinAndCandle ] sfx1
+
+[ > EmptyPumpkin | Candle ] -> [ > EmptyPumpkin | > Candle ]
+
+[ > Candle | stationary Candle ] -> [ > Candle | > Candle ]
+
+[ > Player | LitPumpkin | no Solid ] -> [ Player | EmptyPumpkin | LitCandle1 ] sfx1
+
+[ > Player | UnlitPumpkinAndCandle | no Solid ] -> [ Player | EmptyPumpkin | UnlitCandle ] sfx1
+
+[ > Player | LitPumpkin | Solid ] -> cancel
+[ > Player | UnlitPumpkinAndCandle | Solid ] -> cancel
+[ > Solid | stationary Solid ] -> cancel
+
+(spread fire)
+
+[ LitCandleOrWeb | UnlitCandle ] -> [ LitCandleOrWeb | LitCandle1 ] sfx0
+
+late [ LitCandleOrWeb | UnlitCandle ] -> again
+
+late [ LitCandleOrWeb | UnlitWeb ] -> again
+
+random [ LitCandleOrWeb | UnlitWeb ] [ stationary Player ] -> [ LitCandleOrWeb | LitWeb ] [ action Player ] again
+
+random [ stationary Player ] [ LitWeb ] -> [ Player ] [] again
+
+(fancy lighting)
+
+late [ Lighting ] -> []
+
+late [ LitPumpkin no LightHere ] -> [ LightHere random LitPumpkin ]
+late [ LitCandle no LightHere ] -> [ LightHere random LitCandle ]
+late [ LitWeb no LightHere ] -> [ LightHere random LitWeb ]
+
+late up [ LightHere | no LightHere no LightU ] -> [ LightHere | random LightU ]
+late down [ LightHere | no LightHere no LightU no LightD ] -> [ LightHere | random LightD ]
+late down [ LightHere | LightU ] -> [ LightHere | random LightUD ]
+
+late left [ LightHere | no LightHere no LightL ] -> [ LightHere | random LightL ]
+late right [ LightHere | no LightHere no LightL no LightR ] -> [ LightHere | random LightR ]
+late right [ LightHere | LightL ] -> [ LightHere | random LightLR ]
+
+
+
+==============
+WINCONDITIONS
+==============
+
+no EmptyPumpkin
+no UnlitPumpkinAndCandle
+
+=======
+LEVELS
+=======
+
+#########
+#..o#...#
+#.....*.#
+p.......#
+#.....*.#
+#..o#...#
+#########
+
+#######
+#...###
+p.o...#
+###*#.#
+###.#.#
+###...#
+#######
+
+(#########
+#...#...#
+#.....#.#
+p.o.#.*.#
+#.....#.#
+#...#...#
+#########)
+
+#######
+#...###
+#.#*.o#
+p.....#
+#.#*.o#
+#...###
+#######
+
+######
+#.o..#
+#.o..#
+p.#.##
+#.*..#
+#.*..#
+######
+
+######
+p....#
+#.*..#
+#.####
+#.o.##
+#...##
+#...##
+######
+
+(first introduction of unlit candles)
+
+#########
+#...#...#
+#o|.#...#
+p.....@.#
+#o|.#...#
+#...#...#
+#########
+
+#########
+#...#####
+#.#.@.oo#
+#.|...|.#
+#...#...#
+######p##
+
+#p#####
+#.@...#
+#.....#
+#.#####
+#.o.|.#
+#.....#
+#######
+
+#####
+p..##
+#@.##
+#..##
+#.###
+#...#
+#..o#
+#.|.#
+#...#
+#####
+
+#######
+##...##
+##.@.##
+##...##
+###.###
+#..o..#
+#.|.|.#
+#..o..#
+###p###
+
+########
+p..#...#
+#.|..|.#
+#..oo.##
+#..oo.##
+#.|..*.#
+#..#...#
+########
+
+###p###
+#.....#
+#|@|@|#
+#.....#
+#.@.@.#
+#o.o.o#
+#######
+
+#######
+#..####
+#.o.|.#
+p..#..#
+#.*.o.#
+#..####
+#######
+
+##########
+#o....####
+#....@####
+#...||...#
+####@....#
+####....o#
+######p###
+
+########
+####...#
+#....|.#
+#.o#...#
+p..#####
+#.@#####
+#..#####
+########
+
+#######
+p..o..#
+#.|.|.#
+#o.@.o#
+#.|.|.#
+#..o..#
+#######
+
+message Thanks for playing :)
+

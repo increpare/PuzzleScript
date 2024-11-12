@@ -1,0 +1,353 @@
+title tile step
+author Rosden Shadow [Mark Signorelli]
+homepage rosden.itch.io
+run_rules_on_level_Start
+
+background_color #3B3942
+
+text_color #7EA1E5
+
+========
+OBJECTS
+========
+
+Background
+#46495B #3B3942
+11101
+01011
+10101
+11010
+10111
+
+
+Target
+#536673 #7EA1E5
+.....
+.010.
+.1.1.
+.010.
+.....
+
+Targetx
+ #B32D2D #DB7F55
+.....
+.010.
+.1.1.
+.010.
+.....
+
+Wall
+#845C7A #9B7CA1 #5B4654 #42393C
+10001
+21001
+22120
+32232
+23323
+
+overwall
+#845C7A #9B7CA1 #5B4654 #42393C
+.....
+.....
+.....
+01121
+20012
+
+
+Playerright
+#E0AAF2 #E57ED5  #536673 #7EA1E5
+.000.
+11303
+11212
+11110
+.1.1.
+
+playerleft
+#E0AAF2 #E57ED5 #536673 #7EA1E5
+.000.
+30311
+21211
+01111
+.1.1.
+
+Crate
+#7EA1E5 #AAE0F2 #536673 #46495B
+20011
+20001
+22001
+32223
+.333.
+
+overcrate
+#7EA1E5 #AAE0F2 #536673
+.....
+.....
+.....
+.....
+.111.
+
+Crate2
+#DB7F55 #E5C17E #B32D2D #73342E
+20011
+20001
+22001
+32223
+.333.
+
+overcrate2
+ #DB7F55 #E5C17E #B32D2D #73342E
+.....
+.....
+.....
+.....
+.111.
+
+thefloor
+#3B3942
+00000
+00000
+00000
+00000
+00000
+
+movetileup
+#7EA1E5 #AAE0F2
+11111
+11011
+10001
+01010
+11011
+
+movetiledown
+#7EA1E5 #AAE0F2
+11011
+01010
+10001
+11011
+11111
+
+movetileleft
+#7EA1E5 #AAE0F2
+11101
+11011
+10000
+11011
+11101
+
+movetileright
+#7EA1E5 #AAE0F2
+10111
+11011
+00001
+11011
+10111
+
+downshift
+black
+.....
+.....
+.....
+.....
+.....
+
+upshift
+black
+.....
+.....
+.....
+.....
+.....
+
+leftshift
+black
+.....
+.....
+.....
+.....
+.....
+
+rightshift
+black
+.....
+.....
+.....
+.....
+.....
+
+noshift
+black
+.....
+.....
+.....
+.....
+.....
+
+cratex
+black
+.....
+.....
+.....
+.....
+.....
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Playerright
+* = Crate
+@= crate2
+t = Target
+x = Targetx
+
+-=thefloor
+
+1 = movetileright
+2=movetileup
+3=movetileleft
+4=movetiledown
+
+feel=overwall or overcrate or overcrate2
+pushable=crate2 
+win=crate or wall
+
+player=playerright or playerleft
+
+shift=downshift or rightshift or leftshift or upshift or noshift
+
+mover= crate or cratex
+
+movetile=movetileup or movetiledown or movetileleft or movetileright
+
+blocker=crate or Crate2 or cratex or player or wall or thefloor
+=======
+SOUNDS
+=======
+
+crate MOVE 12509302
+
+
+sfx0 12509302
+================
+COLLISIONLAYERS
+================
+
+Background
+Target, targetx
+movetile
+shift
+Player, Wall, pushable,thefloor,crate,cratex
+feel
+
+======
+RULES
+======
+
+
+[shift]->[]
+[feel]->[]
+
+
+[ >  Player | pushable ] -> [  >  Player| > pushable  ]
+
+[ left Playerright] -> [ left playerleft]
+[ right Playerleft] -> [ right playerright]
+
+
+[> player| movetileup no crate] -> [> player| movetileup upshift] sfx0
+
+[upshift | ] -> [upshift | upshift]
+
+[> player| movetiledown no crate] -> [> player| movetiledown downshift] sfx0
+
+[downshift | ] -> [downshift | downshift]
+
+[> player| movetileleft no crate] -> [> player| movetileleft leftshift] sfx0
+
+[leftshift | ] -> [leftshift | leftshift]
+
+[> player| movetileright no crate] -> [> player| movetileright rightshift] sfx0
+
+[rightshift | ] -> [rightshift | rightshift]
+
+
+late up [crate |upshift no blocker ]->[|cratex]
+
+late down [crate |downshift no blocker ]->[|cratex]
+
+late left [crate |leftshift no blocker ]->[|cratex]
+
+late right [crate |rightshift no blocker ]->[|cratex]
+
+
+late [cratex]->[crate]
+late up [wall| ]-> [wall|overwall]
+late up [crate| ]-> [crate|overcrate]
+late up [crate2| ]-> [crate2|overcrate2]
+
+==============
+WINCONDITIONS
+==============
+
+All Target on crate
+All targetx on cratex
+
+=======
+LEVELS
+=======
+
+message cover up all squares with blocks
+
+message level 1 of 4
+---------
+-#######-
+##.....##
+#.P.**.t#
+#....t..#
+#.......#
+#.#######
+#...2.4.#
+#..3.1..#
+##.....##
+-#######-
+
+message level 2 of 4
+---------
+-#######-
+##.....##
+#2P.....#
+#....3.1#
+#4......#
+#..***..#
+#....t..#
+#.tt....#
+##.....##
+-#######-
+
+message level 3 of 4
+---------
+--#####--
+-##.*.##-
+-#.***.#-
+-#..*..#-
+-#..2..#-
+##.3.1.##
+#...4...#
+#...p...#
+##ttttt##
+-#######-
+
+message level 4 of 4
+---------
+-#######-
+##...t.##
+#.....p.#
+#....t.t#
+#..1.2..#
+#..2....#
+#....21.#
+#**.....#
+##*....##
+-#######-
+
+message great work! 

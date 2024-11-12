@@ -1,0 +1,793 @@
+title Dark Pellets
+author Rosden Shadow [Mark Signorelli]
+homepage rosden.itch.io
+
+noaction
+run_rules_on_level_Start
+
+background_color #231F26
+
+text_color #C1A2A5
+
+again_interval 0.13
+========
+OBJECTS
+========
+
+Background
+#333333 #231F26 (#E57ED5 #CC5285)
+11111
+10001
+11011
+10001
+11111
+(
+00101
+01110
+11011
+01111
+10110)
+(
+11101
+00101
+11111
+10100
+10111)
+
+stoptrail
+#CCCCCC #231F26
+11111
+10101
+10001
+10101
+11111
+
+nomove
+#FFEED9 #536673
+.....
+.000.
+.010.
+.000.
+.....
+
+Target
+#FFD9E0 #423D39
+.....
+.010.
+.0.1.
+.000.
+.....
+
+Wall
+#C1A2A5 #845C5C #5B4846 #423D39
+21110
+12110
+21221
+23232
+32323
+
+overwall
+#C1A2A5 #845C5C #5B4846 #423D39
+.....
+.....
+.....
+10010
+21101
+
+Wall2
+#E5C17E #CC7A52  #B32D2D #73342E
+21110
+21110
+21110
+22221
+23232
+
+
+overwall2
+#E5C17E #CC7A52  #B32D2D #73342E
+.....
+.....
+.....
+.....
+10000
+
+stopWall
+#FFFFFF #CCCCCC #999999 #666666
+21110
+21110
+21110
+22221
+23232
+
+
+overstopwall
+#FFFFFF #CCCCCC #999999 #666666
+.....
+.....
+.....
+.....
+10000
+
+
+Playerright
+#D9FFDC #7EE58D #7F7CA1 #705C84
+.000.
+11202
+11313
+11110
+.1.1.
+
+playerleft
+#D9FFDC #7EE58D #7F7CA1 #705C84
+.000.
+20211
+31311
+01111
+.1.1.
+
+
+Cratek
+#FFFFFF #CCCCCC #999999 #666666
+.0.0.
+2.1.0
+.1.1.
+2.1.0
+.2.2.
+
+Crate
+#FFFFFF #CCCCCC #999999 #666666
+21100
+21010
+22110
+32223
+.333.
+
+overcrate
+#FFFFFF #CCCCCC #999999 #666666
+.....
+.....
+.....
+.....
+.000.
+
+end
+#FFFFFF #CCCCCC #999999 #666666
+21100
+21110
+22110
+32223
+.333.
+endx
+#FFFFFF #CCCCCC #999999 #666666
+21100
+21110
+22110
+32223
+.333.
+
+crate2
+#D9FFF8 #AAE0F2 #7EA1E5 #5C6684
+21100
+21110
+22110
+32223
+.333.
+
+overcrate2
+#D9FFF8 #AAE0F2 #7EA1E5 #5C6684
+.....
+.....
+.....
+.....
+.000.
+
+icefloor
+#AAE0F2 #7EA1E5
+11111
+10101
+11111
+10101
+11111
+
+crate3
+#F2F2AA #E5C17E #CC7A52 #736053
+21100
+21110
+22110
+32223
+.333.
+
+overcrate3
+#F2F2AA #E5C17E #CC7A52 #736053
+.....
+.....
+.....
+.....
+.000.
+
+trailfloor
+#E5C17E #CC7A52
+11111
+11101
+10001
+10111
+11111
+
+crate4
+#D9FFDC #7EE58D #5C8466 #4F5B46
+21100
+21110
+22110
+32223
+.333.
+
+overcrate4
+#D9FFDC #7EE58D #5C8466 #4F5B46
+.....
+.....
+.....
+.....
+.000.
+
+pitfloor
+#7EE58D #5C8466 #4F5B46
+11111
+10001
+10101
+10001
+11111
+
+pellet1
+#666666 #333333 #F2F2AA
+..0..
+.020.
+.101.
+.111.
+..1..
+
+pellet2
+#666666 #333333
+..0..
+.000.
+.101.
+.111.
+..1..
+
+pelx
+transparent
+
+actipellet 
+#E0AAF2 #A87EE5 #705C84
+.....
+..0..
+.110.
+.212.
+..2..
+
+
+cloner
+#E5C17E #DB7F55 #B32D2D #73342E
+.100.
+.210.
+.221.
+.332.
+.....
+
+swapcrate
+Orange Yellow
+00000
+0...0
+0...0
+0...0
+00000
+
+swapwall
+black
+.....
+.....
+.....
+.....
+.....
+
+thefloor
+#231F26
+00000
+00000
+00000
+00000
+00000
+
+thefloorx
+#231F26
+00000
+00000
+00000
+00000
+00000
+
+eend
+#231F26
+00000
+00000
+00000
+00000
+00000
+(
+checkempty
+black
+.....
+.....
+.....
+.....
+.....
+
+checkblock
+black
+.....
+.....
+.....
+.....
+.....
+)
+craacti
+transparent
+
+ontrail
+transparent
+
+spa
+transparent
+movr
+TRANSPARENT
+movl
+TRANSPARENT
+movu
+TRANSPARENT
+movd
+TRANSPARENT
+
+cre
+transparent
+cre2
+transparent
+
+switcrate
+black
+.....
+.....
+.....
+.....
+.....
+
+switcrate2
+black
+.....
+.....
+.....
+.....
+.....
+
+arrow
+black
+.....
+.....
+.0.0.
+.000.
+..0..
+
+arrow2
+black
+.....
+.0.0.
+.000.
+..0..
+.....
+
+arrowx
+black
+.....
+.....
+.....
+.....
+.....
+
+arrowx2
+black
+.....
+.....
+.....
+.....
+.....
+
+winend
+#F2F2AA #E5C17E #CC7A52 #736053
+1000.
+21100
+21110
+22110
+.2221
+
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Playerright
+* = Cratek
+
+
+O = Target
+n = nomove
+a = arrow2 and wall
+e=end
+t = end and target and eend
+w=end and winend
+
+c=cloner
+-=thefloor
+x=thefloorx
+
+1=crate2
+2=crate3
+3=crate4
+
+$=actipellet
+
+pellet=pellet1 or pellet2
+feel=overwall or overcrate or overcrate2 or overcrate3 or overcrate4 or overwall2 or overstopwall
+pushable=crate or cloner or swapcrate  or switcrate or switcrate2 or crate2 or crate3 or crate4 or actipellet
+win=crate or wall 
+
+theemx= crate 
+player=playerright or playerleft
+
+tile=icefloor or trailfloor or pitfloor
+
+blocker = wall or crate  or nomove or player or arrow or crate2 or crate3 or crate4 or wall2 or cratek or pellet or actipellet
+
+arrowk = arrow or arrow2 or arrowx or arrowx2
+
+mov= movr or movl or movu or movd
+
+icemove=player or crate or crate2 or crate3 or crate4 or actipellet
+=======
+SOUNDS
+=======
+
+undo 46762104
+pushable MOVE 36772507
+
+EndLevel 74089700
+
+player MOVE 68988304
+sfx0 52836103
+sfx1 45427502
+
+sfx2 29503700
+sfx3 81951902
+
+sfx4 7332703
+
+sfx5 10901303
+
+sfx6 66942701
+
+sfx8 82369903
+
+sfx9 60850103
+================
+COLLISIONLAYERS
+================
+
+Background
+stoptrail
+
+
+tile
+(icefloor
+trailfloor
+pitfloor)
+
+Target
+nomove
+Player, Wall, pushable,swapwall,thefloor,thefloorx,pellet,wall2,cratek ,stopWall
+
+ontrail
+pelx
+spa
+
+movr
+movl
+movu
+movd
+
+craacti
+cre2
+cre
+arrow, arrow2, arrowx, arrowx2
+winend
+eend
+end, endx
+feel
+
+
+======
+RULES
+======
+[feel]->[]
+
+[ left Playerright] -> [ left playerleft]
+[ right Playerleft] -> [ right playerright]
+
+late[spa no player][pellet1]->[spa no player][pelx]
+late[spa no player][pellet2]->[spa no player][pellet1]
+late[spa no player][pelx]->[spa no player][pellet2]
+
+
+([> player|stoptrail]->[player|stoptrail])
+[ >  Player | pushable ] -> [  >  Player | > pushable ]
+
+[> crate|Target]->[> crate|target] sfx2
+
+
+
+[endx] ->[thefloor] sfx2
+[end | thefloor]-> [endx |thefloor]
+
+(ice)
+[icemove movr]->[right icemove] 
+
+[icemove movl]->[left icemove ] 
+
+[icemove movu]->[up icemove ]
+
+[icemove movd]->[down icemove ] 
+
+[mov]->[]
+right[right icemove|icefloor no blocker]->[right icemove| movr icefloor] sfx5
+left[left icemove|icefloor no blocker]->[left icemove| movl icefloor] sfx5
+up[up icemove|icefloor no blocker]->[up icemove| movu icefloor] sfx5
+down[down icemove|icefloor no blocker]->[down icemove| movd icefloor] sfx5
+
+right[right icemove|icefloor pellet]->[right icemove| movr icefloor pellet] sfx5
+left[left icemove|icefloor pellet]->[left icemove| movl icefloor pellet] sfx5
+up[up icemove|icefloor pellet]->[up icemove| movu icefloor pellet] sfx5
+down[down icemove|icefloor pellet]->[down icemove| movd icefloor pellet] sfx5
+
+(trail)
+
+late [ontrail no icemove no pellet]->[wall2] sfx8
+late [icemove trailfloor]->[icemove trailfloor ontrail] 
+late[icefloor ontrail]->[icefloor]
+
+[> actipellet | crate2]->[|cre2 icefloor pellet1] sfx4
+[> actipellet | crate3]->[|cre2 trailfloor pellet1] sfx4
+[> actipellet | crate4]->[|cre2 pitfloor pellet1] sfx4
+
+[> crate2 |actipellet  ]->[|cre2 icefloor pellet1] sfx4
+[> crate3 | actipellet ]->[|cre2 trailfloor pellet1] sfx4
+[> crate4 | actipellet ]->[|cre2 pitfloor pellet1] sfx4
+
+[> crate| pellet]->[> crate| ] sfx6
+
+late[cre2 icefloor|]->[cre2 icefloor|cre icefloor]
+late[cre2 trailfloor|]->[cre2 trailfloor|cre trailfloor]
+late[cre2 pitfloor|]->[cre2 pitfloor|cre pitfloor]
+
+late[cre icefloor|]->[cre icefloor| icefloor]
+late[cre pitfloor|]->[cre pitfloor| pitfloor]
+late[cre trailfloor|]->[cre trailfloor| trailfloor]
+late[cre]->[]
+late[cre2]->[]
+
+(late[trailfloor icefloor no blocker]->[wall])
+
+late[craacti]->[]
+late[cratek][actipellet]->[Cratek craacti] [actipellet]
+late[cratek no craacti]->[crate] sfx9
+
+
+
+
+late[spa no blocker]->[stopwall]
+late[spa blocker]->[blocker]
+late[player no spa]->[player spa]
+
+late[tile stopwall]->[tile]
+
+late up [wall| ]-> [wall|overwall]
+late up [stopwall| ]-> [stopwall|overstopwall]
+late up [wall2| ]-> [wall2|overwall2]
+
+late up [theemx| ]-> [theemx|overcrate]
+
+late up [crate2| ]-> [crate2|overcrate2]
+late up [crate3| ]-> [crate3|overcrate3]
+late up [crate4| ]-> [crate4|overcrate4]
+
+late up [end| ]-> [end|overcrate]
+late up [endx| ]-> [endx|overcrate]
+
+
+([action player eend|]->[action player eend |crate Target])
+
+
+
+[]-> again 
+(
+[arrow]->[arrowx2]
+[arrow2]->[arrowx]
+
+[arrowx]->[arrow]
+[arrowx2]->[arrow2])
+==============
+WINCONDITIONS
+==============
+
+no actipellet
+no pellet
+
+no winend
+=======
+LEVELS
+=======
+
+message Remove all the purple pellets by pushing them into coloured blocks
+message then remove all the black flashing pellets with the WHITE block
+
+
+message level 1 of 7
+---------
+-#######-
+-#.....#-
+-#..P..#-
+-#.....#-
+-#.2.$.#-
+-#.....#-
+-#.#.#.#-
+-#..*..#-
+-#.....#-
+-#######-
+---------
+
+message level 2 of 7
+---------
+-#######-
+-#.....#-
+-#..P..#-
+-#.1.$.#-
+-#.....#-
+-#.1.$.#-
+-#.....#-
+-#..*..#-
+-#.....#-
+-#######-
+---------
+
+message level 3 of 7
+---------
+---------
+--#####--
+###...###
+#...#...#
+#.1$p$2.#
+#.......#
+##..*..##
+-#.....#-
+-#######-
+---------
+
+
+message level 4 of 7
+---------
+-#######-
+##.....##
+#.......#
+#.1.#.2.#
+#...*...#
+#..#....#
+#..$.$..#
+#...P...#
+#.......#
+#########
+---------
+
+(---------
+#########
+#.......#
+#...P...#
+#..$.$..#
+#..#....#
+#...*...#
+#.1.#.2.#
+#.......#
+##.....##
+-#######-
+---------)
+
+message level 5 of 7
+---------
+-#######-
+##.....##
+#...P...#
+#.......#
+#..2.2..#
+#.......#
+#.$...$.#
+#...*...#
+##.....##
+-#######-
+---------
+
+message level 6 of 7
+---------
+-#######-
+##.....##
+#...P...#
+#.$.*.$.#
+#.......#
+#...1...#
+#...2...#
+#.......#
+##.....##
+-#######-
+---------
+
+message level 7 of 7
+---------
+#########
+#.......#
+#...P...#
+#.$.#.$.#
+#.......#
+#.......#
+#..1.1..#
+#.......#
+#...*...#
+##.....##
+-#######-
+
+(
+---------
+-#######-
+##.....##
+#...P...#
+#.$.#.$.#
+#.......#
+#..1.1..#
+#.......#
+#...*...#
+##.....##
+-#######-
+---------)
+
+
+(---------
+-#######-
+-#.....#-
+-#..$..#-
+-#..1..#-
+-#.....#-
+-#.....#-
+-#..P..#-
+-#..*..#-
+-#.....#-
+-#######-
+---------)
+
+
+xxxxxxxxxxxxxx
+-eeeeeeeeeeee-
+eeeeeeeeeeeeee
+eeeeeeeeeeeeee
+wewewewwweweew
+wewewetweewwew
+weweweeweeweww
+eweweewwweweew
+eeeeeeeeeeeeee
+eeeeeeeeeeeeee
+-eeeeeeeeeeee-
+
+

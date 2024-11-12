@@ -1,0 +1,490 @@
+title Always with the magnets
+author Marcos Donnantuoni
+homepage https://marcosd.itch.io
+
+again_interval 0.0666
+
+========
+OBJECTS
+========
+
+background
+red #eeeeee white
+11211
+12221
+22222
+12221
+11211
+
+playerNormal
+black #ff0000 transparent transparent
+22222
+20012
+20222
+20012
+22222
+
+playerAnti
+black #0000ff transparent transparent
+22222
+20012
+20222
+20012
+22222
+
+pellet
+#00dd00
+.....
+.....
+..0..
+.....
+.....
+
+target
+#00ff00 #00ee00 #00dd00
+.....
+.001.
+.012.
+.122.
+.....
+
+wall
+#777777 #666666 #555555 #444444 #333333
+11112
+12223
+12223
+12223
+23333
+
+crate
+transparent #0000dd #0000ff #0000aa
+00000
+02210
+02030
+01330
+00000
+
+antiCrate
+transparent #dd0000 #ff0000 #aa0000
+00000
+02210
+02030
+01330
+00000
+
+mln
+#ff0000 #ff4d4d #ff9999
+.....
+.....
+.012.
+.....
+.....
+
+mrn
+#ff0000 #ff4d4d #ff9999
+.....
+.....
+.210.
+.....
+.....
+
+mun
+#ff0000 #ff4d4d #ff9999
+.....
+..0..
+..1..
+..2..
+.....
+
+mdn
+#ff0000 #ff4d4d #ff9999
+.....
+..2..
+..1..
+..0..
+.....
+
+mla
+#0000ff #4d4dff #9999ff
+.....
+.....
+.012.
+.....
+.....
+
+mra
+#0000ff #4d4dff #9999ff
+.....
+.....
+.210.
+.....
+.....
+
+mua
+#0000ff #4d4dff #9999ff
+.....
+..0..
+..1..
+..2..
+.....
+
+mda
+#0000ff #4d4dff #9999ff
+.....
+..2..
+..1..
+..0..
+.....
+
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+@ = playerNormal
+$ = playerAnti
+c = crate
+a = anticrate
+d = crate and pellet
+b = anticrate and pellet
+o = Target
+p = pellet
+q = playernormal and pellet
+r = playeranti and pellet
+player = playerNormal or playerAnti
+ml = mln or mla
+mr = mrn or mra
+mu = mun or mua
+md = mdn or mda
+=======
+SOUNDS
+=======
+
+crate move 65116907 (49276507)
+(crate cantmove 82626704)
+anticrate move 65116907 (49276507)
+(anticrate cantmove 82626704)
+endlevel 83744503
+startgame 92244503
+sfx0 47907308
+sfx1 28693701
+sfx2 84094909
+
+================
+COLLISIONLAYERS
+================
+
+Background
+mln, mla
+mrn, mra
+mun, mua
+mdn, mda
+pellet
+player, player target, wall, crate, anticrate
+
+======
+RULES
+======
+
+[ action playernormal pellet ] -> [ playeranti   no pellet ] sfx2
+[ action playeranti   pellet ] -> [ playernormal no pellet ] sfx2
+
+[ > player | target ] -> [ | player ] win
+
+[ action playernormal ] -> [ playernormal mln mrn mun mdn ] sfx0
+[ action playeranti   ] -> [ playeranti   mla mra mua mda ] sfx0
+
+[ ml ] -> [ left  ml ] again
+[ mr ] -> [ right mr ] again
+[ mu ] -> [ up    mu ] again
+[ md ] -> [ down  md ] again
+
+[ wall ml ] -> [ wall no ml ]
+[ wall mr ] -> [ wall no mr ]
+[ wall mu ] -> [ wall no mu ]
+[ wall md ] -> [ wall no md ]
+
+(
+right [ crate mln | pellet ] -> [ crate no mln | pellet ]
+left  [ crate mrn | pellet ] -> [ crate no mrn | pellet ]
+down  [ crate mun | pellet ] -> [ crate no mun | pellet ]
+up    [ crate mdn | pellet ] -> [ crate no mdn | pellet ]
+
+left  [ crate mla | pellet ] -> [ crate no mla | pellet ]
+right [ crate mra | pellet ] -> [ crate no mra | pellet ]
+up    [ crate mua | pellet ] -> [ crate no mua | pellet ]
+down  [ crate mda | pellet ] -> [ crate no mda | pellet ]
+
+left  [ anticrate mln | pellet ] -> [ anticrate no mln | pellet ]
+right [ anticrate mrn | pellet ] -> [ anticrate no mrn | pellet ]
+up    [ anticrate mun | pellet ] -> [ anticrate no mun | pellet ]
+down  [ anticrate mdn | pellet ] -> [ anticrate no mdn | pellet ]
+
+right [ anticrate mla | pellet ] -> [ anticrate no mla | pellet ]
+left  [ anticrate mra | pellet ] -> [ anticrate no mra | pellet ]
+down  [ anticrate mua | pellet ] -> [ anticrate no mua | pellet ]
+up    [ anticrate mda | pellet ] -> [ anticrate no mda | pellet ]
+)
+
+[ crate mln ] -> [ right crate no mln ]
+[ crate mrn ] -> [ left  crate no mrn ]
+[ crate mun ] -> [ down  crate no mun ]
+[ crate mdn ] -> [ up    crate no mdn ]
+
+[ crate mla ] -> [ left  crate no mla ]
+[ crate mra ] -> [ right crate no mra ]
+[ crate mua ] -> [ up    crate no mua ]
+[ crate mda ] -> [ down  crate no mda ]
+
+[ anticrate mln ] -> [ left  anticrate no mln ]
+[ anticrate mrn ] -> [ right anticrate no mrn ]
+[ anticrate mun ] -> [ up    anticrate no mun ]
+[ anticrate mdn ] -> [ down  anticrate no mdn ]
+
+[ anticrate mla ] -> [ right anticrate no mla ]
+[ anticrate mra ] -> [ left  anticrate no mra ]
+[ anticrate mua ] -> [ down  anticrate no mua ]
+[ anticrate mda ] -> [ up    anticrate no mda ]
+
+==============
+WINCONDITIONS
+==============
+
+
+=======
+LEVELS
+=======
+
+message Your task is to reach the target.
+######
+#....#
+#@..o#
+#....#
+######
+
+message Activate your magnet (X) to move the metal crates
+######
+#...##
+#@.co#
+#...##
+######
+
+message Same polarities repel, opposite polarities attract
+#######
+##..co#
+##...##
+#@a..##
+#######
+
+message Green pellets will change your magnet's polarity when consumed
+#######
+#.p.#.#
+#@..ao#
+#...#.#
+#######
+
+
+message Here are five easy levels for you to warm up:
+
+message Easy 1 / 5
+######
+#.@.##
+#a...#
+#p#.##
+#.o###
+######
+
+message Easy 2 / 5
+######
+#....#
+#@#a.#
+##a..#
+#.o#p#
+######
+
+message Easy 3 / 5
+######
+##.#.#
+#.@cp#
+#..###
+#..ao#
+######
+
+message Easy 4 / 5
+######
+#b.###
+#@..##
+#pa#o#
+##...#
+######
+
+message Easy 5 / 5
+######
+#@#co#
+#.#p##
+#a.p.#
+#....#
+######
+
+
+message Now, let's see if you can beat six normal levels.
+
+message Normal 1 / 6
+######
+#@...#
+#.a..#
+###..#
+#oc.c#
+######
+
+message Normal 2 / 6
+######
+#.@pp#
+#..###
+#..#o#
+#..cc#
+######
+
+message Normal 3 / 6
+######
+#c@.##
+#.a.##
+#pa#o#
+#....#
+######
+
+message Normal 4 / 6
+######
+#@cao#
+#b.###
+#....#
+##...#
+######
+
+message Normal 5 / 6
+######
+#c..b#
+#q..##
+##a..#
+#o.#.#
+######
+
+message Normal 6 / 6
+######
+#@a.o#
+#pc###
+##...#
+#pp..#
+######
+
+
+message Very good! Now you can play six hard levels. You earned it.
+
+message Hard 1 / 6
+######
+#pcap#
+#@.c##
+#..c.#
+#.##o#
+######
+
+message Hard 2 / 6
+######
+##.a.#
+#p@..#
+#..#c#
+#pc#o#
+######
+
+message Hard 3 / 6
+######
+#@.#o#
+#p.#a#
+#aa..#
+#pc..#
+######
+
+message Hard 4 / 6
+######
+#.pap#
+#@a.c#
+#p#..#
+#ao#.#
+######
+
+message Hard 5 / 6
+######
+#@a..#
+#.cdp#
+#p#..#
+#bo#.#
+######
+
+message Hard 6 / 6
+######
+#ppcp#
+#@a..#
+###p.#
+#oc.c#
+######
+
+message Wow, you are good! You can try the six hardest levels.
+
+message Hardest 1 / 6
+######
+#.pc.#
+#p@.a#
+#b#cp#
+#co#.#
+######
+
+message Hardest 2 / 6
+######
+#@..b#
+#dapp#
+#c.#a#
+#.p#o#
+######
+
+message Hardest 3 / 6
+######
+#.@pc#
+#ap.a#
+#pp#.#
+###oc#
+######
+
+message Hardest 4 / 6
+######
+#pdp.#
+#cqab#
+#..pd#
+#bc#o#
+######
+
+message Hardest 5 / 6
+######
+#c.d.#
+#q.#o#
+#.a.##
+#.bp##
+######
+
+message Hardest 6 / 6
+######
+#q#oa#
+#p.#d#
+#c.pp#
+#ap.d#
+######
+
+message Congratulations! You beat the game!
+
+
+
+
+
+
+

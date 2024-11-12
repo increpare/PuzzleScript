@@ -1,0 +1,416 @@
+title i herd u liek water templs 
+author Denis Prause
+homepage https://twitter.com/zejety
+realtime_interval 0.22
+key_repeat_interval 0.22
+noaction
+throttle_movement
+noundo
+run_rules_on_level_start
+
+========
+OBJECTS
+========
+
+Background
+purple
+
+Target 
+yellow transparent
+11111
+11011
+10001
+11011
+11111
+
+Wall 
+darkgrey
+
+DirWallUp
+grey transparent
+00000
+01110
+11111
+11111
+11111
+
+DirWallDown
+grey transparent
+11111
+11111
+11111
+01110
+00000
+
+DirWallLeft
+grey transparent
+00111
+01111
+01111
+01111
+00111
+
+DirWallRight
+grey transparent
+11100
+11110
+11110
+11110
+11100
+
+AmplitudeTop 
+white transparent
+11111
+11111
+11011
+10001
+11111
+
+AmplitudeBottom
+white transparent
+11111
+11111
+11111
+10001
+11011
+
+WaveLimitTop
+lightgrey transparent
+11111
+11111
+00100
+11111
+11111
+
+WaveLimitBottom
+lightgrey transparent
+11111
+11111
+11111
+11111
+00100
+
+WaveLimitLocked
+lightgrey transparent
+11111
+11111
+00100
+01110
+00100
+
+EdgeV
+darkgrey
+
+Player
+lightgreen transparent lightred white
+21212
+10001
+10001
+13331
+13131
+
+
+WaterTop
+LightBlue Transparent
+11111
+11111
+11111
+00000
+11111
+
+WaterTopBG
+blue Transparent
+11111
+11111
+11111
+11111
+00000
+
+Water
+Blue
+
+WaterTarget  
+transparent
+
+WaveGenEditor
+lightblue transparent
+11111
+11111
+11111
+11011
+11111
+
+WaveGenDown
+transparent
+
+WaveGenUp
+transparent
+
+Initialize
+transparent
+
+Auto
+transparent
+
+Manual
+transparent
+
+Crate 
+orange brown darkbrown
+00001
+01112
+01112
+01112
+22222
+
+TempBool
+transparent
+
+=======
+LEGEND
+=======
+
+. = Background
+| = EdgeV and Wall
+_ = WaveLimitLocked and Wall
++ = WaveGenEditor and Wall
+X = WaveGenEditor and Wall and WaveLimitLocked
+# = Wall
+P = Player
+* = Crate
+M = DirWallUp and Target
+@ = Crate and Target
+O = Target
+I = Initialize
+n = DirWallUp
+u = DirWallDown
+ü = DirWallDown and Crate
+{ = DirWallLeft
+} = DirWallRight
+
+WaveGen = WaveGenEditor OR WaveGenUp OR WaveGenDown
+WaveLimit = WaveLimitTop OR WaveLimitBottom OR WaveLimitLocked
+Amplitude = AmplitudeTop OR AmplitudeBottom
+TickType = Auto OR Manual
+Falls = Player OR Crate
+Floats = Player OR Crate
+DirWall = DirWallUp OR DirWallDown OR DirWallLeft OR DirWallRight
+Footing = Crate OR Wall OR DirWallUp
+
+=======
+SOUNDS
+=======
+
+AmplitudeTop move up 15514706
+AmplitudeTop move down 11511507
+Restart 7460308
+ShowMessage 84284103
+EndLevel 48691700
+CloseMessage 50465106
+Crate move horizontal 35598907
+sfx0 96204907 (steps)
+sfx1 56311707 (swim) 
+EndGame 19886503
+(old swim sound 84033708)
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Water
+WaterTopBG
+Player, Wall, Crate
+DirWall
+WaveLimit
+WaterTop
+WaterTarget
+EdgeV
+WaveGen
+AmplitudeTop
+AmplitudeBottom
+Target
+Initialize
+TempBool
+Auto Manual
+
+
+======
+RULES     
+======     
+
+(Iitialization)
+	up [Initialize][WaveLimit | ... | WaveLimit] -> [Initialize][WaveLimitBottom | ... | WaveLimitTop]
+	[Initialize] [WaveGen] -> [Initialize] [WaveGenUp AmplitudeTop AmplitudeBottom WaterTop]
+  	Horizontal [Initialize] [WaveGen |...| ] -> [Initialize] [WaveGen |...| WaterTop]
+    UP [Initialize][no Water | ... | WaterTop] -> [Initialize][Water | ... | WaterTop]    
+  	[Initialize][WaterTop no WaterTopBG] -> [Initialize][WaterTop WaterTopBG]
+    
+    random [] -> [Tempbool]
+  	[Initialize] -> []
+
+[TickType] -> []
+random [] -> [Manual]
+[ stationary Player ][Manual] -> [ stationary Player ][Auto] 
+
+
+(player input)
+	(vertical input)
+    	[Manual][up Player][AmplitudeBottom no WaveLimit][no WaveLimit AmplitudeTop] -> [Manual][up Player][down AmplitudeBottom no WaveLimit][no WaveLimit up AmplitudeTop]
+    	[Manual][down Player][AmplitudeBottom no AmplitudeTop][AmplitudeTop] -> [Manual][down Player][up AmplitudeBottom][down AmplitudeTop] 
+    	[vertical Player] -> [Player]
+    
+    (horizontal input)
+     	[TempBool][horizontal Player] -> [up TempBool][horizontal Player]
+      	down [TempBool][player no WaterTop | no Footing ] -> [down TempBool][player no WaterTop | no Footing]
+      	down [down TempBool][WaterTop | ... | player] -> down [up TempBool][WaterTop | ... | player]
+    	[down TempBool][Player] -> [TempBool][stationary Player]
+    	right [right Player | Floats no DirWallLeft] -> [right Player | right Floats no DirWallLeft]
+    	left [left Player | Floats no DirWallRight] -> [left Player | left Floats no DirWallRight]
+        [TempBool] -> [stationary TempBool ]
+        [TempBool][horizontal Player] -> [up TempBool][horizontal Player]
+        down [TempBool][horizontal Player No Water | Footing ]->[stationary TempBool][horizontal Player | Footing ] SFX0 
+        [up TempBool] -> [stationary TempBool] SFX1
+    
+
+(timed events)
+    [Auto][WaveGen] -> [Auto][WaveGen WaterTarget] 
+	Vertical [Auto][ stationary WaterTop |...| WaterTarget ] -> [Auto][ > WaterTop |...| WaterTarget ]
+	[Auto][WaterTarget] -> [Auto][right WaterTarget]
+    (update Water)
+      [moving WaterTop stationary WaterTopBG ] -> [moving WaterTop moving WaterTopBG]
+      [up WaterTop no Water ] -> [up WaterTop stationary Water]
+      down [> WaterTop | Water ] -> [> WaterTop | ]
+
+	(WaveGen oscillerates between amplitude points)
+    	Up [Auto][WaveGenUp | ... | AmplitudeTop] -> [Auto][ > WaveGenUp | ... | AmplitudeTop]
+    	Down [Auto][WaveGenDown | ... | AmplitudeBottom] -> [Auto][ > WaveGenDown | ... | AmplitudeBottom]
+    	[Auto][WaveGenUp AmplitudeTop] -> [Auto][WaveGenDown AmplitudeTop]
+    	[Auto][WaveGenDown AmplitudeBottom] -> [Auto][WaveGenUp AmplitudeBottom]
+        down [Auto][WaveGenUp |...| AmplitudeTop] -> [Auto][WaveGenDown  |...|  AmplitudeTop]
+        up [Auto][WaveGenDown |...| AmplitudeBottom] -> [Auto][WaveGenUp  |...|  AmplitudeBottom]
+        late [WaterTarget EdgeV] -> [EdgeV]
+        
+	(Floating/Falling objects)
+        [Auto][vertical WaterTop Floats] -> [Auto][vertical WaterTop vertical Floats]
+        UP[Auto][stationary Floats |...| WaterTop] -> [Auto][up Floats |...| WaterTop] 
+        up[Auto][up Floats | down WaterTop] -> [Auto][Floats | down WaterTop]
+        down[Auto][stationary Falls no WaterTop no Water | no Water] -> [Auto][down Falls | ]
+
+(any tick)
+down [> Floats | DirWallUp ] -> [ Floats | DirWallUp ]
+up [> Floats | DirWallDown ] -> [ Floats | DirWallDown ]
+left [> Floats | DirWallRight ] -> [ Floats | DirWallRight ]
+right [> Floats | DirWallLeft ] -> [ Floats | DirWallLeft ]
+up [> Floats | Floats ] -> vertical [> Floats | > Floats]
+down [> Floats | DirWallUp ] -> [ Floats | DirWallUp ]
+up [> Floats | DirWallDown ] -> [ Floats | DirWallDown ]
+left [> Floats | DirWallRight ] -> [ Floats | DirWallRight ]
+right [> Floats | DirWallLeft ] -> [ Floats | DirWallLeft ]
+
+
+
+==============
+WINCONDITIONS
+==============
+
+All Target on Crate     
+
+=======     
+LEVELS
+=======
+Message Level 1 - Push a crate onto the yellow plus to complete a level!
+
+#################|
+#...............I|
+#P.*.............|
+######...........|
+#................|
+#...######.......|
+X............O...|
+#................|
+#################|
+
+
+Message Level 2 - Use the up and down arrow keys to remote control the wave machine! 
+#################|
+#I...............|
+#P...............|
+###..............|
+#................|
+_...............O|
++....###*........|
+_................|
+#################|
+
+
+Message Level 3 - With good timing, you can push crates while you and it are at a wave's peak or valley.
+#################|
+#I..#..*.P.......|
+#...#.#####......|
+#...#............|
+#................|
+_..####.........O|
++..####.......###|
+_.............#..|
+#################|
+
+
+Message Level 4: Cue Roundabout
+#################|
+#I.....#.........|
+#.....P}..O*.....|
+_....####n###u#..|
+#.#n*###..##.....|
++...###..........|
+#................|
+_................|
+#################|
+
+Message Level 5: Give Me a Lift
+#################|
+#I...............|
+#..O.............|
+_.........##.#.#.|
+#........*##.#.#.|
++..P.....###.#.*.|
+#....#######.#.*.|
+_.....*......#.*.|
+#################|
+
+Message Level 6: Stop Motion
+#################|
+#I...............|
+#................|
+#.O..u.u......*.P|
+_####ü#ü#.#.#####|
++....*.*#n.n#....|
+_........*.*.....|
+#................|
+#################|
+
+Message Level 7: Build Bridges, Not Walls
+#################|
+#I...............|
+#................|
+##.......P.u.....|
+_##uu*#####n#.*..|
++#..}u#....n..**.|
+_mnnnn*.#..*.....|
+#................|
+#################|
+
+Message Congratulations! You've managed to escape the dungeon!
+
+(
+#################|
+#I...............|
+#................|
+#................|
+#................|
+#................|
+#................|
+#................|
+#################|
+)
+

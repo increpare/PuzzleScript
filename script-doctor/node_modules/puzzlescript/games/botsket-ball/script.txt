@@ -1,0 +1,542 @@
+title Botsket Ball
+
+again_interval 0.05
+========
+OBJECTS
+========
+
+background
+lightgrey
+
+player
+white
+00.00
+0...0
+.....
+0...0
+00.00
+
+
+play
+lightgreen
+..0..
+..00.
+..000
+..00.
+..0..
+
+playu
+darkgreen lightgreen
+11.11
+1.0.1
+.0.0.
+1...1
+11.11
+
+playl
+darkgreen lightgreen
+11.11
+1.0.1
+.0...
+1.0.1
+11.11
+
+playd
+darkgreen lightgreen
+11.11
+1...1
+.0.0.
+1.0.1
+11.11
+
+playr
+darkgreen lightgreen
+11.11
+1.0.1
+...0.
+1.0.1
+11.11
+
+abot
+grey yellow
+11011
+10001
+00000
+10001
+11011
+
+uper
+grey yellow
+.000.
+00100
+01010
+00000
+.000.
+
+downer
+grey yellow
+.000.
+00000
+01010
+00100
+.000.
+
+lefter
+grey yellow
+.000.
+00100
+01000
+00100
+.000.
+
+righter
+grey yellow
+.000.
+00100
+00010
+00100
+.000.
+
+wall
+darkgrey
+
+box
+brown darkbrown
+.111.
+10001
+10001
+10001
+.111.
+
+ball
+orange black
+.101.
+00100
+11111
+00100
+.101.
+
+net
+brown
+.000.
+0...0
+0...0
+0...0
+.000.
+
+cant
+transparent
+
+movin
+lightgrey
+00.00
+0...0
+.....
+0...0
+00.00
+
+connectl
+brown darkbrown
+1....
+0....
+0....
+0....
+1....
+
+connectr
+browndarkbrown
+....1
+....0
+....0
+....0
+....1
+connectu
+brown darkbrown
+10001
+.....
+.....
+.....
+.....
+
+connectd
+brown darkbrown
+.....
+.....
+.....
+.....
+10001
+
+drawing
+lightbrown
+00.00
+0...0
+.....
+0...0
+00.00
+
+destroy
+transparent
+
+hole
+black
+
+wont
+transparent
+
+fail
+darkbrown yellow
+.010.
+00100
+00100
+00000
+.010.
+
+fell
+darkbrown black
+10001
+00000
+00000
+00000
+10001
+
+fellu
+darkbrown
+0...0
+.....
+.....
+.....
+.....
+
+felll
+darkbrown
+0....
+.....
+.....
+.....
+0....
+
+felld
+darkbrown
+.....
+.....
+.....
+.....
+0...0
+
+fellr
+darkbrown
+....0
+.....
+.....
+.....
+....0
+St
+grey
+.000.
+.0...
+.00..
+.0...
+.0...
+
+ft
+grey
+..00.
+.0...
+..0..
+...0.
+.00..
+
+track
+grey
+.....
+.....
+00000
+.....
+.....
+
+dial
+black
+.....
+..0..
+..0..
+..0..
+.....
+
+marker
+transparent
+=======
+LEGEND
+=======
+
+. = Background
+O = Player
+p = play and wall
+x = wall
+h = hole
+playing = playl or playr or playd or playu
+b = ball
+n = net
+bot = uper or downer or lefter or righter
+movable = ball or box or bot
+connect = connectu or connectd or connectl or connectr
+i = hole and player
+s = st and wall
+f = ft and wall
+t = track and wall
+d = track and dial and wall
+=======
+SOUNDS
+=======
+
+SFX0 42784502
+SFX1 62665907
+SFX2 10733904
+SFX3 97500904
+SFX4 12102703
+SFX5 15668904
+SFX6 81418106
+SFX7 68221707
+SFX8 27212708
+================
+COLLISIONLAYERS
+================
+
+Background
+net
+fell
+fellu
+felld
+fellr
+felll
+hole
+wall, uper, downer, lefter, righter, box, ball,
+play, st, track, ft
+dial,
+marker
+
+connectu
+connectl
+connectd
+connectr
+Player,
+movin
+playing
+abot
+cant
+wont
+destroy
+fail
+drawing
+======
+RULES
+======
+
+[moving player movin dial] -> [moving player moving movin moving dial]
+[> movin | no track] -> [|] SFX4
+[> dial | no track] -> [dial | ]
+
+[marker] -> [left marker]
+
+[wall] -> [wall cant]
+[drawing no player] -> []
+
+[connectu] -> [up connectu]
+[connectl] -> [left connectl]
+[connectr] -> [right connectr]
+[connectd] -> [down connectd]
+
+late up [drawing connectu | player] -> [connectu | drawing player]
+late down [drawing connectd | player] -> [connectd | drawing player]
+late left [drawing connectl | player] -> [connectl | drawing player]
+late right [drawing connectr | player] -> [connectr | drawing player]
+
+late up [drawing | player no wall no bot no box no ball no net no hole] -> [connectu |drawing  player connectd box]
+late down [drawing | player no wall no bot no box no ball no net no hole] -> [ connectd |drawing  player connectu box]
+late left [drawing | player no wall no bot no box no ball no net no hole] -> [ connectl |drawing  player connectr box]
+late right [drawing | player no wall no bot no box no ball no net no hole] -> [ connectr |drawing  player connectl box]
+
+[hole bot] -> [hole fail] SFX3
+[hole ball] -> [hole fail] SFX3
+[fail][playing player] -> [fail][play]
+
+late [ball net] -> SFX8
+
+late [drawing no player] -> [] SFX4
+
+[box no hole] -> [box wont]
+[wont | < connect] -> [wont | wont < connect]
+
+[box no wont hole] -> [fell] SFX2
+[connectu no box] -> [fellu]
+[connectr no box] -> [fellr]
+[connectl no box] -> [felll]
+[connectd no box] -> [felld]
+
+down [playd][movable | cant] -> [playd][cant movable | cant]
++ left [playl][movable | cant] -> [playl][cant movable | cant]
++ up [playu][movable | cant] -> [playu][cant movable | cant]
++ right [playr][movable | cant] -> [playr][cant movable | cant]
++ [cant | < connect] -> [cant | cant < connect]
+
+
+
+[playd ][marker dial][downer no cant] -> [playd ][marker dial][down downer]  SFX7
+[playl ][marker dial][lefter no cant] -> [playl][marker dial][ left lefter] SFX7
+[playr ][marker dial][righter no cant] -> [playr ][marker dial][right righter] SFX7
+[playu ][marker dial][uper no cant] -> [playu ][marker dial][up uper] SFX7
+
+[playing][> movable | movable ] -> [playing][> movable | > movable]
++ [moving movable | < connect movable] -> [moving movable | < connect moving movable]
+
+[action player no movin dial] -> [player movin dial]  SFX6
+[action player movin] -> [ player] SFX4
+[action player drawing] -> [player] SFX4
+[action player box] -> [player destroy box] SFX5
+[action player no hole no wall no box no play no bot no ball no net no abot] -> [player abot] SFX6
+[action player abot] -> [player box drawing] SFX6
+[action player bot] -> [player] SFX5
+
+[abot left player] -> [lefter left player] SFX4
+[abot right player] -> [righter right player] SFX4
+[abot up player] -> [uper up player] SFX4
+[abot down player] -> [downer down player] SFX4
+
+[destroy | < connect] -> [destroy | < connect destroy]
+
+[destroy box] -> [destroy]
+[destroy connect] -> [destroy]
+[destroy] -> []
+
+[action player play][dial] -> [action player playl][dial marker] SFX0
+
+[moving connect] -> [stationary connect]
+[connect moving movable] -> [moving connect moving movable]
+[cant] -> []
+[wont] -> []
+
+
+
+[playu] -> again
+[playl] -> again
+[playr] -> again
+[playd] -> again
+
+
+late [marker st][dial][playl] -> [st][marker dial][playu] again
+late [marker st][dial][playd] -> [st][marker dial][playl] again
+late [marker st][dial][playr] -> [st][marker dial][playd] again
+late [marker st][dial][playu] -> [st][marker dial][playr] again
+
+
+==============
+WINCONDITIONS
+==============
+
+all ball on net
+no fail
+
+=======
+LEVELS
+=======
+
+
+
+
+
+message MISSION: GET BALL TO NET.
+message PRESS ACTION ONCE AND ONE DIRECTION TO DRAW A BOT THAT WILL MOVE IN THAT DIRECTION.
+message PRESS ACTION AT THE GREEN PLAY BUTTON TO START THE GAME!
+
+
+xxxxxxxxxxx
+x.........x
+x.........x
+x.........x
+x.........x
+x.b.....n.x
+x.........x
+x.........x
+x....o....x
+x.........x
+xpxsttdttfx
+
+
+message PRESS ACTION TWICE AND AND ANY NUMBER OF DIRECTIONS TO DRAW A BOX.
+message PRESS ACTION ON ANY ALREADY DRAWN ITEM TO DELETE IT
+message PRESS ACTION AND LEFT OR RIGHT ON THE SLIDER ON THE BOTTOM TO CHANGE THE SIMULATION SPEED
+
+xxxxxxxxxxx
+x.........x
+x.........x
+x.........x
+x...b.....x
+x....o....x
+x.....n...x
+x.........x
+x.........x
+x.........x
+xpxsttdttfx
+
+message BOXES CAN BE USED TO BRIDGE GAPS.
+message PLEASE DO NOT DROP BOTS OR THE BALL INTO THE GAP. THEY ARE HARD TO RETRIEVE.
+
+xxxxxxxxxxx
+x....h....x
+x....h....x
+x....h....x
+x....h....x
+x.b..h..n.x
+x....h....x
+x....h....x
+x....i....x
+x....h....x
+xpxsttdttfx
+
+xxxxxxxxxxx
+x.........x
+x.b.....o.x
+x.........x
+xhhhhhh...x
+xhhhhhh...x
+xhhhhhh...x
+xhhhhhh...x
+xhhhhhh.n.x
+xhhhhhh...x
+xpxsttdttfx
+
+
+xxxxxxxxxxx
+x....h....x
+x....h....x
+x....h....x
+x....h....x
+x...bin...x
+x....h....x
+x....h....x
+x....h....x
+x....h....x
+xpxsttdttfx
+
+xxxxxxxxxxx
+xhhhhhhhhhx
+x....b....x
+x.........x
+x.........x
+x....o....x
+x.........x
+x.........x
+x....n....x
+x.........x
+xpxsttdttfx
+
+xxxxxxxxxxx
+x...hhh...x
+x...hhh...x
+x...hhh...x
+x...hhh...x
+x.b.hih.n.x
+x...hhh...x
+x...hhh...x
+x...hhh...x
+x...hhh...x
+xpxsttdttfx

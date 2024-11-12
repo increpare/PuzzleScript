@@ -1,0 +1,266 @@
+title Stairs
+verbose_logging
+
+========
+OBJECTS
+========
+Background
+darkbrown black
+11111
+10001
+10001
+10001
+11111
+
+Foreground
+black
+
+Wall
+darkgreen
+
+Stair_1
+darkbrown red
+00000
+00100
+01010
+00100
+00000
+
+Stair_2
+red orange
+00000
+00100
+01010
+00100
+00000
+
+Stair_3
+orange yellow
+00000
+00100
+01010
+00100
+00000
+
+Stair_4
+yellow green
+00000
+00100
+01010
+00100
+00000
+
+Stair_5
+green blue
+00000
+00100
+01010
+00100
+00000
+
+Stair_6
+blue purple
+00000
+00100
+01010
+00100
+00000
+
+Player
+lightblue
+00.00
+0...0
+.....
+0...0
+00.00
+
+Goal
+white
+.....
+..0..
+.000.
+..0..
+.....
+
+=======
+LEGEND
+=======
+. = Background
+, = Foreground
+
+# = Wall
+P = Player
+
+1 = Stair_1
+2 = Stair_2
+3 = Stair_3
+4 = Stair_4
+5 = Stair_5
+6 = Stair_6
+
+A = Stair_1 and Goal
+B = Stair_2 and Goal
+C = Stair_3 and Goal
+D = Stair_4 and Goal
+E = Stair_5 and Goal
+F = Stair_6 and Goal
+
+X = Goal
+
+=======
+SOUNDS
+=======
+
+sfx0 15810707
+endlevel 26533306
+
+
+================
+COLLISIONLAYERS
+================
+Background
+
+
+Stair_1
+Stair_2
+Stair_3
+Stair_4
+Stair_5
+Stair_6
+Goal
+Wall, Player
+Foreground
+
+
+======
+RULES
+======
+
+(* The Stairs have Stairs beneath them *)
+([Wall] -> [Wall Stair_6])
+[Stair_6] -> [Stair_6 Stair_5]
+[Stair_5] -> [Stair_5 Stair_4]
+[Stair_4] -> [Stair_4 Stair_3]
+[Stair_3] -> [Stair_3 Stair_2]
+[Stair_2] -> [Stair_2 Stair_1]
+
+
+(* Player climbs Stairs at most one layer higher *)
+
+[> Player | Stair_1 no Stair_2] -> [ | Stair_1 Player no Stair_2]
+[Stair_1 > Player | Stair_2 no Stair_3] -> [Stair_1 | Stair_2 Player no Stair_3]
+[Stair_2 > Player | Stair_3 no Stair_4] -> [Stair_2 | Stair_3 Player no Stair_4]
+[Stair_3 > Player | Stair_4 no Stair_5] -> [Stair_3 | Stair_4 Player no Stair_5]
+[Stair_4 > Player | Stair_5 no Stair_6] -> [Stair_4 | Stair_5 Player no Stair_6]
+[Stair_5 > Player | Stair_6 no Wall] -> [Stair_5 | Stair_6 Player no Wall]
+
+(* If Player doesn't climb, push the stair that is one layer higher *)
+
+[> Player no Stair_1| Stair_1] -> [> Player no Stair_1| > Stair_1] sfx0
+[Stair_1 no Stair_2 > Player | Stair_2] -> [Stair_1 no Stair_2 > Player | > Stair_2] sfx0
+[Stair_2 no Stair_3 > Player | Stair_3] -> [Stair_2 no Stair_3 > Player | > Stair_3] sfx0
+[Stair_3 no Stair_4 > Player | Stair_4] -> [Stair_3 no Stair_4 > Player | > Stair_4] sfx0
+[Stair_4 no Stair_5 > Player | Stair_5] -> [Stair_4 no Stair_5 > Player | > Stair_5] sfx0
+[Stair_5 no Stair_6 > Player | Stair_6] -> [Stair_5 no Stair_6 > Player | > Stair_6] sfx0
+
+(* Stairs Block Player *)
+
+[> Player | Stair_1] -> [Player | Stair_1]
+[> Player | Stair_2] -> [Player | Stair_2]
+[> Player | Stair_3] -> [Player | Stair_3]
+[> Player | Stair_4] -> [Player | Stair_4]
+[> Player | Stair_5] -> [Player | Stair_5]
+[> Player | Stair_6] -> [Player | Stair_6]
+
+==============
+WINCONDITIONS
+==============
+
+Some Goal on Player
+
+=======
+LEVELS
+=======
+
+Message Level 1
+
+#,#######,#
+#,#.....#,#
+#,#.....#,#
+#,#..A..#,#
+#,#P....#,#
+#1#.....#1#
+###########
+
+Message Level 2
+
+#,#######,#
+#,#.....#,#
+#,#.....#,#
+#,#..B..#,#
+#2#P....#2#
+#1#.....#1#
+###########
+
+Message Level 3
+
+#,#######,#
+#,#.....#,#
+#,#.....#,#
+#3#..C..#3#
+#2#P....#2#
+#1#.....#1#
+###########
+
+Message Level 4
+
+#,#######,#
+#,#.....#,#
+#4#.....#4#
+#3#..D..#3#
+#2#P....#2#
+#1#.....#1#
+###########
+
+Message Level 5
+
+#,#######,#
+#5#.....#5#
+#4#.....#4#
+#3#..E..#3#
+#2#P....#2#
+#1#.....#1#
+###########
+
+Message Level 6
+
+#6#######6#
+#5#.....#5#
+#4#.....#4#
+#3#..F..#3#
+#2#P....#2#
+#1#.....#1#
+###########
+
+Message Good
+
+(* #6#######F#
+#5#.....#5#
+#4#.....#4#
+#3#.....#3#
+#2#P....#2#
+#1#......1#
+###########
+
+Message Fin
+
+
+########
+#F65433#
+#665433#
+#....33#
+#.P1233#
+#..1233#
+########
+
+*)

@@ -1,0 +1,931 @@
+title Two and a Half
+author scorched
+homepage igorsgames.itch.io
+
+color_palette 2
+(debug)
+background_color black
+text_color lightgrey
+key_repeat_interval 0.3
+
+again_interval 0.1
+
+(require_player_movement)
+(run_rules_on_level_start)
+
+noaction
+
+========
+OBJECTS
+========
+
+HansDown
+#f89c79 #7d6440 #4a2f31
+..0..
+.111.
+11111
+.111.
+.2.1.
+
+HansRight
+#f89c79 #7d6440
+..0..
+..1..
+..11.
+..1..
+..1..
+
+HansLeft
+#f89c79 #7d6440
+..0..
+..1..
+.11..
+..1..
+..1..
+
+HansUp
+#4a2f31 #7d6440
+..0..
+.111.
+11111
+.111.
+.1.0.
+
+HansChildDown
+#f89c79 #f8cdcb #7c73b1 #7d6440 #4a2f31
+..01.
+.232.
+33233
+.333.
+.4.3.
+
+HansChildRight
+#f5da16 #f89c79 #7c73b1 #7d6440
+.01..
+.22..
+.233.
+.23..
+..3..
+
+HansChildLeft
+#f89c79 #f5da16 #7c73b1 #7d6440
+..01.
+..22.
+.332.
+..32.
+..3..
+
+HansChildUp
+#f5da16 #4a2f31 #7c73b1 #7d6440
+.01..
+.223.
+32223
+.232.
+.3.1.
+
+MaryLeft
+#ef9f10 #46c2e3
+..0..
+..10.
+.110.
+..1..
+.111.
+
+MaryRight
+#ef9f10 #46c2e3
+..0..
+.01..
+.011.
+..1..
+.111.
+
+PaulDown
+#f89c79 #236e33
+..0..
+.111.
+11111
+.111.
+.1.1.
+
+PaulRight
+#f89c79 #236e33
+..0..
+..1..
+..11.
+..1..
+..1..
+
+PaulLeft
+#f89c79 #236e33
+..0..
+..1..
+.11..
+..1..
+..1..
+
+Pauldead
+#f89c79 #236e33
+.....
+.....
+.....
+.111.
+11110
+
+PaulUp
+#f5da16 #236e33
+..0..
+.111.
+11111
+.111.
+.1.1.
+
+ground
+darkgrey
+
+grass
+GREEN
+
+(bg2
+darkgreen)
+
+Cliff
+brown
+
+WallTown
+#8F8F8F
+00000
+00000
+00000
+00000
+00000
+
+(00000
+01110
+01110
+01110
+00000)
+
+Wood
+#644d3d #4a2f31
+..00.
+.0011
+0111.
+10.0.
+.000.
+
+(..00.
+.0011
+0111.
+10.0.
+.000.)
+
+Fire
+Orange Yellow
+.0...
+..1..
+0.0..
+.100.
+.00..
+
+(Fire2
+Orange Yellow
+...1.
+.10..
+001.0
+.000.
+.00..)
+
+FireTemp
+Orange Yellow
+...1.
+.10..
+001.0
+.000.
+.00..
+
+WeakWall
+#8F8F8F
+.00..
+.000.
+00000
+0000.
+.....
+
+(PlayerAlone
+Blue Yellow
+01000
+01011
+01001
+01111
+00000
+
+PlayerWithChild
+Pink Yellow
+01000
+01011
+01001
+01111
+00000)
+
+DeadPlayer
+#7d6440 #4a2f31
+.....
+.....
+.....
+.000.
+00001
+
+(Bullet
+Red)
+
+Exit
+#f0f0f0 #8f8f8f
+.....
+.....
+..0..
+.....
+.....
+
+explosive
+#a13715 #ef9f10
+.....
+.000.
+.111.
+.000.
+.111.
+
+Boom0
+#f5da16
+.00..
+0.000
+0.000
+0000.
+.0.0.
+
+Boom1
+#f5da16
+.000.
+00000
+00000
+00000
+.000.
+
+
+Boom2
+#f5da16
+.000.
+00000
+00000
+00000
+.000.
+
+Boom3
+#f5da16
+.000.
+00000
+00000
+00000
+.000.
+
+Boom4
+#f5da16
+.000.
+00000
+00000
+00000
+.000.
+
+Boom5
+#f5da16
+.000.
+00000
+00000
+00000
+.000.
+
+Child
+#f8cdcb #7c73b1
+.....
+..0..
+.111.
+..1..
+.1.1.
+
+ChildDead
+#7c73b1 #f5da16
+.....
+.....
+.....
+..0..
+0001.
+
+boomsmoke
+black transparent
+00001
+10011
+01100
+10000
+11111
+
+Smoke1
+black transparent
+00001
+10011
+01100
+10000
+11111
+
+(timer1
+transparent
+
+timer2
+transparent
+
+timer3
+transparent)
+
+
+target1
+Red transparent
+11011
+11011
+11011
+11011
+11011
+
+target2
+Red transparent
+10101
+10101
+10101
+10101
+10101
+
+target3
+Red transparent
+01010
+01010
+01010
+01010
+01010
+
+indicatorEmpty
+Red transparent black
+11111
+22222
+22222
+22222
+11111
+
+indicatorEnd
+transparent
+
+indicatorBoom1
+Red transparent black
+11111
+22022
+22022
+22022
+11111
+
+indicatorBoom2
+Red transparent black
+11111
+20202
+20202
+20202
+11111
+
+indicatorBoom3
+Red transparent black
+11111
+02020
+02020
+02020
+11111
+
+indicatorArrow
+Red transparent black
+11110
+22202
+22000
+22202
+11110
+
+indicatorArrowSecond
+Red transparent black
+11011
+20222
+00022
+20222
+11011
+
+indicatorArrowTemp
+transparent
+
+cutscene
+transparent
+
+nearriver
+transparent
+
+river
+blue
+0000.
+00000
+00000
+00000
+.0000
+
+blood1
+red
+.....
+.0...
+.....
+..0..
+.....
+
+blood2
+red
+.0...
+..0..
+..00.
+..0..
+.....
+
+shootzone1
+transparent
+
+shootzone2
+transparent
+
+shootzone3
+transparent
+
+bosslevel
+transparent
+
+(paul
+red)
+
+=======
+LEGEND
+=======
+
+Background = ground or grass
+
+PlayerAlone = HansUp or HansDown or HansLeft or HansRight
+PlayerWithChild = HansChildUp or HansChildDown or HansChildLeft or HansChildRight
+
+Player = PlayerAlone or PlayerWithChild
+
+Mary = MaryLeft or MaryRight
+Paul = PaulUp or PaulDown or PaulLeft or PaulRight
+
+wall = walltown or cliff
+
+(fire = fire2 or fire2)
+
+, = grass
+. = ground
+o = Walltown
+u = Cliff
+(p = PlayerAlone)
+p = HansDown
+_ = wood
+: = weakwall
+
+(@ = Crate and Target)
+(o = Target)
+E = Exit
+(1 = healthstart)
+1 = target1 and walltown
+2 = target2 and walltown
+3 = target3 and walltown
+
+9 = blood1
+0 = blood2
+
+m = MaryLeft
+
+c = Child
+B = explosive (and wood)
+
+` = indicatorEmpty and walltown
+! = indicatorBoom1 and walltown and indicatorEmpty
+@ = indicatorBoom2 and walltown and indicatorEmpty
+# = indicatorBoom3 and walltown and indicatorEmpty
+A = indicatorArrowSecond and walltown
+$ = indicatorEmpty and indicatorEnd and walltown
+(> = indicatorArrowTemp)
+
+target = target1 or target2 or target3
+(timer = timer1 or timer2 or timer3)
+boom = boom1 or boom2 or boom3 or boom4 or boom5 or boom0
+smoke = smoke1
+
+(Danger = Fire or Boom or Smoke)
+Danger = Boom or Smoke
+
+* = Boom5
+s = cutscene
+r = river
+n = nearriver
+
+l = PaulLeft
+
+shootzone = shootzone1 or shootzone2 or shootzone3
+
+z = fire and wood
+
+(z = shootzone)
+q = bosslevel
+
+=======
+SOUNDS
+=======
+
+(Crate Move 412312)
+(Boom Create 641667)
+(Boom Create 87044702)
+
+Boom Create 34704108
+Fire Create 4852702
+
+explosive Move 86057307
+
+EndLevel 73779909
+
+player CantMove 57197107
+
+(playerwithchild create 61697303)
+
+(weakwall destroy 96214902)
+
+(showmessage )
+
+(menucursor move 86057307)
+CloseMessage 42276907
+
+(bomb)
+sfx0 49071502
+
+(player dies)
+sfx1 50875704
+
+(child dies)
+sfx2 72098504
+
+(hint)
+sfx3 71102906
+
+(weakwall destroy)
+sfx4 96214902
+
+(fire)
+(sfx5 4852702)
+
+(child rescue)
+sfx6 61697303 (84235103)
+
+(cutscene boom)
+sfx7 34704108
+
+(gun shot)
+sfx8 39147102
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Exit, indicatorEnd, river, wood, blood1, blood2
+(Bullet)
+Player, Wall, DeadPlayer, explosive, Child, ChildDead, Weakwall, Paul, Mary, pauldead
+Fire, FireTemp
+smoke, boomsmoke
+target
+Boom
+indicatorEmpty, indicatorArrow, indicatorArrowTemp, indicatorArrowSecond
+indicatorBoom1, indicatorBoom2, indicatorBoom3, cutscene, nearriver, bosslevel
+shootzone
+
+======
+RULES
+======
+
+startLoop
+[boom2 | no boom ] -> [boom2 | boom1]
+[boom3 | no boom ] -> [boom3 | boom2]
+[boom4 | no boom ] -> [boom4 | boom3]
+[boom5 | no boom ] -> [boom5 | boom4]
+endLoop
+
+[boomsmoke] -> []
+[boom0] -> [boomsmoke]
+[boom] -> [boom0]
+
+(late [boom5] -> [Smoke1])
+
+[boom wood] -> [boom fire wood]
+[boom weakwall] -> [boom no weakwall] sfx4
+
+[fireTemp] -> [fire]
+[fire | wood no fire] -> [fire | wood fireTemp]
+
+[smoke | no boom no fire] -> [ | ]
+[Fire no boom | no Fire] -> [Fire | Smoke1]
+
+
+([fire] -> [fire] sfx5)
+
+
+late [player Danger] -> [deadplayer Danger] sfx1
+late [child Danger] -> [childdead Danger] sfx2
+([> playerAlone | child] -> [> playerWithChild | ])
+[> playerAlone | child] -> [> HansChildDown | ] sfx6
+
+
+[explosive boom] -> [boom3]
+[explosive | fire] -> [boom3 | fire]
+
+
+[indicatorBoom1] [boom target1] -> [indicatorEmpty] [boom]
+[indicatorBoom2] [boom target2] -> [indicatorEmpty] [boom]
+[indicatorBoom3] [boom target3] -> [indicatorEmpty] [boom]
+
+
+late [indicatorArrow indicatorBoom1] [target1] -> [indicatorArrow] [boom4] sfx0
+late [indicatorArrow indicatorBoom2] [target2] -> [indicatorArrow] [boom4] sfx0
+late [indicatorArrow indicatorBoom3] [target3] -> [indicatorArrow] [boom4] sfx0
+
+left [indicatorArrowSecond | indicatorEmpty] -> [indicatorEmpty | indicatorArrowTemp]
+[indicatorArrowSecond indicatorEnd] -> [indicatorEmpty]
+[indicatorArrow] -> [indicatorArrowSecond]
+[indicatorArrowTemp] -> [indicatorArrow]
+
+
+[ >  Player | explosive ] -> [  >  Player | > explosive ]
+
+([> PlayerWithChild | Exit] [Child] -> [PlayerAlone | Exit] [Child] sfx6) (cancel)
+[> PlayerWithChild | Exit] [Child] -> [HansDown | Exit] [Child] sfx6
+
+[> PlayerWithChild | Child] -> sfx3 message I can't carry two kids at once for my leg hurts! I should bring one to safety first.
+late [Player Exit] [ChildDead] -> sfx3 message You failed to keep the child alive. Please restart the level and try again.
+late [Player Exit] [Child] -> sfx3 message Hans: I cannot leave the child here, I must rescue every child I find.
+
+([cutscene] -> [cutscene] again)
+[cutscene] [playerwithchild] [Mary no nearriver | ... | river] -> [cutscene] [playerwithchild] [> Mary | ... | river]
+[cutscene] [smoke] -> win
+late [cutscene] [player nearriver] -> win
+
+left [> PlayerAlone] -> [> HansLeft]
+right [> PlayerAlone] -> [> HansRight]
+up [> PlayerAlone] -> [> HansUp]
+down [> PlayerAlone] -> [> HansDown]
+
+left [> PlayerWithChild] -> [> HansChildLeft]
+right [> PlayerWithChild] -> [> HansChildRight]
+up [> PlayerWithChild] -> [> HansChildUp]
+down [> PlayerWithChild] -> [> HansChildDown]
+
+left [> Mary] -> [> MaryLeft]
+right [> Mary] -> [> MaryRight]
+
+[Paul Danger] [bosslevel] -> [stationary pauldead danger] []
+
+[pauldead][player] -> win
+
+[bosslevel] [paul | no shootzone] -> [bosslevel] [paul | shootzone1]
+[bosslevel] [shootzone1 | no shootzone] -> [bosslevel] [shootzone1 | shootzone2]
+[bosslevel] [shootzone1 danger | ... | paul] -> [bosslevel] [shootzone1 danger | ... | > paul]
+
+([pauldead][shootzone] -> [pauldead][])
+
+[bosslevel] [shootzone2 | no shootzone] -> [bosslevel] [shootzone2 | shootzone3]
+late [bosslevel] [shootzone player] -> [bosslevel] [deadplayer] sfx8
+late [shootzone] -> []
+
+([fire1] -> [fire2] again)
+
+==============
+WINCONDITIONS
+==============
+
+Some Player on Exit
+No Child
+No ChildDead
+
+=======
+LEVELS
+=======
+
+MESSAGE Mary: Could you carry Half to the river, Hans?
+MESSAGE Hans: Sure, sister. Come on!
+
+o,,,,o,,,,,,,,nr,,
+o,p,,c........nr,,
+o,,,,o,,,m,,,,nr,,
+oooooo,,,,,,,,nr,,
+,,,,,,,,,,,,nnrr,,
+,,,,,,,,,,,nrrrl,,
+,s,,,,,,,,nrr,,,,,
+
+MESSAGE Hans: Do you know what is at the other side of the river, Half?
+MESSAGE Half: No, what is it?
+MESSAGE Hans: It's Fircone town, they are our allies, and actually we owe them this calm morning!
+MESSAGE Half: Too boring, better tell me how you lost your leg, uncle Hans!
+MESSAGE Hans: Maybe next time... Hey, Paul!
+MESSAGE Paul: Hello, neighbour!
+
+(sfx7)
+
+................
+s........_......
+.p....._........
+.......BB.B.....
+....._B.*B......
+.......B.._.....
+................
+................
+................
+
+MESSAGE 6:37 am
+
+MESSAGE Hans: (wakes up) Holy crap!
+MESSAGE Hans: It's not a dream! The ammunition depot just blew up!
+MESSAGE Hans: This can mean only one thing - they betrayed us...
+
+MESSAGE The stripe above the level shows the timing of bomb drops
+
+(level 1)
+$`````````!``````A
+oooooooooooooooooo
+o....o...........o
+o....o..._......0E
+o....o_._._....9.o
+o......_.1._.....o
+o.._....___......o
+p..._____.oo.....o
+o.........o......o
+oooooooooooooooooo
+
+MESSAGE 6:45 am
+
+MESSAGE Hans: This is really bad, I must hurry to make sure Half and Mary are in safety!
+
+(level 2)
+$```````#`@```!``A
+oooooooooooooooooo
+o................o
+p........._......o
+oo1o..ooo.2._.0..o
+oooo._..._.......o
+o..._...9.__.....o
+o..._.3ooooooooooo
+o0....__...__....o
+o.9...._____.....o
+oooooooooooooooEoo
+
+MESSAGE 7:02 am
+
+MESSAGE Hans: No doubt, all drops are carefully targeted.
+MESSAGE Hans: But what kind of a scum put all those flare marks?!
+
+(level 3)
+$!```````````````````A
+ooooooooooopoooooooooo
+o..............oc....o
+o..............o.o...o
+o........9.ooooo.o...o
+o....oo.0..o...B.o...o
+o....o1__._....B.o...o
+o....oo.___o...B.o...o
+o.......0__ooooo.....o
+o.......9......o.....o
+o..............ooooooo
+o....................o
+o....................o
+ooooooooEooooooooooooo
+
+MESSAGE 7:20 am
+
+MESSAGE Hans: These fuel barrels are the same ones we provided to Fircone.
+MESSAGE Hans: For their planes.
+
+(level 4)
+$@```````!```````A
+ooooooooooooopoooo
+o.....o..o.......o
+o..c..o.2o.....9.o
+o.....oooo.......o
+o......__..o.....o
+o......._o.......o
+o......oB_.0.0...o
+o.....9___.9.....o
+o........_9......E
+o....Boooooooo...o
+oB.B.BoB1........o
+oooooooooooooooooo
+
+MESSAGE 7:41 am
+
+MESSAGE Hans: Most streets are obstructed, but I will find a way out.
+
+(level 5)
+$@``````````!`````A
+ooooooooooooooooooo
+o........o.......9o
+o.....9..o........o
+o........oB._.....o
+o......1.o..0_2...o
+o........oB9.._...o
+o........:.___....o
+p...B....o_oooo:ooo
+o........o.o__B...E
+ooooooooooooooooooo
+
+MESSAGE 7:59 am
+
+MESSAGE Hans: I hate it when I can't stop bastards on planes to bomb everything around!
+
+(level 6)
+$#````@`````````!```A
+ooooooooooooooooEoooo
+o....o...o........__o
+p....:...oooo.o..__.o
+o..1.o...o0__.o.__..o
+oooooo...o:oooo9_B..o
+o......2.o...3o_._ooo
+o.....0.......o____.o
+o..0.0.._B.___ooooo.o
+o.09....______o..9..o
+o....9...__..9..0...o
+ooooooooooooooooooooo
+
+MESSAGE 8:28 am
+
+MESSAGE Hans: Outskirts. I'm almost there.
+
+(level 7)
+$#`````@``!`````````A
+ooooooooooooooooooooo
+ooo...__..._oo..ooooo
+oc___1._..__Bo.9.oooo
+o...........2......co
+o..9.0..B..0..______o
+o...9..._______90...o
+o..3_____...........o
+o...................o
+o...................o
+ooooopooooooEoooooooo
+
+MESSAGE 8:53 am
+
+MESSAGE Hans: The cliff. I see a kid. This should be Half...
+
+(level 8)
+$#```@```````!``````A
+ooopooooooooooooooooo
+u,,,,,,,____1,,,,,,,u
+u,,,,,,,coB,,,,,,,,,u
+u,,,,,,,,,,,,,,,2,,,u
+u,,,,,,,,,,,,,___,,,u
+u,,,,,,,,______,,_,,u
+u,,ooooo___,_,,,,_B,u
+u,,o,c,,,___,,,,,,,,u
+u,,,_____,,,,,,3,,__u
+uu,,,,,,,_____Bo,___u
+uuuuuuuuuuuuuuuuEuuuu
+
+MESSAGE Half: You're the hero, uncle Hans!
+MESSAGE Hans: Where is your mom?
+MESSAGE Half: That over-the-river man... He punched her... and forced to go with him!..
+MESSAGE Half: But I ran away...
+MESSAGE Hans: Son of a!..
+MESSAGE Hans: Stay here, Half! I'll go talk to Paul.
+
+MESSAGE 9:00 am
+
+MESSAGE Hans: Hey you!
+MESSAGE Paul: Get lost or I'll shoot! You'll never understand!
+
+$!``````````````A
+q,p,,,,,,,,,,r,,,
+,ooo,,,,,,___rr,,
+,o1o,,,,___,_,rr,
+,ooo,,,,,l,,_,rr,
+,,,,,,,,,,,,_,rr,
+,,,,,___,,,__,r,,
+B,,,__,,,,,_,r,,,
+,,,_,BB,,,__,r,,,
+,,,B,,,,z,,,,r,,,
+,,z,z,,,,,z,,,r,,
+
+MESSAGE Hans: Rest in peace, my dear neighbour. You were buried right at the place you marked.
+
+MESSAGE Mary: Hans!
+MESSAGE Mary: Did you see Half?
+MESSAGE Hans: Don't worry, sister, he's safe.
+
+MESSAGE THE END

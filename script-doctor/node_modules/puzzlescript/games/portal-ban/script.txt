@@ -1,0 +1,610 @@
+title Portal-ban
+author Noah Krim
+homepage http://badoptics.co
+
+color_palette arnecolors
+text_color lightblue
+
+run_rules_on_level_start
+again_interval 0.05
+key_repeat_interval 0.2
+
+========
+OBJECTS
+========
+
+Background
+darkblue darkgreen
+00000
+10000
+00000
+00100
+00000
+
+Wall
+gray lightgray
+00000
+01110
+01010
+01110
+00000
+Wall_black
+darkgray black
+00000
+01110
+01010
+01110
+00000
+
+glass
+lightgray white
+00000
+0..10
+0.1.0
+0...0
+00000
+
+Player
+lightgray orange brown black 
+.222.
+.000.
+21112
+32123
+.3.3.
+
+both_portals ( both portals up marker )
+transparent
+
+tp_b ( teleported out of blue marker )
+transparent
+tp_o ( teleported out of orange marker )
+transparent
+
+p_b ( blue portal ranged particle )
+transparent
+p_o ( orange portal ranged particle )
+transparent
+
+b_s ( blue crosshair status )
+transparent
+o_s ( orange crosshair status )
+transparent
+
+c_m ( crate move )
+transparent
+c_t_o ( crate teleport to orange )
+transparent
+c_t_b ( crate teleport to blue )
+transparent
+
+color_swap ( color swap marker )
+transparent
+
+gate_m_v ( gate marker vertical )
+transparent
+gate_m_h ( gate marekr horizontal )
+transparent
+
+gate_prev_open ( sound effect marker for gate )
+transparent
+gate_prev_close ( sound effect marker for gate )
+transparent
+
+shot_portal ( marker to negate bad portal sound effect )
+transparent
+
+cross_b
+blue
+.....
+..0..
+.0.0.
+..0..
+.....
+
+b_m
+blue
+.....
+.....
+..0..
+.....
+.....
+
+b_u
+black blue
+10001
+.111.
+.....
+.....
+.....
+
+b_d 
+black blue
+.....
+.....
+.....
+.111.
+10001
+
+b_l
+black blue
+1....
+01...
+01...
+01...
+1....
+
+b_r
+black blue
+....1
+...10
+...10
+...10
+....1
+
+cross_o
+orange
+.....
+..0..
+.0.0.
+..0..
+.....
+
+o_m
+orange
+.....
+.....
+..0..
+.....
+.....
+
+o_u
+black orange
+10001
+.111.
+.....
+.....
+.....
+
+o_d 
+black orange
+.....
+.....
+.....
+.111.
+10001
+
+o_l
+black orange
+1....
+01...
+01...
+01...
+1....
+
+o_r
+black orange
+....1
+...10
+...10
+...10
+....1
+
+crate
+white pink
+.000.
+01010
+00000
+01010
+.000.
+
+gate_v
+gray black red
+.020.
+.101.
+.000.
+.101.
+.020.
+gate_h
+gray black red
+.....
+01010
+20002
+01010
+.....
+
+(plate_v
+pink white
+..0.1
+.0.0.
+..0..
+.0.0.
+1.0..
+
+plate_h
+pink white
+....1
+.0.0.
+0.0.0
+.0.0.
+1....)
+plate_v
+lightgray gray red black
+2.1..
+.121.
+.131.
+.121.
+..1.2
+
+plate_h
+lightgray gray red black
+....2
+.111.
+12321
+.111.
+2....
+
+exit
+black yellow
+.111.
+10001
+10001
+10001
+.111.
+
+portal_barrier_v
+lightblue
+...0.
+..0..
+.0.0.
+..0..
+.0...
+portal_barrier_h
+lightblue
+.....
+..0.0
+.0.0.
+0.0..
+.....
+
+=======
+LEGEND
+=======
+
+cross = cross_b or cross_o
+status = p_b or p_o
+tp = tp_b or tp_o
+t_s = b_s or o_s
+gate = gate_v or gate_h
+gate_marker = gate_m_v or gate_m_h
+portal_barrier = portal_barrier_v or portal_barrier_h
+obstacle = wall or wall_black or glass or gate or portal_barrier
+object = obstacle or crate
+occluder = gate or wall or wall_black or portal_barrier
+plate = plate_v or plate_h
+
+t_u = b_u or o_u
+t_d = b_d or o_d
+t_l = b_l or o_l
+t_r = b_r or o_r
+
+. = Background
+# = Wall
+% = Wall_black
+G = Glass
+P = Player and p_b
+x = cross_b
+c = crate
+b = b_u or b_d or b_l or b_r
+o = o_u or o_d or o_l or o_r
+t = b or o
+; = gate_v and gate_m_v and gate_prev_close
+- = gate_h and gate_m_h and gate_prev_close
+r = plate_v
+h = plate_h
+! = portal_barrier_v
+~ = portal_barrier_h
+e = exit
+
+=======
+SOUNDS
+=======
+
+(titlescreen 52605908)
+titlescreen 54131902
+endgame 54131902
+showmessage 61634506
+(closemessage 38370506)
+
+startlevel 58653103
+endlevel 40560708
+restart 88262103
+undo 96730907
+
+Player move 22092307
+Crate move 67381507
+(cancel 79164307)
+
+b create  50973103 ( portal shoot - blue )
+o create  29354703 ( portal shoot - orange )
+
+sfx0 81898108 ( bad portal )
+
+sfx1 42864702 ( gate open ) 
+sfx2 70261102 ( gate close )
+
+sfx3 44196708 ( enter blue-barrier )
+
+sfx4 47806708 ( teleport player ) 
+sfx5 15124502 ( teleport crate )
+
+sfx6 67381507 ( crate move - from rule )
+
+================
+COLLISIONLAYERS
+================
+
+Background
+both_portals
+tp
+p_b, p_o
+gate_marker
+shot_portal
+gate_prev_open, gate_prev_close
+Plate, Exit
+Crate ( MOVED CRATE TO IT'S OWN LAYER SO IT CAN'T DELETE THE PLAYER )
+Player, Wall, Wall_black, Glass, Gate
+portal_barrier
+b_s
+o_s
+b 
+o
+b_m, o_m
+c_m
+c_t_o, c_t_b
+color_swap
+cross_b, cross_o
+
+======
+RULES
+======
+( set both_portals status )
+[ both_portals ] -> []
+[ b ] [ o ] [ player ] -> [ b ] [ o ] [ player both_portals ]  
+
+( cancel redudnant moves )
+up    [ > player | obstacle no t_d no portal_barrier ] -> cancel
+down  [ > player | obstacle no t_u no portal_barrier ] -> cancel
+left  [ > player | obstacle no t_r no portal_barrier ] -> cancel
+right [ > player | obstacle no t_l no portal_barrier ] -> cancel
+[ > player no both_portals | obstacle t ] -> cancel
+
+
+( remove teleport status )
+[ tp ] -> []
+
+( crosshair movement )
+[ orthogonal player ] [ cross ] -> [ orthogonal player ] []
+[ > player p_b | ] -> [ > player p_b | > cross_b ]
+[ > player p_o | ] -> [ > player p_o | > cross_o ]
+
+( old portal deletion )
+[ action player | cross_b ] [ b ] -> [ action player | cross_b ] []
+[ action player | cross_b ] [ b_s ] -> [ action player | cross_b ] []
+[ action player | cross_o ] [ o ] -> [ action player | cross_o ] [] 
+[ action player | cross_o ] [ o_s ] -> [ action player | cross_o ] [] 
+
+( long range portal control - blue )
+[ action player | cross_b no occluder ] -> [ action player shot_portal | cross_b b_m ] 
+[ player | ... | b_m | no occluder ] -> [ player | ... | > b_m | no occluder ] again
+[ player | ... | b_m | occluder no wall ] -> [ player | ... | | occluder ]  sfx0
+up    [ player | ... | b_m | wall ] -> [ player color_swap | ... | b_s | b_d wall ]
+down  [ player | ... | b_m | wall ] -> [ player color_swap | ... | b_s | b_u wall ]
+left  [ player | ... | b_m | wall ] -> [ player color_swap | ... | b_s | b_r wall ]
+right [ player | ... | b_m | wall ] -> [ player color_swap | ... | b_s | b_l wall ]
+( long range portal control - orange )
+[ action player | cross_o no occluder ] -> [ action player shot_portal | cross_o o_m ] 
+[ player | ... | o_m | no occluder ] -> [ player | ... | > o_m | no occluder ] again
+[ player | ... | o_m | occluder no wall ] -> [ player | ... | | occluder ] sfx0
+up    [ player | ... | o_m | wall ] -> [ player color_swap | ... | o_s | o_d wall ]
+down  [ player | ... | o_m | wall ] -> [ player color_swap | ... | o_s | o_u wall ]
+left  [ player | ... | o_m | wall ] -> [ player color_swap | ... | o_s | o_r wall ]
+right [ player | ... | o_m | wall ] -> [ player color_swap | ... | o_s | o_l wall ]
+
+( short range portal control - blue )
+up    [ action player | cross_b wall ] -> [ action player color_swap b_s | cross_b b_d wall ] 
+down  [ action player | cross_b wall ] -> [ action player color_swap b_s | cross_b b_u wall ]
+left  [ action player | cross_b wall ] -> [ action player color_swap b_s | cross_b b_r wall ] 
+right [ action player | cross_b wall ] -> [ action player color_swap b_s | cross_b b_l wall ]
+( short range portal control - orange )
+up [ action player | cross_o wall ] -> [ action player color_swap o_s | cross_o o_d wall ]
+down [ action player | cross_o wall ] -> [ action player color_swap o_s | cross_o o_u wall ]
+left [ action player | cross_o wall ] -> [ action player color_swap o_s | cross_o o_r wall ] 
+right [ action player | cross_o wall ] -> [ action player color_swap o_s | cross_o o_l wall ] 
+
+( portal overwriting )
+[ b o | b_s o_s ] [ player p_b ] -> [ b | b_s ] [ player p_b ]
+[ b o | b_s o_s ] [ player p_o ] -> [ o | o_s ] [ player p_o ]
+
+( bad portal sound )
+[ action player no color_swap no shot_portal ] -> sfx0 
+( remove shot_portal marker )
+[ shot_portal ] -> []
+
+( portal color swapping )
+[ player color_swap p_b | cross_b ] -> [ player p_b | cross_o ] 
+[ player color_swap p_o | cross_o ] -> [ player p_o | cross_b ] 
+[ player p_b | cross_o ] -> [ player p_o | cross_o ]
+[ player p_o | cross_b ] -> [ player p_b | cross_b ]
+[ color_swap ] -> []
+
+
+( standard crate movement )
+[ > player | crate ] ->  [ > player | > crate ]
+[ > crate | crate ] -> [ > crate | > crate ]
+up    [ > crate | obstacle no t_d ] -> cancel
+down  [ > crate | obstacle no t_u ] -> cancel
+left  [ > crate | obstacle no t_r ] -> cancel
+right [ > crate | obstacle no t_l ] -> cancel
+[ player no both_portals ] [ > crate | obstacle t ] -> cancel
+
+( cancel block double-tp case )
+[ > crate b_s o_s | t ] -> cancel
+
+( push block through teleporter logic )
+[ > player b_s | b ] [ o_s crate ] -> [ > player b_s | b ] [ o_s crate c_m ] 
+[ > player o_s | o ] [ b_s crate ] -> [ > player o_s | o ] [ b_s crate c_m ]
+[ > crate b_s | b ] [ o_s crate ] -> [ > crate b_s | b ] [ o_s crate c_m ]
+[ > crate o_s | o ] [ b_s crate ] -> [ > crate o_s | o ] [ b_s crate c_m ]
+( logic for multi-block pushing, need a manual rule for each number of blocks )
+[ t | crate c_m | crate | crate | no object ] -> [ t | crate c_m | crate | | crate ] sfx6
+[ t | crate c_m | crate | no object ] -> [ t | crate c_m | | crate ] sfx6
+[ t | crate c_m | no object ] -> [ t | | crate ] sfx6
+[ c_m ] -> cancel
+
+( cancel illegal tp )
+[ > player | b ] [ o_s object ] -> cancel
+[ > player | o ] [ b_s object ] -> cancel
+
+( teleporting player )
+[ > player status b_s | b ] [ o_s ] [ cross ] -> [ b_s | b ] [ player status tp_o o_s ] [] sfx4
+[ > player status o_s | o ] [ b_s ] [ cross ] -> [ o_s | o ] [ player status tp_b b_s ] [] sfx4
+
+( adjust crosshair post-tp )
+[ b | player p_b tp_b | ] -> [ b | player p_b tp_b | cross_b ] 
+[ b | player p_o tp_b | ] -> [ b | player p_o tp_b | cross_o ] 
+[ o | player p_b tp_o | ] -> [ o | player p_b tp_o | cross_b ] 
+[ o | player p_o tp_o | ] -> [ o | player p_o tp_o | cross_o ]
+
+
+( player status tracker )
+[ > player status ] -> [ > player > status ]
+
+
+( cancel illegal crate tp )
+[ > crate | b ] [ o_s obstacle ] -> cancel
+[ > crate | o ] [ b_s obstacle ] -> cancel
+
+( mark crates for teleport )
+[ > crate b_s | b ] [ o_s ] -> [ b_s c_t_o | b ] [ o_s ] sfx5
+[ > crate o_s | o ] [ b_s ] -> [ o_s c_t_b | o ] [ b_s ] sfx5
+
+
+
+( LATE LOGIC ) 
+( crate teleport )
+late [ c_t_o ] [ o_s ] -> [ ] [ crate o_s ]
+late [ c_t_b ] [ b_s ] -> [ ] [ crate b_s ]
+
+( plate logic )
+late [ plate_v crate ] [ gate_v ] -> [ plate_v crate ] [ ]
+late [ plate_h crate ] [ gate_h ] -> [ plate_h crate ] [ ]
+late [ plate_v player ] [ gate_v ] -> [ plate_v player ] [ ]
+late [ plate_h player ] [ gate_h ] -> [ plate_h player ] [ ]
+late [ plate_v no crate no player ] [ gate_m_v no player no crate ] -> [ plate_v no crate no player] [ gate_v gate_m_v ]
+late [ plate_h no crate no player ] [ gate_m_h no player no crate ] -> [ plate_h no crate no player ] [ gate_h gate_m_h ]
+
+( plate sound effects )
+late [ gate_marker gate_prev_close no gate ] -> [gate_marker gate_prev_open ] sfx1
+late [ gate gate_prev_open ] -> [ gate gate_prev_close ] sfx2
+
+( delete portals on portal barrier entry )
+late [ player portal_barrier ] [ b ] [ b_s ] -> [ player portal_barrier ] [] [] sfx3
+late [ player portal_barrier ] [ o ] [ o_s ] -> [ player portal_barrier ] [] [] sfx3
+
+( delete blocks on portal barrier entry )
+(late [ crate portal_barrier ] -> [ portal_barrier ])
+
+==============
+WINCONDITIONS
+==============
+
+all player on exit
+
+=======
+LEVELS
+=======
+
+message Level 1 of 5
+
+message Press X to shoot a portal. Get to the yellow exit.
+
+( easy, good door intro )
+#############
+#.....#.....#
+#.....#.....#
+#.rcr.;.....#
+#.....#.....#
+#.....#.....#
+###-#####-###
+#..h..#.....#
+#.....#~~~~~#
+#..c..#.....#
+#.....#..e..#
+#.px..#.....#
+#############
+
+message Level 2 of 5
+
+message You can shoot portals through glass, but not at black walls
+
+message Blue barriers delete portals and block crates.
+
+( pretty easy, good transition from easy to intermediate )
+########%%%%%
+#.!.#...%.p.%
+#.!e#...%.x.%
+#.!.#..r;...%
+#-###...%.c.%
+#.hhg...%...%
+####gggg#~~~#
+#...........#
+#.........c.#
+#...........#
+#############
+
+message Level 3 of 5
+
+( good intermediate )
+#############
+#.p.........#
+#.x..###....#
+#..###-######
+#..g....c##e#
+#..###.####.#
+#..#.#.####~#
+#..%...rr.;.#
+#..#g#.######
+#....#g#....#
+#.....h.....#
+#############
+
+message Level 4 of 5)
+
+( really nifty intermediate )
+...###.
+...#e#.
+...#-#.
+####~##
+#.rhr;#
+#gg~###
+#.....#
+#x..c.#
+#p..c.#
+#######
+
+message Level 5 of 5
+
+( pretty hard, feels satisfying )
+..###.
+..#e#.
+..#~#.
+..#-##
+###..#
+#.;h##
+#r####
+#.cc.#
+##.#x#
+.#..p#
+.#####
+
+message Thanks for playing!!!

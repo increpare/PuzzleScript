@@ -1,0 +1,1158 @@
+title Skyscraper
+author Rosden Shadow [Mark Signorelli]
+homepage rosden.itch.io
+
+noaction
+run_rules_on_level_Start
+
+background_color #AAE0F2
+
+text_color black
+
+again_interval 0.1
+
+flickscreen 11x14
+========
+OBJECTS
+========
+
+Background
+#333333 #231F26 (#E57ED5 #CC5285)
+11111
+10111
+11011
+11101
+11111
+(
+00101
+01110
+11011
+01111
+10110)
+(
+11101
+00101
+11111
+10100
+10111)
+
+rooftile
+#333333 #231F26 (#E57ED5 #CC5285)
+11111
+10001
+10101
+10001
+11111
+
+nomove
+#FFEED9 #536673
+.....
+.000.
+.010.
+.000.
+.....
+
+Target
+#FFD9E0 #423D39
+.....
+.010.
+.0.1.
+.000.
+.....
+
+overglasswall
+#D9FFF8 #AAE0F2 #7EA1E5
+.....
+.....
+.....
+00000
+01010
+
+glasswall
+#D9FFF8 #AAE0F2 #7EA1E5
+10100
+11010
+22211
+22221
+22221
+
+glass
+#D9FFF8 #AAE0F2 #7EA1E5 #5C6684
+11111
+22121
+22211
+22221
+22221
+
+Wall
+#FFD9E0 #C1A2A5 #845C5C #5B4846
+21110
+21110
+22221
+23232
+32323
+
+overwall
+#FFD9E0 #C1A2A5 #845C5C #5B4846
+.....
+.....
+.....
+10000
+21110
+
+Waller
+#FFD9E0 #C1A2A5 #845C5C #5B4846
+33233
+32333
+23332
+33323
+33233
+(
+23232
+32323
+23232
+32323
+23232)
+
+Waller2
+#FFD9E0 #C1A2A5 #845C5C #5B4846
+33233
+32323
+23332
+32323
+33233
+(
+33333
+33333
+33333
+33333
+33333
+)
+(32323
+23232
+32323
+23232
+32323)
+
+Wallxx1
+#FFD9E0 #C1A2A5 #845C5C #5B4846
+21110
+21110
+22221
+32323
+23232
+
+
+Wall1
+#D9FFF8 #AAE0F2 #7EA1E5 #5C6684
+21110
+22110
+22221
+23232
+32323
+
+overwall1
+#D9FFF8 #AAE0F2 #7EA1E5 #5C6684
+.....
+.....
+.....
+10000
+21100
+
+Wall1x
+#D9FFF8 #AAE0F2 #7EA1E5 #5C6684
+2...0
+.....
+2...0
+.2.2.
+.....
+overwall1x
+#D9FFF8 #AAE0F2 #7EA1E5 #5C6684
+.....
+.....
+.....
+.....
+.0.0.
+
+
+switch1
+#D9FFF8 #AAE0F2 #7EA1E5
+.....
+.100.
+.110.
+.111.
+.222.
+
+Wall2
+#E5C17E #CC7A52 #B32D2D #73342E
+21110
+22110
+22221
+23232
+32323
+
+overwall2
+#E5C17E #CC7A52 #B32D2D #73342E
+.....
+.....
+.....
+10000
+21100
+
+Wall2x
+#E5C17E #CC7A52 #B32D2D #73342E
+2...0
+.....
+2...0
+.2.2.
+.....
+overwall2x
+#E5C17E #CC7A52 #B32D2D #73342E
+.....
+.....
+.....
+.....
+.0.0.
+
+switch2
+#E5C17E #CC7A52 #B32D2D #73342E
+.....
+.100.
+.110.
+.111.
+.222.
+
+Wall3
+#D9FFDC #7EE58D #5C8466 #4F5B46
+21110
+22110
+22221
+23232
+32323
+
+overwall3
+#D9FFDC #7EE58D #5C8466 #4F5B46
+.....
+.....
+.....
+10000
+21100
+
+Wall3x
+#D9FFDC #7EE58D #5C8466 #4F5B46
+2...0
+.....
+2...0
+.2.2.
+.....
+overwall3x
+#D9FFDC #7EE58D #5C8466 #4F5B46
+.....
+.....
+.....
+.....
+.0.0.
+
+switch3
+#D9FFDC #7EE58D #5C8466 #4F5B46
+.....
+.100.
+.110.
+.111.
+.222.
+
+Wall4
+#FFFFFF #CCCCCC #999999 #666666
+21110
+22110
+22221
+23232
+32323
+
+overwall4
+#FFFFFF #CCCCCC #999999 #666666
+.....
+.....
+.....
+10000
+21100
+
+Wall4x
+#FFFFFF #CCCCCC #999999 #666666
+2...0
+.....
+2...0
+.2.2.
+.....
+overwall4x
+#FFFFFF #CCCCCC #999999 #666666
+.....
+.....
+.....
+.....
+.0.0.
+
+switch4
+#FFFFFF #CCCCCC #999999 #666666
+.....
+.100.
+.110.
+.111.
+.222.
+
+
+door
+#FFFFFF #CCCCCC #999999
+00000
+11110
+11120
+11110
+11110
+
+orb
+#FFFFFF #CCCCCC #999999
+.111.
+21001
+21101
+22111
+.222.
+
+
+Playerright
+#FFFFFF #CCCCCC #7F7CA1 #705C84
+.000.
+11202
+11313
+11110
+.1.1.
+
+playerleft
+#FFFFFF #CCCCCC #7F7CA1 #705C84
+.000.
+20211
+31311
+01111
+.1.1.
+
+Crate
+#FFD9E0 #F2AACE #E57ED5 #845C7A
+21100
+21110
+22110
+32223
+.333.
+
+overcrate
+#FFD9E0 #F2AACE #E57ED5 #845C7A
+.....
+.....
+.....
+.....
+.000.
+
+Cratex
+#FFD9E0 #F2AACE  #845C7A #E57ED5 #845C7A
+20202
+20002
+.202.
+..2..
+.....
+Cratexup
+#FFD9E0 #F2AACE  #845C7A #E57ED5 #845C7A
+.....
+.....
+.....
+.222.
+20002
+
+Cratex2
+#FFD9E0 #F2AACE
+.....
+.....
+.....
+.....
+.....
+
+Crate2
+#F2F2AA #E5C17E #CC7A52 #736053
+21100
+21110
+22110
+32223
+.333.
+
+overcrate2
+#F2F2AA #E5C17E #CC7A52 #736053
+.....
+.....
+.....
+.....
+.000.
+
+Crate2x
+#F2F2AA #E5C17E #CC7A52 #736053
+20202
+20002
+.202.
+..2..
+.....
+Crate2xup
+#F2F2AA #E5C17E #CC7A52 #736053
+.....
+.....
+.....
+.222.
+20002
+
+Crate2x2
+#F2F2AA #E5C17E #CC7A52 #736053
+.....
+.....
+.....
+.....
+.....
+
+Crate2switch
+#F2F2AA #E5C17E #CC7A52 #736053
+.....
+.100.
+.110.
+.111.
+.222.
+
+c2act
+#F2F2AA #E5C17E #CC7A52 #736053
+.2.0.
+2.1.0
+.1.1.
+2.1.0
+.2.2.
+
+Crate3
+#FFD9FC #E0AAF2 #A87EE5 #705C84
+21100
+21110
+22110
+32223
+.333.
+
+overcrate3
+#FFD9FC #E0AAF2 #A87EE5 #705C84
+.....
+.....
+.....
+.....
+.000.
+
+Crate3x
+#FFD9FC #E0AAF2 #A87EE5 #705C84
+20202
+20002
+.202.
+..2..
+.....
+Crate3xup
+#FFD9FC #E0AAF2 #A87EE5 #705C84
+.....
+.....
+.....
+.222.
+20002
+
+Crate3x2
+#FFD9FC #E0AAF2 #A87EE5 #705C84
+.....
+.....
+.....
+.....
+.....
+
+Crate3switch
+#FFD9FC #E0AAF2 #A87EE5 #705C84
+.....
+.100.
+.110.
+.111.
+.222.
+
+c3act
+#FFD9FC #E0AAF2 #A87EE5 #705C84
+.2.0.
+2.1.0
+.1.1.
+2.1.0
+.2.2.
+
+end
+#FFD9FC #E0AAF2 #A87EE5 #705C84
+21100
+21110
+22110
+32223
+.333.
+endx
+#FFD9FC #E0AAF2 #A87EE5 #705C84
+21100
+21110
+22110
+32223
+.333.
+
+stairs
+white black
+.111.
+11011
+10001
+10101
+11111
+
+downstairs
+white black
+11111
+10101
+10001
+11011
+.111.
+
+
+cloner
+#E5C17E #DB7F55 #B32D2D #73342E
+.100.
+.210.
+.221.
+.332.
+.....
+
+swapcrate
+Orange Yellow
+00000
+0...0
+0...0
+0...0
+00000
+
+swapwall
+black
+.....
+.....
+.....
+.....
+.....
+
+outlineleft
+black
+0....
+0....
+0....
+0....
+0....
+
+outlineleft2
+black
+.....
+.....
+0....
+0....
+0....
+
+outlineright
+black
+....0
+....0
+....0
+....0
+....0
+outlineright2
+black
+.....
+.....
+....0
+....0
+....0
+
+outlineup
+black
+.....
+.....
+.....
+.....
+00000
+
+outlinedown
+black
+.....
+.....
+00000
+.....
+.....
+
+
+thefloor
+#AAE0F2
+00000
+00000
+00000
+00000
+00000
+
+thefloorx
+#AAE0F2
+00000
+00000
+00000
+00000
+00000
+
+eend
+#AAE0F2
+00000
+00000
+00000
+00000
+00000
+(
+checkempty
+black
+.....
+.....
+.....
+.....
+.....
+
+checkblock
+black
+.....
+.....
+.....
+.....
+.....
+)
+
+stophei
+black
+.....
+.....
+.....
+.....
+.....
+
+onswitch
+black
+.....
+.....
+.....
+.....
+.....
+switcrate
+black
+.....
+.....
+.....
+.....
+.....
+
+horz
+black
+.....
+.....
+.....
+.....
+.....
+
+vertz
+black
+.....
+.....
+.....
+.....
+.....
+
+switcrate2
+black
+.....
+.....
+.....
+.....
+.....
+
+arrow
+black
+.....
+.....
+.0.0.
+.000.
+..0..
+
+arrow2
+black
+.....
+.0.0.
+.000.
+..0..
+.....
+
+arrowx
+black
+.....
+.....
+.....
+.....
+.....
+
+arrowx2
+black
+.....
+.....
+.....
+.....
+.....
+
+winend
+#C1A2A5 #845C5C #5B4846
+1000.
+21100
+21110
+22110
+.2221
+
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+$ = wall and Cratex
+
+(k=wall and waller)
+%=wall and waller
+@=wall and waller2
+j=glass
+h=glasswall
+P = Playerright
+* = Crate
+
+O = Target
+n = nomove
+a = arrow2 and wall
+e=end and thefloorx
+t = end and target and eend and thefloorx
+w=end and winend and thefloorx
+
+s=stairs
+
+-=thefloor
+x=thefloorx
+
+i=switch1
+u=switch2
+y=switch3
+g =switch4
+
+1=wall1
+2=wall2
+3=wall3
+4=wall4
+
+b=c2act
+c=Crate2switch
+
+f=c3act
+d=Crate3switch
+m=door
+
+r=rooftile
+'=rooftile and orb
+
+feelx=overcrate2 or overcrate or overcrate3
+feel=overwall or overwall1 or overwall1x or  overwall2 or overwall2x or overwall3 or overwall3x or overwall4 or overwall4x or overglasswall
+pushable= Crate3 or crate or cloner or swapcrate  or switcrate or switcrate2 or crate2
+win=crate or wall
+
+theemx= crate 
+player=playerright or playerleft
+
+walls=wall or wall1 or Wall2 or wall3 or wall4 or glasswall or Wallxx1
+wallx = Wall1x or Wall2x or wall3x or wall4x
+
+blocker = walls or crate  or nomove or player or arrow or crate2 or crate3 or c2act or c3act
+
+arrowk = arrow or arrow2 or arrowx or arrowx2
+
+switch= switch1 or switch2 or switch3 or switch4
+
+wallerx= waller or waller2
+flo=thefloor or thefloorx
+=======
+SOUNDS
+=======
+
+pushable MOVE 36772507
+
+EndLevel 74089700
+
+player MOVE 68988304
+sfx0 52836103
+sfx1 45427502
+
+sfx2 29503700
+sfx3 81951902
+
+sfx4 20767905
+sfx5 89256308
+
+sfx6 55925703
+sfx7 57631106
+sfx8 1885303
+================
+COLLISIONLAYERS
+================
+
+Background
+rooftile
+Target
+nomove
+stophei
+
+crate3x2
+Cratex2,Crate2x2
+
+stairs,downstairs
+switch,Crate2switch,Crate3switch
+onswitch
+Player, Walls, pushable,swapwall,thefloor,thefloorx,c2act,c3act,wallxx1,glasswall,orb
+
+wallx
+
+arrow, arrow2, arrowx, arrowx2
+winend
+eend
+end, endx
+feel
+feelx
+Cratex,Crate2x,crate3x
+Cratexup,Crate2xup,Crate3xup
+
+vertz
+horz
+
+waller2,waller
+glass
+door
+outlineleft
+outlineright
+outlineleft2
+outlineright2
+outlineup
+outlinedown
+======
+RULES
+======
+
+
+[feel]->[]
+[feelx]->[]
+
+[Cratexup]->[]
+[Crate2xup]->[]
+[Crate3xup]->[]
+
+[> player |orb]->[> player|]
+[stophei no player]->[]
+
+[Crate3switch player][c3act ]->[Crate3switch player][crate3x] sfx8
+
+late up [crate3switch][crate3x  | | | | | | | | | | | | |no Crate3x]->[crate3switch][crate3x  | | | | | | | | | | | | | Crate3x]
+late down [crate3switch][crate3x  | | | | | | | | | | | | |no Crate3x]->[crate3switch][crate3x  | | | | | | | | | | | | | Crate3x]
+late[Crate3switch] [crate3x]->[] [Crate3x]
+
+[vertz]->[]
+[horz]->[]
+up[player|crate3]->[player vertz |crate3]
+down[player|crate3]->[player vertz |crate3]
+left[player|crate3]->[player horz |crate3]
+right[player|crate3]->[player horz |crate3]
+
+[^ player | crate3]->[^ player|< crate3 < crate3x2]
+[v player | crate3]->[v player|< crate3 < crate3x2]
+
+vertical[< player no horz| crate]->[< player|< crate < cratex2]
+horizontal[< player no vertz| crate]->[< player|< crate < cratex2]
+
+([> crate|crate3x2]->[ crate|crate3x2] 
+
+[ cratex2 crate3x2]->[ crate3x2] 
+
+[> cratex2|Crate3x2]->[|Crate3x2]
+
+[> crate3x2|Cratex2]->[|Crate3x2])
+
+late[ Cratex2 player]->[ player]
+late[ Cratex2 crate3]->[ crate3]
+
+[> player | crate2]->[> player|> crate2 > crate2x2]
+late[Crate2x2 no crate2]->[]
+
+
+late[Crate3x2 no crate3]->[]
+
+
+[Crate2switch player][c2act ]->[Crate2switch player][crate2x] sfx8
+
+late up [crate2switch][crate2x  | | | | | | | | | | | | |no Crate2x]->[crate2switch][crate2x  | | | | | | | | | | | | | Crate2x]
+late down [crate2switch][crate2x  | | | | | | | | | | | | |no Crate2x]->[crate2switch][crate2x  | | | | | | | | | | | | | Crate2x]
+late[Crate2switch] [crate2x]->[] [Crate2x]
+
+
+
+
+(the moving of the crate3x2)
+late down[crate3x2 | | | | | | | | | | | | |]->[crate3x2 | | | | | | | | | | | | |crate3x2]
+late up[crate3x2 | | | | | | | | | | | | |]->[crate3x2 | | | | | | | | | | | | |crate3x2]
+late[crate3 no crate3x2|Crate3x2]->[|Crate3x]
+late[crate3x no crate3x2|Crate3x2]->[|Crate3x]
+late [crate3x no blocker]->[crate3]
+(late [crate3x crate3]->[crate3])
+late [ Crate3x2]->[]
+
+(the moving of the cratex2)
+late down[cratex2 | | | | | | | | | | | | |]->[cratex2 | | | | | | | | | | | | |cratex2]
+late up[cratex2 | | | | | | | | | | | | |]->[cratex2 | | | | | | | | | | | | |cratex2]
+late[crate no cratex2|Cratex2]->[|Cratex]
+late[cratex no cratex2|Cratex2]->[|Cratex]
+late [cratex no blocker]->[crate]
+late [ Cratex2]->[]
+
+(the moving of the crate2x2)
+late down[crate2x2 | | | | | | | | | | | | |]->[crate2x2 | | | | | | | | | | | | |crate2x2]
+late up[crate2x2 | | | | | | | | | | | | |]->[crate2x2 | | | | | | | | | | | | |crate2x2]
+late[crate2 no crate2x2|Crate2x2]->[|Crate2x]
+late[crate2x no crate2x2|Crate2x2]->[|Crate2x]
+late [crate2x no blocker]->[crate2]
+late [ Crate2x2]->[]
+
+
+
+
+
+(the switchs)
+late[switch1 blocker] [wall1]->[switch1 blocker][wall1x]
+late[switch1 no blocker] [wall1x no blocker]->[switch1][wall1]
+
+late[switch2 blocker] [wall2]->[switch2 blocker][wall2x]
+late[switch2 no blocker] [wall2x no blocker]->[switch2][wall2]
+late[switch3 blocker] [wall3]->[switch3 blocker][wall3x]
+late[switch3 no blocker] [wall3x no blocker]->[switch3][wall3]
+late[switch4 blocker] [wall4]->[switch4 blocker][wall4x]
+late[switch4 no blocker] [wall4x no blocker]->[switch4][wall4]
+
+late[switch blocker no onswitch]-> [switch blocker onswitch] sfx6
+late[switch no blocker onswitch]-> [switch ] sfx7
+
+
+
+(stairs 12 places I believe)
+late down [stairs| | | | | | | | | | | | |no downstairs]->[ stairs| | | | | | | | | | | | | downstairs]
+
+late down [player no stophei stairs| | | | | | | | | | | | | ]->[ stairs| | | | | | | | | | | | | player stophei] sfx4
+late up [player no stophei downstairs| | | | | | | | | | | | | ]->[ downstairs| | | | | | | | | | | | | player stophei] sfx5
+
+[> crate|Target]->[> crate|target] sfx2
+
+[ left Playerright] -> [ left playerleft]
+[ right Playerleft] -> [ right playerright]
+
+[endx] ->[thefloor] sfx2
+[end | thefloor]-> [endx |thefloor]
+
+late up [wall no wallerx| ]-> [wall|overwall]
+late up [wallxx1 no wallerx| ]-> [wallxx1|overwall]
+late up [theemx| ]-> [theemx|overcrate]
+
+late up [crate2| ]-> [crate2|overcrate2]
+late up [crate3| ]-> [crate3|overcrate3]
+
+late up [end| ]-> [end|overcrate]
+late up [endx| ]-> [endx|overcrate]
+
+late up [cratex| ]->[cratex|Cratexup]
+late up [crate2x| ]->[crate2x|Crate2xup]
+late up [crate3x| ]->[crate3x|Crate3xup]
+
+late up [Wall1| ]->[Wall1|overwall1]
+late up [Wall1x| ]->[Wall1x|overwall1x]
+late up [Wall2| ]->[Wall2|overwall2]
+late up [Wall2x| ]->[Wall2x|overwall2x]
+late up [Wall3| ]->[Wall3|overwall3]
+late up [Wall3x| ]->[Wall3x|overwall3x]
+late up [Wall4| ]->[Wall4|overwall4]
+late up [Wall4x| ]->[Wall4x|overwall4x]
+
+late up [glasswall| ]-> [glasswall|overglasswall]
+
+late down[wall|waller2]->[wallxx1|waller2]
+
+late [pushable rooftile]->[rooftile]
+
+([action player eend|]->[action player eend |crate Target])
+
+late left [walls|flo]->[walls|flo outlineright]
+late right [walls|flo]->[walls|flo outlineleft]
+late down [walls|flo]->[walls outlineup|flo ]
+late up [walls|flo]->[walls |flo outlinedown]
+
+late left [overwall|flo no overwall]->[overwall|flo outlineright2]
+late right [overwall|flo no overwall]->[overwall|flo outlineleft2]
+late [door]->[door outlineup]
+
+[]-> again 
+(
+[arrow]->[arrowx2]
+[arrow2]->[arrowx]
+
+[arrowx]->[arrow]
+[arrowx2]->[arrow2])
+==============
+WINCONDITIONS
+==============
+
+no orb
+some player
+=======
+LEVELS
+=======
+
+message Reach the top
+-----x-----
+-----------
+-----------
+-----------
+-----------
+-----------
+-----------
+-----------
+-#########-
+-#...*..s#-
+-#..#.#..#-
+-#.......#-(floor1)
+-#.......#-
+-####P####-
+-----x-----
+-----------
+-----------
+-----------
+-----------
+-----------
+-----------
+-#########-
+-#.i.$...#-
+-#1....###-
+-#s1.....#-(floor2)
+-#.1..#..#-
+-#h#h#h#h#-
+-%@%@m@%@%-
+-----x-----
+-----------
+-----------
+-----------
+-----------
+-----------
+-#########-
+-#...*...#-
+-#..#..s.#-
+-#.#.cb.##-(floor3)
+-#....#..#-
+-#########-
+-@j@j@j@j@-
+-%@%@m@%@%-
+-----x-----
+-----------
+-----------
+-----------
+-----------
+-#########-
+-#...*...#-
+-#..#u...#-
+-#2...#.##-(floor4)
+-#s2...#.#-
+-#h#h#h#h#-
+-%@%@%@%@%-
+-@j@j@j@j@-
+-%@%@m@%@%-
+-----x-----
+-----------
+-----------
+-----------
+-#########-
+-#...*.y.#-
+-#....1..#-
+-#2..13.##-(floor5)
+-#.213s#.#-
+-#########-
+-@j@j@j@j@-
+-%@%@%@%@%-
+-@j@j@j@j@-
+-%@%@m@%@%-
+-----x-----
+-----------
+-----------
+-#########-
+-#...*..##-
+-#..f..s.#-
+-#..d...##-(floor6 new crate)
+-#.....###-
+-#########-
+-%@%@%@%@%-
+-@j@j@j@j@-
+-%@%@%@%@%-
+-@j@j@j@j@-
+-%@%@m@%@%-
+-----x-----
+-----------
+-#########-
+-#...*...#-
+-##..#.s##-
+-##1##.g.#-(floor7 new wall )
+-#.34s#..#-
+-#########-
+-@j@j@j@j@-
+-%@%@%@%@%-
+-@j@j@j@j@-
+-%@%@%@%@%-
+-@j@j@j@j@-
+-%@%@m@%@%-
+-----x-----
+-#########-
+-#rrrrrrr#-
+-#rrr'rrr#-
+-#rrrrrrr#-(floor7 new wall )
+-#rrrrrrr#-
+-#########-
+-%@%@%@%@%-
+-@j@j@j@j@-
+-%@%@%@%@%-
+-@j@j@j@j@-
+-%@%@%@%@%-
+-@j@j@j@j@-
+-%@%@m@%@%-
+-----x-----
+
+
+xxxxxxxxxxx
+-eeeeeeeee-
+wewewwwewew
+wwwewewewew
+eweewewewew
+eweewwwewww
+eeeeeeeeeee
+wewewwwewwe
+weweeweewew
+wwweeweewew
+ewwewwwewew(win)
+eeeeeeeeeee
+eeeeeeeeeee
+-eeeeeeeee-
+
+
+
+

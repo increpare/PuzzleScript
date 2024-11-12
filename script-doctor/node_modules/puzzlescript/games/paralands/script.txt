@@ -1,0 +1,1237 @@
+title ParaLands
+author Lukas
+run_rules_on_level_start
+again_interval 0.05
+norepeat_action
+
+========
+OBJECTS
+========
+
+
+Background
+darkgray
+
+Floor1
+darkgray
+
+Floor2
+#444444
+
+Wall
+gray #444444 #bbbbbb
+.222.
+20001
+20001
+20001
+.111.
+
+WallConnectorN
+gray #444444 #bbbbbb
+20001
+.....
+.....
+.....
+.....
+
+WallConnectorS
+gray #444444 #bbbbbb
+.....
+.....
+.....
+.....
+20001
+
+WallConnectorE
+gray #444444 #bbbbbb
+....2
+....0
+....0
+....0
+....1
+
+WallConnectorW
+gray #444444 #bbbbbb
+2....
+0....
+0....
+0....
+1....
+
+WallConnectorNE
+gray
+....0
+.....
+.....
+.....
+.....
+
+WallConnectorNW
+gray
+0....
+.....
+.....
+.....
+.....
+
+WallConnectorSE
+gray
+.....
+.....
+.....
+.....
+....0
+
+WallConnectorSW
+gray
+.....
+.....
+.....
+.....
+0....
+
+Pit
+black
+
+PlayerOrange
+orange blue
+.000.
+.101.
+00000
+.000.
+.0.0.
+
+PlayerBlue
+blue orange
+.000.
+.101.
+00000
+.000.
+.0.0.
+
+PlayerTrans1
+orange blue black
+.....
+.000.
+.101.
+22222
+.222.
+
+PlayerTrans2
+black
+.....
+.....
+.000.
+00000
+.000.
+
+PlayerTrans3
+blue orange black
+.....
+.000.
+.101.
+22222
+.222.
+
+CrateOrange
+orange #ffbb88 #bb6600
+11112
+10002
+10002
+10002
+22222
+
+CrateBlue
+blue #8888ff #0000bb
+11112
+10002
+10002
+10002
+22222
+
+CrateOmni
+orange #ffbb88 #bb6600 blue #8888ff #0000bb
+11145
+10035
+10035
+10335
+22555
+
+BallOrange
+orange #ffbb88 #bb6600
+.002.
+01002
+00002
+20002
+.222.
+
+BallBlue
+blue #8888ff #0000bb
+.002.
+01002
+00002
+20002
+.222.
+
+BallOmni
+orange #ffbb88 #bb6600 blue #0000bb
+.004.
+01034
+00034
+20334
+.244.
+
+DoorOrange
+orange #bb6600
+.000.
+00000
+10001
+11111
+.111.
+
+DoorOpenOrange
+orange
+.....
+.....
+.000.
+00000
+.000.
+
+DoorBlue
+blue #0000bb
+.000.
+00000
+10001
+11111
+.111.
+
+DoorOpenBlue
+blue
+.....
+.....
+.000.
+00000
+.000.
+
+DoorOmni
+orange #bb6600 blue #0000bb
+.002.
+00022
+10223
+11333
+.133.
+
+DoorOpenOmni
+orange blue
+.....
+.....
+.001.
+00011
+.011.
+
+SwitchOrange
+orange
+.....
+..0..
+.000.
+..0..
+.....
+
+SwitchBlue
+blue
+.....
+..0..
+.000.
+..0..
+.....
+
+SwitchOmni
+orange blue
+.....
+..0..
+.001.
+..1..
+.....
+
+TrapdoorOrange
+orange #ffbb88
+.000.
+01010
+00000
+01010
+.000.
+
+TrapdoorBlue
+blue #8888ff
+.000.
+01010
+00000
+01010
+.000.
+
+TrapdoorOmni
+orange #ffbb88 blue #8888ff
+.002.
+01032
+00022
+01232
+.022.
+
+EnemyOrangeIdle
+orange #ffbb88
+.....
+..0..
+.101.
+.0.0.
+.0.0.
+
+EnemyOrangeActive
+orange #ffbb88
+.....
+.....
+..0..
+.101.
+.0.0.
+
+EnemyBlueIdle
+blue #8888ff
+.....
+..0..
+.101.
+.0.0.
+.0.0.
+
+EnemyBlueActive
+blue #8888ff
+.....
+.....
+..0..
+.101.
+.0.0.
+
+EnemyOmniIdle
+orange #ffbb88 blue #8888ff
+.....
+..0..
+.123.
+.0.2.
+.0.2.
+
+EnemyOmniActive
+orange #ffbb88 blue #8888ff
+.....
+.....
+..0..
+.123.
+.0.2.
+
+PlatformOrange
+#bb6600
+.....
+.000.
+.000.
+.000.
+.....
+
+PlatformBlue
+#0000bb
+.....
+.000.
+.000.
+.000.
+.....
+
+PlatformOmni
+#bb6600 #0000bb
+.....
+.001.
+.001.
+.011.
+.....
+
+GoalFr1
+gray lightgray
+.000.
+00111
+01001
+00011
+.111.
+
+GoalFr2
+gray lightgray
+.111.
+01011
+01001
+00101
+.000.
+
+GoalFr3
+gray lightgray 
+.111.
+11000
+10010
+11100
+.000.
+
+GoalFr4
+gray lightgray
+.000.
+10100
+10010
+11010
+.111.
+
+Blood
+red
+
+InactiveCrate
+white
+0.0.0
+.....
+0...0
+.....
+0.0.0
+
+InactiveBall
+white
+.0.0.
+0...0
+.....
+0...0
+.0.0.
+
+InactivePlatform
+white
+.....
+.0.0.
+.....
+.0.0.
+.....
+
+InactiveDoor
+white
+.0.0.
+0...0
+.0.0.
+.....
+.....
+
+InactiveDoorOpen
+white
+.....
+.....
+.0.0.
+0...0
+.0.0.
+
+InactiveSwitch
+transparent
+
+InactiveTrapdoor
+white
+0...0
+.....
+.....
+.....
+0...0
+
+InactiveEnemy
+white
+.....
+..0..
+.0.0.
+.....
+.0.0.
+
+TempCrate
+transparent
+
+TempBall
+transparent
+
+TempPlatform
+transparent
+
+tempDoor
+transparent
+
+tempDoorOpen
+transparent
+
+tempSwitch
+transparent
+
+TempTrapdoor
+transparent
+
+TempEnemy
+transparent
+
+Init
+transparent
+
+EnemyTurn
+transparent
+
+Buffer
+transparent
+
+Animate
+transparent
+
+PlayerShadow
+transparent
+
+OrangeToBlue
+transparent
+
+BlueToOrange
+transparent
+
+JumpNow
+transparent
+
+PlayerCrosshair
+transparent
+
+TrapdoorTriggered
+transparent
+
+InactiveTrapdoorTriggered
+transparent
+
+TempTrapdoorTriggered
+transparent
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+@ = PlayerOrange and Init
+! = GoalFr1
+1 = CrateOrange and InactiveCrate
+a = CrateOmni
+2 = BallOrange and InactiveBall
+b = BallOmni
+3 = EnemyOrangeIdle and InactiveEnemy
+c = EnemyOmniIdle
+4 = DoorOrange and InactiveDoor
+d = DoorOmni
+5 = SwitchOrange and InactiveSwitch
+e = SwitchOmni
+6 = Pit and TrapdoorOrange and InactiveTrapdoor
+f = Pit and TrapdoorOmni
+* = Pit
+
+(main game objects)
+Floor = Floor1 or Floor2
+Player = PlayerOrange or PlayerBlue or PlayerTrans1 or PlayerTrans2 or PlayerTrans3
+Goal = GoalFr1 or GoalFr2 or GoalFr3 or GoalFr4
+
+(PU game objects)
+MonoCrate = CrateOrange or CrateBlue
+Crate = MonoCrate or CrateOmni
+MonoBall = BallOrange or BallBlue
+Ball = MonoBall or BallOmni
+MonoPlatform = PlatformOrange or PlatformBlue
+Platform = MonoPlatform or PlatformOmni
+MonoDoor = DoorOrange or DoorBlue
+Door = DoorOmni or MonoDoor
+MonoDoorOpen = DoorOpenOrange or DoorOpenBlue
+DoorOpen = DoorOpenOmni or MonoDoorOpen
+MonoSwitch = SwitchOrange or SwitchBlue
+Switch = SwitchOmni or MonoSwitch
+MonoTrapdoor = TrapdoorOrange or TrapdoorBlue
+Trapdoor = MonoTrapdoor or TrapdoorOmni
+
+Pushable = Ball or Crate
+InactivePushable = InactiveBall or InactiveCrate
+PushableOmni = BallOmni or CrateOmni
+
+EnemyOrange = EnemyOrangeIdle or EnemyOrangeActive
+EnemyBlue = EnemyBlueIdle or EnemyBlueActive
+EnemyOmni = EnemyOmniIdle or EnemyOmniActive
+MonoEnemy = EnemyOrange or EnemyBlue
+Enemy = MonoEnemy or EnemyOmni
+MonoEnemyActive = EnemyBlueActive or EnemyOrangeActive
+EnemyActive = MonoEnemyActive or EnemyOmniActive
+
+(general obstacles)
+Obstacle = Wall or Player or Crate or Ball or Enemy or Door
+
+(inactive obstacles)
+InactiveObstacle = InactiveCrate or InactiveBall or InactiveEnemy or InactiveDoor
+
+(obstacles for inactive objects)
+ObstacleForInactive = InactiveObstacle or Wall or CrateOmni or BallOmni or EnemyOmni
+
+(obstacles for active enemy)
+ObstacleForMonoEnemy = Wall or Enemy or Door
+
+(obstacles for omni enemy)
+ObstacleForOmniEnemy = ObstacleForMonoEnemy or InactiveEnemy or InactiveDoor
+
+(Have 4 different Pitfillers, so the correct platform is built)
+PitFillerOrange = CrateOrange or BallOrange
+PitFillerBlue = CrateBlue or BallBlue
+PitFillerOmni = CrateOmni or BallOmni
+PitFillerInactive = InactiveCrate or InactiveBall
+
+(Fillings)
+Filling = Platform or Trapdoor
+InactiveFilling = InactivePlatform or InactiveTrapdoor or PlatformOmni or TrapdoorOmni
+
+(Weights for doors)
+Weight = Player or Crate or Ball or Enemy
+InactiveWeight = InactiveCrate or InactiveBall or InactiveEnemy or CrateOmni or BallOmni or EnemyOmni
+
+(Trapdoor triggers)
+Trigger = Player or Enemy
+InactiveTrigger = InactiveEnemy or EnemyOmni
+OmniTrigger = Trigger or InactiveTrigger
+
+(Temporary objects, eg buffers, flags, ...)
+TempAnimTurn = Init or Buffer or EnemyTurn or Animate or PlayerCrosshair
+TempInputTurn = PlayerShadow
+
+=======
+SOUNDS
+=======
+
+sfx1 27102304
+sfx2 11336309
+Pushable move 69429507
+sfx3 47602107
+sfx4 91878702
+Trapdoor Destroy 77067304
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Floor1, Floor2
+Goal, Pit, Switch, DoorOpen
+Platform, Trapdoor
+InactivePlatform, InactiveTrapdoor
+TempPlatform, TempTrapdoor
+InactiveTrapdoorTriggered
+TempTrapdoorTriggered
+TrapdoorTriggered
+Player, Wall, Crate, Ball, Enemy, Door
+InactiveSwitch, InactiveDoorOpen
+TempSwitch, TempDoorOpen
+InactiveCrate, InactiveBall, InactiveEnemy, InactiveDoor
+TempCrate, TempBall, TempEnemy, TempDoor
+
+(Some flags. Just to be sure, might as well use a seperate layer for each)
+Animate
+Buffer
+Init
+EnemyTurn
+PlayerShadow
+OrangeToBlue, BlueToOrange
+JumpNow
+PlayerCrosshair
+
+(wall connector sprites. Unfortunately, each one needs its own layer)
+WallConnectorN
+WallConnectorE
+WallConnectorS
+WallConnectorW
+WallConnectorNE
+WallConnectorNW
+WallConnectorSE
+WallConnectorSW
+
+(DEATH)
+Blood
+
+======
+RULES     
+======
+
+(INIT TURN)
+(Rules in this section are only run once on level start)
+
+(init floor)
+[Init][Player] -> [Init][Player Floor1]
+[Floor1|no Floor] -> [Floor1|Floor2]
++[Floor2|no Floor] -> [Floor2|Floor1]
+
+(init walls)
+right [Init][Wall|Wall] -> [Init][Wall WallConnectorE|Wall WallConnectorW]
+down [Init][Wall|Wall] -> [Init][Wall WallConnectorS|Wall WallConnectorN]
+[Init][WallConnectorN WallConnectorE] -> [Init][WallConnectorN WallConnectorE WallConnectorNE]
+[Init][WallConnectorN WallConnectorW] -> [Init][WallConnectorN WallConnectorW WallConnectorNW]
+[Init][WallConnectorS WallConnectorE] -> [Init][WallConnectorS WallConnectorE WallConnectorSE]
+[Init][WallConnectorS WallConnectorW] -> [Init][WallConnectorS WallConnectorW WallConnectorSW]
+
+
+(UNIVERSE HOPPING)
+
+[PlayerTrans3 OrangeToBlue] -> [PlayerBlue]
+[PlayerTrans2 OrangeToBlue JumpNow] -> [PlayerTrans3 OrangeToBlue Animate] again
+[PlayerTrans2 OrangeToBlue no JumpNow] -> [PlayerTrans2 OrangeToBlue JumpNow Animate] again
+[PlayerTrans1 OrangeToBlue] -> [PlayerTrans2 OrangeToBlue Animate] again
+[action PlayerOrange no InactiveObstacle no Pit] -> [PlayerTrans1 OrangeToBlue Animate] again sfx2
+
+[PlayerTrans1 BlueToOrange] -> [PlayerOrange]
+[PlayerTrans2 BlueToOrange JumpNow] -> [PlayerTrans1 BlueToOrange Animate] again
+[PlayerTrans2 BlueToOrange no JumpNow] -> [PlayerTrans2 BlueToOrange JumpNow Animate] again
+[PlayerTrans3 BlueToOrange] -> [PlayerTrans2 BlueToOrange Animate] again
+[action PlayerBlue no InactiveObstacle no Pit] -> [PlayerTrans3 BlueToOrange Animate] again sfx2
+
+[action Player] -> sfx1
+
+
+(PARALLEL UNIVERSE OBJECTS)
+(lots of very similiar code, but no way to avoid that I guess)
+
+(buffer inactive objects)
+[JumpNow][InactiveCrate] -> [JumpNow][TempCrate]
+[JumpNow][InactiveBall] -> [JumpNow][TempBall]
+[JumpNow][InactivePlatform] -> [JumpNow][TempPlatform]
+[JumpNow][InactiveDoor] -> [JumpNow][TempDoor]
+[JumpNow][InactiveDoorOpen] -> [JumpNow][TempDoorOpen]
+[JumpNow][InactiveSwitch] -> [JumpNow][TempSwitch]
+[JumpNow][InactiveTrapdoor] -> [JumpNow][TempTrapdoor]
+[JumpNow][InactiveTrapdoorTriggered] -> [JumpNow][TempTrapdoorTriggered]
+[JumpNow][InactiveEnemy] -> [JumpNow][TempEnemy]
+
+(toggle active objects)
+[JumpNow][MonoCrate] -> [JumpNow][InactiveCrate]
+[JumpNow][MonoBall] -> [JumpNow][InactiveBall]
+[JumpNow][MonoPlatform] -> [JumpNow][InactivePlatform]
+[JumpNow][MonoDoor] -> [JumpNow][InactiveDoor]
+[JumpNow][MonoDoorOpen] -> [JumpNow][InactiveDoorOpen]
+[JumpNow][MonoSwitch] -> [JumpNow][InactiveSwitch]
+[JumpNow][MonoTrapdoor] -> [JumpNow][InactiveTrapdoor]
+[JumpNow][TrapdoorTriggered] -> [JumpNow][InactiveTrapdoorTriggered]
+[JumpNow][MonoEnemy] -> [JumpNow][InactiveEnemy]
+
+("load" inactive objects)
+[TempCrate][OrangeToBlue] -> [CrateBlue][OrangeToBlue]
+[TempCrate][BlueToOrange] -> [CrateOrange][BlueToOrange]
+
+[TempBall][OrangeToBlue] -> [BallBlue][OrangeToBlue]
+[TempBall][BlueToOrange] -> [BallOrange][BlueToOrange]
+
+[TempPlatform][OrangeToBlue] -> [PlatformBlue][OrangeToBlue]
+[TempPlatform][BlueToOrange] -> [PlatformOrange][BlueToOrange]
+
+[TempDoor][OrangeToBlue] -> [DoorBlue][OrangeToBlue]
+[TempDoor][BlueToOrange] -> [DoorOrange][BlueToOrange]
+
+[TempDoorOpen][OrangeToBlue] -> [DoorOpenBlue][OrangeToBlue]
+[TempDoorOpen][BlueToOrange] -> [DoorOpenOrange][BlueToOrange]
+
+[TempSwitch][OrangeToBlue] -> [SwitchBlue][OrangeToBlue]
+[TempSwitch][BlueToOrange] -> [SwitchOrange][BlueToOrange]
+
+[TempTrapdoor][OrangeToBlue] -> [TrapdoorBlue][OrangeToBlue]
+[TempTrapdoor][BlueToOrange] -> [TrapdoorOrange][BlueToOrange]
+
+[TempTrapdoorTriggered] -> [TrapdoorTriggered]
+
+[TempEnemy][OrangeToBlue] -> [EnemyBlueIdle][OrangeToBlue]
+[TempEnemy][BlueToOrange] -> [EnemyOrangeIdle][BlueToOrange]
+
+
+(ENEMY TURN - Kinda nasty)
+
+(Vertical preference, of course - DROD rules!)
+vertical [stationary EnemyActive|...|Player] -> [> EnemyActive|...|Player]
+vertical [stationary EnemyActive|...|PlayerCrosshair] -> [> EnemyActive|...|PlayerCrosshair]
+
+(Do some basic checks if the move is possible)
+[> EnemyActive|ObstacleForMonoEnemy] -> [EnemyActive|ObstacleForMonoEnemy]
+[> EnemyActive|Pushable|Obstacle] -> [EnemyActive|Pushable|Obstacle]
+[> EnemyActive|Pit no Filling] -> [EnemyActive|Pit]
+
+(of course, an omni pushable can't be pushed if the inactive universe blocks it)
+[> EnemyActive|PushableOmni|ObstacleForInactive] -> [EnemyActive|PushableOmni|ObstacleForInactive]
+
+(Special attention to an omni enemy)
+[> EnemyOmniActive|ObstacleForOmniEnemy] -> [EnemyOmniActive|ObstacleForOmniEnemy]
+[> EnemyOmniActive|InactivePushable|ObstacleForInactive] -> [EnemyOmniActive|InactivePushable|ObstacleForInactive]
+[> EnemyOmniActive|Pit no InactiveFilling] -> [EnemyOmniActive|Pit]
+
+(Don't think this is possible without some code duplication)
+horizontal [stationary EnemyActive|...|Player] -> [> EnemyActive|...|Player]
+horizontal [stationary EnemyActive|...|PlayerCrosshair] -> [> EnemyActive|...|PlayerCrosshair]
+
+[> EnemyActive|ObstacleForMonoEnemy] -> [EnemyActive|ObstacleForMonoEnemy]
+[> EnemyActive|Pushable|Obstacle] -> [EnemyActive|Pushable|Obstacle]
+[> EnemyActive|Pit no Filling] -> [EnemyActive|Pit]
+
+[> EnemyActive|PushableOmni|ObstacleForInactive] -> [EnemyActive|PushableOmni|ObstacleForInactive]
+
+[> EnemyOmniActive|ObstacleForOmniEnemy] -> [EnemyOmniActive|ObstacleForOmniEnemy]
+[> EnemyOmniActive|InactivePushable|ObstacleForInactive] -> [EnemyOmniActive|InactivePushable|ObstacleForInactive]
+[> EnemyOmniActive|Pit no InactiveFilling] -> [EnemyOmniActive|Pit]
+
+(Move balls - special attention to "double balls")
+(do this check first so you might save the player from an unfair death)
+[> EnemyOmniActive|Ball InactiveBall] -> [EnemyOmniActive|> Ball > InactiveBall]
+[> EnemyActive|Ball] -> [EnemyActive|> Ball]
+[> EnemyOmniActive|InactiveBall] -> [EnemyOmniActive|> InactiveBall]
+
+(if able to move into the player, do so)
+[> EnemyActive|Player] -> [|Blood] sfx4
+
+(Move crates)
+[> EnemyActive|Crate] -> [> EnemyActive|> Crate]
+[> EnemyOmniActive|InactiveCrate] -> [> EnemyOmniActive|> InactiveCrate]
+
+
+(ANIMATION TURN)
+
+(Goal animation)
+[Animate][GoalFr4] -> [Animate][GoalFr1 Buffer]
+[Animate][GoalFr3] -> [Animate][GoalFr4]
+[Animate][GoalFr2] -> [Animate][GoalFr3]
+[Animate][GoalFr1 no Buffer] -> [Animate][GoalFr2]
+
+(Turn active monsters back into idle ones)
+[EnemyOrangeActive] -> [EnemyOrangeIdle]
+[EnemyBlueActive] -> [EnemyBlueIdle]
+[EnemyOmniActive] -> [EnemyOmniIdle]
+
+(Death animation)
+[Blood Buffer|] -> [Blood Buffer|Blood]
+
+(kill all temporary objects used by the Anim Turn)
+[TempAnimTurn] -> []
+
+(mark blood tiles)
+[Blood] -> [Blood Buffer] again
+
+
+(PLAYER TURN)
+
+(init player Shadow)
+[Player] -> [Player PlayerShadow]
+
+(don't move into pits)
+[> Player|Pit no Filling] -> [Player|Pit]
+
+(push stuff)
+[> Player|Crate] -> [> Player|> Crate]
+[> CrateOmni|InactiveObstacle] -> [CrateOmni|InactiveObstacle]
+
+[> Player|MonoBall|no Obstacle] -> [Player Animate EnemyTurn|> MonoBall|] again
+[> Player|BallOmni|no Obstacle no InactiveObstacle] -> [Player Animate EnemyTurn|> BallOmni|] again
+
+(move balls)
+[> BallOmni|InactiveObstacle] -> [BallOmni|InactiveObstacle]
++[> Ball|no Obstacle] -> [|> Ball] sfx3
++[> MonoBall Pit no Filling] -> [MonoBall Pit]
++[> BallOmni Pit no Filling no InactiveFilling] -> [BallOmni Pit]
+
+(inactive ones, too)
+[> InactiveBall|ObstacleForInactive] -> [InactiveBall|ObstacleForInactive]
++[> InactiveBall|no ObstacleForInactive] -> [|> InactiveBall]
++[> InactiveBall Pit no InactiveFilling] -> [InactiveBall Pit]
+
+(LATE TURN)
+
+(is a trapdoor triggered?)
+late [MonoTrapdoor Trigger] -> [MonoTrapdoor Trigger TrapdoorTriggered]
+late [InactiveTrapdoor InactiveTrigger] -> [InactiveTrapdoor InactiveTrigger InactiveTrapdoorTriggered]
+late [TrapdoorOmni OmniTrigger] -> [TrapdoorOmni OmniTrigger TrapdoorTriggered]
+
+(make triggered trapdoors fall if there's no more weight on top of them)
+late [MonoTrapdoor TrapdoorTriggered no Weight] -> []
+late [InactiveTrapdoor InactiveTrapdoorTriggered no InactiveWeight] -> []
+late [TrapdoorOmni TrapdoorTriggered no Weight no InactiveWeight] -> []
+
+(if something is on top of a pit that can fill it, build a platform)
+late [Pit no Filling PitFillerOrange] -> [Pit PlatformOrange]
+late [Pit no Filling PitFillerBlue] -> [Pit PlatformBlue]
+late [Pit no Filling no InactiveFilling PitFillerOmni] -> [Pit PlatformOmni]
+late [Pit no InactiveFilling PitFillerInactive] -> [Pit InactivePlatform]
+
+(check door states)
+(start by pretending the doors ar open)
+late [DoorOrange] -> [DoorOpenOrange]
+late [DoorBlue] -> [DoorOpenBlue]
+late [DoorOmni] -> [DoorOpenOmni]
+late [InactiveDoor] -> [InactiveDoorOpen]
+
+(if there's nothing on top of the door and there's a switch without a weight, close the door)
+(again, this requires a lot of similiar code, but I don't know how to improve that)
+late [DoorOpenOrange no Obstacle][MonoSwitch no Weight] -> [DoorOrange][MonoSwitch]
+late [DoorOpenBlue no Obstacle][MonoSwitch no Weight] -> [DoorBlue][MonoSwitch]
+late [DoorOpenOmni no Obstacle][MonoSwitch no Weight] -> [DoorOmni][MonoSwitch]
+late [InactiveDoorOpen no ObstacleForInactive][InactiveSwitch no InactiveWeight] -> [InactiveDoor][InactiveSwitch]
+
+(an omni door additionaly needs inactive switches to be held down)
+late [DoorOpenOmni no Obstacle][InactiveSwitch no InactiveWeight] -> [DoorOmni][InactiveSwitch]
+
+(note that omni switches can be held down in either dimension)
+late [DoorOpenOrange no Obstacle][SwitchOmni no Weight no InactiveWeight] -> [DoorOrange][SwitchOmni]
+late [DoorOpenBlue no Obstacle][SwitchOmni no Weight no InactiveWeight] -> [DoorBlue][SwitchOmni]
+late [DoorOpenOmni no Obstacle][SwitchOmni no Weight no InactiveWeight] -> [DoorOmni][SwitchOmni]
+late [InactiveDoorOpen no ObstacleForInactive][SwitchOmni no Weight no InactiveWeight] -> [InactiveDoor][SwitchOmni]
+
+(if the player has actually moved, it's the game's turn)
+late [Player no PlayerShadow] -> [Player Animate EnemyTurn] again
+
+(is an enemy turn coming up? Turn idle monsters into active ones)
+late [EnemyTurn][EnemyOrangeIdle] -> [EnemyTurn][EnemyOrangeActive]
+late [EnemyTurn][EnemyBlueIdle] -> [EnemyTurn][EnemyBlueActive]
+late [EnemyTurn][EnemyOmniIdle] -> [EnemyTurn][EnemyOmniActive]
+
+(also do that crosshair thing)
+late [EnemyTurn][Player|...|] -> [EnemyTurn][Player|...|PlayerCrosshair]
+
+(kill all temporary objects used by the Player Turn)
+late [TempInputTurn] -> []
+
+
+==============
+WINCONDITIONS
+==============
+
+some Player on Goal
+
+=======     
+LEVELS
+=======
+
+
+message Have you ever wondered ...
+message ... if you weren't there ...
+message ... would the universe really care?
+
+
+message I - Nothing New Under the Sun
+
+#####****###
+#@..#*####c#
+#.a.###d##.#
+#.####d!d#.#
+#*#..##d##.#
+#.#.b#.e.#.#
+#.f..#.e.#.#
+####.#...#.#
+**#..##f##.#
+###..*..##.#
+#.a..#..##.#
+#....#####.#
+######***###
+
+
+message II - Universe Hopper
+
+########*
+#..1.1.##
+#..1.1.!#
+#..1.1.##
+#.#######
+#.#*****#
+#.#*1*1*#
+#.#**1**#
+#.#*1*1*#
+#.#*****#
+#.#######
+#*.@.1..#
+#########
+
+
+message III - The Best of Both Worlds
+
+****#########****
+#####.......#****
+#...#.#.#.#.#####
+#.1.........*.*!#
+#####.#.#.#.#####
+#.b............@#
+#...#.#.#.#.#####
+#####.......#****
+****#########****
+
+
+message IV - Two Times Two
+
+*##########
+##...*#.*!#
+#.11....#*#
+##..#*#.#.#
+*#.##.*...#
+*########@#
+********###
+
+message V - Dimensional Prelude
+
+*####****
+*#d!#****
+##*###***
+#*.*.#***
+#@.#*###*
+#....4.##
+#.1#5#a.#
+#.1.....#
+#..######
+####*****
+
+
+message VI - Dimensional Gateways
+
+******#####******
+******#...#******
+#######.5.#######
+#...#...@...#...#
+#!.*d.1.e.a.4.1.#
+#...#.......#...#
+#######.5.#######
+******#...#******
+******#####******
+
+
+message VII - Two Times Four
+
+****###******
+**###.#######
+###..1..#eee#
+#!d@1.1..ee##
+###..1..#eee#
+**###.#######
+****###******
+
+
+message VIII - Game of Marbles
+
+#########**
+#.......#**
+#.2...2.#**
+#.@.....###
+#...5...d!#
+#.b.....###
+#.2...2.#**
+#.......#**
+#########**
+
+
+message IX - Fixing a Hole
+
+#######*********
+#..**!#*********
+#..####*********
+##6##########***
+##..........###*
+*#.##d##d##d#.##
+*#.##.##.##....#
+*#@..6..6...2.##
+*#.##.##.##...#*
+*#d##d##d##...#*
+*#............#*
+*####.1.b.....##
+*#**5..........#
+*###############
+
+
+message X - Half Time
+
+*****###*******
+*#####*#*******
+*#!..#*###*****
+*#.#d#.a.#*****
+*#.d5...5#*****
+####.....#####*
+#**...5..6...#*
+###a.....#...#*
+**#.5...5#...#*
+**####6###...#*
+*****#....2.2##
+*****#.....2..#
+*****#....2.b.#
+*****######..@#
+**********#####
+
+
+message XI - Nemesis
+
+#########******
+#.......#******
+#.#####.#***###
+#.#c#@#.#***#c#
+#.#a#.#.#####d#
+#.#*....b..f.e#
+#.#######b###.#
+###*#..3#f#*#.#
+****#.###.###.#
+****#....*...*#
+****#########d#
+************#!#
+************###
+
+
+message XII - Every Breath You Take
+
+****######***
+****#....#***
+****#.##.#***
+****#....#***
+****##c######
+****#*@*****#
+****#*.....*#
+****#*.b...*#
+****#*.....*#
+****#*...b.*#
+****#*.....*#
+****#*****.*#
+##########.##
+#!*b*b*b....#
+########.##.#
+*******#....#
+*******######
+
+
+message XIII - Stalking Across Universes
+
+**#########***
+**#.......#***
+**#.#...#.#***
+###.......####
+#c@...1...b*!#
+###.......####
+**#.#...#.#***
+**#.......#***
+**#########***
+
+
+message XIV - A Little Help From My Friends
+
+********######
+#########....#
+#.........##3#
+#.#####.b.####
+#.#.####..#***
+#.#..*!#.##***
+#.##.###..#***
+#..#......#***
+##.#.######***
+*#@#.#********
+*#####********
+
+
+message XV - Hope Spot
+
+***#####*###
+***#...#*#!#
+***#.1.#*#*#
+####.#####.#
+#.c#.e.2d..#
+#.##.#.###.#
+#.#@...#*#.#
+#.##.#.###.#
+#....#.....#
+############
+
+
+message XVI - Hope for the Hopeless
+
+***######*****
+***#*##*#####*
+***#....#*#*##
+***#.**.....*#
+***#.**.*.*.##
+####....*...##
+#!*b.e1..4.@c#
+####....*...##
+***#.**.*.*.##
+***#.**.....*#
+***#....#*#*##
+***#*##*#####*
+***######*****
+
+
+message XVII - Blockade
+
+**###
+**#!#
+###*#
+#.#.#
+#.b.#
+#.b.#
+#3#@#
+#####
+
+
+
+message XVIII - Pas de Trois
+
+###########
+#.........#
+#.........#
+#....3....#
+#.........#
+#..e...e..#
+#.........#
+#.........#
+#####@#####
+****#d#****
+****#!#****
+****###****
+
+
+message XIX - Orange Blues
+
+********###**
+********#!###
+#########6.3#
+#...c...d.###
+#.......#f#**
+#..#.#..#.#**
+#..#5#..###**
+#..###..#****
+#.......#****
+#.1...1.#****
+#.##@##.#****
+#.......#****
+#########****
+
+
+message XX - The Last Waltz
+
+**********###****
+**#########3#****
+**#c.##...#d#****
+**##.##.#2#.#****
+**#..#......#****
+###.##.#..#.#****
+#...*.......#****
+#.#a##......#****
+#.#6##.#..1.#****
+#.#6#.......#****
+#...#e#b##b####**
+###f#f#d##d##.#**
+**#@#e.*..*.#.###
+**#########..bb.#
+**********#!#.#f#
+**********###..3#
+************#####
+
+
+message Congratulations! Thanks for playing, hope you enjoyed.
+
+message Encore
+message [Might be a bit too much trial-and-error for an "official" level]
+
+###*###**********
+#c#*#e#*########*
+#d###a#*#......#*
+#...#@###....#.#*
+#.#b#........d3#*
+###.#.###..a.####
+###.#.#*#....dbc#
+#!.*f*###....####
+###f#..##....#***
+**#.##f#######***
+**####.#*********
+***#cd.#*********
+***#####*********

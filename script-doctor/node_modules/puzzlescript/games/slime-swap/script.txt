@@ -1,0 +1,946 @@
+title Slime Swap
+author Alan Hazelden
+homepage www.draknek.org
+
+(verbose_logging)
+
+background_color grey
+
+again_interval 0.1
+realtime_interval 0.1
+
+noaction
+
+run_rules_on_level_start
+
+========
+OBJECTS
+========
+
+Background
+DARKGRAY GRAY
+11111
+10111
+11111
+01111
+11101
+
+
+Exit
+transparent (DarkBlue
+.....
+.111.
+.1.1.
+.111.
+.....)
+
+Target
+DarkBlue
+0...0
+.000.
+.0.0.
+.000.
+0...0
+
+Hole
+black
+
+Wall
+#444
+
+PlayerUD
+#a46422 #495e2b #493c2b #000000
+..0..
+.111.
+01110
+02220
+.2.2.
+
+PlayerL
+#a46422 #495e2b #493c2b #000000
+..0..
+.111.
+.110.
+.220.
+.2.2.
+
+PlayerR
+#a46422 #495e2b #493c2b #000000
+..0..
+.111.
+.011.
+.022.
+.2.2.
+
+Crate
+#eb9141 #eb8931 #732930 #69262c
+.001.
+.011.
+.111.
+.223.
+.233.
+
+Slime
+#44891a #50a01e #306c0c #36770e
+01001
+00100
+00000
+22222
+32232
+
+SlimeAnim1_1
+#44891a #50a01e #306c0c #36770e
+.....
+.....
+.....
+.....
+.....
+
+SlimeAnim1_2
+#44891a #50a01e #306c0c #36770e
+....0
+....1
+.....
+.....
+.....
+
+SlimeAnim1_3
+#44891a #50a01e #306c0c #36770e
+...10
+.....
+.....
+.....
+.....
+
+SlimeAnim2_1
+#44891a #50a01e #306c0c #36770e
+.....
+.....
+.....
+.....
+.....
+
+SlimeAnim2_2
+#44891a #50a01e #306c0c #36770e
+10...
+.....
+.....
+.....
+.....
+
+SlimeAnim2_3
+#44891a #50a01e #306c0c #36770e
+.0...
+1....
+.....
+.....
+.....
+
+SlimeAnim3_1
+#44891a #50a01e #306c0c #36770e
+.....
+.....
+.....
+.....
+.....
+
+SlimeAnim3_2
+#44891a #50a01e #306c0c #36770e
+.....
+..0..
+..1..
+.....
+.....
+
+SlimeAnim3_3
+#44891a #50a01e #306c0c #36770e
+.....
+..0..
+.1...
+.....
+.....
+
+SlimeAnim4_1
+#44891a #50a01e #306c0c #36770e
+.....
+.....
+.....
+.....
+.....
+
+SlimeAnim4_2
+#44891a #50a01e #306c0c #36770e
+.....
+.....
+.....
+.....
+23...
+
+SlimeAnim4_3
+#44891a #50a01e #306c0c #36770e
+.....
+.....
+.....
+.3...
+2....
+
+SlimeAnim5_1
+#44891a #50a01e #306c0c #36770e
+.....
+.....
+.....
+.....
+.....
+
+SlimeAnim5_2
+#44891a #50a01e #306c0c #36770e
+.....
+.....
+.....
+...3.
+...2.
+
+SlimeAnim5_3
+#44891a #50a01e #306c0c #36770e
+.....
+.....
+.....
+.....
+...23
+
+U
+transparent
+
+D
+transparent
+
+L
+transparent
+
+R
+transparent
+
+BelowSlime
+#44891a #50a01e #306c0c #36770e
+22222
+.....
+.....
+.....
+.....
+
+AboveSlime
+#44891a #50a01e #306c0c #36770e
+.....
+.....
+.....
+.....
+00000
+
+BelowFloor
+grey
+00000
+.....
+.....
+.....
+.....
+
+AboveFloor
+black
+00000
+.....
+.....
+.....
+.....
+
+BelowWall
+#444
+00000
+.....
+.....
+.....
+.....
+
+AboveWall
+#93815f
+.....
+.....
+.....
+.....
+00000
+
+WallD
+#93815f #444
+.....
+.....
+.....
+00000
+11111
+
+WallL
+#93815f
+0....
+0....
+0....
+0....
+0....
+
+WallR
+#93815f
+....0
+....0
+....0
+....0
+....0
+
+WallLR
+#93815f
+0...0
+0...0
+0...0
+0...0
+0...0
+
+AboveWallL
+#93815f
+.....
+.....
+.....
+0....
+0....
+
+AboveWallR
+#93815f
+.....
+.....
+.....
+....0
+....0
+
+AboveWallLR
+#93815f
+.....
+.....
+.....
+0...0
+0...0
+
+SlimeDisappearing
+#224410 #285010 #183606 #184b09
+.....
+00000
+01001
+00100
+00000
+
+BelowSlimeDisappearing
+#224410 #285010 #183606 #184b09
+22222
+32232
+22322
+.....
+.....
+
+BelowSlimeDisappearingCovered
+#224410 #285010 #183606 #184b09
+22222
+.....
+.....
+.....
+.....
+
+
+CrateDisappearing
+#764921 #744821 #391418 #341418
+.....
+.001.
+.011.
+.111.
+.223.
+
+BelowCrateDisappearing
+#764921 #744821 #391418 #341418
+.233.
+.....
+.....
+.....
+.....
+
+
+
+PlayerDisappearing
+#523211 #283016 #241d18
+.....
+..0..
+.111.
+01110
+02220
+
+BelowPlayerDisappearing
+#523211 #283016 #241d18
+.2.2.
+.....
+.....
+.....
+.....
+
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = PlayerUD
+* = Crate
+! = Exit
+O = Target
+% = Slime
+_ = Hole
+
+Player = PlayerUD or PlayerL or PlayerR
+
+Direction = L or R or U or D
+Swappable = Player or Crate
+Movable = Player or Crate or Slime
+Solid = Player or Crate or Wall or Slime
+
+AboveDecoration = AboveWall or AboveWallL or AboveWallR or WallL or WallR or WallLR
+BelowDecoration = BelowWall or BelowFloor or BelowSlime or BelowSlimeDisappearing or BelowSlimeDisappearingCovered or BelowCrateDisappearing or BelowPlayerDisappearing
+
+SlimeAnim1 = SlimeAnim1_1 or SlimeAnim1_2 or SlimeAnim1_3
+SlimeAnim2 = SlimeAnim2_1 or SlimeAnim2_2 or SlimeAnim2_3
+SlimeAnim3 = SlimeAnim3_1 or SlimeAnim3_2 or SlimeAnim3_3
+SlimeAnim4 = SlimeAnim4_1 or SlimeAnim4_2 or SlimeAnim4_3
+SlimeAnim5 = SlimeAnim5_1 or SlimeAnim5_2 or SlimeAnim5_3
+
+SlimeAnim = SlimeAnim1 or SlimeAnim2 or SlimeAnim3 or SlimeAnim4 or SlimeAnim5
+
+=======
+SOUNDS
+=======
+
+sfx0 81079707 (player move)
+sfx1 86898707 (crate push)
+sfx2 68847709 (slime swap)
+sfx3 74256309
+(34029309) (12788109) (flying)
+sfx4 3314502 (fall into hole)
+
+Undo 8748307
+(Cancel 1326707)
+Restart 28758302
+
+EndLevel 63730508
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Hole
+BelowDecoration, AboveFloor
+Direction
+Target, Exit
+Slime, SlimeDisappearing
+SlimeAnim1
+SlimeAnim2
+SlimeAnim3
+SlimeAnim4
+SlimeAnim5
+Player, Wall, Crate, CrateDisappearing, PlayerDisappearing
+AboveDecoration
+WallD, AboveWallLR
+AboveSlime
+
+======
+RULES
+======
+
+[ moving Player ] [ Slime ] -> [ moving Player ] [ action Slime ]
+
+[ stationary Slime ] -> [ action Slime random SlimeAnim ]
+
+
+
+[ action Slime ] -> [ Slime ]
+
+[ SlimeAnim1_2 SlimeAnim2_3 SlimeAnim3_1 ] -> []
+[ SlimeAnim1_3 SlimeAnim2_1 SlimeAnim3_1 ] -> []
+
+(fall down holes)
+
+
+[ SlimeDisappearing Hole ] -> [ Hole ]
+[ CrateDisappearing Hole ] -> [ Hole ]
+[ PlayerDisappearing Hole ] -> [ Hole ]
+
+late [ Slime Hole no Direction ] -> [ SlimeDisappearing Hole ] again sfx4
+late [ Crate Hole no Direction ] -> [ CrateDisappearing Hole ] again sfx4
+late [ Player Hole no Direction ] -> [ PlayerDisappearing Hole ] again sfx4
+
+late [ Movable Hole no Direction ] -> [ Hole ] sfx4
+
+late [ SlimeAnim no Slime ] -> []
+
+
+(3D)
+
+down [ Wall | no Wall ] -> [ Wall WallD | BelowWall ]
+up [ Wall | no Wall ] -> [ Wall | AboveWall ]
+left [ Wall | no Wall ] -> [ Wall WallL | ]
+right [ Wall WallL | no Wall ] -> [ Wall WallLR | ]
+right [ Wall no AboveDecoration | no Wall ] -> [ Wall WallR | ]
+
+up [ WallL | Wall no AboveDecoration ] -> [ WallL | Wall AboveWallL ]
+up [ WallR | Wall no AboveDecoration ] -> [ WallR | Wall AboveWallR ]
+up [ WallLR | Wall ] -> [ WallLR | Wall AboveWallLR ]
+
+down [ no Hole no Wall | Hole ] -> [ | Hole BelowFloor ]
+up [ no Hole no Wall | Hole ] -> [ AboveFloor | Hole ]
+
+[ AboveSlime ] -> []
+[ BelowSlime ] -> []
+
+late down [ Slime | ] -> [ Slime | BelowSlime ]
+late up [ Slime | ] -> [ Slime | AboveSlime ]
+
+
+[BelowSlimeDisappearing ] -> []
+[BelowCrateDisappearing ] -> []
+[BelowPlayerDisappearing ] -> []
+
+late down [ SlimeDisappearing | no AboveFloor] -> [ SlimeDisappearing | BelowSlimeDisappearing ]
+late down [ SlimeDisappearing | AboveFloor] -> [ SlimeDisappearing | BelowSlimeDisappearingCovered ]
+
+
+late down [ CrateDisappearing | no AboveFloor] -> [ CrateDisappearing | BelowCrateDisappearing ]
+late down [ PlayerDisappearing | no AboveFloor] -> [ PlayerDisappearing | BelowPlayerDisappearing ]
+
+
+(game)
+
+[ left Player ] -> [ left PlayerL ] sfx0
+[ right Player ] -> [ right PlayerR ] sfx0
+[ vertical Player ] -> [ vertical PlayerUD ] sfx0
+
+[ > Player | Hole ] -> [ Player | Hole ]
+
+[ L Swappable ] -> [ L left Swappable ] sfx3
+[ R Swappable ] -> [ R right Swappable ] sfx3
+[ U Swappable ] -> [ U up Swappable ] sfx3
+[ D Swappable ] -> [ D down Swappable ] sfx3
+
+[ Direction > Swappable stationary Slime ] -> [ Direction > Swappable < Slime ] sfx2
+
+[ L stationary Slime ] -> [ left Slime ] sfx3
+[ R stationary Slime ] -> [ right Slime ] sfx3
+[ U stationary Slime ] -> [ up Slime ] sfx3
+[ D stationary Slime ] -> [ down Slime ] sfx3
+
+[ | Player | Direction > Crate < Slime | Solid ] -> [ Player | Slime | Crate | Solid ]
+
+[ Direction > Swappable | Solid ] -> [ Swappable | Solid ]
+[ Direction > Swappable | ] -> [ | Direction Swappable ]
+
+[ > Slime | Solid ] -> [ Slime no Direction | Solid ]
+left [ > Slime | ] -> [ | L Slime ]
+right [ > Slime | ] -> [ | R Slime ]
+up [ > Slime | ] -> [ | U Slime ]
+down [ > Slime | ] -> [ | D Slime ]
+
+
+[ >  Player | Crate ] -> [  >  Player | > Crate ] sfx1
+
+[ > Crate | no Solid ] -> [ | Crate ]
+[ > Player | no Solid ] -> [ | Player ]
+
+left [ > Swappable | Slime ] -> [ | L Swappable Slime ]
+right [ > Swappable | Slime ] -> [ | R Swappable Slime ]
+up [ > Swappable | Slime ] -> [ | U Swappable Slime ]
+down [ > Swappable | Slime ] -> [ | D Swappable Slime ]
+
+[ > Player | no Solid ] -> [ | Player ]
+
+[ moving Movable ] -> [ Movable no Direction ]
+
+[ Direction Player ] -> [ Direction PlayerUD ]
+
+[ Direction ] -> again
+[ Movable Hole ] -> again
+
+
+==============
+WINCONDITIONS
+==============
+
+All Player on Exit
+some Player
+
+=======
+LEVELS
+=======
+
+#p########
+#.#...####
+#..%..####
+#__...####
+#______..#
+#______..!
+#........#
+#........#
+##########
+
+
+
+##########!##
+#________...#
+#_######_...#
+#...#..._...#
+#.%.#..#_...#
+#......#_...#
+##p##########
+
+
+
+######!##
+#..._...#
+#%.._...#
+#..._...#
+#...____#
+#..._...#
+#.....*.#
+#..._...#
+#_____p_#
+
+
+
+
+###########!##
+#_..._____...#
+#_%.._____...#
+#_..._____...#
+#__._________#
+#....________#
+#...._...____#
+#......*.____#
+#...._...____#
+#______p_____#
+
+
+
+
+
+
+___!________
+_#..._...___
+_#..._.#.___
+_#..._...___
+______...___
+____......._
+____..%.*#.p
+____......._
+____.....___
+____________
+
+
+
+
+
+
+_____________
+#......______
+#......._____
+#...#.*._..._
+#.%.#p.._.#.!
+#...#.*._..._
+#......._____
+#......______
+_____________
+
+
+
+
+
+_________
+_..._..._
+_..*_.#.!
+_..._..._
+_..._____
+_.....*._
+_.%.....p
+_......._
+_________
+
+
+
+
+
+
+
+
+
+
+
+##############
+#....._______#
+#....._______#
+p..%.._______#
+#.....__.....#
+#.....__.....#
+#_______.....!
+#_______.....#
+#.....__.....#
+#...*._______#
+#....._______#
+#.%..._______#
+#....._______#
+##############
+
+
+
+
+
+#p########
+#....____#
+#....____#
+##%..____#
+##...____#
+##*..____#
+#...._...#
+#...._...!
+#_____...#
+##########
+
+
+
+
+
+
+##!####_____
+#..._.._..._
+#..._.%...._
+#..._.._..._
+####_.._____
+#..._.._..._
+#..._.._..._
+p.*........_
+#..._.._..._
+____________
+
+
+
+
+
+
+
+#############
+#______.....#
+#______...%.#
+#______.....p
+#______.*...#
+#______.....#
+#___________#
+#....._.....#
+#....._.....#
+#....._....%#
+#....._.....#
+#....._.....#
+###!#########
+
+
+
+
+
+
+
+_______!__
+______..._
+_...__.#._
+_.%.__..._
+_...______
+_.%.______
+_....*..._
+_........_
+_....*..._
+#######p##
+
+
+
+
+
+_________!__
+________...#
+__...___...#
+__.*.___...#
+_.....______
+_.%.*.______
+_.....______
+__.#._______
+__..._______
+___p________
+
+
+
+
+_________
+_____..._
+_____.*.p
+_____..._
+____...._
+_....%.._
+_.*....._
+_......__
+_________
+_..._____
+!.#._____
+_..._____
+_________
+
+
+
+
+
+
+#######!##
+#...##...#
+p...__...#
+#...__...#
+__._______
+_........_
+_.%....*._
+_........_
+_______.__
+___..._.__
+___.*...__
+___...____
+__________
+
+
+
+
+
+
+
+
+
+
+message Thanks for playing :)
+
+
+
+
+
+(###################
+#....._....._.....#
+#....._....._.....#
+#..*.._..%.._..%..#
+#....._....._.....#
+#....._....._.....#
+######___.________#
+#....._....._.....#
+#....._..#.._..%..#
+#....._..#.._.....#
+#....._..#.._..#..#
+#....._....._.....#
+##!###_______###p##)
+
+
+
+
+(###########
+#.....____#
+p.*...____#
+#.....____#
+##...._...#
+##.____...!
+##...._...#
+#.....____#
+#.%...____#
+#.....____#
+###########)
+
+
+
+(############
+#....______#
+p..*.______#
+#....______#
+#....___...#
+#__.____...!
+#....___...#
+#....______#
+#..%.______#
+#....______#
+############)
+
+
+
+(________#
+__._____#
+_..._...#
+_..*_.#.!
+_..._...#
+p...____#
+_....*._#
+_.%.....#
+_......_#
+________#)
+
+
+
+(############
+#....._____#
+#.....__...#
+#.....__...!
+#.....__...#
+#......____#
+#_____.____#
+#_____.____#
+#......____#
+#.%..._____#
+p....._____#
+#...*._____#
+#....._____#
+############)
+
+
+
+
+(############
+#...___#####
+#..p___#####
+#.%.___#...#
+#.*.___....#
+#...___#...#
+#...___#...!
+############)
+
+
+(
+############
+#.....#__..#
+#.#...#__..#
+#...#.#__..!
+##%##..__..#
+##.....__..#
+###p########)
+
+
+(##.#######
+#...___..#
+#...___..#
+#%p.___..#
+#...####.#
+########.!
+##########)
+
+(
+
+#############
+##..####__..#
+##.%####__..!
+#...#...__..#
+#..##..#__..#
+#......#__..#
+#p###########
+)

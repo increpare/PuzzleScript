@@ -1,0 +1,327 @@
+title purple
+author Rosden Shadow [Mark Signorelli]
+homepage rosden.itch.io
+run_rules_on_level_Start
+
+background_color #536673
+
+text_color #FFD9FC
+
+========
+OBJECTS
+========
+
+Background
+#7C94A1 #536673 (#E57ED5 #CC5285)
+11111
+10101
+11011
+10101
+11111
+(
+00101
+01110
+11011
+01111
+10110)
+(
+11101
+00101
+11111
+10100
+10111)
+
+
+nomove
+#FFEED9 #536673
+.....
+.000.
+.010.
+.000.
+.....
+
+Target
+#82A17C #7EE58D #D9FFDC 
+.....
+.010.
+.1.1.
+.010.
+.....
+
+Wall
+#9B7CA1 #C1A2BC #845C7A #5B4654
+20001
+20001
+22220
+23232
+32323
+
+overwall
+#9B7CA1 #C1A2BC #845C7A #5B4654
+.....
+.....
+.....
+01111
+20001
+
+
+Playerright
+#F2F2AA #E5C17E #DB7F55 #B32D2D
+.000.
+11202
+11313
+11110
+.1.1.
+
+playerleft
+#F2F2AA #E5C17E #DB7F55 #B32D2D
+.000.
+20211
+31311
+01111
+.1.1.
+
+Crate
+#DB7F55 #E5C17E  #B32D2D #73342E
+20011
+20001
+22001
+32223
+.333.
+
+overcrate
+#DB7F55 #E5C17E  #B32D2D #73342E
+.....
+.....
+.....
+.....
+.111.
+
+crate2
+#FFD9FC #E0AAF2 #A87EE5 #705C84
+21100
+21110
+22110
+32223
+.333.
+
+overcrate2
+#FFD9FC #E0AAF2 #A87EE5 #705C84
+.....
+.....
+.....
+.....
+.000.
+
+cloner
+#E5C17E #DB7F55 #B32D2D #73342E
+.100.
+.210.
+.221.
+.332.
+.....
+
+swapcrate
+Orange Yellow
+00000
+0...0
+0...0
+0...0
+00000
+
+swapwall
+black
+.....
+.....
+.....
+.....
+.....
+
+thefloor
+#536673
+00000
+00000
+00000
+00000
+00000
+
+(
+checkempty
+black
+.....
+.....
+.....
+.....
+.....
+
+checkblock
+black
+.....
+.....
+.....
+.....
+.....
+)
+
+switcrate
+black
+.....
+.....
+.....
+.....
+.....
+
+switcrate2
+black
+.....
+.....
+.....
+.....
+.....
+
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Playerright
+* = Crate
+@ = Crate2
+O = Target
+n = nomove
+
+c=cloner
+-=thefloor
+
+feel=overwall or overcrate or overcrate2
+pushable=crate or cloner or swapcrate or crate2 or switcrate or switcrate2
+win=crate or wall
+
+
+theemx= crate 
+player=playerright or playerleft
+
+blocker = wall or crate or crate2 or nomove
+=======
+SOUNDS
+=======
+
+pushable MOVE 36772507
+
+
+sfx0 52836103
+sfx1 45427502
+================
+COLLISIONLAYERS
+================
+
+Background
+Target
+nomove
+Player, Wall, pushable,swapwall,thefloor
+feel
+
+======
+RULES
+======
+
+[feel]->[]
+[ >  Player | crate ] -> [  >  Player | > switcrate2 ]
+[ >  Player | crate2 ] -> [  >  Player | > switcrate ]
+
+
+
+[> switcrate|blocker]->[crate2|blocker]
+[> switcrate2|blocker]->[crate|blocker]
+
+
+
+[switcrate]->[crate]
+[switcrate2]->[crate2]
+
+[ left Playerright] -> [ left playerleft]
+[ right Playerleft] -> [ right playerright]
+
+
+
+late up [wall| ]-> [wall|overwall]
+late up [theemx| ]-> [theemx|overcrate]
+
+late up [crate2| ]-> [crate2|overcrate2]
+
+
+
+==============
+WINCONDITIONS
+==============
+
+no crate
+
+
+
+=======
+LEVELS
+=======
+
+message turn all blocks purple
+
+message level 1 of 4
+---------
+-#######-
+##.nnn.##
+#.n.*.n.#
+#.n***n.#
+#.n.*.n.#
+#..nnn..#
+#.......#
+#..*.*..#
+##..P..##
+-#######-
+
+message level 2 of 4
+---------
+-#######-
+##.nnn.##
+#.n.*.n.#
+#nn*.*nn#
+#n*.*.*n#
+#nn*.*nn#
+#.n.*.n.#
+#..npn..#
+##..n..##
+-#######-
+
+message level 3 of 4
+---------
+-#######-
+##.nnn.##
+#.n***n.#
+#.nn.nn.#
+#.n***n.#
+#.nn.nn.#
+#.n***n.#
+#.n...n.#
+##.nPn.##
+-#######-
+
+message level 4 of 4
+---------
+#########
+#.nnnnn.#
+#n*****n#
+#n*...*n#
+#n*...*n#
+#n*...*n#
+#n*****n#
+#.nnnnn.#
+##..P..##
+-#######-
+
+
+
+
+
+
+message royal purple rules

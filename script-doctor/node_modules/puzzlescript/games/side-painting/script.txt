@@ -1,0 +1,1175 @@
+title Side painting
+author Rosden Shadow [Mark Signorelli]
+homepage rosden.itch.io
+
+noaction
+run_rules_on_level_Start
+
+background_color #231F26 
+text_color #F2F2AA
+again_interval 0.1
+
+========
+OBJECTS
+========
+
+Background
+#333333 #231F26 (#E57ED5 #CC5285)
+11111
+11011
+10001
+11011
+11111
+(
+00101
+01110
+11011
+01111
+10110)
+(
+11101
+00101
+11111
+10100
+10111)
+
+
+nomove
+#FFEED9 #536673
+.....
+.000.
+.010.
+.000.
+.....
+
+Target
+#F2F2AA #231F26
+.....
+.000.
+.010.
+.000.
+.....
+
+Wall
+#F2F2AA #E5C17E #CC7A52 #736053
+12110
+21210
+22121
+23232
+32323
+
+overwall
+#F2F2AA #E5C17E #CC7A52 #736053
+.....
+.....
+.....
+.000.
+21110
+
+Wall1
+#F2AACE #E57ED5 #CC5285 #845C7A
+21110
+21110
+22221
+23232
+32323
+
+overwall1
+#F2AACE #E57ED5 #CC5285 #845C7A
+.....
+.....
+.....
+10000
+21110
+
+Wall2
+ #AAE0F2 #7EA1E5 #5C6684 #46495B
+21110
+21110
+22221
+23232
+32323
+
+overwall2
+ #AAE0F2 #7EA1E5 #5C6684 #46495B
+.....
+.....
+.....
+10000
+21110
+
+Wall3
+#FFD9E0 #C1A2A5 #845C5C #5B4846
+21110
+21110
+22221
+23232
+32323
+
+overwall3
+#FFD9E0 #C1A2A5 #845C5C #5B4846
+.....
+.....
+.....
+10000
+21110
+
+Wallret
+#D9FFDC #7EE58D #5C8466 #4F5B46
+21110
+21110
+22221
+23232
+32323
+
+overwallret
+#D9FFDC #7EE58D #5C8466 #4F5B46
+.....
+.....
+.....
+10000
+21110
+
+
+
+Playerright
+#D9FFF8 #AAE0F2 #5B4846 #423D39
+.000.
+11202
+11313
+11110
+.1.1.
+
+playerleft
+#D9FFF8 #AAE0F2 #5B4846 #423D39
+.000.
+20211
+31311
+01111
+.1.1.
+
+Crate
+#D9FFDC #7EE58D #5C8466 #4F5B46
+21100
+21110
+22110
+32223
+.333.
+
+overcrate
+#D9FFDC #7EE58D #5C8466 #4F5B46
+.....
+.....
+.....
+.....
+.000.
+
+end
+#D9FFDC #7EE58D #5C8466 #4F5B46
+21100
+21110
+22110
+32223
+.333.
+endx
+#D9FFDC #7EE58D #5C8466 #4F5B46
+21100
+21110
+22110
+32223
+.333.
+
+
+
+cloner
+#E5C17E #DB7F55 #B32D2D #73342E
+.100.
+.210.
+.221.
+.332.
+.....
+
+swapcrate
+Orange Yellow
+00000
+0...0
+0...0
+0...0
+00000
+
+swapwall
+black
+.....
+.....
+.....
+.....
+.....
+
+thefloor
+#231F26
+00000
+00000
+00000
+00000
+00000
+
+thefloorx
+#231F26
+00000
+00000
+00000
+00000
+00000
+
+eend
+#231F26
+00000
+00000
+00000
+00000
+00000
+(
+checkempty
+black
+.....
+.....
+.....
+.....
+.....
+
+checkblock
+black
+.....
+.....
+.....
+.....
+.....
+)
+
+cango
+transparent
+can
+transparent
+
+hasmov
+transparent
+
+lb
+#FFD9E0 #C1A2A5 #845C5C #5B4846
+21...
+211..
+22...
+3....
+.....
+
+rb
+#FFD9E0 #C1A2A5 #845C5C #5B4846
+...00
+..110
+...10
+....3
+.....
+
+ub
+#FFD9E0 #C1A2A5 #845C5C #5B4846
+.111.
+..1..
+.....
+.....
+.....
+
+ubup
+#FFD9E0 #C1A2A5 #845C5C #5B4846
+.....
+.....
+.....
+.....
+.000.
+
+db
+#FFD9E0 #C1A2A5 #845C5C #5B4846
+.....
+..1..
+.211.
+.222.
+.333.
+
+
+lb1
+ #F2AACE #E57ED5 #CC5285 #845C7A
+21...
+211..
+22...
+3....
+.....
+
+rb1
+#F2AACE #E57ED5 #CC5285 #845C7A
+...00
+..110
+...10
+....3
+.....
+
+ub1
+#F2AACE #E57ED5 #CC5285 #845C7A
+.111.
+..1..
+.....
+.....
+.....
+
+ubup1
+#F2AACE #E57ED5 #CC5285 #845C7A
+.....
+.....
+.....
+.....
+.000.
+
+db1
+#F2AACE #E57ED5 #CC5285 #845C7A
+.....
+..1..
+.211.
+.222.
+.333.
+
+lb2
+#AAE0F2 #7EA1E5 #5C6684 #46495B
+21...
+211..
+22...
+3....
+.....
+
+rb2
+#AAE0F2 #7EA1E5 #5C6684 #46495B
+...10
+..110
+...10
+....3
+.....
+
+ub2
+#AAE0F2 #7EA1E5 #5C6684 #46495B
+.111.
+..1..
+.....
+.....
+.....
+
+ubup2
+#AAE0F2 #7EA1E5 #5C6684 #46495B
+.....
+.....
+.....
+.....
+.000.
+
+db2
+#AAE0F2 #7EA1E5 #5C6684 #46495B
+.....
+..1..
+.211.
+.222.
+.333.
+
+lbx
+TRANSPARENT
+
+rbx
+TRANSPARENT
+
+ubx
+TRANSPARENT
+
+dbx
+TRANSPARENT
+
+lbx1
+TRANSPARENT
+
+rbx1
+TRANSPARENT
+
+ubx1
+TRANSPARENT
+
+dbx1
+TRANSPARENT
+
+lbx2
+TRANSPARENT
+
+rbx2
+TRANSPARENT
+
+ubx2
+TRANSPARENT
+
+dbx2
+TRANSPARENT
+
+rbruu
+transparent
+rbrud
+transparent
+rbrul
+transparent
+rbrur
+transparent
+
+start
+TRANSPARENT
+startx
+TRANSPARENT
+
+switcrate
+black
+.....
+.....
+.....
+.....
+.....
+
+switcrate2
+black
+.....
+.....
+.....
+.....
+.....
+
+arrow
+black
+.....
+.....
+.0.0.
+.000.
+..0..
+
+arrow2
+black
+.....
+.0.0.
+.000.
+..0..
+.....
+
+spa
+black
+.....
+.....
+.....
+.....
+.....
+
+arrowx
+black
+.....
+.....
+.....
+.....
+.....
+
+arrowx2
+black
+.....
+.....
+.....
+.....
+.....
+
+winend
+#F2AACE #E57ED5 #CC5285 #845C7A
+1000.
+21100
+21110
+22110
+.2221
+
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Playerright and start
+* = Crate
+
+O = Target
+n = nomove
+a = arrow2 and wall
+e=end
+t = end and target and eend
+w=end and winend
+
+c=cloner
+-=thefloor
+x=thefloorx
+
+1=wall1
+2=wall2
+3=wall3
+4=wallret
+
+feel=overwall or overcrate or overwall1 or overwall2 or overwall3 or overwallret
+pushable=crate or cloner or swapcrate  or switcrate or switcrate2
+win=crate or wall
+
+
+theemx= crate 
+player=playerright or playerleft
+
+blocker = wall  or nomove or arrow or wall1 or wall2 or wall3 or crate or Wallret or thefloor
+
+walls=wall or wall1 or wall2 or wall3 or Wallret or thefloor
+
+arrowk = arrow or arrow2 or arrowx or arrowx2
+
+moveable=crate or player
+
+
+bru1= ub or lb or rb or db
+bru2= ub1 or lb1 or rb1 or db1
+bru3= ub2 or lb2 or rb2 or db2
+
+brux=ubx or lbx or rbx or dbx
+brux2=ubx2 or lbx2 or rbx2 or dbx2
+brux1=ubx1 or lbx1 or rbx1 or dbx1
+
+brul=lb1 or lb or lb2
+brur=rb1 or rb or rb2
+bruu=ub1 or ub or ub2
+brud=db1 or db or db2
+(control for all)
+bru= brux or brux2 or brux1 or bru1 or bru2 or bru3 or ubup or ubup1 or ubup2
+
+rbru=rbruu or rbrud or rbrul or rbrur
+
+blockx=blocker or crate
+=======
+SOUNDS
+=======
+
+undo 43401909
+pushable MOVE 36772507
+
+EndLevel 74089700
+
+player MOVE 68988304
+sfx0 52836103
+sfx1 45427502
+
+sfx2 29503700
+sfx3 81951902
+
+sfx4 21197501
+sfx5 89629907
+
+sfx6 48464903
+================
+COLLISIONLAYERS
+================
+
+Background
+Target
+nomove
+Player, Wall, pushable,swapwall,thefloor,thefloorx, wall1, wall2, wall3,Wallret
+
+ub,ub1,ub2
+lb,lb1,lb2
+rb,rb1,rb2
+db,db1,db2
+
+(ub1
+lb1
+rb1
+db1
+
+ub2
+lb2
+rb2
+db2)
+
+ubx,ubx1,ubx2
+lbx,lbx1,lbx2
+rbx,rbx1,rbx2
+dbx,dbx1,dbx2
+
+
+rbruu
+rbrud
+rbrul
+rbrur
+
+spa
+can
+cango
+hasmov
+
+startx
+start
+arrow, arrow2, arrowx, arrowx2
+winend
+eend
+end, endx
+feel
+ubup
+ubup2
+ubup1
+
+======
+RULES
+======
+
+[feel]->[]
+[bru no crate]->[]
+[ubup]->[]
+[ubup2]->[]
+[ubup1]->[]
+
+
+(late down[db2 crate|no player]->[db crate|] sfx4
+late up[ub2 crate|no player]->[ub crate|] sfx4
+late right[rb2 crate|no player]->[rb crate|] sfx4
+late left[lb2 crate|no player]->[lb crate|] sfx4)
+
+
+(right[ right  Player  | crate no brul | no blocker ] -> [  right  Player | right crate |  ]
+left[ left  Player  | crate no brur | no blocker ] -> [  left  Player | left crate | ]
+up[ up Player  | crate no brud| no blocker ] -> [ up Player | up crate | ]
+down[ down Player  | crate no bruu | no blocker ] -> [  down  Player | down crate | ]
+
+right[ right  Player  | crate lb2 | no blocker ] -> [  right  Player | right crate lb2 |  ]
+left[ left  Player  | crate rb2 | no blocker ] -> [  left  Player | left crate rb2 | ]
+up[ up Player  | crate db2| no blocker ] -> [ up Player | up crate db2| ]
+down[ down Player  | crate ub2 | no blocker ] -> [  down  Player | down crate ub2| ])
+
+right[ right  Player  | crate no brul | ] -> [  right  Player | right crate |  ]
+left[ left  Player  | crate no brur | ] -> [  left  Player | left crate | ]
+up[ up Player  | crate no brud| ] -> [ up Player | up crate | ]
+down[ down Player  | crate no bruu | ] -> [  down  Player | down crate | ]
+
+(right[ right  Player  | crate lb2 | ] -> [  right  Player | right crate right lb2 |  ]
+left[ left  Player  | crate rb2 |] -> [  left  Player | left crate left rb2 | ]
+up[ up Player  | crate db2|] -> [ up Player | up crate up db2| ]
+down[ down Player  | crate ub2 |] -> [  down  Player | down crate down ub2| ])
+
+
+right[no walls| left  Player  | crate lb1 |  ] -> [|  left  Player | left crate  lb1|  ]
+left[no walls| right  Player  | crate rb1 |  ] -> [|  right  Player | right crate rb1 | ]
+up[no walls| down Player  | crate db1| ] -> [| down Player | down crate db1| ]
+down[no walls| up Player  | crate ub1 | ] -> [|  up  Player | up crate ub1| ]
+
+
+right[ right  Player  | crate  lb  ] -> [ right  Player  | crate  lb  ] sfx5
+left[ left  Player  | crate  rb  ] -> [ left  Player  | crate  rb  ] sfx5
+up[ up Player  | crate  db] -> [ up Player  | crate  db] sfx5
+down[ down Player  | crate  ub ] -> [ down Player  | crate  ub ] sfx5
+
+
+(bond part)
+
+ right[ moving  moveable  | crate lb2   ] -> [  moving  moveable | crate  lb2 can ]
+ left[ Moving crate lb2 | moveable ] -> [ Moving crate lb2 |  moveable can ]
+ left[ moving  moveable  | crate rb2   ] -> [  moving  moveable |  crate rb2 can]
+ right[ Moving crate rb2 | moveable ] -> [ Moving crate rb2 |  moveable can]
+ up[ moving moveable  | crate db2 ] -> [ moving moveable |  crate db2 can]
+ down[ Moving crate db2 | moveable ] -> [ Moving crate db2|  moveable can]
+ down[ moving moveable  | crate ub2  ] -> [  moving  moveable |  crate ub2 can]
+up[ Moving crate ub2 | moveable ] -> [ Moving crate ub2 |  moveable can]
+[> crate |crate  ]->[> crate| crate]
+
+rigid right[ moving  moveable  | crate lb2   ] -> [  moving  moveable | moving crate  lb2  ]
++rigid left[ Moving crate lb2 | moveable ] -> [ Moving crate lb2 | MOVING moveable ]
++rigid left[ moving  moveable  | crate rb2   ] -> [  moving  moveable | moving crate rb2 ]
++rigid right[ Moving crate rb2 | moveable ] -> [ Moving crate rb2 | MOVING moveable ]
++rigid up[ moving moveable  | crate db2 ] -> [ moving moveable | moving crate db2 ]
++rigid down[ Moving crate db2 | moveable ] -> [ Moving crate db2| MOVING moveable ]
++rigid down[ moving moveable  | crate ub2  ] -> [  moving  moveable | moving crate ub2 ]
++rigid up[ Moving crate ub2 | moveable ] -> [ Moving crate ub2 | MOVING moveable ]
++rigid [> crate |crate  ]->[> crate|> crate]
++rigid [can]->[]
+
+[can]->cancel
+
+(rigid right[ moving  moveable  | crate lb2   ] -> [  moving  moveable | moving crate  lb2  ]
++rigid [ Moving crate lb2 | moveable ] -> [ Moving crate lb2 | MOVING moveable ]
+
+rigid left[ moving  moveable  | crate rb2   ] -> [  moving  moveable | moving crate rb2 ]
++rigid [ Moving crate rb2 | moveable ] -> [ Moving crate rb2 | MOVING moveable ]
+
+rigid up[ moving moveable  | crate db2 ] -> [ moving moveable | moving crate db2 ]
++rigid [ Moving crate db2 | moveable ] -> [ Moving crate db2| MOVING moveable ]
+
+rigid down[ moving moveable  | crate ub2  ] -> [  moving  moveable | moving crate ub2 ]
++rigid [ Moving crate ub2 | moveable ] -> [ Moving crate ub2 | MOVING moveable ])
+
+(rigid [ >  Player | crate ] -> [  >  Player | > crate  ] 
++ rigid [ <  Player | crate ] -> [  <  Player | < crate  ] 
++ rigid [ Moving crate | wall ] -> [ Moving crate | MOVING wall ]
++ rigid [ Moving wall | crate ] -> [ Moving wall | MOVING crate ])
+
+
+([> crate][crate]->[> crate][> crate])
+[ crate]->[ crate  cango]
+
+right[right player | lb1][cango]->[right player | lb1][]
+left[left player | rb1][cango]->[left player | rb1][]
+up[up player | db1][cango]->[up player | db1][]
+down[down player | ub1][cango]->[down player | ub1][]
+
+right[right player | lb][cango]->[right player | lb][]
+left[left player | rb][cango]->[left player | rb][]
+up[up player | db][cango]->[up player | db][]
+down[down player | ub][cango]->[down player | ub][]
+
+[> crate cango|moveable|walls]->[crate|moveable|walls]
+[> crate cango|moveable|moveable|walls]->[crate|moveable|moveable|walls]
+[> crate cango|moveable|moveable|moveable|walls]->[crate|moveable|moveable|moveable|walls]
+[> crate cango|moveable|moveable|moveable|moveable|walls]->[crate|moveable|moveable|moveable|moveable|walls]
+[> crate cango|moveable|moveable|moveable|moveable|moveable|walls]->[crate|moveable|moveable|moveable|moveable|moveable|walls]
+
+[moving crate bru cango] -> [moving crate moving bru cango]
+
+[cango]->[]
+
+([moving crate bru ] -> [moving crate moving bru])
+
+[moving crate hasmov]->[moving crate]
+
+[> crate no bru2|crate no bru2]->[> crate|> crate]
+
+[> bru|player|wall]->[bru|player|wall]
+
+
+[> bru|crate|walls]->[bru|crate|walls]
+[> bru|crate|crate|walls]->[bru|crate|crate|walls]
+[> bru|crate|crate|crate|walls]->[bru|crate|crate|crate|walls]
+[> bru|crate|crate|crate|crate|walls]->[bru|crate|crate|crate|crate|walls]
+[> bru|crate|crate|crate|crate|crate|walls]->[bru|crate|crate|crate|crate|crate|walls]
+
+
+([> bru|crate|blocker]->[bru|crate|blocker]
+[> bru|crate|crate|blocker]->[bru|crate|crate|blocker]
+[> bru|crate|crate|crate|blocker]->[bru|crate|crate|crate|blocker]
+[> bru|crate|crate|crate|crate|blocker]->[bru|crate|crate|crate|crate|blocker])
+([ spa no player][moving crate bru] -> [ spa ][moving crate moving bru])
+
+
+[> bru|walls]->[ bru|walls]
+([ right crate]->[crate])
+
+([player no spa]->[spa player]
+
+[ spa no player]->[]
+
+late [startx][ spa player]->cancel
+late [start]->[startx])
+
+
+
+[> crate|Target]->[> crate|target] sfx2
+
+[ left Playerright] -> [ left playerleft]
+[ right Playerleft] -> [ right playerright]
+
+[endx] ->[thefloor] sfx2
+[end | thefloor]-> [endx |thefloor]
+
+
+(adding the bru)
+late up[ crate no hasmov|wall1][crate]->[ crate ub1|wall1][ crate ub1] sfx6
+late down[ crate no hasmov|wall1][crate]->[ crate db1|wall1][ crate db1] sfx6
+late left[ crate no hasmov|wall1][crate]->[ crate lb1|wall1][ crate lb1] sfx6
+late right[ crate no hasmov|wall1][crate]->[ crate rb1|wall1][ crate rb1] sfx6
+
+late up[ crate no hasmov|wall2][crate]->[ crate ub2|wall2][ crate ub2] sfx6
+late down[ crate no hasmov|wall2][crate]->[ crate db2|wall2][ crate db2] sfx6
+late left[ crate no hasmov|wall2][crate]->[ crate lb2|wall2][ crate lb2] sfx6
+late right[ crate no hasmov|wall2][crate]->[ crate rb2|wall2][ crate rb2] sfx6
+
+late up[ crate no hasmov|wall3][crate]->[ crate ub|wall3][ crate ub] sfx6
+late down[ crate no hasmov|wall3][crate]->[ crate db|wall3][ crate db] sfx6
+late left[ crate no hasmov|wall3][crate]->[ crate lb|wall3][ crate lb] sfx6
+late right[ crate no hasmov|wall3][crate]->[ crate rb|wall3][ crate rb] sfx6
+
+late up[ crate no hasmov bruu|wallret][crate bruu]->[ crate |wallret] [crate rbruu]sfx6
+late down[ crate no hasmov brud|wallret][crate brud]->[ crate |wallret][crate rbrud] sfx6
+late left[ crate no hasmov brul|wallret][crate brul]->[ crate |wallret][crate rbrul] sfx6
+late right[ crate no hasmov brur|wallret][crate brur]->[ crate |wallret][crate rbrur] sfx6
+
+late[crate bruu] [rbruu]->[crate][rbruu]
+late[crate brud] [rbrud]->[crate][rbrud]
+late[crate brul] [rbrul]->[crate][rbrul]
+late[crate brur] [rbrur]->[crate][rbrur]
+
+late[rbru]->[]
+
+late[hasmov]->[]
+
+late[crate]->[crate hasmov]
+
+
+late up [wall| ]-> [wall|overwall]
+late up [wall1| ]-> [wall1|overwall1]
+late up [wall2| ]-> [wall2|overwall2]
+late up [wall3| ]-> [wall3|overwall3]
+
+late up [wallret| ]-> [wallret|overwallret]
+
+late up [theemx| ]-> [theemx|overcrate]
+
+late up [ub| ]-> [ub|ubup]
+late up [ub1| ]-> [ub1|ubup1]
+late up [ub2| ]-> [ub2|ubup2]
+
+(late up [crate2| ]-> [crate2|overcrate2])
+
+late up [end| ]-> [end|overcrate]
+late up [endx| ]-> [endx|overcrate]
+
+[action player eend|]->[action player eend |crate Target]
+
+
+
+[]-> again 
+(
+[arrow]->[arrowx2]
+[arrow2]->[arrowx]
+
+[arrowx]->[arrow]
+[arrowx2]->[arrow2])
+==============
+WINCONDITIONS
+==============
+
+all Target on crate 
+
+some target
+
+=======
+LEVELS
+=======
+
+message Have a block on all targets
+
+message level 1 of 7
+---------
+---###---
+---#*#---
+--##.##--
+###...###
+#O.....O#
+#...1...#
+#.......#
+#..P.*..#
+###...###
+--#####--
+
+message level 2 of 7
+---------
+--######-
+###....##
+#*#.....#
+#.#..2..#
+#.......#
+#..O.O..#
+#...*...#
+#..P....#
+##.....##
+-#######-
+
+message level 3 of 7
+---------
+--#####--
+-##.O###-
+-#.....#-
+-#..#..#-
+-#..O..#-
+-##.2.##-
+-#.....#-
+-#.*P*.#-
+-###...#-
+---#####-
+
+message level 4 of 7
+---------
+-#######-
+-#.4.4.#-
+-#.O.O.#-
+###...###
+#...1...#
+#.......#
+#.*#.#*.#
+#...P...#
+##.....##
+-#######-
+
+message level 5 of 7
+---------
+-#######-
+##.O.O.4#
+#..2.2..#
+#.......#
+##.....##
+-#1.1.1#-
+-#.*.*.#-
+-#..P..#-
+-#.....#-
+-#######-
+
+message level 6 of 7
+---------
+-#######-
+-#..#..#-
+##.OOO.##
+#.......#
+#.2.1.2.#
+#.......#
+#.*.*.*.#
+#....P..#
+##.....##
+-#######-
+
+message level 7 of 7
+---------
+-#######-
+##.O.O.##
+#..O.O..#
+#..1.1..#
+#.......#
+#.2...2.#
+#.......#
+#.**P**.#
+##.....##
+-#######-
+
+
+(---------
+-#######-
+##O.O.O##
+#4.....4#
+#4.....4#
+#4.1.2.4#
+#4.....4#
+#4.***.4#
+#4..P..4#
+##4...4##
+-#######-)
+
+(---------
+-#######-
+##.O.O.##
+#..2.2..#
+#.......#
+#.......#
+#.1.1.1.#
+#..*.*..#
+#...P...#
+##.....##
+-#######-)
+
+(---------
+---------
+-#######-
+##1O1O1##
+#...O...#
+#.*.2.*.#
+#..p.*..#
+##.....##
+-#######-
+---------
+---------)
+(---------
+-#######-
+-#.....#-
+-#.P.*.#-
+-#..2..#-
+##1O1O1##
+#...O...#
+#.*.2.*.#
+#.......#
+##.....##
+-#######-)
+
+
+(---------
+-###2###-
+##12O24##
+#1O1.4O4#
+#.......#
+#.......#
+#...*...#
+#..*.*..#
+#....P..#
+##.....##
+-#######-)
+
+(---------
+--#####--
+--#.O.#--
+--#...#--
+--#...#--
+--#.O.#--
+-##.2.##-
+##.....##
+#..*P*.4#
+##.....##
+-#######-)
+
+(---------
+---####--
+--##O.#--
+--#.P.#--
+--#.O.#--
+--#.2.#--
+--#...#--
+--#**.#--
+--#...#--
+--#####--
+---------)
+
+(---------
+-#######-
+##....*##
+#.......#
+#...2...#
+#.4.2...#
+#.....*.#
+#...P...#
+####O####
+---#O#---
+---###---)
+
+
+(---------
+-#######-
+##.....##
+#.......#
+#.......#
+#.......#
+#.......#
+#.......#
+#.......#
+##.....##
+-#######-)
+
+
+
+(---------
+-#######-
+##*....##
+#.......#
+#...2...#
+#...2...#
+#4....*.#
+#...P...#
+####O####
+---#O#---
+---###---)
+
+(---------
+-#######-
+-#.....#-
+-#.O.O.#-
+-#.....#-
+-#.2.2.#-
+##.....##
+#..*.*..#
+#.#.P.#.#
+#.......#
+#########)
+
+(---------
+---###---
+--##*###-
+-##....#-
+##.....#-
+#4..2..#-
+#...P..#-
+#..*.*.#-
+#..OOO.#-
+##.....#-
+-#######-)
+(---------
+-#######-
+-#..O..#-
+##....O##
+#...#...#
+#..1.4..#
+#.*...*.#
+#...P...#
+#.2...3.#
+##.....##
+-#######-)
+
+(
+message level test
+---------
+-#######-
+-#.....#-
+##..*..##
+#.......#
+#.....*.#
+#.*.2...#
+#...P...#
+#....*..#
+##.....##
+-#######-)
+
+(---------
+-#######-
+##.....##
+#...O.O.#
+#..#....#
+#.....O.#
+#..*....#
+#.*.*.#.#
+#.......#
+##..P..##
+-#######-)
+
+(---------
+-#######-
+##.....##
+#.O.O.O.#
+#.......#
+#.......#
+#..***..#
+#.#...#.#
+#.......#
+##..P..##
+-#######-)
+
+(----------
+----------
+##########
+#........#
+#..#O#...#
+#..#.#..#-
+#.#.#.#.#-
+#..*.*..#-
+#...P...#-
+##.....##-
+-#######--)
+
+
+
+
+xxxxxxxxxxxxxx
+-eeeeeeeeeeee-
+eeeeeeeeeeeeee
+eeeeeeeeeeeeee
+wewewewwweweew
+wewewetweewwew
+weweweeweeweww
+eweweewwweweew
+eeeeeeeeeeeeee
+eeeeeeeeeeeeee
+-eeeeeeeeeeee-
+
+

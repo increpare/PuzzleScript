@@ -1,0 +1,1073 @@
+title Airport Aggression
+zoomscreen 31x18
+run_rules_on_level_start
+key_repeat_interval 0.1
+again_interval 0.1
+
+========
+OBJECTS
+========
+
+Background
+lightblue
+
+b1
+#CCCCFF #EEEEFF #CCFFCC #BBBBFF
+01000
+00020
+00000
+03000
+00000
+
+b2
+#CCCCFF #EEEEFF #CCFFCC #BBBBFF
+00010
+00000
+03000
+00000
+00020
+
+b3
+#CCCCFF #EEEEFF #CCFFCC #BBBBFF
+00200
+00000
+00000
+01000
+00030
+
+b4
+#CCCCFF #EEEEFF #CCFFCC #BBBBFF
+00000
+00000
+10003
+00200
+00000
+
+b5
+#CCCCFF #EEEEFF #CCFFCC #BBBBFF
+00030
+00000
+00002
+10000
+00000
+
+b6
+#CCCCFF #EEEEFF #CCFFCC #BBBBFF
+00000
+00001
+02000
+00000
+00030
+
+playerl
+#996139 blue
+.11..
+0011.
+0011.
+0011.
+.11..
+
+playeru
+#996139 blue
+.000.
+10001
+11111
+.111.
+.....
+
+playerd
+#996139 blue
+.....
+.111.
+11111
+10001
+.000.
+
+playerr
+#996139 blue
+..11.
+.1100
+.1100
+.1100
+..11.
+
+tempu
+brown black
+.000.
+10001
+11111
+.111.
+.....
+
+tempd
+brown black
+.....
+.111.
+11111
+10001
+.000.
+
+templ
+brown black
+.11..
+0011.
+0011.
+0011.
+.11..
+
+tempr
+brown black
+..11.
+.1100
+.1100
+.1100
+..11.
+
+skind1
+#F3E6E0
+.....
+.....
+.....
+.000.
+.000.
+
+skind2
+#DCBAA3
+.....
+.....
+.....
+.000.
+.000.
+
+skind3
+#B58A65
+.....
+.....
+.....
+.000.
+.000.
+
+skind4
+#996139
+.....
+.....
+.....
+.000.
+.000.
+
+skind5
+#5E3922
+.....
+.....
+.....
+.000.
+.000.
+
+skind6
+#301C10
+.....
+.....
+.....
+.000.
+.000.
+
+skinu1
+#F3E6E0
+.000.
+.000.
+.....
+.....
+.....
+
+skinu2
+#DCBAA3
+.000.
+.000.
+.....
+.....
+.....
+
+skinu3
+#B58A65
+.000.
+.000.
+.....
+.....
+.....
+
+skinu4
+#996139
+.000.
+.000.
+.....
+.....
+.....
+
+skinu5
+#5E3922
+.000.
+.000.
+.....
+.....
+.....
+
+skinu6
+#301C10
+.000.
+.000.
+.....
+.....
+.....
+
+skinl1
+#F3E6E0
+.....
+00...
+00...
+00...
+.....
+
+skinl2
+#DCBAA3
+.....
+00...
+00...
+00...
+.....
+
+skinl3
+#B58A65
+.....
+00...
+00...
+00...
+.....
+skinl4
+#996139
+.....
+00...
+00...
+00...
+.....
+
+skinl5
+#5E3922
+.....
+00...
+00...
+00...
+.....
+
+skinl6
+#301C10
+.....
+00...
+00...
+00...
+.....
+
+skinr1
+#F3E6E0
+.....
+...00
+...00
+...00
+.....
+
+skinr2
+#DCBAA3
+.....
+...00
+...00
+...00
+.....
+skinr3
+#B58A65
+.....
+...00
+...00
+...00
+.....
+skinr4
+#996139
+.....
+...00
+...00
+...00
+.....
+skinr5
+#5E3922
+.....
+...00
+...00
+...00
+.....
+skinr6
+#301C10
+.....
+...00
+...00
+...00
+.....
+
+hairl1
+black
+.00..
+..00.
+..00.
+..00.
+.00..
+
+hairl2
+lightbrown
+.000.
+..00.
+..00.
+..00.
+.000.
+
+hairl3
+yellow
+000..
+..00.
+..00.
+..00.
+000..
+
+hairl4
+brown
+.0...
+..0..
+..0..
+..0..
+.0...
+
+hairl5
+darkgrey
+.....
+..0..
+..00.
+..0..
+.....
+
+hairl6
+red
+.0...
+..0..
+..00.
+..0..
+.0...
+
+hairl7
+black
+.....
+..00.
+..00.
+..00.
+.....
+
+hairr1
+red
+..00.
+.00..
+.00..
+.00..
+..00.
+
+hairr2
+darkgrey
+.000.
+.00..
+.00..
+.00..
+.000.
+
+hairr3
+brown
+..000
+.00..
+.00..
+.00..
+..000
+
+hairr4
+yellow
+...0.
+..0..
+..0..
+..0..
+...0.
+
+hairr5
+black
+.....
+..0..
+.00..
+..0..
+.....
+
+hairr6
+lightbrown
+...0.
+..0..
+.00..
+..0..
+...0.
+
+hairr7
+brown
+.....
+.00..
+.00..
+.00..
+.....
+
+haird1
+lightbrown
+.....
+.000.
+00000
+0...0
+.....
+
+haird2
+brown
+.....
+00000
+00000
+0...0
+.....
+
+haird3
+darkgrey
+.....
+.000.
+00000
+0...0
+0...0
+
+haird4
+red
+.....
+.....
+.000.
+0...0
+.....
+
+haird5
+yellow
+.....
+..0..
+.000.
+.....
+.....
+
+haird6
+yellow
+.....
+..0..
+.000.
+0...0
+.....
+
+haird7
+black
+.....
+.000.
+.000.
+.....
+.....
+
+hairu1
+brown
+.....
+0...0
+00000
+.000.
+.....
+
+hairu2
+darkgrey
+.....
+0...0
+00000
+00000
+.....
+
+hairu3
+brown
+0...0
+0...0
+00000
+.000.
+.....
+
+hairu4
+lightbrown
+.....
+0...0
+.000.
+.....
+.....
+
+hairu5
+red
+.....
+.....
+.000.
+..0..
+.....
+
+hairu6
+black
+.....
+0...0
+.000.
+..0..
+.....
+
+hairu7
+yellow
+.....
+.....
+.000.
+.000.
+.....
+
+wall
+#446
+
+walll
+#224
+0....
+0....
+0....
+0....
+0....
+
+wallr
+#668
+....0
+....0
+....0
+....0
+....0
+
+wallu
+#224
+00000
+.....
+.....
+.....
+.....
+
+walld
+#668
+.....
+.....
+.....
+.....
+00000
+
+walllu
+#CCCCFF
+0....
+.....
+.....
+.....
+.....
+
+wallld
+#CCCCFF
+.....
+.....
+.....
+.....
+0....
+
+wallru
+#CCCCFF
+....0
+.....
+.....
+.....
+.....
+
+wallrd
+#CCCCFF
+.....
+.....
+.....
+.....
+....0
+
+movingupl
+lightgrey grey gray
+20001
+20010
+20100
+21000
+20000
+
+movingupr
+lightgrey grey gray
+10002
+01002
+00102
+00012
+00002
+
+movingdownl
+lightgrey grey gray
+21000
+20100
+20010
+20001
+20000
+
+movingdownr
+lightgrey grey gray
+00012
+00102
+01002
+10002
+00002
+
+tag
+transparent
+
+ag
+transparent
+
+marker0
+transparent
+
+marker1
+transparent
+
+marker2
+transparent
+
+marker3
+transparent
+
+marker4
+transparent
+
+marker5
+transparent
+
+marker6
+transparent
+
+roadblack
+#111
+
+roadwhite
+#DDD
+
+sidewalk1
+grey darkgrey
+00001
+00001
+00001
+00001
+00001
+
+sidewalk2
+grey darkgrey
+00001
+00001
+00001
+00001
+11111
+
+sidewalk3
+grey darkgrey
+00000
+00000
+00000
+00000
+00000
+
+sidewalk4
+grey darkgrey
+00000
+00000
+00000
+00000
+11111
+
+
+
+
+
+
+
+car00 あ
+#2D36A6 #4048CC #6068D5 #050505 #505050 #111
+55555
+55550
+55000
+50011
+50111
+car01 い
+#2D36A6 #4048CC #6068D5 #050505 #505050 #111
+55550
+00000
+13333
+33443
+34330
+car02 う
+#2D36A6 #4048CC #6068D5 #050505 #505050 #111
+05555
+00000
+30333
+00000
+11111
+car03 え
+#2D36A6 #4048CC #6068D5 #050505 #505050 #111
+55555
+00000
+30333
+00000
+11111
+car04 お
+#2D36A6 #4048CC #6068D5 #050505 #505050 #111
+55555
+00000
+30000
+00033
+11034
+car05 か
+#2D36A6 #4048CC #6068D5 #050505 #505050 #111
+55555
+00555
+00005
+30005
+43305
+
+car10 き
+#2D3616 #4048CC #6068D5 #050505 #505050
+11113
+11113
+11113
+11113
+11113
+car11 く
+#2D3616 #4048CC #6068D5 #050505 #505050
+33331
+33331
+33331
+33331
+33331
+car12 け
+#2D3616 #4048CC #6068D5 #050505 #505050
+11111
+11111
+11111
+11111
+11111
+car13 こ
+#2D3616 #4048CC #6068D5 #050505 #505050
+11111
+11111
+11111
+11111
+11111
+car14 さ
+#2D3616 #4048CC #6068D5 #050505 #505050
+11133
+11133
+11133
+11133
+11133
+car15 し
+#2D3616 #4048CC #6068D5 #050505 #505050 #111
+34315
+33315
+33315
+33315
+33315
+car20 す
+#2D3616 #4048CC #6068D5 #050505 #505050 #111
+52111
+52211
+55222
+55552
+55555
+car21 せ
+#2D3616 #4048CC #6068D5 #050505 #505050 #111
+33332
+33333
+13333
+22222
+55552
+car22 そ
+#2D3616 #4048CC #6068D5 #050505 #505050 #111
+11111
+22222
+32333
+22222
+25555
+car23 が
+#2D3616 #4048CC #6068D5 #050505 #505050 #111
+11111
+22222
+32333
+22222
+55555
+car24 ぎ
+#2D3616 #4048CC #6068D5 #050505 #505050 #111
+11233
+22233
+32222
+22222
+55555
+car25 ぐ
+#2D3616 #4048CC #6068D5 #050505 #505050 #111
+33325
+32225
+22225
+22555
+55555
+=======
+LEGEND
+=======
+player = playeru or playerl or playerd or playerr
+p = playeru and roadblack
+u = tempu
+l = templ
+r = tempr
+d = tempd
+b=b1 or b2 or b3 or b4 or b5 or b6
+hairu= hairu1 or hairu2 or hairu3 or hairu4 or hairu5 or hairu6 or hairu7
+haird = haird1 or haird2 or haird3 or haird4 or haird5 or haird6 or haird7
+hairl = hairl1 or hairl2 or hairl3 or hairl4 or hairl5 or hairl6 or hairl7
+hairr = hairr1 or hairr2 or hairr3 or hairr4 or hairr5 or hairr6 or hairr7
+hair = hairu or haird or hairr or hairl
+skinu = skinu1 or skinu2 or skinu3 or skinu4 or skinu5 or skinu6
+skind = skind1 or skind2 or skind3 or skind4 or skind5 or skind6
+skinr = skinr1 or skinr2 or skinr3 or skinr4 or skinr5 or skinr6
+skinl = skinl1 or skinl2 or skinl3 or skinl4 or skinl5 or skinl6
+person = skinu or skinl or skind or skinr
+# = wall
+solid = wall or car00 or car01 or car02 or car03 or car04 or car05 or car10 or car11 or car12 or car13 or car14 or car15 or car20 or car21 or car22 or car23 or car24 or car25
+. = background
+movingup = movingupl or movingupr
+& = movingupl
+* = movingupr
+movingdown = movingdownl or movingdownr
+$ = movingdownl
+@ = movingdownr
+0 = marker0
+1 = marker1
+2 = marker2
+3 = marker3
+4 = movingdownl and marker3
+7 = movingdownr and marker3
+5 = movingupl and marker3
+8 = movingupr and marker3
+6 = marker4
+9 = marker6 and roadwhite
+, = roadblack
+? = roadwhite
+{ = sidewalk1
+[ = sidewalk2
+} = sidewalk3
+] = sidewalk4
+sidewalk = sidewalk1 or sidewalk2 or sidewalk3 or sidewalk4
+extra = walll or walld or wallr or wallu or wallru or wallrd or wallld or walllu
+=========
+SOUNDS
+=========
+
+
+================
+COLLISIONLAYERS
+================
+
+Background
+b
+roadblack, roadwhite, sidewalk
+movingup, movingdown
+player,  person, solid,
+tempu, templ, tempr, tempd
+hair
+ag, tag
+marker0, marker1, marker2, marker3, marker4, marker5, marker6
+walld
+wallu
+walll
+wallr
+wallld
+walllu
+wallrd
+wallru
+======
+RULES
+======
+[up player] -> [up playeru]
+[down player] -> [down playerd]
+[left player] -> [left playerl]
+[right player] -> [right playerr]
+
+[extra] -> []
+down[wall|no wall] -> [wall walld|no wall]
+up[wall|no wall] -> [wall wallu|no wall]
+left[wall|no wall] -> [wall walll|no wall]
+right[wall|no wall] -> [wall wallr|no wall]
+
+[wallu walll] -> [wallu walll walllu]
+[wallu wallr] -> [wallu wallr wallru]
+[walld wallr] -> [walld wallr wallrd]
+[walld walll] -> [walld walll wallld]
+
+late [marker0 no player][marker0 player] -> [][marker0 player] checkpoint
+late [marker1 no player][marker1 player] -> [][marker1 player] checkpoint
+late [marker2 no player][marker2 player] -> [][marker2 player]
+late [marker3 no player][marker3 player] -> [][marker3 player] checkpoint
+late [marker6 no player][marker6 player] -> [][marker6 player]
+
+
+late [marker0 player] -> [player]checkpoint message Argh! Why are there so many people here this early in the morning! GET OUTTA MY WAY!
+late [marker1 player] -> [player]checkpoint message I don't have the time to wait in these lines right now. CAN'T THESE PEOPLE GO ANY FASTER?
+late [marker2 player] -> [player] checkpoint message Ooh, the moving walkways, this should hopfully "move things along"!
+late [marker3 player] -> [player]checkpoint message Finally, my gate! And there's even a seat for me!
+late [marker5 player] -> [player]checkpoint message "You didn't hear? The flight got delayed for four hours!"
+late [marker6 player] -> [player] message The wedding starts in three hours! I'll never make it by car!
+late [marker4 player] -> [playeru marker5] again checkpoint message Wait a second, why are all these people still sitting at the gate if I was nearly late?
+
+[background no b] -> [background random b]
+[tempu no person] -> [random skinu tempu]
+[templ no person] -> [random skinl templ]
+[tempd no person] -> [random skind tempd]
+[tempr no person] -> [random skinr tempr]
+
+[tempu] -> [random hairu]
+[templ] -> [random hairl]
+[tempd] -> [random haird]
+[tempr] -> [random hairr]
+
+[moving player] -> [moving player tag]
+
+[ag][player movingup] -> [ag][up player movingup]
+[ag][player movingdown] -> [ag][down player movingdown]
+[ag][person movingup] -> [ag][up person movingup]
+[ag][person movingdown] -> [ag][down person movingdown]
+
+
+
+[> player | person] -> [> player| > person]
+[> person | person] -> [> person| > person]
+[> person | solid] -> [stationary person| solid]
+[> player | solid] -> [stationary player| solid]
+
+late [ag] -> []
+
+late up [tag][player movingup | no solid no person no player] -> [ag][player movingup|] again
+late up [tag][person movingup | no solid no person no player] -> [ag][person movingup|] again
+late down [tag][player movingdown | no solid no person no player] -> [ag][player movingdown|] again
+late down [tag][person movingdown | no solid no person no player] -> [ag][person movingdown|] again
+
+late up [ag][player movingup | no solid no person no player] -> [ag][player movingup|] again
+late up [ag][person movingup | no solid no person no player] -> [ag][person movingup|] again
+late down [ag][player movingdown | no solid no person no player] -> [ag][player movingdown|] again
+late down [ag][person movingdown | no solid no person no player] -> [ag][person movingdown|] again
+
+
+
+[moving person hair] -> [moving person moving hair]
+
+
+==============
+WINCONDITIONS
+==============
+
+
+=======
+LEVELS
+=======
+
+message I'm going to be late for my flight!
+
+.........................&*....
+.###.###.###.###.........&*....
+.#...#.#..#..#...........&*....
+.#.#.###..#..##...######.&*....
+.#.#.#.#..#..#....#ddddd.&*....
+.###.#.#..#..###.........&*....
+..................#uuuuu.&*....
+.#..#....#...###########.&*....
+.#..#...##...ddddd#ddddd.&*....
+.#..#.#..#...............&*....
+.#..#....#...uuuuu#uuuuu.&*....
+.#..#....#...###########.&*....
+.####..#####.ddddd#ddddd.&*....
+.........................&*....
+.uuuuu#uuuuuuu6uuu#uuuuu.&*....
+.#######################.&*....
+................334733333583333
+################..$@.....&*....
+...$@d.#..&*l..#..$@.....&*....
+...$@.....&*l..#..$@.....&*....
+...$@.....&*l..#..$@.....&*....
+...$@.....&*####..$@.....&*..d.
+...$@....r&*......$@.....&*....
+.d.$@....#&*......$@.....&*....
+...$@....#&*......$@.....&*....
+...$@....#&*......$@.....&*....
+r..$@....#&*......$@.....&*....
+...$@..r.#&*......$@..u..&*....
+...$@....#&*......$@.....&*....
+...$@....#&*......$@.....&*....
+...$@....#&*......$@.....&*.l..
+###$@.l..#&*......$@.....&*....
+#.r$@....#&*......$@.....&*....
+#.#$@....#&*......$@.....&*....
+#.#$@...u#&*....u.$@.....&*....
+#2##############.##############
+#.#...r....r..........l...l....
+#.#.............u..............
+..#.......................u....
+.##...u.........u..............
+.###########################...
+.....#u#l......#u#l......#u#l..
+.rrrrru....rrrrru....rrrrru#...
+.u####.....u####.....u######...
+.ulllll....ulllll....ulllll#...
+..####u.....####u.....####u#...
+.rrrrru....rrrrru....rrrrru#...
+.u####.....u####.....u######...
+.ulllll....ulllll....ulllll#...
+..####u.....####u.....####u#...
+.rrrrru....rrrrru....rrrrru#...
+.u####.....u####.....u#########
+.u.........ulllll....ulll..l1##
+############################.##
+................r.....r....#.##
+....................r...r.r#.##
+...r..............r...r...rru..
+.....................r..r.r..uu
+..........r......r.........ru..
+....................r.u...u...u
+r...............r........u...u.
+...........................u...
+......................u........
+..........r..............u...u.
+..................u............
+...........................u...
+##000#########000#########000##
+{}{}{}{}{}{}{}{}{}{}{}{}{}{}{}{
+[][][][][][][][][][][][][][][][
+,,,,p,,,?,,,,,,,,,,,,,,,,,,,,,,
+,??????,?,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,?,,,,,,,,,,,,,,,,,,,,,,
+,??????,??,????,,????,,????,,??
+,,,,,,,,?,,,,,,,,,,,,,,,,,,,,,,
+,??????,?,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,?,,,,,,,,,,,,,,,,,,,,,,
+9999999999999999999999999999999
+あいうえおか,?,あいうえおか,?,あいうえおか,?,あいうえ
+きくけこさし,?,きくけこさし,?,きくけこさし,?,きくけこ
+すせそがぎぐ,?,すせそがぎぐ,?,すせそがぎぐ,?,すせそが

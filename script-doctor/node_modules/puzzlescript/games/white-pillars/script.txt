@@ -1,0 +1,877 @@
+title White Pillars
+author Rosden Shadow [Mark Signorelli]
+homepage rosden.itch.io
+
+noaction
+run_rules_on_level_Start
+
+background_color #1F2026
+
+text_color #F2F2AA
+
+again_interval 0.2
+========
+OBJECTS
+========
+
+Background
+#52465B #1F2026(#E57ED5 #CC5285)
+11111
+10001
+11101
+10101
+11111
+(
+00101
+01110
+11011
+01111
+10110)
+(
+11101
+00101
+11111
+10100
+10111)
+
+
+nomove
+#FFEED9 #536673
+.....
+.000.
+.010.
+.000.
+.....
+
+Target
+#F2F2AA #1F2026
+.....
+.000.
+.0.0.
+.000.
+.....
+
+fakeTarget
+#F2F2AA #1F2026
+.....
+.000.
+.0.0.
+.000.
+.....
+
+
+Target1
+#F2F2AA #1F2026
+11111
+11011
+11011
+11111
+11111
+
+Target2
+#F2F2AA #1F2026
+11111
+11101
+10101
+10111
+11111
+
+Target3
+#F2F2AA #1F2026
+11101
+01101
+01111
+11011
+11011
+
+invitar1
+black
+.....
+.....
+.....
+.....
+.....
+
+invitar2
+black
+.....
+.....
+.....
+.....
+.....
+
+invitar3
+black
+.....
+.....
+.....
+.....
+.....
+
+Wall
+#F2F2AA #E5C17E  #CC7A52 #736053
+21110
+22110
+22221
+23232
+32323
+
+overwall
+#F2F2AA #E5C17E  #CC7A52 #736053
+.....
+.....
+.....
+10000
+21100
+
+
+Playerright
+#FFD9FC #E0AAF2 #736053 #423D39
+.000.
+11202
+11313
+11110
+.1.1.
+
+playerleft
+#FFD9FC #E0AAF2 #736053 #423D39
+.000.
+20211
+31311
+01111
+.1.1.
+
+Crate
+white grey
+.000.
+.000.
+.111.
+.111.
+.111.
+(
+21100
+21110
+22110
+32223
+.333.)
+
+Crateunpush
+white grey
+.000.
+.000.
+.111.
+.111.
+.111.
+
+overcrate
+white
+.....
+.....
+.....
+.....
+.000.
+
+fakeCrate
+white grey
+.000.
+.000.
+.111.
+.111.
+.111.
+
+Crateline1
+white grey black
+.022.
+.000.
+.111.
+.111.
+.111.
+
+Crateline2
+white grey black
+.222.
+.000.
+.111.
+.111.
+.111.
+
+Crateline3
+white grey black
+.220.
+.000.
+.111.
+.111.
+.111.
+
+Cratehorz
+white grey black
+.222.
+.000.
+.111.
+.111.
+.111.
+
+Cratevert
+white grey black
+.020.
+.020.
+.111.
+.111.
+.111.
+
+Cratecross
+white grey black
+.222.
+.020.
+.111.
+.111.
+.111.
+
+overcratevert
+white black
+.....
+.....
+.....
+.....
+.010.
+
+
+
+Crate1
+white grey
+.000.
+.000.
+.111.
+.111.
+.111.
+
+Crate2
+white grey
+.000.
+.000.
+.111.
+.111.
+.111.
+
+Crate3
+white grey
+.000.
+.000.
+.111.
+.111.
+.111.
+
+Cratem1
+white grey
+.000.
+.000.
+.111.
+.111.
+.111.
+
+Cratem2
+white grey
+.000.
+.000.
+.111.
+.111.
+.111.
+
+Cratem3
+white grey
+.000.
+.000.
+.111.
+.111.
+.111.
+
+Cratered
+white grey
+.000.
+.000.
+.111.
+.111.
+.111.
+
+Crategreen
+white grey
+.000.
+.000.
+.111.
+.111.
+.111.
+
+Crateblue
+white grey
+.000.
+.000.
+.111.
+.111.
+.111.
+
+thered
+#B32D2D
+.....
+..0..
+.000.
+..0..
+.....
+
+theblue
+#7EA1E5
+.....
+..0..
+.000.
+..0..
+.....
+
+thegreen
+#7EE58D
+.....
+..0..
+.000.
+..0..
+.....
+
+failcol
+#FFD9FC
+.....
+.0.0.
+..0..
+.0.0.
+.....
+
+tarred
+#B32D2D
+.....
+.000.
+.0.0.
+.000.
+..0..
+
+targreen
+#7EE58D
+.....
+.000.
+.0.0.
+.000.
+..0..
+
+tarblue
+#7EA1E5
+.....
+.000.
+.0.0.
+.000.
+..0..
+
+
+
+end
+#FFD9E0 #F2AACE #E57ED5 #845C7A
+21100
+21110
+22110
+32223
+.333.
+endx
+#FFD9E0 #F2AACE #E57ED5 #845C7A
+21100
+21110
+22110
+32223
+.333.
+
+
+
+cloner
+#E5C17E #DB7F55 #B32D2D #73342E
+.100.
+.210.
+.221.
+.332.
+.....
+
+swapcrate
+Orange Yellow
+00000
+0...0
+0...0
+0...0
+00000
+
+swapwall
+black
+.....
+.....
+.....
+.....
+.....
+
+thefloor
+#1F2026
+00000
+00000
+00000
+00000
+00000
+
+thefloorx
+#1F2026
+00000
+00000
+00000
+00000
+00000
+
+eend
+#1F2026
+00000
+00000
+00000
+00000
+00000
+(
+checkempty
+black
+.....
+.....
+.....
+.....
+.....
+
+checkblock
+black
+.....
+.....
+.....
+.....
+.....
+)
+
+switcrate
+black
+.....
+.....
+.....
+.....
+.....
+
+switcrate2
+black
+.....
+.....
+.....
+.....
+.....
+
+arrow
+black
+.....
+.....
+.0.0.
+.000.
+..0..
+
+arrow2
+black
+.....
+.0.0.
+.000.
+..0..
+.....
+
+arrowx
+black
+.....
+.....
+.....
+.....
+.....
+
+winstop
+black
+.....
+.....
+.....
+.....
+.....
+
+arrowx2
+black
+.....
+.....
+.....
+.....
+.....
+
+winallow
+black
+.....
+.....
+.....
+.....
+.....
+
+winend
+white grey
+.000.
+.000.
+.000.
+.111.
+.111.
+
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Playerright
+* = Crate
+
+O = Target
+I = faketarget
+
+e=background
+t = target and eend
+w=winend
+! = winallow
+
+-=thefloor
+x=thefloorx
+
+a = Crateline1 and fakeCrate
+s = Crateline2 and fakeCrate
+d= Crateline3 and fakeCrate
+
+@ = Crateunpush 
+
+1 = Target1 
+2= Target2
+3 = target3
+
+4 = Crate1
+5=Crate2
+6=Crate3
+
+r = Cratered
+g= Crategreen
+b=Crateblue
+
+f=tarred
+n=tarblue
+h=targreen
+
+7=invitar1
+8=invitar2
+9=invitar3
+
+0=Cratem1
+j= Cratem2
+y=Cratem3
+
+
+feel=overwall or overcrate or overcratevert
+pushable=crate or cloner or swapcrate  or switcrate or switcrate2 or Crateline1 or Crateline2 or Crateline3  or Crate1 or crate2 or Crate3 or Cratered or Crategreen or Crateblue
+win=crate or wall
+
+
+theemx= crate 
+player=playerright or playerleft
+
+blocker = wall or crate  or nomove or player or arrow
+
+arrowk = arrow or arrow2 or arrowx or arrowx2
+
+tar= Crate or Crateunpush or Crate1 or Crate2 or Crate3 or Cratered or Crategreen or Crateblue or Cratem1 or Cratem2 or Cratem3
+
+thetag= target or Target1 or Target2 or Target3 or tarred or tarblue or targreen or fakeTarget
+
+checkpos= cratevert or cratecross or Cratehorz
+=======
+SOUNDS
+=======
+
+pushable MOVE 36772507
+
+EndLevel 74089700
+
+player MOVE 68988304
+sfx0 52836103
+sfx1 45427502
+
+sfx2 29503700
+sfx3 81951902
+
+sfx4 43693309
+sfx5 5265104
+
+sfx6 36772507
+================
+COLLISIONLAYERS
+================
+
+Background
+winstop
+winallow
+thetag,invitar1,invitar2,invitar3
+
+thered
+theblue
+thegreen
+
+failcol
+nomove
+
+Player, Wall, pushable,swapwall,thefloor,thefloorx, Crateunpush,cratem1,Cratem2,cratem3
+checkpos
+
+fakeCrate
+arrow, arrow2, arrowx, arrowx2
+winend
+eend
+end, endx
+feel
+
+
+======
+RULES
+======
+
+[feel]->[]
+
+[winstop] ->[]
+
+[checkpos]->[]
+[> player|pushable]->[> player | > pushable]
+
+[< player|Cratem1]->[< player|> Cratem1] sfx6
+
+[^ player|Cratem2]->[^ player|v Cratem2] sfx6
+
+[v player|Cratem2]->[v player|^ Cratem2] sfx6
+
+[^ player|Cratem3]->[^ player|< Cratem3] sfx6
+[v player|Cratem3]->[v player|< Cratem3] sfx6
+
+[> player| Crateunpush]->[> player| crateunpush] sfx5
+
+[> pushable| Crateunpush]->[> pushable|> Crateunpush]
+
+[> player| fakeCrate]->[> player| ] sfx4
+
+late right [Crateline1|Crateline2|Crateline3]-> [winallow|winallow|winallow] sfx2
+
+late [target no tar]->[target winstop]
+
+late [Target1 no crate1]->[Target1 winstop]
+late [Target2 no crate2]->[Target2 winstop]
+late [Target3 no crate3]->[Target3 winstop]
+
+late [ Cratered no failcol]->[Cratered thered]
+late [ Crateblue no failcol]->[Crateblue theblue]
+late [ Crategreen no failcol]->[Crategreen thegreen]
+
+late [tarred no cratered]->[tarred winstop]
+late [targreen no crategreen]->[targreen winstop]
+late [tarblue no crateblue]->[tarblue winstop]
+
+late [thered thegreen]->[failcol]
+late [thered theblue]->[failcol]
+late [theblue thegreen]->[ failcol]
+
+(the cross puz)
+late [invitar1 no crate1]->[invitar1 winstop]
+late [invitar2 no crate2]->[invitar2 winstop]
+late [invitar3 no crate3]->[invitar3 winstop]
+
+
+late horizontal [crate1 |...|invitar1]->[crate1 Cratehorz no Cratecross|...|invitar1]
+late vertical [crate1 |...|invitar1]->[crate1 Cratevert no Cratecross|...|invitar1]
+late [crate1 invitar1]->[crate1 invitar1 Cratecross]
+
+late horizontal [crate2 |...|invitar2]->[crate2 Cratehorz no Cratecross|...|invitar2]
+late vertical [crate2 |...|invitar2]->[crate2 Cratevert no Cratecross|...|invitar2]
+late [crate2 invitar2]->[crate2 invitar2 Cratecross]
+
+late horizontal [crate3 |...|invitar3]->[crate3 Cratehorz no Cratecross|...|invitar3]
+late vertical [crate3 |...|invitar3]->[crate3 Cratevert no Cratecross|...|invitar3]
+late [crate3 invitar3]->[crate3 invitar3 Cratecross]
+
+(cross puz end)
+late [failcol]->[failcol winstop]
+[> tar|thetag]->[> tar|thetag] sfx2
+
+
+[ left Playerright] -> [ left playerleft]
+[ right Playerleft] -> [ right playerright]
+
+[endx] ->[thefloor] sfx2
+[end | thefloor]-> [endx |thefloor]
+
+
+late up [wall| ]-> [wall|overwall]
+late up [pushable| ]-> [pushable|overcrate]
+late up [tar| ]-> [tar|overcrate]
+
+late up [Crateunpush| ]-> [Crateunpush|overcrate]
+
+late up [Cratevert| ]-> [Cratevert|overcratevert]
+late up [Cratecross| ]-> [Cratecross|overcratevert]
+
+(late up [crate2| ]-> [crate2|overcrate2])
+
+late up [end| ]-> [end|overcrate]
+late up [endx| ]-> [endx|overcrate]
+
+[action player eend|]->[action player eend |crate Target]
+
+
+
+[]-> again 
+(
+[arrow]->[arrowx2]
+[arrow2]->[arrowx]
+
+[arrowx]->[arrow]
+[arrowx2]->[arrow2])
+==============
+WINCONDITIONS
+==============
+
+no winstop
+some winallow
+
+
+=======
+LEVELS
+=======
+
+
+message Hear the pillars call
+
+message level 1 of 8
+---------
+-#######-
+##!....##
+#.O.O.O.#
+#.......#
+#.......#
+#.*.*.*.#
+#.......#
+#...P...#
+##.....##
+-#######-
+
+message level 2 of 8
+---------
+-#######-
+##.....##
+#.......#
+#.......#
+#.......#
+#.s.d.a.#
+#.......#
+#...P...#
+##.....##
+-#######-
+
+message level 3 of 8
+---------
+-#######-
+##!....##
+#...h...#
+#....f..#
+#..n....#
+#.r.g.b.#
+#.......#
+#..P#...#
+##.....##
+-#######-
+
+
+message level 4 of 8
+---------
+-#######-
+##!IOI.##
+#..IIO..#
+#..OII..#
+#.......#
+#.*.*.*.#
+#...#...#
+#...P#..#
+##.#...##
+-#######-
+
+
+message level 5 of 8
+---------
+-#######-
+##!....##
+#.O...O.#
+#...O...#
+#.......#
+#.*.@.@.#
+#.......#
+#...P...#
+##.....##
+-#######-
+
+message level 6 of 8
+---------
+-#######-
+##!....##
+#...1...#
+#.3..2..#
+#.......#
+#.4.5.6.#
+#.......#
+#...P...#
+##.....##
+-#######-
+
+
+message level 7 of 8
+---------
+-#######-
+##!....##
+#.O.O.O.#
+#.......#
+#.......#
+#.j.0.y.#
+#.......#
+#...P...#
+##.....##
+-#######-
+
+
+message level 8 of 8
+---------
+-#######-
+##!....##
+#..7....#
+#.......#
+#.....8.#
+#.4.5.6.#
+#.......#
+#..9P...#
+##.....##
+-#######-
+
+
+
+xxxxxxxxxxxxxx
+-eeeeeeeeeeee-
+eeeeeeeeeeeeee
+eeeeeeeeeeeeee
+wewewewwweweew
+wewewetweewwew
+weweweeweeweww
+eweweewwweweew
+eeeeeeeeeeeeee
+eeeeeeeeeeeeee
+-eeeeeeeeeeee-
+
+

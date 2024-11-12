@@ -1,0 +1,382 @@
+title Path lines
+author Rosden Shadow [Mark Signorelli]
+homepage rosden.itch.io
+run_rules_on_level_Start
+
+background_color #423D39
+
+text_color #FFD9FC
+
+========
+OBJECTS
+========
+
+Background
+#423D39 #5B4846
+00000
+01010
+00100
+01010
+00000
+(
+00101
+01110
+11011
+01111
+10110)
+(
+11101
+00101
+11111
+10100
+10111)
+
+
+pathline
+#E0AAF2 #FFD9FC
+00000
+01010
+00100
+01010
+00000
+
+Target
+ #847A5C #E5C17E
+.....
+.010.
+.1.1.
+.010.
+.....
+
+Wall
+#A87EE5 #E0AAF2 #705C84 #42393C
+20001
+20001
+22220
+23232
+32323
+
+overwall
+ #A87EE5 #E0AAF2  #705C84 #42393C
+.....
+.....
+.....
+01111
+20001
+
+
+Playerright
+#F3FFD9 #BCE57E #A87EE5 #705C84
+.000.
+11202
+11313
+11110
+.1.1.
+
+playerleft
+#F3FFD9 #BCE57E #A87EE5 #705C84
+.000.
+20211
+31311
+01111
+.1.1.
+
+Crate2
+#82A17C #7EE58D  #4F5B46 #394239 
+20011
+20001
+22001
+32223
+.333.
+
+overcrate2
+#82A17C #7EE58D  #4F5B46 #394239
+.....
+.....
+.....
+.....
+.111.
+
+Crate
+#E5C17E #F2F2AA #847A5C #5B5746
+20011
+20001
+22001
+32223
+.333.
+
+overcrate
+#E5C17E #F2F2AA #847A5C #5B5746
+.....
+.....
+.....
+.....
+.111.
+
+cloner
+#E5C17E #DB7F55 #B32D2D #73342E
+.100.
+.210.
+.221.
+.332.
+.....
+
+swapcrate
+Orange Yellow
+00000
+0...0
+0...0
+0...0
+00000
+
+swapwall
+black
+.....
+.....
+.....
+.....
+.....
+
+thefloor
+#423D39
+00000
+00000
+00000
+00000
+00000
+
+stopper
+black
+.....
+.....
+.....
+.....
+.....
+
+shiftright
+black
+.....
+.....
+.....
+.....
+.....
+
+shiftup
+black
+.....
+.....
+.....
+.....
+.....
+
+shiftdown
+black
+.....
+.....
+.....
+.....
+.....
+
+shiftleft
+black
+.....
+.....
+.....
+.....
+.....
+
+
+=======
+LEGEND
+=======
+
+. = Background and stopper
+# = Wall
+P = Playerright
+* = Crate
+@ = Crate and Target
+O = Target
+c=cloner
+-=thefloor
+
+feel=overwall or overcrate or overcrate2
+pushable=crate or cloner or swapcrate or crate2
+win=crate or wall
+
+player=playerright or playerleft
+
+shift=shiftright or shiftup or shiftdown or shiftleft
+mainlayer=player or wall or pushable or swapwall or thefloor
+=======
+SOUNDS
+=======
+
+pushable MOVE 36772507
+
+
+sfx0 52836103
+sfx1 6257504
+================
+COLLISIONLAYERS
+================
+
+Background
+pathline
+Target
+shiftright
+shiftleft
+shiftup
+shiftdown
+Player, Wall, pushable,swapwall,thefloor
+stopper
+feel
+
+======
+RULES
+======
+
+[feel]->[]
+[shift]->[]
+[stopper]->[]
+
+[Background no mainlayer] -> [background stopper]
+
+
+
+[crate]->[crate shiftright shiftleft shiftup shiftdown]
+
+right [shiftright| ]->[shiftright | shiftright]
+
+up [shiftup| ]->[shiftup | shiftup]
+
+down [shiftdown| ]->[shiftdown | shiftdown]
+
+left [shiftleft| ]->[shiftleft | shiftleft]
+
+[shift]->[shift pathline]
+[pathline stopper] -> [pathline]
+
+[ >  Player | pushable ] -> [  >  Player | > pushable  ]
+
+([ >  pushable | pushable ] -> [  >  pushable | > pushable  ])
+
+[> player | stopper] -> [ player | stopper]
+
+[ left Playerright] -> [ left playerleft]
+[ right Playerleft] -> [ right playerright]
+
+(-------------------)
+late [shift]->[]
+late [stopper]->[]
+late [pathline]->[]
+late [crate]->[crate shiftright shiftleft shiftup shiftdown]
+
+late right [shiftright| ]->[shiftright | shiftright]
+
+late up [shiftup| ]->[shiftup | shiftup]
+
+late down [shiftdown| ]->[shiftdown | shiftdown]
+
+late left [shiftleft| ]->[shiftleft | shiftleft]
+
+late [shift]->[shift pathline]
+late [pathline stopper] -> [pathline]
+
+(------------------)
+
+late up [wall| ]-> [wall|overwall]
+late up [crate| ]-> [crate|overcrate]
+late up [crate2| ]-> [crate2|overcrate2]
+==============
+WINCONDITIONS
+==============
+
+All Target on win
+
+=======
+LEVELS
+=======
+
+message cover up all targets with blocks 
+
+message level 1 of 4
+--------
+-######-
+##.*..##
+#......#
+#...*..#
+#..O...#
+#......#
+#......#
+#..P...#
+##....##
+-######-
+
+message level 2 of 4
+--------
+-######-
+##....##
+#......#
+#......#
+#.O.*..#
+#..*.O.#
+#......#
+#..P...#
+##....##
+-######-
+
+message level 3 of 4
+--------
+#######-
+#O....#-
+#.....#-
+#O....#-
+##...##-
+##**###-
+#..*..#-
+#..P.O#-
+##...##-
+-#####--
+
+message level 4 of 4
+--------
+#######-
+##...O#-
+#.....#-
+#.*...#-
+#..*..#-
+#...*.#-
+#O.p.O#-
+#.....##
+####..*#
+---#####
+(
+--------
+#######-
+##...O#-
+#.....#-
+#.*...#-
+#..*..#-
+#...*.#-
+#..p..#-
+#O....#-
+#....O#-
+#######-
+)
+
+
+
+message The path is now clear
+
+
+(--------
+-######-
+##....##
+#......#
+#.*....#
+#....*.#
+#.O....#
+#.OO.*.#
+#.P....#
+##....##
+-######-)

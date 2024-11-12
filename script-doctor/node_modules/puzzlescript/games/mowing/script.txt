@@ -1,0 +1,217 @@
+title Mowing
+
+key_repeat_interval 0.5
+
+========
+OBJECTS
+========
+Background
+#0c0
+
+Unmowed
+Green #060
+.....
+..000
+00000
+00011
+111..
+
+
+PlayerU
+Blue
+.000.
+.000.
+.000.
+00000
+.0.0.
+
+PlayerD
+LightGrey Blue
+.111.
+.000.
+.000.
+11111
+.1.1.
+
+PlayerUSwing
+Blue Grey
+.0001
+.0000
+.0000
+00000
+.0.0.
+
+PlayerDSwing
+LightGrey Blue
+.111.
+.000.
+.000.
+11111
+11.1.
+
+PlayerL
+LightGrey Blue
+.111.
+0001.
+.001.
+11111
+.1.1.
+
+PlayerR
+LightGrey Blue
+.111.
+.1000
+.100.
+11111
+.1.1.
+
+SwordU
+Grey
+.....
+.....
+.....
+....0
+....0
+
+SwordD
+Grey Blue
+1....
+0....
+0....
+0....
+.....
+
+SwordL
+Grey Blue
+.....
+.....
+.....
+00011
+.....
+
+SwordR
+Grey Blue
+.....
+.....
+.....
+11000
+.....
+
+Tree
+Brown Green
+..1..
+.111.
+.111.
+.111.
+..0..
+
+Rock
+Grey DarkGrey
+.....
+.00..
+0000.
+1001.
+.11..
+
+BlackBlock
+Black
+
+SwordIcon
+Grey DarkGrey Black
+22022
+22022
+22022
+21112
+22122
+
+=======
+LEGEND
+=======
+. = Background
+# = Unmowed
+@ = PlayerR
+T = Tree
+* = Rock
+R = Rock and Unmowed
+S = SwordIcon
+B = BlackBlock
+
+Player = PlayerU or PlayerUSwing or PlayerDSwing or PlayerD or PlayerL or PlayerR
+Sword = SwordU or SwordD or SwordL or SwordR
+Unswordable = SwordIcon or BlackBlock or Rock
+
+=======
+SOUNDS
+=======
+
+================
+COLLISIONLAYERS
+================
+Background
+Unmowed
+Player Rock Tree SwordIcon BlackBlock
+Sword
+
+======
+RULES
+======
+[ Sword Unmowed ] -> [ Sword ]
+[ Sword Tree ] -> [ Sword ]
+[ Sword ] [ SwordIcon ] -> [ ] [ BlackBlock ]
+[ PlayerUSwing ] -> [ PlayerU ]
+[ PlayerDSwing ] -> [ PlayerD ]
+up    [ action PlayerU | no Unswordable ] [ SwordIcon ] ->  [ PlayerUSwing | SwordU ] [ SwordIcon ] again
+down  [ action PlayerD | no Unswordable ] [ SwordIcon ] ->  [ PlayerDSwing | SwordD ] [ SwordIcon ] again
+left  [ action PlayerL | no Unswordable ] [ SwordIcon ] ->  [ PlayerL | SwordL ] [ SwordIcon ] again
+right [ action PlayerR | no Unswordable ] [ SwordIcon ] ->  [ PlayerR | SwordR ] [ SwordIcon ] again
+
+[ up    Player ] -> [ up PlayerU ]
+[ down  Player ] -> [ down PlayerD ]
+[ left  Player ] -> [ left PlayerL ]
+[ right Player ] -> [ right PlayerR ]
+
+[ > Player | Rock ] -> [ > Player | > Rock ]
+
+==============
+WINCONDITIONS
+==============
+
+no Unmowed
+
+=======
+LEVELS
+=======
+
+message cut the grass!
+
+@####
+.....
+.....
+.....
+.....
+SSSSB
+
+@....
+..#..
+.#.#.
+..#..
+.....
+SSSSB
+
+message trees get in the way!
+
+@....
+.....
+.....
+TTTTT
+##.##
+SSSSS
+
+message so do rocks
+
+@....
+.....
+.....
+R*R**
+.###.
+SSSSS

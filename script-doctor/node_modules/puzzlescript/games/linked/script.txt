@@ -1,0 +1,497 @@
+title Linked
+
+background_color black
+verbose_logging
+
+
+========
+OBJECTS
+========
+
+Background
+black
+
+Player
+red grey
+.....
+.111.
+.101.
+.111.
+.....
+
+Golem
+blue
+00000
+00.00
+0...0
+00.00
+00000
+
+Robot
+white grey
+.....
+.111.
+.101.
+.111.
+.....
+
+
+Top_Wall
+grey LIGHTGRAY
+00000
+0...0
+0...0
+0...0
+00000
+
+Bottom_Wall
+darkgray grey
+00000
+00000
+00000
+00000
+00000
+
+Top_Prototype
+orange Brown
+00000
+..1..
+..0..
+..1..
+00000
+
+
+Bottom_Prototype
+DARKRed Red
+0...0
+0...0
+01010
+0...0
+0...0
+
+Top_Goal
+orange Brown
+11111
+00100
+01110
+00100
+11111
+
+
+Bottom_Goal
+Darkred Red
+10001
+10101
+11111
+10101
+10001
+
+(Status Ailments)
+
+Top_Paralyzed
+TRANSPARENT
+
+Bottom_Paralyzed
+TRANSPARENT
+
+Bonded
+TRANSPARENT
+
+=======
+LEGEND
+=======
+
+. = Background
+_ = Bottom_Wall
+- = Top_Wall
+# = Top_Wall and Bottom_Wall
+P = Player
+I = Top_Prototype
+H = Bottom_Prototype
+8 = Top_Prototype and Bottom_Prototype
+T = Top_Goal
+B = Bottom_Goal
+G = Golem
+R = Robot
+
+\ = Bottom_Wall and Top_Prototype
+/ = Top_Wall and Bottom_Prototype
+
+
+
+
+
+top_pushable = Top_Prototype
+bottom_pushable = Bottom_Prototype or Golem
+
+tops = Top_Wall or top_pushable or Player or Robot
+bottoms = Bottom_Wall or bottom_pushable
+
+goals = Top_Goal or Bottom_Goal
+
+top_sticky = Top_Prototype
+bottom_sticky = Bottom_Prototype
+
+
+Paralyzed = Top_Paralyzed or Bottom_Paralyzed
+Ailments = Paralyzed or Bonded
+
+
+
+=======
+SOUNDS
+=======
+
+Top_Prototype move 5116707
+Bottom_Prototype move 23490907
+
+sfx0 89911306 (* Bonded *)
+sfx1 411156904 (* Blocked *)
+
+EndLevel 68023700
+
+
+================
+COLLISIONLAYERS
+================
+
+Background
+
+Top_Paralyzed
+Bottom_Paralyzed
+Bonded
+
+goals
+bottoms
+tops
+
+
+
+======
+RULES
+======
+
+(* Remove Lingering Status Ailments *)
+
+[Paralyzed] -> []
+[Bonded] -> []
+
+(* Overview : )
+
+
+(* Pushable Objects Are Pushed By Objects On The Same Level *)
+(* Sticky Objects Are Dragged By Sticky Objects Directly Above Or Below *)
+(* Golems Are Activated When The Player Steps On Them *)
+(* Golems Move In Unison *)
+(* Robots Can Only Be Moved By Golems *)
+
+
+(* If A Sticky Object Is Blocked, Then It Cannot Drag Stickies *)
+(* If A Player Is Blocked, Then It Cannot Control A Golem *)
+(* If The Player's Golem Is Blocked, Then It Cannot Control The Golems *)
+(* Any Blocked Object Is Marked As Stationary Before It Can Move Objects On Another Layer *)
+
+(* Blocked Objects Are Marked As Paralyzed *)
+(* A Paralyzed Object Cannot Be Moved By Objects On Another Layer *)
+(* The Paralyzed Status Ailment Prevents An Object From Going Into An Infinite Moving <-> Stationary Loop *)
+
+
+StartLoop
+
+(Player Pushes Top Layer Pushables)
+[> player | top_pushable no Top_Paralyzed] -> [> player | > top_pushable no Top_Paralyzed]
+
+(Robot Pushes Top Layer Pushables)
+[> Robot | top_pushable no Top_Paralyzed] -> [> Robot | > top_pushable no Top_Paralyzed]
+
+(Top Layer Pushables Move Together)
+[> top_pushable | top_pushable no Top_Paralyzed] -> [> top_pushable | > top_pushable no Top_Paralyzed]
+
+
+(*- Keep Stopped Top Layer Objects From Moving Bottom Layer Objects)
+
+(Detect Top Layer Wall Collisions)
+[> tops | Top_Wall] -> [tops Top_Paralyzed| Top_Wall]
+
+(Detect Top Layer Pushing Other Stopped Objects)
+[> tops | stationary tops] -> [tops Top_Paralyzed| stationary tops]
+
+(-*)
+
+
+(Bottom Layer Stickies Stick to Top Layer Stickies)
+[ bottom_sticky > top_sticky no Bottom_Paralyzed] -> [> bottom_sticky > top_sticky no Bottom_Paralyzed]
+
+(A Golem Sticks To The Player)
+
+[> player golem no Bottom_Paralyzed] -> [> player > golem no Bottom_Paralyzed]
+
+(All Golems Follow The Players Golem)
+
+[player > golem] [golem no Bottom_Paralyzed] -> [player > golem][> golem no Bottom_Paralyzed]
+
+(Bottom Layer Pushables Move Together)
+[> bottom_pushable | bottom_pushable no Bottom_Paralyzed] -> [> bottom_pushable | > bottom_pushable no Bottom_Paralyzed]
+
+
+(*- Keep Stopped Bottom Layer Objects From Moving Top Level Objects)
+
+(Detect Bottom Layer Wall Collisions)
+[> bottoms | Bottom_Wall] -> [bottoms Bottom_Paralyzed| Bottom_Wall]
+
+(Detect Bottom Layer Pushables Pushing Other Stopped Pushables)
+[> bottoms | stationary bottoms] -> [bottoms Bottom_Paralyzed| stationary bottoms]
+
+(-*)
+
+(Stop The Follower Golems if the Players Golem is stopped)
+[player stationary golem] [golem] -> [player stationary golem] [stationary golem]
+
+
+(Top Layer Stickies Stick To Bottom Layer Stickies)
+[> bottom_sticky top_sticky no Top_Paralyzed] -> [> bottom_sticky > top_sticky no Top_Paralyzed]
+
+(Robots Are Controlled By Golems)
+[> Golem Robot no Top_Paralyzed] -> [> Golem > Robot no Top_Paralyzed]
+
+EndLoop
+
+
+(*- For Sound Effects Purposes -*)
+
+[player golem] -> [player golem Bonded]
+
+[> player > golem Bonded] -> [> player > golem > Bonded]
+
+
+late [Player Golem no Bonded] -> [Player Golem Bonded] sfx0
+
+[Paralyzed] -> [Paralyzed] sfx1
+
+(*- Rage Quit -*)
+
+[Action Player] [Top_Goal] -> [Action Player][Top_Goal Top_Prototype]
+[Action Player] [Bottom_Goal] -> [Action Player] [Bottom_Goal Bottom_Prototype]
+
+
+==============
+WINCONDITIONS
+==============
+
+All Top_Goal on Top_Prototype
+All Bottom_Goal on Bottom_Prototype
+
+=======
+LEVELS
+=======
+
+Message Press action (x) to rage quit.
+
+
+(#############
+#...........#
+#...........#
+#..P.TTT....#
+#..._____...#
+#...HIHIH...#
+#..._____...#
+#...........#
+#...#####...#
+#...IH/HI...#
+#...#####...#
+#...........#
+#...........#
+#############)
+
+(##################
+#................#
+#.p..............#
+#................#
+#................#
+#................#
+#................#
+#................#
+#.....#_######...#
+#.....#......#...#
+#.....#......#...#
+#.....#.ihhg.#...#
+#.....#......#...#
+#.....#......#...#
+#.....##----##...#
+#................#
+#................#
+#................#
+#.......hhh......#
+#......bbbbb.....#
+##################
+
+##################
+#................#
+#.p..............#
+#................#
+#................#
+###............__#
+#t..............b#
+#t..............b#
+###...___#####.__#
+#.....#i##...#...#
+#.....#..h.g.#...#
+#.....#..h...#...#
+#.....#-----##...#
+#................#
+#................#
+#................#
+#................#
+#................#
+##################
+
+
+##################
+#................#
+#.P.....II.......#
+#................#
+#....########....#
+###..#......#..__#
+#T..._..HH..-...B#
+#T..._..HH..-...B#
+###..#......#..__#
+#....########....#
+#................#
+#.......II.......#
+#................#
+##################)
+Message Upper Layer
+
+#####
+#-t-#
+#-.-#
+#-i-#
+#-.-#
+#-p-#
+#####
+
+Message Lower Layer
+
+######
+#b.h.#
+#___.#
+#p._.#
+#___.#
+#g...#
+######
+
+
+Message Linked
+
+######
+#t_b_#
+##_._#
+.#_h_#
+.#_i_#
+.#_._#
+.#_p_#
+.#####
+
+
+
+Message Level 1
+
+##############
+#......-.....#
+#P.....-.....#
+#......-TH.IB#
+#G.....-THGIB#
+#......-TH.IB#
+#......-.....#
+#......-.....#
+##############
+
+
+Message Level 2
+
+################
+#..............#
+#.P....II......#
+#....######....#
+###..#....#..__#
+#T..._.HH.-...B#
+#T..._.HH.-...B#
+###..#....#..__#
+#....######....#
+#......II......#
+#..............#
+################
+
+Message Level 3
+
+.#########.
+.#.......#.
+##...p...##
+#tIr...gHb#
+#tIr...gHb#
+##.......##
+.#.......#.
+.#########.
+
+
+Message Level 4
+
+#############
+#..P.TTT....#
+#..._____...#
+#...HIHIH...#
+#..._____...#
+#...........#
+#...#####...#
+#...IH/HI...#
+#...#####...#
+#...........#
+#############
+
+message Win.
+
+(* Notes
+
+Revision 1
+--------------------
+In general, rules of the form
+
+[> Thing | Obstacle] -> [...]
+
+don't apply if "Thing" is pushing against the outer boundary,  that is:
+
+[> Thing | Out-of-Bounds].
+
+
+In Level 3, pushing against a Top_Prototype on the far-left boundary, while standing on a Golem, will cause the Golem to slide under the Top-Prototype
+
+This should not happen, since the Golem should be moving with the player, and the player is blocked.
+
+To solve this issue, I put additional wall on the left and right boundaries so that this edge case never actually happens.
+
+
+Revision 2
+--------------------
+Levels were too big.
+
+So I slimmed them down.
+
+
+Revision 3
+--------------------
+Level 1 introduces too many mechanics.
+
+So I put in some tutorials.
+
+
+Revision A
+---------------------
+Implementing rage quit.
+
+
+Revision 4
+---------------------
+Simplifying appearance.
+
+
+*)

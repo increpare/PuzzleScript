@@ -1,0 +1,549 @@
+title Finding my body
+author Ove Ahlman
+homepage http://oveahlman.itch.io
+background_color purple
+text_color white
+
+========
+OBJECTS
+========
+
+background
+white
+
+background1
+#dfff80
+
+background2
+#cc9900
+
+background3
+#ffe066
+
+tree1
+green #604020
+.000.
+00000
+0.1.0
+..1..
+.111.
+
+tree2
+#009933 #804000
+.000.
+.000.
+.010.
+..1..
+.111.
+
+tree3
+green white
+..0..
+1000.
+.0001
+.100.
+.001.
+
+camel
+brown
+...00
+.0.0.
+0000.
+0000.
+0..0.
+
+duck
+yellow red
+.....
+...0.
+.0.01
+.000.
+.....
+
+seagull
+white red
+.....
+.0...
+10.0.
+.000.
+.....
+
+water
+#66c2ff
+
+rock
+darkgrey
+.....
+..0..
+.000.
+0000.
+.....
+
+
+
+
+PlayerCharacter
+blue
+..0..
+00000
+.000.
+.....
+.....
+
+ActivePlayer
+blue black
+..0..
+00000
+.111.
+.....
+.....
+
+Enemy
+red
+..0..
+00000
+.000.
+.....
+.....
+
+PassiveEnemy
+red
+..0..
+00000
+.000.
+.000.
+.0.0.
+
+EnemyOnGoalLow
+transparent
+
+EnemyOnGoalHigh
+red purple
+..0..
+00000
+.000.
+.000.
+.0.0.
+
+Goal
+blue
+.....
+.....
+.000.
+.000.
+.0.0.
+
+ActiveGoal
+blue black
+.....
+.....
+.111.
+.000.
+.0.0.
+
+EnemyGoal
+red
+.....
+.....
+.000.
+.000.
+.0.0.
+
+PassiveEnemyGoal
+purple
+.000.
+0...0
+00000
+0...0
+.000.
+
+EnemyOnFriendGoal
+red blue
+..0..
+00000
+.000.
+.111.
+.1.1.
+
+PlayeronEnemyGoal
+red blue
+..1..
+11111
+.000.
+.000.
+.0.0.
+
+
+highwall
+darkgrey
+00000
+00000
+0...0
+0...0
+0.0.0
+
+lowwall
+darkgrey
+00.00
+.....
+0...0
+00000
+00000
+
+outerwall
+transparent
+
+outerwallLow
+transparent
+
+secretgoal
+transparent
+
+=======
+LEGEND
+=======
+player = ActivePlayer or ActiveGoal
+FriendlyPlayer = activePlayer or PlayerCharacter
+FriendlyGoal = Goal or ActiveGoal
+Goals = Goal or ActiveGoal or EnemyGoal or PassiveEnemyGoal
+friends = ActivePlayer or PlayerCharacter or Goal or ActiveGoal
+wall = highwall and lowwall
+enemyCharacters = Enemy or PassiveEnemy
+enemyGoals = enemyGoal or PassiveEnemyGoal
+
+
+
+& = duck and water
+_ = seagull and water
++ = rock and water
+/ = water
+. = background1
+a = activePlayer and background1
+b = PlayerCharacter and background1
+c = enemy and background1
+d = enemyGoal and background1
+e = Goal and background1
+f = ActiveGoal and background1
+g = highwall and background1
+w = outerwall and outerwallLow and tree1 and background1
+h = lowwall and background1
+i = wall and background1
+´ = secretgoal and background1
+
+, = background2
+j = activePlayer and background2
+k = PlayerCharacter and background2
+l = enemy and background2
+m = enemyGoal and background2
+n = Goal and background2
+o = ActiveGoal and background2
+p = highwall and background2
+q = outerwall and outerwallLow and tree2 and background2
+r = lowwall and background2
+s = wall and background2
+* = secretgoal and background2
+
+: = background3
+t = activePlayer and background3
+u = PlayerCharacter and background3
+; = enemy and background3
+x = enemyGoal and background3
+y = Goal and background3
+z = ActiveGoal and background3
+! = highwall and background3
+" = outerwall and outerwallLow and tree3 and background3
+# = lowwall and background3
+¤ = wall and background3
+% = camel and background3
+- = secretgoal and background3
+=======
+SOUNDS
+=======
+sfx0 93248902
+EndLevel 79021108
+undo 18282907
+
+
+================
+COLLISIONLAYERS
+================
+background
+background1 background2 background3
+Goals Lowwall EnemyOnGoalLow PlayerOnEnemyGoal outerwallLow
+Enemy PassiveEnemy FriendlyPlayer highwall outerwall EnemyOnGoalHigh EnemyOnFriendGoal
+tree1 tree2 tree3 camel water secretgoal
+duck rock seagull
+
+======
+RULES
+======
+(Start of the round)
+[Enemy] -> [PassiveEnemy]
+[EnemyGoal] -> [PassiveEnemyGoal]
+
+(MidRound)
+[> FriendlyGoal | PassiveEnemy] -> [| Enemy FriendlyGoal]
+[> FriendlyPlayer | PassiveEnemyGoal] -> [| FriendlyPlayer EnemyGoal]
+
+
+
+[FriendlyPlayer |...| PassiveEnemyGoal]-> [FriendlyPlayer | ... | < EnemyGoal]
+[FriendlyGoal |...| PassiveEnemy]-> [FriendlyGoal | ... | < Enemy]
+
+[PassiveEnemyGoal No highwall | PassiveEnemy] -> [EnemyGoal | < Enemy]
+[PassiveEnemyGoal | PassiveEnemy] -> [> EnemyGoal | Enemy]
+[EnemyGoals | ... | no highwall | PassiveEnemy] -> [EnemyGoals  | ... | | < Enemy]
+[PassiveEnemyGoal | no Lowwall|... | EnemyCharacters ] -> [> EnemyGoal  | | ... | EnemyCharacters]
+[PassiveEnemy | ... | EnemyGoal] -> [ > Enemy | ... | EnemyGoal]
+[PassiveEnemyGoal | ... | Enemy] -> [ > EnemyGoal | ... | Enemy]
+
+[ > Enemy  | < EnemyGoal] -> [| Enemy EnemyGoal ]
+
+[action ActivePlayer][Goal] -> [PlayerCharacter][ActiveGoal]
+[action ActiveGoal][PlayerCharacter] -> [Goal][ActivePlayer]
+
+(LateRound)
+
+
+late [FriendlyPlayer No lowwall | PassiveEnemyGoal] -> [FriendlyPlayer EnemyGoal| ]
+late [FriendlyGoal No Highwall| PassiveEnemy] -> [Enemy FriendlyGoal | ]
+late [EnemyGoal No Highwall | PassiveEnemy ] -> [EnemyGoal Enemy |]
+late [Enemy No Lowwall | PassiveEnemyGoal ] -> [Enemy EnemyGoal |]
+
+(EndRound)
+late [PassiveEnemy] -> [Enemy]
+late [PassiveEnemyGoal] -> [EnemyGoal]
+
+late [Enemy EnemyGoal] -> [EnemyOnGoalLow EnemyOnGoalHigh]
+late [FriendlyGoal Enemy] -> [EnemyOnFriendGoal ] sfx0
+late [FriendlyPlayer EnemyGoal] -> [PlayerOnEnemyGoal ] sfx0
+late [Goals outerWall] -> cancel
+==============
+WINCONDITIONS
+==============
+all friendlyPlayer on FriendlyGoal
+all FriendlyGoal on FriendlyPlayer
+some FriendlyGoal
+some FriendlyPlayer
+all secretgoal on enemygoals
+
+=======
+LEVELS
+=======
+(Player and Fake Goals)
+Message Level 1 out of 17
+
+wwwwwww
+w.....w
+whihihw
+waiciew
+wwwwwww
+
+Message Level 2 out of 17
+
+//www/&&
+wwwdwwww
+wa..h.ew
+w.i.iiiw
+w..dd..w
+w.iiii.w
+w......w
+wwwwwwww
+
+Message Level 3 out of 17
+
+wwwwWwwww
+w.....dew
+w.awwwwww
+wwww//&&/
+
+Message Level 4 out of 17
+
+wwwwwwww
+we.....w
+wwdia..w
+/w.i..hw
+/w.i..dw
+&wiig..w
+/w.....w
+/wwwwwww
+
+Message Level 5 out of 17
+
+wwwwwwwww
+w.ddd..ew
+w.ggggggw
+w.......w
+w.......w
+wa......w
+wwwwwwwww
+
+Message Level 6 out of 17
+
+wwwwwwwwww
+w...d.d.dw
+w...d.di.w
+wahiiiic.w
+w.h.i.ei.w
+w.h.i.ii.w
+w...i....w
+wwwwwwwwww
+
+(Player and Fake Players)
+Message Level 7 out of 17
+
++++//qqq/
++////qlq/
+qqqqqq,qq
+q,,,,,,mq
+qrsrsrqqq
+qjslsnq//
+qqqqqqq__
+
+Message Level 8 out of 17
+
++/qqqqq/_
+//qlllq/_
+qqq,,,q//
+q,s,,,qqq
+qj,,,,,,q
+q,r,,,s,q
+qqqmmmsnq
++/qqqqqqq
+
+Message Level 9 out of 17
+
+qqqqqq
+q,ls,q
+q,,s,q
+qj,s,q
+q,,pmq
+q,,rnq
+q,,s,q
+q,,s,q
+q,ms,q
+qqqqqq
+
+Message Level 10 out of 17
+
+++//qqq//__
++__/qmq/+__
+////q,q////
+/qqqq,qqqqq
+/qs,,,smssq
+/ql,,,r,rmq
+/qsrj,s,ssq
+/qss,rs,ssq
+qqss,,,,ssq
+q,l,,lrsssq
+qnssmqqqqqq
+qqqqqq///++
+
+Message Level 11 out of 17
+
+qqqqqqqqqqqqq
+ql,,j,,,,,,mq
+q,mllm,,,,m,q
+ql,,,,,,,,,mq
+q,lm,m,,,m,,q
+qsssssrsssssq
+ql,,,,,,,,,mq
+qqqqqq,nqqqqq
+/////qqqq/__/
+
+Message Level 12 out of 17
+
+qqqqqqqqqqqq
+qllp,,,,,mmq
+qss,sssssssq
+qs,,s,,,,,jq
+qs,,s,,,,,,q
+qs,,s,,,,,,q
+qs,,s,,,,,,q
+qs,,sm,,mmmq
+qs,,,ss,ms,q
+qn,s,,,,,m,q
+qqll,sss,,,q
+_qqqqqqqqqqq
+
+(Both Moves)
+
+Message You can switch character using X.
+Message Level 13 out of 17
+
+:%%%::::""""""
+""""""""":u::"
+";:::z::::::;"
+""""""""""""""
+
+Message Level 14 out of 17
+
+"""""""""""""
+"x:¤x:xx¤:::"
+"::::¤xx::¤:"
+"y¤:x::x¤:¤:"
+"::::¤::::¤x"
+"x¤:x:xx¤x:x"
+"¤¤¤¤¤¤¤¤¤¤x"
+";;::;¤:;;::"
+"::;:;¤:;;::"
+"t;:::::;;;:"
+":;;¤;::::;:"
+"::;¤;¤:;¤;:"
+"""""""""""""
+
+Message Level 15 out of 17
+
+""""""""""""
+"::::t::::x"
+":::::::::x"
+":::::::::x"
+":::::::::x"
+":::::::::x"
+"::::¤:::::"
+";:::::::::"
+";:::::::::"
+";:::::::::"
+";:::::::::"
+";::::y::::"
+""""""""""""
+
+Message Level 16 out of 17
+
+""""""""""
+"y:::¤#::"
+":¤#¤¤:x:"
+":¤:#¤:::"
+":¤x#¤:::"
+":¤¤:¤:t#"
+":¤;;::¤x"
+""""""""""
+
+Message Level 17 out of 17
+
+"""""""
+"x::::"
+""¤:¤t"
+:"¤:¤""
+%":::":
+%":::"%
+:":::":
+""¤:¤":
+"y¤:¤""
+"::::;"
+"""""""
+
+Message Congratulations, You beat the game.
+Message Here is a bonuslevel. (For egg hunters)
+
+wwwwwwwwwwwwwwwww
+w........´....d&w
+w.awwwwwwwwwwwwww
+q,,qqqqqqqqqqqqqq
+q*,,,,,,,,,,,,m_q
+q,,qqqqqqqqqqqqqq
+":y""""""""""""""
+":::::::-:::::x%"
+"""""""""""""""""
+
+Message Nice!

@@ -1,0 +1,2233 @@
+(version 1.0)
+title Maera Public Works
+author CHz
+homepage quiteajolt.com
+
+background_color DarkBlue
+run_rules_on_level_start
+again_interval 0.25
+
+
+========
+OBJECTS
+========
+
+Background
+Black
+
+Surface
+#DDDDDD
+
+Wall
+#222222
+
+RomanNumeral1
+#FF0000
+.....
+..0..
+..0..
+..0..
+.....
+
+RomanNumeral2
+#FF0000
+.....
+.0.0.
+.0.0.
+.0.0.
+.....
+
+RomanNumeral3
+#FF0000
+.....
+0.0.0
+0.0.0
+0.0.0
+.....
+
+RomanNumeral4
+#FF0000
+.....
+0.0.0
+0.0.0
+0..0.
+.....
+
+RomanNumeral5
+#FF0000
+.....
+.0.0.
+.0.0.
+..0..
+.....
+
+
+WaterWheelHorizWet
+#555500 #777700 #0080FF
+22022
+00000
+01010
+00000
+22022
+
+WaterWheelHorizDry
+#555500 #777700 #999999
+22022
+00000
+01010
+00000
+22022
+
+WaterWheelVertWet
+#555500 #777700 #0080FF
+20002
+20102
+00000
+20102
+20002
+
+WaterWheelVertDry
+#555500 #777700 #999999
+20002
+20102
+00000
+20102
+20002
+
+WaterSource
+Transparent
+
+
+Ditch
+#999999
+
+Water
+#0080FF
+
+SwitchOn
+#222222 #999999
+...1.
+...1.
+..1..
+.000.
+.....
+
+SwitchOff
+#222222 #999999
+.1...
+.1...
+..1..
+.000.
+.....
+
+SwitchToggleToken
+Transparent
+
+
+GateVertOpen
+#444444
+.000.
+.....
+.....
+.....
+.000.
+
+GateVertOpenWet
+#444444 #0080FF
+10001
+11111
+11111
+11111
+10001
+
+GateVertClosed
+#444444
+.000.
+.000.
+.000.
+.000.
+.000.
+
+GateVertClosedLeft
+#444444 #0080FF
+1000.
+1000.
+1000.
+1000.
+1000.
+
+GateVertClosedRight
+#444444 #0080FF
+.0001
+.0001
+.0001
+.0001
+.0001
+
+GateHorizOpen
+#444444
+.....
+0...0
+0...0
+0...0
+.....
+
+GateHorizOpenWet
+#444444 #0080FF
+11111
+01110
+01110
+01110
+11111
+
+GateHorizClosed
+#444444
+.....
+00000
+00000
+00000
+.....
+
+GateHorizClosedUp
+#444444 #0080FF
+11111
+00000
+00000
+00000
+.....
+
+GateHorizClosedDown
+#444444 #0080FF
+.....
+00000
+00000
+00000
+11111
+
+
+CrateDitch
+#F0B030 #D06000
+.....
+.111.
+.101.
+.111.
+.....
+
+CrateSurface
+#F0E060 #F08000 #0080FF
+21112
+10001
+10001
+10001
+21112
+
+Block
+#555555 #222222
+11111
+10001
+10001
+10001
+11111
+
+BlockSurface
+#555555 #222222
+11111
+10001
+10001
+10001
+11111
+
+
+LadderUpTop
+Brown
+.....
+.....
+.....
+.....
+.000.
+
+LadderUp
+Brown
+..0..
+..0..
+..0..
+..0..
+.....
+
+LadderDown
+Brown
+.....
+..0..
+..0..
+..0..
+..0..
+
+LadderDownTop
+Brown
+.000.
+.....
+.....
+.....
+.....
+
+LadderLeft
+Brown
+.....
+.....
+0000.
+.....
+.....
+
+LadderLeftTop
+Brown
+.....
+....0
+....0
+....0
+.....
+
+LadderRight
+Brown
+.....
+.....
+.0000
+.....
+.....
+
+LadderRightTop
+Brown
+.....
+0....
+0....
+0....
+.....
+
+
+PlayerSurface
+#009020
+..0..
+.000.
+00000
+.000.
+..0..
+
+PlayerDitch
+#007010
+.....
+..0..
+.000.
+..0..
+.....
+
+PlayerDrowned
+DarkBrown
+.....
+..0..
+.000.
+..0..
+.....
+
+
+Goal
+Transparent
+
+DoorClosed
+#444444
+0.0.0
+0.0.0
+0.0.0
+0.0.0
+0.0.0
+
+
+Timer9
+Transparent
+
+Timer8
+Transparent
+
+Timer7
+Transparent
+
+Timer6
+Transparent
+
+Timer5
+Transparent
+
+Timer4
+Transparent
+
+Timer3
+Transparent
+
+Timer2
+Transparent
+
+Timer1
+Transparent
+
+Timer0
+Transparent
+
+
+Base1Token
+Transparent
+
+Base2Token
+Transparent
+
+Base3Token
+Transparent
+
+Base4Token
+Transparent
+
+Base5Token
+Transparent
+
+FakeSwitchOff
+#222222 #999999
+.1...
+.1...
+..1..
+.000.
+.....
+
+FakeSwitchOn
+#222222 #999999
+...1.
+...1.
+..1..
+.000.
+.....
+
+FakeWaterWheelVertWet
+#555500 #777700 #0080FF
+20002
+20102
+00000
+20102
+20002
+
+FakeGateHorizOpenWet
+#444444 #0080FF
+11111
+01110
+01110
+01110
+11111
+
+FakeDoorClosed
+#444444
+0.0.0
+0.0.0
+0.0.0
+0.0.0
+0.0.0
+
+BaseWheel11
+DarkBrown
+.....
+.....
+...00
+..000
+..000
+
+BaseWheel21
+DarkBrown
+.....
+.....
+.....
+0...0
+00.00
+
+BaseWheel31
+DarkBrown
+.....
+.....
+..000
+00000
+00...
+
+BaseWheel41
+DarkBrown
+.000.
+.000.
+00000
+00000
+.000.
+
+BaseWheel51
+DarkBrown
+.....
+.....
+000..
+00000
+...00
+
+BaseWheel61
+DarkBrown
+.....
+.....
+.....
+0...0
+00.00
+
+BaseWheel71
+DarkBrown
+.....
+.....
+00...
+000..
+000..
+
+BaseWheel71Wet
+DarkBrown #0080FF
+11111
+11111
+00111
+00011
+00011
+
+BaseWheel12
+DarkBrown
+...00
+....0
+.....
+....0
+...00
+
+BaseWheel22
+DarkBrown
+00000
+0000.
+00000
+00000
+0.000
+
+BaseWheel32
+DarkBrown
+.....
+.....
+.....
+0....
+00...
+
+BaseWheel42
+DarkBrown
+.000.
+.000.
+.000.
+.000.
+.000.
+
+BaseWheel52
+DarkBrown
+.....
+.....
+.....
+....0
+...00
+
+BaseWheel62
+DarkBrown
+00000
+.0000
+00000
+00000
+000.0
+
+BaseWheel72
+DarkBrown
+00...
+0....
+.....
+0....
+00...
+
+BaseWheel72Wet
+DarkBrown #0080FF
+00111
+01111
+11111
+01111
+00111
+
+BaseWheel13
+DarkBrown
+...00
+...00
+..00.
+..00.
+..00.
+
+BaseWheel23
+DarkBrown
+...00
+....0
+.....
+.....
+.....
+
+BaseWheel33
+DarkBrown
+00000
+00000
+00000
+00000
+00000
+
+BaseWheel43
+DarkBrown
+00000
+00000
+.000.
+00000
+00000
+
+BaseWheel53
+DarkBrown
+00000
+00000
+00000
+00000
+00000
+
+BaseWheel63
+DarkBrown
+00...
+0....
+.....
+.....
+.....
+
+BaseWheel73
+DarkBrown
+00...
+00...
+.00..
+.00..
+.00..
+
+BaseWheel73Wet
+DarkBrown #0080FF
+00111
+00111
+.0011
+.0011
+.0011
+
+BaseWheel14
+DarkBrown
+..00.
+00000
+00000
+00000
+..00.
+
+BaseWheel24
+DarkBrown
+.....
+00000
+00000
+00000
+.....
+
+BaseWheel34
+DarkBrown
+00.00
+00000
+00000
+00000
+00.00
+
+BaseWheel44
+DarkBrown DarkGray
+00000
+01110
+01110
+01110
+00000
+
+BaseWheel54
+DarkBrown
+00.00
+00000
+00000
+00000
+00.00
+
+BaseWheel64
+DarkBrown
+.....
+00000
+00000
+00000
+.....
+
+BaseWheel74
+DarkBrown
+.00..
+00000
+00000
+00000
+.00..
+
+BaseWheel74Wet1
+DarkBrown #0080FF
+.0011
+00000
+00000
+00000
+.00..
+
+BaseWheel74Wet2
+DarkBrown #0080FF
+.0011
+00000
+00000
+00000
+.0011
+
+BaseWheel15
+DarkBrown
+..00.
+..00.
+..00.
+...00
+...00
+
+BaseWheel25
+DarkBrown
+.....
+.....
+.....
+....0
+...00
+
+BaseWheel35
+DarkBrown
+00000
+00000
+00000
+00000
+00000
+
+BaseWheel45
+DarkBrown
+00000
+00000
+.000.
+00000
+00000
+
+BaseWheel55
+DarkBrown
+00000
+00000
+00000
+00000
+00000
+
+BaseWheel65
+DarkBrown
+.....
+.....
+.....
+0....
+00...
+
+BaseWheel75
+DarkBrown
+.00..
+.00..
+.00..
+00...
+00...
+
+BaseWheel75Wet
+DarkBrown #0080FF
+.0011
+.0011
+.0011
+00111
+00111
+
+BaseWheel16
+DarkBrown
+...00
+....0
+.....
+....0
+...00
+
+BaseWheel26
+DarkBrown
+0.000
+00000
+00000
+0000.
+00000
+
+BaseWheel36
+DarkBrown
+00...
+0....
+.....
+.....
+.....
+
+BaseWheel46
+DarkBrown
+.000.
+.000.
+.000.
+.000.
+.000.
+
+BaseWheel56
+DarkBrown
+...00
+....0
+.....
+.....
+.....
+
+BaseWheel66
+DarkBrown
+000.0
+00000
+00000
+.0000
+00000
+
+BaseWheel76
+DarkBrown
+00...
+0....
+.....
+0....
+00...
+
+BaseWheel76Wet
+DarkBrown #0080FF
+00111
+01111
+11111
+01111
+00111
+
+BaseWheel17
+DarkBrown
+..000
+..000
+...00
+.....
+.....
+
+BaseWheel27
+DarkBrown
+00.00
+0...0
+.....
+.....
+.....
+
+BaseWheel37
+DarkBrown
+00...
+00000
+..000
+.....
+.....
+
+BaseWheel47
+DarkBrown
+.000.
+00000
+00000
+.000.
+.000.
+
+BaseWheel57
+DarkBrown
+...00
+00000
+000..
+.....
+.....
+
+BaseWheel67
+DarkBrown
+00.00
+0...0
+.....
+.....
+.....
+
+BaseWheel77
+DarkBrown
+000..
+000..
+00...
+.....
+.....
+
+BaseWheel77Wet
+DarkBrown #0080FF
+00011
+00011
+00111
+11111
+11111
+
+BaseWheelT11
+DarkBrown
+.....
+.....
+.....
+.....
+.....
+
+BaseWheelT21
+DarkBrown
+..000
+...00
+...00
+...00
+...00
+
+BaseWheelT31
+DarkBrown
+.....
+0....
+00000
+00000
+000..
+
+BaseWheelT41
+DarkBrown
+.....
+.....
+00000
+00000
+.....
+
+BaseWheelT51
+DarkBrown
+.....
+....0
+00000
+00000
+..000
+
+BaseWheelT61
+DarkBrown
+000..
+00...
+00...
+00...
+00...
+
+BaseWheelT71
+DarkBrown
+.....
+.....
+.....
+.....
+.....
+
+BaseWheelT71Wet
+DarkBrown #0080FF
+11111
+11111
+11111
+11111
+11111
+
+BaseWheelT12
+DarkBrown
+.....
+.....
+0...0
+00000
+00000
+
+BaseWheelT22
+DarkBrown
+..000
+.000.
+00...
+00...
+0....
+
+BaseWheelT32
+DarkBrown
+000..
+0000.
+.000.
+.0000
+..000
+
+BaseWheelT42
+DarkBrown
+.....
+.....
+.....
+.....
+.....
+
+BaseWheelT52
+DarkBrown
+..000
+.0000
+.000.
+0000.
+000..
+
+BaseWheelT62
+DarkBrown
+000..
+.000.
+...00
+...00
+....0
+
+BaseWheelT72
+DarkBrown
+.....
+.....
+....0
+00000
+00000
+
+BaseWheelT72Wet
+DarkBrown #0080FF
+11111
+11111
+11110
+00000
+00000
+
+BaseWheelT13
+DarkBrown
+.0000
+..000
+..000
+..00.
+..00.
+
+BaseWheelT23
+DarkBrown
+00...
+0000.
+00000
+.0000
+...00
+
+BaseWheelT33
+DarkBrown
+..000
+..000
+00000
+000.0
+00000
+
+BaseWheelT43
+DarkBrown
+00000
+00000
+00.00
+00.00
+00000
+
+BaseWheelT53
+DarkBrown
+000..
+000..
+00000
+0.000
+00000
+
+BaseWheelT63
+DarkBrown
+...00
+.0000
+00000
+0000.
+00...
+
+BaseWheelT73
+DarkBrown
+0000.
+000..
+000..
+.00..
+.00..
+
+BaseWheelT73Wet
+DarkBrown #0080FF
+00001
+00011
+00011
+.0011
+.0011
+
+BaseWheelT14
+DarkBrown
+..00.
+..00.
+..00.
+..00.
+..00.
+
+BaseWheelT24
+DarkBrown
+.....
+.....
+.....
+.....
+.....
+
+BaseWheelT34
+DarkBrown
+00000
+00000
+00..0
+00000
+00000
+
+BaseWheelT44
+DarkBrown
+00000
+00000
+00000
+00000
+00000
+
+BaseWheelT54
+DarkBrown
+00000
+00000
+0..00
+00000
+00000
+
+BaseWheelT64
+DarkBrown
+.....
+.....
+.....
+.....
+.....
+
+BaseWheelT74
+DarkBrown
+.00..
+.00..
+.00..
+.00..
+.00..
+
+BaseWheelT74Wet
+DarkBrown #0080FF
+.0011
+.0011
+.0011
+.0011
+.0011
+
+BaseWheelT15
+DarkBrown
+..00.
+..00.
+..000
+..000
+.0000
+
+BaseWheelT25
+DarkBrown
+...00
+.0000
+00000
+0000.
+00...
+
+BaseWheelT35
+DarkBrown
+00000
+000.0
+00000
+..000
+..000
+
+BaseWheelT45
+DarkBrown
+00000
+00.00
+00.00
+00000
+00000
+
+BaseWheelT55
+DarkBrown
+00000
+0.000
+00000
+00...
+00...
+
+BaseWheelT65
+DarkBrown
+00...
+0000.
+00000
+.0000
+...00
+
+BaseWheelT75
+DarkBrown
+.00..
+.00..
+000..
+000..
+0000.
+
+BaseWheelT75Wet
+DarkBrown #0080FF
+.0011
+.0011
+00011
+00011
+00001
+
+BaseWheelT16
+DarkBrown
+00000
+00000
+0....
+.....
+.....
+
+BaseWheelT26
+DarkBrown
+0....
+00...
+00...
+.000.
+..000
+
+BaseWheelT36
+DarkBrown
+..000
+.0000
+.000.
+0000.
+000..
+
+BaseWheelT46
+DarkBrown
+.....
+.....
+.....
+.....
+.....
+
+BaseWheelT56
+DarkBrown
+000..
+0000.
+.000.
+.0000
+..000
+
+BaseWheelT66
+DarkBrown
+....0
+...00
+...00
+.000.
+00...
+
+BaseWheelT76
+DarkBrown
+00000
+00000
+....0
+.....
+.....
+
+BaseWheelT76Wet
+DarkBrown #0080FF
+00000
+00000
+11110
+11111
+11111
+
+BaseWheelT17
+DarkBrown
+.....
+.....
+.....
+.....
+.....
+
+BaseWheelT27
+DarkBrown
+...00
+...00
+...00
+...00
+..000
+
+BaseWheelT37
+DarkBrown
+000..
+00000
+00000
+0....
+.....
+
+BaseWheelT47
+DarkBrown
+.....
+00000
+00000
+.....
+.....
+
+BaseWheelT57
+DarkBrown
+..000
+00000
+00000
+....0
+.....
+
+BaseWheelT67
+DarkBrown
+00...
+00...
+00...
+00...
+000..
+
+BaseWheelT77
+DarkBrown
+.....
+.....
+.....
+.....
+.....
+
+BaseWheelT77Wet
+DarkBrown #0080FF
+11111
+11111
+11111
+11111
+11111
+
+
+
+
+
+CutsceneBackground
+Green
+
+House
+DarkBrown
+
+HouseRoofLeft
+DarkBrown
+.....
+....0
+...00
+..000
+.0000
+
+HouseRoofRight
+DarkBrown
+.....
+0....
+00...
+000..
+0000.
+
+Window
+LightBlue
+
+DoorClosedTop
+DarkBrown #383020
+11111
+10001
+10001
+10001
+10001
+
+DoorClosedBottom
+DarkBrown #383020
+10001
+10001
+10001
+10001
+10001
+
+RoadLeft
+#E0D010
+....0
+...00
+..000
+.0000
+00000
+
+Road
+#E0D010
+
+RoadRight
+#E0D010
+.....
+0....
+00...
+000..
+0000.
+
+ClockTowerLeft
+#252525
+
+ClockTowerRight
+#252525
+0000.
+0000.
+0000.
+0000.
+0000.
+
+Clock11
+#252525 White
+.....
+....0
+...00
+..000
+..001
+
+Clock21
+#252525 White
+00000
+00000
+01111
+11101
+11101
+
+Clock21b
+#252525 White
+00000
+00000
+01111
+11110
+11110
+
+Clock31
+#252525 White
+0000.
+00000
+11100
+11110
+11111
+
+Clock41
+#252525 White
+.....
+.....
+0....
+00...
+00...
+
+Clock12
+#252525 White
+..001
+..001
+..001
+..001
+..001
+
+Clock22
+#252525 White
+11110
+11110
+11110
+11111
+11111
+
+Clock32
+#252525 White
+11111
+11111
+00011
+11111
+11111
+
+Clock42
+#252525 White
+00...
+00...
+00...
+00...
+00...
+
+Clock13
+#252525 White
+..001
+..000
+...00
+....0
+.....
+
+Clock23
+#252525 White
+11111
+11111
+01111
+00000
+00000
+
+Clock33
+#252525 White
+11111
+11110
+11100
+00000
+0000.
+
+Clock43
+#252525 White
+00...
+00...
+0....
+.....
+.....
+
+DoorOpen
+Black
+
+CutsceneWater
+#0080FF
+
+PlayerHead
+#009020 White
+..0..
+.000.
+00000
+.000.
+.101.
+
+PlayerBody
+#009020 White
+.111.
+.111.
+.111.
+.1.1.
+.1.1.
+
+
+SoundTrigger0
+Transparent
+
+SoundTrigger1
+Transparent
+
+SoundTrigger2
+Transparent
+
+SoundTrigger3
+Transparent
+
+SoundTrigger4
+Transparent
+
+
+=======
+LEGEND
+=======
+
+! = Background
+
+. = Surface
+# = Wall
+
+Ⅰ = Wall AND RomanNumeral1
+Ⅱ = Wall AND RomanNumeral2
+Ⅲ = Wall AND RomanNumeral3
+Ⅳ = Wall AND RomanNumeral4
+Ⅴ = Wall AND RomanNumeral5
+RomanNumeral = RomanNumeral1 OR RomanNumeral2 OR RomanNumeral3 OR RomanNumeral4 OR RomanNumeral5
+
+5 = WaterWheelHorizWet AND WaterSource
+6 = WaterWheelHorizDry
+7 = WaterWheelVertWet AND WaterSource
+8 = WaterWheelVertDry
+WaterWheel = WaterWheelHorizWet OR WaterWheelHorizDry OR WaterWheelVertWet OR WaterWheelVertDry OR FakeWaterWheelVertWet
+WaterPropagator = Water OR CrateSurface OR WaterSource OR GateVertOpenWet OR GateHorizOpenWet
+
+- = Ditch
+1 = GateVertOpen AND Ditch
+2 = GateVertClosed AND Ditch
+3 = GateHorizOpen AND Ditch
+4 = GateHorizClosed AND Ditch
+
+$ = CrateDitch AND Ditch
+Crate = CrateDitch OR CrateSurface
+% = Block AND Ditch
+
+Pushable = CrateDitch OR Block
+
+/ = SwitchOn AND Surface
+\ = SwitchOff AND Surface
+Switch = SwitchOn OR SwitchOff OR FakeSwitchOn OR FakeSwitchOff
+
+U = LadderUp AND Ditch
+D = LadderDown AND Ditch
+L = LadderLeft AND Ditch
+R = LadderRight AND Ditch
+Ladder = LadderUp OR LadderDown OR LadderLeft OR LadderRight
+
+Gate = GateVertOpen OR GateVertOpenWet OR GateVertClosed OR GateVertClosedLeft OR GateVertClosedRight OR GateHorizOpen OR GateHorizOpenWet OR GateHorizClosed OR GateHorizClosedUp OR GateHorizClosedDown OR FakeGateHorizOpenWet
+
+@ = PlayerSurface AND Surface
+Player = PlayerSurface OR PlayerDitch
+
+G = Goal AND Surface
+
+一 = Timer1 AND CutsceneBackground
+二 = Timer2 AND CutsceneBackground
+三 = Timer3 AND CutsceneBackground
+四 = Timer4 AND CutsceneBackground
+五 = Timer5 AND CutsceneBackground
+六 = Timer6 AND CutsceneBackground
+七 = Timer7 AND CutsceneBackground
+八 = Timer8 AND CutsceneBackground
+九 = Timer9 AND CutsceneBackground
+Timer = Timer1 OR Timer2 OR Timer3 OR Timer4 OR Timer5 OR Timer6 OR Timer7 OR Timer8 OR Timer9 OR Timer0
+
+Ⓐ = BaseWheel11 AND Base1Token AND Ditch
+Ⓑ = BaseWheel11 AND Base2Token AND Ditch
+Ⓒ = BaseWheelT11 AND Base3Token AND Ditch
+Ⓓ = BaseWheel11 AND Base4Token AND Ditch
+Ⓔ = BaseWheelT11 AND Base5Token AND Ditch
+BaseToken = Base1Token OR Base2Token OR Base3Token OR Base4Token OR Base5Token
+BaseWheel = BaseWheel11 OR BaseWheel21 OR BaseWheel31 OR BaseWheel41 OR BaseWheel51 OR BaseWheel61 OR BaseWheel71 OR BaseWheel12 OR BaseWheel22 OR BaseWheel32 OR BaseWheel42 OR BaseWheel52 OR BaseWheel62 OR BaseWheel72 OR BaseWheel13 OR BaseWheel23 OR BaseWheel33 OR BaseWheel43 OR BaseWheel53 OR BaseWheel63 OR BaseWheel73 OR BaseWheel14 OR BaseWheel24 OR BaseWheel34 OR BaseWheel44 OR BaseWheel54 OR BaseWheel64 OR BaseWheel74 OR BaseWheel15 OR BaseWheel25 OR BaseWheel35 OR BaseWheel45 OR BaseWheel55 OR BaseWheel65 OR BaseWheel75 OR BaseWheel16 OR BaseWheel26 OR BaseWheel36 OR BaseWheel46 OR BaseWheel56 OR BaseWheel66 OR BaseWheel76 OR BaseWheel17 OR BaseWheel27 OR BaseWheel37 OR BaseWheel47 OR BaseWheel57 OR BaseWheel67 OR BaseWheel77 OR BaseWheel71Wet OR BaseWheel72Wet OR BaseWheel73Wet OR BaseWheel74Wet1 OR BaseWheel74Wet2 OR BaseWheel75Wet OR BaseWheel76Wet OR BaseWheel77Wet OR BaseWheelT11 OR BaseWheelT21 OR BaseWheelT31 OR BaseWheelT41 OR BaseWheelT51 OR BaseWheelT61 OR BaseWheelT71 OR BaseWheelT12 OR BaseWheelT22 OR BaseWheelT32 OR BaseWheelT42 OR BaseWheelT52 OR BaseWheelT62 OR BaseWheelT72 OR BaseWheelT13 OR BaseWheelT23 OR BaseWheelT33 OR BaseWheelT43 OR BaseWheelT53 OR BaseWheelT63 OR BaseWheelT73 OR BaseWheelT14 OR BaseWheelT24 OR BaseWheelT34 OR BaseWheelT44 OR BaseWheelT54 OR BaseWheelT64 OR BaseWheelT74 OR BaseWheelT15 OR BaseWheelT25 OR BaseWheelT35 OR BaseWheelT45 OR BaseWheelT55 OR BaseWheelT65 OR BaseWheelT75 OR BaseWheelT16 OR BaseWheelT26 OR BaseWheelT36 OR BaseWheelT46 OR BaseWheelT56 OR BaseWheelT66 OR BaseWheelT76 OR BaseWheelT17 OR BaseWheelT27 OR BaseWheelT37 OR BaseWheelT47 OR BaseWheelT57 OR BaseWheelT67 OR BaseWheelT77 OR BaseWheelT71Wet OR BaseWheelT72Wet OR BaseWheelT73Wet OR BaseWheelT74Wet OR BaseWheelT75Wet OR BaseWheelT76Wet OR BaseWheelT77Wet
+
+Ａ = CutsceneBackground
+Ｂ = House AND CutsceneBackground
+Ｃ = HouseRoofLeft AND CutsceneBackground
+Ｄ = HouseRoofRight AND CutsceneBackground
+Ｅ = DoorClosedTop AND CutsceneBackground
+Ｆ = DoorClosedBottom AND CutsceneBackground
+Ｇ = Window AND CutsceneBackground
+Ｈ = RoadLeft AND CutsceneBackground
+Ｉ = Road AND CutsceneBackground
+Ｊ = RoadRight AND CutsceneBackground
+Ｋ = ClockTowerLeft AND CutsceneBackground
+Ｌ = ClockTowerRight AND CutsceneBackground
+Ｍ = Clock11 AND CutsceneBackground
+Ｎ = Clock21 AND CutsceneBackground
+Ｏ = Clock31 AND CutsceneBackground
+Ｐ = Clock41 AND CutsceneBackground
+Ｑ = Clock12 AND CutsceneBackground
+Ｒ = Clock22 AND CutsceneBackground
+Ｓ = Clock32 AND CutsceneBackground
+Ｔ = Clock42 AND CutsceneBackground
+Ｕ = Clock13 AND CutsceneBackground
+Ｖ = Clock23 AND CutsceneBackground
+Ｗ = Clock33 AND CutsceneBackground
+Ｘ = Clock43 AND CutsceneBackground
+Ｙ = DoorOpen AND PlayerHead AND CutsceneBackground
+Ｚ = DoorOpen AND PlayerBody AND CutsceneBackground
+０ = DoorOpen AND CutsceneBackground
+１ = House AND PlayerHead AND CutsceneBackground
+２ = House AND PlayerBody AND CutsceneBackground
+３ = Clock21b AND CutsceneBackground
+～ = CutsceneWater AND CutsceneBackground
+
+⓪ = SoundTrigger0 AND CutsceneBackground
+① = SoundTrigger1 AND CutsceneBackground
+② = SoundTrigger2 AND CutsceneBackground
+③ = SoundTrigger3 AND CutsceneBackground
+④ = SoundTrigger4 AND CutsceneBackground
+SoundTrigger = SoundTrigger0 OR SoundTrigger1 OR SoundTrigger2 OR SoundTrigger3 OR SoundTrigger4
+
+=======
+SOUNDS
+=======
+
+PlayerSurface create 48266305 (climb up)
+PlayerDitch create 41817501 (climb down)
+
+(water movement)
+SwitchOn create 36552908
+SwitchOff create 36552908
+SoundTrigger0 destroy 36552908
+sfx1 36552908
+
+PlayerDrowned create 36552908 (play water movement too)
+PlayerDrowned create 66299108 (u ded)
+
+SoundTrigger1 destroy 56950107 (open door)
+SoundTrigger2 destroy 73601104 (close door)
+
+SoundTrigger3 destroy 20889900 (chime)
+
+SoundTrigger4 destroy 25204707 (wheel click)
+
+sfx0 9950900 (finish a puzzle level)
+
+
+================
+COLLISIONLAYERS
+================
+
+Background
+CutsceneBackground
+Surface, Ditch
+Ladder
+LadderUpTop (tops all on separate layers so more than one can be on one tile)
+LadderDownTop
+LadderLeftTop
+LadderRightTop
+CrateSurface, BlockSurface
+Player, Wall, Water, Gate, Switch, CrateDitch, Block, WaterWheel, DoorClosed, FakeDoorClosed, BaseWheel
+Goal
+SwitchToggleToken, BaseToken
+WaterSource
+Timer, RomanNumeral, PlayerDrowned
+House, HouseRoofLeft, HouseRoofRight, DoorClosedTop, DoorClosedBottom, Window, RoadLeft, Road, RoadRight, ClockTowerLeft, ClockTowerRight, Clock11, Clock21, Clock21b, Clock31, Clock41, Clock12, Clock22, Clock32, Clock42, Clock13, Clock23, Clock33, Clock43, DoorOpen, CutsceneWater
+PlayerHead, PlayerBody
+SoundTrigger
+
+
+======
+RULES
+======
+
+(================
+LEVEL GENERATION
+================)
+
+(Generate the tops of the ladders.)
+DOWN [ | LadderUp ] -> [ LadderUpTop | LadderUp ]
+DOWN [ LadderDown | ] -> [ LadderDown | LadderDownTop ]
+RIGHT [ | LadderLeft ] -> [ LadderLeftTop | LadderLeft ]
+RIGHT [ LadderRight | ] -> [ LadderRight | LadderRightTop ]
+
+
+(========
+MOVEMENT
+========)
+
+(Convert blocks to and from fake surfaces when the player walks on and off them, because layers.)
+[ > Player Surface | Block Ditch ] -> [ > Player Surface | BlockSurface Surface ]
+LATE [ BlockSurface Surface no Player ] -> [ Block Ditch ]
+
+(Shove crates and blocks. They can never move to the surface.)
+[ > PlayerDitch | Pushable ] -> [ > PlayerDitch | > Pushable ]
+[ > Pushable | Surface ] -> [ Pushable | Surface ]
+
+(Cancel movement if the player walks into the void.)
+[ > Player | no Surface no Ditch ] -> [ Player | ]
+
+(Cancel movement if a player on the surface tries to move into a ditch without using a ladder.)
+DOWN [ > Player Surface | Ditch no LadderUp ] -> [ Player Surface | Ditch ]
+UP [ > Player Surface | Ditch no LadderDown ] -> [ Player Surface | Ditch ]
+LEFT [ > Player Surface | Ditch no LadderRight ] -> [ Player Surface | Ditch ]
+RIGHT [ > Player Surface | Ditch no LadderLeft ] -> [ Player Surface | Ditch ]
+
+(Cancel movement if a player in a ditch tries to move to the surface without using a ladder.)
+DOWN [ > Player Ditch no LadderDown | Surface ] -> [ Player Ditch | Surface ]
+UP [ > Player Ditch no LadderUp | Surface ] -> [ Player Ditch | Surface ]
+LEFT [ > Player Ditch no LadderLeft | Surface ] -> [ Player Ditch | Surface ]
+RIGHT [ > Player Ditch no LadderRight | Surface ] -> [ Player Ditch | Surface ]
+
+(Change the player sprite based on their height.)
+LATE [ PlayerSurface Ditch ] -> [ PlayerDitch Ditch ]
+LATE [ PlayerDitch Surface ] -> [ PlayerSurface Surface ]
+
+(Play a sound when the player finishes a puzzle level. Done like this so it doesn't happen on the cutscene levels.)
+LATE [ Player Goal ] -> sfx0
+
+
+(=============
+SPLISH SPLASH
+=============)
+
+(Get started by marking that we're toggling and clearing current water)
+[ > Player Surface | Switch ] -> [ > Player Surface | Switch SwitchToggleToken ]
+[ SwitchToggleToken ] [ Water ] -> [ SwitchToggleToken ] [ ]
+[ SwitchToggleToken ] [ GateVertOpenWet ] -> [ SwitchToggleToken ] [ GateVertOpen ]
+[ SwitchToggleToken ] [ GateVertClosedLeft ] -> [ SwitchToggleToken ] [ GateVertClosed ]
+[ SwitchToggleToken ] [ GateVertClosedRight ] -> [ SwitchToggleToken ] [ GateVertClosed ]
+[ SwitchToggleToken ] [ GateHorizOpenWet ] -> [ SwitchToggleToken ] [ GateHorizOpen ]
+[ SwitchToggleToken ] [ GateHorizClosedUp ] -> [ SwitchToggleToken ] [ GateHorizClosed ]
+[ SwitchToggleToken ] [ GateHorizClosedDown ] -> [ SwitchToggleToken ] [ GateHorizClosed ]
+[ SwitchToggleToken ] [ WaterWheelVertWet no WaterSource ] -> [ SwitchToggleToken ] [ WaterWheelVertDry ]
+[ SwitchToggleToken ] [ WaterWheelHorizWet no WaterSource ] -> [ SwitchToggleToken ] [ WaterWheelHorizDry ]
+[ SwitchToggleToken ] [ CrateSurface Surface ] -> [ SwitchToggleToken ] [ CrateDitch Ditch ]
+
+(Open the associated gate and send the water along.)
+[ SwitchOff SwitchToggleToken | GateVertClosed ] -> [ SwitchOff SwitchToggleToken | GateVertOpen ]
+[ SwitchOff SwitchToggleToken | GateHorizClosed ] -> [ SwitchOff SwitchToggleToken | GateHorizOpen ]
+startloop
+	(This water propagation is bad lmao, don't worry about it)
+	(We do this LATE so we can propagate after a player moves a block.)
+	LATE [ WaterPropagator | Ditch no Water no Gate no Crate no Block no Player ] -> [ WaterPropagator | Ditch Water ]
+    LATE [ WaterPropagator | PlayerDitch ] -> [ WaterPropagator | PlayerDrowned ]
+	LATE [ WaterPropagator | CrateDitch Ditch ] -> [ WaterPropagator | CrateSurface Surface ]
+    LATE [ WaterPropagator | GateVertOpen ] -> [ WaterPropagator | GateVertOpenWet ]
+    LATE RIGHT [ WaterPropagator | GateVertClosed ] -> [ WaterPropagator | GateVertClosedLeft ]
+    LATE RIGHT [ GateVertClosed | WaterPropagator ] -> [ GateVertClosedRight | WaterPropagator ]
+    LATE [ WaterPropagator | GateHorizOpen ] -> [ WaterPropagator | GateHorizOpenWet ]
+    LATE DOWN [ WaterPropagator | GateHorizClosed ] -> [ WaterPropagator | GateHorizClosedUp ]
+    LATE DOWN [ GateHorizClosed | WaterPropagator ] -> [ GateHorizClosedDown | WaterPropagator ]
+endloop
+LATE [ WaterPropagator | WaterWheelVertDry ] -> [ WaterPropagator | WaterWheelVertWet ]
+LATE [ WaterPropagator | WaterWheelHorizDry ] -> [ WaterPropagator | WaterWheelHorizWet ]
+[ SwitchOff SwitchToggleToken ] -> [ SwitchOn ]
+
+(Close the associated gate.)
+[ SwitchOn SwitchToggleToken | GateVertOpen ] -> [ SwitchOn SwitchToggleToken | GateVertClosed ]
+[ SwitchOn SwitchToggleToken | GateHorizOpen ] -> [ SwitchOn SwitchToggleToken | GateHorizClosed ]
+[ SwitchOn SwitchToggleToken ] -> [ SwitchOff ]
+
+(Open/close the door depending on whether the water wheel is powered.)
+LATE [ Goal DoorClosed ] -> [ Goal ]
+LATE [ WaterWheelVertDry ] [ Goal ] -> [ WaterWheelVertDry ] [ Goal DoorClosed ]
+LATE [ WaterWheelHorizDry ] [ Goal ] -> [ WaterWheelHorizDry ] [ Goal DoorClosed ]
+
+
+(=========
+CUTSCENES
+=========)
+
+(Wheel generation for the base levels - #1)
+RIGHT [ Base1Token ] [ BaseWheel11 | | | | | | ] -> [ Base1Token ] [ BaseWheel11 | BaseWheel21 | BaseWheel31 | BaseWheel41 | BaseWheel51 | BaseWheel61 | BaseWheel71 ]
+DOWN [ Base1Token ] [ BaseWheel11 | | | | | | ] -> [ Base1Token ] [ BaseWheel11 | BaseWheel12 | BaseWheel13 | BaseWheel14 | BaseWheel15 | BaseWheel16 | BaseWheel17 ]
+DOWN [ Base1Token ] [ BaseWheel21 | | | | | | ] -> [ Base1Token ] [ BaseWheel21 | BaseWheel22 | BaseWheel23 | BaseWheel24 | BaseWheel25 | BaseWheel26 | BaseWheel27 ]
+DOWN [ Base1Token ] [ BaseWheel31 | | | | | | ] -> [ Base1Token ] [ BaseWheel31 | BaseWheel32 | BaseWheel33 | BaseWheel34 | BaseWheel35 | BaseWheel36 | BaseWheel37 ]
+DOWN [ Base1Token ] [ BaseWheel41 | | | | | | ] -> [ Base1Token ] [ BaseWheel41 | BaseWheel42 | BaseWheel43 | BaseWheel44 | BaseWheel45 | BaseWheel46 | BaseWheel47 ]
+DOWN [ Base1Token ] [ BaseWheel51 | | | | | | ] -> [ Base1Token ] [ BaseWheel51 | BaseWheel52 | BaseWheel53 | BaseWheel54 | BaseWheel55 | BaseWheel56 | BaseWheel57 ]
+DOWN [ Base1Token ] [ BaseWheel61 | | | | | | ] -> [ Base1Token ] [ BaseWheel61 | BaseWheel62 | BaseWheel63 | BaseWheel64 | BaseWheel65 | BaseWheel66 | BaseWheel67 ]
+DOWN [ Base1Token ] [ BaseWheel71 | | | | | | ] -> [ Base1Token ] [ BaseWheel71 | BaseWheel72 | BaseWheel73 | BaseWheel74 | BaseWheel75 | BaseWheel76 | BaseWheel77 ]
+
+(Wheel generation for the base levels - #2)
+RIGHT [ Base2Token ] [ BaseWheel11 | | | | | | ] -> [ Base2Token ] [ BaseWheel11 | BaseWheel21 | BaseWheel31 | BaseWheel41 | BaseWheel51 | BaseWheel61 | BaseWheel71Wet ]
+DOWN [ Base2Token ] [ BaseWheel11 | | | | | | ] -> [ Base2Token ] [ BaseWheel11 | BaseWheel12 | BaseWheel13 | BaseWheel14 | BaseWheel15 | BaseWheel16 | BaseWheel17 ]
+DOWN [ Base2Token ] [ BaseWheel21 | | | | | | ] -> [ Base2Token ] [ BaseWheel21 | BaseWheel22 | BaseWheel23 | BaseWheel24 | BaseWheel25 | BaseWheel26 | BaseWheel27 ]
+DOWN [ Base2Token ] [ BaseWheel31 | | | | | | ] -> [ Base2Token ] [ BaseWheel31 | BaseWheel32 | BaseWheel33 | BaseWheel34 | BaseWheel35 | BaseWheel36 | BaseWheel37 ]
+DOWN [ Base2Token ] [ BaseWheel41 | | | | | | ] -> [ Base2Token ] [ BaseWheel41 | BaseWheel42 | BaseWheel43 | BaseWheel44 | BaseWheel45 | BaseWheel46 | BaseWheel47 ]
+DOWN [ Base2Token ] [ BaseWheel51 | | | | | | ] -> [ Base2Token ] [ BaseWheel51 | BaseWheel52 | BaseWheel53 | BaseWheel54 | BaseWheel55 | BaseWheel56 | BaseWheel57 ]
+DOWN [ Base2Token ] [ BaseWheel61 | | | | | | ] -> [ Base2Token ] [ BaseWheel61 | BaseWheel62 | BaseWheel63 | BaseWheel64 | BaseWheel65 | BaseWheel66 | BaseWheel67 ]
+DOWN [ Base2Token ] [ BaseWheel71Wet | | | | | | ] -> [ Base2Token ] [ BaseWheel71Wet | BaseWheel72Wet | BaseWheel73Wet | BaseWheel74Wet1 | BaseWheel75 | BaseWheel76 | BaseWheel77 ]
+
+(Wheel generation for the base levels - #3)
+RIGHT [ Base3Token ] [ BaseWheelT11 | | | | | | ] -> [ Base3Token ] [ BaseWheelT11 | BaseWheelT21 | BaseWheelT31 | BaseWheelT41 | BaseWheelT51 | BaseWheelT61 | BaseWheelT71Wet ]
+DOWN [ Base3Token ] [ BaseWheelT11 | | | | | | ] -> [ Base3Token ] [ BaseWheelT11 | BaseWheelT12 | BaseWheelT13 | BaseWheelT14 | BaseWheelT15 | BaseWheelT16 | BaseWheelT17 ]
+DOWN [ Base3Token ] [ BaseWheelT21 | | | | | | ] -> [ Base3Token ] [ BaseWheelT21 | BaseWheelT22 | BaseWheelT23 | BaseWheelT24 | BaseWheelT25 | BaseWheelT26 | BaseWheelT27 ]
+DOWN [ Base3Token ] [ BaseWheelT31 | | | | | | ] -> [ Base3Token ] [ BaseWheelT31 | BaseWheelT32 | BaseWheelT33 | BaseWheelT34 | BaseWheelT35 | BaseWheelT36 | BaseWheelT37 ]
+DOWN [ Base3Token ] [ BaseWheelT41 | | | | | | ] -> [ Base3Token ] [ BaseWheelT41 | BaseWheelT42 | BaseWheelT43 | BaseWheelT44 | BaseWheelT45 | BaseWheelT46 | BaseWheelT47 ]
+DOWN [ Base3Token ] [ BaseWheelT51 | | | | | | ] -> [ Base3Token ] [ BaseWheelT51 | BaseWheelT52 | BaseWheelT53 | BaseWheelT54 | BaseWheelT55 | BaseWheelT56 | BaseWheelT57 ]
+DOWN [ Base3Token ] [ BaseWheelT61 | | | | | | ] -> [ Base3Token ] [ BaseWheelT61 | BaseWheelT62 | BaseWheelT63 | BaseWheelT64 | BaseWheelT65 | BaseWheelT66 | BaseWheelT67 ]
+DOWN [ Base3Token ] [ BaseWheelT71Wet | | | | | | ] -> [ Base3Token ] [ BaseWheelT71Wet | BaseWheelT72Wet | BaseWheelT73Wet | BaseWheelT74Wet | BaseWheelT75Wet | BaseWheelT76 | BaseWheelT77 ]
+
+(Wheel generation for the base levels - #4)
+RIGHT [ Base4Token ] [ BaseWheel11 | | | | | | ] -> [ Base4Token ] [ BaseWheel11 | BaseWheel21 | BaseWheel31 | BaseWheel41 | BaseWheel51 | BaseWheel61 | BaseWheel71Wet ]
+DOWN [ Base4Token ] [ BaseWheel11 | | | | | | ] -> [ Base4Token ] [ BaseWheel11 | BaseWheel12 | BaseWheel13 | BaseWheel14 | BaseWheel15 | BaseWheel16 | BaseWheel17 ]
+DOWN [ Base4Token ] [ BaseWheel21 | | | | | | ] -> [ Base4Token ] [ BaseWheel21 | BaseWheel22 | BaseWheel23 | BaseWheel24 | BaseWheel25 | BaseWheel26 | BaseWheel27 ]
+DOWN [ Base4Token ] [ BaseWheel31 | | | | | | ] -> [ Base4Token ] [ BaseWheel31 | BaseWheel32 | BaseWheel33 | BaseWheel34 | BaseWheel35 | BaseWheel36 | BaseWheel37 ]
+DOWN [ Base4Token ] [ BaseWheel41 | | | | | | ] -> [ Base4Token ] [ BaseWheel41 | BaseWheel42 | BaseWheel43 | BaseWheel44 | BaseWheel45 | BaseWheel46 | BaseWheel47 ]
+DOWN [ Base4Token ] [ BaseWheel51 | | | | | | ] -> [ Base4Token ] [ BaseWheel51 | BaseWheel52 | BaseWheel53 | BaseWheel54 | BaseWheel55 | BaseWheel56 | BaseWheel57 ]
+DOWN [ Base4Token ] [ BaseWheel61 | | | | | | ] -> [ Base4Token ] [ BaseWheel61 | BaseWheel62 | BaseWheel63 | BaseWheel64 | BaseWheel65 | BaseWheel66 | BaseWheel67 ]
+DOWN [ Base4Token ] [ BaseWheel71Wet | | | | | | ] -> [ Base4Token ] [ BaseWheel71Wet | BaseWheel72Wet | BaseWheel73Wet | BaseWheel74Wet2 | BaseWheel75Wet | BaseWheel76Wet | BaseWheel77Wet ]
+
+(Wheel generation for the base levels - #5)
+RIGHT [ Base5Token ] [ BaseWheelT11 | | | | | | ] -> [ Base5Token ] [ BaseWheelT11 | BaseWheelT21 | BaseWheelT31 | BaseWheelT41 | BaseWheelT51 | BaseWheelT61 | BaseWheelT71Wet ]
+DOWN [ Base5Token ] [ BaseWheelT11 | | | | | | ] -> [ Base5Token ] [ BaseWheelT11 | BaseWheelT12 | BaseWheelT13 | BaseWheelT14 | BaseWheelT15 | BaseWheelT16 | BaseWheelT17 ]
+DOWN [ Base5Token ] [ BaseWheelT21 | | | | | | ] -> [ Base5Token ] [ BaseWheelT21 | BaseWheelT22 | BaseWheelT23 | BaseWheelT24 | BaseWheelT25 | BaseWheelT26 | BaseWheelT27 ]
+DOWN [ Base5Token ] [ BaseWheelT31 | | | | | | ] -> [ Base5Token ] [ BaseWheelT31 | BaseWheelT32 | BaseWheelT33 | BaseWheelT34 | BaseWheelT35 | BaseWheelT36 | BaseWheelT37 ]
+DOWN [ Base5Token ] [ BaseWheelT41 | | | | | | ] -> [ Base5Token ] [ BaseWheelT41 | BaseWheelT42 | BaseWheelT43 | BaseWheelT44 | BaseWheelT45 | BaseWheelT46 | BaseWheelT47 ]
+DOWN [ Base5Token ] [ BaseWheelT51 | | | | | | ] -> [ Base5Token ] [ BaseWheelT51 | BaseWheelT52 | BaseWheelT53 | BaseWheelT54 | BaseWheelT55 | BaseWheelT56 | BaseWheelT57 ]
+DOWN [ Base5Token ] [ BaseWheelT61 | | | | | | ] -> [ Base5Token ] [ BaseWheelT61 | BaseWheelT62 | BaseWheelT63 | BaseWheelT64 | BaseWheelT65 | BaseWheelT66 | BaseWheelT67 ]
+DOWN [ Base5Token ] [ BaseWheelT71Wet | | | | | | ] -> [ Base5Token ] [ BaseWheelT71Wet | BaseWheelT72Wet | BaseWheelT73Wet | BaseWheelT74Wet | BaseWheelT75Wet | BaseWheelT76Wet | BaseWheelT77Wet ]
+
+(Replace objects with fakes that don't do anything.)
+[ BaseToken ] [ CutsceneBackground ] -> [ BaseToken ] [ Wall ]
+[ BaseToken ] [ WaterWheelHorizWet WaterSource ] -> [ BaseToken ] [ FakeWaterWheelVertWet ]
+[ BaseToken ] [ SwitchOff ] -> [ BaseToken ] [ FakeSwitchOff ]
+[ BaseToken ] [ GateHorizOpen ] -> [ BaseToken ] [ FakeGateHorizOpenWet ]
+[ BaseToken ] [ Goal ] -> [ BaseToken ] [ FakeDoorClosed ]
+(Fill spaces with fake water in part 2 and beyond)
+DOWN [ BaseToken no Base1Token ] [ FakeGateHorizOpenWet | Ditch ] -> [ BaseToken ] [ FakeGateHorizOpenWet | Ditch CutsceneWater ]
+(Fill spaces with fake water in part 4 and beyond)
+[ BaseToken no Base1Token no Base2Token no Base3Token ] [ Ditch no BaseWheel ] -> [ BaseToken ] [ Ditch CutsceneWater ]
+[ BaseToken no Base1Token no Base2Token no Base3Token ] [ WaterWheelVertDry ] -> [ BaseToken ] [ FakeWaterWheelVertWet ]
+
+(Start autoplaying)
+RIGHT [ > Player | FakeSwitchOff ] -> [ Player | FakeSwitchOn Timer1 ] sfx1
+RIGHT [ FakeSwitchOn | GateHorizClosed ] -> [ FakeSwitchOn | FakeGateHorizOpenWet ]
+DOWN [ FakeSwitchOn ] [ FakeGateHorizOpenWet | | | | | ] -> [ FakeSwitchOn ] [ FakeGateHorizOpenWet | CutsceneWater | BaseWheel71Wet | BaseWheel72Wet | BaseWheel73Wet | BaseWheel74Wet1 ]
+
+[ BaseToken ] -> [ ]
+
+(Timer countdowns)
+[Timer0] -> win
+[Timer1] -> [Timer0] again
+[Timer2] -> [Timer1] again
+[Timer3] -> [Timer2] again
+[Timer4] -> [Timer3] again
+[Timer5] -> [Timer4] again
+[Timer6] -> [Timer5] again
+[Timer7] -> [Timer6] again
+[Timer8] -> [Timer7] again
+[Timer9] -> [Timer8] again
+
+[SoundTrigger] -> []
+
+
+==============
+WINCONDITIONS
+==============
+
+Some Player on Goal
+
+
+=======
+LEVELS
+=======
+
+(Opening cutscene)
+ＡＡＡＡＡＡＡＡＡＡＡＡＡ六
+ＡＡＡＡＡＡＡＡＭＮＯＰＡＡ
+ＡＡＡＡＡＡＡＡＱＲＳＴＡＡ
+ＡＡＡＡＡＡＡＡＵＶＷＸＡＡ
+ＡＡＣＢＢＢＤＡＡＫＬＡＡＣ
+ＡＣＢＢＢＢＢＤＡＫＬＡＣＢ
+ＣＢＢＢＢＢＢＢＤＫＬＣＢＢ
+～～～～～～～～～～～～～～
+～～～～～～～～～～～～～～
+～～～～～～～～～～～～～～
+
+ＡＡＡＡＡＡＡＡＡＡＡＡ⓪一
+ＡＡＡＡＡＡＡＡＭＮＯＰＡＡ
+ＡＡＡＡＡＡＡＡＱＲＳＴＡＡ
+ＡＡＡＡＡＡＡＡＵＶＷＸＡＡ
+ＡＡＣＢＢＢＤＡＡＫＬＡＡＣ
+ＡＣＢＢＢＢＢＤＡＫＬＡＣＢ
+ＣＢＢＢＢＢＢＢＤＫＬＣＢＢ
+ＡＢＢＢＢＢＢＢＡＫＬＡＢＢ
+～～～～～～～～～～～～～～
+～～～～～～～～～～～～～～
+
+ＡＡＡＡＡＡＡＡＡＡＡＡ⓪一
+ＡＡＡＡＡＡＡＡＭＮＯＰＡＡ
+ＡＡＡＡＡＡＡＡＱＲＳＴＡＡ
+ＡＡＡＡＡＡＡＡＵＶＷＸＡＡ
+ＡＡＣＢＢＢＤＡＡＫＬＡＡＣ
+ＡＣＢＢＢＢＢＤＡＫＬＡＣＢ
+ＣＢＢＢＢＢＢＢＤＫＬＣＢＢ
+ＡＢＢＢＢＢＢＢＡＫＬＡＢＢ
+ＡＢＢＥＢＢＧＢＡＫＬＡＢＢ
+～～～～～～～～～～～～～～
+
+ＡＡＡＡＡＡＡＡＡＡＡＡ⓪六
+ＡＡＡＡＡＡＡＡＭＮＯＰＡＡ
+ＡＡＡＡＡＡＡＡＱＲＳＴＡＡ
+ＡＡＡＡＡＡＡＡＵＶＷＸＡＡ
+ＡＡＣＢＢＢＤＡＡＫＬＡＡＣ
+ＡＣＢＢＢＢＢＤＡＫＬＡＣＢ
+ＣＢＢＢＢＢＢＢＤＫＬＣＢＢ
+ＡＢＢＢＢＢＢＢＡＫＬＡＢＢ
+ＡＢＢＥＢＢＧＢＡＫＬＡＢＢ
+ＡＢＢＦＢＢＢＢＨＩＩＪＢＢ
+
+ＡＡＡＡＡＡＡＡＡＡＡＡ①一
+ＡＡＡＡＡＡＡＡＭＮＯＰＡＡ
+ＡＡＡＡＡＡＡＡＱＲＳＴＡＡ
+ＡＡＡＡＡＡＡＡＵＶＷＸＡＡ
+ＡＡＣＢＢＢＤＡＡＫＬＡＡＣ
+ＡＣＢＢＢＢＢＤＡＫＬＡＣＢ
+ＣＢＢＢＢＢＢＢＤＫＬＣＢＢ
+ＡＢＢＢＢＢＢＢＡＫＬＡＢＢ
+ＡＢＢＹＢＢＧＢＡＫＬＡＢＢ
+ＡＢＢＺＢＢＢＢＨＩＩＪＢＢ
+
+ＡＡＡＡＡＡＡＡＡＡＡＡＡ一
+ＡＡＡＡＡＡＡＡＭＮＯＰＡＡ
+ＡＡＡＡＡＡＡＡＱＲＳＴＡＡ
+ＡＡＡＡＡＡＡＡＵＶＷＸＡＡ
+ＡＡＣＢＢＢＤＡＡＫＬＡＡＣ
+ＡＣＢＢＢＢＢＤＡＫＬＡＣＢ
+ＣＢＢＢＢＢＢＢＤＫＬＣＢＢ
+ＡＢＢＢＢＢＢＢＡＫＬＡＢＢ
+Ａ１Ｂ０ＢＢＧＢＡＫＬＡＢＢ
+Ａ２Ｂ０ＢＢＢＢＨＩＩＪＢＢ
+
+ＡＡＡＡＡＡＡＡＡＡＡＡＡ六
+ＡＡＡＡＡＡＡＡＭＮＯＰＡＡ
+ＡＡＡＡＡＡＡＡＱＲＳＴＡＡ
+ＡＡＡＡＡＡＡＡＵＶＷＸＡＡ
+ＡＡＣＢＢＢＤＡＡＫＬＡＡＣ
+ＡＣＢＢＢＢＢＤＡＫＬＡＣＢ
+ＣＢＢＢＢＢＢＢＤＫＬＣＢＢ
+ＡＢＢＢＢＢＢＢＡＫＬＡＢＢ
+ＡＢＢ０ＢＢＧＢＡＫＬＡＢＢ
+ＡＢＢ０ＢＢＢＢＨＩＩＪＢＢ
+
+
+(tutorial)
+###@######
+#.-......G
+52-......#
+#\---%D$-6
+#.L.$..#.#
+#...L###.#
+#...-....#
+##########
+
+(1)
+##########Ⅰ
+@....#....#
+#/..U--...#
+51U--%-$D-6
+#...---...#
+#.........G
+###########
+
+(2)
+##################Ⅱ
+51----------------6
+#/...L-%$%$%--....#
+@....---------....G
+#....-#######-....#
+#..-----###-----..#
+#..-----###-----..#
+#..-###-###-###-..#
+#.---#---#---#---.#
+#.---#---#---#---.#
+#.L.-.R.-.-.-.L.R.#
+###################
+
+(3)
+################Ⅲ
+#...$.....-----.#
+#...-#U%---###-.#
+#...-#-$#---#--.#
+#...-#-%-------.#
+#...L#......---.G
+#\..-#---#####$.#
+51DU%--$%-----$$6
+#/..-#---#####$.#
+@...L#......---.#
+#...-#-%-------.#
+#...-#-$#---#--.#
+#...-#D%---###-.#
+#...$.....-----.#
+#################
+
+(4)
+#############Ⅳ
+#..L--..L--..#
+#.##$#..#$##.#
+#.#---..---#.#
+#..-%-$$-%-..#
+@..-%-..-%-..G
+#/.-%-..-%-..#
+51U---#U-----6
+##############
+
+(5)
+############Ⅴ
+#...L...R...#
+@...-...-...#
+#/..-...-...#
+51U-%---$--U#
+#...-...-...#
+#...-...-...#
+#...-...-...#
+#D--$-U-%---#
+#...L...-...#
+#...-...-...#
+#...R...-...#
+########8#G##
+
+
+(ending cutscene - clocktower base)
+#########7#@#
+#.......\4..#
+#.......#-..#
+#..Ⓐ------..#
+#..-------..#
+#..-------..#
+#..-------..#
+#..-------..#
+#..-------..#
+#..-------..#
+#........R..#
+#........L..#
+#######G#8###
+
+#########7#.一
+#......@/3..④
+#.......#-..#
+#..Ⓒ------..#
+#..-------..#
+#..-------..#
+#..-------..#
+#..-------..#
+#..-------..#
+#..-------..#
+#........R..#
+#........L..#
+#######G#8###
+
+#########7#.一
+#......@/3..④
+#.......#-..#
+#..Ⓓ------..#
+#..-------..#
+#..-------..#
+#..-------..#
+#..-------..#
+#..-------..#
+#..-------..#
+#........R..#
+#........L..#
+#######.#8###
+
+#########7#.一
+#......@/3..④
+#.......#-..#
+#..Ⓔ------..#
+#..-------..#
+#..-------..#
+#..-------..#
+#..-------..#
+#..-------..#
+#..-------..#
+#........R..#
+#........L..#
+#######.#8###
+
+#########7#.一
+#......@/3..④
+#.......#-..#
+#..Ⓓ------..#
+#..-------..#
+#..-------..#
+#..-------..#
+#..-------..#
+#..-------..#
+#..-------..#
+#........R..#
+#........L..#
+#######.#8###
+
+
+(ending cutscene - town)
+ＡＡＡＡＡＡＡＡＡＡＡＡ④一
+ＡＡＡＡＡＡＡＡＭＮＯＰＡＡ
+ＡＡＡＡＡＡＡＡＱＲＳＴＡＡ
+ＡＡＡＡＡＡＡＡＵＶＷＸＡＡ
+ＡＡＣＢＢＢＤＡＡＫＬＡＡＣ
+ＡＣＢＢＢＢＢＤＡＫＬＡＣＢ
+ＣＢＢＢＢＢＢＢＤＫＬＣＢＢ
+ＡＢＢＢＢＢＢＢＡＫＬＡＢＢ
+ＡＢＢ０ＢＢＧＢＡＫＬＡＢＢ
+ＡＢＢ０ＢＢＢＢＨＩＩＪＢＢ
+
+ＡＡＡＡＡＡＡＡＡＡＡＡ④一
+ＡＡＡＡＡＡＡＡＭＮＯＰＡＡ
+ＡＡＡＡＡＡＡＡＱＲＳＴＡＡ
+ＡＡＡＡＡＡＡＡＵＶＷＸＡＡ
+ＡＡＣＢＢＢＤＡＡＫＬＡＡＣ
+ＡＣＢＢＢＢＢＤＡＫＬＡＣＢ
+ＣＢＢＢＢＢＢＢＤＫＬＣＢＢ
+ＡＢＢＢＢＢＢＢＡＫＬＡＢＢ
+ＡＢＢ０ＢＢＧＢＡＫＬＡＢＢ
+ＡＢＢ０ＢＢＢＢＨＩＩＪＢＢ
+
+ＡＡＡＡＡＡＡＡＡＡＡＡ④一
+ＡＡＡＡＡＡＡＡＭＮＯＰＡＡ
+ＡＡＡＡＡＡＡＡＱＲＳＴＡＡ
+ＡＡＡＡＡＡＡＡＵＶＷＸＡＡ
+ＡＡＣＢＢＢＤＡＡＫＬＡＡＣ
+ＡＣＢＢＢＢＢＤＡＫＬＡＣＢ
+ＣＢＢＢＢＢＢＢＤＫＬＣＢＢ
+ＡＢＢＢＢＢＢＢＡＫＬＡＢＢ
+ＡＢＢ０ＢＢＧＢＡＫＬＡＢＢ
+ＡＢＢ０ＢＢＢＢＨＩＩＪＢＢ
+
+ＡＡＡＡＡＡＡＡＡＡＡＡ③一
+ＡＡＡＡＡＡＡＡＭ３ＯＰＡＡ
+ＡＡＡＡＡＡＡＡＱＲＳＴＡＡ
+ＡＡＡＡＡＡＡＡＵＶＷＸＡＡ
+ＡＡＣＢＢＢＤＡＡＫＬＡＡＣ
+ＡＣＢＢＢＢＢＤＡＫＬＡＣＢ
+ＣＢＢＢＢＢＢＢＤＫＬＣＢＢ
+ＡＢＢＢＢＢＢＢＡＫＬＡＢＢ
+ＡＢＢ０ＢＢＧＢＡＫＬＡＢＢ
+ＡＢＢ０ＢＢＢＢＨＩＩＪＢＢ
+
+ＡＡＡＡＡＡＡＡＡＡＡＡ③一
+ＡＡＡＡＡＡＡＡＭ３ＯＰＡＡ
+ＡＡＡＡＡＡＡＡＱＲＳＴＡＡ
+ＡＡＡＡＡＡＡＡＵＶＷＸＡＡ
+ＡＡＣＢＢＢＤＡＡＫＬＡＡＣ
+ＡＣＢＢＢＢＢＤＡＫＬＡＣＢ
+ＣＢＢＢＢＢＢＢＤＫＬＣＢＢ
+ＡＢＢＢＢＢＢＢＡＫＬＡＢＢ
+ＡＢＢ０ＢＢＧＢＡＫＬＡＢＢ
+ＡＢＢ０ＢＢＢＢＨＩＩＪＢＢ
+
+ＡＡＡＡＡＡＡＡＡＡＡＡ③六
+ＡＡＡＡＡＡＡＡＭ３ＯＰＡＡ
+ＡＡＡＡＡＡＡＡＱＲＳＴＡＡ
+ＡＡＡＡＡＡＡＡＵＶＷＸＡＡ
+ＡＡＣＢＢＢＤＡＡＫＬＡＡＣ
+ＡＣＢＢＢＢＢＤＡＫＬＡＣＢ
+ＣＢＢＢＢＢＢＢＤＫＬＣＢＢ
+ＡＢＢＢＢＢＢＢＡＫＬＡＢＢ
+ＡＢＢ０ＢＢＧＢＡＫＬＡＢＢ
+ＡＢＢ０ＢＢＢＢＨＩＩＪＢＢ
+
+ＡＡＡＡＡＡＡＡＡＡＡＡＡ一
+ＡＡＡＡＡＡＡＡＭ３ＯＰＡＡ
+ＡＡＡＡＡＡＡＡＱＲＳＴＡＡ
+ＡＡＡＡＡＡＡＡＵＶＷＸＡＡ
+ＡＡＣＢＢＢＤＡＡＫＬＡＡＣ
+ＡＣＢＢＢＢＢＤＡＫＬＡＣＢ
+ＣＢＢＢＢＢＢＢＤＫＬＣＢＢ
+ＡＢＢＢＢＢＢＢＡＫＬＡＢＢ
+Ａ１Ｂ０ＢＢＧＢＡＫＬＡＢＢ
+Ａ２Ｂ０ＢＢＢＢＨＩＩＪＢＢ
+
+ＡＡＡＡＡＡＡＡＡＡＡＡＡ一
+ＡＡＡＡＡＡＡＡＭ３ＯＰＡＡ
+ＡＡＡＡＡＡＡＡＱＲＳＴＡＡ
+ＡＡＡＡＡＡＡＡＵＶＷＸＡＡ
+ＡＡＣＢＢＢＤＡＡＫＬＡＡＣ
+ＡＣＢＢＢＢＢＤＡＫＬＡＣＢ
+ＣＢＢＢＢＢＢＢＤＫＬＣＢＢ
+ＡＢＢＢＢＢＢＢＡＫＬＡＢＢ
+ＡＢＢＹＢＢＧＢＡＫＬＡＢＢ
+ＡＢＢＺＢＢＢＢＨＩＩＪＢＢ
+
+ＡＡＡＡＡＡＡＡＡＡＡＡ②六
+ＡＡＡＡＡＡＡＡＭ３ＯＰＡＡ
+ＡＡＡＡＡＡＡＡＱＲＳＴＡＡ
+ＡＡＡＡＡＡＡＡＵＶＷＸＡＡ
+ＡＡＣＢＢＢＤＡＡＫＬＡＡＣ
+ＡＣＢＢＢＢＢＤＡＫＬＡＣＢ
+ＣＢＢＢＢＢＢＢＤＫＬＣＢＢ
+ＡＢＢＢＢＢＢＢＡＫＬＡＢＢ
+ＡＢＢＥＢＢＧＢＡＫＬＡＢＢ
+ＡＢＢＦＢＢＢＢＨＩＩＪＢＢ

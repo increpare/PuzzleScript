@@ -1,0 +1,640 @@
+title Ice path
+author Rosden Shadow [Mark Signorelli]
+homepage rosden.itch.io
+
+noaction
+run_rules_on_level_Start
+
+background_color #231F26
+
+text_color #AAE0F2
+
+again_interval 0.15
+========
+OBJECTS
+========
+
+Background
+#3B3942 #231F26 (#E57ED5 #CC5285)
+11111
+11101
+11011
+10111
+11111
+(
+00101
+01110
+11011
+01111
+10110)
+(
+11101
+00101
+11111
+10100
+10111)
+
+
+nomove
+#FFEED9 #536673
+.....
+.000.
+.010.
+.000.
+.....
+
+Target
+white #231F26
+.....
+.000.
+.010.
+.000.
+.....
+
+Target2
+white #231F26
+.....
+.010.
+.101.
+.010.
+.....
+
+Wall
+#D9FFDC #7EE58D  #5C8466 #4F5B46
+21110
+21111
+22221
+23232
+32323
+
+overwall
+#D9FFDC #7EE58D  #5C8466 #4F5B46
+.....
+.....
+.....
+11000
+21110
+
+Wall2
+#E5C17E #CC7A52 #736053 #423D39
+21101
+21110
+12110
+21221
+23232
+
+overwall2
+#E5C17E #CC7A52 #736053 #423D39
+.....
+.....
+.....
+.....
+10010
+
+
+
+Playerright
+white #CCCCCC #A87EE5 #705C84
+.000.
+11202
+11313
+11110
+.1.1.
+
+playerleft
+white #CCCCCC #A87EE5 #705C84
+.000.
+20211
+31311
+01111
+.1.1.
+
+Crate
+#E5C17E #CC7A52 #736053 #423D39
+21100
+21110
+22110
+32223
+.333.
+
+overcrate
+#E5C17E #CC7A52 #736053 #423D39
+.....
+.....
+.....
+.....
+.000.
+
+iceground
+#D9FFF8 #AAE0F2 #231F26
+..2..
+.202.
+21102
+.212.
+..2..
+
+Crate2
+#D9FFDC #AAE0F2 #7EA1E5 #52465B
+21100
+21110
+22110
+32223
+.333.
+
+overcrate2
+#D9FFDC #AAE0F2 #7EA1E5 #52465B
+.....
+.....
+.....
+.....
+.000.
+
+end
+#E5C17E #CC7A52 #736053 #423D39
+21100
+21110
+22110
+32223
+.333.
+endx
+#E5C17E #CC7A52 #736053 #423D39
+21100
+21110
+22110
+32223
+.333.
+
+
+
+cloner
+#E5C17E #DB7F55 #B32D2D #73342E
+.100.
+.210.
+.221.
+.332.
+.....
+
+swapcrate
+Orange Yellow
+00000
+0...0
+0...0
+0...0
+00000
+
+
+trail
+#7EA1E5 #5C6684 (#666666 #333333 #231F26 black)
+11111
+10011
+10101
+11001
+11111
+
+(overtrail
+#666666 #333333 #231F26 black
+.....
+.....
+.....
+.....
+10000)
+
+trailx
+TRANSPARENT
+
+swapwall
+black
+.....
+.....
+.....
+.....
+.....
+
+thefloor
+#231F26
+00000
+00000
+00000
+00000
+00000
+
+thefloorx
+#231F26
+00000
+00000
+00000
+00000
+00000
+
+eend
+#231F26
+00000
+00000
+00000
+00000
+00000
+(
+checkempty
+black
+.....
+.....
+.....
+.....
+.....
+
+checkblock
+black
+.....
+.....
+.....
+.....
+.....
+)
+
+switcrate
+black
+.....
+.....
+.....
+.....
+.....
+
+switcrate2
+black
+.....
+.....
+.....
+.....
+.....
+
+movr
+black
+.....
+.....
+.....
+.....
+.....
+
+movl
+black
+.....
+.....
+.....
+.....
+.....
+
+movu
+black
+.....
+.....
+.....
+.....
+.....
+
+movd
+black
+.....
+.....
+.....
+.....
+.....
+
+arrow
+black
+.....
+.....
+.0.0.
+.000.
+..0..
+
+arrow2
+black
+.....
+.0.0.
+.000.
+..0..
+.....
+
+arrowx
+black
+.....
+.....
+.....
+.....
+.....
+
+arrowx2
+black
+.....
+.....
+.....
+.....
+.....
+
+winend
+#D9FFDC #AAE0F2 #7EA1E5 #52465B
+1000.
+21100
+21110
+22110
+.2221
+
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Playerright
+* = Crate
+@=crate2
+
+i=iceground
+
+O = Target
+n = nomove
+a = arrow2 and wall
+e=end
+t = end and target and eend
+w=end and winend
+
+c=cloner
+-=thefloor
+x=thefloorx
+
+feel=overwall or overcrate or overcrate2 or overwall2 (or overtrail)
+pushable= cloner or swapcrate  or switcrate or switcrate2 or crate2
+win=crate or wall
+
+
+theemx= crate 
+player=playerright or playerleft
+
+blocker = wall or crate  or nomove or player or arrow or crate2 or wall2
+
+arrowk = arrow or arrow2 or arrowx or arrowx2
+mov= movr or movl or movu or movd
+
+surv= target or iceground or player or trail or crate2 or target2 or trailx
+=======
+SOUNDS
+=======
+
+pushable MOVE 36772507
+
+EndLevel 74089700
+
+player MOVE 68988304
+sfx0 52836103
+sfx1 45427502
+
+sfx2 29503700
+sfx3 81951902
+
+sfx4 65185702
+sfx5 89493707
+
+================
+COLLISIONLAYERS
+================
+
+Background
+trail,trailx
+
+Target,target2
+nomove
+iceground
+Player, Wall, pushable,swapwall,thefloor,thefloorx,wall2,crate,crate2
+
+movr
+movl
+movu
+movd
+
+arrow, arrow2, arrowx, arrowx2
+winend
+eend
+end, endx
+feel
+
+
+======
+RULES
+======
+
+[feel]->[]
+
+[> player| crate]->[ player|> crate]
+[> player| pushable]->[ player|> pushable]
+
+[> player | trail]->[player | trail] sfx5
+
+[player target]->[player target2] sfx4
+
+[pushable movr]->[right pushable]
+[pushable movl]->[left pushable]
+[pushable movu]->[up pushable]
+[pushable movd]->[down pushable]
+
+right[right pushable|no blocker]->[right pushable| movr]
+left[left pushable|no blocker]->[left pushable| movl]
+up[up pushable|no blocker]->[up pushable| movu]
+down[down pushable|no blocker]->[down pushable| movd]
+
+
+([crate no trail ]->[crate trail])
+
+late[target][player no trail]->[target][player trail]
+
+[> crate2 no mov|Target2]->[> crate2|target2] sfx2
+
+[ left Playerright] -> [ left playerleft]
+[ right Playerleft] -> [ right playerright]
+
+[endx] ->[thefloor] sfx2
+[end | thefloor]-> [endx |thefloor]
+
+late[target2][no surv]->[target2][thefloor]
+late[target2][Background no thefloor no wall2|thefloor]->[target2][Background no thefloor|wall2]
+late[target2][iceground]->[target2][Crate2 trail]
+late[target2][trail]->[target2][trailx]
+late [target][target2]->[target2][target2]
+
+
+
+late up [wall| ]-> [wall|overwall]
+late up [wall2| ]-> [wall2|overwall2]
+late up [theemx| ]-> [theemx|overcrate]
+
+late up [crate2| ]-> [crate2|overcrate2]
+
+late up [end| ]-> [end|overcrate]
+late up [endx| ]-> [endx|overcrate]
+
+(late up [trail | ]->[trail|overtrail])
+
+[action player eend|]->[action player eend |crate Target]
+
+
+
+[]-> again 
+(
+[arrow]->[arrowx2]
+[arrow2]->[arrowx]
+
+[arrowx]->[arrow]
+[arrowx2]->[arrow2])
+==============
+WINCONDITIONS
+==============
+
+all Target2 on crate2 
+
+no mov on Target2
+
+some target2
+=======
+LEVELS
+=======
+
+message Touch the targets to travel into your trails
+message then place the ice blocks on all the targets
+
+message level 1 of 6
+---------
+---------
+---------
+---####--
+--#..O#--
+-#....#--
+-#Pi..#--
+-#....#--
+-######--
+---------
+
+
+message level 2 of 6
+---------
+---------
+-#######-
+-#.P...#-
+-#...O.#-
+-#.....#-
+-#..#..#-
+-#.I...#-
+-#...#.#-
+-#######-
+
+
+message level 3 of 6
+---------
+---------
+-#######-
+-#..p..#-
+##..O..##
+#.......#
+#..#.#..#
+#..i.i..#
+#.......#
+#########
+
+message level 4 of 6
+---------
+#########
+#.......#
+##..OP..#
+#.......#
+#.i##.i##
+#.......#
+##..O...#
+#.......#
+#########
+
+message level 5 of 6
+---------
+#########
+#.......#
+#.O..#..#
+#..O..#.#
+#...P...#
+#.#..i..#
+#..#..i.#
+#.......#
+#########
+
+
+(---------
+#########
+#.......#
+#..i.i..#
+#.......#
+#.#...#.#
+#.O...O.#
+#...P...#
+#.......#
+#########
+---------)
+
+message level 6 of 6
+---------
+---------
+#########
+#.......#
+#.i...i.#
+#.#...#.#
+#...O...#
+#...O...#
+#...P...#
+#########
+
+
+
+(---------
+#########
+##......#
+#..i.i#.#
+#.......#
+#..#.##.#
+#.O...O.#
+#...P...#
+#.......#
+#########
+---------)
+(---------
+---------
+#########
+#.......#
+#.O...#.#
+#..O.#..#
+#...P...#
+#..#.i..#
+#.#...i.#
+#.......#
+#########)
+
+(---------
+-#######-
+##..P..##
+#.......#
+#.O...O.#
+#.#...#.#
+#.......#
+#.i...i.#
+#.......#
+##.....##
+-#######-)
+
+xxxxxxxxxxxxxx
+-eeeeeeeeeeee-
+eeeeeeeeeeeeee
+eeeeeeeeeeeeee
+wewewewwweweew
+wewewetweewwew
+weweweeweeweww
+eweweewwweweew
+eeeeeeeeeeeeee
+eeeeeeeeeeeeee
+-eeeeeeeeeeee-
+
+

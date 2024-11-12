@@ -1,0 +1,164 @@
+Title realtime template
+realtime_interval 0.03
+key_repeat_interval 0.01
+========
+OBJECTS
+========
+
+Background .
+black
+Player P
+transparent
+Tick T
+transparent
+GoD
+transparent
+GoL
+transparent
+GoR
+transparent
+GoU
+transparent
+Act
+transparent
+
+W32
+transparent
+W16
+transparent
+W8
+transparent
+W4
+transparent
+W2
+transparent
+W1
+transparent
+CD
+transparent
+
+Hero H
+orange
+
+RandoU R
+red
+RandoD
+red
+
+Wall #
+grey
+
+Goal *
+white
+
+
+=======
+LEGEND
+=======
+
+Go = GoU or GoD or GoL or GoR
+Do = Go or Act
+
+S = Wall and Player and Tick
+
+W = W1 or W2 or W4 or W8 or W16 or W32
+SmallW = W1 or W2 or W4
+
+Rando = RandoD or RandoU
+
+Obstacle = Rando or Hero or Wall
+
+=======
+SOUNDS
+=======
+
+restart  67785302
+endlevel 88453103
+sfx1     6978907
+
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Player
+Tick
+Go
+Act
+CD
+W1
+W2
+W4
+W8
+W16
+W32
+Goal
+Wall Hero Rando
+
+======
+RULES
+======
+
+( Ticks and movement instructions )
+[ P ] -> [ P T ]
+[ up     P T ] -> [ P GoU no T ]
+[ down   P T ] -> [ P GoD no T ]
+[ left   P T ] -> [ P GoL no T ]
+[ right  P T ] -> [ P GoR no T ]
+[ action P T ] -> [ P Act no T ]
+
+
+( Hero movement )
+up    [ T ][ P GoU no W ][ Hero | no Obstacle ] -> [ T ][ P W4 ]   [ | Hero ]
+down  [ T ][ P GoD no W ][ Hero | no Obstacle ] -> [ T ][ P W2 W1 ][ | Hero ]
+left  [ T ][ P GoL no W ][ Hero | no Obstacle ] -> [ T ][ P W2 W1 ][ | Hero ]
+right [ T ][ P GoR no W ][ Hero | no Obstacle ] -> [ T ][ P W2 W1 ][ | Hero ]
+
+late [ T Go ] -> [ T ]
+
+( Rando )
+up   [ T ][ RandoU no W | Obstacle ] -> [ T ][ RandoD | Obstacle ]
+down [ T ][ RandoD no W | Obstacle ] -> [ T ][ RandoU | Obstacle ] sfx1
+
+up   [ T ][ RandoU no W | no Obstacle ] -> [ T ][ up   RandoU | W4 W2 W1 ]
+down [ T ][ RandoD no W | no Obstacle ] -> [ T ][ down RandoD | W2 ]
+
+[ T ][ Hero | Rando ] -> restart
+
+
+( Waiting )
+late [ T ][ W ] -> [ T ][ W CD ]
+late [ T ][ W1 CD ] -> [ T ][ ]
+late [ T ][ W2 CD no W1 ] -> [ T ][ W1 ]
+late [ T ][ W4 CD no W2 no W1 ] -> [ T ][ W2 W1 ]
+late [ T ][ W8 CD no W4 no W2 no W1 ] -> [ T ][ W4 W2 W1 ]
+late [ T ][ W16 CD no W8 no W4 no W2 no W1 ] -> [ T ][ W8 W4 W2 W1  ]
+late [ T ][ W32 CD no W16 no W8 no W4 no W2 no W1 ] -> [ T ][ W16 W8 W4 W2 W1 ]
+
+
+
+==============
+WINCONDITIONS
+==============
+
+All Goal on Hero
+
+=======
+LEVELS
+=======
+
+S###################
+#..................#
+#..................#
+#......R...........#
+#...............R..#
+#..R......#####....#
+#...#######...#....#
+#.............#...H#
+##########....######
+#...R....#..R......#
+#....#...########..#
+#....#.............#
+#*...#..R..........#
+####################

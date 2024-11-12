@@ -1,0 +1,381 @@
+title interconnection
+author Rosden Shadow [Mark Signorelli]
+homepage rosden.itch.io
+
+run_rules_on_level_Start
+
+background_color #66CC52
+
+text_color #845C7A
+========
+OBJECTS
+========
+
+Background
+#66CC52 #7EE58D #567353
+10001
+00100
+01010
+00100
+10001
+
+
+Target
+#E57ED5 #FFD9FC #845C7A
+.....
+.011.
+.201.
+.220.
+.....
+
+Wall
+#46595B #5C8484 #394240 #1F2026
+10001
+21001
+22120
+33232
+32333
+
+overwall
+#46595B #5C8484 #394240 #1F2026
+.....
+.....
+.....
+01121
+20012
+
+
+Playerright
+#F3FFD9 #E5C17E #845C7A #423942 #66CC52 #2DB34E
+5000.
+11202
+11313
+11110
+5151.
+
+Playerleft
+#F3FFD9 #E5C17E #845C7A #423942 #66CC52 #2DB34E
+5000.
+20211
+31311
+01111
+5151.
+
+playershadowleft
+#2DB34E #66CC52
+.....
+....0
+....0
+....0
+.....
+
+playershadowtop
+#2DB34E #66CC52
+.....
+.....
+.....
+.....
+.....
+
+playershadowtopleft
+#2DB34E #66CC52
+.....
+.....
+.....
+.....
+.....
+
+Cratey
+#9B7CA1 #423942 #E57ED5 #845C7A
+13220
+11000
+11100
+11000
+.110.
+
+Cratex
+#9B7CA1 #423942 #E57ED5 #845C7A
+13220
+11000
+11100
+11000
+.110.
+
+crateshadow
+#2DB34E #66CC52 #567353
+...01
+...00
+....0
+....0
+.....
+
+crateshadowtop
+#2DB34E #66CC52 #567353 (#66CC52)(#394239 #567353 )
+.....
+.....
+.....
+....0
+...01
+
+Cratetop
+#E57ED5 #845C7A #9B7CA1 #423942 #FFD9FC
+.....
+.....
+..0..
+.140.
+11040
+
+leftshift
+black
+.....
+.....
+.....
+.....
+.....
+
+rightshift
+black
+.....
+.....
+.....
+.....
+.....
+
+upshift
+black
+.....
+.....
+.....
+.....
+.....
+
+downshift
+black
+.....
+.....
+.....
+.....
+.....
+
+leftshiftx
+black
+.....
+.....
+..0..
+.....
+.....
+
+rightshiftx
+black
+.....
+.....
+..0..
+.....
+.....
+
+upshiftx
+black
+.....
+.....
+..0..
+.....
+.....
+
+downshiftx
+black
+.....
+.....
+..0..
+.....
+.....
+
+noshift
+black
+.....
+.....
+.....
+.....
+.....
+
+chan
+black
+.....
+.....
+.....
+.....
+.....
+
+thefloor
+#66CC52
+00000
+00000
+00000
+00000
+00000
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Playerleft
+* = Cratey
+@ = Cratey and Target
+O = Target
+c=chan
+-=thefloor
+
+player=Playerright or playerleft
+feel=cratetop or overwall
+
+crate= cratey or cratex
+
+blocker=wall or crate
+
+shadow= crateshadow or crateshadowtop or playershadowleft or playershadowtop or playershadowtopleft
+
+shift =leftshiftx or rightshiftx or upshiftx or downshiftx or leftshift or rightshift or upshift or downshift
+shiftx=leftshiftx or rightshiftx or upshiftx or downshiftx
+=======
+SOUNDS
+=======
+
+Crate MOVE 36772507
+
+sfx0 10685903
+================
+COLLISIONLAYERS
+================
+
+Background
+crateshadow
+crateshadowtop
+playershadowleft
+playershadowtop
+playershadowtopleft
+thefloor
+Target
+Player, Wall, Crate
+feel
+shift,noshift
+chan
+
+
+======
+RULES
+======
+[cratetop]->[]
+[shadow]->[]
+
+[chan]->[up chan]
+
+[chan]->[]
+
+[cratex]->[cratey]
+[ > Player | Cratey ] -> [ > Player | > Cratey]
+
+
+[ left Playerright] -> [ left playerleft]
+[ right Playerleft] -> [ right playerright]
+
+[left cratey] -> [left cratex left leftshiftx]
+[right cratey] -> [right cratex right rightshiftx]
+[up cratey] -> [up cratex up upshiftx]
+[down cratey] -> [down cratex down downshiftx]
+ 
+ [parallel cratex | blocker] ->[parallel  cratex noshift |blocker]
+
+[cratex Target] -> [cratex Target] sfx0
+
+[leftshiftx]->[leftshift]
+[rightshiftx]->[rightshift]
+[upshiftx]->[upshift]
+[downshiftx]->[downshift]
+
+
+[leftshift|no leftshift] ->[leftshift|leftshift]
+[upshift|no upshift] ->[upshift|upshift]
+[rightshift|no rightshift] ->[rightshift|rightshift]
+[downshift|no downshift] ->[downshift|downshift]
+
+[cratey |leftshift]->[left cratex | leftshift]
+[cratey |rightshift]->[right cratex | rightshift]
+[cratey |upshift]->[up cratex | upshift]
+[cratey |downshift]->[down cratex | downshift]
+
+
+late up [crate| ]->[crate| cratetop]
+late left [crate| ]->[crate| crateshadow]
+late up [crateshadow| ]->[crateshadow| crateshadowtop]
+
+late up [player| ]->[player| playershadowtop]
+late left [player| ]->[player| playershadowleft]
+late up [playershadowleft| ]->[playershadowleft| playershadowtopleft]
+
+late up [wall| ]-> [wall|overwall]
+
+late [leftshift] ->[]
+late [rightshift] ->[]
+late [upshift] -> []
+late [downshift] -> []
+
+[]->again
+
+==============
+WINCONDITIONS
+==============
+
+All Target on Crate
+
+=======
+LEVELS
+=======
+
+message cover up all the buttons
+message level 1 of 3
+--------
+########
+#c.....#
+#......#
+#.p..*.#
+#......#
+########
+#.....##
+#O...*.#
+#..#...#
+#.*....#
+#..O...#
+########
+
+message level 2 of 3
+--------
+########
+#c...###
+#....#O#
+###p.#.#
+###..#.#
+#...*#.#
+#.*..#.#
+#..**#.#
+#..*.#.#
+#.#.##.#
+#..#*..#
+########
+
+message level 3 of 3
+--------
+########
+####O###
+###...##
+##....c#
+#...#..#
+#.*..*.#
+#...p..#
+#.*..*.#
+#.....##
+##...###
+###O####
+########
+
+message interconnectivity is key

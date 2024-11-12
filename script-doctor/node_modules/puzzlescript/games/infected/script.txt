@@ -1,0 +1,274 @@
+title infected
+author Rosden Shadow [Mark Signorelli]
+homepage rosden.itch.io
+run_rules_on_level_Start
+
+background_color #3B3942
+
+text_color #F2F2AA
+
+========
+OBJECTS
+========
+
+Background
+#3B3942 #46495B
+00000
+00100
+01010
+00100
+00000
+(
+00101
+01110
+11011
+01111
+10110)
+(
+11101
+00101
+11111
+10100
+10111)
+
+
+Target
+#E5C17E #F2F2AA
+.....
+..0..
+.0.0.
+..0..
+.....
+
+Wall
+#7EA1E5 #AAE0F2 #536673 #46495B
+20001
+20001
+22220
+23232
+32323
+
+overwall
+#7EA1E5 #AAE0F2 #536673
+.....
+.....
+.....
+01111
+20001
+
+
+Playerright
+#E5C17E #DB7F55 #847A5C #5B5746
+.000.
+11202
+11313
+11110
+.1.1.
+
+playerleft
+#E5C17E #DB7F55 #847A5C #5B5746
+.000.
+20211
+31311
+01111
+.1.1.
+
+Crate2
+#82A17C #7EE58D  #4F5B46 #394239 
+20011
+20001
+22001
+32223
+.333.
+
+overcrate2
+#82A17C #7EE58D  #4F5B46 #394239
+.....
+.....
+.....
+.....
+.111.
+
+Crate
+#E5C17E #F2F2AA #847A5C #5B5746
+20011
+20001
+22001
+32223
+.333.
+
+overcrate
+#E5C17E #F2F2AA #847A5C #5B5746
+.....
+.....
+.....
+.....
+.111.
+
+cloner
+#E5C17E #DB7F55 #B32D2D #73342E
+.100.
+.210.
+.221.
+.332.
+.....
+
+swapcrate
+Orange Yellow
+00000
+0...0
+0...0
+0...0
+00000
+
+swapwall
+black
+.....
+.....
+.....
+.....
+.....
+
+thefloor
+#3B3942
+00000
+00000
+00000
+00000
+00000
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Playerright
+* = Crate
+@ = Crate and Target
+O = Target
+c=cloner
+-=thefloor
+
+feel=overwall or overcrate or overcrate2
+pushable=crate or cloner or swapcrate or crate2
+win=crate or wall
+
+player=playerright or playerleft
+=======
+SOUNDS
+=======
+
+pushable MOVE 36772507
+
+
+sfx0 52836103
+sfx1 6257504
+================
+COLLISIONLAYERS
+================
+
+Background
+Target
+Player, Wall, pushable,swapwall,thefloor
+feel
+
+======
+RULES
+======
+
+[feel]->[]
+[ >  Player | pushable ] -> [  >  Player | > pushable  ]
+
+[ >  pushable | pushable ] -> [  >  pushable | > pushable  ]
+
+[> player | crate] -> [> player | > crate2] sfx1
+
+[ left Playerright] -> [ left playerleft]
+[ right Playerleft] -> [ right playerright]
+
+
+late up [wall| ]-> [wall|overwall]
+late up [crate| ]-> [crate|overcrate]
+late up [crate2| ]-> [crate2|overcrate2]
+==============
+WINCONDITIONS
+==============
+
+All Target on win
+
+=======
+LEVELS
+=======
+
+message cover up all targets with blocks that are not infected
+
+message level 1 of 4
+--------
+-######-
+##....##
+#.O....#
+#......#
+#..**..#
+#..**..#
+#......#
+#.P..O.#
+##....##
+-######-
+
+message level 2 of 4
+--------
+########
+#...O..#
+#......#
+##.*.*.#
+-##.#.##
+-##.#.##
+##..*.O#
+#.P....#
+#......#
+########
+
+message level 3 of 4
+--------
+#######-
+#.OOO.#-
+#..P..#-
+#..*..#-
+#..*..#-
+#..*..#-
+#..*..#-
+#.....#-
+#######-
+--------
+
+message level 4 of 4
+--------
+########
+#.OO...#
+#......#
+#....#.#
+###....#
+###****#
+###***.#
+#.P***.#
+##....##
+-######-
+
+message Quaratined into safety 
+
+message level 5 of 4 (SECRET HARD LEVEL)
+--------
+########
+#..O.O.#
+#......#
+#O.O.O.#
+#.***..#
+#.***O.#
+#.***..#
+#O.P.O.#
+#......#
+########
+
+
+message well done! You made it :)

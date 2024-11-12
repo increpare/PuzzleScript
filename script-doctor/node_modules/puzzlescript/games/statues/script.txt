@@ -1,0 +1,870 @@
+title Statues
+author Rosden Shadow [Mark Signorelli]
+homepage rosden.itch.io
+
+
+run_rules_on_level_Start
+
+background_color #231F26
+
+text_color #CCCCCC
+
+again_interval 0.2
+
+
+========
+OBJECTS
+========
+
+Background
+#333333 #231F26 (#E57ED5 #CC5285)
+11111
+10101
+11111
+10101
+11111
+(
+00101
+01110
+11011
+01111
+10110)
+(
+11101
+00101
+11111
+10100
+10111)
+
+
+nomove
+#FFEED9 #536673
+.....
+.000.
+.010.
+.000.
+.....
+
+Target
+white #423D39
+.....
+.000.
+.0.0.
+.000.
+.....
+
+Wall
+#FFD9E0 #C1A2A5  #845C5C #5B4846
+21110
+12110
+21221
+23232
+32323
+
+overwall
+#FFD9E0 #C1A2A5  #845C5C #5B4846
+.....
+.....
+.....
+10010
+21101
+
+
+Playerright
+#E5C17E #CC7A52 #845C5C #5B4846
+.000.
+11202
+11313
+11110
+.1.1.
+
+playerleft
+#E5C17E #CC7A52 #845C5C #5B4846
+.000.
+20211
+31311
+01111
+.1.1.
+
+statue1right
+#CCCCCC #999999 #E5A42D #CC5E28
+.000.
+11202
+11313
+11110
+.1.1.
+
+statue1left
+#CCCCCC #999999  #E5A42D #CC5E28
+.000.
+20211
+31311
+01111
+.1.1.
+
+orb1
+#F2F2AA #E5C17E #CC7A52
+.111.
+21001
+21101
+22111
+.222.
+
+trail1
+#736053 #CC7A52
+00000
+00100
+01010
+00100
+00000
+
+Player2right
+#7EE58D #5C8466 #CC7A52 #B32D2D
+.000.
+11202
+11313
+11110
+.1.1.
+
+player2left
+#7EE58D #5C8466 #CC7A52 #B32D2D
+.000.
+20211
+31311
+01111
+.1.1.
+
+statue2right
+#CCCCCC #999999 #BCE57E #66CC52
+.000.
+11202
+11313
+11110
+.1.1.
+
+statue2left
+#CCCCCC #999999  #BCE57E #66CC52
+.000.
+20211
+31311
+01111
+.1.1.
+
+orb2
+#D9FFDC #7EE58D #5C8466
+.111.
+21001
+21101
+22111
+.222.
+
+trail2
+#4F5B46 #7EE58D
+00000
+00110
+01010
+01100
+00000
+
+Player3right
+#E0AAF2 #A87EE5 #FFEED9 #E5C17E
+.000.
+11202
+11313
+11110
+.1.1.
+
+player3left
+#E0AAF2 #A87EE5 #FFEED9 #E5C17E 
+.000.
+20211
+31311
+01111
+.1.1.
+
+statue3right
+#CCCCCC #999999 #B852CC #702DB3
+.000.
+11202
+11313
+11110
+.1.1.
+
+statue3left
+#CCCCCC #999999  #B852CC #702DB3
+.000.
+20211
+31311
+01111
+.1.1.
+
+orb3
+#FFD9E0 #E0AAF2 #A87EE5
+.111.
+21001
+21101
+22111
+.222.
+
+trail3
+#52465B #A87EE5
+00000
+00010
+00100
+01000
+00000
+
+Thetrail
+#666666 #CCCCCC #333333
+00000
+01010
+00100
+01010
+00000
+
+
+overtrail
+#666666 #CCCCCC #333333
+.....
+.....
+.....
+.....
+.....
+
+
+(#52465B #A87EE5 #4F5B46 #7EE58D  #736053 #CC7A52
+40000
+25010
+22500
+23250
+22224)
+
+(#52465B #A87EE5 #4F5B46 #7EE58D  #736053 #CC7A52
+00000
+01010
+44544
+23232
+22222)
+
+Crate
+#FFD9E0 #E0AAF2 #A87EE5 #705C84
+21100
+21110
+22110
+32223
+.333.
+overcrate
+#FFD9E0 #E0AAF2 #A87EE5 #705C84
+.....
+.....
+.....
+.....
+.000.
+
+end
+#FFD9E0 #E0AAF2 #A87EE5 #705C84
+21100
+21110
+22110
+32223
+.333.
+endx
+#FFD9E0 #E0AAF2 #A87EE5 #705C84
+21100
+21110
+22110
+32223
+.333.
+
+
+
+cloner
+#E5C17E #DB7F55 #B32D2D #73342E
+.100.
+.210.
+.221.
+.332.
+.....
+
+swapcrate
+Orange Yellow
+00000
+0...0
+0...0
+0...0
+00000
+
+swapwall
+black
+.....
+.....
+.....
+.....
+.....
+
+thefloor
+#231F26
+00000
+00000
+00000
+00000
+00000
+
+thefloorx
+#231F26
+00000
+00000
+00000
+00000
+00000
+
+eend
+#231F26
+00000
+00000
+00000
+00000
+00000
+(
+checkempty
+black
+.....
+.....
+.....
+.....
+.....
+
+checkblock
+black
+.....
+.....
+.....
+.....
+.....
+)
+ani
+TRANSPARENT
+
+acti1
+TRANSPARENT
+acti2
+TRANSPARENT
+acti3
+TRANSPARENT
+
+spa
+TRANSPARENT
+
+switcrate
+black
+.....
+.....
+.....
+.....
+.....
+
+switcrate2
+black
+.....
+.....
+.....
+.....
+.....
+
+arrow
+black
+.....
+.....
+.0.0.
+.000.
+..0..
+
+arrow2
+black
+.....
+.0.0.
+.000.
+..0..
+.....
+
+arrowx
+black
+.....
+.....
+.....
+.....
+.....
+
+arrowx2
+black
+.....
+.....
+.....
+.....
+.....
+
+winend
+#D9FFDC #7EE58D #5C8466
+1000.
+21100
+21110
+22110
+.2221
+
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Playerright
+* = Crate
+
+O = Target
+n = nomove
+a = arrow2 and wall
+e=end
+t = end and target and eend
+w=end and winend
+
+$=thetrail
+
+c=cloner
+-=thefloor
+x=thefloorx
+
+1=statue1right
+2= statue2right
+3=statue3right
+
+8=orb1
+9=orb2
+0=orb3
+
+
+feel=overwall or overcrate or overtrail
+
+(statue1right=statue1right1 or statue1right2
+statue1left=statue1left1 or statue1left2)
+
+statue1 =statue1right or statue1left
+statue2 =statue2right or statue2left
+statue3 =statue3right or statue3left
+statues =  statue1 or statue2 or statue3
+
+orbs=orb1 or orb2 or orb3
+
+pushable=crate or cloner or swapcrate  or switcrate or switcrate2 or statues or orbs
+win=crate or wall
+
+theemx= crate 
+
+player1=playerright or playerleft 
+player2=Player2right or player2left 
+player3=Player3right or player3left
+
+player=player1 or player2 or player3 or thefloorx
+
+blocker = wall or crate  or nomove or player or arrow or orbs or statues
+
+arrowk = arrow or arrow2 or arrowx or arrowx2
+
+acti=acti1 or acti2 or acti3
+
+trails=trail1 or trail2 or trail3 or Thetrail
+=======
+SOUNDS
+=======
+
+pushable MOVE 36772507
+
+EndLevel 74089700
+
+player MOVE 68988304
+sfx0 52836103
+sfx1 45427502
+
+sfx2 29503700
+sfx3 81951902
+
+sfx4 36178101
+
+sfx5 15109507
+================
+COLLISIONLAYERS
+================
+
+Background
+Target
+nomove
+
+trails
+
+
+Player, Wall, pushable,swapwall,thefloor,thefloorx,statues,orbs
+
+acti1
+acti2
+acti3
+
+spa
+ani
+arrow, arrow2, arrowx, arrowx2
+winend
+eend
+end, endx
+feel
+
+
+======
+RULES
+======
+
+[feel]->[]
+
+([ani]->[]
+
+
+[statue1right1 no ani]->[statue1right2 ani]
+[statue1right2 no ani]->[statue1right1 ani]
+
+[statue1left1 no ani]->[statue1left2 ani]
+[statue1left2 no ani]->[statue1left1 ani])
+
+[ >  Player| pushable ] -> [  >  Player | > pushable ]
+
+([ >  pushable| pushable ] -> [  >  pushable | > pushable ])
+
+
+late [player no spa]->[player spa]
+late[ spa no blocker]->[ Thetrail]
+
+[> player | thetrail]->[ player | thetrail]sfx5
+([> player1 | trail1]->[player1 |trail1] sfx5
+
+[> player2 | trail2]->[player2 |trail2] sfx5
+
+[> player3 | trail3]->[player3 |trail3] sfx5
+
+
+late[player1 no trail1]->[player1 trail1]
+late[player2 no trail2]->[player2 trail2]
+late[player3 no trail3]->[player3 trail3])
+
+( orb switch)
+[acti]->[]
+[> player | orb1]->[> player acti1 |] sfx4
+[> player | orb2]->[> player acti2 |] sfx4
+[> player | orb3]->[> player acti3 |] sfx4
+
+[ left Playerright] -> [ left playerleft]
+[ right Playerleft] -> [ right playerright]
+
+[ left Player2right] -> [ left player2left]
+[ right Player2left] -> [ right player2right]
+
+[ left Player3right] -> [ left player3left]
+[ right Player3left] -> [ right player3right]
+
+[Playerright acti2  ]->[ statue1right acti2]
+[Playerleft acti2  ]->[ statue1left acti2]
+[Playerright acti3  ]->[ statue1right acti3]
+[Playerleft acti3  ]->[ statue1left acti3]
+
+[Player2right acti1  ]->[ statue2right acti1]
+[Player2left acti1  ]->[ statue2left acti1]
+[Player2right acti3  ]->[ statue2right acti3]
+[Player2left acti3  ]->[ statue2left acti3]
+
+[Player3right acti1  ]->[ statue3right acti1]
+[Player3left acti1  ]->[ statue3left acti1]
+[Player3right acti2  ]->[ statue3right acti2]
+[Player3left acti2  ]->[ statue3left acti2]
+
+[acti1][statue1right]->[acti1][playerright]
+[acti1][statue1left]->[acti1][playerleft]
+[acti2][statue2right]->[acti2][player2right]
+[acti2][statue2left]->[acti2][player2left]
+[acti3][statue3right]->[acti3][player3right]
+[acti3][statue3left]->[acti3][player3left]
+
+[> crate|Target]->[> crate|target] sfx2
+
+
+
+[endx] ->[thefloor] sfx2
+[end | thefloor]-> [endx |thefloor]
+
+
+late up [wall| ]-> [wall|overwall]
+late up [theemx| ]-> [theemx|overcrate]
+
+(late up [crate2| ]-> [crate2|overcrate2])
+
+late up [end| ]-> [end|overcrate]
+late up [endx| ]-> [endx|overcrate]
+
+late up [Thetrail| ]-> [Thetrail|overtrail]
+
+[action player ] [target]->[action player ] []
+
+
+[]-> again 
+(
+[arrow]->[arrowx2]
+[arrow2]->[arrowx]
+
+[arrowx]->[arrow]
+[arrowx2]->[arrow2])
+==============
+WINCONDITIONS
+==============
+
+no orbs
+no target
+
+=======
+LEVELS
+=======
+
+message Collect all the orbs
+
+message level 1 of 8
+---------
+-#######-
+##.....##
+#.8...8.#
+#.......#
+#...9...#
+#.......#
+#.P...8.#
+##.....##
+-#######-
+---------
+
+message level 2 of 8
+---------
+#########
+#.0.P.9.#
+#.......#
+#########
+#.9.2.0.#
+#.......#
+#########
+#.8.3.8.#
+#.......#
+#########
+
+
+message level 3 of 8
+---------
+#########
+#...0...#
+#.##P##.#
+#...2...#
+#...$...#
+#8.....8#
+#...9...#
+###.8.###
+--#...#--
+--#####--
+
+message level 4 of 8
+---------
+-#######-
+##..0..##
+#...8...#
+#...#...#
+#08#P#80#
+#...3...#
+##....9##
+-#.....#-
+-##.8.##-
+--#####--
+
+message level 5 of 8
+---------
+-#######-
+##89898##
+#.98989.#
+#..989..#
+#...9...#
+#.......#
+#..P.2..#
+#...0...#
+##.....##
+-#######-
+
+message level 6 of 8
+---------
+---------
+-#######-
+##89808##
+#.89808.#
+#$8...8$#
+#3.....2#
+#.......#
+#...p...#
+####.####
+---###---
+
+
+message level 7 of 8
+---------
+-#######-
+##90909##
+#8.....8#
+#8.....8#
+#8.....8#
+#8.....8#
+#..2.3..#
+#...P...#
+##.#.#.##
+-#######-
+
+message level 8 of 8
+---------
+-#######-
+##09090##
+#...P...#
+#8.....8#
+#8.....8#
+#8.....8#
+#..2.3..#
+#...#...#
+#..089..#
+#########
+
+
+xxxxxxxxxxxxxx
+-eeeeeeeeeeee-
+eeeeeeeeeeeeee
+eeeeeeeeeeeeee
+wewewewwweweew
+wewewetweewwew
+weweweeweeweww
+eweweewwweweew
+eeeeeeeeeeeeee
+eeeeeeeeeeeeee
+-eeeeeeeeeeee-
+
+(SECRET LEVEL FOR THOSE WHO LOOK AT THE SOURCE CODE)
+(can get to this level in ingame By press X at the win screen)
+(just didnt know where to fit it in :P)
+message Secret: level 9 of 8 
+---------
+########-
+#8#888.##
+#9#.....#
+#.......#
+#0.3P2.9#
+#.......#
+#.....#0#
+##.888#8#
+-########
+---------
+
+message YOU WIN (for real this time :P)
+
+
+
+(---------
+-#######-
+##.....##
+#....#..#
+#..908..#
+#3.890.2#
+#..890#.#
+#....#..#
+#.......#
+##..p..##
+-#######-)
+
+(---------
+-#######-
+#########
+#998989.#
+#89.....#
+####P..8#
+---#2..8#
+####3..8#
+#80.....#
+#008080.#
+#########)
+
+(---------
+#########
+#.90909.#
+#.......#
+#8.....8#
+#8..P..8#
+#8.....8#
+#..2.3..#
+#.......#
+##.....##
+-#######-)
+
+(---------
+#########
+#.......#
+#99...00#
+#99.P.00#
+##8...8##
+#..2.3..#
+#.......#
+#.......#
+##8.9.8##
+-#######-)
+(---------
+-#######-
+##.089.##
+#.......#
+#9.....0#
+#8.P23.8#
+#0.....9#
+#.......#
+#.......#
+##.980.##
+-#######-)
+
+(---------
+-#######-
+##.#8#.##
+#..#9#..#
+#..#8#..#
+#.P.....#
+#.....2.#
+#..#8#..#
+#..#9#..#
+##.#8#.##
+-#######-)
+
+(---------
+#########
+#.9.##2.#
+#.......#
+#.......#
+#...##..#
+#.*.##..#
+#.P.##O.#
+##..##.##
+-#######-
+---------)
+(---------
+-#######-
+##.....##
+#.0.O...#
+#.......#
+#.2...9.#
+#...*...#
+#.3...1.#
+#...P...#
+##.....##
+-#######-)
+
+
+
+
+
+

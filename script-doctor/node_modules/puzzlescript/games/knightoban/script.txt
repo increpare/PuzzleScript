@@ -1,0 +1,225 @@
+title Knightoban
+author Nick Sperry
+
+========
+OBJECTS
+========
+
+Background
+LIGHTGREEN GREEN
+11111
+01111
+11101
+11111
+10111
+
+
+Target
+DarkBlue
+.....
+.000.
+.0.0.
+.000.
+.....
+
+Wall
+BROWN DARKBROWN
+00010
+11111
+01000
+11111
+00010
+
+Player
+Black Orange White Blue
+.000.
+.111.
+22222
+.333.
+.3.3.
+
+Crate
+red 
+00000
+0...0
+0...0
+0...0
+00000
+
+normalcrate
+orange brown
+00000
+0...0
+0...0
+0...0
+00000
+
+
+knight_marker
+transparent
+
+possible_crate
+darkred 
+0.0.0
+.....
+0...0
+.....
+0.0.0
+
+selected_crate
+darkred
+00000
+0...0
+0...0
+0...0
+00000
+
+indicator_selecting
+transparent
+
+indicator_placing
+transparent
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Player
+* = Crate
+& = normalcrate
+@ = Crate and Target
+! = normalcrate and Target
+O = Target
+
+object = Crate or wall or player or normalcrate
+crates = Crate or normalcrate
+ghostcrate = possible_crate or selected_crate
+indicator = indicator_selecting or indicator_placing
+
+
+=======
+SOUNDS
+=======
+
+sfx0 50376306
+sfx1 67537905
+sfx2 92863706
+normalcrate MOVE 36772507
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Target
+Player, Wall, Crate, possible_crate, selected_crate, normalcrate
+knight_marker
+indicator_selecting, indicator_placing
+
+======
+RULES
+======
+
+[> player no indicator | normalcrate] -> [> player no indicator | > normalcrate]
+
+[> player no indicator| Crate | | ] -> [ | player indicator_placing | | > knight_marker]
+
+[^ knight_marker | no object] -> [^ knight_marker | possible_crate]
+[v knight_marker | no object] -> [v knight_marker | possible_crate]
+
+[possible_crate][player indicator_placing] -> [possible_crate][player]
+[indicator_placing] -> cancel
+
+[action player][possible_crate][player indicator_selecting] -> [action player][][player indicator_selecting]
+[action player][selected_crate][player indicator_selecting] -> [action player][Crate][player] sfx1
+
+
+[possible_crate][player no indicator_selecting] -> [selected_crate][player indicator_selecting] sfx0
+
+up [up player][selected_crate | ... | possible_crate] -> [player][possible_crate | ... | selected_crate] sfx2
+down [down player][selected_crate | ... | possible_crate] -> [player][possible_crate | ... | selected_crate] sfx2
+left [left player][selected_crate | ... | possible_crate] -> [player][possible_crate | ... | selected_crate] sfx2
+right [right player][selected_crate | ... | possible_crate] -> [player][possible_crate | ... | selected_crate] sfx2
+
+[orthogonal player indicator_selecting] -> [player indicator_selecting]
+
+[ knight_marker ] -> [ ]
+
+==============
+WINCONDITIONS
+==============
+
+All Target on crates
+
+=======
+LEVELS
+=======
+
+message 0/5 (Tutorial)
+
+#########
+#.......#
+#.......#
+#.p.*.o.#
+#.......#
+#.......#
+#########
+
+message Microban levels by D. Skinner:
+
+message 1/5 (Microban 1)
+
+####..
+#.o#..
+#..###
+#@P..#
+#..*.#
+#..###
+####..
+
+
+message 2/5 (Microban 5)
+
+.#######
+.#.....#
+.#.O*O.#
+##.*P*.#
+#..O*O.#
+#......#
+########
+
+message 3/5 (Microban 6)
+
+######.#####
+#....###...#
+#.**.....#P#
+#.*.#OOO...#
+#...########
+#####.......
+
+message 4/5 (Microban 7)
+
+#######
+#.....#
+#.O*O.#
+#.*O*.#
+#.O*O.#
+#.*O*.#
+#..P..#
+#######
+
+message 5/5 (Microban 13)
+
+####...
+#o.##..
+#op.#..
+#o.*#..
+##*.###
+.#.*..#
+.#....#
+.#..###
+.####..
+
+message YOU ARE NOW A KNIGHT

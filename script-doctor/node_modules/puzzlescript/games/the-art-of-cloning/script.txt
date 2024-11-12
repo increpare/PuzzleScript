@@ -1,0 +1,170 @@
+title the art of cloning
+author Rosden Shadow [Mark Signorelli]
+homepage https://twitter.com/Rosden_Shadow
+
+========
+OBJECTS
+========
+
+Background
+#581AB2 #000000 #291E4C
+11111
+12121
+11211
+12121
+11111
+
+
+Target
+#FF263B #911A45
+.....
+.0.0.
+..0..
+.0.0.
+.....
+(
+.0.0.
+.101.
+.010.
+.1.1.
+.....
+)
+(.....
+.0.0.
+..0..
+.0.0.
+.....)
+
+
+
+
+
+Wall
+#1AB258 #0E664E #CBFF7F
+02222
+10002
+10002
+10002
+11110
+
+Player
+#4CB5FF #26FFEA #263BFF
+.000.
+.202.
+01110
+.111.
+.2.2.
+
+Crate
+#FFB37F #993D74 #FFFFFF
+02222
+10002
+10002
+10002
+11110
+
+
+
+Cratepos
+red
+00000
+0...0
+0...0
+0...0
+00000
+
+
+Crateneg
+blue
+00000
+0...0
+0...0
+0...0
+00000
+
+floor
+black
+.....
+.....
+.....
+.....
+.....
+
+floor0
+black
+.....
+.....
+.....
+.....
+.....
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Player
+* = Crate
++ = cratepos
+- = crateneg
+@ = Crate and Target
+t = Target
+
+Object = Crate or Player or Wall
+
+
+=======
+SOUNDS
+=======
+
+Crate MOVE 36772507
+
+================
+COLLISIONLAYERS
+================
+
+Background
+floor,floor0
+Target
+Player, Wall, Crate,Cratepos,Crateneg
+
+======
+RULES
+======
+
+[ >  Player | Crate ] -> [   player | > Crate  ]
+
+[ > crate | crate] -> [ > crate | > crate ]
+
+[ >  Player | Cratepos ] -> [  >  Player | > Cratepos  ]
+
+[ >  Player | Crateneg ] -> [  >  Player | > Crateneg  ]
+
+late [Floor no Object] -> [no Floor Crate]
+
+[crate no Floor] -> [crate floor]
+==============
+WINCONDITIONS
+==============
+
+All Target on Crate
+
+=======
+LEVELS
+=======
+
+message   the goal is to cover-up all the red crosses
+
+message  level 1 of 1
+#########
+#ttttttt#
+#t.....t#
+#t.....t#
+#t..*.pt#
+#t.....t#
+#t.....t#
+#ttttttt#
+#########
+
+message  Good work!

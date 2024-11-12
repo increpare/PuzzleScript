@@ -1,0 +1,526 @@
+title Aaaah! I'm Being Attacked by a Giant Tentacle!
+author Ricky Liu
+homepage www.puzzlescript.net
+
+noaction
+realtime_interval 0.6
+run_rules_on_level_start
+
+========
+OBJECTS
+========
+
+Background
+#ccc #ddd #bee
+10000
+12220
+12220
+12220
+11110
+
+Wall
+#555 #444 #333 #222
+00220
+11001
+02220
+00011
+31113
+
+
+Fire
+Orange Yellow DarkBrown
+.0.0.
+000..
+0100.
+.010.
+2.2.2
+
+Fire2
+Orange Yellow DarkBrown
+0..0.
+..000
+.0010
+.010.
+2.2.2
+
+Player
+Brown #fda Purple pink black
+.000.
+.111.
+22222
+22222
+.434.
+
+
+SweatR
+#6af
+.....
+0....
+.0...
+.....
+.....
+
+SweatL
+#6af
+.....
+....0
+...0.
+.....
+.....
+
+DeadPlayer
+Black
+.000.
+.000.
+00000
+.000.
+.0.0.
+
+LivePlayer
+Brown #fda Red Blue Black
+.000.
+.111.
+22222
+.333.
+.4.4.
+
+Ash
+DarkGray
+...0.
+.0...
+..0..
+.000.
+00000
+
+Prev
+transparent
+
+PrevU
+purple pink
+.000.
+.000.
+.000.
+.....
+.....
+
+PrevD
+purple pink
+.....
+.....
+.000.
+.000.
+.000.
+
+PrevL
+purple pink
+.....
+000..
+000..
+000..
+.....
+
+PrevR
+purple pink
+.....
+..000
+..000
+..000
+.....
+
+NextU
+purple pink
+.001.
+.001.
+.000.
+.....
+.....
+
+NextD
+purple pink
+.....
+.....
+.000.
+.100.
+.100.
+
+NextL
+purple pink
+.....
+110..
+000..
+000..
+.....
+
+NextR
+purple pink
+.....
+..000
+..000
+..011
+.....
+
+NextU2
+purple pink
+..001
+..001
+..00.
+.....
+.....
+
+NextD2
+purple pink
+.....
+.....
+.00..
+100..
+100..
+
+NextL2
+purple pink
+11...
+000..
+000..
+.....
+.....
+
+NextR2
+purple pink
+.....
+.....
+..000
+..000
+...11
+
+Temp
+transparent
+
+RNG1
+transparent
+
+RNG2
+transparent
+
+Tick
+transparent
+
+=======
+LEGEND
+=======
+. = Background
+P = Player and PrevL
+F = Fire
+# = Wall
+u = PrevU
+d = PrevD
+l = PrevL
+r = PrevR
+
+Obstacle = Wall or Prev
+Next = NextU or NextD or NextL or NextR or NextU2 or NextD2 or NextL2 or NextR2
+RNG = RNG1 or RNG2
+Sweats = SweatL or SweatR
+
+=======
+SOUNDS
+=======
+
+SFX0 8062509
+DeadPlayer create 73802302
+EndLevel 70964300
+StartGame 70964300
+(SFX1 94383907)
+
+================
+COLLISIONLAYERS
+================
+Background
+RNG1, RNG2
+Tick
+Temp
+Prev
+PrevU, PrevD, PrevL, PrevR
+Next
+Fire, Fire2, Ash
+Player, DeadPlayer, LivePlayer, Wall
+Sweats
+
+
+======
+RULES     
+======
+
+[stationary Player] -> [Player Tick]
+
+(simplify)
+[PrevU] -> [Up Prev]
+[PrevD] -> [Down Prev]
+[PrevL] -> [Left Prev]
+[PrevR] -> [Right Prev]
+[Next] -> []
+[Fire2] -> [Fire]
+[Sweats] -> []
+
+(calculate movement)
+[> Player > Prev | Prev] -> [ | Player Prev] (SFX1)
+[> Player | Obstacle] -> cancel
+[ | < Player > Prev] -> [Player > Prev| > Prev] (SFX1)
+[Moving Player] -> [Moving Player Moving Temp] (SFX1)
+
+[Perpendicular Temp > Prev | ] -> [Perpendicular Temp > Prev | Perpendicular Temp]
+[> Temp > Prev | ] -> [> Temp > Prev | Temp]
+[> Temp | Obstacle no Temp] [Player Temp] -> [ | Obstacle] [Player no Temp]
+[Player no Temp] [Temp] -> [Player] [no Temp]
+[> Player no Temp | ] -> [ | Player < Prev]
+[> Player > Temp Perpendicular Prev | ] -> [ | Player Perpendicular Prev]
+[> Temp Perpendicular Prev | ] -> [ | Perpendicular Prev]
+[> Temp > Prev | Temp] -> [ | ]
+[ | < Temp > Prev ] -> [> Prev | > Prev]
+[Temp] -> []
+
+(check fire)
+[Player Prev Fire] -> [DeadPlayer Prev Fire]
+[Player Prev] [Prev Fire] -> [LivePlayer Ash] [Prev Fire]
+[Prev Fire] [Prev no Fire] -> [Prev Fire] [Ash]
+[Prev Fire] -> [Ash]
+
+(draw)
+[Up Prev] -> [PrevU]
+[Down Prev] -> [PrevD]
+[Left Prev] -> [PrevL]
+[Right Prev] -> [PrevR]
+Up [PrevU | ] -> [PrevU | NextD]
+Down [PrevD | ] -> [PrevD | NextU]
+Left [PrevL | ] -> [PrevL | NextR]
+Right [PrevR | ] -> [PrevR | NextL]
+
+(animation)
+[Tick] [RNG] -> [Tick] []
+
+[Tick] [Fire no RNG] -> [Tick] [Fire random RNG]
+[Fire RNG2] -> [Fire2 RNG2]
+
+[Tick] [Player no RNG] -> [Tick] [Player random RNG]
+[Tick] [Player RNG2] -> [Tick] [Player]
+[Tick] [Player no RNG] -> [Tick] [Player random RNG]
+right [Player RNG2 | ] -> [Player | SweatR]
+[Tick] [Player no RNG] -> [Tick] [Player random RNG]
+left [Player RNG2 | ] -> [Player | SweatL] SFX0
+
+[Tick] [Next no RNG] -> [Tick] [Next random RNG]
+[Tick] [Next RNG2] -> [Tick] [Next]
+[Tick] [Next no RNG] -> [Tick] [Next random RNG]
+[Tick] [Next RNG2] -> [Tick] [Next]
+[Tick] [Next no RNG] -> [Tick] [Next random RNG]
+[Tick] [Next RNG2] -> [Tick] [Next]
+[Tick] [Next no RNG] -> [Tick] [Next random RNG]
+[NextU RNG2] -> [NextU2 RNG2]
+[NextD RNG2] -> [NextD2 RNG2]
+[NextL RNG2] -> [NextL2 RNG2]
+[NextR RNG2] -> [NextR2 RNG2]
+
+[Tick] -> []
+
+
+
+==============
+WINCONDITIONS
+==============
+Some LivePlayer
+
+=======     
+LEVELS
+=======
+
+Message Level 1: Aaaah!
+
+############
+#..........#
+#..........#
+lllp.......#
+#..........#
+#........#.#
+#..........#
+#..........#
+#....f.....#
+#....#.....#
+#..........#
+############
+
+Message Level 2: Aaaaah!
+
+############
+lllp.......#
+#..........#
+#..........#
+#...##.##..#
+#.......#..#
+#...#f.....#
+#...##.##..#
+#..........#
+#..........#
+############
+
+
+Message Level 3: Aaaaaah!
+
+###################
+##...............##
+#.................#
+#.................#
+#......######.....#
+#.......####......#
+#....#...##.......#
+lllp.##......#....#
+#.....##....##....#
+#......#.f.##.....#
+#......#####......#
+#.................#
+#.................#
+##................#
+###################
+
+
+Message Level 4: Aaaaaaah!
+
+##############
+#............#
+#............#
+lllp.........#
+#............#
+#.....#......#
+#............#
+#........#...#
+#............#
+#...........f#
+##############
+
+Message Level 5: Aaaaaaaah!
+
+#################
+lllp........#####
+#...........#####
+#...........#####
+#...........#####
+#...........#####
+#..#..#..#..##..#
+#...........#..f#
+#..............##
+#.............###
+#################
+
+Message Level 6: Aaaaaaaaah!
+
+##################
+#................#
+#................#
+lllp.............#
+#................#
+#....#..#..#.....#
+#................#
+#................#
+#....#..#..#.....#
+#................#
+#................#
+#................#
+#................#
+#...............f#
+##################
+
+
+Message Level 7: Aaaaaaaaaah!
+
+###################
+lllp......#########
+#.........#########
+#.........#########
+#.........#########
+#.#.#.#.#.#########
+#.........#########
+#.........#########
+##.........########
+###.........#######
+#####.......#######
+######.......######
+#######.......#####
+#########.....#####
+##########.....####
+###########.....###
+#############...###
+##############...##
+###############...#
+################f.#
+###################
+
+Message Level 8: Aaaaaaaaaaah!
+
+####################
+#..................#
+#.#................#
+#..................#
+lllp...............#
+#..................#
+#..................#
+#..................#
+#..................#
+#....######........#
+#.........#........#
+#.......#.#........#
+#.........#........#
+#.........#........#
+#.......#.#........#
+#..................#
+#..................#
+#..................#
+#..............#...#
+#..................#
+#..................#
+#..................#
+#..................#
+#f.................#
+####################
+
+Message Level 9: Aaaaaaaaaaaah!
+
+##################
+lllp.............#
+#................#
+#.......#.#.#.#..#
+#..#.............#
+#.......#.#.#.#..#
+#..#.#...........#
+#.........#.#.#..#
+#..#.#.#.........#
+#...........#.#..#
+#..#.#.#.#.......#
+#.............#..#
+#..#.#.#.#.#f.#..#
+#...........###..#
+#................#
+#................#
+##################
+
+Message Level 10: Aaaaaaaaaaaaah!
+
+###################
+lllp..#.....#.....#
+#.....#.....#.....#
+#.................#
+#.....#.....#.....#
+#.................#
+#.....#.....#.....#
+#.................#
+#.....#.....#.....#
+#.................#
+#.....#.....#.....#
+#.................#
+#.....#.....#.....#
+#.................#
+#.....#.....#.....#
+#.................#
+#.....#.....#.....#
+#.................#
+#.....#.....#.....#
+#.....#..f..#.....#
+###################
+
+Message Ahhhh! Thanks for playing!

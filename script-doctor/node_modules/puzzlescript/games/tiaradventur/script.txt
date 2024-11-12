@@ -1,0 +1,2818 @@
+title Tiaradventur
+author Pedro PSI
+homepage pedropsi.github.io
+(License: Attribution-NonCommercial-ShareAlike 4.0 International (CC BY-NC-SA 4.0))
+
+(last updated 04/09/2018)
+
+background_color #850026 (dark red)
+text_color #FFAE09 (bright gold)
+
+youtube ?listType=playlist&list=PLLmS63Y3VpxfdAf56-CJu0mb9qY7pqOuL&autoplay=1&loop=1# (ntGWv8F_ccM Whitesand - Legend of The King)
+
+run_rules_on_level_start
+
+realtime_interval 0.1
+key_repeat_interval 0.1
+throttle_movement (prevents player from moving too fast while wolves are on the run)
+norepeat_action
+
+flickscreen 24x18
+
+(debug)
+
+(Palette
+-----------------
+
+#43240B (darkest brown)
+#944300 (dark brown)
+#B15000 (brown)
+#FF7809 (bright brown)
+
+#3C0A18 (darkest red)
+#850026 (dark red)
+#EF084A (bright red)
+#9F002D (red)
+#EE7598 (light red)
+
+
+#43300B (darkest gold)
+#FFAE09 (bright gold)
+
+#43300B (darkest yellow)
+#946300 (dark yellow)
+#FFFD09 (bright yellow)
+
+#213C0A (darkest green)
+#3E8400 (dark green)
+#4A9E00 (green)
+
+#072927 (darkest teal)
+#07C1BA (bright teal)
+#5CBBB7 (light teal)
+
+#BFCDCC (metal teal)
+
+#090228 (darkest blue)
+#064775 (dark blue)
+#2B24CF (bright blue)
+
+#360921 (darkest purple)
+#770041 (dark purple)
+
+#8F004E (pink)
+#E1087E (bright pink)
+
+black
+#1e1e1e (darkest gray)
+-----------------)
+
+========
+OBJECTS
+========
+
+Background
+WHITE
+
+Soil
+#072927 (darkest teal)
+
+Soil1
+#213C0A (darkest green)
+....0
+.....
+..0.0
+...0.
+..0..
+
+Soil2
+#213C0A (darkest green)
+.....
+...0.
+.....
+.0...
+..0..
+
+Soil3
+#213C0A (darkest green)
+..0..
+0..0.
+.0...
+0....
+.....
+
+Soil4
+#213C0A (darkest green)
+.....
+.....
+....0
+.0...
+.....
+
+Soil5
+#213C0A (darkest green)
+.....
+...0.
+.....
+0....
+.....
+
+
+Wall
+#9F002D (red) #850026 (dark red)
+00000
+10000
+11000
+11100
+11110
+
+Wall1
+TRANSPARENT
+Wall2
+TRANSPARENT  #9F002D (red)
+.....
+1....
+.....
+.....
+.....
+
+Wall3
+TRANSPARENT  #9F002D (red)
+.....
+1....
+11...
+.11..
+..11.
+
+Wall4
+TRANSPARENT #9F002D (red)
+.....
+1....
+.1...
+.....
+.....
+
+Wall5
+TRANSPARENT #9F002D (red)
+.....
+1....
+.1...
+..1..
+.....
+
+WallTop1
+TRANSPARENT #9F002D (red)
+.....
+.....
+.....
+.....
+.111.
+
+WallTop2
+TRANSPARENT #9F002D (red)
+.....
+.....
+.....
+..11.
+.1111
+
+WallTop3
+TRANSPARENT #9F002D (red)
+.....
+.....
+.....
+.....
+.1111
+
+WallTop4
+TRANSPARENT
+
+(Tiara)
+(---------------------------------------------------)
+
+Tiara
+#FFAE09 (bright gold) #FFFD09 (bright yellow) #07C1BA (bright teal)
+.....
+..2..
+.111.
+0...1
+.0.0.
+
+TiaraShine
+#5CBBB7 (light teal)
+.....
+..0..
+.....
+.....
+.....
+
+TiaraBroken
+#FFAE09 (bright gold) #FFFD09 (bright yellow) #07C1BA (bright teal)
+.1...
+0..1.
+...12
+...0.
+.1...
+
+(Secret Ring)
+(---------------------------------------------------)
+
+Ring
+#FFAE09 (bright gold) #FFFD09 (bright yellow)
+.111.
+1...1
+0...1
+0...0
+.000.
+
+
+(Characters)
+(---------------------------------------------------)
+
+PrincessTop
+#E1087E (bright pink) #EE7598 (light red) #8F004E (pink) #EF084A (bright red) #FF9703 (player orange) #FF8403 (pdayer orange)
+.....
+.....
+03...
+2344.
+.544.
+
+Princess
+#E1087E (bright pink) #EE7598 (light red) #8F004E (pink) #EF084A (bright red) #FF9703 (player orange) #FF8403 (pdayer orange)
+.200.
+40004
+22000
+22220
+.....
+
+DressR
+#E1087E (bright pink) #EE7598 (light red) #8F004E (pink) #EF084A (bright red) #FF9703 (player orange) #FF8403 (pdayer orange)
+.....
+.....
+.....
+0....
+.....
+
+DressL
+#E1087E (bright pink) #EE7598 (light red) #8F004E (pink) #EF084A (bright red) #FF9703 (player orange) #FF8403 (pdayer orange)
+.....
+.....
+.....
+....2
+.....
+
+PlayerTop
+#FF9703 (player orange) #FF8403 (pdayer orange)
+.....
+.....
+.....
+.000.
+00000
+
+Player
+#FF9703 (player orange) #FF8403 (pdayer orange)
+10001
+.111.
+.1.1.
+.....
+.....
+
+Wolf
+#BFCDCC (metal teal) #07C1BA (bright teal) black #1e1e1e (darkest gray)
+.....
+..1..
+.101.
+..1..
+.....
+
+WolfL
+#BFCDCC (metal teal) #07C1BA (bright teal) black #1e1e1e (darkest gray)
+...2.
+2212.
+00222
+..222
+.32.3
+
+WolfR
+#BFCDCC (metal teal) #07C1BA (bright teal) black #1e1e1e (darkest gray)
+.2...
+.2122
+22200
+222..
+0.20.
+
+WolfTailL
+#BFCDCC (metal teal) #07C1BA (bright teal) black #1e1e1e (darkest gray)
+.....
+.....
+222..
+2.22.
+2....
+
+WolfTailR
+#BFCDCC (metal teal) #07C1BA (bright teal) black #1e1e1e (darkest gray)
+.....
+.....
+..222
+.22.2
+....2
+
+WolfSleep
+#BFCDCC (metal teal) #07C1BA (bright teal) black #1e1e1e (darkest gray)
+.....
+.22..
+..122
+22222
+2222.
+
+WolfWake
+transparent
+
+(Sword and swipes)
+(---------------------------------------------------)
+
+Sword
+#FFAE09 (bright gold) #EF084A (bright red) #07C1BA (bright teal) #BFCDCC (metal teal)
+...33
+..332
+1332.
+.12..
+0.1..
+
+SwordShine1
+white
+....0
+.....
+.....
+.....
+.....
+
+SwordShine2
+white
+.....
+...0.
+.....
+.....
+.....
+
+SwordShine3
+white
+.....
+.....
+..0..
+.....
+.....
+
+SwordShine4
+TRANSPARENT
+
+SwordShine5
+TRANSPARENT
+
+SwordShine6
+TRANSPARENT
+
+SwordShine7
+TRANSPARENT
+
+SwordShine8
+TRANSPARENT
+
+SwordShine9
+TRANSPARENT
+
+SwordSwipeL
+#07C1BA (bright teal) #BFCDCC (metal teal)
+...0.
+..0..
+..1..
+..1..
+...1.
+
+SwordSwipeU
+#07C1BA (bright teal) #BFCDCC (metal teal)
+.....
+.011.
+0...1
+.....
+.....
+
+SwordSwipeR
+#07C1BA (bright teal) #BFCDCC (metal teal)
+.1...
+..1..
+..0..
+..0..
+.0...
+
+SwordSwipeD
+#07C1BA (bright teal) #BFCDCC (metal teal)
+1...0
+.000.
+.....
+.....
+.....
+
+(Crates and Boulders)
+(---------------------------------------------------)
+
+Crate
+#43240B (darkest brown) #944300 (dark brown) #B15000 (brown)
+12211
+11111
+00000
+00000
+00000
+
+Crate1
+#43240B (darkest brown) #944300 (dark brown) #B15000 (brown)
+.....
+.....
+.....
+11111
+11221
+
+CrateW (floating)
+TRANSPARENT
+
+CrateEmerging (underwater)
+TRANSPARENT
+
+CrateDestroy
+#43240B (darkest brown) #944300 (dark brown) #B15000 (brown)
+.....
+..2..
+.021.
+12211
+00110
+
+CrateDestroy2
+TRANSPARENT
+
+Boulder
+#360921 (darkest purple) #770041 (dark purple) #E1087E (bright purple) #DE6DAB (light purple)
+12233
+01222
+01122
+00111
+.000.
+
+Boulder1
+#360921 (darkest purple) #770041 (dark purple) #E1087E (bright purple) #DE6DAB (light purple)
+.....
+.....
+..3..
+.333.
+12333
+
+
+(
+Boulder
+#360921 (darkest purple) #770041 (dark purple) #E1087E (bright purple) #DE6DAB (light purple)
+.102.
+.102.
+.102.
+12132
+23233
+
+Boulder1
+#360921 (darkest purple) #770041 (dark purple) #E1087E (bright purple) #DE6DAB (light purple)
+.....
+.....
+.....
+23233
+12132
+)
+
+(Trees)
+(---------------------------------------------------)
+
+(each seed yields a random tree)
+Seed
+#213C0A (darkest green)
+
+Tree
+TRANSPARENT
+
+Tr
+#213C0A (darkest green) #3E8400 (dark green) #4A9E00 (green) #944300 (dark brown)
+..10.
+.231.
+.13..
+..11.
+..3..
+
+Tre
+#213C0A (darkest green) #3E8400 (dark green) #4A9E00 (green) #944300 (dark brown)
+..00.
+...32
+..13.
+..20.
+.3...
+
+Treee
+#213C0A (darkest green) #3E8400 (dark green) #4A9E00 (green) #944300 (dark brown)
+.010.
+.2110
+.010.
+..0..
+..3..
+
+Treeee
+#213C0A (darkest green) #3E8400 (dark green) #4A9E00 (green) #944300 (dark brown)
+.122.
+11121
+02101
+10200
+.03..
+
+Treeeee
+#213C0A (darkest green) #3E8400 (dark green) #4A9E00 (green) #944300 (dark brown)
+.0111
+..000
+.2.3.
+2110.
+.03..
+
+Tr1
+#213C0A (darkest green) #3E8400 (dark green) #4A9E00 (green)
+.212.
+01122
+12011
+.0010
+..00.
+
+Tre1
+#213C0A (darkest green) #3E8400 (dark green) #4A9E00 (green)
+.22..
+2112.
+12021
+10110
+.001.
+
+Treee1
+#213C0A (darkest green) #3E8400 (dark green) #4A9E00 (green)
+.....
+.212.
+21010
+1011.
+.010.
+
+Treeee1
+#213C0A (darkest green) #3E8400 (dark green) #4A9E00 (green)
+.....
+.....
+.....
+..2..
+.110.
+
+Treeeee1
+#213C0A (darkest green) #3E8400 (dark green) #4A9E00 (green)
+...1.
+...2.
+..221
+..120
+.0010
+
+(Lamp)
+(---------------------------------------------------)
+
+Lamp
+ #43240B (darkest gold) #770041 (dark purple)
+11111
+.000.
+..0..
+..0..
+.111.
+
+Lamp1
+#FFAE09 (bright gold) #FF7809 (bright brown)
+.....
+..0..
+.010.
+.010.
+..1..
+
+Lamp2
+#FFAE09 (bright gold) #FF7809 (bright brown)
+.....
+.0...
+.00..
+.010.
+..1..
+
+Lamp3
+#FFAE09 (bright gold) #FF7809 (bright brown)
+.....
+..0..
+.010.
+.010.
+..1..
+
+Lamp4
+#FFAE09 (bright gold) #FF7809 (bright brown)
+.....
+..0..
+.010.
+.010.
+..1..
+
+Lamp5
+#FFAE09 (bright gold) #FF7809 (bright brown)
+.....
+..0..
+.010.
+.010.
+..1..
+
+Lamp6
+#FFAE09 (bright gold) #FF7809 (bright brown)
+.....
+...0.
+..00.
+.010.
+..1..
+
+Lamp7
+#FFAE09 (bright gold) #FF7809 (bright brown)
+.....
+..0..
+.010.
+.010.
+..1..
+
+Lamp8
+#FFAE09 (bright gold) #FF7809 (bright brown)
+.....
+..0..
+.010.
+.010.
+..1..
+
+(Flames)
+(---------------------------------------------------)
+
+Flame
+TRANSPARENT
+
+Fla32
+#FFAE09 (bright gold) #FF7809 (bright brown) #FFFE5D (bright yellow)
+.....
+.....
+.....
+.....
+..2..
+
+Fla22
+#FFAE09 (bright gold) #FF7809 (bright brown) #FFFE5D (bright yellow)
+.202.
+20002
+00100
+01120
+.0222
+
+Fla12
+#FFAE09 (bright gold) #FF7809 (bright brown) #FFFE5D (bright yellow)
+..010
+.2010
+2020.
+010..
+.0...
+
+Fla21
+#FFAE09 (bright gold) #FF7809 (bright brown) #FFFE5D (bright yellow)
+.....
+.....
+.....
+...2.
+..222
+
+Fla11
+#FFAE09 (bright gold) #FF7809 (bright brown) #FFFE5D (bright yellow)
+..010
+.2010
+2020.
+010..
+.0...
+
+Fla10
+#FFAE09 (bright gold) #FF7809 (bright brown) #FFFE5D (bright yellow)
+.....
+.2...
+202..
+010..
+.0...
+
+(Water)
+(---------------------------------------------------)
+
+Water
+#090228 (darkest blue)
+
+WSplash
+#064775 (dark blue) #090228 (darkest blue)
+.000.
+01110
+01010
+01110
+.000.
+
+W12
+#064775 (dark blue) #090228 (darkest blue)
+11111
+00111
+11111
+11111
+11010
+
+W22
+#064775 (dark blue) #090228 (darkest blue)
+11111
+10011
+11111
+11111
+11100
+
+W32
+#064775 (dark blue) #090228 (darkest blue)
+11111
+10101
+11111
+11111
+11110
+
+W42
+#064775 (dark blue) #090228 (darkest blue)
+11111
+11001
+11111
+11111
+10111
+
+W52
+#064775 (dark blue) #090228 (darkest blue)
+11111
+11101
+11111
+11111
+10011
+
+
+(Shore)
+(---------------------------------------------------)
+
+WLXU
+#090228 (darkest blue) #213C0A (darkest green)
+00...
+0....
+.....
+.....
+.....
+
+WLXD
+#090228 (darkest blue)
+.....
+.....
+.....
+0....
+00...
+
+WRXU
+#090228 (darkest blue)
+...00
+....0
+.....
+.....
+.....
+
+WRXD
+#090228 (darkest blue)
+.....
+.....
+.....
+....0
+...00
+
+SLXU
+#072927 (darkest teal)
+0....
+.....
+.....
+.....
+.....
+
+SLXD
+#072927 (darkest teal)
+.....
+.....
+.....
+.....
+0....
+
+SRXU
+#072927 (darkest teal)
+....0
+.....
+.....
+.....
+.....
+
+SRXD
+#072927 (darkest teal)
+.....
+.....
+.....
+.....
+....0
+
+
+(Floating crates)
+(---------------------------------------------------)
+
+CW1
+#43240B (darkest brown) #944300 (dark brown) #B15000 (brown)
+11111
+11221
+12211
+00000
+00000
+
+CW2
+#43240B (darkest brown) #944300 (dark brown) #B15000 (brown)
+11111
+11221
+12211
+00000
+00000
+
+CW3
+#43240B (darkest brown) #944300 (dark brown) #B15000 (brown)
+11111
+11221
+12211
+00000
+00000
+
+CW4
+#43240B (darkest brown) #944300 (dark brown) #B15000 (brown)
+.....
+11111
+11221
+12211
+00000
+
+CW5
+#43240B (darkest brown) #944300 (dark brown) #B15000 (brown)
+.....
+11111
+11221
+12211
+00000
+
+CW6
+#43240B (darkest brown) #944300 (dark brown) #B15000 (brown)
+.....
+11111
+11221
+12211
+00000
+
+CWeight (push down crate with something on top)
+#43240B (darkest brown) #944300 (dark brown) #B15000 (brown)
+.....
+.....
+11111
+11221
+12211
+
+CR (reverse animation)
+TRANSPARENT
+
+
+(Item storage areas)
+(---------------------------------------------------)
+
+StoragePlay -
+#3C0A18 (darkest red)
+
+StoragePrin =
+#3C0A18 (darkest red)
+
+StoragePicker
+#FF9703 (player orange)
+.....
+.....
+..0..
+.....
+.....
+
+StoragePickerPrin
+#E1087E (bright pink)
+.....
+.....
+..0..
+.....
+.....
+
+
+(Movement and pathfinding controls)
+(---------------------------------------------------)
+
+(block movement in 4 directions)
+FixedL
+blue
+.....
+.....
+00...
+.....
+.....
+
+FixedU
+blue
+..0..
+..0..
+.....
+.....
+.....
+
+FixedR
+blue
+.....
+.....
+...00
+.....
+.....
+
+FixedD
+blue
+.....
+.....
+.....
+..0..
+..0..
+
+(pathfinding)
+
+Seeing S
+TRANSPARENT
+
+Seeking
+TRANSPARENT
+
+(general purpose marker)
+Once
+TRANSPARENT
+Last
+YELLOW
+
+Mark _
+transparent
+
+(whether a princess or wolf try to move this turn)
+Try
+BLUE
+
+(Escape route markers)
+EscapePath ;
+red
+.....
+.....
+.....
+...0.
+.....
+SeekPath ,
+BLUE
+.....
+.0...
+.....
+.....
+.....
+EscapeTarget
+white
+.....
+..0..
+.0.0.
+..0..
+.....
+
+Trapped
+transparent gray
+
+TrappedBefore
+transparent blue
+
+TrapFree
+transparent white
+
+TrapBlock
+transparent red
+
+(marks player for princess to defend)
+DefendTarget
+BLUE
+.....
+.0.0.
+.....
+.0.0.
+.....
+
+Defended
+TRANSPARENT
+
+(marks player for princess to follow)
+FollowTarget
+lightgreen
+..0..
+.....
+0...0
+.....
+..0..
+
+(where can a princess run if trapped by wolves, or wolves by a sword)
+Safefloor
+TRANSPARENT
+
+(whether a human is reachable by wolves)
+Unsafe
+TRANSPARENT
+
+(how the tiara came to the princess?)
+UnsafelyGiven
+TRANSPARENT
+UnsafelyFound
+TRANSPARENT
+Given
+TRANSPARENT
+Found
+TRANSPARENT
+
+(now the tiara came to the princess!)
+NextTiara
+TRANSPARENT
+
+
+(marker for character bitten by wolf)
+Bitten
+TRANSPARENT
+
+(markers for last player moving direction)
+ML
+TRANSPARENT
+MU
+TRANSPARENT
+MR
+TRANSPARENT
+MD
+TRANSPARENT
+Swiper
+TRANSPARENT
+Threat
+TRANSPARENT
+
+
+(Dialog flow)
+(---------------------------------------------------)
+SwordWarn1
+TRANSPARENT
+SwordWarn2
+TRANSPARENT
+
+WarnBurn
+TRANSPARENT
+WarnSwim
+TRANSPARENT
+
+Talk
+TRANSPARENT
+TalkNervous
+TRANSPARENT
+TalkSword
+TRANSPARENT
+TalkWin
+TRANSPARENT
+
+Read
+transparent
+
+Intro
+transparent
+Conclu
+transparent
+
+Story1
+transparent
+Story2
+transparent
+Story3
+TRANSPARENT
+Story4
+TRANSPARENT
+Story5
+transparent
+Story6
+transparent
+Story7
+TRANSPARENT
+Story8
+TRANSPARENT
+Story9
+TRANSPARENT
+
+Dialog1
+transparent
+Dialog2
+transparent
+Dialog3
+TRANSPARENT
+Dialog4
+TRANSPARENT
+Dialog5
+TRANSPARENT
+Dialog6
+TRANSPARENT
+Dialog7
+TRANSPARENT
+
+(Game Win or restart)
+(---------------------------------------------------)
+
+RestartWall
+#9F002D (red) #850026 (dark red)
+00000
+10000
+11000
+11100
+11110
+
+FakeWallStor
+#850026 (dark red)
+
+TalkWall
+#850026 (dark red)
+
+WinWall
+#FFAE09 (bright gold) #FF7809 (bright brown)
+00000
+10000
+11000
+11100
+11110
+
+SaveWall
+#FFAE09 (bright gold)
+
+WinGame
+TRANSPARENT
+
+EndGame
+TRANSPARENT
+
+RestartLevel
+transparent
+
+StartGame $
+transparent
+
+(Master control)
+(---------------------------------------------------)
+
+AllowMove
+TRANSPARENT
+
+InCurrentMap
+transparent
+
+AllowAnimation
+transparent
+
+MapBoundary
+TRANSPARENT
+
+MapBoundaryCorner
+TRANSPARENT
+
+TickPlayer "
+transparent (yellow
+.....
+....1
+....1
+....1
+.....)
+
+TickTime '
+transparent (blue
+.....
+....1
+....1
+....1
+.....)
+
+(Tiara Counting)
+(---------------------------------------------------)
+PlusOne +
+transparent
+
+T0
+transparent
+T1
+transparent
+T2
+transparent
+T3
+transparent
+T4
+transparent
+T5
+transparent
+T6
+transparent
+T7
+transparent
+
+TB0
+transparent
+TB1
+transparent
+TB2
+transparent
+TB3
+transparent
+TB4
+transparent
+TB5
+transparent
+TB6
+transparent
+TB7
+transparent
+
+
+(Level Linking)
+(---------------------------------------------------)
+
+WarpDepart
+transparent
+WarpArrive
+transparent
+
+Warp1
+transparent
+Warp2
+transparent
+Warp3
+TRANSPARENT
+Warp4
+TRANSPARENT
+Warp5
+TRANSPARENT
+Warp6
+TRANSPARENT
+Warp7
+TRANSPARENT
+Warp8
+TRANSPARENT
+Warp9
+TRANSPARENT
+
+WarpPicker
+transparent
+
+WarpHoriz
+transparent
+WarpVerti
+transparent
+
+(call princess to next area)
+Beckon
+TRANSPARENT
+Escaping
+TRANSPARENT
+
+(save game)
+Saved
+transparent
+Save
+TRANSPARENT
+
+
+=======
+LEGEND
+=======
+
+(Map abbreviations)
+(---------------------------------------------------)
+. = Soil and StartGame
+~ = Water and StartGame
+# = Wall and StartGame
+
+? =  T0 and Wall and StartGame
+§ = TB0 and Wall and StartGame
+
+.# = Soil  or Wall       (inner shore)
+W# = Water or Wall       (outer shore)
+
+P = Player and Soil and StartGame and TickTime
+R = Princess and Soil and StartGame
+F = WolfSleep and Soil and StartGame
+
+O = Crate and Soil and StartGame
+Õ = CrateW and Water and StartGame            (floating crate)
+Ö = CrateW and Crate and Water and StartGame  (crate on top of floating crate)
+(Ó = Crate and Flame and Soil and StartGame    burning crate)
+
+D = Boulder and Soil and StartGame
+L = Lamp and Soil and StartGame
+
+T = Soil and Seed and StartGame            (a random tree)
+Y = Soil and Tree and Treeee and StartGame (a small tree, non random)
+
+X = WarpDepart and Soil  and StartGame
+* = WarpArrive and Soil  and StartGame
+
+B = Beckon and Background and Soil and StartGame  (the princess goes there)
+
+A = Tiara and Soil and StartGame
+Q = Ring and Soil and StartGame and NextTiara  (no tiara in area with ring)
+Z = Sword and Soil and StartGame
+
+(Graphics and Animation)
+(---------------------------------------------------)
+
+TreeType = Tr or Tre or Treee or Treeee or Treeeee
+Tree1 = Tr1 or Tre1 or Treee1 or Treeee1 or Treeeee1
+
+Lamps1 = Lamp1 or Lamp2 or Lamp3 or Lamp4 or Lamp5 or Lamp6 or lamp7 or Lamp8
+
+WallTop=Walltop1 or WallTop2 or WallTop3 or WallTop4
+
+Dress=DressL or DressR
+WolfTail = WolfTailL or WolfTailR
+
+Over1 = Crate1 or Boulder1 or Tree1 or PlayerTop or PrincessTop
+
+WallOver= Wall1 or Wall2 or Wall3 or Wall4 or Wall5
+SoilOver= Soil1 or Soil2 or Soil3 or Soil4 or Soil5
+
+CW = CW1 or CW2 or CW3 or CW4 or CW5 or CW6 or CWeight
+
+W = W12 or W22 or W32 or W42 or W52
+
+WX = WLXU or WLXD or WRXU or WRXD
+WXL = WLXU or WLXD
+WXU = WLXU or WRXU
+WXR = WRXU or WRXD
+WXD = WLXD or WRXD
+
+SX = SLXU or SLXD or SRXU or SRXD
+SXL = SLXU or SLXD
+SXU = SLXU or SRXU
+SXR = SRXU or SRXD
+SXD = SLXD or SRXD
+
+AnimWater = W
+AnimCrate = CW
+
+Reverse = CR
+
+SwordShine = SwordShine1 or SwordShine2 or SwordShine3 or SwordShine4 or SwordShine5 or SwordShine6 or SwordShine7 or SwordShine8 or SwordShine9
+AnimPickable = TiaraShine or SwordShine
+
+SwordSwipe = SwordSwipeL or SwordSwipeU or SwordSwipeR or SwordSwipeD
+
+LastMoveDirection = ML or MU or MR or MD
+
+(Game Logic)
+(---------------------------------------------------)
+
+Storage = StoragePlay or StoragePrin
+Fixed = FixedL or FixedR or FixedU or FixedD
+
+Human = Player or Princess
+WolfType = WolfL or WolfR
+Character = Human or Wolf
+Fearful = Princess or Wolf
+
+Seekable = Human
+
+Floater = CrateW or CrateEmerging
+Tiaras = Tiara or TiaraBroken
+Pickable = Tiaras or Sword or Ring
+
+Unbreakable = Boulder or Lamp
+
+Pushable = Crate or Boulder or Lamp
+UnPushable = Wall or Tree
+Pusher = Character or Pushable
+
+Mover = Pusher or Pickable
+
+PushFlammmable = Tree
+Flammmable = PushFlammmable or Crate or CrateW or CrateDestroy
+Flamer = Lamp
+ContactFlamer = Fla11 or Fla12
+
+Weight = Character or Lamp or Lamp or Pickable or Character
+Sinkable = Character or Boulder or Lamp or Pickable
+
+Item = Character or UnPushable or Pushable
+Types = WolfType or TreeType
+
+Overs = Over1 or Lamps1 or WallTop
+
+OverFlame1 = Fla10 or Fla11 or Fla12
+OverFlame2 = Fla21 or Fla22
+OverFlame3 = Fla32
+
+FlameAny = Flame or OverFlame1
+
+Warpable = Character or Pushable or Flame
+
+Danger = Flame or SwordSwipe
+
+Floor = Floater or Soil
+
+Safely = Given or Found
+Unsafely = UnsafelyGiven or UnsafelyFound
+TiaraHandling = Unsafely or Safely or NextTiara
+
+
+(Story and dialogue)
+(---------------------------------------------------)
+
+Warnings = SwordWarn1 or SwordWarn2 or WarnBurn or WarnSwim
+
+Dialog = Dialog1 or Dialog2 or Dialog3 or Dialog4 or Dialog5 or Dialog6 or Dialog7
+
+Story = Story1 or Story2 or Story3 or Story4 or Story5 or Story6 or Story7 or Story8 or Story9
+
+1 = Story1 and Intro and Soil and StartGame
+2 = Story2 and Intro and Soil and StartGame
+3 = Story3 and Intro and Soil and StartGame
+4 = Story4 and Intro and Soil and StartGame
+5 = Story5 and Intro and Soil and StartGame
+6 = Story6 and Intro and Soil and StartGame
+7 = Story7 and Intro and Soil and StartGame
+8 = Story8 and Intro and Soil and StartGame
+9 = Story9 and Intro and Soil and StartGame
+
+C = Conclu and Soil and StartGame
+
+Plot = Intro or Conclu
+Talks = Talk or TalkNervous or TalkSword or TalkWin
+
+DialogMarkers = Dialog or Plot
+
+(Master control)
+(---------------------------------------------------)
+
+» = AllowAnimation
+@ = InCurrentMap
+
+Allowances = AllowMove or AllowAnimation
+
+GameControl = RestartLevel or WinGame
+
+
+WarpReferences = Warp1 or Warp2 or Warp3 or Warp4 or Warp5 or Warp6 or Warp7 or Warp8 or Warp9
+
+Warps = WarpDepart or WarpArrive
+WarpDir = WarpHoriz or WarpVerti
+
+
+\ = MapBoundaryCorner and Wall and StartGame and MapBoundary (level boundary)
+
+
+TiaraCounters = T0 or T1 or T2 or T3 or T4 or T5 or T6 or T7
+TiaraBrokenCounters = TB0 or TB1 or TB2 or TB3 or TB4 or TB5 or TB6 or TB7
+
+TC = TiaraCounters
+TBC = TiaraBrokenCounters
+
+FakeWall = WinWall or RestartWall
+
+Savings = Save or Saved
+
+(Pathfinding)
+(---------------------------------------------------)
+
+Path = EscapePath or SeekPath
+! = Unsafe
+
+ClearRoute= Once or Path or Seeking or S or _
+
+BarrierPass = Item or Flame or Warps
+BarrierWolfTerritory = BarrierPass or SeekPath
+BarrierWolfPrinTerritory = BarrierWolfTerritory or EscapePath or Trapped
+
+BarrierPassThroughPrin = Wolf or Player or UnPushable or Pushable or Flame or Warps
+
+BarrierWolfSeek = Wolf or UnPushable or Pushable or Flame or Warps
+
+BarrierWolfEscape = Wolf or UnPushable or Pushable or Danger or Warps
+BarrierPrin = Human or UnPushable or Flame or Warps
+
+
+SwipeBlockExPrin = Player or UnPushable or Unbreakable
+SwipeBlock = Human or UnPushable or Pushable
+
+Target = FollowTarget or EscapeTarget or DefendTarget    (where to?)
+
+
+=======
+SOUNDS
+=======
+
+================
+COLLISIONLAYERS
+================
+Background
+
+Soil
+SoilOver
+
+Water
+AnimWater
+WLXU
+WLXD
+WRXU
+WRXD
+
+SLXU
+SLXD
+SRXU
+SRXD
+
+WSplash
+AnimCrate
+Reverse
+
+Seed
+
+Floater
+
+Storage
+Pickable
+StoragePicker
+StoragePickerPrin
+AnimPickable
+
+Dress
+WolfTail
+
+Item
+Types
+
+WallOver
+SwordSwipe
+
+CrateDestroy,CrateDestroy2
+Overs
+
+Flame
+OverFlame1
+OverFlame2
+OverFlame3
+
+
+FixedL
+FixedU
+FixedR
+FixedD
+
+GameControl
+EndGame
+
+
+Once
+Last
+Mark
+
+WolfSleep
+WolfWake
+
+Seeing
+Seeking
+SafeFloor
+Try
+
+EscapePath
+SeekPath
+
+TrappedBefore
+TrapFree
+TrapBlock
+Trapped
+
+EscapeTarget
+DefendTarget
+FollowTarget
+
+Defended
+Unsafe
+
+Bitten
+
+Swiper
+Threat
+Warnings
+
+TiaraHandling
+
+Talks
+Read
+Plot
+Story
+Dialog
+
+LastMoveDirection
+AllowMove
+AllowAnimation
+
+TickTime, TickPlayer
+
+MapBoundaryCorner
+MapBoundary
+InCurrentMap
+
+WarpReferences
+Warps
+WarpPicker
+WarpDir
+
+Beckon
+Savings
+Escaping
+
+TiaraCounters, TiaraBrokenCounters
+PlusOne
+
+FakeWallStor
+FakeWall
+TalkWall, SaveWall
+
+StartGame
+======
+RULES
+======
+
+
+(Map Warping)
+(---------------------------------------------------)
+(---------------------------------------------------)
+
+(initialise Warps at marked spots)
+(---------------------------------------------------)
+[Warps]->[Warps _]
+[Story1|_]->[Warp1 _ no DialogMarkers| _]
+[Story2|_]->[Warp2 _ no DialogMarkers| _]
+[Story3|_]->[Warp3 _ no DialogMarkers| _]
+[Story4|_]->[Warp4 _ no DialogMarkers| _]
+[Story5|_]->[Warp5 _ no DialogMarkers| _]
+[Story6|_]->[Warp6 _ no DialogMarkers| _]
+[Story7|_]->[Warp7 _ no DialogMarkers| _]
+[Story8|_]->[Warp8 _ no DialogMarkers| _]
+[Story9|_]->[Warp9 _ no DialogMarkers| _]
+[Warps |_ no Warps]->[Warps| _ Warps]
+
+[WarpReferences|_ no WarpReferences]->[WarpReferences |_ WarpReferences]
+[_]->[]
+
+(synchronise Warping areas of variable geometry)
+(---------------------------------------------------)
+[WarpPicker]->[]
+[Warpable]->[Warpable _]
+[Warp1 _][Warp1]->[Warp1 _][Warp1 WarpPicker]
+[Warp2 _][Warp2]->[Warp2 _][Warp2 WarpPicker]
+[Warp3 _][Warp3]->[Warp3 _][Warp3 WarpPicker]
+[Warp4 _][Warp4]->[Warp4 _][Warp4 WarpPicker]
+[Warp5 _][Warp5]->[Warp5 _][Warp5 WarpPicker]
+[Warp6 _][Warp6]->[Warp6 _][Warp6 WarpPicker]
+[Warp7 _][Warp7]->[Warp7 _][Warp7 WarpPicker]
+[Warp8 _][Warp8]->[Warp8 _][Warp8 WarpPicker]
+[Warp9 _][Warp9]->[Warp9 _][Warp9 WarpPicker]
+[_]->[]
+down [WarpPicker|WarpPicker]->[|WarpPicker]
+right[WarpPicker|WarpPicker]->[|WarpPicker]
+
+random [WarpPicker]->[WarpPicker Once]
+
+startloop
+[WarpPicker Warpable][Once]->[WarpPicker Warpable][]
+
+up   [WarpPicker no try|Warps][Once]->[|WarpPicker Try Warps][Once]
+up   [WarpPicker no try|Warps][Once]->[|WarpPicker Try Warps][Once]
+
+left [WarpPicker no try|Warps][Once]->[|WarpPicker Try Warps][Once]
+left [WarpPicker no try|Warps][Once]->[|WarpPicker Try Warps][Once]
+
+[Try]->[]
+endloop
+[Once]->[]
+
+
+(Warp Warpables around the map)
+(---------------------------------------------------)
+[NextTiara @][Princess|Player Warps]->[NextTiara @][> Princess| Player Warps]
+
+(Warp everything else)
+
+[moving Human Warps]->[stationary Human Warps]
+
+horizontal [WarpDepart|WarpDepart]->[WarpDepart WarpHoriz|WarpDepart WarpHoriz]
+vertical   [WarpDepart|WarpDepart]->[WarpDepart WarpVerti|WarpDepart WarpVerti]
+horizontal [WarpArrive|WarpArrive]->[WarpArrive WarpHoriz|WarpArrive WarpHoriz]
+vertical   [WarpArrive|WarpArrive]->[WarpArrive WarpVerti|WarpArrive WarpVerti]
+
+[stationary Warpable WarpDepart WarpPicker WarpHoriz][WarpPicker no Warpable WarpArrive WarpHoriz]->[WarpDepart WarpPicker WarpHoriz][WarpPicker up   Warpable WarpArrive WarpHoriz]
+[stationary Warpable WarpArrive WarpPicker WarpHoriz][WarpPicker no Warpable WarpDepart WarpHoriz]->[WarpArrive WarpPicker WarpHoriz][WarpPicker down Warpable WarpDepart WarpHoriz]
+
+[stationary Warpable WarpDepart WarpPicker WarpVerti][WarpPicker no Warpable WarpArrive WarpVerti]->[WarpDepart WarpPicker WarpVerti][WarpPicker right Warpable WarpArrive WarpVerti]
+[stationary Warpable WarpArrive WarpPicker WarpVerti][WarpPicker no Warpable WarpDepart WarpVerti]->[WarpArrive WarpPicker WarpVerti][WarpPicker left  Warpable WarpDepart WarpVerti]
+
+
+[> Princess Warps|Player no Warps]->[> Princess Warps|> Player] (princess leaves warps)
+
+
+(Master Control)
+(---------------------------------------------------)
+(---------------------------------------------------)
+[MapBoundaryCorner StartGame|...| no MapBoundary StartGame]->[MapBoundaryCorner StartGame|...| MapBoundary StartGame]
+
+(Level Map Boundary)
+(---------------------------------------------------)
+(picker area colour)
+[Storage|#]->[Storage|# FakeWallStor]
+horizontal [FakeWallStor|#]->[FakeWallStor|# FakeWallStor]
+
+(mark area in current level)
+[@]->[]
+[Player]->[Player @]
+[@|no @ no MapBoundary]->[@|@] (FakeWallStor)
+
+
+(Character movement control)
+(---------------------------------------------------)
+[AllowMove]->[]
+
+[stationary Player]["]->[stationary Player][']
+[moving     Player]["]->[moving     Player][']
+
+[moving     Player][']->[moving     Player]["]
+[action     Player][']->[action     Player]["]
+
+["][Character]->["][AllowMove Character]
+
+(Animation control)
+(---------------------------------------------------)
+[»]->[]
+['][@] -> ['][@ »]
+
+(Freeze all when restarting or winning)
+(---------------------------------------------------)
+[GameControl][Allowances]->[GameControl][]
+
+
+(Register last player move direction)
+(---------------------------------------------------)
+[LastMoveDirection no Character]->[]
+left [left  Player]->[left  Player left  ML]
+up   [up    Player]->[up    Player up    MU]
+right[right Player]->[right Player right MR]
+down [down  Player]->[down  Player down  MD]
+
+(Player Sword Swipe on action)
+(---------------------------------------------------)
+[SwordSwipe]->[]
+left  [action Player Swiper ML|no SwipeBlockExPrin]->[action Player ML|SwordSwipeL]
+up    [action Player Swiper MU|no SwipeBlockExPrin]->[action Player MU|SwordSwipeU]
+right [action Player Swiper MR|no SwipeBlockExPrin]->[action Player MR|SwordSwipeR]
+down  [action Player Swiper MD|no SwipeBlockExPrin]->[action Player MD|SwordSwipeD]
+
+
+
+(Pickable Storage)
+(---------------------------------------------------)
+(---------------------------------------------------)
+
+(Place Picker at first available position)
+[Storage|no Storage no Wall]->[Storage|Storage]
+
+[StoragePicker]->[]
+[Storage]->[Storage StoragePicker]
+
+down [StoragePicker|StoragePicker]->[|StoragePicker]
+right[StoragePicker|StoragePicker]->[|StoragePicker]
+up   [StoragePicker|Storage no Pickable]->[|StoragePicker Storage]
+left [StoragePicker|Storage no Pickable]->[|StoragePicker Storage]
+
+(Player Picks Special Items)
+[Player Ring][StoragePlay StoragePicker no Pickable]->[Player Ring][StoragePlay  Ring] message "A beautiful ring!"
+[Player Sword][StoragePlay StoragePicker no Pickable][Story6 Read @]->[Player Sword TalkSword][StoragePlay StoragePicker Sword][Story6 Dialog1 Read @]
+
+(Player Picks)
+[Player Pickable][StoragePlay StoragePicker no Pickable]->[Player Pickable][StoragePlay  Pickable]
+[Player Pickable]->[Player]
+
+(Princess Picks, Tiara is special)
+[Princess Tiaras][StoragePrin StoragePicker no Pickable]->[Princess Tiaras][StoragePrin  Tiaras Found]
+[Princess Pickable][StoragePrin StoragePicker no Pickable]->[Princess Pickable][StoragePrin  Pickable]
+
+[Princess Pickable]->[Princess]
+
+(reduce to one mark)
+random[Found]->[Found _]
+[Found no _]->[]
+[_]->[]
+
+
+(colour princess picker differently)
+[StoragePickerPrin]->[]
+[StoragePicker StoragePrin]->[StoragePicker StoragePickerPrin StoragePrin]
+
+
+(Place Pickables at the leftmost spot)
+right [Storage no Pickable|Storage Pickable]->[Storage Pickable|Storage ]
+
+
+(Hand Tiaras to Princess)
+(---------------------------------------------------)
+[StoragePlay Tiaras no Given][StoragePrin StoragePicker no Pickable][Player|Princess]->[StoragePlay Tiaras Given][StoragePrin Tiaras Given][Player|Princess]
+[StoragePlay Tiaras Given]->[StoragePlay]
+
+(reduce to one mark)
+random[Given]->[Given _]
+[Given no _]->[]
+[_]->[]
+
+(TiaraCounter)
+(---------------------------------------------------)
+([Tiaras +][Tiaras +]->[Tiaras +][Tiaras])
+
+[Tiara       +][TiaraCounters]->      [Tiara      ][TiaraCounters +]
+[TiaraBroken +][TiaraBrokenCounters]->[TiaraBroken][TiaraBrokenCounters +]
+
+[TiaraCounters no +][TiaraBrokenCounters +]->[TiaraCounters +][TiaraBrokenCounters +]
+
+[T0 +]->[T1]
+[T1 +]->[T2]
+[T2 +]->[T3]
+[T3 +]->[T4]
+[T4 +]->[T5]
+[T5 +]->[T6]
+[T6 +][Player][Princess @]->[T7][Player][Princess WinGame @]
+
+[TB0 +]->[TB1]
+[TB1 +]->[TB2]
+[TB2 +]->[TB3]
+[TB3 +]->[TB4]
+[TB4 +]->[TB5]
+[TB5 +]->[TB6]
+[TB6 +]->[TB7]
+
+(Princess Dialogue)
+(---------------------------------------------------)
+(---------------------------------------------------)
+
+(Dialogue - Retrieving Tiara)
+(---------------------------------------------------)
+[Unsafe no Princess @][Princess no Unsafe @]->[][Princess Unsafe @]
+
+[StoragePrin Tiara       Found][Princess no Unsafe @]->[StoragePrin Tiara       +][NextTiara @ Princess] message Found my precious Tiara!
+[StoragePrin TiaraBroken Found][Princess no Unsafe @]->[StoragePrin TiaraBroken +][NextTiara @ Princess] message It's a disgrace! Torn to pieces...
+
+[StoragePrin Tiara       Found][Princess    Unsafe @]->[StoragePrin Tiara       UnsafelyFound][Princess Unsafe @] message Got my Tiara, but the wolf is chasing me!
+[StoragePrin TiaraBroken Found][Princess    Unsafe @]->[StoragePrin TiaraBroken UnsafelyFound][Princess Unsafe @] message My Tiara may be in pieces... but I won't!
+
+[StoragePrin Tiara       Given][Princess no Unsafe @]->[StoragePrin Tiara       +][NextTiara @ Princess] message You found my Tiara! Thank you!
+[StoragePrin TiaraBroken Given][Princess no Unsafe @]->[StoragePrin TiaraBroken +][NextTiara @ Princess] message You found my Tiara... smashed?! Better than nothing.
+
+[StoragePrin Tiara       Given][Princess    Unsafe @]->[StoragePrin Tiara       UnsafelyGiven][Princess Unsafe @] message Forget the perfect Tiara, wolves are chasing us!
+[StoragePrin TiaraBroken Given][Princess    Unsafe @]->[StoragePrin TiaraBroken UnsafelyGiven][Princess Unsafe @] message Since you failed to protect the Tiara could you at least protect me from the wolves?
+
+
+
+[Princess no Unsafe @][StoragePrin Tiara       UnsafelyGiven]->[NextTiara Princess @][StoragePrin Tiara       +] message Now we're safe... aren't we?
+[Princess no Unsafe @][StoragePrin Tiara       UnsafelyFound]->[NextTiara Princess @][StoragePrin Tiara       +] message Now we're safe... aren't we?
+
+[Princess no Unsafe @][StoragePrin TiaraBroken UnsafelyGiven]->[NextTiara Princess @][StoragePrin TiaraBroken +] message Finaly, we're all safe. Except my  broken Tiara...
+[Princess no Unsafe @][StoragePrin TiaraBroken UnsafelyFound]->[NextTiara Princess @][StoragePrin TiaraBroken +] message Finaly, we're all safe. Except my  broken Tiara...
+
+
+(Dialogue - Retrieving Sword)
+(---------------------------------------------------)
+
+[TalkSword]->[TalkSword Once]
+
+[TalkSword Once][Story6 Read Dialog1 @]->[TalkSword][Story6 Read Dialog2 @] message You found my father's stashed sword!
+[TalkSword Once][Story6 Read Dialog2 @]->[TalkSword][Story6 Read Dialog3 @] message Wolves won't dare biting a swordholder.
+[TalkSword Once][Story6 Read Dialog3 @]->[TalkSword][Story6 Read Dialog4 @] message Wait... have you never held a sword before?
+[TalkSword Once][Story6 Read Dialog3 @]->[TalkSword][Story6 Read Dialog4 @] message You can practise with those crates.
+[TalkSword Once][Story6 Read Dialog4 @]->[][Story6 Read Dialog1 @] message Just let your in-x-tinct guide you!
+
+[Once]->[]
+
+(Warnings)
+(---------------------------------------------------)
+[WarnSwim]->[] message This is no time for a swim!
+[WarnBurn]->[] message Hot! Hot! Ouch!
+
+
+(Story Progress)
+(---------------------------------------------------)
+[Conclu | Story @]->[Conclu |Conclu Story @]
+[Plot no Story]->[]
+
+[Human Story Intro  no Read @][Princess @]->[Human Read Story Intro  Dialog1 @][Princess @]
+[Human Story Conclu no Read @][NextTiara @][Princess @]->[Human Read Story Conclu Dialog1 @][NextTiara @][Princess @]
+
+
+[Story Read Intro  @][Story no Read Intro  @]->[Story Read Intro  @][]
+[Story Read Conclu @][Story no Read Conclu @]->[Story Read Conclu @][]
+
+(Dialogue - Tiara counting after ended level)
+(---------------------------------------------------)
+[Talk][Princess @][NextTiara @][T1]->[][Princess @][NextTiara @][T1] message Only six more to go!
+[Talk][Princess @][NextTiara @][T2]->[][Princess @][NextTiara @][T2] message Still five Tiaras remaining!
+[Talk][Princess @][NextTiara @][T3]->[][Princess @][NextTiara @][T3] message Four Tiaras yet to be found!
+[Talk][Princess @][NextTiara @][T4]->[][Princess @][NextTiara @][T4] message Three last Tiaras to discover!
+[Talk][Princess @][NextTiara @][T5]->[][Princess @][NextTiara @][T5] message Just two more Tiaras and I'll be happy!
+[Talk][Princess @][NextTiara @][T6]->[][Princess @][NextTiara @][T6] message Let's get the final Tiara. I can't wait!
+[Talk][Princess @][NextTiara @][T7]->[][Princess @][NextTiara @][T7] message Finally, we've gathered all Tiaras!!
+
+(CHALENGE GOES HERE)
+
+(Dialogue - Main Story)
+(---------------------------------------------------)
+[Talk]->[Talk Once]
+
+[Talk Once][Story1 @ Read Dialog1]->[Talk][Story1 @ Read Dialog2] message Oh? Is my Tiara across the river?
+[Talk Once][Story1 @ Read Dialog2]->[][Story1 @ Read ] message Will you fetch it for me?
+
+
+[Talk Once][Story2 @ Read Dialog1]->[Talk][Story2 @ Read Dialog2] message This trail of empty crates and scattered treasure was left behind...
+[Talk Once][Story2 @ Read Dialog2]->[Talk][Story2 @ Read Dialog3] message ... by bandits who sneaked into our palace under the cover of the night.
+[Talk Once][Story2 @ Read Dialog3]->[Talk][Story2 @ Read Dialog4] message They subdued my guards and locked us in the tower...
+[Talk Once][Story2 @ Read Dialog4]->[Talk][Story2 @ Read Dialog5] message ... started packing and removing our assets,...
+[Talk Once][Story2 @ Read Dialog5]->[Talk][Story2 @ Read Dialog6] message ... when my father, the King, arrived earlier from an overseas expedition.
+[Talk Once][Story2 @ Read Dialog6]->[][Story2 @ Read ] message He was so irate even I was scared!
+
+
+[Talk Once][Story3 @ Read Dialog1]->[Talk][Story3 @ Read Dialog2] message Those burglars even dared to use our own torches...
+[Talk Once][Story3 @ Read Dialog2]->[Talk][Story3 @ Read Dialog3] message ...to illuminate their traffic across the river...
+[Talk Once][Story3 @ Read Dialog3]->[Talk][Story3 @ Read Dialog4] message ... which they hastily abandoned, chased by our troops.
+[Talk Once][Story3 @ Read Dialog4]->[Talk][Story3 @ Read Dialog5] message The cowards disbanded as soon as they saw a glimpse of my father's sword!
+[Talk Once][Story3 @ Read Dialog5]->[][Story3 @ Read ] message You too, should be brave like my father!
+
+
+[Talk Once][Story4 @ Read Dialog1]->[Talk][Story4 @ Read Dialog2] message The thieves intended to sell our treasure to the neighboring kings...
+[Talk Once][Story4 @ Read Dialog2]->[Talk][Story4 @ Read Dialog3] message ... who always envied the rich bounties of our expeditions.
+[Talk Once][Story4 @ Read Dialog3]->[Talk][Story4 @ Read Dialog4] message I could see that in their eyes at our exuberant palace parties.
+[Talk Once][Story4 @ Read Dialog4]->[Talk][Story4 @ Read Dialog5] message So I suspect they helped finance the whole shipping operation:
+[Talk Once][Story4 @ Read Dialog5]->[Talk][Story4 @ Read Dialog6] message ... dozens of boats crammed on this temporary floating platform.
+[Talk Once][Story4 @ Read Dialog6]->[][Story4 @ Read ] message "Never trust other Kings!" - my father said.
+[Talk Once][Story4 @ Read]->[][Story4 @ Read ] message I trusted you because you're not a King. Go on!
+
+
+[TalkNervous Once][Story5 @ Read Dialog1]->[TalkNervous][Story5 @ Read Dialog2] message I'm afraid wolves will attack us unless we do something clever.
+[TalkNervous Once][Story5 @ Read Dialog2]->[TalkNervous][Story5 @ Read Dialog3] message Don't ask me what, you are the hero!
+[TalkNervous Once][Story5 @ Read Dialog3]->[][Story5 @ Read ] message Do something!
+
+[Talk Once][Story5 @ Read Dialog1]->[Talk][Story5 @ Read Dialog2] message Not all mercenaries came by boat...
+[Talk Once][Story5 @ Read Dialog2]->[Talk][Story5 @ Read Dialog3] message ... and many were left by their fleeing peers in this dense forest.
+[Talk Once][Story5 @ Read Dialog3]->[Talk][Story5 @ Read Dialog4] message Obviously they didn't carry their cargo far deep into the woods...
+[Talk Once][Story5 @ Read Dialog4]->[Talk][Story5 @ Read Dialog5] message ... and the little they carried would have been dropped under a wolf attack.
+[Talk Once][Story5 @ Read Dialog5]->[][Story5 @ Read] message Let us hope they left behind any Tiara!
+
+
+[TalkNervous Once][Story6 @ Read Dialog1]->[TalkNervous][Story6 @ Read Dialog2] message Wolves are chasing us again!
+[TalkNervous Once][Story6 @ Read Dialog2]->[][Story6 @ Read] message Get rid of them!
+
+
+[Talk Once][Story6 @ Read Dialog1]->[Talk][Story6 @ Read Dialog2] message From an early age, my father taught me how to use his sword...
+[Talk Once][Story6 @ Read Dialog2]->[Talk][Story6 @ Read Dialog3] message ... so I could defend myself when he was away.
+[Talk Once][Story6 @ Read Dialog3]->[Talk][Story6 @ Read Dialog4] message That night, after scaring away the crooks,...
+[Talk Once][Story6 @ Read Dialog4]->[Talk][Story6 @ Read Dialog5] message ... he was so displeased to see me and the guards subdued...
+[Talk Once][Story6 @ Read Dialog5]->[Talk][Story6 @ Read Dialog6] message ... that he sent me on a quest to recover the seven Tiaras...
+[Talk Once][Story6 @ Read Dialog6]->[Talk][Story6 @ Read Dialog7] message ... which had belonged to our dinasty for generations.
+[Talk Once][Story6 @ Read Dialog7]->[][Story6 @ Read] message Then he forbade everyone in the Kingdom from helping me!
+[Talk Once][Story6 @ Read]->[][Story6 @ Read] message So lucky to have found a foreigner like you!
+
+
+[TalkNervous Once][Story7 @ Read Dialog1]->[TalkNervous][Story7 @ Read Dialog2] message I can't bear any more wolves!
+[TalkNervous Once][Story7 @ Read Dialog2]->[TalkNervous][Story7 @ Read Dialog3] message It doesn't matter that you've got a sword, I am unarmed...
+[TalkNervous Once][Story7 @ Read Dialog2]->[][Story7 @ Read ] message ... and will burn this bridge if I have to!
+
+[Talk Once][Story7 @ Read Dialog1]->[Talk][Story7 @ Read Dialog2] message I'll never become a Queen...
+[Talk Once][Story7 @ Read Dialog2]->[Talk][Story7 @ Read Dialog3] message ... unless I can complete this Quest.
+[Talk Once][Story7 @ Read Dialog3]->[Talk][Story7 @ Read Dialog4] message My father threatened to abdicate...
+[Talk Once][Story7 @ Read Dialog4]->[Talk][Story7 @ Read Dialog5] message ... in favour of an elected government!
+[Talk Once][Story7 @ Read Dialog5]->[][Story7 @ Read ] message Don't you even pretend to entertain the idea!
+
+
+(Dialogue - Default)
+(---------------------------------------------------)
+[Talk Once]->[] message (sigh) Please!
+[Once]->[]
+
+(Dialogue - Nervous, fearing wolves)
+(---------------------------------------------------)
+[TalkNervous][StoragePrin Sword]->[][StoragePrin Sword] message I'll manage the sword, you use your head!
+
+[TalkNervous]->[] message What kind of hero are you? Protect me!
+
+
+(Dialogue - win game)
+(---------------------------------------------------)
+
+[TalkWin]->[TalkWin Once]
+
+[TalkWin Dialog1 Once]->[TalkWin Dialog2] message Our quest is over! We recovered...
+
+[TalkWin Dialog2 Once][TB0]->[TalkWin Dialog3][] message ~ ~ ~ Intact Tiaras: 7 of 7 ~ ~ ~    ~ Perfect! ~
+[TalkWin Dialog2 Once][TB1]->[TalkWin Dialog3][] message ~ ~ ~ Intact Tiaras: 6 of 7 ~ ~ ~    ~ Excellent! ~
+[TalkWin Dialog2 Once][TB2]->[TalkWin Dialog3][] message ~ ~ ~ Intact Tiaras: 5 of 7 ~ ~ ~    ~ Impressive! ~
+[TalkWin Dialog2 Once][TB3]->[TalkWin Dialog3][] message ~ ~ ~ Intact Tiaras: 4 of 7 ~ ~ ~    ~ Great! ~
+[TalkWin Dialog2 Once][TB4]->[TalkWin Dialog3][] message ~ ~ ~ Intact Tiaras: 3 of 7 ~ ~ ~    ~ Nice!
+[TalkWin Dialog2 Once][TB5]->[TalkWin Dialog3][] message ~ ~ ~ Intact Tiaras: 2 of 7 ~ ~ ~    ~ Not bad! ~
+[TalkWin Dialog2 Once][TB6]->[TalkWin Dialog3][] message ~ ~ ~ Intact Tiaras: 1 of 7 ~ ~ ~    ~ Good effort! ~
+[TalkWin Dialog2 Once][TB7]->[TalkWin Dialog3][] message ~ ~ ~ Intact Tiaras: 0 of 7 ~ ~ ~    ~ Actually not that easy! ~
+
+[TalkWin Dialog3 Once]->[TalkWin Dialog4] message Let's return to the palace!
+
+[TalkWin Dialog4 Once][Ring StoragePlay]->[TalkWin Dialog5][Ring StoragePlay] message What? A special gift for me?
+[TalkWin Dialog5 Once]->[TalkWin Dialog6] message Oh! Such a magnificient ring!
+[TalkWin Dialog6 Once]->[TalkWin Dialog7] message My father will absolutely approve of us...
+
+[TalkWin Dialog4 Once]->[TalkWin Dialog7] message My father will reward your bravery ...
+
+[TalkWin Dialog7 Once]->[EndGame] message ... and our sucess story shall be sung forever in our Kingdom. We'll name it the legend of...
+
+[Once]->[]
+
+
+(Talk to Princess - activate)
+(---------------------------------------------------)
+[> Player|Princess]->[Player |Princess Talk]
+[Talk][Princess Unsafe @]->[TalkNervous][Princess Unsafe @]
+
+(smoother dialogue presentation)
+[TalkWall]->[]
+late [Talks][]->[Talks][TalkWall]
+
+(Dialogue - Sword Swipe against Princess)
+(---------------------------------------------------)
+[SwordSwipe Princess][SwordWarn2][Sword StoragePlay][StoragePrin StoragePicker no Pickable]->[SwordSwipe Princess][SwordWarn2][Sword StoragePlay][StoragePrin StoragePicker Sword]
+
+[SwordSwipe Princess][SwordWarn2][Sword StoragePlay]->[SwordSwipe Princess][SwordWarn2][StoragePlay]
+
+[SwordSwipe Princess][SwordWarn2]->[Princess][] message Hand me your sword now. It is too dangerous for you.
+
+
+[SwordSwipe Princess][SwordWarn1]->[Princess][SwordWarn2] message Be careful with your sword! Last warning.
+[SwordSwipe Princess no Warnings]->[Princess SwordWarn1] message Hey! You almost cut my expensive dress with your clumsy swordmanship!
+
+
+(Dialogue - Level introductions and conclusions, on stepping particular positions)
+(---------------------------------------------------)
+[Intro  Read @]->[Intro  Read @ Once]
+[Conclu Read @]->[Conclu Read @ Once]
+
+
+[Story1 Read Dialog1 Conclu @ Once]->[Story1 Read Dialog2 Conclu @] message Wait! Maybe you could help me...
+[Story1 Read Dialog2 Conclu @ Once]->[Story1 Read Dialog1 @] message ... recover the others?
+
+
+[Story2 Read Dialog1 Intro @ Once]->[Story2 Read Dialog1 @] message Let's cross the river. You go first!
+
+
+[Story3 Read Dialog1 Intro @ Once]->[Story3 Read Dialog2 Intro @] message Look there! A stolen torch, still burning.
+[Story3 Read Dialog2 Intro @ Once]->[Story3 Read Dialog1 @] message Don't let it too close to the trees, you may start a fire.
+
+
+[Story4 Read Dialog1 Intro @ Once]->[Story4 Read Dialog2 Intro @] message A dangerous crate bridge...
+[Story4 Read Dialog2 Intro @ Once]->[Story4 Read Dialog3 Intro @] message ... and a rather heavy boulder?
+[Story4 Read Dialog3 Intro @ Once]->[Story4 Read Dialog1 @] message You go ahead! I'll stay and coordinate.
+
+
+[Story4 Read Dialog1 Conclu @ Once]->[Story4 Read Dialog2 Conclu @] message Finally, we've crossed the river!
+[Story4 Read Dialog2 Conclu @ Once]->[Story4 Read Dialog1 @] message Now we must venture deep into the forest to reach the kingdom's frontier.
+
+
+[Story5 Read Dialog1 Intro @ Once]->[Story5 Read Dialog2 Intro @] message Did you hear that howl?
+[Story5 Read Dialog2 Intro @ Once]->[Story5 Read Dialog1 @] message Wolves must not be far from us.
+
+
+[Story6 Read Dialog1 Intro @ Once]->[Story6 Read Dialog2 Intro @] message No, I'm not hiding!
+[Story6 Read Dialog2 Intro @ Once]->[Story6 Read Dialog1  @] message I'm looking for a sword my father stashed somewhere.
+
+
+
+[Story7 Read Dialog1 Intro @ Once]->[Story7 Read Dialog2 Intro @] message This is the last Tiara!
+[Story7 Read Dialog2 Intro @ Once]->[Story7 Read Dialog3 Intro @] message I'll stay here by this torch.
+[Story7 Read Dialog3 Intro @ Once]->[Story7 Read Dialog1 @] message Call me if you need help!
+
+[Once]->[]
+
+
+(Character Intentions)
+(---------------------------------------------------)
+(---------------------------------------------------)
+
+(Wake up Wolves - important for game performance)
+(---------------------------------------------------)
+(propagate awakeness in wolf group)
+[Story|WolfSleep no Story]->[Story|WolfSleep Story]
+[Story no WolfSleep|WolfSleep]->[|WolfSleep]
+
+(sleep when progress to next point in map, and reawaken)
+[WolfSleep WolfWake @]->[Wolf WolfR @]
+[Player Warps][Wolf  @]->[Player Warps][WolfSleep WolfWake no WolfType @]
+
+
+(wake up selected wolves)
+[WolfSleep Story5 @][Human Story5 @]->[WolfSleep WolfWake @][Human Story5 @]
+[WolfSleep Story6 @][Human Story6 @]->[WolfSleep WolfWake @][Human Story6 @]
+[WolfSleep Story7 @][Human Story7 @]->[WolfSleep WolfWake @][Human Story7 @]
+
+
+(Mark Swordholders)
+(---------------------------------------------------)
+[Swiper]->[]
+[StoragePrin Sword][Princess @]->[StoragePrin Sword][Swiper Princess  @]
+[StoragePlay Sword][Player  ]->[StoragePlay Sword][Swiper Player]
+
+
+
+(Princess fearing wolves: Part I - find longest escape route)
+(---------------------------------------------------)
+
+(initiate all paths starting: from Princess -;- from wolves -,- )
+[Wolf no , @]->[Wolf _ , @]
+[Wolf @][Princess no ; @]->[Wolf @][Princess _ ; @]
+
+(gradually discover safe territory)
+Startloop
+[_ , no Once @|Floor no BarrierWolfTerritory no Once @]->[_ , @|Floor _ , Once @] (wolf)
+[_ ; no Once @|Floor no BarrierWolfPrinTerritory no Once @]->[_ ; @|Floor _ ; Once @] (princess)
+[Once]->[]
+endloop
+[_ Path]->[Path]
+
+
+(mark characters as unsafe)
+[!]->[]
+[, |Human]->[, |Human !]
+
+(gradually exclude escape closest to wolves)
+[! Princess @][,]        ->[! Princess @][]
+[! Princess @][@ Wolf no ,]->[! Princess @][@ Wolf _ ,]
+
+[! Princess @][;]        ->[! Princess @][; Last] (leave when the last target is found)
+
+startloop
+[Last @][_ , no Once @|Floor no , no BarrierPassThroughPrin no Once @]->[Last @][_ , @|Floor _ , Once @]
+[Last @][EscapeTarget]->[Last @][]
+[Last @]->[EscapeTarget Last @]
+[, ; Last]->[,]
+[Once]->[]
+endloop
+
+[Path]->[]
+[_]->[]
+
+(Princess Following Player)
+(---------------------------------------------------)
+(to defend him with her equipped sword against wolves)
+[Sword StoragePrin][Princess @][Player ! no DefendTarget @]->[Sword StoragePrin][Princess @][Player ! DefendTarget @]
+
+
+[Sword StoragePrin][Princess @][Player no DefendTarget @][Wolf @][Defended @]->[Sword StoragePrin][Princess @][Player DefendTarget @][Wolf @][Defended @]
+
+[DefendTarget @]->[DefendTarget @ Defended]
+random [Defended no Princess]->[Defended _]
+[Defended no _]->[]
+[_]->[]
+
+(to go to next level(s) after retrieving a Tiara)
+[NextTiara @][Player]->[NextTiara @][Player FollowTarget]
+
+(Princess going to initial level spot, but after level concluded follow player)
+[NextTiara @][Beckon @]->[NextTiara @][@]
+[Beckon @]->[Beckon @ FollowTarget]
+
+(Target Priorities)
+[DefendTarget @][EscapeTarget @]->[DefendTarget @][@]
+[DefendTarget @][FollowTarget @]->[DefendTarget @][@]
+[EscapeTarget @][FollowTarget @]->[EscapeTarget @][@]
+
+
+(at level end, before Player escaping to new area)
+[> Player|Warps][StoragePlay Tiaras][Princess no Unsafe @]->[stationary Player Escaping|Warps][StoragePlay Tiaras][Princess @]
+
+[Escaping @][Beckon @]->[Escaping @][@]
+[Escaping @][FollowTarget @]->[Escaping @][@]
+[Escaping @][Player ][Princess @]->[Escaping @][Player FollowTarget][Princess @ AllowMove]
+
+[Player Warps][Escaping @]->[Player Warps][@]
+
+(at level beginning, move princess faster, independently of player)
+[Beckon @ FollowTarget][Princess @ no Beckon]->[Beckon @ FollowTarget][Princess @ AllowMove]
+
+
+(Save progress)
+(---------------------------------------------------)
+(Princess reaches save point)
+[Beckon Princess @ FollowTarget no Savings]->[Beckon Princess @ FollowTarget Save _]
+
+(lvl 4: save only after Lamp is there)
+[Save _][Story4 @]->[Save][Story4 @]
+[Save no _][Story4 @][Lamp @]->[Save _][Story4 @][Lamp @]
+
+(save game)
+[SaveWall]->[]
+[Save _]->[Save _ SaveWall]
+[SaveWall][no SaveWall]->[SaveWall][SaveWall]
+[Save _]->[Saved] checkpoint
+[_]->[]
+
+
+
+(Already reached)
+[Princess @ DefendTarget]->[Princess @]
+[Princess @ FollowTarget]->[Princess @]
+
+
+
+(Princess moving to targets)
+(---------------------------------------------------)
+[Trapped]->[]
+[TrapBlock]->[Trapped]
+[TrappedBefore]->[Trapped]
+[! Princess EscapeTarget @]->[! stationary Princess Trapped TrappedBefore @](when Princess reaches EscapeTarget she is Trapped)
+
+(set path possibilities)
+[Floor no BarrierPassThroughPrin @]->[Floor ; @]
+
+(build path from target)
+[Target @] -> [Target _ ; @]
+[Target Princess _ ; @]->[Princess @] (princess has arrived there)
+
+Startloop
+[ no _ ; no Once| _ ;  @] -> [_ > ; | _ ;  @]
+[> ; Princess][; no Once]->[> ; > Princess][Once] (stop on princess and attract her to target)
+endloop
+[ClearRoute]->[]
+
+
+(Warning - Player cannot leave without princess following)
+(---------------------------------------------------)
+[Player FollowTarget][Princess @]->[Player FollowTarget Once][Princess @]
+[Princess @|Player Once]->[Princess @| Player]
+[> Player Once| Warps][Princess @]->[Player |Warps][Princess @ AllowMove] message Wait for me please!
+[Once]->[]
+
+
+(Reset all targets)
+(---------------------------------------------------)
+[Target]->[]
+
+
+
+(Wolves chasing humans)
+(---------------------------------------------------)
+[Wolf @]      ->[Wolf @ Seeing] (leave when no wolf is seeing)
+
+startloop
+
+random [Wolf Seeing]->[Wolf Seeing Seeking]    (one wolf at the time)
+
+(mark possible paths)
+[Wolf Seeing Seeking][Floor no BarrierWolfSeek]->[Wolf Seeing Seeking][Floor ,]
+[Wolf Seeing Seeking no ,]->[Wolf Seeing Seeking ,] (through itself)
+
+(find path to seekables)
+[Wolf Seeing Seeking][Seekable no _] -> [Wolf Seeing Seeking][Seekable _ ,]
+[Wolf Seeing Seeking][ no _ , | _ , ] -> [Wolf Seeing Seeking][ _ > , | _ , ]
+[_]->[]
+
+(mark trapped princess)
+[Wolf Seeing Seeking][ > , no TrapBlock | , Princess Trapped ]->[Wolf Seeing Seeking][ > , TrapBlock | , Princess Trapped ]
+
+(move intent)
+[Wolf Seeing Seeking > ,]->[> Wolf]
+[,]->[]
+[Wolf Seeing Seeking]->[Wolf]
+
+endloop
+[Seeing]->[]
+[Seeking]->[]
+
+(Princess trapped, tries to escape-push in other directions)
+(---------------------------------------------------)
+[stationary Princess Trapped @ | Floor no Trapped @]->[> Princess Trapped Try @ |Floor @]
+[TrapFree]->[]
+[ Princess Trapped @ | Pushable no TrapFree @]->[Princess Trapped @ | Pushable TrapFree @]
+
+(Wolf flip)
+(---------------------------------------------------)
+[left  Wolf ]->[left  Wolf left ML]
+[right Wolf ]->[right Wolf right MR]
+
+
+(Swordholders instil respect)
+(---------------------------------------------------)
+[Threat]->[]
+[Swiper | no Threat]->[Swiper| Threat]
+[> Wolf | Threat]->[stationary Wolf |Threat]
+
+(Humans swipe sword instinctively against wolves)
+(---------------------------------------------------)
+left  [Swiper|no SwordSwipe Wolf]->[Swiper |SwordSwipeL Wolf]
+up    [Swiper|no SwordSwipe Wolf]->[Swiper |SwordSwipeU Wolf]
+right [Swiper|no SwordSwipe Wolf]->[Swiper |SwordSwipeR Wolf]
+down  [Swiper|no SwordSwipe Wolf]->[Swiper |SwordSwipeD Wolf]
+
+late left  [Swiper |no SwordSwipe no SwipeBlock| Wolf]->[Swiper |SwordSwipeL| Wolf]
+late up    [Swiper |no SwordSwipe no SwipeBlock| Wolf]->[Swiper |SwordSwipeU| Wolf]
+late right [Swiper |no SwordSwipe no SwipeBlock| Wolf]->[Swiper |SwordSwipeR| Wolf]
+late down  [Swiper |no SwordSwipe no SwipeBlock| Wolf]->[Swiper |SwordSwipeD| Wolf]
+
+(Move Characters only when allowed)
+(---------------------------------------------------)
+[moving Character no AllowMove]->[stationary Character]
+
+(Wolf fearing sword swipes)
+(---------------------------------------------------)
+[Wolf SwordSwipe]->[stationary Wolf SwordSwipe Try]
+[stationary Wolf SwordSwipeL]->[left  Wolf SwordSwipeL]
+[stationary Wolf SwordSwipeU]->[up    Wolf SwordSwipeU]
+[stationary Wolf SwordSwipeR]->[right Wolf SwordSwipeR]
+[stationary Wolf SwordSwipeD]->[down  Wolf SwordSwipeD]
+
+
+(Warning - Wolf biting)
+(---------------------------------------------------)
+[Princess no Bitten @|Wolf no SwordSwipe @]->[Princess Bitten RestartLevel @|Wolf RestartLevel @] message Bad wolf! Help! I'm fainting...
+[Player no Bitten|Wolf no SwordSwipe @]->[Player Bitten RestartLevel @|Wolf RestartLevel @] message Look out! Are you OK?
+
+
+(Prevent player swim)
+(---------------------------------------------------)
+[> Player | no Floor]->[Player |]
+
+
+
+(Moving / Collide / Transport loop)
+(---------------------------------------------------)
+(---------------------------------------------------)
+
+startloop
+
+(Push and Collision)
+(---------------------------------------------------)
+left  [left  Pusher | stationary Pushable no FixedL]->[left  Pusher|left  Pushable]
+up    [up    Pusher | stationary Pushable no FixedU]->[up    Pusher|up    Pushable]
+right [right Pusher | stationary Pushable no FixedR]->[right Pusher|right Pushable]
+down  [down  Pusher | stationary Pushable no FixedD]->[down  Pusher|down  Pushable]
+
+(Wolves can be pushed indirectly)
+(---------------------------------------------------)
+left  [left  Pushable | Wolf no FixedL]->[left  Pushable|left  Wolf]
+up    [up    Pushable | Wolf no FixedU]->[up    Pushable|up    Wolf]
+right [right Pushable | Wolf no FixedR]->[right Pushable|right Wolf]
+down  [down  Pushable | Wolf no FixedD]->[down  Pushable|down  Wolf]
+
+(Propagate flames on push)
+(---------------------------------------------------)
+left  [left  Flamer | stationary PushFlammmable]->[left  Flamer |stationary PushFlammmable Flame]
+up    [up    Flamer | stationary PushFlammmable]->[up    Flamer |stationary PushFlammmable Flame]
+right [right Flamer | stationary PushFlammmable]->[right Flamer |stationary PushFlammmable Flame]
+down  [down  Flamer | stationary PushFlammmable]->[down  Flamer |stationary PushFlammmable Flame]
+
+(Prevent unacomplished moves: Part 1)
+(---------------------------------------------------)
+left  [left  Pusher | stationary Item]->[left  Pusher FixedL|stationary Item]
+up    [up    Pusher | stationary Item]->[up    Pusher FixedU|stationary Item]
+right [right Pusher | stationary Item]->[right Pusher FixedR|stationary Item]
+down  [down  Pusher | stationary Item]->[down  Pusher FixedD|stationary Item]
+
+
+(Princess/Wolf Panic - try other directions)
+(---------------------------------------------------)
+[Wolf Try|Floor no BarrierWolfEscape no Safefloor]->[Wolf Try|Floor SafeFloor]
+[Princess Try|Floor no BarrierPrin no Safefloor TrapFree ]->[Princess Try|Floor SafeFloor TrapFree]
+
+left  [down  Fearful Try FixedD|SafeFloor]->[left  Fearful Try FixedD|SafeFloor]
+up    [left  Fearful Try FixedL|SafeFloor]->[up    Fearful Try FixedL|SafeFloor]
+right [up    Fearful Try FixedU|SafeFloor]->[right Fearful Try FixedU|SafeFloor]
+down  [right Fearful Try FixedR|SafeFloor]->[down  Fearful Try FixedR|SafeFloor]
+
+left  [up    Fearful Try FixedU|SafeFloor]->[left  Fearful Try FixedU|SafeFloor]
+up    [right Fearful Try FixedR|SafeFloor]->[up    Fearful Try FixedR|SafeFloor]
+right [down  Fearful Try FixedD|SafeFloor]->[right Fearful Try FixedD|SafeFloor]
+down  [left  Fearful Try FixedL|SafeFloor]->[down  Fearful Try FixedL|SafeFloor]
+
+
+[Fearful Try FixedL FixedU FixedR FixedD]->[Fearful FixedL FixedU FixedR FixedD]
+
+(Prevent unacomplished moves: Part 2)
+(---------------------------------------------------)
+left  [left  Pusher no Try FixedL]->[stationary Pusher FixedL ]
+up    [up    Pusher no Try FixedU]->[stationary Pusher FixedU ]
+right [right Pusher no Try FixedR]->[stationary Pusher FixedR ]
+down  [down  Pusher no Try FixedD]->[stationary Pusher FixedD ]
+
+endloop
+[Try]->[]
+[SafeFloor]->[]
+[Fixed]->[]
+
+
+
+(Item Interactions)
+(---------------------------------------------------)
+(---------------------------------------------------)
+
+(Pickables kicked by wolves)
+(---------------------------------------------------)
+[no Item|> Wolf stationary Pickable]->[|> Wolf < Pickable]
+
+
+(Crate destroy)
+(---------------------------------------------------)
+late [CrateDestroy2]->[]
+
+[CrateDestroy]->[CrateDestroy2]
+[Crate SwordSwipe]->[CrateDestroy SwordSwipe]
+
+
+(Displace properties with objects)
+(---------------------------------------------------)
+[> Flammmable stationary FlameAny]->[> Flammmable > FlameAny]
+([> Wolf WolfType]->[> Wolf > WolfType])
+
+(Stabilise last move direction)
+(---------------------------------------------------)
+[vertical Wolf LastMoveDirection]->[vertical Wolf vertical LastMoveDirection]
+
+[stationary Character moving LastMoveDirection]->[stationary Character stationary LastMoveDirection]
+
+(Flammables)
+(---------------------------------------------------)
+late [Flame Fla12 Flammmable]->[Flame Fla12]
+late [Flame ContactFlamer|Flammmable]->[Flame ContactFlamer|Flammmable Flame]
+
+late [TreeType no Tree]->[] (destroy trees)
+
+
+(Floatables)
+(---------------------------------------------------)
+late [WSplash]->[]
+late [Crate Water no Floater]->[CrateW Water WSplash]
+late [Player Water no Floater]->[ Water WSplash WarnSwim]
+late [Tiaras Water no Floater]->[ Water WSplash RestartLevel]
+late [Sinkable Water no Floater]->[ Water WSplash]
+
+
+late [CrateEmerging]->[CrateW]
+late [Boulder Water Floater]->[ Water WSplash CrateEmerging]
+
+late [Flame Water no Floater]->[ Water ]
+
+
+(Warning - Breaking the Tiara)
+(---------------------------------------------------)
+late [Tiara Pushable]->[TiaraBroken Pushable] message Ouch! Tiaras are so fragile!
+
+
+(Warning - Player cannot leave princess alone with wolf)
+(---------------------------------------------------)
+[> Player| Warps][Princess Unsafe @]->[Player|Warps][Princess Unsafe @] message Don't leave me alone with the wolf!
+
+
+
+(Animations and Decorations)
+(---------------------------------------------------)
+(---------------------------------------------------)
+
+(Initialisation - Main Elements)
+(---------------------------------------------------)
+[T]->[Tree random TreeType .]
+[# no WallOver]->[# random WallOver   ]
+[. no SoilOver]->[. random SoilOver   ]
+[~ no W       ]->[~ random W          ]
+
+(Initialisation - Water margins)
+(---------------------------------------------------)
+[. no WX]-> [. WLXU WLXD WRXU WRXD]
+left [WXL|.# StartGame]->[|.# StartGame]
+up   [WXU|.# StartGame]->[|.# StartGame]
+right[WXR|.# StartGame]->[|.# StartGame]
+down [WXD|.# StartGame]->[|.# StartGame]
+
+[~ no SX]-> [~ SLXU SLXD SRXU SRXD]
+left [SXL StartGame|W#]->[ StartGame|W#]
+up   [SXU StartGame|W#]->[ StartGame|W#]
+right[SXR StartGame|W#]->[ StartGame|W#]
+down [SXD StartGame|W#]->[ StartGame|W#]
+
+(Initialisation - End)
+(---------------------------------------------------)
+[StartGame]->[]
+
+
+(Princess and wolf)
+(---------------------------------------------------)
+[Dress]->[]
+late left [Princess|]->[Princess|DressL]
+late right[Princess|]->[Princess|DressR]
+
+late [Wolf MR @]->[Wolf WolfR MR]
+late [Wolf ML @]->[Wolf WolfL ML]
+late left [WolfR|]->[WolfR|WolfTailR]
+late right[WolfL|]->[WolfL|WolfTailL]
+
+late [Wolf no WolfType]->[Wolf WolfL]
+
+late [WolfType no Wolf]->[]
+late left [no WolfR|WolfTailR]->[|]
+late right[no WolfL|WolfTailL]->[|]
+
+
+(Flame)
+(---------------------------------------------------)
+   [no Flame  OverFlame1]->[]
+up [no Flame| OverFlame2]->[|]
+up [no Flame||OverFlame3]->[||]
+
+late [Flame no Flammmable]->[]
+
+late [Flame Fla11]->[Flame Fla12]
+late [Flame Fla10]->[Flame Fla11]
+late [Flame no OverFlame1]->[Flame Fla10]
+
+late up [Flame Fla12|]->[Flame Fla12|Fla22]
+late up [Flame Fla11|no OverFlame2]->[Flame Fla11|Fla21]
+
+late up [Flame Fla12|Fla22|no OverFlame3]->[Flame Fla12|Fla22|Fla32]
+
+(Flame burns)
+(---------------------------------------------------)
+late [Human Fla12]->[Fla12 WarnBurn]
+late [Wolf  Fla12]->[Fla12         ]
+
+
+(Perspective)
+(---------------------------------------------------)
+[Over1]->[]
+late up[Princess|no PrincessTop]->[Princess| PrincessTop]
+late up[Player|no PlayerTop]->[Player| PlayerTop]
+late up[Wall|no WallTop]->[Wall|random WallTop]
+late up[FakeWallStor|WallTop]->[FakeWallStor|no WallTop]
+late up[Crate|no Crate1]->[Crate|Crate1]
+late up[Boulder|no Boulder1]->[Boulder|Boulder1]
+late up[Tr|no Tr1]->[Tr|Tr1]
+late up[Tre|no Tre1]->[Tre|Tre1]
+late up[Treee|no Treee1]->[Treee|Treee1]
+late up[Treeee|no Treeee1]->[Treeee|Treeee1]
+late up[Treeeee|no Treeeee1]->[Treeeee|Treeeee1]
+
+
+(Animation: Pickables)
+(---------------------------------------------------)
+late [TiaraShine no Tiara]->[]
+late [SwordShine no Sword]->[]
+
+[» Tiara]->[» Tiara _]
+
+late [» Tiara _ no TiaraShine]-> [» Tiara TiaraShine]
+late [» Tiara _    TiaraShine]-> [» Tiara ]
+
+[» Sword]->[» Sword _]
+
+late [» Sword _ SwordShine9]-> [» Sword]
+late [» Sword _ SwordShine8]-> [» Sword SwordShine9]
+late [» Sword _ SwordShine7]-> [» Sword SwordShine8]
+late [» Sword _ SwordShine6]-> [» Sword SwordShine7]
+late [» Sword _ SwordShine5]-> [» Sword SwordShine6]
+late [» Sword _ SwordShine4]-> [» Sword SwordShine5]
+late [» Sword _ SwordShine3]-> [» Sword SwordShine4]
+late [» Sword _ SwordShine2]-> [» Sword SwordShine3]
+late [» Sword _ SwordShine1]-> [» Sword SwordShine2]
+late [» Sword _ no SwordShine]-> [» Sword SwordShine1]
+
+[_]-> []
+
+
+(Animation: Lamp: linear)
+(---------------------------------------------------)
+up [» Lamp|no »]->[» Lamp|»]
+
+late [» Lamp8 no _]->[» Lamp1 _]
+late [» Lamp7 no _]->[» Lamp8 _]
+late [» Lamp6 no _]->[» Lamp7 _]
+late [» Lamp5 no _]->[» Lamp6 _]
+late [» Lamp4 no _]->[» Lamp5 _]
+late [» Lamp3 no _]->[» Lamp4 _]
+late [» Lamp2 no _]->[» Lamp3 _]
+late [» Lamp1 no _]->[» Lamp2 _]
+late [_]->  []
+
+late up[Lamp|no Lamps1]->[Lamp| random Lamps1]
+late up[no Lamp|Lamps1]->[|]
+
+(Animation: floating crate: reverse)
+(---------------------------------------------------)
+[ CrateW no CW]->[ CrateW random CW]
+
+[» CrateW]->[» CrateW _]
+
+[» CW6 _ no CR]->[» CW6 CR]
+[» CW5 _ no CR]->[» CW6   ]
+[» CW4 _ no CR]->[» CW5   ]
+[» CW3 _ no CR]->[» CW4   ]
+[» CW2 _ no CR]->[» CW3   ]
+[» CW1 _ no CR]->[» CW2   ]
+
+[» CW6 _    CR]->[» CW5 CR]
+[» CW5 _    CR]->[» CW4 CR]
+[» CW4 _    CR]->[» CW3 CR]
+[» CW3 _    CR]->[» CW2 CR]
+[» CW2 _    CR]->[» CW1 CR]
+[» CW1 _    CR]->[» CW1   ]
+
+[_]->[]
+
+
+late [ CW Weight]->[ CWeight Weight]
+[» CWeight no Weight]->[» CW1]
+
+late [ CW no CrateW]->[]
+
+
+(Animation: water currents)
+(---------------------------------------------------)
+[» W]->[» W _]
+(execute water horizontal background change)
+[» W52 _]->[» W42]
+[» W42 _]->[» W32]
+[» W32 _]->[» W22]
+[» W22 _]->[» W12]
+[» W12 _]->[» W52]
+[_]->[]
+
+
+(Animation: Win/Restart level)
+(---------------------------------------------------)
+[GameControl @]->[GameControl _ @]
+
+[RestartLevel _ @|no RestartLevel ]->[RestartLevel _ @|RestartWall RestartLevel no _ ]
+[     WinGame _ @|no      WinGame ]->[     WinGame _ @|    WinWall      WinGame no _ ]
+
+[GameControl _ @]->[GameControl @]
+
+[GameControl no FakeWall no _ @]->[GameControl no FakeWall _ @]
+[GameControl no FakeWall _ @][no GameControl @]->[GameControl no FakeWall @][no GameControl @]
+
+
+[RestartLevel no FakeWall _ @]->restart
+[WinGame no FakeWall _ @][Player no TalkWin no Dialog]->[WinGame no FakeWall _ @][Player TalkWin Dialog1]
+
+[_]->[]
+
+(End game)
+(---------------------------------------------------)
+[EndGame][Talks]->[EndGame][]
+[EndGame][Dialog]->[EndGame][]
+late [EndGame][]->[EndGame][TalkWall]
+[EndGame]->win
+
+==============
+WINCONDITIONS
+==============
+
+=======
+LEVELS
+=======
+
+message My precious Tiara (sigh)...
+message ... forever lost!
+
+\######################\\######################\\######################\
+#....TT..#######..#TTTT##TTTTT........TTTT~~T..##......................#
+#.TTD...A..TTTZ....TT..X#TTT.T.TTTTTT.....õõ...##......................#
+#..TDTTTDDDTTT#TOT.T...6*...TT......T..TTTY~TT.##......................#
+#T....TT.O..TTT#O#.T...X6....TTTTTT.TT...#T~~~.##......................#
+#TTTT.T#T#T...TTO..T..T#*...TT......TTT#..TTT~.##......................#
+#TTT.....D.......#T..TT##TT....TTTT..TTT#...õ~.##......................#
+#6FF..T#T#T.#........TT##TTTTT.~~~~T.T.##.O..~Y##......................#
+#TYYTT~~~~~~T###TTTT..~##~~~~~5F~~~~A........~~##......................#
+#~~~~~~~~~~T~B......6.~##~~~~~~~~~~####555DD.~~##......................#
+#~~~~~~~~~~~.YTTTTTTT~~########~~~#..#B..5...~~##......................#
+#~~~~~~~~T...~~~~~~~~~~######~~~~#...###~~~~~~~##......................#
+#~~~...~~..T~~~~~~~########~~~~~##......~~~~~~~##......................#
+#~~~......~~~~~~~#########~~~~~~##.......~~~~~~##......................#
+####*7*###########################*5*############......................#
+#################################################......................#
+###========##--------######========##--------####......................#
+\######################\\######################\\######################\
+\7X7###################\\######################\\X5X###################\
+#...7.......#~~~~~~~~~~##~~~~~~~~~##TTT#####...X#...4C##~~~~~~~~~~~~~~~#
+#7777~~~õ~õõ~...~~~~~~~##~~TTTTTT~DTT#T.###....4#..44~~~~~~~~~TTTT~~~~~#
+#~..~BLTõõõ~O.F7~~~~~~~##~~.TTTT#.DATTT..###...X###~~~~~~##~~TTDATT~~~~#
+#~~...~~õ~~~D~~~~.7F~~~##~~.T..T..TY#T.#.####~~##44...~~.OO...~~D#T~~~~#
+#~~~~~~~õ~~~D~~~~.#.~~~##~~~~~~T~~~TTT...#..TOO#*.4...~~.~~~~~~TTTõ~~~~#
+#~~~~~~...~#D...~.T.~~~##~~...~~~~~~~~~#.DD.#..#4.4...~~...~~~..õõõõ~~~#
+#~...........#...O..~~~##~~.OOL~~#~~~~#..##.#.~#*.4...~~.DO~~~.Tõ~~õ~~~#
+#~.o.~~...~..T....#~.~~##~~~OOO.~~~~#~#.....#.~##44....õõõõõ.....~~õ~~~#
+#~...~~~~~~~~T~O~##~D.~##~~~....~~~~~~~###..#.~##....O.~~~~õ~~~~~~~õ~~~#
+#~~~~~~...~#~...~~~A..~##~~~~õ~~~~#~~~~~~~##T.~##.##B..~~~~õ~~õõõõõõ~~~#
+#~~~~~~.....#.##~~~~#~~##~~~~õ~~~~~~T.........~##.OOO####~~õõõõ.~~~~~~~#
+#~~~~~~~~~#.DD.#~~~~~~~##~~~333~TTT...T~~~~~~~~##....#~~~~~~~...~~~~~~~#
+#~~~~~~~~##....##~~~~~~##~~~...B....~~~~~~~~~~~######~~~~~~~~~~~~~~~~~~#
+############################*3*#########################################
+########################################################################
+###========##--------######========##--------######========##--------###
+\######################\\######################\\######################\
+\#######X2X############\\#############X3X######\\######################\
+#~~~~~~~.R.~~~~~~~~~~~~##~~~~~TTTTTT.....~~~~~~##~~~~~~~#~########T#####
+#TT~~~.....~~~~~~~~~~~~##~~##~~TTT#~~T....~~~~~##~~~~~#~~~~~~~~~#####T##
+T#TTTT..TTT~~~~~~~~~~~~##~~##~~..~~~~~~~~~~~~~~##~~~#~~~~#~~~~~~~~~#####
+#TTTT..TT.T~~T.T~~~~~~~##~~~~~~~~~õ~OO~A~...~~~##~#~~~~#~~~~~.....TT##T#
+T#.TT1TT..o~~OA.~~~~~~~##~~~~~...~~~~.~~~...~~~##~~~~#~~~~~~.OOO.TTTT###
+*TTTT..T.o.~~...~~~~~~~##~~~~~.OO~~~~~~~~~~~~~~##~~#~~~TTT~~.O.O.......X
+8TT#TT.To..~~~~~~~~~~TT##~~~~~.OO~~....~.~~~~~~###~~~~~TQT~~...........8
+*TTTTTcT...~T.TT~~~...T##T~~~~...~..O.O..~~~~~~##~~#~~~TTT~~.O.O.......X
+T#TT#T1.B..~..o.......###TT~~~...~~~~~~~.~~~~~~##~~~~#~~~~~~.OOO.TTTT###
+#.TT.TTT...~Y..P......###TT~~~T.T~~T.T~~~~~~~~~##~#~~~~#~~~~~.....TT##T#
+#TTT.T#T~~~~..........T##T~~~~...~~...~~~~~~~~~##~~~#~~~~#~~~~~~~~~#####
+T#.TTTT~~~~~~...#...TT###~~~~~2222B.O.~~~~~~~~~##~~~~~#~~~~~~~~~#####T##
+T###~~~~~~~~~~~~TT.#T#T##~~~~~....~~~~~~~~~~~~~##~~~~~~~#~########T#####
+##############################*2*#######################################
+########################################################################
+###========##--------######========##--------######========##--------###
+\?§####################\\######################\\######################\
+
+
+message  ~ ~ ~ ~ ~  Tiaradventur  ~ ~ ~ ~ ~                                     ~ ~ ~ by  Pedro PSI 2018 ~ ~ ~
+message  ~ ~ Music ~ by Whitesand ~ ~
+
+
+(?§########
+#.O......#
+#.RP.....#
+#B66...O.#
+#.õõõõ#.##
+#.õõõõ#.##
+#.õõõõ#6F#
+#.õõõõ####
+#.Q.LTT..#
+#.....T..#
+#.AAA.Tõ.#
+#..AA.O..#
+#..AA....#
+#........#
+##########
+#========#
+##########
+#--------#
+##########
+##########
+#========#
+##########
+#--------#
+##########)
+
+(Tiara 1:
+- player and princess dialogue / handing tiara
+- crate pushing
+- crate floaters
+- multi-crate pushing
+)
+(Tiara 2:
+)
+(Tiara 3:
+- fire destroying path
+- fire unblocking path
+- lamp and plants on fire
+- boulder pushable, doesn't burn)
+(Tiara 4:
+- boulder sinking
+- boulder sinking over floater
+)
+(Tiara 5:
+- wolves chase humans
+- wolves throw stuff into water
+- wolves can be pushed indirectly
+- wolves stop when there's no available path
+)
+(Tiara 6:
+- Sword destroys crate
+- Sword pushes wolves, even into water
+- Blocking wolf path, they attack princess
+- Trapdoors
+)
+(Tiara7:
+- Hand Sword to Princess
+- Princess burns everything
+)

@@ -1,0 +1,437 @@
+(version 1.0)
+title Punt mazes
+author mathgrant et al.
+homepage http://www.clickmazes.com/punt/ixpunt.htm
+
+run_rules_on_level_start
+again_interval 0.2
+
+
+========
+OBJECTS
+========
+
+Background1
+White
+
+Background2
+#DDDDDD
+
+Checkerboard1
+Transparent
+
+Checkerboard2
+Transparent
+
+
+Target
+Black
+00.00
+0...0
+.....
+0...0
+00.00
+
+Wall
+#333333
+
+Player
+Green
+..0..
+..0..
+00000
+..0..
+..0..
+
+Puck
+Orange
+..0..
+.000.
+00000
+.000.
+..0..
+
+
+PlayerDestination
+Transparent
+
+PlayerBadDestination
+Transparent
+
+PuckDestination
+Transparent
+
+Probe0
+Transparent
+
+Probe1
+Transparent
+
+Probe2
+Transparent
+
+Probe3
+Transparent
+
+Probe4
+Transparent
+
+Probe5
+Transparent
+
+Probe6
+Transparent
+
+Probe7
+Transparent
+
+Probe8
+Transparent
+
+Probe9
+Transparent
+
+Probe10
+Transparent
+
+Probe11
+Transparent
+
+Probe12
+Transparent
+
+Probe13
+Transparent
+
+Probe14
+Transparent
+
+Probe15
+Transparent
+
+
+DontShowGuides
+Transparent
+
+ShowGuides
+Transparent
+
+PlayerDestinationGuide
+Red
+..0..
+..0..
+00000
+..0..
+..0..
+
+PuckDestinationGuide
+Red
+..0..
+.0.0.
+0...0
+.0.0.
+..0..
+
+IllegalMoveFlash
+Red
+..0..
+.0.0.
+0...0
+.0.0.
+..0..
+
+
+=======
+LEGEND
+=======
+
+. = Background1
+Background = Background1 OR Background2
+Checkerboard = Checkerboard1 OR Checkerboard2
+
+# = Wall
++ = Player AND Checkerboard1 AND DontShowGuides
+* = Puck
+O = Target
+@ = Puck AND Target
+Solid = Wall OR Puck
+
+Probe = Probe0 OR Probe1 OR Probe2 OR Probe3 OR Probe4 OR Probe5 OR Probe6 OR Probe7 OR Probe8 OR Probe9 OR Probe10 OR Probe11 OR Probe12 OR Probe13 OR Probe14 OR Probe15
+
+Guide = PlayerDestinationGuide OR PuckDestinationGuide
+
+
+=======
+SOUNDS
+=======
+
+EndLevel 60101309
+
+sfx0 31112104 (hit wall)
+sfx1 99432507 (move puck by 1)
+sfx2 4732102 (move puck by >1)
+sfx3 44230502 (illegal move)
+
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Target
+Player, Wall, Puck
+PlayerDestination, PlayerBadDestination PuckDestination
+IllegalMoveFlash
+Checkerboard
+Probe
+Guide
+ShowGuides, DontShowGuides
+
+
+======
+RULES
+======
+
+(Checkerboard the background on level start.)
+startloop
+	[ Checkerboard1 | no Checkerboard ] -> [ Checkerboard1 | Checkerboard2 ]
+    [ Checkerboard2 | no Checkerboard ] -> [ Checkerboard2 | Checkerboard1 ]
+endloop
+[ Checkerboard2 ] -> [ Checkerboard2 Background2 ]
+[ Checkerboard ] -> [ ]
+
+
+(If the guides aren't on and the player tries to make an illegal move, then flash that bad destination of the puck.)
+[ IllegalMoveFlash ] -> [ ]
+[ DontShowGuides ] [ > Player | ... | PlayerBadDestination ] -> [ DontShowGuides ] [ Player | ... | > PlayerBadDestination ]
+[ > PlayerBadDestination | ... | PuckDestination ] -> [ PlayerBadDestination | ... | PuckDestination IllegalMoveFlash ] sfx3 again
+
+(Move the player and possibly a puck to the destinations we've already calculated.)
+[ > Player | ... | PlayerBadDestination ] -> [ Player | ... | PlayerBadDestination ] sfx3
+[ > Player | ... | PlayerDestination ] -> [ | ... | > Player ]
+[ > Player | PuckDestination ] -> [ Player | Puck ] sfx1
+[ > Player | ... | PuckDestination ] -> [ Player | ... | Puck ] sfx2
+[ > Player ] -> [ Player ] sfx0
+
+(Toggle guides.)
+[ ACTION Player ] [ ShowGuides ] -> [ Player ] [ DontShowGuides ]
+[ ACTION Player ] [ DontShowGuides ] -> [ ACTION Player ] [ ShowGuides ]
+
+
+(Clear stuff.)
+[ PlayerDestination ] -> [ ]
+[ PlayerBadDestination ] -> [ ]
+[ PuckDestination ] -> [ ]
+[ Guide ] -> [ ]
+
+(Probe in each direction to figure out where the player would end up if they move that way.)
+[ Player | no Wall ] -> [ Player | > Probe1 ]
+[ > Probe1 no Puck | no Wall ] -> [ | > Probe2 ]
+[ > Probe2 no Puck | no Wall ] -> [ | > Probe3 ]
+[ > Probe3 no Puck | no Wall ] -> [ | > Probe4 ]
+[ > Probe4 no Puck | no Wall ] -> [ | > Probe5 ]
+[ > Probe5 no Puck | no Wall ] -> [ | > Probe6 ]
+[ > Probe6 no Puck | no Wall ] -> [ | > Probe7 ]
+[ > Probe7 no Puck | no Wall ] -> [ | > Probe8 ]
+[ > Probe8 no Puck | no Wall ] -> [ | > Probe9 ]
+[ > Probe9 no Puck | no Wall ] -> [ | > Probe10 ]
+[ > Probe10 no Puck | no Wall ] -> [ | > Probe11 ]
+[ > Probe11 no Puck | no Wall ] -> [ | > Probe12 ]
+[ > Probe12 no Puck | no Wall ] -> [ | > Probe13 ]
+[ > Probe13 no Puck | no Wall ] -> [ | > Probe14 ]
+[ > Probe14 no Puck | no Wall ] -> [ | > Probe15 ]
+[ > Probe15 no Puck | no Wall ] -> [ | > Probe15 ] (fallback)
+[ > Probe ] -> [ > Probe > PlayerDestination ]
+[ Probe no Puck ] -> [ ]
+
+(If the player would hit a puck, check where the puck would land.)
+[ > Probe15 | ] -> [ | > Probe14 ]
+[ > Probe14 | ] -> [ | > Probe13 ]
+[ > Probe13 | ] -> [ | > Probe12 ]
+[ > Probe12 | ] -> [ | > Probe11 ]
+[ > Probe11 | ] -> [ | > Probe10 ]
+[ > Probe10 | ] -> [ | > Probe9 ]
+[ > Probe9 | ] -> [ | > Probe8 ]
+[ > Probe8 | ] -> [ | > Probe7 ]
+[ > Probe7 | ] -> [ | > Probe6 ]
+[ > Probe6 | ] -> [ | > Probe5 ]
+[ > Probe5 | ] -> [ | > Probe4 ]
+[ > Probe4 | ] -> [ | > Probe3 ]
+[ > Probe3 | ] -> [ | > Probe2 ]
+[ > Probe2 | ] -> [ | > Probe1 ]
+[ > Probe1 | ] -> [ | Probe0 ]
+[ Probe ] -> [ PuckDestination ]
+
+(If the puck will land on top of something, then flag that direction as bad.)
+[ > PlayerDestination | ... | PuckDestination Solid ] -> [ PlayerBadDestination | ... | PuckDestination Solid ]
+[ > PlayerDestination ] -> [ PlayerDestination ]
+
+(Show the guides.)
+[ ShowGuides ] [ PlayerDestination ] -> [ ShowGuides ] [ PlayerDestination PlayerDestinationGuide ]
+[ ShowGuides ] [ PlayerBadDestination ] -> [ ShowGuides ] [ PlayerBadDestination PlayerDestinationGuide ]
+[ ShowGuides ] [ PuckDestination ] -> [ ShowGuides ] [ PuckDestination PuckDestinationGuide ]
+
+
+==============
+WINCONDITIONS
+==============
+
+All Target on Puck
+
+
+=======
+LEVELS
+=======
+
+message 1/12, author: ??
+
+######
+#+.###
+#*..##
+#.*..#
+#O.*.#
+#.O.*#
+##.O.#
+###.O#
+######
+
+message 2/12, author: ??
+
+######
+#+.###
+#*..##
+#O*..#
+#.O*.#
+#..O*#
+##..O#
+###..#
+######
+
+message 3/12, author: andrea
+
+#######
+#O.O.O#
+#..*..#
+#O*.*O#
+#*...*#
+#..+..#
+#######
+
+message 4/12, author: mathgrant
+
+########
+#.#O.#.#
+#...*..#
+#..O...#
+##.*#..#
+#...#..#
+#....+##
+########
+
+message 5/12, author: andrea
+
+########
+###...##
+#.*..O##
+#..*O..#
+#..O*..#
+##O..*.#
+##.+.###
+########
+
+message 6/12, author: andrea
+
+#########
+####.O###
+##...*.##
+#O*....##
+#...+...#
+##....*O#
+##.*...##
+###O.####
+#########
+
+message 7/12, author: andrea
+
+########
+#+OOOO##
+#.....##
+##.**..#
+##.**..#
+##.....#
+##..####
+########
+
+message 8/12, author: zag
+
+###############
+#...O..#......#
+#..O...#......#
+#..#...#......#
+#......**.....#
+###....*.....##
+###..........##
+#..........O..#
+#.............#
+##...........##
+##.....+.....##
+###############
+
+message 9/12, author: mathgrant (tribute to a disk drive)
+
+##############
+##O#*....#####
+##O#......*+##
+####......##O#
+#.*#......#..#
+#..#......####
+#............#
+#..###......*#
+#.#...#......#
+#.#####......#
+#.#...#...#..#
+#O#...#@.....#
+#.#...#...#..#
+##############
+
+message 10/12, author: andrea
+
+##########
+####.###O#
+###...##.#
+##.....#.#
+#...**...#
+#....+...#
+#.......##
+#.#....###
+#O##..####
+##########
+
+message 11/12, author: fadeblue
+
+############
+#..........#
+#...#..###.#
+#.#....#OO.#
+#.....+....#
+##.........#
+#...*.*..*.#
+#O#.*..##.##
+#..#......##
+#....#....O#
+#....#...###
+############
+
+message 12/12, authors: andrea / lostdummy
+
+###########
+##.......##
+#....+....#
+#..#####..#
+#..#*.*#..#
+#..#.#.#..#
+#...O#*#..#
+#...###...#
+##O.....O.#
+###.....###
+###########

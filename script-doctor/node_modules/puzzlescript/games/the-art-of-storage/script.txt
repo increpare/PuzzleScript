@@ -1,0 +1,238 @@
+title The art of storage
+author Rosden Shadow [Mark Signorelli]
+homepage rosden.itch.io
+
+background_color #E5C17E
+text_color  #73342E
+
+========
+OBJECTS
+========
+
+Background
+#E5C17E #BF9269
+11000
+01010
+00000
+01010
+00011
+(
+11111
+01111
+11101
+11111
+10111)
+
+
+Targetx
+#B32D2D
+.....
+.0.0.
+..0..
+.0.0.
+.....
+
+Targetx2
+#73342E
+.....
+.0.0.
+..0..
+.0.0.
+.....
+
+spawner
+black white
+.....
+.....
+.....
+.....
+.....
+(
+.....
+.0.0.
+..1..
+.0.0.
+.....)
+
+Wall
+#B32D2D #CC7A52 #73342E #A32733 #D88D54 #5B2426 (#BC674B)
+01414
+53004
+23031
+50304
+52523
+
+(
+01111
+20001
+20001
+20001
+22220)
+
+
+Playerright
+#73342E #73342E #3B3942 #1F2026
+.000.
+11202
+11313
+11110
+.1.1.
+
+playerleft
+#73342E #73342E #3B3942 #1F2026
+.000.
+20211
+31311
+01111
+.1.1.
+
+Cratex
+#52465B #705373 #1F2026 #3B3942 
+.111.
+20001
+23031
+20001
+.222.
+
+Cratex2
+#52465B #705373 #1F2026 #3B3942 
+.111.
+20301
+20001
+20301
+.222.
+
+thefloor
+#E5C17E
+00000
+00000
+00000
+00000
+00000
+
+Cratexcha
+black
+.....
+.....
+.....
+.....
+.....
+
+Cratex2cha
+black
+.....
+.....
+.....
+.....
+.....
+
+targetxcha
+black
+.....
+.....
+.....
+.....
+.....
+
+targetx2cha
+black
+.....
+.....
+.....
+.....
+.....
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Playerright
+* = Cratex
+@ = Cratex and Targetx
+O = Targetx
+s = spawner and cratex and targetx
+-=thefloor
+
+Player =Playerright or playerleft
+crate= cratex or cratex2 or Cratexcha or Cratex2cha
+stopper = player or crate
+
+Target = Targetx or targetx2 or targetxcha or targetx2cha
+=======
+SOUNDS
+=======
+
+Crate MOVE 36772507
+
+Player MOVE 46350509
+
+sfx0 18307104
+================
+COLLISIONLAYERS
+================
+
+Background
+Target,thefloor
+Player, Wall, Crate
+spawner
+
+======
+RULES
+======
+
+[ left Playerright] -> [ left playerleft]
+[ right Playerleft] -> [ right playerright]
+
+[ >  Player | Crate ] -> [  >  Player | > Crate  ]
+
+late [spawner no stopper] -> [spawner cratex] sfx0
+
+[cratex] ->[Cratex2cha]
+[cratex2] ->[Cratexcha]
+[Cratex2cha]->[cratex2]
+[Cratexcha]->[cratex]
+(
+[targetx] ->[targetx2cha]
+[targetx2] ->[targetxcha]
+[targetx2cha]->[targetx2]
+[targetxcha]->[targetx]
+)
+==============
+WINCONDITIONS
+==============
+
+All Target on Crate
+
+=======
+LEVELS
+=======
+
+message have all the red crosses have a block on them
+
+message Level 1 of 2
+
+
+######
+#....#
+#....#
+#.p..#
+#OOO##
+#OsO#-
+#OOO#-
+#####-
+
+message Level 2 of 2
+#######
+#.....#
+#..p..#
+#.....#
+#OOOOO#
+#OOOOO#
+#OOsOO#
+#OOOOO#
+#OOOOO#
+#######
+
+message you are a master storer!

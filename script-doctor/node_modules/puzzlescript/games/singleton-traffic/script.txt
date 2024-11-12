@@ -1,0 +1,158 @@
+title Singleton Traffic
+author Toph Wells
+homepage www.tophwells.com
+noaction
+run_rules_on_level_start
+========
+OBJECTS
+========
+
+Player
+White #ff0 #ff4
+22222
+21112
+21012
+21112
+22222
+
+Background
+Black
+
+IndicatorH
+#fa0
+.....
+0...0
+00.00
+0...0
+.....
+
+IndicatorV
+#f80
+.000.
+..0..
+.....
+..0..
+.000.
+
+=======
+LEGEND
+=======
+
+. = Background
+o = Player
+Indicator = IndicatorH or IndicatorV
+
+=======
+SOUNDS
+=======
+EndLevel 93613502
+Undo 10562106
+SFX0 11806907
+
+================
+COLLISIONLAYERS
+================
+Background
+Player
+IndicatorH
+IndicatorV
+
+======
+RULES
+======
+
+[Perpendicular Player|Player] -> [Player|Player]
+
+[> Player|No Player] -> [|Player] SFX0
+
+[No Player|Player|No Player] -> [|Action Player|]
+[Player|Action Player|Player] -> [Player|Player|Player]
+[Action Player][Player] -> [Action Player][Action Player]
+[Stationary Player] -> Win
+[Action Player] -> [Stationary Player] 
+
+[Indicator] -> []
+Vertical [Player no IndicatorV|Player] -> [Player IndicatorV|Player]
+Horizontal [Player no IndicatorH|Player] -> [Player IndicatorH|Player]
+==============
+WINCONDITIONS
+==============
+=======
+LEVELS
+=======
+
+Message Tiles can't move horizontally if there's something vertically adjacent.
+Message Tiles can't move vertically if there's something horizontally adjacent.
+Message You win when nothing can move.
+Message 1 OF 3
+
+ooooooooooo
+o.........o
+o.........o
+o...ooo...o
+o...ooo.o.o
+o...ooo...o
+o....o....o
+o..o.o....o
+ooooooooooo
+
+Message 2 OF 3
+
+oooooooooo
+o........o
+o.oo..o..o
+o.....o..o
+o........o
+o........o
+o........o
+o........o
+o........o
+oooooooooo
+
+Message 3 OF 3
+
+oooooooo
+o......o
+o.o....o
+o.o....o
+o......o
+o....o.o
+o.....oo
+oooooooo
+Message 4 OF 3
+
+oooooooo
+o..o...o
+o..o...o
+ooo..ooo
+o......o
+o...o..o
+o...o..o
+oooooooo
+
+Message 5 OF 3
+
+ooooooooo
+o.......o
+o.ooooo.o
+o.......o
+o...o...o
+o.......o
+ooooooooo
+o.......o
+o.o.o...o
+o.o.....o
+o.o.....o
+o.......o
+ooooooooo
+
+Message LAST OF 3
+
+ooooooooooooo
+o......oo...o
+o......oo.o.o
+o.o.oo..o...o
+o.o.....o...o
+o.o.........o
+o...........o
+ooooooooooooo

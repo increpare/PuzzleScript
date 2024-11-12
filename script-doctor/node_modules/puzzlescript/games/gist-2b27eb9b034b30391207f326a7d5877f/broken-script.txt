@@ -1,0 +1,1674 @@
+title Magnecopter
+author ThatScar
+homepage www.puzzlescript.net
+
+(verbose_logging)
+run_rules_on_level_start
+color_palette arnecolors
+again_interval 0.03
+(realtime_interval 0.04)
+(require_player_movement)
+key_repeat_interval 0.22
+(zoomscreen 13x7)
+(background_color #BCC6CC)
+background_color #EEC6CC
+
+========
+OBJECTS
+========
+
+Background .
+White Lightblue
+11111
+01111
+11101
+11111
+10111
+
+BackWall
+DarkBrown Black
+00010
+00010
+11111
+01000
+11111
+
+Target
+Purple
+.....
+.000.
+.0.0.
+.000.
+.....
+
+TargetFull
+Purple
+
+CrateTarget
+Brown
+.....
+.000.
+.0.0.
+.000.
+.....
+
+CaseTarget
+Black
+.....
+.000.
+.0.0.
+.000.
+.....
+
+Wall
+BROWN DARKBROWN
+00010
+11111
+01000
+11111
+00010
+
+WallOff
+Grey DarkGrey
+00010
+11111
+01000
+11111
+00010
+
+WallOn
+Grey DarkRed
+00010
+11111
+01000
+11111
+00010
+
+Heliyes
+Black DarkGrey Blue
+00000
+..1..
+.1.1.
+.111.
+.2.2.
+
+Water
+Blue Grey
+00000
+10000
+00010
+00000
+01000
+
+ConCrate1
+Orange
+
+ConCrate2
+Brown
+
+ConCrate3
+DarkRed
+
+ConCrateOff
+Brown
+.....
+.....
+00000
+.....
+.....
+
+ConCrateOn
+Red
+.....
+.....
+00000
+.....
+.....
+
+CrateSideU
+Orange
+00000
+.....
+.....
+.....
+.....
+
+CrateSideL
+Orange
+0....
+0....
+0....
+0....
+0....
+
+CrateSideR
+Orange
+....0
+....0
+....0
+....0
+....0
+
+CrateSideD
+Orange
+.....
+.....
+.....
+.....
+00000
+
+CrateSideUL
+Orange
+0....
+.....
+.....
+.....
+.....
+
+CrateSideUR
+Orange
+....0
+.....
+.....
+.....
+.....
+
+CrateSideDL
+Orange
+.....
+.....
+.....
+.....
+0....
+
+CrateSideDR
+Orange
+.....
+.....
+.....
+.....
+....0
+
+ConCase1
+Grey
+
+ConCase2
+DarkGrey
+
+ConCaseOff
+DarkGrey
+.....
+.....
+00000
+.....
+.....
+
+ConCaseOn
+Red
+.....
+.....
+00000
+.....
+.....
+
+CaseSideU
+Grey
+00000
+.....
+.....
+.....
+.....
+
+CaseSideL
+Grey
+0....
+0....
+0....
+0....
+0....
+
+CaseSideR
+Grey
+....0
+....0
+....0
+....0
+....0
+
+CaseSideD
+Grey
+.....
+.....
+.....
+.....
+00000
+
+CaseSideUL
+Grey
+0....
+.....
+.....
+.....
+.....
+
+CaseSideUR
+Grey
+....0
+.....
+.....
+.....
+.....
+
+CaseSideDL
+Grey
+.....
+.....
+.....
+.....
+0....
+
+CaseSideDR
+Grey
+.....
+.....
+.....
+.....
+....0
+
+CrateBack
+DarkBrown
+
+CaseBack
+DarkBlue
+
+
+
+
+
+SilverBoxBack1
+Grey Brown
+00110
+01100
+11001
+10011
+00110
+
+(SilverBoxBack2
+Grey Brown
+01100
+00110
+10011
+11001
+01100)
+
+VerSilver I
+Grey Brown #BCC6CC
+02020
+02220
+02020
+22022
+02020
+(
+20112
+21102
+11001
+20012
+20112
+)
+
+HorSilver H
+Grey Brown #BCC6CC
+00020
+22222
+02000
+22222
+00020
+(
+22122
+01100
+11001
+10011
+22122
+)
+
+SilverUp
+#BCC6CC
+00000
+0...0
+0...0
+0...0
+0...0
+
+SilverDown
+#BCC6CC
+0...0
+0...0
+0...0
+0...0
+00000
+
+
+SilverLeft
+#BCC6CC
+00000
+0....
+0....
+0....
+00000
+
+SilverRight
+#BCC6CC
+00000
+....0
+....0
+....0
+00000
+
+
+
+
+SilverCCRightLever1
+#BCC6CC
+.....
+.....
+.....
+...00
+..0..
+
+SilverCCRightLever2
+#BCC6CC
+..0..
+...0.
+...0.
+....0
+.....
+
+SilverCCRightPivot1
+#BCC6CC
+....0
+..00.
+00...
+.....
+.....
+
+SilverCCRightPivot2
+#BCC6CC
+....0
+..00.
+00...
+.....
+.....
+
+SilverCCRightBalast1
+#BCC6CC
+.....
+0....
+0....
+.0...
+.0...
+
+SilverCCRightBalast2
+#BCC6CC
+0....
+.....
+.....
+.....
+.....
+
+
+
+
+SilverCWUpLever1 7
+#BCC6CC
+.0...
+.0...
+0....
+.....
+.....
+
+SilverCWUpLever2 4
+#BCC6CC
+.0...
+..00.
+....0
+.....
+.....
+
+SilverCWUpPivot1 8
+#BCC6CC
+....0
+...0.
+...0.
+..0..
+..0..
+
+SilverCWUpPivot2 5
+#BCC6CC
+....0
+...0.
+...0.
+..0..
+..0..
+
+SilverCWUpBalast1 9
+#BCC6CC
+.....
+.....
+.....
+00...
+..00.
+
+SilverCWUpBalast2 6
+#BCC6CC
+.....
+.....
+.....
+.....
+....0
+
+
+
+(
+SilverCWUpLever1 7
+#BCC6CC
+.0...
+.0...
+0....
+.....
+.....
+
+SilverCWUpLever2 4
+#BCC6CC
+.0...
+..00.
+....0
+.....
+.....
+
+SilverCWUpPivot1 8
+#BCC6CC
+....0
+...0.
+...0.
+..0..
+..0..
+
+SilverCWUpPivot2 5
+#BCC6CC
+....0
+...0.
+...0.
+..0..
+..0..
+
+SilverCWUpBalast1 9
+#BCC6CC
+.....
+.....
+.....
+00...
+..00.
+
+SilverCWUpBalast2 6
+#BCC6CC
+.....
+.....
+.....
+.....
+....0
+)
+
+
+
+SilverCC
+Transparent
+
+SilverCW
+Transparent
+
+
+
+SafeGuards &
+Orange
+.....
+.....
+0...0
+0...0
+.....
+
+Charge U
+Orange
+.....
+.....
+.....
+.....
+.0.0.
+
+OverCharge
+Red
+.....
+.....
+.....
+.....
+.0.0.
+
+Magnet
+Red
+0.0.0
+.....
+0...0
+.....
+0.0.0
+
+PushRight
+Orange DarkBrown
+11111
+10001
+10111
+10001
+11111
+
+ShoulderRight
+Orange DarkBrown
+1111.
+1000.
+10111
+1000.
+1111.
+
+HeadRight
+Orange DarkBrown
+....1
+....1
+11111
+....1
+....1
+
+PushDown
+Orange DarkBrown
+11111
+10001
+10101
+10101
+11111
+
+ShoulderDown
+Orange DarkBrown
+11111
+10001
+10101
+10101
+..1..
+
+HeadDown
+Orange DarkBrown
+..1..
+..1..
+..1..
+..1..
+11111
+
+PushLeft
+Orange DarkBrown
+11111
+10001
+11101
+10001
+11111
+
+ShoulderLeft
+Orange DarkBrown
+.1111
+.0001
+11101
+.0001
+.1111
+
+HeadLeft
+Orange DarkBrown
+1....
+1....
+11111
+1....
+1....
+
+PushUp
+Orange DarkBrown
+11111
+10101
+10101
+10001
+11111
+
+ShoulderUp
+Orange DarkBrown
+..1..
+1010.
+10101
+10001
+11111
+
+HeadUp
+Orange DarkBrown
+11111
+..1..
+..1..
+..1..
+..1..
+
+Power
+Transparent
+.....
+..0..
+.000.
+..0..
+.....
+
+ArrowU
+Transparent
+.....
+..0..
+.0.0.
+.....
+.....
+
+ArrowL
+Transparent
+.....
+..0..
+.0...
+..0..
+.....
+
+ArrowR
+Transparent
+.....
+..0..
+...0.
+..0..
+.....
+
+ArrowD
+Transparent
+.....
+.....
+.0.0.
+..0..
+.....
+
+debugArrowU
+Transparent
+.....
+..0..
+.0.0.
+.....
+.....
+
+debugArrowL
+Transparent
+.....
+..0..
+.0...
+..0..
+.....
+
+debugArrowR
+Transparent
+.....
+..0..
+...0.
+..0..
+.....
+
+debugArrowD
+Transparent
+.....
+.....
+.0.0.
+..0..
+.....
+
+Temp
+Transparent
+
+Temp2
+Transparent
+
+MovSource
+Transparent
+
+Gravity
+Transparent
+
+TagMove
+Transparent
+
+TagStop
+Transparent
+
+=======
+LEGEND
+=======
+
+ConCrate = ConCrateOff or ConCrateOn
+ConCase = ConCaseOff or ConCaseOn
+ConBox = ConCrate or ConCase
+
+Crate = ConCrate
+Case = ConCase
+BoxOff = ConCrateOff or ConCaseOff
+BoxOn = ConCrateOn or ConCaseOn
+Silver = SilverUp or SilverLeft or SilverRight or SilverDown
+Box = Crate or Case or Silver
+SilverBoxBack = SilverBoxBack1
+BoxBack = CrateBack or CaseBack or SilverBoxBack
+
+SilverAnimationCCRight = SilverCCRightLever1 or SilverCCRightLever2 or SilverCCRightPivot1 or SilverCCRightPivot2 or SilverCCRightBalast1 or SilverCCRightBalast2
+SilverAnimationCWUp = SilverCWUpLever1 or SilverCWUpLever2 or SilverCWUpPivot1 or SilverCWUpPivot2 or SilverCWUpBalast1 or SilverCWUpBalast2
+SilverAnimation = SilverAnimationCCRight or SilverAnimationCWUp
+
+SideU = CrateSideU or CaseSideU
+SideL = CrateSideL or CaseSideL
+SideR = CrateSideR or CaseSideR
+SideD = CrateSideD or CaseSideD
+SideUL = CrateSideUL or CaseSideUL
+SideUR = CrateSideUR or CaseSideUR
+SideDL = CrateSideDL or CaseSideDL
+SideDR = CrateSideDR or CaseSideDR
+
+Side = SideU or SideL or SideR or SideD or SideUL or SideUR or SideDL or SideDR
+
+Player = Heliyes
+Arrow = ArrowU or ArrowL or ArrowR or ArrowD
+SilverRotate = SilverCC or SilverCW
+debugArrow = debugArrowU or debugArrowL or debugArrowR or debugArrowD
+Shoulder = ShoulderRight or ShoulderDown or ShoulderLeft or ShoulderUp
+Head = HeadRight or HeadDown or HeadLeft or HeadUp
+Push = PushRight or PushDown or PushLeft or PushUp
+Pusher = Push or Shoulder
+iWall = WallOff or WallOn
+Fixed = Wall or iWall or Pusher or Shoulder or Head
+Obstacle = Fixed or Player or Box
+Conduit = Box or iWall
+Equipment = Safeguards or Charge or OverCharge
+Mobile = Heliyes or Box
+
+P = Player
+# = Wall
+L = WallOff
+A = ConCrate1
+B = ConCrate2
+C = ConCrate3
+O = ConCase1
+X = ConCase2
+T = Target
+1 = CrateTarget and Target
+2 = CaseTarget and Target
+Ą = ConCrate1 and Target
+ß = ConCrate2 and Target
+Q = ConCase1 and Target
+K = ConCase2 and Target
+
+~ = Water
+Y = Water and Target
+(Ã = Water and ConCrate1
+Õ = Water and ConCase1)
+
+M = Magnet
+Π = Target and Magnet
+Â = ConCrate1 and Magnet
+Ô = ConCase1 and Magnet
+
+↑ = PushUp
+← = PushLeft
+→ = PushRight
+↓ = PushDown
+
+SetupSigils = ConCrate1 or ConCrate2 or ConCrate3 or ConCase1 or ConCase2 or VerSilver or HorSilver
+
+=======
+SOUNDS
+=======
+
+SFX0 77074109
+SFX1 11101504
+SFX2 56305500
+SFX3 354308
+
+================
+COLLISIONLAYERS
+================
+
+Background
+BackWall
+Water
+BoxBack
+
+SetupSigils
+
+Target
+TargetFull
+CrateTarget, CaseTarget
+
+Player, Fixed, Box
+SilverAnimationCCRight
+SilverAnimationCWUp
+
+SafeGuards
+Charge, OverCharge
+
+SideU 
+SideL 
+SideR 
+SideD 
+SideUL
+SideUR
+SideDL
+SideDR
+
+Temp, Temp2
+Magnet
+MovSource
+Gravity, Power
+SilverCC
+SilverCW
+Arrow
+debugArrow
+TagMove
+TagStop
+
+======
+RULES
+======
+
+(----SETUP----)
+startloop
+[ ConCrate1 ] -> [ ConCrate1 CrateSideU CrateSideL CrateSideR CrateSideD ]
+Up [ ConCrate1 CrateSideU | ConCrate1 ] -> [ ConCrate1 | ConCrate1 ]
+Left [ ConCrate1 CrateSideL | ConCrate1 ] -> [ ConCrate1 | ConCrate1 ]
+Right [ ConCrate1 CrateSideR | ConCrate1 ] -> [ ConCrate1 | ConCrate1 ]
+Down [ ConCrate1 CrateSideD | ConCrate1 ] -> [ ConCrate1 | ConCrate1 ]
+
+Up [ ConCrate1 No CrateSideL | CrateSideL ] -> [ ConCrate1 CrateSideUL | CrateSideL ]
+Up [ ConCrate1 No CrateSideR | CrateSideR ] -> [ ConCrate1 CrateSideUR | CrateSideR ]
+Down [ ConCrate1 No CrateSideL | CrateSideL ] -> [ ConCrate1 CrateSideDL | CrateSideL ]
+Down [ ConCrate1 No CrateSideR | CrateSideR ] -> [ ConCrate1 CrateSideDR | CrateSideR ]
+
+[ ConCrate1 ] -> [ ConCrateOff ]
+[ ConCrate2 ] -> [ ConCrate1 ]
+[ ConCrate3 ] -> [ ConCrate2 ]
+
+
+[ ConCase1 ] -> [ ConCase1 CaseSideU CaseSideL CaseSideR CaseSideD ]
+Up [ ConCase1 CaseSideU | ConCase1 ] -> [ ConCase1 | ConCase1 ]
+Left [ ConCase1 CaseSideL | ConCase1 ] -> [ ConCase1 | ConCase1 ]
+Right [ ConCase1 CaseSideR | ConCase1 ] -> [ ConCase1 | ConCase1 ]
+Down [ ConCase1 CaseSideD | ConCase1 ] -> [ ConCase1 | ConCase1 ]
+
+Up [ ConCase1 No CaseSideL | CaseSideL ] -> [ ConCase1 CaseSideUL | CaseSideL ]
+Up [ ConCase1 No CaseSideR | CaseSideR ] -> [ ConCase1 CaseSideUR | CaseSideR ]
+Down [ ConCase1 No CaseSideL | CaseSideL ] -> [ ConCase1 CaseSideDL | CaseSideL ]
+Down [ ConCase1 No CaseSideR | CaseSideR ] -> [ ConCase1 CaseSideDR | CaseSideR ]
+
+[ ConCase1 ] -> [ ConCaseOff ]
+[ ConCase2 ] -> [ ConCase1 ]
+endloop
+
+
+(----MOVEMENT----)
+(Down [ Moving Heliyes | Box ] -> [ Moving Heliyes | Moving Box Moving MovSource ])
+[ > Heliyes | No Fixed ] -> [ > Heliyes > MovSource | ]
+
+(ignition)
+[ Moving MovSource ][ Mobile ] -> [ Moving MovSource ][ Moving Mobile ]
+
+[ Box No Power ] -> [ Box Temp ]
+[ MovSource ][ Temp ] -> [ MovSource ][ ]
+[ Box Temp ] -> [ Down Box Down MovSource ] (gravity)
+[ Temp ] -> [ ] message Error: Gravity assertion failed
+
+([ Power MovSource ][ Box ] -> [ Power MovSource ][ Power Box ])
+([ Gravity MovSource ][ Box ] -> [ Gravity MovSource ][ Gravity Box ])
+([ MovSource ] -> [ ])
+
+(blocking)
+[ > Mobile | No Fixed ] -> [ > Mobile TagMove | ]
+
+[ Mobile No TagMove ] -> [ Mobile TagStop ]
+
+startloop
+(back-propagation)
+[ TagMove > Mobile | TagStop Mobile ] -> [ TagStop Mobile | TagStop Mobile ]
++ Up [ TagMove ConBox No SideU | TagStop ConBox ] -> [ TagStop ConBox | TagStop ConBox ]
++ Left [ TagMove ConBox No SideL | TagStop ConBox ] -> [ TagStop ConBox | TagStop ConBox ]
++ Right [ TagMove ConBox No SideR | TagStop ConBox ] -> [ TagStop ConBox | TagStop ConBox ]
++ Down [ TagMove ConBox No SideD | TagStop ConBox ] -> [ TagStop ConBox | TagStop ConBox ]
++ [ TagMove Case Power | TagStop Case ] -> [ TagStop Case Power | TagStop Case ]
+
+[ TagMove TagStop ] -> message Error: Tag exclusivity assertion failed
+
+(forward-propagation)
+[ TagMove MovSource ] -> [ MovSource ]
+
+Down [ Heliyes No TagMove No TagStop | Box TagMove ] -> [ Heliyes | Box ]
+
+
+[ > Box No TagMove No TagStop | > Box TagMove ] -> [ > Box | > Box ]
++ Up [ ConBox No SideU No TagMove No TagStop | ConBox TagMove ] -> [ ConBox | ConBox ]
++ Left [ ConBox No SideL No TagMove No TagStop | ConBox TagMove ] -> [ ConBox | ConBox ]
++ Right [ ConBox No SideR No TagMove No TagStop | ConBox TagMove ] -> [ ConBox | ConBox ]
++ Down [ ConBox No SideD No TagMove No TagStop | ConBox TagMove ] -> [ ConBox | ConBox ]
++ [ Box Power No TagMove No TagStop | Box TagMove ] -> [ Box Power | Box ]
+
+[ Moving Mobile TagStop ] -> [ Mobile TagStop ]
+[ Moving Mobile TagMove ] -> [ Mobile TagStop ]
+
+[ > Mobile | Stationary Mobile ] -> [ > Mobile TagMove | Mobile ]
+[ TagMove ][ Mobile No TagStop ] -> [ TagMove ][ Mobile TagMove ]
+endloop
+
+[ TagMove ] -> [ ]
+[ TagStop ] -> [ ]
+[ MovSource ] -> [ ]
+[ > Mobile | Stationary Mobile ][ Background ] -> [ > Mobile | Mobile ][ ] message Error: Backpropagation assertion failed
+
+[ Moving Box Side ] -> [ Moving Box Moving Side ]
+[ Moving Box Power ] -> [ Moving Box Moving Power ]
+[ Moving Box BoxBack ] -> [ Moving Box Moving BoxBack ]
+
+
+(----REQUIRE-PLAYER-MOVEMENT----)
+[ > Player ] -> [ > Player Temp ]										(+temp)
+Late [ Player No Temp ][ Temp ] -> [ Player ][ ]
+Late [ Player Temp ] -> cancel
+Late [ Temp ] -> [ ]													(-TEMP)
+
+
+(----POWER----)
+Late [ Power ] -> [ Temp ]												(+TEMP)
+Late Down [ Heliyes | Conduit ] -> [ Heliyes | Conduit Power ]
+Late [ Magnet Conduit ] -> [ Magnet Conduit Power ]
+Late [ Conduit Power | Conduit ] -> [ Conduit Power | Conduit Power ]
+
+Late [ Temp No Power ] -> [ ] again SFX0
+Late [ Temp ] -> [ ]													(-TEMP)
+
+Late Down [ Box No Power | ... | Player ] -> again
+
+
+(----TEXTURE----)
+Late [ ConCrateOff Power ] -> [ ConCrateOn Power ]
+Late [ ConCaseOff Power ] -> [ ConCaseOn Power ]
+Late [ ConCaseOn No Power ] -> [ ConCaseOff ]
+Late [ ConCrateOn No Power ] -> [ ConCrateOff ]
+Late [ BoxBack No Box ] -> [ ]
+Late [ Crate ] -> [ Crate CrateBack ]
+Late [ Case ] -> [ Case CaseBack ]
+Late [ TargetFull ] -> [ Target ]
+Late [ Target Box ] -> [ Target Box TargetFull ]
+Late [ Target Player ] -> [ Target Player TargetFull ]
+Late [ TargetFull No Player | Target No TargetFull ] -> [ | Target ]
+
+
+
+[ ] -> again
+
+(Down [ VerSilver | VerSilver ] -> [ SilverUp | SilverDown ]
+Right [ HorSilver | HorSilver ] -> [ SilverLeft | SilverRight ]
+
+[ Silver ] -> [ Silver BackWall ]
+Vertical [ BackWall | ] -> [ BackWall | BackWall ]
+Horizontal [ BackWall | ] -> [ BackWall | BackWall ]
+
+(----SILVER----)
+
+(post-animation)
+Down [ SilverCCRightBalast1 | SilverCCRightBalast2 Box ] -> [ | Box ]
+Right [ No SilverCCRightLever1 | SilverCCRightPivot1 | SilverCCRightBalast1 ] -> [ SilverLeft | SilverRight | ]
+Right [ SilverCCRightLever1 | No SilverCCRightPivot1 | SilverCCRightBalast1 ] -> [ SilverLeft | SilverRight | ]
+Right [ SilverCCRightLever1 | SilverCCRightPivot1 | No SilverCCRightBalast1 ] -> [ SilverLeft | SilverRight | ] sfx2
+
+( alternative
+Down [ SilverCCRightBalast1 | SilverCCRightBalast2 Box ] -> [ | Box ]
+Right[ No SilverCCRightLever1 | SilverCCRightPivot1 | SilverCCRightBalast1 ] -> [ | SilverUp | ]
+Right[ SilverCCRightLever1 | No SilverCCRightPivot1 | SilverCCRightBalast1 ] -> [ | SilverUp | ]
+Right[ SilverCCRightLever1 | SilverCCRightPivot1 | No SilverCCRightBalast1 ] -> [ | SilverUp | ] sfx2
+
+Down [ SilverUp | ] -> [ SilverUp | SilverDown ])
+
+Left [ SilverCWUpBalast1 | SilverCWUpBalast2 Box ] -> [ | Box ]
+Up [ No SilverCWUpLever1 | SilverCWUpPivot1 | SilverCWUpBalast1 ] -> [ SilverDown | SilverUp | ]
+Up [ SilverCWUpLever1 | No SilverCWUpPivot1 | SilverCWUpBalast1 ] -> [ SilverDown | SilverUp | ]
+Up [ SilverCWUpLever1 | SilverCWUpPivot1 | No SilverCWUpBalast1 ] -> [ SilverDown | SilverUp | ] sfx2
+
+[ SilverCCRightBalast1] -> [ SilverUp ]
+[ SilverCCRightBalast2] -> [ SilverDown ]
+[ SilverCCRightLever1 ] -> [ ]
+[ SilverCCRightLever2 ] -> [ ]
+[ SilverCCRightPivot1 ] -> [ ]
+[ SilverCCRightPivot2 ] -> [ ]
+
+[ SilverCWUpBalast1] -> [ SilverRight ]
+[ SilverCWUpBalast2] -> [ SilverLeft ]
+[ SilverCWUpLever1 ] -> [ ]
+[ SilverCWUpLever2 ] -> [ ]
+[ SilverCWUpPivot1 ] -> [ ]
+[ SilverCWUpPivot2 ] -> [ ]
+
+[ SilverAnimation ] -> [ SilverAnimation Temp ]
+
+(trigger rotations)
+[ SilverRotate ] -> [ ]
+
+Left [ Silver No Active | ArrowU No Box ] -> [ Active Silver SilverCW | ArrowU ]
+Left [ Silver No Active | ArrowD No Box ] -> [ Active Silver SilverCC | ArrowD ]
+Right[ Silver No Active | ArrowU No Box ] -> [ Active Silver SilverCC | ArrowU ]
+Right[ Silver No Active | ArrowD No Box ] -> [ Active Silver SilverCW | ArrowD ]
+Up   [ Silver No Active | ArrowR No Box ] -> [ Active Silver SilverCW | ArrowR ]
+Up   [ Silver No Active | ArrowL No Box ] -> [ Active Silver SilverCC | ArrowL ]
+Down [ Silver No Active | ArrowR No Box ] -> [ Active Silver SilverCC | ArrowR ]
+Down [ Silver No Active | ArrowL No Box ] -> [ Active Silver SilverCW | ArrowL ]
+
+Right [ SilverLeft SilverCW | SilverRight SilverCC ] -> [ SilverLeft | SilverRight ]
+Down [ SilverUp SilverCW | SilverDown SilverCC ] -> [ SilverUp | SilverDown ]
+Left [ SilverRight SilverCW | SilverLeft SilverCC ] -> [ SilverRight | SilverLeft ]
+Up [ SilverDown SilverCW | SilverUp SilverCC ] -> [ SilverDown | SilverUp ]
+
+Right [ SilverLeft | SilverRight SilverCC | ] -> [ SilverLeft SilverCCRightLever1 | SilverRight SilverCCRightPivot1 | SilverCCRightBalast1 ] again
+Up [ SilverDown | SilverUp SilverCW | ] -> [ SilverDown SilverCWUpLever1 | SilverUp SilverCWUpPivot1 | SilverCWUpBalast1 ] again
+
+(try down)
+Down [ Box | No Fixed ] -> [ Box Temp | ]								(+temp)
+(cancel)
+Down [ Box Temp | Box No Temp ] -> [ Box | Box ]
++ Up [ Temp ConBox No SideU | No Temp ConBox ] -> [ Conbox | ConBox ]
++ Left [ Temp ConBox No SideL | No Temp ConBox ] -> [ Conbox | ConBox ]
++ Right [ Temp ConBox No SideR | No Temp ConBox ] -> [ Conbox | ConBox ]
++ Down [ Temp ConBox No SideD | No Temp ConBox ] -> [ Conbox | ConBox ]
++ Up [ Temp SilverDown | No Temp SilverUp ] -> [ SilverDown | SilverUp ]
++ Left [ Temp SilverRight | No Temp SilverLeft ] -> [ SilverRight | SilverLeft ]
++ Right [ Temp SilverLeft | No Temp SilverRight ] -> [ SilverLeft | SilverRight ]
++ Down [ Temp SilverUp | No Temp SilverDown ] -> [ SilverUp | SilverDown ]
+(cancel all)
+Down [ SilverCCRightLever1 | Box No Temp ] -> [ | Box ]
+Down [ SilverCCRightLever1 | Fixed ] -> [ | Fixed ]
+Down [ SilverCCRightPivot1 | Box No Temp ] -> [ | Box ]
+Down [ SilverCCRightPivot1 | Fixed ] -> [ | Fixed ]
+Left [ SilverCWUpLever1 | Box No Temp ] -> [ | Box ]
+Left [ SilverCWUpLever1 | Fixed ] -> [ | Fixed ]
+Left [ SilverCWUpPivot1 | Box No Temp ] -> [ | Box ]
+Left [ SilverCWUpPivot1 | Fixed ] -> [ | Fixed ]
+(confirm movement)
+Down [ SilverCCRightLever1 | Box ] -> [ SilverCCRightLever1 | Down Box ]
+Down [ SilverCCRightPivot1 | Box ] -> [ SilverCCRightPivot1 | Down Box ]
+Left [ SilverCWUpLever1 | Box ] -> [ SilverCWUpLever1 | Left Box ]
+Left [ SilverCWUpPivot1 | Box ] -> [ SilverCWUpPivot1 | Left Box ]
+Down [ Down Box | Box ] -> [ Down Box | Down Box ]
++ Up [ Down ConBox No SideU | ConBox ] -> [ Down Conbox | Down ConBox ]
++ Left [ Down ConBox No SideL | ConBox ] -> [ Down Conbox | Down ConBox ]
++ Right [ Down ConBox No SideR | ConBox ] -> [ Down Conbox | Down ConBox ]
++ Down [ Down ConBox No SideD | ConBox ] -> [ Down Conbox | Down ConBox ]
++ Up [ Down SilverDown | SilverUp ] -> [ Down SilverDown | Down SilverUp ]
++ Left [ Down SilverRight | SilverLeft ] -> [ Down SilverRight | Down SilverLeft ]
++ Right [ Down SilverLeft | SilverRight ] -> [ Down SilverLeft | Down SilverRight ]
++ Down [ Down SilverUp |  SilverDown ] -> [ Down SilverUp | Down SilverDown ]
+[ Temp ] -> [ ]															(-temp)
+
+(try left)
+Left [ Box | No Fixed ] -> [ Box Temp | ]								(+temp)
+(cancel)
+Left [ Box Temp | Box No Temp ] -> [ Box | Box ]
++ Up [ Temp ConBox No SideU | No Temp ConBox ] -> [ Conbox | ConBox ]
++ Left [ Temp ConBox No SideL | No Temp ConBox ] -> [ Conbox | ConBox ]
++ Right [ Temp ConBox No SideR | No Temp ConBox ] -> [ Conbox | ConBox ]
++ Down [ Temp ConBox No SideD | No Temp ConBox ] -> [ Conbox | ConBox ]
++ Up [ Temp SilverDown | No Temp SilverUp ] -> [ SilverDown | SilverUp ]
++ Left [ Temp SilverRight | No Temp SilverLeft ] -> [ SilverRight | SilverLeft ]
++ Right [ Temp SilverLeft | No Temp SilverRight ] -> [ SilverLeft | SilverRight ]
++ Down [ Temp SilverUp | No Temp SilverDown ] -> [ SilverUp | SilverDown ]
+(cancel all)
+Left [ SilverCWUpLever1 | Box No Temp ] -> [ | Box ]
+Left [ SilverCWUpLever1 | Fixed ] -> [ | Fixed ]
+Left [ SilverCWUpPivot1 | Box No Temp ] -> [ | Box ]
+Left [ SilverCWUpPivot1 | Fixed ] -> [ | Fixed ]
+(confirm movement)
+Left [ SilverCWUpLever1 | Box ] -> [ SilverCWUpLever1 | Left Box ]
+Left [ SilverCWUpPivot1 | Box ] -> [ SilverCWUpPivot1 | Left Box ]
+Left [ Left Box | Box ] -> [ Left Box | Left Box ]
++ Up [ Left ConBox No SideU | ConBox ] -> [ Left Conbox | Left ConBox ]
++ Left [ Left ConBox No SideL | ConBox ] -> [ Left Conbox | Left ConBox ]
++ Right [ Left ConBox No SideR | ConBox ] -> [ Left Conbox | Left ConBox ]
++ Left [ Left ConBox No SideD | ConBox ] -> [ Left Conbox | Left ConBox ]
++ Up [ Left SilverDown | SilverUp ] -> [ Left SilverDown | Left SilverUp ]
++ Left [ Left SilverRight | SilverLeft ] -> [ Left SilverRight | Left SilverLeft ]
++ Right [ Left SilverLeft | SilverRight ] -> [ Left SilverLeft | Left SilverRight ]
++ Left [ Left SilverUp |  SilverDown ] -> [ Left SilverUp | Left SilverDown ]
+[ Temp ] -> [ ]															(-temp)
+
+Right[ No SilverCCRightLever1 | SilverCCRightPivot1 | SilverCCRightBalast1 ] -> [ | | ]
+Right[ SilverCCRightLever1 | No SilverCCRightPivot1 | SilverCCRightBalast1 ] -> [ | | ]
+Right[ SilverCCRightLever1 | SilverCCRightPivot1 | No SilverCCRightBalast1 ] -> [ | | ]
+Up [ No SilverCWUpLever1 | SilverCWUpPivot1 | SilverCWUpBalast1 ] -> [ | | ]
+Up [ SilverCWUpLever1 | No SilverCWUpPivot1 | SilverCWUpBalast1 ] -> [ | | ]
+Up [ SilverCWUpLever1 | SilverCWUpPivot1 | No SilverCWUpBalast1 ] -> [ | | ]
+
+[ SilverAnimation Silver ] -> [ SilverAnimation ]
+
+Down [ SilverCCRightLever1 | ] -> [ SilverCCRightLever1 | SilverCCRightLever2 ]
+Down [ SilverCCRightPivot1 | ] -> [ SilverCCRightPivot1 | SilverCCRightPivot2 ]
+Down [ SilverCCRightBalast1| ] -> [ SilverCCRightBalast1| SilverCCRightBalast2]
+Left [ SilverCWUpLever1 | ] -> [ SilverCWUpLever1 | SilverCWUpLever2 ]
+Left [ SilverCWUpPivot1 | ] -> [ SilverCWUpPivot1 | SilverCWUpPivot2 ]
+Left [ SilverCWUpBalast1| ] -> [ SilverCWUpBalast1| SilverCWUpBalast2]
+
+(----RESET----)
+
+[ Active ] -> [ ]
+[ Temp ] -> [ ]															(-temp)
+[ > Player | Water ] -> [ Player | Water ]
+
+(----MAGNETICAL MOVEMENT----)
+Down [ Moving Heliyes | Box ] -> [ Moving Heliyes | Moving Box ]
+Down [ Action Player Charge ] -> [ Action Player OverCharge ]
+Down [ OverCharge | ... | No Fixed | Box ] -> [ OverCharge Active | ... | | < Box Active ]
+
+(try moving)
+[ Moving Box | Box ] -> [ Moving Box | Moving Box ]
+(cancel)
+[ > Box | No Fixed ] -> [ > Box Temp | ]								(+temp)
+[ > Box No Temp ] -> [ Box ]
+[ Temp ] -> [ ]															(-temp)
+[ > Box | Stationary Player ] -> [ Box | Player ]
+
+[ > Box | Stationary Box ] -> [ Stationary Box | Box ]
++ [ Moving Case | Stationary Case ] -> [ Stationary Case | Case ]
++ Up [ Moving ConBox No SideU | Stationary ConBox ] -> [ Stationary Conbox | Stationary ConBox ]
++ Left [ Moving ConBox No SideL | Stationary ConBox ] -> [ Stationary Conbox | Stationary ConBox ]
++ Right [ Moving ConBox No SideR | Stationary ConBox ] -> [ Stationary Conbox | Stationary ConBox ]
++ Down [ Moving ConBox No SideD | Stationary ConBox ] -> [ Stationary Conbox | Stationary ConBox ]
++ Up [ Moving SilverDown | Stationary SilverUp ] -> [ Stationary SilverDown | Stationary SilverUp ]
++ Left [ Moving SilverRight | Stationary SilverLeft ] -> [ Stationary SilverRight | Stationary SilverLeft ]
++ Right [ Moving SilverLeft | Stationary SilverRight ] -> [ Stationary SilverLeft | Stationary SilverRight ]
++ Down [ Moving SilverUp | Stationary SilverDown ] -> [ Stationary SilverUp | Stationary SilverDown ]
+
+(confirm movement)
+Down [ Heliyes | Moving Box ] -> [ Heliyes | Moving Box Active ]
+[ Moving Box Active | Moving Box ] -> [ Moving Box Active | Moving Box Active ]
+[ Moving Heliyes ][ Moving Box No Active ] -> [ Moving Heliyes ][ Box Active ]
+[ Moving Box Active ] -> [ Moving Box Moving Active ]
+
+(----ACTIVATE----)
+Down [ Heliyes | Conduit No Active ] -> [ Heliyes | Conduit Active]
+[ Magnet Conduit No Active ] -> [ Magnet Conduit Active ]
+[ Conduit Active | Conduit No Active ] -> [ Conduit Active | Conduit Active ]
+
+[ Arrow ] -> [ ]
+[ Up Conduit Active ] -> [ Up Conduit Active ArrowU ]
+[ Left Conduit Active ] -> [ Left Conduit Active ArrowL ]
+[ Right Conduit Active ] -> [ Right Conduit Active ArrowR ]
+[ Down Conduit Active ] -> [ Down Conduit Active ArrowD ]
+
+(----GRAVITY----)
+Down [ Stationary Player ][ Box No Active No Water | No Fixed No Player ] -> [ Player ][ Box Temp | ] again
+																		(+temp)
+
+Down [ Box Temp | Box No Temp ] -> [ Box | Box ]
++ Up [ ConBox Temp No SideU | ConBox No Temp ] -> [ Conbox | ConBox ]
++ Left [ ConBox Temp No SideL | ConBox No Temp ] -> [ Conbox | ConBox ]
++ Right [ ConBox Temp No SideR | ConBox No Temp ] -> [ Conbox | ConBox ]
++ Down [ ConBox Temp No SideD | ConBox No Temp ] -> [ Conbox | ConBox ]
++ Up [ SilverDown Temp | SilverUp No Temp ] -> [ SilverDown | SilverUp ]
++ Left [ SilverRight Temp | SilverLeft No Temp ] -> [ SilverRight | SilverLeft ]
++ Right [ SilverLeft Temp | SilverRight No Temp ] -> [ SilverLeft | SilverRight ]
++ Down [ SilverUp Temp | SilverDown No Temp ] -> [ SilverUp | SilverDown ]
+[ Box Temp ] -> [ Down Box ]
+[ Temp ] -> [ ]															(-temp)
+
+Up [ Stationary Player ][ Box Water No Active | Water ] -> [ Player ][ Up Box Water | Water ] again
+
+(----REQUIRE-PLAYER-MOVEMENT----)
+[ > Player ] -> [ > Player Temp ]										(+temp)
+Late [ Player Temp ] -> cancel
+Late [ Temp ] -> [ ]													(-TEMP)
+
+(----REACTIVATE----)
+Late [ Active ] -> [ Temp ]												(+TEMP)
+Late Down [ Heliyes | Conduit ] -> [ Heliyes | Conduit Active ]
+Late [ Magnet Conduit No Active ] -> [ Magnet Conduit Active ]
+Late [ Conduit Active | Conduit No Active ] -> [ Conduit Active | Conduit Active ]
++ Late Down [ OverCharge | ... | No Fixed | Box No Active ] -> [ OverCharge Active | ... | | Box Active ] again
+Late [ OverCharge No Active ] -> [ Charge Active ]
+
+Late Right [ Active | Pusher No PushLeft ] -> [ Active | Pusher Active ] again
+Late Left [ Active | Pusher No PushRight ] -> [ Active | Pusher Active ] again
+Late Down [ Active | Pusher No PushUp ] -> [ Active | Pusher Active ] again
+Late Up [ Active | Pusher No PushDown ] -> [ Active | Pusher Active ] again
+
+Late [ Temp No Active ] -> [ ] again SFX0
+Late [ Temp ] -> [ ]													(-TEMP)
+
+Late Down [ Box No Active | ... | Player ] -> again
+
+(----PUSHERS----)
+
+Right [ Active | Pusher No PushLeft ] -> [ Active | Pusher Active ]
+Left [ Active | Pusher No PushRight ] -> [ Active | Pusher Active ]
+Down [ Active | Pusher No PushUp ] -> [ Active | Pusher Active ]
+Up [ Active | Pusher No PushDown ] -> [ Active | Pusher Active ]
+
+Right [ PushRight Active | Box ] -> [ Active PushRight | > Box ]
+([ > Box | Box | No Fixed ] -> [ > Box | > Box | ])
+[ PushRight Active ] -> [ PushRight No Active ]
+
+Late Right [ PushRight Active | No Obstacle ] -> [ Active ShoulderRight | Active HeadRight ]
+Late Left [ PushLeft Active | No Obstacle ] -> [ Active ShoulderLeft | Active HeadLeft ]
+Late Down [ PushDown Active | No Obstacle ] -> [ Active ShoulderDown | Active HeadDown ]
+Late Up [ PushUp Active | No Obstacle ] -> [ Active ShoulderUp | Active HeadUp ]
+
+Late Right [ No Active ShoulderRight | No Active HeadRight ] -> [ PushRight | ] again
+Late Left [ No Active ShoulderLeft | No Active HeadLeft ] -> [ PushLeft | ] again
+Late Down [ No Active ShoulderDown | No Active HeadDown ] -> [ PushDown | ] again
+Late Up [ No Active ShoulderUp | No Active HeadUp ] -> [ PushUp | ] again
+
+(----ATTACHABLLES----)
+[ Moving Player Equipment ] -> [ Moving Player Moving Equipment ]
+[ > SafeGuards | Box No Active ] -> [ > SafeGuards | > Box ] again
+
+[ Moving Box Side ] -> [ Moving Box Moving Side ]
+
+(----TEXTURE----)
+Late [ ConCrateOff Active ] -> [ ConCrateOn Active ]
+Late [ ConCaseOff Active ] -> [ ConCaseOn Active ]
+Late [ ConCaseOn No Active ] -> [ ConCaseOff ]
+Late [ ConCrateOn No Active ] -> [ ConCrateOff ]
+Late [ WallOff Active ] -> [ WallOn Active ]
+Late [ WallOn No Active ] -> [ WallOff ]
+Late [ BoxBack ] -> [ ]
+Late [ Crate ] -> [ Crate CrateBack ]
+Late [ Case ] -> [ Case CaseBack ]
+Late [ TargetFull ] -> [ Target ]
+Late [ Target Box ] -> [ Target Box TargetFull ]
+Late [ Target Player ] -> [ Target Player TargetFull ]
+Late [ TargetFull No Player | Target No TargetFull ] -> [ | Target ]
+
+
+(Late [ Active ] -> [ ]))
+
+==============
+WINCONDITIONS
+==============
+
+All Box on Target
+All Target on Box
+All CaseTarget on Case
+All CrateTarget on Crate
+
+=======
+LEVELS
+=======
+
+#####..
+....#TT
+.XX...P
+###...#
+#######
+
+.......
+O......
+#..P...
+O.O.TTT
+#######
+
+...#...
+.......
+...P...
+X#X#T#T
+#######
+
+.........
+.....P...
+KKOX.....
+####...T#
+#####.T##
+
+.........
+.P..#....
+##..#..##
+OXO...TTT
+#########
+
+.P.........
+##...#...##
+OXX.....TTT
+###Q###.###
+######Q.Q##
+
+......#......
+KK....#......
+QQ....P......
+##...........
+XX....#..TT##
+OO....#..TT##
+#############
+
+(
+......###....
+QQ....###....
+QQ....P.#....
+##...........
+OO....#..TT##
+OO....#..TT##
+#############
+)
+
+.........
+.P..#....
+##..#..##
+ABA...TTT
+#########
+
+.......
+.P.....
+..###..
+..###..
+A......
+B....TT
+#######
+
+.......
+.....P.
+..###..
+..###..
+T......
+T....AB
+#######
+
+##...##
+XX...TT
+XX.P.TT
+##...##
+TT...XX
+TT.Ą.XX
+#######
+
+.......
+.......
+...P...
+.....T.
+##...##
+QQ.Ą..O
+#######
+
+.......
+.......
+...P...
+.....1O
+##...##
+QQ.Ą...
+#######
+
+...#...
+...#...
+.P.#...
+.......
+BB.#.TT
+AA...TT
+#######
+
+....
+.P..
+..##
+..##
+TT..
+ĄßOX
+####
+
+....
+.P.Ą
+..##
+..##
+TT..
+ĄßOX
+####
+
+(
+....
+.P##
+....
+..##
+TT..
+ĄĄOO
+####
+)
+
+(
+.....#.......
+BB.P..#....11
+XX....#....22
+BB....#....11
+##.........##
+##.........##
+#############
+
+#############
+......#......
+BB.P..#....11
+XX....#....22
+BB.........11
+##.........##
+#############
+)
+
+...#....#
+...#....#
+...#....#
+.P.#....O
+...O..TT#
+..AB..TT#
+#########
+
+...#....#
+...#....#
+...#....#
+.P.#....O
+TT.O....#
+TTAB....#
+#########
+
+..##....#
+..##....#
+..#.....#
+.P##....O
+TT.O....#
+TTAB....#
+#########
+
+(
+..##....#
+..##....#
+..##....#
+.P##....O
+TT.O....#
+TTAA....#
+#########
+
+####....#
+####....#
+..#.....#
+.P##....O
+TT.O....#
+TTAA....#
+#########
+)
+
+.........
+#.P.#...#
+....K....
+....K....
+....K....
+A...K..TĄ
+#########
+
+(
+..#......
+#.P.#...#
+....Q....
+....Q....
+....Q....
+A...Q..TĄ
+#########
+)
+
+.........
+.......AA
+....P..##
+TT.....AA
+TT.....##
+TT.....AA
+#########
+
+.........
+.......TT
+....P..##
+AA.....TT
+BB.....##
+AA.....TT
+#########
+
+.........
+.......AB
+....P..##
+TT.....AB
+TT.....##
+TT.....AB
+#########
+
+message "Hidden Potential" levels
+
+...##.
+..###.
+..B...
+TTAA#.
+TTB...
+TTAA#P
+######
+
+.........
+.......TT
+....P..##
+AO.....TT
+OA.....##
+AO.....TT
+#########
+
+##.......
+##.....TT
+....P..##
+OA.....TT
+AO.....##
+OA.....TT
+#########
+
+...###..A
+...###..B
+....P...A
+TTT.....B
+T.T.....A
+TTTAB...B
+#########
+
+.....P.....
+TTO..#.....
+###..#....#
+..M.....M..
+.....#.....
+TTT###.OXOX
+###########
+
+(
+.........
+....P....
+.OX...Ąß.
+#~~~#####
+#~~~Y####
+#~~~Y####
+#########
+)
+(
+....#####
+.P....↓Â.
+.........
+....#....
+....#....
+ĄßĄT→....
+#########
+)
+
+.........
+.......AB
+...PP..##
+TT.....AB
+TT.....##
+TT.....AB
+#########
+
+...........
+TTO.P#P....
+###..#....#
+...........
+.....#.....
+TTT###.OXOX
+###########
+
+.........
+.PAAA..P.
+.BBB#....
+.B.TTT...
+.#TTT....
+..T......
+#########
+
+message The testing playground
+...................................
+...................................
+........P..........69..............
+........A..........58..............
+.....##............47..............
+.II..HH.....#......................
+.II..#........#....................
+..........AAAB.....................
+..........####..&U.................
+......#......#...............#....#
+.............A...............#....#
+BB....#...#####....BABAA...###....#
+XX....#...#.............#..B......#
+BB....#.................#..AA#....#
+##........#.........#...#..B......#
+##........#O...AB.......#..AA#....#
+###################################
+
+...............
+...............
+..#.PP.........
+....#..........
+.....ABAB......
+####.XXXX......
+...#..A........
+...A..BO.......
+#####.AX.BABAA.
+
+........T
+.P.......
+......#..
+##.......
+.I..#.I..
+.I..HHI..
+#########
+
+.........
+.........
+.........
+.........
+.........
+.........
+#########

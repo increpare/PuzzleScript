@@ -1,0 +1,262 @@
+title Push Me / Pull Me
+author Ian Millington
+homepage idm.me.uk
+key_repeat_interval 0.25
+
+
+========
+OBJECTS
+========
+
+Background1
+BLACK #100900
+00100
+00000
+01000
+00010
+00000
+
+Background2
+BLACK #100800
+01000
+00010
+10000
+00100
+00000
+
+Exit 
+#555555 #444444 #333333 #222222
+00000
+01110
+02220
+03330
+00000
+
+Wall1
+#443322 #332211
+10000
+11111
+01000
+11111
+00100
+
+Wall2
+#443322 #332211
+11111
+10100
+11111
+00010
+11111
+
+Pusher 
+Blue #cc9966 Brown #554433
+.222.
+.111.
+10001
+.000.
+.3.3.
+
+InactivePusher
+Blue #cc9966 Brown #554433
+.....
+.222.
+.111.
+.000.
+13031
+
+PusherGate
+#3333cc #6666cc
+0.0.0
+00000
+0.0.0
+00000
+1.1.1
+
+Puller 
+Green #cc9966 Brown #554433
+.222.
+.111.
+10001
+.000.
+.3.3.
+
+InactivePuller
+Green #cc9966 Brown #554433
+.....
+.222.
+.111.
+.000.
+13031
+
+PullerGate
+#339933 #66aa66
+0.0.0
+00000
+0.0.0
+00000
+1.1.1
+
+GoldGate
+#cc9900 #ddaa00
+0.0.0
+00000
+0.0.0
+00000
+1.1.1
+
+GoldBlock 
+#ffcc66 #ffbb00 #cc9900
+00001
+01112
+01112
+01112
+12222
+
+=======
+LEGEND
+=======
+
+. = Background1
+, = Background2
+# = Wall1
+% = Wall2
+P = Pusher
+Q = InactivePusher
+R = PusherGate
+L = Puller
+M = InactivePuller
+N = PullerGate
+* = GoldBlock
+@ = GoldBlock and Exit
+G = GoldGate
+O = Exit
+Player = Pusher or Puller
+Background = Background1 or Background2
+Character = Pusher or InactivePusher or Puller or InactivePuller
+Gate = PusherGate or PullerGate or GoldGate
+Wall = Wall1 or Wall2
+FG = Wall or Character or Gate or GoldBlock
+
+=======
+SOUNDS
+=======
+
+SFX0 53789107
+SFX1 64847105
+SFX2 23717704
+EndLevel 88064703
+Player cantmove 55184304
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Exit
+FG
+
+======
+RULES     
+======     
+
+[ > Pusher | GoldBlock] -> [ > Pusher | > GoldBlock] SFX0
+[ < Puller | GoldBlock] -> [ < Puller | < GoldBlock] SFX0
+[ > Pusher | PusherGate | no FG] -> [ Background1 | PusherGate | Pusher] SFX2
+[ > Puller | PullerGate | no FG] -> [ Background1 | PullerGate | Puller] SFX2
+[ > GoldBlock | GoldGate | no FG] -> [ Background1 | GoldGate | GoldBlock] SFX2
+[ Action Pusher] [InactivePuller] -> [InactivePusher] [Puller] SFX1
+[ Action Puller] [InactivePusher] -> [InactivePuller] [Pusher] SFX1
+[ > Pusher | InactivePuller] -> [InactivePuller | Pusher]
+[ > Puller | InactivePusher] -> [InactivePusher | Puller]
+
+==============
+WINCONDITIONS
+==============
+
+All Exit on GoldBlock
+
+=======     
+LEVELS
+=======
+
+message Push the gold blocks over the holes
+
+###########
+%.,,...,.,%
+#.,.,,*.O,#
+%,P..,..,.%
+#.,.,,*.O.#
+%,..,.,..,%
+###########
+
+message Pull the gold blocks over the holes
+
+###########
+%.,,...,.,%
+#.,.,,O.*,#
+%,L..,..,.%
+#.,.,,O.*.#
+%,..,.,..,%
+###########
+
+message Press 'X' to switch between blue pusher and green puller
+
+###########
+%.,,.%.,,.%
+#,P.,#.M..#
+%.,*.%.,O,%
+#,.O.#..*.#
+%,,.,%,...%
+###########
+
+message Co-operate to solve puzzles
+
+###########
+%%.,..,..%%
+##..,.,..##
+%*.P.,.M.O%
+##.,,.,..##
+%%,..,.,.%%
+###########
+
+message Gates only allow the correct color character through
+
+###########
+%.,,%.,..,%
+#.P.N.,..,#
+%,..%..O*.%
+#.M.#.,.,.#
+%,..%,...,%
+###########
+
+message Push blocks through gold gates
+
+###########
+%..,,%.,.,%
+#,.,.#.,.,#
+%.O..G..*.%
+#.L,.#..Q.#
+%,...%,..,%
+###########
+
+message Move onto the other character to change places
+
+###########
+%*.,.,O.,.%
+########RN#
+%,.P...M.,%
+#NR########
+%..,O,.,.*%
+###########
+
+message Now put it all together. This last one is hard. Good luck!
+
+###########
+%..o..n...%
+#...#r#*.,#
+%*.%o.%o*.%
+#o*#g.###.#
+%.,%..P..,%
+#,.#.##.*.#
+%..%..M..o%
+###########

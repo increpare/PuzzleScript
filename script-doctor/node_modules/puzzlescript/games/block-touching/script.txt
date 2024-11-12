@@ -1,0 +1,883 @@
+title Block touching
+author Rosden Shadow [Mark Signorelli]
+homepage rosden.itch.io
+
+noaction
+run_rules_on_level_Start
+
+background_color #3B3942
+
+text_color #FFD9E0
+
+again_interval 0.1
+========
+OBJECTS
+========
+
+Background
+#666666 #3B3942 (#E57ED5 #CC5285)
+11111
+11111
+11011
+11111
+11111
+
+(
+00101
+01110
+11011
+01111
+10110)
+(
+11101
+00101
+11111
+10100
+10111)
+
+Back2
+#777777 #3B3942 (#E57ED5 #CC5285)
+11111
+11111
+11011
+11111
+11111
+
+
+nomove
+#FFEED9 #536673
+.....
+.000.
+.010.
+.000.
+.....
+
+Target
+white #423D39
+.....
+.000.
+.0.0.
+.000.
+.....
+
+Wall
+#FFD9E0 #C1A2A5  #845C5C #5B4846
+21110
+21110
+22221
+23232
+32323
+
+overwall
+#FFD9E0 #C1A2A5  #845C5C #5B4846
+.....
+.....
+.....
+10000
+21110
+
+Wall2
+#D9FFDC #7EE58D #5C8466 #4F5B46
+21110
+21110
+21110
+22221
+23232
+
+
+overwall2
+#D9FFDC #7EE58D #5C8466 #4F5B46
+.....
+.....
+.....
+.....
+10000
+
+
+
+Playerright
+#F2F2AA #E5C17E #CC7A52 #B32D2D
+.000.
+11202
+11313
+11110
+.1.1.
+
+playerleft
+#F2F2AA #E5C17E #CC7A52 #B32D2D
+.000.
+20211
+31311
+01111
+.1.1.
+
+Playerright2
+#D9FFF8 #AAE0F2 #5C8466 #4F5B46
+.000.
+11202
+11313
+11110
+.1.1.
+
+playerleft2
+#D9FFF8 #AAE0F2 #5C8466 #4F5B46
+.000.
+20211
+31311
+01111
+.1.1.
+
+Crate
+#FFD9E0 #E0AAF2 #A87EE5 #705C84
+21100
+21110
+22110
+32223
+.333.
+
+overcrate
+#FFD9E0 #E0AAF2 #A87EE5 #705C84
+.....
+.....
+.....
+.....
+.000.
+
+Crate1
+#FFD9E0 #E0AAF2 #A87EE5 #705C84 black
+21100
+21410
+22110
+32223
+.333.
+
+Crate2
+#FFD9E0 #E0AAF2 #A87EE5 #705C84 black
+21100
+24140
+22110
+32223
+.333.
+
+Crate3
+#FFD9E0 #E0AAF2 #A87EE5 #705C84 black
+24140
+21110
+22410
+32223
+.333.
+
+Crate4
+#FFD9E0 #E0AAF2 #A87EE5 #705C84 black
+24140
+21110
+24140
+32223
+.333.
+
+Crate12
+#F2F2AA #E5C17E #CC7A52 #736053 black
+21100
+21410
+22110
+32223
+.333.
+
+Crate22
+#F2F2AA #E5C17E #CC7A52 #736053 black
+21100
+24140
+22110
+32223
+.333.
+
+Crate32
+#F2F2AA #E5C17E #CC7A52 #736053 black
+24140
+21110
+22410
+32223
+.333.
+
+Crate42
+#F2F2AA #E5C17E #CC7A52 #736053 black
+24140
+21110
+24140
+32223
+.333.
+
+overcrate2
+#F2F2AA #E5C17E #CC7A52 #736053
+.....
+.....
+.....
+.....
+.000.
+
+
+
+change
+#7EE58D #5C8466
+..0..
+.000.
+.101.
+.111.
+..1..
+
+end
+#FFD9E0 #E0AAF2 #A87EE5 #705C84
+21100
+21110
+22110
+32223
+.333.
+endx
+#FFD9E0 #E0AAF2 #A87EE5 #705C84
+21100
+21110
+22110
+32223
+.333.
+
+
+
+cloner
+#E5C17E #DB7F55 #B32D2D #73342E
+.100.
+.210.
+.221.
+.332.
+.....
+
+swapcrate
+Orange Yellow
+00000
+0...0
+0...0
+0...0
+00000
+
+swapwall
+black
+.....
+.....
+.....
+.....
+.....
+
+thefloor
+#3B3942
+00000
+00000
+00000
+00000
+00000
+
+thefloorx
+#3B3942
+00000
+00000
+00000
+00000
+00000
+
+eend
+#3B3942
+00000
+00000
+00000
+00000
+00000
+(
+checkempty
+black
+.....
+.....
+.....
+.....
+.....
+
+checkblock
+black
+.....
+.....
+.....
+.....
+.....
+)
+spa
+TRANSPARENT
+
+pitani
+black #D9FFF8 #AAE0F2 #7EA1E5
+.1.1.
+2.1.1
+.2.1.
+2.2.1
+.2.2.
+
+pitani2
+black #D9FFF8 #AAE0F2 #7EA1E5
+..1..
+.2.1.
+2.2.1
+.2.2.
+..2..
+
+pitani3
+black #D9FFF8 #AAE0F2 #7EA1E5
+.....
+..1..
+.2.1.
+..2..
+.....
+
+pitani4
+black #D9FFF8 #AAE0F2 #7EA1E5
+.....
+.....
+..1..
+.....
+.....
+
+blockani
+black #F2F2AA #E5C17E #CC7A52 #736053
+.1.1.
+2.1.1
+.2.1.
+2.2.1
+.2.2.
+
+blockani2
+black #F2F2AA #E5C17E #CC7A52 #736053
+..1..
+.2.1.
+2.2.1
+.2.2.
+..2..
+
+blockani3
+black #F2F2AA #E5C17E #CC7A52 #736053
+.....
+..1..
+.2.1.
+..2..
+.....
+
+blockani4
+black #F2F2AA #E5C17E #CC7A52 #736053
+.....
+.....
+..1..
+.....
+.....
+
+cha
+TRANSPARENT
+
+sub
+TRANSPARENT
+
+movr
+TRANSPARENT
+movl
+TRANSPARENT
+movu
+TRANSPARENT
+movd
+TRANSPARENT
+
+pit
+black #231F26 (#E57ED5 #CC5285)
+11111
+10101
+01010
+00000
+00000
+
+pit1
+black #3B3942 (#E57ED5 #CC5285)
+11111
+10101
+01010
+00000
+00000
+
+pitfull
+black #231F26 (#E57ED5 #CC5285)
+00000
+00000
+00000
+00000
+00000
+
+switcrate
+black
+.....
+.....
+.....
+.....
+.....
+
+switcrate2
+black
+.....
+.....
+.....
+.....
+.....
+
+arrow
+black
+.....
+.....
+.0.0.
+.000.
+..0..
+
+arrow2
+black
+.....
+.0.0.
+.000.
+..0..
+.....
+
+arrowx
+black
+.....
+.....
+.....
+.....
+.....
+
+arrowx2
+black
+.....
+.....
+.....
+.....
+.....
+
+winend
+#F2F2AA #E5C17E #CC7A52 #736053
+1000.
+21100
+21110
+22110
+.2221
+
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Playerright
+* = Crate
+
+$ = change
+
+O = Target
+n = nomove
+a = arrow2 and wall
+e=end
+t = end and target and eend
+w=end and winend
+
+c=cloner
+-=thefloor
+x=thefloorx
+
+;=pit
+
+1=crate1
+2=crate2
+3=crate3
+4=crate4
+
+feel=overwall or overcrate or overwall2 or overcrate2
+
+numblock=Crate1 or Crate2 or crate3 or crate4
+
+numblock2=Crate12 or Crate22 or Crate32 or Crate42
+
+pushable=crate or cloner or swapcrate  or switcrate or switcrate2 or numblock or numblock2
+win=crate or wall
+
+mov= movr or movl or movu or movd
+
+theemx= crate or numblock
+
+player1 = playerright or playerleft
+player2= Playerright2 or playerleft2
+
+player=playerright or playerleft or player2
+
+apit= pit or pitfull or pit1
+
+blocker = wall or crate  or nomove or player or arrow or numblock
+
+arrowk = arrow or arrow2 or arrowx or arrowx2
+
+pitanix=pitani or pitani2 or pitani3 or pitani4
+
+blockanix=blockani or blockani2 or blockani3 or blockani4
+=======
+SOUNDS
+=======
+
+pushable MOVE 36772507
+
+EndLevel 74089700
+
+player MOVE 87907(68988304)
+sfx0 52836103
+sfx1 45427502
+
+sfx2 29503700
+sfx3 81951902
+
+sfx4 4416703
+
+sfx5 41950102
+
+sfx6 71099507
+
+sfx7 67526503
+
+sfx8 43219504
+
+sfx9 7215101(41950102)
+================
+COLLISIONLAYERS
+================
+
+Background
+back2
+Target
+nomove
+Player, Wall, pushable,swapwall,thefloor,thefloorx,change,apit,wall2
+
+sub
+spa
+mov
+pitanix
+blockanix
+cha
+arrow, arrow2, arrowx, arrowx2
+winend
+eend
+end, endx
+feel
+
+
+======
+RULES
+======
+
+[feel]->[]
+[cha]->[]
+
+[pitani4]->[]
+[pitani3]->[pitani4]
+[pitani2]->[pitani3]
+[pitani]->[pitani2]
+
+[blockani4]->[]
+[blockani3]->[blockani4]
+[blockani2]->[blockani3]
+[blockani]->[blockani2]
+
+[ left Playerright] -> [ left playerleft]
+[ right Playerleft] -> [ right playerright]
+
+[ left Playerright2] -> [ left playerleft2]
+[ right Playerleft2] -> [ right playerright2]
+
+[ >  Player1 | pushable ] -> [  >  Player1 | > pushable ]
+
+
+
+[player2 movr]->[right player2 movr] sfx6
+[player2 movl]->[left player2 movl] sfx6
+[player2 movu]->[up player2 movu] sfx6
+[player2 movd]->[down player2 movd] sfx6
+
+[ >  Player2 no mov| numblock ] -> [ Player2 |  numblock] sfx8
+
+[ >  Player2 mov| numblock2] -> [ Player2 |  numblock2 sub] sfx7
+
+[crate12 sub]->[blockani pit]
+[crate22 sub]->[crate1 ]
+[crate32 sub]->[crate2 ]
+[crate42 sub]->[crate3 ]
+
+[ > playerright| change] -> [> playerright2| cha] sfx4
+[ > playerleft| change] -> [> playerleft2| cha] sfx4
+
+[> crate|Target]->[> crate|target] sfx2
+
+
+
+
+[> player2 | apit]->[ |pitani apit] sfx5
+
+[mov]->[]
+right[right player2|no blocker]->[right player2| movr]
+left[left player2|no blocker]->[left player2| movl]
+up[up player2|no blocker]->[up player2| movu]
+down[down player2|no blocker]->[down player2| movd]
+
+
+[endx] ->[thefloor] sfx2
+[end | thefloor]-> [endx |thefloor]
+
+(late[wall]->[pit])
+late [crate12]->[crate1]
+late [crate22]->[crate2]
+late [crate32]->[crate3]
+late [crate42]->[crate4]
+
+late [player2 mov][crate1]->[player2 mov][crate12]
+late [player2 mov][crate2]->[player2 mov][crate22]
+late [player2 mov][crate3]->[player2 mov][crate32]
+late [player2 mov][crate4]->[player2 mov][crate42]
+
+late[player2 no spa]->[player2 spa]
+
+late[spa no blocker]->[wall2]
+
+late[cha][crate]->[cha][wall2]
+
+late[cha] [background no apit no thefloor]->[cha][background back2]
+
+late up [wall| ]-> [wall|overwall]
+late up [wall2| ]-> [wall2|overwall2]
+
+late up [theemx| ]-> [theemx|overcrate]
+
+late up [numblock2| ]-> [numblock2|overcrate2]
+(late up [crate2| ]-> [crate2|overcrate2])
+
+late up [end| ]-> [end|overcrate]
+late up [endx| ]-> [endx|overcrate]
+
+late up [apit|back2]->[pit1|back2]
+late up [apit|apit]->[pitfull|apit]
+
+late up [apit|no apit]->[pit|]
+
+
+
+[]-> again 
+(
+[arrow]->[arrowx2]
+[arrow2]->[arrowx]
+
+[arrowx]->[arrow]
+[arrowx2]->[arrow2])
+==============
+WINCONDITIONS
+==============
+
+(all target on player2
+
+no mov)
+
+no numblock
+no numblock2
+no blockanix
+
+no thefloorx
+
+=======
+LEVELS
+=======
+
+message Remove all blocks
+
+message level 1 of 8
+
+---------
+-;;;;;;;-
+;;.....;;
+;...P...;
+;.1...1.;
+;.......;
+;.......;
+;...$...;
+;.......;
+;;.....;;
+-;;;;;;;-
+
+(---------
+-;;;;;;;-
+;;;;;;;;;
+;;..P..;;
+;.......;
+;###1###;
+;.......;
+;..$....;
+;;...1.;;
+;;;;;;;;;
+-;;;;;;;-)
+
+message level 2 of 8
+---------
+-;;;;;;;-
+;;..#..;;
+;.......;
+;...P...;
+;..1.2..;
+;.......;
+;...$...;
+;.......;
+;;.....;;
+-;;;;;;;-
+
+message level 3 of 8
+---------
+-;;;;;;;-
+;;.....;;
+;..1.1..;
+;#......;
+;...3...;
+;...P...;
+;....$..;
+;.......;
+;;.....;;
+-;;;;;;;-
+
+message level 4 of 8
+---------
+-;;;;;;;-
+;;.....;;
+;.......;
+;...P...;
+;..212..;
+;......#;
+;...$...;
+;.......;
+;;.....;;
+-;;;;;;;-
+
+message level 5 of 8
+---------
+-#######-
+##.....##
+#...4...#
+#...1...#
+#.......#
+#...$...#
+#.......#
+#...P...#
+##.....##
+-#######-
+
+message level 6 of 8
+---------
+-#######-
+##.....##
+#...3...#
+#.......#
+#...$...#
+#.......#
+#...2...#
+#...P...#
+##.....##
+-#######-
+
+message level 7 of 8
+---------
+-#######-
+##.....##
+#...P...#
+#..2.2..#
+#.......#
+#...$...#
+#.......#
+#..2.2..#
+##.....##
+-#######-
+
+message level 8 of 8
+---------
+-#######-
+##.....##
+#...P...#
+#..2.2..#
+#....;..#
+#...$...#
+#.......#
+#...3...#
+##.....##
+-#######-
+
+(---------
+-#######-
+##.....##
+#.......#
+#..3.3..#
+#...$...#
+#.......#
+#.......#
+#...P...#
+##.....##
+-#######-)
+
+
+(---------
+-;;;;;;;-
+;;.....;;
+;.......;
+;...2...;
+;..1$3..;
+;.......;
+;.......;
+;...P...;
+;;.....;;
+-;;;;;;;-)
+
+(---------
+-;;;;;;;-
+;;..P..;;
+;...1...;
+;..#1#..;
+;##...##;
+;;#...#;;
+;;#...#;;
+;;;#$#;;;
+;;;;#;;;;
+-;;;;;;;-)
+
+
+(---------
+-;;;;;;;-
+;;.....;;
+;...1...;
+;...P...;
+;.1...1.;
+;...#...;
+;.1...1.;
+;...$...;
+;;.....;;
+-;;;;;;;-)
+
+
+
+xxxxxxxxxxxxxx
+-eeeeeeeeeeee-
+eeeeeeeeeeeeee
+eeeeeeeeeeeeee
+wewewewwweweew
+wewewetweewwew
+weweweeweeweww
+eweweewwweweew
+eeeeeeeeeeeeee
+eeeeeeeeeeeeee
+-eeeeeeeeeeee-
+
+
