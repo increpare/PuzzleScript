@@ -1,5 +1,5 @@
 title Simple Block Pushing Game
-author David Skinner
+author increpare
 homepage www.puzzlescript.net
 
 ========
@@ -7,15 +7,16 @@ OBJECTS
 ========
 
 Background
-lightgreen green
+LIGHTGREEN GREEN
 11111
 01111
 11101
 11111
 10111
 
+
 Target
-darkblue
+DarkBlue
 .....
 .000.
 .0.0.
@@ -23,7 +24,7 @@ darkblue
 .....
 
 Wall
-brown darkbrown
+BROWN DARKBROWN
 00010
 11111
 01000
@@ -31,37 +32,46 @@ brown darkbrown
 00010
 
 Player
-black orange white blue
+Black Orange White Blue
 .000.
 .111.
 22222
 .333.
 .3.3.
 
-Crate
-orange
+BlueCrate B
+lightblue
 00000
 0...0
 0...0
 0...0
 00000
+
+
+OrangeCrate O
+Orange
+00000
+0...0
+0...0
+0...0
+00000
+
 
 =======
 LEGEND
 =======
 
+Crate = OrangeCrate or BlueCrate
 . = Background
 # = Wall
 P = Player
-* = Crate
-@ = Crate and Target
-O = Target
+
 
 =======
 SOUNDS
 =======
 
-Crate move 36772507
+Crate MOVE 36772507
 
 ================
 COLLISIONLAYERS
@@ -75,30 +85,23 @@ Player, Wall, Crate
 RULES
 ======
 
-[ > Player | Crate ] -> [ > Player | > Crate ] 
+[ >  Player | Crate ] -> [  >  Player | > Crate  ]
+
+[ > Crate | Crate ] -> [ > Crate | > Crate ]
 
 ==============
 WINCONDITIONS
 ==============
 
-all Target on Crate
-
 =======
 LEVELS
 =======
 
-####..
-#.O#..
-#..###
-#@P..#
-#..*.#
-#..###
-####..
+#########
+#.......#
+#...B...#
+#.P.B.O.#
+#....O..#
+#.......#
+#########
 
-######
-#....#
-#.#P.#
-#.*@.#
-#.O@.#
-#....#
-######

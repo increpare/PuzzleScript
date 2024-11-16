@@ -1,6 +1,8 @@
 %import common.WS_INLINE
 %import common.INT
-%import common.NEWLINE -> NEWLINE
+// %import common.NEWLINE -> NEWLINE
+
+NEWLINE: "\n"
 
 %ignore WS_INLINE
 
@@ -8,7 +10,7 @@
 start: ps_game
 
 ps_game: prelude? objects_section legend_section sounds_section collisionlayers_section rules_section winconditions_section levels_section
-newlines: NEWLINE+
+NEWLINES: NEWLINE+
 
 // Section delimiters
 section_delimiter: delimiter NEWLINE
@@ -16,18 +18,18 @@ section_delimiter: delimiter NEWLINE
 delimiter: "="+
 
 // Sections
-objects_section: section_delimiter? "OBJECTS" newlines section_delimiter? object_data+
-legend_section: section_delimiter? "LEGEND" newlines section_delimiter? legend_data+
-sounds_section: section_delimiter? "SOUNDS" newlines section_delimiter? sound_data*
-collisionlayers_section: section_delimiter? "COLLISIONLAYERS" newlines section_delimiter? layer_data+
-rules_section: section_delimiter? "RULES" newlines section_delimiter? rule_data+
-winconditions_section: section_delimiter? "WINCONDITIONS" newlines section_delimiter? condition_data+
-levels_section: section_delimiter? "LEVELS" newlines section_delimiter? level_data+
+objects_section: section_delimiter? "OBJECTS" NEWLINES section_delimiter? object_data+
+legend_section: section_delimiter? "LEGEND" NEWLINES section_delimiter? legend_data+
+sounds_section: section_delimiter? "SOUNDS" NEWLINES section_delimiter? sound_data+
+collisionlayers_section: section_delimiter? "COLLISIONLAYERS" NEWLINES section_delimiter? layer_data+
+rules_section: section_delimiter? "RULES" NEWLINES section_delimiter? rule_data+
+winconditions_section: section_delimiter? "WINCONDITIONS"i NEWLINES section_delimiter? condition_data+ // Accept no win conditions
+levels_section: section_delimiter? "LEVELS" NEWLINES section_delimiter? level_data+
 
 // Prelude
 prelude: prelude_data+
 
-prelude_data: (KEYWORD_ID STRING*)? COMMENT? NEWLINE
+prelude_data: (KEYWORD_ID STRING*)? COMMENT? NEWLINES
 
 STRING: /[^\n]+/
 
@@ -35,15 +37,17 @@ STRING: /[^\n]+/
 COMMENT: /\((?:[^\(\)]|\((?:[^\(\)]|\([^)]*\))*\))*\)/
 
 // Object Data
-object_data: (object_name COMMENT? legend_key? NEWLINE colors NEWLINE sprite?)
+object_data: (object_name COMMENT? legend_key? NEWLINE colors COMMENT? NEWLINE sprite?) NEWLINES?
+           | NEWLINES_OR_COMMENTS
 
-sprite_pixel: /[0-9.]/
+SPRITE_PIXEL: /[0-9.]/
 colors: color+
 
-sprite: (sprite_pixel~5 NEWLINE)~5
+sprite: (SPRITE_PIXEL~5 COMMENT? NEWLINE)~5
 
 // Legend Data
-legend_data: (legend_key "=" object_name legend_operation*)? COMMENT? NEWLINE
+legend_data: legend_key "=" object_name legend_operation*
+           | NEWLINES_OR_COMMENTS
 
 legend_operation: "or"i object_name
                 | "and"i object_name
@@ -56,27 +60,30 @@ sound_number: INT
 sound: "sfx"i sound_id
 
 // Layer Data
-layer_data: ((object_name ",")* object_name ","*)? COMMENT? NEWLINE
+layer_data: ((object_name ("," | " "))* object_name ","*)?
+          | NEWLINES_OR_COMMENTS
 
 // Rule Data
-rule_data: (prefix | rule_part)+ "->" (command | rule_part)* message? COMMENT? NEWLINE
+rule_data: "+"? (prefix | rule_part)+ "->" (command | rule_part)* message? COMMENT? NEWLINE
          | "startloop"i rule_data+ "endloop"i NEWLINE
-         | COMMENT
-         | NEWLINE
+         | NEWLINES_OR_COMMENTS
 
-message: "message" STRING*
+message: "message"i STRING*
 
-rule_part: "[" (rule_content "|"*)+ "]"
+rule_part: "[" (rule_content? "|"*)+ "]"
 // RULE_PART: "[ > Player | Crate ]"
 
-rule_content: ID_OR_DIRECTIONAL*
+rule_content: DIRECTIONAL? ID+
+
+ID: /[a-z0-9.A-Z#_]/+
 
 // Command
 command: command_keyword
        | sound
 
 // Condition Data
-condition_data: newlines? condition_id+ newlines?
+condition_data: condition_id+
+              | NEWLINES_OR_COMMENTS
 
 // Level Data
 // level_data: (levelline NEWLINE)+ COMMENT? NEWLINE
@@ -84,16 +91,24 @@ condition_data: newlines? condition_id+ newlines?
 //           | COMMENT
 //           | NEWLINE
 // level_data: "dummy"
-level_data: "message"i STRING* COMMENT? NEWLINE
-             | levellines NEWLINE?
-             | COMMENT
-             | NEWLINE
 
-levellines: (levelline NEWLINE)+
+level_data: LEVELLINES
+          | "message "i STRING+
+          | NEWLINES_OR_COMMENTS
 
-levelline: PIXEL+
+// levellines: (levelline NEWLINE)+
+LEVELLINES: /((?<!message)[a-zA-Zぁ-㍿.!@#$%&*0-9\-,`\'~_"§\[\]è!çàé;?:\/+°£^{}|\><^v¬˅\\±]+\n)+/
 
+NEWLINES_OR_COMMENTS: (NEWLINE | COMMENT)+
+
+// levelline: /(?<!message) / PIXEL+
 PIXEL: /[a-zA-Zぁ-㍿.!@#$%&*0-9\-,`\'~_"§\[\]è!çàé;?:\/+°£^{}|\><^v¬˅\\±]/
+sprite_key: PIXEL
+          | "="  // To permit easyenigma
+levelline: /(?<!message)[a-zA-Zぁ-㍿.!@#$%&*0-9\-,`\'~_"§\[\]è!çàé;?:\/+°£^{}|\><^v¬˅\\±]+/
+// Rewrite LEVELLINE to use PIXEL, but still inhibit message
+// levelline: /(?<!message)./ sprite_key*
+
 // PIXEL: /[a-zA-Z#\.]/
 
 // Identifiers and Tokens
@@ -105,7 +120,8 @@ condition_id: ID
 // A rule prefix is anything but `[`
 legend_key: PIXEL+
 // ID_OR_DIRECTIONAL: /(?!\|)[\>\<a-zA-Z]+/
-ID_OR_DIRECTIONAL: /[\>\<^va-z0-9.A-Z#_]/
+
+DIRECTIONAL: /[\^v<>]/
 
 KEYWORD_ID: /[a-z0-9.A-Z_]+/
 prefix: ID
@@ -120,4 +136,4 @@ legend_keyword: "or"i | "and"i
 command_keyword: "again"i | "cancel"i | "checkpoint"i | "restart"i | "win"i
 
 
-ID: /[a-z0-9.A-Z#_+]+/
+// ID: /[a-z0-9.A-Z#_+]+/
