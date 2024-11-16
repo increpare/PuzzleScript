@@ -1,0 +1,1 @@
+This is a fork of accessible PuzzleScript, taking advantage of the fact that it is implemented as javascript modules, using a javascript-python bridge to communicate directly between the two.

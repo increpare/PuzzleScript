@@ -1,4 +1,4 @@
-title Broken Rigid Body example
+title Rigid Body example
 author Anonymous
 homepage www.puzzlescript.net
 
@@ -104,7 +104,6 @@ Obstacle = Wall or Mover
 SOUNDS
 =======
 
-
 ================
 COLLISIONLAYERS
 ================
@@ -129,6 +128,27 @@ RULES
 
 ( 2. Propagate obstructions backwards )
 [ > Mover  | stationary Obstacle ] -> [ stationary Mover | Obstacle ]
+
+	(the next lines deal with directional conflicts)
++ [ ^ Crate | < Crate ] -> [ stationary Crate | stationary Crate ] 
++ [ ^ Crate | > Crate ] -> [ stationary Crate | stationary Crate ] 
++ [ ^ Crate | v Crate ] -> [ stationary Crate | stationary Crate ] 
+
++ [ v Crate | < Crate ] -> [ stationary Crate | stationary Crate ] 
++ [ v Crate | > Crate ] -> [ stationary Crate | stationary Crate ] 
++ [ v Crate | ^ Crate ] -> [ stationary Crate | stationary Crate ] 
+
++ [ < Crate | > Crate ] -> [ stationary Crate | stationary Crate ] 
++ [ < Crate | ^ Crate ] -> [ stationary Crate | stationary Crate ] 
++ [ < Crate | v Crate ] -> [ stationary Crate | stationary Crate ] 
+
++ [ > Crate | < Crate ] -> [ stationary Crate | stationary Crate ] 
++ [ > Crate | ^ Crate ] -> [ stationary Crate | stationary Crate ] 
++ [ > Crate | v Crate ] -> [ stationary Crate | stationary Crate ] 
+
+(also one space removed)
++ [ > Mover | |  < Mover ] -> [ stationary Mover | |  < Mover ] 
+
 + [ > Crate  ] [ stationary Crate ] -> [ stationary Crate ] [ Crate ]
 + [ > Box    ] [ stationary Box   ] -> [ stationary Box   ] [ Box   ]
 + [ > Chest  ] [ stationary Chest ] -> [ stationary Chest ] [ Chest ]
@@ -148,6 +168,7 @@ RULES
 ( 5. cleanup, remove flag )
 [ wanna_move ] -> [ ]
 
+
 ==============
 WINCONDITIONS
 ==============
@@ -156,22 +177,14 @@ WINCONDITIONS
 LEVELS
 =======
 
-###################
-#.................#
-#............s....#
-#...*..g.g.#......#
-#...*......#...g###
-#...*...o.%%%.....#
-#...+++.o.%.......#
-#....+....%%%.....#
-#....+.........g..#
-#....p.gg.........#
-###################
+#########
+#.......#
+#..p....#
+#.......#
+#.......#
+#..***..#
+#.......#
+#....S..#
+#.......#
+#########
 
-#########
-#.......#
-#.p.+...#
-#...+...#
-#...+.s.#
-#.......#
-#########

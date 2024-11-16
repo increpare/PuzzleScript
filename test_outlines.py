@@ -6,15 +6,20 @@ from outlines import models, generate
 
 load_dotenv()
 
-with open('syntax.rsc', 'r') as f:
+import transformers
+import torch
+
+model_id = "meta-llama/Meta-Llama-3.1-8B-Instruct"
+
+
+with open('Syntax.rsc', 'r') as f:
     grammar = f.read()
 
-model = models.openai(
-    'gpt-4o',
-    api_key=os.getenv('OPENAI_API_KEY'),
+model = models.transformers(
+    model_id,
 )
 
-generator = generate.cfg(model, grammar)
+generator = generate.cfg(model)
 ret = generator.generate("Generate a PuzzleScript game.")
 print(ret)
 breakpoint()

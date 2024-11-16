@@ -1,10 +1,12 @@
-title Broken Rigid Body example
+title BROKEN Rigid Body example
 author Anonymous
 homepage www.puzzlescript.net
 
 verbose_logging
 
 (
+
+BROKEN Example Game FOR ILLUSTRATION PURPOSES ONLY. DO NOT USE.
 
 Example for
 https://www.puzzlescript.net/Documentation/rigidbodies.html#many_many
@@ -104,7 +106,6 @@ Obstacle = Wall or Mover
 SOUNDS
 =======
 
-
 ================
 COLLISIONLAYERS
 ================
@@ -129,6 +130,27 @@ RULES
 
 ( 2. Propagate obstructions backwards )
 [ > Mover  | stationary Obstacle ] -> [ stationary Mover | Obstacle ]
+
+	(the next lines deal with directional conflicts)
++ [ ^ Crate | < Crate ] -> [ stationary Crate | stationary Crate ] 
++ [ ^ Crate | > Crate ] -> [ stationary Crate | stationary Crate ] 
++ [ ^ Crate | v Crate ] -> [ stationary Crate | stationary Crate ] 
+
++ [ v Crate | < Crate ] -> [ stationary Crate | stationary Crate ] 
++ [ v Crate | > Crate ] -> [ stationary Crate | stationary Crate ] 
++ [ v Crate | ^ Crate ] -> [ stationary Crate | stationary Crate ] 
+
++ [ < Crate | > Crate ] -> [ stationary Crate | stationary Crate ] 
++ [ < Crate | ^ Crate ] -> [ stationary Crate | stationary Crate ] 
++ [ < Crate | v Crate ] -> [ stationary Crate | stationary Crate ] 
+
++ [ > Crate | < Crate ] -> [ stationary Crate | stationary Crate ] 
++ [ > Crate | ^ Crate ] -> [ stationary Crate | stationary Crate ] 
++ [ > Crate | v Crate ] -> [ stationary Crate | stationary Crate ] 
+
+(also one space removed)
++ [ > Mover | |  < Mover ] -> [ stationary Mover | |  < Mover ] 
+
 + [ > Crate  ] [ stationary Crate ] -> [ stationary Crate ] [ Crate ]
 + [ > Box    ] [ stationary Box   ] -> [ stationary Box   ] [ Box   ]
 + [ > Chest  ] [ stationary Chest ] -> [ stationary Chest ] [ Chest ]
@@ -148,6 +170,7 @@ RULES
 ( 5. cleanup, remove flag )
 [ wanna_move ] -> [ ]
 
+
 ==============
 WINCONDITIONS
 ==============
@@ -156,22 +179,24 @@ WINCONDITIONS
 LEVELS
 =======
 
-###################
-#.................#
-#............s....#
-#...*..g.g.#......#
-#...*......#...g###
-#...*...o.%%%.....#
-#...+++.o.%.......#
-#....+....%%%.....#
-#....+.........g..#
-#....p.gg.........#
-###################
+#########
+#.......#
+#..p...p#
+#.......#
+#.......#
+#..***..#
+#.......#
+#s...S..#
+#.......#
+#########
 
 #########
 #.......#
-#.p.+...#
-#...+...#
-#...+.s.#
+#.......#
+#.......#
+#...s...#
+#..+++..#
+#...p...#
+#.......#
 #.......#
 #########

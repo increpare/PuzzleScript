@@ -259,7 +259,7 @@ def gen_fewshot_examples(system_prompt, prompt):
     return fewshot_examples_prompt_i
 
 
-def openai_text_query(system_prompt, prompt, seed):
+def llm_text_query(system_prompt, prompt, seed):
     global openai_client
     if openai_client is None:
         openai_client = openai.Client(api_key=os.getenv('OPENAI_API_KEY'))
@@ -321,7 +321,7 @@ def gen_game():
         if fewshot:
             system_prompt += gen_fewshot_examples(system_prompt, prompt)
         save_prompts(system_prompt, prompt, gen_game_prompt_output_path)
-        text = openai_text_query(system_prompt, prompt, seed)
+        text = llm_text_query(system_prompt, prompt, seed)
         with open(gen_game_output_path, 'w', encoding='utf-8') as f:
             f.write(text)
     else:
@@ -369,7 +369,7 @@ def gen_game_from_plan():
         if fewshot:
             plan_system_prompt += gen_fewshot_examples(plan_system_prompt, prompt)   
         save_prompts(plan_system_prompt, prompt, plan_prompt_output_path)
-        game_plan = openai_text_query(plan_system_prompt, prompt, seed)
+        game_plan = llm_text_query(plan_system_prompt, prompt, seed)
         with open(plan_output_path, 'w', encoding='utf-8') as f:
             f.write(game_plan)
     else:
@@ -387,7 +387,7 @@ def gen_game_from_plan():
     if not os.path.isfile(sprites_output_path):
         sprites_prompt_output_path = os.path.join(save_dir, f'0b_sprites_prompt.txt')
         save_prompts(sprites_system_prompt, sprites_prompt, sprites_prompt_output_path)
-        sprites = openai_text_query(sprites_system_prompt, sprites_prompt, seed)
+        sprites = llm_text_query(sprites_system_prompt, sprites_prompt, seed)
         with open(sprites_output_path, 'w', encoding='utf-8') as f:
             f.write(sprites)
         
@@ -414,7 +414,7 @@ def gen_game_from_plan():
     if not os.path.isfile(rules_output_path):
         rules_prompt_output_path = os.path.join(save_dir, f'0d_rules_prompt.txt')
         save_prompts(sprites_system_prompt, rules_prompt, rules_prompt_output_path)
-        rules = openai_text_query(sprites_system_prompt, rules_prompt, seed)
+        rules = llm_text_query(sprites_system_prompt, rules_prompt, seed)
         with open(rules_output_path, 'w', encoding='utf-8') as f:
             f.write(rules)
     else:
@@ -444,7 +444,7 @@ def gen_game_from_plan():
     if not os.path.isfile(levels_output_path):
         levels_prompt_output_path = os.path.join(save_dir, f'0f_levels_prompt.txt')
         save_prompts(levels_system_prompt, levels_prompt, levels_prompt_output_path)
-        levels = openai_text_query(levels_system_prompt, levels_prompt, seed)
+        levels = llm_text_query(levels_system_prompt, levels_prompt, seed)
         with open(levels_output_path, 'w', encoding='utf-8') as f:
             f.write(levels)
     else:
@@ -470,7 +470,7 @@ def gen_game_from_plan():
     if not os.path.isfile(finalize_output_path):
         finalize_prompt_output_path = os.path.join(save_dir, f'0h_code_prompt.txt')
         save_prompts(finalize_system_prompt, finalize_prompt, finalize_prompt_output_path)
-        code = openai_text_query(finalize_system_prompt, finalize_prompt, seed)
+        code = llm_text_query(finalize_system_prompt, finalize_prompt, seed)
         with open(finalize_output_path, 'w', encoding='utf-8') as f:
             f.write(code)
     else:
