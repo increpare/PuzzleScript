@@ -580,7 +580,7 @@ function generateClick() {
 }
 
 // sweep();
-// fromIdeaSweep();
+fromIdeaSweep();
 // fromPlanSweep();
 // evolve();
 

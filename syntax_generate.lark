@@ -1,15 +1,15 @@
-%import common.WS_INLINE
+// %import common.WS_INLINE
 %import common.INT
 // %import common.NEWLINE -> NEWLINE
 
 NEWLINE: "\n"
 
-%ignore WS_INLINE
+// %ignore WS_INLINE
 
 // Start rule
 start: ps_game
 
-ps_game: prelude? objects_section legend_section sounds_section collisionlayers_section rules_section winconditions_section levels_section
+ps_game: objects_section legend_section collisionlayers_section rules_section
 NEWLINES: NEWLINE+
 
 // Section delimiters
@@ -18,12 +18,12 @@ section_delimiter: delimiter NEWLINE
 delimiter: "="+
 
 // Sections
-objects_section: section_delimiter? "OBJECTS" NEWLINES section_delimiter? object_data+
+objects_section: section_delimiter? "OBJECTS" NEWLINES section_delimiter? NEWLINE object_data+
 legend_section: section_delimiter? "LEGEND" NEWLINES section_delimiter? legend_data+
 sounds_section: section_delimiter? "SOUNDS" NEWLINES section_delimiter? sound_data+
 collisionlayers_section: section_delimiter? "COLLISIONLAYERS" NEWLINES section_delimiter? layer_data+
 rules_section: section_delimiter? "RULES" NEWLINES section_delimiter? rule_data+
-winconditions_section: section_delimiter? "WINCONDITIONS"i NEWLINES section_delimiter? condition_data+ // Accept no win conditions
+// winconditions_section: section_delimiter? "WINCONDITIONS"i NEWLINES section_delimiter? condition_data+ // Accept no win conditions
 levels_section: section_delimiter? "LEVELS" NEWLINES section_delimiter? level_data+
 
 // Prelude
@@ -37,8 +37,8 @@ STRING: /[^\n]+/
 COMMENT: /\((?:[^\(\)]|\((?:[^\(\)]|\([^)]*\))*\))*\)/
 
 // Object Data
-object_data: (object_name COMMENT? legend_key? NEWLINE colors COMMENT? NEWLINE sprite?) NEWLINES?
-           | NEWLINES_OR_COMMENTS
+object_data: (object_name COMMENT? legend_key? NEWLINE colors COMMENT? NEWLINE sprite? NEWLINE)
+       //     | NEWLINES_OR_COMMENTS
 
 SPRITE_PIXEL: /[0-9.]/
 colors: color+
@@ -60,8 +60,10 @@ sound_number: INT
 sound: "sfx"i sound_id
 
 // Layer Data
-layer_data: ((object_name ("," | " "))* object_name ","*)?
-          | NEWLINES_OR_COMMENTS
+layer_data: object_in_list* last_object NEWLINE
+object_in_list: object_name ","
+last_object: object_name
+       //    | NEWLINES_OR_COMMENTS
 
 // Rule Data
 rule_data: "+"? (prefix | rule_part)+ "->" (command | rule_part)* message? COMMENT? NEWLINE
@@ -93,8 +95,8 @@ condition_data: condition_id+
 // level_data: "dummy"
 
 level_data: LEVELLINES
-          | "message "i STRING+
-          | NEWLINES_OR_COMMENTS
+       //    | "message "i STRING+
+       //    | NEWLINES_OR_COMMENTS
 
 // levellines: (levelline NEWLINE)+
 LEVELLINES: /((?<!message)[a-zA-Zぁ-㍿.!@#$%&*0-9\-,`\'~_"§\[\]è!çàé;?:\/+°£^{}|\><^v¬˅\\±]+\n)+/

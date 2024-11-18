@@ -1,26 +1,85 @@
+import argparse
+import json
 import os
+import random
 
 from dotenv import load_dotenv
-from outlines import models, generate
-
-
-load_dotenv()
+from lark import Lark
+from outlines import models, generate, grammars
 
 import transformers
 import torch
 
+parser = argparse.ArgumentParser(description='Generate PuzzleScript games')
+parser.add_argument('--overwrite', '-o', action='store_true', help='Overwrite existing generated.txt')
+args = parser.parse_args()
+
 model_id = "meta-llama/Meta-Llama-3.1-8B-Instruct"
 
+# pipeline = transformers.pipeline(
+#     "text-generation", model=model_id, model_kwargs={"torch_dtype": torch.bfloat16}, device_map="auto"
+# )
+messages = [
+    {"role": "system", "content": "You are a pirate chatbot who always responds in pirate speak!"},
+    {"role": "user", "content": "Who are you?"},
+]
 
-with open('Syntax.rsc', 'r') as f:
-    grammar = f.read()
+# print(pipeline(
+#     messages,
+#     max_new_tokens=256,
+# ))
+# breakpoint()
 
-model = models.transformers(
-    model_id,
+prompt = (
+    "You are a game designer, familiar with the PuzzleScript game description language. "
+)
+fewshow_examples_prompt = (
+    "Here are some example games, for inspiration (do not reproduce these games exactly):"""
 )
 
-generator = generate.cfg(model)
-ret = generator.generate("Generate a PuzzleScript game.")
-print(ret)
+with open('example_games.json', 'r') as f:
+    example_games = json.load(f)
+fewshot_examples_prompt_i = fewshow_examples_prompt
+last_fewshot_examples_prompt_i = fewshot_examples_prompt_i
+for i in range(3):
+    last_fewshot_examples_prompt_i = fewshot_examples_prompt_i
+    rand_example_i = random.randint(0, len(example_games) - 1)
+    fewshot_examples_prompt_i += '\n\n' + example_games.pop(rand_example_i)
+fewshot_examples_prompt_i = last_fewshot_examples_prompt_i
+prompt += fewshot_examples_prompt_i
+prompt += "\n\nNow, generate a game using the PuzzleScript language."
+
+prompt_filepath = os.path.join('temp', 'prompt.txt')
+if not os.path.exists('temp'):
+    os.makedirs('temp')
+with open(prompt_filepath, 'w') as f:
+    f.write(prompt)
+
+with open('syntax_generate.lark', 'r') as f:
+    grammar = f.read()
+
+generated_filepath = os.path.join('temp', 'generated.txt')
+if not os.path.isfile(generated_filepath) or args.overwrite:
+    model = models.transformers(
+        model_id,
+        device='cuda:1',
+        model_kwargs={'torch_dtype': torch.bfloat16},
+        # device_map='auto'
+    )
+
+    generator = generate.cfg(model, grammar)
+    print("Generating code...")
+    generated_code = generator(prompt, max_tokens=1024)
+
+    with open(generated_filepath, 'w') as f:
+        f.write(generated_code)
+else:
+    with open(generated_filepath, 'r') as f:
+        generated_code = f.read()
+
+# Now parse the generated text
+parser = Lark(grammar, start="ps_game")
+parse_tree = parser.parse(generated_code)
+print(parse_tree.pretty())
 breakpoint()
 
